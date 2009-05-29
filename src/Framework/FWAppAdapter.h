@@ -2,6 +2,7 @@
 #define FW_APP_ADAPTER_H
 
 #include <conio.h>
+//#include <GL/glut.h>
 #include <Springhead.h>
 #include <Framework/SprFWAppGLUT.h>
 #include <Foundation/UTMMTimer.h>
@@ -10,7 +11,7 @@
 
 using namespace Spr;
 
-class FWAppAdapter;
+void MMTimerCallBack(void* arg);
 
 class FWAppAdapter: public FWAppGLUT, public UTRefCount{
 protected:
@@ -26,11 +27,12 @@ public:
 	bool bHaptic;
 
 	FWAppAdapter();
-	int GetNImp(){return (int)imps.size();}
-	int GetCurrentImpID(){ return impId; }
-	void AddScene(FWAppImp* scene);
+	int GetNImp();
+	int GetCurrentImpID();
+	void AddImp(FWAppImp* i);
+	void SetCallBackImp(FWAppImp* i);
 	void SwitchImp(int i);
-	void InitHapticDevice();
+	void InitHapticInterface();
 	void Init(int argc, char* argv[]);
 	void InitCameraView();
 	void Start();

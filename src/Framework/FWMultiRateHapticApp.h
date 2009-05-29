@@ -1,40 +1,49 @@
-#ifndef FWMULTIRATE_HAPTIC_APP_H
-#define FWMULTIRATE_HAPTIC_APP_H
+#ifndef FW_MULTIRATE_HAPTIC_APP_H
+#define FW_MULTIRATE_HAPTIC_APP_H
 
-#include <Framework/FWHapticAppBase.h>
-#include <Framework/FWHapticBase.h>
-#include <Foundation/UTMMTimer.h>
+#include <Springhead.h>
+#include <Framework/FWAppImp.h>
+#include <Framework/FWHapticProcessBase.h>
+//#include <Framework/FWExpandedPHSolid.h>
 
 namespace Spr{;
 
-class MultiMediaTimer : public UTMMTimer{
-public:
-	MultiMediaTimer(unsigned int r, unsigned int i, MMTimerFunc* f){
-		Init(r, i, f);
-	}
-	MultiMediaTimer(){};
-	void Init(unsigned int r, unsigned int i, MMTimerFunc* f){
-		Resolution(r);
-		Interval(i);
-		Set(f, NULL);
-	}
-};
-
-class FWMultiRateHapticApp : public FWHapticAppBase{
+class FWMultiRateHapticApp : public FWAppImp{
 protected:
-	FWHapticBase hapticProcess;
+	FWHapticProcessBase* hapticProcess;
+	double hdt;
+	PHSolidIf* hapticPointer;
+
 	volatile int hapticcount;
-	bool bSync;
+	volatile bool bSync;
 	bool bCalcPhys;
 public:
-	MultiMediaTimer mTimer;
+	double localRange;
+	FWExpandedPHSolids expandedPHSolids;
+
 	FWMultiRateHapticApp();
-	virtual void InitCameraView();
+	void SetHapticProcess(FWHapticProcessBase* process);
+	FWHapticProcessBase* GetHapticProcess();
+	void SetPhysicTimeStep(double dt);
+	double GetPhysicTimeStep();
+	void SetHapticTimeStep(double dt);
+	double GetHapticTimeStep();
+	void SetHapticPointer(PHSolidIf* pointer);
+	PHSolidIf* GetHapticPointer();
+	int GetNExpandedPHSolids();
+	FWExpandedPHSolid** GetFWExpandedPHSolids();
+
+	virtual void Init();													
+	virtual void ResetScene();
 	virtual void Idle();
-	virtual void SyncHapticProcess();
+	FWExpandedPHSolid** ExpandPHSolidInfo();
+	void FindNearestObjectFromHapticPointer(PHSolidIf* hPointer);
+	void UpdateHapticPointer();
+	void SyncHapticProcess();
 
-	FWHapticBase* GetHapticProcess();
+//	void DisplayContactPlane();
+//	void DisplayLineToNearestPoint();
+
 };
-
 }
 #endif
