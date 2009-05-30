@@ -199,11 +199,13 @@ struct PHSolidIf : public SceneObjectIf{
 		@param av シーンに対する剛体の角速度
 	 */
 	void		SetAngularVelocity(const Vec3d& av);
-    /** @brief 最後のステップで剛体に加わった力を取得する。
+    /** @brief 最後のステップで、拘束力以外に剛体に加わった外力を取得する。
+		拘束力は PHConstraint とその派生クラスから取得しなければならない。
 		@return 剛体に加えられた力(World系)
 	*/
 	Vec3d GetForce() const;
-    /** @brief 最後のステップで剛体に加わったトルクを取得する。
+    /** @brief 最後のステップで、拘束力以外に剛体に加わった外力トルクを取得する。
+		拘束力は PHConstraint とその派生クラスから取得しなければならない。
 		@return 剛体に加えられたトルク(World系、剛体の重心周り)
 	*/
 	Vec3d GetTorque() const;
