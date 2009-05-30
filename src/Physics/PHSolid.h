@@ -188,8 +188,10 @@ public:
 	void		AddForce(Vec3d f);						///< 力を質量中心に加える
 	void		AddTorque(Vec3d t);						///< トルクを加える
 	void		AddForce(Vec3d f, Vec3d r);				///< 力を 位置r(World系) に加える
-	Vec3d		GetForce() const {return force;}		///< 加えられた力
-	Vec3d		GetTorque() const {return torque;}		///< 加えられたトルク
+	/// 拘束力以外の剛体に加わった外力。拘束力はPHConstraintから取得しなければならない。
+	Vec3d		GetForce() const {return force;}
+	/// 拘束力以外の剛体に加わった外力によるトルク。拘束トルクはPHConstraintから取得しなければならない。
+	Vec3d		GetTorque() const {return torque;}
 
 	double		GetMass(){return mass;}					///< 質量
 	double		GetMassInv(){return 1.0 / mass;}		///< 質量の逆数
