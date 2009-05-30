@@ -322,7 +322,7 @@ public:
 
 	///< Solid‚ÉShape‚ª’Ç‰Á‚³‚ê‚½‚Æ‚«‚ÉSolid‚©‚çŒÄ‚Î‚ê‚é
 	void UpdateShapePairs(PHSolid* solid){
-		int isolid = (solids.Find(solid) - &solids[0]);
+		int isolid = (int)(solids.Find(solid) - &solids[0]);
 		int i, j;
 		TSolidPair* sp;
 		PHSolid *slhs, *srhs;
@@ -380,7 +380,7 @@ public:
 		for(int i = 0; i < (int)length; i++){
 			it = find(solids.begin(), solids.end(), (PHSolid*)(group[i]->Cast()));
 			if(it != solids.end())
-				idx.push_back(it - solids.begin());
+				idx.push_back((int)(it - solids.begin()));
 		}
 		sort(idx.begin(), idx.end());
 		for(int i = 0; i < (int)idx.size(); i++){
@@ -395,7 +395,7 @@ public:
 		typename PHSolids::iterator it = find(solids.begin(), solids.end(), (PHSolid*)(solid->Cast()));
 		if(it == solids.end())
 			return;
-		int idx = it - solids.begin();
+		int idx = (int)(it - solids.begin());
 		for(int i = 0; i < idx; i++)
 			solidPairs.item(i, idx)->bEnabled = bEnable;
 		for(int i = idx+1; i < (int)solids.size(); i++)

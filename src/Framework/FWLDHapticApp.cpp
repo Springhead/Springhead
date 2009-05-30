@@ -96,7 +96,7 @@ void FWLDHapticApp::Step(){
 		bCalcPhys = false;
 	}
 	if (hapticcount < pdt/hdt) return;
-	hapticcount -= pdt/hdt;
+	hapticcount -= (int)(pdt/hdt);
 	bSync = true;
 	bCalcPhys = true;
 }
