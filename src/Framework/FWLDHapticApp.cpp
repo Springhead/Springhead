@@ -72,7 +72,7 @@ void FWLDHapticApp::Step(){
 		int Nesolids = GetNExpandedPHSolids();
 		FWExpandedPHSolid** esolids = GetFWExpandedPHSolids();
 		std::vector<SpatialVector> lastvel;
-		for(int i = 0; i < Nesolids; i++){
+		for(int i = 0; i < Nesolids; i++){	
 			if(!esolids[i]->flag.blocal) continue;
 			lastvel.resize(i + 1);
 			lastvel.back().v() = esolids[i]->phSolidIf->GetVelocity();

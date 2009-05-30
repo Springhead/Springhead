@@ -91,6 +91,12 @@ void FWMultiRateHapticApp::FindNearestObjectFromHapticPointer(PHSolidIf* hPointe
 		((PHSolid*)esolids[i]->phSolidIf)->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
 //		DCAST(PHSolid, esolids[i]->phSolidIf)->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
 		cout << esolids[i]->phSolidIf->GetFramePosition() << endl;
+		FWExpandedPHSolid esolid;
+		esolid.phSolidIf = GetHapticPointer();
+		Vec3d d = esolid.phSolidIf->GetDeltaPosition();
+		cout << d << endl;
+
+
 		Vec3d dPos = ((PHSolid*)esolids[i]->phSolidIf)->GetDeltaPosition();
 //		Vec3d dPos = esolids[i]->phSolidIf->GetDeltaPosition();
 		float dLen = (float) (dPos * dir);
