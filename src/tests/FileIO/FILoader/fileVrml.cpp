@@ -29,6 +29,7 @@
 	GRTest.x : XファイルからのグラフィックスSDKの入力テスト
 
  */
+#if 0
 #include <Springhead.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
@@ -325,3 +326,5 @@ int main(int argc, char* argv[]){
 	glutMainLoop();
 	return 0;
 }
+
+#endif
