@@ -11,6 +11,7 @@
 #endif
 
 using namespace Spr;
+#if 0
 int main(){
 	std::ifstream file;
 #if 1
@@ -24,3 +25,5 @@ int main(){
 #endif
 	return 0;
 }
+
+#endif

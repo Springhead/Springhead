@@ -23,8 +23,8 @@ RM				= rm -rf
 #	Cygwin
 # ----------------------------------------------------------
 ifeq ($(findstring CYGWIN, $(shell env uname)), CYGWIN)
-LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/cygwin/ -L/usr/lib -L/usr/w32api/  
-LDFLAGS.GL 		= -lglut32 -lglu32 -lglew32 -lopengl32 -lboost_regex -lm
+LDFLAGS.EXTRA 	= -L$(TOP_DIR)/lib/cygwin/ -L/usr/lib -L/usr/w32api/
+LDFLAGS.GL 		= -lglut -lglut.dll -lglut32 -lglu32 -lglu -lGLU.dll -lglew32 -lGL.dll -lopengl32 -lboost_regex-gcc-mt -lm
 INCLUDES 		= -I/usr/include \
 					-I/usr/local/include
 ARFLAGS			= r

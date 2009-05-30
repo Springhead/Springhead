@@ -122,11 +122,11 @@ public:
 
 	virtual void		SetOffsetForce(Vec3d ofst){offset = ofst;}
 	virtual Vec3d		GetOffsetForce(){
-							Vec3d ans;
+							Vec3d ans, tmp;
 							if(anyLimit)
 								ans = Vec3d();
 							else
-								GetConstraintForce(Vec3d(), ans);
+								GetConstraintForce(tmp, ans);
 							return ans;
 						}
 	virtual bool		IsLimit(){return anyLimit;}

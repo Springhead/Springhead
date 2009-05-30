@@ -1,8 +1,6 @@
 #ifndef FW_APP_ADAPTER_H
 #define FW_APP_ADAPTER_H
 
-#include <conio.h>
-//#include <GL/glut.h>
 #include <Springhead.h>
 #include <Framework/SprFWAppGLUT.h>
 #include <Foundation/UTMMTimer.h>
