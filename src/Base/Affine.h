@@ -140,8 +140,9 @@ void main(){
 				<li> front   手前のクリッピング平面とカメラの距離
 				<li> back    奥のクリッピング平面とカメラの距離
 			</ul>
-		<li> Spr::TAffine::LookAtGL (TVec3 posz, TVec3 posy)
-			位置はそのままで，poszに-Ez(), posy に Ey()が向くようなAffine行列
+		<li> Spr::TAffine::LookAtGL (TVec3 pos, TVec3 diry)
+			位置はそのままで，posに-Ez(), diry に Ey()が向くようなAffine行列．
+			OpenGLのgluLookAtと等価．
 	</ul>
 	
 	\section thanks 謝辞
@@ -550,27 +551,42 @@ public:
 		return y;
 	}
 
-	///	targetPosにEz()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
+	/* obsolete. デフォルト引数に変えました tazz
 	template <class BUF>
 	void LookAt(const PTM::TVectorBase<3, BUF>& targetPos)
 	{
 		PTM::init_look_at(*this, targetPos);
 	}
-	///	targetPosにEz()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
+	*/
+	/**	注視行列として初期化
+		@param targetPos 注視点の位置
+		@param upDir ｙ向きベクトル
+		Affine行列の位置はそのままに，Ez()がtargetPosへ向き，Ey()がupDirへ向くように傾きを設定する．
+		位置はTrn() (Pos())で予め設定する．
+		// NOTE: 今までの実装ではupDirが位置ベクトルとして実装されていましたが，OpenGLの仕様に合わせるため
+		// 方向ベクトルとしました．既存のコードは影響を受ける可能性があります． tazz 09/05/29
+	*/
 	template <class BUFZ, class BUFY>
-	void LookAt(const PTM::TVectorBase<3, BUFZ>& targetPos, const PTM::TVectorBase<3, BUFY>& upDir)
+	void LookAt(const PTM::TVectorBase<3, BUFZ>& targetPos, const PTM::TVectorBase<3, BUFY>& upDir = TVec3<BUFY>(0,1,0))
 	{
 		PTM::init_look_at(*this, targetPos, upDir);
 	}
-	///	targetPosに-Ez()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
+	/* obsolete
 	template <class BUF>
 	void LookAtGL(const PTM::TVectorBase<3, BUF>& targetPos)
 	{
 		PTM::init_look_at_gl(*this, targetPos);
 	}
-	///	targetPosに-Ez()が向いていて, upDirが上向き ≒ Ey() となるAffine行列。カメラ位置を変えるには、Trn()を予め設定する。
+	*/
+	/** 注視行列として初期化
+		@param targetPos 注視点の位置
+		@param upDir ｙ向きベクトル
+		Affine行列の位置はそのままに，-Ez()がtargetPosへ向き，Ey()がupDirへ向くように傾きを設定する．
+		位置はTrn() (Pos())で予め設定する．
+		// NOTE: 上と同様の注意．
+	 */
 	template <class BUFZ, class BUFY>
-	void LookAtGL(const PTM::TVectorBase<3, BUFZ>& targetPos, const PTM::TVectorBase<3, BUFY>& upDir)
+	void LookAtGL(const PTM::TVectorBase<3, BUFZ>& targetPos, const PTM::TVectorBase<3, BUFY>& upDir = TVec3<BUFY>(0,1,0))
 	{
 		PTM::init_look_at_gl(*this, targetPos, upDir);
 	}

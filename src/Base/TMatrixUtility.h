@@ -160,7 +160,10 @@ void init_unitize(TMatrixBase<3,3,D>& m){
 template <class D>
 void init_unitize(TMatrixBase<4,4,D>& m){
  	typedef TYPENAME D::zero zero;
- 	typedef TYPENAME D::unit unit;
+ 	typedef TYPENAME D
+		
+		
+		::unit unit;
 	TYPENAME D::element_type z = zero(0);
  	TYPENAME D::element_type u = unit(1);
 	m.item(0,0)=u;	m.item(0,1)=z;	m.item(0,2)=z;	m.item(0,3)=z;
@@ -186,9 +189,9 @@ void init_cross(TMatrixBase<3, 3, MD>& m, const TVectorBase<3, D>& v){
 }
 
 ///	4×4行列をある点を注視する視点行列に初期化する．
+/* obsolete
 template <class D, class BP>
 void init_look_at(TMatrixBase<4, 4, D>& a, const TVectorBase<3, BP>& posi){
-
 	typedef TMatrixCol<4,4, TYPENAME D::element_type> TAf;
 	typedef TVector<3, TYPENAME BP::element_type> TVec;
 
@@ -210,8 +213,11 @@ void init_look_at(TMatrixBase<4, 4, D>& a, const TVectorBase<3, BP>& posi){
 	ey[0] = 0;
 	ey[1] = 1;
 	ey[2] = 0;
+	// ex = ey % tv
 	a.col(0).sub_vector(TSubVectorDim<0,3>()) = (ey % tv.unit()).unit();
+	// ez = relv
 	a.col(2).sub_vector(TSubVectorDim<0,3>()) = relv.unit();
+	// ey = ez % ex
 	TVec a1 = a.col(2).sub_vector(TSubVectorDim<0,3>()) % a.col(0).sub_vector(TSubVectorDim<0,3>());
 	a.col(1).sub_vector(TSubVectorDim<0,3>()) = a1;
 	if (a.item(1,1) < 0){
@@ -222,23 +228,25 @@ void init_look_at(TMatrixBase<4, 4, D>& a, const TVectorBase<3, BP>& posi){
 	a.col(0).sub_vector(TSubVectorDim<0,3>()) *= sx;
 	a.col(1).sub_vector(TSubVectorDim<0,3>()) *= sy;
 	a.col(2).sub_vector(TSubVectorDim<0,3>()) *= sz;
-}
+}*/
 template <class D, class BP, class BT>
-void init_look_at(TMatrixBase<4,4,D>& a,
-				  const TVectorBase<3, BP>& posz,
-				  const TVectorBase<3, BT>& posy){
+void init_look_at(TMatrixBase<4,4,D>& a, const TVectorBase<3, BP>& pos, const TVectorBase<3, BT>& diry){
 	typedef TYPENAME D::ret_type TAf;
 	typedef TYPENAME BP::ret_type TVec;
+	// preserve scaling (not needed?)
 	TYPENAME D::element_type sx = a.col(0).sub_vector(TSubVectorDim<0,3>()).norm();
 	TYPENAME D::element_type sy = a.col(1).sub_vector(TSubVectorDim<0,3>()).norm();
 	TYPENAME D::element_type sz = a.col(2).sub_vector(TSubVectorDim<0,3>()).norm();
 
-	TVec relvz = posz - a.col(3).sub_vector(TSubVectorDim<0,3>());
-	TVec relvy = posy - a.col(3).sub_vector(TSubVectorDim<0,3>());
+	TVec dz = pos - a.col(3).sub_vector(TSubVectorDim<0,3>());
+	TVec dy = diry;// - a.col(3).sub_vector(TSubVectorDim<0,3>());
 	
-	a.col(2).sub_vector(TSubVectorDim<0,3>()) = relvz.unit();
-	relvy = relvy - (relvy * a.col(2).sub_vector(TSubVectorDim<0,3>())) * a.col(2).sub_vector(TSubVectorDim<0,3>());
-	a.col(1).sub_vector(TSubVectorDim<0,3>()) = relvy.unit();
+	// ez = dz
+	a.col(2).sub_vector(TSubVectorDim<0,3>()) = dz.unit();
+	// dy = dy - (dy*ez)*ez
+	dy = dy - (dy * a.col(2).sub_vector(TSubVectorDim<0,3>())) * a.col(2).sub_vector(TSubVectorDim<0,3>());
+	a.col(1).sub_vector(TSubVectorDim<0,3>()) = dy.unit();
+	// ex = ey % ez
 	a.col(0).sub_vector(TSubVectorDim<0,3>()) = a.col(1).sub_vector(TSubVectorDim<0,3>()) % a.col(2).sub_vector(TSubVectorDim<0,3>());
 	
 	a.col(0).sub_vector(TSubVectorDim<0,3>()) *= sx;
@@ -246,18 +254,17 @@ void init_look_at(TMatrixBase<4,4,D>& a,
 	a.col(2).sub_vector(TSubVectorDim<0,3>()) *= sz;
 }
 ///	4×4行列をある点を注視する視点行列に初期化する．
+/* obsolete
 template <class D, class BP>
 void init_look_at_gl(TMatrixBase<4,4,D>& a, const TVectorBase<3, BP>& posi){
 	TYPENAME BP::ret_type posi_ = posi - 2 * (posi - a.col(3).sub_vector(TSubVectorDim<0,3>()));
 	init_look_at(a, posi_);
-}
+}*/
 template <class D, class BZ, class BY>
-void init_look_at_gl(TMatrixBase<4,4,D>& a,
-					 const TVectorBase<3, BZ>& posi,
-					 const TVectorBase<3, BY>& posy){
-	TYPENAME BZ::ret_type workAroundForBCB6 = a.col(3).sub_vector(TSubVectorDim<0,3>());
-	TYPENAME BZ::ret_type posi_ = posi - 2 * (posi - workAroundForBCB6);
-	init_look_at(a, posi_, posy);
+void init_look_at_gl(TMatrixBase<4,4,D>& a, const TVectorBase<3, BZ>& pos, const TVectorBase<3, BY>& diry){
+	TYPENAME BZ::ret_type org = a.col(3).sub_vector(TSubVectorDim<0,3>());  // work-around for BCB6
+	TYPENAME BZ::ret_type pos_ = pos - 2 * (pos - org);
+	init_look_at(a, pos_, diry);
 }
 
 template <class D, class SD, class ZD>

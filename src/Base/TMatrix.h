@@ -786,7 +786,7 @@ public:
 	void input(std::istream& is){
 		char ch;
 		is >> ch;
-		for(int i=0; i<height(); ++i) is >> row(i);
+		for(int i=0; i<(int)height(); ++i) is >> row(i);
 		is >> ch;
 	}
 	//@}
