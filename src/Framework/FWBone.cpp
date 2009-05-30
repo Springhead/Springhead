@@ -104,10 +104,10 @@ double FWBoneCreate::BoneLength(GRFrameIf* frame1,GRFrameIf* frame2){
 /*2つのgrFrameからshape(ラウンドコーン）を作成*/
 CDRoundConeIf* FWBoneCreate::BoneShapeCone(GRFrameIf* frame1,GRFrameIf* frame2){
 	double wide=0.5;
-	double lengthRate=0.8;
+	double lengthRate=1;
 	double length=BoneLength(frame1,frame2);
 	CDRoundConeDesc desc;
-	desc.length=length*lengthRate;
+	desc.length=(length-wide*2)*lengthRate;
 	desc.radius=Vec2f(wide,wide);
 	shapeBone.push_back(XCAST(fwSdk->GetPHSdk()->CreateShape(desc)));
 	return shapeBone[shapeBone.size()-1];
