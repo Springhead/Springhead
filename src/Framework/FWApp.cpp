@@ -226,6 +226,6 @@ void FWApp::CameraInfo::UpdateView(){
 		cos(rot.x) * cos(rot.y),
 		sin(rot.x),
 		cos(rot.x) * sin(rot.y));
-	view.LookAtGL(target, Vec3f(0.0f, 100.0f, 0.0f));
+	view.LookAtGL(target);
 }
 }
