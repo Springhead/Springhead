@@ -566,8 +566,9 @@ public:
 		// NOTE: 今までの実装ではupDirが位置ベクトルとして実装されていましたが，OpenGLの仕様に合わせるため
 		// 方向ベクトルとしました．既存のコードは影響を受ける可能性があります． tazz 09/05/29
 	*/
-	template <class BUFZ, class BUFY>
-	void LookAt(const PTM::TVectorBase<3, BUFZ>& targetPos, const PTM::TVectorBase<3, BUFY>& upDir = TVec3<BUFY>(0,1,0))
+	template <class BUF>
+	void LookAt(const PTM::TVectorBase<3, BUF>& targetPos,
+		const TVec3<typename BUF::element_type>& upDir = TVec3<typename BUF::element_type>(0,1,0))
 	{
 		PTM::init_look_at(*this, targetPos, upDir);
 	}
@@ -585,8 +586,9 @@ public:
 		位置はTrn() (Pos())で予め設定する．
 		// NOTE: 上と同様の注意．
 	 */
-	template <class BUFZ, class BUFY>
-	void LookAtGL(const PTM::TVectorBase<3, BUFZ>& targetPos, const PTM::TVectorBase<3, BUFY>& upDir = TVec3<BUFY>(0,1,0))
+	template <class BUF>
+	void LookAtGL(const PTM::TVectorBase<3, BUF>& targetPos,
+		const TVec3<typename BUF::element_type>& upDir = TVec3<typename BUF::element_type>(0,1,0))
 	{
 		PTM::init_look_at_gl(*this, targetPos, upDir);
 	}
