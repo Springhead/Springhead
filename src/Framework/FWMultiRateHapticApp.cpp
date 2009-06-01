@@ -23,7 +23,12 @@ void FWMultiRateHapticApp::SetPhysicTimeStep(double dt){ pdt = dt; }
 double FWMultiRateHapticApp::GetPhysicTimeStep(){ return pdt; }
 void FWMultiRateHapticApp::SetHapticTimeStep(double dt){ hdt = dt; }
 double FWMultiRateHapticApp::GetHapticTimeStep(){ return hdt; }
-void FWMultiRateHapticApp::SetHapticPointer(PHSolidIf* pointer){ hapticPointer = pointer; }
+void FWMultiRateHapticApp::SetHapticPointer(PHSolidIf* pointer){ 
+	hapticPointer = pointer; 
+	// —ÍŠoƒ|ƒCƒ“ƒ^‚ðspringhead2‚ÌÚGŒvŽZ‚©‚çŠO‚·
+	// „‘Ì‚ª‘‚¦‚é‚½‚Ñ‚ÉContactMode‚ðNONE‚É‚µ‚È‚¯‚ç‚Î‚¢‚¯‚È‚¢(‘‚¦‚½„‘Ì‚ÆÚGŒvŽZ‚ð‚µ‚Ä‚µ‚Ü‚¤‚½‚ß)
+	GetScene()->GetPHScene()->SetContactMode(hapticPointer, PHSceneDesc::MODE_NONE);
+}
 PHSolidIf* FWMultiRateHapticApp::GetHapticPointer(){ return hapticPointer; }
 int FWMultiRateHapticApp::GetNExpandedPHSolids(){ return expandedPHSolids.size(); }
 FWExpandedPHSolid** FWMultiRateHapticApp::GetFWExpandedPHSolids(){ 
