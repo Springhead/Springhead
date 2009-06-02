@@ -13,7 +13,10 @@
 
 namespace Spr{;
 
-FWHapticProcessBase::FWHapticProcessBase(){}
+FWHapticProcessBase::FWHapticProcessBase(){
+	posScale = 200;
+	loopCounter = 1;
+}
 
 void FWHapticProcessBase::SetPhysicTimeStep(double dt){ physicTimeStep = dt; }
 double FWHapticProcessBase::GetPhysicTimeStep(){ return physicTimeStep; }
@@ -23,8 +26,8 @@ void FWHapticProcessBase::SetHapticInterface(HISpidarGIf* s){ hapticInterface = 
 HIForceInterface6DIf* FWHapticProcessBase::GetHapticInterface(){ return hapticInterface; }
 PHSolid FWHapticProcessBase::GetHapticPointer(){ return hapticPointer; }
 int FWHapticProcessBase::GetNExpandedPHSolids(){ return expandedPHSolids.size(); }
-FWExpandedPHSolid** FWHapticProcessBase::GetFWExpandedPHSolids(){
-	return expandedPHSolids.empty() ? NULL : (FWExpandedPHSolid**)&*expandedPHSolids.begin();
+FWExpandedPHSolids* FWHapticProcessBase::GetFWExpandedPHSolids(){
+	return &expandedPHSolids;
 }
 int FWHapticProcessBase::GetLoopCount(){ return loopCounter; }
 
