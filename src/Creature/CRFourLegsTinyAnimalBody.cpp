@@ -86,6 +86,7 @@ PHSolidIf* CRFourLegsTinyAnimalBody::CreateBody(){
 	solids.push_back(phScene->CreateSolid(solidDesc));
 	boxDesc.boxsize	= Vec3f(bodyBreadth, bodyHeight, bodyThickness);
 	solids.back()->AddShape(phSdk->CreateShape(boxDesc));
+
 	solids.back()->SetFramePosition(Vec3f(0,0,0));
 	solids.back()->SetOrientation(Quaterniond::Rot(Rad(-90), 'x'));
 	solids.back()->SetName("soWaist");

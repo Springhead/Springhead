@@ -74,8 +74,8 @@ void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine*
 	for(int i=0; i<2; ++i){
 		rs[i] = fs[i] = SPRING;
 		rd[i] = fd[i] = DAMPER;
-		sf[i] = sp->shape[i]->material.mu0;
-		df[i] = sp->shape[i]->material.mu;
+		sf[i] = sp->shape[i]->GetMaterial().mu0;
+		df[i] = sp->shape[i]->GetMaterial().mu;
 	}
 	reflexSpring    = ave(rs[0], rs[1]) * convertedMass / (float)(2*dt*dt);
 	reflexDamper    = ave(rd[0], rd[1]) * convertedMass / (float)(dt);

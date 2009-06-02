@@ -10,6 +10,7 @@
 
 #include <SprCollision.h>
 #include <Foundation/Object.h>
+#include "CollisionDecl.hpp"
 
 namespace Spr{;
 
@@ -17,10 +18,10 @@ namespace Spr{;
 /// 形状自体は位置情報を持たない．位置情報は形状を参照する各剛体が持つ．
 class CDShape : public NamedObject{
 public:
-	PHMaterial material;
 
 	SPR_OBJECTDEF_ABST(CDShape);
-	
+	SPR_DECLMEMBEROF_CDShapeDesc;
+
 	void	SetStaticFriction(float mu0){ material.mu0 = mu0; }
 	float	GetStaticFriction(){ return material.mu0; }
 	void	SetDynamicFriction(float mu){ material.mu = mu; }
@@ -47,6 +48,9 @@ public:
 	float GetVibB(){return material.vibB;}
 	void SetVibW(float vibW){material.vibW = vibW;}
 	float GetVibW(){return material.vibW;}
+
+	PHMaterial	GetMaterial(){return material;}
+	void		SetMaterial(PHMaterial mat){material = mat;}
 
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose)=0;
 	virtual bool IsInside(const Vec3f& p){ return false; }
