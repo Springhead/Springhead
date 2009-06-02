@@ -14,6 +14,7 @@ FWAppImpDesc::FWAppImpDesc(){
 /*FWAppImp‚ÌŽÀ‘•*/
 ////////////////////////////////////////////////////////////////////////////////////
 FWAppImp::FWAppImp(){
+	bStep = true;
 	fwscene = NULL;
 };
 

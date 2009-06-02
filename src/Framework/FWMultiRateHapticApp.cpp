@@ -13,8 +13,8 @@ namespace Spr{;
 FWMultiRateHapticApp::FWMultiRateHapticApp(){
 	bSync = false;
 	bCalcPhys = true;
-	pdt = 50;
-	hdt = 1;
+	pdt = 0.05f;
+	hdt = 0.001f;
 }
 
 void FWMultiRateHapticApp::SetHapticProcess(FWHapticProcessBase* process){ hapticProcess = process; }
@@ -31,8 +31,8 @@ void FWMultiRateHapticApp::SetHapticPointer(PHSolidIf* pointer){
 }
 PHSolidIf* FWMultiRateHapticApp::GetHapticPointer(){ return hapticPointer; }
 int FWMultiRateHapticApp::GetNExpandedPHSolids(){ return expandedPHSolids.size(); }
-FWExpandedPHSolid** FWMultiRateHapticApp::GetFWExpandedPHSolids(){ 
-	return expandedPHSolids.empty() ? NULL : (FWExpandedPHSolid**)&*expandedPHSolids.begin();
+FWExpandedPHSolids* FWMultiRateHapticApp::GetFWExpandedPHSolids(){ 
+	return &expandedPHSolids;
 }
 
 
@@ -53,7 +53,7 @@ void FWMultiRateHapticApp::ResetScene(){
 	PHSceneIf* phscene = GetScene()->GetPHScene();
 	phscene->Clear();	
 	phscene->SetGravity(gravity);				
-	phscene->SetTimeStep(pdt);
+	phscene->SetTimeStep(GetPhysicTimeStep());
 	phscene->SetNumIteration(nIter);
 	SetHapticTimeStep(GetHapticProcess()->GetHapticTimeStep());
 	GetHapticProcess()->SetPhysicTimeStep(GetPhysicTimeStep()); 
@@ -74,7 +74,7 @@ FWExpandedPHSolid** FWMultiRateHapticApp::ExpandPHSolidInfo(){
 	return expandedPHSolids.empty() ? NULL : (FWExpandedPHSolid**)&*expandedPHSolids.begin();
 }
 
-void FWMultiRateHapticApp::FindNearestObjectFromHapticPointer(PHSolidIf* hPointer){
+void FWMultiRateHapticApp::FindNearestObjectFromHapticPointer(){
 	/*
 		GJKを使って近傍物体と近傍物体の最近点を取得
 		これをすべてのshapeをもつ剛体についてやる
@@ -84,7 +84,7 @@ void FWMultiRateHapticApp::FindNearestObjectFromHapticPointer(PHSolidIf* hPointe
 	*/
 
 	//1. BBoxレベルの衝突判定
-	FWExpandedPHSolid** esolids = GetFWExpandedPHSolids();
+	FWExpandedPHSolids* esolids = GetFWExpandedPHSolids();
 	int Nesolids = GetNExpandedPHSolids();
 	Vec3f dir(0,0,1);
 	Edges edges;
@@ -92,18 +92,9 @@ void FWMultiRateHapticApp::FindNearestObjectFromHapticPointer(PHSolidIf* hPointe
 	Edges::iterator eit = edges.begin();
 	for(int i = 0; i <	Nesolids; ++i){
 		// ローカル判定をすべてfalseにする
-		esolids[i]->flag.bneighbor = false;
-		((PHSolid*)esolids[i]->phSolidIf)->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
-//		DCAST(PHSolid, esolids[i]->phSolidIf)->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
-		cout << esolids[i]->phSolidIf->GetFramePosition() << endl;
-		FWExpandedPHSolid esolid;
-		esolid.phSolidIf = GetHapticPointer();
-		Vec3d d = esolid.phSolidIf->GetDeltaPosition();
-		cout << d << endl;
-
-
-		Vec3d dPos = ((PHSolid*)esolids[i]->phSolidIf)->GetDeltaPosition();
-//		Vec3d dPos = esolids[i]->phSolidIf->GetDeltaPosition();
+		esolids->at(i).flag.bneighbor = false;
+		DCAST(PHSolid, esolids->at(i).phSolidIf)->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+		Vec3d dPos = esolids->at(i).phSolidIf->GetDeltaPosition();
 		float dLen = (float) (dPos * dir);
 		if (dLen < 0){
 			eit[0].edge += dLen;
@@ -127,10 +118,10 @@ void FWMultiRateHapticApp::FindNearestObjectFromHapticPointer(PHSolidIf* hPointe
 				int f2 = *itf;
 				if (f1 > f2) std::swap(f1, f2);
 				// 近傍物体の仮決定
-				if(esolids[f1]->phSolidIf == hPointer){
-					esolids[f2]->flag.bneighbor = true;
-				}else if(esolids[f2]->phSolidIf == hPointer){
-					esolids[f1]->flag.bneighbor = true;
+				if(esolids->at(f1).phSolidIf == GetHapticPointer()){
+					esolids->at(f2).flag.bneighbor = true;
+				}else if(esolids->at(f2).phSolidIf == GetHapticPointer()){
+					esolids->at(f1).flag.bneighbor = true;
 				}
 			}
 			cur.insert(it->index);
@@ -143,18 +134,18 @@ void FWMultiRateHapticApp::FindNearestObjectFromHapticPointer(PHSolidIf* hPointe
 	// 近傍物体だったらblocalをtrueにし，phSolidにphSolidIfをコピーする
 	// blocalがすでにtrueだったらコピー済みなので近傍点だけコピーする
 	for(int i = 0; i < Nesolids; i++){
-		if(!esolids[i]->flag.bneighbor){
-			esolids[i]->flag.bfirstlocal = false;																	//近傍物体でないのでfalseにする
-			esolids[i]->flag.blocal = false;
+		if(!esolids->at(i).flag.bneighbor){
+			esolids->at(i).flag.bfirstlocal = false;																	//近傍物体でないのでfalseにする
+			esolids->at(i).flag.blocal = false;
 			continue;																									// 近傍でなければ次へ
 		}
 
-		CDConvex* a = DCAST(CDConvex, esolids[i]->phSolidIf->GetShape(0));					// 剛体が持つ凸形状
-		CDConvex* b = DCAST(CDConvex, hPointer->GetShape(0));									// 力覚ポインタの凸形状
+		CDConvex* a = DCAST(CDConvex, esolids->at(i).phSolidIf->GetShape(0));					// 剛体が持つ凸形状
+		CDConvex* b = DCAST(CDConvex, GetHapticPointer()->GetShape(0));									// 力覚ポインタの凸形状
 		Posed a2w, b2w;																								// 剛体のワールド座標
-		/*	if(esolids[i]->flag.blocal) 	a2w = esolids[i]->phSolidIf.GetPose();						// blocalがtrueなら最新の情報でやる
-		else */								a2w = esolids[i]->phSolidIf->GetPose();
-		b2w = hPointer->GetPose();																				// 力覚ポインタのワールド座標																									// pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
+		/*	if(esolids->at(i).flag.blocal) 	a2w = esolids->at(i).phSolidIf.GetPose();						// blocalがtrueなら最新の情報でやる
+		else */								a2w = esolids->at(i).phSolidIf->GetPose();
+		b2w = GetHapticPointer()->GetPose();																				// 力覚ポインタのワールド座標																									// pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
 		Vec3d pa = Vec3d(0.0, 0.0, 0.0);																		// PHSolidの近傍点
 		Vec3d pb = Vec3d(0.0, 0.0, 0.0);																		// HapticPointerの近傍点
 		FindClosestPoints(a, b, a2w, b2w, pa, pb);															// GJKで近傍点の算出
@@ -165,9 +156,9 @@ void FWMultiRateHapticApp::FindNearestObjectFromHapticPointer(PHSolidIf* hPointe
 		if(a2b.norm() < localRange){																			// 近傍点間距離から近傍物体を絞る
 			if(a2b.norm() < 0.01){																				// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める		
 				pa = pb = Vec3d(0.0, 0.0, 0.0);																// 変数のリセット
-				Vec3d dir = -1.0 * esolids[i]->syncInfo.neighborPoint.face_normal;				
+				Vec3d dir = -1.0 * esolids->at(i).syncInfo.neighborPoint.face_normal;				
 				if(dir == Vec3d(0.0, 0.0, 0.0) ){																
-					dir = -(hPointer->GetCenterPosition() - wa);											// dirが(0 , 0, 0ならPHSolidの近傍点からHapticPointerの重心までにする
+					dir = -(GetHapticPointer()->GetCenterPosition() - wa);											// dirが(0 , 0, 0ならPHSolidの近傍点からHapticPointerの重心までにする
 				}
 				double dist = 0.0;
 				int cp = ContFindCommonPoint(a, b, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
@@ -176,26 +167,26 @@ void FWMultiRateHapticApp::FindNearestObjectFromHapticPointer(PHSolidIf* hPointe
 					DSTR << "ContFindCommonPoint do not find contact point" << std::endl;
 				}
 			}
-			if(!esolids[i]->flag.blocal){																			// 初めて最近傍物体になった時
-				esolids[i]->flag.bfirstlocal = true;
-				esolids[i]->haSolid = *DCAST(PHSolid, esolids[i]->phSolidIf);						// シーンが持つ剛体の中身を力覚プロセスで使う剛体（実体）としてコピーする
-				esolids[i]->syncInfo.neighborPoint.face_normal = normal;							// 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．										
+			if(!esolids->at(i).flag.blocal){																			// 初めて最近傍物体になった時
+				esolids->at(i).flag.bfirstlocal = true;
+				esolids->at(i).haSolid = *DCAST(PHSolid, esolids->at(i).phSolidIf);						// シーンが持つ剛体の中身を力覚プロセスで使う剛体（実体）としてコピーする
+				esolids->at(i).syncInfo.neighborPoint.face_normal = normal;							// 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．										
 #ifdef _DEBUG
-				if (esolids[i]->syncInfo.neighborPoint.face_normal * normal < 0.8){
+				if (esolids->at(i).syncInfo.neighborPoint.face_normal * normal < 0.8){
 					DSTR << "Too big change on normal" << normal << std::endl;
 				}
 #endif
 			}
-			esolids[i]->flag.blocal = true;																		// 近傍物体なのでblocalをtrueにする
-			esolids[i]->syncInfo.neighborPoint.closestPoint = pa;										// 剛体近傍点のローカル座標
-			esolids[i]->syncInfo.neighborPoint.pointerPoint = pb;										// 力覚ポインタ近傍点のローカル座標
-			esolids[i]->syncInfo.neighborPoint.last_face_normal											// 法線補間のために前回の法線を取っておく
-				= esolids[i]->syncInfo.neighborPoint.face_normal;										// 初めて近傍になった時は今回できた法線
-			esolids[i]->syncInfo.neighborPoint.face_normal = normal;								// 剛体から力覚ポインタへの法線
+			esolids->at(i).flag.blocal = true;																		// 近傍物体なのでblocalをtrueにする
+			esolids->at(i).syncInfo.neighborPoint.closestPoint = pa;										// 剛体近傍点のローカル座標
+			esolids->at(i).syncInfo.neighborPoint.pointerPoint = pb;										// 力覚ポインタ近傍点のローカル座標
+			esolids->at(i).syncInfo.neighborPoint.last_face_normal											// 法線補間のために前回の法線を取っておく
+				= esolids->at(i).syncInfo.neighborPoint.face_normal;										// 初めて近傍になった時は今回できた法線
+			esolids->at(i).syncInfo.neighborPoint.face_normal = normal;								// 剛体から力覚ポインタへの法線
 		}else{
 			//GJKの結果，近傍点距離がlocalRangeよりも大きい場合
-			esolids[i]->flag.blocal = false;																		// 近傍物体ではないのでblocalをfalseにする
-			esolids[i]->flag.bfirstlocal = false;
+			esolids->at(i).flag.blocal = false;																		// 近傍物体ではないのでblocalをfalseにする
+			esolids->at(i).flag.bfirstlocal = false;
 		}
 	}
 }
@@ -257,7 +248,7 @@ void FWMultiRateHapticApp::SyncHapticProcess(){
 		// 同期終了のフラグ
 		bSync = false;
 	}
-#define COUNT_MAX 300
+#define COUNT_MAX 100
 	if(hprocess->loopCounter > COUNT_MAX) {
 		DSTR << "too many step" << std::endl;
 		hprocess->loopCounter = 0;

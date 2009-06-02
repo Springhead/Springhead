@@ -31,13 +31,13 @@ public:
 	void SetHapticPointer(PHSolidIf* pointer);
 	PHSolidIf* GetHapticPointer();
 	int GetNExpandedPHSolids();
-	FWExpandedPHSolid** GetFWExpandedPHSolids();
+	FWExpandedPHSolids* GetFWExpandedPHSolids();
 
 	virtual void Init();													
 	virtual void ResetScene();
 	virtual void Idle();
 	FWExpandedPHSolid** ExpandPHSolidInfo();
-	void FindNearestObjectFromHapticPointer(PHSolidIf* hPointer);
+	void FindNearestObjectFromHapticPointer();
 	void UpdateHapticPointer();
 	void SyncHapticProcess();
 

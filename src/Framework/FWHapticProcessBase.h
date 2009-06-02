@@ -36,7 +36,7 @@ public:
 	HIForceInterface6DIf* GetHapticInterface();
 	PHSolid GetHapticPointer();
 	int GetNExpandedPHSolids();
-	FWExpandedPHSolid** GetFWExpandedPHSolids();
+	FWExpandedPHSolids* GetFWExpandedPHSolids();
 
 	int GetLoopCount();
 
