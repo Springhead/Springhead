@@ -15,14 +15,12 @@
 namespace Spr{;
 	
 /// ƒJƒvƒZƒ‹
-class CDRoundCone: public CDConvex, public CDRoundConeDesc{
+class CDRoundCone: public CDConvex{
 public:
 	SPR_OBJECTDEF(CDRoundCone);
 	SPR_DECLMEMBEROF_CDRoundConeDesc;
 
 	CDRoundCone();
-	//CDRoundCone(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}
-	//CDRoundCone(Vec3f c = Vec3f(), float r = 0.0f):center(c), radius(r){}
 	CDRoundCone(const CDRoundConeDesc& desc);
 	
 	virtual bool IsInside(const Vec3f& p);

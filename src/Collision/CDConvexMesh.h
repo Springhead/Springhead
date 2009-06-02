@@ -9,6 +9,7 @@
 #define CDCONVEXMESH_H
 
 #include <SprCollision.h>
+#include <vector>
 #include <Foundation/Object.h>
 #include "CDConvex.h"
 
