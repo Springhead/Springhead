@@ -21,7 +21,6 @@
 #include <Framework/FWObject.h>
 #include <Framework/FWScene.h>
 #include <Framework/FWSdk.h>
-#include <Framework/FWPHBone.h>
 #include <Framework/FWBone.h>
 #include <Collision/CDConvexMesh.h>
 
