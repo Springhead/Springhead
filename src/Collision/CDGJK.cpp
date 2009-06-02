@@ -79,8 +79,8 @@ void SaveShape(std::ostream& file, CDShape* a){
 		CDRoundConeDesc desc;
 		rc->GetDesc(&desc);
 		SaveMaterial(file, desc.material);
-		file << "radius " << desc.radius << std::endl;
-		file << "length " << desc.length << std::endl;
+		file << desc.radius << std::endl;
+		file << desc.length << std::endl;
 	}
 }
 CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk){
