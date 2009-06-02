@@ -21,7 +21,10 @@ namespace Spr{;
 CDRoundCone::CDRoundCone() {
 }
 
-CDRoundCone::CDRoundCone(const CDRoundConeDesc& desc):CDRoundConeDesc(desc){
+CDRoundCone::CDRoundCone(const CDRoundConeDesc& desc){
+	radius = desc.radius;
+	length = desc.length;
+	material = desc.material;
 }
 
 bool CDRoundCone::IsInside(const Vec3f& p){
