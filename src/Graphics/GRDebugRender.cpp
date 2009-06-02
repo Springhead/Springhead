@@ -336,7 +336,7 @@ void GRDebugRender::DrawCoordinateAxis(bool solid){
 	PushModelMatrix();
 	MultModelMatrix(Affinef::Scale(scaleAxis, scaleAxis, scaleAxis));
 	// シンプルに線分三本
-#if 0
+#if 1
 	float vtx[4][3] = {{0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}};
 	size_t idx[6] = {0, 1, 0, 2, 0, 3};
 	DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 6);

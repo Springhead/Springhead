@@ -165,6 +165,7 @@ void PHContactPoint::Projection(double& f, int k){
 		//–€CŒW”‚Í—¼Ò‚ÌÃ~–€CŒW”‚Ì•½‹Ï‚Æ‚·‚é
 		f = min(max(-flim, f), flim);
 #endif
+		assert(f < 10000);
 	}
 }
 
