@@ -11,10 +11,10 @@
 #endif
 
 using namespace Spr;
-#if 0
+#if 1
 int main(){
 	std::ifstream file;
-#if 1
+#if 0
 	file.open("ContFindCommonPointSaveParam.txt");
 	PHSdkIf* sdk = PHSdkIf::CreateSdk();
 	ContFindCommonPointCall(file, sdk);
