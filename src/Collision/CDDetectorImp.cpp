@@ -185,6 +185,7 @@ found:;
 		sp->normal = lastNormal;
 		SaveDetectContinuously(sp, ct, pose0, delta0, pose1, delta1);
 		DSTR << "SaveDetectDetectContinuously() called" << std::endl;
+		assert(0);
 	}
 	return true;
 }

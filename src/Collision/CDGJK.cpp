@@ -72,7 +72,16 @@ void SaveShape(std::ostream& file, CDShape* a){
 		sph->GetDesc(&desc);
 		SaveMaterial(file, desc.material);
 		file << desc.radius << std::endl;
-	}		
+	}
+	CDRoundCone* rc = a->Cast();
+	if(rc){
+		file << "rc" << std::endl;
+		CDRoundConeDesc desc;
+		rc->GetDesc(&desc);
+		SaveMaterial(file, desc.material);
+		file << "radius " << desc.radius << std::endl;
+		file << "length " << desc.length << std::endl;
+	}
 }
 CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk){
 	CDConvex* rv = NULL;
@@ -107,6 +116,13 @@ CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk){
 		LoadMaterial(file, desc.material);			
 		file >> desc.radius;
 		rv = sdk->CreateShape(CDSphereIf::GetIfInfoStatic(), desc)->Cast();
+	}
+	if( strcmp(type, "rc") == 0){
+		CDRoundConeDesc desc;
+		LoadMaterial(file, desc.material);
+		file >> desc.radius;
+		file >> desc.length;
+		rv = sdk->CreateShape(CDRoundConeIf::GetIfInfoStatic(), desc)->Cast();
 	}
 	return rv;
 }
