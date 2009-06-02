@@ -44,6 +44,7 @@ protected:
 	Vec3f average;
 public:
 	SPR_OBJECTDEF(CDConvexMesh);
+//	SPR_DECLMEMBEROF_CDConvexMeshDesc;
 
 	///	íTçıäJéní∏ì_î‘çÜ
 	mutable int curPos;

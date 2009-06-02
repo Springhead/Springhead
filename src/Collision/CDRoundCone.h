@@ -18,6 +18,7 @@ namespace Spr{;
 class CDRoundCone: public CDConvex, public CDRoundConeDesc{
 public:
 	SPR_OBJECTDEF(CDRoundCone);
+	SPR_DECLMEMBEROF_CDRoundConeDesc;
 
 	CDRoundCone();
 	//CDRoundCone(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}

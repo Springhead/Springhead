@@ -12,6 +12,7 @@
 #include <Foundation/Object.h>
 #include "CDShape.h"
 #include "CDCutRing.h"
+#include "CollisionDecl.hpp"
 
 namespace Spr{;
 

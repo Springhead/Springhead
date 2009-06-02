@@ -17,8 +17,8 @@ namespace Spr{;
 class CDConvexMeshInterpolate : public CDConvexMesh{
 public:
 	SPR_OBJECTDEF(CDConvexMeshInterpolate);
+	SPR_DECLMEMBEROF_CDConvexMeshInterpolateDesc;
 
-public:
 	CDConvexMeshInterpolate();
 	CDConvexMeshInterpolate(const CDConvexMeshInterpolateDesc& desc);
 	

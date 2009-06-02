@@ -52,9 +52,9 @@ void PHFrame::SetPose(Posed p){
 }
 
 void PHFrame::CompInertia(){
-	mass = shape->material.density * shape->CalcVolume();
+	mass = shape->GetMaterial().density * shape->CalcVolume();
 	center = shape->CalcCenterOfMass();
-	inertia = shape->material.density * shape->CalcMomentOfInertia();
+	inertia = shape->GetMaterial().density * shape->CalcMomentOfInertia();
 }
 
 ///////////////////////////////////////////////////////////////////

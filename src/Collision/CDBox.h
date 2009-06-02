@@ -37,8 +37,8 @@ class CDBox: public CDConvex{
 public:
 	mutable int curPos;
 	SPR_OBJECTDEF(CDBox);
-	
-	Vec3f boxsize;				/// 直方体のサイズ（各辺の長さ）
+	SPR_DECLMEMBEROF_CDBoxDesc;
+
 	CDQuadFaces qfaces;			/// 面（四角形:quadrangular face）
 	std::vector<Vec3f> base;	/// 頂点の座標(ローカル座標系)
 	

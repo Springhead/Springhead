@@ -20,6 +20,8 @@
 	float CalcVolume(){	return	base::CalcVolume();}	\
 	Vec3f CalcCenterOfMass(){	return	base::CalcCenterOfMass();}	\
 	Matrix3f CalcMomentOfInertia(){	return	base::CalcMomentOfInertia();}	\
+	Spr::PHMaterial GetMaterial(){	return	base::GetMaterial();}	\
+	void SetMaterial(Spr::PHMaterial mat){	base::SetMaterial(mat);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDShapePairIf(base)	\
 	Spr::CDShapeIf* GetShape(int i){	return	base::GetShape(i);}	\

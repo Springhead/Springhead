@@ -11,6 +11,8 @@
 
 namespace Spr{;
 
+struct PHMaterial;
+
 /**	\defgroup	gpShape	形状・接触判定クラス	*/	
 //@{
 /**	@file SprCDShape.h
@@ -60,6 +62,10 @@ struct CDShapeIf : public NamedObjectIf{
 	float	CalcVolume();			///< 体積を計算
 	Vec3f	CalcCenterOfMass();		///< 質量中心
 	Matrix3f CalcMomentOfInertia();	///< 単位密度における質量中心に関する慣性行列
+
+	PHMaterial	GetMaterial();
+	void		SetMaterial(PHMaterial mat);
+
 };
 
 ///	形状ペアの基本クラス

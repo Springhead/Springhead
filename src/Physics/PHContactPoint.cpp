@@ -95,7 +95,7 @@ void PHContactPoint::CompBias(){
 		contactCorrectionRate = engine->contactCorrectionRate;
 	}else{
 		//	’µ‚Ë•Ô‚èŒW”: 2•¨‘Ì‚Ì•½‹Ï’l‚ğg‚¤
-		e = 0.5 * (shapePair->shape[0]->material.e + shapePair->shape[1]->material.e);
+		e = 0.5 * (shapePair->shape[0]->GetMaterial().e + shapePair->shape[1]->GetMaterial().e);
 		//	’µ‚Ë•Ô‚é‚Æ‚«‚Í•â³‚È‚µ
 		contactCorrectionRate = 0;
 	}
@@ -140,15 +140,15 @@ void PHContactPoint::Projection(double& f, int k){
 	if(k == 0){	//‚’¼R—Í >= 0‚Ì§–ñ
 		f = max(0.0, f);
 		//	Å‘åÃ~–€C
-		flim = 0.5 * (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0) * f;	}
+		flim = 0.5 * (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0) * f;	}
 	else{
 		//	“®–€C‚ğ‚µ‚ÉÀ‘•‚µ‚Ä‚İ‚éB
 		double fu;
-		if (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0 == 0){
+		if (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0 == 0){
 			fu = 0;
 		}else{
-			fu = (shapePair->shape[0]->material.mu + shapePair->shape[1]->material.mu)
-				/ (shapePair->shape[0]->material.mu0 + shapePair->shape[1]->material.mu0)
+			fu = (shapePair->shape[0]->GetMaterial().mu + shapePair->shape[1]->GetMaterial().mu)
+				/ (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0)
 				* flim;	
 		}
 		if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	Ã~–€C
