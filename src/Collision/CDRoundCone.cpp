@@ -46,10 +46,10 @@ Vec3f CDRoundCone::Support(const Vec3f& p) const {
 	if (p.norm()!=0) {
 		dir = p / p.norm();
 	} else {
-		dir = Vec3f(1,0,0);
+		dir = Vec3f(0,0,0);
 	}
 
-	if (-M_PI/2.0 < normal_Z && normal_Z < M_PI/2.0) {
+	if (-1.0 < normal_Z && normal_Z < 1.0) {
 		if (normal_Z < dir.Z()) {
 			// p‚Ì•û‚ªZŽ²‘O•û ¨ radius[0]‚ðŽg—p
 			return dir*radius[0] + Vec3f(0,0, length/2.0);
@@ -71,8 +71,9 @@ Vec3f CDRoundCone::Support(const Vec3f& p) const {
 bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	//	Ø‚èŒû(ring.local)Œn‚Å‚Ì ƒJƒvƒZƒ‹‚ÌŒü‚«
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
+	std::cout << dir << std::endl;
 	float normal_Z = (radius[1] - radius[0]) / length;
-	if (M_PI/2.0 < normal_Z && normal_Z < M_PI/2.0) {
+	if (-1.0 < normal_Z && normal_Z < 1.0) {
 		float d = abs(-dir.X() - normal_Z);
 		if (d < 0.3f) { // ‘¤–Ê‚ªÚG–Ê‚É‚Ù‚Ú•½s‚Èê‡
 			float shrink = sqrt(1-d*d);	//	ŒX‚¢‚Ä‚¢‚é‚½‚ß‚É‹——£‚ªk‚ÞŠ„‡
