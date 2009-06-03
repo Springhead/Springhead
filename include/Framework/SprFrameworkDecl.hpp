@@ -1,3 +1,13 @@
+#define SPR_OVERRIDEMEMBERFUNCOF_FWBoneIf(base)	\
+	PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
+	void SetPHSolid(PHSolidIf* s){	base::SetPHSolid(s);}	\
+	GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
+	void SetGRFrame(GRFrameIf* f){	base::SetGRFrame(f);}	\
+	CDRoundConeIf* GetShape(){	return	base::GetShape();}	\
+	void SetShapeRadius(double r1, double r2){	base::SetShapeRadius(r1, r2);}	\
+	PHJointIf* GetJoint(){	return	base::GetJoint();}	\
+	void SetJointKDD2(double K, double D, double D2){	base::SetJointKDD2(K, D, D2);}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_FWObjectIf(base)	\
 	PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
 	void SetPHSolid(PHSolidIf* s){	base::SetPHSolid(s);}	\
@@ -18,8 +28,8 @@
 	void Step(){	base::Step();}	\
 	void Draw(GRRenderIf* grRender, bool debug){	base::Draw(grRender, debug);}	\
 	void AddHumanInterface(Spr::HIForceDevice6D* d){	base::AddHumanInterface(d);}	\
-	void SetFWBones(FWBoneIf* b){	base::SetFWBones(b);}	\
-	std::vector< UTRef< FWBoneIf > > GetFWBones(){	return	base::GetFWBones();}	\
+	void SetFWBones(Spr::FWBoneIf* b){	base::SetFWBones(b);}	\
+	std::vector< UTRef< Spr::FWBoneIf > > GetFWBones(){	return	base::GetFWBones();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSdkIf(base)	\
 	Spr::FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc){	return	base::CreateScene(phdesc, grdesc);}	\
@@ -41,14 +51,4 @@
 	void Step(){	base::Step();}	\
 	void Draw(){	base::Draw();}	\
 	void Reshape(int w, int h){	base::Reshape(w, h);}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_FWBoneIf(base)	\
-	PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
-	void SetPHSolid(PHSolidIf* s){	base::SetPHSolid(s);}	\
-	GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
-	void SetGRFrame(GRFrameIf* f){	base::SetGRFrame(f);}	\
-	CDRoundConeIf* GetShape(){	return	base::GetShape();}	\
-	void SetShapeRadius(double r1, double r2){	base::SetShapeRadius(r1, r2);}	\
-	PHJointIf* GetJoint(){	return	base::GetJoint();}	\
-	void SetJointKDD2(double K, double D, double D2){	base::SetJointKDD2(K, D, D2);}	\
 
