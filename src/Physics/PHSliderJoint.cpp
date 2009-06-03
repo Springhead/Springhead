@@ -37,10 +37,11 @@ void PHSliderJoint::UpdateJointState(){
 
 void PHSliderJoint::CompBias(){
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
+
 	if (engine->numIterCorrection==0){	//	Correction ‚ð‘¬“xLCP‚Ås‚¤ê‡
-		db.v() = Xjrel.r * dtinv;// + vjrel.v();
+		db.v()	 = Xjrel.r * dtinv;// + vjrel.v();
 		db.v().z = 0.0;
-//		db.w() = Xjrel.q.AngularVelocity((Xjrel.q - Quaterniond()) * dtinv);// + vjrel.w();
+		if(!bConstraintY) db.v().y = 0.0;
 		db.w() = Xjrel.q.RotationHalf() * dtinv;// + vjrel.w();
 		
 		db *= engine->velCorrectionRate;
@@ -50,13 +51,12 @@ void PHSliderJoint::CompBias(){
 	}
 	else if(spring != 0.0 || damper != 0.0){
 		double diff = GetPosition() - origin;
-		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
-		dA.v().z = tmp / GetScene()->GetTimeStep();
-		db.v().z = spring * (diff) * tmp;
-	}else{
-		dA.v().z = 0;
-		db.v().z = 0;
+		double tmp	= 1.0 / (damper + spring * GetScene()->GetTimeStep());
+		dA.v().z	= tmp / GetScene()->GetTimeStep();
+		db.v().z	= spring * (diff) * tmp;
 	}
+
+
 }
 
 void PHSliderJoint::CompError(){
