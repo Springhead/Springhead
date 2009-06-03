@@ -118,6 +118,22 @@ void FWAppSample::Keyboard(int key, int x, int y){
 		case 'd':
 			bDrawInfo = !bDrawInfo;
 			break;
+		case '1':
+			DSTR << "box" << std::endl;
+			CreateBox(GetSdk());
+			break;
+		case '2':
+			DSTR << "sphere" << std::endl;
+			CreateSphere(GetSdk());
+			break;
+		case '3':
+			DSTR << "capsule" << std::endl;
+			CreateCapsule(GetSdk());
+			break;
+		case '4':
+			DSTR << "roundcone" << std::endl;
+			CreateRoundCone(GetSdk());
+			break;
 		default:
 			break;
 	}
