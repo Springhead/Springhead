@@ -21,7 +21,10 @@ namespace Spr{;
 CDCapsule::CDCapsule() {
 }
 
-CDCapsule::CDCapsule(const CDCapsuleDesc& desc):CDCapsuleDesc(desc){
+CDCapsule::CDCapsule(const CDCapsuleDesc& desc){
+	material	= desc.material;
+	radius		= desc.radius;
+	length		= desc.length;
 }
 
 bool CDCapsule::IsInside(const Vec3f& p){

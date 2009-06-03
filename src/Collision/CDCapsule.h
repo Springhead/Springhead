@@ -15,7 +15,7 @@
 namespace Spr{;
 	
 /// ƒJƒvƒZƒ‹
-class CDCapsule: public CDConvex, public CDCapsuleDesc{
+class CDCapsule: public CDConvex{
 public:
 	SPR_OBJECTDEF(CDCapsule);
 	SPR_DECLMEMBEROF_CDCapsuleDesc;
