@@ -25,7 +25,7 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 
 	// 脚のRounConeに関するパラメータ
 	upperSizes = Vec2d(0.4, 0.2);
-	lowerSizes = Vec2d(0.2, 0.1);
+	lowerSizes = Vec2d(0.3, 0.8);//Vec2d(0.2, 0.1);
 	upperLength = 1.0;
 	lowerLength = 1.4;
 
@@ -95,18 +95,26 @@ PHSolidIf* CRFourLegsTinyAnimalBody::CreateBody(){
 	return solids.back();
 }
 PHSolidIf* CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr, PHSolidIf* sBody){	
-	CDRoundConeDesc		rcDesc;
 	PHSolidDesc			solidDesc;
 
 	// Solid
 	solidDesc.mass   = massFL;
 	solids.push_back(phScene->CreateSolid(solidDesc));
-
-	rcDesc.radius	 = upperSizes;
-	rcDesc.length	 = upperLength;
-
-	solids.back()->AddShape(phSdk->CreateShape(rcDesc));
-
+	if(shapeMode == MODE_ROUNDCONE){
+		CDRoundConeDesc	 rcDesc;
+		rcDesc.radius	 = upperSizes;
+		rcDesc.length	 = upperLength;
+		solids.back()->AddShape(phSdk->CreateShape(rcDesc));
+	} else if(shapeMode == MODE_BOX){
+		CDBoxDesc boxDesc;
+		boxDesc.boxsize = Vec3d(upperSizes[1], upperSizes[1], upperLength);
+		solids.back()->AddShape(phSdk->CreateShape(boxDesc));
+	} else if(shapeMode == MODE_CAPSULE){
+		CDCapsuleDesc capDesc;
+		capDesc.radius = upperSizes[1];
+		capDesc.length = upperLength;
+		solids.back()->AddShape(phSdk->CreateShape(capDesc));
+	} 
 	// 体幹と前脚間の関節
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
@@ -146,7 +154,7 @@ PHSolidIf* CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr, PHSolidIf* sBody){
 	return solids.back();
 }
 void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
-	CDRoundConeDesc		rcDesc;
+	
 	PHSolidDesc			solidDesc;
 	PHBallJointDesc		ballDesc;
 
@@ -154,10 +162,21 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
 	solidDesc.mass   = massFF;
 
 	solids.push_back(phScene->CreateSolid(solidDesc));
-	rcDesc.radius = lowerSizes;
-	rcDesc.length = lowerLength;
-	solids.back()->AddShape(phSdk->CreateShape(rcDesc));
-
+	if(shapeMode == MODE_ROUNDCONE){
+		CDRoundConeDesc		rcDesc;
+		rcDesc.radius = lowerSizes;
+		rcDesc.length = lowerLength;
+		solids.back()->AddShape(phSdk->CreateShape(rcDesc));
+	} else if(shapeMode == MODE_BOX){
+		CDBoxDesc boxDesc;
+		boxDesc.boxsize = Vec3d(lowerSizes[1], lowerSizes[1], lowerLength);
+		solids.back()->AddShape(phSdk->CreateShape(boxDesc));
+	} else if(shapeMode == MODE_CAPSULE){
+		CDCapsuleDesc capDesc;
+		capDesc.radius = lowerSizes[1];
+		capDesc.length = lowerLength;
+		solids.back()->AddShape(phSdk->CreateShape(capDesc));
+	} 
 	// 前脚-前足間の関節
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
@@ -195,7 +214,7 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
 
 }
 PHSolidIf* CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr, PHSolidIf* sBody){
-	CDRoundConeDesc		rcDesc;
+	
 	PHSolidDesc			solidDesc;
 	PHBallJointDesc		ballDesc;
 
@@ -203,10 +222,21 @@ PHSolidIf* CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr, PHSolidIf* sBody){
 	solidDesc.mass   = massRL;
 
 	solids.push_back(phScene->CreateSolid(solidDesc));
-	rcDesc.radius = upperSizes;
-	rcDesc.length = upperLength;
-	solids.back()->AddShape(phSdk->CreateShape(rcDesc));
-
+	if(shapeMode == MODE_ROUNDCONE){
+		CDRoundConeDesc		rcDesc;
+		rcDesc.radius = upperSizes;
+		rcDesc.length = upperLength;
+		solids.back()->AddShape(phSdk->CreateShape(rcDesc));
+	} else if(shapeMode == MODE_BOX){
+		CDBoxDesc boxDesc;
+		boxDesc.boxsize = Vec3d(upperSizes[1], upperSizes[1], upperLength);
+		solids.back()->AddShape(phSdk->CreateShape(boxDesc));
+	} else if(shapeMode == MODE_CAPSULE){
+		CDCapsuleDesc capDesc;
+		capDesc.radius = upperSizes[1];
+		capDesc.length = upperLength;
+		solids.back()->AddShape(phSdk->CreateShape(capDesc));
+	} 
 	// 体幹と後脚間の関節
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
@@ -245,17 +275,28 @@ PHSolidIf* CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr, PHSolidIf* sBody){
 	return solids.back();
 }
 void CRFourLegsTinyAnimalBody::InitRearLeg1(LREnum lr, PHSolidIf* sLeg0){
-	CDRoundConeDesc		rcDesc;
+	
 	PHSolidDesc			solidDesc;
 	PHBallJointDesc		ballDesc;
 
 	// Solid
 	solidDesc.mass   = massRF;
 	solids.push_back(phScene->CreateSolid(solidDesc));
-	rcDesc.radius = lowerSizes;
-	rcDesc.length = lowerLength;
-	solids.back()->AddShape(phSdk->CreateShape(rcDesc));
-
+	if(shapeMode == MODE_ROUNDCONE){
+		CDRoundConeDesc		rcDesc;
+		rcDesc.radius = lowerSizes;
+		rcDesc.length = lowerLength;
+		solids.back()->AddShape(phSdk->CreateShape(rcDesc));
+	} else if(shapeMode == MODE_BOX){
+		CDBoxDesc boxDesc;
+		boxDesc.boxsize = Vec3d(lowerSizes[1], lowerSizes[1], lowerLength);
+		solids.back()->AddShape(phSdk->CreateShape(boxDesc));
+	} else if(shapeMode == MODE_CAPSULE){
+		CDCapsuleDesc capDesc;
+		capDesc.radius = lowerSizes[1];
+		capDesc.length = lowerLength;
+		solids.back()->AddShape(phSdk->CreateShape(capDesc));
+	} 
 	//後脚-後足間の関節
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
