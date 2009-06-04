@@ -710,6 +710,12 @@ struct CRFourLegsTinyAnimalBodyDesc : CRBodyDesc{
 		BALL_MODE,
 	} jointType;
 
+	// 脚のポリゴンのタイプ
+	enum ShapeMode{
+		MODE_ROUNDCONE = 0,
+		MODE_BOX, MODE_CAPSULE, MODE_SPHERE,
+	} shapeMode;
+
 	/// 体幹に関するパラメータ
 	double bodyHeight, bodyBreadth, bodyThickness;
 

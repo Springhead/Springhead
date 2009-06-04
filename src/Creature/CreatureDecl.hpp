@@ -1130,6 +1130,7 @@ public:\
 #define SPR_DECLMEMBEROF_CRFourLegsTinyAnimalBodyDesc \
 protected:\
 	enum Spr::CRFourLegsTinyAnimalBodyDesc::CRTinyJointsMode	jointType;	\
+	enum Spr::CRFourLegsTinyAnimalBodyDesc::ShapeMode	shapeMode;	\
 	double	bodyHeight;	\
 	double	bodyBreadth;	\
 	double	bodyThickness;	\
@@ -1162,6 +1163,7 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRBody::SetDesc((CRBodyDesc*)(CRFourLegsTinyAnimalBodyDesc*)ptr);	\
 		jointType = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->jointType;	\
+		shapeMode = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->shapeMode;	\
 		bodyHeight = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyHeight;	\
 		bodyBreadth = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyBreadth;	\
 		bodyThickness = ((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyThickness;	\
@@ -1196,6 +1198,7 @@ public:\
 		BeforeGetDesc();	\
 		CRBody::GetDesc((CRBodyDesc*)(CRFourLegsTinyAnimalBodyDesc*)ptr);	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->jointType = jointType;	\
+		((CRFourLegsTinyAnimalBodyDesc*)ptr)->shapeMode = shapeMode;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyHeight = bodyHeight;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyBreadth = bodyBreadth;	\
 		((CRFourLegsTinyAnimalBodyDesc*)ptr)->bodyThickness = bodyThickness;	\
