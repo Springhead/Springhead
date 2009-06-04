@@ -25,13 +25,14 @@ public:
 	bool bOneStep;
 	bool bIK;
 
+	// ユーザの指
+	PHSolidIf* soCursor;
+	double zP;
+
 	// クリーチャ
 	CRCreatureIf                  *creature, *userhand;
 	CRBallHumanBodyDesc            descBody;
 	CRBallHumanBodyIf             *body, *userhandModel;
-	CREyeControllerIf             *eyeCtrl;
-	CRNeckControllerIf            *neckCtrl;
-	CRTouchSensorIf               *touchSensor;
 	CRReachingControllersIf       *reaches;
 
 	VirtualHuman();
@@ -42,8 +43,11 @@ public:
 	void Step();
 	void Display();		
 	void Keyboard(int key, int x, int y);
+	void MouseButton(int button, int state, int x, int y);
+	void MouseMove(int x, int y);
 
 	void OneStep();
+	void UpdateCursor(int x, int y);
 }; 
 
 extern VirtualHuman app;
