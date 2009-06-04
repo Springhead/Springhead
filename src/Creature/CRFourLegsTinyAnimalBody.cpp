@@ -28,7 +28,7 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 
 	// ‹r‚ÌRounCone‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^
 	upperSizes = Vec2d(0.4, 0.2);
-	lowerSizes = Vec2d(0.3, 0.8);//Vec2d(0.2, 0.1);
+	lowerSizes = Vec2d(0.3, 0.2);
 	upperLength = 1.0;
 	lowerLength = 1.4;
 
