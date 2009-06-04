@@ -312,7 +312,22 @@ void ObjectStates::LoadState(ObjectIf* o, char*& s){
 		LoadState(o->GetChildObject(i), s);
 	}
 }
-
+void ObjectStates::WriteState(ObjectIf* o, std::ofstream& fout){
+	if(!fout) return;
+	o->WriteState(fout);
+	size_t n = o->NChildObject();
+	for(size_t i = 0; i < n; i++){
+		WriteState(o->GetChildObject(i), fout);
+	}
+}
+void ObjectStates::ReadState(ObjectIf* o, std::ifstream& fin){
+	if(!fin) return;
+	o->ReadState(fin);
+	size_t n = o->NChildObject();
+	for(size_t i = 0; i < n; i++){
+		ReadState(o->GetChildObject(i), fin);
+	}
+}
 ObjectStatesIf* ObjectStatesIf::Create(){
 	ObjectStates* o = new ObjectStates;
 	return o->Cast();

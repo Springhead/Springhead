@@ -10,7 +10,8 @@
 
 #include <SprFoundation.h>
 #include <Base/Base.h>
-
+#include <iostream>
+#include <fstream>
 /*	hase memo
 	1. ObjectはObjectIfを継承しない．
 	2. ObjectIfはバーチャル関数を持たない．
@@ -257,6 +258,10 @@ public:
 	virtual const void* GetStateAddress() const { return NULL; }
 	///	状態の設定
 	virtual void SetState(const void* state){}
+	/// 状態の書き出し
+	virtual bool WriteState(std::ofstream& fout){ return false; }
+	/// 状態の読み込み
+	virtual void ReadState(std::ifstream& fin){}
 	///	状態のサイズ
 	virtual size_t GetStateSize() const { return 0; };
 	///	メモリブロックを状態型に初期化
@@ -436,6 +441,10 @@ public:
 	void LoadState(ObjectIf* o);
 	///	状態のメモリを解放する
 	void ReleaseState(ObjectIf* o);
+	/// 状態をファイルに書き出す
+	void WriteState(ObjectIf* o, std::ofstream& fout);
+	/// 状態をファイルから読み込む
+	void ReadState(ObjectIf* o, std::ifstream& fin);
 	///	状態のサイズを求める
 	size_t CalcStateSize(ObjectIf* o);
 };

@@ -12,6 +12,8 @@
 #define SPR_OBJECT_H
 #include "../SprBase.h"
 #include <iosfwd>
+#include <iostream>
+#include <fstream>
 
 namespace Spr{;
 
@@ -230,6 +232,10 @@ struct ObjectIf{
 	bool GetState(void* state) const;
 	/**	状態の設定	*/
 	void SetState(const void* state);
+	/** 状態の書き出し */
+	bool WriteState(std::ofstream& fout);
+	/** 状態の読み込み */
+	void ReadState(std::ifstream& fin);
 	/**	状態のサイズ	*/
 	size_t GetStateSize() const;
 	/**	メモリブロックを状態型に初期化	*/
@@ -312,6 +318,10 @@ struct ObjectStatesIf: public ObjectIf{
 	void SaveState(ObjectIf* o);
 	///	状態をロードする．
 	void LoadState(ObjectIf* o);
+	/// 状態を書き出す
+	void WriteState(ObjectIf* o, std::ofstream& fout);
+	/// 状態を読み込む
+	void ReadState(ObjectIf* o, std::ifstream& fin);
 	///	ObjectStateオブジェクトを作成する．
 	static ObjectStatesIf* SPR_CDECL Create();
 };
