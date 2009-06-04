@@ -146,6 +146,8 @@ public:
 	virtual void	DestructState(void* m) const ;
 	virtual bool	GetState(void* s) const ;
 	virtual void	SetState(const void* s);
+	virtual bool	WriteState(std::ofstream& fout);
+	virtual void	ReadState(std::ifstream& fin);
 };
 
 }	//	namespace Spr
