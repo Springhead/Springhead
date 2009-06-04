@@ -475,13 +475,14 @@ void PHScene::SetState(const void* s){
 }
 bool PHScene::WriteState(std::ofstream& fout){
 	if(!fout) return false;
-	//fout << *(PHSceneState*)this;
+	fout << *this;
 	if(constraintEngine){
 		constraintEngine->WriteState(fout);
 	}
 	return true;
 }
 void PHScene::ReadState(std::ifstream& fin){
+	if(!fin) return;
 	//fin >> *(PHSceneState*)this;
 	if(constraintEngine){
 		constraintEngine->ReadState(fin);

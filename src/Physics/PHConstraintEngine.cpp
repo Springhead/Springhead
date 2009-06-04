@@ -605,4 +605,20 @@ void PHConstraintEngine::SetState(const void* s){
 		}
 	}
 }
+
+bool PHConstraintEngine::WriteState(std::ofstream& fout){
+	if(!fout) return false;
+	Detector::WriteState(fout);
+	if(bSaveConstraints){
+		;
+	}
+	return true;
+}
+void PHConstraintEngine::ReadState(std::ifstream& fin){
+	if(!fin) return;
+	Detector::ReadState(fin);
+	if(bSaveConstraints){
+		;
+	}
+}
 }
