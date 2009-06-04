@@ -155,7 +155,8 @@ public:
 	virtual const void* GetStateAddress() const { return NULL; } // not supported.
 	virtual bool GetState(void* s) const;
 	virtual void SetState(const void* s);
-
+	virtual bool WriteState(std::ofstream& fout);
+	virtual void ReadState(std::ifstream& fin);
 protected:
 	virtual void BeforeGetDesc() const;
 };

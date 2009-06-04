@@ -473,6 +473,21 @@ void PHScene::SetState(const void* s){
 		constraintEngine->SetState(p);
 	}	
 }
+bool PHScene::WriteState(std::ofstream& fout){
+	if(!fout) return false;
+	//fout << *(PHSceneState*)this;
+	if(constraintEngine){
+		constraintEngine->WriteState(fout);
+	}
+	return true;
+}
+void PHScene::ReadState(std::ifstream& fin){
+	//fin >> *(PHSceneState*)this;
+	if(constraintEngine){
+		constraintEngine->ReadState(fin);
+	}
+}
+
 void PHScene::SetStateMode(bool bConstraints){
 	constraintEngine->bSaveConstraints = bConstraints;
 }
