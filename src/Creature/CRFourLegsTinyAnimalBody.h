@@ -44,17 +44,11 @@ public:
 	SPR_OBJECTDEF(CRFourLegsTinyAnimalBody);
 	ACCESS_DESC(CRFourLegsTinyAnimalBody);
 
-	enum ShapeMode{
-		MODE_ROUNDCONE = 0,
-		MODE_BOX, MODE_CAPSULE,
-	} shapeMode;
-
 	CRFourLegsTinyAnimalBody(){}
 	CRFourLegsTinyAnimalBody(const CRFourLegsTinyAnimalBodyDesc& desc, CRCreatureIf* c=NULL) 
 		: CRFourLegsTinyAnimalBodyDesc(desc) 
 		, CRBody((const CRBodyDesc&)desc, c)
 	{
-		shapeMode		= MODE_CAPSULE;//MODE_BOX;
 		PHSolidIf* b	= InitBody();
 		InitLegs(b);
 		InitContact();

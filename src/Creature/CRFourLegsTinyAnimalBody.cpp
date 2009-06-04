@@ -16,8 +16,11 @@ namespace Spr{
 //コンストラクタ
 CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 		
-	jointOrder = SOCKET_PARENT;
+	jointOrder	= SOCKET_PARENT;
 
+	jointType	= HINGE_MODE;
+	shapeMode	= MODE_CAPSULE;//MODE_BOX;
+	
 	// 体幹に関するパラメータ
 	bodyBreadth   = 2.5;
 	bodyHeight    = 3.8;
@@ -39,8 +42,6 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 	// バネ・ダンパ係数
 	springFront   = 1.0;  damperFront   =  5.0;
 	springRear    = 1.0;  damperRear    =  5.0;
-
-	jointType = HINGE_MODE;
 
 	// IF (jointType == BALL_MODE) THEN
 	// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
@@ -114,7 +115,11 @@ PHSolidIf* CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr, PHSolidIf* sBody){
 		capDesc.radius = upperSizes[1];
 		capDesc.length = upperLength;
 		solids.back()->AddShape(phSdk->CreateShape(capDesc));
-	} 
+	} else if(shapeMode == MODE_SPHERE){
+		CDSphereDesc sphDesc;
+		sphDesc.radius = (float)upperSizes[1];
+		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
+	}
 	// 体幹と前脚間の関節
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
@@ -176,6 +181,10 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
 		capDesc.radius = lowerSizes[1];
 		capDesc.length = lowerLength;
 		solids.back()->AddShape(phSdk->CreateShape(capDesc));
+	} else if(shapeMode == MODE_SPHERE){
+		CDSphereDesc sphDesc;
+		sphDesc.radius = (float)lowerSizes[1];
+		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
 	} 
 	// 前脚-前足間の関節
 	if(jointType == HINGE_MODE){
@@ -236,7 +245,11 @@ PHSolidIf* CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr, PHSolidIf* sBody){
 		capDesc.radius = upperSizes[1];
 		capDesc.length = upperLength;
 		solids.back()->AddShape(phSdk->CreateShape(capDesc));
-	} 
+	} else if(shapeMode == MODE_SPHERE){
+		CDSphereDesc sphDesc;
+		sphDesc.radius = (float)upperSizes[1];
+		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
+	}
 	// 体幹と後脚間の関節
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
@@ -296,7 +309,11 @@ void CRFourLegsTinyAnimalBody::InitRearLeg1(LREnum lr, PHSolidIf* sLeg0){
 		capDesc.radius = lowerSizes[1];
 		capDesc.length = lowerLength;
 		solids.back()->AddShape(phSdk->CreateShape(capDesc));
-	} 
+	} else if(shapeMode == MODE_SPHERE){
+		CDSphereDesc sphDesc;
+		sphDesc.radius = (float)lowerSizes[1];
+		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
+	}
 	//後脚-後足間の関節
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
