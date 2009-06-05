@@ -68,7 +68,7 @@ Vec3f CDConvexMeshInterpolate::Support(const Vec3f& v) const {
 	for (unsigned i=0; i<cn.size(); ++i){
 		double d = base[cn[i]] * v;
 		if (h-d < minDist){
-			nears.push_back(Near(cn[i], minDist - (h-d)));
+			nears.push_back(Near(cn[i], minDist - (h-(float)d)));
 			sum += nears.back().dist;
 		}
 	}

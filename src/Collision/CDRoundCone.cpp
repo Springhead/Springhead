@@ -35,7 +35,7 @@ bool CDRoundCone::IsInside(const Vec3f& p){
 float CDRoundCone::CalcVolume(){
 	return  2.0f/3.0f * (float)M_PI * radius[0] * radius[0] * radius[0] +
 			2.0f/3.0f * (float)M_PI * radius[1] * radius[1] * radius[1] +
-			(float)M_PI * (radius[0]*radius[0] + radius[0]*radius[1] + radius[1]*radius[1]) * length / 3.0;
+			(float)M_PI * (radius[0]*radius[0] + radius[0]*radius[1] + radius[1]*radius[1]) * length / 3.0f;
 }
 	
 // サポートポイントを求める

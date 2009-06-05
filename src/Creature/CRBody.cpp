@@ -47,7 +47,7 @@ int CRBody::NSolids(){
 }
 
 PHSolidIf* CRBody::GetSolid(int i){
-	return (i < solids.size()) ? solids[i] : NULL;
+	return ((size_t)i < solids.size()) ? solids[i] : NULL;
 }
 
 int CRBody::NJoints(){
@@ -55,7 +55,7 @@ int CRBody::NJoints(){
 }
 
 PHJointIf* CRBody::GetJoint(int i){
-	return (i < joints.size()) ? joints[i] : NULL;
+	return ((size_t)i < joints.size()) ? joints[i] : NULL;
 }
 
 int CRBody::NBallJoints(){
@@ -81,7 +81,7 @@ int CRBody::NIKNodes(){
 }
 
 PHIKNodeIf* CRBody::GetIKNode(int i){
-	return (i < ikNodes.size()) ? ikNodes[i] : NULL;
+	return ((size_t)i < ikNodes.size()) ? ikNodes[i] : NULL;
 }
 
 int CRBody::NControlPoints(){
@@ -89,7 +89,7 @@ int CRBody::NControlPoints(){
 }
 
 PHIKControlPointIf* CRBody::GetControlPoint(int i){
-	return (i < ikControlPoints.size()) ? ikControlPoints[i] : NULL;
+	return ((size_t)i < ikControlPoints.size()) ? ikControlPoints[i] : NULL;
 }
 
 Vec3d CRBody::GetCenterOfMass(){

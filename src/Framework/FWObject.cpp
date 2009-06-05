@@ -28,7 +28,7 @@ void FWObject::Sync(){
 			phSolid->GetPose().ToAffine(af);	
 			afParent=grFrame->GetParent()->GetWorldTransform();	//親のWorld座標からみたFrameを取得
 			afd=afParent.inv()*af;								//階層構造下のAffin行列に変換する
-			afl.PosZ()+=solidLength/2;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
+			afl.PosZ()+=(float)solidLength/2.0f;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
 			AF=afd*afl;
 			DCAST(GRFrame, grFrame)->SetTransform(AF);
 		}else{

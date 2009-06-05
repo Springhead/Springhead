@@ -28,7 +28,7 @@ public:
 	std::vector<Vec3d>	section;	///< 交差断面の頂点．個々がPHContactPointとなる．可視化のために保持
 	///	接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．
 	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1);
-	int NSectionVertexes(){return section.size();}		//(sectionの数を返す）
+	int NSectionVertexes(){return (int)section.size();}		//(sectionの数を返す）
 	Vec3d GetSectionVertex(int i){return section[i];}	//(i番目のsectionを返す）
 
 	///	接触面積．接触形状の頂点座標から面積を計算

@@ -1033,7 +1033,7 @@ public:
 		void Execute(UTLoadContext* fc){
 			//FrameTransformMatrix‚Ìæ“¾
 			GRMesh* mesh = NULL;
-			for(int i=0; !mesh && i<ldMesh->loadedObjects.size(); ++i){
+			for(size_t i=0; !mesh && i<ldMesh->loadedObjects.size(); ++i){
 				mesh = ldMesh->loadedObjects[i]->Cast();
 			}
 			//‹Œƒo[ƒWƒ‡ƒ“-------------------------------------------------
@@ -1074,7 +1074,7 @@ public:
 	void AfterCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		//PHScene‚Ìæ“¾
 		PHScene* phScene = FindPHScene(fc);
-		for(int i=0; i<ld->linkTo.size(); ++i){
+		for(size_t i=0; i<ld->linkTo.size(); ++i){
 			UTLoadedData* ldMesh = ld->linkTo[i];
 			fc->postTasks.push_back(DBG_NEW BoneCreator(ldMesh, phScene));
 		}
