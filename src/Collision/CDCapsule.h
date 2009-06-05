@@ -18,12 +18,7 @@ namespace Spr{;
 class CDCapsule: public CDConvex{
 public:
 	SPR_OBJECTDEF(CDCapsule);
-	SPR_DECLMEMBEROF_CDCapsuleDesc;
-
-	CDCapsule();
-	//CDCapsule(float r = 0.0f, Vec3f c = Vec3f()):radius(r), center(c){}
-	//CDCapsule(Vec3f c = Vec3f(), float r = 0.0f):center(c), radius(r){}
-	CDCapsule(const CDCapsuleDesc& desc);
+	CDCapsule(const CDCapsuleDesc& desc = CDCapsuleDesc());
 	
 	virtual bool IsInside(const Vec3f& p);
 	virtual float CalcVolume();

@@ -37,6 +37,10 @@ using namespace Spr;
 
 #define ESC		27
 
+//	床と物体の順番を入れ替えてデバッグするためのフラグ。当たり判定のデバッグで使った。
+#define CREATE_FLOOR
+
+
 bool bStep = true;
 UTRef<PHSdkIf> sdk;
 PHSolidDesc desc;
@@ -47,6 +51,7 @@ CDConvexMeshIf* meshConvex=NULL;
 CDBoxIf* meshBox=NULL;
 CDSphereIf* meshSphere=NULL;
 CDCapsuleIf* meshCapsule=NULL;
+CDRoundConeIf* meshRoundCone=NULL;
 PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soBox;
 
@@ -303,6 +308,44 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 				std::ostringstream os;
 				os << "capsule" << (unsigned int)soBox.size();
 				soBox.back()->SetName(os.str().c_str());
+
+			}break;
+		case 'C':
+			states->ReleaseState(scene);
+			{
+//				desc.dynamical = false;
+//				desc.velocity.y = -1.0;
+				soBox.push_back(scene->CreateSolid(desc));
+				desc.velocity.y = 0.0;
+				desc.dynamical = true;
+				soBox.back()->SetAngularVelocity(Vec3f(0,0,0.2));
+				soBox.back()->AddShape(meshRoundCone);
+				soBox.back()->SetFramePosition(Vec3f(0.5, 20,0));
+//				soBox.back()->SetFramePosition(Vec3f(0.5, 10+3*soBox.size(),0));
+				soBox.back()->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
+				std::ostringstream os;
+				os << "roundCone" << (unsigned int)soBox.size();
+				soBox.back()->SetName(os.str().c_str());
+#ifndef CREATE_FLOOR	
+	// soFloor用のdesc
+	desc.mass = 2.0;
+	desc.inertia = 2.0 * Matrix3d::Unit();
+	desc.mass = 1e20f;
+	desc.inertia *= 1e20f;
+	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
+	soFloor->SetDynamical(false);
+	soFloor->AddShape(meshFloor);
+	soFloor->SetFramePosition(Vec3f(0,-1,0));
+
+	soFloor->AddShape(meshWall);
+	soFloor->AddShape(meshWall);
+	soFloor->AddShape(meshWall);
+	soFloor->AddShape(meshWall);
+	soFloor->SetShapePose(1, Posed::Trn(-60, 0,   0));
+	soFloor->SetShapePose(2, Posed::Trn(  0, 0, -40));
+	soFloor->SetShapePose(3, Posed::Trn( 60, 0,   0));
+	soFloor->SetShapePose(4, Posed::Trn(  0, 0,  40));
+#endif
 			}break;
 		case 'd':
 			states->ReleaseState(scene);
@@ -500,13 +543,15 @@ int __cdecl main(int argc, char* argv[]){
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 	scene->SetStateMode(true);
 	states = ObjectStatesIf::Create();
-
+	
+#ifdef CREATE_FLOOR
 	// soFloor用のdesc
 	desc.mass = 1e20f;
 	desc.inertia *= 1e20f;
 	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 	soFloor->SetDynamical(false);
-	
+#endif
+
 	// soBox用のdesc
 	desc.mass = 2.0;
 	desc.inertia = 2.0 * Matrix3d::Unit();
@@ -526,6 +571,11 @@ int __cdecl main(int argc, char* argv[]){
 		cd.length = 1;
 		meshCapsule = XCAST(sdk->CreateShape(cd));
 		meshCapsule->SetName("meshCapsule");
+
+		CDRoundConeDesc rcd;
+		rcd.length = 3;
+		meshRoundCone= XCAST(sdk->CreateShape(rcd));
+		meshRoundCone->SetName("meshRoundCone");
 	}
 	{
 		CDConvexMeshDesc md;
@@ -547,14 +597,14 @@ int __cdecl main(int argc, char* argv[]){
 		}
 		CDConvexMeshDesc cmd;
 		cmd = md;
-		for(int i=0; i < 30; ++i){
+/*		for(int i=0; i < 30; ++i){
 			Vec3d v;
 			v.x = (rand() % 100 / 100.0 - 0.5) * 50;
 			v.y = (rand() % 100 / 100.0 - 0.5) * 5;
 			v.z = (rand() % 100 / 100.0 - 0.5) * 30;
 			cmd.vertices.push_back(v);
 		}
-		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(cmd));
+*/		meshFloor = DCAST(CDConvexMeshIf, sdk->CreateShape(cmd));
 		meshFloor->SetName("meshFloor");
 		
 		for(unsigned i=0; i<md.vertices.size(); ++i){
@@ -563,6 +613,9 @@ int __cdecl main(int argc, char* argv[]){
 		meshWall = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 		meshWall->SetName("meshWall");
 	}
+
+
+#ifdef CREATE_FLOOR
 	soFloor->AddShape(meshFloor);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
 
@@ -574,6 +627,7 @@ int __cdecl main(int argc, char* argv[]){
 	soFloor->SetShapePose(2, Posed::Trn(  0, 0, -40));
 	soFloor->SetShapePose(3, Posed::Trn( 60, 0,   0));
 	soFloor->SetShapePose(4, Posed::Trn(  0, 0,  40));
+#endif
 
 	scene->SetGravity(Vec3f(0,-30.0f, 0));	// 重力を設定
 	scene->SetTimeStep(0.05);

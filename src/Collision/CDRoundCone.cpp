@@ -40,29 +40,29 @@ float CDRoundCone::CalcVolume(){
 	
 // サポートポイントを求める
 Vec3f CDRoundCone::Support(const Vec3f& p) const {
-	// Z軸前方がradius[0]、後方がradius[1]
-	float normal_Z = (radius[1] - radius[0]) / length;
+	float normal_Z = (radius[0] - radius[1]) / length;
+	float n = p.norm();
 	Vec3f dir;
-	if (p.norm()!=0) {
-		dir = p / p.norm();
-	} else {
-		dir = Vec3f(0,0,0);
+	if(n < 1.0e-10f){
+		dir = Vec3f();
+	}else{
+		dir = p / n;
 	}
 
-	if (-1.0 < normal_Z && normal_Z < 1.0) {
+	if (-1 < normal_Z && normal_Z < 1) {
 		if (normal_Z < dir.Z()) {
-			// pの方がZ軸前方 → radius[0]を使用
-			return dir*radius[0] + Vec3f(0,0, length/2.0);
+			// pの方がZ軸前方 → radius[1]を使用
+			return dir*radius[1] + Vec3f(0,0, length/2.0);
 		} else {
-			// pの方がZ軸後方 → radius[1]を使用
-			return dir*radius[1] + Vec3f(0,0,-length/2.0);
+			// pの方がZ軸後方 → radius[0]を使用
+			return dir*radius[0] + Vec3f(0,0,-length/2.0);
 		}
 	} else {
 		// どちらかの球に包含されている
-		if (radius[1] < radius[0]) {
-			return dir*radius[0] + Vec3f(0,0, length/2.0);
+		if (radius[0] < radius[1]) {
+			return dir*radius[1] + Vec3f(0,0, length/2.0);
 		} else {
-			return dir*radius[1] + Vec3f(0,0,-length/2.0);
+			return dir*radius[0] + Vec3f(0,0,-length/2.0);
 		}
 	}
 }
@@ -71,35 +71,46 @@ Vec3f CDRoundCone::Support(const Vec3f& p) const {
 bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	//	切り口(ring.local)系での カプセルの向き
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
-	std::cout << dir << std::endl;
-	float normal_Z = (radius[1] - radius[0]) / length;
-	if (-1.0 < normal_Z && normal_Z < 1.0) {
-		float d = abs(-dir.X() - normal_Z);
-		if (d < 0.3f) { // 側面が接触面にほぼ平行な場合
-			float shrink = sqrt(1-d*d);	//	傾いているために距離が縮む割合
-			// float l_lat  = length * cos( Rad(90) - acos(normal_Z) );
-			float l_lat  = length;
-			float start  = -0.5f*l_lat*shrink;
-			float end    =  0.5f*l_lat*shrink;
-			
-			if (d > 1e-4) { // 完全な平行ではない場合
-				// 未実装
-			}
+	Vec3f center = ring.localInv * toW.Pos();
+	float sign = center.X() > 0 ? 1 : -1;
+	//	sinA : (r1-r0)/length になる。
+	//	sinB : Cutring面と円筒面の線とのなす角が B
+	//	sinA+B = dir.X() になる。
+	float sinA = (radius[1]-radius[0]) / length;
+	float sinB = dir.X()*sign * sqrt(1-sinA*sinA)  -  sqrt(1-dir.X()*dir.X()) * sinA;
 
-			//	ringに線分を追加
-			ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z()), -start));
-			ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z()), end));
-			ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y()), 0));
-			ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y()), 0));
-			return true;
-		} else {
-			return false;
-		}
-
-	} else {
-		// どちらかが包含されてに球体になっている
-		return false;
+	float r = radius[0];
+	if (sinB < 0){
+		dir = -dir;
+		sinA *= -1;
+		sinB *= -1;
+		r = radius[1];
 	}
+	center = center - (length/2) * dir;
+	if (sinB < 0.3f) { // 側面が接触面にほぼ平行な場合
+		float shrink = sqrt(1-dir.X()*dir.X());	//	傾いているために距離が縮む割合
+		float start = -0.0f*length*shrink;
+		float end = 1.0f*length*shrink;
+
+		if (sinB > 1e-4){	//	完全に平行でない場合
+			float depth = r/shrink - sign*center.X();
+			float cosB = sqrt(1-sinB*sinB);
+			float is = depth / sinB * cosB;	//	接触面と中心線を半径ずらした線との交点
+			if (is < end) end = is;
+			if (end+1e-4 < start){//0.001 < start){
+				DSTR << "CDRoundCone::FindCutRing() may have a problem" << std::endl;
+			}
+			if (end <= start) return false;
+		}
+		//	ringに線分を追加
+		float lenInv = 1/sqrt(dir.Y()*dir.Y() + dir.Z()*dir.Z());
+		ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z())*lenInv, -start));
+		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z())*lenInv, end));
+		ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y())*lenInv, 0));
+		ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y())*lenInv, 0));
+		return true;
+	}
+	return false;
 }
 
 Vec3d CDRoundCone::Normal(Vec3d p){

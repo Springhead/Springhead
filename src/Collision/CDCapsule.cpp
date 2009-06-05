@@ -18,9 +18,6 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	CDCapsule
-CDCapsule::CDCapsule() {
-}
-
 CDCapsule::CDCapsule(const CDCapsuleDesc& desc){
 	material	= desc.material;
 	radius		= desc.radius;
@@ -59,15 +56,17 @@ Vec3f CDCapsule::Support(const Vec3f& p) const {
 bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	//	切り口(ring.local)系での カプセルの向き
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
-	if (dir.X() < 0) dir = -dir;
+	Vec3f center = ring.localInv * toW.Pos();
+	int sign = center.X() > 0 ? 1 : -1;
+	if (dir.X()*sign < 0) dir = -dir;
+	center -= sign*dir * length/2;
 	
-	if (dir.X() < 0.3f){		//	カプセルが接触面に大体平行な場合
+	if (dir.X()*sign < 0.3f){		//	カプセルが接触面に大体平行な場合
 		float shrink = sqrt(1-dir.X()*dir.X());	//	傾いているために距離が縮む割合
-		float start = -0.0f*length*shrink;	//-0.5f*length*shrink;
-		float end = 1.0f*length*shrink;		//0.5f*length*shrink;
-		if (dir.X() > 1e-4){	//	完全に平行でない場合
-			Vec3f center = ring.localInv * toW.Pos();
-			float is = -(center.X()-radius/shrink) / dir.X() * shrink;	//	接触面と中心線を半径ずらした線との交点
+		float start = -0.0f*length*shrink;
+		float end = 1.0f*length*shrink;
+		if (dir.X()*sign > 1e-4){	//	完全に平行でない場合
+			float is = (radius/shrink-sign*center.X()) / (sign*dir.X()) * shrink;	//	接触面と中心線を半径ずらした線との交点
 			if (is < end) end = is;
 
 			if (end+1e-4 < start){//0.001 < start){
@@ -79,10 +78,11 @@ bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		}
 
 		//	ringに線分を追加
-		ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z()), -start));
-		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z()), end));
-		ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y()), 0));
-		ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y()), 0));
+		float lenInv = 1/sqrt(dir.Y()*dir.Y() + dir.Z()*dir.Z());
+		ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z())*lenInv, -start));
+		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z())*lenInv, end));
+		ring.lines.push_back(CDCutLine(Vec2f(dir.Z(), -dir.Y())*lenInv, 0));
+		ring.lines.push_back(CDCutLine(Vec2f(-dir.Z(), dir.Y())*lenInv, 0));
 		return true;
 	}else{
 		return false;

@@ -183,15 +183,15 @@ struct CDRoundConeIf: public CDConvexIf{
 	void  SetLength(float l);
 	void  SetWidth(Vec2f r) ;		///< 長さを変えないで，太さだけ変更する
 };	
-/** RoundConeのディスクリプタ　*/
+/** CDRoundConeIfのディスクリプタ　*/
 struct CDRoundConeDesc: public CDShapeDesc{
 	SPR_DESCDEF(CDRoundCone);
 	CDRoundConeDesc():CDShapeDesc(){
-		radius = Vec2f(1.0f, 1.0f);
+		radius = Vec2f(1.2f, 0.8f);
 		length = 1.0f;
 	}
-	Vec2f radius;					///< カプセルの球の半径
-	float length;					///< カプセルの長さ Z軸向きが長い
+	Vec2f radius;					///< カプセルの球の半径．Z-が radius[0], Z+が radius[1]．
+	float length;					///< 2つの球の中心間距離．
 };	
 	
 /** 直方体 */
