@@ -30,7 +30,7 @@ void FWMultiRateHapticApp::SetHapticPointer(PHSolidIf* pointer){
 	GetScene()->GetPHScene()->SetContactMode(hapticPointer, PHSceneDesc::MODE_NONE);
 }
 PHSolidIf* FWMultiRateHapticApp::GetHapticPointer(){ return hapticPointer; }
-int FWMultiRateHapticApp::GetNExpandedPHSolids(){ return expandedPHSolids.size(); }
+int FWMultiRateHapticApp::GetNExpandedPHSolids(){ return (int)expandedPHSolids.size(); }
 FWExpandedPHSolids* FWMultiRateHapticApp::GetFWExpandedPHSolids(){ 
 	return &expandedPHSolids;
 }
@@ -226,7 +226,7 @@ void FWMultiRateHapticApp::SyncHapticProcess(){
 
 		// 物理プロセス->力覚プロセス
 		// シーンで新しく生成された剛体を格納
-		for(int i = hprocess->expandedPHSolids.size(); i < expandedPHSolids.size(); i++){
+		for(size_t i = hprocess->expandedPHSolids.size(); i < expandedPHSolids.size(); i++){
 			hprocess->expandedPHSolids.resize(hprocess->expandedPHSolids.size() + 1);
 			hprocess->expandedPHSolids.back() = expandedPHSolids[i];
 		}

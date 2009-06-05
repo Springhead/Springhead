@@ -319,6 +319,7 @@ void ObjectStates::WriteState(ObjectIf* o, std::ofstream& fout){
 	for(size_t i = 0; i < n; i++){
 		WriteState(o->GetChildObject(i), fout);
 	}
+	fout.close();
 }
 void ObjectStates::ReadState(ObjectIf* o, std::ifstream& fin){
 	if(!fin) return;
@@ -327,6 +328,7 @@ void ObjectStates::ReadState(ObjectIf* o, std::ifstream& fin){
 	for(size_t i = 0; i < n; i++){
 		ReadState(o->GetChildObject(i), fin);
 	}
+	fin.close();
 }
 ObjectStatesIf* ObjectStatesIf::Create(){
 	ObjectStates* o = new ObjectStates;

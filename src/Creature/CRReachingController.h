@@ -109,9 +109,9 @@ public:
 			CRReachingControllerIf*  reachCtl = creature->CreateController(reachDesc)->Cast();
 			controllers.push_back(reachCtl);
 			
-			for (size_t i=0; i<creature->NBodies(); ++i) {
+			for (int i=0; i<creature->NBodies(); ++i) {
 				CRBodyIf* body = creature->GetBody(i);
-				for (size_t j=0; j<body->NControlPoints(); ++j) {
+				for (int j=0; j<body->NControlPoints(); ++j) {
 					PHIKPosCtlIf* posCtl = body->GetControlPoint(j)->Cast();
 					if (posCtl && posCtl->GetSolid() == solid) {
 						reachCtl->SetIKCP(posCtl);

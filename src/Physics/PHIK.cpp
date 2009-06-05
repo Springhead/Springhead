@@ -81,7 +81,7 @@ void PHIKEngine::Step(){
 
 			int iter = numIter;
 			if (iter < 0) { iter = 200; }
-			for(size_t n=0; n<iter; n++){
+			for(int n=0; n<iter; n++){
 				double dErr = 0;
 				for(size_t i=0; i<nodes.size(); ++i){
 					nodes[i]->ProceedSolve();

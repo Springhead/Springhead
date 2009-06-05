@@ -107,7 +107,7 @@ CDRoundConeIf* FWBoneCreate::BoneShapeCone(GRFrameIf* frame1,GRFrameIf* frame2){
 	double lengthRate=1;
 	double length=BoneLength(frame1,frame2);
 	CDRoundConeDesc desc;
-	desc.length=(length-wide*2)*lengthRate;
+	desc.length=((float)length-(float)wide*2.0f)*((float)lengthRate);
 	desc.radius=Vec2f(wide,wide);
 	shapeBone.push_back(XCAST(fwSdk->GetPHSdk()->CreateShape(desc)));
 	return shapeBone[shapeBone.size()-1];
@@ -168,7 +168,7 @@ void FWBoneCreate::GenerateBone(){
 /*ジョイントを作成*/
 void FWBoneCreate::FWJointCreate(){
 	if (bone.size()){
-		for(int i=0 ;i<bone.size(); ++i){
+		for(size_t i=0 ;i<bone.size(); ++i){
 			if(!(bone[i]->parentBone==NULL)){
 				PH3ElementBallJointDesc d3Ball;
 				{
@@ -189,12 +189,12 @@ void FWBoneCreate::FWJointCreate(){
 /*接触判定の設定(隣合う剛体の接触を切る)*/
 void FWBoneCreate::ContactCanceler(){
 	if (bone.size()){
-		for(int i=0 ;i<bone.size(); ++i){
+		for(size_t i=0 ;i<bone.size(); ++i){
 			if(!(bone[i]->parentBone==NULL)){
 				//親子の接触を切る
 				phSceneIf->SetContactMode(bone[i]->parentBone->phSolid, bone[i]->phSolid, PHSceneDesc::MODE_NONE);
 				//同じ親をもつ剛体の接触を切る
-				for(int j=0 ;j<bone.size(); ++j){
+				for(size_t j=0 ;j<bone.size(); ++j){
 					if(!(bone[j]->parentBone==NULL)){
 						if(!(j==i)){
 							if(bone[i]->parentBone->grFrame->GetName()==bone[j]->parentBone->grFrame->GetName()){
@@ -209,7 +209,7 @@ void FWBoneCreate::ContactCanceler(){
 }
 
 void FWBoneCreate::FWSkinMeshAdapt(){
-	for(int i=0; i<bone.size(); ++i){
+	for(size_t i=0; i<bone.size(); ++i){
 		//ボーン１の設定をする（並行行列のみのアフィン行列更新）
 		fwObject.push_back(fwSdk->GetScene()->CreateFWObject());
 		fwObject[i]->SetPHSolid(bone[i]->phSolid);

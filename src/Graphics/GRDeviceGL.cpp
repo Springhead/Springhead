@@ -410,7 +410,7 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 		// 0から256のコードの文字を、DisplayListのbase番目から登録.
 		// wglUseFontBitmaps()関数、使用して、生成したフォントをディスプレイリストに割当てる.
 		hOldFont = (HFONT)SelectObject(hDC, hFont);			
-		bool b = wglUseFontBitmaps(hDC, 0, range, fontBase);
+		BOOL b = wglUseFontBitmaps(hDC, 0, range, fontBase);
 		if (!b){
 			DWORD e = GetLastError();
 			char* lpMsgBuf;

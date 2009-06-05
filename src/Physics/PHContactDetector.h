@@ -319,7 +319,33 @@ public:
 			}
 		}
 	}
-
+	virtual bool WriteState(std::ofstream& fout){
+		if(!fout) return false;
+		size_t nSolidPair = (size_t) NSolidPairs();
+		size_t nShapePair = (size_t) NShapePairs();
+		fout.write((char*) &nSolidPair, sizeof(size_t));
+		fout.write((char*) &nShapePair, sizeof(size_t));
+		size_t w = (size_t) solidPairs.width();
+		fout.write((char*)&w, sizeof(size_t));
+		TSolidPair sp;
+		for(size_t j = 1; j < w; ++j){
+			for(size_t i = 0; i < j; ++i){
+				sp = *(solidPairs.item(i, j));
+				/*sp.GetSt(solidStates[soliPos]);
+				++solidPos;
+				for(int r = 0; r < sp.shapePairs.height(); ++r){
+					shapeStates[shapePos] = *(CDShapePairSt)(sp.shapePairs.item(r, c));
+					++shapePos;
+				}*/
+			}
+		}
+		return true;
+	}
+	virtual void ReadState(std::ifstream& fin){
+		if(!fin) return;
+		
+		return;
+	}
 	///< Solid‚ÉShape‚ª’Ç‰Á‚³‚ê‚½‚Æ‚«‚ÉSolid‚©‚çŒÄ‚Î‚ê‚é
 	void UpdateShapePairs(PHSolid* solid){
 		int isolid = (int)(solids.Find(solid) - &solids[0]);

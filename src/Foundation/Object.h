@@ -177,6 +177,12 @@ public:
 	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;		\
 		*(cls##StatePrivate*)this =													\
 			*(cls##StatePrivate*) ((char*)s + sizeof(cls##State) ); }				\
+	virtual bool WriteState(std::ofstream& fout){									\
+		if(!fout) return false;														\
+		cls##State p = *this;	fout.write((char*)&p, sizeof(cls##State)); return true;	} \
+	virtual void ReadState(std::ifstream& fin){										\
+		if(!fin) return;															\
+		cls##State p; fin.read((char*)&p, sizeof(cls##State)); *(cls##State*) this = p; }\
 
 #define ACCESS_STATE(cls)															\
 	virtual size_t GetStateSize() const { return sizeof(cls##State); }				\
@@ -185,6 +191,12 @@ public:
 	virtual const void* GetStateAddress() const { return (cls##State*)this; }		\
 	virtual bool GetState(void* s) const { *(cls##State*)s=*this; return true; }	\
 	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
+	virtual bool WriteState(std::ofstream& fout){									\
+		if(!fout) return false;														\
+		cls##State p = *this;	fout.write((char*)&p, sizeof(cls##State)); return true;	} \
+	virtual void ReadState(std::ifstream& fin){										\
+		if(!fin) return;															\
+		cls##State p; fin.read((char*)&p, sizeof(cls##State)); *(cls##State*) this = p; }\
 
 #define ACCESS_PRIVATE(cls)																			\
 	virtual size_t GetStateSize() const { return sizeof(cls##StatePrivate); }						\
@@ -193,6 +205,12 @@ public:
 	virtual const void* GetStateAddress() const { return (cls##StatePrivate*)this; }				\
 	virtual bool GetState(void* s) const { *(cls##StatePrivate*)s=*this; return true; }				\
 	virtual void SetState(const void* s){ *(cls##StatePrivate*)this = *(cls##StatePrivate*)s;}		\
+	virtual bool WriteState(std::ofstream& fout){									\
+		if(!fout) return false;														\
+		cls##StatePrivate p = *this;	fout.write((char*)&p, sizeof(cls##StatePrivate)); return true;	} \
+	virtual void ReadState(std::ifstream& fin){										\
+		if(!fin) return;															\
+		cls##State p; fin.read((char*)&p, sizeof(cls##State)); *(cls##State*) this = p; }\
 
 ///	デスクリプタの設定・取得などアクセス用関数の定義
 #define ACCESS_DESC(cls)															\
@@ -441,7 +459,7 @@ public:
 	void LoadState(ObjectIf* o);
 	///	状態のメモリを解放する
 	void ReleaseState(ObjectIf* o);
-	/// 状態をファイルに書き出す
+	/// 状態をファイルに書き出す, foutはstd::ios::binaryを有効化すること
 	void WriteState(ObjectIf* o, std::ofstream& fout);
 	/// 状態をファイルから読み込む
 	void ReadState(ObjectIf* o, std::ifstream& fin);
