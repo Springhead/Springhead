@@ -18,6 +18,8 @@ namespace Spr{;
 class CDCapsule: public CDConvex{
 public:
 	SPR_OBJECTDEF(CDCapsule);
+	SPR_DECLMEMBEROF_CDCapsuleDesc;
+
 	CDCapsule(const CDCapsuleDesc& desc = CDCapsuleDesc());
 	
 	virtual bool IsInside(const Vec3f& p);
