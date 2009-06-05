@@ -517,6 +517,15 @@ pose[0] はソケットを取り付ける剛体（CreateJoint の第1引数)の座標系に対するソケッ
 同様に pose[1] はプラグを取り付ける剛体（CreateJoint の第2引数)の座標系に対するプラグの位置・傾きを表わします．
 <br><br><br>
 
+\subsection joint_enable	関節のモード
+関節にはTORQUE,VEROCITY,POSITIONの3つのモードがあります．
+モードTORQUEでは関節はトルク制御をします．
+モードVEROCITYでは，速度の制御を行います．
+モードPOSITIONでは位置の制御ができるようになります．また，ばね・ダンパを使用することができます．
+設定を行わない場合はモードPOSITIONになっています
+モードの変更は
+\link Spr::PHJointIf::SetMode() PHJointIf::SetMode \endlink で行うことができます．
+<br><br><br>
 
 \subsection joint_enable 	関節の有効化・無効化
 関節を作成する処理は比較的ハイコストです．このため，一時的に関節による拘束を解除し，しばらくして
@@ -569,6 +578,41 @@ pose[0] はソケットを取り付ける剛体（CreateJoint の第1引数)の座標系に対するソケッ
 と表わされます．ここで\f$q\f$は関節変位，\f$\dot{q}\f$は関節速度です．
 <br><br><br>
 
+\subsection ball_joint 		球関節
+球関節とは，3 自由度の回転運動を実現する関節で，
+以下のようになります：
+- \ref joint_ball
+
+球関節は PHJoint を親クラスに持ち，共通のインタフェースで状態の取得や操作が可能です．
+
+関節変位の回転成分を取得するには\link Spr::PHConstraintIf::GetRelativePoseQ() PHConstraintIf::GetRelativePoseQ\endlinkを呼びます．
+関節速度（関節変位の時間変化率）を取得するには 
+\link Spr::PHBallJointIf::GetRerativeVerocity() PHBallJointIf::GetRerativeVerocity \endlink を呼びます．
+
+関節力を設定するには \link Spr::PHBallJointIf::SetMotorTorque() PHBallJointIf::SetMotorTorque \endlink を呼びます．
+関節力とは，運動方向に沿って加えられる力でベクトルになっています．
+関節に取り付けられたモータが出す力と考えれば分かりやすいでしょう．
+剛体に加わる力（\link Spr::PHSolidIf::AddForce() PHSolidIf::AddForce\endlinkで設定される）と異なり，
+関節力は \link Spr::PHSceneIf::Step() PHSceneIf::Step\endlink を実行してもクリアされません．
+現在設定されている関節力を取得するには \link Spr::PHBallJointIf::GetMotorTorque() PHBallJointIf::GetMotorTorque \endlink を呼びます．
+
+\link Spr::PHBallJointIf::SetlimitSwing PHJointIf::SetlimitSwing\endlink,\link Spr::PHBallJointIf::SetlimitTwist PHBallJointIf::SetlimitTwist\endlink
+を呼ぶことで可動範囲を制限できます．このときSwingは剛体の倒れこみ角で，Twistはひねりの制限を与えます．
+
+関節にバネやダンパを取り付けることができます．
+バネ係数を取得・設定するには
+\link Spr::PHBallJointIf::GetSpring() PHBallJointIf::GetSpring \endlink, 
+\link Spr::PHBallJointIf::SetSpring() PHBallJointIf::SetSpring \endlink
+を呼びます．また，バネの基準変位を取得・設定するには
+\link Spr::PHBallJointIf::GetSpringOrigin() PHBallJointIf::GetGoal \endlink, 
+\link Spr::PHBallJointIf::SetGoal() PHBallJointIf::SetGoal \endlink
+を呼びます．
+ダンパ係数を取得・設定するには
+\link Spr::PHBallJointIf::GetDamper() PHBallJointIf::GetDamper \endlink, 
+\link Spr::PHBallJointIf::SetDamper() PHBallJointIf::SetDamper \endlink
+を呼びます．
+<br><br><br>
+
 
 \subsection joint_hinge 	ヒンジ
 
@@ -588,7 +632,7 @@ pose[0] はソケットを取り付ける剛体（CreateJoint の第1引数)の座標系に対するソケッ
 <br><br><br>
 
 
-\subsection joint_boll  ボールジョイント
+\subsection joint_ball  ボールジョイント
 
 \image html balljoint.png
 
