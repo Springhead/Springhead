@@ -473,22 +473,47 @@ void PHScene::SetState(const void* s){
 		constraintEngine->SetState(p);
 	}	
 }
-bool PHScene::WriteState(std::ofstream& fout){
-	if(!fout) return false;
-	PHSceneState p = *this;
-	fout.write((char*)&p, sizeof(PHSceneState));
-	if(constraintEngine){
-		constraintEngine->WriteState(fout);
+void PHScene::WriteStatePointers(std::ofstream& fout, const void* stIn){
+	PHSceneState* state = (PHSceneState*)stIn;
+	PHContactDetectorSt* dst = (PHContactDetectorSt*)(void*)(state+1);
+	fout.write((char*)dst, sizeof(*dst));
+	
+	if (constraintEngine->bSaveConstraints){
+		PHConstraintsSt* cst = (PHConstraintsSt*)(void*)(dst+1);
+
+		size_t sz = cst->gears.size();
+		fout.write((char*)&sz, sizeof(sz));
+		fout.write((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*cst->gears.size());
+
+		sz = cst->joints.size();
+		fout.write((char*)&sz, sizeof(sz));
+		fout.write((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*cst->joints.size());
+
+		sz = cst->points.size();
+		fout.write((char*)&sz, sizeof(sz));
+		fout.write((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*cst->points.size());
 	}
-	return true;
 }
-void PHScene::ReadState(std::ifstream& fin){
-	if(!fin) return;
-	PHSceneState p;
-	fin.read((char*)&p, sizeof(PHSceneState));
-	*(PHSceneState*) this = p;
-	if(constraintEngine){
-		constraintEngine->ReadState(fin);
+void PHScene::ReadStatePointers(std::ifstream& fin, void* stIn){
+	PHSceneState* state = (PHSceneState*)stIn;
+	PHContactDetectorSt* dst = (PHContactDetectorSt*)(void*)(state+1);
+	fin.read((char*)dst, sizeof(*dst));
+
+	if (constraintEngine->bSaveConstraints){
+		PHConstraintsSt* cst = (PHConstraintsSt*)(void*)(dst+1);
+		size_t sz;
+
+		fin.read((char*)&sz, sizeof(sz));
+		cst->gears.resize(sz);
+		fin.read((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*cst->gears.size());
+
+		fin.read((char*)&sz, sizeof(sz));
+		cst->joints.resize(sz);
+		fin.read((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*cst->joints.size());
+
+		fin.read((char*)&sz, sizeof(sz));
+		cst->points.resize(sz);
+		fin.read((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*cst->points.size());
 	}
 }
 

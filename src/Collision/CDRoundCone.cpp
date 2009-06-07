@@ -72,7 +72,7 @@ bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	//	切り口(ring.local)系での カプセルの向き
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
 	Vec3f center = ring.localInv * toW.Pos();
-	float sign = center.X() > 0 ? 1 : -1;
+	float sign = center.X() > 0.0f ? 1.0f : -1.0f;
 	//	sinA : (r1-r0)/length になる。
 	//	sinB : Cutring面と円筒面の線とのなす角が B
 	//	sinA+B = dir.X() になる。

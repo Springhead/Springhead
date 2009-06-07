@@ -233,9 +233,9 @@ struct ObjectIf{
 	/**	状態の設定	*/
 	void SetState(const void* state);
 	/** 状態の書き出し */
-	bool WriteState(std::ofstream& fout);
+	bool WriteState(std::ostream& fout);
 	/** 状態の読み込み */
-	void ReadState(std::ifstream& fin);
+	void ReadState(std::istream& fin);
 	/**	状態のサイズ	*/
 	size_t GetStateSize() const;
 	/**	メモリブロックを状態型に初期化	*/
@@ -318,12 +318,13 @@ struct ObjectStatesIf: public ObjectIf{
 	void SaveState(ObjectIf* o);
 	///	状態をロードする．
 	void LoadState(ObjectIf* o);
-	/// 状態を書き出す
-	void WriteState(ObjectIf* o, std::ofstream& fout);
-	/// 状態を読み込む
-	void ReadState(ObjectIf* o, std::ifstream& fin);
 	///	ObjectStateオブジェクトを作成する．
 	static ObjectStatesIf* SPR_CDECL Create();
+
+	//	状態をファイルに書き出す
+	static void WriteState(ObjectIf* o, std::ostream& os);
+	//	状態をファイルから読み出す
+	static void ReadState(ObjectIf* o, std::istream& is);
 };
 
 }

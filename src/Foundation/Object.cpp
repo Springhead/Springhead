@@ -170,6 +170,27 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 	}
 	return NULL;
 }
+bool Object::WriteState(std::ostream& fout){
+	unsigned ss = GetStateSize();
+	char* state = DBG_NEW char [ss];
+	ConstructState(state);
+	GetState(state);
+	fout.write(state, ss);
+	WriteStatePointers(fout, state);
+	DestructState(state);
+	delete state;
+	return true;
+}
+void Object::ReadState(std::istream& fin){
+	unsigned ss = GetStateSize();
+	char* state = DBG_NEW char [ss];
+	ConstructState(state);
+	fin.read(state, ss);
+	SetState(state);
+	ReadStatePointers(fin, state);
+	DestructState(state);
+	delete state;
+}
 
 //----------------------------------------------------------------------------
 //	NamedObject
@@ -312,27 +333,26 @@ void ObjectStates::LoadState(ObjectIf* o, char*& s){
 		LoadState(o->GetChildObject(i), s);
 	}
 }
-void ObjectStates::WriteState(ObjectIf* o, std::ofstream& fout){
-	if(!fout) return;
-	o->WriteState(fout);
-	size_t n = o->NChildObject();
-	for(size_t i = 0; i < n; i++){
-		WriteState(o->GetChildObject(i), fout);
-	}
-	fout.close();
-}
-void ObjectStates::ReadState(ObjectIf* o, std::ifstream& fin){
-	if(!fin) return;
-	o->ReadState(fin);
-	size_t n = o->NChildObject();
-	for(size_t i = 0; i < n; i++){
-		ReadState(o->GetChildObject(i), fin);
-	}
-	fin.close();
-}
 ObjectStatesIf* ObjectStatesIf::Create(){
 	ObjectStates* o = new ObjectStates;
 	return o->Cast();
+}
+//	状態をファイルに書き出す
+void ObjectStatesIf::WriteState(ObjectIf* o, std::ostream& os){
+	o->WriteState(os);
+	size_t n = o->NChildObject();
+	for(size_t i=0; i<n; ++i){
+		WriteState(o->GetChildObject(i), os);
+	}	
+}
+//	状態をファイルから読み出す
+void ObjectStatesIf::ReadState(ObjectIf* o, std::istream& is){
+	o->ReadState(is);
+	size_t n = o->NChildObject();
+
+	for(size_t i=0; i<n; ++i){
+		ReadState(o->GetChildObject(i), is);
+	}	
 }
 
 

@@ -17,8 +17,8 @@
 	const void* GetStateAddress()const{	return	base::GetStateAddress();}	\
 	bool GetState(void* state)const{	return	base::GetState(state);}	\
 	void SetState(const void* state){	base::SetState(state);}	\
-	bool WriteState(std::ofstream& fout){	return	base::WriteState(fout);}	\
-	void ReadState(std::ifstream& fin){	base::ReadState(fin);}	\
+	bool WriteState(std::ostream& fout){	return	base::WriteState(fout);}	\
+	void ReadState(std::istream& fin){	base::ReadState(fin);}	\
 	size_t GetStateSize()const{	return	base::GetStateSize();}	\
 	void ConstructState(void* m)const{	base::ConstructState(m);}	\
 	void DestructState(void* m)const{	base::DestructState(m);}	\
@@ -37,8 +37,6 @@
 	size_t CalcStateSize(Spr::ObjectIf* o){	return	base::CalcStateSize(o);}	\
 	void SaveState(Spr::ObjectIf* o){	base::SaveState(o);}	\
 	void LoadState(Spr::ObjectIf* o){	base::LoadState(o);}	\
-	void WriteState(Spr::ObjectIf* o, std::ofstream& fout){	base::WriteState(o, fout);}	\
-	void ReadState(Spr::ObjectIf* o, std::ifstream& fin){	base::ReadState(o, fin);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_NameManagerIf(base)	\
 	Spr::NamedObjectIf* FindObject(UTString name, UTString cls){	return	base::FindObject(name, cls);}	\

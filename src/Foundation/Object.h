@@ -180,7 +180,7 @@ public:
 	virtual bool WriteState(std::ofstream& fout){									\
 		if(!fout) return false;														\
 		cls##State p = *this;	fout.write((char*)&p, sizeof(cls##State)); return true;	} \
-	virtual void ReadState(std::ifstream& fin){										\
+	virtual void ReadState(std::istream& fin){										\
 		if(!fin) return;															\
 		cls##State p; fin.read((char*)&p, sizeof(cls##State)); *(cls##State*) this = p; }\
 
@@ -191,10 +191,10 @@ public:
 	virtual const void* GetStateAddress() const { return (cls##State*)this; }		\
 	virtual bool GetState(void* s) const { *(cls##State*)s=*this; return true; }	\
 	virtual void SetState(const void* s){ *(cls##State*)this = *(cls##State*)s;}	\
-	virtual bool WriteState(std::ofstream& fout){									\
+	virtual bool WriteState(std::ostream& fout){									\
 		if(!fout) return false;														\
 		cls##State p = *this;	fout.write((char*)&p, sizeof(cls##State)); return true;	} \
-	virtual void ReadState(std::ifstream& fin){										\
+	virtual void ReadState(std::istream& fin){										\
 		if(!fin) return;															\
 		cls##State p; fin.read((char*)&p, sizeof(cls##State)); *(cls##State*) this = p; }\
 
@@ -205,10 +205,10 @@ public:
 	virtual const void* GetStateAddress() const { return (cls##StatePrivate*)this; }				\
 	virtual bool GetState(void* s) const { *(cls##StatePrivate*)s=*this; return true; }				\
 	virtual void SetState(const void* s){ *(cls##StatePrivate*)this = *(cls##StatePrivate*)s;}		\
-	virtual bool WriteState(std::ofstream& fout){									\
+	virtual bool WriteState(std::ostream& fout){									\
 		if(!fout) return false;														\
 		cls##StatePrivate p = *this;	fout.write((char*)&p, sizeof(cls##StatePrivate)); return true;	} \
-	virtual void ReadState(std::ifstream& fin){										\
+	virtual void ReadState(std::istream& fin){										\
 		if(!fin) return;															\
 		cls##State p; fin.read((char*)&p, sizeof(cls##State)); *(cls##State*) this = p; }\
 
@@ -276,10 +276,14 @@ public:
 	virtual const void* GetStateAddress() const { return NULL; }
 	///	状態の設定
 	virtual void SetState(const void* state){}
-	/// 状態の書き出し
-	virtual bool WriteState(std::ofstream& fout){ return false; }
+	/// 状態のファイルへの書き出し
+	virtual bool WriteState(std::ostream& fout);
+	///	状態がポインタを持つ場合のポインタの先のデータのファイルへの書き出し
+	virtual void WriteStatePointers(std::ostream& fout, const void* state){}
 	/// 状態の読み込み
-	virtual void ReadState(std::ifstream& fin){}
+	virtual void ReadState(std::istream& fin);
+	///	状態がポインタを持つ場合のポインタの先のデータのファイルへの書き出し
+	virtual void ReadStatePointers(std::istream& fin, void* state){}
 	///	状態のサイズ
 	virtual size_t GetStateSize() const { return 0; };
 	///	メモリブロックを状態型に初期化
@@ -459,10 +463,6 @@ public:
 	void LoadState(ObjectIf* o);
 	///	状態のメモリを解放する
 	void ReleaseState(ObjectIf* o);
-	/// 状態をファイルに書き出す, foutはstd::ios::binaryを有効化すること
-	void WriteState(ObjectIf* o, std::ofstream& fout);
-	/// 状態をファイルから読み込む
-	void ReadState(ObjectIf* o, std::ifstream& fin);
 	///	状態のサイズを求める
 	size_t CalcStateSize(ObjectIf* o);
 };
