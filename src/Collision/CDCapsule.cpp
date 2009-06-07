@@ -57,7 +57,7 @@ bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	//	Ø‚èŒû(ring.local)Œn‚Å‚Ì ƒJƒvƒZƒ‹‚ÌŒü‚«
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
 	Vec3f center = ring.localInv * toW.Pos();
-	int sign = center.X() > 0 ? 1 : -1;
+	float sign = center.X() > 0.0f ? 1.0f : -1.0f;
 	if (dir.X()*sign < 0) dir = -dir;
 	center -= sign*dir * length/2;
 	
