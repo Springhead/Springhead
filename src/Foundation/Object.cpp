@@ -169,10 +169,8 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 	return NULL;
 }
 bool Object::WriteState(std::ostream& fout){
-	static int c;
-	c++;
-	DSTR << c << "W" << GetTypeInfo()->ClassName() << std::endl;
-	fout << c << GetTypeInfo()->ClassName();
+//	DSTR << "W " << GetTypeInfo()->ClassName() << std::endl;
+	fout << GetTypeInfo()->ClassName();
 	unsigned ss = GetStateSize();
 	char* state = DBG_NEW char [ss];
 	ConstructState(state);
@@ -187,9 +185,7 @@ bool Object::WriteState(std::ostream& fout){
 	return true;
 }
 bool Object::ReadState(std::istream& fin){
-	int c;
-	fin >> c;
-	DSTR << c << "R" << GetTypeInfo()->ClassName() << std::endl;
+//	DSTR << "R " << GetTypeInfo()->ClassName() << std::endl;
 	char buf[1024];
 	fin.read(buf, strlen(GetTypeInfo()->ClassName()));
 	buf[strlen(GetTypeInfo()->ClassName())] = '\0';

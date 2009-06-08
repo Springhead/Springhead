@@ -540,7 +540,7 @@ bool PHScene::ReadState(std::istream& fin){
 		if (jsz) fin.read((char*)&*cst->joints.begin(), sizeof(PHConstraintState)*jsz);
 	}
 	SetState(state);
-	cst->~PHConstraintsSt();
+	if (cst) cst->~PHConstraintsSt();
 	delete state;
 	size_t n = NSolids();
 	for(size_t i=0; i<n; ++i) GetSolids()[i]->ReadState(fin);
