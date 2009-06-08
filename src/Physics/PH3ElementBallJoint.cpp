@@ -72,16 +72,15 @@ void PH3ElementBallJoint::CompBias(){
 			D2= secondDamper*hardnessRate;
 		}
 		//3要素モデルの計算
-		ws=vjrel;	//バネのダンパの並列部の速さ
-		tmp = D2-D1+K*h;
-		tmp2=D2*K*h*(2*D1-D2)*(D2-D1)-tmp*D1*D2;
+		ws=vjrel;	//バネとダンパの並列部の速さ
+		tmp = D1+D2+K*h;
 
-		xs[1] = ((D2-D1)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
+		xs[1] = ((D1+D2)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
 
-		dA.w()[0]= -tmp*(D2-D1)/tmp2 * dtinv;
-		dA.w()[1]= -tmp*(D2-D1)/tmp2 * dtinv;
-		dA.w()[2]= -tmp*(D2-D1)/tmp2 * dtinv;
-		db.w() = K*(2*D1-D2)*(D2-D1)/tmp2*(xs[0].w()) ;
+		dA.w()[0]= tmp/(D2*(K*h+D1)) * dtinv;
+		dA.w()[1]= tmp/(D2*(K*h+D1)) * dtinv;
+		dA.w()[2]= tmp/(D2*(K*h+D1)) * dtinv;
+		db.w() = K/(K*h+D1)*(xs[0].w()) ;
 	
 		xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
 	}else{
