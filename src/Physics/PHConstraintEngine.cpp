@@ -6,9 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Physics.h"
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 #include <float.h>
 #include <Collision/CDDetectorImp.h>
 #include <Collision/CDQuickHull2D.h>
@@ -606,19 +604,4 @@ void PHConstraintEngine::SetState(const void* s){
 	}
 }
 
-bool PHConstraintEngine::WriteState(std::ofstream& fout){
-	if(!fout) return false;
-	Detector::WriteState(fout);
-	if(bSaveConstraints){
-		;
-	}
-	return true;
-}
-void PHConstraintEngine::ReadState(std::ifstream& fin){
-	if(!fin) return;
-	Detector::ReadState(fin);
-	if(bSaveConstraints){
-		;
-	}
-}
 }

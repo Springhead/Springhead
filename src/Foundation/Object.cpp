@@ -7,9 +7,7 @@
  */
 #include "Object.h"
 #include "Scene.h"
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 #include <sstream>
 #include <iomanip>
 
@@ -171,25 +169,32 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 	return NULL;
 }
 bool Object::WriteState(std::ostream& fout){
+	DSTR << "W" << GetTypeInfo()->ClassName() << std::endl;
+	fout << GetTypeInfo()->ClassName();
 	unsigned ss = GetStateSize();
 	char* state = DBG_NEW char [ss];
 	ConstructState(state);
 	GetState(state);
 	fout.write(state, ss);
-	WriteStatePointers(fout, state);
 	DestructState(state);
 	delete state;
 	return true;
 }
-void Object::ReadState(std::istream& fin){
+bool Object::ReadState(std::istream& fin){
+	DSTR << "R" << GetTypeInfo()->ClassName() << std::endl;
+	char buf[1024];
+	fin.read(buf, strlen(GetTypeInfo()->ClassName()));
+	buf[strlen(GetTypeInfo()->ClassName())] = '\0';
+	assert(strcmp(buf, GetTypeInfo()->ClassName()) == 0);
+
 	unsigned ss = GetStateSize();
 	char* state = DBG_NEW char [ss];
 	ConstructState(state);
 	fin.read(state, ss);
 	SetState(state);
-	ReadStatePointers(fin, state);
 	DestructState(state);
 	delete state;
+	return true;
 }
 
 //----------------------------------------------------------------------------

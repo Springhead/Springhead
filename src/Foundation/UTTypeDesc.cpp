@@ -7,9 +7,7 @@
  */
 #include "UTTypeDesc.h"
 #include "Scene.h"
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 #include <sstream>
 
 

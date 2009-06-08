@@ -1,6 +1,4 @@
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 #include "UTDllLoader.h"
 #include <Base/BaseDebug.h>
 #include <stdlib.h>

@@ -8,9 +8,7 @@
 #include <Springhead.h>
 #include "CDConvexMeshInterpolate.h"
 #include <set>
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 
 #define CD_EPSILON	HULL_EPSILON
 #define CD_INFINITE	HULL_INFINITE

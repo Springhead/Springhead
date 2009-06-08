@@ -6,9 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Graphics.h"
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 
 #include <iomanip>
 #include <sstream>

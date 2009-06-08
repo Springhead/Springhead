@@ -6,9 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Physics.h"
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 #include <sstream>
 
 namespace Spr{;
@@ -473,48 +471,59 @@ void PHScene::SetState(const void* s){
 		constraintEngine->SetState(p);
 	}	
 }
-void PHScene::WriteStatePointers(std::ofstream& fout, const void* stIn){
-	PHSceneState* state = (PHSceneState*)stIn;
-	PHContactDetectorSt* dst = (PHContactDetectorSt*)(void*)(state+1);
-	fout.write((char*)dst, sizeof(*dst));
-	
+bool PHScene::WriteState(std::ostream& fout){
+	size_t ss = GetStateSize();
+	char* state = new char[ss];
+	ConstructState(state);
+	GetState(state);
+	fout.write(state, ss);
 	if (constraintEngine->bSaveConstraints){
-		PHConstraintsSt* cst = (PHConstraintsSt*)(void*)(dst+1);
+		int off = ss - sizeof(PHConstraintsSt);
+		PHConstraintsSt* cst = (PHConstraintsSt*)(state + off);
 
 		size_t sz = cst->gears.size();
 		fout.write((char*)&sz, sizeof(sz));
-		fout.write((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*cst->gears.size());
+		if (sz) fout.write((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*cst->gears.size());
 
 		sz = cst->joints.size();
 		fout.write((char*)&sz, sizeof(sz));
-		fout.write((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*cst->joints.size());
+		if (sz) fout.write((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*cst->joints.size());
 
 		sz = cst->points.size();
 		fout.write((char*)&sz, sizeof(sz));
-		fout.write((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*cst->points.size());
+		if (sz) fout.write((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*cst->points.size());
 	}
+	DestructState(state);
+	delete state;
+	return true;
 }
-void PHScene::ReadStatePointers(std::ifstream& fin, void* stIn){
-	PHSceneState* state = (PHSceneState*)stIn;
-	PHContactDetectorSt* dst = (PHContactDetectorSt*)(void*)(state+1);
-	fin.read((char*)dst, sizeof(*dst));
-
+bool PHScene::ReadState(std::istream& fin){
+	size_t ss = GetStateSize();
+	char* state = new char[ss];
+	ConstructState(state);
+	fin.read(state, ss);
 	if (constraintEngine->bSaveConstraints){
-		PHConstraintsSt* cst = (PHConstraintsSt*)(void*)(dst+1);
+		int off = ss - sizeof(PHConstraintsSt);
+		PHConstraintsSt* cst = (PHConstraintsSt*)(state + off);
+		memset(cst, 0, sizeof(PHConstraintsSt));
 		size_t sz;
 
 		fin.read((char*)&sz, sizeof(sz));
 		cst->gears.resize(sz);
-		fin.read((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*cst->gears.size());
+		if (sz) fin.read((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*cst->gears.size());
 
 		fin.read((char*)&sz, sizeof(sz));
 		cst->joints.resize(sz);
-		fin.read((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*cst->joints.size());
+		if (sz) fin.read((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*cst->joints.size());
 
 		fin.read((char*)&sz, sizeof(sz));
 		cst->points.resize(sz);
-		fin.read((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*cst->points.size());
+		if (sz) fin.read((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*cst->points.size());
 	}
+	SetState(state);
+	DestructState(state);
+	delete state;
+	return true;
 }
 
 void PHScene::SetStateMode(bool bConstraints){

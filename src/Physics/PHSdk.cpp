@@ -6,10 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Physics.h"
-#include <Collision/CDConvexMeshInterpolate.h>
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 #include <stdlib.h>
 
 namespace Spr{;
