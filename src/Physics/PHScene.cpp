@@ -472,56 +472,53 @@ void PHScene::SetState(const void* s){
 	}	
 }
 bool PHScene::WriteState(std::ostream& fout){
+	fout << GetTypeInfo()->ClassName();
+	DSTR << "W" << GetTypeInfo()->ClassName() << std::endl;
 	size_t ss = GetStateSize();
 	char* state = new char[ss];
 	ConstructState(state);
 	GetState(state);
+	fout.write((char*)&ss, sizeof(ss));
 	fout.write(state, ss);
 	if (constraintEngine->bSaveConstraints){
 		int off = ss - sizeof(PHConstraintsSt);
 		PHConstraintsSt* cst = (PHConstraintsSt*)(state + off);
-
-		size_t sz = cst->gears.size();
-		fout.write((char*)&sz, sizeof(sz));
-		if (sz) fout.write((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*cst->gears.size());
-
-		sz = cst->joints.size();
-		fout.write((char*)&sz, sizeof(sz));
-		if (sz) fout.write((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*cst->joints.size());
-
-		sz = cst->points.size();
-		fout.write((char*)&sz, sizeof(sz));
-		if (sz) fout.write((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*cst->points.size());
+		if (cst->gears.size()) fout.write((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*cst->gears.size());
+		if (cst->joints.size()) fout.write((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*cst->joints.size());
+		if (cst->points.size()) fout.write((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*cst->points.size());
 	}
 	DestructState(state);
 	delete state;
 	return true;
 }
 bool PHScene::ReadState(std::istream& fin){
-	size_t ss = GetStateSize();
+	char buf[1024];
+	memset(buf, 0, sizeof(buf));
+	fin.read(buf, strlen(GetTypeInfo()->ClassName()));
+	DSTR << "R" << buf << std::endl;
+	size_t ss;
+	fin.read((char*)&ss, sizeof(ss));
 	char* state = new char[ss];
-	ConstructState(state);
 	fin.read(state, ss);
+
+	PHConstraintsSt* cst = NULL;
 	if (constraintEngine->bSaveConstraints){
 		int off = ss - sizeof(PHConstraintsSt);
-		PHConstraintsSt* cst = (PHConstraintsSt*)(state + off);
-		memset(cst, 0, sizeof(PHConstraintsSt));
-		size_t sz;
+		cst = (PHConstraintsSt*)(state + off);
+		size_t gsz = cst->gears.size();
+		size_t psz = cst->points.size();
+		size_t jsz = cst->joints.size();
+		new (cst) PHConstraintsSt;
 
-		fin.read((char*)&sz, sizeof(sz));
-		cst->gears.resize(sz);
-		if (sz) fin.read((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*cst->gears.size());
-
-		fin.read((char*)&sz, sizeof(sz));
-		cst->joints.resize(sz);
-		if (sz) fin.read((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*cst->joints.size());
-
-		fin.read((char*)&sz, sizeof(sz));
-		cst->points.resize(sz);
-		if (sz) fin.read((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*cst->points.size());
+		cst->gears.resize(gsz);
+		if (gsz) fin.read((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*gsz);
+		cst->joints.resize(jsz);
+		if (jsz) fin.read((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*jsz);
+		cst->points.resize(psz);
+		if (psz) fin.read((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*psz);
 	}
 	SetState(state);
-	DestructState(state);
+	cst->~PHConstraintsSt();
 	delete state;
 	return true;
 }

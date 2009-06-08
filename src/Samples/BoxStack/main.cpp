@@ -543,7 +543,7 @@ void __cdecl timer(int id){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int __cdecl main(int argc, char* argv[]){
+int main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc dscene;
 	dscene.timeStep = 0.02;

@@ -589,15 +589,15 @@ void PHConstraintEngine::SetState(const void* s){
 	char* p = (char*)s;
 	if (bSaveConstraints){
 		PHConstraintsSt* st = (PHConstraintsSt*)(p + Detector::GetStateSize());
-		st->points.resize(points.size());
+		points.resize(st->points.size());
 		for(size_t i=0; i<points.size(); ++i){
 			points[i]->SetState(&st->points[i]);
 		}		
-		st->joints.resize(joints.size());
+		joints.resize(st->joints.size());
 		for(size_t i=0; i<joints.size(); ++i){
 			joints[i]->SetState(&st->joints[i]);
 		}
-		st->gears.resize(gears.size());
+		gears.resize(st->gears.size());
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->SetState(&st->gears[i]);
 		}
