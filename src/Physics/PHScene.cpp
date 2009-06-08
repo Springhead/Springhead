@@ -469,10 +469,10 @@ void PHScene::SetState(const void* s){
 	p += sizeof(PHSceneState);
 	if (constraintEngine){
 		constraintEngine->SetState(p);
-	}	
+	}
 }
 bool PHScene::WriteState(std::ostream& fout){
-	fout << GetTypeInfo()->ClassName();
+	fout.write(GetTypeInfo()->ClassName(), strlen(GetTypeInfo()->ClassName()));
 	DSTR << "W" << GetTypeInfo()->ClassName() << std::endl;
 	size_t ss = GetStateSize();
 	char* state = new char[ss];
@@ -483,12 +483,13 @@ bool PHScene::WriteState(std::ostream& fout){
 	if (constraintEngine->bSaveConstraints){
 		int off = ss - sizeof(PHConstraintsSt);
 		PHConstraintsSt* cst = (PHConstraintsSt*)(state + off);
-		if (cst->gears.size()) fout.write((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*cst->gears.size());
-		if (cst->joints.size()) fout.write((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*cst->joints.size());
-		if (cst->points.size()) fout.write((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*cst->points.size());
+		if (cst->gears.size()) fout.write((char*)&*cst->gears.begin(), sizeof(PHConstraintState)*cst->gears.size());
+		if (cst->joints.size()) fout.write((char*)&*cst->joints.begin(), sizeof(PHConstraintState)*cst->joints.size());
 	}
 	DestructState(state);
 	delete state;
+	size_t n = NSolids();
+	for(size_t i=0; i<n; ++i) GetSolids()[i]->WriteState(fin);
 	return true;
 }
 bool PHScene::ReadState(std::istream& fin){
@@ -506,20 +507,18 @@ bool PHScene::ReadState(std::istream& fin){
 		int off = ss - sizeof(PHConstraintsSt);
 		cst = (PHConstraintsSt*)(state + off);
 		size_t gsz = cst->gears.size();
-		size_t psz = cst->points.size();
 		size_t jsz = cst->joints.size();
 		new (cst) PHConstraintsSt;
-
 		cst->gears.resize(gsz);
-		if (gsz) fin.read((char*)&*cst->gears.begin(), sizeof(PHConstraintSt)*gsz);
+		if (gsz) fin.read((char*)&*cst->gears.begin(), sizeof(PHConstraintState)*gsz);
 		cst->joints.resize(jsz);
-		if (jsz) fin.read((char*)&*cst->joints.begin(), sizeof(PHConstraintSt)*jsz);
-		cst->points.resize(psz);
-		if (psz) fin.read((char*)&*cst->points.begin(), sizeof(PHConstraintSt)*psz);
+		if (jsz) fin.read((char*)&*cst->joints.begin(), sizeof(PHConstraintState)*jsz);
 	}
 	SetState(state);
 	cst->~PHConstraintsSt();
 	delete state;
+	size_t n = NSolids();
+	for(size_t i=0; i<n; ++i) GetSolids()[i]->ReadState(fin);
 	return true;
 }
 

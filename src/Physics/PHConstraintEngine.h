@@ -8,10 +8,10 @@
 #ifndef PHCONSTRAINTENGINE_H
 #define PHCONSTRAINTENGINE_H
 
-#include <Physics/PHContactDetector.h>
-#include <Physics/PHConstraint.h>
-#include <Physics/PHGear.h>
-#include <Physics/PHPathJoint.h>
+#include "PHContactDetector.h"
+#include "PHConstraint.h"
+#include "PHGear.h"
+#include "PHPathJoint.h"
 #include <Collision/CDDetectorImp.h>
 
 namespace Spr{;
@@ -69,9 +69,8 @@ public:
 };
 
 struct PHConstraintsSt{
-	std::vector<PHConstraintSt> points;
-	std::vector<PHConstraintSt> joints;
-	std::vector<PHConstraintSt> gears;
+	std::vector<PHConstraintState> joints;
+	std::vector<PHConstraintState> gears;
 };
 
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{

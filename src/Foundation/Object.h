@@ -256,8 +256,12 @@ public:
 	virtual bool GetState(void* state) const { return false; }
 	///	状態の読み出し(参照版)
 	virtual const void* GetStateAddress() const { return NULL; }
+	///	状態の再帰的な読み出し
+	virtual void GetStateR(char*& state);
 	///	状態の設定
 	virtual void SetState(const void* state){}
+	///	状態の再帰的な設定
+	virtual void SetStateR(const char*& state);
 	/// 状態のファイルへの書き出し
 	virtual bool WriteState(std::ostream& fout);
 	/// 状態の読み込み
@@ -424,11 +428,6 @@ class ObjectStates:public Object{
 protected:
 	char* state;	///<	状態(XXxxxxState)を並べたもの
 	size_t size;	///<	状態の長さ
-	///	状態セーブの再起部分
-	void SaveState(ObjectIf* o, char*& s);
-	///	状態ロードの再起部分
-	void LoadState(ObjectIf* o, char*& s);
-
 public:
 	SPR_OBJECTDEF(ObjectStates);
 	ObjectStates():state(NULL), size(0){}

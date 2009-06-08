@@ -169,8 +169,10 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 	return NULL;
 }
 bool Object::WriteState(std::ostream& fout){
-	DSTR << "W" << GetTypeInfo()->ClassName() << std::endl;
-	fout << GetTypeInfo()->ClassName();
+	static int c;
+	c++;
+	DSTR << c << "W" << GetTypeInfo()->ClassName() << std::endl;
+	fout << c << GetTypeInfo()->ClassName();
 	unsigned ss = GetStateSize();
 	char* state = DBG_NEW char [ss];
 	ConstructState(state);
@@ -178,10 +180,16 @@ bool Object::WriteState(std::ostream& fout){
 	fout.write(state, ss);
 	DestructState(state);
 	delete state;
+	size_t n = NChildObject();
+	for(size_t i=0; i<n; ++i){
+		GetChildObject(i)->WriteState(fout);
+	}
 	return true;
 }
 bool Object::ReadState(std::istream& fin){
-	DSTR << "R" << GetTypeInfo()->ClassName() << std::endl;
+	int c;
+	fin >> c;
+	DSTR << c << "R" << GetTypeInfo()->ClassName() << std::endl;
 	char buf[1024];
 	fin.read(buf, strlen(GetTypeInfo()->ClassName()));
 	buf[strlen(GetTypeInfo()->ClassName())] = '\0';
@@ -194,6 +202,10 @@ bool Object::ReadState(std::istream& fin){
 	SetState(state);
 	DestructState(state);
 	delete state;
+	size_t n = NChildObject();
+	for(size_t i=0; i<n; ++i){
+		GetChildObject(i)->ReadState(fin);
+	}
 	return true;
 }
 
@@ -294,6 +306,27 @@ void Object::ConstructState(ObjectIf* o, char*& s){
 		ConstructState(o->GetChildObject(i), s);
 	}
 }
+void Object::GetStateR(char*& s){
+	bool rv = GetState(s);
+	size_t sz = GetStateSize();
+	s += sz;
+	assert(rv || sz==0);
+	size_t n = NChildObject();
+	for(size_t i=0; i<n; ++i){
+		((Object*)GetChildObject(i))->GetStateR(s);
+	}
+}
+void Object::SetStateR(const char*& s){
+//	DSTR << std::setbase(16) <<  (unsigned)s << " " << o->GetStateSize() << "  ";
+//	DSTR << o->GetIfInfo()->ClassName() << std::endl;
+	SetState(s);
+	s += GetStateSize();
+	size_t n = NChildObject();
+	for(size_t i=0; i<n; ++i){
+		((Object*)GetChildObject(i))->SetStateR(s);
+	}
+}
+
 void ObjectStates::AllocateState(ObjectIf* o){
 	if (state) ReleaseState(o);
 	size = CalcStateSize(o);
@@ -305,59 +338,18 @@ void ObjectStates::SaveState(ObjectIf* o){
 	if (!state) AllocateState(o);
 	char* s = state;
 //	DSTR << "Save:" << std::endl;
-	SaveState(o, s);
+	((Object*)o)->GetStateR(s);
 }
 
-void ObjectStates::SaveState(ObjectIf* o, char*& s){
-//	DSTR << std::setbase(16) <<  (unsigned)s << " " << o->GetStateSize() << "  ";
-//	DSTR << o->GetIfInfo()->ClassName() << std::endl;
-
-	bool rv = o->GetState(s);
-	size_t sz = o->GetStateSize();
-	s += sz;
-	assert(rv || sz==0);
-	size_t n = o->NChildObject();
-	for(size_t i=0; i<n; ++i){
-		SaveState(o->GetChildObject(i), s);
-	}
-}
 void ObjectStates::LoadState(ObjectIf* o){
-	char* s = state;
-//	DSTR << "Load:" << std::endl;
-	LoadState(o, s);
-}
-void ObjectStates::LoadState(ObjectIf* o, char*& s){
 	if (!state) return;
-//	DSTR << std::setbase(16) <<  (unsigned)s << " " << o->GetStateSize() << "  ";
-//	DSTR << o->GetIfInfo()->ClassName() << std::endl;
-
-	o->SetState(s);
-	s += o->GetStateSize();
-	size_t n = o->NChildObject();
-	for(size_t i=0; i<n; ++i){
-		LoadState(o->GetChildObject(i), s);
-	}
+	const char* s = state;
+//	DSTR << "Load:" << std::endl;
+	((Object*)o)->SetStateR(s);
 }
 ObjectStatesIf* ObjectStatesIf::Create(){
 	ObjectStates* o = new ObjectStates;
 	return o->Cast();
-}
-//	状態をファイルに書き出す
-void ObjectStatesIf::WriteState(ObjectIf* o, std::ostream& os){
-	o->WriteState(os);
-	size_t n = o->NChildObject();
-	for(size_t i=0; i<n; ++i){
-		WriteState(o->GetChildObject(i), os);
-	}	
-}
-//	状態をファイルから読み出す
-void ObjectStatesIf::ReadState(ObjectIf* o, std::istream& is){
-	o->ReadState(is);
-	size_t n = o->NChildObject();
-
-	for(size_t i=0; i<n; ++i){
-		ReadState(o->GetChildObject(i), is);
-	}	
 }
 
 

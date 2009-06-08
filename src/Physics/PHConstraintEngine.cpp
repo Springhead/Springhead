@@ -569,10 +569,6 @@ bool PHConstraintEngine::GetState(void* s) const {
 	char* p = (char*)s;
 	if (bSaveConstraints){
 		PHConstraintsSt* st = (PHConstraintsSt*)(p + Detector::GetStateSize());
-		st->points.resize(points.size());
-		for(size_t i=0; i<points.size(); ++i){
-			points[i]->GetState(&st->points[i]);
-		}		
 		st->joints.resize(joints.size());
 		for(size_t i=0; i<joints.size(); ++i){
 			joints[i]->GetState(&st->joints[i]);
@@ -589,10 +585,6 @@ void PHConstraintEngine::SetState(const void* s){
 	char* p = (char*)s;
 	if (bSaveConstraints){
 		PHConstraintsSt* st = (PHConstraintsSt*)(p + Detector::GetStateSize());
-		points.resize(st->points.size());
-		for(size_t i=0; i<points.size(); ++i){
-			points[i]->SetState(&st->points[i]);
-		}		
 		joints.resize(st->joints.size());
 		for(size_t i=0; i<joints.size(); ++i){
 			joints[i]->SetState(&st->joints[i]);

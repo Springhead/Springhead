@@ -16,12 +16,12 @@ namespace Spr{;
 
 class PHTreeNode;
 
-struct PHConstraintSt{
+struct PHConstraintState{
 	SpatialVector f;				///< S‘©—Í‚Ì—ÍÏ
 	SpatialVector F;				///< S‘©Œë·‚ðˆÊ’u‚ÌLCP‚Å•â³‚·‚éê‡‚Ì•â³—Ê*Ž¿—Ê
 };
 
-class PHConstraint : public SceneObject, public PHConstraintDesc, public PHConstraintSt{
+class PHConstraint : public SceneObject, public PHConstraintDesc, public PHConstraintState{
 public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
 	ACCESS_DESC(PHConstraint);
