@@ -157,8 +157,8 @@ public:
 	virtual void SetState(const void* s);
 	virtual void GetStateR(char*& s);
 	virtual void SetStateR(const char*& state);
-	virtual bool WriteState(std::ostream& fout);
-	virtual bool ReadState(std::istream& fin);
+	virtual bool WriteStateR(std::ostream& fout);
+	virtual bool ReadStateR(std::istream& fin);
 protected:
 	virtual void BeforeGetDesc() const;
 };

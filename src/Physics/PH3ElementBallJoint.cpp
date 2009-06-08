@@ -55,7 +55,7 @@ void PH3ElementBallJoint::CompBias(){
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0 || secondDamper!=0.0){
 		//3要素モデル
-		double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp,tmp2;
+		double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
 		double D1 = damper;
 		double D2 = secondDamper;
 		double K = spring;

@@ -233,9 +233,11 @@ struct ObjectIf{
 	/**	状態の設定	*/
 	void SetState(const void* state);
 	/** 状態の書き出し */
-	bool WriteState(std::ostream& fout);
+	bool WriteStateR(std::ostream& fout);
+	bool WriteState(std::string fileName);
 	/** 状態の読み込み */
-	void ReadState(std::istream& fin);
+	bool ReadStateR(std::istream& fin);
+	bool ReadState(std::string fileName);
 	/**	状態のサイズ	*/
 	size_t GetStateSize() const;
 	/**	メモリブロックを状態型に初期化	*/

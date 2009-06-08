@@ -496,9 +496,8 @@ void PHScene::SetStateR(const char*& s){
 		}
 	}
 }
-bool PHScene::WriteState(std::ostream& fout){
+bool PHScene::WriteStateR(std::ostream& fout){
 	fout.write(GetTypeInfo()->ClassName(), strlen(GetTypeInfo()->ClassName()));
-	DSTR << "W" << GetTypeInfo()->ClassName() << std::endl;
 	size_t ss = GetStateSize();
 	char* state = new char[ss];
 	ConstructState(state);
@@ -514,14 +513,13 @@ bool PHScene::WriteState(std::ostream& fout){
 	DestructState(state);
 	delete state;
 	size_t n = NSolids();
-	for(size_t i=0; i<n; ++i) GetSolids()[i]->WriteState(fout);
+	for(size_t i=0; i<n; ++i) GetSolids()[i]->WriteStateR(fout);
 	return true;
 }
-bool PHScene::ReadState(std::istream& fin){
+bool PHScene::ReadStateR(std::istream& fin){
 	char buf[1024];
 	memset(buf, 0, sizeof(buf));
 	fin.read(buf, strlen(GetTypeInfo()->ClassName()));
-	DSTR << "R" << buf << std::endl;
 	size_t ss;
 	fin.read((char*)&ss, sizeof(ss));
 	char* state = new char[ss];
@@ -543,7 +541,7 @@ bool PHScene::ReadState(std::istream& fin){
 	if (cst) cst->~PHConstraintsSt();
 	delete state;
 	size_t n = NSolids();
-	for(size_t i=0; i<n; ++i) GetSolids()[i]->ReadState(fin);
+	for(size_t i=0; i<n; ++i) GetSolids()[i]->ReadStateR(fin);
 	return true;
 }
 
