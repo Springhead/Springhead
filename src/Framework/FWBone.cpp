@@ -16,9 +16,9 @@ namespace Spr{;
 
 BoneJoint::BoneJoint()
 {
-	K				= 0.01;
-	D1				= 0.1;
-	D2				= 10;
+	K				= 10;
+	D1				= 2;
+	D2				= 0.1;
 	yieldStress		= 0.1;
 	hardnessRate	= 1e3;
 	SocketPos		=Vec3f(0.0,0.0,0.0);
