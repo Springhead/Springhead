@@ -320,11 +320,6 @@ struct ObjectStatesIf: public ObjectIf{
 	void LoadState(ObjectIf* o);
 	///	ObjectStateオブジェクトを作成する．
 	static ObjectStatesIf* SPR_CDECL Create();
-
-	//	状態をファイルに書き出す
-	static void WriteState(ObjectIf* o, std::ostream& os);
-	//	状態をファイルから読み出す
-	static void ReadState(ObjectIf* o, std::istream& is);
 };
 
 }

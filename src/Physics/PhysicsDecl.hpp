@@ -630,3 +630,35 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHConstraintState \
+protected:\
+	SpatialVector	f;	\
+	SpatialVector	F;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		f = ((PHConstraintState*)ptr)->f;	\
+		F = ((PHConstraintState*)ptr)->F;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		((PHConstraintState*)ptr)->f = f;	\
+		((PHConstraintState*)ptr)->F = F;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHContactPointState \
+protected:\
+	int	shapePair;	\
+	Vec3d	pos;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		PHConstraint::SetState((PHConstraintState*)(PHContactPointState*)ptr);	\
+		shapePair = ((PHContactPointState*)ptr)->shapePair;	\
+		pos = ((PHContactPointState*)ptr)->pos;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		PHConstraint::GetState((PHConstraintState*)(PHContactPointState*)ptr);	\
+		((PHContactPointState*)ptr)->shapePair = shapePair;	\
+		((PHContactPointState*)ptr)->pos = pos;	\
+		return true;	\
+	}\
+

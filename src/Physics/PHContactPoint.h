@@ -15,6 +15,11 @@ class PHShapePairForLCP;
 
 namespace Spr{;
 
+struct PHContactPointState:public PHConstraintState{
+	int shapePair;
+	Vec3d pos;
+};
+
 class PHContactPoint : public PHConstraint{
 public:
 	SPR_OBJECTDEF(PHContactPoint);

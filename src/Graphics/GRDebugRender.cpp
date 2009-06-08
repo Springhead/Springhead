@@ -7,10 +7,9 @@
  */
 #include "Graphics.h"
 #pragma hdrstop
-#include <GL/glut.h>
-
 #include <Physics/PHConstraintEngine.h>
 #include <Physics/PHContactPoint.h>
+#include <GL/glut.h>
 
 namespace Spr {;
 //----------------------------------------------------------------------------
