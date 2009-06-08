@@ -9,9 +9,7 @@
 #include <Foundation/Scene.h>
 #include "Collision.h"
 #include <set>
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 #include "CDQuickHull3DImp.h"
 
 namespace Spr{;

@@ -10,9 +10,7 @@
  */
 #include "Physics.h"
 #include <fstream>
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 
 using namespace PTM;
 using namespace std;

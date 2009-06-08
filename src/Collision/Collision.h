@@ -10,6 +10,7 @@
 #include "CDShape.h"
 #include "CDConvex.h"
 #include "CDConvexMesh.h"
+#include "CDConvexMeshInterpolate.h"
 #include "CDSphere.h"
 #include "CDCapsule.h"
 #include "CDRoundCone.h"

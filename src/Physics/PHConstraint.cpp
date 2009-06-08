@@ -6,9 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Physics.h"
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 
 using namespace std;
 using namespace PTM;

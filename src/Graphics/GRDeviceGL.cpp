@@ -5,9 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#include "Graphics.h"
+#pragma hdrstop
+
 #define USE_GREW
 //#define GLEW_MX
-
 #if defined(USE_GREW)
 #ifndef _MSC_VER
 # define GLEW_STATIC		// 定義するとAPI宣言にdeclspecキーワードが付かない
@@ -15,11 +17,6 @@
 # include <GL/glew.h>
 #endif
 
-#include "Graphics.h"
-
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 #ifdef _MSC_VER
 # include <windows.h>
 #endif

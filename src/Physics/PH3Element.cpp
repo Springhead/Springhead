@@ -7,9 +7,7 @@
  */
 #include "Physics.h"
 #include <Math.h>
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 
 using namespace PTM;
 using namespace std;

@@ -6,10 +6,8 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Collision.h"
-#ifdef USE_HDRSTOP
 #include <Foundation/Scene.h>
 #pragma hdrstop
-#endif
 
 namespace Spr{;
 

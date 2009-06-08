@@ -30,9 +30,7 @@ Springhead2/src/Samples/BoxStack
 #include <GL/glut.h>
 #include <sstream>
 
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 using namespace Spr;
 
 #define ESC		27
@@ -451,6 +449,16 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 		case 'l':
 			{
 				states->LoadState(scene);
+			}break;
+		case 'S':
+			{
+				std::ofstream os("state.bin");
+				states->WriteState(scene, os);
+			}break;
+		case 'L':
+			{
+				std::ifstream is("state.bin");
+				states->ReadState(scene, is);
 			}break;
 		default:
 			break;

@@ -6,10 +6,9 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Collision.h"
-#include "CDDetectorImp.h"
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
+
+#include "CDDetectorImp.h"
 
 namespace Spr{;
 

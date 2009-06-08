@@ -6,9 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Collision.h"
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 #include "CDCutRing.h"
 #include <Collision/CDQuickHull2DImp.h>
 

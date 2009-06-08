@@ -6,14 +6,11 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Springhead.h>
-#include <Foundation/Object.h>
+#pragma hdrstop
 #include "Object.h"
 #include "Scene.h"
 #include <sstream>
 #include <iomanip>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 
 namespace Spr{;

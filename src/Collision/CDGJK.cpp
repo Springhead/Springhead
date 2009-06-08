@@ -14,17 +14,16 @@
 	しかし，似ている箇所があります．もし派生物だと認定された場合，
 	ライセンスがLGPLとなります．ご注意ください．
 */
-static bool bDebug;
-
-
 #include "Collision.h"
+#pragma hdrstop
+
 #include "CDDetectorImp.h"
 #include <Foundation/Scene.h>
 #include <fstream>
 //#include <windows.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
+
+static bool bDebug;
+
 
 namespace Spr{;
 

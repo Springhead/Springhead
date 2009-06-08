@@ -11,9 +11,7 @@
 #include "Physics.h"
 //#include "../../../Project\personal\Matunaga\HapticJointTest\BoxStack.h"
 #include <Math.h>
-#ifdef USE_HDRSTOP
 #pragma hdrstop
-#endif
 
 using namespace PTM;
 using namespace std;
