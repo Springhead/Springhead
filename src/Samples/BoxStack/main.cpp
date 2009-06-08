@@ -453,12 +453,12 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 		case 'S':
 			{
 				std::ofstream os("state.bin");
-				states->WriteState(scene, os);
+				scene->WriteState(os);
 			}break;
 		case 'L':
 			{
 				std::ifstream is("state.bin");
-				states->ReadState(scene, is);
+				scene->ReadState(is);
 			}break;
 		default:
 			break;
