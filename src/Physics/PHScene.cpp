@@ -489,7 +489,7 @@ bool PHScene::WriteState(std::ostream& fout){
 	DestructState(state);
 	delete state;
 	size_t n = NSolids();
-	for(size_t i=0; i<n; ++i) GetSolids()[i]->WriteState(fin);
+	for(size_t i=0; i<n; ++i) GetSolids()[i]->WriteState(fout);
 	return true;
 }
 bool PHScene::ReadState(std::istream& fin){
