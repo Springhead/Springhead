@@ -17,8 +17,10 @@
 	const void* GetStateAddress()const{	return	base::GetStateAddress();}	\
 	bool GetState(void* state)const{	return	base::GetState(state);}	\
 	void SetState(const void* state){	base::SetState(state);}	\
-	bool WriteState(std::ostream& fout){	return	base::WriteState(fout);}	\
-	void ReadState(std::istream& fin){	base::ReadState(fin);}	\
+	bool WriteStateR(std::ostream& fout){	return	base::WriteStateR(fout);}	\
+	bool WriteState(std::string fileName){	return	base::WriteState(fileName);}	\
+	bool ReadStateR(std::istream& fin){	return	base::ReadStateR(fin);}	\
+	bool ReadState(std::string fileName){	return	base::ReadState(fileName);}	\
 	size_t GetStateSize()const{	return	base::GetStateSize();}	\
 	void ConstructState(void* m)const{	base::ConstructState(m);}	\
 	void DestructState(void* m)const{	base::DestructState(m);}	\

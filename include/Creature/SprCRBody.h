@@ -706,8 +706,8 @@ struct CRFourLegsTinyAnimalBodyDesc : CRBodyDesc{
 
 	// どの種類の関節で脚を構成するか
 	enum CRTinyJointsMode{
-		MODE_HINGE = 0,
-		MODE_BALL,
+		HINGE_MODE = 0,
+		BALL_MODE,
 	} jointType;
 
 	// 脚のポリゴンのタイプ

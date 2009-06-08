@@ -32,6 +32,7 @@ Springhead2/src/Samples/BoxStack
 
 #pragma hdrstop
 using namespace Spr;
+using namespace std;
 
 #define ESC		27
 
@@ -452,13 +453,11 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 			}break;
 		case 'S':
 			{
-				std::ofstream os("state.bin", std::ios::binary|std::ios::out);
-				scene->WriteState(os);
+				scene->WriteState("state.bin");
 			}break;
 		case 'L':
 			{
-				std::ifstream is("state.bin", std::ios::binary|std::ios::in);
-				scene->ReadState(is);
+				scene->ReadState("state.bin");
 			}break;
 		default:
 			break;

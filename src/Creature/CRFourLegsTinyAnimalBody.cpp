@@ -18,7 +18,7 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 		
 	jointOrder	= SOCKET_PARENT;
 
-	jointType	= MODE_HINGE;
+	jointType	= HINGE_MODE;
 	shapeMode	= MODE_CAPSULE;//MODE_BOX;
 	
 	// ëÃä≤Ç…ä÷Ç∑ÇÈÉpÉâÉÅÅ[É^
@@ -27,8 +27,8 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 	bodyThickness = 0.6;
 
 	// ãrÇÃRounConeÇ…ä÷Ç∑ÇÈÉpÉâÉÅÅ[É^
-	upperSizes = Vec2d(0.4, 0.2);
-	lowerSizes = Vec2d(0.3, 0.2);
+	upperSizes = Vec2d(0.2, 0.4);
+	lowerSizes = Vec2d(0.2, 0.3);
 	upperLength = 1.0;
 	lowerLength = 1.4;
 
@@ -43,14 +43,14 @@ CRFourLegsTinyAnimalBodyDesc::CRFourLegsTinyAnimalBodyDesc(){
 	springFront   = 1.0;  damperFront   =  5.0;
 	springRear    = 1.0;  damperRear    =  5.0;
 
-	// IF (jointType == MODE_BALL) THEN
+	// IF (jointType == BALL_MODE) THEN
 	// Vec2d(lower, upper)  lower>upperÇÃÇ∆Ç´â¬ìÆàÊêßå¿ñ≥å¯
 	rangeFrontSwing   = Vec2d(FLT_MAX, FLT_MAX);
 	rangeFrontTwist	  = Vec2d(FLT_MAX, FLT_MAX);
 	rangeRearSwing    = Vec2d(FLT_MAX, FLT_MAX);
 	rangeRearTwist	  = Vec2d(FLT_MAX, FLT_MAX);
 
-	// ELSE IF(jointType == MODE_HINGE) THEN
+	// ELSE IF(jointType == HINGE_MODE) THEN
 	// Vec2d(lower, upper)  lower>upperÇÃÇ∆Ç´â¬ìÆàÊêßå¿ñ≥å¯
 	rangeUpperFront = Vec2d(FLT_MAX, FLT_MAX);
 	rangeLowerFront = Vec2d(FLT_MAX, FLT_MAX);
@@ -121,11 +121,11 @@ PHSolidIf* CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr, PHSolidIf* sBody){
 		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
 	}
 	// ëÃä≤Ç∆ëOãrä‘ÇÃä÷êﬂ
-	if(jointType == MODE_HINGE){
+	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
 		hingeDesc.poseSocket.Pos()	= Vec3d(-lr * bodyBreadth / 2.0, -bodyHeight / 2.0, 0);
-		hingeDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(90), 'y');
-		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, -upperLength / 2.0);
+		hingeDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
+		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, upperLength / 2.0);
 		hingeDesc.posePlug.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
 		hingeDesc.origin			= 0;
 		hingeDesc.spring			= springFront;
@@ -133,13 +133,13 @@ PHSolidIf* CRFourLegsTinyAnimalBody::InitFrontLeg0(LREnum lr, PHSolidIf* sBody){
 		hingeDesc.upper				= rangeUpperFront.upper;
 		hingeDesc.lower				= rangeUpperFront.lower;
 		joints.push_back(CreateJoint(sBody, solids.back(), hingeDesc));
-	} else if(jointType == MODE_BALL){
+	} else if(jointType == BALL_MODE){
 		PHBallJointDesc		ballDesc;
 		ballDesc.poseSocket.Pos()	= Vec3d(-lr * bodyBreadth / 2.0, -bodyHeight / 2.0, 0);
-		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(90), 'y');
-		ballDesc.posePlug.Pos()		= Vec3d(0, 0, -upperLength / 2.0);
-		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'y');
-		ballDesc.goal				= Quaterniond();
+		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.posePlug.Pos()		= Vec3d(0, 0, upperLength / 2.0);
+		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
 		ballDesc.damper				= damperFront;
 		ballDesc.limitSwing			= rangeFrontSwing;
@@ -187,11 +187,11 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
 		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
 	} 
 	// ëOãr-ëOë´ä‘ÇÃä÷êﬂ
-	if(jointType == MODE_HINGE){
+	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
-		hingeDesc.poseSocket.Pos()	= Vec3d(0, 0, upperLength/2.0);
+		hingeDesc.poseSocket.Pos()	= Vec3d(0, 0, -upperLength/2.0);
 		hingeDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
-		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, -lowerLength / 2.0);
+		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, lowerLength / 2.0);
 		hingeDesc.posePlug.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
 		hingeDesc.origin			= 0;
 		hingeDesc.spring			= springFront;
@@ -199,12 +199,12 @@ void CRFourLegsTinyAnimalBody::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
 		hingeDesc.upper				= rangeLowerFront.upper;
 		hingeDesc.lower				= rangeLowerFront.lower;
 		joints.push_back(CreateJoint(sLeg0, solids.back(), hingeDesc));
-	} else if(jointType == MODE_BALL){
-		ballDesc.poseSocket.Pos()	= Vec3d(0, 0, upperLength/2.0);
-		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
-		ballDesc.posePlug.Pos()		= Vec3d(0, 0, -lowerLength / 2.0);
-		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'y');
-		ballDesc.goal				= Quaterniond();
+	} else if(jointType == BALL_MODE){
+		ballDesc.poseSocket.Pos()	= Vec3d(0, 0, -upperLength/2.0);
+		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.posePlug.Pos()		= Vec3d(0, 0, lowerLength / 2.0);
+		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
 		ballDesc.damper				= damperFront;
 		ballDesc.limitSwing			= rangeFrontSwing;
@@ -251,11 +251,11 @@ PHSolidIf* CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr, PHSolidIf* sBody){
 		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
 	}
 	// ëÃä≤Ç∆å„ãrä‘ÇÃä÷êﬂ
-	if(jointType == MODE_HINGE){
+	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
 		hingeDesc.poseSocket.Pos()	= Vec3d(-lr * bodyBreadth / 2.0, bodyHeight / 2.0, 0);
-		hingeDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(90), 'y');
-		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, -upperLength / 2.0);
+		hingeDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
+		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, upperLength / 2.0);
 		hingeDesc.posePlug.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
 		hingeDesc.origin			= 0;
 		hingeDesc.spring			= springRear;
@@ -263,12 +263,12 @@ PHSolidIf* CRFourLegsTinyAnimalBody::InitRearLeg0(LREnum lr, PHSolidIf* sBody){
 		hingeDesc.upper				= rangeUpperRear.upper;
 		hingeDesc.lower				= rangeUpperRear.lower;
 		joints.push_back(CreateJoint(sBody, solids.back(), hingeDesc));
-	}else if(jointType == MODE_BALL){
+	}else if(jointType == BALL_MODE){
 		ballDesc.poseSocket.Pos()	= Vec3d(-lr * bodyBreadth / 2.0, bodyHeight / 2.0, 0);
-		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(90), 'y');
-		ballDesc.posePlug.Pos()		= Vec3d(0, 0, -upperLength / 2.0);
-		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'y');
-		ballDesc.goal				= Quaterniond();
+		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.posePlug.Pos()		= Vec3d(0, 0, upperLength / 2.0);
+		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springRear;
 		ballDesc.damper				= damperRear;
 		ballDesc.limitSwing			= rangeRearSwing;
@@ -315,11 +315,11 @@ void CRFourLegsTinyAnimalBody::InitRearLeg1(LREnum lr, PHSolidIf* sLeg0){
 		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
 	}
 	//å„ãr-å„ë´ä‘ÇÃä÷êﬂ
-	if(jointType == MODE_HINGE){
+	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
-		hingeDesc.poseSocket.Pos()	= Vec3d(0, 0, upperLength/2.0);
+		hingeDesc.poseSocket.Pos()	= Vec3d(0, 0, -upperLength/2.0);
 		hingeDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
-		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, -lowerLength / 2.0);
+		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, lowerLength / 2.0);
 		hingeDesc.posePlug.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
 		hingeDesc.origin			= 0;
 		hingeDesc.spring			= springRear;
@@ -327,12 +327,12 @@ void CRFourLegsTinyAnimalBody::InitRearLeg1(LREnum lr, PHSolidIf* sLeg0){
 		hingeDesc.upper				= rangeLowerRear.upper;
 		hingeDesc.lower				= rangeLowerRear.lower;
 		joints.push_back(CreateJoint(sLeg0, solids.back(), hingeDesc));
-	} else if(jointType == MODE_BALL){
-		ballDesc.poseSocket.Pos()	= Vec3d(0, 0, upperLength / 2.0);
-		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
-		ballDesc.posePlug.Pos()		= Vec3d(0, 0,  -lowerLength / 2.0);
-		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'y');
-		ballDesc.goal				= Quaterniond();
+	} else if(jointType == BALL_MODE){
+		ballDesc.poseSocket.Pos()	= Vec3d(0, 0, -upperLength / 2.0);
+		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.posePlug.Pos()		= Vec3d(0, 0,  lowerLength / 2.0);
+		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
+		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springRear;
 		ballDesc.damper				= damperRear;
 		ballDesc.limitSwing			= rangeRearSwing;

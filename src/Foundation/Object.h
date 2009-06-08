@@ -263,9 +263,11 @@ public:
 	///	状態の再帰的な設定
 	virtual void SetStateR(const char*& state);
 	/// 状態のファイルへの書き出し
-	virtual bool WriteState(std::ostream& fout);
+	virtual bool WriteStateR(std::ostream& fout);
+	virtual bool WriteState(std::string fileName);
 	/// 状態の読み込み
-	virtual bool ReadState(std::istream& fin);
+	virtual bool ReadStateR(std::istream& fin);
+	virtual bool ReadState(std::string fileName);
 	///	状態のサイズ
 	virtual size_t GetStateSize() const { return 0; };
 	///	メモリブロックを状態型に初期化

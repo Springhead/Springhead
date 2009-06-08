@@ -168,8 +168,14 @@ ObjectIf* Object::CreateObject(const IfInfo* keyInfo, const void* desc){
 	}
 	return NULL;
 }
-bool Object::WriteState(std::ostream& fout){
-//	DSTR << "W " << GetTypeInfo()->ClassName() << std::endl;
+bool Object::WriteState(std::string fileName){
+	std::ofstream fout(fileName.c_str(), std::ios::binary | std::ios::out);
+	if(!fout) return false;
+	WriteStateR(fout);
+	fout.close();
+	return true;
+}
+bool Object::WriteStateR(std::ostream& fout){
 	fout << GetTypeInfo()->ClassName();
 	unsigned ss = GetStateSize();
 	char* state = DBG_NEW char [ss];
@@ -180,12 +186,18 @@ bool Object::WriteState(std::ostream& fout){
 	delete state;
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
-		GetChildObject(i)->WriteState(fout);
+		(Object*)GetChildObject(i)->WriteStateR(fout);
 	}
 	return true;
 }
-bool Object::ReadState(std::istream& fin){
-//	DSTR << "R " << GetTypeInfo()->ClassName() << std::endl;
+bool Object::ReadState(std::string fileName){
+	std::ifstream fin(fileName.c_str(), std::ios::binary | std::ios::in);
+	if(!fin) return false;
+	ReadStateR(fin);
+	fin.close();
+	return true;
+}
+bool Object::ReadStateR(std::istream& fin){
 	char buf[1024];
 	fin.read(buf, strlen(GetTypeInfo()->ClassName()));
 	buf[strlen(GetTypeInfo()->ClassName())] = '\0';
@@ -200,7 +212,7 @@ bool Object::ReadState(std::istream& fin){
 	delete state;
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
-		GetChildObject(i)->ReadState(fin);
+		(Object*)GetChildObject(i)->ReadStateR(fin);
 	}
 	return true;
 }
