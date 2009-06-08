@@ -471,6 +471,31 @@ void PHScene::SetState(const void* s){
 		constraintEngine->SetState(p);
 	}
 }
+
+void PHScene::GetStateR(char*& s){
+	bool rv = GetState(s);
+	size_t sz = GetStateSize();
+	s += sz;
+	assert(rv || sz==0);
+	size_t n = NChildObject();
+	for(size_t i=0; i<n; ++i){
+		// child‚Æ‚µ‚ÄSolid‚¾‚¯‚ðŒÄ‚Ô
+		if(DCAST(PHSolidIf, GetChildObject(i))){
+			((PHSolid*)GetChildObject(i))->GetStateR(s);
+		}
+	}
+}
+void PHScene::SetStateR(const char*& s){
+	SetState(s);
+	s += GetStateSize();
+	size_t n = NChildObject();
+	for(size_t i=0; i<n; ++i){
+		// child‚Æ‚µ‚ÄSolid‚¾‚¯‚ðŒÄ‚Ô
+		if(DCAST(PHSolidIf, GetChildObject(i))){
+			((PHSolid*)GetChildObject(i))->SetStateR(s);
+		}
+	}
+}
 bool PHScene::WriteState(std::ostream& fout){
 	fout.write(GetTypeInfo()->ClassName(), strlen(GetTypeInfo()->ClassName()));
 	DSTR << "W" << GetTypeInfo()->ClassName() << std::endl;
