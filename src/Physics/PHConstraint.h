@@ -24,7 +24,7 @@ struct PHConstraintState{
 class PHConstraint : public SceneObject, public PHConstraintDesc, public PHConstraintState{
 public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
-	ACCESS_DESC(PHConstraint);
+	ACCESS_DESC_STATE(PHConstraint);
 
 
 	PHConstraintEngine* engine;
