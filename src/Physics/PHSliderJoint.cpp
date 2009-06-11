@@ -37,10 +37,12 @@ void PHSliderJoint::CompBias(){
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 
 	if (engine->numIterCorrection==0){	//	Correction ‚ð‘¬“xLCP‚Ås‚¤ê‡
-		db.v()	 = Xjrel.r * dtinv;// + vjrel.v();
+		db.v()	 = Xjrel.r * dtinv;
 		db.v().z = 0.0;
 		if(!bConstraintY) db.v().y = 0.0;
-		db.w() = Xjrel.q.RotationHalf() * dtinv;// + vjrel.w();
+
+		db.w() =  Xjrel.q.RotationHalf() * dtinv;
+				//+ Vec3d(0, 0, Xjrel.r.z) % db.v() *0.1;
 		
 		db *= engine->velCorrectionRate;
 	}
