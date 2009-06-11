@@ -752,9 +752,7 @@ void OnKey6(char key){
 			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
 			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
 				DSTR << "set the value" << endl; 
-			break;
-
-		
+			break;		
 		default:
 			break;
 	}
@@ -920,15 +918,21 @@ void OnKey7(char key){
 }
 
 void OnKey(char key){
-	switch(sceneNo){
-	case 0: OnKey0(key); break;
-	case 1: OnKey1(key); break;
-	case 2: OnKey2(key); break;
-	case 3: OnKey3(key); break;
-	case 4: OnKey4(key); break;
-	case 5: OnKey5(key); break;
-	case 6: OnKey6(key); break;
-	case 7: OnKey7(key); break;
+	if (key == 'W'){
+		scene->WriteState("state.bin");
+	}else if (key == 'R'){
+		scene->ReadState("state.bin");
+	}else{
+		switch(sceneNo){
+		case 0: OnKey0(key); break;
+		case 1: OnKey1(key); break;
+		case 2: OnKey2(key); break;
+		case 3: OnKey3(key); break;
+		case 4: OnKey4(key); break;
+		case 5: OnKey5(key); break;
+		case 6: OnKey6(key); break;
+		case 7: OnKey7(key); break;
+		}
 	}
 }
 

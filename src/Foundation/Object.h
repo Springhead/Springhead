@@ -117,7 +117,9 @@ public:
 	static cls* GetMe(const Object* p) {											\
 		return (cls*)(p)->GetBaseAddress(GetTypeInfoStatic());						\
 	}																				\
-
+	/*	Objectをファイルにダンプ	*/												\
+	virtual void DumpObject(std::ostream& os) const {										\
+		os.write((char*)(void*)this, sizeof(cls)); }								\
 
 #ifdef SWIGSPR
 
@@ -274,6 +276,9 @@ public:
 	virtual void ConstructState(void* m) const {}
 	///	状態型をメモリブロックに戻す
 	virtual void DestructState(void* m) const {}
+	///	メモリデバッグ用。単純にツリーのオブジェクトをファイルにダンプする。
+	virtual void DumpObjectR(std::ostream& os, int level=0) const;
+
 protected:
 	virtual void PrintHeader(std::ostream& os, bool bClose) const;
 	virtual void PrintChildren(std::ostream& os) const;

@@ -549,6 +549,17 @@ void PHScene::SetStateMode(bool bConstraints){
 	constraintEngine->bSaveConstraints = bConstraints;
 }
 
+void PHScene::DumpObjectR(std::ostream& os, int level) const{
+	Object::DumpObjectR(os, level);
+	size_t n = engines.size();
+	os << std::endl;
+	os << level << " PHScene::engines" << std::endl;
+	for(size_t i=0; i<n; ++i){
+		engines[i]->DumpObjectR(os, level+1);
+	}
+}
+
+
 //----------------------------------------------------------------------------
 //	PHRay
 void PHRay::Apply(){
