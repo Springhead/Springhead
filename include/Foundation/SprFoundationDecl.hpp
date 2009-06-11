@@ -24,6 +24,7 @@
 	size_t GetStateSize()const{	return	base::GetStateSize();}	\
 	void ConstructState(void* m)const{	base::ConstructState(m);}	\
 	void DestructState(void* m)const{	base::DestructState(m);}	\
+	void DumpObjectR(std::ostream& os, int level)const{	base::DumpObjectR(os, level);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_NamedObjectIf(base)	\
 	const char* GetName()const{	return	base::GetName();}	\

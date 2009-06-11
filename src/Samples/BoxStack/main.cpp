@@ -458,6 +458,14 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 		case 'L':
 			{
 				scene->ReadState("state.bin");
+				scene->Step();
+				std::ofstream f("dump_after_load.bin", std::ios::binary|std::ios::out);
+				scene->DumpObjectR(f);
+			}break;
+		case 'D':
+			{
+				std::ofstream f("dump.bin", std::ios::binary|std::ios::out);
+				scene->DumpObjectR(f);
 			}break;
 		default:
 			break;

@@ -159,6 +159,7 @@ public:
 	virtual void SetStateR(const char*& state);
 	virtual bool WriteStateR(std::ostream& fout);
 	virtual bool ReadStateR(std::istream& fin);
+	virtual void DumpObjectR(std::ostream& os, int level=0) const;
 protected:
 	virtual void BeforeGetDesc() const;
 };

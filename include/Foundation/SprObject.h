@@ -245,6 +245,8 @@ struct ObjectIf{
 	/**	状態型をメモリブロックに戻す	*/
 	void DestructState(void* m) const;
 	//@}
+	///	オブジェクトツリーのメモリイメージをダンプ
+	void DumpObjectR(std::ostream& os, int level=0) const;
 };
 
 ///	インタフェースクラスへのポインタの配列

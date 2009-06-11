@@ -217,6 +217,16 @@ bool Object::ReadStateR(std::istream& fin){
 	return true;
 }
 
+void Object::DumpObjectR(std::ostream& os, int level) const {
+	os << level << " " << GetTypeInfo()->ClassName() << std::endl;
+	DumpObject(os);
+	size_t n = NChildObject();
+	os << std::endl;
+	for(size_t i=0; i<n; ++i){
+		((Object*)GetChildObject(i))->DumpObjectR(os, level+1);
+	}
+}
+
 //----------------------------------------------------------------------------
 //	NamedObject
 NameManagerIf* NamedObject::GetNameManager() const{
