@@ -9,7 +9,8 @@ echo #	Do not edit. ScilabSwig.bat will update this file.> %MAKEFILE%
 echo all: %MODULE%Stub.cpp>>%MAKEFILE%
 echo %MODULE%Stub.cpp: Scilab.i>>%MAKEFILE%
 echo 	swig -dll -c++ Scilab.i>>%MAKEFILE%
-echo 	move ScilabStub.hpp ..\..\include\Scilab>>%MAKEFILE%
+echo 	copy ScilabStub.hpp ..\..\include\Scilab>>%MAKEFILE%
+echo 	del ScilabStub.hpp>>%MAKEFILE%
 make -f%MAKEFILE%
 
 set PATH=%PATHORG%
