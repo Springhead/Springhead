@@ -284,6 +284,8 @@ public:
 	///	‚±‚Ì„‘Ì‚ª‚Â i”Ô–Ú‚Ì SPR::CDShape ‚Ì‚±‚Ì„‘Ì‚©‚çŒ©‚½p¨‚ğæ“¾
 	Posed		GetShapePose(int i);
 	///	‚±‚Ì„‘Ì‚ª‚Â i”Ô–Ú‚Ì SPR::CDShape ‚Ì‚±‚Ì„‘Ì‚©‚çŒ©‚½p¨‚ğİ’è
+	void		ClearShape();
+	/// ‚±‚Ì„‘Ì‚ª‚ÂSPR::CDShape ‚ğíœ
 	void		SetShapePose(int i, const Posed& pose);
 	void		SetGravity(bool bOn);
 	void		SetDynamical(bool bOn){dynamical = bOn;}

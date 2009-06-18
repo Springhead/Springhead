@@ -320,6 +320,7 @@
 	Spr::CDShapeIf* GetShape(int index){	return	base::GetShape(index);}	\
 	Posed GetShapePose(int index){	return	base::GetShapePose(index);}	\
 	void SetShapePose(int index, const Posed& pose){	base::SetShapePose(index, pose);}	\
+	void ClearShape(){	base::ClearShape();}	\
 	void SetGravity(bool bOn){	base::SetGravity(bOn);}	\
 	void SetDynamical(bool bOn){	base::SetDynamical(bOn);}	\
 	bool IsDynamical(){	return	base::IsDynamical();}	\
