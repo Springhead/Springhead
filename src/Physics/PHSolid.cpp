@@ -396,6 +396,9 @@ Posed	PHSolid::GetShapePose(int i){
 		return frames[i]->pose;
 	return Posed();
 }
+void PHSolid::ClearShape(){
+	frames.clear();
+}
 
 void	PHSolid::SetShapePose(int i, const Posed& pose){
 	if(0 <= i && i < (int)frames.size()){

@@ -236,6 +236,9 @@ struct PHSolidIf : public SceneObjectIf{
 		インデックスについてはGetShapeを参照．
 	 */
 	void		SetShapePose(int index, const Posed& pose);
+	/** @brief 形状をClearする
+	 */
+	void		ClearShape();
 	
 	/** @brief 重力を有効/無効化する
 		@param bOn trueならば剛体に重力が加わる．falseならば加わらない．
