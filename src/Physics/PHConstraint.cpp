@@ -216,12 +216,8 @@ void PHConstraint::SetupLCP(){
 	}
 	
 
-	// LCPのbベクトル == プログラム中のvjrel,論文中のw[t], バネ・ダンパはdbで補正する
-	b = vjrel;
-
-	//2009.06.02
-//	SpatialVector bb = J[0] * solid[0]->v + J[1] * solid[1]->v;
-//	assert((bb - b).norm() < 0.001);
+	// LCPのbベクトル == 論文中のw[t], バネ・ダンパはdbで補正する
+	b = J[0] * solid[0]->v + J[1] * solid[1]->v;	//vjrelではない	値によっては変わって拘束しなくなる
 
 	// 拘束力初期値による速度変化量を計算
 	SpatialVector fs;
