@@ -29,14 +29,6 @@ public:
 
 ///	ヒンジ関節
 class PHHingeJoint : public PHJoint1D{
-
-
-private:
-	// 軌道追従制御用変数，PHBallJointとは変数の型が異なる
-	double qd,		preQd;		///< ある時刻の目標位置への角度と１時刻前の目標位置への角度
-	double qdDot,	preQdDot;	///< ある時刻の目標位置への角度の一階微分と１時刻前の目標位置への角度の一階微分
-	double qdWDot;				///< ある時刻の目標位置への角度の二階微分
-		
 public:
 	SPR_OBJECTDEF(PHHingeJoint);
 	SPR_DECLMEMBEROF_PHHingeJointDesc;

@@ -19,10 +19,6 @@ PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
 	SetDesc(&desc);
 	axisIndex[0] = 5;
 
-	// ‹O“¹’Ç]§Œä—p‚Ì•Ï”‚Ì‰Šú‰»
-	qd		= preQd		= 0;
-	qdDot	= preQdDot	= 0;
-	qdWDot	= 0;
 }
 
 void PHHingeJoint::UpdateJointState(){
