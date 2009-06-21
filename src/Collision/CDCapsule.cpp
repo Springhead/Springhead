@@ -94,4 +94,20 @@ float CDCapsule::GetLength() {
 	return length;
 }
 
+Matrix3f CDCapsule::CalcMomentOfInertia(){
+	Matrix3f ans;
+	
+	// http://www12.plala.or.jp/ksp/mechanics/inertiaTable1/
+	ans[0][0] = ((radius * radius)/4.0f + (length*length)/12.0f + 2.0f * 83.0f/320.0f * radius * radius);
+	ans[0][1] = 0.0f;
+	ans[0][2] = 0.0f;
+	ans[1][0] = 0.0f;
+	ans[1][1] = ((radius * radius)/4.0f + (length*length)/12.0f+ 2.0f * 83.0f/320.0f * radius * radius);
+	ans[1][2] = 0.0f;
+	ans[2][0] = 0.0f;
+	ans[2][1] = 0.0f;
+	ans[2][2] = (9.0f/5.0f * radius * radius);
+
+	return ans;
+}
 }	//	namespace Spr

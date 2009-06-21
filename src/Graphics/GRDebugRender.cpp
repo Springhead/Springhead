@@ -434,10 +434,11 @@ void GRDebugRender::DrawGrid(double y, double span){
 	mat.specular = Vec4f();
 	mat.power	 = 0.0;
 	this->SetMaterial(mat);
+	glLineWidth(2.0);
 	glBegin(GL_LINES);
 	for(int i = 0; i < (int)2*(range/span); i++){
-		glVertex3d(i*span - range, y, -range);
-		glVertex3d(i*span - range, y,  range);
+		glVertex3d(i * span - range, y, -range);
+		glVertex3d(i * span - range, y,  range);
 		glVertex3d(-range, y, i * span -range);
 		glVertex3d( range, y, i * span -range);
 	}
