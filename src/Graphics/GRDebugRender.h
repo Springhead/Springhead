@@ -25,13 +25,16 @@ protected:
 	std::vector<GRMaterialDesc> matSample;		/// レンダラーで用意してある材質(24種類)
 
 	bool	modeSolid, modeWire;				/// 描画モード
-	bool	renderWorldAxis, renderAxis, renderForce, renderContact;
+	bool	renderWorldAxis, renderAxis, renderForce, renderContact, renderGrid;
 	float	scaleAxis, scaleForce;
+	double  gridY, gridSpan;
+
 public:
 	/**  コンストラクタ  */
 	GRDebugRender();
 	virtual void DrawScene(PHSceneIf* scene);
 	virtual void DrawWorldAxis(PHSceneIf* scene);
+	virtual void DrawGrid(double y, double span);
 	virtual void DrawSolid(PHSolidIf* so);
 	virtual void DrawConstraint(PHConstraintIf* con);
 	virtual void DrawContact(PHContactPointIf* con);
@@ -50,6 +53,9 @@ public:
 	}
 	virtual void EnableRenderContact(bool enable = true){ renderContact = enable; }
 
+	virtual void EnableGrid(bool enable = true, double y = 0.0, double span = 0.5){
+		renderGrid = enable; gridY = y; gridSpan = span;
+	}
 	/// カプセルの描画
 	void DrawCapsule(CDCapsuleIf* cap, bool solid);
 	/// 不均等カプセル (RoundCone)の描画

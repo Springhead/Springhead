@@ -404,12 +404,6 @@ struct GRDebugRenderIf:public GRRenderIf{
 	     @param  scene		シーン  */
 	void DrawScene(PHSceneIf* scene);
 
-	/** @brief シーンのWorld座標系の座標軸をレンダリングする
-		@param  scene		シーン
-	*/
-	// 引数が冗長な気がしなくもないです・・・　		toki
-	void DrawWorldAxis(PHSceneIf* scene);
-
 	/**  @brief 剛体をレンダリングする
 	     @param	solid　　　	剛体  */
 	void DrawSolid(PHSolidIf* solid);
@@ -443,6 +437,10 @@ struct GRDebugRenderIf:public GRRenderIf{
 
 	/**  @brief 接触面の描画 */
 	void EnableRenderContact(bool enable = true);
+
+	/** #brief グリッドの描画 */
+	void EnableGrid(bool enable = true, double y = 0.0, double span = 0.5);
+
 	///	面の描画(塗りつぶしあり)
 	void DrawFaceSolid(CDFaceIf* face, Vec3f * base);
 	///	面の描画(ワイヤフレーム)	
