@@ -425,8 +425,8 @@ public:
 //			TVec3<ET> Pos();
 //		};
 		struct{
-			ET w,x,y,z;
-			ET px, py, pz;
+			ET w,x,y,z;		//< ‰ñ“]
+			ET px, py, pz;	//< ˆÊ’u
 		};
 	};
 

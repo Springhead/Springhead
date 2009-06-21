@@ -15,7 +15,8 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 // PHSliderJoint
 PHSliderJointDesc::PHSliderJointDesc(){
-	bConstraintY = true;
+	bConstraintY		= true;
+	bConstraintRollX	= true;
 }
 PHSliderJoint::PHSliderJoint(const PHSliderJointDesc& desc){
 	SetDesc(&desc);
@@ -25,7 +26,9 @@ void PHSliderJoint::SetConstrainedIndex(bool *con){
 	PHJoint1D::SetConstrainedIndex(con);
 	if(!bConstraintY){
 		con[1] = false;
-		//con[3] = false;
+	} 
+	if(!bConstraintRollX){
+		con[3] = false;
 	}
 }
 void PHSliderJoint::UpdateJointState(){
