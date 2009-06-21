@@ -61,7 +61,7 @@ struct CDShapeIf : public NamedObjectIf{
 
 	float	CalcVolume();			///< 体積を計算
 	Vec3f	CalcCenterOfMass();		///< 質量中心
-	Matrix3f CalcMomentOfInertia();	///< 単位密度における質量中心に関する慣性行列
+	Matrix3f CalcMomentOfInertia();	///< 質量当たりの質量中心に関する慣性行列（massを掛けて使う）
 
 	PHMaterial	GetMaterial();
 	void		SetMaterial(PHMaterial mat);

@@ -32,6 +32,8 @@ public:
 	/// ‹…‘Ì‚ÉŠÖ‚µ‚ÄFindCutRing()‚ªŒÄ‚Ño‚³‚ê‚½ê‡‚É‚ÍAassertion‚ª”­¶‚·‚éB
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 	
+	virtual Matrix3f CalcMomentOfInertia();
+
 	float GetRadius();
 	float GetLength();
 };
