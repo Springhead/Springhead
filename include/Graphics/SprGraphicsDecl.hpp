@@ -111,7 +111,6 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRDebugRenderIf(base)	\
 	void DrawScene(PHSceneIf* scene){	base::DrawScene(scene);}	\
-	void DrawWorldAxis(PHSceneIf* scene){	base::DrawWorldAxis(scene);}	\
 	void DrawSolid(PHSolidIf* solid){	base::DrawSolid(solid);}	\
 	void SetMaterialSample(Spr::GRDebugRenderIf::TMaterialSample matname){	base::SetMaterialSample(matname);}	\
 	void SetRenderMode(bool solid, bool wire){	base::SetRenderMode(solid, wire);}	\
@@ -119,6 +118,7 @@
 	void EnableRenderAxis(bool enable, float scale){	base::EnableRenderAxis(enable, scale);}	\
 	void EnableRenderForce(bool enable, float scale){	base::EnableRenderForce(enable, scale);}	\
 	void EnableRenderContact(bool enable){	base::EnableRenderContact(enable);}	\
+	void EnableGrid(bool enable, double y, double span){	base::EnableGrid(enable, y, span);}	\
 	void DrawFaceSolid(CDFaceIf* face, Vec3f* base){	base::DrawFaceSolid(face, base);}	\
 	void DrawFaceWire(CDFaceIf* face, Vec3f* base){	base::DrawFaceWire(face, base);}	\
 

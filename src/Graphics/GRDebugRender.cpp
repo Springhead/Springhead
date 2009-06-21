@@ -48,11 +48,14 @@ GRDebugRender::GRDebugRender(){
 		it->diffuse += Vec4f(0.5,0.5,0.5,1);
 		it->diffuse /= 2;
 	}
-	modeSolid = true;
-	modeWire = false;
-	renderAxis = false;
-	renderForce = false;
+	modeSolid		= true;
+	modeWire		= false;
+	renderAxis		= false;
+	renderForce		= false;
 	renderWorldAxis = false;
+	renderGrid		= false;
+	gridY			= 0.0;
+	gridSpan		= 1.0;
 }
 
 /// シーン内の全てのオブジェクトをレンダリングする
@@ -64,6 +67,7 @@ void GRDebugRender::DrawScene(PHSceneIf* scene){
 		SetMaterialSample((GRDebugRenderIf::TMaterialSample)i);
 		DrawSolid(solids[i]);
 	}
+	if(renderGrid) DrawGrid(gridY, gridSpan);
 	SetMaterialSample((GRDebugRenderIf::TMaterialSample)0);
 	for(int i = 0; i < scene->NJoints(); ++i){
 		DrawConstraint(scene->GetJoint(i));
@@ -421,5 +425,23 @@ void GRDebugRender::SetMaterialSample(GRDebugRenderIf::TMaterialSample matname){
 	this->SetMaterial(matSample[matID]);
 }
 
+void GRDebugRender::DrawGrid(double y, double span){
+	double range = 5000;
+	GRMaterialDesc mat;
+	mat.ambient	 = Vec4f();
+	mat.emissive = Vec4f(0.6, 0.6, 0.6, 1.0);
+	mat.diffuse	 = Vec4f();
+	mat.specular = Vec4f();
+	mat.power	 = 0.0;
+	this->SetMaterial(mat);
+	glBegin(GL_LINES);
+	for(int i = 0; i < (int)2*(range/span); i++){
+		glVertex3d(i*span - range, y, -range);
+		glVertex3d(i*span - range, y,  range);
+		glVertex3d(-range, y, i * span -range);
+		glVertex3d( range, y, i * span -range);
+	}
+	glEnd();
+}
 }	//	Spr
 
