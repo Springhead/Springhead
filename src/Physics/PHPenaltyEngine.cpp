@@ -44,9 +44,7 @@ void PHSolidPairForPenalty::Setup(unsigned int ct, double dt){
 	reflexForce = reflexTorque = frictionForce = frictionTorque = Vec3f();
 	area = 0;
 
-	solid[0]->UpdateCachePenalty(ct);
-	solid[1]->UpdateCachePenalty(ct);
-	cocog = ave(solid[0]->cog, solid[1]->cog);
+	cocog = ave(solid[0]->GetCenterPosition(), solid[1]->GetCenterPosition());
 
 	//	Š·ŽZŽ¿—Ê‚ÌŒvŽZ
 	convertedMass=1.0f;
@@ -139,7 +137,7 @@ void PHSolidPairForPenalty::GenerateForce(){
 //	‚·‚×‚Ä commonPoint ‚ðŒ´“_‚Æ‚µ‚½À•WŒn‚ÅŒvŽZ‚·‚éD
 void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContactAnalysis* analyzer){
 	cp->Clear();
-	Vec3f cog[2] = {solid[0]->cog - cp->commonPoint, solid[1]->cog - cp->commonPoint};
+	Vec3f cog[2] = {solid[0]->GetCenterPosition() - cp->commonPoint, solid[1]->GetCenterPosition() - cp->commonPoint};
 	/*CDConvexMesh* cmesh[2] = {
 		(CDConvexMesh*)cp->shape[0],
 		(CDConvexMesh*)cp->shape[1]
@@ -156,7 +154,7 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 			for(unsigned i=2; i<qhVtx.NCommonVtx(); ++i){
 				p1 = p2;
 				p2 = qhVtx.CommonVtx(i);
-				CalcTriangleReflexForce(cp, p0, p1, p2, cog[curID], solid[curID]->vel, solid[curID]->angVel);
+				CalcTriangleReflexForce(cp, p0, p1, p2, cog[curID], solid[curID]->velocity, solid[curID]->angVelocity);
 #if 0				//	hase
 				if (cp->reflexSpringForce.norm() > 10000 || !finite(cp->reflexSpringForce.norm()) ){
 					DSTR << "CalcTriangleReflexForce returned very large force." << std::endl;
@@ -186,14 +184,14 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 		}
 	}else{	//	bUseContactVolume
 		Vec3d closest[2] = {
-			solid[0]->ori * cp->closestPoint[0] + solid[0]->pos,
-			solid[1]->ori * cp->closestPoint[1] + solid[1]->pos};
+			solid[0]->pose * cp->closestPoint[0],
+			solid[1]->pose * cp->closestPoint[1]};
 		cp->reflexSpringForce = reflexSpring * (closest[1] - closest[0]);
 		Vec3f colPos = (closest[0]+closest[1])/2;
 		cp->reflexSpringTorque = (colPos-cp->commonPoint) ^ cp->reflexSpringForce;
 		Vec3f vel[2];
-		vel[0] = solid[0]->vel + (solid[0]->angVel ^ (colPos - solid[0]->cog));
-		vel[1] = solid[1]->vel + (solid[1]->angVel ^ (colPos - solid[1]->cog));
+		vel[0] = solid[0]->velocity + (solid[0]->angVelocity ^ (colPos - solid[0]->GetCenterPosition()));
+		vel[1] = solid[1]->velocity + (solid[1]->angVelocity ^ (colPos - solid[1]->GetCenterPosition()));
 		Vec3f rvel = vel[1] - vel[0];
 		cp->reflexDamperForce = reflexDamper * rvel;
 		cp->reflexDamperTorque = (colPos-cp->commonPoint) ^ cp->reflexDamperForce;
@@ -327,8 +325,8 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 	Vec3f reflexForcePoint = cp->reflexForcePoint + cp->commonPoint;	//	—Í‚Ìì—p“_(â‘ÎŒn)
 	if (cp->state == PHShapePairForPenalty::NEW){
 		//	ƒoƒlƒ‚ƒfƒ‹‚ÌŽn“_‚ðÝ’è‚·‚éD
-		cp->transFrictionBase[0] = solid[0]->ori.Inv() * (reflexForcePoint - solid[0]->pos);
-		cp->transFrictionBase[1] = solid[1]->ori.Inv() * (reflexForcePoint - solid[1]->pos);
+		cp->transFrictionBase[0] = solid[0]->pose.Inv() * reflexForcePoint;
+		cp->transFrictionBase[1] = solid[1]->pose.Inv() * reflexForcePoint;
 		cp->rotSpring = 0;
 		cp->frictionState = PHShapePairForPenalty::STATIC;
 		cp->frictionForce = Vec3f();
@@ -340,8 +338,8 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 	
 	//	•Àiƒoƒl‚ÌŒvŽZ
 	//	ƒOƒ[ƒoƒ‹Œn‚É•ÏŠ·
-	cp->transFrictionBase[0] = solid[0]->ori * cp->transFrictionBase[0] + solid[0]->pos;
-	cp->transFrictionBase[1] = solid[1]->ori * cp->transFrictionBase[1] + solid[1]->pos;
+	cp->transFrictionBase[0] = solid[0]->pose * cp->transFrictionBase[0];
+	cp->transFrictionBase[1] = solid[1]->pose * cp->transFrictionBase[1];
 	//	•½–Êã‚É—Ž‚Æ‚·
 	cp->transFrictionBase[0] -= (cp->transFrictionBase[0]-cp->center) * cp->normal * cp->normal;
 	cp->transFrictionBase[1] -= (cp->transFrictionBase[1]-cp->center) * cp->normal * cp->normal;
@@ -353,9 +351,11 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 	if (transSpringNorm>1e-10f) frictionForceDicption = transSpring / transSpringNorm;
 
 	//	‰ñ“]ƒoƒl‚ÌŒvŽZ
-	Quaternionf delta[2] = { solid[0]->ori*solid[0]->lastOri.Inv(), solid[1]->ori*solid[1]->lastOri.Inv() };
+	Quaternionf delta[2] = { solid[0]->pose.Ori()*lastOri[0].Inv(), solid[1]->pose.Ori()*lastOri[1].Inv() };
 	cp->rotSpring += delta[1].Rotation()*cp->normal - delta[0].Rotation()*cp->normal;
 	float frictionSpringTorque = frictionSpring*cp->rotSpring;
+	lastOri[0] = solid[0]->pose.Ori();
+	lastOri[1] = solid[1]->pose.Ori();
 
 
 	//	“®–€ŽC‚Ì§–ñ‚ð‰Á‚¦‚é
@@ -386,11 +386,13 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 
 	if (cp->frictionState == PHShapePairForPenalty::STATIC){
 		///	ƒ_ƒ“ƒp‚É‚æ‚éÃŽ~–€ŽC—Í‚ÌŒvŽZ
-		Vec3f frictionVel = ((solid[1]->angVel ^ (reflexForcePoint-solid[1]->cog)) + solid[1]->vel) - ((solid[0]->angVel ^ (reflexForcePoint-solid[0]->cog)) + solid[0]->vel);
+		Vec3f frictionVel = 
+			(solid[1]->angVelocity ^ (reflexForcePoint-solid[1]->GetCenterPosition())) + solid[1]->velocity
+			- ((solid[0]->angVelocity ^ (reflexForcePoint-solid[0]->GetCenterPosition())) + solid[0]->velocity);
 		frictionVel -= frictionVel * cp->normal * cp->normal;
 		cp->frictionForce += frictionDamper * frictionVel;
 		
-		Vec3f frictionAngVel = solid[1]->angVel - solid[0]->angVel;
+		Vec3f frictionAngVel = solid[1]->angVelocity - solid[0]->angVelocity;
 		DEBUG_EVAL( if (!finite(frictionAngVel.norm())){ DSTR << "frictionAngVel: " << frictionAngVel << std::endl; } )
 		
 
@@ -419,8 +421,8 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 	if (frictionSpring < 1e-12f){	//	–€ŽC‚Ì‚Î‚ËŒW”‚ª0‚¾‚ÆAL‚Ñ‚ªŒvŽZ‚Å‚«‚È‚­‚È‚éB
 		frictionSpring = 1e12f;		//	ŒW”0‚Ìê‡L‚Ñ‚Í–³Ž‹‚Å‚«‚é‚Ì‚ÅAL‚Ñ‚ð¬‚³‚È’l‚É‚µ‚Ä‚¨‚­B
 	}
-	cp->transFrictionBase[0] = solid[0]->ori.Inv() * (reflexForcePoint - 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption - solid[0]->pos);
-	cp->transFrictionBase[1] = solid[1]->ori.Inv() * (reflexForcePoint + 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption - solid[1]->pos);
+	cp->transFrictionBase[0] = solid[0]->pose.Inv() * (reflexForcePoint - 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption);
+	cp->transFrictionBase[1] = solid[1]->pose.Inv() * (reflexForcePoint + 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption);
 	cp->rotSpring = frictionSpringTorque / frictionSpring;
 }
 

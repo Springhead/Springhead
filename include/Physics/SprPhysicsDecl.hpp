@@ -310,8 +310,6 @@
 	Quaterniond GetOrientation()const{	return	base::GetOrientation();}	\
 	void SetOrientation(const Quaterniond& q){	base::SetOrientation(q);}	\
 	Posed GetPose()const{	return	base::GetPose();}	\
-	Vec3d GetPoseR()const{	return	base::GetPoseR();}	\
-	Quaterniond GetPoseQ()const{	return	base::GetPoseQ();}	\
 	void SetPose(const Posed& p){	base::SetPose(p);}	\
 	Vec3d GetVelocity()const{	return	base::GetVelocity();}	\
 	void SetVelocity(const Vec3d& v){	base::SetVelocity(v);}	\

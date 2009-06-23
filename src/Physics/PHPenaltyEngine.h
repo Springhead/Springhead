@@ -70,6 +70,7 @@ public:
 	Vec3f frictionTorque;			///<	–€ŽC—Í‚É‚æ‚éƒgƒ‹ƒN(cocogŒn)
 	float convertedMass;			///<	„‘Ì‚Ì‘g‚ÌŠ·ŽZŽ¿—Ê
 	float area;						///<	ÚG–ÊÏ
+	Quaternionf lastOri[2];			///<	‘O‰ñ‚Ì„‘Ì‚ÌŒü‚«(â‘ÎŒn)
 
 	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< Œð·‚ªŒŸ’m‚³‚ê‚½‚Æ‚«‚Ìˆ—
 

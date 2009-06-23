@@ -104,10 +104,6 @@ Vec3d PHSolid::GetDeltaPosition() const {
 	PHScene* s = DCAST(PHScene, nameManager);
 	return velocity * s->GetTimeStep();
 }
-Vec3d PHSolid::GetDeltaAngle() const {
-	PHScene* s = DCAST(PHScene, nameManager);
-	return Vec3d(angVel) * s->GetTimeStep();
-}
 Vec3d PHSolid::GetDeltaPosition(const Vec3d& p) const {
 	PHScene* s = DCAST(PHScene, nameManager);
 	double dt = s->GetTimeStep();
@@ -160,7 +156,7 @@ void PHSolid::UpdateCacheLCP(double dt){
 	}
 	dV.clear();
 }
-
+/*
 void PHSolid::UpdateCachePenalty(int c){
 	if ((unsigned)c == count) return;
 	count = c;
@@ -172,7 +168,7 @@ void PHSolid::UpdateCachePenalty(int c){
 	ori = GetOrientation();
 	cog = ori * GetCenterOfMass() + pos;
 }
-
+*/
 void PHSolid::UpdateVelocity(double dt){
 	SpatialVector vold = v;
 	if(IsDynamical() && !IsFrozen()){

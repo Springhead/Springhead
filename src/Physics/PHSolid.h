@@ -147,20 +147,7 @@ public:
 	void UpdatePosition(double dt);
 	bool IsArticulated();
 	//@}
-	
-	///@name Penalty法関連補助変数
-	//@{
-	/**	最後に接触した時刻 = キャッシュパラメータを最後に更新した時刻．
-		接触時に，キャッシュを更新するので，count が現在の時刻と等しければ
-		衝突が起きたことを意味する．	*/
-	unsigned count;
-	//	フレーム(剛体)単位のパラメータ
-	Vec3f cog, vel, angVel;			///<	重心，速度，角速度
-	Vec3f pos, lastPos;				///<	位置，最後の位置
-	Quaternionf ori, lastOri;		///<	向き，前回の向き
-	void UpdateCachePenalty(int c);		///<	キャッシュ変数を剛体などから取ってくる．
-	//@}
-	
+		
 public:
 	std::vector< UTRef<PHFrame> > frames;
 	PHBBox bbox;
@@ -217,14 +204,11 @@ public:
 	void SetIntegrationMode(PHIntegrationMode m){ integrationMode=m; }
 
 	Posed		GetPose() const { return pose; }
-	Vec3d		GetPoseR() const{ return pose.Pos();}
-	Quaterniond GetPoseQ() const{ return pose.Ori();}
 	void		SetPose(const Posed& p) { pose = p;}
 	Vec3d		GetFramePosition() const {return pose.Pos();}
 	void		SetFramePosition(const Vec3d& p){pose.Pos() = p;}
 	Vec3d		GetDeltaPosition() const ;
 	Vec3d		GetDeltaPosition(const Vec3d& pos) const ;
-	Vec3d		GetDeltaAngle() const;
 	Vec3d		GetPrevFramePosition() const { return pose.Pos()-GetDeltaPosition(); }
 	Vec3d		GetCenterPosition() const {return pose*center;} 	///< 重心位置の取得
 	void		SetCenterPosition(const Vec3d& p){					///< 重心位置の設定
