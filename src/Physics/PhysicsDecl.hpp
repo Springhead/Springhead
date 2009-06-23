@@ -327,11 +327,13 @@ public:\
 protected:\
 	bool	bConstraintY;	\
 	bool	bConstraintRollX;	\
+	bool	bConstraintRollZ;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint1D::SetDesc((PHJoint1DDesc*)(PHSliderJointDesc*)ptr);	\
 		bConstraintY = ((PHSliderJointDesc*)ptr)->bConstraintY;	\
 		bConstraintRollX = ((PHSliderJointDesc*)ptr)->bConstraintRollX;	\
+		bConstraintRollZ = ((PHSliderJointDesc*)ptr)->bConstraintRollZ;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -339,6 +341,7 @@ public:\
 		PHJoint1D::GetDesc((PHJoint1DDesc*)(PHSliderJointDesc*)ptr);	\
 		((PHSliderJointDesc*)ptr)->bConstraintY = bConstraintY;	\
 		((PHSliderJointDesc*)ptr)->bConstraintRollX = bConstraintRollX;	\
+		((PHSliderJointDesc*)ptr)->bConstraintRollZ = bConstraintRollZ;	\
 		return true;	\
 	}\
 

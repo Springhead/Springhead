@@ -363,6 +363,7 @@ struct PHSliderJointDesc : public PHJoint1DDesc{
 	
 	bool bConstraintY;
 	bool bConstraintRollX;
+	bool bConstraintRollZ;
 
 	PHSliderJointDesc();
 };
