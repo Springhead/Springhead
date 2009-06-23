@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
- Springhead2/src/tests/Physics/PHConstraintTest.cpp
+ Springhead2/src/tests/Physics/PHPenaltyTest.cpp
 
 【概要】
   ・接触モードに LCP法 を選択して、シミュレーションする。
@@ -241,7 +241,7 @@ void SPR_CDECL idle(){
 	}
 	// 終了判定
 	if (stepCnt > STAY_COUNTER){
-		DSTR << "\nPHConstraintTest success." << std::endl;
+		DSTR << "\nPHPenaltyTest success." << std::endl;
 		exit(EXIT_SUCCESS);
 	}
 	totalStep++;
@@ -284,7 +284,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 	dscene.numIteration = 100;
 	dscene.timeStep = dt;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
-	scene->SetContactMode(PHSceneDesc::MODE_LCP);	// 接触モードに LCP法で選択
+	scene->SetContactMode(PHSceneDesc::MODE_PENALTY);	// 接触モードに ペナルティ法を選択
 
 	PHSolidDesc dsolid;
 	dsolid.mass = 2.0;
@@ -334,7 +334,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	glutCreateWindow("PHConstraintTest");
+	glutCreateWindow("PHPenaltyTest");
 	initialize();
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
