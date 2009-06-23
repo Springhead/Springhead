@@ -167,15 +167,6 @@ struct PHSolidIf : public SceneObjectIf{
 	 */
 	Posed		GetPose() const;
 	
-	/** @brief 剛体の位置を取得する
-		@return シーンに対する剛体の位置
-	*/
-	Vec3d		GetPoseR() const;
-
-	/** @brief	剛体の向きを取得する
-	*/
-	Quaterniond GetPoseQ() const;
-
 	/** @brief 剛体の位置と向きを設定する
 		@param p シーンに対する剛体の位置と向き
 	 */
