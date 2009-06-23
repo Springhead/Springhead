@@ -761,8 +761,14 @@ void PHBallJointNode::ModifyJacobian(){
 }
 
 void PHBallJointNode::CompBias(){
-	dA.clear();
-	db.clear();
+
+	PHBallJoint* j = GetJoint();
+	j->dA.clear();
+	j->db.clear();
+	j->CompBias();
+	dA = j->dA.w();
+	db = j->db.w();
+
 }
 
 void PHBallJointNode::Projection(double& f, int k){
