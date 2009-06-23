@@ -76,10 +76,10 @@ void PH3ElementBallJoint::CompBias(){
 		tmp = D1+D2+K*h;
 
 		xs[1] = ((D1+D2)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
-
-		dA.w()[0]= tmp/(D2*(K*h+D1)) * dtinv;
-		dA.w()[1]= tmp/(D2*(K*h+D1)) * dtinv;
-		dA.w()[2]= tmp/(D2*(K*h+D1)) * dtinv;
+		
+		for(int i=0;i<3;i++){
+		dA.w()[i]= tmp/(D2*(K*h+D1)) * dtinv /I[i];
+		}
 		db.w() = K/(K*h+D1)*(xs[0].w()) ;
 	
 		xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
@@ -112,6 +112,24 @@ void PH3ElementBallJoint::CompBias(){
 		dA.w()[2] = 0;
 		db.w()[2] = (nowTheta[1] - limitTwist[1]) * dtinv * engine->velCorrectionRate;
 	}
+}
+
+void PH3ElementBallJointNode::CompJointJacobian(){
+	PHBallJoint* j = GetJoint();
+	//SwingTwist& angle = (SwingTwist&)(j->position);
+	//angle.Jacobian(Jst);
+	//Matrix3d test = Jst * Jcinv;
+	Quaterniond q = j->Xjrel.q;
+	for(int i = 0; i < 3; i++)
+		J.col(i).sub_vector(PTM::TSubVectorDim<0,3>()).clear();
+	/*J[0].w() = 2.0 * Vec3d(-q.x, -q.y, -q.z);
+	J[1].w() = 2.0 * Vec3d( q.w,  q.z, -q.y);
+    J[2].w() = 2.0 * Vec3d(-q.z,  q.w,  q.x);
+    J[3].w() = 2.0 * Vec3d( q.y, -q.x,  q.w);*/
+	J.col(0).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(1.0, 0.0, 0.0);
+	J.col(1).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 1.0, 0.0);
+	J.col(2).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 0.0, 1.0);
+	PHTreeNodeND<3>::CompJointJacobian();
 }
 
 }

@@ -280,6 +280,19 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PH3ElementBallJointNodeDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHBallJointNode::SetDesc((PHBallJointNodeDesc*)(PH3ElementBallJointNodeDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHBallJointNode::GetDesc((PHBallJointNodeDesc*)(PH3ElementBallJointNodeDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHGearDesc \
 protected:\
 	double	ratio;	\
@@ -429,12 +442,14 @@ protected:\
 	double	secondDamper;	\
 	double	yieldStress;	\
 	double	hardnessRate;	\
+	Vec3d	I;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHBallJoint::SetDesc((PHBallJointDesc*)(PH3ElementBallJointDesc*)ptr);	\
 		secondDamper = ((PH3ElementBallJointDesc*)ptr)->secondDamper;	\
 		yieldStress = ((PH3ElementBallJointDesc*)ptr)->yieldStress;	\
 		hardnessRate = ((PH3ElementBallJointDesc*)ptr)->hardnessRate;	\
+		I = ((PH3ElementBallJointDesc*)ptr)->I;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -443,6 +458,7 @@ public:\
 		((PH3ElementBallJointDesc*)ptr)->secondDamper = secondDamper;	\
 		((PH3ElementBallJointDesc*)ptr)->yieldStress = yieldStress;	\
 		((PH3ElementBallJointDesc*)ptr)->hardnessRate = hardnessRate;	\
+		((PH3ElementBallJointDesc*)ptr)->I = I;	\
 		return true;	\
 	}\
 
@@ -476,12 +492,14 @@ protected:\
 	Vec3d	secondDamper;	\
 	double	yieldStress;	\
 	double	hardnessRate;	\
+	Vec3d	I;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHSpring::SetDesc((PHSpringDesc*)(PH3ElementDesc*)ptr);	\
 		secondDamper = ((PH3ElementDesc*)ptr)->secondDamper;	\
 		yieldStress = ((PH3ElementDesc*)ptr)->yieldStress;	\
 		hardnessRate = ((PH3ElementDesc*)ptr)->hardnessRate;	\
+		I = ((PH3ElementDesc*)ptr)->I;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -490,6 +508,7 @@ public:\
 		((PH3ElementDesc*)ptr)->secondDamper = secondDamper;	\
 		((PH3ElementDesc*)ptr)->yieldStress = yieldStress;	\
 		((PH3ElementDesc*)ptr)->hardnessRate = hardnessRate;	\
+		((PH3ElementDesc*)ptr)->I = I;	\
 		return true;	\
 	}\
 

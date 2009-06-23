@@ -79,6 +79,8 @@ struct PHPathJointNodeDesc : public PHTreeNode1DDesc{
 };
 struct PHBallJointNodeDesc : public PHTreeNodeDesc{
 };
+struct PH3ElementBallJointNodeDesc : public PHBallJointNodeDesc{
+};
 
 /// ギアのディスクリプタ
 struct PHGearDesc{
@@ -607,6 +609,7 @@ struct PH3ElementBallJointDesc : public PHBallJointDesc{
 	double secondDamper;		// 二個目のダンパ係数
 	double yieldStress;			// 降伏応力
 	double hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
+	Vec3d  I;					// 断面２次モーメント
 
 	PH3ElementBallJointDesc();	// ディスクリプタのコンストラクタ
 };
@@ -700,6 +703,16 @@ struct PH3ElementIf : public PHSpringIf{
 		@return 降伏応力以下の場合にジョイントを硬くする倍率
 	 */
 	double GetHardnessRate();
+
+	/** @brief 断面2次モーメントを設定する
+		@param 断面2次モーメント
+	 */
+	void SetI(const Vec2d i);
+	
+	/** @brief 断面2次モーメントを取得する
+		@return 断面2次モーメント
+	 */
+	Vec2d GetI();
 };
 /// 3要素モデルのディスクリプタ
 struct PH3ElementDesc : public PHSpringDesc{
@@ -708,6 +721,7 @@ struct PH3ElementDesc : public PHSpringDesc{
 	Vec3d		secondDamper;		// 二個目のダンパ係数
 	double		yieldStress;		// 降伏応力
 	double		hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
+	Vec3d		I;					// 断面2次モーメント
 	
 	PH3ElementDesc();
 };
@@ -752,6 +766,9 @@ struct PHPathJointNodeIf : public PHTreeNode1DIf{
 };
 struct PHBallJointNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHBallJointNode);
+};
+struct PH3ElementBallJointNodeIf : public PHBallJointNodeIf{
+	SPR_IFDEF(PH3ElementBallJointNode);
 };
 
 /// ギアのインタフェース

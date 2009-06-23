@@ -17,7 +17,8 @@ PH3ElementDesc::PH3ElementDesc(){
 	springOri = damperOri = 0.0;
 	secondDamper		  = Vec3d(0.0, 0.0, 0.0);
 	yieldStress			  = 0.0;			// ~•š‰—Í
-	hardnessRate		  = 1.0;		// ~•š‰—ÍˆÈ‰º‚Ìê‡‚É“ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ÉŠ|‚¯‚é”ä—¦
+	hardnessRate		  = 1.0;		// ~•š‰—ÍˆÈ‰º‚Ìê‡‚É“ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ÉŠ|‚¯‚é”ä
+	I					  = Vec3d(1.0,1.0,1.0);
 }
 //----------------------------------------------------------------------------
 // PH3Element
@@ -36,6 +37,7 @@ void PH3Element::SetDesc(const void* desc){
 	damperOri = desc3Element.damperOri;
 	yieldStress	= desc3Element.yieldStress;			// ~•š‰—Í
 	hardnessRate = desc3Element.hardnessRate;		// ~•š‰—ÍˆÈ‰º‚Ìê‡‚É“ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ÉŠ|‚¯‚é”ä—¦
+	I = desc3Element.I;								// ’f–Ê‚QŸƒ‚[ƒƒ“ƒg
 }
 
 void PH3Element::SetConstrainedIndex(bool* con){

@@ -181,6 +181,8 @@
 	double GetYieldStress(){	return	base::GetYieldStress();}	\
 	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
 	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
+	void SetI(const Vec2d i){	base::SetI(i);}	\
+	Vec2d GetI(){	return	base::GetI();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHTreeNodeIf(base)	\
 	void Enable(bool bEnable){	base::Enable(bEnable);}	\
@@ -199,6 +201,8 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHPathJointNodeIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHBallJointNodeIf(base)	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementBallJointNodeIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHGearIf(base)	\
 

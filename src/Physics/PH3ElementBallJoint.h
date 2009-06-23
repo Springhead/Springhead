@@ -16,6 +16,13 @@
 
 namespace Spr{
 
+class PH3ElementBallJointNode : public PHBallJointNode{
+	SPR_OBJECTDEF1(PH3ElementBallJointNode, PHTreeNode);
+	SPR_DECLMEMBEROF_PH3ElementBallJointNodeDesc;
+
+	virtual void		CompJointJacobian();
+	PH3ElementBallJointNode(const PH3ElementBallJointNodeDesc& desc = PH3ElementBallJointNodeDesc()){}
+};
 
 class PH3ElementBallJoint : public PHBallJoint, public PH3ElementCommonData{
 public:
