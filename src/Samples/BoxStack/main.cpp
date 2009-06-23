@@ -11,7 +11,7 @@ Springhead2/src/Samples/BoxStack
 
 \section secQuitBoxStack 終了基準
 - Escか'q'で強制終了。
-- ' ', 'v', 'z', 'x'で箱が落ちてくる
+- ' ', 'm', 'd', 'c', 'v', 'z', 'x'で箱が落ちてくる
 	
 \section secFlowBoxStack 処理の流れ
 - シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
@@ -281,6 +281,12 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 			bStep = false;
 			scene->Step();
 			break;
+		case 'P':
+			scene->SetContactMode(PHSceneDesc::MODE_PENALTY);
+			break;
+		case 'C':
+			scene->SetContactMode(PHSceneDesc::MODE_LCP);
+			break;
 		case ' ':
 			states->ReleaseState(scene);
 			{
@@ -309,7 +315,7 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 				soBox.back()->SetName(os.str().c_str());
 
 			}break;
-		case 'C':
+		case 'o':
 			states->ReleaseState(scene);
 			{
 //				desc.dynamical = false;
