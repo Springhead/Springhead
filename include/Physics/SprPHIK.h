@@ -5,6 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+/**
+ *	@file SprPHIK.h
+ *	@brief 逆運動学(IK)計算
+*/
 #ifndef SPR_PHIKIf_H
 #define SPR_PHIKIf_H
 
@@ -13,10 +17,14 @@
 
 namespace Spr{;
 
+/** \addtogroup gpPhysics */
+//@{
+
+/** \defgroup gpJoint 逆運動学(IK)計算*/
 //@{
 
 // ------------------------------------------------------------------------------
-/// IKの制御点
+/// IKの制御点（目標位置を示すもの）
 struct PHIKControlPointIf : SceneObjectIf{
 	SPR_IFDEF(PHIKControlPoint);
 
@@ -45,13 +53,14 @@ struct PHIKControlPointIf : SceneObjectIf{
 	void Enable(bool enable);
 };
 
+/// IK制御点のディスクリプタ
 struct PHIKControlPointDesc{
 	SPR_DESCDEF(PHIKControlPoint);
 
 	PHSolidIf* solid;  ///< 制御点のある剛体
 };
 
-// --- 位置制御点
+/// 目標位置を指定する制御点
 struct PHIKPosCtlIf : PHIKControlPointIf{
 	SPR_IFDEF(PHIKPosCtl);
 
@@ -72,13 +81,14 @@ struct PHIKPosCtlIf : PHIKControlPointIf{
 	Vec3d GetPos();
 };
 
+/// 位置制御点のディスクリプタ
 struct PHIKPosCtlDesc : PHIKControlPointDesc{
 	SPR_DESCDEF(PHIKPosCtl);
 
 	Vec3d pos;  ///< 制御点の位置（剛体ローカル座標系における）
 };
 
-// --- 姿勢制御点
+/// 目標姿勢を指定する制御点
 struct PHIKOriCtlIf : PHIKControlPointIf{
 	SPR_IFDEF(PHIKOriCtl);
 
@@ -91,12 +101,13 @@ struct PHIKOriCtlIf : PHIKControlPointIf{
 	Quaterniond GetGoal();
 };
 
+/// 姿勢制御点のディスクリプタ
 struct PHIKOriCtlDesc : PHIKControlPointDesc{
 	SPR_DESCDEF(PHIKOriCtl);
 };
 
 // ------------------------------------------------------------------------------
-/// IKの制御に用いることのできる可動部品（関節・剛体など）
+/// IKノード（目標の達成のために用いることのできる可動部品（関節・剛体など））
 struct PHIKNodeIf : SceneObjectIf{
 	SPR_IFDEF(PHIKNode);
 
@@ -153,6 +164,7 @@ struct PHIKNodeIf : SceneObjectIf{
 	double GetDamper();
 };
 
+/// IKノードのディスクリプタ
 struct PHIKNodeDesc{
 	SPR_DESCDEF(PHIKNode);
 
@@ -163,38 +175,44 @@ struct PHIKNodeDesc{
 	PHIKNodeDesc(){ bias = 1.0f; }
 };
 
-// --- 位置制御可能な剛体
+/// 位置が可動な剛体
 struct PHIKSolidIf : PHIKNodeIf{
 	SPR_IFDEF(PHIKSolid);
 };
 
+/// IK用剛体のディスクリプタ
 struct PHIKSolidDesc : PHIKNodeDesc{
 	SPR_DESCDEF(PHIKSolid);
 
 	PHSolidIf* solid;  ///< 制御対象の剛体
 };
 
-// --- 角度制御可能なボールジョイント
+/// 姿勢が可動なボールジョイント
 struct PHIKBallJointIf : PHIKNodeIf{
 	SPR_IFDEF(PHIKBallJoint);
 };
 
+/// IK用ボールジョイントのディスクリプタ
 struct PHIKBallJointDesc : PHIKNodeDesc{
 	SPR_DESCDEF(PHIKBallJoint);
 
 	PHBallJointIf* joint;  ///< 制御対象の関節
 };
 
-// --- 角度制御可能なヒンジジョイント
+/// 角度が可動なヒンジジョイント
 struct PHIKHingeJointIf : PHIKNodeIf{
 	SPR_IFDEF(PHIKHingeJoint);
 };
 
+/// IK用ヒンジジョイントのディスクリプタ
 struct PHIKHingeJointDesc : PHIKNodeDesc{
 	SPR_DESCDEF(PHIKHingeJoint);
 
 	PHHingeJointIf *joint;  ///< 制御対象の関節
 };
+
+//@}
+//@}
 
 }
 
