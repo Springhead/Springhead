@@ -16,12 +16,25 @@
 
 namespace Spr{
 
+class PH3ElementBallJoint;
+
 class PH3ElementBallJointNode : public PHBallJointNode{
+public:
 	SPR_OBJECTDEF1(PH3ElementBallJointNode, PHTreeNode);
 	SPR_DECLMEMBEROF_PH3ElementBallJointNodeDesc;
 
-	virtual void		CompJointJacobian();
-	PH3ElementBallJointNode(const PH3ElementBallJointNodeDesc& desc = PH3ElementBallJointNodeDesc()){}
+	PH3ElementBallJoint*	GetJoint(){return PHTreeNodeND<3>::GetJoint()->Cast();}
+
+	virtual void	CompJointJacobian();
+	virtual void	ModifyJacobian();
+	virtual void	CompBias();
+	virtual void	Projection(double& f, int k);
+	virtual void    CompRelativeVelocity();
+	virtual void	CompJointCoriolisAccel();
+	virtual void	CompRelativePosition();
+	virtual void	UpdateJointPosition(double dt);
+
+	PH3ElementBallJointNode(const PH3ElementBallJointNodeDesc& desc = PH3ElementBallJointNodeDesc());
 };
 
 class PH3ElementBallJoint : public PHBallJoint, public PH3ElementCommonData{
@@ -42,6 +55,13 @@ public:
 
 	// このクラス内で再定義する（オーバーライドする）関数
 	void	CompBias();		///< 侵入量の判定(オーバーライド)
+
+	//TreeNode用の関数
+	virtual PHTreeNode*		CreateTreeNode(){
+		return DBG_NEW PH3ElementBallJointNode();
+	}
+	virtual Matrix3d GetJcinv(){return Jcinv;};
+	virtual OnLimit* GetOnLimit(){return onLimit;};
 
 	// コンストラクタ（引数付き）
 	PH3ElementBallJoint(const PH3ElementBallJointDesc& desc = PH3ElementBallJointDesc());				/// - コンストラクタ
