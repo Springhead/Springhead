@@ -20,63 +20,20 @@ PHIKEngine::PHIKEngine():numIter(25){
 }
 void PHIKEngine::Step(){
 	if (bEnabled) {
-		// DSTR << " -- " << std::endl;
 		if (nodes.size() > 0 && controlpoints.size() > 0) {
 
-			/*
-			nDOFsInCol.resize(nodes.size());
-			for(size_t i=0; i<nDOFsInCol.size(); ++i){ nDOFsInCol[i] = 0; }
+			// ヤコビアンの計算
+			for(size_t i=0; i<nodes.size(); ++i){
+				DCAST(PHIKNode,nodes[i])->ClearJacobian();
+				DCAST(PHIKNode,nodes[i])->CalcAllJacobian();
+			}
 
-			nDOFsInRow.resize(controlpoints.size());
-			for(size_t i=0; i<nDOFsInRow.size(); ++i){ nDOFsInRow[i] = 0; }
-			*/
-
+			// 計算の準備（α・β・γの事前計算）
 			for(size_t i=0; i<nodes.size(); ++i){
 				nodes[i]->PrepareSolve();
 			}
 
-			// int w=0; for(size_t i=0; i<nDOFsInCol.size(); ++i){ w+=nDOFsInCol[i]; }
-			// int h=0; for(size_t j=0; j<nDOFsInRow.size(); ++j){ h+=nDOFsInRow[j]; }
-			// Jc.resize(h,w);
-			// v_.resize(h);
-			// w_.resize(w);
-			// std::cout << "h: " << h << ",  w: " << w << std::endl;
-
-			/*
-			int m=0;
-			for(size_t i=0; i<nDOFsInCol.size(); ++i){
-				int n=0;
-				for(size_t j=0; j<nDOFsInRow.size(); ++j){
-					for(size_t x=0; x<nDOFsInRow[j]; ++x) {
-						v_[n+x] = DCAST(PHIKControlPoint,controlpoints[j])->GetTmpGoal()[x];
-					}
-					
-					for(size_t x=0; x<nDOFsInRow[j]; ++x) {
-						for(size_t y=0; y<nDOFsInCol[i]; ++y) {
-							if (DCAST(PHIKNode,nodes[i])->Mj[j]) {
-								Jc[n+x][m+y] = DCAST(PHIKNode,nodes[i])->Mj[j][x][y];
-							} else {
-								Jc[n+x][m+y] = 0;
-							}
-						}
-					}
-
-					n += nDOFsInRow[j];
-				}
-				m += nDOFsInCol[i];
-			}
-			*/
-
-			// std::cout << Jc << std::endl;
-			// piJc = Jc.trans() * PTM::inv(Jc * Jc.trans());
-			// piJc = PTM::inv(Jc.trans() * Jc) * Jc.trans();
-			// std::cout << piJc << std::endl;
-
-			// w_ = piJc * v_;
-
-			// std::cout << w_ << std::endl;
-			// std::cout << " -- " << std::endl;
-
+			// 繰り返し計算の実行
 			int iter = numIter;
 			if (iter < 0) { iter = 200; }
 			for(int n=0; n<iter; n++){
@@ -85,67 +42,16 @@ void PHIKEngine::Step(){
 					nodes[i]->ProceedSolve();
 					PTM::VVector<double> diff = (DCAST(PHIKNode,nodes[i])->dTheta_prev - DCAST(PHIKNode,nodes[i])->dTheta);
 					dErr += (diff.norm() * diff.norm());
-					// std::cout << " -- -- -- " << std::endl;
-					// std::cout << "dT   : " << DCAST(PHIKNode,nodes[i])->dTheta << std::endl;
-					// std::cout << "dTp  : " << DCAST(PHIKNode,nodes[i])->dTheta_prev << std::endl;
-					// std::cout << "diff : " << diff << std::endl;
-					// std::cout << " -- -- -- " << std::endl;
 				}
-				// std::cout << n << " : " << sqrt(dErr) << std::endl;
 				if ((((int)numIter) < 0) && (sqrt(dErr) < 1e-8)) { break; }
 			}
 
-			/*
-			std::cout << "d = 0" << std::endl;
-			{
-				int m=0;
-				for(size_t i=0; i<nDOFsInCol.size(); ++i){
-					for(size_t y=0; y<nDOFsInCol[i]; ++y) {
-						// std::cout << "it_w = " << DCAST(PHIKNode,nodes[i])->dTheta[y];
-						// std::cout << ";  ";
-						// DCAST(PHIKNode,nodes[i])->dTheta[y] = w_[m+y];
-						// std::cout << "pi_w = " << w_[m+y];
-						// std::cout << std::endl;
-						// std::cout << "d += (it_w - pi_w)**2 " << std::endl;
-					}
-					m += nDOFsInCol[i];
-				}
-			}
-			std::cout << "puts Math::sqrt(d)" << std::endl << std::endl;
-			*/
-
-			double d = 0;
-			for(size_t i=0; i<nodes.size(); ++i){
-				double sq_d = DCAST(PHIKNode,nodes[i])->dTheta.norm();
-				d += (sq_d * sq_d);
-			}
-			double limitation = 1.0;
-
-			// std::cout << sqrt(d) << std::endl;
-			double limit = Rad(355);
-			if (limit < sqrt(d)) {
-				limitation = (1 / sqrt(d)) * limit;
-			}
-
-			for(size_t i=0; i<nodes.size(); ++i){
-				// DCAST(PHIKNode,nodes[i])->dTheta = (DCAST(PHIKNode,nodes[i])->dTheta * limitation);
-			}
-
+			// 関節の動作
 			for(size_t i=0; i<nodes.size(); ++i){
 				nodes[i]->Move();
 			}
 
 		}
-		/*
-		DSTR << "J = [M_0_9, M_1_9, M_2_9, M_3_9, zeros(3,2), zeros(3,1), zeros(3,2); M_0_20, M_1_20, zeros(3,3), zeros(3,3), M_7_20, M_8_20, M_9_20];" << std::endl;
-		DSTR << "v = [v_9, v_20]';" << std::endl;
-		DSTR << "w = [w_0, w_1, w_2, w_3, w_7, w_9]';" << std::endl;
-		DSTR << "pv = J * (pinv(J) * v);" << std::endl;
-		DSTR << "iv = J * w;" << std::endl;
-		DSTR << "[pv-v, iv-v]" << std::endl;
-		DSTR << std::endl;
-		DSTR << std::endl;
-		*/
 	}
 }
 
@@ -175,7 +81,6 @@ PHIKNode* PHIKEngine::CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc){
 		iknode = DBG_NEW PHIKHingeJoint();
 		DCAST(PHIKHingeJointIf,iknode)->SetDesc(&desc);
 	}
-	//AddChildObject(iknode->Cast());
 	return iknode;
 }
 
@@ -188,7 +93,6 @@ PHIKControlPoint* PHIKEngine::CreateIKControlPoint(const IfInfo* ii, const PHIKC
 		ikcontrolpoint = DBG_NEW PHIKOriCtl();
 		DCAST(PHIKOriCtlIf,ikcontrolpoint)->SetDesc(&desc);
 	}
-	//AddChildObject(ikcontrolpoint->Cast());
 	return ikcontrolpoint;
 }
 
@@ -277,23 +181,21 @@ Vec3d PHIKOriCtl::GetTmpGoal(){
 
 // --- --- --- --- ---
 void PHIKNode::SetNDOF(int n){
-	// std::cout << "SetNDOF to " << n << std::endl;
 	ndof = n;
-	iDx.resize(ndof); iDx.clear();
-	iD.resize(ndof); iD.clear();
-	F.resize(ndof, ndof); F.clear();
-	for(size_t i=0; i<K.size(); ++i){
-		// std::cout << "ndof = " << ndof << std::endl;
-		// std::cout << " before resize :  K[" << number << "," << i << "] : " << K[i] << std::endl;
-		K[i].resize(ndof, ndof);
-		// std::cout << " after resize  :  K[" << number << "," << i << "] : " << K[i] << std::endl;
-		K[i].clear();
-		// std::cout << " after clear   :  K[" << number << "," << i << "] : " << K[i] << std::endl;
+
+	alpha.resize(ndof); alpha.clear();
+	beta.resize(ndof); beta.clear();
+	gamma.clear();
+	for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
+		int n_y_n = DCAST(PHIKNode,*n_y)->number;
+		gamma[n_y_n].resize(ndof,DCAST(PHIKNode,*n_y)->ndof);
+		gamma[n_y_n].clear();
 	}
+	gamma[number].resize(ndof,ndof); gamma[number].clear();
+
 	dTheta.resize(ndof); dTheta.clear();
 	dTheta_prev.resize(ndof); dTheta_prev.clear();
 	tau.resize(ndof); tau.clear();
-	// std::cout << " --- " << std::endl;
 }
 
 void PHIKNode::ClearJacobian(){
@@ -309,7 +211,7 @@ void PHIKNode::CalcAllJacobian(){
 			// Enabledな姿勢制御点が含まれる
 			enableStat = ES_ORI;
 		} else {
-			// Enabledな位置制御展が含まれる
+			// Enabledな位置制御点が含まれる
 			if (enableStat==ES_NONE) {
 				enableStat = ES_NOORI;
 			}
@@ -333,101 +235,49 @@ void PHIKNode::CalcAllJacobian(){
 
 		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
 		Mj[n] = CalcJacobian(*ctlpt);
-		/*
-		std::cout << "M_" << number << "_" << n << " = ";
-		std::cout << Mj[n] << std::endl;
-		*/
-
-		/*
-		DCAST(PHIKEngine,DCAST(PHSceneIf,GetScene())->GetIKEngine())->nDOFsInCol[number] = ndof;
-		DCAST(PHIKEngine,DCAST(PHSceneIf,GetScene())->GetIKEngine())->nDOFsInRow[n]      = 3;
-		*/
-
-		/*
-		std::cout << "M_" << number << "_" << n << " = ";
-		Mj[n].print(DSTR, "[ ] ,;");
-		std::cout << ";" << std::endl;
-		*/
 	}
 }
 
 void PHIKNode::PrepareSolve(){
-	ClearJacobian();
-	CalcAllJacobian();
+	alpha.clear();
+	beta.clear();
 
-	PTM::VMatrixRow<double>	JtJ; JtJ.resize(ndof,ndof);	JtJ.clear();
-	PTM::VVector<double>	Jtx; Jtx.resize(ndof);		Jtx.clear();
-
-	tau.clear();
-
-	for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
-		if (! DCAST(PHIKControlPoint,*ctlpt)->isEnabled) { continue; }
-
-		PTM::VMatrixRow<double> J; J.resize(ndof,ndof);
-		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
-
-		/**/
-		// Mj[n] = Mj[n] * (1/sqrt(bias));
-		Mj[n] = Mj[n] * (sqrt(bias));
-		J = Mj[n];
-		/*/
-		J = Mj[n] * sqrt(bias);
-		/**/
-		JtJ += J.trans() * J;
-		Jtx += J.trans() * DCAST(PHIKControlPoint,(*ctlpt))->GetTmpGoal();
-
-		/*
-		DSTR << "v_" << DCAST(PHIKControlPoint,(*ctlpt))->number << " = ";
-		DCAST(PHIKControlPoint,(*ctlpt))->GetTmpGoal().print(DSTR, "[,]");
-		DSTR << ";" << std::endl;
-		*/
-
-
-		tau += J.trans() * DCAST(PHIKControlPoint,(*ctlpt))->GetForce();
+	for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
+		int n_y_n = DCAST(PHIKNode,*n_y)->number;
+		gamma[n_y_n].resize(ndof,DCAST(PHIKNode,*n_y)->ndof);
+		gamma[n_y_n].clear();
 	}
 
-	for(int i=0; i<ndof; i++){
-		if (JtJ[i][i]!=0) {
-			iD[i] = 1.0 / JtJ[i][i];
-		} else {
-			iD[i] = 1e+20;
-		}
-		iDx[i] = iD[i] * Jtx[i];
-	}
+	std::cout << "bias : " << bias << std::endl;
+	for (size_t i=0; i<ndof; ++i) {
+		for(CSetIter c_z=linkedControlPoints.begin(); c_z!=linkedControlPoints.end(); ++c_z){
+			if (! DCAST(PHIKControlPoint,*c_z)->isEnabled) { continue; }
+			int c_z_n = DCAST(PHIKControlPoint,*c_z)->number;
+			Vec3d c_z_v = DCAST(PHIKControlPoint,*c_z)->GetTmpGoal();
 
-	for(int i=0; i<ndof; ++i){
-		for(int j=0; j<ndof; ++j){
-			if (i!=j) {
-				F[i][j] = JtJ[i][j];
-			} else {
-				F[i][j] = 0;
+			for (size_t k=0; k<3; ++k) {
+
+				alpha[i] += ( (Mj[c_z_n][k][i]/bias) * (Mj[c_z_n][k][i]) );
+				beta[i]  += ( (Mj[c_z_n][k][i]/bias) * (c_z_v[k]) );
+
+				for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
+					int n_y_n = DCAST(PHIKNode,*n_y)->number;
+					for (size_t j=0; j<DCAST(PHIKNode,*n_y)->ndof; ++j) {
+						if (DCAST(PHIKNode,*n_y)->Mj.find(c_z_n) != DCAST(PHIKNode,*n_y)->Mj.end()) {
+							gamma[n_y_n][i][j] += ( (Mj[c_z_n][k][i]/bias) * (DCAST(PHIKNode,*n_y)->Mj[c_z_n][k][j] / DCAST(PHIKNode,*n_y)->bias) );
+						}
+					}
+				}
+
+				for (size_t j=0; j<ndof; ++j) {
+					if (i!=j) {
+						gamma[number][i][j] += ( (Mj[c_z_n][k][i]/bias) * (Mj[c_z_n][k][j]/bias) );
+					}
+				}
+
 			}
 		}
 	}
-
-	int node_i=0;
-	for(NSetIter node=linkedNodes.begin(); node!=linkedNodes.end(); ++node){
-		K[node_i].clear();
-		for(CSetIter ctlpt=linkedControlPoints.begin(); ctlpt!=linkedControlPoints.end(); ++ctlpt){
-			if (! DCAST(PHIKControlPoint,*ctlpt)->isEnabled) { continue; }
-
-			int n = DCAST(PHIKControlPoint,*ctlpt)->number;
-			/*
-			std::cout << "K    : " << K[node_i] << std::endl;
-			std::cout << "M'*M : " << (Mj[n].trans() * Mj[n]) << std::endl;
-			std::cout << " -- " << std::endl;
-			*/
-			K[node_i] += (Mj[n].trans() * Mj[n]);
-			// std::cout << "M^T M : " << (Mj[n].trans() * Mj[n]) << std::endl;
-		}
-		++node_i;
-	}
-
-	/*
-	std::cout << "iD  : " << iD  << std::endl;
-	std::cout << "iDx : " << iDx << std::endl;
-	std::cout << "F   : " << F   << std::endl;
-	*/
 
 	dTheta.clear();
 	dTheta_prev.clear();
@@ -436,34 +286,56 @@ void PHIKNode::PrepareSolve(){
 void PHIKNode::ProceedSolve(){
 	dTheta_prev = dTheta;
 
-	PTM::VVector<double> Kv; Kv.resize(ndof); Kv.clear();
-	int node_i=0;
-	for(NSetIter node=linkedNodes.begin(); node!=linkedNodes.end(); ++node){
-		// std::cout << "K[" << node_i << "] : " << K[node_i] << std::endl;
-		Kv += (K[node_i] * DCAST(PHIKNode,(*node))->dTheta);
-		++node_i;
+	for (size_t i=0; i<ndof; ++i) {
+		double delta_epsilon = 0;
+
+		for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
+			int n_y_n = DCAST(PHIKNode,*n_y)->number;
+			if (gamma.find(n_y_n) != gamma.end()) {
+				for (size_t k=0; k<DCAST(PHIKNode,*n_y)->ndof; ++k) {
+					delta_epsilon += ( (gamma[n_y_n][i][k]) * (DCAST(PHIKNode,*n_y)->dTheta[k]) );
+				}
+			}
+		}
+
+		for (size_t k=0; k<ndof; ++k) {
+			if (k!=i) {
+				if (gamma.find(number) != gamma.end()) {
+					delta_epsilon += ( (gamma[number][i][k]) * (dTheta[k]) );
+				}
+			}
+		}
+
+		double iAlpha = 0;
+		if (alpha[i]!=0) {
+			iAlpha = (1.0 / alpha[i]);
+		} else {
+			iAlpha = 1e+20;
+		}
+
+		dTheta[i] = iAlpha * (beta[i] - delta_epsilon);
 	}
-	PTM::VVector<double> B; B.resize(ndof); B.clear();
-
-	B = F*dTheta + Kv;
-	for(int i=0; i<ndof; i++){ B[i] *= iD[i]; }
-	dTheta = iDx - B;
-
-	/*
-	std::cout << "B   : " << B   << std::endl;
-	std::cout << "Kv  : " << Kv  << std::endl;
-	*/
 }
 
 void PHIKNode::AddControlPoint(PHIKControlPointIf* control){
 	NSet* ln = &(DCAST(PHIKControlPoint,control)->linkedNodes);
 	for(NSetIter node=ln->begin(); node!=ln->end(); ++node){
 		linkedNodes.insert(*node);
+		PHIKNodeIf* self = this->Cast();
+		if (DCAST(PHIKNode,*node)->linkedNodes.find(self) == DCAST(PHIKNode,*node)->linkedNodes.end()) {
+			DCAST(PHIKNode,*node)->linkedNodes.insert(self);
+		}
 	}
 	DCAST(PHIKControlPoint,control)->linkedNodes.insert(this->Cast());
 	linkedControlPoints.insert(control);
-	K.resize(linkedNodes.size());
-	for(unsigned int i=0; i<K.size(); ++i){ K[i].resize(ndof, ndof); }
+
+	gamma.clear();
+	for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
+		int n_y_n = DCAST(PHIKNode,*n_y)->number;
+		gamma[n_y_n].resize(ndof,DCAST(PHIKNode,*n_y)->ndof);
+		gamma[n_y_n].clear();
+	}
+	gamma[number].resize(ndof,ndof); gamma[number].clear();
 }
 
 PTM::VMatrixRow<double> PHIKNode::CalcJacobian(PHIKControlPointIf* control){
@@ -582,7 +454,7 @@ PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control)
 		return M;
 	}
 
-	std::cout << "??!!" << std::endl;
+	std::cout << "Invalid Control Point type for this Node" << std::endl;
 
 	return PTM::VMatrixRow<double>();
 }
@@ -592,28 +464,10 @@ void PHIKBallJoint::Move(){
 		return;
 	}
 
-	// std::cout << "dT : " << dTheta << std::endl;
-	
-	/*
-	DSTR << "w_" << number << " = ";
-	dTheta.print(DSTR, "[,]");
-	DSTR << ";" << std::endl;
-	*/
-
-	/*
-	for (int i=0; i<ndof; ++i) {
-		if (dTheta[i] > Rad(50)) {
-			dTheta[i] =  Rad(50);
-		} else if (dTheta[i] < Rad(-50)) {
-			dTheta[i] = Rad(-50);
-		}
-	}
-	*/
-
 	// 回転軸ベクトルにする
 	Vec3d dT = Vec3d();
 	for (int i=0; i<ndof; ++i) {
-		dT += dTheta[i] * e[i];
+		dT += (dTheta[i]/bias) * e[i];
 	}
 
 	// Axis-Angle表現にする
@@ -636,7 +490,6 @@ void PHIKBallJoint::Move(){
 
 	// 関節のローカル座標系にする
 	Quaterniond pos = Qj.Inv() * dQ * Qj * joint->GetPosition();
-	// Quaterniond pos = Qj.Inv() * dQ * Qj * jGoal;
 
 	Vec3d goal = pos.RotationHalf();
 	Vec3d orig = jGoal.RotationHalf();
@@ -650,16 +503,6 @@ void PHIKBallJoint::Move(){
 	joint->SetSpring(jSpring + spring);
 	joint->SetDamper(jDamper + damper);
 	joint->SetGoal(pos);
-
-	// デバッグ表示（要改善）
-	/*
-	PHSceneIf* phscene = this->GetScene()->Cast();
-	phscene->GetSolids()[5*number+0]->SetFramePosition(dT*0*2+Pj);
-	phscene->GetSolids()[5*number+1]->SetFramePosition(dT*1*2+Pj);
-	phscene->GetSolids()[5*number+2]->SetFramePosition(dT*2*2+Pj);
-	phscene->GetSolids()[5*number+3]->SetFramePosition(dT*3*2+Pj);
-	phscene->GetSolids()[5*number+4]->SetFramePosition(dT*4*2+Pj);
-	*/
 
 	return;
 }
@@ -707,14 +550,11 @@ void PHIKHingeJoint::Move(){
 		return;
 	}
 
-	// std::cout << dTheta << std::endl;
-
 	static const double Pi = 3.141592653589;
 
 	// 新しい回転角度
-	double angle  = joint->GetPosition() + (dTheta[0]);
+	double angle  = joint->GetPosition() + (dTheta[0]/bias);
 
-	// double newGoal = (jSpring*jGoal + jSpring*10*angle) * (1/(jSpring + jSpring*10));
 	double newGoal = (jSpring*jGoal + spring*angle) * (1/(jSpring + spring));
 
 	// トルクを実現するためのオフセットの追加

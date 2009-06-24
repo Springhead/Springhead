@@ -68,9 +68,6 @@ protected:
 	/// 番号
 	int number;
 
-	/// 自由度
-	int ndof;
-
 	/// 動かしにくさ
 	float bias;
 
@@ -85,20 +82,14 @@ protected:
 	} enableStat;
 
 	// 計算用の一時変数
-	PTM::VVector<double>     iDx, iD;
-	PTM::VMatrixRow<double>  F;
-	std::vector< PTM::VMatrixRow<double> >  K;
-
-	/** @brief 関係するすべての制御点とのヤコビアンをそれぞれ求める
-	*/
-	virtual void CalcAllJacobian();
-
-	/** @brief ヤコビアンをクリアする
-	*/
-	virtual void ClearJacobian();
+	PTM::VVector<double>     alpha, beta;
+	std::map< int, PTM::VMatrixRow<double> >  gamma;
 
 public:
 	SPR_OBJECTDEF(PHIKNode);
+
+	/// 自由度
+	int ndof;
 
 	/// このNodeを動かせるControlPoint
 	CSet linkedControlPoints;
@@ -120,7 +111,7 @@ public:
 
 	/** @brief デフォルトコンストラクタ
 	*/
-	PHIKNode(){};
+	PHIKNode(){ bias=1.0f; }
 
 	/** @brief コンストラクタ
 	*/
@@ -135,6 +126,14 @@ public:
 		this->spring	= ((PHIKNodeDesc*)d)->spring;
 		this->damper	= ((PHIKNodeDesc*)d)->damper;
 	}
+
+	/** @brief 関係するすべての制御点とのヤコビアンをそれぞれ求める
+	*/
+	virtual void CalcAllJacobian();
+
+	/** @brief ヤコビアンをクリアする
+	*/
+	virtual void ClearJacobian();
 
 	/** @brief IKの計算準備をする
 	*/
