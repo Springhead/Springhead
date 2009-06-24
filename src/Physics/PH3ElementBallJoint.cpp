@@ -9,6 +9,7 @@
  *
  */
 #include "Physics.h"
+#include <Physics/PHBallJoint.h>
 //#include "../../../Project\personal\Matunaga\HapticJointTest\BoxStack.h"
 #include <Math.h>
 #pragma hdrstop
@@ -114,22 +115,71 @@ void PH3ElementBallJoint::CompBias(){
 	}
 }
 
+//----------------------------------------------------------------------------
+// PH3ElementBallJointNode
+PH3ElementBallJointNode::PH3ElementBallJointNode(const PH3ElementBallJointNodeDesc& desc):PHBallJointNode(desc){
+}
+
 void PH3ElementBallJointNode::CompJointJacobian(){
-	PHBallJoint* j = GetJoint();
-	//SwingTwist& angle = (SwingTwist&)(j->position);
-	//angle.Jacobian(Jst);
-	//Matrix3d test = Jst * Jcinv;
+	PH3ElementBallJoint* j = GetJoint();
+
 	Quaterniond q = j->Xjrel.q;
 	for(int i = 0; i < 3; i++)
 		J.col(i).sub_vector(PTM::TSubVectorDim<0,3>()).clear();
-	/*J[0].w() = 2.0 * Vec3d(-q.x, -q.y, -q.z);
-	J[1].w() = 2.0 * Vec3d( q.w,  q.z, -q.y);
-    J[2].w() = 2.0 * Vec3d(-q.z,  q.w,  q.x);
-    J[3].w() = 2.0 * Vec3d( q.y, -q.x,  q.w);*/
 	J.col(0).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(1.0, 0.0, 0.0);
 	J.col(1).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 1.0, 0.0);
 	J.col(2).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 0.0, 1.0);
 	PHTreeNodeND<3>::CompJointJacobian();
 }
 
+void PH3ElementBallJointNode::CompJointCoriolisAccel(){
+	//PHBallJoint* j = GetJoint();
+	//cj.v().clear();
+	//((SwingTwist&)(j->position)).Coriolis(cj.w(), j->velocity);
+	//cj.w.clear();
+	cj.clear();		//関節座標をquaternionにとる場合コリオリ項は0
+}
+
+void PH3ElementBallJointNode::UpdateJointPosition(double dt){
+	PH3ElementBallJoint* j = GetJoint();
+	j->Xjrel.q += j->Xjrel.q.Derivative(j->vjrel.w()) * dt;
+	j->Xjrel.q.unitize();
+}
+
+void PH3ElementBallJointNode::CompRelativePosition(){
+	PH3ElementBallJoint* j = GetJoint();
+	j->Xjrel.r.clear();
+	//j->Xjrel.qはUpdateJointPositionで更新済み
+}
+void PH3ElementBallJointNode::CompRelativeVelocity(){
+	PH3ElementBallJoint* j = GetJoint();
+	j->vjrel.v().clear();
+	j->vjrel.w() = j->velocity;
+}
+
+void PH3ElementBallJointNode::ModifyJacobian(){
+	PH3ElementBallJoint* j = GetJoint();
+	Jq = j->GetJcinv();
+}
+
+void PH3ElementBallJointNode::CompBias(){
+
+	PH3ElementBallJoint* j = GetJoint();
+	j->dA.clear();
+	j->db.clear();
+	j->CompBias();
+	dA = j->dA.w();
+	db = j->db.w();
+}
+
+void PH3ElementBallJointNode::Projection(double& f, int k){
+	PH3ElementBallJoint* j = GetJoint();
+	OnLimit* limit=j->GetOnLimit();
+	for(int i=0; k<2; k++){
+		if(limit[i].onLower)
+			f = max(0.0, f);
+		if(limit[i].onUpper)
+			f = min(0.0, f);
+	}
+}
 }
