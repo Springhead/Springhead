@@ -72,14 +72,40 @@ void PH3ElementBallJoint::CompBias(){
 			D1 = damper;
 			D2= secondDamper*hardnessRate;
 		}
+		
 		//3要素モデルの計算
 		ws=vjrel;	//バネとダンパの並列部の速さ
 		tmp = D1+D2+K*h;
 
 		xs[1] = ((D1+D2)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
 		
-		for(int i=0;i<3;i++){
-		dA.w()[i]= tmp/(D2*(K*h+D1)) * dtinv /I[i];
+		if(I[0]!=1&&I[1]!=1&&I[2]!=1){
+			//物体の変形に使用する場合
+			/*x軸，y軸回りの変形(曲げ）
+				I(断面2次モーメント),E(ヤング率),T(トルク),l(剛体間の距離)としたとき
+			　	T=EIθ/l
+			  z軸回りの変形（ねじり）
+				G(せん断弾性係数),v(ポワソン比)
+				G=E/2(1+v)
+				T=GIθ/l 
+			*/
+			double v=0.3;		//ポワソン比は0.3ぐらいが多い
+			dA.w()[0]= tmp/(D2*(K*h+D1)) * dtinv /I[0];
+			dA.w()[1]= tmp/(D2*(K*h+D1)) * dtinv /I[1];
+			//四角形の場合
+			if(I[0]>I[1]){
+				I[2]=I[1]*4;
+			}else{
+				I[2]=I[0]*4;
+			}
+			dA.w()[2]= tmp/(D2*(K*h+D1)) * dtinv * 2*(1+v)/I[2];
+
+		}else{
+			//3要素モデルのシミュレーションだけを使用したい場合
+			for(int i=0;i<3;i++){
+				dA.w()[i]= tmp/(D2*(K*h+D1)) * dtinv /I[i];
+			}
+
 		}
 		db.w() = K/(K*h+D1)*(xs[0].w()) ;
 	
