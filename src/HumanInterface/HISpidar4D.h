@@ -47,7 +47,7 @@ sp->MaxForce(20.0f);
 @endverbatim
 */
 
-class SPR_DLL HISpidar4D: public HIForceInterface3D{
+class SPR_DLL HISpidar4D: public HIForceInterface3D, public HISpidarCalc3Dof{
 protected:
 	bool bGood;
 public:
@@ -76,8 +76,6 @@ public:
 	virtual void SetForce(const Vec3f& f){ SetForce(f, 0.1f); }
 	virtual void SetForce(const Vec3f& f,float eff){ SetForce(f, eff, 0.0f); }
 	virtual void SetForce(const Vec3f& f, float eff, float cont);
-	///	デバイスの状態を更新する.
-	virtual void Update(float dt);
 	//virtual void Update(){ HISpidarCalc3Dof::Update(); }
 	virtual Vec3f GetForce();
 	virtual Vec3f GetPosition(){ return pos; }
@@ -106,6 +104,15 @@ protected:
 	float AvailableForce(int disable, Vec3f& f, Vec3f* v3Str);
 	///	位置を計算するための行列の初期化
 	void InitMat();
+
+	///	デバイスの状態を更新する.
+	virtual void Update(float dt);
+	virtual void Update(){ HISpidarCalc3Dof::Update(); }
+
+protected:
+	virtual void MakeWireVec();					///<	ワイヤ方向ベクトルの計算
+	virtual void UpdatePos();					///<	ワイヤ設置位置座標の更新
+	virtual void MeasureWire();					///<	ワイヤ長の計測
 };
 
 }	//	namespace Spr
