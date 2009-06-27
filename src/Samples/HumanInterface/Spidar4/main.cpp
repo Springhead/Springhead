@@ -18,8 +18,12 @@ int __cdecl main(){
 
 	sdk->Init();
 	sdk->Print(DSTR);
-	UTRef<HISpidarGIf> spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+	//UTRef<HISpidarGIf> spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+	//spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+	UTRef<HISpidar4DIf> spg = sdk->CreateHumanInterface(HISpidar4DIf::GetIfInfoStatic())->Cast();
+	HISpidar4DDesc desc;
+	desc=HISpidar4DDesc("SpidarG6X3R");
+	spg->Init(&desc);
 	int t = 0;
 	while(!_kbhit()){
 		t += 1;
@@ -31,7 +35,7 @@ int __cdecl main(){
 		if(spgpos.y < -0.015){
 			f[1] = 1.5;
 		}
-		spg->SetForce(f, Vec3f());
+		//spg->SetForce(f);
 #else if
 		for(size_t i=0; i<spg->NMotor(); ++i){
 			std::cout << " " << std::setprecision(2) << spg->GetMotor(i)->GetLength();
