@@ -38,7 +38,7 @@ struct HIForceInterface6DIf: public HIPoseIf{
 };
 
 /**	@brief	3自由度力覚インタフェースの基本クラス	*/
-struct HIForceInterface3DIf: public HIPoseIf{
+struct HIForceInterface3DIf: public HIPositionIf{
 	SPR_VIFDEF(HIForceInterface3D);
 	///デバイスの速度を返す
 	Vec3f GetVelocity();
