@@ -35,7 +35,7 @@ int __cdecl main(){
 		if(spgpos.y < -0.015){
 			f[1] = 1.5;
 		}
-		//spg->SetForce(f);
+		spg->SetForce(f);
 #else if
 		for(size_t i=0; i<spg->NMotor(); ++i){
 			std::cout << " " << std::setprecision(2) << spg->GetMotor(i)->GetLength();

@@ -120,6 +120,20 @@ HISpidar4D::~HISpidar4D(){SetMinForce();}
 bool HISpidar4D::Init(const void* pDesc){
 	HISdkIf* sdk = GetSdk();
 	HISpidar4DDesc& desc = *(HISpidar4DDesc*)pDesc;
+	//	計算のための定数の設定
+	nRepeat = 2;
+	sigma = 0.001f; //sigma=sigma*sigma
+	int nMotor = desc.motors.size();
+	motors.resize(nMotor);
+	VVector<float> minForce, maxForce;
+	minForce.resize(desc.motors.size());
+	maxForce.resize(desc.motors.size());
+	for(unsigned i=0; i<desc.motors.size(); ++i){
+		motors[i].SetDesc(&desc.motors[i]);
+		minForce[i] = desc.motors[i].minForce;
+		maxForce[i] = desc.motors[i].maxForce;
+	}
+	HISpidarCalc3Dof::Init(3, minForce, maxForce);
 	////	ドライバの取得
 	int i;
 	for(i=0; i<4; ++i){
@@ -226,6 +240,19 @@ void HISpidar4D::InitMat(){
 		motor[3].pos.square()-motor[2].pos.square());
 }
 
-
+void HISpidar4D::MakeWireVec(){
+	for(unsigned int i=0; i<motors.size(); ++i){
+		//wireDirection[i] = motors[i].pos - (ori*motors[i].jointPos + pos);
+		calculatedLength[i] = wireDirection[i].norm();
+		wireDirection[i] /= calculatedLength[i];
+	}
+}
+void HISpidar4D::UpdatePos(){
+}
+void HISpidar4D::MeasureWire(){
+	for(unsigned int i=0; i<motors.size(); ++i){
+		measuredLength[i] = motors[i].GetLength();
+	}	
+}
 
 }	//	namespace Spr
