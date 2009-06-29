@@ -13,85 +13,6 @@
 
 namespace Spr{
 
-
-PHJointIf* CRBody::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc){
-	PHJointIf* joint;
-	if (jointOrder == PLUG_PARENT) {
-		joint = phScene->CreateJoint(soChild, soParent, desc);
-	} else { // SOCKET_PARENT
-		Posed pp=desc.posePlug, ps=desc.poseSocket;
-		desc.posePlug=ps; desc.poseSocket=pp;
-		joint = phScene->CreateJoint(soParent, soChild, desc);
-	}
-	return joint;
-}
-
-PHJointIf* CRBody::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBallJointDesc desc){
-	PHJointIf* joint;
-	if (jointOrder == PLUG_PARENT) {
-		joint = phScene->CreateJoint(soChild, soParent, desc);
-	} else { // SOCKET_PARENT
-		Posed pp=desc.posePlug, ps=desc.poseSocket;
-		desc.posePlug=ps; desc.poseSocket=pp;
-		joint = phScene->CreateJoint(soParent, soChild, desc);
-	}
-	return joint;
-}
-
-void CRBody::Init(){
-
-}
-
-int CRBody::NSolids(){
-	return solids.size();
-}
-
-PHSolidIf* CRBody::GetSolid(int i){
-	return ((size_t)i < solids.size()) ? solids[i] : NULL;
-}
-
-int CRBody::NJoints(){
-	return joints.size();
-}
-
-PHJointIf* CRBody::GetJoint(int i){
-	return ((size_t)i < joints.size()) ? joints[i] : NULL;
-}
-
-int CRBody::NBallJoints(){
-	int counterNBallJoint = 0;
-	for(unsigned int i = 0; i < joints.size(); i++){
-		if(DCAST(PHBallJointIf, joints[i]))
-			counterNBallJoint ++;
-	}
-	return counterNBallJoint;
-}	
-
-int CRBody::NHingeJoints(){
-	int counterNHingeJoint = 0;
-	for(unsigned int i = 0; i< joints.size(); i++){
-		if(DCAST(PHHingeJointIf, joints[i]))
-			 counterNHingeJoint ++;
-	}
-	return counterNHingeJoint;
-}
-
-int CRBody::NIKNodes(){
-	return ikNodes.size();
-}
-
-PHIKNodeIf* CRBody::GetIKNode(int i){
-	return ((size_t)i < ikNodes.size()) ? ikNodes[i] : NULL;
-}
-
-int CRBody::NControlPoints(){
-	return ikControlPoints.size();
-}
-
-PHIKControlPointIf* CRBody::GetControlPoint(int i){
-	return ((size_t)i < ikControlPoints.size()) ? ikControlPoints[i] : NULL;
-}
-
 Vec3d CRBody::GetCenterOfMass(){
 	/// 重心を求める時に使うi番目までの重心の小計
 	double totalWeight = 0;
@@ -99,9 +20,9 @@ Vec3d CRBody::GetCenterOfMass(){
 	Vec3d  centerPosOfBlocks = Vec3d(0.0, 0.0, 0.0);
 
 	for(int i = 0; i<NSolids(); i++){
-		if(solids[i]){
-			centerPosOfBlocks = centerPosOfBlocks + solids[i]->GetCenterPosition() * solids[i]->GetMass();
-			totalWeight = totalWeight + solids[i]->GetMass(); 
+		if(solids[i] && solids[i]->GetPHSolid()){
+			centerPosOfBlocks = centerPosOfBlocks + solids[i]->GetPHSolid()->GetCenterPosition() * solids[i]->GetPHSolid()->GetMass();
+			totalWeight = totalWeight + solids[i]->GetPHSolid()->GetMass();
 		}
 	}
 
@@ -114,7 +35,7 @@ double CRBody::GetSumOfMass(){
 
 	for(int i = 0; i<NSolids(); i++){
 		if(solids[i])
-			totalWeight = totalWeight + solids[i]->GetMass(); 
+			totalWeight = totalWeight + solids[i]->GetPHSolid()->GetMass(); 
 	}
 
 	return totalWeight;
@@ -128,6 +49,60 @@ Matrix3d CRBody::CalcBoxInertia(Vec3d boxsize, double mass){
 	return Matrix3d(i_xx, 0.0,  0.0, 
 					0.0,  i_yy, 0.0, 
 					0.0,  0.0,  i_zz);
+}
+
+ObjectIf* CRBody::GetChildObject(size_t i) {
+	if (i < solids.size()) {
+		return solids[i];
+	} else if (i < solids.size() + joints.size()) {
+		return joints[i - solids.size()];
+	} else {
+		return NULL;
+	}
+}
+
+bool CRBody::AddChildObject(ObjectIf* o){
+	CRSolidIf* s = DCAST(CRSolidIf, o);
+	if (s){
+		if (std::find(solids.begin(), solids.end(), s) == solids.end()){
+			solids.push_back(s);
+			DCAST(SceneObject, s)->SetScene(DCAST(CRBodyIf,this)->GetScene());
+			return true;
+		}
+	}
+
+	CRJointIf* j = DCAST(CRJointIf, o);
+	if (j){
+		if (std::find(joints.begin(), joints.end(), j) == joints.end()){
+			joints.push_back(j);
+			DCAST(SceneObject, j)->SetScene(DCAST(CRBodyIf,this)->GetScene());
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool CRBody::DelChildObject(ObjectIf* o){
+	CRSolidIf* s = DCAST(CRSolidIf, o);
+	if (s){
+		CRSolids::iterator it = std::find(solids.begin(), solids.end(), s);
+		if(it != solids.end()){
+			solids.erase(it);
+			return true;
+		}
+	}
+
+	CRJointIf* j = DCAST(CRJointIf, o);
+	if (j){
+		CRJoints::iterator it = std::find(joints.begin(), joints.end(), j);
+		if(it != joints.end()){
+			joints.erase(it);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 }

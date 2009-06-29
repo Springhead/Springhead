@@ -11,7 +11,7 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "CRController.h"
+#include "CREngine.h"
 
 //@{
 namespace Spr{;
@@ -141,12 +141,13 @@ private:
 	Vec2d Vec3ToAngle(Vec3d v);
 
 public:
-	CRPhysicalEye(CRCreatureIf* c=NULL) {
-		creature = c;
+	CRPhysicalEye() {
 		soLEye = soREye = soHead = NULL;
 		joLEyeX = joLEyeY = joREyeX = joREyeY = NULL;
 		joLEye = joREye = NULL;
 	}
+
+	void SetCreature(CRCreatureIf* c) { creature = c; }
 
 	/** @brief 初期化を実行する
 	*/
@@ -190,7 +191,7 @@ public:
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 眼球運動コントローラの実装
 */
-class CREyeController : public CRController, public CREyeControllerDesc {
+class CREyeController : public CREngine, public CREyeControllerDesc {
 private:
 	/** @brief 次の制御状態を求める
 	*/
@@ -212,11 +213,12 @@ public:
 	ACCESS_DESC_STATE(CREyeController);
 
 	CREyeController(){}
-	CREyeController(const CREyeControllerDesc& desc, CRCreatureIf* c=NULL) 
+	CREyeController(const CREyeControllerDesc& desc) 
 		: CREyeControllerDesc(desc) 
-		, CRController((const CRControllerDesc&)desc, c)
-		, physicalEye(c)
 	{
+		// 従来ここで↓こんな感じのことをやっていたが今はたぶんこれでは動かない
+		// ので別の場所に移す必要がある（09/06/20 mitake）
+		// physicalEye->SetCreature(GetScene()->Cast());
 	}
 
 	/** @brief 初期化を実行する

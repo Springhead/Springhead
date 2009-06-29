@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef SPR_CRCreatureIf_H
-#define SPR_CRCreatureIf_H
+#ifndef SPR_CRCREATUREIF_H
+#define SPR_CRCREATUREIF_H
 
 #include <SprFoundation.h>
 
@@ -16,12 +16,10 @@ namespace Spr{;
 
 struct CRBodyIf;
 struct CRBodyDesc;
-struct CRSensorIf;
-struct CRSensorDesc;
-struct CRControllerIf;
-struct CRControllerDesc;
-struct CRInternalSceneIf;
-struct CRInternalSceneDesc;
+struct CREngineIf;
+struct CREngineDesc;
+struct CRSceneIf;
+struct CRSceneDesc;
 
 // ------------------------------------------------------------------------------
 /// 型情報登録
@@ -30,32 +28,12 @@ void SPR_CDECL CRRegisterTypeDescs();
 
 // ------------------------------------------------------------------------------
 /// クリーチャのインタフェース
-struct CRCreatureIf : SceneObjectIf{
+struct CRCreatureIf : SceneIf{
 	SPR_IFDEF(CRCreature);
-
-	/** @brief 初期化を実行する
-	*/
-	void Init();
 
 	/** @brief 感覚→情報処理→運動 の１ステップを実行する
 	*/
 	void Step();
-
-	/** @brief 内部シーンのボトムアップ注意をリセットする
-	*/
-	void ClearInternalScene();
-
-	/** @brief センサーからの入力を行う
-	*/
-	void SensorStep();
-
-	/** @brief 内部シーンの処理を行う
-	*/
-	void InternalSceneStep();
-
-	/** @brief 制御を行う
-	*/
-	void ControllerStep();
 
 	/** @brief ボディをつくる
 	*/
@@ -72,54 +50,51 @@ struct CRCreatureIf : SceneObjectIf{
 	*/
 	int NBodies();
 
-	/** @brief 感覚系を追加する（依存するセンサーは先にCreateしておく必要がある．要対策）
+	/** @brief CREngineを作成する
 	*/
-	CRSensorIf* CreateSensor(const IfInfo* ii, const CRSensorDesc& desc);
-	template <class T> CRSensorIf* CreateSensor(const T& desc){
-		return CreateSensor(T::GetIfInfo(), desc);
+	CREngineIf* CreateEngine(const IfInfo* ii, const CREngineDesc& desc);
+	template <class T> CREngineIf* CreateEngine(const T& desc){
+		return CreateEngine(T::GetIfInfo(), desc);
 	}
 
-	/** @brief 感覚系を取得する
+	/** @brief CREngineを取得する
 	*/
-	CRSensorIf* GetSensor(int i);
+	CREngineIf* GetEngine(int i);
 
-	/** @brief 感覚系の数を取得する
+	/** @brief CREngineの数を取得する
 	*/
-	int NSensors();
+	int NEngines();
 
-	/** @brief 運動コントローラを追加する（依存するコントローラは先にCreateしておく必要がある．要対策）
+	/** @brief CRSceneを作成する
 	*/
-	CRControllerIf* CreateController(const IfInfo* ii, const CRControllerDesc& desc);
-	template <class T> CRControllerIf* CreateController(const T& desc){
-		return CreateController(T::GetIfInfo(), desc);
+	CRSceneIf* CreateScene(const IfInfo* ii, const CRSceneDesc& desc);
+	template <class T> CRSceneIf* CreateScene(const T& desc){
+		return CreateScene(T::GetIfInfo(), desc);
 	}
-
-	/** @brief 運動コントローラを取得する
+	
+	/** @brief CRSceneを取得する
 	*/
-	CRControllerIf* GetController(int i);
+	CRSceneIf* GetScene(int i);
 
-	/** @brief 運動コントローラの数を取得する
+	/** @brief CRSceneの数を取得する
 	*/
-	int NControllers();
+	int NScenes();
 
-	/** @brief 内部シーンをつくる
+	/** @brief 関連するPHSceneを取得する
 	*/
-	CRInternalSceneIf* CreateInternalScene(const CRInternalSceneDesc& desc);
-
-	/** @brief 内部シーンを取得する
-	*/
-	CRInternalSceneIf* GetInternalScene();
+	PHSceneIf* GetPHScene();
 };
 
 /// クリーチャのデスクリプタ
 struct CRCreatureDesc{
-	SPR_DESCDEF(CRCreature);
+	// SPR_DESCDEF(CRCreature);
 
-	CRCreatureDesc(){
-	}
+	// CRCreatureDesc(){
+	// }
 };
+
 //@}
 
 }
 
-#endif//SPR_CRCreatureIf_H
+#endif // SPR_CRCREATUREIF_H

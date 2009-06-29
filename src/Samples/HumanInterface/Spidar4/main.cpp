@@ -23,6 +23,7 @@ int __cdecl main(){
 	UTRef<HISpidar4DIf> spg = sdk->CreateHumanInterface(HISpidar4DIf::GetIfInfoStatic())->Cast();
 	HISpidar4DDesc desc;
 	desc=HISpidar4DDesc("SpidarG6X3R");
+	std::cout << spg << std::endl;
 	spg->Init(&desc);
 	int t = 0;
 	while(!_kbhit()){

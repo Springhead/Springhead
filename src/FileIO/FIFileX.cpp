@@ -289,7 +289,7 @@ void FIFileX::Init(){
 
 //------------------------------------------------------------------------------
 void FIFileX::PushLoaderContext(FILoadContext* fc){
-	fc->RegisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
+	fc->RegisterGroupToDb("Foundation Physics Graphics Framework Creature OldSpringhead");
 	fc->typeDbs.Top()->RegisterAlias("Vec3f", "Vector");
 	fc->typeDbs.Top()->RegisterAlias("Vec2f", "Coords2d");
 	fc->typeDbs.Top()->RegisterAlias("Affinef", "Matrix3x3");
@@ -327,7 +327,7 @@ void FIFileX::LoadImp(FILoadContext* fc){
 #define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)
 void FIFileX::OnSaveFileStart(FISaveContext* sc){
-	sc->RegisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
+	sc->RegisterGroupToDb("Foundation Physics Graphics Framework Creature OldSpringhead");
 	sc->typeDbs.Top()->RegisterAlias("Vec3f", "Vector");
 	sc->typeDbs.Top()->RegisterAlias("Vec2f", "Coords2d");
 	sc->typeDbs.Top()->RegisterAlias("Affinef", "Matrix3x3");

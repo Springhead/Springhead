@@ -11,17 +11,17 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
-#include "CRController.h"
+#include "CREngine.h"
 
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 注意コントローラ
 */
-class CRAttentionController : public CRController, public CRAttentionControllerDesc {
+class CRAttentionController : public CREngine, public CRAttentionControllerDesc {
 private:
 	/// 内部シーン
-	CRInternalSceneIf*  internalScene;
+	// CRInternalSceneIf*  internalScene;
 
 	/// 下位のコントローラ：視線コントローラ
 	CRGazeControllerIf* gazeCtrl;
@@ -32,9 +32,8 @@ public:
 
 	CRAttentionController(){
 	}
-	CRAttentionController(const CRAttentionControllerDesc& desc, CRCreatureIf* c=NULL)
+	CRAttentionController(const CRAttentionControllerDesc& desc)
 		: CRAttentionControllerDesc(desc)
-		, CRController((const CRControllerDesc&)desc, c)
 	{
 	}
 

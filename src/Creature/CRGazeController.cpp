@@ -15,8 +15,9 @@ namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
 void CRGazeController::Init(){
-	CRController::Init();
+	// CRController::Init();
 
+	/*
 	eyeCtrl = NULL; neckCtrl = NULL;
 	for (int i=0; i<creature->NControllers(); i++) {
 		if (!eyeCtrl) {
@@ -26,13 +27,15 @@ void CRGazeController::Init(){
 			neckCtrl = DCAST(CRNeckControllerIf, creature->GetController(i));
 		}
 	}
+	*/
 }
 
 void CRGazeController::Step(){
-	CRController::Step();
+	// CRController::Step();
 }
 
 void CRGazeController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
+	/*
 	this->pos = pos;
 	this->vel = vel;
 	this->attractiveness = attractiveness;
@@ -41,5 +44,6 @@ void CRGazeController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 
 	eyeCtrl->LookAt(pos, vel);
 	neckCtrl->LookAt(pos, vel, attractiveness);
+	*/
 }
 }

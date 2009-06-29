@@ -12,7 +12,7 @@
 
 #include <Foundation/Object.h>
 
-#include "CRController.h"
+#include "CREngine.h"
 
 #include <map>
 
@@ -21,7 +21,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 把持コントローラ
 */
-class CRGrabController : public CRController, public CRGrabControllerDesc {
+class CRGrabController : public CREngine, public CRGrabControllerDesc {
 private:
 	/// 下位のコントローラ：ReachingController
 	CRReachingControllerIf *reachLeft, *reachRight, *reachChest;
@@ -67,9 +67,8 @@ public:
 	ACCESS_DESC(CRGrabController);
 
 	CRGrabController(){}
-	CRGrabController(const CRGrabControllerDesc& desc, CRCreatureIf* c=NULL) 
+	CRGrabController(const CRGrabControllerDesc& desc) 
 		: CRGrabControllerDesc(desc) 
-		, CRController((const CRControllerDesc&)desc, c)
 	{
 	}
 

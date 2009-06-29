@@ -12,14 +12,14 @@
 
 #include <Foundation/Object.h>
 
-#include "CRController.h"
+#include "CREngine.h"
 
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 首（頭部）運動コントローラ
 */
-class CRNeckController : public CRController, public CRNeckControllerDesc {
+class CRNeckController : public CREngine, public CRNeckControllerDesc {
 private:
 	/// 注視点
 	Vec3d pos, vel;
@@ -44,9 +44,8 @@ public:
 	ACCESS_DESC_STATE(CRNeckController);
 
 	CRNeckController(){}
-	CRNeckController(const CRNeckControllerDesc& desc, CRCreatureIf* c=NULL)
+	CRNeckController(const CRNeckControllerDesc& desc)
 		: CRNeckControllerDesc(desc)
-		, CRController((const CRControllerDesc&)desc, c)
 	{
 	}
 

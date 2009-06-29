@@ -6,25 +6,31 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
- *	@file SprCollision.h
- *	@brief 衝突判定のヘッダファイル群
+ *	@file SprCreature.h
+ *	@brief クリーチャのヘッダファイル群
 */
 #ifndef SPR_CREATURE_H
 #define SPR_CREATURE_H
 
-// クリーチャ全体
+// クリーチャのSdk
+#include "Creature/SprCRSdk.h"
+
+// クリーチャ（１体）
 #include "Creature/SprCRCreature.h"
 
-// ボディ
+// CREngine : クリーチャを動かすアルゴリズム群（感覚・運動・行動決定など）
+#include "Creature/SprCREngine.h"
+
+#include "Creature/SprCRGazeController.h"
+#include "Creature/SprCRReachController.h"
+
+#include "Creature/SprCRTouchSensor.h"
+#include "Creature/SprCRVisualSensor.h"
+
+// CRScene : クリーチャの記憶構造
+#include "Creature/SprCRScene.h"
+
+// ボディ : 剛体関節モデルの生成を補助するクラス
 #include "Creature/SprCRBody.h"
-
-// 感覚系
-#include "Creature/SprCRSensor.h"
-
-// キャラクタの内部状態（記憶）
-#include "Creature/SprCRInternalScene.h"
-
-// 運動系
-#include "Creature/SprCRController.h"
 
 #endif
