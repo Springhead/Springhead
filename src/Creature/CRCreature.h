@@ -11,6 +11,7 @@
 #include <Springhead.h>
 
 #include <Foundation/Object.h>
+#include <Foundation/Scene.h>
 
 #include <vector>
 
@@ -20,24 +21,22 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief クリーチャの実装
 */
-class CRCreature : public SceneObject, public CRCreatureDesc {
-
+class CRCreature : public Scene, public CRCreatureDesc {
 protected:
-	/** @brief 感覚系
-	*/
-	std::vector<CRSensorIf*> sensors;
+	///	エンジン
+	typedef std::vector< UTRef<CREngineIf> > CREngines;
+	CREngines engines;
 
-	/** @brief 運動コントローラ
-	*/
-	std::vector<CRControllerIf*> controllers;
+	///	シーン
+	typedef std::vector< UTRef<CRSceneIf> > CRScenes;
+	CRScenes scenes;
 
-	/** @brief 内部シーン（記憶の類）
-	*/
-	CRInternalSceneIf* internalScene;
+	///	ボディ
+	typedef std::vector< UTRef<CRBodyIf> > CRBodies;
+	CRBodies bodies;
 
-	/** @brief ボディ（複数持てる）
-	*/
-	std::vector< UTRef<CRBodyIf> > body;
+	/// 関連するPHScene
+	PHSceneIf* phScene;
 
 public:
 	SPR_OBJECTDEF(CRCreature);
@@ -46,35 +45,13 @@ public:
 	CRCreature(){
 		CRRegisterTypeDescs();
 	}
-	CRCreature(const CRCreatureDesc& desc, SceneIf* s=NULL) : CRCreatureDesc(desc) {
+	CRCreature(const CRCreatureDesc& desc) : CRCreatureDesc(desc) {
 		CRRegisterTypeDescs();
-		internalScene = NULL;
-		if(s){SetScene(s);}
 	}
-
-	/** @brief 初期化を実行する
-	*/
-	virtual void Init();
 
 	/** @brief 感覚→情報処理→運動 の１ステップを実行する
 	*/
 	virtual void Step();
-
-	/** @brief 内部シーンのボトムアップ注意をリセットする
-	*/
-	virtual void ClearInternalScene();
-
-	/** @brief センサーからの入力を行う
-	*/
-	virtual void SensorStep();
-
-	/** @brief 内部シーンの処理を行う
-	*/
-	virtual void InternalSceneStep();
-
-	/** @brief 制御を行う
-	*/
-	virtual void ControllerStep();
 
 	/** @brief ボディをつくる
 	*/
@@ -82,50 +59,48 @@ public:
 
 	/** @brief ボディを取得する
 	*/
-	virtual CRBodyIf* GetBody(int i);
+	virtual CRBodyIf* GetBody(int i) { return bodies[i]; }
 
 	/** @brief ボディの数を取得する
 	*/
-	virtual int NBodies();
+	virtual int NBodies() { return (int)bodies.size(); }
 
-	/** @brief 感覚系を追加する
+	/** @brief CREngineを作成する
 	*/
-	virtual CRSensorIf* CreateSensor(const IfInfo* ii, const CRSensorDesc& desc);
+	virtual CREngineIf* CreateEngine(const IfInfo* ii, const CREngineDesc& desc);
 
-	/** @brief 感覚系を取得する
+	/** @brief CREngineを取得する
 	*/
-	virtual CRSensorIf* GetSensor(int i);
+	virtual CREngineIf* GetEngine(int i) { return engines[i]; }
 
-	/** @brief 感覚系の数を取得する
+	/** @brief CREngineの数を取得する
 	*/
-	virtual int NSensors();
+	virtual int NEngines() { return (int)engines.size(); }
 
-	/** @brief 運動コントローラを追加する
+	/** @brief CRSceneを作成する
 	*/
-	virtual CRControllerIf* CreateController(const IfInfo* ii, const CRControllerDesc& desc);
+	virtual CRSceneIf* CreateScene(const IfInfo* ii, const CRSceneDesc& desc);
+	
+	/** @brief CRSceneを取得する
+	*/
+	virtual CRSceneIf* GetScene(int i) { return scenes[i]; }
 
-	/** @brief 運動コントローラを取得する
+	/** @brief CRSceneの数を取得する
 	*/
-	virtual CRControllerIf* GetController(int i);
+	virtual int NScenes() { return (int)scenes.size(); }
 
-	/** @brief 運動コントローラの数を取得する
+	/** @brief 関連するPHSceneを取得する
 	*/
-	virtual int NControllers();
+	PHSceneIf* GetPHScene() { return phScene; }
 
-	/** @brief 内部シーンをつくる
+	/** @brief 子要素の扱い
 	*/
-	virtual CRInternalSceneIf* CreateInternalScene(const CRInternalSceneDesc& desc);
-
-	/** @brief 内部シーンを取得する
-	*/
-	virtual CRInternalSceneIf* GetInternalScene();
-
-	/** @brief Bodyを追加する
-	*/
-	void AddBody(CRBodyIf* b) {
-		this->body.push_back(b->Cast());
-	}
+	virtual size_t NChildObject() const { return bodies.size()+engines.size()+scenes.size(); }
+	virtual ObjectIf* GetChildObject(size_t i);
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
 };
+
 }
 //@}
 

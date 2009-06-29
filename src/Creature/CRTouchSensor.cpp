@@ -13,12 +13,9 @@
 
 namespace Spr{;
 
-void CRTouchSensor::Init() {
-	CRSensor::Init();
-}
-
 void CRTouchSensor::Step() {
-	CRBodyIf* body = creature->GetBody(0);
+	CRBodyIf* body = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetBody(0);
+	PHSceneIf* phScene = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetPHScene();
 
 	// 接触リストの構築を開始する
 	contactList.clear();
@@ -36,8 +33,8 @@ void CRTouchSensor::Step() {
 			// 自分の体を構成する剛体 と それ以外の剛体 のペアのみに限定
 			bool iIsMe = false, jIsMe = false;
 			for (int n=0; n<body->NSolids(); ++n) {
-				if (body->GetSolid(n) && body->GetSolid(n) == phScene->GetSolids()[i]) { iIsMe = true; }
-				if (body->GetSolid(n) && body->GetSolid(n) == phScene->GetSolids()[j]) { jIsMe = true; }
+				if (body->GetSolid(n) && body->GetSolid(n)->GetPHSolid() == phScene->GetSolids()[i]) { iIsMe = true; }
+				if (body->GetSolid(n) && body->GetSolid(n)->GetPHSolid() == phScene->GetSolids()[j]) { jIsMe = true; }
 				if (iIsMe && jIsMe) { break; }
 			}
 			if ((iIsMe && jIsMe) || (!iIsMe && !jIsMe)) { continue; }

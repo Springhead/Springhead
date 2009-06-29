@@ -14,14 +14,14 @@
 
 #include <vector>
 
-#include "CRSensor.h"
+#include "CREngine.h"
 
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 感覚処理
 */
-class CRTouchSensor : public CRSensor, public CRTouchSensorDesc {
+class CRTouchSensor : public CREngine, public CRTouchSensorDesc {
 	std::vector<CRContactInfo> contactList;
 
 public:
@@ -29,15 +29,14 @@ public:
 	ACCESS_DESC(CRTouchSensor);
 
 	CRTouchSensor(){}
-	CRTouchSensor(const CRTouchSensorDesc& desc, CRCreatureIf* c=NULL) 
+	CRTouchSensor(const CRTouchSensorDesc& desc) 
 		: CRTouchSensorDesc(desc) 
-		, CRSensor((const CRSensorDesc&)desc, c)
 	{
 	}
 
-	/** @brief 初期化を行う
+	/** @brief 実行順序を決めるプライオリティ値．小さいほど早い
 	*/
-	virtual void Init();
+	virtual int GetPriority() const { return CREngineDesc::CREP_SENSOR; }
 
 	/** @brief 感覚入力の処理を実行する
 	*/

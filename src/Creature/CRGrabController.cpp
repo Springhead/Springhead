@@ -15,53 +15,53 @@ namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
 void CRGrabController::Init(){
-	CRController::Init(); 
+	// CRController::Init(); 
 
 	/*
 	// 制御に用いるBodyとその剛体の取得
-	CRHingeHumanBodyIf* hiBody=NULL;
-	CRTrunkFootHumanBodyIf* tfBody=NULL;
+	CRHingeHumanBodyGenIf* hiBody=NULL;
+	CRTrunkFootHumanBodyGenIf* tfBody=NULL;
 	for (int i=0; i<creature->NBodies(); ++i) {
 		if (!hiBody) {
-			hiBody = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+			hiBody = DCAST(CRHingeHumanBodyGenIf, creature->GetBody(i));
 		}
 		if (!tfBody) {
-			tfBody = DCAST(CRTrunkFootHumanBodyIf, creature->GetBody(i));
+			tfBody = DCAST(CRTrunkFootHumanBodyGenIf, creature->GetBody(i));
 		}
 	}
 	body = hiBody;
 
-	soWaist  = hiBody->GetSolid(CRHingeHumanBodyDesc::SO_WAIST);
-	soChest  = hiBody->GetSolid(CRHingeHumanBodyDesc::SO_CHEST);
+	soWaist  = hiBody->GetSolid(CRHingeHumanBodyGenDesc::SO_WAIST);
+	soChest  = hiBody->GetSolid(CRHingeHumanBodyGenDesc::SO_CHEST);
 
-	soWaistT = tfBody->GetSolid(CRTrunkFootHumanBodyDesc::SO_WAIST);
-	soChestT = tfBody->GetSolid(CRTrunkFootHumanBodyDesc::SO_CHEST);
+	soWaistT = tfBody->GetSolid(CRTrunkFootHumanBodyGenDesc::SO_WAIST);
+	soChestT = tfBody->GetSolid(CRTrunkFootHumanBodyGenDesc::SO_CHEST);
 
 	// 下位のコントローラ（Reaching）の取得
 	reachLeft  = NULL; reachRight = NULL; reachChest = NULL;
 	for (int i=0; i<creature->NControllers(); i++) {
 		if (!reachLeft) {
 			CRReachingControllerIf* r = DCAST(CRReachingControllerIf, creature->GetController(i));
-			if (r && r->GetSolid()==hiBody->GetSolid(CRHingeHumanBodyDesc::SO_LEFT_HAND)) {
+			if (r && r->GetSolid()==hiBody->GetSolid(CRHingeHumanBodyGenDesc::SO_LEFT_HAND)) {
 				reachLeft = r;
 			}
 		}
 		if (!reachRight) {
 			CRReachingControllerIf* r = DCAST(CRReachingControllerIf, creature->GetController(i));
-			if (r && r->GetSolid()==hiBody->GetSolid(CRHingeHumanBodyDesc::SO_RIGHT_HAND)) {
+			if (r && r->GetSolid()==hiBody->GetSolid(CRHingeHumanBodyGenDesc::SO_RIGHT_HAND)) {
 				reachRight = r;
 			}
 		}
 		if (!reachChest) {
 			CRReachingControllerIf* r = DCAST(CRReachingControllerIf, creature->GetController(i));
-			if (r && r->GetSolid()==hiBody->GetSolid(CRHingeHumanBodyDesc::SO_CHEST)) {
+			if (r && r->GetSolid()==hiBody->GetSolid(CRHingeHumanBodyGenDesc::SO_CHEST)) {
 				reachChest = r;
 			}
 		}
 	}
 
 	// 到達可能か判断するための数値を先に計算しておく
-	CRHingeHumanBodyDesc descHIBody;
+	CRHingeHumanBodyGenDesc descHIBody;
 	hiBody->GetDesc(&descHIBody);
 	reachableDistance = (float)((descHIBody.upperArmLength + descHIBody.lowerArmLength + (descHIBody.handLength / 2.0f) + descHIBody.chestHeight + descHIBody.abdomenHeight + (descHIBody.waistHeight / 2.0f)));
 	shoulderHeightFromWaist = (float)(descHIBody.waistHeight/2.0 + descHIBody.abdomenHeight + descHIBody.chestHeight);
@@ -90,8 +90,8 @@ void CRGrabController::Step(){
 	} else if (controlState==CRGrabControllerIf::CRGC_UPHOLD) {
 		if (reachLeft->GetReachState()==RSSR && reachRight->GetReachState()==RSSR) {
 			// 体を堅くする
-			// DCAST(CRHingeHumanBodyIf,body)->KeepUpperBodyPose();
-			// DCAST(CRHingeHumanBodyIf,body)->SetUpperBodyStiffness(5.0);
+			// DCAST(CRHingeHumanBodyGenIf,body)->KeepUpperBodyPose();
+			// DCAST(CRHingeHumanBodyGenIf,body)->SetUpperBodyStiffness(5.0);
 			// 動作終了
 			// reachLeft->Reset();
 			// reachRight->Reset();
@@ -162,7 +162,7 @@ bool CRGrabController::Reach(PHSolidIf* solid, float radius){
 	}
 
 	// 動きやすいよう上半身をやわらかくする
-	// DCAST(CRHingeHumanBodyIf,body)->SetUpperBodyStiffness(0.5);
+	// DCAST(CRHingeHumanBodyGenIf,body)->SetUpperBodyStiffness(0.5);
 
 	// 到達運動の開始を指示
 	reachLeft->SetTargetPos(targetSolid->GetPose().Pos() + reachPointDirL*targetRadius*1.0, solid->GetVelocity());
@@ -319,8 +319,8 @@ void CRGrabController::Abort(){
 			controlState = CRGrabControllerIf::CRGC_PLACE_COMPLETE;
 		}
 	}
-	// DCAST(CRHingeHumanBodyIf,body)->ResetUpperBodyPose();
-	// DCAST(CRHingeHumanBodyIf,body)->SetUpperBodyStiffness(1.0);
+	// DCAST(CRHingeHumanBodyGenIf,body)->ResetUpperBodyPose();
+	// DCAST(CRHingeHumanBodyGenIf,body)->SetUpperBodyStiffness(1.0);
 	*/
 }
 
@@ -338,8 +338,8 @@ void CRGrabController::AbortAll(){
 	placePos = Vec3f(0,0,0);
 	grabSpring.first = NULL;
 	grabSpring.second = NULL;
-	// DCAST(CRHingeHumanBodyIf,body)->ResetUpperBodyPose();
-	// DCAST(CRHingeHumanBodyIf,body)->SetUpperBodyStiffness(1.0);
+	// DCAST(CRHingeHumanBodyGenIf,body)->ResetUpperBodyPose();
+	// DCAST(CRHingeHumanBodyGenIf,body)->SetUpperBodyStiffness(1.0);
 	controlState = CRGrabControllerIf::CRGC_STANDBY;
 	*/
 }

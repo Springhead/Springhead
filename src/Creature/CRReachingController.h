@@ -12,14 +12,14 @@
 
 #include <Foundation/Object.h>
 
-#include "CRController.h"
+#include "CREngine.h"
 
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 到達運動コントローラ
 */
-class CRReachingController : public CRController, public CRReachingControllerDesc {
+class CRReachingController : public CREngine, public CRReachingControllerDesc {
 private:
 	/// 経過時間
 	float time;
@@ -33,19 +33,28 @@ private:
 	/// 有効かどうか
 	bool bActive;
 
+	/// 現在の目標
+	Vec3f pos, vel;
+
+	/// 目標までの初期距離
+	double initLen;
+
+	/// 予測シミュレーションのために格納しておく状態
+	UTRef<ObjectStatesIf> state;
+
 public:
 	SPR_OBJECTDEF(CRReachingController);
 	ACCESS_DESC(CRReachingController);
 
-	/// 制御対象のikcp
-	PHIKPosCtlIf* ikcp;
+	/// 制御対象のクリーチャ用剛体
+	CRIKSolidIf* cSolid;
 
 	CRReachingController(){}
-	CRReachingController(const CRReachingControllerDesc& desc, CRCreatureIf* c=NULL) 
-		: CRController((const CRControllerDesc&)desc, c)
-		, CRReachingControllerDesc(desc)
+	CRReachingController(const CRReachingControllerDesc& desc) 
+		: CRReachingControllerDesc(desc)
 	{
 		bActive = false;
+		Init();
 	}
 
 	/** @ brief 初期化を実行する
@@ -55,6 +64,10 @@ public:
 	/** @ brief 制御のステップを実行する
 	*/
 	virtual void Step();
+
+	/** @brief デバッグ情報を表示する
+	*/
+	virtual void Render(GRRenderIf* render);
 
 	/** @brief 位置を到達させる
 	*/
@@ -68,18 +81,18 @@ public:
 	*/
 	virtual void SetPos(Vec3f pos){ fP = pos; }
 
-	/** @brief IK制御点の設定
+	/** @brief 制御対象剛体の設定
 	*/
-	virtual void SetIKCP(PHIKPosCtlIf* ikcp){ this->ikcp = ikcp; }
+	virtual void SetCRSolid(CRIKSolidIf* cso){ cSolid = cso; }
 
 	/** @brief IK制御点の取得
 	*/
-	virtual PHIKPosCtlIf* GetIKCP(){ return this->ikcp; }
+	virtual CRIKSolidIf* GetCRSolid(){ return cSolid; }
 };
 
 /** @brief 到達運動コントローラの集合体
 */
-class CRReachingControllers : public CRController, public CRReachingControllersDesc {
+class CRReachingControllers : public CREngine, public CRReachingControllersDesc {
 private:
 	std::vector<CRReachingControllerIf*> controllers;
 
@@ -88,15 +101,19 @@ public:
 	ACCESS_DESC(CRReachingControllers);
 
 	CRReachingControllers(){}
-	CRReachingControllers(const CRReachingControllersDesc& desc, CRCreatureIf* c=NULL) 
-		: CRController((const CRControllerDesc&)desc, c)
-		, CRReachingControllersDesc(desc)
+	CRReachingControllers(const CRReachingControllersDesc& desc)
+		: CRReachingControllersDesc(desc)
 	{
 	}
+
+	/** @ brief 制御のステップを実行する
+	*/
+	virtual void Step() { /* std::cout << "CRReachingControllers::Step() called" << std::endl; */ }
 
 	/** @brief 到達運動コントローラを取得する
 	*/
 	CRReachingControllerIf* GetReachingController(PHSolidIf* solid){
+		/*
 		for (size_t i=0; i<controllers.size(); ++i) {
 			CRReachingController* ct = controllers[i]->Cast();
 			if (ct && ct->ikcp->GetSolid() == solid) {
@@ -105,8 +122,9 @@ public:
 		}
 
 		{
+			CRCreatureIf* creature = DCAST(SceneObject,this)->GetScene()->Cast();
 			CRReachingControllerDesc reachDesc;
-			CRReachingControllerIf*  reachCtl = creature->CreateController(reachDesc)->Cast();
+			CRReachingControllerIf*  reachCtl = creature->CreateEngine(reachDesc)->Cast();
 			controllers.push_back(reachCtl);
 			
 			for (int i=0; i<creature->NBodies(); ++i) {
@@ -120,6 +138,7 @@ public:
 				}
 			}
 		}
+		*/
 
 		return NULL;
 	}

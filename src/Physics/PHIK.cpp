@@ -248,7 +248,6 @@ void PHIKNode::PrepareSolve(){
 		gamma[n_y_n].clear();
 	}
 
-	std::cout << "bias : " << bias << std::endl;
 	for (size_t i=0; i<ndof; ++i) {
 		for(CSetIter c_z=linkedControlPoints.begin(); c_z!=linkedControlPoints.end(); ++c_z){
 			if (! DCAST(PHIKControlPoint,*c_z)->isEnabled) { continue; }
@@ -257,9 +256,11 @@ void PHIKNode::PrepareSolve(){
 
 			for (size_t k=0; k<3; ++k) {
 
+				// ÉøÅAÉ¿
 				alpha[i] += ( (Mj[c_z_n][k][i]/bias) * (Mj[c_z_n][k][i]) );
 				beta[i]  += ( (Mj[c_z_n][k][i]/bias) * (c_z_v[k]) );
 
+				// É¡[ny, nx]
 				for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
 					int n_y_n = DCAST(PHIKNode,*n_y)->number;
 					for (size_t j=0; j<DCAST(PHIKNode,*n_y)->ndof; ++j) {
@@ -269,6 +270,7 @@ void PHIKNode::PrepareSolve(){
 					}
 				}
 
+				// É¡[nx, nx]
 				for (size_t j=0; j<ndof; ++j) {
 					if (i!=j) {
 						gamma[number][i][j] += ( (Mj[c_z_n][k][i]/bias) * (Mj[c_z_n][k][j]/bias) );
@@ -289,6 +291,7 @@ void PHIKNode::ProceedSolve(){
 	for (size_t i=0; i<ndof; ++i) {
 		double delta_epsilon = 0;
 
+		// É¬
 		for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
 			int n_y_n = DCAST(PHIKNode,*n_y)->number;
 			if (gamma.find(n_y_n) != gamma.end()) {
@@ -298,6 +301,7 @@ void PHIKNode::ProceedSolve(){
 			}
 		}
 
+		// É√
 		for (size_t k=0; k<ndof; ++k) {
 			if (k!=i) {
 				if (gamma.find(number) != gamma.end()) {
@@ -306,13 +310,13 @@ void PHIKNode::ProceedSolve(){
 			}
 		}
 
+		// É÷ÇÃçXêV
 		double iAlpha = 0;
 		if (alpha[i]!=0) {
 			iAlpha = (1.0 / alpha[i]);
 		} else {
 			iAlpha = 1e+20;
 		}
-
 		dTheta[i] = iAlpha * (beta[i] - delta_epsilon);
 	}
 }

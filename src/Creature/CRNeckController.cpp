@@ -15,26 +15,29 @@ namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
 void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
+	/*
 	this->pos = pos;
 	this->vel = vel;
 	this->attractiveness = attractiveness;
+	*/
 }
 
 void CRNeckController::Init(){
+	/*
 	CRController::Init();
 
 	cpHead = NULL;
 
 	for (int i=0; i<creature->NBodies(); ++i) {
-		CRHingeHumanBodyIf* hingeBody = DCAST(CRHingeHumanBodyIf, creature->GetBody(i));
+		CRHingeHumanBodyGenIf* hingeBody = DCAST(CRHingeHumanBodyGenIf, creature->GetBody(i));
 		if (hingeBody) {
-			soHead  = hingeBody->GetSolid(CRHingeHumanBodyDesc::SO_HEAD);
-			soNeck  = hingeBody->GetSolid(CRHingeHumanBodyDesc::SO_NECK);
-			soChest = hingeBody->GetSolid(CRHingeHumanBodyDesc::SO_CHEST);
+			soHead  = hingeBody->GetSolid(CRHingeHumanBodyGenDesc::SO_HEAD);
+			soNeck  = hingeBody->GetSolid(CRHingeHumanBodyGenDesc::SO_NECK);
+			soChest = hingeBody->GetSolid(CRHingeHumanBodyGenDesc::SO_CHEST);
 			
-			joNeckHeadX    = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyDesc::JO_NECK_HEAD_X));
-			joChestNeckY   = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyDesc::JO_CHEST_NECK_Y));
-			joAbdomenChest = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyDesc::JO_ABDOMEN_CHEST));
+			joNeckHeadX    = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyGenDesc::JO_NECK_HEAD_X));
+			joChestNeckY   = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyGenDesc::JO_CHEST_NECK_Y));
+			joAbdomenChest = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyGenDesc::JO_ABDOMEN_CHEST));
 		}
 
 		CRBallHumanBodyIf* ballBody = DCAST(CRBallHumanBodyIf, creature->GetBody(i));
@@ -47,9 +50,11 @@ void CRNeckController::Init(){
 
 	origX = 0.0;
 	origZ = 0.0;
+	*/
 }
 
 void CRNeckController::Step(){
+	#if 0
 	CRController::Step();
 
 	if (cpHead) {
@@ -189,5 +194,6 @@ void CRNeckController::Step(){
 	ballDesc.damper            = 50.0;
 	joNeck->SetDesc(&ballDesc);
 	*/
+	#endif
 }
 }

@@ -100,13 +100,13 @@ void IK::BuildScene(int sceneNum){
 		///// 関節
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.1f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
-		descBallJoint.spring = 1000.0f;
-		descBallJoint.damper =   20.0f;
+		descBallJoint.spring =   1.0f;
+		descBallJoint.damper =   2.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
 		///// IKノード
 		descIKBall.joint = jo1->Cast();
-		descIKBall.spring = 100000.0f;
-		descIKBall.damper =   2000.0f;
+		descIKBall.spring = 1000.0f;
+		descIKBall.damper =   20.0f;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
 
 		/// -- 二つ目のリンク
@@ -120,13 +120,13 @@ void IK::BuildScene(int sceneNum){
 		///// 関節
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
-		descBallJoint.spring = 1000.0f;
-		descBallJoint.damper =   20.0f;
+		descBallJoint.spring =   1.0f;
+		descBallJoint.damper =   2.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
 		///// IKノード
 		descIKBall.joint = jo2->Cast();
-		descIKBall.spring = 100000.0f;
-		descIKBall.damper =   2000.0f;
+		descIKBall.spring = 1000.0f;
+		descIKBall.damper =   20.0f;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
 
 		/// -- IK制御点

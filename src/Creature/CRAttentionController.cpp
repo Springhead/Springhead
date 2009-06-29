@@ -15,6 +15,7 @@ namespace Spr{
 
 
 void CRAttentionController::Init(){
+	/*
 	CRController::Init();
 
 	internalScene = creature->GetInternalScene();
@@ -24,14 +25,16 @@ void CRAttentionController::Init(){
 			gazeCtrl = DCAST(CRGazeControllerIf, creature->GetController(i));
 		}
 	}
+	*/
 }
 	
 void CRAttentionController::Step(){
-	CRController::Step();
+	// CRController::Step();
 
 	// creature->GetInternalScene()->SortByAttractiveness();
 	// CRInternalSceneObjectIf* obj = creature->GetInternalScene()->GetISObject(0);
 
+	/*
 	float maxattr = 0;
 	CRISAttractiveObjectIf* maxattrObj = NULL;
 	for (int i=0; i<creature->GetInternalScene()->NObjects(); ++i) {
@@ -44,5 +47,6 @@ void CRAttentionController::Step(){
 	if (maxattrObj) {
 		gazeCtrl->LookAt(maxattrObj->GetSolid()->GetPose() * maxattrObj->GetPos(), maxattrObj->GetSolid()->GetVelocity(), maxattrObj->GetTotalAttractiveness());
 	}
+	*/
 }
 }

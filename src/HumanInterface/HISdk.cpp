@@ -34,6 +34,7 @@ HISdk::HISdk(const HISdkDesc& desc){
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HISpidarG));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HISpidar4D));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HIMouse6D));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HISpidar4D));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HINovintFalcon));
 
 	HIMouse6DIf::GetIfInfoStatic();

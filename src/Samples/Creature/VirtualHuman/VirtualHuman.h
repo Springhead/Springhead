@@ -8,6 +8,8 @@
 #include <Physics/PHIK.h>
 #include <Creature/CRCreature.h>
 
+#include "Creature/CRBodyGenerator/CRBallHumanBodyGen.h"
+
 using namespace Spr;
 using namespace PTM;
 using namespace std;
@@ -30,10 +32,12 @@ public:
 	double zP;
 
 	// ÉNÉäÅ[É`ÉÉ
-	CRCreatureIf                  *creature, *userhand;
-	CRBallHumanBodyDesc            descBody;
-	CRBallHumanBodyIf             *body, *userhandModel;
-	CRReachingControllersIf       *reaches;
+	CRBallHumanBodyGen            *bodyGen;
+
+	CRSdkIf                       *crSdk;
+	CRCreatureIf                  *creature;
+	CRBodyIf                      *body;
+	CRReachingControllerIf        *reachLH, *reachRH;
 
 	VirtualHuman();
 	void Init(int argc, char* argv[]);
@@ -48,6 +52,7 @@ public:
 
 	void OneStep();
 	void UpdateCursor(int x, int y);
+	bool LoadScene(UTString filename);
 }; 
 
 extern VirtualHuman app;

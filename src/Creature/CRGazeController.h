@@ -12,14 +12,14 @@
 
 #include <Foundation/Object.h>
 
-#include "CRController.h"
+#include "CREngine.h"
 
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 視線運動コントローラ
 */
-class CRGazeController : public CRController, public CRGazeControllerDesc {
+class CRGazeController : public CREngine, public CRGazeControllerDesc {
 private:
 	/// 注視点
 	Vec3d pos, vel;
@@ -38,9 +38,8 @@ public:
 	ACCESS_DESC_STATE(CRGazeController);
 
 	CRGazeController(){}
-	CRGazeController(const CRGazeControllerDesc& desc, CRCreatureIf* c=NULL) 
+	CRGazeController(const CRGazeControllerDesc& desc) 
 		: CRGazeControllerDesc(desc) 
-		, CRController((const CRControllerDesc&)desc, c)
 	{
 	}
 

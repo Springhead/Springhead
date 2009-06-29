@@ -68,7 +68,46 @@ void VirtualHuman::InitCameraView(){
 	iss >> cameraInfo.view;
 }
 
+bool VirtualHuman::LoadScene(UTString filename){
+	//filename末端に改行コード( = 0x0a)が含まれているとロードされないので，あれば最初に削除する
+	if(filename.at(filename.length()-1) == 0x0a){
+		filename.erase(filename.length()-1);
+	}
+	//	デフォルトの先祖オブジェクトをを設定
+	//	これらのCreateObjectが呼ばれてシーングラフが作られる。
+	ObjectIfs objs;
+	objs.Push(GetSdk()->GetGRSdk());	//	GRSdk
+	objs.Push(GetSdk()->GetPHSdk());	//	PHSdk
+	objs.Push(crSdk);					//	CRSdk
+	//	FWSdk	FWScene は FWSdkの子になるので、FWSdkを最後にPushする必要がある。
+	objs.Push(GetSdk()->Cast());
+	int first = GetSdk()->NScene();	//	ロードされるFWSceneの位置を覚えておく
+
+	//	ファイルローダーの作成
+	UTRef<FIFileXIf> fiFileX = GetSdk()->GetFISdk()->CreateFileX();
+	//	ファイルのロード
+	if (! fiFileX->Load(objs, filename.data()) ) {
+		DSTR << "Error: Cannot load file " << filename.c_str() << std::endl;
+		//exit(EXIT_FAILURE);
+		return false;
+	}
+	//	ロードしたシーンを取得
+	DSTR << "Loaded " << GetSdk()->NScene() - first << " scenes." << std::endl;
+	DSTR << "LoadFile Complete." << std::endl;
+	for(int i=first; i<GetSdk()->NScene(); ++i){
+		GetSdk()->SwitchScene(GetSdk()->GetScene(i));
+		GetSdk()->GetScene(i)->Print(DSTR);
+	}
+	return true;
+}
+
 void VirtualHuman::BuildScene(int sceneNum){
+	crSdk = CRSdkIf::CreateSdk();
+
+	// ファイルからロード
+	UTString filename = "test.x";
+	LoadScene(filename);
+
 	PHSdkIf*	phSdk	= GetSdk()->GetPHSdk();
 	PHSceneIf*	phScene	= GetSdk()->GetScene()->GetPHScene();
 
@@ -108,25 +147,116 @@ void VirtualHuman::BuildScene(int sceneNum){
 	soCursor->AddShape(phSdk->CreateShape(descSphere));
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	// クリーチャの作成
-	/// クリーチャ
-	CRCreatureDesc descCreature;
-	creature = (DBG_NEW CRCreature(descCreature, phScene))->Cast();
+	// ボディと到達運動コントローラ
+	{
+		crSdk->FindObject(creature, "creature1");
+		if (creature) {
+			// ボディ
+			CRBallHumanBodyGenDesc bodyGenDesc;
+			bodyGen = new CRBallHumanBodyGen(bodyGenDesc, phScene);
 
-	/// ボディ
-	body = creature->CreateBody(descBody)->Cast();
-	PHSolidIf* waist = body->GetSolid(CRBallHumanBodyDesc::SO_WAIST);
-	waist->SetDynamical(false);
+			PHSolidIf* waist = bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_WAIST);
+			waist->SetDynamical(false);
 
-	// body->GetIKNode(CRBallHumanBodyDesc::JO_LEFT_WRIST)->AddControlPoint(body->GetControlPoint(2*CRBallHumanBodyDesc::SO_LEFT_HAND));
-	body->GetIKNode(CRBallHumanBodyDesc::JO_LEFT_ELBOW)->AddControlPoint(body->GetControlPoint(2*CRBallHumanBodyDesc::SO_LEFT_HAND));
-	body->GetIKNode(CRBallHumanBodyDesc::JO_LEFT_SHOULDER)->AddControlPoint(body->GetControlPoint(2*CRBallHumanBodyDesc::SO_LEFT_HAND));
-	body->GetIKNode(CRBallHumanBodyDesc::JO_ABDOMEN_CHEST)->AddControlPoint(body->GetControlPoint(2*CRBallHumanBodyDesc::SO_LEFT_HAND));
-	body->GetIKNode(CRBallHumanBodyDesc::JO_WAIST_ABDOMEN)->AddControlPoint(body->GetControlPoint(2*CRBallHumanBodyDesc::SO_LEFT_HAND));
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_LEFT_ELBOW)->AddControlPoint(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_LEFT_HAND));
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_LEFT_SHOULDER)->AddControlPoint(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_LEFT_HAND));
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST)->AddControlPoint(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_LEFT_HAND));
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN)->AddControlPoint(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_LEFT_HAND));
 
-	/// 到達運動コントローラ
-	CRReachingControllersDesc reachsDesc;
-	reaches = creature->CreateController(reachsDesc)->Cast();
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_RIGHT_ELBOW)->AddControlPoint(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_RIGHT_HAND));
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_RIGHT_SHOULDER)->AddControlPoint(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_RIGHT_HAND));
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST)->AddControlPoint(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_RIGHT_HAND));
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN)->AddControlPoint(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_RIGHT_HAND));
+
+			/*
+			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN))->SetSpring(2000.0);
+			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN))->SetDamper(  50.0);
+			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST))->SetSpring(1000.0);
+			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST))->SetDamper(  20.0);
+			*/
+
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_LEFT_SHOULDER)->SetBias(1.5);
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_LEFT_ELBOW)->SetBias(1);
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST)->SetBias(5);
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN)->SetBias(7);
+
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_RIGHT_SHOULDER)->SetBias(1.5);
+			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_RIGHT_ELBOW)->SetBias(1);
+
+			CRBodyDesc bodyDesc;
+			body = creature->CreateBody(bodyDesc);
+
+			{
+				CRIKSolidDesc iksd;
+				iksd.label = "LeftHand";
+				CRIKSolidIf* csoLeftHand = body->CreateObject(CRIKSolidIf::GetIfInfoStatic(), &iksd)->Cast();
+				csoLeftHand->AddChildObject(bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_LEFT_HAND));
+				csoLeftHand->AddChildObject(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_LEFT_HAND));
+				body->AddChildObject(csoLeftHand);
+			}
+			{
+				CRIKJointDesc ikjd;
+				CRIKJointIf* cjo = body->CreateObject(CRIKJointIf::GetIfInfoStatic(), &ikjd)->Cast();
+				cjo->AddChildObject(bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_LEFT_ELBOW));
+				body->AddChildObject(cjo);
+			}
+			{
+				CRIKJointDesc ikjd;
+				CRIKJointIf* cjo = body->CreateObject(CRIKJointIf::GetIfInfoStatic(), &ikjd)->Cast();
+				cjo->AddChildObject(bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_LEFT_SHOULDER));
+				body->AddChildObject(cjo);
+			}
+			{
+				CRIKJointDesc ikjd;
+				CRIKJointIf* cjo = body->CreateObject(CRIKJointIf::GetIfInfoStatic(), &ikjd)->Cast();
+				cjo->AddChildObject(bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST));
+				body->AddChildObject(cjo);
+			}
+			{
+				CRIKJointDesc ikjd;
+				CRIKJointIf* cjo = body->CreateObject(CRIKJointIf::GetIfInfoStatic(), &ikjd)->Cast();
+				cjo->AddChildObject(bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN));
+				body->AddChildObject(cjo);
+			}
+
+			{
+				CRIKSolidDesc iksd;
+				iksd.label = "RightHand";
+				CRIKSolidIf* csoRightHand = body->CreateObject(CRIKSolidIf::GetIfInfoStatic(), &iksd)->Cast();
+				csoRightHand->AddChildObject(bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_RIGHT_HAND));
+				csoRightHand->AddChildObject(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_RIGHT_HAND));
+				body->AddChildObject(csoRightHand);
+			}
+			{
+				CRIKJointDesc ikjd;
+				CRIKJointIf* cjo = body->CreateObject(CRIKJointIf::GetIfInfoStatic(), &ikjd)->Cast();
+				cjo->AddChildObject(bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_RIGHT_ELBOW));
+				body->AddChildObject(cjo);
+			}
+			{
+				CRIKJointDesc ikjd;
+				CRIKJointIf* cjo = body->CreateObject(CRIKJointIf::GetIfInfoStatic(), &ikjd)->Cast();
+				cjo->AddChildObject(bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_RIGHT_SHOULDER));
+				body->AddChildObject(cjo);
+			}
+
+			// 到達運動コントローラ
+			// xFileからのロードに対応する実験としてあえてcsoLeftHandを直接代入せずにbodyから取得している
+			creature->FindObject(reachLH, "reachLH");
+			creature->FindObject(reachRH, "reachRH");
+			for (size_t i=0; i<body->NChildObject(); ++i) {
+				CRIKSolidIf* cso = body->GetChildObject(i)->Cast();
+				if (cso) {
+					if (std::string("LeftHand") == cso->GetLabel()) {
+						reachLH->SetCRSolid(cso);
+					}
+					if (std::string("RightHand") == cso->GetLabel()) {
+						reachRH->SetCRSolid(cso);
+					}
+				}
+			}
+		}
+	}
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	// Sceneの設定
@@ -134,10 +264,10 @@ void VirtualHuman::BuildScene(int sceneNum){
 	phScene->GetIKEngine()->SetNumIter(10);
 	phScene->GetIKEngine()->Enable(bIK);
 	/// その他の設定
-	// phScene->SetContactMode(PHSceneDesc::MODE_NONE);
 	phScene->SetGravity(gravity);
 	phScene->SetTimeStep(0.01);
 	phScene->SetNumIteration(15);
+	phScene->SetContactMode(PHSceneDesc::MODE_NONE);
 }
 
 void VirtualHuman::Step(){
@@ -156,7 +286,7 @@ void VirtualHuman::OneStep(){
 
 	phScene->ClearForce();
 
-	creature->Step();
+	crSdk->Step();
 
 	phScene->GenerateForce();
 	phScene->Integrate();
@@ -203,8 +333,12 @@ void VirtualHuman::Display(){
 	ld.position = Vec4f(1,1,1,0);
 	render->PushLight(ld);
 
+	/*
 	CRReachingControllerIf* rLHand = reaches->GetReachingController(body->GetSolid(CRBallHumanBodyDesc::SO_LEFT_HAND));
 	rLHand->Render(curRender);
+	*/
+	DCAST(GRDebugRenderIf,curRender)->SetMaterialSample(GRDebugRenderIf::RED);
+	DCAST(CRReachingControllerIf,reachLH)->Render(curRender);
 
 	render->PopLight();
 
@@ -281,14 +415,15 @@ void VirtualHuman::Keyboard(int key, int x, int y){
 
 		case 'o':
 			{
-				CRReachingControllerIf* rLHand = reaches->GetReachingController(body->GetSolid(CRBallHumanBodyDesc::SO_LEFT_HAND));
-				rLHand->Start(soCursor->GetPose().Pos(), Vec3d(), 3.0f);
+				// CRReachingControllerIf* rLHand = reaches->GetReachingController(body->GetSolid(CRBallHumanBodyDesc::SO_LEFT_HAND));
+				reachLH->Start(soCursor->GetPose().Pos(), Vec3d(), 0.5f);
+				reachRH->Start(soCursor->GetPose().Pos(), Vec3d(), 0.5f);
 			}
 			break;
 
 		case 'i':
 			{
-				body->GetSolid(CRBallHumanBodyDesc::SO_LEFT_HAND)->AddForce(Vec3d(0, -10.0, 0));
+				// body->GetSolid(CRBallHumanBodyDesc::SO_LEFT_HAND)->AddForce(Vec3d(0, -10.0, 0));
 				// soRC->AddTorque(Vec3d(100,0,0));
 			}
 			break;
