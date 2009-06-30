@@ -73,17 +73,16 @@ public:
 	///	最低張力を出力
 	void SetMinForce();
 	///	力の出力
-	virtual void SetForce(const Vec3f& f){ SetForce(f, 0.1f); }
-	virtual void SetForce(const Vec3f& f,float eff){ SetForce(f, eff, 0.0f); }
-	virtual void SetForce(const Vec3f& f, float eff, float cont);
-	//virtual void Update(){ HISpidarCalc3Dof::Update(); }
+	//virtual void SetForce(const Vec3f& f){ SetForce(f, 0.1f); }
+	virtual void SetForce(const Vec3f& f){ HISpidarCalc3Dof::SetForce(f); }
+	virtual void SetForce(const Vec3f& f,const Vec3f& t){ HISpidarCalc3Dof::SetForce(f, t); }
 	virtual Vec3f GetForce();
 	virtual Vec3f GetPosition(){ return pos; }
 	HISpidarMotor* Motor(){
 		return motor;
 	}
 protected:
-	Vec3f pos;
+	//Vec3f pos;
 	///	位置を計算するための定数
 	Vec3f posSqrConst;
 	///	位置を計算するための行列
