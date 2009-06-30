@@ -1,5 +1,5 @@
-#ifndef HISPIDAR4D_H
-#define HISPIDAR4D_H
+#ifndef HISPIDAR4_H
+#define HISPIDAR4_H
 
 //#include "HIHapticDevice.h"
 //#include "HISpidarMotor.h"
@@ -47,7 +47,7 @@ sp->MaxForce(20.0f);
 @endverbatim
 */
 
-class SPR_DLL HISpidar4D: public HIForceInterface3D, public HISpidarCalc3Dof{
+class SPR_DLL HISpidar4: public HIForceInterface3D, public HISpidarCalc3Dof{
 protected:
 	bool bGood;
 public:
@@ -55,15 +55,11 @@ public:
 	std::vector<DVPioBaseIf*> buttons;	///<	ボタン
 
 	///	デバイスのタイプ
-	SPR_OBJECTDEF(HISpidar4D);
+	SPR_OBJECTDEF(HISpidar4);
 	
-	HISpidar4D();
-	virtual ~HISpidar4D();
-	//typedef HIForceDevice3D superclass;
-		///	デバイスの初期化(使用前に呼ぶ)
+	HISpidar4();
+	virtual ~HISpidar4();
 	virtual bool Init(const void* pDesc);
-	/*///	デバイスの初期化(使用前に呼ぶ)
-	virtual bool Init(DVDeviceManager& dev, Vec3f* motorPos, float vpn, float lpp, float minF, float maxF);*/
 	///	キャリブレーションの前に行う処理
 	virtual bool BeforeCalibration(){ SetMinForce(); return true; }
 	///	キャリブレーション
@@ -73,7 +69,6 @@ public:
 	///	最低張力を出力
 	void SetMinForce();
 	///	力の出力
-	//virtual void SetForce(const Vec3f& f){ SetForce(f, 0.1f); }
 	virtual void SetForce(const Vec3f& f){ HISpidarCalc3Dof::SetForce(f); }
 	virtual void SetForce(const Vec3f& f,const Vec3f& t){ HISpidarCalc3Dof::SetForce(f, t); }
 	virtual Vec3f GetForce();
@@ -82,7 +77,6 @@ public:
 		return motor;
 	}
 protected:
-	//Vec3f pos;
 	///	位置を計算するための定数
 	Vec3f posSqrConst;
 	///	位置を計算するための行列

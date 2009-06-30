@@ -13,7 +13,7 @@
 #include "DRUsb20Sh4.h"
 #include "HIMouse6D.h"
 #include "HISpidarG.h"
-#include "HISpidar4D.h"
+#include "HISpidar4.h"
 #include "HINovintFalcon.h"
 
 namespace Spr {;
@@ -32,9 +32,9 @@ HISdk::HISdk(const HISdkDesc& desc){
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(DRUsb20Simple));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(DRUsb20Sh4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HISpidarG));
-	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HISpidar4D));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HISpidar4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HIMouse6D));
-	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HISpidar4D));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HISpidar4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpNoDesc(HINovintFalcon));
 
 	HIMouse6DIf::GetIfInfoStatic();

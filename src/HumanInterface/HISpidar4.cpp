@@ -19,13 +19,13 @@ Vec3f HISpidar4::motorPosDef[][4] =	//	モータの取り付け位置(中心を原点とする)
 */
 //----------------------------------------------------------------------------
 
-//HIOBJECTIMP(HISpidar4D, HIForceDevice3D);
-HISpidar4DDesc::HISpidar4DDesc(){
+
+//HISpidar4Desc--------------------------------------------------------------
+HISpidar4Desc::HISpidar4Desc(){
 
 
 }
-
-void HISpidar4DDesc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF, float maxF){
+void HISpidar4Desc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF, float maxF){
 	motors.resize(4);
 	for(int i=0; i<nMotor; ++i){
 		motors[i].pos = motorPos[i];
@@ -44,7 +44,7 @@ void HISpidar4DDesc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn
 		maxForce[i] = maxF;
 	}
 }
-void HISpidar4DDesc::Init(char* type){
+void HISpidar4Desc::Init(char* type){
 	if (stricmp(type, "SpidarG6X3L")==0 || stricmp(type, "SpidarG6X3R")==0){
 		bool bLeft = stricmp(type, "SpidarG6X3L")==0;
 		//	モータの取り付け位置. モータが直方体に取り付けられている場合は，
@@ -57,29 +57,6 @@ void HISpidar4DDesc::Init(char* type){
 		Matrix3f rotR = Matrix3f::Rot((float)Rad(-45), 'y');
 		Matrix3f rotL = Matrix3f::Rot((float)Rad(-45), 'y');
 		Matrix3f rotZ = Matrix3f::Rot((float)Rad(-45), 'z');
-
-	//Vec3f motorPos[2][8][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
-	//	{
-	//		{rotR*Vec3f(-PX,-PY, PZ), rotR*Vec3f( -GX, 0.0f, 0.0f)},
-	//		{rotR*Vec3f( PX,-PY, PZ), rotR*Vec3f(  GX, 0.0f, 0.0f)},
-	//		{rotR*Vec3f( PX,-PY,-PZ), rotR*Vec3f(0.0f,  -GY, 0.0f)},
-	//		{rotR*Vec3f(-PX,-PY,-PZ), rotR*Vec3f(0.0f,  -GY, 0.0f)},
-	//		{rotR*Vec3f(-PX, PY, PZ), rotR*Vec3f( -GX, 0.0f, 0.0f)},
-	//		{rotR*Vec3f( PX, PY, PZ), rotR*Vec3f(  GX, 0.0f, 0.0f)},
-	//		{rotR*Vec3f( PX, PY,-PZ), rotR*Vec3f(0.0f,   GY, 0.0f)},
-	//		{rotR*Vec3f(-PX, PY,-PZ), rotR*Vec3f(0.0f,   GY, 0.0f)}
-	//	},
-	//	{
-	//		{rotL*Vec3f( PX, PY,-PZ), rotL*Vec3f(0, 0.0f,  -GX)},
-	//		{rotL*Vec3f( PX, PY, PZ), rotL*Vec3f(0, 0.0f,   GX)},
-	//		{rotL*Vec3f(-PX, PY, PZ), rotL*Vec3f(0,   GY, 0.0f)},
-	//		{rotL*Vec3f(-PX, PY,-PZ), rotL*Vec3f(0,   GY, 0.0f)},
-	//		{rotL*Vec3f( PX,-PY,-PZ), rotL*Vec3f(0, 0.0f,  -GX)},
-	//		{rotL*Vec3f( PX,-PY, PZ), rotL*Vec3f(0, 0.0f,   GX)},
-	//		{rotL*Vec3f(-PX,-PY, PZ), rotL*Vec3f(0,  -GY, 0.0f)},
-	//		{rotL*Vec3f(-PX,-PY,-PZ), rotL*Vec3f(0,  -GY, 0.0f)},
-	//	}
-	//};
 
 	Vec3f motorPos[2][4][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
 		{
@@ -123,18 +100,18 @@ void HISpidar4DDesc::Init(char* type){
 	}
 }
 
-//---------------------------------------------------------------------------------------------------
-HISpidar4D::HISpidar4D(){
+//HISpidar4D--------------------------------------------------------------
+HISpidar4::HISpidar4(){
     for (int i=0;i<4;i++){
         tension[i] = 0;
     }
 }
-HISpidar4D::~HISpidar4D(){SetMinForce();}
+HISpidar4::~HISpidar4(){SetMinForce();}
 
 
-bool HISpidar4D::Init(const void* pDesc){
+bool HISpidar4::Init(const void* pDesc){
 	HISdkIf* sdk = GetSdk();
-	HISpidar4DDesc& desc = *(HISpidar4DDesc*)pDesc;
+	HISpidar4Desc& desc = *(HISpidar4Desc*)pDesc;
 	//	計算のための定数の設定
 	nRepeat = 2;
 	sigma = 0.001f; //sigma=sigma*sigma
@@ -171,15 +148,14 @@ bool HISpidar4D::Init(const void* pDesc){
 	return true;
 }
 
-bool HISpidar4D::Calibration(){
+bool HISpidar4::Calibration(){
 	//	ポインタを原点(中心)に置いて、キャリブレーションを行う
-	// calibration sets the center of the reference frame at the current
-	// position of the spidar (motor[i].pos.norm())
-	Update(0.001f);
-	for(int i=0; i<4; i++) motor[i].SetLength(motor[i].pos.norm());
+	for(unsigned i=0; i<motors.size(); i++) motors[i].SetLength( (motors[i].pos - motors[i].jointPos).norm() );
+	lengthDiffAve.clear();
+	for(int i=0; i<4; ++i) HISpidarCalc3Dof::Update();	//	姿勢を更新
 	return true;
 }
-void HISpidar4D::Update(float dt){
+void HISpidar4::Update(float dt){
 	HIForceInterface3D::Update(dt);
 	HISpidarCalc3Dof::Update();
 	for(unsigned int i=0; i<4; ++i){
@@ -187,17 +163,17 @@ void HISpidar4D::Update(float dt){
 	}
 }
 
-Vec3f HISpidar4D::GetForce(){
+Vec3f HISpidar4::GetForce(){
     int i;
 	Vec3f f;
     for (i=0;i<4;i++) f=f+tension[i]*phi[i];
     return f;
 }
 
-void HISpidar4D::SetMinForce(){
+void HISpidar4::SetMinForce(){
 	for(int i=0; i<4; i++) motor[i].SetForce(motor[i].minForce);
 }
-void HISpidar4D::InitMat(){
+void HISpidar4::InitMat(){
 	matPos = Matrix3f(
 		motor[1].pos-motor[0].pos,
 		motor[2].pos-motor[1].pos,
@@ -209,16 +185,16 @@ void HISpidar4D::InitMat(){
 		motor[3].pos.square()-motor[2].pos.square());
 }
 
-void HISpidar4D::MakeWireVec(){
+void HISpidar4::MakeWireVec(){
 	for(unsigned int i=0; i<4; ++i){
 		wireDirection[i] = motors[i].pos - pos;
 		calculatedLength[i] = wireDirection[i].norm();
 		wireDirection[i] /= calculatedLength[i];
 	}
 }
-void HISpidar4D::UpdatePos(){
+void HISpidar4::UpdatePos(){
 }
-void HISpidar4D::MeasureWire(){
+void HISpidar4::MeasureWire(){
 	for(unsigned int i=0; i<4; ++i){
 		measuredLength[i] = motors[i].GetLength();
 	}	
