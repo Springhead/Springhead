@@ -115,5 +115,5 @@
 	Spr::HISpidarMotorIf* GetMotor(size_t i){	return	base::GetMotor(i);}	\
 	size_t NMotor()const{	return	base::NMotor();}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_HISpidar4DIf(base)	\
+#define SPR_OVERRIDEMEMBERFUNCOF_HISpidar4If(base)	\
 

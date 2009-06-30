@@ -96,21 +96,21 @@ struct HISpidarGDesc{
 	void Init(char* type);
 };
 
-/**	@brief	Spidar4Dの基本クラス	*/
-struct HISpidar4DIf: public HIForceInterface3DIf{
-	SPR_VIFDEF(HISpidar4D);
+/**	@brief	Spidar4の基本クラス	*/
+struct HISpidar4If: public HIForceInterface3DIf{
+	SPR_VIFDEF(HISpidar4);
 	/////	デバイスの状態を更新する.
 	//void Update(float dt);
 
 };
 
-	///	Spidar4Dのデスクリプタ
-struct HISpidar4DDesc{
-	SPR_DESCDEF(HISpidar4D);
+	///	Spidar4のデスクリプタ
+struct HISpidar4Desc{
+	SPR_DESCDEF(HISpidar4);
 	std::vector<HISpidarMotorDesc> motors;
-	HISpidar4DDesc();
-	HISpidar4DDesc(char* type){Init(type);}
-	HISpidar4DDesc(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f){
+	HISpidar4Desc();
+	HISpidar4Desc(char* type){Init(type);}
+	HISpidar4Desc(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f){
 		Init(nMotor, motorPos, knotPos, vpn, lpp, minF, maxF);
 	}
 	///	パラメータによる初期化
