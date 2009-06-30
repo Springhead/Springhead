@@ -48,9 +48,9 @@ void HISpidarCalc3Dof::Update()
 {
 	int i,j,k;
 
+
 	MeasureWire();
 	MakeWireVec();
-
 	int wire = matA.height();
 	for(int step=0; step< nRepeat; ++ step){
 		for(i=0;i<wire;i++) {
@@ -75,12 +75,14 @@ void HISpidarCalc3Dof::Update()
 			for(k=0;k<wire;k++) postureDiff[i]+=matA[k][i]*lengthDiff[k];
 			matATA[i][i]+=sigma;
 		}
-		
+
+
 		matATA.cholesky(postureDiff);
 		for(i=0;i<3;i++) postureDiff[i]=postureDiff[i];
 		pos.X() += postureDiff[0];
 		pos.Y() += postureDiff[1];
 		pos.Z() += postureDiff[2];
+
 
 		UpdatePos();
 		MakeWireVec();
