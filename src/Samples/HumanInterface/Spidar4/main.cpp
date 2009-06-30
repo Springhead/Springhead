@@ -18,21 +18,21 @@ int __cdecl main(){
 
 	sdk->Init();
 	sdk->Print(DSTR);
-	//UTRef<HISpidarGIf> spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	//spg->Init(&HISpidarGDesc("SpidarG6X3R"));
-	UTRef<HISpidar4DIf> spg = sdk->CreateHumanInterface(HISpidar4DIf::GetIfInfoStatic())->Cast();
-	HISpidar4DDesc desc;
-	desc=HISpidar4DDesc("SpidarG6X3R");
-	std::cout << spg << std::endl;
-	spg->Init(&desc);
+
+	UTRef<HISpidar4If> spg = sdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+	spg->Init(&HISpidar4Desc("SpidarG6X3R"));
+
 	int t = 0;
 	while(!_kbhit()){
 		t += 1;
 		spg->Update(0.001f);
 #if 1
 		Vec3f spgpos = spg->GetPosition();
+		if(t%1000==1){
 		std::cout << std::setprecision(2) << spgpos << std::endl;
+		}
 		Vec3f f(0.0, 0.0, 0.0);
+
 		if(spgpos.y < -0.015){
 			f[1] = 1.5;
 		}
