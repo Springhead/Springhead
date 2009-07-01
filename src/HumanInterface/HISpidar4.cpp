@@ -57,7 +57,7 @@ void HISpidar4Desc::Init(char* type){
 		Matrix3f rotR = Matrix3f::Rot((float)Rad(-45), 'y');
 		Matrix3f rotL = Matrix3f::Rot((float)Rad(-45), 'y');
 		Matrix3f rotZ = Matrix3f::Rot((float)Rad(-45), 'z');
-		Matrix3f 
+		Matrix3f tMat = Matrix3f(); tMat.xx*=-1; tMat.yy*=-1; //左手系を右手系に変換
 
 	Vec3f motorPos[2][4][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
 		{
@@ -67,10 +67,10 @@ void HISpidar4Desc::Init(char* type){
 			{rotR*Vec3f(-PX, PY,-PZ), rotR*rotZ*Vec3f(-GX, 0.0f, 0.0f)}//8上前
 		},
 		{
-			{rotL*Vec3f( PX, PY, PZ), rotL*rotZ*Vec3f( GX, 0.0f, 0.0f)},//2下奥
-			{rotL*Vec3f(-PX, PY,-PZ), rotL*rotZ*Vec3f(0.0f, -GY, 0.0f)},//4下前
-			{rotL*Vec3f( PX,-PY,-PZ), rotL*rotZ*Vec3f(-GX, 0.0f, 0.0f)},//5上左
-			{rotL*Vec3f(-PX,-PY, PZ), rotL*rotZ*Vec3f(0.0f,  GY, 0.0f)},//7上右
+			{tMat*rotL*Vec3f( PX, PY, PZ), tMat*rotL*rotZ*Vec3f( GX, 0.0f, 0.0f)},//2下奥
+			{tMat*rotL*Vec3f(-PX, PY,-PZ), tMat*rotL*rotZ*Vec3f(0.0f, -GY, 0.0f)},//4下前
+			{tMat*rotL*Vec3f( PX,-PY,-PZ), tMat*rotL*rotZ*Vec3f(-GX, 0.0f, 0.0f)},//5上左
+			{tMat*rotL*Vec3f(-PX,-PY, PZ), tMat*rotL*rotZ*Vec3f(0.0f,  GY, 0.0f)},//7上右
 
 		}
 	};
