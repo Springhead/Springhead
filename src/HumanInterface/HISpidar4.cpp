@@ -2,7 +2,7 @@
 #ifdef _WIN32
  #pragma hdrstop
 #endif
-#include "HISpidar4D.h"
+#include "HISpidar4.h"
 
 namespace Spr {
 /*
@@ -26,7 +26,7 @@ HISpidar4Desc::HISpidar4Desc(){
 
 }
 void HISpidar4Desc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF, float maxF){
-	motors.resize(4);
+	motors.resize(nMotor);
 	for(int i=0; i<nMotor; ++i){
 		motors[i].pos = motorPos[i];
 		motors[i].jointPos = knotPos[i];
@@ -57,6 +57,7 @@ void HISpidar4Desc::Init(char* type){
 		Matrix3f rotR = Matrix3f::Rot((float)Rad(-45), 'y');
 		Matrix3f rotL = Matrix3f::Rot((float)Rad(-45), 'y');
 		Matrix3f rotZ = Matrix3f::Rot((float)Rad(-45), 'z');
+		Matrix3f 
 
 	Vec3f motorPos[2][4][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
 		{
@@ -128,19 +129,20 @@ bool HISpidar4::Init(const void* pDesc){
 	HISpidarCalc3Dof::Init(3, minForce, maxForce);
 	////	ドライバの取得
 	int i;
-	for(i=0; i<4; ++i){
+	for(i=0; i<motors.size(); ++i){
 		motors[i].da = sdk->RentVirtualDevice(DVDaBase::TypeS())->Cast();
 		if (!motors[i].da) break;
 		AddDeviceDependency(motors[i].da->RealDevice()->Cast());
 	}
-	if (i<4) return false;
-	for(i=0; i<4; ++i){
+	if (i<motors.size()) return false;
+	for(i=0; i<motors.size(); ++i){
 		motors[i].counter = sdk->RentVirtualDevice(DVCounterBase::TypeS())->Cast();
 		if (!motors[i].counter) break;
 		AddDeviceDependency(motors[i].counter->RealDevice()->Cast());
 	}
-	if (i<4) return false;
-	InitMat();
+	if (i<motors.size()) return false;
+
+	SetMinForce();
 	BeforeCalibration();
 	Calibration();
 	AfterCalibration();
@@ -152,13 +154,13 @@ bool HISpidar4::Calibration(){
 	//	ポインタを原点(中心)に置いて、キャリブレーションを行う
 	for(unsigned i=0; i<motors.size(); i++) motors[i].SetLength( (motors[i].pos - motors[i].jointPos).norm() );
 	lengthDiffAve.clear();
-	for(int i=0; i<4; ++i) HISpidarCalc3Dof::Update();	//	姿勢を更新
+	for(int i=0; i<motors.size(); ++i) HISpidarCalc3Dof::Update();	//	姿勢を更新
 	return true;
 }
 void HISpidar4::Update(float dt){
 	HIForceInterface3D::Update(dt);
 	HISpidarCalc3Dof::Update();
-	for(unsigned int i=0; i<4; ++i){
+	for(unsigned int i=0; i<motors.size(); ++i){
 		motors[i].SetForce(Tension()[i]);
 	}
 }
@@ -166,27 +168,16 @@ void HISpidar4::Update(float dt){
 Vec3f HISpidar4::GetForce(){
     int i;
 	Vec3f f;
-    for (i=0;i<4;i++) f=f+tension[i]*phi[i];
+    for (i=0;i<motors.size();i++) f=f+tension[i]*phi[i];
     return f;
 }
 
 void HISpidar4::SetMinForce(){
-	for(int i=0; i<4; i++) motor[i].SetForce(motor[i].minForce);
-}
-void HISpidar4::InitMat(){
-	matPos = Matrix3f(
-		motor[1].pos-motor[0].pos,
-		motor[2].pos-motor[1].pos,
-		motor[3].pos-motor[2].pos).trans() * 2;
-	matPos = matPos.inv();
-
-	posSqrConst = Vec3f(motor[1].pos.square()-motor[0].pos.square(),
-		motor[2].pos.square()-motor[1].pos.square(),
-		motor[3].pos.square()-motor[2].pos.square());
+	for(int i=0; i<motors.size(); i++) motor[i].SetForce(motor[i].minForce);
 }
 
 void HISpidar4::MakeWireVec(){
-	for(unsigned int i=0; i<4; ++i){
+	for(unsigned int i=0; i<motors.size(); ++i){
 		wireDirection[i] = motors[i].pos - pos;
 		calculatedLength[i] = wireDirection[i].norm();
 		wireDirection[i] /= calculatedLength[i];
@@ -195,7 +186,7 @@ void HISpidar4::MakeWireVec(){
 void HISpidar4::UpdatePos(){
 }
 void HISpidar4::MeasureWire(){
-	for(unsigned int i=0; i<4; ++i){
+	for(unsigned int i=0; i<motors.size(); ++i){
 		measuredLength[i] = motors[i].GetLength();
 	}	
 }
