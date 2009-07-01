@@ -34,11 +34,12 @@
 
 #define	ESC				27				// Esc key
 #define EXIT_TIMER		12000			// 強制終了させるステップ数
-#define TEST_FILEX		"test6.x"		// ロードするXファイル
+#define TEST_FILEX		"Kitchen_room_withDishes04.x"		// ロードするXファイル
 
 namespace Spr{
 	UTRef<PHSdkIf> phSdk;
 	UTRef<GRSdkIf> grSdk;
+	UTRef<FWSdkIf> fwSdk;
 	PHSceneIf* scene;
 	GRDeviceGLIf* grDevice;
 	GRDebugRenderIf* render;
@@ -268,6 +269,8 @@ int main(int argc, char* argv[]){
 		objs.push_back(phSdk);		
 		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
+		fwSdk = FWSdkIf::CreateSdk();					//	FWSDKを用意して，
+		objs.push_back(fwSdk);		
 		if (! fileX->Load(objs, TEST_FILEX) ) {	//	PHSDKごとロードして，
 			DSTR << "Error: Cannot open load file. " << std::endl;
 			exit(EXIT_FAILURE);
