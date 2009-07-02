@@ -133,7 +133,7 @@ bool HISpidar4::Init(const void* pDesc){
 	Vec4i port=desc.port+Vec4i(-1,-1,-1,-1);
 
 	for(i=0; i<motors.size(); ++i){
-		if(port==Vec4i(0,0,0,0)){
+		if(desc.port==Vec4i(0,0,0,0)){
 			motors[i].da = sdk->RentVirtualDevice(DVDaBase::TypeS())->Cast();
 		}else {
 			motors[i].da = sdk->RentVirtualDeviceNo(DVDaBase::TypeS(),port[i])->Cast();
@@ -144,7 +144,7 @@ bool HISpidar4::Init(const void* pDesc){
 	if (i<motors.size()) return false;
 
 	for(i=0; i<motors.size(); ++i){
-		if(port==Vec4i(0,0,0,0)){
+		if(desc.port==Vec4i(0,0,0,0)){
 			motors[i].counter = sdk->RentVirtualDevice(DVCounterBase::TypeS())->Cast();
 		}else {
 			motors[i].counter = sdk->RentVirtualDeviceNo(DVCounterBase::TypeS(),port[i])->Cast();
