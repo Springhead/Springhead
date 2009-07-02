@@ -35,6 +35,7 @@ public:
 #endif
 	///	Rent device.
 	HIVirtualDevice* Rent(const char* type, const char* name=NULL);
+	HIVirtualDevice* RentNo(const char* type, int No=0, const char* name=NULL);
 	///	return device.
 	bool Return(HIVirtualDevice* dev);
 	///	Register virutal device.

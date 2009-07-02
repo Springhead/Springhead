@@ -22,6 +22,7 @@ static UTRef<HIBase::RealDevices> realDevices = DBG_NEW HIBase::RealDevices;
 UTRef<HIBase::RealDevices> HIBase::GetRealDevices(){
 	if (realDevices) return realDevices;
 	UTRef<RealDevices> rv = DBG_NEW RealDevices;
+
 	return rv;
 }
 HISdkIf* HIBase::GetSdk(){

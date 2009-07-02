@@ -129,14 +129,26 @@ bool HISpidar4::Init(const void* pDesc){
 	HISpidarCalc3Dof::Init(3, minForce, maxForce);
 	////	ƒhƒ‰ƒCƒo‚ÌŽæ“¾
 	int i;
+	char* name=NULL;
+	Vec4i port=desc.port+Vec4i(-1,-1,-1,-1);
+
 	for(i=0; i<motors.size(); ++i){
-		motors[i].da = sdk->RentVirtualDevice(DVDaBase::TypeS())->Cast();
+		if(port==Vec4i(0,0,0,0)){
+			motors[i].da = sdk->RentVirtualDevice(DVDaBase::TypeS())->Cast();
+		}else {
+			motors[i].da = sdk->RentVirtualDeviceNo(DVDaBase::TypeS(),port[i])->Cast();
+		}
 		if (!motors[i].da) break;
 		AddDeviceDependency(motors[i].da->RealDevice()->Cast());
 	}
 	if (i<motors.size()) return false;
+
 	for(i=0; i<motors.size(); ++i){
-		motors[i].counter = sdk->RentVirtualDevice(DVCounterBase::TypeS())->Cast();
+		if(port==Vec4i(0,0,0,0)){
+			motors[i].counter = sdk->RentVirtualDevice(DVCounterBase::TypeS())->Cast();
+		}else {
+			motors[i].counter = sdk->RentVirtualDeviceNo(DVCounterBase::TypeS(),port[i])->Cast();
+		}
 		if (!motors[i].counter) break;
 		AddDeviceDependency(motors[i].counter->RealDevice()->Cast());
 	}

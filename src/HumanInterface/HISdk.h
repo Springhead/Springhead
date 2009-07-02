@@ -42,6 +42,7 @@ public:
 	virtual void Clear();
 	///	Rent virtual device.
 	virtual HIVirtualDeviceIf* RentVirtualDevice(const char* type, const char* name=NULL);
+	virtual HIVirtualDeviceIf* RentVirtualDeviceNo(const char* type,int No=0 ,const char* name=NULL);
 	///	Return virutal device.
 	virtual bool ReturnVirtualDevice(HIVirtualDeviceIf* dev);
 	

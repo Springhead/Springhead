@@ -52,6 +52,7 @@ protected:
 	bool bGood;
 public:
 	std::vector<HISpidarMotor> motors;	///<	モータ
+	std::vector<HISpidarMotor> dMotors;	///<	モータ
 	std::vector<DVPioBaseIf*> buttons;	///<	ボタン
 
 	///	デバイスのタイプ

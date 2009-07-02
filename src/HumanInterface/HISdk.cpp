@@ -71,6 +71,9 @@ void HISdk::Clear(){
 HIVirtualDeviceIf* HISdk::RentVirtualDevice(const char* type, const char* name){
 	return vpool->Rent(type, name)->Cast();
 }
+HIVirtualDeviceIf* HISdk::RentVirtualDeviceNo(const char* type, int No, const char* name){
+	return vpool->RentNo(type, No)->Cast();
+}
 bool HISdk::ReturnVirtualDevice(HIVirtualDeviceIf* dev){
 	return vpool->Return(dev->Cast());
 }
