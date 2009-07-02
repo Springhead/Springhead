@@ -35,6 +35,7 @@ struct HISdkIf : public NameManagerIf{
 	void Clear();
 	///	Rent device.
 	HIVirtualDeviceIf* RentVirtualDevice(const char* type, const char* name=NULL);
+	HIVirtualDeviceIf* RentVirtualDeviceNo(const char* type, int No, const char* name=NULL );
 	///	Return virutal device.
 	bool ReturnVirtualDevice(HIVirtualDeviceIf* dev);
 	

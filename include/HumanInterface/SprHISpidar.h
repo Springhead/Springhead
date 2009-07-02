@@ -108,8 +108,13 @@ struct HISpidar4If: public HIForceInterface3DIf{
 struct HISpidar4Desc{
 	SPR_DESCDEF(HISpidar4);
 	std::vector<HISpidarMotorDesc> motors;
+	Vec4i port;
 	HISpidar4Desc();
 	HISpidar4Desc(char* type){Init(type);}
+	HISpidar4Desc(char* type , Vec4i portNum){
+		Init(type);
+		port=portNum;
+	}
 	HISpidar4Desc(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f){
 		Init(nMotor, motorPos, knotPos, vpn, lpp, minF, maxF);
 	}

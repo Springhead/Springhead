@@ -22,6 +22,22 @@ HIVirtualDevice* HIVirtualDevicePool::Rent(const char* type, const char* name){
 	}
 	return NULL;
 }
+HIVirtualDevice* HIVirtualDevicePool::RentNo(const char* type, int No, const char* name){
+	int portNo=0;
+	for(iterator it = begin(); it != end(); ++it){
+		if (strcmp((*it)->Type(), type) == 0){
+			if (!name || strcmp((*it)->Name(), name) == 0){
+				if(portNo==No){
+					(*it)->SetUsed(true);
+					return *it;
+				}
+				portNo++;
+			}
+			
+		}
+	}
+	return NULL;
+}
 bool HIVirtualDevicePool::Return(HIVirtualDevice* d){
 	assert(d->GetUsed());
 	for(iterator it = begin(); it != end(); ++it){

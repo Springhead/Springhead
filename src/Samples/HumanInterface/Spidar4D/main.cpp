@@ -20,26 +20,32 @@ int __cdecl main(){
 	sdk->Print(DSTR);
 
 	UTRef<HISpidar4If> spg = sdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	spg->Init(&HISpidar4Desc("SpidarG6X3R"));
-	UTRef<HISpidar4If> spg2 = sdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	spg2->Init(&HISpidar4Desc("SpidarG6X3L"));
+	spg->Init(&HISpidar4Desc("SpidarG6X3R",Vec4i(1,2,3,4)));
+	//UTRef<HISpidar4If> spg2 = sdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+	//spg2->Init(&HISpidar4Desc("SpidarG6X3L"));
 
 	int t = 0;
 	while(!_kbhit()){
 		t += 1;
-		//spg->Update(0.001f);
-		spg2->Update(0.001f);
+		spg->Update(0.001f);
+		//spg2->Update(0.001f);
 #if 1
-		Vec3f spgpos = spg2->GetPosition();
+		Vec3f spgpos = spg->GetPosition();
+		/*Vec3f spgpos2 = spg2->GetPosition();*/
 		if(t%1000==1){
 		std::cout << std::setprecision(2) << spgpos << std::endl;
 		}
 		Vec3f f(0.0, 0.0, 0.0);
+	/*	Vec3f f2(0.0, 0.0, 0.0);*/
 
-		//if(spgpos.y < -0.015){
-		//	f[1] = 1.5;
+		if(spgpos.y < -0.015){
+			f[1] = 1.5;
+		}
+		//if(spgpos2.y < -0.015){
+		//	f2[1] = 1.5;
 		//}
-		//spg->SetForce(f);
+		spg->SetForce(f);
+		/*spg2->SetForce(f2);*/
 #else if
 		for(size_t i=0; i<spg->NMotor(); ++i){
 			std::cout << " " << std::setprecision(2) << spg->GetMotor(i)->GetLength();

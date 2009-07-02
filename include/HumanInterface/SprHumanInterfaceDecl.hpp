@@ -63,6 +63,7 @@
 	void Init(){	base::Init();}	\
 	void Clear(){	base::Clear();}	\
 	Spr::HIVirtualDeviceIf* RentVirtualDevice(const char* type, const char* name){	return	base::RentVirtualDevice(type, name);}	\
+	Spr::HIVirtualDeviceIf* RentVirtualDeviceNo(const char* type, int No, const char* name){	return	base::RentVirtualDeviceNo(type, No, name);}	\
 	bool ReturnVirtualDevice(Spr::HIVirtualDeviceIf* dev){	return	base::ReturnVirtualDevice(dev);}	\
 	bool AddRealDevice(const IfInfo* keyInfo, const void* desc){	return	base::AddRealDevice(keyInfo, desc);}	\
 	Spr::HIRealDeviceIf* FindRealDevice(const char* name){	return	base::FindRealDevice(name);}	\
