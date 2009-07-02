@@ -235,6 +235,7 @@ struct PHSolidIf : public SceneObjectIf{
 		@param bOn trueならば剛体に重力が加わる．falseならば加わらない．
 	 */
 	void		SetGravity(bool bOn);
+
 	/** @brief 物理法則に従うかどうかを有効/無効化する
 		@param bOn trueならば剛体は物理法則にしたがって運動する．
 		物理法則に従わない剛体も，SetPose，SetVelocityなどの関数による位置や速度の更新は
@@ -245,14 +246,15 @@ struct PHSolidIf : public SceneObjectIf{
 		@return trueならば剛体は物理法則にしたがって運動する．
 	 */
 	bool		IsDynamical();
-	/** @brief 位置，速度を更新するかどうかを有効/無効化する
-		@param bOn trueならば位置，速度の更新を無効化する．←有効化の間違いではないか？@加藤
+
+	/** @brief フリーズ状態を有効/無効化する
+		@param bOn trueならばフリーズ状態にする．フリーズ状態になると位置，速度の更新が行われなくなり，計算量を節約できる．
 	 */
 	void		SetFrozen(bool bOn);
-	/** @brief 位置，速度を更新するかどうかを取得する
-		@param bOn trueならば位置，速度の更新を無効化する．
+	/** @brief フリーズ状態かどうかを取得する
 	*/	
 	bool		IsFrozen();
+
 	/** @brief ツリーノードを取得する
 		CreateRootNode，CreateTreeNodeによってツリーノードが割り当てられている場合，
 		そのノードを返す．それ以外の場合はNULLを返す．
