@@ -246,7 +246,7 @@ struct PHSolidIf : public SceneObjectIf{
 	 */
 	bool		IsDynamical();
 	/** @brief 位置，速度を更新するかどうかを有効/無効化する
-		@param bOn trueならば位置，速度の更新を無効化する．
+		@param bOn trueならば位置，速度の更新を無効化する．←有効化の間違いではないか？@加藤
 	 */
 	void		SetFrozen(bool bOn);
 	/** @brief 位置，速度を更新するかどうかを取得する
