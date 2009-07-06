@@ -17,8 +17,8 @@ public:
 
 	Vec3d gravity;
 
-	PHIKPosCtlIf *ikPosCtl1;
-	PHSolidIf *soPosCtl1;
+	PHIKPosCtlIf *ikPosCtl1, *ikPosCtl2;
+	PHSolidIf *soPosCtl1, *soPosCtl2;
 
 	//デバック表示に使う変数
 	bool bGravity;
