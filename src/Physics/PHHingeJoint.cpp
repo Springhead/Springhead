@@ -73,7 +73,7 @@ void PHHingeJoint::CompBias(){
 				//// ↓これやらないと発振するので戻す．物理シミュレータは一意に値が指定出来ないと計算無理じゃないの？ 09/06/01 toki
 				// while(diff >  M_PI) diff -= 2 * M_PI;
 				// while(diff < -M_PI) diff += 2 * M_PI;
-				// ↓こっちのほうがはやい
+				// ↓こっちのほうがはやいので変更  09/07/06 mitake
 				diff = ((diff / (2*M_PI)) - floor(diff / (2*M_PI)) * (2*M_PI));
 				if (diff > M_PI) { diff -= 2 * M_PI; }
 
