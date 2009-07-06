@@ -441,6 +441,9 @@ struct GRDebugRenderIf:public GRRenderIf{
 	/** #brief ƒOƒŠƒbƒh‚Ì•`‰æ */
 	void EnableGrid(bool enable = true, double y = 0.0, double span = 0.5);
 
+	/**  @brief IK‚ÌŒvZŒ‹‰Ê‚Ì•`‰æ */
+	void EnableRenderIK(bool enable = true, float scale = 1.0f);
+
 	///	–Ê‚Ì•`‰æ(“h‚è‚Â‚Ô‚µ‚ ‚è)
 	void DrawFaceSolid(CDFaceIf* face, Vec3f * base);
 	///	–Ê‚Ì•`‰æ(ƒƒCƒ„ƒtƒŒ[ƒ€)	

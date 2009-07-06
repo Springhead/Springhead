@@ -13,12 +13,17 @@
 using namespace std;
 namespace Spr{
 
+//static std::ofstream *dlog;
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // IKEngine
 PHIKEngine::PHIKEngine():numIter(25){ 
 	bEnabled = false; 
 }
 void PHIKEngine::Step(){
+	//dlog = new std::ofstream("iklog.txt", ios_base::out | ios_base::app);
+	//(*dlog) << "----- ----- ----- ----- ----- ----- ----- ----- ----- ----- " << std::endl;
+
 	if (bEnabled) {
 		if (nodes.size() > 0 && controlpoints.size() > 0) {
 
@@ -48,11 +53,16 @@ void PHIKEngine::Step(){
 
 			// ä÷êﬂÇÃìÆçÏ
 			for(size_t i=0; i<nodes.size(); ++i){
+				//(*dlog) << "--- w[nd:" << DCAST(PHIKNode,nodes[i])->number << "] ---" << std::endl;
+				//(*dlog) << DCAST(PHIKNode,nodes[i])->dTheta << std::endl;
+
 				nodes[i]->Move();
 			}
 
 		}
 	}
+	//dlog->close();
+	//delete dlog;
 }
 
 void PHIKEngine::Clear(){
@@ -235,6 +245,9 @@ void PHIKNode::CalcAllJacobian(){
 
 		int n = DCAST(PHIKControlPoint,*ctlpt)->number;
 		Mj[n] = CalcJacobian(*ctlpt);
+
+		//(*dlog) << "--- J[nd:" << number << "][cp:" << n << "] ---" << std::endl;
+		//(*dlog) << Mj[n] << std::endl;
 	}
 }
 
@@ -247,12 +260,17 @@ void PHIKNode::PrepareSolve(){
 		gamma[n_y_n].resize(ndof,DCAST(PHIKNode,*n_y)->ndof);
 		gamma[n_y_n].clear();
 	}
+	gamma[number].resize(ndof,ndof);
+	gamma[number].clear();
 
 	for (size_t i=0; i<ndof; ++i) {
 		for(CSetIter c_z=linkedControlPoints.begin(); c_z!=linkedControlPoints.end(); ++c_z){
 			if (! DCAST(PHIKControlPoint,*c_z)->isEnabled) { continue; }
 			int c_z_n = DCAST(PHIKControlPoint,*c_z)->number;
 			Vec3d c_z_v = DCAST(PHIKControlPoint,*c_z)->GetTmpGoal();
+
+			//(*dlog) << "--- v[cp:" << c_z_n << "] ---" << std::endl;
+			//(*dlog) << c_z_v << std::endl;
 
 			for (size_t k=0; k<3; ++k) {
 
@@ -273,6 +291,7 @@ void PHIKNode::PrepareSolve(){
 				// É¡[nx, nx]
 				for (size_t j=0; j<ndof; ++j) {
 					if (i!=j) {
+						//(*dlog) << number << ":" << i << ":" << j << ": += " << (Mj[c_z_n][k][i]/bias) << ", " << (Mj[c_z_n][k][j]/bias) << std::endl;
 						gamma[number][i][j] += ( (Mj[c_z_n][k][i]/bias) * (Mj[c_z_n][k][j]/bias) );
 					}
 				}
@@ -280,6 +299,21 @@ void PHIKNode::PrepareSolve(){
 			}
 		}
 	}
+
+
+	//(*dlog) << "--- alpha[" << number << "] ---" << std::endl;
+	//(*dlog) << alpha << std::endl;
+
+	//(*dlog) << "--- beta[" << number << "] ---" << std::endl;
+	//(*dlog) << beta << std::endl;
+
+	for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
+		int n_y_n = DCAST(PHIKNode,*n_y)->number;
+		//(*dlog) << "--- gamma[" << number << "][" << n_y_n << "] ---" << std::endl;
+		//(*dlog) << gamma[n_y_n] << std::endl;
+	}
+	//(*dlog) << "--- gamma[" << number << "][" << number << "] ---" << std::endl;
+	//(*dlog) << gamma[number] << std::endl;
 
 	dTheta.clear();
 	dTheta_prev.clear();
@@ -458,7 +492,7 @@ PTM::VMatrixRow<double> PHIKBallJoint::CalcJacobian(PHIKControlPointIf* control)
 		return M;
 	}
 
-	std::cout << "Invalid Control Point type for this Node" << std::endl;
+	DSTR << "Invalid Control Point type for this Node" << std::endl;
 
 	return PTM::VMatrixRow<double>();
 }
@@ -497,7 +531,6 @@ void PHIKBallJoint::Move(){
 
 	Vec3d goal = pos.RotationHalf();
 	Vec3d orig = jGoal.RotationHalf();
-	// Vec3d newGoal = (jSpring*orig + jSpring*10*goal) * (1/(jSpring + jSpring*10));
 
 	Vec3d newGoal = (jSpring*orig + spring*goal) * (1/(jSpring + spring));
 

@@ -9,6 +9,8 @@
 #pragma hdrstop
 #include <Physics/PHConstraintEngine.h>
 #include <Physics/PHContactPoint.h>
+#include <Physics/PHIK.h>
+#include <Physics/PHBallJoint.h>
 #include <GL/glut.h>
 
 namespace Spr {;
@@ -79,6 +81,77 @@ void GRDebugRender::DrawScene(PHSceneIf* scene){
 			DrawContact(scene->GetContact(i));
 		}
 	}
+	if(renderIK){
+		SetMaterialSample((GRDebugRenderIf::TMaterialSample)2);
+		PHIKEngineIf* ikEngine = scene->GetIKEngine();
+		if (ikEngine) {
+			DrawIK(ikEngine);
+		}
+	}
+}
+
+/// IKの計算結果をレンダリングする
+void GRDebugRender::DrawIK(PHIKEngineIf* ikEngine) {
+	SetLighting(false);
+	SetDepthTest(false);
+	this->PushModelMatrix();
+	this->SetModelMatrix(Affinef());
+
+	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->nodes.size(); ++i) {
+		PHIKNodeIf* ikNode = DCAST(PHIKEngine,ikEngine)->nodes[i];
+		if (ikNode) {
+			PHIKBallJointIf* ikBJ = ikNode->Cast();
+			if (ikBJ) {
+				PHIKBallJoint* bj = ikBJ->Cast();
+				Vec3d dT = Vec3d();
+				for (int j=0; j < bj->ndof; ++j) {
+					dT += (bj->dTheta[j]/bj->bias) * bj->e[j];
+				}
+				PHBallJoint* jt = DCAST(PHBallJoint,bj->joint);
+				PHBallJointDesc d; jt->GetDesc(&d);
+				Vec3d Pj = jt->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
+
+				{
+					GRMaterialDesc mat;
+					mat.ambient = mat.diffuse = Vec4f(1,0,0.7,1);
+					SetMaterial(mat);
+					DrawLine(Pj, Pj + (dT * scaleIK));
+				}
+
+				{
+					GRMaterialDesc mat;
+					mat.ambient = mat.diffuse = Vec4f(1.0,0,0,1);
+					SetMaterial(mat);
+					for (int j=0; j < bj->ndof; ++j) {
+						DrawLine(Pj, Pj + (bj->e[j]));
+					}
+				}
+			}
+		}
+	}
+
+	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->controlpoints.size(); ++i) {
+		PHIKControlPointIf* ikCP = DCAST(PHIKEngine,ikEngine)->controlpoints[i];
+		if (ikCP) {
+			PHIKPosCtlIf* ikP = ikCP->Cast();
+			if (ikP) {
+				PHIKPosCtl* pc = ikP->Cast();
+
+				Vec3d sp = pc->solid->GetPose() * pc->pos;
+				Vec3d tg = pc->GetTmpGoal();
+				{
+					GRMaterialDesc mat;
+					mat.ambient = mat.diffuse = Vec4f(0,1.0,0,1);
+					SetMaterial(mat);
+					DrawLine(sp, sp + tg);
+				}
+			}
+		}
+	}
+
+	this->PopModelMatrix();
+	SetLighting(true);
+	SetDepthTest(true);
 }
 
 /// シーンのワールド座標系の座標軸をレンダリングする
