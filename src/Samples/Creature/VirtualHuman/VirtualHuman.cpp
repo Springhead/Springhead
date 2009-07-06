@@ -264,8 +264,8 @@ void VirtualHuman::BuildScene(int sceneNum){
 	phScene->GetIKEngine()->SetNumIter(10);
 	phScene->GetIKEngine()->Enable(bIK);
 	/// ‚»‚Ì‘¼‚ÌÝ’è
-	phScene->SetGravity(gravity);
-	phScene->SetTimeStep(0.01);
+	// phScene->SetGravity(gravity);
+	// phScene->SetTimeStep(0.01);
 	phScene->SetNumIteration(15);
 	phScene->SetContactMode(PHSceneDesc::MODE_NONE);
 }
@@ -415,7 +415,6 @@ void VirtualHuman::Keyboard(int key, int x, int y){
 
 		case 'o':
 			{
-				// CRReachingControllerIf* rLHand = reaches->GetReachingController(body->GetSolid(CRBallHumanBodyDesc::SO_LEFT_HAND));
 				reachLH->Start(soCursor->GetPose().Pos(), Vec3d(), 0.5f);
 				reachRH->Start(soCursor->GetPose().Pos(), Vec3d(), 0.5f);
 			}
