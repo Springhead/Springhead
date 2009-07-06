@@ -119,6 +119,7 @@
 	void EnableRenderForce(bool enable, float scale){	base::EnableRenderForce(enable, scale);}	\
 	void EnableRenderContact(bool enable){	base::EnableRenderContact(enable);}	\
 	void EnableGrid(bool enable, double y, double span){	base::EnableGrid(enable, y, span);}	\
+	void EnableRenderIK(bool enable, float scale){	base::EnableRenderIK(enable, scale);}	\
 	void DrawFaceSolid(CDFaceIf* face, Vec3f* base){	base::DrawFaceSolid(face, base);}	\
 	void DrawFaceWire(CDFaceIf* face, Vec3f* base){	base::DrawFaceWire(face, base);}	\
 

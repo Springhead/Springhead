@@ -58,7 +58,7 @@ public:
 // IKNode：IKで制御するノード
 // 
 class PHIKNode : public SceneObject{
-protected:
+public:
 	/// 簡略表記用typedef
 	typedef std::set<PHIKControlPointIf*>	CSet;
 	typedef CSet::iterator					CSetIter;
@@ -232,7 +232,7 @@ public:
 };
 
 class PHIKBallJoint : public PHIKNode{
-protected:
+public:
 	/// 制御対象の関節
 	PHBallJointIf* joint;
 
@@ -296,7 +296,7 @@ public:
 };
 
 class PHIKHingeJoint : public PHIKNode{
-protected:
+public:
 	/// 制御対象の関節
 	PHHingeJointIf *joint;
 
