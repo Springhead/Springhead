@@ -52,6 +52,8 @@ public:
 	void	SetYieldStress(double input)	{yieldStress = input;}
 	double  GetHardnessRate()				{return hardnessRate;}
 	void	SetHardnessRate(double input)	{hardnessRate = input;}
+	void	SetI(const Vec3d i)				{I = i;}
+	Vec3d	GetI()							{return I;}
 
 	// このクラス内で再定義する（オーバーライドする）関数
 	void	CompBias();		///< 侵入量の判定(オーバーライド)
