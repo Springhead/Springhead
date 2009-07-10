@@ -163,6 +163,12 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementBallJointIf(base)	\
 	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
 	void SetSecondDamper(double input){	base::SetSecondDamper(input);}	\
+	double GetYieldStress(){	return	base::GetYieldStress();}	\
+	void SetYieldStress(const double yS){	base::SetYieldStress(yS);}	\
+	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
+	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
+	Vec3d GetI(){	return	base::GetI();}	\
+	void SetI(const Vec3d i){	base::SetI(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\
 	void SetSpring(const Vec3d& spring){	base::SetSpring(spring);}	\
