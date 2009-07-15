@@ -81,8 +81,8 @@ void PhysicsProcess::DesignObject(){
 		soFloor->GetShape(0)->SetVibration(-100, 150, 150);
 		soFloor->SetName("solidFloor");
 	}
-	CreateJointBox(GetSdk());
-	Create3ElementJointBox(GetSdk());
+	CreateJointBox(GetSdk());						// ボールジョイントでつながれた剛体
+	Create3ElementJointBox(GetSdk());				// 三要素モデルでつながれた剛体
 	// 力覚ポインタの作成
 	{
 		soPointer = phscene->CreateSolid(desc);
