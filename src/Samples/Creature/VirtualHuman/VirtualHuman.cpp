@@ -18,7 +18,8 @@ VirtualHuman app;
 VirtualHuman::VirtualHuman(){
 	bGravity	= true;
 	bDebug		= false;
-	bStep		= true;
+	bGraphic	= false;
+	bStep		= false;
 	bOneStep	= false;
 	bIK			= false;
 
@@ -105,7 +106,7 @@ void VirtualHuman::BuildScene(int sceneNum){
 	crSdk = CRSdkIf::CreateSdk();
 
 	// ファイルからロード
-	UTString filename = "test.x";
+	UTString filename = "mikuScene.x";
 	LoadScene(filename);
 
 	PHSdkIf*	phSdk	= GetSdk()->GetPHSdk();
@@ -148,7 +149,7 @@ void VirtualHuman::BuildScene(int sceneNum){
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	// ボディと到達運動コントローラ
-	{
+	if (false) {
 		crSdk->FindObject(creature, "creature1");
 		if (creature) {
 			// ボディ
@@ -168,12 +169,10 @@ void VirtualHuman::BuildScene(int sceneNum){
 			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST)->AddControlPoint(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_RIGHT_HAND));
 			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN)->AddControlPoint(bodyGen->GetControlPoint(2*CRBallHumanBodyGenDesc::SO_RIGHT_HAND));
 
-			/*
-			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN))->SetSpring(2000.0);
-			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN))->SetDamper(  50.0);
-			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST))->SetSpring(1000.0);
-			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST))->SetDamper(  20.0);
-			*/
+			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN))->SetSpring(100.0);
+			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN))->SetDamper(  5.0);
+			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST))->SetSpring( 50.0);
+			DCAST(PHBallJointIf,bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_ABDOMEN_CHEST))->SetDamper(  2.5);
 
 			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_LEFT_SHOULDER)->SetBias(1.5);
 			bodyGen->GetIKNode(CRBallHumanBodyGenDesc::JO_LEFT_ELBOW)->SetBias(1);
@@ -258,6 +257,27 @@ void VirtualHuman::BuildScene(int sceneNum){
 		}
 	}
 
+	{
+		// 到達運動コントローラ
+		// xFileからのロードに対応する実験としてあえてcsoLeftHandを直接代入せずにbodyから取得している
+		crSdk->FindObject(creature, "creature1");
+		creature->FindObject(body, "creature1Body");
+		creature->FindObject(reachLH, "reachLH");
+		creature->FindObject(reachRH, "reachRH");
+		for (size_t i=0; i<body->NChildObject(); ++i) {
+			CRIKSolidIf* cso = body->GetChildObject(i)->Cast();
+			if (cso) {
+				if (std::string("LeftHand") == cso->GetLabel()) {
+					reachLH->SetCRSolid(cso);
+				}
+				if (std::string("RightHand") == cso->GetLabel()) {
+					reachRH->SetCRSolid(cso);
+				}
+			}
+		}
+	}
+
+
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	// Sceneの設定
 	/// IKの設定
@@ -267,7 +287,35 @@ void VirtualHuman::BuildScene(int sceneNum){
 	// phScene->SetGravity(gravity);
 	// phScene->SetTimeStep(0.01);
 	phScene->SetNumIteration(15);
-	phScene->SetContactMode(PHSceneDesc::MODE_NONE);
+	// phScene->SetContactMode(PHSceneDesc::MODE_NONE);
+
+	{
+		PHSolidIf *so1, *so2;
+
+		phScene->FindObject(so1, "soCenter");
+		phScene->SetContactMode(so1, PHSceneDesc::MODE_NONE);
+
+		phScene->FindObject(so1, "soUpperFeetR");
+		phScene->FindObject(so2, "soLowerBody");
+		phScene->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE);
+
+		phScene->FindObject(so1, "soUpperFeetL");
+		phScene->FindObject(so2, "soLowerBody");
+		phScene->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE);
+
+		phScene->FindObject(so1, "soUpperTie");
+		phScene->SetContactMode(so1, PHSceneDesc::MODE_NONE);
+		phScene->FindObject(so1, "soLowerTie");
+		phScene->SetContactMode(so1, PHSceneDesc::MODE_NONE);
+	}
+
+	for (size_t i=0; i<phScene->NChildObject(); ++i) {
+		PHIKPosCtlIf* ikcp = phScene->GetChildObject(i)->Cast();
+		if (ikcp) {
+			ikcp->Enable(false);
+			std::cout << ikcp->GetName() << " : disabled " << std::endl;
+		}
+	}
 }
 
 void VirtualHuman::Step(){
@@ -286,6 +334,8 @@ void VirtualHuman::OneStep(){
 
 	phScene->ClearForce();
 
+	// CalcWritheness();
+
 	crSdk->Step();
 
 	phScene->GenerateForce();
@@ -294,7 +344,7 @@ void VirtualHuman::OneStep(){
 
 void VirtualHuman::Display(){
 	// 描画の設定
-	GetSdk()->SetDebugMode(true);
+	GetSdk()->SetDebugMode(!bGraphic);
 	GRDebugRenderIf* render = window->render->Cast();
 
 	// 描画モードの設定
@@ -324,6 +374,7 @@ void VirtualHuman::Display(){
 	curRender->BeginScene();
 
 	if (curScene) curScene->Draw(curRender, GetSdk()->GetDebugMode());
+	// if (curScene) curScene->Draw(curRender, bGraphic);
 
 	//	光源の追加
 	GRLightDesc ld;
@@ -337,13 +388,18 @@ void VirtualHuman::Display(){
 	CRReachingControllerIf* rLHand = reaches->GetReachingController(body->GetSolid(CRBallHumanBodyDesc::SO_LEFT_HAND));
 	rLHand->Render(curRender);
 	*/
-	DCAST(GRDebugRenderIf,curRender)->SetMaterialSample(GRDebugRenderIf::RED);
-	DCAST(CRReachingControllerIf,reachLH)->Render(curRender);
+	if (!bGraphic) {
+		DCAST(GRDebugRenderIf,curRender)->SetMaterialSample(GRDebugRenderIf::RED);
+		DCAST(CRReachingControllerIf,reachLH)->Render(curRender);
+
+		// RenderWritheness(curRender->Cast());
+	}
 
 	render->PopLight();
 
 	curRender->EndScene();
 	glutSwapBuffers();
+	glFinish();
 }
 
 void VirtualHuman::Keyboard(int key, int x, int y){
@@ -371,6 +427,16 @@ void VirtualHuman::Keyboard(int key, int x, int y){
 			}else{
 				bDebug = true;
 				DSTR << "Debug Mode ON" << endl;
+			}
+			break;
+
+		case 'D':
+			if(bGraphic){
+				bGraphic = false;
+				DSTR << "Graphic Mode OFF" << endl;
+			}else{
+				bGraphic = true;
+				DSTR << "Graphic Mode ON" << endl;
 			}
 			break;
 
@@ -416,7 +482,14 @@ void VirtualHuman::Keyboard(int key, int x, int y){
 		case 'o':
 			{
 				reachLH->Start(soCursor->GetPose().Pos(), Vec3d(), 0.5f);
-				reachRH->Start(soCursor->GetPose().Pos(), Vec3d(), 0.5f);
+				/*
+				if (via1L != Vec3d()) {
+					reachLH->Start(via1L, Vec3d(), 0.5f);
+				} else {
+					reachLH->Start(soCursor->GetPose().Pos(), Vec3d(), 0.5f);
+					// reachRH->Start(soCursor->GetPose().Pos(), Vec3d(), 0.5f);
+				}
+				*/
 			}
 			break;
 
@@ -424,6 +497,10 @@ void VirtualHuman::Keyboard(int key, int x, int y){
 			{
 				// body->GetSolid(CRBallHumanBodyDesc::SO_LEFT_HAND)->AddForce(Vec3d(0, -10.0, 0));
 				// soRC->AddTorque(Vec3d(100,0,0));
+				PHIKPosCtlIf* ikcp;
+				phscene->FindObject(ikcp, "ikcpLowerArmL");
+				ikcp->SetGoal(soCursor->GetPose().Pos());
+				ikcp->Enable(true);
 			}
 			break;
 
@@ -478,4 +555,113 @@ void VirtualHuman::MouseMove(int x, int y){
 	} else {
 		FWAppGLUT::MouseMove(x,y);
 	}
+}
+
+void VirtualHuman::CalcWritheness() {
+	// 左手のWritheness
+	PHSolidIf* soChest = bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_CHEST);
+	PHBallJointDesc dBC; bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_CHEST_NECK)->GetDesc(&dBC);
+	Vec3d chestPos = soChest->GetPose() * dBC.poseSocket.Pos();
+
+	PHSolidIf* soWaist = bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_WAIST);
+	PHBallJointDesc dBW; bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN)->GetDesc(&dBW);
+	Vec3d waistPos = soWaist->GetPose() * dBW.poseSocket.Pos();
+
+	trunkUp = chestPos - waistPos;
+	Vec3d trE = trunkUp; if (trE.norm()!=0) { trE = trE.unit(); }
+
+	PHSolidIf* soLUArm = bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_LEFT_UPPER_ARM);
+	PHBallJointDesc dBLUA; bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_LEFT_SHOULDER)->GetDesc(&dBLUA);
+	j1 = soLUArm->GetPose() * dBLUA.posePlug.Pos();
+	Vec3d rj1 = j1 - waistPos;
+	Vec3d pj1 = rj1 - PTM::dot(trE,rj1)*trE; if (pj1.norm()!=0) { pj1 = pj1.unit(); }
+
+	PHSolidIf* soLLArm = bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_LEFT_LOWER_ARM);
+	PHBallJointDesc dBLLA; bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_LEFT_ELBOW)->GetDesc(&dBLLA);
+	j2 = soLLArm->GetPose() * dBLLA.posePlug.Pos();
+	Vec3d rj2 = j2 - waistPos;
+	Vec3d pj2 = rj2 - PTM::dot(trE,rj2)*trE; if (pj2.norm()!=0) { pj2 = pj2.unit(); }
+
+	PHSolidIf* soLHand = bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_LEFT_HAND);
+	PHBallJointDesc dBLH; bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_LEFT_WRIST)->GetDesc(&dBLH);
+	j3 = soLHand->GetPose() * dBLH.posePlug.Pos();
+	Vec3d rj3 = j3 - waistPos;
+	Vec3d pj3 = rj3 - PTM::dot(trE,rj3)*trE; if (pj3.norm()!=0) { pj3 = pj3.unit(); }
+
+	wrL = 0;
+	wrL += acos(PTM::dot(pj1,pj2)) * sign(PTM::dot(PTM::cross(pj1,pj2),trE));
+	wrL += acos(PTM::dot(pj2,pj3)) * sign(PTM::dot(PTM::cross(pj2,pj3),trE));
+
+	std::cout << wrL;
+
+	// 左手の到達目標地点のWritheness
+	g1 = soCursor->GetPose().Pos();
+	Vec3d rg1 = g1 - waistPos;
+	Vec3d pg1 = rg1 - PTM::dot(trE,rg1)*trE; if (pg1.norm()!=0) { pg1 = pg1.unit(); }
+
+	wrLG = 0;
+	wrLG += acos(PTM::dot(pj1,pg1)) * sign(PTM::dot(PTM::cross(pj1,pg1),trE));
+
+	std::cout << " : " << wrLG;
+
+	std::cout << " : " << (abs(wrL - wrLG));
+
+	std::cout << std::endl;
+
+	// 左手の経由地点
+	if (((wrL > 0.2 && wrLG < -0.2) || (wrL < -0.2 && wrLG > 0.2))) {
+		via1L = soWaist->GetPose() * Vec3d(-0.25,0.2,0);
+	} else {
+		via1L = Vec3d();
+	}
+}
+
+void VirtualHuman::RenderWritheness(GRDebugRenderIf* curRender) {
+	curRender->PushModelMatrix();
+	curRender->SetLighting(false);
+	curRender->SetDepthTest(false);
+
+	PHSolidIf* soWaist = bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_WAIST);
+	PHBallJointDesc dBW; bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_WAIST_ABDOMEN)->GetDesc(&dBW);
+	Vec3d waistPos = soWaist->GetPose() * dBW.poseSocket.Pos();
+
+	{
+		curRender->SetModelMatrix(Affinef());
+		GRMaterialDesc mat;
+		mat.ambient = mat.diffuse = Vec4f(1,1,0.5,1);
+		curRender->SetMaterial(mat);
+		Vec3f vtx[] = {waistPos, waistPos + trunkUp};
+		curRender->DrawDirect(GRRenderBaseIf::LINES, vtx, 2);
+	}
+
+	{
+		curRender->SetModelMatrix(Affinef());
+		GRMaterialDesc mat;
+		mat.ambient = mat.diffuse = Vec4f(1,0.5,1,1);
+		curRender->SetMaterial(mat);
+		Vec3f vtx[] = {waistPos, j1, j1, j2, j2, j3};
+		curRender->DrawDirect(GRRenderBaseIf::LINES, vtx, 6);
+	}
+
+	{
+		curRender->SetModelMatrix(Affinef());
+		GRMaterialDesc mat;
+		mat.ambient = mat.diffuse = Vec4f(0.5,1,1,1);
+		curRender->SetMaterial(mat);
+		Vec3f vtx[] = {j1, g1};
+		curRender->DrawDirect(GRRenderBaseIf::LINES, vtx, 2);
+	}
+
+	if (via1L != Vec3d()){
+		curRender->SetModelMatrix(Affinef());
+		GRMaterialDesc mat;
+		mat.ambient = mat.diffuse = Vec4f(0.5,1,0.5,1);
+		curRender->SetMaterial(mat);
+		Vec3f vtx[] = {via1L, g1};
+		curRender->DrawDirect(GRRenderBaseIf::LINES, vtx, 2);
+	}
+
+	curRender->SetLighting(true);
+	curRender->SetDepthTest(true);
+	curRender->PopModelMatrix();
 }

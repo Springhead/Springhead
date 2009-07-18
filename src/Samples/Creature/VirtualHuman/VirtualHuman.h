@@ -23,6 +23,7 @@ public:
 	//デバック表示に使う変数
 	bool bGravity;
 	bool bDebug;
+	bool bGraphic;
 	bool bStep;
 	bool bOneStep;
 	bool bIK;
@@ -30,6 +31,11 @@ public:
 	// ユーザの指
 	PHSolidIf* soCursor;
 	double zP;
+
+	// 腕の胴体に対するWritheness
+	double wrL, wrR, wrLG;
+	Vec3d trunkUp, j1, j2, j3, g1;
+	Vec3d via1L;
 
 	// クリーチャ
 	CRBallHumanBodyGen            *bodyGen;
@@ -53,6 +59,8 @@ public:
 	void OneStep();
 	void UpdateCursor(int x, int y);
 	bool LoadScene(UTString filename);
+	void CalcWritheness();
+	void RenderWritheness(GRDebugRenderIf* curRender);
 }; 
 
 extern VirtualHuman app;

@@ -71,10 +71,12 @@ bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
 	Vec3f center = ring.localInv * toW.Pos();
 	float sign = center.X() > 0.0f ? 1.0f : -1.0f;
+
 	//	sinA : (r1-r0)/length ‚É‚È‚éB
 	//	sinB : Cutring–Ê‚Æ‰~“›–Ê‚Ìü‚Æ‚Ì‚È‚·Šp‚ª B
 	//	sinA+B = dir.X() ‚É‚È‚éB
 	float sinA = (radius[1]-radius[0]) / length;
+	if (-1 > (-sinA) || (-sinA) > 1) { return false; } // ‹…‘Ì‚É‚È‚Á‚Ä‚¢‚é
 	float sinB = dir.X()*sign * sqrt(1-sinA*sinA)  -  sqrt(1-dir.X()*dir.X()) * sinA;
 
 	float r = radius[0];

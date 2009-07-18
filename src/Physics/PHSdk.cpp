@@ -46,6 +46,12 @@ void PHSdkIf::RegisterSdk(){
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPathJointNode));
 
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKSolid));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKBallJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKHingeJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKPosCtl));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKOriCtl));
+
 	PHSolidIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFrame));
 
 	PHRegisterTypeDescs();

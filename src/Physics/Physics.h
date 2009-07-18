@@ -29,4 +29,5 @@
 #include "PH3Element.h"
 #include "PHTreeNode.h"
 #include "PHGear.h"
+#include "PHIK.h"
 

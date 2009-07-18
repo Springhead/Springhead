@@ -57,7 +57,7 @@ struct PHIKControlPointIf : SceneObjectIf{
 struct PHIKControlPointDesc{
 	SPR_DESCDEF(PHIKControlPoint);
 
-	PHSolidIf* solid;  ///< 制御点のある剛体
+	bool isEnabled;  ///< 有効かどうか
 };
 
 /// 目標位置を指定する制御点
@@ -183,8 +183,6 @@ struct PHIKSolidIf : PHIKNodeIf{
 /// IK用剛体のディスクリプタ
 struct PHIKSolidDesc : PHIKNodeDesc{
 	SPR_DESCDEF(PHIKSolid);
-
-	PHSolidIf* solid;  ///< 制御対象の剛体
 };
 
 /// 姿勢が可動なボールジョイント
@@ -195,8 +193,6 @@ struct PHIKBallJointIf : PHIKNodeIf{
 /// IK用ボールジョイントのディスクリプタ
 struct PHIKBallJointDesc : PHIKNodeDesc{
 	SPR_DESCDEF(PHIKBallJoint);
-
-	PHBallJointIf* joint;  ///< 制御対象の関節
 };
 
 /// 角度が可動なヒンジジョイント
@@ -207,8 +203,6 @@ struct PHIKHingeJointIf : PHIKNodeIf{
 /// IK用ヒンジジョイントのディスクリプタ
 struct PHIKHingeJointDesc : PHIKNodeDesc{
 	SPR_DESCDEF(PHIKHingeJoint);
-
-	PHHingeJointIf *joint;  ///< 制御対象の関節
 };
 
 //@}

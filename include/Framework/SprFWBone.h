@@ -12,40 +12,42 @@
 #include <Physics/SprPHSolid.h>
 #include <Graphics/SprGRFrame.h>
 #include <Base/Affine.h>
-namespace Spr{
+namespace Spr{;
 
-	struct FWSceneIf;
+struct FWSceneIf;
 
-	struct FWBoneDesc{
-	};
+struct FWBoneDesc{
+};
 
-	/** @brief Frameworkのオブジェクト
-		自動生成したボーンの剛体（PhysicsモジュールのPHSolid）とシーングラフのフレーム（GraphicsモジュールのGRFrame）を
-		関連付けるオブジェクト．
-		これによってシミュレーションによる剛体の位置の変化がシーングラフに自動的に反映される．
-		Frameworkを利用する場合はPHSceneIf::CreateSolidやGRSceneIf::CreateFrameの代わりに
-		FWSceneIf::CreateObjectを使用する．
-	 */
-	struct FWBoneIf : SceneObjectIf {
-		SPR_IFDEF(FWBone);
+/** @brief Frameworkのオブジェクト
+	自動生成したボーンの剛体（PhysicsモジュールのPHSolid）とシーングラフのフレーム（GraphicsモジュールのGRFrame）を
+	関連付けるオブジェクト．
+	これによってシミュレーションによる剛体の位置の変化がシーングラフに自動的に反映される．
+	Frameworkを利用する場合はPHSceneIf::CreateSolidやGRSceneIf::CreateFrameの代わりに
+	FWSceneIf::CreateObjectを使用する．
+ */
+struct FWBoneIf : SceneObjectIf {
+	SPR_IFDEF(FWBone);
 
-		/// PHSolidを取得する
-		PHSolidIf* GetPHSolid();
-		/// PHSolidを設定する
-		void SetPHSolid(PHSolidIf* s);
-		/// GRFrameを取得する
-		GRFrameIf* GetGRFrame();
-		/// GRFrameを設定する
-		void SetGRFrame(GRFrameIf* f);
-		/// CDRoundConeIfを取得する
-		CDRoundConeIf* GetShape();
-		/// CDRoundConeIfのRadiusを設定する
-		void		   SetShapeRadius(double r1,double r2);
-		///　jointを取得する
-		PHJointIf*	   GetJoint();
-		///  jointのK,D,D2を設定する
-		void		   SetJointKDD2(double K,double D, double D2);
-	};
+	/// PHSolidを取得する
+	PHSolidIf* GetPHSolid();
+	/// PHSolidを設定する
+	void SetPHSolid(PHSolidIf* s);
+	/// GRFrameを取得する
+	GRFrameIf* GetGRFrame();
+	/// GRFrameを設定する
+	void SetGRFrame(GRFrameIf* f);
+	/// CDRoundConeIfを取得する
+	CDRoundConeIf* GetShape();
+	/// CDRoundConeIfのRadiusを設定する
+	void		   SetShapeRadius(double r1,double r2);
+	///　jointを取得する
+	PHJointIf*	   GetJoint();
+	///  jointのK,D,D2を設定する
+	void		   SetJointKDD2(double K,double D, double D2);
+};
+
+
 
 }
 
