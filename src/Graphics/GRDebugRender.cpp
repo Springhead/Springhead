@@ -132,7 +132,7 @@ void GRDebugRender::DrawIK(PHIKEngineIf* ikEngine) {
 
 	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->controlpoints.size(); ++i) {
 		PHIKControlPointIf* ikCP = DCAST(PHIKEngine,ikEngine)->controlpoints[i];
-		if (ikCP) {
+		if (ikCP && DCAST(PHIKControlPoint,ikCP)->isEnabled) {
 			PHIKPosCtlIf* ikP = ikCP->Cast();
 			if (ikP) {
 				PHIKPosCtl* pc = ikP->Cast();

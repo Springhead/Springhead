@@ -90,23 +90,21 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 	cSolid->GetIKControlPoint(0)->Enable(true);
 	bActive = true;
 
-	/*
-	typedef std::pair<PHBallJointIf*,Quaterniond> BallJointGoal;
-	typedef std::vector<BallJointGoal> BallJointGoals;
-	BallJointGoals ballGoals;
+	//typedef std::pair<PHBallJointIf*,Quaterniond> BallJointGoal;
+	//typedef std::vector<BallJointGoal> BallJointGoals;
+	//BallJointGoals ballGoals;
 
-	typedef std::pair<PHHingeJointIf*,double> HingeJointGoal;
-	typedef std::vector<HingeJointGoal> HingeJointGoals;
-	HingeJointGoals hingeGoals;
-	*/
+	//typedef std::pair<PHHingeJointIf*,double> HingeJointGoal;
+	//typedef std::vector<HingeJointGoal> HingeJointGoals;
+	//HingeJointGoals hingeGoals;
 
-	/// 最終位置における関節角度を求める
+	//// 最終位置における関節角度を求める
 	//DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->SetGoal(pos);
 	//CRCreatureIf* creature = DCAST(CRCreatureIf,DCAST(SceneObject,this)->GetScene());
 	//PHSceneIf* phScene = creature->GetPHScene();
 	//state->SaveState(phScene);
 	//double dt = phScene->GetTimeStep();
-	//for (int i=0; i<50; ++i) {
+	//for (int i=0; i<100; ++i) {
 	//	phScene->Step();
 	//}
 	//CRBodyIf* body = creature->GetBody(0);
@@ -140,7 +138,7 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 	//	std::cout << "Hinge : " << hingeGoals[i].second << std::endl;
 	//}
 	//std::cout << " --- " << std::endl;
-	}
+}
 
 void CRReachingController::Stop(){
 	cSolid->GetIKControlPoint(0)->Enable(false);

@@ -198,6 +198,31 @@ public:
 	/** @brief 駆動のためのダンパ係数を取得
 	*/
 	double GetDamper(){ return damper; }
+
+	virtual bool AddChildObject(ObjectIf* o){
+		PHIKControlPointIf* cp = o->Cast();
+		if (cp) {
+			AddControlPoint(cp);
+			return true;
+		}
+		return false;
+	}
+	virtual ObjectIf* GetChildObject(size_t pos){
+		for (CSetIter it=linkedControlPoints.begin(); it!=linkedControlPoints.end(); ++it) {
+			if (pos == 0) {
+				return *it;
+			}
+			pos--;
+		}
+		return NULL;
+	}
+	size_t NChildObject() {
+		int cnt = 0;
+		for (CSetIter it=linkedControlPoints.begin(); it!=linkedControlPoints.end(); ++it) {
+			cnt++;
+		}
+		return cnt;
+	}
 };
 
 class PHIKSolid : public PHIKNode{
@@ -223,12 +248,30 @@ public:
 	*/
 	virtual void SetDesc(const void* d){
 		PHIKNode::SetDesc(d);
-		this->solid = ((PHIKSolidDesc*)d)->solid;
 	}
 
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual PTM::VMatrixRow<double> CalcJacobian(PHIKControlPointIf* control);
+
+	virtual bool AddChildObject(ObjectIf* o){
+		PHSolidIf* so = o->Cast();
+		if (so) { this->solid = so; return true; }
+		return false;
+	}
+	virtual ObjectIf* GetChildObject(size_t pos){
+		if (pos == 0 && this->solid != NULL) { return this->solid; }
+		if (this->solid != NULL) {
+			return PHIKNode::GetChildObject(pos - 1);
+		} else {
+			return PHIKNode::GetChildObject(pos);
+		}
+		return NULL;
+	}
+	size_t NChildObject() {
+		if (this->solid != NULL) { return 1 + PHIKNode::NChildObject(); }
+		return PHIKNode::NChildObject();
+	}
 };
 
 class PHIKBallJoint : public PHIKNode{
@@ -256,17 +299,13 @@ public:
 	PHIKBallJoint(const PHIKBallJointDesc& desc) {
 		SetNDOF(2);
 		SetDesc(&desc);
+		joint = NULL;
 	}
 
 	/** @brief デスクリプタを設定する
 	*/
 	virtual void SetDesc(const void* d){
 		PHIKNode::SetDesc(d);
-		this->joint = ((PHIKBallJointDesc*)d)->joint;
-		PHBallJointDesc dJ; DCAST(PHBallJointIf,this->joint)->GetDesc(&dJ);
-		this->jSpring = dJ.spring;
-		this->jDamper = dJ.damper;
-		this->jGoal   = dJ.goal;
 	}
 
 	/** @brief 計算結果に従って制御対象を動かす
@@ -293,6 +332,32 @@ public:
 	/** @brief 回転軸を計算する
 	*/
 	virtual void CalcAxis();
+
+	virtual bool AddChildObject(ObjectIf* o){
+		PHBallJointIf* jo = o->Cast();
+		if (jo) {
+			this->joint = jo;
+			PHBallJointDesc dJ; DCAST(PHBallJointIf,this->joint)->GetDesc(&dJ);
+			this->jSpring = dJ.spring;
+			this->jDamper = dJ.damper;
+			this->jGoal   = dJ.goal;
+			return true;
+		}
+		return PHIKNode::AddChildObject(o);
+	}
+	virtual ObjectIf* GetChildObject(size_t pos){
+		if (pos == 0 && this->joint != NULL) { return this->joint; }
+		if (this->joint != NULL) {
+			return PHIKNode::GetChildObject(pos - 1);
+		} else {
+			return PHIKNode::GetChildObject(pos);
+		}
+		return NULL;
+	}
+	size_t NChildObject() {
+		if (this->joint != NULL) { return 1 + PHIKNode::NChildObject(); }
+		return PHIKNode::NChildObject();
+	}
 };
 
 class PHIKHingeJoint : public PHIKNode{
@@ -317,16 +382,13 @@ public:
 	PHIKHingeJoint(const PHIKHingeJointDesc& desc) {
 		SetNDOF(1);
 		SetDesc(&desc);
+		joint = NULL;
 	}
 
 	/** @brief デスクリプタを設定する
 	*/
 	virtual void SetDesc(const void* d){
 		PHIKNode::SetDesc(d);
-		this->joint = ((PHIKHingeJointDesc*)d)->joint;
-		this->jSpring = DCAST(PHHingeJointIf,this->joint)->GetSpring();
-		this->jDamper = DCAST(PHHingeJointIf,this->joint)->GetDamper();
-		this->jGoal   = DCAST(PHHingeJointIf,this->joint)->GetSpringOrigin();
 	}
 
 	/** @brief 計算結果に従って制御対象を動かす
@@ -340,6 +402,31 @@ public:
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual PTM::VMatrixRow<double> CalcJacobian(PHIKControlPointIf* control);
+
+	virtual bool AddChildObject(ObjectIf* o){
+		PHHingeJointIf* jo = o->Cast();
+		if (jo) {
+			this->joint = jo;
+			this->jSpring = DCAST(PHHingeJointIf,this->joint)->GetSpring();
+			this->jDamper = DCAST(PHHingeJointIf,this->joint)->GetDamper();
+			this->jGoal   = DCAST(PHHingeJointIf,this->joint)->GetSpringOrigin();
+			return true;
+		}
+		return PHIKNode::AddChildObject(o);
+	}
+	virtual ObjectIf* GetChildObject(size_t pos){
+		if (pos == 0 && this->joint != NULL) { return this->joint; }
+		if (this->joint != NULL) {
+			return PHIKNode::GetChildObject(pos - 1);
+		} else {
+			return PHIKNode::GetChildObject(pos);
+		}
+		return NULL;
+	}
+	size_t NChildObject() {
+		if (this->joint != NULL) { return 1 + PHIKNode::NChildObject(); }
+		return PHIKNode::NChildObject();
+	}
 };
 
 
@@ -382,13 +469,13 @@ public:
 	PHIKControlPoint(const PHIKControlPointDesc& desc){
 		SetDesc(&desc);
 		force	= Vec3d(0,0,0);
-		isEnabled = true;
+		solid = NULL;
 	}
 
 	/** @brief デスクリプタを設定する
 	*/
 	virtual void SetDesc(const void* d){
-		this->solid = ((PHIKPosCtlDesc*)d)->solid;
+		isEnabled = ((PHIKControlPointDesc*)d)->isEnabled;
 	}
 
 	/** @brief 力を設定する
@@ -422,6 +509,20 @@ public:
 	/** @brief 制御対象の剛体を取得する
 	*/
 	PHSolidIf* GetSolid(){ return this->solid; }
+
+	virtual bool AddChildObject(ObjectIf* o){
+		PHSolidIf* so = o->Cast();
+		if (so) { this->solid = so; return true; }
+		return false;
+	}
+	virtual ObjectIf* GetChildObject(size_t pos){
+		if (pos == 0 && this->solid != NULL) { return this->solid; }
+		return NULL;
+	}
+	size_t NChildObject() const {
+		if (this->solid != NULL) { return 1; }
+		return 0;
+	}
 };
 
 class PHIKPosCtl : public PHIKControlPoint{

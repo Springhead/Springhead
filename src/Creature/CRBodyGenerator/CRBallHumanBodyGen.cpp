@@ -791,6 +791,22 @@ void CRBallHumanBodyGen::InitContact(){
 	}
 	/**/
 
+	/*
+	phScene->SetContactMode(solids[SO_WAIST],   solids[SO_LEFT_UPPER_ARM], PHSceneDesc::MODE_LCP);
+	phScene->SetContactMode(solids[SO_ABDOMEN], solids[SO_LEFT_UPPER_ARM], PHSceneDesc::MODE_LCP);
+
+	phScene->SetContactMode(solids[SO_WAIST],   solids[SO_LEFT_LOWER_ARM], PHSceneDesc::MODE_LCP);
+	phScene->SetContactMode(solids[SO_ABDOMEN], solids[SO_LEFT_LOWER_ARM], PHSceneDesc::MODE_LCP);
+	phScene->SetContactMode(solids[SO_CHEST],   solids[SO_LEFT_LOWER_ARM], PHSceneDesc::MODE_LCP);
+
+	phScene->SetContactMode(solids[SO_WAIST],   solids[SO_RIGHT_UPPER_ARM], PHSceneDesc::MODE_LCP);
+	phScene->SetContactMode(solids[SO_ABDOMEN], solids[SO_RIGHT_UPPER_ARM], PHSceneDesc::MODE_LCP);
+
+	phScene->SetContactMode(solids[SO_WAIST],   solids[SO_RIGHT_LOWER_ARM], PHSceneDesc::MODE_LCP);
+	phScene->SetContactMode(solids[SO_ABDOMEN], solids[SO_RIGHT_LOWER_ARM], PHSceneDesc::MODE_LCP);
+	phScene->SetContactMode(solids[SO_CHEST],   solids[SO_RIGHT_LOWER_ARM], PHSceneDesc::MODE_LCP);
+	*/
+
 	// ©•ªˆÈŠO‚É‚·‚Å‚ÉBody‚ª‹‚ê‚Î‚»‚ÌBody‚É‘®‚·‚é„‘Ì‚Æ‚ÌContact‚àØ‚é
 	/*/
 	for (int i=0; i<creature->NBodies(); ++i) {
@@ -855,8 +871,8 @@ void CRBallHumanBodyGen::InitSolidPose(){
 }
 
 void CRBallHumanBodyGen::SetJointSpringDamper(PHBallJointDesc &ballDesc, double springOrig, double damperOrig, double actuatorMass){
-	ballDesc.spring =   10;
-	ballDesc.damper =    5;
+	ballDesc.spring =   10.0;
+	ballDesc.damper =    5.0;
 	/*
 	if (springOrig > 0 && damperOrig > 0) {
 		ballDesc.spring = springOrig;
@@ -870,36 +886,36 @@ void CRBallHumanBodyGen::SetJointSpringDamper(PHBallJointDesc &ballDesc, double 
 }
 
 void CRBallHumanBodyGen::SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass){
-	hingeDesc.spring =   5;
+	hingeDesc.spring =   5.0;
 	hingeDesc.damper =   2.5;
 }
 
 void CRBallHumanBodyGen::CreateIKNode(int n) {
 	if (DCAST(PHBallJointIf,joints[n])) {
 		PHIKBallJointDesc descIKNode;
-		descIKNode.joint  = joints[n]->Cast();
-		descIKNode.spring =  1000.0;
-		descIKNode.damper =    20.0;
+		descIKNode.spring = 6000.0;
+		descIKNode.damper =   50.0;
 		ikNodes[n] = phScene->CreateIKNode(descIKNode);
+		ikNodes[n]->AddChildObject(joints[n]->Cast());
 	} else if (DCAST(PHHingeJointIf,joints[n])) {
 		PHIKHingeJointDesc descIKNode;
-		descIKNode.joint  = joints[n]->Cast();
-		descIKNode.spring =  1000.0;
-		descIKNode.damper =    20.0;
+		descIKNode.spring =  600.0;
+		descIKNode.damper =    5.0;
 		ikNodes[n] = phScene->CreateIKNode(descIKNode);
+		ikNodes[n]->AddChildObject(joints[n]->Cast());
 	}
 }
 
 void CRBallHumanBodyGen::CreateIKControlPoint(int n) {
 	PHIKPosCtlDesc descIKCPPos;
-	descIKCPPos.solid = solids[n];
 	descIKCPPos.pos   = Vec3d(0,0,0);
 	ikControlPoints[2*n] = phScene->CreateIKControlPoint(descIKCPPos);
+	ikControlPoints[2*n]->AddChildObject(solids[n]);
 	ikControlPoints[2*n]->Enable(false);
 
 	PHIKOriCtlDesc descIKCPOri;
-	descIKCPOri.solid = solids[n];
 	ikControlPoints[2*n+1] = phScene->CreateIKControlPoint(descIKCPOri);
+	ikControlPoints[2*n+1]->AddChildObject(solids[n]);
 	ikControlPoints[2*n+1]->Enable(false);
 
 	/*

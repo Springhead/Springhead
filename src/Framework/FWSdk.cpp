@@ -8,6 +8,7 @@
 #include "Framework.h"
 #include "Framework/FWSdk.h"
 #include "Framework/FWOldSpringheadNode.h"
+#include "Framework/FWObject.h"
 #include "Physics/PHSdk.h"
 #include "Physics/PHScene.h"
 #include "Graphics/GRSdk.h"
@@ -33,6 +34,7 @@ void SPR_CDECL FWSdkIf::RegisterSdk(){
 
 	FWSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWScene));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWObject));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWBoneObject));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSdk));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHScene));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRSdk));

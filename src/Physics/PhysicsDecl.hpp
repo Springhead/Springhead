@@ -1,14 +1,14 @@
 #define SPR_DECLMEMBEROF_PHIKControlPointDesc \
 protected:\
-	PHSolidIf*	solid;	\
+	bool	isEnabled;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
-		solid = ((PHIKControlPointDesc*)ptr)->solid;	\
+		isEnabled = ((PHIKControlPointDesc*)ptr)->isEnabled;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		((PHIKControlPointDesc*)ptr)->solid = solid;	\
+		((PHIKControlPointDesc*)ptr)->isEnabled = isEnabled;	\
 		return true;	\
 	}\
 
@@ -63,49 +63,40 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHIKSolidDesc \
 protected:\
-	PHSolidIf*	solid;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHIKNode::SetDesc((PHIKNodeDesc*)(PHIKSolidDesc*)ptr);	\
-		solid = ((PHIKSolidDesc*)ptr)->solid;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHIKNode::GetDesc((PHIKNodeDesc*)(PHIKSolidDesc*)ptr);	\
-		((PHIKSolidDesc*)ptr)->solid = solid;	\
 		return true;	\
 	}\
 
 #define SPR_DECLMEMBEROF_PHIKBallJointDesc \
 protected:\
-	PHBallJointIf*	joint;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHIKNode::SetDesc((PHIKNodeDesc*)(PHIKBallJointDesc*)ptr);	\
-		joint = ((PHIKBallJointDesc*)ptr)->joint;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHIKNode::GetDesc((PHIKNodeDesc*)(PHIKBallJointDesc*)ptr);	\
-		((PHIKBallJointDesc*)ptr)->joint = joint;	\
 		return true;	\
 	}\
 
 #define SPR_DECLMEMBEROF_PHIKHingeJointDesc \
 protected:\
-	PHHingeJointIf*	joint;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHIKNode::SetDesc((PHIKNodeDesc*)(PHIKHingeJointDesc*)ptr);	\
-		joint = ((PHIKHingeJointDesc*)ptr)->joint;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHIKNode::GetDesc((PHIKNodeDesc*)(PHIKHingeJointDesc*)ptr);	\
-		((PHIKHingeJointDesc*)ptr)->joint = joint;	\
 		return true;	\
 	}\
 

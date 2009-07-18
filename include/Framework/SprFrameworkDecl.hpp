@@ -16,6 +16,12 @@
 	double GetSolidLength(){	return	base::GetSolidLength();}	\
 	void SetSolidLength(double l){	base::SetSolidLength(l);}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_FWBoneObjectIf(base)	\
+	PHJointIf* GetPHJoint(){	return	base::GetPHJoint();}	\
+	void SetPHJoint(PHJointIf* j){	base::SetPHJoint(j);}	\
+	GRFrameIf* GetEndFrame(){	return	base::GetEndFrame();}	\
+	void SetEndFrame(GRFrameIf* f){	base::SetEndFrame(f);}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSceneIf(base)	\
 	PHSceneIf* GetPHScene(){	return	base::GetPHScene();}	\
 	void SetPHScene(PHSceneIf* s){	base::SetPHScene(s);}	\
