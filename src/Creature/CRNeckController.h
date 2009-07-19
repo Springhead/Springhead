@@ -27,14 +27,8 @@ private:
 	/// 注意の度合
 	float attractiveness;
 
-	/// 制御に使うIK姿勢制御点
-	PHIKOriCtlIf *cpHead;
-
-	/// 制御につかう剛体
-	PHSolidIf *soHead, *soNeck, *soChest, *soAbdomen;
-
-	/// 制御につかう関節
-	PHHingeJointIf *joNeckHeadX, *joChestNeckY, *joAbdomenChest;
+	/// 制御に使うIK付きクリーチャ剛体
+	CRIKSolidIf *cso, *csHead, *csChest;
 
 	/// 基準方向（ここを中心に割合移動する，attractivenessが一定値を超えるとその方向へ変更される）
 	double origX, origZ;
@@ -47,6 +41,7 @@ public:
 	CRNeckController(const CRNeckControllerDesc& desc)
 		: CRNeckControllerDesc(desc)
 	{
+		Init();
 	}
 
 	/** @brief 初期化を実行する

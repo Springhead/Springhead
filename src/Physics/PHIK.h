@@ -74,12 +74,15 @@ public:
 	/// 駆動用のバネダンパ（関節本来のバネダンパは原点への引き戻しとして作用する）
 	double spring, damper;
 
-	/// 有効・無効
+	/// 連結した制御点の有効・無効状態
 	enum ENABLE_STATUS {
 		ES_NONE=0,
 		ES_NOORI,
 		ES_ORI,
 	} enableStat;
+
+	/// この関節自身の有効・無効
+	bool isEnabled;
 
 	// 計算用の一時変数
 	PTM::VVector<double>     alpha, beta;
@@ -122,6 +125,7 @@ public:
 	/** @brief デスクリプタを設定する
 	*/
 	virtual void SetDesc(const void* d){
+		this->isEnabled = ((PHIKNodeDesc*)d)->isEnabled;
 		this->bias		= ((PHIKNodeDesc*)d)->bias;
 		this->spring	= ((PHIKNodeDesc*)d)->spring;
 		this->damper	= ((PHIKNodeDesc*)d)->damper;
@@ -198,6 +202,14 @@ public:
 	/** @brief 駆動のためのダンパ係数を取得
 	*/
 	double GetDamper(){ return damper; }
+
+	/** @brief 有効・無効を設定する
+	*/
+	void Enable(bool enable){ isEnabled = enable; if (!enable) { MoveNatural(); } }
+
+	/** @brief 有効・無効を取得する
+	*/
+	bool IsEnabled(){ return isEnabled; }
 
 	virtual bool AddChildObject(ObjectIf* o){
 		PHIKControlPointIf* cp = o->Cast();
@@ -501,6 +513,10 @@ public:
 	/** @brief 有効・無効を設定する
 	*/
 	void Enable(bool enable);
+
+	/** @brief 有効・無効を取得する
+	*/
+	bool IsEnabled(){ return isEnabled; }
 
 	/** @brief 制御対象の剛体を設定する
 	*/
