@@ -20,7 +20,7 @@ namespace Spr{;
 /** @brief 到達運動コントローラ
 */
 class CRReachingController : public CREngine, public CRReachingControllerDesc {
-private:
+public:
 	/// 経過時間
 	float time;
 

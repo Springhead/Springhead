@@ -51,6 +51,10 @@ struct PHIKControlPointIf : SceneObjectIf{
 	/** @brief 有効・無効を設定する
 	*/
 	void Enable(bool enable);
+
+	/** @brief 有効・無効を取得する
+	*/
+	bool IsEnabled();
 };
 
 /// IK制御点のディスクリプタ
@@ -162,11 +166,21 @@ struct PHIKNodeIf : SceneObjectIf{
 	/** @brief 駆動のためのダンパ係数を取得
 	*/
 	double GetDamper();
+
+	/** @brief 有効・無効を設定する
+	*/
+	void Enable(bool enable);
+
+	/** @brief 有効・無効を取得する
+	*/
+	bool IsEnabled();
 };
 
 /// IKノードのディスクリプタ
 struct PHIKNodeDesc{
 	SPR_DESCDEF(PHIKNode);
+
+	bool isEnabled;  ///< 有効かどうか
 
 	float	bias;	///< 動かしにくさの係数
 	double	spring;	///< 駆動用バネのバネ係数

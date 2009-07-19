@@ -252,10 +252,13 @@ void PHIKNode::CalcAllJacobian(){
 }
 
 void PHIKNode::PrepareSolve(){
+	if (!isEnabled) { return; }
+
 	alpha.clear();
 	beta.clear();
 
 	for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
+		if (!((*n_y)->IsEnabled())) { continue; }
 		int n_y_n = DCAST(PHIKNode,*n_y)->number;
 		gamma[n_y_n].resize(ndof,DCAST(PHIKNode,*n_y)->ndof);
 		gamma[n_y_n].clear();
@@ -280,6 +283,7 @@ void PHIKNode::PrepareSolve(){
 
 				// ƒÁ[ny, nx]
 				for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
+					if (!((*n_y)->IsEnabled())) { continue; }
 					int n_y_n = DCAST(PHIKNode,*n_y)->number;
 					for (size_t j=0; j<DCAST(PHIKNode,*n_y)->ndof; ++j) {
 						if (DCAST(PHIKNode,*n_y)->Mj.find(c_z_n) != DCAST(PHIKNode,*n_y)->Mj.end()) {
@@ -308,6 +312,7 @@ void PHIKNode::PrepareSolve(){
 	//(*dlog) << beta << std::endl;
 
 	for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
+		if (!((*n_y)->IsEnabled())) { continue; }
 		int n_y_n = DCAST(PHIKNode,*n_y)->number;
 		//(*dlog) << "--- gamma[" << number << "][" << n_y_n << "] ---" << std::endl;
 		//(*dlog) << gamma[n_y_n] << std::endl;
@@ -327,6 +332,7 @@ void PHIKNode::ProceedSolve(){
 
 		// ƒÂ
 		for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
+			if (!((*n_y)->IsEnabled())) { continue; }
 			int n_y_n = DCAST(PHIKNode,*n_y)->number;
 			if (gamma.find(n_y_n) != gamma.end()) {
 				for (size_t k=0; k<DCAST(PHIKNode,*n_y)->ndof; ++k) {
@@ -501,6 +507,9 @@ void PHIKBallJoint::Move(){
 	if (enableStat==ES_NONE) {
 		return;
 	}
+	if (!isEnabled) {
+		return;
+	}
 
 	// ‰ñ“]Ž²ƒxƒNƒgƒ‹‚É‚·‚é
 	Vec3d dT = Vec3d();
@@ -584,6 +593,9 @@ PTM::VMatrixRow<double> PHIKHingeJoint::CalcJacobian(PHIKControlPointIf* control
 
 void PHIKHingeJoint::Move(){
 	if (enableStat==ES_NONE) {
+		return;
+	}
+	if (!isEnabled) {
 		return;
 	}
 

@@ -419,8 +419,8 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 		        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		        (LPSTR)&lpMsgBuf,
 		        0, NULL );
-			DSTR << "wglUseFontBitmaps() failed with error:" << e << std::endl;
-			DSTR << lpMsgBuf << std::endl;
+			// DSTR << "wglUseFontBitmaps() failed with error:" << e << std::endl;
+			// DSTR << lpMsgBuf << std::endl;
 			LocalFree(lpMsgBuf);
 		}
 		SelectObject(hDC, hOldFont);

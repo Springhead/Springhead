@@ -29,6 +29,7 @@
 	PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
 	void SetNumber(int i){	base::SetNumber(i);}	\
 	void Enable(bool enable){	base::Enable(enable);}	\
+	bool IsEnabled(){	return	base::IsEnabled();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKPosCtlIf(base)	\
 	void SetGoal(Vec3d goal){	base::SetGoal(goal);}	\
@@ -54,6 +55,8 @@
 	double GetSpring(){	return	base::GetSpring();}	\
 	void SetDamper(double damper){	base::SetDamper(damper);}	\
 	double GetDamper(){	return	base::GetDamper();}	\
+	void Enable(bool enable){	base::Enable(enable);}	\
+	bool IsEnabled(){	return	base::IsEnabled();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKSolidIf(base)	\
 

@@ -14,6 +14,7 @@
 namespace Spr{;
 
 void CRTouchSensor::Step() {
+	// ‚¢‚¸‚êAddChildObject‚ÅŽw’è‚·‚é‚æ‚¤‚É‚·‚×‚« (mitake, 09/07/19)
 	CRBodyIf* body = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetBody(0);
 	PHSceneIf* phScene = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetPHScene();
 
@@ -84,6 +85,8 @@ void CRTouchSensor::Step() {
 						contact.soMe		= soMe;
 						contact.soOther		= soOther;
 						contact.force		= force;
+						contact.pressure	= force.norm();
+						/*
 						if (nSectionVtx != 0) {
 							contact.normal		= shapePair->GetNormalVector();
 							contact.dimension	= shapePair->GetContactDimension();
@@ -115,6 +118,7 @@ void CRTouchSensor::Step() {
 							contact.dimension	= 1e-4;
 							contact.pressure	= pMax;
 						}
+						*/
 						contactList.push_back(contact);
 					}
 
