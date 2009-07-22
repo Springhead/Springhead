@@ -635,6 +635,7 @@ struct PH3ElementBallJointDesc : public PHBallJointDesc{
 	double yieldStress;			// 降伏応力
 	double hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
 	Vec3d  I;					// 断面２次モーメント
+	bool   yieldFlag;
 
 	PH3ElementBallJointDesc();	// ディスクリプタのコンストラクタ
 };
@@ -747,7 +748,7 @@ struct PH3ElementDesc : public PHSpringDesc{
 	double		yieldStress;		// 降伏応力
 	double		hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
 	Vec3d		I;					// 断面2次モーメント
-	
+	bool		yieldFlag;		    // 降伏応力のフラグ
 	PH3ElementDesc();
 };
 

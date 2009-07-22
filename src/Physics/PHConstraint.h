@@ -11,6 +11,7 @@
 #include <SprPhysics.h>
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHSpatial.h>
+#include <vector>
 
 namespace Spr{;
 
@@ -54,12 +55,12 @@ public:
 	
 	bool		constr[6];				///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
 	bool		constrCorrection[6];	///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる
-
+	
 	///コンストラクタ
 	PHConstraint();
 
 	///このクラス内の機能.
-	void		CompJacobian();
+	virtual void		CompJacobian();
 	void		SetupLCP();
 	void		IterateLCP();
 	void		UpdateState();

@@ -28,7 +28,7 @@ PH3ElementBallJointDesc::PH3ElementBallJointDesc(){
 	yieldStress			=0.0;			// 降伏応力
 	hardnessRate		=1.0;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
 	I					=Vec3d(1.0,1.0,1.0);
-
+	yieldFlag			=false;
 }
 
 //----------------------------------------------------------------------------
@@ -60,57 +60,73 @@ void PH3ElementBallJoint::CompBias(){
 		double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
 		double D1 = damper;
 		double D2 = secondDamper;
-		double K = spring;
+		double K  = spring;
 		double h = GetScene()->GetTimeStep();
-		
-		//降伏応力以下ではジョイントを固くする
-		if(f.w().norm()>=yieldStress ){
-			K = spring;
-			D1 = damper;
-			D2=secondDamper;
-		}else{
-			K = spring;
-			D1 = damper;
-			D2= secondDamper*hardnessRate;
-		}
-		
+		static double     fNorm;
 		//3要素モデルの計算
 		ws=vjrel;	//バネとダンパの並列部の速さ
-		tmp = D1+D2+K*h;
 
-		xs[1] = ((D1+D2)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
-		
+		//fの平均値
+		fs.push_back(f);
+		if(fs.size()>5){
+			vector<SpatialVector>::iterator startIterator;
+			startIterator = fs.begin();
+			fs.erase( startIterator );
+			fNorm=0;
+			for(int i=0;i<fs.size();i++){
+				fNorm+=fs[i].w().norm()/(fs.size()-1);
+			}
+		}
+		//物体の形状を考慮したバネダンパを設定する場合
 		if(I[0]!=1&&I[1]!=1&&I[2]!=1){
 			//物体の変形に使用する場合
 			/*x軸，y軸回りの変形(曲げ）
 				I(断面2次モーメント),E(ヤング率),T(トルク),l(剛体間の距離)としたとき
-			　	T=EIθ/l
+		　		T=EIθ/l
 			  z軸回りの変形（ねじり）
 				G(せん断弾性係数),v(ポワソン比)
 				G=E/2(1+v)
 				T=GIθ/l 
 			*/
 			double v=0.3;		//ポワソン比は0.3ぐらいが多い
-			dA.w()[0]= tmp/(D2*(K*h+D1)) * dtinv /I[0];
-			dA.w()[1]= tmp/(D2*(K*h+D1)) * dtinv /I[1];
-			//四角形の場合
+							//四角形の場合
 			if(I[0]>I[1]){
-				I[2]=I[1]*4;
+				I[2]=I[1]*4/(2*(1+v));
 			}else{
-				I[2]=I[0]*4;
+				I[2]=I[0]*4/(2*(1+v));
 			}
-			dA.w()[2]= tmp/(D2*(K*h+D1)) * dtinv * 2*(1+v)/I[2];
-
-		}else{
-			//3要素モデルのシミュレーションだけを使用したい場合
+		}
+		if(yieldFlag){
+			//弾塑性変形
+			D1 = damper*hardnessRate;
+			D2 = secondDamper*hardnessRate;
+			K  = spring*hardnessRate;
+			tmp = D1+D2+K*h;
+			xs[1] = ((D1+D2)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
 			for(int i=0;i<3;i++){
 				dA.w()[i]= tmp/(D2*(K*h+D1)) * dtinv /I[i];
 			}
-
+			db.w() = K/(K*h+D1)*(xs[0].w()) ;
+			
+			if(ws.w().norm()<0.1){
+				yieldFlag = false;
+				SetGoal(Xjrel.q);
+			}
+			xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
+			
+		}else{
+			//弾性変形
+			double tmp = 1.0 / (D1 + K * GetScene()->GetTimeStep());
+			dA.w() = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
+			db.w() = tmp * (- spring * propV
+						 -    damper * desiredVelocity
+						 -    offset);
+			if(fNorm>=yieldStress){
+				yieldFlag = true;
+				xs[0].v()=Xjrel.r;   //
+				xs[0].w()=Xjrel.q.Rotation();   //
+			}
 		}
-		db.w() = K/(K*h+D1)*(xs[0].w()) ;
-	
-		xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
 	}else{
 			//dA.w().clear();
 			db.w().clear();

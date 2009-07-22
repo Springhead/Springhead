@@ -19,6 +19,7 @@ PH3ElementDesc::PH3ElementDesc(){
 	yieldStress			  = 0.0;			// ~•š‰—Í
 	hardnessRate		  = 1.0;		// ~•š‰—ÍˆÈ‰º‚Ìê‡‚É“ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ÉŠ|‚¯‚é”ä
 	I					  = Vec3d(1.0,1.0,1.0);
+	yieldFlag			  = false;
 }
 //----------------------------------------------------------------------------
 // PH3Element

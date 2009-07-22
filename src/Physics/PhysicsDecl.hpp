@@ -437,6 +437,7 @@ protected:\
 	double	yieldStress;	\
 	double	hardnessRate;	\
 	Vec3d	I;	\
+	bool	yieldFlag;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHBallJoint::SetDesc((PHBallJointDesc*)(PH3ElementBallJointDesc*)ptr);	\
@@ -444,6 +445,7 @@ public:\
 		yieldStress = ((PH3ElementBallJointDesc*)ptr)->yieldStress;	\
 		hardnessRate = ((PH3ElementBallJointDesc*)ptr)->hardnessRate;	\
 		I = ((PH3ElementBallJointDesc*)ptr)->I;	\
+		yieldFlag = ((PH3ElementBallJointDesc*)ptr)->yieldFlag;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -453,6 +455,7 @@ public:\
 		((PH3ElementBallJointDesc*)ptr)->yieldStress = yieldStress;	\
 		((PH3ElementBallJointDesc*)ptr)->hardnessRate = hardnessRate;	\
 		((PH3ElementBallJointDesc*)ptr)->I = I;	\
+		((PH3ElementBallJointDesc*)ptr)->yieldFlag = yieldFlag;	\
 		return true;	\
 	}\
 
@@ -487,6 +490,7 @@ protected:\
 	double	yieldStress;	\
 	double	hardnessRate;	\
 	Vec3d	I;	\
+	bool	yieldFlag;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHSpring::SetDesc((PHSpringDesc*)(PH3ElementDesc*)ptr);	\
@@ -494,6 +498,7 @@ public:\
 		yieldStress = ((PH3ElementDesc*)ptr)->yieldStress;	\
 		hardnessRate = ((PH3ElementDesc*)ptr)->hardnessRate;	\
 		I = ((PH3ElementDesc*)ptr)->I;	\
+		yieldFlag = ((PH3ElementDesc*)ptr)->yieldFlag;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -503,6 +508,7 @@ public:\
 		((PH3ElementDesc*)ptr)->yieldStress = yieldStress;	\
 		((PH3ElementDesc*)ptr)->hardnessRate = hardnessRate;	\
 		((PH3ElementDesc*)ptr)->I = I;	\
+		((PH3ElementDesc*)ptr)->yieldFlag = yieldFlag;	\
 		return true;	\
 	}\
 
