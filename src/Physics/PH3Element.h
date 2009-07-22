@@ -22,18 +22,19 @@ struct SpatialVectorArray2{
 };
 struct PH3ElementState{
 	SpatialVectorArray2 xs;				///(3要素モデル専用)ばね部の距離
+
 };
 
 struct PH3ElementCommonData: public PH3ElementState{
-	SpatialVector xd[2];				///(3要素モデル専用)ダンパ部の距離
-	SpatialVector xss[2];				///(3要素モデル専用)3要素モデルに遷移する前のバネの長さ
+	SpatialVector xd;				///(3要素モデル専用)ダンパ部の距離
 	SpatialVector ws;					///(3要素モデル専用)ばね部の速さ
-	SpatialVector fs;					///(3要素モデル専用)ばね部の力
+	//SpatialVector fs;					///(3要素モデル専用)ばね部の力
 };
 class PH3Element : public PHJoint, public PH3ElementCommonData{
 	Vec3d spring, damper,secondDamper;
 	double springOri, damperOri, yieldStress, hardnessRate;
 	Vec3d  I;							///断面２次モーメント
+	bool   yieldFlag;
 public:
 	SPR_OBJECTDEF(PH3Element);
 

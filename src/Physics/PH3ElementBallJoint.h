@@ -44,7 +44,7 @@ public:
 	ACCESS_STATE(PH3Element);
 protected:
 public:
-		
+	std::vector<SpatialVector> fs;	
 	/// インタフェースの実装
 	double  GetSecondDamper()				{return secondDamper;}
 	void	SetSecondDamper(double input)	{secondDamper = input;}
@@ -57,7 +57,6 @@ public:
 
 	// このクラス内で再定義する（オーバーライドする）関数
 	void	CompBias();		///< 侵入量の判定(オーバーライド)
-
 	//TreeNode用の関数
 	virtual PHTreeNode*		CreateTreeNode(){
 		return DBG_NEW PH3ElementBallJointNode();

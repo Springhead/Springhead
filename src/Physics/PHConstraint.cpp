@@ -82,8 +82,8 @@ void PHConstraint::CompJacobian(){ // S‘©‚·‚é2‚Â‚Ì„‘Ì‚ÌŠe‘¬“x‚©‚ç‘Š‘Î‘¬“x‚Ö‚Ìƒ
 	X[0].q = solid[0]->GetOrientation();
 	X[1].r = solid[1]->GetCenterPosition();
 	X[1].q = solid[1]->GetOrientation();
-	Xjrel = Xj[1] * X[1] * X[0].inv() * Xj[0].inv();
-	
+	Xjrel =  Xj[1] * X[1] * X[0].inv() * Xj[0].inv();
+
 	Js[0] = Xj[0];
 	Js[1] = Xjrel.inv() * Xj[1];
 	J[0] = Js[0];
