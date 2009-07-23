@@ -27,8 +27,9 @@ void HISpidarCalc6Dof::Update()
 {
 	int i,j,k;
 	MeasureWire();	//get length from encorder
-	int nWire = matA.height();
+	MakeWireVec();
 
+	int nWire = matA.height();
 	for(int step=0; step < nRepeat; ++step){
 		for(i=0;i<nWire;i++) {
 			matA[i][0]=wireDirection[i].X();
