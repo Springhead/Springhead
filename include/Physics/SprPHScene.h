@@ -67,7 +67,7 @@ public:
 
 /// 物理エンジンのシーンの状態
 struct PHSceneState{
-	/// 積分ステップ
+	/// 積分ステップ[s]
 	double timeStep;
 	/// 積分した回数
 	unsigned count;
