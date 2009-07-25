@@ -522,6 +522,7 @@ void __cdecl timer(int id){
 	/// 時刻のチェックと画面の更新を行う
 	float DT = 0.05f;
 	if (bStep) scene->Step();
+	if (soBox.size()) DSTR << ((PHSolid*)soBox.back())->dv << std::endl;
 	
 /*
 	{
@@ -567,8 +568,8 @@ int main(int argc, char* argv[]){
 	
 #ifdef CREATE_FLOOR
 	// soFloor用のdesc
-	desc.mass = 1e20f;
-	desc.inertia *= 1e20f;
+	desc.mass = 10.0f;
+	desc.inertia *= 100.0f;
 	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 	soFloor->SetDynamical(false);
 #endif

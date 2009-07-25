@@ -25,8 +25,15 @@ ObjectIf* PHFrame::GetChildObject(size_t pos){
 }
 bool PHFrame::AddChildObject(ObjectIf * o){
 	CDShape* s = o->Cast();
-	if (s && !shape){
-		shape = s;
+	if (s){
+		if (!shape){
+			shape = s;
+		} else {
+			assert(solid);
+			PHFrame* f = DBG_NEW PHFrame;
+			f->shape = s;
+			solid->AddFrame(f->Cast());
+		} 
 		if (solid){
 			solid->CalcBBox();
 			//接触エンジンのshapePairsを更新する
