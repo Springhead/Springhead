@@ -337,4 +337,10 @@ void PHConstraint::GetRelativeVelocity(Vec3d &v, Vec3d &w){
 	w = vjrel.w();
 }
 
+void PHConstraint::GetConstraintForce(Vec3d& _f, Vec3d& _t){
+	Quaterniond cSys = solid[0]->GetPose().Ori() * poseSocket.Ori();
+	_f = f.v() / GetScene()->GetTimeStep();
+	_t = f.w() / GetScene()->GetTimeStep();
+}
+
 }
