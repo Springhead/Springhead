@@ -607,8 +607,10 @@ void PHIKHingeJoint::Move(){
 	double newGoal = (jSpring*jGoal + spring*angle) * (1/(jSpring + spring));
 
 	// トルクを実現するためのオフセットの追加
+	/*
 	double torque = tau[0];
 	newGoal += torque * Rad(16) / joint->GetSpring();
+	*/
 
 	// 関節を動かす
 	joint->SetSpring(jSpring + spring);
