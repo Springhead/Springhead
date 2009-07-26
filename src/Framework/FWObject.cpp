@@ -139,6 +139,8 @@ void FWBoneObject::Modify() {
 		PHBallJointDesc d; bj->GetDesc(&d);
 		sockOffset = d.poseSocket;
 		d.poseSocket = poseSock * d.poseSocket; d.posePlug = posePlug * d.posePlug;
+		d.poseSocket.Ori().unitize();
+		d.posePlug.Ori().unitize();
 		bj->SetDesc(&d);
 	}
 	PHHingeJointIf *hj = phJoint->Cast();
@@ -146,6 +148,8 @@ void FWBoneObject::Modify() {
 		PHHingeJointDesc d; hj->GetDesc(&d);
 		sockOffset = d.poseSocket;
 		d.poseSocket = poseSock * d.poseSocket; d.posePlug = posePlug * d.posePlug;
+		d.poseSocket.Ori().unitize();
+		d.posePlug.Ori().unitize();
 		hj->SetDesc(&d);
 	}
 
