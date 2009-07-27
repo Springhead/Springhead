@@ -148,6 +148,8 @@ bool HISpidarG::Calibration(){
 	//	ポインタを原点(中心)に置いて、キャリブレーションを行う
 	for(unsigned i=0; i<motors.size(); i++) motors[i].SetLength( (motors[i].pos - motors[i].jointPos).norm() );
 	lengthDiffAve.clear();
+	pos = Vec3f();
+	ori = Quaterniond();
 	for(int i=0; i<4; ++i) HISpidarCalc6Dof::Update();	//	姿勢を更新
 	return true;
 }
