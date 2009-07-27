@@ -10,7 +10,6 @@
  */
 #include "Physics.h"
 #include <Physics/PHBallJoint.h>
-//#include "../../../Project\personal\Matunaga\HapticJointTest\BoxStack.h"
 #include <Math.h>
 #pragma hdrstop
 
@@ -57,7 +56,7 @@ void PH3ElementBallJoint::CompBias(){
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0 || secondDamper!=0.0){
 		//3要素モデル
-		double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
+		double dtinv = 1.0 / GetScene()->GetTimeStep();
 		double D1 = damper;
 		double D2 = secondDamper;
 		double K  = spring;
@@ -96,37 +95,39 @@ void PH3ElementBallJoint::CompBias(){
 				I[2]=I[0]*4/(2*(1+v));
 			}
 		}
-		if(yieldFlag){
-			//弾塑性変形
-			D1 = damper*hardnessRate;
-			D2 = secondDamper*hardnessRate;
-			K  = spring*hardnessRate;
-			tmp = D1+D2+K*h;
-			xs[1] = ((D1+D2)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
-			for(int i=0;i<3;i++){
-				dA.w()[i]= tmp/(D2*(K*h+D1)) * dtinv /I[i];
-			}
-			db.w() = K/(K*h+D1)*(xs[0].w()) ;
-			
-			if(ws.w().norm()<0.1){
-				yieldFlag = false;
-				SetGoal(Xjrel.q);
-			}
-			xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
-			
-		}else{
+		//if(yieldFlag){
+		//	//弾塑性変形
+		//	D1 = damper*hardnessRate;
+		//	D2 = secondDamper*hardnessRate;
+		//	K  = spring*hardnessRate;
+		//	double tmp = D1+D2+K*h;
+		//	xs[1] = ((D1+D2)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
+		//	for(int i=0;i<3;i++){
+		//		dA.w()[i]= tmp/(D2*(K*h+D1)) * dtinv /I[i];
+		//	}
+		//	db.w() = K/(K*h+D1)*(xs[0].w()) ;
+		//	
+		//	if(ws.w().norm()<0.1){
+		//		yieldFlag = false;
+		//		SetGoal(Xjrel.q);
+		//	}
+		//	xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
+		//	
+		//}else{
 			//弾性変形
 			double tmp = 1.0 / (D1 + K * GetScene()->GetTimeStep());
-			dA.w() = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
-			db.w() = tmp * (- spring * propV
-						 -    damper * desiredVelocity
-						 -    offset);
-			if(fNorm>=yieldStress){
-				yieldFlag = true;
-				xs[0].v()=Xjrel.r;   //
-				xs[0].w()=Xjrel.q.Rotation();   //
+			for(int i=0;i<3;i++){
+				dA.w()[i] = tmp * dtinv *I[i];		
+				db.w()[i] = tmp * (- spring *I[i]* propV[i]
+							 -    damper *I[i]* desiredVelocity[i]
+							 -    offset[i]);
 			}
-		}
+		//	if(fNorm>=yieldStress){
+		//		yieldFlag = true;
+		//		xs[0].v()=Xjrel.r;   //
+		//		xs[0].w()=Xjrel.q.Rotation();   //
+		//	}
+		//}
 	}else{
 			//dA.w().clear();
 			db.w().clear();
