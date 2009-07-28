@@ -23,11 +23,12 @@ namespace Spr{;
 PH3ElementBallJointDesc::PH3ElementBallJointDesc(){
 	
 	PHBallJointDesc();
-	secondDamper		  = 0.0;
-	yieldStress			=0.0;			// 降伏応力
-	hardnessRate		=1.0;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
-	I					=Vec3d(1.0,1.0,1.0);
-	yieldFlag			=false;
+	secondDamper		= 0.0;
+	yieldStress			= 0.0;			// 降伏応力
+	hardnessRate		= 1.0;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
+	I					= Vec3d(1.0,1.0,1.0);
+	yieldFlag			= false;
+	type				= deformationType::Mix;
 }
 
 //----------------------------------------------------------------------------
@@ -37,14 +38,8 @@ PH3ElementBallJoint::PH3ElementBallJoint(const PH3ElementBallJointDesc& desc){
 	PHBallJoint::PHBallJoint();
 }
 
-// オーバーライドされているのでPH3ElementBallJointを読んだ時には
-// PHBallJoint::CompBias()ではなくてこの関数だけこっちが呼ばれる。
-void PH3ElementBallJoint::CompBias(){
-	double dtinv = 1.0 / GetScene()->GetTimeStep();
-	
-	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
-	db.v() *= engine->velCorrectionRate;
-
+void PH3ElementBallJoint::ElasticDeformation(){
+	//弾性変形
 	Quaterniond propQ = goal * Xjrel.q.Inv();	
 	Vec3d propV = propQ.RotationHalf();
 
@@ -53,86 +48,102 @@ void PH3ElementBallJoint::CompBias(){
 		propV = Jcinv * propV;
 	}
 
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
+	double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
+
+	for(int i=0;i<3;i++){
+		dA.w()[i] = tmp * dtinv *I[i];		
+		db.w()[i] = tmp * (- spring *I[i]* propV[i]
+					 -    damper *I[i]* desiredVelocity[i]
+					 -    offset[i]);
+	}
+
+}
+void PH3ElementBallJoint::PlasticDeformation(){
+	//塑性変形(3要素モデル)
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
+	double D1 = damper*hardnessRate;
+	double D2 = secondDamper*hardnessRate;
+	double K  = spring*hardnessRate;
+	double h = GetScene()->GetTimeStep();	
+	double tmp = D1+D2+K*h;
+	ws=vjrel;	//バネとダンパの並列部の速さ
+
+	xs[1] = ((D1+D2)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
+	for(int i=0;i<3;i++){
+		dA.w()[i]= tmp/(D2*(K*h+D1)) * dtinv /I[i];
+	}
+	db.w() = K/(K*h+D1)*(xs[0].w()) ;
+	
+	if(ws.w().norm()<0.1){
+		yieldFlag = false;
+		SetGoal(Xjrel.q);
+	}
+	xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
+
+}
+
+
+// オーバーライドされているのでPH3ElementBallJointを読んだ時には
+// PHBallJoint::CompBias()ではなくてこの関数だけこっちが呼ばれる。
+void PH3ElementBallJoint::CompBias(){
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
+	
+	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置
+	db.v() *= engine->velCorrectionRate;
+
+	//fの平均値を計算
+	static double     fNorm;
+	fs.push_back(f);
+	if(fs.size()>5){
+		vector<SpatialVector>::iterator startIterator;
+		startIterator = fs.begin();
+		fs.erase( startIterator );
+		fNorm=0;
+		for(int i=0;i<fs.size();i++){
+			fNorm+=fs[i].w().norm()/(fs.size()-1);
+		}
+	}
+	//物体の形状を考慮したバネダンパを設定する場合
+	if(I[0]!=1&&I[1]!=1&&I[2]!=1){
+		//物体の変形に使用する場合
+		/*x軸，y軸回りの変形(曲げ）
+			I(断面2次モーメント),E(ヤング率),T(トルク),l(剛体間の距離)としたとき
+	　		T=EIθ/l
+		  z軸回りの変形（ねじり）
+			G(せん断弾性係数),v(ポワソン比)
+			G=E/2(1+v)
+			T=GIθ/l 
+		*/
+		double v=0.3;		//ポワソン比は0.3ぐらいが多い
+	//四角形の場合
+		if(I[0]>I[1]){
+			I[2]=I[1]*4/(2*(1+v));
+		}else{
+			I[2]=I[0]*4/(2*(1+v));
+		}
+	}
+
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0 || secondDamper!=0.0){
-		//3要素モデル
-		double dtinv = 1.0 / GetScene()->GetTimeStep();
-		double D1 = damper;
-		double D2 = secondDamper;
-		double K  = spring;
-		double h = GetScene()->GetTimeStep();
-		static double     fNorm;
-		//3要素モデルの計算
-		ws=vjrel;	//バネとダンパの並列部の速さ
 
-		//fの平均値
-		fs.push_back(f);
-		if(fs.size()>5){
-			vector<SpatialVector>::iterator startIterator;
-			startIterator = fs.begin();
-			fs.erase( startIterator );
-			fNorm=0;
-			for(int i=0;i<fs.size();i++){
-				fNorm+=fs[i].w().norm()/(fs.size()-1);
-			}
+		if(type==PH3ElementBallJointDesc::deformationType::Mix){	//3:Mix 初期値
+			if(yieldFlag)PlasticDeformation();	//塑性変形
+			else ElasticDeformation();			//弾性変形
+		}else if(type==PH3ElementBallJointDesc::deformationType::Elastic){	//0:Elastic
+			ElasticDeformation();				//弾性変形
+		}else if(type==PH3ElementBallJointDesc::deformationType::Plastic){	//1:Plastic
+			PlasticDeformation();				//塑性変形
 		}
-		//物体の形状を考慮したバネダンパを設定する場合
-		if(I[0]!=1&&I[1]!=1&&I[2]!=1){
-			//物体の変形に使用する場合
-			/*x軸，y軸回りの変形(曲げ）
-				I(断面2次モーメント),E(ヤング率),T(トルク),l(剛体間の距離)としたとき
-		　		T=EIθ/l
-			  z軸回りの変形（ねじり）
-				G(せん断弾性係数),v(ポワソン比)
-				G=E/2(1+v)
-				T=GIθ/l 
-			*/
-			double v=0.3;		//ポワソン比は0.3ぐらいが多い
-							//四角形の場合
-			if(I[0]>I[1]){
-				I[2]=I[1]*4/(2*(1+v));
-			}else{
-				I[2]=I[0]*4/(2*(1+v));
-			}
-		}
-		//if(yieldFlag){
-		//	//弾塑性変形
-		//	D1 = damper*hardnessRate;
-		//	D2 = secondDamper*hardnessRate;
-		//	K  = spring*hardnessRate;
-		//	double tmp = D1+D2+K*h;
-		//	xs[1] = ((D1+D2)/tmp)*xs[0] + (D2*h/tmp)*ws;	//バネとダンパの並列部の距離の更新
-		//	for(int i=0;i<3;i++){
-		//		dA.w()[i]= tmp/(D2*(K*h+D1)) * dtinv /I[i];
-		//	}
-		//	db.w() = K/(K*h+D1)*(xs[0].w()) ;
-		//	
-		//	if(ws.w().norm()<0.1){
-		//		yieldFlag = false;
-		//		SetGoal(Xjrel.q);
-		//	}
-		//	xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
-		//	
-		//}else{
-			//弾性変形
-			double tmp = 1.0 / (D1 + K * GetScene()->GetTimeStep());
-			for(int i=0;i<3;i++){
-				dA.w()[i] = tmp * dtinv *I[i];		
-				db.w()[i] = tmp * (- spring *I[i]* propV[i]
-							 -    damper *I[i]* desiredVelocity[i]
-							 -    offset[i]);
-			}
-		//	if(fNorm>=yieldStress){
-		//		yieldFlag = true;
-		//		xs[0].v()=Xjrel.r;   //
-		//		xs[0].w()=Xjrel.q.Rotation();   //
-		//	}
-		//}
 	}else{
 			//dA.w().clear();
 			db.w().clear();
 	}
 	
+	MovableCheck(dtinv);
+}
+
+void PH3ElementBallJoint::MovableCheck(double dtinv){
 	Vec3d vJc = Jc * vjrel.w();
 	// 可動域フラグの指定onLimit[0]: swing, onLimit[1]: twist
 	// nowTheta[0]: swing, nowTheta[1]: twist
@@ -158,7 +169,6 @@ void PH3ElementBallJoint::CompBias(){
 		db.w()[2] = (nowTheta[1] - limitTwist[1]) * dtinv * engine->velCorrectionRate;
 	}
 }
-
 //----------------------------------------------------------------------------
 // PH3ElementBallJointNode
 PH3ElementBallJointNode::PH3ElementBallJointNode(const PH3ElementBallJointNodeDesc& desc):PHBallJointNode(desc){

@@ -43,6 +43,9 @@ public:
 	SPR_DECLMEMBEROF_PH3ElementBallJointDesc;
 	ACCESS_STATE(PH3Element);
 protected:
+	void    ElasticDeformation();
+	void	PlasticDeformation();
+
 public:
 	std::vector<SpatialVector> fs;	
 	/// インタフェースの実装
@@ -54,9 +57,13 @@ public:
 	void	SetHardnessRate(double input)	{hardnessRate = input;}
 	void	SetI(const Vec3d i)				{I = i;}
 	Vec3d	GetI()							{return I;}
+	void	SetType(int t)					{type = (PH3ElementBallJointDesc::deformationType)t;}
+	int 	GetType()						{return (int)type;}
 
 	// このクラス内で再定義する（オーバーライドする）関数
 	void	CompBias();		///< 侵入量の判定(オーバーライド)
+	void	MovableCheck(double dtinv);	//< 可動域をかけるかのチェック
+
 	//TreeNode用の関数
 	virtual PHTreeNode*		CreateTreeNode(){
 		return DBG_NEW PH3ElementBallJointNode();
