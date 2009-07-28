@@ -12,6 +12,7 @@
 	Affinef GetTransform(){	return	base::GetTransform();}	\
 	Affinef GetWorldTransform(){	return	base::GetWorldTransform();}	\
 	void SetTransform(const Affinef& af){	base::SetTransform(af);}	\
+	void Clear(){	base::Clear();}	\
 	void Print(std::ostream& os)const{	base::Print(os);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRDummyFrameIf(base)	\

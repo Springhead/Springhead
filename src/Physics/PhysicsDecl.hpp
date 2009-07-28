@@ -433,6 +433,7 @@ public:\
 
 #define SPR_DECLMEMBEROF_PH3ElementBallJointDesc \
 protected:\
+	Spr::PH3ElementBallJointDesc::deformationType	type;	\
 	double	secondDamper;	\
 	double	yieldStress;	\
 	double	hardnessRate;	\
@@ -441,6 +442,7 @@ protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHBallJoint::SetDesc((PHBallJointDesc*)(PH3ElementBallJointDesc*)ptr);	\
+		type = ((PH3ElementBallJointDesc*)ptr)->type;	\
 		secondDamper = ((PH3ElementBallJointDesc*)ptr)->secondDamper;	\
 		yieldStress = ((PH3ElementBallJointDesc*)ptr)->yieldStress;	\
 		hardnessRate = ((PH3ElementBallJointDesc*)ptr)->hardnessRate;	\
@@ -451,6 +453,7 @@ public:\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHBallJoint::GetDesc((PHBallJointDesc*)(PH3ElementBallJointDesc*)ptr);	\
+		((PH3ElementBallJointDesc*)ptr)->type = type;	\
 		((PH3ElementBallJointDesc*)ptr)->secondDamper = secondDamper;	\
 		((PH3ElementBallJointDesc*)ptr)->yieldStress = yieldStress;	\
 		((PH3ElementBallJointDesc*)ptr)->hardnessRate = hardnessRate;	\

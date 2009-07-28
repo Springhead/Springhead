@@ -65,6 +65,9 @@ struct GRFrameIf: public GRVisualIf{
 	/** @brief 親ノードとの相対変換を設定 */
 	void SetTransform(const Affinef& af);
 
+	/** @brief メッシュを削除する */
+	void Clear();
+
 	void Print(std::ostream& os) const ;
 };
 ///	@brief GRFrame のDesc．座標系を指定する

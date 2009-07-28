@@ -49,6 +49,7 @@ public:
 	virtual Affinef GetWorldTransform(){ if (parent) return parent->GetWorldTransform() * transform; return transform; }
 	virtual Affinef GetTransform(){ return transform; }
 	virtual void SetTransform(const Affinef& af){ transform = af; }
+	virtual void Clear(){children.clear();}
 	void Print(std::ostream& os) const ;
 
 	// Keyframe Blending based on Radial Basis Function 

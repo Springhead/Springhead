@@ -172,6 +172,8 @@
 	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
 	Vec3d GetI(){	return	base::GetI();}	\
 	void SetI(const Vec3d i){	base::SetI(i);}	\
+	void SetType(int t){	base::SetType(t);}	\
+	int GetType(){	return	base::GetType();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\
 	void SetSpring(const Vec3d& spring){	base::SetSpring(spring);}	\

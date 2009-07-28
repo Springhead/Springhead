@@ -586,6 +586,7 @@ struct PHBallJointDesc : public PHJointDesc{
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };
 
+struct PH3ElementBallJointDesc;
 // ３要素モデルのボールジョイントのインタフェース
 struct PH3ElementBallJointIf : public PHBallJointIf{
 	
@@ -625,12 +626,17 @@ struct PH3ElementBallJointIf : public PHBallJointIf{
 		@param input 断面2次モーメントVec3d(x,y,z)
 	 */
 	void	SetI(const Vec3d i);
+
+	void	SetType(int t);	
+	int		GetType();											
 };
 
 // ３要素モデルのボールジョイントのディスクリプタ
 struct PH3ElementBallJointDesc : public PHBallJointDesc{
 	SPR_DESCDEF(PH3ElementBallJoint);
 
+	enum	deformationType{Elastic,Plastic,Mix};
+	deformationType type;
 	double secondDamper;		// 二個目のダンパ係数
 	double yieldStress;			// 降伏応力
 	double hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
@@ -694,7 +700,7 @@ struct PHSpringDesc : public PHJointDesc{
 	PHSpringDesc();
 };
 
-
+struct PH3ElementBallJointDesc;
 // 3要素モデルのインタフェース
 struct PH3ElementIf : public PHSpringIf{
 	
