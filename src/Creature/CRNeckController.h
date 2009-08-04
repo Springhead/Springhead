@@ -28,10 +28,13 @@ private:
 	float attractiveness;
 
 	/// 制御に使うIK付きクリーチャ剛体
-	CRIKSolidIf *cso, *csHead, *csChest;
+	CRIKSolidIf *csHead;
 
-	/// 基準方向（ここを中心に割合移動する，attractivenessが一定値を超えるとその方向へ変更される）
-	double origX, origZ;
+	/// 基準方向（タイマー開始時の頭の方向）
+	Quaterniond orig;
+
+	/// タイマー
+	double t;
 
 public:
 	SPR_OBJECTDEF(CRNeckController);

@@ -22,11 +22,8 @@ void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 }
 
 void CRNeckController::Init(){
-	origX = 0.0;
-	origZ = 0.0;
-
+	orig = Quaterniond();
 	csHead  = NULL;
-	csChest = NULL;
 }
 
 void CRNeckController::Step(){
@@ -47,6 +44,34 @@ void CRNeckController::Step(){
 			}
 			Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
 			cpHead->SetGoal(qt*soHead->GetPose().Ori());
+			/*
+			if (t > 0) {
+				double ratio = 1 - (10*pow(t,3) - 15*pow(t,4) + 6*pow(t,5));
+				// ratio = 0.1;
+				if (ratio > 0) {
+					rot = rot * ratio;
+					Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
+					// cpHead->SetGoal(qt*soHead->GetPose().Ori());
+					cpHead->SetGoal(qt * orig);
+					std::cout << "r = " << ratio << std::endl;
+				} else {
+					std::cout << "r = " << ratio << std::endl;
+					// cpHead->SetGoal(soHead->GetPose().Ori());
+					cpHead->SetGoal(orig);
+				}
+				t -= 0.005;
+			} else {
+				if (rot.norm() < Rad(5)) {
+					// std::cout << Deg(rot.norm()) << std::endl;
+					Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
+					cpHead->SetGoal(qt*soHead->GetPose().Ori());
+				} else {
+					// std::cout << Deg(rot.norm()) << std::endl;
+					t = 1.0;
+					orig = soHead->GetPose().Ori();
+				}
+			}
+			*/
 			cpHead->Enable(true);
 		}
 	} else {
@@ -58,7 +83,6 @@ void CRNeckController::Step(){
 			CRIKSolidIf* cso = body->GetChildObject(i)->Cast();
 			if (cso) {
 				if (std::string("Head")  == cso->GetLabel()) { csHead  = cso; }
-				if (std::string("Chest") == cso->GetLabel()) { csChest = cso; }
 			}
 		}
 	}
