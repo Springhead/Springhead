@@ -17,7 +17,10 @@ GRSphere::GRSphere(const GRSphereDesc& desc):GRSphereDesc(desc){
 	material = NULL;
 }
 GRSphere::~GRSphere(){
-	if (list) render->ReleaseList(list);		// ディスプレイリストの破棄
+	// これがプログラム終了時に呼ばれる時にはrenderが消滅しているのでここで落ちる。
+	// あとでちゃんと対策を取ること。 
+	// (mitake, 09/08/04)
+	// if (list) render->ReleaseList(list);		// ディスプレイリストの破棄
 }
 void GRSphere::CreateList(GRRenderIf* r){
 	if (list) render->ReleaseList(list);

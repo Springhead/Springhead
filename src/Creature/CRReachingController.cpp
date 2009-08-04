@@ -90,54 +90,56 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 	cSolid->GetIKControlPoint(0)->Enable(true);
 	bActive = true;
 
-	//typedef std::pair<PHBallJointIf*,Quaterniond> BallJointGoal;
-	//typedef std::vector<BallJointGoal> BallJointGoals;
-	//BallJointGoals ballGoals;
+	/*
+	typedef std::pair<PHBallJointIf*,Quaterniond> BallJointGoal;
+	typedef std::vector<BallJointGoal> BallJointGoals;
+	BallJointGoals ballGoals;
 
-	//typedef std::pair<PHHingeJointIf*,double> HingeJointGoal;
-	//typedef std::vector<HingeJointGoal> HingeJointGoals;
-	//HingeJointGoals hingeGoals;
+	typedef std::pair<PHHingeJointIf*,double> HingeJointGoal;
+	typedef std::vector<HingeJointGoal> HingeJointGoals;
+	HingeJointGoals hingeGoals;
 
 	//// ÅIˆÊ’u‚É‚¨‚¯‚éŠÖßŠp“x‚ð‹‚ß‚é
-	//DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->SetGoal(pos);
-	//CRCreatureIf* creature = DCAST(CRCreatureIf,DCAST(SceneObject,this)->GetScene());
-	//PHSceneIf* phScene = creature->GetPHScene();
-	//state->SaveState(phScene);
-	//double dt = phScene->GetTimeStep();
-	//for (int i=0; i<100; ++i) {
-	//	phScene->Step();
-	//}
-	//CRBodyIf* body = creature->GetBody(0);
-	//for (size_t i=0; i<body->NJoints(); ++i) {
-	//	PHBallJointIf* bj = body->GetJoint(i)->GetPHJoint()->Cast();
-	//	if (bj) {
-	//		BallJointGoal bjg;
-	//		bjg.first  = bj;
-	//		bjg.second = bj->GetGoal();
-	//		ballGoals.push_back(bjg);
-	//	}
+	DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->SetGoal(pos);
+	CRCreatureIf* creature = DCAST(CRCreatureIf,DCAST(SceneObject,this)->GetScene());
+	PHSceneIf* phScene = creature->GetPHScene();
+	state->SaveState(phScene);
+	double dt = phScene->GetTimeStep();
+	for (int i=0; i<100; ++i) {
+		phScene->Step();
+	}
+	CRBodyIf* body = creature->GetBody(0);
+	for (size_t i=0; i<body->NJoints(); ++i) {
+		PHBallJointIf* bj = body->GetJoint(i)->GetPHJoint()->Cast();
+		if (bj) {
+			BallJointGoal bjg;
+			bjg.first  = bj;
+			bjg.second = bj->GetGoal();
+:			ballGoals.push_back(bjg);
+		}
 
-	//	PHHingeJointIf* hj = body->GetJoint(i)->GetPHJoint()->Cast();
-	//	if (hj) {
-	//		HingeJointGoal hjg;
-	//		hjg.first  = hj;
-	//		hjg.second = hj->GetSpringOrigin();
-	//		hingeGoals.push_back(hjg);
-	//	}
-	//}
-	//state->LoadState(phScene);
-	//cSolid->GetIKControlPoint(0)->Enable(false);
+		PHHingeJointIf* hj = body->GetJoint(i)->GetPHJoint()->Cast();
+		if (hj) {
+			HingeJointGoal hjg;
+			hjg.first  = hj;
+			hjg.second = hj->GetSpringOrigin();
+			hingeGoals.push_back(hjg);
+		}
+	}
+	state->LoadState(phScene);
+	cSolid->GetIKControlPoint(0)->Enable(false);
 
-	//std::cout << " --- " << std::endl;
-	//for (size_t i=0; i<ballGoals.size(); ++i) {
-	//	(ballGoals[i].first)->SetGoal(ballGoals[i].second);
-	//	std::cout << "Ball  : " << ballGoals[i].second << std::endl;
-	//}
-	//for (size_t i=0; i<hingeGoals.size(); ++i) {
-	//	(hingeGoals[i].first)->SetSpringOrigin(hingeGoals[i].second);
-	//	std::cout << "Hinge : " << hingeGoals[i].second << std::endl;
-	//}
-	//std::cout << " --- " << std::endl;
+	std::cout << " --- " << std::endl;
+	for (size_t i=0; i<ballGoals.size(); ++i) {
+		(ballGoals[i].first)->SetGoal(ballGoals[i].second);
+		std::cout << "Ball  : " << ballGoals[i].second << std::endl;
+	}
+	for (size_t i=0; i<hingeGoals.size(); ++i) {
+		(hingeGoals[i].first)->SetSpringOrigin(hingeGoals[i].second);
+		std::cout << "Hinge : " << hingeGoals[i].second << std::endl;
+	}
+	std::cout << " --- " << std::endl;
+	*/
 }
 
 void CRReachingController::Stop(){
