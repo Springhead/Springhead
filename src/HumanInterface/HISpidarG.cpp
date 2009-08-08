@@ -154,6 +154,7 @@ bool HISpidarG::Calibration(){
 	return true;
 }
 void HISpidarG::Update(float dt){
+	if (!bGood) return;
 	HIForceInterface6D::Update(dt);
 	HISpidarCalc6Dof::Update();
 	for(unsigned int i=0; i<motors.size(); ++i){
