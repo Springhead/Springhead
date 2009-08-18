@@ -655,21 +655,6 @@ void BuildScene(){	// ギター、ギタリストモデル
 	spd.posePlug.Pos() = Vec3d(0.0, 0.03*S, -0.018*S);
 	jntLink.push_back(scene->CreateJoint(soBox[30], soBox[29], spd));
   
-
-  
-	
-	
-	
-	
-	// 重力を設定
-	scene->SetGravity(Vec3f(0, -9.8, 0));
-	//	接触を切る
-	scene->SetContactMode(&soTarget[0], PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(&soTarget[1], PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(&soTarget[2], PHSceneDesc::MODE_NONE);
-    scene->SetContactMode(&soTarget[3], PHSceneDesc::MODE_NONE); 
-	scene->SetContactMode(&soTarget[4], PHSceneDesc::MODE_NONE);
-	
 	
 	
 	
@@ -750,6 +735,20 @@ void BuildScene(){	// ギター、ギタリストモデル
 	soBox.back()->SetFramePosition(Vec3f(-s, -9*s/120, -s/90));
 	soBox.back()->AddShape(meshBlock3);
 	soBox.back()->SetDynamical(false);
+
+	
+	// 重力を設定
+	scene->SetGravity(Vec3f(0, -9.8, 0));
+	//	接触を切る
+	scene->SetContactMode(PHSceneDesc::MODE_NONE);
+/*
+	scene->SetContactMode(&soTarget[0], PHSceneDesc::MODE_NONE);
+	scene->SetContactMode(&soTarget[1], PHSceneDesc::MODE_NONE);
+	scene->SetContactMode(&soTarget[2], PHSceneDesc::MODE_NONE);
+    scene->SetContactMode(&soTarget[3], PHSceneDesc::MODE_NONE); 
+	scene->SetContactMode(&soTarget[4], PHSceneDesc::MODE_NONE);
+*/	
+	
 
 }
 
