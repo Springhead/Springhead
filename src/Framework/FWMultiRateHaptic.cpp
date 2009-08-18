@@ -26,9 +26,10 @@ void FWMultiRateHaptic::Sync(){
 
 		/// HapticLoop--->PhysicsLoop ///
 		for(unsigned i = 0; i < (int)hiSolids->size(); i++){
+			piSolid = GetInteractSolid(i);
 			hiSolid = GetHapticLoop()->GetInteractSolid(i);
 			/// bSim = ture かつ bfirstSim = falseなら結果を反映させる
-			if(!hiSolid->bSim) continue;
+			if(!hiSolid->bSim || hiSolid->bfirstSim) continue;
 			double pdt = GetInteractScene()->GetScene()->GetPHScene()->GetTimeStep();			// physicsの刻み
 		
 			/// 各ポインタが持つ情報を取得
@@ -41,11 +42,8 @@ void FWMultiRateHaptic::Sync(){
 			}
 			/// 結果の反映
 			SpatialVector b;
-			if(hiSolid->bfirstSim){
-				b += (hiSolid->b + 
-						(hiSolid->curb - hiSolid->lastb)) * pdt;	// モビリティ定数項
-				DSTR << "おふ" << std::endl;
-			}
+			b += (piSolid->b + 
+					(piSolid->curb - piSolid->lastb)) * pdt;	// モビリティ定数項
 			Vec3d v = hiSolid->copiedSolid.GetVelocity() + b.v();					// 反映速度
 			Vec3d w = hiSolid->copiedSolid.GetAngularVelocity() + b.w();			// 反映角速度
 			hiSolid->sceneSolid->SetVelocity(v);

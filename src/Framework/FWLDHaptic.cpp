@@ -136,7 +136,6 @@ void FWLDHapticLoop::LocalDynamics(){
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			if(!iInfo->flag.blocal) continue;
 			vel += (iInfo->mobility.A * iInfo->mobility.force) * hdt;			// 力覚ポインタからの力による速度変化
-
 			iInfo->mobility.force = Vec3d();
 		}
 		vel += iSolid->b * hdt;
