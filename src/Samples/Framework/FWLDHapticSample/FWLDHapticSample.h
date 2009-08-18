@@ -17,10 +17,11 @@ public:
 	static void CallBackHapticLoop(void* arg);	
 	void Display();									
 	void BuildScene();																	
-	void Reset();										
+	void Reset();			
 	void Keyboard(int key, int x, int y);		
 	bool bDrawInfo;									
-
+	void DisplayContactPlane();
+	void DisplayLineToNearestPoint();
 }; 
 
 #endif
