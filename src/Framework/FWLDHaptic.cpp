@@ -117,8 +117,8 @@ void FWLDHapticLoop::HapticRendering(){
 		if(bDisplayforce) fInterface->SetForce(displayforce, displaytorque);
 		#else
 	//	if(bDisplayforce) 
-			hif->SetForce(Vec3f(), Vec3f());			// 発振が怖いのでとりあえず出力なしで，あとでフラグをつくります
-	//		hif->SetForce(outForce.v(), Vec3d());					
+//			hif->SetForce(Vec3f(), Vec3f());			// 発振が怖いのでとりあえず出力なしで，あとでフラグをつくります
+			hif->SetForce(outForce.v(), Vec3d());					
 		#endif
 	}
 }
@@ -135,9 +135,7 @@ void FWLDHapticLoop::LocalDynamics(){
 			FWInteractPointer* iPointer = GetInteractPointer(j);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			vel += (iInfo->mobility.A * iInfo->mobility.force) * hdt;			// 力覚ポインタからの力による速度変化
-//			vel.v() += iInfo->mobility.force * hdt;			// 力覚ポインタからの力による速度変化
 
-			DSTR << (iInfo->mobility.A * iInfo->mobility.force).norm() << std::endl;
 			iInfo->mobility.force = Vec3d();
 		}
 		vel += iSolid->b * hdt;
@@ -265,7 +263,7 @@ void FWLDHaptic::TestSimulation(){
 		nextvel.v() = phSolid->GetVelocity();
 		nextvel.w() = phSolid->GetAngularVelocity();
 		/// モビリティbの算出
-		iSolid->lastb = iSolid->lastb;
+		iSolid->lastb = iSolid->b;
 		double pdt = phScene->GetTimeStep();
 		iSolid->b = (nextvel - curvel) / pdt;
 		states->LoadState(phScene);						// 現在の状態に戻す

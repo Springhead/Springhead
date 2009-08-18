@@ -144,7 +144,7 @@ void FWLDHapticSample::BuildScene(){
 	// ” (•¨—–@‘¥‚É]‚¤C‰^“®‚ª•Ï‰»)
 	{
 		// „‘Ì(soBox)‚Ìì¬
-		desc.mass = 0.5;
+		desc.mass = 0.05;
 		desc.inertia *= 0.033;
 		PHSolidIf* soBox = phscene->CreateSolid(desc);
 		// Œ`ó(shapeBox)‚Ìì¬
