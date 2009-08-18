@@ -4,6 +4,7 @@
 #include <sstream>
 #include <GL/glut.h>
 #include "Foundation/UTMMTimer.h"
+#include <Framework/FWInteractScene.h>
 
 #define ESC 27
 
@@ -108,6 +109,10 @@ void FWLDHapticSample::Display(){
 	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
 	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
 	GetSdk()->Draw();
+
+	DisplayContactPlane();
+	DisplayLineToNearestPoint();
+
 	glutSwapBuffers();
 }
 
@@ -167,6 +172,143 @@ void FWLDHapticSample::BuildScene(){
 		idesc.posScale = 300;
 		idesc.localRange = 0.7;
 		GetInteractScene()->CreateInteractPointer(idesc);
+	}
+}
+
+void FWLDHapticSample::DisplayContactPlane(){
+	FWInteractScene* iScene = GetInteractScene()->Cast();
+	int N = iScene->GetInteractAdaptee()->NInteractSolids();
+	FWInteractSolid* iSolid;
+	for(unsigned int i = 0; i <  N; i++){
+		iSolid = iScene->GetInteractAdaptee()->GetInteractSolid(i);
+		if(!iSolid->bSim) continue;
+		for(int j = 0; j < GetInteractScene()->NInteractPointers(); j++){
+			FWInteractPointer* iPointer = GetInteractScene()->GetInteractPointer(j)->Cast();
+			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
+			Vec3d pPoint = iPointer->pointerSolid->GetPose() * iInfo->neighborInfo.pointer_point;
+			Vec3d cPoint = iSolid->sceneSolid->GetPose() * iInfo->neighborInfo.closest_point;
+			Vec3d normal = iInfo->neighborInfo.face_normal;
+			Vec3d v1(0,1,0);
+
+			v1 +=  Vec3d(0, 0, 0.5) - Vec3d(0, 0, 0.5)*normal*normal;
+			v1 -= v1*normal * normal;
+			v1.unitize();
+			Vec3d v2 = normal ^ v1;
+
+			Vec4f moon(1.0, 1.0, 0.8, 0.3);
+			GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
+			render->SetMaterial( GRMaterialDesc(moon) );
+			render->PushModelMatrix();
+			Vec3d offset = 0.02 * normal;
+			render->SetLighting( false );
+			render->SetAlphaTest(true);
+			render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
+			cPoint += offset/2;
+			glBegin(GL_QUADS);
+				// ÚG–Ê’ê–Ê	
+				glVertex3d(cPoint[0] + v1[0] + v2[0], cPoint[1] + v1[1] + v2[1], cPoint[2] + v1[2] + v2[2]);
+				glVertex3d(cPoint[0] - v1[0] + v2[0], cPoint[1] - v1[1] + v2[1], cPoint[2] - v1[2] + v2[2]);
+				glVertex3d(cPoint[0] - v1[0] - v2[0], cPoint[1] - v1[1] - v2[1], cPoint[2] - v1[2] - v2[2]);
+				glVertex3d(cPoint[0] + v1[0] - v2[0], cPoint[1] + v1[1] - v2[1], cPoint[2] + v1[2] - v2[2]);
+				// ‘¤–Ê1
+				glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
+								cPoint[1] + v1[1] + v2[1] + offset[1], 
+								cPoint[2] + v1[2] + v2[2] + offset[2]);
+				glVertex3d(cPoint[0] + v1[0] + v2[0], 
+								cPoint[1] + v1[1] + v2[1], 
+								cPoint[2] + v1[2] + v2[2]);
+				glVertex3d(cPoint[0] - v1[0] + v2[0], 
+								cPoint[1] - v1[1] + v2[1], 
+								cPoint[2] - v1[2] + v2[2]);
+				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
+								cPoint[1] - v1[1] + v2[1] + offset[1], 
+								cPoint[2] - v1[2] + v2[2] + offset[2]);
+				// ‘¤–Ê2
+				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
+								cPoint[1] - v1[1] + v2[1] + offset[1], 
+								cPoint[2] - v1[2] + v2[2] + offset[2]);
+				glVertex3d(cPoint[0] - v1[0] + v2[0], 
+								cPoint[1] - v1[1] + v2[1], 
+								cPoint[2] - v1[2] + v2[2]);
+				glVertex3d(cPoint[0] - v1[0] - v2[0], 
+								cPoint[1] - v1[1] - v2[1], 
+								cPoint[2] - v1[2] - v2[2]);
+				glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
+								cPoint[1] - v1[1] - v2[1] + offset[1], 
+								cPoint[2] - v1[2] - v2[2] + offset[2]);
+				// ‘¤–Ê3
+				glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
+								cPoint[1] - v1[1] - v2[1] + offset[1], 
+								cPoint[2] - v1[2] - v2[2] + offset[2]);
+				glVertex3d(cPoint[0] - v1[0] - v2[0], 
+								cPoint[1] - v1[1] - v2[1], 
+								cPoint[2] - v1[2] - v2[2]);
+				glVertex3d(cPoint[0] + v1[0] - v2[0], 
+								cPoint[1] + v1[1] - v2[1], 
+								cPoint[2] + v1[2] - v2[2]);
+				glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
+								cPoint[1] + v1[1] - v2[1] + offset[1], 
+								cPoint[2] + v1[2] - v2[2] + offset[2]);
+				// ‘¤–Ê4
+				glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
+								cPoint[1] + v1[1] - v2[1] + offset[1], 
+								cPoint[2] + v1[2] - v2[2] + offset[2]);
+				glVertex3d(cPoint[0] + v1[0] - v2[0], 
+								cPoint[1] + v1[1] - v2[1], 
+								cPoint[2] + v1[2] - v2[2]);
+				glVertex3d(cPoint[0] + v1[0] + v2[0], 
+								cPoint[1] + v1[1] + v2[1],
+								cPoint[2] + v1[2] + v2[2]);
+				glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
+								cPoint[1] + v1[1] + v2[1] + offset[1], 
+								cPoint[2] + v1[2] + v2[2] + offset[2]);
+				// ÚG–Êã–Ê
+				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
+								cPoint[1] - v1[1] + v2[1] + offset[1], 
+								cPoint[2] - v1[2] + v2[2] + offset[2]);
+				glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
+								cPoint[1] + v1[1] + v2[1] + offset[1], 
+								cPoint[2] + v1[2] + v2[2] + offset[2]);
+				glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
+								cPoint[1] + v1[1] - v2[1] + offset[1], 
+								cPoint[2] + v1[2] - v2[2] + offset[2]);
+				glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
+								cPoint[1] - v1[1] - v2[1] + offset[1], 
+								cPoint[2] - v1[2] - v2[2] + offset[2]);
+			glEnd();
+			render->SetLighting( true);
+			render->SetAlphaTest(false);
+			render->PopModelMatrix();
+			glEnable(GL_DEPTH_TEST);
+		}
+	}
+}
+
+void FWLDHapticSample::DisplayLineToNearestPoint(){
+	FWInteractScene* iScene = GetInteractScene()->Cast();
+	int N = iScene->GetInteractAdaptee()->NInteractSolids();
+	FWInteractSolid* iSolid;
+	GLfloat moon[]={0.8,0.8,0.8};
+	for(unsigned int i = 0; i <  N; i++){
+		iSolid = iScene->GetInteractAdaptee()->GetInteractSolid(i);
+		if(!iSolid->bSim) continue;
+		for(int j = 0; j < iScene->NInteractPointers(); j++){
+			FWInteractPointer* iPointer = iScene->GetInteractPointer(j)->Cast();
+			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
+			Vec3d pPoint = iPointer->pointerSolid->GetPose() * iInfo->neighborInfo.pointer_point;
+			Vec3d cPoint = iSolid->sceneSolid->GetPose() * iInfo->neighborInfo.closest_point;
+			Vec3d normal = iInfo->neighborInfo.face_normal;
+			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, moon);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, moon);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, moon);
+			glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, moon);
+			glDisable(GL_DEPTH_TEST);
+			glBegin(GL_LINES);
+			glVertex3f(pPoint.X() + normal[0], pPoint.Y() + normal[1], pPoint.Z() + normal[2]);
+			glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
+			glEnd();
+			glEnable(GL_DEPTH_TEST);
+		}
 	}
 }
 
