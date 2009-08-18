@@ -19,7 +19,7 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	CreateSdk();
 	GetSdk()->Clear();										// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.01);
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);
 
 	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
 	windowDesc.title = "FWLDHapticSample";					// ウィンドウのタイトル
@@ -38,6 +38,7 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 
 	UTMMTimer* mtimer = CreateMMTimerFunc();
 	mtimer->Resolution(1);
+	mtimer->Interval(1);
 	mtimer->Set(CallBackHapticLoop, NULL);
 	mtimer->Create();
 }
