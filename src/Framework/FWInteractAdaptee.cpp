@@ -39,7 +39,6 @@ void FWInteractAdaptee::UpdateSolidList(){
 	for(int i = (int)GetInteractSolids()->size(); i < phScene->NSolids(); i++){
 		GetInteractSolids()->resize(i + 1);
 		GetInteractSolids()->back().sceneSolid = solids[i]->Cast();
-		DSTR << GetInteractSolids()->size() << std::endl;
 		for(int j = 0; j < (int)iPointers->size(); j++){
 			FWInteractPointer* ip = iPointers->at(j)->Cast();
 			FWInteractInfo info;
@@ -131,7 +130,6 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				/// ‚³‚ç‚Ébfirstlocal‚Å‚ ‚ê‚ÎfCount++
 				if(iInfo->flag.bfirstlocal){
 					fCount++;
-					DSTR << fCount << std::endl;
 				}
 			}else{
 				/// ‹ß–T•¨‘Ì‚Å‚È‚¢‚Ì‚Åfalse‚É‚·‚é

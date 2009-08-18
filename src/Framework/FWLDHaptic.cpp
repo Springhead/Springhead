@@ -134,6 +134,7 @@ void FWLDHapticLoop::LocalDynamics(){
 		for(int j = 0; j < NInteractPointers(); j++){
 			FWInteractPointer* iPointer = GetInteractPointer(j);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
+			if(!iInfo->flag.blocal) continue;
 			vel += (iInfo->mobility.A * iInfo->mobility.force) * hdt;			// 力覚ポインタからの力による速度変化
 
 			iInfo->mobility.force = Vec3d();
@@ -350,7 +351,7 @@ void FWLDHaptic::TestSimulation(){
 			u.col(2) = (nextvel - curvel) /pdt - iSolid->b;
 			
 			iInfo->mobility.A = u  * force.inv();			// モビリティAの計算
-			states->LoadState(phScene);								// 元のstateに戻しシミュレーションを進める
+			states->LoadState(phScene);						// 元のstateに戻しシミュレーションを進める
 		}
 	}
 	///--------テストシミュレーション終了--------
@@ -358,3 +359,4 @@ void FWLDHaptic::TestSimulation(){
 		states2->LoadState(phScene);							// 元のstateに戻しシミュレーションを進める
 	#endif
 }
+
