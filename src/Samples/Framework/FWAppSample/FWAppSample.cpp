@@ -6,24 +6,50 @@
 
 #define ESC 27
 
+using namespace std;
 FWAppSample::FWAppSample(){
 	bDrawInfo = false;
 }
 
 void FWAppSample::Init(int argc, char* argv[]){
-	FWAppGLUT::Init(argc, argv);										// Sdkの作成
-	GetSdk()->Clear();														// SDKの初期化
+	SetGRAdaptee(TypeGLUT);
+	GetGRAdaptee()->Init(argc, argv);						// Sdkの作成
+	CreateSdk();
+	GetSdk()->Clear();										// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.01);
 
-	FWWinDesc windowDesc;												// GLのウィンドウディスクリプタ
-	windowDesc.title = "FWAppSample";								// ウィンドウのタイトル
-	CreateWin(windowDesc);												// ウィンドウの作成
-	InitCameraView();														// カメラビューの初期化
+	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
+	windowDesc.title = "Springhead2";						// ウィンドウのタイトル
+	CreateWin(windowDesc);									// ウィンドウの作成
+	InitWindow();
+	InitCameraView();										// カメラビューの初期化
 
-	BuildObject();																// 剛体を作成
+	BuildObject();											// 剛体を作成
 }
 
+void FWAppSample::Timer(){
+	GTimer* timer0 = CreateTimerFunc();			// タイマーの生成
+	GetTimerFunc(0)->Set(TimerFunc);			// 呼びだす関数
+	GetTimerFunc(0)->Create(GetGRAdaptee());	// GLUT型でタイマーを作成
+}
+void FWAppSample::TimerFunc(int id){
+	((FWAppSample*)instance)->GetTimerFunc(0)->Loop();
+	//---------------------------------------------
+	//int timeSteps=1;
+	//timeSteps = (int)(FWAppSample::instance->GetSdk()->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
+	//if (timeSteps<1) timeSteps = 1;
+	//glutTimerFunc(timeSteps, TimerFunc, 0);
+	//---------------------------------------------
+	((FWAppSample*)instance)->CallStep();
+	((FWAppSample*)instance)->GetGRAdaptee()->PostRedisplay();
+}
+void FWAppSample::IdleFunc(){
+}
+void FWAppSample::CallStep(){
+	if(!vfBridge || !vfBridge->Step())
+		Step();
+}
 void FWAppSample::InitCameraView(){
 	//	Affinef 型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
 	std::istringstream issView(
@@ -73,7 +99,6 @@ void FWAppSample::BuildObject(){
 
 void FWAppSample::Step(){
 	GetSdk()->Step();
-	glutPostRedisplay();
 }
 
 void FWAppSample::Display(){
@@ -110,7 +135,7 @@ void FWAppSample::Keyboard(int key, int x, int y){
 	switch (key) {
 		case ESC:
 		case 'q':
-			exit(0);
+			Exit();
 			break;
 		case 'r':
 			Reset();
