@@ -12,9 +12,9 @@
  - \ref pageFramework ‚Æ \ref pagePhysics ‚Ì‚Ý‚ðŽg—p
 */
 
-FWAppSample app;
+FWXfileLoader app;
 int _cdecl main(int argc, char* argv[]){
 	app.Init(argc, argv);
-	app.Start();
+	app.TimerStart();
 	return 0;
 }

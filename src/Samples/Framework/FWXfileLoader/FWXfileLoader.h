@@ -1,22 +1,24 @@
-#ifndef FWAPPSAMPLE_H								// ヘッダファイルを作る時のおまじない
-#define FWAPPSAMPLE_H								// 同上
+#ifndef FWXFILE_LOADER_H							// ヘッダファイルを作る時のおまじない
+#define FWXFILE_LOADER_H							// 同上
 
 #include <Springhead.h>								// SpringheadのIf型を使うためのヘッダファイル
-#include <Framework/SprFWAppGLUT.h>					// Frameworkクラスが宣言されているヘッダファイル
+#include <Framework/SprFWApp.h>						// Frameworkクラスが宣言されているヘッダファイル
 
 using namespace Spr;								// Springheadの名前空間
 
-class FWAppSample : public FWAppGLUT, public UTRefCount{
+class FWXfileLoader : public FWApp{
 public:
-	FWAppSample();									// コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
-	void Init(int argc, char* argv[]);				// GLUTの初期化
-	void InitCameraView();							// カメラ座標				
-	void BuildObject();								// 物体を作成
-	void Step();									// シミュレーションを1ステップ進める
-	void Display();									// 描画
-	void Keyboard(int key, int x, int y);			// キーボード関数
-	bool bDrawInfo;									// 接触力などを表示するか
-	bool bDebug;									// デバックモードの切り替え
+	std::string fileName;
+	bool bDebug;									///< デバックモードの切り替え
+	FWXfileLoader();								///< コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
+	virtual void Init(int argc, char* argv[]);		///< GLUTの初期化
+	virtual void Reset();
+	virtual void Timer();
+	virtual void IdleFunc();
+	virtual void Step();							///< シミュレーションを1ステップ進める
+	virtual void Display();							///< 描画
+	virtual void InitCameraView();					///< カメラ座標				
+	virtual void Keyboard(int key, int x, int y);	///< キーボード関数
 }; 
 
 #endif

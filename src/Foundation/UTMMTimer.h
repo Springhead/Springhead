@@ -11,11 +11,12 @@ namespace Spr {
 /**	マルチメディアタイマー.
 	タイマー動作中にデバッガを使うとOSが落ちるので，デバッグ用に
 	スレッドによる擬似動作モードを用意してある．	*/
+typedef void MMTimerFunc(void* arg);
 class SPR_DLL UTMMTimer{
 	static int count;
 	int tick;
 public:
-	typedef void MMTimerFunc(void* arg);
+	//typedef void MMTimerFunc(void* arg);
 
 protected:
 	static unsigned resolution;		///<	タイマーの時間精度

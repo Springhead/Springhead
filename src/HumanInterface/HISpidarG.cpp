@@ -98,7 +98,9 @@ void HISpidarGDesc::Init(char* type){
 HISpidarG::HISpidarG():bGood(false){
 	SetWeight();
 }
-HISpidarG::~HISpidarG(){SetMinForce();}
+HISpidarG::~HISpidarG(){
+	SetMinForce();
+}
 bool HISpidarG::Init(const void* pDesc){
 	HISdkIf* sdk = GetSdk();
 	HISpidarGDesc& desc = *(HISpidarGDesc*)pDesc;
