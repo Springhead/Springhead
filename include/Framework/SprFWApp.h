@@ -8,245 +8,65 @@
 #ifndef SPR_FWAPP_H
 #define SPR_FWAPP_H
 
-#include <Framework/SprFWSdk.h>
-#include <Framework/SprFWScene.h>
+#include <Springhead.h>
+#include <Framework/Framework.h>
+#include <Framework/FWInteractAdaptee.h>
+#include <Framework/FWGraphicsAdaptee.h>
 #include <map>
+#include "Foundation/UTMMTimer.h"
+#include <vector>
+
 
 namespace Spr{;
-
-/** Rubyのプログラム上でFWAppを継承していくつかの関数をオーバライドする際に，
-　　フレームワークがうまくオーバライドされた関数を認識し実行するためのメカニズム
- */
-class FWVFuncBridge : public UTRefCount{
-public:
-	virtual void Link(void* pObj) = 0;
-	virtual bool Display() = 0;
-	virtual bool Reshape(int w, int h) = 0;
-	virtual bool Keyboard(int key, int x, int y) = 0;
-	virtual bool MouseButton(int button, int state, int x, int y) = 0;
-	virtual bool MouseMove(int x, int y) = 0;
-	virtual bool Step() = 0;
-	virtual bool Idle() = 0;
-	virtual bool Joystick(unsigned int buttonMask, int x, int y, int z) = 0;
-	virtual void AtExit() = 0;
-	virtual ~FWVFuncBridge(){}
-};
-
-//	hase	TypeDescができないようにクラスにしてある。TypeDesc側での対応が望ましい。
-class FWWinDesc{
-public:
-	int width;			///<	幅
-	int height;			///<	高さ
-	int left;			///<	左端の座標
-	int top;			///<	上端の座標
-	int parentWindow;	///<	子ウィンドウを作る場合は、親のID、そうでなければ0
-	UTString title;		///<	ウィンドウのタイトル文字列(トップレベルウィンドウのみ)
-	bool fullscreen;	///<	フルスクリーンにするかどうか
-
-	FWWinDesc(int w=640, int h=480, int l=-1, int t=-1, int p=0, bool f=false):
-		width(w), height(h), left(l), top(t), parentWindow(p), fullscreen(f){
-	}
-};
-
-/**	@brief ウィンドウ
-	window ID, scene, renderを持つ．
-	実装されるのはFWWinGlutなので，FWAppGlutでの使用が前提．
- */
-class FWWin : public UTRefCount, public FWWinDesc{
-protected:
-	int id;
-public:	// protectedでよいが互換性のため一時的に
-	UTRef<GRRenderIf>	render;
-	UTRef<FWSceneIf>	scene;
-
-	FWWin(int wid, const FWWinDesc& d, GRRenderIf* r):FWWinDesc(d), id(wid), render(r){}
-public:
-	virtual void Position(int left, int top){}
-	virtual void Reshape(int width, int height){}
-	virtual void SetTitle(UTString title){}
-	virtual UTString GetTitle(){ return UTString(); }
-	virtual void SetFullScreen(bool full = true){ fullscreen = full; }
-	virtual bool GetFullScreen(){ return fullscreen; }
-	virtual int  GetWidth(){ return width; }
-	virtual int  GetHeight(){ return height; }
-
-	int			GetID() const{ return id; }
-	void		SetID(int newID){id = newID;}
-	GRRenderIf*	GetRender(){ return render; }
-	void		SetRender(GRRenderIf* data){render = data;}
-	FWSceneIf*  GetScene(){ return scene; }
-	void		SetScene(FWSceneIf* s){ scene = s; }
-
-	virtual ~FWWin(){}
-};
-typedef FWWinDesc FWAppGLUTDesc;
 
 /** @brief アプリケーションクラス
 	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
 	FWAppおよびその派生クラスは例外であり，ユーザはFWAppあるいはその派生クラスを継承し，
 	仮想関数をオーバライドすることによって独自機能を実装する．
-
-	FWAppクラスはグラフィックスの初期化機能を持たないので，
-	通常は派生クラスであるFWAppGLやFWAppGLUTを使用する．
  */
-class FWApp{
+class FWApp : public UTRefCount{
+
+private:
+	UTRef<FWSdkIf>						fwSdk;
+	UTRef<HISdkIf>						hiSdk;	
+public:
+	virtual ~FWApp();
+	Wins								wins;		//ウィンドウ情報
+	UTRef<FWVFuncBridge>				vfBridge;
+
 protected:
-	/// マウス情報
-	struct MouseInfo{
-		TVec2<int> lastPos;			/// 前回のカーソル座標
-		bool left, middle, right;	/// ボタン押し下げ
-		bool shift, ctrl, alt;		/// コントロールキー状態
-		bool first;
-		MouseInfo():left(false), middle(false), right(false), first(false){}
-	} mouseInfo;
-	/// カメラ情報
-	/// 本来はscene毎に個別に保持すべき。要修正
-	struct CameraInfo{
-		Vec3f target;		/// 中心点
-		Vec2f rot;			/// 経度角，緯度角
-		float zoom;			/// 拡大率（対象からの距離）
-		Vec2f rotRangeX, rotRangeY;
-		Vec2f zoomRange;
-		Affinef view;
-		CameraInfo();
-		void UpdateView();
-	} cameraInfo;
-
-	/// 剛体ドラッグ機能.
-	struct DragInfo{
-		PHRayIf* ray;			/// カーソル下の剛体を特定するためのPHRay
-		PHSolidIf* cursor;		/// カーソル剛体
-		PHSpringIf* spring;
-		float	depth;
-		DragInfo():ray(NULL), cursor(NULL), spring(NULL), depth(0.0f){}
-	};
-	std::map<FWSceneIf*, DragInfo>	dragInfo;
-	
-	UTRef<FWSdkIf> fwSdk;
-	typedef std::vector< UTRef<FWWin> > Wins;
-	Wins wins;
-
-	void AssignScene(FWWin* win);
-	
-	void CallDisplay(){
-		if(!vfBridge || !vfBridge->Display())
-			Display();
-	}
-	void CallReshape(int w, int h){
-		if(!vfBridge || !vfBridge->Reshape(w, h))
-			Reshape(w, h);
-	}
-	void CallKeyboard(int key, int x, int y){
-		if(!vfBridge || !vfBridge->Keyboard(key, x, y))
-			Keyboard(key, x, y);
-	}
-	void CallMouseButton(int button, int state, int x, int y){
-		if(!vfBridge || !vfBridge->MouseButton(button, state, x, y))
-			MouseButton(button, state, x, y);
-	}
-	void CallMouseMove(int x, int y){
-		if(!vfBridge || !vfBridge->MouseMove(x, y))
-			MouseMove(x, y);
-	}
-	void CallStep(){
-		if(!vfBridge || !vfBridge->Step())
-			Step();
-	}
-	void CallIdle(){
-		if(!vfBridge || !vfBridge->Idle())
-			Idle();
-	}
-	void CallJoystick(unsigned int buttonMask, int x, int y, int z){
-		if(!vfBridge || !vfBridge->Joystick(buttonMask, x, y, z))
-			Joystick(buttonMask, x, y, z);
-	}
-
-	/** @brief Ctrl, Shift, Altの状態を返す
-		個々の派生クラスで実装される
-	 */
-	virtual int GetModifier(){ return 0; }
+	MouseInfo							mouseInfo;	//マウス情報
+	CameraInfo							cameraInfo;	//カメラ情報
+	std::map<FWSceneIf*, DragInfo>		dragInfo;	//剛体ドラッグ情報
 
 public:
-	// 以下の定数はGLUTに合わせてある
-	enum MouseButtonType{
-		LEFT_BUTTON = 0,
-		MIDDLE_BUTTON = 1,
-		RIGHT_BUTTON = 2,
-	};
-	enum MouseButtonState{
-		BUTTON_DOWN = 0,
-		BUTTON_UP = 1,
-	};
-	enum ModifierMask{
-		ACTIVE_SHIFT = 1,
-		ACTIVE_CTRL = 2,
-		ACTIVE_ALT = 4,
-	};
-
-	UTRef<FWVFuncBridge>	vfBridge;
-
-	/** @brief SDKを取得する
-	 */
-	FWSdkIf*	GetSdk(){ return fwSdk; }
+// 派生クラスで定義する必要がある仮想関数 -----------------------------
 
 	/** @brief 初期化
 		FWAppオブジェクトの初期化を行う．最初に必ず呼ぶ．
 	 */
-	virtual void Init(int argc = 0, char* argv[] = NULL);
-
-	/** @brief コマンドライン引数の処理
-		アプリケーションに渡されたコマンドライン引数を処理したい場合にオーバライドする
+	virtual void Init(int argc = 0, char* argv[] = NULL)=0;
+	/** @brief タイマー処理
+		繰り返し実行を行う．
 	 */
-	virtual void ProcessArguments(int argc, char* argv[]){}
-
-	/** @brief ウィンドウに対応するコンテキストを作る
-		@param desc	ディスクリプタ
-		ウィンドウを作成する．対応するレンダラは新しく作成され，
-		シーンはアクティブなシーンが関連つけられる．
-	 */
-	virtual FWWin* CreateWin(const FWWinDesc& desc){ return NULL; }
-	
-	/** @brief ウィンドウを削除する
-	 */
-	virtual void DestroyWin(FWWin* win){}
-
-	/** @brief ウィンドウの数
-	 */
-	virtual int NWin(){ return (int)wins.size(); }
-	
-	/**	@brief ウィンドウをIDから探す
-	 */
-	virtual FWWin* GetWinFromId(int wid);
- 	
-	/** @brief ウィンドウを取得する
-		indexで指定されたウィンドウを取得する．
-	 */
-	virtual FWWin* GetWin(int index);
-
-	/** @brief 現在のウィンドウを取得する
-	 */
-	virtual FWWin* GetCurrentWin(){ return NULL;}
-
-	/** @brief 現在のウィンドウを設定する
-	 */
-	virtual void SetCurrentWin(FWWin* win){}
-
-	/** @brief シミュレーションの実行
-		デフォルトではFWSdk::Stepが呼ばれる．
-	 */
-	virtual void Step();
-
-	/** @brief idle関数
-	 */
-	virtual void Idle(){}
-
+	virtual void Timer(){}
 	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．
 		描画処理をカスタマイズしたい場合にオーバライドする．
 		デフォルトではFWSdk::Drawが呼ばれる．
 	 */
-	virtual void Display();
+	virtual void Display()=0;
 
+// 派生クラスで定義することのできる仮想関数 -----------------------------
+
+	/** @brief アイドル処理
+		イベントが何もない場合にバックグラウンド処理を行う．
+	 */
+	virtual void IdleFunc(){};
+	/** @brief メインループの実行
+		glutの場合，glutIdleFunc,glutmainLoopの実行
+	 */
+	virtual void TimerStart();
 	/** @brief 描画領域のサイズ変更
 		@param w 描画領域の横幅
 		@param h 描画領域の縦幅
@@ -254,6 +74,9 @@ public:
 		デフォルトではFWSdk::Reshapeが呼ばれる．
 	 */
 	virtual void Reshape(int w, int h);
+	/** @brief 終了時の処理
+	 */
+	virtual void Exit();
 
 	/** @brief キーボードイベントのハンドラ
 	 */
@@ -273,12 +96,125 @@ public:
 	virtual void Joystick(unsigned int buttonMask, int x, int y, int z){}
 
 
+//　FWAppのインタフェース -----------------------------------------
+
+	/** @brief SDKを取得する
+	*/
+	FWSdkIf*	GetSdk(){ return fwSdk; }
+
+	/** @brief SDKを作成する
+	*/
+	void		CreateSdk();
+
+	/** @brief windowにシーンを与える
+	*/
+	void		AssignScene(FWWin* win);
+
+	/** @brief ウィンドウに対応するコンテキストを作る
+		@param desc	ディスクリプタ
+		ウィンドウを作成する．対応するレンダラは新しく作成され，
+		シーンはアクティブなシーンが関連つけられる．
+	 */
+	FWWin*		CreateWin(const FWWinDesc& desc);
+	
+	/** @brief ウィンドウの初期化
+	 */
+	void		InitWindow();
+
+	/** @brief ウィンドウの数 
+	*/
+	int			NWin(){ return (int)wins.size(); }
+
+	/**	@brief ウィンドウをIDから探す
+	*/
+	FWWin*		GetWinFromId(int wid);
+
+	/** @brief ウィンドウを取得する
+		indexで指定されたウィンドウを取得する．
+	 */
+	FWWin*		GetWin(int index);
+
+	/** @brief 現在のウィンドウを取得する
+	*/
+	FWWin*		GetCurrentWin();
+
+	/** @brief ウィンドウを削除する
+	 */
+	virtual void DestroyWin(FWWin* win);
+
+	/** @brief 現在のウィンドウを設定する
+	 */
+	virtual void SetCurrentWin(FWWin* win);
+
 	/** @brief カメラ情報を返す
 		@return camInfo
 	*/
-	virtual CameraInfo GetCameraInfo(){return cameraInfo;}
-	virtual ~FWApp();
+	CameraInfo	GetCameraInfo(){return cameraInfo;}
 
+	/** @brief Ctrl, Shift, Altの状態を返す
+		個々の派生クラスで実装される
+	 */
+
+	virtual int	GetModifier();
+
+// ------------------------------------------------------------------------
+	
+/** 描画パート */
+private:
+	UTRef<FWGraphicsAdaptee>	grAdaptee;	//グラフィクスシステムのアダプティ
+public:
+	FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;};
+
+	enum grAdapteeType{
+		TypeGLUT,
+		TypeGLUI,
+	};
+	void SetGRAdaptee(grAdapteeType type);
+
+/**コールバック関数*/
+public:
+	static FWApp* instance;
+	void CallDisplay();
+	void CallReshape(int w, int h);
+	void CallIdleFunc();
+	void CallKeyboard(int key, int x, int y);
+	void CallMouseButton(int button, int state, int x, int y);
+	void CallMouseMove(int x, int y);
+	void CallJoystick(unsigned int buttonMask, int x, int y, int z);
+
+/** FWInteraction */
+///////////////////////////////////////////////////////////////////////////////////
+public:
+protected:
+	FWInteractSceneIf*				curiScene;
+	FWInteractScenes				interactScenes;
+	UTRef<FWInteractAdaptee>		interactAdaptee;
+	typedef UTRef<HIBaseIf>			UTRef_HIBaseIf;		// vector宣言に直書きするとswigがerrorを吐く
+	std::vector<UTRef_HIBaseIf>		humanInterfaces;
+public:
+	void					CreateHISdk();
+	HISdkIf*				GetHISdk();
+	void					AddHI(HIBaseIf* hi);
+	HIBaseIf*				GetHI(int i);
+	FWInteractSceneIf*		CreateInteractScene(const FWInteractSceneDesc& desc);
+	FWInteractSceneIf*		GetInteractScene(int i = -1);
+	int						NInteractScene();
+///////////////////////////////////////////////////////////////////////////////////
+
+
+/**マルチメディアタイマ */
+protected:
+	vector<UTMMTimer*> mmtimer;				/// マルチメディアタイマの宣言
+public:
+	UTMMTimer* CreateMMTimerFunc();
+	UTMMTimer* GetMMTimerFunc(int n);
+/**タイマ　*/
+protected:
+	typedef UTRef<GTimer> UTRef_GTimer;
+	vector<UTRef_GTimer> gTimer;
+public:
+	GTimer* CreateTimerFunc();
+	GTimer* GetTimerFunc(int n);
 };
 
 }

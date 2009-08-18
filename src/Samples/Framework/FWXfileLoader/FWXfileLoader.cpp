@@ -6,91 +6,51 @@
 
 #define ESC 27
 
-FWAppSample::FWAppSample(){
-	bDrawInfo	= true;
-	bDebug		= true;
+FWXfileLoader::FWXfileLoader(){
+	fileName = "./xFiles/sceneSample.x";
+	bDebug		= false;
 }
 
-void FWAppSample::Init(int argc, char* argv[]){
-	FWAppGLUT::Init(argc, argv);
+void FWXfileLoader::Init(int argc, char* argv[]){
+	SetGRAdaptee(TypeGLUT);
+	GetGRAdaptee()->Init(argc, argv);				// SDKの作成
+	CreateSdk();
+	GetSdk()->Clear();								// SDKの初期化
+	GetSdk()->LoadScene(fileName);
 
-	GetSdk()->Clear();										// SDKの作成
-	GetSdk()->LoadScene("./xFiles/sceneSample.x");			//XfileからSceneの作成
-	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-	phscene->SetStateMode(true);
-	//BuildObject();											// 剛体を作成
-
-	FWWinDesc windowDesc;
-	windowDesc.title = "FWAppFWAppSample";
-	CreateWin(windowDesc);
-	GetCurrentWin()->scene = GetSdk()->GetScene();
-
-	InitCameraView();
+	FWWinDesc windowDesc;							// GLのウィンドウディスクリプタ
+	windowDesc.title = "FWXfileLoader";				// ウィンドウのタイトル
+	CreateWin(windowDesc);							// ウィンドウの作成
+	InitWindow();
+	InitCameraView();								// カメラビューの初期化
 }
 
-void FWAppSample::InitCameraView(){
-	//	Affinef 型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
-	std::istringstream issView(
-		"((0.9996 0.0107463 -0.0261432 -0.389004)"
-		"(-6.55577e-010 0.924909 0.380188 5.65711)"
-		"(0.0282657 -0.380037 0.92454 13.7569)"
-		"(     0      0      0      1))"
-	);
-	issView >> cameraInfo.view;
+void FWXfileLoader::Reset(){
+	GetSdk()->Clear();								// SDKの初期化
+	GetSdk()->LoadScene("./xFiles/sceneSample.x");
 }
 
-void FWAppSample::BuildObject(){
-	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-	PHSolidDesc desc;
-	CDBoxDesc bd;
-
-	// 床(物理法則に従わない，運動が変化しない)
-	{
-		// 剛体(soFloor)の作成
-		desc.mass = 1e20f;
-		desc.inertia *= 1e30f;
-		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-		soFloor->SetDynamical(false);
-		soFloor->SetGravity(false);
-		// 形状(shapeFloor)の作成
-		bd.boxsize = Vec3f(50, 10, 50);
-		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
-		// 剛体に形状を付加する
-		soFloor->AddShape(shapeFloor);
-		soFloor->SetFramePosition(Vec3d(0, -5, 0));
-	}
-
-	// 箱(物理法則に従う，運動が変化)
-	{
-		// 剛体(soBox)の作成
-		desc.mass = 0.05;
-		desc.inertia *= 0.033;
-		PHSolidIf* soBox = phscene->CreateSolid(desc);
-		// 形状(shapeBox)の作成
-		bd.boxsize = Vec3f(2,2,2);
-		CDShapeIf* shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd);
-		// 剛体に形状を付加
-		soBox->AddShape(shapeBox);
-		soBox->SetFramePosition(Vec3d(0, 10, 0));
-	}
+void FWXfileLoader::Timer(){
+//	GetGRAdaptee()->Timer();
 }
-
-void FWAppSample::Step(){
-	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-	phscene->Step();
+void FWXfileLoader::IdleFunc(){
+	Step();
+}
+void FWXfileLoader::Step(){
+	GetSdk()->Step();
 	glutPostRedisplay();
 }
 
-void FWAppSample::Display(){
-	// 描画モードの設定
+void FWXfileLoader::Display(){
+	/// 描画モードの設定
 	GetSdk()->SetDebugMode(bDebug);
 	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
 	render->SetRenderMode(true, false);
-	render->EnableRenderAxis(bDrawInfo);
-	render->EnableRenderForce(bDrawInfo);
-	render->EnableRenderContact(bDrawInfo);
+//	render->EnableRenderAxis(bDebug);
+	render->EnableRenderForce(bDebug);
+	render->EnableRenderContact(bDebug);
 
-	// カメラ座標の指定
+	/// カメラ座標の指定
 	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
 	if (cam && cam->GetFrame()){
 		cam->GetFrame()->SetTransform(cameraInfo.view);
@@ -98,7 +58,7 @@ void FWAppSample::Display(){
 		GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
 	}
 
-	// 描画の実行
+	/// 描画の実行
 	if(!GetCurrentWin()) return;
 	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
 	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
@@ -106,21 +66,31 @@ void FWAppSample::Display(){
 	glutSwapBuffers();
 }
 
-void FWAppSample::Keyboard(int key, int x, int y){
+void FWXfileLoader::InitCameraView(){
+	///	Affinef 型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
+	std::istringstream issView(
+		"((0.999816 -0.0126615 0.0144361 -0.499499)"
+		"(6.50256e-010 0.751806 0.659384 13.2441)"
+		"(-0.019202 -0.659263 0.751667 10.0918)"
+		"(     0      0      0      1))"
+		);
+	issView >> cameraInfo.view;
+}
+
+void FWXfileLoader::Keyboard(int key, int x, int y){
 	switch (key) {
-		case 'i':
-			bDrawInfo = !bDrawInfo;
-			break;
-		case 'd':
-			if(bDebug==true){
-				bDebug=false;
-			}else{
-				bDebug=true;
-			}
-			break;
 		case ESC:
 		case 'q':
 			exit(0);
+			break;
+//		case 'r':
+//			Reset();			// ファイルの再読み込み(タイマを止めてないと落ちるので未実装)
+//			break;
+		case 'w':				// カメラ初期化
+			InitCameraView();	
+			break;
+		case 'd':				// デバック表示
+			bDebug = !bDebug;
 			break;
 		default:
 			break;

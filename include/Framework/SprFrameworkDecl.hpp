@@ -8,6 +8,29 @@
 	PHJointIf* GetJoint(){	return	base::GetJoint();}	\
 	void SetJointKDD2(double K, double D, double D2){	base::SetJointKDD2(K, D, D2);}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_FWInteractPointerIf(base)	\
+	void SetPointerSolid(PHSolidIf* solid){	base::SetPointerSolid(solid);}	\
+	PHSolidIf* GetPointerSolid(){	return	base::GetPointerSolid();}	\
+	void SetHI(HIBaseIf* hi){	base::SetHI(hi);}	\
+	HIBaseIf* GetHI(){	return	base::GetHI();}	\
+	void SetPosScale(double s){	base::SetPosScale(s);}	\
+	double GetPosScale(){	return	base::GetPosScale();}	\
+	void SetLocalRange(double r){	base::SetLocalRange(r);}	\
+	double GetLocalRange(){	return	base::GetLocalRange();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWInteractSceneIf(base)	\
+	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
+	void CreateInteractAdaptee(Spr::FWInteractMode iMode){	base::CreateInteractAdaptee(iMode);}	\
+	Spr::FWInteractPointerIf* CreateInteractPointer(const Spr::FWInteractPointerDesc& desc){	return	base::CreateInteractPointer(desc);}	\
+	Spr::FWInteractPointerIf* GetInteractPointer(int i){	return	base::GetInteractPointer(i);}	\
+	int NInteractPointers(){	return	base::NInteractPointers();}	\
+	Spr::FWInteractMode GetInteractMode(){	return	base::GetInteractMode();}	\
+	void Init(){	base::Init();}	\
+	void Step(){	base::Step();}	\
+	void Clear(){	base::Clear();}	\
+	void Reset(){	base::Reset();}	\
+	void CallBackHapticLoop(){	base::CallBackHapticLoop();}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_FWObjectIf(base)	\
 	PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
 	void SetPHSolid(PHSolidIf* s){	base::SetPHSolid(s);}	\

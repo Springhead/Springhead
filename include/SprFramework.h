@@ -11,5 +11,8 @@
 #include "Framework/SprFWObject.h"
 #include "Framework/SprFWScene.h"
 #include "Framework/SprFWSdk.h"
+#include "Framework/SprFWInteractScene.h"
+#include "Framework/SprFWInteractPointer.h"
+
 
 #endif

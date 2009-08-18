@@ -12,6 +12,9 @@
 #include "FWOldSpringheadNode.h"
 #include <Physics/PHSdk.h>
 #include <Graphics/GRSdk.h>
+#include "FWGraphicsAdaptee.h"
+#include <Framework/SprFWGLUT.h>
+#include <Framework/SprFWGLUI.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -19,69 +22,26 @@
 
 namespace Spr{;
 
-FWApp::CameraInfo::CameraInfo():
-	rot(Rad(0.0), Rad(80.0)), zoom(1.0f),
-	rotRangeY(Rad(-180.0), Rad(180.0)), rotRangeX(Rad(-80.0), Rad(80.0)), zoomRange(0.01f, 100.0f){
-	UpdateView();
-}
-
-
 FWApp::~FWApp(){
+
 }
 
-void FWApp::Init(int argc, char* argv[]){
-	ProcessArguments(argc, argv);
-	fwSdk = FWSdkIf::CreateSdk();
-}
-
-FWWin* FWApp::GetWinFromId(int wid){
-	for(Wins::iterator i = wins.begin(); i != wins.end(); i++){
-		if((*i)->GetID() == wid)
-			return *i;
-	}
-	return NULL;
-}
-
-FWWin* FWApp::GetWin(int pos){
-	if(0 <= pos && pos < NWin())
-		return wins[pos];
-	return NULL;
-}
-
-void FWApp::AssignScene(FWWin* win){
-	if (win->GetScene()) return;
-	for(int i = GetSdk()->NScene() - 1; i >= 0; --i){
-		Wins::iterator it;
-		for(it = wins.begin(); it != wins.end(); ++it){
-			if ((*it)->GetScene() == GetSdk()->GetScene(i)) break;
-		}
-		if (it == wins.end()){	//	対応するwindowがないscene
-			win->scene = GetSdk()->GetScene(i);
-			return;
-		}
-	}
-}
-
-void FWApp::Step(){
-	for(int i=0; i<GetSdk()->NScene(); ++i){
-		GetSdk()->GetScene(i)->Step();
-	}
-	//if(!GetCurrentWin())return;
-	//fwSdk->SwitchScene(GetCurrentWin()->GetScene());
-	//fwSdk->Step();
-}
-
-void FWApp::Display(){
-	if(!GetCurrentWin())return;
-	fwSdk->SwitchScene(GetCurrentWin()->GetScene());
-	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
-	fwSdk->Draw();
+// 派生クラスで定義することのできる仮想関数/////////////////////////////////
+void FWApp::TimerStart(){
+	grAdaptee->TimerStart();
 }
 
 void FWApp::Reshape(int w, int h){
 	if(!GetCurrentWin())return;
 	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
 	fwSdk->Reshape(w, h);
+}
+
+void FWApp::Exit(){
+	for(int i=0; i< (int)mmtimer.size(); i++){
+		mmtimer[i]->Release();
+	}
+	exit(0);
 }
 
 void FWApp::MouseButton(int button, int state, int x, int y){
@@ -220,12 +180,168 @@ void FWApp::MouseMove(int x, int y){
 	}
 	if(cameraPosChange) cameraInfo.UpdateView();
 }
-void FWApp::CameraInfo::UpdateView(){
-	view  = Affinef();
-	view.Pos() = target + zoom * Vec3f(
-		cos(rot.x) * cos(rot.y),
-		sin(rot.x),
-		cos(rot.x) * sin(rot.y));
-	view.LookAtGL(target);
+//　FWAppのインタフェース ///////////////////////////////////////////////////////
+
+void FWApp::CreateSdk(){
+	fwSdk = FWSdkIf::CreateSdk();
+}
+
+void FWApp::AssignScene(FWWin* win){
+	if (win->GetScene()) return;
+	for(int i = GetSdk()->NScene() - 1; i >= 0; --i){
+		Wins::iterator it;
+		for(it = wins.begin(); it != wins.end(); ++it){
+			if ((*it)->GetScene() == GetSdk()->GetScene(i)) break;
+		}
+		if (it == wins.end()){	//	対応するwindowがないscene
+			win->scene = GetSdk()->GetScene(i);
+			return;
+		}
+	}
+}
+
+FWWin* FWApp::CreateWin(const FWWinDesc& desc){
+	FWWin* win = grAdaptee->CreateWin(desc);
+	return win;
+}
+
+
+
+void FWApp::InitWindow(){
+	if (!NWin()){
+		grAdaptee->CreateWin(FWWinDesc());
+		wins.back()->SetScene(GetSdk()->GetScene());
+	}
+}
+
+FWWin* FWApp::GetWinFromId(int wid){
+	for(Wins::iterator i = wins.begin(); i != wins.end(); i++){
+		if((*i)->GetID() == wid)
+			return *i;
+	}
+	return NULL;
+}
+
+FWWin* FWApp::GetWin(int pos){
+	if(0 <= pos && pos < NWin())
+		return wins[pos];
+	return NULL;
+}
+
+FWWin* FWApp::GetCurrentWin(){
+	return grAdaptee->GetCurrentWin();
+}
+
+void FWApp::DestroyWin(FWWin* win){
+	grAdaptee->DestroyWin(win);
+}
+
+void FWApp::SetCurrentWin(FWWin* win){
+	grAdaptee->SetCurrentWin(win);
+
+}
+
+int FWApp::GetModifier(){
+	return grAdaptee->Modifiers();
+}
+// 描画パート////////////////////////////////////////////////////////////////////
+FWApp* FWApp::instance;
+
+void FWApp::SetGRAdaptee(grAdapteeType type){
+	switch (type) {
+		case TypeGLUT:
+			grAdaptee= new FWGLUT;
+			break;
+		case TypeGLUI:
+			grAdaptee= new FWGLUI;
+			break;
+	}
+	grAdaptee->SetAdapter(this);
+	instance = this;
+}
+
+/**コールバック関数*/
+void FWApp::CallDisplay(){
+		if(!vfBridge || !vfBridge->Display())
+			Display();
+	}
+void FWApp::CallReshape(int w, int h){
+	if(!vfBridge || !vfBridge->Reshape(w, h))
+		Reshape(w, h);
+}
+void FWApp::CallIdleFunc(){
+	if(!vfBridge || !vfBridge->Idle())
+		IdleFunc();
+}
+void FWApp::CallKeyboard(int key, int x, int y){
+	if(!vfBridge || !vfBridge->Keyboard(key, x, y))
+		Keyboard(key, x, y);
+}
+void FWApp::CallMouseButton(int button, int state, int x, int y){
+	if(!vfBridge || !vfBridge->MouseButton(button, state, x, y))
+		MouseButton(button, state, x, y);
+}
+void FWApp::CallMouseMove(int x, int y){
+	if(!vfBridge || !vfBridge->MouseMove(x, y))
+		MouseMove(x, y);
+}
+
+void FWApp::CallJoystick(unsigned int buttonMask, int x, int y, int z){
+	if(!vfBridge || !vfBridge->Joystick(buttonMask, x, y, z))
+		Joystick(buttonMask, x, y, z);
+}
+
+/** FWInteraction */
+ ////////////////////////////////////////////////////////////////
+void FWApp::CreateHISdk(){
+	hiSdk = HISdkIf::CreateSdk();
+}
+HISdkIf* FWApp::GetHISdk(){ return hiSdk; }
+void FWApp::AddHI(HIBaseIf* hi){ humanInterfaces.push_back(hi); }
+HIBaseIf* FWApp::GetHI(int i){ return humanInterfaces[i]; }
+FWInteractSceneIf* FWApp::CreateInteractScene(const FWInteractSceneDesc &desc){
+	FWInteractScene* iScene = DBG_NEW FWInteractScene(desc);
+	interactScenes.push_back(iScene->Cast());
+	iScene->CreateInteractAdaptee(desc.mode);
+	curiScene = iScene->Cast();
+	return curiScene;
+}
+FWInteractSceneIf* FWApp::GetInteractScene(int i){
+	if(i == -1) return curiScene;
+	if(0 <= i && i < NInteractScene()) return interactScenes[i];
+	return NULL;
+}
+int FWApp::NInteractScene(){
+	return (int)interactScenes.size();
+}
+///////////////////////////////////////////////////////////////////////////////////
+
+
+//マルチメディアタイマ//////////////////////////////////////////////////////////////
+UTMMTimer* FWApp::CreateMMTimerFunc(){
+	UTMMTimer* timer_=new UTMMTimer;
+	mmtimer.push_back(timer_);
+	return mmtimer.back();
+}
+
+UTMMTimer* FWApp::GetMMTimerFunc(int n){
+	if(n< (int) mmtimer.size()){
+		return mmtimer[n];
+	}else{
+		return NULL;
+	}
+}
+//タイマ///////////////////////////////////////////////////////////////////////////
+GTimer* FWApp::CreateTimerFunc(){
+	GTimer* timer_=DBG_NEW GTimer;
+	gTimer.push_back(timer_);
+	return gTimer.back();
+}
+GTimer* FWApp::GetTimerFunc(int n){
+	if(n< (int) gTimer.size()){
+		return gTimer[n];
+	}else{
+		return NULL;
+	}
 }
 }

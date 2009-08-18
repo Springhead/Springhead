@@ -185,7 +185,7 @@ Vec3f HISpidar4::GetForce(){
 }
 
 void HISpidar4::SetMinForce(){
-	for(int i=0; i<motors.size(); i++) motor[i].SetForce(motor[i].minForce);
+	for(int i=0; i< (int)motors.size(); i++) motor[i].SetForce(motor[i].minForce);
 }
 
 void HISpidar4::MakeWireVec(){

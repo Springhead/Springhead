@@ -5,21 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef SPR_FWAPPGL_H
-#define SPR_FWAPPGL_H
-#include <Framework/SprFWApp.h>
 
-namespace Spr{;
+#include "FWMultiWinSample.h"
 
-/** OpenGLのコンテキスト作成機能を持つアプリケーションクラス
- */
-class FWAppGL : public FWApp{
-public:
-	/** @brief 新しいWindowのための、GRRender, GRDeviceを作る。
-	 */
-	// FWAppGLを直接使う場合は手動で呼ぶのでpublicにしました	tazz
-};
-
+FWMultiWinSample app;
+int __cdecl main(int argc, char* argv[]){	
+	app.Init(argc, argv);	
+	app.TimerStart();
+	return 0;
 }
-
-#endif

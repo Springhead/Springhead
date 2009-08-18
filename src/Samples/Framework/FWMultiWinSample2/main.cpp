@@ -5,19 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Framework/SprFWAppGL.h>
-#include "FWScene.h"
-#include "FWSdk.h"
-#include "FWOldSpringheadNode.h"
-#include <Physics/PHSdk.h>
-#include <Graphics/GRSdk.h>
 
-#include <GL/glut.h>
+#include "FWMultiWinSample2.h"
 
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
-
-namespace Spr{
-
+FWMultiWinSample2 app;
+int __cdecl main(int argc, char* argv[]){	
+	app.Init(argc, argv);	
+	app.Timer();
+	app.TimerStart();
+	return 0;
 }
