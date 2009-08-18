@@ -12,7 +12,7 @@ FWMultiRateHaptic::FWMultiRateHaptic(){
 }
 void FWMultiRateHaptic::Sync(){
 	FWHapticLoopBase* hLoop = GetHapticLoop();
-	if(bSync){
+	if(bSync){ 
 		/// 力覚ポインタの同期
 		UpdatePointer();			
 		/// 同期のための準備
@@ -29,24 +29,23 @@ void FWMultiRateHaptic::Sync(){
 			hiSolid = GetHapticLoop()->GetInteractSolid(i);
 			/// bSim = ture かつ bfirstSim = falseなら結果を反映させる
 			if(!hiSolid->bSim) continue;
-//			if(!hiSolid->bSim || hiSolid->bfirstSim) continue;
 			double pdt = GetInteractScene()->GetScene()->GetPHScene()->GetTimeStep();			// physicsの刻み
-			SpatialVector b;
+		
 			/// 各ポインタが持つ情報を取得
 			for(int j = 0; j < (int)piPointers->size(); j++){
 				piPointer = GetInteractScene()->GetInteractPointer(j)->Cast();
 				hiPointer = GetHapticLoop()->GetInteractPointer(j)->Cast();
 				piInfo = &piPointer->interactInfo[i];
 				hiInfo = &hiPointer->interactInfo[i];
-				/// 近傍であれば結果をモビリティ定数項を加える
-				if(!hiInfo->flag.blocal || hiInfo->flag.bfirstlocal) continue;
-
-				b += (hiSolid->b + 
-					(hiSolid->curb - hiSolid->lastb)) * pdt;	// モビリティ定数項
-
 				piInfo->neighborInfo.test_force_norm = hiInfo->neighborInfo.test_force_norm;
 			}
 			/// 結果の反映
+			SpatialVector b;
+			if(hiSolid->bfirstSim){
+				b += (hiSolid->b + 
+						(hiSolid->curb - hiSolid->lastb)) * pdt;	// モビリティ定数項
+				DSTR << "おふ" << std::endl;
+			}
 			Vec3d v = hiSolid->copiedSolid.GetVelocity() + b.v();					// 反映速度
 			Vec3d w = hiSolid->copiedSolid.GetAngularVelocity() + b.w();			// 反映角速度
 			hiSolid->sceneSolid->SetVelocity(v);
@@ -54,6 +53,7 @@ void FWMultiRateHaptic::Sync(){
 			hiSolid->sceneSolid->SetCenterPosition(hiSolid->copiedSolid.GetCenterPosition());
 			hiSolid->sceneSolid->SetOrientation(hiSolid->copiedSolid.GetOrientation());
 		}
+	
 
 		/// PhysicsLoop--->HapticLoop ///
 		/// シーンで新しく生成された分を拡張
