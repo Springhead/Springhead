@@ -161,7 +161,10 @@ void FWLDHapticSample::BuildScene(){
 	
 		// ƒ|ƒCƒ“ƒ^
 		soBox = phscene->CreateSolid(desc);
-		soBox->AddShape(shapeBox);
+		CDSphereDesc sd;
+		sd.radius = 0.5;//1.0;
+		CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
+		soBox->AddShape(shapePointer);
 		soBox->SetDynamical(false);
 		GetSdk()->GetScene()->GetPHScene()->SetContactMode(soBox, PHSceneDesc::MODE_NONE);
 		FWInteractPointerDesc idesc;
