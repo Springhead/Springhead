@@ -125,11 +125,17 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 			iPointer = GetInteractScene()->GetInteractPointer(j)->Cast();
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			/// bneighborかつblocalであればlCount++
-			if(iInfo->flag.bneighbor && iInfo->flag.blocal){				
-				lCount++;
-				/// さらにbfirstlocalであればfCount++
-				if(iInfo->flag.bfirstlocal){
-					fCount++;
+			if(iInfo->flag.bneighbor){
+				if(iInfo->flag.blocal){
+					lCount++;
+					/// さらにbfirstlocalであればfCount++
+					if(iInfo->flag.bfirstlocal){
+						fCount++;
+						iInfo->flag.bfirstlocal = false;
+					}
+				}else{
+					iInfo->flag.bfirstlocal = false;							
+					iInfo->flag.blocal = false;													
 				}
 			}else{
 				/// 近傍物体でないのでfalseにする
@@ -151,6 +157,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 			iSolid->bfirstSim = false;
 		}
 	}
+			DSTR << "-------------------------------" << std::endl;
 }
 
 void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPointer){
@@ -172,7 +179,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 	/// 近傍点までの長さから近傍物体を絞る
 	if(r < iPointer->GetLocalRange()){
 		/// 初めて最近傍物体になった場合
-		if(!iInfo->flag.blocal){																
+		if(iInfo->flag.blocal == false){																
 			iInfo->flag.bfirstlocal = true;													
 			iInfo->neighborInfo.face_normal = normal;	// 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．										
 			#ifdef _DEBUG

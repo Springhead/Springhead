@@ -170,7 +170,7 @@ void FWLDHapticSample::BuildScene(){
 		idesc.springK = 10;
 		idesc.damperD = 0.0;
 		idesc.posScale = 300;
-		idesc.localRange = 0.7;
+		idesc.localRange = 0.7 * 10;
 		GetInteractScene()->CreateInteractPointer(idesc);
 	}
 }
