@@ -14,10 +14,10 @@
 
 namespace Spr{;
 
-enum FWInteractMode{
+typedef enum FWInteractMode{
 	NONE,
 	LOCAL_DYNAMICS
-};
+}INMode;
 
 struct FWInteractSceneDesc{
 public:
@@ -36,12 +36,13 @@ struct FWInteractSceneIf : public SceneIf{
 public:
 	SPR_IFDEF(FWInteractScene);
 
+
 	FWSceneIf* GetScene();
-	void CreateInteractAdaptee(FWInteractMode iMode);
-	FWInteractPointerIf*	CreateInteractPointer(const FWInteractPointerDesc& desc);
-	FWInteractPointerIf*	GetInteractPointer(int i = -1);
-	int						NInteractPointers();
-	FWInteractMode			GetInteractMode();
+	void CreateINAdaptee(FWInteractMode inMode);
+	FWInteractPointerIf*	CreateINPointer(const FWInteractPointerDesc& desc);
+	FWInteractPointerIf*	GetINPointer(int i = -1);
+	int						NINPointers();
+	FWInteractMode			GetINMode();
 
 	/// ˆÈ‰º‚ÌŠÖ”‚Íadaptee‚ğ‚Æ‚¨‚µ‚ÄÀ‘•‚ªŒÄ‚Î‚ê‚é
 	void Init();
@@ -50,6 +51,9 @@ public:
 	void Reset();
 	void CallBackHapticLoop();
 };
+
+typedef UTRef<FWInteractSceneIf> UTRef_FWInteractSceneIf;
+typedef std::vector<UTRef_FWInteractSceneIf> FWInteractScenes;
 
 }
 #endif

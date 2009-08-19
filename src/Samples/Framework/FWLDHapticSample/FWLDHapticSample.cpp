@@ -33,7 +33,7 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	desc.fwScene = GetSdk()->GetScene();
 	desc.mode = LOCAL_DYNAMICS;
 	desc.hdt = 0.001;
-	CreateInteractScene(desc);
+	CreateINScene(desc);
 
 	BuildScene();											// „‘Ì‚ðì¬
 
@@ -79,11 +79,11 @@ void FWLDHapticSample::IdleFunc(){
 
 void FWLDHapticSample::CallBackHapticLoop(void* arg){	
 //	FWLDHapticSample::instance->GetInteractAdaptee()->CallBackHapticLoop();
-	((FWLDHapticSample*)instance)->GetInteractScene()->CallBackHapticLoop();
+	((FWLDHapticSample*)instance)->GetINScene()->CallBackHapticLoop();
 
 }
 void FWLDHapticSample::CallBackPhysicsLoop(){
-	FWLDHapticSample::instance->GetInteractScene()->Step();
+	FWLDHapticSample::instance->GetINScene()->Step();
 	glutPostRedisplay();
 }
 
@@ -119,7 +119,7 @@ void FWLDHapticSample::Display(){
 void FWLDHapticSample::Reset(){
 	UTMMTimer* mtimer = GetMMTimerFunc(0);
 	mtimer->Release();
-	GetInteractScene()->Clear();
+	GetINScene()->Clear();
 	GetSdk()->GetScene()->GetPHScene()->Clear();
 	BuildScene();
 	mtimer->Create();
@@ -174,23 +174,22 @@ void FWLDHapticSample::BuildScene(){
 		idesc.damperD = 0.0;
 		idesc.posScale = 300;
 		idesc.localRange = 0.7 * 10;
-		GetInteractScene()->CreateInteractPointer(idesc);
+		GetINScene()->CreateINPointer(idesc);
 	}
 }
 
 void FWLDHapticSample::DisplayContactPlane(){
-	FWInteractScene* iScene = GetInteractScene()->Cast();
-	int N = iScene->GetInteractAdaptee()->NInteractSolids();
-	FWInteractSolid* iSolid;
+	FWInteractScene* inScene = GetINScene()->Cast();
+	int N = inScene->NINSolids();
 	for(unsigned int i = 0; i <  N; i++){
-		iSolid = iScene->GetInteractAdaptee()->GetInteractSolid(i);
-		if(!iSolid->bSim) continue;
-		for(int j = 0; j < GetInteractScene()->NInteractPointers(); j++){
-			FWInteractPointer* iPointer = GetInteractScene()->GetInteractPointer(j)->Cast();
-			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
-			Vec3d pPoint = iPointer->pointerSolid->GetPose() * iInfo->neighborInfo.pointer_point;
-			Vec3d cPoint = iSolid->sceneSolid->GetPose() * iInfo->neighborInfo.closest_point;
-			Vec3d normal = iInfo->neighborInfo.face_normal;
+		FWInteractSolid* inSolid = inScene->GetINSolid(i);
+		if(!inSolid->bSim) continue;
+		for(int j = 0; j < inScene->NINPointers(); j++){
+			FWInteractPointer* inPointer = inScene->GetINPointer(j)->Cast();
+			FWInteractInfo* inInfo = &inPointer->interactInfo[i];
+			Vec3d pPoint = inPointer->pointerSolid->GetPose() * inInfo->neighborInfo.pointer_point;
+			Vec3d cPoint = inSolid->sceneSolid->GetPose() * inInfo->neighborInfo.closest_point;
+			Vec3d normal = inInfo->neighborInfo.face_normal;
 			Vec3d v1(0,1,0);
 
 			v1 +=  Vec3d(0, 0, 0.5) - Vec3d(0, 0, 0.5)*normal*normal;
@@ -288,19 +287,18 @@ void FWLDHapticSample::DisplayContactPlane(){
 }
 
 void FWLDHapticSample::DisplayLineToNearestPoint(){
-	FWInteractScene* iScene = GetInteractScene()->Cast();
-	int N = iScene->GetInteractAdaptee()->NInteractSolids();
-	FWInteractSolid* iSolid;
+	FWInteractScene* inScene = DCAST(FWInteractScene, GetINScene());
+	int N = inScene->NINSolids();
 	GLfloat moon[]={0.8,0.8,0.8};
 	for(unsigned int i = 0; i <  N; i++){
-		iSolid = iScene->GetInteractAdaptee()->GetInteractSolid(i);
-		if(!iSolid->bSim) continue;
-		for(int j = 0; j < iScene->NInteractPointers(); j++){
-			FWInteractPointer* iPointer = iScene->GetInteractPointer(j)->Cast();
-			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
-			Vec3d pPoint = iPointer->pointerSolid->GetPose() * iInfo->neighborInfo.pointer_point;
-			Vec3d cPoint = iSolid->sceneSolid->GetPose() * iInfo->neighborInfo.closest_point;
-			Vec3d normal = iInfo->neighborInfo.face_normal;
+		FWInteractSolid* inSolid = inScene->GetINSolid(i);
+		if(!inSolid->bSim) continue;
+		for(int j = 0; j < inScene->NINPointers(); j++){
+			FWInteractPointer* inPointer = inScene->GetINPointer(j)->Cast();
+			FWInteractInfo* inInfo = &inPointer->interactInfo[i];
+			Vec3d pPoint = inPointer->pointerSolid->GetPose() * inInfo->neighborInfo.pointer_point;
+			Vec3d cPoint = inSolid->sceneSolid->GetPose() * inInfo->neighborInfo.closest_point;
+			Vec3d normal = inInfo->neighborInfo.face_normal;
 			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, moon);
 			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, moon);
 			glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, moon);

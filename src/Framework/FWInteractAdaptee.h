@@ -43,16 +43,27 @@ public:
 class FWInteractAdaptee : public UTRefCount{
 protected:
 	FWInteractScene*	interactScene;
-	FWInteractSolids	interactSolids;
 public:
 	FWInteractAdaptee();
-	void SetInteractScene(FWInteractScene* iScene){ interactScene = iScene; }
-	FWInteractScene* GetInteractScene();
-	virtual FWHapticLoopBase* GetHapticLoop(){ return NULL; }
 
-	FWInteractSolid* GetInteractSolid(int i);
-	FWInteractSolids* GetInteractSolids();
-	int NInteractSolids();
+	/// INSceneŠÖŒW
+	void SetINScene(FWInteractScene* inScene);
+	FWInteractScene* GetINScene();
+	PHSceneIf* GetPHScene();
+
+	/// HapticLoopŠÖŒW
+	virtual FWHapticLoopBase* GetHapticLoop();
+
+	/// INPointerŠÖŒW(INScene‚ð‰î‚µ‚ÄŽæ“¾)
+	FWInteractPointer* GetINPointer(int i = -1);
+	FWInteractPointers* GetINPointers();
+	int NINPointers();
+
+	/// INSolidŠÖŒW(INScene‚ð‰î‚µ‚ÄŽæ“¾)
+	FWInteractSolid* GetINSolid(int i = -1);
+	FWInteractSolids* GetINSolids();
+	int NINSolids();
+
 	void UpdateSolidList();
 
 	virtual void UpdatePointer(){};													///< ƒ|ƒCƒ“ƒ^‚ÌˆÊ’u‚ðXV‚·‚é

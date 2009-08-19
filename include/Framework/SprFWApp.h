@@ -186,19 +186,19 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////
 public:
 protected:
-	FWInteractSceneIf*				curiScene;
-	FWInteractScenes				interactScenes;
+	FWInteractSceneIf*				curINScene;
+	FWInteractScenes				inScenes;
 	UTRef<FWInteractAdaptee>		interactAdaptee;
 	typedef UTRef<HIBaseIf>			UTRef_HIBaseIf;		// vectorêÈåæÇ…íºèëÇ´Ç∑ÇÈÇ∆swigÇ™errorÇìfÇ≠
 	std::vector<UTRef_HIBaseIf>		humanInterfaces;
 public:
-	void					CreateHISdk();
-	HISdkIf*				GetHISdk();
-	void					AddHI(HIBaseIf* hi);
-	HIBaseIf*				GetHI(int i);
-	FWInteractSceneIf*		CreateInteractScene(const FWInteractSceneDesc& desc);
-	FWInteractSceneIf*		GetInteractScene(int i = -1);
-	int						NInteractScene();
+	void							CreateHISdk();
+	HISdkIf*						GetHISdk();
+	void							AddHI(HIBaseIf* hi);
+	HIBaseIf*						GetHI(int i);
+	FWInteractSceneIf*				CreateINScene(const FWInteractSceneDesc& desc);
+	FWInteractSceneIf*				GetINScene(int i = -1);
+	int								NINScenes();
 ///////////////////////////////////////////////////////////////////////////////////
 
 

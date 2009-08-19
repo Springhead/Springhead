@@ -39,8 +39,9 @@ public:
 	void		SetLocalRange(double r);
 	double		GetLocalRange();
 };
-typedef std::vector< UTRef<FWInteractPointerIf> > FWInteractPointers;
 
+//typedef UTRef<FWInteractPointerIf> UTRef_FWInteractPointerIf;
+typedef std::vector< UTRef<FWInteractPointerIf> > FWInteractPointers;
 
 }
 #endif

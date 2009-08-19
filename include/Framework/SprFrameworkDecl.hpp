@@ -20,11 +20,11 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractSceneIf(base)	\
 	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
-	void CreateInteractAdaptee(Spr::FWInteractMode iMode){	base::CreateInteractAdaptee(iMode);}	\
-	Spr::FWInteractPointerIf* CreateInteractPointer(const Spr::FWInteractPointerDesc& desc){	return	base::CreateInteractPointer(desc);}	\
-	Spr::FWInteractPointerIf* GetInteractPointer(int i){	return	base::GetInteractPointer(i);}	\
-	int NInteractPointers(){	return	base::NInteractPointers();}	\
-	Spr::FWInteractMode GetInteractMode(){	return	base::GetInteractMode();}	\
+	void CreateINAdaptee(Spr::FWInteractMode inMode){	base::CreateINAdaptee(inMode);}	\
+	Spr::FWInteractPointerIf* CreateINPointer(const Spr::FWInteractPointerDesc& desc){	return	base::CreateINPointer(desc);}	\
+	Spr::FWInteractPointerIf* GetINPointer(int i){	return	base::GetINPointer(i);}	\
+	int NINPointers(){	return	base::NINPointers();}	\
+	Spr::FWInteractMode GetINMode(){	return	base::GetINMode();}	\
 	void Init(){	base::Init();}	\
 	void Step(){	base::Step();}	\
 	void Clear(){	base::Clear();}	\

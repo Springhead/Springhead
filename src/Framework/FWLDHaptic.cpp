@@ -154,8 +154,8 @@ FWLDHaptic::FWLDHaptic(){}
 void FWLDHaptic::Init(){
 	FWMultiRateHaptic::Init();
 	hapticLoop = &LDHapticLoop;
-	double pdt = GetInteractScene()->GetScene()->GetPHScene()->GetTimeStep();
-	double hdt = GetInteractScene()->hdt;
+	double pdt = GetPHScene()->GetTimeStep();
+	double hdt = GetINScene()->hdt;
 	hapticLoop->Init(pdt, hdt);
 	states = ObjectStatesIf::Create();
 	states2 = ObjectStatesIf::Create();
@@ -179,45 +179,42 @@ void FWLDHaptic::Step(){
 		TestSimulation();
 		bCalcPhys = false;
 	}
-	double pdt = GetInteractScene()->GetScene()->GetPHScene()->GetTimeStep();
-	double hdt = GetInteractScene()->hdt;
+	double pdt = GetPHScene()->GetTimeStep();
+	double hdt = GetINScene()->hdt;
 	if (hapticcount < pdt / hdt) return;
 	hapticcount -= (int)(pdt/hdt);
 	bSync = true;
 	bCalcPhys = true;
 }
 void FWLDHaptic::PhysicsStep(){
-	FWInteractSolids* iSolids = GetInteractSolids();
 	std::vector<SpatialVector> lastvel;
-	for(int i = 0; i < (int)iSolids->size(); i++){
-		FWInteractSolid* iSolid = &iSolids->at(i);
-		if(!iSolid->bSim) continue;
+	for(int i = 0; i < NINSolids(); i++){
+		if(!GetINSolid(i)->bSim) continue;
 		lastvel.resize(i + 1);
-		lastvel.back().v() = iSolid->sceneSolid->GetVelocity();
-		lastvel.back().w() = iSolid->sceneSolid->GetAngularVelocity();
+		PHSolid* phSolid = GetINSolid(i)->sceneSolid;
+		lastvel.back().v() = phSolid->GetVelocity();
+		lastvel.back().w() = phSolid->GetAngularVelocity();
 	}
 //	if(bStep) GetFWApp()->GeSdk()->GetScene()->GetPHScene()->Step();
 //	else if (bOneStep){
-		GetInteractScene()->GetScene()->GetPHScene()->Step();
+		GetPHScene()->Step();
 //		bOneStep = false;
 //	}
-	for(int i = 0; i < (int)iSolids->size(); i++){
-		FWInteractSolid* iSolid = &iSolids->at(i);
-		if(!iSolid->bSim) continue;
+	for(int i = 0; i < NINSolids(); i++){
+		if(!GetINSolid(i)->bSim) continue;
 		SpatialVector curvel;
-		curvel.v() = iSolid->sceneSolid->GetVelocity();
-		curvel.w() = iSolid->sceneSolid->GetAngularVelocity();
-		double pdt = GetInteractScene()->GetScene()->GetPHScene()->GetTimeStep();
-		iSolid->curb = (curvel - lastvel[i]) / pdt;
+		PHSolid* phSolid = GetINSolid(i)->sceneSolid;
+		curvel.v() = phSolid->GetVelocity();
+		curvel.w() = phSolid->GetAngularVelocity();
+		double pdt = GetPHScene()->GetTimeStep();
+		GetINSolid(i)->curb = (curvel - lastvel[i]) / pdt;
 	}
 }
 void FWLDHaptic::UpdatePointer(){
-	int N = GetInteractScene()->NInteractPointers();
-	for(int i = 0; i < N; i++){	
+	for(int i = 0; i < NINPointers(); i++){	
 		if(GetHapticLoop()->NInteractPointers() == 0) return; 
-		FWInteractPointer* piPointer = GetInteractScene()->GetInteractPointer(i)->Cast();
+		PHSolidIf* soPointer = GetINPointer(i)->pointerSolid;
 		FWInteractPointer* hiPointer = GetHapticLoop()->GetInteractPointer(i)->Cast();
-		PHSolidIf* soPointer = piPointer->pointerSolid;
 		PHSolid* hiSolid = &hiPointer->hiSolid;
 		soPointer->SetVelocity(hiSolid->GetVelocity());
 		soPointer->SetAngularVelocity(hiSolid->GetAngularVelocity());
@@ -229,7 +226,7 @@ void FWLDHaptic::UpdatePointer(){
 void FWLDHaptic::TestSimulation(){
 	/** FWInteractSolidsのblocalがtrueの物体に対してテスト力を加え，
 		接触しているすべての物体について，モビリティを計算する */
-	PHSceneIf* phScene = GetInteractScene()->GetScene()->GetPHScene();
+	PHSceneIf* phScene = GetPHScene();
 
 	#ifdef DIVIDE_STEP
 	/// テストシミュレーションのために現在の剛体の状態を保存する
@@ -243,12 +240,10 @@ void FWLDHaptic::TestSimulation(){
 	states->SaveState(phScene);			
 
 	/// テストシミュレーション実行
-	FWInteractSolids* iSolids = GetInteractSolids();
-	for(int i = 0; i < (int)iSolids->size(); i++){
-		FWInteractSolid* iSolid = GetInteractSolid(i);
-		PHSolid* phSolid = iSolid->sceneSolid;
-		if(!iSolid->bSim) continue;
-
+	for(int i = 0; i < NINSolids(); i++){
+		if(!GetINSolid(i)->bSim) continue;
+		FWInteractSolid* inSolid = GetINSolid(i);
+		PHSolid* phSolid = GetINSolid(i)->sceneSolid;
 		/// 現在の速度を保存
 		SpatialVector curvel, nextvel; 
 		curvel.v() = phSolid->GetVelocity();			// 現在の速度
@@ -263,17 +258,16 @@ void FWLDHaptic::TestSimulation(){
 		nextvel.v() = phSolid->GetVelocity();
 		nextvel.w() = phSolid->GetAngularVelocity();
 		/// モビリティbの算出
-		iSolid->lastb = iSolid->b;
+		inSolid->lastb = inSolid->b;
 		double pdt = phScene->GetTimeStep();
-		iSolid->b = (nextvel - curvel) / pdt;
+		inSolid->b = (nextvel - curvel) / pdt;
 		states->LoadState(phScene);						// 現在の状態に戻す
 
 		/// InteractPointerの数だけ力を加えるテストシミュレーションを行う
-		int N = GetInteractScene()->NInteractPointers();
-		for(int j = 0; j < N; j++){
-			FWInteractPointer* iPointer = GetInteractScene()->GetInteractPointer(j)->Cast();
-			PHSolidIf* soPointer = iPointer->pointerSolid;
-			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
+		for(int j = 0; j < NINPointers(); j++){
+			FWInteractPointer* inPointer = GetINPointer(j);
+			PHSolidIf* soPointer = inPointer->pointerSolid;
+			FWInteractInfo* iInfo = &inPointer->interactInfo[i];
 			Vec3d cPoint = phSolid->GetPose() * iInfo->neighborInfo.closest_point;		// 力を加える点(ワールド座標)
 
 			/// 拘束座標系を作るための準備
@@ -321,7 +315,7 @@ void FWLDHaptic::TestSimulation(){
 			#endif
 			nextvel.v() = phSolid->GetVelocity();
 			nextvel.w() = phSolid->GetAngularVelocity();
-			u.col(0) = (nextvel - curvel) /pdt - iSolid->b;
+			u.col(0) = (nextvel - curvel) /pdt - inSolid->b;
 			states->LoadState(phScene);
 
 			/// n + t[0]方向に力を加える
@@ -334,7 +328,7 @@ void FWLDHaptic::TestSimulation(){
 			#endif
 			nextvel.v() = phSolid->GetVelocity();
 			nextvel.w() = phSolid->GetAngularVelocity();
-			u.col(1) = (nextvel - curvel) /pdt - iSolid->b;
+			u.col(1) = (nextvel - curvel) /pdt - inSolid->b;
 			states->LoadState(phScene);
 
 			/// n+t[1]方向力を加える
@@ -347,7 +341,7 @@ void FWLDHaptic::TestSimulation(){
 			#endif
 			nextvel.v() = phSolid->GetVelocity();
 			nextvel.w() = phSolid->GetAngularVelocity();
-			u.col(2) = (nextvel - curvel) /pdt - iSolid->b;
+			u.col(2) = (nextvel - curvel) /pdt - inSolid->b;
 			
 			iInfo->mobility.A = u  * force.inv();			// モビリティAの計算
 			states->LoadState(phScene);						// 元のstateに戻しシミュレーションを進める
