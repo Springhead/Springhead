@@ -602,7 +602,7 @@ struct PH3ElementBallJointIf : public PHBallJointIf{
 	 */
 	void	SetSecondDamper(double input);
 	/** @brief 降伏応力を設定する
-		@param input 降伏応力
+		@return 降伏応力
 	 */
 	double GetYieldStress();
 	/** @brief 降伏応力を取得する
@@ -610,7 +610,7 @@ struct PH3ElementBallJointIf : public PHBallJointIf{
 	 */
     void SetYieldStress(const double yS);
 	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を設定する
-		@param input 硬くする倍率
+		@return 硬くする倍率
 	 */
 	double GetHardnessRate();
 	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を取得する
@@ -619,16 +619,22 @@ struct PH3ElementBallJointIf : public PHBallJointIf{
 	void SetHardnessRate(const double hR);
 	
 	/** @brief 断面2次モーメントを設定する
-		@param input 断面2次モーメントVec3d(x,y,z)
+		@return 断面2次モーメントVec3d(x,y,z)
 	 */
 	Vec3d	GetI();	
 	/** @brief 断面2次モーメントを設定する
 		@param input 断面2次モーメントVec3d(x,y,z)
 	 */
 	void	SetI(const Vec3d i);
-
+	/** @brief 変形のタイプを取得する
+		@return 0:Elastic,1:Plastic,3:Mix
+	 */
+	int		GetType();	
+	/** @brief 変形のタイプを設定する
+		@param input 0:Elastic,1:Plastic,3:Mix
+	 */
 	void	SetType(int t);	
-	int		GetType();											
+										
 };
 
 // ３要素モデルのボールジョイントのディスクリプタ
