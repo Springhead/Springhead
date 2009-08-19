@@ -73,6 +73,9 @@ void FWMultiRateHaptic::Sync(){
 				hiSolid->copiedSolid = piSolid->copiedSolid;	// 最新の情報をコピー
 				piSolid->bfirstSim = false;						// 初めて近傍になった場合の処理
 			}
+			hiSolid->b = piSolid->b;
+			hiSolid->curb = piSolid->curb;
+			hiSolid->lastb = piSolid->lastb;
 			/// ポインタごとに持つ情報の同期
 			for(int j = 0; j < NINPointers(); j++){
 				hiPointer = GetHapticLoop()->GetInteractPointer(j)->Cast();
@@ -81,7 +84,7 @@ void FWMultiRateHaptic::Sync(){
 		}
 		/* 同期終了処理 */
 		GetHapticLoop()->loopCount = 0;		// HapticLoopのカウント初期化
-		bSync = false;				// 同期終了フラグ
+		bSync = false;						// 同期終了フラグ
 	}
 	#define COUNT_MAX 100
 	if(GetHapticLoop()->loopCount > COUNT_MAX) {

@@ -64,6 +64,7 @@ void FWLDHapticLoop::HapticRendering(){
 			interpolation_normal = (loopCount * nInfo->face_normal + 
 				(syncCount - (double)loopCount) * nInfo->last_face_normal) / syncCount;															
 			if(loopCount > syncCount)	interpolation_normal = nInfo->face_normal;
+			//DSTR << interpolation_normal << std::endl;
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
@@ -71,7 +72,7 @@ void FWLDHapticLoop::HapticRendering(){
 				Vec3d dv = cSolid->GetPointVelocity(cPoint) - iPointer->hiSolid.GetPointVelocity(pPoint);
 				Vec3d dvortho = dv.norm() * interpolation_normal;
 				
-				static Vec3d addforce = Vec3d(0,0,0);
+				Vec3d addforce = Vec3d(0,0,0);
 				double K = iPointer->springK;
 				double D = iPointer->damperD;
 	//			if(!bproxy){
@@ -104,9 +105,11 @@ void FWLDHapticLoop::HapticRendering(){
 					proxy[i] += (tanjent.norm() - abs(mu1 * posDot)) * tanjent.unit();
 	//				proxyPos += (tanjent.norm() - abs(1.0 * posDot)) * tanjent.unit();
 				}
-				outForce.v() += addforce + (vibforce * addforce.unit());	// ユーザへの提示力		
+				outForce.v() += addforce;// + (vibforce * addforce.unit());	// ユーザへの提示力		
+
 	//			outForce.w.() += addtorque;										 
 				iPointer->interactInfo[i].mobility.force = -1 * addforce;						// 計算した力を剛体に加える
+//				DSTR << -1 * addforce << std::endl;
 				nInfo->test_force_norm = addforce.norm();
 				noContact = false;
 			}
@@ -117,8 +120,8 @@ void FWLDHapticLoop::HapticRendering(){
 		if(bDisplayforce) fInterface->SetForce(displayforce, displaytorque);
 		#else
 	//	if(bDisplayforce) 
-//			hif->SetForce(Vec3f(), Vec3f());			// 発振が怖いのでとりあえず出力なしで，あとでフラグをつくります
-			hif->SetForce(outForce.v(), Vec3d());					
+			hif->SetForce(Vec3f(), Vec3f());			// 発振が怖いのでとりあえず出力なしで，あとでフラグをつくります
+//			hif->SetForce(outForce.v(), Vec3d());					
 		#endif
 	}
 }
@@ -130,7 +133,10 @@ void FWLDHapticLoop::LocalDynamics(){
 		SpatialVector vel;
 		vel.v() = iSolid->copiedSolid.GetVelocity();
 		vel.w() = iSolid->copiedSolid.GetAngularVelocity();
-		if(GetLoopCount() == 1) vel += (iSolid->curb - iSolid->lastb) *  pdt;	// 衝突の影響を反映
+		if(GetLoopCount() == 1){
+			vel += (iSolid->curb - iSolid->lastb) *  pdt;	// 衝突の影響を反映
+//			DSTR << (iSolid->curb - iSolid->lastb) *  pdt << std::endl;
+		}
 		for(int j = 0; j < NInteractPointers(); j++){
 			FWInteractPointer* iPointer = GetInteractPointer(j);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
@@ -139,6 +145,7 @@ void FWLDHapticLoop::LocalDynamics(){
 			iInfo->mobility.force = Vec3d();
 		}
 		vel += iSolid->b * hdt;
+//		DSTR << vel.v() << std::endl;
 		iSolid->copiedSolid.SetVelocity(vel.v());																		
 		iSolid->copiedSolid.SetAngularVelocity(vel.w());
 		iSolid->copiedSolid.SetCenterPosition(iSolid->copiedSolid.GetCenterPosition() + vel.v() * hdt);
@@ -208,6 +215,7 @@ void FWLDHaptic::PhysicsStep(){
 		curvel.w() = phSolid->GetAngularVelocity();
 		double pdt = GetPHScene()->GetTimeStep();
 		GetINSolid(i)->curb = (curvel - lastvel[i]) / pdt;
+//		DSTR << GetINSolid(i)->curb << std::endl;
 	}
 }
 void FWLDHaptic::UpdatePointer(){
@@ -261,6 +269,7 @@ void FWLDHaptic::TestSimulation(){
 		inSolid->lastb = inSolid->b;
 		double pdt = phScene->GetTimeStep();
 		inSolid->b = (nextvel - curvel) / pdt;
+//		DSTR <<  inSolid->b << std::endl;
 		states->LoadState(phScene);						// 現在の状態に戻す
 
 		/// InteractPointerの数だけ力を加えるテストシミュレーションを行う
@@ -344,6 +353,7 @@ void FWLDHaptic::TestSimulation(){
 			u.col(2) = (nextvel - curvel) /pdt - inSolid->b;
 			
 			iInfo->mobility.A = u  * force.inv();			// モビリティAの計算
+//			DSTR <<  iInfo->mobility.A << std::endl;
 			states->LoadState(phScene);						// 元のstateに戻しシミュレーションを進める
 		}
 	}
@@ -352,4 +362,3 @@ void FWLDHaptic::TestSimulation(){
 		states2->LoadState(phScene);							// 元のstateに戻しシミュレーションを進める
 	#endif
 }
-

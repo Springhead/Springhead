@@ -157,7 +157,7 @@ void FWLDHapticSample::BuildScene(){
 		CDShapeIf* shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd);
 		// 剛体に形状を付加
 		soBox->AddShape(shapeBox);
-		soBox->SetFramePosition(Vec3d(0, 10, 0));
+		soBox->SetFramePosition(Vec3d(-5, 10, 0));
 	
 		// ポインタ
 		soBox = phscene->CreateSolid(desc);

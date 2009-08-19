@@ -16,6 +16,7 @@ public:
 	SpatialVector curb;				///< 通常シミュレーションででた定数項
 	SpatialVector lastb;			///< 前回の予測シミュレーションで求めた定数項
 	FWInteractSolid(){
+		bfirstSim = false; 
 		bSim = false;
 		sceneSolid = NULL;
 	}
