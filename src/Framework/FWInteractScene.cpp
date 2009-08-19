@@ -9,10 +9,9 @@ namespace Spr{;
 FWInteractScene::FWInteractScene(){}
 FWInteractScene::FWInteractScene(const FWInteractSceneDesc &desc) : FWInteractSceneDesc(desc){}
 
-FWSceneIf* FWInteractScene::GetScene(){
-	return fwScene; 
-}
-void FWInteractScene::CreateInteractAdaptee(FWInteractMode iMode){
+FWSceneIf* FWInteractScene::GetScene(){ return fwScene; }
+/// AdapteeŠÖŒW
+void FWInteractScene::CreateINAdaptee(FWInteractMode inMode){
 	FWInteractAdaptee* ia;
 	switch(mode){
 	case NONE:
@@ -20,51 +19,56 @@ void FWInteractScene::CreateInteractAdaptee(FWInteractMode iMode){
 		break;
 	case LOCAL_DYNAMICS:
 		ia = DBG_NEW FWLDHaptic();
-		ia->SetInteractScene(this);
+		ia->SetINScene(this);
 		break;
 	default:
 		ia = NULL;
 		break;
 	}
-	iAdaptee = ia;
-	iAdaptee->Init();
+	interactAdaptee = ia;
+	interactAdaptee->Init();
 }
-FWInteractAdaptee* FWInteractScene::GetInteractAdaptee(){
-	return iAdaptee;
+FWInteractAdaptee* FWInteractScene::GetINAdaptee(){ return interactAdaptee; }
+FWInteractMode FWInteractScene::GetINMode(){ return mode; }
+
+/// INPointerŠÖŒW
+FWInteractPointerIf* FWInteractScene::CreateINPointer(const FWInteractPointerDesc& desc){
+	FWInteractPointer* inPointer = DBG_NEW FWInteractPointer(desc); 
+	interactPointers.push_back(inPointer->Cast()); 
+	curINPointer = inPointer->Cast();
+	return curINPointer;
 }
-FWInteractPointerIf* FWInteractScene::CreateInteractPointer(const FWInteractPointerDesc& desc){
-	FWInteractPointer* iPointer = DBG_NEW FWInteractPointer(desc); 
-	interactPointers.push_back(iPointer->Cast()); 
-	curiPointer = iPointer->Cast();
-	return curiPointer;
-}
-FWInteractPointerIf* FWInteractScene::GetInteractPointer(int i){ 
-	if(i == -1) return curiPointer;
-	if(0 <= i && i < NInteractPointers()) return interactPointers[i];
+FWInteractPointerIf* FWInteractScene::GetINPointer(int i){ 
+	if(i == -1) return curINPointer;
+	if(0 <= i && i < NINPointers()) return interactPointers[i];
 	return NULL;
 }
-FWInteractPointers*	FWInteractScene::GetInteractPointers(){
-	return &interactPointers;
-}
-int FWInteractScene::NInteractPointers(){ 
-	return (int)interactPointers.size(); 
-}
+FWInteractPointers*	FWInteractScene::GetINPointers(){ return &interactPointers; }
+int FWInteractScene::NINPointers(){ return (int)interactPointers.size(); }
 
+/// INSolidŠÖŒW
+FWInteractSolid* FWInteractScene::GetINSolid(int i){
+	if(0 <= i && i < NINSolids()) return &interactSolids[i];
+	return NULL;
+}
+FWInteractSolids* FWInteractScene::GetINSolids(){ return &interactSolids; }
+int FWInteractScene::NINSolids(){ return (int)interactSolids.size(); }
 
+/// 
 void FWInteractScene::Init(){
-	GetInteractAdaptee()->Init();
+	GetINAdaptee()->Init();
 }
 void FWInteractScene::Step(){
-	GetInteractAdaptee()->Step();
+	GetINAdaptee()->Step();
 }
 void FWInteractScene::Clear(){
-	GetInteractAdaptee()->Clear();	
+	GetINAdaptee()->Clear();	
 }
 void FWInteractScene::Reset(){
-	GetInteractAdaptee()->Reset();
+	GetINAdaptee()->Reset();
 }
 void FWInteractScene::CallBackHapticLoop(){
-	GetInteractAdaptee()->CallBackHapticLoop();
+	GetINAdaptee()->CallBackHapticLoop();
 }
 
 

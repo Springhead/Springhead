@@ -4,29 +4,40 @@
 #include <Framework/SprFWInteractScene.h>
 #include <Foundation/Scene.h>
 #include <Framework/FWInteractPointer.h>
+#include <Framework/FWInteractSolid.h>
 #include <Framework/FWInteractAdaptee.h>
 
 namespace Spr{;
 
-
 class SPR_DLL FWInteractScene : public Scene, public FWInteractSceneDesc{
 protected:
-	FWInteractPointerIf*		curiPointer;
+	FWInteractPointerIf*		curINPointer;
 	FWInteractPointers			interactPointers;
-	UTRef<FWInteractAdaptee>	iAdaptee;
+	FWInteractSolids			interactSolids;
+	UTRef<FWInteractAdaptee>	interactAdaptee;
 public:
 	SPR_OBJECTDEF(FWInteractScene);
 	FWInteractScene();
 	FWInteractScene(const FWInteractSceneDesc& desc);
 
 	FWSceneIf* GetScene();
-	void CreateInteractAdaptee(FWInteractMode iMode);
-	FWInteractAdaptee* GetInteractAdaptee();
-	FWInteractPointerIf*	CreateInteractPointer(const FWInteractPointerDesc& desc);
-	FWInteractPointerIf*	GetInteractPointer(int i = -1);
-	FWInteractPointers*		GetInteractPointers();
-	int						NInteractPointers();
-	FWInteractMode			GetInteractMode(){ return mode; }
+
+	/// Adapteeä÷åW
+	void					CreateINAdaptee(FWInteractMode inMode);
+	FWInteractAdaptee*		GetINAdaptee();
+	FWInteractMode			GetINMode();
+
+	/// INPointerä÷åW
+	FWInteractPointerIf*	CreateINPointer(const FWInteractPointerDesc& desc);
+	FWInteractPointerIf*	GetINPointer(int i = -1);
+	FWInteractPointers*		GetINPointers();
+	int						NINPointers();
+
+	/// INSolidä÷åW
+	FWInteractSolid*		GetINSolid(int i);
+	FWInteractSolids*		GetINSolids();
+	int						NINSolids();
+
 
 	/// à»â∫ÇÃä÷êîÇÕadapteeÇÇ∆Ç®ÇµÇƒé¿ëïÇ™åƒÇŒÇÍÇÈ
 	void Init();
@@ -36,8 +47,7 @@ public:
 	void CallBackHapticLoop();
 
 };
-typedef UTRef<FWInteractSceneIf> UTRef_FWInteractSceneIf;
-typedef std::vector<UTRef_FWInteractSceneIf> FWInteractScenes;
+
 
 }
 #endif

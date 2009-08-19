@@ -293,27 +293,23 @@ void FWApp::CallJoystick(unsigned int buttonMask, int x, int y, int z){
 
 /** FWInteraction */
  ////////////////////////////////////////////////////////////////
-void FWApp::CreateHISdk(){
-	hiSdk = HISdkIf::CreateSdk();
-}
+void FWApp::CreateHISdk(){ hiSdk = HISdkIf::CreateSdk(); }
 HISdkIf* FWApp::GetHISdk(){ return hiSdk; }
 void FWApp::AddHI(HIBaseIf* hi){ humanInterfaces.push_back(hi); }
 HIBaseIf* FWApp::GetHI(int i){ return humanInterfaces[i]; }
-FWInteractSceneIf* FWApp::CreateInteractScene(const FWInteractSceneDesc &desc){
-	FWInteractScene* iScene = DBG_NEW FWInteractScene(desc);
-	interactScenes.push_back(iScene->Cast());
-	iScene->CreateInteractAdaptee(desc.mode);
-	curiScene = iScene->Cast();
-	return curiScene;
+FWInteractSceneIf* FWApp::CreateINScene(const FWInteractSceneDesc &desc){
+	FWInteractScene* inScene = DBG_NEW FWInteractScene(desc);
+	inScenes.push_back(inScene->Cast());
+	inScene->CreateINAdaptee(desc.mode);
+	curINScene = inScene->Cast();
+	return curINScene;
 }
-FWInteractSceneIf* FWApp::GetInteractScene(int i){
-	if(i == -1) return curiScene;
-	if(0 <= i && i < NInteractScene()) return interactScenes[i];
+FWInteractSceneIf* FWApp::GetINScene(int i){
+	if(i == -1) return curINScene;
+	if(0 <= i && i < NINScenes()) return inScenes[i];
 	return NULL;
 }
-int FWApp::NInteractScene(){
-	return (int)interactScenes.size();
-}
+int FWApp::NINScenes(){ return (int)inScenes.size(); }
 ///////////////////////////////////////////////////////////////////////////////////
 
 

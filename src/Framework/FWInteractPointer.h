@@ -25,7 +25,6 @@ public:
 	double GetPosScale();
 	void SetLocalRange(double r);
 	double GetLocalRange();
-
 };
 
 }
