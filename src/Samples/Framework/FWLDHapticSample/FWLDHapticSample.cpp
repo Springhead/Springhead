@@ -1,5 +1,4 @@
 #include "FWLDHapticSample.h"
-//#include "SampleModel.h"
 #include <iostream>
 #include <sstream>
 #include <GL/glut.h>
