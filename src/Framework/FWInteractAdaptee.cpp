@@ -164,41 +164,46 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 	FWInteractInfo* iInfo = &iPointer->interactInfo[index]; 
 	PHSolidIf* phSolid = GetInteractSolid(index)->sceneSolid->Cast();
 	PHSolidIf* soPointer = iPointer->GetPointerSolid();
-	CDConvexIf* a = DCAST(CDConvexIf, phSolid->GetShape(0));				///< 剛体が持つ凸形状
-	CDConvexIf* b = DCAST(CDConvexIf, soPointer->GetShape(0));				///< 力覚ポインタの凸形状
-	Posed a2w = phSolid->GetPose();											///< 剛体の姿勢
-	Posed b2w = soPointer->GetPose();										///< 力覚ポインタの姿勢
-	Vec3d dir = -1.0 * iInfo->neighborInfo.face_normal;
-	Vec3d cp = phSolid->GetCenterPosition();								///< 剛体の重心
-	Vec3d normal;															///< 剛体から力覚ポインタへの法線(ワールド座標)
-	Vec3d pa, pb;															///< pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
 
-	/// GJKを使った近傍点探索
-	double r = FindNearestPoint(a, b, a2w, b2w, dir, cp, normal, pa, pb);	
+	if (!phSolid->NShape()==0){													///< 形状を持たない剛体の場合は行わない
+		CDConvexIf* a = DCAST(CDConvexIf, phSolid->GetShape(0));				///< 剛体が持つ凸形状
+		
+		CDConvexIf* b = DCAST(CDConvexIf, soPointer->GetShape(0));				///< 力覚ポインタの凸形状
+		Posed a2w = phSolid->GetPose();											///< 剛体の姿勢
+		Posed b2w = soPointer->GetPose();										///< 力覚ポインタの姿勢
+		Vec3d dir = -1.0 * iInfo->neighborInfo.face_normal;
+		Vec3d cp = phSolid->GetCenterPosition();								///< 剛体の重心
+		Vec3d normal;															///< 剛体から力覚ポインタへの法線(ワールド座標)
+		Vec3d pa, pb;															///< pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
 
-	/// 近傍点までの長さから近傍物体を絞る
-	if(r < iPointer->GetLocalRange()){
-		/// 初めて最近傍物体になった場合
-		if(iInfo->flag.blocal == false){																
-			iInfo->flag.bfirstlocal = true;													
-			iInfo->neighborInfo.face_normal = normal;	// 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．										
-			#ifdef _DEBUG
-				if (iInfo->neighborInfo.face_normal * normal < 0.8){
-					DSTR << "Too big change on normal = " << normal << std::endl;
-				}
-			#endif
+		/// GJKを使った近傍点探索
+		double r = FindNearestPoint(a, b, a2w, b2w, dir, cp, normal, pa, pb);	
+		
+
+		/// 近傍点までの長さから近傍物体を絞る
+		if(r < iPointer->GetLocalRange()){
+			/// 初めて最近傍物体になった場合
+			if(iInfo->flag.blocal == false){																
+				iInfo->flag.bfirstlocal = true;													
+				iInfo->neighborInfo.face_normal = normal;	// 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．										
+				#ifdef _DEBUG
+					if (iInfo->neighborInfo.face_normal * normal < 0.8){
+						DSTR << "Too big change on normal = " << normal << std::endl;
+					}
+				#endif
+			}
+			/// 初めて近傍または継続して近傍だった場合
+			iInfo->flag.blocal = true;								// 近傍物体なのでblocalをtrueにする
+			iInfo->neighborInfo.closest_point = pa;					// 剛体近傍点のローカル座標
+			iInfo->neighborInfo.pointer_point = pb;					// 力覚ポインタ近傍点のローカル座標
+			iInfo->neighborInfo.last_face_normal = iInfo->neighborInfo.face_normal;		// 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
+			iInfo->neighborInfo.face_normal = normal;				// 剛体から力覚ポインタへの法線
+		}else{
+			/// 近傍物体ではないのでfalseにする
+			iInfo->flag.bneighbor = false;
+			iInfo->flag.bfirstlocal = false;						
+			iInfo->flag.blocal = false;																
 		}
-		/// 初めて近傍または継続して近傍だった場合
-		iInfo->flag.blocal = true;								// 近傍物体なのでblocalをtrueにする
-		iInfo->neighborInfo.closest_point = pa;					// 剛体近傍点のローカル座標
-		iInfo->neighborInfo.pointer_point = pb;					// 力覚ポインタ近傍点のローカル座標
-		iInfo->neighborInfo.last_face_normal = iInfo->neighborInfo.face_normal;		// 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
-		iInfo->neighborInfo.face_normal = normal;				// 剛体から力覚ポインタへの法線
-	}else{
-		/// 近傍物体ではないのでfalseにする
-		iInfo->flag.bneighbor = false;
-		iInfo->flag.bfirstlocal = false;						
-		iInfo->flag.blocal = false;																
 	}
 }
 
