@@ -287,6 +287,7 @@ void OnKey(char key){
  return 	なし
  */
 void display(){
+	render->SetClearColor(Vec4f(0,0,1,1));
 	render->ClearBuffer();
 	render->DrawScene(scene);
 	render->EndScene();
@@ -391,15 +392,15 @@ int main(int argc, char* argv[]){
 	render->SetDevice(device);	// デバイスの設定
 	//	カメラの設定
 	GRCameraDesc cam;
-	cam.size = Vec2d(0.05, 0);
+//	cam.size = Vec2d(0.05, 0);
 	render->SetCamera(cam);	
 	initialize();
 
 	// 視点の設定
 	Affinef view;
-	view.Pos() = Vec3f(1.0, 0.8, -2.1);								// 目の位置（観察用）
-//	view.Pos() = Vec3f(0.0, 3.0,  0.1);								// （確認用）
-	view.LookAtGL(Vec3f(0.0, 0.3, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
+//	view.Pos() = Vec3f(1.0, 0.8, -2.1);								// 目の位置（観察用）
+	view.Pos() = Vec3f(0.0, 0.3,  -10);							// （確認用）
+	view.LookAt(Vec3f(0.0, 0.3, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
