@@ -120,8 +120,8 @@ void FWLDHapticLoop::HapticRendering(){
 		if(bDisplayforce) fInterface->SetForce(displayforce, displaytorque);
 		#else
 	//	if(bDisplayforce) 
-			hif->SetForce(Vec3f(), Vec3f());			// ”­U‚ª•|‚¢‚Ì‚Å‚Æ‚è‚ ‚¦‚¸o—Í‚È‚µ‚ÅC‚ ‚Æ‚Åƒtƒ‰ƒO‚ð‚Â‚­‚è‚Ü‚·
-//			hif->SetForce(outForce.v(), Vec3d());					
+//			hif->SetForce(Vec3f(), Vec3f());			// ”­U‚ª•|‚¢‚Ì‚Å‚Æ‚è‚ ‚¦‚¸o—Í‚È‚µ‚ÅC‚ ‚Æ‚Åƒtƒ‰ƒO‚ð‚Â‚­‚è‚Ü‚·
+			hif->SetForce(outForce.v(), Vec3d());					
 		#endif
 	}
 }

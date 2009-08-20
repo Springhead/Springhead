@@ -57,7 +57,11 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 		for(int j = 0; j < NINPointers(); j++){
 			FWInteractPointer* inPointer = GetINPointer(j);
 			PHSolid* soPointer = GetINPointer(j)->pointerSolid->Cast();
-			if (soPointer != phSolid){
+			for(int k = 0; k < NINPointers(); k++){
+				if(phSolid == GetINPointer(k)->pointerSolid->Cast()) phSolid = NULL;
+			}
+			
+			if (soPointer != phSolid && phSolid){
 				// AABBで力覚ポインタ近傍の物体を絞る
 				// ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 				//1. BBoxレベルの衝突判定	
