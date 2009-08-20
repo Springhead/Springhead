@@ -48,7 +48,7 @@ std::vector<PHSolidIf*> soTarget;
 
 /** 実験用変数 **/
 const double dt = 0.05	;					//積分幅
-const int niter = 200;						//LCPはんぷくかいすう
+const int niter = 20;						//LCPはんぷくかいすう
 
 bool bTimer = true;			//	タイマーでシミュレーションを進めるかどうか
 
@@ -160,8 +160,8 @@ void BuildScene(){
 	jd.posePlug.Pos() = Vec3d(0, 0.1, 0);
 	jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	jd.poseSocket.Pos() = Vec3d(0, -0.08, 0);
-	jd.damper = 3.0;
-	jd.spring = 3.0;
+	jd.damper = 1.0;
+	jd.spring = 100.0;
 	jd.origin = Rad(0);
 	jntLink.push_back(scene->CreateJoint(soBox[5], soBox[2], jd));
 
@@ -287,7 +287,16 @@ void OnKey(char key){
  return 	なし
  */
 void display(){
-	render->SetClearColor(Vec4f(0,0,1,1));
+	// 視点の設定
+	Affinef view;
+//	view.Pos() = Vec3f(1.0, 0.8, -2.1);						// 目の位置（観察用）
+	view.Pos() = Vec3f(0.0, 0.3, - 1);						// （確認用）
+	view.LookAtGL(Vec3f(0.0, 0.3, 0.0));					// center, up 
+	render->SetViewMatrix(view.inv());
+
+	render->EnableRenderContact();
+	render->EnableRenderForce();
+	render->SetClearColor(Vec4f(0,0,0,1));
 	render->ClearBuffer();
 	render->DrawScene(scene);
 	render->EndScene();
@@ -392,17 +401,7 @@ int main(int argc, char* argv[]){
 	render->SetDevice(device);	// デバイスの設定
 	//	カメラの設定
 	GRCameraDesc cam;
-//	cam.size = Vec2d(0.05, 0);
 	render->SetCamera(cam);	
 	initialize();
-
-	// 視点の設定
-	Affinef view;
-//	view.Pos() = Vec3f(1.0, 0.8, -2.1);								// 目の位置（観察用）
-	view.Pos() = Vec3f(0.0, 0.3,  -10);							// （確認用）
-	view.LookAt(Vec3f(0.0, 0.3, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
-	view = view.inv();	
-	render->SetViewMatrix(view);
-
 	glutMainLoop();
 }
