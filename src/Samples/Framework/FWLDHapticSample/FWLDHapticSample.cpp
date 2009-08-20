@@ -68,9 +68,13 @@ void FWLDHapticSample::InitHumanInterface(){
 
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
-	UTRef<HISpidarGIf> spg = GetHISdk()->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
-	AddHI(spg);
+	UTRef<HISpidarGIf> spg[2];
+	for(size_t i = 0; i < 2; i++){
+		spg[i] = GetHISdk()->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+		if(i == 0) spg[i]->Init(&HISpidarGDesc("SpidarG6X3R"));
+		if(i == 1) spg[i]->Init(&HISpidarGDesc("SpidarG6X3L"));
+		AddHI(spg[i]);
+	}
 }
 
 void FWLDHapticSample::IdleFunc(){
@@ -160,21 +164,23 @@ void FWLDHapticSample::BuildScene(){
 		soBox->SetFramePosition(Vec3d(-5, 10, 0));
 	
 		// ƒ|ƒCƒ“ƒ^
-		soBox = phscene->CreateSolid(desc);
-		CDSphereDesc sd;
-		sd.radius = 0.5;//1.0;
-		CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
-		soBox->AddShape(shapePointer);
-		soBox->SetDynamical(false);
-		GetSdk()->GetScene()->GetPHScene()->SetContactMode(soBox, PHSceneDesc::MODE_NONE);
-		FWInteractPointerDesc idesc;
-		idesc.pointerSolid = soBox;;
-		idesc.humanInterface = GetHI(0); 
-		idesc.springK = 10;
-		idesc.damperD = 0.0;
-		idesc.posScale = 300;
-		idesc.localRange = 0.7 * 10;
-		GetINScene()->CreateINPointer(idesc);
+		for(int i= 0; i < 2; i++){
+			soBox = phscene->CreateSolid(desc);
+			CDSphereDesc sd;
+			sd.radius = 0.5;//1.0;
+			CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
+			soBox->AddShape(shapePointer);
+			soBox->SetDynamical(false);
+			GetSdk()->GetScene()->GetPHScene()->SetContactMode(soBox, PHSceneDesc::MODE_NONE);
+			FWInteractPointerDesc idesc;
+			idesc.pointerSolid = soBox;;
+			idesc.humanInterface = GetHI(i); 
+			idesc.springK = 10;
+			idesc.damperD = 0.0;
+			idesc.posScale = 300;
+			idesc.localRange = 0.7 * 10;
+			GetINScene()->CreateINPointer(idesc);
+		}
 	}
 }
 
