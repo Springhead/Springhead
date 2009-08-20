@@ -72,8 +72,6 @@ void FWBoneCreate::SetFWBone(){
 				bone.back()->grFrame				= frame1;
 				bone.back()->worldTransformAffine	= frame1->GetWorldTransform();
 				bone.back()->TransformAffine		= frame1->GetTransform();
-				Posed pose; pose.FromAffine(frame1->GetWorldTransform());
-				cout<<i<<" : "<<pose<<endl;
 			}
 		}
 	}
@@ -144,8 +142,6 @@ void FWBoneCreate::SetBoneJoint(){
 	if (bone.size()){
 		for(unsigned int i=0 ;i<bone.size(); ++i){
 			if(!(bone[i]->parentBone==NULL)){
-
-				Affined	PNodeAffine=bone[i]->parentBone->worldTransformAffine;
 				Affined	CNodeAffine=bone[i]->TransformAffine;
 				Posed posOri; posOri.FromAffine(CNodeAffine);
 
@@ -163,7 +159,7 @@ void FWBoneCreate::GenerateBone(){
 	for(unsigned int i=0; i<bone.size(); ++i){
 		//soBone�̍쐬
 		PHSolidDesc	desc;
-		desc.mass = 1;//0.0005;
+		desc.mass = 0.0005;
 		desc.inertia = 0.033 * Matrix3d::Unit();
 		soBone.push_back(phScene->CreateSolid(desc));
 		bone[i]->phSolid=soBone[i];
