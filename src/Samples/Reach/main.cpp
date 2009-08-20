@@ -25,8 +25,8 @@ using namespace Spr;
 
 #define ESC		27
 
-PHSdkIf* phSdk;			// SDKインタフェース
-GRSdkIf* grSdk;
+UTRef<PHSdkIf> phSdk;			// SDKインタフェース
+UTRef<GRSdkIf> grSdk;
 PHSceneIf* scene;		// Sceneインタフェース
 GRDebugRenderIf* render;
 GRDeviceGLIf* device;
@@ -287,50 +287,12 @@ void OnKey(char key){
  return 	なし
  */
 void display(){
-	// 視点の設定
-	Affinef view;
-//	view.Pos() = Vec3f(1.0, 0.8, -2.1);						// 目の位置（観察用）
-	view.Pos() = Vec3f(0.0, 0.3, - 1);						// （確認用）
-	view.LookAtGL(Vec3f(0.0, 0.3, 0.0));					// center, up 
-	render->SetViewMatrix(view.inv());
-
-	render->EnableRenderContact();
-	render->EnableRenderForce();
-	render->SetClearColor(Vec4f(0,0,0,1));
 	render->ClearBuffer();
 	render->DrawScene(scene);
 	render->EndScene();
 	glutSwapBuffers();
 }
 
-/**
- brief     	光源の設定
- param	 	なし
- return 	なし
- */
-void setLight() {
-	GRLightDesc light0, light1;
-	light0.position = Vec4f(10.0, 20.0, 20.0, 1.0);
-	light1.position = Vec4f(-10.0, 10.0, 10.0, 1.0);
-	render->PushLight(light0);
-	render->PushLight(light1);
-}
-
-/**
- brief     	初期化処理
- param	 	なし
- return 	なし
- */
-void initialize(){
-	glClearColor(0.0, 0.0, 0.0, 1.0);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_NORMALIZE);
-
-	setLight();
-}
 
 /**
  brief		glutReshapeFuncで指定したコールバック関数
@@ -398,10 +360,28 @@ int main(int argc, char* argv[]){
 	glutKeyboardFunc(keyboard);
 	//glutIdleFunc(idle);
 	
-	render->SetDevice(device);	// デバイスの設定
+	// デバイスの設定
+	render->SetDevice(device);	
+	//	光源の設定
+	GRLightDesc light0, light1;
+	light0.position = Vec4f(10.0, 20.0, 20.0, 1.0);
+	light1.position = Vec4f(-10.0, 10.0, 10.0, 1.0);
+	render->PushLight(light0);
+	render->PushLight(light1);
+	//	レンダリングモードの設定
+	render->EnableRenderContact();
+	render->EnableRenderForce();
+	render->SetClearColor(Vec4f(0,0,0,1));
+
 	//	カメラの設定
 	GRCameraDesc cam;
 	render->SetCamera(cam);	
-	initialize();
+	// 視点の設定
+	Affinef view;
+//	view.Pos() = Vec3f(1.0, 0.8, -2.1);						// 目の位置（観察用）
+	view.Pos() = Vec3f(0.0, 0.3, - 1);						// （確認用）
+	view.LookAtGL(Vec3f(0.0, 0.3, 0.0));					// center, up 
+	render->SetViewMatrix(view.inv());
+
 	glutMainLoop();
 }
