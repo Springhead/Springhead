@@ -45,8 +45,8 @@ class FWBoneCreate;
 		double D2;
 		double yieldStress;
 		double hardnessRate;
-		Vec3f SocketPos;
-		Vec3f PlugPos;
+		Posed  SocketPos;
+		Posed  PlugPos;
 	};
 
 	class FWBone : public FWObject,public FWBoneDesc{
@@ -56,13 +56,14 @@ class FWBoneCreate;
 		FWBoneDesc desc;
 		FWBone(const FWBoneDesc& d=FWBoneDesc()); // コンストラクタ
 
-		Vec3d		centerPoint;
-		double		length;
+		Vec3d			centerPoint;
+		double			length;
 		CDRoundConeIf*	shapeBone;
-		Affinef		worldTransformAffine;
-		FWBone*		parentBone;
-		PHJointIf*  joint;
-		BoneJoint	jointData;
+		Affinef			worldTransformAffine;
+		Affinef			TransformAffine;
+		FWBone*			parentBone;
+		PHJointIf*		joint;
+		BoneJoint		jointData;
 		
 		PHSolidIf*		GetPHSolid(){ return phSolid; }
 		void			SetPHSolid(PHSolidIf* s){ phSolid = s; }
@@ -70,7 +71,7 @@ class FWBoneCreate;
 		void			SetGRFrame(GRFrameIf* f){ grFrame = f; }
 		CDRoundConeIf*	GetShape(){return shapeBone;}
 		void			SetShapeRadius(double r1,double r2){
-						shapeBone->SetWidth(Vec2f(r1,r2));
+							shapeBone->SetWidth(Vec2f(r1,r2));
 						}
 		PHJointIf*		GetJoint(){return joint;} 
 		void			SetJointKDD2(double K,double D, double D2);
@@ -99,6 +100,7 @@ class FWBoneCreate;
 		bool		BoneDetector(GRFrameIf* frame1,GRFrameIf* frame2);
 		Vec3d		BonePosition(GRFrameIf* frame1,GRFrameIf* frame2);
 		double		BoneLength(GRFrameIf* frame1,GRFrameIf* frame2);
+		Posed		BonePose(FWBone* Bone);
 		//CDBoxIf*	BoneShape(GRFrameIf* frame1,GRFrameIf* frame2);
 		CDRoundConeIf* BoneShapeCone(GRFrameIf* frame1,GRFrameIf* frame2);
 		FWBone*		ParentBone(GRFrameIf* frame1);
@@ -109,6 +111,8 @@ class FWBoneCreate;
 		void		FWPHBoneCreate();
 		void		FWJointCreate();
 		void		FWSkinMeshAdapt();
+
+		void		FWAxis(Posed pose);
 	public:
 		void		Boot(GRMesh* m,PHScene* s);
 

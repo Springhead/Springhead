@@ -21,8 +21,8 @@ BoneJoint::BoneJoint()
 	D2				= 0.1;
 	yieldStress		= 0.1;
 	hardnessRate	= 1e3;
-	SocketPos		=Vec3f(0.0,0.0,0.0);
-	PlugPos			=Vec3f(0.0,0.0,0.0);
+	SocketPos		=Posed();
+	PlugPos			=Posed();
 }
 
 FWBone::FWBone(const FWBoneDesc& d/*=FWObjectDesc()*/)
@@ -48,8 +48,8 @@ void FWBoneCreate::Boot(GRMesh* mesh, PHScene* phScene){
 	phSceneIf =phScene->Cast();
 
 	SetFWBone();		//Xファイルの情報をFWBoneデータ構造に変換
-	SetBoneJoint();		//FWBoneのデータから親に対するジョイントのプラグ，ソケットの位置測りFWBoneに代入
 	GenerateBone();		//シーンに剛体を作成
+	SetBoneJoint();		//FWBoneのデータから親に対するジョイントのプラグ，ソケットの位置測りFWBoneに代入
 	FWJointCreate();	//シーンにジョイントを作成
 	ContactCanceler();	//連なる剛体の接触を切る
 	FWSkinMeshAdapt();	//FWObjectに代入し，スキンメッシュを適合する
@@ -71,6 +71,9 @@ void FWBoneCreate::SetFWBone(){
 				bone.back()->parentBone				= ParentBone(frame1);
 				bone.back()->grFrame				= frame1;
 				bone.back()->worldTransformAffine	= frame1->GetWorldTransform();
+				bone.back()->TransformAffine		= frame1->GetTransform();
+				Posed pose; pose.FromAffine(frame1->GetWorldTransform());
+				cout<<i<<" : "<<pose<<endl;
 			}
 		}
 	}
@@ -103,7 +106,7 @@ double FWBoneCreate::BoneLength(GRFrameIf* frame1,GRFrameIf* frame2){
 }
 /*2つのgrFrameからshape(ラウンドコーン）を作成*/
 CDRoundConeIf* FWBoneCreate::BoneShapeCone(GRFrameIf* frame1,GRFrameIf* frame2){
-	double wide=0.5;
+	double wide=0.1;
 	double lengthRate=1.0;
 	double length=BoneLength(frame1,frame2);
 	CDRoundConeDesc desc;
@@ -126,13 +129,30 @@ FWBone* FWBoneCreate::ParentBone(GRFrameIf* frame1){
 	}
 	return parentBone;
 }
+
+/*boneのPoseを設定*/
+Posed FWBoneCreate::BonePose(FWBone* bone){
+	Posed pose,pose2;
+	pose.PosZ()=-bone->length/2;
+	pose2.FromAffine(bone->worldTransformAffine);
+	pose=pose2*pose;
+	return pose;
+}
+
 /*親boneに対するBoneJointデータを設定*/
 void FWBoneCreate::SetBoneJoint(){
 	if (bone.size()){
 		for(unsigned int i=0 ;i<bone.size(); ++i){
 			if(!(bone[i]->parentBone==NULL)){
-				bone[i]->jointData.SocketPos=Vec3f(0.0,0.0, -bone[i]->parentBone->length/2);
-				bone[i]->jointData.PlugPos=Vec3f(0.0,0.0, bone[i]->length/2);
+
+				Affined	PNodeAffine=bone[i]->parentBone->worldTransformAffine;
+				Affined	CNodeAffine=bone[i]->TransformAffine;
+				Posed posOri; posOri.FromAffine(CNodeAffine);
+
+				bone[i]->jointData.SocketPos.Pos()=Vec3f(0.0,0.0, -bone[i]->parentBone->length/2);
+				bone[i]->jointData.PlugPos.Pos()=Vec3f(0.0,0.0, bone[i]->length/2);
+				bone[i]->jointData.SocketPos.Ori()=posOri.Ori();
+
 			}
 		}
 	}
@@ -143,7 +163,7 @@ void FWBoneCreate::GenerateBone(){
 	for(unsigned int i=0; i<bone.size(); ++i){
 		//soBoneの作成
 		PHSolidDesc	desc;
-		desc.mass = 0.0005;
+		desc.mass = 1;//0.0005;
 		desc.inertia = 0.033 * Matrix3d::Unit();
 		soBone.push_back(phScene->CreateSolid(desc));
 		bone[i]->phSolid=soBone[i];
@@ -154,11 +174,7 @@ void FWBoneCreate::GenerateBone(){
 				bone[i]->phSolid->SetDynamical(true);
 			}
 			//ボーンの初期位置を設定
-			Posed pose,pose2;
-			pose.PosZ()=-bone[i]->length/2;
-			pose2.FromAffine(bone[i]->worldTransformAffine);
-			pose=pose2*pose;
-			bone[i]->phSolid->SetPose(pose);
+			bone[i]->phSolid->SetPose(BonePose(bone[i]));
 		}
 		//shapeBoneの作成
 		if(i>0){
@@ -173,8 +189,8 @@ void FWBoneCreate::FWJointCreate(){
 			if(!(bone[i]->parentBone==NULL)){
 				PH3ElementBallJointDesc d3Ball;
 				{
-					d3Ball.poseSocket.Pos()	= bone[i]->jointData.SocketPos;
-					d3Ball.posePlug.Pos()	= bone[i]->jointData.PlugPos;
+					d3Ball.poseSocket		= bone[i]->jointData.SocketPos;
+					d3Ball.posePlug			= bone[i]->jointData.PlugPos;
 					d3Ball.spring			= bone[i]->jointData.K;
 					d3Ball.damper			= bone[i]->jointData.D1;
 					d3Ball.secondDamper		= bone[i]->jointData.D2;
@@ -220,4 +236,21 @@ void FWBoneCreate::FWSkinMeshAdapt(){
 	}
 }
 
+
+void FWBoneCreate::FWAxis(Posed pose){
+	PHSolidDesc	desc;
+	desc.mass = 0.0005;
+	desc.inertia = 0.033 * Matrix3d::Unit();
+	PHSolidIf* phSolid = phScene->CreateSolid(desc);
+
+	CDRoundConeDesc sdesc;
+	sdesc.length=2.0;
+	sdesc.radius=Vec2f(0.2,0.01);
+	CDShapeIf* shape=fwSdk->GetPHSdk()->CreateShape(sdesc);
+	phSolid->AddShape(shape);
+
+	phSolid->SetDynamical(false);
+	phSolid->SetPose(pose);
+
+}
 }
