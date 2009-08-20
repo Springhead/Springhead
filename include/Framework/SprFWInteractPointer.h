@@ -13,6 +13,7 @@ public:
 	HIBaseIf*	humanInterface; 
 	double		springK;
 	double		damperD;
+	Posed		position;
 	double		posScale;
 	double		localRange;
 	FWInteractPointerDesc(){ Init(); }
@@ -21,6 +22,7 @@ public:
 		humanInterface = NULL;
 		springK = 0.0;
 		damperD = 0.0;
+		position = Posed();
 		posScale = 1.0;
 		localRange = 0.1;
 	}
@@ -38,6 +40,8 @@ public:
 	double		GetPosScale();
 	void		SetLocalRange(double r);
 	double		GetLocalRange();
+	void		SetPosition(Posed p);
+	Posed		GetPosition();
 };
 
 //typedef UTRef<FWInteractPointerIf> UTRef_FWInteractPointerIf;

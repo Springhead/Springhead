@@ -15,6 +15,7 @@ protected:\
 	HIBaseIf*	humanInterface;	\
 	double	springK;	\
 	double	damperD;	\
+	Posed	position;	\
 	double	posScale;	\
 	double	localRange;	\
 public:\
@@ -23,6 +24,7 @@ public:\
 		humanInterface = ((FWInteractPointerDesc*)ptr)->humanInterface;	\
 		springK = ((FWInteractPointerDesc*)ptr)->springK;	\
 		damperD = ((FWInteractPointerDesc*)ptr)->damperD;	\
+		position = ((FWInteractPointerDesc*)ptr)->position;	\
 		posScale = ((FWInteractPointerDesc*)ptr)->posScale;	\
 		localRange = ((FWInteractPointerDesc*)ptr)->localRange;	\
 		AfterSetDesc();	\
@@ -33,6 +35,7 @@ public:\
 		((FWInteractPointerDesc*)ptr)->humanInterface = humanInterface;	\
 		((FWInteractPointerDesc*)ptr)->springK = springK;	\
 		((FWInteractPointerDesc*)ptr)->damperD = damperD;	\
+		((FWInteractPointerDesc*)ptr)->position = position;	\
 		((FWInteractPointerDesc*)ptr)->posScale = posScale;	\
 		((FWInteractPointerDesc*)ptr)->localRange = localRange;	\
 		return true;	\

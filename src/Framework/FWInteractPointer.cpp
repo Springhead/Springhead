@@ -33,4 +33,10 @@ namespace Spr{;
 	double FWInteractPointer::GetLocalRange(){
 		return localRange; 
 	}
+	void  FWInteractPointer::SetPosition(Posed p){
+		position = p;
+	}
+	Posed  FWInteractPointer::GetPosition(){
+		return position; 
+	}
 }

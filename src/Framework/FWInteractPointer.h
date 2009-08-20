@@ -25,6 +25,8 @@ public:
 	double GetPosScale();
 	void SetLocalRange(double r);
 	double GetLocalRange();
+	void	SetPosition(Posed p);
+	Posed	GetPosition();
 };
 
 }

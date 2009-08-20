@@ -17,6 +17,8 @@
 	double GetPosScale(){	return	base::GetPosScale();}	\
 	void SetLocalRange(double r){	base::SetLocalRange(r);}	\
 	double GetLocalRange(){	return	base::GetLocalRange();}	\
+	void SetPosition(Posed p){	base::SetPosition(p);}	\
+	Posed GetPosition(){	return	base::GetPosition();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractSceneIf(base)	\
 	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
