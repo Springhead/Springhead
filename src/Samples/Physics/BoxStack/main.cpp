@@ -522,8 +522,10 @@ void __cdecl timer(int id){
 	/// 時刻のチェックと画面の更新を行う
 	float DT = 0.05f;
 	if (bStep) scene->Step();
+/*
+	//	dv には拘束による速度変化が入るので、剛体に加わった拘束力を取り出すことができる。
 	if (soBox.size()) DSTR << ((PHSolid*)soBox.back())->dv << std::endl;
-	
+*/	
 /*
 	{
 		// SaveState, LoadStateを利用して1ステップ先の結果を見る
