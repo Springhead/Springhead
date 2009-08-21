@@ -48,7 +48,7 @@ std::vector<PHSolidIf*> soTarget;
 
 /** 実験用変数 **/
 const double dt = 0.05	;					//積分幅
-const int niter = 20;						//LCPはんぷくかいすう
+const int niter = 15;						//LCPはんぷくかいすう
 
 bool bTimer = true;			//	タイマーでシミュレーションを進めるかどうか
 
@@ -60,8 +60,8 @@ void step(){
 	glutPostRedisplay();
 }
 void timer(int id){
-	if (!bTimer) return;
 	glutTimerFunc(simulationPeriod, timer, 0);
+	if (!bTimer) return;
 	step();
 }
 

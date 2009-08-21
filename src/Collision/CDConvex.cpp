@@ -55,7 +55,7 @@ void CDConvex::Analyze(){
 //	g_included = 0;
 	boxels.clear();
 	float vol = (bbmax.x - bbmin.x) * (bbmax.y - bbmin.y) * (bbmax.z - bbmin.z);
-	AccumulateBoxels(bbmin, bbmax, vol * 0.001f);
+	AccumulateBoxels(bbmin, bbmax, vol * 0.01f);
 	volume = 0.0f;
 	center.clear();
 	if(boxels.size()){

@@ -241,8 +241,18 @@ void PHConstraint::IterateLCP(){
 	int i, j;
 	for(j = 0; j < 6; j++){
 		if(!constr[j])continue;
+		
+		//	hase 2009.08.21
+		//	1.5倍のSORになっていたが、深い接触が有る場合、かなり不安定化する。
+#if 0
 		fnew[j] = f[j] - 1.5 * Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
 									+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
+#else
+		//	1.0＝普通のガウスザイデルにすると安定化するので、無理にSORにしない方が良いと思われる。
+		//	そこで、普通のガウスザイデルに変更した
+		fnew[j] = f[j] - Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
+									+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
+#endif
 
 		// とりあえず落ちないように間に合わせのコード
 		if (!FPCK_FINITE(fnew[j])) fnew[j] = f[j];
