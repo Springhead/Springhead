@@ -71,14 +71,14 @@ void FWLDHapticLoop::HapticRendering(){
 				Vec3d ortho = f * interpolation_normal;			// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 				Vec3d dv = cSolid->GetPointVelocity(cPoint) - iPointer->hiSolid.GetPointVelocity(pPoint);
 				Vec3d dvortho = dv.norm() * interpolation_normal;
-				
+
 				Vec3d addforce = Vec3d(0,0,0);
 				double K = iPointer->springK;
 				double D = iPointer->damperD;
 	//			if(!bproxy){
 					addforce = -K * ortho + D * dvortho;// * ortho.norm();								// 提示力計算 (*ダンパの項にorthoのノルムをかけてみた)
-	//			}else{
-	//				addforce = -K * (pPoint - (proxy[i]+phSolid->GetCenterPosition())) + D * dvortho;	// 提示力計算(proxy)
+//			}else{
+//					addforce = -K * (pPoint - (proxy[i]+cSolid->GetCenterPosition())) + D * dvortho;	// 提示力計算(proxy)
 	//			}
 				//Vec3d addtorque = (pPoint - hpointer.GetCenterPosition()) % addforce ;
 
@@ -107,8 +107,9 @@ void FWLDHapticLoop::HapticRendering(){
 				}
 				outForce.v() += addforce;// + (vibforce * addforce.unit());	// ユーザへの提示力		
 
-	//			outForce.w.() += addtorque;										 
-				iPointer->interactInfo[i].mobility.force = -1 * addforce;						// 計算した力を剛体に加える
+	//			outForce.w.() += addtorque;
+				/// 計算した力を剛体に加える
+				iPointer->interactInfo[i].mobility.force = -1 * addforce;						
 //				DSTR << -1 * addforce << std::endl;
 				nInfo->test_force_norm = addforce.norm();
 				noContact = false;
