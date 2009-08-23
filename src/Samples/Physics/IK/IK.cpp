@@ -26,25 +26,44 @@ IK::IK(){
 	gravity		= Vec3d(0.0, -9.8, 0.0);
 }
 
+void IK::TimerFunc(int id){
+	((IK*)instance)->GetTimerFunc(0)->Loop();
+	((IK*)instance)->CallStep();
+	((IK*)instance)->GetGRAdaptee()->PostRedisplay();
+}
+
+void IK::CallStep(){
+	if(!vfBridge || !vfBridge->Step()) {
+		Step();
+	}
+}
+
 void IK::Init(int argc, char* argv[]){
-	FWAppGLUT::Init(argc, argv);
+	SetGRAdaptee(TypeGLUT);
+	GetGRAdaptee()->Init(argc, argv);						// Sdkの作成
+	CreateSdk();
+	GetSdk()->Clear();										// SDKの初期化
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
 
-	GetSdk()->Clear();
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
+	// GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.01);
 
-	BuildScene();
+	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
+	windowDesc.title = "Inverse Kinematics Sample";			// ウィンドウのタイトル
+	CreateWin(windowDesc);									// ウィンドウの作成
+	InitWindow();
+	InitCameraView();										// カメラビューの初期化
 
-	FWWinDesc windowDesc;
-	windowDesc.title = "Inverse Kinematics Sample";
-	window = CreateWin(windowDesc);
-	window->scene = GetSdk()->GetScene();
+	BuildScene(0);
+}
 
-	InitCameraView();
+void IK::Timer(){
+	GTimer* timer0 = CreateTimerFunc();			// タイマーの生成
+	GetTimerFunc(0)->Set(TimerFunc);			// 呼びだす関数
+	GetTimerFunc(0)->Create(GetGRAdaptee());	// GLUT型でタイマーを作成
 }
 
 void IK::Reset(int sceneNum){
-	GetSdk()->Clear();
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
+	GetSdk()->GetScene()->GetPHScene()->Clear();
 
 	bGravity	= true;
 	bDebug		= false;
@@ -53,9 +72,6 @@ void IK::Reset(int sceneNum){
 	bIK			= true;
 
 	BuildScene(sceneNum);
-
-	GetCurrentWin()->SetScene(GetSdk()->GetScene());
-	InitCameraView();
 }
 
 void IK::InitCameraView(){
@@ -107,10 +123,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   2.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo1->Cast();
 		descIKBall.spring = 1000.0f;
 		descIKBall.damper =   20.0f;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
+		ikNode1->AddChildObject(jo1->Cast());
 
 		/// -- 二つ目のリンク
 		///// 剛体
@@ -127,16 +143,16 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   2.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo2->Cast();
 		descIKBall.spring = 1000.0f;
 		descIKBall.damper =   20.0f;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
+		ikNode2->AddChildObject(jo2->Cast());
 
 		/// -- IK制御点
 		///// 制御点の作成
-		descIKPos.solid = so3;
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
+		ikPosCtl1->AddChildObject(so3->Cast());
 		///// ノードへの登録
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
@@ -180,10 +196,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo1->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
+		ikNode1->AddChildObject(jo1->Cast());
 
 		/// -- 二つ目のリンク
 		///// 剛体
@@ -200,10 +216,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo2->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
+		ikNode2->AddChildObject(jo2->Cast());
 
 		/// -- 三つ目のリンク
 		///// 剛体
@@ -220,10 +236,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo3 = phScene->CreateJoint(so3, so4, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo3->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode3 = phScene->CreateIKNode(descIKBall);
+		ikNode3->AddChildObject(jo3->Cast());
 
 		/// -- 四つ目のリンク
 		///// 剛体
@@ -240,10 +256,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo4 = phScene->CreateJoint(so4, so5, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo4->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode4 = phScene->CreateIKNode(descIKBall);
+		ikNode4->AddChildObject(jo4->Cast());
 
 		/// -- 五つ目のリンク
 		///// 剛体
@@ -260,16 +276,16 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo5 = phScene->CreateJoint(so5, so6, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo5->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode5 = phScene->CreateIKNode(descIKBall);
+		ikNode5->AddChildObject(jo5->Cast());
 
 		/// -- IK制御点
 		///// 制御点の作成
-		descIKPos.solid = so6;
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
+		ikPosCtl1->AddChildObject(so6->Cast());
 		///// ノードへの登録
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
@@ -316,11 +332,11 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo1->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   200.0f;
 		descIKBall.bias = 1.8;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
+		ikNode1->AddChildObject(jo1->Cast());
 
 		/// -- 二つ目のリンク
 		///// 剛体
@@ -337,11 +353,11 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo2->Cast();
 		descIKBall.spring = 90000.0f;
 		descIKBall.damper =   200.0f;
 		descIKBall.bias = 1.6;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
+		ikNode2->AddChildObject(jo2->Cast());
 
 		/// -- 三つ目のリンク
 		///// 剛体
@@ -358,11 +374,11 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo3 = phScene->CreateJoint(so3, so4, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo3->Cast();
 		descIKBall.spring = 80000.0f;
 		descIKBall.damper =   200.0f;
 		descIKBall.bias = 1.4;
 		PHIKNodeIf* ikNode3 = phScene->CreateIKNode(descIKBall);
+		ikNode3->AddChildObject(jo3->Cast());
 
 		/// -- 四つ目のリンク
 		///// 剛体
@@ -379,11 +395,11 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo4 = phScene->CreateJoint(so4, so5, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo4->Cast();
 		descIKBall.spring = 70000.0f;
 		descIKBall.damper =   200.0f;
 		descIKBall.bias = 1.2;
 		PHIKNodeIf* ikNode4 = phScene->CreateIKNode(descIKBall);
+		ikNode4->AddChildObject(jo4->Cast());
 
 		/// -- 五つ目のリンク
 		///// 剛体
@@ -400,17 +416,17 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo5 = phScene->CreateJoint(so5, so6, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo5->Cast();
 		descIKBall.spring = 60000.0f;
 		descIKBall.damper =   200.0f;
 		descIKBall.bias = 1.0;
 		PHIKNodeIf* ikNode5 = phScene->CreateIKNode(descIKBall);
+		ikNode5->AddChildObject(jo5->Cast());
 
 		/// -- IK制御点
 		///// 制御点の作成
-		descIKPos.solid = so6;
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
+		ikPosCtl1->AddChildObject(so6->Cast());
 		///// ノードへの登録
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
@@ -457,10 +473,10 @@ void IK::BuildScene(int sceneNum){
 		//descBallJoint.damper =   2.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo1->Cast();
 		descIKBall.spring = 1000.0f;
 		descIKBall.damper = 1520.0f;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
+		ikNode1->AddChildObject(jo1->Cast());
 
 		/// -- 二つ目のリンク（Ａ）
 		///// 剛体
@@ -477,10 +493,10 @@ void IK::BuildScene(int sceneNum){
 		//descBallJoint.damper =   2.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo2->Cast();
 		descIKBall.spring = 1000.0f;
 		descIKBall.damper = 1520.0f;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
+		ikNode2->AddChildObject(jo2->Cast());
 
 		/// -- 二つ目のリンク（Ｂ）
 		///// 剛体
@@ -497,16 +513,16 @@ void IK::BuildScene(int sceneNum){
 		//descBallJoint.damper =   2.0f;
 		PHJointIf* jo3 = phScene->CreateJoint(so2, so4, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo3->Cast();
 		descIKBall.spring = 1000.0f;
 		descIKBall.damper = 1520.0f;
 		PHIKNodeIf* ikNode3 = phScene->CreateIKNode(descIKBall);
+		ikNode3->AddChildObject(jo3->Cast());
 
 		/// -- IK制御点
 		///// 制御点１の作成
-		descIKPos.solid = so3;
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
+		ikPosCtl1->AddChildObject(so3->Cast());
 		///// ノードへの登録
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
@@ -518,9 +534,9 @@ void IK::BuildScene(int sceneNum){
 		soPosCtl1->AddShape(phSdk->CreateShape(descBox));
 
 		///// 制御点２の作成
-		descIKPos.solid = so4;
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl2 = phScene->CreateIKControlPoint(descIKPos)->Cast();
+		ikPosCtl2->AddChildObject(so4->Cast());
 		///// ノードへの登録
 		ikNode1->AddControlPoint(ikPosCtl2);
 		ikNode3->AddControlPoint(ikPosCtl2);
@@ -564,10 +580,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo1->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
+		ikNode1->AddChildObject(jo1->Cast());
 
 		/// -- 二つ目のリンク
 		///// 剛体
@@ -584,10 +600,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo2->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
+		ikNode2->AddChildObject(jo2->Cast());
 
 		/// -- 三つ目のリンク（Ａ）
 		///// 剛体
@@ -604,10 +620,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo3 = phScene->CreateJoint(so3, so4, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo3->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode3 = phScene->CreateIKNode(descIKBall);
+		ikNode3->AddChildObject(jo3->Cast());
 
 		/// -- 四つ目のリンク（Ａ）
 		///// 剛体
@@ -624,10 +640,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo4 = phScene->CreateJoint(so4, so5, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo4->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode4 = phScene->CreateIKNode(descIKBall);
+		ikNode4->AddChildObject(jo4->Cast());
 
 		/// -- 五つ目のリンク（Ａ）
 		///// 剛体
@@ -644,16 +660,16 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo5 = phScene->CreateJoint(so5, so6, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo5->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode5 = phScene->CreateIKNode(descIKBall);
+		ikNode5->AddChildObject(jo5->Cast());
 
 		/// -- IK制御点
 		///// 制御点の作成
-		descIKPos.solid = so6;
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
+		ikPosCtl1->AddChildObject(so6->Cast());
 		///// ノードへの登録
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
@@ -683,10 +699,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo6 = phScene->CreateJoint(so3, so7, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo6->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode6 = phScene->CreateIKNode(descIKBall);
+		ikNode6->AddChildObject(jo6->Cast());
 
 		/// -- 四つ目のリンク（Ｂ）
 		///// 剛体
@@ -703,10 +719,10 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo7 = phScene->CreateJoint(so7, so8, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo7->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode7 = phScene->CreateIKNode(descIKBall);
+		ikNode7->AddChildObject(jo7->Cast());
 
 		/// -- 五つ目のリンク（Ｂ）
 		///// 剛体
@@ -723,16 +739,16 @@ void IK::BuildScene(int sceneNum){
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo8 = phScene->CreateJoint(so8, so9, descBallJoint);
 		///// IKノード
-		descIKBall.joint = jo8->Cast();
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode8 = phScene->CreateIKNode(descIKBall);
+		ikNode8->AddChildObject(jo8->Cast());
 
 		/// -- IK制御点
 		///// 制御点の作成
-		descIKPos.solid = so9;
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl2 = phScene->CreateIKControlPoint(descIKPos)->Cast();
+		ikPosCtl2->AddChildObject(so9->Cast());
 		///// ノードへの登録
 		ikNode1->AddControlPoint(ikPosCtl2);
 		ikNode2->AddControlPoint(ikPosCtl2);
@@ -781,49 +797,27 @@ void IK::OneStep(){
 }
 
 void IK::Display(){
-	// 描画の設定
-	GetSdk()->SetDebugMode(true);
-	GRDebugRenderIf* render = window->render->Cast();
-
 	// 描画モードの設定
+	GetSdk()->SetDebugMode(true);
+	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
 	render->SetRenderMode(true, false);
 	render->EnableRenderAxis(bDebug);
 	render->EnableRenderForce(bDebug);
 	render->EnableRenderContact(bDebug);
-	render->EnableRenderIK(true, 10.0);
 
 	// カメラ座標の指定
-	GRCameraIf* cam = window->scene->GetGRScene()->GetCamera();
+	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
 	if (cam && cam->GetFrame()){
 		cam->GetFrame()->SetTransform(cameraInfo.view);
 	}else{
-		window->render->SetViewMatrix(cameraInfo.view.inv());
+		GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
 	}
 
 	// 描画の実行
 	if(!GetCurrentWin()) return;
-	GRRenderIf*curRender =  GetCurrentWin()->GetRender();
-	FWSceneIf* curScene = GetCurrentWin()->GetScene();
-
-	GetSdk()->SwitchScene(curScene);
-	GetSdk()->SwitchRender(curRender);
-
-	if(!curRender) return;
-	curRender->ClearBuffer();
-	curRender->BeginScene();
-
-	if (curScene) curScene->Draw(curRender, GetSdk()->GetDebugMode());
-
-	//	光源の追加
-	GRLightDesc ld;
-	ld.diffuse = Vec4f(1,1,1,1) * 0.8f;
-	ld.specular = Vec4f(1,1,1,1) * 0.8f;
-	ld.ambient = Vec4f(1,1,1,1) * 0.4f;
-	ld.position = Vec4f(1,1,1,0);
-	render->PushLight(ld);
-	render->PopLight();
-
-	curRender->EndScene();
+	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
+	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
+	GetSdk()->Draw();
 	glutSwapBuffers();
 }
 

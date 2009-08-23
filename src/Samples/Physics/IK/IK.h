@@ -4,14 +4,14 @@
 #include <vector>
 
 #include <Springhead.h>
-#include <Framework/SprFWAppGLUT.h>
+#include <Framework/SprFWApp.h>
 #include <Physics/PHIK.h>
 
 using namespace Spr;
 using namespace PTM;
 using namespace std;
 
-class IK : public FWAppGLUT, public UTRefCount{
+class IK : public FWApp{
 public:
 	FWWin* window;
 
@@ -28,7 +28,13 @@ public:
 	bool bIK;
 
 	IK();
-	void Init(int argc, char* argv[]);
+
+	static void _cdecl TimerFunc(int id);
+	void CallStep();
+
+	virtual void Init(int argc, char* argv[]);
+	virtual void Timer();
+
 	void Reset(int sceneNum=0);
 	void InitCameraView();
 	void BuildScene(int sceneNum=0);
