@@ -1,7 +1,6 @@
 #include "FWXfileLoader.h"
 #include <iostream>
 #include <sstream>
-#include <GL/glut.h>
 
 
 #define ESC 27
