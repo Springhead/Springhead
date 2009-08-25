@@ -74,10 +74,6 @@ public:
 		デフォルトではFWSdk::Reshapeが呼ばれる．
 	 */
 	virtual void Reshape(int w, int h);
-	/** @brief 終了時の処理
-	 */
-	void TimerStop();
-
 	/** @brief キーボードイベントのハンドラ
 	 */
 	virtual void Keyboard(int key, int x, int y){}
@@ -208,6 +204,8 @@ protected:
 public:
 	UTMMTimer* CreateMMTimerFunc();
 	UTMMTimer* GetMMTimerFunc(int n);
+	void MTimerRelease();
+	void MTimerStart();
 /**タイマ　*/
 protected:
 	typedef UTRef<GTimer> UTRef_GTimer;

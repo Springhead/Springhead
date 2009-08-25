@@ -23,7 +23,7 @@
 namespace Spr{;
 
 FWApp::~FWApp(){
-	TimerStop();
+	MTimerRelease();
 }
 
 // 派生クラスで定義することのできる仮想関数/////////////////////////////////
@@ -37,9 +37,15 @@ void FWApp::Reshape(int w, int h){
 	fwSdk->Reshape(w, h);
 }
 
-void FWApp::TimerStop(void){
+void FWApp::MTimerRelease(){
 	for(int i=0; i< (int)mmtimer.size(); i++){
 		mmtimer[i]->Release();
+	}
+}
+
+void FWApp::MTimerStart(){
+	for(int i=0; i< (int)mmtimer.size(); i++){
+		mmtimer[i]->Create();
 	}
 }
 
