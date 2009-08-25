@@ -2,8 +2,6 @@
 //#include "SampleModel.h"
 #include <iostream>
 #include <sstream>
-#include <GL/glut.h>
-#include "Foundation/UTMMTimer.h"
 #include <Framework/FWInteractScene.h>
 
 #define ESC 27
@@ -65,9 +63,9 @@ void FWLDHapticSample::InitHumanInterface(){
 		GetHISdk()->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
 	}
 	GetHISdk()->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
+#if 1
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
 		spg[i] = GetHISdk()->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
@@ -75,6 +73,14 @@ void FWLDHapticSample::InitHumanInterface(){
 		if(i == 1) spg[i]->Init(&HISpidarGDesc("SpidarG6X3L"));
 		AddHI(spg[i]);
 	}
+#else
+	UTRef<HISpidar4If> spg = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+	spg->Init(&HISpidar4Desc("SpidarG6X3R",Vec4i(1,3,6,8)));
+	UTRef<HISpidar4If> spg2 = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+	spg2->Init(&HISpidar4Desc("SpidarG6X3L",Vec4i(2,4,5,7)));
+	AddHI(spg);
+	AddHI(spg2);
+#endif
 }
 
 void FWLDHapticSample::IdleFunc(){
@@ -82,7 +88,6 @@ void FWLDHapticSample::IdleFunc(){
 }
 
 void FWLDHapticSample::CallBackHapticLoop(void* arg){	
-//	FWLDHapticSample::instance->GetInteractAdaptee()->CallBackHapticLoop();
 	((FWLDHapticSample*)instance)->GetINScene()->CallBackHapticLoop();
 
 }

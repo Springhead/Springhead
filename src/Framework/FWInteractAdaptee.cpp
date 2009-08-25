@@ -9,7 +9,7 @@ namespace Spr{;
 ///////////////////////////////////////////////////////////////////////////////////
 
 void FWHapticLoopBase::Clear(){
-	GetInteractSolids()->clear();
+	GetINSolids()->clear();
 	loopCount = 1;
 }
 

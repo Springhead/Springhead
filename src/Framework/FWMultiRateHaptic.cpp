@@ -15,15 +15,15 @@ void FWMultiRateHaptic::Sync(){
 		/// 力覚ポインタの同期
 		UpdatePointer();			
 		/// 同期のための準備
-		FWInteractSolids* hiSolids = GetHapticLoop()->GetInteractSolids();
-		std::vector<FWInteractPointer>* hiPointers = GetHapticLoop()->GetInteractPointers();
+		FWInteractSolids* hiSolids = GetHapticLoop()->GetINSolids();
+		std::vector<FWInteractPointer>* hiPointers = GetHapticLoop()->GetINPointers();
 		FWInteractSolid *piSolid, *hiSolid;
 		FWInteractPointer* piPointer,*hiPointer;
 		FWInteractInfo* piInfo, *hiInfo;
 
 		/// HapticLoop--->PhysicsLoop ///
 		for(unsigned i = 0; i < (int)hiSolids->size(); i++){
-			hiSolid = GetHapticLoop()->GetInteractSolid(i);
+			hiSolid = GetHapticLoop()->GetINSolid(i);
 			/// bSim = ture かつ bfirstSim = falseなら結果を反映させる
 			if(!hiSolid->bSim || hiSolid->bfirstSim) continue;
 			piSolid = GetINSolid(i);
@@ -40,7 +40,7 @@ void FWMultiRateHaptic::Sync(){
 			/// 各ポインタが持つ情報を同期
 			for(int j = 0; j < NINPointers(); j++){
 				piInfo = &GetINPointer(j)->interactInfo[i];
-				hiPointer = GetHapticLoop()->GetInteractPointer(j)->Cast();
+				hiPointer = GetHapticLoop()->GetINPointer(j)->Cast();
 				hiInfo = &hiPointer->interactInfo[i];
 				piInfo->neighborInfo.test_force_norm = hiInfo->neighborInfo.test_force_norm;
 			}
@@ -57,7 +57,7 @@ void FWMultiRateHaptic::Sync(){
 			hiSolids->back() = *GetINSolid(i);
 			/// ポインタが持つ情報についても拡張
 			for(int j = 0; j < NINPointers(); j++){
-				hiPointer = GetHapticLoop()->GetInteractPointer(j);
+				hiPointer = GetHapticLoop()->GetINPointer(j);
 				hiPointer->interactInfo.resize(i + 1);
 				hiPointer->interactInfo.back() = GetINPointer(j)->interactInfo[i];
 			}
@@ -65,7 +65,7 @@ void FWMultiRateHaptic::Sync(){
 		/// 情報の同期
 		for(unsigned i = 0; i < hiSolids->size(); i++){
 			piSolid = GetINSolid(i);
-			hiSolid = GetHapticLoop()->GetInteractSolid(i);
+			hiSolid = GetHapticLoop()->GetINSolid(i);
 			hiSolid->bSim = piSolid->bSim;
 			hiSolid->bfirstSim = piSolid->bfirstSim;
 			/// 初めてシミュレーション対象になった時
@@ -78,7 +78,7 @@ void FWMultiRateHaptic::Sync(){
 			hiSolid->lastb = piSolid->lastb;
 			/// ポインタごとに持つ情報の同期
 			for(int j = 0; j < NINPointers(); j++){
-				hiPointer = GetHapticLoop()->GetInteractPointer(j)->Cast();
+				hiPointer = GetHapticLoop()->GetINPointer(j)->Cast();
 				hiPointer->interactInfo[i] = GetINPointer(j)->interactInfo[i];
 			}
 		}

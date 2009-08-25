@@ -19,36 +19,49 @@ void FWLDHapticLoop::Step(){
 }
 
 void FWLDHapticLoop::UpdateInterface(){
-	int N = NInteractPointers();
+	int N = NINPointers();
 	for(int i = 0; i < N; i++){
-		FWInteractPointer* iPointer =GetInteractPointer(i)->Cast();
-		HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+		FWInteractPointer* iPointer = GetINPointer(i)->Cast();
 		double s = iPointer->GetPosScale();
-		hif->Update((float)hdt);
-		PHSolid* hiSolid = &iPointer->hiSolid;
-		hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
-		hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
-		hiSolid->SetFramePosition((Vec3d)hif->GetPosition() * s);
-		hiSolid->SetOrientation(hif->GetOrientation());
+		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+			hif->Update((float)hdt);
+			PHSolid* hiSolid = &iPointer->hiSolid;
+			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
+			hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
+			hiSolid->SetFramePosition((Vec3d)hif->GetPosition() * s);
+			hiSolid->SetOrientation(hif->GetOrientation());
+		}else{
+			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+			hif->Update((float)hdt);
+			PHSolid* hiSolid = &iPointer->hiSolid;
+			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
+			hiSolid->SetFramePosition((Vec3d)hif->GetPosition() * s);
+		}
 	}
 }
 
-
 void FWLDHapticLoop::HapticRendering(){
-	for(int j = 0; j < NInteractPointers(); j++){
-		FWInteractPointer* iPointer = GetInteractPointer(j)->Cast();
-		HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+	for(int j = 0; j < NINPointers(); j++){
+		FWInteractPointer* iPointer = GetINPointer(j)->Cast();
 		static double vibT = 0;
 		static bool vibFlag = false;
-		Vec3d vibV = (Vec3d)hif->GetVelocity() * iPointer->GetPosScale();
+		Vec3d vibV;
+		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+			Vec3d vibV = (Vec3d)hif->GetVelocity() * iPointer->GetPosScale();
+		}else{
+			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+			Vec3d vibV = (Vec3d)hif->GetVelocity() * iPointer->GetPosScale();
+		}
 		static Vec3d vibVo = vibV;
 		double vibforce = 0;
 		static Vec3d proxy[100];
 		bool noContact = true;
 
 		SpatialVector outForce = SpatialVector();
-		for(int i = 0; i < NInteractSolids(); i++){
-			FWInteractSolid* iSolid = GetInteractSolid(i);
+		for(int i = 0; i < NINSolids(); i++){
+			FWInteractSolid* iSolid = GetINSolid(i);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			if(!iInfo->flag.blocal) continue;
 			NeighborInfo* nInfo = &iInfo->neighborInfo;
@@ -117,19 +130,24 @@ void FWLDHapticLoop::HapticRendering(){
 		}
 		if (noContact) vibFlag = false;
 		vibT += hdt;
-		#ifdef TORQUE
-		if(bDisplayforce) fInterface->SetForce(displayforce, displaytorque);
-		#else
-	//	if(bDisplayforce) 
-//			hif->SetForce(Vec3f(), Vec3f());			// 発振が怖いのでとりあえず出力なしで，あとでフラグをつくります
-			hif->SetForce(outForce.v(), Vec3d());					
-		#endif
+
+		/// インタフェースへ力を出力
+		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+			hif->SetForce(outForce.v(), Vec3d());
+			#ifdef TORQUE
+				hif->SetForce(outForce.v(), outForce.w());
+			#endif
+		}else{
+			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+			hif->SetForce(outForce.v());
+		}
 	}
 }
 
 void FWLDHapticLoop::LocalDynamics(){
-	for(int i = 0; i < NInteractSolids(); i++){
-		FWInteractSolid* iSolid = FWHapticLoopBase::GetInteractSolid(i);
+	for(int i = 0; i < NINSolids(); i++){
+		FWInteractSolid* iSolid = FWHapticLoopBase::GetINSolid(i);
 		if(!iSolid->bSim) continue;
 		SpatialVector vel;
 		vel.v() = iSolid->copiedSolid.GetVelocity();
@@ -138,8 +156,8 @@ void FWLDHapticLoop::LocalDynamics(){
 			vel += (iSolid->curb - iSolid->lastb) *  pdt;	// 衝突の影響を反映
 //			DSTR << (iSolid->curb - iSolid->lastb) *  pdt << std::endl;
 		}
-		for(int j = 0; j < NInteractPointers(); j++){
-			FWInteractPointer* iPointer = GetInteractPointer(j);
+		for(int j = 0; j < NINPointers(); j++){
+			FWInteractPointer* iPointer = GetINPointer(j);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			if(!iInfo->flag.blocal) continue;
 			vel += (iInfo->mobility.A * iInfo->mobility.force) * hdt;			// 力覚ポインタからの力による速度変化
@@ -219,11 +237,12 @@ void FWLDHaptic::PhysicsStep(){
 //		DSTR << GetINSolid(i)->curb << std::endl;
 	}
 }
+
 void FWLDHaptic::UpdatePointer(){
 	for(int i = 0; i < NINPointers(); i++){	
-		if(GetHapticLoop()->NInteractPointers() == 0) return; 
+		if(GetHapticLoop()->NINPointers() == 0) return; 
 		PHSolidIf* soPointer = GetINPointer(i)->pointerSolid;
-		FWInteractPointer* hiPointer = GetHapticLoop()->GetInteractPointer(i)->Cast();
+		FWInteractPointer* hiPointer = GetHapticLoop()->GetINPointer(i)->Cast();
 		PHSolid* hiSolid = &hiPointer->hiSolid;
 		soPointer->SetVelocity(hiSolid->GetVelocity());
 		soPointer->SetAngularVelocity(hiSolid->GetAngularVelocity());
@@ -232,6 +251,7 @@ void FWLDHaptic::UpdatePointer(){
 		soPointer->SetDynamical(false);
 	}
 }
+
 void FWLDHaptic::TestSimulation(){
 	/** FWInteractSolidsのblocalがtrueの物体に対してテスト力を加え，
 		接触しているすべての物体について，モビリティを計算する */
