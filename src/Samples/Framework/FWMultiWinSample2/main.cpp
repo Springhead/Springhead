@@ -6,6 +6,14 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
+/*
+	3つのXfileを3つのウィンドウで表示
+	コールバックタイマを3つでそれぞれのシーンをシミュレーション
+	q, ESC	: アプリケーション終了
+	r		: Xfileのリロード
+
+*/
+
 #include "FWMultiWinSample2.h"
 
 FWMultiWinSample2 app;
