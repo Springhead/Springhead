@@ -12,5 +12,6 @@ FWMultiWinSample app;
 int __cdecl main(int argc, char* argv[]){	
 	app.Init(argc, argv);	
 	app.TimerStart();
+//	app.Start();
 	return 0;
 }

@@ -11,10 +11,10 @@
 
 #define ESC 27
 
-
 FWMultiWinSample::FWMultiWinSample(){
-	nWin = 2;
-	std::stringstream sst;		
+	nWin = 2;								// ウィンドウの数
+	std::stringstream sst;
+	/// ウィンドウに名前を付ける
 	for(int i = 0; i < nWin; i++){
 		sst <<"Window" << i+1;
 		winNames.push_back(sst.str());
@@ -26,12 +26,15 @@ FWMultiWinSample::FWMultiWinSample(){
 }
 
 void FWMultiWinSample::Init(int argc, char* argv[]){
-	SetGRAdaptee(TypeGLUT);	
-	GetGRAdaptee()->Init(argc, argv);
+	/// シミュレーションの初期化
 	CreateSdk();
 	GetSdk()->Clear();
+	/// Xfileのロード
 	GetSdk()->LoadScene(fileName);
-	InitCameraView();
+	/// 描画モードの指定，初期化
+	SetGRAdaptee(TypeGLUT);	
+	GetGRAdaptee()->Init(argc, argv);
+	/// 描画ウィンドウの作成，初期化
 	for(int i = 0; i < nWin ; i++){
 		FWWinDesc winDesc;
 		winDesc.width = 480;
@@ -48,17 +51,50 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 		FWWin* win = CreateWin(winDesc);
 		win->SetScene(GetSdk()->GetScene());
 	}
+	/// カメラ行列の初期化
+	InitCameraView();
+
+	/// タイマの作成，初期化
 	GTimer* gtimer = CreateTimerFunc();
 	gtimer->Interval(GetSdk()->GetScene()->GetPHScene()->GetTimeStep());
-	gtimer->Set(CallStep);
+	gtimer->Set(CallBack);
 	gtimer->Create(GetGRAdaptee());
 }
-void FWMultiWinSample::CallStep(int id){
+
+void FWMultiWinSample::InitCameraView(){
+	/// 初期カメラ行列
+	std::istringstream issView(
+		"((0.999894 -0.00902454 0.011391 0.00379173)"
+		 "(-1.70237e-010 0.783822 0.620986 0.206708)"
+		 "(-0.0145326 -0.62092 0.783739 0.260884)"
+		 "(     0      0      0      1))"
+		);
+	issView >> cameraInfo.view;
+}
+
+void FWMultiWinSample::Start(){
+	TimerStart();
+}
+
+void FWMultiWinSample::Reset(){
+	GetSdk()->Clear();
+	DSTR << "Reload the Xfile" << std::endl;
+	GetSdk()->LoadScene(fileName);
+	for(int i = 0; i < nWin; i++){
+		GetWin(i)->SetScene(GetSdk()->GetScene());
+	}
+	InitCameraView();
+}
+
+void FWMultiWinSample::CallBack(int id){
 	((FWMultiWinSample*)instance)->GetTimerFunc(id)->Loop();
 	((FWMultiWinSample*)instance)->Step();
 }
+
 void FWMultiWinSample::Step(){
+	/// シミュレーションの実行
 	GetSdk()->GetScene()->Step();
+	/// 各ウィンドウに描画 
 	for(int i = 0; i < NWin(); i++){
 		SetCurrentWin(GetWin(i));
 		GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
@@ -71,7 +107,6 @@ void FWMultiWinSample::Step(){
 		if(i == 1) bDebug = true; 
 		DebugDisplay(bDebug);
 		Display();
-//		glutPostRedisplay();
 	}
 }
 
@@ -92,22 +127,14 @@ void FWMultiWinSample::DebugDisplay(bool bDebug){
 	r->EnableRenderContact(bDebug);
 }
 
-void FWMultiWinSample::InitCameraView(){
-	///	Affinef 型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
-	std::istringstream issView(
-		"((0.999894 -0.00902454 0.011391 0.00379173)"
-		 "(-1.70237e-010 0.783822 0.620986 0.206708)"
-		 "(-0.0145326 -0.62092 0.783739 0.260884)"
-		 "(     0      0      0      1))"
-		);
-	issView >> cameraInfo.view;
-}
-
 void FWMultiWinSample::Keyboard(int key, int x, int y){
 	switch(key){
 		case ESC:
 		case 'q':
 			exit(0);
+			break;
+		case 'r':
+			Reset();
 			break;
 		default:
 			break;
