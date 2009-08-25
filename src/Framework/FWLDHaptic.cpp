@@ -82,15 +82,15 @@ void FWLDHapticLoop::HapticRendering(){
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
 				Vec3d ortho = f * interpolation_normal;			// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
-				Vec3d dv = cSolid->GetPointVelocity(cPoint) - iPointer->hiSolid.GetPointVelocity(pPoint);
+				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
 				Vec3d dvortho = dv.norm() * interpolation_normal;
 
 				Vec3d addforce = Vec3d(0,0,0);
 				double K = iPointer->springK;
 				double D = iPointer->damperD;
 	//			if(!bproxy){
-					addforce = -K * ortho + D * dvortho;// * ortho.norm();								// 提示力計算 (*ダンパの項にorthoのノルムをかけてみた)
-//			}else{
+					addforce = -1 * (K * ortho + D * dvortho);
+	//			}else{
 //					addforce = -K * (pPoint - (proxy[i]+cSolid->GetCenterPosition())) + D * dvortho;	// 提示力計算(proxy)
 	//			}
 				//Vec3d addtorque = (pPoint - hpointer.GetCenterPosition()) % addforce ;

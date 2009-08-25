@@ -158,15 +158,15 @@ void FWLDHapticSample::BuildScene(){
 	// 箱(物理法則に従う，運動が変化)
 	{
 		// 剛体(soBox)の作成
-		desc.mass = 0.005;
-		desc.inertia *= 0.033;
+		desc.mass = 0.05;
+		desc.inertia = 0.0333 * Matrix3d::Unit();
 		PHSolidIf* soBox = phscene->CreateSolid(desc);
 		// 形状(shapeBox)の作成
 		bd.boxsize = Vec3f(4,4,4);
 		CDShapeIf* shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd);
 		// 剛体に形状を付加
 		soBox->AddShape(shapeBox);
-		soBox->GetShape(0)->SetStaticFriction(1.0);
+		soBox->GetShape(0)->SetStaticFriction(2.0);
 		soBox->GetShape(0)->SetDynamicFriction(1.0);
 		soBox->SetFramePosition(Vec3d(-5, 10, 0));
 	
@@ -185,9 +185,9 @@ void FWLDHapticSample::BuildScene(){
 			idesc.pointerSolid = soBox;;
 			idesc.humanInterface = GetHI(i); 
 			idesc.springK = 10;
-			idesc.damperD = 0.0;
+			idesc.damperD = 0.1;
 			idesc.posScale = 300;
-			idesc.localRange = 0.7 * 10;
+			idesc.localRange = 1.0;
 			Posed pose;
 			if(i==0){
 				pose.Pos()=Vec3d(-5.0,0.0,0.0);
@@ -210,6 +210,7 @@ void FWLDHapticSample::DisplayContactPlane(){
 		for(int j = 0; j < inScene->NINPointers(); j++){
 			FWInteractPointer* inPointer = inScene->GetINPointer(j)->Cast();
 			FWInteractInfo* inInfo = &inPointer->interactInfo[i];
+			if(!inInfo->flag.blocal) continue;
 			Vec3d pPoint = inPointer->pointerSolid->GetPose() * inInfo->neighborInfo.pointer_point;
 			Vec3d cPoint = inSolid->sceneSolid->GetPose() * inInfo->neighborInfo.closest_point;
 			Vec3d normal = inInfo->neighborInfo.face_normal;
@@ -319,6 +320,7 @@ void FWLDHapticSample::DisplayLineToNearestPoint(){
 		for(int j = 0; j < inScene->NINPointers(); j++){
 			FWInteractPointer* inPointer = inScene->GetINPointer(j)->Cast();
 			FWInteractInfo* inInfo = &inPointer->interactInfo[i];
+			if(!inInfo->flag.blocal) continue;
 			Vec3d pPoint = inPointer->pointerSolid->GetPose() * inInfo->neighborInfo.pointer_point;
 			Vec3d cPoint = inSolid->sceneSolid->GetPose() * inInfo->neighborInfo.closest_point;
 			Vec3d normal = inInfo->neighborInfo.face_normal;
