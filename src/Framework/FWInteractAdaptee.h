@@ -18,12 +18,12 @@ public:
 	double pdt, hdt;
 	int loopCount;
 	FWHapticLoopBase(){}
-	FWInteractPointer* GetInteractPointer(int i){ return &interactPointers[i]; }
-	std::vector<FWInteractPointer>* GetInteractPointers(){ return &interactPointers;}
-	int NInteractPointers(){ return (int)interactPointers.size();}
-	FWInteractSolid* GetInteractSolid(int i){ return &interactSolids[i]; } 
-	FWInteractSolids* GetInteractSolids(){ return &interactSolids; }
-	int NInteractSolids(){ return (int)interactSolids.size(); }
+	FWInteractPointer* GetINPointer(int i){ return &interactPointers[i]; }
+	std::vector<FWInteractPointer>* GetINPointers(){ return &interactPointers;}
+	int NINPointers(){ return (int)interactPointers.size();}
+	FWInteractSolid* GetINSolid(int i){ return &interactSolids[i]; } 
+	FWInteractSolids* GetINSolids(){ return &interactSolids; }
+	int NINSolids(){ return (int)interactSolids.size(); }
 	int GetLoopCount(){ return loopCount; }
 
 	void Init(double physicdt, double hapticdt){
