@@ -42,6 +42,7 @@ public:
 	double		GetLocalRange();
 	void		SetPosition(Posed p);
 	Posed		GetPosition();
+	void		EnableForce(bool b);
 };
 
 //typedef UTRef<FWInteractPointerIf> UTRef_FWInteractPointerIf;

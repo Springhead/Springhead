@@ -132,15 +132,18 @@ void FWLDHapticLoop::HapticRendering(){
 		vibT += hdt;
 
 		/// インタフェースへ力を出力
-		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-			hif->SetForce(outForce.v(), Vec3d());
-			#ifdef TORQUE
-				hif->SetForce(outForce.v(), outForce.w());
-			#endif
-		}else{
-			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-			hif->SetForce(outForce.v());
+		if(iPointer->bForce){
+			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+				hif->SetForce(outForce.v(), Vec3d());
+				#ifdef TORQUE
+					hif->SetForce(outForce.v(), outForce.w());
+				#endif
+			}else{
+				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+				hif->SetForce(outForce.v());
+			}
+		
 		}
 	}
 }
