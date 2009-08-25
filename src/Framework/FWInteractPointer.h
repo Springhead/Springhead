@@ -13,20 +13,24 @@ public:
 	SPR_OBJECTDEF(FWInteractPointer);
 	PHSolid			hiSolid;
 	AllInteractInfo interactInfo;
+	bool			bForce;
 
 	FWInteractPointer();
 	FWInteractPointer(const FWInteractPointerDesc& desc);
 
-	void SetPointerSolid(PHSolidIf* solid);
-	PHSolidIf* GetPointerSolid();
-	void SetHI(HIBaseIf* hi);
-	HIBaseIf* GetHI();
-	void SetPosScale(double s);
-	double GetPosScale();
-	void SetLocalRange(double r);
-	double GetLocalRange();
-	void	SetPosition(Posed p);
-	Posed	GetPosition();
+	void		Init();
+	void		SetPointerSolid(PHSolidIf* solid);
+	PHSolidIf*	GetPointerSolid();
+	void		SetHI(HIBaseIf* hi);
+	HIBaseIf*	GetHI();
+	void		SetPosScale(double s);
+	double		GetPosScale();
+	void		SetLocalRange(double r);
+	double		GetLocalRange();
+	void		SetPosition(Posed p);
+	Posed		GetPosition();
+	void		EnableForce(bool b = true);
+
 };
 
 }

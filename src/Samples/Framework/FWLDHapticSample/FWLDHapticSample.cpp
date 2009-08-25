@@ -13,7 +13,7 @@ FWLDHapticSample::FWLDHapticSample(){
 }
 
 void FWLDHapticSample::Init(int argc, char* argv[]){
-	SetGRAdaptee(grAdapteeType::TypeGLUT);
+	SetGRAdaptee(TypeGLUT);
 	GetGRAdaptee()->Init(argc, argv);						// Sdk‚Ìì¬
 	CreateSdk();
 	GetSdk()->Clear();										// SDK‚Ì‰Šú‰»
@@ -196,7 +196,7 @@ void FWLDHapticSample::BuildScene(){
 void FWLDHapticSample::DisplayContactPlane(){
 	FWInteractScene* inScene = GetINScene()->Cast();
 	int N = inScene->NINSolids();
-	for(unsigned int i = 0; i <  N; i++){
+	for(int i = 0; i <  N; i++){
 		FWInteractSolid* inSolid = inScene->GetINSolid(i);
 		if(!inSolid->bSim) continue;
 		for(int j = 0; j < inScene->NINPointers(); j++){
@@ -305,7 +305,7 @@ void FWLDHapticSample::DisplayLineToNearestPoint(){
 	FWInteractScene* inScene = DCAST(FWInteractScene, GetINScene());
 	int N = inScene->NINSolids();
 	GLfloat moon[]={0.8,0.8,0.8};
-	for(unsigned int i = 0; i <  N; i++){
+	for(int i = 0; i <  N; i++){
 		FWInteractSolid* inSolid = inScene->GetINSolid(i);
 		if(!inSolid->bSim) continue;
 		for(int j = 0; j < inScene->NINPointers(); j++){
@@ -339,6 +339,20 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 			break;
 		case 'd':
 			bDrawInfo = !bDrawInfo;
+			break;
+		case 'f':
+			{
+				static bool bf = false;
+				bf = !bf;
+				for(int i = 0; i < GetINScene()->NINPointers(); i++){
+					GetINScene()->GetINPointer(i)->EnableForce(bf);
+				}
+				if(bf){
+					DSTR << "Enable ForceFeedBack" << std::endl;
+				}else{
+					DSTR << "Disable ForceFeedBack" << std::endl;
+				}
+			}
 			break;
 		//case '1':
 		//	DSTR << "box" << std::endl;
