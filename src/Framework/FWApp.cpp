@@ -23,7 +23,7 @@
 namespace Spr{;
 
 FWApp::~FWApp(){
-
+	TimerStop();
 }
 
 // 派生クラスで定義することのできる仮想関数/////////////////////////////////
@@ -37,11 +37,10 @@ void FWApp::Reshape(int w, int h){
 	fwSdk->Reshape(w, h);
 }
 
-void FWApp::Exit(){
+void FWApp::TimerStop(void){
 	for(int i=0; i< (int)mmtimer.size(); i++){
 		mmtimer[i]->Release();
 	}
-	exit(0);
 }
 
 void FWApp::MouseButton(int button, int state, int x, int y){
