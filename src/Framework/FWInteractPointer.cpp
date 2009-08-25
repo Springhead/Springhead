@@ -44,5 +44,8 @@ Posed  FWInteractPointer::GetPosition(){
 void FWInteractPointer::EnableForce(bool b){
 	bForce = b;
 }
+void FWInteractPointer::Calibration(){
+	GetHI()->Calibration();
+}
 
 }

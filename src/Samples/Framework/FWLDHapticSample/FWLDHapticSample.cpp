@@ -340,6 +340,15 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 		case 'd':
 			bDrawInfo = !bDrawInfo;
 			break;
+		case 'c':
+			{
+				MTimerRelease();
+				for(int i = 0; i < GetINScene()->NINPointers(); i++){
+					GetINScene()->GetINPointer(i)->Calibration();
+				}
+				MTimerStart();
+			}
+			break;
 		case 'f':
 			{
 				static bool bf = false;
@@ -348,9 +357,9 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 					GetINScene()->GetINPointer(i)->EnableForce(bf);
 				}
 				if(bf){
-					DSTR << "Enable ForceFeedBack" << std::endl;
+					DSTR << "Enable Force Feedback" << std::endl;
 				}else{
-					DSTR << "Disable ForceFeedBack" << std::endl;
+					DSTR << "Disable Force Feedback" << std::endl;
 				}
 			}
 			break;

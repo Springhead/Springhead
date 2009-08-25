@@ -43,6 +43,7 @@ public:
 	void		SetPosition(Posed p);
 	Posed		GetPosition();
 	void		EnableForce(bool b);
+	void		Calibration();
 };
 
 //typedef UTRef<FWInteractPointerIf> UTRef_FWInteractPointerIf;
