@@ -332,7 +332,7 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 	switch (key) {
 		case ESC:
 		case 'q':
-			Exit();
+			exit(0);
 			break;
 		case 'r':
 			Reset();
