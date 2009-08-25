@@ -31,6 +31,7 @@ public:
 	Posed		GetPosition();
 	void		EnableForce(bool b = true);
 
+	/*std::vector<  UTRef< FWObjectIf >  >	copiedBiscuits;*/
 };
 
 }

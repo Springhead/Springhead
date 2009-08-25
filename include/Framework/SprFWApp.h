@@ -76,7 +76,7 @@ public:
 	virtual void Reshape(int w, int h);
 	/** @brief 終了時の処理
 	 */
-	virtual void Exit();
+	void TimerStop();
 
 	/** @brief キーボードイベントのハンドラ
 	 */
