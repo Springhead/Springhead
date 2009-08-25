@@ -249,8 +249,10 @@ void FWLDHaptic::UpdatePointer(){
 		PHSolid* hiSolid = &hiPointer->hiSolid;
 		soPointer->SetVelocity(hiSolid->GetVelocity());
 		soPointer->SetAngularVelocity(hiSolid->GetAngularVelocity());
-		soPointer->SetFramePosition(hiSolid->GetFramePosition());
-		soPointer->SetOrientation(hiSolid->GetOrientation());
+		//soPointer->SetFramePosition(hiSolid->GetFramePosition());
+		//soPointer->SetOrientation(hiSolid->GetOrientation());
+		Posed PointerPose=hiSolid->GetPose()*GetINPointer(i)->GetPosition();
+		soPointer->SetPose(PointerPose);
 		soPointer->SetDynamical(false);
 	}
 }
