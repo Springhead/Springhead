@@ -38,6 +38,7 @@ double FWInteractPointer::GetLocalRange(){
 void  FWInteractPointer::SetPosition(Posed p){
 	position = p;
 }
+
 Posed  FWInteractPointer::GetPosition(){
 	return position; 
 }
