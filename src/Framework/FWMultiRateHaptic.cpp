@@ -18,7 +18,7 @@ void FWMultiRateHaptic::Sync(){
 		FWInteractSolids* hiSolids = GetHapticLoop()->GetINSolids();
 		std::vector<FWInteractPointer>* hiPointers = GetHapticLoop()->GetINPointers();
 		FWInteractSolid *piSolid, *hiSolid;
-		FWInteractPointer* piPointer,*hiPointer;
+		FWInteractPointer* hiPointer;
 		FWInteractInfo* piInfo, *hiInfo;
 
 		/// HapticLoop--->PhysicsLoop ///
