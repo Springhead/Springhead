@@ -188,14 +188,8 @@ void FWLDHapticSample::BuildScene(){
 			idesc.damperD = 0.1;
 			idesc.posScale = 300;
 			idesc.localRange = 1.0;
-			Posed pose;
-			if(i==0){
-				pose.Pos()=Vec3d(5.0,0.0,0.0);
-			}
-			if(i==1){
-				pose.Pos()=Vec3d(-5.0,0.0,0.0);
-			}
-			idesc.position =pose;
+			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0);
+			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);
 			GetINScene()->CreateINPointer(idesc);
 		}
 	}
