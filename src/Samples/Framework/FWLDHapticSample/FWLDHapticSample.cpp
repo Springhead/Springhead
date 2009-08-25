@@ -168,7 +168,7 @@ void FWLDHapticSample::BuildScene(){
 		soBox->AddShape(shapeBox);
 		soBox->GetShape(0)->SetStaticFriction(2.0);
 		soBox->GetShape(0)->SetDynamicFriction(1.0);
-		soBox->SetFramePosition(Vec3d(-5, 10, 0));
+		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	
 		// ƒ|ƒCƒ“ƒ^
 		for(int i= 0; i < 2; i++){
@@ -190,10 +190,10 @@ void FWLDHapticSample::BuildScene(){
 			idesc.localRange = 1.0;
 			Posed pose;
 			if(i==0){
-				pose.Pos()=Vec3d(-5.0,0.0,0.0);
+				pose.Pos()=Vec3d(5.0,0.0,0.0);
 			}
 			if(i==1){
-				pose.Pos()=Vec3d(5.0,0.0,0.0);
+				pose.Pos()=Vec3d(-5.0,0.0,0.0);
 			}
 			idesc.position =pose;
 			GetINScene()->CreateINPointer(idesc);
