@@ -46,7 +46,6 @@ public:
 	void		Calibration();
 };
 
-//typedef UTRef<FWInteractPointerIf> UTRef_FWInteractPointerIf;
 typedef std::vector< UTRef<FWInteractPointerIf> > FWInteractPointers;
 
 }
