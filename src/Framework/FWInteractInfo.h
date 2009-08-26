@@ -24,6 +24,7 @@ struct NeighborInfo{
 	Vec3d face_normal;				///< 近傍物体の提示面の法線(近傍物体から力覚ポインタへのベクトル)
 	Vec3d last_face_normal;			///< 前回の近傍物体の提示面の法線
 	double test_force_norm;			///< 予測シミュレーションで単位力の大きさ
+	Vec3d test_force;				///< 予測シミュレーションで使うテスト力
 	Vec3d impulse;					///< 物理プロセスが1ステップ終わるまでに力覚ポインタが加えた力積
 	NeighborInfo(){
 		closest_point = Vec3d(0.0, 0.0, 0.0);					
