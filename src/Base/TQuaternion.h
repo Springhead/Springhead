@@ -580,6 +580,20 @@ public:
 		return rv;
 	}
 
+	///@name 初期化・構築
+	//@{
+	///	コンストラクタ
+	template <class TW,class TX, class TY, class TZ,class TPX, class TPY, class TPZ> TPose (TW wi,TX xi, TY yi, TZ zi,TPX pxi, TPY pyi, TPZ pzi){
+		W() = element_type(wi);
+		X() = element_type(xi);
+		Y() = element_type(yi);
+		Z() = element_type(zi);
+		Px() = element_type(pxi);
+		Py() = element_type(pyi);
+		Pz() = element_type(pzi);
+	}
+	//@}
+
 protected:
 	///	コンストラクタ
 	void set_default(){ 
