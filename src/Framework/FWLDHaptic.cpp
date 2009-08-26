@@ -29,8 +29,13 @@ void FWLDHapticLoop::UpdateInterface(){
 			PHSolid* hiSolid = &iPointer->hiSolid;
 			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
 			hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
-			hiSolid->SetFramePosition((Vec3d)hif->GetPosition() * s);
-			hiSolid->SetOrientation(hif->GetOrientation());
+			//hiSolid->SetFramePosition((Vec3d)hif->GetPosition() * s);
+			//hiSolid->SetOrientation(hif->GetOrientation());
+			Posed hifPose;
+			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
+			hifPose.Ori()=hif->GetOrientation();
+			Posed hiSolidPose=hifPose*GetINPointer(i)->GetPosition();
+			hiSolid->SetPose(hiSolidPose);
 		}else{
 			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 			hif->Update((float)hdt);
@@ -249,10 +254,8 @@ void FWLDHaptic::UpdatePointer(){
 		PHSolid* hiSolid = &hiPointer->hiSolid;
 		soPointer->SetVelocity(hiSolid->GetVelocity());
 		soPointer->SetAngularVelocity(hiSolid->GetAngularVelocity());
-		//soPointer->SetFramePosition(hiSolid->GetFramePosition());
-		//soPointer->SetOrientation(hiSolid->GetOrientation());
-		Posed PointerPose=hiSolid->GetPose()*GetINPointer(i)->GetPosition();
-		soPointer->SetPose(PointerPose);
+		soPointer->SetFramePosition(hiSolid->GetFramePosition());
+		soPointer->SetOrientation(hiSolid->GetOrientation());
 		soPointer->SetDynamical(false);
 	}
 }
