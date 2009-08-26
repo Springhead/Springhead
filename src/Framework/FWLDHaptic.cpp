@@ -34,7 +34,7 @@ void FWLDHapticLoop::UpdateInterface(){
 			Posed hifPose;
 			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
 			hifPose.Ori()=hif->GetOrientation();
-			Posed hiSolidPose=hifPose*GetINPointer(i)->GetPosition();
+			Posed hiSolidPose = hifPose * GetINPointer(i)->GetPosition();
 			hiSolid->SetPose(hiSolidPose);
 		}else{
 			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
@@ -49,20 +49,11 @@ void FWLDHapticLoop::UpdateInterface(){
 void FWLDHapticLoop::HapticRendering(){
 	for(int j = 0; j < NINPointers(); j++){
 		FWInteractPointer* iPointer = GetINPointer(j)->Cast();
-		static double vibT = 0;
-		static bool vibFlag = false;
-		Vec3d vibV;
 		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
 			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-			Vec3d vibV = (Vec3d)hif->GetVelocity() * iPointer->GetPosScale();
 		}else{
 			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-			Vec3d vibV = (Vec3d)hif->GetVelocity() * iPointer->GetPosScale();
 		}
-		static Vec3d vibVo = vibV;
-		double vibforce = 0;
-		static Vec3d proxy[100];
-		bool noContact = true;
 
 		SpatialVector outForce = SpatialVector();
 		for(int i = 0; i < NINSolids(); i++){
@@ -82,7 +73,6 @@ void FWLDHapticLoop::HapticRendering(){
 			interpolation_normal = (loopCount * nInfo->face_normal + 
 				(syncCount - (double)loopCount) * nInfo->last_face_normal) / syncCount;															
 			if(loopCount > syncCount)	interpolation_normal = nInfo->face_normal;
-			//DSTR << interpolation_normal << std::endl;
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
@@ -90,51 +80,36 @@ void FWLDHapticLoop::HapticRendering(){
 				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
 				Vec3d dvortho = dv.norm() * interpolation_normal;
 
-				Vec3d addforce = Vec3d(0,0,0);
+				Vec3d friction_dir = -1 * (force_dir - ortho);	// 摩擦力がポインタに加わる方向
+				Vec3d friction_normal = friction_dir.unit();
+				double friction_rate = friction_dir.norm() / ortho.norm();
+				PTM::TMatrixRow<1,3,double> fdtrans;
+				fdtrans[0][0] = friction_normal[0];
+				fdtrans[0][1] = friction_normal[1];
+				fdtrans[0][2] = friction_normal[2];
+				Vec3d dvortho2 = dvortho - (fdtrans * dvortho)[0] * friction_normal;
+
+				/// 抗力の計算
 				double K = iPointer->springK;
 				double D = iPointer->damperD;
-	//			if(!bproxy){
-					addforce = -1 * (K * ortho + D * dvortho);
-	//			}else{
-//					addforce = -K * (pPoint - (proxy[i]+cSolid->GetCenterPosition())) + D * dvortho;	// 提示力計算(proxy)
-	//			}
-				//Vec3d addtorque = (pPoint - hpointer.GetCenterPosition()) % addforce ;
+//				Vec3d addforce = -1 * (K * ortho + D * dvortho);
+				Vec3d addforce = -1 * (K * ortho + D * dvortho2);
+				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
-				if(!vibFlag){
-					vibT = 0;
-					vibVo = vibV - cSolid->GetVelocity() ;
-				}
-				vibFlag = true;
-	//			if(vhaptic){
-					double vibA = cSolid->GetShape(0)->GetVibA();
-					double vibB = cSolid->GetShape(0)->GetVibB();
-					double vibW = cSolid->GetShape(0)->GetVibW();
-					vibforce = vibA * (vibVo * 0.003 * addforce.unit()) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);	//振動計算
-	//			}			
+				///摩擦力の計算
+				double d = 0.01;
+				Vec3d friction = (friction_rate * addforce.norm() + (d * fdtrans * dvortho)[0]) * friction_normal;
+//				addforce += friction;
 
-				// proxy法での摩擦の計算
-				Vec3d posVec = pPoint - (proxy[i] + cSolid->GetCenterPosition());
-				double posDot = dot(nInfo->face_normal,posVec);
-				Vec3d tVec = posDot * nInfo->face_normal;
-				Vec3d tanjent = posVec - tVec;
-				double mu0 = cSolid->GetShape(0)->GetStaticFriction();
-				double mu1 = cSolid->GetShape(0)->GetDynamicFriction();
-				if(tanjent.norm() > abs(mu0 * posDot)){
-					proxy[i] += (tanjent.norm() - abs(mu1 * posDot)) * tanjent.unit();
-	//				proxyPos += (tanjent.norm() - abs(1.0 * posDot)) * tanjent.unit();
-				}
-				outForce.v() += addforce;// + (vibforce * addforce.unit());	// ユーザへの提示力		
+				outForce.v() += addforce;	
+				outForce.w() += addtorque;
 
-	//			outForce.w.() += addtorque;
 				/// 計算した力を剛体に加える
 				iPointer->interactInfo[i].mobility.force = -1 * addforce;						
-//				DSTR << -1 * addforce << std::endl;
 				nInfo->test_force_norm = addforce.norm();
-				noContact = false;
+				nInfo->test_force = addforce;
 			}
 		}
-		if (noContact) vibFlag = false;
-		vibT += hdt;
 
 		/// インタフェースへ力を出力
 		if(iPointer->bForce){
@@ -339,12 +314,26 @@ void FWLDHaptic::TestSimulation(){
 			if(iInfo->neighborInfo.test_force_norm < minTestForce){
 				iInfo->neighborInfo.test_force_norm = minTestForce;					 
 			}
-
+			#ifdef FORCE_ELEMENT
+			for(int i = 0; i < 3; i++){
+				if(iInfo->neighborInfo.test_force[i] < minTestForce)
+					iInfo->neighborInfo.test_force[i] = minTestForce;
+			}
+			#endif
 			TMatrixRow<6, 3, double> u;			// 剛体の機械インピーダンス
 			TMatrixRow<3, 3, double> force;		// 加える力
 
-			/// 法線方向に力を加える
+			#ifdef FORCE_ELEMENT
+			force.col(0) = Vec3d(iInfo->neighborInfo.test_force[0], 0, 0);
+			force.col(1) = Vec3d(0, iInfo->neighborInfo.test_force[1], 0);
+			force.col(2) = Vec3d(0, 0, iInfo->neighborInfo.test_force[2]);
+			#else
 			force.col(0) = iInfo->neighborInfo.test_force_norm * n;
+			force.col(1) = iInfo->neighborInfo.test_force_norm * (n + t[0]);
+			force.col(2) = iInfo->neighborInfo.test_force_norm * (n + t[1]);
+			#endif
+
+			/// 法線方向に力を加える
 			phSolid->AddForce(force.col(0), cPoint);
 			#ifdef DIVIDE_STEP
 			phScene->IntegratePart2();
@@ -357,7 +346,6 @@ void FWLDHaptic::TestSimulation(){
 			states->LoadState(phScene);
 
 			/// n + t[0]方向に力を加える
-			force.col(1) = iInfo->neighborInfo.test_force_norm * (n + t[0]);
 			phSolid->AddForce(force.col(1), cPoint);
 			#ifdef DIVIDE_STEP
 			phScene->IntegratePart2();
@@ -370,7 +358,6 @@ void FWLDHaptic::TestSimulation(){
 			states->LoadState(phScene);
 
 			/// n+t[1]方向力を加える
-			force.col(2) = iInfo->neighborInfo.test_force_norm * (n + t[1]);
 			phSolid->AddForce(force.col(2), cPoint);
 			#ifdef DIVIDE_STEP
 			phScene->IntegratePart2();
