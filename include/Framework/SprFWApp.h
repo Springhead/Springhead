@@ -111,7 +111,7 @@ public:
 		ウィンドウを作成する．対応するレンダラは新しく作成され，
 		シーンはアクティブなシーンが関連つけられる．
 	 */
-	FWWin*		CreateWin(const FWWinDesc& desc);
+	FWWin*		CreateWin(const FWWinDesc& desc = FWWinDesc());
 	
 	/** @brief ウィンドウの初期化
 	 */
