@@ -41,6 +41,8 @@ public:
 		material.vibA = vibA;
 		material.vibB = vibB;
 		material.vibW = vibW;
+		material.vibT = 0;
+		material.vibContact = false;
 	}
 	void SetVibA(float vibA){material.vibA = vibA;}
 	float GetVibA(){return material.vibA;}
@@ -48,6 +50,10 @@ public:
 	float GetVibB(){return material.vibB;}
 	void SetVibW(float vibW){material.vibW = vibW;}
 	float GetVibW(){return material.vibW;}
+	void SetVibT(float vibT){material.vibT = vibT;}
+	float GetVibT(){return material.vibT;}
+	void SetVibContact(float vibContact){material.vibContact = vibContact;}
+	bool GetVibContact(){return material.vibContact;}
 
 	PHMaterial	GetMaterial(){return material;}
 	void		SetMaterial(PHMaterial mat){material = mat;}

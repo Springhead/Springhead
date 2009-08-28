@@ -54,6 +54,10 @@ struct CDShapeIf : public NamedObjectIf{
 	float GetVibB();
 	void SetVibW(float vibW);
 	float GetVibW();
+	void SetVibT(float vibT);
+	float GetVibT();
+	void SetVibContact(float vibContact);
+	bool GetVibContact();
 
 	void SetSpringDamper(float spring, float damper);
 	float GetSpringK();
@@ -109,6 +113,8 @@ struct PHMaterial{
 	float vibA;
 	float vibB;
 	float vibW;
+	float vibT;
+	bool vibContact;
 };
 
 ///	形状のディスクリプタ(基本クラス)
