@@ -22,6 +22,8 @@ PHMaterial::PHMaterial(){
 	vibA = 0;
 	vibB = 0;
 	vibW = 0;
+	vibT = 0;
+	vibContact = false;
 }
 
 }

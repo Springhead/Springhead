@@ -23,7 +23,7 @@ int __cdecl main(){
 	spg->Init(&HISpidar4Desc("SpidarG6X3R",Vec4i(1,3,6,8)));
 	UTRef<HISpidar4If> spg2 = sdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
 	spg2->Init(&HISpidar4Desc("SpidarG6X3L",Vec4i(2,4,5,7)));
-
+	
 	int t = 0;
 	while(!_kbhit()){
 		t += 1;

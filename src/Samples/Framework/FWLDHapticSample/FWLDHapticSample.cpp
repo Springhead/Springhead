@@ -162,7 +162,7 @@ void FWLDHapticSample::BuildScene(){
 	{
 		/// 剛体(soBox)の作成
 		desc.mass = 0.05;
-		desc.inertia = 0.0333 * Matrix3d::Unit();
+		desc.inertia = 0.333 * Matrix3d::Unit();
 		PHSolidIf* soBox = phscene->CreateSolid(desc);
 		/// 形状(shapeBox)の作成
 		bd.boxsize = Vec3f(4,4,4);
@@ -171,6 +171,7 @@ void FWLDHapticSample::BuildScene(){
 		soBox->AddShape(shapeBox);
 		soBox->GetShape(0)->SetStaticFriction(2.0);
 		soBox->GetShape(0)->SetDynamicFriction(1.0);
+		soBox->GetShape(0)->SetVibration(5,80,300);
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}
 	/// ポインタ

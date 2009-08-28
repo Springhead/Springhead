@@ -13,14 +13,35 @@
 #include <Framework/FWInteractAdaptee.h>
 
 class FWLDHapticLoop : public FWHapticLoopBase{
+private:
+	Vec3d vibV;
+	double vibT;
+	Vec3d proxy[100];
+	Vec3d dproxy;
 public:
 	FWLDHapticLoop();
 	virtual void Step();
 	virtual void UpdateInterface();
 	virtual void HapticRendering();
+	virtual void Proxy();
+	virtual Vec3d Vibration(FWInteractSolid*, FWInteractPointer*);
 	virtual void LocalDynamics();
-
 };
+
+//class FWLDProxy : public FWLDHapticLoop{
+//private:
+//	Vec3d proxy[100];
+//	Vec3d dproxy;
+//public:
+//	FWLDProxy();
+//	void HapticRendering();
+//};
+
+//class FWLDProxySimulation : FWLDHapticLoop{
+//public:
+//	FWLDProxySimulation();
+//	void HapticRendering();
+//};
 
 class FWLDHaptic : public FWMultiRateHaptic{
 protected:
