@@ -162,7 +162,7 @@ void FWLDHapticSample::BuildScene(){
 	{
 		/// „‘Ì(soBox)‚Ìì¬
 		desc.mass = 0.05;
-		desc.inertia = 0.00333 * Matrix3d::Unit();
+		desc.inertia = 0.0333 * Matrix3d::Unit();
 		PHSolidIf* soBox = phscene->CreateSolid(desc);
 		/// Œ`ó(shapeBox)‚Ìì¬
 		bd.boxsize = Vec3f(4,4,4);
