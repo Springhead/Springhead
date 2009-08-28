@@ -1,5 +1,4 @@
 #include "FWLDHapticSample.h"
-//#include "SampleModel.h"
 #include <iostream>
 #include <sstream>
 #include <Framework/FWInteractScene.h>
@@ -13,37 +12,45 @@ FWLDHapticSample::FWLDHapticSample(){
 }
 
 void FWLDHapticSample::Init(int argc, char* argv[]){
-	SetGRAdaptee(TypeGLUT);
-	GetGRAdaptee()->Init(argc, argv);						// Sdkの作成
+	/// Sdkの初期化，シーンの作成
 	CreateSdk();
 	GetSdk()->Clear();										// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
 
+	/// 描画モードの設定
+	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
+	GetGRAdaptee()->Init(argc, argv);						// Sdkの作成
+
+	/// 描画Windowの作成，初期化
 	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
 	windowDesc.title = "FWLDHapticSample";					// ウィンドウのタイトル
 	CreateWin(windowDesc);									// ウィンドウの作成
-	InitWindow();
+	InitWindow();											// ウィンドウの初期化
 	InitCameraView();										// カメラビューの初期化
 
+	/// HumanInterfaceの初期化
 	InitHumanInterface();
+
+	/// InteractSceneの作成
 	FWInteractSceneDesc desc;
-	desc.fwScene = GetSdk()->GetScene();
-	desc.mode = LOCAL_DYNAMICS;
-	desc.hdt = 0.001;
-	CreateINScene(desc);
+	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
+	desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
+	CreateINScene(desc);									// interactSceneの作成
 
-	BuildScene();											// 剛体を作成
+	/// 物理シミュレーションする剛体を作成
+	BuildScene();
 
-	UTMMTimer* mtimer = CreateMMTimerFunc();
-	mtimer->Resolution(1);
-	mtimer->Interval(1);
-	mtimer->Set(CallBackHapticLoop, NULL);
-	mtimer->Create();
+	/// タイマの作成，設定
+	UTMMTimer* mtimer = CreateMMTimerFunc();				// タイマを作成
+	mtimer->Resolution(1);									// 分解能[ms]
+	mtimer->Interval(1);									// 呼びだし感覚[ms]
+	mtimer->Set(CallBackHapticLoop, NULL);					// コールバックする関数
+	mtimer->Create();										// コールバック開始
 }
 
 void FWLDHapticSample::InitCameraView(){
-	//	Affinef 型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
 	std::istringstream issView(
 		"((0.9996 0.0107463 -0.0261432 -0.389004)"
 		"(-6.55577e-010 0.924909 0.380188 5.65711)"
@@ -54,7 +61,9 @@ void FWLDHapticSample::InitCameraView(){
 }
 
 void FWLDHapticSample::InitHumanInterface(){
+	/// HISdkの作成
 	CreateHISdk();
+
 	DRUsb20SimpleDesc usbSimpleDesc;
 	GetHISdk()->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 	DRUsb20Sh4Desc usb20Sh4Desc;
@@ -66,6 +75,7 @@ void FWLDHapticSample::InitHumanInterface(){
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
 #if 1
+	/// SPIDARG6を2台使う場合
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
 		spg[i] = GetHISdk()->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
@@ -74,6 +84,7 @@ void FWLDHapticSample::InitHumanInterface(){
 		AddHI(spg[i]);
 	}
 #else
+	/// SPIDAR4Dを使う場合
 	UTRef<HISpidar4If> spg = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidar4Desc("SpidarG6X3R",Vec4i(1,3,6,8)));
 	UTRef<HISpidar4If> spg2 = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
@@ -83,21 +94,22 @@ void FWLDHapticSample::InitHumanInterface(){
 #endif
 }
 
-void FWLDHapticSample::IdleFunc(){
-	CallBackPhysicsLoop();
+void FWLDHapticSample::Start(){
+	TimerStart();
 }
+
+void FWLDHapticSample::IdleFunc(){
+	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
+	FWLDHapticSample::instance->GetINScene()->Step();
+	glutPostRedisplay();}
 
 void FWLDHapticSample::CallBackHapticLoop(void* arg){	
+	/// HapticLoopをコールバックする
 	((FWLDHapticSample*)instance)->GetINScene()->CallBackHapticLoop();
-
-}
-void FWLDHapticSample::CallBackPhysicsLoop(){
-	FWLDHapticSample::instance->GetINScene()->Step();
-	glutPostRedisplay();
 }
 
 void FWLDHapticSample::Display(){
-	// 描画モードの設定
+	/// 描画モードの設定
 	GetSdk()->SetDebugMode(true);
 	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
 	render->SetRenderMode(true, false);
@@ -105,7 +117,7 @@ void FWLDHapticSample::Display(){
 	render->EnableRenderForce(bDrawInfo);
 	render->EnableRenderContact(bDrawInfo);
 
-	// カメラ座標の指定
+	/// カメラ座標の指定
 	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
 	if (cam && cam->GetFrame()){
 		cam->GetFrame()->SetTransform(cameraInfo.view);
@@ -113,25 +125,16 @@ void FWLDHapticSample::Display(){
 		GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
 	}
 
-	// 描画の実行
+	/// 描画の実行
 	if(!GetCurrentWin()) return;
 	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
 	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
 	GetSdk()->Draw();
-
+	
 	DisplayContactPlane();
 	DisplayLineToNearestPoint();
 
 	glutSwapBuffers();
-}
-
-void FWLDHapticSample::Reset(){
-	UTMMTimer* mtimer = GetMMTimerFunc(0);
-	mtimer->Release();
-	GetINScene()->Clear();
-	GetSdk()->GetScene()->GetPHScene()->Clear();
-	BuildScene();
-	mtimer->Create();
 }
 
 void FWLDHapticSample::BuildScene(){
@@ -139,58 +142,59 @@ void FWLDHapticSample::BuildScene(){
 	PHSolidDesc desc;
 	CDBoxDesc bd;
 
-	// 床(物理法則に従わない，運動が変化しない)
+	/// 床(物理法則に従わない，運動が変化しない)
 	{
-		// 剛体(soFloor)の作成
+		/// 剛体(soFloor)の作成
 		desc.mass = 1e20f;
 		desc.inertia *= 1e30f;
 		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 		soFloor->SetDynamical(false);
 		soFloor->SetGravity(false);
-		// 形状(shapeFloor)の作成
+		/// 形状(shapeFloor)の作成
 		bd.boxsize = Vec3f(50, 10, 50);
 		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
-		// 剛体に形状を付加する
+		/// 剛体に形状を付加する
 		soFloor->AddShape(shapeFloor);
 		soFloor->SetFramePosition(Vec3d(0, -10, 0));
 	}
 
-	// 箱(物理法則に従う，運動が変化)
+	/// 箱(物理法則に従う，運動が変化)
 	{
-		// 剛体(soBox)の作成
+		/// 剛体(soBox)の作成
 		desc.mass = 0.05;
-		desc.inertia = 0.0333 * Matrix3d::Unit();
+		desc.inertia = 0.00333 * Matrix3d::Unit();
 		PHSolidIf* soBox = phscene->CreateSolid(desc);
-		// 形状(shapeBox)の作成
+		/// 形状(shapeBox)の作成
 		bd.boxsize = Vec3f(4,4,4);
 		CDShapeIf* shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd);
-		// 剛体に形状を付加
+		/// 剛体に形状を付加
 		soBox->AddShape(shapeBox);
 		soBox->GetShape(0)->SetStaticFriction(2.0);
 		soBox->GetShape(0)->SetDynamicFriction(1.0);
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
-	
-		// ポインタ
+	}
+	/// ポインタ
+	{	
 		for(int i= 0; i < 2; i++){
-			soBox = phscene->CreateSolid(desc);
+			PHSolidIf* soPointer = phscene->CreateSolid(desc);
 			CDSphereDesc sd;
 			sd.radius = 0.5;//1.0;
 			CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
-			soBox->AddShape(shapePointer);
-			soBox->SetDynamical(false);
-			soBox->GetShape(0)->SetStaticFriction(1.0);
-			soBox->GetShape(0)->SetDynamicFriction(1.0);
-			GetSdk()->GetScene()->GetPHScene()->SetContactMode(soBox, PHSceneDesc::MODE_NONE);
-			FWInteractPointerDesc idesc;
-			idesc.pointerSolid = soBox;;
-			idesc.humanInterface = GetHI(i); 
-			idesc.springK = 10;
-			idesc.damperD = 0.1;
-			idesc.posScale = 300;
-			idesc.localRange = 1.0;
-			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0);
+			soPointer->AddShape(shapePointer);
+			soPointer->SetDynamical(false);
+			soPointer->GetShape(0)->SetStaticFriction(1.0);
+			soPointer->GetShape(0)->SetDynamicFriction(1.0);
+			GetSdk()->GetScene()->GetPHScene()->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
+			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
+			idesc.pointerSolid = soPointer;			// soPointerを設定
+			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
+			idesc.springK = 10;						// haptic renderingのバネ係数
+			idesc.damperD = 0.1;					// haptic renderingのダンパ係数
+			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
+			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
+			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
 			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);
-			GetINScene()->CreateINPointer(idesc);
+			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
 		}
 	}
 }
@@ -225,12 +229,12 @@ void FWLDHapticSample::DisplayContactPlane(){
 			render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
 			cPoint += offset/2;
 			glBegin(GL_QUADS);
-				// 接触面底面	
+				/// 接触面底面	
 				glVertex3d(cPoint[0] + v1[0] + v2[0], cPoint[1] + v1[1] + v2[1], cPoint[2] + v1[2] + v2[2]);
 				glVertex3d(cPoint[0] - v1[0] + v2[0], cPoint[1] - v1[1] + v2[1], cPoint[2] - v1[2] + v2[2]);
 				glVertex3d(cPoint[0] - v1[0] - v2[0], cPoint[1] - v1[1] - v2[1], cPoint[2] - v1[2] - v2[2]);
 				glVertex3d(cPoint[0] + v1[0] - v2[0], cPoint[1] + v1[1] - v2[1], cPoint[2] + v1[2] - v2[2]);
-				// 側面1
+				/// 側面1
 				glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
 								cPoint[1] + v1[1] + v2[1] + offset[1], 
 								cPoint[2] + v1[2] + v2[2] + offset[2]);
@@ -243,7 +247,7 @@ void FWLDHapticSample::DisplayContactPlane(){
 				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
 								cPoint[1] - v1[1] + v2[1] + offset[1], 
 								cPoint[2] - v1[2] + v2[2] + offset[2]);
-				// 側面2
+				/// 側面2
 				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
 								cPoint[1] - v1[1] + v2[1] + offset[1], 
 								cPoint[2] - v1[2] + v2[2] + offset[2]);
@@ -256,7 +260,7 @@ void FWLDHapticSample::DisplayContactPlane(){
 				glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
 								cPoint[1] - v1[1] - v2[1] + offset[1], 
 								cPoint[2] - v1[2] - v2[2] + offset[2]);
-				// 側面3
+				/// 側面3
 				glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
 								cPoint[1] - v1[1] - v2[1] + offset[1], 
 								cPoint[2] - v1[2] - v2[2] + offset[2]);
@@ -269,7 +273,7 @@ void FWLDHapticSample::DisplayContactPlane(){
 				glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
 								cPoint[1] + v1[1] - v2[1] + offset[1], 
 								cPoint[2] + v1[2] - v2[2] + offset[2]);
-				// 側面4
+				/// 側面4
 				glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
 								cPoint[1] + v1[1] - v2[1] + offset[1], 
 								cPoint[2] + v1[2] - v2[2] + offset[2]);
@@ -282,7 +286,7 @@ void FWLDHapticSample::DisplayContactPlane(){
 				glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
 								cPoint[1] + v1[1] + v2[1] + offset[1], 
 								cPoint[2] + v1[2] + v2[2] + offset[2]);
-				// 接触面上面
+				/// 接触面上面
 				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
 								cPoint[1] - v1[1] + v2[1] + offset[1], 
 								cPoint[2] - v1[2] + v2[2] + offset[2]);
@@ -338,9 +342,6 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 		case 'q':
 			exit(0);
 			break;
-		case 'r':
-			Reset();
-			break;
 		case 'd':
 			bDrawInfo = !bDrawInfo;
 			break;
@@ -367,22 +368,6 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 				}
 			}
 			break;
-		//case '1':
-		//	DSTR << "box" << std::endl;
-		//	CreateBox(GetSdk());
-		//	break;
-		//case '2':
-		//	DSTR << "sphere" << std::endl;
-		//	CreateSphere(GetSdk());
-		//	break;
-		//case '3':
-		//	DSTR << "capsule" << std::endl;
-		//	CreateCapsule(GetSdk());
-		//	break;
-		//case '4':
-		//	DSTR << "roundcone" << std::endl;
-		//	CreateRoundCone(GetSdk());
-		//	break;
 		default:
 			break;
 	}

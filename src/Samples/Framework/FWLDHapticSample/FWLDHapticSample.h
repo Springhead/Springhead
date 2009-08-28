@@ -9,19 +9,21 @@ using namespace Spr;
 class FWLDHapticSample : public FWApp{
 public:
 	FWLDHapticSample();									
-	virtual void Init(int argc, char* argv[]);
-	void InitCameraView();	
-	void InitHumanInterface();
-	void IdleFunc();
-	static void CallBackPhysicsLoop();
-	static void CallBackHapticLoop(void* arg);	
-	void Display();									
-	void BuildScene();																	
-	void Reset();			
-	void Keyboard(int key, int x, int y);		
-	bool bDrawInfo;									
-	void DisplayContactPlane();
-	void DisplayLineToNearestPoint();
+	void Init(int argc, char* argv[]);			///< アプリケーションの初期化
+	void InitCameraView();						///< カメラ行列の初期化
+	void InitHumanInterface();					///< HapticInterfaceの初期化
+	void Start();								///< アプリケーション開始
+	void IdleFunc();							
+	static void CallBackHapticLoop(void* arg);	///< hapticloopのコールバック
+	void Display();								///< 描画関数	
+	void BuildScene();							///< 剛体の作成									
+	void Reset();								///< リセット(末実装)
+	void Keyboard(int key, int x, int y);		///< キーボード関数
+
+	/// オプション
+	bool bDrawInfo;								///< デバック表示するかどうか									
+	void DisplayContactPlane();					///< 接触面の描画
+	void DisplayLineToNearestPoint();			///< ポインタの近傍点から剛体の近傍点への線
 }; 
 
 #endif
