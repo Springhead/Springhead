@@ -7,6 +7,10 @@
 
 using namespace std;
 
+#define SPIDARTYPE 0;
+//0:大きいフレームのSpidar4×2
+//1 SPIDARG
+
 FWLDHapticSample::FWLDHapticSample(){
 	bDrawInfo = false;
 }
@@ -74,7 +78,7 @@ void FWLDHapticSample::InitHumanInterface(){
 	GetHISdk()->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
-#if 1
+#if SPIDARTYPE
 	/// SPIDARG6を2台使う場合
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
@@ -86,9 +90,9 @@ void FWLDHapticSample::InitHumanInterface(){
 #else
 	/// SPIDAR4Dを使う場合
 	UTRef<HISpidar4If> spg = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	spg->Init(&HISpidar4Desc("SpidarG6X3R",Vec4i(1,3,6,8)));
+	spg->Init(&HISpidar4Desc("SpidarR",Vec4i(1,2,3,4)));
 	UTRef<HISpidar4If> spg2 = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	spg2->Init(&HISpidar4Desc("SpidarG6X3L",Vec4i(2,4,5,7)));
+	spg2->Init(&HISpidar4Desc("SpidarL",Vec4i(5,6,7,8)));
 	AddHI(spg);
 	AddHI(spg2);
 #endif
@@ -181,7 +185,7 @@ void FWLDHapticSample::BuildScene(){
 			CDSphereDesc sd;
 			sd.radius = 0.5;//1.0;
 			CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
-			soPointer->AddShape(shapePointer);
+soPointer->AddShape(shapePointer);
 			soPointer->SetDynamical(false);
 			soPointer->GetShape(0)->SetStaticFriction(1.0);
 			soPointer->GetShape(0)->SetDynamicFriction(1.0);
@@ -189,12 +193,17 @@ void FWLDHapticSample::BuildScene(){
 			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-			idesc.springK = 10;						// haptic renderingのバネ係数
-			idesc.damperD = 0.1;					// haptic renderingのダンパ係数
+			idesc.springK = 10;//0.8						// haptic renderingのバネ係数
+			idesc.damperD = 0.1;//0.01					// haptic renderingのダンパ係数
 			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
 			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
 			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);
+			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0); idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
+			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
+			
+			
+
 			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
 		}
 	}
