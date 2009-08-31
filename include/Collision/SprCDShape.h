@@ -56,7 +56,7 @@ struct CDShapeIf : public NamedObjectIf{
 	float GetVibW();
 	void SetVibT(float vibT);
 	float GetVibT();
-	void SetVibContact(float vibContact);
+	void SetVibContact(bool vibContact);
 	bool GetVibContact();
 
 	void SetSpringDamper(float spring, float damper);

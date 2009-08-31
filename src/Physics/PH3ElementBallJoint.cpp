@@ -28,7 +28,8 @@ PH3ElementBallJointDesc::PH3ElementBallJointDesc(){
 	hardnessRate		= 1.0;		// ~•š‰—ÍˆÈ‰º‚Ìê‡‚É“ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ÉŠ|‚¯‚é”ä—¦
 	I					= Vec3d(1.0,1.0,1.0);
 	yieldFlag			= false;
-	type				= deformationType::Mix;
+	type				= Mix;
+//	type				= deformationType::Mix;
 }
 
 //----------------------------------------------------------------------------

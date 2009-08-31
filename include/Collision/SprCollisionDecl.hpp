@@ -16,7 +16,7 @@
 	float GetVibW(){	return	base::GetVibW();}	\
 	void SetVibT(float vibT){	base::SetVibT(vibT);}	\
 	float GetVibT(){	return	base::GetVibT();}	\
-	void SetVibContact(float vibContact){	base::SetVibContact(vibContact);}	\
+	void SetVibContact(bool vibContact){	base::SetVibContact(vibContact);}	\
 	bool GetVibContact(){	return	base::GetVibContact();}	\
 	void SetSpringDamper(float spring, float damper){	base::SetSpringDamper(spring, damper);}	\
 	float GetSpringK(){	return	base::GetSpringK();}	\

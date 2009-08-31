@@ -52,7 +52,7 @@ public:
 	float GetVibW(){return material.vibW;}
 	void SetVibT(float vibT){material.vibT = vibT;}
 	float GetVibT(){return material.vibT;}
-	void SetVibContact(float vibContact){material.vibContact = vibContact;}
+	void SetVibContact(bool vibContact){material.vibContact = vibContact;}
 	bool GetVibContact(){return material.vibContact;}
 
 	PHMaterial	GetMaterial(){return material;}
