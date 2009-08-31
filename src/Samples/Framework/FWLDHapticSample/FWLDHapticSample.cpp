@@ -10,50 +10,8 @@ using namespace std;
 #define SPIDARTYPE 0;
 //0:大きいフレームのSpidar4×2
 //1 SPIDARG
-
 FWLDHapticSample::FWLDHapticSample(){
-	bDrawInfo = false;
 }
-
-void FWLDHapticSample::Init(int argc, char* argv[]){
-	/// Sdkの初期化，シーンの作成
-	CreateSdk();
-	GetSdk()->Clear();										// SDKの初期化
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
-
-	/// 描画モードの設定
-	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
-	GetGRAdaptee()->Init(argc, argv);						// Sdkの作成
-
-	/// 描画Windowの作成，初期化
-	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
-	windowDesc.title = "FWLDHapticSample";					// ウィンドウのタイトル
-	CreateWin(windowDesc);									// ウィンドウの作成
-	InitWindow();											// ウィンドウの初期化
-	InitCameraView();										// カメラビューの初期化
-
-	/// HumanInterfaceの初期化
-	InitHumanInterface();
-
-	/// InteractSceneの作成
-	FWInteractSceneDesc desc;
-	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
-	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
-	CreateINScene(desc);									// interactSceneの作成
-
-	/// 物理シミュレーションする剛体を作成
-	BuildScene();
-
-	/// タイマの作成，設定
-	UTMMTimer* mtimer = CreateMMTimerFunc();				// タイマを作成
-	mtimer->Resolution(1);									// 分解能[ms]
-	mtimer->Interval(1);									// 呼びだし感覚[ms]
-	mtimer->Set(CallBackHapticLoop, NULL);					// コールバックする関数
-	mtimer->Create();										// コールバック開始
-}
-
 void FWLDHapticSample::InitCameraView(){
 	std::istringstream issView(
 		"((0.9996 0.0107463 -0.0261432 -0.389004)"
@@ -98,49 +56,6 @@ void FWLDHapticSample::InitHumanInterface(){
 #endif
 }
 
-void FWLDHapticSample::Start(){
-	TimerStart();
-}
-
-void FWLDHapticSample::IdleFunc(){
-	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
-	FWLDHapticSample::instance->GetINScene()->Step();
-	glutPostRedisplay();}
-
-void FWLDHapticSample::CallBackHapticLoop(void* arg){	
-	/// HapticLoopをコールバックする
-	((FWLDHapticSample*)instance)->GetINScene()->CallBackHapticLoop();
-}
-
-void FWLDHapticSample::Display(){
-	/// 描画モードの設定
-	GetSdk()->SetDebugMode(true);
-	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
-	render->SetRenderMode(true, false);
-	render->EnableRenderAxis(bDrawInfo);
-	render->EnableRenderForce(bDrawInfo);
-	render->EnableRenderContact(bDrawInfo);
-
-	/// カメラ座標の指定
-	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
-	if (cam && cam->GetFrame()){
-		cam->GetFrame()->SetTransform(cameraInfo.view);
-	}else{
-		GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
-	}
-
-	/// 描画の実行
-	if(!GetCurrentWin()) return;
-	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
-	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
-	GetSdk()->Draw();
-	
-	DisplayContactPlane();
-	DisplayLineToNearestPoint();
-
-	glutSwapBuffers();
-}
-
 void FWLDHapticSample::BuildScene(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	PHSolidDesc desc;
@@ -178,6 +93,10 @@ void FWLDHapticSample::BuildScene(){
 		soBox->GetShape(0)->SetVibration(5,80,300);
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}
+}
+void FWLDHapticSample::BuildPointer(){
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+	PHSolidDesc desc;
 	/// ポインタ
 	{	
 		for(int i= 0; i < 2; i++){
@@ -185,7 +104,7 @@ void FWLDHapticSample::BuildScene(){
 			CDSphereDesc sd;
 			sd.radius = 0.5;//1.0;
 			CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
-soPointer->AddShape(shapePointer);
+			soPointer->AddShape(shapePointer);
 			soPointer->SetDynamical(false);
 			soPointer->GetShape(0)->SetStaticFriction(1.0);
 			soPointer->GetShape(0)->SetDynamicFriction(1.0);
@@ -201,184 +120,11 @@ soPointer->AddShape(shapePointer);
 			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);
 			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0); idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
 			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
-			
-			
-
 			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
 		}
 	}
 }
 
-void FWLDHapticSample::DisplayContactPlane(){
-	FWInteractScene* inScene = GetINScene()->Cast();
-	int N = inScene->NINSolids();
-	for(int i = 0; i <  N; i++){
-		FWInteractSolid* inSolid = inScene->GetINSolid(i);
-		if(!inSolid->bSim) continue;
-		for(int j = 0; j < inScene->NINPointers(); j++){
-			FWInteractPointer* inPointer = inScene->GetINPointer(j)->Cast();
-			FWInteractInfo* inInfo = &inPointer->interactInfo[i];
-			if(!inInfo->flag.blocal) continue;
-			Vec3d pPoint = inPointer->pointerSolid->GetPose() * inInfo->neighborInfo.pointer_point;
-			Vec3d cPoint = inSolid->sceneSolid->GetPose() * inInfo->neighborInfo.closest_point;
-			Vec3d normal = inInfo->neighborInfo.face_normal;
-			Vec3d v1(0,1,0);
-
-			v1 +=  Vec3d(0, 0, 0.5) - Vec3d(0, 0, 0.5)*normal*normal;
-			v1 -= v1*normal * normal;
-			v1.unitize();
-			Vec3d v2 = normal ^ v1;
-
-			Vec4f moon(1.0, 1.0, 0.8, 0.3);
-			GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
-			render->SetMaterial( GRMaterialDesc(moon) );
-			render->PushModelMatrix();
-			Vec3d offset = 0.02 * normal;
-			render->SetLighting( false );
-			render->SetAlphaTest(true);
-			render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
-			cPoint += offset/2;
-			glBegin(GL_QUADS);
-				/// 接触面底面	
-				glVertex3d(cPoint[0] + v1[0] + v2[0], cPoint[1] + v1[1] + v2[1], cPoint[2] + v1[2] + v2[2]);
-				glVertex3d(cPoint[0] - v1[0] + v2[0], cPoint[1] - v1[1] + v2[1], cPoint[2] - v1[2] + v2[2]);
-				glVertex3d(cPoint[0] - v1[0] - v2[0], cPoint[1] - v1[1] - v2[1], cPoint[2] - v1[2] - v2[2]);
-				glVertex3d(cPoint[0] + v1[0] - v2[0], cPoint[1] + v1[1] - v2[1], cPoint[2] + v1[2] - v2[2]);
-				/// 側面1
-				glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
-								cPoint[1] + v1[1] + v2[1] + offset[1], 
-								cPoint[2] + v1[2] + v2[2] + offset[2]);
-				glVertex3d(cPoint[0] + v1[0] + v2[0], 
-								cPoint[1] + v1[1] + v2[1], 
-								cPoint[2] + v1[2] + v2[2]);
-				glVertex3d(cPoint[0] - v1[0] + v2[0], 
-								cPoint[1] - v1[1] + v2[1], 
-								cPoint[2] - v1[2] + v2[2]);
-				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
-								cPoint[1] - v1[1] + v2[1] + offset[1], 
-								cPoint[2] - v1[2] + v2[2] + offset[2]);
-				/// 側面2
-				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
-								cPoint[1] - v1[1] + v2[1] + offset[1], 
-								cPoint[2] - v1[2] + v2[2] + offset[2]);
-				glVertex3d(cPoint[0] - v1[0] + v2[0], 
-								cPoint[1] - v1[1] + v2[1], 
-								cPoint[2] - v1[2] + v2[2]);
-				glVertex3d(cPoint[0] - v1[0] - v2[0], 
-								cPoint[1] - v1[1] - v2[1], 
-								cPoint[2] - v1[2] - v2[2]);
-				glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
-								cPoint[1] - v1[1] - v2[1] + offset[1], 
-								cPoint[2] - v1[2] - v2[2] + offset[2]);
-				/// 側面3
-				glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
-								cPoint[1] - v1[1] - v2[1] + offset[1], 
-								cPoint[2] - v1[2] - v2[2] + offset[2]);
-				glVertex3d(cPoint[0] - v1[0] - v2[0], 
-								cPoint[1] - v1[1] - v2[1], 
-								cPoint[2] - v1[2] - v2[2]);
-				glVertex3d(cPoint[0] + v1[0] - v2[0], 
-								cPoint[1] + v1[1] - v2[1], 
-								cPoint[2] + v1[2] - v2[2]);
-				glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
-								cPoint[1] + v1[1] - v2[1] + offset[1], 
-								cPoint[2] + v1[2] - v2[2] + offset[2]);
-				/// 側面4
-				glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
-								cPoint[1] + v1[1] - v2[1] + offset[1], 
-								cPoint[2] + v1[2] - v2[2] + offset[2]);
-				glVertex3d(cPoint[0] + v1[0] - v2[0], 
-								cPoint[1] + v1[1] - v2[1], 
-								cPoint[2] + v1[2] - v2[2]);
-				glVertex3d(cPoint[0] + v1[0] + v2[0], 
-								cPoint[1] + v1[1] + v2[1],
-								cPoint[2] + v1[2] + v2[2]);
-				glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
-								cPoint[1] + v1[1] + v2[1] + offset[1], 
-								cPoint[2] + v1[2] + v2[2] + offset[2]);
-				/// 接触面上面
-				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
-								cPoint[1] - v1[1] + v2[1] + offset[1], 
-								cPoint[2] - v1[2] + v2[2] + offset[2]);
-				glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
-								cPoint[1] + v1[1] + v2[1] + offset[1], 
-								cPoint[2] + v1[2] + v2[2] + offset[2]);
-				glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
-								cPoint[1] + v1[1] - v2[1] + offset[1], 
-								cPoint[2] + v1[2] - v2[2] + offset[2]);
-				glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
-								cPoint[1] - v1[1] - v2[1] + offset[1], 
-								cPoint[2] - v1[2] - v2[2] + offset[2]);
-			glEnd();
-			render->SetLighting( true);
-			render->SetAlphaTest(false);
-			render->PopModelMatrix();
-			glEnable(GL_DEPTH_TEST);
-		}
-	}
-}
-
-void FWLDHapticSample::DisplayLineToNearestPoint(){
-	FWInteractScene* inScene = DCAST(FWInteractScene, GetINScene());
-	int N = inScene->NINSolids();
-	GLfloat moon[]={0.8,0.8,0.8};
-	for(int i = 0; i <  N; i++){
-		FWInteractSolid* inSolid = inScene->GetINSolid(i);
-		if(!inSolid->bSim) continue;
-		for(int j = 0; j < inScene->NINPointers(); j++){
-			FWInteractPointer* inPointer = inScene->GetINPointer(j)->Cast();
-			FWInteractInfo* inInfo = &inPointer->interactInfo[i];
-			if(!inInfo->flag.blocal) continue;
-			Vec3d pPoint = inPointer->pointerSolid->GetPose() * inInfo->neighborInfo.pointer_point;
-			Vec3d cPoint = inSolid->sceneSolid->GetPose() * inInfo->neighborInfo.closest_point;
-			Vec3d normal = inInfo->neighborInfo.face_normal;
-			glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, moon);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, moon);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, moon);
-			glMaterialfv(GL_FRONT_AND_BACK, GL_SHININESS, moon);
-			glDisable(GL_DEPTH_TEST);
-			glBegin(GL_LINES);
-			glVertex3f(pPoint.X() + normal[0], pPoint.Y() + normal[1], pPoint.Z() + normal[2]);
-			glVertex3f(cPoint.X(), cPoint.Y(), cPoint.Z());
-			glEnd();
-			glEnable(GL_DEPTH_TEST);
-		}
-	}
-}
-
 void FWLDHapticSample::Keyboard(int key, int x, int y){
-	switch (key) {
-		case ESC:
-		case 'q':
-			exit(0);
-			break;
-		case 'd':
-			bDrawInfo = !bDrawInfo;
-			break;
-		case 'c':
-			{
-				MTimerRelease();
-				for(int i = 0; i < GetINScene()->NINPointers(); i++){
-					GetINScene()->GetINPointer(i)->Calibration();
-				}
-				MTimerStart();
-			}
-			break;
-		case 'f':
-			{
-				static bool bf = false;
-				bf = !bf;
-				for(int i = 0; i < GetINScene()->NINPointers(); i++){
-					GetINScene()->GetINPointer(i)->EnableForce(bf);
-				}
-				if(bf){
-					DSTR << "Enable Force Feedback" << std::endl;
-				}else{
-					DSTR << "Disable Force Feedback" << std::endl;
-				}
-			}
-			break;
-		default:
-			break;
-	}
+	FWAppHaptic::Keyboard(key , x, y);
 }

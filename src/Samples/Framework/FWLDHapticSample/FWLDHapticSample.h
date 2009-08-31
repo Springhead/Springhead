@@ -2,28 +2,19 @@
 #define FWLDHAPTIC_SAMPLE_H
 
 #include <Springhead.h>
-#include <Framework/SprFWApp.h>
+#include <Framework/SprFWAppHaptic.h>
 
 using namespace Spr;
 
-class FWLDHapticSample : public FWApp{
+class FWLDHapticSample : public FWAppHaptic{
 public:
 	FWLDHapticSample();									
-	void Init(int argc, char* argv[]);			///< アプリケーションの初期化
-	void InitCameraView();						///< カメラ行列の初期化
-	void InitHumanInterface();					///< HapticInterfaceの初期化
-	void Start();								///< アプリケーション開始
-	void IdleFunc();							
-	static void CallBackHapticLoop(void* arg);	///< hapticloopのコールバック
-	void Display();								///< 描画関数	
-	void BuildScene();							///< 剛体の作成									
-	void Reset();								///< リセット(末実装)
+	virtual void InitCameraView();						///< カメラ行列の初期化
+	virtual void InitHumanInterface();					///< HapticInterfaceの初期化
+	virtual void BuildScene();							///< 剛体の作成	
+	virtual void BuildPointer();							///< 剛体の作成	
+	void Reset(){};								///< リセット(末実装)
 	void Keyboard(int key, int x, int y);		///< キーボード関数
-
-	/// オプション
-	bool bDrawInfo;								///< デバック表示するかどうか									
-	void DisplayContactPlane();					///< 接触面の描画
-	void DisplayLineToNearestPoint();			///< ポインタの近傍点から剛体の近傍点への線
 }; 
 
 #endif
