@@ -3,13 +3,8 @@
 #include <sstream>
 #include <Framework/FWInteractScene.h>
 
-#define ESC 27
-
 using namespace std;
 
-#define SPIDARTYPE 0;
-//0:大きいフレームのSpidar4×2
-//1 SPIDARG
 FWLDHapticSample::FWLDHapticSample(){
 }
 void FWLDHapticSample::InitCameraView(){
@@ -36,7 +31,7 @@ void FWLDHapticSample::InitHumanInterface(){
 	GetHISdk()->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
-#if SPIDARTYPE
+
 	/// SPIDARG6を2台使う場合
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
@@ -45,15 +40,34 @@ void FWLDHapticSample::InitHumanInterface(){
 		if(i == 1) spg[i]->Init(&HISpidarGDesc("SpidarG6X3L"));
 		AddHI(spg[i]);
 	}
-#else
-	/// SPIDAR4Dを使う場合
-	UTRef<HISpidar4If> spg = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	spg->Init(&HISpidar4Desc("SpidarR",Vec4i(1,2,3,4)));
-	UTRef<HISpidar4If> spg2 = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	spg2->Init(&HISpidar4Desc("SpidarL",Vec4i(5,6,7,8)));
-	AddHI(spg);
-	AddHI(spg2);
-#endif
+}
+void FWLDHapticSample::BuildPointer(){
+	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+	PHSolidDesc desc;
+	/// ポインタ
+	{	
+		for(int i= 0; i < 2; i++){
+			PHSolidIf* soPointer = phscene->CreateSolid(desc);
+			CDSphereDesc sd;
+			sd.radius = 0.5;//1.0;
+			CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
+			soPointer->AddShape(shapePointer);
+			soPointer->SetDynamical(false);
+			soPointer->GetShape(0)->SetStaticFriction(1.0);
+			soPointer->GetShape(0)->SetDynamicFriction(1.0);
+			GetSdk()->GetScene()->GetPHScene()->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
+			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
+			idesc.pointerSolid = soPointer;			// soPointerを設定
+			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
+			idesc.springK = 10;//0.8						// haptic renderingのバネ係数
+			idesc.damperD = 0.1;//0.01					// haptic renderingのダンパ係数
+			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
+			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
+			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
+			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);
+			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
+		}
+	}
 }
 
 void FWLDHapticSample::BuildScene(){
@@ -94,36 +108,7 @@ void FWLDHapticSample::BuildScene(){
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}
 }
-void FWLDHapticSample::BuildPointer(){
-	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-	PHSolidDesc desc;
-	/// ポインタ
-	{	
-		for(int i= 0; i < 2; i++){
-			PHSolidIf* soPointer = phscene->CreateSolid(desc);
-			CDSphereDesc sd;
-			sd.radius = 0.5;//1.0;
-			CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
-			soPointer->AddShape(shapePointer);
-			soPointer->SetDynamical(false);
-			soPointer->GetShape(0)->SetStaticFriction(1.0);
-			soPointer->GetShape(0)->SetDynamicFriction(1.0);
-			GetSdk()->GetScene()->GetPHScene()->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
-			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
-			idesc.pointerSolid = soPointer;			// soPointerを設定
-			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-			idesc.springK = 10;//0.8						// haptic renderingのバネ係数
-			idesc.damperD = 0.1;//0.01					// haptic renderingのダンパ係数
-			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
-			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
-			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
-			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);
-			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0); idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
-			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
-			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
-		}
-	}
-}
+
 
 void FWLDHapticSample::Keyboard(int key, int x, int y){
 	FWAppHaptic::Keyboard(key , x, y);
