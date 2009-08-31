@@ -3,13 +3,8 @@
 #include <sstream>
 #include <Framework/FWInteractScene.h>
 
-#define ESC 27
-
 using namespace std;
 
-#define SPIDARTYPE 0;
-//0:大きいフレームのSpidar4×2
-//1 SPIDARG
 FWLDHapticSample::FWLDHapticSample(){
 }
 void FWLDHapticSample::InitCameraView(){
@@ -36,16 +31,7 @@ void FWLDHapticSample::InitHumanInterface(){
 	GetHISdk()->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
-#if SPIDARTYPE
-	/// SPIDARG6を2台使う場合
-	UTRef<HISpidarGIf> spg[2];
-	for(size_t i = 0; i < 2; i++){
-		spg[i] = GetHISdk()->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-		if(i == 0) spg[i]->Init(&HISpidarGDesc("SpidarG6X3R"));
-		if(i == 1) spg[i]->Init(&HISpidarGDesc("SpidarG6X3L"));
-		AddHI(spg[i]);
-	}
-#else
+
 	/// SPIDAR4Dを使う場合
 	UTRef<HISpidar4If> spg = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidar4Desc("SpidarR",Vec4i(1,2,3,4)));
@@ -53,7 +39,6 @@ void FWLDHapticSample::InitHumanInterface(){
 	spg2->Init(&HISpidar4Desc("SpidarL",Vec4i(5,6,7,8)));
 	AddHI(spg);
 	AddHI(spg2);
-#endif
 }
 
 void FWLDHapticSample::BuildScene(){
@@ -116,8 +101,6 @@ void FWLDHapticSample::BuildPointer(){
 			idesc.damperD = 0.1;//0.01					// haptic renderingのダンパ係数
 			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
-			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
-			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);
 			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0); idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
 			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
 			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
