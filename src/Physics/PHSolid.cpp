@@ -155,8 +155,10 @@ void PHSolid::UpdateCacheLCP(double dt){
 	if(IsArticulated())return;
 	
 	if(IsDynamical() && !IsFrozen()){
+		//DSTR<<"naga5"<<dv<<std::endl;
 		dv.v() = minv * f.v() * dt;
 		dv.w() = Iinv * (f.w() - v.w() % (GetInertia() * v.w())) * dt;
+		//DSTR<<"naga6"<<dv<<std::endl;
 	}
 	else{
 		dv.clear();
@@ -179,10 +181,13 @@ void PHSolid::UpdateCachePenalty(int c){
 void PHSolid::UpdateVelocity(double dt){
 	SpatialVector vold = v;
 	if(IsDynamical() && !IsFrozen()){
+		//std::cout<<"naga3"<<v.w()<<std::endl;
 		v += dv;
+		//std::cout<<"naga4"<<dv<<std::endl;
 //		DSTR << "v:" << v.w().norm();
 //		DSTR << "dv:" << dv.w().norm() << std::endl;
 		v.w() *= 0.95;	
+		//std::cout<<"naga5"<<v.w()<<std::endl;
 		double vMax = 100;
 		if (v.w().norm() > 100) v.w() = v.w().unit() * vMax;
 
