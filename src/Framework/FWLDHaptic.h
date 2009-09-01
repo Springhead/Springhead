@@ -16,7 +16,12 @@ class FWLDHapticLoop : public FWHapticLoopBase{
 private:
 	Vec3d vibV;
 	double vibT;
-	Vec3d proxy[100];
+	double proK;
+	double proD;
+	double proM;
+	Vec3d pLastPoint[2][100];
+	Vec3d proxy[2][100];
+	Vec3d proVel[2][100];
 	Vec3d dproxy;
 public:
 	FWLDHapticLoop();
@@ -24,24 +29,11 @@ public:
 	virtual void UpdateInterface();
 	virtual void HapticRendering();
 	virtual void Proxy();
+	virtual void ProxySimulation();
 	virtual Vec3d Vibration(FWInteractSolid*, FWInteractPointer*);
 	virtual void LocalDynamics();
 };
 
-//class FWLDProxy : public FWLDHapticLoop{
-//private:
-//	Vec3d proxy[100];
-//	Vec3d dproxy;
-//public:
-//	FWLDProxy();
-//	void HapticRendering();
-//};
-
-//class FWLDProxySimulation : FWLDHapticLoop{
-//public:
-//	FWLDProxySimulation();
-//	void HapticRendering();
-//};
 
 class FWLDHaptic : public FWMultiRateHaptic{
 protected:
