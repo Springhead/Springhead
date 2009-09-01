@@ -25,6 +25,7 @@ void FWLDHapticLoop::UpdateInterface(){
 		FWInteractPointer* iPointer = GetINPointer(i)->Cast();
 		double s = iPointer->GetPosScale();
 		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+			//6自由度インタフェースの場合
 			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
 			hif->Update((float)hdt);
 			PHSolid* hiSolid = &iPointer->hiSolid;
@@ -36,13 +37,20 @@ void FWLDHapticLoop::UpdateInterface(){
 			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
 			hifPose.Ori()=hif->GetOrientation();
 			Posed hiSolidPose = hifPose * GetINPointer(i)->GetPosition();
+
+
 			hiSolid->SetPose(hiSolidPose);
 		}else{
+			//3自由度インタフェースの場合
 			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 			hif->Update((float)hdt);
 			PHSolid* hiSolid = &iPointer->hiSolid;
 			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
-			hiSolid->SetFramePosition((Vec3d)hif->GetPosition() * s);
+			//hiSolid->SetFramePosition((Vec3d)hif->GetPosition() * s);
+			Posed hifPose;
+			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
+			Posed hiSolidPose = hifPose * GetINPointer(i)->GetPosition();
+			hiSolid->SetPose(hiSolidPose);
 		}
 	}
 }
@@ -115,7 +123,7 @@ void FWLDHapticLoop::HapticRendering(){
 
 				if(iPointer->bForce)	DSTR << vibforce << endl;
 			}else{
-				iSolid->sceneSolid->GetShape(0)->SetVibContact(true);
+				iSolid->sceneSolid->GetShape(0)->SetVibContact(true); 
 			}
 		}
 
