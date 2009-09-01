@@ -243,10 +243,8 @@ void FWLDHapticLoop::Proxy(){
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				///U“®‚ÌŒvŽZ
-				if(iPointer->bVibration){
-					vibforce = Vibration(iSolid, iPointer);
-				}
-					cout << iPointer->bVibration << endl;
+				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer);
+
 				// –€ŽC‚ÌŒvŽZ
 				Vec3d wproxy = poseSolid * proxy[j][i];
 				Vec3d posVec = pPoint - (wproxy);
