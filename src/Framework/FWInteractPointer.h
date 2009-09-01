@@ -31,7 +31,7 @@ public:
 	void		SetPosition(Posed p);
 	Posed		GetPosition();
 	void		EnableForce(bool b = true);
-	void		EnableVibration( bool b = true);
+	void		EnableVibration(bool b = true);
 	void		Calibration();
 
 	/*std::vector<  UTRef< FWObjectIf >  >	copiedBiscuits;*/
