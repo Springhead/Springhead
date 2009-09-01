@@ -122,6 +122,8 @@ struct HISpidar4Desc{
 	void Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f);
 	///	SPIDARのタイプ指定による初期化
 	void Init(char* type);
+	void InitSpidarG(char* type);
+	void InitSpidarBig(char* type);
 };
 
 

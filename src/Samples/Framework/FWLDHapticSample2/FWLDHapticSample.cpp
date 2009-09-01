@@ -101,8 +101,8 @@ void FWLDHapticSample::BuildPointer(){
 			idesc.damperD = 0.1;//0.01					// haptic rendering‚Ìƒ_ƒ“ƒpŒW”
 			idesc.posScale = 300;					// soPointer‚Ì‰Â“®ˆæ‚Ìİ’è(`”{)
 			idesc.localRange = 1.0;					// LocalDynamics‚ğg‚¤ê‡‚Ì‹ß–T”ÍˆÍ
-			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0); idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
-			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
+			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0); //idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
+			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);//idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');
 			GetINScene()->CreateINPointer(idesc);	// interactpointer‚Ìì¬
 		}
 	}
