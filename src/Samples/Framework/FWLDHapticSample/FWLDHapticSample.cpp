@@ -31,7 +31,11 @@ void FWLDHapticSample::InitHumanInterface(){
 	GetHISdk()->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
+<<<<<<< .mine
+#if 0
+=======
 
+>>>>>>> .r4330
 	/// SPIDARG6Ç2ë‰égÇ§èÍçá
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
@@ -88,6 +92,7 @@ void FWLDHapticSample::BuildScene(){
 		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
 		/// çÑëÃÇ…å`èÛÇïtâ¡Ç∑ÇÈ
 		soFloor->AddShape(shapeFloor);
+		soFloor->GetShape(0)->SetVibration(10,80,100);
 		soFloor->SetFramePosition(Vec3d(0, -10, 0));
 	}
 
@@ -104,12 +109,63 @@ void FWLDHapticSample::BuildScene(){
 		soBox->AddShape(shapeBox);
 		soBox->GetShape(0)->SetStaticFriction(2.0);
 		soBox->GetShape(0)->SetDynamicFriction(1.0);
-		soBox->GetShape(0)->SetVibration(5,80,300);
+		soBox->GetShape(0)->SetVibration(10,80,300);
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}
 }
 
 
 void FWLDHapticSample::Keyboard(int key, int x, int y){
+<<<<<<< .mine
+	switch (key) {
+		case ESC:
+		case 'q':
+			exit(0);
+			break;
+		case 'd':
+			bDrawInfo = !bDrawInfo;
+			break;
+		case 'c':
+			{
+				MTimerRelease();
+				for(int i = 0; i < GetINScene()->NINPointers(); i++){
+					GetINScene()->GetINPointer(i)->Calibration();
+				}
+				MTimerStart();
+			}
+			break;
+		case 'f':
+			{
+				static bool bf = false;
+				bf = !bf;
+				for(int i = 0; i < GetINScene()->NINPointers(); i++){
+					GetINScene()->GetINPointer(i)->EnableForce(bf);
+				}
+				if(bf){
+					DSTR << "Enable Force Feedback" << std::endl;
+				}else{
+					DSTR << "Disable Force Feedback" << std::endl;
+				}
+			}
+			break;
+		//case 'o':
+		//	{
+		//		static bool bv = false;
+		//		bv = !bv;
+		//		for(int i = 0; i < GetINScene()->NINPointers(); i++){
+		//			GetINScene()->GetINPointer(i)->EnableVibration(bv);
+		//		}
+		//		if(bv){
+		//			DSTR << "Enable Vibration Feedback" << std::endl;
+		//		}else{
+		//			DSTR << "Disable Vibration Feedback" << std::endl;
+		//		}
+		//	}
+		//	break;
+		default:
+			break;
+	}
+=======
 	FWAppHaptic::Keyboard(key , x, y);
+>>>>>>> .r4330
 }

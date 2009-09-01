@@ -56,8 +56,8 @@ void HISpidar4Desc::InitSpidarG(char* type){
 		//	糸のグリップへの取り付け位置．グリップはピンポン玉を採用しています．
 		const float GX = 0.02f/2;		//	x方向の辺の長さ/2
 		const float GY = 0.02f/2;		//	y方向の辺の長さ/2
-		Matrix3f rotR = Matrix3f::Rot((float)Rad(-45), 'y');
-		Matrix3f rotL = Matrix3f::Rot((float)Rad(-45), 'y');
+		Matrix3f rotR = Matrix3f::Rot((float)Rad(-90), 'y');
+		Matrix3f rotL = Matrix3f::Rot((float)Rad(0), 'y');
 		Matrix3f rotZ = Matrix3f::Rot((float)Rad(-45), 'z');
 		Matrix3f tMat = Matrix3f(); tMat.xx*=-1; tMat.yy*=-1; //左手系を右手系に変換
 
