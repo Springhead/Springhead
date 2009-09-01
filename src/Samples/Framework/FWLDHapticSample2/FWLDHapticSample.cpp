@@ -6,6 +6,7 @@
 using namespace std;
 
 FWLDHapticSample::FWLDHapticSample(){
+	bDrawInfo=true;
 }
 void FWLDHapticSample::InitCameraView(){
 	std::istringstream issView(
@@ -97,8 +98,8 @@ void FWLDHapticSample::BuildPointer(){
 			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-			idesc.springK = 10;//0.8						// haptic renderingのバネ係数
-			idesc.damperD = 0.1;//0.01					// haptic renderingのダンパ係数
+			idesc.springK = 0.8;						// haptic renderingのバネ係数
+			idesc.damperD = 0.01;					// haptic renderingのダンパ係数
 			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
 			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0); //idesc.position.Ori()=Quaterniond::Rot(Rad(90.0),'z');

@@ -111,8 +111,8 @@ void HISpidar4Desc::InitSpidarBig(char* type){
 		const float PY = 0.54f/2;		//	y方向の辺の長さ/2
 		const float PZ = 0.55f/2;		//	z方向の辺の長さ/2
 		//	糸のグリップへの取り付け位置．グリップはピンポン玉を採用しています．
-		const float GX = 0.02f/2;		//	x方向の辺の長さ/2
-		const float GY = 0.02f/2;		//	y方向の辺の長さ/2
+		const float GX = 0.00f/2;		//	x方向の辺の長さ/2
+		const float GY = 0.00f/2;		//	y方向の辺の長さ/2
 
 		Matrix3f rotZ = Matrix3f::Rot((float)Rad(-45), 'z');
 		Matrix3f tMatR = Matrix3f(); tMatR.zz*=-1; //座標調整
