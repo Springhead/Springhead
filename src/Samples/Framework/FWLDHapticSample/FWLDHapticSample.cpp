@@ -31,11 +31,7 @@ void FWLDHapticSample::InitHumanInterface(){
 	GetHISdk()->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
-<<<<<<< .mine
-#if 0
-=======
 
->>>>>>> .r4330
 	/// SPIDARG6Ç2ë‰égÇ§èÍçá
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
@@ -116,38 +112,8 @@ void FWLDHapticSample::BuildScene(){
 
 
 void FWLDHapticSample::Keyboard(int key, int x, int y){
-<<<<<<< .mine
+	FWAppHaptic::Keyboard(key , x, y);
 	switch (key) {
-		case ESC:
-		case 'q':
-			exit(0);
-			break;
-		case 'd':
-			bDrawInfo = !bDrawInfo;
-			break;
-		case 'c':
-			{
-				MTimerRelease();
-				for(int i = 0; i < GetINScene()->NINPointers(); i++){
-					GetINScene()->GetINPointer(i)->Calibration();
-				}
-				MTimerStart();
-			}
-			break;
-		case 'f':
-			{
-				static bool bf = false;
-				bf = !bf;
-				for(int i = 0; i < GetINScene()->NINPointers(); i++){
-					GetINScene()->GetINPointer(i)->EnableForce(bf);
-				}
-				if(bf){
-					DSTR << "Enable Force Feedback" << std::endl;
-				}else{
-					DSTR << "Disable Force Feedback" << std::endl;
-				}
-			}
-			break;
 		//case 'o':
 		//	{
 		//		static bool bv = false;
@@ -165,7 +131,4 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 		default:
 			break;
 	}
-=======
-	FWAppHaptic::Keyboard(key , x, y);
->>>>>>> .r4330
 }
