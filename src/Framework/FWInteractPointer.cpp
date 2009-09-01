@@ -10,7 +10,7 @@ FWInteractPointer::FWInteractPointer(){ Init(); }
 FWInteractPointer::FWInteractPointer(const FWInteractPointerDesc& desc) : FWInteractPointerDesc(desc){ Init(); }
 void FWInteractPointer::Init(){
 	bForce = false;
-//	bVibration = false;
+	bVibration = false;
 }
 void FWInteractPointer::SetPointerSolid(PHSolidIf* solid){
 	pointerSolid = solid;
@@ -45,6 +45,9 @@ Posed  FWInteractPointer::GetPosition(){
 }
 void FWInteractPointer::EnableForce(bool b){
 	bForce = b;
+}
+void FWInteractPointer::EnableVibration(bool b){
+	bVibration = b;
 }
 void FWInteractPointer::Calibration(){
 	GetHI()->Calibration();

@@ -112,7 +112,7 @@ void FWLDHapticLoop::HapticRendering(){
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				///U“®‚ÌŒvŽZ
-				vibforce = Vibration(iSolid, iPointer);
+				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer);
 
 				///–€ŽC—Í‚ÌŒvŽZ
 				double d = 0.01;
@@ -243,8 +243,10 @@ void FWLDHapticLoop::Proxy(){
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				///U“®‚ÌŒvŽZ
-				vibforce = Vibration(iSolid, iPointer);
-
+				if(iPointer->bVibration){
+					vibforce = Vibration(iSolid, iPointer);
+				}
+					cout << iPointer->bVibration << endl;
 				// –€ŽC‚ÌŒvŽZ
 				Vec3d wproxy = poseSolid * proxy[j][i];
 				Vec3d posVec = pPoint - (wproxy);
@@ -341,7 +343,7 @@ void FWLDHapticLoop::ProxySimulation(){
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				///U“®‚ÌŒvŽZ
-				vibforce = Vibration(iSolid, iPointer);
+				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer);
 
 				// –€ŽC‚ÌŒvŽZ
 				Vec3d pvel = iPointer->hiSolid.GetPointVelocity(pPoint);

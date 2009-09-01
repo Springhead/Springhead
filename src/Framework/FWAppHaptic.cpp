@@ -344,6 +344,20 @@ void FWAppHaptic::Keyboard(int key, int x, int y){
 				}
 			}
 			break;
+		case 'o':
+			{
+				static bool bv = false;
+				bv = !bv;
+				for(int i = 0; i < GetINScene()->NINPointers(); i++){
+					GetINScene()->GetINPointer(i)->EnableVibration(bv);
+				}
+				if(bv){
+					DSTR << "Enable Vibration Feedback" << std::endl;
+				}else{
+					DSTR << "Disable Vibration Feedback" << std::endl;
+				}
+			}
+			break;
 		default:
 			break;
 	}

@@ -20,6 +20,7 @@
 	void SetPosition(Posed p){	base::SetPosition(p);}	\
 	Posed GetPosition(){	return	base::GetPosition();}	\
 	void EnableForce(bool b){	base::EnableForce(b);}	\
+	void EnableVibration(bool b){	base::EnableVibration(b);}	\
 	void Calibration(){	base::Calibration();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractSceneIf(base)	\

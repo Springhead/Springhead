@@ -81,6 +81,7 @@ void FWMultiRateHaptic::Sync(){
 				hiPointer = GetHapticLoop()->GetINPointer(j)->Cast();
 				hiPointer->interactInfo[i] = GetINPointer(j)->interactInfo[i];
 				hiPointer->bForce = GetINPointer(j)->bForce;
+				hiPointer->bVibration = GetINPointer(j)->bVibration;
 			}
 		}
 		/* “¯ŠúI—¹ˆ— */
