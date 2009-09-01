@@ -255,7 +255,7 @@ void PHConstraint::IterateLCP(){
 #endif
 
 		// とりあえず落ちないように間に合わせのコード
-		if (!FPCK_FINITE(fnew[j])) fnew[j] = f[j];
+		if (!FPCK_FINITE(fnew[j])) fnew[j] = f[j]; //naga 特定条件下では間に合わせのコードでも落ちる
 
 		if (!FPCK_FINITE(fnew[0])){
 			FPCK_FINITE(b[0]);
