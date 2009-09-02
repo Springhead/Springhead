@@ -127,7 +127,9 @@ void PH3ElementBallJoint::CompBias(){
 
 	// バネダンパが入っていたら構築する
 	if (spring != 0.0 || damper != 0.0 || secondDamper!=0.0){
-
+		if(fNorm>yieldStress){
+			yieldFlag=true;
+		}
 		if(type==PH3ElementBallJointDesc::deformationType::Mix){	//3:Mix 初期値
 			if(yieldFlag)PlasticDeformation();	//塑性変形
 			else ElasticDeformation();			//弾性変形
