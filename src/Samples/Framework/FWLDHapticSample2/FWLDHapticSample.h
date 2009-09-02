@@ -8,7 +8,8 @@ using namespace Spr;
 
 class FWLDHapticSample : public FWAppHaptic{
 public:
-	FWLDHapticSample();									
+	FWLDHapticSample();	
+	virtual void Init(int argc, char* argv[]);
 	virtual void InitCameraView();						///< ƒJƒƒ‰s—ñ‚Ì‰Šú‰»
 	virtual void InitHumanInterface();					///< HapticInterface‚Ì‰Šú‰»
 	virtual void BuildScene();							///< „‘Ì‚Ìì¬	

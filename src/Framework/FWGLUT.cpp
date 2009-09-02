@@ -34,6 +34,7 @@ FWGLUT::FWGLUTTimer* FWGLUT::FWGLUTTimer::timerInstance;
 FWGLUT::~FWGLUT(){
 	FWGLUT::AtExit();
 	instance = NULL;
+	
 }
 /** コールバック関数*///////////////////////////////////////////////////////
 void FWGLUT::GlutDisplayFunc(){

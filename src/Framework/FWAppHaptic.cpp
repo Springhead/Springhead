@@ -316,6 +316,7 @@ void FWAppHaptic::Keyboard(int key, int x, int y){
 		switch (key) {
 		case  27: //ESC
 		case 'q':
+			
 			exit(0);
 			break;
 		case 'd':
@@ -336,6 +337,18 @@ void FWAppHaptic::Keyboard(int key, int x, int y){
 				bf = !bf;
 				for(int i = 0; i < GetINScene()->NINPointers(); i++){
 					GetINScene()->GetINPointer(i)->EnableForce(bf);
+					if(!bf){
+						HIBaseIf* hib = GetINScene()->GetINPointer(i)->GetHI();
+						if(DCAST(HIForceInterface6DIf, hib)){
+							HIForceInterface6DIf* hif = hib->Cast();
+							hif->SetForce(Vec3d(), Vec3d());
+						}
+						if(DCAST(HIForceInterface3DIf, hib)){
+							HIForceInterface3DIf* hif = hib->Cast();
+							hif->SetForce(Vec3d());
+						}
+					}
+
 				}
 				if(bf){
 					DSTR << "Enable Force Feedback" << std::endl;

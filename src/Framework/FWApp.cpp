@@ -24,6 +24,7 @@ namespace Spr{;
 
 FWApp::~FWApp(){
 	MTimerRelease();
+	glutLeaveGameMode();
 }
 
 // 派生クラスで定義することのできる仮想関数/////////////////////////////////

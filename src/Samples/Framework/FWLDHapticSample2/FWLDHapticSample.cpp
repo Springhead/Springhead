@@ -6,8 +6,50 @@
 using namespace std;
 
 FWLDHapticSample::FWLDHapticSample(){
-	bDrawInfo=true;
+	bDrawInfo=false;
 }
+
+void FWLDHapticSample::Init(int argc, char* argv[]){
+	/// Sdkの初期化，シーンの作成
+	CreateSdk();
+	GetSdk()->Clear();										// SDKの初期化
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
+
+	/// 描画モードの設定
+	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
+	GetGRAdaptee()->Init(argc, argv);						// Sdkの作成
+
+	/// 描画Windowの作成，初期化
+	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
+	windowDesc.title = "Springhead2";						// ウィンドウのタイトル
+	windowDesc.fullscreen =true;
+	CreateWin(windowDesc);									// ウィンドウの作成
+	InitWindow();											// ウィンドウの初期化
+	InitCameraView();										// カメラビューの初期化
+
+	/// HumanInterfaceの初期化
+	InitHumanInterface();
+
+	/// InteractSceneの作成
+	FWInteractSceneDesc desc;
+	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
+	desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
+	CreateINScene(desc);									// interactSceneの作成
+
+	/// 物理シミュレーションする剛体を作成
+	BuildScene();
+	BuildPointer();
+
+	/// タイマの作成，設定
+	UTMMTimer* mtimer = CreateMMTimerFunc();				// タイマを作成
+	mtimer->Resolution(1);									// 分解能[ms]
+	mtimer->Interval(1);									// 呼びだし感覚[ms]
+	mtimer->Set(CallBackHapticLoop, NULL);					// コールバックする関数
+	mtimer->Create();										// コールバック開始
+}
+
 void FWLDHapticSample::InitCameraView(){
 	std::istringstream issView(
 		"((0.9996 0.0107463 -0.0261432 -0.389004)"
@@ -98,12 +140,12 @@ void FWLDHapticSample::BuildPointer(){
 			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-			idesc.springK = 0.8;						// haptic renderingのバネ係数
-			idesc.damperD = 0.01;					// haptic renderingのダンパ係数
-			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
+			idesc.springK = 5;						// haptic renderingのバネ係数
+			idesc.damperD = 0.1;					// haptic renderingのダンパ係数
+			idesc.posScale = 60;					// soPointerの可動域の設定(～倍)
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
-			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0); //ポインタの初期位置
-			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);
+			if(i==0) idesc.position = Posed(1,0,0,0,5,0,0); //ポインタの初期位置
+			if(i==1) idesc.position = Posed(1,0,0,0,5,0,0);
 			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
 		}
 	}
