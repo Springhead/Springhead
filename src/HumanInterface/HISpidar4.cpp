@@ -114,7 +114,7 @@ void HISpidar4Desc::InitSpidarBig(char* type){
 		const float GX = 0.00f/2;		//	xХ√М№В╠Х╙В╠Т╖В│/2
 		const float GY = 0.00f/2;		//	yХ√М№В╠Х╙В╠Т╖В│/2
 
-		Matrix3f rotZ = Matrix3f::Rot((float)Rad(-45), 'z');
+		Matrix3f rotZ = Matrix3f::Rot((float)Rad(0), 'z');
 		Matrix3f tMatR = Matrix3f(); tMatR.zz*=-1; //Н└ХWТ▓Ро
 		Matrix3f tMatL = Matrix3f(); tMatL.xx*=-1; //Н└ХWТ▓Ро
 
@@ -148,7 +148,7 @@ void HISpidar4Desc::InitSpidarBig(char* type){
 			kp[i] = motorPos[0][i][1];
 		}
 	}
-	Init(4, mp, kp, 0.365296803653f, 1.66555e-5f*1.667, 0.3f, 20.0f);
+	Init(4, mp, kp, 0.365296803653f, 1.66555e-5f*1.667, 0.3f, 15.0f);
 
 	}
 	

@@ -277,7 +277,8 @@ void FWLDHapticLoop::Proxy(){
 				proxy[j][i] = poseSolid.Inv() * pPoint;
 			}
 		}
-
+		/// 
+//		if(outForce.v() > )
 		/// インタフェースへ力を出力
 		if(iPointer->bForce){
 			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
@@ -290,7 +291,17 @@ void FWLDHapticLoop::Proxy(){
 				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(outForce.v());
 			}
-		
+		}else{
+			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+				hif->SetForce(outForce.v(), Vec3d());
+				#ifdef TORQUE
+					hif->SetForce(Vec3d(), Vec3d());
+				#endif
+			}else{
+				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+				hif->SetForce(Vec3d());
+			}		
 		}
 	}
 }
