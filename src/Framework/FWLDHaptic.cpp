@@ -12,15 +12,15 @@
 // FWLDHapticLoop‚ÌŽÀ‘•
 //////////////////////////////////////////////////////////////////////////////////////////////
 FWLDHapticLoop::FWLDHapticLoop(){
-	proK = 300;
-	proD = 0.05;
-	proM = 0.003;
+	proK = 1000;
+	proD = 0.01;
+	proM = 2.0*10e-6;
 }
 void FWLDHapticLoop::Step(){
 	UpdateInterface();
 //	HapticRendering();
-	Proxy();
-//	ProxySimulation();
+//	Proxy();
+	ProxySimulation();
 	LocalDynamics();
 }
 
@@ -361,13 +361,15 @@ void FWLDHapticLoop::ProxySimulation(){
 				}
 				if(friFlag){
 					Vec3d dPOS;
-					Vec3d dVEL = dot((pvel - proVel[j][i]),velTan.unit()) * velTan.unit();
+					Vec3d dVEL;
 					Vec3d dFRI;
-					if(tanjent.norm() == 0){
-						dPOS = hdt * hdt * dot(proVel[j][i],velTan.unit())*velTan.unit();
+					if((tanjent.norm() == 0)||(velTan.norm() == 0)){
+						dPOS = Vec3d(0,0,0);
+						dVEL = Vec3d(0,0,0);
 						dFRI = Vec3d(0,0,0);
 					}else{
 						dPOS = dot(pPoint-wproxy,tanjent.unit()) * tanjent.unit() - hdt * dot(proVel[j][i],velTan.unit())*velTan.unit();
+						dVEL = dot((pvel - proVel[j][i]),velTan.unit()) * velTan.unit();
 						dFRI = abs(posDot*proK * mu1)*tanjent.unit();
 					}
 
