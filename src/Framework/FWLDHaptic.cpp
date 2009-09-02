@@ -541,6 +541,7 @@ void FWLDHaptic::TestSimulation(){
 		/// InteractPointerの数だけ力を加えるテストシミュレーションを行う
 		for(int j = 0; j < NINPointers(); j++){
 			FWInteractPointer* inPointer = GetINPointer(j);
+			if(inPointer->interactInfo[i].flag.blocal==false)continue;
 			PHSolidIf* soPointer = inPointer->pointerSolid;
 			FWInteractInfo* iInfo = &inPointer->interactInfo[i];
 			Vec3d cPoint = phSolid->GetPose() * iInfo->neighborInfo.closest_point;		// 力を加える点(ワールド座標)
@@ -564,10 +565,13 @@ void FWLDHaptic::TestSimulation(){
 				if(t[0].norm() < 1.0e-10)							// それでもノルムが小さかったら
 					t[0] = n % Vec3d(0.0, 1.0, 0.0);				// t[0]を法線とVec3d(0.0, 1.0, 0.0)の外積とする
 				t[0].unitize();										// t[0]を単位ベクトルにする
+				//if (!FPCK_FINITE(t[0]));//naga
+				
 			}
 			else{
 				t[0] = vjrelproj / vjrelproj_norm;					// ノルムが小さくなかったら，射影ベクトルのまま
 			}
+
 			t[1] = n % t[0];										// t[1]は法線とt[0]の外積できまる
 
 			/// 接触点に加える力
@@ -596,7 +600,7 @@ void FWLDHaptic::TestSimulation(){
 			#endif
 
 			/// 法線方向に力を加える
-			phSolid->AddForce(force.col(0), cPoint);
+			phSolid->AddForce(force.col(0), cPoint); 
 			#ifdef DIVIDE_STEP
 			phScene->IntegratePart2();
 			#else
