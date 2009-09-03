@@ -117,6 +117,9 @@ void FWLDHapticSample::BuildScene(){
 void FWLDHapticSample::Keyboard(int key, int x, int y){
 	FWAppHaptic::Keyboard(key , x, y);
 	PHSceneIf* phscene=GetSdk()->GetPHSdk()->GetScene(0);
+	FWLDHaptic* adaptee = (FWLDHaptic*)GetINScene(0)->GetINAdaptee();
+	adaptee->ReleaseState(phscene);
+
 
 	switch (key) {
 		case ' ':
