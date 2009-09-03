@@ -13,7 +13,7 @@ PHSolidIf* CreateBox(FWSdkIf* fwSdk){
 	desc.inertia = 0.0333 * Matrix3d::Unit();
 	PHSolidIf* soBox = fwSdk->GetScene()->GetPHScene()->CreateSolid(desc);
 	CDBoxDesc bd;
-	bd.boxsize = Vec3f(2, 2, 2);
+	bd.boxsize = Vec3f(2, 3, 2);
 	CDShapeIf* shapeBox = fwSdk->GetPHSdk()->CreateShape(bd);
 	soBox->AddShape(shapeBox);
 	soBox->SetFramePosition(Vec3d(-1, 5, 4));
@@ -207,10 +207,11 @@ void Create3ElementJointBox(FWSdkIf* fwSdk){
 		desc.poseSocket.Pos()	= Vec3f(0.0f, -1.0f, 0.0f);
 		desc.posePlug.Pos()	= Vec3f(0.0f, 1.0f, 0.0f);
 		desc.spring			= 1.0;
-		desc.damper		= 100;
-		desc.secondDamper = 10.0;
+		desc.damper		= 0.1;
+		desc.secondDamper = 0.1;
 		desc.hardnessRate = 5;
 		desc.yieldStress =0.2;
+		desc.type		=PH3ElementBallJointDesc::deformationType::Mix;
 
 	}
 	PHSolidIf* rootSolid = CreateBox(fwSdk);
