@@ -10,6 +10,46 @@ using namespace std;
 
 FWLDHapticSample::FWLDHapticSample(){
 }
+
+void FWLDHapticSample::Init(int argc, char* argv[]){
+	/// Sdkの初期化，シーンの作成
+	CreateSdk();
+	GetSdk()->Clear();										// SDKの初期化
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
+	//GetSdk()->GetScene()->GetPHScene()->SetGravity(Vec3d());
+	/// 描画モードの設定
+	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
+	GetGRAdaptee()->Init(argc, argv);						// Sdkの作成
+
+	/// 描画Windowの作成，初期化
+	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
+	windowDesc.title = "Springhead2";						// ウィンドウのタイトル
+	CreateWin(windowDesc);									// ウィンドウの作成
+	InitWindow();											// ウィンドウの初期化
+	InitCameraView();										// カメラビューの初期化
+
+	/// HumanInterfaceの初期化
+	InitHumanInterface();
+
+	/// InteractSceneの作成
+	FWInteractSceneDesc desc;
+	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
+	desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
+	CreateINScene(desc);									// interactSceneの作成
+
+	/// 物理シミュレーションする剛体を作成
+	BuildScene();
+	BuildPointer();
+
+	/// タイマの作成，設定
+	UTMMTimer* mtimer = CreateMMTimerFunc();				// タイマを作成
+	mtimer->Resolution(1);									// 分解能[ms]
+	mtimer->Interval(1);									// 呼びだし感覚[ms]
+	mtimer->Set(CallBackHapticLoop, NULL);					// コールバックする関数
+	mtimer->Create();										// コールバック開始
+}
 void FWLDHapticSample::InitCameraView(){
 	std::istringstream issView(
 		"((0.9996 0.0107463 -0.0261432 -0.389004)"
@@ -74,8 +114,12 @@ void FWLDHapticSample::BuildPointer(){
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
 			idesc.springK = 5;						// haptic renderingのバネ係数
-			idesc.damperD = 0.1;					// haptic renderingのダンパ係数
+			idesc.damperD = 0.0;					// haptic renderingのダンパ係数
+		#if SPIDAR
+			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
+		#else
 			idesc.posScale = 60;					// soPointerの可動域の設定(～倍)
+		#endif
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
 			if(i==0) idesc.position = Posed(1,0,0,0,5,0,0); //ポインタの初期位置
 			if(i==1) idesc.position = Posed(1,0,0,0,5,0,0);
@@ -106,23 +150,78 @@ void FWLDHapticSample::BuildScene(){
 		soFloor->SetFramePosition(Vec3d(0, -10, 0));
 	}
 
-	Create3ElementJointBox(GetSdk());
+	{	
+		PH3ElementBallJointDesc desc;
+		//PHBallJointDesc desc;
+		{
+			desc.poseSocket.Pos()	= Vec3f(0.0f,0.0f , -1.2f);
+			desc.posePlug.Pos()	= Vec3f(0.0f,0.0f , 1.2f);
+			desc.spring			= 10;//10.0;
+			desc.damper		= 2;//2.0;
+			desc.secondDamper = 1;
+			desc.hardnessRate = 1;
+			desc.yieldStress =0;
+			desc.type		=PH3ElementBallJointDesc::deformationType::Plastic;
+
+		}
+		PHSolidIf* rootSolid = CreateCapsule(GetSdk());
+		rootSolid->SetMass(0.001);
+		rootSolid->SetDynamical(false);
+		double posy = 15;
+		Vec3d pos = Vec3d(0, posy, 0);
+		//rootSolid->SetFramePosition(pos);
+		//rootSolid->SetOrientation(Quaterniond().Rot(Rad(90),Vec3d(0,1,0)));
+
+		//PHTreeNodeIf* root=GetSdk()->GetScene()->GetPHScene()->CreateRootNode(rootSolid,PHRootNodeDesc());
+	
+		for(int i = 1; i < 1; i++){
+			PHSolidIf* nodeSolid = CreateCapsule(GetSdk());
+			nodeSolid->SetMass(0.001);
+			PHJointIf* joint=GetSdk()->GetScene()->GetPHScene()->CreateJoint(rootSolid, nodeSolid, desc);
+			if(i==6){
+			//	Balljoint=DCAST(PH3ElementBallJointIf,joint);//naga
+				//nodeSolid->SetDynamical(false);
+			}
+			nodeSolid->SetFramePosition(Vec3d(0, posy - 2.4 * i, 0));
+			//nodeSolid->SetOrientation(Quaterniond().Rot(Rad(90),Vec3d(0,1,0)));
+			GetSdk()->GetScene()->GetPHScene()->SetContactMode(rootSolid, nodeSolid, PHSceneDesc::MODE_NONE);
+			//root=GetSdk()->GetScene()->GetPHScene()->CreateTreeNode(root,nodeSolid);
+			rootSolid = nodeSolid;
+		}
+	}
 }
+
+void FWLDHapticSample::IdleFunc(){
+	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
+	FWAppHaptic::instance->GetINScene()->Step();
+	//Balljoint->GetDefomationMode();//naga
+	glutPostRedisplay();
+}						
 
 void FWLDHapticSample::Reset(){
 
 	//MTimerRelease();
-	////Solidを追加する場合，ObjectStatesIfのリリースが必要
-	//FWLDHaptic* adaptee = (FWLDHaptic*)GetINScene(0)->GetINAdaptee();
-	//adaptee->ReleaseState(GetSdk()->GetPHSdk()->GetScene(0));
 
+	///// Sdkの初期化，シーンの作成
+	//CreateSdk();
 	//GetSdk()->Clear();										// SDKの初期化
 	//GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
 	//GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
-	//PHSceneIf* phscene=GetSdk()->GetPHSdk()->GetScene(0);
-	//phscene->Clear();
-	//BuildPointer();
+	///// HumanInterfaceの初期化
+	//InitHumanInterface();
+	///// InteractSceneの作成
+	//FWInteractSceneDesc desc;
+	//desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
+	//desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	//desc.hdt = 0.001;										// マルチレートの場合の更新[s]
+	//CreateINScene(desc);									// interactSceneの作成
+	///// 物理シミュレーションする剛体を作成
 	//BuildScene();
+	//BuildPointer();
+	////描画Windowの初期化
+	//GetCurrentWin()->SetScene(GetSdk()->GetScene());
+	//InitCameraView();
+
 	//MTimerStart();
 
 

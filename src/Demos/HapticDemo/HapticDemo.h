@@ -8,13 +8,17 @@ using namespace Spr;
 
 class FWLDHapticSample : public FWAppHaptic{
 public:
-	FWLDHapticSample();									
+	FWLDHapticSample();
+	virtual void Init(int argc, char* argv[]);			///< アプリケーションの初期化
 	virtual void InitCameraView();						///< カメラ行列の初期化
 	virtual void InitHumanInterface();					///< HapticInterfaceの初期化
+	virtual void IdleFunc();							
 	virtual void BuildScene();							///< 剛体の作成	
 	virtual void BuildPointer();							///< 剛体の作成	
 	void Reset();								///< リセット(末実装)
 	void Keyboard(int key, int x, int y);		///< キーボード関数
+
+	PH3ElementBallJointIf* Balljoint;
 }; 
 
 #endif
