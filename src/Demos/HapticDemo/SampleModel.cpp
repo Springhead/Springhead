@@ -20,9 +20,9 @@ PHSolidIf* CreateBox(FWSdkIf* fwSdk){
 	//soBox.back()->SetOrientation(
 	//	Quaternionf::Rot(Rad(30), 'y') * 
 	//	Quaternionf::Rot(Rad(10), 'x'));  
-	//soBox->GetShape(0)->SetVibration(-200,120,300);
-	//soBox->GetShape(0)->SetStaticFriction(1);//0.8);
-	//soBox->GetShape(0)->SetDynamicFriction(1);//0.6);
+	soBox->GetShape(0)->SetVibration(-200,120,300);
+	soBox->GetShape(0)->SetStaticFriction(1);//0.8);
+	soBox->GetShape(0)->SetDynamicFriction(1);//0.6);
 	return soBox;
 }
 
@@ -211,16 +211,16 @@ void Create3ElementJointBox(FWSdkIf* fwSdk){
 		desc.secondDamper = 0.01*1000;
 	}
 	PHSolidIf* rootSolid = CreateBox(fwSdk);
-	rootSolid->SetMass(0.001);
+	rootSolid->SetMass(0.1);
 	rootSolid->SetDynamical(false);
 	double posy = 15;
-	Vec3d pos = Vec3d(5, posy, 0);
+	Vec3d pos = Vec3d(0, posy, 0);
 	rootSolid->SetFramePosition(pos);
-	for(int i = 1; i < 6; i++){
+	for(int i = 1; i < 8; i++){
 		PHSolidIf* nodeSolid = CreateBox(fwSdk);
-		nodeSolid->SetMass(0.001);
+		nodeSolid->SetMass(0.1);
 		fwSdk->GetScene()->GetPHScene()->CreateJoint(rootSolid, nodeSolid, desc);
-		nodeSolid->SetFramePosition(Vec3d(5, posy - 2 * i, 0));
+		nodeSolid->SetFramePosition(Vec3d(0, posy - 2 * i, 0));
 		fwSdk->GetScene()->GetPHScene()->SetContactMode(rootSolid, nodeSolid, PHSceneDesc::MODE_NONE);
 		rootSolid = nodeSolid;
 	}

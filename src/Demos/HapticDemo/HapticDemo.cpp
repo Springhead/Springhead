@@ -6,6 +6,8 @@
 
 using namespace std;
 
+#define SPIDAR 1;
+
 FWLDHapticSample::FWLDHapticSample(){
 }
 void FWLDHapticSample::InitCameraView(){
@@ -33,6 +35,7 @@ void FWLDHapticSample::InitHumanInterface(){
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
 
+#if SPIDAR
 	/// SPIDARG6を2台使う場合
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
@@ -41,6 +44,16 @@ void FWLDHapticSample::InitHumanInterface(){
 		if(i == 1) spg[i]->Init(&HISpidarGDesc("SpidarG6X3L"));
 		AddHI(spg[i]);
 	}
+#else
+	/// SPIDAR4Dを使う場合
+	UTRef<HISpidar4If> spg[2];
+	for(size_t i = 0; i < 2; i++){
+		spg[i] = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+		if(i == 0) spg[i]->Init(&HISpidar4Desc("SpidarR",Vec4i(1,2,3,4)));
+		if(i == 1) spg[i]->Init(&HISpidar4Desc("SpidarL",Vec4i(5,6,7,8)));
+		AddHI(spg[i]);
+	}
+#endif
 }
 void FWLDHapticSample::BuildPointer(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
@@ -60,12 +73,12 @@ void FWLDHapticSample::BuildPointer(){
 			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-			idesc.springK = 10;//0.8						// haptic renderingのバネ係数
-			idesc.damperD = 0.01;//0.01					// haptic renderingのダンパ係数
-			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
+			idesc.springK = 5;						// haptic renderingのバネ係数
+			idesc.damperD = 0.1;					// haptic renderingのダンパ係数
+			idesc.posScale = 60;					// soPointerの可動域の設定(～倍)
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
-			if(i==0) idesc.position =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
-			if(i==1) idesc.position =Posed(1,0,0,0,-5,0,0);
+			if(i==0) idesc.position = Posed(1,0,0,0,5,0,0); //ポインタの初期位置
+			if(i==1) idesc.position = Posed(1,0,0,0,5,0,0);
 			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
 		}
 	}
@@ -91,23 +104,6 @@ void FWLDHapticSample::BuildScene(){
 		soFloor->AddShape(shapeFloor);
 		soFloor->GetShape(0)->SetVibration(5,80,100);
 		soFloor->SetFramePosition(Vec3d(0, -10, 0));
-	}
-
-	/// 箱(物理法則に従う，運動が変化)
-	{
-		/// 剛体(soBox)の作成
-		desc.mass = 0.05;
-		desc.inertia = 0.333 * Matrix3d::Unit();
-		PHSolidIf* soBox = phscene->CreateSolid(desc);
-		/// 形状(shapeBox)の作成
-		bd.boxsize = Vec3f(4,4,4);
-		CDShapeIf* shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd);
-		/// 剛体に形状を付加
-		soBox->AddShape(shapeBox);
-		soBox->GetShape(0)->SetStaticFriction(2.0);
-		soBox->GetShape(0)->SetDynamicFriction(1.0);
-		soBox->GetShape(0)->SetVibration(5,80,300);
-		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}
 
 	Create3ElementJointBox(GetSdk());
