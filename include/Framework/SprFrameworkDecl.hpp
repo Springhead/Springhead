@@ -26,6 +26,7 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractSceneIf(base)	\
 	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
 	void CreateINAdaptee(Spr::FWInteractMode inMode){	base::CreateINAdaptee(inMode);}	\
+	Spr::FWInteractAdaptee* GetINAdaptee(){	return	base::GetINAdaptee();}	\
 	Spr::FWInteractPointerIf* CreateINPointer(const Spr::FWInteractPointerDesc& desc){	return	base::CreateINPointer(desc);}	\
 	Spr::FWInteractPointerIf* GetINPointer(int i){	return	base::GetINPointer(i);}	\
 	int NINPointers(){	return	base::NINPointers();}	\

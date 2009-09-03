@@ -117,20 +117,15 @@ void FWLDHapticSample::BuildScene(){
 void FWLDHapticSample::Keyboard(int key, int x, int y){
 	FWAppHaptic::Keyboard(key , x, y);
 	PHSceneIf* phscene=GetSdk()->GetPHSdk()->GetScene(0);
-	FWLDHaptic* adaptee = (FWLDHaptic*)GetINScene(0)->GetINAdaptee();
-	adaptee->ReleaseState(phscene);
-
 
 	switch (key) {
 		case ' ':
 			{
-				MTimerRelease();
 				CreateBox(GetSdk());
 				for(int i=0;i<GetINScene()->NINPointers();i++){
 					phscene->SetContactMode(GetINScene()->GetINPointer(i)->GetPointerSolid(), PHSceneDesc::MODE_NONE);
 				}
 				DSTR << "Nobj:" << phscene->NSolids() << endl;
-				MTimerStart();
 			}
 			break;
 		case 'v':
