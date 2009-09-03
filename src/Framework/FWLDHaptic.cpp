@@ -656,4 +656,9 @@ void FWLDHaptic::TestSimulation(){
 	#endif
 }
 
+void FWLDHaptic::ReleaseState(PHSceneIf* p){
+	states->ReleaseState(p);
+	states2->ReleaseState(p);
+}
+
 

@@ -48,6 +48,7 @@ public:
 	virtual void PhysicsStep();
 	virtual void UpdatePointer();
 	virtual void TestSimulation();
+	void ReleaseState(PHSceneIf*);
 
 };
 

@@ -11,8 +11,11 @@
 #include <Foundation/SprScene.h>
 #include <Framework/SprFWScene.h>
 #include <Framework/SprFWInteractPointer.h>
+#include <Framework/FWInteractAdaptee.h>
 
 namespace Spr{;
+
+class FWInteractAdaptee;
 
 typedef enum FWInteractMode{
 	NONE,
@@ -39,6 +42,7 @@ public:
 
 	FWSceneIf* GetScene();
 	void CreateINAdaptee(FWInteractMode inMode);
+	FWInteractAdaptee*		GetINAdaptee();
 	FWInteractPointerIf*	CreateINPointer(const FWInteractPointerDesc& desc);
 	FWInteractPointerIf*	GetINPointer(int i = -1);
 	int						NINPointers();

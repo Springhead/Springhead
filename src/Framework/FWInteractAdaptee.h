@@ -8,6 +8,7 @@
 namespace Spr{;
 
 class FWInteractScene;
+class FWInteractPointer;
 
 /** Hapticインタラクションのためのクラス*/
 class FWHapticLoopBase : public UTRefCount{

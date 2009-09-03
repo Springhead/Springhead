@@ -91,7 +91,8 @@ void FWAppHaptic::Start(){
 void FWAppHaptic::IdleFunc(){
 	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
 	FWAppHaptic::instance->GetINScene()->Step();
-	glutPostRedisplay();}
+	glutPostRedisplay();
+}
 
 void FWAppHaptic::CallBackHapticLoop(void* arg){	
 	/// HapticLoopをコールバックする
@@ -313,6 +314,10 @@ void FWAppHaptic::DisplayLineToNearestPoint(){
 }
 
 void FWAppHaptic::Keyboard(int key, int x, int y){
+	//Solidを追加する場合，ObjectStatesIfのリリースが必要
+	FWLDHaptic* adaptee = (FWLDHaptic*)GetINScene(0)->GetINAdaptee();
+	adaptee->ReleaseState(GetSdk()->GetPHSdk()->GetScene(0));
+
 		switch (key) {
 		case  27: //ESC
 		case 'q':
