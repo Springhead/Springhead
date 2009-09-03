@@ -206,9 +206,12 @@ void Create3ElementJointBox(FWSdkIf* fwSdk){
 	{
 		desc.poseSocket.Pos()	= Vec3f(0.0f, -1.0f, 0.0f);
 		desc.posePlug.Pos()	= Vec3f(0.0f, 1.0f, 0.0f);
-		desc.spring			= 3+5;
-		desc.damper		= 0.001*2000;
-		desc.secondDamper = 0.01*1000;
+		desc.spring			= 1.0;
+		desc.damper		= 100;
+		desc.secondDamper = 10.0;
+		desc.hardnessRate = 5;
+		desc.yieldStress =0.2;
+
 	}
 	PHSolidIf* rootSolid = CreateBox(fwSdk);
 	rootSolid->SetMass(0.1);

@@ -109,12 +109,35 @@ void FWLDHapticSample::BuildScene(){
 	Create3ElementJointBox(GetSdk());
 }
 
+void FWLDHapticSample::Reset(){
+
+	//MTimerRelease();
+	////Solidを追加する場合，ObjectStatesIfのリリースが必要
+	//FWLDHaptic* adaptee = (FWLDHaptic*)GetINScene(0)->GetINAdaptee();
+	//adaptee->ReleaseState(GetSdk()->GetPHSdk()->GetScene(0));
+
+	//GetSdk()->Clear();										// SDKの初期化
+	//GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
+	//GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
+	//PHSceneIf* phscene=GetSdk()->GetPHSdk()->GetScene(0);
+	//phscene->Clear();
+	//BuildPointer();
+	//BuildScene();
+	//MTimerStart();
+
+
+}
 
 void FWLDHapticSample::Keyboard(int key, int x, int y){
 	FWAppHaptic::Keyboard(key , x, y);
 	PHSceneIf* phscene=GetSdk()->GetPHSdk()->GetScene(0);
 
 	switch (key) {
+		case 'r':
+			{
+				Reset();
+			}
+			break;
 		case ' ':
 			{
 				CreateBox(GetSdk());

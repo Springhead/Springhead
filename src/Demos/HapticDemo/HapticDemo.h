@@ -13,7 +13,7 @@ public:
 	virtual void InitHumanInterface();					///< HapticInterfaceの初期化
 	virtual void BuildScene();							///< 剛体の作成	
 	virtual void BuildPointer();							///< 剛体の作成	
-	void Reset(){};								///< リセット(末実装)
+	void Reset();								///< リセット(末実装)
 	void Keyboard(int key, int x, int y);		///< キーボード関数
 }; 
 
