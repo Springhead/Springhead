@@ -69,21 +69,21 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				Vec3d pMax = soPointer->GetPose()*soPointer->bbox.GetBBoxMax();
 				Vec3d soMin = phSolid->GetPose()*phSolid->bbox.GetBBoxMin();
 				Vec3d soMax = phSolid->GetPose()*phSolid->bbox.GetBBoxMax();
-				for(int i=0; i<3; ++i){
-					if (pMin[i] - soMax[i] > inPointer->GetLocalRange()){
-						bLocalFlag =false; 
-						break ; 
-					}
-					if (soMin[i] - pMax[i] > inPointer->GetLocalRange()){ 
-						bLocalFlag =false;
-						break ; 
-					}
-				}
-				if(bLocalFlag==false){
-					//DSTR<<"NO bLocal"<<std::endl;
-					continue;
-				}
-					//DSTR<<"bLocal"<<std::endl;
+				//for(int i=0; i<3; ++i){
+				//	if (pMin[i] - soMax[i] > inPointer->GetLocalRange()){
+				//		bLocalFlag =false; 
+				//		break ; 
+				//	}
+				//	if (soMin[i] - pMax[i] > inPointer->GetLocalRange()){ 
+				//		bLocalFlag =false;
+				//		break ; 
+				//	}
+				//}
+				//if(bLocalFlag==false){
+				//	DSTR<<"NO bLocal"<<std::endl;
+				//	continue;
+				//}
+				//	DSTR<<"bLocal"<<std::endl;
 				GetINPointer(j)->interactInfo[i].flag.bneighbor = true;
 				UpdateInteractSolid(i, GetINPointer(j));
 			}
