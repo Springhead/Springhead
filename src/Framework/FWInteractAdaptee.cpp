@@ -49,7 +49,6 @@ void FWInteractAdaptee::UpdateSolidList(){
 void FWInteractAdaptee::NeighborObjectFromPointer(){
 	// GJKを使って近傍物体と近傍物体の最近点を取得
 	// これをすべてのshapeをもつ剛体についてやる
-
 	for(int i = 0; i < NINSolids(); i++){
 		int lCount = 0;					///< flag.blocalの数
 		int fCount = 0;					///< flag.bfirstlocalの数
@@ -65,10 +64,26 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				// AABBで力覚ポインタ近傍の物体を絞る
 				// ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 				//1. BBoxレベルの衝突判定	
+				bool bLocalFlag =true ;
+				Vec3d pMin = soPointer->GetPose()*soPointer->bbox.GetBBoxMin();
+				Vec3d pMax = soPointer->GetPose()*soPointer->bbox.GetBBoxMax();
+				Vec3d soMin = phSolid->GetPose()*phSolid->bbox.GetBBoxMin();
+				Vec3d soMax = phSolid->GetPose()*phSolid->bbox.GetBBoxMax();
 				for(int i=0; i<3; ++i){
-					if (soPointer->bbox.GetBBoxMin()[i] - phSolid->bbox.GetBBoxMax()[i] > inPointer->GetLocalRange()) continue;
-					if (phSolid->bbox.GetBBoxMin()[i] - soPointer->bbox.GetBBoxMax()[i] > inPointer->GetLocalRange()) continue;
+					if (pMin[i] - soMax[i] > inPointer->GetLocalRange()){
+						bLocalFlag =false; 
+						break ; 
+					}
+					if (soMin[i] - pMax[i] > inPointer->GetLocalRange()){ 
+						bLocalFlag =false;
+						break ; 
+					}
 				}
+				if(bLocalFlag==false){
+					//DSTR<<"NO bLocal"<<std::endl;
+					continue;
+				}
+					//DSTR<<"bLocal"<<std::endl;
 				GetINPointer(j)->interactInfo[i].flag.bneighbor = true;
 				UpdateInteractSolid(i, GetINPointer(j));
 			}
@@ -166,17 +181,24 @@ double FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf
 	Vec3d wb = b2w * pb;							///< 力覚ポインタ近傍点のワールド座標
 	Vec3d a2b = wb - wa;							///< 剛体から力覚ポインタへのベクトル
 	normal = a2b.unit();
+
 	/// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める
 	if(a2b.norm() < 0.01){									
 		pa = pb = Vec3d(0.0, 0.0, 0.0);
 		/// dirが潰れてしまっている場合は剛体重心から近傍点へのベクトルとする
 		if(dir == Vec3d(0.0, 0.0, 0.0) ){
-			dir = wa - pc;
-			//DSTR << "dir not find" << std::endl;
+			dir =-( wa - pc);
+			//DSTR << "dir not find" << dir<<std::endl;
 		}
+		///Sphereの場合，GJKの結果を使わない
+		if(DCAST(CDSphereIf,a)){
+			dir =-( wa - pc);
+		}
+
 		double dist = 0.0;
 		/// CCDGJKの実行
-		//	DSTR << "dir="<< dir << std::endl;
+			//DSTR << "dir="<< dir << std::endl;
+		
 		int cp = ContFindCommonPoint(ca, cb, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
 		/// CCDGJKが失敗した場合の処理
 		if(cp != 1){

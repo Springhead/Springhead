@@ -634,6 +634,10 @@ struct PH3ElementBallJointIf : public PHBallJointIf{
 		@param input 0:Elastic,1:Plastic,3:Mix
 	 */
 	void	SetType(int t);	
+	/** @brief 変形のタイプを表示する
+		@return yieldFlag
+	 */
+	bool 	GetDefomationMode();
 										
 };
 

@@ -78,7 +78,7 @@ void FWLDHapticSample::InitHumanInterface(){
 #if SPIDAR
 	/// SPIDARG6を2台使う場合
 	UTRef<HISpidarGIf> spg[2];
-	for(size_t i = 0; i < 2; i++){
+	for(size_t i = 0; i < 1; i++){
 		spg[i] = GetHISdk()->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 		if(i == 0) spg[i]->Init(&HISpidarGDesc("SpidarG6X3R"));
 		if(i == 1) spg[i]->Init(&HISpidarGDesc("SpidarG6X3L"));
@@ -100,7 +100,7 @@ void FWLDHapticSample::BuildPointer(){
 	PHSolidDesc desc;
 	/// ポインタ
 	{	
-		for(int i= 0; i < 2; i++){
+		for(int i= 0; i < 1; i++){
 			PHSolidIf* soPointer = phscene->CreateSolid(desc);
 			CDSphereDesc sd;
 			sd.radius = 0.5;//1.0;
@@ -113,8 +113,8 @@ void FWLDHapticSample::BuildPointer(){
 			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-			idesc.springK = 5;						// haptic renderingのバネ係数
-			idesc.damperD = 0.0;					// haptic renderingのダンパ係数
+			idesc.springK = 10;						// haptic renderingのバネ係数
+			idesc.damperD = 0.05;					// haptic renderingのダンパ係数
 		#if SPIDAR
 			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
 		#else
@@ -130,65 +130,71 @@ void FWLDHapticSample::BuildPointer(){
 
 void FWLDHapticSample::BuildScene(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-	PHSolidDesc desc;
-	CDBoxDesc bd;
+	//PHSolidDesc desc;
+	//CDBoxDesc bd;
 
-	/// 床(物理法則に従わない，運動が変化しない)
-	{
-		/// 剛体(soFloor)の作成
-		desc.mass = 1e20f;
-		desc.inertia *= 1e30f;
-		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-		soFloor->SetDynamical(false);
-		soFloor->SetGravity(false);
-		/// 形状(shapeFloor)の作成
-		bd.boxsize = Vec3f(50, 10, 50);
-		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
-		/// 剛体に形状を付加する
-		soFloor->AddShape(shapeFloor);
-		soFloor->GetShape(0)->SetVibration(5,80,100);
-		soFloor->SetFramePosition(Vec3d(0, -10, 0));
-	}
+	///// 床(物理法則に従わない，運動が変化しない)
+	//{
+	//	/// 剛体(soFloor)の作成
+	//	desc.mass = 1e20f;
+	//	desc.inertia *= 1e30f;
+	//	PHSolidIf* soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
+	//	soFloor->SetDynamical(false);
+	//	soFloor->SetGravity(false);
+	//	/// 形状(shapeFloor)の作成
+	//	bd.boxsize = Vec3f(50, 10, 50);
+	//	CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
+	//	/// 剛体に形状を付加する
+	//	soFloor->AddShape(shapeFloor);
+	//	soFloor->GetShape(0)->SetVibration(5,80,100);
+	//	soFloor->SetFramePosition(Vec3d(0, -10, 0));
+	//}
 
-	{	
-		PH3ElementBallJointDesc desc;
-		//PHBallJointDesc desc;
-		{
-			desc.poseSocket.Pos()	= Vec3f(0.0f,0.0f , -1.2f);
-			desc.posePlug.Pos()	= Vec3f(0.0f,0.0f , 1.2f);
-			desc.spring			= 10;//10.0;
-			desc.damper		= 2;//2.0;
-			desc.secondDamper = 1;
-			desc.hardnessRate = 1;
-			desc.yieldStress =0;
-			desc.type		=PH3ElementBallJointDesc::deformationType::Plastic;
+	//{	
+	//	PH3ElementBallJointDesc desc;
+	//	//PHBallJointDesc desc;
+	//	{
+	//		desc.poseSocket.Pos()	= Vec3f(0.0f,0.0f , -1.3f);
+	//		desc.posePlug.Pos()		= Vec3f(0.0f,0.0f , 1.3f);
+	//		desc.spring				= 100;
+	//		desc.damper				= 20;
+	//		desc.secondDamper		= 1000;
+	//		desc.hardnessRate		= 1;
+	//		desc.yieldStress		= 0;
+	//		desc.type				=PH3ElementBallJointDesc::deformationType::Plastic;
 
-		}
-		PHSolidIf* rootSolid = CreateCapsule(GetSdk());
-		rootSolid->SetMass(0.001);
-		rootSolid->SetDynamical(false);
-		double posy = 15;
-		Vec3d pos = Vec3d(0, posy, 0);
-		//rootSolid->SetFramePosition(pos);
-		//rootSolid->SetOrientation(Quaterniond().Rot(Rad(90),Vec3d(0,1,0)));
+	//	}
+	//	PHSolidIf* rootSolid = CreateCapsule(GetSdk());
+	//	rootSolid->SetMass(0.001);
+	//	rootSolid->SetDynamical(false);
+	//	double posy = 15;
+	//	Vec3d pos = Vec3d(0, posy, 0);
+	//	rootSolid->SetFramePosition(pos);
+	//	rootSolid->SetOrientation(Quaterniond().Rot(Rad(-90),Vec3d(1,0,0)));
 
-		//PHTreeNodeIf* root=GetSdk()->GetScene()->GetPHScene()->CreateRootNode(rootSolid,PHRootNodeDesc());
-	
-		for(int i = 1; i < 1; i++){
-			PHSolidIf* nodeSolid = CreateCapsule(GetSdk());
-			nodeSolid->SetMass(0.001);
-			PHJointIf* joint=GetSdk()->GetScene()->GetPHScene()->CreateJoint(rootSolid, nodeSolid, desc);
-			if(i==6){
-			//	Balljoint=DCAST(PH3ElementBallJointIf,joint);//naga
-				//nodeSolid->SetDynamical(false);
-			}
-			nodeSolid->SetFramePosition(Vec3d(0, posy - 2.4 * i, 0));
-			//nodeSolid->SetOrientation(Quaterniond().Rot(Rad(90),Vec3d(0,1,0)));
-			GetSdk()->GetScene()->GetPHScene()->SetContactMode(rootSolid, nodeSolid, PHSceneDesc::MODE_NONE);
-			//root=GetSdk()->GetScene()->GetPHScene()->CreateTreeNode(root,nodeSolid);
-			rootSolid = nodeSolid;
-		}
-	}
+	//	//PHTreeNodeIf* root=GetSdk()->GetScene()->GetPHScene()->CreateRootNode(rootSolid,PHRootNodeDesc());
+	//
+	//	for(int i = 1; i < 6; i++){
+	//		PHSolidIf* nodeSolid = CreateCapsule(GetSdk());
+	//		nodeSolid->SetMass(0.001);
+	//		PHJointIf* joint=GetSdk()->GetScene()->GetPHScene()->CreateJoint(rootSolid, nodeSolid, desc);
+	//		if(i==6){
+	//		//	Balljoint=DCAST(PH3ElementBallJointIf,joint);//naga
+	//			//nodeSolid->SetDynamical(false);
+	//		}
+	//		nodeSolid->SetFramePosition(Vec3d(0, posy - 2.4 * i, 0));
+	//		nodeSolid->SetOrientation(Quaterniond().Rot(Rad(-90),Vec3d(1,0,0)));
+	//		GetSdk()->GetScene()->GetPHScene()->SetContactMode(rootSolid, nodeSolid, PHSceneDesc::MODE_NONE);
+	//		//root=GetSdk()->GetScene()->GetPHScene()->CreateTreeNode(root,nodeSolid);
+	//		rootSolid = nodeSolid;
+	//	}
+	//}
+
+	//PHSolidIf* sSolid=CreateSphere(GetSdk());
+	PHSolidIf* sSolid=CreateBox(GetSdk());
+	sSolid->SetDynamical(false);
+	sSolid->SetFramePosition(Vec3d(0.0,0.1,0.0));
+
 }
 
 void FWLDHapticSample::IdleFunc(){

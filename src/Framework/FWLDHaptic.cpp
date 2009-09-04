@@ -18,9 +18,9 @@ FWLDHapticLoop::FWLDHapticLoop(){
 }
 void FWLDHapticLoop::Step(){
 	UpdateInterface();
-//	HapticRendering();
+	HapticRendering();
 //	Proxy();
-	ProxySimulation();
+//	ProxySimulation();
 	LocalDynamics();
 }
 
@@ -127,7 +127,7 @@ void FWLDHapticLoop::HapticRendering(){
 				nInfo->test_force_norm = addforce.norm();
 				nInfo->test_force = addforce;
 
-				if(iPointer->bForce)	DSTR << vibforce << endl;
+				//if(iPointer->bForce)	DSTR << vibforce << endl;
 			}else{
 				iSolid->sceneSolid->GetShape(0)->SetVibContact(true); 
 			}
@@ -350,6 +350,7 @@ void FWLDHapticLoop::ProxySimulation(){
 				double D = iPointer->damperD;
 				Vec3d addforce = -K * (pPoint - (poseSolid * proxy[j][i])) - D * dvortho;
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
+
 
 				///U“®‚ÌŒvŽZ
 				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer);

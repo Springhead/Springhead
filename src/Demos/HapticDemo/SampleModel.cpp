@@ -32,7 +32,7 @@ PHSolidIf* CreateSphere(FWSdkIf* fwSdk){
 	desc.inertia = 0.0288* Matrix3d::Unit();
 	PHSolidIf* phSolid = fwSdk->GetScene()->GetPHScene()->CreateSolid(desc);
 	CDSphereDesc sd;
-	sd.radius = 1.2;
+	sd.radius = 3;//1.2;
 	CDShapeIf* shape = fwSdk->GetPHSdk()->CreateShape(sd);
 	shape->SetElasticity(0.4);
 	phSolid->AddShape(shape);
@@ -56,14 +56,12 @@ PHSolidIf* CreateCapsule(FWSdkIf* fwSdk){
 	PHSolidIf* phSolid = fwSdk->GetScene()->GetPHScene()->CreateSolid(desc);
 	CDCapsuleDesc cd;
 	cd.radius = 1;
-	cd.length = 1;
+	cd.length = 3;
 	CDShapeIf* shape = fwSdk->GetPHSdk()->CreateShape(cd);
 	shape->SetVibration(-80,200,150);
 	shape->SetElasticity(0.1);
 	phSolid->AddShape(shape);
-	phSolid->SetAngularVelocity(Vec3f(0,0,0.2));
 	phSolid->SetFramePosition(Vec3f(0.5, 20,0));
-	phSolid->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));  
 	return phSolid;
 }
 

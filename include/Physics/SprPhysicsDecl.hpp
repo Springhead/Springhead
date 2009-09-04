@@ -174,6 +174,7 @@
 	void SetI(const Vec3d i){	base::SetI(i);}	\
 	int GetType(){	return	base::GetType();}	\
 	void SetType(int t){	base::SetType(t);}	\
+	bool GetDefomationMode(){	return	base::GetDefomationMode();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\
 	void SetSpring(const Vec3d& spring){	base::SetSpring(spring);}	\

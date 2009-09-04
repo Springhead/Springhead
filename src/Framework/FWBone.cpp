@@ -119,7 +119,7 @@ FWBone* FWBoneCreate::ParentBone(GRFrameIf* frame1){
 	FWBone* parentBone=NULL;
 	std::string parentName=frame1->GetParent()->GetName();
 	for(unsigned int i=0 ;i<bone.size()-1; ++i){
-		DSTR<<bone[bone.size()-2-i]->grFrame->GetName()<<endl;
+		//DSTR<<bone[bone.size()-2-i]->grFrame->GetName()<<endl;
 		if(parentName==bone[bone.size()-2-i]->grFrame->GetName()){
 			parentBone=bone[bone.size()-2-i];
 			break;
