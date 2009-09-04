@@ -19,9 +19,9 @@ private:
 	double proK;
 	double proD;
 	double proM;
-	Vec3d pLastPoint[2][100];
-	Vec3d proxy[2][100];
-	Vec3d proVel[2][100];
+	std::vector<Vec3d> pLastPoint[2];
+	std::vector<Vec3d> proxy[2];
+	std::vector<Vec3d> proVel[2];
 	Vec3d dproxy;
 public:
 	FWLDHapticLoop();
@@ -30,7 +30,7 @@ public:
 	virtual void HapticRendering();
 	virtual void Proxy();
 	virtual void ProxySimulation();
-	virtual Vec3d Vibration(FWInteractSolid*, FWInteractPointer*);
+	virtual Vec3d Vibration(FWInteractSolid*, FWInteractPointer*, int);
 	virtual void LocalDynamics();
 };
 
