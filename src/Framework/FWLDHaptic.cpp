@@ -12,15 +12,15 @@
 // FWLDHapticLoopの実装
 //////////////////////////////////////////////////////////////////////////////////////////////
 FWLDHapticLoop::FWLDHapticLoop(){
-	proK = 1000;
-	proD = 0.01;
-	proM = 2.0*10e-6;
+	proK = 50;
+	proD = 0.005;
+	proM = 7.5*10e-7;
 }
 void FWLDHapticLoop::Step(){
 	UpdateInterface();
 //	HapticRendering();
-	Proxy();
-//	ProxySimulation();
+//	Proxy();
+	ProxySimulation();
 	LocalDynamics();
 }
 
@@ -231,9 +231,6 @@ void FWLDHapticLoop::Proxy(){
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
-				//if(cSolid->GetShape(0)->GetVibContact()){
-				//	proxy[j][i] = poseSolid.Inv() * cPoint;
-				//}
 				Vec3d vibforce = Vec3d(0,0,0);
 				Vec3d ortho = f * interpolation_normal;			// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
@@ -294,7 +291,7 @@ void FWLDHapticLoop::Proxy(){
 				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(outForce.v());
 			}
-		}else{
+		}/*else{
 			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
 				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(outForce.v(), Vec3d());
@@ -305,7 +302,7 @@ void FWLDHapticLoop::Proxy(){
 				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(Vec3d());
 			}		
-		}
+		}*/
 	}
 }
 
