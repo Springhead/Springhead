@@ -53,41 +53,41 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 		int lCount = 0;					///< flag.blocalの数
 		int fCount = 0;					///< flag.bfirstlocalの数
 		PHSolid* phSolid = GetINSolid(i)->sceneSolid;
+		/// INPointerの数だけやる
 		for(int j = 0; j < NINPointers(); j++){
 			FWInteractPointer* inPointer = GetINPointer(j);
+			FWInteractInfo* inInfo = &GetINPointer(j)->interactInfo[i];
 			PHSolid* soPointer = GetINPointer(j)->pointerSolid->Cast();
+
+			inInfo->flag.bneighbor = false;				// ローカル可能性の初期化
+			/// Solidが他のポインタであった場合
 			for(int k = 0; k < NINPointers(); k++){
 				if(phSolid == GetINPointer(k)->pointerSolid->Cast()) phSolid = NULL;
 			}
-			
 			if (soPointer != phSolid && phSolid){
 				// AABBで力覚ポインタ近傍の物体を絞る
 				// ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 				//1. BBoxレベルの衝突判定	
-				bool bLocalFlag =true ;
-				Vec3d pMin = soPointer->GetPose()*soPointer->bbox.GetBBoxMin();
-				Vec3d pMax = soPointer->GetPose()*soPointer->bbox.GetBBoxMax();
-				Vec3d soMin = phSolid->GetPose()*phSolid->bbox.GetBBoxMin();
-				Vec3d soMax = phSolid->GetPose()*phSolid->bbox.GetBBoxMax();
-				//for(int i=0; i<3; ++i){
-				//	if (pMin[i] - soMax[i] > inPointer->GetLocalRange()){
-				//		bLocalFlag =false; 
-				//		break ; 
-				//	}
-				//	if (soMin[i] - pMax[i] > inPointer->GetLocalRange()){ 
-				//		bLocalFlag =false;
-				//		break ; 
-				//	}
-				//}
-				//if(bLocalFlag==false){
-				//	DSTR<<"NO bLocal"<<std::endl;
-				//	continue;
-				//}
-				//	DSTR<<"bLocal"<<std::endl;
-				GetINPointer(j)->interactInfo[i].flag.bneighbor = true;
-				UpdateInteractSolid(i, GetINPointer(j));
+				Vec3d pMin = soPointer->GetPose()*soPointer->bbox.GetBBoxMin();		// PointerのBBoxの最小値(3軸)
+				Vec3d pMax = soPointer->GetPose()*soPointer->bbox.GetBBoxMax();		// PointerのBBoxの最大値(3軸)
+				Vec3d soMin = phSolid->GetPose()*phSolid->bbox.GetBBoxMin();		// SolidのBBoxの最小値(3軸)
+				Vec3d soMax = phSolid->GetPose()*phSolid->bbox.GetBBoxMax();		// SolidのBBoxの最大値(3軸)
+				/// 3軸で判定
+				for(int i=0; i<3; ++i){
+					/// Pointerの最小値がSolidの最大値の差がLocalRangeよりも小さい場合は交差
+					if (pMin[i] - soMax[i] < inPointer->GetLocalRange()){
+						inInfo->flag.bneighbor = true;
+					}
+					/// Solidの最小値がPointerの最大値の差がLocalRangeよりも小さい場合は交差
+					if (soMin[i] - pMax[i] < inPointer->GetLocalRange()){ 
+						inInfo->flag.bneighbor = true;
+					}
+				}
+				/// 近傍の可能性がある物体は詳細判定(GJKへ)
+				if(inInfo->flag.bneighbor){
+					UpdateInteractSolid(i, GetINPointer(j));
+				}
 			}
-			FWInteractInfo* inInfo = &GetINPointer(j)->interactInfo[i];
 			/// bneighborかつblocalであればlCount++
 			if(inInfo->flag.bneighbor){
 				if(inInfo->flag.blocal){
@@ -106,7 +106,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				inInfo->flag.bfirstlocal = false;							
 				inInfo->flag.blocal = false;									
 			}
-		}
+		}	// end INPointerの数だけやる
 		/// 初シミュレーションの処理フラグをtrueにする
 		FWInteractSolid* inSolid = GetINSolid(i);
 		if(fCount > 0){
