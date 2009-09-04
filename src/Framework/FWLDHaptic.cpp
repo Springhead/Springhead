@@ -19,8 +19,13 @@ FWLDHapticLoop::FWLDHapticLoop(){
 void FWLDHapticLoop::Step(){
 	UpdateInterface();
 	HapticRendering();
+<<<<<<< .mine
+	Proxy();
+//	ProxySimulation();
+=======
 //	Proxy();
 //	ProxySimulation();
+>>>>>>> .r4353
 	LocalDynamics();
 }
 
@@ -112,7 +117,7 @@ void FWLDHapticLoop::HapticRendering(){
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				///振動の計算
-				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer);
+				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer, i);
 
 				///摩擦力の計算
 				double d = 0.01;
@@ -179,15 +184,15 @@ void FWLDHapticLoop::LocalDynamics(){
 	}
 }
 
-Vec3d FWLDHapticLoop::Vibration(FWInteractSolid* iSolid, FWInteractPointer* iPointer){
+Vec3d FWLDHapticLoop::Vibration(FWInteractSolid* iSolid, FWInteractPointer* iPointer, int n){
 	Vec3d vibforce = Vec3d(0,0,0);
 
-	if(iSolid->copiedSolid.GetShape(0)->GetVibContact()){	// この近傍点と初接触かどうか
+	if(!iPointer->bContact[n]){	// この近傍点と初接触かどうか
 		vibV = iPointer->hiSolid.GetVelocity() - iSolid->copiedSolid.GetVelocity();
-		iSolid->copiedSolid.GetShape(0)->SetVibT(0);
+		iSolid->sceneSolid->GetShape(0)->SetVibT(0);
 	}
 	vibT = iSolid->sceneSolid->GetShape(0)->GetVibT();		// material.vibTへのポインタ
-	iSolid->sceneSolid->GetShape(0)->SetVibContact(false);
+	iPointer->bContact[n] = true;
 
 	double vibA = iSolid->copiedSolid.GetShape(0)->GetVibA();
 	double vibB = iSolid->copiedSolid.GetShape(0)->GetVibB();
@@ -203,6 +208,11 @@ void FWLDHapticLoop::Proxy(){
 
 	for(int j = 0; j < NINPointers(); j++){
 		FWInteractPointer* iPointer = GetINPointer(j)->Cast();
+		if((int)iPointer->bContact.size() < NINSolids()){
+			for(int i=(int)iPointer->bContact.size(); i<NINSolids(); i++){
+				iPointer->bContact.push_back(false);
+			}
+		}
 		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
 			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
 		}else{
@@ -221,6 +231,11 @@ void FWLDHapticLoop::Proxy(){
 			Vec3d pPoint = iPointer->hiSolid.GetPose() * nInfo->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
 			Vec3d force_dir = pPoint - cPoint;
 			Vec3d interpolation_normal;											// 提示力計算にしようする法線（前回の法線との間を補間する）
+			if((int)proxy[j].size() <= NINSolids()){
+				for(int k=(int)proxy[j].size(); k<NINSolids(); k++){
+					proxy[j].push_back(poseSolid.Inv()*pPoint);
+				}
+			}
 
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
@@ -243,7 +258,7 @@ void FWLDHapticLoop::Proxy(){
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				///振動の計算
-				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer);
+				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer, i);
 
 				// 摩擦の計算
 				Vec3d wproxy = poseSolid * proxy[j][i];
@@ -273,7 +288,7 @@ void FWLDHapticLoop::Proxy(){
 				nInfo->test_force = addforce;
 
 			}else{
-				iSolid->sceneSolid->GetShape(0)->SetVibContact(true);
+				iPointer->bContact[i] = false;
 				proxy[j][i] = poseSolid.Inv() * pPoint;
 			}
 		}
@@ -291,18 +306,7 @@ void FWLDHapticLoop::Proxy(){
 				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(outForce.v());
 			}
-		}/*else{
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(outForce.v(), Vec3d());
-				#ifdef TORQUE
-					hif->SetForce(Vec3d(), Vec3d());
-				#endif
-			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(Vec3d());
-			}		
-		}*/
+		}
 	}
 }
 
@@ -312,6 +316,11 @@ void FWLDHapticLoop::ProxySimulation(){
 
 	for(int j = 0; j < NINPointers(); j++){
 		FWInteractPointer* iPointer = GetINPointer(j)->Cast();
+		if((int)iPointer->bContact.size() < NINSolids()){
+			for(int i=(int)iPointer->bContact.size(); i<NINSolids(); i++){
+				iPointer->bContact.push_back(false);
+			}
+		}
 		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
 			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
 		}else{
@@ -330,6 +339,13 @@ void FWLDHapticLoop::ProxySimulation(){
 			Vec3d pPoint = iPointer->hiSolid.GetPose() * nInfo->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
 			Vec3d force_dir = pPoint - cPoint;
 			Vec3d interpolation_normal;											// 提示力計算にしようする法線（前回の法線との間を補間する）
+			if((int)proxy[j].size() < NINSolids()){
+				for(int k=(int)proxy[j].size(); k<NINSolids(); k++){
+					proxy[j].push_back(poseSolid.Inv()*pPoint);
+					proVel[j].push_back(Vec3d(0,0,0));
+					pLastPoint[j].push_back(Vec3d(0,0,0));
+				}
+			}
 
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
@@ -353,7 +369,9 @@ void FWLDHapticLoop::ProxySimulation(){
 
 
 				///振動の計算
-				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer);
+				if(iPointer->bVibration){
+					vibforce = Vibration(iSolid, iPointer, i);
+				}
 
 				// 摩擦の計算
 				Vec3d pvel = iPointer->hiSolid.GetPointVelocity(pPoint);
@@ -380,7 +398,7 @@ void FWLDHapticLoop::ProxySimulation(){
 						dVEL = Vec3d(0,0,0);
 						dFRI = Vec3d(0,0,0);
 					}else if(tanjent.norm() == 0){
-						dPOS = - hdt * dot(proVel[j][i],velTan.unit())*velTan.unit();
+						dPOS = - hdt * proVel[j][i];
 						dVEL = dot((pvel - proVel[j][i]),velTan.unit()) * velTan.unit();
 						dFRI = Vec3d(0,0,0);
 					}else if(velTan.norm() == 0){
@@ -388,7 +406,7 @@ void FWLDHapticLoop::ProxySimulation(){
 						dVEL = Vec3d(0,0,0);
 						dFRI = abs(posDot*proK * mu1)*tanjent.unit();
 					}else{
-						dPOS = dot(pPoint-wproxy,tanjent.unit()) * tanjent.unit() - hdt * dot(proVel[j][i],velTan.unit())*velTan.unit();
+						dPOS = dot(pPoint-wproxy,tanjent.unit()) * tanjent.unit() - hdt * proVel[j][i];
 						dVEL = dot((pvel - proVel[j][i]),velTan.unit()) * velTan.unit();
 						dFRI = abs(posDot*proK * mu1)*tanjent.unit();
 					}
@@ -415,7 +433,7 @@ void FWLDHapticLoop::ProxySimulation(){
 				nInfo->test_force_norm = addforce.norm();
 				nInfo->test_force = addforce;
 			}else{
-				iSolid->sceneSolid->GetShape(0)->SetVibContact(true);
+				iPointer->bContact[i] = false;
 				proxy[j][i] = poseSolid.Inv() * pPoint;
 				proVel[j][i] = Vec3d(0,0,0);
 			}

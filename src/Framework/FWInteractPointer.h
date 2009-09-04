@@ -15,6 +15,7 @@ public:
 	AllInteractInfo interactInfo;
 	bool			bForce;
 	bool			bVibration;
+	std::vector<bool>	bContact;
 
 	FWInteractPointer();
 	FWInteractPointer(const FWInteractPointerDesc& desc);
