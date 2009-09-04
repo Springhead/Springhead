@@ -19,8 +19,8 @@ FWLDHapticLoop::FWLDHapticLoop(){
 void FWLDHapticLoop::Step(){
 	UpdateInterface();
 //	HapticRendering();
-//	Proxy();
-	ProxySimulation();
+	Proxy();
+//	ProxySimulation();
 	LocalDynamics();
 }
 
@@ -231,6 +231,9 @@ void FWLDHapticLoop::Proxy(){
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
+				//if(cSolid->GetShape(0)->GetVibContact()){
+				//	proxy[j][i] = poseSolid.Inv() * cPoint;
+				//}
 				Vec3d vibforce = Vec3d(0,0,0);
 				Vec3d ortho = f * interpolation_normal;			// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
@@ -374,16 +377,23 @@ void FWLDHapticLoop::ProxySimulation(){
 					Vec3d dPOS;
 					Vec3d dVEL;
 					Vec3d dFRI;
-					if((tanjent.norm() == 0)||(velTan.norm() == 0)){
+					if((tanjent.norm() == 0)&&(velTan.norm() == 0)){
 						dPOS = Vec3d(0,0,0);
 						dVEL = Vec3d(0,0,0);
 						dFRI = Vec3d(0,0,0);
+					}else if(tanjent.norm() == 0){
+						dPOS = - hdt * dot(proVel[j][i],velTan.unit())*velTan.unit();
+						dVEL = dot((pvel - proVel[j][i]),velTan.unit()) * velTan.unit();
+						dFRI = Vec3d(0,0,0);
+					}else if(velTan.norm() == 0){
+						dPOS = dot(pPoint-wproxy,tanjent.unit()) * tanjent.unit();
+						dVEL = Vec3d(0,0,0);
+						dFRI = abs(posDot*proK * mu1)*tanjent.unit();
 					}else{
 						dPOS = dot(pPoint-wproxy,tanjent.unit()) * tanjent.unit() - hdt * dot(proVel[j][i],velTan.unit())*velTan.unit();
 						dVEL = dot((pvel - proVel[j][i]),velTan.unit()) * velTan.unit();
 						dFRI = abs(posDot*proK * mu1)*tanjent.unit();
 					}
-
 					if(proVel[j][i].norm() < 0){
 						dproVel = (proK * dPOS + proD * dVEL + dFRI) * (hdt/(proM + proD*hdt + proK*hdt*hdt));
 					}else{
