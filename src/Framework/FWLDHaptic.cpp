@@ -127,11 +127,11 @@ void FWLDHapticLoop::HapticRendering(){
 				outForce.v() += addforce + vibforce;	
 				outForce.w() += addtorque;
 
-				/// ŒvŽZ‚µ‚½—Í‚ð„‘Ì‚É‰Á‚¦‚é
-				iPointer->interactInfo[i].mobility.force = -1 * addforce;						
-				nInfo->test_force_norm = addforce.norm();
-				nInfo->test_force = addforce;
-
+				/// ŒvŽZ‚µ‚½—Í‚ð„‘Ì‚É‰Á‚¦‚é//naga
+				iPointer->interactInfo[i].mobility.force = -1 * addforce * iPointer->GetForceScale();	
+				nInfo->test_force_norm = addforce.norm() * iPointer->GetForceScale();
+				nInfo->test_force = addforce * iPointer->GetForceScale();
+				//DSTR<<iPointer->GetForceScale()<<std::endl;//naga
 				//if(iPointer->bForce)	DSTR << vibforce << endl;
 			}else{
 				iSolid->sceneSolid->GetShape(0)->SetVibContact(true); 
@@ -164,7 +164,7 @@ void FWLDHapticLoop::LocalDynamics(){
 		vel.w() = iSolid->copiedSolid.GetAngularVelocity();
 		if(GetLoopCount() == 1){
 			vel += (iSolid->curb - iSolid->lastb) *  pdt;	// Õ“Ë‚Ì‰e‹¿‚ð”½‰f
-//			DSTR << (iSolid->curb - iSolid->lastb) *  pdt << std::endl;
+
 		}
 		for(int j = 0; j < NINPointers(); j++){
 			FWInteractPointer* iPointer = GetINPointer(j);

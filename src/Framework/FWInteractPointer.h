@@ -27,6 +27,8 @@ public:
 	HIBaseIf*	GetHI();
 	void		SetPosScale(double s);
 	double		GetPosScale();
+	void		SetForceScale(double s);
+	double		GetForceScale();
 	void		SetLocalRange(double r);
 	double		GetLocalRange();
 	void		SetPosition(Posed p);

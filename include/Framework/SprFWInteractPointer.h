@@ -15,6 +15,7 @@ public:
 	double		damperD;
 	Posed		position;
 	double		posScale;
+	double		forceScale;
 	double		localRange;
 	FWInteractPointerDesc(){ Init(); }
 	void Init(){
@@ -24,6 +25,7 @@ public:
 		damperD = 0.0;
 		position = Posed();
 		posScale = 1.0;
+		forceScale = 1.0;
 		localRange = 0.1;
 	}
 };
@@ -38,6 +40,8 @@ public:
 	HIBaseIf*	GetHI();
 	void		SetPosScale(double s);
 	double		GetPosScale();
+	void		SetForceScale(double s);
+	double		GetForceScale();
 	void		SetLocalRange(double r);
 	double		GetLocalRange();
 	void		SetPosition(Posed p);

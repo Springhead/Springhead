@@ -30,6 +30,12 @@ void FWInteractPointer::SetPosScale(double s){
 double FWInteractPointer::GetPosScale(){
 	return posScale; 
 }
+void FWInteractPointer::SetForceScale(double s){
+	forceScale = s; 
+}
+double FWInteractPointer::GetForceScale(){
+	return forceScale; 
+}
 void FWInteractPointer::SetLocalRange(double r){
 	localRange = r; 
 }

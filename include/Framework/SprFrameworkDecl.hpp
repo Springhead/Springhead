@@ -15,6 +15,8 @@
 	HIBaseIf* GetHI(){	return	base::GetHI();}	\
 	void SetPosScale(double s){	base::SetPosScale(s);}	\
 	double GetPosScale(){	return	base::GetPosScale();}	\
+	void SetForceScale(double s){	base::SetForceScale(s);}	\
+	double GetForceScale(){	return	base::GetForceScale();}	\
 	void SetLocalRange(double r){	base::SetLocalRange(r);}	\
 	double GetLocalRange(){	return	base::GetLocalRange();}	\
 	void SetPosition(Posed p){	base::SetPosition(p);}	\

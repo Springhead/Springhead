@@ -17,6 +17,7 @@ protected:\
 	double	damperD;	\
 	Posed	position;	\
 	double	posScale;	\
+	double	forceScale;	\
 	double	localRange;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
@@ -26,6 +27,7 @@ public:\
 		damperD = ((FWInteractPointerDesc*)ptr)->damperD;	\
 		position = ((FWInteractPointerDesc*)ptr)->position;	\
 		posScale = ((FWInteractPointerDesc*)ptr)->posScale;	\
+		forceScale = ((FWInteractPointerDesc*)ptr)->forceScale;	\
 		localRange = ((FWInteractPointerDesc*)ptr)->localRange;	\
 		AfterSetDesc();	\
 	}\
@@ -37,6 +39,7 @@ public:\
 		((FWInteractPointerDesc*)ptr)->damperD = damperD;	\
 		((FWInteractPointerDesc*)ptr)->position = position;	\
 		((FWInteractPointerDesc*)ptr)->posScale = posScale;	\
+		((FWInteractPointerDesc*)ptr)->forceScale = forceScale;	\
 		((FWInteractPointerDesc*)ptr)->localRange = localRange;	\
 		return true;	\
 	}\
