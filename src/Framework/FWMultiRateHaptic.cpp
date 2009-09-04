@@ -33,6 +33,7 @@ void FWMultiRateHaptic::Sync(){
 					(piSolid->curb - piSolid->lastb)) * pdt;	// ƒ‚ƒrƒŠƒeƒB’è”€
 			Vec3d v = hiSolid->copiedSolid.GetVelocity() + b.v();					// ”½‰f‘¬“x
 			Vec3d w = hiSolid->copiedSolid.GetAngularVelocity() + b.w();			// ”½‰fŠp‘¬“x
+
 			hiSolid->sceneSolid->SetVelocity(v);
 			hiSolid->sceneSolid->SetAngularVelocity(w);
 			hiSolid->sceneSolid->SetCenterPosition(hiSolid->copiedSolid.GetCenterPosition());

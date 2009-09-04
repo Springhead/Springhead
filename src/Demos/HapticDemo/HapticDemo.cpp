@@ -98,6 +98,8 @@ void FWLDHapticSample::InitHumanInterface(){
 void FWLDHapticSample::BuildPointer(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	PHSolidDesc desc;
+
+
 	/// ƒ|ƒCƒ“ƒ^
 	{	
 		for(int i= 0; i < 1; i++){
@@ -117,6 +119,7 @@ void FWLDHapticSample::BuildPointer(){
 			idesc.damperD = 0.05;					// haptic rendering‚Ìƒ_ƒ“ƒpŒW”
 		#if SPIDAR
 			idesc.posScale = 300;					// soPointer‚Ì‰Â“®ˆæ‚ÌÝ’è(`”{)
+			idesc.forceScale = 1.0;
 		#else
 			idesc.posScale = 60;					// soPointer‚Ì‰Â“®ˆæ‚ÌÝ’è(`”{)
 		#endif
@@ -130,69 +133,69 @@ void FWLDHapticSample::BuildPointer(){
 
 void FWLDHapticSample::BuildScene(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-	//PHSolidDesc desc;
-	//CDBoxDesc bd;
+	PHSolidDesc desc;
+	CDBoxDesc bd;
 
-	///// °(•¨—–@‘¥‚É]‚í‚È‚¢C‰^“®‚ª•Ï‰»‚µ‚È‚¢)
-	//{
-	//	/// „‘Ì(soFloor)‚Ìì¬
-	//	desc.mass = 1e20f;
-	//	desc.inertia *= 1e30f;
-	//	PHSolidIf* soFloor = phscene->CreateSolid(desc);		// „‘Ì‚ðdesc‚ÉŠî‚Ã‚¢‚Äì¬
-	//	soFloor->SetDynamical(false);
-	//	soFloor->SetGravity(false);
-	//	/// Œ`ó(shapeFloor)‚Ìì¬
-	//	bd.boxsize = Vec3f(50, 10, 50);
-	//	CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
-	//	/// „‘Ì‚ÉŒ`ó‚ð•t‰Á‚·‚é
-	//	soFloor->AddShape(shapeFloor);
-	//	soFloor->GetShape(0)->SetVibration(5,80,100);
-	//	soFloor->SetFramePosition(Vec3d(0, -10, 0));
-	//}
+	/// °(•¨—–@‘¥‚É]‚í‚È‚¢C‰^“®‚ª•Ï‰»‚µ‚È‚¢)
+	{
+		/// „‘Ì(soFloor)‚Ìì¬
+		desc.mass = 1e20f;
+		desc.inertia *= 1e30f;
+		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// „‘Ì‚ðdesc‚ÉŠî‚Ã‚¢‚Äì¬
+		soFloor->SetDynamical(false);
+		soFloor->SetGravity(false);
+		/// Œ`ó(shapeFloor)‚Ìì¬
+		bd.boxsize = Vec3f(50, 10, 50);
+		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
+		/// „‘Ì‚ÉŒ`ó‚ð•t‰Á‚·‚é
+		soFloor->AddShape(shapeFloor);
+		soFloor->GetShape(0)->SetVibration(5,80,100);
+		soFloor->SetFramePosition(Vec3d(0, -10, 0));
+	}
 
-	//{	
-	//	PH3ElementBallJointDesc desc;
-	//	//PHBallJointDesc desc;
-	//	{
-	//		desc.poseSocket.Pos()	= Vec3f(0.0f,0.0f , -1.3f);
-	//		desc.posePlug.Pos()		= Vec3f(0.0f,0.0f , 1.3f);
-	//		desc.spring				= 100;
-	//		desc.damper				= 20;
-	//		desc.secondDamper		= 1000;
-	//		desc.hardnessRate		= 1;
-	//		desc.yieldStress		= 0;
-	//		desc.type				=PH3ElementBallJointDesc::deformationType::Plastic;
+	{	
+		PH3ElementBallJointDesc desc;
+		//PHBallJointDesc desc;
+		{
+			desc.poseSocket.Pos()	= Vec3f(0.0f,0.0f , -1.3f);
+			desc.posePlug.Pos()		= Vec3f(0.0f,0.0f , 1.3f);
+			desc.spring				= 100;
+			desc.damper				= 20;
+			desc.secondDamper		= 1000;
+			desc.hardnessRate		= 1;
+			desc.yieldStress		= 0;
+			desc.type				=PH3ElementBallJointDesc::deformationType::Plastic;
 
-	//	}
-	//	PHSolidIf* rootSolid = CreateCapsule(GetSdk());
-	//	rootSolid->SetMass(0.001);
-	//	rootSolid->SetDynamical(false);
-	//	double posy = 15;
-	//	Vec3d pos = Vec3d(0, posy, 0);
-	//	rootSolid->SetFramePosition(pos);
-	//	rootSolid->SetOrientation(Quaterniond().Rot(Rad(-90),Vec3d(1,0,0)));
+		}
+		PHSolidIf* rootSolid = CreateCapsule(GetSdk());
+		rootSolid->SetMass(0.001);
+		rootSolid->SetDynamical(false);
+		double posy = 15;
+		Vec3d pos = Vec3d(0, posy, 0);
+		rootSolid->SetFramePosition(pos);
+		rootSolid->SetOrientation(Quaterniond().Rot(Rad(-90),Vec3d(1,0,0)));
 
-	//	//PHTreeNodeIf* root=GetSdk()->GetScene()->GetPHScene()->CreateRootNode(rootSolid,PHRootNodeDesc());
-	//
-	//	for(int i = 1; i < 6; i++){
-	//		PHSolidIf* nodeSolid = CreateCapsule(GetSdk());
-	//		nodeSolid->SetMass(0.001);
-	//		PHJointIf* joint=GetSdk()->GetScene()->GetPHScene()->CreateJoint(rootSolid, nodeSolid, desc);
-	//		if(i==6){
-	//		//	Balljoint=DCAST(PH3ElementBallJointIf,joint);//naga
-	//			//nodeSolid->SetDynamical(false);
-	//		}
-	//		nodeSolid->SetFramePosition(Vec3d(0, posy - 2.4 * i, 0));
-	//		nodeSolid->SetOrientation(Quaterniond().Rot(Rad(-90),Vec3d(1,0,0)));
-	//		GetSdk()->GetScene()->GetPHScene()->SetContactMode(rootSolid, nodeSolid, PHSceneDesc::MODE_NONE);
-	//		//root=GetSdk()->GetScene()->GetPHScene()->CreateTreeNode(root,nodeSolid);
-	//		rootSolid = nodeSolid;
-	//	}
-	//}
+		//PHTreeNodeIf* root=GetSdk()->GetScene()->GetPHScene()->CreateRootNode(rootSolid,PHRootNodeDesc());
+	
+		for(int i = 1; i < 6; i++){
+			PHSolidIf* nodeSolid = CreateCapsule(GetSdk());
+			nodeSolid->SetMass(0.001);
+			PHJointIf* joint=GetSdk()->GetScene()->GetPHScene()->CreateJoint(rootSolid, nodeSolid, desc);
+			if(i==6){
+			//	Balljoint=DCAST(PH3ElementBallJointIf,joint);//naga
+				//nodeSolid->SetDynamical(false);
+			}
+			nodeSolid->SetFramePosition(Vec3d(0, posy - 2.4 * i, 0));
+			nodeSolid->SetOrientation(Quaterniond().Rot(Rad(-90),Vec3d(1,0,0)));
+			GetSdk()->GetScene()->GetPHScene()->SetContactMode(rootSolid, nodeSolid, PHSceneDesc::MODE_NONE);
+			//root=GetSdk()->GetScene()->GetPHScene()->CreateTreeNode(root,nodeSolid);
+			rootSolid = nodeSolid;
+		}
+	}
 
 	//PHSolidIf* sSolid=CreateSphere(GetSdk());
 	PHSolidIf* sSolid=CreateBox(GetSdk());
-	sSolid->SetDynamical(false);
+	//sSolid->SetDynamical(false);
 	sSolid->SetFramePosition(Vec3d(0.0,0.1,0.0));
 
 }
@@ -245,9 +248,9 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 			break;
 		case ' ':
 			{
-				CreateBox(GetSdk());
+				PHSolidIf* solid=CreateBox(GetSdk());
 				for(int i=0;i<GetINScene()->NINPointers();i++){
-					phscene->SetContactMode(GetINScene()->GetINPointer(i)->GetPointerSolid(), PHSceneDesc::MODE_NONE);
+					phscene->SetContactMode(GetINScene()->GetINPointer(i)->GetPointerSolid(),solid, PHSceneDesc::MODE_NONE);
 				}
 				DSTR << "Nobj:" << phscene->NSolids() << endl;
 			}
