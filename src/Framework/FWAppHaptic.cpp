@@ -72,7 +72,7 @@ void FWAppHaptic::InitHumanInterface(){
 	}
 	GetHISdk()->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	GetHISdk()->Init();
-	GetHISdk()->Print(DSTR);
+	//GetHISdk()->Print(DSTR);
 
 	/// SPIDARG6‚ð2‘äŽg‚¤ê‡
 	UTRef<HISpidarGIf> spg[2];

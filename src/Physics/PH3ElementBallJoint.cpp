@@ -39,6 +39,24 @@ PH3ElementBallJoint::PH3ElementBallJoint(const PH3ElementBallJointDesc& desc){
 	PHBallJoint::PHBallJoint();
 }
 
+
+bool PH3ElementBallJoint::GetDefomationMode(){
+	
+	if(type==PH3ElementBallJointDesc::deformationType::Mix){
+		if(yieldFlag){
+			std::cout<<"塑性変形モード"<<std::endl;
+		}else {
+			std::cout<<"弾性変形モード"<<std::endl;
+		}
+	}else if(type==PH3ElementBallJointDesc::deformationType::Elastic){
+			std::cout<<"弾性変形のみ"<<std::endl;
+	}else if(type==PH3ElementBallJointDesc::deformationType::Plastic){
+			std::cout<<"塑性変形のみ"<<std::endl;
+	}
+
+	return yieldFlag;
+}
+
 void PH3ElementBallJoint::ElasticDeformation(){
 	//弾性変形
 	Quaterniond propQ = goal * Xjrel.q.Inv();	
@@ -76,9 +94,11 @@ void PH3ElementBallJoint::PlasticDeformation(){
 	}
 	db.w() = K/(K*h+D1)*(xs[0].w()) ;
 	
-	if(ws.w().norm()<0.1){
-		yieldFlag = false;
-		SetGoal(Xjrel.q);
+	if(type==PH3ElementBallJointDesc::deformationType::Mix){
+		if(ws.w().norm()<0.1){
+			yieldFlag = false;
+			SetGoal(Xjrel.q);
+		}
 	}
 	xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
 

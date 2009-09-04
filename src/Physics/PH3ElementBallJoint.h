@@ -59,6 +59,7 @@ public:
 	Vec3d	GetI()							{return I;}
 	void	SetType(int t)					{type = (PH3ElementBallJointDesc::deformationType)t;}
 	int 	GetType()						{return (int)type;}
+	bool 	GetDefomationMode();
 
 	// このクラス内で再定義する（オーバーライドする）関数
 	void	CompBias();		///< 侵入量の判定(オーバーライド)
