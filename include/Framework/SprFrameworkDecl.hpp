@@ -31,6 +31,7 @@
 	Spr::FWInteractPointerIf* GetINPointer(int i){	return	base::GetINPointer(i);}	\
 	int NINPointers(){	return	base::NINPointers();}	\
 	Spr::FWInteractMode GetINMode(){	return	base::GetINMode();}	\
+	Spr::FWHapticMode GetHMode(){	return	base::GetHMode();}	\
 	void Init(){	base::Init();}	\
 	void Step(){	base::Step();}	\
 	void Clear(){	base::Clear();}	\

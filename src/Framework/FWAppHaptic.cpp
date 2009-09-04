@@ -353,7 +353,6 @@ void FWAppHaptic::Keyboard(int key, int x, int y){
 							hif->SetForce(Vec3d());
 						}
 					}
-
 				}
 				if(bf){
 					DSTR << "Enable Force Feedback" << std::endl;

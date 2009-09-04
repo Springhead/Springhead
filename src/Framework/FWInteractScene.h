@@ -26,6 +26,7 @@ public:
 	void					CreateINAdaptee(FWInteractMode inMode);
 	FWInteractAdaptee*		GetINAdaptee();
 	FWInteractMode			GetINMode();
+	FWHapticMode			GetHMode();
 
 	/// INPointerŠÖŒW
 	FWInteractPointerIf*	CreateINPointer(const FWInteractPointerDesc& desc);
