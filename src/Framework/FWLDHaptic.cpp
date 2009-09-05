@@ -18,14 +18,12 @@ FWLDHapticLoop::FWLDHapticLoop(){
 }
 void FWLDHapticLoop::Step(){
 	UpdateInterface();
+#if 1
 	HapticRendering();
-<<<<<<< .mine
+#else
 	Proxy();
 //	ProxySimulation();
-=======
-//	Proxy();
-//	ProxySimulation();
->>>>>>> .r4353
+#endif 
 	LocalDynamics();
 }
 
@@ -41,14 +39,10 @@ void FWLDHapticLoop::UpdateInterface(){
 			PHSolid* hiSolid = &iPointer->hiSolid;
 			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
 			hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
-			//hiSolid->SetFramePosition((Vec3d)hif->GetPosition() * s);
-			//hiSolid->SetOrientation(hif->GetOrientation());
 			Posed hifPose;
 			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
 			hifPose.Ori()=hif->GetOrientation();
 			Posed hiSolidPose = hifPose * GetINPointer(i)->GetPosition();
-
-
 			hiSolid->SetPose(hiSolidPose);
 		}else{
 			//3自由度インタフェースの場合
@@ -56,7 +50,6 @@ void FWLDHapticLoop::UpdateInterface(){
 			hif->Update((float)hdt);
 			PHSolid* hiSolid = &iPointer->hiSolid;
 			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
-			//hiSolid->SetFramePosition((Vec3d)hif->GetPosition() * s);
 			Posed hifPose;
 			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
 			Posed hiSolidPose = hifPose * GetINPointer(i)->GetPosition();
