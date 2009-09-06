@@ -18,7 +18,7 @@ FWLDHapticLoop::FWLDHapticLoop(){
 }
 void FWLDHapticLoop::Step(){
 	UpdateInterface();
-#if 1
+#if 0
 	HapticRendering();
 #else
 	Proxy();
