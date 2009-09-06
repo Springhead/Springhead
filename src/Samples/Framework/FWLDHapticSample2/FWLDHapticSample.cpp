@@ -116,8 +116,8 @@ void FWLDHapticSample::BuildScene(){
 		CDShapeIf* shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd);
 		/// 剛体に形状を付加
 		soBox->AddShape(shapeBox);
-		soBox->GetShape(0)->SetStaticFriction(2.0);
-		soBox->GetShape(0)->SetDynamicFriction(1.0);
+		soBox->GetShape(0)->SetStaticFriction(0.5);
+		soBox->GetShape(0)->SetDynamicFriction(0.2);
 		soBox->GetShape(0)->SetVibration(5,80,300);
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}
@@ -141,7 +141,7 @@ void FWLDHapticSample::BuildPointer(){
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
 			idesc.springK = 5;						// haptic renderingのバネ係数
-			idesc.damperD = 0.1;					// haptic renderingのダンパ係数
+//			idesc.damperD = 0.1;					// haptic renderingのダンパ係数
 			idesc.posScale = 60;					// soPointerの可動域の設定(～倍)
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
 			if(i==0) idesc.position = Posed(1,0,0,0,5,0,0); //ポインタの初期位置
