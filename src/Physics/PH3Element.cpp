@@ -51,7 +51,7 @@ void PH3Element::SetConstrainedIndexCorrection(bool* con){
 
 void PH3Element::CompBias(){
 	
-	double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp,tmp2;
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	Vec3d D1 = damper;
 	Vec3d K = spring;
 	Vec3d D2 = secondDamper;
@@ -70,15 +70,23 @@ void PH3Element::CompBias(){
 
 	//3要素モデル	
 	ws=vjrel;
-	for(int i = 0; i < 3; i++){
-		if (!constr[i]) continue;
-		//ばねの長さを更新
-		tmp = D2[i]-D1[i]+K[i]*h;
-		tmp2=D2[i]*K[i]*h*(2*D1[i]-D2[i])*(D2[i]-D1[i])-tmp*D1[i]*D2[i];
+	//for(int i = 0; i < 3; i++){
+	//	if (!constr[i]) continue;
+	//	//ばねの長さを更新
+	//	tmp = D2[i]-D1[i]+K[i]*h;
+	//	tmp2=D2[i]*K[i]*h*(2*D1[i]-D2[i])*(D2[i]-D1[i])-tmp*D1[i]*D2[i];
 
-		xs[1][i] = ((D2[i]-D1[i])/tmp)*xs[0][i] + (D2[i]*h/tmp)*ws[i];		
-		dA[i] = -tmp*(D2[i]-D1[i])/tmp2* dtinv;
-		db[i] = K[i]*(2*D1[i]-D2[i])*(D2[i]-D1[i])/tmp2*xs[0][i];
+	//	xs[1][i] = ((D2[i]-D1[i])/tmp)*xs[0][i] + (D2[i]*h/tmp)*ws[i];		
+	//	dA[i] = -tmp*(D2[i]-D1[i])/tmp2* dtinv;
+	//	db[i] = K[i]*(2*D1[i]-D2[i])*(D2[i]-D1[i])/tmp2*xs[0][i];
+	//}
+
+	for(int i=0;i<3;i++){
+		if (!constr[i]) continue;
+		double tmp = D1[i]+D2[i]+K[i]*h;
+		xs[1][i] = ((D1[i]+D2[i])/tmp)*xs[0][i] + (D2[i]*h/tmp)*ws[i];	//バネとダンパの並列部の距離の更新
+		dA[i]= tmp/(D2[i]*(K[i]*h+D1[i])) * dtinv;
+		db[i] = K[i]/(K[i]*h+D1[i])*(xs[0][i]) ;
 	}
 	xs[0]=xs[1];
 
@@ -143,7 +151,7 @@ void PH3Element::CompBias(){
 		Vec3d prop = diff.RotationHalf();
 		double tmpInv = damperOri + springOri * GetScene()->GetTimeStep();
 		if (tmpInv > 1e-30){
-			tmp = 1.0/tmpInv;
+			double tmp = 1.0/tmpInv;
 			dA.w() = Vec3d(tmp * dtinv, tmp * dtinv, tmp * dtinv);
 			db.w() = springOri * (prop) * tmp;
 		}

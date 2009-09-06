@@ -75,7 +75,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				Vec3d soMin = phSolid->GetPose().Pos() + phSolid->bbox.GetBBoxMin();		// SolidのBBoxの最小値(3軸)
 				Vec3d soMax = phSolid->GetPose().Pos() + phSolid->bbox.GetBBoxMax();		// SolidのBBoxの最大値(3軸)
 				/// 3軸で判定
-				int isLocal = 0;		//< いくつの軸で交差しているかどうか
+				int isLocal = 3;		//< いくつの軸で交差しているかどうか
 				for(int i = 0; i < 3; ++i){
 					int in = 0;
 					/// ポインタのエッジ間にソリッドのエッジがあったら交差
