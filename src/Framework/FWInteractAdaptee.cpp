@@ -76,16 +76,17 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				Vec3d soMax = phSolid->GetPose()*phSolid->bbox.GetBBoxMax();		// SolidのBBoxの最大値(3軸)
 				/// 3軸で判定
 				int isLocal = 0;		//< いくつの軸で交差しているかどうか
-				for(int i=0; i<3; ++i){
+				for(int i = 0; i < 3; ++i){
 					int in = 0;
-					/// ポインタのエッジ間にソリッドの最小値があったら交差
-					if(pMin[i] < soMin[i] && soMin[i] < pMax[i]) in++; 
-					/// ポインタのエッジ間にソリッドの最大値があったら交差
-					if(pMin[i] < soMax[i] && soMax[i] < pMax[i]) in++;
+					/// ポインタのエッジ間にソリッドのエッジがあったら交差
+					if(pMin[i] <= soMin[i] && soMin[i] <= pMax[i]) in++; 
+					if(pMin[i] <= soMax[i] && soMax[i] <= pMax[i]) in++; 
+					/// ソリッドのエッジ間にポインタの最大値があったら交差
+					if(soMin[i] <= pMin[i] && pMin[i] <= soMax[i]) in++;
+					if(soMin[i] <= pMax[i] && pMax[i] <= soMax[i]) in++;
 					/// inが1以上ならその軸で交差
 					if(in > 0) isLocal++;
 				}
-				//DSTR << "isLocal" << isLocal << std::endl;
 				/// 2.近傍の可能性がある物体は詳細判定(GJKへ)
 				if(isLocal > 2){
 					inInfo->flag.bneighbor = true;
@@ -126,7 +127,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 			inSolid->bfirstSim = false;
 		}
 	}
-//			DSTR << "-------------------------------" << std::endl;
+	//DSTR << "-------------------------------------------------" << std::endl;
 }
 
 void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* inPointer){
