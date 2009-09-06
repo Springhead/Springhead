@@ -159,7 +159,7 @@ void PH3ElementBallJoint::CompBias(){
 			PlasticDeformation();				//‘Y«•ÏŒ`
 		}
 	}else{
-			//dA.w().clear();
+			dA.w().clear();
 			db.w().clear();
 	}
 	
