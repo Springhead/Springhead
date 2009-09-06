@@ -68,12 +68,12 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				/* AABBで力覚ポインタ近傍の物体を絞る
 				   ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 				*/
-				/// 1. BBoxレベルの衝突判定	
+				/// 1. BBoxレベルの衝突判定(Sweep & Prune)
 				Vec3d range = Vec3d(1, 1, 1) * inPointer->GetLocalRange();
-				Vec3d pMin = soPointer->GetPose()*soPointer->bbox.GetBBoxMin() - range;		// PointerのBBoxの最小値(3軸)
-				Vec3d pMax = soPointer->GetPose()*soPointer->bbox.GetBBoxMax() + range;		// PointerのBBoxの最大値(3軸)
-				Vec3d soMin = phSolid->GetPose()*phSolid->bbox.GetBBoxMin();		// SolidのBBoxの最小値(3軸)
-				Vec3d soMax = phSolid->GetPose()*phSolid->bbox.GetBBoxMax();		// SolidのBBoxの最大値(3軸)
+				Vec3d pMin = soPointer->GetPose() * soPointer->bbox.GetBBoxMin() - range;		// PointerのBBoxの最小値(3軸)
+				Vec3d pMax = soPointer->GetPose() * soPointer->bbox.GetBBoxMax() + range;		// PointerのBBoxの最大値(3軸)
+				Vec3d soMin = phSolid->GetPose().Pos() + phSolid->bbox.GetBBoxMin();		// SolidのBBoxの最小値(3軸)
+				Vec3d soMax = phSolid->GetPose().Pos() + phSolid->bbox.GetBBoxMax();		// SolidのBBoxの最大値(3軸)
 				/// 3軸で判定
 				int isLocal = 0;		//< いくつの軸で交差しているかどうか
 				for(int i = 0; i < 3; ++i){
@@ -86,7 +86,14 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 					if(soMin[i] <= pMax[i] && pMax[i] <= soMax[i]) in++;
 					/// inが1以上ならその軸で交差
 					if(in > 0) isLocal++;
+#if 0
+					//DSTR << i << " pMin[i] = " << pMin[i] << "  soMin[i] = " << soMin[i] << "  pMax[i] = " << pMax[i] << std::endl;
+					//DSTR << i << " pMin[i] = "  << pMin[i] << "  soMax[i] = " << soMax[i] << "  pMax[i] = " << pMax[i] << std::endl;
+					//DSTR << i << " soMin[i] = " << soMin[i] << "  pMin[i] = " << pMin[i] << "  soMax[i] = " << soMax[i] << std::endl;
+					//DSTR << i << " soMin[i] = " << soMin[i] << "  pMax[i] = " << pMax[i] << "  soMax[i] = " << soMax[i] << std::endl;
+#endif
 				}
+//				DSTR << "isLocal" << isLocal <<  std::endl;
 				/// 2.近傍の可能性がある物体は詳細判定(GJKへ)
 				if(isLocal > 2){
 					inInfo->flag.bneighbor = true;
@@ -127,7 +134,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 			inSolid->bfirstSim = false;
 		}
 	}
-	//DSTR << "-------------------------------------------------" << std::endl;
+//	DSTR << "-------------------------------------------------" << std::endl;
 }
 
 void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* inPointer){
