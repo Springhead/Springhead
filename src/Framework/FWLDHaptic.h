@@ -48,6 +48,8 @@ public:
 	virtual void PhysicsStep();
 	virtual void UpdatePointer();
 	virtual void TestSimulation();
+	virtual void BeginKeyboard();
+	virtual void EndKeyboard();
 	void ReleaseState(PHSceneIf*);
 
 };

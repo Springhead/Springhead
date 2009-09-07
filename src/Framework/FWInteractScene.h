@@ -46,6 +46,8 @@ public:
 	void Clear();
 	void Reset();
 	void CallBackHapticLoop();
+	void BeginKeyboard();
+	void EndKeyboard();
 
 };
 

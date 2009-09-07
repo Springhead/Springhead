@@ -71,8 +71,11 @@ void FWInteractScene::Reset(){
 void FWInteractScene::CallBackHapticLoop(){
 	GetINAdaptee()->CallBackHapticLoop();
 }
-
-
-
+void FWInteractScene::BeginKeyboard(){
+	GetINAdaptee()->BeginKeyboard();
+}
+void FWInteractScene::EndKeyboard(){
+	GetINAdaptee()->EndKeyboard();
+}
 
 }

@@ -80,6 +80,8 @@ public:
 	virtual void Clear(){};
 	virtual void Reset(){};
 	virtual void Step(){};
+	virtual void BeginKeyboard(){};
+	virtual void EndKeyboard(){};
 };
 
 }

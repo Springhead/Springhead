@@ -18,7 +18,7 @@ FWLDHapticLoop::FWLDHapticLoop(){
 }
 void FWLDHapticLoop::Step(){
 	UpdateInterface();
-#if 0
+#if 1
 	HapticRendering();
 #else
 	Proxy();
@@ -112,11 +112,6 @@ void FWLDHapticLoop::HapticRendering(){
 				///振動の計算
 				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer, i);
 
-				///摩擦力の計算
-				double d = 0.01;
-				Vec3d friction = (friction_rate * addforce.norm() + (d * fdtrans * dvortho)[0]) * friction_normal;
-//				addforce += friction;
-
 				outForce.v() += addforce + vibforce;	
 				outForce.w() += addtorque;
 
@@ -143,7 +138,17 @@ void FWLDHapticLoop::HapticRendering(){
 				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(outForce.v());
 			}
-		
+		}else{
+			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+				hif->SetForce(Vec3d(), Vec3d());
+				#ifdef TORQUE
+					hif->SetForce(Vec3d(), Vec3d());
+				#endif
+			}else{
+				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+				hif->SetForce(Vec3d());
+			}		
 		}
 	}
 }
@@ -299,6 +304,17 @@ void FWLDHapticLoop::Proxy(){
 				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(outForce.v());
 			}
+		}else{
+			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+				hif->SetForce(Vec3d(), Vec3d());
+				#ifdef TORQUE
+					hif->SetForce(Vec3d(), Vec3d());
+				#endif
+			}else{
+				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+				hif->SetForce(Vec3d());
+			}		
 		}
 	}
 }
@@ -444,6 +460,17 @@ void FWLDHapticLoop::ProxySimulation(){
 					HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 					hif->SetForce(outForce.v());
 				}
+			}else{
+				if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+					HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+					hif->SetForce(Vec3d(), Vec3d());
+					#ifdef TORQUE
+					hif->SetForce(Vec3d(), Vec3d());
+					#endif
+				}else{
+					HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+					hif->SetForce(Vec3d());
+				}		
 			}
 		}
 	}
@@ -496,11 +523,8 @@ void FWLDHaptic::PhysicsStep(){
 		lastvel.back().v() = phSolid->GetVelocity();
 		lastvel.back().w() = phSolid->GetAngularVelocity();
 	}
-//	if(bStep) GetFWApp()->GeSdk()->GetScene()->GetPHScene()->Step();
-//	else if (bOneStep){
-		GetPHScene()->Step();
-//		bOneStep = false;
-//	}
+	/// シミュレーションを進める
+	GetPHScene()->Step();
 	for(int i = 0; i < NINSolids(); i++){
 		if(!GetINSolid(i)->bSim) continue;
 		SpatialVector curvel;
@@ -673,6 +697,19 @@ void FWLDHaptic::TestSimulation(){
 	#ifdef DIVIDE_STEP
 		states2->LoadState(phScene);							// 元のstateに戻しシミュレーションを進める
 	#endif
+}
+
+void FWLDHaptic::BeginKeyboard(){
+	PHSceneIf* phScene = GetINScene()->GetScene()->GetPHScene();
+	states->ReleaseState(phScene);
+	states2->ReleaseState(phScene);
+}
+void FWLDHaptic::EndKeyboard(){
+	PHSceneIf* phScene = GetINScene()->GetScene()->GetPHScene();
+	for(int i = 0; i < NINPointers(); i++){
+		PHSolidIf* pointer = GetINPointer(i)->pointerSolid;
+		phScene->SetContactMode(pointer,PHSceneDesc::MODE_NONE);
+	}
 }
 
 void FWLDHaptic::ReleaseState(PHSceneIf* p){
