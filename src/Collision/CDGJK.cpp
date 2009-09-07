@@ -378,7 +378,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		}
 		Vec3d s;		//	ŽOŠpŒ`‚Ì—LŒü–ÊÏ
 		s = (w[ids[1]]-w[ids[0]]) % (w[ids[2]]-w[ids[0]]);
-		if (s.Z() > epsilon*10.0 || -s.Z() > epsilon*10.0){
+		if (s.Z() > epsilon*100.0 || -s.Z() > epsilon*100.0){
 			if (s.Z() < 0){		//	‹tŒü‚«‚Ìê‡A‚Ð‚Á‚­‚è•Ô‚·
 				std::swap(ids[1], ids[2]);
 				s *= -1;
@@ -528,7 +528,7 @@ final:
 	}else{
 		Vec3d dec = TriDecompose(w[ids[0]].XY(), w[ids[1]].XY(), w[ids[2]].XY());
 		pa = dec[0]*p[ids[0]] + dec[1]*p[ids[1]] + dec[2]*p[ids[2]];
-		pb = dec[0]*q[ids[1]] + dec[1]*q[ids[1]] + dec[2]*q[ids[1]];
+		pb = dec[0]*q[ids[0]] + dec[1]*q[ids[1]] + dec[2]*q[ids[2]];
 		dist = dec[0]*w[ids[0]].z + dec[1]*w[ids[1]].z + dec[2]*w[ids[2]].z;
 	}
 	normal = w2z.Conjugated() * v[ids[3]];
