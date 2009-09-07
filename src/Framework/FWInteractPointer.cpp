@@ -42,12 +42,12 @@ void FWInteractPointer::SetLocalRange(double r){
 double FWInteractPointer::GetLocalRange(){
 	return localRange; 
 }
-void  FWInteractPointer::SetPosition(Posed p){
-	position = p;
+void  FWInteractPointer::SetDefaultPosition(Posed p){
+	defaultPosition = p;
 }
 
-Posed  FWInteractPointer::GetPosition(){
-	return position; 
+Posed  FWInteractPointer::GetDefaultPosition(){
+	return defaultPosition; 
 }
 void FWInteractPointer::EnableForce(bool b){
 	bForce = b;
