@@ -23,6 +23,8 @@ public:
 	static void CallBackHapticLoop(void* arg);			///< hapticloopのコールバック
 
 	/// オプション
+	bool bStep;									///< シミュレーションを進めるかどうか
+	bool bOneStep;								///< ステップ実行
 	bool bDrawInfo;								///< デバック表示するかどうか									
 	void DisplayContactPlane();					///< 接触面の描画
 	void DisplayLineToNearestPoint();			///< ポインタの近傍点から剛体の近傍点への線
