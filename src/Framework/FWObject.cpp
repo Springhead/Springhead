@@ -155,12 +155,12 @@ void FWBoneObject::Modify() {
 
 	double boneLength = endFrame->GetTransform().Trn().norm();
 
-	for (size_t i=0; i<phSolid->NShape(); ++i) {
+	for (int i=0; i<phSolid->NShape(); ++i) {
 		CDRoundConeIf* rc = phSolid->GetShape(i)->Cast();
 		if (rc) {
 			CDRoundConeDesc rd;
 			rc->GetDesc(&rd);
-			rd.length = boneLength;
+			rd.length = (float)boneLength;
 			rc->SetDesc(&rd);
 
 			Posed pose;
