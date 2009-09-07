@@ -22,7 +22,7 @@
 #include <fstream>
 //#include <windows.h>
 
-static bool bDebug;
+bool bCCDGJKDebug;
 
 
 namespace Spr{;
@@ -143,7 +143,7 @@ void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
 	file << dist << std::endl;
 }
 void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk){
-	bDebug = true;
+	bCCDGJKDebug = true;
 	const CDConvex* a;
 	const CDConvex* b;
 	Posed a2w, b2w;
@@ -373,7 +373,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			DSTR << "Too many loop in CCDGJK." << std::endl;
 			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
 			//DebugBreak();
-			bDebug = true;
+			bCCDGJKDebug = true;
 #endif
 		}
 		Vec3d s;		//	三角形の有向面積
@@ -383,7 +383,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				std::swap(ids[1], ids[2]);
 				s *= -1;
 			}
-			if (bDebug) DSTR << "TRI ";
+			if (bCCDGJKDebug) DSTR << "TRI ";
 			//	三角形になる場合
 			notuse = -1;
 			lastTriV = v[ids[3]] = s.unit();	//	3角形の法線を使う
@@ -391,7 +391,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			//	新しい w w[3] を求める
 			CalcSupport(ids[3]);
 		}else{
-			if (bDebug) DSTR << "LINE";
+			if (bCCDGJKDebug) DSTR << "LINE";
 			int id0, id1;
 			if (notuse >= 0){	
 				//	前回も線分だった場合。新しい点と古い線分のどちらかの頂点で新たな線分を作る。
@@ -450,11 +450,12 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				Vec3d ave = v[ids[id0]] + v[ids[id1]];
 				Vec3d line = (w[ids[id1]] - w[ids[id0]]).unit();
 				ave = ave - (ave * line) * line;
-				lastTriV = v[ids[3]] = ave.unit();
+				/*lastTriV = */
+				v[ids[3]] = ave.unit();
 			}
 			CalcSupport(ids[3]);
 		}
-		if (bDebug){
+		if (bCCDGJKDebug){
 			DSTR << "v:" << v[ids[3]];
 			for(int i=0; i<4; ++i){
 				DSTR << "  w[" << (int) ids[i] << "] = " << w[ids[i]];
