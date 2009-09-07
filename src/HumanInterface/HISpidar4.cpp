@@ -111,26 +111,25 @@ void HISpidar4Desc::InitSpidarBig(char* type){
 		const float PY = 0.54f/2;		//	y方向の辺の長さ/2
 		const float PZ = 0.55f/2;		//	z方向の辺の長さ/2
 		//	糸のグリップへの取り付け位置．グリップはピンポン玉を採用しています．
-		const float GX = 0.00f/2;		//	x方向の辺の長さ/2
-		const float GY = 0.00f/2;		//	y方向の辺の長さ/2
+		const float GX = 0.02f/2;		//	x方向の辺の長さ/2
+		const float GY = 0.02f/2;		//	y方向の辺の長さ/2
 
-		Matrix3f rotZ = Matrix3f::Rot((float)Rad(0), 'z');
+		Matrix3f rotZ = Matrix3f::Rot((float)Rad(45), 'z');
 		Matrix3f tMatR = Matrix3f(); tMatR.zz*=-1; //座標調整
 		Matrix3f tMatL = Matrix3f(); tMatL.xx*=-1; //座標調整
 
 	Vec3f motorPos[2][4][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
 		{
-			{tMatR*Vec3f( PX,  PY,-PZ), tMatR*rotZ*Vec3f(-GX, 0.0f, 0.0f)},//0上右前
-			{tMatR*Vec3f(-PX,  PY, PZ), tMatR*rotZ*Vec3f(0.0f,  GY, 0.0f)},//1上左奥
-			{tMatR*Vec3f( PX, -PY, PZ), tMatR*rotZ*Vec3f( GX, 0.0f, 0.0f)},//2下右奥
-			{tMatR*Vec3f(-PX, -PY,-PZ), tMatR*rotZ*Vec3f(0.0f, -GY, 0.0f)},//3下左前
+			{tMatR*Vec3f( PX,  PY,-PZ), rotZ*tMatR*Vec3f(0.0f,  GY, 0.0f)},//0上右前
+			{tMatR*Vec3f(-PX,  PY, PZ), rotZ*tMatR*Vec3f(-GX,  0.0f, 0.0f)},//1上左奥
+			{tMatR*Vec3f( PX, -PY, PZ), rotZ*tMatR*Vec3f( GX, 0.0f, 0.0f)},//2下右奥
+			{tMatR*Vec3f(-PX, -PY,-PZ), rotZ*tMatR*Vec3f(0.0f, -GY, 0.0f)},//3下左前
 		},
 		{
-			{tMatL*Vec3f( PX, PY, PZ), tMatL*rotZ*Vec3f( GX, 0.0f, 0.0f)},//2下奥
-			{tMatL*Vec3f(-PX, PY,-PZ), tMatL*rotZ*Vec3f(0.0f, -GY, 0.0f)},//4下前
-			{tMatL*Vec3f( PX,-PY,-PZ), tMatL*rotZ*Vec3f(-GX, 0.0f, 0.0f)},//5上左
-			{tMatL*Vec3f(-PX,-PY, PZ), tMatL*rotZ*Vec3f(0.0f,  GY, 0.0f)},//7上右
-
+			{tMatL*Vec3f( PX, PY, PZ),  rotZ*tMatL*Vec3f( -GX, 0.0f, 0.0f)},//4上左前
+			{tMatL*Vec3f(-PX, PY,-PZ),  rotZ*tMatL*Vec3f( 0.0f, GY, 0.0f)},//5上右奥
+			{tMatL*Vec3f( PX,-PY,-PZ),  rotZ*tMatL*Vec3f( 0.0f, -GY, 0.0f)},//6下右前
+			{tMatL*Vec3f(-PX,-PY, PZ),  rotZ*tMatL*Vec3f( GX, 0.0f, 0.0f)},//7下左奥
 		}
 	};
 
