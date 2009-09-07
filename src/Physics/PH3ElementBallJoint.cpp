@@ -42,15 +42,15 @@ PH3ElementBallJoint::PH3ElementBallJoint(const PH3ElementBallJointDesc& desc){
 
 bool PH3ElementBallJoint::GetDefomationMode(){
 	
-	if(type==PH3ElementBallJointDesc::deformationType::Mix){
+	if(type==PH3ElementBallJointDesc::Mix){
 		if(yieldFlag){
 			std::cout<<"塑性変形モード"<<std::endl;
 		}else {
 			std::cout<<"弾性変形モード"<<std::endl;
 		}
-	}else if(type==PH3ElementBallJointDesc::deformationType::Elastic){
+	}else if(type==PH3ElementBallJointDesc::Elastic){
 			std::cout<<"弾性変形のみ"<<std::endl;
-	}else if(type==PH3ElementBallJointDesc::deformationType::Plastic){
+	}else if(type==PH3ElementBallJointDesc::Plastic){
 			std::cout<<"塑性変形のみ"<<std::endl;
 	}
 
@@ -94,7 +94,7 @@ void PH3ElementBallJoint::PlasticDeformation(){
 	}
 	db.w() = K/(K*h+D1)*(xs[0].w()) ;
 	
-	if(type==PH3ElementBallJointDesc::deformationType::Mix){
+	if(type==PH3ElementBallJointDesc::Mix){
 		if(ws.w().norm()<0.01){
 			yieldFlag = false;
 			SetGoal(Xjrel.q);
@@ -121,7 +121,7 @@ void PH3ElementBallJoint::CompBias(){
 		startIterator = fs.begin();
 		fs.erase( startIterator );
 		fNorm=0;
-		for(int i=0;i<fs.size();i++){
+		for(size_t i=0;i<fs.size();i++){
 			fNorm+=fs[i].w().norm()/(fs.size()-1);
 		}
 	}
@@ -150,12 +150,12 @@ void PH3ElementBallJoint::CompBias(){
 		if(fNorm>yieldStress){
 			yieldFlag=true;
 		}
-		if(type==PH3ElementBallJointDesc::deformationType::Mix){	//3:Mix 初期値
+		if(type==PH3ElementBallJointDesc::Mix){	//3:Mix 初期値
 			if(yieldFlag)PlasticDeformation();	//塑性変形
 			else ElasticDeformation();			//弾性変形
-		}else if(type==PH3ElementBallJointDesc::deformationType::Elastic){	//0:Elastic
+		}else if(type==PH3ElementBallJointDesc::Elastic){	//0:Elastic
 			ElasticDeformation();				//弾性変形
-		}else if(type==PH3ElementBallJointDesc::deformationType::Plastic){	//1:Plastic
+		}else if(type==PH3ElementBallJointDesc::Plastic){	//1:Plastic
 			PlasticDeformation();				//塑性変形
 		}
 	}else{

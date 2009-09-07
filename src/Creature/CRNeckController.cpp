@@ -30,7 +30,7 @@ void CRNeckController::Step(){
 	if (csHead) {
 		PHSolidIf*    soHead = csHead->GetPHSolid();
 		PHIKOriCtlIf* cpHead = NULL;
-		for (size_t i=0; i<csHead->NIKControlPoints(); ++i) {
+		for (int i=0; i<csHead->NIKControlPoints(); ++i) {
 			if (!cpHead) {
 				cpHead = csHead->GetIKControlPoint(i)->Cast();
 			} else {

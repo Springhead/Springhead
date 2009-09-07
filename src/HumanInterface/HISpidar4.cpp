@@ -186,7 +186,7 @@ bool HISpidar4::Init(const void* pDesc){
 	}
 	HISpidarCalc3Dof::Init(3, minForce, maxForce);
 	////	ドライバの取得
-	int i;
+	size_t i;
 	char* name=NULL;
 	Vec4i port=desc.port+Vec4i(-1,-1,-1,-1);
 
@@ -224,7 +224,7 @@ bool HISpidar4::Calibration(){
 	//	ポインタを原点(中心)に置いて、キャリブレーションを行う
 	for(unsigned i=0; i<motors.size(); i++) motors[i].SetLength( (motors[i].pos - motors[i].jointPos).norm() );
 	lengthDiffAve.clear();
-	for(int i=0; i<motors.size(); ++i) HISpidarCalc3Dof::Update();	//	姿勢を更新
+	for(size_t i=0; i<motors.size(); ++i) HISpidarCalc3Dof::Update();	//	姿勢を更新
 	return true;
 }
 void HISpidar4::Update(float dt){
@@ -236,7 +236,7 @@ void HISpidar4::Update(float dt){
 }
 
 Vec3f HISpidar4::GetForce(){
-    int i;
+    size_t i;
 	Vec3f f;
     for (i=0;i<motors.size();i++) f=f+tension[i]*phi[i];
     return f;
