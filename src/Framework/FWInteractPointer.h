@@ -31,8 +31,8 @@ public:
 	double		GetForceScale();
 	void		SetLocalRange(double r);
 	double		GetLocalRange();
-	void		SetPosition(Posed p);
-	Posed		GetPosition();
+	void		SetDefaultPosition(Posed p);
+	Posed		GetDefaultPosition();
 	void		EnableForce(bool b = true);
 	void		EnableVibration(bool b = true);
 	void		Calibration();

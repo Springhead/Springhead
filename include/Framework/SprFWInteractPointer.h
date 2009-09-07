@@ -13,7 +13,7 @@ public:
 	HIBaseIf*	humanInterface; 
 	double		springK;
 	double		damperD;
-	Posed		position;
+	Posed		defaultPosition;
 	double		posScale;
 	double		forceScale;
 	double		localRange;
@@ -23,7 +23,7 @@ public:
 		humanInterface = NULL;
 		springK = 0.0;
 		damperD = 0.0;
-		position = Posed();
+		defaultPosition = Posed();
 		posScale = 1.0;
 		forceScale = 1.0;
 		localRange = 0.1;
@@ -44,8 +44,8 @@ public:
 	double		GetForceScale();
 	void		SetLocalRange(double r);
 	double		GetLocalRange();
-	void		SetPosition(Posed p);
-	Posed		GetPosition();
+	void		SetDefaultPosition(Posed p);
+	Posed		GetDefaultPosition();
 	void		EnableForce(bool b);
 	void		EnableVibration(bool b);
 	void		Calibration();

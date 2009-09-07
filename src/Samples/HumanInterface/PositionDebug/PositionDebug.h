@@ -13,10 +13,11 @@ public:
 	virtual void InitCameraView();						///< カメラ行列の初期化
 	virtual void InitHumanInterface();					///< HapticInterfaceの初期化
 	virtual void IdleFunc();							
-	virtual void BuildScene(){};							///< 剛体の作成	
-	virtual void BuildPointer();							///< 剛体の作成	
+	virtual void BuildScene(){};						///< 剛体の作成	
+	virtual void BuildPointer();						///< 剛体の作成	
 	virtual void Display();								///< 描画関数	
-	void Keyboard(int key, int x, int y);		///< キーボード関数
+	void Keyboard(int key, int x, int y);				///< キーボード関数
+	void TwoPointerCalib();								///< 2点のポインタの座標系を一致させる
 
 	PH3ElementBallJointIf* Balljoint;
 }; 

@@ -112,7 +112,7 @@ void FWLDHapticSample::InitHumanInterface(){
 #if SPIDAR
 	/// SPIDARG6を2台使う場合
 	UTRef<HISpidarGIf> spg[2];
-	for(size_t i = 0; i < 1; i++){
+	for(size_t i = 0; i < 2; i++){
 		spg[i] = GetHISdk()->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 		if(i == 0) spg[i]->Init(&HISpidarGDesc("SpidarG6X3R"));
 		if(i == 1) spg[i]->Init(&HISpidarGDesc("SpidarG6X3L"));
@@ -123,8 +123,8 @@ void FWLDHapticSample::InitHumanInterface(){
 	UTRef<HISpidar4If> spg[2];
 	for(size_t i = 0; i < 2; i++){
 		spg[i] = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-		if(i == 0) spg[i]->Init(&HISpidar4Desc("SpidarR",Vec4i(1,2,3,4)));
-		if(i == 1) spg[i]->Init(&HISpidar4Desc("SpidarL",Vec4i(5,6,7,8)));
+		if(i == 0) spg[i]->Init(&HISpidar4Desc("SpidarG6X3L",Vec4i(1,2,3,4)));
+		if(i == 1) spg[i]->Init(&HISpidar4Desc("SpidarG6X3L",Vec4i(5,6,7,8)));
 		AddHI(spg[i]);
 	}
 #endif
@@ -158,8 +158,8 @@ void FWLDHapticSample::BuildPointer(){
 			idesc.posScale = 60;					// soPointerの可動域の設定(～倍)
 		#endif
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
-			if(i==0) idesc.position = Posed(1,0,0,0,3.0,0.0,0.0); //ポインタの初期位置
-			if(i==1) idesc.position = Posed(1,0,0,0,3.0,0.0,0.0);
+			if(i==0) idesc.defaultPosition = Posed(1,0,0,0,5.0,0.0,0.0); //ポインタの初期位置
+			if(i==1) idesc.defaultPosition = Posed(1,0,0,0,-5.0,0.0,0.0);
 			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
 		}
 	}
@@ -170,7 +170,13 @@ void FWLDHapticSample::IdleFunc(){
 	FWAppHaptic::instance->GetINScene()->Step();
 	//Balljoint->GetDefomationMode();//naga
 	glutPostRedisplay();
-}						
+}
+
+void FWLDHapticSample::TwoPointerCalib(){
+	//GetINScene()->GetINPointer()->GetPosition
+
+
+}
 
 void FWLDHapticSample::Keyboard(int key, int x, int y){
 	FWAppHaptic::Keyboard(key , x, y);
