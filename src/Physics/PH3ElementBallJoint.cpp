@@ -95,7 +95,7 @@ void PH3ElementBallJoint::PlasticDeformation(){
 	db.w() = K/(K*h+D1)*(xs[0].w()) ;
 	
 	if(type==PH3ElementBallJointDesc::deformationType::Mix){
-		if(ws.w().norm()<0.1){
+		if(ws.w().norm()<0.01){
 			yieldFlag = false;
 			SetGoal(Xjrel.q);
 		}
