@@ -6,6 +6,7 @@
 using namespace std;
 
 FWAppHaptic::FWAppHaptic(){
+	bStep = true;
 	bDrawInfo = false;
 }
 
@@ -90,7 +91,11 @@ void FWAppHaptic::Start(){
 
 void FWAppHaptic::IdleFunc(){
 	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
-	FWAppHaptic::instance->GetINScene()->Step();
+	if(bStep) 	FWAppHaptic::instance->GetINScene()->Step();
+	else if (bOneStep){
+			FWAppHaptic::instance->GetINScene()->Step();
+			bOneStep = false;
+	}
 	glutPostRedisplay();
 }
 
@@ -326,6 +331,15 @@ void FWAppHaptic::Keyboard(int key, int x, int y){
 			break;
 		case 'd':
 			bDrawInfo = !bDrawInfo;
+			break;
+		case 's':
+			bStep = false;
+			bOneStep = true;
+			DSTR << "Stepwise Execution" << endl;
+			break;
+		case 'a':
+			bStep = true;
+			DSTR << "Play" << endl;
 			break;
 		case 'c':
 			{

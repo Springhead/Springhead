@@ -15,6 +15,7 @@
 #include "FWGraphicsAdaptee.h"
 #include <Framework/SprFWGLUT.h>
 #include <Framework/SprFWGLUI.h>
+#include <Framework/FWInteractScene.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -47,6 +48,19 @@ void FWApp::MTimerRelease(){
 void FWApp::MTimerStart(){
 	for(int i=0; i< (int)mmtimer.size(); i++){
 		mmtimer[i]->Create();
+	}
+}
+
+void FWApp::BeginKeyboard(){
+	for(int i = 0; i < NINScenes(); i++){
+		FWInteractScene* inScene = GetINScene(i)->Cast();
+		inScene->BeginKeyboard();
+	}
+}
+void FWApp::EndKeyboard(){
+	for(int i = 0; i < NINScenes(); i++){
+		FWInteractScene* inScene = GetINScene(i)->Cast();
+		inScene->EndKeyboard();
 	}
 }
 
