@@ -77,6 +77,14 @@ public:
 	/** @brief キーボードイベントのハンドラ
 	 */
 	virtual void Keyboard(int key, int x, int y){}
+	/** @brief キーボードイベントのハンドラ
+		Keyboard関数のはじめに呼ぶ
+	 */
+	void BeginKeyboard();
+	/** @brief キーボードイベントのハンドラ
+		Keyboard関数の終わりに呼ぶ
+	 */
+	void EndKeyboard();
 
 	/** @brief マウスイベントのハンドラ
 	 */
