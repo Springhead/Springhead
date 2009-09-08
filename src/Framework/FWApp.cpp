@@ -330,6 +330,10 @@ FWInteractSceneIf* FWApp::GetINScene(int i){
 	return NULL;
 }
 int FWApp::NINScenes(){ return (int)inScenes.size(); }
+void FWApp::INClear(){ 
+	inScenes.clear();
+	curINScene = NULL;
+}
 ///////////////////////////////////////////////////////////////////////////////////
 
 

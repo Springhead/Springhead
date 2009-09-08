@@ -35,9 +35,8 @@
 	Spr::FWInteractMode GetINMode(){	return	base::GetINMode();}	\
 	Spr::FWHapticMode GetHMode(){	return	base::GetHMode();}	\
 	void Init(){	base::Init();}	\
-	void Step(){	base::Step();}	\
 	void Clear(){	base::Clear();}	\
-	void Reset(){	base::Reset();}	\
+	void Step(){	base::Step();}	\
 	void CallBackHapticLoop(){	base::CallBackHapticLoop();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWObjectIf(base)	\

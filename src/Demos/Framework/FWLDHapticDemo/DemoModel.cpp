@@ -57,7 +57,7 @@ PHSolidIf* CreateSphere(PHSceneIf* phscene){
 	solid->AddShape(CreateShapeSphere(phscene));
 	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
 	solid->SetFramePosition(Vec3f(0.5, 1,0));
-	solid->SetDynamical(false);
+//	solid->SetDynamical(false);
 	return solid;
 }
 

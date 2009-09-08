@@ -27,12 +27,12 @@ public:
 	int NINSolids(){ return (int)interactSolids.size(); }
 	int GetLoopCount(){ return loopCount; }
 
+	virtual void Clear();
 	void Init(double physicdt, double hapticdt){
 		pdt = physicdt;
 		hdt = hapticdt;
 		loopCount = 1;
 	}
-	virtual void Clear();
 	virtual void Step(){};
 	virtual void HapticRendering(){}
 };
@@ -75,10 +75,9 @@ public:
 											const Posed& a2w, const Posed& b2w, const Vec3d pc, Vec3d& dir, 
 											Vec3d& normal, Vec3d& pa, Vec3d& pb);	///< ポインタ近傍の物体との近傍点を探す
 
+	virtual void Clear(){};
 	virtual void Init(){};
 	virtual void CallBackHapticLoop(){};
-	virtual void Clear(){};
-	virtual void Reset(){};
 	virtual void Step(){};
 	virtual void BeginKeyboard(){};
 	virtual void EndKeyboard(){};

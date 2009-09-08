@@ -59,9 +59,8 @@ public:
 
 	/// ˆÈ‰º‚ÌŠÖ”‚Íadaptee‚ğ‚Æ‚¨‚µ‚ÄÀ‘•‚ªŒÄ‚Î‚ê‚é
 	void Init();
-	void Step();
 	void Clear();
-	void Reset();
+	void Step();
 	void CallBackHapticLoop();
 };
 
