@@ -23,6 +23,7 @@ public:
 	void TwoPointerSet();								///< 2点のポインタの座標系を一致させる
 	std::vector<Vec3d> mainPosition;
 	std::vector<Vec3d> subPosition;
+	Posed tPos;
 
 
 	PH3ElementBallJointIf* Balljoint;

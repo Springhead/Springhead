@@ -3,7 +3,7 @@
 #include <sstream>
 #include <Framework/FWInteractScene.h>
 
-#define SPIDAR 1;
+#define SPIDAR 0;
 using namespace std;
 
 
@@ -159,13 +159,19 @@ void FWLDHapticSample::BuildPointer(){
 			idesc.posScale = 60;					// soPointerの可動域の設定(～倍)
 		#endif
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
+			//idesc.defaultPosition =Posed(1,0,0,0,456,0,0);
 
 			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
 		}
+		GetINScene()->GetINPointer(0)->SetDefaultPosition(Posed(1,0,0,0,10,0,0));
 	}
+	//
 }
 
 void FWLDHapticSample::IdleFunc(){
+
+	//DSTR<<GetINScene()->GetINPointer(1)->GetDefaultPosition()<<std::endl;
+	
 	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
 	FWAppHaptic::instance->GetINScene()->Step();
 	//Balljoint->GetDefomationMode();//naga
@@ -173,10 +179,13 @@ void FWLDHapticSample::IdleFunc(){
 }
 
 void FWLDHapticSample::TwoPointerCalib(){
+	MTimerRelease();
 	TMatrixRow<6,3,float> mainMat ;
 	TMatrixRow<6,4,float> subMat ;
 	TMatrixRow<4,3,float> transMat ;
 	Affined TAffine ;
+
+	if(mainPosition.size()>5){
 
 	//mainMat：(x,y,z)を一列とするn行の行列
 	for(int i=0; i<6 ; i++){
@@ -209,17 +218,29 @@ void FWLDHapticSample::TwoPointerCalib(){
 	TAffine[3][2]=0;
 	TAffine[3][3]=1;
 	
-	DSTR<<"TAffine"<<std::endl<<TAffine<<std::endl;
-	for(int i=0;i<6;i++){
-		DSTR<<"mainMat"<<mainMat[i]<<std::endl;
-		DSTR<<"subMat"<<subMat[i]<<std::endl;
-		Vec3d NewPosition = TAffine*subPosition[i];
-		DSTR<<"NewPosition"<<NewPosition<<std::endl;
-	}
+	//DSTR<<"TAffine"<<std::endl<<TAffine<<std::endl;
+	//for(int i=0;i<6;i++){
+	//	DSTR<<"mainMat"<<mainMat[i]<<std::endl;
+	//	DSTR<<"subMat"<<subMat[i]<<std::endl;
+	//	Vec3d NewPosition = TAffine*subPosition[i];
+	//	DSTR<<"NewPosition"<<NewPosition<<std::endl;
+	//}
 
-	Posed tPos;
 	tPos.FromAffine(TAffine);
-	GetINScene()->GetINPointer(0)->SetDefaultPosition(tPos);
+	//DSTR<<tPos<<std::endl;
+	//GetINScene()->GetINPointer(0)->SetDefaultPosition(Posed(1,0,0,0,10,0,0));
+
+	
+				
+	DSTR<<GetINScene()->GetINPointer(0)->GetDefaultPosition()<<std::endl;
+	DSTR<<GetINScene()->GetINPointer(1)->GetDefaultPosition()<<std::endl;
+	GetINScene()->GetINPointer(1)->SetDefaultPosition(tPos);
+	DSTR<<"After"<<GetINScene()->GetINPointer(0)->GetDefaultPosition()<<std::endl;
+	DSTR<<"After"<<GetINScene()->GetINPointer(1)->GetDefaultPosition()<<std::endl;
+	
+	}
+	MTimerStart();
+
 }
 
 void FWLDHapticSample::TwoPointerSet(){
@@ -266,6 +287,8 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 
 		case 'v':
 			{
+				GetINScene()->GetINPointer(1)->SetDefaultPosition(Posed(1,0,0,0,10,0,0));
+				DSTR<<GetINScene()->GetINPointer(1)->GetDefaultPosition()<<std::endl;
 				//真上からの視点
 				std::istringstream issView(
 					"((1.0 0.0 0.0 0.0)"
@@ -280,6 +303,7 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 			
 		case 'b':
 			{
+				DSTR<<GetINScene()->GetINPointer(1)->GetDefaultPosition()<<std::endl;
 				//真前からの視点
 				std::istringstream issView(
 					"((1.0 0.0 0.0 0.0)"
