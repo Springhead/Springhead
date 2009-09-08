@@ -15,6 +15,7 @@
 #include <SprGraphics.h>
 #include <Foundation/Scene.h>
 #include "GRFrame.h"
+#include "GRSphere.h"
 
 namespace Spr{;
 
@@ -256,7 +257,7 @@ public:
 		{ ptr GetShaderLocation(shader, location); }														\
 	
 	REDIRECTIMP_GRRENDERBASE(device->)
-	
+
 	///	デバイスの設定
 	virtual void SetDevice(GRDeviceIf* dev){ device = dev; }
 	///	デバイスの取得
