@@ -3,9 +3,10 @@
 #include <sstream>
 #include <Framework/FWInteractScene.h>
 
+#define SPIDAR 1;
 using namespace std;
 
-#define SPIDAR 0;
+
 
 FWLDHapticSample::FWLDHapticSample(){
 }
@@ -110,6 +111,7 @@ void FWLDHapticSample::InitHumanInterface(){
 	GetHISdk()->Print(DSTR);
 
 #if SPIDAR
+
 	/// SPIDARG6を2台使う場合
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
@@ -123,8 +125,8 @@ void FWLDHapticSample::InitHumanInterface(){
 	UTRef<HISpidar4If> spg[2];
 	for(size_t i = 0; i < 2; i++){
 		spg[i] = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-		if(i == 0) spg[i]->Init(&HISpidar4Desc("SpidarG6X3L",Vec4i(1,2,3,4)));
-		if(i == 1) spg[i]->Init(&HISpidar4Desc("SpidarG6X3L",Vec4i(5,6,7,8)));
+		if(i == 0) spg[i]->Init(&HISpidar4Desc("SpidarR",Vec4i(1,2,3,4)));
+		if(i == 1) spg[i]->Init(&HISpidar4Desc("SpidarL",Vec4i(5,6,7,8)));
 		AddHI(spg[i]);
 	}
 #endif
@@ -132,7 +134,6 @@ void FWLDHapticSample::InitHumanInterface(){
 void FWLDHapticSample::BuildPointer(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	PHSolidDesc desc;
-
 
 	/// ポインタ
 	{	
@@ -173,8 +174,78 @@ void FWLDHapticSample::IdleFunc(){
 }
 
 void FWLDHapticSample::TwoPointerCalib(){
-	//GetINScene()->GetINPointer()->GetPosition
+	TMatrixRow<6,3,float> mainMat ;
+	TMatrixRow<6,4,float> subMat ;
+	TMatrixRow<4,3,float> transMat ;
+	Affined TAffine ;
 
+	//mainMat：(x,y,z)を一列とするn行の行列
+	for(int i=0; i<6 ; i++){
+		for(int j=0; j<3; j++){
+			mainMat[i][j] =mainPosition[i][j];
+		}
+	}
+	//subMat：(x,y,z,1)を一列とするn行の行列
+	for(int i=0; i<6 ; i++){
+		for(int j=0; j<4; j++){
+			if(j==3) subMat[i][j] = 1;
+			else subMat[i][j] =subPosition[i][j];	
+		}
+	}
+	//DSTR<<"mainMat"<<std::endl<<mainMat<<std::endl;
+	//DSTR<<"subMat"<<std::endl<<subMat<<std::endl;
+
+	//疑似逆行列からsubをmainに変換するaffin行列の数値を算出
+	TMatrixRow<4,4,float> subMatb = subMat.trans()* subMat;
+	transMat = subMatb.inv()* subMat.trans() * mainMat;
+
+	//Affin行列の形に整形
+	for(int i=0; i<3; i++){
+		for(int j=0; j<4; j++){
+			TAffine[i][j]=transMat[j][i];
+		}
+	}
+	TAffine[3][0]=0;
+	TAffine[3][1]=0;
+	TAffine[3][2]=0;
+	TAffine[3][3]=1;
+	
+	DSTR<<"TAffine"<<std::endl<<TAffine<<std::endl;
+	for(int i=0;i<6;i++){
+		DSTR<<"mainMat"<<mainMat[i]<<std::endl;
+		DSTR<<"subMat"<<subMat[i]<<std::endl;
+		Vec3d NewPosition = TAffine*subPosition[i];
+		DSTR<<"NewPosition"<<NewPosition<<std::endl;
+	}
+
+	Posed tPos;
+	tPos.FromAffine(TAffine);
+	GetINScene()->GetINPointer(0)->SetDefaultPosition(tPos);
+}
+
+void FWLDHapticSample::TwoPointerSet(){
+	Vec3d mainPos = GetINScene()->GetINPointer(0)->GetPointerSolid()->GetFramePosition();
+	Vec3d subPos = GetINScene()->GetINPointer(1)->GetPointerSolid()->GetFramePosition();
+
+	mainPosition.push_back(mainPos);
+	subPosition.push_back(subPos);
+
+	DSTR<<"mainPos"<<mainPosition.size()<<":"<<mainPos<<std::endl;
+	DSTR<<"subPos"<<subPosition.size()<<":"<<subPos<<std::endl;
+
+	//for(int i=0;i<4;i++){
+	//	mainPosition.push_back(Vec3d(0,0,0));
+	//	subPosition.push_back(Vec3d(0,0,0));
+	//}
+
+	//mainPosition.push_back(Vec3d(1,0,0));
+	//subPosition.push_back(Vec3d(3,0,0));
+	//mainPosition.push_back(Vec3d(0,1,0));
+	//subPosition.push_back(Vec3d(0,3,0));
+	//mainPosition.push_back(Vec3d(0,0,1));
+	//subPosition.push_back(Vec3d(0,0,3));
+	//mainPosition.push_back(Vec3d(0,2,1));
+	//subPosition.push_back(Vec3d(0,6,3));
 
 }
 
@@ -221,6 +292,19 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 			}
 			break;
 
+		case 'z':
+			{
+				TwoPointerSet();
+			}
+
+			break;
+			
+		case 'x':
+			{
+				TwoPointerCalib();
+			}
+
+			break;
 		default:
 			break;
 	}
