@@ -19,6 +19,7 @@ public:
 
 	virtual void UpdatePointer(){}
 	void Sync();
+	void SyncPointer();
 	virtual void Clear();
 
 	virtual void Init(){

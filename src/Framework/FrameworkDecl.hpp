@@ -16,6 +16,7 @@ protected:\
 	double	springK;	\
 	double	damperD;	\
 	Posed	defaultPosition;	\
+	Posed	pointersCalibPosition;	\
 	double	posScale;	\
 	double	forceScale;	\
 	double	localRange;	\
@@ -26,6 +27,7 @@ public:\
 		springK = ((FWInteractPointerDesc*)ptr)->springK;	\
 		damperD = ((FWInteractPointerDesc*)ptr)->damperD;	\
 		defaultPosition = ((FWInteractPointerDesc*)ptr)->defaultPosition;	\
+		pointersCalibPosition = ((FWInteractPointerDesc*)ptr)->pointersCalibPosition;	\
 		posScale = ((FWInteractPointerDesc*)ptr)->posScale;	\
 		forceScale = ((FWInteractPointerDesc*)ptr)->forceScale;	\
 		localRange = ((FWInteractPointerDesc*)ptr)->localRange;	\
@@ -38,6 +40,7 @@ public:\
 		((FWInteractPointerDesc*)ptr)->springK = springK;	\
 		((FWInteractPointerDesc*)ptr)->damperD = damperD;	\
 		((FWInteractPointerDesc*)ptr)->defaultPosition = defaultPosition;	\
+		((FWInteractPointerDesc*)ptr)->pointersCalibPosition = pointersCalibPosition;	\
 		((FWInteractPointerDesc*)ptr)->posScale = posScale;	\
 		((FWInteractPointerDesc*)ptr)->forceScale = forceScale;	\
 		((FWInteractPointerDesc*)ptr)->localRange = localRange;	\

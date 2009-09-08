@@ -14,6 +14,7 @@ public:
 	double		springK;
 	double		damperD;
 	Posed		defaultPosition;
+	Posed		pointersCalibPosition;
 	double		posScale;
 	double		forceScale;
 	double		localRange;
@@ -24,6 +25,7 @@ public:
 		springK = 0.0;
 		damperD = 0.0;
 		defaultPosition = Posed();
+		pointersCalibPosition = Posed();
 		posScale = 1.0;
 		forceScale = 1.0;
 		localRange = 0.1;
@@ -44,6 +46,8 @@ public:
 	double		GetForceScale();
 	void		SetLocalRange(double r);
 	double		GetLocalRange();
+	void		SetPointersCalibPosition(Posed p);
+	Posed		GetPointersCalibPosition();
 	void		SetDefaultPosition(Posed p);
 	Posed		GetDefaultPosition();
 	void		EnableForce(bool b);

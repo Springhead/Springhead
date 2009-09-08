@@ -33,6 +33,8 @@ public:
 	double		GetLocalRange();
 	void		SetDefaultPosition(Posed p);
 	Posed		GetDefaultPosition();
+	void		SetPointersCalibPosition(Posed p);
+	Posed		GetPointersCalibPosition();
 	void		EnableForce(bool b = true);
 	void		EnableVibration(bool b = true);
 	void		Calibration();

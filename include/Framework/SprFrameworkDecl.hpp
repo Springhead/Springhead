@@ -19,6 +19,8 @@
 	double GetForceScale(){	return	base::GetForceScale();}	\
 	void SetLocalRange(double r){	base::SetLocalRange(r);}	\
 	double GetLocalRange(){	return	base::GetLocalRange();}	\
+	void SetPointersCalibPosition(Posed p){	base::SetPointersCalibPosition(p);}	\
+	Posed GetPointersCalibPosition(){	return	base::GetPointersCalibPosition();}	\
 	void SetDefaultPosition(Posed p){	base::SetDefaultPosition(p);}	\
 	Posed GetDefaultPosition(){	return	base::GetDefaultPosition();}	\
 	void EnableForce(bool b){	base::EnableForce(b);}	\
