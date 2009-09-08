@@ -18,12 +18,27 @@ FWLDHapticLoop::FWLDHapticLoop(){
 }
 void FWLDHapticLoop::Step(){
 	UpdateInterface();
-#if 0
-	HapticRendering();
+#if 1
+	switch(hmode){
+		case PENALTY:
+			HapticRendering();
+			break;
+		case PROXY:
+			Proxy();
+			break;
+		case PROXYSIMULATION:
+			ProxySimulation();
+			break;
+		default:
+			std::cout << hmode << std::endl;
+			HapticRendering();
+			break;
+	}
 #else
+//	HapticRendering();
 	Proxy();
 //	ProxySimulation();
-#endif 
+#endif
 	LocalDynamics();
 }
 
@@ -291,8 +306,7 @@ void FWLDHapticLoop::Proxy(){
 				proxy[j][i] = poseSolid.Inv() * pPoint;
 			}
 		}
-		/// 
-//		if(outForce.v() > )
+
 		/// インタフェースへ力を出力
 		if(iPointer->bForce){
 			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){

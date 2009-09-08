@@ -36,6 +36,7 @@
 	int NINPointers(){	return	base::NINPointers();}	\
 	Spr::FWInteractMode GetINMode(){	return	base::GetINMode();}	\
 	Spr::FWHapticMode GetHMode(){	return	base::GetHMode();}	\
+	void SetHMode(Spr::FWHapticMode hMode){	base::SetHMode(hMode);}	\
 	void Init(){	base::Init();}	\
 	void Clear(){	base::Clear();}	\
 	void Step(){	base::Step();}	\

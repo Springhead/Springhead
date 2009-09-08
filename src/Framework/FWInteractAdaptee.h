@@ -9,6 +9,7 @@ namespace Spr{;
 
 class FWInteractScene;
 class FWInteractPointer;
+enum FWHapticMode;
 
 /** Hapticインタラクションのためのクラス*/
 class FWHapticLoopBase : public UTRefCount{
@@ -18,6 +19,7 @@ protected:
 public:
 	double pdt, hdt;
 	int loopCount;
+	FWHapticMode hmode;
 	FWHapticLoopBase(){}
 	FWInteractPointer* GetINPointer(int i){ return &interactPointers[i]; }
 	std::vector<FWInteractPointer>* GetINPointers(){ return &interactPointers;}
@@ -54,6 +56,7 @@ public:
 
 	/// HapticLoop関係
 	virtual FWHapticLoopBase* GetHapticLoop();
+	void SetHMode(FWHapticMode hMode);
 
 	/// INPointer関係(INSceneを介して取得)
 	FWInteractPointer* GetINPointer(int i = -1);

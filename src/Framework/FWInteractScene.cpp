@@ -31,6 +31,9 @@ void FWInteractScene::CreateINAdaptee(FWInteractMode inMode){
 FWInteractAdaptee* FWInteractScene::GetINAdaptee(){ return interactAdaptee; }
 FWInteractMode FWInteractScene::GetINMode(){ return mode; }
 FWHapticMode FWInteractScene::GetHMode(){ return hmode; }
+void FWInteractScene::SetHMode(FWHapticMode hMode){
+	GetINAdaptee()->SetHMode(hMode);
+}
 
 /// INPointerŠÖŒW
 FWInteractPointerIf* FWInteractScene::CreateINPointer(const FWInteractPointerDesc& desc){
