@@ -337,8 +337,7 @@ void FWAppHaptic::DisplayLineToNearestPoint(){
 
 void FWAppHaptic::Keyboard(int key, int x, int y){
 	//Solidを追加する場合，ObjectStatesIfのリリースが必要
-	FWLDHaptic* adaptee = (FWLDHaptic*)GetINScene(0)->GetINAdaptee();
-	adaptee->ReleaseState(GetSdk()->GetPHSdk()->GetScene(0));
+	BeginKeyboard();
 
 		switch (key) {
 		case  27: //ESC
@@ -409,7 +408,26 @@ void FWAppHaptic::Keyboard(int key, int x, int y){
 				}
 			}
 			break;
+		case 'j':
+			{
+					GetINScene()->SetHMode(PENALTY);
+					DSTR << "PENALTY MODE" << std::endl;
+					break;
+			}
+		case 'k':
+			{
+					GetINScene()->SetHMode(PROXY);
+					DSTR << "PROXY MODE" << std::endl;
+					break;
+			}
+		case 'l':
+			{
+					GetINScene()->SetHMode(PROXYSIMULATION);
+					DSTR << "PROXYSIMULATION MODE" << std::endl;
+					break;
+			}
 		default:
 			break;
 	}
+		EndKeyboard();
 }

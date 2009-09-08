@@ -21,13 +21,11 @@ typedef enum FWInteractMode{
 	NONE,
 	LOCAL_DYNAMICS
 }INMode;
-
 typedef enum FWHapticMode{
-	NOMAL,
+	PENALTY,
 	PROXY,
-	PRO_SIMU
+	PROXYSIMULATION
 }HMode;
-
 struct FWInteractSceneDesc{
 public:
 	FWSceneIf* fwScene;
@@ -38,7 +36,7 @@ public:
 	void Init(){
 		fwScene = NULL;
 		mode = NONE;
-		hmode = NOMAL;
+		hmode = PENALTY;
 		hdt = 0.001;
 	}
 };
@@ -56,6 +54,7 @@ public:
 	int						NINPointers();
 	FWInteractMode			GetINMode();
 	FWHapticMode			GetHMode();
+	void SetHMode(FWHapticMode hMode);
 
 	/// à»â∫ÇÃä÷êîÇÕadapteeÇÇ∆Ç®ÇµÇƒé¿ëïÇ™åƒÇŒÇÍÇÈ
 	void Init();
