@@ -100,6 +100,13 @@ void FWMultiRateHaptic::Sync(){
 	hapticcount++;
 }
 
+void FWMultiRateHaptic::SyncPointer(){
+	std::vector<FWInteractPointer>* hiPointers = GetHapticLoop()->GetINPointers();
+	for(int i = 0; i < NINPointers(); i++){
+		hiPointers->at(i)= *GetINPointer(i);
+	}
+}
+
 void FWMultiRateHaptic::Clear(){
 	GetHapticLoop()->Clear();
 	bSync = false;

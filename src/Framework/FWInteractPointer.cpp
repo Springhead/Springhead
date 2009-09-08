@@ -49,6 +49,14 @@ void  FWInteractPointer::SetDefaultPosition(Posed p){
 Posed  FWInteractPointer::GetDefaultPosition(){
 	return defaultPosition; 
 }
+
+void  FWInteractPointer::SetPointersCalibPosition(Posed p){
+	pointersCalibPosition = p;
+}
+
+Posed  FWInteractPointer::GetPointersCalibPosition(){
+	return pointersCalibPosition; 
+}
 void FWInteractPointer::EnableForce(bool b){
 	bForce = b;
 }
