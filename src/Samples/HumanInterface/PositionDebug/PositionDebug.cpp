@@ -219,24 +219,24 @@ void FWLDHapticSample::TwoPointerCalib(){
 	TAffine[3][3]=1;
 	
 	//DSTR<<"TAffine"<<std::endl<<TAffine<<std::endl;
-	//for(int i=0;i<6;i++){
-	//	DSTR<<"mainMat"<<mainMat[i]<<std::endl;
-	//	DSTR<<"subMat"<<subMat[i]<<std::endl;
-	//	Vec3d NewPosition = TAffine*subPosition[i];
-	//	DSTR<<"NewPosition"<<NewPosition<<std::endl;
-	//}
+	for(int i=0;i<6;i++){
+		DSTR<<"mainMat"<<mainMat[i]<<std::endl;
+		DSTR<<"subMat"<<subMat[i]<<std::endl;
+		Vec3d NewPosition = TAffine*subPosition[i];
+		DSTR<<"NewPosition"<<NewPosition<<std::endl;
+	}
 
 	tPos.FromAffine(TAffine);
+	GetINScene()->GetINPointer(1)->SetPointersCalibPosition(tPos);
 	//DSTR<<tPos<<std::endl;
 	//GetINScene()->GetINPointer(0)->SetDefaultPosition(Posed(1,0,0,0,10,0,0));
+	//DSTR<<GetINScene()->GetINPointer(0)->GetDefaultPosition()<<std::endl;
+	//DSTR<<GetINScene()->GetINPointer(1)->GetDefaultPosition()<<std::endl;
+	//DSTR<<"After"<<GetINScene()->GetINPointer(0)->GetDefaultPosition()<<std::endl;
+	//DSTR<<"After"<<GetINScene()->GetINPointer(1)->GetDefaultPosition()<<std::endl;
 
-	
-				
-	DSTR<<GetINScene()->GetINPointer(0)->GetDefaultPosition()<<std::endl;
-	DSTR<<GetINScene()->GetINPointer(1)->GetDefaultPosition()<<std::endl;
-	GetINScene()->GetINPointer(1)->SetDefaultPosition(tPos);
-	DSTR<<"After"<<GetINScene()->GetINPointer(0)->GetDefaultPosition()<<std::endl;
-	DSTR<<"After"<<GetINScene()->GetINPointer(1)->GetDefaultPosition()<<std::endl;
+	FWLDHaptic* adaptee = (FWLDHaptic*)GetINScene(0)->GetINAdaptee();
+	adaptee->SyncPointer();
 	
 	}
 	MTimerStart();
