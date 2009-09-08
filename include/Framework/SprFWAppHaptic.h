@@ -17,7 +17,7 @@ public:
 	virtual void Display();								///< 描画関数	
 	virtual void BuildScene();							///< 剛体の作成
 	virtual void BuildPointer();							///< 剛体の作成
-	virtual void Reset(){};								///< リセット(末実装)
+	virtual void Reset();								
 	virtual void Keyboard(int key, int x, int y);		///< キーボード関数
 
 	static void CallBackHapticLoop(void* arg);			///< hapticloopのコールバック

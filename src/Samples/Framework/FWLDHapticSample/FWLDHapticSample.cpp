@@ -41,6 +41,8 @@ void FWLDHapticSample::InitHumanInterface(){
 		AddHI(spg[i]);
 	}
 }
+
+
 void FWLDHapticSample::BuildPointer(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	PHSolidDesc desc;

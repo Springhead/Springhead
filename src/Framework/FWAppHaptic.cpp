@@ -85,6 +85,23 @@ void FWAppHaptic::InitHumanInterface(){
 	}
 }
 
+void FWAppHaptic::Reset(){
+	MTimerRelease();
+	GetSdk()->Clear();
+	INClear();
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
+	FWInteractSceneDesc desc;
+	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
+	desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
+	CreateINScene(desc);									// interactSceneの作成
+	BuildScene();
+	BuildPointer();
+	GetCurrentWin()->SetScene(GetSdk()->GetScene());
+	MTimerCreate();
+}
+
 void FWAppHaptic::Start(){
 	TimerStart();
 }
@@ -329,6 +346,9 @@ void FWAppHaptic::Keyboard(int key, int x, int y){
 			
 			exit(0);
 			break;
+		case 'r':
+			Reset();
+			break;
 		case 'd':
 			bDrawInfo = !bDrawInfo;
 			break;
@@ -347,7 +367,7 @@ void FWAppHaptic::Keyboard(int key, int x, int y){
 				for(int i = 0; i < GetINScene()->NINPointers(); i++){
 					GetINScene()->GetINPointer(i)->Calibration();
 				}
-				MTimerStart();
+				MTimerCreate();
 			}
 			break;
 		case 'f':
