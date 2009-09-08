@@ -211,17 +211,24 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 				break;
 			}
 		}
-		assert(j>=0);
+		if(j < 0){
+			if (ip[0] < ip[1] && ip[0] < ip[2]) j=0;
+			else if (ip[1] < ip[2]) j=1;
+			else j = 2;
+		}
 		if (j==0){
 			double a = p1*p1; double b = -p1*p2;
+			if (a+b == 0) a = b = 1;
 			r.x = b/(a+b);
 			r.y = a/(a+b);
 		}else if (j==1){
 			double a = p2*p2; double b = -p2*p3;
+			if (a+b == 0) a = b = 1;
 			r.y = b/(a+b);
 			r.z = a/(a+b);
 		}else{	//	j==2
 			double a = p3*p3; double b = -p3*p1;
+			if (a+b == 0) a = b = 1;
 			r.z = b/(a+b);
 			r.x = a/(a+b);
 		}
