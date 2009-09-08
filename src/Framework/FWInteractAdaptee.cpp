@@ -210,11 +210,11 @@ double FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf
 		/// CCDGJKÇÃé¿çs
 			//DSTR << "dir="<< dir << std::endl;
 		
-extern bool bCCDGJKDebug;
-		bCCDGJKDebug = false;
+extern bool bGJKDebug;
+		bGJKDebug = false;
 //		bCCDGJKDebug = true;
 		int cp = ContFindCommonPoint(ca, cb, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
-		bCCDGJKDebug = false;
+		bGJKDebug = false;
 		/// CCDGJKÇ™é∏îsÇµÇΩèÍçáÇÃèàóù
 		if(cp != 1){
 			ContFindCommonPointSaveParam(ca, cb, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
