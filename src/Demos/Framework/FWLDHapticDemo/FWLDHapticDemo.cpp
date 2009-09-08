@@ -101,7 +101,7 @@ void FWLDHapticDemo::Reset(){
 	BuildScene();
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 	InitCameraView();
-	MTimerStart();
+	MTimerCreate();
 }
 
 void FWLDHapticDemo::Start(){
@@ -373,7 +373,7 @@ void FWLDHapticDemo::Keyboard(int key, int x, int y){
 			for(int i = 0; i < GetINScene()->NINPointers(); i++){
 				GetINScene()->GetINPointer(i)->Calibration();
 			}
-			MTimerStart();
+			MTimerCreate();
 		}
 		break;
 	case 'f':
