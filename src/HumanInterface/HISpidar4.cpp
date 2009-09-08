@@ -147,7 +147,7 @@ void HISpidar4Desc::InitSpidarBig(char* type){
 			kp[i] = motorPos[0][i][1];
 		}
 	}
-	Init(4, mp, kp, 0.365296803653f, 1.66555e-5f*1.667, 0.3f, 15.0f);
+	Init(4, mp, kp, 0.365296803653f, 1.66555e-5f*1.667, 0.25f, 10.0f);
 
 	}
 	
