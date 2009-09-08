@@ -33,6 +33,8 @@ public:
 	void Render(GRRenderIf* r);
 	void Rendered(GRRenderIf* r);
 	virtual bool AddChildObject(ObjectIf* o);
+
+	void SetRender(GRRenderIf* r) {render = r;}
 };
 }
 #endif

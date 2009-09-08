@@ -105,7 +105,8 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 	PHSceneIf* phScene = creature->GetPHScene();
 	state->SaveState(phScene);
 	double dt = phScene->GetTimeStep();
-	for (int i=0; i<100; ++i) {
+	phScene->SetTimeStep(dt * 10);
+	for (int i=0; i<10; ++i) {
 		phScene->Step();
 	}
 	CRBodyIf* body = creature->GetBody(0);
@@ -115,7 +116,7 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 			BallJointGoal bjg;
 			bjg.first  = bj;
 			bjg.second = bj->GetGoal();
-:			ballGoals.push_back(bjg);
+			ballGoals.push_back(bjg);
 		}
 
 		PHHingeJointIf* hj = body->GetJoint(i)->GetPHJoint()->Cast();
