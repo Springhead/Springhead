@@ -76,7 +76,7 @@ void FWLDHapticDemo::InitHumanInterface(){
 	GetHISdk()->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
-
+#if 0
 	/// SPIDARG6を2台使う場合
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
@@ -85,6 +85,16 @@ void FWLDHapticDemo::InitHumanInterface(){
 		if(i == 1) spg[i]->Init(&HISpidarGDesc("SpidarG6X3L"));
 		AddHI(spg[i]);
 	}
+	#else
+	/// SPIDAR4Dを使う場合
+	UTRef<HISpidar4If> spg[2];
+	for(size_t i = 0; i < 2; i++){
+		spg[i] = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+		if(i == 0) spg[i]->Init(&HISpidar4Desc("SpidarR",Vec4i(1,2,3,4)));
+		if(i == 1) spg[i]->Init(&HISpidar4Desc("SpidarL",Vec4i(5,6,7,8)));
+		AddHI(spg[i]);
+	}
+#endif
 }
 
 void FWLDHapticDemo::Reset(){
@@ -199,10 +209,10 @@ void FWLDHapticDemo::BuildScene(){
 		idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
 		idesc.springK = 8;					// haptic renderingのバネ係数
 		idesc.damperD = 0.01;					// haptic renderingのダンパ係数
-		idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
+		idesc.posScale = 60;//300;					// soPointerの可動域の設定(～倍)
 		idesc.localRange = 0.7;//1.0;					// LocalDynamicsを使う場合の近傍範囲
-		if(i==0) idesc.defaultPosition =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
-		if(i==1) idesc.defaultPosition =Posed(1,0,0,0,-5,0,0);
+		if(i==0) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);	// 初期位置の設定
+		if(i==1) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);
 		GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
 	}
 }

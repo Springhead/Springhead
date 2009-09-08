@@ -163,7 +163,7 @@ void FWLDHapticSample::BuildPointer(){
 
 			GetINScene()->CreateINPointer(idesc);	// interactpointer�̍쐬
 		}
-		GetINScene()->GetINPointer(0)->SetDefaultPosition(Posed(1,0,0,0,10,0,0));
+		//GetINScene()->GetINPointer(0)->SetDefaultPosition(Posed(1,0,0,0,10,0,0));
 	}
 	//
 }
@@ -239,7 +239,7 @@ void FWLDHapticSample::TwoPointerCalib(){
 	adaptee->SyncPointer();
 	
 	}
-	MTimerStart();
+	MTimerCreate();
 
 }
 
