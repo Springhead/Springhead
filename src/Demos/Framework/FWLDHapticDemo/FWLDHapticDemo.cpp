@@ -87,6 +87,23 @@ void FWLDHapticDemo::InitHumanInterface(){
 	}
 }
 
+void FWLDHapticDemo::Reset(){
+	MTimerRelease();
+	GetSdk()->Clear();
+	INClear();
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
+	FWInteractSceneDesc desc;
+	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
+	desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
+	CreateINScene(desc);									// interactSceneの作成
+	BuildScene();
+	GetCurrentWin()->SetScene(GetSdk()->GetScene());
+	InitCameraView();
+	MTimerStart();
+}
+
 void FWLDHapticDemo::Start(){
 	TimerStart();
 }
@@ -334,6 +351,9 @@ void FWLDHapticDemo::Keyboard(int key, int x, int y){
 	case  27: //ESC
 	case 'q':
 		exit(0);
+		break;
+	case 'r':
+		Reset();
 		break;
 	case 'd':
 		bDrawInfo = !bDrawInfo;

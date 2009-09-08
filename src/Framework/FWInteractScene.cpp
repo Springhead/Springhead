@@ -63,10 +63,11 @@ void FWInteractScene::Step(){
 	GetINAdaptee()->Step();
 }
 void FWInteractScene::Clear(){
-	GetINAdaptee()->Clear();	
-}
-void FWInteractScene::Reset(){
-	GetINAdaptee()->Reset();
+	fwScene = NULL;
+	interactAdaptee = NULL;
+	curINPointer = NULL;
+	interactPointers.clear();
+	interactSolids.clear();
 }
 void FWInteractScene::CallBackHapticLoop(){
 	GetINAdaptee()->CallBackHapticLoop();
