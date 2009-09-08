@@ -3,6 +3,7 @@
 
 #include <Springhead.h>
 #include <Framework/SprFWAppHaptic.h>
+#include <vector>
 
 using namespace Spr;
 
@@ -17,7 +18,12 @@ public:
 	virtual void BuildPointer();						///< 剛体の作成	
 	virtual void Display();								///< 描画関数	
 	void Keyboard(int key, int x, int y);				///< キーボード関数
+
 	void TwoPointerCalib();								///< 2点のポインタの座標系を一致させる
+	void TwoPointerSet();								///< 2点のポインタの座標系を一致させる
+	std::vector<Vec3d> mainPosition;
+	std::vector<Vec3d> subPosition;
+
 
 	PH3ElementBallJointIf* Balljoint;
 }; 
