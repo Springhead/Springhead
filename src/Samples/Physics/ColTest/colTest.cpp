@@ -32,20 +32,28 @@ int main(){
 	UTRef<CDConvex> cB = new CDSphere(sdB);
 	Posed poseA, poseB;
 	double rr = sdA.radius + sdB.radius;
+/*
+	poseA.pz = rr-0.1;
+	poseA.px = 0.1;
+/*/
 	poseA.pz = sqrt(rr)-0.1;
 	poseA.px = sqrt(rr);
+/*/
+	poseA.pz = sqrt(3.0)/2*rr-0.1;
+	poseA.px = 0.5*rr;
+*/
 	Vec3d dir(0,0,1);
 	Vec3d normal, pa, pb;
 	double dist = 0;
 	for(int i=0; i<10; ++i){
 		int rt = ContFindCommonPoint(cA, cB, poseA, poseB, dir, -10, 10, normal, pa, pb, dist);
-		std::cout << rt;
-		std::cout << " normal:" << normal;
-		std::cout << " dist:" << dist;
-		std::cout << " pa pb:" << pa << pb << std::endl;
+		DSTR << rt;
+		DSTR << " normal:" << normal;
+		DSTR << " dist:" << dist;
+		DSTR << " pa pb:" << pa << pb << std::endl;
+		DSTR << "---------------------------------------------------------------------" << std::endl;
 		dir = -normal;
 	}
-	getchar();
 #endif
 	return 0;
 }

@@ -22,7 +22,7 @@
 #include <fstream>
 //#include <windows.h>
 
-bool bCCDGJKDebug;
+bool bGJKDebug;
 
 
 namespace Spr{;
@@ -143,7 +143,7 @@ void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
 	file << dist << std::endl;
 }
 void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk){
-	bCCDGJKDebug = true;
+	bGJKDebug = true;
 	const CDConvex* a;
 	const CDConvex* b;
 	Posed a2w, b2w;
@@ -196,21 +196,31 @@ inline char FindVacantId(char a, char b, char c){
 inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 	double det = p1.x*(p2.y-p3.y) + p2.x*(p3.y-p1.y) + p3.x*(p1.y-p2.y);
 	Vec3d r;
-	if (det){
+	if (abs(det) > epsilon){
 		double detInv = 1/det;
 		r.x = detInv * (p2.x*p3.y-p3.x*p2.y);
 		r.y = detInv * (p3.x*p1.y-p1.x*p3.y);
 		r.z = 1 - r.x - r.y;
 	}else{
-		if (p1*p2 < 0){
+		double ip[3] = {p1*p2, p2*p3, p3*p1};
+		int j=-1;
+		for(int i=0; i<3; ++i){
+			if (ip[i]<=0 && ip[(i+1)%3]<=0){
+				if (ip[i] > ip[(i+1)%3]) j = i;
+				else j = (i+1)%3;
+				break;
+			}
+		}
+		assert(j>=0);
+		if (j==0){
 			double a = p1*p1; double b = -p1*p2;
 			r.x = b/(a+b);
 			r.y = a/(a+b);
-		}else if (p2*p3 < 0){
+		}else if (j==1){
 			double a = p2*p2; double b = -p2*p3;
 			r.y = b/(a+b);
 			r.z = a/(a+b);
-		}else if (p3*p1 < 0){
+		}else{	//	j==2
 			double a = p3*p3; double b = -p3*p1;
 			r.z = b/(a+b);
 			r.x = a/(a+b);
@@ -364,6 +374,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	//	三角形を小さくしていく
 	int notuse = -1;
 	int count = 0;
+	Vec3d lastV;
 	Vec3d lastTriV;
 	double lastZ = DBL_MAX;
 	while(1){
@@ -373,7 +384,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			DSTR << "Too many loop in CCDGJK." << std::endl;
 			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
 			//DebugBreak();
-			bCCDGJKDebug = true;
+			bGJKDebug = true;
 #endif
 		}
 		Vec3d s;		//	三角形の有向面積
@@ -383,7 +394,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				std::swap(ids[1], ids[2]);
 				s *= -1;
 			}
-			if (bCCDGJKDebug) DSTR << "TRI ";
+			if (bGJKDebug) DSTR << "TRI ";
 			//	三角形になる場合
 			notuse = -1;
 			lastTriV = v[ids[3]] = s.unit();	//	3角形の法線を使う
@@ -391,12 +402,13 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			//	新しい w w[3] を求める
 			CalcSupport(ids[3]);
 		}else{
-			if (bCCDGJKDebug) DSTR << "LINE";
+			if (bGJKDebug) DSTR << "LINE";
 			int id0, id1;
 			if (notuse >= 0){	
 				//	前回も線分だった場合。新しい点と古い線分のどちらかの頂点で新たな線分を作る。
 				double ip1 = w[ids[notuse]].XY() * w[ids[(notuse+1)%3]].XY();
 				double ip2 = w[ids[notuse]].XY() * w[ids[(notuse+2)%3]].XY();
+				double ipN = w[ids[(notuse+1)%3]].XY() * w[ids[(notuse+2)%3]].XY();
 				if (ip1 < ip2){
 					id0 = notuse;
 					id1 = (notuse+1)%3;
@@ -442,25 +454,21 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			if (lastTriV.square() != 0){
 				v[ids[3]] = lastTriV;
 			}else{
-				//	//	初めてならば、2頂点を求めたときのsupport用法線の平均をつかう。
-				//	lastTriV = v[ids[3]] = (v[ids[id0]] + v[ids[id1]]).unit();
-
-				//	hase08.08.03: 
-				//	上，怪しい．これも怪しいけど．平均じゃなくて，線分に垂直な平均では？ 
+				//	初めてならば、2頂点の法線の平均の線分に垂直な成分をつかう。
 				Vec3d ave = v[ids[id0]] + v[ids[id1]];
 				Vec3d line = (w[ids[id1]] - w[ids[id0]]).unit();
 				ave = ave - (ave * line) * line;
-				/*lastTriV = */
 				v[ids[3]] = ave.unit();
 			}
 			CalcSupport(ids[3]);
 		}
-		if (bCCDGJKDebug){
+		if (bGJKDebug){
 			DSTR << "v:" << v[ids[3]];
 			for(int i=0; i<4; ++i){
 				DSTR << "  w[" << (int) ids[i] << "] = " << w[ids[i]];
 			}
 			DSTR << std::endl;
+			/*	//	ExcelでWとVを見るための出力	
 			for(int j=0; j<3; ++j) DSTR << v[ids[3]][j] << "\t";
 			DSTR << std::endl;
 			for(int i=0; i<4; ++i){
@@ -469,11 +477,10 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				DSTR << std::endl;
 			}
 			DSTR << std::endl;
+			*/
 
 			DSTR << "notuse:" << notuse;
 			for(int i=0; i<4; ++i) DSTR << " " << ids[i];
-			DSTR << std::endl;
-//			DSTR << "Improvement: " << improvement << std::endl;
 		}
 		if (notuse>=0){	//	線分の場合、使った2点と新しい点で三角形を作る
 			int nid[3];
@@ -482,7 +489,10 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			nid[2] = ids[3];
 			Vec3d dec = TriDecompose(w[nid[0]].XY(), w[nid[1]].XY(), w[nid[2]].XY());
 			double newZ = w[nid[0]].z * dec[0] + w[nid[1]].z * dec[1] + w[nid[2]].z * dec[2];
-			if (newZ >= lastZ) goto final;
+			if (bGJKDebug){
+				DSTR << " newZ:" << newZ << "  dec:"<< dec << std::endl;
+			}
+			if (newZ + epsilon >= lastZ) goto final;
 			lastZ = newZ;
 			std::swap(ids[notuse], ids[3]);
 		}else{
@@ -510,7 +520,10 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			int nid2 = ids[3];
 			Vec3d dec = decs[i];
 			double newZ = w[nid0].z * dec[0] + w[nid1].z * dec[1] + w[nid2].z * dec[2];
-			if (newZ >= lastZ) goto final;
+			if (bGJKDebug){
+				DSTR << " newZ:" << newZ << std::endl;
+			}
+			if (newZ + epsilon >= lastZ) goto final;
 			lastZ = newZ;
 			std::swap(ids[(i+2)%3], ids[3]);
 		}
