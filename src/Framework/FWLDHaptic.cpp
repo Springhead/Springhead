@@ -30,7 +30,6 @@ void FWLDHapticLoop::Step(){
 			ProxySimulation();
 			break;
 		default:
-			std::cout << hmode << std::endl;
 			HapticRendering();
 			break;
 	}
