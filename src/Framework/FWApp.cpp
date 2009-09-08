@@ -39,15 +39,15 @@ void FWApp::Reshape(int w, int h){
 	fwSdk->Reshape(w, h);
 }
 
-void FWApp::MTimerRelease(){
+void FWApp::MTimerCreate(){
 	for(int i=0; i< (int)mmtimer.size(); i++){
-		mmtimer[i]->Release();
+		mmtimer[i]->Create();
 	}
 }
 
-void FWApp::MTimerStart(){
+void FWApp::MTimerRelease(){
 	for(int i=0; i< (int)mmtimer.size(); i++){
-		mmtimer[i]->Create();
+		mmtimer[i]->Release();
 	}
 }
 

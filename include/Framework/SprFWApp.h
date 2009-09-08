@@ -212,8 +212,8 @@ protected:
 public:
 	UTMMTimer* CreateMMTimerFunc();
 	UTMMTimer* GetMMTimerFunc(int n);
+	void MTimerCreate();
 	void MTimerRelease();
-	void MTimerStart();
 /**タイマ　*/
 protected:
 	typedef UTRef<GTimer> UTRef_GTimer;
