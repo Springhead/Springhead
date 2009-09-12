@@ -23,15 +23,16 @@ private:
 public:
 	FWMultiWinSample2();	
 	virtual void Init(int argc, char* argv[]);
-	virtual void InitCameraView();	
-	virtual void Start();
-	virtual void Reset();
-	virtual void CallStep(int i);
-	static void _cdecl Step1(int id);
-	static void _cdecl Step2(int id);
-	static void _cdecl Step3(int id);
+	virtual void TimerFunc(int id);
 	virtual void Display();
 	virtual void Keyboard(int key, int x, int y);	
+	
+	void InitCameraView();	
+	void Reset();
+	/*void CallStep(int i);
+	static void _cdecl Step1(int id);
+	static void _cdecl Step2(int id);
+	static void _cdecl Step3(int id);*/
 };
 
 #endif

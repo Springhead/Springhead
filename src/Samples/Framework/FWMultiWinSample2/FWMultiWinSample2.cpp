@@ -56,7 +56,10 @@ void FWMultiWinSample2::Init(int argc, char* argv[]){
 	InitCameraView();
 
 	/// コールバックタイマの作成と設定 
-	for(int i = 0; i< (int)GetSdk()->NScene(); i++){
+	for(int i = 0; i < (int)GetSdk()->NScene(); i++){
+		CreateTimer()->SetInterval((int)(1000.0 * GetSdk()->GetScene(i)->GetPHScene()->GetTimeStep()));
+	}
+	/*for(int i = 0; i< (int)GetSdk()->NScene(); i++){
 		GTimer* timer = CreateTimerFunc();
 		timer->Interval(GetSdk()->GetScene(i)->GetPHScene()->GetTimeStep());
 	}
@@ -65,7 +68,8 @@ void FWMultiWinSample2::Init(int argc, char* argv[]){
 	GetTimerFunc(2)->Set(Step3);
 	for(int i = 0; i< (int)GetSdk()->NScene(); i++){
 		GetTimerFunc(i)->Create(GetGRAdaptee());
-	}
+	}*/
+
 }
 
 void FWMultiWinSample2::InitCameraView(){
@@ -78,9 +82,6 @@ void FWMultiWinSample2::InitCameraView(){
 	issView >> cameraInfo.view;
 }
 
-void FWMultiWinSample2::Start(){
-	TimerStart();
-}
 void FWMultiWinSample2::Reset(){
 	GetSdk()->Clear();
 	DSTR << "Reload the Xfile" << std::endl;
@@ -90,7 +91,7 @@ void FWMultiWinSample2::Reset(){
 	}
 	InitCameraView();	
 }
-
+/*
 void FWMultiWinSample2::Step1(int id){ 
 	((FWMultiWinSample2*)instance)->GetTimerFunc(0)->Loop();
 	((FWMultiWinSample2*)instance)->CallStep(0);
@@ -103,8 +104,8 @@ void FWMultiWinSample2::Step3(int id){
 	((FWMultiWinSample2*)instance)->GetTimerFunc(2)->Loop();
 	((FWMultiWinSample2*)instance)->CallStep(2); 
 }
-
-void FWMultiWinSample2::CallStep(int i){
+*/
+void FWMultiWinSample2::TimerFunc(int i){
 	GetSdk()->GetScene(i)->Step();
 	SetCurrentWin(GetWin(i));
 	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();

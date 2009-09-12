@@ -10,17 +10,16 @@ class FWAppSample : public FWApp{
 public:
 	FWAppSample();									// コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
 	virtual void Init(int argc, char* argv[]);		// GLUTの初期化
-	virtual void Timer();
+	virtual void TimerFunc(int id);
 	virtual void IdleFunc();
+	virtual void Display();							// 描画
+	virtual void Keyboard(int key, int x, int y);	// キーボード関数
+	
 	void InitCameraView();							// カメラ座標		
 	void BuildObject();								// 物体を作成
 	void Step();									// シミュレーションを1ステップ進める
-	void Display();									// 描画
 	void Reset();									// シーンのリセット
-	void Keyboard(int key, int x, int y);			// キーボード関数
 	bool bDrawInfo;									// 接触力などを表示するか
-	static void _cdecl TimerFunc(int id);
-	void CallStep();
 }; 
 
 #endif

@@ -1,4 +1,4 @@
-#include "FWAppSample.h"
+#include "FWGLUISample.h"
 #include "SampleModel.h"
 #include <iostream>
 #include <sstream>
@@ -7,28 +7,23 @@
 
 #define ESC 27
 
-FWAppSample* FWAppSample::ins;
-
-FWAppSample::FWAppSample(){
+FWGLUISample::FWGLUISample(){
 	bDrawInfo = false;
 }
 
-void FWAppSample::Init(int argc, char* argv[]){
-	ins=this;
-	SetGRAdaptee(grAdapteeType::TypeGLUI);
-	GetGRAdaptee()->Init(argc, argv);										// Sdkの作成
+void FWGLUISample::Init(int argc, char* argv[]){
+	SetGRAdaptee(TypeGLUI);
+	GetGRAdaptee()->Init(argc, argv);						// Sdkの作成
 	CreateSdk();
-	GetSdk()->Clear();														// SDKの初期化
+	GetSdk()->Clear();										// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);
 
-	FWWinDesc windowDesc;												// GLのウィンドウディスクリプタ
-	windowDesc.title = "FWAppSample";								// ウィンドウのタイトル
-	CreateWin(windowDesc);												// ウィンドウの作成
+	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
+	windowDesc.title = "FWAppSample";						// ウィンドウのタイトル
+	CreateWin(windowDesc);									// ウィンドウの作成
 	InitWindow();
 	
-	glutDisplayFunc(FWAppSample::CallDisplay);
-
 	FWGLUIDesc uiDesc;
 	{
 		uiDesc.fromLeft = 510;	uiDesc.fromTop	=  30;
@@ -38,19 +33,12 @@ void FWAppSample::Init(int argc, char* argv[]){
 		DesignGUI();
 	}
 
-	InitCameraView();														// カメラビューの初期化
-
-	BuildObject();																// 剛体を作成
+	InitCameraView();										// カメラビューの初期化
+	BuildObject();											// 剛体を作成
+	CreateTimer()->SetInterval(10);							// タイマを作成，周期10ms
 }
 
-void FWAppSample::Timer(){
-	GTimer* timer0 = CreateTimerFunc();
-	//GetTimerFunc(0)->Interval(10);			/// 呼びだし頻度
-	GetTimerFunc(0)->Set(TimerFunc);			/// 呼びだす関数
-	GetTimerFunc(0)->Create(GetGRAdaptee());
-}
-
-void FWAppSample::InitCameraView(){
+void FWGLUISample::InitCameraView(){
 	//	Affinef 型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
 	std::istringstream issView(
 		"((0.9996 0.0107463 -0.0261432 -0.389004)"
@@ -61,7 +49,7 @@ void FWAppSample::InitCameraView(){
 	issView >> cameraInfo.view;
 }
 
-void FWAppSample::BuildObject(){
+void FWGLUISample::BuildObject(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	PHSolidDesc desc;
 	CDBoxDesc bd;
@@ -97,23 +85,15 @@ void FWAppSample::BuildObject(){
 	}
 }
 
-void FWAppSample::Step(){
+void FWGLUISample::Step(){
 	GetSdk()->Step();
 }
-void FWAppSample::CallStep(){
-	if(!vfBridge || !vfBridge->Step())
-		Step();
-}
-void FWAppSample::TimerFunc(int id){
-	ins->GetTimerFunc(0)->Loop();
-	ins->CallStep();
+
+void FWGLUISample::TimerFunc(int id){
+	Step();
 }
 
-void FWAppSample::CallDisplay(){
-	ins->Display();
-}
-
-void FWAppSample::Display(){
+void FWGLUISample::Display(){
 	// 描画モードの設定
 	GetSdk()->SetDebugMode(true);
 	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
@@ -140,12 +120,12 @@ void FWAppSample::Display(){
 	glutPostRedisplay();
 }
 
-void FWAppSample::Reset(){
+void FWGLUISample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->Clear();
 	BuildObject();
 }
 
-void FWAppSample::Keyboard(int key, int x, int y){
+void FWGLUISample::Keyboard(int key, int x, int y){
 	switch (key) {
 		case ESC:
 		case 'q':
@@ -179,18 +159,16 @@ void FWAppSample::Keyboard(int key, int x, int y){
 }
 
 
-void FWAppSample::DesignGUI(){
+void FWGLUISample::DesignGUI(){
 	panel = glui->add_panel("Sample", true);
-
 	button1 = glui->add_button_to_panel(panel, "Create Box", 1, GLUI_CB(CallButton1));
-	
 }
 
-void FWAppSample::CallButton1(int control){
-	((FWAppSample*)FWAppSample::instance)->Button1(control);
+void FWGLUISample::CallButton1(int control){
+	((FWGLUISample*)FWApp::instance)->Button1(control);
 }
 
-void FWAppSample::Button1(int control){
+void FWGLUISample::Button1(int control){
 	Keyboard('1', 0, 0);
 }
 

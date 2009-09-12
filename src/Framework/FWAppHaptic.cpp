@@ -103,7 +103,7 @@ void FWAppHaptic::Reset(){
 }
 
 void FWAppHaptic::Start(){
-	TimerStart();
+	StartMainLoop();
 }
 
 void FWAppHaptic::IdleFunc(){

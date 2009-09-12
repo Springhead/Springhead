@@ -27,25 +27,18 @@ protected:
 	FWApp*	 fwApp;
 public:	
 	FWGraphicsAdaptee();
-	void SetAdapter(FWApp* a){ fwApp = a; };	// FWAppの設定
-	FWApp* GetFWApp(){ return fwApp; };			// FWAppの取得
+	void SetAdapter(FWApp* a){ fwApp = a; }	// FWAppの設定
+	FWApp* GetFWApp(){ return fwApp; }		// FWAppの取得
 	
 	///	初期化を行う。最初にこれを呼ぶ必要がある。
-	virtual void Init(int argc = 0, char* argv[] = NULL){};
+	virtual void Init(int argc = 0, char* argv[] = NULL){}
 	
 	/** タイマ */
 	/// タイマーを設定する
-	virtual void Timer(int i){};
-	/// タイマーを作成する
-	virtual void AddTimer(){};
-	/// 最後に作成したタイマーの番号を返す
-	virtual int GetTimerNo(){return NULL;};
-	/// i番目のタイマーにTimerfuncを設定する
-	virtual void SetTimerFunc(GTimerFunc* f ,int i){};
-	/// Timerfuncで呼ぶことにより，ループを作成する
-	virtual void Loop(int i,double timeSteo){};
+	virtual void SetTimer(int i, int interval)=0;
+
 	/// mainloopを呼び，タイマーをスタートする
-	virtual void TimerStart(){};
+	virtual void StartMainLoop()=0;
 
 	/** ウィンドウ */
 	///	ウィンドウを作成し、ウィンドウ IDを返す

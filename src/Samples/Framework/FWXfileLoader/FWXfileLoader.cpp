@@ -41,10 +41,6 @@ void FWXfileLoader::InitCameraView(){
 	issView >> cameraInfo.view;
 }
 
-void FWXfileLoader::Start(){
-	TimerStart();
-}
-
 void FWXfileLoader::Reset(){
 	GetSdk()->Clear();		
 	GetSdk()->LoadScene("./xFiles/sceneSample.x");

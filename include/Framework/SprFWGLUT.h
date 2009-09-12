@@ -27,13 +27,12 @@ public:
 	FWGLUTDesc();
 };
 
-class FWGLUT :public FWGraphicsAdaptee, public FWGLUTDesc{
-
+class FWGLUT : public FWGraphicsAdaptee, public FWGLUTDesc{
 protected:
 	/** glutTimerfuncを管理するクラス */
-	class FWGLUTTimer : public UTRefCount{
+	/*class FWGLUTTimer : public UTRefCount{
 	public:
-		static FWGLUTTimer* timerInstance;
+		//static FWGLUTTimer* timerInstance;
 		GTimerFunc* func;					//glutTimerFuncで呼び出す関数
 		void SetTimerFunc(GTimerFunc* f);	//funcを設定する
 		void GetTimerFunc();				//funcを取得する
@@ -41,6 +40,10 @@ protected:
 	typedef UTRef<FWGLUTTimer> UTRef_FWGLUTTimer;
 	typedef vector<UTRef_FWGLUTTimer> FWGLUTTimers;
 	FWGLUTTimers glutTimer;
+	/// タイマーを取得する
+	FWGLUTTimer* GetTimer(int i){
+		return (i < (int)glutTimer.size() ? glutTimer[i] : NULL);
+	}*/
 
 	/** コールバック関数*/
 	static FWGLUT* instance;
@@ -56,25 +59,22 @@ public:
 	FWGLUT();
 	~FWGLUT();
 
-	
 	///	GLUTの初期化を行う。最初にこれを呼ぶ必要がある。
 	virtual void Init(int argc, char* argv[]);
 	
 	/** タイマ */
 	/// タイマーを設定する
-	virtual void Timer(int i);
+	virtual void SetTimer(int id, int interval);
 	/// タイマーを作成する
-	virtual void AddTimer();
+	//virtual void AddTimer();
 	/// 最後に作成したタイマーの番号を返す
-	virtual int GetTimerNo();
+	//virtual int NTimers();
 	/// i番目のタイマーにTimerfuncを設定する
-	virtual void SetTimerFunc(GTimerFunc* f ,int i=0);
+	//virtual void SetTimerFunc(GTimerFunc* f ,int i=0);
 	/// mainloopを呼ぶ
-	virtual void Loop(int i,double teimeStep);
+	//virtual void Loop(int i,double timeStep);
 	///GLUTによるTimerをスタートする
-	virtual void TimerStart();
-	/// タイマーを取得する
-	virtual FWGLUTTimer* GetTimer(int i);
+	virtual void StartMainLoop();
 
 	/** ウィンドウ */
 	///	ウィンドウを作成し、ウィンドウ IDを返す

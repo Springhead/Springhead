@@ -1,4 +1,5 @@
 #include <Framework/FWAppInfo.h>
+#include <Framework/SprFWApp.h>
 #include <Springhead.h>
 
 namespace Spr{;
@@ -8,6 +9,7 @@ CameraInfo::CameraInfo():
 	rotRangeY(Rad(-180.0), Rad(180.0)), rotRangeX(Rad(-80.0), Rad(80.0)), zoomRange(0.01f, 100.0f){
 	UpdateView();
 }
+
 void CameraInfo::UpdateView(){
 	view  = Affinef();
 	view.Pos() = target + zoom * Vec3f(
@@ -17,29 +19,39 @@ void CameraInfo::UpdateView(){
 	view.LookAtGL(target);
 }
 
-GTimer::GTimer(){
+void GTimer::GTimerFunc(int id){
+	FWApp* app = FWApp::instance;
+	if(!app)return;
+	
+	app->TimerFunc(id);
+	
+	// タイマーの再始動
+	// 周期が指定されていればその値を採用
+	int ms = app->GetTimer(id)->GetInterval();
+	// それ以外はアクティブシーンのtime stepから決定
+	if(!ms){
+		FWSceneIf* scene = app->GetSdk()->GetScene();
+		if(scene && scene->GetPHScene()){
+			ms = (int)(scene->GetPHScene()->GetTimeStep() * 1000.0);
+			if(ms < 1) ms = 1;
+		}
+	}
+	app->GetGRAdaptee()->SetTimer(id, ms);
+
+	// 再描画要求
+	app->GetGRAdaptee()->PostRedisplay();
+}
+
+GTimer::GTimer(int _id){
+	id			=	_id;
 	interval	=	0;
-	func		=	NULL;			
-	adaptee		=	NULL;
-	adapteeNo	=	NULL;
 }
-void GTimer::Interval(unsigned i){
-	interval	=	i;
+void GTimer::SetInterval(unsigned ms){
+	interval	=	ms;
 }
-void GTimer::Set(GTimerFunc* f){
-	func = f;
-}
-
-void GTimer::Create(FWGraphicsAdaptee* a){
-	adaptee=a;
-	adaptee->AddTimer();
-	adapteeNo=adaptee->GetTimerNo();
-	adaptee->SetTimerFunc(func,adapteeNo);
-	adaptee->Timer(adapteeNo);
-}
-
-void GTimer::Loop(){
-	adaptee->Loop(adapteeNo,interval);
+void GTimer::Create(){
+	FWGraphicsAdaptee* adaptee = (FWApp::instance)->GetGRAdaptee();
+	adaptee->SetTimer(id, interval);
 }
 
 }

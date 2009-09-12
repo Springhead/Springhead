@@ -26,30 +26,17 @@ void FWAppSample::Init(int argc, char* argv[]){
 	InitCameraView();										// カメラビューの初期化
 
 	BuildObject();											// 剛体を作成
+
+	CreateTimer();											// タイマーの生成
 }
 
-void FWAppSample::Timer(){
-	GTimer* timer0 = CreateTimerFunc();			// タイマーの生成
-	GetTimerFunc(0)->Set(TimerFunc);			// 呼びだす関数
-	GetTimerFunc(0)->Create(GetGRAdaptee());	// GLUT型でタイマーを作成
-}
 void FWAppSample::TimerFunc(int id){
-	((FWAppSample*)instance)->GetTimerFunc(0)->Loop();
-	//---------------------------------------------
-	//int timeSteps=1;
-	//timeSteps = (int)(FWAppSample::instance->GetSdk()->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
-	//if (timeSteps<1) timeSteps = 1;
-	//glutTimerFunc(timeSteps, TimerFunc, 0);
-	//---------------------------------------------
-	((FWAppSample*)instance)->CallStep();
-	((FWAppSample*)instance)->GetGRAdaptee()->PostRedisplay();
+	Step();
 }
+
 void FWAppSample::IdleFunc(){
 }
-void FWAppSample::CallStep(){
-	if(!vfBridge || !vfBridge->Step())
-		Step();
-}
+
 void FWAppSample::InitCameraView(){
 	//	Affinef 型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
 	std::istringstream issView(
@@ -115,7 +102,7 @@ void FWAppSample::Display(){
 	if (cam && cam->GetFrame()){
 		cam->GetFrame()->SetTransform(cameraInfo.view);
 	}else{
-		GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
+		render->SetViewMatrix(cameraInfo.view.inv());
 	}
 
 	// 描画の実行
