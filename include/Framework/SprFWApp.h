@@ -31,13 +31,13 @@ private:
 	UTRef<HISdkIf>						hiSdk;	
 public:
 	virtual ~FWApp();
-	Wins								wins;		//ウィンドウ情報
-	UTRef<FWVFuncBridge>				vfBridge;
+	Wins								wins;		///< ウィンドウ情報
+	UTRef<FWVFuncBridge>				vfBridge;	///< 多言語(Rubyなど)へポートする際に仮想関数が適切に呼ばれるようにするためのブリッジ
 
 protected:
-	MouseInfo							mouseInfo;	//マウス情報
-	CameraInfo							cameraInfo;	//カメラ情報
-	std::map<FWSceneIf*, DragInfo>		dragInfo;	//剛体ドラッグ情報
+	MouseInfo							mouseInfo;	///< マウス情報
+	CameraInfo							cameraInfo;	///< カメラ情報
+	std::map<FWSceneIf*, DragInfo>		dragInfo;	///< 剛体ドラッグ情報
 
 public:
 // 派生クラスで定義する必要がある仮想関数 -----------------------------
@@ -46,10 +46,7 @@ public:
 		FWAppオブジェクトの初期化を行う．最初に必ず呼ぶ．
 	 */
 	virtual void Init(int argc = 0, char* argv[] = NULL)=0;
-	/** @brief タイマー処理
-		繰り返し実行を行う．
-	 */
-	virtual void Timer(){}
+
 	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．
 		描画処理をカスタマイズしたい場合にオーバライドする．
@@ -62,11 +59,18 @@ public:
 	/** @brief アイドル処理
 		イベントが何もない場合にバックグラウンド処理を行う．
 	 */
-	virtual void IdleFunc(){};
+	virtual void IdleFunc(){}
+
+	/** @brief タイマー処理
+		繰り返し実行を行う．
+	 */
+	virtual void TimerFunc(int id){}
+	
 	/** @brief メインループの実行
 		glutの場合，glutIdleFunc,glutmainLoopの実行
 	 */
-	virtual void TimerStart();
+	virtual void StartMainLoop();
+
 	/** @brief 描画領域のサイズ変更
 		@param w 描画領域の横幅
 		@param h 描画領域の縦幅
@@ -74,13 +78,16 @@ public:
 		デフォルトではFWSdk::Reshapeが呼ばれる．
 	 */
 	virtual void Reshape(int w, int h);
+
 	/** @brief キーボードイベントのハンドラ
 	 */
 	virtual void Keyboard(int key, int x, int y){}
+
 	/** @brief キーボードイベントのハンドラ
 		Keyboard関数のはじめに呼ぶ
 	 */
 	void BeginKeyboard();
+
 	/** @brief キーボードイベントのハンドラ
 		Keyboard関数の終わりに呼ぶ
 	 */
@@ -167,15 +174,14 @@ public:
 private:
 	UTRef<FWGraphicsAdaptee>	grAdaptee;	//グラフィクスシステムのアダプティ
 public:
-	FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;};
-
 	enum grAdapteeType{
 		TypeGLUT,
 		TypeGLUI,
 	};
+	FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;};
 	void SetGRAdaptee(grAdapteeType type);
 
-/**コールバック関数*/
+/** コールバック関数*/
 public:
 	static FWApp* instance;
 	void CallDisplay();
@@ -206,7 +212,7 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-/**マルチメディアタイマ */
+/** マルチメディアタイマ */
 protected:
 	vector<UTMMTimer*> mmtimer;				/// マルチメディアタイマの宣言
 public:
@@ -214,13 +220,27 @@ public:
 	UTMMTimer* GetMMTimerFunc(int n);
 	void MTimerCreate();
 	void MTimerRelease();
-/**タイマ　*/
+
+/** タイマ　*/
 protected:
 	typedef UTRef<GTimer> UTRef_GTimer;
-	vector<UTRef_GTimer> gTimer;
+	vector<UTRef_GTimer> gTimers;
 public:
-	GTimer* CreateTimerFunc();
-	GTimer* GetTimerFunc(int n);
+
+	/** @brief タイマーを作成する
+		最初に作成されたタイマのIDは0．その後は1ずつ増加する．ReleaseTimerによって既存のタイマのIDが変化することは無い．
+		タイマ周期の初期値は0．周期が0の場合はアクティブなシーンのtime stepがタイマ周期となる．
+		異なる周期を設定する場合はGTimer::SetIntervalを使用する．
+	 */
+	GTimer* CreateTimer();
+
+	/** @brief タイマーを解放する
+		未実装
+	*/
+	void ReleaseTimer(int id){}
+
+	/** @brief タイマーを取得する */
+	GTimer* GetTimer(int id);
 };
 
 }

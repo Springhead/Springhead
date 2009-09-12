@@ -30,14 +30,15 @@ private:
 public:
 	FWMultiWinSample();	
 	virtual void Init(int argc, char* argv[]);
-	virtual void InitCameraView();
-	virtual void Start();
-	virtual void Reset();
-	static void _cdecl CallBack(int id);
-	virtual void Step();
+	virtual void TimerFunc(int id);
 	virtual void Display();
+	virtual void Keyboard(int key, int x, int y);
+
+	void InitCameraView();
+	void Reset();
+	void Step();
 	void DebugDisplay(bool bDebug);
-	virtual void Keyboard(int key, int x, int y);	
+	
 };
 
 #endif

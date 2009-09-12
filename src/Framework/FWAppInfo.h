@@ -117,22 +117,23 @@ struct DragInfo{
 };
 
 
-class FWGraphicsAdaptee;
-typedef void SPR_CDECL GTimerFunc(int id);
-
+/// タイマ．
 class  GTimer : public UTRefCount{
-
 public:
-	GTimer();
+	static void SPR_CDECL GTimerFunc(int id);	///<	タイマーコールバック関数
+	GTimer(int id);
 private:
-	unsigned interval;					///<	タイマーの時間間隔
-	GTimerFunc* func;					///<	時間が来るたびに呼ばれるコールバック関数．							///<	コールバック関数に渡す引数
-	FWGraphicsAdaptee* adaptee;
-	int adapteeNo;
+	unsigned id;								///<	タイマーID
+	unsigned interval;							///<	タイマーの時間間隔[ms]
+	//GTimerFunc* func;							///<	時間が来るたびに呼ばれるコールバック関数．							///<	コールバック関数に渡す引数
+	//FWApp*				app;					///<	FWAppインスタンスへの参照
+	//FWGraphicsAdaptee*	adaptee;
+	//int adapteeNo;
 public:
-	void Interval(unsigned i);				///<	タイマーの時間間隔の設定
-	void Set( GTimerFunc* f);
-	void Create(FWGraphicsAdaptee* a);
+	void SetInterval(unsigned ms);				///<	タイマーの時間間隔の設定
+	unsigned GetInterval(){return interval;}	///<	タイマーの時間間隔の取得
+	//void SetCallback(GTimerFunc* f);
+	void Create();
 	void Loop();
 };
 }

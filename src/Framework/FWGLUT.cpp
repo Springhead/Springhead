@@ -29,7 +29,7 @@ FWGLUT::FWGLUT(){
 };
 
 FWGLUT* FWGLUT::instance;
-FWGLUT::FWGLUTTimer* FWGLUT::FWGLUTTimer::timerInstance;
+//FWGLUT::FWGLUTTimer* FWGLUT::FWGLUTTimer::timerInstance;
 
 FWGLUT::~FWGLUT(){
 	FWGLUT::AtExit();
@@ -79,34 +79,37 @@ void FWGLUT::Init(int argc, char* argv[]){
 
 /** タイマ *////////////////////////////////////////////////////////////////
 
-void FWGLUT::FWGLUTTimer::SetTimerFunc(GTimerFunc* f){
+/*void FWGLUT::FWGLUTTimer::SetTimerFunc(GTimerFunc* f){
 	func=f;
 }
+
 void FWGLUT::FWGLUTTimer::GetTimerFunc(){;
 	this->func;
+}*/
+
+void FWGLUT::SetTimer(int i, int ms){
+	//if(i < (int)glutTimer.size()){
+		//glutTimerFunc(1, glutTimer[i]->func, 0);
+		glutTimerFunc(ms, GTimer::GTimerFunc, i);
+	//}
 }
-/// タイマーを設定する
-void FWGLUT::Timer(int i){
-	if(i < (int)glutTimer.size()){
-		glutTimerFunc(1, glutTimer[i]->func, 0);
-	}
-}
-/// タイマーを作成する
+/*
 void FWGLUT::AddTimer(){
 	glutTimer.push_back(DBG_NEW FWGLUTTimer);
-}
-/// 最後に作成したタイマーの番号を返す
-int FWGLUT::GetTimerNo(){
-	return (int)glutTimer.size() - 1;
-}
-/// i番目のタイマーにTimerfuncを設定する
-void FWGLUT::SetTimerFunc(GTimerFunc* f ,int i){
+}*/
+
+/*int FWGLUT::NTimers(){
+	//return (int)glutTimer.size() - 1;
+	return (int)glutTimer.size();
+}*/
+
+/*void FWGLUT::SetTimerFunc(GTimerFunc* f ,int i){
 	if(i < (int)glutTimer.size()){
 		glutTimer[i]->SetTimerFunc(f);
 	}
-}
-/// mainloopを呼ぶ
-void FWGLUT::Loop(int i,double timeStep){
+}*/
+
+/*void FWGLUT::Loop(int i, double timeStep){
 	int timeSteps=1;
 	if(!fwApp->instance)return;
 	if(!fwApp->instance->GetSdk())return;
@@ -120,19 +123,11 @@ void FWGLUT::Loop(int i,double timeStep){
 		timeSteps=timeStep;
 	}
 	glutTimerFunc(timeSteps, glutTimer[i]->func, 0);
-}
-///GLUTによるTimerをスタートする
-void FWGLUT::TimerStart(){
+}*/
+
+void FWGLUT::StartMainLoop(){
 	glutIdleFunc(FWGLUT::GlutIdleFunc);
 	glutMainLoop();
-}
-/// タイマーを取得する
-FWGLUT::FWGLUTTimer* FWGLUT::GetTimer(int i){
-	if(i < (int)glutTimer.size()){
-		return glutTimer[i];
-	}else{
-		return NULL;
-	}
 }
 
 /** ウィンドウ *////////////////////////////////////////////////////////////////

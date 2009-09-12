@@ -54,11 +54,8 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 	/// カメラ行列の初期化
 	InitCameraView();
 
-	/// タイマの作成，初期化
-	GTimer* gtimer = CreateTimerFunc();
-	gtimer->Interval(GetSdk()->GetScene()->GetPHScene()->GetTimeStep());
-	gtimer->Set(CallBack);
-	gtimer->Create(GetGRAdaptee());
+	/// タイマの作成
+	CreateTimer();
 }
 
 void FWMultiWinSample::InitCameraView(){
@@ -72,10 +69,6 @@ void FWMultiWinSample::InitCameraView(){
 	issView >> cameraInfo.view;
 }
 
-void FWMultiWinSample::Start(){
-	TimerStart();
-}
-
 void FWMultiWinSample::Reset(){
 	GetSdk()->Clear();
 	DSTR << "Reload the Xfile" << std::endl;
@@ -86,9 +79,8 @@ void FWMultiWinSample::Reset(){
 	InitCameraView();
 }
 
-void FWMultiWinSample::CallBack(int id){
-	((FWMultiWinSample*)instance)->GetTimerFunc(id)->Loop();
-	((FWMultiWinSample*)instance)->Step();
+void FWMultiWinSample::TimerFunc(int id){
+	Step();
 }
 
 void FWMultiWinSample::Step(){

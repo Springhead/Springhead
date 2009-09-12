@@ -31,7 +31,7 @@ public:
 	virtual void Display();							// 描画
 	virtual void Reset();							// シーンのリセット
 	virtual void Keyboard(int key, int x, int y){};	// キーボード関数
-	void				CallStep();
+	void	CallStep();
 	static void SPR_CDECL	TimerFunc(int id);			// ループで呼ばれる関数
 
 	bool bDrawInfo;

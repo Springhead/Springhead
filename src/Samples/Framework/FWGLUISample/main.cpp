@@ -1,4 +1,4 @@
-#include "FWAppSample.h"
+#include "FWGLUISample.h"
 /**
 \page pageFWAppSample フレームワークSDKを使った一番簡単なサンプル
  Springhead2/src/Samples/FWAppSample
@@ -12,10 +12,9 @@
  - \ref pageFramework と \ref pagePhysics のみを使用
 */
 
-FWAppSample app;
 int _cdecl main(int argc, char* argv[]){
+	FWGLUISample app;
 	app.Init(argc, argv);
-	app.Timer();
-	app.TimerStart();
+	app.StartMainLoop();
 	return 0;
 }

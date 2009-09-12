@@ -29,8 +29,8 @@ FWApp::~FWApp(){
 }
 
 // 派生クラスで定義することのできる仮想関数/////////////////////////////////
-void FWApp::TimerStart(){
-	grAdaptee->TimerStart();
+void FWApp::StartMainLoop(){
+	grAdaptee->StartMainLoop();
 }
 
 void FWApp::Reshape(int w, int h){
@@ -225,8 +225,6 @@ FWWin* FWApp::CreateWin(const FWWinDesc& desc){
 	return win;
 }
 
-
-
 void FWApp::InitWindow(){
 	if (!NWin()){
 		grAdaptee->CreateWin(FWWinDesc());
@@ -282,9 +280,9 @@ void FWApp::SetGRAdaptee(grAdapteeType type){
 
 /**コールバック関数*/
 void FWApp::CallDisplay(){
-		if(!vfBridge || !vfBridge->Display())
-			Display();
-	}
+	if(!vfBridge || !vfBridge->Display())
+		Display();
+}
 void FWApp::CallReshape(int w, int h){
 	if(!vfBridge || !vfBridge->Reshape(w, h))
 		Reshape(w, h);
@@ -334,10 +332,10 @@ void FWApp::INClear(){
 	inScenes.clear();
 	curINScene = NULL;
 }
+
 ///////////////////////////////////////////////////////////////////////////////////
-
-
 //マルチメディアタイマ//////////////////////////////////////////////////////////////
+
 UTMMTimer* FWApp::CreateMMTimerFunc(){
 	UTMMTimer* timer_=new UTMMTimer;
 	mmtimer.push_back(timer_);
@@ -351,17 +349,17 @@ UTMMTimer* FWApp::GetMMTimerFunc(int n){
 		return NULL;
 	}
 }
+
 //タイマ///////////////////////////////////////////////////////////////////////////
-GTimer* FWApp::CreateTimerFunc(){
-	GTimer* timer_=DBG_NEW GTimer;
-	gTimer.push_back(timer_);
-	return gTimer.back();
+
+GTimer* FWApp::CreateTimer(){
+	gTimers.push_back(DBG_NEW GTimer(gTimers.size()));
+	gTimers.back()->Create();
+	return gTimers.back();
 }
-GTimer* FWApp::GetTimerFunc(int n){
-	if(n< (int) gTimer.size()){
-		return gTimer[n];
-	}else{
-		return NULL;
-	}
+
+GTimer* FWApp::GetTimer(int id){
+	return (id < (int) gTimers.size() ? gTimers[id] : NULL);
 }
+
 }

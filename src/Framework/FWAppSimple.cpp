@@ -38,11 +38,6 @@ void FWAppSimple::TimerFunc(int id){
 	((FWAppSimple*)instance)->GetGRAdaptee()->PostRedisplay();
 }
 
-void FWAppSimple::CallStep(){
-	if(!vfBridge || !vfBridge->Step())
-		Step();
-}
-
 void FWAppSimple::InitCameraView(){
 	//	Affinef 型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
 	std::istringstream issView(
@@ -52,6 +47,11 @@ void FWAppSimple::InitCameraView(){
 		"(     0      0      0      1))"
 	);
 	issView >> cameraInfo.view;
+}
+
+void FWAppSimple::CallStep(){
+	if(!vfBridge || !vfBridge->Step())
+		Step();
 }
 
 void FWAppSimple::Step(){

@@ -8,29 +8,26 @@
 
 using namespace Spr;								// Springheadの名前空間
 
-class FWAppSample : public FWApp{
+class FWGLUISample : public FWApp{
 private:
 	GLUI*			glui;
 	GLUI_Panel*		panel;
 	GLUI_Button*	button1;
 public:
-	FWAppSample();									// コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
-	static FWAppSample* ins;
-
-	void Init(int argc, char* argv[]);			// GLUTの初期化
-	virtual void Timer();
+	FWGLUISample();									// コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
+	
+	virtual void Init(int argc, char* argv[]);		// GLUTの初期化
+	virtual void TimerFunc(int id);
+	virtual void Display();							// 描画
+	virtual void Keyboard(int key, int x, int y);	// キーボード関数
+	
 	void InitCameraView();							// カメラ座標		
 	void BuildObject();								// 物体を作成
-	void Step();										// シミュレーションを1ステップ進める
-	void Display();									// 描画
-	void Reset();										// シーンのリセット
-	void Keyboard(int key, int x, int y);		// キーボード関数
+	void Step();									// シミュレーションを1ステップ進める	
+	void Reset();									// シーンのリセット
 	bool bDrawInfo;									// 接触力などを表示するか
-	static void _cdecl TimerFunc(int id);
 	void SPR_CDECL DesignGUI();
-	void CallStep();
-	static void SPR_CDECL CallDisplay();
-
+	
 private:
 	static void _cdecl CallButton1(int control);
 	void		Button1(int control);
