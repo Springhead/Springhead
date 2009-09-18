@@ -52,7 +52,7 @@ void FWXfileLoader::IdleFunc(){
 }
 void FWXfileLoader::Step(){
 	GetSdk()->Step();
-	glutPostRedisplay();
+	GetGRAdaptee()->PostRedisplay();
 }
 
 void FWXfileLoader::Display(){

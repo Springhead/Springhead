@@ -79,51 +79,9 @@ void FWGLUT::Init(int argc, char* argv[]){
 
 /** ƒ^ƒCƒ} *////////////////////////////////////////////////////////////////
 
-/*void FWGLUT::FWGLUTTimer::SetTimerFunc(GTimerFunc* f){
-	func=f;
-}
-
-void FWGLUT::FWGLUTTimer::GetTimerFunc(){;
-	this->func;
-}*/
-
 void FWGLUT::SetTimer(int i, int ms){
-	//if(i < (int)glutTimer.size()){
-		//glutTimerFunc(1, glutTimer[i]->func, 0);
-		glutTimerFunc(ms, GTimer::GTimerFunc, i);
-	//}
+	//glutTimerFunc(ms, FWTimer::FWTimerFunc, i);
 }
-/*
-void FWGLUT::AddTimer(){
-	glutTimer.push_back(DBG_NEW FWGLUTTimer);
-}*/
-
-/*int FWGLUT::NTimers(){
-	//return (int)glutTimer.size() - 1;
-	return (int)glutTimer.size();
-}*/
-
-/*void FWGLUT::SetTimerFunc(GTimerFunc* f ,int i){
-	if(i < (int)glutTimer.size()){
-		glutTimer[i]->SetTimerFunc(f);
-	}
-}*/
-
-/*void FWGLUT::Loop(int i, double timeStep){
-	int timeSteps=1;
-	if(!fwApp->instance)return;
-	if(!fwApp->instance->GetSdk())return;
-	if(fwApp->instance->GetSdk()->GetScene()){
-		if(fwApp->instance->GetSdk()->GetScene()->GetPHScene()){
-			timeSteps = (int)(fwApp->instance->GetSdk()->GetScene()->GetPHScene()->GetTimeStep() * 1000.0);
-			if (timeSteps<1) timeSteps = 1;
-		}
-	}
-	if(!timeStep==0){
-		timeSteps=timeStep;
-	}
-	glutTimerFunc(timeSteps, glutTimer[i]->func, 0);
-}*/
 
 void FWGLUT::StartMainLoop(){
 	glutIdleFunc(FWGLUT::GlutIdleFunc);

@@ -43,11 +43,16 @@ void FWAppHaptic::Init(int argc, char* argv[]){
 	BuildPointer();
 
 	/// タイマの作成，設定
-	UTMMTimer* mtimer = CreateMMTimerFunc();				// タイマを作成
-	mtimer->Resolution(1);									// 分解能[ms]
-	mtimer->Interval(1);									// 呼びだし感覚[ms]
-	mtimer->Set(CallBackHapticLoop, NULL);					// コールバックする関数
-	mtimer->Create();										// コールバック開始
+	//UTMMTimer* mtimer = CreateMMTimerFunc();				// タイマを作成
+	//mtimer->Resolution(1);									// 分解能[ms]
+	//mtimer->Interval(1);									// 呼びだし感覚[ms]
+	//mtimer->Set(CallBackHapticLoop, NULL);					// コールバックする関数
+	//mtimer->Create();										// コールバック開始
+
+	FWTimer* timer = CreateTimer(MMTimer);
+	timer->SetInterval(1);
+	timer->SetResolution(1);
+
 }
 
 void FWAppHaptic::InitCameraView(){
@@ -86,7 +91,7 @@ void FWAppHaptic::InitHumanInterface(){
 }
 
 void FWAppHaptic::Reset(){
-	MTimerRelease();
+	ReleaseAllTimer();
 	GetSdk()->Clear();
 	INClear();
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
@@ -99,13 +104,21 @@ void FWAppHaptic::Reset(){
 	BuildScene();
 	BuildPointer();
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
-	MTimerCreate();
+	CreateAllTimer();
 }
 
 void FWAppHaptic::Start(){
 	StartMainLoop();
 }
 
+void FWAppHaptic::TimerFunc(int id){	
+	switch(id){
+		case 0:
+			((FWAppHaptic*)instance)->GetINScene()->CallBackHapticLoop();
+			//GetGRAdaptee()->PostRedisplay();
+			break;
+	}
+}
 void FWAppHaptic::IdleFunc(){
 	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
 	if(bStep) 	FWAppHaptic::instance->GetINScene()->Step();
@@ -114,11 +127,6 @@ void FWAppHaptic::IdleFunc(){
 			bOneStep = false;
 	}
 	glutPostRedisplay();
-}
-
-void FWAppHaptic::CallBackHapticLoop(void* arg){	
-	/// HapticLoopをコールバックする
-	((FWAppHaptic*)instance)->GetINScene()->CallBackHapticLoop();
 }
 
 void FWAppHaptic::Display(){
@@ -362,11 +370,11 @@ void FWAppHaptic::Keyboard(int key, int x, int y){
 			break;
 		case 'c':
 			{
-				MTimerRelease();
+				ReleaseAllTimer();
 				for(int i = 0; i < GetINScene()->NINPointers(); i++){
 					GetINScene()->GetINPointer(i)->Calibration();
 				}
-				MTimerCreate();
+				CreateAllTimer();
 			}
 			break;
 		case 'f':

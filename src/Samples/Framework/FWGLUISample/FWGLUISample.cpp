@@ -85,12 +85,9 @@ void FWGLUISample::BuildObject(){
 	}
 }
 
-void FWGLUISample::Step(){
-	GetSdk()->Step();
-}
-
 void FWGLUISample::TimerFunc(int id){
-	Step();
+	GetSdk()->Step();
+	GetGRAdaptee()->PostRedisplay();
 }
 
 void FWGLUISample::Display(){

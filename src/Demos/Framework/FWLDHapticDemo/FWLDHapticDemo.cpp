@@ -44,11 +44,9 @@ void FWLDHapticDemo::Init(int argc, char* argv[]){
 	BuildScene();
 
 	/// タイマの作成，設定
-	UTMMTimer* mtimer = CreateMMTimerFunc();				// タイマを作成
-	mtimer->Resolution(1);									// 分解能[ms]
-	mtimer->Interval(1);									// 呼びだし感覚[ms]
-	mtimer->Set(CallBackHapticLoop, NULL);					// コールバックする関数
-	mtimer->Create();										// コールバック開始
+	FWTimer* timer = CreateTimer(MMTimer);
+	timer->SetInterval(1);
+	timer->SetResolution(1);
 }
 
 void FWLDHapticDemo::InitCameraView(){
@@ -98,7 +96,7 @@ void FWLDHapticDemo::InitHumanInterface(){
 }
 
 void FWLDHapticDemo::Reset(){
-	MTimerRelease();
+	ReleaseAllTimer();
 	GetSdk()->Clear();
 	INClear();
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
@@ -111,11 +109,7 @@ void FWLDHapticDemo::Reset(){
 	BuildScene();
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 	InitCameraView();
-	MTimerCreate();
-}
-
-void FWLDHapticDemo::Start(){
-	TimerStart();
+	CreateAllTimer();
 }
 
 void FWLDHapticDemo::IdleFunc(){
@@ -128,9 +122,10 @@ void FWLDHapticDemo::IdleFunc(){
 	glutPostRedisplay();
 }
 
-void FWLDHapticDemo::CallBackHapticLoop(void* arg){	
+void FWLDHapticDemo::TimerFunc(int id){	
 	/// HapticLoopをコールバックする
 	((FWLDHapticDemo*)instance)->GetINScene()->CallBackHapticLoop();
+	GetGRAdaptee()->PostRedisplay();
 }
 
 void FWLDHapticDemo::Display(){
@@ -379,11 +374,11 @@ void FWLDHapticDemo::Keyboard(int key, int x, int y){
 		break;
 	case 'c':
 		{
-			MTimerRelease();
+			ReleaseAllTimer();
 			for(int i = 0; i < GetINScene()->NINPointers(); i++){
 				GetINScene()->GetINPointer(i)->Calibration();
 			}
-			MTimerCreate();
+			CreateAllTimer();
 		}
 		break;
 	case 'f':

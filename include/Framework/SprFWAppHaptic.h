@@ -13,6 +13,7 @@ public:
 	virtual void InitCameraView();						///< カメラ行列の初期化
 	virtual void InitHumanInterface();					///< HapticInterfaceの初期化
 	virtual void Start();								///< アプリケーション開始
+	virtual void TimerFunc(int id);
 	virtual void IdleFunc();							
 	virtual void Display();								///< 描画関数	
 	virtual void BuildScene();							///< 剛体の作成

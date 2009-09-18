@@ -24,7 +24,7 @@
 namespace Spr{;
 
 FWApp::~FWApp(){
-	MTimerRelease();
+	ReleaseAllTimer();
 	glutLeaveGameMode();
 }
 
@@ -38,18 +38,18 @@ void FWApp::Reshape(int w, int h){
 	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
 	fwSdk->Reshape(w, h);
 }
-
-void FWApp::MTimerCreate(){
-	for(int i=0; i< (int)mmtimer.size(); i++){
-		mmtimer[i]->Create();
-	}
-}
-
-void FWApp::MTimerRelease(){
-	for(int i=0; i< (int)mmtimer.size(); i++){
-		mmtimer[i]->Release();
-	}
-}
+//
+//void FWApp::MTimerCreate(){
+//	for(int i=0; i< (int)mmtimer.size(); i++){
+//		mmtimer[i]->Create();
+//	}
+//}
+//
+//void FWApp::MTimerRelease(){
+//	for(int i=0; i< (int)mmtimer.size(); i++){
+//		mmtimer[i]->Release();
+//	}
+//}
 
 void FWApp::BeginKeyboard(){
 	for(int i = 0; i < NINScenes(); i++){
@@ -335,31 +335,46 @@ void FWApp::INClear(){
 
 ///////////////////////////////////////////////////////////////////////////////////
 //マルチメディアタイマ//////////////////////////////////////////////////////////////
-
-UTMMTimer* FWApp::CreateMMTimerFunc(){
-	UTMMTimer* timer_=new UTMMTimer;
-	mmtimer.push_back(timer_);
-	return mmtimer.back();
-}
-
-UTMMTimer* FWApp::GetMMTimerFunc(int n){
-	if(n< (int) mmtimer.size()){
-		return mmtimer[n];
-	}else{
-		return NULL;
-	}
-}
+//
+//UTMMTimer* FWApp::CreateMMTimerFunc(){
+//	UTMMTimer* timer_=new UTMMTimer;
+//	mmtimer.push_back(timer_);
+//	return mmtimer.back();
+//}
+//
+//UTMMTimer* FWApp::GetMMTimerFunc(int n){
+//	if(n< (int) mmtimer.size()){
+//		return mmtimer[n];
+//	}else{
+//		return NULL;
+//	}
+//}
 
 //タイマ///////////////////////////////////////////////////////////////////////////
 
-GTimer* FWApp::CreateTimer(){
-	gTimers.push_back(DBG_NEW GTimer(gTimers.size()));
-	gTimers.back()->Create();
-	return gTimers.back();
+FWTimer* FWApp::CreateTimer(TimerType t){
+	fwTimers.push_back(DBG_NEW FWTimer(fwTimers.size(),t));
+	fwTimers.back()->Create();
+	return fwTimers.back();
 }
 
-GTimer* FWApp::GetTimer(int id){
-	return (id < (int) gTimers.size() ? gTimers[id] : NULL);
+void FWApp::ReleaseTimer(int id){
+	fwTimers[id]->Release();
+}
+
+void FWApp::ReleaseAllTimer(){
+	for(int i=0; i < fwTimers.size() ; i++){
+		fwTimers[i]->Release();
+	}
+}
+void FWApp::CreateAllTimer(){
+	for(int i=0; i < fwTimers.size() ; i++){
+		fwTimers[i]->Recreate();
+	}
+}
+
+FWTimer* FWApp::GetTimer(int id){
+	return (id < (int) fwTimers.size() ? fwTimers[id] : NULL);
 }
 
 }
