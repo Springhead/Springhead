@@ -81,6 +81,7 @@ void FWMultiWinSample::Reset(){
 
 void FWMultiWinSample::TimerFunc(int id){
 	Step();
+	GetGRAdaptee()->PostRedisplay();
 }
 
 void FWMultiWinSample::Step(){

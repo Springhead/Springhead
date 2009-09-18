@@ -42,7 +42,7 @@ void FWTimer::GLUTTimerFunc(int id){
 	//app->GetGRAdaptee()->SetTimer(id, ms);
 	glutTimerFunc(ms, GLUTTimerFunc, id);
 
-	// 再描画要求
+	// 再描画要求はTimerFuncで記述するようにする？
 	//app->GetGRAdaptee()->PostRedisplay();
 
 	app->CreateAllTimer();		//マルチメディアタイマーを再構成
@@ -54,7 +54,7 @@ void FWTimer::MultiMediaTimerFunc(int id){
 	
 	app->TimerFunc(id);
 
-	// 再描画要求
+	// 再描画要求はTimerFuncで記述するようにする？
 	//app->GetGRAdaptee()->PostRedisplay();
 }
 
