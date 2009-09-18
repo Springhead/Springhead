@@ -15,7 +15,7 @@ namespace Spr{;
 class FWApp;
 class FWWin;
 class FWWinDesc;
-typedef void SPR_CDECL GTimerFunc(int id);
+typedef void SPR_CDECL FWTimerFunc(int id);
 
 class FWGraphicsAdapteeDesc{
 public:

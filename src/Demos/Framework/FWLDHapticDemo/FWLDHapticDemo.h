@@ -13,9 +13,8 @@ public:
 	virtual void InitCameraView();						///< カメラ行列の初期化
 	virtual void InitHumanInterface();					///< HapticInterfaceの初期化
 	virtual void Reset();
-	virtual void Start();								///< アプリケーション開始
 	virtual void IdleFunc();							///< Physicのコールバック
-	static void CallBackHapticLoop(void* arg);			///< hapticloopのコールバック
+	virtual void TimerFunc(int id);						///< hapticloopのコールバック
 	virtual void Display();								///< 描画関数	
 	virtual void BuildScene();							///< 剛体の作成
 	virtual void Keyboard(int key, int x, int y);		///< キーボード関数

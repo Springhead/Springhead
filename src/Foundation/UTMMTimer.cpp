@@ -12,6 +12,7 @@ UTMMTimer::UTMMTimer()
 	{
 	func = NULL;
 	arg = NULL;
+	id	= NULL;
 	timerID = 0;
 	interval = resolution;
 	if (interval==0) interval = 1;
@@ -99,7 +100,8 @@ void SPR_STDCALL UTMMTimer::TimerCallback(unsigned uID, unsigned, unsigned long 
 	mmtimer.tick = tick;
 #endif
 	mmtimer.bRun = true;
-	mmtimer.func(mmtimer.arg);
+	if(mmtimer.func!=NULL)mmtimer.func(mmtimer.arg);
+	if(mmtimer.idFunc!=NULL)mmtimer.idFunc(mmtimer.id);
     mmtimer.bRun = false;
 	}
 unsigned long SPR_STDCALL UTMMTimer::ThreadCallback(void* arg){
@@ -114,7 +116,8 @@ unsigned long SPR_STDCALL UTMMTimer::ThreadCallback(void* arg){
 		}
  		lastCall = now;
 		
-		mmtimer.func(mmtimer.arg);
+		if(mmtimer.func!=NULL)mmtimer.func(mmtimer.arg);
+		if(mmtimer.idFunc!=NULL)mmtimer.idFunc(mmtimer.id);
 	}
 	mmtimer.bRun = false;
 	return 0;
@@ -150,6 +153,11 @@ void UTMMTimer::Set(MMTimerFunc* f, void* a)
 	{
 	func = f;
 	arg = a;
+	}
+void UTMMTimer::Set(MMTimerIdFunc* f,int i)
+	{
+	idFunc = f;
+	id = i;
 	}
 void UTMMTimer::Init(unsigned int r, unsigned int i, MMTimerFunc* f, void* arg){
 	Resolution(r);

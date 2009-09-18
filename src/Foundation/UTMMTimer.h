@@ -5,6 +5,8 @@
 #endif // _MSC_VER >= 1000
 
 #include <Base/Env.h>
+#include <iostream>
+using namespace std; 
 
 namespace Spr {
 
@@ -12,6 +14,8 @@ namespace Spr {
 	タイマー動作中にデバッガを使うとOSが落ちるので，デバッグ用に
 	スレッドによる擬似動作モードを用意してある．	*/
 typedef void MMTimerFunc(void* arg);
+typedef void MMTimerIdFunc(int id);
+
 class SPR_DLL UTMMTimer{
 	static int count;
 	int tick;
@@ -22,7 +26,9 @@ protected:
 	static unsigned resolution;		///<	タイマーの時間精度
 	unsigned interval;					///<	タイマーの時間間隔
 	MMTimerFunc* func;				///<	時間が来るたびに呼ばれるコールバック関数．
+	MMTimerIdFunc* idFunc;				///<	時間が来るたびに呼ばれるコールバック関数．
 	void* arg;								///<	コールバック関数に渡す引数
+	int id;								///<	コールバック関数に渡すint型引数
 	unsigned timerID;
 	volatile bool bCreated;				///<	タイマーが動作しているかどうか
 	volatile bool bThread;				///<	タイマーがスレッドとして擬似動作しているかどうか
@@ -44,6 +50,7 @@ protected:
 	unsigned Interval();						///<	タイマーの時間間隔
 	void Interval(unsigned i);				///<	タイマーの時間間隔の設定
 	void Set(MMTimerFunc* f, void* arg);
+	void Set(MMTimerIdFunc* f, int i);
 													///<	コールバック関数の設定
 	void Init(unsigned int r, unsigned int i, MMTimerFunc* f, void* arg);				///< 時間精度，間隔，コールバック関数を一度で設定 
 	bool Create();								///<	タイマー動作開始

@@ -23,7 +23,7 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	/// 描画Windowの作成，初期化
 	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
 	windowDesc.title = "Springhead2";						// ウィンドウのタイトル
-	windowDesc.fullscreen =true;
+	windowDesc.fullscreen =false;
 	CreateWin(windowDesc);									// ウィンドウの作成
 	InitWindow();											// ウィンドウの初期化
 	InitCameraView();										// カメラビューの初期化
@@ -42,12 +42,10 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	BuildScene();
 	BuildPointer();
 
-	/// タイマの作成，設定
-	UTMMTimer* mtimer = CreateMMTimerFunc();				// タイマを作成
-	mtimer->Resolution(1);									// 分解能[ms]
-	mtimer->Interval(1);									// 呼びだし感覚[ms]
-	mtimer->Set(CallBackHapticLoop, NULL);					// コールバックする関数
-	mtimer->Create();										// コールバック開始
+	///// タイマの作成，設定
+	FWTimer* timer = CreateTimer(MMTimer);
+	timer->SetInterval(1);
+	timer->SetResolution(1);
 }
 
 void FWLDHapticSample::InitCameraView(){

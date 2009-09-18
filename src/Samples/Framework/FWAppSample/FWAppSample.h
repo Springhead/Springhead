@@ -17,7 +17,6 @@ public:
 	
 	void InitCameraView();							// カメラ座標		
 	void BuildObject();								// 物体を作成
-	void Step();									// シミュレーションを1ステップ進める
 	void Reset();									// シーンのリセット
 	bool bDrawInfo;									// 接触力などを表示するか
 }; 

@@ -29,22 +29,6 @@ public:
 
 class FWGLUT : public FWGraphicsAdaptee, public FWGLUTDesc{
 protected:
-	/** glutTimerfuncを管理するクラス */
-	/*class FWGLUTTimer : public UTRefCount{
-	public:
-		//static FWGLUTTimer* timerInstance;
-		GTimerFunc* func;					//glutTimerFuncで呼び出す関数
-		void SetTimerFunc(GTimerFunc* f);	//funcを設定する
-		void GetTimerFunc();				//funcを取得する
-	};
-	typedef UTRef<FWGLUTTimer> UTRef_FWGLUTTimer;
-	typedef vector<UTRef_FWGLUTTimer> FWGLUTTimers;
-	FWGLUTTimers glutTimer;
-	/// タイマーを取得する
-	FWGLUTTimer* GetTimer(int i){
-		return (i < (int)glutTimer.size() ? glutTimer[i] : NULL);
-	}*/
-
 	/** コールバック関数*/
 	static FWGLUT* instance;
 	static void SPR_CDECL GlutDisplayFunc();
@@ -65,14 +49,6 @@ public:
 	/** タイマ */
 	/// タイマーを設定する
 	virtual void SetTimer(int id, int interval);
-	/// タイマーを作成する
-	//virtual void AddTimer();
-	/// 最後に作成したタイマーの番号を返す
-	//virtual int NTimers();
-	/// i番目のタイマーにTimerfuncを設定する
-	//virtual void SetTimerFunc(GTimerFunc* f ,int i=0);
-	/// mainloopを呼ぶ
-	//virtual void Loop(int i,double timeStep);
 	///GLUTによるTimerをスタートする
 	virtual void StartMainLoop();
 

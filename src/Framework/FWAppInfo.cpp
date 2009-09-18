@@ -4,6 +4,8 @@
 
 namespace Spr{;
 
+enum TimerType;
+
 CameraInfo::CameraInfo():
 	rot(Rad(0.0), Rad(80.0)), zoom(1.0f),
 	rotRangeY(Rad(-180.0), Rad(180.0)), rotRangeX(Rad(-80.0), Rad(80.0)), zoomRange(0.01f, 100.0f){
@@ -19,10 +21,11 @@ void CameraInfo::UpdateView(){
 	view.LookAtGL(target);
 }
 
-void GTimer::GTimerFunc(int id){
+void FWTimer::GLUTTimerFunc(int id){
 	FWApp* app = FWApp::instance;
 	if(!app)return;
 	
+	app->ReleaseAllTimer();		//マルチメディアタイマーを解放
 	app->TimerFunc(id);
 	
 	// タイマーの再始動
@@ -36,22 +39,81 @@ void GTimer::GTimerFunc(int id){
 			if(ms < 1) ms = 1;
 		}
 	}
-	app->GetGRAdaptee()->SetTimer(id, ms);
+	//app->GetGRAdaptee()->SetTimer(id, ms);
+	glutTimerFunc(ms, GLUTTimerFunc, id);
 
 	// 再描画要求
-	app->GetGRAdaptee()->PostRedisplay();
+	//app->GetGRAdaptee()->PostRedisplay();
+
+	app->CreateAllTimer();		//マルチメディアタイマーを再構成
 }
 
-GTimer::GTimer(int _id){
+void FWTimer::MultiMediaTimerFunc(int id){
+	FWApp* app = FWApp::instance;
+	if(!app)return;
+	
+	app->TimerFunc(id);
+
+	// 再描画要求
+	//app->GetGRAdaptee()->PostRedisplay();
+}
+
+FWTimer::FWTimer(int _id ,TimerType t){
 	id			=	_id;
 	interval	=	0;
+	resolution	=	1;
+	timerType	=   t;
+	mtimer		=	NULL;
 }
-void GTimer::SetInterval(unsigned ms){
+void FWTimer::SetInterval(unsigned ms){
 	interval	=	ms;
+	if(timerType==MMTimer && mtimer!=NULL) {
+		mtimer->Release();
+		mtimer->Interval(interval);
+		mtimer->Create();
+	}
 }
-void GTimer::Create(){
-	FWGraphicsAdaptee* adaptee = (FWApp::instance)->GetGRAdaptee();
-	adaptee->SetTimer(id, interval);
+void FWTimer::SetResolution(unsigned r){
+	resolution	=	r;
+	if(timerType==MMTimer && mtimer!=NULL) {
+		mtimer->Release();
+		mtimer->Resolution(resolution);
+		mtimer->Create();
+	}
+}
+void FWTimer::Create(){
+	//FWGraphicsAdaptee* adaptee = (FWApp::instance)->GetGRAdaptee();
+	//adaptee->SetTimer(id, interval);
+	switch(timerType){
+		case GLUTTimer:
+			glutTimerFunc(interval, GLUTTimerFunc, id);
+			break;
+		case MMTimer:
+			mtimer = new UTMMTimer;
+			mtimer->Resolution(resolution);							// 分解能[ms]
+			if(interval!=0) mtimer->Interval(interval);				// 呼びだし感覚[ms]
+			mtimer->Set(MultiMediaTimerFunc, id);					// コールバックする関数
+			mtimer->Create();										// コールバック開始
+			break;
+	}
+}
+
+void FWTimer::Recreate(){
+	//GLUTTimerに関しては未実装
+	if(timerType==MMTimer){
+		if(mtimer!=NULL){
+			mtimer->Create();
+		}
+	}
+}
+
+void FWTimer::Release(){
+	//GLUTTimerに関しては未実装
+	if(timerType==MMTimer){
+		if(mtimer!=NULL){
+			mtimer->Release();
+		}
+	}
 }
 
 }

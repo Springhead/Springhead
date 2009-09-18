@@ -27,11 +27,16 @@ void FWAppSample::Init(int argc, char* argv[]){
 
 	BuildObject();											// 剛体を作成
 
-	CreateTimer();											// タイマーの生成
+	CreateTimer(GLUTTimer);											// タイマーの生成
 }
 
-void FWAppSample::TimerFunc(int id){
-	Step();
+void FWAppSample::TimerFunc(int id){	
+	switch(id){
+		case 0:
+			GetSdk()->Step();
+			GetGRAdaptee()->PostRedisplay();
+			break;
+	}
 }
 
 void FWAppSample::IdleFunc(){
@@ -82,10 +87,6 @@ void FWAppSample::BuildObject(){
 		soBox->AddShape(shapeBox);
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}
-}
-
-void FWAppSample::Step(){
-	GetSdk()->Step();
 }
 
 void FWAppSample::Display(){

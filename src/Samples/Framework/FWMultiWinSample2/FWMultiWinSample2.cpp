@@ -59,17 +59,6 @@ void FWMultiWinSample2::Init(int argc, char* argv[]){
 	for(int i = 0; i < (int)GetSdk()->NScene(); i++){
 		CreateTimer()->SetInterval((int)(1000.0 * GetSdk()->GetScene(i)->GetPHScene()->GetTimeStep()));
 	}
-	/*for(int i = 0; i< (int)GetSdk()->NScene(); i++){
-		GTimer* timer = CreateTimerFunc();
-		timer->Interval(GetSdk()->GetScene(i)->GetPHScene()->GetTimeStep());
-	}
-	GetTimerFunc(0)->Set(Step1);
-	GetTimerFunc(1)->Set(Step2);
-	GetTimerFunc(2)->Set(Step3);
-	for(int i = 0; i< (int)GetSdk()->NScene(); i++){
-		GetTimerFunc(i)->Create(GetGRAdaptee());
-	}*/
-
 }
 
 void FWMultiWinSample2::InitCameraView(){
@@ -91,20 +80,7 @@ void FWMultiWinSample2::Reset(){
 	}
 	InitCameraView();	
 }
-/*
-void FWMultiWinSample2::Step1(int id){ 
-	((FWMultiWinSample2*)instance)->GetTimerFunc(0)->Loop();
-	((FWMultiWinSample2*)instance)->CallStep(0);
-}
-void FWMultiWinSample2::Step2(int id){
-	((FWMultiWinSample2*)instance)->GetTimerFunc(1)->Loop();	
-	((FWMultiWinSample2*)instance)->CallStep(1); 
-}
-void FWMultiWinSample2::Step3(int id){ 
-	((FWMultiWinSample2*)instance)->GetTimerFunc(2)->Loop();
-	((FWMultiWinSample2*)instance)->CallStep(2); 
-}
-*/
+
 void FWMultiWinSample2::TimerFunc(int i){
 	GetSdk()->GetScene(i)->Step();
 	SetCurrentWin(GetWin(i));

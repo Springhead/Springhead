@@ -2,6 +2,7 @@
 #define FWAPPINFO_H
 #include <Springhead.h>
 #include "FWGraphicsAdaptee.h"
+#include "Foundation/UTMMTimer.h"
 
 namespace Spr{;
 
@@ -116,25 +117,33 @@ struct DragInfo{
 	DragInfo():ray(NULL), cursor(NULL), spring(NULL), depth(0.0f){}
 };
 
-
 /// タイマ．
-class  GTimer : public UTRefCount{
+enum TimerType{
+	GLUTTimer = 0,
+	MMTimer = 1,
+};
+
+class  FWTimer : public UTRefCount{
 public:
-	static void SPR_CDECL GTimerFunc(int id);	///<	タイマーコールバック関数
-	GTimer(int id);
+	static void SPR_CDECL GLUTTimerFunc(int id);		///<	タイマーコールバック関数
+	static void SPR_CDECL MultiMediaTimerFunc(int id);	///<	タイマーコールバック関数
+	FWTimer(int id, TimerType t = GLUTTimer);
 private:
-	unsigned id;								///<	タイマーID
-	unsigned interval;							///<	タイマーの時間間隔[ms]
-	//GTimerFunc* func;							///<	時間が来るたびに呼ばれるコールバック関数．							///<	コールバック関数に渡す引数
-	//FWApp*				app;					///<	FWAppインスタンスへの参照
-	//FWGraphicsAdaptee*	adaptee;
-	//int adapteeNo;
+	UTMMTimer* mtimer;								///<　	マルチメディアタイマー
+	TimerType timerType;							///<	タイマーのタイプ(GLUTタイマー、マルチメディアタイマー)
+	unsigned id;									///<	タイマーID
+	unsigned interval;								///<	タイマーの時間間隔[ms]
+	unsigned resolution;							///<	タイマーの分解能[ms](マルチメディアタイマーのみ）
 public:
-	void SetInterval(unsigned ms);				///<	タイマーの時間間隔の設定
-	unsigned GetInterval(){return interval;}	///<	タイマーの時間間隔の取得
-	//void SetCallback(GTimerFunc* f);
-	void Create();
-	void Loop();
+	void SetTimerType(TimerType t){timerType = t;}	///<	タイマーのタイプの設定
+	TimerType GetTimerType(){return timerType;}		///<	タイマーのタイプの取得
+	void SetInterval(unsigned ms);					///<	タイマーの時間間隔の設定
+	unsigned GetInterval(){return interval;}		///<	タイマーの時間間隔の取得
+	void SetResolution(unsigned r);					///<	タイマーの分解能の設定
+	unsigned GetResolution(){return resolution;}	///<	タイマーの分解能の取得
+	void Create();									///<	タイマーの作成
+	void Recreate();
+	void Release();
 };
 }
 #endif 

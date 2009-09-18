@@ -212,35 +212,40 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-/** マルチメディアタイマ */
-protected:
-	vector<UTMMTimer*> mmtimer;				/// マルチメディアタイマの宣言
-public:
-	UTMMTimer* CreateMMTimerFunc();
-	UTMMTimer* GetMMTimerFunc(int n);
-	void MTimerCreate();
-	void MTimerRelease();
+///** マルチメディアタイマ */
+//protected:
+//	vector<UTMMTimer*> mmtimer;				/// マルチメディアタイマの宣言
+//public:
+//	UTMMTimer* CreateMMTimerFunc();
+//	UTMMTimer* GetMMTimerFunc(int n);
+//	void MTimerCreate();
+//	void MTimerRelease();
 
 /** タイマ　*/
 protected:
-	typedef UTRef<GTimer> UTRef_GTimer;
-	vector<UTRef_GTimer> gTimers;
+	typedef UTRef<FWTimer> UTRef_FWTimer;
+	vector<UTRef_FWTimer> fwTimers;
 public:
 
 	/** @brief タイマーを作成する
 		最初に作成されたタイマのIDは0．その後は1ずつ増加する．ReleaseTimerによって既存のタイマのIDが変化することは無い．
 		タイマ周期の初期値は0．周期が0の場合はアクティブなシーンのtime stepがタイマ周期となる．
-		異なる周期を設定する場合はGTimer::SetIntervalを使用する．
+		異なる周期を設定する場合はFWTimer::SetIntervalを使用する．
 	 */
-	GTimer* CreateTimer();
+	FWTimer* CreateTimer(TimerType t = GLUTTimer);
 
 	/** @brief タイマーを解放する
-		未実装
 	*/
-	void ReleaseTimer(int id){}
+	void ReleaseTimer(int id);
+	/** @brief 全てのタイマーを解放する
+	*/
+	void ReleaseAllTimer();
+	/** @brief 全てのタイマーを再構成する
+	*/
+	void CreateAllTimer();
 
 	/** @brief タイマーを取得する */
-	GTimer* GetTimer(int id);
+	FWTimer* GetTimer(int id);
 };
 
 }
