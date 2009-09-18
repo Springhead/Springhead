@@ -115,7 +115,7 @@ void FWAppHaptic::TimerFunc(int id){
 	switch(id){
 		case 0:
 			((FWAppHaptic*)instance)->GetINScene()->CallBackHapticLoop();
-			//GetGRAdaptee()->PostRedisplay();
+			GetGRAdaptee()->PostRedisplay();
 			break;
 	}
 }
