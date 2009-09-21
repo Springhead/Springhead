@@ -216,7 +216,9 @@ void clip(const VectorImp<AD>& a, const VectorImp<BD>& b, const VectorImp<ED>& e
 template<size_t SZ, size_t STR, class OD> class TVectorSlice;
 template<size_t SZ, class OD> class TSubVector;
 template<class D> class EVectorSlice;
-template<class D> class EVectorRange;
+
+template<class D> class ConstEVectorSlice;
+
 ///	ベクトルの演算などの実装
 template <class D>
 class VectorImp{
@@ -242,7 +244,7 @@ public:
 	///	サイズの設定
 	inline void resize(size_t sz){ exp().resize_impl(sz); }
 	///	ストライドの取得
-	inline size_t stride(){ return exp().stride_impl(); }
+	inline size_t stride() const { return exp().stride_impl(); }
 	//@}
 	
 	///@name 部分ベクトル
@@ -282,15 +284,15 @@ public:
 	EVectorSlice<element_type> v_range(size_t off, size_t sz){
 		return EVectorSlice<element_type>(sz, stride(), &item(off));
 	}
-	EVectorSlice<element_type> v_range(size_t off, size_t sz) const {
-		return EVectorSlice<element_type>(sz, stride(), &item(off));
+	ConstEVectorSlice<element_type> v_range(size_t off, size_t sz) const {
+		return ConstEVectorSlice<element_type>(sz, stride(), &item(off));
 	}
 	///	ベクトルのスライスを返す．
 	EVectorSlice<element_type> v_slice(size_t off, size_t sz, size_t str){
 		return EVectorSlice<element_type>(sz, stride()*str, &item(off));
 	}
-	EVectorSlice<element_type> v_slice(size_t off, size_t sz, size_t str) const {
-		return EVectorSlice<element_type>(sz, stride()*str, &item(off));
+	ConstEVectorSlice<element_type> v_slice(size_t off, size_t sz, size_t str) const {
+		return ConstEVectorSlice<element_type>(sz, stride()*str, &item(off));
 	}
 	//@}
 	
@@ -719,7 +721,7 @@ public:
 	///
 	ConstEVectorSlice(const ConstEVectorSlice& v):data(v.data), size_(v.size_), stride_(v.stride_){}
 	///	要素のアクセス
-	element_type& item_impl(size_t i){ return data[index(i)]; }
+	element_type& item_impl(size_t i){ return (element_type&)data[index(i)]; } ///< const外し．もっとelegantな方法があると思うが… tazz
 	///	要素のアクセス
 	const element_type& item_impl(size_t i) const { return data[index(i)]; }
 	///	サイズ
