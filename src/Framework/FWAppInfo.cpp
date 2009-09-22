@@ -68,17 +68,13 @@ FWTimer::FWTimer(int _id ,TimerType t){
 void FWTimer::SetInterval(unsigned ms){
 	interval	=	ms;
 	if(timerType==MMTimer && mtimer!=NULL) {
-		mtimer->Release();
 		mtimer->Interval(interval);
-		mtimer->Create();
 	}
 }
 void FWTimer::SetResolution(unsigned r){
 	resolution	=	r;
 	if(timerType==MMTimer && mtimer!=NULL) {
-		mtimer->Release();
 		mtimer->Resolution(resolution);
-		mtimer->Create();
 	}
 }
 void FWTimer::Create(){

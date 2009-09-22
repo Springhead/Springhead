@@ -243,6 +243,9 @@ public:
 	/** @brief 全てのタイマーを再構成する
 	*/
 	void CreateAllTimer();
+	/** @brief 全てのタイマーを削除する
+	*/
+	void ClearAllTimer();
 
 	/** @brief タイマーを取得する */
 	FWTimer* GetTimer(int id);
