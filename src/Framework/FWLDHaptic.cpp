@@ -296,9 +296,9 @@ void FWLDHapticLoop::Proxy(){
 				outForce.w() += addtorque;
 
 				/// ŒvŽZ‚µ‚½—Í‚ð„‘Ì‚É‰Á‚¦‚é
-				iPointer->interactInfo[i].mobility.force = -1 * addforce;						
-				nInfo->test_force_norm = addforce.norm();
-				nInfo->test_force = addforce;
+				iPointer->interactInfo[i].mobility.force = -1 * addforce* iPointer->GetForceScale();						
+				nInfo->test_force_norm = addforce.norm()* iPointer->GetForceScale();;
+				nInfo->test_force = addforce* iPointer->GetForceScale();;
 
 			}else{
 				iPointer->bContact[i] = false;
@@ -452,9 +452,9 @@ void FWLDHapticLoop::ProxySimulation(){
 				outForce.w() += addtorque;
 
 				/// ŒvŽZ‚µ‚½—Í‚ð„‘Ì‚É‰Á‚¦‚é
-				iPointer->interactInfo[i].mobility.force = -1 * addforce;						
-				nInfo->test_force_norm = addforce.norm();
-				nInfo->test_force = addforce;
+				iPointer->interactInfo[i].mobility.force = -1 * addforce* iPointer->GetForceScale();;						
+				nInfo->test_force_norm = addforce.norm()* iPointer->GetForceScale();;
+				nInfo->test_force = addforce* iPointer->GetForceScale();;
 			}else{
 				iPointer->bContact[i] = false;
 				proxy[j][i] = poseSolid.Inv() * pPoint;

@@ -372,6 +372,9 @@ void FWApp::CreateAllTimer(){
 		fwTimers[i]->Recreate();
 	}
 }
+void FWApp::ClearAllTimer(){
+	fwTimers.clear();
+}
 
 FWTimer* FWApp::GetTimer(int id){
 	return (id < (int) fwTimers.size() ? fwTimers[id] : NULL);
