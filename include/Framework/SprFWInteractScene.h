@@ -11,7 +11,7 @@
 #include <Foundation/SprScene.h>
 #include <Framework/SprFWScene.h>
 #include <Framework/SprFWInteractPointer.h>
-#include <Framework/FWInteractAdaptee.h>
+//include <Framework/FWInteractAdaptee.h> //不要？　実装部分ヘッダの読み込み
 
 namespace Spr{;
 
