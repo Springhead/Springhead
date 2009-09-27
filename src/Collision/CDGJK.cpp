@@ -555,7 +555,6 @@ final:
 	normal = w2z.Conjugated() * v[ids[3]];
 	normal.unitize();
 	//	HASE_REPORT
-	//DSTR << "CCDGJK dist:" << dist << "v" << v[ids[3]] << "  " << pa << pb << std::endl;//naga
 	static bool bSave = false;
 	if (bSave){
 		ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);

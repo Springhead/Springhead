@@ -12,6 +12,7 @@
 #ifndef SPR_PHJOINTIf_H
 #define SPR_PHJOINTIf_H
 #include <Foundation/SprObject.h>
+#include <Physics/PHSpatial.h>
 
 namespace Spr{;
 
@@ -582,7 +583,6 @@ struct PHBallJointDesc : public PHJointDesc{
 	double			fMax;			 ///< 関節にかけられる最大の力
 	double			fMin;			 ///< 関節にかけられる最小の力
 	Vec2d			PoleTwist;
-	
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };
 

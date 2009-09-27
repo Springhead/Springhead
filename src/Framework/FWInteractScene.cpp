@@ -7,7 +7,8 @@
 
 namespace Spr{;
 FWInteractScene::FWInteractScene(){}
-FWInteractScene::FWInteractScene(const FWInteractSceneDesc &desc) : FWInteractSceneDesc(desc){}
+FWInteractScene::FWInteractScene(const FWInteractSceneDesc &desc) : FWInteractSceneDesc(desc){
+}
 
 FWSceneIf* FWInteractScene::GetScene(){ return fwScene; }
 /// AdapteeŠÖŒW

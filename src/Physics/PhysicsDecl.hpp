@@ -662,14 +662,59 @@ public:\
 protected:\
 	SpatialVector	f;	\
 	SpatialVector	F;	\
+	SpatialTransform	X;	\
+	SpatialTransform	Xj;	\
+	SpatialTransform	Xjrel;	\
+	SpatialVector	vjrel;	\
+	SpatialTransform	Js;	\
+	SpatialMatrix	J;	\
+	SpatialMatrix	AinvJ;	\
+	SpatialMatrix	T;	\
+	SpatialVector	b;	\
+	SpatialVector	db;	\
+	SpatialVector	B;	\
+	SpatialVector	A;	\
+	SpatialVector	dA;	\
+	SpatialVector	Ainv;	\
+	SpatialVector	scale;	\
 public:\
 	virtual void SetState(const void* ptr){ \
 		f = ((PHConstraintState*)ptr)->f;	\
 		F = ((PHConstraintState*)ptr)->F;	\
+		X = ((PHConstraintState*)ptr)->X;	\
+		Xj = ((PHConstraintState*)ptr)->Xj;	\
+		Xjrel = ((PHConstraintState*)ptr)->Xjrel;	\
+		vjrel = ((PHConstraintState*)ptr)->vjrel;	\
+		Js = ((PHConstraintState*)ptr)->Js;	\
+		J = ((PHConstraintState*)ptr)->J;	\
+		AinvJ = ((PHConstraintState*)ptr)->AinvJ;	\
+		T = ((PHConstraintState*)ptr)->T;	\
+		b = ((PHConstraintState*)ptr)->b;	\
+		db = ((PHConstraintState*)ptr)->db;	\
+		B = ((PHConstraintState*)ptr)->B;	\
+		A = ((PHConstraintState*)ptr)->A;	\
+		dA = ((PHConstraintState*)ptr)->dA;	\
+		Ainv = ((PHConstraintState*)ptr)->Ainv;	\
+		scale = ((PHConstraintState*)ptr)->scale;	\
 	}\
 	virtual bool GetState(void* ptr) const { \
 		((PHConstraintState*)ptr)->f = f;	\
 		((PHConstraintState*)ptr)->F = F;	\
+		((PHConstraintState*)ptr)->X = X;	\
+		((PHConstraintState*)ptr)->Xj = Xj;	\
+		((PHConstraintState*)ptr)->Xjrel = Xjrel;	\
+		((PHConstraintState*)ptr)->vjrel = vjrel;	\
+		((PHConstraintState*)ptr)->Js = Js;	\
+		((PHConstraintState*)ptr)->J = J;	\
+		((PHConstraintState*)ptr)->AinvJ = AinvJ;	\
+		((PHConstraintState*)ptr)->T = T;	\
+		((PHConstraintState*)ptr)->b = b;	\
+		((PHConstraintState*)ptr)->db = db;	\
+		((PHConstraintState*)ptr)->B = B;	\
+		((PHConstraintState*)ptr)->A = A;	\
+		((PHConstraintState*)ptr)->dA = dA;	\
+		((PHConstraintState*)ptr)->Ainv = Ainv;	\
+		((PHConstraintState*)ptr)->scale = scale;	\
 		return true;	\
 	}\
 

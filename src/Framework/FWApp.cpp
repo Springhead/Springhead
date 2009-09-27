@@ -319,6 +319,7 @@ FWInteractSceneIf* FWApp::CreateINScene(const FWInteractSceneDesc &desc){
 	FWInteractScene* inScene = DBG_NEW FWInteractScene(desc);
 	inScenes.push_back(inScene->Cast());
 	inScene->CreateINAdaptee(desc.mode);
+	inScene->SetHMode(desc.hmode);
 	curINScene = inScene->Cast();
 	return curINScene;
 }
