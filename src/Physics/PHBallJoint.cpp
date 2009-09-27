@@ -606,6 +606,7 @@ void PHBallJoint::MovableCheck(double dtinv){
 	}
 }
 void PHBallJoint::CompBias(){
+
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	
 	db.v() = Xjrel.r * dtinv;		//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ

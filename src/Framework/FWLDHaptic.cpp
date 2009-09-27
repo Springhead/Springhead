@@ -18,7 +18,6 @@ FWLDHapticLoop::FWLDHapticLoop(){
 }
 void FWLDHapticLoop::Step(){
 	UpdateInterface();
-#if 1
 	switch(hmode){
 		case PENALTY:
 			HapticRendering();
@@ -33,11 +32,6 @@ void FWLDHapticLoop::Step(){
 			HapticRendering();
 			break;
 	}
-#else
-//	HapticRendering();
-	Proxy();
-//	ProxySimulation();
-#endif
 	LocalDynamics();
 }
 
@@ -69,7 +63,6 @@ void FWLDHapticLoop::UpdateInterface(){
 			Posed hiSolidPose = hifPose * GetINPointer(i)->GetDefaultPosition()*GetINPointer(i)->GetPointersCalibPosition();
 			hiSolid->SetPose(hiSolidPose);
 		}
-		//DSTR<<GetINPointer(i)->GetDefaultPosition()<<std::endl; //naga
 	}
 }
 
@@ -130,11 +123,11 @@ void FWLDHapticLoop::HapticRendering(){
 				outForce.v() += addforce + vibforce;	
 				outForce.w() += addtorque;
 
-				/// 計算した力を剛体に加える//naga
+				/// 計算した力を剛体に加える//
 				iPointer->interactInfo[i].mobility.force = -1 * addforce * iPointer->GetForceScale();	
 				nInfo->test_force_norm = addforce.norm() * iPointer->GetForceScale();
 				nInfo->test_force = addforce * iPointer->GetForceScale();
-				//DSTR<<iPointer->GetForceScale()<<std::endl;//naga
+				//DSTR<<"force"<<nInfo->test_force_norm<<std::endl;//naga
 				//if(iPointer->bForce)	DSTR << vibforce << endl;
 			}else{
 				iSolid->sceneSolid->GetShape(0)->SetVibContact(true); 
@@ -183,7 +176,7 @@ void FWLDHapticLoop::LocalDynamics(){
 			FWInteractPointer* iPointer = GetINPointer(j);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			if(!iInfo->flag.blocal) continue;
-			vel += (iInfo->mobility.A * iInfo->mobility.force) * hdt;			// 力覚ポインタからの力による速度変化
+			//vel += (iInfo->mobility.A * iInfo->mobility.force) * hdt;			// 力覚ポインタからの力による速度変化
 			iInfo->mobility.force = Vec3d();
 		}
 		vel += iSolid->b * hdt;
@@ -192,6 +185,13 @@ void FWLDHapticLoop::LocalDynamics(){
 		iSolid->copiedSolid.SetAngularVelocity(vel.w());
 		iSolid->copiedSolid.SetCenterPosition(iSolid->copiedSolid.GetCenterPosition() + vel.v() * hdt);
 		iSolid->copiedSolid.SetOrientation(( Quaterniond::Rot(vel.w() * hdt) * iSolid->copiedSolid.GetOrientation()).unit());
+
+		//DSTR<<"Vel:"<<iSolid->copiedSolid.GetVelocity()<<std::endl;
+		//DSTR<<"AngVel:"<<iSolid->copiedSolid.GetAngularVelocity()<<std::endl;
+		//DSTR<<"Vel:"<<iSolid->copiedSolid.GetVelocity()<<std::endl;
+		//DSTR<<"Vel:"<<iSolid->copiedSolid.GetVelocity()<<std::endl;
+
+
  		iSolid->copiedSolid.SetUpdated(true);
 		iSolid->copiedSolid.Step();
 	}
@@ -538,6 +538,8 @@ void FWLDHaptic::PhysicsStep(){
 		lastvel.back().w() = phSolid->GetAngularVelocity();
 	}
 	/// シミュレーションを進める
+
+	DSTR<<"Physicsシミュレーション"<<std::endl;
 	GetPHScene()->Step();
 	for(int i = 0; i < NINSolids(); i++){
 		if(!GetINSolid(i)->bSim) continue;
@@ -547,6 +549,7 @@ void FWLDHaptic::PhysicsStep(){
 		curvel.w() = phSolid->GetAngularVelocity();
 		double pdt = GetPHScene()->GetTimeStep();
 		GetINSolid(i)->curb = (curvel - lastvel[i]) / pdt;
+		DSTR << "naga"<<curvel.w() << std::endl;
 //		DSTR << GetINSolid(i)->curb << std::endl;
 	}
 }
@@ -591,6 +594,7 @@ void FWLDHaptic::TestSimulation(){
 		curvel.v() = phSolid->GetVelocity();			// 現在の速度
 		curvel.w() = phSolid->GetAngularVelocity();		// 現在の角速度									
 
+		DSTR<<" 力を加えないで1ステップ進める--------------------"<<std::endl;
 		/// 何も力を加えないでシミュレーションを1ステップ進める
 		#ifdef DIVIDE_STEP
 		phScene->IntegratePart2();
@@ -643,7 +647,7 @@ void FWLDHaptic::TestSimulation(){
 			t[1] = n % t[0];										// t[1]は法線とt[0]の外積できまる
 
 			/// 接触点に加える力
-			const float minTestForce = 0.5;										// 最小テスト力
+			const float minTestForce = 10.0;//naga0.5;										// 最小テスト力
 			/// 通常テスト力が最小テスト力を下回る場合
 			if(iInfo->neighborInfo.test_force_norm < minTestForce){
 				iInfo->neighborInfo.test_force_norm = minTestForce;					 
@@ -666,7 +670,9 @@ void FWLDHaptic::TestSimulation(){
 			force.col(1) = iInfo->neighborInfo.test_force_norm * (n + t[0]);
 			force.col(2) = iInfo->neighborInfo.test_force_norm * (n + t[1]);
 			#endif
+			//DSTR<<force<<std::endl;
 
+			DSTR<<" 法線--------------------"<<std::endl;
 			/// 法線方向に力を加える
 			phSolid->AddForce(force.col(0), cPoint); 
 			#ifdef DIVIDE_STEP
@@ -678,7 +684,8 @@ void FWLDHaptic::TestSimulation(){
 			nextvel.w() = phSolid->GetAngularVelocity();
 			u.col(0) = (nextvel - curvel) /pdt - inSolid->b;
 			states->LoadState(phScene);
-
+			
+			DSTR<<" n + t[0]--------------------"<<std::endl;
 			/// n + t[0]方向に力を加える
 			phSolid->AddForce(force.col(1), cPoint);
 			#ifdef DIVIDE_STEP
@@ -691,6 +698,7 @@ void FWLDHaptic::TestSimulation(){
 			u.col(1) = (nextvel - curvel) /pdt - inSolid->b;
 			states->LoadState(phScene);
 
+			DSTR<<" n + t[1]--------------------"<<std::endl;
 			/// n+t[1]方向力を加える
 			phSolid->AddForce(force.col(2), cPoint);
 			#ifdef DIVIDE_STEP

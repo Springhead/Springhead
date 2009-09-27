@@ -8,7 +8,7 @@
 #ifndef PHSPATIAL_H
 #define PHSPATIAL_H
 
-#include <SprPhysics.h>
+//#include <SprPhysics.h>
 
 /**
  SpatialVector	  V(v, w) = [v; w];
