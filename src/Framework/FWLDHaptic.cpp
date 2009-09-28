@@ -180,6 +180,7 @@ void FWLDHapticLoop::LocalDynamics(){
 			iInfo->mobility.force = Vec3d();
 		}
 		vel += iSolid->b * hdt;
+		//DSTR<<"b"<<iSolid->b<<std::endl;
 //		DSTR << vel.v() << std::endl;
 		iSolid->copiedSolid.SetVelocity(vel.v());																		
 		iSolid->copiedSolid.SetAngularVelocity(vel.w());
@@ -188,9 +189,9 @@ void FWLDHapticLoop::LocalDynamics(){
 
 		//DSTR<<"Vel:"<<iSolid->copiedSolid.GetVelocity()<<std::endl;
 		//DSTR<<"AngVel:"<<iSolid->copiedSolid.GetAngularVelocity()<<std::endl;
-		//DSTR<<"Vel:"<<iSolid->copiedSolid.GetVelocity()<<std::endl;
-		//DSTR<<"Vel:"<<iSolid->copiedSolid.GetVelocity()<<std::endl;
-
+		//DSTR<<"Pos:"<<iSolid->copiedSolid.GetCenterPosition()<<std::endl;
+		//DSTR<<"Ori:"<<iSolid->copiedSolid.GetOrientation()<<std::endl;
+		//DSTR<<"----------------------------"<<std::endl;
 
  		iSolid->copiedSolid.SetUpdated(true);
 		iSolid->copiedSolid.Step();
@@ -539,7 +540,7 @@ void FWLDHaptic::PhysicsStep(){
 	}
 	/// シミュレーションを進める
 
-	DSTR<<"Physicsシミュレーション"<<std::endl;
+	//DSTR<<"Physicsシミュレーション"<<std::endl;
 	GetPHScene()->Step();
 	for(int i = 0; i < NINSolids(); i++){
 		if(!GetINSolid(i)->bSim) continue;
@@ -549,7 +550,7 @@ void FWLDHaptic::PhysicsStep(){
 		curvel.w() = phSolid->GetAngularVelocity();
 		double pdt = GetPHScene()->GetTimeStep();
 		GetINSolid(i)->curb = (curvel - lastvel[i]) / pdt;
-		DSTR << "naga"<<curvel.w() << std::endl;
+		//DSTR << "naga"<<curvel.w() << std::endl;
 //		DSTR << GetINSolid(i)->curb << std::endl;
 	}
 }
@@ -594,7 +595,7 @@ void FWLDHaptic::TestSimulation(){
 		curvel.v() = phSolid->GetVelocity();			// 現在の速度
 		curvel.w() = phSolid->GetAngularVelocity();		// 現在の角速度									
 
-		DSTR<<" 力を加えないで1ステップ進める--------------------"<<std::endl;
+	//	DSTR<<" 力を加えないで1ステップ進める--------------------"<<std::endl;
 		/// 何も力を加えないでシミュレーションを1ステップ進める
 		#ifdef DIVIDE_STEP
 		phScene->IntegratePart2();
@@ -672,7 +673,7 @@ void FWLDHaptic::TestSimulation(){
 			#endif
 			//DSTR<<force<<std::endl;
 
-			DSTR<<" 法線--------------------"<<std::endl;
+			//DSTR<<" 法線--------------------"<<std::endl;
 			/// 法線方向に力を加える
 			phSolid->AddForce(force.col(0), cPoint); 
 			#ifdef DIVIDE_STEP
@@ -685,7 +686,7 @@ void FWLDHaptic::TestSimulation(){
 			u.col(0) = (nextvel - curvel) /pdt - inSolid->b;
 			states->LoadState(phScene);
 			
-			DSTR<<" n + t[0]--------------------"<<std::endl;
+			//DSTR<<" n + t[0]--------------------"<<std::endl;
 			/// n + t[0]方向に力を加える
 			phSolid->AddForce(force.col(1), cPoint);
 			#ifdef DIVIDE_STEP
@@ -698,7 +699,7 @@ void FWLDHaptic::TestSimulation(){
 			u.col(1) = (nextvel - curvel) /pdt - inSolid->b;
 			states->LoadState(phScene);
 
-			DSTR<<" n + t[1]--------------------"<<std::endl;
+			//DSTR<<" n + t[1]--------------------"<<std::endl;
 			/// n+t[1]方向力を加える
 			phSolid->AddForce(force.col(2), cPoint);
 			#ifdef DIVIDE_STEP
