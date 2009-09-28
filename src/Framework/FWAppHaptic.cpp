@@ -43,12 +43,6 @@ void FWAppHaptic::Init(int argc, char* argv[]){
 	BuildPointer();
 
 	/// タイマの作成，設定
-	//UTMMTimer* mtimer = CreateMMTimerFunc();				// タイマを作成
-	//mtimer->Resolution(1);									// 分解能[ms]
-	//mtimer->Interval(1);									// 呼びだし感覚[ms]
-	//mtimer->Set(CallBackHapticLoop, NULL);					// コールバックする関数
-	//mtimer->Create();										// コールバック開始
-
 	FWTimer* timer = CreateTimer(MMTimer);
 	timer->SetInterval(1);
 	timer->SetResolution(1);

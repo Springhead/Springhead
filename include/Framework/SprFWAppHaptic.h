@@ -4,7 +4,7 @@
 #include <Springhead.h>
 #include <Framework/SprFWApp.h>
 
-using namespace Spr;
+namespace Spr{;
 
 class FWAppHaptic : public FWApp{
 public:
@@ -30,5 +30,7 @@ public:
 	void DisplayContactPlane();					///< 接触面の描画
 	void DisplayLineToNearestPoint();			///< ポインタの近傍点から剛体の近傍点への線
 }; 
+
+}
 
 #endif
