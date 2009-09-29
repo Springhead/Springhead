@@ -320,8 +320,13 @@ bool PHScene::AddChildObject(ObjectIf* o){
 		}
 	}
 	PHJointIf* con = DCAST(PHJointIf, o);
-	if(con && constraintEngine->AddChildObject(con))
+	if(con && constraintEngine->AddChildObject(con)){
 		ok = true;
+	}
+	PHBallJointIf* ball = DCAST(PHBallJointIf, o);
+	if(ball && constraintEngine->AddChildObject(o)){
+		ok = true;
+	}
 	PHTreeNodeIf* node = DCAST(PHTreeNodeIf, o);
 	if(node && constraintEngine->AddChildObject(o))
 		ok = true;

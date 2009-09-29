@@ -280,11 +280,18 @@ PHGear* PHConstraintEngine::CreateGear(const PHGearDesc& desc, PHJoint1D* lhs, P
 bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 	if(Detector::AddChildObject(o))
 		return true;
-	
+
 	PHConstraint* con = DCAST(PHConstraint, o);
 	if(con){
 		con->engine = this;
 		joints.push_back(con);
+		//naga
+		//PHBallJoint* ball = DCAST(PHBallJoint, o);
+		//if(ball){
+		//	ball->engine = this;
+		//	ballJoints.push_back(ball);
+		//	return true;
+		//}
 		return true;
 	}
 	PHRootNode* root = DCAST(PHRootNode, o);
@@ -306,6 +313,7 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 		paths.push_back(path);
 		return true;
 	}
+
 	return false;
 }
 
@@ -577,6 +585,11 @@ bool PHConstraintEngine::GetState(void* s) const {
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->GetState(&st->gears[i]);
 		}
+		//naga
+		st->ballJoints.resize(ballJoints.size());
+		for(size_t i=0; i<ballJoints.size(); ++i){
+			ballJoints[i]->GetState(&st->ballJoints[i]);
+		}
 	}
 	return true;
 }
@@ -592,6 +605,11 @@ void PHConstraintEngine::SetState(const void* s){
 		gears.resize(st->gears.size());
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->SetState(&st->gears[i]);
+		}
+		//naga
+		ballJoints.resize(st->ballJoints.size());
+		for(size_t i=0; i<ballJoints.size(); ++i){
+			ballJoints[i]->SetState(&st->ballJoints[i]);
 		}
 	}
 }
