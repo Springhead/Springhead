@@ -73,6 +73,7 @@ void PHBallJoint::AfterSetDesc(){
 }
 
 void PHBallJoint::UpdateJointState(){
+	
 	// Jc.Ez() : Socket‚É‘Î‚·‚éPlug‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü(‹ŒcurrentVector)
 	Jc.Ez() = Xjrel.q * Vec3f(0.0, 0.0, 1.0);
 	if((onLimit[0].onLower || onLimit[0].onUpper) && (Jc.Ez() != limitDir)){

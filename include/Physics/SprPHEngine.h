@@ -56,6 +56,11 @@ public:
 	*/
 	double GetContactCorrectionRate();
 
+	/** @brief bSaveConstraintsを書き換える
+		@return value SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
+	*/
+	void	SetBSaveConstraints(bool value);
+
 	/** @brief 剛体の速度だけ更新するフラグを設定する
 	*/
 	void SetUpdateAllSolidState(bool flag);

@@ -12,6 +12,7 @@
 #include "PHConstraint.h"
 #include "PHGear.h"
 #include "PHPathJoint.h"
+#include "PHBallJoint.h"
 #include <Collision/CDDetectorImp.h>
 
 namespace Spr{;
@@ -71,6 +72,7 @@ public:
 struct PHConstraintsSt{
 	std::vector<PHConstraintState> joints;
 	std::vector<PHConstraintState> gears;
+	std::vector<PHBallJointState> ballJoints;//naga
 };
 
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
@@ -113,6 +115,8 @@ public:
 
 	PHConstraints	points;			///< 接触点の配列
 	PHConstraints	joints;			///< 関節の配列
+	typedef std::vector< UTRef<PHBallJoint> > PHBallJoints;
+	PHBallJoints	ballJoints;		///< 球関節の配列
 	typedef std::vector< UTRef<PHRootNode> > PHRootNodes;
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
 	PHGears			gears;

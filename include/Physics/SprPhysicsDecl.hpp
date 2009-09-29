@@ -8,6 +8,7 @@
 	double GetPosCorrectionRate(){	return	base::GetPosCorrectionRate();}	\
 	void SetContactCorrectionRate(double value){	base::SetContactCorrectionRate(value);}	\
 	double GetContactCorrectionRate(){	return	base::GetContactCorrectionRate();}	\
+	void SetBSaveConstraints(bool value){	base::SetBSaveConstraints(value);}	\
 	void SetUpdateAllSolidState(bool flag){	base::SetUpdateAllSolidState(flag);}	\
 	void SetShrinkRate(double data){	base::SetShrinkRate(data);}	\
 	double GetShrinkRate(){	return	base::GetShrinkRate();}	\

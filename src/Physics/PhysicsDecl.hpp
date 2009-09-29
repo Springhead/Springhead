@@ -658,6 +658,57 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHBallJointState \
+protected:\
+	Vec3d	nowTheta;	\
+	bool	anyLimit;	\
+	Matrix3d	Jc;	\
+	Matrix3d	Jcinv;	\
+	Spr::OnLimit	onLimit;	\
+	double	fMinDt;	\
+	double	fMaxDt;	\
+	Spr::limitLine	LimitLine;	\
+	int	limitCount;	\
+	double	Irrupt;	\
+	Vec3d	tanLine;	\
+	int	FunNum;	\
+	Matrix3d	limDir;	\
+	Vec3d	BefPos;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		nowTheta = ((PHBallJointState*)ptr)->nowTheta;	\
+		anyLimit = ((PHBallJointState*)ptr)->anyLimit;	\
+		Jc = ((PHBallJointState*)ptr)->Jc;	\
+		Jcinv = ((PHBallJointState*)ptr)->Jcinv;	\
+		onLimit = ((PHBallJointState*)ptr)->onLimit;	\
+		fMinDt = ((PHBallJointState*)ptr)->fMinDt;	\
+		fMaxDt = ((PHBallJointState*)ptr)->fMaxDt;	\
+		LimitLine = ((PHBallJointState*)ptr)->LimitLine;	\
+		limitCount = ((PHBallJointState*)ptr)->limitCount;	\
+		Irrupt = ((PHBallJointState*)ptr)->Irrupt;	\
+		tanLine = ((PHBallJointState*)ptr)->tanLine;	\
+		FunNum = ((PHBallJointState*)ptr)->FunNum;	\
+		limDir = ((PHBallJointState*)ptr)->limDir;	\
+		BefPos = ((PHBallJointState*)ptr)->BefPos;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		((PHBallJointState*)ptr)->nowTheta = nowTheta;	\
+		((PHBallJointState*)ptr)->anyLimit = anyLimit;	\
+		((PHBallJointState*)ptr)->Jc = Jc;	\
+		((PHBallJointState*)ptr)->Jcinv = Jcinv;	\
+		((PHBallJointState*)ptr)->onLimit = onLimit;	\
+		((PHBallJointState*)ptr)->fMinDt = fMinDt;	\
+		((PHBallJointState*)ptr)->fMaxDt = fMaxDt;	\
+		((PHBallJointState*)ptr)->LimitLine = LimitLine;	\
+		((PHBallJointState*)ptr)->limitCount = limitCount;	\
+		((PHBallJointState*)ptr)->Irrupt = Irrupt;	\
+		((PHBallJointState*)ptr)->tanLine = tanLine;	\
+		((PHBallJointState*)ptr)->FunNum = FunNum;	\
+		((PHBallJointState*)ptr)->limDir = limDir;	\
+		((PHBallJointState*)ptr)->BefPos = BefPos;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHConstraintState \
 protected:\
 	SpatialVector	f;	\
