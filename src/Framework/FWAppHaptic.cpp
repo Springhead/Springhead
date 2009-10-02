@@ -108,22 +108,25 @@ void FWAppHaptic::Start(){
 
 void FWAppHaptic::TimerFunc(int id){	
 	switch(id){
-		case 0:
+		case 0:{
 			((FWAppHaptic*)instance)->GetINScene()->CallBackHapticLoop();
 			GetGRAdaptee()->PostRedisplay();
 			break;
-		case 1:
+			   }
+		case 1:{
 			/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
 			if(bStep) 	FWAppHaptic::instance->GetINScene()->Step();
 			else if (bOneStep){
 					FWAppHaptic::instance->GetINScene()->Step();
 					bOneStep = false;
 			}
+			GetGRAdaptee()->PostRedisplay();
 			break;
+			   }
 	}
 }
 void FWAppHaptic::IdleFunc(){
-	
+
 	glutPostRedisplay();
 }
 

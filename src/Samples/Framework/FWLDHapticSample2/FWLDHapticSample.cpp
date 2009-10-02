@@ -46,6 +46,7 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	FWTimer* timer = CreateTimer(MMTimer);
 	timer->SetInterval(1);
 	timer->SetResolution(1);
+	FWTimer* timer2 = CreateTimer(GLUTTimer);
 }
 
 void FWLDHapticSample::InitCameraView(){
