@@ -75,7 +75,7 @@ void FWMultiRateHaptic::Sync(){
 				piSolid->bfirstSim = false;						// 初めて近傍になった場合の処理
 			}
 			//DSTR<<"sync:"<<piSolid->b<<std::endl; //naga
-			//hiSolid->b = piSolid->b;
+			hiSolid->b = piSolid->b;
 			hiSolid->curb = piSolid->curb;
 			hiSolid->lastb = piSolid->lastb;
 			/// ポインタごとに持つ情報の同期

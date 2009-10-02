@@ -46,6 +46,7 @@ void FWAppHaptic::Init(int argc, char* argv[]){
 	FWTimer* timer = CreateTimer(MMTimer);
 	timer->SetInterval(1);
 	timer->SetResolution(1);
+	FWTimer* timer2 = CreateTimer(GLUTTimer);
 
 }
 
@@ -111,15 +112,18 @@ void FWAppHaptic::TimerFunc(int id){
 			((FWAppHaptic*)instance)->GetINScene()->CallBackHapticLoop();
 			GetGRAdaptee()->PostRedisplay();
 			break;
+		case 1:
+			/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
+			if(bStep) 	FWAppHaptic::instance->GetINScene()->Step();
+			else if (bOneStep){
+					FWAppHaptic::instance->GetINScene()->Step();
+					bOneStep = false;
+			}
+			break;
 	}
 }
 void FWAppHaptic::IdleFunc(){
-	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
-	if(bStep) 	FWAppHaptic::instance->GetINScene()->Step();
-	else if (bOneStep){
-			FWAppHaptic::instance->GetINScene()->Step();
-			bOneStep = false;
-	}
+	
 	glutPostRedisplay();
 }
 
