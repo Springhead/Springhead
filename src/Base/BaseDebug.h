@@ -10,6 +10,8 @@
 #include "Env.h"
 #include <stdarg.h>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 /**	@file BaseDebug.h デバッグ用ユーティリティークラス・関数の定義.	*/
 
@@ -68,6 +70,30 @@ public:
  #define DEBUG_EVAL(x)
 #endif
 
+
+/**	デバッグ用 CSV出力ストリーム.
+	@verbatim
+	CSVout << "メッセージ:" << msg;@endverbatim
+	の様に使う．							*/
+#define CSVOUT (Spr::DebugCSV::GetInstance()->Stream())
+/**	デバッグ用 CSV出力ストリーム.
+	現在開いているファイルをcloseする．
+	保存するには必ず呼ぶ必要がある。
+	*/
+#define CSVCLOSE (Spr::DebugCSV::GetInstance()->Close())
+
+class SPR_DLL DebugCSV{
+public:
+	static DebugCSV* instance;
+	std::ofstream fout;
+
+	static DebugCSV* FASTCALL GetInstance();
+	std::ostream& Stream();
+	void Set(void (*out)(const char*));
+	static void defcsvOutFunc(const char* str);
+	void Close();
+	std::string FileNameSearch();							//フォルダ内のCSVファイルをサーチし新しいファイル名を生成
+};
 
 }	//	namespace Spr
 

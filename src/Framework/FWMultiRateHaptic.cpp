@@ -33,11 +33,12 @@ void FWMultiRateHaptic::Sync(){
 					(piSolid->curb - piSolid->lastb)) * pdt;	// モビリティ定数項
 			Vec3d v = hiSolid->copiedSolid.GetVelocity() + b.v();					// 反映速度
 			Vec3d w = hiSolid->copiedSolid.GetAngularVelocity() + b.w();			// 反映角速度
-			
+#if 1 //HapticLoopの結果をPhysicsLoopに反映させない場合はfalse //naga
 			hiSolid->sceneSolid->SetVelocity(v);
 			hiSolid->sceneSolid->SetAngularVelocity(w);
 			hiSolid->sceneSolid->SetCenterPosition(hiSolid->copiedSolid.GetCenterPosition());
 			hiSolid->sceneSolid->SetOrientation(hiSolid->copiedSolid.GetOrientation());
+#endif
 			/// 各ポインタが持つ情報を同期
 			for(int j = 0; j < NINPointers(); j++){
 				piInfo = &GetINPointer(j)->interactInfo[i];
