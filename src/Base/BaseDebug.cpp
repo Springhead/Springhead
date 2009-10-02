@@ -20,6 +20,8 @@ namespace Spr {
 
 typedef void (DebugOutFunc)(const char*);
 static DebugOutFunc* debugOutFunc;
+static DebugOutFunc* csvOutFunc;
+
 
 int SPR_CDECL DebugPrintf::PrintfFunc::operator ()(const char* fmt, ...){
 	int rv = 0;
@@ -70,12 +72,21 @@ public:
 		return 0;
 	}
 	virtual unsigned int write(void* src, unsigned int len){
-		if (debugOutFunc){
+		if(csvOutFunc){
+			char buf[4096];
+			if (len > sizeof buf - 1) len = sizeof buf -1;
+			memcpy(buf, src, len);
+			buf[len] = '\0';
+			csvOutFunc(buf);
+			csvOutFunc = NULL;
+		}
+		else if (debugOutFunc){
 			char buf[4096];
 			if (len > sizeof buf - 1) len = sizeof buf -1;
 			memcpy(buf, src, len);
 			buf[len] = '\0';
 			debugOutFunc(buf);
+			debugOutFunc = NULL;
 		}else{
 			len = 0;
 		}
@@ -125,6 +136,61 @@ std::ostream& DebugPrintf::Stream(){
 	return DebugPrintf_dpfStr;
 }
 #endif
+
+//デバッグ用 CSV出力ストリーム----------------------------------------------------------------
+
+static bool CSVFileOpenFlag;
+DebugCSV* DebugCSV::instance;
+
+void DebugCSV::defcsvOutFunc(const char* str){
+	instance->fout<<str;
+}
+
+DebugCSV* DebugCSV::GetInstance(){
+	static DebugCSV dpf;
+	instance = &dpf;
+	if (!csvOutFunc) dpf.Set(defcsvOutFunc);
+	return &dpf;
+}
+
+void DebugCSV::Set(void (*out)(const char*)){
+	csvOutFunc = out;
+}
+
+std::ostream& DebugCSV::Stream(){
+	static DPFStream DebugCSV_dpfStr;
+	DebugCSV_dpfStr.flush();
+	DebugCSV_dpfStr.clear();
+
+	if(CSVFileOpenFlag == false){
+		std::string name = FileNameSearch(); //新規のファイル名を指定
+		fout.open(name.c_str());
+		CSVFileOpenFlag = true;
+	}
+	return DebugCSV_dpfStr;
+}
+
+void DebugCSV::Close(){
+	fout.close();
+	CSVFileOpenFlag = false;
+}
+
+std::string DebugCSV::FileNameSearch(){
+	std::stringstream filenames;	
+	std::ifstream ifs;
+
+	for(int No=1;;No++){
+		filenames<<"DebugData"<<No<<".csv";
+		ifs.open(filenames.str().c_str());
+	if(!ifs){
+		ifs.close();
+		return filenames.str();
+	}
+	filenames.str(""); // バッファをクリアする。
+	ifs.close();
+	}
+	
+}
 
 
 
