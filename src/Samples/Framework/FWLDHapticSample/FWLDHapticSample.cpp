@@ -32,6 +32,7 @@ void FWLDHapticSample::InitHumanInterface(){
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
 
+#if 1
 	/// SPIDARG6‚ğ2‘äg‚¤ê‡
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
@@ -40,6 +41,15 @@ void FWLDHapticSample::InitHumanInterface(){
 		if(i == 1) spg[i]->Init(&HISpidarGDesc("SpidarG6X3L"));
 		AddHI(spg[i]);
 	}
+#else
+	/// SPIDAR4D‚ğg‚¤ê‡
+	UTRef<HISpidar4If> spg = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+	spg->Init(&HISpidar4Desc("SpidarR",Vec4i(1,2,3,4)));
+	UTRef<HISpidar4If> spg2 = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
+	spg2->Init(&HISpidar4Desc("SpidarL",Vec4i(5,6,7,8)));
+	AddHI(spg);
+	AddHI(spg2);
+#endif
 }
 
 
