@@ -1,12 +1,10 @@
 #ifndef FWGLUT_H
 #define FWGLUT_H
-#include<sstream>
-#include<string>
-#include<vector>
-#include<Springhead.h>
-#include"Framework/FWGraphicsAdaptee.h"
-#include"Framework/SprFWApp.h"
-#include"Framework/FWAppInfo.h"
+#include <vector>
+#include <GL/glut.h>
+#include <Framework/SprFWGraphicsAdaptee.h>
+#include <Framework/SprFWApp.h>
+
 using namespace std;
 
 namespace Spr{;

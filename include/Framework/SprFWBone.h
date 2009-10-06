@@ -11,7 +11,7 @@
 #include <Foundation/SprScene.h>
 #include <Physics/SprPHSolid.h>
 #include <Graphics/SprGRFrame.h>
-#include <Base/Affine.h>
+//#include <Base/Affine.h>
 namespace Spr{;
 
 struct FWSceneIf;

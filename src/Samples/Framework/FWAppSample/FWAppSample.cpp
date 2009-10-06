@@ -27,7 +27,7 @@ void FWAppSample::Init(int argc, char* argv[]){
 
 	BuildObject();											// 剛体を作成
 
-	CreateTimer(FWTimer::GLUT);											// タイマーの生成
+	int timerId = CreateTimer(FWTimer::GLUT);				// タイマーの生成
 }
 
 void FWAppSample::TimerFunc(int id){	

@@ -1,6 +1,7 @@
-#include <Framework/FWAppInfo.h>
+#include <Framework/SprFWAppInfo.h>
 #include <Framework/SprFWApp.h>
 #include <Springhead.h>
+#include <GL/glut.h>
 
 namespace Spr{;
 

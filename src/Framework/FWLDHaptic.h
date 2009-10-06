@@ -10,7 +10,7 @@
 #define FWLDHaptic_H
 
 #include <Framework/FWMultiRateHaptic.h>
-#include <Framework/FWInteractAdaptee.h>
+#include <Framework/FWInteractScene.h>
 
 class FWLDHapticLoop : public FWHapticLoopBase{
 private:

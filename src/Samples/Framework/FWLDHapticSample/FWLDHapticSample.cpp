@@ -43,9 +43,9 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	BuildPointer();
 
 	/// タイマの作成，設定
-	FWTimer* timer = CreateTimer(FWTimer::MM);
-	timer->SetInterval(1);
-	timer->SetResolution(1);
+	int timerId = CreateTimer(FWTimer::MM);
+	SetInterval(timerId , 1);
+	SetResolution(timerId , 1);
 }
 
 void FWLDHapticSample::InitCameraView(){

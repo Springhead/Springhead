@@ -27,7 +27,9 @@ void FWXfileLoader::Init(int argc, char* argv[]){
 	InitWindow();
 
 	/// ƒJƒƒ‰ƒrƒ…[‚Ì‰Šú‰»
-	InitCameraView();								
+	InitCameraView();	
+
+	CreateTimer();
 }
 
 void FWXfileLoader::InitCameraView(){
@@ -47,8 +49,11 @@ void FWXfileLoader::Reset(){
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 }
 
-void FWXfileLoader::IdleFunc(){
+void FWXfileLoader::TimerFunc(int id){
 	Step();
+}
+
+void FWXfileLoader::IdleFunc(){
 }
 void FWXfileLoader::Step(){
 	GetSdk()->Step();

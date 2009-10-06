@@ -12,7 +12,6 @@
 #include "FWOldSpringheadNode.h"
 #include <Physics/PHSdk.h>
 #include <Graphics/GRSdk.h>
-#include "FWGraphicsAdaptee.h"
 #include <Framework/SprFWGLUT.h>
 #include <Framework/SprFWGLUI.h>
 #include <Framework/FWInteractScene.h>
@@ -38,18 +37,6 @@ void FWApp::Reshape(int w, int h){
 	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
 	fwSdk->Reshape(w, h);
 }
-//
-//void FWApp::MTimerCreate(){
-//	for(int i=0; i< (int)mmtimer.size(); i++){
-//		mmtimer[i]->Create();
-//	}
-//}
-//
-//void FWApp::MTimerRelease(){
-//	for(int i=0; i< (int)mmtimer.size(); i++){
-//		mmtimer[i]->Release();
-//	}
-//}
 
 void FWApp::BeginKeyboard(){
 	for(int i = 0; i < NINScenes(); i++){
@@ -338,35 +325,32 @@ void FWApp::INClear(){
 	curINScene = NULL;
 }
 
-///////////////////////////////////////////////////////////////////////////////////
-//マルチメディアタイマ//////////////////////////////////////////////////////////////
-//
-//UTMMTimer* FWApp::CreateMMTimerFunc(){
-//	UTMMTimer* timer_=new UTMMTimer;
-//	mmtimer.push_back(timer_);
-//	return mmtimer.back();
-//}
-//
-//UTMMTimer* FWApp::GetMMTimerFunc(int n){
-//	if(n< (int) mmtimer.size()){
-//		return mmtimer[n];
-//	}else{
-//		return NULL;
-//	}
-//}
-
 //タイマ///////////////////////////////////////////////////////////////////////////
 
-FWTimer* FWApp::CreateTimer(FWTimer::TimerType t){
-	fwTimers.push_back(DBG_NEW FWTimer(fwTimers.size(),t));
+int FWApp::CreateTimer(FWTimer::TimerType t){
+	fwTimers.push_back(DBG_NEW FWTimer((int)fwTimers.size(),t));
 	fwTimers.back()->Create();
-	return fwTimers.back();
+	return fwTimers.back()->GetTimerId();
+}
+void FWApp::SetInterval(int id, unsigned ms){
+	fwTimers[id]->SetInterval(ms);
+}
+unsigned FWApp::GetInterval(int id){
+	return fwTimers[id]->GetInterval();
+}
+void FWApp::SetResolution(int id, unsigned r){
+	fwTimers[id]->SetResolution(r);
+}
+unsigned FWApp::GetResolution(int id){
+	return fwTimers[id]->GetResolution();
 }
 
 void FWApp::ReleaseTimer(int id){
 	fwTimers[id]->Release();
 }
-
+void FWApp::RecreateTimer(int id){
+	fwTimers[id]->Recreate();
+}
 void FWApp::ReleaseAllTimer(){
 	for(unsigned int i=0; i < fwTimers.size() ; i++){
 		fwTimers[i]->Release();

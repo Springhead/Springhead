@@ -1,12 +1,4 @@
-#include "Framework/SprFWApp.h"
-
 #include <Framework/SprFWGLUI.h>
-#include "FWScene.h"
-#include "FWSdk.h"
-#include "FWOldSpringheadNode.h"
-#include <Physics/PHSdk.h>
-#include <Graphics/GRSdk.h>
-#include <GL/glui.h>
 
 namespace Spr{;
 

@@ -57,7 +57,7 @@ void FWMultiWinSample2::Init(int argc, char* argv[]){
 
 	/// コールバックタイマの作成と設定 
 	for(int i = 0; i < (int)GetSdk()->NScene(); i++){
-		CreateTimer()->SetInterval((int)(1000.0 * GetSdk()->GetScene(i)->GetPHScene()->GetTimeStep()));
+		CreateTimer();
 	}
 }
 
