@@ -118,16 +118,21 @@ struct DragInfo{
 };
 
 /// タイマ．
-enum TimerType{
-	GLUTTimer = 0,
-	MMTimer = 1,
-};
+//enum TimerType{
+//	GLUTTimer = 0,
+//	MMTimer = 1,
+//};
 
 class  FWTimer : public UTRefCount{
 public:
+	enum TimerType{
+		GLUT = 0,
+		MM = 1,
+	};
 	static void SPR_CDECL GLUTTimerFunc(int id);		///<	タイマーコールバック関数
 	static void SPR_CDECL MultiMediaTimerFunc(int id);	///<	タイマーコールバック関数
-	FWTimer(int id, TimerType t = GLUTTimer);
+	FWTimer(int id, TimerType t = GLUT);
+
 private:
 	UTMMTimer* mtimer;								///<　	マルチメディアタイマー
 	TimerType timerType;							///<	タイマーのタイプ(GLUTタイマー、マルチメディアタイマー)
@@ -144,6 +149,7 @@ public:
 	void Create();									///<	タイマーの作成
 	void Recreate();
 	void Release();
+
 };
 }
 #endif 

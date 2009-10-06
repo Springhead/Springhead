@@ -29,7 +29,6 @@ FWGLUT::FWGLUT(){
 };
 
 FWGLUT* FWGLUT::instance;
-//FWGLUT::FWGLUTTimer* FWGLUT::FWGLUTTimer::timerInstance;
 
 FWGLUT::~FWGLUT(){
 	FWGLUT::AtExit();
@@ -43,6 +42,9 @@ void FWGLUT::GlutDisplayFunc(){
 
 void FWGLUT::GlutReshapeFunc(int w, int h){
 	instance->fwApp->CallReshape(w, h);
+}
+void FWGLUT::GlutTimerFunc(int id){
+	instance->fwApp->CallTimerFunc(id);
 }
 void FWGLUT::GlutIdleFunc(){
 	instance->fwApp->CallIdleFunc();
@@ -122,6 +124,7 @@ FWWin* FWGLUT::CreateWin(const FWWinDesc& d){
 	glutJoystickFunc(FWGLUT::GlutJoystickFunc, pollInterval);
 	
 	FWWin* win = DBG_NEW FWWinGLUT(wid, d, fwApp->GetSdk()->CreateRender());
+	win->SetID(glutGetWindow());	//現在のwindowのIDを設定
 	fwApp->AssignScene(win);
 	fwApp->wins.push_back(win);
 	return win;
@@ -144,6 +147,10 @@ void FWGLUT::SetCurrentWin(FWWin* w){
 ///	カレントウィンドウを返す。
 FWWin* FWGLUT::GetCurrentWin(){
 	return fwApp->GetWinFromId(glutGetWindow());
+}
+///	カレントウィンドウのIDを返す。
+int FWGLUT::GetWinFromId(){
+	return glutGetWindow();
 }
 ///カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
 void FWGLUT::PostRedisplay(){
