@@ -43,7 +43,7 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	BuildPointer();
 
 	/// タイマの作成，設定
-	FWTimer* timer = CreateTimer(MMTimer);
+	FWTimer* timer = CreateTimer(FWTimer::MM);
 	timer->SetInterval(1);
 	timer->SetResolution(1);
 }

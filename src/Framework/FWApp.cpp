@@ -287,6 +287,10 @@ void FWApp::CallReshape(int w, int h){
 	if(!vfBridge || !vfBridge->Reshape(w, h))
 		Reshape(w, h);
 }
+void FWApp::CallTimerFunc(int id){
+	if(!vfBridge || !vfBridge->Idle())
+		TimerFunc(id);
+}
 void FWApp::CallIdleFunc(){
 	if(!vfBridge || !vfBridge->Idle())
 		IdleFunc();
@@ -353,7 +357,7 @@ void FWApp::INClear(){
 
 //ƒ^ƒCƒ}///////////////////////////////////////////////////////////////////////////
 
-FWTimer* FWApp::CreateTimer(TimerType t){
+FWTimer* FWApp::CreateTimer(FWTimer::TimerType t){
 	fwTimers.push_back(DBG_NEW FWTimer(fwTimers.size(),t));
 	fwTimers.back()->Create();
 	return fwTimers.back();

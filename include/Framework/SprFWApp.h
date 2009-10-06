@@ -186,6 +186,7 @@ public:
 	static FWApp* instance;
 	void CallDisplay();
 	void CallReshape(int w, int h);
+	void CallTimerFunc(int id);
 	void CallIdleFunc();
 	void CallKeyboard(int key, int x, int y);
 	void CallMouseButton(int button, int state, int x, int y);
@@ -232,7 +233,7 @@ public:
 		タイマ周期の初期値は0．周期が0の場合はアクティブなシーンのtime stepがタイマ周期となる．
 		異なる周期を設定する場合はFWTimer::SetIntervalを使用する．
 	 */
-	FWTimer* CreateTimer(TimerType t = GLUTTimer);
+	FWTimer* CreateTimer(FWTimer::TimerType t = FWTimer::GLUT);
 
 	/** @brief タイマーを解放する
 	*/

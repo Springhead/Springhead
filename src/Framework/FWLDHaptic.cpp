@@ -113,7 +113,6 @@ void FWLDHapticLoop::HapticRendering(){
 				/// 抗力の計算
 				double K = iPointer->springK;
 				double D = iPointer->damperD;
-//				Vec3d addforce = -1 * (K * ortho + D * dvortho);
 				Vec3d addforce = -1 * (K * ortho + D * dvortho2);
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
@@ -127,7 +126,6 @@ void FWLDHapticLoop::HapticRendering(){
 				iPointer->interactInfo[i].mobility.force = -1 * addforce * iPointer->GetForceScale();	
 				nInfo->test_force_norm = addforce.norm() * iPointer->GetForceScale();
 				nInfo->test_force = addforce * iPointer->GetForceScale();
-				//DSTR<<"force"<<nInfo->test_force_norm<<std::endl;//naga
 				//if(iPointer->bForce)	DSTR << vibforce << endl;
 			}else{
 				iSolid->sceneSolid->GetShape(0)->SetVibContact(true); 
@@ -180,15 +178,12 @@ void FWLDHapticLoop::LocalDynamics(){
 			iInfo->mobility.force = Vec3d();
 		}
 		vel += iSolid->b * hdt;
-		//naga
-		//DSTR<<"b"<<iSolid->b<<std::endl;
-//		DSTR << vel.v() << std::endl;
-		iSolid->copiedSolid.SetVelocity(vel.v());																		
+		iSolid->copiedSolid.SetVelocity(vel.v());		
 		iSolid->copiedSolid.SetAngularVelocity(vel.w());
 		iSolid->copiedSolid.SetCenterPosition(iSolid->copiedSolid.GetCenterPosition() + vel.v() * hdt);
 		iSolid->copiedSolid.SetOrientation(( Quaterniond::Rot(vel.w() * hdt) * iSolid->copiedSolid.GetOrientation()).unit());
 
-		//naga
+		//Debug
 		//DSTR<<"Vel:"<<iSolid->copiedSolid.GetVelocity()<<std::endl;
 		//DSTR<<"AngVel:"<<iSolid->copiedSolid.GetAngularVelocity()<<std::endl;
 		//DSTR<<"Pos:"<<iSolid->copiedSolid.GetCenterPosition()<<std::endl;
@@ -596,7 +591,12 @@ void FWLDHaptic::TestSimulation(){
 		/// 現在の速度を保存
 		SpatialVector curvel, nextvel; 
 		curvel.v() = phSolid->GetVelocity();			// 現在の速度
-		curvel.w() = phSolid->GetAngularVelocity();		// 現在の角速度									
+		curvel.w() = phSolid->GetAngularVelocity();		// 現在の角速度		
+
+
+		//if(i==2){
+		//	DSTR<<"1:"<<phSolid->GetVelocity().y<<std::endl; //naga
+		//}
 
 		//DSTR<<" 力を加えないで1ステップ進める--------------------"<<std::endl;
 		/// 何も力を加えないでシミュレーションを1ステップ進める
@@ -653,7 +653,7 @@ void FWLDHaptic::TestSimulation(){
 			t[1] = n % t[0];										// t[1]は法線とt[0]の外積できまる
 
 			/// 接触点に加える力
-			const float minTestForce = 0.5;//naga0.5;										// 最小テスト力
+			const float minTestForce = 0.5;										// 最小テスト力
 			/// 通常テスト力が最小テスト力を下回る場合
 			if(iInfo->neighborInfo.test_force_norm < minTestForce){
 				iInfo->neighborInfo.test_force_norm = minTestForce;					 

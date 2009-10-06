@@ -33,6 +33,7 @@ protected:
 	static FWGLUT* instance;
 	static void SPR_CDECL GlutDisplayFunc();
 	static void SPR_CDECL GlutReshapeFunc(int w, int h);
+	static void SPR_CDECL GlutTimerFunc(int id);
 	static void SPR_CDECL GlutIdleFunc();
 	static void SPR_CDECL GlutKeyboardFunc(unsigned char key, int x, int y);
 	static void SPR_CDECL GlutMouseFunc(int button, int state, int x, int y);
@@ -61,6 +62,8 @@ public:
 	virtual void SetCurrentWin(FWWin* w);
 	///	カレントウィンドウを返す。
 	virtual FWWin* GetCurrentWin();	
+	///	カレントウィンドウを返す。
+	virtual int GetWinFromId();
 	///カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
 	virtual void PostRedisplay();
 	/// Shift,Ctrl,Altのステートを返す

@@ -44,7 +44,8 @@ protected:
 public:
 	~FWGLUI();
 	virtual void SPR_CDECL DesignGUI(){};
-	virtual void		 Start();						// FWAppGLUTのStart()とは中身が異なるので消さないこと．
+	///GLUIによるTimerをスタートする
+	virtual void StartMainLoop();			// FWAppGLUTのStartMainLoop()とは中身が異なるので消さないこと．
 	virtual GLUI*		 CreateGUI(int wid = 0, FWGLUIDesc desc = FWGLUIDesc());
 };
 

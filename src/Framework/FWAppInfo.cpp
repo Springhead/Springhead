@@ -67,13 +67,13 @@ FWTimer::FWTimer(int _id ,TimerType t){
 }
 void FWTimer::SetInterval(unsigned ms){
 	interval	=	ms;
-	if(timerType==MMTimer && mtimer!=NULL) {
+	if(timerType==MM && mtimer!=NULL) {
 		mtimer->Interval(interval);
 	}
 }
 void FWTimer::SetResolution(unsigned r){
 	resolution	=	r;
-	if(timerType==MMTimer && mtimer!=NULL) {
+	if(timerType==MM && mtimer!=NULL) {
 		mtimer->Resolution(resolution);
 	}
 }
@@ -81,10 +81,10 @@ void FWTimer::Create(){
 	//FWGraphicsAdaptee* adaptee = (FWApp::instance)->GetGRAdaptee();
 	//adaptee->SetTimer(id, interval);
 	switch(timerType){
-		case GLUTTimer:
+		case GLUT:
 			glutTimerFunc(interval, GLUTTimerFunc, id);
 			break;
-		case MMTimer:
+		case MM:
 			mtimer = new UTMMTimer;
 			mtimer->Resolution(resolution);							// •ª‰ð”\[ms]
 			if(interval!=0) mtimer->Interval(interval);				// ŒÄ‚Ñ‚¾‚µŠ´Šo[ms]
@@ -96,7 +96,7 @@ void FWTimer::Create(){
 
 void FWTimer::Recreate(){
 	//GLUTTimer‚ÉŠÖ‚µ‚Ä‚Í–¢ŽÀ‘•
-	if(timerType==MMTimer){
+	if(timerType==MM){
 		if(mtimer!=NULL){
 			mtimer->Create();
 		}
@@ -105,7 +105,7 @@ void FWTimer::Recreate(){
 
 void FWTimer::Release(){
 	//GLUTTimer‚ÉŠÖ‚µ‚Ä‚Í–¢ŽÀ‘•
-	if(timerType==MMTimer){
+	if(timerType==MM){
 		if(mtimer!=NULL){
 			mtimer->Release();
 		}

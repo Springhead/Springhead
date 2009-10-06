@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Physics.h"
+#include <Base/VectorDebug.h>
 #pragma hdrstop
 
 using namespace std;

@@ -72,7 +72,6 @@ public:
 struct PHConstraintsSt{
 	std::vector<PHConstraintState> joints;
 	std::vector<PHConstraintState> gears;
-	std::vector<PHBallJointState> ballJoints;//naga
 };
 
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
