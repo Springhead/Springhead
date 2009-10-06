@@ -1,10 +1,6 @@
 #include <windows.h>
 #include <GL/glew.h>
-#include <GL/glut.h>
-
 #include "Framework/SprFWGLUT.h"
-#include "Framework/SprFWApp.h"
-
 
 namespace Spr{;
 // FWWinGLUT /////////////////////////////////////////////////////////////////////

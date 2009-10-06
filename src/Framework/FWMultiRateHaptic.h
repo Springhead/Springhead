@@ -2,7 +2,7 @@
 #define FWMULTIRATE_HAPTIC_H
 
 #include <Springhead.h>
-#include <Framework/FWInteractAdaptee.h>
+#include <Framework/SprFWInteractAdaptee.h>
 
 namespace Spr{;
 

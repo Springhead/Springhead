@@ -210,7 +210,7 @@ Vec3d FWLDHapticLoop::Vibration(FWInteractSolid* iSolid, FWInteractPointer* iPoi
 	double vibW = iSolid->copiedSolid.GetShape(0)->GetVibW();
 
 	vibforce = vibA * (vibV*0.03) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
-	iSolid->sceneSolid->GetShape(0)->SetVibT(vibT+hdt);		// 接触時間の更新
+	iSolid->sceneSolid->GetShape(0)->SetVibT((float)(vibT+hdt));		// 接触時間の更新
 	return vibforce;
 }
 

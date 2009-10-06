@@ -1,4 +1,4 @@
-#include "FWGraphicsAdaptee.h"
+#include <Framework/SprFWGraphicsAdaptee.h>
 
 namespace Spr{;
 

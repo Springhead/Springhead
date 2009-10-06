@@ -5,7 +5,7 @@
 #include <Foundation/Scene.h>
 #include <Framework/FWInteractPointer.h>
 #include <Framework/FWInteractSolid.h>
-#include <Framework/FWInteractAdaptee.h>
+#include <Framework/SprFWInteractAdaptee.h>
 
 namespace Spr{;
 

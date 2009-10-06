@@ -9,12 +9,12 @@
 #define SPR_FWAPP_H
 
 #include <Springhead.h>
-#include <Framework/Framework.h>
-#include <Framework/FWInteractAdaptee.h>
-#include <Framework/FWGraphicsAdaptee.h>
+#include <Framework/SprFWInteractAdaptee.h>
+#include <Framework/SprFWGraphicsAdaptee.h>
+#include <Framework/SprFWAppInfo.h>
 #include <map>
-#include "Foundation/UTMMTimer.h"
 #include <vector>
+#include <GL/glut.h>
 
 
 namespace Spr{;
@@ -213,19 +213,9 @@ public:
 ///////////////////////////////////////////////////////////////////////////////////
 
 
-///** マルチメディアタイマ */
-//protected:
-//	vector<UTMMTimer*> mmtimer;				/// マルチメディアタイマの宣言
-//public:
-//	UTMMTimer* CreateMMTimerFunc();
-//	UTMMTimer* GetMMTimerFunc(int n);
-//	void MTimerCreate();
-//	void MTimerRelease();
-
 /** タイマ　*/
 protected:
-	typedef UTRef<FWTimer> UTRef_FWTimer;
-	vector<UTRef_FWTimer> fwTimers;
+	vector<UTRef<FWTimer> > fwTimers;
 public:
 
 	/** @brief タイマーを作成する
@@ -233,11 +223,26 @@ public:
 		タイマ周期の初期値は0．周期が0の場合はアクティブなシーンのtime stepがタイマ周期となる．
 		異なる周期を設定する場合はFWTimer::SetIntervalを使用する．
 	 */
-	FWTimer* CreateTimer(FWTimer::TimerType t = FWTimer::GLUT);
+	int CreateTimer(FWTimer::TimerType t = FWTimer::GLUT);
 
+	/** @brief タイマーの時間間隔の設定
+	*/
+	void SetInterval(int id, unsigned ms);	
+	/** @brief タイマーの時間間隔の取得
+	*/
+	unsigned GetInterval(int id);
+	/** @brief タイマーの分解能の設定
+	*/
+	void SetResolution(int id, unsigned r);	
+	/** @brief タイマーの分解能の取得
+	*/
+	unsigned GetResolution(int id);
 	/** @brief タイマーを解放する
 	*/
 	void ReleaseTimer(int id);
+	/** @brief タイマーを再構成する
+	*/
+	void RecreateTimer(int id);
 	/** @brief 全てのタイマーを解放する
 	*/
 	void ReleaseAllTimer();
