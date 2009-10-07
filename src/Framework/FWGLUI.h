@@ -1,11 +1,11 @@
 #ifndef FWGLUI_H
 #define FWGLUI_H
-#include<sstream>
-#include<string>
-#include<vector>
-#include<Springhead.h>
-#include<Framework/FWGLUT.h>
-#include"Framework/SprFWApp.h"
+#include <sstream>
+#include <string>
+#include <vector>
+#include <Springhead.h>
+#include <Framework/FWGLUT.h>
+#include <Framework/SprFWApp.h>
 #include <GL/glui.h>
 
 using namespace std;

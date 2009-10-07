@@ -14,14 +14,14 @@ typedef void SPR_CDECL FWTimerFunc(int id);
 
 class FWGraphicsAdapteeDesc{
 public:
-	FWGraphicsAdapteeDesc();
+	FWGraphicsAdapteeDesc(){};
 };
 
 class FWGraphicsAdaptee :public FWGraphicsAdapteeDesc, public UTRefCount{
 protected:
 	FWApp*	 fwApp;
 public:	
-	FWGraphicsAdaptee();
+	FWGraphicsAdaptee(){};
 	void SetAdapter(FWApp* a){ fwApp = a; }	// FWAppÇÃê›íË
 	FWApp* GetFWApp(){ return fwApp; }		// FWAppÇÃéÊìæ
 	

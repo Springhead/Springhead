@@ -13,7 +13,7 @@ FWGLUISample::FWGLUISample(){
 
 void FWGLUISample::Init(int argc, char* argv[]){
 	SetGRAdaptee(TypeGLUI);
-	GetGRAdaptee()->Init(argc, argv);						// Sdk‚Ìì¬
+	GRInit(argc, argv);						// Sdk‚Ìì¬
 	CreateSdk();
 	GetSdk()->Clear();										// SDK‚Ì‰Šú‰»
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Scene‚Ìì¬

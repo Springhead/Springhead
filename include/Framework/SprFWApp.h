@@ -10,6 +10,7 @@
 
 #include <Springhead.h>
 #include <Framework/SprFWInteractScene.h>
+#include <Framework/SprFWGraphicsAdaptee.h>
 #include <Framework/SprFWAppInfo.h>
 #include <map>
 #include <vector>

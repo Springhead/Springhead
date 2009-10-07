@@ -2,7 +2,7 @@
 #define FWGLUT_H
 #include <vector>
 #include <GL/glut.h>
-#include <Framework/FWGraphicsAdaptee.h>
+#include <Framework/SprFWGraphicsAdaptee.h>
 #include <Framework/SprFWApp.h>
 
 using namespace std;
