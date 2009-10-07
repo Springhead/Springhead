@@ -10,7 +10,6 @@
 
 #include <Springhead.h>
 #include <Framework/SprFWInteractScene.h>
-#include <Framework/SprFWGraphicsAdaptee.h>
 #include <Framework/SprFWAppInfo.h>
 #include <map>
 #include <vector>
@@ -151,11 +150,15 @@ public:
 
 	/** @brief ウィンドウを削除する
 	 */
-	virtual void DestroyWin(FWWin* win);
+	void DestroyWin(FWWin* win);
 
 	/** @brief 現在のウィンドウを設定する
 	 */
-	virtual void SetCurrentWin(FWWin* win);
+	void SetCurrentWin(FWWin* win);
+
+	/** @brief カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
+	 */
+	void PostRedisplay();
 
 	/** @brief カメラ情報を返す
 		@return camInfo
@@ -178,8 +181,16 @@ public:
 		TypeGLUT,
 		TypeGLUI,
 	};
-	FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;};
+	/** @brief 描画の設定
+		FWGraphicsAdapteeを設定する．最初に必ず呼ぶ．
+	 */
+	//FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;};
 	void SetGRAdaptee(grAdapteeType type);
+
+	/** @brief FWGraphicsAdapteeの初期化
+		FWGraphicsAdapteeの初期化を行う．最初に必ず呼ぶ．
+	 */
+	void GRInit(int argc = 0, char* argv[] = NULL);
 
 /** コールバック関数*/
 public:
