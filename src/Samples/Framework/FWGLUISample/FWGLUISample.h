@@ -3,7 +3,7 @@
 
 #include <Springhead.h>								// SpringheadのIf型を使うためのヘッダファイル
 #include <Framework/SprFWApp.h>					// Frameworkクラスが宣言されているヘッダファイル
-#include <Framework/SprFWGLUI.h>					// Frameworkクラスが宣言されているヘッダファイル
+#include <Framework/FWGLUI.h>					// Frameworkクラスが宣言されているヘッダファイル
 #include <GL/glui.h>
 
 using namespace Spr;								// Springheadの名前空間
