@@ -13,7 +13,7 @@ FWAppSample::FWAppSample(){
 
 void FWAppSample::Init(int argc, char* argv[]){
 	SetGRAdaptee(TypeGLUT);
-	GetGRAdaptee()->Init(argc, argv);						// Sdk‚Ìì¬
+	GRInit(argc, argv);										// Sdk‚Ìì¬
 	CreateSdk();
 	GetSdk()->Clear();										// SDK‚Ì‰Šú‰»
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Scene‚Ìì¬
@@ -34,7 +34,7 @@ void FWAppSample::TimerFunc(int id){
 	switch(id){
 		case 0:
 			GetSdk()->Step();
-			GetGRAdaptee()->PostRedisplay();
+			PostRedisplay();
 			break;
 	}
 }

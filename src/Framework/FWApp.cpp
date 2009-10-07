@@ -12,9 +12,10 @@
 #include "FWOldSpringheadNode.h"
 #include <Physics/PHSdk.h>
 #include <Graphics/GRSdk.h>
-#include <Framework/SprFWGLUT.h>
-#include <Framework/SprFWGLUI.h>
+#include <Framework/FWGLUT.h>
+#include <Framework/FWGLUI.h>
 #include <Framework/FWInteractScene.h>
+#include <Framework/FWGraphicsAdaptee.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -246,6 +247,10 @@ void FWApp::SetCurrentWin(FWWin* win){
 
 }
 
+void FWApp::PostRedisplay(){
+	grAdaptee->PostRedisplay();
+}
+
 int FWApp::GetModifier(){
 	return grAdaptee->Modifiers();
 }
@@ -263,6 +268,10 @@ void FWApp::SetGRAdaptee(grAdapteeType type){
 	}
 	grAdaptee->SetAdapter(this);
 	instance = this;
+}
+
+void FWApp::GRInit(int argc, char* argv[]){
+	grAdaptee->Init(argc, argv);
 }
 
 /**コールバック関数*/
