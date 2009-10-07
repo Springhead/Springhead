@@ -39,7 +39,7 @@ void FWInteractScene::CreateIAAdaptee(FWInteractMode iaMode){
 }
 FWInteractAdaptee* FWInteractScene::GetIAAdaptee(){ return interactAdaptee; }
 FWInteractMode FWInteractScene::GetIAMode(){ return iaMode; }
-FWHapticMode FWInteractScene::GetHMode(){ return hmode; }
+FWHapticMode FWInteractScene::GetHMode(){ return hMode; }
 void FWInteractScene::SetHMode(FWHapticMode hMode){
 	GetIAAdaptee()->SetHMode(hMode);
 }

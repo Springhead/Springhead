@@ -51,13 +51,13 @@ public:\
 protected:\
 	Spr::FWSceneIf*	fwScene;	\
 	Spr::FWInteractMode	iaMode;	\
-	Spr::FWHapticMode	hmode;	\
+	Spr::FWHapticMode	hMode;	\
 	double	hdt;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		fwScene = ((FWInteractSceneDesc*)ptr)->fwScene;	\
 		iaMode = ((FWInteractSceneDesc*)ptr)->iaMode;	\
-		hmode = ((FWInteractSceneDesc*)ptr)->hmode;	\
+		hMode = ((FWInteractSceneDesc*)ptr)->hMode;	\
 		hdt = ((FWInteractSceneDesc*)ptr)->hdt;	\
 		AfterSetDesc();	\
 	}\
@@ -65,7 +65,7 @@ public:\
 		BeforeGetDesc();	\
 		((FWInteractSceneDesc*)ptr)->fwScene = fwScene;	\
 		((FWInteractSceneDesc*)ptr)->iaMode = iaMode;	\
-		((FWInteractSceneDesc*)ptr)->hmode = hmode;	\
+		((FWInteractSceneDesc*)ptr)->hMode = hMode;	\
 		((FWInteractSceneDesc*)ptr)->hdt = hdt;	\
 		return true;	\
 	}\
