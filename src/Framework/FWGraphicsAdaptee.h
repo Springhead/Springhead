@@ -29,9 +29,6 @@ public:
 	virtual void Init(int argc = 0, char* argv[] = NULL){}
 	
 	/** タイマ */
-	/// タイマーを設定する
-	virtual void SetTimer(int i, int interval)=0;
-
 	/// mainloopを呼び，タイマーをスタートする
 	virtual void StartMainLoop()=0;
 

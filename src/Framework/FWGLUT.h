@@ -2,7 +2,7 @@
 #define FWGLUT_H
 #include <vector>
 #include <GL/glut.h>
-#include <Framework/SprFWGraphicsAdaptee.h>
+#include <Framework/FWGraphicsAdaptee.h>
 #include <Framework/SprFWApp.h>
 
 using namespace std;
@@ -46,8 +46,6 @@ public:
 	virtual void Init(int argc, char* argv[]);
 	
 	/** タイマ */
-	/// タイマーを設定する
-	virtual void SetTimer(int id, int interval);
 	///GLUTによるTimerをスタートする
 	virtual void StartMainLoop();
 

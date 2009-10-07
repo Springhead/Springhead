@@ -1,6 +1,6 @@
 #include <windows.h>
 #include <GL/glew.h>
-#include "Framework/SprFWGLUT.h"
+#include <Framework/FWGLUT.h>
 
 namespace Spr{;
 // FWWinGLUT /////////////////////////////////////////////////////////////////////
@@ -76,11 +76,6 @@ void FWGLUT::Init(int argc, char* argv[]){
 }
 
 /** É^ÉCÉ} *////////////////////////////////////////////////////////////////
-
-void FWGLUT::SetTimer(int i, int ms){
-	//glutTimerFunc(ms, FWTimer::FWTimerFunc, i);
-}
-
 void FWGLUT::StartMainLoop(){
 	glutIdleFunc(FWGLUT::GlutIdleFunc);
 	glutMainLoop();

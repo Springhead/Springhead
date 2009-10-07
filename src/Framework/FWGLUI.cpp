@@ -1,4 +1,4 @@
-#include <Framework/SprFWGLUI.h>
+#include <Framework/FWGLUI.h>
 
 namespace Spr{;
 

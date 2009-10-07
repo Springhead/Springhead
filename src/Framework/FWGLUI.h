@@ -4,7 +4,7 @@
 #include<string>
 #include<vector>
 #include<Springhead.h>
-#include"Framework/SprFWGLUT.h"
+#include<Framework/FWGLUT.h>
 #include"Framework/SprFWApp.h"
 #include <GL/glui.h>
 
