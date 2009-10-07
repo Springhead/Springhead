@@ -15,7 +15,7 @@
 #include <Framework/FWGLUT.h>
 #include <Framework/FWGLUI.h>
 #include <Framework/FWInteractScene.h>
-#include <Framework/FWGraphicsAdaptee.h>
+#include <Framework/SprFWGraphicsAdaptee.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -254,6 +254,7 @@ void FWApp::PostRedisplay(){
 int FWApp::GetModifier(){
 	return grAdaptee->Modifiers();
 }
+
 // ï`âÊÉpÅ[Ég////////////////////////////////////////////////////////////////////
 FWApp* FWApp::instance;
 
