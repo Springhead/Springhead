@@ -1,4 +1,4 @@
-#include <Framework/SprFWInteractAdaptee.h>
+#include <Framework/FWInteractAdaptee.h>
 #include <Framework/FWInteractScene.h>
 #include <Physics/PHConstraintEngine.h>
 #include <iostream>

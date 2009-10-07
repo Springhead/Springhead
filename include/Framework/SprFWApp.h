@@ -9,7 +9,7 @@
 #define SPR_FWAPP_H
 
 #include <Springhead.h>
-#include <Framework/SprFWInteractAdaptee.h>
+#include <Framework/SprFWInteractScene.h>
 #include <Framework/SprFWGraphicsAdaptee.h>
 #include <Framework/SprFWAppInfo.h>
 #include <map>
@@ -199,7 +199,6 @@ public:
 protected:
 	FWInteractSceneIf*					curINScene;
 	FWInteractScenes					inScenes;
-	UTRef<FWInteractAdaptee>			interactAdaptee;
 	std::vector<UTRef < HIBaseIf > >	humanInterfaces;
 public:
 	void							CreateHISdk();
