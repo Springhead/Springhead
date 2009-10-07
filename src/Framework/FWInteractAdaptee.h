@@ -1,3 +1,11 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
 #ifndef FWINTERACT_ADAPTEE_H
 #define FWINTERACT_ADAPTEE_H
 
@@ -21,12 +29,12 @@ public:
 	int loopCount;
 	FWHapticMode hmode;
 	FWHapticLoopBase(){}
-	FWInteractPointer* GetINPointer(int i){ return &interactPointers[i]; }
-	std::vector<FWInteractPointer>* GetINPointers(){ return &interactPointers;}
-	int NINPointers(){ return (int)interactPointers.size();}
-	FWInteractSolid* GetINSolid(int i){ return &interactSolids[i]; } 
-	FWInteractSolids* GetINSolids(){ return &interactSolids; }
-	int NINSolids(){ return (int)interactSolids.size(); }
+	FWInteractPointer* GetIAPointer(int i){ return &interactPointers[i]; }
+	std::vector<FWInteractPointer>* GetIAPointers(){ return &interactPointers;}
+	int NIAPointers(){ return (int)interactPointers.size();}
+	FWInteractSolid* GetIASolid(int i){ return &interactSolids[i]; } 
+	FWInteractSolids* GetIASolids(){ return &interactSolids; }
+	int NIASolids(){ return (int)interactSolids.size(); }
 	int GetLoopCount(){ return loopCount; }
 
 	virtual void Clear();
@@ -49,24 +57,24 @@ protected:
 public:
 	FWInteractAdaptee();
 
-	/// INSceneŠÖŒW
-	void SetINScene(FWInteractScene* inScene);
-	FWInteractScene* GetINScene();
+	/// IASceneŠÖŒW
+	void SetIAScene(FWInteractScene* inScene);
+	FWInteractScene* GetIAScene();
 	PHSceneIf* GetPHScene();
 
 	/// HapticLoopŠÖŒW
 	virtual FWHapticLoopBase* GetHapticLoop();
 	void SetHMode(FWHapticMode hMode);
 
-	/// INPointerŠÖŒW(INScene‚ð‰î‚µ‚ÄŽæ“¾)
-	FWInteractPointer* GetINPointer(int i = -1);
-	FWInteractPointers* GetINPointers();
-	int NINPointers();
+	/// IAPointerŠÖŒW(IAScene‚ð‰î‚µ‚ÄŽæ“¾)
+	FWInteractPointer* GetIAPointer(int i = -1);
+	FWInteractPointers* GetIAPointers();
+	int NIAPointers();
 
-	/// INSolidŠÖŒW(INScene‚ð‰î‚µ‚ÄŽæ“¾)
-	FWInteractSolid* GetINSolid(int i = -1);
-	FWInteractSolids* GetINSolids();
-	int NINSolids();
+	/// IASolidŠÖŒW(IAScene‚ð‰î‚µ‚ÄŽæ“¾)
+	FWInteractSolid* GetIASolid(int i = -1);
+	FWInteractSolids* GetIASolids();
+	int NIASolids();
 
 	void UpdateSolidList();
 

@@ -50,13 +50,13 @@ public:\
 #define SPR_DECLMEMBEROF_FWInteractSceneDesc \
 protected:\
 	Spr::FWSceneIf*	fwScene;	\
-	Spr::FWInteractMode	mode;	\
+	Spr::FWInteractMode	iaMode;	\
 	Spr::FWHapticMode	hmode;	\
 	double	hdt;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		fwScene = ((FWInteractSceneDesc*)ptr)->fwScene;	\
-		mode = ((FWInteractSceneDesc*)ptr)->mode;	\
+		iaMode = ((FWInteractSceneDesc*)ptr)->iaMode;	\
 		hmode = ((FWInteractSceneDesc*)ptr)->hmode;	\
 		hdt = ((FWInteractSceneDesc*)ptr)->hdt;	\
 		AfterSetDesc();	\
@@ -64,7 +64,7 @@ public:\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		((FWInteractSceneDesc*)ptr)->fwScene = fwScene;	\
-		((FWInteractSceneDesc*)ptr)->mode = mode;	\
+		((FWInteractSceneDesc*)ptr)->iaMode = iaMode;	\
 		((FWInteractSceneDesc*)ptr)->hmode = hmode;	\
 		((FWInteractSceneDesc*)ptr)->hdt = hdt;	\
 		return true;	\

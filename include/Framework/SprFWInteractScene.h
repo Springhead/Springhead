@@ -20,22 +20,24 @@ class FWInteractAdaptee;
 typedef enum FWInteractMode{
 	NONE,
 	LOCAL_DYNAMICS
-}INMode;
+}IAMode;
+
 typedef enum FWHapticMode{
 	PENALTY,
 	PROXY,
 	PROXYSIMULATION
 }HMode;
+
 struct FWInteractSceneDesc{
 public:
 	FWSceneIf* fwScene;
-	FWInteractMode mode;
+	FWInteractMode iaMode;
 	FWHapticMode hmode;
 	double hdt;
 	FWInteractSceneDesc(){Init();}
 	void Init(){
 		fwScene = NULL;
-		mode = NONE;
+		iaMode = NONE;
 		hmode = PENALTY;
 		hdt = 0.001;
 	}
@@ -47,12 +49,12 @@ public:
 
 
 	FWSceneIf* GetScene();
-	void CreateINAdaptee(FWInteractMode inMode);
-	FWInteractAdaptee*		GetINAdaptee();
-	FWInteractPointerIf*	CreateINPointer(const FWInteractPointerDesc& desc);
-	FWInteractPointerIf*	GetINPointer(int i = -1);
-	int						NINPointers();
-	FWInteractMode			GetINMode();
+	void CreateIAAdaptee(FWInteractMode mode);
+	FWInteractAdaptee*		GetIAAdaptee();
+	FWInteractPointerIf*	CreateIAPointer(const FWInteractPointerDesc& desc);
+	FWInteractPointerIf*	GetIAPointer(int i = -1);
+	int						NIAPointers();
+	FWInteractMode			GetIAMode();
 	FWHapticMode			GetHMode();
 	void SetHMode(FWHapticMode hMode);
 

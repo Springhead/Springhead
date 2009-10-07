@@ -1,3 +1,11 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
 #include <Framework/FWMultiRateHaptic.h>
 #include <Framework/SprFWApp.h>
 #include <Physics/PHConstraintEngine.h>
@@ -15,18 +23,18 @@ void FWMultiRateHaptic::Sync(){
 		/// 力覚ポインタの同期
 		UpdatePointer();			
 		/// 同期のための準備
-		FWInteractSolids* hiSolids = GetHapticLoop()->GetINSolids();
-		std::vector<FWInteractPointer>* hiPointers = GetHapticLoop()->GetINPointers();
+		FWInteractSolids* hiSolids = GetHapticLoop()->GetIASolids();
+		std::vector<FWInteractPointer>* hiPointers = GetHapticLoop()->GetIAPointers();
 		FWInteractSolid *piSolid, *hiSolid;
 		FWInteractPointer* hiPointer;
 		FWInteractInfo* piInfo, *hiInfo;
 
 		/// HapticLoop--->PhysicsLoop ///
 		for(unsigned i = 0; i < (int)hiSolids->size(); i++){
-			hiSolid = GetHapticLoop()->GetINSolid(i);
+			hiSolid = GetHapticLoop()->GetIASolid(i);
 			/// bSim = ture かつ bfirstSim = falseなら結果を反映させる
 			if(!hiSolid->bSim || hiSolid->bfirstSim) continue;
-			piSolid = GetINSolid(i);
+			piSolid = GetIASolid(i);
 			double pdt = GetPHScene()->GetTimeStep();			// physicsの刻み
 			SpatialVector b;
 			b += (piSolid->b + 
@@ -40,9 +48,9 @@ void FWMultiRateHaptic::Sync(){
 			hiSolid->sceneSolid->SetOrientation(hiSolid->copiedSolid.GetOrientation());
 #endif
 			/// 各ポインタが持つ情報を同期
-			for(int j = 0; j < NINPointers(); j++){
-				piInfo = &GetINPointer(j)->interactInfo[i];
-				hiPointer = GetHapticLoop()->GetINPointer(j)->Cast();
+			for(int j = 0; j < NIAPointers(); j++){
+				piInfo = &GetIAPointer(j)->interactInfo[i];
+				hiPointer = GetHapticLoop()->GetIAPointer(j)->Cast();
 				hiInfo = &hiPointer->interactInfo[i];
 				piInfo->neighborInfo.test_force_norm = hiInfo->neighborInfo.test_force_norm;
 			}
@@ -50,24 +58,24 @@ void FWMultiRateHaptic::Sync(){
 	
 		/// PhysicsLoop--->HapticLoop ///
 		/// シーンで新しく生成された分を拡張
-		for(int i = (int)hiPointers->size(); i < NINPointers(); i++){
+		for(int i = (int)hiPointers->size(); i < NIAPointers(); i++){
 			hiPointers->resize(i + 1);
-			hiPointers->back() = *GetINPointer(i);
+			hiPointers->back() = *GetIAPointer(i);
 		}
-		for(int i = (int)hiSolids->size(); i < (int)NINSolids(); i++){
+		for(int i = (int)hiSolids->size(); i < (int)NIASolids(); i++){
 			hiSolids->resize(i + 1);
-			hiSolids->back() = *GetINSolid(i);
+			hiSolids->back() = *GetIASolid(i);
 			/// ポインタが持つ情報についても拡張
-			for(int j = 0; j < NINPointers(); j++){
-				hiPointer = GetHapticLoop()->GetINPointer(j);
+			for(int j = 0; j < NIAPointers(); j++){
+				hiPointer = GetHapticLoop()->GetIAPointer(j);
 				hiPointer->interactInfo.resize(i + 1);
-				hiPointer->interactInfo.back() = GetINPointer(j)->interactInfo[i];
+				hiPointer->interactInfo.back() = GetIAPointer(j)->interactInfo[i];
 			}
 		}
 		/// 情報の同期
 		for(unsigned i = 0; i < hiSolids->size(); i++){
-			piSolid = GetINSolid(i);
-			hiSolid = GetHapticLoop()->GetINSolid(i);
+			piSolid = GetIASolid(i);
+			hiSolid = GetHapticLoop()->GetIASolid(i);
 			hiSolid->bSim = piSolid->bSim;
 			hiSolid->bfirstSim = piSolid->bfirstSim;
 			/// 初めてシミュレーション対象になった時
@@ -79,11 +87,11 @@ void FWMultiRateHaptic::Sync(){
 			hiSolid->curb = piSolid->curb;
 			hiSolid->lastb = piSolid->lastb;
 			/// ポインタごとに持つ情報の同期
-			for(int j = 0; j < NINPointers(); j++){
-				hiPointer = GetHapticLoop()->GetINPointer(j)->Cast();
-				hiPointer->interactInfo[i] = GetINPointer(j)->interactInfo[i];
-				hiPointer->bForce = GetINPointer(j)->bForce;
-				hiPointer->bVibration = GetINPointer(j)->bVibration;
+			for(int j = 0; j < NIAPointers(); j++){
+				hiPointer = GetHapticLoop()->GetIAPointer(j)->Cast();
+				hiPointer->interactInfo[i] = GetIAPointer(j)->interactInfo[i];
+				hiPointer->bForce = GetIAPointer(j)->bForce;
+				hiPointer->bVibration = GetIAPointer(j)->bVibration;
 			}
 		}
 		/* 同期終了処理 */
@@ -102,9 +110,9 @@ void FWMultiRateHaptic::Sync(){
 }
 
 void FWMultiRateHaptic::SyncPointer(){
-	std::vector<FWInteractPointer>* hiPointers = GetHapticLoop()->GetINPointers();
-	for(int i = 0; i < NINPointers(); i++){
-		hiPointers->at(i)= *GetINPointer(i);
+	std::vector<FWInteractPointer>* hiPointers = GetHapticLoop()->GetIAPointers();
+	for(int i = 0; i < NIAPointers(); i++){
+		hiPointers->at(i)= *GetIAPointer(i);
 	}
 }
 

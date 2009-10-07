@@ -29,12 +29,12 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractSceneIf(base)	\
 	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
-	void CreateINAdaptee(Spr::FWInteractMode inMode){	base::CreateINAdaptee(inMode);}	\
-	Spr::FWInteractAdaptee* GetINAdaptee(){	return	base::GetINAdaptee();}	\
-	Spr::FWInteractPointerIf* CreateINPointer(const Spr::FWInteractPointerDesc& desc){	return	base::CreateINPointer(desc);}	\
-	Spr::FWInteractPointerIf* GetINPointer(int i){	return	base::GetINPointer(i);}	\
-	int NINPointers(){	return	base::NINPointers();}	\
-	Spr::FWInteractMode GetINMode(){	return	base::GetINMode();}	\
+	void CreateIAAdaptee(Spr::FWInteractMode mode){	base::CreateIAAdaptee(mode);}	\
+	Spr::FWInteractAdaptee* GetIAAdaptee(){	return	base::GetIAAdaptee();}	\
+	Spr::FWInteractPointerIf* CreateIAPointer(const Spr::FWInteractPointerDesc& desc){	return	base::CreateIAPointer(desc);}	\
+	Spr::FWInteractPointerIf* GetIAPointer(int i){	return	base::GetIAPointer(i);}	\
+	int NIAPointers(){	return	base::NIAPointers();}	\
+	Spr::FWInteractMode GetIAMode(){	return	base::GetIAMode();}	\
 	Spr::FWHapticMode GetHMode(){	return	base::GetHMode();}	\
 	void SetHMode(Spr::FWHapticMode hMode){	base::SetHMode(hMode);}	\
 	void Init(){	base::Init();}	\
