@@ -18,7 +18,7 @@ void FWXfileLoader::Init(int argc, char* argv[]){
 
 	/// 描画モードの設定
 	SetGRAdaptee(TypeGLUT);					// GLUTで描画
-	GetGRAdaptee()->Init(argc, argv);		// 初期化
+	GRInit(argc, argv);		// 初期化
 
 	/// ウィンドウの作成
 	FWWinDesc windowDesc;					// GLのウィンドウディスクリプタ
@@ -57,7 +57,7 @@ void FWXfileLoader::IdleFunc(){
 }
 void FWXfileLoader::Step(){
 	GetSdk()->Step();
-	GetGRAdaptee()->PostRedisplay();
+	PostRedisplay();
 }
 
 void FWXfileLoader::Display(){

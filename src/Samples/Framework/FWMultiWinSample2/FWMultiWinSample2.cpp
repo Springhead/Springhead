@@ -32,7 +32,7 @@ void FWMultiWinSample2::Init(int argc, char* argv[]){
 	GetSdk()->Clear();
 	/// 描画タイプの指定
 	SetGRAdaptee(TypeGLUT);	
-	GetGRAdaptee()->Init(argc, argv);
+	GRInit(argc, argv);
 	/// ウィンドウの作成とファイルのロード
 	for(int i = 0; i < nWin ; i++){
 		GetSdk()->LoadScene(fileNames[i]);
@@ -90,7 +90,7 @@ void FWMultiWinSample2::TimerFunc(int i){
 	}else{
 		GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
 	} 
-	GetGRAdaptee()->PostRedisplay();
+	PostRedisplay();
 }
 
 void FWMultiWinSample2::Display(){

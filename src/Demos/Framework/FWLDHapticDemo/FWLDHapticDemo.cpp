@@ -13,15 +13,15 @@ FWLDHapticDemo::FWLDHapticDemo(){
 }
 
 void FWLDHapticDemo::Init(int argc, char* argv[]){
-	/// Sdkの初期化，シーンの作成
+	/// 描画モードの設定
+	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
+	GRInit(argc, argv);						// Sdkの作成
+
+		/// Sdkの初期化，シーンの作成
 	CreateSdk();
 	GetSdk()->Clear();										// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
-
-	/// 描画モードの設定
-	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
-	GetGRAdaptee()->Init(argc, argv);						// Sdkの作成
 
 	/// 描画Windowの作成，初期化
 	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
@@ -125,7 +125,7 @@ void FWLDHapticDemo::IdleFunc(){
 void FWLDHapticDemo::TimerFunc(int id){	
 	/// HapticLoopをコールバックする
 	((FWLDHapticDemo*)instance)->GetIAScene()->CallBackHapticLoop();
-	GetGRAdaptee()->PostRedisplay();
+	PostRedisplay();
 }
 
 void FWLDHapticDemo::Display(){

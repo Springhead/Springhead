@@ -40,23 +40,14 @@ void FWTimer::GLUTTimerFunc(int id){
 			if(ms < 1) ms = 1;
 		}
 	}
-	//app->GetGRAdaptee()->SetTimer(id, ms);
 	glutTimerFunc(ms, GLUTTimerFunc, id);
-
-	// 再描画要求はTimerFuncで記述するようにする？
-	//app->GetGRAdaptee()->PostRedisplay();
-
 	app->CreateAllTimer();		//マルチメディアタイマーを再構成
 }
 
 void FWTimer::MultiMediaTimerFunc(int id){
 	FWApp* app = FWApp::instance;
 	if(!app)return;
-	
 	app->TimerFunc(id);
-
-	// 再描画要求はTimerFuncで記述するようにする？
-	//app->GetGRAdaptee()->PostRedisplay();
 }
 
 FWTimer::FWTimer(int _id ,TimerType t){
@@ -79,8 +70,6 @@ void FWTimer::SetResolution(unsigned r){
 	}
 }
 void FWTimer::Create(){
-	//FWGraphicsAdaptee* adaptee = (FWApp::instance)->GetGRAdaptee();
-	//adaptee->SetTimer(id, interval);
 	switch(timerType){
 		case GLUT:
 			glutTimerFunc(interval, GLUTTimerFunc, id);
