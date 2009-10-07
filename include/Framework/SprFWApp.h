@@ -184,8 +184,8 @@ public:
 	/** @brief 描画の設定
 		FWGraphicsAdapteeを設定する．最初に必ず呼ぶ．
 	 */
-	//FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;};
 	void SetGRAdaptee(grAdapteeType type);
+	FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;};
 
 	/** @brief FWGraphicsAdapteeの初期化
 		FWGraphicsAdapteeの初期化を行う．最初に必ず呼ぶ．
