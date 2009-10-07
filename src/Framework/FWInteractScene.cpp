@@ -1,3 +1,11 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
 #include <Framework/FWInteractScene.h>
 #include <Framework/FWLDHaptic.h>
 
@@ -11,16 +19,16 @@ FWInteractScene::FWInteractScene(const FWInteractSceneDesc &desc) : FWInteractSc
 }
 
 FWSceneIf* FWInteractScene::GetScene(){ return fwScene; }
-/// AdapteeŠÖŒW
-void FWInteractScene::CreateINAdaptee(FWInteractMode inMode){
+/// IAAdapteeŠÖŒW
+void FWInteractScene::CreateIAAdaptee(FWInteractMode iaMode){
 	FWInteractAdaptee* ia;
-	switch(mode){
+	switch(iaMode){
 	case NONE:
 		ia = NULL;
 		break;
 	case LOCAL_DYNAMICS:
 		ia = DBG_NEW FWLDHaptic();
-		ia->SetINScene(this);
+		ia->SetIAScene(this);
 		break;
 	default:
 		ia = NULL;
@@ -29,58 +37,58 @@ void FWInteractScene::CreateINAdaptee(FWInteractMode inMode){
 	interactAdaptee = ia;
 	interactAdaptee->Init();
 }
-FWInteractAdaptee* FWInteractScene::GetINAdaptee(){ return interactAdaptee; }
-FWInteractMode FWInteractScene::GetINMode(){ return mode; }
+FWInteractAdaptee* FWInteractScene::GetIAAdaptee(){ return interactAdaptee; }
+FWInteractMode FWInteractScene::GetIAMode(){ return iaMode; }
 FWHapticMode FWInteractScene::GetHMode(){ return hmode; }
 void FWInteractScene::SetHMode(FWHapticMode hMode){
-	GetINAdaptee()->SetHMode(hMode);
+	GetIAAdaptee()->SetHMode(hMode);
 }
 
-/// INPointerŠÖŒW
-FWInteractPointerIf* FWInteractScene::CreateINPointer(const FWInteractPointerDesc& desc){
-	FWInteractPointer* inPointer = DBG_NEW FWInteractPointer(desc); 
-	interactPointers.push_back(inPointer->Cast()); 
-	curINPointer = inPointer->Cast();
-	return curINPointer;
+/// IAPointerŠÖŒW
+FWInteractPointerIf* FWInteractScene::CreateIAPointer(const FWInteractPointerDesc& desc){
+	FWInteractPointer* iPointer = DBG_NEW FWInteractPointer(desc); 
+	interactPointers.push_back(iPointer->Cast()); 
+	curIAPointer = iPointer->Cast();
+	return curIAPointer;
 }
-FWInteractPointerIf* FWInteractScene::GetINPointer(int i){ 
-	if(i == -1) return curINPointer;
-	if(0 <= i && i < NINPointers()) return interactPointers[i];
+FWInteractPointerIf* FWInteractScene::GetIAPointer(int i){ 
+	if(i == -1) return curIAPointer;
+	if(0 <= i && i < NIAPointers()) return interactPointers[i];
 	return NULL;
 }
-FWInteractPointers*	FWInteractScene::GetINPointers(){ return &interactPointers; }
-int FWInteractScene::NINPointers(){ return (int)interactPointers.size(); }
+FWInteractPointers*	FWInteractScene::GetIAPointers(){ return &interactPointers; }
+int FWInteractScene::NIAPointers(){ return (int)interactPointers.size(); }
 
-/// INSolidŠÖŒW
-FWInteractSolid* FWInteractScene::GetINSolid(int i){
-	if(0 <= i && i < NINSolids()) return &interactSolids[i];
+/// IASolidŠÖŒW
+FWInteractSolid* FWInteractScene::GetIASolid(int i){
+	if(0 <= i && i < NIASolids()) return &interactSolids[i];
 	return NULL;
 }
-FWInteractSolids* FWInteractScene::GetINSolids(){ return &interactSolids; }
-int FWInteractScene::NINSolids(){ return (int)interactSolids.size(); }
+FWInteractSolids* FWInteractScene::GetIASolids(){ return &interactSolids; }
+int FWInteractScene::NIASolids(){ return (int)interactSolids.size(); }
 
 /// 
 void FWInteractScene::Init(){
-	GetINAdaptee()->Init();
+	GetIAAdaptee()->Init();
 }
 void FWInteractScene::Step(){
-	GetINAdaptee()->Step();
+	GetIAAdaptee()->Step();
 }
 void FWInteractScene::Clear(){
 	fwScene = NULL;
 	interactAdaptee = NULL;
-	curINPointer = NULL;
+	curIAPointer = NULL;
 	interactPointers.clear();
 	interactSolids.clear();
 }
 void FWInteractScene::CallBackHapticLoop(){
-	GetINAdaptee()->CallBackHapticLoop();
+	GetIAAdaptee()->CallBackHapticLoop();
 }
 void FWInteractScene::BeginKeyboard(){
-	GetINAdaptee()->BeginKeyboard();
+	GetIAAdaptee()->BeginKeyboard();
 }
 void FWInteractScene::EndKeyboard(){
-	GetINAdaptee()->EndKeyboard();
+	GetIAAdaptee()->EndKeyboard();
 }
 
 }

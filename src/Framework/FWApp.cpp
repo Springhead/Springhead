@@ -39,15 +39,15 @@ void FWApp::Reshape(int w, int h){
 }
 
 void FWApp::BeginKeyboard(){
-	for(int i = 0; i < NINScenes(); i++){
-		FWInteractScene* inScene = GetINScene(i)->Cast();
-		inScene->BeginKeyboard();
+	for(int i = 0; i < NIAScenes(); i++){
+		FWInteractScene* iaScene = GetIAScene(i)->Cast();
+		iaScene->BeginKeyboard();
 	}
 }
 void FWApp::EndKeyboard(){
-	for(int i = 0; i < NINScenes(); i++){
-		FWInteractScene* inScene = GetINScene(i)->Cast();
-		inScene->EndKeyboard();
+	for(int i = 0; i < NIAScenes(); i++){
+		FWInteractScene* iaScene = GetIAScene(i)->Cast();
+		iaScene->EndKeyboard();
 	}
 }
 
@@ -306,23 +306,23 @@ void FWApp::CreateHISdk(){ hiSdk = HISdkIf::CreateSdk(); }
 HISdkIf* FWApp::GetHISdk(){ return hiSdk; }
 void FWApp::AddHI(HIBaseIf* hi){ humanInterfaces.push_back(hi); }
 HIBaseIf* FWApp::GetHI(int i){ return humanInterfaces[i]; }
-FWInteractSceneIf* FWApp::CreateINScene(const FWInteractSceneDesc &desc){
-	FWInteractScene* inScene = DBG_NEW FWInteractScene(desc);
-	inScenes.push_back(inScene->Cast());
-	inScene->CreateINAdaptee(desc.mode);
-	inScene->SetHMode(desc.hmode);
-	curINScene = inScene->Cast();
-	return curINScene;
+FWInteractSceneIf* FWApp::CreateIAScene(const FWInteractSceneDesc &desc){
+	FWInteractScene* iaScene = DBG_NEW FWInteractScene(desc);
+	iaScenes.push_back(iaScene->Cast());
+	iaScene->CreateIAAdaptee(desc.iaMode);
+	iaScene->SetHMode(desc.hmode);
+	curIAScene = iaScene->Cast();
+	return curIAScene;
 }
-FWInteractSceneIf* FWApp::GetINScene(int i){
-	if(i == -1) return curINScene;
-	if(0 <= i && i < NINScenes()) return inScenes[i];
+FWInteractSceneIf* FWApp::GetIAScene(int i){
+	if(i == -1) return curIAScene;
+	if(0 <= i && i < NIAScenes()) return iaScenes[i];
 	return NULL;
 }
-int FWApp::NINScenes(){ return (int)inScenes.size(); }
-void FWApp::INClear(){ 
-	inScenes.clear();
-	curINScene = NULL;
+int FWApp::NIAScenes(){ return (int)iaScenes.size(); }
+void FWApp::IAClear(){ 
+	iaScenes.clear();
+	curIAScene = NULL;
 }
 
 //ƒ^ƒCƒ}///////////////////////////////////////////////////////////////////////////

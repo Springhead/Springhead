@@ -1,3 +1,11 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
 #include <Framework/FWInteractAdaptee.h>
 #include <Framework/FWInteractScene.h>
 #include <Physics/PHConstraintEngine.h>
@@ -9,40 +17,40 @@ namespace Spr{;
 ///////////////////////////////////////////////////////////////////////////////////
 
 void FWHapticLoopBase::Clear(){
-	GetINSolids()->clear();
+	GetIASolids()->clear();
 	loopCount = 1;
 }
 
 /** FWInteractAdapteeの実装 */
 ///////////////////////////////////////////////////////////////////////////////////
 FWInteractAdaptee::FWInteractAdaptee(){}
-/// INScene関係
-void FWInteractAdaptee::SetINScene(FWInteractScene* iScene){ interactScene = iScene; }
-FWInteractScene* FWInteractAdaptee::GetINScene(){ return interactScene; }			
-PHSceneIf* FWInteractAdaptee::GetPHScene(){ return GetINScene()->GetScene()->GetPHScene(); }
+/// IAScene関係
+void FWInteractAdaptee::SetIAScene(FWInteractScene* iScene){ interactScene = iScene; }
+FWInteractScene* FWInteractAdaptee::GetIAScene(){ return interactScene; }			
+PHSceneIf* FWInteractAdaptee::GetPHScene(){ return GetIAScene()->GetScene()->GetPHScene(); }
 
 /// HapticLoop関係
 FWHapticLoopBase* FWInteractAdaptee::GetHapticLoop(){ return NULL; }
 void FWInteractAdaptee::SetHMode(FWHapticMode hMode) {GetHapticLoop()->hmode = hMode;}
 
-/// INPointer関係(INSceneを介して取得)
-FWInteractPointer* FWInteractAdaptee::GetINPointer(int i){ return GetINScene()->GetINPointer(i)->Cast(); }
-FWInteractPointers* FWInteractAdaptee::GetINPointers(){ return GetINScene()->GetINPointers(); }
-int FWInteractAdaptee::NINPointers(){ return GetINScene()->NINPointers(); }
+/// IAPointer関係(IASceneを介して取得)
+FWInteractPointer* FWInteractAdaptee::GetIAPointer(int i){ return GetIAScene()->GetIAPointer(i)->Cast(); }
+FWInteractPointers* FWInteractAdaptee::GetIAPointers(){ return GetIAScene()->GetIAPointers(); }
+int FWInteractAdaptee::NIAPointers(){ return GetIAScene()->NIAPointers(); }
 
-/// INSolid関係(INSceneを介して取得)
-FWInteractSolid* FWInteractAdaptee::GetINSolid(int i){ return GetINScene()->GetINSolid(i); }
-FWInteractSolids* FWInteractAdaptee::GetINSolids(){ return GetINScene()->GetINSolids(); }
-int FWInteractAdaptee::NINSolids(){ return GetINScene()->NINSolids(); }
+/// IASolid関係(IASceneを介して取得)
+FWInteractSolid* FWInteractAdaptee::GetIASolid(int i){ return GetIAScene()->GetIASolid(i); }
+FWInteractSolids* FWInteractAdaptee::GetIASolids(){ return GetIAScene()->GetIASolids(); }
+int FWInteractAdaptee::NIASolids(){ return GetIAScene()->NIASolids(); }
 
 void FWInteractAdaptee::UpdateSolidList(){
 	PHSceneIf* phScene = GetPHScene(); 
 	PHSolidIf** phSolids = phScene->GetSolids();
-	for(int i = NINSolids(); i < phScene->NSolids(); i++){
-		GetINSolids()->resize(i + 1);
-		GetINSolids()->back().sceneSolid = phSolids[i]->Cast();
-		for(int j = 0; j < NINPointers(); j++){
-			GetINPointer(j)->interactInfo.resize(i + 1);
+	for(int i = NIASolids(); i < phScene->NSolids(); i++){
+		GetIASolids()->resize(i + 1);
+		GetIASolids()->back().sceneSolid = phSolids[i]->Cast();
+		for(int j = 0; j < NIAPointers(); j++){
+			GetIAPointer(j)->interactInfo.resize(i + 1);
 		}
 	}
 }
@@ -50,27 +58,27 @@ void FWInteractAdaptee::UpdateSolidList(){
 void FWInteractAdaptee::NeighborObjectFromPointer(){
 	// GJKを使って近傍物体と近傍物体の最近点を取得
 	// これをすべてのshapeをもつ剛体についてやる
-	for(int i = 0; i < NINSolids(); i++){
+	for(int i = 0; i < NIASolids(); i++){
 		int lCount = 0;					///< flag.blocalの数
 		int fCount = 0;					///< flag.bfirstlocalの数
-		PHSolid* phSolid = GetINSolid(i)->sceneSolid;
-		/// INPointerの数だけやる
-		for(int j = 0; j < NINPointers(); j++){
-			FWInteractPointer* inPointer = GetINPointer(j);
-			FWInteractInfo* inInfo = &GetINPointer(j)->interactInfo[i];
-			PHSolid* soPointer = GetINPointer(j)->pointerSolid->Cast();
+		PHSolid* phSolid = GetIASolid(i)->sceneSolid;
+		/// IAPointerの数だけやる
+		for(int j = 0; j < NIAPointers(); j++){
+			FWInteractPointer* iPointer = GetIAPointer(j);
+			FWInteractInfo* iaInfo = &GetIAPointer(j)->interactInfo[i];
+			PHSolid* soPointer = GetIAPointer(j)->pointerSolid->Cast();
 
-			inInfo->flag.bneighbor = false;				// ローカル可能性の初期化
+			iaInfo->flag.bneighbor = false;				// ローカル可能性の初期化
 			/// Solidが他のポインタであった場合
-			for(int k = 0; k < NINPointers(); k++){
-				if(phSolid == GetINPointer(k)->pointerSolid->Cast()) phSolid = NULL;
+			for(int k = 0; k < NIAPointers(); k++){
+				if(phSolid == GetIAPointer(k)->pointerSolid->Cast()) phSolid = NULL;
 			}
 			if (soPointer != phSolid && phSolid){
 				/* AABBで力覚ポインタ近傍の物体を絞る
 				   ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 				*/
 				/// 1. BBoxレベルの衝突判定(Sweep & Prune)
-				Vec3d range = Vec3d(1, 1, 1) * inPointer->GetLocalRange();
+				Vec3d range = Vec3d(1, 1, 1) * iPointer->GetLocalRange();
 				Vec3d pMin = soPointer->GetPose() * soPointer->bbox.GetBBoxMin() - range;		// PointerのBBoxの最小値(3軸)
 				Vec3d pMax = soPointer->GetPose() * soPointer->bbox.GetBBoxMax() + range;		// PointerのBBoxの最大値(3軸)
 				Vec3d soMin = phSolid->GetPose().Pos() + phSolid->bbox.GetBBoxMin();		// SolidのBBoxの最小値(3軸)
@@ -97,31 +105,31 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 //				DSTR << "isLocal" << isLocal <<  std::endl;
 				/// 2.近傍の可能性がある物体は詳細判定(GJKへ)
 				if(isLocal > 2){
-					inInfo->flag.bneighbor = true;
-					UpdateInteractSolid(i, GetINPointer(j));
+					iaInfo->flag.bneighbor = true;
+					UpdateInteractSolid(i, GetIAPointer(j));
 				}
 			}
 			/// bneighborかつblocalであればlCount++
-			if(inInfo->flag.bneighbor){
-				if(inInfo->flag.blocal){
+			if(iaInfo->flag.bneighbor){
+				if(iaInfo->flag.blocal){
 					lCount++;
 					/// さらにbfirstlocalであればfCount++
-					if(inInfo->flag.bfirstlocal){
+					if(iaInfo->flag.bfirstlocal){
 						fCount++;
-						inInfo->flag.bfirstlocal = false;
+						iaInfo->flag.bfirstlocal = false;
 					}
 				}else{
-					inInfo->flag.bfirstlocal = false;							
-					inInfo->flag.blocal = false;													
+					iaInfo->flag.bfirstlocal = false;							
+					iaInfo->flag.blocal = false;													
 				}
 			}else{
 				/// 近傍物体でないのでfalseにする
-				inInfo->flag.bfirstlocal = false;							
-				inInfo->flag.blocal = false;									
+				iaInfo->flag.bfirstlocal = false;							
+				iaInfo->flag.blocal = false;									
 			}
-		}	// end INPointerの数だけやる
+		}	// end IAPointerの数だけやる
 		/// 初シミュレーションの処理フラグをtrueにする
-		FWInteractSolid* inSolid = GetINSolid(i);
+		FWInteractSolid* inSolid = GetIASolid(i);
 		if(fCount > 0){
 			inSolid->bfirstSim = true;	
 			inSolid->copiedSolid = *inSolid->sceneSolid;	// シーンが持つ剛体の中身を力覚プロセスで使う剛体（実体）としてコピーする
@@ -138,17 +146,17 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 //	DSTR << "-------------------------------------------------" << std::endl;
 }
 
-void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* inPointer){
-	PHSolid* phSolid = GetINSolid(index)->sceneSolid;
-	PHSolid* soPointer = inPointer->GetPointerSolid()->Cast();
+void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPointer){
+	PHSolid* phSolid = GetIASolid(index)->sceneSolid;
+	PHSolid* soPointer = iPointer->GetPointerSolid()->Cast();
 
-	FWInteractInfo* inInfo = &inPointer->interactInfo[index]; 
+	FWInteractInfo* iaInfo = &iPointer->interactInfo[index]; 
 	if (!phSolid->NShape()==0){													///< 形状を持たない剛体の場合は行わない
 		CDConvexIf* a = DCAST(CDConvexIf, phSolid->GetShape(0));				///< 剛体が持つ凸形状
 		CDConvexIf* b = DCAST(CDConvexIf, soPointer->GetShape(0));				///< 力覚ポインタの凸形状
 		Posed a2w = phSolid->GetPose();											///< 剛体の姿勢
 		Posed b2w = soPointer->GetPose();										///< 力覚ポインタの姿勢
-		Vec3d dir = -1.0 * inInfo->neighborInfo.face_normal;
+		Vec3d dir = -1.0 * iaInfo->neighborInfo.face_normal;
 		Vec3d cp = phSolid->GetCenterPosition();								///< 剛体の重心
 		Vec3d normal;															///< 剛体から力覚ポインタへの法線(ワールド座標)
 		Vec3d pa, pb;															///< pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
@@ -156,28 +164,28 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* inPoin
 		/// GJKを使った近傍点探索
 		double r = FindNearestPoint(a, b, a2w, b2w, cp, dir, normal, pa, pb);	
 		/// 近傍点までの長さから近傍物体を絞る
-		if(r < inPointer->GetLocalRange()){
+		if(r < iPointer->GetLocalRange()){
 			/// 初めて最近傍物体になった場合
-			if(inInfo->flag.blocal == false){																
-				inInfo->flag.bfirstlocal = true;	
-				inInfo->neighborInfo.face_normal = normal;	// 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．										
+			if(iaInfo->flag.blocal == false){																
+				iaInfo->flag.bfirstlocal = true;	
+				iaInfo->neighborInfo.face_normal = normal;	// 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．										
 				#ifdef _DEBUG
-					if (inInfo->neighborInfo.face_normal * normal < 0.8){
+					if (iaInfo->neighborInfo.face_normal * normal < 0.8){
 						DSTR << "Too big change on normal = " << normal << std::endl;
 					}
 				#endif
 			}
 			/// 初めて近傍または継続して近傍だった場合
-			inInfo->flag.blocal = true;								// 近傍物体なのでblocalをtrueにする
-			inInfo->neighborInfo.closest_point = pa;				// 剛体近傍点のローカル座標
-			inInfo->neighborInfo.pointer_point = pb;				// 力覚ポインタ近傍点のローカル座標
-			inInfo->neighborInfo.last_face_normal = inInfo->neighborInfo.face_normal;		// 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
-			inInfo->neighborInfo.face_normal = normal;				// 剛体から力覚ポインタへの法線
+			iaInfo->flag.blocal = true;								// 近傍物体なのでblocalをtrueにする
+			iaInfo->neighborInfo.closest_point = pa;				// 剛体近傍点のローカル座標
+			iaInfo->neighborInfo.pointer_point = pb;				// 力覚ポインタ近傍点のローカル座標
+			iaInfo->neighborInfo.last_face_normal = iaInfo->neighborInfo.face_normal;		// 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
+			iaInfo->neighborInfo.face_normal = normal;				// 剛体から力覚ポインタへの法線
 		}else{
 			/// 近傍物体ではないのでfalseにする
-			inInfo->flag.bneighbor = false;
-			inInfo->flag.bfirstlocal = false;						
-			inInfo->flag.blocal = false;																
+			iaInfo->flag.bneighbor = false;
+			iaInfo->flag.bfirstlocal = false;						
+			iaInfo->flag.blocal = false;																
 		}
 	}
 }

@@ -36,9 +36,9 @@ void FWLDHapticDemo::Init(int argc, char* argv[]){
 	/// InteractSceneの作成
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.iaMode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
-	CreateINScene(desc);									// interactSceneの作成
+	CreateIAScene(desc);									// interactSceneの作成
 
 	/// 物理シミュレーションする剛体を作成
 	BuildScene();
@@ -98,14 +98,14 @@ void FWLDHapticDemo::InitHumanInterface(){
 void FWLDHapticDemo::Reset(){
 	ReleaseAllTimer();
 	GetSdk()->Clear();
-	INClear();
+	IAClear();
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.iaMode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
-	CreateINScene(desc);									// interactSceneの作成
+	CreateIAScene(desc);									// interactSceneの作成
 	BuildScene();
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 	InitCameraView();
@@ -114,9 +114,9 @@ void FWLDHapticDemo::Reset(){
 
 void FWLDHapticDemo::IdleFunc(){
 	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
-	if(bStep) FWLDHapticDemo::instance->GetINScene()->Step();
+	if(bStep) FWLDHapticDemo::instance->GetIAScene()->Step();
 	else if(bOneStep){
-		FWLDHapticDemo::instance->GetINScene()->Step();
+		FWLDHapticDemo::instance->GetIAScene()->Step();
 		bOneStep = false;
 	}
 	glutPostRedisplay();
@@ -124,7 +124,7 @@ void FWLDHapticDemo::IdleFunc(){
 
 void FWLDHapticDemo::TimerFunc(int id){	
 	/// HapticLoopをコールバックする
-	((FWLDHapticDemo*)instance)->GetINScene()->CallBackHapticLoop();
+	((FWLDHapticDemo*)instance)->GetIAScene()->CallBackHapticLoop();
 	GetGRAdaptee()->PostRedisplay();
 }
 
@@ -208,18 +208,18 @@ void FWLDHapticDemo::BuildScene(){
 		idesc.localRange = 0.7;//1.0;					// LocalDynamicsを使う場合の近傍範囲
 		if(i==0) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);	// 初期位置の設定
 		if(i==1) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);
-		GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
+		GetIAScene()->CreateIAPointer(idesc);	// interactpointerの作成
 	}
 }
 
 void FWLDHapticDemo::DisplayContactPlane(){
-	FWInteractScene* inScene = GetINScene()->Cast();
-	int N = inScene->NINSolids();
+	FWInteractScene* inScene = GetIAScene()->Cast();
+	int N = inScene->NIASolids();
 	for(int i = 0; i <  N; i++){
-		FWInteractSolid* inSolid = inScene->GetINSolid(i);
+		FWInteractSolid* inSolid = inScene->GetIASolid(i);
 		if(!inSolid->bSim) continue;
-		for(int j = 0; j < inScene->NINPointers(); j++){
-			FWInteractPointer* inPointer = inScene->GetINPointer(j)->Cast();
+		for(int j = 0; j < inScene->NIAPointers(); j++){
+			FWInteractPointer* inPointer = inScene->GetIAPointer(j)->Cast();
 			FWInteractInfo* inInfo = &inPointer->interactInfo[i];
 			if(!inInfo->flag.blocal) continue;
 			Vec3d pPoint = inPointer->pointerSolid->GetPose() * inInfo->neighborInfo.pointer_point;
@@ -322,14 +322,14 @@ void FWLDHapticDemo::DisplayContactPlane(){
 }
 
 void FWLDHapticDemo::DisplayLineToNearestPoint(){
-	FWInteractScene* inScene = DCAST(FWInteractScene, GetINScene());
-	int N = inScene->NINSolids();
+	FWInteractScene* inScene = DCAST(FWInteractScene, GetIAScene());
+	int N = inScene->NIASolids();
 	GLfloat moon[]={0.8,0.8,0.8};
 	for(int i = 0; i <  N; i++){
-		FWInteractSolid* inSolid = inScene->GetINSolid(i);
+		FWInteractSolid* inSolid = inScene->GetIASolid(i);
 		if(!inSolid->bSim) continue;
-		for(int j = 0; j < inScene->NINPointers(); j++){
-			FWInteractPointer* inPointer = inScene->GetINPointer(j)->Cast();
+		for(int j = 0; j < inScene->NIAPointers(); j++){
+			FWInteractPointer* inPointer = inScene->GetIAPointer(j)->Cast();
 			FWInteractInfo* inInfo = &inPointer->interactInfo[i];
 			if(!inInfo->flag.blocal) continue;
 			Vec3d pPoint = inPointer->pointerSolid->GetPose() * inInfo->neighborInfo.pointer_point;
@@ -375,8 +375,8 @@ void FWLDHapticDemo::Keyboard(int key, int x, int y){
 	case 'c':
 		{
 			ReleaseAllTimer();
-			for(int i = 0; i < GetINScene()->NINPointers(); i++){
-				GetINScene()->GetINPointer(i)->Calibration();
+			for(int i = 0; i < GetIAScene()->NIAPointers(); i++){
+				GetIAScene()->GetIAPointer(i)->Calibration();
 			}
 			CreateAllTimer();
 		}
@@ -385,8 +385,8 @@ void FWLDHapticDemo::Keyboard(int key, int x, int y){
 		{
 			static bool bf = false;
 			bf = !bf;
-			for(int i = 0; i < GetINScene()->NINPointers(); i++){
-				GetINScene()->GetINPointer(i)->EnableForce(bf);
+			for(int i = 0; i < GetIAScene()->NIAPointers(); i++){
+				GetIAScene()->GetIAPointer(i)->EnableForce(bf);
 			}
 			if(bf){
 				DSTR << "Enable Force Feedback" << std::endl;
@@ -399,8 +399,8 @@ void FWLDHapticDemo::Keyboard(int key, int x, int y){
 		{
 			static bool bv = false;
 			bv = !bv;
-			for(int i = 0; i < GetINScene()->NINPointers(); i++){
-				GetINScene()->GetINPointer(i)->EnableVibration(bv);
+			for(int i = 0; i < GetIAScene()->NIAPointers(); i++){
+				GetIAScene()->GetIAPointer(i)->EnableVibration(bv);
 			}
 			if(bv){
 				DSTR << "Enable Vibration Feedback" << std::endl;

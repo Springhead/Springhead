@@ -1,3 +1,11 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
 #include "FWLDHapticSample.h"
 #include <iostream>
 #include <sstream>
@@ -34,9 +42,9 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	/// InteractSceneの作成
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.iaMode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
-	CreateINScene(desc);									// interactSceneの作成
+	CreateIAScene(desc);									// interactSceneの作成
 
 	/// 物理シミュレーションする剛体を作成
 	BuildScene();
@@ -96,14 +104,14 @@ void FWLDHapticSample::InitHumanInterface(){
 void FWLDHapticSample::Reset(){
 	ReleaseAllTimer();
 	GetSdk()->Clear();
-	INClear();
+	IAClear();
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.mode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.iaMode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
-	CreateINScene(desc);									// interactSceneの作成
+	CreateIAScene(desc);									// interactSceneの作成
 	BuildScene();
 	BuildPointer();
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
@@ -113,7 +121,7 @@ void FWLDHapticSample::Reset(){
 void FWLDHapticSample::TimerFunc(int id){	
 	switch(id){
 		case 0:{
-			GetINScene()->CallBackHapticLoop();
+			GetIAScene()->CallBackHapticLoop();
 			break;
 			   }
 	}
@@ -121,9 +129,9 @@ void FWLDHapticSample::TimerFunc(int id){
 
 void FWLDHapticSample::IdleFunc(){
 	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
-	if(bStep) 	GetINScene()->Step();
+	if(bStep) 	GetIAScene()->Step();
 	else if (bOneStep){
-			GetINScene()->Step();
+			GetIAScene()->Step();
 			bOneStep = false;
 	}
 	GetGRAdaptee()->PostRedisplay();
@@ -219,7 +227,7 @@ void FWLDHapticSample::BuildPointer(){
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
 			if(i==0) idesc.defaultPosition =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
 			if(i==1) idesc.defaultPosition =Posed(1,0,0,0,-5,0,0);
-			GetINScene()->CreateINPointer(idesc);	// interactpointerの作成
+			GetIAScene()->CreateIAPointer(idesc);	// interactpointerの作成
 		}
 	}
 }
@@ -249,8 +257,8 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 		case 'c':
 			{
 				ReleaseAllTimer();
-				for(int i = 0; i < GetINScene()->NINPointers(); i++){
-					GetINScene()->GetINPointer(i)->Calibration();
+				for(int i = 0; i < GetIAScene()->NIAPointers(); i++){
+					GetIAScene()->GetIAPointer(i)->Calibration();
 				}
 				CreateAllTimer();
 			}
@@ -259,10 +267,10 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 			{
 				static bool bf = false;
 				bf = !bf;
-				for(int i = 0; i < GetINScene()->NINPointers(); i++){
-					GetINScene()->GetINPointer(i)->EnableForce(bf);
+				for(int i = 0; i < GetIAScene()->NIAPointers(); i++){
+					GetIAScene()->GetIAPointer(i)->EnableForce(bf);
 					if(!bf){
-						HIBaseIf* hib = GetINScene()->GetINPointer(i)->GetHI();
+						HIBaseIf* hib = GetIAScene()->GetIAPointer(i)->GetHI();
 						if(DCAST(HIForceInterface6DIf, hib)){
 							HIForceInterface6DIf* hif = hib->Cast();
 							hif->SetForce(Vec3d(), Vec3d());
@@ -284,8 +292,8 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 			{
 				static bool bv = false;
 				bv = !bv;
-				for(int i = 0; i < GetINScene()->NINPointers(); i++){
-					GetINScene()->GetINPointer(i)->EnableVibration(bv);
+				for(int i = 0; i < GetIAScene()->NIAPointers(); i++){
+					GetIAScene()->GetIAPointer(i)->EnableVibration(bv);
 				}
 				if(bv){
 					DSTR << "Enable Vibration Feedback" << std::endl;
@@ -296,19 +304,19 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 			break;
 		case 'j':
 			{
-					GetINScene()->SetHMode(PENALTY);
+					GetIAScene()->SetHMode(PENALTY);
 					DSTR << "PENALTY MODE" << std::endl;
 					break;
 			}
 		case 'k':
 			{
-					GetINScene()->SetHMode(PROXY);
+					GetIAScene()->SetHMode(PROXY);
 					DSTR << "PROXY MODE" << std::endl;
 					break;
 			}
 		case 'l':
 			{
-					GetINScene()->SetHMode(PROXYSIMULATION);
+					GetIAScene()->SetHMode(PROXYSIMULATION);
 					DSTR << "PROXYSIMULATION MODE" << std::endl;
 					break;
 			}
