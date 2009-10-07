@@ -32,13 +32,13 @@ struct FWInteractSceneDesc{
 public:
 	FWSceneIf* fwScene;
 	FWInteractMode iaMode;
-	FWHapticMode hmode;
+	FWHapticMode hMode;
 	double hdt;
 	FWInteractSceneDesc(){Init();}
 	void Init(){
 		fwScene = NULL;
 		iaMode = NONE;
-		hmode = PENALTY;
+		hMode = PENALTY;
 		hdt = 0.001;
 	}
 };
