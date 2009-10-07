@@ -33,7 +33,7 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 	GetSdk()->LoadScene(fileName);
 	/// 描画モードの指定，初期化
 	SetGRAdaptee(TypeGLUT);	
-	GetGRAdaptee()->Init(argc, argv);
+	GRInit(argc, argv);
 	/// 描画ウィンドウの作成，初期化
 	for(int i = 0; i < nWin ; i++){
 		FWWinDesc winDesc;
@@ -81,7 +81,7 @@ void FWMultiWinSample::Reset(){
 
 void FWMultiWinSample::TimerFunc(int id){
 	Step();
-	GetGRAdaptee()->PostRedisplay();
+	PostRedisplay();
 }
 
 void FWMultiWinSample::Step(){

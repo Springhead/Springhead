@@ -186,7 +186,10 @@ public:
 		FWGraphicsAdapteeを設定する．最初に必ず呼ぶ．
 	 */
 	void SetGRAdaptee(grAdapteeType type);
-	FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;};
+	/** @brief 描画の設定を取得
+		FWGraphicsAdapteeを取得する．　
+	 */
+	FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;}; //将来的には削除したい
 
 	/** @brief FWGraphicsAdapteeの初期化
 		FWGraphicsAdapteeの初期化を行う．最初に必ず呼ぶ．

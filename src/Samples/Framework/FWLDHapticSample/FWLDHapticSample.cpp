@@ -27,7 +27,7 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 
 	/// 描画モードの設定
 	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
-	Init(argc, argv);						// Sdkの作成
+	GRInit(argc, argv);						// Sdkの作成
 
 	/// 描画Windowの作成，初期化
 	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
