@@ -1,7 +1,7 @@
 #ifndef FWAPPINFO_H
 #define FWAPPINFO_H
 #include <Springhead.h>
-#include <Framework/SprFWGraphicsAdaptee.h>
+#include <Framework/FWGraphicsAdaptee.h>
 #include <Foundation/UTMMTimer.h>
 
 namespace Spr{;
