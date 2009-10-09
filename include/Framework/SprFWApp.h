@@ -223,7 +223,7 @@ public:
 	FWInteractSceneIf*				CreateIAScene(const FWInteractSceneDesc& desc);
 	FWInteractSceneIf*				GetIAScene(int i = -1);
 	int								NIAScenes();
-	void							IAClear();
+	void							ClearIAScenes();
 ///////////////////////////////////////////////////////////////////////////////////
 
 

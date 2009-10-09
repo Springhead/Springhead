@@ -330,7 +330,7 @@ FWInteractSceneIf* FWApp::GetIAScene(int i){
 	return NULL;
 }
 int FWApp::NIAScenes(){ return (int)iaScenes.size(); }
-void FWApp::IAClear(){ 
+void FWApp::ClearIAScenes(){ 
 	iaScenes.clear();
 	curIAScene = NULL;
 }
