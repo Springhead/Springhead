@@ -90,5 +90,13 @@ void FWInteractScene::BeginKeyboard(){
 void FWInteractScene::EndKeyboard(){
 	GetIAAdaptee()->EndKeyboard();
 }
-
+Vec3d* FWInteractScene::GetProxyPoint(){
+	return GetIAAdaptee()->GetProxyPoint();
+}
+Vec3d* FWInteractScene::GetForce(){
+	return GetIAAdaptee()->GetForce();
+}
+bool FWInteractScene::GetContactFlag(){
+	return GetIAAdaptee()->GetContactFlag();
+}
 }

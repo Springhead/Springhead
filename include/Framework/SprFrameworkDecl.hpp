@@ -41,6 +41,9 @@
 	void Clear(){	base::Clear();}	\
 	void Step(){	base::Step();}	\
 	void CallBackHapticLoop(){	base::CallBackHapticLoop();}	\
+	Vec3d* GetProxyPoint(){	return	base::GetProxyPoint();}	\
+	Vec3d* GetForce(){	return	base::GetForce();}	\
+	bool GetContactFlag(){	return	base::GetContactFlag();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWObjectIf(base)	\
 	PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\

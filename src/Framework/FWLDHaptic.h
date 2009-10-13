@@ -23,6 +23,9 @@ private:
 	std::vector<Vec3d> proxy[2];
 	std::vector<Vec3d> proVel[2];
 	Vec3d dproxy;
+	Vec3d DisplayProxy[2];				//	デバッグ用
+	Vec3d DisplayForce[2];				//	プロット用
+	bool contactFlag[2];				//	プロット用
 public:
 	FWLDHapticLoop();
 	virtual void Step();
@@ -31,6 +34,11 @@ public:
 	virtual void Proxy();
 	virtual void ProxySimulation();
 	virtual Vec3d Vibration(FWInteractSolid*, FWInteractPointer*, int);
+	Vec3d* GetProxyPoint();				//	デバッグ用
+	Vec3d* GetForce();
+	bool GetContactFlag();				//	把持しているかの判定
+//	int GetPicTime();
+//	int GetPenetrateLength();
 	virtual void LocalDynamics();
 };
 
@@ -51,6 +59,9 @@ public:
 	virtual void BeginKeyboard();
 	virtual void EndKeyboard();
 	void ReleaseState(PHSceneIf*);
+	Vec3d* GetProxyPoint();
+	Vec3d* GetForce();
+	bool GetContactFlag();
 
 };
 

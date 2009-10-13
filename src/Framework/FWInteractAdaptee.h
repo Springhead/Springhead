@@ -92,6 +92,9 @@ public:
 	virtual void Step(){};
 	virtual void BeginKeyboard(){};
 	virtual void EndKeyboard(){};
+	virtual Vec3d* GetProxyPoint();
+	virtual Vec3d* GetForce();
+	virtual bool GetContactFlag();
 };
 
 }
