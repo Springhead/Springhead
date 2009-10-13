@@ -320,7 +320,9 @@ FWInteractSceneIf* FWApp::CreateIAScene(const FWInteractSceneDesc &desc){
 	FWInteractScene* iaScene = DBG_NEW FWInteractScene(desc);
 	iaScenes.push_back(iaScene->Cast());
 	iaScene->CreateIAAdaptee(desc.iaMode);
-	iaScene->SetHMode(desc.hMode);
+	if(desc.iaMode == FWInteractMode::LOCAL_DYNAMICS){
+		iaScene->SetHMode(desc.hMode);
+	}
 	curIAScene = iaScene->Cast();
 	return curIAScene;
 }
