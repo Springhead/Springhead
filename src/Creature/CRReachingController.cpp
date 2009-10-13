@@ -79,16 +79,19 @@ void CRReachingController::Render(GRRenderIf* render){
 }
 
 void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
-	this->time		= 0.0f;
 	this->fP		= pos;
-	this->fV		= v;
-	this->period	= t;
 
-	Vec3f dir = (cSolid->GetPHSolid()->GetPose() * DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->GetPos())-fP;
-	initLen = dir.norm();
+	if (!bActive) {
+		this->time		= 0.0f;
+		this->fV		= v;
+		this->period	= t;
 
-	cSolid->GetIKControlPoint(0)->Enable(true);
-	bActive = true;
+		Vec3f dir = (cSolid->GetPHSolid()->GetPose() * DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->GetPos())-fP;
+		initLen = dir.norm();
+
+		cSolid->GetIKControlPoint(0)->Enable(true);
+		bActive = true;
+	}
 
 	/*
 	typedef std::pair<PHBallJointIf*,Quaterniond> BallJointGoal;
