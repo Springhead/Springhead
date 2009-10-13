@@ -104,7 +104,7 @@ void FWLDHapticSample::InitHumanInterface(){
 void FWLDHapticSample::Reset(){
 	ReleaseAllTimer();
 	GetSdk()->Clear();
-	IAClear();
+	ClearIAScenes();
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Scene‚Ìì¬
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// ‚İ‚Ìİ’è
 	FWInteractSceneDesc desc;
