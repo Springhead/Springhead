@@ -63,6 +63,9 @@ public:
 	void Clear();
 	void Step();
 	void CallBackHapticLoop();
+	Vec3d* GetProxyPoint();
+	Vec3d* GetForce();
+	bool GetContactFlag();
 };
 
 typedef UTRef<FWInteractSceneIf> UTRef_FWInteractSceneIf;

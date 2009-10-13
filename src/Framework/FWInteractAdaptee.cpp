@@ -232,6 +232,18 @@ extern bool bGJKDebug;
 	}
 	return a2b.norm();
 }
+Vec3d* FWInteractAdaptee::GetProxyPoint(){
+	Vec3d DisplayProxy[2];
+	return DisplayProxy;
+}
 
+Vec3d* FWInteractAdaptee::GetForce(){
+	Vec3d DisplayForce[2];
+	return DisplayForce;
+}
+
+bool FWInteractAdaptee::GetContactFlag(){
+	return false;
+}
 
 }
