@@ -8,6 +8,7 @@
 
 #include <Framework/FWInteractScene.h>
 #include <Framework/FWLDHaptic.h>
+#include <Framework/FWVirtualCoupling.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -28,6 +29,10 @@ void FWInteractScene::CreateIAAdaptee(FWInteractMode iaMode){
 		break;
 	case LOCAL_DYNAMICS:
 		ia = DBG_NEW FWLDHaptic();
+		ia->SetIAScene(this);
+		break;
+	case VIRTUAL_COUPLING:
+		ia = DBG_NEW FWVirtualCoupling();
 		ia->SetIAScene(this);
 		break;
 	default:

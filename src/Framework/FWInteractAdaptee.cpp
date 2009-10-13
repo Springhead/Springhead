@@ -31,7 +31,7 @@ PHSceneIf* FWInteractAdaptee::GetPHScene(){ return GetIAScene()->GetScene()->Get
 
 /// HapticLoopŠÖŒW
 FWHapticLoopBase* FWInteractAdaptee::GetHapticLoop(){ return NULL; }
-void FWInteractAdaptee::SetHMode(FWHapticMode hMode) {GetHapticLoop()->hmode = hMode;}
+void FWInteractAdaptee::SetHMode(FWHapticMode hMode) { GetHapticLoop()->hmode = hMode; }
 
 /// IAPointerŠÖŒW(IAScene‚ğ‰î‚µ‚Äæ“¾)
 FWInteractPointer* FWInteractAdaptee::GetIAPointer(int i){ return GetIAScene()->GetIAPointer(i)->Cast(); }
