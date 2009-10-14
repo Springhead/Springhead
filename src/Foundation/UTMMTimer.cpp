@@ -11,6 +11,7 @@ unsigned UTMMTimer::resolution=1;
 UTMMTimer::UTMMTimer()
 	{
 	func = NULL;
+	idFunc = NULL;
 	arg = NULL;
 	id	= NULL;
 	timerID = 0;
