@@ -645,8 +645,10 @@ struct PH3ElementBallJointIf : public PHBallJointIf{
 struct PH3ElementBallJointDesc : public PHBallJointDesc{
 	SPR_DESCDEF(PH3ElementBallJoint);
 
-	enum	deformationType{Elastic,Plastic,Mix};
-	deformationType type;
+	enum deformationType{
+		Elastic,
+		Plastic,
+		Mix}type;
 	double secondDamper;		// “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”
 	double yieldStress;			// ~•š‰—Í
 	double hardnessRate;		// ~•š‰—ÍˆÈ‰º‚Ìê‡‚É“ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ÉŠ|‚¯‚é”ä—¦
