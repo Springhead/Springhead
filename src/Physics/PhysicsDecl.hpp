@@ -433,7 +433,7 @@ public:\
 
 #define SPR_DECLMEMBEROF_PH3ElementBallJointDesc \
 protected:\
-	Spr::PH3ElementBallJointDesc::deformationType	type;	\
+	enum Spr::PH3ElementBallJointDesc::deformationType	type;	\
 	double	secondDamper;	\
 	double	yieldStress;	\
 	double	hardnessRate;	\

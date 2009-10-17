@@ -134,8 +134,21 @@ void FWBoneObject::Modify() {
 	}
 	Posed absPose; absPose.FromAffine(af);
 
+	DSTR<<"------------------------"<<std::endl;
+	DSTR<<phJoint->GetName()<<std::endl;
+	DSTR<<"------------------------"<<std::endl;
+	PH3ElementBallJointIf *e3bj = phJoint->Cast();
+	if (e3bj) {
+		PHBallJointDesc d; e3bj->GetDesc(&d);
+		sockOffset = d.poseSocket;
+		d.poseSocket = poseSock * d.poseSocket; d.posePlug = posePlug * d.posePlug;
+		d.poseSocket.Ori().unitize();
+		d.posePlug.Ori().unitize();
+		e3bj->SetDesc(&d);
+	}
+
 	PHBallJointIf *bj = phJoint->Cast();
-	if (bj) {
+	if (bj&&!e3bj) {
 		PHBallJointDesc d; bj->GetDesc(&d);
 		sockOffset = d.poseSocket;
 		d.poseSocket = poseSock * d.poseSocket; d.posePlug = posePlug * d.posePlug;
