@@ -28,7 +28,7 @@ void FWObject::Sync(){
 			phSolid->GetPose().ToAffine(af);	
 			afParent=grFrame->GetParent()->GetWorldTransform();	//親のWorld座標からみたFrameを取得
 			afd=afParent.inv()*af;								//階層構造下のAffin行列に変換する
-			afl.PosZ()+=(float)solidLength/2.0f;							//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
+			afl.PosZ()+=(float)solidLength/2.0f;				//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
 			AF=afd*afl;
 			DCAST(GRFrame, grFrame)->SetTransform(AF);
 		}else{
@@ -84,11 +84,19 @@ void FWBoneObject::Sync(){
 			DCAST(FWSceneIf,GetScene())->GetPHScene()->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE);
 		}
 	}
+	if(phSolid && grFrame && (!phJoint)){
+		//最初のFrameに関する処理
+		Affinef af;
+		phSolid->GetPose().ToAffine(af);
+		DCAST(GRFrame, grFrame)->SetTransform(af);
+	}
+
 }
 
 
 bool FWBoneObject::AddChildObject(ObjectIf* o){
 	bool rv = false;
+
 	if (!rv) {
 		PHSolidIf* obj = DCAST(PHSolidIf, o);
 		if (obj) {
@@ -115,6 +123,14 @@ bool FWBoneObject::AddChildObject(ObjectIf* o){
 			rv = true;
 		}
 	}
+	if ((phJoint==NULL&&endFrame==NULL)){
+		//最初のFrameに関する処理
+		if(phSolid){
+			Affinef af = grFrame->GetTransform();
+			Posed absPose; absPose.FromAffine(af);
+			phSolid->SetPose(absPose);
+		}
+	}
 	if (grFrame && endFrame && phSolid && phJoint) {
 		Modify();
 	}
@@ -125,7 +141,6 @@ void FWBoneObject::Modify() {
 	Posed poseSock, posePlug;
 	poseSock.FromAffine( grFrame->GetTransform() );
 	posePlug.FromAffine( Affinef() );
-
 	GRFrameIf* fr = grFrame;
 	Affinef af = Affinef();
 	while (fr->GetParent()) {
@@ -134,9 +149,6 @@ void FWBoneObject::Modify() {
 	}
 	Posed absPose; absPose.FromAffine(af);
 
-	DSTR<<"------------------------"<<std::endl;
-	DSTR<<phJoint->GetName()<<std::endl;
-	DSTR<<"------------------------"<<std::endl;
 	PH3ElementBallJointIf *e3bj = phJoint->Cast();
 	if (e3bj) {
 		PHBallJointDesc d; e3bj->GetDesc(&d);
@@ -179,9 +191,7 @@ void FWBoneObject::Modify() {
 			Posed pose;
 			pose.Pos() = Vec3d(0,0,-boneLength/2.0);
 			phSolid->SetShapePose(i, pose);
-
 			phSolid->SetCenterOfMass(Vec3d(0,0,-boneLength/2.0));
-
 			phSolid->SetPose(absPose);
 		}
 	}
