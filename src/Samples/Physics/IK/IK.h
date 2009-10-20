@@ -29,11 +29,10 @@ public:
 
 	IK();
 
-	static void _cdecl TimerFunc(int id);
 	void CallStep();
 
 	virtual void Init(int argc, char* argv[]);
-	virtual void Timer();
+	virtual void TimerFunc(int id);
 
 	void Reset(int sceneNum=0);
 	void InitCameraView();
