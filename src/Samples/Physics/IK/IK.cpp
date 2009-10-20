@@ -26,10 +26,13 @@ IK::IK(){
 	gravity		= Vec3d(0.0, -9.8, 0.0);
 }
 
-void IK::TimerFunc(int id){
-	((IK*)instance)->GetTimerFunc(0)->Loop();
-	((IK*)instance)->CallStep();
-	((IK*)instance)->GetGRAdaptee()->PostRedisplay();
+void IK::TimerFunc(int id){	
+	switch(id){
+		case 0:
+			GetSdk()->Step();
+			PostRedisplay();
+			break;
+	}
 }
 
 void IK::CallStep(){
@@ -54,13 +57,9 @@ void IK::Init(int argc, char* argv[]){
 	InitCameraView();										// カメラビューの初期化
 
 	BuildScene(0);
+int timerId = CreateTimer(FWTimer::GLUT);				// タイマーの生成
 }
 
-void IK::Timer(){
-	GTimer* timer0 = CreateTimerFunc();			// タイマーの生成
-	GetTimerFunc(0)->Set(TimerFunc);			// 呼びだす関数
-	GetTimerFunc(0)->Create(GetGRAdaptee());	// GLUT型でタイマーを作成
-}
 
 void IK::Reset(int sceneNum){
 	GetSdk()->GetScene()->GetPHScene()->Clear();
