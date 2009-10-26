@@ -7,6 +7,8 @@
 
 using namespace std;
 
+#define SPIDARG6 0;
+
 FWLDHapticDemo::FWLDHapticDemo(){
 	bStep = true;
 	bDrawInfo = false;
@@ -37,6 +39,7 @@ void FWLDHapticDemo::Init(int argc, char* argv[]){
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
 	desc.iaMode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.hMode =  FWHapticMode::PENALTY;
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
 	CreateIAScene(desc);									// interactSceneの作成
 
@@ -74,7 +77,7 @@ void FWLDHapticDemo::InitHumanInterface(){
 	GetHISdk()->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
-#if 0
+#if SPIDARG6
 	/// SPIDARG6を2台使う場合
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
@@ -98,7 +101,7 @@ void FWLDHapticDemo::InitHumanInterface(){
 void FWLDHapticDemo::Reset(){
 	ReleaseAllTimer();
 	GetSdk()->Clear();
-	IAClear();
+	ClearIAScenes();
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
 	FWInteractSceneDesc desc;
@@ -125,7 +128,7 @@ void FWLDHapticDemo::IdleFunc(){
 void FWLDHapticDemo::TimerFunc(int id){	
 	/// HapticLoopをコールバックする
 	((FWLDHapticDemo*)instance)->GetIAScene()->CallBackHapticLoop();
-	PostRedisplay();
+	//PostRedisplay();
 }
 
 void FWLDHapticDemo::Display(){
@@ -204,8 +207,13 @@ void FWLDHapticDemo::BuildScene(){
 		idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
 		idesc.springK = 8;					// haptic renderingのバネ係数
 		idesc.damperD = 0.01;					// haptic renderingのダンパ係数
+#if	SPIDARG6
 		idesc.posScale = 60;//300;					// soPointerの可動域の設定(～倍)
 		idesc.localRange = 0.7;//1.0;					// LocalDynamicsを使う場合の近傍範囲
+#else
+		idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
+		idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
+#endif
 		if(i==0) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);	// 初期位置の設定
 		if(i==1) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);
 		GetIAScene()->CreateIAPointer(idesc);	// interactpointerの作成
