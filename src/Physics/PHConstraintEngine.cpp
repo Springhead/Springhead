@@ -286,6 +286,13 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 	if(con){
 		con->engine = this;
 		joints.push_back(con);
+
+		PH3ElementBallJoint* threeBallJoint = DCAST(PH3ElementBallJoint, o);
+		if(threeBallJoint){
+			threeBallJoints.push_back(threeBallJoint);
+			return true;
+		}
+
 		return true;
 	}
 	PHRootNode* root = DCAST(PHRootNode, o);
@@ -307,7 +314,6 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 		paths.push_back(path);
 		return true;
 	}
-
 	return false;
 }
 
@@ -579,6 +585,10 @@ bool PHConstraintEngine::GetState(void* s) const {
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->GetState(&st->gears[i]);
 		}
+		st->threeElements.resize(threeBallJoints.size());
+		for(size_t i=0; i<threeBallJoints.size(); ++i){
+			threeBallJoints[i]->GetState(&st->threeElements[i]);
+		}
 	}
 	return true;
 }
@@ -594,6 +604,10 @@ void PHConstraintEngine::SetState(const void* s){
 		gears.resize(st->gears.size());
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->SetState(&st->gears[i]);
+		}
+		threeBallJoints.resize(st->threeElements.size());
+		for(size_t i=0; i<threeBallJoints.size(); ++i){
+			threeBallJoints[i]->SetState(&st->threeElements[i]);
 		}
 	}
 }
