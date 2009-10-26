@@ -181,7 +181,7 @@ void FWLDHapticSample::IdleFunc(){
 void FWLDHapticSample::TimerFunc(int id){	
 	/// HapticLoopをコールバックする
 	((FWLDHapticSample*)instance)->GetIAScene()->CallBackHapticLoop();
-	//PostRedisplay();
+	PostRedisplay();
 }
 
 
