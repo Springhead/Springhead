@@ -22,7 +22,6 @@ struct SpatialVectorArray2{
 };
 struct PH3ElementState{
 	SpatialVectorArray2 xs;				///(3—v‘fƒ‚ƒfƒ‹ê—p)‚Î‚Ë•”‚Ì‹——£
-
 };
 
 struct PH3ElementCommonData: public PH3ElementState{

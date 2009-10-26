@@ -13,6 +13,7 @@
 #include "PHGear.h"
 #include "PHPathJoint.h"
 #include "PHBallJoint.h"
+#include "PH3ElementBallJoint.h"
 #include <Collision/CDDetectorImp.h>
 
 namespace Spr{;
@@ -72,6 +73,8 @@ public:
 struct PHConstraintsSt{
 	std::vector<PHConstraintState> joints;
 	std::vector<PHConstraintState> gears;
+	std::vector<PH3ElementState> threeElements;
+	
 };
 
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
@@ -121,6 +124,8 @@ public:
 	PHGears			gears;
 	typedef std::vector< UTRef<PHPath> > PHPaths;
 	PHPaths			paths;
+	typedef std::vector< UTRef<PH3ElementBallJoint> > PH3ElementBallJoints;
+	PH3ElementBallJoints			threeBallJoints;
 	
 	void SetupLCP();				///< 速度更新LCPの準備
 	void IterateLCP();				///< 速度更新LCPの一度の反復

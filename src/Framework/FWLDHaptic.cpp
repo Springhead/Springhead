@@ -640,19 +640,12 @@ void FWLDHaptic::TestSimulation(){
 		curvel.v() = phSolid->GetVelocity();			// 現在の速度
 		curvel.w() = phSolid->GetAngularVelocity();		// 現在の角速度		
 
-
-		//if(i==2){
-		//	DSTR<<"1:"<<phSolid->GetVelocity().y<<std::endl; //naga
-		//}
-
 		//DSTR<<" 力を加えないで1ステップ進める--------------------"<<std::endl;
 		/// 何も力を加えないでシミュレーションを1ステップ進める
 		#ifdef DIVIDE_STEP
 		phScene->IntegratePart2();
 		#else
-		//DSTR <<"V1"<< phSolid->GetVelocity() << std::endl;	//naga
 		phScene->Step();
-		//DSTR <<"V2"<< phSolid->GetVelocity() << std::endl;	//naga
 		#endif
 		nextvel.v() = phSolid->GetVelocity();
 		nextvel.w() = phSolid->GetAngularVelocity();
@@ -660,7 +653,6 @@ void FWLDHaptic::TestSimulation(){
 		inSolid->lastb = inSolid->b;
 		double pdt = phScene->GetTimeStep();
 		inSolid->b = (nextvel - curvel) / pdt;
-		//DSTR <<  inSolid->b << std::endl;	//naga
 		states->LoadState(phScene);						// 現在の状態に戻す
 
 		/// InteractPointerの数だけ力を加えるテストシミュレーションを行う
@@ -689,9 +681,7 @@ void FWLDHaptic::TestSimulation(){
 				t[0] = n % Vec3d(1.0, 0.0, 0.0);					// t[0]を法線とVec3d(1.0, 0.0, 0.0)の外積とする
 				if(t[0].norm() < 1.0e-10)							// それでもノルムが小さかったら
 					t[0] = n % Vec3d(0.0, 1.0, 0.0);				// t[0]を法線とVec3d(0.0, 1.0, 0.0)の外積とする
-				t[0].unitize();										// t[0]を単位ベクトルにする
-				//if (!FPCK_FIAITE(t[0]));//naga
-				
+				t[0].unitize();										// t[0]を単位ベクトルにする				
 			}
 			else{
 				t[0] = vjrelproj / vjrelproj_norm;					// ノルムが小さくなかったら，射影ベクトルのまま
