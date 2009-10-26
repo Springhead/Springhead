@@ -186,7 +186,7 @@ void FWLDHapticDemo::BuildScene(){
 	Create3ElementJointBox(phscene);
 #endif
 	/// ポインタ
-	for(int i= 0; i < 2; i++){
+	for(int i= 0; i < 1; i++){
 		PHSolidIf* soPointer = phscene->CreateSolid(desc);
 		soPointer->SetDynamical(false);
 		GetSdk()->GetScene()->GetPHScene()->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
@@ -208,10 +208,10 @@ void FWLDHapticDemo::BuildScene(){
 		idesc.springK = 8;					// haptic renderingのバネ係数
 		idesc.damperD = 0.01;					// haptic renderingのダンパ係数
 #if	SPIDARG6
-		idesc.posScale = 60;//300;					// soPointerの可動域の設定(～倍)
-		idesc.localRange = 0.7;//1.0;					// LocalDynamicsを使う場合の近傍範囲
+		idesc.posScale = 300;//300;					// soPointerの可動域の設定(～倍)
+		idesc.localRange = 1.0;//1.0;					// LocalDynamicsを使う場合の近傍範囲
 #else
-		idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
+		idesc.posScale = 80;					// soPointerの可動域の設定(～倍)
 		idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
 #endif
 		if(i==0) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);	// 初期位置の設定
