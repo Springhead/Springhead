@@ -20,9 +20,11 @@ int __cdecl main(){
 	sdk->Print(DSTR);
 
 	UTRef<HISpidar4If> spg = sdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	spg->Init(&HISpidar4Desc("SpidarG6X3R",Vec4i(1,3,6,8)));
 	UTRef<HISpidar4If> spg2 = sdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
-	spg2->Init(&HISpidar4Desc("SpidarG6X3L",Vec4i(2,4,5,7)));
+	//spg->Init(&HISpidar4Desc("SpidarG6X3R",Vec4i(1,3,6,8)));
+	//spg2->Init(&HISpidar4Desc("SpidarG6X3L",Vec4i(2,4,5,7)));
+	spg->Init(&HISpidar4Desc("SpidarR",Vec4i(1,2,3,4)));
+	spg2->Init(&HISpidar4Desc("SpidarL",Vec4i(5,6,7,8)));
 	
 	int t = 0;
 	while(!_kbhit()){
