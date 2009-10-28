@@ -266,7 +266,7 @@ void PHIKNode::PrepareSolve(){
 	gamma[number].resize(ndof,ndof);
 	gamma[number].clear();
 
-	for (size_t i=0; i<ndof; ++i) {
+	for (int i=0; i< ndof; ++i) {
 		for(CSetIter c_z=linkedControlPoints.begin(); c_z!=linkedControlPoints.end(); ++c_z){
 			if (! DCAST(PHIKControlPoint,*c_z)->isEnabled) { continue; }
 			int c_z_n = DCAST(PHIKControlPoint,*c_z)->number;
@@ -285,7 +285,7 @@ void PHIKNode::PrepareSolve(){
 				for(NSetIter n_y=linkedNodes.begin(); n_y!=linkedNodes.end(); ++n_y){
 					if (!((*n_y)->IsEnabled())) { continue; }
 					int n_y_n = DCAST(PHIKNode,*n_y)->number;
-					for (size_t j=0; j<DCAST(PHIKNode,*n_y)->ndof; ++j) {
+					for (int j=0; j<DCAST(PHIKNode,*n_y)->ndof; ++j) {
 						if (DCAST(PHIKNode,*n_y)->Mj.find(c_z_n) != DCAST(PHIKNode,*n_y)->Mj.end()) {
 							gamma[n_y_n][i][j] += ( (Mj[c_z_n][k][i]/bias) * (DCAST(PHIKNode,*n_y)->Mj[c_z_n][k][j] / DCAST(PHIKNode,*n_y)->bias) );
 						}
@@ -293,7 +293,7 @@ void PHIKNode::PrepareSolve(){
 				}
 
 				// É¡[nx, nx]
-				for (size_t j=0; j<ndof; ++j) {
+				for (int j=0; j<ndof; ++j) {
 					if (i!=j) {
 						//(*dlog) << number << ":" << i << ":" << j << ": += " << (Mj[c_z_n][k][i]/bias) << ", " << (Mj[c_z_n][k][j]/bias) << std::endl;
 						gamma[number][i][j] += ( (Mj[c_z_n][k][i]/bias) * (Mj[c_z_n][k][j]/bias) );
@@ -327,7 +327,7 @@ void PHIKNode::PrepareSolve(){
 void PHIKNode::ProceedSolve(){
 	dTheta_prev = dTheta;
 
-	for (size_t i=0; i<ndof; ++i) {
+	for (int i=0; i<ndof; ++i) {
 		double delta_epsilon = 0;
 
 		// É¬
@@ -335,14 +335,14 @@ void PHIKNode::ProceedSolve(){
 			if (!((*n_y)->IsEnabled())) { continue; }
 			int n_y_n = DCAST(PHIKNode,*n_y)->number;
 			if (gamma.find(n_y_n) != gamma.end()) {
-				for (size_t k=0; k<DCAST(PHIKNode,*n_y)->ndof; ++k) {
+				for (int k=0; k<DCAST(PHIKNode,*n_y)->ndof; ++k) {
 					delta_epsilon += ( (gamma[n_y_n][i][k]) * (DCAST(PHIKNode,*n_y)->dTheta[k]) );
 				}
 			}
 		}
 
 		// É√
-		for (size_t k=0; k<ndof; ++k) {
+		for (int k=0; k<ndof; ++k) {
 			if (k!=i) {
 				if (gamma.find(number) != gamma.end()) {
 					delta_epsilon += ( (gamma[number][i][k]) * (dTheta[k]) );

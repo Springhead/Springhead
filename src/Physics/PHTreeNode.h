@@ -45,8 +45,8 @@ public:
 	/// このノードに加わる拘束力の変化量から他のノードの速度変化量への影響を計算．LCPで使用
 	virtual void CompResponse(const SpatialVector& df, bool bUpdate, bool bImpulse);
 	virtual void CompBiasForceDiff(bool bUpdate, bool bImpulse)=0;
-	virtual void SetupLCP();
-	virtual void IterateLCP();
+	//virtual void SetupLCP();
+	//virtual void IterateLCP();
 	virtual void InitArticulatedInertia();
 			void InitArticulatedBiasForce();
 	virtual void CompArticulatedInertia();			///< Articulated Inertiaの計算
@@ -146,12 +146,12 @@ public:
 
 	/// LCP関係の関数
 	virtual void CompResponse(const VecNd& tau, bool bUpdate);
-			void CompResponseMatrix();
-	virtual void ModifyJacobian();
-	virtual void SetupLCP();
-	virtual void IterateLCP();
-	virtual void CompBias()=0;
-	virtual void Projection(double& f, int k)=0;
+	//		void CompResponseMatrix();
+	//virtual void ModifyJacobian();
+	//virtual void SetupLCP();
+	//virtual void IterateLCP();
+	//virtual void CompBias()=0;
+	//virtual void Projection(double& f, int k)=0;
 
 	void AddGear(PHGear* gear, PHTreeNodeND<NDOF>* child);
 	PHGear*			gear;				///< ギアへの参照．このギアを介して親ノードと連動する
@@ -176,8 +176,8 @@ public:
 	VecNd			sumJtrZplusIc, sumJtrdZ, sumtorque, JtrdZ;
 	
 
-	VecNd A, Ainv, dA, b, db, f;	///< 関節座標LCPのための変数
-	MatrixNd Jq;					///< 関節座標LCPにおける関節速度から拘束変数へのヤコビアン
+	//VecNd A, Ainv, dA, b, db, f;	///< 関節座標LCPのための変数
+	//MatrixNd Jq;					///< 関節座標LCPにおける関節速度から拘束変数へのヤコビアン
 };
 
 ///	1自由度の関節
@@ -187,8 +187,8 @@ public:
 	SPR_DECLMEMBEROF_PHTreeNode1DDesc;
 	
 	PHJoint1D*		GetJoint(){return DCAST(PHJoint1D, joint);}
-	virtual void	CompBias();
-	virtual void	Projection(double& f, int k);
+	//virtual void	CompBias();
+	//virtual void	Projection(double& f, int k);
 	
 	PHTreeNode1D();
 };

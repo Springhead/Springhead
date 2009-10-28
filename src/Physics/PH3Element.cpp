@@ -45,9 +45,9 @@ void PH3Element::SetConstrainedIndex(bool* con){
 	for(int i=0; i<3; ++i) con[i] = (damper[i] != 0.0 || spring[i] != 0.0);
 	con[3] = con[4] = con[5] = (damperOri != 0.0 || springOri != 0.0);
 }
-void PH3Element::SetConstrainedIndexCorrection(bool* con){
-	con[0] = con[1] = con[2] = con[3] = con[4] = con[5] = false;
-}
+//void PH3Element::SetConstrainedIndexCorrection(bool* con){
+//	con[0] = con[1] = con[2] = con[3] = con[4] = con[5] = false;
+//}
 
 void PH3Element::CompBias(){
 	

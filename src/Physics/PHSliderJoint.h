@@ -34,7 +34,7 @@ public:
 	SPR_DECLMEMBEROF_PHSliderJointDesc;
 
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}
-	virtual void SetConstrainedIndex(bool* con);
+	//virtual void SetConstrainedIndex(bool* con);
 	virtual void CompBias();
 	virtual void CompError();
 	virtual void UpdateJointState();

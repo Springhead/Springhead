@@ -27,10 +27,12 @@ PHConstraint::PHConstraint(){
 }
 
 PHSceneIf* PHConstraint::GetScene() const{
-	return SceneObject::GetScene()->Cast();
+	return DCAST(PHSceneIf, SceneObject::GetScene());
 }
+
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//ƒCƒ“ƒ^ƒtƒF[ƒX(PHConstraintIf‚Ì‹@”\)‚ÌÀ‘•,ƒI[ƒo[ƒ‰ƒCƒh   cf.SprPHJoint.h
+// ƒCƒ“ƒ^ƒtƒF[ƒX(PHConstraintIf‚Ì‹@”\)‚ÌÀ‘•,ƒI[ƒo[ƒ‰ƒCƒh   cf.SprPHJoint.h
+
 bool PHConstraint::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s){
@@ -60,15 +62,14 @@ void PHConstraint::AfterSetDesc(){
 }
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//‚±‚ÌƒNƒ‰ƒX“à‚Ì‹@”\.
+// ‚±‚ÌƒNƒ‰ƒX“à‚Ì‹@”\.
+
 void PHConstraint::UpdateState(){
 	// „‘Ì‚Ì‘Š‘ÎˆÊ’u‚©‚çƒ„ƒRƒrƒAƒ“CŠÖß‘¬“xEˆÊ’u‚ğ‹tZ‚·‚é
-	//if(!bArticulated){
-		CompJacobian();
-		//e„‘Ì‚Ì’†S‚©‚çŒ©‚½‘¬“x‚ÆCq„‘Ì‚Ì’†S‚©‚çŒ©‚½‘¬“x‚ğSocketÀ•WŒn‚©‚çŒ©‚½‘¬“x‚É—¼•û’¼‚µ‚ÄC‘Š‘Î‘¬“x‚ğæ‚éD
-		vjrel = Js[1] * solid[1]->v - Js[0] * solid[0]->v;
-		UpdateJointState();
-	//}
+	CompJacobian();
+	//e„‘Ì‚Ì’†S‚©‚çŒ©‚½‘¬“x‚ÆCq„‘Ì‚Ì’†S‚©‚çŒ©‚½‘¬“x‚ğSocketÀ•WŒn‚©‚çŒ©‚½‘¬“x‚É—¼•û’¼‚µ‚ÄC‘Š‘Î‘¬“x‚ğæ‚éD
+	vjrel = Js[1] * solid[1]->v - Js[0] * solid[0]->v;
+	UpdateJointState();
 }
 
 
@@ -94,9 +95,9 @@ void PHConstraint::CompJacobian(){ // S‘©‚·‚é2‚Â‚Ì„‘Ì‚ÌŠe‘¬“x‚©‚ç‘Š‘Î‘¬“x‚Ö‚Ìƒ
 	/*
 	//Šp‘¬“x‚Ì¶‚©‚ç‚©‚¯‚é‚Æquaternion‚ÌŠÔ”÷•ª‚ª“¾‚ç‚ê‚és—ñ
 	Matrix3d E(
-			qjrel.W(),  qjrel.Z(), -qjrel.Y(),
+		 qjrel.W(),  qjrel.Z(), -qjrel.Y(),
 		-qjrel.Z(),  qjrel.W(),  qjrel.X(),
-			qjrel.Y(), -qjrel.X(),  qjrel.W());
+		 qjrel.Y(), -qjrel.X(),  qjrel.W());
 	E *= 0.5;
 	Jqv[0].clear();
 	Jqw[0] = E * Jww[0];
@@ -123,7 +124,6 @@ void PHConstraint::CompResponseMatrix(){
 		if(solid[i]->IsDynamical()){
 			if(solid[i]->IsArticulated()){
 				for(j = 0; j < 6; j++){
-					if(!constr[j])continue;
 					(Vec6d&)df = J[i].row(j);
 					solid[i]->treeNode->CompResponse(df, false, false);
 					A[j] += J[i].row(j) * solid[i]->treeNode->da;
@@ -166,57 +166,58 @@ void PHConstraint::CompResponseMatrix(){
 	}
 }
 
+void PHConstraint::CompResponse(double df, int j){
+	SpatialVector dfs;
+	for(int i = 0; i < 2; i++){
+		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
+		if(solid[i]->IsArticulated()){
+			(Vec6d&)dfs = J[i].row(j) * df;
+			solid[i]->treeNode->CompResponse(dfs, true, false);
+		}
+		else solid[i]->dv += T[i].row(j) * df;
+	}
+}
+
 void PHConstraint::SetupLCP(){
 	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
 	if(!bEnabled || !bFeasible)
 		return;
 
-	/* ‘O‰ñ‚Ì’l‚ğk¬‚µ‚½‚à‚Ì‚ğ‰Šú’l‚Æ‚·‚éD
+	/* S‘©—Í‚Í‘O‰ñ‚Ì’l‚ğk¬‚µ‚½‚à‚Ì‚ğ‰Šú’l‚Æ‚·‚éD
 	   ‘O‰ñ‚Ì’l‚»‚Ì‚Ü‚Ü‚ğ‰Šú’l‚É‚·‚é‚ÆCS‘©—Í‚ªŸ‘æ‚É‘‘å‚·‚é‚Æ‚¢‚¤Œ»Û‚ª¶‚¶‚éD
 	   ‚±‚ê‚ÍCLCP‚ğ—LŒÀ‰ñiÀÛ‚É‚Í10‰ñ’ö“xj‚Ì”½•œ‚Å‘Å‚¿Ø‚é‚½‚ß‚¾‚Æv‚í‚ê‚éD
 	   0ƒxƒNƒgƒ‹‚ğ‰Šú’l‚É—p‚¢‚Ä‚à—Ç‚¢‚ªC‚±‚Ìê‡”äŠr“I‘½‚­‚Ì”½•œ‰ñ”‚ğ—v‚·‚éD
 	  */
 	
-	// S‘©‚·‚é©—R“x‚ÌŒˆ’è
-	bool con[6];
-	SetConstrainedIndex(con);
+	// S‘©‚·‚é©—R“x‚ÌŒˆ’èCS‘©—Í‚Ì‰Šú‰»
+	//bool con[6];
+	SetConstrainedIndex(constr);
 	for(int i = 0; i < 6; i++){
-		if(con[i] && constr[i]){				// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
-			 f[i] *= engine->shrinkRate;
-		}else{
-			f[i] = 0.0;							// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
-		}
-		constr[i] = con[i];
+		//if(con[i] && constr[i]){				// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
+			f[i] *= engine->shrinkRate;
+		//}else{
+		//	f[i] = 0.0;							// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
+		//}
+		//constr[i] = con[i];
 	}
 
 	FPCK_FINITE(f.v());
 
-	// ABA‚Ìê‡‚Í‚±‚±‚Ü‚Å
-	if(bArticulated)return;
-
 	// LCP‚ÌÀ•W‚Ìæ‚è•û‚ª“Áê‚ÈŠÖß‚Íƒ„ƒRƒrƒAƒ“‚ÉÀ•W•ÏŠ·‚ğ‚©‚¯‚é
 	ModifyJacobian();
 
+	// LCP‚ÌŒW”A, b‚Ì•â³’ldA, db‚ğŒvZ
 	dA.clear();
 	db.clear();
-	CompBias();	// –Ú•W‘¬Cƒoƒlƒ_ƒ“ƒp‚É‚æ‚é•â³€dA, db‚ğŒvZ
 	
 	// LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚ğŒvZ
 	CompResponseMatrix();
 
+	// ABA‚Ìê‡‚Í‚±‚±‚Ü‚Å
+	if(bArticulated)return;
 
-	AddMotorTorque();
-	SpatialVector ft;
-	for(int i=0; i<6; ++i){
-		if (!constr[i]) ft[i]=f[i];
-	}
-	for(int i=0; i<2; ++i){
-		if(solid[i]->dynamical) {	
-			solid[i]->dv += T[i].trans() * ft;
-		}
-	}
+	CompBias();	// Œë·C³‚Ì‚½‚ß‚Ì•â³’lD
 	
-
 	// LCP‚ÌbƒxƒNƒgƒ‹ == ˜_•¶’†‚Ìw[t], ƒoƒlEƒ_ƒ“ƒp‚Ídb‚Å•â³‚·‚é
 	b = J[0] * solid[0]->v + J[1] * solid[1]->v;	//vjrel‚Å‚Í‚È‚¢	’l‚É‚æ‚Á‚Ä‚Í•Ï‚í‚Á‚ÄS‘©‚µ‚È‚­‚È‚é
 
@@ -238,22 +239,12 @@ void PHConstraint::IterateLCP(){
 		return;
 	FPCK_FINITE(f.v());
 
-	SpatialVector fnew, df, dfs;
-	int i, j;
-	for(j = 0; j < 6; j++){
+	SpatialVector fnew, df;
+	for(int j = 0; j < 6; j++){
 		if(!constr[j])continue;
 		
-		//	hase 2009.08.21
-		//	1.5”{‚ÌSOR‚É‚È‚Á‚Ä‚¢‚½‚ªA[‚¢ÚG‚ª—L‚éê‡A‚©‚È‚è•sˆÀ’è‰»‚·‚éB
-#if 0
-		fnew[j] = f[j] - 1.5 * Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
-									+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
-#else
-		//	1.0•’Ê‚ÌƒKƒEƒXƒUƒCƒfƒ‹‚É‚·‚é‚ÆˆÀ’è‰»‚·‚é‚Ì‚ÅA–³—‚ÉSOR‚É‚µ‚È‚¢•û‚ª—Ç‚¢‚Æv‚í‚ê‚éB
-		//	‚»‚±‚ÅA•’Ê‚ÌƒKƒEƒXƒUƒCƒfƒ‹‚É•ÏX‚µ‚½
-		fnew[j] = f[j] - Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
-									+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
-#endif
+		fnew[j] = f[j] - engine->accelSOR * Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
+				+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
 
 		// ‚Æ‚è‚ ‚¦‚¸—‚¿‚È‚¢‚æ‚¤‚ÉŠÔ‚É‡‚í‚¹‚ÌƒR[ƒh
 		if (!FPCK_FINITE(fnew[j])) fnew[j] = f[j]; //naga “Á’èğŒ‰º‚Å‚ÍŠÔ‚É‡‚í‚¹‚ÌƒR[ƒh‚Å‚à—‚¿‚é
@@ -270,14 +261,7 @@ void PHConstraint::IterateLCP(){
 		}
 		Projection(fnew[j], j);
 		df[j] = fnew[j] - f[j];
-		for(i = 0; i < 2; i++){
-			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
-			if(solid[i]->IsArticulated()){
-				(Vec6d&)dfs = J[i].row(j) * df[j];
-				solid[i]->treeNode->CompResponse(dfs, true, false);
-			}
-			else solid[i]->dv += T[i].row(j) * df[j];
-		}
+		CompResponse(df[j], j);
 		f[j] = fnew[j];
 	}
 }
@@ -286,15 +270,15 @@ void PHConstraint::SetupCorrectionLCP(){
 	if(!bEnabled || !bFeasible || bArticulated)
 		return;
 	//	S‘©‚·‚é©—R“x‚ÌŒˆ’è
-	bool con[6];
-	SetConstrainedIndexCorrection(con);
+	//bool con[6];
+	//SetConstrainedIndexCorrection(con);
 	for(int i = 0; i < 6; i++){
-		if(con[i] && constrCorrection[i]){		// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
+		//if(con[i] && constrCorrection[i]){		// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
 			 F[i] *= engine->shrinkRateCorrection;
-		}else{
-			F[i] = 0.0;							// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
-		}
-		constrCorrection[i] = con[i];
+		//}else{
+		//	F[i] = 0.0;							// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
+		//}
+		//constrCorrection[i] = con[i];
 	}
 	B.clear();
 	CompError();

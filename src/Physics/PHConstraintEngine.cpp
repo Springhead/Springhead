@@ -168,18 +168,19 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 //----------------------------------------------------------------------------
 // PHConstraintEngine
 PHConstraintEngine::PHConstraintEngine(){
-	numIter				 = 15;
-	numIterCorrection	 = 0;
+	numIter					 = 15;
+	numIterCorrection		 = 0;
 	numIterContactCorrection = 0;
-	velCorrectionRate	 = 0.3;
-	posCorrectionRate	 = 0.3;
-	shrinkRate			 = 0.7;
-	shrinkRateCorrection = 0.7;
-	freezeThreshold		 = 0.0;
-	contactCorrectionRate = 0.1;
-	bGearNodeReady = false;
+	velCorrectionRate		 = 0.3;
+	posCorrectionRate		 = 0.3;
+	shrinkRate				 = 0.7;
+	shrinkRateCorrection	 = 0.7;
+	freezeThreshold			 = 0.0;
+	accelSOR				 = 1.0;
+	contactCorrectionRate	 = 0.1;
+	bGearNodeReady	 = false;
 	bSaveConstraints = false;
-	bUpdateAllState = true;
+	bUpdateAllState	 = true;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -201,14 +202,10 @@ PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& de
 	PHJoint* joint = NULL;
 	if(ii == PHHingeJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHHingeJoint();
-	else if(ii == PH3ElementHingeJointIf::GetIfInfoStatic())
-		joint = DBG_NEW PH3ElementHingeJoint();
 	else if(ii == PHSliderJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHSliderJoint();
 	else if(ii == PHBallJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHBallJoint();
-	else if(ii == PH3ElementBallJointIf::GetIfInfoStatic())
-		joint = DBG_NEW PH3ElementBallJoint();
 	else if(ii == PHPathJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHPathJoint();
 	else if(ii == PHSpringIf::GetIfInfoStatic())
@@ -287,11 +284,12 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 		con->engine = this;
 		joints.push_back(con);
 
+		/* 特定の関節種類のみ特別扱いするのは問題です　tazz
 		PH3ElementBallJoint* threeBallJoint = DCAST(PH3ElementBallJoint, o);
 		if(threeBallJoint){
 			threeBallJoints.push_back(threeBallJoint);
 			return true;
-		}
+		}*/
 
 		return true;
 	}
@@ -403,8 +401,8 @@ void PHConstraintEngine::SetupLCP(){
 	for(PHGears::iterator it = gears.begin(); it != gears.end(); it++)
 		(*it)->SetupLCP();
 	//ツリー構造の前処理
-	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-		(*it)->SetupLCP();
+	//for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+	//	(*it)->SetupLCP();
 
 }
 void PHConstraintEngine::SetupCorrectionLCP(){
@@ -431,8 +429,8 @@ void PHConstraintEngine::IterateLCP(){
 			(*it)->IterateLCP();
 		for(PHGears::iterator it = gears.begin(); it != gears.end(); it++)
 			(*it)->IterateLCP();
-		for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-			(*it)->IterateLCP();
+		//for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
+		//	(*it)->IterateLCP();
 		count++;
 	}
 }
@@ -470,9 +468,9 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 }
 
 // ほとんど同じ処理のためフラグ処理にしました．aliasしてますがobsoleteとします tazz
-void PHConstraintEngine::UpdateOnlyVelocity(){
-	UpdateSolids(true);
-}
+//void PHConstraintEngine::UpdateOnlyVelocity(){
+//	UpdateSolids(true);
+//}
 
 #ifdef REPORT_TIME
 }
@@ -508,9 +506,6 @@ void PHConstraintEngine::StepPart1(){
 #ifdef REPORT_TIME
 	DSTR << " col:" << ptimer.CountUS();
 #endif
-	//前回のStep以降に別の要因によって剛体の位置・速度が変化した場合
-	//ヤコビアン等の再計算
-	//各剛体の前処理
 #ifdef REPORT_TIME
 	ptimer.CountUS();
 #endif
@@ -519,6 +514,9 @@ void PHConstraintEngine::StepPart1(){
 void PHConstraintEngine::StepPart2(){
 	double dt = GetScene()->GetTimeStep();
 
+	//前回のStep以降に別の要因によって剛体の位置・速度が変化した場合
+	//ヤコビアン等の再計算
+	//各剛体の前処理
 	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
 		(*it)->UpdateCacheLCP(dt);
 	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
@@ -585,10 +583,10 @@ bool PHConstraintEngine::GetState(void* s) const {
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->GetState(&st->gears[i]);
 		}
-		st->threeElements.resize(threeBallJoints.size());
-		for(size_t i=0; i<threeBallJoints.size(); ++i){
-			threeBallJoints[i]->GetState(&st->threeElements[i]);
-		}
+		//st->threeElements.resize(threeBallJoints.size());
+		//for(size_t i=0; i<threeBallJoints.size(); ++i){
+		//	threeBallJoints[i]->GetState(&st->threeElements[i]);
+		//}
 	}
 	return true;
 }
@@ -605,10 +603,10 @@ void PHConstraintEngine::SetState(const void* s){
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->SetState(&st->gears[i]);
 		}
-		threeBallJoints.resize(st->threeElements.size());
-		for(size_t i=0; i<threeBallJoints.size(); ++i){
-			threeBallJoints[i]->SetState(&st->threeElements[i]);
-		}
+		//threeBallJoints.resize(st->threeElements.size());
+		//for(size_t i=0; i<threeBallJoints.size(); ++i){
+		//	threeBallJoints[i]->SetState(&st->threeElements[i]);
+		//}
 	}
 }
 
