@@ -28,6 +28,7 @@ protected:
 	size_t	vertexSize;					///< 頂点のサイズ
 	bool	vertexColor;				///< 頂点が色を持つかどうか
 	GRMaterialDesc currentMaterial;		///< 現在のマテリアル
+	
 	/**
 	 *	@name	マトリックス変数
 	 *　　 GLではModelを変えずにViewだけを変えるということができない。 \n
@@ -56,11 +57,11 @@ protected:
 	 */
 	std::map<unsigned int, GRFont> fontList;		///< フォントリスト<DisplayListのindex, font>    
 	unsigned int	fontBase;						///< ディスプレイリストのindex numberの基底数 
+	GRFont			font;							///< フォント情報
 	/** @} */	
 
 	/**
 	 *	@name	シェーダ変数
-	 *　　 新規に指定されたフォントはfontListに格納される。
 	 *	@{
 	 */
 	std::string vertexShaderFile;						///< VertexShader ファイル名
@@ -124,14 +125,11 @@ public:
 	virtual void DrawList(int i);
 	///	DisplayListの解放
 	virtual void ReleaseList(int i);
+	virtual void SetFont(const GRFont& font);
 	/// 3次元テキストの描画（GLオンリー版でfontは指定なし）
 	virtual void DrawFont(Vec2f pos, const std::string str);
 	/// 3次元テキストの描画（GLオンリー版でfontは指定なし）
 	virtual void DrawFont(Vec3f pos, const std::string str);
-	///	3次元テキストの描画
-	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font);
-	///	3次元テキストの描画
-	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font);
 	///	描画の材質の設定
 	virtual void SetMaterial(const GRMaterialDesc& mat);
 	virtual void SetMaterial(const GRMaterialIf*& mat){ GRDevice::SetMaterial(mat); }

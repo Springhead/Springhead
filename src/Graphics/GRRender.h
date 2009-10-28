@@ -134,10 +134,11 @@ public:
 	virtual void DrawList(int i){}
 	///	DisplayListの解放
 	virtual void ReleaseList(int i){}
-	///	2次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。
-	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font=0){}
-	///	3次元テキストの描画　　 Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	
-	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font=0){}
+	virtual void SetFont(const GRFont& font)=0;
+	///	2次元テキストの描画
+	virtual void DrawFont(Vec2f pos, const std::string str){}
+	///	3次元テキストの描画
+	virtual void DrawFont(Vec3f pos, const std::string str){}
 	///	描画の材質の設定
 	virtual void SetMaterial(const GRMaterialDesc& mat){}
 	virtual void SetMaterial(const GRMaterialIf* mat){}
@@ -224,12 +225,9 @@ public:
 		{ ptr EndList(); }																					\
 	virtual void DrawList(int i){ ptr DrawList(i); }														\
 	virtual void ReleaseList(int i){ ptr ReleaseList(i); }													\
+	virtual void SetFont(const GRFont& font){ ptr SetFont(font); }											\
 	virtual void DrawFont(Vec2f pos, const std::string str){ ptr DrawFont(pos, str); }						\
     virtual void DrawFont(Vec3f pos, const std::string str){ ptr DrawFont(pos, str); }						\
-	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font)								\
-		{ ptr DrawFont(pos, str, font); }																	\
-	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font)								\
-		{ ptr DrawFont(pos, str, font); }																	\
 	virtual void SetMaterial(const GRMaterialDesc& mat){ ptr SetMaterial(mat); }							\
 	virtual void SetMaterial(const GRMaterialIf* mat)														\
 		{ if(mat) ptr SetMaterial((const GRMaterialDesc&)*DCAST(GRMaterial, mat)); }						\
