@@ -41,6 +41,7 @@ namespace Spr {;
 /// 初期設定
 void GRDeviceGL::Init(){
 	nLights = 0;
+	fontBase = -1;
 	glDrawBuffer(GL_BACK);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
@@ -53,7 +54,7 @@ void GRDeviceGL::Init(){
 	// 視点行列の設定
 	viewMatrix.Pos() = Vec3f(0.0, 0.0, 1.0);	                        // eye
 	viewMatrix.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));	// center, up 
-	viewMatrix = viewMatrix.inv();			
+	viewMatrix = viewMatrix.inv();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(viewMatrix);
 }
@@ -332,33 +333,40 @@ void GRDeviceGL::ReleaseList(int list){
 }
 /// 3次元テキストの描画（GLオンリー版でfontは指定なし） .. Vec2f pos
 void GRDeviceGL::DrawFont(Vec2f pos, const std::string str){
-	glDisable(GL_LIGHTING);
-	
-	glRasterPos2fv(pos);
-	std::string::const_iterator iter;
-	for (iter = str.begin(); iter != str.end();	++iter) {
-		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *iter);
-	}
-	glEnable(GL_LIGHTING);
+	DrawFont(Vec3f(pos.x, pos.y, 0.0f), str);
 }
+
 /// 3次元テキストの描画（GLオンリー版でfontは指定なし）.. Vec3f pos
 void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 	glDisable(GL_LIGHTING);
-	glRasterPos3fv(pos);
-	std::string::const_iterator iter;
-	for (iter = str.begin(); iter != str.end();	++iter) {
-		glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *iter);
+	if(fontBase != -1){
+		glBindTexture(GL_TEXTURE_3D,0);								//直前に使用した3Dテクスチャを文字色に反映させない.
+		glColor3f(((font.color >> 16) & 0xFF) / 255.0,
+				  ((font.color >>  8) & 0xFF) / 255.0,
+				  ((font.color >>  0) & 0xFF) / 255.0);
+		glRasterPos3fv(pos);
+		glPushAttrib(GL_LIST_BIT);
+		glListBase(fontBase);											// 	ディスプレイリストを渡す.	
+		glCallLists(str.size(), GL_UNSIGNED_BYTE, str.c_str());		// 文字列を渡す.
+		glPopAttrib();
+		return;
+	}
+	else{
+		glColor3f(1.0f, 1.0f, 1.0f);		// 白限定（暫定）
+		glRasterPos3fv(pos);
+		std::string::const_iterator iter;
+		for (iter = str.begin(); iter != str.end();	++iter) {
+			glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *iter);
+		}
 	}
 	glEnable(GL_LIGHTING);
 }
-/// 3次元テキストの描画 ... Vec2f pos
-void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
-/// VC版のみfontをサポートする。
-#ifdef _MSC_VER	
-	GLuint	base = 0;						// DisplayList開始指標番号
-	bool	findFont = false;				// fontListの検索結果
+
+void GRDeviceGL::SetFont(const GRFont& font){
+	/// VC版のみfontをサポートする。
+#ifdef _MSC_VER
+	bool	fontFound = false;
 	GLsizei	range	 = 256;					//	生成するディスプレイリストの数
-	unsigned long color=font.color;			//	フォントの色
 
 	if (fontList.size() > 0) {		// fontListが空でない場合は、fontListの検索が必要
 		// ストアサイズ10以上の場合、先頭を削除	
@@ -367,21 +375,20 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 		}
 		// fontListを検索
 		std::map<unsigned int, GRFont>::iterator itr = fontList.begin();
-		while((itr != fontList.end()) && (findFont == false)) {
+		while((itr != fontList.end()) && (fontFound == false)) {
 			if (((*itr).second.height == font.height)
 				&& ((*itr).second.width == font.width)
 				&& ((*itr).second.weight == font.weight)
 				&& ((*itr).second.bItalic == font.bItalic)
 				&& ((strcmp((*itr).second.face.c_str(),font.face.c_str()))==0)
 				&& ((*itr).second.color == font.color)){
-					findFont = true;
-					base = (*itr).first;
-					color = (*itr).second.color;
+					fontFound = true;
+					fontBase = (*itr).first;
 			} 
 			++itr;
 		}
 	}
-	if (findFont == false ) {		// 新規登録の場合
+	if (fontFound == false ) {		// 新規登録の場合
 		// 引数で指定された特性を持つ論理フォントを作成する
 		HFONT		hFont;			// フォントハンドル
 		HFONT		hOldFont;	
@@ -427,105 +434,11 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 		DeleteObject(hFont);		
 		// fontListへ登録
 		fontList.insert(std::map<unsigned int, GRFont>::value_type(fontBase, font));	
-		base = fontBase;	
 	}
-
-	glDisable(GL_LIGHTING);
-	glBindTexture(GL_TEXTURE_3D,0);								//直前に使用した3Dテクスチャを文字色に反映させない.
-	glColor3f(((font.color >> 16) & 0xFF) / 255.0,
-			  ((font.color >>  8) & 0xFF) / 255.0,
-			  ((font.color >>  0) & 0xFF) / 255.0);
-	glRasterPos2fv(pos);
-	glPushAttrib(GL_LIST_BIT);
-	glListBase(base);											// 	ディスプレイリストを渡す.	
-	glCallLists(str.size(), GL_UNSIGNED_BYTE, str.c_str());		// 文字列を渡す.
-	glPopAttrib();
-	glEnable(GL_LIGHTING);
-#else	// _MSC_VER	
-	// VC以外の環境では、fontをサポートしない。
-	DrawFont(pos, str);
-#endif	
+	this->font = font;
+#endif
 }
-/// 3次元テキストの描画  ... Vec3f pos
-void GRDeviceGL::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
-/// VC版のみfontをサポートする。
-#ifdef _MSC_VER		
-	GLuint	base = 0;						// DisplayList開始指標番号
-	bool	findFont = false;				// fontListの検索結果
-	GLsizei	range	 = 256;					//	生成するディスプレイリストの数
-	unsigned long color=font.color;			//	フォントの色
 
-	if (fontList.size() > 0) {		// fontListが空でない場合は、fontListの検索が必要
-		// ストアサイズ10以上の場合、先頭を削除	
-		if (fontList.size() > 10) {		
-			fontList.erase(fontList.begin());	
-		}
-		// fontListを検索
-		std::map<unsigned int, GRFont>::iterator itr = fontList.begin();
-		while((itr != fontList.end()) && (findFont == false)) {
-			if (((*itr).second.height == font.height)
-				&& ((*itr).second.width == font.width)
-				&& ((*itr).second.weight == font.weight)
-				&& ((*itr).second.bItalic == font.bItalic)
-				&& ((strcmp((*itr).second.face.c_str(),font.face.c_str()))==0)
-				&& ((*itr).second.color == font.color)){
-					findFont = true;
-					base = (*itr).first;
-					color = (*itr).second.color;
-			} 
-			++itr;
-		}
-	}
-	if (findFont == false ) {		// 新規登録の場合
-		// 引数で指定された特性を持つ論理フォントを作成する
-		HFONT		hFont;			// フォントハンドル
-		HFONT		hOldFont;	
-		fontBase = glGenLists(range);
-		// フォントの作成
-		hFont = CreateFont(font.height,						//	フォントの高さ
-							font.width,						//	平均文字幅
-							0,								//	文字送り方向のX軸の角度
-							0,								//	各文字とX軸の角度
-							font.weight,					//	フォントの太さ
-							font.bItalic,					//	イタリック体
-							FALSE,							//	アンダーライン
-							FALSE,							//	打ち消し線付
-							ANSI_CHARSET,					//	フォント文字セット
-							OUT_DEFAULT_PRECIS,				//	出力精度
-							CLIP_DEFAULT_PRECIS,			//	クリッピング精度
-							ANTIALIASED_QUALITY,			//	出力品質
-							FF_DONTCARE | DEFAULT_PITCH,	//	ピッチとファミリ(文字間隔と書体)
-							font.face.c_str());				//	タイプフェイス
-		
-		assert(hFont);
-		HDC hDC = wglGetCurrentDC();
-		// 0から256のコードの文字を、DisplayListのbase番目から登録.
-		// wglUseFontBitmaps()関数、使用して、生成したフォントをディスプレイリストに割当てる.
-		hOldFont = (HFONT)SelectObject(hDC, hFont);			
-		wglUseFontBitmaps(hDC, 0, range, fontBase);		
-		SelectObject(hDC, hOldFont);
-		DeleteObject(hFont);		
-		// fontListへ登録
-		fontList.insert(std::map<unsigned int, GRFont>::value_type(fontBase, font));	
-		base = fontBase;	
-	}
-
-	glDisable(GL_LIGHTING);
-	glBindTexture(GL_TEXTURE_3D,0);								//直前に使用した3Dテクスチャを文字色に反映させない.
-	glColor3f(((font.color >> 16) & 0xFF) / 255.0,
-			  ((font.color >>  8) & 0xFF) / 255.0,
-			  ((font.color >>  0) & 0xFF) / 255.0);
-	glRasterPos3fv(pos);
-	glPushAttrib(GL_LIST_BIT);
-	glListBase(base);											// 	ディスプレイリストを渡す.	
-	glCallLists(str.size(), GL_UNSIGNED_BYTE, str.c_str());		// 文字列を渡す.
-	glPopAttrib();
-	glEnable(GL_LIGHTING);
-#else	// _MSC_VER	
-	// VC以外の環境では、fontをサポートしない。
-	DrawFont(pos, str);
-#endif	
-}
 /// 描画の材質の設定
 void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	glMaterialfv(GL_FRONT, GL_AMBIENT,   mat.ambient);
