@@ -477,8 +477,17 @@ public:
 	bool IsNumber(){
 		return back().fieldType==UTTypeDescFieldIt::F_INT || back().fieldType==UTTypeDescFieldIt::F_REAL;
 	}
+	bool IsInteger(){
+		return back().fieldType==UTTypeDescFieldIt::F_INT;
+	}
+	bool IsReal(){
+		return back().fieldType==UTTypeDescFieldIt::F_REAL;
+	}
 	bool IsString(){
 		return back().fieldType==UTTypeDescFieldIt::F_STR;
+	}
+	bool IsBlock(){
+		return back().fieldType==UTTypeDescFieldIt::F_BLOCK;
 	}
 };
 

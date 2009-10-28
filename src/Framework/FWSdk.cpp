@@ -13,6 +13,7 @@
 #include "Physics/PHScene.h"
 #include "Graphics/GRSdk.h"
 #include "Graphics/GRScene.h"
+#include "Foundation/UTPath.h"
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -78,7 +79,7 @@ FWSceneIf* FWSdk::CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grde
 	AddChildObject(scene);
 	return scene;
 }
-bool FWSdk::LoadScene(UTString filename){
+bool FWSdk::LoadScene(UTString filename, const IfInfo* ii){
 
 	//filename末端に改行コード( = 0x0a)が含まれているとロードされないので，あれば最初に削除する
 	if(filename.at(filename.length()-1) == 0x0a){
@@ -94,9 +95,28 @@ bool FWSdk::LoadScene(UTString filename){
 	int first = NScene();	//	ロードされるFWSceneの位置を覚えておく
 
 	//	ファイルローダーの作成
-	UTRef<FIFileXIf> fiFileX = GetFISdk()->CreateFileX();
+	FIFileIf* file;
+	UTPath path;
+	path.Path(filename);	
+	if((!ii && !path.Ext().compare("x")) || ii == FIFileXIf::GetIfInfoStatic()){
+		file = GetFISdk()->CreateFileX();
+	}
+	else if((!ii && !path.Ext().compare("wrl")) || ii == FIFileVRMLIf::GetIfInfoStatic()){
+		file = GetFISdk()->CreateFileVRML();
+	}
+	else if((!ii && !path.Ext().compare("dae")) || ii == FIFileCOLLADAIf::GetIfInfoStatic()){
+		file = GetFISdk()->CreateFileCOLLADA();
+	}
+	else if((!ii && !path.Ext().compare("dat")) || ii == FIFileBinaryIf::GetIfInfoStatic()){
+		file = GetFISdk()->CreateFileBinary();
+	}
+	else{
+		DSTR << "unknown file type. regarded as X file." << std::endl;
+		file = GetFISdk()->CreateFileX();
+	}
+
 	//	ファイルのロード
-	if (! fiFileX->Load(objs, filename.data()) ) {
+	if(!file->Load(objs, filename.data()) ) {
 		DSTR << "Error: Cannot load file " << filename.c_str() << std::endl;
 		//exit(EXIT_FAILURE);
 		return false;
@@ -110,7 +130,8 @@ bool FWSdk::LoadScene(UTString filename){
 	}
 	return true;
 }
-bool FWSdk::SaveScene(UTString filename){
+
+bool FWSdk::SaveScene(UTString filename, const IfInfo* ii){
 	// 保存
 	ObjectIfs objs;
 	for(unsigned int i=0; i<scenes.size(); ++i){
