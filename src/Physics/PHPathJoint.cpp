@@ -234,19 +234,6 @@ void PHPathJoint::CompBias(){
 	(Vec6d&)db = Jq * db;
 	db.w().z = 0.0;
 	db *= engine->velCorrectionRate;
-
-	double diff;
-	if(mode == PHJointDesc::MODE_VELOCITY){
-		db.w().z = -desiredVelocity;
-	}
-	else if(spring != 0.0 || damper != 0.0){
-		diff = GetPosition() - origin;
-		//while(diff >  M_PI) diff -= 2 * M_PI;
-		//while(diff < -M_PI) diff += 2 * M_PI;
-		double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
-		dA.w().z = tmp * dtinv;
-		db.w().z = spring * (diff) * tmp;
-	}
 }
 
 /*void PHPathJoint::CompError(double dt){

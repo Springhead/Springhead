@@ -74,7 +74,6 @@ struct PHConstraintsSt{
 	std::vector<PHConstraintState> joints;
 	std::vector<PHConstraintState> gears;
 	std::vector<PH3ElementState> threeElements;
-	
 };
 
 class PHConstraintEngine : public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
@@ -92,6 +91,7 @@ public:
 	double	shrinkRate;					///< LCP初期値を前回の解に対して縮小させる比率
 	double	shrinkRateCorrection;
 	double	freezeThreshold;			///< 剛体がフリーズする閾値
+	double	accelSOR;					///< SOR法の加速係数
 	bool	bGearNodeReady;				///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
 	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
 	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
@@ -109,21 +109,21 @@ public:
 	virtual void Step();			///< 
 	virtual void StepPart1();		///< 
 	virtual void StepPart2();		///< 
-	//virtual void Dynamics(double dt, int ct);		///< 
-	//virtual void Correction(double dt, int ct);		///< 
 	void UpdateSolids(bool bVelOnly);	///< 結果をSolidに反映する. bVelOnly == trueならば結果の速度のみをSolidに反映させ，位置はそのまま．
 	void UpdateOnlyVelocity();			///< obsolete. UpdateSolids(true)を使用のこと
 	void Clear();
 
+	typedef std::vector< UTRef<PHRootNode> >	PHRootNodes;
+	typedef std::vector< UTRef<PHPath> >		PHPaths;
+	//typedef std::vector< UTRef<PHJointLimit> >	PHJointLimits;
+	//typedef std::vector< UTRef<PHMotor> >		PHMotors;
+	
 	PHConstraints	points;			///< 接触点の配列
 	PHConstraints	joints;			///< 関節の配列
-	typedef std::vector< UTRef<PHBallJoint> > PHBallJoints;
-	PHBallJoints	ballJoints;		///< 球関節の配列
-	typedef std::vector< UTRef<PHRootNode> > PHRootNodes;
+	
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
-	PHGears			gears;
-	typedef std::vector< UTRef<PHPath> > PHPaths;
-	PHPaths			paths;
+	PHGears			gears;			///< ギアの配列
+	PHPaths			paths;			///< パスの配列
 	typedef std::vector< UTRef<PH3ElementBallJoint> > PH3ElementBallJoints;
 	PH3ElementBallJoints			threeBallJoints;
 	

@@ -204,6 +204,7 @@ void PHTreeNode::CompResponse(const SpatialVector& df, bool bUpdate, bool bImpul
 	CompBiasForceDiff(bUpdate, bImpulse);
 }
 
+/*
 void PHTreeNode::SetupLCP(){
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->SetupLCP();
@@ -212,6 +213,7 @@ void PHTreeNode::IterateLCP(){
 	for(container_t::iterator it = Children().begin(); it != Children().end(); it++)
 		(*it)->IterateLCP();
 }
+*/
 
 void PHTreeNode::UpdateVelocity(double dt){
 	PHSolid* sp = GetParent()->GetSolid();
@@ -353,7 +355,7 @@ PHTreeNodeND<NDOF>::PHTreeNodeND(){
 	dtau.clear();
 	dZ.clear();
 	JtrdZ.clear();
-	f.clear();
+	//f.clear();
 	accel.clear();
 	vel.clear();
 	gear = NULL;
@@ -398,7 +400,7 @@ void PHTreeNodeND<NDOF>::InitArticulatedInertia(){
 		sumJIJ.clear();
 		sumJIJinv.clear();
 		sumJtrZplusIc.clear();
-		sumtorque.clear();
+		//sumtorque.clear();
 	}
 }
 
@@ -446,15 +448,15 @@ void PHTreeNodeND<NDOF>::AccumulateBiasForce(){
 
   	if(gearNode){
 		gearNode->sumXtrZplusIc += XtrZplusIc;
-		gearNode->sumtorque     += GetJoint()->GetTorqueND();
+		//gearNode->sumtorque     += GetJoint()->GetTorqueND();
 		gearNode->sumJtrZplusIc += JtrZplusIc;
 	}
 	if(gearNode == this)
 		GetParent()->Z +=
-			sumXtrZplusIc + sumXtrIJ_sumJIJinv * (sumtorque * scene->GetTimeStep() - sumJtrZplusIc);
+			sumXtrZplusIc + sumXtrIJ_sumJIJinv * (/*sumtorque * scene->GetTimeStep()*/ - sumJtrZplusIc);
 	if(!gearNode)
 		GetParent()->Z +=
-			XtrZplusIc + XtrIJ_JIJinv * (GetJoint()->GetTorqueND() * scene->GetTimeStep() - JtrZplusIc);
+			XtrZplusIc + XtrIJ_JIJinv * (/*GetJoint()->GetTorqueND() * scene->GetTimeStep()*/ - JtrZplusIc);
 }
 
 template<int NDOF>
@@ -488,14 +490,14 @@ template<int NDOF>
 void PHTreeNodeND<NDOF>::CompAccel(){
 	if(gearNode){
 		if(gearNode == this)
-			 accel = sumJIJinv * (GetJoint()->GetTorqueND() * scene->GetTimeStep() - sumXtrIJ.trans() * GetParent()->a - sumJtrZplusIc);
+			 accel = sumJIJinv * (/*GetJoint()->GetTorqueND() * scene->GetTimeStep()*/ - sumXtrIJ.trans() * GetParent()->a - sumJtrZplusIc);
 		else if(GetParent() != gearNode->GetParent())
 			 accel = gear->GetRatio() * parentND->accel;
 		else accel = gear->GetRatio() * gearNode->accel;
 		(Vec6d&)a = Xcg * gearNode->GetParent()->a + c + J * gearNode->accel;
 	}
 	else{
-		accel = JIJinv * (GetJoint()->GetTorqueND() * scene->GetTimeStep() - XtrIJ.trans() * GetParent()->a - JtrZplusIc);
+		accel = JIJinv * (/*GetJoint()->GetTorqueND() * scene->GetTimeStep()*/ - XtrIJ.trans() * GetParent()->a - JtrZplusIc);
 		(Vec6d&)a = Xcp * GetParent()->a + c + J * accel;
 	}
 
@@ -601,7 +603,7 @@ void PHTreeNodeND<NDOF>::CompResponse(const PTM::TVector<NDOF, double>& _dtau, b
 	}
 }
 
-template<int NDOF>
+/*template<int NDOF>
 void PHTreeNodeND<NDOF>::CompResponseMatrix(){
 	const double eps = 1.0e-6;
 	VecNd Jrow;
@@ -610,9 +612,9 @@ void PHTreeNodeND<NDOF>::CompResponseMatrix(){
 		CompResponse(Jrow, false);
 		A[i] = max(eps, Jrow * daccel);
 	}
-}
+}*/
 
-template<int NDOF>
+/*template<int NDOF>
 void PHTreeNodeND<NDOF>::ModifyJacobian(){
 	//ä÷êﬂë¨ìxÇÃê¨ï™ñàÇ…çSë©Ç∑ÇÈèÍçáÇÕíPà çsóÒ
 	init_unitize(Jq);
@@ -677,11 +679,11 @@ void PHTreeNodeND<NDOF>::IterateLCP(){
 	}
 	PHTreeNode::IterateLCP();
 }
-
+*/
 //-----------------------------------------------------------------------------
 PHTreeNode1D::PHTreeNode1D(){
 }
-
+/*
 void PHTreeNode1D::CompBias(){
 	PHJoint1D* j = GetJoint();
 	
@@ -736,7 +738,7 @@ void PHTreeNode1D::Projection(double& _f, int k){
 	if(j->onUpper)
 		_f = min(0.0, _f);
 }
-
+*/
 //-----------------------------------------------------------------------------
 // explicit instantiation
 template class PHTreeNodeND<1>;

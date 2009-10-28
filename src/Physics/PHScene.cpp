@@ -17,6 +17,8 @@ PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
 }
 void PHScene::Init(){
+	PHSceneDesc::Init();
+
 	engines.scene = this;
 	Scene::Clear();
 
@@ -28,24 +30,27 @@ void PHScene::Init(){
 	
 	gravityEngine = DBG_NEW PHGravityEngine;
 	engines.Add(gravityEngine);
-	gravityEngine->accel = gravity;
-
+	
 	penaltyEngine = DBG_NEW PHPenaltyEngine;
 	engines.Add(penaltyEngine);
 	
 	constraintEngine = DBG_NEW PHConstraintEngine;
-	constraintEngine->numIter = numIteration;
 	engines.Add(constraintEngine);
 
 	ikEngine = DBG_NEW PHIKEngine;
-	ikEngine->numIter = 5;
 	engines.Add(ikEngine);
 
-	count = 0;
+	AfterSetDesc();
+}
+void PHScene::AfterSetDesc(){
+	gravityEngine->accel = gravity;
+	constraintEngine->numIter = numIteration;
+	timeStepInv = 1.0/timeStep;	
 }
 void PHScene::BeforeGetDesc() const{
-	if (gravityEngine)
-		((PHScene*)this)->gravity = gravityEngine->accel;
+	// Engine‚ÌAPI‚ð‰î‚µ‚Ä•ÏX‚³‚ê‚é‰Â”\«‚à‚ ‚é‚Ì‚Å
+	(Vec3f&)gravity = gravityEngine->accel;
+	(int&)numIteration = constraintEngine->numIter;
 }
 PHSdkIf* PHScene::GetSdk(){
 	NameManagerIf* nm = GetNameManager();
@@ -180,6 +185,7 @@ void PHScene::Clear(){
 
 void PHScene::SetTimeStep(double dt){
 	timeStep = dt;
+	timeStepInv = 1.0/dt;
 }
 
 void PHScene::Step(){

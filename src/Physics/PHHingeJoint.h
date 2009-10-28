@@ -33,12 +33,13 @@ public:
 	SPR_OBJECTDEF(PHHingeJoint);
 	SPR_DECLMEMBEROF_PHHingeJointDesc;
 
+	virtual double GetDeviation();
 	virtual void CompBias();
 	virtual void UpdateJointState();
 	virtual PHTreeNode* CreateTreeNode(){
 		return DBG_NEW PHHingeJointNode();
 	}
-	virtual void	CompError();
+	virtual void CompError();
 	PHHingeJoint(const PHHingeJointDesc& desc = PHHingeJointDesc());
 };
 

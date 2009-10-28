@@ -53,6 +53,7 @@ protected:
 	PHGravityEngine*		gravityEngine;
 	PHIKEngine*				ikEngine;
 	PHRays					rays;
+	double					timeStepInv;	///< timeStepの逆数．高速化用
 public:
 	
 	friend class			PHSolid;
@@ -71,6 +72,7 @@ public:
 	//このクラス内での機能.
 	PHEngines*				GetEngines();
 	CDShapeIf*				CreateShape(const IfInfo* ii, const CDShapeDesc& desc);	
+	double					GetTimeStepInv(){ return timeStepInv; }
 	
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	//インタフェース(PHSceneIf)の実装
@@ -161,6 +163,7 @@ public:
 	virtual bool ReadStateR(std::istream& fin);
 	virtual void DumpObjectR(std::ostream& os, int level=0) const;
 protected:
+	virtual void AfterSetDesc();
 	virtual void BeforeGetDesc() const;
 };
 

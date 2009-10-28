@@ -23,7 +23,7 @@ PHSliderJoint::PHSliderJoint(const PHSliderJointDesc& desc){
 	SetDesc(&desc);
 	axisIndex[0] = 2;
 }
-void PHSliderJoint::SetConstrainedIndex(bool *con){
+/*void PHSliderJoint::SetConstrainedIndex(bool *con){
 	PHJoint1D::SetConstrainedIndex(con);
 	if(!bConstraintY){
 		con[1] = false;
@@ -34,7 +34,7 @@ void PHSliderJoint::SetConstrainedIndex(bool *con){
 	if(!bConstraintRollZ){
 		con[5] = false;
 	}
-}
+}*/
 void PHSliderJoint::UpdateJointState(){
 	position[0] = Xjrel.r.z;
 	velocity[0] = vjrel.v().z;
@@ -53,7 +53,7 @@ void PHSliderJoint::CompBias(){
 		
 		db *= engine->velCorrectionRate;
 	}
-	if(mode == PHJointDesc::MODE_VELOCITY){
+	/*if(mode == PHJointDesc::MODE_VELOCITY){
 		db.v().z = -desiredVelocity;
 	}
 	else if(spring != 0.0 || damper != 0.0){
@@ -61,9 +61,7 @@ void PHSliderJoint::CompBias(){
 		double tmp	= 1.0 / (damper + spring * GetScene()->GetTimeStep());
 		dA.v().z	= tmp / GetScene()->GetTimeStep();
 		db.v().z	= spring * (diff) * tmp;
-	}
-
-
+	}*/
 }
 
 void PHSliderJoint::CompError(){

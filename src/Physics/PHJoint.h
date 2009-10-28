@@ -10,6 +10,8 @@
 
 #include <SprPhysics.h>
 #include <Physics/PHConstraint.h>
+#include <Physics/PHJointLimit.h>
+#include <Physics/PHMotor.h>
 #include <Physics/PhysicsDecl.hpp>
 
 
@@ -22,8 +24,8 @@ public:
 	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
 	virtual PHTreeNode* CreateTreeNode(){return NULL;}
 	//ControlModeを取得,設定する
-	virtual PHJointDesc::PHControlMode	GetMode() {return mode;}
-	virtual void	SetMode(PHJointDesc::PHControlMode mode) {this->mode = mode;}
+	//virtual PHJointDesc::PHControlMode	GetMode() {return mode;}
+	//virtual void	SetMode(PHJointDesc::PHControlMode mode) {this->mode = mode;}
 	/// コンストラクタ
 	PHJoint();
 };
@@ -36,49 +38,64 @@ class PHJointND : public PHJoint{
 public:
 	typedef	PTM::TVector<NDOF, double> coord_t;
 
-	int		axisIndex[NDOF];		//< 何番目の軸が拘束されるか
+	int		axisIndex[NDOF];		//< 何番目の軸が関節軸となるか
 	coord_t position, velocity;
 	
+	void	CompResponse(double df, int k){
+		PHConstraint::CompResponse(df, axisIndex[k]);
+	}
+
+	virtual void SetConstrainedIndex(bool* con){
+		std::fill(con, con+6, true);
+		for(int i = 0; i < NDOF; i++)
+			con[axisIndex[i]] = false;
+	}
+
 	PHJointND(){
 		position.clear();
 		velocity.clear();
 	}
 protected:
-	virtual coord_t GetTorqueND() = 0;
+	//virtual coord_t GetTorqueND() = 0;
 	friend class PHTreeNodeND<NDOF>;
 };
 
 class PHJoint1D : public PHJointND<1>{
 protected:
-	double  fMaxDt, fMinDt;				///< 関節の出せる力*dtの最大値、最小値
-	bool	onLower, onUpper;			///< 可動範囲の下限、上限に達している場合にtrue
-	virtual void AfterSetDesc();
-	virtual coord_t GetTorqueND(){ return (coord_t&)torque; }
 	friend class PHTreeNode1D;
+	friend class PHJointLimit1D;
+	friend class PHMotor1D;
+
+	PHJointLimit1D	limit;			///< 可動範囲拘束
+	PHMotor1D		motor;			///< モータ
+
+	//virtual coord_t GetTorqueND(){ return (coord_t&)torque; }
 public:
 	SPR_OBJECTDEF_ABST1(PHJoint1D, PHJoint);
 	SPR_DECLMEMBEROF_PHJoint1DDesc;
 
 	/// インタフェースの実装
-	virtual double	GetPosition() const {return position[0];}
-	virtual double	GetVelocity() const {return velocity[0];}
-	virtual void	SetMotorTorque(double t){torque = t;}
-	virtual double	GetMotorTorque() const {return torque;}
-	virtual void	SetRange(double l, double u){lower = l, upper = u;}
-	virtual void	GetRange(double& l, double& u) const {l = lower, u = upper;}
-	virtual void	SetDesiredVelocity(double v){desiredVelocity = v;}
-	virtual double	GetDesiredVelocity() const {return desiredVelocity;}
-	virtual void	SetTrajectoryVelocity(double v){desiredVelocity = v;}
-	virtual double  GetTrajectoryVelocity(){return desiredVelocity;}
-	virtual void	SetSpring(double K){spring = K;}
-	virtual double	GetSpring() const {return spring;}
-	virtual void	SetSpringOrigin(double org){ origin = org;}
-	virtual double	GetSpringOrigin() const {return origin;}
-	virtual void	SetDamper(double D){damper = D;}
-	virtual double	GetDamper() const {return damper;}
-	virtual void	SetOffsetForce(double dat){offsetForce = dat;}
-	virtual double	GetOffsetForce(){
-		double ans = 0;
+	double	GetPosition() const {return position[0];}
+	double	GetVelocity() const {return velocity[0];}
+	void	SetMotorTorque(double t){ offsetForce = t; }
+	double	GetMotorTorque() const { return offsetForce; }
+	void	SetRange(double l, double u){lower = l, upper = u;}
+	void	GetRange(double& l, double& u) const {l = lower, u = upper;}
+	void	SetDesiredVelocity(double v){desiredVelocity = v;}
+	double	GetDesiredVelocity() const {return desiredVelocity;}
+	void	SetTrajectoryVelocity(double v){desiredVelocity = v;}
+	double  GetTrajectoryVelocity(){return desiredVelocity;}
+	void	SetSpring(double K){spring = K;}
+	double	GetSpring() const {return spring;}
+	void	SetSpringOrigin(double org){ origin = org;}
+	double	GetSpringOrigin() const {return origin;}
+	void	SetDamper(double D){damper = D;}
+	double	GetDamper() const {return damper;}
+	void	SetSecondDamper(double D2)	{secondDamper = D2;}
+	double  GetSecondDamper()			{return secondDamper;}
+	void	SetOffsetForce(double dat){ offsetForce = dat; }
+	double	GetOffsetForce(){ return offsetForce;
+		/*double ans = 0;
 		if(onLower || onUpper)
 			ans = 0.0;
 		else{
@@ -86,20 +103,28 @@ public:
 			GetConstraintForce(f, t);
 			ans = t.Z();
 		}
-		return ans;
+		return ans;*/
 	}
-	virtual bool	IsLimit(){return (onLower||onUpper);}
-	virtual void	SetTorqueMax(double max){fMax = max; fMaxDt = fMax * GetScene()->GetTimeStep(); }
-	virtual double	GetTorqueMax(){return fMax;}
-	virtual void	SetTorqueMin(double min){fMin = min; fMinDt = fMin * GetScene()->GetTimeStep(); }
-	virtual double	GetTorqueMin(){return fMin;}
+	bool	IsLimit(){ return (limit.onLower || limit.onUpper); }
+	void	SetTorqueMax(double max){fMax = max; }
+	double	GetTorqueMax(){return fMax;}
+	void	SetTorqueMin(double min){fMin = min; }
+	double	GetTorqueMin(){return fMin;}
 
 	/// オーバライド
-	virtual void	AddMotorTorque(){f[axisIndex[0]] = torque * GetScene()->GetTimeStep();}
-	virtual void	SetConstrainedIndex(bool* con);
-	virtual void	SetConstrainedIndexCorrection(bool* con);
-	virtual void	Projection(double& f, int k);
-	virtual void	ProjectionCorrection(double& F, int k);
+	virtual void	SetupLCP();
+	virtual	void	IterateLCP();
+	virtual void	SetupCorrectionLCP();
+	virtual void	IterateCorrectionLCP();
+	//virtual void	AddMotorTorque(){f[axisIndex[0]] = torque * GetScene()->GetTimeStep();}
+	//virtual void	SetConstrainedIndexCorrection(bool* con);
+	//virtual void	CompJointBias();
+	//virtual void	Projection(double& f, int k);
+	//virtual void	ProjectionCorrection(double& F, int k);
+
+	/// バネ中点（目標角度）からの偏差を返す．回転関節がオーバライドする
+	virtual double	GetDeviation(){ return GetPosition() - origin; }
+
 	PHJoint1D();
 };
 

@@ -18,7 +18,6 @@ namespace Spr{;
 PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
 	SetDesc(&desc);
 	axisIndex[0] = 5;
-
 }
 
 void PHHingeJoint::UpdateJointState(){
@@ -29,9 +28,23 @@ void PHHingeJoint::UpdateJointState(){
 	velocity[0] = vjrel.w().z;
 }
 
+double PHHingeJoint::GetDeviation(){
+	// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
+	//// ↑むしろこのコードがあることで不連続なトルク変化が避けられているのでは？と思い復活． 08/10/07 mitake
+	//// ↓これやらないと発振するので戻す．物理シミュレータは一意に値が指定出来ないと計算無理じゃないの？ 09/06/01 toki
+	// while(diff >  M_PI) diff -= 2 * M_PI;
+	// while(diff < -M_PI) diff += 2 * M_PI;
+	// ↓こっちのほうがはやいので変更  09/07/06 mitake
+	double diff = PHJoint1D::GetDeviation();
+	diff = ((diff / (2*M_PI)) - floor(diff / (2*M_PI)) * (2*M_PI));
+	if (diff > M_PI) { diff -= 2 * M_PI; }
+	return diff;
+}
+
 void PHHingeJoint::CompBias(){
-//	DSTR << "spring " << spring << " goal " << origin*180/M_PI << endl;
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
+	
+	// 拘束誤差補正のためのバイアス
 	if (engine->numIterCorrection==0){	//	Correction を速度LCPで行う場合
 		//	次のステップでの位置の誤差の予測値が0になるような速度を設定
 		//	dv * dt = x + v*dt
@@ -43,49 +56,6 @@ void PHHingeJoint::CompBias(){
 		db *= engine->velCorrectionRate;
 	}
 
-	if(mode == PHJointDesc::MODE_VELOCITY){
-		db.w().z = -desiredVelocity;
-	}else if(mode == PHJointDesc::MODE_TRAJ){
-		double diff = origin - GetPosition();
-		db.w().z = -(desiredVelocity + spring * diff);
-	}else if(mode == PHJointDesc::MODE_POSITION){
-		if(spring != 0.0 || damper != 0.0){
-			if (onUpper&& GetVelocity()>0){
-			}else if (onLower && GetVelocity()<0){
-			}else{
-				double diff;
-				diff = GetPosition() - origin;
-				double springLim = 0;
-				double damper_ = damper;
-				double diffLim = 0;
-				if (onUpper){
-					diffLim = GetPosition() - upper;
-					springLim = 10000;
-					damper_   = 100;
-				} else if (onLower){
-					diffLim = GetPosition() - lower;
-					springLim = 10000;
-					damper_   = 100;
-				}
-
-				// 不連続なトルク変化を避けるため (ゼンマイのようにいくらでも巻けるように削除)。 07/07/26
-				//// ↑むしろこのコードがあることで不連続なトルク変化が避けられているのでは？と思い復活． 08/10/07 mitake
-				//// ↓これやらないと発振するので戻す．物理シミュレータは一意に値が指定出来ないと計算無理じゃないの？ 09/06/01 toki
-				// while(diff >  M_PI) diff -= 2 * M_PI;
-				// while(diff < -M_PI) diff += 2 * M_PI;
-				// ↓こっちのほうがはやいので変更  09/07/06 mitake
-				diff = ((diff / (2*M_PI)) - floor(diff / (2*M_PI)) * (2*M_PI));
-				if (diff > M_PI) { diff -= 2 * M_PI; }
-
-				double tmp = 1.0 / (damper_ + spring * GetScene()->GetTimeStep());
-				dA.w().z = tmp * dtinv;
-				//軌道追従制御のLCPは以下のようになる
-				db.w().z = tmp * ((spring * diff + springLim*diffLim)
-							 - (damper_ * desiredVelocity) 
-							 - offsetForce );
-			}
-		}
-	}
 }
 
 void PHHingeJoint::CompError(){
