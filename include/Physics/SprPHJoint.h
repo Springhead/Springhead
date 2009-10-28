@@ -12,7 +12,6 @@
 #ifndef SPR_PHJOINTIf_H
 #define SPR_PHJOINTIf_H
 #include <Foundation/SprObject.h>
-#include <Physics/PHSpatial.h>
 
 namespace Spr{;
 
@@ -35,12 +34,12 @@ struct PHConstraintDesc{
 /// 関節のディスクリプタ	<	何もメンバを追加しない場合は，typedefと別名定義を FIDesc.cppに追加で．
 //typedef PHConstraintDesc	PHJointDesc;
 struct PHJointDesc : public PHConstraintDesc{
-	enum PHControlMode{
+	/*enum PHControlMode{
 		MODE_TORQUE=0,
 		MODE_POSITION,
 		MODE_VELOCITY,
 		MODE_TRAJ,
-	} mode;
+	} mode;*/
 	
 	PHJointDesc();
 };
@@ -50,9 +49,12 @@ struct PHJoint1DDesc : public PHJointDesc{
 	double	spring;			///< バネ係数
 	double  origin;			///< バネ原点
 	double  damper;			///< ダンパ係数
+	double	secondDamper;	///< 二個目のダンパ係数
 	double	desiredVelocity;///< 目標速度
 	double	offsetForce;	///< 慣性項を計算して入れる場合に使用．
-	double	torque;			///< モータトルク
+	//double	torque;			///< モータトルク
+	double	rangeSpring;	///< 可動範囲バネ
+	double	rangeDamper;	///< 可動範囲ダンパ
 	double	fMax;			///< 関節にかけられる最大の力
 	double	fMin;			///< 関節にかけられる最小の力
 	PHJoint1DDesc();
@@ -79,8 +81,6 @@ struct PHSliderJointNodeDesc : public PHTreeNode1DDesc{
 struct PHPathJointNodeDesc : public PHTreeNode1DDesc{
 };
 struct PHBallJointNodeDesc : public PHTreeNodeDesc{
-};
-struct PH3ElementBallJointNodeDesc : public PHBallJointNodeDesc{
 };
 
 /// ギアのディスクリプタ
@@ -193,8 +193,8 @@ struct PHJointIf : public PHConstraintIf{
 	SPR_IFDEF(PHJoint);
 
 	/**関節のControlModeの取得,設定する*/
-	PHJointDesc::PHControlMode	GetMode();
-	void	SetMode(PHJointDesc::PHControlMode mode);
+	//PHJointDesc::PHControlMode	GetMode();
+	//void	SetMode(PHJointDesc::PHControlMode mode);
 
 };
 
@@ -278,6 +278,16 @@ struct PHJoint1DIf : public PHJointIf{
 		@return ダンパ係数
 	 */
 	double	GetDamper();
+	
+	/** @brief 二個目のダンパ係数を取得する
+		@return 二個目のダンパ係数
+	 */
+	double  GetSecondDamper();
+
+	/** @brief 二個目のダンパ係数を設定する
+		@param input 二個目のダンパ係数
+	 */
+	void	SetSecondDamper(double input);
 
 	/** @brief 関節変位を取得する
 		@return 関節変位
@@ -331,30 +341,6 @@ struct PHHingeJointDesc : public PHJoint1DDesc{
 	PHHingeJointDesc(){}
 };
 
-// ３要素モデルのヒンジジョイントのインタフェース
-struct PH3ElementHingeJointIf : public PHHingeJointIf{
-	
-	SPR_IFDEF(PH3ElementHingeJoint);
-
-	/** @brief 二個目のダンパ係数を取得する
-		@return 二個目のダンパ係数
-	 */
-	double  GetSecondDamper();
-
-	/** @brief 二個目のダンパ係数を設定する
-		@param input 二個目のダンパ係数
-	 */
-	void	SetSecondDamper(double input);
-};
-
-// ３要素モデルのヒンジジョイントのディスクリプタ
-struct PH3ElementHingeJointDesc : public PHHingeJointDesc{
-	SPR_DESCDEF(PH3ElementHingeJoint);
-
-	double secondDamper;		// 二個目のダンパ係数
-
-	PH3ElementHingeJointDesc();	// ディスクリプタのコンストラクタ
-};
 
 /// スライダのインタフェース
 struct PHSliderJointIf : public PHJoint1DIf{
@@ -567,30 +553,6 @@ struct PHBallJointIf : public PHJointIf{
 		@return かかっていればtrue
 	*/
 	bool IsLimit();
-};
-/// ボールジョイントのディスクリプタ
-struct PHBallJointDesc : public PHJointDesc{
-	SPR_DESCDEF(PHBallJoint);
-	double			spring;			 ///< バネ係数
-	double			damper;			 ///< ダンパ係数
-	Vec2d			limitSwing;		 ///< swing角の可動域（[0] or .lower, [1] or .upper）
-	Vec2d			limitTwist;		 ///< twist角の可動域（[0] or .lower, [1] or .upper）
-	Vec3d			limitDir;		 ///< 可動域の中心ベクトル
-	Quaterniond		goal;			 ///< バネダンパの制御目標
-	Vec3d			desiredVelocity; ///< 目標となる回転ベクトル
-	Vec3d			offset;			 ///< 定数項（軌道追従制御の加速度の項を入れるのに使ったりする）
-	Vec3d			torque;			 ///< モータトルク
-	double			fMax;			 ///< 関節にかけられる最大の力
-	double			fMin;			 ///< 関節にかけられる最小の力
-	Vec2d			PoleTwist;
-	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
-};
-
-struct PH3ElementBallJointDesc;
-// ３要素モデルのボールジョイントのインタフェース
-struct PH3ElementBallJointIf : public PHBallJointIf{
-	
-	SPR_IFDEF(PH3ElementBallJoint);
 
 	/** @brief 二個目のダンパ係数を取得する
 		@return 二個目のダンパ係数
@@ -635,27 +597,38 @@ struct PH3ElementBallJointIf : public PHBallJointIf{
 	 */
 	void	SetType(int t);	
 	/** @brief 変形のタイプを表示する
-		@return yieldFlag
+		@return 変形のタイプ
 	 */
-	bool 	GetDefomationMode();
-										
+	bool 	GetDeformationMode();
+
 };
 
-// ３要素モデルのボールジョイントのディスクリプタ
-struct PH3ElementBallJointDesc : public PHBallJointDesc{
-	SPR_DESCDEF(PH3ElementBallJoint);
-
+/// ボールジョイントのディスクリプタ
+struct PHBallJointDesc : public PHJointDesc{
+	SPR_DESCDEF(PHBallJoint);
+	double			spring;			 ///< バネ係数
+	double			damper;			 ///< ダンパ係数
+	Vec2d			limitSwing;		 ///< swing角の可動域（[0] or .lower, [1] or .upper）
+	Vec2d			limitTwist;		 ///< twist角の可動域（[0] or .lower, [1] or .upper）
+	Vec3d			limitDir;		 ///< 可動域の中心ベクトル
+	Quaterniond		goal;			 ///< バネダンパの制御目標
+	Vec3d			desiredVelocity; ///< 目標となる回転ベクトル
+	Vec3d			offsetForce;	 ///< 定数項（軌道追従制御の加速度の項を入れるのに使ったりする）
+	//Vec3d			torque;			 ///< モータトルク
+	double			fMax;			 ///< 関節にかけられる最大の力
+	double			fMin;			 ///< 関節にかけられる最小の力
+	Vec2d			poleTwist;
+	
 	enum deformationType{
 		Elastic,
 		Plastic,
 		Mix}type;
-	double secondDamper;		// 二個目のダンパ係数
-	double yieldStress;			// 降伏応力
-	double hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
-	Vec3d  I;					// 断面２次モーメント
-	bool   yieldFlag;
-
-	PH3ElementBallJointDesc();	// ディスクリプタのコンストラクタ
+	double secondDamper;			///< 第２ダンパ係数
+	double yieldStress;				///< 降伏応力
+	double hardnessRate;			///< 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
+	Vec3d  I;						///< 断面２次モーメント
+	
+	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };
 
 /// バネダンパのインタフェース
@@ -712,7 +685,6 @@ struct PHSpringDesc : public PHJointDesc{
 	PHSpringDesc();
 };
 
-struct PH3ElementBallJointDesc;
 // 3要素モデルのインタフェース
 struct PH3ElementIf : public PHSpringIf{
 	
@@ -810,9 +782,6 @@ struct PHPathJointNodeIf : public PHTreeNode1DIf{
 };
 struct PHBallJointNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHBallJointNode);
-};
-struct PH3ElementBallJointNodeIf : public PHBallJointNodeIf{
-	SPR_IFDEF(PH3ElementBallJointNode);
 };
 
 /// ギアのインタフェース
