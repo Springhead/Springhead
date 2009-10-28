@@ -312,15 +312,27 @@ void FWApp::CallJoystick(unsigned int buttonMask, int x, int y, int z){
 
 /** FWInteraction */
  ////////////////////////////////////////////////////////////////
-void FWApp::CreateHISdk(){ hiSdk = HISdkIf::CreateSdk(); }
-HISdkIf* FWApp::GetHISdk(){ return hiSdk; }
-void FWApp::AddHI(HIBaseIf* hi){ humanInterfaces.push_back(hi); }
-HIBaseIf* FWApp::GetHI(int i){ return humanInterfaces[i]; }
+void FWApp::CreateHISdk(){
+	hiSdk = HISdkIf::CreateSdk();
+}
+
+HISdkIf* FWApp::GetHISdk(){
+	return hiSdk;
+}
+
+void FWApp::AddHI(HIBaseIf* hi){
+	humanInterfaces.push_back(hi);
+}
+
+HIBaseIf* FWApp::GetHI(int i){
+	return humanInterfaces[i];
+}
+
 FWInteractSceneIf* FWApp::CreateIAScene(const FWInteractSceneDesc &desc){
 	FWInteractScene* iaScene = DBG_NEW FWInteractScene(desc);
 	iaScenes.push_back(iaScene->Cast());
 	iaScene->CreateIAAdaptee(desc.iaMode);
-	if(desc.iaMode == FWInteractMode::LOCAL_DYNAMICS){
+	if(desc.iaMode == LOCAL_DYNAMICS){
 		iaScene->SetHMode(desc.hMode);
 	}
 	curIAScene = iaScene->Cast();

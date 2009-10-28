@@ -30,7 +30,7 @@ FWBone::FWBone(const FWBoneDesc& d/*=FWObjectDesc()*/)
 {
 }
 void FWBone::SetJointKDD2(double K,double D, double D2){
-	PH3ElementBallJointIf* ball=joint->Cast();
+	PHBallJointIf* ball=joint->Cast();
 	ball->SetSpring(K);
 	ball->SetDamper(D);
 	ball->SetSecondDamper(D2);
@@ -183,7 +183,7 @@ void FWBoneCreate::FWJointCreate(){
 	if (bone.size()){
 		for(size_t i=0 ;i<bone.size(); ++i){
 			if(!(bone[i]->parentBone==NULL)){
-				PH3ElementBallJointDesc d3Ball;
+				PHBallJointDesc d3Ball;
 				{
 					d3Ball.poseSocket		= bone[i]->jointData.SocketPos;
 					d3Ball.posePlug			= bone[i]->jointData.PlugPos;

@@ -149,7 +149,7 @@ void FWBoneObject::Modify() {
 	}
 	Posed absPose; absPose.FromAffine(af);
 
-	PH3ElementBallJointIf *e3bj = phJoint->Cast();
+	PHBallJointIf *e3bj = phJoint->Cast();
 	if (e3bj) {
 		PHBallJointDesc d; e3bj->GetDesc(&d);
 		sockOffset = d.poseSocket;

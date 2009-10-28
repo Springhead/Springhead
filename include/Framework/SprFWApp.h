@@ -80,6 +80,14 @@ public:
 	virtual void Reshape(int w, int h);
 
 	/** @brief キーボードイベントのハンドラ
+		@param key キーコード
+		@param x カーソルｘ座標
+		@param y カーソルｙ座標
+		特殊キーのキーコードは使用するグラフィクスライブラリに依存する．
+		
+		＊GLUTの場合，glutKeyboardFuncコールバックとglutSpecialFuncコールバックで
+		キーコードが重複している．そこでglutSpecialFuncコールバックに渡されたキーコードには
+		256が加算されてKeyboardに渡される．
 	 */
 	virtual void Keyboard(int key, int x, int y){}
 

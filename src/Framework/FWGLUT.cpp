@@ -1,8 +1,11 @@
-#include <windows.h>
+#ifdef _MSC_VER
+#	include <windows.h>
+#endif
 #include <GL/glew.h>
 #include <Framework/FWGLUT.h>
 
 namespace Spr{;
+
 // FWWinGLUT /////////////////////////////////////////////////////////////////////
 void FWWinGLUT::Position(int left, int top){
 	glutPositionWindow(left, top); fullscreen = false;
@@ -50,6 +53,11 @@ void FWGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 	instance->fwApp->CallKeyboard((int)key, x, y);
 }
 
+void FWGLUT::GlutSpecialFunc(int key, int x, int y){
+	// GlutKeyboardFuncと重複しないようにビットを立てる
+	instance->fwApp->CallKeyboard(key | 0x100, x, y);
+}
+
 void FWGLUT::GlutMouseFunc(int button, int state, int x, int y){
 	instance->fwApp->CallMouseButton(button, state, x, y);
 }
@@ -77,7 +85,8 @@ void FWGLUT::Init(int argc, char* argv[]){
 
 /** タイマ *////////////////////////////////////////////////////////////////
 void FWGLUT::StartMainLoop(){
-	glutIdleFunc(FWGLUT::GlutIdleFunc);
+	// CPUが常時100%になる問題あり
+	//glutIdleFunc(FWGLUT::GlutIdleFunc);
 	glutMainLoop();
 }
 
@@ -109,6 +118,7 @@ FWWin* FWGLUT::CreateWin(const FWWinDesc& d){
 	glutDisplayFunc(FWGLUT::GlutDisplayFunc);
 	glutReshapeFunc(FWGLUT::GlutReshapeFunc);
 	glutKeyboardFunc(FWGLUT::GlutKeyboardFunc);
+	glutSpecialFunc(FWGLUT::GlutSpecialFunc);
 	glutMouseFunc(FWGLUT::GlutMouseFunc);
 	glutMotionFunc(FWGLUT::GlutMotionFunc);
 	int pollInterval = 10;	// int pollInterval : glutJoystickFuncを使うときに使う何か．読み込み時間に関係しているらしい．
