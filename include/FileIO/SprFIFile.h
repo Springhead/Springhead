@@ -51,6 +51,15 @@ struct FIFileCOLLADAIf: public FIFileIf{
 	bool Save(const ObjectIfs& objs, const char* fn);
 };
 
+///	バイナリファイルのファイルローダとセーバ
+struct FIFileBinaryIf: public FIFileIf{
+	SPR_IFDEF(FIFileBinary);
+	///	ロード
+	bool Load(ObjectIfs& objs, const char* fn);
+	///	セーブ
+	bool Save(const ObjectIfs& objs, const char* fn);
+};
+
 }
 
 #endif
