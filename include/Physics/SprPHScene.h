@@ -86,13 +86,18 @@ struct PHSceneDesc: public PHSceneState{
 		MODE_LCP		///< LCPで解く
 	};
 	
-	Vec3f	gravity;	///< 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f, 0.0f)．
+	/** 設定パラメータ．
+		各EngineのAPIを介して全パラメータが取得・設定可能だが，以下のパラメータは
+		頻繁に用いるのでPHSceneIfからもアクセスできるようにしてある．（要検討）
+	 */
+	Vec3f	gravity;		///< 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f, 0.0f)．
 	int		numIteration;	///< LCPの反復回数
 
 	PHSceneDesc(){Init();}
 	void Init(){
-		gravity=Vec3f(0,-9.8f,0);
-		numIteration = 15;
+		PHSceneState::Init();
+		gravity			= Vec3f(0,-9.8f,0);
+		numIteration	= 15;
 	}
 };
 
@@ -302,7 +307,12 @@ public:
 		@return 積分ステップ
 	 */
 	double GetTimeStep()const;
-	
+
+	/** @brief 積分ステップの逆数を取得する
+		@return 積分ステップの逆数
+	 */
+	double GetTimeStepInv()const;
+
 	/** @brief 積分ステップを設定する
 		@param dt 積分ステップ
 	 */
