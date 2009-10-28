@@ -11,5 +11,6 @@
 #include "FIFileX.h"
 #include "FIFileVrml.h"
 #include "FIFileCOLLADA.h"
+#include "FIFileBinary.h"
 #include "FISpirit.h"
 #include "FISaveContext.h"

@@ -18,13 +18,26 @@ namespace Spr{;
 struct FIFileXIf;
 struct FIFileVRMLIf;
 struct FIFileCOLLADAIf;
+struct FIFileBinaryIf;
 
 ///	ファイル入出力SDK
 struct FISdkIf : public SdkIf{
 	SPR_IFDEF(FISdk);
-	FIFileXIf* CreateFileX();
-	FIFileVRMLIf* CreateFileVRML();
-	FIFileCOLLADAIf* CreateFileCOLLADA();
+
+	/// Xファイルオブジェクトの作成
+	FIFileXIf*			CreateFileX();
+	/// VRMLファイルオブジェクトの作成
+	FIFileVRMLIf*		CreateFileVRML();
+	/// COLLADAファイルオブジェクトの作成
+	FIFileCOLLADAIf*	CreateFileCOLLADA();
+	/// バイナリファイルオブジェクトの作成
+	FIFileBinaryIf*		CreateFileBinary();
+
+	/// ファイルオブジェクトの削除
+	bool DelChildObject(ObjectIf* o);
+	/// 全ファイルオブジェクトの削除
+	void Clear();
+
 	static  FISdkIf* SPR_CDECL CreateSdk();
 };
 

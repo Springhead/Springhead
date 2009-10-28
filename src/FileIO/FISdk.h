@@ -15,14 +15,17 @@ namespace Spr {;
 class FIFile;
 class SPR_DLL FISdk:public Sdk{
 public:
-
-	std::vector< UTRef<FIFile> > files;
 	SPR_OBJECTDEF(FISdk);
+	typedef std::vector< UTRef<FIFile> > Files;
+	Files files;
+	
 	FISdk();
 	~FISdk();
-	FIFileXIf* CreateFileX();
-	FIFileVRMLIf* CreateFileVRML();
-	FIFileCOLLADAIf* CreateFileCOLLADA();
+	FIFileXIf*			CreateFileX();
+	FIFileVRMLIf*		CreateFileVRML();
+	FIFileCOLLADAIf*	CreateFileCOLLADA();
+	FIFileBinaryIf*		CreateFileBinary();
+	bool DelChildObject(ObjectIf* o);
 	void Clear();
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 };

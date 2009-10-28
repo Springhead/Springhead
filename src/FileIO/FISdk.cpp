@@ -37,13 +37,34 @@ void FISdk::Clear(){
 }
 ObjectIf* FISdk::CreateObject(const IfInfo* info, const void* desc){
 	ObjectIf* rv = Object::CreateObject(info, desc);
-	if (!rv){
-		if (info->Inherit(FIFileXIf::GetIfInfoStatic())){
+	if(!rv){
+		if(info->Inherit(FIFileXIf::GetIfInfoStatic())){
 			rv = CreateFileX();
+		}
+		else if(info->Inherit(FIFileVRMLIf::GetIfInfoStatic())){
+			rv = CreateFileVRML();
+		}
+		else if(info->Inherit(FIFileCOLLADAIf::GetIfInfoStatic())){
+			rv = CreateFileCOLLADA();
+		}
+		else if(info->Inherit(FIFileBinaryIf::GetIfInfoStatic())){
+			rv = CreateFileBinary();
 		}
 	}
 	return rv;
 }
+bool FISdk::DelChildObject(ObjectIf* o){
+	FIFileIf* file = DCAST(FIFileIf, o);
+	if(file){
+		Files::iterator it = find(files.begin(), files.end(), file->Cast());
+		if(it != files.end()){
+			files.erase(it);
+			return true;
+		}
+	}
+	return false;
+}
+
 FIFileXIf* FISdk::CreateFileX(){
 	FIFileX* rv = DBG_NEW FIFileX;
 	rv->sdk = this;
@@ -60,6 +81,13 @@ FIFileVRMLIf* FISdk::CreateFileVRML(){
 
 FIFileCOLLADAIf* FISdk::CreateFileCOLLADA(){
 	FIFileCOLLADA* rv = DBG_NEW FIFileCOLLADA;
+	rv->sdk = this;
+	files.push_back(rv);
+	return rv->Cast();
+}
+
+FIFileBinaryIf* FISdk::CreateFileBinary(){
+	FIFileBinary* rv = DBG_NEW FIFileBinary;
 	rv->sdk = this;
 	files.push_back(rv);
 	return rv->Cast();
