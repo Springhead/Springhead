@@ -326,10 +326,12 @@ TQuaternion<A> operator*(const TQuaternion<A>& q1, const TQuaternion<B>& q2){
 ///	TQuaternionでベクトルを回転． Quaternion * vector * Quaternion^{*} と同じ．
 template <class ET, class BD>
 inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TVectorBase<3, BD>& v){
-	TQuaternion<ET> qv(1, ET(v[0]), ET(v[1]), ET(v[2]));
-	TYPENAME BD::ret_type r = (q * qv * q.Conjugated()).sub_vector(PTM::TSubVectorDim<1,3>());
-	//TYPENAME BD::ret_type tmp = q.V() % v;
-	//TYPENAME BD::ret_type r = q.W()*q.W()*v + 2*q.W()*tmp + (q.V()*v)*q.V() + q.V()%tmp;
+	// ↓第1成分は0ではないか？？　tazz
+	//TQuaternion<ET> qv(1, ET(v[0]), ET(v[1]), ET(v[2]));
+	//TYPENAME BD::ret_type r = (q * qv * q.Conjugated()).sub_vector(PTM::TSubVectorDim<1,3>());
+	// ↓は第1成分を0として展開したコード
+	TYPENAME BD::ret_type tmp = q.V() % v;
+	TYPENAME BD::ret_type r = q.W()*q.W()*v + 2*q.W()*tmp + (q.V()*v)*q.V() + q.V()%tmp;
 	return r;
 }
 
@@ -338,7 +340,8 @@ template <class ET, class BD>
 inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TMatrixBase<3, 3, BD>& m){
 	TYPENAME BD::ret_type r;
 	for(int i=0; i<3; ++i){
-		TQuaternion<ET> qv(1, ET(m.col(i)[0]), ET(m.col(i)[1]), ET(m.col(i)[2]));
+		// 上と同じく0と思われる
+		TQuaternion<ET> qv(0, ET(m.col(i)[0]), ET(m.col(i)[1]), ET(m.col(i)[2]));
 		r.col(i) = (q * qv * q.Conjugated()).sub_vector(PTM::TSubVectorDim<1,3>());
 	}
 	return r;
