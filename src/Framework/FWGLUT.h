@@ -47,6 +47,8 @@ public:
 	virtual void Init(int argc, char* argv[]);
 	
 	/** タイマ */
+	///GLUTによるIdleFuncをスタートする
+	virtual void StartIdleFunc();
 	///GLUTによるTimerをスタートする
 	virtual void StartMainLoop();
 

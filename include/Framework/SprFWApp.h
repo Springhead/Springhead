@@ -65,9 +65,14 @@ public:
 		繰り返し実行を行う．
 	 */
 	virtual void TimerFunc(int id){}
+
+	/** @brief IdleFuncの実行
+		glutの場合，glutIdleFuncの実行
+	 */
+	virtual void StartIdleFunc();
 	
 	/** @brief メインループの実行
-		glutの場合，glutIdleFunc,glutmainLoopの実行
+		glutの場合，glutmainLoopの実行
 	 */
 	virtual void StartMainLoop();
 

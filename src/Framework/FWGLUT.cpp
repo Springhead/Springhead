@@ -84,6 +84,9 @@ void FWGLUT::Init(int argc, char* argv[]){
 }
 
 /** É^ÉCÉ} *////////////////////////////////////////////////////////////////
+void FWGLUT::StartIdleFunc(){
+	glutIdleFunc(FWGLUT::GlutIdleFunc);
+}
 void FWGLUT::StartMainLoop(){
 	// CPUÇ™èÌéû100%Ç…Ç»ÇÈñ‚ëËÇ†ÇË
 	//glutIdleFunc(FWGLUT::GlutIdleFunc);
