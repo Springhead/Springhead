@@ -123,10 +123,6 @@ public:
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
 	PHGears			gears;			///< ギアの配列
 	PHPaths			paths;			///< パスの配列
-	// jointsからキャストするかアプリ側で配列をもつようにしてください　tazz
-	//typedef std::vector< UTRef<PH3ElementBallJoint> > PH3ElementBallJoints;
-	//PH3ElementBallJoints			threeBallJoints;
-	
 	void SetupLCP();				///< 速度更新LCPの準備
 	void IterateLCP();				///< 速度更新LCPの一度の反復
 	void SetupCorrectionLCP();		///< 誤差修正LCPの準備
