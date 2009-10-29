@@ -223,4 +223,23 @@ void FWScene::SetFWBones(FWBoneIf* b){
 std::vector< UTRef<FWBoneIf> > FWScene::GetFWBones(){
 	return fwBones;
 }
+
+void FWScene::CreateFWStructure(){
+	FWStructureIf *fwStructure =DCAST(FWStructureIf ,new FWStructure);
+	fwStructures.push_back(fwStructure);
+}
+void FWScene::AddFWStructure(FWStructureIf* o){
+	return fwStructures.push_back(o);
+}
+
+FWStructureIf* FWScene::GetFWStructure(){
+	return fwStructures.back();
+}
+
+FWStructureIf* FWScene::GetFWStructure(int n){
+	if(n < fwStructures.size()){
+		return fwStructures[n];
+	}
+	return NULL;
+}
 }

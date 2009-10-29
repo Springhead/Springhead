@@ -36,8 +36,10 @@ public:
 	ACCESS_DESC(FWScene);
 	typedef std::vector< UTRef<FWObjectIf> > FWObjects;
 	typedef std::vector< UTRef<FWBoneIf> >	 FWBones;
+	typedef std::vector< UTRef<FWStructureIf> >	 FWStructures;
 	FWObjects fwObjects;						///<	物理とグラフィックスのオブジェクトのリンク
 	FWBones	  fwBones;							///<	物理とグラフィックスのBoneのリンク
+	FWStructures fwStructures;					///<	BoneObjectの集合体であるFWStructureへのリンク
 	UTRef<PHSceneIf> phScene;					///<	物理シミュレーション用のシーン
 	UTRef<GRSceneIf> grScene;					///<	グラフィックス用のシーン
 	typedef std::vector< UTRef<HIForceDevice6D> > FWHumanInterfaces;
@@ -76,6 +78,10 @@ public:
 	virtual void AddHumanInterface(HIForceDevice6D* d);
 	virtual void SetFWBones(FWBoneIf* b);
 	virtual std::vector< UTRef<FWBoneIf> > GetFWBones();
+	virtual void CreateFWStructure();
+	virtual void AddFWStructure(FWStructureIf* o);
+	virtual FWStructureIf* GetFWStructure();
+	virtual FWStructureIf* GetFWStructure(int n);
 };
 
 

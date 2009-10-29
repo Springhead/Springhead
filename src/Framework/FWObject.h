@@ -91,6 +91,22 @@ public:
 	virtual void Modify();
 };
 
+class FWStructure: public SceneObject, public FWStructureDesc{
+private:
+	std::vector<FWBoneObjectIf*> fwBones;
+public:
+	SPR_OBJECTDEF(FWStructure);
+	ACCESS_DESC(FWStructure);
+
+	FWStructureDesc desc;
+	FWStructure(const FWStructureDesc& d=FWStructureDesc()); // コンストラクタ
+
+	FWBoneObjectIf* GetBone(int n);
+	void AddBone(FWBoneObjectIf* o);
+
+	virtual bool		AddChildObject(ObjectIf* o);
+};
+
 }
 
 #endif

@@ -72,8 +72,9 @@
 	void EndList(){	base::EndList();}	\
 	void DrawList(int i){	base::DrawList(i);}	\
 	void ReleaseList(int i){	base::ReleaseList(i);}	\
-	void DrawFont(Vec2f pos, const std::string str, const Spr::GRFont& font){	base::DrawFont(pos, str, font);}	\
-	void DrawFont(Vec3f pos, const std::string str, const Spr::GRFont& font){	base::DrawFont(pos, str, font);}	\
+	void SetFont(const Spr::GRFont& font){	base::SetFont(font);}	\
+	void DrawFont(Vec2f pos, const std::string str){	base::DrawFont(pos, str);}	\
+	void DrawFont(Vec3f pos, const std::string str){	base::DrawFont(pos, str);}	\
 	void SetMaterial(const Spr::GRMaterialDesc& mat){	base::SetMaterial(mat);}	\
 	void SetMaterial(const Spr::GRMaterialIf* mat){	base::SetMaterial(mat);}	\
 	void SetLineWidth(float w){	base::SetLineWidth(w);}	\

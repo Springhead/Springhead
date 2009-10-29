@@ -149,18 +149,18 @@ void FWBoneObject::Modify() {
 	}
 	Posed absPose; absPose.FromAffine(af);
 
-	PHBallJointIf *e3bj = phJoint->Cast();
-	if (e3bj) {
-		PHBallJointDesc d; e3bj->GetDesc(&d);
-		sockOffset = d.poseSocket;
-		d.poseSocket = poseSock * d.poseSocket; d.posePlug = posePlug * d.posePlug;
-		d.poseSocket.Ori().unitize();
-		d.posePlug.Ori().unitize();
-		e3bj->SetDesc(&d);
-	}
+	//PHBallJointIf *e3bj = phJoint->Cast();	//nagaD
+	//if (e3bj) {
+	//	PHBallJointDesc d; e3bj->GetDesc(&d);
+	//	sockOffset = d.poseSocket;
+	//	d.poseSocket = poseSock * d.poseSocket; d.posePlug = posePlug * d.posePlug;
+	//	d.poseSocket.Ori().unitize();
+	//	d.posePlug.Ori().unitize();
+	//	e3bj->SetDesc(&d);
+	//}
 
 	PHBallJointIf *bj = phJoint->Cast();
-	if (bj&&!e3bj) {
+	if (bj) {
 		PHBallJointDesc d; bj->GetDesc(&d);
 		sockOffset = d.poseSocket;
 		d.poseSocket = poseSock * d.poseSocket; d.posePlug = posePlug * d.posePlug;
@@ -196,5 +196,44 @@ void FWBoneObject::Modify() {
 		}
 	}
 }
+
+/// --- --- --- --- --- --- --- --- --- ---
+//FWStructure(BoneÇÃèWçá)
+
+FWStructure::FWStructure(const FWStructureDesc& d/*=FWStructureDesc()*/)
+: desc(d)
+{
+}
+
+FWBoneObjectIf* FWStructure::GetBone(int n){
+	if(n<fwBones.size()){
+		return fwBones[n];
+	}
+	DSTR<<"EROOR: FWBone don't exit"<<std::endl;
+	return NULL;
+}
+
+void FWStructure::AddBone(FWBoneObjectIf* o){
+	fwBones.push_back(o);
+}
+
+bool FWStructure::AddChildObject(ObjectIf* o){
+	bool rv = false;
+	if (!rv) {
+		FWBoneObjectIf* obj = DCAST(FWBoneObjectIf, o);
+		if (obj) {
+			if(fwBones.size()==0){
+				DCAST(FWSceneIf,GetScene())->CreateFWStructure();
+			}
+			AddBone(obj);
+			//FWSceneÇÃFWStructureÇ…ï€ë∂
+			DCAST(FWSceneIf,GetScene())->GetFWStructure()->AddBone(obj);
+			rv = true;
+		}
+	}
+	return rv;
+}
+
+
 
 }

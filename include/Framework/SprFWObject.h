@@ -51,6 +51,9 @@ struct FWBoneObjectDesc {
 	bool modifyPlugSocketPose;	///< 関節の取り付け位置をBoneにあわせて変更する
 };
 
+struct FWStructureDesc {
+};
+
 /** @brief ボーンモデルと剛体関節系をつなげるためのFrameworkオブジェクト
  */
 struct FWBoneObjectIf : FWObjectIf {
@@ -65,6 +68,17 @@ struct FWBoneObjectIf : FWObjectIf {
 	GRFrameIf* GetEndFrame();
 	/// ボーンの終端点を示すGRFrameを設定する
 	void SetEndFrame(GRFrameIf* f);
+};
+
+/** @brief ボーンを集合体として管理するためのFrameworkオブジェクト
+ */
+struct FWStructureIf : SceneObjectIf {
+	SPR_IFDEF(FWStructure);
+
+	/// BoneObjectをナンバーで指定して取得する
+	FWBoneObjectIf* GetBone(int n);
+	/// FWBoneObjectを追加する
+	void AddBone(FWBoneObjectIf* o);
 };
 
 }

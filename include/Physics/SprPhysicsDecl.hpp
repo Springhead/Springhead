@@ -89,8 +89,6 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHContactPointIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHJointIf(base)	\
-	Spr::PHJointDesc::PHControlMode GetMode(){	return	base::GetMode();}	\
-	void SetMode(Spr::PHJointDesc::PHControlMode mode){	base::SetMode(mode);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHJoint1DIf(base)	\
 	void SetRange(double lower, double upper){	base::SetRange(lower, upper);}	\
@@ -107,6 +105,8 @@
 	double GetSpringOrigin(){	return	base::GetSpringOrigin();}	\
 	void SetDamper(double damper){	base::SetDamper(damper);}	\
 	double GetDamper(){	return	base::GetDamper();}	\
+	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
+	void SetSecondDamper(double input){	base::SetSecondDamper(input);}	\
 	double GetPosition(){	return	base::GetPosition();}	\
 	double GetVelocity(){	return	base::GetVelocity();}	\
 	void SetOffsetForce(double dat){	base::SetOffsetForce(dat);}	\
@@ -118,10 +118,6 @@
 	bool IsLimit(){	return	base::IsLimit();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHingeJointIf(base)	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementHingeJointIf(base)	\
-	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
-	void SetSecondDamper(double input){	base::SetSecondDamper(input);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSliderJointIf(base)	\
 
@@ -163,8 +159,6 @@
 	void SetOffsetForce(Vec3d ofst){	base::SetOffsetForce(ofst);}	\
 	Vec3d GetOffsetForce(){	return	base::GetOffsetForce();}	\
 	bool IsLimit(){	return	base::IsLimit();}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementBallJointIf(base)	\
 	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
 	void SetSecondDamper(double input){	base::SetSecondDamper(input);}	\
 	double GetYieldStress(){	return	base::GetYieldStress();}	\
@@ -175,7 +169,7 @@
 	void SetI(const Vec3d i){	base::SetI(i);}	\
 	int GetType(){	return	base::GetType();}	\
 	void SetType(int t){	base::SetType(t);}	\
-	bool GetDefomationMode(){	return	base::GetDefomationMode();}	\
+	bool GetDeformationMode(){	return	base::GetDeformationMode();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\
 	void SetSpring(const Vec3d& spring){	base::SetSpring(spring);}	\
@@ -214,8 +208,6 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHPathJointNodeIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHBallJointNodeIf(base)	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementBallJointNodeIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHGearIf(base)	\
 
@@ -267,6 +259,7 @@
 	int NIKControlPoints(){	return	base::NIKControlPoints();}	\
 	Spr::PHIKControlPointIf* GetIKControlPoint(int i){	return	base::GetIKControlPoint(i);}	\
 	double GetTimeStep()const{	return	base::GetTimeStep();}	\
+	double GetTimeStepInv()const{	return	base::GetTimeStepInv();}	\
 	void SetTimeStep(double dt){	base::SetTimeStep(dt);}	\
 	unsigned int GetCount()const{	return	base::GetCount();}	\
 	void SetCount(unsigned int count){	base::SetCount(count);}	\

@@ -59,6 +59,10 @@
 	GRFrameIf* GetEndFrame(){	return	base::GetEndFrame();}	\
 	void SetEndFrame(GRFrameIf* f){	base::SetEndFrame(f);}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_FWStructureIf(base)	\
+	Spr::FWBoneObjectIf* GetBone(int n){	return	base::GetBone(n);}	\
+	void AddBone(Spr::FWBoneObjectIf* o){	base::AddBone(o);}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSceneIf(base)	\
 	PHSceneIf* GetPHScene(){	return	base::GetPHScene();}	\
 	void SetPHScene(PHSceneIf* s){	base::SetPHScene(s);}	\
@@ -73,11 +77,15 @@
 	void AddHumanInterface(Spr::HIForceDevice6D* d){	base::AddHumanInterface(d);}	\
 	void SetFWBones(Spr::FWBoneIf* b){	base::SetFWBones(b);}	\
 	std::vector< UTRef< Spr::FWBoneIf > > GetFWBones(){	return	base::GetFWBones();}	\
+	void CreateFWStructure(){	base::CreateFWStructure();}	\
+	void AddFWStructure(Spr::FWStructureIf* o){	base::AddFWStructure(o);}	\
+	Spr::FWStructureIf* GetFWStructure(){	return	base::GetFWStructure();}	\
+	Spr::FWStructureIf* GetFWStructure(int n){	return	base::GetFWStructure(n);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSdkIf(base)	\
 	Spr::FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc){	return	base::CreateScene(phdesc, grdesc);}	\
-	bool LoadScene(UTString filename){	return	base::LoadScene(filename);}	\
-	bool SaveScene(UTString filename){	return	base::SaveScene(filename);}	\
+	bool LoadScene(UTString filename, const IfInfo* ii){	return	base::LoadScene(filename, ii);}	\
+	bool SaveScene(UTString filename, const IfInfo* ii){	return	base::SaveScene(filename, ii);}	\
 	int NScene()const{	return	base::NScene();}	\
 	void SwitchScene(Spr::FWSceneIf* scene){	base::SwitchScene(scene);}	\
 	Spr::FWSceneIf* GetScene(int index){	return	base::GetScene(index);}	\

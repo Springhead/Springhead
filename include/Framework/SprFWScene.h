@@ -13,6 +13,7 @@
 #include <Graphics/SprGRScene.h>
 #include <Graphics/SprGRRender.h>
 #include <Framework/SprFWBone.h>
+#include <Framework/SprFWObject.h>
 
 namespace Spr{
 
@@ -73,6 +74,22 @@ namespace Spr{
 		/** @brief 作成したFWBoneをシーンに保存する
 		 */
 		std::vector< UTRef<FWBoneIf> > GetFWBones();
+
+		/** @brief ボーンの集合体を作成する
+		 */
+		void CreateFWStructure();
+		/** @brief ボーンの集合体にボーンを追加する
+		 */
+		void AddFWStructure(FWStructureIf* o);
+		/** @brief 最後に作成したボーンの集合体を取得する
+		 */
+		FWStructureIf* GetFWStructure();
+		
+		/** @brief n番目のボーンの集合体を取得する
+		 */
+		FWStructureIf* GetFWStructure(int n);
+
+
 	};
 
 	FWSceneIf* SPR_CDECL CreateFWScene();

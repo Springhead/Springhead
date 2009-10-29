@@ -14,8 +14,15 @@
 	bool Load(Spr::ObjectIfs& objs, const char* fn){	return	base::Load(objs, fn);}	\
 	bool Save(const Spr::ObjectIfs& objs, const char* fn){	return	base::Save(objs, fn);}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_FIFileBinaryIf(base)	\
+	bool Load(Spr::ObjectIfs& objs, const char* fn){	return	base::Load(objs, fn);}	\
+	bool Save(const Spr::ObjectIfs& objs, const char* fn){	return	base::Save(objs, fn);}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_FISdkIf(base)	\
 	Spr::FIFileXIf* CreateFileX(){	return	base::CreateFileX();}	\
 	Spr::FIFileVRMLIf* CreateFileVRML(){	return	base::CreateFileVRML();}	\
 	Spr::FIFileCOLLADAIf* CreateFileCOLLADA(){	return	base::CreateFileCOLLADA();}	\
+	Spr::FIFileBinaryIf* CreateFileBinary(){	return	base::CreateFileBinary();}	\
+	bool DelChildObject(Spr::ObjectIf* o){	return	base::DelChildObject(o);}	\
+	void Clear(){	base::Clear();}	\
 
