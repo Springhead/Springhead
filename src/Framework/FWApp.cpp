@@ -29,6 +29,10 @@ FWApp::~FWApp(){
 }
 
 // 派生クラスで定義することのできる仮想関数/////////////////////////////////
+void FWApp::StartIdleFunc(){
+	grAdaptee->StartIdleFunc();
+}
+
 void FWApp::StartMainLoop(){
 	grAdaptee->StartMainLoop();
 }

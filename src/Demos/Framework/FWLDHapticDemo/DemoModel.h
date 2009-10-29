@@ -17,6 +17,6 @@ PHSolidIf* CreateLumpBox(PHSceneIf* phScene);
 void CreateWall(PHSceneIf* phScene);
 void CreateTower(PHSceneIf* phScene);
 void CreateJointBox(PHSceneIf* phScene);
-void Create3ElementJointBox(PHSceneIf* phScene);
+//void Create3ElementJointBox(PHSceneIf* phScene);
 
 #endif
