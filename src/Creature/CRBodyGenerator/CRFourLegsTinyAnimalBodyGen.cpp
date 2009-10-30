@@ -393,10 +393,12 @@ void CRFourLegsTinyAnimalBodyGen::InitContact(){
 	*/
 }
 
+/*
 void CRFourLegsTinyAnimalBodyGen::InitControlMode(PHJointDesc::PHControlMode m){
 	int njoints = joints.size();
 	for(int i = 0; i < njoints; i++){
 		if(joints[i]){joints[i]->SetMode(m);}
 	}
 }
+*/
 }
