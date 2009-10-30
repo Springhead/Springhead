@@ -986,12 +986,14 @@ void CRFourLegsAnimalBodyGen::InitContact(){
 	*/
 
 }
+/*
 void CRFourLegsAnimalBodyGen::InitControlMode(PHJointDesc::PHControlMode m){
 	int njoints = joints.size();
 	for(int i = 0; i < njoints; i++){
 		if(joints[i])joints[i]->SetMode(m);
 	}
 }
+*/
 void CRFourLegsAnimalBodyGen::SetUpperBody(){
 	upperBody.push_back(solids[CRFourLegsAnimalBodyGenDesc::SO_WAIST]);
 	upperBody.push_back(solids[CRFourLegsAnimalBodyGenDesc::SO_CHEST]);

@@ -162,7 +162,7 @@ void CRDebugLinkBodyGen::InitContact(){
 	*/
 }
 
-void CRDebugLinkBodyGen::InitControlMode(PHJointDesc::PHControlMode m){}
+// void CRDebugLinkBodyGen::InitControlMode(PHJointDesc::PHControlMode m){}
 
 void CRDebugLinkBodyGen::Init(){}
 

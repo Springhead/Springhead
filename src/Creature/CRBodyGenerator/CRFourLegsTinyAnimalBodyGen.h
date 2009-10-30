@@ -92,7 +92,7 @@ private:
 	void InitLegs(PHSolidIf* sBody);
 
 	void InitContact();
-	void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);	//< ボディの制御モードを設定する．
+	// void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);	//< ボディの制御モードを設定する．
 
 
 public:
@@ -105,7 +105,7 @@ public:
 		PHSolidIf* b	= InitBody();
 		InitLegs(b);
 		InitContact();
-		InitControlMode();
+		// InitControlMode();
 		Init();
 	}
 

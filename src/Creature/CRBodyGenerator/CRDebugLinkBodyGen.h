@@ -82,7 +82,7 @@ private:
 	void CreateBody();
 	void InitBody();
 	void InitContact();
-	void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);
+	// void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);
 public:
 
 	CRDebugLinkBodyGen(){}
@@ -93,7 +93,7 @@ public:
 		CreateBody();
 		InitBody();
 		InitContact();
-		InitControlMode();
+		// InitControlMode();
 	}
 	virtual void Init();
 	int NBallJoints(){return joNBallJoints;}
