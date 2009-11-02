@@ -155,14 +155,23 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 		found = FindNearestPoint(a, b, a2w, b2w, cp, dir, normal, pa, pb);							
 		
 		/// 接触解析(susa実装中)
+		Posed shapePoseW0 = phSolid->GetPose();
+		Posed shapePoseW1 = soPointer->GetPose();
+		Vec3d a2b = b2w * pb - a2w * pa;
+		std::vector<Vec3d> section;
 		if(found == 1){
 			/// FindClosestPointで終わった場合
 			/// 力覚ポインタと剛体が離れているので，近づけて接触解析
+			shapePoseW1.Pos() -= a2b;
+			Vec3d commonPoint = shapePoseW0 * pa;
+			FindSectionVertex(phSolid, soPointer, shapePoseW0, shapePoseW1, normal, commonPoint, section);
 		}else if(found == 2){
 			/// ContFindCommonPointで終わった場合
 			///	既に接触している状態なので，そのまま接触解析
-			FindSectionVertex();
+			Vec3d commonPoint = shapePoseW0 * pa - 0.5 * a2b;
+			FindSectionVertex(phSolid, soPointer, shapePoseW0, shapePoseW1, normal, commonPoint, section);
 		}
+		iaInfo->neighborInfo.section = section;
 
 		if(found > 0){
 			/// 初めて最近傍物体になった場合
@@ -215,7 +224,6 @@ int FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b
 		/// CCDGJKの実行	
 extern bool bGJKDebug;
 		bGJKDebug = false;
-//		bCCDGJKDebug = true;
 
 		double dist = 0.0;
 		int cp = ContFindCommonPoint(ca, cb, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
@@ -230,21 +238,19 @@ extern bool bGJKDebug;
 	}
 }
 
-void FWInteractAdaptee::FindSectionVertex(){
-#if 0
+
+void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, const Posed shapePoseW0, const Posed shapePoseW1,
+										  const Vec3d normal, const Vec3d commonPoint, std::vector<Vec3d>& section){
+#if 1
 	/// 力覚ポインタと剛体との接触部分解析
 	// PHConstraintEngine.hにあるメンバ関数PHShapePairForLCP::EnumVertex()を改変
 	// 本当はCDDetectorImp.hのクラスCDContactAnalysisFaceを使うべき？
 
-	depth = -dist;
-	center = commonPoint = shapePoseW[0] * closestPoint[0];
-	center -= 0.5f*depth*normal;
-
 	// 相対速度をみて2Dの座標系を決める。
 	FPCK_FINITE(solid0->pose);
 	FPCK_FINITE(solid1->pose);
-	Vec3d v0 = solid0->GetPointVelocity(center);
-	Vec3d v1 = solid1->GetPointVelocity(center);
+	Vec3d v0 = solid0->GetPointVelocity(commonPoint);
+	Vec3d v1 = solid1->GetPointVelocity(commonPoint);
 	Matrix3d local;	//	contact coodinate system 接触の座標系
 	local.Ex() = normal;
 	local.Ey() = v1-v0;
@@ -260,16 +266,17 @@ void FWInteractAdaptee::FindSectionVertex(){
 	//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
 	//	切り口を求める。まず、それぞれの形状の切り口を列挙
 	CDCutRing cutRing(commonPoint, local);	//	commonPointならば、それを含む面で切れば、必ず切り口の中になる。
-	int nPoint = engine->points.size();
 	//	両方に切り口がある場合．(球などないものもある)
-	bool found = shape[0]->FindCutRing(cutRing, shapePoseW[0]);
+	CDConvex* convex0 = solid0->GetShape(0)->Cast();
+	bool found = convex0->FindCutRing(cutRing, shapePoseW0);
 	int nLine0 = cutRing.lines.size();
-	if (found) found = shape[1]->FindCutRing(cutRing, shapePoseW[1]);
+	CDConvex* convex1 = solid1->GetShape(0)->Cast();
+	if (found) found = convex1->FindCutRing(cutRing, shapePoseW1);
 	int nLine1 = cutRing.lines.size() - nLine0;
+	section.clear();
 	if (found){
 		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
 		cutRing.MakeRing();		
-		section.clear();
 		if (cutRing.vtxs.begin != cutRing.vtxs.end && !(cutRing.vtxs.end-1)->deleted){
 			CDQHLine<CDCutLine>* vtx = cutRing.vtxs.end-1;
 			do{
@@ -282,9 +289,9 @@ void FWInteractAdaptee::FindSectionVertex(){
 			} while (vtx!=cutRing.vtxs.end-1);
 		}
 	}
-	if (nPoint == (int)engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
+	if (section.size() == 0){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
 		//	きっと1点で接触している．
-		section.push_back(center);
+		section.push_back(commonPoint);
 	}
 #endif
 }
