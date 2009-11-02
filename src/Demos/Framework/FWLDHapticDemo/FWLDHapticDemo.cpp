@@ -7,7 +7,7 @@
 
 using namespace std;
 
-#define SPIDARG6 0;
+#define SPIDARG6 1;
 
 FWLDHapticDemo::FWLDHapticDemo(){
 	bStep = true;
