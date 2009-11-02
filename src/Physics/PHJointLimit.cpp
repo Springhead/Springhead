@@ -558,7 +558,7 @@ void PHBallJointLimit::CheckLimit(){
 
 void PHBallJointLimit::SetupLCP(){
 	// ‰Â“®”ÍˆÍƒ`ƒFƒbƒN
-	CheckLimit();
+	//CheckLimit();
 
 	// vJc : Jc‚É‚æ‚Á‚ÄŽÊ‘œ‚³‚ê‚éS‘©À•WŒn‚©‚çŒ©‚½Plug‚ÌŠp‘¬“x
 	Vec3d vJc = joint->Jc * joint->vjrel.w();

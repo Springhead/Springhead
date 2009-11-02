@@ -30,15 +30,17 @@ private:
 	UTRef<FWSdkIf>						fwSdk;
 	UTRef<HISdkIf>						hiSdk;	
 public:
+	FWApp();
 	virtual ~FWApp();
 	Wins								wins;		///< ウィンドウ情報
 	UTRef<FWVFuncBridge>				vfBridge;	///< 多言語(Rubyなど)へポートする際に仮想関数が適切に呼ばれるようにするためのブリッジ
+	bool								idleFuncFlag; ///< IdleFuncの呼び出しに関するFlag
 
 protected:
 	MouseInfo							mouseInfo;	///< マウス情報
 	CameraInfo							cameraInfo;	///< カメラ情報
 	std::map<FWSceneIf*, DragInfo>		dragInfo;	///< 剛体ドラッグ情報
-
+	
 public:
 // 派生クラスで定義する必要がある仮想関数 -----------------------------
 
@@ -54,6 +56,16 @@ public:
 	 */
 	virtual void Display()=0;
 
+	/** @brief IdleFuncの実行を停止する場合Init()で呼び出す
+		glutの場合，glutIdleFuncの実行の停止
+	 */
+	void DisableIdleFunc();
+	
+	/** @brief メインループの実行
+		glutの場合，glutmainLoopの実行
+	 */
+	void StartMainLoop();
+
 // 派生クラスで定義することのできる仮想関数 -----------------------------
 
 	/** @brief アイドル処理
@@ -65,16 +77,6 @@ public:
 		繰り返し実行を行う．
 	 */
 	virtual void TimerFunc(int id){}
-
-	/** @brief IdleFuncの実行
-		glutの場合，glutIdleFuncの実行
-	 */
-	virtual void StartIdleFunc();
-	
-	/** @brief メインループの実行
-		glutの場合，glutmainLoopの実行
-	 */
-	virtual void StartMainLoop();
 
 	/** @brief 描画領域のサイズ変更
 		@param w 描画領域の横幅
