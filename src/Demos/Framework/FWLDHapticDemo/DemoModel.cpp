@@ -16,7 +16,7 @@ CDShapeIf* CreateShapeSphere(PHSceneIf* phscene){
 	cd.material.mu0 = 0.5;
 	cd.material.mu = 0.3;
 	CDShapeIf* shape = phscene->GetSdk()->CreateShape(cd);
-	shape->SetVibration(-200, 120, 300);
+	shape->SetVibration(-20, 120, 300);
 	return shape;
 }
 CDShapeIf* CreateShapeCapsule(PHSceneIf* phscene){
@@ -182,28 +182,3 @@ void CreateJointBox(PHSceneIf* phscene){
 		rootSolid = nodeSolid;
 	}
 }
-
-//void Create3ElementJointBox(PHSceneIf* phscene){
-//	PH3ElementBallJointDesc desc;
-//	{
-//		desc.poseSocket.Pos()	= Vec3f(0.0f, -1.0f, 0.0f);
-//		desc.posePlug.Pos()	= Vec3f(0.0f, 1.0f, 0.0f);
-//		desc.spring			= 3+5;
-//		desc.damper		= 0.001*2000;
-//		desc.secondDamper = 0.01*1000;
-//	}
-//	PHSolidIf* rootSolid = CreateBox(phscene);
-//	rootSolid->SetMass(0.001);
-//	rootSolid->SetDynamical(false);
-//	double posy = 15;
-//	Vec3d pos = Vec3d(5, posy, 0);
-//	rootSolid->SetFramePosition(pos);
-//	for(int i = 1; i < 6; i++){
-//		PHSolidIf* nodeSolid = CreateBox(phscene);
-//		nodeSolid->SetMass(0.001);
-//		phscene->CreateJoint(rootSolid, nodeSolid, desc);
-//		nodeSolid->SetFramePosition(Vec3d(5, posy - 2 * i, 0));
-//		phscene->SetContactMode(rootSolid, nodeSolid, PHSceneDesc::MODE_NONE);
-//		rootSolid = nodeSolid;
-//	}
-//}

@@ -23,20 +23,22 @@
 
 namespace Spr{;
 
+FWApp::FWApp(){
+	idleFuncFlag = true;
+}
 FWApp::~FWApp(){
 	ReleaseAllTimer();
 	glutLeaveGameMode();
 }
-
-// 派生クラスで定義することのできる仮想関数/////////////////////////////////
-void FWApp::StartIdleFunc(){
-	grAdaptee->StartIdleFunc();
+void FWApp::DisableIdleFunc(){
+	idleFuncFlag = false;
 }
-
 void FWApp::StartMainLoop(){
 	grAdaptee->StartMainLoop();
 }
 
+
+// 派生クラスで定義することのできる仮想関数/////////////////////////////////
 void FWApp::Reshape(int w, int h){
 	if(!GetCurrentWin())return;
 	fwSdk->SwitchRender(GetCurrentWin()->GetRender());

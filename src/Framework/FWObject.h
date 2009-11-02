@@ -102,6 +102,8 @@ public:
 	FWStructure(const FWStructureDesc& d=FWStructureDesc()); // コンストラクタ
 
 	FWBoneObjectIf* GetBone(int n);
+	FWBoneObjectIf* GetBone(char* name);
+	int				GetBoneSize();
 	void AddBone(FWBoneObjectIf* o);
 
 	virtual bool		AddChildObject(ObjectIf* o);

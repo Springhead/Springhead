@@ -84,12 +84,11 @@ void FWGLUT::Init(int argc, char* argv[]){
 }
 
 /** ƒ^ƒCƒ} *////////////////////////////////////////////////////////////////
-void FWGLUT::StartIdleFunc(){
-	glutIdleFunc(FWGLUT::GlutIdleFunc);
-}
 void FWGLUT::StartMainLoop(){
-	// CPU‚ªí100%‚É‚È‚é–â‘è‚ ‚è
-	//glutIdleFunc(FWGLUT::GlutIdleFunc);
+	if(fwApp->idleFuncFlag){
+		// CPU‚ªí100%‚É‚È‚é–â‘è‚ ‚è
+		glutIdleFunc(FWGLUT::GlutIdleFunc);
+	}
 	glutMainLoop();
 }
 

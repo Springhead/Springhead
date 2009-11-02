@@ -29,8 +29,6 @@ public:
 	virtual void Init(int argc = 0, char* argv[] = NULL){}
 	
 	/** タイマ */
-	/// IdleFUncを呼ぶ
-	virtual void StartIdleFunc(){};
 	/// mainloopを呼び，タイマーをスタートする
 	virtual void StartMainLoop()=0;
 
