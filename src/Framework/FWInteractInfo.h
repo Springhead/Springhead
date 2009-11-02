@@ -47,11 +47,9 @@ struct SyncInfo{
 };
 /** ポインタ近傍かどうかのフラグ */
 struct Flag{
-	bool bneighbor;
 	bool blocal;			///< 力覚プロセスでシミュレーションしているかどうか
 	bool bfirstlocal;		///< 初めて近傍物体になったかどうか
 	Flag(){
-		bneighbor = false;
 		blocal = false;							
 		bfirstlocal = false;	
 	}

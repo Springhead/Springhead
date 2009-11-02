@@ -68,7 +68,6 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 			FWInteractInfo* iaInfo = &GetIAPointer(j)->interactInfo[i];
 			PHSolid* soPointer = GetIAPointer(j)->pointerSolid->Cast();
 
-			iaInfo->flag.bneighbor = false;				// ローカル可能性の初期化
 			/// Solidが他のポインタであった場合
 			for(int k = 0; k < NIAPointers(); k++){
 				if(phSolid == GetIAPointer(k)->pointerSolid->Cast()) phSolid = NULL;
@@ -84,7 +83,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				Vec3d soMin = phSolid->GetPose().Pos() + phSolid->bbox.GetBBoxMin();		// SolidのBBoxの最小値(3軸)
 				Vec3d soMax = phSolid->GetPose().Pos() + phSolid->bbox.GetBBoxMax();		// SolidのBBoxの最大値(3軸)
 				/// 3軸で判定
-				int isLocal = 3;		//< いくつの軸で交差しているかどうか
+				int isLocal = 0;		//< いくつの軸で交差しているかどうか
 				for(int i = 0; i < 3; ++i){
 					int in = 0;
 					/// ポインタのエッジ間にソリッドのエッジがあったら交差
@@ -100,34 +99,24 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 					DSTR << i << " pMin[i] = "  << pMin[i] << "  soMax[i] = " << soMax[i] << "  pMax[i] = " << pMax[i] << std::endl;
 					DSTR << i << " soMin[i] = " << soMin[i] << "  pMin[i] = " << pMin[i] << "  soMax[i] = " << soMax[i] << std::endl;
 					DSTR << i << " soMin[i] = " << soMin[i] << "  pMax[i] = " << pMax[i] << "  soMax[i] = " << soMax[i] << std::endl;
+					DSTR << "isLocal" << isLocal <<  std::endl;
 #endif
 				}
-//				DSTR << "isLocal" << isLocal <<  std::endl;
-				/// 2.近傍の可能性がある物体は詳細判定(GJKへ)
+				/// 2.近傍物体と判定．接触解析および状態更新
 				if(isLocal > 2){
-					iaInfo->flag.bneighbor = true;
 					UpdateInteractSolid(i, GetIAPointer(j));
-				}
-			}
-			/// bneighborかつblocalであればlCount++
-			if(iaInfo->flag.bneighbor){
-				if(iaInfo->flag.blocal){
-					lCount++;
-					/// さらにbfirstlocalであればfCount++
+					lCount++;		//< ローカルなのでlCount++
 					if(iaInfo->flag.bfirstlocal){
-						fCount++;
+						fCount++;	//< firstLocalなのでfCount++;
 						iaInfo->flag.bfirstlocal = false;
 					}
 				}else{
 					iaInfo->flag.bfirstlocal = false;							
-					iaInfo->flag.blocal = false;													
+					iaInfo->flag.blocal = false;				
 				}
-			}else{
-				/// 近傍物体でないのでfalseにする
-				iaInfo->flag.bfirstlocal = false;							
-				iaInfo->flag.blocal = false;									
 			}
 		}	// end IAPointerの数だけやる
+
 		/// 初シミュレーションの処理フラグをtrueにする
 		FWInteractSolid* inSolid = GetIASolid(i);
 		if(fCount > 0){
@@ -162,13 +151,24 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 		Vec3d pa, pb;															///< pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
 
 		/// GJKを使った近傍点探索
-		double r = FindNearestPoint(a, b, a2w, b2w, cp, dir, normal, pa, pb);	
-		/// 近傍点までの長さから近傍物体を絞る
-		if(r < iPointer->GetLocalRange()){
+		int found = 0;
+		found = FindNearestPoint(a, b, a2w, b2w, cp, dir, normal, pa, pb);							
+		
+		/// 接触解析(susa実装中)
+		if(found == 1){
+			/// FindClosestPointで終わった場合
+			/// 力覚ポインタと剛体が離れているので，近づけて接触解析
+		}else if(found == 2){
+			/// ContFindCommonPointで終わった場合
+			///	既に接触している状態なので，そのまま接触解析
+			FindSectionVertex();
+		}
+
+		if(found > 0){
 			/// 初めて最近傍物体になった場合
 			if(iaInfo->flag.blocal == false){																
 				iaInfo->flag.bfirstlocal = true;	
-				iaInfo->neighborInfo.face_normal = normal;	// 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．										
+				iaInfo->neighborInfo.face_normal = normal;	//< 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．										
 				#ifdef _DEBUG
 					if (iaInfo->neighborInfo.face_normal * normal < 0.8){
 						DSTR << "Too big change on normal = " << normal << std::endl;
@@ -176,21 +176,21 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 				#endif
 			}
 			/// 初めて近傍または継続して近傍だった場合
-			iaInfo->flag.blocal = true;								// 近傍物体なのでblocalをtrueにする
-			iaInfo->neighborInfo.closest_point = pa;				// 剛体近傍点のローカル座標
-			iaInfo->neighborInfo.pointer_point = pb;				// 力覚ポインタ近傍点のローカル座標
-			iaInfo->neighborInfo.last_face_normal = iaInfo->neighborInfo.face_normal;		// 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
-			iaInfo->neighborInfo.face_normal = normal;				// 剛体から力覚ポインタへの法線
+			iaInfo->flag.blocal = true;								//< 近傍物体なのでblocalをtrueにする
+			iaInfo->neighborInfo.closest_point = pa;				//< 剛体近傍点のローカル座標
+			iaInfo->neighborInfo.pointer_point = pb;				//< 力覚ポインタ近傍点のローカル座標
+			iaInfo->neighborInfo.last_face_normal = iaInfo->neighborInfo.face_normal;		//< 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
+			iaInfo->neighborInfo.face_normal = normal;				//< 剛体から力覚ポインタへの法線
 		}else{
+			/// ここには入らない可能あり，要検証(susa)
 			/// 近傍物体ではないのでfalseにする
-			iaInfo->flag.bneighbor = false;
 			iaInfo->flag.bfirstlocal = false;						
 			iaInfo->flag.blocal = false;																
 		}
 	}
 }
 
-double FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b,
+int FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b,
 											const Posed& a2w, const Posed& b2w, const Vec3d pc, Vec3d& dir, 
 											Vec3d& normal, Vec3d& pa, Vec3d& pb){
 	/// GJKで近傍点を求め，力覚ポインタ最近傍の物体を決定する
@@ -201,37 +201,94 @@ double FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf
 	Vec3d wb = b2w * pb;							///< 力覚ポインタ近傍点のワールド座標
 	Vec3d a2b = wb - wa;							///< 剛体から力覚ポインタへのベクトル
 	normal = a2b.unit();
-	//DSTR << "dir" << dir<<std::endl;
-	/// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める
-	if(a2b.norm() < 0.01){									
+
+	if(a2b.norm() >= 0.01){
+		return 1;	// FindClosestPointsで見つけた 
+	}else{
+		/// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める
 		pa = pb = Vec3d(0.0, 0.0, 0.0);
 		/// dirが潰れてしまっている場合は剛体重心から近傍点へのベクトルとする
 		if(dir == Vec3d(0.0, 0.0, 0.0) ){
 			dir =-( wa - pc);
-			//DSTR << "dir not find"<<std::endl;
 		}
-#if 0
-		///Sphereの場合，GJKの結果を使わない
-		if(DCAST(CDSphereIf,a)) dir =-( wa - pc);
-#endif
 
-		double dist = 0.0;
-		/// CCDGJKの実行
-			//DSTR << "dir="<< dir << std::endl;
-		
+		/// CCDGJKの実行	
 extern bool bGJKDebug;
 		bGJKDebug = false;
 //		bCCDGJKDebug = true;
+
+		double dist = 0.0;
 		int cp = ContFindCommonPoint(ca, cb, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
+
 		bGJKDebug = false;
 		/// CCDGJKが失敗した場合の処理
 		if(cp != 1){
 			ContFindCommonPointSaveParam(ca, cb, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
 			DSTR << "ContFindCommonPoint do not find contact point" << std::endl;
 		}
+		return 2;	// CCDGJKで見つけた
 	}
-	return a2b.norm();
 }
+
+void FWInteractAdaptee::FindSectionVertex(){
+#if 0
+	/// 力覚ポインタと剛体との接触部分解析
+	// PHConstraintEngine.hにあるメンバ関数PHShapePairForLCP::EnumVertex()を改変
+	// 本当はCDDetectorImp.hのクラスCDContactAnalysisFaceを使うべき？
+
+	depth = -dist;
+	center = commonPoint = shapePoseW[0] * closestPoint[0];
+	center -= 0.5f*depth*normal;
+
+	// 相対速度をみて2Dの座標系を決める。
+	FPCK_FINITE(solid0->pose);
+	FPCK_FINITE(solid1->pose);
+	Vec3d v0 = solid0->GetPointVelocity(center);
+	Vec3d v1 = solid1->GetPointVelocity(center);
+	Matrix3d local;	//	contact coodinate system 接触の座標系
+	local.Ex() = normal;
+	local.Ey() = v1-v0;
+	local.Ey() -= local.Ey() * normal * normal;
+	if (local.Ey().square() > 1e-6){
+		local.Ey().unitize(); 
+	}else{
+		if (Square(normal.x) < 0.5) local.Ey()= (normal ^ Vec3f(1,0,0)).unit();
+		else local.Ey() = (normal ^ Vec3f(0,1,0)).unit();
+	}
+	local.Ez() =  local.Ex() ^ local.Ey();
+
+	//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
+	//	切り口を求める。まず、それぞれの形状の切り口を列挙
+	CDCutRing cutRing(commonPoint, local);	//	commonPointならば、それを含む面で切れば、必ず切り口の中になる。
+	int nPoint = engine->points.size();
+	//	両方に切り口がある場合．(球などないものもある)
+	bool found = shape[0]->FindCutRing(cutRing, shapePoseW[0]);
+	int nLine0 = cutRing.lines.size();
+	if (found) found = shape[1]->FindCutRing(cutRing, shapePoseW[1]);
+	int nLine1 = cutRing.lines.size() - nLine0;
+	if (found){
+		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
+		cutRing.MakeRing();		
+		section.clear();
+		if (cutRing.vtxs.begin != cutRing.vtxs.end && !(cutRing.vtxs.end-1)->deleted){
+			CDQHLine<CDCutLine>* vtx = cutRing.vtxs.end-1;
+			do{
+				assert(finite(vtx->dist));
+				Vec3d pos;
+				pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
+				pos = cutRing.local * pos;
+				section.push_back(pos);
+				vtx = vtx->neighbor[0];
+			} while (vtx!=cutRing.vtxs.end-1);
+		}
+	}
+	if (nPoint == (int)engine->points.size()){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
+		//	きっと1点で接触している．
+		section.push_back(center);
+	}
+#endif
+}
+
 Vec3d* FWInteractAdaptee::GetProxyPoint(){
 	Vec3d DisplayProxy[2];
 	return DisplayProxy;
