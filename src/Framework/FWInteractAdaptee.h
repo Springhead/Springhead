@@ -82,9 +82,10 @@ public:
 	void NeighborObjectFromPointer();												///< ポインタ近傍の物体を探す
 	/// 以下2つの関数はNeighborObjectFromPointer()で呼ばれる
 	virtual void UpdateInteractSolid(int index, FWInteractPointer* iPointer);		///< InteractSolidの情報を更新する(オーバーライドして使用)
-	double FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b,
+	int FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b,
 											const Posed& a2w, const Posed& b2w, const Vec3d pc, Vec3d& dir, 
 											Vec3d& normal, Vec3d& pa, Vec3d& pb);	///< ポインタ近傍の物体との近傍点を探す
+	void FindSectionVertex();
 
 	virtual void Clear(){};
 	virtual void Init(){};
