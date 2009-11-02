@@ -6,7 +6,7 @@ CDShapeIf* CreateShapeBox(PHSceneIf* phscene){
 	cd.material.mu0 = 0.5;
 	cd.material.mu = 0.3;
 	CDShapeIf* shape = phscene->GetSdk()->CreateShape(cd);
-	shape->SetVibration(-200, 120, 300);
+	shape->SetVibration(-20, 120, 300);
 	return shape;
 }
 
