@@ -155,6 +155,8 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
 
 		engine->points.push_back(point);
+		section.clear();
+		section.push_back(center);
 	}
 }
 
