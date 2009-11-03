@@ -94,7 +94,7 @@ void CRTrunkFootHumanBodyGen::CreateChest(){
 		hingeDesc.poseSocket.Pos() = Vec3d(0, -chestHeight/2.0, 0);
 		hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'x');
 
-		hingeDesc.origin =   0.0;
+		hingeDesc.targetPosition =   0.0;
 		hingeDesc.spring = 500.0;
 		hingeDesc.damper =  50.0;
 
@@ -122,7 +122,7 @@ void CRTrunkFootHumanBodyGen::CreateChest(){
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = springWaistChest;
 	hingeDesc.damper           = damperWaistChest;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeWaistChest[0];
 	hingeDesc.upper            = rangeWaistChest[1];
 	joints[JO_WAIST_CHEST] = CreateJoint(solids[SO_CHEST], solids[SO_WAIST], hingeDesc);
@@ -154,7 +154,7 @@ void CRTrunkFootHumanBodyGen::CreateHead(){
 	hingeDesc.poseSocket.Pos() = Vec3d(0, -headDiameter/2.0 - neckLength/2.0, 0.0);
 	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(0), 'x');
 
-	hingeDesc.origin =   0.0;
+	hingeDesc.targetPosition =   0.0;
 	hingeDesc.spring = 500.0;
 	hingeDesc.damper =  50.0;
 	/*
@@ -172,7 +172,7 @@ void CRTrunkFootHumanBodyGen::CreateHead(){
 	hingeDesc.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 	hingeDesc.spring           = springChestHead;
 	hingeDesc.damper           = damperChestHead;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeChestHead[0];
 	hingeDesc.upper            = rangeChestHead[1];
 	joints[JO_CHEST_HEAD] = CreateJoint(solids[SO_HEAD], solids[SO_CHEST], hingeDesc);

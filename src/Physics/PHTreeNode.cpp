@@ -690,7 +690,7 @@ void PHTreeNode1D::CompBias(){
 	double diff;
 	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
 	if(j->mode == PHJointDesc::MODE_VELOCITY){
-		db[0] = -j->GetDesiredVelocity();
+		db[0] = -j->GetTargetVelocity();
 		return;
 	}
 
@@ -699,12 +699,12 @@ void PHTreeNode1D::CompBias(){
 		//return;
 	}
 
-	double D = j->damper, K = j->spring, origin = j->origin;
+	double D = j->damper, K = j->spring, targetPosition = j->targetPosition;
 	PHJoint1D* jchild;
 	// ギアトレインの先頭の場合，連動している関節のバネダンパ係数を足し合わせる
 	if(gearNode){
 		double Di, Ki, ratio;
-		origin = K * j->origin;
+		targetPosition = K * j->targetPosition;
 		for(int i = 0; i < (int)gearChildren.size(); i++){
 			jchild = DCAST(PHJoint1D, gearChildren[i]->GetJoint());
 			if(!jchild)continue;	// 自由度の異なる関節との連動：起こり得ないはず
@@ -713,13 +713,13 @@ void PHTreeNode1D::CompBias(){
 			Ki = ratio * ratio * jchild->spring;
 			D += Di;	// バネダンパ係数はギア比の自乗倍
 			K += Ki;
-			origin += Ki * jchild->origin;		// バネ原点は係数による重心
+			targetPosition += Ki * jchild->targetPosition;		// バネ原点は係数による重心
 		}
 		if(K > 0.0)
-			origin /= K;
+			targetPosition /= K;
 	}
 	if(K != 0.0 || D != 0.0){
-		diff = j->GetPosition() - origin;
+		diff = j->GetPosition() - targetPosition;
 		// たまに不安定性により無限大に張り付くことがあり、下のwhileで無限ループしてしまう
 		if(abs(diff) > 1.0e3)
 			diff = 0.0;

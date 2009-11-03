@@ -47,10 +47,10 @@ struct PHJointDesc : public PHConstraintDesc{
 struct PHJoint1DDesc : public PHJointDesc{
 	double	lower, upper;	///< 可動範囲. lower < upperのときに有効となる
 	double	spring;			///< バネ係数
-	double  origin;			///< バネ原点
+	double  targetPosition;	///< バネの制御目標
 	double  damper;			///< ダンパ係数
 	double	secondDamper;	///< 二個目のダンパ係数
-	double	desiredVelocity;///< 目標速度
+	double	targetVelocity;///< 目標速度
 	double	offsetForce;	///< 慣性項を計算して入れる場合に使用．
 	//double	torque;			///< モータトルク
 	double	rangeSpring;	///< 可動範囲バネ
@@ -230,12 +230,12 @@ struct PHJoint1DIf : public PHJointIf{
 	/** @brief 目標速度を設定する
 		@param vel 目標速度
 	 */
-	void	SetDesiredVelocity(double v);
+	void	SetTargetVelocity(double v);
 
 	/** @brief 目標速度を取得する
 		@return 目標速度
 	 */
-	double	GetDesiredVelocity();
+	double	GetTargetVelocity();
 	
 	/** @brief 目標軌道の速度を設定する
 		@param v 目標軌道の速度
@@ -257,17 +257,17 @@ struct PHJoint1DIf : public PHJointIf{
 	 */
 	double	GetSpring();
 
-	/** @brief バネの原点を設定する
-		@param origin バネ原点
+	/** @brief バネの制御目標を設定する
+		@param targetPosition バネの制御目標
 
 		バネ原点とはバネの力が0となる関節変位のこと．
 	 */
-	void	SetSpringOrigin(double origin);
+	void	SetTargetPosition(double targetPosition);
 
 	/** @brief バネの原点を取得する
 		@return バネ原点
 	 */
-	double	GetSpringOrigin();
+	double	GetTargetPosition();
 
 	/** @brief ダンパ係数を設定する
 		@param damper ダンパ係数
@@ -497,13 +497,13 @@ struct PHBallJointIf : public PHJointIf{
 	*/
 	double GetTorqueMin();
 
-	/** @brief 目標の向きを設定する
+	/** @brief 制御の目標向きを設定する
 	*/
-	void SetGoal(Quaterniond g);
+	void SetTargetPosition(Quaterniond p);
 	
-	/** @brief 目標の向きを取得する
+	/** @brief 制御の目標向きを取得する
 	*/
-	Quaterniond GetGoal();
+	Quaterniond GetTargetPosition();
 
 	/** @brief バネ係数を設定する
 		@param spring バネ係数
@@ -527,11 +527,11 @@ struct PHBallJointIf : public PHJointIf{
 
 	/** @brief 速度制御に切り替え，速度を設定する
 	*/
-	void  SetDesiredVelocity(Vec3d q);
+	void  SetTargetVelocity(Vec3d q);
 
 	/** @brief 速度制御の目標速度を取得する
 	*/
-	Vec3d GetDesiredVelocity();
+	Vec3d GetTargetVelocity();
 
 	/** @brief 軌道追従制御に切り替え，目標速度を設定する
 	*/
@@ -611,8 +611,8 @@ struct PHBallJointDesc : public PHJointDesc{
 	Vec2d			limitSwing;		 ///< swing角の可動域（[0] or .lower, [1] or .upper）
 	Vec2d			limitTwist;		 ///< twist角の可動域（[0] or .lower, [1] or .upper）
 	Vec3d			limitDir;		 ///< 可動域の中心ベクトル
-	Quaterniond		goal;			 ///< バネダンパの制御目標
-	Vec3d			desiredVelocity; ///< 目標となる回転ベクトル
+	Quaterniond		targetPosition;  ///< バネダンパの制御目標
+	Vec3d			targetVelocity;  ///< 目標となる回転ベクトル
 	Vec3d			offsetForce;	 ///< 定数項（軌道追従制御の加速度の項を入れるのに使ったりする）
 	//Vec3d			torque;			 ///< モータトルク
 	double			fMax;			 ///< 関節にかけられる最大の力

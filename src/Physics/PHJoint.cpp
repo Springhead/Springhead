@@ -24,10 +24,10 @@ PHJoint1DDesc::PHJoint1DDesc(){
 	lower = 0.0;
 	upper = 0.0;
 	spring = 0.0;
-	origin = 0.0;
+	targetPosition = 0.0;
 	damper = 0.0;
 	secondDamper	= 0.0;
-	desiredVelocity = 0.0;
+	targetVelocity = 0.0;
 	/*torque(0.0), */
 	offsetForce = 0.0;
 	rangeSpring = 10000.0;

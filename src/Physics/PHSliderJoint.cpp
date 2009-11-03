@@ -54,10 +54,10 @@ void PHSliderJoint::CompBias(){
 		db *= engine->velCorrectionRate;
 	}
 	/*if(mode == PHJointDesc::MODE_VELOCITY){
-		db.v().z = -desiredVelocity;
+		db.v().z = -targetVelocity;
 	}
 	else if(spring != 0.0 || damper != 0.0){
-		double diff = GetPosition() - origin;
+		double diff = GetPosition() - targetPosition;
 		double tmp	= 1.0 / (damper + spring * GetScene()->GetTimeStep());
 		dA.v().z	= tmp / GetScene()->GetTimeStep();
 		db.v().z	= spring * (diff) * tmp;

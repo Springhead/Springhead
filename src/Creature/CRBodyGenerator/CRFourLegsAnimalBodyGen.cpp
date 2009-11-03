@@ -209,7 +209,7 @@ void CRFourLegsAnimalBodyGen::CreateChest(){
 	ballDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(0), 'z');
 	ballDesc.spring           = springWaistChest;
 	ballDesc.damper           = damperWaistChest;
-	ballDesc.goal			  = goalWaistChest;
+	ballDesc.targetPosition			  = goalWaistChest;
 
 	if(flagRange){
 	ballDesc.limitSwing		  = limitSwingWaistChest;
@@ -266,7 +266,7 @@ void CRFourLegsAnimalBodyGen::CreateTail(){
 	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.spring            = springWaistTail;
 	ballDesc.damper            = damperWaistTail;
-	ballDesc.goal			   = goalWaistTail;
+	ballDesc.targetPosition			   = goalWaistTail;
 
 	if(flagRange){
 	ballDesc.limitSwing		   = limitSwingWaistTail;
@@ -287,7 +287,7 @@ void CRFourLegsAnimalBodyGen::CreateTail(){
 	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
-	ballDesc.goal			   = goalTail;
+	ballDesc.targetPosition			   = goalTail;
 
 	if(flagRange){
 	ballDesc.limitSwing		   = limitSwingTail;
@@ -308,7 +308,7 @@ void CRFourLegsAnimalBodyGen::CreateTail(){
 	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.spring            = springTail;
 	ballDesc.damper            = damperTail;
-	ballDesc.goal			   = goalTail;
+	ballDesc.targetPosition			   = goalTail;
 
 	if(flagRange){
 	ballDesc.limitSwing		   = limitSwingTail;
@@ -359,7 +359,7 @@ void CRFourLegsAnimalBodyGen::CreateNeck(){
 	ballDesc.posePlug.Ori()	  = Quaterniond::Rot(Rad(150), 'x');
 	ballDesc.spring			  = springChestNeck;
 	ballDesc.damper			  = damperChestNeck;
-	ballDesc.goal			  = goalChestNeck;
+	ballDesc.targetPosition			  = goalChestNeck;
 
 	if(flagRange){
 	ballDesc.limitSwing		  = limitSwingChestNeck;
@@ -402,7 +402,7 @@ void CRFourLegsAnimalBodyGen::CreateHead(){
 	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.spring            = springNeckHead;
 	ballDesc.damper            = damperNeckHead;
-	ballDesc.goal			   = goalNeckHead;
+	ballDesc.targetPosition			   = goalNeckHead;
 	
 	if(flagRange){
 	ballDesc.limitSwing		   = limitSwingNeckHead;
@@ -482,7 +482,7 @@ void CRFourLegsAnimalBodyGen::CreateBreastBone(LREnum lr){
 	ballDesc.posePlug.Ori()	  = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.spring			  = springShoulder;
 	ballDesc.damper			  = damperShoulder;
-	ballDesc.goal			  = goalShoulder;
+	ballDesc.targetPosition			  = goalShoulder;
 	
 	if(flagRange){
 	ballDesc.limitSwing		  = limitSwingShoulder;
@@ -546,7 +546,7 @@ void CRFourLegsAnimalBodyGen::CreateRadius(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springElbow;
 	hingeDesc.damper		   = damperElbow;
-	hingeDesc.origin		   = originElbow;
+	hingeDesc.targetPosition		   = originElbow;
 
 	if(flagRange){
 	hingeDesc.lower			   = rangeElbow[0];
@@ -605,7 +605,7 @@ void CRFourLegsAnimalBodyGen::CreateFrontCannonBone(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springFrontKnee;
 	hingeDesc.damper		   = damperFrontKnee;
-	hingeDesc.origin		   = originFrontKnee;
+	hingeDesc.targetPosition		   = originFrontKnee;
 	
 	if(flagRange){
 	hingeDesc.lower			   = rangeFrontKnee[0];
@@ -665,7 +665,7 @@ void CRFourLegsAnimalBodyGen::CreateFrontToeBones(LREnum lr){
 	ballDesc.posePlug.Ori()	  = Quaterniond::Rot(Rad(0), 'z');
 	ballDesc.spring			  = springFrontAnkle;
 	ballDesc.damper			  = damperFrontAnkle;
-	ballDesc.goal			  = goalFrontAnkle;
+	ballDesc.targetPosition			  = goalFrontAnkle;
 	
 	if(flagRange){
 	ballDesc.limitSwing		  = limitSwingFrontAnkle;
@@ -743,7 +743,7 @@ void CRFourLegsAnimalBodyGen::CreateFemur(LREnum lr){
 	ballDesc.posePlug.Ori()	  = Quaterniond::Rot(Rad(-90), 'x');
 	ballDesc.spring			  = springHip;
 	ballDesc.damper			  = damperHip;
-	ballDesc.goal			  = goalHip;
+	ballDesc.targetPosition			  = goalHip;
 
 	if(flagRange){
 	ballDesc.limitSwing		  = limitSwingHip;
@@ -802,7 +802,7 @@ void CRFourLegsAnimalBodyGen::CreateTibia(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springStifle;
 	hingeDesc.damper		   = damperStifle;
-	hingeDesc.origin		   = originStifle;
+	hingeDesc.targetPosition		   = originStifle;
 	
 	if(flagRange){
 	hingeDesc.lower			   = rangeStifle[0];
@@ -862,7 +862,7 @@ void CRFourLegsAnimalBodyGen::CreateRearCannonBone(LREnum lr){
 	hingeDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring		   = springRearKnee;
 	hingeDesc.damper		   = damperRearKnee;
-	hingeDesc.origin		   = originRearKnee;
+	hingeDesc.targetPosition		   = originRearKnee;
 	
 	if(flagRange){
 	hingeDesc.lower			   = rangeRearKnee[0];
@@ -922,7 +922,7 @@ void CRFourLegsAnimalBodyGen::CreateRearToeBones(LREnum lr){
 	ballDesc.posePlug.Ori()	   = Quaterniond::Rot(Rad(0), 'x');
 	ballDesc.spring		       = springRearAnkle;
 	ballDesc.damper			   = damperRearAnkle;
-	ballDesc.goal			   = goalRearAnkle;
+	ballDesc.targetPosition			   = goalRearAnkle;
 	
 	if(flagRange){
 	ballDesc.limitSwing		   = limitSwingRearAnkle;

@@ -49,7 +49,7 @@ struct CRDebugLinkBodyGenDesc : CRBodyGenDesc {
 	Vec2d  range;
 	
 	// BallJoint§Œä–Ú•W
-	Quaterniond goal;
+	Quaterniond SetTargetPosition;
 
 	/// BallJoint‚Ìswing‰Â“®ˆæ:
 	Vec2d limitSwing;

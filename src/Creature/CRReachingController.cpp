@@ -37,7 +37,7 @@ void CRReachingController::Step(){
 		Vec3f dir = (cSolid->GetPHSolid()->GetPose() * DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->GetPos())-fP;
 		if (dir.norm() != 0) { dir /= dir.norm(); }
 		pos = fP + dir*initLen*length;
-		DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->SetGoal(pos);
+		DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->SetTargetPosition(pos);
 	}
 }
 
@@ -61,8 +61,8 @@ void CRReachingController::Render(GRRenderIf* render){
 	if (goalLocal[1] > 0) { goalLocal[1] = 1; } else { goalLocal[1] = -1; }
 	if (goalLocal[2] > 0) { goalLocal[2] = 1; } else { goalLocal[2] = -1; }
 
-	Vec3d goal = shoulderPose * goalLocal;
-	render->SetModelMatrix(Affinef::Trn(goal[0], goal[1], goal[2]));
+	Vec3d SetTargetPosition = shoulderPose * goalLocal;
+	render->SetModelMatrix(Affinef::Trn(SetTargetPosition[0], SetTargetPosition[1], SetTargetPosition[2]));
 	render->DrawSphere(0.05, 8, 8, false);
 
 	Affinef shoulderAf; shoulderPose.ToAffine(shoulderAf);
@@ -103,7 +103,7 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 	HingeJointGoals hingeGoals;
 
 	//// ÅIˆÊ’u‚É‚¨‚¯‚éŠÖßŠp“x‚ð‹‚ß‚é
-	DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->SetGoal(pos);
+	DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->SetTargetPosition(pos);
 	CRCreatureIf* creature = DCAST(CRCreatureIf,DCAST(SceneObject,this)->GetScene());
 	PHSceneIf* phScene = creature->GetPHScene();
 	state->SaveState(phScene);
@@ -118,7 +118,7 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 		if (bj) {
 			BallJointGoal bjg;
 			bjg.first  = bj;
-			bjg.second = bj->GetGoal();
+			bjg.second = bj->GetTargetPosition();
 			ballGoals.push_back(bjg);
 		}
 
@@ -126,7 +126,7 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 		if (hj) {
 			HingeJointGoal hjg;
 			hjg.first  = hj;
-			hjg.second = hj->GetSpringOrigin();
+			hjg.second = hj->GetTargetPosition();
 			hingeGoals.push_back(hjg);
 		}
 	}
@@ -135,11 +135,11 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 
 	std::cout << " --- " << std::endl;
 	for (size_t i=0; i<ballGoals.size(); ++i) {
-		(ballGoals[i].first)->SetGoal(ballGoals[i].second);
+		(ballGoals[i].first)->SetTargetPosition(ballGoals[i].second);
 		std::cout << "Ball  : " << ballGoals[i].second << std::endl;
 	}
 	for (size_t i=0; i<hingeGoals.size(); ++i) {
-		(hingeGoals[i].first)->SetSpringOrigin(hingeGoals[i].second);
+		(hingeGoals[i].first)->SetTargetPosition(hingeGoals[i].second);
 		std::cout << "Hinge : " << hingeGoals[i].second << std::endl;
 	}
 	std::cout << " --- " << std::endl;

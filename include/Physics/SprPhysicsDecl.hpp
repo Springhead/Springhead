@@ -33,14 +33,14 @@
 	bool IsEnabled(){	return	base::IsEnabled();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKPosCtlIf(base)	\
-	void SetGoal(Vec3d goal){	base::SetGoal(goal);}	\
-	Vec3d GetGoal(){	return	base::GetGoal();}	\
+	void SetTargetPosition(Vec3d goal){	base::SetTargetPosition(goal);}	\
+	Vec3d GetTargetPosition(){	return	base::GetTargetPosition();}	\
 	void SetPos(Vec3d pos){	base::SetPos(pos);}	\
 	Vec3d GetPos(){	return	base::GetPos();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKOriCtlIf(base)	\
-	void SetGoal(Quaterniond goal){	base::SetGoal(goal);}	\
-	Quaterniond GetGoal(){	return	base::GetGoal();}	\
+	void SetTargetPosition(Quaterniond goal){	base::SetTargetPosition(goal);}	\
+	Quaterniond GetTargetPosition(){	return	base::GetTargetPosition();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKNodeIf(base)	\
 	void PrepareSolve(){	base::PrepareSolve();}	\
@@ -95,14 +95,14 @@
 	void GetRange(double& lower, double& upper){	base::GetRange(lower, upper);}	\
 	void SetMotorTorque(double t){	base::SetMotorTorque(t);}	\
 	double GetMotorTorque(){	return	base::GetMotorTorque();}	\
-	void SetDesiredVelocity(double v){	base::SetDesiredVelocity(v);}	\
-	double GetDesiredVelocity(){	return	base::GetDesiredVelocity();}	\
+	void SetTargetVelocity(double v){	base::SetTargetVelocity(v);}	\
+	double GetTargetVelocity(){	return	base::GetTargetVelocity();}	\
 	void SetTrajectoryVelocity(double v){	base::SetTrajectoryVelocity(v);}	\
 	double GetTrajectoryVelocity(){	return	base::GetTrajectoryVelocity();}	\
 	void SetSpring(double spring){	base::SetSpring(spring);}	\
 	double GetSpring(){	return	base::GetSpring();}	\
-	void SetSpringOrigin(double origin){	base::SetSpringOrigin(origin);}	\
-	double GetSpringOrigin(){	return	base::GetSpringOrigin();}	\
+	void SetTargetPosition(double targetPosition){	base::SetTargetPosition(targetPosition);}	\
+	double GetTargetPosition(){	return	base::GetTargetPosition();}	\
 	void SetDamper(double damper){	base::SetDamper(damper);}	\
 	double GetDamper(){	return	base::GetDamper();}	\
 	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
@@ -146,14 +146,14 @@
 	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
 	void SetTorqueMin(double min){	base::SetTorqueMin(min);}	\
 	double GetTorqueMin(){	return	base::GetTorqueMin();}	\
-	void SetGoal(Quaterniond g){	base::SetGoal(g);}	\
-	Quaterniond GetGoal(){	return	base::GetGoal();}	\
+	void SetTargetPosition(Quaterniond p){	base::SetTargetPosition(p);}	\
+	Quaterniond GetTargetPosition(){	return	base::GetTargetPosition();}	\
 	void SetSpring(double spring){	base::SetSpring(spring);}	\
 	double GetSpring(){	return	base::GetSpring();}	\
 	void SetDamper(double damper){	base::SetDamper(damper);}	\
 	double GetDamper(){	return	base::GetDamper();}	\
-	void SetDesiredVelocity(Vec3d q){	base::SetDesiredVelocity(q);}	\
-	Vec3d GetDesiredVelocity(){	return	base::GetDesiredVelocity();}	\
+	void SetTargetVelocity(Vec3d q){	base::SetTargetVelocity(q);}	\
+	Vec3d GetTargetVelocity(){	return	base::GetTargetVelocity();}	\
 	void SetTrajectoryVelocity(Vec3d q){	base::SetTrajectoryVelocity(q);}	\
 	Vec3d GetTrajectoryVelocity(){	return	base::GetTrajectoryVelocity();}	\
 	void SetOffsetForce(Vec3d ofst){	base::SetOffsetForce(ofst);}	\

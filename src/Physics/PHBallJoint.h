@@ -85,12 +85,12 @@ public:
 	virtual double		GetTorqueMax(){return fMax;}
 	virtual void		SetTorqueMin(double min){fMin = min; }
 	virtual double		GetTorqueMin(){return fMin;}
-	virtual void		SetDesiredVelocity(Vec3d v){ desiredVelocity = v;}
-	virtual Vec3d		GetDesiredVelocity() const {return desiredVelocity;}
-	virtual void		SetTrajectoryVelocity(Vec3d v) { desiredVelocity = v;}
-	virtual Vec3d		GetTrajectoryVelocity() const {return desiredVelocity;}
-	virtual void		SetGoal(Quaterniond g){ goal = g;}
-	virtual Quaterniond GetGoal(){return goal;}
+	virtual void		SetTargetVelocity(Vec3d v){ targetVelocity = v;}
+	virtual Vec3d		GetTargetVelocity() const {return targetVelocity;}
+	virtual void		SetTrajectoryVelocity(Vec3d v) { targetVelocity = v;}
+	virtual Vec3d		GetTrajectoryVelocity() const {return targetVelocity;}
+	virtual void		SetTargetPosition(Quaterniond p){ targetPosition = p;}
+	virtual Quaterniond GetTargetPosition(){return targetPosition;}
 
 	virtual void		SetSpring(double spring){ this->spring = spring; }
 	virtual double		GetSpring(){ return spring; }

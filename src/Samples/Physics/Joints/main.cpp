@@ -444,7 +444,7 @@ void BuildScene7(){
 	desc.posePlug.Ori()   = Quaterniond::Rot(Rad(0), 'x');
 	desc.spring			  = 100;
 	desc.damper			  = 10;
-	desc.origin			  = Rad(0);
+	desc.targetPosition	  = Rad(0);
 	desc.lower			  = Rad(0);
 	desc.upper			  = Rad(60);
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
@@ -469,7 +469,7 @@ void BuildScene7(){
 	desc.posePlug.Ori()   = Quaterniond::Rot(Rad(0), 'x');
 	desc.spring			  = 100;
 	desc.damper			  = 10;
-	desc.origin			  = Rad(0);
+	desc.targetPosition			  = Rad(0);
 	desc.lower			  = Rad(0);
 	desc.upper			  = Rad(60);
 	jntLink[0] = scene->CreateJoint(soBox[0], soBox[1], desc);
@@ -529,29 +529,29 @@ void OnKey1(char key){
 	case 's': hinge->SetMotorTorque(0.0);	break;
 	case 'd': hinge->SetMotorTorque(-1.0);	break;
 	case 'f':
-		hinge->SetDesiredVelocity(Rad(180));
+		hinge->SetTargetVelocity(Rad(180));
 		//if(path)
 		//	path->SetDesiredVelocity(Rad(90.0));
 		break;
 	case 'g':
-		hinge->SetDesiredVelocity(Rad(0.0));
+		hinge->SetTargetVelocity(Rad(0.0));
 		//if(path)
 		//	path->SetDesiredVelocity(Rad(0.0));
 		break;
-	case 'h': hinge->SetDesiredVelocity(Rad(-90.0));	break;
+	case 'h': hinge->SetTargetVelocity(Rad(-90.0));	break;
 	case 'j':
 		hinge->SetSpring(K);
-		hinge->SetSpringOrigin(1.0);
+		hinge->SetTargetPosition(1.0);
 		hinge->SetDamper(B);
 		break;
 	case 'k':
 		hinge->SetSpring(K);
-		hinge->SetSpringOrigin(0.0);
+		hinge->SetTargetPosition(0.0);
 		hinge->SetDamper(B);
 		break;
 	case 'l':
 		hinge->SetSpring(K);
-		hinge->SetSpringOrigin(-1.0);
+		hinge->SetTargetPosition(-1.0);
 		hinge->SetDamper(B);
 		break;
 	/*case 'c':{
@@ -819,96 +819,96 @@ void OnKey7(char key){
 		case 'w':
 			DSTR << hiJoint->GetIfInfo()->ClassName() << endl;
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(10);
+			hingeDesc.targetPosition = Rad(10);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'e':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(20);
+			hingeDesc.targetPosition = Rad(20);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'r':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(30);
+			hingeDesc.targetPosition = Rad(30);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'a':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(40);
+			hingeDesc.targetPosition = Rad(40);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 's':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(50);
+			hingeDesc.targetPosition = Rad(50);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'd':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(60);
+			hingeDesc.targetPosition = Rad(60);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'z':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(70);
+			hingeDesc.targetPosition = Rad(70);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'x':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(80);
+			hingeDesc.targetPosition = Rad(80);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'c':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(90);
+			hingeDesc.targetPosition = Rad(90);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		}
 
-		// minus value origin
+		// minus value targetPosition
 		{
 		case 'i':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(-10);
+			hingeDesc.targetPosition = Rad(-10);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'o':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(-20);
+			hingeDesc.targetPosition = Rad(-20);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'p':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(-30);
+			hingeDesc.targetPosition = Rad(-30);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'j':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(-40);
+			hingeDesc.targetPosition = Rad(-40);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'k':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(-50);
+			hingeDesc.targetPosition = Rad(-50);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'l':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(-60);
+			hingeDesc.targetPosition = Rad(-60);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'b':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(-70);
+			hingeDesc.targetPosition = Rad(-70);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'n':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(-80);
+			hingeDesc.targetPosition = Rad(-80);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		case 'm':
 			hiJoint->GetDesc(&hingeDesc);
-			hingeDesc.origin = Rad(-90);
+			hingeDesc.targetPosition = Rad(-90);
 			hiJoint->SetDesc(&hingeDesc);
 			break;
 		}

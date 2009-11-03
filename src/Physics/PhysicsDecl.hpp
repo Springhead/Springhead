@@ -141,10 +141,10 @@ protected:\
 	double	lower;	\
 	double	upper;	\
 	double	spring;	\
-	double	origin;	\
+	double	targetPosition;	\
 	double	damper;	\
 	double	secondDamper;	\
-	double	desiredVelocity;	\
+	double	targetVelocity;	\
 	double	offsetForce;	\
 	double	rangeSpring;	\
 	double	rangeDamper;	\
@@ -156,10 +156,10 @@ public:\
 		lower = ((PHJoint1DDesc*)ptr)->lower;	\
 		upper = ((PHJoint1DDesc*)ptr)->upper;	\
 		spring = ((PHJoint1DDesc*)ptr)->spring;	\
-		origin = ((PHJoint1DDesc*)ptr)->origin;	\
+		targetPosition = ((PHJoint1DDesc*)ptr)->targetPosition;	\
 		damper = ((PHJoint1DDesc*)ptr)->damper;	\
 		secondDamper = ((PHJoint1DDesc*)ptr)->secondDamper;	\
-		desiredVelocity = ((PHJoint1DDesc*)ptr)->desiredVelocity;	\
+		targetVelocity = ((PHJoint1DDesc*)ptr)->targetVelocity;	\
 		offsetForce = ((PHJoint1DDesc*)ptr)->offsetForce;	\
 		rangeSpring = ((PHJoint1DDesc*)ptr)->rangeSpring;	\
 		rangeDamper = ((PHJoint1DDesc*)ptr)->rangeDamper;	\
@@ -173,10 +173,10 @@ public:\
 		((PHJoint1DDesc*)ptr)->lower = lower;	\
 		((PHJoint1DDesc*)ptr)->upper = upper;	\
 		((PHJoint1DDesc*)ptr)->spring = spring;	\
-		((PHJoint1DDesc*)ptr)->origin = origin;	\
+		((PHJoint1DDesc*)ptr)->targetPosition = targetPosition;	\
 		((PHJoint1DDesc*)ptr)->damper = damper;	\
 		((PHJoint1DDesc*)ptr)->secondDamper = secondDamper;	\
-		((PHJoint1DDesc*)ptr)->desiredVelocity = desiredVelocity;	\
+		((PHJoint1DDesc*)ptr)->targetVelocity = targetVelocity;	\
 		((PHJoint1DDesc*)ptr)->offsetForce = offsetForce;	\
 		((PHJoint1DDesc*)ptr)->rangeSpring = rangeSpring;	\
 		((PHJoint1DDesc*)ptr)->rangeDamper = rangeDamper;	\
@@ -363,8 +363,8 @@ protected:\
 	Vec2d	limitSwing;	\
 	Vec2d	limitTwist;	\
 	Vec3d	limitDir;	\
-	Quaterniond	goal;	\
-	Vec3d	desiredVelocity;	\
+	Quaterniond	targetPosition;	\
+	Vec3d	targetVelocity;	\
 	Vec3d	offsetForce;	\
 	double	fMax;	\
 	double	fMin;	\
@@ -382,8 +382,8 @@ public:\
 		limitSwing = ((PHBallJointDesc*)ptr)->limitSwing;	\
 		limitTwist = ((PHBallJointDesc*)ptr)->limitTwist;	\
 		limitDir = ((PHBallJointDesc*)ptr)->limitDir;	\
-		goal = ((PHBallJointDesc*)ptr)->goal;	\
-		desiredVelocity = ((PHBallJointDesc*)ptr)->desiredVelocity;	\
+		targetPosition = ((PHBallJointDesc*)ptr)->targetPosition;	\
+		targetVelocity = ((PHBallJointDesc*)ptr)->targetVelocity;	\
 		offsetForce = ((PHBallJointDesc*)ptr)->offsetForce;	\
 		fMax = ((PHBallJointDesc*)ptr)->fMax;	\
 		fMin = ((PHBallJointDesc*)ptr)->fMin;	\
@@ -403,8 +403,8 @@ public:\
 		((PHBallJointDesc*)ptr)->limitSwing = limitSwing;	\
 		((PHBallJointDesc*)ptr)->limitTwist = limitTwist;	\
 		((PHBallJointDesc*)ptr)->limitDir = limitDir;	\
-		((PHBallJointDesc*)ptr)->goal = goal;	\
-		((PHBallJointDesc*)ptr)->desiredVelocity = desiredVelocity;	\
+		((PHBallJointDesc*)ptr)->targetPosition = targetPosition;	\
+		((PHBallJointDesc*)ptr)->targetVelocity = targetVelocity;	\
 		((PHBallJointDesc*)ptr)->offsetForce = offsetForce;	\
 		((PHBallJointDesc*)ptr)->fMax = fMax;	\
 		((PHBallJointDesc*)ptr)->fMin = fMin;	\

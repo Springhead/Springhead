@@ -2,6 +2,6 @@
 
 int _cdecl main(int argc, char* argv[]){
 	app.Init(argc, argv);
-	app.Start();
+	app.StartMainLoop();
 	return 0;
 }
