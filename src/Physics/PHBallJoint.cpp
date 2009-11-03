@@ -36,7 +36,7 @@ PHBallJointDesc::PHBallJointDesc(){
 	secondDamper	= 0.0;
 	yieldStress		= 0.0;
 	hardnessRate	= 1.0;
-	I				= Vec3d(1.0,1.0,1.0);
+	Inertia			= Vec3d(1.0,1.0,1.0);
 	type			= Mix;
 }
 

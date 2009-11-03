@@ -583,11 +583,11 @@ struct PHBallJointIf : public PHJointIf{
 	/** @brief 断面2次モーメントを設定する
 		@return 断面2次モーメントVec3d(x,y,z)
 	 */
-	Vec3d	GetI();	
+	Vec3d	GetInertia();	
 	/** @brief 断面2次モーメントを設定する
 		@param input 断面2次モーメントVec3d(x,y,z)
 	 */
-	void	SetI(const Vec3d i);
+	void	SetInertia(const Vec3d i);
 	/** @brief 変形のタイプを取得する
 		@return 0:Elastic,1:Plastic,3:Mix
 	 */
@@ -626,7 +626,7 @@ struct PHBallJointDesc : public PHJointDesc{
 	double secondDamper;			///< 第２ダンパ係数
 	double yieldStress;				///< 降伏応力
 	double hardnessRate;			///< 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
-	Vec3d  I;						///< 断面２次モーメント
+	Vec3d  Inertia;						///< 断面２次モーメント
 	
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };

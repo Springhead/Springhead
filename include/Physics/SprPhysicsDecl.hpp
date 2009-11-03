@@ -33,13 +33,13 @@
 	bool IsEnabled(){	return	base::IsEnabled();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKPosCtlIf(base)	\
-	void SetTargetPosition(Vec3d goal){	base::SetTargetPosition(goal);}	\
+	void SetTargetPosition(Vec3d targetPosition){	base::SetTargetPosition(targetPosition);}	\
 	Vec3d GetTargetPosition(){	return	base::GetTargetPosition();}	\
 	void SetPos(Vec3d pos){	base::SetPos(pos);}	\
 	Vec3d GetPos(){	return	base::GetPos();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKOriCtlIf(base)	\
-	void SetTargetPosition(Quaterniond goal){	base::SetTargetPosition(goal);}	\
+	void SetTargetPosition(Quaterniond targetPosition){	base::SetTargetPosition(targetPosition);}	\
 	Quaterniond GetTargetPosition(){	return	base::GetTargetPosition();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKNodeIf(base)	\
@@ -165,8 +165,8 @@
 	void SetYieldStress(const double yS){	base::SetYieldStress(yS);}	\
 	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
 	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
-	Vec3d GetI(){	return	base::GetI();}	\
-	void SetI(const Vec3d i){	base::SetI(i);}	\
+	Vec3d GetInertia(){	return	base::GetInertia();}	\
+	void SetInertia(const Vec3d i){	base::SetInertia(i);}	\
 	int GetType(){	return	base::GetType();}	\
 	void SetType(int t){	base::SetType(t);}	\
 	bool GetDeformationMode(){	return	base::GetDeformationMode();}	\

@@ -373,7 +373,7 @@ protected:\
 	double	secondDamper;	\
 	double	yieldStress;	\
 	double	hardnessRate;	\
-	Vec3d	I;	\
+	Vec3d	Inertia;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint::SetDesc((PHJointDesc*)(PHBallJointDesc*)ptr);	\
@@ -392,7 +392,7 @@ public:\
 		secondDamper = ((PHBallJointDesc*)ptr)->secondDamper;	\
 		yieldStress = ((PHBallJointDesc*)ptr)->yieldStress;	\
 		hardnessRate = ((PHBallJointDesc*)ptr)->hardnessRate;	\
-		I = ((PHBallJointDesc*)ptr)->I;	\
+		Inertia = ((PHBallJointDesc*)ptr)->Inertia;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -413,7 +413,7 @@ public:\
 		((PHBallJointDesc*)ptr)->secondDamper = secondDamper;	\
 		((PHBallJointDesc*)ptr)->yieldStress = yieldStress;	\
 		((PHBallJointDesc*)ptr)->hardnessRate = hardnessRate;	\
-		((PHBallJointDesc*)ptr)->I = I;	\
+		((PHBallJointDesc*)ptr)->Inertia = Inertia;	\
 		return true;	\
 	}\
 

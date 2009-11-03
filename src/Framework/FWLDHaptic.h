@@ -38,7 +38,7 @@ public:
 	virtual void ProxySimulation();
 	int* ContactStat(int nPic);
 	virtual Vec3d Vibration(FWInteractSolid*, FWInteractPointer*, int);		//	ポインタ-剛体
-	virtual Vec3d Vibration(int nSolids);												//	剛体-剛体
+	//virtual Vec3d Vibration(int nSolids);									//	剛体-剛体     //ビルドできないのでコメントアウトしました　naga
 	Vec3d* GetProxyPoint();					//	デバッグ用
 	Vec3d* GetForce();
 	bool GetContactFlag();					//	把持しているかの判定

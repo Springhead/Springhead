@@ -250,7 +250,7 @@ Vec3d FWLDHapticLoop::Vibration(FWInteractSolid* iSolid, FWInteractPointer* iPoi
 	iSolid->sceneSolid->GetShape(0)->SetVibT((float)(vibT+hdt));		// ÚGŽžŠÔ‚ÌXV
 	return vibforce;
 }
-#if 1
+#if 0
 void FWLDHapticLoop::PicVibration(int nSolids){
 	PHSceneIf* phScene = GetIAAdaptee()->GetPHScene();
 	
