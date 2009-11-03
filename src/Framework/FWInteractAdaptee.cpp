@@ -162,16 +162,17 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 		Posed shapePoseW1 = soPointer->GetPose();
 		Vec3d a2b = b2w * pb - a2w * pa;
 		std::vector<Vec3d> section;
+		Vec3d commonPoint;
 		if(found == 1){
 			/// FindClosestPointで終わった場合
 			/// 力覚ポインタと剛体が離れているので，近づけて接触解析
 			shapePoseW1.Pos() -= a2b;
-			Vec3d commonPoint = shapePoseW0 * pa;
+			commonPoint = shapePoseW0 * pa;
 			FindSectionVertex(phSolid, soPointer, shapePoseW0, shapePoseW1, normal, commonPoint, section);
 		}else if(found == 2){
 			/// ContFindCommonPointで終わった場合
 			///	既に接触している状態なので，そのまま接触解析
-			Vec3d commonPoint = shapePoseW0 * pa - 0.5 * a2b;
+			commonPoint = shapePoseW0 * pa + 0.5 * a2b;
 			FindSectionVertex(phSolid, soPointer, shapePoseW0, shapePoseW1, normal, commonPoint, section);
 		}
 		iaInfo->neighborInfo.section = section;
@@ -244,7 +245,6 @@ extern bool bGJKDebug;
 
 void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, const Posed shapePoseW0, const Posed shapePoseW1,
 										  const Vec3d normal, const Vec3d commonPoint, std::vector<Vec3d>& section){
-#if 1
 	/// 力覚ポインタと剛体との接触部分解析
 	// PHConstraintEngine.hにあるメンバ関数PHShapePairForLCP::EnumVertex()を改変
 	// 本当はCDDetectorImp.hのクラスCDContactAnalysisFaceを使うべき？
@@ -296,6 +296,10 @@ void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, cons
 		//	きっと1点で接触している．
 		section.push_back(commonPoint);
 	}
+#if 0
+	DSTR << commonPoint << std::endl;
+	for(int k = 0; k < section.size(); k++)		DSTR << section[k] << std::endl;
+	DSTR << "--------------------------------" << std::endl;
 #endif
 }
 
