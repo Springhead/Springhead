@@ -18,12 +18,15 @@ namespace Spr{;
 class FWInteractScene;
 class FWInteractPointer;
 enum FWHapticMode;
+class FWInteractAdaptee;
 
 /** Hapticインタラクションのためのクラス*/
 class FWHapticLoopBase : public UTRefCount{
 protected:
 	std::vector<FWInteractPointer>	interactPointers;
 	std::vector<FWInteractSolid>	interactSolids;
+	FWInteractAdaptee* interactAdaptee;
+
 public:
 	double pdt, hdt;
 	int loopCount;
@@ -36,6 +39,8 @@ public:
 	FWInteractSolids* GetIASolids(){ return &interactSolids; }
 	int NIASolids(){ return (int)interactSolids.size(); }
 	int GetLoopCount(){ return loopCount; }
+	FWInteractAdaptee* GetIAAdaptee(){ return interactAdaptee; }
+	void SetIAAdaptee(FWInteractAdaptee* ia){ interactAdaptee = ia; }
 
 	virtual void Clear();
 	void Init(double physicdt, double hapticdt){
@@ -64,6 +69,7 @@ public:
 
 	/// HapticLoop関係
 	virtual FWHapticLoopBase* GetHapticLoop();
+	void InitIAAdaptee();
 	void SetHMode(FWHapticMode hMode);
 
 	/// IAPointer関係(IASceneを介して取得)

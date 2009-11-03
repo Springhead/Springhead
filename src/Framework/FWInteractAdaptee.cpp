@@ -31,6 +31,9 @@ PHSceneIf* FWInteractAdaptee::GetPHScene(){ return GetIAScene()->GetScene()->Get
 
 /// HapticLoopŠÖŒW
 FWHapticLoopBase* FWInteractAdaptee::GetHapticLoop(){ return NULL; }
+void FWInteractAdaptee::InitIAAdaptee(){
+	GetHapticLoop()->SetIAAdaptee(this);
+}
 void FWInteractAdaptee::SetHMode(FWHapticMode hMode) { GetHapticLoop()->hmode = hMode; }
 
 /// IAPointerŠÖŒW(IAScene‚ð‰î‚µ‚ÄŽæ“¾)
@@ -297,12 +300,12 @@ void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, cons
 }
 
 Vec3d* FWInteractAdaptee::GetProxyPoint(){
-	Vec3d DisplayProxy[2];
+	Vec3d DisplayProxy[2] = {Vec3d(5,0,0),Vec3d(5,0,0)};
 	return DisplayProxy;
 }
 
 Vec3d* FWInteractAdaptee::GetForce(){
-	Vec3d DisplayForce[2];
+	Vec3d DisplayForce[2] = {Vec3d(0,0,0),Vec3d(0,0,0)};
 	return DisplayForce;
 }
 

@@ -15,10 +15,15 @@ FWLDHapticLoop::FWLDHapticLoop(){
 	proK = 50;
 	proD = 0.005;
 	proM = 7.5*10e-7;
+	bPic = false;
+	picNum = 0;
 	for(int i=0;i<2;i++){
-		DisplayProxy[i] = Vec3d(0,0,0);
+		DisplayProxy[i] = Vec3d(5,0,0);
 		DisplayForce[i] = Vec3d(0,0,0);
-		contactFlag[i] = false;
+		//contactFlag[i].push_back(false);
+		//proxy[i].push_back(Vec3d(3,0,0));
+		//proVel[i].push_back(Vec3d(0,0,0));
+		//pLastPoint[i].push_back(Vec3d(0,0,0));
 	}
 }
 void FWLDHapticLoop::Step(){
@@ -34,7 +39,7 @@ void FWLDHapticLoop::Step(){
 			ProxySimulation();
 			break;
 		default:
-			HapticRendering();
+			Proxy();
 			break;
 	}
 	LocalDynamics();
@@ -72,19 +77,25 @@ void FWLDHapticLoop::UpdateInterface(){
 }
 
 void FWLDHapticLoop::HapticRendering(){
+	bPic = false;
 	for(int j = 0; j < NIAPointers(); j++){
 		FWInteractPointer* iPointer = GetIAPointer(j)->Cast();
 		if((int)iPointer->bContact.size() < NIASolids()){
 			for(int i=(int)iPointer->bContact.size(); i<NIASolids(); i++){
 				iPointer->bContact.push_back(false);
+				contactFlag[0].push_back(false);
+				contactFlag[1].push_back(false);
+				oVibForce.push_back(Vec3d(0,0,0));
 			}
-		}		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+		}		
+		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
 			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
 		}else{
 			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 		}
 
 		SpatialVector outForce = SpatialVector();
+//		Vibration(NIASolids());
 		for(int i = 0; i < NIASolids(); i++){
 			FWInteractSolid* iSolid = GetIASolid(i);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
@@ -96,6 +107,13 @@ void FWLDHapticLoop::HapticRendering(){
 			Vec3d pPoint = iPointer->hiSolid.GetPose() * nInfo->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
 			Vec3d force_dir = pPoint - cPoint;
 			Vec3d interpolation_normal;											// 提示力計算にしようする法線（前回の法線との間を補間する）
+			if((int)proxy[j].size() <= NIASolids()){
+				for(int k=(int)proxy[j].size(); k<NIASolids(); k++){
+					proxy[j].push_back(poseSolid.Inv()*pPoint);
+					proVel[j].push_back(Vec3d(0,0,0));
+					pLastPoint[j].push_back(Vec3d(0,0,0));
+				}
+			}
 
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
@@ -106,7 +124,10 @@ void FWLDHapticLoop::HapticRendering(){
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
-				Vec3d vibforce = Vec3d(0,0,0);
+				contactFlag[j][i] = true;
+				if(contactFlag[0][i]&&contactFlag[1][i]) bPic = true;	// 物体を把持しているかどうか
+				Vec3d pVibforce = Vec3d(0,0,0);
+				Vec3d oVibforce = Vec3d(0,0,0);
 				Vec3d ortho = f * interpolation_normal;			// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
 				Vec3d dvortho = dv.norm() * interpolation_normal;
@@ -127,9 +148,9 @@ void FWLDHapticLoop::HapticRendering(){
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				///振動の計算
-				if(iPointer->bVibration)	vibforce = Vibration(iSolid, iPointer, i);
+				if(iPointer->bVibration)	pVibforce = Vibration(iSolid, iPointer, i);
 
-				outForce.v() += addforce + vibforce;	
+				outForce.v() += addforce + pVibforce;	
 				outForce.w() += addtorque;
 
 				DisplayForce[j] = outForce.v();
@@ -140,9 +161,9 @@ void FWLDHapticLoop::HapticRendering(){
 				nInfo->test_force = addforce * iPointer->GetForceScale();
 				//if(iPointer->bForce)	DSTR << vibforce << endl;
 			}else{
-				iPointer->bContact[i] = false; 
+				iPointer->bContact[i] = false;
+				contactFlag[j][i] = false;
 			}
-			contactFlag[j] = iPointer->bContact[i];
 		}
 
 		/// インタフェースへ力を出力
@@ -226,15 +247,89 @@ Vec3d FWLDHapticLoop::Vibration(FWInteractSolid* iSolid, FWInteractPointer* iPoi
 	iSolid->sceneSolid->GetShape(0)->SetVibT((float)(vibT+hdt));		// 接触時間の更新
 	return vibforce;
 }
+#if 1
+Vec3d FWLDHapticLoop::Vibration(int nSolids){
+	PHSceneIf* phScene = GetIAAdaptee()->GetPHScene();
+	
+	int sceneCnt = phScene->GetCount();
+	std::vector<Vec3d> vel;
+	if((int)vel.size() < nSolids){
+		for(int i=vel.size(); i<nSolids; i++){
+			vel.push_back(Vec3d(0,0,0));
+		}
+	}
 
+	PHSolidPairForLCPIf* solidPair;
+	PHShapePairForLCPIf* shapePair;
+
+	for (int i=0; i<nSolids; ++i) {
+		for (int j=i+1; j<nSolids; ++j) {
+			PHSolidIf *so1, *so2;
+			so1 = phScene->GetSolids()[i];
+			so2 = phScene->GetSolids()[j];
+
+			solidPair = phScene->GetSolidPair(i, j);
+			PHConstraintIf* constraint = phScene->GetConstraintEngine()->GetContactPoints()->FindBySolidPair(so1, so2);
+
+			if (!solidPair)  { continue; }
+			if (!constraint) { continue; }
+
+			for (int s=0; s<so1->NShape(); ++s) {
+				for (int t=0; t<so2->NShape(); ++t) {
+
+					// この方法だと同じ剛体の異なるShapeについての接触は
+					// 異なるContactとなる。
+					// それを剛体ごとにまとめるには皮膚感覚の加算についての知見が必要。
+					// とりあえずあとまわし (mitake, 09/02/07)
+
+					shapePair = solidPair->GetShapePair(s, t);
+
+					if (!shapePair) { continue; }
+
+					int			contactStat	= solidPair->GetContactState(s, t);
+					unsigned	lastContCnt	= solidPair->GetLastContactCount(s, t);
+
+					if (contactStat == 1 || (contactStat == 2 && (lastContCnt == sceneCnt-1))) {
+						if(contactStat ==1){
+							vel[i] = so1->GetVelocity() - so2->GetVelocity();
+							vel[j] = so2->GetVelocity() - so1->GetVelocity();
+							so1->GetShape(0)->SetVibT(0.0);
+							so2->GetShape(0)->SetVibT(0.0);
+						}
+
+						double vibT1 = so1->GetShape(0)->GetVibT();
+						double vibA1 = so1->GetShape(0)->GetVibA();
+						double vibB1 = so1->GetShape(0)->GetVibB();
+						double vibW1 = so1->GetShape(0)->GetVibW();
+
+						double vibT2 = so2->GetShape(0)->GetVibT();
+						double vibA2 = so2->GetShape(0)->GetVibA();
+						double vibB2 = so2->GetShape(0)->GetVibB();
+						double vibW2 = so2->GetShape(0)->GetVibW();
+
+						oVibForce[i] += vibA1 * (vel[i]*0.03) * exp(-vibB1 * vibT1) * sin(2 * M_PI * vibW1 * vibT1);		//振動計算
+						oVibForce[j] += vibA2 * (vel[j]*0.03) * exp(-vibB2 * vibT2) * sin(2 * M_PI * vibW2 * vibT2);		//振動計算
+
+						so1->GetShape(0)->SetVibT(vibT1+hdt);
+						so2->GetShape(0)->SetVibT(vibT2+hdt);
+					}
+				}
+			}
+		}
+	}
+}
+#endif
 void FWLDHapticLoop::Proxy(){
 	static bool friFlag = false;
+	bPic = false;
 
 	for(int j = 0; j < NIAPointers(); j++){
 		FWInteractPointer* iPointer = GetIAPointer(j)->Cast();
 		if((int)iPointer->bContact.size() < NIASolids()){
 			for(int i=(int)iPointer->bContact.size(); i<NIASolids(); i++){
 				iPointer->bContact.push_back(false);
+				contactFlag[0].push_back(false);
+				contactFlag[1].push_back(false);
 			}
 		}
 		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
@@ -272,7 +367,7 @@ void FWLDHapticLoop::Proxy(){
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
-				contactFlag[j] = true;
+				contactFlag[j][i] = true;
 				Vec3d vibforce = Vec3d(0,0,0);
 				Vec3d ortho = f * interpolation_normal;			// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
@@ -318,7 +413,7 @@ void FWLDHapticLoop::Proxy(){
 
 			}else{
 				iPointer->bContact[i] = false;
-				contactFlag[j] = false;
+				contactFlag[j][i] = false;
 				proxy[j][i] = poseSolid.Inv() * pPoint;
 			}
 			DisplayProxy[0] = poseSolid * proxy[0][i];
@@ -350,17 +445,26 @@ void FWLDHapticLoop::Proxy(){
 			}		
 		}
 	}
+	for(int k=0;k<NIASolids();k++){
+		if(contactFlag[0][k]&&contactFlag[1][k]){
+			picNum = k;
+			bPic = true;
+		}
+	}
 }
 
 void FWLDHapticLoop::ProxySimulation(){
 	static bool friFlag = false;
 	Vec3d dproVel = Vec3d(0,0,0);
+	bPic = false;
 
 	for(int j = 0; j < NIAPointers(); j++){
 		FWInteractPointer* iPointer = GetIAPointer(j)->Cast();
 		if((int)iPointer->bContact.size() < NIASolids()){
 			for(int i=(int)iPointer->bContact.size(); i<NIASolids(); i++){
 				iPointer->bContact.push_back(false);
+				contactFlag[0].push_back(false);
+				contactFlag[1].push_back(false);
 			}
 		}
 		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
@@ -398,6 +502,7 @@ void FWLDHapticLoop::ProxySimulation(){
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
+				contactFlag[j][i] = true;
 				Vec3d vibforce = Vec3d(0,0,0);
 				Vec3d ortho = f * interpolation_normal;			// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
@@ -484,12 +589,12 @@ void FWLDHapticLoop::ProxySimulation(){
 				nInfo->test_force = addforce* iPointer->GetForceScale();;
 			}else{
 				iPointer->bContact[i] = false;
+				contactFlag[j][i] = false;
 				proxy[j][i] = poseSolid.Inv() * pPoint;
 				proVel[j][i] = Vec3d(0,0,0);
 			}
 			DisplayProxy[0] = poseSolid * proxy[0][i];
 //			DisplayProxy[1] = poseSolid * proxy[1][i];
-			contactFlag[j] = iPointer->bContact[i];
 			pLastPoint[j][i] = pPoint;
 
 			/// インタフェースへ力を出力
@@ -518,6 +623,12 @@ void FWLDHapticLoop::ProxySimulation(){
 			}
 		}
 	}
+	for(int k=0;k<NIASolids();k++){
+		if(contactFlag[0][k]&&contactFlag[1][k]){
+			picNum = k;
+			bPic = true;
+		}
+	}
 }
 
 Vec3d* FWLDHapticLoop::GetProxyPoint(){
@@ -529,8 +640,47 @@ Vec3d* FWLDHapticLoop::GetForce(){
 }
 
 bool FWLDHapticLoop::GetContactFlag(){
-	return contactFlag[0]&&contactFlag[1];
+	return bPic;
 };
+#if 0
+int* FWLDHapticLoop::ContactStat(int nPic){
+	PHSceneIf* phScene = GetPHScene();
+	int	contactStat[phScene->NSolids()];
+
+	PHSolidPairForLCPIf* solidPair;
+	PHShapePairForLCPIf* shapePair;
+
+	for(int i=0; i<phScene->NSolids(); ++i){
+		PHSolidIf *so1, *so2;
+		so1	= phScene->GetSolids()[i];
+		so2	= phScene->GetSolids()[nPic];
+		solidPair = phScene->GetSolidPair(i,nPic);
+		PHConstraintIf* constraint = phScene->GetConstraintEngine()->GetContactPoints()->FindBySolidPair(so1, so2);
+
+		if (!solidPair){
+			int contactStat[i] = 0;
+			continue;
+		}
+		if (!constraint){
+			int contactStat[i] = 0;
+			continue;
+		}
+
+		for (int s=0; s<so1->NShape(); ++s){
+			for (int t=0; t<so2->NShape(); ++t){
+				shapePair = solidPair->GetShapePair(s, t);
+
+				if (!shapePair){ 
+					int contactStat[i] = 0;
+					continue;
+				}
+				int	contactStat[i]	= solidPair->GetContactState(s, t);
+			}
+		}
+	}
+	return contactStat;
+}
+#endif
 /*
 int GetPicTime();
 int GetPenetrate();
@@ -543,6 +693,7 @@ void FWLDHaptic::Init(){
 	hapticLoop = &LDHapticLoop;
 	double pdt = GetPHScene()->GetTimeStep();
 	double hdt = GetIAScene()->hdt;
+	InitIAAdaptee();
 	hapticLoop->Init(pdt, hdt);
 	states = ObjectStatesIf::Create();
 	states2 = ObjectStatesIf::Create();
