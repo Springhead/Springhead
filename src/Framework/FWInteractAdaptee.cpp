@@ -297,7 +297,8 @@ void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, cons
 		section.push_back(commonPoint);
 	}
 #if 0
-	DSTR << commonPoint << std::endl;
+	DSTR << "commonPoint" << commonPoint << std::endl;
+	DSTR << "section" << std::endl;
 	for(int k = 0; k < section.size(); k++)		DSTR << section[k] << std::endl;
 	DSTR << "--------------------------------" << std::endl;
 #endif

@@ -34,9 +34,9 @@ public:
 
 	///	接触面積．接触形状の頂点座標から面積を計算
 	double GetContactDimension(){
+		if((int)section.size() < 2)	return 0.0;	// 頂点が2以上ない場合は面積なし
 		Vec3d area;
-		unsigned int i;
-		for(i = 0; i < section.size()-2; i++){
+		for(unsigned int i = 0; i < section.size()-2; i++){
 			Vec3d vec1 = section[i+1] - section[0];
 			Vec3d vec2 = section[i+2] - section[0];
 			area += cross(vec1, vec2);
@@ -46,9 +46,15 @@ public:
 
 	/// 接触面の単位法線ベクトル
 	Vec3d GetNormalVector(){
+		Vec3d normal;
+		if((int)section.size() < 3){
+			// 頂点が3以上ない場合は近傍点間の法線を返す
+			normal = shapePoseW[1] * closestPoint[1] - shapePoseW[0] * closestPoint[0];
+			return normal / normal.norm();
+		}
 		Vec3d vec1 = section[1] - section[0];
 		Vec3d vec2 = section[2] - section[0];
-		Vec3d normal = cross(vec1, vec2);
+		normal = cross(vec1, vec2);
 		return normal / normal.norm();
 	}
 
