@@ -28,11 +28,14 @@ VirtualHuman::VirtualHuman(){
 }
 
 void VirtualHuman::Init(int argc, char* argv[]){
-	FWAppGLUT::Init(argc, argv);
-
+	CreateSdk();
+	SetGRAdaptee(VirtualHuman::TypeGLUT);
+	GetGRAdaptee()->Init(argc, argv);
 	GetSdk()->Clear();
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
-
+	crSdk = Spr::CRSdkIf::CreateSdk();
+	CRCreatureDesc d;
+	creature = crSdk->CreateCreature(d);
 	BuildScene();
 
 	FWWinDesc windowDesc;
@@ -499,7 +502,7 @@ void VirtualHuman::Keyboard(int key, int x, int y){
 				// soRC->AddTorque(Vec3d(100,0,0));
 				PHIKPosCtlIf* ikcp;
 				phscene->FindObject(ikcp, "ikcpLowerArmL");
-				ikcp->SetGoal(soCursor->GetPose().Pos());
+				ikcp->SetTargetPosition(soCursor->GetPose().Pos());
 				ikcp->Enable(true);
 			}
 			break;
@@ -553,7 +556,7 @@ void VirtualHuman::MouseMove(int x, int y){
 	if (mouseInfo.middle) {
 		UpdateCursor(x, y);
 	} else {
-		FWAppGLUT::MouseMove(x,y);
+		FWApp::MouseMove(x,y);
 	}
 }
 

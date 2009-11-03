@@ -81,14 +81,14 @@ public:
 	double	GetMotorTorque() const { return offsetForce; }
 	void	SetRange(double l, double u){lower = l, upper = u;}
 	void	GetRange(double& l, double& u) const {l = lower, u = upper;}
-	void	SetDesiredVelocity(double v){desiredVelocity = v;}
-	double	GetDesiredVelocity() const {return desiredVelocity;}
-	void	SetTrajectoryVelocity(double v){desiredVelocity = v;}
-	double  GetTrajectoryVelocity(){return desiredVelocity;}
+	void	SetTargetVelocity(double v){targetVelocity = v;}
+	double	GetTargetVelocity() const {return targetVelocity;}
+	void	SetTrajectoryVelocity(double v){targetVelocity = v;}
+	double  GetTrajectoryVelocity(){return targetVelocity;}
 	void	SetSpring(double K){spring = K;}
 	double	GetSpring() const {return spring;}
-	void	SetSpringOrigin(double org){ origin = org;}
-	double	GetSpringOrigin() const {return origin;}
+	void	SetTargetPosition(double org){ targetPosition = org;}
+	double	GetTargetPosition() const {return targetPosition;}
 	void	SetDamper(double D){damper = D;}
 	double	GetDamper() const {return damper;}
 	void	SetSecondDamper(double D2)	{secondDamper = D2;}
@@ -123,7 +123,7 @@ public:
 	//virtual void	ProjectionCorrection(double& F, int k);
 
 	/// バネ中点（目標角度）からの偏差を返す．回転関節がオーバライドする
-	virtual double	GetDeviation(){ return GetPosition() - origin; }
+	virtual double	GetDeviation(){ return GetPosition() - targetPosition; }
 
 	PHJoint1D();
 };

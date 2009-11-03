@@ -27,7 +27,7 @@ PHBallJointDesc::PHBallJointDesc(){
 	limitTwist[0]	= FLT_MAX;
 	limitTwist[1]	= FLT_MAX;	
 	limitDir		= Vec3d(0.0, 0.0, 1.0);
-	goal			= Quaterniond(1, 0, 0, 0);
+	targetPosition			= Quaterniond(1, 0, 0, 0);
 	fMax			= FLT_MAX;
 	fMin			= -FLT_MAX;
 	poleTwist		= Vec2d(FLT_MAX,FLT_MAX);

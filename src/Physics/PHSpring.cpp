@@ -51,7 +51,7 @@ void PHSpring::CompBias(){
 
 	// Žp¨‚É‘Î‚·‚éƒoƒl
 	if(springOri != 0.0 || damperOri != 0.0){
-		Quaterniond diff =  Xjrel.q; // * origin.Inv();
+		Quaterniond diff =  Xjrel.q; // * targetPosition.Inv();
 		Vec3d prop = diff.RotationHalf();
 		double tmpInv = damperOri + springOri * GetScene()->GetTimeStep();
 		if (tmpInv > 1e-30){

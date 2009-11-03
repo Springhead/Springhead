@@ -518,7 +518,7 @@ void CRBallHumanBodyGen::CreateLowerArm(LREnum lr){
 	hingeDesc.poseSocket.Pos() = Vec3d(-lr*lowerArmLength/2.0, 0, 0);
 	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(lr*90), 'x');
 	SetJointSpringDamper(hingeDesc, springElbow, damperElbow, solids[soNUpperArm]->GetMass());
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	joints[joNElbow] = CreateJoint(solids[soNLowerArm], solids[soNUpperArm], hingeDesc);
 	CreateIKNode(joNElbow);
 
@@ -845,7 +845,7 @@ void CRBallHumanBodyGen::InitSolidPose(){
 
 	/*
 	for (int i=0; i<SO_NSOLIDS; ++i) {
-		DCAST(PHIKOriCtlIf,ikControlPoints[2*SO_NSOLIDS+i])->SetGoal(solids[i]->GetPose().Ori());
+		DCAST(PHIKOriCtlIf,ikControlPoints[2*SO_NSOLIDS+i])->SetTargetPosition(solids[i]->GetPose().Ori());
 	}
 	*/
 

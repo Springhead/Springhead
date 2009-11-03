@@ -127,7 +127,7 @@ PHSolidIf* CRFourLegsTinyAnimalBodyGen::InitFrontLeg0(LREnum lr, PHSolidIf* sBod
 		hingeDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
 		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, upperLength / 2.0);
 		hingeDesc.posePlug.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
-		hingeDesc.origin			= 0;
+		hingeDesc.targetPosition			= 0;
 		hingeDesc.spring			= springFront;
 		hingeDesc.damper			= damperFront;
 		hingeDesc.upper				= rangeUpperFront.upper;
@@ -139,7 +139,7 @@ PHSolidIf* CRFourLegsTinyAnimalBodyGen::InitFrontLeg0(LREnum lr, PHSolidIf* sBod
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
 		ballDesc.posePlug.Pos()		= Vec3d(0, 0, upperLength / 2.0);
 		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
-		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.targetPosition				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
 		ballDesc.damper				= damperFront;
 		ballDesc.limitSwing			= rangeFrontSwing;
@@ -193,7 +193,7 @@ void CRFourLegsTinyAnimalBodyGen::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
 		hingeDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
 		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, lowerLength / 2.0);
 		hingeDesc.posePlug.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
-		hingeDesc.origin			= 0;
+		hingeDesc.targetPosition			= 0;
 		hingeDesc.spring			= springFront;
 		hingeDesc.damper			= damperFront;
 		hingeDesc.upper				= rangeLowerFront.upper;
@@ -204,7 +204,7 @@ void CRFourLegsTinyAnimalBodyGen::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
 		ballDesc.posePlug.Pos()		= Vec3d(0, 0, lowerLength / 2.0);
 		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
-		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.targetPosition				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springFront;
 		ballDesc.damper				= damperFront;
 		ballDesc.limitSwing			= rangeFrontSwing;
@@ -257,7 +257,7 @@ PHSolidIf* CRFourLegsTinyAnimalBodyGen::InitRearLeg0(LREnum lr, PHSolidIf* sBody
 		hingeDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
 		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, upperLength / 2.0);
 		hingeDesc.posePlug.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
-		hingeDesc.origin			= 0;
+		hingeDesc.targetPosition			= 0;
 		hingeDesc.spring			= springRear;
 		hingeDesc.damper			= damperRear;
 		hingeDesc.upper				= rangeUpperRear.upper;
@@ -268,7 +268,7 @@ PHSolidIf* CRFourLegsTinyAnimalBodyGen::InitRearLeg0(LREnum lr, PHSolidIf* sBody
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
 		ballDesc.posePlug.Pos()		= Vec3d(0, 0, upperLength / 2.0);
 		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
-		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.targetPosition				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springRear;
 		ballDesc.damper				= damperRear;
 		ballDesc.limitSwing			= rangeRearSwing;
@@ -321,7 +321,7 @@ void CRFourLegsTinyAnimalBodyGen::InitRearLeg1(LREnum lr, PHSolidIf* sLeg0){
 		hingeDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
 		hingeDesc.posePlug.Pos()	= Vec3d(0, 0, lowerLength / 2.0);
 		hingeDesc.posePlug.Ori()	= Quaterniond::Rot(Rad(-90), 'y');
-		hingeDesc.origin			= 0;
+		hingeDesc.targetPosition			= 0;
 		hingeDesc.spring			= springRear;
 		hingeDesc.damper			= damperRear;
 		hingeDesc.upper				= rangeLowerRear.upper;
@@ -332,7 +332,7 @@ void CRFourLegsTinyAnimalBodyGen::InitRearLeg1(LREnum lr, PHSolidIf* sLeg0){
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
 		ballDesc.posePlug.Pos()		= Vec3d(0, 0,  lowerLength / 2.0);
 		ballDesc.posePlug.Ori()		= Quaterniond::Rot(Rad(-90), 'x');
-		ballDesc.goal				= Quaterniond::Rot(Rad(90), 'x');
+		ballDesc.targetPosition				= Quaterniond::Rot(Rad(90), 'x');
 		ballDesc.spring				= springRear;
 		ballDesc.damper				= damperRear;
 		ballDesc.limitSwing			= rangeRearSwing;

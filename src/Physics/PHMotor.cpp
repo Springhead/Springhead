@@ -33,7 +33,7 @@ void PHMotor1D::SetupLCP(){
 			double tmp = 1.0 / (joint->damper + joint->spring * joint->GetScene()->GetTimeStep());
 			dA = tmp * joint->GetScene()->GetTimeStepInv();
 			db = tmp * (joint->spring * joint->GetDeviation()
-				- joint->damper * joint->desiredVelocity - joint->offsetForce);
+				- joint->damper * joint->targetVelocity - joint->offsetForce);
 		}
 		else{
 			//3要素モデルの設定
@@ -49,7 +49,7 @@ void PHMotor1D::SetupLCP(){
 			tmpA = (D2-D1)*(D2-D1)/(D1*D2*tmp) ;
 			tmpB = K*(D2-D1)*(D2-D1)/(D2*tmp*tmp)*(xs[0].w().z);
 			dA = tmpA * dtinv;
-			db = tmpB * (K * joint->GetDeviation() - D1 * joint->desiredVelocity - joint->offsetForce);
+			db = tmpB * (K * joint->GetDeviation() - D1 * joint->targetVelocity - joint->offsetForce);
 			xs[0] = xs[1];	//バネとダンパの並列部の距離のステップを進める
 		}
 		Ainv = 1.0 / (A + dA);
@@ -84,7 +84,7 @@ PHBallJointMotor::PHBallJointMotor(){
 
 void PHBallJointMotor::ElasticDeformation(){
 	double tmp = 1.0 / (joint->damper + joint->spring * dt);
-	Vec3d I = joint->I, v0 = joint->desiredVelocity, f0 = joint->offsetForce;
+	Vec3d I = joint->I, v0 = joint->targetVelocity, f0 = joint->offsetForce;
 	for(int i=0;i<3;i++){
 		dA[i] = tmp * dtinv * I[i];		
 		db[i] = tmp * (- K * I[i] * propV[i] - D * I[i] * v0[i] - f0[i]);
@@ -108,7 +108,7 @@ void PHBallJointMotor::PlasticDeformation(){
 	if(joint->type==PHBallJointDesc::Mix){
 		if(ws.w().norm()<0.01){
 			yieldFlag = false;
-			joint->SetGoal(joint->Xjrel.q);
+			joint->SetTargetPosition(joint->Xjrel.q);
 		}
 	}
 	xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
@@ -136,7 +136,7 @@ void PHBallJointMotor::SetupLCP(){
 		足りない角度の差を回転軸ベクトルに変換．propV(田崎さんの論文でいうq[t])に対してdb.w()を計算している.
 		自然長が0[rad]で，propV[rad]伸びた時に対しての角度バネを構成していると考えればいい．
 		********************************************************************************************************/
-		propQ = joint->goal * joint->Xjrel.q.Inv();	// Xjrel.qの目標goalとXjrel.qの実際の角度の差をQuaternionで取得
+		propQ = joint->targetPosition * joint->Xjrel.q.Inv();	// Xjrel.qの目標targetPositionとXjrel.qの実際の角度の差をQuaternionで取得
 		propV = propQ.RotationHalf();
 
 		A = joint->A.w();
@@ -159,7 +159,7 @@ void PHBallJointMotor::SetupLCP(){
 			位置制御のみであれば，以下の式の1行目のみ．
 			軌道追従制御では残りの2行もふくむ．offsetには外で計算してきた合成慣性テンソルを代入する
 			****/
-			db = tmp * (- K * propV - D * joint->desiredVelocity - joint->offsetForce);
+			db = tmp * (- K * propV - D * joint->targetVelocity - joint->offsetForce);
 
 			/*
 			// 可動域制限がかかっている場合はpropの座標を変換して考えないといけない。
@@ -168,14 +168,14 @@ void PHBallJointMotor::SetupLCP(){
 
 			if(mode == PHJointDesc::MODE_VELOCITY){
 				if(anyLimit)
-					db.w() = -Jcinv * desiredVelocity;
+					db.w() = -Jcinv * targetVelocity;
 				else
-					db.w() = - desiredVelocity;
+					db.w() = - targetVelocity;
 			}else if(mode == PHJointDesc::MODE_TRAJ){
 				if(anyLimit)
-					db.w() = -Jcinv * (desiredVelocity + spring * propV);
+					db.w() = -Jcinv * (targetVelocity + spring * propV);
 				else
-					db.w() = - (desiredVelocity + spring * propV);
+					db.w() = - (targetVelocity + spring * propV);
 			}else if (mode == PHJointDesc::MODE_POSITION){
 				// バネダンパが入っていたら構築する
 				if (spring != 0.0 || damper != 0.0){

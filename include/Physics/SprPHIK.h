@@ -68,13 +68,13 @@ struct PHIKControlPointDesc{
 struct PHIKPosCtlIf : PHIKControlPointIf{
 	SPR_IFDEF(PHIKPosCtl);
 
-	/** @brief 目標地点を設定する
+	/** @brief 位置の到達目標値を設定する
 	*/
-	void SetGoal(Vec3d goal);
+	void SetTargetPosition(Vec3d targetPosition);
 
-	/** @brief 目標地点を取得する
+	/** @brief 位置の到達目標値を取得する
 	*/
-	Vec3d GetGoal();
+	Vec3d GetTargetPosition();
 
 	/** @brief 制御点の位置を設定する
 	*/
@@ -96,13 +96,13 @@ struct PHIKPosCtlDesc : PHIKControlPointDesc{
 struct PHIKOriCtlIf : PHIKControlPointIf{
 	SPR_IFDEF(PHIKOriCtl);
 
-	/** @brief 目標地点を設定する
+	/** @brief 位置の到達目標値を設定する
 	*/
-	void SetGoal(Quaterniond goal);
+	void SetTargetPosition(Quaterniond targetPosition);
 
-	/** @brief 目標地点を取得する
+	/** @brief 位置の到達目標値を取得する
 	*/
-	Quaterniond GetGoal();
+	Quaterniond GetTargetPosition();
 };
 
 /// 姿勢制御点のディスクリプタ

@@ -164,7 +164,7 @@ void PHIKControlPoint::Enable(bool enable){
 // --- --- --- --- ---
 Vec3d PHIKPosCtl::GetTmpGoal(){
 	Vec3d spos = solid->GetPose()*pos;
-	Vec3d dir = goal - spos;
+	Vec3d dir = targetPosition - spos;
 	double epsilon = 1.0;
 	if (dir.norm() < epsilon) {
 		return(dir);
@@ -176,7 +176,7 @@ Vec3d PHIKPosCtl::GetTmpGoal(){
 // --- --- --- --- ---
 Vec3d PHIKOriCtl::GetTmpGoal(){
 	Quaterniond qS = solid->GetPose().Ori();
-	Quaterniond qG = (goal * qS.Inv());
+	Quaterniond qG = (targetPosition * qS.Inv());
 
 	double epsilon = Rad(50.0);
 	if (qG.Theta() < epsilon) {
@@ -538,24 +538,24 @@ void PHIKBallJoint::Move(){
 	// ŠÖß‚Ìƒ[ƒJƒ‹À•WŒn‚É‚·‚é
 	Quaterniond pos = Qj.Inv() * dQ * Qj * joint->GetPosition();
 
-	Vec3d goal = pos.RotationHalf();
+	Vec3d targetPosition = pos.RotationHalf();
 	Vec3d orig = jGoal.RotationHalf();
 
-	Vec3d newGoal = (jSpring*orig + spring*goal) * (1/(jSpring + spring));
+	Vec3d newGoal = (jSpring*orig + spring*targetPosition) * (1/(jSpring + spring));
 
 	pos = Quaterniond::Rot(newGoal.norm(), (newGoal.norm()!=0)?(newGoal.unit()):(Vec3d(1,0,0)));
 
 	// ŠÖß‚ð“®‚©‚·
 	joint->SetSpring(jSpring + spring);
 	joint->SetDamper(jDamper + damper);
-	joint->SetGoal(pos);
+	joint->SetTargetPosition(pos);
 	/*
 	Vec3d vel = dT / DCAST(PHSceneIf,GetScene())->GetTimeStep();
 	if (vel.norm() > Rad(360)) {
 		vel = vel.unit() * Rad(360);
 	}
 	joint->SetMode(PHBallJointDesc::MODE_VELOCITY);
-	joint->SetDesiredVelocity(vel);
+	joint->SetTargetVelocity(vel);
 	*/
 
 	return;
@@ -564,7 +564,7 @@ void PHIKBallJoint::Move(){
 void PHIKBallJoint::MoveNatural(){
 	joint->SetSpring(jSpring);
 	joint->SetDamper(jDamper);
-	joint->SetGoal(jGoal);
+	joint->SetTargetPosition(jGoal);
 }
 
 void PHIKBallJoint::AddControlPoint(PHIKControlPointIf* control){
@@ -623,13 +623,13 @@ void PHIKHingeJoint::Move(){
 	// ŠÖß‚ð“®‚©‚·
 	joint->SetSpring(jSpring + spring);
 	joint->SetDamper(jDamper + damper);
-	joint->SetSpringOrigin(newGoal);
+	joint->SetTargetPosition(newGoal);
 }
 
 void PHIKHingeJoint::MoveNatural(){
 	joint->SetSpring(jSpring);
 	joint->SetDamper(jDamper);
-	joint->SetSpringOrigin(jGoal);
+	joint->SetTargetPosition(jGoal);
 }
 
 }

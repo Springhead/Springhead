@@ -352,7 +352,7 @@ public:
 			PHBallJointDesc dJ; DCAST(PHBallJointIf,this->joint)->GetDesc(&dJ);
 			this->jSpring = dJ.spring;
 			this->jDamper = dJ.damper;
-			this->jGoal   = dJ.goal;
+			this->jGoal   = dJ.targetPosition;
 			return true;
 		}
 		return PHIKNode::AddChildObject(o);
@@ -421,7 +421,7 @@ public:
 			this->joint = jo;
 			this->jSpring = DCAST(PHHingeJointIf,this->joint)->GetSpring();
 			this->jDamper = DCAST(PHHingeJointIf,this->joint)->GetDamper();
-			this->jGoal   = DCAST(PHHingeJointIf,this->joint)->GetSpringOrigin();
+			this->jGoal   = DCAST(PHHingeJointIf,this->joint)->GetTargetPosition();
 			return true;
 		}
 		return PHIKNode::AddChildObject(o);
@@ -543,7 +543,7 @@ public:
 
 class PHIKPosCtl : public PHIKControlPoint{
 	/// 目標値
-	Vec3d goal;
+	Vec3d targetPosition;
 
 public:
 	/// 制御点の位置（剛体ローカル座標系）
@@ -559,7 +559,7 @@ public:
 	*/
 	PHIKPosCtl(const PHIKPosCtlDesc& desc) {
 		SetDesc(&desc);
-		goal	= Vec3d(0,0,0);
+		targetPosition	= Vec3d(0,0,0);
 	}
 
 	/** @brief デスクリプタを設定する
@@ -575,11 +575,11 @@ public:
 
 	/** @brief 目標地点を設定する
 	*/
-	virtual void SetGoal(Vec3d goal){ this->goal = goal; }
+	virtual void SetTargetPosition(Vec3d targetPosition){ this->targetPosition = targetPosition; }
 
 	/** @brief 目標地点を取得する
 	*/
-	virtual Vec3d GetGoal(){ return goal; }
+	virtual Vec3d GetTargetPosition(){ return targetPosition; }
 
 	/** @brief 制御点の位置を設定する
 	*/
@@ -592,7 +592,7 @@ public:
 
 class PHIKOriCtl : public PHIKControlPoint{
 	/// 目標値
-	Quaterniond goal;
+	Quaterniond targetPosition;
 
 public:
 	SPR_OBJECTDEF(PHIKOriCtl);
@@ -600,7 +600,7 @@ public:
 	/** @brief デフォルトコンストラクタ
 	*/
 	PHIKOriCtl(){
-		goal	= Quaterniond();
+		targetPosition	= Quaterniond();
 	}
 
 	/** @brief コンストラクタ
@@ -621,11 +621,11 @@ public:
 
 	/** @brief 目標地点を設定する
 	*/
-	virtual void SetGoal(Quaterniond goal){ this->goal = goal; }
+	virtual void SetTargetPosition(Quaterniond targetPosition){ this->targetPosition = targetPosition; }
 
 	/** @brief 目標地点を取得する
 	*/
-	virtual Quaterniond GetGoal(){ return goal; }
+	virtual Quaterniond GetTargetPosition(){ return targetPosition; }
 };
 
 }

@@ -43,7 +43,7 @@ void CRNeckController::Step(){
 				rot = rot * ((attractiveness - lowerAttractiveness) / (upperAttractiveness - lowerAttractiveness));
 			}
 			Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
-			cpHead->SetGoal(qt*soHead->GetPose().Ori());
+			cpHead->SetTargetPosition(qt*soHead->GetPose().Ori());
 			/*
 			if (t > 0) {
 				double ratio = 1 - (10*pow(t,3) - 15*pow(t,4) + 6*pow(t,5));
@@ -51,20 +51,20 @@ void CRNeckController::Step(){
 				if (ratio > 0) {
 					rot = rot * ratio;
 					Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
-					// cpHead->SetGoal(qt*soHead->GetPose().Ori());
-					cpHead->SetGoal(qt * orig);
+					// cpHead->SetTargetPosition(qt*soHead->GetPose().Ori());
+					cpHead->SetTargetPosition(qt * orig);
 					std::cout << "r = " << ratio << std::endl;
 				} else {
 					std::cout << "r = " << ratio << std::endl;
-					// cpHead->SetGoal(soHead->GetPose().Ori());
-					cpHead->SetGoal(orig);
+					// cpHead->SetTargetPosition(soHead->GetPose().Ori());
+					cpHead->SetTargetPosition(orig);
 				}
 				t -= 0.005;
 			} else {
 				if (rot.norm() < Rad(5)) {
 					// std::cout << Deg(rot.norm()) << std::endl;
 					Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
-					cpHead->SetGoal(qt*soHead->GetPose().Ori());
+					cpHead->SetTargetPosition(qt*soHead->GetPose().Ori());
 				} else {
 					// std::cout << Deg(rot.norm()) << std::endl;
 					t = 1.0;

@@ -972,7 +972,7 @@ public:
 		j->desc.poseSocket.Ori().FromMatrix(d.pRj);
 		j->desc.spring = d.fPValue;
 		j->desc.damper = d.fDValue;
-		j->desc.origin = d.fInput;
+		j->desc.targetPosition = d.fInput;
 		j->desc.lower = d.fMinPosition;
 		j->desc.upper = d.fMaxPosition;
 		

@@ -171,7 +171,7 @@ void CRHingeHumanBodyGen::CreateAbdomen(){
 	SetJointSpringDamper(hingeDesc, springWaistAbdomen, damperWaistAbdomen, solids[SO_WAIST]->GetMass());
 	// hingeDesc.spring           = springWaistAbdomen;
 	// hingeDesc.damper           = damperWaistAbdomen;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeWaistAbdomen[0];
 	hingeDesc.upper            = rangeWaistAbdomen[1];
 	joints[JO_WAIST_ABDOMEN] = CreateJoint(solids[SO_ABDOMEN], solids[SO_WAIST], hingeDesc);
@@ -199,7 +199,7 @@ void CRHingeHumanBodyGen::CreateChest(){
 	SetJointSpringDamper(hingeDesc, springAbdomenChest, damperAbdomenChest, solids[SO_ABDOMEN]->GetMass());
 	// hingeDesc.spring           = springAbdomenChest;
 	// hingeDesc.damper           = damperAbdomenChest;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeAbdomenChest[0];
 	hingeDesc.upper            = rangeAbdomenChest[1];
 	joints[JO_ABDOMEN_CHEST] = CreateJoint(solids[SO_CHEST], solids[SO_ABDOMEN], hingeDesc);
@@ -238,7 +238,7 @@ void CRHingeHumanBodyGen::CreateNeck(){
 	SetJointSpringDamper(hingeDesc, springChestNeckX, damperChestNeckX, solids[SO_CHEST]->GetMass());
 	// hingeDesc.spring           = springChestNeckX;
 	// hingeDesc.damper           = damperChestNeckX;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeChestNeckX[0];
 	hingeDesc.upper            = rangeChestNeckX[1];
 	joints[JO_CHEST_NECK_X] = CreateJoint(solids[SO_CHEST_NECK_XZ], solids[SO_CHEST], hingeDesc);
@@ -249,7 +249,7 @@ void CRHingeHumanBodyGen::CreateNeck(){
 	SetJointSpringDamper(hingeDesc, springChestNeckZ, damperChestNeckZ, solids[SO_CHEST]->GetMass());
 	// hingeDesc.spring           = springChestNeckZ;
 	// hingeDesc.damper           = damperChestNeckZ;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeChestNeckZ[0];
 	hingeDesc.upper            = rangeChestNeckZ[1];
 	joints[JO_CHEST_NECK_Z] = CreateJoint(solids[SO_CHEST_NECK_ZY], solids[SO_CHEST_NECK_XZ], hingeDesc);
@@ -261,7 +261,7 @@ void CRHingeHumanBodyGen::CreateNeck(){
 	SetJointSpringDamper(hingeDesc, springChestNeckY, damperChestNeckY, solids[SO_CHEST]->GetMass());
 	// hingeDesc.spring           = springChestNeckY;
 	// hingeDesc.damper           = damperChestNeckY;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeChestNeckY[0];
 	hingeDesc.upper            = rangeChestNeckY[1];
 	joints[JO_CHEST_NECK_Y] = CreateJoint(solids[SO_NECK], solids[SO_CHEST_NECK_ZY], hingeDesc);
@@ -293,7 +293,7 @@ void CRHingeHumanBodyGen::CreateHead(){
 	SetJointSpringDamper(hingeDesc, springNeckHeadX, damperNeckHeadX, solids[SO_NECK]->GetMass());
 	// hingeDesc.spring           = springNeckHeadX;
 	// hingeDesc.damper           = damperNeckHeadX;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeNeckHeadX[0];
 	hingeDesc.upper            = rangeNeckHeadX[1];
 	joints[JO_NECK_HEAD_X] = CreateJoint(solids[SO_NECK_HEAD_XZ], solids[SO_NECK], hingeDesc);
@@ -305,7 +305,7 @@ void CRHingeHumanBodyGen::CreateHead(){
 	SetJointSpringDamper(hingeDesc, springNeckHeadZ, damperNeckHeadZ, solids[SO_NECK]->GetMass());
 	// hingeDesc.spring           = springNeckHeadZ;
 	// hingeDesc.damper           = damperNeckHeadZ;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeNeckHeadZ[0];
 	hingeDesc.upper            = rangeNeckHeadZ[1];
 	joints[JO_NECK_HEAD_Z] = CreateJoint(solids[SO_HEAD], solids[SO_NECK_HEAD_XZ], hingeDesc);
@@ -363,7 +363,7 @@ void CRHingeHumanBodyGen::CreateUpperArm(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springShoulderZ, damperShoulderZ, solids[SO_CHEST]->GetMass());
 	// hingeDesc.spring           = springShoulderZ;
 	// hingeDesc.damper           = damperShoulderZ;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeShoulderZ[0]) : (-rangeShoulderZ[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeShoulderZ[1]) : (-rangeShoulderZ[0]));
 	joints[joNShoulderZ]       = CreateJoint(solids[soNShoulderZX], solids[SO_CHEST], hingeDesc);
@@ -374,7 +374,7 @@ void CRHingeHumanBodyGen::CreateUpperArm(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springShoulderX, damperShoulderX, solids[SO_CHEST]->GetMass());
 	// hingeDesc.spring           = springShoulderX;
 	// hingeDesc.damper           = damperShoulderX;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeShoulderX[0];
 	hingeDesc.upper            = rangeShoulderX[1];
 	joints[joNShoulderX]       = CreateJoint(solids[soNShoulderXY], solids[soNShoulderZX], hingeDesc);
@@ -386,7 +386,7 @@ void CRHingeHumanBodyGen::CreateUpperArm(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springShoulderY, damperShoulderY, solids[SO_CHEST]->GetMass());
 	// hingeDesc.spring           = springShoulderY;
 	// hingeDesc.damper           = damperShoulderY;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeShoulderY[0]) : (-rangeShoulderY[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeShoulderY[1]) : (-rangeShoulderY[0]));
 	joints[joNShoulderY]       = CreateJoint(solids[soNUpperArm], solids[soNShoulderXY], hingeDesc);
@@ -424,7 +424,7 @@ void CRHingeHumanBodyGen::CreateLowerArm(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springElbow, damperElbow, solids[soNUpperArm]->GetMass());
 	// hingeDesc.spring           = springElbow;
 	// hingeDesc.damper           = damperElbow;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeElbow[0]) : (-rangeElbow[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeElbow[1]) : (-rangeElbow[0]));
 	joints[joNElbow] = CreateJoint(solids[soNLowerArm], solids[soNUpperArm], hingeDesc);
@@ -467,7 +467,7 @@ void CRHingeHumanBodyGen::CreateHand(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springWristY, damperWristY, solids[soNLowerArm]->GetMass());
 	// hingeDesc.spring           = springWristY;
 	// hingeDesc.damper           = damperWristY;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWristY[0]) : (-rangeWristY[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWristY[1]) : (-rangeWristY[0]));
 	joints[joNWristY]          = CreateJoint(solids[soNWristYX], solids[soNLowerArm], hingeDesc);
@@ -478,7 +478,7 @@ void CRHingeHumanBodyGen::CreateHand(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springWristX, damperWristX, solids[soNLowerArm]->GetMass());
 	// hingeDesc.spring           = springWristX;
 	// hingeDesc.damper           = damperWristX;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeWristX[0];
 	hingeDesc.upper            = rangeWristX[1];
 	joints[joNWristX]          = CreateJoint(solids[soNWristXZ], solids[soNWristYX], hingeDesc);
@@ -490,7 +490,7 @@ void CRHingeHumanBodyGen::CreateHand(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springWristZ, damperWristZ, solids[soNLowerArm]->GetMass());
 	// hingeDesc.spring           = springWristZ;
 	// hingeDesc.damper           = damperWristZ;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWristZ[0]) : (-rangeWristZ[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWristZ[1]) : (-rangeWristZ[0]));
 	joints[joNWristZ]          = CreateJoint(solids[soNHand], solids[soNWristXZ], hingeDesc);
@@ -542,7 +542,7 @@ void CRHingeHumanBodyGen::CreateEye(LREnum lr){
 	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 	hingeDesc.spring           = springEyeY;
 	hingeDesc.damper           = damperEyeY;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeRightEyeY[0]) : (-rangeRightEyeY[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeRightEyeY[1]) : (-rangeRightEyeY[0]));
 	joints[joNEyeY]            = CreateJoint(solids[soNEyeYX], solids[SO_HEAD], hingeDesc);
@@ -553,7 +553,7 @@ void CRHingeHumanBodyGen::CreateEye(LREnum lr){
 	hingeDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90), 'y');
 	hingeDesc.spring           = springEyeX;
 	hingeDesc.damper           = damperEyeX;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeEyeX[0];
 	hingeDesc.upper            = rangeEyeX[1];
 	joints[joNEyeX] = CreateJoint(solids[soNEye], solids[soNEyeYX], hingeDesc);
@@ -611,7 +611,7 @@ void CRHingeHumanBodyGen::CreateUpperLeg(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springWaistLegZ, damperWaistLegZ, solids[SO_WAIST]->GetMass());
 	// hingeDesc.spring           = springWaistLegZ;
 	// hingeDesc.damper           = damperWaistLegZ;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWaistLegZ[0]) : (-rangeWaistLegZ[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWaistLegZ[1]) : (-rangeWaistLegZ[0]));
 	joints[joNWaistLegZ]       = CreateJoint(solids[soNWaistLegZX], solids[SO_WAIST], hingeDesc);
@@ -622,7 +622,7 @@ void CRHingeHumanBodyGen::CreateUpperLeg(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springWaistLegX, damperWaistLegX, solids[SO_WAIST]->GetMass());
 	// hingeDesc.spring           = springWaistLegX;
 	// hingeDesc.damper           = damperWaistLegX;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeWaistLegX[0];
 	hingeDesc.upper            = rangeWaistLegX[1];
 	joints[joNWaistLegX]       = CreateJoint(solids[soNWaistLegXY], solids[soNWaistLegZX], hingeDesc);
@@ -634,7 +634,7 @@ void CRHingeHumanBodyGen::CreateUpperLeg(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springWaistLegY, damperWaistLegY, solids[SO_WAIST]->GetMass());
 	// hingeDesc.spring           = springWaistLegY;
 	// hingeDesc.damper           = damperWaistLegY;
-	hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeWaistLegY[0]) : (-rangeWaistLegY[1]));
 	hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeWaistLegY[1]) : (-rangeWaistLegY[0]));
 	joints[joNWaistLegY]       = CreateJoint(solids[soNUpperLeg], solids[soNWaistLegXY], hingeDesc);
@@ -672,7 +672,7 @@ void CRHingeHumanBodyGen::CreateLowerLeg(LREnum lr){
 	SetJointSpringDamper(hingeDesc, springKnee, damperKnee, solids[soNUpperLeg]->GetMass());
 	// hingeDesc.spring           = springKnee;
 	// hingeDesc.damper           = damperKnee;
-	hingeDesc.origin           = Rad(-20);    // hingeDesc.origin           = Rad(0);
+	hingeDesc.targetPosition           = Rad(-20);    // hingeDesc.targetPosition           = Rad(0);
 	hingeDesc.lower            = rangeKnee[0];
 	hingeDesc.upper            = rangeKnee[1];
 	joints[joNKnee] = CreateJoint(solids[soNLowerLeg], solids[soNUpperLeg], hingeDesc);
@@ -716,7 +716,7 @@ void CRHingeHumanBodyGen::CreateFoot(LREnum lr){
 		SetJointSpringDamper(hingeDesc, springAnkleY, damperAnkleY, solids[soNLowerLeg]->GetMass());
 		// hingeDesc.spring           = springAnkleY;
 		// hingeDesc.damper           = damperAnkleY;
-		hingeDesc.origin           = Rad(0);
+		hingeDesc.targetPosition           = Rad(0);
 		hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeAnkleY[0]) : (-rangeAnkleY[1]));
 		hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeAnkleY[1]) : (-rangeAnkleY[0]));
 		joints[joNAnkleY]          = CreateJoint(solids[soNAnkleYX], solids[soNLowerLeg], hingeDesc);
@@ -727,7 +727,7 @@ void CRHingeHumanBodyGen::CreateFoot(LREnum lr){
 		SetJointSpringDamper(hingeDesc, springAnkleX, damperAnkleX, solids[soNLowerLeg]->GetMass());
 		// hingeDesc.spring           = springAnkleX;
 		// hingeDesc.damper           = damperAnkleX;
-		hingeDesc.origin           = Rad(0);
+		hingeDesc.targetPosition           = Rad(0);
 		hingeDesc.lower            = rangeAnkleX[0];
 		hingeDesc.upper            = rangeAnkleX[1];
 		joints[joNAnkleX]          = CreateJoint(solids[soNAnkleXZ], solids[soNAnkleYX], hingeDesc);
@@ -739,7 +739,7 @@ void CRHingeHumanBodyGen::CreateFoot(LREnum lr){
 		SetJointSpringDamper(hingeDesc, springAnkleZ, damperAnkleZ, solids[soNLowerLeg]->GetMass());
 		// hingeDesc.spring           = springAnkleZ;
 		// hingeDesc.damper           = damperAnkleZ;
-		hingeDesc.origin           = Rad(0);
+		hingeDesc.targetPosition           = Rad(0);
 		hingeDesc.lower            = ((lr==RIGHTPART) ? (rangeAnkleZ[0]) : (-rangeAnkleZ[1]));
 		hingeDesc.upper            = ((lr==RIGHTPART) ? (rangeAnkleZ[1]) : (-rangeAnkleZ[0]));
 		joints[joNAnkleZ]          = CreateJoint(solids[soNFoot], solids[soNAnkleXZ], hingeDesc);
@@ -841,40 +841,40 @@ void CRHingeHumanBodyGen::SetUpperBodyStiffness(float stiffness){
 }
 
 void CRHingeHumanBodyGen::KeepUpperBodyPose(){
-	DCAST(PHHingeJointIf, joints[JO_WAIST_ABDOMEN])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_WAIST_ABDOMEN])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_ABDOMEN_CHEST])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_ABDOMEN_CHEST])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Z])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_SHOULDER_Z])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_X])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_SHOULDER_X])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Y])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_SHOULDER_Y])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_ELBOW])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_ELBOW])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Y])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_WRIST_Y])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_X])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_WRIST_X])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Z])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_RIGHT_WRIST_Z])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Z])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_SHOULDER_Z])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_X])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_SHOULDER_X])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Y])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_SHOULDER_Y])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_LEFT_ELBOW])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_ELBOW])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Y])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_WRIST_Y])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_X])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_WRIST_X])->GetPosition());
-	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Z])->SetSpringOrigin(DCAST(PHHingeJointIf,joints[JO_LEFT_WRIST_Z])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_WAIST_ABDOMEN])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_WAIST_ABDOMEN])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_ABDOMEN_CHEST])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_ABDOMEN_CHEST])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Z])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_RIGHT_SHOULDER_Z])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_X])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_RIGHT_SHOULDER_X])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Y])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_RIGHT_SHOULDER_Y])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_ELBOW])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_RIGHT_ELBOW])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Y])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_RIGHT_WRIST_Y])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_X])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_RIGHT_WRIST_X])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Z])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_RIGHT_WRIST_Z])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Z])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_LEFT_SHOULDER_Z])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_X])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_LEFT_SHOULDER_X])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Y])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_LEFT_SHOULDER_Y])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_ELBOW])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_LEFT_ELBOW])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Y])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_LEFT_WRIST_Y])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_X])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_LEFT_WRIST_X])->GetPosition());
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Z])->SetTargetPosition(DCAST(PHHingeJointIf,joints[JO_LEFT_WRIST_Z])->GetPosition());
 }
 
 void CRHingeHumanBodyGen::ResetUpperBodyPose(){
-	DCAST(PHHingeJointIf, joints[JO_WAIST_ABDOMEN])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_ABDOMEN_CHEST])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Z])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_X])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Y])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_ELBOW])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Y])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_X])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Z])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Z])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_X])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Y])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_LEFT_ELBOW])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Y])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_X])->SetSpringOrigin(0);
-	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Z])->SetSpringOrigin(0);
+	DCAST(PHHingeJointIf, joints[JO_WAIST_ABDOMEN])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_ABDOMEN_CHEST])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Z])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_X])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_SHOULDER_Y])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_ELBOW])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Y])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_X])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_RIGHT_WRIST_Z])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Z])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_X])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_SHOULDER_Y])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_ELBOW])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Y])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_X])->SetTargetPosition(0);
+	DCAST(PHHingeJointIf, joints[JO_LEFT_WRIST_Z])->SetTargetPosition(0);
 }
 }

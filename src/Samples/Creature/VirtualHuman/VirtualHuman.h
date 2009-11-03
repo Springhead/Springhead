@@ -4,7 +4,7 @@
 #include <vector>
 
 #include <Springhead.h>
-#include <Framework/SprFWAppGLUT.h>
+#include <Framework/SprFWApp.h>
 #include <Physics/PHIK.h>
 #include <Creature/CRCreature.h>
 
@@ -14,7 +14,7 @@ using namespace Spr;
 using namespace PTM;
 using namespace std;
 
-class VirtualHuman : public FWAppGLUT, public UTRefCount{
+class VirtualHuman : public FWApp{
 public:
 	FWWin* window;
 

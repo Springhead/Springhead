@@ -789,9 +789,9 @@ void IK::OneStep(){
 
 	phScene->Step();
 
-	soPosCtl1->SetFramePosition(ikPosCtl1->GetGoal());
+	soPosCtl1->SetFramePosition(ikPosCtl1->GetTargetPosition());
 	if (soPosCtl2) {
-		soPosCtl2->SetFramePosition(ikPosCtl2->GetGoal());
+		soPosCtl2->SetFramePosition(ikPosCtl2->GetTargetPosition());
 	}
 }
 
@@ -879,78 +879,78 @@ void IK::Keyboard(int key, int x, int y){
 
 		case 'l':
 			{
-				Vec3d goal = ikPosCtl1->GetGoal();
+				Vec3d goal = ikPosCtl1->GetTargetPosition();
 				goal += Vec3f(+0.2f,  0.0f,  0.0f);
-				ikPosCtl1->SetGoal(goal);
+				ikPosCtl1->SetTargetPosition(goal);
 				if (soPosCtl2) {
-					Vec3d goal = ikPosCtl2->GetGoal();
+					Vec3d goal = ikPosCtl2->GetTargetPosition();
 					goal += Vec3f(+0.2f,  0.0f,  0.0f);
-					ikPosCtl2->SetGoal(goal);
+					ikPosCtl2->SetTargetPosition(goal);
 				}
 			}
 			break;
 
 		case 'j':
 			{
-				Vec3d goal = ikPosCtl1->GetGoal();
+				Vec3d goal = ikPosCtl1->GetTargetPosition();
 				goal += Vec3f(-0.2f,  0.0f,  0.0f);
-				ikPosCtl1->SetGoal(goal);
+				ikPosCtl1->SetTargetPosition(goal);
 				if (soPosCtl2) {
-					Vec3d goal = ikPosCtl2->GetGoal();
+					Vec3d goal = ikPosCtl2->GetTargetPosition();
 					goal += Vec3f(-0.2f,  0.0f,  0.0f);
-					ikPosCtl2->SetGoal(goal);
+					ikPosCtl2->SetTargetPosition(goal);
 				}
 			}
 			break;
 
 		case 'i':
 			{
-				Vec3d goal = ikPosCtl1->GetGoal();
+				Vec3d goal = ikPosCtl1->GetTargetPosition();
 				goal += Vec3f( 0.0f, +0.2f,  0.0f);
-				ikPosCtl1->SetGoal(goal);
+				ikPosCtl1->SetTargetPosition(goal);
 				if (soPosCtl2) {
-					Vec3d goal = ikPosCtl2->GetGoal();
+					Vec3d goal = ikPosCtl2->GetTargetPosition();
 					goal += Vec3f( 0.0f, +0.2f,  0.0f);
-					ikPosCtl2->SetGoal(goal);
+					ikPosCtl2->SetTargetPosition(goal);
 				}
 			}
 			break;
 
 		case 'k':
 			{
-				Vec3d goal = ikPosCtl1->GetGoal();
+				Vec3d goal = ikPosCtl1->GetTargetPosition();
 				goal += Vec3f( 0.0f, -0.2f,  0.0f);
-				ikPosCtl1->SetGoal(goal);
+				ikPosCtl1->SetTargetPosition(goal);
 				if (soPosCtl2) {
-					Vec3d goal = ikPosCtl2->GetGoal();
+					Vec3d goal = ikPosCtl2->GetTargetPosition();
 					goal += Vec3f( 0.0f, -0.2f,  0.0f);
-					ikPosCtl2->SetGoal(goal);
+					ikPosCtl2->SetTargetPosition(goal);
 				}
 			}
 			break;
 
 		case 'u':
 			{
-				Vec3d goal = ikPosCtl1->GetGoal();
+				Vec3d goal = ikPosCtl1->GetTargetPosition();
 				goal += Vec3f( 0.0f,  0.0f, +0.2f);
-				ikPosCtl1->SetGoal(goal);
+				ikPosCtl1->SetTargetPosition(goal);
 				if (soPosCtl2) {
-					Vec3d goal = ikPosCtl2->GetGoal();
+					Vec3d goal = ikPosCtl2->GetTargetPosition();
 					goal += Vec3f( 0.0f,  0.0f, +0.2f);
-					ikPosCtl2->SetGoal(goal);
+					ikPosCtl2->SetTargetPosition(goal);
 				}
 			}
 			break;
 
 		case 'o':
 			{
-				Vec3d goal = ikPosCtl1->GetGoal();
+				Vec3d goal = ikPosCtl1->GetTargetPosition();
 				goal += Vec3f( 0.0f,  0.0f, -0.2f);
-				ikPosCtl1->SetGoal(goal);
+				ikPosCtl1->SetTargetPosition(goal);
 				if (soPosCtl2) {
-					Vec3d goal = ikPosCtl2->GetGoal();
+					Vec3d goal = ikPosCtl2->GetTargetPosition();
 					goal += Vec3f( 0.0f,  0.0f, -0.2f);
-					ikPosCtl2->SetGoal(goal);
+					ikPosCtl2->SetTargetPosition(goal);
 				}
 			}
 			break;
@@ -958,49 +958,49 @@ void IK::Keyboard(int key, int x, int y){
 
 		case 'L':
 			{
-				Vec3d relGoal = ikPosCtl2->GetGoal() - ikPosCtl1->GetGoal();
+				Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
 				relGoal += Vec3f(+0.2f,  0.0f,  0.0f);
-				ikPosCtl2->SetGoal(relGoal + ikPosCtl1->GetGoal());
+				ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
 			}
 			break;
 
 		case 'J':
 			{
-				Vec3d relGoal = ikPosCtl2->GetGoal() - ikPosCtl1->GetGoal();
+				Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
 				relGoal += Vec3f(-0.2f,  0.0f,  0.0f);
-				ikPosCtl2->SetGoal(relGoal + ikPosCtl1->GetGoal());
+				ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
 			}
 			break;
 
 		case 'I':
 			{
-				Vec3d relGoal = ikPosCtl2->GetGoal() - ikPosCtl1->GetGoal();
+				Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
 				relGoal += Vec3f( 0.0f, +0.2f,  0.0f);
-				ikPosCtl2->SetGoal(relGoal + ikPosCtl1->GetGoal());
+				ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
 			}
 			break;
 
 		case 'K':
 			{
-				Vec3d relGoal = ikPosCtl2->GetGoal() - ikPosCtl1->GetGoal();
+				Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
 				relGoal += Vec3f( 0.0f, -0.2f,  0.0f);
-				ikPosCtl2->SetGoal(relGoal + ikPosCtl1->GetGoal());
+				ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
 			}
 			break;
 
 		case 'U':
 			{
-				Vec3d relGoal = ikPosCtl2->GetGoal() - ikPosCtl1->GetGoal();
+				Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
 				relGoal += Vec3f( 0.0f,  0.0f, +0.2f);
-				ikPosCtl2->SetGoal(relGoal + ikPosCtl1->GetGoal());
+				ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
 			}
 			break;
 
 		case 'O':
 			{
-				Vec3d relGoal = ikPosCtl2->GetGoal() - ikPosCtl1->GetGoal();
+				Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
 				relGoal += Vec3f( 0.0f,  0.0f, -0.2f);
-				ikPosCtl2->SetGoal(relGoal + ikPosCtl1->GetGoal());
+				ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
 			}
 			break;
 
