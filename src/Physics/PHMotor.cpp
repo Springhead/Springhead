@@ -84,7 +84,7 @@ PHBallJointMotor::PHBallJointMotor(){
 
 void PHBallJointMotor::ElasticDeformation(){
 	double tmp = 1.0 / (joint->damper + joint->spring * dt);
-	Vec3d I = joint->I, v0 = joint->targetVelocity, f0 = joint->offsetForce;
+	Vec3d I = joint->Inertia, v0 = joint->targetVelocity, f0 = joint->offsetForce;
 	for(int i=0;i<3;i++){
 		dA[i] = tmp * dtinv * I[i];		
 		db[i] = tmp * (- K * I[i] * propV[i] - D * I[i] * v0[i] - f0[i]);
@@ -122,7 +122,7 @@ void PHBallJointMotor::SetupLCP(){
 	D  = joint->damper;
 	D2 = joint->secondDamper;
 	K  = joint->spring;
-	I  = joint->I;
+	I  = joint->Inertia;
 	
 	// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
 	if(K == 0.0 && D == 0.0){

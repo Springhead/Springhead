@@ -122,8 +122,8 @@ public:
 	void	SetYieldStress(double input)	{yieldStress = input;}
 	double  GetHardnessRate()				{return hardnessRate;}
 	void	SetHardnessRate(double input)	{hardnessRate = input;}
-	void	SetI(const Vec3d i)				{I = i;}
-	Vec3d	GetI()							{return I;}
+	void	SetInertia(const Vec3d i)				{Inertia = i;}
+	Vec3d	GetInertia()							{return Inertia;}
 	void	SetType(int t)					{type = (PHBallJointDesc::deformationType)t;}
 	int 	GetType()						{return (int)type;}
 	bool 	GetDeformationMode();

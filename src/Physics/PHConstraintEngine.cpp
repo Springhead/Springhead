@@ -585,10 +585,6 @@ bool PHConstraintEngine::GetState(void* s) const {
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->GetState(&st->gears[i]);
 		}
-		//st->threeElements.resize(threeBallJoints.size());
-		//for(size_t i=0; i<threeBallJoints.size(); ++i){
-		//	threeBallJoints[i]->GetState(&st->threeElements[i]);
-		//}
 	}
 	return true;
 }
@@ -605,10 +601,6 @@ void PHConstraintEngine::SetState(const void* s){
 		for(size_t i=0; i<gears.size(); ++i){
 			gears[i]->SetState(&st->gears[i]);
 		}
-		//threeBallJoints.resize(st->threeElements.size());
-		//for(size_t i=0; i<threeBallJoints.size(); ++i){
-		//	threeBallJoints[i]->SetState(&st->threeElements[i]);
-		//}
 	}
 }
 
