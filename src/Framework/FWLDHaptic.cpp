@@ -95,7 +95,8 @@ void FWLDHapticLoop::HapticRendering(){
 		}
 
 		SpatialVector outForce = SpatialVector();
-//		Vibration(NIASolids());
+//		PicVibration(NIASolids());
+
 		for(int i = 0; i < NIASolids(); i++){
 			FWInteractSolid* iSolid = GetIASolid(i);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
@@ -126,8 +127,7 @@ void FWLDHapticLoop::HapticRendering(){
 			if(f < 0.0){										// 内積が負なら力を計算
 				contactFlag[j][i] = true;
 				if(contactFlag[0][i]&&contactFlag[1][i]) bPic = true;	// 物体を把持しているかどうか
-				Vec3d pVibforce = Vec3d(0,0,0);
-				Vec3d oVibforce = Vec3d(0,0,0);
+				Vec3d pVibForce = Vec3d(0,0,0);
 				Vec3d ortho = f * interpolation_normal;			// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
 				Vec3d dvortho = dv.norm() * interpolation_normal;
@@ -148,9 +148,12 @@ void FWLDHapticLoop::HapticRendering(){
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				///振動の計算
-				if(iPointer->bVibration)	pVibforce = Vibration(iSolid, iPointer, i);
+				if(iPointer->bVibration){
+					pVibForce = Vibration(iSolid, iPointer, i);
+					if(bPic){ pVibForce += oVibForce[i]; }
+				}
 
-				outForce.v() += addforce + pVibforce;	
+				outForce.v() += addforce + pVibForce;	
 				outForce.w() += addtorque;
 
 				DisplayForce[j] = outForce.v();
@@ -248,19 +251,20 @@ Vec3d FWLDHapticLoop::Vibration(FWInteractSolid* iSolid, FWInteractPointer* iPoi
 	return vibforce;
 }
 #if 1
-Vec3d FWLDHapticLoop::Vibration(int nSolids){
+void FWLDHapticLoop::PicVibration(int nSolids){
 	PHSceneIf* phScene = GetIAAdaptee()->GetPHScene();
 	
 	int sceneCnt = phScene->GetCount();
-	std::vector<Vec3d> vel;
+	static std::vector<Vec3d> vel;
 	if((int)vel.size() < nSolids){
-		for(int i=vel.size(); i<nSolids; i++){
+		for(int i=(int)vel.size(); i<nSolids; i++){
 			vel.push_back(Vec3d(0,0,0));
 		}
 	}
 
 	PHSolidPairForLCPIf* solidPair;
 	PHShapePairForLCPIf* shapePair;
+	for(int i=0; i<nSolids; i++){ oVibForce[i] = Vec3d(0,0,0); }
 
 	for (int i=0; i<nSolids; ++i) {
 		for (int j=i+1; j<nSolids; ++j) {
