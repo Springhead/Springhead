@@ -23,8 +23,14 @@ namespace Spr{;
 /// デバッグ用のヘビ状モデルのデスクリプタ
 struct CRDebugLinkBodyGenDesc : CRBodyGenDesc {
 	
+	/* 
+		MODE_SPHEERE 全て球
+		MODE_CAPSULE 全てカプセル
+		MODE_BOX	 全てボックス
+		MODE_MIX	 球とボックスが交互
+	*/
 	enum CDShapeMode{
-		MODE_SPHERE=0, MODE_CAPSULE, MODE_BOX
+		MODE_SPHERE=0, MODE_CAPSULE, MODE_BOX, MODE_MIX,
 	} shapeMode;
 
 	enum PHJointMode{
@@ -93,7 +99,6 @@ public:
 		CreateBody();
 		InitBody();
 		InitContact();
-		// InitControlMode();
 	}
 	virtual void Init();
 	int NBallJoints(){return joNBallJoints;}

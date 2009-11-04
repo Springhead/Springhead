@@ -102,6 +102,29 @@ void CRDebugLinkBodyGen::SolidFactory(CDShapeMode m){
 			solids.back()->AddShape(phSdk->CreateShape(cDesc));
 		}
 	}
+	else if(m == MODE_MIX){
+		CDSphereDesc sphere;
+		{
+			sphere.radius		= radius;
+			sphere.material.mu	= mu;
+			sphere.material.mu0	= mu0;
+			sphere.material.e	= 0.0;
+		}
+		CDBoxDesc box;
+		{
+			box.boxsize = Vec3f(radius, radius, length);
+			box.material.mu	= mu;
+			box.material.mu0	= mu0;
+			box.material.e	= 0.0;
+		}
+		bool isSphere = true;
+		for(unsigned int i = 0; i < soNSolids; i++){
+			solids.push_back(phScene->CreateSolid(sDesc));
+			if(isSphere) solids.back()->AddShape(phSdk->CreateShape(sphere));
+			else		 solids.back()->AddShape(phSdk->CreateShape(box));
+			isSphere = !isSphere;
+		}
+	}
 	else{
 		DSTR << "Undefined CollisionShape" << std::endl;
 	}
@@ -146,23 +169,7 @@ void CRDebugLinkBodyGen::InitContact(){
 			}
 		}
 	}
-
-	/*
-	// Ž©•ªˆÈŠO‚É‚·‚Å‚ÉBody‚ª‹‚ê‚Î‚»‚ÌBody‚É‘®‚·‚é„‘Ì‚Æ‚ÌContact‚àØ‚é
-	for (int i=0; i<creature->NBodies(); ++i) {
-		CRBodyIf* body = creature->GetBody(i);
-		if (DCAST(CRFourLegsAnimalBodyGenIf,body)!=(this->Cast())) {
-			for (int s=0; s<body->NSolids(); ++s) {
-				for (unsigned int j=0; j<solids.size(); ++j) {
-					phScene->SetContactMode(body->GetSolid(s), solids[j], PHSceneDesc::MODE_NONE);
-				}
-			}
-		}
-	}
-	*/
 }
-
-// void CRDebugLinkBodyGen::InitControlMode(PHJointDesc::PHControlMode m){}
 
 void CRDebugLinkBodyGen::Init(){}
 
