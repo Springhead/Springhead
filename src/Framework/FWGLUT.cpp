@@ -3,6 +3,9 @@
 #endif
 #include <GL/glew.h>
 #include <Framework/FWGLUT.h>
+#include <sstream>
+
+using namespace std;
 
 namespace Spr{;
 
