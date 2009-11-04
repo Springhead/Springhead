@@ -29,15 +29,9 @@ IK::IK(){
 void IK::TimerFunc(int id){	
 	switch(id){
 		case 0:
-			GetSdk()->Step();
+			Step();
 			PostRedisplay();
 			break;
-	}
-}
-
-void IK::CallStep(){
-	if(!vfBridge || !vfBridge->Step()) {
-		Step();
 	}
 }
 
@@ -57,7 +51,7 @@ void IK::Init(int argc, char* argv[]){
 	InitCameraView();										// カメラビューの初期化
 
 	BuildScene(0);
-int timerId = CreateTimer(FWTimer::GLUT);				// タイマーの生成
+	int timerId = CreateTimer(FWTimer::GLUT);				// タイマーの生成
 }
 
 

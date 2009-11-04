@@ -11,7 +11,7 @@ using namespace Spr;
 using namespace PTM;
 using namespace std;
 
-class IK : public FWApp{
+class VTraj : public FWApp{
 public:
 	FWWin* window;
 
@@ -20,6 +20,16 @@ public:
 	PHIKPosCtlIf *ikPosCtl1, *ikPosCtl2;
 	PHSolidIf *soPosCtl1, *soPosCtl2;
 
+	UTRef<ObjectStatesIf> states;
+
+	struct BJOffset {
+		PHBallJointIf* jo;
+		Vec3d          offset;
+		double         damper;
+		Vec3d          vel;
+		Quaterniond    goal;
+	};
+
 	//デバック表示に使う変数
 	bool bGravity;
 	bool bDebug;
@@ -27,21 +37,22 @@ public:
 	bool bOneStep;
 	bool bIK;
 
-	IK();
+	VTraj();
 
 	virtual void Init(int argc, char* argv[]);
-	virtual void TimerFunc(int id);
 	virtual void Step();
 
 	void Reset(int sceneNum=0);
 	void InitCameraView();
 	void BuildScene(int sceneNum=0);
+	void TimerFunc(int id);
 	void Display();		
 	void Keyboard(int key, int x, int y);
 
 	void OneStep();
+	void CalcOffsetForce();
 }; 
 
-extern IK app;
+extern VTraj app;
 
 #endif
