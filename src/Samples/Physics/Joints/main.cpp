@@ -706,49 +706,49 @@ void OnKey6(char key){
 	switch (key){
 		case 'a':
 			scene->GetJoint(0)->GetDesc(&ballDesc);
-			ballDesc.goal = Quaterniond::Rot(Rad(30), 'x');
+			ballDesc.targetPosition = Quaterniond::Rot(Rad(30), 'x');
 			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
 			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
 				DSTR << "set the value" << endl;
 			break;
 		case 's':
 			scene->GetJoint(0)->GetDesc(&ballDesc);
-			ballDesc.goal = Quaterniond(0, -1, 0, 0);
+			ballDesc.targetPosition = Quaterniond(0, -1, 0, 0);
 			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
 			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
 				DSTR << "set the value" << endl;
 			break;
 		case 'd':
 			scene->GetJoint(0)->GetDesc(&ballDesc);
-			ballDesc.goal = Quaterniond(0, 0, 1, 0);
+			ballDesc.targetPosition = Quaterniond(0, 0, 1, 0);
 			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
 			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
 				DSTR << "set the value" << endl; 
 			break;
 		case 'f':
 			scene->GetJoint(0)->GetDesc(&ballDesc);
-			ballDesc.goal = Quaterniond(0, 0, -1, 0);
+			ballDesc.targetPosition = Quaterniond(0, 0, -1, 0);
 			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
 			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
 				DSTR << "set the value" << endl; 
 			break;
 		case 'w':
 			scene->GetJoint(0)->GetDesc(&ballDesc);
-			ballDesc.goal = Quaterniond(0, 0, 1, 1);
+			ballDesc.targetPosition = Quaterniond(0, 0, 1, 1);
 			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
 			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
 				DSTR << "set the value" << endl; 
 			break;
 		case 'i':
 			scene->GetJoint(0)->GetDesc(&ballDesc);
-			ballDesc.goal = Quaterniond::Rot(Rad(120), 'x');
+			ballDesc.targetPosition = Quaterniond::Rot(Rad(120), 'x');
 			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
 			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
 				DSTR << "set the value" << endl; 
 			break;
 		case 'o':
 			scene->GetJoint(0)->GetDesc(&ballDesc);
-			ballDesc.goal = Quaterniond::Rot(Rad(120), 'x') * Quaterniond::Rot(Rad(20), 'y');
+			ballDesc.targetPosition = Quaterniond::Rot(Rad(120), 'x') * Quaterniond::Rot(Rad(20), 'y');
 			DCAST(PHBallJointIf, scene->GetJoint(0))->SetDesc(&ballDesc);
 			if(DCAST(PHBallJointIf, scene->GetJoint(0)))
 				DSTR << "set the value" << endl; 
