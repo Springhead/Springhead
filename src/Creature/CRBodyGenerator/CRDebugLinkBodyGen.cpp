@@ -48,7 +48,10 @@ PHHingeJointDesc CRDebugLinkBodyGen::InitHingeJointDesc(){
 	{
 		desc.spring				= spring;
 		desc.damper				= damper;
-		desc.poseSocket.Pos()	= Vec3d(0, 0, length/2);
+		if(shapeMode == MODE_MIX && solids.size() == 2)
+			desc.poseSocket.Pos()	= Vec3d(0, 0, radius/2);
+		else
+			desc.poseSocket.Pos()	= Vec3d(0, 0, length/2);
 		desc.poseSocket.Ori()	= Quaterniond::Rot(Rad(90), 'y');
 		desc.posePlug.Pos()		= Vec3d(0, 0, -length/2);
 		desc.posePlug.Ori()		= Quaterniond::Rot(Rad(90), 'y');
