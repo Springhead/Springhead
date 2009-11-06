@@ -558,7 +558,7 @@ void PHBallJointLimit::CheckLimit(){
 
 void PHBallJointLimit::SetupLCP(){
 	// ‰Â“®”ÍˆÍƒ`ƒFƒbƒN
-	//CheckLimit();
+	CheckLimit();
 
 	// vJc : Jc‚É‚æ‚Á‚ÄŽÊ‘œ‚³‚ê‚éS‘©À•WŒn‚©‚çŒ©‚½Plug‚ÌŠp‘¬“x
 	Vec3d vJc = joint->Jc * joint->vjrel.w();
@@ -690,13 +690,13 @@ void PHBallJointLimit::IterateLCP(){
 	Vec3d fnew;
 	for(int i = 0; i < 3; i++){
 		int j = joint->axisIndex[i];
-		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i]
+		fnew[i] = joint->limitf[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * joint->limitf[i] + b[i] + db[i]
 				+ joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);	
 
 		Projection(fnew[i], i);
 		
-		joint->CompResponse(fnew[i] - f[i], i);
-		f[i] = fnew[i];
+		joint->CompResponse(fnew[i] - joint->limitf[i], i);
+		joint->limitf[i] = fnew[i];
 	}
 	
 }

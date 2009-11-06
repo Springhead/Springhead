@@ -20,6 +20,11 @@ class PHTreeNode;
 struct PHConstraintState{
 	SpatialVector f;				///< 拘束力の力積
 	SpatialVector F;				///< 拘束誤差を位置のLCPで補正する場合の補正量*質量
+	
+	//一時的にSaveStateを有効にするためのソースコード
+	Vec3d motorf;
+	Vec3d limitf;
+	Vec3d limitF;
 
 };
 

@@ -56,7 +56,7 @@ public:
 	PHBallJoint*			joint;
 
 	Vec3d	A, Ainv, dA, b, db;
-	Vec3d	f;
+	//Vec3d	f;
 	Quaterniond	propQ;
 	Vec3d	propV, I;
 	double	fMaxDt, fMinDt;

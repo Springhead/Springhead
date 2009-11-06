@@ -55,7 +55,7 @@ class PHBallJointLimit{
 public:
 	PHBallJoint*	joint;
 	Vec3d	A, Ainv, dA, b, db;
-	Vec3d	f, F;
+	//Vec3d	f, F;
 	bool	onLower, onUpper;
 
 	/*********************************************************
