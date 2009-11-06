@@ -128,7 +128,7 @@ void PHBallJointMotor::SetupLCP(){
 	if(K == 0.0 && D == 0.0){
 		dA.clear();
 		db.clear();
-		f = joint->offsetForce;
+		joint->motorf = joint->offsetForce;
 	}
 	else{
 		// 位置制御の計算
@@ -184,17 +184,21 @@ void PHBallJointMotor::SetupLCP(){
 			}*/
 		}
 		else{
+			//Saveに関する部分でfsが保存されていないので一時的にコメントアウト
 			//fの平均値を計算
-			fs.push_back(f);
-			if(fs.size()>5){
-				vector<Vec3d>::iterator startIterator;
-				startIterator = fs.begin();
-				fs.erase( startIterator );
-				fNorm=0;
-				for(size_t i=0;i<fs.size();i++){
-					fNorm+=fs[i].norm()/(fs.size()-1);
-				}
-			}
+			//fs.push_back(joint->motorf);
+			//if(fs.size()>5){
+			//	vector<Vec3d>::iterator startIterator;
+			//	startIterator = fs.begin();
+			//	fs.erase( startIterator );
+			//	fNorm=0;
+			//	for(size_t i=0;i<fs.size();i++){
+			//		fNorm+=fs[i].norm()/(fs.size()-1);
+			//	}
+			//}
+
+			fNorm = joint->motorf.norm();
+
 			//物体の形状を考慮したバネダンパを設定する場合
 			if(I[0]!=1&&I[1]!=1&&I[2]!=1){
 				//物体の変形に使用する場合
@@ -220,22 +224,22 @@ void PHBallJointMotor::SetupLCP(){
 				yieldFlag = true;
 			}
 			switch(joint->type){
-			case PHBallJointDesc::Mix:	//3:Mix 初期値
+			case PHBallJointDesc::Mix:	//3:Mix 
 				if(yieldFlag)
 					 PlasticDeformation();	//塑性変形
 				else ElasticDeformation();	//弾性変形
 				break;
-			case PHBallJointDesc::Elastic:	//0:Elastic
+			case PHBallJointDesc::Elastic:	//0:Elastic　初期値
 				ElasticDeformation();
 				break;
 			case PHBallJointDesc::Plastic:	//1:Plastic
 			default:
-				PlasticDeformation();
+				ElasticDeformation();
 			}
 		}
 		for(int i = 0; i < 3; i++)
 			Ainv[i] = 1.0 / (A[i] + dA[i]);
-		f *= joint->engine->shrinkRate;
+		joint->motorf *= joint->engine->shrinkRate;
 	}
 }
 
@@ -246,16 +250,16 @@ void PHBallJointMotor::IterateLCP(){
 	Vec3d fnew;
 	for(int i = 0; i < 3; i++){
 		int j = joint->axisIndex[i];
-		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i]
+		fnew[i] = joint->motorf[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * joint->motorf[i] + b[i] + db[i]
 				+ joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);	
 
 		if(fMaxDt < fnew[i])
 			fnew[i] = fMaxDt;
-		else if(f[i] < fMinDt)
-			f[i] = fMinDt;
+		else if(joint->motorf[i] < fMinDt)
+			joint->motorf[i] = fMinDt;
 		
-		joint->CompResponse(fnew[i] - f[i], i);
-		f[i] = fnew[i];
+		joint->CompResponse(fnew[i] - joint->motorf[i], i);
+		joint->motorf[i] = fnew[i];
 	}
 	
 }

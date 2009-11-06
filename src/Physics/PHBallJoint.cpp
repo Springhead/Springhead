@@ -37,7 +37,7 @@ PHBallJointDesc::PHBallJointDesc(){
 	yieldStress		= 0.0;
 	hardnessRate	= 1.0;
 	Inertia			= Vec3d(1.0,1.0,1.0);
-	type			= Mix;
+	type			= Elastic;
 }
 
 //----------------------------------------------------------------------------
@@ -54,13 +54,13 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 
 void PHBallJoint::SetupLCP(){
 	PHJoint::SetupLCP();
-	limit.SetupLCP();
+	//limit.SetupLCP(); //不安定なので一時的にコメントアウトしておきます
 	motor.SetupLCP();
 }
 
 void PHBallJoint::IterateLCP(){
 	PHJoint::IterateLCP();
-	limit.IterateLCP();
+	//limit.IterateLCP();　//不安定なので一時的にコメントアウトしておきます
 	motor.IterateLCP();
 }
 
