@@ -162,6 +162,16 @@ struct PHConstraintIf : public SceneObjectIf{
 	 */
 	void GetConstraintForce(Vec3d& f, Vec3d& t);
 
+	/** @brief PHMotorの拘束力を取得
+		@return 拘束モーメント
+	*/
+	Vec3d GetMotorf();
+
+	/** @brief PHJointLimitの拘束力を取得
+		@return 拘束モーメント
+	*/
+	Vec3d GetLimitf();
+
 };
 
 /// 拘束の集合のインタフェース

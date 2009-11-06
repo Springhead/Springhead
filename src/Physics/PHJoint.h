@@ -94,17 +94,7 @@ public:
 	void	SetSecondDamper(double D2)	{secondDamper = D2;}
 	double  GetSecondDamper()			{return secondDamper;}
 	void	SetOffsetForce(double dat){ offsetForce = dat; }
-	double	GetOffsetForce(){ return offsetForce;
-		/*double ans = 0;
-		if(onLower || onUpper)
-			ans = 0.0;
-		else{
-			Vec3d f, t;
-			GetConstraintForce(f, t);
-			ans = t.Z();
-		}
-		return ans;*/
-	}
+	double	GetOffsetForce(){ return offsetForce;}
 	bool	IsLimit(){ return (limit.onLower || limit.onUpper); }
 	void	SetTorqueMax(double max){fMax = max; }
 	double	GetTorqueMax(){return fMax;}

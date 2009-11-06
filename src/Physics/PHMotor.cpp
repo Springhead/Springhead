@@ -12,10 +12,8 @@ using namespace PTM;
 using namespace std;
 namespace Spr{;
 
-PHMotor1D::PHMotor1D(){
-	f = 0.0;
-}
-
+PHMotor1D::PHMotor1D(){}
+	
 void PHMotor1D::SetupLCP(){
 	fMinDt = joint->fMin * joint->GetScene()->GetTimeStep();
 	fMaxDt = joint->fMax * joint->GetScene()->GetTimeStep();
@@ -23,7 +21,7 @@ void PHMotor1D::SetupLCP(){
 	// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
 	if(joint->spring == 0.0 && joint->damper == 0.0){
 		dA = db = 0.0;
-		f = joint->offsetForce;
+		joint->motorf.z = joint->offsetForce;
 	}
 	else{
 		A = joint->A[joint->axisIndex[0]];
@@ -53,11 +51,11 @@ void PHMotor1D::SetupLCP(){
 			xs[0] = xs[1];	//バネとダンパの並列部の距離のステップを進める
 		}
 		Ainv = 1.0 / (A + dA);
-		f *= joint->engine->shrinkRate;
+		joint->motorf.z *= joint->engine->shrinkRate;
 	}
 			
 	// 拘束力初期値による速度変化量を計算
-	joint->CompResponse(f, 0);
+	joint->CompResponse(joint->motorf.z, 0);
 }
 
 void PHMotor1D::IterateLCP(){
@@ -65,13 +63,13 @@ void PHMotor1D::IterateLCP(){
 		return;
 
 	int j = joint->axisIndex[0];
-	double fnew = f - joint->engine->accelSOR * Ainv * (dA * f + b + db
+	double fnew = joint->motorf.z - joint->engine->accelSOR * Ainv * (dA * joint->motorf.z + b + db
 			 + joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);
 
 	// トルク制限
 	fnew = min(max(fMinDt, fnew), fMaxDt);
-	joint->CompResponse(fnew - f, 0);
-	f = fnew;
+	joint->CompResponse(fnew - joint->motorf.z, 0);
+	joint->motorf.z = fnew;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -154,18 +152,19 @@ void PHBallJointMotor::SetupLCP(){
 			double tmp = 1.0 / (D + K * dt);
 			dA = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
 
+			// 可動域制限がかかっている場合はpropの座標を変換しないといけない。
+			//if (joint->IsLimit())
+			//	propV = Jcinv * propV; //< 拘束ヤコビアンってどこでとれるんだっけか･･･
+
 			/****
 			田崎さんの論文の式25のdbに相当する．
 			位置制御のみであれば，以下の式の1行目のみ．
 			軌道追従制御では残りの2行もふくむ．offsetには外で計算してきた合成慣性テンソルを代入する
+			速度制御ではDを無限大に飛ばす．位置制御等へ戻す時にDも戻すのも忘れずに．
 			****/
 			db = tmp * (- K * propV - D * joint->targetVelocity - joint->offsetForce);
 
-			/*
-			// 可動域制限がかかっている場合はpropの座標を変換して考えないといけない。
-			if (anyLimit)
-				propV = Jcinv * propV;
-
+			/* [comment]:昔のPHControlModeの名残．
 			if(mode == PHJointDesc::MODE_VELOCITY){
 				if(anyLimit)
 					db.w() = -Jcinv * targetVelocity;

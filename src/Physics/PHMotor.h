@@ -43,7 +43,6 @@ public:
 	PHJoint1D*				joint;
 
 	double  A, Ainv, dA, b, db;
-	double	f;	
 	double  fMaxDt, fMinDt;			///< 関節の出せる力*dtの最大値、最小値
 	
 	virtual void	SetupLCP();
