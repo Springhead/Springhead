@@ -81,6 +81,8 @@
 	Quaternionf GetAbsolutePoseQ(){	return	base::GetAbsolutePoseQ();}	\
 	void GetRelativeVelocity(Vec3d& v, Vec3d& w){	base::GetRelativeVelocity(v, w);}	\
 	void GetConstraintForce(Vec3d& f, Vec3d& t){	base::GetConstraintForce(f, t);}	\
+	Vec3d GetMotorf(){	return	base::GetMotorf();}	\
+	Vec3d GetLimitf(){	return	base::GetLimitf();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintsIf(base)	\
 	Spr::PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs){	return	base::FindBySolidPair(lhs, rhs);}	\

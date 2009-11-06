@@ -117,7 +117,8 @@ public:
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject();
 	virtual ObjectIf*	 GetChildObject(size_t i);
-	
+	virtual	Vec3d		 GetMotorf(){return motorf;}
+	virtual Vec3d		 GetLimitf(){return limitf;}
 
 protected:
 	virtual void AfterSetDesc();
