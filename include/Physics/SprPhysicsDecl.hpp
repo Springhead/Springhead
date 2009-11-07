@@ -169,8 +169,8 @@
 	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
 	Vec3d GetInertia(){	return	base::GetInertia();}	\
 	void SetInertia(const Vec3d i){	base::SetInertia(i);}	\
-	int GetType(){	return	base::GetType();}	\
-	void SetType(int t){	base::SetType(t);}	\
+	int GetDefomationType(){	return	base::GetDefomationType();}	\
+	void SetDefomationType(int t){	base::SetDefomationType(t);}	\
 	bool GetDeformationMode(){	return	base::GetDeformationMode();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\

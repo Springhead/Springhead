@@ -599,13 +599,13 @@ struct PHBallJointIf : public PHJointIf{
 	 */
 	void	SetInertia(const Vec3d i);
 	/** @brief 変形のタイプを取得する
-		@return 0:Elastic,1:Plastic,3:Mix
+		@return 0:ELASTIC,1:PLASTIC,2:ELASTIC_PLASTIC
 	 */
-	int		GetType();	
+	int		GetDefomationType();	
 	/** @brief 変形のタイプを設定する
-		@param input 0:Elastic,1:Plastic,3:Mix
+		@param input 0:ELASTIC,1:PLASTIC,2:ELASTIC_PLASTIC
 	 */
-	void	SetType(int t);	
+	void	SetDefomationType(int t);	
 	/** @brief 変形のタイプを表示する
 		@return 変形のタイプ
 	 */
@@ -629,10 +629,10 @@ struct PHBallJointDesc : public PHJointDesc{
 	double			fMin;			 ///< 関節にかけられる最小の力
 	Vec2d			poleTwist;
 	
-	enum deformationType{
-		Elastic,
-		Plastic,
-		Mix}type;
+	enum PHDeformationType{
+		ELASTIC,
+		PLASTIC,
+		ELASTIC_PLASTIC}type;
 	double secondDamper;			///< 第２ダンパ係数
 	double yieldStress;				///< 降伏応力
 	double hardnessRate;			///< 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
@@ -640,6 +640,7 @@ struct PHBallJointDesc : public PHJointDesc{
 	
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };
+
 
 /// バネダンパのインタフェース
 struct PHSpringIf : public PHJointIf{

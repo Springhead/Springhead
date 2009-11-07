@@ -24,7 +24,7 @@ struct PHConstraintState{
 	//一時的にSaveStateを有効にするためのソースコード
 	Vec3d motorf;
 	Vec3d limitf;
-	Vec3d limitF;
+	//Vec3d limitF;
 
 };
 

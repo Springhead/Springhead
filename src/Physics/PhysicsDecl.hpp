@@ -369,7 +369,7 @@ protected:\
 	double	fMax;	\
 	double	fMin;	\
 	Vec2d	poleTwist;	\
-	enum Spr::PHBallJointDesc::deformationType	type;	\
+	enum Spr::PHBallJointDesc::PHDeformationType	type;	\
 	double	secondDamper;	\
 	double	yieldStress;	\
 	double	hardnessRate;	\
@@ -607,21 +607,18 @@ protected:\
 	SpatialVector	F;	\
 	Vec3d	motorf;	\
 	Vec3d	limitf;	\
-	Vec3d	limitF;	\
 public:\
 	virtual void SetState(const void* ptr){ \
 		f = ((PHConstraintState*)ptr)->f;	\
 		F = ((PHConstraintState*)ptr)->F;	\
 		motorf = ((PHConstraintState*)ptr)->motorf;	\
 		limitf = ((PHConstraintState*)ptr)->limitf;	\
-		limitF = ((PHConstraintState*)ptr)->limitF;	\
 	}\
 	virtual bool GetState(void* ptr) const { \
 		((PHConstraintState*)ptr)->f = f;	\
 		((PHConstraintState*)ptr)->F = F;	\
 		((PHConstraintState*)ptr)->motorf = motorf;	\
 		((PHConstraintState*)ptr)->limitf = limitf;	\
-		((PHConstraintState*)ptr)->limitF = limitF;	\
 		return true;	\
 	}\
 
