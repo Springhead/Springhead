@@ -41,10 +41,8 @@ public:
 	
 };
 
-//struct PHBallJointState{
-//};
-
-class PHBallJoint : public PHJointND<3>/*, public PHBallJointState*/{
+enum PHDeformationType;
+class PHBallJoint : public PHJointND<3>{
 public:
 	SPR_OBJECTDEF1(PHBallJoint, PHJoint);
 	SPR_DECLMEMBEROF_PHBallJointDesc;
@@ -122,10 +120,10 @@ public:
 	void	SetYieldStress(double input)	{yieldStress = input;}
 	double  GetHardnessRate()				{return hardnessRate;}
 	void	SetHardnessRate(double input)	{hardnessRate = input;}
-	void	SetInertia(const Vec3d i)				{Inertia = i;}
-	Vec3d	GetInertia()							{return Inertia;}
-	void	SetType(int t)					{type = (PHBallJointDesc::deformationType)t;}
-	int 	GetType()						{return (int)type;}
+	void	SetInertia(const Vec3d i)		{Inertia = i;}
+	Vec3d	GetInertia()					{return Inertia;}
+	void	SetDefomationType(int t)		{type = (PHBallJointDesc::PHDeformationType)t;}
+	int 	GetDefomationType()				{return (int)type;}
 	bool 	GetDeformationMode();
 
 	/// 仮想関数のオーバライド

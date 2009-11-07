@@ -90,6 +90,14 @@ void PHBallJointMotor::ElasticDeformation(){
 }
 
 void PHBallJointMotor::PlasticDeformation(){
+
+	//3要素モデル
+	/*		K
+		―VVVV―   D2
+	―|			]―匚 ―
+		― 匚 ―
+			D1
+	*/
 	//塑性変形(3要素モデル)
 	D  *= joint->hardnessRate;
 	D2 *= joint->hardnessRate;
@@ -103,7 +111,8 @@ void PHBallJointMotor::PlasticDeformation(){
 	}
 	db = K/(K*dt+D)*(xs[0].w()) ;
 	
-	if(joint->type==PHBallJointDesc::Mix){
+	//ELASTIC_PLASTICモードの場合,ELASTIC状態の終了時に残留変位を保存する位置にTargetPositionを変更
+	if(joint->type==PHBallJointDesc::ELASTIC_PLASTIC){
 		if(ws.w().norm()<0.01){
 			yieldFlag = false;
 			joint->SetTargetPosition(joint->Xjrel.q);
@@ -223,17 +232,22 @@ void PHBallJointMotor::SetupLCP(){
 				yieldFlag = true;
 			}
 			switch(joint->type){
-			case PHBallJointDesc::Mix:	//3:Mix 
-				if(yieldFlag)
-					 PlasticDeformation();	//塑性変形
-				else ElasticDeformation();	//弾性変形
-				break;
-			case PHBallJointDesc::Elastic:	//0:Elastic　初期値
+			case PHBallJointDesc::ELASTIC:	//PHDeformationType::Elastic 0　初期値
 				ElasticDeformation();
 				break;
-			case PHBallJointDesc::Plastic:	//1:Plastic
+			case PHBallJointDesc::PLASTIC:	//PHDeformationType::Plastic 1
+				PlasticDeformation();
+				break;
+			case PHBallJointDesc::ELASTIC_PLASTIC: //PHDeformationType::ELASTIC_PLASTIC 2	
+				if(yieldFlag){
+					PlasticDeformation();	//塑性変形
+				}else {
+					ElasticDeformation();	//弾性変形
+				}
+				break;
 			default:
 				ElasticDeformation();
+				break;
 			}
 		}
 		for(int i = 0; i < 3; i++)

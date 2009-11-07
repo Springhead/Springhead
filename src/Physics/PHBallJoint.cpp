@@ -37,7 +37,7 @@ PHBallJointDesc::PHBallJointDesc(){
 	yieldStress		= 0.0;
 	hardnessRate	= 1.0;
 	Inertia			= Vec3d(1.0,1.0,1.0);
-	type			= Elastic;
+	type			= ELASTIC;
 }
 
 //----------------------------------------------------------------------------
@@ -87,19 +87,18 @@ void PHBallJoint::CompError(){
 
 bool PHBallJoint::GetDeformationMode(){
 	switch(type){
-	case PHBallJointDesc::Mix:
+	case PHBallJointDesc::ELASTIC_PLASTIC:
 		if(motor.yieldFlag){
-			std::cout<<"‘Y«•ÏŒ`ƒ‚[ƒh"<<std::endl;
+			std::cout<<"’e‘Y«•ÏŒ`F‘Y«•ÏŒ`ƒ‚[ƒh"<<std::endl;
 		}else {
-			std::cout<<"’e«•ÏŒ`ƒ‚[ƒh"<<std::endl;
+			std::cout<<"’e‘Y«•ÏŒ`F’e«•ÏŒ`ƒ‚[ƒh"<<std::endl;
 		}
 		break;
-	case PHBallJointDesc::Elastic:
-		std::cout<<"’e«•ÏŒ`‚Ì‚Ý"<<std::endl;
+	case PHBallJointDesc::ELASTIC:
+		std::cout<<"’e«•ÏŒ`"<<std::endl;
 		break;
-	case PHBallJointDesc::Plastic:
-	default:
-		std::cout<<"‘Y«•ÏŒ`‚Ì‚Ý"<<std::endl;
+	case PHBallJointDesc::PLASTIC:
+		std::cout<<"‘Y«•ÏŒ`"<<std::endl;
 	}
 	return motor.yieldFlag;
 }
