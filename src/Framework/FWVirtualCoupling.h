@@ -35,6 +35,7 @@ public:
 	virtual void Step();
 	void UpdateInterface();
 	void CreateVCPointer();
+	void CallBackHapticLoop(){};
 
 };
 }
