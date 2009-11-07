@@ -124,7 +124,7 @@ bool FWBoneObject::AddChildObject(ObjectIf* o){
 		}
 	}
 	if ((phJoint==NULL&&endFrame==NULL)){
-		//Å‰‚ÌFrame‚ÉŠÖ‚·‚éˆ—
+		//Å‰‚ÌFrame‚ÉŠÖ‚·‚éˆ—(Center)
 		if(phSolid){
 			Affinef af = grFrame->GetTransform();
 			Posed absPose; absPose.FromAffine(af);
@@ -148,16 +148,6 @@ void FWBoneObject::Modify() {
 		fr = fr->GetParent();
 	}
 	Posed absPose; absPose.FromAffine(af);
-
-	//PHBallJointIf *e3bj = phJoint->Cast();	//nagaD
-	//if (e3bj) {
-	//	PHBallJointDesc d; e3bj->GetDesc(&d);
-	//	sockOffset = d.poseSocket;
-	//	d.poseSocket = poseSock * d.poseSocket; d.posePlug = posePlug * d.posePlug;
-	//	d.poseSocket.Ori().unitize();
-	//	d.posePlug.Ori().unitize();
-	//	e3bj->SetDesc(&d);
-	//}
 
 	PHBallJointIf *bj = phJoint->Cast();
 	if (bj) {

@@ -21,7 +21,7 @@ public:
 	HIBaseIf*	humanInterface; 
 	double		springK;
 	double		damperD;
-	Posed		defaultPosition;
+	Posed		defaultPosition; //World座標系に対する物理シミュレーションのPointerのPose
 	Posed		pointersCalibPosition;
 	double		posScale;
 	double		forceScale;

@@ -36,6 +36,8 @@ void FWVirtualCoupling::CreateVCPointer(){
 				jointDesc.posePlug.Pos()	= Vec3f(0.0f, 0.0f, 0.0f);
 				jointDesc.spring			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->springK;
 				jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->damperD;
+				jointDesc.springOri			= GetIAPointer(i)->springK *1000;
+				jointDesc.damperOri			= GetIAPointer(i)->damperD *1000;
 			}
 			vcJoint.push_back( GetPHScene()->CreateJoint(vcSolid[i], pSolid, jointDesc) );
 		}
@@ -127,7 +129,8 @@ void FWVirtualCoupling::UpdatePointer(){
 void FWVirtualCoupling::Step(){
 	UpdateInterface();
 	UpdatePointer();
-	GetPHScene()->Step();
+	//UpdatePointerDirect();
+	//GetPHScene()->Step();@//LDHaptic‚Æ•¹—p‚Å‚«‚é‚æ‚¤‚É‚·‚é‚½‚ßCStep()‚Í©•ª‚ÅŒÄ‚Ô‚±‚Æ‚É‚·‚é
 }
 
 void FWVirtualCoupling::Clear(){

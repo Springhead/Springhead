@@ -113,6 +113,8 @@ void FWLDHapticSample::TimerFunc(int id){
 					GetIAScene()->Step();
 					bOneStep = false;
 			}
+			GetSdk()->GetScene()->GetPHScene()->Step(); //VirtualCoupringでは自分でシミュレーションのステップを呼ぶ
+
 			PostRedisplay();
 			break;
 			   }
@@ -196,20 +198,26 @@ void FWLDHapticSample::BuildPointer(){
 	{	
 		for(int i= 0; i < 2; i++){
 			PHSolidIf* soPointer = phscene->CreateSolid(desc);
-			CDSphereDesc sd;
-			sd.radius = 0.5;//1.0;
-			CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
+			//CDSphereDesc sd;
+			//sd.radius = 0.5;//1.0;
+			//CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
+			CDBoxDesc bd;
+			bd.boxsize = Vec3d(1,2,1);
+			CDBoxIf* shapePointer = DCAST(CDBoxIf,  GetSdk()->GetPHSdk()->CreateShape(bd));
 			soPointer->SetGravity(false);
 			soPointer->AddShape(shapePointer);
 			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-			idesc.springK = 1;				    // バーチャルカップリングのバネ係数
-			idesc.damperD = 0.08;					    // バーチャルカップリングのダンパ係数
+			idesc.springK = 1;						// バーチャルカップリングのバネ係数
+			idesc.damperD = 0.08;					   // バーチャルカップリングのダンパ係数
 			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
 			idesc.forceScale = 1.0;					// インタフェースに働く力の倍率
-			if(i==0) idesc.defaultPosition =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
-			if(i==1) idesc.defaultPosition =Posed(1,0,0,0,-5,0,0);
+			
+			Posed pose1; pose1.Pos()=Vec3d(5,0,0); pose1.Ori()=Quaterniond::Rot(Rad(-45), 'x');
+			Posed pose2; pose2.Pos()=Vec3d(-5,0,0); pose2.Ori()=Quaterniond::Rot(Rad(-45), 'x');
+			if(i==0) idesc.defaultPosition =pose1;	// 初期位置の設定
+			if(i==1) idesc.defaultPosition =pose2;
 			GetIAScene()->CreateIAPointer(idesc);	// interactpointerの作成
 		}
 	}
@@ -262,17 +270,6 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 				bf = !bf;
 				for(int i = 0; i < GetIAScene()->NIAPointers(); i++){
 					GetIAScene()->GetIAPointer(i)->EnableForce(bf);
-					if(!bf){
-						HIBaseIf* hib = GetIAScene()->GetIAPointer(i)->GetHI();
-						if(DCAST(HIForceInterface6DIf, hib)){
-							HIForceInterface6DIf* hif = hib->Cast();
-							hif->SetForce(Vec3d(), Vec3d());
-						}
-						if(DCAST(HIForceInterface3DIf, hib)){
-							HIForceInterface3DIf* hif = hib->Cast();
-							hif->SetForce(Vec3d());
-						}
-					}
 				}
 				if(bf){
 					DSTR << "Enable Force Feedback" << std::endl;
