@@ -62,7 +62,7 @@ public:
 	double	fNorm;
 	double	dt, dtinv, K, D, D2;
 	bool	yieldFlag;
-	std::vector<Vec3d> fs;	
+	Vec3d   fs;	
 
 	void    ElasticDeformation();
 	void	PlasticDeformation();
