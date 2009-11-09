@@ -125,14 +125,17 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHJointDesc \
 protected:\
+	enum Spr::PHJointDesc::PHDeformationType	type;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHConstraint::SetDesc((PHConstraintDesc*)(PHJointDesc*)ptr);	\
+		type = ((PHJointDesc*)ptr)->type;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHConstraint::GetDesc((PHConstraintDesc*)(PHJointDesc*)ptr);	\
+		((PHJointDesc*)ptr)->type = type;	\
 		return true;	\
 	}\
 
@@ -149,6 +152,8 @@ protected:\
 	double	rangeSpring;	\
 	double	rangeDamper;	\
 	double	fMax;	\
+	double	yieldStress;	\
+	double	hardnessRate;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint::SetDesc((PHJointDesc*)(PHJoint1DDesc*)ptr);	\
@@ -163,6 +168,8 @@ public:\
 		rangeSpring = ((PHJoint1DDesc*)ptr)->rangeSpring;	\
 		rangeDamper = ((PHJoint1DDesc*)ptr)->rangeDamper;	\
 		fMax = ((PHJoint1DDesc*)ptr)->fMax;	\
+		yieldStress = ((PHJoint1DDesc*)ptr)->yieldStress;	\
+		hardnessRate = ((PHJoint1DDesc*)ptr)->hardnessRate;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -179,6 +186,8 @@ public:\
 		((PHJoint1DDesc*)ptr)->rangeSpring = rangeSpring;	\
 		((PHJoint1DDesc*)ptr)->rangeDamper = rangeDamper;	\
 		((PHJoint1DDesc*)ptr)->fMax = fMax;	\
+		((PHJoint1DDesc*)ptr)->yieldStress = yieldStress;	\
+		((PHJoint1DDesc*)ptr)->hardnessRate = hardnessRate;	\
 		return true;	\
 	}\
 
@@ -365,7 +374,6 @@ protected:\
 	Vec3d	offsetForce;	\
 	double	fMax;	\
 	Vec2d	poleTwist;	\
-	enum Spr::PHBallJointDesc::PHDeformationType	type;	\
 	double	secondDamper;	\
 	double	yieldStress;	\
 	double	hardnessRate;	\
@@ -383,7 +391,6 @@ public:\
 		offsetForce = ((PHBallJointDesc*)ptr)->offsetForce;	\
 		fMax = ((PHBallJointDesc*)ptr)->fMax;	\
 		poleTwist = ((PHBallJointDesc*)ptr)->poleTwist;	\
-		type = ((PHBallJointDesc*)ptr)->type;	\
 		secondDamper = ((PHBallJointDesc*)ptr)->secondDamper;	\
 		yieldStress = ((PHBallJointDesc*)ptr)->yieldStress;	\
 		hardnessRate = ((PHBallJointDesc*)ptr)->hardnessRate;	\
@@ -403,7 +410,6 @@ public:\
 		((PHBallJointDesc*)ptr)->offsetForce = offsetForce;	\
 		((PHBallJointDesc*)ptr)->fMax = fMax;	\
 		((PHBallJointDesc*)ptr)->poleTwist = poleTwist;	\
-		((PHBallJointDesc*)ptr)->type = type;	\
 		((PHBallJointDesc*)ptr)->secondDamper = secondDamper;	\
 		((PHBallJointDesc*)ptr)->yieldStress = yieldStress;	\
 		((PHBallJointDesc*)ptr)->hardnessRate = hardnessRate;	\

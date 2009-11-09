@@ -44,6 +44,10 @@ public:
 
 	double  A, Ainv, dA, b, db;
 	double  fMaxDt;			///< 関節の出せる力*dtの最大値、最小値
+	double	fNorm;
+	double	dt, dtinv, K, D, D2;
+	bool	yieldFlag;
+	Vec3d   fs;	
 	
 	virtual void	SetupLCP();
 	virtual void	IterateLCP();

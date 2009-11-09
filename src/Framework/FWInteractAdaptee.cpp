@@ -99,7 +99,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 					if(soMin[i] <= pMax[i] && pMax[i] <= soMax[i]) in++;
 					/// in‚ª1ˆÈã‚È‚ç‚»‚ÌŽ²‚ÅŒð·
 					if(in > 0) isLocal++;
-#if 1
+#if 0
 					DSTR << i << " pMin[i] = " << pMin[i] << "  soMin[i] = " << soMin[i] << "  pMax[i] = " << pMax[i] << std::endl;
 					DSTR << i << " pMin[i] = "  << pMin[i] << "  soMax[i] = " << soMax[i] << "  pMax[i] = " << pMax[i] << std::endl;
 					DSTR << i << " soMin[i] = " << soMin[i] << "  pMin[i] = " << pMin[i] << "  soMax[i] = " << soMax[i] << std::endl;
