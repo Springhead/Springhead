@@ -182,7 +182,6 @@ void FWLDHapticDemo::BuildScene(){
 	}
 
 	CreateRoundCone(phscene);
-	phscene->SetContactMode(PHSceneDesc::MODE_NONE);
 
 	/// ƒ|ƒCƒ“ƒ^
 	for(int i= 0; i < 1; i++){
