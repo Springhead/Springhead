@@ -607,7 +607,7 @@ protected:\
 	SpatialVector	F;	\
 	Vec3d	motorf;	\
 	Vec3d	limitf;	\
-	std::vector<(Vec3d)>	fs;	\
+	Vec3d	fs;	\
 	SpatialVector	xs;	\
 public:\
 	virtual void SetState(const void* ptr){ \

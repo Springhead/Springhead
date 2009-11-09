@@ -194,18 +194,17 @@ void PHBallJointMotor::SetupLCP(){
 		else{
 			//Saveに関する部分でfsが保存されていないので一時的にコメントアウト
 			//fの平均値を計算
-			joint->fs.push_back(joint->motorf);
-			if(joint->fs.size()>5){
-				vector<Vec3d>::iterator startIterator;
-				startIterator = joint->fs.begin();
-				joint->fs.erase( startIterator );
-				fNorm=0;
-				for(size_t i=0;i<fs.size();i++){
-					fNorm+=joint->fs[i].norm()/(joint->fs.size()-1);
+			fNorm = 0;
+			for(int i=0; i<5 ;i++){
+				if(i==4){
+					joint->fs[4] = joint->motorf;
+				}else{ 
+					joint->fs[i] = joint->fs[i+1];
 				}
+				
+				fNorm+=joint->fs[i].norm()/5;
 			}
-
-			//joint->motorfNorm = joint->motorf.norm();
+			//fNorm = joint->motorf.norm();
 
 			//物体の形状を考慮したバネダンパを設定する場合
 			if(I[0]!=1&&I[1]!=1&&I[2]!=1){
