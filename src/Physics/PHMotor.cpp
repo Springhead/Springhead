@@ -15,7 +15,6 @@ namespace Spr{;
 PHMotor1D::PHMotor1D(){}
 	
 void PHMotor1D::SetupLCP(){
-	fMinDt = joint->fMin * joint->GetScene()->GetTimeStep();
 	fMaxDt = joint->fMax * joint->GetScene()->GetTimeStep();
 
 	// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
@@ -67,7 +66,7 @@ void PHMotor1D::IterateLCP(){
 			 + joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);
 
 	// トルク制限
-	fnew = min(max(fMinDt, fnew), fMaxDt);
+	fnew = (fnew > 0) ? min(fnew, fMaxDt) : max(fnew, -fMaxDt);
 	joint->CompResponse(fnew - joint->motorf.z, 0);
 	joint->motorf.z = fnew;
 }
@@ -77,7 +76,6 @@ void PHMotor1D::IterateLCP(){
 PHBallJointMotor::PHBallJointMotor(){
 	yieldFlag	=  false;
 	fMaxDt		=  FLT_MAX;
-	fMinDt		= -FLT_MAX;
 }
 
 void PHBallJointMotor::ElasticDeformation(){
@@ -122,7 +120,6 @@ void PHBallJointMotor::PlasticDeformation(){
 }
 
 void PHBallJointMotor::SetupLCP(){
-	fMinDt = joint->fMin * joint->GetScene()->GetTimeStep();
 	fMaxDt = joint->fMax * joint->GetScene()->GetTimeStep();
 	dt		= joint->GetScene()->GetTimeStep();
 	dtinv	= joint->GetScene()->GetTimeStepInv();
@@ -267,8 +264,8 @@ void PHBallJointMotor::IterateLCP(){
 
 		if(fMaxDt < fnew[i])
 			fnew[i] = fMaxDt;
-		else if(joint->motorf[i] < fMinDt)
-			joint->motorf[i] = fMinDt;
+		else if(joint->motorf[i] < -fMaxDt)
+			joint->motorf[i] = fMaxDt;
 		
 		joint->CompResponse(fnew[i] - joint->motorf[i], i);
 		joint->motorf[i] = fnew[i];

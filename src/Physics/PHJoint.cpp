@@ -33,7 +33,6 @@ PHJoint1DDesc::PHJoint1DDesc(){
 	rangeSpring = 10000.0;
 	rangeDamper = 100.0;
 	fMax =  FLT_MAX;
-	fMin = -FLT_MAX;
 }
 
 PHJoint1D::PHJoint1D(){
