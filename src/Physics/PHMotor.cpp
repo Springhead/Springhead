@@ -43,12 +43,12 @@ void PHMotor1D::SetupLCP(){
 			
 			ws = joint->vjrel;	//バネのダンパの並列部の速さ
 			tmp = D2-D1+K*h;
-			xs[1] = ((D2-D1)/tmp)*xs[0] + (D2*h/(D2-D1))*ws;	//バネとダンパの並列部の距離の更新	
+			joint->xs[1] = ((D2-D1)/tmp)*joint->xs[0] + (D2*h/(D2-D1))*ws;	//バネとダンパの並列部の距離の更新	
 			tmpA = (D2-D1)*(D2-D1)/(D1*D2*tmp) ;
-			tmpB = K*(D2-D1)*(D2-D1)/(D2*tmp*tmp)*(xs[0].w().z);
+			tmpB = K*(D2-D1)*(D2-D1)/(D2*tmp*tmp)*(joint->xs[0].w().z);
 			dA = tmpA * dtinv;
 			db = tmpB * (K * joint->GetDeviation() - D1 * joint->targetVelocity - joint->offsetForce);
-			xs[0] = xs[1];	//バネとダンパの並列部の距離のステップを進める
+			joint->xs[0] = joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
 		}
 		Ainv = 1.0 / (A + dA);
 		joint->motorf.z *= joint->engine->shrinkRate;
@@ -105,20 +105,20 @@ void PHBallJointMotor::PlasticDeformation(){
 	double tmp = D+D2+K*dt;
 	ws = joint->vjrel;	//バネとダンパの並列部の速さ
 
-	xs[1] = ((D+D2)/tmp)*xs[0] + (D2*dt/tmp)*ws;	//バネとダンパの並列部の距離の更新
+	joint->xs[1] = ((D+D2)/tmp)*joint->xs[0] + (D2*dt/tmp)*ws;	//バネとダンパの並列部の距離の更新
 	for(int i=0;i<3;i++){
 		dA[i]= tmp/(D2*(K*dt+D)) * dtinv /I[i];
 	}
-	db = K/(K*dt+D)*(xs[0].w()) ;
+	db = K/(K*dt+D)*(joint->xs[0].w()) ;
 	
-	//ELASTIC_PLASTICモードの場合,ELASTIC状態の終了時に残留変位を保存する位置にTargetPositionを変更
+	//ELASTIC_PLASTICモードの場合,PLASTIC状態の終了時に残留変位を保存する位置にTargetPositionを変更
 	if(joint->type==PHBallJointDesc::ELASTIC_PLASTIC){
 		if(ws.w().norm()<0.01){
 			yieldFlag = false;
 			joint->SetTargetPosition(joint->Xjrel.q);
 		}
 	}
-	xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
+	joint->xs[0]=joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
 }
 
 void PHBallJointMotor::SetupLCP(){
@@ -194,18 +194,18 @@ void PHBallJointMotor::SetupLCP(){
 		else{
 			//Saveに関する部分でfsが保存されていないので一時的にコメントアウト
 			//fの平均値を計算
-			//fs.push_back(joint->motorf);
-			//if(fs.size()>5){
-			//	vector<Vec3d>::iterator startIterator;
-			//	startIterator = fs.begin();
-			//	fs.erase( startIterator );
-			//	fNorm=0;
-			//	for(size_t i=0;i<fs.size();i++){
-			//		fNorm+=fs[i].norm()/(fs.size()-1);
-			//	}
-			//}
+			joint->fs.push_back(joint->motorf);
+			if(joint->fs.size()>5){
+				vector<Vec3d>::iterator startIterator;
+				startIterator = joint->fs.begin();
+				joint->fs.erase( startIterator );
+				fNorm=0;
+				for(size_t i=0;i<fs.size();i++){
+					fNorm+=joint->fs[i].norm()/(joint->fs.size()-1);
+				}
+			}
 
-			fNorm = joint->motorf.norm();
+			//joint->motorfNorm = joint->motorf.norm();
 
 			//物体の形状を考慮したバネダンパを設定する場合
 			if(I[0]!=1&&I[1]!=1&&I[2]!=1){
