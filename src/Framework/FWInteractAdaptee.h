@@ -92,7 +92,8 @@ public:
 											const Posed& a2w, const Posed& b2w, const Vec3d pc, Vec3d& dir, 
 											Vec3d& normal, Vec3d& pa, Vec3d& pb);	///< ポインタ近傍の物体との近傍点を探す
 	void FindSectionVertex(PHSolid* solid0, PHSolid* solid1, const Posed shapePoseW0, const Posed shapePoseW1,
-											const Vec3d normal, const Vec3d commonPoint, std::vector<Vec3d>& section);
+											const Vec3d pa, Vec3d pb, const Vec3d normal,
+											const Vec3d commonPoint, std::vector<Vec3d>& section);
 
 	virtual void Clear(){};
 	virtual void Init(){};

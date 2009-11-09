@@ -718,7 +718,11 @@ void FWLDHaptic::Step(){
 		PhysicsStep();
 		UpdateSolidList();
 		NeighborObjectFromPointer();
+#if 1
 		TestSimulation();
+#else
+		TestSimulation6D();
+#endif
 		bCalcPhys = false;
 	}
 	double pdt = GetPHScene()->GetTimeStep();
@@ -971,35 +975,26 @@ void FWLDHaptic::TestSimulation6D(){
 		for(int j = 0; j < NIAPointers(); j++){
 			FWInteractPointer* iPointer = GetIAPointer(j);
 			if(iPointer->interactInfo[i].flag.blocal==false)continue;
-			PHSolidIf* soPointer = iPointer->pointerSolid;
+			PHSolid* soPointer = iPointer->pointerSolid->Cast();
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			Vec3d cPoint = phSolid->GetPose() * iInfo->neighborInfo.closest_point;		// 力を加える点(ワールド座標)
+			Vec3d pPoint = soPointer->GetPose() * iInfo->neighborInfo.pointer_point;
 
-			/// 拘束座標系を作るための準備
-			Vec3d rpjabs, vpjabs;
-			rpjabs = cPoint - soPointer->GetCenterPosition();									//力覚ポインタの中心から接触点までのベクトル
-			vpjabs = soPointer->GetVelocity() + soPointer->GetAngularVelocity() % rpjabs;		//接触点での速度
-			Vec3d rjabs, vjabs;
-			rjabs = cPoint - phSolid->GetCenterPosition();										//剛体の中心から接触点までのベクトル
-			vjabs = phSolid->GetVelocity() + phSolid->GetAngularVelocity() % rjabs;				//接触点での速度
-
-			/// 拘束座標変換行列の計算
-			Vec3d n, t[2], vjrel, vjrelproj;						//接線ベクトルt[0], t[1] (t[0]は相対速度ベクトルに平行になるようにする)
-			n = -1* iInfo->neighborInfo.face_normal;
-			vjrel = vjabs - vpjabs;									// 相対速度
-			vjrelproj = vjrel - (n * vjrel) * n;					// 相対速度ベクトルを法線に直交する平面に射影したベクトル
-			double vjrelproj_norm = vjrelproj.norm();
-			if(vjrelproj_norm < 1.0e-10){							// 射影ベクトルのノルムが小さいとき
-				t[0] = n % Vec3d(1.0, 0.0, 0.0);					// t[0]を法線とVec3d(1.0, 0.0, 0.0)の外積とする
-				if(t[0].norm() < 1.0e-10)							// それでもノルムが小さかったら
-					t[0] = n % Vec3d(0.0, 1.0, 0.0);				// t[0]を法線とVec3d(0.0, 1.0, 0.0)の外積とする
-				t[0].unitize();										// t[0]を単位ベクトルにする				
+			/// 拘束座標系の作成
+			Vec3d v0 = phSolid->GetPointVelocity(cPoint);
+			Vec3d v1 = soPointer->GetPointVelocity(pPoint);
+			Matrix3d local;	//	contact coodinate system 接触の座標系
+			Vec3d normal = iInfo->neighborInfo.face_normal; 
+			local.Ex() = normal;
+			local.Ey() = v1-v0;
+			local.Ey() -= local.Ey() * normal * normal;
+			if (local.Ey().square() > 1e-6){
+				local.Ey().unitize(); 
+			}else{
+				if (Square(normal.x) < 0.5) local.Ey()= (normal ^ Vec3f(1,0,0)).unit();
+				else local.Ey() = (normal ^ Vec3f(0,1,0)).unit();
 			}
-			else{
-				t[0] = vjrelproj / vjrelproj_norm;					// ノルムが小さくなかったら，射影ベクトルのまま
-			}
-
-			t[1] = n % t[0];										// t[1]は法線とt[0]の外積できまる
+			local.Ez() =  local.Ex() ^ local.Ey();
 
 			/// 接触点に加える力
 			const float minTestForce = 0.5;										// 最小テスト力
@@ -1007,24 +1002,14 @@ void FWLDHaptic::TestSimulation6D(){
 			if(iInfo->neighborInfo.test_force_norm < minTestForce){
 				iInfo->neighborInfo.test_force_norm = minTestForce;					 
 			}
-			#ifdef FORCE_ELEMENT
-			for(int i = 0; i < 3; i++){
-				if(iInfo->neighborInfo.test_force[i] < minTestForce)
-					iInfo->neighborInfo.test_force[i] = minTestForce;
-			}
-			#endif
+
 			TMatrixRow<6, 3, double> u;			// 剛体の機械インピーダンス
 			TMatrixRow<3, 3, double> force;		// 加える力
+			Vec3d localForce = local * iInfo->neighborInfo.test_force;
 
-			#ifdef FORCE_ELEMENT
-			force.col(0) = Vec3d(iInfo->neighborInfo.test_force[0], 0, 0);
-			force.col(1) = Vec3d(0, iInfo->neighborInfo.test_force[1], 0);
-			force.col(2) = Vec3d(0, 0, iInfo->neighborInfo.test_force[2]);
-			#else
-			force.col(0) = iInfo->neighborInfo.test_force_norm * n;
-			force.col(1) = iInfo->neighborInfo.test_force_norm * (n + t[0]);
-			force.col(2) = iInfo->neighborInfo.test_force_norm * (n + t[1]);
-			#endif
+			force.col(0) = Vec3d(localForce[0], 0, 0);
+			force.col(1) = Vec3d(0, localForce[0], 0);
+			force.col(2) = Vec3d(0, 0,localForce[0]);
 			//DSTR<<force<<std::endl;
 
 			//DSTR<<" 法線--------------------"<<std::endl;

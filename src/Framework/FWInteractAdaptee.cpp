@@ -146,8 +146,8 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 	if (!phSolid->NShape()==0){													///< 形状を持たない剛体の場合は行わない
 		CDConvexIf* a = DCAST(CDConvexIf, phSolid->GetShape(0));				///< 剛体が持つ凸形状
 		CDConvexIf* b = DCAST(CDConvexIf, soPointer->GetShape(0));				///< 力覚ポインタの凸形状
-		Posed a2w = phSolid->GetPose();											///< 剛体の姿勢
-		Posed b2w = soPointer->GetPose();										///< 力覚ポインタの姿勢
+		Posed a2w = phSolid->GetPose() * phSolid->GetShapePose(0);											///< 剛体の姿勢
+		Posed b2w = soPointer->GetPose() * soPointer->GetShapePose(0);										///< 力覚ポインタの姿勢
 		Vec3d dir = -1.0 * iaInfo->neighborInfo.face_normal;
 		Vec3d cp = phSolid->GetCenterPosition();								///< 剛体の重心
 		Vec3d normal;															///< 剛体から力覚ポインタへの法線(ワールド座標)
@@ -158,22 +158,20 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 		found = FindNearestPoint(a, b, a2w, b2w, cp, dir, normal, pa, pb);							
 		
 		/// 接触解析(susa実装中)
-		Posed shapePoseW0 = phSolid->GetPose();
-		Posed shapePoseW1 = soPointer->GetPose();
 		Vec3d a2b = b2w * pb - a2w * pa;
 		std::vector<Vec3d> section;
 		Vec3d commonPoint;
 		if(found == 1){
 			/// FindClosestPointで終わった場合
 			/// 力覚ポインタと剛体が離れているので，近づけて接触解析
-			shapePoseW1.Pos() -= a2b;
-			commonPoint = shapePoseW0 * pa;
-			FindSectionVertex(phSolid, soPointer, shapePoseW0, shapePoseW1, normal, commonPoint, section);
+			b2w.Pos() -= a2b;
+			commonPoint = a2w * pa;
+			FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
 		}else if(found == 2){
 			/// ContFindCommonPointで終わった場合
 			///	既に接触している状態なので，そのまま接触解析
-			commonPoint = shapePoseW0 * pa + 0.5 * a2b;
-			FindSectionVertex(phSolid, soPointer, shapePoseW0, shapePoseW1, normal, commonPoint, section);
+			commonPoint = a2w * pa + 0.5 * a2b;
+			FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
 		}
 		iaInfo->neighborInfo.section = section;
 
@@ -244,7 +242,8 @@ extern bool bGJKDebug;
 
 
 void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, const Posed shapePoseW0, const Posed shapePoseW1,
-										  const Vec3d normal, const Vec3d commonPoint, std::vector<Vec3d>& section){
+										  Vec3d pa, Vec3d pb, const Vec3d normal,
+										  const Vec3d commonPoint, std::vector<Vec3d>& section){
 	/// 力覚ポインタと剛体との接触部分解析
 	// PHConstraintEngine.hにあるメンバ関数PHShapePairForLCP::EnumVertex()を改変
 	// 本当はCDDetectorImp.hのクラスCDContactAnalysisFaceを使うべき？
@@ -252,8 +251,8 @@ void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, cons
 	// 相対速度をみて2Dの座標系を決める。
 	FPCK_FINITE(solid0->pose);
 	FPCK_FINITE(solid1->pose);
-	Vec3d v0 = solid0->GetPointVelocity(commonPoint);
-	Vec3d v1 = solid1->GetPointVelocity(commonPoint);
+	Vec3d v0 = solid0->GetPointVelocity(solid0->pose * pa);
+	Vec3d v1 = solid1->GetPointVelocity(solid1->pose * pb);
 	Matrix3d local;	//	contact coodinate system 接触の座標系
 	local.Ex() = normal;
 	local.Ey() = v1-v0;
