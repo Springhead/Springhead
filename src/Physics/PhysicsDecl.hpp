@@ -149,7 +149,6 @@ protected:\
 	double	rangeSpring;	\
 	double	rangeDamper;	\
 	double	fMax;	\
-	double	fMin;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint::SetDesc((PHJointDesc*)(PHJoint1DDesc*)ptr);	\
@@ -164,7 +163,6 @@ public:\
 		rangeSpring = ((PHJoint1DDesc*)ptr)->rangeSpring;	\
 		rangeDamper = ((PHJoint1DDesc*)ptr)->rangeDamper;	\
 		fMax = ((PHJoint1DDesc*)ptr)->fMax;	\
-		fMin = ((PHJoint1DDesc*)ptr)->fMin;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -181,7 +179,6 @@ public:\
 		((PHJoint1DDesc*)ptr)->rangeSpring = rangeSpring;	\
 		((PHJoint1DDesc*)ptr)->rangeDamper = rangeDamper;	\
 		((PHJoint1DDesc*)ptr)->fMax = fMax;	\
-		((PHJoint1DDesc*)ptr)->fMin = fMin;	\
 		return true;	\
 	}\
 
@@ -367,7 +364,6 @@ protected:\
 	Vec3d	targetVelocity;	\
 	Vec3d	offsetForce;	\
 	double	fMax;	\
-	double	fMin;	\
 	Vec2d	poleTwist;	\
 	enum Spr::PHBallJointDesc::PHDeformationType	type;	\
 	double	secondDamper;	\
@@ -386,7 +382,6 @@ public:\
 		targetVelocity = ((PHBallJointDesc*)ptr)->targetVelocity;	\
 		offsetForce = ((PHBallJointDesc*)ptr)->offsetForce;	\
 		fMax = ((PHBallJointDesc*)ptr)->fMax;	\
-		fMin = ((PHBallJointDesc*)ptr)->fMin;	\
 		poleTwist = ((PHBallJointDesc*)ptr)->poleTwist;	\
 		type = ((PHBallJointDesc*)ptr)->type;	\
 		secondDamper = ((PHBallJointDesc*)ptr)->secondDamper;	\
@@ -407,7 +402,6 @@ public:\
 		((PHBallJointDesc*)ptr)->targetVelocity = targetVelocity;	\
 		((PHBallJointDesc*)ptr)->offsetForce = offsetForce;	\
 		((PHBallJointDesc*)ptr)->fMax = fMax;	\
-		((PHBallJointDesc*)ptr)->fMin = fMin;	\
 		((PHBallJointDesc*)ptr)->poleTwist = poleTwist;	\
 		((PHBallJointDesc*)ptr)->type = type;	\
 		((PHBallJointDesc*)ptr)->secondDamper = secondDamper;	\

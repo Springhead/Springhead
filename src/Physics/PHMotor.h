@@ -43,7 +43,7 @@ public:
 	PHJoint1D*				joint;
 
 	double  A, Ainv, dA, b, db;
-	double  fMaxDt, fMinDt;			///< 関節の出せる力*dtの最大値、最小値
+	double  fMaxDt;			///< 関節の出せる力*dtの最大値、最小値
 	
 	virtual void	SetupLCP();
 	virtual void	IterateLCP();
@@ -58,7 +58,7 @@ public:
 	//Vec3d	f;
 	Quaterniond	propQ;
 	Vec3d	propV, I;
-	double	fMaxDt, fMinDt;
+	double	fMaxDt;
 	double	fNorm;
 	double	dt, dtinv, K, D, D2;
 	bool	yieldFlag;

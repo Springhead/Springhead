@@ -79,10 +79,8 @@ public:
 	virtual Vec3d		GetAngle(){return position;}								///< 角度を返す関数
 	virtual Quaterniond GetPosition(){return Xjrel.q;}								///< 角度のクォータニオンを返す関数
 	virtual Vec3d		GetVelocity(){return velocity;}								///< 速度を返す関数
-	virtual void		SetTorqueMax(double max){fMax = max; }
+	virtual void		SetTorqueMax(double max){fMax = fabs(max); }
 	virtual double		GetTorqueMax(){return fMax;}
-	virtual void		SetTorqueMin(double min){fMin = min; }
-	virtual double		GetTorqueMin(){return fMin;}
 	virtual void		SetTargetVelocity(Vec3d v){ targetVelocity = v;}
 	virtual Vec3d		GetTargetVelocity() const {return targetVelocity;}
 	virtual void		SetTrajectoryVelocity(Vec3d v) { targetVelocity = v;}

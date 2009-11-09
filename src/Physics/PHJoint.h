@@ -96,10 +96,8 @@ public:
 	void	SetOffsetForce(double dat){ offsetForce = dat; }
 	double	GetOffsetForce(){ return offsetForce;}
 	bool	IsLimit(){ return (limit.onLower || limit.onUpper); }
-	void	SetTorqueMax(double max){fMax = max; }
+	void	SetTorqueMax(double max){fMax = fabs(max); }
 	double	GetTorqueMax(){return fMax;}
-	void	SetTorqueMin(double min){fMin = min; }
-	double	GetTorqueMin(){return fMin;}
 
 	/// オーバライド
 	virtual void	SetupLCP();

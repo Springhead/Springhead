@@ -56,7 +56,6 @@ struct PHJoint1DDesc : public PHJointDesc{
 	double	rangeSpring;	///< 可動範囲バネ
 	double	rangeDamper;	///< 可動範囲ダンパ
 	double	fMax;			///< 関節にかけられる最大の力
-	double	fMin;			///< 関節にかけられる最小の力
 	PHJoint1DDesc();
 };
 
@@ -319,21 +318,14 @@ struct PHJoint1DIf : public PHJointIf{
 	*/
 	double	GetOffsetForce();
 
-	/** @brief 関節の出すことができる最大トルク(N)を設定する
+	/** @brief 関節の出すことができる最大トルク(N)の絶対値を設定する
+		@param max ある関節の最大トルク(0～DBL_MAX)
 	*/
 	void SetTorqueMax(double max);
 
-	/** @brief 関節の出すことができる最大トルク(N)を取得する
+	/** @brief 関節の出すことができる最大トルク(N)の絶対値を取得する
 	*/
 	double GetTorqueMax();
-
-		/** @brief 関節の出すことができる最小トルク(N)を設定する
-	*/
-	void SetTorqueMin(double min);
-
-	/** @brief 関節の出すことができる最小トルク(N)を取得する
-	*/
-	double GetTorqueMin();
 
 	/** @brief 可動域にかかっているかどうかを取得する
 		@return かかっていればtrue
@@ -498,15 +490,6 @@ struct PHBallJointIf : public PHJointIf{
 	*/
 	double GetTorqueMax();
 
-	/** @brief 関節の出せる最小トルクを設定する
-		@param min 最小トルク
-	*/
-	void SetTorqueMin(double min);
-
-	/** @brief 関節の出せる最小トルクを取得する
-	*/
-	double GetTorqueMin();
-
 	/** @brief 制御の目標向きを設定する
 	*/
 	void SetTargetPosition(Quaterniond p);
@@ -625,8 +608,7 @@ struct PHBallJointDesc : public PHJointDesc{
 	Vec3d			targetVelocity;  ///< 目標となる回転ベクトル
 	Vec3d			offsetForce;	 ///< 定数項（軌道追従制御の加速度の項を入れるのに使ったりする）
 	//Vec3d			torque;			 ///< モータトルク
-	double			fMax;			 ///< 関節にかけられる最大の力
-	double			fMin;			 ///< 関節にかけられる最小の力
+	double			fMax;			 ///< 関節にかけられる最大の力(絶対値)
 	Vec2d			poleTwist;
 	
 	enum PHDeformationType{

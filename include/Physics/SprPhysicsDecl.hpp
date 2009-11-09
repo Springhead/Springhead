@@ -115,8 +115,6 @@
 	double GetOffsetForce(){	return	base::GetOffsetForce();}	\
 	void SetTorqueMax(double max){	base::SetTorqueMax(max);}	\
 	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
-	void SetTorqueMin(double min){	base::SetTorqueMin(min);}	\
-	double GetTorqueMin(){	return	base::GetTorqueMin();}	\
 	bool IsLimit(){	return	base::IsLimit();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHingeJointIf(base)	\
@@ -146,8 +144,6 @@
 	Vec3d GetVelocity(){	return	base::GetVelocity();}	\
 	void SetTorqueMax(double max){	base::SetTorqueMax(max);}	\
 	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
-	void SetTorqueMin(double min){	base::SetTorqueMin(min);}	\
-	double GetTorqueMin(){	return	base::GetTorqueMin();}	\
 	void SetTargetPosition(Quaterniond p){	base::SetTargetPosition(p);}	\
 	Quaterniond GetTargetPosition(){	return	base::GetTargetPosition();}	\
 	void SetSpring(double spring){	base::SetSpring(spring);}	\
