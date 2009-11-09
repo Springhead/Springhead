@@ -77,22 +77,8 @@ PHSolidIf* CreateRoundCone(PHSceneIf* phscene){
 	PHSolidIf*  solid = phscene->CreateSolid(desc);
 	solid->AddShape(CreateShapeCone(phscene));
 	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
-	solid->SetFramePosition(Vec3d(-2, 2, 0));
+	solid->SetFramePosition(Vec3d(-2, 12, 0));
 	solid->SetOrientation(Quaterniond::Rot(Rad(90), 'x'));
-	solid->SetDynamical(false);
-
-	PHSolidIf*  solid2 = phscene->CreateSolid(desc);
-	solid2->AddShape(CreateShapeCone(phscene));
-	solid2->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
-	solid2->SetFramePosition(Vec3d(-2, 2, -2));
-	solid2->SetOrientation(Quaterniond::Rot(Rad(90), 'y'));
-	solid2->SetDynamical(false);
-
-	PHSolidIf*  solid3 = phscene->CreateSolid(desc);
-	solid3->AddShape(CreateShapeCone(phscene));
-	solid3->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
-	solid3->SetFramePosition(Vec3d(-2, 2, -2));
-	solid3->SetDynamical(false);
 	return solid;
 }
 
