@@ -17,6 +17,12 @@ PHMotor1D::PHMotor1D(){}
 void PHMotor1D::SetupLCP(){
 	fMaxDt = joint->fMax * joint->GetScene()->GetTimeStep();
 
+	double dtinv = joint->GetScene()->GetTimeStepInv();
+	double D1 = joint->damper;
+	double D2 = joint->secondDamper;
+	double K = joint->spring;
+	double h = joint->GetScene()->GetTimeStep();
+
 	// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
 	if(joint->spring == 0.0 && joint->damper == 0.0){
 		dA = db = 0.0;
@@ -32,25 +38,44 @@ void PHMotor1D::SetupLCP(){
 			db = tmp * (joint->spring * joint->GetDeviation()
 				- joint->damper * joint->targetVelocity - joint->offsetForce);
 		}
+		//else{
+		//	//3要素モデルの設定
+
+		//	
+		//	ws = joint->vjrel;	//バネのダンパの並列部の速さ
+		//	tmp = D2-D1+K*h;
+		//	joint->xs[1] = ((D2-D1)/tmp)*joint->xs[0] + (D2*h/(D2-D1))*ws;	//バネとダンパの並列部の距離の更新	
+		//	tmpA = (D2-D1)*(D2-D1)/(D1*D2*tmp) ;
+		//	tmpB = K*(D2-D1)*(D2-D1)/(D2*tmp*tmp)*(joint->xs[0].w().z);
+		//	dA = tmpA * dtinv;
+		//	db = tmpB * (K * joint->GetDeviation() - D1 * joint->targetVelocity - joint->offsetForce);
+		//	joint->xs[0] = joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
+		//}
+
 		else{
-			//3要素モデルの設定
-			double dtinv = joint->GetScene()->GetTimeStepInv(), tmp, tmpA, tmpB;
-			double D1 = joint->damper;
-			double D2 = joint->secondDamper;
-			double K = joint->spring;
-			double h = joint->GetScene()->GetTimeStep();
+			//塑性変形(3要素モデル)
+			D  *= joint->hardnessRate;
+			D2 *= joint->hardnessRate;
+			K  *= joint->hardnessRate;
+			double tmp = D+D2+K*dt;
+			ws = joint->vjrel;	//バネとダンパの並列部の速さ
+
+			joint->xs[1] = ((D+D2)/tmp)*joint->xs[0] + (D2*dt/tmp)*ws;	//バネとダンパの並列部の距離の更新
+			dA= tmp/(D2*(K*dt+D)) * dtinv;
+			db = K/(K*dt+D)*(joint->xs[0].w().z) ;
 			
-			ws = joint->vjrel;	//バネのダンパの並列部の速さ
-			tmp = D2-D1+K*h;
-			joint->xs[1] = ((D2-D1)/tmp)*joint->xs[0] + (D2*h/(D2-D1))*ws;	//バネとダンパの並列部の距離の更新	
-			tmpA = (D2-D1)*(D2-D1)/(D1*D2*tmp) ;
-			tmpB = K*(D2-D1)*(D2-D1)/(D2*tmp*tmp)*(joint->xs[0].w().z);
-			dA = tmpA * dtinv;
-			db = tmpB * (K * joint->GetDeviation() - D1 * joint->targetVelocity - joint->offsetForce);
-			joint->xs[0] = joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
+			//ELASTIC_PLASTICモードの場合,PLASTIC状態の終了時に残留変位を保存する位置にTargetPositionを変更
+			if(joint->type==PHBallJointDesc::ELASTIC_PLASTIC){
+				if(ws.w().norm()<0.01){
+					yieldFlag = false;
+					joint->SetTargetPosition(joint->Xjrel.q.z);//naga間違っているかも
+				}
+			}
+			joint->xs[0]=joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
 		}
 		Ainv = 1.0 / (A + dA);
 		joint->motorf.z *= joint->engine->shrinkRate;
+
 	}
 			
 	// 拘束力初期値による速度変化量を計算

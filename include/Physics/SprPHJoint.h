@@ -40,7 +40,11 @@ struct PHJointDesc : public PHConstraintDesc{
 		MODE_VELOCITY,
 		MODE_TRAJ,
 	} mode;*/
-	
+	enum PHDeformationType{
+		ELASTIC,
+		PLASTIC,
+		ELASTIC_PLASTIC}type;
+
 	PHJointDesc();
 };
 /// 1軸関節のディスクリプタ
@@ -56,6 +60,8 @@ struct PHJoint1DDesc : public PHJointDesc{
 	double	rangeSpring;	///< 可動範囲バネ
 	double	rangeDamper;	///< 可動範囲ダンパ
 	double	fMax;			///< 関節にかけられる最大の力
+	double  yieldStress;		///< 降伏応力
+	double  hardnessRate;	///< 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
 	PHJoint1DDesc();
 };
 
@@ -611,14 +617,10 @@ struct PHBallJointDesc : public PHJointDesc{
 	double			fMax;			 ///< 関節にかけられる最大の力(絶対値)
 	Vec2d			poleTwist;
 	
-	enum PHDeformationType{
-		ELASTIC,
-		PLASTIC,
-		ELASTIC_PLASTIC}type;
 	double secondDamper;			///< 第２ダンパ係数
 	double yieldStress;				///< 降伏応力
 	double hardnessRate;			///< 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
-	Vec3d  Inertia;						///< 断面２次モーメント
+	Vec3d  Inertia;					///< 断面２次モーメント
 	
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };
