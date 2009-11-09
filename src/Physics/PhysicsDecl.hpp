@@ -607,18 +607,24 @@ protected:\
 	SpatialVector	F;	\
 	Vec3d	motorf;	\
 	Vec3d	limitf;	\
+	std::vector<(Vec3d)>	fs;	\
+	SpatialVector	xs;	\
 public:\
 	virtual void SetState(const void* ptr){ \
 		f = ((PHConstraintState*)ptr)->f;	\
 		F = ((PHConstraintState*)ptr)->F;	\
 		motorf = ((PHConstraintState*)ptr)->motorf;	\
 		limitf = ((PHConstraintState*)ptr)->limitf;	\
+		fs = ((PHConstraintState*)ptr)->fs;	\
+		xs = ((PHConstraintState*)ptr)->xs;	\
 	}\
 	virtual bool GetState(void* ptr) const { \
 		((PHConstraintState*)ptr)->f = f;	\
 		((PHConstraintState*)ptr)->F = F;	\
 		((PHConstraintState*)ptr)->motorf = motorf;	\
 		((PHConstraintState*)ptr)->limitf = limitf;	\
+		((PHConstraintState*)ptr)->fs = fs;	\
+		((PHConstraintState*)ptr)->xs = xs;	\
 		return true;	\
 	}\
 
@@ -641,13 +647,10 @@ public:\
 
 #define SPR_DECLMEMBEROF_PH3ElementState \
 protected:\
-	SpatialVector	xs;	\
 public:\
 	virtual void SetState(const void* ptr){ \
-		xs = ((PH3ElementState*)ptr)->xs;	\
 	}\
 	virtual bool GetState(void* ptr) const { \
-		((PH3ElementState*)ptr)->xs = xs;	\
 		return true;	\
 	}\
 

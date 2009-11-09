@@ -31,8 +31,8 @@ CDShapeIf* CreateShapeCapsule(PHSceneIf* phscene){
 }
 CDShapeIf* CreateShapeCone(PHSceneIf* phscene){
 	CDRoundConeDesc cd;
-	cd.radius = Vec2f(0.5, 0.1) * modelScale;
-	cd.length = 2.0;
+	cd.radius = Vec2f(0.8, 0.8) * modelScale;
+	cd.length = 7.0;
 	cd.material.mu0 = 0.8;
 	cd.material.mu = 0.6;
 	CDShapeIf* shape = phscene->GetSdk()->CreateShape(cd);
@@ -77,7 +77,22 @@ PHSolidIf* CreateRoundCone(PHSceneIf* phscene){
 	PHSolidIf*  solid = phscene->CreateSolid(desc);
 	solid->AddShape(CreateShapeCone(phscene));
 	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
-	solid->SetFramePosition(Vec3d(0, 15, 0));
+	solid->SetFramePosition(Vec3d(-2, 2, 0));
+	solid->SetOrientation(Quaterniond::Rot(Rad(90), 'x'));
+	solid->SetDynamical(false);
+
+	PHSolidIf*  solid2 = phscene->CreateSolid(desc);
+	solid2->AddShape(CreateShapeCone(phscene));
+	solid2->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
+	solid2->SetFramePosition(Vec3d(-2, 2, -2));
+	solid2->SetOrientation(Quaterniond::Rot(Rad(90), 'y'));
+	solid2->SetDynamical(false);
+
+	PHSolidIf*  solid3 = phscene->CreateSolid(desc);
+	solid3->AddShape(CreateShapeCone(phscene));
+	solid3->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
+	solid3->SetFramePosition(Vec3d(-2, 2, -2));
+	solid3->SetDynamical(false);
 	return solid;
 }
 

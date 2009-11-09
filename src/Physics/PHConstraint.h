@@ -25,6 +25,8 @@ struct PHConstraintState{
 	Vec3d motorf;
 	Vec3d limitf;
 	//Vec3d limitF;
+	std::vector<Vec3d> fs;	//fのNormの平均値を保存
+	SpatialVector xs[2];			///< (3要素モデル専用)ばね部の距離
 
 };
 

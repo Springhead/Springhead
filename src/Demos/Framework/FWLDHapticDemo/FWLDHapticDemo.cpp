@@ -180,11 +180,10 @@ void FWLDHapticDemo::BuildScene(){
 		soFloor->AddShape(shapeFloor);
 		soFloor->SetFramePosition(Vec3d(0, -7, 0));
 	}
-#if 0
-	CreateWall(phscene);
-	CreateJointBox(phscene);
-	Create3ElementJointBox(phscene);
-#endif
+
+	CreateRoundCone(phscene);
+	phscene->SetContactMode(PHSceneDesc::MODE_NONE);
+
 	/// ƒ|ƒCƒ“ƒ^
 	for(int i= 0; i < 1; i++){
 		PHSolidIf* soPointer = phscene->CreateSolid(desc);

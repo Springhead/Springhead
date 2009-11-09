@@ -25,7 +25,7 @@ class PHJoint1D;
 	}
 };*/
 struct PH3ElementState{
-	SpatialVector xs[2];			///< (3要素モデル専用)ばね部の距離
+	//SpatialVector xs[2];			///< (3要素モデル専用)ばね部の距離
 };
 
 struct PH3ElementCommonData: public PH3ElementState{
