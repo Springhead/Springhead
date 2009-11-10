@@ -15,6 +15,7 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 // PHJoint
 PHJointDesc::PHJointDesc()/*:mode(MODE_POSITION)*/{
+	type = PHDeformationType::ELASTIC;
 };
 PHJoint::PHJoint(){	
 }
