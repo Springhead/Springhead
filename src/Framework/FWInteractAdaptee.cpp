@@ -106,13 +106,14 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				   ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 				*/
 				/// 1. BBoxレベルの衝突判定(Sweep & Prune)
-				Vec3f soMin,soMax;
+				/// sceneSolidのローカル座標系にそろえて判定を行う
 				Vec3d range = Vec3d(1, 1, 1) * iPointer->GetLocalRange();
-				Posed shapePose0 = phSolid->GetPose() * phSolid->GetShapePose(0);
-				phSolid->bbox.GetBBoxWorldMinMax(shapePose0,soMin,soMax);		// SolidのBBoxの最小値,最大値(3軸)
-				Posed shapePose1 = soPointer->GetPose() * soPointer->GetShapePose(0);
-				Vec3d pMin = shapePose1 * soPointer->bbox.GetBBoxMin() - range;		// PointerのBBoxの最小値(3軸)
-				Vec3d pMax = shapePose1 * soPointer->bbox.GetBBoxMax() + range;		// PointerのBBoxの最大値(3軸)
+				Posed solidPose = phSolid->GetPose() * phSolid->GetShapePose(0);
+				Posed pointerPose = soPointer->GetPose() * soPointer->GetShapePose(0);
+				Vec3f soMax = phSolid->bbox.GetBBoxMax();												//sceneSolidのBBoxの最大値(3軸) sceneSolid座標系
+				Vec3f soMin = phSolid->bbox.GetBBoxMin();												//sceneSolidのBBoxの最小値(3軸) sceneSolid座標系
+				Vec3d pMin = solidPose.Inv() * pointerPose * soPointer->bbox.GetBBoxMin() - range;		// PointerのBBoxの最小値(3軸) sceneSolid座標系
+				Vec3d pMax = solidPose.Inv() * pointerPose * soPointer->bbox.GetBBoxMax() + range;		// PointerのBBoxの最大値(3軸) sceneSolid座標系
 				/// 3軸で判定
 				int isLocal = 0;		//< いくつの軸で交差しているかどうか
 				for(int i = 0; i < 3; ++i){
@@ -125,7 +126,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 					if(soMin[i] <= pMax[i] && pMax[i] <= soMax[i]) in++;
 					/// inが1以上ならその軸で交差
 					if(in > 0) isLocal++;
-#if 0
+#if 1
 					DSTR << i << " pMin[i] = " << pMin[i] << "  soMin[i] = " << soMin[i] << "  pMax[i] = " << pMax[i] << std::endl;
 					DSTR << i << " pMin[i] = "  << pMin[i] << "  soMax[i] = " << soMax[i] << "  pMax[i] = " << pMax[i] << std::endl;
 					DSTR << i << " soMin[i] = " << soMin[i] << "  pMin[i] = " << pMin[i] << "  soMax[i] = " << soMax[i] << std::endl;
