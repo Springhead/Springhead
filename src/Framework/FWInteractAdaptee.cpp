@@ -80,6 +80,11 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				   ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 				*/
 				/// 1. BBoxレベルの衝突判定(Sweep & Prune)
+				/* shapeの向きを変えるとそれに応じてsolidの向きも変えなくてはならない．
+					しかし，GetBBox～はlocal座標系のmin, maxを返し，これをワールド系に
+					変換するためにposedをかけると，minであるものがmaxになったりするので問題である．
+					とりあえず．isLoxal = 3;にすることで，全ての剛体をGJKにまわすことにしている.susa
+				*/
 				Vec3d range = Vec3d(1, 1, 1) * iPointer->GetLocalRange();
 				Posed shapePose0 = phSolid->GetPose() * phSolid->GetShapePose(0);
 				Vec3d soMin = shapePose0 * phSolid->bbox.GetBBoxMin();		// SolidのBBoxの最小値(3軸)
@@ -88,7 +93,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				Vec3d pMin = shapePose1 * soPointer->bbox.GetBBoxMin() - range;		// PointerのBBoxの最小値(3軸)
 				Vec3d pMax = shapePose1 * soPointer->bbox.GetBBoxMax() + range;		// PointerのBBoxの最大値(3軸)
 				/// 3軸で判定
-				int isLocal = 0;		//< いくつの軸で交差しているかどうか
+				int isLocal = 3;		//< いくつの軸で交差しているかどうか
 				for(int i = 0; i < 3; ++i){
 					int in = 0;
 					/// ポインタのエッジ間にソリッドのエッジがあったら交差
