@@ -62,6 +62,7 @@ public:
 	virtual void UpdatePointer();
 	virtual void TestSimulation();
 	virtual void TestSimulation6D();
+	Matrix3d CalcConstraintCoordinateSystem(PHSolid* pha, PHSolid* phb, Vec3d pa, Vec3d pb, Vec3d normal);
 	virtual void BeginKeyboard();
 	virtual void EndKeyboard();
 	void ReleaseState(PHSceneIf*);
