@@ -65,6 +65,37 @@ public:
 		minS = c-d;
 		maxS = c+d;
 	}
+	///	SolidのPoseを代入することで，world座標系の最小値,最大値を取得
+	/// (注意）バウンディングボックスよりも大きなボックスで判定されてしまう．
+	void GetBBoxWorldMinMax(Posed& pos , Vec3f& min, Vec3f& max){
+		Vec3f ext[8];
+		ext[0] = Vec3f( bboxExtent.X(),  bboxExtent.Y(),  bboxExtent.Z());
+		ext[1] = Vec3f(-bboxExtent.X(),  bboxExtent.Y(),  bboxExtent.Z());
+		ext[2] = Vec3f( bboxExtent.X(), -bboxExtent.Y(),  bboxExtent.Z());
+		ext[3] = Vec3f( bboxExtent.X(),  bboxExtent.Y(), -bboxExtent.Z());
+		ext[4] = Vec3f(-bboxExtent.X(), -bboxExtent.Y(),  bboxExtent.Z());
+		ext[5] = Vec3f( bboxExtent.X(), -bboxExtent.Y(), -bboxExtent.Z());
+		ext[6] = Vec3f(-bboxExtent.X(),  bboxExtent.Y(), -bboxExtent.Z());
+		ext[7] = Vec3f(-bboxExtent.X(), -bboxExtent.Y(), -bboxExtent.Z());
+
+		for(int i =0; i<8 ;i++){
+			ext[i] = pos * ext[i];
+		}
+
+		min = ext[0];
+		max = ext[0];
+
+		for(int i =1; i<8 ;i++){
+			for(int j =0; j<3 ;j++){
+				if(min[j]>ext[i][j]){
+					min[j] = ext[i][j];
+				}
+				if(max[j]<ext[i][j]){
+					max[j] = ext[i][j];
+				}
+			}
+		}
+	}
 };
 
 
