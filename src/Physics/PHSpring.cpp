@@ -20,16 +20,18 @@ PHSpringDesc::PHSpringDesc(){
 // PHSpring
 PHSpring::PHSpring(const PHSpringDesc& desc){
 	SetDesc(&desc);
+	yieldFlag = false;
 }
 
-void PHSpring::SetDesc(const void* desc){
-	PHConstraint::SetDesc(desc);
-	const PHSpringDesc& descSpring = *(const PHSpringDesc*)desc;
-	spring = descSpring.spring;
-	damper = descSpring.damper;
-	springOri = descSpring.springOri;
-	damperOri = descSpring.damperOri;
-}
+//void PHSpring::SetDesc(const void* desc){
+//	PHConstraint::SetDesc(desc);
+//	const PHSpringDesc& descSpring = *(const PHSpringDesc*)desc;
+//	spring = descSpring.spring;
+//	damper = descSpring.damper;
+//	springOri = descSpring.springOri;
+//	damperOri = descSpring.damperOri;
+//}
+
 
 void PHSpring::SetConstrainedIndex(bool* con){
 	for(int i=0; i<3; ++i) con[i] = (damper[i] != 0.0 || spring[i] != 0.0);
@@ -39,7 +41,7 @@ void PHSpring::SetConstrainedIndexCorrection(bool* con){
 	con[0] = con[1] = con[2] = con[3] = con[4] = con[5] = false;
 }
 
-void PHSpring::CompBias(){
+void PHSpring::ElasticDeformation(){
 	//rjrel
 	double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
 	for(int i = 0; i < 3; i++){
@@ -47,19 +49,97 @@ void PHSpring::CompBias(){
 		tmp = 1.0 / (damper[i] + spring[i] * GetScene()->GetTimeStep());
 		dA[i] = tmp * dtinv;
 		db[i] = spring[i] * Xjrel.r[i] * tmp;
-	}
+	//}
 
 	// 姿勢に対するバネ
 	if(springOri != 0.0 || damperOri != 0.0){
-		Quaterniond diff =  Xjrel.q; // * targetPosition.Inv();
+		Quaterniond diff = Xjrel.q; // * targetPosition.Inv();
 		Vec3d prop = diff.RotationHalf();
-		double tmpInv = damperOri + springOri * GetScene()->GetTimeStep();
+		double tmpInv = damperOri +springOri * GetScene()->GetTimeStep();
 		if (tmpInv > 1e-30){
 			tmp = 1.0/tmpInv;
 			dA.w() = Vec3d(tmp * dtinv, tmp * dtinv, tmp * dtinv);
 			db.w() = springOri * (prop) * tmp;
 		}
 	}
+	}
+}
+
+void PHSpring::PlasticDeformation(){
+	//3要素モデル
+	double dt		= GetScene()->GetTimeStep();
+	double dtinv	= GetScene()->GetTimeStepInv();
+	Vec3d D		= damper * hardnessRate;
+	Vec3d D2		= secondDamper * hardnessRate;
+	Vec3d K		= spring * hardnessRate;
+
+	//rjrel
+	Vec3d tmp = D+D2+K*dt;
+	SpatialVector ws = vjrel;	//バネとダンパの並列部の速さ
+	for(int i = 0; i < 3; i++){
+		xs[1].v()[i] = ((D[i]+D2[i])/tmp[i])*xs[0].v()[i]+(D2[i]*dt/tmp[i])*ws.v()[i];	//バネとダンパの並列部の距離の更新
+		dA[i]		 = tmp[i]/(D2[i]*(K[i]*dt+D[i])) * dtinv;
+		db[i]		 = K[i]/(K[i]*dt+D[i])*(xs[0].v()[i]) ;
+	}
+
+	// 姿勢に対するバネ
+	if(springOri != 0.0 || damperOri != 0.0){
+		Quaterniond diff = Xjrel.q; // * targetPosition.Inv();
+		Vec3d prop = diff.RotationHalf();
+		double tmpInv = damperOri +springOri * GetScene()->GetTimeStep();
+		if (tmpInv > 1e-30){
+			double tmpO = 1.0/tmpInv;
+			dA.w() = Vec3d(tmpO * dtinv, tmpO * dtinv, tmpO * dtinv);
+			db.w() = springOri * (prop) * tmpO;
+		}
+	}
+
+	
+	//ELASTIC_PLASTICモードの場合,PLASTIC状態の終了時に残留変位を保存する位置にTargetPositionを変更
+	if(type==PHJointDesc::ELASTIC_PLASTIC){
+		if(ws.w().norm()<0.01){
+			yieldFlag = false;
+			//SetTargetPosition(Xjrel.q);
+		}
+	}
+	xs[0]=xs[1];	//バネとダンパの並列部の距離のステップを進める
+
+}
+void PHSpring::CompBias(){
+
+	//fの平均値を計算
+	double fNorm = 0;
+	for(int i=0; i<5 ;i++){
+		if(i==4){
+			fs[4] = motorf;
+		}else{ 
+			fs[i] = fs[i+1];
+		}
+		
+		fNorm+=fs[i].norm()/5;
+	}
+	if(fNorm > yieldStress){
+		yieldFlag = true;
+	}
+	switch(type){
+	case PHJointDesc::ELASTIC:	//PHDeformationType::Elastic 0　初期値
+		ElasticDeformation();
+		break;
+	case PHJointDesc::PLASTIC:	//PHDeformationType::Plastic 1
+		PlasticDeformation();
+		break;
+	case PHJointDesc::ELASTIC_PLASTIC: //PHDeformationType::ELASTIC_PLASTIC 2	
+		if(yieldFlag){
+			PlasticDeformation();	//塑性変形
+		}else {
+			ElasticDeformation();	//弾性変形
+		}
+		break;
+	default:
+		ElasticDeformation();
+		break;
+	}
+
 }
 
 }

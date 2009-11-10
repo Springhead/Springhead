@@ -120,7 +120,7 @@ public:
 	void	SetHardnessRate(double input)	{hardnessRate = input;}
 	void	SetInertia(const Vec3d i)		{Inertia = i;}
 	Vec3d	GetInertia()					{return Inertia;}
-	void	SetDefomationType(int t)		{type = (PHBallJointDesc::PHDeformationType)t;}
+	void	SetDefomationType(int t)		{type = (PHJointDesc::PHDeformationType)t;}
 	int 	GetDefomationType()				{return (int)type;}
 	bool 	GetDeformationMode();
 

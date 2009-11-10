@@ -45,7 +45,7 @@ struct PHJointDesc : public PHConstraintDesc{
 		PLASTIC,
 		ELASTIC_PLASTIC}type;
 
-	PHJointDesc();
+		PHJointDesc();	
 };
 /// 1軸関節のディスクリプタ
 struct PHJoint1DDesc : public PHJointDesc{
@@ -53,14 +53,14 @@ struct PHJoint1DDesc : public PHJointDesc{
 	double	spring;			///< バネ係数
 	double  targetPosition;	///< バネの制御目標
 	double  damper;			///< ダンパ係数
-	double	secondDamper;	///< 二個目のダンパ係数
-	double	targetVelocity;///< 目標速度
+	double	targetVelocity; ///< 目標速度
 	double	offsetForce;	///< 慣性項を計算して入れる場合に使用．
-	//double	torque;			///< モータトルク
+	//double	torque;		///< モータトルク
 	double	rangeSpring;	///< 可動範囲バネ
 	double	rangeDamper;	///< 可動範囲ダンパ
 	double	fMax;			///< 関節にかけられる最大の力
-	double  yieldStress;		///< 降伏応力
+	double	secondDamper;	///< 二個目のダンパ係数
+	double  yieldStress;	///< 降伏応力
 	double  hardnessRate;	///< 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
 	PHJoint1DDesc();
 };
@@ -211,6 +211,16 @@ struct PHJointIf : public PHConstraintIf{
 	//PHJointDesc::PHControlMode	GetMode();
 	//void	SetMode(PHJointDesc::PHControlMode mode);
 
+	/** @brief 変形のタイプを取得する
+		@return 0:ELASTIC,1:PLASTIC,2:ELASTIC_PLASTIC
+	 */
+	int		GetDefomationType();	
+	/** @brief 変形のタイプを設定する
+		@param input 0:ELASTIC,1:PLASTIC,2:ELASTIC_PLASTIC
+	 */
+	void	SetDefomationType(int t);	
+
+
 };
 
 /// 1軸関節のインタフェース
@@ -293,16 +303,6 @@ struct PHJoint1DIf : public PHJointIf{
 		@return ダンパ係数
 	 */
 	double	GetDamper();
-	
-	/** @brief 二個目のダンパ係数を取得する
-		@return 二個目のダンパ係数
-	 */
-	double  GetSecondDamper();
-
-	/** @brief 二個目のダンパ係数を設定する
-		@param input 二個目のダンパ係数
-	 */
-	void	SetSecondDamper(double input);
 
 	/** @brief 関節変位を取得する
 		@return 関節変位
@@ -337,6 +337,37 @@ struct PHJoint1DIf : public PHJointIf{
 		@return かかっていればtrue
 	*/
 	bool IsLimit();
+
+		/** @brief 二個目のダンパ係数を取得する
+		@return 二個目のダンパ係数
+	 */
+	double  GetSecondDamper();
+
+	/** @brief 二個目のダンパ係数を設定する
+		@param input 二個目のダンパ係数
+	 */
+	void	SetSecondDamper(double input);
+	/** @brief 降伏応力を設定する
+		@return 降伏応力
+	 */
+	double GetYieldStress();
+	/** @brief 降伏応力を取得する
+		@param input 降伏応力
+	 */
+    void SetYieldStress(const double yS);
+	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を設定する
+		@return 硬くする倍率
+	 */
+	double GetHardnessRate();
+	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を取得する
+		@param input 硬くする倍率
+	 */
+	void SetHardnessRate(const double hR);
+	
+	/** @brief 変形のタイプを表示する
+		@return 変形のタイプ
+	 */
+	bool 	GetDeformationMode();
 };
 
 /// ヒンジのインタフェース
@@ -587,14 +618,7 @@ struct PHBallJointIf : public PHJointIf{
 		@param input 断面2次モーメントVec3d(x,y,z)
 	 */
 	void	SetInertia(const Vec3d i);
-	/** @brief 変形のタイプを取得する
-		@return 0:ELASTIC,1:PLASTIC,2:ELASTIC_PLASTIC
-	 */
-	int		GetDefomationType();	
-	/** @brief 変形のタイプを設定する
-		@param input 0:ELASTIC,1:PLASTIC,2:ELASTIC_PLASTIC
-	 */
-	void	SetDefomationType(int t);	
+	
 	/** @brief 変形のタイプを表示する
 		@return 変形のタイプ
 	 */
@@ -677,65 +701,69 @@ struct PHSpringDesc : public PHJointDesc{
 	Vec3d		damper;		///< ダンパ係数
 	double		springOri;
 	double		damperOri;
-	PHSpringDesc();
-};
-
-// 3要素モデルのインタフェース
-struct PH3ElementIf : public PHSpringIf{
-	
-	SPR_IFDEF(PH3Element);
-
-	/** @brief 二個目のダンパ係数を設定する
-		@param secondDamper 二個目のダンパ係数
-	 */
-	void	SetSecondDamper(const Vec3d& secondDamper);
-
-	/** @brief 二個目のダンパ係数を取得する
-		@return 二個目のダンパ係数
-	 */
-	Vec3d	GetSecondDamper();
-
-	/** @brief 降伏応力を設定する
-		@param yieldStress 降伏応力
-	 */
-	void SetYieldStress(const double yS);
-	
-	/** @brief 降伏応力を取得する
-		@return 降伏応力
-	 */
-	double GetYieldStress();
-
-	/** @brief 降伏応力以下の場合にジョイントを硬くする倍率を設定する
-		@param hardnessRate 降伏応力以下の場合にジョイントを硬くする倍率
-	 */
-	void SetHardnessRate(const double hR);
-	
-	/** @brief 降伏応力以下の場合にジョイントを硬くする倍率を取得する
-		@return 降伏応力以下の場合にジョイントを硬くする倍率
-	 */
-	double GetHardnessRate();
-
-	/** @brief 断面2次モーメントを設定する
-		@param 断面2次モーメント
-	 */
-	void SetI(const Vec2d i);
-	
-	/** @brief 断面2次モーメントを取得する
-		@return 断面2次モーメント
-	 */
-	Vec2d GetI();
-};
-/// 3要素モデルのディスクリプタ
-struct PH3ElementDesc : public PHSpringDesc{
-	SPR_DESCDEF(PH3Element);
-
 	Vec3d		secondDamper;		// 二個目のダンパ係数
 	double		yieldStress;		// 降伏応力
 	double		hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
-	Vec3d		I;					// 断面2次モーメント
-	bool		yieldFlag;		    // 降伏応力のフラグ
-	PH3ElementDesc();
+	
+	PHSpringDesc();
 };
+
+//// 3要素モデルのインタフェース
+//struct PH3ElementIf : public PHSpringIf{
+//	
+//	SPR_IFDEF(PH3Element);
+//
+//	/** @brief 二個目のダンパ係数を設定する
+//		@param secondDamper 二個目のダンパ係数
+//	 */
+//	void	SetSecondDamper(const Vec3d& secondDamper);
+//
+//	/** @brief 二個目のダンパ係数を取得する
+//		@return 二個目のダンパ係数
+//	 */
+//	Vec3d	GetSecondDamper();
+//
+//	/** @brief 降伏応力を設定する
+//		@param yieldStress 降伏応力
+//	 */
+//	void SetYieldStress(const double yS);
+//	
+//	/** @brief 降伏応力を取得する
+//		@return 降伏応力
+//	 */
+//	double GetYieldStress();
+//
+//	/** @brief 降伏応力以下の場合にジョイントを硬くする倍率を設定する
+//		@param hardnessRate 降伏応力以下の場合にジョイントを硬くする倍率
+//	 */
+//	void SetHardnessRate(const double hR);
+//	
+//	/** @brief 降伏応力以下の場合にジョイントを硬くする倍率を取得する
+//		@return 降伏応力以下の場合にジョイントを硬くする倍率
+//	 */
+//	double GetHardnessRate();
+//
+//	/** @brief 断面2次モーメントを設定する
+//		@param 断面2次モーメント
+//	 */
+//	void SetI(const Vec2d i);
+//	
+//	/** @brief 断面2次モーメントを取得する
+//		@return 断面2次モーメント
+//	 */
+//	Vec2d GetI();
+//};
+///// 3要素モデルのディスクリプタ
+//struct PH3ElementDesc : public PHSpringDesc{
+//	SPR_DESCDEF(PH3Element);
+//
+//	Vec3d		secondDamper;		// 二個目のダンパ係数
+//	double		yieldStress;		// 降伏応力
+//	double		hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
+//	Vec3d		I;					// 断面2次モーメント
+//	bool		yieldFlag;		    // 降伏応力のフラグ
+//	PH3ElementDesc();
+//};
 
 /// ツリーノードのインタフェース
 struct PHTreeNodeIf : public SceneObjectIf{

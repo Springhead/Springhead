@@ -91,6 +91,8 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHContactPointIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHJointIf(base)	\
+	int GetDefomationType(){	return	base::GetDefomationType();}	\
+	void SetDefomationType(int t){	base::SetDefomationType(t);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHJoint1DIf(base)	\
 	void SetRange(double lower, double upper){	base::SetRange(lower, upper);}	\
@@ -107,8 +109,6 @@
 	double GetTargetPosition(){	return	base::GetTargetPosition();}	\
 	void SetDamper(double damper){	base::SetDamper(damper);}	\
 	double GetDamper(){	return	base::GetDamper();}	\
-	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
-	void SetSecondDamper(double input){	base::SetSecondDamper(input);}	\
 	double GetPosition(){	return	base::GetPosition();}	\
 	double GetVelocity(){	return	base::GetVelocity();}	\
 	void SetOffsetForce(double dat){	base::SetOffsetForce(dat);}	\
@@ -116,6 +116,13 @@
 	void SetTorqueMax(double max){	base::SetTorqueMax(max);}	\
 	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
 	bool IsLimit(){	return	base::IsLimit();}	\
+	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
+	void SetSecondDamper(double input){	base::SetSecondDamper(input);}	\
+	double GetYieldStress(){	return	base::GetYieldStress();}	\
+	void SetYieldStress(const double yS){	base::SetYieldStress(yS);}	\
+	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
+	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
+	bool GetDeformationMode(){	return	base::GetDeformationMode();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHingeJointIf(base)	\
 
@@ -165,8 +172,6 @@
 	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
 	Vec3d GetInertia(){	return	base::GetInertia();}	\
 	void SetInertia(const Vec3d i){	base::SetInertia(i);}	\
-	int GetDefomationType(){	return	base::GetDefomationType();}	\
-	void SetDefomationType(int t){	base::SetDefomationType(t);}	\
 	bool GetDeformationMode(){	return	base::GetDeformationMode();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\
@@ -178,16 +183,6 @@
 	double GetSpringOri(){	return	base::GetSpringOri();}	\
 	void SetDamperOri(const double damper){	base::SetDamperOri(damper);}	\
 	double GetDamperOri(){	return	base::GetDamperOri();}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_PH3ElementIf(base)	\
-	void SetSecondDamper(const Vec3d& secondDamper){	base::SetSecondDamper(secondDamper);}	\
-	Vec3d GetSecondDamper(){	return	base::GetSecondDamper();}	\
-	void SetYieldStress(const double yS){	base::SetYieldStress(yS);}	\
-	double GetYieldStress(){	return	base::GetYieldStress();}	\
-	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
-	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
-	void SetI(const Vec2d i){	base::SetI(i);}	\
-	Vec2d GetI(){	return	base::GetI();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHTreeNodeIf(base)	\
 	void Enable(bool bEnable){	base::Enable(bEnable);}	\

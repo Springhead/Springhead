@@ -146,12 +146,12 @@ protected:\
 	double	spring;	\
 	double	targetPosition;	\
 	double	damper;	\
-	double	secondDamper;	\
 	double	targetVelocity;	\
 	double	offsetForce;	\
 	double	rangeSpring;	\
 	double	rangeDamper;	\
 	double	fMax;	\
+	double	secondDamper;	\
 	double	yieldStress;	\
 	double	hardnessRate;	\
 public:\
@@ -162,12 +162,12 @@ public:\
 		spring = ((PHJoint1DDesc*)ptr)->spring;	\
 		targetPosition = ((PHJoint1DDesc*)ptr)->targetPosition;	\
 		damper = ((PHJoint1DDesc*)ptr)->damper;	\
-		secondDamper = ((PHJoint1DDesc*)ptr)->secondDamper;	\
 		targetVelocity = ((PHJoint1DDesc*)ptr)->targetVelocity;	\
 		offsetForce = ((PHJoint1DDesc*)ptr)->offsetForce;	\
 		rangeSpring = ((PHJoint1DDesc*)ptr)->rangeSpring;	\
 		rangeDamper = ((PHJoint1DDesc*)ptr)->rangeDamper;	\
 		fMax = ((PHJoint1DDesc*)ptr)->fMax;	\
+		secondDamper = ((PHJoint1DDesc*)ptr)->secondDamper;	\
 		yieldStress = ((PHJoint1DDesc*)ptr)->yieldStress;	\
 		hardnessRate = ((PHJoint1DDesc*)ptr)->hardnessRate;	\
 		AfterSetDesc();	\
@@ -180,12 +180,12 @@ public:\
 		((PHJoint1DDesc*)ptr)->spring = spring;	\
 		((PHJoint1DDesc*)ptr)->targetPosition = targetPosition;	\
 		((PHJoint1DDesc*)ptr)->damper = damper;	\
-		((PHJoint1DDesc*)ptr)->secondDamper = secondDamper;	\
 		((PHJoint1DDesc*)ptr)->targetVelocity = targetVelocity;	\
 		((PHJoint1DDesc*)ptr)->offsetForce = offsetForce;	\
 		((PHJoint1DDesc*)ptr)->rangeSpring = rangeSpring;	\
 		((PHJoint1DDesc*)ptr)->rangeDamper = rangeDamper;	\
 		((PHJoint1DDesc*)ptr)->fMax = fMax;	\
+		((PHJoint1DDesc*)ptr)->secondDamper = secondDamper;	\
 		((PHJoint1DDesc*)ptr)->yieldStress = yieldStress;	\
 		((PHJoint1DDesc*)ptr)->hardnessRate = hardnessRate;	\
 		return true;	\
@@ -423,6 +423,9 @@ protected:\
 	Vec3d	damper;	\
 	double	springOri;	\
 	double	damperOri;	\
+	Vec3d	secondDamper;	\
+	double	yieldStress;	\
+	double	hardnessRate;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint::SetDesc((PHJointDesc*)(PHSpringDesc*)ptr);	\
@@ -430,6 +433,9 @@ public:\
 		damper = ((PHSpringDesc*)ptr)->damper;	\
 		springOri = ((PHSpringDesc*)ptr)->springOri;	\
 		damperOri = ((PHSpringDesc*)ptr)->damperOri;	\
+		secondDamper = ((PHSpringDesc*)ptr)->secondDamper;	\
+		yieldStress = ((PHSpringDesc*)ptr)->yieldStress;	\
+		hardnessRate = ((PHSpringDesc*)ptr)->hardnessRate;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -439,34 +445,9 @@ public:\
 		((PHSpringDesc*)ptr)->damper = damper;	\
 		((PHSpringDesc*)ptr)->springOri = springOri;	\
 		((PHSpringDesc*)ptr)->damperOri = damperOri;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PH3ElementDesc \
-protected:\
-	Vec3d	secondDamper;	\
-	double	yieldStress;	\
-	double	hardnessRate;	\
-	Vec3d	I;	\
-	bool	yieldFlag;	\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		PHSpring::SetDesc((PHSpringDesc*)(PH3ElementDesc*)ptr);	\
-		secondDamper = ((PH3ElementDesc*)ptr)->secondDamper;	\
-		yieldStress = ((PH3ElementDesc*)ptr)->yieldStress;	\
-		hardnessRate = ((PH3ElementDesc*)ptr)->hardnessRate;	\
-		I = ((PH3ElementDesc*)ptr)->I;	\
-		yieldFlag = ((PH3ElementDesc*)ptr)->yieldFlag;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHSpring::GetDesc((PHSpringDesc*)(PH3ElementDesc*)ptr);	\
-		((PH3ElementDesc*)ptr)->secondDamper = secondDamper;	\
-		((PH3ElementDesc*)ptr)->yieldStress = yieldStress;	\
-		((PH3ElementDesc*)ptr)->hardnessRate = hardnessRate;	\
-		((PH3ElementDesc*)ptr)->I = I;	\
-		((PH3ElementDesc*)ptr)->yieldFlag = yieldFlag;	\
+		((PHSpringDesc*)ptr)->secondDamper = secondDamper;	\
+		((PHSpringDesc*)ptr)->yieldStress = yieldStress;	\
+		((PHSpringDesc*)ptr)->hardnessRate = hardnessRate;	\
 		return true;	\
 	}\
 
@@ -642,15 +623,6 @@ public:\
 		PHConstraint::GetState((PHConstraintState*)(PHContactPointState*)ptr);	\
 		((PHContactPointState*)ptr)->shapePair = shapePair;	\
 		((PHContactPointState*)ptr)->pos = pos;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PH3ElementState \
-protected:\
-public:\
-	virtual void SetState(const void* ptr){ \
-	}\
-	virtual bool GetState(void* ptr) const { \
 		return true;	\
 	}\
 

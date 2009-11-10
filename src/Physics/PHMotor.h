@@ -24,11 +24,11 @@ class PHJoint1D;
 		return v[i];
 	}
 };*/
-struct PH3ElementState{
+struct PH3ElementSt{
 	//SpatialVector xs[2];			///< (3要素モデル専用)ばね部の距離
 };
 
-struct PH3ElementCommonData: public PH3ElementState{
+struct PH3ElementCommonData: public PH3ElementSt{
 	SpatialVector xd;				///< (3要素モデル専用)ダンパ部の距離
 	SpatialVector ws;				///< (3要素モデル専用)ばね部の速さ
 	//SpatialVector fs;				///< (3要素モデル専用)ばね部の力
@@ -47,10 +47,12 @@ public:
 	double	fNorm;
 	double	dt, dtinv, K, D, D2;
 	bool	yieldFlag;
-	Vec3d   fs;	
 	
 	virtual void	SetupLCP();
 	virtual void	IterateLCP();
+	void ElasticDeformation();
+	void PlasticDeformation();
+
 	PHMotor1D();
 };
 
@@ -66,7 +68,6 @@ public:
 	double	fNorm;
 	double	dt, dtinv, K, D, D2;
 	bool	yieldFlag;
-	Vec3d   fs;	
 
 	void    ElasticDeformation();
 	void	PlasticDeformation();

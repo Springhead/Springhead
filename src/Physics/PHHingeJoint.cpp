@@ -68,6 +68,8 @@ void PHHingeJoint::CompError(){
 	B.w() = -qarc.Theta() * qarc.Axis();
 }
 
+
+
 //-----------------------------------------------------------------------------
 void PHHingeJointNode::CompJointJacobian(){
 	J.col(0).sub_vector(PTM::TSubVectorDim<0, 3>()).clear();
