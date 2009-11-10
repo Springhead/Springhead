@@ -43,7 +43,8 @@ struct PHJointDesc : public PHConstraintDesc{
 	enum PHDeformationType{
 		ELASTIC,
 		PLASTIC,
-		ELASTIC_PLASTIC}type;
+		ELASTIC_PLASTIC
+	}type;
 
 		PHJointDesc();	
 };
