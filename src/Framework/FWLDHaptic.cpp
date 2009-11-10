@@ -30,7 +30,11 @@ void FWLDHapticLoop::Step(){
 	UpdateInterface();
 	switch(hmode){
 		case PENALTY:
+			#if 1
 			HapticRendering();
+			#else
+			HapticRendering6D();
+			#endif
 			break;
 		case PROXY:
 			Proxy();
@@ -132,19 +136,10 @@ void FWLDHapticLoop::HapticRendering(){
 				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
 				Vec3d dvortho = dv.norm() * interpolation_normal;
 
-				Vec3d friction_dir = -1 * (force_dir - ortho);	// 摩擦力がポインタに加わる方向
-				Vec3d friction_normal = friction_dir.unit();
-				double friction_rate = friction_dir.norm() / ortho.norm();
-				PTM::TMatrixRow<1,3,double> fdtrans;
-				fdtrans[0][0] = friction_normal[0];
-				fdtrans[0][1] = friction_normal[1];
-				fdtrans[0][2] = friction_normal[2];
-				Vec3d dvortho2 = dvortho - (fdtrans * dvortho)[0] * friction_normal;
-
 				/// 抗力の計算
 				double K = iPointer->springK;
 				double D = iPointer->damperD;
-				Vec3d addforce = -1 * (K * ortho + D * dvortho2);
+				Vec3d addforce = -1 * (K * ortho + D * dvortho);
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				///振動の計算
@@ -168,33 +163,63 @@ void FWLDHapticLoop::HapticRendering(){
 				contactFlag[j][i] = false;
 			}
 		}
-
 		/// インタフェースへ力を出力
-		if(iPointer->bForce){
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(outForce.v(), Vec3d());
-				#ifdef TORQUE
-					hif->SetForce(outForce.v(), outForce.w());
-				#endif
-			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(outForce.v());
-			}
-		}else{
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(Vec3d(), Vec3d());
-				#ifdef TORQUE
-					hif->SetForce(Vec3d(), Vec3d());
-				#endif
-			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(Vec3d());
-			}		
-		}
+		SetRenderedForce(iPointer->GetHI(), iPointer->bForce, outForce);
 	}
 }
+
+void FWLDHapticLoop::HapticRendering6D(){
+	for(int j = 0; j < NIAPointers(); j++){
+		FWInteractPointer* iPointer = GetIAPointer(j)->Cast();
+
+		SpatialVector outForce = SpatialVector();
+
+		for(int i = 0; i < NIASolids(); i++){
+			FWInteractSolid* iSolid = GetIASolid(i);
+			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
+			if(!iInfo->flag.blocal) continue;
+			NeighborInfo* nInfo = &iInfo->neighborInfo;
+			PHSolid* cSolid = &iSolid->copiedSolid;
+			Posed poseSolid = cSolid->GetPose();
+			Vec3d cPoint = cSolid->GetPose() * nInfo->closest_point;			// 剛体の近傍点のワールド座標系
+			Vec3d pPoint = iPointer->hiSolid.GetPose() * nInfo->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
+			Vec3d force_dir = pPoint - cPoint;
+			Vec3d interpolation_normal;											// 提示力計算にしようする法線（前回の法線との間を補間する）
+
+			// 剛体の面の法線補間
+			// 前回の法線と現在の法線の間を補間しながら更新
+			double syncCount = pdt / hdt;						// プロセスの刻み時間の比
+			interpolation_normal = (loopCount * nInfo->face_normal + 
+				(syncCount - (double)loopCount) * nInfo->last_face_normal) / syncCount;															
+			if(loopCount > syncCount)	interpolation_normal = nInfo->face_normal;
+
+			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
+			if(f < 0.0){										// 内積が負なら力を計算
+				Vec3d ortho = f * interpolation_normal;			// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
+				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
+				Vec3d dvortho = dv.norm() * interpolation_normal;
+
+				/// 抗力の計算
+				double K = iPointer->springK;
+				double D = iPointer->damperD;
+				Vec3d addforce = -1 * (K * ortho + D * dvortho);
+				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
+
+				outForce.v() += addforce;	
+				outForce.w() += addtorque;
+
+				/// 計算した力を剛体に加える//
+				iPointer->interactInfo[i].mobility.force = -1 * addforce * iPointer->GetForceScale();	
+				nInfo->test_force_norm = addforce.norm() * iPointer->GetForceScale();
+				nInfo->test_force = addforce * iPointer->GetForceScale();
+			}
+		}
+		/// インタフェースへ力を出力
+		SetRenderedForce(iPointer->GetHI(), iPointer->bForce, outForce);
+	}
+
+}
+
 
 void FWLDHapticLoop::LocalDynamics(){
 	for(int i = 0; i < NIASolids(); i++){
@@ -718,7 +743,7 @@ void FWLDHaptic::Step(){
 		PhysicsStep();
 		UpdateSolidList();
 		NeighborObjectFromPointer();
-#if 1
+#if 0
 		TestSimulation();
 #else
 		TestSimulation6D();
@@ -972,11 +997,12 @@ void FWLDHaptic::TestSimulation6D(){
 			force.col(0) = iInfo->neighborInfo.test_force_norm * n;
 			force.col(1) = iInfo->neighborInfo.test_force_norm * (n + local.col(1));
 			force.col(2) = iInfo->neighborInfo.test_force_norm * (n + local.col(2));
-			//DSTR<<force<<std::endl;
 
-			//DSTR<<" 法線--------------------"<<std::endl;
 			/// 法線方向に力を加える
-			phSolid->AddForce(force.col(0), cPoint); 
+			std::vector<Vec3d> section = iInfo->neighborInfo.section;
+			for(int k = 0; k < section.size(); k++){
+				phSolid->AddForce(force.col(0), section[k]); 
+			}
 			#ifdef DIVIDE_STEP
 			phScene->IntegratePart2();
 			#else
@@ -987,9 +1013,10 @@ void FWLDHaptic::TestSimulation6D(){
 			u.col(0) = (nextvel - curvel) /pdt - inSolid->b;
 			states->LoadState(phScene);
 			
-			//DSTR<<" n + t[0]--------------------"<<std::endl;
 			/// n + t[0]方向に力を加える
-			phSolid->AddForce(force.col(1), cPoint);
+			for(int k = 0; k < section.size(); k++){
+				phSolid->AddForce(force.col(1), section[k]); 
+			}
 			#ifdef DIVIDE_STEP
 			phScene->IntegratePart2();
 			#else
@@ -1000,9 +1027,10 @@ void FWLDHaptic::TestSimulation6D(){
 			u.col(1) = (nextvel - curvel) /pdt - inSolid->b;
 			states->LoadState(phScene);
 
-			//DSTR<<" n + t[1]--------------------"<<std::endl;
 			/// n+t[1]方向力を加える
-			phSolid->AddForce(force.col(2), cPoint);
+			for(int k = 0; k < section.size(); k++){
+				phSolid->AddForce(force.col(2), section[k]); 
+			}
 			#ifdef DIVIDE_STEP
 			phScene->IntegratePart2();
 			#else
@@ -1013,7 +1041,6 @@ void FWLDHaptic::TestSimulation6D(){
 			u.col(2) = (nextvel - curvel) /pdt - inSolid->b;
 			
 			iInfo->mobility.A = u  * force.inv();			// モビリティAの計算
-//			DSTR <<  iInfo->mobility.A << std::endl;
 			states->LoadState(phScene);						// 元のstateに戻しシミュレーションを進める
 		}
 	}
