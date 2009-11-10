@@ -21,6 +21,32 @@ void FWHapticLoopBase::Clear(){
 	loopCount = 1;
 }
 
+void FWHapticLoopBase::SetRenderedForce(HIBaseIf* hi, bool bForce, SpatialVector f){
+	if(bForce){
+		if(DCAST(HIForceInterface6DIf, hi)){
+			HIForceInterface6DIf* hif = hi->Cast();
+			hif->SetForce(f.v(), Vec3d());
+			#ifdef TORQUE
+				hif->SetForce(outForce.v(), outForce.w());
+			#endif
+		}else{
+			HIForceInterface3DIf* hif = hi->Cast();
+			hif->SetForce(f.v());
+		}
+	}else{
+		if(DCAST(HIForceInterface6DIf, hi)){
+			HIForceInterface6DIf* hif = hi->Cast();
+			hif->SetForce(Vec3d(), Vec3d());
+			#ifdef TORQUE
+				hif->SetForce(Vec3d(), Vec3d());
+			#endif
+		}else{
+			HIForceInterface3DIf* hif = hi->Cast();
+			hif->SetForce(Vec3d());
+		}		
+	}
+}
+
 /** FWInteractAdaptee‚ÌŽÀ‘• */
 ///////////////////////////////////////////////////////////////////////////////////
 FWInteractAdaptee::FWInteractAdaptee(){}
