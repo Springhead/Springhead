@@ -26,6 +26,9 @@ public:
 	//ControlModeを取得,設定する
 	//virtual PHJointDesc::PHControlMode	GetMode() {return mode;}
 	//virtual void	SetMode(PHJointDesc::PHControlMode mode) {this->mode = mode;}
+
+	virtual void	SetDefomationType(int t)		{type = (PHJointDesc::PHDeformationType)t;}
+	virtual int 	GetDefomationType()				{return (int)type;}
 	/// コンストラクタ
 	PHJoint();
 };
@@ -91,13 +94,22 @@ public:
 	double	GetTargetPosition() const {return targetPosition;}
 	void	SetDamper(double D){damper = D;}
 	double	GetDamper() const {return damper;}
-	void	SetSecondDamper(double D2)	{secondDamper = D2;}
-	double  GetSecondDamper()			{return secondDamper;}
 	void	SetOffsetForce(double dat){ offsetForce = dat; }
 	double	GetOffsetForce(){ return offsetForce;}
 	bool	IsLimit(){ return (limit.onLower || limit.onUpper); }
 	void	SetTorqueMax(double max){fMax = fabs(max); }
 	double	GetTorqueMax(){return fMax;}
+	
+
+	/// インタフェースの実装
+	double  GetSecondDamper()				{return secondDamper;}
+	void	SetSecondDamper(double input)	{secondDamper = input;}
+	double  GetYieldStress()				{return yieldStress;}
+	void	SetYieldStress(double input)	{yieldStress = input;}
+	double  GetHardnessRate()				{return hardnessRate;}
+	void	SetHardnessRate(double input)	{hardnessRate = input;}
+	bool GetDeformationMode();
+
 
 	/// オーバライド
 	virtual void	SetupLCP();

@@ -12,17 +12,55 @@ using namespace PTM;
 using namespace std;
 namespace Spr{;
 
-PHMotor1D::PHMotor1D(){}
+PHMotor1D::PHMotor1D(){
+	yieldFlag = false;
+}
 	
+void PHMotor1D::ElasticDeformation(){
+	double tmp = 1.0 / (joint->damper + joint->spring * joint->GetScene()->GetTimeStep());
+	dA = tmp * joint->GetScene()->GetTimeStepInv();
+	db = tmp * (joint->spring * joint->GetDeviation()
+		- joint->damper * joint->targetVelocity - joint->offsetForce);
+}
+
+void PHMotor1D::PlasticDeformation(){
+
+	//3要素モデル
+	/*		K
+		―VVVV―   D2
+	―|			]―匚 ―
+		― 匚 ―
+			D1
+	*/
+	//塑性変形(3要素モデル)
+	D  *= joint->hardnessRate;
+	D2 *= joint->hardnessRate;
+	K  *= joint->hardnessRate;
+	double tmp = D+D2+K*dt;
+	ws = joint->vjrel;	//バネとダンパの並列部の速さ
+
+	joint->xs[1] = ((D+D2)/tmp)*joint->xs[0] + (D2*dt/tmp)*ws;	//バネとダンパの並列部の距離の更新
+	dA= tmp/(D2*(K*dt+D)) * dtinv;
+	db = K/(K*dt+D)*(joint->xs[0].w().z) ;
+	
+	//ELASTIC_PLASTICモードの場合,PLASTIC状態の終了時に残留変位を保存する位置にTargetPositionを変更
+	if(joint->type==PHJointDesc::ELASTIC_PLASTIC){
+		if(ws.w().norm()<0.01){
+			yieldFlag = false;
+			joint->SetTargetPosition(joint->Xjrel.q.z);
+		}
+	}
+	joint->xs[0]=joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
+}
 void PHMotor1D::SetupLCP(){
 	fMaxDt = joint->fMax * joint->GetScene()->GetTimeStep();
 
-	double dtinv = joint->GetScene()->GetTimeStepInv();
-	double D1 = joint->damper;
-	double D2 = joint->secondDamper;
-	double K = joint->spring;
-	double h = joint->GetScene()->GetTimeStep();
-
+	dt		= joint->GetScene()->GetTimeStep();
+	dtinv	= joint->GetScene()->GetTimeStepInv();
+	D		= joint->damper;
+	D2		= joint->secondDamper;
+	K		= joint->spring;
+	
 	// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
 	if(joint->spring == 0.0 && joint->damper == 0.0){
 		dA = db = 0.0;
@@ -32,46 +70,37 @@ void PHMotor1D::SetupLCP(){
 		A = joint->A[joint->axisIndex[0]];
 		b = joint->b[joint->axisIndex[0]];
 
-		if(joint->secondDamper == 0.0){
-			double tmp = 1.0 / (joint->damper + joint->spring * joint->GetScene()->GetTimeStep());
-			dA = tmp * joint->GetScene()->GetTimeStepInv();
-			db = tmp * (joint->spring * joint->GetDeviation()
-				- joint->damper * joint->targetVelocity - joint->offsetForce);
-		}
-		//else{
-		//	//3要素モデルの設定
-
-		//	
-		//	ws = joint->vjrel;	//バネのダンパの並列部の速さ
-		//	tmp = D2-D1+K*h;
-		//	joint->xs[1] = ((D2-D1)/tmp)*joint->xs[0] + (D2*h/(D2-D1))*ws;	//バネとダンパの並列部の距離の更新	
-		//	tmpA = (D2-D1)*(D2-D1)/(D1*D2*tmp) ;
-		//	tmpB = K*(D2-D1)*(D2-D1)/(D2*tmp*tmp)*(joint->xs[0].w().z);
-		//	dA = tmpA * dtinv;
-		//	db = tmpB * (K * joint->GetDeviation() - D1 * joint->targetVelocity - joint->offsetForce);
-		//	joint->xs[0] = joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
-		//}
-
-		else{
-			//塑性変形(3要素モデル)
-			D  *= joint->hardnessRate;
-			D2 *= joint->hardnessRate;
-			K  *= joint->hardnessRate;
-			double tmp = D+D2+K*dt;
-			ws = joint->vjrel;	//バネとダンパの並列部の速さ
-
-			joint->xs[1] = ((D+D2)/tmp)*joint->xs[0] + (D2*dt/tmp)*ws;	//バネとダンパの並列部の距離の更新
-			dA= tmp/(D2*(K*dt+D)) * dtinv;
-			db = K/(K*dt+D)*(joint->xs[0].w().z) ;
-			
-			//ELASTIC_PLASTICモードの場合,PLASTIC状態の終了時に残留変位を保存する位置にTargetPositionを変更
-			if(joint->type==PHBallJointDesc::ELASTIC_PLASTIC){
-				if(ws.w().norm()<0.01){
-					yieldFlag = false;
-					joint->SetTargetPosition(joint->Xjrel.q.z);//naga間違っているかも
-				}
+		//fの平均値を計算
+		fNorm = 0;
+		for(int i=0; i<5 ;i++){
+			if(i==4){
+				joint->fs[4] = joint->motorf;
+			}else{ 
+				joint->fs[i] = joint->fs[i+1];
 			}
-			joint->xs[0]=joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
+			
+			fNorm+=joint->fs[i].norm()/5;
+		}
+		if(fNorm > joint->yieldStress){
+			yieldFlag = true;
+		}
+		switch(joint->type){
+		case PHJointDesc::ELASTIC:	//PHDeformationType::Elastic 0　初期値
+			ElasticDeformation();
+			break;
+		case PHJointDesc::PLASTIC:	//PHDeformationType::Plastic 1
+			PlasticDeformation();
+			break;
+		case PHJointDesc::ELASTIC_PLASTIC: //PHDeformationType::ELASTIC_PLASTIC 2	
+			if(yieldFlag){
+				PlasticDeformation();	//塑性変形
+			}else {
+				ElasticDeformation();	//弾性変形
+			}
+			break;
+		default:
+			ElasticDeformation();
+			break;
 		}
 		Ainv = 1.0 / (A + dA);
 		joint->motorf.z *= joint->engine->shrinkRate;
@@ -214,7 +243,6 @@ void PHBallJointMotor::SetupLCP(){
 			}*/
 		}
 		else{
-			//Saveに関する部分でfsが保存されていないので一時的にコメントアウト
 			//fの平均値を計算
 			fNorm = 0;
 			for(int i=0; i<5 ;i++){
@@ -226,7 +254,6 @@ void PHBallJointMotor::SetupLCP(){
 				
 				fNorm+=joint->fs[i].norm()/5;
 			}
-			//fNorm = joint->motorf.norm();
 
 			//物体の形状を考慮したバネダンパを設定する場合
 			if(I[0]!=1&&I[1]!=1&&I[2]!=1){
@@ -253,13 +280,13 @@ void PHBallJointMotor::SetupLCP(){
 				yieldFlag = true;
 			}
 			switch(joint->type){
-			case PHBallJointDesc::ELASTIC:	//PHDeformationType::Elastic 0　初期値
+			case PHJointDesc::ELASTIC:	//PHDeformationType::Elastic 0　初期値
 				ElasticDeformation();
 				break;
-			case PHBallJointDesc::PLASTIC:	//PHDeformationType::Plastic 1
+			case PHJointDesc::PLASTIC:	//PHDeformationType::Plastic 1
 				PlasticDeformation();
 				break;
-			case PHBallJointDesc::ELASTIC_PLASTIC: //PHDeformationType::ELASTIC_PLASTIC 2	
+			case PHJointDesc::ELASTIC_PLASTIC: //PHDeformationType::ELASTIC_PLASTIC 2	
 				if(yieldFlag){
 					PlasticDeformation();	//塑性変形
 				}else {

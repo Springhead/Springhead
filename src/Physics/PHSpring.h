@@ -10,14 +10,17 @@
 
 #include <SprPhysics.h>
 #include <Foundation/Object.h>
+#include <Physics/PHJoint.h>
 
 namespace Spr{;
 
 class PHSpring : public PHJoint{
-	Vec3d spring, damper;
-	double springOri, damperOri;
+	//Vec3d spring, damper;
+	//double springOri, damperOri;
 public:
 	SPR_OBJECTDEF(PHSpring);
+	SPR_DECLMEMBEROF_PHSpringDesc;
+
 	virtual void SetSpring(const Vec3d& s){spring = s;}
 	virtual Vec3d GetSpring(){return spring;}
 	virtual void SetDamper(const Vec3d& d){damper = d;}
@@ -28,10 +31,26 @@ public:
 	virtual void SetDamperOri(const double damper){damperOri = damper;}
 	virtual double GetDamperOri(){return damperOri;}
 
-	virtual void SetDesc(const void* desc);
+	//virtual void SetDesc(const void* desc);
 	virtual void SetConstrainedIndex(bool* con);
 	virtual void SetConstrainedIndexCorrection(bool* con);
 	virtual void CompBias();
+	void ElasticDeformation();
+	void PlasticDeformation();
+
+	/// インタフェースの実装
+	Vec3d	GetSecondDamper()				{return secondDamper;}
+	void	SetSecondDamper(Vec3d input)	{secondDamper = input;}
+	double  GetYieldStress()				{return yieldStress;}
+	void	SetYieldStress(double input)	{yieldStress = input;}
+	double  GetHardnessRate()				{return hardnessRate;}
+	void	SetHardnessRate(double input)	{hardnessRate = input;}
+	void	SetDefomationType(int t)		{type = (PHJointDesc::PHDeformationType)t;}
+	int 	GetDefomationType()				{return (int)type;}
+	bool 	GetDeformationMode(){};
+
+	bool	yieldFlag;		    // 降伏応力のフラグ
+
 	PHSpring(const PHSpringDesc& desc = PHSpringDesc());
 };
 

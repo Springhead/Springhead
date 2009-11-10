@@ -49,6 +49,7 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 
 	limit.joint = this;
 	motor.joint = this;
+
 }
 
 void PHBallJoint::SetupLCP(){
