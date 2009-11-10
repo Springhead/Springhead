@@ -165,21 +165,21 @@ void FWLDHapticDemo::BuildScene(){
 	PHSolidDesc desc;
 	CDBoxDesc bd;
 
-	/// 床(物理法則に従わない，運動が変化しない)
-	{
-		/// 剛体(soFloor)の作成
-		desc.mass = 1e20f;
-		desc.inertia *= 1e30f;
-		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-		soFloor->SetDynamical(false);
-		soFloor->SetGravity(false);
-		/// 形状(shapeFloor)の作成
-		bd.boxsize = Vec3f(50, 10, 50);
-		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
-		/// 剛体に形状を付加する
-		soFloor->AddShape(shapeFloor);
-		soFloor->SetFramePosition(Vec3d(0, -7, 0));
-	}
+	///// 床(物理法則に従わない，運動が変化しない)
+	//{
+	//	/// 剛体(soFloor)の作成
+	//	desc.mass = 1e20f;
+	//	desc.inertia *= 1e30f;
+	//	PHSolidIf* soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
+	//	soFloor->SetDynamical(false);
+	//	soFloor->SetGravity(false);
+	//	/// 形状(shapeFloor)の作成
+	//	bd.boxsize = Vec3f(50, 10, 50);
+	//	CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
+	//	/// 剛体に形状を付加する
+	//	soFloor->AddShape(shapeFloor);
+	//	soFloor->SetFramePosition(Vec3d(0, -7, 0));
+	//}
 
 	CreateRoundCone(phscene);
 
@@ -212,7 +212,7 @@ void FWLDHapticDemo::BuildScene(){
 		idesc.posScale = 80;					// soPointerの可動域の設定(～倍)
 		idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
 #endif
-		if(i==0) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);	// 初期位置の設定
+		if(i==0) idesc.defaultPosition =Posed(1,0,0,0,2,5,0);	// 初期位置の設定
 		if(i==1) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);
 		GetIAScene()->CreateIAPointer(idesc);	// interactpointerの作成
 	}
