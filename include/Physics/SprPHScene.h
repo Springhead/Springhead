@@ -91,12 +91,14 @@ struct PHSceneDesc: public PHSceneState{
 		頻繁に用いるのでPHSceneIfからもアクセスできるようにしてある．（要検討）
 	 */
 	Vec3f	gravity;		///< 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f, 0.0f)．
+	double	airResistanceRate; ///<毎ステップ剛体の速度に掛けられる倍率　デフォルト値は1.0.
 	int		numIteration;	///< LCPの反復回数
 
 	PHSceneDesc(){Init();}
 	void Init(){
 		PHSceneState::Init();
 		gravity			= Vec3f(0,-9.8f,0);
+		airResistanceRate = 1.0;
 		numIteration	= 15;
 	}
 };
@@ -352,6 +354,16 @@ public:
 		@return 重力加速度ベクトル
 	 */
 	Vec3d GetGravity();
+
+	/** @brief 回転に対する空気抵抗の割合を設定する
+		@param rate 回転に対する空気抵抗の割合 標準は1.0 比率を下げるとシミュレーションが安定する(PHSolid::UpdateVelocity()内で呼ばれる）
+	 */
+	void SetAirResistanceRate(double rate);
+	
+	/** @brief 回転に対する空気抵抗の割合を取得する
+		@return 回転に対する空気抵抗の割合　標準は1.0 比率を下げるとシミュレーションが安定する(PHSolid::UpdateVelocity()内で呼ばれる）
+	 */
+	double GetAirResistanceRate();
 
 	int NEngines();
 	/** @brief i番目のエンジンを取得する

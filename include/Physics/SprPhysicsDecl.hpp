@@ -265,6 +265,8 @@
 	void Clear(){	base::Clear();}	\
 	void SetGravity(const Vec3d& accel){	base::SetGravity(accel);}	\
 	Vec3d GetGravity(){	return	base::GetGravity();}	\
+	void SetAirResistanceRate(double rate){	base::SetAirResistanceRate(rate);}	\
+	double GetAirResistanceRate(){	return	base::GetAirResistanceRate();}	\
 	int NEngines(){	return	base::NEngines();}	\
 	Spr::PHEngineIf* GetEngine(int i){	return	base::GetEngine(i);}	\
 	Spr::PHConstraintEngineIf* GetConstraintEngine(){	return	base::GetConstraintEngine();}	\

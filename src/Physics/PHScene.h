@@ -107,6 +107,8 @@ public:
 	PHRayIf*				CreateRay(const PHRayDesc& desc = PHRayDesc());
 	int						NRays() const;
 	PHRayIf*				GetRay(int i);
+	double					GetAirResistanceRate(){return airResistanceRate;}
+	void					SetAirResistanceRate(double rate){airResistanceRate =rate;}
 
 	PHIKNodeIf*				CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc = PHIKNodeDesc());
 	int						NIKNodes();

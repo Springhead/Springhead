@@ -486,11 +486,13 @@ public:\
 #define SPR_DECLMEMBEROF_PHSceneDesc \
 protected:\
 	Vec3f	gravity;	\
+	double	airResistanceRate;	\
 	int	numIteration;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHScene::SetState((PHSceneState*)(PHSceneDesc*)ptr);	\
 		gravity = ((PHSceneDesc*)ptr)->gravity;	\
+		airResistanceRate = ((PHSceneDesc*)ptr)->airResistanceRate;	\
 		numIteration = ((PHSceneDesc*)ptr)->numIteration;	\
 		AfterSetDesc();	\
 	}\
@@ -498,6 +500,7 @@ public:\
 		BeforeGetDesc();	\
 		PHScene::GetState((PHSceneState*)(PHSceneDesc*)ptr);	\
 		((PHSceneDesc*)ptr)->gravity = gravity;	\
+		((PHSceneDesc*)ptr)->airResistanceRate = airResistanceRate;	\
 		((PHSceneDesc*)ptr)->numIteration = numIteration;	\
 		return true;	\
 	}\
