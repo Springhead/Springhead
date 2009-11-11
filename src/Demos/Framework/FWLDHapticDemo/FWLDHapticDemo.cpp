@@ -165,23 +165,21 @@ void FWLDHapticDemo::BuildScene(){
 	PHSolidDesc desc;
 	CDBoxDesc bd;
 
-	///// 床(物理法則に従わない，運動が変化しない)
-	//{
-	//	/// 剛体(soFloor)の作成
-	//	desc.mass = 1e20f;
-	//	desc.inertia *= 1e30f;
-	//	PHSolidIf* soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
-	//	soFloor->SetDynamical(false);
-	//	soFloor->SetGravity(false);
-	//	/// 形状(shapeFloor)の作成
-	//	bd.boxsize = Vec3f(50, 10, 50);
-	//	CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
-	//	/// 剛体に形状を付加する
-	//	soFloor->AddShape(shapeFloor);
-	//	soFloor->SetFramePosition(Vec3d(0, -7, 0));
-	//}
-
-	CreateRoundCone(phscene);
+	/// 床(物理法則に従わない，運動が変化しない)
+	{
+		/// 剛体(soFloor)の作成
+		desc.mass = 1e20f;
+		desc.inertia *= 1e30f;
+		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
+		soFloor->SetDynamical(false);
+		soFloor->SetGravity(false);
+		/// 形状(shapeFloor)の作成
+		bd.boxsize = Vec3f(50, 10, 50);
+		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
+		/// 剛体に形状を付加する
+		soFloor->AddShape(shapeFloor);
+		soFloor->SetFramePosition(Vec3d(0, -7, 0));
+	}
 
 	/// ポインタ
 	for(int i= 0; i < 1; i++){

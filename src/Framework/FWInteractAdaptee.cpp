@@ -106,14 +106,27 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				   ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 				*/
 				/// 1. BBoxレベルの衝突判定(Sweep & Prune)
-				/// sceneSolidのローカル座標系にそろえて判定を行う
+				/// sceneSolidのshape座標系にそろえて判定を行う
 				Vec3d range = Vec3d(1, 1, 1) * iPointer->GetLocalRange();
-				Posed solidPose = phSolid->GetPose() * phSolid->GetShapePose(0);
-				Posed pointerPose = soPointer->GetPose() * soPointer->GetShapePose(0);
-				Vec3f soMax = phSolid->bbox.GetBBoxMax();												//sceneSolidのBBoxの最大値(3軸) sceneSolid座標系
-				Vec3f soMin = phSolid->bbox.GetBBoxMin();												//sceneSolidのBBoxの最小値(3軸) sceneSolid座標系
-				Vec3d pMin = solidPose.Inv() * pointerPose * soPointer->bbox.GetBBoxMin() - range;		// PointerのBBoxの最小値(3軸) sceneSolid座標系
-				Vec3d pMax = solidPose.Inv() * pointerPose * soPointer->bbox.GetBBoxMax() + range;		// PointerのBBoxの最大値(3軸) sceneSolid座標系
+				//Posed solidPose = phSolid->GetPose()*phSolid->GetShapePose(0) ;
+				//Posed pointerPose = soPointer->GetPose() * soPointer->GetShapePose(0);
+				Vec3f soMax = phSolid->GetShapePose(0).Inv() * phSolid->bbox.GetBBoxMax();												//sceneSolidのBBoxの最大値(3軸) sceneSolidのshape座標系
+				Vec3f soMin = phSolid->GetShapePose(0).Inv() * phSolid->bbox.GetBBoxMin();												//sceneSolidのBBoxの最小値(3軸) sceneSolidのshape座標系
+				Vec3d pMin = soPointer->GetShapePose(0) * soPointer->bbox.GetBBoxMin() ;		// PointerのBBoxの最小値(3軸) pointerのshape座標系
+				Vec3d pMax = soPointer->GetShapePose(0) * soPointer->bbox.GetBBoxMax() ;		// PointerのBBoxの最大値(3軸) pointerのshape座標系
+
+				//ポインターのBBoxの形が球状出ない場合にBBoxの最大値最小値が座標変換により変わってしまう
+				//そこで，BBoxの大きさを大きくとる
+				double pmin = pMin[0],pmax = pMax[0];
+				for(int i=1;i<3;i++){
+					if(pmin>pMin[i]) pmin = pMin[i];
+					if(pmax<pMax[i]) pmax = pMax[i];
+				}
+				pMin =Vec3d(pmin,pmin,pmin); // PointerのBBoxの最小値(3軸) pointerのshape座標系(3軸で一番最小の値)
+				pMax =Vec3d(pmax,pmax,pmax); // PointerのBBoxの最大値(3軸) pointerのshape座標系(3軸で一番最大の値)
+
+				pMin = phSolid->GetShapePose(0).Inv() * phSolid->GetPose().Inv() * soPointer->GetPose() * pMin - range;		// PointerのBBoxの最小値(3軸) sceneSolidのshape座標系
+				pMax = phSolid->GetShapePose(0).Inv() * phSolid->GetPose().Inv() * soPointer->GetPose() * pMax + range;		// PointerのBBoxの最大値(3軸) sceneSolidのshape座標系
 				/// 3軸で判定
 				int isLocal = 0;		//< いくつの軸で交差しているかどうか
 				for(int i = 0; i < 3; ++i){
@@ -126,7 +139,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 					if(soMin[i] <= pMax[i] && pMax[i] <= soMax[i]) in++;
 					/// inが1以上ならその軸で交差
 					if(in > 0) isLocal++;
-#if 1
+#if 0
 					DSTR << i << " pMin[i] = " << pMin[i] << "  soMin[i] = " << soMin[i] << "  pMax[i] = " << pMax[i] << std::endl;
 					DSTR << i << " pMin[i] = "  << pMin[i] << "  soMax[i] = " << soMax[i] << "  pMax[i] = " << pMax[i] << std::endl;
 					DSTR << i << " soMin[i] = " << soMin[i] << "  pMin[i] = " << pMin[i] << "  soMax[i] = " << soMax[i] << std::endl;
@@ -175,8 +188,10 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 	if (!phSolid->NShape()==0){													///< 形状を持たない剛体の場合は行わない
 		CDConvexIf* a = DCAST(CDConvexIf, phSolid->GetShape(0));				///< 剛体が持つ凸形状
 		CDConvexIf* b = DCAST(CDConvexIf, soPointer->GetShape(0));				///< 力覚ポインタの凸形状
-		Posed a2w = phSolid->GetPose() * phSolid->GetShapePose(0);											///< 剛体の姿勢
-		Posed b2w = soPointer->GetPose() * soPointer->GetShapePose(0);										///< 力覚ポインタの姿勢
+		Posed a2w = phSolid->GetPose() * phSolid->GetShapePose(0);				///< 剛体の姿勢
+		Posed b2w = soPointer->GetPose() * soPointer->GetShapePose(0);			///< 力覚ポインタの姿勢
+		Posed shapePoseW0 = phSolid->GetShapePose(0);
+		Posed shapePoseW1 = soPointer->GetShapePose(0);
 		Vec3d dir = -1.0 * iaInfo->neighborInfo.face_normal;
 		Vec3d cp = phSolid->GetCenterPosition();								///< 剛体の重心
 		Vec3d normal;															///< 剛体から力覚ポインタへの法線(ワールド座標)
@@ -217,8 +232,8 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			}
 			/// 初めて近傍または継続して近傍だった場合
 			iaInfo->flag.blocal = true;								//< 近傍物体なのでblocalをtrueにする
-			iaInfo->neighborInfo.closest_point = pa;				//< 剛体近傍点のローカル座標
-			iaInfo->neighborInfo.pointer_point = pb;				//< 力覚ポインタ近傍点のローカル座標
+			iaInfo->neighborInfo.closest_point = shapePoseW0 * pa;				//< 剛体近傍点のローカル座標
+			iaInfo->neighborInfo.pointer_point = shapePoseW1 * pb;				//< 力覚ポインタ近傍点のローカル座標
 			iaInfo->neighborInfo.last_face_normal = iaInfo->neighborInfo.face_normal;		//< 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
 			iaInfo->neighborInfo.face_normal = normal;				//< 剛体から力覚ポインタへの法線
 		}else{

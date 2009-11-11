@@ -26,17 +26,17 @@ CDShapeIf* CreateShapeCapsule(PHSceneIf* phscene){
 	cd.material.mu0 = 0.5;
 	cd.material.mu = 0.3;
 	CDShapeIf* shape = phscene->GetSdk()->CreateShape(cd);
-	shape->SetVibration(-80,200,150);
+	shape->SetVibration(-30,200,150);
 	return shape;
 }
 CDShapeIf* CreateShapeCone(PHSceneIf* phscene){
 	CDRoundConeDesc cd;
-	cd.radius = Vec2f(0.8, 0.8) * modelScale;
-	cd.length = 7.0;
+	cd.radius = Vec2f(0.8, 0.3) * modelScale;
+	cd.length = 2.0;
 	cd.material.mu0 = 0.8;
 	cd.material.mu = 0.6;
 	CDShapeIf* shape = phscene->GetSdk()->CreateShape(cd);
-	shape->SetVibration(-80,200,150);
+	shape->SetVibration(-30,200,150);
 	return shape;
 }
 
@@ -77,26 +77,9 @@ PHSolidIf* CreateRoundCone(PHSceneIf* phscene){
 	PHSolidIf*  solid = phscene->CreateSolid(desc);
 	solid->AddShape(CreateShapeCone(phscene));
 	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
-	solid->SetFramePosition(Vec3d(-0, 5, 0));
+	solid->SetFramePosition(Vec3d(-0, 0, 0));
 	solid->SetOrientation(Quaterniond::Rot(Rad(90), 'x'));
-	solid->SetDynamical(false);
-	/*{
-	PHSolidIf*  solid = phscene->CreateSolid(desc);
-	solid->AddShape(CreateShapeCone(phscene));
-	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
-	solid->SetFramePosition(Vec3d(-0, 5, 0));
-	solid->SetOrientation(Quaterniond::Rot(Rad(90), 'y'));
-	solid->SetDynamical(false);
-	}
-	{
-	PHSolidIf*  solid = phscene->CreateSolid(desc);
-	solid->AddShape(CreateShapeCone(phscene));
-	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
-	solid->SetFramePosition(Vec3d(-0, 5, 0));
-	solid->SetDynamical(false);
-	}*/
-
-
+	solid->SetShapePose(0,Posed(1,0,0,0,0,0,0));
 	return solid;
 }
 
@@ -115,7 +98,7 @@ PHSolidIf* CreatePolyhedron(PHSceneIf* phscene){
 		cd.vertices.push_back(v);
 	}
 	CDShapeIf* shape = phscene->GetSdk()->CreateShape(cd);
-	shape->SetVibration(-100,60,100);
+	shape->SetVibration(-10,60,100);
 	shape->SetStaticFriction(0.5);
 	shape->SetDynamicFriction(0.3);
 	solid->AddShape(shape);
