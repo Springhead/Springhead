@@ -27,7 +27,7 @@ void FWHapticLoopBase::SetRenderedForce(HIBaseIf* hi, bool bForce, SpatialVector
 			HIForceInterface6DIf* hif = hi->Cast();
 			hif->SetForce(f.v(), Vec3d());
 			#ifdef TORQUE
-				hif->SetForce(outForce.v(), outForce.w());
+				hif->SetForce(f.v(), f.w());
 			#endif
 		}else{
 			HIForceInterface3DIf* hif = hi->Cast();
@@ -96,6 +96,9 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 			FWInteractPointer* iPointer = GetIAPointer(j);
 			FWInteractInfo* iaInfo = &GetIAPointer(j)->interactInfo[i];
 			PHSolid* soPointer = GetIAPointer(j)->pointerSolid->Cast();
+			// 接触点の初期化
+			iaInfo->neighborInfo.solid_section.clear();
+			iaInfo->neighborInfo.pointer_section.clear();
 
 			/// Solidが他のポインタであった場合
 			for(int k = 0; k < NIAPointers(); k++){
@@ -211,14 +214,24 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			b2w.Pos() -= a2b;
 			commonPoint = a2w * pa;
 			FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
+			for(int k = 0; k  < section.size(); k++){
+				iaInfo->neighborInfo.solid_section.push_back(a2w.Inv() * section[k]);
+				iaInfo->neighborInfo.pointer_section.push_back(b2w.Inv() * section[k]);
+			}
 		}else if(found == 2){
 			/// ContFindCommonPointで終わった場合
 			///	既に接触している状態なので，そのまま接触解析
 			commonPoint = a2w * pa + 0.5 * a2b;
 			FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
+			for(int k = 0; k  < section.size(); k++){
+				// commonpoinが侵入量により変化してしまうため
+				// 近傍点が載ってるところに面を動かす
+				iaInfo->neighborInfo.solid_section.push_back(a2w.Inv() * (section[k] - 0.5 * a2b));
+				iaInfo->neighborInfo.pointer_section.push_back(b2w.Inv() * (section[k] + 0.5 * a2b));
+			}
 		}
-		iaInfo->neighborInfo.section = section;
 
+		/// 判定後の後処理(ローカルシミュレーションするかどうかのフラグを立てる)
 		if(found > 0){
 			/// 初めて最近傍物体になった場合
 			if(iaInfo->flag.blocal == false){																
