@@ -5,7 +5,7 @@ set MODULE=FWOldSpringhead
 set MAKEFILE=%MODULE%Stub.mak.txt
 rem makefileÇÃçÏê¨Ç∆MakeÇÃé¿çs
 set PATHORG=%PATH%;
-set PATH=%SPRINGHEAD2%\bin
+set PATH=..\..\bin
 set SRCIMP=..\Framework\FWOldSpringheadNodeHandler.h
 
 echo src files:%SRCIMP%
