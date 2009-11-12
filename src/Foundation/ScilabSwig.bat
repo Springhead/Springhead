@@ -1,7 +1,7 @@
 @echo off
 echo "swig -dll" generating entry point for Scilab.
 set PATHORG=%PATH%;
-set PATH=%SPRINGHEAD2%\bin\swig;%SPRINGHEAD2%\bin
+set PATH=..\..\bin\swig;..\..\bin
 
 set MODULE=Scilab
 set MAKEFILE=%MODULE%Stub.mak.txt

@@ -549,6 +549,7 @@ void PHIKBallJoint::Move(){
 	joint->SetSpring(jSpring + spring);
 	joint->SetDamper(jDamper + damper);
 	joint->SetTargetPosition(pos);
+
 	/*
 	Vec3d vel = dT / DCAST(PHSceneIf,GetScene())->GetTimeStep();
 	if (vel.norm() > Rad(360)) {

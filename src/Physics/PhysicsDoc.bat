@@ -1,3 +1,3 @@
-set PATH=%SPRINGHEAD2%\BIN;%SPRINGHEAD2%\BIN\Graphviz\bin
+set PATH=..\..\BIN;..\..\BIN\Graphviz\bin
 doxygen Physics.doxy
 :END
