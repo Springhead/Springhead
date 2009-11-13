@@ -30,7 +30,7 @@ void FWLDHapticLoop::Step(){
 	UpdateInterface();
 	switch(hmode){
 		case PENALTY:
-			#if USERNAME == susa
+			#if 0
 			HapticRendering6D();
 			#else
 			HapticRendering();
@@ -137,8 +137,8 @@ void FWLDHapticLoop::HapticRendering(){
 				Vec3d dvortho = dv.norm() * interpolation_normal;
 
 				/// R—Í‚ÌŒvŽZ
-				double K = iPointer->springK;
-				double D = iPointer->damperD;
+				double K = iPointer->correctionSpringK;
+				double D = iPointer->correctionDamperD;
 				Vec3d addforce = -1 * (K * ortho + D * dvortho);
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
@@ -207,10 +207,10 @@ void FWLDHapticLoop::HapticRendering6D(){
 					//DSTR << "Depth "<< ortho.norm() << std::endl;
 
 					/// R—Í‚ÌŒvŽZ
-					double K = iPointer->springK / psection.size();
-					double D = iPointer->damperD * psection.size();
+					double K = iPointer->correctionSpringK / psection.size() / 5;
+					double D = iPointer->correctionDamperD / psection.size() / 5;
 					Vec3d addforce = -1 * (K * ortho + D * dvortho);
-					Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
+					Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce / iPointer->GetPosScale();
 
 					outForce.v() += addforce;	
 					outForce.w() += addtorque;
@@ -410,8 +410,8 @@ void FWLDHapticLoop::Proxy(){
 				Vec3d dvortho = dv.norm() * interpolation_normal;
 
 				/// R—Í‚ÌŒvŽZ
-				double K = iPointer->springK;
-				double D = iPointer->damperD;
+				double K = iPointer->correctionSpringK;
+				double D = iPointer->correctionDamperD;
 				Vec3d addforce = -K * (pPoint - (poseSolid * proxy[j][i])) - D * dvortho;
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
@@ -545,8 +545,8 @@ void FWLDHapticLoop::ProxySimulation(){
 				Vec3d dvortho = dv.norm() * interpolation_normal;
 
 				/// R—Í‚ÌŒvŽZ
-				double K = iPointer->springK;
-				double D = iPointer->damperD;
+				double K = iPointer->correctionSpringK;
+				double D = iPointer->correctionDamperD;
 				Vec3d addforce;
 				Vec3d addtorque;
 				if(dvortho.norm() < 0){
@@ -750,7 +750,7 @@ void FWLDHaptic::Step(){
 		PhysicsStep();
 		UpdateSolidList();
 		NeighborObjectFromPointer();
-#if USENAME == susa
+#if 0
 		TestSimulation6D();
 #else
 		TestSimulation();

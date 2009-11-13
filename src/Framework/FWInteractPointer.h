@@ -25,6 +25,9 @@ public:
 	bool			bVibration;
 	std::vector<bool>	bContact;
 
+	double correctionSpringK;
+	double correctionDamperD;
+
 	FWInteractPointer();
 	FWInteractPointer(const FWInteractPointerDesc& desc);
 
@@ -43,6 +46,7 @@ public:
 	Posed		GetDefaultPosition();
 	void		SetPointersCalibPosition(Posed p);
 	Posed		GetPointersCalibPosition();
+	void		CalcCorrectionSpringDamper();
 	void		EnableForce(bool b = true);
 	void		EnableVibration(bool b = true);
 	void		Calibration();
