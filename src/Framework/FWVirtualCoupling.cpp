@@ -34,8 +34,8 @@ void FWVirtualCoupling::CreateVCPointer(){
 			{
 				jointDesc.poseSocket.Pos()	= Vec3f(0.0f, 0.0f, 0.0f);
 				jointDesc.posePlug.Pos()	= Vec3f(0.0f, 0.0f, 0.0f);
-				jointDesc.spring			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->springK;
-				jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->damperD;
+				jointDesc.spring			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->correctionSpringK;
+				jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->correctionDamperD;
 				jointDesc.springOri			= GetIAPointer(i)->springK *1000;
 				jointDesc.damperOri			= GetIAPointer(i)->damperD *1000;
 			}

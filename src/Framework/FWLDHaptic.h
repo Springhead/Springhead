@@ -70,7 +70,6 @@ public:
 	Vec3d* GetProxyPoint();
 	Vec3d* GetForce();
 	bool GetContactFlag();
-
 };
 
 #endif

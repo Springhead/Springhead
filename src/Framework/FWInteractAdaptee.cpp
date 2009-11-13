@@ -21,6 +21,7 @@ void FWHapticLoopBase::Clear(){
 	loopCount = 1;
 }
 
+
 void FWHapticLoopBase::SetRenderedForce(HIBaseIf* hi, bool bForce, SpatialVector f){
 	if(bForce){
 		if(DCAST(HIForceInterface6DIf, hi)){
@@ -224,7 +225,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			commonPoint = a2w * pa + 0.5 * a2b;
 			FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
 			for(int k = 0; k  < section.size(); k++){
-				// commonpoin‚ªN“ü—Ê‚É‚æ‚è•Ï‰»‚µ‚Ä‚µ‚Ü‚¤‚½‚ß
+				// commonpoint‚ªN“ü—Ê‚É‚æ‚è•Ï‰»‚µ‚Ä‚µ‚Ü‚¤‚½‚ß
 				// ‹ß–T“_‚ªÚ‚Á‚Ä‚é‚Æ‚±‚ë‚É–Ê‚ð“®‚©‚·
 				iaInfo->neighborInfo.solid_section.push_back(a2w.Inv() * (section[k] - 0.5 * a2b));
 				iaInfo->neighborInfo.pointer_section.push_back(b2w.Inv() * (section[k] + 0.5 * a2b));

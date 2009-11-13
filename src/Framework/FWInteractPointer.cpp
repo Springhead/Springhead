@@ -16,9 +16,11 @@ namespace Spr{;
 
 FWInteractPointer::FWInteractPointer(){ Init(); }
 FWInteractPointer::FWInteractPointer(const FWInteractPointerDesc& desc) : FWInteractPointerDesc(desc){ Init(); }
+
 void FWInteractPointer::Init(){
 	bForce = false;
 	bVibration = false;
+	CalcCorrectionSpringDamper();
 }
 void FWInteractPointer::SetPointerSolid(PHSolidIf* solid){
 	pointerSolid = solid;
@@ -34,6 +36,7 @@ HIBaseIf* FWInteractPointer::GetHI(){
 }
 void FWInteractPointer::SetPosScale(double s){
 	posScale = s; 
+	CalcCorrectionSpringDamper();
 }
 double FWInteractPointer::GetPosScale(){
 	return posScale; 
@@ -65,6 +68,12 @@ void  FWInteractPointer::SetPointersCalibPosition(Posed p){
 Posed  FWInteractPointer::GetPointersCalibPosition(){
 	return pointersCalibPosition; 
 }
+
+void FWInteractPointer::CalcCorrectionSpringDamper(){
+	correctionSpringK = springK / posScale;
+	correctionDamperD = damperD / posScale;
+} 
+
 void FWInteractPointer::EnableForce(bool b){
 	bForce = b;
 }
