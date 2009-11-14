@@ -22,11 +22,11 @@ struct PHConstraintState{
 	SpatialVector F;				///< 拘束誤差を位置のLCPで補正する場合の補正量*質量
 	
 	//一時的にSaveStateを有効にするためのソースコード
-	Vec3d motorf;
-	Vec3d limitf;
+	Vec3d motorf;			//< もとはConstraintにあったfが分離したもの(PHMotor.hのf)
+	Vec3d limitf;			//< もとはConstraintにあったfが分離したもの(PHJointLimit.hのf)
 	//Vec3d limitF;
-	Vec3d fs[5];	//fのNormの平均値を保存
-	SpatialVector xs[2];			///< (3要素モデル専用)ばね部の距離
+	Vec3d fs[5];			//fのNormの平均値を保存
+	SpatialVector xs[2];	///< (3要素モデル専用)ばね部の距離
 
 };
 

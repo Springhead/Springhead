@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Physics.h"
+#include <iostream>
 #pragma hdrstop
 
 using namespace PTM;
@@ -14,13 +15,15 @@ namespace Spr{;
 
 PHMotor1D::PHMotor1D(){
 	yieldFlag = false;
+	A = Ainv = dA = b = db = 0.0;
+	fMaxDt = DBL_MAX;
 }
-	
+
 void PHMotor1D::ElasticDeformation(){
-	double tmp = 1.0 / (joint->damper + joint->spring * joint->GetScene()->GetTimeStep());
-	dA = tmp * joint->GetScene()->GetTimeStepInv();
-	db = tmp * (joint->spring * joint->GetDeviation()
-		- joint->damper * joint->targetVelocity - joint->offsetForce);
+	double tmp = 1.0 / (D + K * dt);
+	dA = tmp * dtinv;
+	db = tmp * (K * joint->GetDeviation()
+		- D * joint->targetVelocity - joint->offsetForce);
 }
 
 void PHMotor1D::PlasticDeformation(){
@@ -53,14 +56,13 @@ void PHMotor1D::PlasticDeformation(){
 	joint->xs[0]=joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
 }
 void PHMotor1D::SetupLCP(){
-	fMaxDt = joint->fMax * joint->GetScene()->GetTimeStep();
-
 	dt		= joint->GetScene()->GetTimeStep();
-	dtinv	= joint->GetScene()->GetTimeStepInv();
+	dtinv	= 1.0/dt;
+	fMaxDt  = joint->fMax * dt;
+	K		= joint->spring;
 	D		= joint->damper;
 	D2		= joint->secondDamper;
-	K		= joint->spring;
-	
+
 	// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
 	if(joint->spring == 0.0 && joint->damper == 0.0){
 		dA = db = 0.0;
@@ -116,13 +118,16 @@ void PHMotor1D::IterateLCP(){
 		return;
 
 	int j = joint->axisIndex[0];
-	double fnew = joint->motorf.z - joint->engine->accelSOR * Ainv * (dA * joint->motorf.z + b + db
+	double fold = joint->motorf.z;
+	double fnew = fold - joint->engine->accelSOR * Ainv * (dA * fold + b + db
 			 + joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);
 
 	// トルク制限
 	fnew = (fnew > 0) ? min(fnew, fMaxDt) : max(fnew, -fMaxDt);
-	joint->CompResponse(fnew - joint->motorf.z, 0);
+	joint->CompResponse(fnew - fold, 0);
+	//DSTR << ", " << joint->motorf.z << endl;
 	joint->motorf.z = fnew;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
