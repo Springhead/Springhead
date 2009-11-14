@@ -63,22 +63,16 @@ void PHJoint1D::IterateCorrectionLCP(){
 	limit.IterateCorrectionLCP();
 }
 
-bool PHJoint1D::GetDeformationMode(){
+PHJointDesc::PHDeformationType PHJoint1D::GetDeformationMode(){
 	switch(type){
 	case PHBallJointDesc::ELASTIC_PLASTIC:
-		if(motor.yieldFlag){
-			std::cout<<"’e‘Y«•ÏŒ`F‘Y«•ÏŒ`ƒ‚[ƒh"<<std::endl;
-		}else {
-			std::cout<<"’e‘Y«•ÏŒ`F’e«•ÏŒ`ƒ‚[ƒh"<<std::endl;
-		}
-		break;
+		if(motor.yieldFlag)return PHBallJointDesc::PLASTIC;
+		else  return PHBallJointDesc::ELASTIC;
 	case PHBallJointDesc::ELASTIC:
-		std::cout<<"’e«•ÏŒ`"<<std::endl;
-		break;
+		return type;
 	case PHBallJointDesc::PLASTIC:
-		std::cout<<"‘Y«•ÏŒ`"<<std::endl;
+		return type;
 	}
-	return motor.yieldFlag;
 }
 /*
 void PHJoint1D::SetConstrainedIndex(bool* con){

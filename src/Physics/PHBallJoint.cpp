@@ -85,22 +85,16 @@ void PHBallJoint::CompError(){
 	B.v() = Xjrel.r;
 }
 
-bool PHBallJoint::GetDeformationMode(){
+PHJointDesc::PHDeformationType PHBallJoint::GetDeformationMode(){
 	switch(type){
 	case PHBallJointDesc::ELASTIC_PLASTIC:
-		if(motor.yieldFlag){
-			std::cout<<"’e‘Y«•ÏŒ`F‘Y«•ÏŒ`ƒ‚[ƒh"<<std::endl;
-		}else {
-			std::cout<<"’e‘Y«•ÏŒ`F’e«•ÏŒ`ƒ‚[ƒh"<<std::endl;
-		}
-		break;
+		if(motor.yieldFlag)return PHBallJointDesc::PLASTIC;
+		else  return PHBallJointDesc::ELASTIC;
 	case PHBallJointDesc::ELASTIC:
-		std::cout<<"’e«•ÏŒ`"<<std::endl;
-		break;
+		return type;
 	case PHBallJointDesc::PLASTIC:
-		std::cout<<"‘Y«•ÏŒ`"<<std::endl;
+		return type;
 	}
-	return motor.yieldFlag;
 }
 
 

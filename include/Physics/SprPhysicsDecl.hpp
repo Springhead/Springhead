@@ -122,7 +122,7 @@
 	void SetYieldStress(const double yS){	base::SetYieldStress(yS);}	\
 	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
 	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
-	bool GetDeformationMode(){	return	base::GetDeformationMode();}	\
+	Spr::PHJointDesc::PHDeformationType GetDeformationMode(){	return	base::GetDeformationMode();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHingeJointIf(base)	\
 
@@ -172,7 +172,7 @@
 	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
 	Vec3d GetInertia(){	return	base::GetInertia();}	\
 	void SetInertia(const Vec3d i){	base::SetInertia(i);}	\
-	bool GetDeformationMode(){	return	base::GetDeformationMode();}	\
+	Spr::PHJointDesc::PHDeformationType GetDeformationMode(){	return	base::GetDeformationMode();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\
 	void SetSpring(const Vec3d& spring){	base::SetSpring(spring);}	\

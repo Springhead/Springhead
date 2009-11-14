@@ -108,7 +108,7 @@ public:
 	void	SetYieldStress(double input)	{yieldStress = input;}
 	double  GetHardnessRate()				{return hardnessRate;}
 	void	SetHardnessRate(double input)	{hardnessRate = input;}
-	bool GetDeformationMode();
+	PHJointDesc::PHDeformationType GetDeformationMode();
 
 
 	/// オーバライド
