@@ -227,7 +227,7 @@ void PHBallJointMotor::SetupLCP(){
 			軌道追従制御では残りの2行もふくむ．offsetには外で計算してきた合成慣性テンソルを代入する
 			速度制御ではDを無限大に飛ばす．位置制御等へ戻す時にDも戻すのも忘れずに．
 			****/
-			db = tmp * (- K * propV - D * joint->targetVelocity - joint->offsetForce);
+			db = tmp * (- K * propV - D * joint->targetVelocity - joint->offsetForce * dtinv);
 
 			/* [comment]:昔のPHControlModeの名残．
 			if(mode == PHJointDesc::MODE_VELOCITY){
