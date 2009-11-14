@@ -22,8 +22,9 @@ PHMotor1D::PHMotor1D(){
 void PHMotor1D::ElasticDeformation(){
 	double tmp = 1.0 / (D + K * dt);
 	dA = tmp * dtinv;
-	db = tmp * (K * joint->GetDeviation()
-		- D * joint->targetVelocity - joint->offsetForce);
+	double pos = joint->GetPosition();
+	double tar = joint->GetTargetPosition();
+	db = tmp * (K * (pos - tar)	- D * joint->targetVelocity - joint->offsetForce * dtinv);
 }
 
 void PHMotor1D::PlasticDeformation(){
@@ -125,19 +126,6 @@ void PHMotor1D::IterateLCP(){
 	// ƒgƒ‹ƒN§ŒÀ
 	fnew = (fnew > 0) ? min(fnew, fMaxDt) : max(fnew, -fMaxDt);
 	joint->CompResponse(fnew - fold, 0);
-#if 0
-	int inte = joint->GetScene()->GetNumIteration();
-	static int count = 0;
-	if(count == 0){
-		DSTR << "motorf" << joint->motorf.z << ", fnew : " << fnew <<endl;
-		DSTR << "SOR  : " << joint->engine->accelSOR << endl;
-		DSTR << "Ainv : " << Ainv << ", dA : " << dA << endl;
-		DSTR << "b	  : " << b	  << ", db : " << db << endl;
-		DSTR << "---------------------------------------------" << endl;
-	}
-	count++;
-	if(count >= inte-1) count = 0;
-#endif
 	joint->motorf.z = fnew;
 
 }
@@ -151,7 +139,7 @@ PHBallJointMotor::PHBallJointMotor(){
 
 void PHBallJointMotor::ElasticDeformation(){
 	double tmp = 1.0 / (joint->damper + joint->spring * dt);
-	Vec3d I = joint->Inertia, v0 = joint->targetVelocity, f0 = joint->offsetForce;
+	Vec3d I = joint->Inertia, v0 = joint->targetVelocity, f0 = joint->offsetForce * dtinv;
 	for(int i=0;i<3;i++){
 		dA[i] = tmp * dtinv * I[i];		
 		db[i] = tmp * (- K * I[i] * propV[i] - D * I[i] * v0[i] - f0[i]);
