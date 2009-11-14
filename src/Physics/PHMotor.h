@@ -40,43 +40,46 @@ struct PH3ElementCommonData: public PH3ElementSt{
 
 class PHMotor1D : public PH3ElementCommonData{
 public:
-	PHJoint1D*				joint;
+	PHJoint1D*		joint;
+	bool			yieldFlag;
 
-	double  A, Ainv, dA, b, db;
-	double  fMaxDt;			///< 関節の出せる力*dtの最大値、最小値
-	/** to naga > 変数のコメント書けよ．デバッグできないし↓**/
-	double	fNorm;
-	double	dt, dtinv, K, D, D2;
-	bool	yieldFlag;
-	
 	virtual void	SetupLCP();
 	virtual void	IterateLCP();
+	PHMotor1D();
+private:
+	double  A, Ainv, dA, b, db;
+	double  fMaxDt;			///< 関節の出せる力*dtの最大値
+	/** to naga > 変数のコメント書けよ．デバッグできないし↓**/
+	double	dt, dtinv, K, D, D2;
+	
 	void ElasticDeformation();	//< 弾性変形
 	void PlasticDeformation();	//< 塑性変形
-
-	PHMotor1D();
+	bool IsYield();				//< 降伏しているか否かのチェック
 };
 
 class PHBallJointMotor : public PH3ElementCommonData{
 public:
-	PHBallJoint*			joint;
-
-	Vec3d	A, Ainv, dA, b, db;
-	//Vec3d	f;
-	Quaterniond	propQ;
-	Vec3d	propV, I;
-	double	fMaxDt;
-	double	fNorm;
-	double	dt, dtinv, K, D, D2;
-	bool	yieldFlag;
-
-	void    ElasticDeformation(); //< 弾性変形
-	void	PlasticDeformation(); //< 塑性変形
+	PHBallJoint*	joint;
+	bool			yieldFlag;
 
 	virtual void	SetupLCP();
 	virtual void	IterateLCP();
 
 	PHBallJointMotor();
+
+private:
+	Vec3d	A, Ainv, dA, b, db;
+	//Vec3d	f;
+	Quaterniond	propQ;
+	Vec3d	propV, I;
+	double	fMaxDt;
+	double	dt, dtinv, K, D, D2;
+
+
+	void    ElasticDeformation(); //< 弾性変形
+	void	PlasticDeformation(); //< 塑性変形
+	bool	IsYield(); //< 降伏しているか否かのチェック
+
 };
 
 }
