@@ -44,14 +44,15 @@ public:
 
 	double  A, Ainv, dA, b, db;
 	double  fMaxDt;			///< 関節の出せる力*dtの最大値、最小値
+	/** to naga > 変数のコメント書けよ．デバッグできないし↓**/
 	double	fNorm;
 	double	dt, dtinv, K, D, D2;
 	bool	yieldFlag;
 	
 	virtual void	SetupLCP();
 	virtual void	IterateLCP();
-	void ElasticDeformation();
-	void PlasticDeformation();
+	void ElasticDeformation();	//< 弾性変形
+	void PlasticDeformation();	//< 塑性変形
 
 	PHMotor1D();
 };
@@ -69,8 +70,8 @@ public:
 	double	dt, dtinv, K, D, D2;
 	bool	yieldFlag;
 
-	void    ElasticDeformation();
-	void	PlasticDeformation();
+	void    ElasticDeformation(); //< 弾性変形
+	void	PlasticDeformation(); //< 塑性変形
 
 	virtual void	SetupLCP();
 	virtual void	IterateLCP();

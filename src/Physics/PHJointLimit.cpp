@@ -14,6 +14,8 @@ namespace Spr{;
 
 PHJointLimit1D::PHJointLimit1D(){
 	f = F = 0.0;
+	onLower = onUpper = false;
+	A = Ainv = dA = b = db = 0;
 }
 
 void PHJointLimit1D::SetupLCP(){

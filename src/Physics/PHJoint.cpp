@@ -22,8 +22,8 @@ PHJoint::PHJoint(){
 //----------------------------------------------------------------------------
 // PHJoint1D
 PHJoint1DDesc::PHJoint1DDesc(){
-	lower = 0.0;
-	upper = 0.0;
+	lower  = 0.0;
+	upper  = 0.0;
 	spring = 0.0;
 	targetPosition = 0.0;
 	damper = 0.0;

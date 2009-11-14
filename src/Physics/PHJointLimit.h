@@ -35,6 +35,7 @@ public:
 	virtual void	SetupCorrectionLCP();
 	virtual void	IterateCorrectionLCP();
 
+
 	PHJointLimit1D();
 };
 

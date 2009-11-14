@@ -490,9 +490,12 @@ void PHScene::GetStateR(char*& s){
 	assert(rv || sz==0);
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
-		// childとしてSolidだけを呼ぶ
+		// childとしてSolidだけを呼ぶ→なぜ？
+		//とりあえず，保存されないと困るのでjointもセーブします
 		if(DCAST(PHSolidIf, GetChildObject(i))){
 			((PHSolid*)GetChildObject(i))->GetStateR(s);
+		}else if(DCAST(PHConstraintIf, GetChildObject(i))){
+			((PHConstraint*)GetChildObject(i))->GetStateR(s);
 		}
 	}
 }
@@ -501,9 +504,12 @@ void PHScene::SetStateR(const char*& s){
 	s += GetStateSize();
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
-		// childとしてSolidだけを呼ぶ
+		// childとしてSolidだけを呼ぶ→なぜ？
+		//とりあえず，保存されないと困るのでjointもロードします
 		if(DCAST(PHSolidIf, GetChildObject(i))){
 			((PHSolid*)GetChildObject(i))->SetStateR(s);
+		}else if(DCAST(PHConstraintIf, GetChildObject(i))){
+			((PHConstraint*)GetChildObject(i))->SetStateR(s);
 		}
 	}
 }
