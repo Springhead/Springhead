@@ -231,6 +231,7 @@ void PHBallJointMotor::SetupLCP(){
 			}
 		}
 			
+		
 		switch(joint->type){
 			case PHJointDesc::ELASTIC:	//PHDeformationType::Elastic 0　初期値
 				ElasticDeformation();
@@ -276,7 +277,6 @@ void PHBallJointMotor::IterateLCP(){
 	
 }
 bool PHBallJointMotor::IsYield(){
-	bool ans = false;
 	//fの平均値を計算
 	double fNorm = 0;
 	for(int i=0; i<5 ;i++){
@@ -289,8 +289,8 @@ bool PHBallJointMotor::IsYield(){
 		fNorm+=joint->fs[i].norm()/5;
 	}
 	if(fNorm > joint->yieldStress){
-		ans = yieldFlag = true;
+		yieldFlag = true;
 	}
-	return ans;
+	return yieldFlag;
 }
 }
