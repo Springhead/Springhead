@@ -125,7 +125,19 @@ void PHMotor1D::IterateLCP(){
 	// ƒgƒ‹ƒN§ŒÀ
 	fnew = (fnew > 0) ? min(fnew, fMaxDt) : max(fnew, -fMaxDt);
 	joint->CompResponse(fnew - fold, 0);
-	//DSTR << ", " << joint->motorf.z << endl;
+#if 0
+	int inte = joint->GetScene()->GetNumIteration();
+	static int count = 0;
+	if(count == 0){
+		DSTR << "motorf" << joint->motorf.z << ", fnew : " << fnew <<endl;
+		DSTR << "SOR  : " << joint->engine->accelSOR << endl;
+		DSTR << "Ainv : " << Ainv << ", dA : " << dA << endl;
+		DSTR << "b	  : " << b	  << ", db : " << db << endl;
+		DSTR << "---------------------------------------------" << endl;
+	}
+	count++;
+	if(count >= inte-1) count = 0;
+#endif
 	joint->motorf.z = fnew;
 
 }
