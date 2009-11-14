@@ -368,7 +368,7 @@ struct PHJoint1DIf : public PHJointIf{
 	/** @brief 変形のタイプを表示する
 		@return 変形のタイプ
 	 */
-	bool 	GetDeformationMode();
+	PHJointDesc::PHDeformationType 	GetDeformationMode();
 };
 
 /// ヒンジのインタフェース
@@ -623,7 +623,7 @@ struct PHBallJointIf : public PHJointIf{
 	/** @brief 変形のタイプを表示する
 		@return 変形のタイプ
 	 */
-	bool 	GetDeformationMode();
+	PHJointDesc::PHDeformationType 	GetDeformationMode();
 
 };
 

@@ -47,7 +47,7 @@ public:
 	void	SetHardnessRate(double input)	{hardnessRate = input;}
 	void	SetDefomationType(int t)		{type = (PHJointDesc::PHDeformationType)t;}
 	int 	GetDefomationType()				{return (int)type;}
-	bool 	GetDeformationMode(){};
+	PHJointDesc::PHDeformationType 	GetDeformationMode(){};
 
 	bool	yieldFlag;		    // ~•š‰—Í‚Ìƒtƒ‰ƒO
 
