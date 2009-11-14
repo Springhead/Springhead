@@ -209,8 +209,8 @@ void FWLDHapticSample::BuildPointer(){
 			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-			idesc.springK = 1;						// バーチャルカップリングのバネ係数
-			idesc.damperD = 0.08;					   // バーチャルカップリングのダンパ係数
+			idesc.springK = 1*300;						// バーチャルカップリングのバネ係数
+			idesc.damperD = 0.08*300;					   // バーチャルカップリングのダンパ係数
 			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
 			idesc.forceScale = 1.0;					// インタフェースに働く力の倍率
 			

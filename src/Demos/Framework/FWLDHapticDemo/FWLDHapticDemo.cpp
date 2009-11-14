@@ -38,8 +38,8 @@ void FWLDHapticDemo::Init(int argc, char* argv[]){
 	/// InteractSceneの作成
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.iaMode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
-	desc.hMode =  FWHapticMode::PENALTY;
+	desc.iaMode = FWInteractMode::LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.hMode =  FWHapticMode::PROXY;
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
 	CreateIAScene(desc);									// interactSceneの作成
 
@@ -176,6 +176,8 @@ void FWLDHapticDemo::BuildScene(){
 		/// 形状(shapeFloor)の作成
 		bd.boxsize = Vec3f(50, 10, 50);
 		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
+		shapeFloor->SetDynamicFriction(0.7);
+		shapeFloor->SetStaticFriction(0.7);
 		/// 剛体に形状を付加する
 		soFloor->AddShape(shapeFloor);
 		soFloor->SetFramePosition(Vec3d(0, -7, 0));
@@ -201,8 +203,7 @@ void FWLDHapticDemo::BuildScene(){
 		FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
 		idesc.pointerSolid = soPointer;			// soPointerを設定
 		idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-		idesc.springK = 8;					// haptic renderingのバネ係数
-		idesc.damperD = 0.01;					// haptic renderingのダンパ係数
+
 #if	SPIDARG6
 		idesc.posScale = 300;//300;					// soPointerの可動域の設定(～倍)
 		idesc.localRange = 1.0;//1.0;					// LocalDynamicsを使う場合の近傍範囲
@@ -210,6 +211,8 @@ void FWLDHapticDemo::BuildScene(){
 		idesc.posScale = 80;					// soPointerの可動域の設定(～倍)
 		idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
 #endif
+		idesc.springK = 8 * idesc.posScale;					// haptic renderingのバネ係数
+		idesc.damperD = 0.01 * idesc.posScale;					// haptic renderingのダンパ係数
 		if(i==0) idesc.defaultPosition =Posed(1,0,0,0,2,5,0);	// 初期位置の設定
 		if(i==1) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);
 		GetIAScene()->CreateIAPointer(idesc);	// interactpointerの作成
