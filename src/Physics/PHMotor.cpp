@@ -24,6 +24,7 @@ void PHMotor1D::ElasticDeformation(){
 	dA = tmp * dtinv;
 	double pos = joint->GetPosition();
 	double tar = joint->GetTargetPosition();
+	// offsetForceはdAと同じ次元にしなければならない．by toki 2009.11.12
 	db = tmp * (K * (pos - tar)	- D * joint->targetVelocity - joint->offsetForce * dtinv);
 }
 
@@ -73,20 +74,6 @@ void PHMotor1D::SetupLCP(){
 		A = joint->A[joint->axisIndex[0]];
 		b = joint->b[joint->axisIndex[0]];
 
-		//fの平均値を計算
-		fNorm = 0;
-		for(int i=0; i<5 ;i++){
-			if(i==4){
-				joint->fs[4] = joint->motorf;
-			}else{ 
-				joint->fs[i] = joint->fs[i+1];
-			}
-			
-			fNorm+=joint->fs[i].norm()/5;
-		}
-		if(fNorm > joint->yieldStress){
-			yieldFlag = true;
-		}
 		switch(joint->type){
 		case PHJointDesc::ELASTIC:	//PHDeformationType::Elastic 0　初期値
 			ElasticDeformation();
@@ -95,7 +82,7 @@ void PHMotor1D::SetupLCP(){
 			PlasticDeformation();
 			break;
 		case PHJointDesc::ELASTIC_PLASTIC: //PHDeformationType::ELASTIC_PLASTIC 2	
-			if(yieldFlag){
+			if(IsYield()){
 				PlasticDeformation();	//塑性変形
 			}else {
 				ElasticDeformation();	//弾性変形
@@ -130,6 +117,24 @@ void PHMotor1D::IterateLCP(){
 
 }
 
+bool PHMotor1D::IsYield(){
+	bool ans = false;
+	//fの平均値を計算
+	double fNorm = 0;
+	for(int i=0; i<5 ;i++){
+		if(i==4){
+			joint->fs[4] = joint->motorf;
+		}else{ 
+			joint->fs[i] = joint->fs[i+1];
+		}
+		
+		fNorm+=joint->fs[i].norm()/5;
+	}
+	if(fNorm > joint->yieldStress){
+		ans = yieldFlag = true;
+	}
+	return ans;
+}
 ////////////////////////////////////////////////////////////////////////////////////////
 
 PHBallJointMotor::PHBallJointMotor(){
@@ -138,11 +143,11 @@ PHBallJointMotor::PHBallJointMotor(){
 }
 
 void PHBallJointMotor::ElasticDeformation(){
-	double tmp = 1.0 / (joint->damper + joint->spring * dt);
-	Vec3d I = joint->Inertia, v0 = joint->targetVelocity, f0 = joint->offsetForce * dtinv;
+	double tmp = 1.0 / (D + K * dt);
+	Vec3d v0 = joint->targetVelocity, f0 = joint->offsetForce;
 	for(int i=0;i<3;i++){
 		dA[i] = tmp * dtinv * I[i];		
-		db[i] = tmp * (- K * I[i] * propV[i] - D * I[i] * v0[i] - f0[i]);
+		db[i] = tmp * (- K * I[i] * propV[i] - D * I[i] * v0[i] - f0[i] * dtinv);
 	}
 }
 
@@ -205,86 +210,28 @@ void PHBallJointMotor::SetupLCP(){
 		A = joint->A.w();
 		b = joint->b.w();
 		
-		if(joint->secondDamper == 0.0){
-			/*****************************************************************************
-			w[t+1] = (A+dA) * λ[t+1] + (b+db)
-			のAの内，バネダンパを構成するのは，BallJointの場合は回転の三軸についてなので，
-			SpatialVector dA.w()にtmp = (D + K⊿t)^{-1}を入れている．
-			dtinvをさらにかけるのは,pptなど表記とは違い，A=JM^{-1}J^T ⊿tのうち，
-			プログラム中で計算しているのは，A = JM^{-1}J^Tだけ．
-			あとから(A + dA)⊿tをしているため
-			******************************************************************************/
-			double tmp = 1.0 / (D + K * dt);
-			dA = tmp * dtinv * Vec3d(1.0, 1.0, 1.0);
+		//物体の形状を考慮したバネダンパを設定する場合
+		if(I[0]!=1&&I[1]!=1&&I[2]!=1){
+			//物体の変形に使用する場合
+			/*x軸，y軸回りの変形(曲げ）
+				I(断面2次モーメント),E(ヤング率),T(トルク),l(剛体間の距離)としたとき
+　				T=EIθ/l
+			  z軸回りの変形（ねじり）
+				G(せん断弾性係数),v(ポワソン比)
+				G=E/2(1+v)
+				T=GIθ/l 
+			*/
+			double v=0.3;		//ポワソン比は0.3ぐらいが多い
 
-			// 可動域制限がかかっている場合はpropの座標を変換しないといけない。
-			//if (joint->IsLimit())
-			//	propV = Jcinv * propV; //< 拘束ヤコビアンってどこでとれるんだっけか･･･
-
-			/****
-			田崎さんの論文の式25のdbに相当する．
-			位置制御のみであれば，以下の式の1行目のみ．
-			軌道追従制御では残りの2行もふくむ．offsetには外で計算してきた合成慣性テンソルを代入する
-			速度制御ではDを無限大に飛ばす．位置制御等へ戻す時にDも戻すのも忘れずに．
-			****/
-			db = tmp * (- K * propV - D * joint->targetVelocity - joint->offsetForce * dtinv);
-
-			/* [comment]:昔のPHControlModeの名残．
-			if(mode == PHJointDesc::MODE_VELOCITY){
-				if(anyLimit)
-					db.w() = -Jcinv * targetVelocity;
-				else
-					db.w() = - targetVelocity;
-			}else if(mode == PHJointDesc::MODE_TRAJ){
-				if(anyLimit)
-					db.w() = -Jcinv * (targetVelocity + spring * propV);
-				else
-					db.w() = - (targetVelocity + spring * propV);
-			}else if (mode == PHJointDesc::MODE_POSITION){
-				// バネダンパが入っていたら構築する
-				if (spring != 0.0 || damper != 0.0){
-					double tmp = 1.0 / (damper + spring * GetScene()->GetTimeStep());
-				}
-			}*/
+			//四角形の場合
+			if(I[0]>I[1]){
+				I[2]=I[1]*4/(2*(1+v));
+			}else{
+				I[2]=I[0]*4/(2*(1+v));
+			}
 		}
-		else{
-			//fの平均値を計算
-			fNorm = 0;
-			for(int i=0; i<5 ;i++){
-				if(i==4){
-					joint->fs[4] = joint->motorf;
-				}else{ 
-					joint->fs[i] = joint->fs[i+1];
-				}
-				
-				fNorm+=joint->fs[i].norm()/5;
-			}
-
-			//物体の形状を考慮したバネダンパを設定する場合
-			if(I[0]!=1&&I[1]!=1&&I[2]!=1){
-				//物体の変形に使用する場合
-				/*x軸，y軸回りの変形(曲げ）
-					I(断面2次モーメント),E(ヤング率),T(トルク),l(剛体間の距離)としたとき
-	　				T=EIθ/l
-				  z軸回りの変形（ねじり）
-					G(せん断弾性係数),v(ポワソン比)
-					G=E/2(1+v)
-					T=GIθ/l 
-				*/
-				double v=0.3;		//ポワソン比は0.3ぐらいが多い
-
-				//四角形の場合
-				if(I[0]>I[1]){
-					I[2]=I[1]*4/(2*(1+v));
-				}else{
-					I[2]=I[0]*4/(2*(1+v));
-				}
-			}
-
-			if(fNorm > joint->yieldStress){
-				yieldFlag = true;
-			}
-			switch(joint->type){
+			
+		switch(joint->type){
 			case PHJointDesc::ELASTIC:	//PHDeformationType::Elastic 0　初期値
 				ElasticDeformation();
 				break;
@@ -292,7 +239,7 @@ void PHBallJointMotor::SetupLCP(){
 				PlasticDeformation();
 				break;
 			case PHJointDesc::ELASTIC_PLASTIC: //PHDeformationType::ELASTIC_PLASTIC 2	
-				if(yieldFlag){
+				if(IsYield()){
 					PlasticDeformation();	//塑性変形
 				}else {
 					ElasticDeformation();	//弾性変形
@@ -301,7 +248,6 @@ void PHBallJointMotor::SetupLCP(){
 			default:
 				ElasticDeformation();
 				break;
-			}
 		}
 		for(int i = 0; i < 3; i++)
 			Ainv[i] = 1.0 / (A[i] + dA[i]);
@@ -329,5 +275,22 @@ void PHBallJointMotor::IterateLCP(){
 	}
 	
 }
-
+bool PHBallJointMotor::IsYield(){
+	bool ans = false;
+	//fの平均値を計算
+	double fNorm = 0;
+	for(int i=0; i<5 ;i++){
+		if(i==4){
+			joint->fs[4] = joint->motorf;
+		}else{ 
+			joint->fs[i] = joint->fs[i+1];
+		}
+		
+		fNorm+=joint->fs[i].norm()/5;
+	}
+	if(fNorm > joint->yieldStress){
+		ans = yieldFlag = true;
+	}
+	return ans;
+}
 }
