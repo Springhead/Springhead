@@ -36,7 +36,7 @@ double PHHingeJoint::GetDeviation(){
 	// while(diff < -M_PI) diff += 2 * M_PI;
 	// «‚±‚Á‚¿‚Ì‚Ù‚¤‚ª‚Í‚â‚¢‚Ì‚Å•ÏX  09/07/06 mitake
 	double diff = PHJoint1D::GetDeviation();
-	diff = ((diff / (2*M_PI)) - floor(diff / (2*M_PI)) * (2*M_PI));
+	diff = ( (diff / (2*M_PI)) - floor(diff / (2*M_PI)) ) * (2*M_PI);
 	if (diff > M_PI) { diff -= 2 * M_PI; }
 	return diff;
 }
