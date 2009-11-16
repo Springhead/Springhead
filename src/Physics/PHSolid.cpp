@@ -71,6 +71,17 @@ PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	bFrozen = false;
 	if (s){ SetScene(s); }
 }
+SceneObjectIf* PHSolid::CloneObject(){
+	PHSolidDesc desc;
+	PHSolidIf* origin = DCAST(PHSolidIf,this);
+	origin ->GetDesc(&desc);
+	PHScene* s = DCAST(PHScene, GetScene());
+	PHSolidIf* clone = s->CreateSolid(desc);
+	for (unsigned int i=0; i < origin->NChildObject(); ++i) {
+		clone->AddChildObject(origin->GetChildObject(i));
+	}
+	return clone;
+}
 void PHSolid::SetGravity(bool bOn){
 	PHScene* s = DCAST(PHScene, GetScene());
 	PHGravityEngine* ge;

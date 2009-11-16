@@ -19,6 +19,18 @@ FWObject::FWObject(const FWObjectDesc& d/*=FWObjectDesc()*/)
 {
 	solidLength=0;
 }
+SceneObjectIf* FWObject::CloneObject(){
+	FWObjectIf* origin = DCAST(FWObjectIf,this);
+	FWSceneIf* s = DCAST(FWSceneIf, GetScene());
+	FWObjectIf* clone = s->CreateFWObject();
+
+	if(origin->GetPHSolid())
+		clone->SetPHSolid(origin->GetPHSolid()->CloneObject()->Cast());
+	if(origin->GetGRFrame())
+		clone->SetGRFrame(origin->GetGRFrame()->CloneObject()->Cast());
+
+	return clone;
+}
 
 void FWObject::Sync(){
 	if (phSolid && grFrame){

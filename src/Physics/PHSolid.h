@@ -186,6 +186,7 @@ public:
 	SPR_OBJECTDEF(PHSolid);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
+	virtual SceneObjectIf* CloneObject();
 	CDShapeIf* CreateAndAddShape(const IfInfo* info, const CDShapeDesc& desc);
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	bool AddChildObject(ObjectIf* obj);

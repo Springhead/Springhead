@@ -18,7 +18,17 @@ GRFrame::GRFrame(const GRFrameDesc& desc):GRFrameDesc(desc){
 	parent = NULL;
 
 }
-
+SceneObjectIf* GRFrame::CloneObject(){
+	GRFrameDesc desc;
+	GRFrameIf* origin = DCAST(GRFrameIf,this);
+	origin ->GetDesc(&desc);
+	GRScene* s = DCAST(GRScene, GetScene());
+	GRFrameIf* clone = s->CreateVisual(desc.GetIfInfo(), desc)->Cast();
+	for (unsigned int i=0; i < origin->NChildObject(); ++i) {
+		clone->AddChildObject(origin->GetChildObject(i));
+	}
+	return clone;
+}
 void GRFrame::Render(GRRenderIf* r){
 	r->PushModelMatrix();
 	r->MultModelMatrix(transform);

@@ -288,6 +288,9 @@ SceneIf* SceneObject::GetScene() const{
 	return (SceneIf*)GetNameManager();
 }
 
+SceneObjectIf* SceneObject::CloneObject(){
+	return NULL;
+}
 
 //----------------------------------------------------------------------------
 //	ObjectStates

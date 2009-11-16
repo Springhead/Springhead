@@ -334,6 +334,8 @@ class SceneObject:public NamedObject{
 public:
 	virtual void SetScene(SceneIf* s);
 	virtual SceneIf* GetScene() const;
+
+	virtual SceneObjectIf* CloneObject();
 };
 
 ///	Object‚Ö‚ÌQÆ‚Ì”z—ñ

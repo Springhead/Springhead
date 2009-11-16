@@ -290,6 +290,8 @@ struct SceneObjectIf: NamedObjectIf{
 	SPR_IFDEF(SceneObject);
 	///	Š‘®Scene‚Ìæ“¾
 	SceneIf* GetScene();
+	/// ©•ª‚ğŠ‘®Scene‚É•¡»‚·‚é
+	SceneObjectIf* CloneObject();
 };
 
 
