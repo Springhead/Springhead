@@ -35,6 +35,7 @@ public:
 
 	GRSceneIf* GetScene(){return DCAST(GRSceneIf, GRVisual::GetScene());}
 	
+	virtual SceneObjectIf* CloneObject(); 
 	virtual GRFrameIf* GetParent(){ return parent->Cast(); }
 	virtual void SetParent(GRFrameIf* fr);
 	virtual int NChildren(){ return (int)children.size(); }

@@ -26,6 +26,7 @@ public:
 	UTRef< GRFrameIf > grFrame;
 	double			   solidLength;
 	//
+	virtual SceneObjectIf* CloneObject(); 
 	virtual bool		AddChildObject(ObjectIf* o);
 	virtual PHSolidIf*	GetPHSolid(){ return phSolid; }
 	virtual void		SetPHSolid(PHSolidIf* s){ phSolid = s; }

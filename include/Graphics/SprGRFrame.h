@@ -26,7 +26,7 @@ struct GRVisualDesc{
 };
 
 /**	@brief	グラフィックスで表示に影響を与えるもの	*/
-struct GRVisualIf: public NamedObjectIf{
+struct GRVisualIf: public SceneObjectIf{
 	SPR_IFDEF(GRVisual);
 	///	レンダリング．子ノード，弟ノードのレンダリングより前に呼ばれる．
 	void Render(GRRenderIf* r);

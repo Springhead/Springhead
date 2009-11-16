@@ -33,6 +33,7 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_SceneObjectIf(base)	\
 	Spr::SceneIf* GetScene(){	return	base::GetScene();}	\
+	Spr::SceneObjectIf* CloneObject(){	return	base::CloneObject();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_ObjectStatesIf(base)	\
 	void AllocateState(Spr::ObjectIf* o){	base::AllocateState(o);}	\
