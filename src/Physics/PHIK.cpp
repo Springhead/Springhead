@@ -621,6 +621,20 @@ void PHIKHingeJoint::Move(){
 	newGoal += torque * Rad(16) / joint->GetSpring();
 	*/
 
+	// ‰Â“®ˆæ§ŒÀ“à‚É‚¨‚³‚ß‚é
+	double pi = 3.141592653589;
+	while (newGoal < -pi) { newGoal += 2*pi; }
+	while (newGoal > +pi) { newGoal -= 2*pi; }
+	double rl, ru;
+	joint->GetRange(rl,ru);
+	if (rl < ru) {
+		if (newGoal < rl) {
+			newGoal = rl;
+		} else if (ru < newGoal) {
+			newGoal = ru;
+		}
+	}
+
 	// ŠÖß‚ğ“®‚©‚·
 	joint->SetSpring(jSpring + spring);
 	joint->SetDamper(jDamper + damper);

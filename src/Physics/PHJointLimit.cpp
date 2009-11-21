@@ -448,21 +448,21 @@ void PHBallJointLimit::CheckLimit(){
 
 	// swing角の可動域制限の確認
 	if (limitCount[0] == 0 && (!onLimit[0].onUpper)){
-		if (joint->limitSwing[0]!=FLT_MAX && nowTheta[0] < joint->limitSwing[0]){
+		if (joint->limitSwing[0]>(FLT_MAX*0.1) /*joint->limitSwing[0]!=FLT_MAX*/ && nowTheta[0] < joint->limitSwing[0]){
 			onLimit[0].onLower = true;
 			Irrupt = nowTheta[0] - joint->limitSwing[0];
 		}
 		else onLimit[0].onLower = false;
 	}	
 	if(limitCount[1] == 0 && !onLimit[0].onLower){
-		if(joint->limitSwing[1]!=FLT_MAX && nowTheta[0] > joint->limitSwing[1]){
+		if(joint->limitSwing[1]>(FLT_MAX*0.1)/*joint->limitSwing[1]!=FLT_MAX*/ && nowTheta[0] > joint->limitSwing[1]){
 			onLimit[0].onUpper = true;
 			Irrupt = nowTheta[0] - joint->limitSwing[1];
 		}
 		else onLimit[0].onUpper = false;
 	}
 	//ツイスト角の可動域制限の確認
-	if(joint->poleTwist.upper != FLT_MAX || joint->poleTwist.lower != FLT_MAX){
+	if(joint->poleTwist.upper>(FLT_MAX*0.1)/*joint->poleTwist.upper != FLT_MAX*/ || joint->poleTwist.lower>(FLT_MAX*0.1)/*joint->poleTwist.lower != FLT_MAX*/){
 		double Herx,Theta;
 		Vec2d LSwing,LimTwistL,LimTwistU;
 		if(limitCount[1] != 0){		//スイング角の最大値があるとき最大値と最大ツイスト角を求める
@@ -514,7 +514,7 @@ void PHBallJointLimit::CheckLimit(){
 		else if(nowTheta[0] < LSwing[0]) Theta = LSwing[0];
 		else Theta = nowTheta[0];
 		for(int i = 0;i<2;i++){
-			if(joint->poleTwist[i] != FLT_MAX){
+			if(joint->poleTwist[i]>(FLT_MAX*0.1)/*joint->poleTwist[i] != FLT_MAX*/){
 				if(LSwing.lower - LSwing.upper){
 					joint->limitTwist[i] = ((LimTwistL[i] - LimTwistU[i]) * Theta + (LSwing.lower * LimTwistU[i] - LSwing.upper * LimTwistL[i])) / (LSwing.lower - LSwing.upper);
 				}
@@ -525,9 +525,9 @@ void PHBallJointLimit::CheckLimit(){
 	}
 
 	// twist角の可動域制限の確認
-	if(joint->limitTwist[0] != FLT_MAX && nowTheta[1] < joint->limitTwist[0])
+	if(joint->limitTwist[0]>(FLT_MAX*0.1)/*joint->limitTwist[0] != FLT_MAX*/ && nowTheta[1] < joint->limitTwist[0])
 		onLimit[1].onLower = true;
-	else if(joint->limitTwist[1] != FLT_MAX && nowTheta[1] > joint->limitTwist[1])
+	else if(joint->limitTwist[1]>(FLT_MAX*0.1)/*joint->limitTwist[1] != FLT_MAX*/ && nowTheta[1] > joint->limitTwist[1])
 		onLimit[1].onUpper = true;
 	else{
 		onLimit[1].onLower = false;
