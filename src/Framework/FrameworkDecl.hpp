@@ -87,12 +87,14 @@ protected:\
 	bool	modifyShapeWidth;	\
 	bool	modifyShapePose;	\
 	bool	modifyPlugSocketPose;	\
+	enum Spr::FWBoneObjectDesc::FWBoneObjectAdaptType	AdaptType;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		modifyShapeLength = ((FWBoneObjectDesc*)ptr)->modifyShapeLength;	\
 		modifyShapeWidth = ((FWBoneObjectDesc*)ptr)->modifyShapeWidth;	\
 		modifyShapePose = ((FWBoneObjectDesc*)ptr)->modifyShapePose;	\
 		modifyPlugSocketPose = ((FWBoneObjectDesc*)ptr)->modifyPlugSocketPose;	\
+		AdaptType = ((FWBoneObjectDesc*)ptr)->AdaptType;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -101,6 +103,7 @@ public:\
 		((FWBoneObjectDesc*)ptr)->modifyShapeWidth = modifyShapeWidth;	\
 		((FWBoneObjectDesc*)ptr)->modifyShapePose = modifyShapePose;	\
 		((FWBoneObjectDesc*)ptr)->modifyPlugSocketPose = modifyPlugSocketPose;	\
+		((FWBoneObjectDesc*)ptr)->AdaptType = AdaptType;	\
 		return true;	\
 	}\
 

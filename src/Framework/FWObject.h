@@ -90,6 +90,7 @@ public:
 
 	virtual void Sync();
 	virtual void Modify();
+	void		 SetAdaptType(int t){AdaptType = (FWBoneObjectAdaptType)t;}
 };
 
 class FWStructure: public SceneObject, public FWStructureDesc{

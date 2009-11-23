@@ -58,6 +58,7 @@
 	void SetPHJoint(PHJointIf* j){	base::SetPHJoint(j);}	\
 	GRFrameIf* GetEndFrame(){	return	base::GetEndFrame();}	\
 	void SetEndFrame(GRFrameIf* f){	base::SetEndFrame(f);}	\
+	void SetAdaptType(int t){	base::SetAdaptType(t);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWStructureIf(base)	\
 	Spr::FWBoneObjectIf* GetBone(int n){	return	base::GetBone(n);}	\

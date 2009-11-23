@@ -78,31 +78,46 @@ bool FWObject::AddChildObject(ObjectIf* o){
 FWBoneObject::FWBoneObject(const FWBoneObjectDesc& d/*=FWBoneObjectDesc()*/)
 : desc(d), phJoint(NULL), endFrame(NULL), FWObject((const FWObjectDesc&)d)
 {
+	AdaptType = GRFRAME_TO_PHSOLID;
 }
 
 void FWBoneObject::Sync(){
-	if (phSolid && grFrame && phJoint){
-		Posed jointPosition;
-		jointPosition.Ori() = phJoint->GetRelativePoseQ() * sockOffset.Ori().Inv();
+	if(AdaptType==GRFRAME_TO_PHSOLID){
+		if (phSolid && grFrame && phJoint){
+			Posed jointPosition;
+			jointPosition.Ori() = phJoint->GetRelativePoseQ() * sockOffset.Ori().Inv();
 
-		Posed poseSocket; phJoint->GetSocketPose(poseSocket);
-		Posed pose = poseSocket * jointPosition;
+			Posed poseSocket; phJoint->GetSocketPose(poseSocket);
+			Posed pose = poseSocket * jointPosition;
 
-		Affinef af; pose.ToAffine(af);
-		DCAST(GRFrame, grFrame)->SetTransform(af);
+			Affinef af; pose.ToAffine(af);
+			DCAST(GRFrame, grFrame)->SetTransform(af);
 
-		PHSolidIf *so1 = phJoint->GetSocketSolid(), *so2 = phJoint->GetPlugSolid();
-		if (so1 && so2) {
-			DCAST(FWSceneIf,GetScene())->GetPHScene()->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE);
+			PHSolidIf *so1 = phJoint->GetSocketSolid(), *so2 = phJoint->GetPlugSolid();
+			if (so1 && so2) {
+				DCAST(FWSceneIf,GetScene())->GetPHScene()->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE);
+			}
+		}
+		if(phSolid && grFrame && (!phJoint)){
+			//Å‰‚ÌFrame‚ÉŠÖ‚·‚éˆ—
+			Affinef af;
+			phSolid->GetPose().ToAffine(af);
+			DCAST(GRFrame, grFrame)->SetTransform(af);
 		}
 	}
-	if(phSolid && grFrame && (!phJoint)){
-		//Å‰‚ÌFrame‚ÉŠÖ‚·‚éˆ—
-		Affinef af;
-		phSolid->GetPose().ToAffine(af);
-		DCAST(GRFrame, grFrame)->SetTransform(af);
+	if(AdaptType==PHSOLID_TO_GRFRAME){
+		if (phSolid && grFrame && phJoint){
+			Affinef af = grFrame->GetWorldTransform();
+			Posed pose; pose.FromAffine(af);
+			phSolid->SetPose(pose);
+		}
+		if(phSolid && grFrame && (!phJoint)){
+			//Å‰‚ÌFrame‚ÉŠÖ‚·‚éˆ—
+			Affinef af = grFrame->GetWorldTransform();
+			Posed pose; pose.FromAffine(af);
+			phSolid->SetPose(pose);
+		}
 	}
-
 }
 
 
