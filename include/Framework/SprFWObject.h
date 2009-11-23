@@ -49,9 +49,11 @@ struct FWBoneObjectDesc {
 	bool modifyShapeWidth;		///< 剛体のShapeの太さをスキンメッシュに合わせて変更する（未実装）
 	bool modifyShapePose;		///< 剛体に対するShapeの位置を(0,0,0)に変更する（falseにするともともとのshapePoseを維持する）
 	bool modifyPlugSocketPose;	///< 関節の取り付け位置をBoneにあわせて変更する
-};
 
-struct FWStructureDesc {
+	enum FWBoneObjectAdaptType{
+		GRFRAME_TO_PHSOLID = 0, //PHSolidの位置にGRFrameを合わせる
+		PHSOLID_TO_GRFRAME = 1	//GRFrameの位置にPHSolidを合わせる
+	}AdaptType; 
 };
 
 /** @brief ボーンモデルと剛体関節系をつなげるためのFrameworkオブジェクト
@@ -68,8 +70,13 @@ struct FWBoneObjectIf : FWObjectIf {
 	GRFrameIf* GetEndFrame();
 	/// ボーンの終端点を示すGRFrameを設定する
 	void SetEndFrame(GRFrameIf* f);
+
+	/// PHSolid,GRFrameのいずれの位置に合わせるかを設定する
+	void SetAdaptType(int t);
 };
 
+struct FWStructureDesc {
+};
 /** @brief ボーンを集合体として管理するためのFrameworkオブジェクト
  */
 struct FWStructureIf : SceneObjectIf {
