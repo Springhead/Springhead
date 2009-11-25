@@ -7,6 +7,7 @@
  */
 #include "Physics.h"
 #include <iostream>
+#include <iomanip>
 #pragma hdrstop
 
 using namespace PTM;
@@ -68,7 +69,10 @@ void PHMotor1D::SetupLCP(){
 	// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
 	if(joint->spring == 0.0 && joint->damper == 0.0){
 		dA = db = 0.0;
-		joint->motorf.z = joint->offsetForce;
+		if(joint->offsetForce >= joint->fMax) 
+			joint->motorf.z = joint->fMax;
+		else 
+			joint->motorf.z = joint->offsetForce;
 	}
 	else{
 		A = joint->A[joint->axisIndex[0]];
@@ -114,7 +118,14 @@ void PHMotor1D::IterateLCP(){
 	fnew = (fnew > 0) ? min(fnew, fMaxDt) : max(fnew, -fMaxDt);
 	joint->CompResponse(fnew - fold, 0);
 	joint->motorf.z = fnew;
-
+#if 0
+	static int count = 0;
+	int nu = joint->GetScene()->GetNumIteration();
+	if(count == nu){
+		DSTR << "f:" << setw(4) << setfill(' ') << fnew/dt << ", fMax:" << setw(4) << setfill(' ')  << fMaxDt/dt << ", f_0:" << setw(4) << setfill(' ') << joint->GetOffsetForce() << endl;
+		count = 0;
+	}else count++;
+#endif
 }
 
 bool PHMotor1D::IsYield(){
