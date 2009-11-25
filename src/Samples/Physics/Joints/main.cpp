@@ -380,8 +380,8 @@ void BuildScene6(){
 	desc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90), 'x');
 	desc.posePlug.Pos()   = Vec3d(0.0, -3.0, 0.0);
 	desc.posePlug.Ori()   = Quaterniond::Rot(Rad(-90), 'x');
-	desc.spring			  = 100;
-	desc.damper			  = 10;
+	desc.spring			  = 1000;
+	desc.damper			  = 50;
 //	desc.limitSwing[0]	  = Rad(  0); // swing lower
 //	desc.limitSwing[1]	  = Rad( 20); // swing upper
 //	desc.limitTwist[0]	  = Rad(-20); // twist lower
@@ -988,8 +988,8 @@ void display(){
 	view.PosY() += yoffset;
 	view.LookAtGL(Vec3f(0.0, yoffset, 0.0), Vec3f(0.0f, 100.0f, 0.0f));
 	render->SetViewMatrix(view.inv());
-
 	render->ClearBuffer();
+	render->EnableRenderWorldAxis();
 	render->DrawScene(scene);
 	render->EndScene();
 	glutSwapBuffers();
