@@ -168,7 +168,7 @@ public:
 	template<class AM> void FromMatrix(const AM& m)
 	{
 		ET tr = m[0][0] + m[1][1] + m[2][2] + 1;
-		if (tr > 1e-6f){
+		if (tr > 1e-1f){
 			ET s = ET( 0.5/sqrt(tr) );
 			W() = ET( 0.25 / s );
 			X() = ET( (m[2][1] - m[1][2]) * s );
@@ -191,7 +191,7 @@ public:
 			X() = (m[0][2] + m[2][0] ) / s;
 			Y() = (m[1][2] + m[2][1] ) / s;
 			Z() = ET(0.25) * s;
-			W() = (m[0][1] - m[1][0] ) / s;
+			W() = (m[1][0] - m[0][1] ) / s;
 		}
 		this->unitize();
 	}
