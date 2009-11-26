@@ -192,7 +192,8 @@ void FWLDHapticLoop::HapticRendering6D(){
 			std::vector < Vec3d > ssection = nInfo->solid_section;
 			//DSTR << "//////////////////////////////////////////////" << std::endl;
 			//DSTR << "normal "<< interpolation_normal << std::endl;
-			for(int k = 0; k < psection.size(); k++){
+			int pSecSize = (int)psection.size();
+			for(int k = 0; k < pSecSize; k++){
 				Vec3d pPoint = iPointer->hiSolid.GetPose() * psection[k];	// 力覚ポインタの接触点(ワールド座標)
 				Vec3d cPoint = cSolid->GetPose() * ssection[k];				// 剛体の接触点(ワールド座標)
 				//DSTR << "--------" << std::endl;
@@ -1007,7 +1008,8 @@ void FWLDHaptic::TestSimulation6D(){
 
 			/// 法線方向に力を加える
 			std::vector< Vec3d > section;
-			for(int k = 0; k < iInfo->neighborInfo.solid_section.size(); k++){
+			int neibSSize = (int)iInfo->neighborInfo.solid_section.size();
+			for(int k = 0; k < neibSSize; k++){
 				section.push_back(iInfo->neighborInfo.solid_section[k]);			
 				phSolid->AddForce(force.col(0), section[k]); 
 			}
@@ -1022,7 +1024,8 @@ void FWLDHaptic::TestSimulation6D(){
 			states->LoadState(phScene);
 			
 			/// n + t[0]方向に力を加える
-			for(int k = 0; k < section.size(); k++){
+			int secSize = (int)section.size();
+			for(int k = 0; k < secSize; k++){
 				phSolid->AddForce(force.col(1), section[k]); 
 			}
 			#ifdef DIVIDE_STEP
@@ -1036,7 +1039,7 @@ void FWLDHaptic::TestSimulation6D(){
 			states->LoadState(phScene);
 
 			/// n+t[1]方向力を加える
-			for(int k = 0; k < section.size(); k++){
+			for(int k = 0; k < secSize; k++){
 				phSolid->AddForce(force.col(2), section[k]); 
 			}
 			#ifdef DIVIDE_STEP
