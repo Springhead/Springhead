@@ -237,7 +237,8 @@ FWStructureIf* FWScene::GetFWStructure(){
 }
 
 FWStructureIf* FWScene::GetFWStructure(int n){
-	if(n < fwStructures.size()){
+	int size = fwStructures.size();
+	if(n < size){
 		return fwStructures[n];
 	}
 	return NULL;

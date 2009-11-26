@@ -223,7 +223,8 @@ FWStructure::FWStructure(const FWStructureDesc& d/*=FWStructureDesc()*/)
 }
 
 FWBoneObjectIf* FWStructure::GetBone(int n){
-	if(n<fwBones.size()){
+	int size = fwBones.size();
+	if(n< size){
 		return fwBones[n];
 	}
 	DSTR<<"EROOR: FWBone don't exit"<<std::endl;
@@ -232,7 +233,8 @@ FWBoneObjectIf* FWStructure::GetBone(int n){
 
 FWBoneObjectIf* FWStructure::GetBone(char* n){
 	std::string name = n;
-	for(int i=0; i<fwBones.size(); i++){
+	int size = fwBones.size();
+	for(int i = 0; i < size; i++){
 		std::string getName = fwBones[i]->GetName();
 		if(getName==n){
 			return fwBones[i];
@@ -244,7 +246,7 @@ FWBoneObjectIf* FWStructure::GetBone(char* n){
 }
 
 int FWStructure::GetBoneSize(){
-	return fwBones.size();
+	return (int)fwBones.size();
 }
 
 void FWStructure::AddBone(FWBoneObjectIf* o){

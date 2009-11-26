@@ -215,7 +215,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			b2w.Pos() -= a2b;
 			commonPoint = a2w * pa;
 			FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
-			for(int k = 0; k  < section.size(); k++){
+			for(size_t k = 0; k  < section.size(); k++){
 				iaInfo->neighborInfo.solid_section.push_back(a2w.Inv() * section[k]);
 				iaInfo->neighborInfo.pointer_section.push_back(b2w.Inv() * section[k]);
 			}
@@ -224,7 +224,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			///	Šù‚ÉÚG‚µ‚Ä‚¢‚éó‘Ô‚È‚Ì‚ÅC‚»‚Ì‚Ü‚ÜÚG‰ğÍ
 			commonPoint = a2w * pa + 0.5 * a2b;
 			FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
-			for(int k = 0; k  < section.size(); k++){
+			for(size_t k = 0; k  < section.size(); k++){
 				// commonpoint‚ªN“ü—Ê‚É‚æ‚è•Ï‰»‚µ‚Ä‚µ‚Ü‚¤‚½‚ß
 				// ‹ß–T“_‚ªÚ‚Á‚Ä‚é‚Æ‚±‚ë‚É–Ê‚ğ“®‚©‚·
 				iaInfo->neighborInfo.solid_section.push_back(a2w.Inv() * (section[k] - 0.5 * a2b));
