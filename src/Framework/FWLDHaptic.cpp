@@ -64,7 +64,7 @@ void FWLDHapticLoop::UpdateInterface(){
 			Posed hifPose;
 			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
 			hifPose.Ori()=hif->GetOrientation();
-			Posed hiSolidPose = hifPose * GetIAPointer(i)->GetDefaultPosition()*GetIAPointer(i)->GetPointersCalibPosition();
+			Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition() * hifPose;//*GetIAPointer(i)->GetPointersCalibPosition();
 			hiSolid->SetPose(hiSolidPose);
 		}else{
 			//3自由度インタフェースの場合
@@ -74,7 +74,7 @@ void FWLDHapticLoop::UpdateInterface(){
 			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
 			Posed hifPose;
 			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
-			Posed hiSolidPose = hifPose * GetIAPointer(i)->GetDefaultPosition()*GetIAPointer(i)->GetPointersCalibPosition();
+			Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition() * hifPose ; //*GetIAPointer(i)->GetPointersCalibPosition();
 			hiSolid->SetPose(hiSolidPose);
 		}
 	}
