@@ -17,7 +17,8 @@ PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
 }
 void PHScene::Init(){
-	PHSceneDesc::Init();
+	//コンストラクタで設定した値を上書きしてしまうため、コメントアウトしました
+	//PHSceneDesc::Init();
 
 	engines.scene = this;
 	Scene::Clear();
