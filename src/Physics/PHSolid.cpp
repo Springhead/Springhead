@@ -10,7 +10,57 @@
 #include <float.h>
 
 using namespace PTM;
-namespace Spr{
+namespace Spr{;
+
+//----------------------------------------------------------------------------
+//	PHBBox
+void PHBBox::GetSupport(const Vec3f& dir, float& minS, float& maxS){
+	Vec3f ext0( bboxExtent.X(),  bboxExtent.Y(),  bboxExtent.Z());
+	Vec3f ext1(-bboxExtent.X(),  bboxExtent.Y(),  bboxExtent.Z());
+	Vec3f ext2( bboxExtent.X(), -bboxExtent.Y(),  bboxExtent.Z());
+	Vec3f ext3( bboxExtent.X(),  bboxExtent.Y(), -bboxExtent.Z());
+	float d = abs(dir*ext0);
+	float d1 = abs(dir*ext1);
+	if (d < d1) d = d1;
+	float d2 = abs(dir*ext2);
+	if (d < d2) d = d2;
+	float d3 = abs(dir*ext3);
+	if (d < d3) d = d3;
+	float c = dir * bboxCenter;
+	minS = c-d;
+	maxS = c+d;
+}
+
+void PHBBox::GetBBoxWorldMinMax(Posed& pos , Vec3d& min, Vec3d& max){
+	Vec3d ext[8];
+	Vec3d bb = bboxExtent;
+	ext[0] = Vec3f( bb.x,  bb.y,  bb.z);
+	ext[1] = Vec3f(-bb.x,  bb.y,  bb.z);
+	ext[2] = Vec3f( bb.x, -bb.y,  bb.z);
+	ext[3] = Vec3f( bb.x,  bb.y, -bb.z);
+	ext[4] = Vec3f(-bb.x, -bb.y,  bb.z);
+	ext[5] = Vec3f( bb.x, -bb.y, -bb.z);
+	ext[6] = Vec3f(-bb.x,  bb.y, -bb.z);
+	ext[7] = Vec3f(-bb.x, -bb.y, -bb.z);
+
+	for(int i =0; i<8 ;i++){
+		ext[i] = pos * ext[i];
+	}
+
+	min = ext[0];
+	max = ext[0];
+
+	for(int i =1; i<8 ;i++){
+		for(int j =0; j<3 ;j++){
+			if(min[j]>ext[i][j]){
+				min[j] = ext[i][j];
+			}
+			if(max[j]<ext[i][j]){
+				max[j] = ext[i][j];
+			}
+		}
+	}
+}
 
 //----------------------------------------------------------------------------
 //	PHFrame
