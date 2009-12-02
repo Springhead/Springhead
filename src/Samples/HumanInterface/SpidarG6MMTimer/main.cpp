@@ -6,14 +6,39 @@
 using namespace Spr;
 
 UTRef<HISpidarGIf> spg;
-void CallBackHoge(void* arg){
+
+Vec3d ForceRenderring(){
+	double K = 5000;
+	double D = 0.0;
+
+	Vec3d F = Vec3d(0.0, 0.0, 0.0);
+	double fY  = -0.01; //床の位置
+	double pY  = spg->GetPosition().y; //ポインタの位置
+	double pvY = spg->GetVelocity().y; //ポインタの速度
+	double dy  = pY-fY;		//床とポインタの位置の差
+	double dv  = pvY - 0;   //床とポインタの速度差
+	
+	if(dy<0){
+		F.y= -K*dy - D*dv;		//力の計算
+	}
+	/*
+	-0.05<F.y<0.05の範囲で変化
+
+
+
+	*/
+	//if(dy<0)F.y = 5;
+	DSTR<<"F:"<<F<<"dy:"<<dy<<"dv"<<dv<<std::endl;
+	return F;
+}
+
+void CallBackLoop(void* arg){
 	spg->Update(0.001f);
 	Vec3f spgpos = spg->GetPosition();
-	std::cout << std::setprecision(2) << spgpos << std::endl;
+	//std::cout << std::setprecision(2) << spgpos << std::endl;
 	Vec3f f(0.0, 0.0, 0.0);
-	if(spgpos.y < -0.015){
-		f[1] = 10.0;
-	}
+	f = ForceRenderring();
+	
 	spg->SetForce(f, Vec3f());
 }
 
@@ -32,16 +57,14 @@ int __cdecl main(){
 	sdk->Print(DSTR);
 	spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
-	int t = 0;
+	spg->Calibration();
 
 	Spr::UTMMTimer timer1;				/// マルチメディアタイマの宣言
-	timer1.Resolution(1);					///	 呼びだし分解能
+	timer1.Resolution(1);				///	 呼びだし分解能
 	timer1.Interval(1);					/// 呼びだし頻度
-	timer1.Set(CallBackHoge, NULL);	/// 呼びだす関数
+	timer1.Set(CallBackLoop, NULL);		/// 呼びだす関数
+	timer1.Create();					/// マルチメディアタイマスタート
 
-	timer1.Create();							/// マルチメディアタイマスタート
-	
-	std::cout << "終了するには何かキーを押してください" << std::endl;
 	while(!_kbhit()){}
 	return 0;
 }
