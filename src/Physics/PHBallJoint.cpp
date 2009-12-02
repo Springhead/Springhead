@@ -54,13 +54,13 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 
 void PHBallJoint::SetupLCP(){
 	PHJoint::SetupLCP();
-	//limit.SetupLCP(); //不安定なので一時的にコメントアウトしておきます
+//	limit.SetupLCP(); //円形での拘束はなおりました
 	motor.SetupLCP();
 }
 
 void PHBallJoint::IterateLCP(){
 	PHJoint::IterateLCP();
-	//limit.IterateLCP();　//不安定なので一時的にコメントアウトしておきます
+//	limit.IterateLCP(); //円形での拘束はなおりました
 	motor.IterateLCP();
 }
 
