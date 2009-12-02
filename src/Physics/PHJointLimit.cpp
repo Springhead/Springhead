@@ -317,11 +317,6 @@ void PHBallJointLimit::SetupLCP(){
 		dA[2] = 0;
 		db[2] = (nowTheta[1] - joint->limitTwist[1]) * dtinv * corRate;
 	}
-	for(int i = 0; i < 3; i++){
-		A[i]  = joint->A[joint->axisIndex[i]];	//A‚Ì‰ñ“]¬•ª‚ðŽæ“¾
-		b[i]  = joint->b[joint->axisIndex[i]];
-	}
-
 	A = CompResponseMatrix();
 	b = (J[0] * joint->solid[0]->v + J[1] * joint->solid[1]->v).w();
 	for(int i = 0; i < 3; i++){
@@ -329,7 +324,6 @@ void PHBallJointLimit::SetupLCP(){
 		joint->f[i] *= joint->engine->shrinkRate;
 		joint->CompResponse(joint->f[i], i);
 	}
-	if(anyLimit)limitLine.SwingLow[0][0] = 1;
 }
 
 void PHBallJointLimit::Projection(double& f, int k){
@@ -357,10 +351,6 @@ void PHBallJointLimit::IterateLCP(){
 	if(!anyLimit)
 		return;
 
-	if(limitLine.SwingLow[0][0] == 1){
-		limitLine.SwingLow[0][0] = 0;
-		joint->solid[1]->dv.w() = Vec3d(0.0,0.0,0.0);
-	}
 	Vec3d fnew;
 	for(int i = 0; i < 3; i++){
 		int j = joint->axisIndex[i];
@@ -368,7 +358,6 @@ void PHBallJointLimit::IterateLCP(){
 			+ J[0].row(j) * joint->solid[0]->dv + J[1].row(j) * joint->solid[1]->dv);	
 	}
 
-	DSTR <<joint->limitf << endl;
 	for(int i = 0; i < 3; i++){
 		int j = joint->axisIndex[i];
 		Projection(fnew[i], i);
