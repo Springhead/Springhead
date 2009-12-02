@@ -167,19 +167,6 @@ inline Vec3d CalcDir(double theta, double phi){
 }
 
 void PHBallJointLimit::CheckLimit(){
-	/**
-		花岡さんへの伝言：
-
-		処理内容が把握できなかったので動作未確認状態で一旦コミットします。
-
-		デスクリプタの内容を書き換えている部分がありますが、デスクリプタは読み取り専用です。
-		定数ではなく状態であるならば場所を移すべきです。	tazz
-	
-		conの設定は不要になりました
-
-		同じ処理は関数化してコードを軽量化してください。お願いします。
-	*/
-
 	/*
 	// -----bool* conの意味----------------------------------
 	// 拘束する軸についてのフラグ
@@ -194,7 +181,14 @@ void PHBallJointLimit::CheckLimit(){
 
 	// 可動域のチェック
 	// 現在のSocketとPlugとの間の角度を計算
-	nowTheta[0]	= acos(dot(joint->limitDir, joint->Jc.Ez()));			///< Swing角の計算	
+	double cosLange = dot(joint->limitDir, joint->Jc.Ez());
+	if(cosLange > 1.0){
+		cosLange = 1.0;
+	}
+	else if(cosLange < -1.0){
+		cosLange = -1.0;
+	}
+	nowTheta[0]	= acos(cosLange);			///< Swing角の計算	
 
 	Vec3d PolarCoord;
 	PolarCoord = joint->Jc.Ez() * limDir.trans();					///< 倒れる方向の計算開始
@@ -230,304 +224,25 @@ void PHBallJointLimit::CheckLimit(){
 	if(nowTheta[1] > Rad( 180)) nowTheta[1] -= Rad(360);
 	
 	// 可動域制限にかかっているかの判定
-
-	//swing角の可動域制限の確認
-	if (limitCount[1] != 0){
-		FunNum = 1;
-		while(limitLine.SwingUp[FunNum][0] < nowTheta[2]){				//現在の姿勢が拘束曲線のどの区間にあるのか調べる。
-			FunNum++;
-			if(limitCount[1] < FunNum) break;
-		}
-		double Herx,Swing;
-		// スイング方向の拘束座標の制限値を求める
-		Herx = (nowTheta[2] - limitLine.SwingUp[FunNum-1][0]) / (limitLine.SwingUp[FunNum][0] - limitLine.SwingUp[FunNum-1][0]);				//スプライン曲線から拘束座標を求める
-		
-		joint->limitSwing[1] = (2 * limitLine.SwingUp[FunNum-1][1] - 2 * limitLine.SwingUp[FunNum][1] + limitLine.SwingUp[FunNum][4] + limitLine.SwingUp[FunNum-1][4]) * Herx * Herx * Herx
-					+ (3 * limitLine.SwingUp[FunNum][1] - 3 * limitLine.SwingUp[FunNum-1][1] - 2 * limitLine.SwingUp[FunNum-1][4] - limitLine.SwingUp[FunNum][4]) * Herx * Herx
-					+ limitLine.SwingUp[FunNum-1][4] * Herx + limitLine.SwingUp[FunNum-1][1];
-		if(nowTheta[0] >= joint->limitSwing[1]){
-			onLimit[0].onUpper = true;					//可動域を外れている場合には拘束を行う
-
-			double SerchStep=0.001;		//近傍点を求めるための繰り返し計算のステップ幅
-			int k = 30;					//近傍点を求めるための繰り返し計算のステップ数
-			double IrruptUp;			//近傍点までの最短距離
-			double minDif;			//近傍点のスイング方位角
-
-			SerchStep = (nowTheta[2] - BefPos[2]) / 25;
-			if(SerchStep > 0.005) SerchStep = 0.005;
-			else if (SerchStep < -0.005) SerchStep = -0.005;
-			int FunStack;				//拘束に利用する関数の番号を取得しておく
-
-			Vec3d Neighbor;				//近傍点
-			FunStack = FunNum;
-			minDif = nowTheta[2];		//現段階での近傍点候補のスイング方位角の保持
-			nowTheta[2] = BefPos[2];
-			Neighbor = CalcDir(joint->limitSwing[1], nowTheta[2]);	//ソケット座標系での近傍点の座標
-			Irrupt = (cross(Neighbor, joint->Jc.Ez())).norm();				//現在の値と近傍点の角度の差　sin(Rad)
-
-			// ステップごとに変化させていく
-			for(int i = 0;i < k;i++){
-				nowTheta[2] += SerchStep;
-				if(nowTheta[2] >= Rad(360)){		//スイング方位角の範囲の制限 0<nowTheta[2]<360
-					nowTheta[2] = 0;
-					FunNum = 1;
-				}
-				else if(nowTheta[2] < 0){
-					nowTheta[2] = Rad(360);
-					FunNum = limitCount[1] - 1;
-				}
-
-				while(nowTheta[2] > limitLine.SwingUp[FunNum][0]){ //拘束の曲線の関数の区間を超えていたら次の区間へ
-					FunNum++;
-				}
-				while(nowTheta[2] < limitLine.SwingUp[FunNum-1][0]){
-					FunNum--;
-				}
-				Herx = (nowTheta[2] - limitLine.SwingUp[FunNum-1][0]) / (limitLine.SwingUp[FunNum][0] - limitLine.SwingUp[FunNum-1][0]);	//範囲を0-1にしたときのx座標
-				Swing = (2 * limitLine.SwingUp[FunNum-1][1] - 2 * limitLine.SwingUp[FunNum][1] + limitLine.SwingUp[FunNum][4] + limitLine.SwingUp[FunNum-1][4]) * Herx * Herx * Herx
-							+ (3 * limitLine.SwingUp[FunNum][1] - 3 * limitLine.SwingUp[FunNum-1][1] - 2 * limitLine.SwingUp[FunNum-1][4] - limitLine.SwingUp[FunNum][4]) * Herx * Herx
-							+ limitLine.SwingUp[FunNum-1][4] * Herx + limitLine.SwingUp[FunNum-1][1];	//計算位置でのSwing角の制限
-				Neighbor = CalcDir(Swing, nowTheta[2]);				//近傍点の座標（中心からのベクトル）を計算
-				IrruptUp = (cross(Neighbor, joint->Jc.Ez())).norm();		//現在の値との距離のcosを求める
-				if(Irrupt > IrruptUp){								//前の位置より近い近傍点を得られたら交換する
-					Irrupt = IrruptUp;
-					minDif = nowTheta[2];
-					FunStack = FunNum;
-				}
-			}
-			nowTheta[2] = minDif;			//近傍点のスイング方位角での拘束位置へのベクトルを計算する
-			FunNum = FunStack;
-			Herx = (nowTheta[2] - limitLine.SwingUp[FunNum-1][0]) / (limitLine.SwingUp[FunNum][0] - limitLine.SwingUp[FunNum-1][0]);
-			if(Herx > 1 || Herx < 0){
-				FunNum = 1;
-				while(limitLine.SwingUp[FunNum][0] < nowTheta[2]){
-					FunNum++;
-					if(limitCount[1] < FunNum) break;
-				}
-				Herx = (nowTheta[2] - limitLine.SwingUp[FunNum-1][0]) / (limitLine.SwingUp[FunNum][0] - limitLine.SwingUp[FunNum-1][0]);
-			}
-			joint->limitSwing[1]
-				= (2 * limitLine.SwingUp[FunNum-1][1] - 2 * limitLine.SwingUp[FunNum][1] + limitLine.SwingUp[FunNum][4] + limitLine.SwingUp[FunNum-1][4]) * Herx * Herx * Herx
-				+ (3 * limitLine.SwingUp[FunNum][1] - 3 * limitLine.SwingUp[FunNum-1][1] - 2 * limitLine.SwingUp[FunNum-1][4] - limitLine.SwingUp[FunNum][4]) * Herx * Herx
-				+ limitLine.SwingUp[FunNum-1][4] * Herx + limitLine.SwingUp[FunNum-1][1];
-			Neighbor = CalcDir(joint->limitSwing[1], nowTheta[2]);	//近傍点の座標（中心からのベクトル）を計算
-			Irrupt = (cross(Neighbor, joint->Jc.Ez())).norm();				//近傍点までの最短となる角度を求める
-			Irrupt = asin(Irrupt);
-			//ここまで
-			//接線方向を求める
-			tanLine.x = 3 * (2 * limitLine.SwingUp[FunNum-1][1] - 2 * limitLine.SwingUp[FunNum][1] + limitLine.SwingUp[FunNum][4] + limitLine.SwingUp[FunNum-1][4]) * Herx * Herx
-							+ 2 * (3 * limitLine.SwingUp[FunNum][1] - 3 * limitLine.SwingUp[FunNum-1][1] - 2 * limitLine.SwingUp[FunNum-1][4] - limitLine.SwingUp[FunNum][4]) * Herx
-							+ limitLine.SwingUp[FunNum-1][4]; //θ'の計算
-			tanLine.z = -tanLine.x * sin(joint->limitSwing[1]);
-			tanLine.x *= cos(joint->limitSwing[1]);
-			tanLine.y = tanLine.x * sin(nowTheta[2]) + Neighbor.x;
-			tanLine.x = tanLine.x * cos(nowTheta[2]) - Neighbor.y;
-			tanLine.unitize();
-
-			// 座標変換をすぐに行う
-			CalcFrame(joint->Jc, joint->Xjrel.q * Vec3d(0.0, 0.0, 1.0), tanLine);
-			joint->Jcinv = joint->Jc.trans();
-		}
-		else{
-			onLimit[0].onUpper = false;
-		}
-	}
-	else{
-		onLimit[0].onUpper = false;
-	}
-	//Swing角の最小値を決める
-	if (limitCount[0] != 0 && !onLimit[0].onUpper){
-		FunNum = 1;
-		while(limitLine.SwingLow[FunNum][0] < nowTheta[2]){
-			FunNum++;
-			if(limitCount[0] < FunNum) break;
-		}
-		double Herx,Swing;
-		// スイング方向の拘束座標の制限値を求める
-		Herx = (nowTheta[2] - limitLine.SwingLow[FunNum-1][0]) / (limitLine.SwingLow[FunNum][0] - limitLine.SwingLow[FunNum-1][0]);
-		joint->limitSwing[0] = (2 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum][1] + limitLine.SwingLow[FunNum][4] + limitLine.SwingLow[FunNum-1][4]) * Herx * Herx * Herx
-					+ (3 * limitLine.SwingLow[FunNum][1] - 3 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum-1][4] - limitLine.SwingLow[FunNum][4]) * Herx * Herx
-					+ limitLine.SwingLow[FunNum-1][4] * Herx + limitLine.SwingLow[FunNum-1][1];
-		if(nowTheta[0] <= joint->limitSwing[0]){
-
-			onLimit[0].onLower = true;
-			double SerchStep = 0.001;
-			int k = 30;
-			SerchStep = (nowTheta[2] - BefPos[2]) / 25;
-			if(SerchStep > 0.005) SerchStep = 0.005;
-			else if (SerchStep < -0.005) SerchStep = -0.005;
-			double IrruptUp;
-			double minDif;
-			int FunStack;
-			Vec3d Neighbor;
-
-			//近傍点を求める
-			FunNum = 1;
-			while(limitLine.SwingLow[FunNum][0] < nowTheta[2]){
-				FunNum++;
-				if(limitCount[0] < FunNum + 1) break;
-			}
-			FunStack = FunNum;
-			minDif = nowTheta[2];
-			nowTheta[2] = BefPos[2];
-			Herx = (nowTheta[2] - limitLine.SwingLow[FunNum-1][0]) / (limitLine.SwingLow[FunNum][0] - limitLine.SwingLow[FunNum-1][0]);
-			joint->limitSwing[0] = (2 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum][1] + limitLine.SwingLow[FunNum][4] + limitLine.SwingLow[FunNum-1][4]) * Herx * Herx * Herx
-						+ (3 * limitLine.SwingLow[FunNum][1] - 3 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum-1][4] - limitLine.SwingLow[FunNum][4]) * Herx * Herx
-						+ limitLine.SwingLow[FunNum-1][4] * Herx + limitLine.SwingLow[FunNum-1][1];
-			Neighbor = CalcDir(joint->limitSwing[0], nowTheta[2]);	//ソケット座標系での近傍点の座標
-			Irrupt = (cross(Neighbor, joint->Jc.Ez())).norm();				//現在の値と近傍点の変移角度　sin(Rad)
-			// ステップごとに変化させていく
-			for(int i = 0;i < k;i++){
-				nowTheta[2] += SerchStep;
-				if(nowTheta[2] >= Rad(360)){		//xの範囲の制限
-					nowTheta[2] = 0;
-					FunNum = 1;
-				}
-				else if(nowTheta[2] < 0){
-					nowTheta[2] = Rad(360);
-					FunNum = limitCount[0] - 1;
-				}
-				while(nowTheta[2] > limitLine.SwingLow[FunNum][0]){
-					FunNum++;	//区間を超えていたら次の区間へ
-				}
-				while(nowTheta[2] < limitLine.SwingLow[FunNum-1][0]){
-					FunNum--;
-				}
-				Herx = (nowTheta[2] - limitLine.SwingLow[FunNum-1][0]) / (limitLine.SwingLow[FunNum][0] - limitLine.SwingLow[FunNum-1][0]);	//範囲を0-1にしたときのx座標
-				Swing = (2 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum][1] + limitLine.SwingLow[FunNum][4] + limitLine.SwingLow[FunNum-1][4]) * Herx * Herx * Herx
-							+ (3 * limitLine.SwingLow[FunNum][1] - 3 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum-1][4] - limitLine.SwingLow[FunNum][4]) * Herx * Herx
-							+ limitLine.SwingLow[FunNum-1][4] * Herx + limitLine.SwingLow[FunNum-1][1];	//計算位置でのSwing角の制限
-				Neighbor = CalcDir(Swing, nowTheta[2]);				//近傍点の座標（中心からのベクトル）を計算		
-				IrruptUp = (cross(Neighbor, joint->Jc.Ez())).norm();		//現在の値との距離のsinを求める
-				if(Irrupt > IrruptUp){
-					Irrupt = IrruptUp;
-					minDif = nowTheta[2];
-					FunStack = FunNum;
-				}
-			}
-			nowTheta[2] = minDif;			//近傍点のスイング方位角での拘束位置へのベクトルを計算する
-			FunNum = FunStack;
-			Herx = (nowTheta[2] - limitLine.SwingLow[FunNum-1][0]) / (limitLine.SwingLow[FunNum][0] - limitLine.SwingLow[FunNum-1][0]);
-			if(Herx > 1 || Herx < 0){
-				FunNum = 1;
-				while(limitLine.SwingLow[FunNum][0] < nowTheta[2]){
-					FunNum++;
-					if(limitCount[1] < FunNum) break;
-				}
-				Herx = (nowTheta[2] - limitLine.SwingLow[FunNum-1][0]) / (limitLine.SwingLow[FunNum][0] - limitLine.SwingLow[FunNum-1][0]);
-			}
-			joint->limitSwing[1] = (2 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum][1] + limitLine.SwingLow[FunNum][4] + limitLine.SwingLow[FunNum-1][4]) * Herx * Herx * Herx
-						+ (3 * limitLine.SwingLow[FunNum][1] - 3 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum-1][4] - limitLine.SwingLow[FunNum][4]) * Herx * Herx
-						+ limitLine.SwingLow[FunNum-1][4] * Herx + limitLine.SwingLow[FunNum-1][1];
-			Neighbor = CalcDir(joint->limitSwing[1], nowTheta[2]);	//近傍点の座標（中心からのベクトル）を計算
-			Irrupt = (cross(Neighbor, joint->Jc.Ez())).norm();				//近傍点までの最短となる角度を求める
-			Irrupt = asin(Irrupt);
-			//ここまで
-			//接線方向を求める
-			tanLine.x = 3 * (2 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum][1] + limitLine.SwingLow[FunNum][4] + limitLine.SwingLow[FunNum-1][4]) * Herx * Herx
-							+ 2 * (3 * limitLine.SwingLow[FunNum][1] - 3 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum-1][4] - limitLine.SwingLow[FunNum][4]) * Herx
-							+ limitLine.SwingLow[FunNum-1][4]; //θ'の計算
-			tanLine.z = -tanLine.x * sin(joint->limitSwing[1]);
-			tanLine.x *= cos(joint->limitSwing[1]);
-			tanLine.y = tanLine.x * sin(nowTheta[2]) + Neighbor.x;
-			tanLine.x = tanLine.x * cos(nowTheta[2]) - Neighbor.y;
-			tanLine.unitize();
-
-			// 座標変換をすぐに行う
-			CalcFrame(joint->Jc, joint->Xjrel.q * Vec3f(0.0, 0.0, 1.0), -tanLine);
-			joint->Jcinv = joint->Jc.trans();
-		}
-		else{
-			onLimit[0].onLower = false;
-		}
-	}
-	else{
-		onLimit[0].onLower = false;
-	}
-	BefPos = nowTheta;
-
 	// swing角の可動域制限の確認
 	if (limitCount[0] == 0 && (!onLimit[0].onUpper)){
-		if (joint->limitSwing[0]>(FLT_MAX*0.1) /*joint->limitSwing[0]!=FLT_MAX*/ && nowTheta[0] < joint->limitSwing[0]){
+		if (joint->limitSwing[0]<(FLT_MAX*0.1) /*joint->limitSwing[0]!=FLT_MAX*/ && nowTheta[0] < joint->limitSwing[0]){
 			onLimit[0].onLower = true;
 			Irrupt = nowTheta[0] - joint->limitSwing[0];
 		}
 		else onLimit[0].onLower = false;
 	}	
 	if(limitCount[1] == 0 && !onLimit[0].onLower){
-		if(joint->limitSwing[1]>(FLT_MAX*0.1)/*joint->limitSwing[1]!=FLT_MAX*/ && nowTheta[0] > joint->limitSwing[1]){
+		if(joint->limitSwing[1]<(FLT_MAX*0.1)/*joint->limitSwing[1]!=FLT_MAX*/ && nowTheta[0] > joint->limitSwing[1]){
 			onLimit[0].onUpper = true;
 			Irrupt = nowTheta[0] - joint->limitSwing[1];
 		}
 		else onLimit[0].onUpper = false;
 	}
-	//ツイスト角の可動域制限の確認
-	if(joint->poleTwist.upper>(FLT_MAX*0.1)/*joint->poleTwist.upper != FLT_MAX*/ || joint->poleTwist.lower>(FLT_MAX*0.1)/*joint->poleTwist.lower != FLT_MAX*/){
-		double Herx,Theta;
-		Vec2d LSwing,LimTwistL,LimTwistU;
-		if(limitCount[1] != 0){		//スイング角の最大値があるとき最大値と最大ツイスト角を求める
-			FunNum = 1;
-			while(limitLine.SwingUp[FunNum][0] < nowTheta[2]){
-				FunNum++;
-				if(limitCount[1] < FunNum) break;
-			}
-			Herx = (nowTheta[2] - limitLine.SwingUp[FunNum-1][0]) / (limitLine.SwingUp[FunNum][0] - limitLine.SwingUp[FunNum-1][0]);
-			LimTwistU.upper = (2 * limitLine.SwingUp[FunNum-1][3] - 2 * limitLine.SwingUp[FunNum][3] + limitLine.SwingUp[FunNum][4] + limitLine.SwingUp[FunNum-1][4]) * Herx * Herx * Herx
-						+ (3 * limitLine.SwingUp[FunNum][3] - 3 * limitLine.SwingUp[FunNum-1][3] - 2 * limitLine.SwingUp[FunNum-1][4] - limitLine.SwingUp[FunNum][4]) * Herx * Herx
-						+ limitLine.SwingUp[FunNum-1][4] * Herx + limitLine.SwingUp[FunNum-1][3];
-			LSwing[1] = (2 * limitLine.SwingUp[FunNum-1][1] - 2 * limitLine.SwingUp[FunNum][1] + limitLine.SwingUp[FunNum][4] + limitLine.SwingUp[FunNum-1][4]) * Herx * Herx * Herx
-						+ (3 * limitLine.SwingUp[FunNum][1] - 3 * limitLine.SwingUp[FunNum-1][1] - 2 * limitLine.SwingUp[FunNum-1][4] - limitLine.SwingUp[FunNum][4]) * Herx * Herx
-						+ limitLine.SwingUp[FunNum-1][4] * Herx + limitLine.SwingUp[FunNum-1][1];
-			LimTwistU.lower = (2 * limitLine.SwingUp[FunNum-1][2] - 2 * limitLine.SwingUp[FunNum][2] + limitLine.SwingUp[FunNum][4] + limitLine.SwingUp[FunNum-1][4]) * Herx * Herx * Herx
-						+ (3 * limitLine.SwingUp[FunNum][2] - 3 * limitLine.SwingUp[FunNum-1][2] - 2 * limitLine.SwingUp[FunNum-1][4] - limitLine.SwingUp[FunNum][4]) * Herx * Herx
-						+ limitLine.SwingUp[FunNum-1][4] * Herx + limitLine.SwingUp[FunNum-1][2];
-		}
-		else{
-			LimTwistU.upper = joint->poleTwist.upper;
-			LSwing[1] = M_PI;
-			LimTwistU.lower = joint->poleTwist.lower;
-		}		
-		//スイング角の最小値があるとき
-		if(limitCount[0] != 0){
-			FunNum = 1;
-			while(limitLine.SwingUp[FunNum][0] < nowTheta[2]){
-				FunNum++;
-				if(limitCount[1] < FunNum) break;
-			}
-			Herx = (nowTheta[2] - limitLine.SwingLow[FunNum-1][0]) / (limitLine.SwingLow[FunNum][0] - limitLine.SwingLow[FunNum-1][0]);
-			LimTwistL.lower = (2 * limitLine.SwingLow[FunNum-1][2] - 2 * limitLine.SwingLow[FunNum][2] + limitLine.SwingLow[FunNum][4] + limitLine.SwingLow[FunNum-1][4]) * Herx * Herx * Herx
-						+ (3 * limitLine.SwingLow[FunNum][2] - 3 * limitLine.SwingLow[FunNum-1][2] - 2 * limitLine.SwingLow[FunNum-1][4] - limitLine.SwingLow[FunNum][4]) * Herx * Herx
-						+ limitLine.SwingLow[FunNum-1][4] * Herx + limitLine.SwingLow[FunNum-1][2];
-			LSwing[0] = (2 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum][1] + limitLine.SwingLow[FunNum][4] + limitLine.SwingLow[FunNum-1][4]) * Herx * Herx * Herx
-						+ (3 * limitLine.SwingLow[FunNum][1] - 3 * limitLine.SwingLow[FunNum-1][1] - 2 * limitLine.SwingLow[FunNum-1][4] - limitLine.SwingLow[FunNum][4]) * Herx * Herx
-						+ limitLine.SwingLow[FunNum-1][4] * Herx + limitLine.SwingLow[FunNum-1][1];
-			LimTwistL.upper = (2 * limitLine.SwingLow[FunNum-1][3] - 2 * limitLine.SwingLow[FunNum][3] + limitLine.SwingLow[FunNum][4] + limitLine.SwingLow[FunNum-1][4]) * Herx * Herx * Herx
-						+ (3 * limitLine.SwingLow[FunNum][3] - 3 * limitLine.SwingLow[FunNum-1][3] - 2 * limitLine.SwingLow[FunNum-1][4] - limitLine.SwingLow[FunNum][4]) * Herx * Herx
-						+ limitLine.SwingLow[FunNum-1][4] * Herx + limitLine.SwingLow[FunNum-1][3];
-		}
-		else{
-			LimTwistL.upper = joint->poleTwist.upper;
-			LSwing[0] = 0;
-			LimTwistL.lower = joint->poleTwist.lower;
-		}
-		if(nowTheta[0] > LSwing[1]) Theta = LSwing[1];
-		else if(nowTheta[0] < LSwing[0]) Theta = LSwing[0];
-		else Theta = nowTheta[0];
-		for(int i = 0;i<2;i++){
-			if(joint->poleTwist[i]>(FLT_MAX*0.1)/*joint->poleTwist[i] != FLT_MAX*/){
-				if(LSwing.lower - LSwing.upper){
-					joint->limitTwist[i] = ((LimTwistL[i] - LimTwistU[i]) * Theta + (LSwing.lower * LimTwistU[i] - LSwing.upper * LimTwistL[i])) / (LSwing.lower - LSwing.upper);
-				}
-				else if(i==0) joint->limitTwist[i] = min(LimTwistL[i] , LimTwistU[i]);
-				else joint->limitTwist[i] = max(LimTwistL[i] , LimTwistU[i]);
-			}
-		}
-	}
-
 	// twist角の可動域制限の確認
-	if(joint->limitTwist[0]>(FLT_MAX*0.1)/*joint->limitTwist[0] != FLT_MAX*/ && nowTheta[1] < joint->limitTwist[0])
+	if(joint->limitTwist[0]<(FLT_MAX*0.1)/*joint->limitTwist[0] != FLT_MAX*/ && nowTheta[1] < joint->limitTwist[0])
 		onLimit[1].onLower = true;
-	else if(joint->limitTwist[1]>(FLT_MAX*0.1)/*joint->limitTwist[1] != FLT_MAX*/ && nowTheta[1] > joint->limitTwist[1])
+	else if(joint->limitTwist[1]<(FLT_MAX*0.1)/*joint->limitTwist[1] != FLT_MAX*/ && nowTheta[1] > joint->limitTwist[1])
 		onLimit[1].onUpper = true;
 	else{
 		onLimit[1].onLower = false;
@@ -539,6 +254,16 @@ void PHBallJointLimit::CheckLimit(){
 	   (onLimit[1].onUpper || onLimit[1].onLower))  
 	   anyLimit = true;
 	else anyLimit = false;
+
+	if(anyLimit){
+		//ヤコビアンの取得＆更新
+		J[0] = joint->J[0];
+		J[1] = joint->J[1];
+		J[0].wv() = joint->Jcinv * joint->J[0].wv();
+		J[0].ww() = joint->Jcinv * joint->J[0].ww();
+		J[1].wv() = joint->Jcinv * joint->J[1].wv();
+		J[1].ww() = joint->Jcinv * joint->J[1].ww();
+	}
 
 	/* conの設定は不要になった
 	// 上の計算を踏まえて毎回、回転軸の拘束条件の更新をする
@@ -570,67 +295,7 @@ void PHBallJointLimit::SetupLCP(){
 	// 可動域フラグの指定onLimit[0]: swing, onLimit[1]: twist
 	// nowTheta[0]: swing, nowTheta[1]: twist
 	// 可動域制限を越えていたら、dA:関節を柔らかくする成分を0にする、db:侵入してきた分だけ元に戻す	
-	// x軸方向に拘束をかける場合	
-	if(onLimit[0].onUpper || onLimit[0].onLower){
-		double dbLCP = (Irrupt) * dtinv * corRate;
-		double fCheck;
-		//fCheckは何を表しているのですか？
-		//double bSame = b[3] + J[0].row(3) * solid[0]->dv + J[1].row(3) * solid[1]->dv;
-		//fCheck = (A.w().x + dA.w().x) * A.w()[0] *
-		//			(A.w()[0] * (dA.w()[0] * f.w()[0] + db.w()[0]) - dA.w()[0] * (dbLCP + bSame));
-		if(fCheck > 0 ){
-			db[0] += dbLCP;
-		}
-		else{
-			dA[0] = 0;
-			db[0] = dbLCP;
-		}
-	}
 
-	//z軸方向に拘束をかける場合
-	if(onLimit[1].onLower && (vJc.z < 0)){
-		double dbLCP = (nowTheta[1] - joint->limitTwist[0]) * dtinv * corRate;
-		double fCheck;
-		//double bSame = b[5] + J[0].row(5) * solid[0]->dv + J[1].row(5) * solid[1]->dv;
-		//fCheck = (A.w().z + dA.w().z) * A.w()[2] *
-		//			(A.w()[2] * (dA.w()[2] * f.w()[2] + db.w()[2]) - dA.w()[2] * (dbLCP + bSame));
-		if(fCheck > 0 ){
-			db[2] += dbLCP;
-		}
-		else{
-			dA[2] = 0;
-			db[2] = dbLCP;
-		}
-	}
-	if(onLimit[1].onUpper && (vJc.z > 0)){
-		double dbLCP = (nowTheta[1] - joint->limitTwist[1]) * dtinv * corRate;
-		double fCheck;
-		//double bSame = b[5] + J[0].row(5) * solid[0]->dv + J[1].row(5) * solid[1]->dv;
-		//fCheck = (A.w().z + dA.w().z) * A.w()[2] *
-		//			(A.w()[2] * (dA.w()[2] * f.w()[2] + db.w()[2]) - dA.w()[2] * (dbLCP + bSame));	
-		if(fCheck > 0 ){																			
-			db[2] += dbLCP;
-		}
-		else{
-			dA[2] = 0;
-			db[2] = dbLCP;
-		}
-	}
-
-	// limDir : Z軸がlimitDirに向く座標系．X軸がSocketのZ軸と直交するようにとる
-	//limitDir.unitize();
-	limDir.Ez() = joint->limitDir.unit();
-	if(limDir.Ez() != Vec3d(0.0,0.0,1.0))		///< NG: Vec3d比較
-		 limDir.Ex() = cross(Vec3d(0.0,0.0,1.0),limDir.Ez());
-	else limDir.Ex() = Vec3d(1.0,0.0,0.0);
-	limDir.Ey() = cross(limDir.Ez(), limDir.Ex());
-	BefPos.clear();
-
-	// 可動域フラグの指定onLimit[0]: swing, onLimit[1]: twist
-	// nowTheta[0]: swing, nowTheta[1]: twist
-	// 可動域制限を越えていたら、dA:関節を柔らかくする成分を0にする、db:侵入してきた分だけ元に戻す	
-
-/*
 	// 以下はPHBallJointにもともとあったコード
 	dA.clear();
 	db.clear();
@@ -640,8 +305,7 @@ void PHBallJointLimit::SetupLCP(){
 		db[0] = (nowTheta[0] - joint->limitSwing[0]) * dtinv * corRate;
 	}
 	else if(onLimit[0].onUpper){
-		dA[0] = 0;
-		db[0] = (nowTheta[0] - joint->limitSwing[1]) * dtinv * corRate;
+		db[0] = (nowTheta[0] - joint->limitSwing[1] + 0.001) * dtinv * corRate;
 	}
 
 	// Twist角可動範囲
@@ -653,15 +317,19 @@ void PHBallJointLimit::SetupLCP(){
 		dA[2] = 0;
 		db[2] = (nowTheta[1] - joint->limitTwist[1]) * dtinv * corRate;
 	}
-
 	for(int i = 0; i < 3; i++){
-		A[i]  = joint->A[joint->axisIndex[i]];
+		A[i]  = joint->A[joint->axisIndex[i]];	//Aの回転成分を取得
 		b[i]  = joint->b[joint->axisIndex[i]];
-		Ainv[i] = 1.0 / (A[i] + dA[i]);
-		f[i] *= joint->engine->shrinkRate;
-		joint->CompResponse(f[i], i);
 	}
-*/
+
+	A = CompResponseMatrix();
+	b = (J[0] * joint->solid[0]->v + J[1] * joint->solid[1]->v).w();
+	for(int i = 0; i < 3; i++){
+		Ainv[i] = 1.0 / (A[i] + dA[i]);
+		joint->f[i] *= joint->engine->shrinkRate;
+		joint->CompResponse(joint->f[i], i);
+	}
+	if(anyLimit)limitLine.SwingLow[0][0] = 1;
 }
 
 void PHBallJointLimit::Projection(double& f, int k){
@@ -689,18 +357,93 @@ void PHBallJointLimit::IterateLCP(){
 	if(!anyLimit)
 		return;
 
+	if(limitLine.SwingLow[0][0] == 1){
+		limitLine.SwingLow[0][0] = 0;
+		joint->solid[1]->dv.w() = Vec3d(0.0,0.0,0.0);
+	}
 	Vec3d fnew;
 	for(int i = 0; i < 3; i++){
 		int j = joint->axisIndex[i];
 		fnew[i] = joint->limitf[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * joint->limitf[i] + b[i] + db[i]
-				+ joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);	
-
-		Projection(fnew[i], i);
-		
-		joint->CompResponse(fnew[i] - joint->limitf[i], i);
-		joint->limitf[i] = fnew[i];
+			+ J[0].row(j) * joint->solid[0]->dv + J[1].row(j) * joint->solid[1]->dv);	
 	}
-	
+
+	DSTR <<joint->limitf << endl;
+	for(int i = 0; i < 3; i++){
+		int j = joint->axisIndex[i];
+		Projection(fnew[i], i);
+//		joint->CompResponse(fnew[i] - joint->limitf[i], i);	
+
+		SpatialVector dfs;
+		for(int k = 0; k < 2; k++){
+			if(!joint->solid[k]->IsDynamical() || !joint->IsInactive(k))continue;
+			if(joint->solid[k]->IsArticulated()){
+				(Vec6d&)dfs = J[k].row(i+3) * (fnew[i] - joint->limitf[i]);
+				joint->solid[k]->treeNode->CompResponse(dfs, true, false);
+			}
+			else joint->solid[k]->dv += T[k].row(i+3) * (fnew[i] - joint->limitf[i]);
+		}
+
+		joint ->limitf[i] = fnew[i];
+	}
+}
+
+Vec3d PHBallJointLimit::CompResponseMatrix(){
+	int i, j;
+	SpatialVector A;
+	A.clear();
+	PHRootNode* root[2];
+	if(joint->solid[0]->IsArticulated())
+		root[0] = joint->solid[0]->treeNode->GetRootNode();
+	if(joint->solid[1]->IsArticulated())
+		root[1] = joint->solid[1]->treeNode->GetRootNode();
+
+	SpatialVector df;
+	for(i = 0; i < 2; i++){
+		if(joint->solid[i]->IsDynamical()){
+			if(joint->solid[i]->IsArticulated()){
+				for(j = 0; j < 6; j++){
+					(Vec6d&)df = J[i].row(j);
+					joint->solid[i]->treeNode->CompResponse(df, false, false);
+					A[j] += J[i].row(j) * joint->solid[i]->treeNode->da;
+					int ic = !i;
+					//もう片方の剛体も同一のツリーに属する場合はその影響項も加算
+					if(joint->solid[ic]->IsArticulated() && root[i] == root[ic])
+						A[j] += J[ic].row(j) * joint->solid[ic]->treeNode->da;
+				}
+			}
+			else{
+				// T = M^-1 * J^T
+				T[i].vv() = J[i].vv() * joint->solid[i]->minv;
+				T[i].vw() = J[i].vw() * joint->solid[i]->Iinv;
+				T[i].wv() = J[i].wv() * joint->solid[i]->minv;
+				T[i].ww() = J[i].ww() * joint->solid[i]->Iinv;
+				for(j = 0; j < 6; j++)
+					// A == 論文中のJ * M^-1 * J^T, Gauss Seidel法のD
+					A[j] += J[i].row(j) * T[i].row(j);
+			}
+		}
+	}
+	/** 最大の対角要素との比がepsよりも小さい対角要素がある場合，
+		数値的不安定性の原因となるのでその成分は拘束対象から除外する
+		＊epsを大きくとると，必要な拘束まで無効化されてしまうので、調整は慎重に。
+	 */
+	const double eps = 0.000001, epsabs = 1.0e-10;
+	double Amax = 0.0, Amin;
+	for(j = 0; j < 6; j++)
+		if(joint->constr[j] && A[j] > Amax)
+			Amax = A[j];
+	Amin = Amax * eps;
+	for(j = 0; j < 3; j++){
+		if(!joint->constr[j+3])continue;
+		if(A[j+3] < Amin || A[j+3] < epsabs){
+			joint->constr[j+3] = false;
+			DSTR << j << "-th constraint ill-conditioned! disabled." << endl;
+		}
+		else
+			Ainv[j] = 1.0 / (A[j+3] + dA[j]);
+	}
+	return A.w();
 }
 
 }

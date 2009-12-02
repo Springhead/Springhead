@@ -56,6 +56,8 @@ class PHBallJointLimit{
 public:
 	PHBallJoint*	joint;
 	Vec3d	A, Ainv, dA, b, db;
+	SpatialMatrix J[2];
+	SpatialMatrix T[2];
 	//Vec3d	f, F;
 	bool	onLower, onUpper;
 
@@ -86,6 +88,7 @@ public:
 	void	SetupLCP();
 	void	IterateLCP();
 	void	Projection(double& f, int k);
+	Vec3d	CompResponseMatrix();
 
 	PHBallJointLimit();
 };
