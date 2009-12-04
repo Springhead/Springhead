@@ -45,7 +45,7 @@ public:
 	#ifdef _WIN32
 		// ファイルオープン
 		hFile = CreateFile(fn.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);	
-		if (!hFile){
+		if (hFile == INVALID_HANDLE_VALUE){
 			DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
 			return false;	
 		}		

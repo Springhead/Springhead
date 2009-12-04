@@ -95,6 +95,10 @@ bool FIFileBinary::LoadNode(){
 		ptr += strlen(name) + 1;
 		return true;
 	}
+	if(id == ID_NODE_END){
+		fileContext->NodeEnd();
+		return true;
+	}
 	if(id != ID_NODE_BEGIN)
 		return false;
 	
@@ -118,6 +122,8 @@ bool FIFileBinary::LoadNode(){
 		skip = true;
 
 	LoadBlock();
+	
+	// child nodes or NODE_END tag
 	while(LoadNode());
 
 	//ptr = next;
