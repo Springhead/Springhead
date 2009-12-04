@@ -54,8 +54,8 @@ public:
 	virtual void Position(int left, int top){}
 	virtual void Reshape(int width, int height){}
 	virtual void SetTitle(UTString title){}
-	virtual UTString GetTitle(){ return UTString(); }
-	virtual void SetFullScreen(bool full = true){ fullscreen = full; }
+	virtual UTString GetTitle(){ return title; }
+	virtual void SetFullScreen(bool full = true){ fullscreen = full;}
 	virtual bool GetFullScreen(){ return fullscreen; }
 	virtual int  GetWidth(){ return width; }
 	virtual int  GetHeight(){ return height; }
