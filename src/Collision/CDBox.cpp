@@ -192,4 +192,34 @@ Vec3f CDBox::SetBoxSize(Vec3f boxSize){
 	return boxsize;
 }
 
+int CDBox::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){
+	const float eps = 1.0e-10f;
+	Vec3f p;
+	int num = 0;
+
+	for(int i = 0; i < qfaces.size(); i++){
+		const CDQuadFace& f = qfaces[i];
+		const Vec3f& n = f.normal;	//面の法線
+		float tmp = n * dir;		//面の法線とポインタのベクトルとの内積
+		if(abs(tmp) < eps)	//内積が小さい場合は判定しない
+			continue;
+
+		float s = ((base[f.vtxs[0]] - origin) * n) / tmp; //カメラと面の距離 
+		if(s < 0.0)
+			continue;
+		p = origin + dir * s;	//直線と面の交点p = カメラ座標系の原点+カメラ座標系から面へのベクトル*距離 (Shape座標系)
+
+		// 4角形の内部にあるか
+		Vec3d b =GetBoxSize()*0.5; //CDBoxのx,y,z軸に対する最大値
+		if(-b.x<=p.x && p.x <=b.x && -b.y<=p.y && p.y <=b.y && -b.z<=p.z && p.z <=b.z ){
+			result[num] = p;
+			offset[num] = s;
+			num++;
+		}
+		if(num == 2)		// 理屈上は3つ以上はあり得ないが念のため
+			break;
+	}
+	return num;
+}
+
 }	//	namespace Spr

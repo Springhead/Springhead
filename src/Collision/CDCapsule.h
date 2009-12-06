@@ -36,7 +36,11 @@ public:
 
 	float GetRadius();
 	float GetLength();
+
+	int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 };
+
+
 
 	
 }	//	namespace Spr

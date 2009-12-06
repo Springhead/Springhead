@@ -65,4 +65,29 @@ Matrix3f CDSphere::CalcMomentOfInertia(){
 	return 0.4f * radius * radius * Matrix3f::Unit();
 }
 
+int CDSphere::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){
+	const float eps = 1.0e-10f;
+	Vec3f p;
+	int num = 0;
+
+	const Vec3f n = origin;	//面の法線 = カメラとshapeの原点を結ぶベクトル
+	float tmp = n * dir;	//面の法線とポインタのベクトルとの内積
+	if(abs(tmp) < eps)	//内積が小さい場合は判定しない
+		return num;
+
+	float s = ((Vec3d(0.0,0.0,0.0) - origin) * n) / tmp; //カメラと面の距離 
+	if(s < 0.0)
+		return num;
+	p = origin + dir * s;	//直線と面の交点p = カメラ座標系の原点+カメラ座標系から面へのベクトル*距離 (Shape座標系)
+
+	// 円の内部にあるか
+	if(p.norm()<GetRadius()){
+		//result[num] = p;
+		result[num] = Vec3f(0.0,0.0,0.0); //Sphereは中心位置にジョイントを接続した方が使いやすそう
+		offset[num] = s;
+		num++;
+	}
+	return num;
+}
+
 }	//	namespace Spr

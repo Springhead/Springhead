@@ -591,20 +591,22 @@ void PHRay::Apply(){
 	PHScene* phScene = DCAST(PHScene, GetScene());
 	for(int i = 0; i < phScene->NSolids(); i++){
 		PHSolid* solid = DCAST(PHSolid, phScene->GetSolids()[i]);
-
-		for(int j = 0; j < (int)solid->NShape(); j++){
-			p = (solid->GetPose() * solid->GetShapePose(j));
-			pinv = p.Inv();
-			ori = pinv * origin;
-			dir = pinv.Ori() * direction;
-			CDShape* shape = solid->GetShape(j)->Cast();
-			int num = shape->LineIntersect(ori, dir, point, offset);
-			for(int k = 0; k < num; k++){
-				hits.push_back(PHRaycastHit());
-				hits.back().solid = solid->Cast();
-				hits.back().shape = shape->Cast();
-				hits.back().point = p * point[k];
-				hits.back().distance = offset[k];
+		std::string solidName = solid->GetName();
+		if(!(solidName =="PHCursor")){
+			for(int j = 0; j < (int)solid->NShape(); j++){
+				p = (solid->GetPose() * solid->GetShapePose(j));
+				pinv = p.Inv();
+				ori = pinv * origin;
+				dir = pinv.Ori() * direction;
+				CDShape* shape = solid->GetShape(j)->Cast();
+				int num = shape->LineIntersect(ori, dir, point, offset);
+				for(int k = 0; k < num; k++){
+					hits.push_back(PHRaycastHit());
+					hits.back().solid = solid->Cast();
+					hits.back().shape = shape->Cast();
+					hits.back().point = p * point[k];
+					hits.back().distance = offset[k];
+				}
 			}
 		}
 	}

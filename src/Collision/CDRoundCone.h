@@ -43,6 +43,8 @@ public:
 	void SetLength(float l);
 	//lengthを変えないでカプセルの太さだけ変更する
 	void SetWidth(Vec2f r);
+
+	int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 };
 
 	
