@@ -36,6 +36,8 @@ public:
 	/// ‹…‘Ì‚ÉŠÖ‚µ‚ÄFindCutRing()‚ªŒÄ‚Ño‚³‚ê‚½ê‡‚É‚ÍAassertion‚ª”­¶‚·‚éB
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 
+	virtual int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
+
 	
 	/// ‹…‘Ì‚Ì”¼Œa‚ğæ“¾
 	float GetRadius();

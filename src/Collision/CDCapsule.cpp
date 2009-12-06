@@ -110,4 +110,54 @@ Matrix3f CDCapsule::CalcMomentOfInertia(){
 
 	return ans;
 }
+
+int CDCapsule::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){
+	const float eps = 1.0e-10f;
+	Vec3f p;
+	int num = 0;
+	Vec3f sCenter[2];	//球の中心位置
+	sCenter[0] = Vec3f(0.0f,0.0f,length);
+	sCenter[1] = Vec3f(0.0f,0.0f,-length);
+
+	//球部分の判定
+	for(int i=0; i<2; i++){
+		const Vec3f n = sCenter[i] - origin;		 //面の法線 = カメラと球の原点を結ぶベクトル
+		float tmp = n * dir;						 //面の法線とポインタのベクトルとの内積
+		if(abs(tmp) < eps)							 //内積が小さい場合は判定しない
+			continue;
+		float s = ((sCenter[i] - origin) * n) / tmp; //カメラと面の距離 
+		if(s < 0.0)
+			continue;
+		p = origin + dir * s;						 //直線と面の交点p = カメラ座標系の原点+カメラ座標系から面へのベクトル*距離 (Shape座標系)
+		Vec3f po = p-sCenter[i];					 //球の中心を原点とした時の交点の位置
+		// 円の内部にあるか
+		if(po.norm()<GetRadius()){
+			result[num] = p;
+			offset[num] = s;
+			num++;
+		}
+	}
+	//円柱部分の判定
+	const Vec3f n =  origin;						 //カメラ方向への垂直な断面の法線 = カメラとshapeの原点を結ぶベクトル
+	float tmp = n * dir;							 //面の法線とポインタのベクトルとの内積
+
+	for(int i=0; i<1; i++){
+		if(abs(tmp) < eps)							 //内積が小さい場合は判定しない
+			continue;
+		float s = ((- origin) * n) / tmp;			 //カメラと面の距離 
+		if(s < 0.0)
+			continue;
+		p = origin + dir * s;						 //直線と面の交点p = カメラ座標系の原点+カメラ座標系から面へのベクトル*距離 (Shape座標系)
+		
+		Vec2f pr = Vec2f(p.x,p.y);					 //xy平面のp
+		// 円柱の内部にあるか
+		if(pr.norm()<GetRadius() && abs(p.z)<=GetLength()*0.5){
+			result[num] = p;
+			offset[num] = s;
+			num++;
+		}
+	}
+	return num;
+}
+
 }	//	namespace Spr

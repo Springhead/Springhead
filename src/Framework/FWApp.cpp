@@ -94,9 +94,11 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 			info.ray = phScene->CreateRay();
 			info.cursor = phScene->CreateSolid();
 			info.cursor->SetDynamical(false);
+			info.cursor->SetName("PHCursor");
 			phScene->SetContactMode(info.cursor, PHSceneDesc::MODE_NONE);
-			CDBoxDesc bd;
-			info.cursor->AddShape(fwSdk->GetPHSdk()->CreateShape(bd));
+			CDSphereDesc sd;
+			sd.radius = 0.1f;
+			info.cursor->AddShape(fwSdk->GetPHSdk()->CreateShape(sd));
 		}
 		info.ray->SetOrigin(ori);
 		info.ray->SetDirection(dir);
@@ -115,9 +117,12 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 				pose.Pos() = hit->point;
 				desc.poseSocket = hit->solid->GetPose().Inv() * pose;
 				info.spring = DCAST(PHSpringIf, phScene->CreateJoint(hit->solid, info.cursor, desc));
-				const double K = 100.0, D = 10.0;
-				info.spring->SetSpring(Vec3d(K, K, K));
-				info.spring->SetDamper(Vec3d(D, D, D));
+				double mass = hit->solid->GetMass();	//mass‚É‚æ‚Á‚ÄÅ“K‚ÈK,D‚ðÝ’è‚·‚é•K—v‚ª‚ ‚é
+				const double K = 1000.0, D = 100.0;
+				info.spring->SetSpring(Vec3d(K, K, K)*mass);
+				info.spring->SetDamper(Vec3d(D, D, D)*mass);
+				info.spring->SetSpringOri(K);
+				info.spring->SetDamperOri(D);
 			}
 		}
 	}
