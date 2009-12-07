@@ -101,6 +101,7 @@ void FWLDHapticDemo::InitHumanInterface(){
 void FWLDHapticDemo::Reset(){
 	ReleaseAllTimer();
 	GetSdk()->Clear();
+	Clear();
 	ClearIAScenes();
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Scene‚Ìì¬
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// ‚Ý‚ÌÝ’è
@@ -168,8 +169,8 @@ void FWLDHapticDemo::BuildScene(){
 	/// °(•¨—–@‘¥‚É]‚í‚È‚¢C‰^“®‚ª•Ï‰»‚µ‚È‚¢)
 	{
 		/// „‘Ì(soFloor)‚Ìì¬
-		desc.mass = 1e20f;
-		desc.inertia *= 1e30f;
+		//desc.mass = 1e20f;
+		//desc.inertia *= 1e30f;
 		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// „‘Ì‚ðdesc‚ÉŠî‚Ã‚¢‚Äì¬
 		soFloor->SetDynamical(false);
 		soFloor->SetGravity(false);
