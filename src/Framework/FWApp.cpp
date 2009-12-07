@@ -28,7 +28,14 @@ FWApp::FWApp(){
 }
 FWApp::~FWApp(){
 	ReleaseAllTimer();
-	glutLeaveGameMode();
+	int s = wins.size();
+	bool hasGameMode = false;
+	for(int i = 0; i < s; i++){
+		if(wins[i]->fullscreen == true){
+			hasGameMode = true; break;
+		}
+	}
+	if(hasGameMode) glutLeaveGameMode();
 }
 void FWApp::DisableIdleFunc(){
 	idleFuncFlag = false;
