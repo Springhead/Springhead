@@ -116,6 +116,7 @@ void FWAppSample::Display(){
 
 void FWAppSample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->Clear();
+	Clear();
 	BuildObject();
 }
 
