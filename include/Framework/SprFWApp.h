@@ -181,6 +181,10 @@ public:
 	*/
 	CameraInfo	GetCameraInfo(){return cameraInfo;}
 
+	/** @brief FWApp‚ğ‰Šúó‘Ô‚É‚·‚é
+	*/
+	void	Clear();
+
 	/** @brief Ctrl, Shift, Alt‚Ìó‘Ô‚ğ•Ô‚·
 		ŒÂX‚Ì”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚³‚ê‚é
 	 */
