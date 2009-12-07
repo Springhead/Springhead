@@ -79,9 +79,13 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 		// カーソル座標をシーン座標に変換
 		const GRCameraDesc& cam = fwSdk->GetRender()->GetCamera();
 		Vec2f vpSize = fwSdk->GetRender()->GetViewportSize();
+		double r = (vpSize[0]/vpSize[1]); //アスペクト比
+		Vec2f camSize = cam.size;	//カメラの比率
+		if(cam.size.x ==0) camSize.x = camSize.y * r ;	//片方を0に設定してある場合，内部で自動的に比率が計算されているので，再度計算し代入する
+		if(cam.size.y ==0) camSize.y = camSize.x / r ;
 		Vec3f cursorPos(
-			cam.center.x + ((float)x - vpSize.x / 2.0f) * (cam.size.x / vpSize.x),
-			cam.center.y + (vpSize.y / 2.0f - (float)y) * (cam.size.y / vpSize.y),
+			cam.center.x + ((float)x - vpSize.x / 2.0f) * (camSize.x / vpSize.x),
+			cam.center.y + (vpSize.y / 2.0f - (float)y) * (camSize.y / vpSize.y),
 			-cam.front);
 		Vec3f ori, dir;
 		ori = cameraInfo.view.Pos();
@@ -118,7 +122,7 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 				desc.poseSocket = hit->solid->GetPose().Inv() * pose;
 				info.spring = DCAST(PHSpringIf, phScene->CreateJoint(hit->solid, info.cursor, desc));
 				double mass = hit->solid->GetMass();	//massによって最適なK,Dを設定する必要がある
-				const double K = 1000.0, D = 100.0;
+				const double K = 10000.0, D = 100.0;
 				info.spring->SetSpring(Vec3d(K, K, K)*mass);
 				info.spring->SetDamper(Vec3d(D, D, D)*mass);
 				info.spring->SetSpringOri(K);
@@ -158,9 +162,13 @@ void FWApp::MouseMove(int x, int y){
 			const GRCameraDesc& cam = fwSdk->GetRender()->GetCamera();
 			Vec2f vpSize = fwSdk->GetRender()->GetViewportSize();
 			float ratio = info.depth / (-cam.front);
+			double r = (vpSize[0]/vpSize[1]); //アスペクト比
+			Vec2f camSize = cam.size;	//カメラの比率
+			if(cam.size.x ==0) camSize.x = camSize.y * r ;	//片方を0に設定してある場合，内部で自動的に比率が計算されているので，再度計算し代入する
+			if(cam.size.y ==0) camSize.y = camSize.x / r ;
 			Vec3f rel(
-				 (float)xrel * (cam.size.x / vpSize.x) * ratio,
-				-(float)yrel * (cam.size.y / vpSize.y) * ratio,
+				 (float)xrel * (camSize.x / vpSize.x) * ratio,
+				-(float)yrel * (camSize.y / vpSize.y) * ratio,
 				 0.0f);
 			rel = cameraInfo.view.Rot() * rel;
 			info.cursor->SetCenterPosition(info.cursor->GetCenterPosition() + rel);
@@ -264,6 +272,10 @@ void FWApp::PostRedisplay(){
 
 int FWApp::GetModifier(){
 	return grAdaptee->Modifiers();
+}
+
+void FWApp::Clear(){
+	dragInfo.clear();	//剛体ドラッグ情報を初期化
 }
 
 // 描画パート////////////////////////////////////////////////////////////////////
