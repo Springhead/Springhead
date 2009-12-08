@@ -223,7 +223,7 @@ FWStructure::FWStructure(const FWStructureDesc& d/*=FWStructureDesc()*/)
 }
 
 FWBoneObjectIf* FWStructure::GetBone(int n){
-	int size = fwBones.size();
+	int size = (int)fwBones.size();
 	if(n< size){
 		return fwBones[n];
 	}
@@ -233,7 +233,7 @@ FWBoneObjectIf* FWStructure::GetBone(int n){
 
 FWBoneObjectIf* FWStructure::GetBone(char* n){
 	std::string name = n;
-	int size = fwBones.size();
+	int size = (int)fwBones.size();
 	for(int i = 0; i < size; i++){
 		std::string getName = fwBones[i]->GetName();
 		if(getName==n){
@@ -269,6 +269,15 @@ bool FWStructure::AddChildObject(ObjectIf* o){
 	}
 	return rv;
 }
+
+void FWStructure::SetPose(Posed p){
+	for(int i =0; i < GetBoneSize(); i++){
+		if(!(GetBone(i)->GetPHSolid())) continue;
+		Posed pose = GetBone(i)->GetPHSolid()->GetPose();
+		GetBone(i)->GetPHSolid()->SetPose(p * pose);
+	}
+}
+
 
 
 
