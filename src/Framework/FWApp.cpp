@@ -355,7 +355,8 @@ void FWApp::AddHI(HIBaseIf* hi){
 }
 
 HIBaseIf* FWApp::GetHI(int i){
-	return humanInterfaces[i];
+	if((unsigned)i <humanInterfaces.size()) return humanInterfaces[i];
+	else						  return NULL;
 }
 
 FWInteractSceneIf* FWApp::CreateIAScene(const FWInteractSceneDesc &desc){
