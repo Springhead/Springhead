@@ -103,9 +103,10 @@ public:
 	FWStructureDesc desc;
 	FWStructure(const FWStructureDesc& d=FWStructureDesc()); // コンストラクタ
 
-	FWBoneObjectIf* GetBone(int n);
-	FWBoneObjectIf* GetBone(char* name);
-	int				GetBoneSize();
+	FWBoneObjectIf* GetBone(int n);			//FWBoneObjectを取得する
+	FWBoneObjectIf* GetBone(char* name);	//FWBoneObjectを名前で取得する
+	int				GetBoneSize();			//FWBoneObjectの数を取得する
+	void			SetPose(Posed p);		//FWBoneObjectの位置を設定する(fwBones[0]を基準とする)
 	void AddBone(FWBoneObjectIf* o);
 
 	virtual bool		AddChildObject(ObjectIf* o);

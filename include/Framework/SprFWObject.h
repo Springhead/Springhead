@@ -88,6 +88,8 @@ struct FWStructureIf : SceneObjectIf {
 	FWBoneObjectIf* GetBone(char* n);
 	/// BoneObjectのサイズを取得する
 	int GetBoneSize();
+	/// FWBoneObjectの位置を設定する
+	void SetPose(Posed p);	
 	/// FWBoneObjectを追加する
 	void AddBone(FWBoneObjectIf* o);
 };
