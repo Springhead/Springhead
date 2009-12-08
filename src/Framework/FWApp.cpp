@@ -132,8 +132,8 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 				const double K = 10000.0, D = 100.0;
 				info.spring->SetSpring(Vec3d(K, K, K)*mass);
 				info.spring->SetDamper(Vec3d(D, D, D)*mass);
-				info.spring->SetSpringOri(K);
-				info.spring->SetDamperOri(D);
+				//info.spring->SetSpringOri(K);
+				//info.spring->SetDamperOri(D);
 			}
 		}
 	}
