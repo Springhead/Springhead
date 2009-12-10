@@ -239,6 +239,7 @@ void PHSolid::UpdateCachePenalty(int c){
 */
 void PHSolid::UpdateVelocity(double dt){
 	SpatialVector vold = v;
+	if(!IsIntegrate()) return;
 	if(IsDynamical() && !IsFrozen()){
 		v += dv;
 //		DSTR << "v:" << v.w().norm();
@@ -260,7 +261,7 @@ void PHSolid::UpdateVelocity(double dt){
 
 }
 void PHSolid::UpdatePosition(double dt){
-	if(IsFrozen())return;
+	if(IsFrozen() || !IsIntegrate()) return;
 	// SetOrientation -> SetCenterPositionの順に呼ぶ必要がある．逆だとSetOrientationによって重心位置がずれてしまう tazz
 	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w() * dt + dV.w())).unit());
 	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
@@ -275,8 +276,7 @@ void PHSolid::Step(){
 	nextTorque.clear();
 
 	//既に他のエンジンによって更新が成された場合は積分を行わない
-	if(IsUpdated())
-		return;
+	if(IsUpdated()) return;
 
 	PHScene* s = DCAST(PHScene, GetScene());
 	double dt = s->GetTimeStep();
