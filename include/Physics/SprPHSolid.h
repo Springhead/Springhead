@@ -44,13 +44,15 @@ struct PHSolidDesc: public PHSolidState{
 	double		mass;			///<	質量
 	Matrix3d	inertia;		///<	慣性テンソル	(Local系)
 	Vec3d		center;			///<	質量中心の位置	(Local系)
-	bool		dynamical;		///<	物理法則に従うか
+	bool		dynamical;		///<	物理法則に従うか(速度は積分される)
+	bool		integrate;		///<	力，速度，位置を積分しない(値は保持される)
 
 	PHSolidDesc(){ Init(); }
 	void Init(){
 		mass = 1.0f;
 		inertia = Matrix3d::Unit();
 		dynamical = true;
+		integrate = true;
 	}
 };
 
@@ -246,15 +248,15 @@ struct PHSolidIf : public SceneObjectIf{
 		@return trueならば剛体は物理法則にしたがって運動する．
 	 */
 	bool		IsDynamical();
-
-	/** @brief フリーズ状態を有効/無効化する
-		@param bOn trueならばフリーズ状態にする．フリーズ状態になると位置，速度の更新が行われなくなり，計算量を節約できる．
-	 */
-	void		SetFrozen(bool bOn);
-	/** @brief フリーズ状態かどうかを取得する
-	*/	
-	bool		IsFrozen();
-
+	/** @brief 速度を積分し，位置を更新するかどうかを有効/無効かする
+		@param bOn trueならば剛体は速度を積分し，位置を更新する．
+		SetVelocity関数で速度を設定した場合，値は保持されますが，積分は行われません．
+	*/
+	void		SetIntegrate(bool bOn);
+	/** @brief 速度を積分し，位置を更新するかどうか取得する．
+		@return trueならば剛体は速度を積分し，位置を更新する．
+	*/
+	bool		IsIntegrate();
 	/** @brief ツリーノードを取得する
 		CreateRootNode，CreateTreeNodeによってツリーノードが割り当てられている場合，
 		そのノードを返す．それ以外の場合はNULLを返す．

@@ -263,10 +263,19 @@ public:
 	void		ClearShape();
 	/// この剛体が持つSPR::CDShape を削除
 	void		SetShapePose(int i, const Posed& pose);
+	/// 重力を加えるかどうか設定
 	void		SetGravity(bool bOn);
+	/// 物理法則に従うかどうか設定
 	void		SetDynamical(bool bOn){dynamical = bOn;}
+	/// 物理法則に従っているかどうかを取得
 	bool		IsDynamical(){return dynamical;}
+	/// 速度を積分するかどうかを設定
+	void		SetIntegrate(bool bOn){integrate = bOn;}
+	/// 速度を積分するかどうかを取得
+	bool		IsIntegrate(){return integrate;}
+	/// 速度が一定以下の時，積分を行わないように設定
 	void		SetFrozen(bool bOn){bFrozen = bOn;}
+	/// 速度が一定以下で積分を行わないかどうかを取得
 	bool		IsFrozen(){return bFrozen;}
 	PHTreeNodeIf* GetTreeNode();
 

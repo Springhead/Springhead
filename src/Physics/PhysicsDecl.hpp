@@ -566,6 +566,7 @@ protected:\
 	Matrix3d	inertia;	\
 	Vec3d	center;	\
 	bool	dynamical;	\
+	bool	integrate;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHSolid::SetState((PHSolidState*)(PHSolidDesc*)ptr);	\
@@ -573,6 +574,7 @@ public:\
 		inertia = ((PHSolidDesc*)ptr)->inertia;	\
 		center = ((PHSolidDesc*)ptr)->center;	\
 		dynamical = ((PHSolidDesc*)ptr)->dynamical;	\
+		integrate = ((PHSolidDesc*)ptr)->integrate;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -582,6 +584,7 @@ public:\
 		((PHSolidDesc*)ptr)->inertia = inertia;	\
 		((PHSolidDesc*)ptr)->center = center;	\
 		((PHSolidDesc*)ptr)->dynamical = dynamical;	\
+		((PHSolidDesc*)ptr)->integrate = integrate;	\
 		return true;	\
 	}\
 

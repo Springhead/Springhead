@@ -327,8 +327,8 @@
 	void SetGravity(bool bOn){	base::SetGravity(bOn);}	\
 	void SetDynamical(bool bOn){	base::SetDynamical(bOn);}	\
 	bool IsDynamical(){	return	base::IsDynamical();}	\
-	void SetFrozen(bool bOn){	base::SetFrozen(bOn);}	\
-	bool IsFrozen(){	return	base::IsFrozen();}	\
+	void SetIntegrate(bool bOn){	base::SetIntegrate(bOn);}	\
+	bool IsIntegrate(){	return	base::IsIntegrate();}	\
 	Spr::PHTreeNodeIf* GetTreeNode(){	return	base::GetTreeNode();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHShapePairForLCPIf(base)	\
