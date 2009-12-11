@@ -58,6 +58,8 @@ public:
 	Vec3d	A, Ainv, dA, b, db;
 	SpatialMatrix J[2];
 	SpatialMatrix T[2];
+	Matrix3d		Jc;
+	Matrix3d		Jcinv;
 	//Vec3d	f, F;
 	bool	onLower, onUpper;
 
@@ -78,10 +80,12 @@ public:
 	Vec3d			tanLine;
 	int				FunNum;
 	Matrix3d		limDir;					///< ‰Šú‚ÌS‘©À•WŒn (xŽ²,yŽ²,zŽ²( = limitDir))
-	Vec3d			BefPos;					///< ‘O‰ñ‚ÌˆÊ’u
+	Vec3d			befTheta;					///< ‘O‰ñ‚ÌˆÊ’u
 	LimitLine		limitLine;				///< S‘©”ÍˆÍ‚ÌŽw’è
+	Vec4d			NPointInf;				///< S‘©Žž‚Ì‹ß–T“_‚Ìî•ñ(SDir,Swing,‹æŠÔ,”}‰î•Ï”’l)
 
 	void	CheckLimit();
+	void	SplineLimit();
 	bool	SetConstLine(char* fileName , int i);
 	double	GetConstLine(int num, int way){ return limitLine.SwingUp[num][way]; }
 
@@ -89,6 +93,10 @@ public:
 	void	IterateLCP();
 	void	Projection(double& f, int k);
 	Vec3d	CompResponseMatrix();
+
+
+	Vec3d	Eq3D(Vec4d coefficient);
+	Vec4d	CalcParameter(int i,int j);
 
 	PHBallJointLimit();
 };
