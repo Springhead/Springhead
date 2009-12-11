@@ -162,8 +162,25 @@ inline void CalcFrame(Matrix3d& R, const Vec3d& zdir, const Vec3d& xdir){
 	R.Ey() = cross(R.Ez(), R.Ex());
 	R.Ex() = cross(R.Ey(), R.Ez());		
 }
+
 inline Vec3d CalcDir(double theta, double phi){
 	return Vec3d(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
+}
+
+inline Vec3d CalcPosition(double SwingDir,double Swing){
+	Vec3d Position;
+	Position[0] = sin(Swing) * cos(SwingDir);
+	Position[1] = sin(Swing) * sin(SwingDir);
+	Position[2] = cos(Swing);
+	return(Position);
+}
+Vec4d PHBallJointLimit::CalcParameter(int i,int j){
+	Vec4d eq3Para;
+	eq3Para[0] = 2 * limitLine.SwingUp[i-1][j] - 2 * limitLine.SwingUp[i][j] + limitLine.SwingUp[i][j+2] + limitLine.SwingUp[i-1][j+2];
+	eq3Para[1] = 3 * limitLine.SwingUp[i][j] - 3 * limitLine.SwingUp[i-1][j] - 2 * limitLine.SwingUp[i-1][j+2] - limitLine.SwingUp[i][j+2];
+	eq3Para[2] = limitLine.SwingUp[i-1][j+2];
+	eq3Para[3] = limitLine.SwingUp[i-1][j]; 
+	return eq3Para;
 }
 
 void PHBallJointLimit::CheckLimit(){
@@ -181,7 +198,9 @@ void PHBallJointLimit::CheckLimit(){
 
 	// 可動域のチェック
 	// 現在のSocketとPlugとの間の角度を計算
-	double cosLange = dot(joint->limitDir, joint->Jc.Ez());
+	Jc = joint->Jc;
+	Jcinv = joint->Jcinv;
+	double cosLange = dot(joint->limitDir, Jc.Ez());
 	if(cosLange > 1.0){
 		cosLange = 1.0;
 	}
@@ -191,7 +210,7 @@ void PHBallJointLimit::CheckLimit(){
 	nowTheta[0]	= acos(cosLange);			///< Swing角の計算	
 
 	Vec3d PolarCoord;
-	PolarCoord = joint->Jc.Ez() * limDir.trans();					///< 倒れる方向の計算開始
+	PolarCoord = Jc.Ez() * limDir.trans();					///< 倒れる方向の計算開始
 	if(PolarCoord.x == 0){
 		if(PolarCoord.y >= 0) nowTheta[2] = M_PI / 2;
 		else nowTheta[2] = 3 * M_PI / 2;
@@ -203,7 +222,7 @@ void PHBallJointLimit::CheckLimit(){
 	else if(PolarCoord.x > 0 && PolarCoord.y < 0) nowTheta[2] += 2 * M_PI;
 
 	Quaterniond qSwing;
-	Vec3d half =  0.5 * (Vec3d(0.0, 0.0, 1.0) + joint->Jc.Ez());	
+	Vec3d half =  0.5 * (Vec3d(0.0, 0.0, 1.0) + Jc.Ez());	
 	double l = half.norm();
 	if (l>1e-20){
 		half /= l;
@@ -239,6 +258,11 @@ void PHBallJointLimit::CheckLimit(){
 		}
 		else onLimit[0].onUpper = false;
 	}
+
+	if(limitCount[1]!=0){//Swing.upper
+		SplineLimit(); //スプライン曲線での拘束
+	}
+
 	// twist角の可動域制限の確認
 	if(joint->limitTwist[0]<(FLT_MAX*0.1)/*joint->limitTwist[0] != FLT_MAX*/ && nowTheta[1] < joint->limitTwist[0])
 		onLimit[1].onLower = true;
@@ -259,12 +283,14 @@ void PHBallJointLimit::CheckLimit(){
 		//ヤコビアンの取得＆更新
 		J[0] = joint->J[0];
 		J[1] = joint->J[1];
-		J[0].wv() = joint->Jcinv * joint->J[0].wv();
-		J[0].ww() = joint->Jcinv * joint->J[0].ww();
-		J[1].wv() = joint->Jcinv * joint->J[1].wv();
-		J[1].ww() = joint->Jcinv * joint->J[1].ww();
+		J[0].wv() = Jcinv * joint->J[0].wv();
+		J[0].ww() = Jcinv * joint->J[0].ww();
+		J[1].wv() = Jcinv * joint->J[1].wv();
+		J[1].ww() = Jcinv * joint->J[1].ww();
 	}
+	else NPointInf[0] = nowTheta[2];
 
+	befTheta = nowTheta;
 	/* conの設定は不要になった
 	// 上の計算を踏まえて毎回、回転軸の拘束条件の更新をする
 	if(mode == PHJointDesc::MODE_POSITION){
@@ -283,12 +309,78 @@ void PHBallJointLimit::CheckLimit(){
 	*/
 }
 
+void PHBallJointLimit::SplineLimit(){
+	int FunNum = 1;
+	while(limitLine.SwingUp[FunNum][0] <= nowTheta[2]){
+		FunNum++;
+		if(limitCount[1] < FunNum)	break;	//入らないはず。
+	}
+	double para = (nowTheta[2] - limitLine.SwingUp[FunNum-1][0])/(limitLine.SwingUp[FunNum][0] - limitLine.SwingUp[FunNum-1][0]);
+	Vec4d Swing = CalcParameter(FunNum,1);
+	double LSwing;
+	LSwing = Swing[0] * para * para * para + Swing[1] * para * para + Swing[2] * para + Swing[3];
+	if(LSwing <= nowTheta[0]){
+		onLimit[0].onUpper = true;
+		double k = 25;	//繰り返し計算回数。
+		double delta = (nowTheta[2] - NPointInf[0]) / k;
+		double SwDir = nowTheta[2];
+		Vec3d Neighbor = CalcPosition(SwDir,LSwing);
+		Irrupt = cos(nowTheta[0] - LSwing);		//sinの値で角度の大小を比べる。
+		NPointInf[0] = SwDir;
+		NPointInf[1] = LSwing;
+		NPointInf[2] = FunNum;
+		NPointInf[3] = para;
+		for(int i = 0;i < k; i++){
+			para -= delta;
+			SwDir -= delta;
+			if(para > 1){
+				FunNum++;
+				if(FunNum > limitCount[1]) FunNum = 1;
+				para -= 1.0;
+				Swing = CalcParameter(FunNum,1);
+			}
+			else if(para < 0){
+				FunNum--;
+				if(FunNum < 1) FunNum = limitCount[1];
+				para += 1.0;
+				Swing = CalcParameter(FunNum,1);
+			}
+			if(SwDir < 0) SwDir += Rad(360);
+			LSwing = Swing[0] * para * para * para + Swing[1] * para * para + Swing[2] * para + Swing[3];
+			Neighbor = CalcPosition(SwDir,LSwing);
+			double checkIrrupt = (cross(Neighbor,Jc.Ez())).norm();
+			if(Irrupt > checkIrrupt){
+				Irrupt = checkIrrupt;
+				NPointInf[0] = SwDir;
+				NPointInf[1] = LSwing;
+				NPointInf[2] = FunNum;
+				NPointInf[3] = para;
+			}
+			else{break;}
+		}
+		//近傍点から拘束座標系への変換を行う。
+		Neighbor = CalcPosition(NPointInf[0],NPointInf[1]);
+		Vec3d tanLine;
+		Swing = CalcParameter(NPointInf[2],1);
+		tanLine.x = 3 * Swing[0] * NPointInf[3] * NPointInf[3] + 2 * Swing[1] * NPointInf[3] + Swing[2];
+		tanLine.z = -tanLine.x * sin(NPointInf[1]);
+		tanLine.x *= cos(NPointInf[1]);
+		tanLine.y = tanLine.x * sin(NPointInf[1]) + Neighbor.x;
+		tanLine.x = tanLine.x * cos(NPointInf[1]) - Neighbor.y;
+		tanLine = tanLine.unit();
+		Jc.Ex() = tanLine;
+		Jc.Ey() = cross(Jc.Ez(),Jc.Ex());
+		Jcinv = Jc.trans();
+	}
+	else onLimit[0].onUpper = false;
+}
+
 void PHBallJointLimit::SetupLCP(){
 	// 可動範囲チェック
 	CheckLimit();
 
 	// vJc : Jcによって写像される拘束座標系から見たPlugの角速度
-	Vec3d vJc = joint->Jc * joint->vjrel.w();
+	Vec3d vJc = Jc * joint->vjrel.w();
 	double dtinv = joint->GetScene()->GetTimeStepInv();
 	double corRate = joint->engine->GetVelCorrectionRate();
 
@@ -305,7 +397,9 @@ void PHBallJointLimit::SetupLCP(){
 		db[0] = (nowTheta[0] - joint->limitSwing[0]) * dtinv * corRate;
 	}
 	else if(onLimit[0].onUpper){
-		db[0] = (nowTheta[0] - joint->limitSwing[1] + 0.001) * dtinv * corRate;
+		db[0] = Irrupt * dtinv * corRate;;	//少し内側に戻す力を加えないと拘束から抜けない。
+		DSTR << Irrupt << endl;
+//		db[0] = (nowTheta[0] - joint->limitSwing[1] + 0.001) * dtinv * corRate;//戻す位置を可動域の少し内側にしないと止まってしまう。
 	}
 
 	// Twist角可動範囲
@@ -320,9 +414,12 @@ void PHBallJointLimit::SetupLCP(){
 	A = CompResponseMatrix();
 	b = (J[0] * joint->solid[0]->v + J[1] * joint->solid[1]->v).w();
 	for(int i = 0; i < 3; i++){
-		Ainv[i] = 1.0 / (A[i] + dA[i]);
-		joint->f[i] *= joint->engine->shrinkRate;
-		joint->CompResponse(joint->f[i], i);
+		if(A[i]+dA[i]==0) Ainv[i] = FLT_MAX;
+		else{
+			Ainv[i] = 1.0 / (A[i] + dA[i]);
+			joint->f[i] *= joint->engine->shrinkRate;
+			joint->CompResponse(joint->f[i], i);
+		}
 	}
 }
 
@@ -353,26 +450,23 @@ void PHBallJointLimit::IterateLCP(){
 
 	Vec3d fnew;
 	for(int i = 0; i < 3; i++){
-		int j = joint->axisIndex[i];
-		fnew[i] = joint->limitf[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * joint->limitf[i] + b[i] + db[i]
-			+ J[0].row(j) * joint->solid[0]->dv + J[1].row(j) * joint->solid[1]->dv);	
-	}
-
-	for(int i = 0; i < 3; i++){
-		int j = joint->axisIndex[i];
-		Projection(fnew[i], i);
-//		joint->CompResponse(fnew[i] - joint->limitf[i], i);	
-
-		SpatialVector dfs;
-		for(int k = 0; k < 2; k++){
-			if(!joint->solid[k]->IsDynamical() || !joint->IsInactive(k))continue;
-			if(joint->solid[k]->IsArticulated()){
-				(Vec6d&)dfs = J[k].row(i+3) * (fnew[i] - joint->limitf[i]);
-				joint->solid[k]->treeNode->CompResponse(dfs, true, false);
+		if((i == 0 && onLimit[0].onUpper)||(i == 2 && onLimit[1].onUpper)){
+			int j = joint->axisIndex[i];
+			fnew[i] = joint->limitf[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * joint->limitf[i] + b[i] + db[i]
+				+ J[0].row(j) * joint->solid[0]->dv + J[1].row(j) * joint->solid[1]->dv);	
+			Projection(fnew[i], i);
+	//		joint->CompResponse(fnew[i] - joint->limitf[i], i);	
+			SpatialVector dfs;
+			for(int k = 0; k < 2; k++){
+				if(!joint->solid[k]->IsDynamical() || !joint->IsInactive(k))continue;
+				if(joint->solid[k]->IsArticulated()){
+					(Vec6d&)dfs = J[k].row(i+3) * (fnew[i] - joint->limitf[i]);
+					joint->solid[k]->treeNode->CompResponse(dfs, true, false);
+				}
+				else joint->solid[k]->dv += T[k].row(i+3) * (fnew[i] - joint->limitf[i]);
 			}
-			else joint->solid[k]->dv += T[k].row(i+3) * (fnew[i] - joint->limitf[i]);
 		}
-
+		else fnew[i] = 0;
 		joint ->limitf[i] = fnew[i];
 	}
 }
