@@ -10,8 +10,6 @@
 
 #include "UTQPTimer.h"
 #include <Base/BaseDebug.h>
-
-#ifdef _WIN32
 #include <Windows.h>
 #include <mmsystem.h>
 
@@ -20,16 +18,21 @@ namespace Spr{;
 //é¸îgêîÇì«Ç›èoÇ∑
 UTQPTimer::UTQPTimer(): stopWatch(0), startFlag(false)
 {
-	QueryPerformanceFrequency( &freq );
+	LARGE_INTEGER f;
+	QueryPerformanceFrequency( &(f) );
+	freq.quadPart = f.QuadPart;
 }
 
+int UTQPTimer::Freq(){
+	return (int)freq.quadPart;
+} 
 //É ïbíPà Ç≈ë“Ç¬
 void UTQPTimer::WaitUS(int time)
 {
 	LARGE_INTEGER time1,time2;
 
 	QueryPerformanceCounter( &time1);
-	time2.QuadPart = time1.QuadPart + time * freq.QuadPart / 1000000;
+	time2.QuadPart = time1.QuadPart + time * freq.quadPart / 1000000;
 	do{
 		QueryPerformanceCounter( &time1);
 	}while(time1.QuadPart < time2.QuadPart);
@@ -43,8 +46,8 @@ int  UTQPTimer::CountUS()
 
 	QueryPerformanceCounter( &now);
 	
-	retval =  (int)((now.QuadPart-lasttime.QuadPart)*1000000 / freq.QuadPart);
-	lasttime.QuadPart = now.QuadPart;
+	retval =  (int)((now.QuadPart-lasttime.quadPart)*1000000 / freq.quadPart);
+	lasttime.quadPart = now.QuadPart;
 	return retval;
 }
 
@@ -83,4 +86,3 @@ unsigned long UTQPTimer::Clear(){
 }
 
 }
-#endif
