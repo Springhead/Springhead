@@ -5,6 +5,7 @@
 #include <windows.h>
 
 //梶本先生のソースコード
+//http://kaji-lab.jp/ja/index.php?people/kaji
 
 using namespace std;
 int _cdecl main(int argc, char* argv[]){
@@ -40,8 +41,8 @@ int _cdecl main(int argc, char* argv[]){
 	/*************************************************************/
 	myTimer.Start();
 	while(1){
-		double time = myTimer.GetTime(); //us単位
 		Sleep(10);
+		double time = myTimer.GetTime(); //us単位
 		std::cout<<time/1000<<"ms"<<std::endl;
 		if(time >1000000){
 			myTimer.Stop();
