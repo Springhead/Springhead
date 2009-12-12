@@ -8,11 +8,7 @@
 #ifndef UTQTTIMER_H
 #define UTQTTIMER_H
 #pragma once
-
-#ifdef _WIN32
-#include <WinSock2.h>　//バッティングを回避するため，新しいWinSockをWindows.hより先にincludeする．
-#include <Windows.h>
-
+#include <Foundation/UTPreciseTimer.h> //UTLargeIntegerの読み込み
 namespace Spr{;
 
 //梶本先生のソースコード
@@ -26,8 +22,8 @@ namespace Spr{;
 
 class UTQPTimer{
 private:
-	LARGE_INTEGER freq;
-	LARGE_INTEGER lasttime;//前回の状態を保存する
+	UTLargeInteger freq;
+	UTLargeInteger lasttime;//前回の状態を保存する
 	unsigned long stopWatch;		///<計測時間us単位
 	bool startFlag;
 
@@ -36,7 +32,7 @@ public:
 	void WaitUS(int time); //μs単位で待つ
 	int CountUS();//前回からの経過時間をμs単位で計測
 	void CountAndWaitUS(int time);//前回からの経過時間をμs単位で計測し，全体としてus単位で待つ（一定ループ生成用）
-	int Freq(){return (int)freq.QuadPart;} //タイマーの周波数を出力
+	int Freq(); //タイマーの周波数を出力
 
 	/// ストップウォッチ機能.
 	unsigned long Start();		///< 計測開始，開始時間（stopWatchの値）をus単位で返す
@@ -48,4 +44,3 @@ public:
 }
 #endif
 
-#endif
