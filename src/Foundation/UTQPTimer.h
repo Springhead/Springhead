@@ -8,13 +8,16 @@
 #ifndef UTQTTIMER_H
 #define UTQTTIMER_H
 #pragma once
-#include <windows.h>
+
+#ifdef _WIN32
+#include <WinSock2.h>　//バッティングを回避するため，新しいWinSockをWindows.hより先にincludeする．
+#include <Windows.h>
 
 namespace Spr{;
 
 //梶本先生のソースコード
-
-//QueryPerformanceCounterを使った例．
+//http://kaji-lab.jp/ja/index.php?people/kaji
+//QueryPerformanceCounterを使った例．(windows.h内で宣言された関数）
 //以前のRDTSCを使ったバージョンで生じていた問題を
 //QueryPerformanceCounterを使い，
 //スレッドをロックする
@@ -43,5 +46,6 @@ public:
 };
 
 }
+#endif
 
 #endif

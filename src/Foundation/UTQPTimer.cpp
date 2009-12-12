@@ -10,6 +10,8 @@
 
 #include "UTQPTimer.h"
 #include <Base/BaseDebug.h>
+
+#ifdef _WIN32
 #include <Windows.h>
 #include <mmsystem.h>
 
@@ -80,5 +82,5 @@ unsigned long UTQPTimer::Clear(){
 	return rv;
 }
 
-
 }
+#endif
