@@ -172,14 +172,22 @@ inline Vec3d CalcPosition(double SwingDir,double Swing){
 	Position[0] = sin(Swing) * cos(SwingDir);
 	Position[1] = sin(Swing) * sin(SwingDir);
 	Position[2] = cos(Swing);
-	return(Position);
+	return Position;
 }
-Vec4d PHBallJointLimit::CalcParameter(int i,int j){
+Vec4d PHBallJointLimit::CalcParameter(int i,int j,bool flag){
 	Vec4d eq3Para;
-	eq3Para[0] = 2 * limitLine.SwingUp[i-1][j] - 2 * limitLine.SwingUp[i][j] + limitLine.SwingUp[i][j+2] + limitLine.SwingUp[i-1][j+2];
-	eq3Para[1] = 3 * limitLine.SwingUp[i][j] - 3 * limitLine.SwingUp[i-1][j] - 2 * limitLine.SwingUp[i-1][j+2] - limitLine.SwingUp[i][j+2];
-	eq3Para[2] = limitLine.SwingUp[i-1][j+2];
-	eq3Para[3] = limitLine.SwingUp[i-1][j]; 
+	if(flag){
+		eq3Para[0] = 2 * limitLine.SwingUp[i-1][j] - 2 * limitLine.SwingUp[i][j] + limitLine.SwingUp[i][j+2] + limitLine.SwingUp[i-1][j+2];
+		eq3Para[1] = 3 * limitLine.SwingUp[i][j] - 3 * limitLine.SwingUp[i-1][j] - 2 * limitLine.SwingUp[i-1][j+2] - limitLine.SwingUp[i][j+2];
+		eq3Para[2] = limitLine.SwingUp[i-1][j+2];
+		eq3Para[3] = limitLine.SwingUp[i-1][j]; 
+	}
+	else{
+		eq3Para[0] = 2 * limitLine.SwingLow[i-1][j] - 2 * limitLine.SwingLow[i][j] + limitLine.SwingLow[i][j+2] + limitLine.SwingLow[i-1][j+2];
+		eq3Para[1] = 3 * limitLine.SwingLow[i][j] - 3 * limitLine.SwingLow[i-1][j] - 2 * limitLine.SwingLow[i-1][j+2] - limitLine.SwingLow[i][j+2];
+		eq3Para[2] = limitLine.SwingLow[i-1][j+2];
+		eq3Para[3] = limitLine.SwingLow[i-1][j]; 
+	}		
 	return eq3Para;
 }
 
@@ -259,7 +267,7 @@ void PHBallJointLimit::CheckLimit(){
 		else onLimit[0].onUpper = false;
 	}
 
-	if(limitCount[1]!=0){//Swing.upper
+	if(limitCount[1] != 0 || limitCount[0] != 0){//Swing.upper
 		SplineLimit(); //スプライン曲線での拘束
 	}
 
@@ -310,17 +318,40 @@ void PHBallJointLimit::CheckLimit(){
 }
 
 void PHBallJointLimit::SplineLimit(){
+
 	int FunNum = 1;
-	while(limitLine.SwingUp[FunNum][0] <= nowTheta[2]){
-		FunNum++;
-		if(limitCount[1] < FunNum)	break;	//入らないはず。
-	}
-	double para = (nowTheta[2] - limitLine.SwingUp[FunNum-1][0])/(limitLine.SwingUp[FunNum][0] - limitLine.SwingUp[FunNum-1][0]);
-	Vec4d Swing = CalcParameter(FunNum,1);
+	double para;
 	double LSwing;
-	LSwing = Swing[0] * para * para * para + Swing[1] * para * para + Swing[2] * para + Swing[3];
-	if(LSwing <= nowTheta[0]){
-		onLimit[0].onUpper = true;
+	Vec4d Swing;
+	if(limitCount[1] != 0){
+		while(limitLine.SwingUp[FunNum][0] <= nowTheta[2]){
+			FunNum++;
+			if(limitCount[1] < FunNum)	break;	//入らないはず。
+		}
+		para = (nowTheta[2] - limitLine.SwingUp[FunNum-1][0])/(limitLine.SwingUp[FunNum][0] - limitLine.SwingUp[FunNum-1][0]);
+		Swing = CalcParameter(FunNum,1,true);
+		LSwing = Swing[0] * para * para * para + Swing[1] * para * para + Swing[2] * para + Swing[3];
+		if(LSwing < nowTheta[0]){
+			onLimit[0].onUpper = true;
+		}
+		else	onLimit[0].onUpper = false;
+
+	}
+	else{
+		while(limitLine.SwingLow[FunNum][0] <= nowTheta[2]){
+			FunNum++;
+			if(limitCount[0] < FunNum)	break;	//入らないはず。
+		}
+		para = (nowTheta[2] - limitLine.SwingLow[FunNum-1][0])/(limitLine.SwingLow[FunNum][0] - limitLine.SwingLow[FunNum-1][0]);
+		Swing = CalcParameter(FunNum,1,false);
+		LSwing = Swing[0] * para * para * para + Swing[1] * para * para + Swing[2] * para + Swing[3];
+		if(LSwing > nowTheta[0]){
+			onLimit[0].onLower = true;
+		}
+		else	onLimit[0].onUpper = false;
+	}
+	if(onLimit[0].onUpper || onLimit[0].onLower){
+//		onLimit[0].onUpper = true;
 		double k = 25;	//繰り返し計算回数。
 		double delta = (nowTheta[2] - NPointInf[0]) / k;
 		double SwDir = nowTheta[2];
@@ -337,13 +368,13 @@ void PHBallJointLimit::SplineLimit(){
 				FunNum++;
 				if(FunNum > limitCount[1]) FunNum = 1;
 				para -= 1.0;
-				Swing = CalcParameter(FunNum,1);
+				Swing = CalcParameter(FunNum,1,onLimit[0].onUpper);
 			}
 			else if(para < 0){
 				FunNum--;
 				if(FunNum < 1) FunNum = limitCount[1];
 				para += 1.0;
-				Swing = CalcParameter(FunNum,1);
+				Swing = CalcParameter(FunNum,1,onLimit[0].onUpper);
 			}
 			if(SwDir < 0) SwDir += Rad(360);
 			LSwing = Swing[0] * para * para * para + Swing[1] * para * para + Swing[2] * para + Swing[3];
@@ -361,7 +392,7 @@ void PHBallJointLimit::SplineLimit(){
 		//近傍点から拘束座標系への変換を行う。
 		Neighbor = CalcPosition(NPointInf[0],NPointInf[1]);
 		Vec3d tanLine;
-		Swing = CalcParameter(NPointInf[2],1);
+		Swing = CalcParameter(NPointInf[2],1,!onLimit[0].onLower);
 		tanLine.x = 3 * Swing[0] * NPointInf[3] * NPointInf[3] + 2 * Swing[1] * NPointInf[3] + Swing[2];
 		tanLine.z = -tanLine.x * sin(NPointInf[1]);
 		tanLine.x *= cos(NPointInf[1]);
@@ -371,8 +402,8 @@ void PHBallJointLimit::SplineLimit(){
 		Jc.Ex() = tanLine;
 		Jc.Ey() = cross(Jc.Ez(),Jc.Ex());
 		Jcinv = Jc.trans();
+		if(onLimit[0].onLower) Irrupt *= -1;
 	}
-	else onLimit[0].onUpper = false;
 }
 
 void PHBallJointLimit::SetupLCP(){
@@ -393,8 +424,8 @@ void PHBallJointLimit::SetupLCP(){
 	db.clear();
 	// Swing角可動範囲
 	if(onLimit[0].onLower){
-		dA[0] = 0;
-		db[0] = (nowTheta[0] - joint->limitSwing[0]) * dtinv * corRate;
+		db[0] = Irrupt * dtinv * corRate;
+		DSTR << Irrupt << endl;
 	}
 	else if(onLimit[0].onUpper){
 		db[0] = Irrupt * dtinv * corRate;;	//少し内側に戻す力を加えないと拘束から抜けない。
@@ -425,9 +456,9 @@ void PHBallJointLimit::SetupLCP(){
 
 void PHBallJointLimit::Projection(double& f, int k){
 	if (k == 0){
-		if(onLimit[0].onLower && limitCount[0] == 0)
+		if(onLimit[0].onLower)
 			f = max(0.0, f);
-		else if(onLimit[0].onUpper || onLimit[0].onLower)	///< 誤りではないか？
+		else if(onLimit[0].onUpper)
 			f = min(0.0, f);
 	}
 	if (k == 2){
@@ -450,7 +481,7 @@ void PHBallJointLimit::IterateLCP(){
 
 	Vec3d fnew;
 	for(int i = 0; i < 3; i++){
-		if((i == 0 && onLimit[0].onUpper)||(i == 2 && onLimit[1].onUpper)){
+		if((i == 0 && (onLimit[0].onUpper||onLimit[0].onLower))||(i == 2 && (onLimit[1].onUpper||onLimit[1].onLower))){
 			int j = joint->axisIndex[i];
 			fnew[i] = joint->limitf[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * joint->limitf[i] + b[i] + db[i]
 				+ J[0].row(j) * joint->solid[0]->dv + J[1].row(j) * joint->solid[1]->dv);	

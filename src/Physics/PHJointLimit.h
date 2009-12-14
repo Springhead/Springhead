@@ -96,7 +96,7 @@ public:
 
 
 	Vec3d	Eq3D(Vec4d coefficient);
-	Vec4d	CalcParameter(int i,int j);
+	Vec4d	CalcParameter(int i,int j,bool flag);
 
 	PHBallJointLimit();
 };
