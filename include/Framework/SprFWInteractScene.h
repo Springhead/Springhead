@@ -25,6 +25,8 @@ typedef enum FWInteractMode{
 
 typedef enum FWHapticMode{
 	PENALTY,
+	PENALTY6D,
+	CONSTRAINT,
 	PROXY,
 	PROXYSIMULATION
 }HMode;

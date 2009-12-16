@@ -21,7 +21,7 @@ void FWHapticLoopBase::Clear(){
 	loopCount = 1;
 }
 
-
+#define TORQUE
 void FWHapticLoopBase::SetRenderedForce(HIBaseIf* hi, bool bForce, SpatialVector f){
 	if(bForce){
 		if(DCAST(HIForceInterface6DIf, hi)){
@@ -207,6 +207,10 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 		
 		/// 接触解析(susa実装中)
 		Vec3d a2b = b2w * pb - a2w * pa;
+		//DSTR << "---------------------" << std::endl;
+		//DSTR << found << std::endl;
+		//CSVOUT << found << "," << a2b.norm() << std::endl; 
+
 		std::vector<Vec3d> section;
 		Vec3d commonPoint;
 		if(found == 1){
@@ -220,15 +224,23 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 				iaInfo->neighborInfo.pointer_section.push_back(b2w.Inv() * section[k]);
 			}
 		}else if(found == 2){
-			/// ContFindCommonPointで終わった場合
-			///	既に接触している状態なので，そのまま接触解析
-			commonPoint = a2w * pa + 0.5 * a2b;
+			///// ContFindCommonPointで終わった場合
+			/////	既に接触している状態なので，そのまま接触解析
+			//commonPoint = a2w * pa + 0.5 * a2b;
+			//FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
+			//for(int k = 0; k  < section.size(); k++){
+			//	// commonpointが侵入量により変化してしまうため
+			//	// 近傍点が載ってるところに面を動かす
+			//	iaInfo->neighborInfo.solid_section.push_back(a2w.Inv() * (section[k] - 0.5 * a2b));
+			//	iaInfo->neighborInfo.pointer_section.push_back(b2w.Inv() * (section[k] + 0.5 * a2b));
+			//}
+			commonPoint = a2w * pa;
 			FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
 			for(size_t k = 0; k  < section.size(); k++){
 				// commonpointが侵入量により変化してしまうため
 				// 近傍点が載ってるところに面を動かす
-				iaInfo->neighborInfo.solid_section.push_back(a2w.Inv() * (section[k] - 0.5 * a2b));
-				iaInfo->neighborInfo.pointer_section.push_back(b2w.Inv() * (section[k] + 0.5 * a2b));
+				iaInfo->neighborInfo.solid_section.push_back(a2w.Inv() * (section[k]));
+				iaInfo->neighborInfo.pointer_section.push_back(b2w.Inv() * (section[k] + a2b));
 			}
 		}
 
@@ -271,14 +283,15 @@ int FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b
 	Vec3d a2b = wb - wa;							///< 剛体から力覚ポインタへのベクトル
 	normal = a2b.unit();
 
-	if(a2b.norm() >= 0.01){
-		return 1;	// FindClosestPointsで見つけた 
+	if(a2b.norm() > 1e-10){
+		return 1;	// FindClosestPointsで見つけた
 	}else{
 		/// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める
 		pa = pb = Vec3d(0.0, 0.0, 0.0);
 		/// dirが潰れてしまっている場合は剛体重心から近傍点へのベクトルとする
 		if(dir == Vec3d(0.0, 0.0, 0.0) ){
 			dir =-( wa - pc);
+			DSTR << "おふ" << std::endl;
 		}
 
 		/// CCDGJKの実行	
@@ -291,8 +304,10 @@ extern bool bGJKDebug;
 		bGJKDebug = false;
 		/// CCDGJKが失敗した場合の処理
 		if(cp != 1){
+			static int cont = 0;
 			ContFindCommonPointSaveParam(ca, cb, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
-			DSTR << "ContFindCommonPoint do not find contact point" << std::endl;
+			DSTR << cont << "ContFindCommonPoint do not find contact point" << std::endl;
+			cont++;
 		}
 		return 2;	// CCDGJKで見つけた
 	}
@@ -359,6 +374,7 @@ void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, cons
 	for(int k = 0; k < section.size(); k++)		DSTR << section[k] << std::endl;
 	DSTR << "--------------------------------" << std::endl;
 #endif
+	//CSVOUT << section.size() << std::endl;
 }
 
 Vec3d* FWInteractAdaptee::GetProxyPoint(){

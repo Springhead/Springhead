@@ -110,6 +110,7 @@ void FWLDHapticSample::Reset(){
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
 	desc.iaMode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.hMode = PENALTY;
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
 	CreateIAScene(desc);									// interactSceneの作成
 	BuildScene();
@@ -123,7 +124,7 @@ void FWLDHapticSample::TimerFunc(int id){
 		case 0:{
 			GetIAScene()->CallBackHapticLoop();
 			break;
-			   }
+		}
 	}
 }
 
@@ -214,16 +215,15 @@ void FWLDHapticSample::BuildPointer(){
 			sd.radius = 0.5;//1.0;
 			CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
 			soPointer->AddShape(shapePointer);
-			soPointer->SetDynamical(false);
 			soPointer->GetShape(0)->SetStaticFriction(1.0);
 			soPointer->GetShape(0)->SetDynamicFriction(1.0);
-			GetSdk()->GetScene()->GetPHScene()->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
 			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-			idesc.springK = 10;//0.8						// haptic renderingのバネ係数
-			idesc.damperD = 0.01;//0.01					// haptic renderingのダンパ係数
+			idesc.springK = 3000;					// haptic renderingのバネ係数
+			idesc.damperD = 0;						// haptic renderingのダンパ係数
 			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
+			idesc.forceScale = 1.0;
 			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
 			if(i==0) idesc.defaultPosition =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
 			if(i==1) idesc.defaultPosition =Posed(1,0,0,0,-5,0,0);

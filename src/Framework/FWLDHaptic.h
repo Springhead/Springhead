@@ -35,6 +35,7 @@ public:
 	virtual void UpdateInterface();
 	virtual void HapticRendering();
 	virtual void HapticRendering6D();
+	virtual void ConstraintBasedRendering();
 	virtual void Proxy();
 	virtual void ProxySimulation();
 	int* ContactStat(int nPic);
