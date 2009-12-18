@@ -117,4 +117,7 @@ Vec3d* FWInteractScene::GetForce(){
 bool FWInteractScene::GetContactFlag(){
 	return GetIAAdaptee()->GetContactFlag();
 }
+Vec3d FWInteractScene::GetPicCenterPosition(){
+	return GetIAAdaptee()->GetPicCenterPosition();
+}
 }

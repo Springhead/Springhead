@@ -391,4 +391,9 @@ bool FWInteractAdaptee::GetContactFlag(){
 	return false;
 }
 
+Vec3d FWInteractAdaptee::GetPicCenterPosition(){
+	Vec3d centerPosition = Vec3d(0,0,0);
+	return centerPosition;
+}
+
 }

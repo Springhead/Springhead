@@ -44,6 +44,7 @@
 	Vec3d* GetProxyPoint(){	return	base::GetProxyPoint();}	\
 	Vec3d* GetForce(){	return	base::GetForce();}	\
 	bool GetContactFlag(){	return	base::GetContactFlag();}	\
+	Vec3d* GetPicCenterPosition(){	return	base::GetPicCenterPosition();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWObjectIf(base)	\
 	PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\

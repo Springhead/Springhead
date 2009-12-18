@@ -40,12 +40,13 @@ public:
 	virtual void ProxySimulation();
 	int* ContactStat(int nPic);
 	virtual Vec3d Vibration(FWInteractSolid*, FWInteractPointer*, int);		//	ポインタ-剛体
-	//virtual Vec3d Vibration(int nSolids);									//	剛体-剛体     //ビルドできないのでコメントアウトしました　naga
+	virtual void PicVibration(int nSolids);									//	剛体-剛体
+
 	Vec3d* GetProxyPoint();					//	デバッグ用
 	Vec3d* GetForce();
 	bool GetContactFlag();					//	把持しているかの判定
+	Vec3d GetPicCenterPosition();			//	把持している物体の重心位置
 //	int GetPicTime();
-//	int GetPenetrateLength();
 	virtual void LocalDynamics();
 };
 
@@ -71,6 +72,7 @@ public:
 	Vec3d* GetProxyPoint();
 	Vec3d* GetForce();
 	bool GetContactFlag();
+	Vec3d GetPicCenterPosition();
 };
 
 #endif

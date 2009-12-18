@@ -59,6 +59,7 @@ public:
 	Vec3d* GetProxyPoint();
 	Vec3d* GetForce();
 	bool GetContactFlag();
+	Vec3d GetPicCenterPosition();
 };
 
 
