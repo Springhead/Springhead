@@ -82,6 +82,7 @@ public:
 	virtual void AddFWStructure(FWStructureIf* o);
 	virtual FWStructureIf* GetFWStructure();
 	virtual FWStructureIf* GetFWStructure(int n);
+	virtual size_t NFWStructure();
 };
 
 

@@ -242,4 +242,7 @@ FWStructureIf* FWScene::GetFWStructure(int n){
 	}
 	return NULL;
 }
+size_t FWScene::NFWStructure(){
+	return fwStructures.size();
+}
 }

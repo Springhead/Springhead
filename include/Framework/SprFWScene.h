@@ -89,6 +89,10 @@ namespace Spr{
 		 */
 		FWStructureIf* GetFWStructure(int n);
 
+		/** @brief ƒ{[ƒ“‚ÌW‡‘Ì‚ÌŒÂ”‚ğæ“¾‚·‚é
+		 */
+		size_t NFWStructure();
+
 
 	};
 

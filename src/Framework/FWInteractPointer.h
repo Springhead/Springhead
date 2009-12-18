@@ -38,6 +38,8 @@ public:
 	HIBaseIf*	GetHI();
 	void		SetPosScale(double s);
 	double		GetPosScale();
+	void		SetWorldScale(double s);
+	double		GetWorldScale();
 	void		SetForceScale(double s);
 	double		GetForceScale();
 	void		SetLocalRange(double r);

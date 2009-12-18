@@ -18,6 +18,7 @@ protected:\
 	Posed	defaultPosition;	\
 	Posed	pointersCalibPosition;	\
 	double	posScale;	\
+	double	worldScale;	\
 	double	forceScale;	\
 	double	localRange;	\
 public:\
@@ -29,6 +30,7 @@ public:\
 		defaultPosition = ((FWInteractPointerDesc*)ptr)->defaultPosition;	\
 		pointersCalibPosition = ((FWInteractPointerDesc*)ptr)->pointersCalibPosition;	\
 		posScale = ((FWInteractPointerDesc*)ptr)->posScale;	\
+		worldScale = ((FWInteractPointerDesc*)ptr)->worldScale;	\
 		forceScale = ((FWInteractPointerDesc*)ptr)->forceScale;	\
 		localRange = ((FWInteractPointerDesc*)ptr)->localRange;	\
 		AfterSetDesc();	\
@@ -42,6 +44,7 @@ public:\
 		((FWInteractPointerDesc*)ptr)->defaultPosition = defaultPosition;	\
 		((FWInteractPointerDesc*)ptr)->pointersCalibPosition = pointersCalibPosition;	\
 		((FWInteractPointerDesc*)ptr)->posScale = posScale;	\
+		((FWInteractPointerDesc*)ptr)->worldScale = worldScale;	\
 		((FWInteractPointerDesc*)ptr)->forceScale = forceScale;	\
 		((FWInteractPointerDesc*)ptr)->localRange = localRange;	\
 		return true;	\

@@ -52,16 +52,16 @@ void FWLDHapticLoop::UpdateInterface(){
 	int N = NIAPointers();
 	for(int i = 0; i < N; i++){
 		FWInteractPointer* iPointer = GetIAPointer(i)->Cast();
-		double posScale = iPointer->GetPosScale();
+		double s = iPointer->GetWorldScale() * iPointer->GetPosScale();
 		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
 			//6Ž©—R“xƒCƒ“ƒ^ƒtƒF[ƒX‚Ìê‡
 			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
 			hif->Update((float)hdt);
 			PHSolid* hiSolid = &iPointer->hiSolid;
-			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * posScale);
+			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
 			hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
 			Posed hifPose;
-			hifPose.Pos()=(Vec3d)hif->GetPosition() * posScale;
+			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
 			hifPose.Ori()=hif->GetOrientation();
 			hiSolid->SetPose(GetIAPointer(i)->GetDefaultPosition() * hifPose);
 			//static bool frag = true;
@@ -77,9 +77,9 @@ void FWLDHapticLoop::UpdateInterface(){
 			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
 			hif->Update((float)hdt);
 			PHSolid* hiSolid = &iPointer->hiSolid;
-			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * posScale);
+			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
 			Posed hifPose;
-			hifPose.Pos()=(Vec3d)hif->GetPosition() * posScale;
+			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
 			hiSolid->SetPose(GetIAPointer(i)->GetDefaultPosition() * hifPose);
 		}
 	}
@@ -216,8 +216,9 @@ void FWLDHapticLoop::HapticRendering6D(){
 					/// R—Í‚ÌŒvŽZ
 					double K = iPointer->correctionSpringK / psection.size();
 					double D = iPointer->correctionDamperD / psection.size();
+					double s = iPointer->GetWorldScale() * iPointer->GetPosScale();
 					Vec3d addforce = -1 * (K * ortho + D * dvortho);
-					Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce / iPointer->GetPosScale() * iPointer->GetForceScale();
+					Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce / s;
 
 					outForce.v() += addforce;	
 					outForce.w() += addtorque;
@@ -579,7 +580,7 @@ void FWLDHapticLoop::Proxy(){
 				/// R—Í‚ÌŒvŽZ
 				double K = iPointer->correctionSpringK;
 				double D = iPointer->correctionDamperD;
-				Vec3d addforce = -K * (pPoint - (poseSolid * proxy[j][i])) - D * dvortho;
+				Vec3d addforce = (-K * (pPoint - (poseSolid * proxy[j][i])) - D * dvortho);
 				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				///U“®‚ÌŒvŽZ
@@ -608,15 +609,19 @@ void FWLDHapticLoop::Proxy(){
 					}
 				}
 
-				outForce.v() += addforce + pVibForce;	
+				double ws = iPointer->GetWorldScale();
+				double ws4 = ws *ws*ws*ws;
+				outForce.v() += addforce/ws4 + pVibForce;	
 				outForce.w() += addtorque;
+
+				DSTR<<outForce.v()<<std::endl;
 
 				DisplayForce[j] = outForce.v();
 
 				/// ŒvŽZ‚µ‚½—Í‚ð„‘Ì‚É‰Á‚¦‚é
-				iPointer->interactInfo[i].mobility.force = -1 * addforce* iPointer->GetForceScale();						
-				nInfo->test_force_norm = addforce.norm()* iPointer->GetForceScale();;
-				nInfo->test_force = addforce* iPointer->GetForceScale();;
+				iPointer->interactInfo[i].mobility.force = -1 * addforce;						
+				nInfo->test_force_norm = addforce.norm();
+				nInfo->test_force = addforce;
 
 			}else{
 				iPointer->bContact[i] = false;

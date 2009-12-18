@@ -283,7 +283,7 @@ int FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b
 	Vec3d a2b = wb - wa;							///< 剛体から力覚ポインタへのベクトル
 	normal = a2b.unit();
 
-	if(a2b.norm() > 1e-10){
+	if(a2b.norm() > 0.01){
 		return 1;	// FindClosestPointsで見つけた
 	}else{
 		/// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める

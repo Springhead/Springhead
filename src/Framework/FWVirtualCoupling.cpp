@@ -48,7 +48,7 @@ void FWVirtualCoupling::UpdateInterface(){
 		double pdt = GetPHScene()->GetTimeStep();
 		for(int i = 0; i < N; i++){
 			FWInteractPointer* iPointer = GetIAPointer(i)->Cast();
-			double s = iPointer->GetPosScale();
+			double s = iPointer->GetWorldScale() * iPointer->GetPosScale();
 			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
 				//6自由度インタフェースの場合
 				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();

@@ -44,7 +44,7 @@
 	Vec3d* GetProxyPoint(){	return	base::GetProxyPoint();}	\
 	Vec3d* GetForce(){	return	base::GetForce();}	\
 	bool GetContactFlag(){	return	base::GetContactFlag();}	\
-	Vec3d* GetPicCenterPosition(){	return	base::GetPicCenterPosition();}	\
+	Vec3d GetPicCenterPosition(){	return	base::GetPicCenterPosition();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWObjectIf(base)	\
 	PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
@@ -86,6 +86,7 @@
 	void AddFWStructure(Spr::FWStructureIf* o){	base::AddFWStructure(o);}	\
 	Spr::FWStructureIf* GetFWStructure(){	return	base::GetFWStructure();}	\
 	Spr::FWStructureIf* GetFWStructure(int n){	return	base::GetFWStructure(n);}	\
+	size_t NFWStructure(){	return	base::NFWStructure();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSdkIf(base)	\
 	Spr::FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc){	return	base::CreateScene(phdesc, grdesc);}	\
