@@ -41,6 +41,13 @@ void FWInteractPointer::SetPosScale(double s){
 double FWInteractPointer::GetPosScale(){
 	return posScale; 
 }
+void FWInteractPointer::SetWorldScale(double s){
+	worldScale = s; 
+	CalcCorrectionSpringDamper();
+}
+double FWInteractPointer::GetWorldScale(){
+	return worldScale; 
+}
 void FWInteractPointer::SetForceScale(double s){
 	forceScale = s; 
 }
@@ -70,8 +77,8 @@ Posed  FWInteractPointer::GetPointersCalibPosition(){
 }
 
 void FWInteractPointer::CalcCorrectionSpringDamper(){
-	correctionSpringK = springK / posScale;
-	correctionDamperD = damperD / posScale;
+	correctionSpringK = (springK / posScale)*worldScale*worldScale*worldScale;
+	correctionDamperD = (damperD / posScale)*worldScale*worldScale*worldScale;
 } 
 
 void FWInteractPointer::EnableForce(bool b){
