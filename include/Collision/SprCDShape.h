@@ -110,11 +110,11 @@ struct PHMaterial{
 
 	float springK;
 	float damperD;
-	float vibA;
-	float vibB;
-	float vibW;
-	float vibT;
-	bool vibContact;
+	float vibA;				///< U•ŒW”
+	float vibB;				///< Œ¸ŠŒW”
+	float vibW;				///< Žü”g”
+	float vibT;				///< ÚGŽžŠÔ
+	bool vibContact;		///< 
 };
 
 ///	Œ`ó‚ÌƒfƒBƒXƒNƒŠƒvƒ^(Šî–{ƒNƒ‰ƒX)

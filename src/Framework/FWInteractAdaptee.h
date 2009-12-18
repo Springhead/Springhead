@@ -105,6 +105,7 @@ public:
 	virtual Vec3d* GetProxyPoint();
 	virtual Vec3d* GetForce();
 	virtual bool GetContactFlag();
+	virtual Vec3d GetPicCenterPosition();
 };
 
 }
