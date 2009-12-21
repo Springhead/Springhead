@@ -387,7 +387,10 @@ public:
 
 	/** @brief デフォルトコンストラクタ
 	*/
-	PHIKHingeJoint(){SetNDOF(1);}
+	PHIKHingeJoint(){
+		joint = NULL;
+		SetNDOF(1);
+	}
 
 	/** @brief コンストラクタ
 	*/
