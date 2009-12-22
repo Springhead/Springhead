@@ -15,7 +15,7 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 // PHJoint
 PHJointDesc::PHJointDesc()/*:mode(MODE_POSITION)*/{
-	type = PHDeformationType::ELASTIC;
+	type = ELASTIC;
 };
 PHJoint::PHJoint(){	
 }
@@ -67,10 +67,7 @@ PHJointDesc::PHDeformationType PHJoint1D::GetDeformationMode(){
 	case PHBallJointDesc::ELASTIC_PLASTIC:
 		if(motor.yieldFlag)return PHBallJointDesc::PLASTIC;
 		else  return PHBallJointDesc::ELASTIC;
-	case PHBallJointDesc::ELASTIC:
-		return type;
-	case PHBallJointDesc::PLASTIC:
-		return type;
+	default: return type;
 	}
 }
 /*
