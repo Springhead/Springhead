@@ -13,9 +13,9 @@
 // FWLDHapticLoop‚ÌŽÀ‘•
 //////////////////////////////////////////////////////////////////////////////////////////////
 FWLDHapticLoop::FWLDHapticLoop(){
-	proK = 1000;
-	proD = 0.05;
-	proM = 7.5*10e-5;
+	proK = 10;
+	proD = 0.001;
+	proM = 7.5*10e-6;
 	bPic = false;
 	picNum = 0;
 	for(int i=0;i<2;i++){
@@ -613,8 +613,6 @@ void FWLDHapticLoop::Proxy(){
 				double ws4 = ws *ws*ws*ws;
 				outForce.v() += addforce/ws4 + pVibForce;	
 				outForce.w() += addtorque;
-
-				DSTR<<outForce.v()<<std::endl;
 
 				DisplayForce[j] = outForce.v();
 
