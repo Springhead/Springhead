@@ -41,6 +41,9 @@ public:
 		virtual void Voltage(float v){ realDevice->Voltage(ch, v); }
 		virtual void Digit(int v){ realDevice->Digit(ch, v); }
 		virtual const char* Name() const{ return name; }
+		///	更新
+		virtual void Update(){ realDevice->Update(); }
+
 	};
 	///	仮想デバイス(Counter)
 	class VirtualDeviceCounter:public DVCounterBase{
@@ -57,6 +60,8 @@ public:
 		virtual long Count(){ return realDevice->Count(ch); }
 		///	名前
 		virtual const char* Name() const{ return name; }
+		///	更新
+		virtual void Update(){ realDevice->Update(); }
 	};
 	///	仮想デバイス(Pio)
 	class VirtualDevicePio:public DVPioBase{
@@ -70,6 +75,8 @@ public:
 		virtual void Set(int l){ realDevice->Pio(ch, l!=0); }
 		virtual int Get(){ return realDevice->Pio(ch) ? 1 : 0; }
 		virtual const char* Name() const{ return name; }
+		///	更新
+		virtual void Update(){ realDevice->Update(); }
 	};
 
 //----------------------------------------------------------------------------
