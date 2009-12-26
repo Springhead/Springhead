@@ -13,7 +13,7 @@ set MODULE=%2
 set MAKEFILE=%MODULE%Stub.mak.txt
 rem makefileÇÃçÏê¨Ç∆MakeÇÃé¿çs
 set PATHORG=%PATH%;
-pwd
+
 set PATH=..\..\bin;..\..\bin\swig
 set SRCINTF=
 for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do set SRCINTF=!SRCINTF! ../../include/%%p/%%f
