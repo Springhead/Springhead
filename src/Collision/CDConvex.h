@@ -43,10 +43,15 @@ public:
 	/// 偏心によって生じるイナーシャ
 	static void OffsetInertia(const Vec3f& c, Matrix3f& I);
 
-	///	サポートポイント(方向ベクトルpとの内積が最大の頂点)を求める．
-	virtual Vec3f Support(const Vec3f& p) const =0;
+	/**	サポートポイント(方向ベクトルvとの内積が最大の点)をwに格納する。
+		戻り値には、頂点番号があれば返す。無ければ-1。頂点番号はメッシュの頂点の場合
+		のほか、RoundConeなどの球の中心の番号のこともある	*/
+	virtual int Support(Vec3f&w, const Vec3f& v) const =0;
 	///	切り口を求める．接触解析に使う．
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW) =0;
+	///	ある頂点のとなりの頂点の座標を配列で返す。
+	virtual Vec3f* FindNeighbor(int vtx){return NULL;}
+	
 	///	バウンディングボックスを求める．
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose);
 	/// 表面上の点pにおける曲率半径を求める

@@ -242,7 +242,7 @@ bool CDConvexMesh::IsInside(const Vec3f& p){
 	return true;
 }
 
-Vec3f CDConvexMesh::Support(const Vec3f& v) const {
+int CDConvexMesh::Support(Vec3f& w, const Vec3f& v) const {
 	int lastPos = -1;
 	float h = base[curPos] * v;
 	float d=0;
@@ -270,7 +270,8 @@ Vec3f CDConvexMesh::Support(const Vec3f& v) const {
 		curPos = curNeighbor[i];
 		h = d;
 	}
-	return base[curPos];
+	w = base[curPos];
+	return curPos;
 }
 
 CDFaceIf* CDConvexMesh::GetFace(size_t i){

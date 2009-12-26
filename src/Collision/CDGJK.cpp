@@ -176,9 +176,11 @@ const double sqEpsilon = 1e-3;
 const double epsilon   = 1e-6;  // sが2e-6になることもあった．まだだめかもしれない．（mitake）
 const double epsilon2  = epsilon*epsilon;
 
-static Vec3d p[4];			// Aのサポートポイント(ローカル系)
-static Vec3d q[4];			// Bのサポートポイント(ローカル系)
+static Vec3f p[4];			// Aのサポートポイント(ローカル系)
+static Vec3f q[4];			// Bのサポートポイント(ローカル系)
 static Vec3d p_q[4];		// ミンコスキー和上でのサポートポイント(ワールド系)
+static int p_id[4];
+static int q_id[4];
 
 const char vacants[] = {
 	0, 1, 0, 2, 0, 1, 0, 3,
@@ -237,9 +239,9 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 }
 
 #define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
-#define CalcSupport(n)											\
-	p[n] = a->Support(a2z.Ori().Conjugated() * (v[n]));			\
-	q[n] = b->Support(b2z.Ori().Conjugated() * -(v[n]));		\
+#define CalcSupport(n)														\
+	p_id[n] = a->Support(p[n], a2z.Ori().Conjugated() * (v[n]));			\
+	q_id[n] = b->Support(q[n], b2z.Ori().Conjugated() * -(v[n]));			\
 	w[n] = b2z * (q[n]) - a2z * (p[n]);
 
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
@@ -266,7 +268,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	//	GJKと似た方法で，交点を求める
 	//	まず、2次元で見たときに、原点が含まれるような三角形または線分を作る
 	int ids[4];
-	Vec3d w[4], p[4], q[4], v[4];
+	Vec3d w[4], v[4];
+	Vec3f p[4], q[4];
 
 	//	w0を求める
 	v[0] = Vec3d(0,0,1);
@@ -735,8 +738,8 @@ bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 		lastId = VacantIdFromBits(usedBits);
 		lastBit = 1 << lastId;
 
-		p[lastId] = a->Support(a2w.Ori().Conjugated() * (-v));
-		q[lastId] = b->Support(b2w.Ori().Conjugated() * v);
+		p_id[lastId] = a->Support(p[lastId], a2w.Ori().Conjugated() * (-v));
+		q_id[lastId] = b->Support(q[lastId], b2w.Ori().Conjugated() * v);
 		w = a2w * p[lastId]  -  b2w * q[lastId];
 		if (v*w > 0) return false;			//	原点がsupport面の外側
 		if (HasSame(w)) return false;		//	supportが1点に集中＝原点は外にある．
@@ -808,8 +811,11 @@ inline bool IsDegenerate(const Vec3d& w) {
 void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 					  const Posed& a2w, const Posed& b2w,
 					  Vec3d& pa, Vec3d& pb) {
-	Vec3d v; 				
-	v = a2w * a->Support(Vec3d()) - b2w * b->Support(Vec3d());	
+	Vec3d v;
+	Vec3f p_0, q_0;
+	a->Support(p_0, Vec3d());
+	b->Support(q_0, Vec3d());
+	v = a2w * p_0 - b2w * q_0;	
 	double dist = v.norm();	
 	Vec3d w;				
 	double maxSupportDist = 0.0f;
@@ -822,8 +828,8 @@ void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 		lastId = 0;
 		lastBit = 1;
 		while (usedBits & lastBit) { ++lastId; lastBit <<= 1; }
-		p[lastId] = a->Support(a2w.Ori().Conjugated() * (-v));
-		q[lastId] = b->Support(b2w.Ori().Conjugated() * v);
+		p_id[lastId] = a->Support(p[lastId], a2w.Ori().Conjugated() * (-v));
+		q_id[lastId] = b->Support(q[lastId], b2w.Ori().Conjugated() * v);
 		w = a2w * p[lastId]  -  b2w * q[lastId];
 		double supportDist = w*v/dist;
 		if (maxSupportDist < supportDist) maxSupportDist= supportDist;

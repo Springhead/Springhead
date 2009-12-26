@@ -37,31 +37,34 @@ float CDRoundCone::CalcVolume(){
 }
 	
 // サポートポイントを求める
-Vec3f CDRoundCone::Support(const Vec3f& p) const {
+int CDRoundCone::Support(Vec3f&w, const Vec3f& v) const{
 	float normal_Z = (radius[0] - radius[1]) / length;
-	float n = p.norm();
+	float n = v.norm();
 	Vec3f dir;
 	if(n < 1.0e-10f){
 		dir = Vec3f();
 	}else{
-		dir = p / n;
+		dir = v / n;
 	}
 
 	if (-1 < normal_Z && normal_Z < 1) {
 		if (normal_Z < dir.Z()) {
-			// pの方がZ軸前方 → radius[1]を使用
-			return dir*radius[1] + Vec3f(0,0, length/2.0);
+			// vの方がZ軸前方 → radius[1]を使用
+			w = dir*radius[1] + Vec3f(0,0, length/2.0);
+			return 1;
 		} else {
-			// pの方がZ軸後方 → radius[0]を使用
-			return dir*radius[0] + Vec3f(0,0,-length/2.0);
+			// vの方がZ軸後方 → radius[0]を使用
+			w = dir*radius[0] + Vec3f(0,0,-length/2.0);
+			return 0;
 		}
 	} else {
 		// どちらかの球に包含されている
 		if (radius[0] < radius[1]) {
-			return dir*radius[1] + Vec3f(0,0, length/2.0);
+			w = dir*radius[1] + Vec3f(0,0, length/2.0);
 		} else {
-			return dir*radius[0] + Vec3f(0,0,-length/2.0);
+			w =  dir*radius[0] + Vec3f(0,0,-length/2.0);
 		}
+		return -1;
 	}
 }
 
