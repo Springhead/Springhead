@@ -273,6 +273,9 @@ int CDConvexMesh::Support(Vec3f& w, const Vec3f& v) const {
 	w = base[curPos];
 	return curPos;
 }
+std::vector<int>& CDConvexMesh::FindNeighbors(int vtx){
+	return neighbor[vtx];
+}
 
 CDFaceIf* CDConvexMesh::GetFace(size_t i){
 	return faces.at(i).Cast();

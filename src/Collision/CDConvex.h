@@ -49,8 +49,10 @@ public:
 	virtual int Support(Vec3f&w, const Vec3f& v) const =0;
 	///	切り口を求める．接触解析に使う．
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW) =0;
-	///	ある頂点のとなりの頂点の座標を配列で返す。
-	virtual Vec3f* FindNeighbor(int vtx){return NULL;}
+	///	頂点vtx のとなりの頂点を列挙する。
+	virtual std::vector<int>& FindNeighbors(int vtx);
+	///	頂点バッファを返す。
+	virtual Vec3f* GetBase(){return NULL;}
 	
 	///	バウンディングボックスを求める．
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose);

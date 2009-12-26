@@ -74,6 +74,10 @@ public:
 	
 	///	切り口を求める．接触解析に使う．
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
+	///	指定の頂点 vtx の隣の頂点番号を返す
+	virtual std::vector<int>& FindNeighbors(int vtx);
+	///	頂点バッファを返す。
+	virtual Vec3f* GetBase(){return &*base.begin();}	
 
 	CDFaceIf* GetFace(size_t i);
 	size_t NFace();

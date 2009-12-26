@@ -102,6 +102,24 @@ void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
 ///	デバッグ用のツール。
 void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk);
 
+namespace GJK{
+	extern Vec3f p[4];			///<	Aのサポートポイント(ローカル系)
+	extern Vec3f q[4];			///<	Bのサポートポイント(ローカル系)
+	extern int p_id[4];			///<	Aのサポートポイントの頂点番号（球など頂点がない場合は -1）
+	extern int q_id[4];			///<	Bのサポートポイントの頂点番号（球など頂点がない場合は -1）
+	extern Vec3d w[4];			///<	ContFindCommonPointで使用する速度向き座標系でのサポートポイント
+	extern Vec3d v[4];			///<	ContFindCommonPointで使用するv
+	extern int nSupport;		///<	何点のsupportから最近傍点を計算したかを表す。(ContFindCommonPoint専用)
+	extern Vec3d dec;			///<	内分の割合
+	extern int ids[4];			///<	頂点ID対応表
+		//	pa = dec[0]*p[ids[0]] + dec[1]*p[ids[1]] + dec[2]*p[ids[2]];
+		//	pb = dec[0]*q[ids[0]] + dec[1]*q[ids[1]] + dec[2]*q[ids[2]];
+		//	で最近傍点（local系）が求まる
+	
+	extern Vec3d p_q[4];		///<	ミンコスキー和上でのサポートポイント(ワールド系) ContでないFindXXで使用
+}	//	namespace GJK
+
+
 #if 1
 /// GJKで最近傍点対を見つける
 void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,

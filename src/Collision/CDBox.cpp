@@ -19,6 +19,9 @@ const double epsilon2 = epsilon*epsilon;
 
 //----------------------------------------------------------------------------
 //	CDBox
+CDQuadFaces CDBox::qfaces;		// 面（四角形:quadrangular face）
+std::vector<int> CDBox::neighbor[8];	// 頂点の隣の点
+
 CDBox::CDBox() {
 }
 
@@ -54,42 +57,61 @@ void CDBox::Recalc(){
 	base.push_back(Vec3f(-halfsize.x,  halfsize.y,  halfsize.z));
 	base.push_back(Vec3f(-halfsize.x, -halfsize.y,  halfsize.z));
 	base.push_back(Vec3f(-halfsize.x, -halfsize.y, -halfsize.z));
+	//      ^z              ^z        
+	//      |               |         
+	//   6  |  5         2  |  1      
+	//      |               |         
+	//------o------>y ------+------>y 
+	//      |x-             |x+       
+	//   7  |  4         3  |  0      
+	//      |               |         
+	if (!neighbor[0].size()){
+		for(int i=0; i<8; ++i) neighbor[i].resize(3);
+		neighbor[0][0] = 3; neighbor[0][1] = 1; neighbor[0][2] = 4;
+		neighbor[1][0] = 2; neighbor[1][1] = 0; neighbor[1][2] = 5;
+		neighbor[2][0] = 1; neighbor[2][1] = 3; neighbor[2][2] = 6;
+		neighbor[3][0] = 0; neighbor[3][1] = 2; neighbor[3][2] = 7;
+		neighbor[4][0] = 7; neighbor[4][1] = 5; neighbor[4][2] = 0;
+		neighbor[5][0] = 6; neighbor[5][1] = 4; neighbor[5][2] = 1;
+		neighbor[6][0] = 5; neighbor[6][1] = 7; neighbor[6][2] = 2;
+		neighbor[7][0] = 4; neighbor[7][1] = 6; neighbor[7][2] = 3;
 
-	qfaces.clear();
-	for (int nface=0; nface<6; ++nface){	// 立方体は8面
-		qfaces.push_back(CDQuadFace());
+		qfaces.clear();
+		for (int nface=0; nface<6; ++nface){	// 立方体は8面
+			qfaces.push_back(CDQuadFace());
+		}
+		// boxの各面の法線を設定、boxの各面の頂点のインデックスを設定
+		qfaces[0].normal  = Vec3f(1.0, 0.0, 0.0);
+		qfaces[0].vtxs[0] = 0;		
+		qfaces[0].vtxs[1] = 1;
+		qfaces[0].vtxs[2] = 2;
+		qfaces[0].vtxs[3] = 3;
+		qfaces[1].normal  = Vec3f(0.0, 1.0, 0.0);
+		qfaces[1].vtxs[0] = 0;		
+		qfaces[1].vtxs[1] = 4;
+		qfaces[1].vtxs[2] = 5;
+		qfaces[1].vtxs[3] = 1;
+		qfaces[2].normal  = Vec3f(-1.0, 0.0, 0.0);
+		qfaces[2].vtxs[0] = 4;		
+		qfaces[2].vtxs[1] = 7;
+		qfaces[2].vtxs[2] = 6;
+		qfaces[2].vtxs[3] = 5;
+		qfaces[3].normal  = Vec3f(0.0, -1.0, 0.0);
+		qfaces[3].vtxs[0] = 3;		
+		qfaces[3].vtxs[1] = 2;
+		qfaces[3].vtxs[2] = 6;
+		qfaces[3].vtxs[3] = 7;
+		qfaces[4].normal  = Vec3f(0.0, 0.0, 1.0);
+		qfaces[4].vtxs[0] = 1;		
+		qfaces[4].vtxs[1] = 5;
+		qfaces[4].vtxs[2] = 6;
+		qfaces[4].vtxs[3] = 2;
+		qfaces[5].normal  = Vec3f(0.0, 0.0, -1.0);
+		qfaces[5].vtxs[0] = 0;		
+		qfaces[5].vtxs[1] = 3;
+		qfaces[5].vtxs[2] = 7;
+		qfaces[5].vtxs[3] = 4;
 	}
-	// boxの各面の法線を設定、boxの各面の頂点のインデックスを設定
-	qfaces[0].normal  = Vec3f(1.0, 0.0, 0.0);
-	qfaces[0].vtxs[0] = 0;		
-	qfaces[0].vtxs[1] = 1;
-	qfaces[0].vtxs[2] = 2;
-	qfaces[0].vtxs[3] = 3;
-	qfaces[1].normal  = Vec3f(0.0, 1.0, 0.0);
-	qfaces[1].vtxs[0] = 0;		
-	qfaces[1].vtxs[1] = 4;
-	qfaces[1].vtxs[2] = 5;
-	qfaces[1].vtxs[3] = 1;
-	qfaces[2].normal  = Vec3f(-1.0, 0.0, 0.0);
-	qfaces[2].vtxs[0] = 4;		
-	qfaces[2].vtxs[1] = 7;
-	qfaces[2].vtxs[2] = 6;
-	qfaces[2].vtxs[3] = 5;
-	qfaces[3].normal  = Vec3f(0.0, -1.0, 0.0);
-	qfaces[3].vtxs[0] = 3;		
-	qfaces[3].vtxs[1] = 2;
-	qfaces[3].vtxs[2] = 6;
-	qfaces[3].vtxs[3] = 7;
-	qfaces[4].normal  = Vec3f(0.0, 0.0, 1.0);
-	qfaces[4].vtxs[0] = 1;		
-	qfaces[4].vtxs[1] = 5;
-	qfaces[4].vtxs[2] = 6;
-	qfaces[4].vtxs[3] = 2;
-	qfaces[5].normal  = Vec3f(0.0, 0.0, -1.0);
-	qfaces[5].vtxs[0] = 0;		
-	qfaces[5].vtxs[1] = 3;
-	qfaces[5].vtxs[2] = 7;
-	qfaces[5].vtxs[3] = 4;
 	curPos = 0;
 }
 
@@ -106,6 +128,9 @@ int CDBox::Support(Vec3f& w, const Vec3f& v) const {
 	}
 	w = base[curPos];
 	return curPos;
+}
+std::vector<int>& CDBox::FindNeighbors(int vtx){
+	return neighbor[vtx];
 }
 
 // 切り口を求める. 接触解析を行う.

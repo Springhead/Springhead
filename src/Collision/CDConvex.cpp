@@ -14,6 +14,12 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	CDConvex
+std::vector<int>& CDConvex::FindNeighbors(int vtx){
+	static std::vector<int> rv;
+	rv.clear();
+	return rv;
+}
+
 void CDConvex::CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose){
 	Matrix3f rot;
 	pose.Ori().Inv().ToMatrix(rot);
