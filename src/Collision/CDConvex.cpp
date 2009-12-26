@@ -18,8 +18,11 @@ void CDConvex::CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose){
 	Matrix3f rot;
 	pose.Ori().Inv().ToMatrix(rot);
 	for(int i=0; i<3; ++i){
-		bbmin[i] = std::min(bbmin[i], (float)((pose.Ori() * Support(-rot.col(i)))[i] + pose.Pos()[i]));
-		bbmax[i] = std::max(bbmax[i], (float)((pose.Ori() * Support( rot.col(i)))[i] + pose.Pos()[i]));
+		Vec3f v[2];
+		Support(v[0], -rot.col(i));
+		Support(v[1], rot.col(i));
+		bbmin[i] = std::min(bbmin[i], (float)((pose.Ori() * v[0])[i] + pose.Pos()[i]));
+		bbmax[i] = std::max(bbmax[i], (float)((pose.Ori() * v[1])[i] + pose.Pos()[i]));
 	}
 }
 

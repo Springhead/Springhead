@@ -94,17 +94,18 @@ void CDBox::Recalc(){
 }
 
 // サポートポイントを求める
-Vec3f CDBox::Support(const Vec3f& p) const {
+int CDBox::Support(Vec3f& w, const Vec3f& v) const {
 	// 与えられた方向pに一番遠い点（内積最大の点をサポートポイントとする）
 	float d1=0.0, d2=0.0;
 	for (unsigned int i=0; i<8; ++i){		// 8頂点
-		d1 = base[i] * p;
+		d1 = base[i] * v;
 		if (d1 > d2) { 
 			d2 = d1;
 			curPos = i;
 		}
 	}
-	return base[curPos];
+	w = base[curPos];
+	return curPos;
 }
 
 // 切り口を求める. 接触解析を行う.

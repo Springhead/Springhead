@@ -70,7 +70,7 @@ public:
 	virtual bool IsInside(const Vec3f& p);
 	
 	///	サポートポイントを求める．
-	virtual Vec3f Support(const Vec3f& p) const;
+	int Support(Vec3f& w, const Vec3f& v) const;
 	
 	///	切り口を求める．接触解析に使う．
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);

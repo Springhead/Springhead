@@ -33,20 +33,19 @@ float CDCapsule::CalcVolume(){
 }
 	
 // サポートポイントを求める
-Vec3f CDCapsule::Support(const Vec3f& p) const {	
-	float n = p.norm();
-	Vec3f off;
+int CDCapsule::Support(Vec3f& w, const Vec3f& v) const {
+	float n = v.norm();
 	if(n < 1.0e-10f){
-		off = Vec3f();
+		w = Vec3f();
 	}else{
-		off = (radius / n) * p;
+		w = (radius / n) * v;
 	}
-	if (p.Z() >= 0){
-		off.Z() += length*0.5f;
+	if (v.Z() >= 0){
+		w.Z() += length*0.5f;
 	}else{
-		off.Z() -= length*0.5f;
+		w.Z() -= length*0.5f;
 	}
-	return off;
+	return -1;
 }
 
 
