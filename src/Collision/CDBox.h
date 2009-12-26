@@ -39,8 +39,9 @@ public:
 	SPR_OBJECTDEF(CDBox);
 	SPR_DECLMEMBEROF_CDBoxDesc;
 
-	CDQuadFaces qfaces;			/// 面（四角形:quadrangular face）
-	std::vector<Vec3f> base;	/// 頂点の座標(ローカル座標系)
+	std::vector<Vec3f> base;				///< 頂点の座標(ローカル座標系)
+	static CDQuadFaces qfaces;				///< 面（四角形:quadrangular face）
+	static std::vector<int> neighbor[8];	///< 頂点の隣の点
 	
 	CDBox();
 	CDBox(const CDBoxDesc& desc);
@@ -55,6 +56,10 @@ public:
 	/// ただし、球体に関しては、切り口は求めない。接触解析時には最近傍の１点さえあればいい。
 	/// 球体に関してFindCutRing()が呼び出された場合には、assertionが発生する。
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
+	///	指定の頂点 vtx の隣の頂点番号を返す
+	virtual std::vector<int>& FindNeighbors(int vtx);
+	///	頂点バッファを返す。
+	virtual Vec3f* GetBase(){return &*base.begin();}	
 	
 	/// 直方体のサイズを取得
 	Vec3f GetBoxSize();

@@ -176,11 +176,20 @@ const double sqEpsilon = 1e-3;
 const double epsilon   = 1e-6;  // sが2e-6になることもあった．まだだめかもしれない．（mitake）
 const double epsilon2  = epsilon*epsilon;
 
-static Vec3f p[4];			// Aのサポートポイント(ローカル系)
-static Vec3f q[4];			// Bのサポートポイント(ローカル系)
-static Vec3d p_q[4];		// ミンコスキー和上でのサポートポイント(ワールド系)
-static int p_id[4];
-static int q_id[4];
+namespace GJK{
+	Vec3f p[4];			///<	Aのサポートポイント(ローカル系)
+	Vec3f q[4];			///<	Bのサポートポイント(ローカル系)
+	int p_id[4];		///<	Aのサポートポイントの頂点番号（球など頂点がない場合は -1）
+	int q_id[4];		///<	Bのサポートポイントの頂点番号（球など頂点がない場合は -1）
+	Vec3d w[4];			///<	ContFindCommonPointで使用する速度向き座標系でのサポートポイント
+	Vec3d v[4];			///<	ContFindCommonPointで使用するv
+	int nSupport;		///<	何点のsupportから最近傍点を計算したかを表す。(ContFindCommonPoint専用)
+	Vec3d dec;			///<	内分の割合
+	int ids[4];			///<	頂点ID対応表
+
+	Vec3d p_q[4];		///<	ミンコスキー和上でのサポートポイント(ワールド系) ContでないFindXXで使用
+}	//	namespace GJK
+using namespace GJK;
 
 const char vacants[] = {
 	0, 1, 0, 2, 0, 1, 0, 3,
@@ -238,6 +247,7 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 	return r;
 }
 
+//	以下、ContFindCommonPoint()関数専用のマクロ
 #define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
 #define CalcSupport(n)														\
 	p_id[n] = a->Support(p[n], a2z.Ori().Conjugated() * (v[n]));			\
@@ -247,6 +257,7 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
+	nSupport = 0;
 	//	range が+Zになるような座標系を求める．
 	Quaterniond w2z;
 	Vec3d u = -dir;	//	u: 物体ではなく原点の速度の向きなので - がつく．
@@ -267,9 +278,6 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	
 	//	GJKと似た方法で，交点を求める
 	//	まず、2次元で見たときに、原点が含まれるような三角形または線分を作る
-	int ids[4];
-	Vec3d w[4], v[4];
-	Vec3f p[4], q[4];
 
 	//	w0を求める
 	v[0] = Vec3d(0,0,1);
@@ -292,6 +300,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 		normal = u.unit();
 		pa = p[0]; pb = q[0];
 		dist = w[0].Z();
+		nSupport = 1;
+		dec[0] = 1; dec[1] = 0; dec[2] = 0;
 		if (dist > end) return -1;
 		if (dist < start) return -2;
 		return 1;
@@ -543,17 +553,20 @@ final:
 	if (notuse >=0){
 		int id0 = ids[(notuse+1)%3];	int id1 = ids[(notuse+2)%3];
 		double a = w[id0].norm();		double b = w[id1].norm();
-		double k0, k1;
-		if (a+b > 1e-10){ k0 = b/(a+b); k1 = a/(a+b); }
-		else {k0 =0.5; k1=0.5;}
-		pa = k0*p[id0] + k1*p[id1];
-		pb = k0*q[id0] + k1*q[id1];
-		dist = k0*w[id0].z + k1*w[id1].z;
+		if (a+b > 1e-10){ dec[0] = b/(a+b); dec[1] = a/(a+b); }
+		else {dec[0] =0.5; dec[1]=0.5;}
+		dec[2]=0;
+		pa = dec[0]*p[id0] + dec[1]*p[id1];
+		pb = dec[0]*q[id0] + dec[1]*q[id1];
+		dist = dec[0]*w[id0].z + dec[1]*w[id1].z;
+		ids[0] = id0; ids[1] = id1;
+		nSupport = 2;
 	}else{
-		Vec3d dec = TriDecompose(w[ids[0]].XY(), w[ids[1]].XY(), w[ids[2]].XY());
+		dec = TriDecompose(w[ids[0]].XY(), w[ids[1]].XY(), w[ids[2]].XY());
 		pa = dec[0]*p[ids[0]] + dec[1]*p[ids[1]] + dec[2]*p[ids[2]];
 		pb = dec[0]*q[ids[0]] + dec[1]*q[ids[1]] + dec[2]*q[ids[2]];
 		dist = dec[0]*w[ids[0]].z + dec[1]*w[ids[1]].z + dec[2]*w[ids[2]].z;
+		nSupport = 3;
 	}
 	normal = w2z.Conjugated() * v[ids[3]];
 	normal.unitize();
