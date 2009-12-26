@@ -115,6 +115,7 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 		info.ray->SetDirection(dir);
 		info.ray->Apply();
 		if(info.ray->NHits()){
+			ReleaseAllTimer();
 			PHRaycastHit* hit = info.ray->GetNearest();
 			// カーソル剛体をヒット位置に移動
 			info.cursor->SetCenterPosition(hit->point);
@@ -135,6 +136,7 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 				//info.spring->SetSpringOri(K);
 				//info.spring->SetDamperOri(D);
 			}
+			CreateAllTimer();
 		}
 	}
 

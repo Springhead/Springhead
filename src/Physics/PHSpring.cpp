@@ -43,7 +43,8 @@ void PHSpring::SetConstrainedIndexCorrection(bool* con){
 
 void PHSpring::ElasticDeformation(){
 	//rjrel
-	double dtinv = 1.0 / GetScene()->GetTimeStep(), tmp;
+	double dtinv = 1.0 / GetScene()->GetTimeStep();
+	double tmp;
 	for(int i = 0; i < 3; i++){
 		if (!constr[i]) continue;
 		tmp = 1.0 / (damper[i] + spring[i] * GetScene()->GetTimeStep());

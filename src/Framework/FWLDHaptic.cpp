@@ -610,7 +610,7 @@ void FWLDHapticLoop::Proxy(){
 				}
 
 				double ws = iPointer->GetWorldScale();
-				double ws4 = ws *ws*ws*ws;
+				double ws4 = ws * ws * ws * ws;
 				outForce.v() += addforce/ws4 + pVibForce;	
 				outForce.w() += addtorque;
 

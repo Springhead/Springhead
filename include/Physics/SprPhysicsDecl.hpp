@@ -173,6 +173,7 @@
 	Vec3d GetInertia(){	return	base::GetInertia();}	\
 	void SetInertia(const Vec3d i){	base::SetInertia(i);}	\
 	Spr::PHJointDesc::PHDeformationType GetDeformationMode(){	return	base::GetDeformationMode();}	\
+	double GetmotorfNorm(){	return	base::GetmotorfNorm();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\
 	void SetSpring(const Vec3d& spring){	base::SetSpring(spring);}	\

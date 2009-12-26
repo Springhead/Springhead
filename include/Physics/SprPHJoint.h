@@ -41,9 +41,9 @@ struct PHJointDesc : public PHConstraintDesc{
 		MODE_TRAJ,
 	} mode;*/
 	enum PHDeformationType{
-		ELASTIC,
-		PLASTIC,
-		ELASTIC_PLASTIC
+		ELASTIC =0,
+		PLASTIC =1,
+		ELASTIC_PLASTIC =2
 	}type;
 
 		PHJointDesc();	
@@ -624,6 +624,11 @@ struct PHBallJointIf : public PHJointIf{
 		@return 変形のタイプ
 	 */
 	PHJointDesc::PHDeformationType 	GetDeformationMode();
+
+	/** @brief Jointに加わっている力の過去5ステップ分を平均したノルムを取得する
+		@return Jointに加わっている力の過去5ステップ分を平均したノルム
+	 */
+	double GetmotorfNorm();	
 
 };
 
