@@ -186,7 +186,7 @@ void PHBallJointMotor::PlasticDeformation(){
 	
 	//ELASTIC_PLASTICモードの場合,PLASTIC状態の終了時に残留変位を保存する位置にTargetPositionを変更
 	if(joint->type==PHBallJointDesc::ELASTIC_PLASTIC){
-		if(ws.w().norm()<0.01){
+		if(ws.w().norm()<0.1){
 			yieldFlag = false;
 			joint->SetTargetPosition(joint->Xjrel.q);
 		}
@@ -289,10 +289,11 @@ void PHBallJointMotor::IterateLCP(){
 }
 bool PHBallJointMotor::IsYield(){
 	//fの平均値を計算
-	double fNorm = 0;
+	double dt		= joint->GetScene()->GetTimeStep();
+	fNorm = 0;
 	for(int i=0; i<5 ;i++){
 		if(i==4){
-			joint->fs[4] = joint->motorf;
+			joint->fs[4] = joint->motorf / dt;
 		}else{ 
 			joint->fs[i] = joint->fs[i+1];
 		}

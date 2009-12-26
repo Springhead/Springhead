@@ -88,9 +88,7 @@ void PHBallJoint::CompError(){
 PHJointDesc::PHDeformationType PHBallJoint::GetDeformationMode(){
 	switch(type){
 	case PHBallJointDesc::ELASTIC_PLASTIC:
-		if(motor.yieldFlag)return PHBallJointDesc::PLASTIC;
-		else  return PHBallJointDesc::ELASTIC;
-	default: return type;
+		return type;
 	}
 }
 

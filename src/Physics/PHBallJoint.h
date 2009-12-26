@@ -122,6 +122,7 @@ public:
 	Vec3d	GetInertia()					{return Inertia;}
 	void	SetDefomationType(int t)		{type = (PHJointDesc::PHDeformationType)t;}
 	int 	GetDefomationType()				{return (int)type;}
+	double 	GetmotorfNorm()					{return motor.fNorm;}
 	PHJointDesc::PHDeformationType 	GetDeformationMode();
 
 	/// 仮想関数のオーバライド

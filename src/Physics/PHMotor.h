@@ -61,6 +61,7 @@ class PHBallJointMotor : public PH3ElementCommonData{
 public:
 	PHBallJoint*	joint;
 	bool			yieldFlag;
+	double			fNorm;
 
 	virtual void	SetupLCP();
 	virtual void	IterateLCP();
@@ -74,8 +75,6 @@ private:
 	Vec3d	propV, I;
 	double	fMaxDt;
 	double	dt, dtinv, K, D, D2;
-
-
 	void    ElasticDeformation(); //< ’e«•ÏŒ`
 	void	PlasticDeformation(); //< ‘Y«•ÏŒ`
 	bool	IsYield(); //< ~•š‚µ‚Ä‚¢‚é‚©”Û‚©‚Ìƒ`ƒFƒbƒN
