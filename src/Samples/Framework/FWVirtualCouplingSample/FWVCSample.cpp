@@ -10,6 +10,7 @@
 #include <iostream>
 #include <sstream>
 #include <Framework/FWInteractScene.h>
+#include <Framework/FWVirtualCoupling.h>
 
 using namespace std;
 
@@ -113,6 +114,7 @@ void FWLDHapticSample::TimerFunc(int id){
 					GetIAScene()->Step();
 					bOneStep = false;
 			}
+
 			GetSdk()->GetScene()->GetPHScene()->Step(); //VirtualCoupringでは自分でシミュレーションのステップを呼ぶ
 
 			PostRedisplay();
@@ -121,7 +123,14 @@ void FWLDHapticSample::TimerFunc(int id){
 	}
 }
 
-void FWLDHapticSample::IdleFunc(){}
+void FWLDHapticSample::IdleFunc(){
+	/// 剛体を掴む
+	if(GetIAScene()->GetIAPointer(0)->GetGrabFlag()==1||GetIAScene()->GetIAPointer(0)->GetGrabFlag()==3){
+		FWVirtualCoupling* vcAdaptee = (FWVirtualCoupling*)GetIAScene()->GetIAAdaptee();
+		vcAdaptee->GrabSolid();
+	}
+
+}
 
 void FWLDHapticSample::Display(){
 	/// 描画モードの設定
@@ -196,21 +205,23 @@ void FWLDHapticSample::BuildPointer(){
 	desc.inertia =1e-2*Matrix3d().Unit();
 	/// ポインタ
 	{	
-		for(int i= 0; i < 2; i++){
+		for(int i= 0; i < 1; i++){
 			PHSolidIf* soPointer = phscene->CreateSolid(desc);
 			//CDSphereDesc sd;
 			//sd.radius = 0.5;//1.0;
 			//CDSphereIf* shapePointer = DCAST(CDSphereIf,  GetSdk()->GetPHSdk()->CreateShape(sd));
 			CDBoxDesc bd;
-			bd.boxsize = Vec3d(1,2,1);
+			bd.boxsize = Vec3d(1,5,1);
 			CDBoxIf* shapePointer = DCAST(CDBoxIf,  GetSdk()->GetPHSdk()->CreateShape(bd));
 			soPointer->SetGravity(false);
 			soPointer->AddShape(shapePointer);
 			FWInteractPointerDesc idesc;			// interactpointerのディスクリプタ
 			idesc.pointerSolid = soPointer;			// soPointerを設定
 			idesc.humanInterface = GetHI(i);		// humaninterfaceを設定
-			idesc.springK = 1*300;						// バーチャルカップリングのバネ係数
-			idesc.damperD = 0.08*300;					   // バーチャルカップリングのダンパ係数
+			idesc.springK = 1;						// バーチャルカップリングのバネ係数
+			idesc.damperD = 0.08;					   // バーチャルカップリングのダンパ係数
+			idesc.springOriK = 1*10;						// バーチャルカップリングのバネ係数
+			idesc.damperOriD = 0.08*10;					   // バーチャルカップリングのダンパ係数
 			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
 			idesc.forceScale = 1.0;					// インタフェースに働く力の倍率
 			
@@ -310,6 +321,14 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 					DSTR << "PROXYSIMULATION MODE" << std::endl;
 					break;
 			}
+		case ' ':
+		{	
+					int f = GetIAScene()->GetIAPointer(0)->GetGrabFlag();
+					DSTR<<f<<std::endl;
+					if(f==0)GetIAScene()->GetIAPointer(0)->SetGrabFlag(1);
+					if(f==2)GetIAScene()->GetIAPointer(0)->SetGrabFlag(3);
+					break;
+		}
 		default:
 			break;
 	}
