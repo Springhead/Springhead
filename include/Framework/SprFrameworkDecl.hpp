@@ -17,6 +17,8 @@
 	double GetPosScale(){	return	base::GetPosScale();}	\
 	void SetForceScale(double s){	base::SetForceScale(s);}	\
 	double GetForceScale(){	return	base::GetForceScale();}	\
+	void SetTorqueScale(double s){	base::SetTorqueScale(s);}	\
+	double GetTorqueScale(){	return	base::GetTorqueScale();}	\
 	void SetLocalRange(double r){	base::SetLocalRange(r);}	\
 	double GetLocalRange(){	return	base::GetLocalRange();}	\
 	void SetPointersCalibPosition(Posed p){	base::SetPointersCalibPosition(p);}	\

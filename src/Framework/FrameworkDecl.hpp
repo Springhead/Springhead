@@ -15,11 +15,14 @@ protected:\
 	HIBaseIf*	humanInterface;	\
 	double	springK;	\
 	double	damperD;	\
+	double	springOriK;	\
+	double	damperOriD;	\
 	Posed	defaultPosition;	\
 	Posed	pointersCalibPosition;	\
 	double	posScale;	\
 	double	worldScale;	\
 	double	forceScale;	\
+	double	torqueScale;	\
 	double	localRange;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
@@ -27,11 +30,14 @@ public:\
 		humanInterface = ((FWInteractPointerDesc*)ptr)->humanInterface;	\
 		springK = ((FWInteractPointerDesc*)ptr)->springK;	\
 		damperD = ((FWInteractPointerDesc*)ptr)->damperD;	\
+		springOriK = ((FWInteractPointerDesc*)ptr)->springOriK;	\
+		damperOriD = ((FWInteractPointerDesc*)ptr)->damperOriD;	\
 		defaultPosition = ((FWInteractPointerDesc*)ptr)->defaultPosition;	\
 		pointersCalibPosition = ((FWInteractPointerDesc*)ptr)->pointersCalibPosition;	\
 		posScale = ((FWInteractPointerDesc*)ptr)->posScale;	\
 		worldScale = ((FWInteractPointerDesc*)ptr)->worldScale;	\
 		forceScale = ((FWInteractPointerDesc*)ptr)->forceScale;	\
+		torqueScale = ((FWInteractPointerDesc*)ptr)->torqueScale;	\
 		localRange = ((FWInteractPointerDesc*)ptr)->localRange;	\
 		AfterSetDesc();	\
 	}\
@@ -41,11 +47,14 @@ public:\
 		((FWInteractPointerDesc*)ptr)->humanInterface = humanInterface;	\
 		((FWInteractPointerDesc*)ptr)->springK = springK;	\
 		((FWInteractPointerDesc*)ptr)->damperD = damperD;	\
+		((FWInteractPointerDesc*)ptr)->springOriK = springOriK;	\
+		((FWInteractPointerDesc*)ptr)->damperOriD = damperOriD;	\
 		((FWInteractPointerDesc*)ptr)->defaultPosition = defaultPosition;	\
 		((FWInteractPointerDesc*)ptr)->pointersCalibPosition = pointersCalibPosition;	\
 		((FWInteractPointerDesc*)ptr)->posScale = posScale;	\
 		((FWInteractPointerDesc*)ptr)->worldScale = worldScale;	\
 		((FWInteractPointerDesc*)ptr)->forceScale = forceScale;	\
+		((FWInteractPointerDesc*)ptr)->torqueScale = torqueScale;	\
 		((FWInteractPointerDesc*)ptr)->localRange = localRange;	\
 		return true;	\
 	}\

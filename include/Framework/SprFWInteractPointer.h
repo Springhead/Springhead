@@ -21,11 +21,14 @@ public:
 	HIBaseIf*	humanInterface; 
 	double		springK;
 	double		damperD;
+	double		springOriK;
+	double		damperOriD;
 	Posed		defaultPosition; //World座標系に対する物理シミュレーションのPointerのPose
 	Posed		pointersCalibPosition;
 	double		posScale;	//ポインタの移動量はグリップの移動に対してposScale*worldScale倍
 	double		worldScale;	//シミュレーション空間は実世界のworldScale倍
 	double		forceScale; //力覚インタフェースで出力する力をforceScale倍する．通常は1.0
+	double		torqueScale;	////力覚インタフェースで出力するトルクをforceScale倍する．通常は1.0
 	double		localRange;
 	FWInteractPointerDesc(){ Init(); }
 	void Init(){
@@ -33,11 +36,14 @@ public:
 		humanInterface = NULL;
 		springK = 0.0;
 		damperD = 0.0;
+		springOriK = 0.0;
+		damperOriD = 0.0;
 		defaultPosition = Posed();
 		pointersCalibPosition = Posed();
 		posScale = 1.0;
 		worldScale = 1.0;
 		forceScale = 1.0;
+		torqueScale = 1.0;
 		localRange = 0.1;
 	}
 };
@@ -54,6 +60,8 @@ public:
 	double		GetPosScale();
 	void		SetForceScale(double s);
 	double		GetForceScale();
+	void		SetTorqueScale(double s);
+	double		GetTorqueScale();
 	void		SetLocalRange(double r);
 	double		GetLocalRange();
 	void		SetPointersCalibPosition(Posed p);

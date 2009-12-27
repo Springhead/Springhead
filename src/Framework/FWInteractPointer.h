@@ -29,7 +29,6 @@ public:
 							// 1:接触している剛体とバーチャルカップリングをするためにジョイントを作成する
 							// 2:接触している剛体とバーチャルカップリング中
 							// 3:接触している剛体に接続したジョイントをクリアする
-	double		grabPose;	// 掴んだ瞬間のPose
 
 	double correctionSpringK;
 	double correctionDamperD;
@@ -48,6 +47,8 @@ public:
 	double		GetWorldScale();
 	void		SetForceScale(double s);
 	double		GetForceScale();
+	void		SetTorqueScale(double s);
+	double		GetTorqueScale();
 	void		SetLocalRange(double r);
 	double		GetLocalRange();
 	void		SetDefaultPosition(Posed p);
