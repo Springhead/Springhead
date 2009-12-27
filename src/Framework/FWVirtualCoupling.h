@@ -17,7 +17,8 @@ namespace Spr{;
 class FWVirtualCoupling : public FWInteractAdaptee{
 private:
 	std::vector<PHSolidIf*> vcSolid;	
-	std::vector<PHJointIf*> vcJoint;	
+	std::vector<PHJointIf*> vcJoint;
+	std::vector<PHJointIf*> grabJoint;
 protected:
 	volatile int hapticcount;
 	volatile bool bSync;
@@ -36,6 +37,7 @@ public:
 	void UpdateInterface();
 	void CreateVCPointer();
 	void CallBackHapticLoop(){};
+	void GrabSolid();
 
 };
 }

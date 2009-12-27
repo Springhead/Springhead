@@ -24,6 +24,12 @@ public:
 	bool			bForce;
 	bool			bVibration;
 	std::vector<bool>	bContact;
+	int			grabFlag;	//接触している剛体とバーチャルカップリングで掴む場合のFlag
+							// 0:接触している剛体とバーチャルカップリングはしない
+							// 1:接触している剛体とバーチャルカップリングをするためにジョイントを作成する
+							// 2:接触している剛体とバーチャルカップリング中
+							// 3:接触している剛体に接続したジョイントをクリアする
+	double		grabPose;	// 掴んだ瞬間のPose
 
 	double correctionSpringK;
 	double correctionDamperD;
@@ -52,6 +58,8 @@ public:
 	void		EnableForce(bool b = true);
 	void		EnableVibration(bool b = true);
 	void		Calibration();
+	void		SetGrabFlag(int f);
+	int		GetGrabFlag();
 };
 
 }

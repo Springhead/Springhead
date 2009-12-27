@@ -26,6 +26,8 @@
 	void EnableForce(bool b){	base::EnableForce(b);}	\
 	void EnableVibration(bool b){	base::EnableVibration(b);}	\
 	void Calibration(){	base::Calibration();}	\
+	void SetGrabFlag(int f){	base::SetGrabFlag(f);}	\
+	int GetGrabFlag(){	return	base::GetGrabFlag();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractSceneIf(base)	\
 	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
