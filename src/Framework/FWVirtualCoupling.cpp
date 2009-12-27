@@ -36,11 +36,77 @@ void FWVirtualCoupling::CreateVCPointer(){
 				jointDesc.posePlug.Pos()	= Vec3f(0.0f, 0.0f, 0.0f);
 				jointDesc.spring			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->correctionSpringK;
 				jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->correctionDamperD;
-				//jointDesc.springOri			= GetIAPointer(i)->springK *1000;
-				//jointDesc.damperOri			= GetIAPointer(i)->damperD *1000;
+				jointDesc.springOri			= GetIAPointer(i)->springK *1000;
+				jointDesc.damperOri			= GetIAPointer(i)->damperD *1000;
 			}
 			vcJoint.push_back( GetPHScene()->CreateJoint(vcSolid[i], pSolid, jointDesc) );
 		}
+	}
+}
+void FWVirtualCoupling::GrabSolid(){
+	int N = NIAPointers();
+	for(int i = 0; i < N; i++){
+		if(GetIAPointer(i)->GetGrabFlag()==1){
+			PHSolidIf* pSolid = GetIAPointer(i)->GetPointerSolid(); //物理シミュレーションのポインタ
+			int NSolids = GetPHScene()->NSolids();
+			////Pointerに接触している剛体の取得
+			PHSolidPairForLCPIf* pair;						// 剛体のペアをいれる変数pair
+			int contact;									// 接触判定の結果0よりも大きい場合接触
+			PHSolidIf* grabSolid;							// 接触している剛体
+			//ポインタ剛体と接触している剛体のペアを検索
+			for(int m=0; m< NSolids; m++){
+				for(int n=m+1; n<NSolids; n++){
+					// (m, n)番目の剛体ペアへのポインタを取得して，自分で作ったpairに代入
+					pair =GetPHScene()->GetSolidPair(m, n);
+					
+					// ポインタ剛体との接触を判定
+					for(int pairN = 0; pairN<2 ;pairN++){
+						if(pSolid == pair->GetSolid(pairN)){
+							// (m, n)番目の剛体ペアの接触判定　contact>0のとき接触
+							for(int si=0; si<pair->GetSolid(0)->NShape(); si++){
+								for(int sl=0; sl<pair->GetSolid(1)->NShape(); sl++){
+									contact = pair->GetContactState(si, sl);
+									if(contact>0){
+										grabSolid = pair->GetSolid(1-pairN);
+										continue;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			//掴んだ時点のPoseを取得し，キャリブレーションを行う．
+			//GetIAPointer(i)->grabPose = grabSolid->GetPose();
+
+			//vcJointの作成
+			PHSpringDesc jointDesc;
+			{
+				jointDesc.poseSocket.Pos()	= Vec3f(0.0f, 0.0f, 0.0f);
+				jointDesc.poseSocket.Ori()	= grabSolid->GetPose().Ori();
+				jointDesc.posePlug.Pos()	= Vec3f(0.0f, 0.0f, 0.0f);
+				jointDesc.spring			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->correctionSpringK;
+				jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->correctionDamperD;
+				jointDesc.springOri			= GetIAPointer(i)->springK *1000;
+				jointDesc.damperOri			= GetIAPointer(i)->damperD *1000;
+			}
+			grabJoint.push_back( GetPHScene()->CreateJoint(vcSolid[i], grabSolid, jointDesc) );
+
+			//Pointer剛体の接触判定解除
+			GetPHScene()->SetContactMode(GetIAPointer(i)->GetPointerSolid(),PHSceneDesc::MODE_NONE);
+			//Jointの作成終了
+			GetIAPointer(i)->SetGrabFlag(2);
+		}else if(GetIAPointer(i)->GetGrabFlag()==3){
+			//Pointer剛体の接触判定を復活
+			GetPHScene()->SetContactMode(GetIAPointer(i)->GetPointerSolid(),PHSceneDesc::MODE_LCP);
+			for(int i=0;i<grabJoint.size() ;i++){
+				grabJoint[i]->Enable(false);
+				grabJoint[i]->Clear();
+			}
+			grabJoint.clear();
+			GetIAPointer(i)->SetGrabFlag(0);
+		}
+
 	}
 }
 void FWVirtualCoupling::UpdateInterface(){

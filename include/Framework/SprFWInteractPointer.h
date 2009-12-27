@@ -63,6 +63,8 @@ public:
 	void		EnableForce(bool b);
 	void		EnableVibration(bool b);
 	void		Calibration();
+	void		SetGrabFlag(int f);
+	int			GetGrabFlag();
 };
 
 typedef std::vector< UTRef<FWInteractPointerIf> > FWInteractPointers;

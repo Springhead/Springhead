@@ -20,6 +20,7 @@ FWInteractPointer::FWInteractPointer(const FWInteractPointerDesc& desc) : FWInte
 void FWInteractPointer::Init(){
 	bForce = false;
 	bVibration = false;
+	grabFlag = 0;
 	CalcCorrectionSpringDamper();
 }
 void FWInteractPointer::SetPointerSolid(PHSolidIf* solid){
@@ -89,6 +90,13 @@ void FWInteractPointer::EnableVibration(bool b){
 }
 void FWInteractPointer::Calibration(){
 	GetHI()->Calibration();
+}
+
+void FWInteractPointer::SetGrabFlag(int f){
+	grabFlag = f;
+}
+int FWInteractPointer::GetGrabFlag(){
+	return grabFlag;
 }
 
 }
