@@ -347,7 +347,7 @@ void FWInteractAdaptee::CompareCurrentContactPoint(PHSolid* solida, PHSolid* sol
 	double breakingThreshold = 0.05;
 	std::vector<Vec3d> temp_solid_section;
 	std::vector<Vec3d> temp_pointer_section;
-	for(int i = 0; i < nInfo->solid_section.size(); i++){
+	for(size_t i = 0; i < nInfo->solid_section.size(); i++){
 		Vec3d veca = solida->GetPose() * nInfo->solid_section[i];
 		Vec3d vecb = solidb->GetPose() * nInfo->pointer_section[i];
 		Vec3d vec = vecb - veca;
@@ -370,7 +370,7 @@ void FWInteractAdaptee::CompareCurrentContactPoint(PHSolid* solida, PHSolid* sol
 	nInfo->pointer_section = temp_pointer_section;
 	// 新たに取得した近傍点対とキャッシュを比較
 	int state = 0;
-	for(int i = 0; i < nInfo->solid_section.size(); i++){
+	for(size_t i = 0; i < nInfo->solid_section.size(); i++){
 		double arange = (nInfo->solid_section[i] - pa).norm();		// 剛体の近傍点間距離
 		double brange = (nInfo->pointer_section[i] - pb).norm();	// ポインタの近傍点間距離
 		if(arange < 1e-1 && brange < 1e-1){
@@ -393,7 +393,7 @@ void FWInteractAdaptee::CompareCurrentContactPoint(PHSolid* solida, PHSolid* sol
 		int index = -1;
 		double dis = 10e5;
 		// 最新の法線にキャッシュの近傍点間ベクトルを射影して，ノルムが小さいものを探す
-		for(int i = 0; i < nInfo->solid_section.size(); i++){
+		for(size_t i = 0; i < nInfo->solid_section.size(); i++){
 			Vec3d wa_old = solida->GetPose() * nInfo->solid_section[i];
 			Vec3d wb_old = solidb->GetPose() * nInfo->pointer_section[i];
 			Vec3d vec = wb_old - wa_old;  
@@ -407,7 +407,7 @@ void FWInteractAdaptee::CompareCurrentContactPoint(PHSolid* solida, PHSolid* sol
 		// ノルムが小さいものを外し，キャッシュを再構築
 		temp_solid_section.clear();
 		temp_pointer_section.clear();
-		for(int i = 0; i < nInfo->solid_section.size(); i++){
+		for(size_t i = 0; i < nInfo->solid_section.size(); i++){
 			if(i == index) continue;
 			temp_solid_section.push_back(nInfo->solid_section[i]);
 			temp_pointer_section.push_back(nInfo->pointer_section[i]);
@@ -427,7 +427,7 @@ void FWInteractAdaptee::FindPenetratingPoints(PHSolid* solida, PHSolid* solidb, 
 	// サポートポイントの隣の頂点を探す
 	for(int i = 0; i < nSupport; i++){
 		std::vector<int>& pointsb = convexa->FindNeighbors(q_id[i]);
-		for(int j = 0; j < pointsb.size(); j++){
+		for(size_t j = 0; j < pointsb.size(); j++){
 //			Vec3f lvb = *baseb[j];
 //		Vec3d vb = solidb->GetPose() *	lvb;
 
