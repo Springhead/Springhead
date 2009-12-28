@@ -89,6 +89,8 @@ PHJointDesc::PHDeformationType PHBallJoint::GetDeformationMode(){
 	switch(type){
 	case PHBallJointDesc::ELASTIC_PLASTIC:
 		return type;
+	default:
+		return type; //< デフォルトの戻り値ぐらい書いてよ．
 	}
 }
 
