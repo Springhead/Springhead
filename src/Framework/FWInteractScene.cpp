@@ -56,16 +56,16 @@ FWInteractPointerIf* FWInteractScene::CreateIAPointer(const FWInteractPointerDes
 	interactPointers.push_back(iPointerIf); 
 	curIAPointer = iPointer->Cast();
 	switch(iaMode){
-		case FWInteractMode::NONE:
+		case NONE:
 			break;
-		case FWInteractMode::LOCAL_DYNAMICS:
+		case LOCAL_DYNAMICS:
 			{
 				GetScene()->GetPHScene()->SetContactMode(iPointer->pointerSolid, PHSceneDesc::MODE_NONE);
 				iPointer->pointerSolid->SetDynamical(false);
 				iPointer->pointerSolid->SetIntegrate(false);
 				break;
 			}
-		case FWInteractMode::VIRTUAL_COUPLING:
+		case VIRTUAL_COUPLING:
 			{
 				FWVirtualCoupling* ip = (FWVirtualCoupling*)GetIAAdaptee();
 				ip->CreatePointerSolid();
