@@ -31,6 +31,8 @@ struct NeighborInfo{
 	Vec3d pointer_point;			///< 力覚ポインタ最近点(ローカル座標)
 	Vec3d face_normal;				///< 近傍物体の提示面の法線(近傍物体から力覚ポインタへのベクトル)
 	Vec3d last_face_normal;			///< 前回の近傍物体の提示面の法線
+	double section_depth;
+	double last_section_depth;
 	std::vector< Vec3d > pointer_section;	///< ポインタの接触頂点(ローカル座標)
 	std::vector< Vec3d > solid_section;		///< 剛体の接触頂点(ローカル座標)
 	double test_force_norm;			///< 予測シミュレーションで単位力の大きさ
@@ -41,6 +43,8 @@ struct NeighborInfo{
 		pointer_point = Vec3d(0.0, 0.0, 0.0);						
 		face_normal = Vec3d(0.0, 0.0, 0.0);			
 		last_face_normal = Vec3d(0.0, 0.0, 0.0);
+		section_depth = 0.0;
+		last_section_depth = 0.0;
 		test_force_norm = 0.0;
 		impulse = Vec3d();
 	}

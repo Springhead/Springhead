@@ -381,8 +381,8 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 				dtheta += f[m] * iPointer->hiSolid.GetInertia().inv() * (sv[m].r % sv[m].normal);
 			}
 			// 力覚インタフェースに出力する力の計算
-			outForce.v() = iPointer->correctionSpringK * dr - iPointer->correctionDamperD * (dr/hdt);
-			outForce.w() = iPointer->correctionSpringK * dtheta / 20;
+			outForce.v() = iPointer->correctionSpringK * dr;// - iPointer->correctionDamperD * (dr/hdt);
+//			outForce.w() = iPointer->correctionSpringK * dtheta / 20;
 //			CSVOUT << outForce.v().x << "," << outForce.v().y << "," << outForce.v().z << "," << outForce.w().x << "," << outForce.w().y << "," << outForce.w().z << endl;
 		}
 		/// インタフェースへ力を出力

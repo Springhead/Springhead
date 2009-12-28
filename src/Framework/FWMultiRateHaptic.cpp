@@ -59,8 +59,9 @@ void FWMultiRateHaptic::Sync(){
 		/// PhysicsLoop--->HapticLoop ///
 		/// ƒV[ƒ“‚ÅV‚µ‚­¶¬‚³‚ê‚½•ª‚ðŠg’£
 		for(int i = (int)hiPointers->size(); i < NIAPointers(); i++){
-			hiPointers->resize(i + 1);
+			hiPointers->resize(i+1);
 			hiPointers->back() = *GetIAPointer(i);
+			hiPointers->back().Sync();
 		}
 		for(int i = (int)hiSolids->size(); i < (int)NIASolids(); i++){
 			hiSolids->resize(i + 1);

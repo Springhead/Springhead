@@ -37,6 +37,7 @@ public:
 	FWInteractPointer(const FWInteractPointerDesc& desc);
 
 	void		Init();
+	void		Sync();
 	void		SetPointerSolid(PHSolidIf* solid);
 	PHSolidIf*	GetPointerSolid();
 	void		SetHI(HIBaseIf* hi);
