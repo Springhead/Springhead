@@ -223,7 +223,7 @@ int CDBox::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, f
 	Vec3f p;
 	int num = 0;
 
-	for(int i = 0; i < qfaces.size(); i++){
+	for(size_t i = 0; i < qfaces.size(); i++){
 		const CDQuadFace& f = qfaces[i];
 		const Vec3f& n = f.normal;	//面の法線
 		float tmp = n * dir;		//面の法線とポインタのベクトルとの内積

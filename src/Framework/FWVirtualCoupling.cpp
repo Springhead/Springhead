@@ -119,7 +119,7 @@ void FWVirtualCoupling::GrabSolid(){
 		}else if(GetIAPointer(i)->GetGrabFlag()==3){
 			//Pointer„‘Ì‚ÌÚG”»’è‚ð•œŠˆ
 			GetPHScene()->SetContactMode(GetIAPointer(i)->GetPointerSolid(),PHSceneDesc::MODE_LCP);
-			for(int i=0;i<grabJoint.size() ;i++){
+			for(size_t i=0;i<grabJoint.size() ;i++){
 				grabJoint[i]->Enable(false);
 				grabJoint[i]->Clear();
 			}

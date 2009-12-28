@@ -316,7 +316,7 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 			std::vector < Vec3d > ssection = nInfo->solid_section;
 			double ptemp;
 			double ctemp;
-			for(int k = 0; k < psection.size(); k++){
+			for(size_t k = 0; k < psection.size(); k++){
 				Vec3d pPoint = iPointer->hiSolid.GetPose() * psection[k];	// 力覚ポインタの接触点(ワールド座標)
 				Vec3d cPoint = cSolid->GetPose() * ssection[k];				// 剛体の接触点(ワールド座標)
 				ptemp = pPoint.y;
