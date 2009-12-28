@@ -15,11 +15,16 @@ namespace Spr{;
 
 FWVirtualCoupling::FWVirtualCoupling(){
 }
-void FWVirtualCoupling::CreateVCPointer(){
+void FWVirtualCoupling::CreatePointerSolid(){
+	
 	if(vcSolid.size()== 0 ){
 		int N = NIAPointers();
 		for(int i = 0; i < N; i++){
 			PHSolidIf* pSolid = GetIAPointer(i)->GetPointerSolid(); //物理シミュレーションのポインタ
+			pSolid->SetPose(GetIAPointer(i)->GetDefaultPosition());
+			pSolid->SetDynamical(true);
+			pSolid->SetGravity(false);
+			pSolid->SetIntegrate(true);
 			
 			//vcSolidの作成(インタフェースに同期して動くshapeのないポインタ)
 			PHSolidDesc desc;
@@ -40,7 +45,8 @@ void FWVirtualCoupling::CreateVCPointer(){
 				jointDesc.springOri			= GetIAPointer(i)->springOriK;
 				jointDesc.damperOri			= GetIAPointer(i)->damperOriD;
 			}
-			vcJoint.push_back( GetPHScene()->CreateJoint(vcSolid[i], pSolid, jointDesc) );
+			PHJointIf* joint = GetPHScene()->CreateJoint(vcSolid[i], pSolid, jointDesc);
+			vcJoint.push_back( joint );
 		}
 	}
 }
@@ -144,7 +150,7 @@ void FWVirtualCoupling::UpdateInterface(){
 				hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
 				Posed hifPose;
 				hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
-				hifPose.Ori()=hif->GetOrientation(); //naga
+				hifPose.Ori()=hif->GetOrientation();
 				Posed hiSolidPose = hifPose * GetIAPointer(i)->GetDefaultPosition()*GetIAPointer(i)->GetPointersCalibPosition();
 				hiSolid->SetPose(hiSolidPose);
 			}else{
@@ -174,7 +180,7 @@ void FWVirtualCoupling::UpdatePointerDirect(){
 
 void FWVirtualCoupling::UpdatePointer(){
 	//バーチャルカップリングでポインタを更新する
-	CreateVCPointer(); //VCポインタが作成されていない場合作成する．
+	//CreateVCPointer(); //VCポインタが作成されていない場合作成する．
 	int N = NIAPointers();
 	for(int i = 0; i<N ; i++){
 		PHSolidIf* pSolid = GetIAPointer(i)->GetPointerSolid(); //物理シミュレーションのポインタ
