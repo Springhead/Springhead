@@ -125,7 +125,7 @@ SceneObjectIf* PHSolid::CloneObject(){
 	PHSolidDesc desc;
 	PHSolidIf* origin = DCAST(PHSolidIf,this);
 	origin ->GetDesc(&desc);
-	PHScene* s = DCAST(PHScene, GetScene());
+	PHSceneIf* s = DCAST(PHSceneIf, GetScene());
 	PHSolidIf* clone = s->CreateSolid(desc);
 	for (unsigned int i=0; i < origin->NChildObject(); ++i) {
 		clone->AddChildObject(origin->GetChildObject(i));

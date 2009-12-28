@@ -52,22 +52,23 @@ void FWInteractScene::SetHMode(FWHapticMode hMode){
 /// IAPointerŠÖŒW
 FWInteractPointerIf* FWInteractScene::CreateIAPointer(const FWInteractPointerDesc& desc){
 	FWInteractPointer* iPointer = DBG_NEW FWInteractPointer(desc); 
-	interactPointers.push_back(iPointer->Cast()); 
+	FWInteractPointerIf* iPointerIf = iPointer->Cast();
+	interactPointers.push_back(iPointerIf); 
 	curIAPointer = iPointer->Cast();
 	switch(iaMode){
-		case NONE:
+		case FWInteractMode::NONE:
 			break;
-		case LOCAL_DYNAMICS:
+		case FWInteractMode::LOCAL_DYNAMICS:
 			{
 				GetScene()->GetPHScene()->SetContactMode(iPointer->pointerSolid, PHSceneDesc::MODE_NONE);
 				iPointer->pointerSolid->SetDynamical(false);
 				iPointer->pointerSolid->SetIntegrate(false);
 				break;
 			}
-		case VIRTUAL_COUPLING:
+		case FWInteractMode::VIRTUAL_COUPLING:
 			{
 				FWVirtualCoupling* ip = (FWVirtualCoupling*)GetIAAdaptee();
-				ip->CreateVCPointer();
+				ip->CreatePointerSolid();
 				break;
 			}
 		default:
