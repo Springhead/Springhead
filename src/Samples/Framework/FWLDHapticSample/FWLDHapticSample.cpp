@@ -224,7 +224,7 @@ void FWLDHapticSample::BuildPointer(){
 			idesc.damperD = 0;						// haptic renderingのダンパ係数
 			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
 			idesc.forceScale = 1.0;
-			idesc.localRange = 1.0;					// LocalDynamicsを使う場合の近傍範囲
+			idesc.localRange = 5.0;					// LocalDynamicsを使う場合の近傍範囲
 			if(i==0) idesc.defaultPosition =Posed(1,0,0,0,5,0,0);	// 初期位置の設定
 			if(i==1) idesc.defaultPosition =Posed(1,0,0,0,-5,0,0);
 			GetIAScene()->CreateIAPointer(idesc);	// interactpointerの作成

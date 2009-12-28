@@ -23,6 +23,10 @@ void FWInteractPointer::Init(){
 	grabFlag = 0;
 	CalcCorrectionSpringDamper();
 }
+void FWInteractPointer::Sync(){
+	hiSolid.mass = pointerSolid->GetMass();
+	hiSolid.inertia = pointerSolid->GetInertia(); 
+}
 void FWInteractPointer::SetPointerSolid(PHSolidIf* solid){
 	pointerSolid = solid;
 }
