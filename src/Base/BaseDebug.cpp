@@ -86,7 +86,6 @@ public:
 			memcpy(buf, src, len);
 			buf[len] = '\0';
 			debugOutFunc(buf);
-			debugOutFunc = NULL;
 		}else{
 			len = 0;
 		}
