@@ -328,7 +328,6 @@ extern bool bGJKDebug;
 
 		double dist = 0.0;
 		int cp = ContFindCommonPoint(ca, cb, a2w, b2w, dir, -DBL_MAX, 1, normal, pa, pb, dist);
-
 		bGJKDebug = false;
 		/// CCDGJKが失敗した場合の処理
 		if(cp != 1){
@@ -419,35 +418,58 @@ void FWInteractAdaptee::CompareCurrentContactPoint(PHSolid* solida, PHSolid* sol
 }
 
 void FWInteractAdaptee::FindPenetratingPoints(PHSolid* solida, PHSolid* solidb, Vec3d pa, Vec3d pb, NeighborInfo* nInfo){
-	CDConvex* convexa = solida->GetShape(0)->Cast();
-	CDConvex* convexb = solidb->GetShape(0)->Cast();
-	Vec3f* basea = convexa->GetBase();
-	Vec3f* baseb = convexb->GetBase();
 	using namespace GJK;
 	// サポートポイントidを比較して，同値なら削る
+	int qidtemp[4];
+	for(int i = 0; i < nSupport; i++)	qidtemp[i] = q_id[ids[i]];
+	std::sort(qidtemp, qidtemp + nSupport);
 	std::vector<int> qids;
+	int index = -1;
 	for(int i = 0; i < nSupport; i++){
-		for(int j = i+1; j < nSupport; j++){
-			if(q_id[i] == q_id[j]) continue;
-			qids.push_back(q_id[i]);
+		if(index != qidtemp[i]){
+			qids.push_back(qidtemp[i]);
+			index = qidtemp[i];
 		}
 	}
 	// サポートポイントの隣の頂点を探す
+	CDConvex* convexa = solida->GetShape(0)->Cast();
+	CDConvex* convexb = solidb->GetShape(0)->Cast();
+	std::vector<int> temppoints;
 	for(size_t i = 0; i < qids.size(); i++){
 		std::vector<int>& pointsb = convexb->FindNeighbors(qids[i]);
 		for(size_t j = 0; j < pointsb.size(); j++){
-			Vec3f lvb = baseb[pointsb[j]].data;
-			Vec3d wvb = solidb->GetPose() *	lvb;
-
-			double ip = nInfo->face_normal * (wvb - solida->GetPose() * nInfo->closest_point);
-			if(ip > 0) continue;
-			Vec3d ortho = ip * nInfo->face_normal;
-			Vec3d wva = wvb - ortho;
-			nInfo->solid_section.push_back(solida->GetPose().Inv() * wva);
-			nInfo->pointer_section.push_back(lvb);
+			temppoints.push_back(pointsb[j]);
 		}
 	}
-	DSTR << nSupport << std::endl;
+
+	// 隣の頂点でかぶっているものを削る
+	std::sort(temppoints.begin(), temppoints.end());
+	index = -1;
+	std::vector<int> neighbors;
+	for(int i = 0; i < temppoints.size(); i++){
+		if(index != temppoints[i]){
+			neighbors.push_back(temppoints[i]);
+			index = temppoints[i];
+		}
+	}
+
+	// 頂点が有効かどうか判定，有効ならば保つ
+	Vec3f* basea = convexa->GetBase();
+	Vec3f* baseb = convexb->GetBase();
+	// はじめに近傍点を追加しておく
+	nInfo->solid_section.push_back(nInfo->closest_point);
+	nInfo->pointer_section.push_back(nInfo->pointer_point);
+	for(size_t i = 0; i < neighbors.size(); i++){
+		Vec3f lvb = baseb[neighbors[i]].data;
+		Vec3d wvb = solidb->GetPose() *	lvb;
+
+		double ip = nInfo->face_normal * (wvb - solida->GetPose() * nInfo->closest_point);
+		if(ip > 0.05) continue;
+		Vec3d ortho = ip * nInfo->face_normal;
+		Vec3d wva = wvb - ortho;
+		nInfo->solid_section.push_back(solida->GetPose().Inv() * wva);
+		nInfo->pointer_section.push_back(lvb);
+	}
 }
 
 void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, const Posed shapePoseW0, const Posed shapePoseW1,
