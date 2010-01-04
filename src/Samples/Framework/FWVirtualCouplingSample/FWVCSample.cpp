@@ -17,6 +17,7 @@ using namespace std;
 FWLDHapticSample::FWLDHapticSample(){
 	bStep = true;
 	bDrawInfo = false;
+	dt = 0.02;
 }
 
 void FWLDHapticSample::Init(int argc, char* argv[]){
@@ -24,7 +25,7 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	CreateSdk();
 	GetSdk()->Clear();										// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(dt);	// 刻みの設定
 
 	/// 描画モードの設定
 	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
@@ -51,7 +52,9 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	BuildPointer();
 
 	/// タイマの作成，設定
-	int timerId = CreateTimer(FWTimer::GLUT);
+	int timerId = CreateTimer(FWTimer::MM);
+	SetResolution(timerId ,1);
+	SetInterval(timerId ,1000*dt);
 }
 
 void FWLDHapticSample::InitCameraView(){

@@ -33,6 +33,7 @@ public:
 	bool bStep;									///< シミュレーションを進めるかどうか
 	bool bOneStep;								///< ステップ実行
 	bool bDrawInfo;								///< デバック表示するかどうか
+	double dt;									///< 更新ステップ[s]
 }; 
 
 #endif
