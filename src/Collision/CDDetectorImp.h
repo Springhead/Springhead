@@ -111,11 +111,11 @@ namespace GJK{
 	extern Vec3d v[4];			///<	ContFindCommonPointで使用するv
 	extern int nSupport;		///<	何点のsupportから最近傍点を計算したかを表す。(ContFindCommonPoint専用)
 	extern Vec3d dec;			///<	内分の割合
-	extern int ids[4];			///<	頂点ID対応表
+	extern int ids[4];			///<	4つの p, q, p_id, q_id, w, v のうちどれを使うか
 		//	pa = dec[0]*p[ids[0]] + dec[1]*p[ids[1]] + dec[2]*p[ids[2]];
 		//	pb = dec[0]*q[ids[0]] + dec[1]*q[ids[1]] + dec[2]*q[ids[2]];
 		//	で最近傍点（local系）が求まる
-	
+		//	例えば、nSupportが3の時、Aの頂点番号は、p_id[ids[0]], p_id[ids[1]], p_id[ids[2]] の3つ
 	extern Vec3d p_q[4];		///<	ミンコスキー和上でのサポートポイント(ワールド系) ContでないFindXXで使用
 }	//	namespace GJK
 
