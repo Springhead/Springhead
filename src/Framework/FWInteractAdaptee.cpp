@@ -424,21 +424,28 @@ void FWInteractAdaptee::FindPenetratingPoints(PHSolid* solida, PHSolid* solidb, 
 	Vec3f* basea = convexa->GetBase();
 	Vec3f* baseb = convexb->GetBase();
 	using namespace GJK;
-	// サポートポイントの隣の頂点を探す
+	// サポートポイントidを比較して，同値なら削る
+	std::vector<int> qids;
 	for(int i = 0; i < nSupport; i++){
-		std::vector<int>& pointsb = convexa->FindNeighbors(q_id[i]);
-		for(size_t j = 0; j < pointsb.size(); j++){
-//			Vec3f lvb = *baseb[j];
-//		Vec3d vb = solidb->GetPose() *	lvb;
-
+		for(int j = i+1; j < nSupport; j++){
+			if(q_id[i] == q_id[j]) continue;
+			qids.push_back(q_id[i]);
 		}
+	}
+	// サポートポイントの隣の頂点を探す
+	for(size_t i = 0; i < qids.size(); i++){
+		std::vector<int>& pointsb = convexb->FindNeighbors(qids[i]);
+		for(size_t j = 0; j < pointsb.size(); j++){
+			Vec3f lvb = baseb[pointsb[j]].data;
+			Vec3d wvb = solidb->GetPose() *	lvb;
 
-		//double ip = nInfo->face_normal * (vb - solida->GetPose() * nInfo->closest_point);
-		//if(ip > 0) continue;
-		//Vec3d ortho = ip * nInfo->face_normal;
-		//Vec3d va = vb - ortho;
-		//nInfo->solid_section.push_back(solida->GetPose().Inv() * va);
-		//nInfo->pointer_section.push_back(q[ids[i]]);
+			double ip = nInfo->face_normal * (wvb - solida->GetPose() * nInfo->closest_point);
+			if(ip > 0) continue;
+			Vec3d ortho = ip * nInfo->face_normal;
+			Vec3d wva = wvb - ortho;
+			nInfo->solid_section.push_back(solida->GetPose().Inv() * wva);
+			nInfo->pointer_section.push_back(lvb);
+		}
 	}
 	DSTR << nSupport << std::endl;
 }
