@@ -77,7 +77,7 @@ void CDBox::Recalc(){
 		neighbor[7][0] = 4; neighbor[7][1] = 6; neighbor[7][2] = 3;
 
 		qfaces.clear();
-		for (int nface=0; nface<6; ++nface){	// 立方体は8面
+		for (int nface=0; nface<6; ++nface){	// 立方体は6面
 			qfaces.push_back(CDQuadFace());
 		}
 		// boxの各面の法線を設定、boxの各面の頂点のインデックスを設定

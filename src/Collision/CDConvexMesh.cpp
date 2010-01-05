@@ -65,8 +65,8 @@ bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 	double d = planeNormalL * planePosL;
 	for(unsigned i=0; i<base.size(); ++i){
 		double vtxDist = planeNormalL * base[i];
-		if (vtxDist > d + epsilon) sign[i] = 1;
-		else if (vtxDist < d - epsilon) sign[i] = -1;
+		if (vtxDist > d + epsilon*4) sign[i] = 1;
+		else if (vtxDist < d - epsilon*4) sign[i] = -1;
 		else sign[i] = 0;
 	}
 	bool rv = false;
