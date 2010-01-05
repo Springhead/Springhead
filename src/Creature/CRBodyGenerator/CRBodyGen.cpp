@@ -223,6 +223,7 @@ double CRBodyGen::GetPotentialEnergy(PHSolidIf* rootSolid){
 	if(rootSolid) ans = 0;
 	for(size_t i = 0; i < joints.size(); i++){
 		if(rootSolid == joints[i]->GetSocketSolid()){
+			// Solid‚Ìpose‚ð‘‚«Š·‚¦‚Ä‚Í‚¢‚¯‚È‚¢‚½‚ßCˆø”‚ª3‚Â
 			ans += CalcPotential(rootSolid->GetPose(), rootSolid, joints[i]);
 		}
 	}
@@ -230,9 +231,27 @@ double CRBodyGen::GetPotentialEnergy(PHSolidIf* rootSolid){
 }
 
 double CRBodyGen::CalcPotential(Posed parentPos, PHSolidIf* parentSolid, PHJointIf* childJoint){
-	double ans = DBL_MAX;
+	double ans = 0.0;
 
-	
+	PHSolidIf* nextParent = childJoint->GetPlugSolid();
+	Posed sp, pp;
+	childJoint->GetSocketPose(sp);
+	childJoint->GetPlugPose(pp);
+	Posed parentRot;
+	parentRot.W() = parentPos.W();
+	parentRot.X() = parentPos.X();
+	parentRot.Y() = parentPos.Y();
+	parentRot.Z() = parentPos.Z();
+	Vec3d spX = sp.Pos();
+	Vec3d ppX = pp.Pos();
+	sp.Px() = spX.X();
+	sp.Py() = spX.Y();
+	sp.Pz() = spX.Z();
+	pp.Px() = ppX.X();
+	pp.Py() = ppX.Y();
+	pp.Pz() = ppX.Z();
+	Posed nextParentPos = sp * pp.Inv() * parentPos;
+	//ans += 
 	return ans;
 }
 
