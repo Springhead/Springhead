@@ -15,8 +15,6 @@ namespace Spr{
 
 //コンストラクタ
 CRFourLegsTinyAnimalBodyGenDesc::CRFourLegsTinyAnimalBodyGenDesc(){
-		
-	jointOrder	= SOCKET_PARENT;
 
 	jointType	= HINGE_MODE;
 	shapeMode	= MODE_CAPSULE;//MODE_BOX;
@@ -70,7 +68,7 @@ CRFourLegsTinyAnimalBodyGenDesc::CRFourLegsTinyAnimalBodyGenDesc(){
 
 // --- --- ---
 void CRFourLegsTinyAnimalBodyGen::Init(){
-	
+	CRBodyGen::Init();
 }
 
 // --- --- ---
@@ -132,7 +130,7 @@ PHSolidIf* CRFourLegsTinyAnimalBodyGen::InitFrontLeg0(LREnum lr, PHSolidIf* sBod
 		hingeDesc.damper			= damperFront;
 		hingeDesc.upper				= rangeUpperFront.upper;
 		hingeDesc.lower				= rangeUpperFront.lower;
-		joints.push_back(CreateJoint(sBody, solids.back(), hingeDesc));
+		joints.push_back(phScene->CreateJoint(sBody, solids.back(), hingeDesc));
 	} else if(jointType == BALL_MODE){
 		PHBallJointDesc		ballDesc;
 		ballDesc.poseSocket.Pos()	= Vec3d(-lr * bodyBreadth / 2.0, -bodyHeight / 2.0, 0);
@@ -144,7 +142,7 @@ PHSolidIf* CRFourLegsTinyAnimalBodyGen::InitFrontLeg0(LREnum lr, PHSolidIf* sBod
 		ballDesc.damper				= damperFront;
 		ballDesc.limitSwing			= rangeFrontSwing;
 		ballDesc.limitTwist			= rangeFrontTwist;
-		joints.push_back(CreateJoint(sBody, solids.back(), ballDesc));
+		joints.push_back(phScene->CreateJoint(sBody, solids.back(), ballDesc));
 	}
 	phScene->SetContactMode(sBody, solids.back(), PHSceneDesc::MODE_NONE);
 
@@ -198,7 +196,7 @@ void CRFourLegsTinyAnimalBodyGen::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
 		hingeDesc.damper			= damperFront;
 		hingeDesc.upper				= rangeLowerFront.upper;
 		hingeDesc.lower				= rangeLowerFront.lower;
-		joints.push_back(CreateJoint(sLeg0, solids.back(), hingeDesc));
+		joints.push_back(phScene->CreateJoint(sLeg0, solids.back(), hingeDesc));
 	} else if(jointType == BALL_MODE){
 		ballDesc.poseSocket.Pos()	= Vec3d(0, 0, -upperLength/2.0);
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
@@ -209,7 +207,7 @@ void CRFourLegsTinyAnimalBodyGen::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
 		ballDesc.damper				= damperFront;
 		ballDesc.limitSwing			= rangeFrontSwing;
 		ballDesc.limitTwist			= rangeFrontTwist;
-		joints.push_back(CreateJoint(sLeg0, solids.back(), ballDesc));
+		joints.push_back(phScene->CreateJoint(sLeg0, solids.back(), ballDesc));
 	}
 	phScene->SetContactMode(sLeg0, solids.back(), PHSceneDesc::MODE_NONE);
 
@@ -262,7 +260,7 @@ PHSolidIf* CRFourLegsTinyAnimalBodyGen::InitRearLeg0(LREnum lr, PHSolidIf* sBody
 		hingeDesc.damper			= damperRear;
 		hingeDesc.upper				= rangeUpperRear.upper;
 		hingeDesc.lower				= rangeUpperRear.lower;
-		joints.push_back(CreateJoint(sBody, solids.back(), hingeDesc));
+		joints.push_back(phScene->CreateJoint(sBody, solids.back(), hingeDesc));
 	}else if(jointType == BALL_MODE){
 		ballDesc.poseSocket.Pos()	= Vec3d(-lr * bodyBreadth / 2.0, bodyHeight / 2.0, 0);
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
@@ -273,7 +271,7 @@ PHSolidIf* CRFourLegsTinyAnimalBodyGen::InitRearLeg0(LREnum lr, PHSolidIf* sBody
 		ballDesc.damper				= damperRear;
 		ballDesc.limitSwing			= rangeRearSwing;
 		ballDesc.limitTwist			= rangeRearTwist;
-		joints.push_back(CreateJoint(sBody, solids.back(), ballDesc));
+		joints.push_back(phScene->CreateJoint(sBody, solids.back(), ballDesc));
 	}
 	phScene->SetContactMode(sBody, solids.back(), PHSceneDesc::MODE_NONE);
 
@@ -326,7 +324,7 @@ void CRFourLegsTinyAnimalBodyGen::InitRearLeg1(LREnum lr, PHSolidIf* sLeg0){
 		hingeDesc.damper			= damperRear;
 		hingeDesc.upper				= rangeLowerRear.upper;
 		hingeDesc.lower				= rangeLowerRear.lower;
-		joints.push_back(CreateJoint(sLeg0, solids.back(), hingeDesc));
+		joints.push_back(phScene->CreateJoint(sLeg0, solids.back(), hingeDesc));
 	} else if(jointType == BALL_MODE){
 		ballDesc.poseSocket.Pos()	= Vec3d(0, 0, -upperLength / 2.0);
 		ballDesc.poseSocket.Ori()	= Quaterniond::Rot(Rad(-90), 'x');
@@ -337,7 +335,7 @@ void CRFourLegsTinyAnimalBodyGen::InitRearLeg1(LREnum lr, PHSolidIf* sLeg0){
 		ballDesc.damper				= damperRear;
 		ballDesc.limitSwing			= rangeRearSwing;
 		ballDesc.limitTwist			= rangeRearTwist;
-		joints.push_back(CreateJoint(sLeg0, solids.back(), ballDesc));
+		joints.push_back(phScene->CreateJoint(sLeg0, solids.back(), ballDesc));
 	}
 	phScene->SetContactMode(sLeg0, solids.back(), PHSceneDesc::MODE_NONE);
 	if(lr == RIGHTPART){
@@ -377,28 +375,6 @@ void CRFourLegsTinyAnimalBodyGen::InitContact(){
 			}
 		}
 	}
-
-	/*
-	// 自分以外にすでにBodyが居ればそのBodyに属する剛体とのContactも切る
-	for (int i=0; i<creature->NBodies(); ++i) {
-		CRBodyIf* body = creature->GetBody(i);
-		if (DCAST(CRFourLegsTinyAnimalBodyGenIf,body)!=(this->Cast())) {
-			for (int s=0; s<body->NSolids(); ++s) {
-				for (unsigned int j=0; j<solids.size(); ++j) {
-					phScene->SetContactMode(body->GetSolid(s), solids[j], PHSceneDesc::MODE_NONE);
-				}
-			}
-		}
-	}
-	*/
 }
 
-/*
-void CRFourLegsTinyAnimalBodyGen::InitControlMode(PHJointDesc::PHControlMode m){
-	int njoints = joints.size();
-	for(int i = 0; i < njoints; i++){
-		if(joints[i]){joints[i]->SetMode(m);}
-	}
-}
-*/
 }

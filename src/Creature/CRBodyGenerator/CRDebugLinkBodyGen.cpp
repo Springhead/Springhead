@@ -46,16 +46,16 @@ PHBallJointDesc CRDebugLinkBodyGen::InitBallJointDesc(){
 PHHingeJointDesc CRDebugLinkBodyGen::InitHingeJointDesc(){
 	PHHingeJointDesc desc;
 	{
-		desc.spring				= spring;
-		desc.damper				= damper;
+		desc.spring					= spring;
+		desc.damper					= damper;
 		if(shapeMode == MODE_MIX && solids.size() == 2)
 			desc.poseSocket.Pos()	= Vec3d(0, 0, radius/2);
 		else
 			desc.poseSocket.Pos()	= Vec3d(0, 0, length/2);
-		desc.poseSocket.Ori()	= Quaterniond::Rot(Rad(90), 'y');
-		desc.posePlug.Pos()		= Vec3d(0, 0, -length/2);
-		desc.posePlug.Ori()		= Quaterniond::Rot(Rad(90), 'y');
-		desc.fMax				= fMax;
+		desc.poseSocket.Ori()		= Quaterniond::Rot(Rad(90), 'y');
+		desc.posePlug.Pos()			= Vec3d(0, 0, -length/2);
+		desc.posePlug.Ori()			= Quaterniond::Rot(Rad(90), 'y');
+		desc.fMax					= fMax;
 	}
 	return desc;
 }
@@ -161,7 +161,9 @@ void CRDebugLinkBodyGen::CreateBody(){
 	JointFactory(jointMode);
 }
 
-void CRDebugLinkBodyGen::InitBody(){}
+void CRDebugLinkBodyGen::InitBody(){
+	Init();
+}
 
 void CRDebugLinkBodyGen::InitContact(){
 	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
@@ -173,7 +175,5 @@ void CRDebugLinkBodyGen::InitContact(){
 		}
 	}
 }
-
-void CRDebugLinkBodyGen::Init(){}
 
 }

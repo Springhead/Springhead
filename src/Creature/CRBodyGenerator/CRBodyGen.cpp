@@ -38,7 +38,41 @@ PHJointIf* CRBodyGen::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBal
 }
 
 void CRBodyGen::Init(){
+	for(size_t i = 0; i < joints.size(); i++){
+		if(solids.front() == joints[i]->GetSocketSolid()){
+			SetInitPosition(solids.front(), joints[i]);
+		}
+	}
+}
 
+void CRBodyGen::SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint){
+	PHSolidIf*	nextParent		= childJoint->GetPlugSolid();
+	Posed sp, pp; //< socket, plug‚Ìpose
+	childJoint->GetSocketPose(sp);
+	childJoint->GetPlugPose(pp);
+	Posed parentRot;
+	parentRot.W() = parentSolid->GetPose().W(); 
+	parentRot.X() = parentSolid->GetPose().X();
+	parentRot.Y() = parentSolid->GetPose().Y();
+	parentRot.Z() = parentSolid->GetPose().Z();
+	Vec3d spX = sp.Pos();
+	Vec3d ppX = pp.Pos();
+	spX = parentRot * spX;
+	ppX = parentRot * ppX;
+	sp.Px() = spX.X();
+	sp.Py() = spX.Y();
+	sp.Pz() = spX.Z();
+	pp.Px() = ppX.X();
+	pp.Py() = ppX.Y();
+	pp.Pz() = ppX.Z();
+	// §Œä–Ú•W‚ª‚È‚¢ê‡
+	Posed nextParentPos	= sp * pp.Inv() * parentSolid->GetPose();
+	nextParent->SetPose(nextParentPos);
+	for(size_t i = 0; i < joints.size(); i++){
+		if(nextParent == joints[i]->GetSocketSolid()){
+			SetInitPosition(nextParent, joints[i]);
+		}
+	}
 }
 
 int CRBodyGen::NSolids(){
@@ -129,4 +163,77 @@ Matrix3d CRBodyGen::CalcBoxInertia(Vec3d boxsize, double mass){
 					0.0,  0.0,  i_zz);
 }
 
+double CRBodyGen::GetTargetMechanicalEnergy(PHSolidIf* rootSolid){
+	return GetTargetKineticEnergy() + GetTargetPotentialEnergy(rootSolid);
 }
+
+double CRBodyGen::GetTargetKineticEnergy(){
+	double ans = DBL_MAX;
+	if(solids.size() > 0){
+		ans = 0;
+		for(size_t i = 0; i < solids.size(); i++){
+			double m = solids[i]->GetMass();
+			Vec3d  v = solids[i]->GetVelocity();
+			ans += 0.5 * m * pow(v[0], 2);
+			ans += 0.5 * m * pow(v[1], 2);
+			ans += 0.5 * m * pow(v[2], 2);
+			Matrix3d I = solids[i]->GetInertia();
+			Vec3d	 o = solids[i]->GetAngularVelocity();
+			ans += 0.5 * I[0][0] * pow(o[0], 2);
+			ans += 0.5 * I[1][1] * pow(o[1], 2);
+			ans += 0.5 * I[2][2] * pow(o[2], 2);
+		}
+	}
+	return ans;
+}
+
+double CRBodyGen::GetTargetPotentialEnergy(PHSolidIf* rootSolid){
+	double ans = DBL_MAX;
+	
+	return ans;
+}
+
+double CRBodyGen::GetMechanicalEnergy(PHSolidIf* rootSolid){
+	return GetKineticEnergy() + GetPotentialEnergy(rootSolid);
+}
+
+double CRBodyGen::GetKineticEnergy(){
+	double ans = DBL_MAX;
+	if(solids.size() > 0){
+		ans = 0;
+		for(size_t i = 0; i < solids.size(); i++){
+			double m = solids[i]->GetMass();
+			Vec3d  v = solids[i]->GetVelocity();
+			ans += 0.5 * m * pow(v[0], 2);
+			ans += 0.5 * m * pow(v[1], 2);
+			ans += 0.5 * m * pow(v[2], 2);
+			Matrix3d I = solids[i]->GetInertia();
+			Vec3d	 o = solids[i]->GetAngularVelocity();
+			ans += 0.5 * I[0][0] * pow(o[0], 2);
+			ans += 0.5 * I[1][1] * pow(o[1], 2);
+			ans += 0.5 * I[2][2] * pow(o[2], 2);
+		}
+	}
+	return ans;
+}
+
+double CRBodyGen::GetPotentialEnergy(PHSolidIf* rootSolid){
+	double ans = DBL_MAX;
+	
+	if(rootSolid) ans = 0;
+	for(size_t i = 0; i < joints.size(); i++){
+		if(rootSolid == joints[i]->GetSocketSolid()){
+			ans += CalcPotential(rootSolid->GetPose(), rootSolid, joints[i]);
+		}
+	}
+	return ans;
+}
+
+double CRBodyGen::CalcPotential(Posed parentPos, PHSolidIf* parentSolid, PHJointIf* childJoint){
+	double ans = DBL_MAX;
+
+	
+	return ans;
+}
+
+}//< end of namespace Spr

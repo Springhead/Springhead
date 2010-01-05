@@ -100,7 +100,6 @@ public:
 		InitBody();
 		InitContact();
 	}
-	virtual void Init();
 	int NBallJoints(){return joNBallJoints;}
 	int NHingeJoints(){return joNHingeJoints;}
 

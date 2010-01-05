@@ -62,6 +62,16 @@ protected:
 	*/
 	Matrix3d CalcBoxInertia(Vec3d boxsize, double mass);
 
+	/**
+		@brief childのポテンシャルエネルギーを計算する
+	*/
+	double CalcPotential(Posed parentPos, PHSolidIf* parentSolid, PHJointIf* childJoint);
+
+	/**
+		@brief すべての剛体の初期姿勢を目標角に収束したものとして初期化する
+	*/
+	void SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint);
+
 public:
 	CRBodyGen(){}
 	CRBodyGen(const CRBodyGenDesc& desc, PHSceneIf* s=NULL) 
@@ -117,11 +127,42 @@ public:
 
 	/** @brief ボディの重心座標を得る
 	*/
-	virtual Vec3d				GetCenterOfMass();
+	virtual Vec3d GetCenterOfMass();
 	
 	/** @brief ボディの質量を得る
 	*/
-	virtual double				GetSumOfMass();
+	virtual double GetSumOfMass();
+
+	/**
+		@brief 目標角・目標角速度に収束した場合の力学的エネルギーを返す
+	*/
+	virtual double GetTargetMechanicalEnergy(PHSolidIf* rootSolid);
+
+	/**
+		@brief 目標角・目標角速度に収束した場合の運動エネルギーを返す
+	*/
+	virtual double GetTargetKineticEnergy();
+
+	/**
+		@brief 目標角・目標角速度に収束した場合の位置エネルギーを返す
+	*/
+	virtual double GetTargetPotentialEnergy(PHSolidIf* rootSolid);
+
+	/**
+		@brief 現在の力学的エネルギーを返す
+	*/
+	virtual double GetMechanicalEnergy(PHSolidIf* rootSolid);
+
+	/**
+		@brief 現在の運動エネルギーを返す
+	*/
+	virtual double GetKineticEnergy();
+
+	/**
+		@brief 現在の位置エネルギーを返す
+	*/
+	virtual double GetPotentialEnergy(PHSolidIf* rootSolid);
+
 };
 }
 //@}
