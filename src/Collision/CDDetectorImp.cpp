@@ -139,7 +139,10 @@ bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3
 
 			このような場合は、形状の中心間を結ぶベクトルを仮法線として、
 			仮法線の向きで接触法線を求めてこれを本法線とする。
-			本法線の向きで、侵入量と法線、最近傍点を計算する。	
+			本法線の向きで、侵入量と法線、最近傍点を計算する。
+
+			この処理では、例えば広い床の上の小さなサイコロが床を横に飛んでいくという
+			問題が起こる。
 		*/
 		//	仮法線（形状の中心を結ぶ向き）の計算
 		Vec3d tmpNormal = shapePoseW[1]*shape[1]->CalcCenterOfMass() - shapePoseW[0]*shape[0]->CalcCenterOfMass();
