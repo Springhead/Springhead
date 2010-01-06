@@ -142,6 +142,7 @@ void CRDebugLinkBodyGen::JointFactory(PHJointMode m){
 	}
 	else if(m == MODE_HINGE){
 		PHHingeJointDesc hDesc = InitHingeJointDesc();
+		hDesc.targetPosition = Rad(30);
 		for(unsigned int i = 0; i < joNJoints; i++){
 			joints.push_back(phScene->CreateJoint(solids[i], solids[i+1], hDesc));
 		}
@@ -162,7 +163,6 @@ void CRDebugLinkBodyGen::CreateBody(){
 }
 
 void CRDebugLinkBodyGen::InitBody(){
-	Init();
 }
 
 void CRDebugLinkBodyGen::InitContact(){
