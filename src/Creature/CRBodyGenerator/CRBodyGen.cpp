@@ -50,14 +50,16 @@ void CRBodyGen::SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint){
 	Posed sp, pp; //< socket, plug‚Ìpose
 	childJoint->GetSocketPose(sp);
 	childJoint->GetPlugPose(pp);
-	PHHingeJointIf* hj = DCAST(PHHingeJointIf, childJoint);
-	Quaterniond target = Quaterniond::Rot(hj->GetTargetPosition(), 'z');
+	Quaterniond target;
+	if(PHHingeJointIf* hj = DCAST(PHHingeJointIf, childJoint)){
+		target = Quaterniond::Rot(hj->GetTargetPosition(), 'z');
+	}else if(PHBallJointIf* bj = DCAST(PHBallJointIf, childJoint)){
+		target = bj->GetTargetPosition();
+	}
 	Posed targetRot;
 	targetRot.Ori() = target;
 	targetRot.Pos() = Vec3d();
-	Posed nextParentPos = pp.Inv() * sp * parentSolid->GetPose();
-	// –Ú•W‚ðÝ’è‚·‚é‚Æ‹““®‚ª‚¨‚©‚µ‚¢
-	//Posed nextParentPos = pp.Inv() * targetRot * sp * parentSolid->GetPose();
+	Posed nextParentPos = parentSolid->GetPose() * sp * targetRot * pp.Inv();
 	nextParent->SetPose(nextParentPos);
 
 	for(size_t i = 0; i < joints.size(); i++){
@@ -181,12 +183,47 @@ double CRBodyGen::GetTargetKineticEnergy(){
 
 double CRBodyGen::GetTargetPotentialEnergy(PHSolidIf* rootSolid){
 	double ans = DBL_MAX;
+
+	if(rootSolid){
+		ans = 0;
+		ans += rootSolid->GetMass() * phScene->GetGravity().Y() * rootSolid->GetPose().PosY();
+		for(size_t i = 0; i < joints.size(); i++){
+			if(rootSolid == joints[i]->GetSocketSolid()){
+				// Solid‚Ìpose‚ð‘‚«Š·‚¦‚Ä‚Í‚¢‚¯‚È‚¢‚½‚ßCˆø”‚ª3‚Â
+				ans += CalcTargetPotential(rootSolid->GetPose(), rootSolid, joints[i]);
+			}
+		}
+	}
+
+	return ans;
+}
+
+double CRBodyGen::CalcTargetPotential(Posed parentPos, PHSolidIf* parentSolid, PHJointIf* childJoint){
+	double ans = DBL_MAX;
+	
+	PHSolidIf*	nextParent = childJoint->GetPlugSolid();
+	Posed sp, pp; //< socket, plug‚Ìpose
+	childJoint->GetSocketPose(sp);
+	childJoint->GetPlugPose(pp);
+	PHHingeJointIf* hj = DCAST(PHHingeJointIf, childJoint);
+	Quaterniond target = Quaterniond::Rot(hj->GetPosition(), 'z');
+	Posed targetRot;
+	targetRot.Ori() = target;
+	targetRot.Pos() = Vec3d();
+	Posed nextParentPos = parentSolid->GetPose() * sp * targetRot * pp.Inv();
+	
+	ans += parentSolid->GetMass() * phScene->GetGravity().Y() * nextParentPos.PosY();
+	for(size_t i = 0; i < joints.size(); i++){
+		if(nextParent == joints[i]->GetSocketSolid()){
+			ans += CalcTargetPotential(nextParentPos, nextParent, joints[i]);
+		}
+	}
 	
 	return ans;
 }
 
-double CRBodyGen::GetMechanicalEnergy(PHSolidIf* rootSolid){
-	return GetKineticEnergy() + GetPotentialEnergy(rootSolid);
+double CRBodyGen::GetMechanicalEnergy(){
+	return GetKineticEnergy() + GetPotentialEnergy();
 }
 
 double CRBodyGen::GetKineticEnergy(){
@@ -209,41 +246,14 @@ double CRBodyGen::GetKineticEnergy(){
 	return ans;
 }
 
-double CRBodyGen::GetPotentialEnergy(PHSolidIf* rootSolid){
-	double ans = DBL_MAX;
-	
-	if(rootSolid) ans = 0;
-	for(size_t i = 0; i < joints.size(); i++){
-		if(rootSolid == joints[i]->GetSocketSolid()){
-			// Solid‚Ìpose‚ð‘‚«Š·‚¦‚Ä‚Í‚¢‚¯‚È‚¢‚½‚ßCˆø”‚ª3‚Â
-			ans += CalcPotential(rootSolid->GetPose(), rootSolid, joints[i]);
-		}
+double CRBodyGen::GetPotentialEnergy(){
+	double ans = 0;
+
+	for(size_t i = 0; i < solids.size(); i++){
+		ans += solids[i]->GetMass() * solids[i]->GetPose().PosY();
 	}
-	return ans;
-}
+	ans *= phScene->GetGravity().Y();
 
-double CRBodyGen::CalcPotential(Posed parentPos, PHSolidIf* parentSolid, PHJointIf* childJoint){
-	double ans = 0.0;
-
-	PHSolidIf* nextParent = childJoint->GetPlugSolid();
-	Posed sp, pp;
-	childJoint->GetSocketPose(sp);
-	childJoint->GetPlugPose(pp);
-	Posed parentRot;
-	parentRot.W() = parentPos.W();
-	parentRot.X() = parentPos.X();
-	parentRot.Y() = parentPos.Y();
-	parentRot.Z() = parentPos.Z();
-	Vec3d spX = sp.Pos();
-	Vec3d ppX = pp.Pos();
-	sp.Px() = spX.X();
-	sp.Py() = spX.Y();
-	sp.Pz() = spX.Z();
-	pp.Px() = ppX.X();
-	pp.Py() = ppX.Y();
-	pp.Pz() = ppX.Z();
-	Posed nextParentPos = sp * pp.Inv() * parentPos;
-	//ans += 
 	return ans;
 }
 

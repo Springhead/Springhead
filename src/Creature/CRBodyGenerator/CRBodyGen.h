@@ -149,9 +149,14 @@ public:
 	virtual double GetTargetPotentialEnergy(PHSolidIf* rootSolid);
 
 	/**
+		@breif 各剛体の目標状態に収束した場合の位置エネルギーを返す
+	*/
+	 virtual double CalcTargetPotential(Posed parentPos, PHSolidIf* parentSolid, PHJointIf* childJoint);
+
+	/**
 		@brief 現在の力学的エネルギーを返す
 	*/
-	virtual double GetMechanicalEnergy(PHSolidIf* rootSolid);
+	virtual double GetMechanicalEnergy();
 
 	/**
 		@brief 現在の運動エネルギーを返す
@@ -161,7 +166,7 @@ public:
 	/**
 		@brief 現在の位置エネルギーを返す
 	*/
-	virtual double GetPotentialEnergy(PHSolidIf* rootSolid);
+	virtual double GetPotentialEnergy();
 
 };
 }
