@@ -50,24 +50,16 @@ void CRBodyGen::SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint){
 	Posed sp, pp; //< socket, plug‚Ìpose
 	childJoint->GetSocketPose(sp);
 	childJoint->GetPlugPose(pp);
-	Posed parentRot;
-	parentRot.W() = parentSolid->GetPose().W(); 
-	parentRot.X() = parentSolid->GetPose().X();
-	parentRot.Y() = parentSolid->GetPose().Y();
-	parentRot.Z() = parentSolid->GetPose().Z();
-	Vec3d spX = sp.Pos();
-	Vec3d ppX = pp.Pos();
-	spX = parentRot * spX;
-	ppX = parentRot * ppX;
-	sp.Px() = spX.X();
-	sp.Py() = spX.Y();
-	sp.Pz() = spX.Z();
-	pp.Px() = ppX.X();
-	pp.Py() = ppX.Y();
-	pp.Pz() = ppX.Z();
-	// §Œä–Ú•W‚ª‚È‚¢ê‡
-	Posed nextParentPos	= sp * pp.Inv() * parentSolid->GetPose();
+	PHHingeJointIf* hj = DCAST(PHHingeJointIf, childJoint);
+	Quaterniond target = Quaterniond::Rot(hj->GetTargetPosition(), 'z');
+	Posed targetRot;
+	targetRot.Ori() = target;
+	targetRot.Pos() = Vec3d();
+	Posed nextParentPos = pp.Inv() * sp * parentSolid->GetPose();
+	// –Ú•W‚ðÝ’è‚·‚é‚Æ‹““®‚ª‚¨‚©‚µ‚¢
+	//Posed nextParentPos = pp.Inv() * targetRot * sp * parentSolid->GetPose();
 	nextParent->SetPose(nextParentPos);
+
 	for(size_t i = 0; i < joints.size(); i++){
 		if(nextParent == joints[i]->GetSocketSolid()){
 			SetInitPosition(nextParent, joints[i]);
