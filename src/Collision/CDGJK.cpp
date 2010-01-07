@@ -252,7 +252,7 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 #define CalcSupport(n)														\
 	p_id[n] = a->Support(p[n], a2z.Ori().Conjugated() * (v[n]));			\
 	q_id[n] = b->Support(q[n], b2z.Ori().Conjugated() * -(v[n]));			\
-	w[n] = b2z * (q[n]) - a2z * (p[n]);
+	w[n] = b2z * ((Spr::Vec3d)q[n]) - a2z * ((Spr::Vec3d)p[n]);
 
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
