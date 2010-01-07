@@ -252,7 +252,7 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 #define CalcSupport(n)														\
 	p_id[n] = a->Support(p[n], a2z.Ori().Conjugated() * (v[n]));			\
 	q_id[n] = b->Support(q[n], b2z.Ori().Conjugated() * -(v[n]));			\
-	w[n] = b2z * ((Spr::Vec3d)q[n]) - a2z * ((Spr::Vec3d)p[n]);
+	w[n] = b2z * ((Vec3d)q[n]) - a2z * ((Vec3d)p[n]);
 
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
@@ -556,15 +556,15 @@ final:
 		if (a+b > 1e-10){ dec[0] = b/(a+b); dec[1] = a/(a+b); }
 		else {dec[0] =0.5; dec[1]=0.5;}
 		dec[2]=0;
-		pa = dec[0]*p[id0] + dec[1]*p[id1];
-		pb = dec[0]*q[id0] + dec[1]*q[id1];
+		pa = dec[0]*(Vec3d)p[id0] + dec[1]*(Vec3d)p[id1];
+		pb = dec[0]*(Vec3d)q[id0] + dec[1]*(Vec3d)q[id1];
 		dist = dec[0]*w[id0].z + dec[1]*w[id1].z;
 		ids[0] = id0; ids[1] = id1;
 		nSupport = 2;
 	}else{
 		dec = TriDecompose(w[ids[0]].XY(), w[ids[1]].XY(), w[ids[2]].XY());
-		pa = dec[0]*p[ids[0]] + dec[1]*p[ids[1]] + dec[2]*p[ids[2]];
-		pb = dec[0]*q[ids[0]] + dec[1]*q[ids[1]] + dec[2]*q[ids[2]];
+		pa = dec[0]*(Vec3d)p[ids[0]] + dec[1]*(Vec3d)p[ids[1]] + dec[2]*(Vec3d)p[ids[2]];
+		pb = dec[0]*(Vec3d)q[ids[0]] + dec[1]*(Vec3d)q[ids[1]] + dec[2]*(Vec3d)q[ids[2]];
 		dist = dec[0]*w[ids[0]].z + dec[1]*w[ids[1]].z + dec[2]*w[ids[2]].z;
 		nSupport = 3;
 	}
@@ -676,8 +676,8 @@ inline void CalcPoints(int usedBits, Vec3d& p1, Vec3d& p2) {
 	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<= 1) {
 		if (usedBits & curPoint) {
 			sum += det[usedBits][i];
-			p1 += p[i] * det[usedBits][i];
-			p2 += q[i] * det[usedBits][i];
+			p1 += (Vec3d)p[i] * det[usedBits][i];
+			p2 += (Vec3d)q[i] * det[usedBits][i];
 		}
 	}
 	if (sum){
