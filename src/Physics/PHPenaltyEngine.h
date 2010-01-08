@@ -110,7 +110,7 @@ protected:
 		return false;
 	}
 	void CalcReflexForce(PHShapePairForPenalty* sp, CDContactAnalysis* analyzer);
-	void CalcTriangleReflexForce(PHShapePairForPenalty* cp, Vec3f p0, Vec3f p1, Vec3f p2, Vec3f cog, Vec3f vel, Vec3f angVel);
+	void CalcTriangleReflexForce(PHShapePairForPenalty* cp, Vec3f p0, Vec3f p1, Vec3f p2, Vec3f v0, Vec3f v1, Vec3f v2);
 	void CalcFriction(PHShapePairForPenalty* cp);
 };
 
