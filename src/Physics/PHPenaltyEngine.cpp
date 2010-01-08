@@ -68,8 +68,12 @@ void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine*
 	//	接触力計算の準備
 	float rs[2], rd[2], fs[2], fd[2], sf[2], df[2];
 	for(int i=0; i<2; ++i){
-		rs[i] = fs[i] = SPRING;
-		rd[i] = fd[i] = DAMPER;
+		//rs[i] = fs[i] = SPRING;
+		//rd[i] = fd[i] = DAMPER;
+		rs[i] = sp->shape[i]->GetMaterial().reflexSpringK;
+		rd[i] = sp->shape[i]->GetMaterial().reflexDamperD;
+		fs[i] = sp->shape[i]->GetMaterial().frictionSpringK;
+		fd[i] = sp->shape[i]->GetMaterial().frictionDamperD;
 		sf[i] = sp->shape[i]->GetMaterial().mu0;
 		df[i] = sp->shape[i]->GetMaterial().mu;
 	}
@@ -94,7 +98,7 @@ void PHSolidPairForPenalty::GenerateForce(){
 	for(i = 0; i < shapePairs.height(); i++)for(j = 0; j < shapePairs.width(); j++){
 		cp = shapePairs.item(i, j);
 		if(cp->state == CDShapePair::NONE) continue;
-		if (!area) continue;
+		if (!cp->area) continue;
 
 		//	積分したペナルティと速度を面積で割る
 		cp->reflexSpringForce /= area;
@@ -148,18 +152,25 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 		for (CDContactAnalysisFace** it = &*analyzer->vtxs.begin(); it != analyzer->planes.vtxBegin; ++it){	// これでいいの？
 			CDContactAnalysisFace& qhVtx = **it;
 			if (qhVtx.NCommonVtx() < 3) continue;
-			int curID = qhVtx.id;
 			Vec3f p0 = qhVtx.CommonVtx(0);
 			Vec3f p1;
 			Vec3f p2 = qhVtx.CommonVtx(1);
+			Vec3f v0 = solid[0]->velocity + ((p0-cog[0])^solid[0]->angVelocity)
+					 - solid[1]->velocity - ((p0-cog[1])^solid[1]->angVelocity);
+			Vec3f v1;
+			Vec3f v2 = solid[0]->velocity + ((p2-cog[0])^solid[0]->angVelocity)
+					 - solid[1]->velocity - ((p2-cog[1])^solid[1]->angVelocity);
 			for(unsigned i=2; i<qhVtx.NCommonVtx(); ++i){
-				p1 = p2;
+				p1 = p2;	v1 = v2;
 				p2 = qhVtx.CommonVtx(i);
-				CalcTriangleReflexForce(cp, p0, p1, p2, cog[curID], solid[curID]->velocity, solid[curID]->angVelocity);
+				v2 = solid[0]->velocity + ((p2-cog[0])^solid[0]->angVelocity)
+				   - solid[1]->velocity - ((p2-cog[1])^solid[1]->angVelocity);
+				float sign = qhVtx.id ? 1.0f : -1.0f;
+				CalcTriangleReflexForce(cp, p0, p1, p2, sign*v0, sign*v1, sign*v2);
 #if 0				//	hase
 				if (cp->reflexSpringForce.norm() > 10000 || !finite(cp->reflexSpringForce.norm()) ){
 					DSTR << "CalcTriangleReflexForce returned very large force." << std::endl;
-					CalcTriangleReflexForce(cp, cp, p0, p1, p2, cog[curID], fr[curID]->vel, fr[curID]->angVel);
+					CalcTriangleReflexForce(cp, p0, p1, p2, sign*v0, sign*v1, sign*v2);
 				}
 #endif
 			}
@@ -226,29 +237,19 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 #endif
 }
 
-void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, Vec3f p0, Vec3f p1, Vec3f p2, Vec3f cog, Vec3f vel, Vec3f angVel){
+void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, Vec3f p0, Vec3f p1, Vec3f p2, Vec3f v0, Vec3f v1, Vec3f v2){
 	//---------------------------------------------------------------
 	//	ばねモデルの計算：各頂点の侵入深さの計算
 	float depth0 = p0 * cp->normal;
  	float depth1 = p1 * cp->normal;
  	float depth2 = p2 * cp->normal;
-	//	ダンパモデルの計算：各頂点の速度とその法線方向成分を求める
-	angVel *= 1;	/*	角速度をダンパの計算の前に増やす．
-						ここで角速度のダンパを強くすると安定するけど，
-						転がらなくなる．
-						抗力は出しても，引力は出さないような工夫をすれば
-						安定でかつ転がるようにできるのではないかと思う．
-						by hase
-					*/
 	p0 -= depth0 * cp->normal;
 	p1 -= depth1 * cp->normal;
 	p2 -= depth2 * cp->normal;
-	Vec3f vel0 = (angVel^(p0-cog)) + vel;
-	Vec3f vel1 = (angVel^(p1-cog)) + vel;
-	Vec3f vel2 = (angVel^(p2-cog)) + vel;
-	float vel0_normal = vel0 * cp->normal;
-	float vel1_normal = vel1 * cp->normal;
-	float vel2_normal = vel2 * cp->normal;
+	//	ダンパモデルの計算：各頂点の速度の法線方向成分を求める
+	float vel0_normal = v0 * cp->normal;
+	float vel1_normal = v1 * cp->normal;
+	float vel2_normal = v2 * cp->normal;
 
 	//	抗力を計算
 	float refSp0 = reflexSpring * depth0;
@@ -279,7 +280,8 @@ void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, V
 		  ) ^ a_b;
 #ifdef _DEBUG
 	if (refSp0 > 10000 || refSp1 > 10000 || refSp2 > 10000 || !finite(triRefSp.norm()) ){
-		DSTR << "Error: The reflection spring force is too large: " << triRefSp << std::endl;
+		DSTR << "Error: The reflection spring force is too large: " 
+			<< refSp0 << " " << refSp1 << " " << refSp2 << " " << triRefSp << std::endl;
 	}
 #endif
 	// 数値演算範囲エラーのチェック
@@ -292,9 +294,9 @@ void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, V
 
 	//---------------------------------------------------------------
 	//	動摩擦力を求める
-	Vec3f velTan0 = vel0 - vel0_normal * cp->normal;
-	Vec3f velTan1 = vel1 - vel1_normal * cp->normal;
-	Vec3f velTan2 = vel2 - vel2_normal * cp->normal;
+	Vec3f velTan0 = v0 - vel0_normal * cp->normal;
+	Vec3f velTan1 = v1 - vel1_normal * cp->normal;
+	Vec3f velTan2 = v2 - vel2_normal * cp->normal;
 	Vec3f fric0, fric1, fric2;
 	if (velTan0.square() > 1e-8) fric0 = velTan0.unit() * (refSp0+refDa0);
 	if (velTan1.square() > 1e-8) fric1 = velTan1.unit() * (refSp1+refDa1);
@@ -359,10 +361,9 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 	lastOri[1] = solid[1]->pose.Ori();
 
 
-	//	動摩擦の制約を加える
+	//	摩擦係数の制約を加える
 	float fricCoeff = (cp->frictionState == PHShapePairForPenalty::STATIC) ? staticFriction : dynamicFriction;
 	float maxFric = fricCoeff * cp->dynaFric.norm();
-
 	//hase	摩擦のテスト中
 //	float reflexForce = (cp->reflexSpringForce+cp->reflexDamperForce).norm();
 //	if (maxFric < fricCoeff * reflexForce) maxFric = fricCoeff * reflexForce;
@@ -420,7 +421,7 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 
 	//	ローカル系に変換して保存
 	if (frictionSpring < 1e-12f){	//	摩擦のばね係数が0だと、伸びが計算できなくなる。
-		frictionSpring = 1e12f;		//	係数0の場合伸びは無視できるので、伸びを小さな値にしておく。
+		frictionSpring = 1e-12f;		//	係数0の場合伸びは無視できるので、伸びを小さな値にしておく。
 	}
 	cp->transFrictionBase[0] = solid[0]->pose.Inv() * (reflexForcePoint - 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption);
 	cp->transFrictionBase[1] = solid[1]->pose.Inv() * (reflexForcePoint + 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption);
