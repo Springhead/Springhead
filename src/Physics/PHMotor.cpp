@@ -154,11 +154,11 @@ PHBallJointMotor::PHBallJointMotor(){
 }
 
 void PHBallJointMotor::ElasticDeformation(){
-	double tmp = 1.0 / (D + K * dt);
 	Vec3d v0 = joint->targetVelocity, f0 = joint->offsetForce;
 	for(int i=0;i<3;i++){
-		dA[i] = tmp * dtinv * I[i];		
-		db[i] = tmp * (- K * I[i] * propV[i] - D * I[i] * v0[i] - f0[i] * dtinv);
+		double tmp = 1.0 / (D[i] + K[i] * dt);
+		dA[i] = tmp * dtinv;		
+		db[i] = tmp * (- K[i] * propV[i] - D[i] * v0[i] - f0[i] * dtinv);
 	}
 }
 
@@ -175,14 +175,16 @@ void PHBallJointMotor::PlasticDeformation(){
 	D  *= joint->hardnessRate;
 	D2 *= joint->hardnessRate;
 	K  *= joint->hardnessRate;
-	double tmp = D+D2+K*dt;
+	
 	ws = joint->vjrel;	//バネとダンパの並列部の速さ
 
-	joint->xs[1] = ((D+D2)/tmp)*joint->xs[0] + (D2*dt/tmp)*ws;	//バネとダンパの並列部の距離の更新
+	
 	for(int i=0;i<3;i++){
-		dA[i]= tmp/(D2*(K*dt+D)) * dtinv /I[i];
+		double tmp = D[i]+D2[i]+K[i]*dt;
+		joint->xs[1].w()[i] = ((D[i]+D2[i])/tmp)*joint->xs[0][i] + (D2[i]*dt/tmp) * ws.w()[i];	//バネとダンパの並列部の距離の更新
+		dA[i]= tmp/(D2[i]*(K[i]*dt+D[i])) * dtinv;
+		db[i] = K[i]/(K[i]*dt+D[i])*(joint->xs[0].w()[i]) ;
 	}
-	db = K/(K*dt+D)*(joint->xs[0].w()) ;
 	
 	//ELASTIC_PLASTICモードの場合,PLASTIC状態の終了時に残留変位を保存する位置にTargetPositionを変更
 	if(joint->type==PHBallJointDesc::ELASTIC_PLASTIC){
@@ -198,13 +200,12 @@ void PHBallJointMotor::SetupLCP(){
 	fMaxDt = joint->fMax * joint->GetScene()->GetTimeStep();
 	dt		= joint->GetScene()->GetTimeStep();
 	dtinv	= joint->GetScene()->GetTimeStepInv();
-	D  = joint->damper;
-	D2 = joint->secondDamper;
-	K  = joint->spring;
-	I  = joint->Inertia;
-	
+	D  = joint->damper *joint->Inertia;
+	D2 = joint->secondDamper *joint->Inertia;
+	K  = joint->spring *joint->Inertia;
+
 	// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
-	if(K == 0.0 && D == 0.0){
+	if(joint->spring == 0.0 && joint->damper == 0.0){
 		dA.clear();
 		db.clear();
 		joint->motorf = joint->offsetForce;
@@ -220,29 +221,27 @@ void PHBallJointMotor::SetupLCP(){
 
 		A = joint->A.w();
 		b = joint->b.w();
-		
-		//物体の形状を考慮したバネダンパを設定する場合
-		if(I[0]!=1&&I[1]!=1&&I[2]!=1){
-			//物体の変形に使用する場合
-			/*x軸，y軸回りの変形(曲げ）
-				I(断面2次モーメント),E(ヤング率),T(トルク),l(剛体間の距離)としたとき
-　				T=EIθ/l
-			  z軸回りの変形（ねじり）
-				G(せん断弾性係数),v(ポワソン比)
-				G=E/2(1+v)
-				T=GIθ/l 
-			*/
-			double v=0.3;		//ポワソン比は0.3ぐらいが多い
 
-			//四角形の場合
-			if(I[0]>I[1]){
-				I[2]=I[1]*4/(2*(1+v));
-			}else{
-				I[2]=I[0]*4/(2*(1+v));
-			}
-		}
-			
-		
+		////物体の形状を考慮したバネダンパを設定する場合
+		//if(I[0]!=1&&I[1]!=1&&I[2]!=1){
+		//	//物体の変形に使用する場合
+		//	/*x軸，y軸回りの変形(曲げ）
+		//		I(断面2次モーメント),E(ヤング率),T(トルク),l(剛体間の距離)としたとき
+		//			T=EIθ/l
+		//	  z軸回りの変形（ねじり）
+		//		G(せん断弾性係数),v(ポワソン比)
+		//		G=E/2(1+v)
+		//		T=GIθ/l 
+		//	*/
+		//	double v=0.3;		//ポワソン比は0.3ぐらいが多い
+
+		//	//四角形の場合
+		//	if(I[0]>I[1]){
+		//		I[2]=I[1]*4/(2*(1+v));
+		//	}else{
+		//		I[2]=I[0]*4/(2*(1+v));
+		//	}
+		//}
 		switch(joint->type){
 			case PHJointDesc::ELASTIC:	//PHDeformationType::Elastic 0　初期値
 				ElasticDeformation();
@@ -268,7 +267,7 @@ void PHBallJointMotor::SetupLCP(){
 }
 
 void PHBallJointMotor::IterateLCP(){
-	if(K == 0.0 && D == 0.0)
+	if(joint->spring == 0.0 && joint->damper == 0.0)
 		return;
 
 	Vec3d fnew;
@@ -277,10 +276,14 @@ void PHBallJointMotor::IterateLCP(){
 		fnew[i] = joint->motorf[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * joint->motorf[i] + b[i] + db[i]
 				+ joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);	
 
-		if(fMaxDt < fnew[i])
+		if(fMaxDt < fnew[i]){
+			DSTR<<joint->GetName()<<" : fnew["<<i<<"]="<<fnew[i]<<" fMax Over"<<std::endl;
 			fnew[i] = fMaxDt;
-		else if(joint->motorf[i] < -fMaxDt)
+		}
+		else if(joint->motorf[i] < -fMaxDt){
+			DSTR<<joint->GetName()<<" : fnew["<<i<<"]="<<fnew[i]<<" fMax Over"<<std::endl;
 			joint->motorf[i] = fMaxDt;
+		}
 		
 		joint->CompResponse(fnew[i] - joint->motorf[i], i);
 		joint->motorf[i] = fnew[i];

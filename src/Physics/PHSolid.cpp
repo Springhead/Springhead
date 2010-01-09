@@ -245,6 +245,7 @@ void PHSolid::UpdateVelocity(double dt){
 //		DSTR << "v:" << v.w().norm();
 //		DSTR << "dv:" << dv.w().norm() << std::endl;
 		v.w() *= DCAST(PHScene,GetScene())->GetAirResistanceRate();
+
 		double vMax = 100;
 		if (v.w().norm() > 100) v.w() = v.w().unit() * vMax;
 

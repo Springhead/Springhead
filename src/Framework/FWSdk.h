@@ -43,6 +43,7 @@ protected:
 	UTRef<FISdkIf> fiSdk;
 	
 	bool debugMode;
+	bool DSTRFlag;
 public:
 	SPR_OBJECTDEF(FWSdk);
 	FWSdk();
@@ -76,6 +77,8 @@ public:
 	virtual void Step();
 	virtual void Draw();
 	virtual void Reshape(int w, int h);
+
+	void SetDSTR(bool f){ DSTRFlag = f; }
 	
 protected:
 	void CreateSdks();

@@ -159,7 +159,7 @@ void PHConstraint::CompResponseMatrix(){
 		if(!constr[j])continue;
 		if(A[j] < Amin || A[j] < epsabs){
 			constr[j] = false;
-			DSTR << j << "-th constraint ill-conditioned! disabled." << endl;
+			DSTR <<this->GetName()<<":"<< j << "-th constraint ill-conditioned! disabled." << endl;
 		}
 		else
 			Ainv[j] = 1.0 / (A[j] + dA[j]);

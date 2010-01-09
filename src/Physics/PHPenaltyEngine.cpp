@@ -68,12 +68,17 @@ void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine*
 	//	接触力計算の準備
 	float rs[2], rd[2], fs[2], fd[2], sf[2], df[2];
 	for(int i=0; i<2; ++i){
-		//rs[i] = fs[i] = SPRING;
-		//rd[i] = fd[i] = DAMPER;
-		rs[i] = sp->shape[i]->GetMaterial().reflexSpringK;
-		rd[i] = sp->shape[i]->GetMaterial().reflexDamperD;
-		fs[i] = sp->shape[i]->GetMaterial().frictionSpringK;
-		fd[i] = sp->shape[i]->GetMaterial().frictionDamperD;
+
+		rs[i] = fs[i] = SPRING;
+		rd[i] = fd[i] = DAMPER;
+
+		//PHMaterialに宣言のない変数が設定されておりビルドできませんでした
+		//一時的にSPRING，DAMPERの設定に戻しておきます　//naga
+		//rs[i] = sp->shape[i]->GetMaterial().reflexSpringK;
+		//rd[i] = sp->shape[i]->GetMaterial().reflexDamperD;
+		//fs[i] = sp->shape[i]->GetMaterial().frictionSpringK;
+		//fd[i] = sp->shape[i]->GetMaterial().frictionDamperD;
+
 		sf[i] = sp->shape[i]->GetMaterial().mu0;
 		df[i] = sp->shape[i]->GetMaterial().mu;
 	}

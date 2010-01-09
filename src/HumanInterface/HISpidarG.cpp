@@ -35,7 +35,7 @@ void HISpidarGDesc::Init(char* type){
 		bool bLeft = stricmp(type, "SpidarG6X3L")==0;
 		//	モータの取り付け位置. モータが直方体に取り付けられている場合は，
 		const float PX = 0.12f/2;		//	x方向の辺の長さ/2
-		const float PY = 0.14f/2;		//	y方向の辺の長さ/2
+		const float PY = 0.152f/2;//0.14f/2;		//	y方向の辺の長さ/2
 		const float PZ = 0.12f/2;		//	z方向の辺の長さ/2
 		//	糸のグリップへの取り付け位置．グリップはピンポン玉を採用しています．
 		const float GX = 0.045f/2;		//	x方向の辺の長さ/2

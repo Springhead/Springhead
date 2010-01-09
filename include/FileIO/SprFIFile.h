@@ -21,6 +21,8 @@ struct FIFileIf: public ObjectIf{
 	bool Load(ObjectIfs& objs, const char* fn);
 	///	セーブ
 	bool Save(const ObjectIfs& objs, const char* fn);
+	///	情報のDSTRの出力の有無
+	void SetDSTR(bool f);
 };
 
 ///	DirectXファイルのファイルローダとセーバ

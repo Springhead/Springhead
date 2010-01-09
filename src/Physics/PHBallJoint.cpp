@@ -87,10 +87,11 @@ void PHBallJoint::CompError(){
 
 PHJointDesc::PHDeformationType PHBallJoint::GetDeformationMode(){
 	switch(type){
-	case PHBallJointDesc::ELASTIC_PLASTIC:
+	case PHJointDesc::ELASTIC_PLASTIC:
+		if(motor.yieldFlag)return PHJointDesc::PLASTIC;
+		else  return PHJointDesc::ELASTIC;
+	default: 
 		return type;
-	default:
-		return type; //< デフォルトの戻り値ぐらい書いてよ．
 	}
 }
 

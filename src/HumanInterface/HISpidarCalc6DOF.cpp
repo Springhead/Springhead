@@ -65,8 +65,11 @@ void HISpidarCalc6Dof::Update()
 		delta.X() = postureDiff[3];
 		delta.Y() = postureDiff[4];
 		delta.Z() = postureDiff[5];
+
+		
 		float a = delta.norm();
 		if (a > 1e-10) ori = Quaternionf::Rot(a, delta/a) * ori;
+		
 		UpdatePos();
 		MakeWireVec();
 	}

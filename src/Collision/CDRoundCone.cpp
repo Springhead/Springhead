@@ -194,6 +194,27 @@ double CDRoundCone::CurvatureRadius(Vec3d p){
 	return Rmin;
 }
 
+Matrix3f CDRoundCone::CalcMomentOfInertia(){
+	Matrix3f ans;
+	//‰~‘ä‚Ì•”•ª‚Í‰~’Œ‹ß—
+	// http://www12.plala.or.jp/ksp/mechanics/inertiaTable1/
+	// http://www.dynamictouch.matrix.jp/tensormodel.php
+
+	float r = (radius[0] +radius[1])*0.5;	 //‰~’Œ‚Ì”¼Œa
+	
+	ans[0][0] = ((r * r)/4.0f + (length*length)/12.0f + 83.0f/320.0f * ( radius[0] * radius[0] +  radius[1] * radius[1]))+ length * length / 2.0f; 
+	ans[0][1] = 0.0f;
+	ans[0][2] = 0.0f;
+	ans[1][0] = 0.0f;
+	ans[1][1] = ((r * r)/4.0f + (length*length)/12.0f + 83.0f/320.0f * ( radius[0] * radius[0] +  radius[1] * radius[1]))+ length * length / 2.0f;
+	ans[1][2] = 0.0f;
+	ans[2][0] = 0.0f;
+	ans[2][1] = 0.0f;
+	ans[2][2] = (9.0f/5.0f * r * r);
+
+	return ans;
+}
+
 Vec2f CDRoundCone::GetRadius() {
 	return radius;
 }

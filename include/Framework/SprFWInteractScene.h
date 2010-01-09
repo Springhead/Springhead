@@ -20,7 +20,8 @@ class FWInteractAdaptee;
 typedef enum FWInteractMode{
 	NONE,
 	LOCAL_DYNAMICS,
-	VIRTUAL_COUPLING
+	VIRTUAL_COUPLING,
+	GRAB_COUPLING
 }IAMode;
 
 typedef enum FWHapticMode{

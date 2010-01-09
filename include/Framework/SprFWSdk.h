@@ -121,6 +121,10 @@ struct FWSdkIf : SdkIf {
 	 */
 	void Reshape(int w, int h);
 
+	/** @brief DSTR出力のデバッグ情報の表示の可否を設定
+	 */
+	void SetDSTR(bool f);
+
 	static void SPR_CDECL RegisterSdk();
 };
 

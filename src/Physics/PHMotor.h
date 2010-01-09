@@ -72,9 +72,9 @@ private:
 	Vec3d	A, Ainv, dA, b, db;
 	//Vec3d	f;
 	Quaterniond	propQ;
-	Vec3d	propV, I;
+	Vec3d	 K, D, D2,propV;
 	double	fMaxDt;
-	double	dt, dtinv, K, D, D2;
+	double	dt, dtinv;
 	void    ElasticDeformation(); //< ’e«•ÏŒ`
 	void	PlasticDeformation(); //< ‘Y«•ÏŒ`
 	bool	IsYield(); //< ~•š‚µ‚Ä‚¢‚é‚©”Û‚©‚Ìƒ`ƒFƒbƒN

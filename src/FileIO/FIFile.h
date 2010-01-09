@@ -28,6 +28,8 @@ class FISdk;
 */
 class FIFile:public Object{
 public:
+	FIFile();	
+	bool DSTRFlag;		//デバッグ情報をDSTRで表示するかどうか
 	FISdk* sdk;
 	SPR_OBJECTDEF_ABST(FIFile);
 	FISdk* GetSdk(){ return sdk; }
@@ -35,6 +37,7 @@ public:
 	virtual void Load(FILoadContext* fc);
 	virtual bool Save(const ObjectIfs& objs, const char* fn);
 	virtual void Save(const ObjectIfs& objs, FISaveContext* sc);
+	void SetDSTR(bool f){ DSTRFlag = f; }
 	/**	ノードのロード．
 		TODO: 新仕様にあわせる
 
@@ -59,6 +62,8 @@ public:
 	//@}
 
 protected:	
+
+
 	///	ノードのセーブ
 	void SaveNode(FISaveContext* sc, ObjectIf* obj);
 	///	ブロックのセーブ

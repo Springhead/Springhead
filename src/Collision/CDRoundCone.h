@@ -36,6 +36,8 @@ public:
 	virtual double CurvatureRadius(Vec3d p);
 	///< •\–Êã‚Ì“_p‚É‚¨‚¯‚é–@ü
 	virtual Vec3d Normal(Vec3d p);
+
+	virtual Matrix3f CalcMomentOfInertia();
 	
 	Vec2f GetRadius();
 	float GetLength();

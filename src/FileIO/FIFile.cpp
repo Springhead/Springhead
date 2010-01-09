@@ -116,7 +116,9 @@ void FILoadContext::PushFileMap(const UTString fn){
 
 //---------------------------------------------------------------------------
 //	FIFile
-
+FIFile::FIFile(){
+	DSTRFlag = true;
+}
 bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	DSTR << "Loading " << fn << " ...." << std::endl;
 	FILoadContext fc;
@@ -135,8 +137,10 @@ void FIFile::Load(FILoadContext* fc){
 		//	ファイルからデータをロード
 		LoadImp(fc);
 	}
+	fc->SetDSTR(DSTRFlag);
+
 	fc->LinkData();
-	fc->loadedDatas.Print(DSTR);
+	if(DSTRFlag) fc->loadedDatas.Print(DSTR);
 
 	//	データからノードを作成
 	fc->CreateScene();
