@@ -59,6 +59,7 @@ FWSdk::FWSdk(){
 	curScene = NULL;
 	curRender = NULL;
 	debugMode = false;
+	DSTRFlag = true;
 }
 void FWSdk::CreateSdks(){
 	phSdk = PHSdkIf::CreateSdk();
@@ -116,6 +117,7 @@ bool FWSdk::LoadScene(UTString filename, const IfInfo* ii){
 		file = GetFISdk()->CreateFileX();
 	}
 
+	file->SetDSTR(DSTRFlag);
 	//	ファイルのロード
 	if(!file->Load(objs, filename.data()) ) {
 		DSTR << "Error: Cannot load file " << filename.c_str() << std::endl;
@@ -123,11 +125,11 @@ bool FWSdk::LoadScene(UTString filename, const IfInfo* ii){
 		return false;
 	}
 	//	ロードしたシーンを取得
-	DSTR << "Loaded " << NScene() - first << " scenes." << std::endl;
-	DSTR << "LoadFile Complete." << std::endl;
+	if(DSTRFlag) DSTR << "Loaded " << NScene() - first << " scenes." << std::endl;
+	if(DSTRFlag) DSTR << "LoadFile Complete." << std::endl;
 	for(int i=first; i<NScene(); ++i){
 		curScene = GetScene(i);
-		curScene->Print(DSTR);
+		if(DSTRFlag)curScene->Print(DSTR);
 	}
 	return true;
 }

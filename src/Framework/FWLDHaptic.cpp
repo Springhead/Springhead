@@ -962,8 +962,6 @@ void FWLDHaptic::PhysicsStep(){
 		curvel.w() = phSolid->GetAngularVelocity();
 		double pdt = GetPHScene()->GetTimeStep();
 		GetIASolid(i)->curb = (curvel - lastvel[i]) / pdt;
-		//DSTR << "naga"<<curvel.w() << std::endl;
-//		DSTR << GetIASolid(i)->curb << std::endl;
 	}
 }
 

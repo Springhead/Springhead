@@ -112,4 +112,5 @@
 	void Step(){	base::Step();}	\
 	void Draw(){	base::Draw();}	\
 	void Reshape(int w, int h){	base::Reshape(w, h);}	\
+	void SetDSTR(bool f){	base::SetDSTR(f);}	\
 

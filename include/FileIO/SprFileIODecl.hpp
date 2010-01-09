@@ -1,6 +1,7 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_FIFileIf(base)	\
 	bool Load(Spr::ObjectIfs& objs, const char* fn){	return	base::Load(objs, fn);}	\
 	bool Save(const Spr::ObjectIfs& objs, const char* fn){	return	base::Save(objs, fn);}	\
+	void SetDSTR(bool f){	base::SetDSTR(f);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FIFileXIf(base)	\
 	bool Load(Spr::ObjectIfs& objs, const char* fn){	return	base::Load(objs, fn);}	\

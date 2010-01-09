@@ -14,6 +14,7 @@ namespace Spr{;
 
 PHSpringDesc::PHSpringDesc(){
 	springOri = damperOri = 0.0;
+	fMax = NULL;
 }
 
 //----------------------------------------------------------------------------
@@ -50,7 +51,7 @@ void PHSpring::ElasticDeformation(){
 		tmp = 1.0 / (damper[i] + spring[i] * GetScene()->GetTimeStep());
 		dA[i] = tmp * dtinv;
 		db[i] = spring[i] * Xjrel.r[i] * tmp;
-	//}
+	}
 
 	// épê®Ç…ëŒÇ∑ÇÈÉoÉl
 	if(springOri != 0.0 || damperOri != 0.0){
@@ -61,8 +62,9 @@ void PHSpring::ElasticDeformation(){
 			tmp = 1.0/tmpInv;
 			dA.w() = Vec3d(tmp * dtinv, tmp * dtinv, tmp * dtinv);
 			db.w() = springOri * (prop) * tmp;
+		}else{
+			DSTR<<"PHSpring :: tmpInv is small"<<std::endl;
 		}
-	}
 	}
 }
 
@@ -71,7 +73,7 @@ void PHSpring::PlasticDeformation(){
 	double dt		= GetScene()->GetTimeStep();
 	double dtinv	= GetScene()->GetTimeStepInv();
 	Vec3d D		= damper * hardnessRate;
-	Vec3d D2		= secondDamper * hardnessRate;
+	Vec3d D2	= secondDamper * hardnessRate;
 	Vec3d K		= spring * hardnessRate;
 
 	//rjrel
@@ -141,6 +143,45 @@ void PHSpring::CompBias(){
 		break;
 	}
 
+}
+
+void PHSpring::IterateLCP(){
+	if(!bEnabled || !bFeasible || bArticulated)
+		return;
+	FPCK_FINITE(f.v());
+
+	double fMaxDt  = fMax * GetScene()->GetTimeStep();
+	SpatialVector fnew, df;
+	for(int j = 0; j < 6; j++){
+		if(!constr[j])continue;
+		
+		fnew[j] = f[j] - engine->accelSOR * Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
+				+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
+
+		if (!FPCK_FINITE(fnew[0])){
+			FPCK_FINITE(b[0]);
+			DSTR << "s0:" << (solid[0]->dv) << std::endl;
+			DSTR << "s1:" << (solid[1]->dv)  << std::endl;
+		}
+	}
+
+
+
+	if(fnew.v().norm() > fMaxDt){
+		fnew.v() = fnew.v() * fMaxDt/fnew.v().norm();
+		//DSTR<<GetName()<<":"<<fnew<<std::endl;
+	}
+	if(fnew.w().norm() > fMaxDt){
+		fnew.w() = fnew.w() * fMaxDt/fnew.w().norm();
+		//DSTR<<GetName()<<":"<<fnew<<std::endl;
+	}
+
+	for(int j = 0; j < 6; j++){
+		Projection(fnew[j], j);
+		df[j] = fnew[j] - f[j];
+		CompResponse(df[j], j);
+		f[j] = fnew[j];
+	}
 }
 
 }

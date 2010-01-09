@@ -221,6 +221,8 @@ public:
 	UTMapObject mapObj;	
 	//	データ用のルートNameManagerのためのオブジェクト
 	UTRef<UTLoadedData> rootNameManagerForData;
+	//	DSTRに情報を表示するかどうかのフラグ
+	bool DSTRFlag;
 
 	//---------------------------------------------------------------------------
 	///	コンストラクタ
@@ -265,6 +267,8 @@ public:
 		例：ResisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
 	*/
 	void RegisterGroupToDb(const char* gp);
+
+	void SetDSTR(bool f){ DSTRFlag = f ;}
 
 	  virtual ~UTLoadContext(){}
 protected:

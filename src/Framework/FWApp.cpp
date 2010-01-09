@@ -108,7 +108,7 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 			info.cursor->SetName("PHCursor");
 			phScene->SetContactMode(info.cursor, PHSceneDesc::MODE_NONE);
 			CDSphereDesc sd;
-			sd.radius = 0.1f;
+			sd.radius = 0.002f;
 			info.cursor->AddShape(fwSdk->GetPHSdk()->CreateShape(sd));
 		}
 		info.ray->SetOrigin(ori);

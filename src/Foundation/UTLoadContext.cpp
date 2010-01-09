@@ -557,8 +557,10 @@ void UTLoadContext::LinkNode(UTLoadedData* ld){
 		for (ObjectIfs::iterator o2 = (*ld2)->loadedObjects.begin(); o2!=(*ld2)->loadedObjects.end(); ++o2){
 			bool rv = false;
 			for (ObjectIfs::iterator o1 = ld->loadedObjects.begin(); o1!=ld->loadedObjects.end(); ++o1){
-				DSTR << DCAST(NamedObject, *o1)->GetName() << "->" 
-				<< DCAST(NamedObject, *o2)->GetName() << std::endl; 
+				if(DSTRFlag){
+					DSTR << DCAST(NamedObject, *o1)->GetName() << "->" 
+					<< DCAST(NamedObject, *o2)->GetName() << std::endl; 
+				}
 				rv |= (*o1)->AddChildObject( (*o2)->Cast() );
 			}
 			if (!rv){

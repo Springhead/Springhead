@@ -707,69 +707,13 @@ struct PHSpringDesc : public PHJointDesc{
 	Vec3d		damper;		///< ƒ_ƒ“ƒpŒW”
 	double		springOri;
 	double		damperOri;
+	double		fMax;			///< ŠÖß‚É‚©‚¯‚ç‚ê‚éÅ‘å‚Ì—Í
 	Vec3d		secondDamper;		// “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”
 	double		yieldStress;		// ~•š‰ž—Í
 	double		hardnessRate;		// ~•š‰ž—ÍˆÈ‰º‚Ìê‡‚É“ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ÉŠ|‚¯‚é”ä—¦
 	
 	PHSpringDesc();
 };
-
-//// 3—v‘fƒ‚ƒfƒ‹‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
-//struct PH3ElementIf : public PHSpringIf{
-//	
-//	SPR_IFDEF(PH3Element);
-//
-//	/** @brief “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ðÝ’è‚·‚é
-//		@param secondDamper “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”
-//	 */
-//	void	SetSecondDamper(const Vec3d& secondDamper);
-//
-//	/** @brief “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ðŽæ“¾‚·‚é
-//		@return “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”
-//	 */
-//	Vec3d	GetSecondDamper();
-//
-//	/** @brief ~•š‰ž—Í‚ðÝ’è‚·‚é
-//		@param yieldStress ~•š‰ž—Í
-//	 */
-//	void SetYieldStress(const double yS);
-//	
-//	/** @brief ~•š‰ž—Í‚ðŽæ“¾‚·‚é
-//		@return ~•š‰ž—Í
-//	 */
-//	double GetYieldStress();
-//
-//	/** @brief ~•š‰ž—ÍˆÈ‰º‚Ìê‡‚ÉƒWƒ‡ƒCƒ“ƒg‚ðd‚­‚·‚é”{—¦‚ðÝ’è‚·‚é
-//		@param hardnessRate ~•š‰ž—ÍˆÈ‰º‚Ìê‡‚ÉƒWƒ‡ƒCƒ“ƒg‚ðd‚­‚·‚é”{—¦
-//	 */
-//	void SetHardnessRate(const double hR);
-//	
-//	/** @brief ~•š‰ž—ÍˆÈ‰º‚Ìê‡‚ÉƒWƒ‡ƒCƒ“ƒg‚ðd‚­‚·‚é”{—¦‚ðŽæ“¾‚·‚é
-//		@return ~•š‰ž—ÍˆÈ‰º‚Ìê‡‚ÉƒWƒ‡ƒCƒ“ƒg‚ðd‚­‚·‚é”{—¦
-//	 */
-//	double GetHardnessRate();
-//
-//	/** @brief ’f–Ê2ŽŸƒ‚[ƒƒ“ƒg‚ðÝ’è‚·‚é
-//		@param ’f–Ê2ŽŸƒ‚[ƒƒ“ƒg
-//	 */
-//	void SetI(const Vec2d i);
-//	
-//	/** @brief ’f–Ê2ŽŸƒ‚[ƒƒ“ƒg‚ðŽæ“¾‚·‚é
-//		@return ’f–Ê2ŽŸƒ‚[ƒƒ“ƒg
-//	 */
-//	Vec2d GetI();
-//};
-///// 3—v‘fƒ‚ƒfƒ‹‚ÌƒfƒBƒXƒNƒŠƒvƒ^
-//struct PH3ElementDesc : public PHSpringDesc{
-//	SPR_DESCDEF(PH3Element);
-//
-//	Vec3d		secondDamper;		// “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”
-//	double		yieldStress;		// ~•š‰ž—Í
-//	double		hardnessRate;		// ~•š‰ž—ÍˆÈ‰º‚Ìê‡‚É“ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ÉŠ|‚¯‚é”ä—¦
-//	Vec3d		I;					// ’f–Ê2ŽŸƒ‚[ƒƒ“ƒg
-//	bool		yieldFlag;		    // ~•š‰ž—Í‚Ìƒtƒ‰ƒO
-//	PH3ElementDesc();
-//};
 
 /// ƒcƒŠ[ƒm[ƒh‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
 struct PHTreeNodeIf : public SceneObjectIf{

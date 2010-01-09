@@ -423,6 +423,7 @@ protected:\
 	Vec3d	damper;	\
 	double	springOri;	\
 	double	damperOri;	\
+	double	fMax;	\
 	Vec3d	secondDamper;	\
 	double	yieldStress;	\
 	double	hardnessRate;	\
@@ -433,6 +434,7 @@ public:\
 		damper = ((PHSpringDesc*)ptr)->damper;	\
 		springOri = ((PHSpringDesc*)ptr)->springOri;	\
 		damperOri = ((PHSpringDesc*)ptr)->damperOri;	\
+		fMax = ((PHSpringDesc*)ptr)->fMax;	\
 		secondDamper = ((PHSpringDesc*)ptr)->secondDamper;	\
 		yieldStress = ((PHSpringDesc*)ptr)->yieldStress;	\
 		hardnessRate = ((PHSpringDesc*)ptr)->hardnessRate;	\
@@ -445,6 +447,7 @@ public:\
 		((PHSpringDesc*)ptr)->damper = damper;	\
 		((PHSpringDesc*)ptr)->springOri = springOri;	\
 		((PHSpringDesc*)ptr)->damperOri = damperOri;	\
+		((PHSpringDesc*)ptr)->fMax = fMax;	\
 		((PHSpringDesc*)ptr)->secondDamper = secondDamper;	\
 		((PHSpringDesc*)ptr)->yieldStress = yieldStress;	\
 		((PHSpringDesc*)ptr)->hardnessRate = hardnessRate;	\

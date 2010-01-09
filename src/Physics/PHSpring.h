@@ -35,6 +35,7 @@ public:
 	virtual void SetConstrainedIndex(bool* con);
 	virtual void SetConstrainedIndexCorrection(bool* con);
 	virtual void CompBias();
+	virtual void IterateLCP();
 	void ElasticDeformation();
 	void PlasticDeformation();
 
