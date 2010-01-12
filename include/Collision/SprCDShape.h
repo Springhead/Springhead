@@ -103,13 +103,20 @@ struct CDQuadFaceIf: public ObjectIf{
 ///	•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÉŠÖŒW‚·‚éŞ¿
 struct PHMaterial{
 	PHMaterial();
-	float mu;				///< “®–€C–€CŒW”
-	float mu0;				///< Ã~–€CŒW”
-	float e;				///< ’µ‚Ë•Ô‚èŒW”
+	//	¿—ÊEŠµ«ƒeƒ“ƒ\ƒ‹‚ÌŒvZ—p
 	float density;			///< –§“x
-
-	float springK;
-	float damperD;
+	//	ƒN[ƒƒ“–€C
+	float mu;				///< “®–€C–€CŒW”
+	float mu0;				///< Ã~–€CŒW”	
+	//	LCP(PHConstarintEngine)‚É‚æ‚éS‘©—ÍŒvZ—p
+	float e;				///< ’µ‚Ë•Ô‚èŒW”
+	//	ƒyƒiƒ‹ƒeƒB–@(PHPenaltyEngine)‚Ì‚½‚ß‚ÌƒoƒlEƒ_ƒ“ƒpŒW”
+	float reflexSpringK;
+	float reflexDamperD;
+	float frictionSpringK;
+	float frictionDamperD;
+	
+	//	ŒÅ—LU“®’ñ¦‚Ì‚½‚ß‚ÌŒW”
 	float vibA;				///< U•ŒW”
 	float vibB;				///< Œ¸ŠŒW”
 	float vibW;				///< ü”g”
