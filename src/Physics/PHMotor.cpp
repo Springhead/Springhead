@@ -53,7 +53,15 @@ void PHMotor1D::PlasticDeformation(){
 	if(joint->type==PHJointDesc::ELASTIC_PLASTIC){
 		if(ws.w().norm()<0.01){
 			yieldFlag = false;
-			joint->SetTargetPosition(joint->Xjrel.q.z);
+			Vec3d ori = joint->Xjrel.q.Rotation();
+			joint->SetTargetPosition(ori.z);
+			//Vec2d range;
+			//joint->GetRange(range[0],range[1]);
+			//range +=Vec2d(Deg(ori.z),Deg(ori.z));
+			//if(range[0]>360) range -=Vec2d(360,360);
+			//if(range[1]<-360) range +=Vec2d(360,360);
+			//DSTR<<range[0]<<","<<range[1]<<","<<Deg(ori.z)<<std::endl;
+			//joint->SetRange(range[0], range[1]);
 		}
 	}
 	joint->xs[0]=joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
@@ -129,12 +137,12 @@ void PHMotor1D::IterateLCP(){
 }
 
 bool PHMotor1D::IsYield(){
-	bool ans = false;
 	//fの平均値を計算
+	double dt		= joint->GetScene()->GetTimeStep();
 	double fNorm = 0;
 	for(int i=0; i<5 ;i++){
 		if(i==4){
-			joint->fs[4] = joint->motorf;
+			joint->fs[4] = joint->motorf / dt;
 		}else{ 
 			joint->fs[i] = joint->fs[i+1];
 		}
@@ -142,9 +150,9 @@ bool PHMotor1D::IsYield(){
 		fNorm+=joint->fs[i].norm()/5;
 	}
 	if(fNorm > joint->yieldStress){
-		ans = yieldFlag = true;
+		yieldFlag = true;
 	}
-	return ans;
+	return yieldFlag;
 }
 ////////////////////////////////////////////////////////////////////////////////////////
 
@@ -276,18 +284,25 @@ void PHBallJointMotor::IterateLCP(){
 		fnew[i] = joint->motorf[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * joint->motorf[i] + b[i] + db[i]
 				+ joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);	
 
+		//if (!FPCK_FINITE(fnew[j])) fnew[j] = joint->motorf[i]; //naga 
+
+
+		
 		if(fMaxDt < fnew[i]){
 			DSTR<<joint->GetName()<<" : fnew["<<i<<"]="<<fnew[i]<<" fMax Over"<<std::endl;
 			fnew[i] = fMaxDt;
 		}
-		else if(joint->motorf[i] < -fMaxDt){
+		else if(fnew[i] < -fMaxDt){
 			DSTR<<joint->GetName()<<" : fnew["<<i<<"]="<<fnew[i]<<" fMax Over"<<std::endl;
-			joint->motorf[i] = fMaxDt;
+			fnew[i] = -fMaxDt;
 		}
 		
 		joint->CompResponse(fnew[i] - joint->motorf[i], i);
 		joint->motorf[i] = fnew[i];
 	}
+	
+	//DSTR<<joint->GetName()<<" : fnew"<<fnew<<std::endl;
+	//DSTR<<joint->GetName()<<" : dv1 "<<joint->solid[0]->dv<<" : dv2 "<<joint->solid[1]->dv<<std::endl;//naga
 	
 }
 bool PHBallJointMotor::IsYield(){

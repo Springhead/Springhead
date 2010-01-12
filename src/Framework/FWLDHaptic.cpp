@@ -656,9 +656,11 @@ void FWLDHapticLoop::Proxy(){
 		}
 	}
 	for(int k=0;k<NIASolids();k++){
-		if(contactFlag[0][k]&&contactFlag[1][k]){
-			picNum = k;
-			bPic = true;
+		if((*contactFlag).size()>0){
+			if(contactFlag[0][k]&&contactFlag[1][k]){
+				picNum = k;
+				bPic = true;
+			}
 		}
 	}
 }
@@ -834,9 +836,11 @@ void FWLDHapticLoop::ProxySimulation(){
 		}
 	}
 	for(int k=0;k<NIASolids();k++){
-		if(contactFlag[0][k]&&contactFlag[1][k]){
-			picNum = k;
-			bPic = true;
+		if((*contactFlag).size()>0){
+			if(contactFlag[0][k]&&contactFlag[1][k]){
+				picNum = k;
+				bPic = true;
+			}
 		}
 	}
 }

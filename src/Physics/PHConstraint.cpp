@@ -247,7 +247,7 @@ void PHConstraint::IterateLCP(){
 				+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
 
 		// とりあえず落ちないように間に合わせのコード
-		if (!FPCK_FINITE(fnew[j])) fnew[j] = f[j]; //naga 特定条件下では間に合わせのコードでも落ちる
+		//if (!FPCK_FINITE(fnew[j])) fnew[j] = f[j]; //naga 特定条件下では間に合わせのコードでも落ちる
 
 		if (!FPCK_FINITE(fnew[0])){
 			FPCK_FINITE(b[0]);

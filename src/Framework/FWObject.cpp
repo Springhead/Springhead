@@ -7,6 +7,7 @@
  */
 #include "FWObject.h"
 #include <Graphics/GRFrame.h>
+#include <Physics/PHConstraint.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -85,11 +86,9 @@ void FWBoneObject::Sync(){
 	if(AdaptType==GRFRAME_TO_PHSOLID){
 		if (phSolid && grFrame && phJoint){
 			Posed jointPosition;
-			jointPosition.Ori() = phJoint->GetRelativePoseQ() * sockOffset.Ori().Inv();
-
+			jointPosition.Ori() = DCAST(PHConstraint,phJoint)->Xjrel.q * sockOffset.Ori().Inv();
 			Posed poseSocket; phJoint->GetSocketPose(poseSocket);
 			Posed pose = poseSocket * jointPosition;
-
 			Affinef af; pose.ToAffine(af);
 			DCAST(GRFrame, grFrame)->SetTransform(af);
 

@@ -123,6 +123,10 @@
 	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
 	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
 	Spr::PHJointDesc::PHDeformationType GetDeformationMode(){	return	base::GetDeformationMode();}	\
+	void SetRangeSpring(double rSpring){	base::SetRangeSpring(rSpring);}	\
+	double GetRangeSpring(){	return	base::GetRangeSpring();}	\
+	void SetRangeDamper(double rDamper){	base::SetRangeDamper(rDamper);}	\
+	double GetRangeDamper(){	return	base::GetRangeDamper();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHingeJointIf(base)	\
 
