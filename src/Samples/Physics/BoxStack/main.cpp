@@ -520,7 +520,6 @@ void __cdecl motion(int x, int y){
  */
 void __cdecl timer(int id){
 	/// 時刻のチェックと画面の更新を行う
-	float DT = 0.05f;
 	if (bStep) scene->Step();
 /*
 	//	dv には拘束による速度変化が入るので、剛体に加わった拘束力を取り出すことができる。
@@ -549,7 +548,7 @@ void __cdecl timer(int id){
 */
 
 	glutPostRedisplay();
-	unsigned int msecs = static_cast<unsigned int>(1000*DT);
+	unsigned int msecs = static_cast<unsigned int>( 1000*scene->GetTimeStep() );
 	glutTimerFunc(msecs, timer, 0);
 }
 
@@ -562,7 +561,7 @@ void __cdecl timer(int id){
 int main(int argc, char* argv[]){
 	sdk = PHSdkIf::CreateSdk();					// SDKの作成　
 	PHSceneDesc dscene;
-	dscene.timeStep = 0.02;
+	dscene.timeStep = 0.05;
 	dscene.numIteration = 15;
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 	scene->SetStateMode(true);
@@ -654,7 +653,6 @@ int main(int argc, char* argv[]){
 #endif
 
 	scene->SetGravity(Vec3f(0,-30.0f, 0));	// 重力を設定
-	scene->SetTimeStep(0.05);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

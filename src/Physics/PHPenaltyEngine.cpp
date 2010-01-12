@@ -72,12 +72,10 @@ void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine*
 		rs[i] = fs[i] = SPRING;
 		rd[i] = fd[i] = DAMPER;
 
-		//PHMaterialに宣言のない変数が設定されておりビルドできませんでした
-		//一時的にSPRING，DAMPERの設定に戻しておきます　//naga
-		//rs[i] = sp->shape[i]->GetMaterial().reflexSpringK;
-		//rd[i] = sp->shape[i]->GetMaterial().reflexDamperD;
-		//fs[i] = sp->shape[i]->GetMaterial().frictionSpringK;
-		//fd[i] = sp->shape[i]->GetMaterial().frictionDamperD;
+		rs[i] = sp->shape[i]->GetMaterial().reflexSpringK;
+		rd[i] = sp->shape[i]->GetMaterial().reflexDamperD;
+		fs[i] = sp->shape[i]->GetMaterial().frictionSpringK;
+		fd[i] = sp->shape[i]->GetMaterial().frictionDamperD;
 
 		sf[i] = sp->shape[i]->GetMaterial().mu0;
 		df[i] = sp->shape[i]->GetMaterial().mu;
@@ -103,7 +101,7 @@ void PHSolidPairForPenalty::GenerateForce(){
 	for(i = 0; i < shapePairs.height(); i++)for(j = 0; j < shapePairs.width(); j++){
 		cp = shapePairs.item(i, j);
 		if(cp->state == CDShapePair::NONE) continue;
-		if (!cp->area) continue;
+		if (!area) continue;
 
 		//	積分したペナルティと速度を面積で割る
 		cp->reflexSpringForce /= area;
@@ -160,17 +158,17 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 			Vec3f p0 = qhVtx.CommonVtx(0);
 			Vec3f p1;
 			Vec3f p2 = qhVtx.CommonVtx(1);
-			Vec3f v0 = solid[0]->velocity + ((p0-cog[0])^solid[0]->angVelocity)
-					 - solid[1]->velocity - ((p0-cog[1])^solid[1]->angVelocity);
+			Vec3f v0 = solid[0]->velocity + (solid[0]->angVelocity^(p0-cog[0]))
+					 - solid[1]->velocity - (solid[1]->angVelocity^(p0-cog[1]));
 			Vec3f v1;
-			Vec3f v2 = solid[0]->velocity + ((p2-cog[0])^solid[0]->angVelocity)
-					 - solid[1]->velocity - ((p2-cog[1])^solid[1]->angVelocity);
+			Vec3f v2 = solid[0]->velocity + (solid[0]->angVelocity^(p2-cog[0]))
+					 - solid[1]->velocity - (solid[1]->angVelocity^(p2-cog[1]));
 			for(unsigned i=2; i<qhVtx.NCommonVtx(); ++i){
 				p1 = p2;	v1 = v2;
 				p2 = qhVtx.CommonVtx(i);
-				v2 = solid[0]->velocity + ((p2-cog[0])^solid[0]->angVelocity)
-				   - solid[1]->velocity - ((p2-cog[1])^solid[1]->angVelocity);
-				float sign = qhVtx.id ? 1.0f : -1.0f;
+				v2 = solid[0]->velocity + (solid[0]->angVelocity^(p2-cog[0]))
+				   - solid[1]->velocity - (solid[1]->angVelocity^(p2-cog[1]));
+				float sign = (qhVtx.id==0) ? 1.0f : -1.0f;
 				CalcTriangleReflexForce(cp, p0, p1, p2, sign*v0, sign*v1, sign*v2);
 #if 0				//	hase
 				if (cp->reflexSpringForce.norm() > 10000 || !finite(cp->reflexSpringForce.norm()) ){

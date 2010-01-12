@@ -32,11 +32,13 @@ public:
 	float	GetDensity(){ return material.density; }
 
 	void SetSpringDamper(float spring, float damper){
-		material.springK = spring;
-		material.damperD = damper;
+		material.reflexSpringK = spring;
+		material.reflexDamperD = damper;
+		material.frictionSpringK = spring;
+		material.frictionDamperD = damper;
 	}
-	float GetSpringK(){return material.springK;}
-	float GetDamperD(){return material.damperD;}
+	float GetSpringK(){return material.reflexSpringK;}
+	float GetDamperD(){return material.reflexDamperD;}
 	void SetVibration(float vibA, float vibB, float vibW){
 		material.vibA = vibA;
 		material.vibB = vibB;
