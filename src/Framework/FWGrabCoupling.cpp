@@ -199,7 +199,7 @@ void FWGrabCoupling::GrabSolid2(){
 						jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->damperD * coefficient;
 						jointDesc.springOri			= GetIAPointer(i)->springOriK* coefficient;
 						jointDesc.damperOri			= GetIAPointer(i)->damperOriD* coefficient;
-						jointDesc.fMax				= 5.0;
+						jointDesc.fMax				= 15.0;
 					}
 					grabJoint.push_back( GetPHScene()->CreateJoint(GetIAPointer(i)->GetPointerSolid(), grabSolid, jointDesc) );
 					//掴んだ剛体の位置をポインタの位置に移動

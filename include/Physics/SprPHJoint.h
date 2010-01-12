@@ -369,6 +369,27 @@ struct PHJoint1DIf : public PHJointIf{
 		@return 変形のタイプ
 	 */
 	PHJointDesc::PHDeformationType 	GetDeformationMode();
+
+
+	/** @brief バネ係数を設定する
+		@param spring バネ係数
+	 */
+	void	SetRangeSpring(double rSpring);
+
+	/** @brief バネ係数を取得する
+		@return バネ係数
+	 */
+	double	GetRangeSpring();
+
+	/** @brief ダンパ係数を設定する
+		@param damper ダンパ係数
+	 */
+	void	SetRangeDamper(double rDamper);
+
+	/** @brief ダンパ係数を取得する
+		@return ダンパ係数
+	 */
+	double	GetRangeDamper();
 };
 
 /// ヒンジのインタフェース

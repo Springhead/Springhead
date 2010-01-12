@@ -99,6 +99,10 @@ public:
 	bool	IsLimit(){ return (limit.onLower || limit.onUpper); }
 	void	SetTorqueMax(double max){fMax = fabs(max); }
 	double	GetTorqueMax(){return fMax;}
+	void	SetRangeSpring(double rSpring){ rangeSpring = rSpring;}
+	double	GetRangeSpring(){return rangeSpring;};
+	void	SetRangeDamper(double rDamper){ rangeDamper = rDamper;}
+	double	GetRangeDamper(){return rangeDamper;};
 	
 
 	/// インタフェースの実装
