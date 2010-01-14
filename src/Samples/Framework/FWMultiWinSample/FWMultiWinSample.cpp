@@ -29,13 +29,12 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 	/// シミュレーションの初期化
 	CreateSdk();
 	GetSdk()->Clear();
-	/// Xfileのロード
-	GetSdk()->LoadScene(fileName);
 	/// 描画モードの指定，初期化
 	SetGRAdaptee(TypeGLUT);	
 	GRInit(argc, argv);
 	/// 描画ウィンドウの作成，初期化
 	for(int i = 0; i < nWin ; i++){
+		GetSdk()->CreateScene(PHSceneDesc(),GRSceneDesc());
 		FWWinDesc winDesc;
 		winDesc.width = 480;
 		winDesc.height = 320;
@@ -49,8 +48,9 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 			winDesc.title = "Window";
 		}
 		FWWin* win = CreateWin(winDesc);
-		win->SetScene(GetSdk()->GetScene());
+		win->SetScene(GetSdk()->GetScene(i));
 	}
+	BuildScene();
 	/// カメラ行列の初期化
 	InitCameraView();
 
@@ -85,10 +85,9 @@ void FWMultiWinSample::TimerFunc(int id){
 }
 
 void FWMultiWinSample::Step(){
-	/// シミュレーションの実行
-	GetSdk()->GetScene()->Step();
 	/// 各ウィンドウに描画 
 	for(int i = 0; i < NWin(); i++){
+		GetSdk()->GetScene(i)->Step();
 		SetCurrentWin(GetWin(i));
 		GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
 		if (cam && cam->GetFrame()){
@@ -96,7 +95,7 @@ void FWMultiWinSample::Step(){
 		}else{
 			GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
 		}
-		bool bDebug = false;
+		bool bDebug = true;
 		if(i == 1) bDebug = true; 
 		DebugDisplay(bDebug);
 		Display();
@@ -118,6 +117,8 @@ void FWMultiWinSample::DebugDisplay(bool bDebug){
 //	r->EnableRenderAxis();
 	r->EnableRenderForce(bDebug);
 	r->EnableRenderContact(bDebug);
+	r->EnableRenderWorldAxis(true);
+	r->EnableGrid();
 }
 
 void FWMultiWinSample::Keyboard(int key, int x, int y){
@@ -131,5 +132,40 @@ void FWMultiWinSample::Keyboard(int key, int x, int y){
 			break;
 		default:
 			break;
+	}
+}
+
+void FWMultiWinSample::BuildScene(){
+	PHSceneIf* phScene1 = GetSdk()->GetPHSdk()->GetScene(0);
+	CreateJointScene(phScene1);
+	PHSceneIf* phScene2 = GetSdk()->GetPHSdk()->GetScene(1);
+	CreateJointScene(phScene2);
+}
+
+void FWMultiWinSample::CreateJointScene(PHSceneIf* phScene){
+	PHSolidDesc sDesc;
+	
+	CDBoxDesc bDesc;
+	bDesc.boxsize = Vec3d(0.01,0.01,0.01);
+	CDShapeIf* shapebox = phScene->GetSdk()->CreateShape(bDesc);
+	PHBallJointDesc desc;
+	{
+		desc.poseSocket.Pos()	= Vec3f(-0.01f,0.0f , 0.0f);
+		desc.posePlug.Pos()	= Vec3f(0.01f, 0.0f, 0.0f);
+		desc.spring			= 3;
+		desc.damper		= 2;
+	}
+	PHSolidIf* rootSolid = phScene->CreateSolid(sDesc);
+	rootSolid->AddShape(shapebox);
+	rootSolid->SetDynamical(false);
+	float posy = 0;
+	rootSolid->SetFramePosition(Vec3d(-0, posy, 0));
+	for(int i = 1; i < 6; i++){
+		PHSolidIf* nodeSolid = phScene->CreateSolid(sDesc);
+		nodeSolid->AddShape(shapebox);
+		phScene->CreateJoint(rootSolid, nodeSolid, desc);
+		nodeSolid->SetFramePosition(Vec3d(posy - 0.01 * i, 1, 0));
+		phScene->SetContactMode(rootSolid, nodeSolid, PHSceneDesc::MODE_NONE);
+		rootSolid = nodeSolid;
 	}
 }
