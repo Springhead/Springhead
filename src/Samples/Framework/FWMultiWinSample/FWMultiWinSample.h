@@ -38,6 +38,8 @@ public:
 	void Reset();
 	void Step();
 	void DebugDisplay(bool bDebug);
+	void BuildScene();
+	void CreateJointScene(PHSceneIf* phScene);
 	
 };
 
