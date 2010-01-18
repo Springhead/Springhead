@@ -9,6 +9,7 @@
 #include <Framework/FWInteractAdaptee.h>
 #include <Framework/FWInteractScene.h>
 #include <Physics/PHConstraintEngine.h>
+#include <Collision/CDDetectorImp.h>
 #include <iostream>
 
 namespace Spr{;
@@ -204,7 +205,6 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 		/// GJKを使った近傍点探索
 		int found = 0;
 		found = FindNearestPoint(a, b, a2w, b2w, cp, dir, normal, pa, pb);							
-
 		/// 判定後の後処理(ローカルシミュレーションするかどうかのフラグを立てる)
 		if(found > 0){
 			/// 初めて最近傍物体になった場合
@@ -221,6 +221,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			iaInfo->flag.blocal = true;								//< 近傍物体なのでblocalをtrueにする
 			iaInfo->neighborInfo.closest_point = shapePoseW0 * pa;				//< 剛体近傍点のローカル座標
 			iaInfo->neighborInfo.pointer_point = shapePoseW1 * pb;				//< 力覚ポインタ近傍点のローカル座標
+			iaInfo->neighborInfo.common_point = (shapePoseW0 * pa + shapePoseW1 * pb)/2; 
 			iaInfo->neighborInfo.last_face_normal = iaInfo->neighborInfo.face_normal;		//< 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
 			iaInfo->neighborInfo.face_normal = normal;				//< 剛体から力覚ポインタへの法線
 		}else{
@@ -233,7 +234,13 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 		/// 接触解析(susa実装中)
 // #define BT_COLLISION
 // #define CUT_RING
- #define ROUND_NEAREST_POINTS
+//#define ROUND_NEAREST_POINTS
+//#define CONTACT_ANALYSIS
+
+#ifdef CONTACT_ANALYSIS
+		AnalyzeContactResion(phSolid, soPointer, pa, pb, &iaInfo->neighborInfo);
+#endif
+
 #ifdef BT_COLLISION
 		CompareCurrentContactPoint(phSolid, soPointer, pa, pb, &iaInfo->neighborInfo);
 #endif
@@ -340,6 +347,44 @@ extern bool bGJKDebug;
 	}
 }
 
+// 力覚ポインタと剛体の接触形状(ボリュームの頂点)を取得
+extern bool bUseContactVolume;
+void FWInteractAdaptee::AnalyzeContactResion(PHSolid* solida, PHSolid* solidb, Vec3d pa, Vec3d pb, NeighborInfo* nInfo){
+	CDShapePair sp;
+	sp.shape[0] = solida->GetShape(0)->Cast();
+	sp.shape[1] = solidb->GetShape(0)->Cast();
+	sp.commonPoint = nInfo->common_point; 
+	sp.shapePoseW[0] = solida->GetPose();
+	sp.shapePoseW[1] = solidb->GetPose();
+
+
+	static CDContactAnalysis analyzer;
+	
+	bUseContactVolume = true;
+	analyzer.FindIntersection(&sp);
+	bUseContactVolume = false;
+
+	DSTR << analyzer.vtxs.size() << std::endl;
+	std::vector< Vec3d > tempPoints; 
+	for(int i = 0; i < (int)analyzer.vtxs.size(); i++){
+		for(int j = 0; j < (int)analyzer.vtxs[i]->NCommonVtx(); j ++){
+			DSTR << analyzer.vtxs[i]->CommonVtx(j) << std::endl;
+			tempPoints.push_back(analyzer.vtxs[i]->CommonVtx(j));
+		}
+	}
+
+	std::sort(tempPoints.begin(), tempPoints.end());
+	Vec3d coord = Vec3d();
+	nInfo->intersection_vertices.clear();
+	for(int i = 0; i < (int)tempPoints.size(); i++){
+		if(coord != tempPoints[i]){
+			nInfo->intersection_vertices.push_back(tempPoints[i]);
+			coord = tempPoints[i];
+		}
+	}
+
+}
+
 void FWInteractAdaptee::CompareCurrentContactPoint(PHSolid* solida, PHSolid* solidb, Vec3d pa, Vec3d pb, NeighborInfo* nInfo){
 	DSTR << "--------------------------"<< std::endl;
 	// キャッシュの更新，侵入していないものは外す，さらに距離が離れているものも外す
@@ -400,7 +445,7 @@ void FWInteractAdaptee::CompareCurrentContactPoint(PHSolid* solida, PHSolid* sol
 			double vec_norm = vec_ortho.norm();
 			if(dis > vec_norm){
 				dis = vec_norm;
-				index = i;
+				index = (int)i;
 			}
 		}
 		// ノルムが小さいものを外し，キャッシュを再構築
@@ -439,6 +484,10 @@ void FWInteractAdaptee::FindPenetratingPoints(PHSolid* solida, PHSolid* solidb, 
 		std::vector<int>& pointsb = convexb->FindNeighbors(qids[i]);
 		for(size_t j = 0; j < pointsb.size(); j++){
 			temppoints.push_back(pointsb[j]);
+			std::vector<int>& pointsb2 = convexb->FindNeighbors(pointsb[j]);
+			for(size_t k = 0; k < pointsb2.size(); k++){
+				temppoints.push_back(pointsb2[k]);
+			}
 		}
 	}
 
@@ -446,7 +495,7 @@ void FWInteractAdaptee::FindPenetratingPoints(PHSolid* solida, PHSolid* solidb, 
 	std::sort(temppoints.begin(), temppoints.end());
 	index = -1;
 	std::vector<int> neighbors;
-	for(int i = 0; i < temppoints.size(); i++){
+	for(int i = 0; i < (int)temppoints.size(); i++){
 		if(index != temppoints[i]){
 			neighbors.push_back(temppoints[i]);
 			index = temppoints[i];
@@ -457,8 +506,8 @@ void FWInteractAdaptee::FindPenetratingPoints(PHSolid* solida, PHSolid* solidb, 
 	Vec3f* basea = convexa->GetBase();
 	Vec3f* baseb = convexb->GetBase();
 	// はじめに近傍点を追加しておく
-	nInfo->solid_section.push_back(nInfo->closest_point);
-	nInfo->pointer_section.push_back(nInfo->pointer_point);
+	//nInfo->solid_section.push_back(nInfo->closest_point);
+	//nInfo->pointer_section.push_back(nInfo->pointer_point);
 	for(size_t i = 0; i < neighbors.size(); i++){
 		Vec3f lvb = baseb[neighbors[i]].data;
 		Vec3d wvb = solidb->GetPose() *	lvb;
@@ -502,10 +551,10 @@ void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, cons
 	//	両方に切り口がある場合．(球などないものもある)
 	CDConvex* convex0 = solid0->GetShape(0)->Cast();
 	bool found = convex0->FindCutRing(cutRing, shapePoseW0);
-	int nLine0 = cutRing.lines.size();
+	int nLine0 = (int)cutRing.lines.size();
 	CDConvex* convex1 = solid1->GetShape(0)->Cast();
 	if (found) found = convex1->FindCutRing(cutRing, shapePoseW1);
-	int nLine1 = cutRing.lines.size() - nLine0;
+	int nLine1 = (int)cutRing.lines.size() - nLine0;
 	section.clear();
 	if (found){
 		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。

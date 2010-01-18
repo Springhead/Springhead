@@ -335,7 +335,7 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 		}
 		/// 連立不等式を計算するための行列を作成
 		if(sv.size() > 0){
-			int l = sv.size();
+			int l = sv.size();	// 接触点の数
 			VMatrixRow<double> a;
 			a.resize(l, l);
 			VVector<double> d;
@@ -372,18 +372,33 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 			f.resize(l);
 			GaussSeidel(a,f,-d);
 #endif
-			// ポインタに拘束を与える
+			// ポインタと剛体に拘束を与える
 			Vec3d dr = Vec3d();
 			Vec3d dtheta = Vec3d();
 			for(int m = 0; m < l; m++){
 				if(f[m] < 0) f[m] = 0.0;
-				dr += f[m] * sv[m].normal / iPointer->hiSolid.GetMass();
-				dtheta += f[m] * iPointer->hiSolid.GetInertia().inv() * (sv[m].r % sv[m].normal);
+				// ポインタへの拘束
+				dr += f[m] * sv[m].normal / iPointer->hiSolid.GetMass();							// 位置拘束
+				dtheta += f[m] * iPointer->hiSolid.GetInertia().inv() * (sv[m].r % sv[m].normal);	// 回転拘束
 			}
-			// 力覚インタフェースに出力する力の計算
-			outForce.v() = iPointer->correctionSpringK * dr;// - iPointer->correctionDamperD * (dr/hdt);
-			outForce.w() = iPointer->correctionSpringK * dtheta /20;
-//			CSVOUT << outForce.v().x << "," << outForce.v().y << "," << outForce.v().z << "," << outForce.w().x << "," << outForce.w().y << "," << outForce.w().z << endl;
+
+			/// 力覚インタフェースに出力する力の計算
+			outForce.v() = iPointer->correctionSpringK * dr - iPointer->correctionDamperD * (dr/hdt);
+			outForce.w() = iPointer->correctionSpringK * dtheta / 20;
+			CSVOUT << l << "," << sv[0].d << "," << outForce.v().y << endl;
+			//CSVOUT << outForce.v().x << "," << outForce.v().y << "," << outForce.v().z << "," << outForce.w().x << "," << outForce.w().y << "," << outForce.w().z << endl;
+
+			/// 剛体へ力を加える
+			for(int m = 0; m < l; m++){
+				// 剛体へ加える力
+				/// 計算した力を剛体に加える
+				Vec3d addforce = -1 * outForce.v().norm() * sv[m].normal;
+				iPointer->interactInfo[sv[m].iaSolidID].mobility.force += addforce;	
+				iPointer->interactInfo[sv[m].iaSolidID].neighborInfo.test_force_norm += addforce.norm();
+				iPointer->interactInfo[sv[m].iaSolidID].neighborInfo.test_force += addforce;
+			}
+
+
 		}
 		/// インタフェースへ力を出力
 		SetRenderedForce(iPointer->GetHI(), iPointer->bForce, outForce * iPointer->GetForceScale());
@@ -1038,7 +1053,8 @@ void FWLDHaptic::TestSimulation(){
 				iInfo->neighborInfo.pointer_point, iInfo->neighborInfo.closest_point, n);
 
 			/// 接触点に加える力
-			const float minTestForce = 0.5;										// 最小テスト力
+			float minTestForce = 0.5;		// 最小テスト力
+			minTestForce = 10e-10;
 			/// 通常テスト力が最小テスト力を下回る場合
 			if(iInfo->neighborInfo.test_force_norm < minTestForce){
 				iInfo->neighborInfo.test_force_norm = minTestForce;					 

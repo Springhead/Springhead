@@ -97,6 +97,7 @@ public:
 	void FindSectionVertex(PHSolid* solid0, PHSolid* solid1, const Posed shapePoseW0, const Posed shapePoseW1,
 											const Vec3d pa, Vec3d pb, const Vec3d normal,
 											const Vec3d commonPoint, std::vector<Vec3d>& section);
+	void AnalyzeContactResion(PHSolid* solida, PHSolid* solidb, Vec3d pa, Vec3d pb, NeighborInfo* nInfo);
 
 	virtual void Clear(){};
 	virtual void Init(){};
