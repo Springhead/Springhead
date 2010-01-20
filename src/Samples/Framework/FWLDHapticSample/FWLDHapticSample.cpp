@@ -110,7 +110,7 @@ void FWLDHapticSample::Reset(){
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
 	desc.iaMode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
-	desc.hMode = PENALTY;
+	desc.hMode = PENALTY3D;
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
 	CreateIAScene(desc);									// interactSceneの作成
 	BuildScene();
@@ -177,8 +177,9 @@ void FWLDHapticSample::BuildScene(){
 		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 		soFloor->SetDynamical(false);
 		soFloor->SetGravity(false);
+		soFloor->SetIntegrate(false);
 		/// 形状(shapeFloor)の作成
-		bd.boxsize = Vec3f(50, 10, 50);
+		bd.boxsize = Vec3f(50, 15, 50);
 		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
 		/// 剛体に形状を付加する
 		soFloor->AddShape(shapeFloor);
@@ -209,7 +210,7 @@ void FWLDHapticSample::BuildPointer(){
 	PHSolidDesc desc;
 	/// ポインタ
 	{	
-		for(int i= 0; i < 2; i++){
+		for(int i= 0; i < 1; i++){
 			PHSolidIf* soPointer = phscene->CreateSolid(desc);
 			CDSphereDesc sd;
 			sd.radius = 0.5;//1.0;
