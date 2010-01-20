@@ -204,7 +204,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 
 		/// GJKを使った近傍点探索
 		int found = 0;
-		found = FindNearestPoint(a, b, a2w, b2w, cp, dir, normal, pa, pb);							
+		found = FindNearestPoint(a, b, a2w, b2w, cp, dir, normal, pa, pb);		
 		/// 判定後の後処理(ローカルシミュレーションするかどうかのフラグを立てる)
 		if(found > 0){
 			/// 初めて最近傍物体になった場合
@@ -219,9 +219,9 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			}
 			/// 初めて近傍または継続して近傍だった場合
 			iaInfo->flag.blocal = true;								//< 近傍物体なのでblocalをtrueにする
-			iaInfo->neighborInfo.closest_point = shapePoseW0 * pa;				//< 剛体近傍点のローカル座標
-			iaInfo->neighborInfo.pointer_point = shapePoseW1 * pb;				//< 力覚ポインタ近傍点のローカル座標
-			iaInfo->neighborInfo.common_point = (shapePoseW0 * pa + shapePoseW1 * pb)/2; 
+			iaInfo->neighborInfo.closest_point = pa;				//< 剛体近傍点
+			iaInfo->neighborInfo.pointer_point = pb;				//< 力覚ポインタ近傍点
+			iaInfo->neighborInfo.common_point = (phSolid->GetPose() * pa + soPointer->GetPose() * pb)/2; 
 			iaInfo->neighborInfo.last_face_normal = iaInfo->neighborInfo.face_normal;		//< 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
 			iaInfo->neighborInfo.face_normal = normal;				//< 剛体から力覚ポインタへの法線
 		}else{
@@ -233,12 +233,19 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 
 		/// 接触解析(susa実装中)
 // #define BT_COLLISION
-// #define CUT_RING
+//#define CUT_RING
 //#define ROUND_NEAREST_POINTS
-//#define CONTACT_ANALYSIS
+#define CONTACT_ANALYSIS
 
-#ifdef CONTACT_ANALYSIS
-		AnalyzeContactResion(phSolid, soPointer, pa, pb, &iaInfo->neighborInfo);
+#ifdef CONTACT_ANALYSIS		
+		iaInfo->neighborInfo.intersection_vertices.clear();
+		//iaInfo->neighborInfo.solid_section.clear();
+		//iaInfo->neighborInfo.pointer_section.clear();
+		if(found == 1){
+			iaInfo->neighborInfo.intersection_vertices.push_back(pb);
+			//iaInfo->neighborInfo.solid_section.push_back(pa);
+		}
+		if(found == 2)AnalyzeContactResion(phSolid, soPointer, pa, pb, &iaInfo->neighborInfo);
 #endif
 
 #ifdef BT_COLLISION
@@ -250,6 +257,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 #endif
 
 #ifdef CUT_RING
+		iaInfo->neighborInfo.intersection_vertices.clear();
 		/// Muller Preparataの方法で切り口を求め，接触点を取得
 		std::vector<Vec3d> section;
 		Vec3d commonPoint;
@@ -301,6 +309,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			DSTR <<iaInfo->neighborInfo.solid_section.size() << std::endl;
 #endif
 		}
+		//DSTR << iaInfo->neighborInfo.intersection_vertices.size() << std::endl;
 #endif
 
 	}
@@ -318,7 +327,7 @@ int FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b
 	Vec3d a2b = wb - wa;							///< 剛体から力覚ポインタへのベクトル
 	normal = a2b.unit();
 
-	if(a2b.norm() > 0.01){
+	if(a2b.norm() > 0.001){
 		return 1;	// FindClosestPointsで見つけた
 	}else{
 		/// 力覚ポインタと剛体がすでに接触していたらCCDGJKで法線を求める
@@ -357,32 +366,23 @@ void FWInteractAdaptee::AnalyzeContactResion(PHSolid* solida, PHSolid* solidb, V
 	sp.shapePoseW[0] = solida->GetPose();
 	sp.shapePoseW[1] = solidb->GetPose();
 
-
 	static CDContactAnalysis analyzer;
 	
 	bUseContactVolume = true;
 	analyzer.FindIntersection(&sp);
 	bUseContactVolume = false;
 
-	DSTR << analyzer.vtxs.size() << std::endl;
-	std::vector< Vec3d > tempPoints; 
-	for(int i = 0; i < (int)analyzer.vtxs.size(); i++){
-		for(int j = 0; j < (int)analyzer.vtxs[i]->NCommonVtx(); j ++){
-			DSTR << analyzer.vtxs[i]->CommonVtx(j) << std::endl;
-			tempPoints.push_back(analyzer.vtxs[i]->CommonVtx(j));
-		}
+	for(CDQHPlane< CDContactAnalysisFace >* it = analyzer.planes.begin; it != analyzer.planes.end; ++it){
+		if(it->deleted) continue;
+		Vec3d point = it->normal/it->dist + sp.commonPoint;
+		nInfo->intersection_vertices.push_back(solidb->GetPose().Inv() * point);
+		//double dot = (point - solida->GetPose() * pa) * nInfo->face_normal;
+		//if(dot < 0){
+		//	Vec3d ortho = dot * nInfo->face_normal;
+		//	Vec3d onPlane = point - ortho;
+		//	nInfo->solid_section.push_back(solida->GetPose().Inv() * onPlane);
+		//}
 	}
-
-	std::sort(tempPoints.begin(), tempPoints.end());
-	Vec3d coord = Vec3d();
-	nInfo->intersection_vertices.clear();
-	for(int i = 0; i < (int)tempPoints.size(); i++){
-		if(coord != tempPoints[i]){
-			nInfo->intersection_vertices.push_back(tempPoints[i]);
-			coord = tempPoints[i];
-		}
-	}
-
 }
 
 void FWInteractAdaptee::CompareCurrentContactPoint(PHSolid* solida, PHSolid* solidb, Vec3d pa, Vec3d pb, NeighborInfo* nInfo){

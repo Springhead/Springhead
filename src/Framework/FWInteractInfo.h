@@ -20,8 +20,10 @@ using namespace PTM;
 
 /** Local Dynamicsに必要な変数 */
 struct Mobility{
-	Vec3d force;
+	Vec3d force;					///< LocalDynamicsで使う力
 	TMatrixRow<6, 3, double> A;		///< LocalDynamicsで使うモビリティ（ユーザの入力により変化）
+	std::vector< Vec3d > f;			///< LocalDynamics6Dで使う力
+	TMatrixRow<6, 6, double> Minv;  ///< LocalDynamics6Dで使うモビリティ
 };
 /** ポインタとソリッドの近傍点及び法線 */
 struct NeighborInfo{
@@ -37,18 +39,18 @@ struct NeighborInfo{
 	std::vector< Vec3d > intersection_vertices; ///< 接触体積の頂点(ワールド座標)
 	std::vector< Vec3d > pointer_section;	///< ポインタの接触頂点(ローカル座標)
 	std::vector< Vec3d > solid_section;		///< 剛体の接触頂点(ローカル座標)
-	double test_force_norm;			///< 予測シミュレーションで単位力の大きさ
+	double test_force_norm;			///< 予測シミュレーションで加える力の大きさ
+	double test_torque_norm;		///< 予測シミュレーションで加えるトルクの大きさ
 	Vec3d test_force;				///< 予測シミュレーションで使うテスト力
+	Vec3d test_torque;
 	Vec3d impulse;					///< 物理プロセスが1ステップ終わるまでに力覚ポインタが加えた力積
 	NeighborInfo(){
-		common_point = Vec3d();
-		closest_point = Vec3d();					
-		pointer_point = Vec3d();						
+		common_point = closest_point = pointer_point = Vec3d(); 
 		face_normal = Vec3d();			
 		last_face_normal = Vec3d();
-		section_depth = 0.0;
-		last_section_depth = 0.0;
-		test_force_norm = 0.0;
+		section_depth = last_section_depth = 0.0;
+		test_force = test_torque = Vec3d();
+		test_force_norm = test_torque_norm = 0.0;
 		impulse = Vec3d();
 	}
 };

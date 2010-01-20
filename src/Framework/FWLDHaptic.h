@@ -33,6 +33,7 @@ public:
 	FWLDHapticLoop();
 	virtual void Step();
 	virtual void UpdateInterface();
+	virtual void HapticRendering3D();
 	virtual void HapticRendering();
 	virtual void HapticRendering6D();
 	virtual void ConstraintBasedRendering();
@@ -48,6 +49,7 @@ public:
 	Vec3d GetPicCenterPosition();			//	”c‚µ‚Ä‚¢‚é•¨‘Ì‚ÌdSˆÊ’u
 //	int GetPicTime();
 	virtual void LocalDynamics();
+	virtual void LocalDynamics6D();
 };
 
 

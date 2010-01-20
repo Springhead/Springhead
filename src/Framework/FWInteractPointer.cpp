@@ -66,7 +66,6 @@ double FWInteractPointer::GetTorqueScale(){
 	return torqueScale; 
 }
 
-
 void FWInteractPointer::SetLocalRange(double r){
 	localRange = r; 
 }
@@ -90,8 +89,8 @@ Posed  FWInteractPointer::GetPointersCalibPosition(){
 }
 
 void FWInteractPointer::CalcCorrectionSpringDamper(){
-	correctionSpringK = springK;
-	correctionDamperD = damperD;
+	correctionSpringK = springK * (pow(GetWorldScale(), 3)/GetPosScale());
+	correctionDamperD = damperD * (pow(GetWorldScale(), 3)/GetPosScale());
 } 
 
 void FWInteractPointer::EnableForce(bool b){
