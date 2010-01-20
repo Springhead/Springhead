@@ -138,7 +138,7 @@ void FWLDHapticLoop::HapticRendering3D(){
 				/// 計算した力を剛体に加える//
 				iPointer->interactInfo[i].mobility.force = -1 * addforce;	
 				nInfo->test_force_norm = addforce.norm();
-				nInfo->test_force = addforce;
+				nInfo->test_force = -1 * addforce;
 			}
 		}
 		/// インタフェースへ力を出力
@@ -473,7 +473,6 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 
 			/// 力覚インタフェースに出力する力の計算
 			double ws4 = pow(iPointer->GetWorldScale(), 4);
-
 			outForce.v() = (iPointer->correctionSpringK * dr - iPointer->correctionDamperD * (dr/hdt)) /ws4;
 			outForce.w() = (iPointer->correctionSpringK * dtheta / 20) / ws4;
 			//CSVOUT << l << "," << sv[0].d << "," << outForce.v().y << endl;
@@ -481,7 +480,7 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 
 			/// 剛体へ力を加える
 			for(int m = 0; m < l; m++){
-				Vec3d addforce = -1 * f[m] * sv[m].normal * iPointer->correctionSpringK;
+				Vec3d addforce = -1 * f[m] * sv[m].normal * iPointer->correctionSpringK /ws4;
 				iPointer->interactInfo[sv[m].iaSolidID].mobility.f.push_back(addforce);	
 
 			}
@@ -1127,6 +1126,7 @@ void FWLDHaptic::TestSimulation(){
 		接触しているすべての物体について，モビリティを計算する */
 	PHSceneIf* phScene = GetPHScene();
 
+	//#define DIVIDE_STEP
 	#ifdef DIVIDE_STEP
 	/// テストシミュレーションのために現在の剛体の状態を保存する
 	states2->SaveState(phScene);		
@@ -1176,48 +1176,46 @@ void FWLDHaptic::TestSimulation(){
 			Matrix3d local = CalcConstraintCoordinateSystem(soPointer, phSolid, 
 				iInfo->neighborInfo.pointer_point, iInfo->neighborInfo.closest_point, n);
 
-			/// 接触点に加える力
+			TMatrixRow<6, 3, double> u;			// 剛体の機械インピーダンス
+			TMatrixRow<3, 3, double> force;		// 加える力
+			for(int k = 0; k < 6; k++){
+				for(int l = 0; l < 3; l++){
+					u[k][l] = 0;
+					if(k < 3) force[k][l] = 0;
+				}
+			}
+
 			float minTestForce = 0.5;		// 最小テスト力
 			/// 通常テスト力が最小テスト力を下回る場合
 			if(iInfo->neighborInfo.test_force_norm < minTestForce){
 				iInfo->neighborInfo.test_force_norm = minTestForce;					 
 			}
 
-			TMatrixRow<6, 3, double> u;			// 剛体の機械インピーダンス
-			TMatrixRow<3, 3, double> force;		// 加える力
-#define NORMAL
+			//#define NORMAL
 			#ifdef NORMAL
-			force.col(0) = iInfo->neighborInfo.test_force_norm * n;
-			force.col(1) = iInfo->neighborInfo.test_force_norm * (n + local.col(1));
-			force.col(2) = iInfo->neighborInfo.test_force_norm * (n + local.col(2));
+				force.col(0) = iInfo->neighborInfo.test_force_norm * n;
+				force.col(1) = iInfo->neighborInfo.test_force_norm * (n + local.col(1));
+				force.col(2) = iInfo->neighborInfo.test_force_norm * (n + local.col(2));
             #else
-			force.col(0) = iInfo->neighborInfo.test_force;
-			Vec3d base1 = iInfo->neighborInfo.test_force.unit();
-			Vec3d base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
-			if (base2.norm() > 0.1){
-				base2.unitize();
-			}else{
-				base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
-				base2.unitize();
-			}
-			Vec3d base3 = base1^base2;
-			force.col(1) = iInfo->neighborInfo.test_force.norm() * (base1 + base2);
-			force.col(2) = iInfo->neighborInfo.test_force.norm() * (base1 + base3);
-            #endif
-
-			//DSTR<<" 法線--------------------"<<std::endl;
-			/// 法線方向に力を加える
-			phSolid->AddForce(force.col(0), cPoint); 
-			#ifdef DIVIDE_STEP
-			phScene->IntegratePart2();
-			#else
-			phScene->Step();
+				if(iInfo->neighborInfo.test_force.norm() == 0){
+					force.col(0) = minTestForce * n;
+				}else{
+					force.col(0) = iInfo->neighborInfo.test_force;
+				}
+				Vec3d base1 = force.col(0).unit();
+				Vec3d base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
+				if (base2.norm() > 0.1){
+					base2.unitize();
+				}else{
+					base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
+					base2.unitize();
+				}
+				Vec3d base3 = base1^base2;
+				force.col(1) = force.col(0).norm() * (base1 + base2);
+				force.col(2) = force.col(0).norm() * (base1 + base3);
 			#endif
-			nextvel.v() = phSolid->GetVelocity();
-			nextvel.w() = phSolid->GetAngularVelocity();
-			u.col(0) = (nextvel - curvel) /pdt - inSolid->b;
-			states->LoadState(phScene);
-			
+		
+			/// テスト力を3方向に加える	
 			for(int k = 0; k < 3; k++){
 				phSolid->AddForce(force.col(k), cPoint);
 				#ifdef DIVIDE_STEP
@@ -1232,8 +1230,6 @@ void FWLDHaptic::TestSimulation(){
 			}
 
 			iInfo->mobility.A = u  * force.inv();			// モビリティAの計算
-//			DSTR <<  iInfo->mobility.A << std::endl;
-			states->LoadState(phScene);						// 元のstateに戻しシミュレーションを進める
 		}
 	}
 	///--------テストシミュレーション終了--------
@@ -1360,7 +1356,7 @@ void FWLDHaptic::TestSimulation6D(){
 				states->LoadState(phScene);
 			}
 			
-			iInfo->mobility.Minv = u  * f.inv() * -1;			// モビリティAの計算
+			iInfo->mobility.Minv = u  * f.inv();			// モビリティAの計算
 		}
 	}
 	///--------テストシミュレーション終了--------
