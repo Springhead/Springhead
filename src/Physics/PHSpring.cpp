@@ -14,6 +14,7 @@ namespace Spr{;
 
 PHSpringDesc::PHSpringDesc(){
 	springOri = damperOri = 0.0;
+	hardnessRate = 1.0;
 	fMax = NULL;
 }
 
@@ -22,6 +23,7 @@ PHSpringDesc::PHSpringDesc(){
 PHSpring::PHSpring(const PHSpringDesc& desc){
 	SetDesc(&desc);
 	yieldFlag = false;
+	hardnessRate = 1;
 }
 
 //void PHSpring::SetDesc(const void* desc){
@@ -150,7 +152,7 @@ void PHSpring::IterateLCP(){
 		return;
 	FPCK_FINITE(f.v());
 
-	double fMaxDt  = fMax * GetScene()->GetTimeStep();
+	
 	SpatialVector fnew, df;
 	for(int j = 0; j < 6; j++){
 		if(!constr[j])continue;
@@ -166,14 +168,16 @@ void PHSpring::IterateLCP(){
 	}
 
 
-
-	if(fnew.v().norm() > fMaxDt){
-		fnew.v() = fnew.v() * fMaxDt/fnew.v().norm();
-		//DSTR<<GetName()<<":"<<fnew<<std::endl;
-	}
-	if(fnew.w().norm() > fMaxDt){
-		fnew.w() = fnew.w() * fMaxDt/fnew.w().norm();
-		//DSTR<<GetName()<<":"<<fnew<<std::endl;
+	if(fMax){
+		double fMaxDt  = fMax * GetScene()->GetTimeStep();
+		if(fnew.v().norm() > fMaxDt){
+			fnew.v() = fnew.v() * fMaxDt/fnew.v().norm();
+			DSTR<<GetName()<<":"<<fnew<<std::endl;
+		}
+		if(fnew.w().norm() > fMaxDt){
+			fnew.w() = fnew.w() * fMaxDt/fnew.w().norm();
+			DSTR<<GetName()<<":"<<fnew<<std::endl;
+		}
 	}
 
 	for(int j = 0; j < 6; j++){

@@ -116,7 +116,7 @@ void FWAppSample::Display(){
 
 void FWAppSample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->Clear();
-	Clear();
+	FWApp::Reset();
 	BuildObject();
 }
 
@@ -124,6 +124,7 @@ void FWAppSample::Keyboard(int key, int x, int y){
 	switch (key) {
 		case ESC:
 		case 'q':
+			FWApp::Clear();
 			exit(0);
 			break;
 		case 'r':

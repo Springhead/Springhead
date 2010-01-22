@@ -61,8 +61,10 @@ void UTQPTimer::CountAndWaitUS(int time)
 
 
 unsigned long UTQPTimer::Start(){
-	CountUS();
-	startFlag = true;
+	if(!startFlag){
+		CountUS();
+		startFlag = true;
+	}
 	return stopWatch;
 }
 unsigned long UTQPTimer::GetTime(){

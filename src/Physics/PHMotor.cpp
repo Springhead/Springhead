@@ -189,18 +189,33 @@ void PHBallJointMotor::PlasticDeformation(){
 	
 	for(int i=0;i<3;i++){
 		double tmp = D[i]+D2[i]+K[i]*dt;
-		joint->xs[1].w()[i] = ((D[i]+D2[i])/tmp)*joint->xs[0][i] + (D2[i]*dt/tmp) * ws.w()[i];	//バネとダンパの並列部の距離の更新
+		joint->xs[1].w()[i] = ((D[i]+D2[i])/tmp)*joint->xs[0].w()[i] + (D2[i]*dt/tmp) * ws.w()[i];	//バネとダンパの並列部の距離の更新
 		dA[i]= tmp/(D2[i]*(K[i]*dt+D[i])) * dtinv;
 		db[i] = K[i]/(K[i]*dt+D[i])*(joint->xs[0].w()[i]) ;
 	}
+
+
+	//Quaterniond qAll = joint->targetPosition.Inv() * joint->Xjrel.q;;//3要素全体の変位差のクォータニオン
+	//Quaterniond qForct;
+	//Vec3d fAngle = joint->xs[1].w();
+	//qForct.FromEuler(Vec3d(fAngle.y,fAngle.z,fAngle.x));//バネダンパ部の変位差のクォータニオン
+	//CSVOUT<<Deg(joint->Xjrel.q.Theta())<<","<<Deg(qForct.Theta())<<std::endl;
 	
 	//ELASTIC_PLASTICモードの場合,PLASTIC状態の終了時に残留変位を保存する位置にTargetPositionを変更
-	if(joint->type==PHBallJointDesc::ELASTIC_PLASTIC){
-		if(ws.w().norm()<0.1){
-			yieldFlag = false;
-			joint->SetTargetPosition(joint->Xjrel.q);
-		}
-	}
+	//if(joint->type==PHBallJointDesc::ELASTIC_PLASTIC){
+	//	//if(ws.w().norm()<0.1){
+	//	if(ws.w().norm()<0.001){
+	//		yieldFlag = false;
+	//		Quaterniond qAll = joint->Xjrel.q;//3要素全体の変位差のクォータニオン
+	//		Quaterniond qForct;
+	//		Vec3d fAngle = joint->xs[1].w();
+	//		qForct.FromEuler(Vec3d(fAngle.y,fAngle.z,fAngle.x));//バネダンパ部の変位差のクォータニオン
+	//		//DSTR<<"All: "<<Deg(qAll.Theta())<<"Forct: "<<Deg(qForct.Theta())<<std::endl;
+	//		//DSTR<<"All: "<<qAll.Axis()<<"Forct: "<<qForct.Axis()<<std::endl;
+	//		Quaterniond difQ = qForct.Inv() * qAll;
+	//		joint->SetTargetPosition(difQ);
+	//	}
+	//}
 	joint->xs[0]=joint->xs[1];	//バネとダンパの並列部の距離のステップを進める
 }
 
@@ -309,18 +324,34 @@ bool PHBallJointMotor::IsYield(){
 	//fの平均値を計算
 	double dt		= joint->GetScene()->GetTimeStep();
 	fNorm = 0;
-	for(int i=0; i<5 ;i++){
-		if(i==4){
-			joint->fs[4] = joint->motorf / dt;
+	for(int i=0; i<50 ;i++){
+		if(i==49){
+			joint->fs[49] = joint->motorf / dt;
 		}else{ 
 			joint->fs[i] = joint->fs[i+1];
 		}
-		
-		fNorm+=joint->fs[i].norm()/5;
+		fNorm+=joint->fs[i].norm()/50;
 	}
+
+	double yieldStressRate = 1.0;
+	if((fNorm < joint->yieldStress* yieldStressRate) && yieldFlag){
+		//Quaterniond qAll =joint->Xjrel.q * joint->targetPosition.Inv();//3要素全体の変位差のクォータニオン
+		Quaterniond qAll = joint->Xjrel.q;//3要素全体の変位差のクォータニオン
+		Quaterniond qForct;
+		Vec3d fAngle = joint->xs[1].w();
+		qForct.FromEuler(Vec3d(fAngle.y,fAngle.z,fAngle.x));//バネダンパ部の変位差のクォータニオン
+		//DSTR<<"All: "<<Deg(qAll.Theta())<<"Forct: "<<Deg(qForct.Theta())<<std::endl;
+		Quaterniond difQ = qForct.Inv() * qAll;
+		joint->SetTargetPosition(difQ);
+		yieldFlag = false;
+		//DSTR<<"3Element END"<<std::endl;
+	}
+
 	if(fNorm > joint->yieldStress){
 		yieldFlag = true;
+		//DSTR<<"3Element START"<<std::endl;
 	}
+
 	return yieldFlag;
 }
 }
