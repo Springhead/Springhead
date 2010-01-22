@@ -163,57 +163,70 @@ void FWGrabCoupling::GrabSolid2(){
 			PHSolidIf* pSolid = GetIAPointer(i)->GetPointerSolid(); //物理シミュレーションのポインタ
 			int NSolids = GetPHScene()->NSolids();
 			////Pointerに接触している剛体の取得
-			PHSolidIf* grabSolid;							// 接触している剛体
+			PHSolidIf* grabSolid = NULL;							// 接触している剛体
 			Posed pose = pSolid->GetPose();
 			bool createdFlag =false;
 
+			double length =1e30;
 			////ポインタのレンジ内の剛体を検索
+			PHSolidIf** solids = GetPHScene()->GetSolids();
 			for(int n=0; n< NSolids&&!createdFlag; n++){
-				PHSolidIf** solids = GetPHScene()->GetSolids();
+				if(!solids[n]->IsDynamical())continue;
 				Posed shapePose = solids[n]->GetShapePose(0);
 				Posed spose = solids[n]->GetPose() * shapePose;
 				Vec3d lPose = spose.Pos() - pose.Pos();
-				double length = lPose.norm();
-				if(length <GetIAPointer(i)->localRange && solids[n]!=pSolid){
-					//ポインタ近傍の剛体に対してジョイント作成
-					grabSolid =solids[n];
-					vcSolid.push_back(grabSolid);
-					DSTR<<"grabSolid: "<<grabSolid->GetName()<<std::endl;
-					grabSolid->GetDesc(&grabSolidDesc);
-					grabSolid->SetDynamical(true);
-					grabSolid->SetIntegrate(true);
-					
-
-					//Axis表示用の座標変換Poseを保存
-					grabPointerPose = pSolid->GetPose().Inv() * grabSolid->GetPose();
-
-					PHSpringDesc jointDesc;
-					double coefficient = 1; //バネを接続した瞬間は係数を高く設定しないと発散してしまう
-					{
-						jointDesc.poseSocket.Pos()	= Vec3d(0,0,0);
-						jointDesc.poseSocket.Ori()	= pSolid->GetPose().Ori().Inv();
-						jointDesc.posePlug.Pos()	= shapePose * Vec3d(0,0,0);
-						//jointDesc.posePlug.Pos()	= Vec3d(0,0,0);
-						jointDesc.posePlug.Ori()	= grabSolid->GetShapePose(0).Ori().Inv() * grabSolid->GetPose().Ori().Inv();
-						jointDesc.spring			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->springK * coefficient;
-						jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->damperD * coefficient;
-						jointDesc.springOri			= GetIAPointer(i)->springOriK* coefficient;
-						jointDesc.damperOri			= GetIAPointer(i)->damperOriD* coefficient;
-						jointDesc.fMax				= 15.0;
+				if(length > lPose.norm()) {
+					length = lPose.norm();
+					if(length <GetIAPointer(i)->localRange && solids[n]!=pSolid){
+						grabSolid =solids[n]; //ポインタ近傍の剛体
 					}
-					grabJoint.push_back( GetPHScene()->CreateJoint(GetIAPointer(i)->GetPointerSolid(), grabSolid, jointDesc) );
-					//掴んだ剛体の位置をポインタの位置に移動
-					pSolid->SetPose(grabSolid->GetPose());
-
-					
-					//Pointer剛体の接触判定解除
-					GetPHScene()->SetContactMode(GetIAPointer(i)->GetPointerSolid(),PHSceneDesc::MODE_NONE);
-					createdFlag = true;
-					//ポインタのShapeを削除
-					//pointerShape = pSolid->GetShape(0);
-					//pSolid->ClearShape();
-					continue;
 				}
+			}
+
+
+			///ジョイントの作成
+			if(grabSolid){
+				DSTR<<"grabSolid: "<<grabSolid->GetName()<<std::endl;
+				grabSolid->GetDesc(&grabSolidDesc);
+				grabSolid->SetDynamical(true);
+				grabSolid->SetIntegrate(true);
+				
+
+				//Axis表示用の座標変換Poseを保存
+				grabPointerPose = pSolid->GetPose().Inv() * grabSolid->GetPose();
+				Posed shapePose = grabSolid->GetShapePose(0);
+				PHSpringDesc jointDesc;
+				double coefficient = 1; //バネを接続した瞬間は係数を高く設定しないと発散してしまう
+				{
+					jointDesc.poseSocket.Pos()	= Vec3d(0,0,0);
+					jointDesc.poseSocket.Ori()	= pSolid->GetPose().Ori().Inv();
+					jointDesc.posePlug.Pos()	= shapePose * Vec3d(0,0,0);
+					jointDesc.posePlug.Ori()	= grabSolid->GetShapePose(0).Ori().Inv() * grabSolid->GetPose().Ori().Inv();
+					jointDesc.spring			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->springK * coefficient;
+					jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->damperD * coefficient;
+					jointDesc.springOri			= GetIAPointer(i)->springOriK* coefficient;
+					jointDesc.damperOri			= GetIAPointer(i)->damperOriD* coefficient;
+					jointDesc.fMax				= 15.0;
+				}
+				//DSTR<<grabSolid->GetName()<<std::endl;
+				std::string name = "soRightUpperArm";
+				if(grabSolid->GetName() == name){
+					jointDesc.springOri			= 0.0;
+					jointDesc.damperOri			= 0.0;
+
+				}
+				grabJoint.push_back( GetPHScene()->CreateJoint(GetIAPointer(i)->GetPointerSolid(), grabSolid, jointDesc) );
+				//掴んだ剛体の位置をポインタの位置に移動
+				pSolid->SetPose(grabSolid->GetPose());
+
+				
+				//Pointer剛体の接触判定解除
+				GetPHScene()->SetContactMode(GetIAPointer(i)->GetPointerSolid(),PHSceneDesc::MODE_NONE);
+				createdFlag = true;
+				//ポインタのShapeを削除
+				//pointerShape = pSolid->GetShape(0);
+				//pSolid->ClearShape();
+				//continue;
 			}
 
 			//Jointの作成終了

@@ -25,7 +25,7 @@ struct PHConstraintState{
 	Vec3d motorf;			//< もとはConstraintにあったfが分離したもの(PHMotor.hのf)
 	Vec3d limitf;			//< もとはConstraintにあったfが分離したもの(PHJointLimit.hのf)
 	//Vec3d limitF;
-	Vec3d fs[5];			//< fのNormを過去5ステップ分保存
+	Vec3d fs[50];			//< motorfを過去50ステップ分保存
 	SpatialVector xs[2];	///< (3要素モデル専用)ばね部の距離
 
 };

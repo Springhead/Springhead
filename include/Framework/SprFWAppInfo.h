@@ -144,7 +144,8 @@ public:
 	unsigned GetInterval(){return interval;}		///<	タイマーの時間間隔の取得
 	void SetResolution(unsigned r);					///<	タイマーの分解能の設定
 	unsigned GetResolution(){return resolution;}	///<	タイマーの分解能の取得
-	void Create();									///<	タイマーの作成
+	void Create();								///<	タイマーの作成
+	void Clear();
 	void Recreate();
 	void Release();
 

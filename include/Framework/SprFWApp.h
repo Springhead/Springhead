@@ -184,6 +184,9 @@ public:
 	/** @brief FWAppを初期状態にする
 	*/
 	void	Clear();
+	/** @brief FWAppをリセットする(タイマーのリセットは行わない)
+	*/
+	void	Reset();
 
 	/** @brief Ctrl, Shift, Altの状態を返す
 		個々の派生クラスで実装される

@@ -283,8 +283,17 @@ int FWApp::GetModifier(){
 	return grAdaptee->Modifiers();
 }
 
-void FWApp::Clear(){
+
+void FWApp::Reset(){
 	dragInfo.clear();	//剛体ドラッグ情報を初期化
+}
+void FWApp::Clear(){
+	Reset();
+	//Timerの初期化
+	for(int i = 0; i <fwTimers.size() ; i++){
+		fwTimers[i]->Clear();
+	}
+	fwTimers.clear();
 }
 
 // 描画パート////////////////////////////////////////////////////////////////////

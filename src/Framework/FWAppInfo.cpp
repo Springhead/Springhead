@@ -102,4 +102,10 @@ void FWTimer::Release(){
 	}
 }
 
+void FWTimer::Clear(){
+	if(mtimer){
+		delete mtimer;
+	}
+}
+
 }
