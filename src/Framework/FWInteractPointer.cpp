@@ -79,6 +79,20 @@ void  FWInteractPointer::SetDefaultPosition(Posed p){
 Posed  FWInteractPointer::GetDefaultPosition(){
 	return defaultPosition; 
 }
+void  FWInteractPointer::SetCameraOri(Quaterniond q){
+	cameraOri = q;
+}
+
+Quaterniond  FWInteractPointer::GetCameraOri(){
+	return cameraOri; 
+}
+
+void  FWInteractPointer::SetCameraOrigin(Posed p){
+	cameraOrigin = p;
+}
+Posed FWInteractPointer::GetCameraOrigin(){
+	return cameraOrigin; 
+}
 
 void  FWInteractPointer::SetPointersCalibPosition(Posed p){
 	pointersCalibPosition = p;
@@ -101,6 +115,8 @@ void FWInteractPointer::EnableVibration(bool b){
 }
 void FWInteractPointer::Calibration(){
 	GetHI()->Calibration();
+	cameraOrigin = Posed();
+	cameraPose = Posed();
 }
 
 void FWInteractPointer::SetGrabFlag(int f){

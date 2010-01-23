@@ -182,10 +182,10 @@ void FWGrabCoupling::GrabSolid2(){
 					}
 				}
 			}
-
-
+			
 			///ジョイントの作成
 			if(grabSolid){
+				vcSolid.push_back(grabSolid);
 				DSTR<<"grabSolid: "<<grabSolid->GetName()<<std::endl;
 				grabSolid->GetDesc(&grabSolidDesc);
 				grabSolid->SetDynamical(true);
@@ -273,7 +273,6 @@ void FWGrabCoupling::AdjustSpring(double n){
 //	
 }
 
-
 void FWGrabCoupling::UpdateInterface(){
 
 	
@@ -290,7 +289,18 @@ void FWGrabCoupling::UpdateInterface(){
 				Posed hifPose;
 				hifPose.Pos() = (Vec3d)hif->GetPosition() * s;
 				hifPose.Ori() = hif->GetOrientation();
-				Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition()*hifPose;
+				Posed newCameraPose; 
+				newCameraPose.Ori() = GetIAPointer(i)->GetCameraOri();
+
+				//Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition()*hifPose;
+				Posed origin = GetIAPointer(i)->GetCameraOrigin();
+				
+				Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition() * GetIAPointer(i)->cameraPose * hifPose * origin;
+				origin  = hifPose.Inv() * newCameraPose.Inv() * GetIAPointer(i)->cameraPose * hifPose * origin;
+				GetIAPointer(i)->SetCameraOrigin(origin);
+				GetIAPointer(i)->cameraPose = newCameraPose;
+
+				//hiSolidPose =	cameraPose*hiSolidPose; //カメラの移動に対して移動方向を変更
 				if(!cluchFlag){
 					hiSolid->SetPose(cluchTrans * hiSolidPose);
 					hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
@@ -342,6 +352,7 @@ void FWGrabCoupling::UpdateGrabPointer(){
 			//ジョイントに働く力(world座標系)を取得
 			outForce = SpatialVector();
 			Posed jPose;
+			Posed cPose = iPointer->GetCameraOrigin();
 		if(GetIAPointer(i)->GetGrabFlag()==3){
 			//GrabSolidの場合
 			grabJoint[i]->GetSocketPose(jPose);
@@ -349,8 +360,8 @@ void FWGrabCoupling::UpdateGrabPointer(){
 
 			double fs = iPointer->GetForceScale();
 			double ts = iPointer->GetTorqueScale();
-			outForce.v() = jPose * outForce.v() * (-fs);
-			outForce.w() = jPose * outForce.w() * (-ts);
+			outForce.v() = jPose * cPose* outForce.v() * (-fs);
+			outForce.w() = jPose * cPose*  outForce.w() * (-ts);
 		}else{
 			outForce.v() = Vec3d(0.0,0.0,0.0);
 			outForce.w() = Vec3d(0.0,0.0,0.0);
@@ -409,6 +420,7 @@ void FWGrabCoupling::UpdatePointer(){
 		//ジョイントに働く力(world座標系)を取得
 		SpatialVector outForce = SpatialVector();
 		Posed jPose;
+		Posed cPose ;cPose.Ori()= iPointer->GetCameraOri();
 
 		if(GetIAPointer(i)->GetGrabFlag()==3){
 			//GrabSolidの場合
@@ -419,8 +431,10 @@ void FWGrabCoupling::UpdatePointer(){
 			vcJoint[i]->GetConstraintForce(outForce.v(),outForce.w());
 		}
 		double s = iPointer->GetForceScale();
-		outForce.v() = jPose * outForce.v() * (-s);
-		outForce.w() = jPose * outForce.w() * (-s);
+		outForce.v() = cPose.Inv() *jPose * outForce.v() * (-s);
+		outForce.w() = cPose.Inv() *jPose * outForce.w() * (-s);
+
+		DSTR<<jPose * outForce.v() * (-s)<<" 変換後 "<<cPose *jPose * outForce.v() * (-s)<<std::endl;
 
 		/// インタフェースへ力を出力
 		if(iPointer->bForce){

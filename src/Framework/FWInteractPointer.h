@@ -31,6 +31,9 @@ public:
 							// 3:設定したK,Dを使用したジョイントによるバーチャルカップリング中
 							// 4:接触している剛体に接続したジョイントをクリアする
 
+	Posed  cameraOrigin;	//カメラに対して基準となる姿勢，カメラの移動により変位が蓄積する
+	Posed  cameraPose;		//1ステップ前のカメラ姿勢を保存
+
 	double correctionSpringK;
 	double correctionDamperD;
 
@@ -62,7 +65,11 @@ public:
 	void		EnableVibration(bool b = true);
 	void		Calibration();
 	void		SetGrabFlag(int f);
-	int		GetGrabFlag();
+	int			GetGrabFlag();
+	void		 SetCameraOri(Quaterniond q);
+	Quaterniond  GetCameraOri();
+	void		 SetCameraOrigin(Posed p);
+	Posed		 GetCameraOrigin();
 };
 
 }
