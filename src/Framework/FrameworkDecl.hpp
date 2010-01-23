@@ -24,6 +24,7 @@ protected:\
 	double	forceScale;	\
 	double	torqueScale;	\
 	double	localRange;	\
+	Quaterniond	cameraOri;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		pointerSolid = ((FWInteractPointerDesc*)ptr)->pointerSolid;	\
@@ -39,6 +40,7 @@ public:\
 		forceScale = ((FWInteractPointerDesc*)ptr)->forceScale;	\
 		torqueScale = ((FWInteractPointerDesc*)ptr)->torqueScale;	\
 		localRange = ((FWInteractPointerDesc*)ptr)->localRange;	\
+		cameraOri = ((FWInteractPointerDesc*)ptr)->cameraOri;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -56,6 +58,7 @@ public:\
 		((FWInteractPointerDesc*)ptr)->forceScale = forceScale;	\
 		((FWInteractPointerDesc*)ptr)->torqueScale = torqueScale;	\
 		((FWInteractPointerDesc*)ptr)->localRange = localRange;	\
+		((FWInteractPointerDesc*)ptr)->cameraOri = cameraOri;	\
 		return true;	\
 	}\
 

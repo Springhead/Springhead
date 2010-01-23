@@ -30,6 +30,8 @@
 	void Calibration(){	base::Calibration();}	\
 	void SetGrabFlag(int f){	base::SetGrabFlag(f);}	\
 	int GetGrabFlag(){	return	base::GetGrabFlag();}	\
+	void SetCameraOri(Quaterniond q){	base::SetCameraOri(q);}	\
+	Quaterniond GetCameraOri(){	return	base::GetCameraOri();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractSceneIf(base)	\
 	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\

@@ -30,6 +30,7 @@ public:
 	double		forceScale; //力覚インタフェースで出力する力をforceScale倍する．通常は1.0
 	double		torqueScale;	////力覚インタフェースで出力するトルクをforceScale倍する．通常は1.0
 	double		localRange;
+	Quaterniond cameraOri;	//カメラ視点の回転に対して常に移動方向を一定にするためのクォータニオン，毎ステップSetする必要がある．
 	FWInteractPointerDesc(){ Init(); }
 	void Init(){
 		pointerSolid  = NULL;
@@ -73,6 +74,8 @@ public:
 	void		Calibration();
 	void		SetGrabFlag(int f);
 	int			GetGrabFlag();
+	void		 SetCameraOri(Quaterniond q);
+	Quaterniond  GetCameraOri();
 };
 
 typedef std::vector< UTRef<FWInteractPointerIf> > FWInteractPointers;
