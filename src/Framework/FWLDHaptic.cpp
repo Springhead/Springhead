@@ -41,7 +41,6 @@ void FWLDHapticLoop::Step(){
 			break;
 		case CONSTRAINT:
 			ConstraintBasedRendering();
-			//LocalDynamics();
 			LocalDynamics6D();
 			break;
 		case PROXY:
@@ -136,9 +135,7 @@ void FWLDHapticLoop::HapticRendering3D(){
 				DisplayForce[j] = outForce.v();
 
 				/// 計算した力を剛体に加える//
-				iPointer->interactInfo[i].mobility.force = -1 * addforce;	
-				nInfo->test_force_norm = addforce.norm();
-				nInfo->test_force = -1 * addforce;
+				iPointer->interactInfo[i].mobility.force = nInfo->test_force = -1 * addforce;	
 			}
 		}
 		/// インタフェースへ力を出力
@@ -220,9 +217,7 @@ void FWLDHapticLoop::HapticRendering(){
 				DisplayForce[j] = outForce.v();
 
 				/// 計算した力を剛体に加える//
-				iPointer->interactInfo[i].mobility.force = -1 * addforce;	
-				nInfo->test_force_norm = addforce.norm();
-				nInfo->test_force = addforce;
+				iPointer->interactInfo[i].mobility.force = nInfo->test_force = -1 * addforce;	
 				//if(iPointer->bForce)	DSTR << vibforce << endl;
 			}else{
 				iPointer->bContact[i] = false;
@@ -285,9 +280,7 @@ void FWLDHapticLoop::HapticRendering6D(){
 					outForce.w() += addtorque;
 
 					/// 計算した力を剛体に加える//
-					iPointer->interactInfo[i].mobility.force = -1 * addforce;	
-					nInfo->test_force_norm = addforce.norm();
-					nInfo->test_force = addforce;
+					iPointer->interactInfo[i].mobility.force = nInfo->test_force = -1 * addforce;	
 				}
 			}
 		}
@@ -337,8 +330,9 @@ void GaussSeidel(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b){
 		for(int i = 0; i < n; i++) lastx[i] = x[i];
 	}
 	// nIterで計算が終わらなかったので打ち切り
-	//DSTR << "Could not convergent the variable. << std::endl; 
-	//DTR << "Abort the iteration." << std::endl;
+	static int iterError = 0;
+	iterError += 1;
+	DSTR << iterError << " Could not convergent the variable." << std::endl; 
 }
 
 struct SolidVertex{
@@ -418,13 +412,14 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 					Vec3d onPlane = wivs - ortho;
 					nInfo->solid_section.push_back(cSolid->GetPose().Inv() * onPlane);
 				}
+				//DSTR << nInfo->solid_section.size() << std::endl;
 			}
 	
 #endif
 		}
 		/// 連立不等式を計算するための行列を作成
 		if(sv.size() > 0){
-			int l = sv.size();	// 接触点の数
+			int l = (int)sv.size();	// 接触点の数
 			VMatrixRow<double> a;
 			a.resize(l, l);
 			VVector<double> d;
@@ -474,7 +469,7 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 			/// 力覚インタフェースに出力する力の計算
 			double ws4 = pow(iPointer->GetWorldScale(), 4);
 			outForce.v() = (iPointer->correctionSpringK * dr - iPointer->correctionDamperD * (dr/hdt)) /ws4;
-			outForce.w() = (iPointer->correctionSpringK * dtheta / 20) / ws4;
+			outForce.w() = (iPointer->correctionSpringK * dtheta) / ws4 / iPointer->GetPosScale();
 			//CSVOUT << l << "," << sv[0].d << "," << outForce.v().y << endl;
 			//CSVOUT << outForce.v().x << "," << outForce.v().y << "," << outForce.v().z << "," << outForce.w().x << "," << outForce.w().y << "," << outForce.w().z << endl;
 
@@ -482,7 +477,6 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 			for(int m = 0; m < l; m++){
 				Vec3d addforce = -1 * f[m] * sv[m].normal * iPointer->correctionSpringK /ws4;
 				iPointer->interactInfo[sv[m].iaSolidID].mobility.f.push_back(addforce);	
-
 			}
 		}
 		/// インタフェースへ力を出力
@@ -539,18 +533,28 @@ void FWLDHapticLoop::LocalDynamics6D(){
 			FWInteractPointer* iPointer = GetIAPointer(j);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			if(!iInfo->flag.blocal) continue;
-			SpatialVector f;
-			for(int k = 0; k < iInfo->mobility.f.size(); k++){
+			SpatialVector f = SpatialVector();
+			for(int k = 0; k < (int)iInfo->mobility.f.size(); k++){
 				f.v() += iInfo->mobility.f[k];
 				Vec3d r = (iSolid->copiedSolid.GetPose() * iInfo->neighborInfo.solid_section[k]) - iSolid->copiedSolid.GetCenterPosition(); 
 				f.w() += r % iInfo->mobility.f[k];
 			}
-			vel += (iInfo->mobility.Minv * f) * hdt;			// 力覚ポインタからの力による速度変化
-			iInfo->neighborInfo.test_force_norm = f.v().norm();
-			iInfo->neighborInfo.test_torque_norm = f.w().norm();
-			iInfo->neighborInfo.test_force = f.v();
-			iInfo->neighborInfo.test_torque = f.w();
-			//DSTR << f.v().norm() << std::endl;
+#if 0
+			// モビリティの力成分のみを使う
+			TMatrixRow<3, 3, double> sub = TMatrixRow<3, 3, double>();
+			for(int k = 0; k < 3; k++){
+				for(int l = 0; l < 3; l++){
+					sub[k][l] = iInfo->mobility.Minv[k][l];
+				}
+			}
+			vel.v() += sub * f * hdt;
+#else
+			vel += (iInfo->mobility.Minv * f) * hdt;				// 力覚ポインタからの力による速度変化
+			//DSTR << iInfo->mobility.Minv * f << std::endl;
+#endif
+			iInfo->neighborInfo.test_force = f.v();					// テスト力の保存
+			iInfo->neighborInfo.test_torque = f.w();				// テストトルクの保存
+			iInfo->neighborInfo.solid_section.clear();
 			iInfo->mobility.f.clear();
 		}
 		vel += iSolid->b * hdt;
@@ -756,8 +760,7 @@ void FWLDHapticLoop::Proxy(){
 
 				/// 計算した力を剛体に加える
 				iPointer->interactInfo[i].mobility.force = -1 * addforce;						
-				nInfo->test_force_norm = addforce.norm();
-				nInfo->test_force = addforce;
+				nInfo->test_force = -1 * addforce;
 
 			}else{
 				iPointer->bContact[i] = false;
@@ -935,8 +938,7 @@ void FWLDHapticLoop::ProxySimulation(){
 
 				/// 計算した力を剛体に加える
 				iPointer->interactInfo[i].mobility.force = -1 * addforce* iPointer->GetForceScale();;						
-				nInfo->test_force_norm = addforce.norm()* iPointer->GetForceScale();;
-				nInfo->test_force = addforce* iPointer->GetForceScale();;
+				nInfo->test_force = -1 * addforce* iPointer->GetForceScale();;
 			}else{
 				iPointer->bContact[i] = false;
 				contactFlag[j][i] = false;
@@ -1093,7 +1095,6 @@ void FWLDHaptic::PhysicsStep(){
 		lastvel.back().w() = phSolid->GetAngularVelocity();
 	}
 	/// シミュレーションを進める
-
 	//DSTR<<"Physicsシミュレーション"<<std::endl;
 	GetPHScene()->Step();
 	for(int i = 0; i < NIASolids(); i++){
@@ -1171,10 +1172,7 @@ void FWLDHaptic::TestSimulation(){
 			PHSolid* soPointer = iPointer->pointerSolid->Cast();
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			Vec3d cPoint = phSolid->GetPose() * iInfo->neighborInfo.closest_point;		// 力を加える点(ワールド座標)
-
 			Vec3d n = -iInfo->neighborInfo.face_normal;
-			Matrix3d local = CalcConstraintCoordinateSystem(soPointer, phSolid, 
-				iInfo->neighborInfo.pointer_point, iInfo->neighborInfo.closest_point, n);
 
 			TMatrixRow<6, 3, double> u;			// 剛体の機械インピーダンス
 			TMatrixRow<3, 3, double> force;		// 加える力
@@ -1186,33 +1184,36 @@ void FWLDHaptic::TestSimulation(){
 			}
 
 			float minTestForce = 0.5;		// 最小テスト力
-			/// 通常テスト力が最小テスト力を下回る場合
-			if(iInfo->neighborInfo.test_force_norm < minTestForce){
-				iInfo->neighborInfo.test_force_norm = minTestForce;					 
-			}
 
 			//#define NORMAL
 			#ifdef NORMAL
-				force.col(0) = iInfo->neighborInfo.test_force_norm * n;
-				force.col(1) = iInfo->neighborInfo.test_force_norm * (n + local.col(1));
-				force.col(2) = iInfo->neighborInfo.test_force_norm * (n + local.col(2));
+			Matrix3d local = CalcConstraintCoordinateSystem(soPointer, phSolid, 
+			iInfo->neighborInfo.pointer_point, iInfo->neighborInfo.closest_point, n);
+			/// 通常テスト力が最小テスト力を下回る場合
+			if(iInfo->neighborInfo.test_force.norm() < minTestForce){
+				force.col(0) = minTestForce * n;
+			}else{
+				force.col(0) = iInfo->neighborInfo.test_force.norm() * n;			
+			}
+			force.col(1) = force.col(0).norm() * (n + local.col(1));
+			force.col(2) = force.col(0).norm() * (n + local.col(2));
             #else
-				if(iInfo->neighborInfo.test_force.norm() == 0){
-					force.col(0) = minTestForce * n;
-				}else{
-					force.col(0) = iInfo->neighborInfo.test_force;
-				}
-				Vec3d base1 = force.col(0).unit();
-				Vec3d base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
-				if (base2.norm() > 0.1){
-					base2.unitize();
-				}else{
-					base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
-					base2.unitize();
-				}
-				Vec3d base3 = base1^base2;
-				force.col(1) = force.col(0).norm() * (base1 + base2);
-				force.col(2) = force.col(0).norm() * (base1 + base3);
+			if(iInfo->neighborInfo.test_force.norm() == 0){
+				force.col(0) = minTestForce * n;
+			}else{
+				force.col(0) = iInfo->neighborInfo.test_force;
+			}
+			Vec3d base1 = force.col(0).unit();
+			Vec3d base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
+			if (base2.norm() > 0.1){
+				base2.unitize();
+			}else{
+				base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
+				base2.unitize();
+			}
+			Vec3d base3 = base1^base2;
+			force.col(1) = force.col(0).norm() * (base1 + base2);
+			force.col(2) = force.col(0).norm() * (base1 + base3);
 			#endif
 		
 			/// テスト力を3方向に加える	
@@ -1239,12 +1240,7 @@ void FWLDHaptic::TestSimulation(){
 }
 
 void FWLDHaptic::TestSimulation6D(){
-	/* 6DoF Haptic Rendering のための多点接触テストシミュレーション*/
-	/*	力覚ポインタが剛体に加える力の点が複数
-		点はFWInteractAdaptee::FindSectionVertex()で取得し，
-		vector< Vec3d > FWInteractInfo::neighborInfo::sectionに保存されている
-	*/
-	
+	/* 6DoF Haptic Rendering のためのテストシミュレーション*/
 	PHSceneIf* phScene = GetPHScene();
 
 	#ifdef DIVIDE_STEP
@@ -1287,51 +1283,120 @@ void FWLDHaptic::TestSimulation6D(){
 		/// InteractPointerの数だけ力を加えるテストシミュレーションを行う
 		for(int j = 0; j < NIAPointers(); j++){
 			FWInteractPointer* iPointer = GetIAPointer(j);
-			if(iPointer->interactInfo[i].flag.blocal==false) continue;
+			if(iPointer->interactInfo[i].flag.blocal == false) continue;
 			PHSolid* soPointer = iPointer->pointerSolid->Cast();
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
-			Vec3d cPoint = phSolid->GetPose() * iInfo->neighborInfo.closest_point;		// 力を加える点(ワールド座標)
-			
-			/// 拘束座標系の作成
 			Vec3d n = -iInfo->neighborInfo.face_normal;
-			Matrix3d local = CalcConstraintCoordinateSystem(soPointer, phSolid, 
-				iInfo->neighborInfo.pointer_point, iInfo->neighborInfo.closest_point, n);
 
-			/// 接触点に加える力
-			const float minTestForce = 0.5;										// 最小テスト力
-			/// 通常テスト力が最小テスト力を下回る場合
-			if(iInfo->neighborInfo.test_force_norm < minTestForce)		iInfo->neighborInfo.test_force_norm = minTestForce;
-			if(iInfo->neighborInfo.test_torque_norm < minTestForce)		iInfo->neighborInfo.test_torque_norm = minTestForce;					 
-			
-			TMatrixRow<6,6,double> u;		// 剛体の機械インピーダンス
-			TMatrixRow<6,6,double> f;		// 加える力,トルク
-			u.resize(6,6);
-			f.resize(6,6);
-			for(int k = 0; k<6; k++){
-				for(int l = 0; l<6; l++){
-					u[k][l] = 0;
-					f[k][l] = 0;
-				}
-			}
-			
-			SpatialVector force[6];
-			for(int k = 0; k < 5; k++){
-				force[k] = SpatialVector();
-			}
-			force[0].v() = iInfo->neighborInfo.test_force_norm * n;
-			force[1].v() = iInfo->neighborInfo.test_force_norm * (n + local.col(1));
-			force[2].v() = iInfo->neighborInfo.test_force_norm * (n + local.col(2));
-			force[3].w() = iInfo->neighborInfo.test_torque_norm * n;
-			force[4].w() = iInfo->neighborInfo.test_torque_norm * (n + local.col(1));
-			force[5].w() = iInfo->neighborInfo.test_torque_norm * (n + local.col(2));
+			const float minTestForce = 0.1;		// 最小テスト力
+			const float minTestTorque = 0.1;
 
-			for(int k = 0; k < 5; k++){
-				f.col(k) = force[k];
+			SpatialVector f[6];
+			for(int k = 0; k < 5; k++)	f[k] = SpatialVector();
+			f[0].v() = iInfo->neighborInfo.test_force;
+			f[0].w() = iInfo->neighborInfo.test_torque;
+			iInfo->neighborInfo.test_force = Vec3d();
+			iInfo->neighborInfo.test_torque = Vec3d();
+			/// テスト力が0の場合の処理
+			//テストトルクも必ず0になる
+			//接触していないので，1点だけに力を加えるようにする
+			if(f[0].v().norm() == 0){
+				f[0].v() = minTestForce * n;
+				Vec3d cPoint = phSolid->GetPose() * iInfo->neighborInfo.closest_point;		// 力を加える点(ワールド座標)
+				Vec3d center = phSolid->GetCenterPosition();
+				f[0].w() = (cPoint - center) % f[0].v();
+			}
+			/// テストトルクが0の場合の処理
+			if(f[0].w().norm() == 0){
+				f[0].w() = minTestTorque * Vec3d(1, 0, 0);	// とりあえず適当なベクトルを入れておく
+				DSTR << "test torque is Zero" << std::endl;
 			}
 
-			/// 力を加える
-			for(int k = 0; k < 3; k++){
-				phSolid->AddForce((Vec3d)force[k].v()); 
+#if 1
+			f[3].w() = f[0].w();
+			f[0].w() = Vec3d();
+			/// 力f[0].v()と垂直な力2本
+			Vec3d base1 = f[0].v().unit();
+			Vec3d base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
+			if(base2.norm() > 0.1)	base2.unitize();
+			else{
+				base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
+				base2.unitize();
+			}
+			Vec3d base3 = base1^base2;
+			f[1].v() = f[0].v().norm() * (base1 + base2);
+			f[2].v() = f[0].v().norm() * (base1 + base3);
+
+			/// トルクf[0].w()と垂直なトルク2本
+			base1 = f[3].w().unit();
+			base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
+			if(base2.norm() > 0.1)	base2.unitize();
+			else{
+				base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
+				base2.unitize();
+			}
+			base3 = base1^base2;
+			f[4].w() = f[3].w().norm() * (base1 + base2);
+			f[5].w() = f[3].w().norm() * (base1 + base3);
+#else
+			/// テスト力すべてをf[0]にする
+			for(int k = 1; k < 6; k++) f[k] = f[0];
+
+			/// 力f[0].v()と垂直な力2本
+			Vec3d base1 = f[0].v().unit();
+			Vec3d base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
+			if(base2.norm() > 0.1)	base2.unitize();
+			else{
+				base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
+				base2.unitize();
+			}
+			Vec3d base3 = base1^base2;
+			f[1].v() = f[0].v().norm() * (base1 + base2);
+			f[2].v() = f[0].v().norm() * (base1 + base3);
+
+			/// トルクf[0].w()と垂直なトルク2本
+			base1 = f[0].w().unit();
+			base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
+			if(base2.norm() > 0.1)	base2.unitize();
+			else{
+				base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
+				base2.unitize();
+			}
+			base3 = base1^base2;
+			f[3].w() = f[0].w().norm() * (base1 + base2);
+			f[4].w() = f[0].w().norm() * (base1 + base3);
+
+			/// f[0]と垂直になるベクトル svbase2 = (a * f[0].v() b*f[0].w())^{t}
+			/// a*f[0].v()*f[0].v() + b*f[0].w()*f[0].w() = 0となるa, bをみつける
+			SpatialVector svbase1 = SpatialVector();
+			svbase1.v() = f[0].v();
+			svbase1.w() = f[0].w();
+			svbase1.unitize();
+			double f_ip = f[0].v()*f[0].v();
+			double t_ip = f[0].w()*f[0].w();
+			double c = f_ip / t_ip;
+			double a = 1;
+			double b = - a * c;
+			//DSTR << c << std::endl;
+			SpatialVector svbase2 = SpatialVector();
+			svbase2.v() = a * f[0].v();
+			svbase2.w() = b * f[0].w();
+			svbase2.unitize();
+			//f[5] = f[0].w().norm() * (svbase1 + svbase2);
+			f[5] = svbase1 + svbase2;
+			f[5].v() = f[0].v().norm() * f[5].v();
+			f[5].w() = f[0].w().norm() * f[5].w();
+
+#endif
+
+			TMatrixRow<6,6,double> u = TMatrixRow<6,6,double>();		// 剛体の機械インピーダンス
+			TMatrixRow<6,6,double> F = TMatrixRow<6,6,double>();		// 加える力,トルク行列
+			for(int k = 0; k < 6; k++)	F.col(k) = f[k];				// テスト力，テストトルクを行列に詰める
+
+			/// テスト力，テストトルクを加えてテストシミュレーション実行
+			for(int k = 0; k < 6; k++){
+				phSolid->AddForce(f[k].v()); 
+				phSolid->AddTorque(f[k].w());
 				#ifdef DIVIDE_STEP
 				phScene->IntegratePart2();
 				#else
@@ -1342,21 +1407,22 @@ void FWLDHaptic::TestSimulation6D(){
 				u.col(k) = (nextvel - curvel) /pdt - inSolid->b;
 				states->LoadState(phScene);
 			}
-			/// トルクを加える
-			for(int k = 3; k < 6; k++){
-				phSolid->AddTorque((Vec3d)force[k].w()); 
-				#ifdef DIVIDE_STEP
-				phScene->IntegratePart2();
-				#else
-				phScene->Step();
-				#endif
-				nextvel.v() = phSolid->GetVelocity();
-				nextvel.w() = phSolid->GetAngularVelocity();
-				u.col(k) = (nextvel - curvel) /pdt - inSolid->b;
-				states->LoadState(phScene);
-			}
-			
-			iInfo->mobility.Minv = u  * f.inv();			// モビリティAの計算
+			//DSTR << F.det() << std::endl; 
+			//DSTR << u << std::endl; 
+			iInfo->mobility.Minv = u  * F.inv();			// モビリティAの計算
+#if 1
+			//DEBUG
+			//DSTR << "------------------------" << std::endl;
+			//DSTR << "b:" << std::endl;	DSTR << inSolid->b << std::endl;
+			//DSTR << "F:" << std::endl;	DSTR << F << std::endl;
+			//DSTR << "Minv:" << std::endl;	DSTR << iInfo->mobility.Minv << std::endl;
+#if 0
+			TMatrixRow<6, 6, double> M = TMatrixRow<6, 6, double>();
+			if(det(u) == 0)	M = F * u; 
+			else			M = F * u.inv(); 
+			DSTR << "M:" << std::endl;	DSTR << M << std::endl;
+#endif
+#endif
 		}
 	}
 	///--------テストシミュレーション終了--------
