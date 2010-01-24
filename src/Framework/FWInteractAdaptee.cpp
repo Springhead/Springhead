@@ -172,6 +172,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 		if(fCount > 0){
 			inSolid->bfirstSim = true;	
 			inSolid->copiedSolid = *inSolid->sceneSolid;	// シーンが持つ剛体の中身を力覚プロセスで使う剛体（実体）としてコピーする
+			inSolid->b = inSolid->lastb = SpatialVector();
 		}
 		/// シミュレーションの処理フラグをtrueにする
 		if(lCount > 0){
@@ -210,7 +211,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			/// 初めて最近傍物体になった場合
 			if(iaInfo->flag.blocal == false){																
 				iaInfo->flag.bfirstlocal = true;	
-				iaInfo->neighborInfo.face_normal = normal;	//< 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．										
+				iaInfo->neighborInfo.face_normal = normal;	//< 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．
 				#ifdef _DEBUG
 					if (iaInfo->neighborInfo.face_normal * normal < 0.8){
 						DSTR << "Too big change on normal = " << normal << std::endl;
@@ -224,11 +225,6 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			iaInfo->neighborInfo.common_point = (phSolid->GetPose() * pa + soPointer->GetPose() * pb)/2; 
 			iaInfo->neighborInfo.last_face_normal = iaInfo->neighborInfo.face_normal;		//< 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
 			iaInfo->neighborInfo.face_normal = normal;				//< 剛体から力覚ポインタへの法線
-		}else{
-			/// ここには入らない可能あり，要検証(susa)
-			/// 近傍物体ではないのでfalseにする
-			iaInfo->flag.bfirstlocal = false;						
-			iaInfo->flag.blocal = false;																
 		}
 
 		/// 接触解析(susa実装中)
@@ -239,13 +235,8 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 
 #ifdef CONTACT_ANALYSIS		
 		iaInfo->neighborInfo.intersection_vertices.clear();
-		//iaInfo->neighborInfo.solid_section.clear();
-		//iaInfo->neighborInfo.pointer_section.clear();
-		if(found == 1){
-			iaInfo->neighborInfo.intersection_vertices.push_back(pb);
-			//iaInfo->neighborInfo.solid_section.push_back(pa);
-		}
-		if(found == 2)AnalyzeContactResion(phSolid, soPointer, pa, pb, &iaInfo->neighborInfo);
+		if(found == 1)	iaInfo->neighborInfo.intersection_vertices.push_back(pb);
+		if(found == 2)	AnalyzeContactResion(phSolid, soPointer, pa, pb, &iaInfo->neighborInfo);
 #endif
 
 #ifdef BT_COLLISION
@@ -372,17 +363,24 @@ void FWInteractAdaptee::AnalyzeContactResion(PHSolid* solida, PHSolid* solidb, V
 	analyzer.FindIntersection(&sp);
 	bUseContactVolume = false;
 
+	// 形状の頂点を取ってくる
 	for(CDQHPlane< CDContactAnalysisFace >* it = analyzer.planes.begin; it != analyzer.planes.end; ++it){
 		if(it->deleted) continue;
 		Vec3d point = it->normal/it->dist + sp.commonPoint;
+	
+/// ALLかSELECTIONのどちらかを選ぶ
+#define SELECTION	// 中間表現の上にに載っている点は接触点としない
+//#define ALL		// 接触形状の頂点を全て，接触点とする
+#ifdef SELECTION
+		double dot = (point - solida->GetPose() * pa) * nInfo->face_normal;
+		if(dot < -1e-5){
+			nInfo->intersection_vertices.push_back(solidb->GetPose().Inv() * point);
+		}
+#endif
+#ifdef ALL
 		nInfo->intersection_vertices.push_back(solidb->GetPose().Inv() * point);
-		//double dot = (point - solida->GetPose() * pa) * nInfo->face_normal;
-		//if(dot < 0){
-		//	Vec3d ortho = dot * nInfo->face_normal;
-		//	Vec3d onPlane = point - ortho;
-		//	nInfo->solid_section.push_back(solida->GetPose().Inv() * onPlane);
-		//}
-	}
+#endif
+	}	
 }
 
 void FWInteractAdaptee::CompareCurrentContactPoint(PHSolid* solida, PHSolid* solidb, Vec3d pa, Vec3d pb, NeighborInfo* nInfo){

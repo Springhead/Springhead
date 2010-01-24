@@ -35,12 +35,10 @@ void FWMultiRateHaptic::Sync(){
 			/// bSim = ture ‚©‚Â bfirstSim = false‚È‚çŒ‹‰Ê‚ð”½‰f‚³‚¹‚é
 			if(!hiSolid->bSim || hiSolid->bfirstSim) continue;
 			piSolid = GetIASolid(i);
-			double pdt = GetPHScene()->GetTimeStep();			// physics‚Ì‚Ý
-			SpatialVector b;
-			b += (piSolid->b + 
-					(piSolid->curb - piSolid->lastb)) * pdt;	// ƒ‚ƒrƒŠƒeƒB’è”€
-			Vec3d v = hiSolid->copiedSolid.GetVelocity() + b.v();					// ”½‰f‘¬“x
-			Vec3d w = hiSolid->copiedSolid.GetAngularVelocity() + b.w();			// ”½‰fŠp‘¬“x
+			double pdt = GetPHScene()->GetTimeStep();	// physics‚Ì‚Ý
+			SpatialVector b = (piSolid->b + (piSolid->curb - piSolid->lastb)) * pdt;	// ƒ‚ƒrƒŠƒeƒB’è”€
+			Vec3d v = hiSolid->copiedSolid.GetVelocity() + b.v();			// ”½‰f‘¬“x
+			Vec3d w = hiSolid->copiedSolid.GetAngularVelocity() + b.w();	// ”½‰fŠp‘¬“x
 #if 1 //HapticLoop‚ÌŒ‹‰Ê‚ðPhysicsLoop‚É”½‰f‚³‚¹‚È‚¢ê‡‚Ífalse //naga
 			hiSolid->sceneSolid->SetVelocity(v);
 			hiSolid->sceneSolid->SetAngularVelocity(w);
@@ -52,7 +50,6 @@ void FWMultiRateHaptic::Sync(){
 				piInfo = &GetIAPointer(j)->interactInfo[i];
 				hiPointer = GetHapticLoop()->GetIAPointer(j)->Cast();
 				hiInfo = &hiPointer->interactInfo[i];
-				piInfo->neighborInfo.test_force_norm = hiInfo->neighborInfo.test_force_norm;
 			}
 		}
 	
