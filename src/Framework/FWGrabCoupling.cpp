@@ -171,7 +171,12 @@ void FWGrabCoupling::GrabSolid2(){
 			////ポインタのレンジ内の剛体を検索
 			PHSolidIf** solids = GetPHScene()->GetSolids();
 			for(int n=0; n< NSolids&&!createdFlag; n++){
-				if(!solids[n]->IsDynamical())continue;
+				//---
+				std::string centerName;
+				centerName= "soCenter";
+				if(solids[n]->GetName() == centerName)continue;
+				//---
+				//if(!solids[n]->IsDynamical())continue;
 				Posed shapePose = solids[n]->GetShapePose(0);
 				Posed spose = solids[n]->GetPose() * shapePose;
 				Vec3d lPose = spose.Pos() - pose.Pos();
@@ -199,8 +204,11 @@ void FWGrabCoupling::GrabSolid2(){
 				double coefficient = 1; //バネを接続した瞬間は係数を高く設定しないと発散してしまう
 				{
 					jointDesc.poseSocket.Pos()	= Vec3d(0,0,0);
+					jointDesc.poseSocket.Pos()	= Vec3d(0,0,0);
 					jointDesc.poseSocket.Ori()	= pSolid->GetPose().Ori().Inv();
-					jointDesc.posePlug.Pos()	= shapePose * Vec3d(0,0,0);
+					//jointDesc.posePlug.Pos()	= shapePose * Vec3d(0,0,0);
+					Posed plug =grabSolid->GetPose().Inv()*pSolid->GetPose();
+					jointDesc.posePlug.Pos()	= plug.Pos();
 					jointDesc.posePlug.Ori()	= grabSolid->GetShapePose(0).Ori().Inv() * grabSolid->GetPose().Ori().Inv();
 					jointDesc.spring			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->springK * coefficient;
 					jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->damperD * coefficient;
@@ -209,11 +217,19 @@ void FWGrabCoupling::GrabSolid2(){
 					jointDesc.fMax				= 15.0;
 				}
 				//DSTR<<grabSolid->GetName()<<std::endl;
-				std::string name = "soRightUpperArm";
-				if(grabSolid->GetName() == name){
-					jointDesc.springOri			= 0.0;
-					jointDesc.damperOri			= 0.0;
-
+				std::string name[8];
+				name[0]= "soRightUpperArm";
+				name[1]= "soLeftUpperArm";
+				name[2]= "soRightUpperKnee";
+				name[3]= "soLeftUpperKnee";
+				name[4]= "soWaist";
+				name[5]= "soBreast";
+				name[6]= "soHead";
+				for(int i=0; i<6; i++){
+					if(grabSolid->GetName() == name[i]){
+						jointDesc.springOri			= 0.0;
+						jointDesc.damperOri			= 0.0;
+					}
 				}
 				grabJoint.push_back( GetPHScene()->CreateJoint(GetIAPointer(i)->GetPointerSolid(), grabSolid, jointDesc) );
 				//掴んだ剛体の位置をポインタの位置に移動
@@ -239,8 +255,8 @@ void FWGrabCoupling::GrabSolid2(){
 				grabJoint[i]->Clear();
 			}
 			for(int i=0;i<vcSolid.size() ;i++){
-				vcSolid[i]->SetDynamical(grabSolidDesc.dynamical);
-				vcSolid[i]->SetIntegrate(grabSolidDesc.integrate);
+				//vcSolid[i]->SetDynamical(grabSolidDesc.dynamical);
+				//vcSolid[i]->SetIntegrate(grabSolidDesc.integrate);
 				vcSolid[i]->SetVelocity(Vec3d(0.0,0.0,0.0));
 				vcSolid[i]->SetAngularVelocity(Vec3d(0.0,0.0,0.0));
 			}
@@ -287,6 +303,7 @@ void FWGrabCoupling::UpdateInterface(){
 				hif->Update((float)pdt);
 				PHSolid* hiSolid = &iPointer->hiSolid;
 				Posed hifPose;
+
 				hifPose.Pos() = (Vec3d)hif->GetPosition() * s;
 				hifPose.Ori() = hif->GetOrientation();
 				Posed newCameraPose; 
@@ -367,7 +384,7 @@ void FWGrabCoupling::UpdateGrabPointer(){
 			outForce.w() = Vec3d(0.0,0.0,0.0);
 		}
 
-		double fRange = 15.0;
+		double fRange = 1.0;
 
 		if(outForce.v().norm() > fRange){
 			for(int i=0; i<3 ; i++){
@@ -375,7 +392,7 @@ void FWGrabCoupling::UpdateGrabPointer(){
 			}
 		}
 
-		double fRotRange = 15.0;
+		double fRotRange = 1.0;
 		if(outForce.w().norm() > fRotRange){
 			for(int i=0; i<3 ; i++){
 				outForce.w()[i] = outForce.w()[i] * fRotRange / outForce.w().norm();
