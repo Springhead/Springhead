@@ -125,12 +125,14 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 			// ヒットした剛体とカーソル剛体をつなぐバネ
 			if(mouseInfo.left && mouseInfo.ctrl){
 				PHSpringDesc desc;
+				desc.fMax =100;
+				desc.type = PHJointDesc::ELASTIC;
 				Posed pose;
 				pose.Pos() = hit->point;
 				desc.poseSocket = hit->solid->GetPose().Inv() * pose;
 				info.spring = DCAST(PHSpringIf, phScene->CreateJoint(hit->solid, info.cursor, desc));
 				double mass = hit->solid->GetMass();	//massによって最適なK,Dを設定する必要がある
-				const double K = 10000.0, D = 100.0;
+				const double K = 50000.0, D = 1000;//K = 10000.0, D = 100.0;
 				info.spring->SetSpring(Vec3d(K, K, K)*mass);
 				info.spring->SetDamper(Vec3d(D, D, D)*mass);
 				//info.spring->SetSpringOri(K);
