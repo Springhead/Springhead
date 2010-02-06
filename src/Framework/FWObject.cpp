@@ -85,6 +85,7 @@ FWBoneObject::FWBoneObject(const FWBoneObjectDesc& d/*=FWBoneObjectDesc()*/)
 void FWBoneObject::Sync(){
 	if(AdaptType==GRFRAME_TO_PHSOLID){
 		if (phSolid && grFrame && phJoint){
+			//PHSolid‚ÌˆÊ’u‚ÉGRFrame‚ð‡‚í‚¹‚é
 			Posed jointPosition;
 			jointPosition.Ori() = DCAST(PHConstraint,phJoint)->Xjrel.q * sockOffset.Ori().Inv();
 			Posed poseSocket; phJoint->GetSocketPose(poseSocket);
@@ -105,6 +106,7 @@ void FWBoneObject::Sync(){
 		}
 	}
 	if(AdaptType==PHSOLID_TO_GRFRAME){
+		//GRFrame‚ÌˆÊ’u‚ÉPHSolid‚ð‡‚í‚¹‚é
 		if (phSolid && grFrame && phJoint){
 			Affinef af = grFrame->GetWorldTransform();
 			Posed pose; pose.FromAffine(af);
@@ -166,6 +168,11 @@ bool FWBoneObject::AddChildObject(ObjectIf* o){
 void FWBoneObject::Modify() {
 	Posed poseSock, posePlug;
 	poseSock.FromAffine( grFrame->GetTransform() );
+	//DSTR<<"---------------------------------"<<std::endl;
+	//DSTR<<grFrame->GetName()<<std::endl;
+	//DSTR<<grFrame->GetTransform()<<std::endl;
+
+
 	posePlug.FromAffine( Affinef() );
 	GRFrameIf* fr = grFrame;
 	Affinef af = Affinef();

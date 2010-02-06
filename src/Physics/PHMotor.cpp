@@ -39,9 +39,6 @@ void PHMotor1D::PlasticDeformation(){
 			D1
 	*/
 	//塑性変形(3要素モデル)
-	D  *= joint->hardnessRate;
-	D2 *= joint->hardnessRate;
-	K  *= joint->hardnessRate;
 	double tmp = D+D2+K*dt;
 	ws = joint->vjrel;	//バネとダンパの並列部の速さ
 
