@@ -26,8 +26,7 @@ void FWTimer::GLUTTimerFunc(int id){
 	FWApp* app = FWApp::instance;
 	if(!app)return;
 	
-	app->ReleaseAllTimer();		//マルチメディアタイマーを解放
-	app->TimerFunc(id);
+
 	
 	// タイマーの再始動
 	// 周期が指定されていればその値を採用
@@ -41,6 +40,9 @@ void FWTimer::GLUTTimerFunc(int id){
 		}
 	}
 	glutTimerFunc(ms, GLUTTimerFunc, id);
+
+	app->ReleaseAllTimer();		//マルチメディアタイマーを解放
+	app->TimerFunc(id);
 	app->CreateAllTimer();		//マルチメディアタイマーを再構成
 }
 
