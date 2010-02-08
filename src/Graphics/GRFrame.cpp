@@ -369,6 +369,17 @@ bool GRAnimation::AddChildObject(ObjectIf* o){
 	return false;
 }
 
+GRAnimationKey GRAnimation::GetAnimationKey(int n){
+	if(n < keys.size()){
+		return keys[n];
+	}else{
+		DSTR<<"GetAnimationKey is NO"<<std::endl;
+	}
+}
+int GRAnimation::NAnimationKey(){
+	return keys.size();
+}
+
 //-----------------------------------------------------------------
 //	GRAnimationSet
 //

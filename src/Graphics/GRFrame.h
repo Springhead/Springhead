@@ -99,6 +99,10 @@ public:
 	virtual void LoadInitialPose();
 	///	
 	virtual bool AddChildObject(ObjectIf* v);
+
+	virtual GRAnimationKey GetAnimationKey(int n);
+	///	
+	virtual int NAnimationKey();
 };
 
 class GRAnimationSet: public SceneObject{
