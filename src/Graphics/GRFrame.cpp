@@ -8,6 +8,7 @@
 #include "Graphics.h"
 #include "GRFrame.h"
 #include "GRMesh.h"
+#include <algorithm> 
 
 namespace Spr{;
 
@@ -380,6 +381,68 @@ int GRAnimation::NAnimationKey(){
 	return keys.size();
 }
 
+void GRAnimation::SetCurrentPose(float t){
+	//同一の時刻のKeyがある場合削除
+	DeletePose(t);
+	//GRAnimationKeyが存在する場合Keyを作成
+	if(keys.size()>0){
+		//ROTATIONの指定
+			GRKey rotationKey;
+			rotationKey.time = t;
+			Affinef af = targets[0].target->GetTransform();
+			Quaterniond q; q.FromMatrix(af.Rot());
+			q.w *=-1;
+			DSTR<<q<<std::endl;
+			//クォータニオンに代入
+			for(int i=0; i<4; i++){
+				rotationKey.values.push_back(q[i]);
+			}
+			keys[0].keys.push_back(rotationKey);
+		//SCALEの指定
+			GRKey scaleKey;
+			scaleKey.time = t;
+			//3変数のベクトルを代入
+			scaleKey.values =keys[1].keys[0].values; //0番目のKeyをコピー
+			keys[1].keys.push_back(scaleKey);
+		//POSITIONの指定
+			GRKey positionKey;
+			positionKey.time = t;
+			//3変数のベクトルを代入
+			positionKey.values =keys[2].keys[0].values; //0番目のKeyをコピー
+			keys[2].keys.push_back(positionKey);
+	}
+	SortGRKey();
+}
+void GRAnimation::DeletePose(float t){
+	//GRAnimationKeyが存在する場合Keyを作成
+	if(keys.size()>0){
+		for(int i=0; i<3 ; i++){
+			std::vector<GRKey>::iterator it;
+			std::vector<GRKey>::iterator eraseit;
+			bool timeFlag = false;
+			for(it =keys[i].keys.begin();it!= keys[i].keys.end(); ++it){
+				if(it->time==t){
+					eraseit = it;
+					timeFlag = true;
+					continue;
+				}
+			}
+			if(timeFlag)keys[i].keys.erase(eraseit);
+		}
+	SortGRKey();
+	}
+}
+//GRKeyのソート用関数
+bool cmp(GRKey a, GRKey b){
+	return a.time < b.time;
+}
+
+void GRAnimation::SortGRKey(){
+	//keys[0].keys,keys[1].keys,keys[2].keysを時間でソート
+	for(int i=0; i<3; i++){
+		std::sort( keys[i].keys.begin(), keys[i].keys.end() ,cmp) ;
+	}
+}
 //-----------------------------------------------------------------
 //	GRAnimationSet
 //
@@ -431,7 +494,20 @@ void GRAnimationSet::LoadInitialPose(){
 	}
 }
 
+void GRAnimationSet::SetCurrentAnimationPose(float t){
+	for(int i = 0; i<animations.size(); i++){
+		animations[i]->SetCurrentPose(t);
+	}
+}
+void GRAnimationSet::DeleteAnimationPose(float t){
+	for(int i = 0; i<animations.size(); i++){
+		animations[i]->DeletePose(t);
+	}
+}
 
+//-----------------------------------------------------------------
+//	GRAnimationController
+//
 bool GRAnimationController::AddChildObject(ObjectIf* o){
 	GRAnimationSet* ani = o->Cast();
 	if (ani){
@@ -457,6 +533,11 @@ int GRAnimationController::NChildObject(){
 }
 
 ObjectIf* GRAnimationController::GetChildObject(size_t p){
+	Sets::iterator it = sets.begin();
+	for(unsigned i=0; i<p; ++i) ++it;
+	return it->second->Cast();
+}
+GRAnimationSetIf* GRAnimationController::GetAnimationSet(size_t p){
 	Sets::iterator it = sets.begin();
 	for(unsigned i=0; i<p; ++i) ++it;
 	return it->second->Cast();

@@ -99,10 +99,16 @@ public:
 	virtual void LoadInitialPose();
 	///	
 	virtual bool AddChildObject(ObjectIf* v);
-
+	///
 	virtual GRAnimationKey GetAnimationKey(int n);
 	///	
 	virtual int NAnimationKey();
+	/// 現在のGRFrameからGRKeyを作成する tは時刻を指定
+	void SetCurrentPose(float t);
+	/// GRKeyを時刻順にソートする
+	void SortGRKey();
+	/// 時刻tのGRKeyを削除する
+	void DeletePose(float t);
 };
 
 class GRAnimationSet: public SceneObject{
@@ -120,7 +126,7 @@ public:
 	///	GRAnimationの削除
 	virtual bool DelChildObject(ObjectIf* o);
 	///	GRAnimationの数
-	virtual int NChildObject();
+	int NChildObject();
 
 	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
 	virtual void BlendPose(float time, float weight);
@@ -130,6 +136,10 @@ public:
 	virtual void ResetPose();
 	///
 	virtual void LoadInitialPose();
+	/// 現在のGRFrameからポーズを作成する tは時刻を指定
+	void SetCurrentAnimationPose(float t);
+	/// 時刻tのGRKeyを削除する
+	void DeleteAnimationPose(float t);
 };
 
 class GRAnimationController: public SceneObject{
@@ -156,6 +166,8 @@ public:
 	virtual int NChildObject();
 	///	GRAnimationの取得
 	ObjectIf* GetChildObject(size_t p);
+	///	GRAnimationSetの取得
+	GRAnimationSetIf* GetAnimationSet(size_t p);
 };
 
 }//	namespace Spr
