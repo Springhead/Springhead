@@ -31,6 +31,10 @@
 	void BlendPose(UTString name, float time, float weight){	base::BlendPose(name, time, weight);}	\
 	void ResetPose(){	base::ResetPose();}	\
 	void LoadInitialPose(){	base::LoadInitialPose();}	\
+	bool AddChildObject(Spr::ObjectIf* o){	return	base::AddChildObject(o);}	\
+	bool DelChildObject(Spr::ObjectIf* o){	return	base::DelChildObject(o);}	\
+	int NChildObject(){	return	base::NChildObject();}	\
+	Spr::ObjectIf* GetChildObject(size_t p){	return	base::GetChildObject(p);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRMeshIf(base)	\
 

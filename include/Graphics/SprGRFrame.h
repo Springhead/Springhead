@@ -90,7 +90,16 @@ struct GRDummyFrameIf: public GRVisualIf{
 struct GRDummyFrameDesc:public GRVisualDesc{
 	SPR_DESCDEF(GRDummyFrame);
 };
-
+///	@brief アニメーションのデスクリプタ XのAnimationに対応
+struct GRKey{
+	unsigned time;				//	時刻
+	std::vector<float> values;	//	変換の値
+};
+///	時刻と変換の対応表 XのAnimationKeyに対応
+struct GRAnimationKey{
+	int keyType;				//	変換の種類
+	std::vector<GRKey> keys;	//	時刻と変換のセット
+};
 /**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
 struct GRAnimationIf: public SceneObjectIf{
 	SPR_IFDEF(GRAnimation);
@@ -100,17 +109,12 @@ struct GRAnimationIf: public SceneObjectIf{
 	void ResetPose();
 	///	フレームの変換行列を初期値に戻す．
 	void LoadInitialPose();
+	///	AnimationKeyを取得する．
+	GRAnimationKey GetAnimationKey(int n);
+	///	AnimationKeyの数を取得する．
+	int NAnimationKey();
 };
-///	@brief アニメーションのデスクリプタ XのAnimationに対応
-struct GRKey{
-	unsigned time;				//	時刻
-	std::vector<float> values;	//	変換の値
-};
-///	時刻と変換の対応表 XのAnimationKeyに対応
-struct GRAnimationKey{
-	int keyType;			//	変換の種類
-	std::vector<GRKey> keys;		//	時刻と変換のセット
-};
+
 struct GRAnimationDesc{
 	SPR_DESCDEF(GRAnimation);
 	enum KeyType { ROTATION, SCALE, POSITION, MATRIX };
@@ -127,6 +131,16 @@ struct GRAnimationSetIf: public SceneObjectIf{
 	void ResetPose();
 	///	フレームの変換行列を初期値に戻す．
 	void LoadInitialPose();
+
+	///	子オブジェクト(animations)を返す
+	ObjectIf* GetChildObject(size_t p);
+	///	GRAnimationの追加
+	virtual bool AddChildObject(ObjectIf* o);
+	///	GRAnimationの削除
+	virtual bool DelChildObject(ObjectIf* o);
+	///	GRAnimationの数
+	virtual int NChildObject();
+
 };
 ///	@brief アニメーションセットのデスクリプタ
 struct GRAnimationSetDesc{
@@ -142,6 +156,15 @@ struct GRAnimationControllerIf: public SceneObjectIf{
 	void ResetPose();
 	///	フレームの変換行列を初期値に戻す．
 	void LoadInitialPose();
+
+	///	GRAnimationの追加
+	bool AddChildObject(ObjectIf* o);
+	///	GRAnimationの削除
+	bool DelChildObject(ObjectIf* o);
+	///	GRAnimationの数
+	int NChildObject();
+	///	GRAnimationの取得
+	ObjectIf* GetChildObject(size_t p);
 };
 ///	@brief アニメーションコントローラのデスクリプタ
 struct GRAnimationControllerDesc{
