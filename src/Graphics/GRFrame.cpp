@@ -404,11 +404,19 @@ void GRAnimation::SetCurrentPose(float t){
 			//3変数のベクトルを代入
 			scaleKey.values =keys[1].keys[0].values; //0番目のKeyをコピー
 			keys[1].keys.push_back(scaleKey);
-		//POSITIONの指定
+		//POSITIONの指定(RootとなるKeyのみ位置が変わる)
 			GRKey positionKey;
 			positionKey.time = t;
-			//3変数のベクトルを代入
-			positionKey.values =keys[2].keys[0].values; //0番目のKeyをコピー
+			if(!(targets[0].target->GetParent()->GetParent()->GetParent()->GetParent())){
+				//Rootの場合
+				Vec3d trn = targets[0].target->GetTransform().Trn();
+				for(int i=0; i<3; i++){
+					positionKey.values.push_back(trn[i]);
+				}
+			}else{
+				//3変数のベクトルを代入
+				positionKey.values =keys[2].keys[0].values; //0番目のKeyをコピー
+			}
 			keys[2].keys.push_back(positionKey);
 	}
 	SortGRKey();
