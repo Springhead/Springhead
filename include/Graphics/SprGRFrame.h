@@ -113,6 +113,8 @@ struct GRAnimationIf: public SceneObjectIf{
 	GRAnimationKey GetAnimationKey(int n);
 	///	AnimationKeyの数を取得する．
 	int NAnimationKey();
+	/// 時刻tのGRKeyを削除する
+	void DeletePose(float t);
 };
 
 struct GRAnimationDesc{
@@ -139,8 +141,11 @@ struct GRAnimationSetIf: public SceneObjectIf{
 	///	GRAnimationの削除
 	virtual bool DelChildObject(ObjectIf* o);
 	///	GRAnimationの数
-	virtual int NChildObject();
-
+	int NChildObject();
+	/// 現在のGRFrameからポーズを作成する tは時刻を指定
+	void SetCurrentAnimationPose(float t);
+	/// 時刻tのGRKeyを削除する
+	void DeleteAnimationPose(float t);
 };
 ///	@brief アニメーションセットのデスクリプタ
 struct GRAnimationSetDesc{
@@ -165,6 +170,8 @@ struct GRAnimationControllerIf: public SceneObjectIf{
 	int NChildObject();
 	///	GRAnimationの取得
 	ObjectIf* GetChildObject(size_t p);
+	///	GRAnimationSetの取得
+	GRAnimationSetIf* GetAnimationSet(size_t p);
 };
 ///	@brief アニメーションコントローラのデスクリプタ
 struct GRAnimationControllerDesc{
