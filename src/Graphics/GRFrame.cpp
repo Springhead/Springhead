@@ -451,6 +451,16 @@ void GRAnimation::SortGRKey(){
 		std::sort( keys[i].keys.begin(), keys[i].keys.end() ,cmp) ;
 	}
 }
+
+float GRAnimation::GetLastKeyTime(){
+	SortGRKey();
+	float lastKeyTime;
+	if(keys[0].keys.size()>0){
+		//ソート後の最後の時間を取得
+		lastKeyTime =keys[0].keys.back().time;
+	}
+	return lastKeyTime;
+}
 //-----------------------------------------------------------------
 //	GRAnimationSet
 //
@@ -490,29 +500,41 @@ void GRAnimationSet::BlendPose(float time, float weight, bool add){
 	for (Animations::iterator it = animations.begin(); it != animations.end(); ++it){
 		(*it)->BlendPose(time, weight, add);
 	}
+	UpdateLastKeyTime();
 }
 void GRAnimationSet::ResetPose(){
 	for (Animations::iterator it = animations.begin(); it != animations.end(); ++it){
 		(*it)->ResetPose();
-	}	
+	}
+	UpdateLastKeyTime();
 }
 void GRAnimationSet::LoadInitialPose(){
 	for (Animations::iterator it = animations.begin(); it != animations.end(); ++it){
 		(*it)->LoadInitialPose();
 	}
+	UpdateLastKeyTime();
 }
 
 void GRAnimationSet::SetCurrentAnimationPose(float t){
 	for(int i = 0; i<animations.size(); i++){
 		animations[i]->SetCurrentPose(t);
 	}
+	UpdateLastKeyTime();
 }
 void GRAnimationSet::DeleteAnimationPose(float t){
 	for(int i = 0; i<animations.size(); i++){
 		animations[i]->DeletePose(t);
 	}
+	UpdateLastKeyTime();
 }
 
+void GRAnimationSet::UpdateLastKeyTime(){
+	//lastKeyTimeは全てのGRAnimationのLastKeyTimeが同一であると仮定して取得
+	lastKeyTime = animations[0]->GetLastKeyTime();
+}
+float GRAnimationSet::GetLastKeyTime(){
+	return lastKeyTime;
+}
 //-----------------------------------------------------------------
 //	GRAnimationController
 //
