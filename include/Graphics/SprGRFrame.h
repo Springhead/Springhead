@@ -146,6 +146,8 @@ struct GRAnimationSetIf: public SceneObjectIf{
 	void SetCurrentAnimationPose(float t);
 	/// 時刻tのGRKeyを削除する
 	void DeleteAnimationPose(float t);
+	/// アニメーションの最終時間を取得する
+	float GetLastKeyTime();
 };
 ///	@brief アニメーションセットのデスクリプタ
 struct GRAnimationSetDesc{

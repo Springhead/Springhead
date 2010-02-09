@@ -109,12 +109,15 @@ public:
 	void SortGRKey();
 	/// 時刻tのGRKeyを削除する
 	void DeletePose(float t);
+	/// アニメーションの最終時間を取得する
+	float GetLastKeyTime();
 };
 
 class GRAnimationSet: public SceneObject{
 	typedef std::vector< UTRef<GRAnimation> > Animations;
 	Animations animations;
 	std::vector<GRFrame*> roots;
+	float lastKeyTime;
 
 public:
 	SPR_OBJECTDEF(GRAnimationSet);
@@ -140,6 +143,10 @@ public:
 	void SetCurrentAnimationPose(float t);
 	/// 時刻tのGRKeyを削除する
 	void DeleteAnimationPose(float t);
+	/// GRKeyからアニメーションの最終時間を設定する
+	void UpdateLastKeyTime();
+	/// アニメーションの最終時間を取得する
+	float GetLastKeyTime();
 };
 
 class GRAnimationController: public SceneObject{
