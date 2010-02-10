@@ -42,14 +42,23 @@ PHJoint1D::PHJoint1D(){
 
 void PHJoint1D::SetupLCP(){
 	PHJoint::SetupLCP();
-	limit.SetupLCP();
+	//limit.SetupLCP();
+	//motor.SetupLCP();
+
+	//motor¨limit‚Ì‡”Ô‚É‚µ‚È‚¢‚Æmotor‚ª“­‚¢‚Ä‚¢‚éê‡limit‚ª“­‚©‚È‚¢
 	motor.SetupLCP();
+	limit.SetupLCP();
 }
 
 void PHJoint1D::IterateLCP(){
 	PHJoint::IterateLCP();
-	limit.IterateLCP();
+	//limit.IterateLCP();
+	//motor.IterateLCP();
+
+	//motor¨limit‚Ì‡”Ô‚É‚µ‚È‚¢‚Æmotor‚ª“­‚¢‚Ä‚¢‚éê‡limit‚ª“­‚©‚È‚¢
 	motor.IterateLCP();
+	limit.IterateLCP();
+
 }
 
 void PHJoint1D::SetupCorrectionLCP(){

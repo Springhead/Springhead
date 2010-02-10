@@ -28,10 +28,12 @@ void PHJointLimit1D::SetupLCP(){
 		if(theta <= l){
 			onLower = true;
 			diff = joint->GetPosition() - l;
+			DSTR<<joint->GetName()<<std::endl;
 		}
 		if(theta >= u){
 			onUpper = true;
 			diff = joint->GetPosition() - u;
+			DSTR<<joint->GetName()<<std::endl;
 		}
 	}
 	if(onLower || onUpper){
@@ -61,8 +63,11 @@ void PHJointLimit1D::IterateLCP(){
 	if(onUpper)
 		fnew = min(0.0, fnew);
 
+	DSTR<<fnew<<std::endl;
+
 	joint->CompResponse(fnew - f, 0);
 	f = fnew;
+
 }
 
 void PHJointLimit1D::SetupCorrectionLCP(){

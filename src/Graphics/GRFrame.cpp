@@ -392,7 +392,6 @@ void GRAnimation::SetCurrentPose(float t){
 			Affinef af = targets[0].target->GetTransform();
 			Quaterniond q; q.FromMatrix(af.Rot());
 			q.w *=-1;
-			DSTR<<q<<std::endl;
 			//クォータニオンに代入
 			for(int i=0; i<4; i++){
 				rotationKey.values.push_back(q[i]);
