@@ -344,6 +344,10 @@ struct SolidVertex{
 };
 typedef std::vector< SolidVertex > SolidVertices;
 
+
+std::vector<string> savePointerForce;
+std::vector<string> savePointerPosition;
+
 //#define SIMPLEX
 #ifdef SIMPLEX 
 #include "C:\Project\Experiments\HapticInteraction\FWLDHapticTest\Simplex.h"
@@ -470,8 +474,6 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 			double ws4 = pow(iPointer->GetWorldScale(), 4);
 			outForce.v() = (iPointer->correctionSpringK * dr - iPointer->correctionDamperD * (dr/hdt)) /ws4;
 			outForce.w() = (iPointer->correctionSpringK * dtheta) / ws4 / iPointer->GetPosScale();
-			//CSVOUT << l << "," << sv[0].d << "," << outForce.v().y << endl;
-			//CSVOUT << outForce.v().x << "," << outForce.v().y << "," << outForce.v().z << "," << outForce.w().x << "," << outForce.w().y << "," << outForce.w().z << endl;
 
 			/// 剛体へ力を加える
 			for(int m = 0; m < l; m++){
@@ -479,8 +481,32 @@ void FWLDHapticLoop::ConstraintBasedRendering(){
 				iPointer->interactInfo[sv[m].iaSolidID].mobility.f.push_back(addforce);	
 			}
 		}
+
 		/// インタフェースへ力を出力
 		SetRenderedForce(iPointer->GetHI(), iPointer->bForce, outForce * iPointer->GetForceScale());
+
+#if 0
+		//CSVOUT << l << "," << sv[0].d << "," << outForce.v().y << endl;
+		//CSVOUT << outForce.v().x << "," << outForce.v().y << "," << outForce.v().z << "," << outForce.w().x << "," << outForce.w().y << "," << outForce.w().z << endl;
+
+
+		//力のファイルセーブ
+		std::stringstream str;
+		str << outForce.v().x << "\t" << outForce.v().y << "\t" << outForce.v().z << "\t" << outForce.w().x << "\t" << outForce.w().y << "\t" << outForce.w().z;
+		savePointerForce.push_back(str.str());
+		str.str("");
+		str.clear();
+
+		//位置のファイルセーブ
+		Vec3d pos = iPointer->hiSolid.GetCenterPosition();
+		Vec3d ori, temp;
+		iPointer->hiSolid.GetOrientation().ToEuler(temp);
+		ori.x = Deg(temp.z);
+		ori.y = Deg(temp.x);
+		ori.z = Deg(temp.y);
+		str << pos.x << "\t" << pos.y << "\t" << pos.z << "\t" << ori.x << "\t" << ori.y << "\t" << ori.z; 
+		savePointerPosition.push_back(str.str());
+#endif
 	}
 }
 
@@ -519,6 +545,8 @@ void FWLDHapticLoop::LocalDynamics(){
 	}
 }
 
+std::vector<string> saveSolidForce;
+std::vector<string> saveSolidPosition;
 void FWLDHapticLoop::LocalDynamics6D(){
 	for(int i = 0; i < NIASolids(); i++){
 		FWInteractSolid* iSolid = FWHapticLoopBase::GetIASolid(i);
@@ -539,32 +567,56 @@ void FWLDHapticLoop::LocalDynamics6D(){
 				Vec3d r = (iSolid->copiedSolid.GetPose() * iInfo->neighborInfo.solid_section[k]) - iSolid->copiedSolid.GetCenterPosition(); 
 				f.w() += r % iInfo->mobility.f[k];
 			}
-#if 0
-			// モビリティの力成分のみを使う
-			TMatrixRow<3, 3, double> sub = TMatrixRow<3, 3, double>();
-			for(int k = 0; k < 3; k++){
-				for(int l = 0; l < 3; l++){
-					sub[k][l] = iInfo->mobility.Minv[k][l];
-				}
-			}
-			vel.v() += sub * f * hdt;
-#else
 			vel += (iInfo->mobility.Minv * f) * hdt;				// 力覚ポインタからの力による速度変化
 			//DSTR << iInfo->mobility.Minv * f << std::endl;
-#endif
 			iInfo->neighborInfo.test_force = f.v();					// テスト力の保存
 			iInfo->neighborInfo.test_torque = f.w();				// テストトルクの保存
 			iInfo->neighborInfo.solid_section.clear();
 			iInfo->mobility.f.clear();
 		}
 		vel += iSolid->b * hdt;
+
+		//solid　forceをセーブするための計算
+		SpatialVector dvel = SpatialVector();
+		dvel.v() = vel.v() - iSolid->copiedSolid.GetVelocity();
+		dvel.w() = vel.w() - iSolid->copiedSolid.GetAngularVelocity();
+		SpatialVector accel = dvel / hdt;		// 加速度
+		SpatialVector sf = SpatialVector();	// 力
+		sf.v() = iSolid->copiedSolid.GetMass() * accel.v() ;
+		sf.w() = iSolid->copiedSolid.GetInertia() * accel.w();
+
+		/// 状態の更新
 		iSolid->copiedSolid.SetVelocity(vel.v());		
 		iSolid->copiedSolid.SetAngularVelocity(vel.w());
 		iSolid->copiedSolid.SetCenterPosition(iSolid->copiedSolid.GetCenterPosition() + vel.v() * hdt);
 		iSolid->copiedSolid.SetOrientation(( Quaterniond::Rot(vel.w() * hdt) * iSolid->copiedSolid.GetOrientation()).unit());
-
+		/// 更新完了のフラグを立てる
  		iSolid->copiedSolid.SetUpdated(true);
 		iSolid->copiedSolid.Step();
+
+#if 0
+		if(i != 1) continue;
+		//Solid Position, Forceのセーブ
+		std::stringstream str;
+		str << sf.v().x << "\t" << sf.v().y << "\t" << sf.v().z << "\t" << sf.w().x << "\t" << sf.w().y << "\t" << sf.w().z;
+		saveSolidForce.push_back(str.str());
+		str.str("");
+		str.clear();
+
+		//位置のファイルセーブ
+		Vec3d sVel = iSolid->copiedSolid.GetVelocity();
+		Vec3d sAVel = iSolid->copiedSolid.GetAngularVelocity();
+		Vec3d pos = iSolid->copiedSolid.GetCenterPosition();
+		Vec3d ori, temp;
+		iSolid->copiedSolid.GetOrientation().ToEuler(temp);
+		ori.x = Deg(temp.z);
+		ori.y = Deg(temp.x);
+		ori.z = Deg(temp.y);
+		str << sVel.x << "\t" << sVel.y << "\t" << sVel.z << "\t" << sAVel.x << "\t" << sAVel.y << "\t" << sAVel.z << "\t";
+		str << pos.x << "\t" << pos.y << "\t" << pos.z << "\t" << ori.x << "\t" << ori.y << "\t" << ori.z;
+		//DSTR << str.str() << std::endl;
+		saveSolidPosition.push_back(str.str());
+#endif
 	}
 }
 
@@ -1071,7 +1123,7 @@ void FWLDHaptic::Step(){
 		PhysicsStep();
 		UpdateSolidList();
 		NeighborObjectFromPointer();
-#if 0
+#if 1
 		TestSimulation6D();
 #else
 		TestSimulation();
@@ -1288,8 +1340,8 @@ void FWLDHaptic::TestSimulation6D(){
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			Vec3d n = -iInfo->neighborInfo.face_normal;
 
-			const float minTestForce = 0.1;		// 最小テスト力
-			const float minTestTorque = 0.1;
+			const float minTestForce = 1;		// 最小テスト力
+			const float minTestTorque = 0.;
 
 			SpatialVector f[6];
 			for(int k = 0; k < 5; k++)	f[k] = SpatialVector();
@@ -1336,6 +1388,7 @@ void FWLDHaptic::TestSimulation6D(){
 				base2.unitize();
 			}
 			base3 = base1^base2;
+			f[4].v() = f[5].v() = f[0].v();
 			f[4].w() = f[3].w().norm() * (base1 + base2);
 			f[5].w() = f[3].w().norm() * (base1 + base3);
 #else
