@@ -153,6 +153,7 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 #endif
 				}
 				/// 2.近傍物体と判定．接触解析および状態更新
+				isLocal == 3;
 				if(isLocal > 2){
 					UpdateInteractSolid(i, GetIAPointer(j));
 					lCount++;		//< ローカルなのでlCount++
