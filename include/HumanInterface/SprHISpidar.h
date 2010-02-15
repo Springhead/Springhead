@@ -127,6 +127,14 @@ struct HISpidar4Desc{
 };
 
 
+/**	@brief	Spidar4‚ÌŠî–{ƒNƒ‰ƒX	*/
+struct HISpidar4DIf: public HIForceInterface3DIf{
+	SPR_VIFDEF(HISpidar4D);
+};
+struct HISpidar4DDesc: public HISpidar4Desc{
+};
+
 //@}
 }
+
 #endif
