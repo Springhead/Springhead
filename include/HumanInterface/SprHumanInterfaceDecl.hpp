@@ -118,3 +118,5 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpidar4If(base)	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_HISpidar4DIf(base)	\
+
