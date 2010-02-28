@@ -93,7 +93,7 @@ void DRUsb20Sh4::UsbUpdate(){
 			}
 		}
 		ct += diff;
-		count[i] = -ct;
+		count[i] = -(long)ct;
 	}
 	//	A/DÇÃì«Ç›èoÇµ
 	for(int i=0; i<8; ++i){
