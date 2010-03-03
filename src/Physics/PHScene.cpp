@@ -625,4 +625,22 @@ PHRaycastHit* PHRay::GetNearest(){
 	return nearest;
 }
 
+PHRaycastHit* PHRay::GetDynamicalNearest(){
+	PHRaycastHit* nearest = NULL;
+	float distMin = FLT_MAX;
+	for(int i = 0; i < (int)hits.size(); i++){
+		if(hits[i].distance < distMin){
+			PHRaycastHit* n = &hits[i];
+			if(n->solid){
+				n->solid->IsDynamical();
+				if(n->solid->IsDynamical()){
+					nearest = n;
+					distMin = n->distance;
+				}
+			}
+		}
+	}
+	return nearest;
+}
+
 }

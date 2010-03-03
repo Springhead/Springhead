@@ -168,7 +168,7 @@ public:
 	template<class AM> void FromMatrix(const AM& m)
 	{
 		ET tr = m[0][0] + m[1][1] + m[2][2] + 1;
-		if (tr > 1e-1f){
+		if (tr > (0.1f)){
 			ET s = ET( 0.5/sqrt(tr) );
 			W() = ET( 0.25 / s );
 			X() = ET( (m[2][1] - m[1][2]) * s );

@@ -60,6 +60,7 @@ public:
 	int		NHits();
 	PHRaycastHit* GetHits();
 	PHRaycastHit* GetNearest();
+	PHRaycastHit* GetDynamicalNearest();
 };
 
 //struct PHJointDesc: public PHConstraintDesc{

@@ -110,6 +110,27 @@ void FWBoneObject::Sync(){
 		if (phSolid && grFrame && phJoint){
 			Affinef af = grFrame->GetWorldTransform();
 			Posed pose; pose.FromAffine(af);
+			//アフィン行列→クォータニオンの変換誤差が大きい場合のエラー表示
+			Affinef af2; pose.ToAffine(af2);
+			Matrix3d mat,mat2;
+			mat = af.Rot();
+			mat2 = af2.Rot();
+			bool flag = false;
+			double filter =0.2;
+			for(int i=0;i<2;i++){
+				for(int j=0;j<2;j++){
+					if(fabs(mat[i][j]-mat2[i][j])>filter){
+						flag = true;
+					}
+				}
+			}
+			if(flag){
+				DSTR<<mat<<std::endl;
+				std::cout<<mat<<std::endl;
+				std::cout<<mat2<<std::endl;
+				std::cout<<"↑×"<<filter<<"以上の誤差××××"<<std::endl;
+			}
+			//
 			phSolid->SetPose(pose);
 		}
 		if(phSolid && grFrame && (!phJoint)){
