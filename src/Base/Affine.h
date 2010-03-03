@@ -592,6 +592,30 @@ public:
 	{
 		PTM::init_look_at_gl(*this, targetPos, upDir);
 	}
+	/// 正規直交化
+	void Orthonormalization(){
+		this->Ex() /= this->Ex().norm();
+		this->Ey() /= this->Ey().norm();
+		this->Ez() /= this->Ez().norm();
+		for (int i=0; i<10; ++i) {
+			Vec3f u = PTM::cross(this->Ey(), this->Ez());
+			Vec3f v = PTM::cross(this->Ez(), this->Ex());
+			Vec3f w = PTM::cross(this->Ex(), this->Ey());
+			this->Ex() = (this->Ex()+u)/2.0f;
+			this->Ey() = (this->Ey()+v)/2.0f;
+			this->Ez() = (this->Ez()+w)/2.0f;
+			this->Ex() /= this->Ex().norm();
+			this->Ey() /= this->Ey().norm();
+			this->Ez() /= this->Ez().norm();
+			float r = 0.0f;
+			r += PTM::dot(this->Ex(), this->Ey())*PTM::dot(this->Ex(), this->Ey());
+			r += PTM::dot(this->Ey(), this->Ez())*PTM::dot(this->Ey(), this->Ez());
+			r += PTM::dot(this->Ez(), this->Ex())*PTM::dot(this->Ez(), this->Ex());
+			if (r < 0.000001) {
+				break;
+			}
+		}
+	}
 	
 	///コンストラクタ
 	void set_default(){PTM::init_unitize(*this);}
