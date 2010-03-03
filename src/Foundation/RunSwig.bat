@@ -18,16 +18,13 @@ set PATH=..\..\bin;..\..\bin\swig
 set SRCINTF=
 for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do set SRCINTF=!SRCINTF! ../../include/%%p/%%f
 set SRCIMP=
-for %%p in (%TARGET%) do for %%f in (../%%p/*.h) do if %%p==%MODULE% (set SRCIMP=!SRCIMP! %%f
-) else (set SRCIMP=!SRCIMP! ../%%p/%%f
-)
+for %%p in (%TARGET%) do for %%f in (../%%p/*.h) do set SRCIMP=!SRCIMP! ../%%p/%%f
 
 rem echo interface files:%SRCINTF%
 rem echo src files:%SRCIMP%
 
 echo #	Do not edit. RunSwig.bat will update this file.> %MODULE%.i
 echo %%module %MODULE%>> %MODULE%.i
-echo %%include "%MODULE%.h">> %MODULE%.i
 echo %%include "../../include/Springhead.h">> %MODULE%.i
 echo %%include "../../include/base/Env.h">> %MODULE%.i
 for %%p in (%SRCINTF%) do echo %%include "%%p">> %MODULE%.i

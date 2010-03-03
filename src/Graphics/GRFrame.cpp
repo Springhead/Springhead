@@ -371,7 +371,7 @@ bool GRAnimation::AddChildObject(ObjectIf* o){
 }
 
 GRAnimationKey GRAnimation::GetAnimationKey(int n){
-	if(n < keys.size()){
+	if(n < (int)keys.size()){
 		return keys[n];
 	}else{
 		DSTR<<"GetAnimationKey is NO"<<std::endl;
@@ -515,13 +515,13 @@ void GRAnimationSet::LoadInitialPose(){
 }
 
 void GRAnimationSet::SetCurrentAnimationPose(float t){
-	for(int i = 0; i<animations.size(); i++){
+	for(size_t i = 0; i<animations.size(); i++){
 		animations[i]->SetCurrentPose(t);
 	}
 	UpdateLastKeyTime();
 }
 void GRAnimationSet::DeleteAnimationPose(float t){
-	for(int i = 0; i<animations.size(); i++){
+	for(size_t i = 0; i<animations.size(); i++){
 		animations[i]->DeletePose(t);
 	}
 	UpdateLastKeyTime();
