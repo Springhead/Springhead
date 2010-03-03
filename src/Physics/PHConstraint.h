@@ -42,26 +42,26 @@ public:
 	bool		bArticulated;			///< 関節系を構成している場合true
 	bool		bInactive[2];			///< 剛体が解析法に従う場合true	
 	PHSolid*			solid[2];		///< 拘束する剛体
-	SpatialTransform    X[2];			///< ワールド座標系の中心に対する親(子)剛体の位置と向き
-	SpatialTransform	Xj[2];			///< 剛体の質量中心に対するソケット，プラグの位置と向き
-	SpatialTransform	Xjrel;			///< ソケットに対するプラグの位置と向き
-	SpatialVector		vjrel;			///< ソケットに対するプラグの相対速度,角速度
+	SpatialTransform    X[2];			///< ワールド座標系の中心に対する親(子)剛体の位置と向き		#* 剛体から毎回取ってくる値
+	SpatialTransform	Xj[2];			///< 剛体の質量中心に対するソケット，プラグの位置と向き		#* 関節を作るときに設定する値
+	SpatialTransform	Xjrel;			///< ソケットに対するプラグの位置と向き						#* Xから計算
+	SpatialVector		vjrel;			///< ソケットに対するプラグの相対速度,角速度				#* 剛体から計算
 	
-	SpatialTransform	Js[2];			///< 拘束ヤコビアン SpatialTranform形式，
+	SpatialTransform	Js[2];			///< 拘束ヤコビアン SpatialTranform形式，					#  Xj Xjrelから計算
 												//[0]：親剛体中心からSocket座標系へ変換するヤコビアン
 												//[1]：子剛体中心からSocket座標系へ変換するのヤコビアン
-	SpatialMatrix		J[2];			///< 拘束ヤコビアン 行列形式
+	SpatialMatrix		J[2];			///< 拘束ヤコビアン 行列形式								#[n_c x 6] Jsから計算。行列型が必要
 												//[0]：親剛体の質量中心からSocket座標系へのヤコビアン
 												//[1]：子剛体の質量中心からPlug座標系経由でSocket座標系へのヤコビアン
-	SpatialMatrix		AinvJ[2];
-	SpatialMatrix		T[2];
+	SpatialMatrix		AinvJ[2];		//															# 不使用変数
+	SpatialMatrix		T[2];			//	T = M.inv() * J^t										#[6 x n_c] ガウスザイデルで使用 拘束のある列だけで良い
 	
-	SpatialVector b, db, B;				///< LCPのbベクトルとその補正量
-	SpatialVector A, dA, Ainv;			///< LCPのA行列の対角成分とその補正量，逆数
-	SpatialVector scale;
+	SpatialVector b, db, B;				///< LCPのbベクトルとその補正量								#[n_c] 拘束のある行だけで良い
+	SpatialVector A, dA, Ainv;			///< LCPのA行列の対角成分とその補正量，逆数					#[n_c]
+	SpatialVector scale;				//	不使用
 	
-	bool		constr[6];				///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる
-	bool		constrCorrection[6];	///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる
+	bool		constr[6];				///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる	# 不要
+	bool		constrCorrection[6];	///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる					# 不要
 	
 	///コンストラクタ
 	PHConstraint();
