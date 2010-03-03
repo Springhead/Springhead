@@ -343,6 +343,7 @@ void GRAnimation::BlendPose(float time, float weight, bool add){
 		}
 	}
 	//	transform をターゲットに適用
+	transform.Orthonormalization(); //正規直交化
 	for(Targets::iterator it = targets.begin(); it!= targets.end(); ++it){
 		it->target->SetTransform(transform);
 	}
@@ -390,6 +391,7 @@ void GRAnimation::SetCurrentPose(float t){
 			GRKey rotationKey;
 			rotationKey.time = t;
 			Affinef af = targets[0].target->GetTransform();
+			af.Orthonormalization();
 			Quaterniond q; q.FromMatrix(af.Rot());
 			q.w *=-1;
 			//クォータニオンに代入

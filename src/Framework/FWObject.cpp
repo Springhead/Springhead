@@ -109,6 +109,12 @@ void FWBoneObject::Sync(){
 		//GRFrameの位置にPHSolidを合わせる
 		if (phSolid && grFrame && phJoint){
 			Affinef af = grFrame->GetWorldTransform();
+			af.Orthonormalization(); //正規直交化
+			//Matrix3d afr = af.Rot();
+			//if(afr.det()<1.00){
+			//	DSTR<<"行列式 : "<<afr.det()<<std::endl;
+			//	DSTR<<af<<std::endl;
+			//}
 			Posed pose; pose.FromAffine(af);
 			//アフィン行列→クォータニオンの変換誤差が大きい場合のエラー表示
 			Affinef af2; pose.ToAffine(af2);
@@ -116,7 +122,7 @@ void FWBoneObject::Sync(){
 			mat = af.Rot();
 			mat2 = af2.Rot();
 			bool flag = false;
-			double filter =0.2;
+			double filter =0.1;
 			for(int i=0;i<2;i++){
 				for(int j=0;j<2;j++){
 					if(fabs(mat[i][j]-mat2[i][j])>filter){
@@ -136,6 +142,7 @@ void FWBoneObject::Sync(){
 		if(phSolid && grFrame && (!phJoint)){
 			//最初のFrameに関する処理
 			Affinef af = grFrame->GetWorldTransform();
+			af.Orthonormalization();
 			Posed pose; pose.FromAffine(af);
 			phSolid->SetPose(pose);
 		}
