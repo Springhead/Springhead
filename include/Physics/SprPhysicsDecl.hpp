@@ -218,6 +218,7 @@
 	int NHits(){	return	base::NHits();}	\
 	Spr::PHRaycastHit* GetHits(){	return	base::GetHits();}	\
 	Spr::PHRaycastHit* GetNearest(){	return	base::GetNearest();}	\
+	Spr::PHRaycastHit* GetDynamicalNearest(){	return	base::GetDynamicalNearest();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSceneIf(base)	\
 	Spr::PHSdkIf* GetSdk(){	return	base::GetSdk();}	\

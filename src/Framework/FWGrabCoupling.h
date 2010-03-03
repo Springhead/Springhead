@@ -56,6 +56,8 @@ public:
 	void OnCluch(){ cluchFlag = true;}
 	void OffCluch(){ cluchFlag = false;}
 
+	SpatialVector lastOutForce;
+
 
 };
 }

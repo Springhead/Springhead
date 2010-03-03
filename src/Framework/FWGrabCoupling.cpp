@@ -214,7 +214,7 @@ void FWGrabCoupling::GrabSolid2(){
 					jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->damperD * coefficient;
 					jointDesc.springOri			= GetIAPointer(i)->springOriK* coefficient;
 					jointDesc.damperOri			= GetIAPointer(i)->damperOriD* coefficient;
-					jointDesc.fMax				= 15.0;
+					//jointDesc.fMax				= 10.0;
 				}
 				//DSTR<<grabSolid->GetName()<<std::endl;
 				std::string name[8];
@@ -223,8 +223,8 @@ void FWGrabCoupling::GrabSolid2(){
 				name[2]= "soRightUpperKnee";
 				name[3]= "soLeftUpperKnee";
 				name[4]= "soWaist";
-				name[5]= "soBreast";
-				name[6]= "soHead";
+				//name[5]= "soBreast";
+				name[5]= "soHead";
 				for(int i=0; i<6; i++){
 					if(grabSolid->GetName() == name[i]){
 						jointDesc.springOri			= 0.0;
@@ -255,8 +255,8 @@ void FWGrabCoupling::GrabSolid2(){
 				grabJoint[i]->Clear();
 			}
 			for(int i=0;i<vcSolid.size() ;i++){
-				//vcSolid[i]->SetDynamical(grabSolidDesc.dynamical);
-				//vcSolid[i]->SetIntegrate(grabSolidDesc.integrate);
+				vcSolid[i]->SetDynamical(grabSolidDesc.dynamical);
+				vcSolid[i]->SetIntegrate(grabSolidDesc.integrate);
 				vcSolid[i]->SetVelocity(Vec3d(0.0,0.0,0.0));
 				vcSolid[i]->SetAngularVelocity(Vec3d(0.0,0.0,0.0));
 			}
@@ -370,6 +370,7 @@ void FWGrabCoupling::UpdateGrabPointer(){
 			outForce = SpatialVector();
 			Posed jPose;
 			Posed cPose = iPointer->GetCameraOrigin();
+
 		if(GetIAPointer(i)->GetGrabFlag()==3){
 			//GrabSolid�̏ꍇ
 			grabJoint[i]->GetSocketPose(jPose);
@@ -384,6 +385,8 @@ void FWGrabCoupling::UpdateGrabPointer(){
 			outForce.w() = Vec3d(0.0,0.0,0.0);
 		}
 
+		outForce = outForce*0.6 + lastOutForce*0.4;
+
 		double fRange = 1.0;
 
 		if(outForce.v().norm() > fRange){
@@ -392,12 +395,13 @@ void FWGrabCoupling::UpdateGrabPointer(){
 			}
 		}
 
-		double fRotRange = 1.0;
+		double fRotRange = 3.0;
 		if(outForce.w().norm() > fRotRange){
 			for(int i=0; i<3 ; i++){
 				outForce.w()[i] = outForce.w()[i] * fRotRange / outForce.w().norm();
 			}
 		}
+		lastOutForce = outForce;
 		//outForce.v() = Vec3d(0.0,0.0,0.0);
 
 		//DSTR<<outForce<<std::endl;

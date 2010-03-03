@@ -38,6 +38,7 @@ public:
 	int		NHits(){ return (int)hits.size(); }
 	PHRaycastHit* GetHits(){ return &hits[0]; }
 	PHRaycastHit* GetNearest();
+	PHRaycastHit* GetDynamicalNearest();
 };
 typedef std::vector< UTRef<PHRay> > PHRays;
 
