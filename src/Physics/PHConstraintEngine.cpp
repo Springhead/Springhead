@@ -59,7 +59,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	Vec3d v1 = solid1->GetPointVelocity(center);
 	Matrix3d local;	//	contact coodinate system ÚG‚ÌÀ•WŒn
 	local.Ex() = normal;
-	local.Ey() = v1-v0;
+ 	local.Ey() = v1-v0;
 	local.Ey() -= local.Ey() * normal * normal;
 	if (local.Ey().square() > 1e-6){
 		local.Ey().unitize(); 
@@ -98,6 +98,8 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		//	2‚Â‚ÌØ‚èŒû‚ÌƒAƒ“ƒh‚ğ‚Æ‚Á‚ÄA2•¨‘Ì‚ÌÚG–Ê‚ÌŒ`ó‚ğ‹‚ß‚éB
 		cutRing.MakeRing();		
 		section.clear();
+		std::vector<Vec3d>	local_section;	//ÚGÀ•WŒn‚Å‚ÌÚG–Ê‚Ì’¸“_(–ÊÚG—p)
+		local_section.clear();		
 		if (cutRing.vtxs.begin != cutRing.vtxs.end && !(cutRing.vtxs.end-1)->deleted){
 			CDQHLine<CDCutLine>* vtx = cutRing.vtxs.end-1;
 			do{
@@ -132,17 +134,35 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 #endif
 				Vec3d pos;
 				pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
+				if(engine->bUseContactSurface == true){
+					local_section.push_back(pos);
+				}
 				pos = cutRing.local * pos;
 				section.push_back(pos);
-				PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
+
+				if(engine->bUseContactSurface == false){
+					PHContactPoint *point = DBG_NEW PHContactPoint(local, this, pos, solid0, solid1);
+					point->SetScene(engine->GetScene());
+					point->engine = engine;
+
+					if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
+					if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
+					engine->points.push_back(point);
+				}
+				vtx = vtx->neighbor[0];
+			} while (vtx!=cutRing.vtxs.end-1);
+
+			if(engine->bUseContactSurface == true){
+				Vec3d pos(0.0, 0.0, 0.0);//S‘©“_‚ÍÚGÀ•WŒn‚ÌŒ´“_‚Æ‚·‚é
+				pos = cutRing.local * pos;
+				PHContactSurface *point = DBG_NEW PHContactSurface(local, this, pos, solid0, solid1, local_section);
 				point->SetScene(engine->GetScene());
 				point->engine = engine;
 
 				if(engine->IsInactiveSolid(solid0->Cast())) point->SetInactive(1, false);
 				if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
 				engine->points.push_back(point);
-				vtx = vtx->neighbor[0];
-			} while (vtx!=cutRing.vtxs.end-1);
+			}
 		}
 	}
 	if (nPoint == (int)engine->points.size()){	//	‚Ğ‚Æ‚Â‚à’Ç‰Á‚µ‚Ä‚¢‚È‚¢Ø‚èŒû‚ª‚È‚©‚Á‚½ or ‚ ‚Á‚Ä‚àConvexHull‚ªì‚ê‚È‚©‚Á‚½D
@@ -155,8 +175,8 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		if(engine->IsInactiveSolid(solid1->Cast())) point->SetInactive(0, false);
 
 		engine->points.push_back(point);
-		section.clear();
-		section.push_back(center);
+	//	section.clear();
+	//	section.push_back(center);
 	}
 }
 
@@ -183,6 +203,7 @@ PHConstraintEngine::PHConstraintEngine(){
 	bGearNodeReady	 = false;
 	bSaveConstraints = false;
 	bUpdateAllState	 = true;
+	bUseContactSurface = false;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -406,7 +427,7 @@ void PHConstraintEngine::SetupLCP(){
 
 }
 void PHConstraintEngine::SetupCorrectionLCP(){
-	if(numIterCorrection)
+ 	if(numIterCorrection)
 		for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 			(*it)->SetupCorrectionABA();
 
@@ -418,6 +439,7 @@ void PHConstraintEngine::SetupCorrectionLCP(){
 		for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
 			(*it)->SetupCorrectionLCP();
 }
+
 void PHConstraintEngine::IterateLCP(){
 	int count = 0;
 	while(true){
@@ -434,6 +456,7 @@ void PHConstraintEngine::IterateLCP(){
 		count++;
 	}
 }
+
 void PHConstraintEngine::IterateCorrectionLCP(){
 	int end = max(numIterCorrection, numIterContactCorrection);
 	for(int i=0; i!=end; ++i){

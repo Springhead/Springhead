@@ -99,7 +99,8 @@ public:
 	bool	bGearNodeReady;				///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
 	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
 	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
-
+	bool	bUseContactSurface;			///< 面接触を使う
+	
 	PHConstraintEngine();
 	~PHConstraintEngine();
 	
@@ -142,6 +143,8 @@ public:
 	virtual double	GetContactCorrectionRate(){return contactCorrectionRate;}
 	virtual void	SetBSaveConstraints(bool value){bSaveConstraints = value;}
 	virtual void	SetUpdateAllSolidState(bool flag){bUpdateAllState = flag;}
+	virtual void	SetUseContactSurface(bool flag){bUseContactSurface = flag;}
+
 	virtual void	SetShrinkRate(double data){shrinkRate = data;}
 	virtual double	GetShrinkRate(){return shrinkRate;}
 	virtual void	SetShrinkRateCorrection(double data){shrinkRateCorrection = data;}

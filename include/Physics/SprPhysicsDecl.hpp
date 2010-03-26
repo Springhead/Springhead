@@ -10,6 +10,7 @@
 	double GetContactCorrectionRate(){	return	base::GetContactCorrectionRate();}	\
 	void SetBSaveConstraints(bool value){	base::SetBSaveConstraints(value);}	\
 	void SetUpdateAllSolidState(bool flag){	base::SetUpdateAllSolidState(flag);}	\
+	void SetUseContactSurface(bool flag){	base::SetUseContactSurface(flag);}	\
 	void SetShrinkRate(double data){	base::SetShrinkRate(data);}	\
 	double GetShrinkRate(){	return	base::GetShrinkRate();}	\
 	void SetShrinkRateCorrection(double data){	base::SetShrinkRateCorrection(data);}	\
