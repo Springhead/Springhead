@@ -65,6 +65,10 @@ public:
 	*/
 	void SetUpdateAllSolidState(bool flag);
 
+	/** @brief 面接触を使うフラグを設定する
+	*/
+	void SetUseContactSurface(bool flag);
+
 	/** @brief shrinkRateの値を設定する
 	*/
 	void SetShrinkRate(double data);
