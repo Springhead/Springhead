@@ -94,6 +94,20 @@ Posed FWInteractPointer::GetCameraOrigin(){
 	return cameraOrigin; 
 }
 
+void FWInteractPointer::SetSpringK(double k){
+	springK = k;
+	CalcCorrectionSpringDamper();
+}
+double FWInteractPointer::GetSpringK(){
+	return springK;
+}
+void FWInteractPointer::SetDamperD(double d){
+	damperD = d;
+	CalcCorrectionSpringDamper();
+}
+double FWInteractPointer::GetDamperD(){
+	return damperD;
+}
 void  FWInteractPointer::SetPointersCalibPosition(Posed p){
 	pointersCalibPosition = p;
 }

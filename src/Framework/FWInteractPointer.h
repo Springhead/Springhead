@@ -70,6 +70,10 @@ public:
 	Quaterniond  GetCameraOri();
 	void		 SetCameraOrigin(Posed p);
 	Posed		 GetCameraOrigin();
+	void		 SetSpringK(double k);
+	double		 GetSpringK();
+	void		 SetDamperD(double d);
+	double		 GetDamperD();
 };
 
 }
