@@ -255,8 +255,8 @@ void FWGrabCoupling::GrabSolid2(){
 				grabJoint[i]->Clear();
 			}
 			for(int i=0;i<vcSolid.size() ;i++){
-				vcSolid[i]->SetDynamical(grabSolidDesc.dynamical);
-				vcSolid[i]->SetIntegrate(grabSolidDesc.integrate);
+				//vcSolid[i]->SetDynamical(grabSolidDesc.dynamical);
+				//vcSolid[i]->SetIntegrate(grabSolidDesc.integrate);
 				vcSolid[i]->SetVelocity(Vec3d(0.0,0.0,0.0));
 				vcSolid[i]->SetAngularVelocity(Vec3d(0.0,0.0,0.0));
 			}
@@ -387,7 +387,7 @@ void FWGrabCoupling::UpdateGrabPointer(){
 
 		outForce = outForce*0.6 + lastOutForce*0.4;
 
-		double fRange = 1.0;
+		double fRange = 10.0;
 
 		if(outForce.v().norm() > fRange){
 			for(int i=0; i<3 ; i++){
@@ -395,7 +395,7 @@ void FWGrabCoupling::UpdateGrabPointer(){
 			}
 		}
 
-		double fRotRange = 3.0;
+		double fRotRange = 10.0;
 		if(outForce.w().norm() > fRotRange){
 			for(int i=0; i<3 ; i++){
 				outForce.w()[i] = outForce.w()[i] * fRotRange / outForce.w().norm();

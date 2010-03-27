@@ -76,6 +76,10 @@ public:
 	int			GetGrabFlag();
 	void		 SetCameraOri(Quaterniond q);
 	Quaterniond  GetCameraOri();
+	void		 SetSpringK(double k);
+	double		 GetSpringK();
+	void		 SetDamperD(double d);
+	double		 GetDamperD();
 };
 
 typedef std::vector< UTRef<FWInteractPointerIf> > FWInteractPointers;

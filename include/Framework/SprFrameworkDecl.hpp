@@ -32,6 +32,10 @@
 	int GetGrabFlag(){	return	base::GetGrabFlag();}	\
 	void SetCameraOri(Quaterniond q){	base::SetCameraOri(q);}	\
 	Quaterniond GetCameraOri(){	return	base::GetCameraOri();}	\
+	void SetSpringK(double k){	base::SetSpringK(k);}	\
+	double GetSpringK(){	return	base::GetSpringK();}	\
+	void SetDamperD(double d){	base::SetDamperD(d);}	\
+	double GetDamperD(){	return	base::GetDamperD();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractSceneIf(base)	\
 	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
