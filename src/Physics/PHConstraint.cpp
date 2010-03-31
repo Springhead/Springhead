@@ -50,7 +50,7 @@ bool PHConstraint::AddChildObject(ObjectIf* o){
 	}
 	return false;
 }
-size_t PHConstraint::NChildObject(){
+size_t PHConstraint::NChildObject() const{
 	return (solid[0] ? 1 : 0) + (solid[1] ? 1 : 0);
 }
 ObjectIf* PHConstraint::GetChildObject(size_t i){

@@ -228,12 +228,13 @@ public:
 		}
 		return NULL;
 	}
-	size_t NChildObject() {
-		int cnt = 0;
+	size_t NChildObject() const{
+		return linkedControlPoints.size();
+		/*int cnt = 0;
 		for (CSetIter it=linkedControlPoints.begin(); it!=linkedControlPoints.end(); ++it) {
 			cnt++;
 		}
-		return cnt;
+		return cnt;*/
 	}
 };
 
@@ -280,7 +281,7 @@ public:
 		}
 		return NULL;
 	}
-	size_t NChildObject() {
+	size_t NChildObject() const{
 		if (this->solid != NULL) { return 1 + PHIKNode::NChildObject(); }
 		return PHIKNode::NChildObject();
 	}
@@ -366,7 +367,7 @@ public:
 		}
 		return NULL;
 	}
-	size_t NChildObject() {
+	size_t NChildObject() const{
 		if (this->joint != NULL) { return 1 + PHIKNode::NChildObject(); }
 		return PHIKNode::NChildObject();
 	}
@@ -438,7 +439,7 @@ public:
 		}
 		return NULL;
 	}
-	size_t NChildObject() {
+	size_t NChildObject() const{
 		if (this->joint != NULL) { return 1 + PHIKNode::NChildObject(); }
 		return PHIKNode::NChildObject();
 	}

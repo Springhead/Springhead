@@ -21,7 +21,7 @@ public:
 	SPR_OBJECTDEF_ABST(PHTreeNode);
 	
 	virtual bool AddChildObject(ObjectIf* o);
-	virtual size_t NChildObject();
+	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t i);
 
 	void Enable(bool bEnable = true);
@@ -92,7 +92,7 @@ public:
 	SPR_DECLMEMBEROF_PHRootNodeDesc;
 
 	virtual bool AddChildObject(ObjectIf* o);
-	virtual size_t NChildObject();
+	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t i);
 	
 	void SetupABA();

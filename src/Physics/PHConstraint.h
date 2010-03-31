@@ -117,7 +117,7 @@ public:
 	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w);//{UpdateCacheLCP(GetScene()->GetTimeStep()); UpdateState();v = vjrel.v(); w = vjrel.w();}
 	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t);
 	virtual bool		 AddChildObject(ObjectIf* o);
-	virtual size_t		 NChildObject();
+	virtual size_t		 NChildObject() const;
 	virtual ObjectIf*	 GetChildObject(size_t i);
 	virtual	Vec3d		 GetMotorf(){return motorf;}
 	virtual Vec3d		 GetLimitf(){return limitf;}

@@ -40,7 +40,7 @@ bool PHTreeNode::AddChildObject(ObjectIf* o){
 	}
 	return false;
 }
-size_t PHTreeNode::NChildObject(){
+size_t PHTreeNode::NChildObject() const{
 	return (joint ? 1 : 0) + Children().size();
 }
 ObjectIf* PHTreeNode::GetChildObject(size_t i){
@@ -259,7 +259,7 @@ bool PHRootNode::AddChildObject(ObjectIf* o){
 	}
 	return false;
 }
-size_t PHRootNode::NChildObject(){
+size_t PHRootNode::NChildObject() const{
 	return (solid ? 1 : 0) + Children().size();
 }
 ObjectIf* PHRootNode::GetChildObject(size_t i){

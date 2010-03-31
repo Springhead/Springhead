@@ -129,7 +129,7 @@ public:
 	///	GRAnimationの削除
 	virtual bool DelChildObject(ObjectIf* o);
 	///	GRAnimationの数
-	int NChildObject();
+	size_t NChildObject() const;
 
 	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
 	virtual void BlendPose(float time, float weight);
@@ -170,7 +170,7 @@ public:
 	///	GRAnimationの削除
 	virtual bool DelChildObject(ObjectIf* o);
 	///	GRAnimationの数
-	virtual int NChildObject();
+	virtual size_t NChildObject() const;
 	///	GRAnimationの取得
 	ObjectIf* GetChildObject(size_t p);
 	///	GRAnimationSetの取得
