@@ -486,7 +486,7 @@ bool GRAnimationSet::DelChildObject(ObjectIf* o){
 	}
 	return false;
 }
-int GRAnimationSet::NChildObject(){
+size_t GRAnimationSet::NChildObject() const{
 	return animations.size();
 }
 
@@ -559,7 +559,7 @@ bool GRAnimationController::DelChildObject(ObjectIf* o){
 	}
 	return false;
 }
-int GRAnimationController::NChildObject(){
+size_t GRAnimationController::NChildObject() const{
 	return sets.size();
 }
 

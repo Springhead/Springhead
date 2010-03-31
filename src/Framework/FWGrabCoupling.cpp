@@ -250,11 +250,11 @@ void FWGrabCoupling::GrabSolid2(){
 			else GetIAPointer(i)->SetGrabFlag(0);
 
 		}else if(GetIAPointer(i)->GetGrabFlag()==4){
-			for(int i=0;i<grabJoint.size() ;i++){
+			for(int i=0;i<(int)grabJoint.size() ;i++){
 				grabJoint[i]->Enable(false);
 				grabJoint[i]->Clear();
 			}
-			for(int i=0;i<vcSolid.size() ;i++){
+			for(int i=0;i<(int)vcSolid.size() ;i++){
 				//vcSolid[i]->SetDynamical(grabSolidDesc.dynamical);
 				//vcSolid[i]->SetIntegrate(grabSolidDesc.integrate);
 				vcSolid[i]->SetVelocity(Vec3d(0.0,0.0,0.0));
