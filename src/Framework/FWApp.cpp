@@ -376,7 +376,7 @@ FWInteractSceneIf* FWApp::CreateIAScene(const FWInteractSceneDesc &desc){
 	FWInteractScene* iaScene = DBG_NEW FWInteractScene(desc);
 	iaScenes.push_back(iaScene->Cast());
 	iaScene->CreateIAAdaptee(desc.iaMode);
-	if(desc.iaMode == LOCAL_DYNAMICS){
+	if(desc.iaMode == LOCAL_DYNAMICS_3D || desc.iaMode == LOCAL_DYNAMICS_6D){
 		iaScene->SetHMode(desc.hMode);
 	}
 	curIAScene = iaScene->Cast();

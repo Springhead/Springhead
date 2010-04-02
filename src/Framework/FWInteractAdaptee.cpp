@@ -22,15 +22,41 @@ void FWHapticLoopBase::Clear(){
 	loopCount = 1;
 }
 
-#define TORQUE
+void FWHapticLoopBase::UpdateInterface(){
+	int N = NIAPointers();
+	for(int i = 0; i < N; i++){
+		FWInteractPointer* iPointer = GetIAPointer(i)->Cast();
+		double s = iPointer->GetWorldScale() * iPointer->GetPosScale();
+		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+			//6自由度インタフェースの場合
+			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+			hif->Update((float)hdt);
+			PHSolid* hiSolid = &iPointer->hiSolid;
+			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
+			hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
+			Posed hifPose;
+			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
+			hifPose.Ori()=hif->GetOrientation();
+			hiSolid->SetPose(GetIAPointer(i)->GetDefaultPosition() * hifPose);
+		}else{
+			//3自由度インタフェースの場合
+			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+			hif->Update((float)hdt);
+			PHSolid* hiSolid = &iPointer->hiSolid;
+			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
+			Posed hifPose;
+			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
+			hiSolid->SetPose(GetIAPointer(i)->GetDefaultPosition() * hifPose);
+		}
+	}
+}
+
 void FWHapticLoopBase::SetRenderedForce(HIBaseIf* hi, bool bForce, SpatialVector f){
 	if(bForce){
 		if(DCAST(HIForceInterface6DIf, hi)){
 			HIForceInterface6DIf* hif = hi->Cast();
 			hif->SetForce(f.v(), Vec3d());
-			#ifdef TORQUE
-				hif->SetForce(f.v(), f.w());
-			#endif
+			hif->SetForce(f.v(), f.w());	
 		}else{
 			HIForceInterface3DIf* hif = hi->Cast();
 			hif->SetForce(f.v());
@@ -39,9 +65,6 @@ void FWHapticLoopBase::SetRenderedForce(HIBaseIf* hi, bool bForce, SpatialVector
 		if(DCAST(HIForceInterface6DIf, hi)){
 			HIForceInterface6DIf* hif = hi->Cast();
 			hif->SetForce(Vec3d(), Vec3d());
-			#ifdef TORQUE
-				hif->SetForce(Vec3d(), Vec3d());
-			#endif
 		}else{
 			HIForceInterface3DIf* hif = hi->Cast();
 			hif->SetForce(Vec3d());
@@ -258,7 +281,7 @@ int FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b
 		/// dirが潰れてしまっている場合は剛体重心から近傍点へのベクトルとする
 		if(dir == Vec3d(0.0, 0.0, 0.0) ){
 			dir =-( wa - pc);
-			DSTR << "おふ" << std::endl;
+			DSTR << "dir is Zero vecotor." << std::endl;
 		}
 
 		/// CCDGJKの実行	
