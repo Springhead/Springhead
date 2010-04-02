@@ -42,7 +42,7 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	/// InteractSceneの作成
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.iaMode = LOCAL_DYNAMICS;							// humaninterfaceのレンダリングモードの設定
+	desc.iaMode = LOCAL_DYNAMICS_3D;						// humaninterfaceのレンダリングモードの設定
 	desc.hMode = PENALTY3D;
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
 	CreateIAScene(desc);									// interactSceneの作成
@@ -110,7 +110,7 @@ void FWLDHapticSample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.iaMode = LOCAL_DYNAMICS;								// humaninterfaceのレンダリングモードの設定
+	desc.iaMode = LOCAL_DYNAMICS_3D;							// humaninterfaceのレンダリングモードの設定
 	desc.hMode = PENALTY3D;
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
 	CreateIAScene(desc);									// interactSceneの作成

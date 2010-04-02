@@ -7,7 +7,8 @@
  */
 
 #include <Framework/FWInteractScene.h>
-#include <Framework/FWLDHaptic.h>
+#include <Framework/FWLDHaptic3D.h>
+#include <Framework/FWLDHaptic6D.h>
 #include <Framework/FWVirtualCoupling.h>
 #include <Framework/FWGrabCoupling.h>
 
@@ -28,8 +29,12 @@ void FWInteractScene::CreateIAAdaptee(FWInteractMode iaMode){
 	case NONE:
 		ia = NULL;
 		break;
-	case LOCAL_DYNAMICS:
-		ia = DBG_NEW FWLDHaptic();
+	case LOCAL_DYNAMICS_3D:
+		ia = DBG_NEW FWLDHaptic3D();
+		ia->SetIAScene(this);
+		break;
+	case LOCAL_DYNAMICS_6D:
+		ia = DBG_NEW FWLDHaptic6D();
 		ia->SetIAScene(this);
 		break;
 	case VIRTUAL_COUPLING:
@@ -63,7 +68,8 @@ FWInteractPointerIf* FWInteractScene::CreateIAPointer(const FWInteractPointerDes
 	switch(iaMode){
 		case NONE:
 			break;
-		case LOCAL_DYNAMICS:
+		case LOCAL_DYNAMICS_3D:
+		case LOCAL_DYNAMICS_6D:
 			{
 				GetScene()->GetPHScene()->SetContactMode(iPointer->pointerSolid, PHSceneDesc::MODE_NONE);
 				iPointer->pointerSolid->SetDynamical(false);

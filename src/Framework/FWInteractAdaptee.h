@@ -50,6 +50,7 @@ public:
 	}
 	virtual void Step(){};
 	virtual void HapticRendering(){}
+	virtual void UpdateInterface();
 	virtual void SetRenderedForce(HIBaseIf* hi, bool bForce, SpatialVector f);
 };
 
