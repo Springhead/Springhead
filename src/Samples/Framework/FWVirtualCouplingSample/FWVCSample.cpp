@@ -226,7 +226,7 @@ void FWLDHapticSample::BuildPointer(){
 			idesc.springOriK = 1*10;						// バーチャルカップリングのバネ係数
 			idesc.damperOriD = 0.08*10;					   // バーチャルカップリングのダンパ係数
 			idesc.posScale = 300;					// soPointerの可動域の設定(～倍)
-			idesc.forceScale = 1.0;					// インタフェースに働く力の倍率
+			idesc.forceScale = 0.1;					// インタフェースに働く力の倍率
 			
 			Posed pose1; pose1.Pos()=Vec3d(5,0,0); pose1.Ori()=Quaterniond::Rot(Rad(-45), 'x');
 			Posed pose2; pose2.Pos()=Vec3d(-5,0,0); pose2.Ori()=Quaterniond::Rot(Rad(-45), 'x');

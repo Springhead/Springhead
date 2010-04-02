@@ -72,6 +72,20 @@ void FWInteractPointer::SetLocalRange(double r){
 double FWInteractPointer::GetLocalRange(){
 	return localRange; 
 }
+void FWInteractPointer::SetSpringCoeff(double k){
+	springK = k;
+};
+
+double	FWInteractPointer::GetSpringCoeff(){
+	return springK;
+}
+void FWInteractPointer::SetDamperCoeff(double d){
+	damperD = d;
+}
+double FWInteractPointer::GetDamperCoeff(){
+	return damperD;
+}
+
 void  FWInteractPointer::SetDefaultPosition(Posed p){
 	defaultPosition = p;
 }

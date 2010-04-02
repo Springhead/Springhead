@@ -69,6 +69,10 @@ public:
 	Posed		GetPointersCalibPosition();
 	void		SetDefaultPosition(Posed p);
 	Posed		GetDefaultPosition();
+	void		SetSpringCoeff(double k);
+	double		GetSpringCoeff();
+	void		SetDamperCoeff(double d);
+	double		GetDamperCoeff();
 	void		EnableForce(bool b);
 	void		EnableVibration(bool b);
 	void		Calibration();

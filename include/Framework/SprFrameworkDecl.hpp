@@ -25,6 +25,10 @@
 	Posed GetPointersCalibPosition(){	return	base::GetPointersCalibPosition();}	\
 	void SetDefaultPosition(Posed p){	base::SetDefaultPosition(p);}	\
 	Posed GetDefaultPosition(){	return	base::GetDefaultPosition();}	\
+	void SetSpringCoeff(double k){	base::SetSpringCoeff(k);}	\
+	double GetSpringCoeff(){	return	base::GetSpringCoeff();}	\
+	void SetDamperCoeff(double d){	base::SetDamperCoeff(d);}	\
+	double GetDamperCoeff(){	return	base::GetDamperCoeff();}	\
 	void EnableForce(bool b){	base::EnableForce(b);}	\
 	void EnableVibration(bool b){	base::EnableVibration(b);}	\
 	void Calibration(){	base::Calibration();}	\
@@ -51,8 +55,6 @@
 	void Clear(){	base::Clear();}	\
 	void Step(){	base::Step();}	\
 	void CallBackHapticLoop(){	base::CallBackHapticLoop();}	\
-	Vec3d* GetProxyPoint(){	return	base::GetProxyPoint();}	\
-	Vec3d* GetForce(){	return	base::GetForce();}	\
 	bool GetContactFlag(){	return	base::GetContactFlag();}	\
 	Vec3d GetPicCenterPosition(){	return	base::GetPicCenterPosition();}	\
 

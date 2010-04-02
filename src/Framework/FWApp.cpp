@@ -28,7 +28,7 @@ FWApp::FWApp(){
 }
 FWApp::~FWApp(){
 	ReleaseAllTimer();
-	int s = wins.size();
+	int s = (int)wins.size();
 	bool hasGameMode = false;
 	for(int i = 0; i < s; i++){
 		if(wins[i]->fullscreen == true){
@@ -292,7 +292,7 @@ void FWApp::Reset(){
 void FWApp::Clear(){
 	Reset();
 	//TimerÇÃèâä˙âª
-	for(int i = 0; i <fwTimers.size() ; i++){
+	for(int i = 0; i < (int)fwTimers.size() ; i++){
 		fwTimers[i]->Clear();
 	}
 	fwTimers.clear();
