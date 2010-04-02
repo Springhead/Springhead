@@ -56,8 +56,8 @@ public:
 	void CallBackHapticLoop();
 	void BeginKeyboard();
 	void EndKeyboard();
-	Vec3d* GetProxyPoint();
-	Vec3d* GetForce();
+	//Vec3d* GetProxyPoint();
+	//Vec3d* GetForce();
 	bool GetContactFlag();
 	Vec3d GetPicCenterPosition();
 };

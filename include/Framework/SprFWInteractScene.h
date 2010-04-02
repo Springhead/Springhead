@@ -27,7 +27,6 @@ typedef enum FWInteractMode{
 typedef enum FWHapticMode{
 	PENALTY3D,
 	PENALTY,
-	PENALTY6D,
 	CONSTRAINT,
 	PROXY,
 	PROXYSIMULATION
@@ -68,8 +67,8 @@ public:
 	void Clear();
 	void Step();
 	void CallBackHapticLoop();
-	Vec3d* GetProxyPoint();
-	Vec3d* GetForce();
+	//Vec3d* GetProxyPoint();	// ローカル変数のポインタを返しているので良くない
+	//Vec3d* GetForce();		// ローカル変数のポインタを返しているので良くない
 	bool GetContactFlag();
 	Vec3d GetPicCenterPosition();
 };

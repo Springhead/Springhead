@@ -43,6 +43,7 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
 	desc.iaMode = LOCAL_DYNAMICS;							// humaninterfaceのレンダリングモードの設定
+	desc.hMode = PENALTY3D;
 	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
 	CreateIAScene(desc);									// interactSceneの作成
 
@@ -238,6 +239,7 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 	switch (key) {
 		case  27: //ESC
 		case 'q':
+			ReleaseAllTimer();
 			exit(0);
 			break;
 		case 'r':
