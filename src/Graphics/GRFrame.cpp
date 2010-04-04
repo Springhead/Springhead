@@ -448,7 +448,7 @@ bool cmp(GRKey a, GRKey b){
 
 void GRAnimation::SortGRKey(){
 	//keys[0].keys,keys[1].keys,keys[2].keys‚ğŠÔ‚Åƒ\[ƒg
-	for(int i=0; i<3; i++){
+	for(int i=0; i<keys.size(); i++){
 		std::sort( keys[i].keys.begin(), keys[i].keys.end() ,cmp) ;
 	}
 }
