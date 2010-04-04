@@ -13,8 +13,6 @@
 
 using namespace PTM;
 namespace Spr{;
-const float SPRING = 0.2f;
-const float DAMPER = 0.3f;
 extern bool bUseContactVolume;
 static float reflexSpring;
 static float reflexDamper;
@@ -68,15 +66,10 @@ void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine*
 	//	ÚG—ÍŒvZ‚Ì€”õ
 	float rs[2], rd[2], fs[2], fd[2], sf[2], df[2];
 	for(int i=0; i<2; ++i){
-
-		rs[i] = fs[i] = SPRING;
-		rd[i] = fd[i] = DAMPER;
-
 		rs[i] = sp->shape[i]->GetMaterial().reflexSpringK;
 		rd[i] = sp->shape[i]->GetMaterial().reflexDamperD;
 		fs[i] = sp->shape[i]->GetMaterial().frictionSpringK;
 		fd[i] = sp->shape[i]->GetMaterial().frictionDamperD;
-
 		sf[i] = sp->shape[i]->GetMaterial().mu0;
 		df[i] = sp->shape[i]->GetMaterial().mu;
 	}

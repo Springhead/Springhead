@@ -27,8 +27,8 @@ static char* GetEnv(char* buf, const char* var){
 			strncpy(varstr, var+start, cur-start);
 			char* env = getenv(varstr);
 			if (!env){
+				env = "";
 				DSTR << "UTDllLoader::Load fails to find environment value of '" << var << "'" << std::endl;
-				return NULL;
 			}
 			strcpy(buf+bufCur, env);
 			bufCur += strlen(env);
@@ -42,8 +42,8 @@ static char* GetEnv(char* buf, const char* var){
 			strncpy(varstr, var+start, cur-start);
 			char* env = getenv(varstr);
 			if (!env){
+				env = "";
 				DSTR << "UTDllLoader::Load fails to find environment value of '" << var << "'" << std::endl;
-				return NULL;
 			}
 			strcpy(buf+bufCur, env);
 			bufCur += strlen(env);
@@ -68,8 +68,8 @@ bool UTDllLoader::Load(const char* dllNameIn, const char* addPathIn){
 	char pathOrg[len];
 	char pathNew[len];
 	
-	if(!GetEnv(dll, dllName)) return false;
-	if(!GetEnv(path, addPath)) return false;
+	GetEnv(dll, dllName);
+	GetEnv(path, addPath);
 	sprintf(pathOrg, "PATH=%s", getenv("PATH"));
 	sprintf(pathNew, "PATH=%s;%s", path, getenv("PATH"));
 	putenv(pathNew);

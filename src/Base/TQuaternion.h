@@ -423,10 +423,6 @@ public:
 	DEF_TVECTOR_BASIC_MEMBER(TPose);
 	union{
 		ET data[7];
-//		struct{
-//			TQuaternion<ET> Ori();
-//			TVec3<ET> Pos();
-//		};
 		struct{
 			ET w,x,y,z;		//< ‰ñ“]
 			ET px, py, pz;	//< ˆÊ’u
@@ -594,6 +590,9 @@ public:
 		Px() = element_type(pxi);
 		Py() = element_type(pyi);
 		Pz() = element_type(pzi);
+	}
+	template <class AT> TPose (const TAffine<AT>& af){
+		FromAffine(af);
 	}
 	//@}
 

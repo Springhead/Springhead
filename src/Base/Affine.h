@@ -689,11 +689,12 @@ public:
 #ifdef _WIN32
  #pragma warning (disable: 4700)
 #endif
-///	TAffine‚ÆƒxƒNƒgƒ‹‚ÌŠ|‚¯ŽZ
-template <class T, class TV>
-TVec3<TV> operator * (
-	const TAffine<T>& a,
-	const TVec3<TV>& b){
+
+	
+	
+	///	TAffine‚ÆƒxƒNƒgƒ‹‚ÌŠ|‚¯ŽZ
+template <class TD, class TV>
+TVec3<TV> operator * (const PTM::TMatrixBase<4,4, TD>& a, const TVec3<TV>& b){
 	TVec3<TV> r;
 	r[0] = a[0][0]*b[0] + a[0][1]*b[1] + a[0][2]*b[2] + a[0][3];
 	r[1] = a[1][0]*b[0] + a[1][1]*b[1] + a[1][2]*b[2] + a[1][3];
