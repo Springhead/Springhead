@@ -236,126 +236,106 @@ public:
 class FWNodeHandlerXMesh: public UTLoadHandlerImp<Mesh>{
 public:
 	FWNodeHandlerXMesh():UTLoadHandlerImp<Desc>("Mesh"){}
+
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		GRMeshDesc desc;
+
+		// 頂点配列，面配列をコピー
+		desc.vertices = d.vertices;
+		desc.faces.resize(d.nFaces);
+		for(int i = 0; i < d.nFaces; i++){
+			int nvtx = d.faces[i].nFaceVertexIndices;
+			if(!(nvtx == 3 || nvtx == 4)){
+				fc->ErrorMessage(NULL, NULL, "number of vertices in a face must be 3 or 4.");
+				return;
+			}
+			desc.faces[i].nVertices = nvtx;
+			for(int j = 0; j < nvtx; j++)
+				desc.faces[i].indices[j] = d.faces[i].faceVertexIndices[j];
+		}
+
+		// 法線情報
+		UTLoadedData* normalData = ld->FindDescendant("MeshNormals");
+		if(normalData){
+			MeshNormals* meshNormals = (MeshNormals*)normalData->data;
+			desc.normals = meshNormals->normals;
+			desc.faceNormals.resize(meshNormals->nFaceNormals);
+			for(int i = 0; i < meshNormals->nFaceNormals; ++i){
+				int nvtx = meshNormals->faceNormals[i].nFaceVertexIndices;
+				if(!(nvtx == 3 || nvtx == 4)){
+					fc->ErrorMessage(NULL, NULL, "number of normals in a face must be 3 or 4.");
+					return;
+				}
+				desc.faceNormals[i].nVertices = nvtx;
+				for(int j = 0; j < nvtx; ++j)
+					desc.faceNormals[i].indices[j] = meshNormals->faceNormals[i].faceVertexIndices[j];
+			}
+		}
+
+		//	テクスチャ座標
+		UTLoadedData* coordsData = ld->FindDescendant("MeshTextureCoords");
+		if (coordsData){
+			MeshTextureCoords* uv = (MeshTextureCoords* )coordsData->data;
+			desc.texCoords = uv->textureCoords;
+		}
+
+		//	マテリアルリスト
+		UTLoadedData* mlData = ld->FindDescendant("MeshMaterialList");
+		if (mlData){
+			MeshMaterialList* ml = (MeshMaterialList*) mlData->data;
+			desc.materialList.insert(desc.materialList.end(), ml->faceIndexes.begin(), ml->faceIndexes.end());
+		}
+
+		//	スキンメッシュのヘッダ
+		UTLoadedData* skinHeader = ld->FindDescendant("XSkinMeshHeader");
+		if (skinHeader){
+			XSkinMeshHeader* sd = (XSkinMeshHeader*) skinHeader->data;
+			//	特に何もしない？	
+		}
+
+		// メッシュを作成
 		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &desc, ld->GetName()));	
 		ld->loadedObjects.push_back(fc->objects.Top());
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
-		
-		//	Meshの名前に、 tex3d が含まれる場合、テクスチャを2Dでなく4Dにする。
-		if (ld->GetName().find("tex3d") != UTString::npos){
-			mesh->tex3d = true;
-		}
-		if (mesh){
-			mesh->positions = d.vertices;	// 頂点座標
-			for (unsigned i=0; i<mesh->positions.size(); ++i){
-				mesh->positions[i].z *= -1;	//	左手系→右手系変換
-			}
-			for (int f=0; f < d.nFaces; ++f){		
-				if ((d.faces[f].nFaceVertexIndices == 3) || (d.faces[f].nFaceVertexIndices == 4)) {
-					mesh->originalFaceIds.push_back(f);
-					mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
-					mesh->faces.push_back( d.faces[f].faceVertexIndices[1] );
-					mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
-					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[0] );
-					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[1] );
-					mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[2] );
-
-					if (d.faces[f].nFaceVertexIndices == 4){
-						mesh->originalFaceIds.push_back(f);
-						// facesには、面が四角形なら三角形に分割したインデックスをpush
-						mesh->faces.push_back( d.faces[f].faceVertexIndices[2] );
-						mesh->faces.push_back( d.faces[f].faceVertexIndices[0] );
-						mesh->faces.push_back( d.faces[f].faceVertexIndices[3] );
-						// originalFaces には、4頂点目のインデックスをpush
-						mesh->originalFaces.push_back( d.faces[f].faceVertexIndices[3] );
-					}
-				}else{
-					fc->ErrorMessage(NULL, NULL, "Number of faces for mesh != 3 or 4.");
-				}
-			}
-			//	法線情報
-			UTLoadedData* normalData = ld->FindDescendant("MeshNormals");
-			if (normalData){
-				MeshNormals* normalDesc = (MeshNormals* )normalData->data;
-				mesh->normals = normalDesc->normals;
-				for (unsigned i=0; i<mesh->normals.size(); ++i){
-					mesh->normals[i].z *= -1;	//	左手系→右手系変換
-				}
-				for (int f=0; f < normalDesc->nFaceNormals; ++f){
-					for (int i=0; i < normalDesc->faceNormals[f].nFaceVertexIndices; ++i){
-						mesh->faceNormals.push_back(	// 法線インデックス
-							normalDesc->faceNormals[f].faceVertexIndices[i] );
-					}
-				}
-			}else{	//	法線情報の自動生成
-				mesh->normals.resize(mesh->positions.size());
-				std::vector<int> nFace;
-				nFace.resize(mesh->positions.size());
-				for(unsigned i=0; i<nFace.size(); ++i) nFace[i] = 0;
-				for(unsigned i=0; i<mesh->faces.size(); i+=3){
-					Vec3f normal = 
-						(mesh->positions[mesh->faces[i+1]]-mesh->positions[mesh->faces[i]])
-						^ (mesh->positions[mesh->faces[i+2]]-mesh->positions[mesh->faces[i]]);
-					normal.unitize();
-
-					mesh->normals[mesh->faces[i  ]] += normal;
-					mesh->normals[mesh->faces[i+1]] += normal;
-					mesh->normals[mesh->faces[i+2]] += normal;
-					nFace[mesh->faces[i  ]] ++;
-					nFace[mesh->faces[i+1]] ++;
-					nFace[mesh->faces[i+2]] ++;
-				}
-				for(unsigned i=0; i<mesh->normals.size(); ++i){
-					mesh->normals[i] /= nFace[i];
-				}
-			}
-			//	テクスチャ座標
-			UTLoadedData* coordsData = ld->FindDescendant("MeshTextureCoords");
-			if (coordsData){
-				MeshTextureCoords* coordsDesc = (MeshTextureCoords* )coordsData->data;
-				mesh->texCoords = coordsDesc->textureCoords;
-			}
-			//	マテリアルリスト
-			UTLoadedData* mlData = ld->FindDescendant("MeshMaterialList");
-			if (mlData){
-				MeshMaterialList* mlDesc = (MeshMaterialList*) mlData->data;
-				mesh->materialList = mlDesc->faceIndexes;
-			}
-			//	スキンメッシュのヘッダ
-			UTLoadedData* skinHeader = ld->FindDescendant("XSkinMeshHeader");
-			if (skinHeader){
-				XSkinMeshHeader* sd = (XSkinMeshHeader*) skinHeader->data;
-				//	特に何もしない？	
-			}
-			//	スキンメッシュの重みづけ
-			for(unsigned i=0; i<ld->children.size(); ++i){
-				if (ld->children[i]->type->GetTypeName().compare("SkinWeights")==0){
-					SkinWeights* sw = (SkinWeights*) ld->children[i]->data;
-					mesh->skinWeights.push_back(GRMesh::SkinWeight());
-					for(unsigned i=0; i<sw->nWeights; ++i){
-						mesh->skinWeights.back().indices.push_back(sw->vertexIndices[i]);
-						mesh->skinWeights.back().weights.push_back(sw->weights[i]);
-					}
-					mesh->skinWeights.back().offset = sw->matrixOffset;
-					mesh->skinWeights.back().offset.ExZ()*=-1;
-					mesh->skinWeights.back().offset.EyZ()*=-1;
-					mesh->skinWeights.back().offset.EzX()*=-1;
-					mesh->skinWeights.back().offset.EzY()*=-1;
-					mesh->skinWeights.back().offset.PosZ()*=-1;
-
-					fc->links.push_back( DBG_NEW UTLinkTask(mesh->Cast(), 
-						sw->transformNodeName, mesh->GetNameManager()) );
-				}
-			}
-
-		}else{
+		if(!mesh){
 			fc->ErrorMessage(NULL, NULL, "cannot create Mesh node.");
+			return;
 		}
+
+		//	スキンメッシュの重みづけ
+		for(unsigned i = 0; i < ld->children.size(); ++i){
+			if (ld->children[i]->type->GetTypeName().compare("SkinWeights") == 0){
+				SkinWeights* sw = (SkinWeights*) ld->children[i]->data;
+				
+				GRSkinWeightDesc skinDesc;
+				skinDesc.indices.resize(sw->nWeights);
+				skinDesc.weights.resize(sw->nWeights);
+				for(unsigned i=0; i<sw->nWeights; ++i){
+					skinDesc.indices[i] = sw->vertexIndices[i];
+					skinDesc.weights[i] = sw->weights[i];
+				}
+				skinDesc.offset = sw->matrixOffset;
+
+				GRSkinWeightIf* skinWeight = mesh->CreateSkinWeight(skinDesc);
+				
+				// スキンメッシュに関連付けられたフレーム名をリンクタスクに登録
+				fc->links.push_back( DBG_NEW UTLinkTask(skinWeight->Cast(), sw->transformNodeName, mesh->GetNameManager()) );
+			}
+		}
+
+		// Meshの名前に、 tex3d が含まれる場合、テクスチャを2Dでなく4Dにする。
+		if (ld->GetName().find("tex3d") != UTString::npos)
+			mesh->EnableTex3D();
+
+		// 左手系→右手系変換
+		mesh->SwitchCoordinate();
+		
 	}
+
 	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		fc->objects.Pop();
 	}
+
 };
 
 inline void SetPHMaterial(PHMaterial& mat, const PhysicalMaterial& oldMat){
@@ -645,9 +625,8 @@ public:
 				GRMesh* m = DCAST(GRMesh, v);
 				if (m){
 					CDConvexMeshDesc mdesc;
-					for(unsigned i=0; i<m->positions.size(); ++i){
-						mdesc.vertices.push_back(m->positions[i]);
-					}
+					for(unsigned i=0; i < m->vertices.size(); ++i)
+						mdesc.vertices.push_back(m->vertices[i]);
 
 					// 動摩擦摩擦係数mu、静止摩擦係数mu0 
 					UTMapObject::iterator itr = fc->mapObj.find(m->Cast());

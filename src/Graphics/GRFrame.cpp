@@ -345,6 +345,7 @@ void GRAnimation::BlendPose(float time, float weight, bool add){
 	//	transform をターゲットに適用
 	transform.Orthonormalization(); //正規直交化
 	for(Targets::iterator it = targets.begin(); it!= targets.end(); ++it){
+		UTString name = it->target->GetName();
 		it->target->SetTransform(transform);
 	}
 }
@@ -375,7 +376,8 @@ GRAnimationKey GRAnimation::GetAnimationKey(int n){
 	if(n < (int)keys.size()){
 		return keys[n];
 	}else{
-		DSTR<<"GetAnimationKey is NO"<<std::endl;
+		DSTR<< "GetAnimationKey: index out of range" << std::endl;
+		return GRAnimationKey();
 	}
 }
 int GRAnimation::NAnimationKey(){
