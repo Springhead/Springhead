@@ -31,7 +31,7 @@ public:
 	
 	FISaveContext();
 	///	セーブ用にファイルを開く
-	bool Open(const char* fn);
+	bool Open(const char* fn, bool binary);
 	///	メッセージの出力
 	void Message(const char* msg);
 	///	エラーメッセージの出力

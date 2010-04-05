@@ -14,6 +14,8 @@
 #include <fstream>
 #include <sstream>
 
+using namespace std;
+
 namespace Spr{;
 
 //---------------------------------------------------------------------------
@@ -24,8 +26,13 @@ FISaveContext::FISaveContext(){
 	handlerDbs.Push(DBG_NEW UTLoadHandlerDb);
 }
 
-bool FISaveContext::Open(const char* fn){
-	file.open(fn);
+bool FISaveContext::Open(const char* fn, bool binary){
+	ios_base::openmode mode = ios_base::out;
+	// バイナリフォーマットの場合binaryフラグが必要
+	if(binary)
+		mode |= ios_base::binary;
+	
+	file.open(fn, mode);
 	return file.is_open();
 }
 void FISaveContext::Message(const char* msg){
