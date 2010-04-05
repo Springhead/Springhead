@@ -26,18 +26,22 @@ namespace Spr{;
 #endif
 
 /* データ構造
+ 
  *node
+
  node:
 	indicator (char) = ID_NODE_BEGIN
 	type (null-terminated string)
 	name (null-terminated string)
 	block_size (int)
-	block (as described in typedesc)
+	block[block_size] (as described in typedesc)
 	*(node | ref)
 	indicator (char) = ID_NODE_END
+
  ref:
 	indicator (char) = ID_REF
 	name (null-terminated string)
+
 */
 
 enum{
@@ -56,12 +60,22 @@ void FIFileBinary::Init(){
 }
 
 void FIFileBinary::LoadBlock(){
-	size_t sz = *(size_t*)ptr;
+	/*size_t sz = *(size_t*)ptr;
+	ptr += sizeof(size_t);
 	if(!skip)
 		std::copy(ptr, ptr + sz, (char*)fileContext->datas.Top()->data);
-	ptr += sz;
-	/*
+	ptr += sz;*/
+
 	while(fileContext->fieldIts.NextField()){
+		UTTypeDescFieldIt& fieldIt = fileContext->fieldIts.back();
+		UTTypeDesc::Field* field = &*(fieldIt.field);
+
+		// 可変長フィールドの場合，長さを読み込みセット
+		if(field->varType == UTTypeDesc::Field::VECTOR){
+			fieldIt.arrayLength = *(size_t*)ptr;
+			ptr += sizeof(size_t);
+		}
+
 		while(fileContext->fieldIts.IncArrayPos()){
 			if(fileContext->fieldIts.IsBool()){
 				fileContext->WriteBool(*(bool*)ptr);
@@ -80,27 +94,33 @@ void FIFileBinary::LoadBlock(){
 				ptr += strlen(ptr) + 1;
 			}
 			else if(fileContext->fieldIts.IsBlock()){
-				LoadBlock(ptr);
+				LBlockStart(fileContext);
+				LoadBlock();
+				LBlockEnd(fileContext);
 			}
 		}
 	}
-	*/
 }
 
-bool FIFileBinary::LoadNode(){
+/* 戻り値:
+	 1 : ノードのロード完了
+	 0 : 親ノードの閉じタグ検知
+	-1 : エラー
+ */
+int FIFileBinary::LoadNode(){
 	char id = *ptr++;
 	if(id == ID_REF){
 		const char* name = ptr;
 		fileContext->AddDataLink(UTString(name), ptr);
 		ptr += strlen(name) + 1;
-		return true;
+		return 1;
 	}
 	if(id == ID_NODE_END){
 		fileContext->NodeEnd();
-		return true;
+		return 0;
 	}
 	if(id != ID_NODE_BEGIN)
-		return false;
+		return -1;
 	
 	// data size in bytes
 	//size_t sz = *(size_t*)ptr;
@@ -114,7 +134,7 @@ bool FIFileBinary::LoadNode(){
 	const char* name = ptr;
 	ptr += strlen(name) + 1;
 
-	fileContext->NodeStart(UTString(name));
+	fileContext->NodeStart(UTString(type));
 	fileContext->datas.back()->SetName(UTString(name));
 
 	// typedesc available?
@@ -123,16 +143,28 @@ bool FIFileBinary::LoadNode(){
 
 	LoadBlock();
 	
-	// child nodes or NODE_END tag
-	while(LoadNode());
-
-	//ptr = next;
-	return true;
+	int ret;
+	while(true){
+		ret = LoadNode();
+		// このノードの閉じタグを検知
+		if(ret == 0){
+			ret = 1;
+			break;
+		}
+		// エラー
+		if(ret == -1){
+			ret = -1;
+			break;
+		}
+	}
+	return ret;
 }
 
 void FIFileBinary::LoadImp(FILoadContext* fc){
+	fc->RegisterGroupToDb("Foundation Physics Graphics Framework Creature OldSpringhead");
 	ptr = fc->fileMaps.Top()->start;
 	end = fc->fileMaps.Top()->end;
+	fileContext = fc;
 	while(ptr < end)
 		LoadNode();
 }
@@ -141,7 +173,7 @@ void FIFileBinary::LoadImp(FILoadContext* fc){
 //	セーブ時のハンドラ
 
 void FIFileBinary::OnSaveFileStart(FISaveContext* sc){
-
+	sc->RegisterGroupToDb("Foundation Physics Graphics Framework Creature OldSpringhead");
 }
 void FIFileBinary::OnSaveNodeStart(FISaveContext* sc){
 	char id = ID_NODE_BEGIN;
@@ -155,22 +187,26 @@ void FIFileBinary::OnSaveNodeEnd(FISaveContext* sc){
 	sc->file.write(&id, sizeof(char));
 }
 void FIFileBinary::OnSaveBlockStart(FISaveContext* sc){
-	size_t sz = sc->fieldIts.back().type->size;
+/*	size_t sz = sc->fieldIts.back().type->size;
 	sc->file.write((const char*)&sz, sizeof(size_t));
-	sc->file.write((const char*)sc->datas.Top()->data, sz);
+	sc->file.write((const char*)sc->datas.Top()->data, sz);*/
 }
 void FIFileBinary::OnSaveRef(FISaveContext* sc){
+	char id = ID_REF;
+	sc->file.write(&id, sizeof(char));
 	NamedObjectIf* n = DCAST(NamedObjectIf, sc->objects.Top());
 	sc->file << n->GetName() << '\0';
 }
-
-/*
 void FIFileBinary::OnSaveDataEnd(FISaveContext* sc){
 
 }
-
 void FIFileBinary::OnSaveFieldStart(FISaveContext* sc, int nElements){
-
+	UTTypeDesc::Composit::iterator field = sc->fieldIts.back().field;
+	if(field->varType == UTTypeDesc::Field::VECTOR){
+		// 可変長フィールドの場合，その長さを出力
+		size_t len = nElements;
+		sc->file.write((const char*)&len, sizeof(size_t));
+	}
 }
 void FIFileBinary::OnSaveFieldEnd(FISaveContext* sc, int nElements){
 
@@ -178,18 +214,23 @@ void FIFileBinary::OnSaveFieldEnd(FISaveContext* sc, int nElements){
 void FIFileBinary::OnSaveElementEnd(FISaveContext* sc, int nElements, bool last){
 
 }
+// flushしないとゴミデータが出力されることがある（原因不明）
 void FIFileBinary::OnSaveBool(FISaveContext* sc, bool val){
 	sc->file.write((const char*)&val, sizeof(bool));
+	sc->file.flush();
 }
 void FIFileBinary::OnSaveInt(FISaveContext* sc, int val){
 	sc->file.write((const char*)&val, sizeof(int));
+	sc->file.flush();
 }
 void FIFileBinary::OnSaveReal(FISaveContext* sc, double val){
 	sc->file.write((const char*)&val, sizeof(double));
+	sc->file.flush();
 }
 void FIFileBinary::OnSaveString(FISaveContext* sc, UTString val){
 	sc->file << val << '\0';
-}*/
+	sc->file.flush();
+}
 
 
 };

@@ -152,6 +152,7 @@ void FIFile::Load(FILoadContext* fc){
 
 void FIFile::LBlockStart(FILoadContext* fc){
 	char* base = (char*)fc->datas.Top()->data;
+	// フィールドのアドレスを取得：必要に応じてvectorを拡張
 	void* ptr = fc->fieldIts.back().field->GetAddressEx(base, fc->fieldIts.ArrayPos());
 	fc->datas.Push(DBG_NEW UTLoadedData(fc, NULL, ptr));
 	fc->fieldIts.Push(UTTypeDescFieldIt(fc->fieldIts.back().field->type));
@@ -163,7 +164,7 @@ void FIFile::LBlockEnd(FILoadContext* fc){
 
 bool FIFile::Save(const ObjectIfs& objs, const char* fn){
 	FISaveContext sc;
-	if (sc.Open(fn)){
+	if (sc.Open(fn, IsBinary())){
 		Save(objs, &sc);
 		return true;
 	}

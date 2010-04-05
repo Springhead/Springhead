@@ -69,6 +69,9 @@ protected:
 	///	ブロックのセーブ
 	void SaveBlock(FISaveContext* sc);
 
+	/// バイナリフォーマットか
+	virtual bool IsBinary(){ return false; }
+
 	//@name 保存処理のハンドラー
 	//@{
 	///	ファイル開始時の処理
