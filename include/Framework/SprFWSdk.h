@@ -34,7 +34,8 @@ struct FWSdkIf : SdkIf {
 
 	/** @brief シーンをファイルからロードする
 		@param filename ファイル名
-		@ii	   ファイルの種類を示すIfInfo
+		@param ii		ファイルの種類を示すIfInfo
+		@param objs		親オブジェクトの配列
 		指定されたファイルからシーンをロードし、シーンリストに追加する．
 		ロード後は，ロードされたシーンがアクティブとなる．
 		ファイル中に複数のシーンが含まれていた場合は，最後にロードされたシーンがアクティブとなる．
@@ -45,14 +46,21 @@ struct FWSdkIf : SdkIf {
 		.dae => COLLADA
 		.dat => binary
 		明示するにはiiに対応するIfInfoを指定する(FIFileXIf::GetIfInfoStatic()など)
+
+		親オブジェクトを指定したい場合は，objsに設定する．
+		objsがNULLの場合，シーンはFWSdkの子オブジェクトとしてロードされる．
 	 */
-	bool LoadScene(UTString filename, const IfInfo* ii = NULL);
+	bool LoadScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
 
 	/** @brief シーンをファイルへセーブする
 		@param filename ファイル名
+		@param ii		ファイルの種類を示すIfInfo
+		@param objs		保存するオブジェクトの配列
 		ファイルの種類の指定についてはLoadSceneを参照．
+		保存するオブジェクトを指定したい場合は，それらをobjsに設定する．
+		objsがNULLの場合は全てのFWSceneが保存される．
 	 */
-	bool SaveScene(UTString filename, const IfInfo* ii = NULL);
+	bool SaveScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
 
 	/// シーンの個数を取得する
 	int NScene() const;

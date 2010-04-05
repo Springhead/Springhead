@@ -98,14 +98,20 @@ enum ModifierMask{
 /// カメラ情報
 /// 本来はscene毎に個別に保持すべき。要修正
 struct CameraInfo{
-	Vec3f target;		/// 中心点
+	Vec3f target;		/// 注視点
 	Vec2f rot;			/// 経度角，緯度角
 	float zoom;			/// 拡大率（対象からの距離）
 	Vec2f rotRangeX, rotRangeY;
 	Vec2f zoomRange;
 	Affinef view;
+
 	CameraInfo();
+
+	/// カメラ位置情報をもとにビュー変換行列を設定
 	void UpdateView();
+
+	/// 注視点上にある半径radiusの球がちょうど視野に収まるようにzoomを設定する
+	void Fit(const GRCameraDesc& cam, float radius);
 };
 
 /// 剛体ドラッグ機能.

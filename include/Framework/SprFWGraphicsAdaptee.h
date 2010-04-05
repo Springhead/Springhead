@@ -32,6 +32,13 @@ public:
 	/// mainloopを呼び，タイマーをスタートする
 	virtual void StartMainLoop()=0;
 
+	/// Idle callbackの有効化/無効化
+	virtual void EnableIdleFunc(bool on = true)=0;
+
+	/// フルスクリーンモードへの切り替え．API名は暫定的にGLUTに準拠
+	virtual void EnterGameMode()=0;
+	virtual void LeaveGameMode()=0;
+
 	/** ウィンドウ */
 	///	ウィンドウを作成し、ウィンドウ IDを返す
 	virtual FWWin* CreateWin(const FWWinDesc& d){return NULL;};
@@ -46,7 +53,7 @@ public:
 	/// カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
 	virtual void PostRedisplay(){};
 	/// Shift,Ctrl,Altのステートを返す
-	virtual int Modifiers(){return NULL;};
+	virtual int GetModifiers(){return NULL;};
 
 };
 
