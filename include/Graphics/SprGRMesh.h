@@ -20,18 +20,72 @@
 
 namespace Spr{;
 
+struct GRMeshFace{
+	int	nVertices;	///< 3 or 4
+	int	indices[4];
+};
+
+struct GRSkinWeightIf: public GRVisualIf{
+	SPR_IFDEF(GRSkinWeight);
+};
+
+struct GRSkinWeightDesc{
+	SPR_DESCDEF(GRSkinWeight);
+	Affinef offset;
+	std::vector<unsigned> indices;
+	std::vector<float> weights;
+};
+
 /**	@brief	グラフィックスで使う表示用のMesh */
 struct GRMeshIf: public GRVisualIf{
 	SPR_IFDEF(GRMesh);
+
+	/// 頂点の個数
+	int		NVertex();
+	/// 面の個数(3角形分割後)
+	int		NTriangle();
+	/// 面の個数(3角形分割前)
+	int		NFace();
+	
+	/// 頂点配列
+	Vec3f*	GetVertices();
+	/// 法線配列
+	Vec3f*	GetNormals();
+	/// 頂点色配列
+	Vec4f*	GetColors();
+	/// テクスチャ座標配列
+	Vec2f*	GetTexCoords();
+	/// 頂点インデックス配列
+	GRMeshFace*	GetFaces();
+	/// 面法線
+	GRMeshFace* GetFaceNormals();
+	/// マテリアルインデックス配列
+	int*	GetMaterialIndices();
+
+	/** @brief 右手/左手座標系の切り換え
+		頂点座標のZ成分の符号を反転する．
+	 */
+	void SwitchCoordinate();
+
+	/// 3DテクスチャのOn/Off
+	void EnableTex3D(bool on = true);
+	bool IsTex3D();
+
+	/// スキンウェイトの作成
+	GRSkinWeightIf* CreateSkinWeight(const GRSkinWeightDesc& desc);
+
 };
+
 ///	@brief 表示用のMesh(GRMesh)のデスクリプタ．
 struct GRMeshDesc : GRVisualDesc{
 	SPR_DESCDEF(GRMesh);
-	std::vector<Vec3f> positions;				///< 頂点の座標
-	std::vector<Vec3f> normals;					///< 頂点の法線
-	std::vector<Vec4f> colors;					///< 頂点の色
-	std::vector<Vec2f> texCoords;				///< テクスチャUV
-	std::vector<size_t> faces;					///< 面を構成する頂点インデックス（四角形は三角形に分割）
+	std::vector<Vec3f>		vertices;				///< 頂点の座標
+	std::vector<GRMeshFace>	faces;				///< 面
+	std::vector<Vec3f>		normals;					///< 頂点の法線
+	std::vector<GRMeshFace>	faceNormals;		///< 面の法線
+	std::vector<Vec4f>		colors;					///< 頂点の色
+	std::vector<Vec2f>		texCoords;				///< テクスチャUV	
+	std::vector<int>		materialList;			///< マテリアルリスト
 };
 
 //@}

@@ -136,12 +136,6 @@ struct GRAnimationSetIf: public SceneObjectIf{
 
 	///	子オブジェクト(animations)を返す
 	ObjectIf* GetChildObject(size_t p);
-	///	GRAnimationの追加
-	virtual bool AddChildObject(ObjectIf* o);
-	///	GRAnimationの削除
-	virtual bool DelChildObject(ObjectIf* o);
-	///	GRAnimationの数
-	int NChildObject();
 	/// 現在のGRFrameからポーズを作成する tは時刻を指定
 	void SetCurrentAnimationPose(float t);
 	/// 時刻tのGRKeyを削除する

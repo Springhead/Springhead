@@ -60,8 +60,8 @@ void FWBoneCreate::Boot(GRMesh* mesh, PHScene* phScene){
 void FWBoneCreate::SetFWBone(){
 	if (mesh){
 		for(unsigned int i=0 ;i<mesh->skinWeights.size()-1; ++i){
-			GRFrameIf* frame1 =mesh->skinWeights[i].frame->Cast();
-			GRFrameIf* frame2 =mesh->skinWeights[i+1].frame->Cast();
+			GRFrameIf* frame1 =mesh->skinWeights[i]->frame->Cast();
+			GRFrameIf* frame2 =mesh->skinWeights[i+1]->frame->Cast();
 			if(BoneDetector(frame1,frame2)==true){
 				bone_= new FWBone;
 				bone.push_back(bone_);
