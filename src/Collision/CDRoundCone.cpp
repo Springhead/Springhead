@@ -200,7 +200,7 @@ Matrix3f CDRoundCone::CalcMomentOfInertia(){
 	// http://www12.plala.or.jp/ksp/mechanics/inertiaTable1/
 	// http://www.dynamictouch.matrix.jp/tensormodel.php
 
-	float r = (radius[0] +radius[1])*0.5;	 //‰~’Œ‚Ì”¼Œa
+	float r = (radius[0] + radius[1]) * 0.5f;	 //‰~’Œ‚Ì”¼Œa
 	
 	ans[0][0] = ((r * r)/4.0f + (length*length)/12.0f + 83.0f/320.0f * ( radius[0] * radius[0] +  radius[1] * radius[1]))+ length * length / 2.0f; 
 	ans[0][1] = 0.0f;
