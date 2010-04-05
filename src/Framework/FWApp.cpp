@@ -23,9 +23,12 @@
 
 namespace Spr{;
 
+FWApp* FWApp::instance;
+
 FWApp::FWApp(){
-	idleFuncFlag = true;
+	instance = this;
 }
+
 FWApp::~FWApp(){
 	ReleaseAllTimer();
 	int s = (int)wins.size();
@@ -37,18 +40,20 @@ FWApp::~FWApp(){
 	}
 	if(hasGameMode) glutLeaveGameMode();
 }
-void FWApp::DisableIdleFunc(){
-	idleFuncFlag = false;
+void FWApp::EnableIdleFunc(bool on){
+	if(grAdaptee)
+		grAdaptee->EnableIdleFunc(on);
 }
 void FWApp::StartMainLoop(){
-	grAdaptee->StartMainLoop();
+	if(grAdaptee)
+		grAdaptee->StartMainLoop();
 }
 
 
 // 派生クラスで定義することのできる仮想関数/////////////////////////////////
 void FWApp::Reshape(int w, int h){
-	if(!GetCurrentWin())return;
-	fwSdk->SwitchRender(GetCurrentWin()->GetRender());
+	if(GetCurrentWin())
+		fwSdk->SwitchRender(GetCurrentWin()->GetRender());
 	fwSdk->Reshape(w, h);
 }
 
@@ -239,13 +244,16 @@ void FWApp::AssignScene(FWWin* win){
 }
 
 FWWin* FWApp::CreateWin(const FWWinDesc& desc){
+	if(!grAdaptee)
+		return NULL;
 	FWWin* win = grAdaptee->CreateWin(desc);
+	wins.push_back(win);
 	return win;
 }
 
 void FWApp::InitWindow(){
-	if (!NWin()){
-		grAdaptee->CreateWin(FWWinDesc());
+	if(!NWin() && grAdaptee){
+		CreateWin();
 		wins.back()->SetScene(GetSdk()->GetScene());
 	}
 }
@@ -265,24 +273,30 @@ FWWin* FWApp::GetWin(int pos){
 }
 
 FWWin* FWApp::GetCurrentWin(){
+	if(!grAdaptee)
+		return NULL;
 	return grAdaptee->GetCurrentWin();
 }
 
 void FWApp::DestroyWin(FWWin* win){
-	grAdaptee->DestroyWin(win);
+	if(grAdaptee)
+		grAdaptee->DestroyWin(win);
 }
 
 void FWApp::SetCurrentWin(FWWin* win){
-	grAdaptee->SetCurrentWin(win);
-
+	if(grAdaptee)
+		grAdaptee->SetCurrentWin(win);
 }
 
 void FWApp::PostRedisplay(){
-	grAdaptee->PostRedisplay();
+	if(grAdaptee)
+		grAdaptee->PostRedisplay();
 }
 
 int FWApp::GetModifier(){
-	return grAdaptee->Modifiers();
+	if(!grAdaptee)
+		return 0;
+	return grAdaptee->GetModifiers();
 }
 
 
@@ -292,17 +306,19 @@ void FWApp::Reset(){
 void FWApp::Clear(){
 	Reset();
 	//Timerの初期化
-	for(int i = 0; i < (int)fwTimers.size() ; i++){
+	for(int i = 0; i < (int)fwTimers.size(); i++){
 		fwTimers[i]->Clear();
 	}
 	fwTimers.clear();
 }
 
 // 描画パート////////////////////////////////////////////////////////////////////
-FWApp* FWApp::instance;
 
 void FWApp::SetGRAdaptee(grAdapteeType type){
 	switch (type) {
+		case TypeNone:
+			grAdaptee = NULL;
+			break;
 		case TypeGLUT:
 			grAdaptee= new FWGLUT;
 			break;
@@ -310,12 +326,14 @@ void FWApp::SetGRAdaptee(grAdapteeType type){
 			grAdaptee= new FWGLUI;
 			break;
 	}
-	grAdaptee->SetAdapter(this);
-	instance = this;
+	if(grAdaptee)
+		grAdaptee->SetAdapter(this);
+	//instance = this;
 }
 
 void FWApp::GRInit(int argc, char* argv[]){
-	grAdaptee->Init(argc, argv);
+	if(grAdaptee)
+		grAdaptee->Init(argc, argv);
 }
 
 /**コールバック関数*/

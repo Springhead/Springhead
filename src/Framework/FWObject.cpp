@@ -56,22 +56,17 @@ void FWObject::Sync(){
 
 
 bool FWObject::AddChildObject(ObjectIf* o){
-	bool rv = false;
-	if (!rv) {
-		PHSolidIf* obj = DCAST(PHSolidIf, o);
-		if (obj) {
-			phSolid = obj;
-			rv = true;
-		}
+	PHSolidIf* so = DCAST(PHSolidIf, o);
+	if(so){
+		phSolid = so;
+		return true;
 	}
-	if (!rv) {
-		GRFrameIf* obj = DCAST(GRFrameIf, o);
-		if (obj) {
-			grFrame = obj;
-			rv = true;
-		}
+	GRFrameIf* fr = DCAST(GRFrameIf, o);
+	if(fr){
+		grFrame = fr;
+		return true;
 	}
-	return rv;
+	return false;
 }
 
 /// --- --- --- --- --- --- --- --- --- ---

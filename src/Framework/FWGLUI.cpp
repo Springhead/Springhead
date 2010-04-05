@@ -17,17 +17,18 @@ FWGLUI::~FWGLUI(){
 /*FWGLUIの実装*///--------------------------------------------------------------
 void FWGLUI::StartMainLoop(){
 	instance = this;
+	// これはInitでやるべきことでは？
 	if (!fwApp->NWin()){
-		CreateWin();
-		FWWin* win = fwApp->wins.back();
-		win->SetScene(fwApp->GetSdk()->GetScene());
+		fwApp->CreateWin()->SetScene(fwApp->GetSdk()->GetScene());
 	}
+
 	// gluiを使うならFWAppGLUT::GlutTimerFuncはGLUI_Masterの管理下に置く必要がある
 	GLUI_Master.set_glutTimerFunc(1, FWGLUT::GlutTimerFunc, 0);
 	GLUI_Master.set_glutIdleFunc(FWGLUT::GlutIdleFunc);
 
-	glutIdleFunc(FWGLUT::GlutIdleFunc);
-	glutMainLoop();
+	//glutIdleFunc(FWGLUT::GlutIdleFunc);
+	
+	FWGLUT::StartMainLoop();
 }
 
 GLUI* FWGLUI::CreateGUI(int wid, FWGLUIDesc desc){

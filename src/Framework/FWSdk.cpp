@@ -81,7 +81,7 @@ FWSceneIf* FWSdk::CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grde
 	AddChildObject(scene);
 	return scene;
 }
-bool FWSdk::LoadScene(UTString filename, const IfInfo* ii){
+bool FWSdk::LoadScene(UTString filename, const IfInfo* ii, ObjectIfs* objs){
 
 	//filename末端に改行コード( = 0x0a)が含まれているとロードされないので，あれば最初に削除する
 	if(filename.at(filename.length()-1) == 0x0a){
@@ -89,27 +89,31 @@ bool FWSdk::LoadScene(UTString filename, const IfInfo* ii){
 	}
 	//	デフォルトの先祖オブジェクトをを設定
 	//	これらのCreateObjectが呼ばれてシーングラフが作られる。
-	ObjectIfs objs;
-	objs.Push(GetGRSdk());	//	GRSdk
-	objs.Push(GetPHSdk());	//	PHSdk
-	//	FWSdk	FWScene は FWSdkの子になるので、FWSdkを最後にPushする必要がある。
-	objs.Push(Cast());
+	ObjectIfs defObjs;
+	if(!objs){
+		defObjs.Push(GetGRSdk());	//	GRSdk
+		defObjs.Push(GetPHSdk());	//	PHSdk
+		//	FWSdk	FWScene は FWSdkの子になるので、FWSdkを最後にPushする必要がある。
+		defObjs.Push(Cast());
+		objs = &defObjs;
+	}
+
 	int first = NScene();	//	ロードされるFWSceneの位置を覚えておく
 
 	//	ファイルローダーの作成
 	FIFileIf* file;
 	UTPath path;
 	path.Path(filename);	
-	if((!ii && !path.Ext().compare("x")) || ii == FIFileXIf::GetIfInfoStatic()){
+	if((!ii && !path.Ext().compare(".x")) || ii == FIFileXIf::GetIfInfoStatic()){
 		file = GetFISdk()->CreateFileX();
 	}
-	else if((!ii && !path.Ext().compare("wrl")) || ii == FIFileVRMLIf::GetIfInfoStatic()){
+	else if((!ii && !path.Ext().compare(".wrl")) || ii == FIFileVRMLIf::GetIfInfoStatic()){
 		file = GetFISdk()->CreateFileVRML();
 	}
-	else if((!ii && !path.Ext().compare("dae")) || ii == FIFileCOLLADAIf::GetIfInfoStatic()){
+	else if((!ii && !path.Ext().compare(".dae")) || ii == FIFileCOLLADAIf::GetIfInfoStatic()){
 		file = GetFISdk()->CreateFileCOLLADA();
 	}
-	else if((!ii && !path.Ext().compare("dat")) || ii == FIFileBinaryIf::GetIfInfoStatic()){
+	else if((!ii && !path.Ext().compare(".dat")) || ii == FIFileBinaryIf::GetIfInfoStatic()){
 		file = GetFISdk()->CreateFileBinary();
 	}
 	else{
@@ -119,7 +123,7 @@ bool FWSdk::LoadScene(UTString filename, const IfInfo* ii){
 
 	file->SetDSTR(DSTRFlag);
 	//	ファイルのロード
-	if(!file->Load(objs, filename.data()) ) {
+	if(!file->Load(*objs, filename.data()) ) {
 		DSTR << "Error: Cannot load file " << filename.c_str() << std::endl;
 		//exit(EXIT_FAILURE);
 		return false;
@@ -134,14 +138,36 @@ bool FWSdk::LoadScene(UTString filename, const IfInfo* ii){
 	return true;
 }
 
-bool FWSdk::SaveScene(UTString filename, const IfInfo* ii){
+bool FWSdk::SaveScene(UTString filename, const IfInfo* ii, ObjectIfs* objs){
 	// 保存
-	ObjectIfs objs;
-	for(unsigned int i=0; i<scenes.size(); ++i){
-		objs.push_back(scenes[i]->Cast());
+	ObjectIfs defObjs;
+	if(!objs){
+		for(unsigned int i=0; i<scenes.size(); ++i)
+			defObjs.push_back(scenes[i]->Cast());
+		objs = &defObjs;
 	}
-	UTRef<FIFileXIf> fiFileX = GetFISdk()->CreateFileX();
-	if(!fiFileX->Save(objs, filename.c_str())){
+
+	FIFileIf* file;
+	UTPath path;
+	path.Path(filename);	
+	if((!ii && !path.Ext().compare(".x")) || ii == FIFileXIf::GetIfInfoStatic()){
+		file = GetFISdk()->CreateFileX();
+	}
+	else if((!ii && !path.Ext().compare(".wrl")) || ii == FIFileVRMLIf::GetIfInfoStatic()){
+		file = GetFISdk()->CreateFileVRML();
+	}
+	else if((!ii && !path.Ext().compare(".dae")) || ii == FIFileCOLLADAIf::GetIfInfoStatic()){
+		file = GetFISdk()->CreateFileCOLLADA();
+	}
+	else if((!ii && !path.Ext().compare(".dat")) || ii == FIFileBinaryIf::GetIfInfoStatic()){
+		file = GetFISdk()->CreateFileBinary();
+	}
+	else{
+		DSTR << "unknown file type. regarded as X file." << std::endl;
+		file = GetFISdk()->CreateFileX();
+	}
+
+	if(!file->Save(*objs, filename.c_str())){
 		DSTR << "Error: Cannot save file " << filename.c_str() << std::endl;
 		return false;
 	}
@@ -258,9 +284,11 @@ void FWSdk::Clear(){
 	grSdk = NULL;
 	fiSdk = NULL;
 	scenes.clear();
-	renders.clear();
 	curScene = NULL;
-	curRender = NULL;
+	// レンダラはシーンオブジェクトではないのでここでは削除しない．
+	// ClearRender APIを追加するかは要検討
+	//renders.clear();
+	//curRender = NULL;
 	CreateSdks();
 }
 void FWSdk::Step(){

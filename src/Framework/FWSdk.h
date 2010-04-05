@@ -50,8 +50,8 @@ public:
 	~FWSdk();
 
 	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
-	virtual bool LoadScene(UTString filename, const IfInfo* ii = NULL);
-	virtual bool SaveScene(UTString filename, const IfInfo* ii = NULL);
+	virtual bool LoadScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
+	virtual bool SaveScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
 	virtual int NScene() const{	return (int)scenes.size(); }
 	virtual void SwitchScene(FWSceneIf* scene){ curScene = scene; }
 	virtual FWSceneIf* GetScene(int i = -1);
