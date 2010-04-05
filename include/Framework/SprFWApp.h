@@ -25,22 +25,26 @@ namespace Spr{;
 	仮想関数をオーバライドすることによって独自機能を実装する．
  */
 class FWApp : public UTRefCount{
-
 private:
-	UTRef<FWSdkIf>						fwSdk;
-	UTRef<HISdkIf>						hiSdk;	
+	UTRef<FWSdkIf>						fwSdk;		///< Framework SDK
+	UTRef<HISdkIf>						hiSdk;		///< HumanInterface SDK
 public:
 	FWApp();
 	virtual ~FWApp();
-	Wins								wins;		///< ウィンドウ情報
 	UTRef<FWVFuncBridge>				vfBridge;	///< 多言語(Rubyなど)へポートする際に仮想関数が適切に呼ばれるようにするためのブリッジ
-	bool								idleFuncFlag; ///< IdleFuncの呼び出しに関するFlag
-
 protected:
 	MouseInfo							mouseInfo;	///< マウス情報
 	CameraInfo							cameraInfo;	///< カメラ情報
 	std::map<FWSceneIf*, DragInfo>		dragInfo;	///< 剛体ドラッグ情報
+
+	Wins		wins;				///< ウィンドウ情報
 	
+	/** @brief ウィンドウにシーンを与える
+		@param win シーンを割り当てるウィンドウ
+		winに，既存のウィンドウが割り当てられていないシーンを割り当てる．
+		該当するシーンが見つからない場合，あるいはwinに既にシーンが割り当てられている場合は何もしない．
+	*/
+	void		AssignScene(FWWin* win);
 public:
 // 派生クラスで定義する必要がある仮想関数 -----------------------------
 
@@ -56,10 +60,14 @@ public:
 	 */
 	virtual void Display()=0;
 
-	/** @brief IdleFuncの実行を停止する場合Init()で呼び出す
-		glutの場合，glutIdleFuncの実行の停止
+	/** @brief IdleFuncの呼び出しを有効化/無効化する
+		glutの場合，glutIdleFuncに対応する．
+
+		＊一般性を持たせ、かつ他とあわせるためにEnableIdleFuncを追加しました。
+		DisableIdleFuncも残していますがobsoleteとしたいと思います。
 	 */
-	void DisableIdleFunc();
+	void DisableIdleFunc(){ EnableIdleFunc(false); }
+	void EnableIdleFunc(bool on = true);
 	
 	/** @brief メインループの実行
 		glutの場合，glutmainLoopの実行
@@ -132,18 +140,18 @@ public:
 	*/
 	void		CreateSdk();
 
-	/** @brief windowにシーンを与える
-	*/
-	void		AssignScene(FWWin* win);
-
 	/** @brief ウィンドウに対応するコンテキストを作る
 		@param desc	ディスクリプタ
 		ウィンドウを作成する．対応するレンダラは新しく作成され，
-		シーンはアクティブなシーンが関連つけられる．
+		既存のウィンドウが割り当てられていないシーンが関連づけられる．
 	 */
 	FWWin*		CreateWin(const FWWinDesc& desc = FWWinDesc());
 	
 	/** @brief ウィンドウの初期化
+		ウィンドウを1つ作成し，これにアクティブシーンを割り当てる簡易関数．
+		既に1つ以上のウィンドウがある場合は何もしない．
+		AssignScene(CreateWin())と等価．
+		＊無くてもよいか？
 	 */
 	void		InitWindow();
 
@@ -152,11 +160,15 @@ public:
 	int			NWin(){ return (int)wins.size(); }
 
 	/**	@brief ウィンドウをIDから探す
+		@param wid ウィンドウID
+		glutの場合，widはglutGetWindowが返す識別子．
 	*/
 	FWWin*		GetWinFromId(int wid);
 
 	/** @brief ウィンドウを取得する
+		@param index 何番目のウィンドウを取得するか
 		indexで指定されたウィンドウを取得する．
+		DestroyWinを呼ぶとインデックスは変化するので注意が必要．
 	 */
 	FWWin*		GetWin(int index);
 
@@ -191,8 +203,7 @@ public:
 	/** @brief Ctrl, Shift, Altの状態を返す
 		個々の派生クラスで実装される
 	 */
-
-	virtual int	GetModifier();
+	int	GetModifier();
 
 
 // ------------------------------------------------------------------------
@@ -202,13 +213,15 @@ private:
 	UTRef<FWGraphicsAdaptee>	grAdaptee;	//グラフィクスシステムのアダプティ
 public:
 	enum grAdapteeType{
-		TypeGLUT,
-		TypeGLUI,
+		TypeNone,	///< アダプタ無し
+		TypeGLUT,	///< GLUT
+		TypeGLUI,	///< GLUI
 	};
 	/** @brief 描画の設定
 		FWGraphicsAdapteeを設定する．最初に必ず呼ぶ．
 	 */
 	void SetGRAdaptee(grAdapteeType type);
+
 	/** @brief 描画の設定を取得
 		FWGraphicsAdapteeを取得する．　
 	 */
