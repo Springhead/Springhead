@@ -22,6 +22,14 @@ void CameraInfo::UpdateView(){
 	view.LookAtGL(target);
 }
 
+void CameraInfo::Fit(const GRCameraDesc& cam, float radius){
+	float sz = Spr::min(cam.size.x, cam.size.y);
+	if(sz == 0.0f)
+		sz = cam.size.x;
+	zoom = cam.front * (radius / (sz/2.0f));
+	UpdateView();
+}
+
 void FWTimer::GLUTTimerFunc(int id){
 	FWApp* app = FWApp::instance;
 	if(!app)return;

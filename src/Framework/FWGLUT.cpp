@@ -11,37 +11,43 @@ namespace Spr{;
 
 // FWWinGLUT /////////////////////////////////////////////////////////////////////
 void FWWinGLUT::Position(int left, int top){
-	glutPositionWindow(left, top); fullscreen = false;
+	glutPositionWindow(left, top);
+	fullscreen = false;
 }
 void FWWinGLUT::Reshape(int width, int height){
-	glutReshapeWindow(width, height); fullscreen = false;
-	this->width = width; this->height = height;
+	glutReshapeWindow(width, height);
+	fullscreen = false;
+	this->width = width;
+	this->height = height;
 }
 void FWWinGLUT::SetTitle(UTString t){
-	glutSetWindowTitle(t.c_str()); title = t;
+	glutSetWindowTitle(t.c_str());
+	title = t;
 }
 void FWWinGLUT::FullScreen(){
-	glutFullScreen(); fullscreen = true;
+	glutFullScreen();
+	fullscreen = true;
 }
+
 // FWGLUT /////////////////////////////////////////////////////////////////////
 FWGLUTDesc::FWGLUTDesc(){
 }
 
 FWGLUT::FWGLUT(){
+	idleFuncFlag = true;
 };
 
 FWGLUT* FWGLUT::instance;
 
 FWGLUT::~FWGLUT(){
 	FWGLUT::AtExit();
-	instance = NULL;
-	
+	instance = NULL;	
 }
+
 /** コールバック関数*///////////////////////////////////////////////////////
 void FWGLUT::GlutDisplayFunc(){
 	instance->fwApp->CallDisplay();	
 }
-
 void FWGLUT::GlutReshapeFunc(int w, int h){
 	instance->fwApp->CallReshape(w, h);
 }
@@ -51,27 +57,22 @@ void FWGLUT::GlutTimerFunc(int id){
 void FWGLUT::GlutIdleFunc(){
 	instance->fwApp->CallIdleFunc();
 }
-
 void FWGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 	instance->fwApp->CallKeyboard((int)key, x, y);
 }
-
 void FWGLUT::GlutSpecialFunc(int key, int x, int y){
 	// GlutKeyboardFuncと重複しないようにビットを立てる
 	instance->fwApp->CallKeyboard(key | 0x100, x, y);
 }
-
 void FWGLUT::GlutMouseFunc(int button, int state, int x, int y){
 	instance->fwApp->CallMouseButton(button, state, x, y);
 }
 void FWGLUT::GlutMotionFunc(int x, int y){
 	instance->fwApp->CallMouseMove(x, y);
 }
-
 void FWGLUT::GlutJoystickFunc(unsigned int buttonMask, int x, int y, int z){
 	instance->fwApp->CallJoystick(buttonMask, x, y, z);
 }
-
 void FWGLUT::AtExit(){
 	if(instance && instance->fwApp->vfBridge)
 		instance->fwApp->vfBridge->AtExit();
@@ -81,18 +82,32 @@ void FWGLUT::AtExit(){
 
 void FWGLUT::Init(int argc, char* argv[]){
 	instance = this;
-	glutInit(&argc, argv);
+	if(argc == 0){
+		argc = 1;
+		char* dummy[] = {"", NULL};
+		glutInit(&argc, dummy);
+	}
+	else glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	atexit(FWGLUT::AtExit);
 }
 
 /** タイマ *////////////////////////////////////////////////////////////////
 void FWGLUT::StartMainLoop(){
-	if(fwApp->idleFuncFlag){
-		// CPUが常時100%になる問題あり
-		glutIdleFunc(FWGLUT::GlutIdleFunc);
-	}
+	// CPUが常時100%になる問題あり
+	EnableIdleFunc(idleFuncFlag);
 	glutMainLoop();
+}
+
+void FWGLUT::EnableIdleFunc(bool on){
+	idleFuncFlag = on;
+	glutIdleFunc(on ? FWGLUT::GlutIdleFunc : NULL);
+}
+void FWGLUT::EnterGameMode(){
+	glutEnterGameMode();
+}
+void FWGLUT::LeaveGameMode(){
+	glutLeaveGameMode();
 }
 
 /** ウィンドウ *////////////////////////////////////////////////////////////////
@@ -131,8 +146,6 @@ FWWin* FWGLUT::CreateWin(const FWWinDesc& d){
 	
 	FWWin* win = DBG_NEW FWWinGLUT(wid, d, fwApp->GetSdk()->CreateRender());
 	win->SetID(glutGetWindow());	//現在のwindowのIDを設定
-	fwApp->AssignScene(win);
-	fwApp->wins.push_back(win);
 	return win;
 }
 ///	ウィンドウを破棄する
@@ -142,9 +155,6 @@ void FWGLUT::DestroyWin(FWWin* w){
 	}else{
 		glutDestroyWindow(w->GetID());
 	}
-	Wins::iterator it = std::find(fwApp->wins.begin(), fwApp->wins.end(), w);
-	assert(it != fwApp->wins.end());
-	fwApp->wins.erase(it);
 };
 ///	カレントウィンドウを設定する
 void FWGLUT::SetCurrentWin(FWWin* w){
@@ -163,7 +173,7 @@ void FWGLUT::PostRedisplay(){
 	return glutPostRedisplay();
 };
 /// Shift,Ctrl,Altのステートを返す
-int FWGLUT::Modifiers(){
+int FWGLUT::GetModifiers(){
 	return glutGetModifiers();
 };
 

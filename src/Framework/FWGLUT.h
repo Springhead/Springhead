@@ -9,16 +9,19 @@ using namespace std;
 
 namespace Spr{;
 
+/**
+	FWGraphicsAdapteeのGLUTによる実装
+ */
+
 class FWWinGLUT : public FWWin{
 public:
 	FWWinGLUT(int wid, const FWWinDesc& d, GRRenderIf* r):
 	  FWWin(wid, d, r){}
-	void FullScreen();
-	void Position(int left, int top);
-	void Reshape(int width, int height);
-	void SetTitle(UTString t);
+	virtual void FullScreen();
+	virtual void Position(int left, int top);
+	virtual void Reshape(int width, int height);
+	virtual void SetTitle(UTString t);
 };
-
 
 class FWGLUTDesc{
 public:
@@ -27,6 +30,8 @@ public:
 
 class FWGLUT : public FWGraphicsAdaptee, public FWGLUTDesc{
 protected:
+	bool idleFuncFlag;	///< IdleFuncの呼び出しに関するFlag	
+
 	/** コールバック関数*/
 	static FWGLUT* instance;
 	static void SPR_CDECL GlutDisplayFunc();
@@ -49,6 +54,10 @@ public:
 	/** タイマ */
 	///GLUTによるTimerをスタートする
 	virtual void StartMainLoop();
+	///
+	virtual void EnableIdleFunc(bool on = true);
+	virtual void EnterGameMode();
+	virtual void LeaveGameMode();
 
 	/** ウィンドウ */
 	///	ウィンドウを作成し、ウィンドウ IDを返す
@@ -64,7 +73,7 @@ public:
 	///カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
 	virtual void PostRedisplay();
 	/// Shift,Ctrl,Altのステートを返す
-	virtual int Modifiers();
+	virtual int GetModifiers();
 
 };
 
