@@ -66,7 +66,7 @@ int CDSphere::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result
 	if(abs(tmp) < eps)	//内積が小さい場合は判定しない
 		return num;
 
-	float s = ((Vec3d(0.0,0.0,0.0) - origin) * n) / tmp; //カメラと面の距離 
+	float s = ((Vec3f(0.0,0.0,0.0) - origin) * n) / tmp; //カメラと面の距離 
 	if(s < 0.0)
 		return num;
 	p = origin + dir * s;	//直線と面の交点p = カメラ座標系の原点+カメラ座標系から面へのベクトル*距離 (Shape座標系)
