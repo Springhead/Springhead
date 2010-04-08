@@ -46,13 +46,6 @@ void MyApp::Display(){
 	GRMaterialDesc material;
 	material.diffuse = Vec4f(1.0,0.8,0.4,1.0);
 	win->render->SetMaterial(material);
-		cam = GetSdk()->GetScene() ? GetSdk()->GetScene()->GetGRScene()->GetCamera() : NULL;
-	if (cam && cam->GetFrame()){
-		//Affinef cameraInfo.view = cam->GetFrame()->GetTransform();
-		cam->GetFrame()->SetTransform(cameraInfo.view);
-	}else{
-		win->render->SetViewMatrix(cameraInfo.view.inv());
-	}
 
 	DrawTexQuad();
 	FWSceneIf* fwScene = GetSdk()->GetScene();
