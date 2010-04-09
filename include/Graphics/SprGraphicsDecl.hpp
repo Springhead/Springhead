@@ -21,11 +21,18 @@
 	void BlendPose(float time, float weight){	base::BlendPose(time, weight);}	\
 	void ResetPose(){	base::ResetPose();}	\
 	void LoadInitialPose(){	base::LoadInitialPose();}	\
+	Spr::GRAnimationKey GetAnimationKey(int n){	return	base::GetAnimationKey(n);}	\
+	int NAnimationKey(){	return	base::NAnimationKey();}	\
+	void DeletePose(float t){	base::DeletePose(t);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRAnimationSetIf(base)	\
 	void BlendPose(float time, float weight){	base::BlendPose(time, weight);}	\
 	void ResetPose(){	base::ResetPose();}	\
 	void LoadInitialPose(){	base::LoadInitialPose();}	\
+	Spr::ObjectIf* GetChildObject(size_t p){	return	base::GetChildObject(p);}	\
+	void SetCurrentAnimationPose(float t){	base::SetCurrentAnimationPose(t);}	\
+	void DeleteAnimationPose(float t){	base::DeleteAnimationPose(t);}	\
+	float GetLastKeyTime(){	return	base::GetLastKeyTime();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRAnimationControllerIf(base)	\
 	void BlendPose(UTString name, float time, float weight){	base::BlendPose(name, time, weight);}	\
@@ -35,8 +42,25 @@
 	bool DelChildObject(Spr::ObjectIf* o){	return	base::DelChildObject(o);}	\
 	int NChildObject(){	return	base::NChildObject();}	\
 	Spr::ObjectIf* GetChildObject(size_t p){	return	base::GetChildObject(p);}	\
+	Spr::GRAnimationSetIf* GetAnimationSet(size_t p){	return	base::GetAnimationSet(p);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_GRSkinWeightIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRMeshIf(base)	\
+	int NVertex(){	return	base::NVertex();}	\
+	int NTriangle(){	return	base::NTriangle();}	\
+	int NFace(){	return	base::NFace();}	\
+	Vec3f* GetVertices(){	return	base::GetVertices();}	\
+	Vec3f* GetNormals(){	return	base::GetNormals();}	\
+	Vec4f* GetColors(){	return	base::GetColors();}	\
+	Vec2f* GetTexCoords(){	return	base::GetTexCoords();}	\
+	Spr::GRMeshFace* GetFaces(){	return	base::GetFaces();}	\
+	Spr::GRMeshFace* GetFaceNormals(){	return	base::GetFaceNormals();}	\
+	int* GetMaterialIndices(){	return	base::GetMaterialIndices();}	\
+	void SwitchCoordinate(){	base::SwitchCoordinate();}	\
+	void EnableTex3D(bool on){	base::EnableTex3D(on);}	\
+	bool IsTex3D(){	return	base::IsTex3D();}	\
+	Spr::GRSkinWeightIf* CreateSkinWeight(const Spr::GRSkinWeightDesc& desc){	return	base::CreateSkinWeight(desc);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRLightIf(base)	\
 
