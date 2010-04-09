@@ -28,24 +28,23 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(dt);	// 刻みの設定
 
 	/// 描画モードの設定
-	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
+	SetGRAdaptee(TypeGLUT);					// GLUTモードに設定
 	GRInit(argc, argv);						// Sdkの作成
 
 	/// 描画Windowの作成，初期化
-	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
-	windowDesc.title = "FWVCSample";					// ウィンドウのタイトル
-	CreateWin(windowDesc);									// ウィンドウの作成
-	InitWindow();											// ウィンドウの初期化
-	InitCameraView();										// カメラビューの初期化
+	FWWinDesc windowDesc;					// GLのウィンドウディスクリプタ
+	windowDesc.title = "FWVCSample";		// ウィンドウのタイトル
+	AssignScene(CreateWin(windowDesc));		// ウィンドウの作成
+	InitCameraView();						// カメラビューの初期化
 
 	/// HumanInterfaceの初期化
 	InitHumanInterface();
 
 	/// InteractSceneの作成
 	FWInteractSceneDesc desc;
-	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.iaMode = FWInteractMode::VIRTUAL_COUPLING;			// humaninterfaceのレンダリングモードの設定
-	CreateIAScene(desc);									// interactSceneの作成
+	desc.fwScene = GetSdk()->GetScene();		// fwSceneに対するinteractsceneを作る
+	desc.iaMode = VIRTUAL_COUPLING;				// humaninterfaceのレンダリングモードの設定
+	CreateIAScene(desc);						// interactSceneの作成
 
 	/// 物理シミュレーションする剛体を作成
 	BuildScene();
@@ -100,7 +99,7 @@ void FWLDHapticSample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
 	FWInteractSceneDesc desc;
 	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.iaMode = FWInteractMode::VIRTUAL_COUPLING;								// humaninterfaceのレンダリングモードの設定
+	desc.iaMode = VIRTUAL_COUPLING;							// humaninterfaceのレンダリングモードの設定
 	CreateIAScene(desc);									// interactSceneの作成
 	BuildScene();
 	BuildPointer();

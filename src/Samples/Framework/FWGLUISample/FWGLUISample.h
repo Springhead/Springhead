@@ -22,7 +22,7 @@ public:
 	virtual void Keyboard(int key, int x, int y);	// キーボード関数
 	
 	void InitCameraView();							// カメラ座標		
-	void BuildObject();								// 物体を作成
+	void CreateObjects();							// 物体を作成
 	void Reset();									// シーンのリセット
 	bool bDrawInfo;									// 接触力などを表示するか
 	void SPR_CDECL DesignGUI();

@@ -27,13 +27,12 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 
 	/// 描画モードの設定
 	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
-	GRInit(argc, argv);						// Sdkの作成
+	GRInit(argc, argv);										// Sdkの作成
 
 	/// 描画Windowの作成，初期化
 	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
 	windowDesc.title = "FWLDHapticSample";					// ウィンドウのタイトル
-	CreateWin(windowDesc);									// ウィンドウの作成
-	InitWindow();											// ウィンドウの初期化
+	AssignScene(CreateWin(windowDesc));						// ウィンドウの作成、シーンの割り当て
 	InitCameraView();										// カメラビューの初期化
 
 	/// HumanInterfaceの初期化

@@ -12,17 +12,16 @@ FWGLUISample::FWGLUISample(){
 }
 
 void FWGLUISample::Init(int argc, char* argv[]){
-	SetGRAdaptee(TypeGLUI);
-	GRInit(argc, argv);						// Sdkの作成
-	CreateSdk();
-	GetSdk()->Clear();										// SDKの初期化
+	SetGRAdaptee(TypeGLUI); // GLUIを使うことを指定
+	GRInit(argc, argv);		// GLUIの初期化				
+	CreateSdk();			// Sdkの作成
+	GetSdk()->Clear();		// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);	// シミュレーションの刻み時間を設定
 
-	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
-	windowDesc.title = "FWAppSample";						// ウィンドウのタイトル
-	CreateWin(windowDesc);									// ウィンドウの作成
-	InitWindow();
+	FWWinDesc windowDesc;					// GLのウィンドウディスクリプタ
+	windowDesc.title = "FWAppSample";		// ウィンドウのタイトル
+	AssignScene(CreateWin(windowDesc));		// ウィンドウの作成、シーンの割り当て
 	
 	FWGLUIDesc uiDesc;
 	{
@@ -33,9 +32,9 @@ void FWGLUISample::Init(int argc, char* argv[]){
 		DesignGUI();
 	}
 
-	InitCameraView();										// カメラビューの初期化
-	BuildObject();											// 剛体を作成
-	CreateTimer(FWTimer::GLUT);							// タイマを作成，周期10ms
+	InitCameraView();				// カメラビューの初期化
+	CreateObjects();				// 剛体を作成
+	CreateTimer(FWTimer::GLUT);		// タイマを作成
 }
 
 void FWGLUISample::InitCameraView(){
@@ -49,7 +48,7 @@ void FWGLUISample::InitCameraView(){
 	issView >> cameraInfo.view;
 }
 
-void FWGLUISample::BuildObject(){
+void FWGLUISample::CreateObjects(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	PHSolidDesc desc;
 	CDBoxDesc bd;
@@ -111,7 +110,6 @@ void FWGLUISample::Display(){
 	if(!GetCurrentWin()) return;
 	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
 	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
-	std::cout << NWin() << std::endl;
 	GetSdk()->Draw();
 	glutSwapBuffers();
 	glutPostRedisplay();
@@ -119,7 +117,7 @@ void FWGLUISample::Display(){
 
 void FWGLUISample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->Clear();
-	BuildObject();
+	CreateObjects();
 }
 
 void FWGLUISample::Keyboard(int key, int x, int y){
