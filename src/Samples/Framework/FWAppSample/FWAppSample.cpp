@@ -12,20 +12,20 @@ FWAppSample::FWAppSample(){
 }
 
 void FWAppSample::Init(int argc, char* argv[]){
-	SetGRAdaptee(TypeGLUT);
-	GRInit(argc, argv);										// Sdkの作成
-	CreateSdk();
+	SetGRAdaptee(TypeGLUT);									// CGをOpenGL(GLUT)で描画指定
+	GRInit(argc, argv);										// GLUTの初期化
+
+	CreateSdk();											// Sdkの作成
 	GetSdk()->Clear();										// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.01);
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.01);	// シミュレーションの刻み時間を設定
 
 	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
 	windowDesc.title = "Springhead2";						// ウィンドウのタイトル
-	CreateWin(windowDesc);									// ウィンドウの作成
-	InitWindow();
+	AssignScene(CreateWin(windowDesc));						// ウィンドウの作成とシーンの割り当て
 	InitCameraView();										// カメラビューの初期化
 
-	BuildObject();											// 剛体を作成
+	CreateObject();											// 剛体を作成
 
 	int timerId = CreateTimer(FWTimer::GLUT);				// タイマーの生成
 }
@@ -53,7 +53,7 @@ void FWAppSample::InitCameraView(){
 	issView >> cameraInfo.view;
 }
 
-void FWAppSample::BuildObject(){
+void FWAppSample::CreateObject(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	PHSolidDesc desc;
 	CDBoxDesc bd;
@@ -91,12 +91,13 @@ void FWAppSample::BuildObject(){
 
 void FWAppSample::Display(){
 	// 描画モードの設定
-	GetSdk()->SetDebugMode(true);
+	GetSdk()->SetDebugMode(true);				// デバックモードで描画
 	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
-	render->SetRenderMode(true, false);
-	render->EnableRenderAxis(bDrawInfo);
-	render->EnableRenderForce(bDrawInfo);
-	render->EnableRenderContact(bDrawInfo);
+	render->SetRenderMode(true, false);			// solidで描画
+	/// 各種、情報を表示するかどうかの設定
+	render->EnableRenderAxis(bDrawInfo);		// 座標軸の表示
+	render->EnableRenderForce(bDrawInfo);		// 拘束力の表示
+	render->EnableRenderContact(bDrawInfo);		// 接触状態の表示
 
 	// カメラ座標の指定
 	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
@@ -117,7 +118,7 @@ void FWAppSample::Display(){
 void FWAppSample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->Clear();
 	FWApp::Reset();
-	BuildObject();
+	CreateObject();
 }
 
 void FWAppSample::Keyboard(int key, int x, int y){
