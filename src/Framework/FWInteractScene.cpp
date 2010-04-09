@@ -7,8 +7,8 @@
  */
 
 #include <Framework/FWInteractScene.h>
-//#include <Framework/FWLDHaptic3D.h>
-//#include <Framework/FWLDHaptic6D.h>
+#include <Framework/FWLDHaptic3D.h>
+#include <Framework/FWLDHaptic6D.h>
 #include <Framework/FWVirtualCoupling.h>
 #include <Framework/FWGrabCoupling.h>
 
@@ -30,12 +30,12 @@ void FWInteractScene::CreateIAAdaptee(FWInteractMode iaMode){
 		ia = NULL;
 		break;
 	case LOCAL_DYNAMICS_3D:
-//		ia = DBG_NEW FWLDHaptic3D();
-//		ia->SetIAScene(this);
+		ia = DBG_NEW FWLDHaptic3D();
+		ia->SetIAScene(this);
 		break;
 	case LOCAL_DYNAMICS_6D:
-//		ia = DBG_NEW FWLDHaptic6D();
-//		ia->SetIAScene(this);
+		ia = DBG_NEW FWLDHaptic6D();
+		ia->SetIAScene(this);
 		break;
 	case VIRTUAL_COUPLING:
 		ia = DBG_NEW FWVirtualCoupling();
