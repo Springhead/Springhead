@@ -566,7 +566,7 @@ int main(int argc, char* argv[]){
 	scene = sdk->CreateScene(dscene);				// シーンの作成
 	scene->SetStateMode(true);
 	states = ObjectStatesIf::Create();
-	
+	//scene->GetConstraintEngine()->SetUseContactSurface(true); //面接触での力計算を有効化
 #ifdef CREATE_FLOOR
 	// soFloor用のdesc
 	desc.mass = 10.0f;
