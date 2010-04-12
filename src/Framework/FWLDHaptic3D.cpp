@@ -90,12 +90,10 @@ void FWLDHaptic3DLoop::HapticRendering3D(){
 				double K = iPointer->correctionSpringK;
 				double D = iPointer->correctionDamperD;
 				Vec3d addforce = -1 * (K * ortho + D * dvortho);
-				Vec3d addtorque = (pPoint - cSolid->GetCenterPosition()) % addforce ;
 
 				double ws4 = pow(iPointer->GetWorldScale(), 4);
 				outForce.v() += addforce / ws4;	
-
-				DisplayForce[j] = outForce.v();
+				outForce.w() = Vec3d();
 
 				/// ŒvŽZ‚µ‚½—Í‚ð„‘Ì‚É‰Á‚¦‚é//
 				iPointer->interactInfo[i].mobility.force = nInfo->test_force = -1 * addforce;	

@@ -11,6 +11,7 @@
 #include <Framework/FWLDHaptic6D.h>
 #include <Framework/FWVirtualCoupling.h>
 #include <Framework/FWGrabCoupling.h>
+#include <Framework/FWImpulseHaptic.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -31,24 +32,24 @@ void FWInteractScene::CreateIAAdaptee(FWInteractMode iaMode){
 		break;
 	case LOCAL_DYNAMICS_3D:
 		ia = DBG_NEW FWLDHaptic3D();
-		ia->SetIAScene(this);
 		break;
 	case LOCAL_DYNAMICS_6D:
 		ia = DBG_NEW FWLDHaptic6D();
-		ia->SetIAScene(this);
 		break;
 	case VIRTUAL_COUPLING:
 		ia = DBG_NEW FWVirtualCoupling();
-		ia->SetIAScene(this);
 		break;
 	case GRAB_COUPLING:
 		ia = DBG_NEW FWGrabCoupling();
-		ia->SetIAScene(this);
+		break;
+	case IMPULSE:
+		ia = DBG_NEW FWImpulseHaptic();
 		break;
 	default:
 		ia = NULL;
 		break;
 	}
+	ia->SetIAScene(this);
 	interactAdaptee = ia;
 	interactAdaptee->Init();
 }
@@ -80,6 +81,11 @@ FWInteractPointerIf* FWInteractScene::CreateIAPointer(const FWInteractPointerDes
 			{
 				FWVirtualCoupling* ip = (FWVirtualCoupling*)GetIAAdaptee();
 				ip->CreatePointerSolid();
+				break;
+			}
+		case IMPULSE:
+			{
+				GetScene()->GetPHScene()->SetContactMode(iPointer->GetPointerSolid(), PHSceneDesc::MODE_NONE);
 				break;
 			}
 		default:

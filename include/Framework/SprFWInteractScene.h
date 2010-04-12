@@ -22,7 +22,8 @@ typedef enum FWInteractMode{
 	LOCAL_DYNAMICS_3D,
 	LOCAL_DYNAMICS_6D,
 	VIRTUAL_COUPLING,
-	GRAB_COUPLING
+	GRAB_COUPLING,
+	IMPULSE
 }IAMode;
 
 typedef enum FWHapticMode{
