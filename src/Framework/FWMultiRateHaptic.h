@@ -26,7 +26,9 @@ public:
 	FWHapticLoopBase* GetHapticLoop(){ return hapticLoop; }
 
 	virtual void UpdatePointer(){}
-	void Sync();
+	void Sync();						// 各スレッドを同期させる
+	virtual void SyncHaptic2Phsyic(){};	// 継承先で実装
+	virtual void SyncPhsyic2Haptic(){};	// 継承先で実装
 	void SyncPointer();
 	virtual void Clear();
 

@@ -118,6 +118,15 @@ void FWImpulseHaptic::CallBackHapticLoop(){
 	Sync();
 }
 
+void FWImpulseHaptic::SyncHaptic2Phsyic(Spr::FWInteractSolid *h, Spr::FWInteractSolid *p){
+	//Vec3d cPoint = hprocess.expandedObjects[i].syncInfo.neighborPoint.closestPoint;	// 近傍物体の接触点(ワールド座標系)
+	//Vec3d force = hprocess.expandedObjects[i].syncInfo.neighborPoint.impulse / (hprocess.hcount * hdt);											// 近傍物体に加える力
+	//hprocess.expandedObjects[i].syncInfo.neighborPoint.impulse = Vec3d();																						// 近傍物体に加わる力積の初期化
+	//expandedObjects[i].phSolidIf->AddForce(force, cPoint);
+}
+
+void FWImpulseHaptic::SyncPhsyic2Haptic(Spr::FWInteractSolid *h, Spr::FWInteractSolid *p){}
+
 void FWImpulseHaptic::Step(){
 	if (bSync) return;
 	if (bCalcPhys){

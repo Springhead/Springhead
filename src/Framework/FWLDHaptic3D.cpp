@@ -722,15 +722,99 @@ void FWLDHaptic3D::Init(){
 	states = ObjectStatesIf::Create();
 	states2 = ObjectStatesIf::Create();
 }
+
 void FWLDHaptic3D::Clear(){
 	FWMultiRateHaptic::Clear();
 	states->Clear();
 	states2->Clear();
 }
+
 void FWLDHaptic3D::CallBackHapticLoop(){
 	GetHapticLoop()->Step();
 	Sync();
 }
+
+void FWLDHaptic3D::SyncHaptic2Phsyic(){
+	/// HapticLoop--->PhysicsLoop
+	FWInteractSolids* hiss = GetHapticLoop()->GetIASolids();
+	for(unsigned i = 0; i < (int)hiss->size(); i++){
+		FWInteractSolid* his = GetHapticLoop()->GetIASolid(i);
+		// bSim = ture かつ bfirstSim = falseなら結果を反映させる
+		if(!his->bSim || his->bfirstSim) continue;
+		FWInteractSolid* pis = GetIASolid(i);
+
+		//1. モビリティ定数項で反映速度を作る
+		double pdt = GetPHScene()->GetTimeStep();						// physicsの刻み
+		SpatialVector b = (pis->b + (pis->curb - pis->lastb)) * pdt;	// モビリティ定数項
+		Vec3d v = his->copiedSolid.GetVelocity() + b.v();				// 反映速度
+		Vec3d w = his->copiedSolid.GetAngularVelocity() + b.w();		// 反映角速度
+
+		//2. solidの状態の更新（Physics側）
+		his->sceneSolid->SetVelocity(v);
+		his->sceneSolid->SetAngularVelocity(w);
+		his->sceneSolid->SetCenterPosition(his->copiedSolid.GetCenterPosition());
+		his->sceneSolid->SetOrientation(his->copiedSolid.GetOrientation());
+
+		//3. 各ポインタが持つ情報(テスト力)を同期
+		/// なんか怪しい(10/4/13 susa)
+		//for(int j = 0; j < NIAPointers(); j++){
+		//	FWInteractPointer* hip = GetHapticLoop()->GetIAPointer(j)->Cast();
+		//	GetIAPointer(j)->interactInfo[i] = hip->interactInfo[i];
+		//}
+	}
+}
+
+void FWLDHaptic3D::SyncPhsyic2Haptic(){
+	/// PhysicsLoop--->HapticLoop ///
+	/// シーンで新しく生成された分を拡張
+	// 1. 力覚ポインタの増加分
+	std::vector<FWInteractPointer>* hips= GetHapticLoop()->GetIAPointers();
+	for(int i = (int)hips->size(); i < NIAPointers(); i++){
+		hips->resize(i+1);
+		hips->back() = *GetIAPointer(i);
+		hips->back().Sync();
+	}
+	// 2. Solidの増加分
+	FWInteractSolids* hiss = GetHapticLoop()->GetIASolids();
+	for(int i = (int)hiss->size(); i < (int)NIASolids(); i++){
+		hiss->resize(i + 1);
+		hiss->back() = *GetIASolid(i);
+		/// ポインタが持つ情報についても拡張
+		for(int j = 0; j < NIAPointers(); j++){
+			FWInteractPointer* hip = GetHapticLoop()->GetIAPointer(j);
+			hip->interactInfo.resize(i + 1);
+			hip->interactInfo.back() = GetIAPointer(j)->interactInfo[i];
+		}
+	}
+	/// 情報の同期
+	for(unsigned i = 0; i < hiss->size(); i++){
+		FWInteractSolid* pis = GetIASolid(i);
+		FWInteractSolid* his = GetHapticLoop()->GetIASolid(i);
+
+		// 1. ローカルシミュレーションの実行フラグ同期
+		his->bSim = pis->bSim;
+		his->bfirstSim = pis->bfirstSim;
+		if(pis->bfirstSim){
+			// 初めてシミュレーション対象になったときの処理
+			his->copiedSolid = pis->copiedSolid;	// 最新の情報をコピー
+			pis->bfirstSim = false;					// フラグ立て完了
+		}
+
+		// 2.モビリティ定数項の同期
+		his->b = pis->b;
+		his->curb = pis->curb;
+		his->lastb = pis->lastb;
+
+		// 3.ポインタごとに持つ情報の同期
+		for(int j = 0; j < NIAPointers(); j++){
+			FWInteractPointer* hip = GetHapticLoop()->GetIAPointer(j)->Cast();
+			hip->interactInfo[i] = GetIAPointer(j)->interactInfo[i];
+			hip->bForce = GetIAPointer(j)->bForce;
+			hip->bVibration = GetIAPointer(j)->bVibration;
+		}
+	}
+}
+
 void FWLDHaptic3D::Step(){
 	if (bSync) return;
 	if (bCalcPhys){
@@ -748,6 +832,7 @@ void FWLDHaptic3D::Step(){
 	bSync = true;
 	bCalcPhys = true;
 }
+
 void FWLDHaptic3D::PhysicsStep(){
 	std::vector<SpatialVector> lastvel;
 	for(int i = 0; i < NIASolids(); i++){
@@ -907,6 +992,7 @@ void FWLDHaptic3D::BeginKeyboard(){
 	states->ReleaseState(phScene);
 	states2->ReleaseState(phScene);
 }
+
 void FWLDHaptic3D::EndKeyboard(){
 	PHSceneIf* phScene = GetIAScene()->GetScene()->GetPHScene();
 	for(int i = 0; i < NIAPointers(); i++){
