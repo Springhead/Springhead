@@ -93,7 +93,7 @@ public:
 	int FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b,
 											const Posed& a2w, const Posed& b2w, const Vec3d pc, Vec3d& dir, 
 											Vec3d& normal, Vec3d& pa, Vec3d& pb);	///< ポインタ近傍の物体との近傍点を探す
-	void AnalyzeContactResion(PHSolid* solida, PHSolid* solidb, Vec3d pa, Vec3d pb, NeighborInfo* nInfo);
+	void AnalyzeContactResion(PHSolid* solida, PHSolid* solidb, Vec3d pa, Vec3d pb, ToHaptic* th);
 
 	virtual void Clear(){};
 	virtual void Init(){};

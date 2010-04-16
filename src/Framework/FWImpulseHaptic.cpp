@@ -41,12 +41,13 @@ void FWImpulseHapticLoop::HapticRendering(){
 			FWInteractSolid* iSolid = GetIASolid(i);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			if(!iInfo->flag.blocal) continue;
-			NeighborInfo* nInfo = &iInfo->neighborInfo;
+			ToHaptic* th = &iInfo->toHaptic;
+			ToPhysic* tp = &iInfo->toPhysic;
 			PHSolid* cSolid = &iSolid->copiedSolid;
 			Posed poseSolid = cSolid->GetPose();
-			Vec3d last_cPoint = nInfo->last_closest_point;
-			Vec3d cPoint = cSolid->GetPose() * nInfo->closest_point;			// 剛体の近傍点のワールド座標系
-			Vec3d pPoint = iPointer->hiSolid.GetPose() * nInfo->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
+			Vec3d last_cPoint = th->last_closest_point;
+			Vec3d cPoint = cSolid->GetPose() * th->closest_point;			// 剛体の近傍点のワールド座標系
+			Vec3d pPoint = iPointer->hiSolid.GetPose() * th->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
 			Vec3d force_dir = pPoint - cPoint;
 			Vec3d interpolation_normal;											// 提示力計算にしようする法線（前回の法線との間を補間する）
 			Vec3d interpolation_cPoint;
@@ -54,8 +55,8 @@ void FWImpulseHapticLoop::HapticRendering(){
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
 			double syncCount = pdt / hdt;						// プロセスの刻み時間の比
-			interpolation_normal = (loopCount * nInfo->face_normal + 
-				(syncCount - (double)loopCount) * nInfo->last_face_normal) / syncCount;															
+			interpolation_normal = (loopCount * th->face_normal + 
+				(syncCount - (double)loopCount) * th->last_face_normal) / syncCount;															
 
 			// 接触点の補間（剛体側の接触点を補間する）
 			interpolation_cPoint = (loopCount * cPoint + 
@@ -64,7 +65,7 @@ void FWImpulseHapticLoop::HapticRendering(){
 		
 			// 同期カウントを越えたら現在の法線，接触点を使う
 			if(loopCount > syncCount){
-				interpolation_normal = nInfo->face_normal;
+				interpolation_normal = th->face_normal;
 				force_dir = pPoint - cPoint;
 			}
 
@@ -84,7 +85,7 @@ void FWImpulseHapticLoop::HapticRendering(){
 				outForce.w() = Vec3d();
 
 				/// 計算した力を剛体に加える//
-				iPointer->interactInfo[i].mobility.force = nInfo->test_force = -1 * addforce;	
+				iPointer->interactInfo[i].mobility.force = tp->test_force = -1 * addforce;	
 			}
 		}
 		/// インタフェースへ力を出力

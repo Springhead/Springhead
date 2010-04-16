@@ -24,7 +24,7 @@ void FWMultiRateHaptic::Sync(){
 		/// 力覚ポインタの同期
 		UpdatePointer();			
 		SyncHaptic2Phsyic();
-		SyncPhsyic2Haptic();
+		SyncPhysic2Haptic();
 
 		/// 同期終了処理
 		GetHapticLoop()->loopCount = 0;		// HapticLoopのカウント初期化

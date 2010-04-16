@@ -122,8 +122,8 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 			FWInteractInfo* iaInfo = &GetIAPointer(j)->interactInfo[i];
 			PHSolid* soPointer = GetIAPointer(j)->pointerSolid->Cast();
 			// 接触点の初期化
-			iaInfo->neighborInfo.solid_section.clear();
-			iaInfo->neighborInfo.pointer_section.clear();
+			iaInfo->toHaptic.solid_section.clear();
+			iaInfo->toHaptic.pointer_section.clear();
 
 			/// Solidが他のポインタであった場合
 			for(int k = 0; k < NIAPointers(); k++){
@@ -222,7 +222,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 		Posed b2w = soPointer->GetPose() * soPointer->GetShapePose(0);			///< 力覚ポインタの姿勢
 		Posed shapePoseW0 = phSolid->GetShapePose(0);
 		Posed shapePoseW1 = soPointer->GetShapePose(0);
-		Vec3d dir = -1.0 * iaInfo->neighborInfo.face_normal;
+		Vec3d dir = -1.0 * iaInfo->toHaptic.face_normal;
 		Vec3d cp = phSolid->GetCenterPosition();								///< 剛体の重心
 		Vec3d normal;															///< 剛体から力覚ポインタへの法線(ワールド座標)
 		Vec3d pa, pb;															///< pa:剛体の近傍点，pb:力覚ポインタの近傍点（ローカル座標）
@@ -235,7 +235,7 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			/// 初めて最近傍物体になった場合
 			if(iaInfo->flag.blocal == false){																
 				iaInfo->flag.bfirstlocal = true;	
-				iaInfo->neighborInfo.face_normal = normal;	//< 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．
+				iaInfo->toHaptic.face_normal = normal;	//< 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．
 				#ifdef _DEBUG
 					if (iaInfo->neighborInfo.face_normal * normal < 0.8){
 						DSTR << "Too big change on normal = " << normal << std::endl;
@@ -244,19 +244,19 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			}
 			/// 初めて近傍または継続して近傍だった場合
 			iaInfo->flag.blocal = true;								//< 近傍物体なのでblocalをtrueにする
-			iaInfo->neighborInfo.closest_point = pa;				//< 剛体近傍点
-			iaInfo->neighborInfo.pointer_point = pb;				//< 力覚ポインタ近傍点
-			iaInfo->neighborInfo.common_point = (phSolid->GetPose() * pa + soPointer->GetPose() * pb)/2; 
-			iaInfo->neighborInfo.last_face_normal = iaInfo->neighborInfo.face_normal;		//< 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
-			iaInfo->neighborInfo.face_normal = normal;				//< 剛体から力覚ポインタへの法線
+			iaInfo->toHaptic.closest_point = pa;				//< 剛体近傍点
+			iaInfo->toHaptic.pointer_point = pb;				//< 力覚ポインタ近傍点
+			iaInfo->toHaptic.common_point = (phSolid->GetPose() * pa + soPointer->GetPose() * pb)/2; 
+			iaInfo->toHaptic.last_face_normal = iaInfo->toHaptic.face_normal;		//< 前回の法線(法線の補間に使う)，初めて近傍になった時は今回できた法線
+			iaInfo->toHaptic.face_normal = normal;				//< 剛体から力覚ポインタへの法線
 		}
 
 /// 接触解析(susa実装中)
 #define CONTACT_ANALYSIS
 #ifdef CONTACT_ANALYSIS		
-		iaInfo->neighborInfo.intersection_vertices.clear();
-		if(found == 1)	iaInfo->neighborInfo.intersection_vertices.push_back(pb);
-		if(found == 2)	AnalyzeContactResion(phSolid, soPointer, pa, pb, &iaInfo->neighborInfo);
+		iaInfo->toHaptic.intersection_vertices.clear();
+		if(found == 1)	iaInfo->toHaptic.intersection_vertices.push_back(pb);
+		if(found == 2)	AnalyzeContactResion(phSolid, soPointer, pa, pb, &iaInfo->toHaptic);
 #endif
 	}
 }
@@ -304,11 +304,11 @@ extern bool bGJKDebug;
 
 // 力覚ポインタと剛体の接触形状(ボリュームの頂点)を取得
 extern bool bUseContactVolume;
-void FWInteractAdaptee::AnalyzeContactResion(PHSolid* solida, PHSolid* solidb, Vec3d pa, Vec3d pb, NeighborInfo* nInfo){
+void FWInteractAdaptee::AnalyzeContactResion(PHSolid* solida, PHSolid* solidb, Vec3d pa, Vec3d pb, ToHaptic* th){
 	CDShapePair sp;
 	sp.shape[0] = solida->GetShape(0)->Cast();
 	sp.shape[1] = solidb->GetShape(0)->Cast();
-	sp.commonPoint = nInfo->common_point; 
+	sp.commonPoint = th->common_point; 
 	sp.shapePoseW[0] = solida->GetPose();
 	sp.shapePoseW[1] = solidb->GetPose();
 
@@ -327,13 +327,13 @@ void FWInteractAdaptee::AnalyzeContactResion(PHSolid* solida, PHSolid* solidb, V
 #define SELECTION	// 中間表現の上にに載っている点は接触点としない
 //#define ALL		// 接触形状の頂点を全て，接触点とする
 #ifdef SELECTION
-		double dot = (point - solida->GetPose() * pa) * nInfo->face_normal;
+		double dot = (point - solida->GetPose() * pa) * th->face_normal;
 		if(dot < -1e-5){
-			nInfo->intersection_vertices.push_back(solidb->GetPose().Inv() * point);
+			th->intersection_vertices.push_back(solidb->GetPose().Inv() * point);
 		}
 #endif
 #ifdef ALL
-		nInfo->intersection_vertices.push_back(solidb->GetPose().Inv() * point);
+		th->intersection_vertices.push_back(solidb->GetPose().Inv() * point);
 #endif
 	}	
 }
