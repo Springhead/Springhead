@@ -65,20 +65,21 @@ void FWLDHaptic3DLoop::HapticRendering3D(){
 			FWInteractSolid* iSolid = GetIASolid(i);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			if(!iInfo->flag.blocal) continue;
-			NeighborInfo* nInfo = &iInfo->neighborInfo;
+			ToHaptic* th = &iInfo->toHaptic;
+			ToPhysic* tp = &iInfo->toPhysic;
 			PHSolid* cSolid = &iSolid->copiedSolid;
 			Posed poseSolid = cSolid->GetPose();
-			Vec3d cPoint = cSolid->GetPose() * nInfo->closest_point;			// 剛体の近傍点のワールド座標系
-			Vec3d pPoint = iPointer->hiSolid.GetPose() * nInfo->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
+			Vec3d cPoint = cSolid->GetPose() * th->closest_point;			// 剛体の近傍点のワールド座標系
+			Vec3d pPoint = iPointer->hiSolid.GetPose() * th->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
 			Vec3d force_dir = pPoint - cPoint;
 			Vec3d interpolation_normal;											// 提示力計算にしようする法線（前回の法線との間を補間する）
 
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
 			double syncCount = pdt / hdt;						// プロセスの刻み時間の比
-			interpolation_normal = (loopCount * nInfo->face_normal + 
-				(syncCount - (double)loopCount) * nInfo->last_face_normal) / syncCount;															
-			if(loopCount > syncCount)	interpolation_normal = nInfo->face_normal;
+			interpolation_normal = (loopCount * th->face_normal + 
+				(syncCount - (double)loopCount) * th->last_face_normal) / syncCount;															
+			if(loopCount > syncCount)	interpolation_normal = th->face_normal;
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
@@ -96,7 +97,9 @@ void FWLDHaptic3DLoop::HapticRendering3D(){
 				outForce.w() = Vec3d();
 
 				/// 計算した力を剛体に加える//
-				iPointer->interactInfo[i].mobility.force = nInfo->test_force = -1 * addforce;	
+				Vec3d tf = -1 * addforce;
+				iPointer->interactInfo[i].mobility.force = tf;	
+				tp->test_force = tf;
 			}
 		}
 		/// インタフェースへ力を出力
@@ -129,11 +132,12 @@ void FWLDHaptic3DLoop::HapticRendering(){
 			FWInteractSolid* iSolid = GetIASolid(i);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			if(!iInfo->flag.blocal) continue;
-			NeighborInfo* nInfo = &iInfo->neighborInfo;
+			ToHaptic* th = &iInfo->toHaptic;
+			ToPhysic* tp = &iInfo->toPhysic;
 			PHSolid* cSolid = &iSolid->copiedSolid;
 			Posed poseSolid = cSolid->GetPose();
-			Vec3d cPoint = cSolid->GetPose() * nInfo->closest_point;			// 剛体の近傍点のワールド座標系
-			Vec3d pPoint = iPointer->hiSolid.GetPose() * nInfo->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
+			Vec3d cPoint = cSolid->GetPose() * th->closest_point;			// 剛体の近傍点のワールド座標系
+			Vec3d pPoint = iPointer->hiSolid.GetPose() * th->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
 			Vec3d force_dir = pPoint - cPoint;
 			Vec3d interpolation_normal;											// 提示力計算にしようする法線（前回の法線との間を補間する）
 			if((int)proxy[j].size() <= NIASolids()){
@@ -147,9 +151,9 @@ void FWLDHaptic3DLoop::HapticRendering(){
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
 			double syncCount = pdt / hdt;						// プロセスの刻み時間の比
-			interpolation_normal = (loopCount * nInfo->face_normal + 
-				(syncCount - (double)loopCount) * nInfo->last_face_normal) / syncCount;															
-			if(loopCount > syncCount)	interpolation_normal = nInfo->face_normal;
+			interpolation_normal = (loopCount * th->face_normal + 
+				(syncCount - (double)loopCount) * th->last_face_normal) / syncCount;															
+			if(loopCount > syncCount)	interpolation_normal = th->face_normal;
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
@@ -178,7 +182,7 @@ void FWLDHaptic3DLoop::HapticRendering(){
 				DisplayForce[j] = outForce.v();
 
 				/// 計算した力を剛体に加える//
-				iPointer->interactInfo[i].mobility.force = nInfo->test_force = -1 * addforce;	
+				iPointer->interactInfo[i].mobility.force = tp->test_force = -1 * addforce;	
 				//if(iPointer->bForce)	DSTR << vibforce << endl;
 			}else{
 				iPointer->bContact[i] = false;
@@ -353,11 +357,12 @@ void FWLDHaptic3DLoop::Proxy(){
 			FWInteractSolid* iSolid = GetIASolid(i);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			if(!iInfo->flag.blocal) continue;
-			NeighborInfo* nInfo = &iInfo->neighborInfo;
+			ToHaptic* th = &iInfo->toHaptic;
+			ToPhysic* tp = &iInfo->toPhysic;
 			PHSolid* cSolid = &iSolid->copiedSolid;
 			Posed poseSolid = cSolid->GetPose();
-			Vec3d cPoint = cSolid->GetPose() * nInfo->closest_point;			// 剛体の近傍点のワールド座標系
-			Vec3d pPoint = iPointer->hiSolid.GetPose() * nInfo->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
+			Vec3d cPoint = cSolid->GetPose() * th->closest_point;			// 剛体の近傍点のワールド座標系
+			Vec3d pPoint = iPointer->hiSolid.GetPose() * th->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
 			Vec3d force_dir = pPoint - cPoint;
 			Vec3d interpolation_normal;											// 提示力計算にしようする法線（前回の法線との間を補間する）
 			if((int)proxy[j].size() <= NIASolids()){
@@ -371,9 +376,9 @@ void FWLDHaptic3DLoop::Proxy(){
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
 			double syncCount = pdt / hdt;						// プロセスの刻み時間の比
-			interpolation_normal = (loopCount * nInfo->face_normal + 
-				(syncCount - (double)loopCount) * nInfo->last_face_normal) / syncCount;															
-			if(loopCount > syncCount)	interpolation_normal = nInfo->face_normal;
+			interpolation_normal = (loopCount * th->face_normal + 
+				(syncCount - (double)loopCount) * th->last_face_normal) / syncCount;															
+			if(loopCount > syncCount)	interpolation_normal = th->face_normal;
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
@@ -425,7 +430,7 @@ void FWLDHaptic3DLoop::Proxy(){
 
 				/// 計算した力を剛体に加える
 				iPointer->interactInfo[i].mobility.force = -1 * addforce;						
-				nInfo->test_force = -1 * addforce;
+				tp->test_force = -1 * addforce;
 
 			}else{
 				iPointer->bContact[i] = false;
@@ -496,11 +501,12 @@ void FWLDHaptic3DLoop::ProxySimulation(){
 			FWInteractSolid* iSolid = GetIASolid(i);
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			if(!iInfo->flag.blocal) continue;
-			NeighborInfo* nInfo = &iInfo->neighborInfo;
+			ToHaptic* th = &iInfo->toHaptic;
+			ToPhysic* tp = &iInfo->toPhysic;
 			PHSolid* cSolid = &iSolid->copiedSolid;
 			Posed poseSolid = cSolid->GetPose();
-			Vec3d cPoint = cSolid->GetPose() * nInfo->closest_point;			// 剛体の近傍点のワールド座標系
-			Vec3d pPoint = iPointer->hiSolid.GetPose() * nInfo->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
+			Vec3d cPoint = cSolid->GetPose() * th->closest_point;			// 剛体の近傍点のワールド座標系
+			Vec3d pPoint = iPointer->hiSolid.GetPose() * th->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
 			Vec3d force_dir = pPoint - cPoint;
 			Vec3d interpolation_normal;											// 提示力計算にしようする法線（前回の法線との間を補間する）
 			if((int)proxy[j].size() < NIASolids()){
@@ -514,9 +520,9 @@ void FWLDHaptic3DLoop::ProxySimulation(){
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
 			double syncCount = pdt / hdt;						// プロセスの刻み時間の比
-			interpolation_normal = (loopCount * nInfo->face_normal + 
-				(syncCount - (double)loopCount) * nInfo->last_face_normal) / syncCount;															
-			if(loopCount > syncCount)	interpolation_normal = nInfo->face_normal;
+			interpolation_normal = (loopCount * th->face_normal + 
+				(syncCount - (double)loopCount) * th->last_face_normal) / syncCount;															
+			if(loopCount > syncCount)	interpolation_normal = th->face_normal;
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
@@ -603,7 +609,7 @@ void FWLDHaptic3DLoop::ProxySimulation(){
 
 				/// 計算した力を剛体に加える
 				iPointer->interactInfo[i].mobility.force = -1 * addforce* iPointer->GetForceScale();;						
-				nInfo->test_force = -1 * addforce* iPointer->GetForceScale();;
+				tp->test_force = -1 * addforce* iPointer->GetForceScale();;
 			}else{
 				iPointer->bContact[i] = false;
 				contactFlag[j][i] = false;
@@ -756,25 +762,25 @@ void FWLDHaptic3D::SyncHaptic2Phsyic(){
 		his->sceneSolid->SetOrientation(his->copiedSolid.GetOrientation());
 
 		//3. 各ポインタが持つ情報(テスト力)を同期
-		/// なんか怪しい(10/4/13 susa)
-		//for(int j = 0; j < NIAPointers(); j++){
-		//	FWInteractPointer* hip = GetHapticLoop()->GetIAPointer(j)->Cast();
-		//	GetIAPointer(j)->interactInfo[i] = hip->interactInfo[i];
-		//}
+		// なんか怪しい(10/4/13 susa)
+		for(int j = 0; j < NIAPointers(); j++){
+			FWInteractPointer* hip = GetHapticLoop()->GetIAPointer(j)->Cast();
+			GetIAPointer(j)->interactInfo[i].toPhysic = hip->interactInfo[i].toPhysic;
+		}
 	}
 }
 
-void FWLDHaptic3D::SyncPhsyic2Haptic(){
+void FWLDHaptic3D::SyncPhysic2Haptic(){
 	/// PhysicsLoop--->HapticLoop ///
-	/// シーンで新しく生成された分を拡張
-	// 1. 力覚ポインタの増加分
+	// 1. シーンで新しく生成された分を拡張
+	// 1.1. 力覚ポインタの増加分
 	std::vector<FWInteractPointer>* hips= GetHapticLoop()->GetIAPointers();
 	for(int i = (int)hips->size(); i < NIAPointers(); i++){
 		hips->resize(i+1);
 		hips->back() = *GetIAPointer(i);
 		hips->back().Sync();
 	}
-	// 2. Solidの増加分
+	// 1.2. Solidの増加分
 	FWInteractSolids* hiss = GetHapticLoop()->GetIASolids();
 	for(int i = (int)hiss->size(); i < (int)NIASolids(); i++){
 		hiss->resize(i + 1);
@@ -786,12 +792,12 @@ void FWLDHaptic3D::SyncPhsyic2Haptic(){
 			hip->interactInfo.back() = GetIAPointer(j)->interactInfo[i];
 		}
 	}
-	/// 情報の同期
+	// 2. 情報の同期
 	for(unsigned i = 0; i < hiss->size(); i++){
 		FWInteractSolid* pis = GetIASolid(i);
 		FWInteractSolid* his = GetHapticLoop()->GetIASolid(i);
 
-		// 1. ローカルシミュレーションの実行フラグ同期
+		// 2.1. ローカルシミュレーションの実行フラグ同期
 		his->bSim = pis->bSim;
 		his->bfirstSim = pis->bfirstSim;
 		if(pis->bfirstSim){
@@ -800,15 +806,17 @@ void FWLDHaptic3D::SyncPhsyic2Haptic(){
 			pis->bfirstSim = false;					// フラグ立て完了
 		}
 
-		// 2.モビリティ定数項の同期
+		// 2.2. モビリティ定数項の同期
 		his->b = pis->b;
 		his->curb = pis->curb;
 		his->lastb = pis->lastb;
 
-		// 3.ポインタごとに持つ情報の同期
+		// 2.3. ポインタごとに持つ情報の同期
 		for(int j = 0; j < NIAPointers(); j++){
 			FWInteractPointer* hip = GetHapticLoop()->GetIAPointer(j)->Cast();
-			hip->interactInfo[i] = GetIAPointer(j)->interactInfo[i];
+			hip->interactInfo[i].toHaptic = GetIAPointer(j)->interactInfo[i].toHaptic;
+			hip->interactInfo[i].mobility = GetIAPointer(j)->interactInfo[i].mobility;
+			hip->interactInfo[i].flag = GetIAPointer(j)->interactInfo[i].flag;
 			hip->bForce = GetIAPointer(j)->bForce;
 			hip->bVibration = GetIAPointer(j)->bVibration;
 		}
@@ -919,8 +927,8 @@ void FWLDHaptic3D::TestSimulation(){
 			if(iPointer->interactInfo[i].flag.blocal==false) continue;
 			PHSolid* soPointer = iPointer->pointerSolid->Cast();
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
-			Vec3d cPoint = phSolid->GetPose() * iInfo->neighborInfo.closest_point;		// 力を加える点(ワールド座標)
-			Vec3d n = -iInfo->neighborInfo.face_normal;
+			Vec3d cPoint = phSolid->GetPose() * iInfo->toHaptic.closest_point;		// 力を加える点(ワールド座標)
+			Vec3d n = -iInfo->toHaptic.face_normal;
 
 			TMatrixRow<6, 3, double> u;			// 剛体の機械インピーダンス
 			TMatrixRow<3, 3, double> force;		// 加える力
@@ -933,23 +941,24 @@ void FWLDHaptic3D::TestSimulation(){
 
 			float minTestForce = 0.5;		// 最小テスト力
 
-			//#define NORMAL
-			#ifdef NORMAL
+//#define NORMAL
+#ifdef NORMAL
 			Matrix3d local = CalcConstraintCoordinateSystem(soPointer, phSolid, 
-			iInfo->neighborInfo.pointer_point, iInfo->neighborInfo.closest_point, n);
+			iInfo->toHaptic.pointer_point, iInfo->toHaptic.closest_point, n);
 			/// 通常テスト力が最小テスト力を下回る場合
-			if(iInfo->neighborInfo.test_force.norm() < minTestForce){
+			if(iInfo->toHaptic.test_force.norm() < minTestForce){
 				force.col(0) = minTestForce * n;
 			}else{
-				force.col(0) = iInfo->neighborInfo.test_force.norm() * n;			
+				force.col(0) = iInfo->toHaptic.test_force.norm() * n;			
 			}
 			force.col(1) = force.col(0).norm() * (n + local.col(1));
 			force.col(2) = force.col(0).norm() * (n + local.col(2));
-            #else
-			if(iInfo->neighborInfo.test_force.norm() == 0){
+#else
+			if(iInfo->toPhysic.test_force.norm() == 0){
 				force.col(0) = minTestForce * n;
 			}else{
-				force.col(0) = iInfo->neighborInfo.test_force;
+				force.col(0) = iInfo->toPhysic.test_force;
+				iInfo->toPhysic.test_force = Vec3d();
 			}
 			Vec3d base1 = force.col(0).unit();
 			Vec3d base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
@@ -962,7 +971,7 @@ void FWLDHaptic3D::TestSimulation(){
 			Vec3d base3 = base1^base2;
 			force.col(1) = force.col(0).norm() * (base1 + base2);
 			force.col(2) = force.col(0).norm() * (base1 + base3);
-			#endif
+#endif
 		
 			/// テスト力を3方向に加える	
 			for(int k = 0; k < 3; k++){

@@ -99,42 +99,22 @@ void FWLDHaptic6DLoop::ConstraintBasedRendering(){
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
 			iInfo->mobility.f.clear();
 			if(!iInfo->flag.blocal) continue;
-			NeighborInfo* nInfo = &iInfo->neighborInfo;
+			ToHaptic* th = &iInfo->toHaptic;
 			PHSolid* cSolid = &iSolid->copiedSolid;
 
 			/// 剛体の面の法線補間
 			double syncCount = pdt / hdt;									// プロセスの刻み時間の比
 			// 提示力計算にしようする法線（前回の法線との間を補間する）
-			Vec3d interpolation_normal = (loopCount * nInfo->face_normal + 
-				(syncCount - (double)loopCount) * nInfo->last_face_normal) / syncCount;															
+			Vec3d interpolation_normal = (loopCount * th->face_normal + 
+				(syncCount - (double)loopCount) * th->last_face_normal) / syncCount;															
 			// カウンタが規定の同期カウントを上回る場合は現在の法線にする
-			if(loopCount > syncCount)	interpolation_normal = nInfo->face_normal;			
-#if 0
-			std::vector < Vec3d > psection = nInfo->pointer_section;
-			std::vector < Vec3d > ssection = nInfo->solid_section;
-			double ptemp;
-			double ctemp;
-			for(size_t k = 0; k < psection.size(); k++){
-				Vec3d pPoint = iPointer->hiSolid.GetPose() * psection[k];	// 力覚ポインタの接触点(ワールド座標)
-				Vec3d cPoint = cSolid->GetPose() * ssection[k];				// 剛体の接触点(ワールド座標)
-				ptemp = pPoint.y;
-				ctemp = cPoint.y;
-				Vec3d force_dir =  pPoint - cPoint;							// 剛体の接触点から力覚ポインタの接触点へのベクトル(ワールド系)
-				double f = force_dir * interpolation_normal;				// 剛体の面の法線と内積をとる
-				if(f < 0.0){												// 内積が負なら力を計算
-					Vec3d ortho = f * interpolation_normal;					// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
-					sv.resize(sv.size() + 1);
-					sv.back().iaSolidID = i;
-					sv.back().normal = interpolation_normal;
-					sv.back().r = pPoint - iPointer->hiSolid.GetCenterPosition();
-					sv.back().d = ortho.norm();
-				}
-			}
-#else
-			nInfo->solid_section.clear();
-			std::vector < Vec3d > ivs = nInfo->intersection_vertices;
-			Vec3d pPoint = iPointer->hiSolid.GetPose() * nInfo->pointer_point;	// 力覚ポインタの接触点(ワールド座標)
-			Vec3d cPoint = cSolid->GetPose() * nInfo->closest_point;			// 剛体の接触点(ワールド座標)
+			if(loopCount > syncCount)	interpolation_normal = th->face_normal;			
+
+
+			th->solid_section.clear();
+			std::vector < Vec3d > ivs = th->intersection_vertices;
+			Vec3d pPoint = iPointer->hiSolid.GetPose() * th->pointer_point;	// 力覚ポインタの接触点(ワールド座標)
+			Vec3d cPoint = cSolid->GetPose() * th->closest_point;			// 剛体の接触点(ワールド座標)
 			Vec3d force_dir =  pPoint - cPoint;									// 剛体の接触点から力覚ポインタの接触点へのベクトル(ワールド系)
 			double f = force_dir * interpolation_normal;						// 剛体の面の法線と内積をとる
 			//DSTR << "--------------------" << std::endl;
@@ -151,12 +131,11 @@ void FWLDHaptic6DLoop::ConstraintBasedRendering(){
 					sv.back().r = wivs - iPointer->hiSolid.GetCenterPosition();
 					sv.back().d = ortho.norm();
 					Vec3d onPlane = wivs - ortho;
-					nInfo->solid_section.push_back(cSolid->GetPose().Inv() * onPlane);
+					th->solid_section.push_back(cSolid->GetPose().Inv() * onPlane);
 				}
-				//DSTR << nInfo->solid_section.size() << std::endl;
+				//DSTR << th->solid_section.size() << std::endl;
 			}
 	
-#endif
 		}
 		/// 連立不等式を計算するための行列を作成
 		if(sv.size() > 0){
@@ -267,14 +246,14 @@ void FWLDHaptic6DLoop::LocalDynamics6D(){
 			SpatialVector f = SpatialVector();
 			for(int k = 0; k < (int)iInfo->mobility.f.size(); k++){
 				f.v() += iInfo->mobility.f[k];
-				Vec3d r = (iSolid->copiedSolid.GetPose() * iInfo->neighborInfo.solid_section[k]) - iSolid->copiedSolid.GetCenterPosition(); 
+				Vec3d r = (iSolid->copiedSolid.GetPose() * iInfo->toHaptic.solid_section[k]) - iSolid->copiedSolid.GetCenterPosition(); 
 				f.w() += r % iInfo->mobility.f[k];
 			}
 			vel += (iInfo->mobility.Minv * f) * hdt;				// 力覚ポインタからの力による速度変化
 			//DSTR << iInfo->mobility.Minv * f << std::endl;
-			iInfo->neighborInfo.test_force = f.v();					// テスト力の保存
-			iInfo->neighborInfo.test_torque = f.w();				// テストトルクの保存
-			iInfo->neighborInfo.solid_section.clear();
+			iInfo->toPhysic.test_force = f.v();					// テスト力の保存
+			iInfo->toPhysic.test_torque = f.w();				// テストトルクの保存
+			iInfo->toHaptic.solid_section.clear();
 			iInfo->mobility.f.clear();
 		}
 		vel += iSolid->b * hdt;
@@ -396,23 +375,23 @@ void FWLDHaptic6D::TestSimulation6D(){
 			if(iPointer->interactInfo[i].flag.blocal == false) continue;
 			PHSolid* soPointer = iPointer->pointerSolid->Cast();
 			FWInteractInfo* iInfo = &iPointer->interactInfo[i];
-			Vec3d n = -iInfo->neighborInfo.face_normal;
+			Vec3d n = -iInfo->toHaptic.face_normal;
 
 			const float minTestForce = 1;		// 最小テスト力
 			const float minTestTorque = 0.;
 
 			SpatialVector f[6];
 			for(int k = 0; k < 5; k++)	f[k] = SpatialVector();
-			f[0].v() = iInfo->neighborInfo.test_force;
-			f[0].w() = iInfo->neighborInfo.test_torque;
-			iInfo->neighborInfo.test_force = Vec3d();
-			iInfo->neighborInfo.test_torque = Vec3d();
+			f[0].v() = iInfo->toPhysic.test_force;
+			f[0].w() = iInfo->toPhysic.test_torque;
+			iInfo->toPhysic.test_force = Vec3d();
+			iInfo->toPhysic.test_torque = Vec3d();
 			/// テスト力が0の場合の処理
 			//テストトルクも必ず0になる
 			//接触していないので，1点だけに力を加えるようにする
 			if(f[0].v().norm() == 0){
 				f[0].v() = minTestForce * n;
-				Vec3d cPoint = phSolid->GetPose() * iInfo->neighborInfo.closest_point;		// 力を加える点(ワールド座標)
+				Vec3d cPoint = phSolid->GetPose() * iInfo->toHaptic.closest_point;		// 力を加える点(ワールド座標)
 				Vec3d center = phSolid->GetCenterPosition();
 				f[0].w() = (cPoint - center) % f[0].v();
 			}

@@ -84,7 +84,7 @@ void FWLDHapticSample::InitHumanInterface(){
 #if 1
 	/// SPIDARG6‚ğ2‘äg‚¤ê‡
 	UTRef<HISpidarGIf> spg[2];
-	for(size_t i = 0; i < 2; i++){
+	for(size_t i = 0; i < 1; i++){
 		spg[i] = GetHISdk()->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 		if(i == 0) spg[i]->Init(&HISpidarGDesc("SpidarG6X3R"));
 		if(i == 1) spg[i]->Init(&HISpidarGDesc("SpidarG6X3L"));
@@ -231,6 +231,7 @@ void FWLDHapticSample::BuildPointer(){
 			GetIAScene()->CreateIAPointer(idesc);	// interactpointer‚Ìì¬
 		}
 	}
+	DSTR << GetIAScene()->NIAPointers() << std::endl;
 }
 
 void FWLDHapticSample::Keyboard(int key, int x, int y){
