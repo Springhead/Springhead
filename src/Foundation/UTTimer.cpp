@@ -1,6 +1,6 @@
 #include "Foundation.h"
 #pragma hdrstop
-#include "UTTimer.h"
+#include <Foundation/UTTimer.h>
 #include <windows.h>
 #include <mmsystem.h>
 
