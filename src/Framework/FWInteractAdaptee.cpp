@@ -236,11 +236,11 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 			if(iaInfo->flag.blocal == false){																
 				iaInfo->flag.bfirstlocal = true;	
 				iaInfo->toHaptic.face_normal = normal;	//< 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．
-				#ifdef _DEBUG
+				/*#ifdef _DEBUG
 					if (iaInfo->neighborInfo.face_normal * normal < 0.8){
 						DSTR << "Too big change on normal = " << normal << std::endl;
 					}
-				#endif
+				#endif*/
 			}
 			/// 初めて近傍または継続して近傍だった場合
 			iaInfo->flag.blocal = true;								//< 近傍物体なのでblocalをtrueにする
