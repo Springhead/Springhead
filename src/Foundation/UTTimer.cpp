@@ -70,6 +70,7 @@ protected:
 UTTimerProvider::UTTimerProvider(){
 }
 UTTimerProvider::~UTTimerProvider(){
+	Unregister();
 }
 void UTTimerProvider::Register(){
 	UTTimerStub& stub = UTTimerStub::Get();
@@ -79,16 +80,20 @@ void UTTimerProvider::Unregister(){
 	UTTimerStub& stub = UTTimerStub::Get();
 	for(UTTimerStub::Providers::iterator it = stub.providers.begin(); it != stub.providers.end(); ++it){
 		if (*it == this){
+			for(UTTimerStub::Timers::iterator t = stub.timers.begin(); t != stub.timers.end(); ++t){
+				if ((*t)->IsStarted() && (*t)->GetMode() == UTTimer::FRAMEWORK && (*t)->provider == this){
+					(*t)->Stop();
+				}
+			}
 			stub.providers.erase(it);
 			return;
 		}
 	}
-	assert(0);	//	Fail to UnregisterProvider
 }
 void UTTimerProvider::CallIdle(){
 	UTTimerStub& stub = UTTimerStub::Get();
 	for(UTTimerStub::Timers::iterator it = stub.timers.begin(); it != stub.timers.end(); ++it){
-		if ((*it)->GetMode() == UTTimer::IDLE) (*it)->Call();
+		if ((*it)->GetMode() == UTTimer::IDLE && (*it)->IsStarted()) (*it)->Call();
 	}
 }
 

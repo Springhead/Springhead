@@ -86,7 +86,7 @@ public:
 	///	タイマーの削除
 	virtual bool StopTimer(UTTimer* timer)=0;
 	///	Idle処理の呼び出し口。mode == IDLEのタイマーのコールバックを一通り呼び出す。
-	void CallIdle();
+	static void CallIdle();
 };
 
 
