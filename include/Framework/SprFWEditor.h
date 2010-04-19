@@ -65,7 +65,7 @@ public:
 
 /**	Validator
  */
-class FWValidator : UTRefCount{
+class FWValidator{
 
 };
 
