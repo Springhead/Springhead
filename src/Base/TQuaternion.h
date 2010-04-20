@@ -331,7 +331,7 @@ inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TVec
 	//TYPENAME BD::ret_type r = (q * qv * q.Conjugated()).sub_vector(PTM::TSubVectorDim<1,3>());
 	// ↓は第1成分を0として展開したコード
 	TYPENAME BD::ret_type tmp = q.V() % v;
-	TYPENAME BD::ret_type r = q.W()*q.W()*v + 2*q.W()*tmp + (q.V()*v)*q.V() + q.V()%tmp;
+	TYPENAME BD::ret_type r = (BD::element_type)(q.W()*q.W())*v + (BD::element_type)(2*q.W())*tmp + (BD::element_type)(q.V()*v)*q.V() + q.V()%tmp;
 	return r;
 }
 
