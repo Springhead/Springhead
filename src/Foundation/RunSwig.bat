@@ -28,7 +28,7 @@ echo %%module %MODULE%>> %MODULE%.i
 echo %%include "../../include/Springhead.h">> %MODULE%.i
 echo %%include "../../include/base/Env.h">> %MODULE%.i
 for %%p in (%SRCINTF%) do echo %%include "%%p">> %MODULE%.i
-echo %%include "../../src/Base/BaseDebug.h">> %MODULE%.i
+echo %%include "../../include/Base/BaseDebug.h">> %MODULE%.i
 echo %%include "../../src/Foundation/UTTypeDesc.h">> %MODULE%.i
 for %%p in (%SRCIMP%) do echo %%include "%%p">> %MODULE%.i
 
