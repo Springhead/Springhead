@@ -109,31 +109,57 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_GRSkinWeightDesc \
+protected:\
+	Affinef	offset;	\
+	std::vector<(unsigned int)>	indices;	\
+	std::vector<(float)>	weights;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		offset = ((GRSkinWeightDesc*)ptr)->offset;	\
+		indices = ((GRSkinWeightDesc*)ptr)->indices;	\
+		weights = ((GRSkinWeightDesc*)ptr)->weights;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((GRSkinWeightDesc*)ptr)->offset = offset;	\
+		((GRSkinWeightDesc*)ptr)->indices = indices;	\
+		((GRSkinWeightDesc*)ptr)->weights = weights;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_GRMeshDesc \
 protected:\
-	std::vector<(Vec3f)>	positions;	\
+	std::vector<(Vec3f)>	vertices;	\
+	std::vector<(Spr::GRMeshFace)>	faces;	\
 	std::vector<(Vec3f)>	normals;	\
+	std::vector<(Spr::GRMeshFace)>	faceNormals;	\
 	std::vector<(Vec4f)>	colors;	\
 	std::vector<(Vec2f)>	texCoords;	\
-	std::vector<(size_t)>	faces;	\
+	std::vector<(int)>	materialList;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		GRVisual::SetDesc((GRVisualDesc*)(GRMeshDesc*)ptr);	\
-		positions = ((GRMeshDesc*)ptr)->positions;	\
+		vertices = ((GRMeshDesc*)ptr)->vertices;	\
+		faces = ((GRMeshDesc*)ptr)->faces;	\
 		normals = ((GRMeshDesc*)ptr)->normals;	\
+		faceNormals = ((GRMeshDesc*)ptr)->faceNormals;	\
 		colors = ((GRMeshDesc*)ptr)->colors;	\
 		texCoords = ((GRMeshDesc*)ptr)->texCoords;	\
-		faces = ((GRMeshDesc*)ptr)->faces;	\
+		materialList = ((GRMeshDesc*)ptr)->materialList;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		GRVisual::GetDesc((GRVisualDesc*)(GRMeshDesc*)ptr);	\
-		((GRMeshDesc*)ptr)->positions = positions;	\
+		((GRMeshDesc*)ptr)->vertices = vertices;	\
+		((GRMeshDesc*)ptr)->faces = faces;	\
 		((GRMeshDesc*)ptr)->normals = normals;	\
+		((GRMeshDesc*)ptr)->faceNormals = faceNormals;	\
 		((GRMeshDesc*)ptr)->colors = colors;	\
 		((GRMeshDesc*)ptr)->texCoords = texCoords;	\
-		((GRMeshDesc*)ptr)->faces = faces;	\
+		((GRMeshDesc*)ptr)->materialList = materialList;	\
 		return true;	\
 	}\
 

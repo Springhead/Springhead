@@ -8,7 +8,6 @@
 #include "Base.h"
 #pragma hdrstop
 
-#include "BaseUtility.h"
 #include <iostream>
 namespace Spr {
 using namespace std;

@@ -10,7 +10,7 @@
 #if defined _MSC_VER && _MSC_VER >= 1000
 #pragma once
 #endif // _MSC_VER >= 1000
-#include "Env.h"
+#include <Base/Env.h>
 #include <cstdio>
 #include <iostream>
 /**	@file StrBufBase.h iostream を派生するときに使うクラスの定義 */

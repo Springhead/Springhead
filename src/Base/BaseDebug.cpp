@@ -6,9 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Base.h"
-#include "StrBufBase.h"
-#include "TVector.h"
-#include "TMatrix.h"
 
 #include <stdio.h>
 #include <iostream>

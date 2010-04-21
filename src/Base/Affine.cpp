@@ -7,7 +7,7 @@
  */
 #include "Base.h"
 #pragma hdrstop
-#include "TQuaternion.h"
+#include <Base/TQuaternion.h>
 
 
 namespace Spr{;
