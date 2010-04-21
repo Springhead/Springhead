@@ -740,7 +740,7 @@ void FWLDHaptic3D::CallBackHapticLoop(){
 	Sync();
 }
 
-void FWLDHaptic3D::SyncHaptic2Phsyic(){
+void FWLDHaptic3D::SyncHaptic2Physic(){
 	/// HapticLoop--->PhysicsLoop
 	FWInteractSolids* hiss = GetHapticLoop()->GetIASolids();
 	for(unsigned i = 0; i < (int)hiss->size(); i++){
