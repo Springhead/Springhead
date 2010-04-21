@@ -24,16 +24,16 @@
 */
 
 namespace Spr{}
-#include "Env.h"
-#include "BaseDebug.h"
-#include "BaseUtility.h"
-#include "BaseTypeInfo.h"
+#include <Base/Env.h>
+#include <Base/BaseDebug.h>
+#include <Base/BaseUtility.h>
+#include <Base/BaseTypeInfo.h>
+#include <Base/TVector.h>
+#include <Base/TMatrix.h>
+#include <Base/TinyVec.h>
+#include <Base/TinyMat.h>
+#include <Base/TQuaternion.h>
+#include <Base/Affine.h>
 #include "StrBufBase.h"
-#include "TVector.h"
-#include "TMatrix.h"
-#include "TinyVec.h"
-#include "TinyMat.h"
-#include "TQuaternion.h"
-#include "Affine.h"
 
 #endif
