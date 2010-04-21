@@ -23,7 +23,7 @@ void FWMultiRateHaptic::Sync(){
 	if(bSync){ 
 		/// 力覚ポインタの同期
 		UpdatePointer();			
-		SyncHaptic2Phsyic();
+		SyncHaptic2Physic();
 		SyncPhysic2Haptic();
 
 		/// 同期終了処理

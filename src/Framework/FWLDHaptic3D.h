@@ -58,7 +58,7 @@ public:
 	virtual void Init();
 	virtual void Clear();
 	void CallBackHapticLoop();
-	virtual void SyncHaptic2Phsyic();
+	virtual void SyncHaptic2Physic();
 	virtual void SyncPhysic2Haptic();
 	virtual void Step();
 	virtual void PhysicsStep();

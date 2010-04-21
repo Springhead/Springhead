@@ -233,17 +233,20 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 		/// 判定後の後処理(ローカルシミュレーションするかどうかのフラグを立てる)
 		if(found > 0){
 			/// 初めて最近傍物体になった場合
-			if(iaInfo->flag.blocal == false){																
+			if(iaInfo->flag.blocal == false){
 				iaInfo->flag.bfirstlocal = true;	
+				iaInfo->toHaptic.closest_point = pa;	//< 初めて近傍物体になったので，前回の剛体の接触点に今回できた接触点を上書き
 				iaInfo->toHaptic.face_normal = normal;	//< 初めて近傍物体になったので，前回の法線に今回できた法線を上書きする．
-				/*#ifdef _DEBUG
-					if (iaInfo->neighborInfo.face_normal * normal < 0.8){
+				
+				#ifdef _DEBUG
+					if (iaInfo->toHaptic.face_normal * normal < 0.8){
 						DSTR << "Too big change on normal = " << normal << std::endl;
 					}
-				#endif*/
+				#endif
 			}
 			/// 初めて近傍または継続して近傍だった場合
-			iaInfo->flag.blocal = true;								//< 近傍物体なのでblocalをtrueにする
+			iaInfo->flag.blocal = true;							//< 近傍物体なのでblocalをtrueにする
+			iaInfo->toHaptic.pose = phSolid->GetPose();
 			iaInfo->toHaptic.closest_point = pa;				//< 剛体近傍点
 			iaInfo->toHaptic.pointer_point = pb;				//< 力覚ポインタ近傍点
 			iaInfo->toHaptic.common_point = (phSolid->GetPose() * pa + soPointer->GetPose() * pb)/2; 

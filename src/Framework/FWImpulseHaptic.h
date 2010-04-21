@@ -28,8 +28,8 @@ public:
 	virtual void Init();
 	virtual void Clear();
 	void CallBackHapticLoop();
-	virtual void SyncHaptic2Phsyic(FWInteractSolid* h, FWInteractSolid* p);
-	virtual void SyncPhsyic2Haptic(FWInteractSolid* h, FWInteractSolid* p);
+	virtual void SyncHaptic2Physic();
+	virtual void SyncPhysic2Haptic();
 	virtual void Step();
 	virtual void UpdatePointer();
 	virtual void BeginKeyboard();

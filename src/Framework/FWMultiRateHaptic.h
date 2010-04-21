@@ -27,7 +27,7 @@ public:
 
 	virtual void UpdatePointer(){}
 	void Sync();						// 各スレッドを同期させる
-	virtual void SyncHaptic2Phsyic(){};	// 継承先で実装
+	virtual void SyncHaptic2Physic(){};	// 継承先で実装
 	virtual void SyncPhysic2Haptic(){};	// 継承先で実装
 	void SyncPointer();
 	virtual void Clear();

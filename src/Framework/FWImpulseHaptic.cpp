@@ -44,12 +44,10 @@ void FWImpulseHapticLoop::HapticRendering(){
 			ToHaptic* th = &iInfo->toHaptic;
 			ToPhysic* tp = &iInfo->toPhysic;
 			PHSolid* cSolid = &iSolid->copiedSolid;
-			Posed poseSolid = cSolid->GetPose();
-			Vec3d last_cPoint = th->last_closest_point;
 			Vec3d cPoint = cSolid->GetPose() * th->closest_point;			// 剛体の近傍点のワールド座標系
 			Vec3d pPoint = iPointer->hiSolid.GetPose() * th->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
 			Vec3d force_dir = pPoint - cPoint;
-			Vec3d interpolation_normal;											// 提示力計算にしようする法線（前回の法線との間を補間する）
+			Vec3d interpolation_normal;										// 提示力計算にしようする法線（前回の法線との間を補間する）
 			Vec3d interpolation_cPoint;
 
 			// 剛体の面の法線補間
@@ -58,11 +56,6 @@ void FWImpulseHapticLoop::HapticRendering(){
 			interpolation_normal = (loopCount * th->face_normal + 
 				(syncCount - (double)loopCount) * th->last_face_normal) / syncCount;															
 
-			// 接触点の補間（剛体側の接触点を補間する）
-			interpolation_cPoint = (loopCount * cPoint + 
-				((double)syncCount - loopCount) * last_cPoint) / (double)syncCount;
-			force_dir = pPoint - interpolation_cPoint;
-		
 			// 同期カウントを越えたら現在の法線，接触点を使う
 			if(loopCount > syncCount){
 				interpolation_normal = th->face_normal;
@@ -85,7 +78,7 @@ void FWImpulseHapticLoop::HapticRendering(){
 				outForce.w() = Vec3d();
 
 				/// 計算した力を剛体に加える//
-				iPointer->interactInfo[i].mobility.force = tp->test_force = -1 * addforce;	
+				tp->impulse = -1 * addforce;	
 			}
 		}
 		/// インタフェースへ力を出力
@@ -119,14 +112,66 @@ void FWImpulseHaptic::CallBackHapticLoop(){
 	Sync();
 }
 
-void FWImpulseHaptic::SyncHaptic2Phsyic(Spr::FWInteractSolid *h, Spr::FWInteractSolid *p){
-	//Vec3d cPoint = hprocess.expandedObjects[i].syncInfo.neighborPoint.closestPoint;	// 近傍物体の接触点(ワールド座標系)
-	//Vec3d force = hprocess.expandedObjects[i].syncInfo.neighborPoint.impulse / (hprocess.hcount * hdt);											// 近傍物体に加える力
-	//hprocess.expandedObjects[i].syncInfo.neighborPoint.impulse = Vec3d();																						// 近傍物体に加わる力積の初期化
-	//expandedObjects[i].phSolidIf->AddForce(force, cPoint);
+void FWImpulseHaptic::SyncHaptic2Physic(){
+	/// HapticLoop--->PhysicsLoop
+	double hdt = GetHapticLoop()->hdt;
+	int lc = GetHapticLoop()->GetLoopCount(); 
+	for(int i = 0; i < GetHapticLoop()->NIAPointers(); i++){
+		FWInteractPointer* hip = GetHapticLoop()->GetIAPointer(i);
+
+		FWInteractSolids* hiss = GetHapticLoop()->GetIASolids();
+		for(int j = 0; j < (int)hiss->size(); j++){
+			GetIAPointer(i)->interactInfo[j].toPhysic = hip->interactInfo[j].toPhysic;
+
+			FWInteractInfo* iInfo = &hip->interactInfo[j];
+			// bSim = ture かつ bfirstSim = falseなら結果を反映させる
+			if(!iInfo->flag.blocal || iInfo->flag.bfirstlocal) continue;
+			Vec3d cPoint = iInfo->toHaptic.pose * iInfo->toHaptic.closest_point;	// 近傍物体の接触点
+			Vec3d force = iInfo->toPhysic.impulse / (lc * hdt);							// 近傍物体に加える力
+			DSTR << force << std::endl;
+			iInfo->toPhysic.impulse = Vec3d();											// 近傍物体に加わる力積の初期化
+			PHSolid* ps = GetIASolid(j)->sceneSolid;
+			ps->AddForce(force, cPoint);						// 近傍物体の接触点に力覚ポインタからの力を加える
+		}
+	}
 }
 
-void FWImpulseHaptic::SyncPhsyic2Haptic(Spr::FWInteractSolid *h, Spr::FWInteractSolid *p){}
+void FWImpulseHaptic::SyncPhysic2Haptic(){
+	/// PhysicsLoop--->HapticLoop ///
+	// 1. シーンで新しく生成された分を拡張
+	// 1.1. 力覚ポインタの増加分
+	std::vector<FWInteractPointer>* hips= GetHapticLoop()->GetIAPointers();
+	for(int i = (int)hips->size(); i < NIAPointers(); i++){
+		hips->resize(i+1);
+		hips->back() = *GetIAPointer(i);
+		hips->back().Sync();
+	}
+	// 1.2. Solidの増加分
+	FWInteractSolids* hiss = GetHapticLoop()->GetIASolids();
+	for(int i = (int)hiss->size(); i < (int)NIASolids(); i++){
+		hiss->resize(i + 1);
+		hiss->back() = *GetIASolid(i);
+		/// ポインタが持つ情報についても拡張
+		for(int j = 0; j < NIAPointers(); j++){
+			FWInteractPointer* hip = GetHapticLoop()->GetIAPointer(j);
+			hip->interactInfo.resize(i + 1);
+			hip->interactInfo.back() = GetIAPointer(j)->interactInfo[i];
+		}
+	}
+	// 2. 情報の同期
+	for(unsigned i = 0; i < hiss->size(); i++){
+		FWInteractSolid* pis = GetIASolid(i);
+		FWInteractSolid* his = GetHapticLoop()->GetIASolid(i);
+
+		for(int j = 0; j < NIAPointers(); j++){
+			FWInteractPointer* hip = GetHapticLoop()->GetIAPointer(j)->Cast();
+			hip->interactInfo[i].toHaptic = GetIAPointer(j)->interactInfo[i].toHaptic;
+			hip->interactInfo[i].flag = GetIAPointer(j)->interactInfo[i].flag;
+			hip->bForce = GetIAPointer(j)->bForce;
+			hip->bVibration = GetIAPointer(j)->bVibration;
+		}
+	}
+}
 
 void FWImpulseHaptic::Step(){
 	if (bSync) return;
@@ -158,5 +203,6 @@ void FWImpulseHaptic::UpdatePointer(){
 		soPointer->SetDynamical(false);
 	}
 }
+
 void FWImpulseHaptic::BeginKeyboard(){}
 void FWImpulseHaptic::EndKeyboard(){}
