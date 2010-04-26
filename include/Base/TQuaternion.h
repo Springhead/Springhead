@@ -73,7 +73,7 @@ public:
 	/// 回転ベクトル．0..PIの範囲で回転ベクトルを返す．
 	TVec3<ET> RotationHalf() {
 		TQuaternion<ET> tmp;
-		if (tmp.W() < 0) tmp = -*this;
+		if (W() < 0) tmp = -*this;
 		else tmp = *this;
 		TVec3<ET> r;
 		if (tmp.W() > 1) tmp.W() = 1;
