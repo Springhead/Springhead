@@ -234,6 +234,11 @@ void FWLDHapticSample::BuildPointer(){
 	DSTR << GetIAScene()->NIAPointers() << std::endl;
 }
 
+
+void FWLDHapticSample::DisplayProxy(){
+
+}
+
 void FWLDHapticSample::Keyboard(int key, int x, int y){
 	BeginKeyboard();
 	switch (key) {

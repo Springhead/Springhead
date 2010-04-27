@@ -28,7 +28,7 @@ Vec3d ForceRenderring(){
 
 	*/
 	//if(dy<0)F.y = 5;
-	DSTR<<"F:"<<F<<"dy:"<<dy<<"dv"<<dv<<std::endl;
+	//DSTR<<"F:"<<F<<"dy:"<<dy<<"dv"<<dv<<std::endl;
 	return F;
 }
 
@@ -66,5 +66,7 @@ int __cdecl main(){
 	timer1.Create();					/// マルチメディアタイマスタート
 
 	while(!_kbhit()){}
+	Sleep(10);
+	timer1.Release();
 	return 0;
 }

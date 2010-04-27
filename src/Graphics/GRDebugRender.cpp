@@ -66,6 +66,7 @@ void GRDebugRender::DrawScene(PHSceneIf* scene){
 	if(renderWorldAxis) DrawWorldAxis(scene);
 	PHSolidIf **solids = scene->GetSolids();
 	for(int i = 0; i < scene->NSolids(); ++i){
+		if(!solids[i]->IsDrawn()) continue;
 		SetMaterialSample((GRDebugRenderIf::TMaterialSample)i);
 		DrawSolid(solids[i]);
 	}

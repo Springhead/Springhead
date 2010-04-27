@@ -183,6 +183,7 @@ struct PHSolidIf : public SceneObjectIf{
 		@param v シーンに対する剛体の質量中心の速度
 	 */
 	void		SetVelocity(const Vec3d& v);
+
 	/** @brief 剛体の角速度を取得する
 		@return シーンに対する剛体の角速度
 	 */
@@ -192,24 +193,29 @@ struct PHSolidIf : public SceneObjectIf{
 		@param av シーンに対する剛体の角速度
 	 */
 	void		SetAngularVelocity(const Vec3d& av);
-    /** @brief 最後のステップで、拘束力以外に剛体に加わった外力を取得する。
+
+	/** @brief 最後のステップで、拘束力以外に剛体に加わった外力を取得する。
 		拘束力は PHConstraint とその派生クラスから取得しなければならない。
 		@return 剛体に加えられた力(World系)
 	*/
 	Vec3d GetForce() const;
-    /** @brief 最後のステップで、拘束力以外に剛体に加わった外力トルクを取得する。
+
+	/** @brief 最後のステップで、拘束力以外に剛体に加わった外力トルクを取得する。
 		拘束力は PHConstraint とその派生クラスから取得しなければならない。
 		@return 剛体に加えられたトルク(World系、剛体の重心周り)
 	*/
 	Vec3d GetTorque() const;
+
 	/** @brief 剛体に形状を登録する
 		@param shape 形状へのポインタ
 	 */
 	void		AddShape(CDShapeIf* shape);
+
 	/** @brief 登録されている形状の個数を取得する
 		@return 形状の個数
 	 */
 	int			NShape();
+
 	/**	@brief 登録されている形状を取得する
 		@param index 形状のインデックス
 		@return 形状へのポインタ
@@ -217,18 +223,21 @@ struct PHSolidIf : public SceneObjectIf{
 		以下同様．
 	 */
 	CDShapeIf*	GetShape(int index);
+
 	/** @brief 形状の位置と向きを取得する
 		@param index 対象とする形状のインデックス
 		@return 剛体に対する形状の位置と向き
 		インデックスについてはGetShapeを参照．
 	 */
 	Posed		GetShapePose(int index);
+
 	/** @brief 形状の位置と向きを設定する
 		@param index 対象とする形状のインデックス
 		@param pose 剛体に対する形状の位置と向き
 		インデックスについてはGetShapeを参照．
 	 */
 	void		SetShapePose(int index, const Posed& pose);
+
 	/** @brief 形状をClearする
 	 */
 	void		ClearShape();
@@ -244,25 +253,38 @@ struct PHSolidIf : public SceneObjectIf{
 		可能です．
 	 */
 	void		SetDynamical(bool bOn);
+
 	/** @brief 物理法則に従うかどうかを取得する
 		@return trueならば剛体は物理法則にしたがって運動する．
 	 */
 	bool		IsDynamical();
+
 	/** @brief 速度を積分し，位置を更新するかどうかを有効/無効かする
 		@param bOn trueならば剛体は速度を積分し，位置を更新する．
 		SetVelocity関数で速度を設定した場合，値は保持されますが，積分は行われません．
 	*/
 	void		SetIntegrate(bool bOn);
+
 	/** @brief 速度を積分し，位置を更新するかどうか取得する．
 		@return trueならば剛体は速度を積分し，位置を更新する．
 	*/
 	bool		IsIntegrate();
+
 	/** @brief ツリーノードを取得する
 		CreateRootNode，CreateTreeNodeによってツリーノードが割り当てられている場合，
 		そのノードを返す．それ以外の場合はNULLを返す．
 	 */
 	PHTreeNodeIf* GetTreeNode();
 
+	/** @brief 剛体の形状を描画するかどうかを指定する
+		@param bOn true: 形状を描画 bOn false: 形状を描画しない
+	*/
+	void		SetDrawing(bool bOn);
+
+	/** @brief 剛体の形状を描画するかどうかを取得
+		@return trueで描画、falseで描画しない
+	*/
+	bool		IsDrawn();
 };
 
 struct PHShapePairForLCPIf : public ObjectIf{

@@ -47,14 +47,18 @@ void FWImpulseHapticLoop::HapticRendering(){
 			Vec3d cPoint = cSolid->GetPose() * th->closest_point;			// 剛体の近傍点のワールド座標系
 			Vec3d pPoint = iPointer->hiSolid.GetPose() * th->pointer_point;	// 力覚ポインタの近傍点のワールド座標系
 			Vec3d force_dir = pPoint - cPoint;
-			Vec3d interpolation_normal;										// 提示力計算にしようする法線（前回の法線との間を補間する）
-			Vec3d interpolation_cPoint;
 
 			// 剛体の面の法線補間
 			// 前回の法線と現在の法線の間を補間しながら更新
 			double syncCount = pdt / hdt;						// プロセスの刻み時間の比
-			interpolation_normal = (loopCount * th->face_normal + 
+			Vec3d interpolation_normal = (loopCount * th->face_normal + 
 				(syncCount - (double)loopCount) * th->last_face_normal) / syncCount;															
+
+			// 接触点の補間
+			Vec3d interpolation_cPoint = (loopCount * cPoint + 
+				(syncCount - (double)loopCount) * th->last_closest_point) / syncCount;
+
+			force_dir = pPoint - interpolation_cPoint;
 
 			// 同期カウントを越えたら現在の法線，接触点を使う
 			if(loopCount > syncCount){
@@ -127,8 +131,7 @@ void FWImpulseHaptic::SyncHaptic2Physic(){
 			// bSim = ture かつ bfirstSim = falseなら結果を反映させる
 			if(!iInfo->flag.blocal || iInfo->flag.bfirstlocal) continue;
 			Vec3d cPoint = iInfo->toHaptic.pose * iInfo->toHaptic.closest_point;	// 近傍物体の接触点
-			Vec3d force = iInfo->toPhysic.impulse / (lc * hdt);							// 近傍物体に加える力
-			DSTR << force << std::endl;
+			Vec3d force = iInfo->toPhysic.impulse;							// 近傍物体に加える力
 			iInfo->toPhysic.impulse = Vec3d();											// 近傍物体に加わる力積の初期化
 			PHSolid* ps = GetIASolid(j)->sceneSolid;
 			ps->AddForce(force, cPoint);						// 近傍物体の接触点に力覚ポインタからの力を加える
@@ -162,13 +165,19 @@ void FWImpulseHaptic::SyncPhysic2Haptic(){
 	for(unsigned i = 0; i < hiss->size(); i++){
 		FWInteractSolid* pis = GetIASolid(i);
 		FWInteractSolid* his = GetHapticLoop()->GetIASolid(i);
+		his->copiedSolid = *pis->sceneSolid;
 
 		for(int j = 0; j < NIAPointers(); j++){
 			FWInteractPointer* hip = GetHapticLoop()->GetIAPointer(j)->Cast();
-			hip->interactInfo[i].toHaptic = GetIAPointer(j)->interactInfo[i].toHaptic;
-			hip->interactInfo[i].flag = GetIAPointer(j)->interactInfo[i].flag;
-			hip->bForce = GetIAPointer(j)->bForce;
-			hip->bVibration = GetIAPointer(j)->bVibration;
+			FWInteractPointer* pip = GetIAPointer(j);
+			hip->interactInfo[i].toHaptic = pip->interactInfo[i].toHaptic;
+			hip->interactInfo[i].flag = pip->interactInfo[i].flag;
+			hip->bForce = pip->bForce;
+			hip->bVibration = pip->bVibration;
+
+			// 同期後の後処理
+			pip->interactInfo[i].toHaptic.last_closest_point
+				= pis->sceneSolid->GetPose() * pip->interactInfo[i].toHaptic.closest_point;
 		}
 	}
 }
