@@ -138,6 +138,8 @@ public:
 	void UpdatePosition(double dt);
 	bool IsArticulated();
 	//@}
+
+	bool bDraw;				///< Œ`ó‚ğ•`‰æ‚·‚é‚©‚Ç‚¤‚©
 		
 public:
 	std::vector< UTRef<PHFrame> > frames;
@@ -278,7 +280,8 @@ public:
 	/// ‘¬“x‚ªˆê’èˆÈ‰º‚ÅÏ•ª‚ğs‚í‚È‚¢‚©‚Ç‚¤‚©‚ğæ“¾
 	bool		IsFrozen(){return bFrozen;}
 	PHTreeNodeIf* GetTreeNode();
-
+	void		SetDrawing(bool bOn){bDraw = bOn; }
+	bool		IsDrawn(){ return bDraw; }
 	ACCESS_DESC_STATE_PRIVATE(PHSolid);
 
 protected:

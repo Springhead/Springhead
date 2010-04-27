@@ -337,6 +337,8 @@
 	void SetIntegrate(bool bOn){	base::SetIntegrate(bOn);}	\
 	bool IsIntegrate(){	return	base::IsIntegrate();}	\
 	Spr::PHTreeNodeIf* GetTreeNode(){	return	base::GetTreeNode();}	\
+	void SetDrawing(bool bOn){	base::SetDrawing(bOn);}	\
+	bool IsDrawn(){	return	base::IsDrawn();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHShapePairForLCPIf(base)	\
 	int NSectionVertexes(){	return	base::NSectionVertexes();}	\

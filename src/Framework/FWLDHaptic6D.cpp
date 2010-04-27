@@ -137,6 +137,8 @@ void FWLDHaptic6DLoop::ConstraintBasedRendering(){
 			}
 	
 		}
+		Vec3d dr = Vec3d();
+		Vec3d dtheta = Vec3d();
 		/// 連立不等式を計算するための行列を作成
 		if(sv.size() > 0){
 			int l = (int)sv.size();	// 接触点の数
@@ -177,8 +179,8 @@ void FWLDHaptic6DLoop::ConstraintBasedRendering(){
 			GaussSeidel(a,f,-d);
 #endif
 			// ポインタと剛体に拘束を与える
-			Vec3d dr = Vec3d();
-			Vec3d dtheta = Vec3d();
+			dr = Vec3d();
+			dtheta = Vec3d();
 			for(int m = 0; m < l; m++){
 				if(f[m] < 0) f[m] = 0.0;
 				// ポインタへの拘束
@@ -194,12 +196,17 @@ void FWLDHaptic6DLoop::ConstraintBasedRendering(){
 			/// 剛体へ力を加える
 			for(int m = 0; m < l; m++){
 				Vec3d addforce = -1 * f[m] * sv[m].normal * iPointer->correctionSpringK /ws4;
-				iPointer->interactInfo[sv[m].iaSolidID].mobility.f.push_back(addforce);	
+				iPointer->interactInfo[sv[m].iaSolidID].mobility.f.push_back(addforce);
 			}
 		}
 
 		/// インタフェースへ力を出力
 		SetRenderedForce(iPointer->GetHI(), iPointer->bForce, outForce * iPointer->GetForceScale());
+
+		Posed p = iPointer->hiSolid.GetPose();
+		p.Pos() += dr;
+		p.Ori() = ( Quaterniond::Rot(dtheta) * p.Ori()).unit();
+		iPointer->proxy_pose =  p;
 
 #if 0
 		//CSVOUT << l << "," << sv[0].d << "," << outForce.v().y << endl;

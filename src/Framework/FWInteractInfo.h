@@ -29,6 +29,7 @@ struct Mobility{
 struct ToHaptic{
 	Posed pose;
 	Vec3d closest_point;			///< 近傍物体最近点(ローカル座標)
+	Vec3d last_closest_point;		///< 前回の近傍物体の接触点(ローカル座標)
 	Vec3d pointer_point;			///< 力覚ポインタ最近点(ローカル座標)
 	Vec3d common_point;				///< 近傍点を内分する点(ワールド座標系)
 	Vec3d face_normal;				///< 近傍物体の提示面の法線(近傍物体から力覚ポインタへのベクトル)

@@ -98,7 +98,8 @@ void FWLDHaptic3DLoop::HapticRendering3D(){
 
 				/// ŒvŽZ‚µ‚½—Í‚ð„‘Ì‚É‰Á‚¦‚é//
 				Vec3d tf = -1 * addforce;
-				iPointer->interactInfo[i].mobility.force = tf;	
+				iPointer->interactInfo[i].mobility.force = tf;
+				iPointer->proxy_pose = iPointer->hiSolid.GetPose() + ortho;
 				tp->test_force = tf;
 			}
 		}
@@ -875,6 +876,8 @@ void FWLDHaptic3D::UpdatePointer(){
 		soPointer->SetFramePosition(hiSolid->GetFramePosition());
 		soPointer->SetOrientation(hiSolid->GetOrientation());
 		soPointer->SetDynamical(false);
+
+		GetIAPointer(i)->proxy_pose = hiPointer->proxy_pose;
 	}
 }
 

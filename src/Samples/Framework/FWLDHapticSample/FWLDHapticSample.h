@@ -26,7 +26,8 @@ public:
 	virtual void Display();								///< 描画関数	
 	virtual void BuildScene();							///< 剛体の作成
 	virtual void BuildPointer();						///< 剛体の作成
-								
+	void DisplayProxy();	
+
 	virtual void Keyboard(int key, int x, int y);		///< キーボード関数
 
 	/// オプション

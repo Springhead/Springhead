@@ -33,6 +33,7 @@ public:
 
 	Posed  cameraOrigin;	//カメラに対して基準となる姿勢，カメラの移動により変位が蓄積する
 	Posed  cameraPose;		//1ステップ前のカメラ姿勢を保存
+	Posed  proxy_pose;
 
 	double correctionSpringK;
 	double correctionDamperD;

@@ -119,6 +119,7 @@ PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	inertia_inv = inertia.inv();
 	treeNode = NULL;
 	bFrozen = false;
+	bDraw = true;
 	if (s){ SetScene(s); }
 }
 SceneObjectIf* PHSolid::CloneObject(){
