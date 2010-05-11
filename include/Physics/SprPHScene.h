@@ -278,33 +278,33 @@ public:
 
 	/** @brief IKのノード（IKに用いることのできる可動物(=関節など)）を作成する．
 	 */
-	PHIKNodeIf* CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc = PHIKNodeDesc());
-	template <class T> PHIKNodeIf* CreateIKNode(const T& desc){
-		return CreateIKNode(T::GetIfInfo(), desc);
+	PHIKActuatorIf* CreateIKActuator(const IfInfo* ii, const PHIKActuatorDesc& desc = PHIKActuatorDesc());
+	template <class T> PHIKActuatorIf* CreateIKActuator(const T& desc){
+		return CreateIKActuator(T::GetIfInfo(), desc);
 	}
 
-	/** @brief IKノードの数
+	/** @brief IKアクチュエータの数
 	 */
-	int NIKNodes();
+	int NIKActuators();
 
-	/** @brief IKノードを取得する
+	/** @brief IKアクチュエータを取得する
 	 */
-	PHIKNodeIf* GetIKNode(int i);
+	PHIKActuatorIf* GetIKActuator(int i);
 
 	/** @brief IKの制御点を作成する．
 	 */
-	PHIKControlPointIf*	 CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc = PHIKControlPointDesc());
-	template <class T> PHIKControlPointIf* CreateIKControlPoint(const T& desc){
-		return CreateIKControlPoint(T::GetIfInfo(), desc);
+	PHIKEndEffectorIf*	 CreateIKEndEffector(const IfInfo* ii, const PHIKEndEffectorDesc& desc = PHIKEndEffectorDesc());
+	template <class T> PHIKEndEffectorIf* CreateIKEndEffector(const T& desc){
+		return CreateIKEndEffector(T::GetIfInfo(), desc);
 	}
 
-	/** @brief IK制御点の数
+	/** @brief IKエンドエフェクタの数
 	 */
-	int NIKControlPoints();
+	int NIKEndEffectors();
 
-	/** @brief IK制御点を取得する
+	/** @brief IKエンドエフェクタを取得する
 	 */
-	PHIKControlPointIf* GetIKControlPoint(int i);
+	PHIKEndEffectorIf* GetIKEndEffector(int i);
 
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ

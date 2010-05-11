@@ -55,7 +55,9 @@ struct CREngineDesc{
 		// çsìÆåàíË
 		CREP_ACTIONDECISION		= 300,
 		// â^ìÆêßå‰
-		CREP_CONTROLLER			= 400,
+		CREP_CONTROLLER_PLAN	= 400,
+		CREP_CONTROLLER			= 425,
+		CREP_CONTROLLER_ACT		= 450,
 	};
 
 	CREngineDesc(){

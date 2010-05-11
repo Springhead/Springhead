@@ -24,29 +24,19 @@ namespace Spr{;
 //@{
 
 // ------------------------------------------------------------------------------
-/// IKの制御点（目標位置を示すもの）
-struct PHIKControlPointIf : SceneObjectIf{
-	SPR_IFDEF(PHIKControlPoint);
+/// IKのエンドエフェクタ（到達目標に向けて動かされるもの）
+struct PHIKEndEffectorIf : SceneObjectIf{
+	SPR_IFDEF(PHIKEndEffector);
 
-	/** @brief 力を設定する
-	*/
-	void SetForce(Vec3d force);
-
-	/** @brief 力を取得する
-	*/
-	Vec3d GetForce();
-
-	/** @brief 制御対象の剛体を設定する
+	/** @brief 動作対象の剛体を設定する（１エンドエフェクタにつき１剛体が必ず対応する）
 	*/
 	void SetSolid(PHSolidIf* solid);
 
-	/** @brief 制御対象の剛体を取得する
+	/** @brief 動作対象として設定された剛体を取得する
 	*/
 	PHSolidIf* GetSolid();
 
-	/** @brief 番号を設定する
-	*/
-	void SetNumber(int i);
+	// --- --- --- --- ---
 
 	/** @brief 有効・無効を設定する
 	*/
@@ -55,65 +45,111 @@ struct PHIKControlPointIf : SceneObjectIf{
 	/** @brief 有効・無効を取得する
 	*/
 	bool IsEnabled();
-};
 
-/// IK制御点のディスクリプタ
-struct PHIKControlPointDesc{
-	SPR_DESCDEF(PHIKControlPoint);
+	// --- --- --- --- ---
 
-	bool isEnabled;  ///< 有効かどうか
-};
-
-/// 目標位置を指定する制御点
-struct PHIKPosCtlIf : PHIKControlPointIf{
-	SPR_IFDEF(PHIKPosCtl);
-
-	/** @brief 位置の到達目標値を設定する
+	/** @brief 位置の制御の有効・無効を切り替える
 	*/
-	void SetTargetPosition(Vec3d targetPosition);
+	void EnablePositionControl(bool enable);
 
-	/** @brief 位置の到達目標値を取得する
+	/** @brief 位置制御のプライオリティを設定する
+	*/
+	void SetPositionPriority(double priority);
+
+	/** @brief 位置の目標値を設定する
+	*/
+	void SetTargetPosition(Vec3d position, Vec3d localPosition = Vec3d());
+
+	/** @brief 設定された位置の目標値を取得する
 	*/
 	Vec3d GetTargetPosition();
 
-	/** @brief 制御点の位置を設定する
+	/** @brief エンドエフェクタにおける到達させたい位置の設定された目標値を取得する
 	*/
-	void SetPos(Vec3d pos);
+	Vec3d GetTargetLocalPosition();
 
-	/** @brief 制御点の位置を取得する
+	// --- --- --- --- ---
+
+	/** @brief 姿勢の制御の有効・無効を切り替える
 	*/
-	Vec3d GetPos();
+	void EnableOrientationControl(bool enable);
+
+	/** @brief 姿勢制御のプライオリティを設定する
+	*/
+	void SetOrientationPriority(double priority);
+
+	/** @brief 姿勢の目標値を設定する
+	*/
+	void SetTargetOrientation(Quaterniond orientation);
+
+	/** @brief 設定された姿勢の目標値を取得する
+	*/
+	Quaterniond GetTargetOrientation();
+
+	// --- --- --- --- ---
+
+	/** @brief 力の制御の有効・無効を切り替える
+	*/
+	void EnableForceControl(bool enable);
+
+	/** @brief 力の目標値を設定する
+	*/
+	void SetTargetForce(Vec3d force, Vec3d workingPoint = Vec3d());
+
+	/** @brief 設定された力の目標値を取得する
+	*/
+	Vec3d GetTargetForce();
+
+	/** @brief 設定された力の作用点を取得する
+	*/
+	Vec3d GetTargetForceWorkingPoint();
+
+	// --- --- --- --- ---
+
+	/** @brief トルクの制御の有効・無効を切り替える
+	*/
+	void EnableTorqueControl(bool enable);
+
+	/** @brief トルクの目標値を設定する
+	*/
+	void SetTargetTorque(Vec3d torque);
+
+	/** @brief 設定されたトルクの目標値を取得する
+	*/
+	Vec3d GetTargetTorque();
+
 };
 
-/// 位置制御点のディスクリプタ
-struct PHIKPosCtlDesc : PHIKControlPointDesc{
-	SPR_DESCDEF(PHIKPosCtl);
+/// IKエンドエフェクタのデスクリプタ
+struct PHIKEndEffectorDesc {
+	SPR_DESCDEF(PHIKEndEffector);
 
-	Vec3d pos;  ///< 制御点の位置（剛体ローカル座標系における）
-};
+	bool   bEnabled;					///< エンドエフェクタを作動させるかどうか
 
-/// 目標姿勢を指定する制御点
-struct PHIKOriCtlIf : PHIKControlPointIf{
-	SPR_IFDEF(PHIKOriCtl);
+	bool   bPosition;				///< 位置制御を有効にするかどうか
+	bool   bOrientation;			///< 姿勢制御を有効にするかどうか
+	bool   bForce;					///< 力制御を有効にするかどうか
+	bool   bTorque;					///< トルク制御を有効にするかどうか
 
-	/** @brief 位置の到達目標値を設定する
-	*/
-	void SetTargetPosition(Quaterniond targetPosition);
+	double positionPriority;		///< 位置制御の達成優先度（1～0、大きいほど優先度が高い）
+	double orientationPriority;		///< 姿勢制御の達成優先度（1～0、大きいほど優先度が高い）
+	double forcePriority;			///< 力制御の達成優先度（1～0、大きいほど優先度が高い）
+	double torquePriority;			///< トルク制御の達成優先度（1～0、大きいほど優先度が高い）
 
-	/** @brief 位置の到達目標値を取得する
-	*/
-	Quaterniond GetTargetPosition();
-};
+	Vec3d		targetPosition;				///< 到達目標位置
+	Vec3d		targetLocalPosition;		///< エンドエフェクタにおける到達させたい部位の位置
+	Quaterniond	targetOrientation;			///< 到達目標姿勢
+	Vec3d		targetForce;				///< 力の目標値
+	Vec3d		targetForceWorkingPoint;	///< 出したい力の作用点
+	Vec3d		targetTorque;				///< トルクの目標値
 
-/// 姿勢制御点のディスクリプタ
-struct PHIKOriCtlDesc : PHIKControlPointDesc{
-	SPR_DESCDEF(PHIKOriCtl);
+	PHIKEndEffectorDesc();
 };
 
 // ------------------------------------------------------------------------------
-/// IKノード（目標の達成のために用いることのできる可動部品（関節・剛体など））
-struct PHIKNodeIf : SceneObjectIf{
-	SPR_IFDEF(PHIKNode);
+/// IK用のアクチュエータ（目標の達成のために用いることのできる作動部品（おもに関節に付随））
+struct PHIKActuatorIf : SceneObjectIf{
+	SPR_IFDEF(PHIKActuator);
 
 	/** @brief IKの計算準備をする
 	*/
@@ -123,9 +159,11 @@ struct PHIKNodeIf : SceneObjectIf{
 	*/
 	void ProceedSolve();
 
-	/** @brief 計算結果を取得する
+	/** @brief 擬似逆解を解いたままの"生の"計算結果を取得する
 	*/
-	PTM::VVector<double> GetDTheta();
+	PTM::VVector<double> GetRawSolution();
+
+	// --- --- --- --- ---
 
 	/** @brief 計算結果に従って制御対象を動かす
 	*/
@@ -133,11 +171,15 @@ struct PHIKNodeIf : SceneObjectIf{
 
 	/** @brief 自然位置に戻る
 	*/
-	void MoveNatural();
+	void MoveToNaturalPosition();
 
-	/** @brief 制御点を追加する
+	// --- --- --- --- ---
+
+	/** @brief このアクチュエータを使って動かせるエンドエフェクタ、を登録する
 	*/
-	void AddControlPoint(PHIKControlPointIf* control);
+	void RegisterEndEffector(PHIKEndEffectorIf* endeffector);
+
+	// --- --- --- --- ---
 
 	/** @brief 動かしにくさを設定する
 	*/
@@ -146,10 +188,6 @@ struct PHIKNodeIf : SceneObjectIf{
 	/** @brief 動かしにくさを取得する
 	*/
 	float GetBias();
-
-	/** @brief 番号を設定する
-	*/
-	void SetNumber(int i);
 
 	/** @brief 駆動のためのバネ係数を設定する
 	*/
@@ -176,47 +214,54 @@ struct PHIKNodeIf : SceneObjectIf{
 	bool IsEnabled();
 };
 
-/// IKノードのディスクリプタ
-struct PHIKNodeDesc{
-	SPR_DESCDEF(PHIKNode);
+/// IKアクチュエータのディスクリプタ
+struct PHIKActuatorDesc{
+	SPR_DESCDEF(PHIKActuator);
 
-	bool isEnabled;  ///< 有効かどうか
+	bool bEnabled;  ///< 有効かどうか
 
 	float	bias;	///< 動かしにくさの係数
+
 	double	spring;	///< 駆動用バネのバネ係数
 	double	damper;	///< 駆動用バネのダンパ係数
 
-	PHIKNodeDesc(){ bias = 1.0f; }
+	PHIKActuatorDesc();
 };
 
-/// 位置が可動な剛体
-struct PHIKSolidIf : PHIKNodeIf{
-	SPR_IFDEF(PHIKSolid);
+/// ３軸アクチュエータ（PHBallJointを駆動する）
+struct PHIKBallActuatorIf : PHIKActuatorIf{
+	SPR_IFDEF(PHIKBallActuator);
+
+	/** @brief 動作対象の関節を設定する（１アクチュエータにつき１関節が必ず対応する）
+	*/
+	void SetJoint(PHBallJointIf* joint);
+
+	/** @brief 動作対象として設定された関節を取得する
+	*/
+	PHBallJointIf* GetJoint();
 };
 
-/// IK用剛体のディスクリプタ
-struct PHIKSolidDesc : PHIKNodeDesc{
-	SPR_DESCDEF(PHIKSolid);
+/// ３軸アクチュエータのディスクリプタ
+struct PHIKBallActuatorDesc : PHIKActuatorDesc{
+	SPR_DESCDEF(PHIKBallActuator);
 };
 
-/// 姿勢が可動なボールジョイント
-struct PHIKBallJointIf : PHIKNodeIf{
-	SPR_IFDEF(PHIKBallJoint);
+/// １軸アクチュエータ（PHHingeJointを駆動する）
+struct PHIKHingeActuatorIf : PHIKActuatorIf{
+	SPR_IFDEF(PHIKHingeActuator);
+
+	/** @brief 動作対象の関節を設定する（１アクチュエータにつき１関節が必ず対応する）
+	*/
+	void SetJoint(PHHingeJointIf* joint);
+
+	/** @brief 動作対象として設定された関節を取得する
+	*/
+	PHHingeJointIf* GetJoint();
 };
 
-/// IK用ボールジョイントのディスクリプタ
-struct PHIKBallJointDesc : PHIKNodeDesc{
-	SPR_DESCDEF(PHIKBallJoint);
-};
-
-/// 角度が可動なヒンジジョイント
-struct PHIKHingeJointIf : PHIKNodeIf{
-	SPR_IFDEF(PHIKHingeJoint);
-};
-
-/// IK用ヒンジジョイントのディスクリプタ
-struct PHIKHingeJointDesc : PHIKNodeDesc{
-	SPR_DESCDEF(PHIKHingeJoint);
+/// １軸アクチュエータのディスクリプタ
+struct PHIKHingeActuatorDesc : PHIKActuatorDesc{
+	SPR_DESCDEF(PHIKHingeActuator);
 };
 
 //@}

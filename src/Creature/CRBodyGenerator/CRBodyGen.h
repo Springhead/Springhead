@@ -40,10 +40,10 @@ protected:
 	std::vector< UTRef<PHJointIf> > joints;
 
 	/// IKノード
-	std::vector< UTRef<PHIKNodeIf> > ikNodes;
+	std::vector< UTRef<PHIKActuatorIf> > ikActuators;
 
 	/// 制御点
-	std::vector< UTRef<PHIKControlPointIf> > ikControlPoints;
+	std::vector< UTRef<PHIKEndEffectorIf> > ikEndEffectors;
 
 	/// 所属するシーン
 	PHSceneIf*		phScene;
@@ -111,11 +111,11 @@ public:
 
 	/** @brief IKノードの数を得る
 	*/
-	int NIKNodes();
+	int NIKActuators();
 
 	/** @brief i番目のIKノードを得る
 	*/
-	PHIKNodeIf* GetIKNode(int i);
+	PHIKActuatorIf* GetIKActuator(int i);
 
 	/** @brief IK制御点の数を得る
 	*/
@@ -123,7 +123,7 @@ public:
 
 	/** @brief i番目のIK制御点を得る
 	*/
-	PHIKControlPointIf* GetControlPoint(int i);
+	PHIKEndEffectorIf* GetControlPoint(int i);
 
 	/** @brief ボディの重心座標を得る
 	*/

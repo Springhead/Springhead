@@ -102,6 +102,10 @@ public:
 
 struct PHIKEngineIf : PHEngineIf{
 public:
+	/** @brief —LŒø‚©–³Œø‚©‚ğæ“¾‚·‚é
+	*/
+	bool IsEnabled();
+
 	/** @brief —LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
 	*/
 	void Enable(bool bEnabled);

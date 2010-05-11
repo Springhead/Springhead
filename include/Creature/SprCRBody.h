@@ -53,21 +53,17 @@ struct CRSolidDesc : CRBodyPartDesc {
 	SPR_DESCDEF(CRSolid);
 };
 
-/// クリーチャのボディを構成するIK制御点付きの剛体
+/// クリーチャのボディを構成するIKエンドエフェクタ付きの剛体
 struct CRIKSolidIf : CRSolidIf {
 	SPR_IFDEF(CRIKSolid);
 
-	/** @brief IK制御点の数を取得
+	/** @brief IKエンドエフェクタを取得
 	 */
-	int NIKControlPoints();
+	PHIKEndEffectorIf* GetIKEndEffector();
 
-	/** @brief i番目のIK制御点を取得
+	/** @brief IKエンドエフェクタを設定
 	 */
-	PHIKControlPointIf* GetIKControlPoint(int i);
-
-	/** @brief IK制御点を追加
-	 */
-	void AddIKControlPoint(PHIKControlPointIf* ikCP);
+	void SetIKEndEffector(PHIKEndEffectorIf* ikEE);
 };
 struct CRIKSolidDesc : CRSolidDesc {
 	SPR_DESCDEF(CRSolid);
@@ -84,26 +80,30 @@ struct CRJointIf : CRBodyPartIf {
 	/** @brief PHJointを設定
 	 */
 	void SetPHJoint(PHJointIf* jo);
+
+	/** @brief バネダンパ係数の倍数を設定
+	 */
+	void SetSpringRatio(double springRatio, double damperRatio);
 };
 struct CRJointDesc : CRBodyPartDesc {
 	SPR_DESCDEF(CRJoint);
 };
 
-/// クリーチャのボディを構成するIKノード付きの関節
+/// クリーチャのボディを構成するIKアクチュエータ付きの関節
 struct CRIKJointIf : CRJointIf {
 	SPR_IFDEF(CRIKJoint);
 
-	/** @brief IKノードの数を取得
+	/** @brief IKアクチュエータを取得
 	 */
-	int NIKNodes();
+	PHIKActuatorIf* GetIKActuator();
 
-	/** @brief i番目のIKノードを取得
+	/** @brief IKアクチュエータを設定
 	 */
-	PHIKNodeIf* GetIKNode(int i);
+	void SetIKActuator(PHIKActuatorIf* ikAct);
 
-	/** @brief IKノードを追加
+	/** @brief バネダンパ係数の倍数を設定
 	 */
-	void AddIKNode(PHIKNodeIf* ikNd);
+	void SetIKSpringRatio(double springRatio, double damperRatio);
 };
 struct CRIKJointDesc : CRJointDesc {
 	SPR_DESCDEF(CRJoint);

@@ -87,10 +87,10 @@ struct CRCreatureIf : SceneIf{
 
 /// クリーチャのデスクリプタ
 struct CRCreatureDesc{
-	// SPR_DESCDEF(CRCreature);
+	SPR_DESCDEF(CRCreature);
 
-	// CRCreatureDesc(){
-	// }
+	CRCreatureDesc(){
+	}
 };
 
 //@}

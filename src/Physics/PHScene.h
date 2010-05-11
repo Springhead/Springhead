@@ -11,7 +11,9 @@
 #include <Foundation/Scene.h>
 #include <Physics/PHEngine.h>
 #include <Physics/PHSolid.h>
-#include <Physics/PHIK.h>
+#include <Physics/PHIKEngine.h>
+#include <Physics/PHIKActuator.h>
+#include <Physics/PHIKEndEffector.h>
 
 namespace Spr {;
 
@@ -111,12 +113,12 @@ public:
 	double					GetAirResistanceRate(){return airResistanceRate;}
 	void					SetAirResistanceRate(double rate){airResistanceRate =rate;}
 
-	PHIKNodeIf*				CreateIKNode(const IfInfo* ii, const PHIKNodeDesc& desc = PHIKNodeDesc());
-	int						NIKNodes();
-	PHIKNodeIf*				GetIKNode(int i);
-	PHIKControlPointIf*		CreateIKControlPoint(const IfInfo* ii, const PHIKControlPointDesc& desc = PHIKControlPointDesc());
-	int						NIKControlPoints();
-	PHIKControlPointIf*		GetIKControlPoint(int i);
+	PHIKActuatorIf*				CreateIKActuator(const IfInfo* ii, const PHIKActuatorDesc& desc = PHIKActuatorDesc());
+	int						NIKActuators();
+	PHIKActuatorIf*				GetIKActuator(int i);
+	PHIKEndEffectorIf*		CreateIKEndEffector(const IfInfo* ii, const PHIKEndEffectorDesc& desc = PHIKEndEffectorDesc());
+	int						NIKEndEffectors();
+	PHIKEndEffectorIf*		GetIKEndEffector(int i);
 
 	/// 積分ステップを返す
 	double					GetTimeStep()const{return timeStep;}
