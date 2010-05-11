@@ -9,8 +9,11 @@
 #pragma hdrstop
 #include <Physics/PHConstraintEngine.h>
 #include <Physics/PHContactPoint.h>
-#include <Physics/PHIK.h>
+#include <Physics/PHIKEngine.h>
+#include <Physics/PHIKEndEffector.h>
+#include <Physics/PHIKActuator.h>
 #include <Physics/PHBallJoint.h>
+#include <Physics/PHHingeJoint.h>
 #include <GL/glut.h>
 
 namespace Spr {;
@@ -56,6 +59,7 @@ GRDebugRender::GRDebugRender(){
 	renderForce		= false;
 	renderWorldAxis = false;
 	renderGrid		= false;
+	renderIK		= false;
 	gridY			= 0.0;
 	gridSpan		= 1.0;
 }
@@ -98,17 +102,17 @@ void GRDebugRender::DrawIK(PHIKEngineIf* ikEngine) {
 	this->PushModelMatrix();
 	this->SetModelMatrix(Affinef());
 
-	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->nodes.size(); ++i) {
-		PHIKNodeIf* ikNode = DCAST(PHIKEngine,ikEngine)->nodes[i];
-		if (ikNode) {
-			PHIKBallJointIf* ikBJ = ikNode->Cast();
+	// IK周りのAPI変更に対応するようにいずれ書き換える　（10/01/09, mitake）
+	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->actuators.size(); ++i) {
+		PHIKActuator* ikAct = DCAST(PHIKEngine,ikEngine)->actuators[i];
+		if (ikAct) {
+			PHIKBallActuator* ikBJ = ikAct->Cast();
 			if (ikBJ) {
-				PHIKBallJoint* bj = ikBJ->Cast();
-				Vec3d dT = Vec3d();
-				for (int j=0; j < bj->ndof; ++j) {
-					dT += (bj->dTheta[j]/bj->bias) * bj->e[j];
+				Vec3d w = Vec3d();
+				for (int j=0; j < ikBJ->omega.size(); ++j) {
+					w += (ikBJ->omega[j]/ikBJ->GetBias()) * ikBJ->e[j];
 				}
-				PHBallJoint* jt = DCAST(PHBallJoint,bj->joint);
+				PHBallJoint* jt = DCAST(PHBallJoint,ikBJ->joint);
 				PHBallJointDesc d; jt->GetDesc(&d);
 				Vec3d Pj = jt->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
 
@@ -116,39 +120,56 @@ void GRDebugRender::DrawIK(PHIKEngineIf* ikEngine) {
 					GRMaterialDesc mat;
 					mat.ambient = mat.diffuse = Vec4f(1,0,0.7,1);
 					SetMaterial(mat);
-					DrawLine(Pj, Pj + (dT * scaleIK));
+					DrawLine(Pj, Pj + (w * scaleIK));
 				}
 
 				{
 					GRMaterialDesc mat;
 					mat.ambient = mat.diffuse = Vec4f(1.0,0,0,1);
 					SetMaterial(mat);
-					for (int j=0; j < bj->ndof; ++j) {
-						DrawLine(Pj, Pj + (bj->e[j]));
+					for (int j=0; j < ikBJ->ndof; ++j) {
+						DrawLine(Pj, Pj + (ikBJ->e[j]));
 					}
 				}
 			}
-		}
-	}
+			PHIKHingeActuator* ikHJ = ikAct->Cast();
+			if (ikHJ) {
+				PHHingeJoint* jt = DCAST(PHHingeJoint,ikHJ->joint);
+				PHHingeJointDesc d; jt->GetDesc(&d);
 
-	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->controlpoints.size(); ++i) {
-		PHIKControlPointIf* ikCP = DCAST(PHIKEngine,ikEngine)->controlpoints[i];
-		if (ikCP && DCAST(PHIKControlPoint,ikCP)->isEnabled) {
-			PHIKPosCtlIf* ikP = ikCP->Cast();
-			if (ikP) {
-				PHIKPosCtl* pc = ikP->Cast();
+				Vec3d Pj = jt->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
+				Vec3d wD = jt->solid[0]->GetPose().Ori() * d.poseSocket.Ori() * Vec3d(0,0,1);
 
-				Vec3d sp = pc->solid->GetPose() * pc->pos;
-				Vec3d tg = pc->GetTmpGoal();
+				double w = 0;
+				if (ikHJ->omega.size() != 0) {
+					w = (ikHJ->omega[0]/ikHJ->GetBias());
+				}
+
 				{
 					GRMaterialDesc mat;
-					mat.ambient = mat.diffuse = Vec4f(0,1.0,0,1);
+					mat.ambient = mat.diffuse = Vec4f(1.0,0,0,1);
 					SetMaterial(mat);
-					DrawLine(sp, sp + tg);
+					DrawLine(Pj, Pj + (w * scaleIK * wD));
 				}
 			}
 		}
 	}
+
+	/*
+	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->endeffectors.size(); ++i) {
+		PHIKEndEffector* ikEE = DCAST(PHIKEngine,ikEngine)->endeffectors[i];
+		if (ikEE && DCAST(PHIKEndEffector,ikEE)->bEnabled) {
+			Vec3d sp = ikEE->solid->GetPose() * ikEE->targetLocalPosition;
+			Vec3d tg = ikEE->GetTempTarget();
+			{
+				GRMaterialDesc mat;
+				mat.ambient = mat.diffuse = Vec4f(0,1.0,0,1);
+				SetMaterial(mat);
+				DrawLine(sp, sp + tg);
+			}
+		}
+	}
+	*/
 
 	this->PopModelMatrix();
 	SetLighting(true);
@@ -409,6 +430,20 @@ void GRDebugRender::DrawCoordinateAxis(bool solid){
 	SetVertexFormat(GRVertexElement::vfP3f);
 	PushModelMatrix();
 	MultModelMatrix(Affinef::Scale(scaleAxis, scaleAxis, scaleAxis));
+
+	float vtx[4][3] = {{0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}};
+	size_t idx_x[2] = {0, 1};
+	size_t idx_y[2] = {0, 2};
+	size_t idx_z[2] = {0, 3};
+	SetMaterialSample(GRDebugRenderIf::RED);
+	DrawIndexed(GRRenderBaseIf::LINES, idx_x, (void*)vtx, 2);
+	SetMaterialSample(GRDebugRenderIf::GREEN);
+	DrawIndexed(GRRenderBaseIf::LINES, idx_y, (void*)vtx, 2);
+	SetMaterialSample(GRDebugRenderIf::BLUE);
+	DrawIndexed(GRRenderBaseIf::LINES, idx_z, (void*)vtx, 2);
+	PopModelMatrix();
+
+/*
 	// シンプルに線分三本
 #if 1
 	float vtx[4][3] = {{0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}};
@@ -445,6 +480,7 @@ void GRDebugRender::DrawCoordinateAxis(bool solid){
 	glTranslatef(0, 0, length/2); glScalef(width, width, length); glutSolidCube(1.0);
 	this->PopModelMatrix();
 #endif
+*/
 }
 
 void GRDebugRender::DrawLine(const Vec3d& p0, const Vec3d& p1){

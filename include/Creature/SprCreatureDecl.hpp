@@ -7,18 +7,18 @@
 	void SetPHSolid(Spr::PHSolidIf* so){	base::SetPHSolid(so);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRIKSolidIf(base)	\
-	int NIKControlPoints(){	return	base::NIKControlPoints();}	\
-	PHIKControlPointIf* GetIKControlPoint(int i){	return	base::GetIKControlPoint(i);}	\
-	void AddIKControlPoint(PHIKControlPointIf* ikCP){	base::AddIKControlPoint(ikCP);}	\
+	PHIKEndEffectorIf* GetIKEndEffector(){	return	base::GetIKEndEffector();}	\
+	void SetIKEndEffector(PHIKEndEffectorIf* ikEE){	base::SetIKEndEffector(ikEE);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRJointIf(base)	\
 	Spr::PHJointIf* GetPHJoint(){	return	base::GetPHJoint();}	\
 	void SetPHJoint(Spr::PHJointIf* jo){	base::SetPHJoint(jo);}	\
+	void SetSpringRatio(double springRatio, double damperRatio){	base::SetSpringRatio(springRatio, damperRatio);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRIKJointIf(base)	\
-	int NIKNodes(){	return	base::NIKNodes();}	\
-	PHIKNodeIf* GetIKNode(int i){	return	base::GetIKNode(i);}	\
-	void AddIKNode(PHIKNodeIf* ikNd){	base::AddIKNode(ikNd);}	\
+	PHIKActuatorIf* GetIKActuator(){	return	base::GetIKActuator();}	\
+	void SetIKActuator(PHIKActuatorIf* ikAct){	base::SetIKActuator(ikAct);}	\
+	void SetIKSpringRatio(double springRatio, double damperRatio){	base::SetIKSpringRatio(springRatio, damperRatio);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRBodyIf(base)	\
 	int NSolids(){	return	base::NSolids();}	\
@@ -97,6 +97,27 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_CRTouchSensorIf(base)	\
 	int NContacts(){	return	base::NContacts();}	\
 	Spr::CRContactInfo GetContact(int n){	return	base::GetContact(n);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_CRTrajectoryIf(base)	\
+	Vec3f GetPosition(){	return	base::GetPosition();}	\
+	Vec3f GetVelocity(){	return	base::GetVelocity();}	\
+	Quaternionf GetOrientation(){	return	base::GetOrientation();}	\
+	Vec3f GetAngularVelocity(){	return	base::GetAngularVelocity();}	\
+	void Start(){	base::Start();}	\
+	void Step(){	base::Step();}	\
+	void SetTimeLimit(double tL){	base::SetTimeLimit(tL);}	\
+	void SetTargetPosition(Vec3f pos){	base::SetTargetPosition(pos);}	\
+	void EnablePositionControl(bool enable){	base::EnablePositionControl(enable);}	\
+	void SetTargetPositionInSolid(Vec3f pos){	base::SetTargetPositionInSolid(pos);}	\
+	void SetTargetVelocity(Vec3f vel){	base::SetTargetVelocity(vel);}	\
+	void EnableVelocityControl(bool enable){	base::EnableVelocityControl(enable);}	\
+	void SetTargetOrientation(Vec3f ori){	base::SetTargetOrientation(ori);}	\
+	void EnableOrientationControl(bool enable){	base::EnableOrientationControl(enable);}	\
+	void SetTargetAngularVelocity(Vec3f angvel){	base::SetTargetAngularVelocity(angvel);}	\
+	void EnableAngularVelocityControl(bool enable){	base::EnableAngularVelocityControl(enable);}	\
+	void Enable(bool enable){	base::Enable(enable);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_CRTrajectoryControllerIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRVisualSensorIf(base)	\
 	bool IsVisible(Spr::PHSolidIf* solid){	return	base::IsVisible(solid);}	\

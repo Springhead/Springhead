@@ -26,5 +26,7 @@
 #include "PHSpring.h"
 #include "PHTreeNode.h"
 #include "PHGear.h"
-#include "PHIK.h"
+#include "PHIKEngine.h"
+#include "PHIKActuator.h"
+#include "PHIKEndEffector.h"
 #include "PHContactSurface.h"

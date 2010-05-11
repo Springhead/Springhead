@@ -23,6 +23,7 @@
 
 #include "Creature/SprCRGazeController.h"
 #include "Creature/SprCRReachController.h"
+#include "Creature/SprCRTrajectoryController.h"
 
 #include "Creature/SprCRTouchSensor.h"
 #include "Creature/SprCRVisualSensor.h"

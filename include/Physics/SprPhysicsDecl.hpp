@@ -21,38 +21,41 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHPenaltyEngineIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKEngineIf(base)	\
+	bool IsEnabled(){	return	base::IsEnabled();}	\
 	void Enable(bool bEnabled){	base::Enable(bEnabled);}	\
 	void SetNumIter(int numIter){	base::SetNumIter(numIter);}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_PHIKControlPointIf(base)	\
-	void SetForce(Vec3d force){	base::SetForce(force);}	\
-	Vec3d GetForce(){	return	base::GetForce();}	\
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKEndEffectorIf(base)	\
 	void SetSolid(PHSolidIf* solid){	base::SetSolid(solid);}	\
 	PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
-	void SetNumber(int i){	base::SetNumber(i);}	\
 	void Enable(bool enable){	base::Enable(enable);}	\
 	bool IsEnabled(){	return	base::IsEnabled();}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_PHIKPosCtlIf(base)	\
-	void SetTargetPosition(Vec3d targetPosition){	base::SetTargetPosition(targetPosition);}	\
+	void EnablePositionControl(bool enable){	base::EnablePositionControl(enable);}	\
+	void SetPositionPriority(double priority){	base::SetPositionPriority(priority);}	\
+	void SetTargetPosition(Vec3d position, Vec3d localPosition){	base::SetTargetPosition(position, localPosition);}	\
 	Vec3d GetTargetPosition(){	return	base::GetTargetPosition();}	\
-	void SetPos(Vec3d pos){	base::SetPos(pos);}	\
-	Vec3d GetPos(){	return	base::GetPos();}	\
+	Vec3d GetTargetLocalPosition(){	return	base::GetTargetLocalPosition();}	\
+	void EnableOrientationControl(bool enable){	base::EnableOrientationControl(enable);}	\
+	void SetOrientationPriority(double priority){	base::SetOrientationPriority(priority);}	\
+	void SetTargetOrientation(Quaterniond orientation){	base::SetTargetOrientation(orientation);}	\
+	Quaterniond GetTargetOrientation(){	return	base::GetTargetOrientation();}	\
+	void EnableForceControl(bool enable){	base::EnableForceControl(enable);}	\
+	void SetTargetForce(Vec3d force, Vec3d workingPoint){	base::SetTargetForce(force, workingPoint);}	\
+	Vec3d GetTargetForce(){	return	base::GetTargetForce();}	\
+	Vec3d GetTargetForceWorkingPoint(){	return	base::GetTargetForceWorkingPoint();}	\
+	void EnableTorqueControl(bool enable){	base::EnableTorqueControl(enable);}	\
+	void SetTargetTorque(Vec3d torque){	base::SetTargetTorque(torque);}	\
+	Vec3d GetTargetTorque(){	return	base::GetTargetTorque();}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_PHIKOriCtlIf(base)	\
-	void SetTargetPosition(Quaterniond targetPosition){	base::SetTargetPosition(targetPosition);}	\
-	Quaterniond GetTargetPosition(){	return	base::GetTargetPosition();}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_PHIKNodeIf(base)	\
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKActuatorIf(base)	\
 	void PrepareSolve(){	base::PrepareSolve();}	\
 	void ProceedSolve(){	base::ProceedSolve();}	\
-	PTM::VVector< double > GetDTheta(){	return	base::GetDTheta();}	\
+	PTM::VVector< double > GetRawSolution(){	return	base::GetRawSolution();}	\
 	void Move(){	base::Move();}	\
-	void MoveNatural(){	base::MoveNatural();}	\
-	void AddControlPoint(Spr::PHIKControlPointIf* control){	base::AddControlPoint(control);}	\
+	void MoveToNaturalPosition(){	base::MoveToNaturalPosition();}	\
+	void RegisterEndEffector(Spr::PHIKEndEffectorIf* endeffector){	base::RegisterEndEffector(endeffector);}	\
 	void SetBias(float bias){	base::SetBias(bias);}	\
 	float GetBias(){	return	base::GetBias();}	\
-	void SetNumber(int i){	base::SetNumber(i);}	\
 	void SetSpring(double spring){	base::SetSpring(spring);}	\
 	double GetSpring(){	return	base::GetSpring();}	\
 	void SetDamper(double damper){	base::SetDamper(damper);}	\
@@ -60,11 +63,13 @@
 	void Enable(bool enable){	base::Enable(enable);}	\
 	bool IsEnabled(){	return	base::IsEnabled();}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_PHIKSolidIf(base)	\
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKBallActuatorIf(base)	\
+	void SetJoint(PHBallJointIf* joint){	base::SetJoint(joint);}	\
+	PHBallJointIf* GetJoint(){	return	base::GetJoint();}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_PHIKBallJointIf(base)	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_PHIKHingeJointIf(base)	\
+#define SPR_OVERRIDEMEMBERFUNCOF_PHIKHingeActuatorIf(base)	\
+	void SetJoint(PHHingeJointIf* joint){	base::SetJoint(joint);}	\
+	PHHingeJointIf* GetJoint(){	return	base::GetJoint();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintIf(base)	\
 	PHSolidIf* GetSocketSolid(){	return	base::GetSocketSolid();}	\
@@ -252,12 +257,12 @@
 	Spr::PHRayIf* CreateRay(const Spr::PHRayDesc& desc){	return	base::CreateRay(desc);}	\
 	int NRays(){	return	base::NRays();}	\
 	Spr::PHRayIf* GetRay(int i){	return	base::GetRay(i);}	\
-	Spr::PHIKNodeIf* CreateIKNode(const IfInfo* ii, const Spr::PHIKNodeDesc& desc){	return	base::CreateIKNode(ii, desc);}	\
-	int NIKNodes(){	return	base::NIKNodes();}	\
-	Spr::PHIKNodeIf* GetIKNode(int i){	return	base::GetIKNode(i);}	\
-	Spr::PHIKControlPointIf* CreateIKControlPoint(const IfInfo* ii, const Spr::PHIKControlPointDesc& desc){	return	base::CreateIKControlPoint(ii, desc);}	\
-	int NIKControlPoints(){	return	base::NIKControlPoints();}	\
-	Spr::PHIKControlPointIf* GetIKControlPoint(int i){	return	base::GetIKControlPoint(i);}	\
+	Spr::PHIKActuatorIf* CreateIKActuator(const IfInfo* ii, const Spr::PHIKActuatorDesc& desc){	return	base::CreateIKActuator(ii, desc);}	\
+	int NIKActuators(){	return	base::NIKActuators();}	\
+	Spr::PHIKActuatorIf* GetIKActuator(int i){	return	base::GetIKActuator(i);}	\
+	Spr::PHIKEndEffectorIf* CreateIKEndEffector(const IfInfo* ii, const Spr::PHIKEndEffectorDesc& desc){	return	base::CreateIKEndEffector(ii, desc);}	\
+	int NIKEndEffectors(){	return	base::NIKEndEffectors();}	\
+	Spr::PHIKEndEffectorIf* GetIKEndEffector(int i){	return	base::GetIKEndEffector(i);}	\
 	double GetTimeStep()const{	return	base::GetTimeStep();}	\
 	double GetTimeStepInv()const{	return	base::GetTimeStepInv();}	\
 	void SetTimeStep(double dt){	base::SetTimeStep(dt);}	\

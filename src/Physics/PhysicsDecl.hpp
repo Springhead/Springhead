@@ -1,105 +1,105 @@
-#define SPR_DECLMEMBEROF_PHIKControlPointDesc \
+#define SPR_DECLMEMBEROF_PHIKEndEffectorDesc \
 protected:\
-	bool	isEnabled;	\
+	bool	bEnabled;	\
+	bool	bPosition;	\
+	bool	bOrientation;	\
+	bool	bForce;	\
+	bool	bTorque;	\
+	double	positionPriority;	\
+	double	orientationPriority;	\
+	double	forcePriority;	\
+	double	torquePriority;	\
+	Vec3d	targetPosition;	\
+	Vec3d	targetLocalPosition;	\
+	Quaterniond	targetOrientation;	\
+	Vec3d	targetForce;	\
+	Vec3d	targetForceWorkingPoint;	\
+	Vec3d	targetTorque;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
-		isEnabled = ((PHIKControlPointDesc*)ptr)->isEnabled;	\
+		bEnabled = ((PHIKEndEffectorDesc*)ptr)->bEnabled;	\
+		bPosition = ((PHIKEndEffectorDesc*)ptr)->bPosition;	\
+		bOrientation = ((PHIKEndEffectorDesc*)ptr)->bOrientation;	\
+		bForce = ((PHIKEndEffectorDesc*)ptr)->bForce;	\
+		bTorque = ((PHIKEndEffectorDesc*)ptr)->bTorque;	\
+		positionPriority = ((PHIKEndEffectorDesc*)ptr)->positionPriority;	\
+		orientationPriority = ((PHIKEndEffectorDesc*)ptr)->orientationPriority;	\
+		forcePriority = ((PHIKEndEffectorDesc*)ptr)->forcePriority;	\
+		torquePriority = ((PHIKEndEffectorDesc*)ptr)->torquePriority;	\
+		targetPosition = ((PHIKEndEffectorDesc*)ptr)->targetPosition;	\
+		targetLocalPosition = ((PHIKEndEffectorDesc*)ptr)->targetLocalPosition;	\
+		targetOrientation = ((PHIKEndEffectorDesc*)ptr)->targetOrientation;	\
+		targetForce = ((PHIKEndEffectorDesc*)ptr)->targetForce;	\
+		targetForceWorkingPoint = ((PHIKEndEffectorDesc*)ptr)->targetForceWorkingPoint;	\
+		targetTorque = ((PHIKEndEffectorDesc*)ptr)->targetTorque;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		((PHIKControlPointDesc*)ptr)->isEnabled = isEnabled;	\
+		((PHIKEndEffectorDesc*)ptr)->bEnabled = bEnabled;	\
+		((PHIKEndEffectorDesc*)ptr)->bPosition = bPosition;	\
+		((PHIKEndEffectorDesc*)ptr)->bOrientation = bOrientation;	\
+		((PHIKEndEffectorDesc*)ptr)->bForce = bForce;	\
+		((PHIKEndEffectorDesc*)ptr)->bTorque = bTorque;	\
+		((PHIKEndEffectorDesc*)ptr)->positionPriority = positionPriority;	\
+		((PHIKEndEffectorDesc*)ptr)->orientationPriority = orientationPriority;	\
+		((PHIKEndEffectorDesc*)ptr)->forcePriority = forcePriority;	\
+		((PHIKEndEffectorDesc*)ptr)->torquePriority = torquePriority;	\
+		((PHIKEndEffectorDesc*)ptr)->targetPosition = targetPosition;	\
+		((PHIKEndEffectorDesc*)ptr)->targetLocalPosition = targetLocalPosition;	\
+		((PHIKEndEffectorDesc*)ptr)->targetOrientation = targetOrientation;	\
+		((PHIKEndEffectorDesc*)ptr)->targetForce = targetForce;	\
+		((PHIKEndEffectorDesc*)ptr)->targetForceWorkingPoint = targetForceWorkingPoint;	\
+		((PHIKEndEffectorDesc*)ptr)->targetTorque = targetTorque;	\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHIKPosCtlDesc \
+#define SPR_DECLMEMBEROF_PHIKActuatorDesc \
 protected:\
-	Vec3d	pos;	\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		PHIKControlPoint::SetDesc((PHIKControlPointDesc*)(PHIKPosCtlDesc*)ptr);	\
-		pos = ((PHIKPosCtlDesc*)ptr)->pos;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHIKControlPoint::GetDesc((PHIKControlPointDesc*)(PHIKPosCtlDesc*)ptr);	\
-		((PHIKPosCtlDesc*)ptr)->pos = pos;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHIKOriCtlDesc \
-protected:\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		PHIKControlPoint::SetDesc((PHIKControlPointDesc*)(PHIKOriCtlDesc*)ptr);	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHIKControlPoint::GetDesc((PHIKControlPointDesc*)(PHIKOriCtlDesc*)ptr);	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHIKNodeDesc \
-protected:\
-	bool	isEnabled;	\
+	bool	bEnabled;	\
 	float	bias;	\
 	double	spring;	\
 	double	damper;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
-		isEnabled = ((PHIKNodeDesc*)ptr)->isEnabled;	\
-		bias = ((PHIKNodeDesc*)ptr)->bias;	\
-		spring = ((PHIKNodeDesc*)ptr)->spring;	\
-		damper = ((PHIKNodeDesc*)ptr)->damper;	\
+		bEnabled = ((PHIKActuatorDesc*)ptr)->bEnabled;	\
+		bias = ((PHIKActuatorDesc*)ptr)->bias;	\
+		spring = ((PHIKActuatorDesc*)ptr)->spring;	\
+		damper = ((PHIKActuatorDesc*)ptr)->damper;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		((PHIKNodeDesc*)ptr)->isEnabled = isEnabled;	\
-		((PHIKNodeDesc*)ptr)->bias = bias;	\
-		((PHIKNodeDesc*)ptr)->spring = spring;	\
-		((PHIKNodeDesc*)ptr)->damper = damper;	\
+		((PHIKActuatorDesc*)ptr)->bEnabled = bEnabled;	\
+		((PHIKActuatorDesc*)ptr)->bias = bias;	\
+		((PHIKActuatorDesc*)ptr)->spring = spring;	\
+		((PHIKActuatorDesc*)ptr)->damper = damper;	\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHIKSolidDesc \
+#define SPR_DECLMEMBEROF_PHIKBallActuatorDesc \
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
-		PHIKNode::SetDesc((PHIKNodeDesc*)(PHIKSolidDesc*)ptr);	\
+		PHIKActuator::SetDesc((PHIKActuatorDesc*)(PHIKBallActuatorDesc*)ptr);	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		PHIKNode::GetDesc((PHIKNodeDesc*)(PHIKSolidDesc*)ptr);	\
+		PHIKActuator::GetDesc((PHIKActuatorDesc*)(PHIKBallActuatorDesc*)ptr);	\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHIKBallJointDesc \
+#define SPR_DECLMEMBEROF_PHIKHingeActuatorDesc \
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
-		PHIKNode::SetDesc((PHIKNodeDesc*)(PHIKBallJointDesc*)ptr);	\
+		PHIKActuator::SetDesc((PHIKActuatorDesc*)(PHIKHingeActuatorDesc*)ptr);	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		PHIKNode::GetDesc((PHIKNodeDesc*)(PHIKBallJointDesc*)ptr);	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHIKHingeJointDesc \
-protected:\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		PHIKNode::SetDesc((PHIKNodeDesc*)(PHIKHingeJointDesc*)ptr);	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHIKNode::GetDesc((PHIKNodeDesc*)(PHIKHingeJointDesc*)ptr);	\
+		PHIKActuator::GetDesc((PHIKActuatorDesc*)(PHIKHingeActuatorDesc*)ptr);	\
 		return true;	\
 	}\
 

@@ -28,51 +28,23 @@ void CRNeckController::Init(){
 
 void CRNeckController::Step(){
 	if (csHead) {
-		PHSolidIf*    soHead = csHead->GetPHSolid();
-		PHIKOriCtlIf* cpHead = NULL;
-		for (int i=0; i<csHead->NIKControlPoints(); ++i) {
-			if (!cpHead) {
-				cpHead = csHead->GetIKControlPoint(i)->Cast();
-			} else {
-				break;
-			}
-		}
-		Vec3d rot = PTM::cross(soHead->GetPose().Ori()*Vec3d(0,1,0), (pos-(soHead->GetPose().Pos())).unit());
+		PHSolidIf*			soHead = csHead->GetPHSolid();
+		PHIKEndEffectorIf*	efHead = csHead->GetIKEndEffector();
+
+		Vec3d rotLook	= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,1,0), (pos-(soHead->GetPose().Pos())).unit());
+		Vec3d rotUp		= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,0,-1), Vec3d(0,1,0));
+		Vec3d rot		= rotLook + 0.3*rotUp;
+
 		if (!(attractiveness <= lowerAttractiveness)) {
 			if (attractiveness < upperAttractiveness) {
 				rot = rot * ((attractiveness - lowerAttractiveness) / (upperAttractiveness - lowerAttractiveness));
 			}
+
 			Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
-			cpHead->SetTargetPosition(qt*soHead->GetPose().Ori());
-			/*
-			if (t > 0) {
-				double ratio = 1 - (10*pow(t,3) - 15*pow(t,4) + 6*pow(t,5));
-				// ratio = 0.1;
-				if (ratio > 0) {
-					rot = rot * ratio;
-					Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
-					// cpHead->SetTargetPosition(qt*soHead->GetPose().Ori());
-					cpHead->SetTargetPosition(qt * orig);
-					std::cout << "r = " << ratio << std::endl;
-				} else {
-					std::cout << "r = " << ratio << std::endl;
-					// cpHead->SetTargetPosition(soHead->GetPose().Ori());
-					cpHead->SetTargetPosition(orig);
-				}
-				t -= 0.005;
-			} else {
-				if (rot.norm() < Rad(5)) {
-					// std::cout << Deg(rot.norm()) << std::endl;
-					Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
-					cpHead->SetTargetPosition(qt*soHead->GetPose().Ori());
-				} else {
-					// std::cout << Deg(rot.norm()) << std::endl;
-					t = 1.0;
-					orig = soHead->GetPose().Ori();
-				}
-			}
-			*/
-			cpHead->Enable(true);
+			efHead->SetTargetOrientation(qt*soHead->GetPose().Ori());
+
+			efHead->EnableOrientationControl(true);
+			efHead->Enable(true);
 		}
 	} else {
 		// ‚¢‚¸‚êAddChildObject‚ÅŽw’è‚·‚é‚æ‚¤‚É‚·‚×‚« (mitake, 09/07/19)

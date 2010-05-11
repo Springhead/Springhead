@@ -20,6 +20,8 @@
 #include "Creature/CRGazeController.h"
 #include "Creature/CRAttentionController.h"
 #include "Creature/CRReachingController.h"
+#include "Creature/CRTrajectoryController.h"
+#include "Creature/CRTrajectory.h"
 #include "Creature/CRGrabController.h"
 
 using namespace std;
@@ -48,6 +50,8 @@ void SPR_CDECL CRSdkIf::RegisterSdk(){
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRReachingController));
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRReachingControllers));
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRGrabController));
+	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRTrajectoryController));
+	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRTrajectory));
 
 	/*
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRWalkController));

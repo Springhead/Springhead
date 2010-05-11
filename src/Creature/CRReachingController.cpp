@@ -34,10 +34,10 @@ void CRReachingController::Step(){
 			length = 0;
 			deltaLength = 0;
 		}
-		Vec3f dir = (cSolid->GetPHSolid()->GetPose() * DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->GetPos())-fP;
+		Vec3f dir = (cSolid->GetPHSolid()->GetPose() * cSolid->GetIKEndEffector()->GetTargetLocalPosition())-fP;
 		if (dir.norm() != 0) { dir /= dir.norm(); }
 		pos = fP + dir*initLen*length;
-		DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->SetTargetPosition(pos);
+		cSolid->GetIKEndEffector()->SetTargetPosition(pos);
 	}
 }
 
@@ -86,10 +86,11 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 		this->fV		= v;
 		this->period	= t;
 
-		Vec3f dir = (cSolid->GetPHSolid()->GetPose() * DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->GetPos())-fP;
+		Vec3f dir = (cSolid->GetPHSolid()->GetPose() * cSolid->GetIKEndEffector()->GetTargetLocalPosition())-fP;
 		initLen = dir.norm();
 
-		cSolid->GetIKControlPoint(0)->Enable(true);
+		cSolid->GetIKEndEffector()->Enable(true);
+		cSolid->GetIKEndEffector()->EnablePositionControl(true);
 		bActive = true;
 	}
 
@@ -103,7 +104,7 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 	HingeJointGoals hingeGoals;
 
 	//// ÅIˆÊ’u‚É‚¨‚¯‚éŠÖßŠp“x‚ğ‹‚ß‚é
-	DCAST(PHIKPosCtlIf,cSolid->GetIKControlPoint(0))->SetTargetPosition(pos);
+	DCAST(PHIKPosCtlIf,cSolid->GetIKEndEffector(0))->SetTargetPosition(pos);
 	CRCreatureIf* creature = DCAST(CRCreatureIf,DCAST(SceneObject,this)->GetScene());
 	PHSceneIf* phScene = creature->GetPHScene();
 	state->SaveState(phScene);
@@ -131,7 +132,7 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 		}
 	}
 	state->LoadState(phScene);
-	cSolid->GetIKControlPoint(0)->Enable(false);
+	cSolid->GetIKEndEffector(0)->Enable(false);
 
 	std::cout << " --- " << std::endl;
 	for (size_t i=0; i<ballGoals.size(); ++i) {
@@ -147,7 +148,7 @@ void CRReachingController::Start(Vec3d pos, Vec3d v, float t){
 }
 
 void CRReachingController::Stop(){
-	cSolid->GetIKControlPoint(0)->Enable(false);
+	cSolid->GetIKEndEffector()->Enable(false);
 	bActive = false;
 }
 

@@ -277,6 +277,100 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_CRTrajectoryState \
+protected:\
+	bool	posEnabled;	\
+	bool	velEnabled;	\
+	bool	oriEnabled;	\
+	bool	angvelEnabled;	\
+	double	time;	\
+	Vec3f	posStart;	\
+	Vec3f	posEnd;	\
+	Vec3f	velStart;	\
+	Vec3f	velEnd;	\
+	Quaternionf	oriStart;	\
+	Quaternionf	oriEnd;	\
+	Vec3f	angvelStart;	\
+	Vec3f	angvelEnd;	\
+	Vec3f	currentPosition;	\
+	Quaternionf	currentOrientation;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		posEnabled = ((CRTrajectoryState*)ptr)->posEnabled;	\
+		velEnabled = ((CRTrajectoryState*)ptr)->velEnabled;	\
+		oriEnabled = ((CRTrajectoryState*)ptr)->oriEnabled;	\
+		angvelEnabled = ((CRTrajectoryState*)ptr)->angvelEnabled;	\
+		time = ((CRTrajectoryState*)ptr)->time;	\
+		posStart = ((CRTrajectoryState*)ptr)->posStart;	\
+		posEnd = ((CRTrajectoryState*)ptr)->posEnd;	\
+		velStart = ((CRTrajectoryState*)ptr)->velStart;	\
+		velEnd = ((CRTrajectoryState*)ptr)->velEnd;	\
+		oriStart = ((CRTrajectoryState*)ptr)->oriStart;	\
+		oriEnd = ((CRTrajectoryState*)ptr)->oriEnd;	\
+		angvelStart = ((CRTrajectoryState*)ptr)->angvelStart;	\
+		angvelEnd = ((CRTrajectoryState*)ptr)->angvelEnd;	\
+		currentPosition = ((CRTrajectoryState*)ptr)->currentPosition;	\
+		currentOrientation = ((CRTrajectoryState*)ptr)->currentOrientation;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		((CRTrajectoryState*)ptr)->posEnabled = posEnabled;	\
+		((CRTrajectoryState*)ptr)->velEnabled = velEnabled;	\
+		((CRTrajectoryState*)ptr)->oriEnabled = oriEnabled;	\
+		((CRTrajectoryState*)ptr)->angvelEnabled = angvelEnabled;	\
+		((CRTrajectoryState*)ptr)->time = time;	\
+		((CRTrajectoryState*)ptr)->posStart = posStart;	\
+		((CRTrajectoryState*)ptr)->posEnd = posEnd;	\
+		((CRTrajectoryState*)ptr)->velStart = velStart;	\
+		((CRTrajectoryState*)ptr)->velEnd = velEnd;	\
+		((CRTrajectoryState*)ptr)->oriStart = oriStart;	\
+		((CRTrajectoryState*)ptr)->oriEnd = oriEnd;	\
+		((CRTrajectoryState*)ptr)->angvelStart = angvelStart;	\
+		((CRTrajectoryState*)ptr)->angvelEnd = angvelEnd;	\
+		((CRTrajectoryState*)ptr)->currentPosition = currentPosition;	\
+		((CRTrajectoryState*)ptr)->currentOrientation = currentOrientation;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_CRTrajectoryDesc \
+protected:\
+	Vec3f	posInSolid;	\
+	Vec3f	posInWorld;	\
+	double	timeLimit;	\
+	bool	bEnabled;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		CREngine::SetDesc((CREngineDesc*)(CRTrajectoryDesc*)ptr);	\
+		CRTrajectory::SetState((CRTrajectoryState*)(CRTrajectoryDesc*)ptr);	\
+		posInSolid = ((CRTrajectoryDesc*)ptr)->posInSolid;	\
+		posInWorld = ((CRTrajectoryDesc*)ptr)->posInWorld;	\
+		timeLimit = ((CRTrajectoryDesc*)ptr)->timeLimit;	\
+		bEnabled = ((CRTrajectoryDesc*)ptr)->bEnabled;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CREngine::GetDesc((CREngineDesc*)(CRTrajectoryDesc*)ptr);	\
+		CRTrajectory::GetState((CRTrajectoryState*)(CRTrajectoryDesc*)ptr);	\
+		((CRTrajectoryDesc*)ptr)->posInSolid = posInSolid;	\
+		((CRTrajectoryDesc*)ptr)->posInWorld = posInWorld;	\
+		((CRTrajectoryDesc*)ptr)->timeLimit = timeLimit;	\
+		((CRTrajectoryDesc*)ptr)->bEnabled = bEnabled;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_CRTrajectoryControllerDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		CREngine::SetDesc((CREngineDesc*)(CRTrajectoryControllerDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CREngine::GetDesc((CREngineDesc*)(CRTrajectoryControllerDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_CRVisualSensorDesc \
 protected:\
 public:\

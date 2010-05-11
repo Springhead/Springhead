@@ -103,20 +103,20 @@ int CRBodyGen::NHingeJoints(){
 	return counterNHingeJoint;
 }
 
-int CRBodyGen::NIKNodes(){
-	return ikNodes.size();
+int CRBodyGen::NIKActuators(){
+	return ikActuators.size();
 }
 
-PHIKNodeIf* CRBodyGen::GetIKNode(int i){
-	return ((size_t)i < ikNodes.size()) ? ikNodes[i] : NULL;
+PHIKActuatorIf* CRBodyGen::GetIKActuator(int i){
+	return ((size_t)i < ikActuators.size()) ? ikActuators[i] : NULL;
 }
 
 int CRBodyGen::NControlPoints(){
-	return ikControlPoints.size();
+	return ikEndEffectors.size();
 }
 
-PHIKControlPointIf* CRBodyGen::GetControlPoint(int i){
-	return ((size_t)i < ikControlPoints.size()) ? ikControlPoints[i] : NULL;
+PHIKEndEffectorIf* CRBodyGen::GetControlPoint(int i){
+	return ((size_t)i < ikEndEffectors.size()) ? ikEndEffectors[i] : NULL;
 }
 
 Vec3d CRBodyGen::GetCenterOfMass(){
