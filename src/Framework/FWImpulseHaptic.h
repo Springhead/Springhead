@@ -13,10 +13,14 @@
 #include <Framework/FWInteractScene.h>
 
 class FWImpulseHapticLoop : public FWHapticLoopBase{
+	Vec3d vibV;
+	double vibT;
+	// std::vector<Vec3d> oVibForce;
 public:
 	FWImpulseHapticLoop();
 	virtual void Step();
 	virtual void HapticRendering();
+	virtual Vec3d Vibration(FWInteractSolid* iSolid, FWInteractPointer* iPointer, int n);
 	virtual void ConstraintBasedRendering();
 };
 

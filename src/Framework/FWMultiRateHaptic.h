@@ -37,6 +37,9 @@ public:
 	}
 	virtual void Step(){}
 
+	virtual bool GetSyncFlag() { return bSync; }
+	virtual bool GetCalcPhysFlag() { return bCalcPhys; }
+
 };
 }
 #endif
