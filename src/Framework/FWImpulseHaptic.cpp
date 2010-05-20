@@ -26,9 +26,38 @@ void FWImpulseHapticLoop::Step(){
 	}
 }
 
+Vec3d FWImpulseHapticLoop::Vibration(FWInteractSolid* iSolid, FWInteractPointer* iPointer, int n){
+	Vec3d vibforce = Vec3d(0,0,0);
+
+	if(!iPointer->bContact[n]){	// この近傍点と初接触かどうか
+		vibV = iPointer->hiSolid.GetVelocity() - iSolid->copiedSolid.GetVelocity();
+		iSolid->sceneSolid->GetShape(0)->SetVibT(0);
+	}
+	vibT = iSolid->sceneSolid->GetShape(0)->GetVibT();		// material.vibTへのポインタ
+	iPointer->bContact[n] = true;
+
+	double vibA = iSolid->copiedSolid.GetShape(0)->GetVibA();
+	double vibB = iSolid->copiedSolid.GetShape(0)->GetVibB();
+	double vibW = iSolid->copiedSolid.GetShape(0)->GetVibW();
+
+	vibforce = vibA * (vibV*0.03) * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//振動計算
+	iSolid->sceneSolid->GetShape(0)->SetVibT((float)(vibT+hdt));		// 接触時間の更新
+	return vibforce;
+}
+
 void FWImpulseHapticLoop::HapticRendering(){
 	for(int j = 0; j < NIAPointers(); j++){
 		FWInteractPointer* iPointer = GetIAPointer(j)->Cast();
+
+		if((int)iPointer->bContact.size() < NIASolids()){
+			for(int i=(int)iPointer->bContact.size(); i<NIASolids(); i++){
+				iPointer->bContact.push_back(false);
+				// contactFlag[0].push_back(false);
+				// contactFlag[1].push_back(false);
+				// oVibForce.push_back(Vec3d(0,0,0));
+			}
+		}
+
 		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
 			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
 		}else{
@@ -68,6 +97,8 @@ void FWImpulseHapticLoop::HapticRendering(){
 
 			double f = force_dir * interpolation_normal;		// 剛体の面の法線と内積をとる
 			if(f < 0.0){										// 内積が負なら力を計算
+				Vec3d pVibForce = Vec3d(0,0,0);
+
 				Vec3d ortho = f * interpolation_normal;			// 近傍点から力覚ポインタへのベクトルの面の法線への正射影
 				Vec3d dv =  iPointer->hiSolid.GetPointVelocity(pPoint) - cSolid->GetPointVelocity(cPoint);
 				Vec3d dvortho = dv.norm() * interpolation_normal;
@@ -81,8 +112,20 @@ void FWImpulseHapticLoop::HapticRendering(){
 				outForce.v() += addforce / ws4;	
 				outForce.w() = Vec3d();
 
+				///振動の計算
+				if(iPointer->bVibration){
+					pVibForce = Vibration(iSolid, iPointer, i);
+					// if(bPic){ pVibForce += oVibForce[i]; }
+				}
+
+				outForce.v() += pVibForce;	
+
 				/// 計算した力を剛体に加える//
 				tp->impulse = -1 * addforce;	
+			}else{
+				iPointer->bContact[i] = false;
+				// contactFlag[j][i] = false;
+				// proxy[j][i] = poseSolid.Inv() * pPoint;
 			}
 		}
 		/// インタフェースへ力を出力
