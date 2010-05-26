@@ -449,14 +449,13 @@ void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	glMaterialfv(GL_FRONT, GL_EMISSION,  mat.emissive);
 	glMaterialf (GL_FRONT, GL_SHININESS, mat.power);
 	if (mat.texname.length()){
+		int texId = LoadTexture(mat.texname);
 		if (mat.Is3D()){
-			int texId = LoadTexture(mat.texname);
 			glDisable(GL_TEXTURE_2D);
 			glEnable(GL_TEXTURE_3D);
 			glBindTexture(GL_TEXTURE_3D, texId);
 			if (enableDebugMessage){ std::cout << "1: glBindTexture(GL_TEXTURE_3D, " << texId << ");" << std::endl; }
 		}else{
-			int texId = LoadTexture(mat.texname);
 			// std::cout << " SetMaterial : id : " << texId << std::endl;
 			glDisable(GL_TEXTURE_3D);
 			glEnable(GL_TEXTURE_2D);
@@ -603,9 +602,9 @@ void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize
 static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_BGR_EXT, GL_BGRA_EXT};
 static boost::regex Tex3DRegex("^(.*_tex3d_)([0-9]+)(\\Q.\\E[^\\Q.\\E]+)$");
 unsigned int GRDeviceGL::LoadTexture(const std::string filename){
-	if (enableDebugMessage) { std::cout << "GRDeviceGL::LoadTexture(" << filename.c_str() << ");" << std::endl; }
 	GRTexnameMap::iterator it = texnameMap.find(filename);
 	if (it != texnameMap.end()) return it->second;
+	if (1/*enableDebugMessage*/) { std::cout << "GRDeviceGL::LoadTexture(" << filename.c_str() << ");" << std::endl; }
 
 	// ƒtƒ@ƒCƒ‹–¼‚ª‹ó‚È‚ç return 0;
 	if (filename.empty()) return 0;

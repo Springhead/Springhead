@@ -73,7 +73,7 @@ bool UTDllLoader::Load(const char* dllNameIn, const char* addPathIn){
 	sprintf(pathOrg, "PATH=%s", getenv("PATH"));
 	sprintf(pathNew, "PATH=%s;%s", path, getenv("PATH"));
 	putenv(pathNew);
-
+	DSTR << "PathNew: " << pathNew << std::endl;
 #ifdef _WIN32	
 	module = LoadLibrary(dll);
 #else

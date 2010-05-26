@@ -66,6 +66,15 @@ bool FWObject::AddChildObject(ObjectIf* o){
 		grFrame = fr;
 		return true;
 	}
+	GRMeshIf* m = DCAST(GRMeshIf, o);
+	if(m){
+		FWSceneIf* s=GetScene()->Cast();
+		GRSceneIf* gs = s->GetGRScene();
+		grFrame = gs->CreateVisual(GRFrameIf::GetIfInfoStatic(), GRFrameDesc())->Cast();
+		grFrame->SetName("newFrameForMesh");
+		grFrame->AddChildObject(m);
+		return true;
+	}
 	return false;
 }
 
