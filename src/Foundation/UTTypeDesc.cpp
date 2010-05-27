@@ -272,7 +272,7 @@ UTTypeDescFieldIt::UTTypeDescFieldIt(UTTypeDesc* d){
 		}
 	}
 }
-bool UTTypeDescFieldIt::NextField(){
+bool UTTypeDescFieldIt::NextField(void* base){
 	if (!type || !type->GetComposit().size()) return false;
 	//	次のフィールドへ進む
 	if (field == type->GetComposit().end()){
@@ -284,11 +284,11 @@ bool UTTypeDescFieldIt::NextField(){
 			return false;
 		}
 	}
-	SetFieldInfo();
+	SetFieldInfo(base);
 	return true;
 }
 	
-bool UTTypeDescFieldIt::FindField(UTString name){
+bool UTTypeDescFieldIt::FindField(UTString name, void* base){
 	if (!type || !type->GetComposit().size()) return false;
 	//	次のフィールドへ進む
 	for(field = type->GetComposit().begin(); field != type->GetComposit().end(); ++field){
@@ -300,18 +300,24 @@ bool UTTypeDescFieldIt::FindField(UTString name){
 		fieldType = F_NONE;
 		return false;
 	}
-	SetFieldInfo();
+	SetFieldInfo(base);
 	return true;
 }
 
-void UTTypeDescFieldIt::SetFieldInfo(){
+void UTTypeDescFieldIt::SetFieldInfo(void* base){
 	//	フィールドの配列要素数を設定
 	if (field->varType==UTTypeDesc::Field::SINGLE){
 		arrayLength = 1;
-	}else if(field->varType==UTTypeDesc::Field::VECTOR){
+	}else if(field->varType==UTTypeDesc::Field::VECTOR || field->varType==UTTypeDesc::Field::ARRAY){
 		arrayLength = field->length;
-	}else if(field->varType==UTTypeDesc::Field::ARRAY){
-		arrayLength = field->length;
+		if (field->lengthFieldName.length()){
+			for(UTTypeDesc::Composit::iterator it = type->composit.begin(); it != field && it != type->composit.end(); ++it){
+				if (it->name.compare(field->lengthFieldName) == 0){
+					arrayLength = it->ReadNumber(base, 0);
+					break;
+				}
+			}
+		}
 	}
 	//	配列カウントを初期化
 	arrayPos = -1;

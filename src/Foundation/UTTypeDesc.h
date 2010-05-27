@@ -428,11 +428,11 @@ public:
 	int arrayLength;						///<	固定長の場合の配列の長さ
 	FieldType fieldType;					///<	読み出すフィールドの型
 
-	UTTypeDescFieldIt(UTTypeDesc* d);					///<	コンストラクタ
-	bool NextField();						///<	次のフィールドに進む
-	bool FindField(UTString n);				///<	指定のフィールドに進む
+	UTTypeDescFieldIt(UTTypeDesc* d);		///<	コンストラクタ
+	bool NextField(void* base);				///<	次のフィールドに進む
+	bool FindField(UTString n, void* base);	///<	指定のフィールドに進む
 protected:
-	void SetFieldInfo();					//<		NextField FindFieldが使う
+	void SetFieldInfo(void* base);			///<		NextField FindFieldが使う
 	FieldType GetTypeId(UTTypeDesc* t);
 };
 class UTTypeDescFieldIts:public UTStack<UTTypeDescFieldIt>{
@@ -442,14 +442,14 @@ public:
 		Push(UTTypeDescFieldIt(t));
 	}
 	///	次のフィールドに進む
-	bool NextField(){
-		if(size()) return back().NextField();
+	bool NextField(void* base){
+		if(size()) return back().NextField(base);
 		return false;
 	}
 	/**	現在の組み立て型の中から，指定の名前のフィールドを探す．
 		見つけたらそのフィールドを指してtrueを返す．	*/
-	bool FindField(UTString n){
-		if(size()) return back().FindField(n);
+	bool FindField(UTString n, void* base){
+		if(size()) return back().FindField(n, base);
 		return false;
 	}
 	///	配列中での位置

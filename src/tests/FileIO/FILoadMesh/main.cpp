@@ -39,7 +39,6 @@
 
 #elif defined(TEST_CASE) && (TEST_CASE == 2)
 #define EXIT_TIMER	20000				
-#define TEST_FILEX	"tire3d.x"			
 
 #endif
 
@@ -66,8 +65,8 @@ void display(){
 	count ++;
 	GRMesh* mesh = scene->FindObject("tire_tex3d")->Cast();
 	if (mesh){
-		for(int i=0; i<mesh->GetNVertex(); ++i){
-			mesh->GetVertex(i)[2] = (i+count)%10 * 0.1;
+		for(int i=0; i<mesh->NVertex(); ++i){
+			mesh->GetVertices()[i][2] = (i+count)%10 * 0.1;
 		}
 	}
 
@@ -177,7 +176,7 @@ int main(int argc, char* argv[]){
 	objs.push_back(grSdk);
 	scene = grSdk->CreateScene(GRSceneDesc());
 	objs.push_back(scene);
-	fileX->Load(objs, TEST_FILEX);
+	fileX->Load(objs, "test.x");
  
 
 	if (!grSdk) return -1;

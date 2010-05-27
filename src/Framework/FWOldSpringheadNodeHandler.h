@@ -10,6 +10,13 @@
 
 #if (!defined SWIG) || (defined SWIG_OLDNODEHANDLER)
 
+#ifdef SWIG_OLDNODEHANDLER
+#define VECTOR_LENGTH(x)	[x]		///	SWIGに配列の長さ情報を渡す
+#else
+#define VECTOR_LENGTH(x)
+#endif
+
+
 namespace SprOldSpringhead{;
 using namespace Spr;
 
@@ -93,14 +100,15 @@ struct MeshMaterialList{
 };
 
 ///	DirectXのMeshの頂点色．
-struct MeshVertexColor{
-	int nVertices;
-	Vec4f vertexColors;
+struct IndexColor{
+	int index;
+	Vec4f indexColor;
 };
+
 ///	DirectXのMeshの頂点色リスト．
 struct MeshVertexColors{
-	int nVertices;
-	std::vector<MeshVertexColor> vertexColors;
+	int nVertexColors;
+	std::vector<IndexColor> vertexColors VECTOR_LENGTH(nVertexColors);
 };
 
 /// DirectXのテクスチャファイル名（Materialの内部タグ)．
