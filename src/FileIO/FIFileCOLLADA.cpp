@@ -46,7 +46,8 @@ UTStack<char> tagStack;
 static void TagStart(const char* b, const char* e){
 	attrs.clear();
 	tagName = UTString(b,e);
-	if (fileContext->fieldIts.FindField(tagName)){	
+	void* base = fileContext->datas.Top()->data;
+	if (fileContext->fieldIts.FindField(tagName, base)){	
 		//	組み立て型のロード中で，メンバが見つかった場合
 		tagStack.Push(false);
 	}else{
@@ -96,7 +97,8 @@ static void BlockEnd(const char* b, const char* e){
 	TypeDescを見て次に読み出すべきフィールドをセットする．
 	読み出すべきフィールドがある間 true を返す．	*/
 static bool NextField(){
-	bool rv = fileContext->fieldIts.NextField();
+	char* base = (char*)fileContext->datas.Top()->data;
+	bool rv = fileContext->fieldIts.NextField(base);
 	PDEBUG(
 		if (rv){
 			DSTR << "NextField:";

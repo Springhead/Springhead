@@ -74,7 +74,8 @@ static void NodeSkip(const char* b, const char* e){
 	TypeDescを見て次に読み出すべきフィールドをセットする．
 	読み出すべきフィールドがある間 true を返す．	*/
 static bool NextField(){
-	bool rv = fileContext->fieldIts.NextField();
+	char* base = (char*)fileContext->datas.Top()->data;
+	bool rv = fileContext->fieldIts.NextField(base);
 	PDEBUG(
 		if (rv){
 			DSTR << "NextField:";
@@ -170,6 +171,9 @@ static void StopArray(const char c){
 	UTTypeDescFieldIt& curField = fileContext->fieldIts.back();
 	curField.arrayPos=UTTypeDesc::BIGVALUE;
 }
+static void StopArrayStr(const char* b, const char* e){
+	StopArray(' ');
+}
 
 ///	参照型を書き込む．(未完成)
 static void RefSet(const char* b, const char* e){
@@ -261,8 +265,8 @@ void FIFileX::Init(){
 	ref			= ch_p('{') >> (id[&RefSet] | ExpP("id")) >> (ch_p('}')|ExpP("'}'"));
 	block		= while_p(&NextField)[
 					while_p(&ArrayCount)[
-						ch_p(';')[&StopArray] |
-						(exp >> ((ch_p(',')|!ch_p(';'))[&SetVal] | ExpP("',' or ';'")))
+						ch_p(';')[&StopArray] | exp >> (
+							(ch_p(',')|!ch_p(';'))[&SetVal] | ExpP("',' or ';'")[&StopArrayStr]  )
 					]
 				  ];
 	exp			= if_p(&IsFieldBool)[ boolVal | ExpP("bool value") ] >>

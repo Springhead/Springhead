@@ -66,7 +66,8 @@ void FIFileBinary::LoadBlock(){
 		std::copy(ptr, ptr + sz, (char*)fileContext->datas.Top()->data);
 	ptr += sz;*/
 
-	while(fileContext->fieldIts.NextField()){
+	void* base = fileContext->datas.Top()->data;
+	while(fileContext->fieldIts.NextField(base)){
 		UTTypeDescFieldIt& fieldIt = fileContext->fieldIts.back();
 		UTTypeDesc::Field* field = &*(fieldIt.field);
 
