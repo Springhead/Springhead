@@ -109,7 +109,7 @@ void GRDebugRender::DrawIK(PHIKEngineIf* ikEngine) {
 			PHIKBallActuator* ikBJ = ikAct->Cast();
 			if (ikBJ) {
 				Vec3d w = Vec3d();
-				for (int j=0; j < ikBJ->omega.size(); ++j) {
+				for (int j=0; j < (int)ikBJ->omega.size(); ++j) {
 					w += (ikBJ->omega[j]/ikBJ->GetBias()) * ikBJ->e[j];
 				}
 				PHBallJoint* jt = DCAST(PHBallJoint,ikBJ->joint);

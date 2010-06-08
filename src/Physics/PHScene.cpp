@@ -480,7 +480,7 @@ void PHScene::SetState(const void* s){
 	*(PHSceneState*)this = *(const PHSceneState*)p;
 	p += sizeof(PHSceneState);
 	if (constraintEngine){
-		constraintEngine->SetState(p);
+	//	constraintEngine->SetState(p);
 	}
 }
 

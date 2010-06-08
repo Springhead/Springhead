@@ -81,6 +81,23 @@ FWSceneIf* FWSdk::CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grde
 	AddChildObject(scene);
 	return scene;
 }
+
+FIFileIf* FWSdk::CreateFile(UTString ext, const IfInfo* ii){
+	FIFileIf* file;
+	// IfInfo指定の場合
+	if(ii)
+		file = GetFISdk()->CreateFile(ii);
+	// 拡張子判定
+	else file = GetFISdk()->CreateFileFromExt(ext);
+
+	// 判定不能はXとみなす
+	if(!file){
+		DSTR << "unknown file type. regarded as X file." << std::endl;
+		file = GetFISdk()->CreateFileX();
+	}
+	return file;
+}
+
 bool FWSdk::LoadScene(UTString filename, const IfInfo* ii, ObjectIfs* objs){
 
 	//filename末端に改行コード( = 0x0a)が含まれているとロードされないので，あれば最初に削除する
@@ -100,26 +117,10 @@ bool FWSdk::LoadScene(UTString filename, const IfInfo* ii, ObjectIfs* objs){
 
 	int first = NScene();	//	ロードされるFWSceneの位置を覚えておく
 
-	//	ファイルローダーの作成
-	FIFileIf* file;
 	UTPath path;
 	path.Path(filename);	
-	if((!ii && !path.Ext().compare(".x")) || ii == FIFileXIf::GetIfInfoStatic()){
-		file = GetFISdk()->CreateFileX();
-	}
-	else if((!ii && !path.Ext().compare(".wrl")) || ii == FIFileVRMLIf::GetIfInfoStatic()){
-		file = GetFISdk()->CreateFileVRML();
-	}
-	else if((!ii && !path.Ext().compare(".dae")) || ii == FIFileCOLLADAIf::GetIfInfoStatic()){
-		file = GetFISdk()->CreateFileCOLLADA();
-	}
-	else if((!ii && !path.Ext().compare(".dat")) || ii == FIFileBinaryIf::GetIfInfoStatic()){
-		file = GetFISdk()->CreateFileBinary();
-	}
-	else{
-		DSTR << "unknown file type. regarded as X file." << std::endl;
-		file = GetFISdk()->CreateFileX();
-	}
+	
+	FIFileIf* file = CreateFile(path.Ext(), ii);
 
 	file->SetDSTR(DSTRFlag);
 	//	ファイルのロード
@@ -138,7 +139,7 @@ bool FWSdk::LoadScene(UTString filename, const IfInfo* ii, ObjectIfs* objs){
 	return true;
 }
 
-bool FWSdk::SaveScene(UTString filename, const IfInfo* ii, ObjectIfs* objs){
+bool FWSdk::SaveScene(UTString filename, const IfInfo* ii, ObjectIfs* objs, ImportIf* ex){
 	// 保存
 	ObjectIfs defObjs;
 	if(!objs){
@@ -147,26 +148,11 @@ bool FWSdk::SaveScene(UTString filename, const IfInfo* ii, ObjectIfs* objs){
 		objs = &defObjs;
 	}
 
-	FIFileIf* file;
 	UTPath path;
-	path.Path(filename);	
-	if((!ii && !path.Ext().compare(".x")) || ii == FIFileXIf::GetIfInfoStatic()){
-		file = GetFISdk()->CreateFileX();
-	}
-	else if((!ii && !path.Ext().compare(".wrl")) || ii == FIFileVRMLIf::GetIfInfoStatic()){
-		file = GetFISdk()->CreateFileVRML();
-	}
-	else if((!ii && !path.Ext().compare(".dae")) || ii == FIFileCOLLADAIf::GetIfInfoStatic()){
-		file = GetFISdk()->CreateFileCOLLADA();
-	}
-	else if((!ii && !path.Ext().compare(".dat")) || ii == FIFileBinaryIf::GetIfInfoStatic()){
-		file = GetFISdk()->CreateFileBinary();
-	}
-	else{
-		DSTR << "unknown file type. regarded as X file." << std::endl;
-		file = GetFISdk()->CreateFileX();
-	}
+	path.Path(filename);
 
+	FIFileIf* file = CreateFile(path.Ext(), ii);
+	file->SetImport(ex);
 	if(!file->Save(*objs, filename.c_str())){
 		DSTR << "Error: Cannot save file " << filename.c_str() << std::endl;
 		return false;
@@ -242,11 +228,12 @@ GRRenderIf* FWSdk::GetRender(int i){
 }
 
 bool FWSdk::AddChildObject(ObjectIf* o){
-	FWSceneIf* s = DCAST(FWSceneIf, o);
+	FWScene* s = DCAST(FWScene, o);
 	if (s){
-		if (std::find(scenes.begin(), scenes.end(), s) == scenes.end()){
-			scenes.push_back(s);
-			curScene = s;
+		if (std::find(scenes.begin(), scenes.end(), s->Cast()) == scenes.end()){
+			scenes.push_back(s->Cast());
+			s->sdk = this;
+			curScene = s->Cast();
 			return true;
 		}
 	}

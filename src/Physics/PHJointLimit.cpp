@@ -393,7 +393,7 @@ void PHBallJointLimit::SplineLimit(){
 		//近傍点から拘束座標系への変換を行う。
 		Neighbor = CalcPosition(NPointInf[0],NPointInf[1]);
 		Vec3d tanLine;
-		Swing = CalcParameter(NPointInf[2],1,!onLimit[0].onLower);
+		Swing = CalcParameter(NPointInf[2], 1, !onLimit[0].onLower);
 		tanLine.x = 3 * Swing[0] * NPointInf[3] * NPointInf[3] + 2 * Swing[1] * NPointInf[3] + Swing[2];
 		tanLine.z = -tanLine.x * sin(NPointInf[1]);
 		tanLine.x *= cos(NPointInf[1]);

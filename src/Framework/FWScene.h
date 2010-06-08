@@ -17,6 +17,7 @@
 
 namespace Spr{;
 
+class FWSdk;
 
 ///	FWSceneのファクトリ
 class FWSceneFactory : public FactoryBase {
@@ -37,12 +38,14 @@ public:
 	typedef std::vector< UTRef<FWObjectIf> > FWObjects;
 	typedef std::vector< UTRef<FWBoneIf> >	 FWBones;
 	typedef std::vector< UTRef<FWStructureIf> >	 FWStructures;
+	FWSdk*	sdk;								///<	親SDKへの参照
 	FWObjects fwObjects;						///<	物理とグラフィックスのオブジェクトのリンク
 	FWBones	  fwBones;							///<	物理とグラフィックスのBoneのリンク
 	FWStructures fwStructures;					///<	BoneObjectの集合体であるFWStructureへのリンク
 	UTRef<PHSceneIf> phScene;					///<	物理シミュレーション用のシーン
 	UTRef<GRSceneIf> grScene;					///<	グラフィックス用のシーン
 	typedef std::vector< UTRef<HIForceDevice6D> > FWHumanInterfaces;
+	
 	//	hase TBW
 	//	FWHumanInterfaces humanInterfaces;			///<	ユーザインタフェース．[0]がカメラ．HIForceDevice6Dのクラス名は変更する予定．
 	enum HumanInterfacePurposeId{
@@ -55,19 +58,28 @@ public:
 	/// コンストラクタ
 	FWScene(const FWSceneDesc& d=FWSceneDesc());
 	
+	PHSceneIf*	GetPHScene(){ return phScene; }
+	void		SetPHScene(PHSceneIf* s){ phScene = s; }
+	GRSceneIf*	GetGRScene(){ return grScene; }
+	void		SetGRScene(GRSceneIf* s){ grScene = s; }
+	FWObjectIf* CreateFWObject();
+	int NObject()const{return (int)fwObjects.size();}
+	FWObjectIf** GetObjects(){return (FWObjectIf**)&*fwObjects.begin();}
 
+	void		Sync();
+	void		Step();
+	void		Draw(GRRenderIf* grRender, bool debug=false);
 
-	virtual PHSceneIf*	GetPHScene(){ return phScene; }
-	virtual void		SetPHScene(PHSceneIf* s){ phScene = s; }
-	virtual GRSceneIf*	GetGRScene(){ return grScene; }
-	virtual void		SetGRScene(GRSceneIf* s){ grScene = s; }
-	virtual FWObjectIf* CreateFWObject();
-	virtual int NObject()const{return (int)fwObjects.size();}
-	virtual FWObjectIf** GetObjects(){return (FWObjectIf**)&*fwObjects.begin();}
-	virtual void Sync();
-	virtual void Step();
-	virtual void Draw(GRRenderIf* grRender, bool debug=false);
-	virtual HIForceDevice6D* GetHumanInterface(size_t pos);
+	HIForceDevice6D*	GetHumanInterface(size_t pos);
+	void				AddHumanInterface(HIForceDevice6D* d);
+	void				SetFWBones(FWBoneIf* b);
+	std::vector< UTRef<FWBoneIf> > GetFWBones();
+	void				CreateFWStructure();
+	void				AddFWStructure(FWStructureIf* o);
+	FWStructureIf*		GetFWStructure();
+	FWStructureIf*		GetFWStructure(int n);
+	size_t				NFWStructure();
+
 	//
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual bool AddChildObject(ObjectIf* o);
@@ -75,14 +87,7 @@ public:
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual NamedObjectIf* FindObject(UTString name, UTString cls);
-	virtual void AddHumanInterface(HIForceDevice6D* d);
-	virtual void SetFWBones(FWBoneIf* b);
-	virtual std::vector< UTRef<FWBoneIf> > GetFWBones();
-	virtual void CreateFWStructure();
-	virtual void AddFWStructure(FWStructureIf* o);
-	virtual FWStructureIf* GetFWStructure();
-	virtual FWStructureIf* GetFWStructure(int n);
-	virtual size_t NFWStructure();
+	
 };
 
 

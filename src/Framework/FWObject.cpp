@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FWObject.h"
+#include "Framework.h"
 #include <Graphics/GRFrame.h>
 #include <Physics/PHConstraint.h>
 
@@ -76,6 +76,26 @@ bool FWObject::AddChildObject(ObjectIf* o){
 		return true;
 	}
 	return false;
+}
+
+GRMeshIf* FWObject::LoadMesh(const char* filename, const IfInfo* ii){
+	FWScene* scene = DCAST(FWScene, GetScene());
+	FISdkIf* fiSdk = scene->sdk->GetFISdk();
+
+	ObjectIfs objs;
+	objs.Push(scene->GetGRScene());	///< GRSceneが作成し，
+	objs.Push(GetGRFrame());		///< GRFrameが持つ
+
+	FIFileIf* file = (ii ? fiSdk->CreateFile(ii) : fiSdk->CreateFileFromExt(filename));
+	if(!file)
+		file = fiSdk->CreateFileX();
+
+	// ロードされたオブジェクトはobjsにプッシュされる
+	file->Load(objs, filename);
+	
+	if(objs.size() < 2)
+		return NULL;
+	return DCAST(GRMeshIf, objs[1]);
 }
 
 /// --- --- --- --- --- --- --- --- --- ---
