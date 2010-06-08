@@ -28,7 +28,7 @@ protected:
 	///	シーン
 	typedef std::vector< UTRef<FWSceneIf> > FWScenes;	//< GRRenderにもScenesがあってScenes型typedefでは上手く動かない．
 	FWScenes scenes;
-	
+
 	/// レンダラ
 	typedef std::vector< UTRef<GRRenderIf> > Renders;
 	Renders renders;
@@ -51,7 +51,7 @@ public:
 
 	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
 	virtual bool LoadScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
-	virtual bool SaveScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
+	virtual bool SaveScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL, ImportIf* import = NULL);
 	virtual int NScene() const{	return (int)scenes.size(); }
 	virtual void SwitchScene(FWSceneIf* scene){ curScene = scene; }
 	virtual FWSceneIf* GetScene(int i = -1);
@@ -81,6 +81,7 @@ public:
 	void SetDSTR(bool f){ DSTRFlag = f; }
 	
 protected:
+	FIFileIf* CreateFile(UTString ext, const IfInfo* ii);
 	void CreateSdks();
 };
 }

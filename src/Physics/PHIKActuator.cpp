@@ -105,7 +105,7 @@ void PHIKActuator::PrepareSolve(){
 			//(*dlog) << "--- v[cp:" << eef_n << "] ---" << std::endl;
 			//(*dlog) << eef_v << std::endl;
 
-			for (size_t k=0; k < (*eef)->ndof; ++k) {
+			for (int k=0; k < (*eef)->ndof; ++k) {
 
 				// ÉøÅAÉ¿
 				alpha[i] += ( (Mj[eef_n][k][i]/bias) * (Mj[eef_n][k][i]) );
