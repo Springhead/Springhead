@@ -20,12 +20,23 @@ class UTLoadContext;
 class UTLoadHandler:public UTRefCount{
 public:
 	UTString type;
-	virtual void BeforeCreateObject(UTLoadedData* d, UTLoadContext* fc){}
-	virtual void AfterCreateObject(UTLoadedData* d, UTLoadContext* fc){}
-	virtual void AfterCreateChildren(UTLoadedData* d, UTLoadContext* fc){}
+	
+	/// DOMノードのロード開始時に呼ばれる
 	virtual void BeforeLoadData(UTLoadedData* d, UTLoadContext* fc){}
+	/// DOMノードのロード終了時に呼ばれる
 	virtual void AfterLoadData(UTLoadedData* d, UTLoadContext* fc){}
 
+	/// CreateObjectの直前に呼ばれる
+	virtual void BeforeCreateObject(UTLoadedData* d, UTLoadContext* fc){}
+	/// CreateObjectの直後に呼ばれる
+	virtual void AfterCreateObject(UTLoadedData* d, UTLoadContext* fc){}
+	/** 子オブジェクトの作成後に呼ばれる
+		objは作成された子オブジェクト
+	 */
+	virtual void AfterCreateChild(UTLoadedData* d, ObjectIf* child, UTLoadContext* fc){}
+	/// 子オブジェクトが全ての作成された後に呼ばれる
+	virtual void AfterCreateChildren(UTLoadedData* d, UTLoadContext* fc){}
+	
 	virtual void Save(UTLoadContext* fc){};
 	struct Less{
 		bool operator()(const UTLoadHandler* h1, const UTLoadHandler* h2) const{
@@ -59,6 +70,10 @@ public:
 		T* desc = (T*)ld->data;
 		AfterCreateObject(*desc, ld, ctx);
 	}
+	void AfterCreateChild(UTLoadedData* ld, ObjectIf* child, UTLoadContext* ctx){
+		T* desc = (T*)ld->data;
+		AfterCreateChild(*desc, ld, child, ctx);
+	}
 	void AfterCreateChildren(UTLoadedData* ld, UTLoadContext* ctx){
 		T* desc = (T*)ld->data;
 		AfterCreateChildren(*desc, ld, ctx);
@@ -73,6 +88,7 @@ public:
 	}
 	virtual void BeforeCreateObject(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
 	virtual void AfterCreateObject(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
+	virtual void AfterCreateChild(T& t, UTLoadedData* ld, ObjectIf* child, UTLoadContext* ctx){}
 	virtual void AfterCreateChildren(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
 	virtual void BeforeLoadData(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
 	virtual void AfterLoadData(T& t, UTLoadedData* ld, UTLoadContext* ctx){}

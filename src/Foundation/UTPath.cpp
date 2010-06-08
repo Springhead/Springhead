@@ -134,6 +134,15 @@ bool UTPath::SetCwd(UTString cwd){
 	return (chdir(cwd.c_str()) == 0);
 #endif		
 }
+
+void UTPath::CreateDir(UTString dirname){
+#ifdef _MSC_VER
+	CreateDirectory(dirname.c_str(), NULL);
+#else
+	mkdir(dirname.c_str(), 0777);
+#endif
+}
+
 UTString UTPath::FullPath(){
 	if (path.length() && path[0] == '\\'
 		|| path.length()>=2 && path[1] == ':'){
@@ -156,8 +165,7 @@ UTString UTPath::FullPath(){
 	}
 }
 UTString UTPath::RelPath(){
-	if (path.length() && path[0] == '\\'
-		|| path.length()>=2 && path[1] == ':'){
+	if (path.length() && path[0] == '\\' || path.length()>=2 && path[1] == ':'){
 		UTString fp = FullPath();
 		//	‚à‚Æ‚à‚Æâ‘ÎƒpƒX
 		UTString cwd = GetCwd();

@@ -263,11 +263,6 @@ struct Joint{
 	float		fDValue;			///<	PID§Œä‚ÌD‚Ì’l
 };
 
-/// Springhead1‚ÌImportD	
-struct Import{
-	std::string file;	
-};
-
 struct PHBoneGenerator{
 };
 

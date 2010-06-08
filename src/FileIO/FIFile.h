@@ -14,29 +14,32 @@
 #include <Foundation/UTLoadHandler.h>
 
 namespace Spr{;
-///	FILoadContext
-class FILoadContext: public UTLoadContext{
-public:
-	void PushFileMap(const UTString fn);
-	virtual ~FILoadContext(){}
-};
 
+class FILoadContext;
 class FISaveContext;
 class FISdk;
+class Import;
 
 /**	ファイルローダー・セーバー
 */
-class FIFile:public Object{
+class FIFile : public Object{
 public:
 	FIFile();	
-	bool DSTRFlag;		//デバッグ情報をDSTRで表示するかどうか
-	FISdk* sdk;
+	bool		DSTRFlag;		//デバッグ情報をDSTRで表示するかどうか
+	FISdk*		sdk;
+	Import*		import;
+	
 	SPR_OBJECTDEF_ABST(FIFile);
 	FISdk* GetSdk(){ return sdk; }
-	virtual bool Load(ObjectIfs& objs, const char* fn);
-	virtual void Load(FILoadContext* fc);
-	virtual bool Save(const ObjectIfs& objs, const char* fn);
-	virtual void Save(const ObjectIfs& objs, FISaveContext* sc);
+	
+	bool Load(ObjectIfs& objs, const char* fn);
+	void Load(FILoadContext* fc);
+	bool Save(const ObjectIfs& objs, const char* fn);
+	void Save(const ObjectIfs& objs, FISaveContext* sc);
+	
+	void		SetImport(ImportIf* im);
+	ImportIf*	GetImport();
+
 	void SetDSTR(bool f){ DSTRFlag = f; }
 	/**	ノードのロード．
 		TODO: 新仕様にあわせる

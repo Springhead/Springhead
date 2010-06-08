@@ -26,6 +26,7 @@ void SPR_CDECL FIRegisterTypeDescs();
 
 FISdk::FISdk(){
 	FIRegisterTypeDescs();
+	UTLoadHandlerDbPool::Get("FileIO")->insert(DBG_NEW ImportHandler);
 }
 
 FISdk::~FISdk(){
@@ -91,6 +92,55 @@ FIFileBinaryIf* FISdk::CreateFileBinary(){
 	rv->sdk = this;
 	files.push_back(rv);
 	return rv->Cast();
+}
+
+FIFileIf* FISdk::CreateFile(const IfInfo* ii){
+	if(ii == FIFileXIf::GetIfInfoStatic())
+		return CreateFileX();
+	if(ii == FIFileVRMLIf::GetIfInfoStatic())
+		return CreateFileVRML();
+	if(ii == FIFileCOLLADAIf::GetIfInfoStatic())
+		return CreateFileCOLLADA();
+	if(ii == FIFileBinaryIf::GetIfInfoStatic())
+		return CreateFileBinary();
+	return NULL;
+}
+
+FIFileIf* FISdk::CreateFileFromExt(UTString filename){
+	UTPath name;
+	name.Path(filename);
+	UTString ext = name.Ext();
+
+	if(!ext.compare(".x"))
+		return CreateFileX();
+
+	if(!ext.compare(".wrl"))
+		return CreateFileVRML();
+	
+	if(!ext.compare(".dae"))
+		return CreateFileCOLLADA();
+	
+	if(!ext.compare(".dat"))
+		return CreateFileBinary();
+	
+	return NULL;
+}
+
+ImportIf* FISdk::CreateImport(){
+	Import* import = DBG_NEW Import;
+	imports.push_back(import);
+	return import->Cast();
+}
+
+ImportIf*	FISdk::CreateImport(ImportIf* parent, UTString path, ObjectIf* owner, const ObjectIfs& children){
+	Import* import = DBG_NEW Import;
+	import->path = path;
+	import->ownerObj = owner;
+	import->childObjs = children;
+
+	DCAST(Import, parent)->AddChild(import);
+
+	return import->Cast();
 }
 
 }

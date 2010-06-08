@@ -15,10 +15,12 @@ namespace Spr{;
 /** \addtogroup gpFileIO	*/
 //@{
 
+struct FIFileIf;
 struct FIFileXIf;
 struct FIFileVRMLIf;
 struct FIFileCOLLADAIf;
 struct FIFileBinaryIf;
+struct ImportIf;
 
 ///	ファイル入出力SDK
 struct FISdkIf : public SdkIf{
@@ -32,6 +34,29 @@ struct FISdkIf : public SdkIf{
 	FIFileCOLLADAIf*	CreateFileCOLLADA();
 	/// バイナリファイルオブジェクトの作成
 	FIFileBinaryIf*		CreateFileBinary();
+
+	/** @brief IfInfoに対応するファイルオブジェクトを作成
+		@param ii IfInfo
+		未知のIfInfoの場合はNULLを返す．
+	 */
+	FIFileIf*			CreateFile(const IfInfo* ii);
+
+	/** @brief 拡張子からファイルオブジェクトを作成
+		@param ext	拡張子を含むファイルパス
+		拡張子とファイルタイプの対応は以下の通り:
+		.x		<=> Direct X
+		.wrl	<=> VRML
+		.dae	<=> Collada
+		.dat	<=> Binary
+		
+		未知の拡張子の場合はNULLを返す．
+	 */
+	FIFileIf*		CreateFileFromExt(UTString filename);
+
+	/// ルートインポートの作成
+	ImportIf*		CreateImport();
+	/// インポートの作成
+	ImportIf*		CreateImport(ImportIf* parent, UTString path, ObjectIf* owner, const ObjectIfs& children);
 
 	/// ファイルオブジェクトの削除
 	bool DelChildObject(ObjectIf* o);

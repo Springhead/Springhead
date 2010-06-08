@@ -8,30 +8,38 @@
 #ifndef FISAVECONTEXT_H
 #define FISAVECONTEXT_H
 
-#include <Foundation/Object.h>
-#include <Foundation/UTTypeDesc.h>
 #include <Foundation/UTLoadContext.h>
 #include <fstream>
 
 namespace Spr{;
 
-class FINodeHandlers;
+class Import;
+
 class FISaveContext: public UTFileContext{
 public:
 	///	セーブするファイルの名前
 	UTString fileName;
-	///	セーブファイルのファイルストリーム
-	std::ofstream file;
 	///	UTTypeDescのフィールドへのイタレータのスタック
 	UTTypeDescFieldIts fieldIts;
 	///	セーブするディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
 	UTStack< UTRef<UTLoadedData> > datas;
 	///
 	std::set<ObjectIf*> savedObjects;
+	/// インポートスタック
+	UTStack<Import*>	importStack;
+	/// SDKへの参照
+	FISdk*				sdk;
 	
 	FISaveContext();
 	///	セーブ用にファイルを開く
-	bool Open(const char* fn, bool binary);
+	//bool Open(const char* fn, bool binary);
+	/// ファイルを閉じる
+	//void Close();
+
+	virtual void PushFileMap(const UTString fn, bool binary);
+	virtual void PopFileMap();
+	std::ostream&	Stream();
+
 	///	メッセージの出力
 	void Message(const char* msg);
 	///	エラーメッセージの出力

@@ -17,11 +17,35 @@ class UTTypeDescDb;
 ///	ファイルローダ・セーバ
 struct FIFileIf: public ObjectIf{
 	SPR_IFDEF(FIFile);
-	///	ロード
+	/**	@brief シーンをファイルからロードする
+		@param objs ロードするシーンの親となるオブジェクトのスタック
+		@param fn	ファイル名
+		@return		成功したらtrue，失敗したらfalse
+	 */
 	bool Load(ObjectIfs& objs, const char* fn);
-	///	セーブ
+
+	/** @brief シーンをファイルへセーブする
+		@param objs	セーブするシーンの最上位オブジェクトを格納した配列
+		@param fn	ファイル名
+		@return		成功したらtrue, 失敗したらfalse
+	 */
 	bool Save(const ObjectIfs& objs, const char* fn);
+
+	/** @brief	インポート情報の設定
+		@param	インポート情報
+		シーンをセーブする際に，一部を別ファイルへエクスポートしたい場合は
+		Saveに先立ってSetImportを呼ぶ．
+	 */
+	void SetImport(ImportIf* import);
+
+	/**	@brief  インポート情報の取得
+		@return	インポート情報
+		シーンのロード後にインポートを取得したい際に使用する．
+	 */
+	ImportIf* GetImport();
+
 	///	情報のDSTRの出力の有無
+	/// 汎用性が低いのでObjectIfにデバッグ出力レベルを設定するAPIをつけるべきか？tazz
 	void SetDSTR(bool f);
 };
 

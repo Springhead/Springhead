@@ -10,30 +10,54 @@
 #pragma hdrstop
 #endif
 
-#include "FISaveContext.h"
-#include <fstream>
-#include <sstream>
-
 using namespace std;
 
 namespace Spr{;
 
 //---------------------------------------------------------------------------
+//	FISaveFileMap
+
+class FISaveFileMap : public UTFileMap{
+public:
+	///	セーブファイルのファイルストリーム
+	std::ofstream file;
+	
+	virtual bool Map(const UTString fn, bool binary){
+		ios_base::openmode mode = ios_base::out;
+		// バイナリフォーマットの場合binaryフラグが必要
+		if(binary)
+			mode |= ios_base::binary;
+		
+		file.open(fn.c_str(), mode);
+		return file.is_open();
+	}
+	virtual void Unmap(){
+		file.close();
+	}
+	virtual bool IsGood(){
+		return file.good();
+	}
+};
+
+
+//---------------------------------------------------------------------------
 //	FISaveContext
+
 FISaveContext::FISaveContext(){
 	errorStream = &DSTR;
 	typeDbs.Push(DBG_NEW UTTypeDescDb);
 	handlerDbs.Push(DBG_NEW UTLoadHandlerDb);
 }
-
-bool FISaveContext::Open(const char* fn, bool binary){
-	ios_base::openmode mode = ios_base::out;
-	// バイナリフォーマットの場合binaryフラグが必要
-	if(binary)
-		mode |= ios_base::binary;
-	
-	file.open(fn, mode);
-	return file.is_open();
+void FISaveContext::PushFileMap(const UTString fn, bool binary){
+	fileMaps.Push(DBG_NEW FISaveFileMap);
+	fileMaps.Top()->Map(fn, binary);
+}
+void FISaveContext::PopFileMap(){
+	fileMaps.Top()->Unmap();
+	fileMaps.Pop();
+}
+ostream& FISaveContext::Stream(){
+	return ((FISaveFileMap*)&*fileMaps.Top())->file;
 }
 void FISaveContext::Message(const char* msg){
 	*errorStream << msg << std::endl;

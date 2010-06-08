@@ -9,134 +9,56 @@
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
-#include "FIFile.h"
 
-#ifdef _WIN32
-#include <Windows.h>
-#else
-#include <sys/mman.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#endif
+using namespace std;
 
 namespace Spr{;
-//---------------------------------------------------------------------------
-//	FIFileMap
-//	ファイル マッピング
-//  既存のファイルのアクセス速度向上を行うために、実際のファイルをメモリ上にマッピングする
-class FIFileMap:public UTFileMap{
-	FIFileMap::~FIFileMap(){
-		if (start) Unmap();
-	}
-#ifdef _WIN32
-		HANDLE hFile, hFileMap;		///<	ファイルハンドル、ファイルマッピングオブジェクト
-#else 
-		//FILE *hFile;
-		//char *buffer;
-		int fd;					///<	ファイルディスクリプタ
-		struct stat filestat;	///<	ファイルサイズを得るのに使う
-		void *sourceptr;
-#endif
-public:
-	///	ファイルのマップ
-	bool Map(const UTString fn){
-		name = fn;
-	#ifdef _WIN32
-		// ファイルオープン
-		hFile = CreateFile(fn.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);	
-		if (hFile == INVALID_HANDLE_VALUE){
-			DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
-			return false;	
-		}		
-		// ファイルサイズの取得
-		DWORD len = GetFileSize(hFile,NULL);	
-		// ファイルマッピングオブジェクト作成
-		hFileMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
-		// ファイルfnを読み属性でマップし、その先頭アドレスを取得
-		start = (const char*)MapViewOfFile(hFileMap, FILE_MAP_READ, 0, 0, 0);
-		end = start + len;
-		return true;	
-	#else	
-		/*
-		hFile = fopen(fn.c_str(), "rb");
-		if (!hFile) {
-			DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
-			return false;	
-		}		
-		fseek(hFile, 0, SEEK_END);
-		int const len = ftell(hFile);
-		fseek(hFile, 0, SEEK_SET);
-		buffer = DBG_NEW char[len];
-		fread(buffer, 1, len, hFile);
-		start = buffer;
-		end = start + len;*/
-		fd = open(fn.c_str(), O_RDONLY); 
-		if( fd < 0 ) {
-			DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
-			return false;	
-		}		
-		if( fstat( fd, &filestat ) == 0 ) {
-			// 読み込み専用でファイルマッピング
-			sourceptr = mmap( NULL, filestat.st_size, PROT_READ, MAP_SHARED, fd, 0 );
-			if( sourceptr != MAP_FAILED ) {
-				start = (char*)sourceptr;
-				end = start + filestat.st_size;
-				return true;
-			} 
-		}
-		return false;
-	#endif
-	}
-	/// ファイル アンマッピング
-	void Unmap(){
-	#ifdef _WIN32
-		UnmapViewOfFile(start);		// マップしたファイルをアンマップ
-		CloseHandle(hFileMap);		// ファイルマッピングオブジェクトをクローズ
-		CloseHandle(hFile);			// ファイルのハンドルをクローズ
-	#else
-		//fclose(hFile);
-		//delete[] buffer;
-		munmap(sourceptr, filestat.st_size);
-	#endif
-		start = end = NULL;
-	}
-};
-//---------------------------------------------------------------------------
-//	FILoadContext
-void FILoadContext::PushFileMap(const UTString fn){
-	fileMaps.Push(DBG_NEW FIFileMap);
-	fileMaps.Top()->Map(fn);
-}
-
 
 //#define PDEBUG_EVAL(x)	x
 #define PDEBUG_EVAL(x)
 
-
 //---------------------------------------------------------------------------
 //	FIFile
 FIFile::FIFile(){
+	import = NULL;
 	DSTRFlag = true;
+}
+void FIFile::SetImport(ImportIf* im){
+	import = im->Cast();
+}
+ImportIf* FIFile::GetImport(){
+	return import->Cast();
 }
 bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	DSTR << "Loading " << fn << " ...." << std::endl;
+
 	FILoadContext fc;
+	fc.sdk = sdk;
 	fc.objects.insert(fc.objects.end(), objs.begin(), objs.end());
-	fc.PushFileMap(fn);
-	Load(&fc);
-	if (fc.rootObjects.size()){
+
+	// インポートが設定されていない場合は作成する
+	if(!import)
+		import = sdk->CreateImport()->Cast();
+	import->Clear();
+	fc.importStack.Push(import->Cast());
+
+	fc.PushFileMap(fn, true);
+
+	bool ok = false;
+	if(fc.IsGood()){
+		Load(&fc);
+		// ロードした最上位オブジェクトをスタックに積む（ユーザがアクセスできるように）
 		objs.insert(objs.end(), fc.rootObjects.begin(), fc.rootObjects.end());
-		return true;
+		ok = true;
 	}
-	if (objs.size()) return true;
-	return false;
+
+	fc.PopFileMap();
+
+	return ok;
 }
 void FIFile::Load(FILoadContext* fc){
-	if (fc->IsGood()){
-		//	ファイルからデータをロード
-		LoadImp(fc);
-	}
+	LoadImp(fc);
+	
 	fc->SetDSTR(DSTRFlag);
 
 	fc->LinkData();
@@ -163,12 +85,29 @@ void FIFile::LBlockEnd(FILoadContext* fc){
 }
 
 bool FIFile::Save(const ObjectIfs& objs, const char* fn){
+	// 保存先ディレクトリへ移動(なければ作成)
+	UTPath path(fn);
+	UTPath::CreateDir(path.Dir());
+	UTString oldCwd = UTPath::GetCwd();
+	UTPath::SetCwd(path.Dir());
+
 	FISaveContext sc;
-	if (sc.Open(fn, IsBinary())){
+	if(import)
+		sc.importStack.Push(import->Cast());
+	sc.sdk = sdk;
+
+	bool ok = false;
+	sc.PushFileMap(path.File().c_str(), IsBinary());
+	if(sc.IsGood()){
 		Save(objs, &sc);
-		return true;
+		ok = true;
 	}
-	return false;
+	sc.PopFileMap();
+
+	// 元ディレクトリへ復帰
+	UTPath::SetCwd(oldCwd);
+
+	return ok;
 }
 void FIFile::Save(const ObjectIfs& objs, FISaveContext* sc){
 	OnSaveFileStart(sc);
@@ -178,6 +117,8 @@ void FIFile::Save(const ObjectIfs& objs, FISaveContext* sc){
 	OnSaveFileEnd(sc);
 }
 void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
+	// 同一オブジェクトの2度目以降の保存は参照扱いになる
+	// ＊所有者がロード時とセーブ時で変わる可能性がある	tazz
 	if (!sc->savedObjects.insert(obj).second){
 		sc->objects.Push(obj);
 		OnSaveRef(sc);
@@ -204,41 +145,91 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 			obj->GetDesc(data);
 		}
 		OnSaveNodeStart(sc);
-		OnSaveDataStart(sc);
+		
 		//	データのセーブ
+		OnSaveDataStart(sc);
 		SaveBlock(sc);
 		sc->datas.Pop();
 		sc->fieldIts.Pop();
 		OnSaveDataEnd(sc);
-		//	子ノードのセーブ
-		size_t nChild = obj->NChildObject();
-		if (nChild){
-			OnSaveChildStart(sc);
-			for(size_t i=0; i<nChild; ++i){
-				ObjectIf* child = obj->GetChildObject(i);
-				assert(child);
-				SaveNode(sc, child);
-			}
-			OnSaveChildEnd(sc);
-		}
-		OnSaveNodeEnd(sc);
-	}else{
+	}
+	else{
 		UTString err("Node '");
 		err.append(tn);
 		err.append("' not found. can not save data.");
 		sc->ErrorMessage(err.c_str());
-		//	子ノードのセーブ
-		size_t nChild = obj->NChildObject();
-		if (nChild){
-			OnSaveChildStart(sc);
-			for(size_t i=0; i<nChild; ++i){
-				ObjectIf* child = obj->GetChildObject(i);
-				assert(child);
-				SaveNode(sc, child);
+	}
+
+	ObjectIfs exportedObjs;
+	
+	// エクスポート対象の子オブジェクトを別ファイルに保存
+	if(!sc->importStack.empty()){
+
+		// objがオーナーオブジェクトであるエクスポートエントリを列挙
+		vector<Import*>	imports;
+		Import* im = sc->importStack.Top();
+		for(int i = 0; i < (int)im->Children().size(); i++){
+			Import* imChild = im->Children()[i];
+			if(imChild->ownerObj == obj)
+				imports.push_back(imChild);
+		}
+
+		// エントリごとに別ファイルに保存
+		for(vector<Import*>::iterator it = imports.begin(); it != imports.end(); it++){
+			Import* imChild = *it;
+
+			if(!imChild->loadOnly){
+				// 保存先ディレクトリを作成して移動
+				UTPath path(imChild->path);
+				bool changeDir = (path.Dir().compare("") != 0);
+				UTString oldCwd;
+				if(changeDir){
+					UTPath::CreateDir(path.Dir());
+					oldCwd = UTPath::GetCwd();
+					UTPath::SetCwd(path.Dir());
+				}
+
+				// エクスポート対象のオブジェクトを別ファイルへ保存
+				FIFile* file = sc->sdk->CreateFileFromExt(path.Ext())->Cast();
+				sc->PushFileMap(path.File(), IsBinary());
+				if(sc->IsGood()){
+					OnSaveFileStart(sc);
+					for(int i = 0; i < (int)imChild->childObjs.size(); i++){
+						ObjectIf* childObj = imChild->childObjs[i];
+						file->SaveNode(sc, childObj);
+						exportedObjs.push_back(childObj);
+					}
+					OnSaveFileEnd(sc);
+				}
+				sc->PopFileMap();
+				
+				if(changeDir)
+					UTPath::SetCwd(oldCwd);
 			}
-			OnSaveChildEnd(sc);
+
+			// 保存中のファイルにはImportノードを書き込む
+			SaveNode(sc, imChild->Cast());
 		}
 	}
+
+	// エクスポート対象外の子オブジェクトを保存
+	size_t nChild = obj->NChildObject();
+	if (nChild){
+		OnSaveChildStart(sc);
+		for(size_t i=0; i<nChild; ++i){
+			ObjectIf* child = obj->GetChildObject(i);
+			assert(child);
+			// エクスポート済みならスキップ
+			if(find(exportedObjs.begin(), exportedObjs.end(), child) != exportedObjs.end())
+				continue;
+			SaveNode(sc, child);
+		}
+		OnSaveChildEnd(sc);
+	}
+
+	if(type)
+		OnSaveNodeEnd(sc);
+	
 	//	記録をPOP
 	sc->objects.Pop();
 }

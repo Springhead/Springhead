@@ -24,13 +24,6 @@
 namespace Spr{;
 
 //---------------------------------------------------------------------------
-//	UTFileMap
-bool UTFileMap::IsGood(){
-	return start && end && (end != (char*)-1);
-}
-
-
-//---------------------------------------------------------------------------
 //	UTLoadedData
 UTLoadedData::UTLoadedData(UTLoadContext* fc, UTTypeDesc* t, void* d): parent(NULL), 
 	type(t),data(d), haveData(false), man(NULL){
@@ -448,6 +441,11 @@ UTLoadedData* UTNameManagerForData::SearchSet(UTString name, UTString cls){
 //	UTFileContext
 UTFileContext::UTFileContext():errorStream(NULL){
 }
+bool UTFileContext::IsGood(){
+	if (!fileMaps.size()) return false;
+	return fileMaps.Top()->IsGood();
+}
+
 //---------------------------------------------------------------------------
 //	UTLoadContext
 UTLoadContext::UTLoadContext(){
@@ -531,7 +529,7 @@ void UTLoadContext::NodeEnd(){
 	//	データロード後ハンドラの呼び出し
 	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
 	key->type = datas.Top()->GetAttribute("type");
-	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
+	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range
 		= handlerDbs.Top()->equal_range(key);
 	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
 		(*it)->AfterLoadData(datas.Top(), this);
@@ -540,10 +538,6 @@ void UTLoadContext::NodeEnd(){
 	//	スタックの片付け
 	datas.Pop();
 	fieldIts.Pop();
-}
-bool UTLoadContext::IsGood(){
-	if (!fileMaps.size()) return false;
-	return fileMaps.Top()->IsGood();
 }
 void UTLoadContext::AddDataLink(std::string ref, const char* pos){
 	dataLinks.push_back(DBG_NEW UTDataLinkTask(datas.Top(), ref, fileMaps.Top(), pos));
@@ -599,11 +593,11 @@ void UTLoadContext::LinkNode(UTLoadedData* ld){
 void UTLoadContext::CreateScene(){
 	for(UTLoadedDataRefs::iterator it = loadedDatas.begin(); it!=loadedDatas.end(); ++it){
 		datas.Push(*it);
-		CreateSceneRecursive();
+		rootObjects.Push(CreateSceneRecursive());
 		datas.Pop();
 	}
 }
-void UTLoadContext::CreateSceneRecursive(){
+ObjectIf* UTLoadContext::CreateSceneRecursive(){
 	UTLoadedData* ld = datas.Top();
 
 	//	ハンドラーの処理
@@ -625,9 +619,9 @@ void UTLoadContext::CreateSceneRecursive(){
 		if (obj){
 			ld->loadedObjects.Push(obj);
 			objects.Push(obj);								//	スタックに積む
-			if (objects.size() == 1){
-				rootObjects.push_back(objects.Top());	//	ルートオブジェクトとして記録
-			}
+			//if (objects.size() == 1){
+			//	rootObjects.push_back(objects.Top());	//	ルートオブジェクトとして記録
+			//}
 		}
 	}
 	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
@@ -637,18 +631,25 @@ void UTLoadContext::CreateSceneRecursive(){
 	//	子ノードの作成
 	for(UTLoadedDataRefs::iterator it = ld->children.begin(); it!= ld->children.end(); ++it){
 		datas.Push(*it);
-		CreateSceneRecursive();	//	子孫データに対応するオブジェクトの作成
+		ObjectIf* childObj = CreateSceneRecursive();	//	子孫データに対応するオブジェクトの作成
 		datas.Pop();
+
+		//	ハンドラの処理
+		for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it)
+			(*it)->AfterCreateChild(ld, childObj, this);
 	}
-	//	ハンドラーの処理
+	//	ハンドラの処理
 	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
 		(*it)->AfterCreateChildren(ld, this);
 	}
 	
 	//	終了処理
 	if(obj){
-		objects.Pop();										//	スタックをPop
+		objects.Pop();		//	スタックをPop
 	}
+
+	// シーンのトップオブジェクトを返す
+	return obj;
 }
 
 

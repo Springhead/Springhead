@@ -15,6 +15,7 @@
 namespace Spr{;
 
 struct FWSceneIf;
+struct GRMeshIf;
 
 struct FWObjectDesc{
 };
@@ -36,6 +37,14 @@ struct FWObjectIf : SceneObjectIf {
 	GRFrameIf* GetGRFrame();
 	/// GRFrameを設定する
 	void SetGRFrame(GRFrameIf* f);
+
+	/** メッシュをロードするヘルパ関数
+		@param filename ファイル名
+		@param ii ファイルタイプを指定する場合のIfInfo
+		@return ロードに成功したらメッシュオブジェクトを返す．失敗したらNULLを返す．
+		メッシュをロードし，このFWObjectのGRFrameの下に加える
+	 */
+	GRMeshIf* LoadMesh(const char* filename, const IfInfo* ii = NULL);
 
 	///ボーン付きXファイル専用
 	/// solidLengthを取得する

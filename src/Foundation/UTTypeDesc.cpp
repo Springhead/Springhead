@@ -129,8 +129,7 @@ void UTTypeDesc::Composit::Link(UTTypeDescDb* db) {
 
 //----------------------------------------------------------------------------
 //	UTTypeDesc
-UTTypeDesc::Field* UTTypeDesc::AddField(std::string pre, std::string tn, 
-	std::string n, std::string suf){
+UTTypeDesc::Field* UTTypeDesc::AddField(std::string pre, std::string tn, std::string n, std::string suf){
 	composit.push_back(Field());
 	if (pre.compare("vector") == 0){
 		composit.back().varType = UTTypeDesc::Field::VECTOR;
