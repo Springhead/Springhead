@@ -13,11 +13,16 @@
 namespace Spr {;
 
 class FIFile;
+class Import;
+
 class SPR_DLL FISdk:public Sdk{
 public:
 	SPR_OBJECTDEF(FISdk);
 	typedef std::vector< UTRef<FIFile> > Files;
 	Files files;
+
+	typedef std::vector< UTRef<Import> > Imports;
+	Imports imports;
 	
 	FISdk();
 	~FISdk();
@@ -25,6 +30,12 @@ public:
 	FIFileVRMLIf*		CreateFileVRML();
 	FIFileCOLLADAIf*	CreateFileCOLLADA();
 	FIFileBinaryIf*		CreateFileBinary();
+	FIFileIf*			CreateFile(const IfInfo* ii);
+	FIFileIf*			CreateFileFromExt(UTString filename);
+	
+	ImportIf*			CreateImport();
+	ImportIf*			CreateImport(ImportIf* parent, UTString path, ObjectIf* owner, const ObjectIfs& children);
+
 	bool DelChildObject(ObjectIf* o);
 	void Clear();
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);

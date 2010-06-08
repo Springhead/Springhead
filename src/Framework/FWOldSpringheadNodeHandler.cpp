@@ -981,6 +981,7 @@ public:
 	}
 };
 
+/*
 // Springhead1ÇÃImportÅD
 class FWNodeHandlerImport: public UTLoadHandlerImp<Import>{
 public:	
@@ -1008,6 +1009,7 @@ public:
 		imPath.SetCwd(oldCwd);
 	}
 };
+*/
 
 class FWNodeHandlerPHBoneGenerator:public UTLoadHandlerImp<PHBoneGenerator>{
 public:
@@ -1105,7 +1107,7 @@ void SPR_CDECL FWRegisterOldSpringheadNode(){
 	handlers->insert(DBG_NEW FWNodeHandlerContactEngine);
 	handlers->insert(DBG_NEW FWNodeHandlerJointEngine);
 	handlers->insert(DBG_NEW FWNodeHandlerJoint);
-	handlers->insert(DBG_NEW FWNodeHandlerImport);
+	//handlers->insert(DBG_NEW FWNodeHandlerImport);
 	handlers->insert(DBG_NEW FWNodeHandlerPHBoneGenerator);
 }
 }

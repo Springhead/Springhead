@@ -293,7 +293,7 @@ void FIFileX::Init(){
 
 //------------------------------------------------------------------------------
 void FIFileX::PushLoaderContext(FILoadContext* fc){
-	fc->RegisterGroupToDb("Foundation Physics Graphics Framework Creature OldSpringhead");
+	fc->RegisterGroupToDb("Foundation Physics Graphics FileIO Framework Creature OldSpringhead");
 	fc->typeDbs.Top()->RegisterAlias("Vec3f", "Vector");
 	fc->typeDbs.Top()->RegisterAlias("Vec2f", "Coords2d");
 	fc->typeDbs.Top()->RegisterAlias("Affinef", "Matrix3x3");
@@ -331,64 +331,64 @@ void FIFileX::LoadImp(FILoadContext* fc){
 #define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)
 void FIFileX::OnSaveFileStart(FISaveContext* sc){
-	sc->RegisterGroupToDb("Foundation Physics Graphics Framework Creature OldSpringhead");
+	sc->RegisterGroupToDb("Foundation Physics Graphics FileIO Framework Creature OldSpringhead");
 	sc->typeDbs.Top()->RegisterAlias("Vec3f", "Vector");
 	sc->typeDbs.Top()->RegisterAlias("Vec2f", "Coords2d");
 	sc->typeDbs.Top()->RegisterAlias("Affinef", "Matrix3x3");
 	sc->typeDbs.Top()->RegisterAlias("Affined", "Matrix4x4");
 
-	sc->file << "xof 0302txt 0064" << std::endl;
+	sc->Stream() << "xof 0302txt 0064" << std::endl;
 }
 static bool cont;
 void FIFileX::OnSaveNodeStart(FISaveContext* sc){
-	sc->file << INDENT(-1) << sc->GetNodeTypeName();
+	sc->Stream() << INDENT(-1) << sc->GetNodeTypeName();
 	UTString name = sc->GetNodeName();
-	if (name.length()) sc->file << " " << name;
-	sc->file << "{" << std::endl;
+	if (name.length()) sc->Stream() << " " << name;
+	sc->Stream() << "{" << std::endl;
 	cont = false;
 }
 void FIFileX::OnSaveNodeEnd(FISaveContext* sc){
-	sc->file << INDENT(-1) << "}" << std::endl;
+	sc->Stream() << INDENT(-1) << "}" << std::endl;
 }
 void FIFileX::OnSaveDataEnd(FISaveContext* sc){
-	if (cont) sc->file << std::endl;
+	if (cont) sc->Stream() << std::endl;
 }
 
 void FIFileX::OnSaveFieldStart(FISaveContext* sc, int nElements){
 	if (!cont){
-		sc->file << INDENT(0);
+		sc->Stream() << INDENT(0);
 		cont = true;
 	}
 }
 void FIFileX::OnSaveFieldEnd(FISaveContext* sc, int nElements){
-	if (!cont) sc->file << INDENT(0);
-	sc->file << ";";
+	if (!cont) sc->Stream() << INDENT(0);
+	sc->Stream() << ";";
 	cont = true;
 	if (sc->fieldIts.Top().fieldType == UTTypeDescFieldIt::F_BLOCK){
-		sc->file << std::endl;
+		sc->Stream() << std::endl;
 		cont = false;
 	}
 }
 void FIFileX::OnSaveElementEnd(FISaveContext* sc, int nElements, bool last){
-	if (!last) sc->file << ",";
+	if (!last) sc->Stream() << ",";
 }
 void FIFileX::OnSaveBool(FISaveContext* sc, bool val){
-	sc->file << (val ? "TRUE" : "FALSE");
+	sc->Stream() << (val ? "TRUE" : "FALSE");
 }
 void FIFileX::OnSaveInt(FISaveContext* sc, int val){
-	sc->file << val;
+	sc->Stream() << val;
 }
 ///	real’l‚Ì•Û‘¶
 void FIFileX::OnSaveReal(FISaveContext* sc, double val){
-	sc->file << val;
+	sc->Stream() << val;
 }
 ///	string’l‚Ì•Û‘¶
 void FIFileX::OnSaveString(FISaveContext* sc, UTString val){
-	sc->file << '"' << val << '"' << std::endl;
+	sc->Stream() << '"' << val << '"' << std::endl;
 }
 void FIFileX::OnSaveRef(FISaveContext* sc){
 	NamedObjectIf* n = DCAST(NamedObjectIf, sc->objects.Top());
-	sc->file << INDENT(-1) << "{" << n->GetName() << "}" << std::endl;
+	sc->Stream() << INDENT(-1) << "{" << n->GetName() << "}" << std::endl;
 }
 
 

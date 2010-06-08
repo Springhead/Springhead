@@ -81,7 +81,7 @@ FIFileVRML::FIFileVRML(){
 	Init();
 }
 void FIFileVRML::PushLoaderContext(FILoadContext* fc){
-	fc->RegisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
+	fc->RegisterGroupToDb("Foundation Physics Graphics FileIO Framework OldSpringhead");
 	fc->typeDbs.Top()->RegisterAlias("Vec3f", "Vector");
 	fc->typeDbs.Top()->RegisterAlias("Vec2f", "Coords2d");
 	fc->typeDbs.Top()->RegisterAlias("Affinef", "Matrix3x3");

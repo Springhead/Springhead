@@ -63,6 +63,7 @@
 	void SetPHSolid(PHSolidIf* s){	base::SetPHSolid(s);}	\
 	GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
 	void SetGRFrame(GRFrameIf* f){	base::SetGRFrame(f);}	\
+	Spr::GRMeshIf* LoadMesh(const char* filename, const IfInfo* ii){	return	base::LoadMesh(filename, ii);}	\
 	double GetSolidLength(){	return	base::GetSolidLength();}	\
 	void SetSolidLength(double l){	base::SetSolidLength(l);}	\
 
@@ -103,7 +104,7 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSdkIf(base)	\
 	Spr::FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc){	return	base::CreateScene(phdesc, grdesc);}	\
 	bool LoadScene(UTString filename, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::LoadScene(filename, ii, objs);}	\
-	bool SaveScene(UTString filename, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::SaveScene(filename, ii, objs);}	\
+	bool SaveScene(UTString filename, const IfInfo* ii, Spr::ObjectIfs* objs, ImportIf* ex){	return	base::SaveScene(filename, ii, objs, ex);}	\
 	int NScene()const{	return	base::NScene();}	\
 	void SwitchScene(Spr::FWSceneIf* scene){	base::SwitchScene(scene);}	\
 	Spr::FWSceneIf* GetScene(int index){	return	base::GetScene(index);}	\

@@ -15,7 +15,6 @@
 
 namespace Spr{;
 
-
 ///	ファイルマップ(今のところファイルのロード専用)
 class UTFileMap: public UTRefCount{
 public:
@@ -28,11 +27,11 @@ public:
 	///	デストラクタ
 	virtual ~UTFileMap(){}
 	/// ファイル マッピング		
-	virtual bool Map(const UTString fn)=0;
+	virtual bool Map(const UTString fn, bool binary)=0;
 	/// ファイル アンマッピング
 	virtual void Unmap()=0;
 	///	ロードできる状態ならtrue
-	bool IsGood();
+	virtual bool IsGood()=0;
 };
 
 
@@ -173,6 +172,8 @@ class UTLoadHandlerDb;
 class UTFileContext{
 public:
 	UTFileContext();
+	///	ロード/セーブ中のファイルの名前と中身．ファイルincludeに備えてstackになっている．
+	UTStack< UTRef<UTFileMap> > fileMaps;
 	///	エラーメッセージ出力用のストリーム cout とか DSTR を指定する．
 	std::ostream* errorStream;
 	///	typeDb のスタック
@@ -180,8 +181,15 @@ public:
 	///	handlerDbのスタック
 	UTStack< UTRef<UTLoadHandlerDb> > handlerDbs;
 	/**	現在ロード中 or セーブ中のオブジェクト．
-		ネストしたオブジェクトに備えてスタックになっている．	*/
+		ネストしたオブジェクトに備えてスタックになっている．*/
 	ObjectIfs objects;
+
+	///	ロードできる状態ならtrue
+	bool IsGood();
+	
+	///	ファイルマップを作成してスタック(fileMaps)に積む
+	virtual void PushFileMap(const UTString fn, bool binary)=0;
+	virtual void PopFileMap()=0;
 };
 
 /**	ファイルロード時に使用するコンテキスト
@@ -195,8 +203,7 @@ protected:
 public:	
 	//--------------------------------------------------------------------------
 	//	変数
-	///	ロード中のファイルの名前と中身．ファイルincludeに備えてstackになっている．
-	UTStack< UTRef<UTFileMap> > fileMaps;
+
 	///	スタックに最初に詰まれたオブジェクト＝ファイルの一番外側＝ルートのオブジェクトの記録．
 	ObjectIfs rootObjects;
 	///	ロードしたディスクリプタのスタック．ネストした組み立て型に備えてスタックになっている．
@@ -233,8 +240,6 @@ public:
 	void ErrorMessage(UTFileMap* info, const char* pos, const char* msg);
 	///	メッセージの作成．posをファイル名と行番号に変換する．
 	void Message(UTFileMap* info, const char* pos, const char* msg);
-	///	ロードできる状態ならtrue
-	bool IsGood();
 	///	typeを処理する準備をする(typeをセットし，XXDescを用意する)
 	void NodeStart(UTString tn, UTLoadedData::Attributes* attrs=NULL);
 	////
@@ -261,8 +266,6 @@ public:
 	void LinkNode();
 	///
 	void PostTask();
-	///	ファイルマップを作成してスタック(fileMaps)に積む
-	virtual void PushFileMap(const UTString fn)=0;
 	/**	ロードするノードのグループを登録。グループ名をスペースで区切って指定。
 		例：ResisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
 	*/
@@ -273,7 +276,7 @@ public:
 	  virtual ~UTLoadContext(){}
 protected:
 	void LinkNode(UTLoadedData* ld);
-	void CreateSceneRecursive();
+	ObjectIf* CreateSceneRecursive();
 };
 
 }

@@ -40,15 +40,13 @@ struct FWSdkIf : SdkIf {
 		ロード後は，ロードされたシーンがアクティブとなる．
 		ファイル中に複数のシーンが含まれていた場合は，最後にロードされたシーンがアクティブとなる．
 
-		ファイルの種類は，iiがNULLの場合ファイル名の拡張子から判別される:
-		.x   => X
-		.wrl => VRML
-		.dae => COLLADA
-		.dat => binary
-		明示するにはiiに対応するIfInfoを指定する(FIFileXIf::GetIfInfoStatic()など)
-
+		iiがNULLの場合は拡張子からファイルタイプが判定される．
+		ファイルタイプを明示したい場合はiiに対応するIfInfoを指定する(FIFileXIf::GetIfInfoStatic()など)
+		
 		親オブジェクトを指定したい場合は，objsに設定する．
 		objsがNULLの場合，シーンはFWSdkの子オブジェクトとしてロードされる．
+
+		内部でインポートされるファイルのタイプは必ず拡張子より判定される．
 	 */
 	bool LoadScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
 
@@ -56,11 +54,16 @@ struct FWSdkIf : SdkIf {
 		@param filename ファイル名
 		@param ii		ファイルの種類を示すIfInfo
 		@param objs		保存するオブジェクトの配列
+		@param ex		エクスポート情報
 		ファイルの種類の指定についてはLoadSceneを参照．
+
 		保存するオブジェクトを指定したい場合は，それらをobjsに設定する．
 		objsがNULLの場合は全てのFWSceneが保存される．
+
+		部分的に別ファイルに保存したい場合はエクスポート情報をexに指定する．
+		exがNULLの場合は全てが1つのファイルに保存される．
 	 */
-	bool SaveScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
+	bool SaveScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL, ImportIf* ex = NULL);
 
 	/// シーンの個数を取得する
 	int NScene() const;

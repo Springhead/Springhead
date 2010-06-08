@@ -13,4 +13,6 @@
 #include "FIFileCOLLADA.h"
 #include "FIFileBinary.h"
 #include "FISpirit.h"
+#include "FILoadContext.h"
 #include "FISaveContext.h"
+#include "FIImport.h"
