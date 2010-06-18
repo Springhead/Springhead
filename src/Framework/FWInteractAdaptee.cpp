@@ -55,7 +55,6 @@ void FWHapticLoopBase::SetRenderedForce(HIBaseIf* hi, bool bForce, SpatialVector
 	if(bForce){
 		if(DCAST(HIForceInterface6DIf, hi)){
 			HIForceInterface6DIf* hif = hi->Cast();
-			hif->SetForce(f.v(), Vec3d());
 			hif->SetForce(f.v(), f.w());	
 		}else{
 			HIForceInterface3DIf* hif = hi->Cast();
@@ -261,6 +260,34 @@ void FWInteractAdaptee::UpdateInteractSolid(int index, FWInteractPointer* iPoint
 		if(found == 1)	iaInfo->toHaptic.intersection_vertices.push_back(pb);
 		if(found == 2)	AnalyzeContactResion(phSolid, soPointer, pa, pb, &iaInfo->toHaptic);
 #endif
+
+//#define CUT_RING
+#ifdef CUT_RING
+		/// Muller Preparataの方法で切り口を求め，接触点を取得
+		std::vector<Vec3d> section;
+		Vec3d commonPoint;
+		Vec3d a2b = b2w * pb - a2w * pa;
+		//if(found == 1){
+		//	/// FindClosestPointで終わった場合
+		//	/// 力覚ポインタと剛体が離れているので，近づけて接触解析
+		//	b2w.Pos() -= a2b;
+		//	commonPoint = a2w * pa;
+		//	FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
+		//	for(size_t k = 0; k  < section.size(); k++){
+		//		iaInfo->neighborInfo.solid_section.push_back(a2w.Inv() * section[k]);
+		//		iaInfo->neighborInfo.pointer_section.push_back(b2w.Inv() * section[k]);
+		//	}
+		//}else 
+		if(found == 2){
+			// デバイスが剛体に侵入している場合
+			// 共有点(common point)で切り口を探す
+			commonPoint = a2w * pa + 0.5 * a2b;
+			FindSectionVertex(phSolid, soPointer, a2w, b2w, pa, pb, normal, commonPoint, section);
+			for(size_t k = 0; k  < section.size(); k++){
+				iaInfo->toHaptic.intersection_vertices.push_back(soPointer->GetPose().Inv() * section[k]);
+			}
+		}
+#endif
 	}
 }
 
@@ -328,17 +355,69 @@ void FWInteractAdaptee::AnalyzeContactResion(PHSolid* solida, PHSolid* solidb, V
 	
 /// ALLかSELECTIONのどちらかを選ぶ
 #define SELECTION	// 中間表現の上にに載っている点は接触点としない
-//#define ALL		// 接触形状の頂点を全て，接触点とする
 #ifdef SELECTION
 		double dot = (point - solida->GetPose() * pa) * th->face_normal;
-		if(dot < -1e-5){
-			th->intersection_vertices.push_back(solidb->GetPose().Inv() * point);
-		}
-#endif
-#ifdef ALL
+		if(dot < -1e-5)		th->intersection_vertices.push_back(solidb->GetPose().Inv() * point);
+#else
 		th->intersection_vertices.push_back(solidb->GetPose().Inv() * point);
 #endif
 	}	
+}
+
+void FWInteractAdaptee::FindSectionVertex(PHSolid* solid0, PHSolid* solid1, const Posed shapePoseW0, const Posed shapePoseW1,
+										  Vec3d pa, Vec3d pb, const Vec3d normal,
+										  const Vec3d commonPoint, std::vector<Vec3d>& section){
+	/// 力覚ポインタと剛体との接触部分解析
+	// PHConstraintEngine.hにあるメンバ関数PHShapePairForLCP::EnumVertex()を改変
+	// 本当はCDDetectorImp.hのクラスCDContactAnalysisFaceを使うべき？
+
+	// 相対速度をみて2Dの座標系を決める。
+	FPCK_FINITE(solid0->pose);
+	FPCK_FINITE(solid1->pose);
+	Vec3d v0 = solid0->GetPointVelocity(solid0->pose * pa);
+	Vec3d v1 = solid1->GetPointVelocity(solid1->pose * pb);
+	Matrix3d local;	//	contact coodinate system 接触の座標系
+	local.Ex() = normal;
+	local.Ey() = v1-v0;
+	local.Ey() -= local.Ey() * normal * normal;
+	if (local.Ey().square() > 1e-6){
+		local.Ey().unitize(); 
+	}else{
+		if (Square(normal.x) < 0.5) local.Ey()= (normal ^ Vec3f(1,0,0)).unit();
+		else local.Ey() = (normal ^ Vec3f(0,1,0)).unit();
+	}
+	local.Ez() =  local.Ex() ^ local.Ey();
+
+	//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
+	//	切り口を求める。まず、それぞれの形状の切り口を列挙
+	CDCutRing cutRing(commonPoint, local);	//	commonPointならば、それを含む面で切れば、必ず切り口の中になる。
+	//	両方に切り口がある場合．(球などないものもある)
+	CDConvex* convex0 = solid0->GetShape(0)->Cast();
+	bool found = convex0->FindCutRing(cutRing, shapePoseW0);
+	int nLine0 = (int)cutRing.lines.size();
+	CDConvex* convex1 = solid1->GetShape(0)->Cast();
+	if (found) found = convex1->FindCutRing(cutRing, shapePoseW1);
+	int nLine1 = (int)cutRing.lines.size() - nLine0;
+	section.clear();
+	if (found){
+		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
+		cutRing.MakeRing();		
+		if (cutRing.vtxs.begin != cutRing.vtxs.end && !(cutRing.vtxs.end-1)->deleted){
+			CDQHLine<CDCutLine>* vtx = cutRing.vtxs.end-1;
+			do{
+				assert(finite(vtx->dist));
+				Vec3d pos;
+				pos.sub_vector(1, Vec2d()) = vtx->normal / vtx->dist;
+				pos = cutRing.local * pos;
+				section.push_back(pos);
+				vtx = vtx->neighbor[0];
+			} while (vtx!=cutRing.vtxs.end-1);
+		}
+	}
+	if (section.size() == 0){	//	ひとつも追加していない＝切り口がなかった or あってもConvexHullが作れなかった．
+		//	きっと1点で接触している．
+		section.push_back(commonPoint);
+	}
 }
 
 

@@ -16,6 +16,10 @@ using namespace Spr;
 
 class FWLDHapticSample : public FWApp{
 public:
+	PHSceneDesc phsd;
+	FWWinDesc wd;
+	FWInteractSceneDesc fisd;
+
 	FWLDHapticSample();
 	virtual void Init(int argc, char* argv[]);			///< アプリケーションの初期化
 	virtual void InitCameraView();						///< カメラ行列の初期化
