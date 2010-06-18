@@ -36,7 +36,7 @@ struct ToHaptic{
 	Vec3d last_face_normal;			///< 前回の近傍物体の提示面の法線
 	double section_depth;
 	double last_section_depth;
-	std::vector< Vec3d > intersection_vertices; ///< 接触体積の頂点(ワールド座標)
+	std::vector< Vec3d > intersection_vertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< Vec3d > pointer_section;	///< ポインタの接触頂点(ローカル座標)
 	std::vector< Vec3d > solid_section;		///< 剛体の接触頂点(ローカル座標)
 

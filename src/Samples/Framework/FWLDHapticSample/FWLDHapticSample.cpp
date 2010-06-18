@@ -14,6 +14,12 @@
 using namespace std;
 
 FWLDHapticSample::FWLDHapticSample(){
+	phsd.timeStep = 0.02;
+	wd.title = "FWLDHapticSample";
+	fisd.iaMode = LOCAL_DYNAMICS_3D;						// humaninterfaceのレンダリングモードの設定
+	fisd.hMode = PENALTY3D;
+	fisd.hdt = 0.001;										// マルチレートの場合の更新[s]
+
 	bStep = true;
 	bDrawInfo = false;
 }
@@ -21,30 +27,23 @@ FWLDHapticSample::FWLDHapticSample(){
 void FWLDHapticSample::Init(int argc, char* argv[]){
 	/// Sdkの初期化，シーンの作成
 	CreateSdk();
-	GetSdk()->Clear();										// SDKの初期化
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
+	GetSdk()->Clear();							// SDKの初期化
+	GetSdk()->CreateScene(phsd, GRSceneDesc());	// Sceneの作成
 
 	/// 描画モードの設定
-	SetGRAdaptee(TypeGLUT);									// GLUTモードに設定
-	GRInit(argc, argv);										// Sdkの作成
+	SetGRAdaptee(TypeGLUT);						// GLUTモードに設定
+	GRInit(argc, argv);							// Sdkの作成
 
 	/// 描画Windowの作成，初期化
-	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
-	windowDesc.title = "FWLDHapticSample";					// ウィンドウのタイトル
-	AssignScene(CreateWin(windowDesc));						// ウィンドウの作成、シーンの割り当て
-	InitCameraView();										// カメラビューの初期化
+	AssignScene(CreateWin(wd));					// ウィンドウの作成、シーンの割り当て
+	InitCameraView();							// カメラビューの初期化
 
 	/// HumanInterfaceの初期化
 	InitHumanInterface();
 
 	/// InteractSceneの作成
-	FWInteractSceneDesc desc;
-	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.iaMode = LOCAL_DYNAMICS_3D;						// humaninterfaceのレンダリングモードの設定
-	desc.hMode = PENALTY3D;
-	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
-	CreateIAScene(desc);									// interactSceneの作成
+	fisd.fwScene = GetSdk()->GetScene();		// fwSceneに対するinteractsceneを作る
+	CreateIAScene(fisd);
 
 	/// 物理シミュレーションする剛体を作成
 	BuildScene();
@@ -105,14 +104,9 @@ void FWLDHapticSample::Reset(){
 	ReleaseAllTimer();
 	GetSdk()->Clear();
 	ClearIAScenes();
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// 刻みの設定
-	FWInteractSceneDesc desc;
-	desc.fwScene = GetSdk()->GetScene();					// fwSceneに対するinteractsceneを作る
-	desc.iaMode = LOCAL_DYNAMICS_3D;							// humaninterfaceのレンダリングモードの設定
-	desc.hMode = PENALTY3D;
-	desc.hdt = 0.001;										// マルチレートの場合の更新[s]
-	CreateIAScene(desc);									// interactSceneの作成
+	GetSdk()->CreateScene(phsd, GRSceneDesc());	// Sceneの作成
+	fisd.fwScene = GetSdk()->GetScene();
+	CreateIAScene(fisd);						// interactSceneの作成
 	BuildScene();
 	BuildPointer();
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
@@ -234,10 +228,6 @@ void FWLDHapticSample::BuildPointer(){
 	DSTR << GetIAScene()->NIAPointers() << std::endl;
 }
 
-
-void FWLDHapticSample::DisplayProxy(){
-
-}
 
 void FWLDHapticSample::Keyboard(int key, int x, int y){
 	BeginKeyboard();

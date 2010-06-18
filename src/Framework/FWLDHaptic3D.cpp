@@ -1013,10 +1013,6 @@ void FWLDHaptic3D::EndKeyboard(){
 	}
 }
 
-void FWLDHaptic3D::ReleaseState(PHSceneIf* p){
-	states->ReleaseState(p);
-	states2->ReleaseState(p);
-}
 
 Vec3d* FWLDHaptic3D::GetProxyPoint(){
 	FWLDHaptic3DLoop* l = (FWLDHaptic3DLoop*)GetHapticLoop();  
