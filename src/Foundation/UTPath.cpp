@@ -114,7 +114,7 @@ UTString UTPath::Dir(){
 		return path.substr(0, e+1);
 	}
 }
-UTString UTPath::GetCwd(){
+UTString SPR_CDECL UTPath::GetCwd(){
 	char buf[1024];
 #ifdef _MSC_VER		
 	GetCurrentDirectory(sizeof(buf), buf);
@@ -127,7 +127,7 @@ UTString UTPath::GetCwd(){
 #endif	
 	return rv;
 }
-bool UTPath::SetCwd(UTString cwd){
+bool SPR_CDECL UTPath::SetCwd(UTString cwd){
 #ifdef _MSC_VER		
 	return SetCurrentDirectory(cwd.c_str())!=0;
 #else		
@@ -135,7 +135,7 @@ bool UTPath::SetCwd(UTString cwd){
 #endif		
 }
 
-void UTPath::CreateDir(UTString dirname){
+void SPR_CDECL UTPath::CreateDir(UTString dirname){
 #ifdef _MSC_VER
 	CreateDirectory(dirname.c_str(), NULL);
 #else
