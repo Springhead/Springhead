@@ -112,7 +112,7 @@ public:
 			fc->mapObj.insert(UTPairObject(simtask->Cast(), phScene->Cast()));
 			phScene->SetTimeStep(d.timeStep);
 		}else{				// Sceneロード時に、mapを検索し、timeStepを設定 			
-			fc->mapObj.insert(UTPairObject(simtask->Cast(), NULL));
+			fc->mapObj.insert(UTPairObject(simtask->Cast(), (ObjectIf*)NULL));
 		}
 	}
 };
