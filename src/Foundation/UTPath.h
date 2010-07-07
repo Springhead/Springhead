@@ -13,11 +13,11 @@ protected:
 	UTString path;
 public:
 	///	カレントディレクトリを取得する
-	static UTString GetCwd();
+	static UTString SPR_CDECL GetCwd();
 	///	カレントディレクトリを設定する
-	static bool SetCwd(UTString cwd);
+	static bool SPR_CDECL SetCwd(UTString cwd);
 	/// ディレクトリを作成する
-	static void CreateDir(UTString dirname);
+	static void SPR_CDECL CreateDir(UTString dirname);
 
 	///	ファイルパスの取得
 	UTString Path() const { return path; }
