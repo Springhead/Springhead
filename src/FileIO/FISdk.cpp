@@ -26,7 +26,11 @@ void SPR_CDECL FIRegisterTypeDescs();
 
 FISdk::FISdk(){
 	FIRegisterTypeDescs();
-	UTLoadHandlerDbPool::Get("FileIO")->insert(DBG_NEW ImportHandler);
+	static bool bFirst = true;
+	if (bFirst){
+		UTLoadHandlerDbPool::Get("FileIO")->insert(DBG_NEW ImportHandler);
+		bFirst = false;
+	}
 }
 
 FISdk::~FISdk(){
