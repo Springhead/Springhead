@@ -103,7 +103,7 @@ void CRTrajectoryController::CompJointAngle() {
 void CRTrajectoryController::CompOffsetForce() {
 	PHSceneIf* phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
 
-	for (int i=0; i<jointTargetValues.size(); ++i) {
+	for (unsigned i=0; i<jointTargetValues.size(); ++i) {
 		PHBallJointIf* bj = jointTargetValues[i].joint->Cast();
 		if (bj) {
 			bj->SetSpring(0);
@@ -121,7 +121,7 @@ void CRTrajectoryController::CompOffsetForce() {
 
 	phScene->Step();
 
-	for (int i=0; i<jointTargetValues.size(); ++i) {
+	for (unsigned i=0; i<jointTargetValues.size(); ++i) {
 		PHBallJointIf* bj = jointTargetValues[i].joint->Cast();
 		if (bj) {
 			jointTargetValues[i].ballOffset = bj->GetOffsetForce();
@@ -135,7 +135,7 @@ void CRTrajectoryController::CompOffsetForce() {
 
 	states->LoadState(phScene);
 
-	for (int i=0; i<jointTargetValues.size(); ++i) {
+	for (unsigned i=0; i<jointTargetValues.size(); ++i) {
 		PHBallJointIf* bj = jointTargetValues[i].joint->Cast();
 		if (bj) {
 			bj->SetTargetPosition(jointTargetValues[i].ballPosition);
