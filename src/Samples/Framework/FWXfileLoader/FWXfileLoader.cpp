@@ -24,7 +24,7 @@ void FWXfileLoader::Init(int argc, char* argv[]){
 	FWWinDesc windowDesc;					// GLのウィンドウディスクリプタ
 	windowDesc.title = "FWXfileLoader";		// ウィンドウのタイトル
 	CreateWin(windowDesc);					// ウィンドウの作成
-	InitWindow();
+	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 
 	/// カメラビューの初期化
 	InitCameraView();	
@@ -70,11 +70,14 @@ void FWXfileLoader::Display(){
 	render->EnableRenderContact(bDebug);
 
 	/// カメラ座標の指定
-	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
-	if (cam && cam->GetFrame()){
-		cam->GetFrame()->SetTransform(cameraInfo.view);
-	}else{
-		GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
+	FWWin* win = GetCurrentWin();
+	if (win->scene){
+		GRCameraIf* cam = win->scene->GetGRScene()->GetCamera();
+		if (cam && cam->GetFrame()){
+			cam->GetFrame()->SetTransform(cameraInfo.view);
+		}else{
+			GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
+		}
 	}
 
 	/// 描画の実行

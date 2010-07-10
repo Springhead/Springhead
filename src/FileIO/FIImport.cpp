@@ -27,6 +27,13 @@ void ImportHandler::AfterLoadData(UTLoadedData* ld, UTLoadContext* lc){
 
 	// 一時的なLoadContext上にDOMをロード
 	FIFile* file = fc->sdk->CreateFileFromExt(path.Ext())->Cast();
+	//	現在ロードしているファイルからの相対パスにしなければならない。
+	if (path.Path().length() < 2 || (path.Path()[0] != '\\' && path.Path()[1] != ':')){
+		UTPath curFile;
+		curFile.Path(fc->fileMaps.back()->name);
+		path.Path(curFile.Dir() + path.Path());
+	}
+
 	fc->PushFileMap(path.FullPath(), true);
 	if(fc->IsGood())
 		file->LoadImp(fc);
