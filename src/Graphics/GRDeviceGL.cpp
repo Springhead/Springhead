@@ -604,7 +604,7 @@ static boost::regex Tex3DRegex("^(.*_tex3d_)([0-9]+)(\\Q.\\E[^\\Q.\\E]+)$");
 unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	GRTexnameMap::iterator it = texnameMap.find(filename);
 	if (it != texnameMap.end()) return it->second;
-	if (1/*enableDebugMessage*/) { std::cout << "GRDeviceGL::LoadTexture(" << filename.c_str() << ");" << std::endl; }
+	if (enableDebugMessage) { std::cout << "GRDeviceGL::LoadTexture(" << filename.c_str() << ");" << std::endl; }
 
 	// ƒtƒ@ƒCƒ‹–¼‚ª‹ó‚È‚ç return 0;
 	if (filename.empty()) return 0;
