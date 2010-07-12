@@ -12,9 +12,15 @@ if "%2"=="10" set EXT=10%EXT%
 
 
 set OUTPUT=../Lib/win32/Springhead%EXT%.lib
-set INPUT=Base/Base%EXT%.lib Foundation/Foundation%EXT%.lib 
-set INPUT=%INPUT% Collision/Collision%EXT%.lib Physics/Physics%EXT%.lib
-set INPUT=%INPUT% Graphics/Graphics%EXT%.lib FileIO/FileIO%EXT%.lib 
+set INPUT=Base/Base%EXT%.lib
+set INPUT=%INPUT% Foundation/Foundation%EXT%.lib 
+set INPUT=%INPUT% Collision/Collision%EXT%.lib
+set INPUT=%INPUT% Physics/Physics%EXT%.lib
+set INPUT=%INPUT% Graphics/Graphics%EXT%.lib
+set INPUT=%INPUT% FileIO/FileIO%EXT%.lib
+set INPUT=%INPUT% Framework/Framework%EXT%.lib
+set INPUT=%INPUT% HumanInterface/HumanInterface%EXT%.lib
+
 rem set INPUT=Device/Device%EXT%.lib HIS/HIS%EXT%.lib
 
 if "%INPUT%"=="" echo ŠÂ‹«•Ï”—pƒƒ‚ƒŠ‚Ì‹ó‚«‚ª•s‘«‚µ‚Ä‚¢‚Ü‚·D
