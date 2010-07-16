@@ -27,6 +27,7 @@ public:
 	FISdk();
 	~FISdk();
 	FIFileXIf*			CreateFileX();
+	FIFileSprIf*		CreateFileSpr();
 	FIFileVRMLIf*		CreateFileVRML();
 	FIFileCOLLADAIf*	CreateFileCOLLADA();
 	FIFileBinaryIf*		CreateFileBinary();

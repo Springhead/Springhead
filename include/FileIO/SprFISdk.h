@@ -17,6 +17,7 @@ namespace Spr{;
 
 struct FIFileIf;
 struct FIFileXIf;
+struct FIFileSprIf;
 struct FIFileVRMLIf;
 struct FIFileCOLLADAIf;
 struct FIFileBinaryIf;

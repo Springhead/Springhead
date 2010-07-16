@@ -77,6 +77,13 @@ FIFileXIf* FISdk::CreateFileX(){
 	return rv->Cast();
 }
 
+FIFileSprIf* FISdk::CreateFileSpr(){
+	FIFileSpr* rv = DBG_NEW FIFileSpr;
+	rv->sdk = this;
+	files.push_back(rv);
+	return rv->Cast();
+}
+
 FIFileVRMLIf* FISdk::CreateFileVRML(){
 	FIFileVRML* rv = DBG_NEW FIFileVRML;
 	rv->sdk = this;
@@ -117,6 +124,9 @@ FIFileIf* FISdk::CreateFileFromExt(UTString filename){
 
 	if(!ext.compare(".x"))
 		return CreateFileX();
+
+	if(!ext.compare(".spr") || !ext.compare(".Spr") || !ext.compare(".SPR"))
+		return CreateFileSpr();
 
 	if(!ext.compare(".wrl"))
 		return CreateFileVRML();
