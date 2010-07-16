@@ -430,6 +430,7 @@ public:
 
 	UTTypeDescFieldIt(UTTypeDesc* d);		///<	コンストラクタ
 	bool NextField(void* base);				///<	次のフィールドに進む
+	bool PrevField(void* base);				///<	前のフィールドに進む
 	bool FindField(UTString n, void* base);	///<	指定のフィールドに進む
 protected:
 	void SetFieldInfo(void* base);			///<		NextField FindFieldが使う

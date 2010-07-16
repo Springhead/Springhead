@@ -302,6 +302,19 @@ bool UTTypeDescFieldIt::FindField(UTString name, void* base){
 	SetFieldInfo(base);
 	return true;
 }
+bool UTTypeDescFieldIt::PrevField(void* base){
+	if (!type || !type->GetComposit().size()) return false;
+	//	前のフィールドへ戻る
+	if (field == type->GetComposit().begin()){
+		field = type->GetComposit().end();
+		fieldType = F_NONE;
+		return false;
+	}else{
+		--field;
+		SetFieldInfo(base);
+		return true;
+	}
+}
 
 void UTTypeDescFieldIt::SetFieldInfo(void* base){
 	//	フィールドの配列要素数を設定
