@@ -70,7 +70,7 @@ void FWSprfileLoader::Display(){
 
 	/// ƒJƒƒ‰À•W‚ÌŽw’è
 	FWWin* win = GetCurrentWin();
-	if (win->scene){
+	if (win->scene && win->scene->GetGRScene()){
 		GRCameraIf* cam = win->scene->GetGRScene()->GetCamera();
 		if (cam && cam->GetFrame()){
 			cam->GetFrame()->SetTransform(cameraInfo.view);

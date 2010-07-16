@@ -37,6 +37,7 @@ enum IdType{ IT_NODE, IT_FIELD, IT_UNKNOWN} idType;
 ///	Idが、型名なのか、構造体のメンバ名なのか
 static void SetIdType(const char* b, const char* e){
 	idTypeId.assign(b,e);
+	PDEBUG( DSTR << "SetIdType(" << idTypeId << ")" << std::endl; )
 	idType = IT_UNKNOWN;
 	if (fileContext->fieldIts.size() && fileContext->fieldIts.Top().type){
 		char* base = (char*)fileContext->datas.Top()->data;
@@ -55,12 +56,10 @@ static bool IsFieldName(){
 	return idType == IT_FIELD;
 }
 
-static size_t fieldItsStartPos;
 ///	ノードの始まり．型を見つけてセット
 static void NodeStart(const char* b, const char* e){
 	PDEBUG( DSTR << "NodeStart " << idTypeId << std::endl );
 	fileContext->NodeStart(idTypeId);
-	fieldItsStartPos = fileContext->fieldIts.size();
 }
 ///	ノードの名前の設定
 static void NameSet(const char* b, const char* e){
@@ -90,22 +89,43 @@ static void NodeSkip(const char* b, const char* e){
 	fileContext->datas.Top()->str = UTString(b,e);
 }
 
-static void SetLeftId(char c){
+static size_t fieldItsStartPos;
+static void SetImmediate(char c){
+	fieldItsStartPos = fileContext->fieldIts.size();
+}
+static void LetStart(char c){
+	//	指定のidをfieldItsが指すようにする
 	char* base = (char*)fileContext->datas.Top()->data;
 	if (!fileContext->fieldIts.Top().FindField(idTypeId, base)){
 		assert(0);	//	left value is not defined.
 	}
-	fieldItsStartPos = fileContext->fieldIts.size();
-	while(fileContext->fieldIts.Top().fieldType == UTTypeDescFieldIt::F_BLOCK){
-		fileContext->fieldIts.PushType(fileContext->fieldIts.Top().field->type);
-		if (!fileContext->fieldIts.NextField(base)) break;
+	fieldItsStartPos = fileContext->fieldIts.size()+1;	//	同階層でNextしてはいけないので、+1。
+	//	Block型の場合、単純型になるまで掘り進む
+	bool rv = true;
+	while (1){
+		while (!rv && fieldItsStartPos < fileContext->fieldIts.size()){
+			fileContext->fieldIts.Pop();
+			rv = fileContext->fieldIts.NextField(base);
+		}
+		if (!rv) break;
+		while(rv && fileContext->fieldIts.Top().fieldType == UTTypeDescFieldIt::F_BLOCK){
+			fileContext->fieldIts.PushType(fileContext->fieldIts.Top().field->type);
+			rv = fileContext->fieldIts.NextField(base);
+		}
+		if (rv) break;
 	}
 }
-
+static void LetEnd(const char* b, const char* e){
+	while (fieldItsStartPos < fileContext->fieldIts.size()+1){
+		fileContext->fieldIts.Pop();
+	}
+}
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．
 	TypeDescを見て次に読み出すべきフィールドをセットする．
 	読み出すべきフィールドがある間 true を返す．	*/
 static bool NextField(){
+	if (fieldItsStartPos > fileContext->fieldIts.size()) return false;
+
 	char* base = (char*)fileContext->datas.Top()->data;
 	bool rv = fileContext->fieldIts.NextField(base);
 	while (1){
@@ -177,8 +197,6 @@ static void StrSet(const char* b, const char* e){
 
 ///	ObjectDescに読み出した値を書き込む
 static void SetVal(const char* b, const char* e){
-	char ch = *b;
-
 	UTTypeDescFieldIt& curField = fileContext->fieldIts.back();
 	//	debug 出力
 #ifdef TRACE_PARSE
@@ -195,8 +213,8 @@ static void SetVal(const char* b, const char* e){
 		}else if (curField.fieldType == UTTypeDescFieldIt::F_STR){
 			DSTR << " " << strValue;
 		}
-		if (ch == ';') DSTR << std::endl;
 	}
+	DSTR << std::endl;
 #endif
 	//	ここまで
 	
@@ -206,9 +224,6 @@ static void SetVal(const char* b, const char* e){
 		fileContext->WriteNumber(numValue);
 	}else if (fileContext->fieldIts.IsString()){
 		fileContext->WriteString(strValue);
-	}
-	if (ch == ';'){
-		curField.arrayPos=UTTypeDesc::BIGVALUE;
 	}
 }
 static void StopArray(const char c){
@@ -287,30 +302,27 @@ void FIFileSpr::Init(){
 	//	本文用パーサ
 	start		= *(id[&SetIdType] >> node);
 	node		=  if_p(&IsNodeType)
-					 [ eps_p[&NodeStart] >> !id[&NameSet] >> (block || immediate) ].
+					 [ eps_p[&NodeStart] >> !id[&NameSet] >> (block | immediate | ExpP("'{' or '='")) ].
 					else_p[ ExpP("type name") ];
-	immediate	= (ch_p('=') | ExpP("'{' or '='")) >>
+	immediate	= ch_p('=')[&SetImmediate] >>
 				  while_p(&NextField)[
 					while_p(&ArrayCount)[
-						value | ExpP("values")
+						value[&SetVal] | ExpP("values")
 					]					
 				  ] >> eps_p[&NodeEnd];
 	block		= ch_p('{') >>
-					* (refer || data)
+					*(refer | data)
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
 	refer		= '^' >> id;
 	data		= id[&SetIdType] >> 
 					if_p(&IsFieldName)[let | ExpP("= and left value")] >>
 					if_p(&IsNodeType)[node | ExpP("node definition")];
-	let			= ch_p('=')[&SetLeftId] >> right;
-	right		= while_p(&ArrayCount)[
-					value | ExpP("values")
-				  ] >> 
-				  while_p(&NextField)[
+	let			= ch_p('=')[&LetStart] >> right[&LetEnd];
+	right		= do_p[
 					while_p(&ArrayCount)[
-						value | ExpP("values")
+						value[&SetVal] | ExpP("values")
 					]
- 				  ];
+				  ].while_p(&NextField);
 	value		= if_p(&IsFieldBool)[ boolVal | ExpP("bool value") ] >>
 				  if_p(&IsFieldInt)[ iNum | ExpP("int value") ] >>
 				  if_p(&IsFieldReal)[ rNum | ExpP("numeric value") ] >>
