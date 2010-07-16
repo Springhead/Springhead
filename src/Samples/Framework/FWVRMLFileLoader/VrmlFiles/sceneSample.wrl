@@ -1,3 +1,10 @@
+FWScene fwScene {
+	children[
+		FWObject fwKuma{
+		}
+	]
+}
+
 Transform {
     translation 0.0 0.0 2.0
     children [

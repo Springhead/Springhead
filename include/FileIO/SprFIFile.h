@@ -48,6 +48,14 @@ struct FIFileIf: public ObjectIf{
 	/// 汎用性が低いのでObjectIfにデバッグ出力レベルを設定するAPIをつけるべきか？tazz
 	void SetDSTR(bool f);
 };
+///	Sprファイルのファイルローダとセーバ
+struct FIFileSprIf: public FIFileIf{
+	SPR_IFDEF(FIFileSpr);
+	///	ロード
+	bool Load(ObjectIfs& objs, const char* fn);
+	///	セーブ
+	bool Save(const ObjectIfs& objs, const char* fn);
+};
 
 ///	DirectXファイルのファイルローダとセーバ
 struct FIFileXIf: public FIFileIf{

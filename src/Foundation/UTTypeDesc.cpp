@@ -289,7 +289,7 @@ bool UTTypeDescFieldIt::NextField(void* base){
 	
 bool UTTypeDescFieldIt::FindField(UTString name, void* base){
 	if (!type || !type->GetComposit().size()) return false;
-	//	次のフィールドへ進む
+	//	フィールドを探す
 	for(field = type->GetComposit().begin(); field != type->GetComposit().end(); ++field){
 		if (field->name.compare(name) == 0){
 			break;
