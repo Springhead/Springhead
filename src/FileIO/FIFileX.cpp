@@ -57,13 +57,13 @@ static void NodeEnd(const char* b, const char* e){
 ///	ブロック型の読み出し準備
 static void BlockStart(const char* b, const char* e){
 	PDEBUG(DSTR << "blockStart" << std::endl);
-	fileX->LBlockStart(fileContext);
+	fileContext->CompositStart();
 }
 
 ///	ブロック型の終了
 static void BlockEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "blockEnd" << std::endl);
-	fileX->LBlockEnd(fileContext);
+	fileContext->CompositEnd();
 }
 ///	ブロック型のスキップ
 static void NodeSkip(const char* b, const char* e){

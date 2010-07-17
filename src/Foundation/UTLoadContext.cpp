@@ -448,7 +448,7 @@ bool UTFileContext::IsGood(){
 
 //---------------------------------------------------------------------------
 //	UTLoadContext
-UTLoadContext::UTLoadContext(){
+UTLoadContext::UTLoadContext():nodeStartDepth(0){
 	errorStream=&DSTR;
 	rootNameManagerForData = DBG_NEW UTLoadedData(NULL, NULL);
 	rootNameManagerForData->nameMan = DBG_NEW UTNameManagerForData;
@@ -495,6 +495,7 @@ void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){
 */
 	//	型情報をロード用イタレータにセット
 	fieldIts.PushType(type);
+	nodeStartDepth = fieldIts.size();
 
 	//	typeにあったDescのノード(DOMノード)を用意
 	UTLoadedData* data = DBG_NEW UTLoadedData(this, type);
@@ -539,6 +540,45 @@ void UTLoadContext::NodeEnd(){
 	datas.Pop();
 	fieldIts.Pop();
 }
+void UTLoadContext::CompositStart(){
+	assert(fieldIts.size() && !fieldIts.Top().field->type->IsPrimitive());
+	char* base = (char*)datas.Top()->data;
+	// フィールドのアドレスを取得：必要に応じてvectorを拡張
+	void* ptr = fieldIts.Top().field->GetAddressEx(base, fieldIts.ArrayPos());
+	datas.Push(DBG_NEW UTLoadedData(this, NULL, ptr));
+	fieldIts.PushType(fieldIts.Top().field->type);
+}
+void UTLoadContext::CompositEnd(){
+	fieldIts.Pop();
+	datas.Pop();
+}
+static bool FindFieldR(UTLoadContext* lc, UTString name){
+	UTTypeDesc::Composit::iterator f;
+	for(f = lc->fieldIts.Top().type->GetComposit().begin(); f != lc->fieldIts.Top().type->GetComposit().end(); ++f){
+		if (f->name.length() == 0){	//継承している場合、継承元も検索
+			lc->fieldIts.Top().field = f;
+			lc->CompositStart();
+			if (FindFieldR(lc, name)) return true;
+			lc->CompositEnd();
+		}else{
+			if (f->name.compare(name) == 0){
+				lc->fieldIts.Top().field = f;
+				return true;
+			}
+		}
+	}
+	lc->fieldIts.Top().fieldType = UTTypeDescFieldIt::F_NONE;
+	return false;
+}
+bool UTLoadContext::FindField(UTString name){
+	if (!fieldIts.Top().type || !fieldIts.Top().type->GetComposit().size()) return false;
+	//	フィールドを探す
+	if (!FindFieldR(this, name)) return false;
+	fieldIts.Top().SetFieldInfo((char*)datas.Top()->data);
+	return true;
+}
+
+
 void UTLoadContext::AddDataLink(std::string ref, const char* pos){
 	dataLinks.push_back(DBG_NEW UTDataLinkTask(datas.Top(), ref, fileMaps.Top(), pos));
 }

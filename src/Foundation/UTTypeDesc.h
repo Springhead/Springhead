@@ -423,7 +423,6 @@ public:
 	};
 	UTTypeDesc* type;						///<	読み出し中のUTTypeDesc
 	UTTypeDesc::Composit::iterator field;	///<	組み立て型の場合，その中のどのフィールドか
-	//UTTypeDesc::Field* field;	///<	組み立て型の場合，その中のどのフィールドか
 	int arrayPos;							///<	配列の場合，読み出し中の添え字
 	int arrayLength;						///<	固定長の場合の配列の長さ
 	FieldType fieldType;					///<	読み出すフィールドの型
@@ -431,10 +430,11 @@ public:
 	UTTypeDescFieldIt(UTTypeDesc* d);		///<	コンストラクタ
 	bool NextField(void* base);				///<	次のフィールドに進む
 	bool PrevField(void* base);				///<	前のフィールドに進む
-	bool FindField(UTString n, void* base);	///<	指定のフィールドに進む
+	bool HaveField(UTString name);			///<	指定の名前のフィールドを持っているならtrue。継承元のフィールドも検索する。
 protected:
-	void SetFieldInfo(void* base);			///<		NextField FindFieldが使う
+	void SetFieldInfo(void* base);			///<	NextFieldが使う
 	FieldType GetTypeId(UTTypeDesc* t);
+	friend class UTLoadContext;
 };
 class UTTypeDescFieldIts:public UTStack<UTTypeDescFieldIt>{
 public:
@@ -445,12 +445,6 @@ public:
 	///	次のフィールドに進む
 	bool NextField(void* base){
 		if(size()) return back().NextField(base);
-		return false;
-	}
-	/**	現在の組み立て型の中から，指定の名前のフィールドを探す．
-		見つけたらそのフィールドを指してtrueを返す．	*/
-	bool FindField(UTString n, void* base){
-		if(size()) return back().FindField(n, base);
 		return false;
 	}
 	///	配列中での位置

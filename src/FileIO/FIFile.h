@@ -56,14 +56,6 @@ public:
 	///	ロードの実装
 	virtual void LoadImp(FILoadContext* fc)=0;
 	
-	//@name ローダーを書くためのユーティリティ関数
-	//@{	
-	///	ブロック(組み立て型)に入る
-	virtual void LBlockStart(FILoadContext* fc);
-	///	ブロック(組み立て型)から出る
-	virtual void LBlockEnd(FILoadContext* fc);
-	//@}
-
 protected:	
 
 

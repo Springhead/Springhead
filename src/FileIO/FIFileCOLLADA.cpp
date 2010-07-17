@@ -46,8 +46,7 @@ UTStack<char> tagStack;
 static void TagStart(const char* b, const char* e){
 	attrs.clear();
 	tagName = UTString(b,e);
-	void* base = fileContext->datas.Top()->data;
-	if (fileContext->fieldIts.FindField(tagName, base)){	
+	if (fileContext->fieldIts.Top().HaveField(tagName)){	
 		//	組み立て型のロード中で，メンバが見つかった場合
 		tagStack.Push(false);
 	}else{
@@ -84,13 +83,13 @@ static void SetProperty(const char* b, const char* e){
 ///	ブロック型の読み出し準備
 static void BlockStart(const char* b, const char* e){
 	PDEBUG(DSTR << "blockStart" << std::endl);
-	fileCOLLADA->LBlockStart(fileContext);
+	fileContext->CompositStart();
 }
 
 ///	ブロック型の終了
 static void BlockEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "blockEnd" << std::endl);
-	fileCOLLADA->LBlockEnd(fileContext);
+	fileContext->CompositEnd();
 }
 
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．

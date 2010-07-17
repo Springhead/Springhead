@@ -94,9 +94,9 @@ void FIFileBinary::LoadBlock(){
 				ptr += strlen(ptr) + 1;
 			}
 			else if(fileContext->fieldIts.IsBlock()){
-				LBlockStart(fileContext);
+				fileContext->CompositStart();
 				LoadBlock();
-				LBlockEnd(fileContext);
+				fileContext->CompositEnd();
 			}
 		}
 	}
