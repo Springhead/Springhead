@@ -215,6 +215,9 @@ public:
 	LoadedDatas loadedDatas;
 	///	ロード中のFITypedescのフィールドの位置．組み立て型のフィールドに備えてスタックになっている．
 	UTTypeDescFieldIts fieldIts;
+	///	ノードスタート時のfieldIts.size()
+	size_t nodeStartDepth;
+
 	///	フラグのスタック
 	UTStack<char> flags;
 
@@ -234,6 +237,7 @@ public:
 	//---------------------------------------------------------------------------
 	///	コンストラクタ
 	UTLoadContext();
+	virtual ~UTLoadContext(){}
 	//@name ローダ，ハンドラを書くためのユーティリティ
 	//@{
 	///	エラーメッセージの出力．posをファイル名と行番号に変換する．
@@ -244,6 +248,12 @@ public:
 	void NodeStart(UTString tn, UTLoadedData::Attributes* attrs=NULL);
 	////
 	void NodeEnd();
+	///	組立型に入る(fieldItsとdatasに現在のフィールドの型をPushする）
+	void CompositStart();
+	///	組立型から抜る(fieldItsとdatasをPopする）
+	void CompositEnd();
+	///	現在ロード中のノードから指定のフィールドをさがす。
+	bool UTLoadContext::FindField(UTString name);
 	///
 	void WriteString(std::string v);
 	///
@@ -272,8 +282,6 @@ public:
 	void RegisterGroupToDb(const char* gp);
 
 	void SetDSTR(bool f){ DSTRFlag = f ;}
-
-	  virtual ~UTLoadContext(){}
 protected:
 	void LinkNode(UTLoadedData* ld);
 	ObjectIf* CreateSceneRecursive();

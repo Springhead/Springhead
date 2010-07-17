@@ -38,15 +38,12 @@ enum IdType{ IT_NODE, IT_FIELD, IT_UNKNOWN} idType;
 static void SetIdType(const char* b, const char* e){
 	idTypeId.assign(b,e);
 	PDEBUG( DSTR << "SetIdType(" << idTypeId << ")" << std::endl; )
-	idType = IT_UNKNOWN;
-	if (fileContext->fieldIts.size() && fileContext->fieldIts.Top().type){
-		char* base = (char*)fileContext->datas.Top()->data;
-		if (fileContext->fieldIts.Top().FindField(idTypeId, base)){
-			idType = IT_FIELD;
-		}
-	}
-	if (idType == IT_UNKNOWN && (fileContext->typeDbs.Top()->Find(idTypeId) || fileContext->typeDbs.Top()->Find(idTypeId + "Desc"))){
+	if (fileContext->fieldIts.size() && fileContext->fieldIts.Top().type && fileContext->fieldIts.Top().HaveField(idTypeId)){
+		idType = IT_FIELD;
+	}else if (fileContext->typeDbs.Top()->Find(idTypeId) || fileContext->typeDbs.Top()->Find(idTypeId + "Desc")){
 		idType = IT_NODE;
+	}else{
+		idType = IT_UNKNOWN;
 	}
 }
 static bool IsNodeType(){
@@ -73,69 +70,54 @@ static void NodeEnd(const char* b, const char* e){
 	fileContext->NodeEnd();
 }
 
-///	ブロック型の読み出し準備
-static void BlockStart(const char* b, const char* e){
-	PDEBUG(DSTR << "blockStart" << std::endl);
-	fileSpr->LBlockStart(fileContext);
-}
-
-///	ブロック型の終了
-static void BlockEnd(const char* b, const char* e){
-	PDEBUG(DSTR << "blockEnd" << std::endl);
-	fileSpr->LBlockEnd(fileContext);
-}
 ///	ブロック型のスキップ
 static void NodeSkip(const char* b, const char* e){
 	fileContext->datas.Top()->str = UTString(b,e);
 }
 
-static size_t fieldItsStartPos;
+static size_t letStartDepth;
 static void SetImmediate(char c){
-	fieldItsStartPos = fileContext->fieldIts.size();
+	letStartDepth = fileContext->fieldIts.size();
 }
 static void LetStart(char c){
-	//	指定のidをfieldItsが指すようにする
+	fileContext->FindField(idTypeId);
+	letStartDepth = fileContext->fieldIts.size()+1;	//	同階層でNextしてはいけないので、+1。
 	char* base = (char*)fileContext->datas.Top()->data;
-	if (!fileContext->fieldIts.Top().FindField(idTypeId, base)){
-		assert(0);	//	left value is not defined.
-	}
-	fieldItsStartPos = fileContext->fieldIts.size()+1;	//	同階層でNextしてはいけないので、+1。
 	//	Block型の場合、単純型になるまで掘り進む
 	bool rv = true;
 	while (1){
-		while (!rv && fieldItsStartPos < fileContext->fieldIts.size()){
-			fileContext->fieldIts.Pop();
+		while (!rv && letStartDepth < fileContext->fieldIts.size()){
+			fileContext->CompositEnd();
 			rv = fileContext->fieldIts.NextField(base);
 		}
 		if (!rv) break;
 		while(rv && fileContext->fieldIts.Top().fieldType == UTTypeDescFieldIt::F_BLOCK){
-			fileContext->fieldIts.PushType(fileContext->fieldIts.Top().field->type);
+			fileContext->CompositStart();
 			rv = fileContext->fieldIts.NextField(base);
 		}
 		if (rv) break;
 	}
 }
 static void LetEnd(const char* b, const char* e){
-	while (fieldItsStartPos < fileContext->fieldIts.size()+1){
-		fileContext->fieldIts.Pop();
-	}
+	while (fileContext->fieldIts.size() > fileContext->nodeStartDepth) 
+		fileContext->CompositEnd();
 }
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．
 	TypeDescを見て次に読み出すべきフィールドをセットする．
 	読み出すべきフィールドがある間 true を返す．	*/
 static bool NextField(){
-	if (fieldItsStartPos > fileContext->fieldIts.size()) return false;
+	if (letStartDepth > fileContext->fieldIts.size()) return false;
 
 	char* base = (char*)fileContext->datas.Top()->data;
 	bool rv = fileContext->fieldIts.NextField(base);
 	while (1){
-		while (!rv && fieldItsStartPos < fileContext->fieldIts.size()){
-			fileContext->fieldIts.Pop();
+		while (!rv && letStartDepth < fileContext->fieldIts.size()){
+			fileContext->CompositEnd();
 			rv = fileContext->fieldIts.NextField(base);
 		}
 		if (!rv) break;
 		while(rv && fileContext->fieldIts.Top().fieldType == UTTypeDescFieldIt::F_BLOCK){
-			fileContext->fieldIts.PushType(fileContext->fieldIts.Top().field->type);
+			fileContext->CompositStart();
 			rv = fileContext->fieldIts.NextField(base);
 		}
 		if (rv) break;
@@ -234,9 +216,8 @@ static void StopArrayStr(const char* b, const char* e){
 	StopArray(' ');
 }
 
-///	参照型を書き込む．(未完成)
+///	参照を追加する．
 static void RefSet(const char* b, const char* e){
-	//DSTR << "ref(" << std::string(b,e) << ") not yet implemented." << std::endl;
 	std::string ref(b,e);
 	fileContext->AddDataLink(ref, b);
 }
@@ -303,7 +284,7 @@ void FIFileSpr::Init(){
 	start		= *(id[&SetIdType] >> node);
 	node		=  if_p(&IsNodeType)
 					 [ eps_p[&NodeStart] >> !id[&NameSet] >> (block | immediate | ExpP("'{' or '='")) ].
-					else_p[ ExpP("type name") ];
+					else_p[ ExpP("node type") ];
 	immediate	= ch_p('=')[&SetImmediate] >>
 				  while_p(&NextField)[
 					while_p(&ArrayCount)[
@@ -313,7 +294,7 @@ void FIFileSpr::Init(){
 	block		= ch_p('{') >>
 					*(refer | data)
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
-	refer		= '^' >> id;
+	refer		= (ch_p('^')|'@'|'*'|'&') >> id[&RefSet];
 	data		= id[&SetIdType] >> 
 					if_p(&IsFieldName)[let | ExpP("= and left value")] >>
 					if_p(&IsNodeType)[node | ExpP("node definition")];

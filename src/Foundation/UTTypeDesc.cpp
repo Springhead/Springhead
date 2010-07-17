@@ -286,22 +286,6 @@ bool UTTypeDescFieldIt::NextField(void* base){
 	SetFieldInfo(base);
 	return true;
 }
-	
-bool UTTypeDescFieldIt::FindField(UTString name, void* base){
-	if (!type || !type->GetComposit().size()) return false;
-	//	フィールドを探す
-	for(field = type->GetComposit().begin(); field != type->GetComposit().end(); ++field){
-		if (field->name.compare(name) == 0){
-			break;
-		}
-	}
-	if (field == type->GetComposit().end()){
-		fieldType = F_NONE;
-		return false;
-	}
-	SetFieldInfo(base);
-	return true;
-}
 bool UTTypeDescFieldIt::PrevField(void* base){
 	if (!type || !type->GetComposit().size()) return false;
 	//	前のフィールドへ戻る
@@ -314,6 +298,20 @@ bool UTTypeDescFieldIt::PrevField(void* base){
 		SetFieldInfo(base);
 		return true;
 	}
+}
+static bool HaveFieldR(UTTypeDesc* type, UTString& name){
+	if (type->IsPrimitive()) return false;
+	for(UTTypeDesc::Composit::iterator f = type->composit.begin(); f!= type->composit.end(); ++f){
+		if (f->name.length() == 0){
+			if (HaveFieldR(f->type, name)) return true;
+		}else if (name.compare(f->name) == 0){
+			return true;
+		}
+	}
+	return false;
+}
+bool UTTypeDescFieldIt::HaveField(UTString name){			///<	指定の名前のフィールドを持っているならtrue。継承元のフィールドも検索する。
+	return HaveFieldR(type, name);
 }
 
 void UTTypeDescFieldIt::SetFieldInfo(void* base){
@@ -372,5 +370,6 @@ UTTypeDescFieldIt::FieldType UTTypeDescFieldIt::GetTypeId(UTTypeDesc* type){
 	}
 	return fieldType;
 }
+
 
 }
