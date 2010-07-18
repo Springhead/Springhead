@@ -99,7 +99,7 @@ static void LetStart(char c){
 	}
 }
 static void LetEnd(const char* b, const char* e){
-	while (fileContext->fieldIts.size() > fileContext->nodeStartDepth) 
+	while (fileContext->fieldIts.size() > fileContext->nodeStartDepthes.Top()) 
 		fileContext->CompositEnd();
 }
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．
@@ -289,8 +289,8 @@ void FIFileSpr::Init(){
 				  while_p(&NextField)[
 					while_p(&ArrayCount)[
 						value[&SetVal] | ExpP("values")
-					]					
-				  ] >> eps_p[&NodeEnd];
+					]
+				  ] >> eps_p[&LetEnd] >> eps_p[&NodeEnd];
 	block		= ch_p('{') >>
 					*(refer | data)
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
