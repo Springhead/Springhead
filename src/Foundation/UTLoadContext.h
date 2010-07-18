@@ -216,7 +216,7 @@ public:
 	///	ロード中のFITypedescのフィールドの位置．組み立て型のフィールドに備えてスタックになっている．
 	UTTypeDescFieldIts fieldIts;
 	///	ノードスタート時のfieldIts.size()
-	size_t nodeStartDepth;
+	UTStack<size_t> nodeStartDepthes;
 
 	///	フラグのスタック
 	UTStack<char> flags;

@@ -448,7 +448,7 @@ bool UTFileContext::IsGood(){
 
 //---------------------------------------------------------------------------
 //	UTLoadContext
-UTLoadContext::UTLoadContext():nodeStartDepth(0){
+UTLoadContext::UTLoadContext(){
 	errorStream=&DSTR;
 	rootNameManagerForData = DBG_NEW UTLoadedData(NULL, NULL);
 	rootNameManagerForData->nameMan = DBG_NEW UTNameManagerForData;
@@ -484,18 +484,9 @@ void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){
 	//	ノードの型情報を検索
 	UTTypeDesc* type = typeDbs.Top()->Find(tn);
 	if (!type) type = typeDbs.Top()->Find(tn + "Desc");	
-/*	TODOhase	
-	//	データファイルに知らない型があったとき，エラーを出す処理.
-	//	XMLの場合など，うるさいので消した．
-	if (!type){
-		UTString msg = tn;
-		msg.append(" not defined.");
-		Message(NULL, NULL, msg.c_str());
-	}
-*/
+
 	//	型情報をロード用イタレータにセット
 	fieldIts.PushType(type);
-	nodeStartDepth = fieldIts.size();
 
 	//	typeにあったDescのノード(DOMノード)を用意
 	UTLoadedData* data = DBG_NEW UTLoadedData(this, type);
@@ -517,6 +508,10 @@ void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){
 	//	子ノードのロード用に，DOMノードをスタックに積む．
 	datas.Push(data);
 
+	//	ノードのロード開始時のスタックの深さを記録
+	nodeStartDepthes.Push(fieldIts.size());
+
+
 	//	DOMロード前ハンドラの呼び出し
 	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
 	key->type = datas.Top()->GetAttribute("type");
@@ -537,6 +532,11 @@ void UTLoadContext::NodeEnd(){
 	}
 
 	//	スタックの片付け
+	while(nodeStartDepthes.Top() > fieldIts.size()){
+		datas.Pop();
+		fieldIts.Pop();
+	}
+	nodeStartDepthes.Pop();
 	datas.Pop();
 	fieldIts.Pop();
 }
