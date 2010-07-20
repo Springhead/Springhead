@@ -459,6 +459,7 @@ public:
 	}
 	bool IncArrayPos(){
 		if(!size()) return false;
+		if (back().arrayPos == -2) return true;
 		++ back().arrayPos;
 		return back().arrayPos < back().arrayLength;
 	}
