@@ -64,7 +64,14 @@ void* UTTypeDesc::Field::GetAddressEx(void* base, int pos){
 	void* ptr = (char*)base + offset;
 	if (varType == VECTOR){
 		while((int)type->VectorSize(ptr)<=pos) type->VectorPush(ptr);
-		ptr = type->VectorAt(ptr, pos);
+		if (pos == -2){
+			type->VectorPush(ptr);
+			int back = type->VectorSize(ptr)-1;
+			ptr = type->VectorAt(ptr, back);
+			DSTR << type->GetTypeName() << "ArrayPos of -2, get ptr of " << back << std::endl;
+		}else{
+			ptr = type->VectorAt(ptr, pos);
+		}
 	}else if (varType == ARRAY){
 		ptr = (char*)ptr + type->GetSize()*pos;
 	}

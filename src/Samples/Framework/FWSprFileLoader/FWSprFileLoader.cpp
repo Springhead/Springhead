@@ -16,6 +16,9 @@ void FWSprfileLoader::Init(int argc, char* argv[]){
 	GetSdk()->Clear();						// SDKの初期化
 	GetSdk()->LoadScene(fileName);			// ファイルのロード
 
+	///	ファイルのセーブテスト
+	GetSdk()->SaveScene("save.spr");
+
 	/// 描画モードの設定
 	SetGRAdaptee(TypeGLUT);					// GLUTで描画
 	GRInit(argc, argv);		// 初期化

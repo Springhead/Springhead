@@ -53,6 +53,7 @@ static bool IsFieldName(){
 	return idType == IT_FIELD;
 }
 
+
 ///	ノードの始まり．型を見つけてセット
 static void NodeStart(const char* b, const char* e){
 	PDEBUG( DSTR << "NodeStart " << idTypeId << std::endl );
@@ -83,20 +84,6 @@ static void LetStart(char c){
 	fileContext->FindField(idTypeId);
 	letStartDepth = fileContext->fieldIts.size()+1;	//	同階層でNextしてはいけないので、+1。
 	char* base = (char*)fileContext->datas.Top()->data;
-	//	Block型の場合、単純型になるまで掘り進む
-	bool rv = true;
-	while (1){
-		while (!rv && letStartDepth < fileContext->fieldIts.size()){
-			fileContext->CompositEnd();
-			rv = fileContext->fieldIts.NextField(base);
-		}
-		if (!rv) break;
-		while(rv && fileContext->fieldIts.Top().fieldType == UTTypeDescFieldIt::F_BLOCK){
-			fileContext->CompositStart();
-			rv = fileContext->fieldIts.NextField(base);
-		}
-		if (rv) break;
-	}
 }
 static void LetEnd(const char* b, const char* e){
 	while (fileContext->fieldIts.size() > fileContext->nodeStartDepthes.Top()) 
@@ -110,18 +97,6 @@ static bool NextField(){
 
 	char* base = (char*)fileContext->datas.Top()->data;
 	bool rv = fileContext->fieldIts.NextField(base);
-	while (1){
-		while (!rv && letStartDepth < fileContext->fieldIts.size()){
-			fileContext->CompositEnd();
-			rv = fileContext->fieldIts.NextField(base);
-		}
-		if (!rv) break;
-		while(rv && fileContext->fieldIts.Top().fieldType == UTTypeDescFieldIt::F_BLOCK){
-			fileContext->CompositStart();
-			rv = fileContext->fieldIts.NextField(base);
-		}
-		if (rv) break;
-	}
 	PDEBUG(
 		if (rv){
 			DSTR << "NextField:";
@@ -136,6 +111,22 @@ static bool NextField(){
 ///	配列のカウント．まだ読み出すべきデータが残っていれば true を返す．
 static bool ArrayCount(){
 	return fileContext->fieldIts.IncArrayPos();
+}
+static void VectorStart(const char c){
+	fileContext->fieldIts.Top().arrayPos = -2;
+}
+static bool InVector(){
+	return fileContext->fieldIts.Top().arrayPos == -2;
+}
+static bool IsBlock(){
+	return !fileContext->fieldIts.Top().field->type->IsPrimitive();
+}
+static void BlockStart(const char* b, const char* e){
+	fileContext->CompositStart();
+	NextField();
+}
+static void BlockEnd(const char* b, const char* e){
+	fileContext->CompositEnd();
 }
 
 static bool IsFieldInt(){ return fileContext->fieldIts.back().fieldType==UTTypeDescFieldIt::F_INT; }
@@ -212,9 +203,6 @@ static void StopArray(const char c){
 	UTTypeDescFieldIt& curField = fileContext->fieldIts.back();
 	curField.arrayPos=UTTypeDesc::BIGVALUE;
 }
-static void StopArrayStr(const char* b, const char* e){
-	StopArray(' ');
-}
 
 ///	参照を追加する．
 static void RefSet(const char* b, const char* e){
@@ -272,7 +260,7 @@ typedef boost::spirit::functor_parser<ExpectParser> ExpP;
 using namespace FileSpr;
 
 
-FIFileSpr::FIFileSpr(){
+FIFileSpr::FIFileSpr():depthFromField(-1){
 	Init();
 }
 
@@ -287,9 +275,15 @@ void FIFileSpr::Init(){
 					else_p[ ExpP("node type") ];
 	immediate	= ch_p('=')[&SetImmediate] >>
 				  while_p(&NextField)[
+					!ch_p('[')[&VectorStart] >>
 					while_p(&ArrayCount)[
-						value[&SetVal] | ExpP("values")
-					]
+						if_p(&IsBlock)[
+							eps_p[&BlockStart] >> right >> eps_p[&BlockEnd]
+						].else_p[
+							value[&SetVal] | ExpP("values")
+						]
+						>> if_p(&InVector)[ !ch_p(']')[&StopArray] ]
+					 ]
 				  ] >> eps_p[&LetEnd] >> eps_p[&NodeEnd];
 	block		= ch_p('{') >>
 					*(refer | data)
@@ -300,8 +294,14 @@ void FIFileSpr::Init(){
 					if_p(&IsNodeType)[node | ExpP("node definition")];
 	let			= ch_p('=')[&LetStart] >> right[&LetEnd];
 	right		= do_p[
+					!ch_p('[')[&VectorStart] >>
 					while_p(&ArrayCount)[
-						value[&SetVal] | ExpP("values")
+						if_p(&IsBlock)[
+							eps_p[&BlockStart] >> right >> eps_p[&BlockEnd]
+						].else_p[
+							value[&SetVal] | ExpP("values")
+						]
+						>> if_p(&InVector)[ !ch_p(']')[&StopArray] ]
 					]
 				  ].while_p(&NextField);
 	value		= if_p(&IsFieldBool)[ boolVal | ExpP("bool value") ] >>
@@ -372,8 +372,6 @@ void FIFileSpr::OnSaveFileStart(FISaveContext* sc){
 	sc->typeDbs.Top()->RegisterAlias("Vec2f", "Coords2d");
 	sc->typeDbs.Top()->RegisterAlias("Affinef", "Matrix3x3");
 	sc->typeDbs.Top()->RegisterAlias("Affined", "Matrix4x4");
-
-	sc->Stream() << "xof 0302txt 0064" << std::endl;
 }
 static bool cont;
 void FIFileSpr::OnSaveNodeStart(FISaveContext* sc){
@@ -386,27 +384,32 @@ void FIFileSpr::OnSaveNodeStart(FISaveContext* sc){
 void FIFileSpr::OnSaveNodeEnd(FISaveContext* sc){
 	sc->Stream() << INDENT(-1) << "}" << std::endl;
 }
-void FIFileSpr::OnSaveDataEnd(FISaveContext* sc){
-	if (cont) sc->Stream() << std::endl;
-}
 
 void FIFileSpr::OnSaveFieldStart(FISaveContext* sc, int nElements){
-	if (!cont){
+	if (depthFromField==-1 && sc->fieldIts.Top().field->name.length()){
 		sc->Stream() << INDENT(0);
-		cont = true;
+		sc->Stream() << sc->fieldIts.Top().field->name << " = ";
+		depthFromField=0;
+	}else if(depthFromField >= 0){
+		depthFromField ++;
+	}
+	UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);
+	if (field->varType == UTTypeDesc::Field::VECTOR){
+		sc->Stream() << "[";
 	}
 }
 void FIFileSpr::OnSaveFieldEnd(FISaveContext* sc, int nElements){
-	if (!cont) sc->Stream() << INDENT(0);
-	sc->Stream() << ";";
-	cont = true;
-	if (sc->fieldIts.Top().fieldType == UTTypeDescFieldIt::F_BLOCK){
-		sc->Stream() << std::endl;
-		cont = false;
+	UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);
+	if (field->varType == UTTypeDesc::Field::VECTOR){
+		sc->Stream() << "]";
 	}
+	if (depthFromField == 0){
+		sc->Stream() << std::endl;
+	}
+	if (depthFromField >= 0) depthFromField--;
 }
 void FIFileSpr::OnSaveElementEnd(FISaveContext* sc, int nElements, bool last){
-	if (!last) sc->Stream() << ",";
+	if (depthFromField > 0 || (!last && depthFromField==0) ) sc->Stream() << " ";
 }
 void FIFileSpr::OnSaveBool(FISaveContext* sc, bool val){
 	sc->Stream() << (val ? "TRUE" : "FALSE");
@@ -420,11 +423,11 @@ void FIFileSpr::OnSaveReal(FISaveContext* sc, double val){
 }
 ///	string値の保存
 void FIFileSpr::OnSaveString(FISaveContext* sc, UTString val){
-	sc->Stream() << '"' << val << '"' << std::endl;
+	sc->Stream() << '"' << val << '"';
 }
 void FIFileSpr::OnSaveRef(FISaveContext* sc){
 	NamedObjectIf* n = DCAST(NamedObjectIf, sc->objects.Top());
-	sc->Stream() << INDENT(-1) << "{" << n->GetName() << "}" << std::endl;
+	sc->Stream() << INDENT(-1) << "*" << n->GetName() << std::endl;
 }
 
 
