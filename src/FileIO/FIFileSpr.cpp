@@ -18,7 +18,10 @@
 
 namespace Spr{;
 
+#ifdef _DEBUG
 #define TRACE_PARSE
+#endif
+
 #ifdef TRACE_PARSE
 # define PDEBUG(x)	x
 #else 
@@ -288,7 +291,7 @@ void FIFileSpr::Init(){
 	block		= ch_p('{') >>
 					*(refer | data)
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
-	refer		= (ch_p('^')|'@'|'*'|'&') >> id[&RefSet];
+	refer		= ch_p('*') >> id[&RefSet];
 	data		= id[&SetIdType] >> 
 					if_p(&IsFieldName)[let | ExpP("= and left value")] >>
 					if_p(&IsNodeType)[node | ExpP("node definition")];
