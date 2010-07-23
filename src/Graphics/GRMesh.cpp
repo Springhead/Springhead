@@ -387,10 +387,13 @@ void GRMesh::DrawBuffer(void* vtx){
 	if(faces.empty())
 		return;
 
-	if (materialList.empty()){	// Mesh に material の指定がない場合
+	// Mesh に material の指定がない場合
+	// マテリアルリストはあるがマテリアルが無いモデルデータも考慮
+	if (materialList.empty() || material.empty()){	
 		render->DrawIndexed(GRRenderIf::TRIANGLES, &triFaces[0], vtx, triFaces.size());
 	}
-	else{	// Xファイルからの materialList 指定がある場合、materialごとに描画
+	// Xファイルからの materialList 指定がある場合、materialごとに描画
+	else{
 		int from = 0, to = 0;
 		for(; to <= NTriangle(); ++to){
 			if(to == NTriangle() || triML[from] != triML[to]){
