@@ -354,11 +354,12 @@ void FIFileX::OnSaveDataEnd(FISaveContext* sc){
 	if (cont) sc->Stream() << std::endl;
 }
 
-void FIFileX::OnSaveFieldStart(FISaveContext* sc, int nElements){
+bool FIFileX::OnSaveFieldStart(FISaveContext* sc, int nElements){
 	if (!cont){
 		sc->Stream() << INDENT(0);
 		cont = true;
 	}
+	return true;
 }
 void FIFileX::OnSaveFieldEnd(FISaveContext* sc, int nElements){
 	if (!cont) sc->Stream() << INDENT(0);

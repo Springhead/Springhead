@@ -44,7 +44,7 @@ protected:
 	virtual void OnSaveInt(FISaveContext* sc, int val);
 	virtual void OnSaveReal(FISaveContext* sc, double val);
 	virtual void OnSaveString(FISaveContext* sc, UTString val);
-	virtual void OnSaveFieldStart(FISaveContext* sc, int nElements);
+	virtual bool OnSaveFieldStart(FISaveContext* sc, int nElements);
 	virtual void OnSaveFieldEnd(FISaveContext* sc, int nElements);
 	virtual void OnSaveElementEnd(FISaveContext* sc, int pos, bool last);
 };

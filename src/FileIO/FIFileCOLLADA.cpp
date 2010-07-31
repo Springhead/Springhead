@@ -369,11 +369,12 @@ void FIFileCOLLADA::OnSaveDataEnd(FISaveContext* sc){
 	if (cont) sc->Stream() << std::endl;
 }
 
-void FIFileCOLLADA::OnSaveFieldStart(FISaveContext* sc, int nElements){
+bool FIFileCOLLADA::OnSaveFieldStart(FISaveContext* sc, int nElements){
 	if (!cont){
 		sc->Stream() << INDENT(0);
 		cont = true;
 	}
+	return true;
 }
 void FIFileCOLLADA::OnSaveFieldEnd(FISaveContext* sc, int nElements){
 	if (!cont) sc->Stream() << INDENT(0);
