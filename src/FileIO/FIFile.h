@@ -90,8 +90,8 @@ protected:
 	virtual void OnSaveBlockStart(FISaveContext* sc){}
 	///	ブロック終了時の処理
 	virtual void OnSaveBlockEnd(FISaveContext* sc){}
-	///	フィールド開始時の処理
-	virtual void OnSaveFieldStart(FISaveContext* sc, int nElements){}
+	///	フィールド開始時の処理	falseを返した場合、フィールドはセーブされず、OnSaveFieldEnd()も呼ばれない。
+	virtual bool OnSaveFieldStart(FISaveContext* sc, int nElements){ return true; }
 	///	フィールド終了時の処理
 	virtual void OnSaveFieldEnd(FISaveContext* sc, int nElements){}
 	///	要素開始時の処理

@@ -377,6 +377,7 @@ void FIFileSpr::OnSaveFileStart(FISaveContext* sc){
 	sc->typeDbs.Top()->RegisterAlias("Affined", "Matrix4x4");
 }
 static bool cont;
+static void* defaultData;
 void FIFileSpr::OnSaveNodeStart(FISaveContext* sc){
 	sc->Stream() << INDENT(-1) << sc->GetNodeTypeName();
 	UTString name = sc->GetNodeName();
@@ -384,22 +385,51 @@ void FIFileSpr::OnSaveNodeStart(FISaveContext* sc){
 	sc->Stream() << "{" << std::endl;
 	cont = false;
 }
+void FIFileSpr::OnSaveDataStart(FISaveContext* sc){
+	assert(defaultData==NULL);
+	defaultData = sc->fieldIts.Top().type->Create();
+}
+void FIFileSpr::OnSaveDataEnd(FISaveContext* sc){
+	if (defaultData) sc->fieldIts.Top().type->Delete(defaultData);
+	defaultData = NULL;
+}
 void FIFileSpr::OnSaveNodeEnd(FISaveContext* sc){
 	sc->Stream() << INDENT(-1) << "}" << std::endl;
 }
 
-void FIFileSpr::OnSaveFieldStart(FISaveContext* sc, int nElements){
+bool FIFileSpr::OnSaveFieldStart(FISaveContext* sc, int nElements){
+	UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);
 	if (depthFromField==-1 && sc->fieldIts.Top().field->name.length()){
+		//	‰Šú’l‚Æ·‚ª‚ ‚é‚©Šm”F
+		bool bNoChange = true;
+		void* data = sc->datas.Top()->data;
+		int dataLen=-1, defaultDataLen=-1;
+		if (field->varType == UTTypeDesc::Field::VECTOR){
+			dataLen = field->VectorSize(data);
+			defaultDataLen = field->VectorSize(defaultData);
+		}else if(field->varType == UTTypeDesc::Field::ARRAY){
+			dataLen = defaultDataLen = field->length;
+		}
+		if (dataLen>=0){
+			if (dataLen != defaultDataLen) bNoChange = false;
+			for(int i=0; bNoChange && i<dataLen; ++i){
+				if (memcmp(field->GetAddress(data, i), field->GetAddress(defaultData, i), field->type->GetSize())) bNoChange = false;
+			}
+		}else{
+			if (memcmp(field->GetAddress(data, 0), field->GetAddress(defaultData, 0), field->type->GetSize())) bNoChange = false;
+		}
+		if (bNoChange) return false;
+
 		sc->Stream() << INDENT(0);
 		sc->Stream() << sc->fieldIts.Top().field->name << " = ";
-		depthFromField=0;
+		depthFromField=0;			
 	}else if(depthFromField >= 0){
 		depthFromField ++;
 	}
-	UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);
 	if (field->varType == UTTypeDesc::Field::VECTOR){
 		sc->Stream() << "[";
 	}
+	return true;
 }
 void FIFileSpr::OnSaveFieldEnd(FISaveContext* sc, int nElements){
 	UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);

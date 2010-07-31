@@ -73,10 +73,14 @@ void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine*
 		sf[i] = sp->shape[i]->GetMaterial().mu0;
 		df[i] = sp->shape[i]->GetMaterial().mu;
 	}
-	reflexSpring    = ave(rs[0], rs[1]) * convertedMass / (float)(2*dt*dt);
-	reflexDamper    = ave(rd[0], rd[1]) * convertedMass / (float)(dt);
-	frictionSpring  = ave(fs[0], fs[1]) * convertedMass / (float)(2*dt*dt);
-	frictionDamper  = ave(fd[0], fd[1]) * convertedMass / (float)(dt);
+	//	2010.07.30 バネ・ダンパを半分にしました。
+	reflexSpring    = ave(rs[0], rs[1]) * convertedMass / (float)(4*dt*dt);
+	reflexDamper    = ave(rd[0], rd[1]) * convertedMass / (float)(2*dt);
+	frictionSpring  = ave(fs[0], fs[1]) * convertedMass / (float)(4*dt*dt);
+	frictionDamper  = ave(fd[0], fd[1]) * convertedMass / (float)(2*dt);
+	if (reflexSpring > convertedMass / (float)(2*dt*dt)) 
+
+
 	staticFriction  = ave(sf[0], sf[1]);
 	dynamicFriction = ave(df[0], df[1]);
 	
@@ -137,6 +141,7 @@ void PHSolidPairForPenalty::GenerateForce(){
 //	凸形状対に発生する反力の計算と最大摩擦力の計算
 //	すべて commonPoint を原点とした座標系で計算する．
 void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContactAnalysis* analyzer){
+	DSTR << "---------------------------------------------------------" << std::endl;
 	cp->Clear();
 	Vec3f cog[2] = {solid[0]->GetCenterPosition() - cp->commonPoint, solid[1]->GetCenterPosition() - cp->commonPoint};
 	/*CDConvexMesh* cmesh[2] = {
@@ -151,18 +156,18 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 			Vec3f p0 = qhVtx.CommonVtx(0);
 			Vec3f p1;
 			Vec3f p2 = qhVtx.CommonVtx(1);
-			Vec3f v0 = solid[0]->velocity + (solid[0]->angVelocity^(p0-cog[0]))
-					 - solid[1]->velocity - (solid[1]->angVelocity^(p0-cog[1]));
+			Vec3f v0 = solid[1]->velocity + (solid[1]->angVelocity^(p0-cog[1]))
+					 - solid[0]->velocity - (solid[0]->angVelocity^(p0-cog[0]));
 			Vec3f v1;
-			Vec3f v2 = solid[0]->velocity + (solid[0]->angVelocity^(p2-cog[0]))
-					 - solid[1]->velocity - (solid[1]->angVelocity^(p2-cog[1]));
+			Vec3f v2 = solid[1]->velocity + (solid[1]->angVelocity^(p2-cog[1]))
+					 - solid[0]->velocity - (solid[0]->angVelocity^(p2-cog[0]));
 			for(unsigned i=2; i<qhVtx.NCommonVtx(); ++i){
 				p1 = p2;	v1 = v2;
 				p2 = qhVtx.CommonVtx(i);
-				v2 = solid[0]->velocity + (solid[0]->angVelocity^(p2-cog[0]))
-				   - solid[1]->velocity - (solid[1]->angVelocity^(p2-cog[1]));
-				float sign = (qhVtx.id==0) ? 1.0f : -1.0f;
-				CalcTriangleReflexForce(cp, p0, p1, p2, sign*v0, sign*v1, sign*v2);
+				v2 = solid[1]->velocity + (solid[1]->angVelocity^(p2-cog[1]))
+				   - solid[0]->velocity - (solid[0]->angVelocity^(p2-cog[0]));
+				//	双対変換の原点＝GJKで見つけた共通点を原点として、三角形の３頂点を渡す
+				CalcTriangleReflexForce(cp, p0, p1, p2, v0, v1, v2, qhVtx.id==1);
 #if 0				//	hase
 				if (cp->reflexSpringForce.norm() > 10000 || !finite(cp->reflexSpringForce.norm()) ){
 					DSTR << "CalcTriangleReflexForce returned very large force." << std::endl;
@@ -233,16 +238,21 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 #endif
 }
 
-void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, Vec3f p0, Vec3f p1, Vec3f p2, Vec3f v0, Vec3f v1, Vec3f v2){
+//	この三角形が物体0に与える力を求める。
+void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, Vec3f p0, Vec3f p1, Vec3f p2, Vec3f v0, Vec3f v1, Vec3f v2, bool bFront){
+	//	p0..p2 三角形の３頂点。原点はGJKの共通点＝双対変換の原点
+	//	v0..v2 ３頂点での物体0～1を見たときの相対速度  （絶対速度ではだめ　→　相対速度の向きに動摩擦力が生じるので摩擦で困る）
+	//	bFront	物体1の面なら true
 	//---------------------------------------------------------------
 	//	ばねモデルの計算：各頂点の侵入深さの計算
-	float depth0 = p0 * cp->normal;
- 	float depth1 = p1 * cp->normal;
+	float depth0 = p0 * cp->normal;	//	normal は物体0から1の向き。物体0が法線向きにずれるとより侵入して反力が増える。
+ 	float depth1 = p1 * cp->normal;	//	物体1が法線向きにずれると反力が減るが、a_b_normalの符号も負になるので符号が合う。
  	float depth2 = p2 * cp->normal;
 	p0 -= depth0 * cp->normal;
 	p1 -= depth1 * cp->normal;
 	p2 -= depth2 * cp->normal;
 	//	ダンパモデルの計算：各頂点の速度の法線方向成分を求める
+	//	物体0が法線向きに速度を持つと反力が増える。
 	float vel0_normal = v0 * cp->normal;
 	float vel1_normal = v1 * cp->normal;
 	float vel2_normal = v2 * cp->normal;
@@ -251,29 +261,32 @@ void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, V
 	float refSp0 = reflexSpring * depth0;
 	float refSp1 = reflexSpring * depth1;
 	float refSp2 = reflexSpring * depth2;
-
-	float refDa0 = reflexDamper * vel0_normal;
-	float refDa1 = reflexDamper * vel1_normal;
-	float refDa2 = reflexDamper * vel2_normal;
+	
+	float refDa0 = reflexDamper * vel0_normal * 0.5;	//	裏表で2回数えてしまうので、半分にしておく
+	float refDa1 = reflexDamper * vel1_normal * 0.5;
+	float refDa2 = reflexDamper * vel2_normal * 0.5;
 
 	//---------------------------------------------------------------
 	//	三角形について積分
 	Vec3f a = p1 - p0;
 	Vec3f b = p2 - p0;
-	Vec3f a_b = a^b;
-	float a_b_normal = a_b * cp->normal;
+	Vec3f a_b = a^b;						//	物体1だと裏を向く。
+	float a_b_normal = a_b * cp->normal;	//	物体1だと負。
 	Vec3f triRefSp = (1.0f/6.0f) * (refSp0 + refSp1 + refSp2) * a_b;
 	Vec3f triRefMomSp = (
 				((1.0f/12.0f)*refSp0 + (1.0f/24.0f)*refSp1 + (1.0f/24.0f)*refSp2) * p0
 			+	((1.0f/24.0f)*refSp0 + (1.0f/12.0f)*refSp1 + (1.0f/24.0f)*refSp2) * p1
 			+	((1.0f/24.0f)*refSp0 + (1.0f/24.0f)*refSp1 + (1.0f/12.0f)*refSp2) * p2
 		  ) ^ a_b;
-	Vec3f triRefDa = (1.0f/6.0f) * (refDa0 + refDa1 + refDa2) * a_b;
+	float sign_a_b_normal = a_b_normal > 0 ? 1 : -1;
+	Vec3f abs_a_b = sign_a_b_normal * a_b;
+	Vec3f triRefDa = (1.0f/6.0f) * (refDa0 + refDa1 + refDa2) * abs_a_b;
 	Vec3f triRefMomDa = (
 				((1.0f/12.0f)*refDa0 + (1.0f/24.0f)*refDa1 + (1.0f/24.0f)*refDa2) * p0
 			+	((1.0f/24.0f)*refDa0 + (1.0f/12.0f)*refDa1 + (1.0f/24.0f)*refDa2) * p1
 			+	((1.0f/24.0f)*refDa0 + (1.0f/24.0f)*refDa1 + (1.0f/12.0f)*refDa2) * p2
-		  ) ^ a_b;
+		  ) ^ abs_a_b;
+	//	triXXX は裏表に関係なく + になる
 #ifdef _DEBUG
 	if (refSp0 > 10000 || refSp1 > 10000 || refSp2 > 10000 || !finite(triRefSp.norm()) ){
 		DSTR << "Error: The reflection spring force is too large: " 
@@ -285,20 +298,22 @@ void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, V
 	assert(finite(triRefMomSp.norm()));	
 
 	//	3角形の面積の計算
-	float triArea = a_b_normal / 4;
-	if (triArea < 0) triArea = -triArea;
+	float triArea = sign_a_b_normal * a_b_normal / 4;		//	裏表で２回数えるから4で割る
 
 	//---------------------------------------------------------------
 	//	動摩擦力を求める
+	//	動摩擦は、相対速度の方向*抗力。裏表共に数える。抗力が裏の分、表の分だけになっているので、２重に数える心配はない。
 	Vec3f velTan0 = v0 - vel0_normal * cp->normal;
 	Vec3f velTan1 = v1 - vel1_normal * cp->normal;
 	Vec3f velTan2 = v2 - vel2_normal * cp->normal;
 	Vec3f fric0, fric1, fric2;
-	if (velTan0.square() > 1e-8) fric0 = velTan0.unit() * (refSp0+refDa0);
-	if (velTan1.square() > 1e-8) fric1 = velTan1.unit() * (refSp1+refDa1);
-	if (velTan2.square() > 1e-8) fric2 = velTan2.unit() * (refSp2+refDa2);
+	//	摩擦の計算
+	if (velTan0.square() > 1e-8) fric0 = velTan0.unit() * (refSp0+sign_a_b_normal*refDa0);
+	if (velTan1.square() > 1e-8) fric1 = velTan1.unit() * (refSp1+sign_a_b_normal*refDa1);
+	if (velTan2.square() > 1e-8) fric2 = velTan2.unit() * (refSp2+sign_a_b_normal*refDa2);
+	//	符号について：裏面だと、refSpr?+refDa? が - になるが a_b_normalも-になるので打ち消す。
 
-	Vec3f triFric = (1.0f/6.0f) * (fric0 + fric1 + fric2) * a_b_normal;
+	Vec3f triFric = (1.0f/6.0f) * (fric0 + fric1 + fric2) * a_b_normal;	
 	Vec3f triFricMom = (
 				(p0 ^ ((1.0f/12.0f)*fric0 + (1.0f/24.0f)*fric1 + (1.0f/24.0f)*fric2))
 			+	(p1 ^ ((1.0f/24.0f)*fric0 + (1.0f/12.0f)*fric1 + (1.0f/24.0f)*fric2))
@@ -313,6 +328,10 @@ void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, V
 	cp->reflexSpringTorque += triRefMomSp;
 	cp->reflexDamperForce += triRefDa;
 	cp->reflexDamperTorque += triRefMomDa;
+
+	if (abs(a_b_normal) > 1.0){
+		DSTR << "a_b_normal:" << a_b_normal << " f:" << triFric << "  s:" << triRefSp.y << "  d:" << triRefDa.y << std::endl;
+	}
 	cp->dynaFric += triFric;
 	cp->dynaFricMom += triFricMom;
 }

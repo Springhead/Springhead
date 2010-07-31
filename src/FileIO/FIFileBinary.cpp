@@ -200,13 +200,14 @@ void FIFileBinary::OnSaveRef(FISaveContext* sc){
 void FIFileBinary::OnSaveDataEnd(FISaveContext* sc){
 
 }
-void FIFileBinary::OnSaveFieldStart(FISaveContext* sc, int nElements){
+bool FIFileBinary::OnSaveFieldStart(FISaveContext* sc, int nElements){
 	UTTypeDesc::Composit::iterator field = sc->fieldIts.back().field;
 	if(field->varType == UTTypeDesc::Field::VECTOR){
 		// 可変長フィールドの場合，その長さを出力
 		size_t len = nElements;
 		sc->Stream().write((const char*)&len, sizeof(size_t));
 	}
+	return true;
 }
 void FIFileBinary::OnSaveFieldEnd(FISaveContext* sc, int nElements){
 

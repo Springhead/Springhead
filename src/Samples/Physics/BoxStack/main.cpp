@@ -61,6 +61,7 @@ UTRef<GRDeviceGLIf> device;
 double	CameraRotX = 0.0, CameraRotY = Rad(80.0), CameraZoom = 30.0;
 bool bLeftButton = false, bRightButton = false;
 
+double floorShakeAmplitude = 0;
 
 // 光源の設定 
 static GLfloat light_position[] = { 25.0, 50.0, 20.0, 1.0 };
@@ -122,93 +123,11 @@ void __cdecl display(){
 	render->SetViewMatrix(view.inv());
 
 	render->DrawScene(scene);
-/*
-	render->SetMaterialSample((GRDebugRenderIf::TMaterialSample)0);
-	render->DrawSolid(soFloor);
-	for(unsigned int i=0; i<soBox.size(); ++i){
-		render->SetMaterialSample((GRDebugRenderIf::TMaterialSample)(i+1));
-		render->DrawSolid(soBox[i]);
-	}
-	if (scene && scene->GetConstraintEngine()){
-		grscene->GetConstraintEngine()
-	}
-*/
+
 	std::ostringstream sstr;
 	sstr << "NObj = " << scene->NSolids();
 	render->DrawFont(Vec2f(-21, 23), sstr.str());
 	glutSwapBuffers();
-
-/*
-	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-
-	Affined ad;
-	
-	// 下の床(soFloor)
-	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_floor);
-	glPushMatrix();
-	Posed pose = soFloor->GetPose();
-	pose.ToAffine(ad);
-	glMultMatrixd(ad);	
-
-	Vec3f normal;
-	for(int i=0; i<soFloor->NShape(); ++i){
-		CDShapeIf* shape = soFloor->GetShape(i);
-		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
-		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->NFace();++f){
-			CDFaceIf* face = mesh->GetFace(f);
-			
-			glBegin(GL_POLYGON);
-			genFaceNormal(normal, base, face);
-			glNormal3fv(normal.data);
-			for(int v=0; v<face->NIndex(); ++v){	
-				glVertex3fv(base[face->GetIndices()[v]].data);
-			}
-			glEnd();
-		}
-	}
-	glPopMatrix();
-	
-	// ボックス(soBox)
-	for (unsigned int boxCnt=0; boxCnt<soBox.size(); ++boxCnt) {	
-		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_box[boxCnt%2]);
-		glPushMatrix();
-		pose = soBox[boxCnt]->GetPose();
-		ad = Affined(pose);
-		glMultMatrixd(ad);
-			for(int i=0; i<soBox[boxCnt]->NShape(); ++i){
-				glPushMatrix();
-				pose = soBox[boxCnt]->GetShapePose(i);
-				ad = Affined(pose);
-				glMultMatrixd(ad);
-
-				CDShapeIf* shape = soBox[boxCnt]->GetShape(i);
-				CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
-				Vec3f* base = mesh->GetVertices();
-				for(size_t f=0; f<mesh->NFace();++f){
-					CDFaceIf* face = mesh->GetFace(f);
-				
-					glBegin(GL_POLYGON);
-					genFaceNormal(normal, base, face);
-					glNormal3fv(normal.data);	
-					for(int v=0; v<face->NIndex(); ++v){	
-						glVertex3fv(base[face->GetIndices()[v]].data);
-					}
-					glEnd();
-				}
-
-				glPopMatrix();
-			}
-		glPopMatrix();
-		std::cout << "\rBox count : " << static_cast<unsigned int>(soBox.size());
-		fps();
-	}
-
-	glutSwapBuffers();
-*/
 }
 
 /**
@@ -280,12 +199,6 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 		case 'p':
 			bStep = false;
 			scene->Step();
-			break;
-		case 'P':
-			scene->SetContactMode(PHSceneDesc::MODE_PENALTY);
-			break;
-		case 'C':
-			scene->SetContactMode(PHSceneDesc::MODE_LCP);
 			break;
 		case ' ':
 			states->ReleaseState(scene);
@@ -457,22 +370,38 @@ void __cdecl keyboard(unsigned char key, int x, int y){
 			{
 				states->LoadState(scene);
 			}break;
-		case 'S':
+		case 'C':
+			std::cout << "C: Set contact mode to LCP mode." << std::endl;
+			scene->SetContactMode(PHSceneDesc::MODE_LCP);
+			break;
+		case 'D':
 			{
-				scene->WriteState("state.bin");
+				std::ofstream f("dump.bin", std::ios::binary|std::ios::out);
+				scene->DumpObjectR(f);
 			}break;
+		case 'F':
+			std::cout << "F: shake floor." << std::endl;
+			{
+				if (!floorShakeAmplitude) floorShakeAmplitude = 2;
+				else floorShakeAmplitude = 0;
+			}
 		case 'L':
+			std::cout << "L: Load state from state.bin." << std::endl;
 			{
 				scene->ReadState("state.bin");
 				scene->Step();
 				std::ofstream f("dump_after_load.bin", std::ios::binary|std::ios::out);
 				scene->DumpObjectR(f);
 			}break;
-		case 'D':
+		case 'S':
+			std::cout << "S: Save state to state.bin." << std::endl;
 			{
-				std::ofstream f("dump.bin", std::ios::binary|std::ios::out);
-				scene->DumpObjectR(f);
+				scene->WriteState("state.bin");
 			}break;
+		case 'P':
+			std::cout << "P: Set contact mode to PENALTY mode." << std::endl;
+			scene->SetContactMode(PHSceneDesc::MODE_PENALTY);
+			break;
 		default:
 			break;
 	}
@@ -510,9 +439,6 @@ void __cdecl motion(int x, int y){
 	}
 }
 
-//	#include <WinBasis/WBPreciseTimer.h>
-//	WBPreciseTimer ptimer;
-
 /**
  brief  	glutTimerFuncで指定したコールバック関数
  param	 	<in/--> id　　 タイマーの区別をするための情報
@@ -520,33 +446,15 @@ void __cdecl motion(int x, int y){
  */
 void __cdecl timer(int id){
 	/// 時刻のチェックと画面の更新を行う
-	if (bStep) scene->Step();
-/*
-	//	dv には拘束による速度変化が入るので、剛体に加わった拘束力を取り出すことができる。
-	if (soBox.size()) DSTR << ((PHSolid*)soBox.back())->dv << std::endl;
-*/	
-/*
-	{
-		// SaveState, LoadStateを利用して1ステップ先の結果を見る
-		states->SaveState(scene);
-		int NSolids = scene->NSolids();
-		PHSolidIf** solids = scene->GetSolids();
-		std::vector<Vec3d> vel, nextvel;
-		std::cout << "----------" << std::endl;
-		for(int i = 0; i < NSolids; i++){
-			vel.push_back(solids[i]->GetVelocity());
-			std::cout << "vel" << vel[i] << std::endl;
- 		}
+	if (bStep){
 		scene->Step();
-		for(int i = 0; i < NSolids; i++){
-			nextvel.push_back(solids[i]->GetVelocity());
-			std::cout << "nextvel" << nextvel[i] << std::endl;
-		}	
-		states->LoadState(scene);
-		states->ReleaseState(scene);
+		if (soFloor){
+			double time = scene->GetCount() * scene->GetTimeStep();
+			double omega = 2.0 * M_PI;
+			soFloor->SetFramePosition(Vec3d(floorShakeAmplitude*sin(time*omega),0,0));			
+			soFloor->SetVelocity(Vec3d(floorShakeAmplitude*omega*cos(time*omega),0,0));
+		}
 	}
-*/
-
 	glutPostRedisplay();
 	unsigned int msecs = static_cast<unsigned int>( 1000*scene->GetTimeStep() );
 	glutTimerFunc(msecs, timer, 0);

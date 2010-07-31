@@ -137,9 +137,9 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 		//	データのセーブ
 		OnSaveDataStart(sc);
 		SaveBlock(sc);
+		OnSaveDataEnd(sc);
 		sc->datas.Pop();
 		sc->fieldIts.Pop();
-		OnSaveDataEnd(sc);
 	}
 	else{
 		UTString err("Node '");
@@ -234,47 +234,48 @@ void FIFile::SaveBlock(FISaveContext* sc){
 		}else if (field->varType == UTTypeDesc::Field::ARRAY){
 			nElements = field->length;
 		}
-		OnSaveFieldStart(sc, nElements);
-		PDEBUG_EVAL( DSTR << "Save field '" << field->name << "' : " << field->typeName << " = "; )
-		for(int pos=0; pos<nElements; ++pos){
-			OnSaveElementStart(sc, pos, (pos==nElements-1));
-			switch(sc->fieldIts.back().fieldType){
-				case UTTypeDescFieldIt::F_BLOCK:{
-					PDEBUG_EVAL( DSTR << "=" << std::endl; )
-					void* blockData = field->GetAddress(base, pos);
-					sc->datas.Push(DBG_NEW UTLoadedData(NULL, field->type, blockData));
-					sc->fieldIts.Push(UTTypeDescFieldIt(field->type));
-					SaveBlock(sc);
-					sc->fieldIts.Pop();
-					sc->datas.Pop();
-					}break;
-				case UTTypeDescFieldIt::F_BOOL:{
-					bool val = field->ReadBool(base, pos);
-					PDEBUG_EVAL( DSTR << val ? "true" : "false"; )
-					OnSaveBool(sc, val);
-					}break;
-				case UTTypeDescFieldIt::F_INT:{
-					int val = (int)field->ReadNumber(base, pos);
-					PDEBUG_EVAL( DSTR << val; )
-					OnSaveInt(sc, val);
-					}break;
-				case UTTypeDescFieldIt::F_REAL:{
-					double val = field->ReadNumber(base, pos);
-					PDEBUG_EVAL( DSTR << val; )
-					OnSaveReal(sc, val);
-					}break;
-				case UTTypeDescFieldIt::F_STR:{
-					UTString val = field->ReadString(base, pos);
-					PDEBUG_EVAL( DSTR << val; )
-					OnSaveString(sc, val);
-					}break;
-				default:;
+		if (OnSaveFieldStart(sc, nElements)){
+			PDEBUG_EVAL( DSTR << "Save field '" << field->name << "' : " << field->typeName << " = "; )
+			for(int pos=0; pos<nElements; ++pos){
+				OnSaveElementStart(sc, pos, (pos==nElements-1));
+				switch(sc->fieldIts.back().fieldType){
+					case UTTypeDescFieldIt::F_BLOCK:{
+						PDEBUG_EVAL( DSTR << "=" << std::endl; )
+						void* blockData = field->GetAddress(base, pos);
+						sc->datas.Push(DBG_NEW UTLoadedData(NULL, field->type, blockData));
+						sc->fieldIts.Push(UTTypeDescFieldIt(field->type));
+						SaveBlock(sc);
+						sc->fieldIts.Pop();
+						sc->datas.Pop();
+						}break;
+					case UTTypeDescFieldIt::F_BOOL:{
+						bool val = field->ReadBool(base, pos);
+						PDEBUG_EVAL( DSTR << val ? "true" : "false"; )
+						OnSaveBool(sc, val);
+						}break;
+					case UTTypeDescFieldIt::F_INT:{
+						int val = (int)field->ReadNumber(base, pos);
+						PDEBUG_EVAL( DSTR << val; )
+						OnSaveInt(sc, val);
+						}break;
+					case UTTypeDescFieldIt::F_REAL:{
+						double val = field->ReadNumber(base, pos);
+						PDEBUG_EVAL( DSTR << val; )
+						OnSaveReal(sc, val);
+						}break;
+					case UTTypeDescFieldIt::F_STR:{
+						UTString val = field->ReadString(base, pos);
+						PDEBUG_EVAL( DSTR << val; )
+						OnSaveString(sc, val);
+						}break;
+					default:;
+				}
+				PDEBUG_EVAL( if (pos<nElements-1) DSTR << ", "; )
+				OnSaveElementEnd(sc, pos, (pos==nElements-1));
 			}
-			PDEBUG_EVAL( if (pos<nElements-1) DSTR << ", "; )
-			OnSaveElementEnd(sc, pos, (pos==nElements-1));
+			PDEBUG_EVAL( DSTR << ";" << std::endl; )
+			OnSaveFieldEnd(sc, nElements);
 		}
-		PDEBUG_EVAL( DSTR << ";" << std::endl; )
-		OnSaveFieldEnd(sc, nElements);
 	}
 	OnSaveBlockEnd(sc);
 }
