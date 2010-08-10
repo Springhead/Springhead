@@ -199,6 +199,8 @@ template <class T> T sign(T t){
 	return t > T()  ?  T(1)  :  T(-1);
 }
 
+#if _MSC_VER < 12
+
 #undef min
 /// ¬‚³‚¢•û‚ð•Ô‚·
 template <class T> T min(T a, T b){return a < b ? a : b;}
@@ -206,6 +208,8 @@ template <class T> T min(T a, T b){return a < b ? a : b;}
 #undef max
 /// ‘å‚«‚¢•û‚ð•Ô‚·
 template <class T> T max(T a, T b){return a > b ? a : b;}
+
+#endif
 
 /// •½‹Ï‚ð‚Æ‚é
 template <class T> T ave(T a, T b){return T(0.5 * (a + b));}
@@ -349,6 +353,16 @@ public:
 	void set_default(){PTM::init_unitize(*this);}
 	//@}
 };
+
+///	TAffine2‚ÆƒxƒNƒgƒ‹‚ÌŠ|‚¯ŽZ
+template <class TD, class TV>
+TVec2<TV> operator * (const PTM::TMatrixBase<3,3, TD>& a, const TVec2<TV>& b){
+	TVec2<TV> r;
+	r[0] = a[0][0]*b[0] + a[0][1]*b[1] + a[0][2];
+	r[1] = a[1][0]*b[0] + a[1][1]*b[1] + a[1][2];
+	return r;
+}
+
 
 //-----------------------------------------------------------------------------
 //	TAffine

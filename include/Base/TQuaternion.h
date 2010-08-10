@@ -653,7 +653,7 @@ struct SwingTwist : public Vec3d{
 	void Jacobian(Matrix3d& J){
 		// tazzさんのメモの(13)式、st=[psi, theta, phi]^Tの時間微分から角速度ωを与えるヤコビアンJ (ω = J * (d/dt)st)
 		double psi = SwingDir();
-		double the = max(Rad(1.0), Swing());	// スイング角0でランク落ちするので無理やり回避
+		double the = std::max(Rad(1.0), Swing());	// スイング角0でランク落ちするので無理やり回避
 		double cos_psi = cos(psi), sin_psi = sin(psi);
 		double cos_the = cos(the), sin_the = sin(the);
 		J[0][0] = -sin_the * sin_psi;
@@ -670,9 +670,9 @@ struct SwingTwist : public Vec3d{
 	void JacobianInverse(Matrix3d& J, const Quaterniond& q){
 		// tazzさんのメモの(14)式、角速度ωからst=[psi, theta, phi]^Tの時間微分を求めるヤコビアンJInv ((d/dt)st = JInv * ω)
 		const double eps = 1.0e-2;									// (14)式の分母が0になることを防ぐためのeps。小さくし過ぎると（1.0e-12とかすると）0付近で横にしたときに物体が外れてしまう
-		double w2z2 = max(eps, q.w * q.w + q.z * q.z);
+		double w2z2 = std::max(eps, q.w * q.w + q.z * q.z);
 		double w2z2inv = 1.0 / w2z2;
-		double x2y2 = max(eps, 1.0 - w2z2);
+		double x2y2 = std::max(eps, 1.0 - w2z2);
 		double x2y2inv = 1.0 / x2y2;
 		double tmp = sqrt(w2z2inv * x2y2inv);
 		double wy_xz = q.w * q.y + q.x * q.z;
