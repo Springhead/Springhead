@@ -193,10 +193,10 @@ void FWApp::MouseMove(int x, int y){
 			// éãì_à⁄ìÆ(âÒì])
 			cameraInfo.rot.y += (float)xrel * 0.01f;
 			cameraInfo.rot.y =
-				Spr::max(cameraInfo.rotRangeY[0], Spr::min(cameraInfo.rot.y, cameraInfo.rotRangeY[1]));
+				std::max(cameraInfo.rotRangeY[0], std::min(cameraInfo.rot.y, cameraInfo.rotRangeY[1]));
 			cameraInfo.rot.x += (float)yrel * 0.01f;
 			cameraInfo.rot.x =
-				Spr::max(cameraInfo.rotRangeX[0], Spr::min(cameraInfo.rot.x, cameraInfo.rotRangeX[1]));
+				std::max(cameraInfo.rotRangeX[0], std::min(cameraInfo.rot.x, cameraInfo.rotRangeX[1]));
 			cameraPosChange = true;
 		}
 	}
@@ -218,7 +218,7 @@ void FWApp::MouseMove(int x, int y){
 	if(mouseInfo.right){
 		// ÉYÅ[ÉÄ
 		cameraInfo.zoom *= (float)exp((double)yrel/10.0);
-		cameraInfo.zoom = Spr::max(cameraInfo.zoomRange[0], Spr::min(cameraInfo.zoom, cameraInfo.zoomRange[1]));
+		cameraInfo.zoom = std::max(cameraInfo.zoomRange[0], std::min(cameraInfo.zoom, cameraInfo.zoomRange[1]));
 		cameraPosChange = true;
 	}
 	if(cameraPosChange) cameraInfo.UpdateView();

@@ -525,7 +525,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				int nid1 = ids[(i+1)%3];
 				int nid2 = ids[3];
 				decs[i] = TriDecompose(w[nid0].XY(), w[nid1].XY(), w[nid2].XY());
-				minDec[i] = min(decs[i][0], min(decs[i][1], decs[i][2]));
+				minDec[i] = std::min(decs[i][0], std::min(decs[i][1], decs[i][2]));
 			}
 			if (minDec[0] > minDec[1]){
 				if (minDec[0] > minDec[2]) i = 0;

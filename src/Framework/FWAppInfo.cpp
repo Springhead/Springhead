@@ -23,7 +23,7 @@ void CameraInfo::UpdateView(){
 }
 
 void CameraInfo::Fit(const GRCameraDesc& cam, float radius){
-	float sz = Spr::min(cam.size.x, cam.size.y);
+	float sz = std::min(cam.size.x, cam.size.y);
 	if(sz == 0.0f)
 		sz = cam.size.x;
 	zoom = cam.front * (radius / (sz/2.0f));
