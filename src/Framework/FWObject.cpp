@@ -205,7 +205,7 @@ bool FWBoneObject::AddChildObject(ObjectIf* o){
 	}
 	if ((phJoint==NULL&&endFrame==NULL)){
 		//Å‰‚ÌFrame‚ÉŠÖ‚·‚éˆ—(Center)
-		if(phSolid){
+		if(phSolid && grFrame){
 			Affinef af = grFrame->GetTransform();
 			Posed absPose; absPose.FromAffine(af);
 			phSolid->SetPose(absPose);
