@@ -283,6 +283,7 @@ void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 	if (endeffector->bPosition){
 		// ŠÖß‚Ì‰ñ“]’†S
 		PHBallJoint* j = DCAST(PHBallJoint,joint);
+
 		PHBallJointDesc d; j->GetDesc(&d);
 		Vec3d Pj = j->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
 

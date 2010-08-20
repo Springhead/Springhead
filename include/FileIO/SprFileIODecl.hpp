@@ -30,6 +30,7 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FISdkIf(base)	\
 	Spr::FIFileXIf* CreateFileX(){	return	base::CreateFileX();}	\
+	Spr::FIFileSprIf* CreateFileSpr(){	return	base::CreateFileSpr();}	\
 	Spr::FIFileVRMLIf* CreateFileVRML(){	return	base::CreateFileVRML();}	\
 	Spr::FIFileCOLLADAIf* CreateFileCOLLADA(){	return	base::CreateFileCOLLADA();}	\
 	Spr::FIFileBinaryIf* CreateFileBinary(){	return	base::CreateFileBinary();}	\

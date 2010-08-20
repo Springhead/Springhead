@@ -29,6 +29,8 @@ struct FISdkIf : public SdkIf{
 
 	/// Xファイルオブジェクトの作成
 	FIFileXIf*			CreateFileX();
+	/// Sprファイルオブジェクトの作成
+	FIFileSprIf*		CreateFileSpr();
 	/// VRMLファイルオブジェクトの作成
 	FIFileVRMLIf*		CreateFileVRML();
 	/// COLLADAファイルオブジェクトの作成
