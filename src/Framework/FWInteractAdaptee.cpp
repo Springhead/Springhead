@@ -108,6 +108,28 @@ void FWInteractAdaptee::UpdateSolidList(){
 	}
 }
 
+
+void FWInteractAdaptee::RotateBBox(PHSolid* s, Vec3f &min, Vec3f &max){
+	min += (Vec3f)s->GetFramePosition();
+	max += (Vec3f)s->GetFramePosition();
+
+	for(int i = 0; i < 3; i++){
+		Matrix3f mat;
+		s->GetOrientation().ToMatrix(mat);
+		for(int j = 0; j < 3; j++){
+			float e = mat[i][j] * s->bbox.GetBBoxMin()[j];
+			float f = mat[i][j] * s->bbox.GetBBoxMax()[j];
+			if(e < f){
+				min[i] += e;
+				max[i] += f;
+			}else{
+				min[i] += f;
+				max[i] += e;
+			}
+		}
+	}
+}
+
 void FWInteractAdaptee::NeighborObjectFromPointer(){
 	// GJKを使って近傍物体と近傍物体の最近点を取得
 	// これをすべてのshapeをもつ剛体についてやる
@@ -129,31 +151,22 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 				if(phSolid == GetIAPointer(k)->pointerSolid->Cast()) phSolid = NULL;
 			}
 			if (soPointer != phSolid && phSolid){
+
 				/* AABBで力覚ポインタ近傍の物体を絞る
 				   ここで絞った物体についてGJKを行う．ここで絞ることでGJKをする回数を少なくできる．
 				*/
 				/// 1. BBoxレベルの衝突判定(Sweep & Prune)
-				/// sceneSolidのshape座標系にそろえて判定を行う
-				Vec3d range = Vec3d(1, 1, 1) * iPointer->GetLocalRange();
-				//Posed solidPose = phSolid->GetPose()*phSolid->GetShapePose(0) ;
-				//Posed pointerPose = soPointer->GetPose() * soPointer->GetShapePose(0);
-				Vec3f soMax = phSolid->GetShapePose(0).Inv() * phSolid->bbox.GetBBoxMax();		//sceneSolidのBBoxの最大値(3軸) sceneSolidのshape座標系
-				Vec3f soMin = phSolid->GetShapePose(0).Inv() * phSolid->bbox.GetBBoxMin();		//sceneSolidのBBoxの最小値(3軸) sceneSolidのshape座標系
-				Vec3d pMin = soPointer->GetShapePose(0) * soPointer->bbox.GetBBoxMin() ;		// PointerのBBoxの最小値(3軸) pointerのshape座標系
-				Vec3d pMax = soPointer->GetShapePose(0) * soPointer->bbox.GetBBoxMax() ;		// PointerのBBoxの最大値(3軸) pointerのshape座標系
+				Vec3f pMin, pMax;	// pointerのBBox
+				Vec3f soMin, soMax; // solidのBBox
+				Vec3f range = Vec3d(1, 1, 1) * iPointer->GetLocalRange(); // ローカルエリア
 
-				//ポインターのBBoxの形が球状出ない場合にBBoxの最大値最小値が座標変換により変わってしまう
-				//そこで，BBoxの大きさを大きくとる
-				double pmin = pMin[0],pmax = pMax[0];
-				for(int i=1;i<3;i++){
-					if(pmin>pMin[i]) pmin = pMin[i];
-					if(pmax<pMax[i]) pmax = pMax[i];
-				}
-				pMin =Vec3d(pmin,pmin,pmin); // PointerのBBoxの最小値(3軸) pointerのshape座標系(3軸で一番最小の値)
-				pMax =Vec3d(pmax,pmax,pmax); // PointerのBBoxの最大値(3軸) pointerのshape座標系(3軸で一番最大の値)
+				// ポインタの周りをローカルエリアで囲む
+				pMin -= range;
+				pMax += range;
+				// BBoxの回転対応
+				RotateBBox(soPointer, pMin, pMax);
+				RotateBBox(phSolid, soMin, soMax);
 
-				pMin = phSolid->GetShapePose(0).Inv() * phSolid->GetPose().Inv() * soPointer->GetPose() * pMin - range;		// PointerのBBoxの最小値(3軸) sceneSolidのshape座標系
-				pMax = phSolid->GetShapePose(0).Inv() * phSolid->GetPose().Inv() * soPointer->GetPose() * pMax + range;		// PointerのBBoxの最大値(3軸) sceneSolidのshape座標系
 				/// 3軸で判定
 				int isLocal = 0;		//< いくつの軸で交差しているかどうか
 				for(int i = 0; i < 3; ++i){
@@ -171,11 +184,13 @@ void FWInteractAdaptee::NeighborObjectFromPointer(){
 					DSTR << i << " pMin[i] = "  << pMin[i] << "  soMax[i] = " << soMax[i] << "  pMax[i] = " << pMax[i] << std::endl;
 					DSTR << i << " soMin[i] = " << soMin[i] << "  pMin[i] = " << pMin[i] << "  soMax[i] = " << soMax[i] << std::endl;
 					DSTR << i << " soMin[i] = " << soMin[i] << "  pMax[i] = " << pMax[i] << "  soMax[i] = " << soMax[i] << std::endl;
-					DSTR << "isLocal" << isLocal <<  std::endl;
-#endif
 				}
+				DSTR << "isLocal" << isLocal <<  std::endl;
+				DSTR << "------------------------" << std::endl;
+#else
+				}
+#endif
 				/// 2.近傍物体と判定．接触解析および状態更新
-				isLocal = 3;
 				if(isLocal > 2){
 					UpdateInteractSolid(i, GetIAPointer(j));
 					lCount++;		//< ローカルなのでlCount++
