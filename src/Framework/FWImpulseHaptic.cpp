@@ -228,7 +228,6 @@ void FWImpulseHaptic::SyncPhysic2Haptic(){
 void FWImpulseHaptic::Step(){
 	if (bSync) return;
 	if (bCalcPhys){
-		UpdatePointer();
 		GetPHScene()->Step();
 		UpdateSolidList();
 		NeighborObjectFromPointer();
