@@ -183,7 +183,7 @@ public:
 	/** @brief ƒJƒƒ‰î•ñ‚ğ•Ô‚·
 		@return camInfo
 	*/
-	CameraInfo	GetCameraInfo(){return cameraInfo;}
+	FWUICamera*	GetCameraInfo(){return &cameraInfo;}
 
 	/** @brief FWApp‚ğ‰Šúó‘Ô‚É‚·‚é
 	*/
