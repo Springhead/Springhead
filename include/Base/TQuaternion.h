@@ -122,8 +122,8 @@ public:
 	ET Theta()const{
 		/// ”’lŒë·‚ÅW‚ª1.0‚ğã‰ñ‚é‚ÆƒGƒ‰[‚·‚éê‡‚ª‚ ‚é
 		double w = W();
-		w = min(w,  1.0);
-		w = max(w, -1.0);
+		w = std::min(w,  1.0);
+		w = std::max(w, -1.0);
 		return (ET)( acos(w) * 2 );
 	}
 	//@}

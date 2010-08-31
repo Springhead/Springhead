@@ -53,6 +53,31 @@ void GRRender::SetCamera(const GRCameraDesc& c){
 		SetProjectionMatrix(afProj);
 	}
 }
+Vec2f GRRender::GetPixelSize(){
+	// ピクセルサイズ = スクリーンサイズ / ビューポートサイズ
+	Vec2f px(camera.size.x / viewportSize.x, camera.size.y / viewportSize.y);
+	if(px.x == 0.0f)
+		px.x = px.y;
+	if(px.y == 0.0f)
+		px.y = px.x;
+	return px;
+}	
+Vec3f GRRender::ScreenToCamera(int x, int y, float depth, bool LorR){
+	//アスペクト比
+	double r = (viewportSize.x / viewportSize.y);
+
+	//スクリーンサイズ
+	Vec2f camSize = camera.size;
+	if(camSize.x ==0) camSize.x = camSize.y * r ;	//片方を0に設定してある場合，内部で自動的に比率が計算されているので，再度計算し代入する
+	if(camSize.y ==0) camSize.y = camSize.x / r ;
+
+	Vec3f pos(
+		 camera.center.x + ((float)x - viewportSize.x / 2.0f) * (camSize.x / viewportSize.x),
+		 camera.center.y + (viewportSize.y / 2.0f - (float)y) * (camSize.y / viewportSize.y),
+		 (LorR ? camera.front : -camera.front));
+	pos *= (depth / camera.front);
+	return pos;
+}
 
 //----------------------------------------------------------------------------
 //	GRMaterial

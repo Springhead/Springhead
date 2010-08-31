@@ -759,7 +759,7 @@ public:
 	///	o—Í
 	void print(std::ostream& os, char* sep="( )") const {
 //		os << "sz:" << height() << "," << width() << std::endl;
-		int w = os.width();
+		int w = (int)os.width();
 		os.width(0);
 		for(size_t i=0; i<height(); ++i){
 			for(int j=0; j<w; ++j){

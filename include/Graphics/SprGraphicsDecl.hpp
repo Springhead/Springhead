@@ -132,6 +132,8 @@
 	void Reshape(Vec2f pos, Vec2f screenSize){	base::Reshape(pos, screenSize);}	\
 	Vec2f GetViewportPos(){	return	base::GetViewportPos();}	\
 	Vec2f GetViewportSize(){	return	base::GetViewportSize();}	\
+	Vec2f GetPixelSize(){	return	base::GetPixelSize();}	\
+	Vec3f ScreenToCamera(int x, int y, float depth, bool LorR){	return	base::ScreenToCamera(x, y, depth, LorR);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRDeviceIf(base)	\
 	void Init(){	base::Init();}	\

@@ -428,14 +428,14 @@ void __cdecl motion(int x, int y){
 	// 左ボタン
 	if(bLeftButton){
 		CameraRotY += xrel * 0.01;
-		CameraRotY = Spr::max(Rad(-180.0), Spr::min(CameraRotY, Rad(180.0)));
+		CameraRotY = std::max(Rad(-180.0), std::min(CameraRotY, Rad(180.0)));
 		CameraRotX += yrel * 0.01;
-		CameraRotX = Spr::max(Rad(-80.0), Spr::min(CameraRotX, Rad(80.0)));
+		CameraRotX = std::max(Rad(-80.0), std::min(CameraRotX, Rad(80.0)));
 	}
 	// 右ボタン
 	if(bRightButton){
 		CameraZoom *= exp(yrel/10.0);
-		CameraZoom = Spr::max(0.1, Spr::min(CameraZoom, 100.0));
+		CameraZoom = std::max(0.1, std::min(CameraZoom, 100.0));
 	}
 }
 

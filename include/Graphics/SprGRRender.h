@@ -351,6 +351,20 @@ struct GRRenderIf: public GRRenderBaseIf{
 	Vec2f GetViewportPos();
 	/// Viewportのサイズの取得
 	Vec2f GetViewportSize();
+	/// 1ピクセルの物理サイズを取得
+	Vec2f GetPixelSize();
+
+	/** @brief スクリーン座標からカメラ座標への変換
+		@param	x		スクリーンx座標
+		@param	y		スクリーンy座標
+		@param depth	z座標
+		@param LorR		trueなら左手座標(D3D)，falseならば右手座標(GL)
+		@return			カメラ座標
+		カーソル位置などのスクリーン座標（ピクセル）をカメラ座標系に変換する．
+		z方向に自由度が残るのでdepthで指定する．
+		depthはカメラ原点からのz方向距離で必ずdepth > 0．
+	 */
+	Vec3f	ScreenToCamera(int x, int y, float depth, bool LorR = false);
 
 };
 

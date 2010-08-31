@@ -33,9 +33,9 @@ public:
 	virtual ~FWApp();
 	UTRef<FWVFuncBridge>				vfBridge;	///< 多言語(Rubyなど)へポートする際に仮想関数が適切に呼ばれるようにするためのブリッジ
 protected:
-	MouseInfo							mouseInfo;	///< マウス情報
-	CameraInfo							cameraInfo;	///< カメラ情報
-	std::map<FWSceneIf*, DragInfo>		dragInfo;	///< 剛体ドラッグ情報
+	FWMouseInfo				mouseInfo;		///< マウス情報
+	FWUICamera				cameraInfo;		///< カメラ情報
+	FWDragger				dragInfo;		///< 剛体ドラッグ情報
 
 	Wins		wins;				///< ウィンドウ情報
 	
@@ -44,7 +44,8 @@ protected:
 		winに，既存のウィンドウが割り当てられていないシーンを割り当てる．
 		該当するシーンが見つからない場合，あるいはwinに既にシーンが割り当てられている場合は何もしない．
 	*/
-	void		AssignScene(FWWin* win);
+	void	AssignScene(FWWin* win);
+
 public:
 // 派生クラスで定義する必要がある仮想関数 -----------------------------
 
@@ -105,16 +106,6 @@ public:
 		256が加算されてKeyboardに渡される．
 	 */
 	virtual void Keyboard(int key, int x, int y){}
-
-	/** @brief キーボードイベントのハンドラ
-		Keyboard関数のはじめに呼ぶ
-	 */
-	void BeginKeyboard();
-
-	/** @brief キーボードイベントのハンドラ
-		Keyboard関数の終わりに呼ぶ
-	 */
-	void EndKeyboard();
 
 	/** @brief マウスイベントのハンドラ
 	 */
@@ -188,6 +179,7 @@ public:
 	 */
 	void PostRedisplay();
 
+	/// 外部から取得する必要はあるか？　tazz
 	/** @brief カメラ情報を返す
 		@return camInfo
 	*/
@@ -196,6 +188,7 @@ public:
 	/** @brief FWAppを初期状態にする
 	*/
 	void	Clear();
+
 	/** @brief FWAppをリセットする(タイマーのリセットは行わない)
 	*/
 	void	Reset();
@@ -246,7 +239,6 @@ public:
 
 /** FWInteraction */
 ///////////////////////////////////////////////////////////////////////////////////
-public:
 protected:
 	FWInteractSceneIf*					curIAScene;
 	FWInteractScenes					iaScenes;
