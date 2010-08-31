@@ -212,7 +212,7 @@ public:
 		else if(key == '.'){
 			double dt = GetPHScene()->GetTimeStep();
 			dt /= 2.0;
-			dt = Spr::max(0.001, dt);
+			dt = std::max(0.001, dt);
 			GetPHScene()->SetTimeStep(dt);
 		}
 		else if(key == ','){

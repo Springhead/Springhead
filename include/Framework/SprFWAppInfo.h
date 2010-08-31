@@ -71,12 +71,14 @@ public:
 };
 typedef std::vector< UTRef<FWWin> > Wins;
 
-struct MouseInfo{
-	TVec2<int> lastPos;			/// 前回のカーソル座標
-	bool left, middle, right;	/// ボタン押し下げ
-	bool shift, ctrl, alt;		/// コントロールキー状態
-	bool first;
-	MouseInfo():left(false), middle(false), right(false), first(false){}
+struct FWMouseInfo{
+	TVec2<int>	pos;				///< 現在のカーソル座標
+	TVec2<int>	lastPos;			///< 前回のカーソル座標
+	bool	left, middle, right;	///< ボタン押し下げ
+	bool	shift, ctrl, alt;		///< コントロールキー状態
+	bool	first;					///< ボタン押し下げイベントの直後かどうか
+
+	FWMouseInfo();
 };
 
 // 以下の定数はGLUTに合わせてある
@@ -95,32 +97,106 @@ enum ModifierMask{
 	ACTIVE_ALT = 4,
 };
 
-/// カメラ情報
-/// 本来はscene毎に個別に保持すべき。要修正
-struct CameraInfo{
-	Vec3f target;		/// 注視点
-	Vec2f rot;			/// 経度角，緯度角
-	float zoom;			/// 拡大率（対象からの距離）
-	Vec2f rotRangeX, rotRangeY;
-	Vec2f zoomRange;
-	Affinef view;
+/** ユーザインタフェースつきカメラ
+	カーソル移動によって注視点からの距離，緯度，経度を操作できる
+ */
+class FWUICamera{
+public:
+	/// 状態
+	Vec2f rot;						/// 経度角，緯度角
+	float zoom;						/// 拡大率（対象からの距離）
+	Vec3f target;					/// 注視点
+	Affinef view;					/// 視点行列
 
-	CameraInfo();
-
+	/// パラメータ
+	Vec2f rotRangeX, rotRangeY;		/// 角度範囲
+	Vec2f zoomRange;				/// 対象からの距離範囲
+	
+	float rotGain;					/// カーソル移動量から角度変化量（経度・緯度）へのゲイン
+	float posGain;					/// カーソル移動量から注視点移動量へのゲイン
+	float zoomGain;					/// カーソル移動量から距離変化率へのゲイン
+	
+public:
 	/// カメラ位置情報をもとにビュー変換行列を設定
 	void UpdateView();
 
 	/// 注視点上にある半径radiusの球がちょうど視野に収まるようにzoomを設定する
 	void Fit(const GRCameraDesc& cam, float radius);
+
+	/**	@brief	視点の回転
+		@param xrel	スクリーン上移動量（経度分）
+		@param yrel	スクリーン上移動量（緯度分）
+		@param px	1ピクセルの長さ
+		カーソル移動量に対して緯度・経度を変化させる．
+		pxは(スクリーンサイズ/ビューポートサイズ)
+	 */
+	void Rotate(int xrel, int yrel, Vec2f px);
+
+	/** @brief	視点の移動
+		@param xrel
+		@param yrel
+		@param px
+	 */
+	void Translate(int xrel, int yrel, Vec2f px);
+
+	/** @brief	ズーム（注視点からの距離の操作）
+		@param yrel	スクリーン上移動量
+	 */
+	void Zoom(int yrel);
+
+	FWUICamera();
 };
 
-/// 剛体ドラッグ機能.
-struct DragInfo{
-	PHRayIf* ray;			/// カーソル下の剛体を特定するためのPHRay
-	PHSolidIf* cursor;		/// カーソル剛体
-	PHSpringIf* spring;
-	float	depth;
-	DragInfo():ray(NULL), cursor(NULL), spring(NULL), depth(0.0f){}
+/** カーソルによる剛体のドラッグ機能
+ */
+class FWDragger{
+public:
+	PHSceneIf*	scene;
+	Affinef		view;		///	
+	GRRenderIf*	render;		/// 
+
+	PHRayIf*	ray;		/// カーソル下の剛体を特定するためのPHRay
+	PHSolidIf*	cursor;		/// カーソル剛体
+	PHSpringIf* spring;		/// ドラッグするためのバネ
+	float		depth;		/// ドラッグする剛体のカメラから見たz座標
+
+public:
+	/**	@brief	初期化
+		@param	scene
+		@param	view
+		@param	render
+
+		sceneを用いて内部のレイ，バネ，カーソル剛体が作られる．
+		ビュー変換viewはドラッグの最中に変化しないと想定される．
+		renderを用いてスクリーン・カメラ座標変換を行う．
+	 */
+	void Init(PHSceneIf* phScene, const Affinef& view, GRRenderIf* render);
+
+	/**	@brief	剛体をつかむ
+		@param	x		カーソルx座標
+		@param	y		カーソルy座標
+		@param	view	ビュー変換行列
+		@param	render	レンダラ
+		カメラからカーソル位置へ投射した直線が最初に交差する剛体をドラッグ対象に設定する．
+
+	 */
+	void Grab(int x, int y);
+
+	/**	@brief	剛体をひっぱる
+		@param	x
+		@param	y
+		@param	view
+		@param	render
+		カーソル位置に向かってバネの力で剛体をひっぱる．
+		この際カメラの奥行方向には力は加わらない．
+	 */
+	void Drag(int x, int y);
+
+	/**	@brief	剛体を離す
+	 */
+	void Release();
+
+	FWDragger():ray(NULL), cursor(NULL), spring(NULL), depth(0.0f){}
 };
 
 /// タイマ．

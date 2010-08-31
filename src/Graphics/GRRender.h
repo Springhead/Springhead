@@ -271,7 +271,10 @@ public:
 	Vec2f GetViewportPos(){ return viewportPos; }
 	/// Viewportのサイズの取得
 	Vec2f GetViewportSize(){ return viewportSize; }
-
+	///
+	Vec2f GetPixelSize();
+	/// スクリーン・カメラ座標変換
+	Vec3f	ScreenToCamera(int x, int y, float depth, bool LorR = false);
 };
 
 /**	@class	GRDevice

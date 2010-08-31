@@ -40,6 +40,7 @@ FWApp::~FWApp(){
 	}
 	if(hasGameMode) glutLeaveGameMode();
 }
+
 void FWApp::EnableIdleFunc(bool on){
 	if(grAdaptee)
 		grAdaptee->EnableIdleFunc(on);
@@ -57,172 +58,41 @@ void FWApp::Reshape(int w, int h){
 	fwSdk->Reshape(w, h);
 }
 
-void FWApp::BeginKeyboard(){
-	for(int i = 0; i < NIAScenes(); i++){
-		FWInteractScene* iaScene = GetIAScene(i)->Cast();
-		iaScene->BeginKeyboard();
-	}
-}
-void FWApp::EndKeyboard(){
-	for(int i = 0; i < NIAScenes(); i++){
-		FWInteractScene* iaScene = GetIAScene(i)->Cast();
-		iaScene->EndKeyboard();
-	}
-}
-
 void FWApp::MouseButton(int button, int state, int x, int y){
-	mouseInfo.lastPos.x = x, mouseInfo.lastPos.y = y;
-	if(button == LEFT_BUTTON)
-		mouseInfo.left = (state == BUTTON_DOWN);
-	if(button == MIDDLE_BUTTON)
-		mouseInfo.middle = (state == BUTTON_DOWN);
-	if(button == RIGHT_BUTTON)
-		mouseInfo.right = (state == BUTTON_DOWN);
-	if(state == BUTTON_DOWN)
-		mouseInfo.first = true;
-	int mod = GetModifier();
-	mouseInfo.shift = (mod & ACTIVE_SHIFT) != 0;
-	mouseInfo.ctrl  = (mod & ACTIVE_CTRL) != 0;
-	mouseInfo.alt   = (mod & ACTIVE_ALT) != 0;
-
 	// ctrl+left カーソルで剛体を動かす
-	// middle    カメラ平行移動
-	if(fwSdk->GetScene() && ((mouseInfo.left && mouseInfo.ctrl) || mouseInfo.middle)){
-		// カーソル座標をシーン座標に変換
-		const GRCameraDesc& cam = fwSdk->GetRender()->GetCamera();
-		Vec2f vpSize = fwSdk->GetRender()->GetViewportSize();
-		double r = (vpSize[0]/vpSize[1]); //アスペクト比
-		Vec2f camSize = cam.size;	//カメラの比率
-		if(cam.size.x ==0) camSize.x = camSize.y * r ;	//片方を0に設定してある場合，内部で自動的に比率が計算されているので，再度計算し代入する
-		if(cam.size.y ==0) camSize.y = camSize.x / r ;
-		Vec3f cursorPos(
-			cam.center.x + ((float)x - vpSize.x / 2.0f) * (camSize.x / vpSize.x),
-			cam.center.y + (vpSize.y / 2.0f - (float)y) * (camSize.y / vpSize.y),
-			-cam.front);
-		Vec3f ori, dir;
-		ori = cameraInfo.view.Pos();
-		dir = cameraInfo.view.Rot() * cursorPos;
-		// raycast
-		// 現在のシーンにPHRayが無ければ作成
-		PHSceneIf* phScene = fwSdk->GetScene()->GetPHScene();
-		DragInfo& info = dragInfo[fwSdk->GetScene()];
-		if(!info.ray){
-			info.ray = phScene->CreateRay();
-			info.cursor = phScene->CreateSolid();
-			info.cursor->SetDynamical(false);
-			info.cursor->SetName("PHCursor");
-			phScene->SetContactMode(info.cursor, PHSceneDesc::MODE_NONE);
-			CDSphereDesc sd;
-			sd.radius = 0.002f;
-			info.cursor->AddShape(fwSdk->GetPHSdk()->CreateShape(sd));
-		}
-		info.ray->SetOrigin(ori);
-		info.ray->SetDirection(dir);
-		info.ray->Apply();
-		if(info.ray->NHits()){
-			ReleaseAllTimer();
-			PHRaycastHit* hit = info.ray->GetNearest();
-			// カーソル剛体をヒット位置に移動
-			info.cursor->SetCenterPosition(hit->point);
-			// ヒット位置のカメラから見た距離（Z座標）を記憶
-			Vec3f pointCamera = cameraInfo.view.inv() * hit->point;
-			info.depth = pointCamera.z;
-			// ヒットした剛体とカーソル剛体をつなぐバネ
-			if(mouseInfo.left && mouseInfo.ctrl){
-				PHSpringDesc desc;
-				desc.fMax =100;
-				desc.type = PHJointDesc::ELASTIC;
-				Posed pose;
-				pose.Pos() = hit->point;
-				desc.poseSocket = hit->solid->GetPose().Inv() * pose;
-				info.spring = DCAST(PHSpringIf, phScene->CreateJoint(hit->solid, info.cursor, desc));
-				double mass = hit->solid->GetMass();	//massによって最適なK,Dを設定する必要がある
-				const double K = 50000.0, D = 1000;//K = 10000.0, D = 100.0;
-				info.spring->SetSpring(Vec3d(K, K, K)*mass);
-				info.spring->SetDamper(Vec3d(D, D, D)*mass);
-				//info.spring->SetSpringOri(K);
-				//info.spring->SetDamperOri(D);
-			}
-			CreateAllTimer();
-		}
+	if(fwSdk->GetScene() && (mouseInfo.left && mouseInfo.ctrl)){
+		dragInfo.Init(fwSdk->GetScene()->GetPHScene(), cameraInfo.view, fwSdk->GetRender());
+		dragInfo.Grab(x, y);
 	}
 
-	if(state == BUTTON_UP){
-		if(button == LEFT_BUTTON){
-			// ドラッグバネの削除
-			DragInfo& info = dragInfo[fwSdk->GetScene()];
-			if(info.spring){
-				fwSdk->GetScene()->GetPHScene()->DelChildObject(info.spring);
-				info.spring = NULL;
-			}
-		}
-	}
+	if(state == BUTTON_UP && button == LEFT_BUTTON)
+		dragInfo.Release();
 }
 
 void FWApp::MouseMove(int x, int y){
-	int xrel = x - mouseInfo.lastPos.x, yrel = y - mouseInfo.lastPos.y;
-	mouseInfo.lastPos.x = x;
-	mouseInfo.lastPos.y = y;
-	if(mouseInfo.first){
-		mouseInfo.first = false;
-		return;
+	// 視点移動(回転)
+	if(mouseInfo.left && !mouseInfo.ctrl && !mouseInfo.alt){
+		cameraInfo.Rotate(mouseInfo.pos.x - mouseInfo.lastPos.x, mouseInfo.pos.y - mouseInfo.lastPos.y,
+			GetSdk()->GetRender()->GetPixelSize());
 	}
-	bool cameraPosChange = false;
-	// 左ボタン
-	if(mouseInfo.left){
-		if(mouseInfo.ctrl){
-			DragInfo& info = dragInfo[fwSdk->GetScene()];
-			if(!info.spring)
-				return;
-			// カーソル位置の剛体を動かす
-			const GRCameraDesc& cam = fwSdk->GetRender()->GetCamera();
-			Vec2f vpSize = fwSdk->GetRender()->GetViewportSize();
-			float ratio = info.depth / (-cam.front);
-			double r = (vpSize[0]/vpSize[1]); //アスペクト比
-			Vec2f camSize = cam.size;	//カメラの比率
-			if(cam.size.x ==0) camSize.x = camSize.y * r ;	//片方を0に設定してある場合，内部で自動的に比率が計算されているので，再度計算し代入する
-			if(cam.size.y ==0) camSize.y = camSize.x / r ;
-			Vec3f rel(
-				 (float)xrel * (camSize.x / vpSize.x) * ratio,
-				-(float)yrel * (camSize.y / vpSize.y) * ratio,
-				 0.0f);
-			rel = cameraInfo.view.Rot() * rel;
-			info.cursor->SetCenterPosition(info.cursor->GetCenterPosition() + rel);
-		}
-		else{
-			// 視点移動(回転)
-			cameraInfo.rot.y += (float)xrel * 0.01f;
-			cameraInfo.rot.y =
-				std::max(cameraInfo.rotRangeY[0], std::min(cameraInfo.rot.y, cameraInfo.rotRangeY[1]));
-			cameraInfo.rot.x += (float)yrel * 0.01f;
-			cameraInfo.rot.x =
-				std::max(cameraInfo.rotRangeX[0], std::min(cameraInfo.rot.x, cameraInfo.rotRangeX[1]));
-			cameraPosChange = true;
-		}
+
+	// 視点移動(平行移動)
+	if(mouseInfo.middle || mouseInfo.left && mouseInfo.alt){
+		cameraInfo.Translate(mouseInfo.pos.x - mouseInfo.lastPos.x, mouseInfo.pos.y - mouseInfo.lastPos.y,
+			GetSdk()->GetRender()->GetPixelSize());
 	}
-	// 中ボタン
-	if(mouseInfo.middle){
-		// 視点移動(平行移動)
-		DragInfo& info = dragInfo[fwSdk->GetScene()];
-		const GRCameraDesc& cam = fwSdk->GetRender()->GetCamera();
-		Vec2f vpSize = fwSdk->GetRender()->GetViewportSize();
-		float ratio = info.depth / (-cam.front);
-		Vec3f rel(
-			-(float)xrel * (cam.size.x / vpSize.x) * ratio,
-			 (float)yrel * (cam.size.y / vpSize.y) * ratio,
-			 0.0f);
-		cameraInfo.target += cameraInfo.view.Rot() * rel;
-		cameraPosChange = true;
-	}
-	// 右ボタン
+	
+	// ズーム
 	if(mouseInfo.right){
-		// ズーム
-		cameraInfo.zoom *= (float)exp((double)yrel/10.0);
-		cameraInfo.zoom = std::max(cameraInfo.zoomRange[0], std::min(cameraInfo.zoom, cameraInfo.zoomRange[1]));
-		cameraPosChange = true;
+		cameraInfo.Zoom(mouseInfo.pos.y - mouseInfo.lastPos.y);
 	}
-	if(cameraPosChange) cameraInfo.UpdateView();
+
+	// 剛体ドラッグ
+	if(mouseInfo.left && mouseInfo.ctrl)
+		dragInfo.Drag(x, y);
+
 }
+
 //　FWAppのインタフェース ///////////////////////////////////////////////////////
 
 void FWApp::CreateSdk(){
@@ -299,10 +169,10 @@ int FWApp::GetModifier(){
 	return grAdaptee->GetModifiers();
 }
 
-
 void FWApp::Reset(){
-	dragInfo.clear();	//剛体ドラッグ情報を初期化
+	//dragger.clear();	//剛体ドラッグ情報を初期化
 }
+
 void FWApp::Clear(){
 	Reset();
 	//Timerの初期化
@@ -354,14 +224,49 @@ void FWApp::CallIdleFunc(){
 		IdleFunc();
 }
 void FWApp::CallKeyboard(int key, int x, int y){
+	for(int i = 0; i < NIAScenes(); i++){
+		FWInteractScene* iaScene = GetIAScene(i)->Cast();
+		iaScene->BeginKeyboard();
+	}
+
 	if(!vfBridge || !vfBridge->Keyboard(key, x, y))
 		Keyboard(key, x, y);
+
+	for(int i = 0; i < NIAScenes(); i++){
+		FWInteractScene* iaScene = GetIAScene(i)->Cast();
+		iaScene->EndKeyboard();
+	}
 }
 void FWApp::CallMouseButton(int button, int state, int x, int y){
+	mouseInfo.pos.x = mouseInfo.lastPos.x = x;
+	mouseInfo.pos.y = mouseInfo.lastPos.y = y;
+	if(button == LEFT_BUTTON)
+		mouseInfo.left = (state == BUTTON_DOWN);
+	if(button == MIDDLE_BUTTON)
+		mouseInfo.middle = (state == BUTTON_DOWN);
+	if(button == RIGHT_BUTTON)
+		mouseInfo.right = (state == BUTTON_DOWN);
+	if(state == BUTTON_DOWN)
+		mouseInfo.first = true;
+	int mod = GetModifier();
+	mouseInfo.shift = (mod & ACTIVE_SHIFT) != 0;
+	mouseInfo.ctrl  = (mod & ACTIVE_CTRL) != 0;
+	mouseInfo.alt   = (mod & ACTIVE_ALT) != 0;
+
 	if(!vfBridge || !vfBridge->MouseButton(button, state, x, y))
 		MouseButton(button, state, x, y);
 }
 void FWApp::CallMouseMove(int x, int y){
+	mouseInfo.lastPos.x = mouseInfo.pos.x;
+	mouseInfo.lastPos.y = mouseInfo.pos.y;
+	mouseInfo.pos.x = x;
+	mouseInfo.pos.y = y;
+
+	if(mouseInfo.first){
+		mouseInfo.first = false;
+		return;
+	}
+
 	if(!vfBridge || !vfBridge->MouseMove(x, y))
 		MouseMove(x, y);
 }
