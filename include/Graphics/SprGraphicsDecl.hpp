@@ -79,9 +79,11 @@
 	void BeginScene(){	base::BeginScene();}	\
 	void EndScene(){	base::EndScene();}	\
 	void SetViewMatrix(const Affinef& afv){	base::SetViewMatrix(afv);}	\
+	void GetViewMatrix(Affinef& afv){	base::GetViewMatrix(afv);}	\
 	void SetProjectionMatrix(const Affinef& afp){	base::SetProjectionMatrix(afp);}	\
 	void GetProjectionMatrix(Affinef& afp){	base::GetProjectionMatrix(afp);}	\
 	void SetModelMatrix(const Affinef& afw){	base::SetModelMatrix(afw);}	\
+	void GetModelMatrix(Affinef& afw){	base::GetModelMatrix(afw);}	\
 	void MultModelMatrix(const Affinef& afw){	base::MultModelMatrix(afw);}	\
 	void PushModelMatrix(){	base::PushModelMatrix();}	\
 	void PopModelMatrix(){	base::PopModelMatrix();}	\

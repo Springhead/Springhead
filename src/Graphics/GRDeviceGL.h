@@ -85,12 +85,14 @@ public:
 	virtual void EndScene();
 	///	カレントの視点行列をafvで置き換える
 	virtual void SetViewMatrix(const Affinef& afv);
+	virtual void GetViewMatrix(Affinef& afv);
 	///	カレントの投影行列を取得する
 	virtual void SetProjectionMatrix(const Affinef& afp);
 	///	カレントの投影行列をafpで置き換える
 	virtual void GetProjectionMatrix(Affinef& afp);
 	///	カレントのモデル行列をafwで置き換える
 	virtual void SetModelMatrix(const Affinef& afw);
+	virtual void GetModelMatrix(Affinef& afw);
 	///	カレントのモデル行列に対してafwを掛ける
 	virtual void MultModelMatrix(const Affinef& afw);
 	///	カレントのモデル行列をモデル行列スタックへ保存する

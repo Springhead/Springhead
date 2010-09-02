@@ -421,7 +421,7 @@ void GRMesh::Render(GRRenderIf* r){
 	bool usebuffer = false;
 	if (!materialList.empty()) {
 		for (unsigned i=0; i<material.size(); ++i) {
-			if (material[i]->texname[0]==':') {
+			if (!material[i]->texname.empty() && material[i]->texname[0]==':') {
 				usebuffer = true;
 				break;
 			}

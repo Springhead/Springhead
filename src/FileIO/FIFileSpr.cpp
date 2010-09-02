@@ -247,7 +247,7 @@ public:
     ExpectParser(const char *m) : msg(m) {}
 	static std::ostream* errorStr;
 
-	typedef boost::spirit::nil_t result_t;
+	typedef boost::spirit::classic::nil_t result_t;
     
     template <typename ScannerT>
 	int operator()(ScannerT const& scan, result_t& /*result*/) const {
@@ -258,7 +258,7 @@ public:
 		return -1;
     }
 }; 
-typedef boost::spirit::functor_parser<ExpectParser> ExpP;
+typedef boost::spirit::classic::functor_parser<ExpectParser> ExpP;
 }	//	namespace FileSpr
 using namespace FileSpr;
 
@@ -269,7 +269,7 @@ FIFileSpr::FIFileSpr():depthFromField(-1){
 
 void FIFileSpr::Init(){
 	using namespace std;
-	using namespace boost::spirit;
+	using namespace boost::spirit::classic;
 	//	パーサの定義
 	//	本文用パーサ
 	start		= *(id[&SetIdType] >> node);
@@ -357,7 +357,7 @@ void FIFileSpr::PopLoaderContext(){
 }
 void FIFileSpr::LoadImp(FILoadContext* fc){
 	using namespace std;
-	using namespace boost::spirit;
+	using namespace boost::spirit::classic;
 	PushLoaderContext(fc);
 	parse_info<const char*> info = parse(
 		fileContext->fileMaps.Top()->start, 

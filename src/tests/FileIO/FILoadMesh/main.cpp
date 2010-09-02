@@ -26,7 +26,7 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
-#define TEST_CASE		2				// テストケース
+#define TEST_CASE		1				// テストケース
 
 
 #if defined(TEST_CASE) && (TEST_CASE == 0)
@@ -176,7 +176,7 @@ int main(int argc, char* argv[]){
 	objs.push_back(grSdk);
 	scene = grSdk->CreateScene(GRSceneDesc());
 	objs.push_back(scene);
-	fileX->Load(objs, "test.x");
+	fileX->Load(objs, TEST_FILEX);
  
 
 	if (!grSdk) return -1;
