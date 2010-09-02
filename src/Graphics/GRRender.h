@@ -91,12 +91,14 @@ public:
 	virtual void EndScene(){}
 	///	カレントの視点行列をafvで置き換える
 	virtual void SetViewMatrix(const Affinef& afv){}
+	virtual void GetViewMatrix(Affinef& afv){}
 	///	カレントの投影行列をafpで置き換える
 	virtual void SetProjectionMatrix(const Affinef& afp){}
 	///	カレントの投影行列を取得する
 	virtual void GetProjectionMatrix(Affinef& afp){}
 	///	カレントのモデル行列をafwで置き換える
 	virtual void SetModelMatrix(const Affinef& afw){}
+	virtual void GetModelMatrix(Affinef& afw){}
 	///	カレントのモデル行列に対してafwを掛ける
 	virtual void MultModelMatrix(const Affinef& afw){}
 	///	カレントのモデル行列をモデル行列スタックへ保存する
@@ -198,9 +200,11 @@ public:
 	virtual void BeginScene(){ ptr BeginScene(); }															\
 	virtual void EndScene(){ ptr EndScene(); }																\
 	virtual void SetViewMatrix(const Affinef& afv){ ptr SetViewMatrix(afv); }								\
+	virtual void GetViewMatrix(Affinef& afv){ ptr SetViewMatrix(afv); }										\
 	virtual void SetProjectionMatrix(const Affinef& afp){ ptr SetProjectionMatrix(afp); }					\
 	virtual void GetProjectionMatrix(Affinef& afp){ ptr GetProjectionMatrix(afp); }							\
 	virtual void SetModelMatrix(const Affinef& afw){ ptr SetModelMatrix(afw); }								\
+	virtual void GetModelMatrix(Affinef& afw){ ptr SetModelMatrix(afw); }									\
 	virtual void MultModelMatrix(const Affinef& afw){ ptr MultModelMatrix(afw); }							\
 	virtual void PushModelMatrix(){ ptr PushModelMatrix(); }												\
 	virtual void PopModelMatrix(){ ptr PopModelMatrix(); }													\

@@ -4,9 +4,9 @@
 #include "FIFileVrml.h"
 #include <list>
 #include <stack>
-#include <boost/spirit/utility/regex.hpp>
+#include <boost/spirit/include/classic_regex.hpp>
 namespace Spr{;
-using namespace boost::spirit;
+using namespace boost::spirit::classic;
 
 static UTStack<FILoadContext*> fileContexts;
 static UTStack<FIFileVRML*> fileVRMLs;
@@ -105,7 +105,7 @@ void FIFileVRML::PopLoaderContext(){
 }
 void FIFileVRML::LoadImp(FILoadContext* fc){
 	using namespace std;
-	using namespace boost::spirit;
+	using namespace boost::spirit::classic;
 	using namespace Spr;
 	PushLoaderContext(fc);
 	parse_info<const char*> info = parse(

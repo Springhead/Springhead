@@ -235,12 +235,16 @@ struct GRRenderBaseIf: public ObjectIf{
 	void EndScene();
 	///	カレントの視点行列をafvで置き換える
 	void SetViewMatrix(const Affinef& afv);
+	///	カレントの視点行列を取得する
+	void GetViewMatrix(Affinef& afv);
 	///	カレントの投影行列をafpで置き換える
 	void SetProjectionMatrix(const Affinef& afp);
 	///	カレントの投影行列を取得する
 	void GetProjectionMatrix(Affinef& afp);
 	///	カレントのモデル行列をafwで置き換える
 	void SetModelMatrix(const Affinef& afw);
+	///	カレントのモデル行列を取得する
+	void GetModelMatrix(Affinef& afw);
 	///	カレントのモデル行列に対してafwを掛ける
 	void MultModelMatrix(const Affinef& afw);
 	///	カレントのモデル行列をモデル行列スタックへ保存する

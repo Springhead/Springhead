@@ -84,6 +84,9 @@ void GRDeviceGL::SetViewMatrix(const Affinef& afv){
 	glLoadMatrixf(viewMatrix);
 	//glLoadMatrixf(viewMatrix * modelMatrix);
 }
+void GRDeviceGL::GetViewMatrix(Affinef& afv){   
+	afv = viewMatrix;
+}
 /// カレントの投影行列をafpで置き換える
 void GRDeviceGL::SetProjectionMatrix(const Affinef& afp){  
 	glMatrixMode(GL_PROJECTION);
@@ -99,6 +102,9 @@ void GRDeviceGL::SetModelMatrix(const Affinef& afw){
 	modelMatrix = afw;		// モデル行列の保存
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(viewMatrix * modelMatrix);
+}
+void GRDeviceGL::GetModelMatrix(Affinef& afw){
+	afw = modelMatrix;
 }
 /// カレントのモデル行列に対してafwを掛ける
 void GRDeviceGL::MultModelMatrix(const Affinef& afw){	

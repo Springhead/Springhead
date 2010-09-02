@@ -216,7 +216,7 @@ public:
     ExpectParser(const char *m) : msg(m) {}
 	static std::ostream* errorStr;
 
-	typedef boost::spirit::nil_t result_t;
+	typedef boost::spirit::classic::nil_t result_t;
     
     template <typename ScannerT>
 	int operator()(ScannerT const& scan, result_t& /*result*/) const {
@@ -227,7 +227,7 @@ public:
 		return -1;
     }
 }; 
-typedef boost::spirit::functor_parser<ExpectParser> ExpP;
+typedef boost::spirit::classic::functor_parser<ExpectParser> ExpP;
 }
 using namespace FileX;
 
@@ -236,7 +236,7 @@ FIFileX::FIFileX(){
 }
 void FIFileX::Init(){
 	using namespace std;
-	using namespace boost::spirit;
+	using namespace boost::spirit::classic;
 	using namespace Spr;
 	//	パーサの定義
 	//	本文用パーサ
@@ -317,7 +317,7 @@ void FIFileX::PopLoaderContext(){
 }
 void FIFileX::LoadImp(FILoadContext* fc){
 	using namespace std;
-	using namespace boost::spirit;
+	using namespace boost::spirit::classic;
 	using namespace Spr;
 	PushLoaderContext(fc);
 	parse_info<const char*> info = parse(
