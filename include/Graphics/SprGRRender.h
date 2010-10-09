@@ -119,7 +119,7 @@ struct GRMaterialDesc : GRVisualDesc{
 	Vec4f specular;					///<	鏡面光に対する反射率
 	Vec4f emissive;					///<	放射輝度
 	float power;					///<	鏡面反射の強度、鏡面係数
-	std::string	texname;			///<	テクスチャファイル名
+	std::string	texname;			///<	テクスチャファイル名（ファイルの保存する相対パス名）
 
 	GRMaterialDesc(){
 		ambient = Vec4f(0.2, 0.2, 0.2, 1.0);

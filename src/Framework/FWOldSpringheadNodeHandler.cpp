@@ -201,18 +201,19 @@ SPR_OBJECTIMP1(FWXTextureTask, UTLoadTask);
 // DirectXのテクスチャファイル名（Materialの内部タグ)．
 class FWNodeHandlerXTextureFilename: public UTLoadHandlerImp<TextureFilename>{
 public:
+	UTString path;
 	FWNodeHandlerXTextureFilename():UTLoadHandlerImp<Desc>("TextureFilename"){}
 	virtual void AfterLoadData(Desc& d, UTLoadedData* ld, UTLoadContext* ctx){
 		if (d.filename.length()<=2 || (d.filename.at(0) != '/' && d.filename.at(0) != '\\'
 			&& d.filename.at(1) != ':')){	
 			//	相対パス指定の場合、Xファイルのパスを前に付け加える
-			UTString path = ctx->fileMaps.back()->name;
+			path = ctx->fileMaps.back()->name;
 			UTString::size_type pos = path.find_last_of('/');
 			if (pos == UTString::npos) pos = path.find_last_of('\\');
 			if (pos != UTString::npos){
 				path = path.substr(0, pos+1);
-				path.append(d.filename);
-				d.filename = path;
+			}else{
+				path = "";
 			}
 		}
 	}
@@ -223,6 +224,8 @@ public:
 			exit(-1);
 		}
 		mat->texname = d.filename;
+		mat->texnameAbs = path;
+		mat->texnameAbs.append(d.filename);
 	}
 };
 

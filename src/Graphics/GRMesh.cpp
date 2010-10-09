@@ -397,7 +397,7 @@ void GRMesh::DrawBuffer(void* vtx){
 		int from = 0, to = 0;
 		for(; to <= NTriangle(); ++to){
 			if(to == NTriangle() || triML[from] != triML[to]){
-				render->SetMaterial(*material[triML[from]]);
+				render->SetMaterial(material[triML[from]]->Cast());
 				render->DrawIndexed(GRRenderIf::TRIANGLES, &triFaces[3*from], vtx, (to-from)*3);
 				from = to;
 			}

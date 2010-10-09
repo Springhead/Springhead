@@ -45,6 +45,7 @@ public:
 /**	@brief	グラフィックスの材質 */
 class GRMaterial :public GRVisual, public GRMaterialDesc{
 public:
+	UTString texnameAbs;			//	テクスチャファイルの絶対パスが入っていることがある。入ってない場合は、texnameが使われる
 	SPR_OBJECTDEF(GRMaterial);
 	ACCESS_DESC(GRMaterial);
 	GRMaterial(const GRMaterialDesc& desc=GRMaterialDesc()):GRMaterialDesc(desc){}
@@ -69,7 +70,6 @@ public:
 		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
 	}
 	void Render(GRRenderIf* render);
-	//virtual bool AddChildObject(ObjectIf* o);
 };
 
 /**	@class	GRRenderBase
@@ -233,12 +233,10 @@ public:
 	virtual void DrawFont(Vec2f pos, const std::string str){ ptr DrawFont(pos, str); }						\
     virtual void DrawFont(Vec3f pos, const std::string str){ ptr DrawFont(pos, str); }						\
 	virtual void SetMaterial(const GRMaterialDesc& mat){ ptr SetMaterial(mat); }							\
-	virtual void SetMaterial(const GRMaterialIf* mat)														\
-		{ if(mat) ptr SetMaterial((const GRMaterialDesc&)*DCAST(GRMaterial, mat)); }						\
+	virtual void SetMaterial(const GRMaterialIf* mat){ ptr SetMaterial(mat); }								\
 	virtual void SetLineWidth(float w){ ptr SetLineWidth(w); }												\
 	virtual void PushLight(const GRLightDesc& light){ptr PushLight(light);}									\
-	virtual void PushLight(const GRLightIf* light)															\
-		{ if(light) ptr PushLight((const GRLightDesc&)*DCAST(GRLight, light)); }							\
+	virtual void PushLight(const GRLightIf* light){ptr PushLight(light);}									\
 	virtual void PopLight(){ptr PopLight(); }																\
 	virtual void SetDepthWrite(bool b){ ptr SetDepthWrite(b); }												\
 	virtual void SetDepthTest(bool b){ptr SetDepthTest(b); }												\
@@ -292,8 +290,7 @@ public:
 	virtual void GetClearColor(Vec4f& color){ color = clearColor; }
 	virtual void SetClearColor(const Vec4f& color){ clearColor = color; }
 	virtual void SetMaterial(const GRMaterialDesc& mat){}
-	virtual void SetMaterial(const GRMaterialIf* mat){
-		if(mat) SetMaterial(*DCAST(GRMaterial, mat)); }
+	virtual void SetMaterial(const GRMaterialIf* mat){}
 	virtual void PushLight(const GRLightDesc& light){}
     virtual void PushLight(const GRLightIf* light){
         if(light) PushLight(*DCAST(GRLight, light)); }
