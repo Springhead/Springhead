@@ -40,6 +40,9 @@ using namespace std;
 #define CREATE_FLOOR
 
 
+
+int x;
+
 bool bStep = true;
 UTRef<PHSdkIf> sdk;
 PHSolidDesc desc;

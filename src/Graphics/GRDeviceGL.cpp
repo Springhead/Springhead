@@ -446,6 +446,12 @@ void GRDeviceGL::SetFont(const GRFont& font){
 #endif
 }
 
+void GRDeviceGL::SetMaterial(const GRMaterialIf* mi){
+	GRMaterial* mat = (GRMaterial*)mi;
+	currentMaterial = * mat;
+	if (mat->texnameAbs.length()) currentMaterial.texname = mat->texnameAbs;
+	SetMaterial(currentMaterial);
+}
 /// •`‰æ‚ÌŞ¿‚Ìİ’è
 void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	glMaterialfv(GL_FRONT, GL_AMBIENT,   mat.ambient);

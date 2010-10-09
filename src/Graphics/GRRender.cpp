@@ -82,7 +82,7 @@ Vec3f GRRender::ScreenToCamera(int x, int y, float depth, bool LorR){
 //----------------------------------------------------------------------------
 //	GRMaterial
 void GRMaterial::Render(GRRenderIf* render){
-	render->SetMaterial(*this);
+	render->SetMaterial(this->Cast());
 }
 
 //----------------------------------------------------------------------------
