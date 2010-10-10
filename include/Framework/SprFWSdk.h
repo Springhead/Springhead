@@ -48,13 +48,13 @@ struct FWSdkIf : SdkIf {
 
 		内部でインポートされるファイルのタイプは必ず拡張子より判定される．
 	 */
-	bool LoadScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
+	bool LoadScene(UTString filename, ImportIf* ex=NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
 
 	/** @brief シーンをファイルへセーブする
 		@param filename ファイル名
+		@param ex		エクスポート情報
 		@param ii		ファイルの種類を示すIfInfo
 		@param objs		保存するオブジェクトの配列
-		@param ex		エクスポート情報
 		ファイルの種類の指定についてはLoadSceneを参照．
 
 		保存するオブジェクトを指定したい場合は，それらをobjsに設定する．
@@ -63,7 +63,7 @@ struct FWSdkIf : SdkIf {
 		部分的に別ファイルに保存したい場合はエクスポート情報をexに指定する．
 		exがNULLの場合は全てが1つのファイルに保存される．
 	 */
-	bool SaveScene(UTString filename, const IfInfo* ii = NULL, ObjectIfs* objs = NULL, ImportIf* ex = NULL);
+	bool SaveScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
 
 	/// シーンの個数を取得する
 	int NScene() const;
