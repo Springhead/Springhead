@@ -98,7 +98,7 @@ FIFileIf* FWSdk::CreateFile(UTString ext, const IfInfo* ii){
 	return file;
 }
 
-bool FWSdk::LoadScene(UTString filename, const IfInfo* ii, ObjectIfs* objs){
+bool FWSdk::LoadScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectIfs* objs){
 
 	//filename末端に改行コード( = 0x0a)が含まれているとロードされないので，あれば最初に削除する
 	if(filename.at(filename.length()-1) == 0x0a){
@@ -121,7 +121,7 @@ bool FWSdk::LoadScene(UTString filename, const IfInfo* ii, ObjectIfs* objs){
 	path.Path(filename);	
 	
 	FIFileIf* file = CreateFile(path.Ext(), ii);
-
+	if (ex) file->SetImport(ex);
 	file->SetDSTR(DSTRFlag);
 	//	ファイルのロード
 	if(!file->Load(*objs, filename.data()) ) {
@@ -139,7 +139,7 @@ bool FWSdk::LoadScene(UTString filename, const IfInfo* ii, ObjectIfs* objs){
 	return true;
 }
 
-bool FWSdk::SaveScene(UTString filename, const IfInfo* ii, ObjectIfs* objs, ImportIf* ex){
+bool FWSdk::SaveScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectIfs* objs){
 	// 保存
 	ObjectIfs defObjs;
 	if(!objs){

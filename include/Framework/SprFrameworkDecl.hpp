@@ -103,8 +103,8 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSdkIf(base)	\
 	Spr::FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc){	return	base::CreateScene(phdesc, grdesc);}	\
-	bool LoadScene(UTString filename, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::LoadScene(filename, ii, objs);}	\
-	bool SaveScene(UTString filename, const IfInfo* ii, Spr::ObjectIfs* objs, ImportIf* ex){	return	base::SaveScene(filename, ii, objs, ex);}	\
+	bool LoadScene(UTString filename, ImportIf* ex, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::LoadScene(filename, ex, ii, objs);}	\
+	bool SaveScene(UTString filename, ImportIf* ex, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::SaveScene(filename, ex, ii, objs);}	\
 	int NScene()const{	return	base::NScene();}	\
 	void SwitchScene(Spr::FWSceneIf* scene){	base::SwitchScene(scene);}	\
 	Spr::FWSceneIf* GetScene(int index){	return	base::GetScene(index);}	\
