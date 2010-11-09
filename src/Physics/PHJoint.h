@@ -48,10 +48,19 @@ public:
 		PHConstraint::CompResponse(df, axisIndex[k]);
 	}
 
-	virtual void SetConstrainedIndex(bool* con){
-		std::fill(con, con+6, true);
-		for(int i = 0; i < NDOF; i++)
-			con[axisIndex[i]] = false;
+	virtual void SetConstrainedIndex(int* con){
+		//std::fill(con, con+6, true);
+		//for(int i = 0; i < NDOF; i++)
+		//	con[axisIndex[i]] = false;
+		for(int i = 0; i < 6;i++){
+			con[i] = i;
+		}
+		for(int i = NDOF-1; i >= 0;i--){
+			for(int j = axisIndex[i];j < 5;j++){
+				con[j] = con[j+1];
+			}
+		}
+		ConstAxis = 6-NDOF;
 	}
 
 	PHJointND(){
@@ -117,7 +126,7 @@ public:
 
 	/// オーバライド
 	virtual void	SetupLCP();
-	virtual	void	IterateLCP();
+//	virtual	void	IterateLCP();		//IterateLCPをConstraintと統合した。
 	virtual void	SetupCorrectionLCP();
 	virtual void	IterateCorrectionLCP();
 	//virtual void	AddMotorTorque(){f[axisIndex[0]] = torque * GetScene()->GetTimeStep();}

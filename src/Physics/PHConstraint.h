@@ -25,7 +25,7 @@ struct PHConstraintState{
 	Vec3d motorf;			//< もとはConstraintにあったfが分離したもの(PHMotor.hのf)
 	Vec3d limitf;			//< もとはConstraintにあったfが分離したもの(PHJointLimit.hのf)
 	//Vec3d limitF;
-	Vec3d fs[50];			//< motorfを過去50ステップ分保存
+	Vec3d fs[50];				//< motorfを過去50ステップ分保存
 	SpatialVector xs[2];	///< (3要素モデル専用)ばね部の距離
 
 };
@@ -61,8 +61,13 @@ public:
 	SpatialVector scale;				//	不使用
 	
 	bool		constr[6];				///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる	# 不要
+	int			ConstNum[6];			// constrの変わり。計算の必要な軸番号を入れる
+	int			ConstAxis;
 	bool		constrCorrection[6];	///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる					# 不要
 	
+	double fMax;
+	double fMaxDt[6],fMinDt[6];
+
 	///コンストラクタ
 	PHConstraint();
 
@@ -79,7 +84,7 @@ public:
 	
 	///派生クラスの機能.
 	//virtual void	AddMotorTorque(){}							///< 拘束力に関節トルク分を加算
-	virtual void	SetConstrainedIndex(bool* con){}			///< どの自由度を速度拘束するかを設定
+	virtual void	SetConstrainedIndex(int* con){}			///< どの自由度を速度拘束するかを設定
 	//virtual void	SetConstrainedIndexCorrection(bool* con){	///< どの自由度を位置拘束するかを設定
 	//	SetConstrainedIndex(con);
 	//}														

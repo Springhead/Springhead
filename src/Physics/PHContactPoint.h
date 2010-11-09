@@ -27,7 +27,7 @@ public:
 	Vec3d pos;
 	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::CONTACT;}
 	virtual void CompError();
-	virtual void SetConstrainedIndex(bool* con);
+	virtual void SetConstrainedIndex(int* con);
 	virtual void CompBias();
 	virtual void Projection(double& f, int k);
 	virtual void ProjectionCorrection(double& F, int k);

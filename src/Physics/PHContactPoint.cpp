@@ -71,9 +71,13 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 	}
 }
 
-void PHContactPoint::SetConstrainedIndex(bool* con){
-	con[0] = con[1] = con[2] = true;
-	con[3] = con[4] = con[5] = false;
+void PHContactPoint::SetConstrainedIndex(int* con){
+//	con[0] = con[1] = con[2] = true;
+//	con[3] = con[4] = con[5] = false;
+	for(int i = 0;i<3;i++){
+		con[i] = i;
+	}
+	ConstAxis = 3;
 }
 
 void PHContactPoint::CompBias(){

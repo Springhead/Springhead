@@ -89,8 +89,12 @@ PHContactSurface::PHContactSurface(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, 
 	}
 }
 
-void PHContactSurface::SetConstrainedIndex(bool* con){
-	con[0] = con[1] = con[2] = con[3] = con[4] = con[5] = true;
+void PHContactSurface::SetConstrainedIndex(int* con){
+//	con[0] = con[1] = con[2] = con[3] = con[4] = con[5] = true;
+	 for(int i = 0; i<6;i++){
+		con[i] = i;
+	}
+	ConstAxis = 6;
 }
 
 void PHContactSurface::CompBias(){
@@ -191,13 +195,14 @@ void PHContactSurface::IterateLCP(){
 
 	SpatialVector fnew, df;
 
-	for(int j = 0; j < 6; j++){
-		if(!constr[j])continue;
-		fnew[j] = f[j] - engine->accelSOR * Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
-				+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
+	for(int j = 0; j < ConstAxis; j++){
+//		if(!constr[j])continue;
+		int i = ConstNum[j];
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
+				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
 
 		// とりあえず落ちないように間に合わせのコード
-		if (!FPCK_FINITE(fnew[j])) fnew[j] = f[j]; //naga 特定条件下では間に合わせのコードでも落ちる
+		if (!FPCK_FINITE(fnew[i])) fnew[i] = f[i]; //naga 特定条件下では間に合わせのコードでも落ちる
 		if (!FPCK_FINITE(fnew[0])){
 			FPCK_FINITE(b[0]);
 //			DSTR << AinvJ[0].vv << AinvJ[1].vv;
@@ -209,10 +214,10 @@ void PHContactSurface::IterateLCP(){
 			DSTR << "s1:" << (solid[1]->dv)  << std::endl;
 		}
 		if(j > 2)continue;	//トルクは全トルクの計算が終わってから、Projectionする
-		Projection(fnew[j], j);
-		df[j] = fnew[j] - f[j];
-		CompResponse(df[j],j);
-		f[j] = fnew[j];
+		Projection(fnew[i], i);
+		df[j] = fnew[i] - f[i];
+		CompResponse(df[i],i);
+		f[j] = fnew[i];
 	}
 
 	//トルクのProjection　

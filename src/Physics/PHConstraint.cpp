@@ -23,7 +23,11 @@ PHConstraint::PHConstraint(){
 	bEnabled = true;
 	bInactive[0] = true;
 	bInactive[1] = true;
-	bArticulated = false;	
+	bArticulated = false;
+	for(int i=0;i<6;i++){
+		fMaxDt[i] = FLT_MAX;
+		fMinDt[i] = -FLT_MAX;
+	}
 }
 
 PHSceneIf* PHConstraint::GetScene() const{
@@ -151,18 +155,19 @@ void PHConstraint::CompResponseMatrix(){
 	 */
 	const double eps = 0.000001, epsabs = 1.0e-10;
 	double Amax = 0.0, Amin;
-	for(j = 0; j < 6; j++)
-		if(constr[j] && A[j] > Amax)
-			Amax = A[j];
+	for(j = 0; j < ConstAxis; j++)
+//		if(constr[j] && A[j] > Amax)
+		if(A[ConstNum[j]] > Amax)
+			Amax = A[ConstNum[j]];
 	Amin = Amax * eps;
-	for(j = 0; j < 6; j++){
-		if(!constr[j])continue;
-		if(A[j] < Amin || A[j] < epsabs){
-			constr[j] = false;
-			DSTR <<this->GetName()<<":"<< j << "-th constraint ill-conditioned! disabled." << endl;
+	for(j = 0; j < ConstAxis; j++){
+//		if(!constr[j])continue;
+		if(A[ConstNum[j]] < Amin || A[ConstNum[j]] < epsabs){
+//			constr[j] = false;
+			DSTR <<this->GetName()<<":"<< ConstNum[j] << "-th constraint ill-conditioned! disabled." << endl;
 		}
 		else
-			Ainv[j] = 1.0 / (A[j] + dA[j]);
+			Ainv[ConstNum[j]] = 1.0 / (A[ConstNum[j]] + dA[ConstNum[j]]);
 	}
 }
 
@@ -191,10 +196,10 @@ void PHConstraint::SetupLCP(){
 	
 	// çSë©Ç∑ÇÈé©óRìxÇÃåàíËÅCçSë©óÕÇÃèâä˙âª
 	//bool con[6];
-	SetConstrainedIndex(constr);
-	for(int i = 0; i < 6; i++){
+	SetConstrainedIndex(ConstNum);
+	for(int i = 0; i < ConstAxis; i++){
 		//if(con[i] && constr[i]){				// åpë±ÇµÇƒçSë©Ç≥ÇÍÇÈèÍçá
-			f[i] *= engine->shrinkRate;
+			f[ConstNum[i]] *= engine->shrinkRate;
 		//}else{
 		//	f[i] = 0.0;							// êVãKÇ…çSë©Ç≥ÇÍÇÈ or çSë©Ç≥ÇÍÇ»Ç¢
 		//}
@@ -237,14 +242,15 @@ void PHConstraint::SetupLCP(){
 void PHConstraint::IterateLCP(){
 	if(!bEnabled || !bFeasible || bArticulated)
 		return;
+	const IfInfo* ii = GetIfInfo();
 	FPCK_FINITE(f.v());
 
 	SpatialVector fnew, df;
-	for(int j = 0; j < 6; j++){
-		if(!constr[j])continue;
-		
-		fnew[j] = f[j] - engine->accelSOR * Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
-				+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
+	for(int j = 0; j < ConstAxis; j++){
+//		if(!constr[j])continue;
+		int i = ConstNum[j];
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
+				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
 
 		// Ç∆ÇËÇ†Ç¶Ç∏óéÇøÇ»Ç¢ÇÊÇ§Ç…ä‘Ç…çáÇÌÇπÇÃÉRÅ[Éh
 		//if (!FPCK_FINITE(fnew[j])) fnew[j] = f[j]; //naga ì¡íËèåèâ∫Ç≈ÇÕä‘Ç…çáÇÌÇπÇÃÉRÅ[ÉhÇ≈Ç‡óéÇøÇÈ
@@ -259,10 +265,15 @@ void PHConstraint::IterateLCP(){
 			DSTR << "s0:" << (solid[0]->dv) << std::endl;
 			DSTR << "s1:" << (solid[1]->dv)  << std::endl;
 		}
-		Projection(fnew[j], j);
-		df[j] = fnew[j] - f[j];
-		CompResponse(df[j], j);
-		f[j] = fnew[j];
+		if(ii->desc->typeName == "PHContactPointState")
+			Projection(fnew[i], i);
+		else{
+			fnew[i] = max(fMinDt[i],fnew[i]);
+			fnew[i] = min(fMaxDt[i],fnew[i]);
+		}
+		df[i] = fnew[i] - f[i];
+		CompResponse(df[i], i);
+		f[i] = fnew[i];
 	}
 }
 
@@ -272,9 +283,9 @@ void PHConstraint::SetupCorrectionLCP(){
 	//	çSë©Ç∑ÇÈé©óRìxÇÃåàíË
 	//bool con[6];
 	//SetConstrainedIndexCorrection(con);
-	for(int i = 0; i < 6; i++){
+	for(int i = 0; i < ConstAxis; i++){
 		//if(con[i] && constrCorrection[i]){		// åpë±ÇµÇƒçSë©Ç≥ÇÍÇÈèÍçá
-			 F[i] *= engine->shrinkRateCorrection;
+			 F[ConstNum[i]] *= engine->shrinkRateCorrection;
 		//}else{
 		//	F[i] = 0.0;							// êVãKÇ…çSë©Ç≥ÇÍÇÈ or çSë©Ç≥ÇÍÇ»Ç¢
 		//}
@@ -306,20 +317,21 @@ void PHConstraint::IterateCorrectionLCP(){
 	
 	SpatialVector Fnew, dF, dFs;
 	int i, j;
-	for(j = 0; j < 6; j++){
-		if(!constrCorrection[j]) continue;
-		Fnew[j] = F[j] - Ainv[j] * (B[j] + J[0].row(j) * solid[0]->dV + J[1].row(j) * solid[1]->dV);
-		ProjectionCorrection(Fnew[j], j);
-		dF[j] = Fnew[j] - F[j];
+	for(j = 0; j < ConstAxis; j++){
+//		if(!constrCorrection[j]) continue;
+		int k = ConstNum[j];
+		Fnew[k] = F[k] - Ainv[k] * (B[k] + J[0].row(k) * solid[0]->dV + J[1].row(k) * solid[1]->dV);
+		ProjectionCorrection(Fnew[k], k);
+		dF[k] = Fnew[k] - F[k];
 		for(i = 0; i < 2; i++){
 			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
 			if(solid[i]->IsArticulated()){
-				(Vec6d&)dFs = J[i].row(j) * dF[j];
+				(Vec6d&)dFs = J[i].row(k) * dF[k];
 				solid[i]->treeNode->CompResponse(dFs, true, true);			
 			}
-			else solid[i]->dV += T[i].row(j) * dF[j];
+			else solid[i]->dV += T[i].row(k) * dF[k];
 		}
-		F[j] = Fnew[j];
+		F[k] = Fnew[k];
 	}
 }
 

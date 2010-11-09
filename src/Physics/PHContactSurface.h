@@ -20,7 +20,7 @@ public:
 	Vec3d	fpoint;		//ZMP
 	std::vector<Vec3d>	section;	///< 交差断面の頂点（接触座標系での値）．トルクの制限のために保持
 	int lastL,lastR;	///前回、最近点があった辺の頂点を表すsection番号
-	virtual void SetConstrainedIndex(bool* con);
+	virtual void SetConstrainedIndex(int* con);
 	virtual void CompBias();
 	virtual void Projection(double& f, int k);
 	virtual void IterateLCP();
