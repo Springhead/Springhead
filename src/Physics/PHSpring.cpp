@@ -36,23 +36,37 @@ PHSpring::PHSpring(const PHSpringDesc& desc){
 //}
 
 
-void PHSpring::SetConstrainedIndex(bool* con){
-	for(int i=0; i<3; ++i) con[i] = (damper[i] != 0.0 || spring[i] != 0.0);
-	con[3] = con[4] = con[5] = (damperOri != 0.0 || springOri != 0.0);
+void PHSpring::SetConstrainedIndex(int* con){
+	//for(int i=0; i<3; ++i) con[i] = (damper[i] != 0.0 || spring[i] != 0.0);
+	//con[3] = con[4] = con[5] = (damperOri != 0.0 || springOri != 0.0);
+	int j = 0;
+	for(int i=0; i<3; ++i) if(damper[i] !=0.0||spring[i] !=0.0){
+		con[j] = i;
+		j++;
+	}
+	if(damperOri != 0.0||springOri != 0.0){
+		con[j] = 3;
+		con[j+1] = 4;
+		con[j+2] = 5;
+		ConstAxis = j+3;
+	}
+	else ConstAxis = j;
 }
 void PHSpring::SetConstrainedIndexCorrection(bool* con){
 	con[0] = con[1] = con[2] = con[3] = con[4] = con[5] = false;
+	ConstAxis = 0;
 }
 
 void PHSpring::ElasticDeformation(){
 	//rjrel
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	double tmp;
-	for(int i = 0; i < 3; i++){
-		if (!constr[i]) continue;
-		tmp = 1.0 / (damper[i] + spring[i] * GetScene()->GetTimeStep());
-		dA[i] = tmp * dtinv;
-		db[i] = spring[i] * Xjrel.r[i] * tmp;
+	for(int i = 0; i < ConstAxis; i++){
+//		if (!constr[i]) continue;
+		int j = ConstNum[i];
+		tmp = 1.0 / (damper[j] + spring[j] * GetScene()->GetTimeStep());
+		dA[j] = tmp * dtinv;
+		db[j] = spring[j] * Xjrel.r[j] * tmp;
 	}
 
 	// 姿勢に対するバネ
@@ -114,15 +128,17 @@ void PHSpring::CompBias(){
 
 	//fの平均値を計算
 	double fNorm = 0;
-	for(int i=0; i<5 ;i++){
-		if(i==4){
-			fs[4] = motorf;
-		}else{ 
-			fs[i] = fs[i+1];
-		}
-		
-		fNorm+=fs[i].norm()/5;
-	}
+	//for(int i=0; i<5 ;i++){
+	//	if(i==4){
+	//		fs[4] = motorf;
+	//	}else{ 
+	//		fs[i] = fs[i+1];
+	//	}
+	//	
+	//	fNorm+=fs[i].norm()/5;
+	//}
+	fs[0] = 0.8 * fs[0] + 0.2 * motorf;
+	fNorm = fs[0].norm();
 	if(fNorm > yieldStress){
 		yieldFlag = true;
 	}
@@ -154,11 +170,11 @@ void PHSpring::IterateLCP(){
 
 	
 	SpatialVector fnew, df;
-	for(int j = 0; j < 6; j++){
-		if(!constr[j])continue;
-		
-		fnew[j] = f[j] - engine->accelSOR * Ainv[j] * (dA[j] * f[j] + b[j] + db[j] 
-				+ J[0].row(j) * solid[0]->dv + J[1].row(j) * solid[1]->dv);
+	for(int j = 0; j < ConstAxis; j++){
+//		if(!constr[j])continue;
+		int i = ConstNum[j];		
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
+				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[i]->dv);
 
 		if (!FPCK_FINITE(fnew[0])){
 			FPCK_FINITE(b[0]);

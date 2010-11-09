@@ -32,7 +32,7 @@ public:
 	virtual double GetDamperOri(){return damperOri;}
 
 	//virtual void SetDesc(const void* desc);
-	virtual void SetConstrainedIndex(bool* con);
+	virtual void SetConstrainedIndex(int* con);
 	virtual void SetConstrainedIndexCorrection(bool* con);
 	virtual void CompBias();
 	virtual void IterateLCP();

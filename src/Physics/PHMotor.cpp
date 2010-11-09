@@ -66,7 +66,8 @@ void PHMotor1D::PlasticDeformation(){
 void PHMotor1D::SetupLCP(){
 	dt		= joint->GetScene()->GetTimeStep();
 	dtinv	= 1.0/dt;
-	fMaxDt  = joint->fMax * dt;
+	joint->fMaxDt[joint->ConstAxis]  = joint->fMax * dt;
+	joint->fMinDt[joint->ConstAxis]  = -joint->fMaxDt[joint->ConstAxis];
 	K		= joint->spring;
 	D		= joint->damper;
 	D2		= joint->secondDamper;
@@ -104,10 +105,16 @@ void PHMotor1D::SetupLCP(){
 		Ainv = 1.0 / (A + dA);
 		joint->motorf.z *= joint->engine->shrinkRate;
 
+		joint->ConstNum[joint->ConstAxis] = joint->axisIndex[0];
+		joint->ConstAxis++;
 	}
 			
 	// 拘束力初期値による速度変化量を計算
 	joint->CompResponse(joint->motorf.z, 0);
+	joint->dA[joint->axisIndex[0]] = dA;
+	joint->db[joint->axisIndex[0]] = db;
+	joint->Ainv[joint->axisIndex[0]] = Ainv;
+	joint->f[joint->axisIndex[0]] = joint->motorf.z;
 }
 
 void PHMotor1D::IterateLCP(){
@@ -137,15 +144,17 @@ bool PHMotor1D::IsYield(){
 	//fの平均値を計算
 	double dt		= joint->GetScene()->GetTimeStep();
 	double fNorm = 0;
-	for(int i=0; i<5 ;i++){
-		if(i==4){
-			joint->fs[4] = joint->motorf / dt;
-		}else{ 
-			joint->fs[i] = joint->fs[i+1];
-		}
-		
-		fNorm+=joint->fs[i].norm()/5;
-	}
+	//for(int i=0; i<5 ;i++){
+	//	if(i==4){
+	//		joint->fs[4] = joint->motorf / dt;
+	//	}else{ 
+	//		joint->fs[i] = joint->fs[i+1];
+	//	}
+	//	
+	//	fNorm+=joint->fs[i].norm()/5;
+	//}
+	joint->fs[0] = 0.8 * joint->fs[0] + 0.2 * joint->motorf / dt;
+	fNorm = joint->fs[0].norm();
 	if(fNorm > joint->yieldStress){
 		yieldFlag = true;
 	}
@@ -319,18 +328,20 @@ void PHBallJointMotor::IterateLCP(){
 }
 bool PHBallJointMotor::IsYield(){
 	//fの平均値を計算
-	double dt		= joint->GetScene()->GetTimeStep();
-	fNorm = 0;
-	for(int i=0; i<50 ;i++){
-		if(i==49){
-			joint->fs[49] = joint->motorf / dt;
-		}else{ 
-			joint->fs[i] = joint->fs[i+1];
-		}
-		fNorm+=joint->fs[i].norm()/50;
-	}
-
+	//double dt		= joint->GetScene()->GetTimeStep();
+	//fNorm = 0;
+	//for(int i=0; i<50 ;i++){
+	//	if(i==49){
+	//		joint->fs[49] = joint->motorf / dt;
+	//	}else{ 
+	//		joint->fs[i] = joint->fs[i+1];
+	//	}
+	//	fNorm+=joint->fs[i].norm()/50;
+	//}
+	joint->fs[0] = 0.98 * joint->fs[0] + 0.02 * joint->motorf / dt;
+	fNorm = joint->fs[0].norm();
 	double yieldStressRate = 1.0;
+	//fNorm = joint->fs.norm();
 	if((fNorm < joint->yieldStress* yieldStressRate) && yieldFlag){
 		//Quaterniond qAll =joint->Xjrel.q * joint->targetPosition.Inv();//3要素全体の変位差のクォータニオン
 		Quaterniond qAll = joint->Xjrel.q;//3要素全体の変位差のクォータニオン

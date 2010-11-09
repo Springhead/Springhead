@@ -28,21 +28,38 @@ void PHJointLimit1D::SetupLCP(){
 		if(theta <= l){
 			onLower = true;
 			diff = joint->GetPosition() - l;
+			joint->fMaxDt[joint->axisIndex[0]] = FLT_MAX;
+			joint->fMinDt[joint->axisIndex[0]] = 0;
+
 		}
 		if(theta >= u){
 			onUpper = true;
 			diff = joint->GetPosition() - u;
+			joint->fMaxDt[joint->axisIndex[0]] = 0;
+			joint->fMinDt[joint->axisIndex[0]] = -FLT_MAX;
+
 		}
 	}
 	if(onLower || onUpper){
 		double tmp = 1.0 / (joint->rangeDamper + joint->rangeSpring * joint->GetScene()->GetTimeStep());
 		dA = tmp * joint->GetScene()->GetTimeStepInv();
-		db = tmp * (joint->rangeSpring * diff);
+//		db = tmp * (joint->rangeSpring * diff);
+		db = tmp * (joint->rangeSpring * diff + joint->GetSpring() * (joint->GetPosition() - joint->GetTargetPosition())
+			- joint->GetDamper() * joint->targetVelocity - joint->offsetForce * joint->GetScene()->GetTimeStepInv());
 		A  = joint->A[joint->axisIndex[0]];
 		b  = joint->b[joint->axisIndex[0]];
 		Ainv = 1.0 / (A + dA);
 		f *= joint->engine->shrinkRate;
-
+		
+		int i = joint->axisIndex[0];
+		joint->dA[i] = dA;
+		joint->A[i] = A;
+		joint->db[i] = db;
+		joint->b[i] = b;
+		joint->Ainv[i] = Ainv;
+		joint->f[i] = f;
+		joint->ConstNum[i] = joint->axisIndex[0];
+		joint->ConstAxis = 6;
 		joint->CompResponse(f, 0);
 	}
 	else f = 0.0;
@@ -545,18 +562,20 @@ Vec3d PHBallJointLimit::CompResponseMatrix(){
 	 */
 	const double eps = 0.000001, epsabs = 1.0e-10;
 	double Amax = 0.0, Amin;
-	for(j = 0; j < 6; j++)
-		if(joint->constr[j] && A[j] > Amax)
-			Amax = A[j];
+	for(j = 0; j < joint->ConstAxis; j++)
+//		if(joint->constr[j] && A[j] > Amax)
+		if(A[joint->ConstNum[j]] > Amax)
+			Amax = A[joint->ConstNum[j]];
 	Amin = Amax * eps;
-	for(j = 0; j < 3; j++){
-		if(!joint->constr[j+3])continue;
-		if(A[j+3] < Amin || A[j+3] < epsabs){
-			joint->constr[j+3] = false;
+	for(j = 3; j < joint->ConstAxis; j++){
+//		if(!joint->constr[j+3])continue;
+		int i = joint->ConstNum[j];
+		if(A[i] < Amin || A[i] < epsabs){
+//			joint->constr[j+3] = false;
 			DSTR << j << "-th constraint ill-conditioned! disabled." << endl;
 		}
 		else
-			Ainv[j] = 1.0 / (A[j+3] + dA[j]);
+			Ainv[i-3] = 1.0 / (A[i] + dA[i-3]);
 	}
 	return A.w();
 }

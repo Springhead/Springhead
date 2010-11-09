@@ -161,7 +161,7 @@ public:
 	
 	PHTreeNodeND();
 //protected:
-	bool			constr[NDOF];			///< ABAとして各自由度を拘束するか
+//	bool			constr[NDOF];			///< ABAとして各自由度を拘束するか
 	Matrix6Nd		J;						///< 関節座標から相対速度へのヤコビアン
 	Matrix6Nd		IJ, XtrIJ, J_JIJinv, IJ_JIJinv, XtrIJ_JIJinv;
 	MatrixNd		JIJ, JIJinv;
