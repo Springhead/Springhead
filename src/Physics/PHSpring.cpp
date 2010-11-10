@@ -172,9 +172,9 @@ void PHSpring::IterateLCP(){
 	SpatialVector fnew, df;
 	for(int j = 0; j < ConstAxis; j++){
 //		if(!constr[j])continue;
-		int i = ConstNum[j];		
+		int i = ConstNum[j];
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
-				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[i]->dv);
+				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
 
 		if (!FPCK_FINITE(fnew[0])){
 			FPCK_FINITE(b[0]);
