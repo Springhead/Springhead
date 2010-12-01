@@ -83,6 +83,8 @@ public:
 	virtual void BeginScene();
 	///	レンダリングの終了後に呼ぶ関数
 	virtual void EndScene();
+	///	バッファを表示するための呼ぶ関数
+	virtual void SwapBuffers();
 	///	カレントの視点行列をafvで置き換える
 	virtual void SetViewMatrix(const Affinef& afv);
 	virtual void GetViewMatrix(Affinef& afv);

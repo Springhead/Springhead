@@ -81,6 +81,8 @@ public:
 	virtual void SetViewport(Vec2f pos, Vec2f sz){}
 	///	バッファクリア
 	virtual void ClearBuffer(){}
+	///	バッファの入れ替え（表示）
+	virtual void SwapBuffers(){}
 	/// 背景色の取得
 	virtual void GetClearColor(Vec4f& color){}
 	/// 背景色の設定
@@ -195,6 +197,7 @@ public:
 #define REDIRECTIMP_GRRENDERBASE(ptr)																		\
 	virtual void SetViewport(Vec2f p, Vec2f s){ ptr SetViewport(p, s); }									\
 	virtual void ClearBuffer(){ ptr ClearBuffer(); }														\
+	virtual void SwapBuffers(){ ptr SwapBuffers(); }														\
 	virtual void GetClearColor(Vec4f& color){ ptr GetClearColor(color); }									\
 	virtual void SetClearColor(const Vec4f& color){ ptr SetClearColor(color); }								\
 	virtual void BeginScene(){ ptr BeginScene(); }															\

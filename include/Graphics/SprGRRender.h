@@ -225,6 +225,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	void SetViewport(Vec2f pos, Vec2f sz);
 	///	バッファクリア
 	void ClearBuffer();
+	///	バッファの入れ替え（表示）
+	void SwapBuffers();
 	/// 背景色の取得
 	void GetClearColor(Vec4f& color);
 	/// 背景色の設定
