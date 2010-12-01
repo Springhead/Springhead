@@ -68,6 +68,10 @@ void GRDeviceGL::ClearBuffer(){
 	glClearDepth(1.0); 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+void GRDeviceGL::SwapBuffers(){
+	glutSwapBuffers();
+}
+
 /// レンダリングの開始前に呼ぶ関数
 void GRDeviceGL::BeginScene(){		
   /// GLでレンダリングする場合、特に処理する必要なし

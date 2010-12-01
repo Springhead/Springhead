@@ -74,6 +74,7 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_GRRenderBaseIf(base)	\
 	void SetViewport(Vec2f pos, Vec2f sz){	base::SetViewport(pos, sz);}	\
 	void ClearBuffer(){	base::ClearBuffer();}	\
+	void SwapBuffers(){	base::SwapBuffers();}	\
 	void GetClearColor(Vec4f& color){	base::GetClearColor(color);}	\
 	void SetClearColor(const Vec4f& color){	base::SetClearColor(color);}	\
 	void BeginScene(){	base::BeginScene();}	\
