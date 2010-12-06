@@ -77,7 +77,7 @@ void PHContactPoint::SetConstrainedIndex(int* con){
 	for(int i = 0;i<3;i++){
 		con[i] = i;
 	}
-	ConstAxis = 3;
+	targetAxis = 3;
 }
 
 void PHContactPoint::CompBias(){

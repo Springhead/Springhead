@@ -66,8 +66,8 @@ void PHMotor1D::PlasticDeformation(){
 void PHMotor1D::SetupLCP(){
 	dt		= joint->GetScene()->GetTimeStep();
 	dtinv	= 1.0/dt;
-	joint->fMaxDt[joint->ConstAxis]  = joint->fMax * dt;
-	joint->fMinDt[joint->ConstAxis]  = -joint->fMaxDt[joint->ConstAxis];
+	joint->fMaxDt[joint->targetAxis]  = joint->fMax * dt;
+	joint->fMinDt[joint->targetAxis]  = -joint->fMaxDt[joint->targetAxis];
 	K		= joint->spring;
 	D		= joint->damper;
 	D2		= joint->secondDamper;
@@ -105,8 +105,8 @@ void PHMotor1D::SetupLCP(){
 		Ainv = 1.0 / (A + dA);
 		joint->motorf.z *= joint->engine->shrinkRate;
 
-		joint->ConstNum[joint->ConstAxis] = joint->axisIndex[0];
-		joint->ConstAxis++;
+		joint->numCondition[joint->targetAxis] = joint->axisIndex[0];
+		joint->targetAxis++;
 	}
 			
 	// S‘©—Í‰Šú’l‚É‚æ‚é‘¬“x•Ï‰»—Ê‚ğŒvZ

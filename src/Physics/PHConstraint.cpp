@@ -155,19 +155,19 @@ void PHConstraint::CompResponseMatrix(){
 	 */
 	const double eps = 0.000001, epsabs = 1.0e-10;
 	double Amax = 0.0, Amin;
-	for(j = 0; j < ConstAxis; j++)
+	for(j = 0; j < targetAxis; j++)
 //		if(constr[j] && A[j] > Amax)
-		if(A[ConstNum[j]] > Amax)
-			Amax = A[ConstNum[j]];
+		if(A[numCondition[j]] > Amax)
+			Amax = A[numCondition[j]];
 	Amin = Amax * eps;
-	for(j = 0; j < ConstAxis; j++){
+	for(j = 0; j < targetAxis; j++){
 //		if(!constr[j])continue;
-		if(A[ConstNum[j]] < Amin || A[ConstNum[j]] < epsabs){
+		if(A[numCondition[j]] < Amin || A[numCondition[j]] < epsabs){
 //			constr[j] = false;
-			DSTR <<this->GetName()<<":"<< ConstNum[j] << "-th constraint ill-conditioned! disabled." << endl;
+			DSTR <<this->GetName()<<":"<< numCondition[j] << "-th constraint ill-conditioned! disabled." << endl;
 		}
 		else
-			Ainv[ConstNum[j]] = 1.0 / (A[ConstNum[j]] + dA[ConstNum[j]]);
+			Ainv[numCondition[j]] = 1.0 / (A[numCondition[j]] + dA[numCondition[j]]);
 	}
 }
 
@@ -196,10 +196,10 @@ void PHConstraint::SetupLCP(){
 	
 	// S‘©‚·‚é©—R“x‚ÌŒˆ’èCS‘©—Í‚Ì‰Šú‰»
 	//bool con[6];
-	SetConstrainedIndex(ConstNum);
-	for(int i = 0; i < ConstAxis; i++){
+	SetConstrainedIndex(numCondition);
+	for(int i = 0; i < targetAxis; i++){
 		//if(con[i] && constr[i]){				// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
-			f[ConstNum[i]] *= engine->shrinkRate;
+			f[numCondition[i]] *= engine->shrinkRate;
 		//}else{
 		//	f[i] = 0.0;							// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
 		//}
@@ -242,13 +242,12 @@ void PHConstraint::SetupLCP(){
 void PHConstraint::IterateLCP(){
 	if(!bEnabled || !bFeasible || bArticulated)
 		return;
-	const IfInfo* ii = GetIfInfo();
 	FPCK_FINITE(f.v());
 
 	SpatialVector fnew, df;
-	for(int j = 0; j < ConstAxis; j++){
+	for(int j = 0; j < targetAxis; j++){
 //		if(!constr[j])continue;
-		int i = ConstNum[j];
+		int i = numCondition[j];
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
 				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
 
@@ -265,7 +264,9 @@ void PHConstraint::IterateLCP(){
 			DSTR << "s0:" << (solid[0]->dv) << std::endl;
 			DSTR << "s1:" << (solid[1]->dv)  << std::endl;
 		}
-		if(ii->desc->typeName == "PHContactPointState")
+		//PHContactPoint‚Ì‚Æ‚«‚Ì–€C‚ÌŒvZ‚ÉProjection‚ğ—p‚¢‚éBContactSurface‚Í•Ê‚ÌIterateLCP‚É‚Í‚¢‚é
+		//‚»‚êˆÈŠO‚Ì‚Æ‚«‚Ífnew‚Ìmax,min‚Ìˆ—‚É‚Ü‚Æ‚ß‚é‚±‚Æ‚ª‚Å‚«‚éB
+		if(DCAST(PHContactPointIf,this))
 			Projection(fnew[i], i);
 		else{
 			fnew[i] = max(fMinDt[i],fnew[i]);
@@ -283,9 +284,9 @@ void PHConstraint::SetupCorrectionLCP(){
 	//	S‘©‚·‚é©—R“x‚ÌŒˆ’è
 	//bool con[6];
 	//SetConstrainedIndexCorrection(con);
-	for(int i = 0; i < ConstAxis; i++){
+	for(int i = 0; i < targetAxis; i++){
 		//if(con[i] && constrCorrection[i]){		// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
-			 F[ConstNum[i]] *= engine->shrinkRateCorrection;
+			 F[numCondition[i]] *= engine->shrinkRateCorrection;
 		//}else{
 		//	F[i] = 0.0;							// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
 		//}
@@ -317,9 +318,9 @@ void PHConstraint::IterateCorrectionLCP(){
 	
 	SpatialVector Fnew, dF, dFs;
 	int i, j;
-	for(j = 0; j < ConstAxis; j++){
+	for(j = 0; j < targetAxis; j++){
 //		if(!constrCorrection[j]) continue;
-		int k = ConstNum[j];
+		int k = numCondition[j];
 		Fnew[k] = F[k] - Ainv[k] * (B[k] + J[0].row(k) * solid[0]->dV + J[1].row(k) * solid[1]->dV);
 		ProjectionCorrection(Fnew[k], k);
 		dF[k] = Fnew[k] - F[k];

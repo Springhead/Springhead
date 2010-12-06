@@ -60,7 +60,7 @@ public:
 				con[j] = con[j+1];
 			}
 		}
-		ConstAxis = 6-NDOF;
+		targetAxis = 6-NDOF;
 	}
 
 	PHJointND(){

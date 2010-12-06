@@ -47,7 +47,7 @@ struct OnLimit{
 	}
 };
 
-struct LimitLine{
+struct splinePoints{
 	double SwingLow[15][5];
 	double SwingUp[15][5];
 };
@@ -72,22 +72,22 @@ public:
 	 z軸：Socket座標系から見たPlug座標系のz軸の方向)
 	**********************************************************/
 
-	Vec3d			nowTheta;				///< 現在SocketからPlugに伸びているベクトル(Jc.ez())と稼動域制限の中心ベクトルとのなす角度(.x:swing, .y:twist, .z:swingDir)
+	Vec3d			currentEulerangle;				///< 現在SocketからPlugに伸びているベクトル(Jc.ez())と稼動域制限の中心ベクトルとのなす角度(.x:swing, .y:twist, .z:swingDir)
 	bool			anyLimit;				///< どこかのリミットにかかっているかどうかを調べるフラグ == (onLimit.onUpper || onLimit.onLower)
 	OnLimit			onLimit[2];				///< 可動域制限にかかっているとtrue ([0]:swing, [1]:twist)	
 	int				limitCount[2];			///< 上の配列のいくつまで入っているのか数える
-	double			Irrupt;					///< 侵入量
-	Vec3d			tanLine;
-	int				FunNum;
+	double			penetration;					///< 侵入量
+	Vec3d			tanDir;
+	int				splineNum;
 	Matrix3d		limDir;					///< 初期の拘束座標系 (x軸,y軸,z軸( = limitDir))
-	Vec3d			befTheta;					///< 前回の位置
-	LimitLine		limitLine;				///< 拘束範囲の指定
-	Vec4d			NPointInf;				///< 拘束時の近傍点の情報(SDir,Swing,区間,媒介変数値)
+	Vec3d			lastAngle;					///< 前回の位置
+	splinePoints	splinePoints;				///< 拘束範囲の指定
+	Vec4d			neighborAngle;				///< 拘束時の近傍点の情報(SDir,Swing,区間,媒介変数値)
 
 	void	CheckLimit();
 	void	SplineLimit();
 	bool	SetConstLine(char* fileName , int i);
-	double	GetConstLine(int num, int way){ return limitLine.SwingUp[num][way]; }
+	double	GetConstLine(int num, int way){ return splinePoints.SwingUp[num][way]; }
 
 	void	SetupLCP();
 	void	IterateLCP();
@@ -95,7 +95,7 @@ public:
 	Vec3d	CompResponseMatrix();
 
 
-	Vec3d	Eq3D(Vec4d coefficient);
+	Vec3d	SolveQubicFunction(Vec4d coefficient);
 	Vec4d	CalcParameter(int i,int j,bool flag);
 
 	PHBallJointLimit();
