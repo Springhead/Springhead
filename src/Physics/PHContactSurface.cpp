@@ -94,7 +94,7 @@ void PHContactSurface::SetConstrainedIndex(int* con){
 	 for(int i = 0; i<6;i++){
 		con[i] = i;
 	}
-	ConstAxis = 6;
+	targetAxis = 6;
 }
 
 void PHContactSurface::CompBias(){
@@ -195,9 +195,9 @@ void PHContactSurface::IterateLCP(){
 
 	SpatialVector fnew, df;
 
-	for(int j = 0; j < ConstAxis; j++){
+	for(int j = 0; j < targetAxis; j++){
 //		if(!constr[j])continue;
-		int i = ConstNum[j];
+		int i = numCondition[j];
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
 				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
 

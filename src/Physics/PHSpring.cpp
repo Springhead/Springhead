@@ -48,22 +48,22 @@ void PHSpring::SetConstrainedIndex(int* con){
 		con[j] = 3;
 		con[j+1] = 4;
 		con[j+2] = 5;
-		ConstAxis = j+3;
+		targetAxis = j+3;
 	}
-	else ConstAxis = j;
+	else targetAxis = j;
 }
 void PHSpring::SetConstrainedIndexCorrection(bool* con){
 	con[0] = con[1] = con[2] = con[3] = con[4] = con[5] = false;
-	ConstAxis = 0;
+	targetAxis = 0;
 }
 
 void PHSpring::ElasticDeformation(){
 	//rjrel
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	double tmp;
-	for(int i = 0; i < ConstAxis; i++){
+	for(int i = 0; i < targetAxis; i++){
 //		if (!constr[i]) continue;
-		int j = ConstNum[i];
+		int j = numCondition[i];
 		tmp = 1.0 / (damper[j] + spring[j] * GetScene()->GetTimeStep());
 		dA[j] = tmp * dtinv;
 		db[j] = spring[j] * Xjrel.r[j] * tmp;
@@ -170,9 +170,9 @@ void PHSpring::IterateLCP(){
 
 	
 	SpatialVector fnew, df;
-	for(int j = 0; j < ConstAxis; j++){
+	for(int j = 0; j < targetAxis; j++){
 //		if(!constr[j])continue;
-		int i = ConstNum[j];
+		int i = numCondition[j];
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
 				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
 
