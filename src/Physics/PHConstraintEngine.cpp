@@ -189,7 +189,7 @@ void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engi
 
 //----------------------------------------------------------------------------
 // PHConstraintEngine
-PHConstraintEngine::PHConstraintEngine(){
+PHConstraintEngineDesc::PHConstraintEngineDesc(){
 	numIter					 = 15;
 	numIterCorrection		 = 0;
 	numIterContactCorrection = 0;
@@ -204,6 +204,8 @@ PHConstraintEngine::PHConstraintEngine(){
 	bSaveConstraints = false;
 	bUpdateAllState	 = true;
 	bUseContactSurface = false;
+}
+PHConstraintEngine::PHConstraintEngine(){
 }
 
 PHConstraintEngine::~PHConstraintEngine(){

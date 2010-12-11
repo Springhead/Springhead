@@ -18,6 +18,24 @@ namespace Spr{;
 /** \addtogroup gpPhysics */
 //@{
 
+struct PHConstraintEngineDesc{
+	int		numIter;					///< 速度更新LCPの反復回数
+	int		numIterCorrection;			///< 誤差修正LCPの反復回数
+	int		numIterContactCorrection;	///< 接触点の誤差修正LCPの反復回数
+	double	velCorrectionRate;			///< 速度のLCPで関節拘束の誤差を修正する場合の誤差修正比率
+	double	posCorrectionRate;			///< 位置のLCPで，関節拘束の誤差を修正する場合の誤差修正比率
+	double  contactCorrectionRate;		///< 接触の侵入解消のための，速度のLCPでの補正比率．
+	double	shrinkRate;					///< LCP初期値を前回の解に対して縮小させる比率
+	double	shrinkRateCorrection;
+	double	freezeThreshold;			///< 剛体がフリーズする閾値
+	double	accelSOR;					///< SOR法の加速係数
+	bool	bGearNodeReady;				///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
+	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
+	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
+	bool	bUseContactSurface;			///< 面接触を使う
+	PHConstraintEngineDesc();
+};
+
 /** \defgroup gpJoint ジョイント*/
 //@{
 
