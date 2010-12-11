@@ -103,6 +103,59 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHConstraintEngineDesc \
+protected:\
+	int	numIter;	\
+	int	numIterCorrection;	\
+	int	numIterContactCorrection;	\
+	double	velCorrectionRate;	\
+	double	posCorrectionRate;	\
+	double	contactCorrectionRate;	\
+	double	shrinkRate;	\
+	double	shrinkRateCorrection;	\
+	double	freezeThreshold;	\
+	double	accelSOR;	\
+	bool	bGearNodeReady;	\
+	bool	bSaveConstraints;	\
+	bool	bUpdateAllState;	\
+	bool	bUseContactSurface;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		numIter = ((PHConstraintEngineDesc*)ptr)->numIter;	\
+		numIterCorrection = ((PHConstraintEngineDesc*)ptr)->numIterCorrection;	\
+		numIterContactCorrection = ((PHConstraintEngineDesc*)ptr)->numIterContactCorrection;	\
+		velCorrectionRate = ((PHConstraintEngineDesc*)ptr)->velCorrectionRate;	\
+		posCorrectionRate = ((PHConstraintEngineDesc*)ptr)->posCorrectionRate;	\
+		contactCorrectionRate = ((PHConstraintEngineDesc*)ptr)->contactCorrectionRate;	\
+		shrinkRate = ((PHConstraintEngineDesc*)ptr)->shrinkRate;	\
+		shrinkRateCorrection = ((PHConstraintEngineDesc*)ptr)->shrinkRateCorrection;	\
+		freezeThreshold = ((PHConstraintEngineDesc*)ptr)->freezeThreshold;	\
+		accelSOR = ((PHConstraintEngineDesc*)ptr)->accelSOR;	\
+		bGearNodeReady = ((PHConstraintEngineDesc*)ptr)->bGearNodeReady;	\
+		bSaveConstraints = ((PHConstraintEngineDesc*)ptr)->bSaveConstraints;	\
+		bUpdateAllState = ((PHConstraintEngineDesc*)ptr)->bUpdateAllState;	\
+		bUseContactSurface = ((PHConstraintEngineDesc*)ptr)->bUseContactSurface;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHConstraintEngineDesc*)ptr)->numIter = numIter;	\
+		((PHConstraintEngineDesc*)ptr)->numIterCorrection = numIterCorrection;	\
+		((PHConstraintEngineDesc*)ptr)->numIterContactCorrection = numIterContactCorrection;	\
+		((PHConstraintEngineDesc*)ptr)->velCorrectionRate = velCorrectionRate;	\
+		((PHConstraintEngineDesc*)ptr)->posCorrectionRate = posCorrectionRate;	\
+		((PHConstraintEngineDesc*)ptr)->contactCorrectionRate = contactCorrectionRate;	\
+		((PHConstraintEngineDesc*)ptr)->shrinkRate = shrinkRate;	\
+		((PHConstraintEngineDesc*)ptr)->shrinkRateCorrection = shrinkRateCorrection;	\
+		((PHConstraintEngineDesc*)ptr)->freezeThreshold = freezeThreshold;	\
+		((PHConstraintEngineDesc*)ptr)->accelSOR = accelSOR;	\
+		((PHConstraintEngineDesc*)ptr)->bGearNodeReady = bGearNodeReady;	\
+		((PHConstraintEngineDesc*)ptr)->bSaveConstraints = bSaveConstraints;	\
+		((PHConstraintEngineDesc*)ptr)->bUpdateAllState = bUpdateAllState;	\
+		((PHConstraintEngineDesc*)ptr)->bUseContactSurface = bUseContactSurface;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHConstraintDesc \
 protected:\
 	bool	bEnabled;	\

@@ -25,7 +25,6 @@ Springhead2/src/Samples/BoxStack
 #include <windows.h>
 
 #include <Springhead.h>		//	Springheadのインタフェース
-#include <Physics/PHConstraintEngine.h>
 #include <ctime>
 #include <GL/glut.h>
 #include <sstream>
@@ -478,6 +477,16 @@ int main(int argc, char* argv[]){
 	scene->SetStateMode(true);
 	states = ObjectStatesIf::Create();
 	//scene->GetConstraintEngine()->SetUseContactSurface(true); //面接触での力計算を有効化
+
+//#define USE_CORRECTION_LCP	//	位置のコレクションを入れるかどうか
+#ifdef USE_CORRECTION_LCP
+	PHConstraintEngineDesc ced;
+	scene->GetConstraintEngine()->GetDesc(&ced);
+	ced.numIterCorrection = 10;
+	ced.numIterContactCorrection = 10;
+	scene->GetConstraintEngine()->SetDesc(&ced);
+#endif
+
 #ifdef CREATE_FLOOR
 	// soFloor用のdesc
 	desc.mass = 10.0f;

@@ -283,8 +283,8 @@ public:
 		}
 		else if(key == 't'){
 			// ツリーノードを作成し，ABAで計算するように指定
-			//if(key == ' ')
-			//	nodeTree.push_back(phScene->CreateTreeNode(nodeTree.back(), soBox[n-1], PHTreeNodeDesc()));
+			size_t n = soBox.size();
+			nodeTree.push_back(phScene->CreateTreeNode(nodeTree.back(), soBox[n-1], PHTreeNodeDesc()));
 		}
 		else if(key == 'g'){
 			// 以下はギアの作成コード
