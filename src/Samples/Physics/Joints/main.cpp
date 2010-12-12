@@ -11,13 +11,14 @@
 \ref pagePhysics の関節機能のデモプログラム。
 
 \section secTestPatternJoints テストパターン
-- シーン0：ヒンジの鎖
+- シーン0：鎖
 - シーン1：チェビシェフリンク
-- シーン2：ボールジョイントの鎖
-- シーン3：スライダの鎖
+- シーン2：バネダンパ入りジョイントとバネダンパ
+- シーン3：ボールジョイント1つのテスト
 - シーン4：パスジョイント
 - シーン5：バネダンパ（安定なバネダンパの確認デモ） 
- 
+
+
 \section secSpecJoints 仕様
 - 共通の操作：
  - シーン番号0, 1, ...をタイプすると対応するシーンに切り替わる（デフォルト：シーン0)
@@ -95,6 +96,7 @@ public:
 	PHSceneIf* GetPHScene(){ return FWApp::instance->GetSdk()->GetScene()->GetPHScene(); }
 
 public:
+	Handler(){ bReady = false; }
 	/// 共用のシーンセットアップ処理
 	void BuildCommon(bool floor = true, bool rootBox = true, bool gravity = true){
 		PHSdkIf* phSdk = GetPHSdk();
@@ -208,22 +210,22 @@ public:
 			soBox.back()->SetVelocity(Vec3d(-3.0, 0.0, 0.0));
 			soBox.back()->SetMass(2.0);
 		}
-		/// 
+		// dtを半分にする
 		else if(key == '.'){
 			double dt = GetPHScene()->GetTimeStep();
 			dt /= 2.0;
 			dt = std::max(0.001, dt);
 			GetPHScene()->SetTimeStep(dt);
 		}
+		// dtを倍にする
 		else if(key == ','){
 			double dt = GetPHScene()->GetTimeStep();
 			dt *= 2.0;
 			GetPHScene()->SetTimeStep(dt);
 		}
 	}
-
-	Handler(){ bReady = false; }
 };
+
 
 class ChainHandler : public Handler{
 public:
@@ -234,7 +236,6 @@ public:
 	virtual void OnKey(int key){
 		PHSdkIf* phSdk = GetPHSdk();
 		PHSceneIf* phScene = GetPHScene();
-
 		if(key == 'h'){
 			soBox.push_back(phScene->CreateSolid(sdBox));
 			soBox.back()->AddShape(shapeBox);
@@ -390,8 +391,9 @@ public:
 			hinge->SetTargetPosition(-1.0);
 			hinge->SetDamper(B);
 			break;
-		/*case 'c':{
+		case 'c':{
 			//チェビシェフリンク一周分の軌跡を記憶させてパスジョイントを作成
+			//	2010.12.12 コメントを外してみたところ落ちる。未完？	by hase
 			PHPathDesc descPath;
 			descPath.bLoop = true;
 			PHPathIf* trajectory = phScene->CreatePath(descPath);
@@ -402,14 +404,13 @@ public:
 			hinge->SetTargetPosition(theta);
 			for(int i = 0; i < 50; i++)
 				phScene->Step();
-			for(; theta < Rad(180.0); theta += Rad(1.0)){
+			for(; theta < Rad(180.0); theta += Rad(2.0)){
 				hinge->SetTargetPosition(theta);
 				for(int i = 0; i < 5; i++)
 					phScene->Step();
 				Posed pose = soFloor->GetPose().Inv() * soBox[2]->GetPose();
 				//pose.Ori() = Quaterniond();
 				trajectory->AddPoint(theta, pose);
-				display();
 			}
 		
 			soBox.resize(4);
@@ -425,11 +426,15 @@ public:
 			joint->AddChildObject(trajectory);
 			joint->SetPosition(0);
 		
-			}break;*/
+			}break;
 		}
 	}
 };
 
+
+/*
+	PathJointのデモだが、誤差補正が上手く行っていないように見える。
+	床にぶつかると発散してしまう。	2010.12.12 by hase	*/
 class PathHandler : public Handler{
 public:
 	virtual void Build(){
@@ -451,6 +456,7 @@ public:
 			pose.Ori().FromMatrix(Matrix3d::Rot(-stmp, 'y'));
 			path->AddPoint(s, pose);
 		}
+		soBox[0]->SetDynamical(true);
 		PHPathJointDesc descJoint;
 		jntLink.push_back(phScene->CreateJoint(soFloor, soBox[0], descJoint));
 		PHPathJointIf* joint = DCAST(PHPathJointIf, jntLink[0]);
@@ -878,16 +884,17 @@ public:
 		render->PushLight(light);
 
 		// シーンの構築
-		for(int i = 0; i < 5; i++){
-			GetSdk()->CreateScene();
-			GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);
-			GetSdk()->GetScene()->GetPHScene()->SetNumIteration(20);
-		}
 		handlers.push_back(new ChainHandler());
 		handlers.push_back(new LinkHandler());
 		handlers.push_back(new ArmHandler());
 		handlers.push_back(new BallJointHandler());
 		handlers.push_back(new HingeJointHandler());
+		handlers.push_back(new PathHandler());
+		for(unsigned i = 0; i < handlers.size(); i++){
+			GetSdk()->CreateScene();
+			GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);
+			GetSdk()->GetScene()->GetPHScene()->SetNumIteration(20);
+		}
 
 		state = ObjectStatesIf::Create();
 		SwitchScene(0);
