@@ -66,6 +66,7 @@ public:
 	PHJointND(){
 		position.clear();
 		velocity.clear();
+		targetAxis = 6-NDOF;
 	}
 protected:
 	//virtual coord_t GetTorqueND() = 0;
