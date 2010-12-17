@@ -704,6 +704,9 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		if (loadFromFile) { 
 			// paintLib でファイルをロード．
 			int h = LoadBmpCreate(filename.c_str());
+			if (!h) {
+				DSTR << "GRDeviceGL::LoadTexture() fail to load \'" << filename << "\'." << std::endl;
+			}
 			tx = LoadBmpGetWidth(h);
 			ty = LoadBmpGetHeight(h);
 			nc = LoadBmpGetBytePerPixel(h);
