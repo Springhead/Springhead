@@ -203,7 +203,7 @@ public:
 	virtual void BeginScene(){ ptr BeginScene(); }															\
 	virtual void EndScene(){ ptr EndScene(); }																\
 	virtual void SetViewMatrix(const Affinef& afv){ ptr SetViewMatrix(afv); }								\
-	virtual void GetViewMatrix(Affinef& afv){ ptr SetViewMatrix(afv); }										\
+	virtual void GetViewMatrix(Affinef& afv){ ptr GetViewMatrix(afv); }										\
 	virtual void SetProjectionMatrix(const Affinef& afp){ ptr SetProjectionMatrix(afp); }					\
 	virtual void GetProjectionMatrix(Affinef& afp){ ptr GetProjectionMatrix(afp); }							\
 	virtual void SetModelMatrix(const Affinef& afw){ ptr SetModelMatrix(afw); }								\
