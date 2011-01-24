@@ -1,5 +1,0 @@
-#	Do not edit. RunSwig.bat will update this file.
-all: CollisionStub.cpp
-CollisionStub.cpp:  ../../include/Foundation/SprObject.h ../../include/Foundation/SprScene.h ../../include/Foundation/UTTimer.h ../../include/Collision/SprCDShape.h  ../Foundation/Foundation.h ../Foundation/Object.h ../Foundation/Scene.h ../Foundation/UTBaseType.h ../Foundation/UTDllLoader.h ../Foundation/UTDllLoaderImpl.h ../Foundation/UTLoadContext.h ../Foundation/UTLoadHandler.h ../Foundation/UTMMTimer.h ../Foundation/UTPath.h ../Foundation/UTPreciseTimer.h ../Foundation/UTQPTimer.h ../Foundation/UTTypeDesc.h ../Collision/CDBox.h ../Collision/CDCapsule.h ../Collision/CDConvex.h ../Collision/CDConvexMesh.h ../Collision/CDConvexMeshInterpolate.h ../Collision/CDCutRing.h ../Collision/CDDetectorImp.h ../Collision/CDQuickHull2D.h ../Collision/CDQuickHull2DImp.h ../Collision/CDQuickHull3D.h ../Collision/CDQuickHull3DImp.h ../Collision/CDRoundCone.h ../Collision/CDShape.h ../Collision/CDSphere.h ../Collision/Collision.h
-	swig -spr -w312,401,402 -DSWIG_Collision -c++ Collision.i
-	copy SprCollisionDecl.hpp ..\..\include\Collision 
