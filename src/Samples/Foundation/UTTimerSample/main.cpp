@@ -17,7 +17,7 @@ class TimerProviderGL: public UTTimerProvider{
 	};
 	typedef std::vector<Arg*> Args;
 	Args args;
-	static void Callback(int a){
+	static void SPR_CDECL Callback(int a){
 		Arg* arg = (Arg*)a;
 		if (!arg->bStop){
 			arg->timer->Call();
@@ -74,12 +74,12 @@ Fuga fuga;									/// クラスFuga
 
 TimerProviderGL providerGL;	//	タイマーにフレームワークを登録 
 
-void idle(){
+void SPR_CDECL keyboard(unsigned char key, int x, int y);
+void SPR_CDECL display();
+void SPR_CDECL reshape(int w, int h);
+void SPR_CDECL idle(){
 	providerGL.CallIdle();
 }
-void keyboard(unsigned char key, int x, int y);
-void display();
-void reshape(int w, int h);
 
 int _cdecl main(int argc, char* argv[]){
 	glutInit(&argc, argv);
@@ -110,12 +110,14 @@ int _cdecl main(int argc, char* argv[]){
 	glutMainLoop();
 	return 0;
 }
-void keyboard(unsigned char key, int x, int y){
+
+void SPR_CDECL keyboard(unsigned char key, int x, int y){
 	timer1.Stop();
 	fuga.timer2.Stop();
 	exit(0);
 }	
-void display(){
+
+void SPR_CDECL display(){
 }
-void reshape(int w, int h){
+void SPR_CDECL reshape(int w, int h){
 }
