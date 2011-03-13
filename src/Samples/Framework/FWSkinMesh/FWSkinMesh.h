@@ -46,9 +46,8 @@ public:
 	GLuint texName;
 
 	virtual void Init(int argc, char* argv[]);
-	virtual void IdleFunc();
 	virtual void Display();
-	virtual void TimerFunc(int id){};
+	virtual void TimerFunc(int id);
 	virtual void Keyboard(int key, int x, int y);
 	void TexInit();
 	void DrawTexQuad();

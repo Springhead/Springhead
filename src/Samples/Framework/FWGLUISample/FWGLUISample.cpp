@@ -34,7 +34,7 @@ void FWGLUISample::Init(int argc, char* argv[]){
 
 	InitCameraView();				// カメラビューの初期化
 	CreateObjects();				// 剛体を作成
-	CreateTimer(FWTimer::GLUT);		// タイマを作成
+	CreateTimer(TIMER_FRAMEWORK);		// タイマを作成
 }
 
 void FWGLUISample::InitCameraView(){
