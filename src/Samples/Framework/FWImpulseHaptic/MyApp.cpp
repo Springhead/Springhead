@@ -47,7 +47,7 @@ void MyApp::Init(int argc, char* argv[]){
 	BuildScene();
 
 	/// タイマの作成，設定
-	int timerId = CreateTimer(FWTimer::MM);
+	int timerId = CreateTimer(TIMER_MULTIMEDIA);
 	SetInterval(timerId , 1);
 	SetResolution(timerId , 1);
 }
@@ -98,7 +98,6 @@ void MyApp::InitHumanInterface(){
 }
 
 void MyApp::Reset(){
-	ReleaseAllTimer();
 	GetSdk()->Clear();
 	ClearIAScenes();
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
@@ -112,7 +111,6 @@ void MyApp::Reset(){
 	BuildScene();
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 	InitCameraView();
-	CreateAllTimer();
 }
 
 void MyApp::IdleFunc(){
@@ -227,7 +225,6 @@ void MyApp::BuildScene(){
 
 
 void MyApp::Keyboard(int key, int x, int y){
-	BeginKeyboard();
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	switch (key) {
 	case  27: //ESC
@@ -252,11 +249,9 @@ void MyApp::Keyboard(int key, int x, int y){
 		break;
 	case 'c':
 		{
-			ReleaseAllTimer();
 			for(int i = 0; i < GetIAScene()->NIAPointers(); i++){
 				GetIAScene()->GetIAPointer(i)->Calibration();
 			}
-			CreateAllTimer();
 		}
 		break;
 	case 'f':
@@ -298,7 +293,6 @@ void MyApp::Keyboard(int key, int x, int y){
 	default:
 		break;
 	}
-	EndKeyboard();
 }
 
 

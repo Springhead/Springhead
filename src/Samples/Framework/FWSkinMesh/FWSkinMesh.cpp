@@ -16,10 +16,9 @@ void MyApp::Init(int argc, char* argv[]){
 	CreateWin(windowDesc);									// ウィンドウの作成
 	InitWindow();
 
-	int timerId = CreateTimer(FWTimer::GLUT);				// タイマーの生成
-	SetInterval(timerId,0.02);
+	int timerId = CreateTimer(TIMER_IDLE);				// タイマーの生成
 }
-void MyApp::IdleFunc(){
+void MyApp::TimerFunc(int id){
 	GRAnimationControllerIf* anim = GetSdk()->GetScene()->GetGRScene()->GetAnimationController();
 	anim->ResetPose();
 	static float time;
