@@ -52,7 +52,7 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 		jntGuideBody[i] = scene->CreateJoint(body, soGuide[i], jd)->Cast();
 		jntGuideBody[i]->SetDamper(D);
 		jntGuideBody[i]->SetSpring(K);
-		jntGuideBody[i]->SetSpringOrigin(Rad(-90.0));
+		jntGuideBody[i]->SetTargetPosition(Rad(-90.0));
 		node = scene->CreateTreeNode(root, soGuide[i]);
 			
 		jd.poseSocket.Ori() = Quaterniond();
@@ -62,7 +62,7 @@ void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, P
 		scene->CreateTreeNode(node, soFoot[i]);
 		jntFootGuide[i]->SetSpring(K);
 		jntFootGuide[i]->SetDamper(D);
-		jntFootGuide[i]->SetSpringOrigin(Rad(-90.0));
+		jntFootGuide[i]->SetTargetPosition(Rad(-90.0));
 	}
 	
 	// ‚µ‚Î‚µ‘Ò‚Â

@@ -870,7 +870,7 @@ public:
 		CreateWin(windowDesc);
 		InitWindow();
 
-		int timerId = CreateTimer(FWTimer::GLUT);				// タイマーの生成
+		int timerId = CreateTimer();				// タイマーの生成
 
 		cameraInfo.zoomRange[1] = 1000.0f;
 		GetSdk()->SetDebugMode(true);
