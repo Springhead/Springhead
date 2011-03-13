@@ -5,7 +5,7 @@
 
 #include <Springhead.h>
 #include <Framework/SprFWApp.h>
-#include <Physics/PHIK.h>
+#include <Physics/SprPHIK.h>
 
 using namespace Spr;
 using namespace PTM;

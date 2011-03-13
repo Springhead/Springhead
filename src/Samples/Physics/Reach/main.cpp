@@ -125,7 +125,7 @@ void BuildScene(){
 	bjd.poseSocket.Pos() = Vec3d(0, 0.1, 0);
 	bjd.damper = 6.0;
 	bjd.spring = 10.0;
-	(Vec3d&)bjd.goal = Vec3d(Rad(-30), Rad(30), Rad(-30));
+	(Vec3d&)bjd.targetPosition = Vec3d(Rad(-30), Rad(30), Rad(-30));
 	jntLink.push_back(scene->CreateJoint(soBox[3], soBox[2], bjd));
 
 
@@ -144,7 +144,7 @@ void BuildScene(){
 	jd.poseSocket.Pos() = Vec3d(0, 0.07, 0);
 	jd.damper = 4.0;
 	jd.spring = 6.0;
-	jd.origin = Rad(-30);
+	jd.targetPosition = Rad(-30);
 	jntLink.push_back(scene->CreateJoint(soBox[4], soBox[3], jd));
 
 	//	頭
@@ -162,7 +162,7 @@ void BuildScene(){
 	jd.poseSocket.Pos() = Vec3d(0, -0.08, 0);
 	jd.damper = 1.0;
 	jd.spring = 100.0;
-	jd.origin = Rad(0);
+	jd.targetPosition = Rad(0);
 	jntLink.push_back(scene->CreateJoint(soBox[5], soBox[2], jd));
 
 	//	目標位置
@@ -189,7 +189,7 @@ void BuildScene(){
 	bjd.poseSocket.Pos() = Vec3d(0, 0.1, 0);
 	bjd.damper = 6.0;
 	bjd.spring = 10.0;
-	(Vec3d&)bjd.goal = Vec3d(Rad(30), Rad(30), Rad(30));
+	(Vec3d&)bjd.targetPosition = Vec3d(Rad(30), Rad(30), Rad(30));
 	jntLink.push_back(scene->CreateJoint(soBox[7], soBox[2], bjd));
 
 	//	左前腕
@@ -207,7 +207,7 @@ void BuildScene(){
 	jd.poseSocket.Pos() = Vec3d(0, 0.07, 0);
 	jd.damper = 4.0;
 	jd.spring = 6.0;
-	jd.origin = Rad(-30);
+	jd.targetPosition = Rad(-30);
 	jntLink.push_back(scene->CreateJoint(soBox[8], soBox[7], jd));
 
 	//	目標位置
