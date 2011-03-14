@@ -33,16 +33,16 @@ struct UTTimerIf : ObjectIf{
 	};
 
 	///	コールバック関数の型
-	typedef void (SPR_CDECL *TimerFunc)(void* arg);
-
+	typedef void (SPR_CDECL *TimerFunc)(int id);
 	///	タイマの数を取得
 	static unsigned		SPR_CDECL NTimers();
-
 	/// タイマを取得
 	static UTTimerIf*	SPR_CDECL Get(unsigned id);
-
 	/// タイマを作成
 	static UTTimerIf*	SPR_CDECL Create();
+
+	/// タイマIDを取得
+	unsigned GetID();
 
 	/// MULTIMEDIA時のタイマー精度の取得
 	unsigned GetResolution();
@@ -55,7 +55,7 @@ struct UTTimerIf : ObjectIf{
 	bool SetInterval(unsigned i);
 	
 	/// コールバック関数の設定
-	bool SetCallback(TimerFunc f, void* arg);
+	bool SetCallback(TimerFunc f);
 	/// タイマーの動作モードの取得
 	Mode GetMode();
 	/// タイマーの動作モードの設定

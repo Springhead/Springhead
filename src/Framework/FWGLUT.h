@@ -31,7 +31,8 @@ public:
 
 class FWGLUT : public FWGraphicsAdaptee, public UTTimerProvider, public FWGLUTDesc{
 protected:
-	bool idleFuncFlag;	///< IdleFuncの呼び出しに関するFlag	
+	bool	idleFuncFlag;	///< IdleFuncの呼び出しに関するFlag	
+	bool	timerRestart;	///< タイマコールバック内でタイマの再登録をするか
 
 	/** コールバック関数*/
 	static FWGLUT* instance;

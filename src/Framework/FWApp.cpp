@@ -277,18 +277,18 @@ void FWApp::ClearIAScenes(){
 //タイマ///////////////////////////////////////////////////////////////////////////
 
 /// UTTimerに登録するコールバック関数
-void SPR_CDECL FWApp_TimerCallback(void* arg){
+void SPR_CDECL FWApp_TimerCallback(int id){
 	FWApp* app = FWApp::instance;
 	if(!app)
 		return;
-	app->TimerFunc((int)arg);
+	app->TimerFunc(id);
 }
 
 UTTimerIf*  FWApp::CreateTimer(UTTimerIf::Mode mode){
 	/// インスタンスはコンストラクタの中でUTTimerStubに格納される
 	UTTimerIf* timer = UTTimerIf::Create();
 	timer->SetMode(mode);
-	timer->SetCallback(FWApp_TimerCallback, (void*)timer);
+	timer->SetCallback(FWApp_TimerCallback);
 	return timer;
 }
 
