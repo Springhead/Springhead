@@ -35,6 +35,11 @@ public:
 		static UTTimerStub obj;
 		return obj;
 	}
+	/// タイマの登録
+	void AddTimer(UTTimer* timer){
+		timer->timerId = timers.size();
+		timers.push_back(timer);
+	}
 	/// マルチメディアタイマの最小分解能
 	uint ResolutionMin(){
 		if (!resolutionMin) GetCaps();
@@ -133,12 +138,12 @@ UTTimer::UTTimer(){
 	interval	= 1;
 	resolution	= 1;
 	func		= 0;
-	arg			= 0;
-	timerId		= 0;
+	timerIdImpl = 0;
 	provider	= 0;
 
 	// 自身をStubに登録
-	UTTimerStub::Get().timers.push_back(this);
+	UTTimerStub::Get().AddTimer(this);
+	
 }
 
 UTTimer::~UTTimer(){
@@ -183,11 +188,11 @@ bool UTTimer::SetMode(UTTimerIf::Mode m){
 
 #if defined _WIN32
 void SPR_STDCALL UTTimer_MMTimerCallback(uint uID, uint, ulong dwUser, ulong, ulong){
-	((UTTimer*)dwUser)->Call();
+	UTTimerStub::Get().timers[dwUser]->Call();
 }
 
 ulong SPR_STDCALL UTTimer_ThreadCallback(void* arg){
-	UTTimer* timer = (UTTimer*)arg;
+	UTTimer* timer = UTTimerStub::Get().timers[(int)arg];
 	ulong lastCall = timeGetTime();
 	
 	while(!timer->bStopThread){
@@ -217,8 +222,8 @@ bool UTTimer::Start(){
 #if defined _WIN32
 		bStarted = true;
 		stub.UpdateResolution();
-		timerId = timeSetEvent(interval, resolution, UTTimer_MMTimerCallback, (ulong)this, TIME_PERIODIC);
-		if (!timerId){
+		timerIdImpl = timeSetEvent(interval, resolution, UTTimer_MMTimerCallback, timerId, TIME_PERIODIC);
+		if (!timerIdImpl){
 			bStarted = false;
 			stub.UpdateResolution();
 		}
@@ -227,9 +232,9 @@ bool UTTimer::Start(){
 	else if(mode == UTTimerIf::THREAD){
 #if defined _WIN32
 		ulong id=0;
-		timerId = (uint)CreateThread(NULL, 0x1000, UTTimer_ThreadCallback, this, 0, &id);
-		if (timerId){
-			SetThreadPriority((HANDLE)timerId, THREAD_PRIORITY_TIME_CRITICAL);//THREAD_PRIORITY_ABOVE_NORMAL);
+		timerIdImpl = (uint)CreateThread(NULL, 0x1000, UTTimer_ThreadCallback, (void*)timerId, 0, &id);
+		if (timerIdImpl){
+			SetThreadPriority((HANDLE)timerIdImpl, THREAD_PRIORITY_TIME_CRITICAL);//THREAD_PRIORITY_ABOVE_NORMAL);
 			bStarted = true;
 		}
 #endif
@@ -259,11 +264,11 @@ bool UTTimer::Stop(){
 	
 	if (mode == UTTimerIf::MULTIMEDIA){
 #ifdef _WIN32
-		timeKillEvent(timerId);
+		timeKillEvent(timerIdImpl);
 		for(int i=0; bRunning && i<100; i++) Sleep(10); 
 		if (bRunning)
 			DSTR << "UTTimer MULTIMEDIA mode: Can not stop the timer callback. There may be a dead lock problem." << std::endl;
-		timerId = 0;
+		timerIdImpl = 0;
 		bStarted = false;
 		stub.UpdateResolution();
 #endif
@@ -274,15 +279,15 @@ bool UTTimer::Stop(){
 		for(int t=0; t<100 && bStopThread; t++) Sleep(20);	//	停止するまで待ってみる
 		if (bStopThread)
 			DSTR << "UTTimer THREAD mode: Can not stop the timer thread. There may be a dead lock problem." << std::endl;
-		CloseHandle(*(HANDLE*)&timerId);
-		timerId = 0;
+		CloseHandle(*(HANDLE*)&timerIdImpl);
+		timerIdImpl = 0;
 		bStarted = false;
 #endif
 	}
 	else if (mode == UTTimerIf::FRAMEWORK){
 		bStarted = false;
 		if (provider && provider->StopTimer(this)){
-			timerId = 0;
+			timerIdImpl = 0;
 			provider = NULL;
 		}
 		else{
@@ -295,11 +300,10 @@ bool UTTimer::Stop(){
 	return !bStarted;
 }
 
-bool UTTimer::SetCallback(UTTimerIf::TimerFunc f, void* a){
+bool UTTimer::SetCallback(UTTimerIf::TimerFunc f){
 	if (IsRunning() && !Stop())
 		return false;
 	func = f;
-	arg  = a;
 	return Start();
 }
 
@@ -323,7 +327,7 @@ bool UTTimer::SetResolution(unsigned r){
 void UTTimer::Call(){
 	if (func && !bRunning){
 		bRunning = true;
-		(*func)(arg);
+		(*func)(timerId);
 		bRunning = false;
 	}
 }

@@ -33,7 +33,8 @@ protected:
 	volatile bool				bRunning;			///<	コールバック呼び出し中ならば true
 
 public:
-	unsigned					timerId;			///<	タイマーを識別するためのId
+	unsigned					timerId;			///<	UTTimerの通し番号
+	unsigned					timerIdImpl;		///<	モード別に使われるタイマID．通し番号ではない
 	UTTimerProvider*			provider;			///<	フレームワークタイマーが動いているとき、タイマーを提供しているフレームワークを覚えておくためのポインタ
 	volatile bool				bStopThread;		///<	スレッドモードのスレッドに停止を指示するためのフラグ
 
@@ -41,13 +42,15 @@ public:
 	UTTimer();
 	~UTTimer();
 
+	unsigned GetID(){return timerId; }
+
 	unsigned GetResolution(){return resolution; }
 	bool SetResolution(unsigned r);
 	
 	unsigned GetInterval(){ return interval;}
 	bool SetInterval(unsigned i);
 	
-	bool SetCallback(UTTimerIf::TimerFunc f, void* arg);
+	bool SetCallback(UTTimerIf::TimerFunc f);
 	
 	UTTimerIf::Mode GetMode() { return mode; }
 	bool SetMode(UTTimerIf::Mode m);

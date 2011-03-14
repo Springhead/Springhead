@@ -53,11 +53,12 @@ void FWGLUT::GlutReshapeFunc(int w, int h){
 }
 void FWGLUT::GlutTimerFunc(int value){
 	//instance->fwApp->CallTimerFunc(id);
-	UTTimer* timer = (UTTimer*)value;
+	UTTimerIf* timer = UTTimerIf::Get(value);
 	timer->Call();
 
 	// タイマーの再設定
-	glutTimerFunc(timer->GetInterval(), GlutTimerFunc, (int)timer);
+	if(instance->timerRestart)
+		glutTimerFunc(timer->GetInterval(), GlutTimerFunc, timer->GetID());
 
 }
 void FWGLUT::GlutIdleFunc(){
@@ -107,11 +108,13 @@ void FWGLUT::Init(int argc, char* argv[]){
 }
 
 bool FWGLUT::StartTimer(UTTimer* timer){
-	glutTimerFunc(timer->GetInterval(), GlutTimerFunc, (int)timer);
+	glutTimerFunc(timer->GetInterval(), GlutTimerFunc, timer->timerId);
+	timerRestart = true;
 	return true;
 }
 
 bool FWGLUT::StopTimer(UTTimer* timer){
+	timerRestart = false;
 	return true;
 }
 
