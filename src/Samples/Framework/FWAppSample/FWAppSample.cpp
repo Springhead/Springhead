@@ -27,16 +27,12 @@ void FWAppSample::Init(int argc, char* argv[]){
 
 	CreateObject();											// 剛体を作成
 
-	int timerId = CreateTimer(TIMER_FRAMEWORK);				// タイマーの生成
+	CreateTimer();				// タイマーの生成
 }
 
 void FWAppSample::TimerFunc(int id){	
-	switch(id){
-		case 0:
-			GetSdk()->Step();
-			PostRedisplay();
-			break;
-	}
+	GetSdk()->Step();
+	PostRedisplay();
 }
 
 void FWAppSample::IdleFunc(){
