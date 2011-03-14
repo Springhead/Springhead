@@ -26,12 +26,12 @@ namespace Spr{;
  */
 class FWApp : public UTRefCount{
 private:
-	UTRef<FWSdkIf>						fwSdk;		///< Framework SDK
-	UTRef<HISdkIf>						hiSdk;		///< HumanInterface SDK
+	UTRef<FWSdkIf>			fwSdk;		///< Framework SDK
+	UTRef<HISdkIf>			hiSdk;		///< HumanInterface SDK
 public:
 	FWApp();
 	virtual ~FWApp();
-	UTRef<FWVFuncBridge>				vfBridge;	///< 多言語(Rubyなど)へポートする際に仮想関数が適切に呼ばれるようにするためのブリッジ
+
 protected:
 	FWMouseInfo				mouseInfo;		///< マウス情報
 	FWUICamera				cameraInfo;		///< カメラ情報
@@ -116,10 +116,13 @@ public:
 	 */
 	virtual void MouseMove(int x, int y);
 
-	/** @brif ジョイスティックのハンドラ
+	/** @brief ジョイスティックのハンドラ
 	*/
 	virtual void Joystick(unsigned int buttonMask, int x, int y, int z){}
 
+	/** @brief 終了処理ハンドラ
+	 */
+	virtual void AtExit(){}
 
 //　FWAppのインタフェース -----------------------------------------
 
@@ -185,13 +188,11 @@ public:
 	*/
 	FWUICamera*	GetCameraInfo(){return &cameraInfo;}
 
-	/** @brief FWAppを初期状態にする
-	*/
-	void	Clear();
-
-	/** @brief FWAppをリセットする(タイマーのリセットは行わない)
-	*/
-	void	Reset();
+	// 削除候補
+	/// 初期状態にする
+	void	Clear(){}
+	/// リセットする
+	void	Reset(){}
 
 	/** @brief Ctrl, Shift, Altの状態を返す
 		個々の派生クラスで実装される
@@ -254,49 +255,14 @@ public:
 	void							ClearIAScenes();
 ///////////////////////////////////////////////////////////////////////////////////
 
-
-/** タイマ　*/
-protected:
-	vector<UTRef<FWTimer> > fwTimers;
 public:
 
 	/** @brief タイマーを作成する
-		最初に作成されたタイマのIDは0．その後は1ずつ増加する．ReleaseTimerによって既存のタイマのIDが変化することは無い．
-		タイマ周期の初期値は0．周期が0の場合はアクティブなシーンのtime stepがタイマ周期となる．
-		異なる周期を設定する場合はFWTimer::SetIntervalを使用する．
+		@param	mode	タイマの種類
+		@return			タイマオブジェクト
 	 */
-	int CreateTimer(FWTimer::TimerType t = FWTimer::GLUT);
+	UTTimerIf*	CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
 
-	/** @brief タイマーの時間間隔の設定
-	*/
-	void SetInterval(int id, unsigned ms);	
-	/** @brief タイマーの時間間隔の取得
-	*/
-	unsigned GetInterval(int id);
-	/** @brief タイマーの分解能の設定
-	*/
-	void SetResolution(int id, unsigned r);	
-	/** @brief タイマーの分解能の取得
-	*/
-	unsigned GetResolution(int id);
-	/** @brief タイマーを解放する
-	*/
-	void ReleaseTimer(int id);
-	/** @brief タイマーを再構成する
-	*/
-	void RecreateTimer(int id);
-	/** @brief 全てのタイマーを解放する
-	*/
-	void ReleaseAllTimer();
-	/** @brief 全てのタイマーを再構成する
-	*/
-	void CreateAllTimer();
-	/** @brief 全てのタイマーを削除する
-	*/
-	void ClearAllTimer();
-
-	/** @brief タイマーを取得する */
-	FWTimer* GetTimer(int id);
 };
 
 }

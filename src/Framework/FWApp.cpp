@@ -30,7 +30,7 @@ FWApp::FWApp(){
 }
 
 FWApp::~FWApp(){
-	ReleaseAllTimer();
+	//ReleaseAllTimer();
 	int s = (int)wins.size();
 	bool hasGameMode = false;
 	for(int i = 0; i < s; i++){
@@ -169,19 +169,6 @@ int FWApp::GetModifier(){
 	return grAdaptee->GetModifiers();
 }
 
-void FWApp::Reset(){
-	//dragger.clear();	//剛体ドラッグ情報を初期化
-}
-
-void FWApp::Clear(){
-	Reset();
-	//Timerの初期化
-	for(int i = 0; i < (int)fwTimers.size(); i++){
-		fwTimers[i]->Clear();
-	}
-	fwTimers.clear();
-}
-
 // 描画パート////////////////////////////////////////////////////////////////////
 
 void FWApp::SetGRAdaptee(grAdapteeType type){
@@ -208,20 +195,16 @@ void FWApp::GRInit(int argc, char* argv[]){
 
 /**コールバック関数*/
 void FWApp::CallDisplay(){
-	if(!vfBridge || !vfBridge->Display())
-		Display();
+	Display();
 }
 void FWApp::CallReshape(int w, int h){
-	if(!vfBridge || !vfBridge->Reshape(w, h))
-		Reshape(w, h);
+	Reshape(w, h);
 }
 void FWApp::CallTimerFunc(int id){
-	if(!vfBridge || !vfBridge->Idle())
-		TimerFunc(id);
+	TimerFunc(id);
 }
 void FWApp::CallIdleFunc(){
-	if(!vfBridge || !vfBridge->Idle())
-		IdleFunc();
+	IdleFunc();
 }
 void FWApp::CallKeyboard(int key, int x, int y){
 	for(int i = 0; i < NIAScenes(); i++){
@@ -229,8 +212,7 @@ void FWApp::CallKeyboard(int key, int x, int y){
 		iaScene->BeginKeyboard();
 	}
 
-	if(!vfBridge || !vfBridge->Keyboard(key, x, y))
-		Keyboard(key, x, y);
+	Keyboard(key, x, y);
 
 	for(int i = 0; i < NIAScenes(); i++){
 		FWInteractScene* iaScene = GetIAScene(i)->Cast();
@@ -238,42 +220,18 @@ void FWApp::CallKeyboard(int key, int x, int y){
 	}
 }
 void FWApp::CallMouseButton(int button, int state, int x, int y){
-	mouseInfo.pos.x = mouseInfo.lastPos.x = x;
-	mouseInfo.pos.y = mouseInfo.lastPos.y = y;
-	if(button == LEFT_BUTTON)
-		mouseInfo.left = (state == BUTTON_DOWN);
-	if(button == MIDDLE_BUTTON)
-		mouseInfo.middle = (state == BUTTON_DOWN);
-	if(button == RIGHT_BUTTON)
-		mouseInfo.right = (state == BUTTON_DOWN);
-	if(state == BUTTON_DOWN)
-		mouseInfo.first = true;
-	int mod = GetModifier();
-	mouseInfo.shift = (mod & ACTIVE_SHIFT) != 0;
-	mouseInfo.ctrl  = (mod & ACTIVE_CTRL) != 0;
-	mouseInfo.alt   = (mod & ACTIVE_ALT) != 0;
+	mouseInfo.Button(button, state, x, y, GetModifier());
 
-	if(!vfBridge || !vfBridge->MouseButton(button, state, x, y))
-		MouseButton(button, state, x, y);
+	MouseButton(button, state, x, y);
 }
 void FWApp::CallMouseMove(int x, int y){
-	mouseInfo.lastPos.x = mouseInfo.pos.x;
-	mouseInfo.lastPos.y = mouseInfo.pos.y;
-	mouseInfo.pos.x = x;
-	mouseInfo.pos.y = y;
+	mouseInfo.Move(x, y);
 
-	if(mouseInfo.first){
-		mouseInfo.first = false;
-		return;
-	}
-
-	if(!vfBridge || !vfBridge->MouseMove(x, y))
-		MouseMove(x, y);
+	MouseMove(x, y);
 }
 
 void FWApp::CallJoystick(unsigned int buttonMask, int x, int y, int z){
-	if(!vfBridge || !vfBridge->Joystick(buttonMask, x, y, z))
-		Joystick(buttonMask, x, y, z);
+	Joystick(buttonMask, x, y, z);
 }
 
 /** FWInteraction */
@@ -318,46 +276,20 @@ void FWApp::ClearIAScenes(){
 
 //タイマ///////////////////////////////////////////////////////////////////////////
 
-int FWApp::CreateTimer(FWTimer::TimerType t){
-	fwTimers.push_back(DBG_NEW FWTimer((int)fwTimers.size(),t));
-	fwTimers.back()->Create();
-	return fwTimers.back()->GetTimerId();
-}
-void FWApp::SetInterval(int id, unsigned ms){
-	fwTimers[id]->SetInterval(ms);
-}
-unsigned FWApp::GetInterval(int id){
-	return fwTimers[id]->GetInterval();
-}
-void FWApp::SetResolution(int id, unsigned r){
-	fwTimers[id]->SetResolution(r);
-}
-unsigned FWApp::GetResolution(int id){
-	return fwTimers[id]->GetResolution();
+/// UTTimerに登録するコールバック関数
+void SPR_CDECL FWApp_TimerCallback(void* arg){
+	FWApp* app = FWApp::instance;
+	if(!app)
+		return;
+	app->TimerFunc((int)arg);
 }
 
-void FWApp::ReleaseTimer(int id){
-	fwTimers[id]->Release();
-}
-void FWApp::RecreateTimer(int id){
-	fwTimers[id]->Recreate();
-}
-void FWApp::ReleaseAllTimer(){
-	for(unsigned int i=0; i < fwTimers.size() ; i++){
-		fwTimers[i]->Release();
-	}
-}
-void FWApp::CreateAllTimer(){
-	for(unsigned int i=0; i < fwTimers.size() ; i++){
-		fwTimers[i]->Recreate();
-	}
-}
-void FWApp::ClearAllTimer(){
-	fwTimers.clear();
-}
-
-FWTimer* FWApp::GetTimer(int id){
-	return (id < (int) fwTimers.size() ? fwTimers[id] : NULL);
+UTTimerIf*  FWApp::CreateTimer(UTTimerIf::Mode mode){
+	/// インスタンスはコンストラクタの中でUTTimerStubに格納される
+	UTTimerIf* timer = UTTimerIf::Create();
+	timer->SetMode(mode);
+	timer->SetCallback(FWApp_TimerCallback, (void*)timer);
+	return timer;
 }
 
 }

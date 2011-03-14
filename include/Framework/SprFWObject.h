@@ -16,6 +16,7 @@ namespace Spr{;
 
 struct FWSceneIf;
 struct GRMeshIf;
+struct CDConvexMeshIf;
 
 struct FWObjectDesc{
 };
@@ -38,13 +39,22 @@ struct FWObjectIf : SceneObjectIf {
 	/// GRFrameを設定する
 	void SetGRFrame(GRFrameIf* f);
 
-	/** メッシュをロードするヘルパ関数
+	/** @brief グラフィクス用メッシュをロードするヘルパ関数
 		@param filename ファイル名
-		@param ii ファイルタイプを指定する場合のIfInfo
-		@return ロードに成功したらメッシュオブジェクトを返す．失敗したらNULLを返す．
+		@param ii		ファイルタイプを指定する場合のIfInfo
+		@param frame	メッシュを保有するフレーム．NULLを指定するとルートフレームが保有する
+		@return ロードに成功したらtrueを返す．失敗したらfalseを返す．
+
 		メッシュをロードし，このFWObjectのGRFrameの下に加える
 	 */
-	GRMeshIf* LoadMesh(const char* filename, const IfInfo* ii = NULL);
+	bool LoadMesh(const char* filename, const IfInfo* ii = NULL, GRFrameIf* frame = NULL);
+
+	/** @brief グラフィクス用メッシュから衝突判定用メッシュを自動生成する
+		@param frame	変換対象のメッシュを保有するGRFrame．NULLを指定するとルートフレームが対象となる
+		@param mat		物性値
+		オブジェクトが保持するグラフィクスメッシュの凸包として衝突判定メッシュを生成する
+	 */
+	void GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
 
 	///ボーン付きXファイル専用
 	/// solidLengthを取得する

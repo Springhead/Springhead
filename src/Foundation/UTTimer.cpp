@@ -1,44 +1,58 @@
 #include "Foundation.h"
 #pragma hdrstop
 #include <Foundation/UTTimer.h>
-#include <windows.h>
-#include <mmsystem.h>
 
-namespace Spr {
+#ifdef _WIN32
+# include <windows.h>
+# include <mmsystem.h>
+#endif
+
+namespace Spr {;
+
+typedef unsigned int	uint;
+typedef unsigned long	ulong;
 
 //----------------------------------------------------------------------------------------------------------
-//	UTTimerStub
+//	UTTimerStub		UTTimerのインスタンスを保持するシングルトン
 //
 class UTTimerStub{
-	unsigned resolution;
-	unsigned resolutionMin;
-	unsigned resolutionMax;
+	///< マルチメディアタイマの分解能
+	uint resolution;		///< 現在の設定値
+	uint resolutionMin;		///< システムがサポートする最小値
+	uint resolutionMax;		///< システムがサポートする最大値
 public:
 	typedef std::vector<UTTimerProvider*> Providers;
-	Providers providers;
-	typedef std::vector<UTTimer*> Timers;
-	Timers timers;
+	typedef std::vector< UTRef<UTTimer> > Timers;
+
+	Providers	providers;		///< プロバイダの配列
+	Timers		timers;			///< タイマの配列
+
 	UTTimerStub(): resolution(0), resolutionMin(0), resolutionMax(0){}
 
 public:
+	/// 唯一のインスタンスを取得
 	static UTTimerStub& UTTimerStub::Get(){
 		static UTTimerStub obj;
 		return obj;
-	}	
-	unsigned ResolutionMin(){
+	}
+	/// マルチメディアタイマの最小分解能
+	uint ResolutionMin(){
 		if (!resolutionMin) GetCaps();
 		return resolutionMin;
 	}
-	unsigned ResolutionMax(){
+	/// マルチメディアタイマの最大分解能
+	uint ResolutionMax(){
 		if (!resolutionMax) GetCaps();
 		return resolutionMax;
 	}
-#if defined(_WIN32)
+	/** @brief 分解能の再設定
+	 */
 	void UpdateResolution(){
+#if defined(_WIN32)
 		int resOld = resolution;
 		resolution = UINT_MAX;
 		for(Timers::iterator it = timers.begin(); it!=timers.end(); ++it){
-			if ((*it)->IsStarted() && (*it)->GetMode() == UTTimer::MULTIMEDIA && (*it)->GetResolution() < resolution) 
+			if ((*it)->IsStarted() && (*it)->GetMode() == UTTimerIf::MULTIMEDIA && (*it)->GetResolution() < resolution) 
 				resolution = (*it)->GetResolution();
 		}
 		if (resolution == UINT_MAX) resolution = 0;
@@ -46,19 +60,23 @@ public:
 		if (resOld == resolution) return;
 		if (resOld) timeEndPeriod(resOld);
 		if (resolution) timeBeginPeriod(resolution);
-	}
 #else
-#error UTMMTimerStub: Not yet implemented.	//	未実装
+# error UTMMTimerStub: Not yet implemented.	//	未実装
 #endif
+	}
 
 protected:
 	void GetCaps(){
+#ifdef _WIN32
 		TIMECAPS tc;
 		if (timeGetDevCaps(&tc, sizeof(TIMECAPS)) != TIMERR_NOERROR) {
 			DSTR << "UTTimer::BeginPeriod()  Fail to get resolution." << std::endl;
 		}
 		resolutionMin = tc.wPeriodMin;
 		resolutionMax = tc.wPeriodMax;
+#else
+# error UTMMTimerStub: Not yet implemented.	//	未実装
+#endif
 	}
 };
 
@@ -66,22 +84,26 @@ protected:
 //	UTTimerProvider
 //
 
-
 UTTimerProvider::UTTimerProvider(){
+
 }
+
 UTTimerProvider::~UTTimerProvider(){
 	Unregister();
 }
+
 void UTTimerProvider::Register(){
 	UTTimerStub& stub = UTTimerStub::Get();
 	stub.providers.push_back(this);
 }
+
 void UTTimerProvider::Unregister(){
 	UTTimerStub& stub = UTTimerStub::Get();
 	for(UTTimerStub::Providers::iterator it = stub.providers.begin(); it != stub.providers.end(); ++it){
 		if (*it == this){
+			// このプロバイダを利用しているタイマを停止する
 			for(UTTimerStub::Timers::iterator t = stub.timers.begin(); t != stub.timers.end(); ++t){
-				if ((*t)->IsStarted() && (*t)->GetMode() == UTTimer::FRAMEWORK && (*t)->provider == this){
+				if ((*t)->IsStarted() && (*t)->GetMode() == UTTimerIf::FRAMEWORK && (*t)->provider == this){
 					(*t)->Stop();
 				}
 			}
@@ -90,55 +112,87 @@ void UTTimerProvider::Unregister(){
 		}
 	}
 }
+
 void UTTimerProvider::CallIdle(){
 	UTTimerStub& stub = UTTimerStub::Get();
 	for(UTTimerStub::Timers::iterator it = stub.timers.begin(); it != stub.timers.end(); ++it){
-		if ((*it)->GetMode() == UTTimer::IDLE && (*it)->IsStarted()) (*it)->Call();
+		if ((*it)->GetMode() == UTTimerIf::IDLE && (*it)->IsStarted()) (*it)->Call();
 	}
 }
-
 
 
 //----------------------------------------------------------------------------------------------------------
 //	UTTimer
 //
 
-UTTimer::UTTimer(): bStarted(false), bRunning(false), mode(FRAMEWORK),
-	func(NULL), arg(NULL), interval(1), resolution(1),
-	timerId(0), bStopThread(false), provider(NULL)
-{
+UTTimer::UTTimer(){
+	bStarted	= false;
+	bRunning	= false;
+	bStopThread = false;
+	mode		= UTTimerIf::FRAMEWORK;
+	interval	= 1;
+	resolution	= 1;
+	func		= 0;
+	arg			= 0;
+	timerId		= 0;
+	provider	= 0;
+
+	// 自身をStubに登録
 	UTTimerStub::Get().timers.push_back(this);
-};
+}
+
 UTTimer::~UTTimer(){
 	Stop();
+	/*
 	UTTimerStub::Timers& timers = UTTimerStub::Get().timers;
 	for(UTTimerStub::Timers::iterator it = timers.begin(); it != timers.end(); ++it){
 		if (*it == this){
 			timers.erase(it);
 			break;
 		}
-	}
-};
-bool UTTimer::SetMode(Mode m){
-	if (mode == m) return true;
-	bool b = IsStarted();
-	if (b) if (!Stop()) return false;
+	}*/
+}
+
+unsigned SPR_CDECL UTTimerIf::NTimers(){
+	return UTTimerStub::Get().timers.size();
+}
+
+UTTimerIf* SPR_CDECL UTTimerIf::Get(unsigned i){
+	if(0 <= i && i < NTimers())
+		return DCAST(UTTimerIf, UTTimerStub::Get().timers[i]);
+	return 0;
+}
+
+UTTimerIf* SPR_CDECL UTTimerIf::Create(){
+	UTTimer* timer = DBG_NEW UTTimer();
+	
+	return DCAST(UTTimerIf, timer);
+}
+
+bool UTTimer::SetMode(UTTimerIf::Mode m){
+	if (mode == m)
+		return true;
+	
+	bool started = IsStarted();
+	if (started && !Stop())
+		return false;
+
 	mode = m;
-	if (b) Start();
-	return true;
+	return Start();
 }
 
 #if defined _WIN32
-
-void SPR_STDCALL UTTimer_MMTimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long){
+void SPR_STDCALL UTTimer_MMTimerCallback(uint uID, uint, ulong dwUser, ulong, ulong){
 	((UTTimer*)dwUser)->Call();
 }
-unsigned long SPR_STDCALL UTTimer_ThreadCallback(void* arg){
+
+ulong SPR_STDCALL UTTimer_ThreadCallback(void* arg){
 	UTTimer* timer = (UTTimer*)arg;
-	unsigned long lastCall = timeGetTime();
+	ulong lastCall = timeGetTime();
+	
 	while(!timer->bStopThread){
-		unsigned long now = timeGetTime();
-		unsigned long nextCall = lastCall + timer->GetInterval();
+		ulong now = timeGetTime();
+		ulong nextCall = lastCall + timer->GetInterval();
 		int delta = (int)nextCall - (int)now;
 		if (delta > 0){
 			Sleep(delta);
@@ -150,26 +204,37 @@ unsigned long SPR_STDCALL UTTimer_ThreadCallback(void* arg){
 	timer->bStopThread = false;
 	return 0;
 }
+#else	//	Windows以外のプラットフォームでの実装
+# error UTTimer: Not yet implemented.		//	未実装
+#endif
+
 bool UTTimer::Start(){
+	if (bStarted)
+		return true;
+	
 	UTTimerStub& stub =  UTTimerStub::Get();
-	if (bStarted) return true;
-	heavy = 0;
-	if (mode==MULTIMEDIA){
+	if (mode == UTTimerIf::MULTIMEDIA){
+#if defined _WIN32
 		bStarted = true;
 		stub.UpdateResolution();
-		timerId = timeSetEvent(interval, resolution, UTTimer_MMTimerCallback, (unsigned long)this, TIME_PERIODIC);
+		timerId = timeSetEvent(interval, resolution, UTTimer_MMTimerCallback, (ulong)this, TIME_PERIODIC);
 		if (!timerId){
 			bStarted = false;
 			stub.UpdateResolution();
 		}
-	}else if(mode==THREAD){
-		unsigned long id=0;
-		timerId = (unsigned)CreateThread(NULL, 0x1000, UTTimer_ThreadCallback, this, 0, &id);
+#endif
+	}
+	else if(mode == UTTimerIf::THREAD){
+#if defined _WIN32
+		ulong id=0;
+		timerId = (uint)CreateThread(NULL, 0x1000, UTTimer_ThreadCallback, this, 0, &id);
 		if (timerId){
 			SetThreadPriority((HANDLE)timerId, THREAD_PRIORITY_TIME_CRITICAL);//THREAD_PRIORITY_ABOVE_NORMAL);
 			bStarted = true;
 		}
-	}else if (mode==FRAMEWORK){
+#endif
+	}
+	else if (mode == UTTimerIf::FRAMEWORK){
 		bStarted = true;
 		for(UTTimerStub::Providers::iterator it = stub.providers.begin(); it != stub.providers.end(); ++it){
 			if (!*it) continue;
@@ -179,71 +244,77 @@ bool UTTimer::Start(){
 			}
 		}
 		bStarted = false;
-	}else if (mode==IDLE){
+	}
+	else if (mode == UTTimerIf::IDLE){
 		bStarted = true;
 	}
 	return bStarted;
 }
+
 bool UTTimer::Stop(){
+	if (!bStarted)
+		return true;
+
 	UTTimerStub& stub =  UTTimerStub::Get();
-	if (!bStarted) return true;
-	if (mode == MULTIMEDIA){
+	
+	if (mode == UTTimerIf::MULTIMEDIA){
+#ifdef _WIN32
 		timeKillEvent(timerId);
 		for(int i=0; bRunning && i<100; i++) Sleep(10); 
-		if (bRunning){
+		if (bRunning)
 			DSTR << "UTTimer MULTIMEDIA mode: Can not stop the timer callback. There may be a dead lock problem." << std::endl;
-		}
 		timerId = 0;
 		bStarted = false;
 		stub.UpdateResolution();
-	}else if (mode == THREAD){
+#endif
+	}
+	else if (mode == UTTimerIf::THREAD){
+#ifdef _WIN32
 		bStopThread = true;									//	スレッドの停止を指示
 		for(int t=0; t<100 && bStopThread; t++) Sleep(20);	//	停止するまで待ってみる
-		if (bStopThread){
+		if (bStopThread)
 			DSTR << "UTTimer THREAD mode: Can not stop the timer thread. There may be a dead lock problem." << std::endl;
-		}
 		CloseHandle(*(HANDLE*)&timerId);
 		timerId = 0;
 		bStarted = false;
-	}else if (mode == FRAMEWORK){
+#endif
+	}
+	else if (mode == UTTimerIf::FRAMEWORK){
 		bStarted = false;
 		if (provider && provider->StopTimer(this)){
 			timerId = 0;
 			provider = NULL;
-		}else{
+		}
+		else{
 			bStarted = true;
 		}
-	}else if (mode==IDLE){
+	}
+	else if (mode == UTTimerIf::IDLE){
 		bStarted = false;
 	}
 	return !bStarted;
 }
-#else	//	Windows以外のプラットフォームでの実装
 
-#error UTTimer: Not yet implemented.		//	未実装
-
-#endif
-
-bool UTTimer::SetCallback(TimerFunc* f, void* a){
-	bool b = IsRunning();
-	if (b) if (!Stop()) return false;
+bool UTTimer::SetCallback(UTTimerIf::TimerFunc f, void* a){
+	if (IsRunning() && !Stop())
+		return false;
 	func = f;
-	arg = a;
-	if (b) Start();
-	return true;
+	arg  = a;
+	return Start();
 }
-bool UTTimer::SetInterval(unsigned i){
-	bool b = IsRunning();
-	if (b) if (!Stop()) return false;
+
+bool UTTimer::SetInterval(uint i){
+	if (IsRunning() && !Stop())
+		return false;
 	interval = i;
-	if (b) Start();
-	return true;
+	return Start();
 }
+
 bool UTTimer::SetResolution(unsigned r){
 	r = min(r, UTTimerStub::Get().ResolutionMax());
 	r = max(r, UTTimerStub::Get().ResolutionMin());
 	resolution = r;
-	if (bStarted && mode == MULTIMEDIA){
+	if (bStarted && mode == UTTimerIf::MULTIMEDIA){
 		UTTimerStub::Get().UpdateResolution();
 	}
 	return true;
@@ -252,10 +323,9 @@ bool UTTimer::SetResolution(unsigned r){
 void UTTimer::Call(){
 	if (func && !bRunning){
 		bRunning = true;
-		func(arg);
+		(*func)(arg);
 		bRunning = false;
 	}
 }
-
 
 }	//	namespace Spr

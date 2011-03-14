@@ -144,7 +144,6 @@ void GRMesh::SwitchCoordinate(){
 		skinWeights[i]->offset.EzY()  *= -1.0f;
 		skinWeights[i]->offset.PosZ() *= -1.0f;
 	}
-
 }
 
 void GRMesh::MakeBuffer(){
@@ -418,6 +417,7 @@ void GRMesh::CreateList(GRRenderIf* r){
 }
 
 void GRMesh::Render(GRRenderIf* r){
+	DSTR << 'm' << endl;
 	bool usebuffer = false;
 	if (!materialList.empty()) {
 		for (unsigned i=0; i<material.size(); ++i) {

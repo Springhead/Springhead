@@ -49,3 +49,17 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_SdkIf(base)	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_UTTimerIf(base)	\
+	unsigned int GetResolution(){	return	base::GetResolution();}	\
+	bool SetResolution(unsigned int r){	return	base::SetResolution(r);}	\
+	unsigned int GetInterval(){	return	base::GetInterval();}	\
+	bool SetInterval(unsigned int i){	return	base::SetInterval(i);}	\
+	bool SetCallback(Spr::UTTimerIf::TimerFunc f, void* arg){	return	base::SetCallback(f, arg);}	\
+	Spr::UTTimerIf::Mode GetMode(){	return	base::GetMode();}	\
+	bool SetMode(Spr::UTTimerIf::Mode m){	return	base::SetMode(m);}	\
+	bool IsStarted(){	return	base::IsStarted();}	\
+	bool IsRunning(){	return	base::IsRunning();}	\
+	bool Start(){	return	base::Start();}	\
+	bool Stop(){	return	base::Stop();}	\
+	void Call(){	base::Call();}	\
+

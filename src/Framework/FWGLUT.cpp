@@ -51,10 +51,22 @@ void FWGLUT::GlutDisplayFunc(){
 void FWGLUT::GlutReshapeFunc(int w, int h){
 	instance->fwApp->CallReshape(w, h);
 }
-void FWGLUT::GlutTimerFunc(int id){
-	instance->fwApp->CallTimerFunc(id);
+void FWGLUT::GlutTimerFunc(int value){
+	//instance->fwApp->CallTimerFunc(id);
+	UTTimer* timer = (UTTimer*)value;
+	timer->Call();
+
+	// タイマーの再設定
+	glutTimerFunc(timer->GetInterval(), GlutTimerFunc, (int)timer);
+
 }
 void FWGLUT::GlutIdleFunc(){
+	// ＊以下2系統のIdle処理は統一すべき	tazz
+
+	// UTTimerProviderとしての機能．IDLEモードのタイマのTimerFuncが呼ばれる
+	UTTimerProvider::CallIdle();
+
+	// FWApp::IdleFuncを呼ぶ
 	instance->fwApp->CallIdleFunc();
 }
 void FWGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
@@ -74,8 +86,7 @@ void FWGLUT::GlutJoystickFunc(unsigned int buttonMask, int x, int y, int z){
 	instance->fwApp->CallJoystick(buttonMask, x, y, z);
 }
 void FWGLUT::AtExit(){
-	if(instance && instance->fwApp->vfBridge)
-		instance->fwApp->vfBridge->AtExit();
+	instance->fwApp->AtExit();
 }
 
 /** Init *////////////////////////////////////////////////////////////////
@@ -90,9 +101,20 @@ void FWGLUT::Init(int argc, char* argv[]){
 	else glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	atexit(FWGLUT::AtExit);
+
+	// UTTimerProviderとして登録
+	Register();
 }
 
-/** タイマ *////////////////////////////////////////////////////////////////
+bool FWGLUT::StartTimer(UTTimer* timer){
+	glutTimerFunc(timer->GetInterval(), GlutTimerFunc, (int)timer);
+	return true;
+}
+
+bool FWGLUT::StopTimer(UTTimer* timer){
+	return true;
+}
+
 void FWGLUT::StartMainLoop(){
 	// CPUが常時100%になる問題あり
 	EnableIdleFunc(idleFuncFlag);

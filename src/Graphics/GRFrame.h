@@ -8,7 +8,8 @@
 #ifndef GRFrame_H
 #define GRFrame_H
 
-#include <SprGraphics.h>
+#include <Graphics/SprGRScene.h>
+#include <Foundation/Scene.h>
 
 namespace Spr{;
 
@@ -17,9 +18,21 @@ namespace Spr{;
 class GRVisual: public SceneObject{
 public:
 	SPR_OBJECTDEF_ABST(GRVisual);
+	bool	enabled;
+
+public:
 	virtual void Render(GRRenderIf* render){}
 	virtual void Rendered(GRRenderIf* render){}
+	void Enable(bool on = true){ enabled = on; }
+	bool IsEnabled(){ return enabled; }
+
+	GRVisual(){ enabled = true; }
 };
+
+class GRLight;
+class GRMaterial;
+class GRMesh;
+class GRFrame;
 
 /**	@class	GRFrame
     @brief	グラフィックスシーングラフのツリーのノード 座標系を表す */
@@ -30,6 +43,13 @@ public:
 	GRFrame* parent;
 	typedef std::vector< UTRef<GRVisualIf> > GRVisualIfs;
 	GRVisualIfs children;
+
+	/// レンダリング順序がクリティカルなものを個別保持
+	std::vector<GRLight*>		lights;
+	std::vector<GRMaterial*>	materials;
+	std::vector<GRMesh*>		meshes;
+	std::vector<GRFrame*>		frames;
+	std::vector<GRVisual*>		miscs;
 
 	GRFrame(const GRFrameDesc& desc=GRFrameDesc());
 

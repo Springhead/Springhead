@@ -234,7 +234,7 @@ public:
 	}
 };
 
-// DirectXのマテリアル．GRMateiralに対応．
+// DirectXのマテリアル．GRMaterialに対応．
 class FWNodeHandlerXMaterial: public UTLoadHandlerImp<Material>{
 public:
 	FWNodeHandlerXMaterial():UTLoadHandlerImp<Desc>("Material"){}

@@ -63,7 +63,8 @@
 	void SetPHSolid(PHSolidIf* s){	base::SetPHSolid(s);}	\
 	GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
 	void SetGRFrame(GRFrameIf* f){	base::SetGRFrame(f);}	\
-	Spr::GRMeshIf* LoadMesh(const char* filename, const IfInfo* ii){	return	base::LoadMesh(filename, ii);}	\
+	bool LoadMesh(const char* filename, const IfInfo* ii, GRFrameIf* frame){	return	base::LoadMesh(filename, ii, frame);}	\
+	void GenerateCDMesh(GRFrameIf* frame, const PHMaterial& mat){	base::GenerateCDMesh(frame, mat);}	\
 	double GetSolidLength(){	return	base::GetSolidLength();}	\
 	void SetSolidLength(double l){	base::SetSolidLength(l);}	\
 

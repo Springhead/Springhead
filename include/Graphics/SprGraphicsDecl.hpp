@@ -3,6 +3,8 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_GRVisualIf(base)	\
 	void Render(Spr::GRRenderIf* r){	base::Render(r);}	\
 	void Rendered(Spr::GRRenderIf* r){	base::Rendered(r);}	\
+	void Enable(bool on){	base::Enable(on);}	\
+	bool IsEnabled(){	return	base::IsEnabled();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRFrameIf(base)	\
 	Spr::GRFrameIf* GetParent(){	return	base::GetParent();}	\

@@ -2,25 +2,8 @@
 #define FWAPPINFO_H
 #include <Springhead.h>
 #include <Framework/SprFWGraphicsAdaptee.h>
-#include <Foundation/UTMMTimer.h>
 
 namespace Spr{;
-
-class FWVFuncBridge : public UTRefCount{
-public:
-	virtual void Link(void* pObj) = 0;
-	virtual bool Display() = 0;
-	virtual bool Reshape(int w, int h) = 0;
-	virtual bool Keyboard(int key, int x, int y) = 0;
-	virtual bool MouseButton(int button, int state, int x, int y) = 0;
-	virtual bool MouseMove(int x, int y) = 0;
-	virtual bool Step() = 0;
-	virtual bool Idle() = 0;
-	virtual bool Joystick(unsigned int buttonMask, int x, int y, int z) = 0;
-	virtual void AtExit() = 0;
-	virtual ~FWVFuncBridge(){}
-};
-
 
 //	hase	TypeDescができないようにクラスにしてある。TypeDesc側での対応が望ましい。
 class FWWinDesc{
@@ -71,12 +54,21 @@ public:
 };
 typedef std::vector< UTRef<FWWin> > Wins;
 
-struct FWMouseInfo{
+/// マウス状態
+class FWMouseInfo{
+public:
 	TVec2<int>	pos;				///< 現在のカーソル座標
 	TVec2<int>	lastPos;			///< 前回のカーソル座標
 	bool	left, middle, right;	///< ボタン押し下げ
 	bool	shift, ctrl, alt;		///< コントロールキー状態
 	bool	first;					///< ボタン押し下げイベントの直後かどうか
+
+public:
+	/// ボタンイベント時の状態の更新
+	void	Button(int button, int state, int x, int y, int mod);
+
+	/// 移動イベント時の状態の更新
+	void	Move(int x, int y);
 
 	FWMouseInfo();
 };
@@ -200,7 +192,7 @@ public:
 };
 
 /// タイマ．
-
+/*
 class  FWTimer : public UTRefCount{
 public:
 	enum TimerType{
@@ -232,5 +224,8 @@ public:
 	void Release();
 
 };
+*/
+
+
 }
 #endif 

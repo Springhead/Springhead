@@ -78,24 +78,55 @@ bool FWObject::AddChildObject(ObjectIf* o){
 	return false;
 }
 
-GRMeshIf* FWObject::LoadMesh(const char* filename, const IfInfo* ii){
+bool FWObject::LoadMesh(const char* filename, const IfInfo* ii, GRFrameIf* frame){
 	FWScene* scene = DCAST(FWScene, GetScene());
 	FISdkIf* fiSdk = scene->sdk->GetFISdk();
 
 	ObjectIfs objs;
-	objs.Push(scene->GetGRScene());	///< GRSceneが作成し，
-	objs.Push(GetGRFrame());		///< GRFrameが持つ
+	objs.Push(scene->GetGRScene());					///< GRSceneが作成し，
+	objs.Push(frame ? frame : GetGRFrame());		///< GRFrameが持つ
 
 	FIFileIf* file = (ii ? fiSdk->CreateFile(ii) : fiSdk->CreateFileFromExt(filename));
 	if(!file)
 		file = fiSdk->CreateFileX();
 
-	// ロードされたオブジェクトはobjsにプッシュされる
-	file->Load(objs, filename);
-	
-	if(objs.size() < 2)
-		return NULL;
-	return DCAST(GRMeshIf, objs[1]);
+	return file->Load(objs, filename);
+}
+
+void FWObject::GenerateCDMesh(GRFrameIf* frame, const PHMaterial& mat){
+	// フレームをスキャン
+	for(int i = 0; i < frame->NChildren(); i++){
+		GRMeshIf* mesh	 = DCAST(GRMeshIf,  frame->GetChildren()[i]);
+		GRFrameIf* child = DCAST(GRFrameIf, frame->GetChildren()[i]);
+		
+		// 子メッシュ
+		if(mesh){
+			// descレベルで頂点座標をコピー
+			GRMeshDesc		 grdesc;
+			CDConvexMeshDesc cddesc;
+
+			mesh->GetDesc(&grdesc);
+			for(int i = 0; i < (int)grdesc.vertices.size(); i++)
+				cddesc.vertices.push_back(grdesc.vertices[i]);
+
+			// CDConvexMeshを作成
+			FWScene* scene = DCAST(FWScene, GetScene());
+			CDShapeIf* shape = DCAST(CDConvexMeshIf, scene->sdk->GetPHSdk()->CreateShape(cddesc));
+
+			// メッシュを保有するフレームのposeを反映
+			Posed pose;
+			pose.FromAffine(frame->GetWorldTransform());
+
+			PHSolidIf* solid = GetPHSolid();
+			solid->AddShape(shape);
+			solid->SetShapePose(solid->NShape()-1, pose);
+		}
+
+		// 子フレームに対して再帰呼び出し
+		if(child)
+			GenerateCDMesh(child, mat);
+	}
+
 }
 
 /// --- --- --- --- --- --- --- --- --- ---
