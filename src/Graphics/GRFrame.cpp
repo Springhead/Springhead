@@ -10,6 +10,8 @@
 #include "GRMesh.h"
 #include <algorithm> 
 
+using namespace std;
+
 namespace Spr{;
 
 //-----------------------------------------------------------------
@@ -31,14 +33,42 @@ SceneObjectIf* GRFrame::CloneObject(){
 	return clone;
 }
 void GRFrame::Render(GRRenderIf* r){
+	if(!enabled)
+		return;
 	r->PushModelMatrix();
 	r->MultModelMatrix(transform);
-	for(GRVisualIfs::iterator it = children.begin(); it != children.end(); ++it){
+	
+	/// light -> material -> mesh -> その他visual -> 子frame　の順にRenderを呼ぶ
+	/// Renderedはその逆順で呼ぶ
+	for(vector<GRLight*>::iterator it = lights.begin(); it != lights.end(); it++)
 		(*it)->Render(r);
-	}
-	for(GRVisualIfs::reverse_iterator it = children.rbegin(); it != children.rend(); ++it){
+	for(vector<GRMaterial*>::iterator it = materials.begin(); it != materials.end(); it++)
+		(*it)->Render(r);
+	for(vector<GRMesh*>::iterator it = meshes.begin(); it != meshes.end(); it++)
+		(*it)->Render(r);
+	for(vector<GRVisual*>::iterator it = miscs.begin(); it != miscs.end(); it++)
+		(*it)->Render(r);
+	for(vector<GRFrame*>::iterator it = frames.begin(); it != frames.end(); it++)
+		(*it)->Render(r);
+	
+	for(vector<GRFrame*>::iterator it = frames.begin(); it != frames.end(); it++)
 		(*it)->Rendered(r);
-	}
+	for(vector<GRVisual*>::iterator it = miscs.begin(); it != miscs.end(); it++)
+		(*it)->Rendered(r);
+	for(vector<GRMesh*>::iterator it = meshes.begin(); it != meshes.end(); it++)
+		(*it)->Rendered(r);
+	for(vector<GRMaterial*>::iterator it = materials.begin(); it != materials.end(); it++)
+		(*it)->Rendered(r);
+	for(vector<GRLight*>::iterator it = lights.begin(); it != lights.end(); it++)
+		(*it)->Rendered(r);
+	
+	//for(GRVisualIfs::iterator it = children.begin(); it != children.end(); ++it){
+	//	(*it)->Render(r);
+	//}
+	//for(GRVisualIfs::reverse_iterator it = children.rbegin(); it != children.rend(); ++it){
+	//	(*it)->Rendered(r);
+	//}
+	
 	r->PopModelMatrix();
 }
 void GRFrame::Rendered(GRRenderIf* r){
@@ -64,31 +94,63 @@ bool GRFrame::AddChildObject(ObjectIf* o){
 			//	 -> いや、Frame は parentがひとつなので、複数のフレームの子になるのはだめです。 by hase
 			if (frame->parent) frame->parent->DelChildObject(frame->Cast());
 			frame->parent = this;
+			frames.push_back(frame);
 		}
+		else if(mat)
+			materials.push_back(mat);
+		else if(light)
+			lights.push_back(light);
+		else if(mesh)
+			meshes.push_back(mesh);
+		else miscs.push_back(v);
+
 		// デフォルトネーム設定
 		if(strcmp(v->GetName(), "") == 0){
 			char name[256]="";
 			if(frame)
-				sprintf(name, "%s_frame%d", GetName(), children.size()-1);
-			if(mat)
-				sprintf(name, "%s_mat%d", GetName(), children.size()-1);
-			if(light)
-				sprintf(name, "%s_light%d", GetName(), children.size()-1);
-			if(mesh)
-				sprintf(name, "%s_mesh%d", GetName(), children.size()-1);
+				sprintf(name, "%s_frame%d", GetName(), frames.size()-1);
+			else if(mat)
+				sprintf(name, "%s_mat%d", GetName(), materials.size()-1);
+			else if(light)
+				sprintf(name, "%s_light%d", GetName(), lights.size()-1);
+			else if(mesh)
+				sprintf(name, "%s_mesh%d", GetName(), meshes.size()-1);
+			else sprintf(name, "%s_misc%d", GetName(), miscs.size()-1);
 			v->SetName(name);
 		}
 		return true;
 	}
 	return false;
 }
-bool GRFrame::DelChildObject(ObjectIf* v){
-	for(GRVisualIfs::iterator it = children.begin(); it != children.end(); ++it){
-		if (*it == v){
-			children.erase(it);
-			return true;
-		}
+bool GRFrame::DelChildObject(ObjectIf* o){
+	
+	GRVisualIfs::iterator it = find(children.begin(), children.end(), o);
+	if(it != children.end()){
+
+		// 種類別の参照を削除
+		GRVisual*	v		= o->Cast();
+		GRFrame*	frame	= DCAST(GRFrame, v);
+		GRMaterial* mat		= DCAST(GRMaterial, v);
+		GRLight*	light	= DCAST(GRLight, v);
+		GRMesh*		mesh	= DCAST(GRMesh, v);
+
+		if(frame)
+			frames.erase(find(frames.begin(), frames.end(), frame));
+		else if(mat)
+			materials.erase(find(materials.begin(), materials.end(), mat));
+		else if(light)
+			lights.erase(find(lights.begin(), lights.end(), light));
+		else if(mesh)
+			meshes.erase(find(meshes.begin(), meshes.end(), mesh));
+		else miscs.erase(find(miscs.begin(), miscs.end(), v));
+	
+		// 最後にオブジェクトを削除
+		children.erase(it);
+
+		return true;
+	
 	}
+	
 	return false;
 }
 size_t GRFrame::NChildObject() const {

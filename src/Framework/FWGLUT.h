@@ -2,6 +2,7 @@
 #define FWGLUT_H
 #include <vector>
 #include <GL/glut.h>
+#include <Foundation/UTTimer.h>
 #include <Framework/SprFWGraphicsAdaptee.h>
 #include <Framework/SprFWApp.h>
 
@@ -28,7 +29,7 @@ public:
 	FWGLUTDesc();
 };
 
-class FWGLUT : public FWGraphicsAdaptee, public FWGLUTDesc{
+class FWGLUT : public FWGraphicsAdaptee, public UTTimerProvider, public FWGLUTDesc{
 protected:
 	bool idleFuncFlag;	///< IdleFuncの呼び出しに関するFlag	
 
@@ -50,11 +51,12 @@ public:
 
 	///	GLUTの初期化を行う。最初にこれを呼ぶ必要がある。
 	virtual void Init(int argc, char* argv[]);
+
+	/// UTTimerProviderの実装
+	virtual bool StartTimer(UTTimer* timer);
+	virtual bool StopTimer(UTTimer* timer);
 	
-	/** タイマ */
-	///GLUTによるTimerをスタートする
 	virtual void StartMainLoop();
-	///
 	virtual void EnableIdleFunc(bool on = true);
 	virtual void EnterGameMode();
 	virtual void LeaveGameMode();

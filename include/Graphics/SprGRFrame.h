@@ -32,6 +32,12 @@ struct GRVisualIf: public SceneObjectIf{
 	void Render(GRRenderIf* r);
 	///	レンダリング終了処理．子ノード，弟ノードのレンダリングが終わってから呼ばれる．
 	void Rendered(GRRenderIf* r);
+
+	/// レンダリングの有効化/無効化
+	void Enable(bool on = true);
+	/// 有効/無効状態の取得
+	bool IsEnabled();
+
 };
 		
 ///	DirectX の Frame の変換を表す FrameTransformMatrix ノードを読むためのDesc

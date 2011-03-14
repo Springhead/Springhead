@@ -45,7 +45,8 @@ public:
 	void		SetGRFrame(GRFrameIf* f){ grFrame = f; }
 	double		GetSolidLength(){ return solidLength; }
 	void		SetSolidLength(double l){ solidLength = l; }
-	GRMeshIf*	LoadMesh(const char* filename, const IfInfo* ii = NULL);
+	bool		LoadMesh(const char* filename, const IfInfo* ii = NULL, GRFrameIf* frame = NULL);
+	void		GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
 
 	virtual	void Sync();
 };

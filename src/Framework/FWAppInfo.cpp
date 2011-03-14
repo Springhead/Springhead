@@ -16,6 +16,34 @@ FWMouseInfo::FWMouseInfo(){
 	first = false;
 }
 
+void FWMouseInfo::Button(int button, int state, int x, int y, int mod){
+	pos.x = lastPos.x = x;
+	pos.y = lastPos.y = y;
+	if(button == LEFT_BUTTON)
+		left = (state == BUTTON_DOWN);
+	if(button == MIDDLE_BUTTON)
+		middle = (state == BUTTON_DOWN);
+	if(button == RIGHT_BUTTON)
+		right = (state == BUTTON_DOWN);
+	if(state == BUTTON_DOWN)
+		first = true;
+	shift = (mod & ACTIVE_SHIFT) != 0;
+	ctrl  = (mod & ACTIVE_CTRL) != 0;
+	alt   = (mod & ACTIVE_ALT) != 0;
+}
+
+void FWMouseInfo::Move(int x, int y){
+	lastPos.x = pos.x;
+	lastPos.y = pos.y;
+	pos.x = x;
+	pos.y = y;
+
+	if(first){
+		first = false;
+		return;
+	}
+}
+
 //-------------------------------------------------------------------------------------------------
 // FWUICamera
 
@@ -147,6 +175,7 @@ void FWDragger::Release(){
 //-------------------------------------------------------------------------------------------------
 // FWTimer
 
+/*
 void FWTimer::GLUTTimerFunc(int id){
 	FWApp* app = FWApp::instance;
 	if(!app)return;
@@ -232,5 +261,6 @@ void FWTimer::Clear(){
 		delete mtimer;
 	}
 }
+*/
 
 }

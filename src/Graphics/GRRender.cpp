@@ -82,15 +82,21 @@ Vec3f GRRender::ScreenToCamera(int x, int y, float depth, bool LorR){
 //----------------------------------------------------------------------------
 //	GRMaterial
 void GRMaterial::Render(GRRenderIf* render){
+	if(!enabled)
+		return;
 	render->SetMaterial(this->Cast());
 }
 
 //----------------------------------------------------------------------------
 //	GRLight
 void GRLight::Render(GRRenderIf* render){
+	if(!enabled)
+		return;
 	render->PushLight(*this);
 }
 void GRLight::Rendered(GRRenderIf* render){
+	if(!enabled)
+		return;
 	render->PopLight();
 }
 
@@ -112,6 +118,9 @@ bool GRCamera::AddChildObject(ObjectIf* o){
 	return false;
 }
 void GRCamera::Render(GRRenderIf* r){
+	if(!enabled)
+		return;
+
 	if (frame){
 		Affinef af = frame->GetWorldTransform();
 		r->SetViewMatrix(af.inv());

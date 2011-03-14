@@ -17,7 +17,7 @@ public:
 	FWGraphicsAdapteeDesc(){};
 };
 
-class FWGraphicsAdaptee :public FWGraphicsAdapteeDesc, public UTRefCount{
+class FWGraphicsAdaptee : public FWGraphicsAdapteeDesc, public UTRefCount{
 protected:
 	FWApp*	 fwApp;
 public:	

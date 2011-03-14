@@ -14,6 +14,6 @@
 
 #include "Foundation/SprObject.h"
 #include "Foundation/SprScene.h"
-#include "Foundation/UTTimer.h"
+#include "Foundation/SprUTTimer.h"
 
 #endif
