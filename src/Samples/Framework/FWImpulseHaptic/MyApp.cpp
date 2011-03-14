@@ -47,9 +47,9 @@ void MyApp::Init(int argc, char* argv[]){
 	BuildScene();
 
 	/// タイマの作成，設定
-	int timerId = CreateTimer(TIMER_MULTIMEDIA);
-	SetInterval(timerId , 1);
-	SetResolution(timerId , 1);
+	UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);
+	timer->SetInterval(1);
+	timer->SetResolution(1);
 }
 
 void MyApp::InitCameraView(){
