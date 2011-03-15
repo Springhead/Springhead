@@ -417,7 +417,6 @@ void GRMesh::CreateList(GRRenderIf* r){
 }
 
 void GRMesh::Render(GRRenderIf* r){
-	DSTR << 'm' << endl;
 	bool usebuffer = false;
 	if (!materialList.empty()) {
 		for (unsigned i=0; i<material.size(); ++i) {
