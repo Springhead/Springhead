@@ -17,7 +17,7 @@ int main(){
 	file.open("ContFindCommonPointSaveParam.txt");
 	PHSdkIf* sdk = PHSdkIf::CreateSdk();
 	ContFindCommonPointCall(file, sdk);
-#elif 0
+#elif 1
 	file.open("DetectContinuouslySaveParam.txt");
 	PHSdkIf* sdk = PHSdkIf::CreateSdk();
 	CallDetectContinuously(file, sdk);
