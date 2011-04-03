@@ -182,7 +182,7 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 
 PHPathJoint::PHPathJoint(const PHPathJointDesc& desc){
 	SetDesc(&desc);
-	axisIndex[0] = 5;
+	movableAxes[0] = 5;
 }
 
 bool PHPathJoint::AddChildObject(ObjectIf* o){

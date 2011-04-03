@@ -48,16 +48,19 @@ struct OnLimit{
 };
 
 struct splinePoints{
-	double SwingLow[15][5];
-	double SwingUp[15][5];
+	double swingUpper[15][6];
+	int limitCount;
+	bool UorL;	//true:LimitUpper,,false:LimitLower
 };
 
 class PHBallJointLimit{
 public:
 	PHBallJoint*	joint;
 	Vec3d	A, Ainv, dA, b, db;
-	SpatialMatrix J[2];
-	SpatialMatrix T[2];
+//	SpatialMatrix	J[2];
+	Matrix3d		J[2];
+//	SpatialMatrix	T[2];
+	Matrix3d		T[2];
 	Matrix3d		Jc;
 	Matrix3d		Jcinv;
 	//Vec3d	f, F;
@@ -72,22 +75,25 @@ public:
 	 z軸：Socket座標系から見たPlug座標系のz軸の方向)
 	**********************************************************/
 
-	Vec3d			currentEulerangle;				///< 現在SocketからPlugに伸びているベクトル(Jc.ez())と稼動域制限の中心ベクトルとのなす角度(.x:swing, .y:twist, .z:swingDir)
+	Vec3d			currentEulerAngle;				///< 現在SocketからPlugに伸びているベクトル(Jc.ez())と稼動域制限の中心ベクトルとのなす角度(.x:swing, .y:twist, .z:swingDir)
 	bool			anyLimit;				///< どこかのリミットにかかっているかどうかを調べるフラグ == (onLimit.onUpper || onLimit.onLower)
 	OnLimit			onLimit[2];				///< 可動域制限にかかっているとtrue ([0]:swing, [1]:twist)	
 	int				limitCount[2];			///< 上の配列のいくつまで入っているのか数える
-	double			penetration;					///< 侵入量
+	Vec3d			penetration;			///< 侵入量
 	Vec3d			tanDir;
-	int				splineNum;
 	Matrix3d		limDir;					///< 初期の拘束座標系 (x軸,y軸,z軸( = limitDir))
-	Vec3d			lastAngle;					///< 前回の位置
-	splinePoints	splinePoints;				///< 拘束範囲の指定
-	Vec4d			neighborAngle;				///< 拘束時の近傍点の情報(SDir,Swing,区間,媒介変数値)
+	Vec3d			lastEulerAngle;					///< 前回の位置
+	splinePoints	splinePoints[2];			///< 拘束範囲の指定
+	Vec4d			neighborAngle;			///< 拘束時の近傍点の情報(SDir,Swing,区間,媒介変数値)
+	int				constNumCondition;		///< 拘束軸の数
+	int				constrainedAxes[3];		///< 拘束軸を指定
 
 	void	CheckLimit();
 	void	SplineLimit();
-	bool	SetConstLine(char* fileName , int i);
-	double	GetConstLine(int num, int way){ return splinePoints.SwingUp[num][way]; }
+	void	SwingTwistLimit();
+	bool	SetConstLine(char* fileName , bool i);
+	void	SetConstPoint(int num, int way, double a);
+	double	GetConstLine(int num, int way){ return splinePoints[0].swingUpper[num][way]; }
 
 	void	SetupLCP();
 	void	IterateLCP();
@@ -97,7 +103,6 @@ public:
 
 	Vec3d	SolveQubicFunction(Vec4d coefficient);
 	Vec4d	CalcParameter(int i,int j,bool flag);
-
 	PHBallJointLimit();
 };
 

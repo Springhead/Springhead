@@ -105,9 +105,10 @@ public:
 						}
 	virtual bool		IsLimit(){return limit.anyLimit;}
 	/// 拘束点の入力
-	virtual bool		SetConstLine(char* fileName , int i){ return limit.SetConstLine(fileName, i); }
+	virtual bool		SetConstLine(char* fileName , bool i){ return limit.SetConstLine(fileName, i); }
+	virtual void		SetConstPoint(int num, int way, double a){limit.SetConstPoint(num,way,a);}
 	/// 拘束点の座標の取得
-	virtual double		GetConstLine(int num, int way){ return limit.GetConstLine(num, way); }
+	virtual double		GetConstLine(int num, int way){ return limit.splinePoints[0].swingUpper[num][way]; }
 	/// ConstLineと使うTwist角の範囲制限
 	virtual void		SetTwistPole(Vec2d range){ poleTwist = range; }
 
@@ -124,6 +125,7 @@ public:
 	int 	GetDefomationType()				{return (int)type;}
 	double 	GetmotorfNorm()					{return motor.fNorm;}
 	PHJointDesc::PHDeformationType 	GetDeformationMode();
+	void	SetConstraintMode(int t) {ConstMode = (PHBallJointDesc::PHConstraintType)t;}
 
 	/// 仮想関数のオーバライド
 	virtual void	SetupLCP();

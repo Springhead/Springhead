@@ -26,10 +26,12 @@ PHBallJointDesc::PHBallJointDesc(){
 	limitSwing[1]	= FLT_MAX;
 	limitTwist[0]	= FLT_MAX;
 	limitTwist[1]	= FLT_MAX;	
+	limitSwingDir[0]= FLT_MAX;
+	limitSwingDir[1]= FLT_MAX;
+	poleTwist		= Vec2d(FLT_MAX,FLT_MAX);
 	limitDir		= Vec3d(0.0, 0.0, 1.0);
 	targetPosition			= Quaterniond(1, 0, 0, 0);
 	fMax			= FLT_MAX;
-	poleTwist		= Vec2d(FLT_MAX,FLT_MAX);
 	offsetForce		= Vec3d();
 
 	secondDamper	= 0.0;
@@ -37,15 +39,16 @@ PHBallJointDesc::PHBallJointDesc(){
 	hardnessRate	= 1.0;
 	Inertia			= Vec3d(1.0,1.0,1.0);
 	type			= ELASTIC;
+	ConstMode		= SwingTwist;
 }
 
 //----------------------------------------------------------------------------
 // PHBallJoint
 PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	SetDesc(&desc);
-	axisIndex[0] = 3;
-	axisIndex[1] = 4;
-	axisIndex[2] = 5;
+	movableAxes[0] = 3;
+	movableAxes[1] = 4;
+	movableAxes[2] = 5;
 
 	limit.joint = this;
 	motor.joint = this;
@@ -54,20 +57,20 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 
 void PHBallJoint::SetupLCP(){
 	PHJoint::SetupLCP();
-//	limit.SetupLCP(); //‰~Œ`‚Å‚ÌS‘©‚Í‚È‚¨‚è‚Ü‚µ‚½
+	limit.SetupLCP(); //‰~Œ`‚Å‚ÌS‘©‚Í‚È‚¨‚è‚Ü‚µ‚½
 	motor.SetupLCP();
 }
 
 void PHBallJoint::IterateLCP(){
 	PHJoint::IterateLCP();
-//	limit.IterateLCP(); //‰~Œ`‚Å‚ÌS‘©‚Í‚È‚¨‚è‚Ü‚µ‚½
-	motor.IterateLCP();
+	limit.IterateLCP(); //‰~Œ`‚Å‚ÌS‘©‚Í‚È‚¨‚è‚Ü‚µ‚½
+//	motor.IterateLCP();
 }
 
 void PHBallJoint::CompBias(){
 	//	•ÀiŒë·‚Ì‰ðÁ‚Ì‚½‚ßA‘¬“x‚ÉŒë·/dt‚ð‰ÁŽZ, Xjrel.r: ƒ\ƒPƒbƒg‚É‘Î‚·‚éƒvƒ‰ƒO‚ÌˆÊ’u‚ÌƒYƒŒ
-	db.v() = Xjrel.r * GetScene()->GetTimeStepInv();
-	db.v() *= engine->velCorrectionRate;
+	db.v_range(0,3) = Xjrel.r * GetScene()->GetTimeStepInv();
+	db.v_range(0,3) *= engine->velCorrectionRate;
 }
 
 void PHBallJoint::UpdateJointState(){
@@ -82,7 +85,7 @@ void PHBallJoint::UpdateJointState(){
 }
 
 void PHBallJoint::CompError(){
-	B.v() = Xjrel.r;
+	B.v_range(0,3) = Xjrel.r;
 }
 
 PHJointDesc::PHDeformationType PHBallJoint::GetDeformationMode(){

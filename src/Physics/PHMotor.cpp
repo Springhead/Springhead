@@ -81,8 +81,8 @@ void PHMotor1D::SetupLCP(){
 			joint->motorf.z = joint->offsetForce;
 	}
 	else{
-		A = joint->A[joint->axisIndex[0]];
-		b = joint->b[joint->axisIndex[0]];
+		A = joint->A[joint->movableAxes[0]];
+		b = joint->b[joint->movableAxes[0]];
 
 		switch(joint->type){
 		case PHJointDesc::ELASTIC:	//PHDeformationType::Elastic 0　初期値
@@ -105,23 +105,23 @@ void PHMotor1D::SetupLCP(){
 		Ainv = 1.0 / (A + dA);
 		joint->motorf.z *= joint->engine->shrinkRate;
 
-		joint->numCondition[joint->targetAxis] = joint->axisIndex[0];
+		joint->constrainedAxes[joint->targetAxis] = joint->movableAxes[0];
 		joint->targetAxis++;
 	}
 			
 	// 拘束力初期値による速度変化量を計算
 	joint->CompResponse(joint->motorf.z, 0);
-	joint->dA[joint->axisIndex[0]] = dA;
-	joint->db[joint->axisIndex[0]] = db;
-	joint->Ainv[joint->axisIndex[0]] = Ainv;
-	joint->f[joint->axisIndex[0]] = joint->motorf.z;
+	joint->dA[joint->movableAxes[0]] = dA;
+	joint->db[joint->movableAxes[0]] = db;
+	joint->Ainv[joint->movableAxes[0]] = Ainv;
+	joint->f[joint->movableAxes[0]] = joint->motorf.z;
 }
 
 void PHMotor1D::IterateLCP(){
 	if(joint->spring == 0.0 && joint->damper == 0.0)
 		return;
 
-	int j = joint->axisIndex[0];
+	int j = joint->movableAxes[0];
 	double fold = joint->motorf.z;
 	double fnew = fold - joint->engine->accelSOR * Ainv * (dA * fold + b + db
 			 + joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);
@@ -226,12 +226,16 @@ void PHBallJointMotor::PlasticDeformation(){
 }
 
 void PHBallJointMotor::SetupLCP(){
-	fMaxDt = joint->fMax * joint->GetScene()->GetTimeStep();
+//	fMaxDt = joint->fMax * joint->GetScene()->GetTimeStep();
 	dt		= joint->GetScene()->GetTimeStep();
 	dtinv	= joint->GetScene()->GetTimeStepInv();
 	D  = joint->damper *joint->Inertia;
 	D2 = joint->secondDamper *joint->Inertia;
 	K  = joint->spring *joint->Inertia;
+	for(int i = 3;i<6;i++){
+		joint->fMaxDt[i] = joint->fMax * joint->GetScene()->GetTimeStep();
+		joint->fMinDt[i] = -joint->fMaxDt[i];
+	}
 
 	// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
 	if(joint->spring == 0.0 && joint->damper == 0.0){
@@ -248,8 +252,8 @@ void PHBallJointMotor::SetupLCP(){
 		propQ = joint->targetPosition * joint->Xjrel.q.Inv();	// Xjrel.qの目標targetPositionとXjrel.qの実際の角度の差をQuaternionで取得
 		propV = propQ.RotationHalf();
 
-		A = joint->A.w();
-		b = joint->b.w();
+		A = joint->A.v_range(3,3);
+		b = joint->b.v_range(3,3);
 
 		////物体の形状を考慮したバネダンパを設定する場合
 		//if(I[0]!=1&&I[1]!=1&&I[2]!=1){
@@ -292,7 +296,15 @@ void PHBallJointMotor::SetupLCP(){
 		for(int i = 0; i < 3; i++)
 			Ainv[i] = 1.0 / (A[i] + dA[i]);
 		joint->motorf *= joint->engine->shrinkRate;
+		joint->targetAxis = 6;
+		joint->constrainedAxes[3] = 3;
+		joint->constrainedAxes[4] = 4;
+		joint->constrainedAxes[5] = 5;
 	}
+	joint->dA.v_range(3,3) = dA;
+	joint->db.v_range(3,3) = db;
+	joint->Ainv.v_range(3,3) = Ainv;
+	joint->f.v_range(3,3) = joint->motorf;
 }
 
 void PHBallJointMotor::IterateLCP(){
@@ -301,7 +313,7 @@ void PHBallJointMotor::IterateLCP(){
 
 	Vec3d fnew;
 	for(int i = 0; i < 3; i++){
-		int j = joint->axisIndex[i];
+		int j = joint->movableAxes[i];
 		fnew[i] = joint->motorf[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * joint->motorf[i] + b[i] + db[i]
 				+ joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);	
 
