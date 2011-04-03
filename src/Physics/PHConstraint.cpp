@@ -157,17 +157,17 @@ void PHConstraint::CompResponseMatrix(){
 	double Amax = 0.0, Amin;
 	for(j = 0; j < targetAxis; j++)
 //		if(constr[j] && A[j] > Amax)
-		if(A[numCondition[j]] > Amax)
-			Amax = A[numCondition[j]];
+		if(A[constrainedAxes[j]] > Amax)
+			Amax = A[constrainedAxes[j]];
 	Amin = Amax * eps;
 	for(j = 0; j < targetAxis; j++){
 //		if(!constr[j])continue;
-		if(A[numCondition[j]] < Amin || A[numCondition[j]] < epsabs){
+		if(A[constrainedAxes[j]] < Amin || A[constrainedAxes[j]] < epsabs){
 //			constr[j] = false;
-			DSTR <<this->GetName()<<":"<< numCondition[j] << "-th constraint ill-conditioned! disabled." << endl;
+			DSTR <<this->GetName()<<":"<< constrainedAxes[j] << "-th constraint ill-conditioned! disabled." << endl;
 		}
 		else
-			Ainv[numCondition[j]] = 1.0 / (A[numCondition[j]] + dA[numCondition[j]]);
+			Ainv[constrainedAxes[j]] = 1.0 / (A[constrainedAxes[j]] + dA[constrainedAxes[j]]);
 	}
 }
 
@@ -196,10 +196,10 @@ void PHConstraint::SetupLCP(){
 	
 	// çSë©Ç∑ÇÈé©óRìxÇÃåàíËÅCçSë©óÕÇÃèâä˙âª
 	//bool con[6];
-	SetConstrainedIndex(numCondition);
+	SetConstrainedIndex(constrainedAxes);
 	for(int i = 0; i < targetAxis; i++){
 		//if(con[i] && constr[i]){				// åpë±ÇµÇƒçSë©Ç≥ÇÍÇÈèÍçá
-			f[numCondition[i]] *= engine->shrinkRate;
+			f[constrainedAxes[i]] *= engine->shrinkRate;
 		//}else{
 		//	f[i] = 0.0;							// êVãKÇ…çSë©Ç≥ÇÍÇÈ or çSë©Ç≥ÇÍÇ»Ç¢
 		//}
@@ -247,7 +247,7 @@ void PHConstraint::IterateLCP(){
 	SpatialVector fnew, df;
 	for(int j = 0; j < targetAxis; j++){
 //		if(!constr[j])continue;
-		int i = numCondition[j];
+		int i = constrainedAxes[j];
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
 				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
 
@@ -286,7 +286,7 @@ void PHConstraint::SetupCorrectionLCP(){
 	//SetConstrainedIndexCorrection(con);
 	for(int i = 0; i < targetAxis; i++){
 		//if(con[i] && constrCorrection[i]){		// åpë±ÇµÇƒçSë©Ç≥ÇÍÇÈèÍçá
-			 F[numCondition[i]] *= engine->shrinkRateCorrection;
+			 F[constrainedAxes[i]] *= engine->shrinkRateCorrection;
 		//}else{
 		//	F[i] = 0.0;							// êVãKÇ…çSë©Ç≥ÇÍÇÈ or çSë©Ç≥ÇÍÇ»Ç¢
 		//}
@@ -320,7 +320,7 @@ void PHConstraint::IterateCorrectionLCP(){
 	int i, j;
 	for(j = 0; j < targetAxis; j++){
 //		if(!constrCorrection[j]) continue;
-		int k = numCondition[j];
+		int k = constrainedAxes[j];
 		Fnew[k] = F[k] - Ainv[k] * (B[k] + J[0].row(k) * solid[0]->dV + J[1].row(k) * solid[1]->dV);
 		ProjectionCorrection(Fnew[k], k);
 		dF[k] = Fnew[k] - F[k];

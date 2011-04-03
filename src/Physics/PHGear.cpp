@@ -65,10 +65,10 @@ void PHGear::CompResponse(double f){
 			s = joint[i]->solid[j];
 			if(!s->IsDynamical())continue;
 			if(s->treeNode){
-				(Vec6d&)fs = joint[i]->J[j].row(joint[i]->axisIndex[0]) * fc;
+				(Vec6d&)fs = joint[i]->J[j].row(joint[i]->movableAxes[0]) * fc;
 				s->treeNode->CompResponse(fs, true, false);
 			}
-			else s->dv += joint[i]->T[j].row(joint[i]->axisIndex[0]) * fc;
+			else s->dv += joint[i]->T[j].row(joint[i]->movableAxes[0]) * fc;
 		}
 	}
 }
@@ -78,7 +78,7 @@ void PHGear::SetupLCP(){
 	f *= engine->shrinkRate;
 	
 	// LCPのA行列の対角成分を計算
-	A = ratio * ratio * joint[0]->A[joint[0]->axisIndex[0]] + joint[1]->A[joint[1]->axisIndex[0]];
+	A = ratio * ratio * joint[0]->A[joint[0]->movableAxes[0]] + joint[1]->A[joint[1]->movableAxes[0]];
 	Ainv = 1.0 / A;
 
 	// 拘束力初期値による速度変化量を計算
@@ -90,7 +90,7 @@ void PHGear::IterateLCP(){
 	double fnew;
 	double b[2];
 	for(int i = 0; i < 2; i++){
-		int iaxis = joint[i]->axisIndex[0];
+		int iaxis = joint[i]->movableAxes[0];
 		b[i] = joint[i]->b[iaxis]
 			+ joint[i]->J[0].row(iaxis) * joint[i]->solid[0]->dv
 			+ joint[i]->J[1].row(iaxis) * joint[i]->solid[1]->dv;

@@ -634,7 +634,7 @@ void PHTreeNodeND<NDOF>::SetupLCP(){
 	PHJointND<NDOF>* j = GetJoint();
 	bool con, constrAtAll = false;
 	for(int i = 0; i < NDOF; i++){
-		con = j->constr[j->axisIndex[i]];
+		con = j->constr[j->movableAxes[i]];
 		if(con && constr[i])			// åpë±ÇµÇƒçSë©Ç≥ÇÍÇÈèÍçá
 			 f[i] *= engine->shrinkRate;
 		else f[i] = 0.0;					// êVãKÇ…çSë©Ç≥ÇÍÇÈ or çSë©Ç≥ÇÍÇ»Ç¢

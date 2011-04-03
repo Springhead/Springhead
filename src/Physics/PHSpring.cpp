@@ -63,7 +63,7 @@ void PHSpring::ElasticDeformation(){
 	double tmp;
 	for(int i = 0; i < targetAxis; i++){
 //		if (!constr[i]) continue;
-		int j = numCondition[i];
+		int j = constrainedAxes[i];
 		tmp = 1.0 / (damper[j] + spring[j] * GetScene()->GetTimeStep());
 		dA[j] = tmp * dtinv;
 		db[j] = spring[j] * Xjrel.r[j] * tmp;
@@ -172,7 +172,7 @@ void PHSpring::IterateLCP(){
 	SpatialVector fnew, df;
 	for(int j = 0; j < targetAxis; j++){
 //		if(!constr[j])continue;
-		int i = numCondition[j];
+		int i = constrainedAxes[j];
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
 				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
 

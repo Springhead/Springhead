@@ -420,6 +420,7 @@ protected:\
 	double	spring;	\
 	double	damper;	\
 	Vec2d	limitSwing;	\
+	Vec2d	limitSwingDir;	\
 	Vec2d	limitTwist;	\
 	Vec3d	limitDir;	\
 	Quaterniond	targetPosition;	\
@@ -431,12 +432,14 @@ protected:\
 	double	yieldStress;	\
 	double	hardnessRate;	\
 	Vec3d	Inertia;	\
+	enum Spr::PHBallJointDesc::PHConstraintType	ConstMode;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint::SetDesc((PHJointDesc*)(PHBallJointDesc*)ptr);	\
 		spring = ((PHBallJointDesc*)ptr)->spring;	\
 		damper = ((PHBallJointDesc*)ptr)->damper;	\
 		limitSwing = ((PHBallJointDesc*)ptr)->limitSwing;	\
+		limitSwingDir = ((PHBallJointDesc*)ptr)->limitSwingDir;	\
 		limitTwist = ((PHBallJointDesc*)ptr)->limitTwist;	\
 		limitDir = ((PHBallJointDesc*)ptr)->limitDir;	\
 		targetPosition = ((PHBallJointDesc*)ptr)->targetPosition;	\
@@ -448,6 +451,7 @@ public:\
 		yieldStress = ((PHBallJointDesc*)ptr)->yieldStress;	\
 		hardnessRate = ((PHBallJointDesc*)ptr)->hardnessRate;	\
 		Inertia = ((PHBallJointDesc*)ptr)->Inertia;	\
+		ConstMode = ((PHBallJointDesc*)ptr)->ConstMode;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -456,6 +460,7 @@ public:\
 		((PHBallJointDesc*)ptr)->spring = spring;	\
 		((PHBallJointDesc*)ptr)->damper = damper;	\
 		((PHBallJointDesc*)ptr)->limitSwing = limitSwing;	\
+		((PHBallJointDesc*)ptr)->limitSwingDir = limitSwingDir;	\
 		((PHBallJointDesc*)ptr)->limitTwist = limitTwist;	\
 		((PHBallJointDesc*)ptr)->limitDir = limitDir;	\
 		((PHBallJointDesc*)ptr)->targetPosition = targetPosition;	\
@@ -467,6 +472,7 @@ public:\
 		((PHBallJointDesc*)ptr)->yieldStress = yieldStress;	\
 		((PHBallJointDesc*)ptr)->hardnessRate = hardnessRate;	\
 		((PHBallJointDesc*)ptr)->Inertia = Inertia;	\
+		((PHBallJointDesc*)ptr)->ConstMode = ConstMode;	\
 		return true;	\
 	}\
 

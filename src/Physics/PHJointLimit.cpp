@@ -28,16 +28,14 @@ void PHJointLimit1D::SetupLCP(){
 		if(theta <= l){
 			onLower = true;
 			diff = joint->GetPosition() - l;
-			joint->fMaxDt[joint->axisIndex[0]] = FLT_MAX;
-			joint->fMinDt[joint->axisIndex[0]] = 0;
-
+			joint->fMaxDt[joint->movableAxes[0]] = FLT_MAX;
+			joint->fMinDt[joint->movableAxes[0]] = 0;
 		}
 		if(theta >= u){
 			onUpper = true;
 			diff = joint->GetPosition() - u;
-			joint->fMaxDt[joint->axisIndex[0]] = 0;
-			joint->fMinDt[joint->axisIndex[0]] = -FLT_MAX;
-
+			joint->fMaxDt[joint->movableAxes[0]] = 0;
+			joint->fMinDt[joint->movableAxes[0]] = -FLT_MAX;
 		}
 	}
 	if(onLower || onUpper){
@@ -46,21 +44,22 @@ void PHJointLimit1D::SetupLCP(){
 //		db = tmp * (joint->rangeSpring * diff);
 		db = tmp * (joint->rangeSpring * diff + joint->GetSpring() * (joint->GetPosition() - joint->GetTargetPosition())
 			- joint->GetDamper() * joint->targetVelocity - joint->offsetForce * joint->GetScene()->GetTimeStepInv());
-		A  = joint->A[joint->axisIndex[0]];
-		b  = joint->b[joint->axisIndex[0]];
+		A  = joint->A[joint->movableAxes[0]];
+		b  = joint->b[joint->movableAxes[0]];
 		Ainv = 1.0 / (A + dA);
 		f *= joint->engine->shrinkRate;
-		
-		int i = joint->axisIndex[0];
+
+		joint->CompResponse(f, 0);
+
+		int i = joint->movableAxes[0];
 		joint->dA[i] = dA;
 		joint->A[i] = A;
 		joint->db[i] = db;
 		joint->b[i] = b;
 		joint->Ainv[i] = Ainv;
 		joint->f[i] = f;
-		joint->numCondition[i] = joint->axisIndex[0];
+		joint->constrainedAxes[i] = joint->movableAxes[0];
 		joint->targetAxis = 6;
-		joint->CompResponse(f, 0);
 	}
 	else f = 0.0;
 }
@@ -69,7 +68,7 @@ void PHJointLimit1D::IterateLCP(){
 	if(!onLower && !onUpper)
 		return;
 
-	int j = joint->axisIndex[0];
+	int j = joint->movableAxes[0];
 	double fnew = f - joint->engine->accelSOR * Ainv * (dA * f + b + db
 			 + joint->J[0].row(j) * joint->solid[0]->dv + joint->J[1].row(j) * joint->solid[1]->dv);	
 
@@ -103,12 +102,14 @@ PHBallJointLimit::PHBallJointLimit(){
 		onLimit[i].onUpper = false;
 	}
 	anyLimit = false;
-	limitCount[0]	= 0;
-	limitCount[1]	= 0;
+	constNumCondition = 0;
 }
 
-bool PHBallJointLimit::SetConstLine(char* fileName , int i){
-	limitCount[i] = 0;
+bool PHBallJointLimit::SetConstLine(char* fileName , bool i){
+	int n = 0;
+	int Num;
+	if(i) Num = 0;
+	else Num = 1;
 	std::fstream ConstData(fileName,std::ios::in); //読み込みでファイルを開く
 	if( ConstData.fail()){
 		std::cout<<"error"<<std::endl;
@@ -116,61 +117,48 @@ bool PHBallJointLimit::SetConstLine(char* fileName , int i){
 	}
 	char txt[10];
 	ConstData >> txt;
+	ConstData >> joint-> poleTwist[0] >> joint-> poleTwist[1];
 	while( !ConstData.eof()){
-		if(i == 1){
-			ConstData
-				>> splinePoints.SwingUp[limitCount[i]][0]
-				>> splinePoints.SwingUp[limitCount[i]][1]
-				>> splinePoints.SwingUp[limitCount[i]][2]
-				>> splinePoints.SwingUp[limitCount[i]][3]
-				>> splinePoints.SwingUp[limitCount[i]][4];
+		ConstData
+			>> splinePoints[Num].swingUpper[n][0]
+			>> splinePoints[Num].swingUpper[n][1]
+			>> splinePoints[Num].swingUpper[n][2]
+			>> splinePoints[Num].swingUpper[n][3]
+			>> splinePoints[Num].swingUpper[n][4]
+			>> splinePoints[Num].swingUpper[n][5];//0から、スイング方位角、スイング角、スイング方位角の傾き、スイング角の傾き、ツイスト角の最大、ツイスト角の最小
+		for(int j = 0; j<6;j++){
+			splinePoints[Num].swingUpper[n][j] = Rad(splinePoints[Num].swingUpper[n][j]);
 		}
-		else if(i == 0){
-			ConstData
-				>> splinePoints.SwingLow[limitCount[i]][0]
-				>> splinePoints.SwingLow[limitCount[i]][1]
-				>> splinePoints.SwingLow[limitCount[i]][2]
-				>> splinePoints.SwingLow[limitCount[i]][3]
-				>> splinePoints.SwingLow[limitCount[i]][4];
-		}
-		for(int j = 0; j<5;j++){
-			if(i==1)
-				splinePoints.SwingUp[limitCount[i]][j] = Rad(splinePoints.SwingUp[limitCount[i]][j]);
-			if(i==0)			
-				splinePoints.SwingLow[limitCount[i]][j] = Rad(splinePoints.SwingLow[limitCount[i]][j]);
-		}
-		if(limitCount[i] < 15) limitCount[i]++;
+		if(n < 15) n++;
 	}
-	limitCount[i]--;
-	if(i == 0 && limitCount[0] != 0){
-		if(splinePoints.SwingLow[limitCount[i]-1][0] != splinePoints.SwingLow[0][0] || splinePoints.SwingLow[limitCount[i]-1][1] != splinePoints.SwingLow[0][1] || splinePoints.SwingLow[limitCount[i]-1][2] != splinePoints.SwingLow[0][2]
-		|| splinePoints.SwingLow[limitCount[i]-1][3] != splinePoints.SwingLow[0][3] || splinePoints.SwingLow[limitCount[i]-1][4] != splinePoints.SwingLow[0][4]){
-			if(splinePoints.SwingLow[limitCount[i]-1][0] < Rad(360)){
-				limitCount[i]++;
+	n--;
+	if(n != 0){
+		if(splinePoints[Num].swingUpper[n-1][Num] != splinePoints[Num].swingUpper[0][0] || splinePoints[Num].swingUpper[n-1][1] != splinePoints[Num].swingUpper[0][1] || splinePoints[Num].swingUpper[n-1][2] != splinePoints[Num].swingUpper[0][2]
+		|| splinePoints[Num].swingUpper[n-1][3] != splinePoints[Num].swingUpper[0][3] || splinePoints[Num].swingUpper[n-1][4] != splinePoints[Num].swingUpper[0][4]){
+			if(splinePoints[Num].swingUpper[n-1][0] < Rad(360)){
+				n++;
 			}
-			for(int j = 1; j < 5; j++){
-				splinePoints.SwingLow[limitCount[i] - 1][j] = splinePoints.SwingLow[0][j];
+			for(int j = 1; j < 6; j++){
+				splinePoints[Num].swingUpper[n - 1][j] = splinePoints[Num].swingUpper[0][j];
 			}
-			splinePoints.SwingLow[limitCount[i] - 1][0] = Rad(360);
+			splinePoints[Num].swingUpper[n - 1][0] = Rad(360);
 		}
 	}
-
-	if(i == 1 && limitCount[1] != 0){
-		if(splinePoints.SwingUp[limitCount[i]-1][0] != splinePoints.SwingUp[0][0] || splinePoints.SwingUp[limitCount[i]-1][1] != splinePoints.SwingUp[0][1] || splinePoints.SwingUp[limitCount[i]-1][2] != splinePoints.SwingUp[0][2]
-		|| splinePoints.SwingUp[limitCount[i]-1][3] != splinePoints.SwingUp[0][3] || splinePoints.SwingUp[limitCount[i]-1][4] != splinePoints.SwingUp[0][4]){
-			if(splinePoints.SwingUp[limitCount[i]-1][0] < Rad(360)){
-				limitCount[i]++;
-			}
-			for(int j = 1; j < 5; j++){
-				splinePoints.SwingUp[limitCount[i] - 1][j] = splinePoints.SwingUp[0][j];
-			}
-			splinePoints.SwingUp[limitCount[i] - 1][0] = Rad(360);
-		}
-	}
-
-	onLimit[0][i] = false;
-	onLimit[1][i] = false;
+	splinePoints[Num].UorL = i;
+	splinePoints[Num].limitCount = n;
+	onLimit[0][0] = false;
+	onLimit[1][0] = false;
+	onLimit[2][0] = false;
+	onLimit[0][1] = false;
+	onLimit[1][1] = false;
+	onLimit[2][1] = false;
 	return true;
+}
+void PHBallJointLimit::SetConstPoint(int num,int way,double a){//スプラインで拘束するときに拘束点の成分の修正に使用
+	if(a >= 6.28 && way == 0){
+		splinePoints[0].limitCount = num+1;
+	}
+	splinePoints[0].swingUpper[num][way] = a;
 }
 
 // 重複コードを関数化
@@ -179,10 +167,6 @@ inline void CalcFrame(Matrix3d& R, const Vec3d& zdir, const Vec3d& xdir){
 	R.Ex() = xdir;
 	R.Ey() = cross(R.Ez(), R.Ex());
 	R.Ex() = cross(R.Ey(), R.Ez());		
-}
-
-inline Vec3d CalcDir(double theta, double phi){
-	return Vec3d(sin(theta) * cos(phi), sin(theta) * sin(phi), cos(theta));
 }
 
 inline Vec3d CalcPosition(double SwingDir,double Swing){
@@ -194,18 +178,10 @@ inline Vec3d CalcPosition(double SwingDir,double Swing){
 }
 Vec4d PHBallJointLimit::CalcParameter(int i,int j,bool flag){
 	Vec4d eq3Para;
-	if(flag){
-		eq3Para[0] = 2 * splinePoints.SwingUp[i-1][j] - 2 * splinePoints.SwingUp[i][j] + splinePoints.SwingUp[i][j+2] + splinePoints.SwingUp[i-1][j+2];
-		eq3Para[1] = 3 * splinePoints.SwingUp[i][j] - 3 * splinePoints.SwingUp[i-1][j] - 2 * splinePoints.SwingUp[i-1][j+2] - splinePoints.SwingUp[i][j+2];
-		eq3Para[2] = splinePoints.SwingUp[i-1][j+2];
-		eq3Para[3] = splinePoints.SwingUp[i-1][j]; 
-	}
-	else{
-		eq3Para[0] = 2 * splinePoints.SwingLow[i-1][j] - 2 * splinePoints.SwingLow[i][j] + splinePoints.SwingLow[i][j+2] + splinePoints.SwingLow[i-1][j+2];
-		eq3Para[1] = 3 * splinePoints.SwingLow[i][j] - 3 * splinePoints.SwingLow[i-1][j] - 2 * splinePoints.SwingLow[i-1][j+2] - splinePoints.SwingLow[i][j+2];
-		eq3Para[2] = splinePoints.SwingLow[i-1][j+2];
-		eq3Para[3] = splinePoints.SwingLow[i-1][j]; 
-	}		
+		eq3Para[0] = 2 * splinePoints[0].swingUpper[i-1][j] - 2 * splinePoints[0].swingUpper[i][j] + splinePoints[0].swingUpper[i][j+2] + splinePoints[0].swingUpper[i-1][j+2];
+		eq3Para[1] = 3 * splinePoints[0].swingUpper[i][j] - 3 * splinePoints[0].swingUpper[i-1][j] - 2 * splinePoints[0].swingUpper[i-1][j+2] - splinePoints[0].swingUpper[i][j+2];
+		eq3Para[2] = splinePoints[0].swingUpper[i-1][j+2];
+		eq3Para[3] = splinePoints[0].swingUpper[i-1][j]; 
 	return eq3Para;
 }
 
@@ -233,19 +209,19 @@ void PHBallJointLimit::CheckLimit(){
 	else if(cosLange < -1.0){
 		cosLange = -1.0;
 	}
-	currentEulerangle[0]	= acos(cosLange);			///< Swing角の計算	
+	currentEulerAngle[0]	= acos(cosLange);			///< Swing角の計算	
 
 	Vec3d PolarCoord;
 	PolarCoord = Jc.Ez() * limDir.trans();					///< 倒れる方向の計算開始
 	if(PolarCoord.x == 0){
-		if(PolarCoord.y >= 0) currentEulerangle[2] = M_PI / 2;
-		else currentEulerangle[2] = 3 * M_PI / 2;
+		if(PolarCoord.y >= 0) currentEulerAngle[1] = M_PI / 2;
+		else currentEulerAngle[1] = 3 * M_PI / 2;
 	}
 	else {
-		currentEulerangle[2] = atan(PolarCoord.y / PolarCoord.x);
+		currentEulerAngle[1] = atan(PolarCoord.y / PolarCoord.x);
 	}
-	if (PolarCoord.x < 0) currentEulerangle[2] += M_PI;								///< 0 <= currentEulerangle[2] <= 2πの範囲に変更
-	else if(PolarCoord.x > 0 && PolarCoord.y < 0) currentEulerangle[2] += 2 * M_PI;
+	if (PolarCoord.x < 0) currentEulerAngle[1] += M_PI;								///< 0 <= currentEulerAngle[2] <= 2πの範囲に変更
+	else if(PolarCoord.x > 0 && PolarCoord.y < 0) currentEulerAngle[1] += 2 * M_PI;
 
 	Quaterniond qSwing;
 	Vec3d half =  0.5 * (Vec3d(0.0, 0.0, 1.0) + Jc.Ez());	
@@ -261,62 +237,44 @@ void PHBallJointLimit::CheckLimit(){
 	}
 
 	Quaterniond twistQ = qSwing * joint->Xjrel.q;
-	currentEulerangle[1] = twistQ.Theta();						///< Twist角の計算を行っている	
+	currentEulerAngle[2] = twistQ.Theta();						///< Twist角の計算を行っている	
 	if (twistQ.z < 0)
-		currentEulerangle[1]  *= -1;								///< Twist回転軸が反対を向くことがあるのでその対策
+		currentEulerAngle[2]  *= -1;								///< Twist回転軸が反対を向くことがあるのでその対策
 	
-	if(currentEulerangle[1] < Rad(-180)) currentEulerangle[1] += Rad(360);
-	if(currentEulerangle[1] > Rad( 180)) currentEulerangle[1] -= Rad(360);
+	if(currentEulerAngle[2] < Rad(-180)) currentEulerAngle[2] += Rad(360);
+	if(currentEulerAngle[2] > Rad( 180)) currentEulerAngle[2] -= Rad(360);
+	joint->position = currentEulerAngle;
 	
 	// 可動域制限にかかっているかの判定
-	// swing角の可動域制限の確認
-	if (limitCount[0] == 0 && (!onLimit[0].onUpper)){
-		if (joint->limitSwing[0]<(FLT_MAX*0.1) /*joint->limitSwing[0]!=FLT_MAX*/ && currentEulerangle[0] < joint->limitSwing[0]){
-			onLimit[0].onLower = true;
-			penetration = currentEulerangle[0] - joint->limitSwing[0];
-		}
-		else onLimit[0].onLower = false;
-	}	
-	if(limitCount[1] == 0 && !onLimit[0].onLower){
-		if(joint->limitSwing[1]<(FLT_MAX*0.1)/*joint->limitSwing[1]!=FLT_MAX*/ && currentEulerangle[0] > joint->limitSwing[1]){
-			onLimit[0].onUpper = true;
-			penetration = currentEulerangle[0] - joint->limitSwing[1];
-		}
-		else onLimit[0].onUpper = false;
-	}
-
-	if(limitCount[1] != 0 || limitCount[0] != 0){//Swing.upper
-		SplineLimit(); //スプライン曲線での拘束
-	}
-
-	// twist角の可動域制限の確認
-	if(joint->limitTwist[0]<(FLT_MAX*0.1)/*joint->limitTwist[0] != FLT_MAX*/ && currentEulerangle[1] < joint->limitTwist[0])
-		onLimit[1].onLower = true;
-	else if(joint->limitTwist[1]<(FLT_MAX*0.1)/*joint->limitTwist[1] != FLT_MAX*/ && currentEulerangle[1] > joint->limitTwist[1])
-		onLimit[1].onUpper = true;
-	else{
-		onLimit[1].onLower = false;
-		onLimit[1].onUpper = false;
+	switch(joint->ConstMode){
+		case 1:
+			SwingTwistLimit();
+			break;
+		case 2:
+			SplineLimit();
+			break;
 	}
 
 	// どこかが可動域制限にかかっているとtrue
 	if((onLimit[0].onUpper || onLimit[0].onLower) ||
+	   (onLimit[2].onUpper || onLimit[2].onLower) ||
 	   (onLimit[1].onUpper || onLimit[1].onLower))  
 	   anyLimit = true;
 	else anyLimit = false;
 
 	if(anyLimit){
 		//ヤコビアンの取得＆更新
-		J[0] = joint->J[0];
-		J[1] = joint->J[1];
-		J[0].wv() = Jcinv * joint->J[0].wv();
-		J[0].ww() = Jcinv * joint->J[0].ww();
-		J[1].wv() = Jcinv * joint->J[1].wv();
-		J[1].ww() = Jcinv * joint->J[1].ww();
+		//J[0] = joint->J[0];
+		//J[1] = joint->J[1];
+		//J[0].wv() = Jcinv * joint->J[0].wv();
+		//J[0].ww() = Jcinv * joint->J[0].ww();
+		//J[1].wv() = Jcinv * joint->J[1].wv();
+		//J[1].ww() = Jcinv * joint->J[1].ww();
+		J[0] = Jcinv * joint->J[0].ww();
+		J[1] = Jcinv * joint->J[1].ww();
 	}
-	else neighborAngle[0] = currentEulerangle[2];
+	else neighborAngle[0] = currentEulerAngle[2];
 
-	lastAngle = currentEulerangle;
 	/* conの設定は不要になった
 	// 上の計算を踏まえて毎回、回転軸の拘束条件の更新をする
 	if(mode == PHJointDesc::MODE_POSITION){
@@ -335,97 +293,296 @@ void PHBallJointLimit::CheckLimit(){
 	*/
 }
 
-void PHBallJointLimit::SplineLimit(){
-
-	int splineNum = 1;
-	double para;
-	double LSwing;
-	Vec4d Swing;
-	if(limitCount[1] != 0){
-		while(splinePoints.SwingUp[splineNum][0] <= currentEulerangle[2]){
-			splineNum++;
-			if(limitCount[1] < splineNum)	break;	//入らないはず。
+void PHBallJointLimit::SwingTwistLimit(){
+	// swing角の可動域制限の確認
+	{
+		if (joint->limitSwing[0]<(FLT_MAX*0.1) && currentEulerAngle[0] < joint->limitSwing[0]){
+			onLimit[0].onLower = true;
+			penetration[0] = currentEulerAngle[0] - joint->limitSwing[0];
+			joint->limitf[0] = max(0.0,joint->limitf[0]);
+			constrainedAxes[constNumCondition] = 0;
+			constNumCondition++;
 		}
-		para = (currentEulerangle[2] - splinePoints.SwingUp[splineNum-1][0])/(splinePoints.SwingUp[splineNum][0] - splinePoints.SwingUp[splineNum-1][0]);
-		Swing = CalcParameter(splineNum,1,true);
-		LSwing = Swing[0] * para * para * para + Swing[1] * para * para + Swing[2] * para + Swing[3];
-		if(LSwing < currentEulerangle[0]){
+		else onLimit[0].onLower = false;
+	}
+	if(!onLimit[0].onLower){
+		if(joint->limitSwing[1]<(FLT_MAX*0.1) && currentEulerAngle[0] > joint->limitSwing[1]){
 			onLimit[0].onUpper = true;
+			penetration[0] = currentEulerAngle[0] - joint->limitSwing[1];
+			joint->limitf[0] = min(0.0,joint->limitf[0]);
+			constrainedAxes[constNumCondition] = 0;
+			constNumCondition++;
 		}
-		else	onLimit[0].onUpper = false;
-
+		else onLimit[0].onUpper = false;
+	}
+	// swingDir角の可動域制限の確認
+	{
+		if (joint->limitSwingDir[0]<(FLT_MAX*0.1) && currentEulerAngle[1] < joint->limitSwingDir[0]){
+			onLimit[1].onLower = true;
+			penetration[1] = currentEulerAngle[1] - joint->limitSwingDir[0];
+			joint->limitf[1] = max(0.0,joint->limitf[1]);
+			constrainedAxes[constNumCondition] = 1;
+			constNumCondition++;
+		}
+		else onLimit[1].onLower = false;
+	}
+	if(!onLimit[1].onLower){
+		if(joint->limitSwingDir[1]<(FLT_MAX*0.1) && currentEulerAngle[1] > joint->limitSwingDir[1]){
+			onLimit[1].onUpper = true;
+			penetration[1] = currentEulerAngle[1] - joint->limitSwingDir[1];
+			joint->limitf[1] = min(0.0,joint->limitf[1]);
+			constrainedAxes[constNumCondition] = 1;
+			constNumCondition++;
+		}
+		else onLimit[1].onUpper = false;
+	}
+	// twist角の可動域制限の確認
+	if(joint->limitTwist[0]<(FLT_MAX*0.1) && currentEulerAngle[2] < joint->limitTwist[0]){
+		penetration[2] = currentEulerAngle[2] - joint->limitTwist[0];
+		joint->limitf[2] = max(0.0,joint->limitf[1]);
+		onLimit[2].onLower = true;
+		onLimit[2].onUpper = false;
+		constrainedAxes[constNumCondition] = 2;
+		constNumCondition++;
+	}
+	else if(joint->limitTwist[1]<(FLT_MAX*0.1) && currentEulerAngle[2] > joint->limitTwist[1]){
+		penetration[2] = currentEulerAngle[2] - joint->limitTwist[1];
+		joint->limitf[2] = min(0.0,joint->limitf[2]);
+		onLimit[2].onLower = false;
+		onLimit[2].onUpper = true;
+		constrainedAxes[constNumCondition] = 2;
+		constNumCondition++;
 	}
 	else{
-		while(splinePoints.SwingLow[splineNum][0] <= currentEulerangle[2]){
-			splineNum++;
-			if(limitCount[0] < splineNum)	break;	//入らないはず。
-		}
-		para = (currentEulerangle[2] - splinePoints.SwingLow[splineNum-1][0])/(splinePoints.SwingLow[splineNum][0] - splinePoints.SwingLow[splineNum-1][0]);
-		Swing = CalcParameter(splineNum,1,false);
-		LSwing = Swing[0] * para * para * para + Swing[1] * para * para + Swing[2] * para + Swing[3];
-		if(LSwing > currentEulerangle[0]){
-			onLimit[0].onLower = true;
-		}
-		else	onLimit[0].onUpper = false;
+		onLimit[2].onLower = false;
+		onLimit[2].onUpper = false;
 	}
-	if(onLimit[0].onUpper || onLimit[0].onLower){
-//		onLimit[0].onUpper = true;
-		double k = 25;	//繰り返し計算回数。
-		double delta = (currentEulerangle[2] - neighborAngle[0]) / k;
-		double SwDir = currentEulerangle[2];
-		Vec3d Neighbor = CalcPosition(SwDir,LSwing);
-		penetration = cos(currentEulerangle[0] - LSwing);		//sinの値で角度の大小を比べる。
-		neighborAngle[0] = SwDir;
-		neighborAngle[1] = LSwing;
-		neighborAngle[2] = splineNum;
-		neighborAngle[3] = para;
-		for(int i = 0;i < k; i++){
-			para -= delta;
-			SwDir -= delta;
-			if(para > 1){
-				splineNum++;
-				if(splineNum > limitCount[1]) splineNum = 1;
-				para -= 1.0;
-				Swing = CalcParameter(splineNum,1,onLimit[0].onUpper);
-			}
-			else if(para < 0){
-				splineNum--;
-				if(splineNum < 1) splineNum = limitCount[1];
-				para += 1.0;
-				Swing = CalcParameter(splineNum,1,onLimit[0].onUpper);
-			}
-			if(SwDir < 0) SwDir += Rad(360);
-			LSwing = Swing[0] * para * para * para + Swing[1] * para * para + Swing[2] * para + Swing[3];
-			Neighbor = CalcPosition(SwDir,LSwing);
-			double checkIrrupt = (cross(Neighbor,Jc.Ez())).norm();
-			if(penetration > checkIrrupt){
-				penetration = checkIrrupt;
-				neighborAngle[0] = SwDir;
-				neighborAngle[1] = LSwing;
-				neighborAngle[2] = splineNum;
-				neighborAngle[3] = para;
-			}
-			else{break;}
+
+
+}
+
+void PHBallJointLimit::SplineLimit(){
+	//拘束の手順
+	//現在の姿勢が拘束か調べる
+	onLimit[0].onLower = false;
+	Vec3d para;
+	Vec4d swing,swingDir,eq3;
+	//swing角0°を超える場合には0°で区切って2回ループを回す。
+	int exception;
+	Vec3d exceptionVec;
+	if(abs(lastEulerAngle[0]-currentEulerAngle[0]) > M_PI){//移動のベクトルは差分の小さい方をとる
+		exception = 2;
+		exceptionVec = currentEulerAngle;
+		if(currentEulerAngle[0] > M_PI){
+			currentEulerAngle[1] = (lastEulerAngle[0] * currentEulerAngle[1] - (currentEulerAngle[0]-2*M_PI) * lastEulerAngle[1])/(lastEulerAngle[0]-(currentEulerAngle[0]-2*M_PI));
+			currentEulerAngle[0] = 0;
 		}
-		//近傍点から拘束座標系への変換を行う。
-		Neighbor = CalcPosition(neighborAngle[0],neighborAngle[1]);
-		Vec3d tanDir;
-		Swing = CalcParameter(neighborAngle[2], 1, !onLimit[0].onLower);
-		tanDir.x = 3 * Swing[0] * neighborAngle[3] * neighborAngle[3] + 2 * Swing[1] * neighborAngle[3] + Swing[2];
-		tanDir.z = -tanDir.x * sin(neighborAngle[1]);
-		tanDir.x *= cos(neighborAngle[1]);
-		tanDir.y = tanDir.x * sin(neighborAngle[1]) + Neighbor.x;
-		tanDir.x = tanDir.x * cos(neighborAngle[1]) - Neighbor.y;
-		tanDir = tanDir.unit();
-		Jc.Ex() = tanDir;
-		Jc.Ey() = cross(Jc.Ez(),Jc.Ex());
-		Jcinv = Jc.trans();
-		if(onLimit[0].onLower) penetration *= -1;
+		else{
+			currentEulerAngle[1] = ((lastEulerAngle[0]-2*M_PI) * currentEulerAngle[1] - currentEulerAngle[0] * lastEulerAngle[1])/((lastEulerAngle[0]-2*M_PI)-currentEulerAngle[0]);
+			currentEulerAngle[0] = 2*M_PI;
+		}
 	}
+	else exception = 1;
+
+	if(!onLimit[0].onUpper){ //1ステップで移動した線分と拘束曲線の間に交点があるかをチェックする。
+		for(int m=0;m<exception;m++){
+		
+			//前回の点と今回の点の位置の線分
+			if(m==1){
+				lastEulerAngle = currentEulerAngle;
+				currentEulerAngle = exceptionVec;
+				if(lastEulerAngle[0] == 0)	lastEulerAngle[0] = 2*M_PI;
+				else lastEulerAngle = 0;
+			}
+			double Line[2];//1ステップで移動した量の線分の係数
+			if(currentEulerAngle[1] == lastEulerAngle[1]){
+				Line[0] = 0;
+				Line[1] = currentEulerAngle[0];
+			}
+			else{
+				Line[0] = (currentEulerAngle[0] - lastEulerAngle[0])/(currentEulerAngle[1] - lastEulerAngle[1]);	//注:前回の位置と今回の位置のxの値が変わっていることを確認するべし
+				Line[1] = (currentEulerAngle[1]*lastEulerAngle[0] - currentEulerAngle[0]*lastEulerAngle[1])/(currentEulerAngle[1] - lastEulerAngle[1]);
+			}
+			for(int funcNum = 1; funcNum < splinePoints[0].limitCount;funcNum++){
+				//エルミートスプラインの式
+				swingDir = CalcParameter(funcNum,0,1);//スイング方位角の3次方程式を立てる
+				swing = CalcParameter(funcNum,1,1);//スイング角の3次方程式を立てる
+				eq3 = swing - Line[0] * swingDir;//スイング角、スイング方位角の3次方程式を1ステップでの移動ベクトルの1次式に代入する
+				eq3[3] -= Line[1];
+				para = SolveQubicFunction(eq3);//求められた3次方程式の解を調べる
+
+				double nearAngleDistance = FLT_MAX;
+				for(int j = 0;j < 3;j++){
+					if(para[j] <= 1 && para[j] > 0){//解が定義域にあるか調べる(0<t<=1)
+						Vec2d limit;
+						limit[1] = swingDir[0] * para[j] * para[j] * para[j] + swingDir[1] * para[j] * para[j] + swingDir[2] * para[j] + swingDir[3];  
+						limit[0] = swing[0] * para[j] * para[j] * para[j] + swing[1] * para[j] * para[j] + swing[2] * para[j] + swing[3];
+						if(limit[0] < currentEulerAngle[0]){
+							onLimit[0].onUpper = true;
+							if( fabs(currentEulerAngle[1]-limit[1]) + fabs(currentEulerAngle[0]-limit[0]) < nearAngleDistance){
+								neighborAngle[0] = limit[0];	//交点のswing角
+								neighborAngle[1] = limit[1];	//交点のswingDir角
+								neighborAngle[2] = funcNum;		//使用している関数
+								neighborAngle[3] = para[j];		//媒介変数
+								nearAngleDistance = fabs(currentEulerAngle[1]-limit[1]) + fabs(currentEulerAngle[0]-limit[0]);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	if(onLimit[0].onUpper){
+		onLimit[0].onUpper = false;
+		penetration.x = 10;
+		for(int FuncNum = 1; FuncNum < splinePoints[0].limitCount;FuncNum++){
+			swingDir = CalcParameter(FuncNum,0,1);
+			swingDir[3] -= currentEulerAngle[1];
+			para = SolveQubicFunction(swingDir);
+			for(int j = 0;j <3;j++){
+				if(para[j] > 0 && para[j] < 1){
+					swing = CalcParameter(FuncNum,1,1);
+					joint->limitSwing.upper = swing[0] * para[j] * para[j] * para[j] + swing[1] * para[j] * para[j] + swing[2] * para[j] + swing[3];
+					if(joint->limitSwing.upper < currentEulerAngle[0]) {
+						onLimit[0].onUpper = !onLimit[0].onUpper;
+						if(abs(penetration.x) > abs(joint->limitSwing.upper - lastEulerAngle[0])){
+							neighborAngle[2] = FuncNum;
+							neighborAngle[3] = para[j];
+						}
+						penetration.x = joint->limitSwing.upper - currentEulerAngle[0];
+					}
+				}
+			}
+		}
+	}
+	Vec3d changeJacobian = Vec3d(0.0,0.0,0.0);
+	//拘束している場合 近傍点を決める。	交点に戻す力が働くように変更する。(近傍点ではなく交点に戻すように変える話がある。)
+	if(onLimit[0].onUpper){
+		double delta;
+		delta = 0.001;//(currentEulerAngle[1] - lastEulerAngle[1]) / 20;
+		neighborAngle[3] -= delta * 10;
+		while(neighborAngle[3] > 1){
+			neighborAngle[3] -= 1;
+			neighborAngle[2]++;
+			if(neighborAngle[2] > splinePoints[0].limitCount) neighborAngle[2] = 0;
+		}
+		while(neighborAngle[3] < 0){
+			neighborAngle[3] +=1;
+			neighborAngle[2] --;
+			if(neighborAngle[2] < 1) neighborAngle[2] = splinePoints[0].limitCount;
+		}
+		Vec4d para;
+		para = neighborAngle;
+		para[0] = 10;//diff
+		swingDir = CalcParameter((int)para[2],0,1);
+		swing = CalcParameter((int)para[2],1,1);
+		Vec2d limit;
+		for(int i=0;i<20;i++){
+			para[3] += delta;
+			if(para[3] > 1){
+				para[3] -= 1;
+				para[2]++;
+				if(para[2] > splinePoints[0].limitCount) para[2] = 0;
+				swingDir = CalcParameter((int)para[2],0,1);
+				swing = CalcParameter((int)para[2],1,1);
+			}
+			if(para[3] < 0){
+				para[3] +=1;
+				para[2] --;
+				if(para[2] < 1) para[2] = splinePoints[0].limitCount;
+				swingDir = CalcParameter((int)para[2],0,1);
+				swing = CalcParameter((int)para[2],1,1);
+			}
+			limit[0] = swing[0] * para[3] * para[3] * para[3] + swing[1] * para[3] * para[3] + swing[2] * para[3] + swing[3] - currentEulerAngle[0];
+			limit[1] = swingDir[0] * para[3] * para[3] * para[3] + swingDir[1] * para[3] * para[3] + swingDir[2] * para[3] + swingDir[3] - currentEulerAngle[1];
+			if(para[0] > limit.norm()){
+				para[0] = limit.norm();
+				neighborAngle[0] = limit[0];
+				neighborAngle[1] = limit[1];
+				neighborAngle[2] = para[2];
+				neighborAngle[3] = para[3];
+			}
+		}
+		penetration.x = para[0];
+		//DSTR << penetration.x << std::endl;
+		if(penetration.x > 0.5) {
+			penetration.x = 0.5;
+		}//値が大きすぎると発散する可能性があるため
+		constrainedAxes[constNumCondition] = 0;
+		constNumCondition++;
+		onLimit[1].onUpper = true;
+		//座標変換
+		limit[0] = swing[0] * neighborAngle[3] * neighborAngle[3] * neighborAngle[3] + swing[1] * neighborAngle[3] * neighborAngle[3] + swing[2] * neighborAngle[3] + swing[3] - currentEulerAngle[0];
+		limit[1] = swingDir[0] * neighborAngle[3] * neighborAngle[3] * neighborAngle[3] + swingDir[1] * neighborAngle[3] * neighborAngle[3] + swingDir[2] * neighborAngle[3] + swingDir[3] - currentEulerAngle[1];
+		changeJacobian = Vec3d(-limit[1],-limit[0],0);
+		changeJacobian = changeJacobian / changeJacobian.norm();
+		Jc.Ex() = changeJacobian * Jc;
+		joint->limitf[0] = max(0.0,joint->limitf[0]);
+	}
+	if(joint->poleTwist.x < FLT_MAX*0.1 && joint->poleTwist.x != joint->poleTwist.y){
+		if(!onLimit[0].onUpper){
+			neighborAngle[0] = currentEulerAngle[0];
+			neighborAngle[1] = currentEulerAngle[1];
+			for(int funNum = 1;funNum < splinePoints[0].limitCount;funNum++){
+				if(neighborAngle[1] > splinePoints[0].swingUpper[funNum-1][0] && neighborAngle[1] <= splinePoints[0].swingUpper[funNum][0]){
+					neighborAngle[2] = funNum;
+				}
+			}
+			swingDir = CalcParameter((int)neighborAngle[2],0,1);
+			swing    = CalcParameter((int)neighborAngle[2],1,1);
+			swingDir[3] -= neighborAngle[1];
+			para = SolveQubicFunction(swingDir);
+			int j = 0;
+			for (;j < 3;j++){
+				if(para[j] <= 1 && para[j] > 0){
+					neighborAngle[3] = para[j];
+				}
+			}
+		}
+		else{
+			neighborAngle[0] += currentEulerAngle[0];
+			neighborAngle[1] += currentEulerAngle[1];
+		}
+		double limit = swing[0] * neighborAngle[3] * neighborAngle[3] * neighborAngle[3] + swing[1] * neighborAngle[3] * neighborAngle[3] + swing[2] * neighborAngle[3] + swing[3];
+		joint->limitTwist[0] = splinePoints[0].swingUpper[(int)neighborAngle[2]-1][5]*(1-neighborAngle[3])+splinePoints[0].swingUpper[(int)neighborAngle[2]][5]*neighborAngle[3];
+		joint->limitTwist[1] = splinePoints[0].swingUpper[(int)neighborAngle[2]-1][4]*(1-neighborAngle[3])+splinePoints[0].swingUpper[(int)neighborAngle[2]][4]*neighborAngle[3];
+		if(!onLimit[0].onUpper){
+			joint->limitTwist[0] = joint->limitTwist[0] * (neighborAngle[0]/limit) * (neighborAngle[0]/limit)+ joint->poleTwist[0] * (1.0-(neighborAngle[0]/limit)*(neighborAngle[0]/limit));
+			joint->limitTwist[1] = joint->limitTwist[1] * (neighborAngle[0]/limit) * (neighborAngle[0]/limit)+ joint->poleTwist[1] * (1.0-(neighborAngle[0]/limit)*(neighborAngle[0]/limit));
+		}
+		//ここまでlimitTwistの可動域を計算
+		// twist角の可動域制限の確認SwingTwist角拘束と同様
+		if(joint->limitTwist[0]<(FLT_MAX*0.1) && currentEulerAngle[2] < joint->limitTwist[0]){
+			penetration[2] = currentEulerAngle[2] - joint->limitTwist[0];
+			joint->limitf[2] = max(0.0,joint->limitf[1]);
+			onLimit[2].onLower = true;
+			onLimit[2].onUpper = false;
+			constrainedAxes[constNumCondition] = 2;
+			constNumCondition++;
+		}
+		else if(joint->limitTwist[1]<(FLT_MAX*0.1) && currentEulerAngle[2] > joint->limitTwist[1]){
+			penetration[2] = currentEulerAngle[2] - joint->limitTwist[1];
+			joint->limitf[2] = min(0.0,joint->limitf[2]);
+			onLimit[2].onLower = false;
+			onLimit[2].onUpper = true;
+			constrainedAxes[constNumCondition] = 2;
+			constNumCondition++;
+		}
+		else{
+			onLimit[2].onLower = false;
+			onLimit[2].onUpper = false;
+		}
+	}
+
+	lastEulerAngle = currentEulerAngle;
 }
 
 void PHBallJointLimit::SetupLCP(){
+	if(joint->ConstMode == 0 || (joint->ConstMode==1 && (joint->limitTwist[0]<(FLT_MAX*0.1)||joint->limitTwist[1]<(FLT_MAX*0.1)))){ //関節の拘束のモードが-1のときは拘束の計算をおこなわない。//モードの番号を修正した方がよさそう
+		return;
+	}
 	// 可動範囲チェック
+	constNumCondition = 0;
 	CheckLimit();
 
 	// vJc : Jcによって写像される拘束座標系から見たPlugの角速度
@@ -433,35 +590,24 @@ void PHBallJointLimit::SetupLCP(){
 	double dtinv = joint->GetScene()->GetTimeStepInv();
 	double corRate = joint->engine->GetVelCorrectionRate();
 
-	// 可動域フラグの指定onLimit[0]: swing, onLimit[1]: twist
-	// currentEulerangle[0]: swing, currentEulerangle[1]: twist
+	// 可動域フラグの指定onLimit[0]: swing, onLimit[1]: swingdir, onLimit[2]: twist
+	// currentEulerAngle[0]: swing, currentEulerAngle[1]: twist
 	// 可動域制限を越えていたら、dA:関節を柔らかくする成分を0にする、db:侵入してきた分だけ元に戻す	
 
 	// 以下はPHBallJointにもともとあったコード
 	dA.clear();
 	db.clear();
 	// Swing角可動範囲
-	if(onLimit[0].onLower){
-		db[0] = penetration * dtinv * corRate;
-		DSTR << penetration << endl;
-	}
-	else if(onLimit[0].onUpper){
-		db[0] = penetration * dtinv * corRate;;	//少し内側に戻す力を加えないと拘束から抜けない。
-		DSTR << penetration << endl;
-//		db[0] = (currentEulerangle[0] - joint->limitSwing[1] + 0.001) * dtinv * corRate;//戻す位置を可動域の少し内側にしないと止まってしまう。
-	}
-
-	// Twist角可動範囲
-	if(onLimit[1].onLower && (vJc.z < 0)){
-		dA[2] = 0;
-		db[2] = (currentEulerangle[1] - joint->limitTwist[0]) * dtinv * corRate;
-	}
-	else if(onLimit[1].onUpper && (vJc.z > 0)){
-		dA[2] = 0;
-		db[2] = (currentEulerangle[1] - joint->limitTwist[1]) * dtinv * corRate;
+	for(int i=0;i<3;i++){
+		if(onLimit[i].onLower){
+			db[i] = penetration[i] * dtinv * corRate;
+		}
+		else if(onLimit[i].onUpper){
+			db[i] = penetration[i] * dtinv * corRate;
+		}
 	}
 	A = CompResponseMatrix();
-	b = (J[0] * joint->solid[0]->v + J[1] * joint->solid[1]->v).w();
+	b = (J[0] * joint->solid[0]->v.w() + J[1] * joint->solid[1]->v.w());
 	for(int i = 0; i < 3; i++){
 		if(A[i]+dA[i]==0) Ainv[i] = FLT_MAX;
 		else{
@@ -473,18 +619,10 @@ void PHBallJointLimit::SetupLCP(){
 }
 
 void PHBallJointLimit::Projection(double& f, int k){
-	if (k == 0){
-		if(onLimit[0].onLower)
-			f = max(0.0, f);
-		else if(onLimit[0].onUpper)
-			f = min(0.0, f);
-	}
-	if (k == 2){
-		if(onLimit[1].onLower)
-			f = max(0.0, f);
-		else if(onLimit[1].onUpper)
-			f = min(0.0, f);
-	}
+	if (onLimit[k].onLower)
+		f = max(0.0, f);
+	else if(onLimit[k].onUpper)
+		f = min(0.0, f);
 }
 
 void PHBallJointLimit::IterateLCP(){
@@ -498,21 +636,22 @@ void PHBallJointLimit::IterateLCP(){
 		return;
 
 	Vec3d fnew;
-	for(int i = 0; i < 3; i++){
-		if((i == 0 && (onLimit[0].onUpper||onLimit[0].onLower))||(i == 2 && (onLimit[1].onUpper||onLimit[1].onLower))){
-			int j = joint->axisIndex[i];
+	for(int n = 0; n < constNumCondition; n++){
+		int i = constrainedAxes[n];
+		if((onLimit[i].onUpper||onLimit[i].onLower)){
 			fnew[i] = joint->limitf[i] - joint->engine->accelSOR * Ainv[i] * (dA[i] * joint->limitf[i] + b[i] + db[i]
-				+ J[0].row(j) * joint->solid[0]->dv + J[1].row(j) * joint->solid[1]->dv);	
+				+ J[0].row(i) * joint->solid[0]->dv.w() + J[1].row(i) * joint->solid[1]->dv.w());	
 			Projection(fnew[i], i);
 	//		joint->CompResponse(fnew[i] - joint->limitf[i], i);	
 			SpatialVector dfs;
 			for(int k = 0; k < 2; k++){
 				if(!joint->solid[k]->IsDynamical() || !joint->IsInactive(k))continue;
 				if(joint->solid[k]->IsArticulated()){
-					(Vec6d&)dfs = J[k].row(i+3) * (fnew[i] - joint->limitf[i]);
+					dfs.v().clear();
+					dfs.w() = J[k].row(i) * (fnew[i] - joint->limitf[i]);
 					joint->solid[k]->treeNode->CompResponse(dfs, true, false);
 				}
-				else joint->solid[k]->dv += T[k].row(i+3) * (fnew[i] - joint->limitf[i]);
+				else joint->solid[k]->dv.w() += T[k].row(i) * (fnew[i] - joint->limitf[i]);
 			}
 		}
 		else fnew[i] = 0;
@@ -522,8 +661,8 @@ void PHBallJointLimit::IterateLCP(){
 
 Vec3d PHBallJointLimit::CompResponseMatrix(){
 	int i, j;
-	SpatialVector A;
-	A.clear();
+//	SpatialVector A;
+	Vec3d A;	//球関節は3自由度のため3×3行列でいい
 	PHRootNode* root[2];
 	if(joint->solid[0]->IsArticulated())
 		root[0] = joint->solid[0]->treeNode->GetRootNode();
@@ -534,25 +673,28 @@ Vec3d PHBallJointLimit::CompResponseMatrix(){
 	for(i = 0; i < 2; i++){
 		if(joint->solid[i]->IsDynamical()){
 			if(joint->solid[i]->IsArticulated()){
-				for(j = 0; j < 6; j++){
-					(Vec6d&)df = J[i].row(j);
+				for(j = 0; j < 3; j++){
+					df.v().clear();
+					df.w() = J[i].row(j);
 					joint->solid[i]->treeNode->CompResponse(df, false, false);
-					A[j] += J[i].row(j) * joint->solid[i]->treeNode->da;
+					A[j] += J[i].row(j) * joint->solid[i]->treeNode->da.w();
 					int ic = !i;
 					//もう片方の剛体も同一のツリーに属する場合はその影響項も加算
 					if(joint->solid[ic]->IsArticulated() && root[i] == root[ic])
-						A[j] += J[ic].row(j) * joint->solid[ic]->treeNode->da;
+						A[j] += J[ic].row(j) * joint->solid[ic]->treeNode->da.w();
 				}
 			}
 			else{
 				// T = M^-1 * J^T
-				T[i].vv() = J[i].vv() * joint->solid[i]->minv;
-				T[i].vw() = J[i].vw() * joint->solid[i]->Iinv;
-				T[i].wv() = J[i].wv() * joint->solid[i]->minv;
-				T[i].ww() = J[i].ww() * joint->solid[i]->Iinv;
-				for(j = 0; j < 6; j++)
+				//T[i].vv() = J[i].vv() * joint->solid[i]->minv;
+				//T[i].vw() = J[i].vw() * joint->solid[i]->Iinv;
+				//T[i].wv() = J[i].wv() * joint->solid[i]->minv;
+				//T[i].ww() = J[i].ww() * joint->solid[i]->Iinv;
+				T[i] = J[i] * joint-> solid[i]->Iinv;
+				for(j = 0; j < 3; j++){
 					// A == 論文中のJ * M^-1 * J^T, Gauss Seidel法のD
 					A[j] += J[i].row(j) * T[i].row(j);
+				}
 			}
 		}
 	}
@@ -562,22 +704,84 @@ Vec3d PHBallJointLimit::CompResponseMatrix(){
 	 */
 	const double eps = 0.000001, epsabs = 1.0e-10;
 	double Amax = 0.0, Amin;
-	for(j = 0; j < joint->targetAxis; j++)
+	for(j = 0; j < constNumCondition; j++)
 //		if(joint->constr[j] && A[j] > Amax)
-		if(A[joint->numCondition[j]] > Amax)
-			Amax = A[joint->numCondition[j]];
+		if(A[constrainedAxes[j]] > Amax)
+			Amax = A[constrainedAxes[j]];
 	Amin = Amax * eps;
-	for(j = 3; j < joint->targetAxis; j++){
+	for(j = 0; j < constNumCondition; j++){
 //		if(!joint->constr[j+3])continue;
-		int i = joint->numCondition[j];
+		int i = constrainedAxes[j];
 		if(A[i] < Amin || A[i] < epsabs){
 //			joint->constr[j+3] = false;
 			DSTR << j << "-th constraint ill-conditioned! disabled." << endl;
 		}
 		else
-			Ainv[i-3] = 1.0 / (A[i] + dA[i-3]);
+			Ainv[i] = 1.0 / (A[i] + dA[i]);
 	}
-	return A.w();
+	return A;
+}
+
+//3次方程式を解く関数//スプライン曲線での拘束で使用
+Vec3d PHBallJointLimit::SolveQubicFunction(Vec4d eq3){	//拘束の確認のために3次方程式を解く必要がある
+	double z = 0;
+	bool FlagQ = true;
+	double D;
+	Vec3d Para;
+	double eq2[3];
+	
+	if(eq3[0] != 0){
+		if(eq3[3] == 0) Para[0] = 0;
+		else {
+			double variable[2];
+			variable[0] = (eq3[2]/eq3[0] - eq3[1]*eq3[1] / (3.0*eq3[0]*eq3[0])) / 3.0;//P
+			variable[1] = (eq3[3]/eq3[0]-eq3[1]*eq3[2]/(3.0*eq3[0]*eq3[0])+2.0*pow(eq3[1],3)/(27.0*pow(eq3[0],3)))/2.0;//Q
+			
+			if(variable[1] == 0) z = 0;
+			else{
+				if(variable[1] < 0){
+					FlagQ = false;
+					variable[1] *= -1;
+				}
+				D = pow(variable[0],3) + pow(variable[1],2);
+				if(D < 0)
+					z = - 2 * sqrt( -variable[0] ) * cos(atan(sqrt(-D) / variable[1]) / 3.0);
+				else if(variable[0] < 0)
+					z = -pow(variable[1] + sqrt(D),0.333333) - pow(variable[1] - sqrt(D),0.333333);
+				else if(variable[0] >= 0)
+					z = pow(sqrt(D) - variable[1],0.333333) - pow(variable[1] + sqrt(D),0.333333);
+				if(FlagQ == false)
+					z *= -1;				
+			}	
+		Para[0] = z - eq3[1] / (3 * eq3[0]);
+		}
+		eq2[0] = eq3[0];
+		for(int  i=0; i<2; i++){
+			eq2[i+1] = eq3[i+1] + Para[0] * eq2[i];
+		}
+	}
+	else {
+		Para[0] = FLT_MAX;
+		eq2[0] = eq3[1];
+		eq2[1] = eq3[2];
+		eq2[2] = eq3[3];
+	}
+	if(eq2[0] != 0){
+		D = eq2[1] * eq2[1] - 4.0 * eq2[0] * eq2[2];
+		if (D > 0){
+			Para[1] = (- eq2[1] + sqrt(D))/ (2 * eq2[0]);
+			Para[2] = (- eq2[1] - sqrt(D))/ (2 * eq2[0]);
+		}
+		else Para[1] = Para[2] = FLT_MAX;
+	}
+	else if(eq2[1] != 0){
+		Para[1] = -eq2[2]/eq2[1];
+		Para[2] = FLT_MAX;
+	}
+	else{
+		Para[1] = Para[2] = FLT_MAX;
+	}
+	return	Para;
 }
 
 }

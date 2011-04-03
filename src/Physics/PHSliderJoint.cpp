@@ -21,7 +21,7 @@ PHSliderJointDesc::PHSliderJointDesc(){
 }
 PHSliderJoint::PHSliderJoint(const PHSliderJointDesc& desc){
 	SetDesc(&desc);
-	axisIndex[0] = 2;
+	movableAxes[0] = 2;
 }
 /*void PHSliderJoint::SetConstrainedIndex(bool *con){
 	PHJoint1D::SetConstrainedIndex(con);

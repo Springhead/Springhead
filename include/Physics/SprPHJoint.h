@@ -527,7 +527,11 @@ struct PHBallJointIf : public PHJointIf{
 	/**@brief 拘束位置を設定する
 	   @param 拘束位置のファイルを読み込む
     */
-	bool SetConstLine(char* fileName, int i);
+	bool SetConstLine(char* fileName, bool i);
+	/**@brief 拘束位置を設定する
+	   @param [way][0]スイング方位角　[1]スイング角　[2]ツイスト角min　[3]ツイスト角max　[4]傾き
+    */
+	void SetConstPoint(int Num, int way, double a);
 	/**@brief 拘束位置を取得する
 	   @param [way][0]スイング方位角　[1]スイング角　[2]ツイスト角min　[3]ツイスト角max　[4]傾き
     */
@@ -669,6 +673,8 @@ struct PHBallJointIf : public PHJointIf{
 	 */
 	double GetmotorfNorm();	
 
+	void SetConstraintMode(int t);
+
 };
 
 /// ボールジョイントのディスクリプタ
@@ -677,6 +683,7 @@ struct PHBallJointDesc : public PHJointDesc{
 	double			spring;			 ///< バネ係数
 	double			damper;			 ///< ダンパ係数
 	Vec2d			limitSwing;		 ///< swing角の可動域（[0] or .lower, [1] or .upper）
+	Vec2d			limitSwingDir;	 ///< swing方位角の可動域（[0] or .lower, [1] or .upper）
 	Vec2d			limitTwist;		 ///< twist角の可動域（[0] or .lower, [1] or .upper）
 	Vec3d			limitDir;		 ///< 可動域の中心ベクトル
 	Quaterniond		targetPosition;  ///< バネダンパの制御目標
@@ -684,13 +691,20 @@ struct PHBallJointDesc : public PHJointDesc{
 	Vec3d			offsetForce;	 ///< 定数項（軌道追従制御の加速度の項を入れるのに使ったりする）
 	//Vec3d			torque;			 ///< モータトルク
 	double			fMax;			 ///< 関節にかけられる最大の力(絶対値)
-	Vec2d			poleTwist;
+	Vec2d			poleTwist;		 ///< spline拘束でSwing角0のときのTwist角可動域（[0] or .lower, [1] or .upper）
 	
 	double secondDamper;			///< 第２ダンパ係数
 	double yieldStress;				///< 降伏応力
 	double hardnessRate;			///< 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
 	Vec3d  Inertia;					///< 断面２次モーメント
 	
+	enum PHConstraintType{
+		non = 0,
+		SwingTwist =1,
+		Spline =2,
+		Jacobian =3
+	}ConstMode;
+
 	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
 };
 

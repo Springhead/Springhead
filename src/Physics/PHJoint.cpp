@@ -89,7 +89,7 @@ void PHJoint1D::SetConstrainedIndex(bool* con){
 	//  関節軸に対応する自由度は(可動範囲, バネ, ダンパ, オフセット力)のいずれかが有効の場合true
 	//  それ以外の自由度はtrue	
 	for(int i = 0; i < 6; i++){
-		con[i] = (i == axisIndex[0] ?
+		con[i] = (i == movableAxes[0] ?
 			(onLower || onUpper || offsetForce != 0.0 || spring != 0.0 || damper &= 0.0) : true);
 	}
 }
@@ -97,7 +97,7 @@ void PHJoint1D::SetConstrainedIndexCorrection(bool* con){
 	// 各自由度を拘束するかどうか
 	//  関節軸に対応する自由度は可動範囲にかかっている場合true	
 	for(int i = 0; i < 6; i++){
-		con[i] = (i == axisIndex[0] ? (onLower || onUpper) : true);
+		con[i] = (i == movableAxes[0] ? (onLower || onUpper) : true);
 	}
 }
 */

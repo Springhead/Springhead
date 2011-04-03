@@ -41,22 +41,22 @@ class PHJointND : public PHJoint{
 public:
 	typedef	PTM::TVector<NDOF, double> coord_t;
 
-	int		axisIndex[NDOF];		//< ‰½”Ô–Ú‚ÌŽ²‚ªŠÖßŽ²‚Æ‚È‚é‚©
+	int		movableAxes[NDOF];		//< ‰½”Ô–Ú‚ÌŽ²‚ªŠÖßŽ²‚Æ‚È‚é‚©
 	coord_t position, velocity;
 	
 	void	CompResponse(double df, int k){
-		PHConstraint::CompResponse(df, axisIndex[k]);
+		PHConstraint::CompResponse(df, movableAxes[k]);
 	}
 
 	virtual void SetConstrainedIndex(int* con){
 		//std::fill(con, con+6, true);
 		//for(int i = 0; i < NDOF; i++)
-		//	con[axisIndex[i]] = false;
+		//	con[movableAxes[i]] = false;
 		for(int i = 0; i < 6;i++){
 			con[i] = i;
 		}
 		for(int i = NDOF-1; i >= 0;i--){
-			for(int j = axisIndex[i];j < 5;j++){
+			for(int j = movableAxes[i];j < 5;j++){
 				con[j] = con[j+1];
 			}
 		}
@@ -130,7 +130,7 @@ public:
 //	virtual	void	IterateLCP();		//IterateLCP‚ðConstraint‚Æ“‡‚µ‚½B
 	virtual void	SetupCorrectionLCP();
 	virtual void	IterateCorrectionLCP();
-	//virtual void	AddMotorTorque(){f[axisIndex[0]] = torque * GetScene()->GetTimeStep();}
+	//virtual void	AddMotorTorque(){f[movableAxes[0]] = torque * GetScene()->GetTimeStep();}
 	//virtual void	SetConstrainedIndexCorrection(bool* con);
 	//virtual void	CompJointBias();
 	//virtual void	Projection(double& f, int k);

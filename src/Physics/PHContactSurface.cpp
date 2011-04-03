@@ -197,7 +197,7 @@ void PHContactSurface::IterateLCP(){
 
 	for(int j = 0; j < targetAxis; j++){
 //		if(!constr[j])continue;
-		int i = numCondition[j];
+		int i = constrainedAxes[j];
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
 				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
 

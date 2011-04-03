@@ -17,7 +17,7 @@ namespace Spr{;
 // PHHingeJoint
 PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc){
 	SetDesc(&desc);
-	axisIndex[0] = 5;
+	movableAxes[0] = 5;
 }
 
 void PHHingeJoint::UpdateJointState(){

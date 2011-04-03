@@ -152,7 +152,8 @@
 	void SetTwistRange(Vec2d range){	base::SetTwistRange(range);}	\
 	void GetTwistRange(Vec2d& range){	base::GetTwistRange(range);}	\
 	void SetTwistPole(Vec2d range){	base::SetTwistPole(range);}	\
-	bool SetConstLine(char* fileName, int i){	return	base::SetConstLine(fileName, i);}	\
+	bool SetConstLine(char* fileName, bool i){	return	base::SetConstLine(fileName, i);}	\
+	void SetConstPoint(int Num, int way, double a){	base::SetConstPoint(Num, way, a);}	\
 	double GetConstLine(int Num, int way){	return	base::GetConstLine(Num, way);}	\
 	void SetMotorTorque(const Vec3d& torque){	base::SetMotorTorque(torque);}	\
 	Vec3d GetMotorTorque(){	return	base::GetMotorTorque();}	\
@@ -184,6 +185,7 @@
 	void SetInertia(const Vec3d i){	base::SetInertia(i);}	\
 	Spr::PHJointDesc::PHDeformationType GetDeformationMode(){	return	base::GetDeformationMode();}	\
 	double GetmotorfNorm(){	return	base::GetmotorfNorm();}	\
+	void SetConstraintMode(int t){	base::SetConstraintMode(t);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\
 	void SetSpring(const Vec3d& spring){	base::SetSpring(spring);}	\

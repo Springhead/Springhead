@@ -61,7 +61,7 @@ public:
 	SpatialVector scale;				//	不使用
 	
 	bool		constr[6];				///< 速度を拘束する自由度. 可動範囲，バネ・ダンパが有効な場合はtrueとなる	# 不要
-	int			numCondition[6];			// constrの変わり。計算の必要な軸番号を入れる
+	int			constrainedAxes[6];			// constrの変わり。計算の必要な軸番号を入れる
 	int			targetAxis;
 	bool		constrCorrection[6];	///< 位置を拘束する自由度. 可動範囲が有効な場合はtrueとなる					# 不要
 	
