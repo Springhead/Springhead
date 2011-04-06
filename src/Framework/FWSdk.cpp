@@ -203,7 +203,7 @@ void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 }
 
 GRRenderIf*	FWSdk::CreateRender(){
-	GRRenderIf* render = GetGRSdk()->CreateDebugRender();
+	GRRenderIf* render = GetGRSdk()->CreateRender();
 	GRDeviceIf* dev = GetGRSdk()->CreateDeviceGL();
 	dev->Init();
 	render->SetDevice(dev);
@@ -287,8 +287,15 @@ void FWSdk::Draw(){
 	if(!curRender)return;
 	curRender->ClearBuffer();
 	curRender->BeginScene();
-	if (curScene)
-		curScene->Draw(curRender, debugMode);
+	if (curScene){
+		if(debugMode)
+			curScene->DrawPHScene(curRender);
+		else if(curScene->GetGRScene()){
+			curScene->Sync();
+			curScene->GetGRScene()->Render(curRender);
+		}
+	}
+	//curScene->Draw(curRender, debugMode);
 	curRender->EndScene();
 }
 void FWSdk::Reshape(int w, int h){

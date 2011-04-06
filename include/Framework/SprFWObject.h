@@ -56,6 +56,9 @@ struct FWObjectIf : SceneObjectIf {
 	 */
 	void GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
 
+	/// PHSolidとGRFrameの同期
+	void Sync(bool ph_to_gr);
+
 	///ボーン付きXファイル専用
 	/// solidLengthを取得する
 	double GetSolidLength();

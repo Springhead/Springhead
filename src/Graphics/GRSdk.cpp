@@ -55,8 +55,9 @@ GRSdk::GRSdk(const GRSdkDesc& desc):GRSdkDesc(desc){
 }
 GRSdk::~GRSdk(){
 }
-GRDebugRenderIf* GRSdk::CreateDebugRender(){
-	GRDebugRender* rv = DBG_NEW GRDebugRender;
+
+GRRenderIf* GRSdk::CreateRender(){
+	GRRender* rv = DBG_NEW GRRender;
 	objects.push_back(rv);
 	return rv->Cast();
 }

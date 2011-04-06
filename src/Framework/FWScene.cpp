@@ -7,9 +7,10 @@
  */
 #include "FWScene.h"
 #include "FWObject.h"
-#include <Graphics/GRDebugRender.h>
 #include <Graphics/GRScene.h>
 #include <Physics/PHScene.h>
+#include <Physics/PHConstraintEngine.h>
+#include <Physics/PHContactPoint.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -17,9 +18,36 @@
 
 namespace Spr{;
 
-FWScene::FWScene(const FWSceneDesc& d/*=FWSceneDesc()*/)
-: phScene(NULL), grScene(NULL)
-{
+FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
+	// デフォルト描画設定
+	// ソリッド描画のみ
+	renderSolid = true;
+	renderWire  = false;
+	// 付加情報の描画はなし
+	renderAxisWorld = renderAxisSolid = renderAxisConst = false;
+	renderForceSolid = renderForceConst	= false;
+	renderGridX = renderGridY = renderGridZ = false;
+	renderContact	= false;
+	renderIK		= false;
+	// 倍率は等倍
+	scaleAxisWorld = scaleAxisSolid = scaleAxisConst = 1.0f;
+	scaleForce = 1.0f;
+	scaleMoment = 1.0f;
+	scaleIK = 1.0f;
+	// マテリアル
+	matAxis.x	= GRRenderIf::RED;
+	matAxis.y	= GRRenderIf::GREEN;
+	matAxis.z	= GRRenderIf::BLUE;
+	matContact	= GRRenderIf::YELLOW;
+	matForce	= GRRenderIf::ORANGE;
+	matMoment	= GRRenderIf::CYAN;
+	matGrid.x = matGrid.y = matGrid.z = GRRenderIf::GRAY;
+	// 座標軸
+	axisStyle = FWSceneIf::AXIS_LINES;
+	// グリッド
+	gridOffset.clear();
+	gridSize = Vec3f(100.0f, 100.0f, 100.0f);
+	gridSlice = Vec3i(100, 100, 100);
 }
 
 NamedObjectIf* FWScene::FindObject(UTString name, UTString cls){
@@ -154,14 +182,17 @@ FWSceneIf* SPR_CDECL CreateFWScene(const void* desc){
 	FWScene* rv = DBG_NEW FWScene(*(FWSceneDesc*)desc);
 	return rv->Cast();
 }
-void FWScene::Sync(){
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+void FWScene::Sync(bool ph_to_gr){
 	//	オブジェクト位置・姿勢の同期
 	for(FWObjects::iterator it = fwObjects.begin(); it!=fwObjects.end(); ++it){
-		DCAST(FWObject, *it)->Sync();
+		DCAST(FWObject, *it)->Sync(ph_to_gr);
 	}
 	
-	//	カメラの同期
-	if (grScene){
+	//	カメラの同期 (未実装？)
+	if(ph_to_gr && grScene){
 		HIForceDevice6D* device = GetHumanInterface(HI_CAMERACONTROLLER);
 		GRCameraIf* camera = grScene->GetCamera();
 		if(camera && device){
@@ -181,35 +212,529 @@ void FWScene::Sync(){
 			}
 		}
 	}
+
 }
+
 void FWScene::Step(){
 	if (phScene) phScene->Step();
 }
 
-void FWScene::Draw(GRRenderIf* grRender, bool debug/*=false*/){
-	Sync();
-	if (debug){
-		GRDebugRenderIf* render = DCAST(GRDebugRenderIf, grRender);
-		if (render){
-			GRCameraIf* cam = NULL;
-			if (grScene) cam = grScene->GetCamera();
-			if (cam) cam->Render(render);
-			
-			GRLightDesc ld;
-			ld.diffuse = Vec4f(1,1,1,1) * 0.8f;
-			ld.specular = Vec4f(1,1,1,1) * 0.8f;
-			ld.ambient = Vec4f(1,1,1,1) * 0.4f;
-			ld.position = Vec4f(1,1,1,0);
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// 描画系
 
-			render->PushLight(ld);
-			render->DrawScene(phScene);
-			render->PopLight();
-			if (cam) cam->Rendered(render);
+/// シーン内の全てのオブジェクトをレンダリングする
+void FWScene::DrawPHScene(GRRenderIf* render){
+	if (!phScene) return;
+
+	// GRSceneのカメラの視点を反映
+	GRCameraIf* cam = NULL;
+	if (grScene) cam = grScene->GetCamera();
+	if (cam) cam->Render(render);
+			
+	// 光源が1つもセットされない場合
+	bool defLight = false;
+	if(render->NLights() == 0){
+		defLight = true;
+		GRLightDesc ld;
+		ld.diffuse = Vec4f(1,1,1,1) * 0.8f;
+		ld.specular = Vec4f(1,1,1,1) * 0.8f;
+		ld.ambient = Vec4f(1,1,1,1) * 0.4f;
+		ld.position = Vec4f(1,1,1,0);
+		render->PushLight(ld);
+	}
+
+	// ワールド座標軸
+	if(renderAxisWorld){
+		if(renderSolid)
+			DrawCoordinateAxis(render, scaleAxisWorld, true);
+		if(renderWire){
+			render->SetLighting(false);
+			DrawCoordinateAxis(render, scaleAxisWorld, false);
+			render->SetLighting(true);
 		}
-	}else{
-		if (grScene) grScene->Render(grRender);
+	}
+
+	// グリッド
+	if(renderGridX){
+		render->PushModelMatrix();
+		render->MultModelMatrix(Affinef::Trn(gridOffset.x, 0.0f, 0.0f));
+		render->MultModelMatrix(Affinef::Rot(Rad(90.0f), 'y'));
+		render->DrawGrid(gridSize.x, gridSlice.x);
+		render->PopModelMatrix();
+	}
+	if(renderGridY){
+		render->PushModelMatrix();
+		render->MultModelMatrix(Affinef::Trn(0.0f, gridOffset.y, 0.0f));
+		render->MultModelMatrix(Affinef::Rot(Rad(90.0f), 'x'));
+		render->DrawGrid(gridSize.y, gridSlice.y);
+		render->PopModelMatrix();
+	}
+	if(renderGridZ){
+		render->PushModelMatrix();
+		render->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, gridOffset.z));
+		render->DrawGrid(gridSize.z, gridSlice.z);
+		render->PopModelMatrix();
+	}
+	
+	// 剛体
+	PHSolidIf **solids = phScene->GetSolids();
+	for(int i = 0; i < phScene->NSolids(); ++i){
+		if(!IsRenderEnabled(solids[i]))
+			continue;
+
+		// 形状を描画
+		if(renderSolid){
+			int matSolid = GetSolidMaterial(solids[i]);
+			if(matSolid == -1)
+				matSolid = i % GRRenderIf::MATERIAL_SAMPLE_END;
+			render->SetMaterial(matSolid);
+			DrawSolid(render, solids[i], true);
+		}
+		if(renderWire){
+			int matWire  = GetWireMaterial(solids[i]);
+			if(matWire == -1)
+				matWire = i % GRRenderIf::MATERIAL_SAMPLE_END;
+			render->SetMaterial(matWire);
+			render->SetLighting(false);
+			DrawSolid(render, solids[i], false);
+			render->SetLighting(true);
+		}
+	}
+
+	// 拘束
+	for(int i = 0; i < phScene->NJoints(); ++i){
+		PHConstraintIf* con = phScene->GetJoint(i);
+		if(IsRenderEnabled(con))
+			DrawConstraint(render, con);
+	}
+	
+	// 接触
+	if(renderContact){
+		for(int i = 0; i < phScene->NContacts(); ++i){
+			PHContactPointIf* con = phScene->GetContact(i);
+			if(IsRenderEnabled(con)){
+				DrawConstraint(render, con);
+				DrawContact(render, con);
+			}
+		}
+	}
+	
+	// Inverse Kinematics
+	if(renderIK){
+		//SetMaterialSample((GRRenderIf::TMaterialSample)2);
+		PHIKEngineIf* ikEngine = phScene->GetIKEngine();
+		if (ikEngine) {
+			DrawIK(render, ikEngine);
+		}
+	}
+
+	if(defLight) render->PopLight();
+	if (cam) cam->Rendered(render);
+
+}
+
+/// 剛体をレンダリングする
+void FWScene::DrawSolid(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire){
+	Affinef aff;
+	solid->GetPose().ToAffine(aff);
+	render->PushModelMatrix();
+	render->MultModelMatrix(aff);
+	
+	for(int s = 0; s < solid->NShape(); ++s){
+		CDShapeIf* shape = solid->GetShape(s);
+		if(IsRenderEnabled(shape)){
+			solid->GetShapePose(s).ToAffine(aff);
+			render->PushModelMatrix();
+			render->MultModelMatrix(aff);
+			DrawShape(render, shape, solid_or_wire);
+			render->PopModelMatrix();
+		}
+	}
+
+	// 座標軸
+	if(renderAxisSolid)
+		DrawCoordinateAxis(render, scaleAxisSolid, solid_or_wire);
+
+	// 力
+	if(renderForceSolid){
+		DrawForce(render, solid->GetForce(), solid->GetTorque());
+	}
+
+
+	render->PopModelMatrix();
+}
+
+void FWScene::DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire){
+	CDBoxIf*		box		= DCAST(CDBoxIf, shape);
+	CDSphereIf*		sphere	= DCAST(CDSphereIf, shape);
+	CDCapsuleIf*	cap		= DCAST(CDCapsuleIf, shape);
+	CDRoundConeIf*	rc		= DCAST(CDRoundConeIf, shape);
+	CDConvexMeshIf* mesh	= DCAST(CDConvexMeshIf, shape);
+
+	// solid, wireframeの順に描画
+	const int slice = 16;
+	if(box){
+		Vec3f sz = box->GetBoxSize();
+		render->DrawBox(sz.x, sz.y, sz.z, solid_or_wire);
+	}
+	if(sphere)	render->DrawSphere(sphere->GetRadius(), slice, slice, solid_or_wire);
+	if(cap)		render->DrawCapsule(cap->GetRadius(), cap->GetLength(), slice, solid_or_wire);
+	if(rc){
+		Vec2f r = rc->GetRadius();
+		render->DrawRoundCone(r[0], r[1], rc->GetLength(), slice, solid_or_wire);
+	}
+	if(mesh)	DrawMesh(render, mesh, solid_or_wire);
+}
+
+void FWScene::DrawConstraint(GRRenderIf* render, PHConstraintIf* con){
+	Affinef aff;
+	Vec3d f, t;
+
+	Posed sock, plug;
+	con->GetSocketPose(sock);
+	con->GetPlugPose(plug);
+
+	if(renderAxisConst || renderForceConst){
+		// socket
+		(con->GetSocketSolid()->GetPose() * sock).ToAffine(aff);
+		render->PushModelMatrix();
+		render->MultModelMatrix(aff);
+
+		if(renderAxisConst){
+			if(renderSolid)
+				DrawCoordinateAxis(render, scaleAxisConst, true);
+			if(renderWire){
+				render->SetLighting(false);
+				DrawCoordinateAxis(render, scaleAxisConst, false);
+				render->SetLighting(true);
+			}
+		}
+	
+		if(renderForceConst){
+			con->GetConstraintForce(f, t);
+			DrawForce(render, f, t);
+		}
+		render->PopModelMatrix();
+	}
+	
+	// plug
+	if(renderAxisConst){
+		(con->GetPlugSolid()->GetPose() * plug).ToAffine(aff);
+		render->PushModelMatrix();
+		render->MultModelMatrix(aff);
+		if(renderSolid)
+			DrawCoordinateAxis(render, scaleAxisConst, true);
+		if(renderWire){
+			render->SetLighting(false);
+			DrawCoordinateAxis(render, scaleAxisConst, false);
+			render->SetLighting(true);
+		}
+		render->PopModelMatrix();
 	}
 }
+
+void FWScene::DrawContact(GRRenderIf* render, PHContactPointIf* con){
+	render->SetMaterial(matContact);
+
+	PHContactPoint* c = con->Cast();
+	if(c->shapePair->section.size() < 3)
+		return;
+	std::vector<Vec3f> vtx;
+	vtx.resize(c->shapePair->section.size());
+	copy(c->shapePair->section.begin(), c->shapePair->section.end(), vtx.begin());
+	
+	render->SetLighting(false);
+	render->SetDepthTest(false);
+	
+	render->SetVertexFormat(GRVertexElement::vfP3f);
+	render->DrawDirect(GRRenderBaseIf::LINE_LOOP, &vtx[0], vtx.size());
+	
+	render->SetDepthTest(true);
+	render->SetLighting(true);
+}
+
+/// IKの計算結果をレンダリングする
+void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
+	render->SetLighting(false);
+	render->SetDepthTest(false);
+
+	render->PushModelMatrix();
+	render->SetModelMatrix(Affinef());
+
+	// IK周りのAPI変更に対応するようにいずれ書き換える　（10/01/09, mitake）
+	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->actuators.size(); ++i) {
+		PHIKActuator* ikAct = DCAST(PHIKEngine,ikEngine)->actuators[i];
+		if(!ikAct) continue;
+		
+		PHIKBallActuator* ikBJ = ikAct->Cast();
+		if (ikBJ) {
+			Vec3d w;
+			for (int j=0; j < (int)ikBJ->omega.size(); ++j) {
+				w += (ikBJ->omega[j]/ikBJ->GetBias()) * ikBJ->e[j];
+			}
+			PHBallJointIf* jt = ikBJ->joint;
+			PHBallJointDesc d;
+			jt->GetDesc(&d);
+			Vec3d Pj = jt->GetSocketSolid()->GetPose() * d.poseSocket.Pos();
+
+			{
+				GRMaterialDesc mat;
+				mat.ambient = mat.diffuse = Vec4f(1,0,0.7,1);
+				render->SetMaterial(mat);
+				render->DrawLine(Pj, Pj + (w * scaleIK));
+			}
+
+			{
+				GRMaterialDesc mat;
+				mat.ambient = mat.diffuse = Vec4f(1.0,0,0,1);
+				render->SetMaterial(mat);
+				for (int j=0; j < ikBJ->ndof; ++j) {
+					render->DrawLine(Pj, Pj + (ikBJ->e[j]));
+				}
+			}
+		}
+
+		PHIKHingeActuator* ikHJ = ikAct->Cast();
+		if (ikHJ) {
+			PHHingeJointIf* jt = ikHJ->joint;
+			PHHingeJointDesc d; jt->GetDesc(&d);
+
+			Vec3d Pj = jt->GetSocketSolid()->GetPose() * d.poseSocket.Pos();
+			Vec3d wD = jt->GetSocketSolid()->GetPose().Ori() * d.poseSocket.Ori() * Vec3d(0,0,1);
+
+			double w = 0;
+			if (ikHJ->omega.size() != 0) {
+				w = (ikHJ->omega[0]/ikHJ->GetBias());
+			}
+
+			{
+				GRMaterialDesc mat;
+				mat.ambient = mat.diffuse = Vec4f(1.0,0,0,1);
+				render->SetMaterial(mat);
+				render->DrawLine(Pj, Pj + (w * scaleIK * wD));
+			}
+		}
+	}
+
+	/*
+	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->endeffectors.size(); ++i) {
+		PHIKEndEffector* ikEE = DCAST(PHIKEngine,ikEngine)->endeffectors[i];
+		if (ikEE && DCAST(PHIKEndEffector,ikEE)->bEnabled) {
+			Vec3d sp = ikEE->solid->GetPose() * ikEE->targetLocalPosition;
+			Vec3d tg = ikEE->GetTempTarget();
+			{
+				GRMaterialDesc mat;
+				mat.ambient = mat.diffuse = Vec4f(0,1.0,0,1);
+				SetMaterial(mat);
+				DrawLine(sp, sp + tg);
+			}
+		}
+	}
+	*/
+
+	render->PopModelMatrix();
+	render->SetLighting(true);
+	render->SetDepthTest(true);
+}
+
+void FWScene::DrawMesh(GRRenderIf* render, CDConvexMeshIf* mesh, bool solid){
+	Vec3f* base = mesh->GetVertices();
+	if(solid){
+		for (size_t f=0; f<mesh->NFace(); ++f) {	
+			CDFaceIf* face = mesh->GetFace(f);
+			this->DrawFaceSolid(render, face, base);
+		}
+	}
+	else{
+		for (size_t f=0; f<mesh->NFace(); ++f) {	
+			CDFaceIf* face = mesh->GetFace(f);
+			this->DrawFaceWire(render, face, base);
+		}
+	}
+}
+
+void FWScene::DrawFaceSolid(GRRenderIf* render, CDFaceIf* face, Vec3f * base){
+	int numIndices = face->NIndex();			// (=3 :三角形なので3頂点)
+	struct Vtx{
+		Vec3f n;
+		Vec3f p;
+	} vtxs[10];
+	assert((size_t)numIndices <= sizeof(vtxs)/sizeof(vtxs[0]));
+	for(int v = 0; v < numIndices; ++v)
+		vtxs[v].p = base[face->GetIndices()[v]].data;
+	Vec3f edge0, edge1;
+	edge0 = vtxs[1].p - vtxs[0].p;
+	edge1 = vtxs[2].p - vtxs[0].p;
+	Vec3f n = (edge0^edge1).unit();
+	for(int v = 0; v < numIndices; ++v)
+		vtxs[v].n = n;
+	render->SetVertexFormat(GRVertexElement::vfN3fP3f);
+	render->DrawDirect(GRRenderBaseIf::TRIANGLE_FAN, vtxs, numIndices);
+}
+
+void FWScene::DrawFaceWire(GRRenderIf* render, CDFaceIf* face, Vec3f * base){
+	int numIndices = face->NIndex();
+	Vec3f vtxs[10];
+	assert((size_t)numIndices+1 <= sizeof(vtxs)/sizeof(vtxs[0]));
+	int v;
+	for(v = 0; v < numIndices; ++v)
+		vtxs[v] = base[face->GetIndices()[v]].data;
+	vtxs[v] = base[face->GetIndices()[0]].data;
+	render->SetVertexFormat(GRVertexElement::vfP3f);
+	render->DrawDirect(GRRenderBaseIf::LINES, vtxs, numIndices+1);
+}
+
+void FWScene::DrawCoordinateAxis(GRRenderIf* render, float scale, bool solid_or_wire){
+	if(axisStyle == FWSceneIf::AXIS_LINES){
+		render->SetVertexFormat(GRVertexElement::vfP3f);
+		render->PushModelMatrix();
+		render->MultModelMatrix(Affinef::Scale(scale, scale, scale));
+
+		float vtx[4][3] = {{0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}};
+		size_t idx_x[2] = {0, 1};
+		size_t idx_y[2] = {0, 2};
+		size_t idx_z[2] = {0, 3};
+		render->SetMaterial(matAxis.x);
+		render->DrawIndexed(GRRenderBaseIf::LINES, idx_x, (void*)vtx, 2);
+		render->SetMaterial(matAxis.y);
+		render->DrawIndexed(GRRenderBaseIf::LINES, idx_y, (void*)vtx, 2);
+		render->SetMaterial(matAxis.z);
+		render->DrawIndexed(GRRenderBaseIf::LINES, idx_z, (void*)vtx, 2);
+	
+		render->PopModelMatrix();
+	}
+	if(axisStyle == FWSceneIf::AXIS_ARROWS){
+		float rbar  = 0.05f * scale;
+		float rhead = 0.10f * scale;
+		float lhead = 0.20f * scale;
+		// x
+		render->SetMaterial(matAxis.x);
+		render->DrawArrow(Vec3f(), Vec3f(1.0f, 0.0f, 0.0f), rbar, rhead, lhead, 16, solid_or_wire);
+		// y
+		render->SetMaterial(matAxis.y);
+		render->DrawArrow(Vec3f(), Vec3f(0.0f, 1.0f, 0.0f), rbar, rhead, lhead, 16, solid_or_wire);
+		// z
+		render->SetMaterial(matAxis.z);
+		render->DrawArrow(Vec3f(), Vec3f(0.0f, 0.0f, 1.0f), rbar, rhead, lhead, 16, solid_or_wire);
+	}
+}
+
+void FWScene::DrawForce(GRRenderIf* render, const Vec3d& f, const Vec3d& t){
+	render->SetLighting(false);
+	render->SetDepthTest(false);
+	// constraint force
+	render->SetMaterial(matForce);
+	render->DrawLine(Vec3f(), scaleForce * f);
+			
+	// constraint moment
+	render->SetMaterial(matMoment);
+	render->DrawLine(Vec3f(), scaleMoment * t);
+			
+	render->SetDepthTest(true);
+	render->SetLighting(true);
+}
+
+void FWScene::SetRenderMode(bool solid, bool wire){
+	renderSolid = solid;
+	renderWire  = wire;
+}
+void FWScene::EnableRender(ObjectIf* obj, bool enable){
+	renderObject[obj] = enable;
+}
+void FWScene::SetSolidMaterial(int mat, PHSolidIf* solid){
+	matSolid[solid] = mat;
+}
+void FWScene::SetWireMaterial(int mat, PHSolidIf* solid){
+	matWire[solid] = mat;
+}	
+void FWScene::EnableRenderAxis(bool world, bool solid, bool con){
+	renderAxisWorld = world;
+	renderAxisSolid = solid;
+	renderAxisConst = con;
+}
+void FWScene::SetAxisMaterial(int matX, int matY, int matZ){
+	matAxis = Vec3i(matX, matY, matZ);
+}
+void FWScene::SetAxisScale(float scaleWorld, float scaleSolid, float scaleConst){
+	scaleAxisWorld = scaleWorld;
+	scaleAxisSolid = scaleSolid;
+	scaleAxisConst = scaleConst;
+}
+void FWScene::SetAxisStyle(int style){
+	axisStyle = style;
+}
+void FWScene::EnableRenderForce(bool solid, bool con){
+	renderForceSolid = solid;
+	renderForceConst = con;
+}
+void FWScene::SetForceMaterial(int matf, int matm){
+	matForce	= matf;
+	matMoment	= matm;	
+}
+void FWScene::SetForceScale(float scalef, float scalem){
+	scaleForce	= scalef;
+	scaleMoment = scalem;
+}
+void FWScene::EnableRenderContact(bool enable){
+	renderContact = enable;
+}
+void FWScene::SetContactMaterial(int mat){
+	matContact = mat;
+}
+void FWScene::EnableRenderGrid(bool x, bool y, bool z){
+	renderGridX = x;
+	renderGridY = y;
+	renderGridZ = z;
+}
+void FWScene::SetGridOption(char axis, float offset, float size, int slice){
+	int i = tolower(axis) - 'x';
+	gridOffset[i] = offset;
+	gridSize[i]   = size;
+	gridSlice[i]  = slice;
+}
+void FWScene::SetGridMaterial(int matX, int matY, int matZ){
+	matGrid = Vec3i(matX, matY, matZ);
+}
+void FWScene::EnableRenderIK(bool enable){
+	renderIK = enable;
+}
+void FWScene::SetIKMaterial(int mat){
+	matIK = mat;
+}
+void FWScene::SetIKScale(float scale){
+	scaleIK = scale;
+}
+bool FWScene::IsRenderEnabled(ObjectIf* obj){
+	std::map<ObjectIf*, bool>::iterator it = renderObject.find(obj);
+	if(it != renderObject.end())
+		return it->second;
+	return true;
+}
+int FWScene::GetSolidMaterial(PHSolidIf* solid){
+	// 最初に特定のsolidにあてられたマテリアルがあるか調べ，
+	// なければ次に0 (全剛体)のマテリアルを調べ，
+	// どちらもなければ-1を返す
+	std::map<PHSolidIf*, int>::iterator it;
+	it = matSolid.find(solid);
+	if(it != matSolid.end())
+		return it->second;
+	it = matSolid.find(0);
+	if(it != matSolid.end())
+		return it->second;
+	return -1;
+}
+int FWScene::GetWireMaterial(PHSolidIf* solid){
+	std::map<PHSolidIf*, int>::iterator it;
+	it = matWire.find(solid);
+	if(it != matWire.end())
+		return it->second;
+	it = matWire.find(0);
+	if(it != matWire.end())
+		return it->second;
+	return -1;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// HumanInterface系
 
 void FWScene::AddHumanInterface(HIForceDevice6D* d){
 //	hase	TBW

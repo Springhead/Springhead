@@ -98,9 +98,15 @@
 	void DrawIndexed(Spr::GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){	base::DrawIndexed(ty, idx, vtx, count, stride);}	\
 	void DrawArrays(Spr::GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){	base::DrawArrays(ty, arrays, count);}	\
 	void DrawArrays(Spr::GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){	base::DrawArrays(ty, idx, arrays, count);}	\
+	void DrawLine(Vec3f p0, Vec3f p1){	base::DrawLine(p0, p1);}	\
+	void DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid){	base::DrawArrow(p0, p1, rbar, rhead, lhead, slice, solid);}	\
+	void DrawBox(float sx, float sy, float sz, bool solid){	base::DrawBox(sx, sy, sz, solid);}	\
 	void DrawSphere(float radius, int slices, int stacks, bool solid){	base::DrawSphere(radius, slices, stacks, solid);}	\
 	void DrawCone(float radius, float height, int slice, bool solid){	base::DrawCone(radius, height, slice, solid);}	\
 	void DrawCylinder(float radius, float height, int slice, bool solid){	base::DrawCylinder(radius, height, slice, solid);}	\
+	void DrawCapsule(float radius, float height, int slice, bool solid){	base::DrawCapsule(radius, height, slice, solid);}	\
+	void DrawRoundCone(float rbottom, float rtop, float height, int slice, bool solid){	base::DrawRoundCone(rbottom, rtop, height, slice, solid);}	\
+	void DrawGrid(float size, int slice, float lineWidth){	base::DrawGrid(size, slice, lineWidth);}	\
 	int StartList(){	return	base::StartList();}	\
 	void EndList(){	base::EndList();}	\
 	void DrawList(int i){	base::DrawList(i);}	\
@@ -110,10 +116,12 @@
 	void DrawFont(Vec3f pos, const std::string str){	base::DrawFont(pos, str);}	\
 	void SetMaterial(const Spr::GRMaterialDesc& mat){	base::SetMaterial(mat);}	\
 	void SetMaterial(const Spr::GRMaterialIf* mat){	base::SetMaterial(mat);}	\
+	void SetMaterial(int matname){	base::SetMaterial(matname);}	\
 	void SetLineWidth(float w){	base::SetLineWidth(w);}	\
 	void PushLight(const Spr::GRLightDesc& light){	base::PushLight(light);}	\
 	void PushLight(const Spr::GRLightIf* light){	base::PushLight(light);}	\
 	void PopLight(){	base::PopLight();}	\
+	int NLights(){	return	base::NLights();}	\
 	void SetDepthWrite(bool b){	base::SetDepthWrite(b);}	\
 	void SetDepthTest(bool b){	base::SetDepthTest(b);}	\
 	void SetDepthFunc(Spr::GRRenderBaseIf::TDepthFunc f){	base::SetDepthFunc(f);}	\
@@ -146,20 +154,6 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRDeviceGLIf(base)	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_GRDebugRenderIf(base)	\
-	void DrawScene(PHSceneIf* scene){	base::DrawScene(scene);}	\
-	void DrawSolid(PHSolidIf* solid){	base::DrawSolid(solid);}	\
-	void SetMaterialSample(Spr::GRDebugRenderIf::TMaterialSample matname){	base::SetMaterialSample(matname);}	\
-	void SetRenderMode(bool solid, bool wire){	base::SetRenderMode(solid, wire);}	\
-	void EnableRenderWorldAxis(bool enable){	base::EnableRenderWorldAxis(enable);}	\
-	void EnableRenderAxis(bool enable, float scale){	base::EnableRenderAxis(enable, scale);}	\
-	void EnableRenderForce(bool enable, float scale){	base::EnableRenderForce(enable, scale);}	\
-	void EnableRenderContact(bool enable){	base::EnableRenderContact(enable);}	\
-	void EnableGrid(bool enable, double y, double span){	base::EnableGrid(enable, y, span);}	\
-	void EnableRenderIK(bool enable, float scale){	base::EnableRenderIK(enable, scale);}	\
-	void DrawFaceSolid(CDFaceIf* face, Vec3f* base){	base::DrawFaceSolid(face, base);}	\
-	void DrawFaceWire(CDFaceIf* face, Vec3f* base){	base::DrawFaceWire(face, base);}	\
-
 #define SPR_OVERRIDEMEMBERFUNCOF_GRSceneIf(base)	\
 	void Render(Spr::GRRenderIf* r){	base::Render(r);}	\
 	Spr::GRFrameIf* GetWorld(){	return	base::GetWorld();}	\
@@ -170,7 +164,7 @@
 	Spr::GRSdkIf* GetSdk(){	return	base::GetSdk();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRSdkIf(base)	\
-	Spr::GRDebugRenderIf* CreateDebugRender(){	return	base::CreateDebugRender();}	\
+	Spr::GRRenderIf* CreateRender(){	return	base::CreateRender();}	\
 	Spr::GRDeviceGLIf* CreateDeviceGL(){	return	base::CreateDeviceGL();}	\
 	Spr::GRSceneIf* CreateScene(const Spr::GRSceneDesc& desc){	return	base::CreateScene(desc);}	\
 	Spr::GRSceneIf* GetScene(size_t i){	return	base::GetScene(i);}	\

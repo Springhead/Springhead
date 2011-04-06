@@ -296,16 +296,54 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	//しかし，著しく処理が重くなる可能性がある．画面がちらつくのを我慢するか，処理が重くなるのを我慢するか注意する必要がある．
 	glFinish();	
 }
+
+void GRDeviceGL::DrawLine(Vec3f p0, Vec3f p1){
+	glBegin(GL_LINES);
+	glVertex3fv((const float*)&p0);
+	glVertex3fv((const float*)&p1);
+	glEnd();
+}
+
+void GRDeviceGL::DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid){
+	Vec3f d = p1 - p0;
+	float l = d.norm();
+	if(l == 0.0f)
+		return;
+
+	// 矢印をz軸に合わせる回転
+	Quaternionf q;
+	Affinef aff;
+	q.RotationArc(Vec3f(0.0f, 0.0f, 1.0f), d);
+	q.ToMatrix(aff.Rot());
+
+	this->PushModelMatrix();
+	this->MultModelMatrix(aff);
+	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, 0.5f * l));
+	DrawCylinder(rbar, l, slice, solid);
+	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, 0.5f * l));
+	DrawCone(rhead, lhead, slice, solid);
+	this->PopModelMatrix();
+}
+
+void GRDeviceGL::DrawBox(float sx, float sy, float sz, bool solid){
+	this->PushModelMatrix();
+	this->MultModelMatrix(Affinef::Scale(sx, sy, sz));
+	solid ? glutSolidCube(1.0) : glutWireCube(1.0);
+	this->PopModelMatrix();
+}
+
 void GRDeviceGL::DrawSphere(float radius, int slices, int stacks, bool solid){
 	if(solid)
 		 glutSolidSphere(radius, slices, stacks);
 	else glutWireSphere(radius, slices, stacks);
 }
+
 void GRDeviceGL::DrawCone(float radius, float height, int slice, bool solid){
 	if(solid)
 		 glutSolidCone(radius, height, slice, 1);
 	else glutWireCone(radius, height, slice, 1);
 }
+
 void GRDeviceGL::DrawCylinder(float radius, float height, int slice, bool solid){
 	// 現状では側面のみ
 	glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
@@ -322,7 +360,80 @@ void GRDeviceGL::DrawCylinder(float radius, float height, int slice, bool solid)
 	}
 	glEnd();
 }
+
+void GRDeviceGL::DrawCapsule(float radius, float height, int slice, bool solid){
+	DrawCylinder(radius, height, 20, solid);
+
+	this->PushModelMatrix();
+	glTranslatef(0,0,-height/2);
+	solid ? glutSolidSphere(radius, 20, 20) : glutWireSphere(radius, 20, 20);
+	glTranslatef(0,0,height);
+	solid ? glutSolidSphere(radius, 20, 20) : glutWireSphere(radius, 20, 20);
+	this->PopModelMatrix();
+}
+
+void GRDeviceGL::DrawRoundCone(float rbottom, float rtop, float height, int slice, bool solid){
 	
+	float normal_Z = (rbottom - rtop) / height;
+	if (-M_PI/2.0 < normal_Z && normal_Z < M_PI/2.0) {
+		float theta = acos(normal_Z);
+		float R0 =  rbottom * sin(theta);
+		float Z0 = -height / 2.0f + rbottom * cos(theta);
+		float R1 =  rtop * sin(theta);
+		float Z1 =  height / 2.0f + rtop * cos(theta);
+
+		// 側面を描画
+		glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
+		float step = (float)(M_PI * 2.0f) / (float)slice;
+		float t = 0.0;
+		float x,y,st;
+		for (int i=0; i<=slice; i++) {
+			x=sin(t);
+			y=cos(t);
+			st = sin(theta);
+			glNormal3f(x*st, y*st, cos(theta));
+			glVertex3f(R0 * x, R0 * y, Z0);
+			glVertex3f(R1 * x, R1 * y, Z1);
+			t += step;
+		}
+		glEnd();
+	}
+
+	this->PushModelMatrix();
+	glTranslatef(0,0,-height/2);
+	solid ? glutSolidSphere(rbottom, 20, 20) : glutWireSphere(rbottom, 20, 20);
+	glTranslatef(0,0,height);
+	solid ? glutSolidSphere(rtop, 20, 20) : glutWireSphere(rtop, 20, 20);
+	this->PopModelMatrix();
+
+}
+
+void GRDeviceGL::DrawGrid(float size, int slice, float lineWidth){
+	/*double range = 5000;
+	GRMaterialDesc mat;
+	mat.ambient	 = Vec4f();
+	mat.emissive = Vec4f(0.6, 0.6, 0.6, 1.0);
+	mat.diffuse	 = Vec4f();
+	mat.specular = Vec4f();
+	mat.power	 = 0.0;
+	this->SetMaterial(mat);*/
+	if(slice <= 0)
+		return;
+
+	float halfsize = 0.5f * size;
+	float div = size / (float)slice;
+	float pos = -halfsize;
+	glLineWidth(lineWidth);
+	glBegin(GL_LINES);
+	for(int i = 0; i <= slice; i++){
+		glVertex3f(-halfsize, pos, 0.0f);
+		glVertex3f( halfsize, pos, 0.0f);
+		glVertex3f(pos, -halfsize, 0.0f);
+		glVertex3f(pos,  halfsize, 0.0f);
+		pos += div;
+	}
+	glEnd();
+}
 
 ///	DiplayList の作成
 int GRDeviceGL::StartList(){
@@ -514,6 +625,9 @@ void GRDeviceGL::PushLight(const GRLightDesc& light){
 void GRDeviceGL::PopLight(){
 	nLights--;
 	if (nLights < GL_MAX_LIGHTS) glDisable(GL_LIGHT0+nLights);
+}
+int GRDeviceGL::NLights(){
+	return nLights;
 }
 /// デプスバッファへの書き込みを許可/禁止する
 void GRDeviceGL::SetDepthWrite(bool b){

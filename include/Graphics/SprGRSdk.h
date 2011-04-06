@@ -18,7 +18,7 @@ namespace Spr{;
 /**	\defgroup gpGraphics	グラフィックスSDK	*/
 //@{
 struct GRDeviceGLIf;
-struct GRDebugRenderIf;
+struct GRRenderIf;
 struct GRSceneIf;
 struct GRSceneDesc;
 
@@ -29,7 +29,7 @@ struct GRSdkDesc{
 /**	@brief	グラフィックスSDKの基本クラス　 */
 struct GRSdkIf: public SdkIf{
 	SPR_IFDEF(GRSdk);
-	GRDebugRenderIf* CreateDebugRender();
+	GRRenderIf* CreateRender();
 	GRDeviceGLIf* CreateDeviceGL();
 	GRSceneIf* CreateScene(const GRSceneDesc& desc);
 	GRSceneIf* GetScene(size_t i);

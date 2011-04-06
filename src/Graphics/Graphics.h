@@ -14,5 +14,4 @@
 #include <Foundation/Scene.h>
 #include "GRSdk.h"
 #include "GRRender.h"
-#include "GRDebugRender.h"
 #include "GRDeviceGL.h"

@@ -279,12 +279,12 @@ struct PHSolidIf : public SceneObjectIf{
 	/** @brief 剛体の形状を描画するかどうかを指定する
 		@param bOn true: 形状を描画 bOn false: 形状を描画しない
 	*/
-	void		SetDrawing(bool bOn);
+	//void		SetDrawing(bool bOn);
 
 	/** @brief 剛体の形状を描画するかどうかを取得
 		@return trueで描画、falseで描画しない
 	*/
-	bool		IsDrawn();
+	//bool		IsDrawn();
 };
 
 struct PHShapePairForLCPIf : public ObjectIf{

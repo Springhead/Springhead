@@ -77,110 +77,69 @@ public:
 class GRRenderBase: public Object{
 public:
 	SPR_OBJECTDEF_ABST(GRRenderBase);
-	///	ビューポートの設定
+	
 	virtual void SetViewport(Vec2f pos, Vec2f sz){}
-	///	バッファクリア
 	virtual void ClearBuffer(){}
-	///	バッファの入れ替え（表示）
 	virtual void SwapBuffers(){}
-	/// 背景色の取得
 	virtual void GetClearColor(Vec4f& color){}
-	/// 背景色の設定
 	virtual void SetClearColor(const Vec4f& color){}
-	///	レンダリングの開始前に呼ぶ関数
 	virtual void BeginScene(){}
-	///	レンダリングの終了後に呼ぶ関数
 	virtual void EndScene(){}
-	///	カレントの視点行列をafvで置き換える
 	virtual void SetViewMatrix(const Affinef& afv){}
 	virtual void GetViewMatrix(Affinef& afv){}
-	///	カレントの投影行列をafpで置き換える
 	virtual void SetProjectionMatrix(const Affinef& afp){}
-	///	カレントの投影行列を取得する
 	virtual void GetProjectionMatrix(Affinef& afp){}
-	///	カレントのモデル行列をafwで置き換える
 	virtual void SetModelMatrix(const Affinef& afw){}
 	virtual void GetModelMatrix(Affinef& afw){}
-	///	カレントのモデル行列に対してafwを掛ける
 	virtual void MultModelMatrix(const Affinef& afw){}
-	///	カレントのモデル行列をモデル行列スタックへ保存する
 	virtual void PushModelMatrix(){}
-	///	モデル行列スタックから取り出し、カレントのモデル行列とする
 	virtual void PopModelMatrix(){}
-	/// ブレンド変換行列の全要素を削除する
 	virtual void ClearBlendMatrix(){}
-	/// ブレンド変換行列を設定する
 	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id=0){return 0;}	
-	///	頂点フォーマットの指定
 	virtual void SetVertexFormat(const GRVertexElement* e){}
-	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
 	virtual void SetVertexShader(void* shader){}
-	///	頂点を指定してプリミティブを描画
 	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0){}
-	///	頂点とインデックスを指定してプリミティブを描画
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){}
-	///	球体を描画
-	virtual void DrawSphere(float radius, int slices, int stacks, bool solid=true){}
- 	/// 円錐の描画
-	virtual void DrawCone(float radius, float height, int slice, bool solid=true){}
-	/// 円筒の描画
-	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true){}
-	///	頂点の成分ごとの配列を指定して，プリミティブを描画
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
- 	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
-	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
-	
-	///	DiplayList の作成(リスト作成開始)
-	virtual int StartList(){return 0;}
-	///	リスト作成終了
+ 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
+	virtual void DrawLine(Vec3f p0, Vec3f p1){}
+	virtual void DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid){}
+	virtual void DrawBox(float sx, float sy, float sz, bool solid=true){}
+	virtual void DrawSphere(float radius, int slices, int stacks, bool solid=true){}
+ 	virtual void DrawCone(float radius, float height, int slice, bool solid=true){}
+	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true){}
+	virtual void DrawCapsule(float radius, float height, int slice=20, bool solid=true){}
+	virtual void DrawRoundCone(float rbottom, float rtop, float height, int slice=20, bool solid=true){}
+	virtual void DrawGrid(float size, int slice, float lineWidth){}
+	virtual int	 StartList(){return 0;}
 	virtual void EndList(){}
-	///	DisplayListの表示
 	virtual void DrawList(int i){}
-	///	DisplayListの解放
 	virtual void ReleaseList(int i){}
 	virtual void SetFont(const GRFont& font)=0;
-	///	2次元テキストの描画
 	virtual void DrawFont(Vec2f pos, const std::string str){}
-	///	3次元テキストの描画
 	virtual void DrawFont(Vec3f pos, const std::string str){}
-	///	描画の材質の設定
 	virtual void SetMaterial(const GRMaterialDesc& mat){}
 	virtual void SetMaterial(const GRMaterialIf* mat){}
-	///	描画する点・線の太さの設定
+	virtual void SetMaterial(int matname){}
 	virtual void SetLineWidth(float w){}
-	///	光源スタックをPush
 	virtual void PushLight(const GRLightDesc& light){}
 	virtual void PushLight(const GRLightIf* light){}
-	///	光源スタックをPop
 	virtual void PopLight(){}
-	///	デプスバッファへの書き込みを許可/禁止する
+	virtual int  NLights(){ return 0; }
 	virtual void SetDepthWrite(bool b){}
-	///	デプステストを有効/無効にする
 	virtual void SetDepthTest(bool b){}
-	///	デプスバッファ法に用いる判定条件を指定する
 	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f){}
-	/// アルファブレンディングを有効/無効にする
 	virtual void SetAlphaTest(bool b){}
-	///	アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){}
-	///	シェーディングON(glMaterial) or OFF（glColor)
 	virtual void SetLighting(bool l){}
 
-	/// テクスチャのロード（戻り値：テクスチャID）
 	virtual unsigned int LoadTexture(const std::string filename){return 0;}
-	/// テクスチャ画像の設定
 	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb){}
-	/// シェーダの初期化
 	virtual void InitShader(){}
-	/// シェーダフォーマットの設定
 	virtual void SetShaderFormat(GRShaderFormat::ShaderType type){}	
-	/// シェーダオブジェクトの作成
 	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){return 0;}
-	/// シェーダオブジェクトの作成、GRDeviceGL::shaderへの登録（あらかじめShaderFile名を登録しておく必要がある）	
 	virtual GRHandler CreateShader(){return 0;}
-	/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける
 	virtual bool ReadShaderSource(GRHandler shader, std::string file){return 0;}	
-	/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
 	virtual void GetShaderLocation(GRHandler shader, void* location){}
 };
 
@@ -193,6 +152,9 @@ protected:
 	GRCameraDesc camera;			///<	カメラ
 	Vec2f viewportPos;				///<	ビューポートの左上
 	Vec2f viewportSize;				///<	ビューポートのサイズ
+
+	std::vector<GRMaterialDesc> matSample;		/// レンダラーで用意してある材質(24種類)
+	
 public:
 #define REDIRECTIMP_GRRENDERBASE(ptr)																		\
 	virtual void SetViewport(Vec2f p, Vec2f s){ ptr SetViewport(p, s); }									\
@@ -220,12 +182,23 @@ public:
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty,												\
 		size_t* idx, void* vtx, size_t ct, size_t st=0)														\
 		{ ptr DrawIndexed(ty, idx, vtx, ct, st); }															\
+	virtual void DrawLine(Vec3f p0, Vec3f p1){ ptr DrawLine(p0, p1); }										\
+	virtual void DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid)	\
+		{ ptr DrawArrow(p0, p1, rbar, rhead, lhead, slice, solid); }										\
+	virtual void DrawBox(float sx, float sy, float sz, bool solid=true)										\
+		{ ptr DrawBox(sx, sy, sz, solid); }																	\
 	virtual void DrawSphere(float radius, int stacks, int slice, bool solid = true)							\
 		{ ptr DrawSphere(radius, stacks, slice, solid); }													\
 	virtual void DrawCone(float radius, float height, int slice, bool solid=true)							\
 		{ ptr DrawCone(radius, height, slice, solid); }														\
 	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true)						\
 		{ ptr DrawCylinder(radius, height, slice, solid); }													\
+	virtual void DrawCapsule(float radius, float height, int slice=20, bool solid=true)						\
+		{ ptr DrawCapsule(radius, height, slice, solid); }													\
+	virtual void DrawRoundCone(float rbottom, float rtop, float height, int slice=20, bool solid=true)		\
+		{ ptr DrawRoundCone(rbottom, rtop, height, slice, solid); }											\
+	virtual void DrawGrid(float size, int slice, float lineWidth)											\
+		{ ptr DrawGrid(size, slice, lineWidth); }															\
 	virtual int StartList()																					\
 		{ return ptr StartList(); }																			\
 	virtual void EndList()																					\
@@ -238,9 +211,10 @@ public:
 	virtual void SetMaterial(const GRMaterialDesc& mat){ ptr SetMaterial(mat); }							\
 	virtual void SetMaterial(const GRMaterialIf* mat){ ptr SetMaterial(mat); }								\
 	virtual void SetLineWidth(float w){ ptr SetLineWidth(w); }												\
-	virtual void PushLight(const GRLightDesc& light){ptr PushLight(light);}									\
-	virtual void PushLight(const GRLightIf* light){ptr PushLight(light);}									\
-	virtual void PopLight(){ptr PopLight(); }																\
+	virtual void PushLight(const GRLightDesc& light){ ptr PushLight(light);}								\
+	virtual void PushLight(const GRLightIf* light){ ptr PushLight(light);}									\
+	virtual void PopLight(){ ptr PopLight(); }																\
+	virtual int  NLights(){ return ptr NLights(); }															\
 	virtual void SetDepthWrite(bool b){ ptr SetDepthWrite(b); }												\
 	virtual void SetDepthTest(bool b){ptr SetDepthTest(b); }												\
 	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f){ ptr SetDepthFunc(f); }							\
@@ -265,13 +239,20 @@ public:
 	virtual void SetDevice(GRDeviceIf* dev){ device = dev; }
 	///	デバイスの取得
 	virtual GRDeviceIf* GetDevice(){ return device; }
+	
 	///	デバッグ表示
 	virtual void Print(std::ostream& os) const;
+	
 	///	カメラの設定
 	void SetCamera(const GRCameraDesc& c);
 	const GRCameraDesc& GetCamera(){ return camera; }
+	
 	///	スクリーンサイズとプロジェクション行列の設定
 	virtual void Reshape(Vec2f pos, Vec2f sz);
+
+	/// 予約マテリアルの設定
+	virtual void SetMaterial(int matname);
+	
 	/// Viewportの基点座標の取得
 	Vec2f GetViewportPos(){ return viewportPos; }
 	/// Viewportのサイズの取得
@@ -279,7 +260,10 @@ public:
 	///
 	Vec2f GetPixelSize();
 	/// スクリーン・カメラ座標変換
-	Vec3f	ScreenToCamera(int x, int y, float depth, bool LorR = false);
+	Vec3f ScreenToCamera(int x, int y, float depth, bool LorR = false);
+	
+	GRRender();
+
 };
 
 /**	@class	GRDevice
@@ -295,8 +279,7 @@ public:
 	virtual void SetMaterial(const GRMaterialDesc& mat){}
 	virtual void SetMaterial(const GRMaterialIf* mat){}
 	virtual void PushLight(const GRLightDesc& light){}
-    virtual void PushLight(const GRLightIf* light){
-        if(light) PushLight(*DCAST(GRLight, light)); }
+    virtual void PushLight(const GRLightIf* light){ if(light) PushLight(*DCAST(GRLight, light)); }
 };
 }
 #endif

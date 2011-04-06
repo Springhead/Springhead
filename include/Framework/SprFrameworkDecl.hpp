@@ -65,6 +65,7 @@
 	void SetGRFrame(GRFrameIf* f){	base::SetGRFrame(f);}	\
 	bool LoadMesh(const char* filename, const IfInfo* ii, GRFrameIf* frame){	return	base::LoadMesh(filename, ii, frame);}	\
 	void GenerateCDMesh(GRFrameIf* frame, const PHMaterial& mat){	base::GenerateCDMesh(frame, mat);}	\
+	void Sync(bool ph_to_gr){	base::Sync(ph_to_gr);}	\
 	double GetSolidLength(){	return	base::GetSolidLength();}	\
 	void SetSolidLength(double l){	base::SetSolidLength(l);}	\
 
@@ -90,9 +91,33 @@
 	Spr::FWObjectIf* CreateFWObject(){	return	base::CreateFWObject();}	\
 	int NObject()const{	return	base::NObject();}	\
 	Spr::FWObjectIf** GetObjects(){	return	base::GetObjects();}	\
-	void Sync(){	base::Sync();}	\
+	void Sync(bool ph_to_gr){	base::Sync(ph_to_gr);}	\
 	void Step(){	base::Step();}	\
-	void Draw(GRRenderIf* grRender, bool debug){	base::Draw(grRender, debug);}	\
+	void DrawPHScene(GRRenderIf* render){	base::DrawPHScene(render);}	\
+	void DrawSolid(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire){	base::DrawSolid(render, solid, solid_or_wire);}	\
+	void DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid){	base::DrawShape(render, shape, solid);}	\
+	void DrawConstraint(GRRenderIf* render, PHConstraintIf* con){	base::DrawConstraint(render, con);}	\
+	void DrawContact(GRRenderIf* render, PHContactPointIf* con){	base::DrawContact(render, con);}	\
+	void DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine){	base::DrawIK(render, ikEngine);}	\
+	void SetRenderMode(bool solid, bool wire){	base::SetRenderMode(solid, wire);}	\
+	void EnableRender(Spr::ObjectIf* obj, bool enable){	base::EnableRender(obj, enable);}	\
+	void SetSolidMaterial(int mat, PHSolidIf* solid){	base::SetSolidMaterial(mat, solid);}	\
+	void SetWireMaterial(int mat, PHSolidIf* solid){	base::SetWireMaterial(mat, solid);}	\
+	void EnableRenderAxis(bool world, bool solid, bool con){	base::EnableRenderAxis(world, solid, con);}	\
+	void SetAxisMaterial(int matX, int matY, int matZ){	base::SetAxisMaterial(matX, matY, matZ);}	\
+	void SetAxisScale(float scaleWorld, float scaleSolid, float scaleCon){	base::SetAxisScale(scaleWorld, scaleSolid, scaleCon);}	\
+	void SetAxisStyle(int style){	base::SetAxisStyle(style);}	\
+	void EnableRenderForce(bool solid, bool constraint){	base::EnableRenderForce(solid, constraint);}	\
+	void SetForceMaterial(int matForce, int matMoment){	base::SetForceMaterial(matForce, matMoment);}	\
+	void SetForceScale(float scaleForce, float scaleMoment){	base::SetForceScale(scaleForce, scaleMoment);}	\
+	void EnableRenderContact(bool enable){	base::EnableRenderContact(enable);}	\
+	void SetContactMaterial(int mat){	base::SetContactMaterial(mat);}	\
+	void EnableRenderGrid(bool x, bool y, bool z){	base::EnableRenderGrid(x, y, z);}	\
+	void SetGridOption(char axis, float offset, float size, int slice){	base::SetGridOption(axis, offset, size, slice);}	\
+	void SetGridMaterial(int matX, int matY, int matZ){	base::SetGridMaterial(matX, matY, matZ);}	\
+	void EnableRenderIK(bool enable){	base::EnableRenderIK(enable);}	\
+	void SetIKMaterial(int mat){	base::SetIKMaterial(mat);}	\
+	void SetIKScale(float scale){	base::SetIKScale(scale);}	\
 	void AddHumanInterface(Spr::HIForceDevice6D* d){	base::AddHumanInterface(d);}	\
 	void SetFWBones(Spr::FWBoneIf* b){	base::SetFWBones(b);}	\
 	std::vector< UTRef< Spr::FWBoneIf > > GetFWBones(){	return	base::GetFWBones();}	\

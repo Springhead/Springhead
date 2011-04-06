@@ -33,24 +33,42 @@ SceneObjectIf* FWObject::CloneObject(){
 	return clone;
 }
 
-void FWObject::Sync(){
-	if (phSolid && grFrame){
-		if(solidLength){
-			//ボーン付きXファイルを使用する場合
-			Affinef af,afParent,afd,afl,AF;
-			phSolid->GetPose().ToAffine(af);	
-			afParent=grFrame->GetParent()->GetWorldTransform();	//親のWorld座標からみたFrameを取得
-			afd=afParent.inv()*af;								//階層構造下のAffin行列に変換する
-			afl.PosZ()+=(float)solidLength/2.0f;				//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
-			AF=afd*afl;
-			DCAST(GRFrame, grFrame)->SetTransform(AF);
-		}else{
-			Affinef af;
-			phSolid->GetPose().ToAffine(af);
-			DCAST(GRFrame, grFrame)->SetTransform(af);
-		}
-	}else{
+void FWObject::Sync(bool ph_to_gr){
+	if(!phSolid || !grFrame){
 		//DSTR << "Warning: No solid or frame for " << GetName() << ":FWObject." << std::endl;
+		return;
+	}
+		
+	// ボーン付きXファイルを使用する場合
+	if(solidLength){
+		if(ph_to_gr){
+			Affinef affSolid, affParFrame, afd, afl, AF;
+			// 剛体
+			phSolid->GetPose().ToAffine(affSolid);
+			// 親フレーム
+			affParFrame = grFrame->GetParent()->GetWorldTransform();	
+
+			afd = affParFrame.inv() * affSolid;								//階層構造下のAffin行列に変換する
+			afl.PosZ() += (float)solidLength/2.0f;				//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
+			AF = afd * afl;
+			grFrame->SetTransform(AF);
+		}
+		else{
+			// undefined
+		}
+	}
+	// 通常時
+	else{
+		if(ph_to_gr){
+			Affinef aff;
+			phSolid->GetPose().ToAffine(aff);
+			grFrame->SetTransform(aff);
+		}
+		else{
+			Posed pose;
+			pose.FromAffine(grFrame->GetTransform());
+			phSolid->SetPose(pose);
+		}
 	}
 }
 
