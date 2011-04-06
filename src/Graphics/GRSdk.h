@@ -43,7 +43,7 @@ public:
 	SPR_OBJECTDEF(GRSdk);
 	GRSdk(const GRSdkDesc& = GRSdkDesc());
 	~GRSdk();
-	virtual GRDebugRenderIf* CreateDebugRender();
+	virtual GRRenderIf* CreateRender();
 	virtual GRDeviceGLIf* CreateDeviceGL();
 	virtual GRSceneIf* CreateScene(const GRSceneDesc& desc);
 	virtual GRSceneIf* GetScene(size_t i);

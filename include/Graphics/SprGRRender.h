@@ -221,6 +221,35 @@ struct GRRenderBaseIf: public ObjectIf{
 	};
 	/** @} */
 
+	///	レンダラーで用意してある材質(24種類)
+	enum TMaterialSample {
+		RED,
+		GREEN,
+		BLUE,
+		YELLOW,
+		CYAN,
+		MAGENTA,
+		WHITE,
+		GRAY,
+		ORANGE,
+		BLOWN,
+		LIGHT_BLUE,
+		MIDIUM_PURPLE,
+		DARK_GREEN,
+		DARK_VIOLET,
+		DARK_CYAN,
+		GREEN_YELLOW,
+		LIME_GREEN,
+		INDIAN_RED,
+		INDIGO,
+		GREEN_INDIGO,
+		OLIVE_GREEN,
+		NAVY_BLUE,
+		TURQUOISE_BLUE,
+		EMERALD_GREEN,
+		MATERIAL_SAMPLE_END
+	};
+
 	///	ビューポートの設定
 	void SetViewport(Vec2f pos, Vec2f sz);
 	///	バッファクリア
@@ -261,6 +290,7 @@ struct GRRenderBaseIf: public ObjectIf{
 	void SetVertexFormat(const GRVertexElement* e);
 	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
 	void SetVertexShader(void* shader);
+
 	///	頂点を指定してプリミティブを描画
 	void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
 	///	頂点とインデックスを指定してプリミティブを描画
@@ -268,14 +298,31 @@ struct GRRenderBaseIf: public ObjectIf{
  	///	頂点の成分ごとの配列を指定して，プリミティブを描画
 	void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count);
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
-	void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count);	///	球体を描画
+	void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count);
+
+	/// 線分を描画
+	void	DrawLine(Vec3f p0, Vec3f p1);
+	/// 矢印を描画
+	void	DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid);
+	/// 直方体を描画
+	void	DrawBox(float sx, float sy, float sz, bool solid=true);
 	/// 球体を描画
-	void DrawSphere(float radius, int slices, int stacks, bool solid=true);
+	void	DrawSphere(float radius, int slices, int stacks, bool solid=true);
 	/// 円錐の描画
-	void DrawCone(float radius, float height, int slice, bool solid=true);
+	void	DrawCone(float radius, float height, int slice, bool solid=true);
 	/// 円筒の描画
-	void DrawCylinder(float radius, float height, int slice, bool solid=true);
-	
+	void	DrawCylinder(float radius, float height, int slice, bool solid=true);
+	/// カプセルの描画
+	void	DrawCapsule(float radius, float height, int slice=20, bool solid=true);
+	/// 球円錐の描画
+	void	DrawRoundCone(float rbottom, float rtop, float height, int slice=20, bool solid=true);
+	/**	グリッドを描画
+		@param	size		幅
+		@param	slice		分割数
+		@param	lineWidth	線の太さ
+		xy面上にグリッドを描画する
+	 */
+	void	DrawGrid(float size, int slice, float lineWidth = 1.0f);
 	
 	///	DiplayList の作成(記録開始)
 	int StartList();
@@ -292,6 +339,7 @@ struct GRRenderBaseIf: public ObjectIf{
 	/** @brief	2次元テキストの描画
 	 */
 	void DrawFont(Vec2f pos, const std::string str);
+
 	/** @brief	3次元テキストの描画
 		@param  pos		World座標系での書き始めの位置，ビューポートをはみ出すと何も表示されなくなるので注意．
 		@param	str		書く文字列(bitmapfontで書ける物のみ)
@@ -300,9 +348,13 @@ struct GRRenderBaseIf: public ObjectIf{
 	 */
 	void DrawFont(Vec3f pos, const std::string str);
 
-	///	描画の材質の設定
+	///	描画マテリアルの設定（デスクリプタ版）
 	void SetMaterial(const GRMaterialDesc& mat);
+	///	描画マテリアルの設定（オブジェクト版）
 	void SetMaterial(const GRMaterialIf* mat);
+	/// 描画マテリアルの設定（予約マテリアルの名前で指定）
+	void SetMaterial(int matname);
+
 	///	描画する点・線の太さの設定
 	void SetLineWidth(float w);
 	///	光源スタックをPush
@@ -310,6 +362,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	void PushLight(const GRLightIf* light);
 	///	光源スタックをPop
 	void PopLight();
+	/// 設定されている光源の数
+	int	 NLights();
 	///	デプスバッファへの書き込みを許可/禁止する
 	void SetDepthWrite(bool b);
 	///	デプステストを有効/無効にする
@@ -343,6 +397,7 @@ struct GRRenderBaseIf: public ObjectIf{
 /**	@brief	グラフィックスレンダラーのインタフェース（デバイスの設定、カメラの設定） */
 struct GRRenderIf: public GRRenderBaseIf{
 	SPR_IFDEF(GRRender);
+
 	///	デバイスの設定
 	void SetDevice(GRDeviceIf* dev);
 	///	デバイスの取得
@@ -394,88 +449,6 @@ struct GRDeviceD3DIf: public GRDeviceIf{
 	SPR_IFDEF(GRDeviceD3D);
 };
 */
-
-/**	@brief	デバッグ情報レンダラーのインタフェース */
-struct GRDebugRenderIf:public GRRenderIf{
-	SPR_IFDEF(GRDebugRender);
-	///	レンダラーで用意してある材質(24種類)
-	enum TMaterialSample {
-		RED,
-		GREEN,
-		BLUE,
-		YELLOW,
-		CYAN,
-		MAGENTA,
-		WHITE,
-		GRAY,
-		ORANGE,
-		BLOWN,
-		LIGHT_BLUE,
-		MIDIUM_PURPLE,
-		DARK_GREEN,
-		DARK_VIOLET,
-		DARK_CYAN,
-		GREEN_YELLOW,
-		LIME_GREEN,
-		INDIAN_RED,
-		INDIGO,
-		GREEN_INDIGO,
-		OLIVE_GREEN,
-		NAVY_BLUE,
-		TURQUOISE_BLUE,
-		EMERALD_GREEN,
-		MATERIAL_SAMPLE_END
-	};
-
-	/**  @brief シーン内の全てのオブジェクトをレンダリングする
-	     @param  scene		シーン  */
-	void DrawScene(PHSceneIf* scene);
-
-	/**  @brief 剛体をレンダリングする
-	     @param	solid　　　	剛体  */
-	void DrawSolid(PHSolidIf* solid);
-	
-	/**  @brief 面をレンダリングをする
-		 @param	face　　　	面  
-		 @param	base　　　	凸形状の頂点群  */
-	//
-	// APIとして公開するのは変では？	tazz
-	//
-	//void DrawFace(CDFaceIf* face, Vec3f * base);
-	
-	/**  @brief 指定したマテリアルを割り当てる
-	     @param matname		マテリアルサンプル  */
-	void SetMaterialSample(GRDebugRenderIf::TMaterialSample matname);
-
-	/**	 @brief 描画モードの設定
-		 @param solid 面描画
-		 @param wire ワイヤ描画
-	 */
-	void SetRenderMode(bool solid = true, bool wire = false);
-	
-	/** @brief ワールド座標系の座標軸を描画 */
-	void EnableRenderWorldAxis(bool enable = true);
-
-	/**	 @brief 各関節の座標軸の描画 */
-	void EnableRenderAxis(bool enable = true, float scale = 1.0f);
-
-	/**  @brief 各関節の力の描画 */
-	void EnableRenderForce(bool enable = true, float scale = 1.0f);
-
-	/**  @brief 接触面の描画 */
-	void EnableRenderContact(bool enable = true);
-
-	/** #brief グリッドの描画 */
-	void EnableGrid(bool enable = true, double y = 0.0, double span = 0.5);
-
-	/**  @brief IKの計算結果の描画 */
-	void EnableRenderIK(bool enable = true, float scale = 1.0f);
-
-	///	面の描画(塗りつぶしあり)
-	void DrawFaceSolid(CDFaceIf* face, Vec3f * base);
-	///	面の描画(ワイヤフレーム)	
-	void DrawFaceWire(CDFaceIf* face, Vec3f * base);
-};
 
 //@}
 

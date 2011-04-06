@@ -52,8 +52,9 @@ void FWGLUT::GlutReshapeFunc(int w, int h){
 	instance->fwApp->CallReshape(w, h);
 }
 void FWGLUT::GlutTimerFunc(int value){
-	//instance->fwApp->CallTimerFunc(id);
 	UTTimerIf* timer = UTTimerIf::Get(value);
+	if(!timer)
+		return;
 	timer->Call();
 
 	// タイマーの再設定
