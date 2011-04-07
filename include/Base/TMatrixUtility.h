@@ -316,6 +316,17 @@ void init_projection_d3d(TMatrixBase<4, 4, D>& a,
 	a.item(0,3) = 0;					a.item(1,3) = 0;					a.item(2,3) = -Q*front;		a.item(3,3) = 0;
 }
 
+template <class D, class SD>
+void init_ortho_gl(TMatrixBase<4,4,D>& a, const TVectorBase<2,SD>& vpSize){
+	a.clear();
+	a.item(0,0) =  2.0f / vpSize.item(0);
+	a.item(1,1) = -2.0f / vpSize.item(1);
+	a.item(2,2) = -1.0f;
+	a.item(3,3) =  1.0f;
+	a.item(0,3) = -1.0f;
+	a.item(1,3) =  1.0f;
+}
+
 
 /**	4行ベクトルを回転をあらわすクォータニオンとして初期化	*/
 template <class QD, class T, class AD>

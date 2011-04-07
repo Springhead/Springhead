@@ -565,6 +565,16 @@ public:
 		return y;
 	}
 
+	/** OpenGLの直交射影変換
+		@param vpSize	ビューポートのサイズ
+	 */
+	template <class BUFS>
+	static TAffine<T> OrthoGL(const PTM::TVectorBase<2,BUFS>& vpSize){
+		TAffine<T> y;
+		PTM::init_ortho_gl(y, vpSize);
+		return y;
+	}
+
 	/* obsolete. デフォルト引数に変えました tazz
 	template <class BUF>
 	void LookAt(const PTM::TVectorBase<3, BUF>& targetPos)

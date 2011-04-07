@@ -53,6 +53,8 @@ GRRender::GRRender(){
 		it->diffuse += Vec4f(0.5,0.5,0.5,1);
 		it->diffuse /= 2;
 	}
+
+	screenCoord = false;
 }
 
 void GRRender::Print(std::ostream& os) const{
@@ -116,6 +118,30 @@ Vec3f GRRender::ScreenToCamera(int x, int y, float depth, bool LorR){
 	pos *= (depth / camera.front);
 	return pos;
 }
+
+void GRRender::EnterScreenCoordinate(){
+	if(screenCoord)
+		return;
+	GetViewMatrix(affViewTmp);
+	GetModelMatrix(affModelTmp);
+	GetProjectionMatrix(affProjTmp);
+
+	SetModelMatrix(Affinef());
+	SetViewMatrix(Affinef::Trn(0.0f, 0.0f, -1.001f * GetCamera().front));
+	Affinef affOrtho = Affinef::OrthoGL(GetViewportSize());
+	SetProjectionMatrix(affOrtho);
+	screenCoord = true;
+}
+
+void GRRender::LeaveScreenCoordinate(){
+	if(!screenCoord)
+		return;
+	SetProjectionMatrix(affProjTmp);
+	SetViewMatrix(affViewTmp);
+	SetModelMatrix(affModelTmp);
+	screenCoord = false;
+}
+	
 
 //----------------------------------------------------------------------------
 //	GRMaterial

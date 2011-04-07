@@ -427,6 +427,15 @@ struct GRRenderIf: public GRRenderBaseIf{
 	 */
 	Vec3f	ScreenToCamera(int x, int y, float depth, bool LorR = false);
 
+	/** @brief スクリーン座標系へ切り替える
+		スクリーン座標で文字などを描画するための機能．
+		画面左上が原点，画面右方向がx軸正方向，画面下方向がy軸正方向．
+		座標はピクセル単位．
+	 */
+	void EnterScreenCoordinate();
+	/// スクリーン座標系から戻る
+	void LeaveScreenCoordinate();
+	
 };
 
 /**	@brief	グラフィックスレンダラーのデバイスクラス．OpenGLやDirectXのラッパ */
