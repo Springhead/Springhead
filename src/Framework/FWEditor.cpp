@@ -286,25 +286,9 @@ bool FWEditorOverlay::Key(int key){
 	return false;
 }
 
-void OrthoGL(Affinef& aff, const Vec2f& vpPos, const Vec2f& vpSize){
-	aff.clear();
-	aff[0][0] =  2.0f / vpSize.x;
-	aff[1][1] = -2.0f / vpSize.y;
-	aff[2][2] = -1.0f;
-	aff[3][3] =  1.0f;
-	aff[0][3] = -1.0f;
-	aff[1][3] =  1.0f;
-}
-
 void FWEditorOverlay::Draw(GRRenderIf* render){
-	// orthogonal projection
-	render->SetModelMatrix(Affinef());
-	render->SetViewMatrix(Affinef::Trn(0.0f, 0.0f, -1.001f*render->GetCamera().front));
-	Affinef affProj, affOrtho;
-	render->GetProjectionMatrix(affProj);
-	OrthoGL(affOrtho, render->GetViewportPos(), render->GetViewportSize());
-	render->SetProjectionMatrix(affOrtho);
-		
+	render->EnterScreenCoordinate();
+
 	// オブジェクトの型と名前
 	drawPos.x = margin.x;
 	drawPos.y = margin.y;
@@ -340,7 +324,7 @@ void FWEditorOverlay::Draw(GRRenderIf* render){
 		DrawField(render, i);
 	}
 
-	render->SetProjectionMatrix(affProj);
+	render->LeaveScreenCoordinate();
 }
 
 void FWEditorOverlay::DrawField(GRRenderIf* render, size_t index){

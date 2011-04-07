@@ -152,6 +152,8 @@ protected:
 	GRCameraDesc camera;			///<	カメラ
 	Vec2f viewportPos;				///<	ビューポートの左上
 	Vec2f viewportSize;				///<	ビューポートのサイズ
+	Affinef	affViewTmp, affModelTmp, affProjTmp;	///< 退避用アフィン行列
+	bool	screenCoord;			///<	画面座標モードか
 
 	std::vector<GRMaterialDesc> matSample;		/// レンダラーで用意してある材質(24種類)
 	
@@ -261,6 +263,11 @@ public:
 	Vec2f GetPixelSize();
 	/// スクリーン・カメラ座標変換
 	Vec3f ScreenToCamera(int x, int y, float depth, bool LorR = false);
+
+	/// スクリーン座標系へ切り替える
+	void EnterScreenCoordinate();
+	/// スクリーン座標系から戻る
+	void LeaveScreenCoordinate();
 	
 	GRRender();
 
