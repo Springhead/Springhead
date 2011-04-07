@@ -24,15 +24,18 @@ using namespace Spr;
 class SampleApp : public FWApp{
 public:
 	/** メニューID
-		MENU_ALWAYSはいつでも表示され，それ以外のメニューはIDの順で並ぶ．
-		ユーザ定義メニュー先に来るように1～99のIDを使用，100以降を基本メニューが使用．
+		MENU_ALWAYSはいつでも表示される
+		シーンに対応するメニューは1～99のIDを使用(シーンは99個まで)
+		100以降を共有メニューが使用
 	 */
 	enum MenuID{
-		MENU_ALWAYS = 0,		///< いつでも有効系
-		MENU_USER   = 1,		///< ユーザ使用領域
-		MENU_CONFIG = 100,		///< パラメータ設定系
-		MENU_STATE,				///< ステート保存系
-		MENU_EDITOR,			///< FWEditorを表示
+		MENU_ALWAYS		= 0,			///< いつでも有効なメニュー
+		MENU_SCENE		= 1,			///< シーンメニュー
+		MENU_COMMON		= 100,			///< 共有メニュー
+		MENU_CONFIG		= MENU_COMMON,	///< パラメータ設定系
+		MENU_STATE,						///< ステート保存系
+		MENU_EDITOR,					///< FWEditorを表示
+		MENU_COMMON_LAST,
 	};
 	/// アクションID
 	enum ActionAlways{
@@ -51,6 +54,7 @@ public:
 	enum ActionConfig{
 		ID_SWITCH_LCP_PENALTY,		///< LCPとペナルティ法を切り替える
 		ID_ENABLE_JOINT,			///< 関節の有効化と無効化
+		ID_ENABLE_ABA,				///< ABAの有効化と無効化
 		ID_INC_TIMESTEP,			///< タイムステップを増やす
 		ID_DEC_TIMESTEP,			///< タイムステップを減らす
 	};
@@ -87,8 +91,9 @@ public:
 	};
 	typedef map<int, Menu>	Menus;
 	Menus					menus;
-	int						curMenu;
+	int						curMenu;		///< 表示中の共有メニュー
 	stringstream			ss;
+	UTString				message;		///< 一行メッセージ
 	
 	FWEditorOverlay			editor;			///< 内部情報の表示/編集機能
 	FWSceneIf*				fwScene;		///< アクティブなシーン
@@ -281,12 +286,21 @@ public:
 			DrawMenu(render, MENU_ALWAYS, pos);
 			pos.y += yline;
 
-			// 現在表示中のメニュー
+			// シーンメニュー
+			DrawMenu(render, MENU_SCENE + curScene, pos);
+			pos.y += yline;
+
+			// 共有メニュー
 			DrawMenu(render, curMenu, pos);
 			pos.y += yline;
 
 			render->DrawFont(pos, "hit TAB to switch menu");
+			pos.y += yline;
 		}
+
+		// メッセージ
+		render->DrawFont(pos, message);
+
 		render->LeaveScreenCoordinate();
 		render->SetLighting(true);
 		render->SetDepthTest(true);
@@ -299,7 +313,7 @@ public:
 		appName		= "untitled";
 		numScenes	= 1;
 		curScene	= 0;
-		curMenu		= MENU_USER;
+		curMenu		= MENU_COMMON;
 
 		ymargin		= 10;
 		xmargin		= 20;
@@ -317,30 +331,34 @@ public:
 		AddHotKey(MENU_ALWAYS, ID_TOGGLE, ' ', "space");
 		AddAction(MENU_ALWAYS, ID_STEP, "step", "step simulation");
 		AddHotKey(MENU_ALWAYS, ID_STEP, ';');
+
+		/// 共有コマンドはシーンコマンドとの衝突回避のために大文字を割り当てる
 		/// ステートの保存や復帰
 		AddMenu(MENU_STATE, "< save and load states >");
 		AddAction(MENU_STATE, ID_LOAD_STATE, "load state", "load saved state");
-		AddHotKey(MENU_STATE, ID_LOAD_STATE, 'l');
+		AddHotKey(MENU_STATE, ID_LOAD_STATE, 'L');
 		AddAction(MENU_STATE, ID_SAVE_STATE, "save state", "save current state");
-		AddHotKey(MENU_STATE, ID_SAVE_STATE, 's');
+		AddHotKey(MENU_STATE, ID_SAVE_STATE, 'S');
 		AddAction(MENU_STATE, ID_RELEASE_STATE, "release state", "release saved state");
-		AddHotKey(MENU_STATE, ID_RELEASE_STATE, 'x');
+		AddHotKey(MENU_STATE, ID_RELEASE_STATE, 'X');
 		AddAction(MENU_STATE, ID_READ_STATE, "read state", "read state from state.bin");
-		AddHotKey(MENU_STATE, ID_READ_STATE, 'r');
+		AddHotKey(MENU_STATE, ID_READ_STATE, 'R');
 		AddAction(MENU_STATE, ID_WRITE_STATE, "write state", "write state to state.bin");
-		AddHotKey(MENU_STATE, ID_WRITE_STATE, 'w');
+		AddHotKey(MENU_STATE, ID_WRITE_STATE, 'W');
 		AddAction(MENU_STATE, ID_DUMP, "dump", "dump object data to dump.bin");
-		AddHotKey(MENU_STATE, ID_DUMP, 'd');
+		AddHotKey(MENU_STATE, ID_DUMP, 'D');
 		/// シミュレーション設定
 		AddMenu(MENU_CONFIG, "< simulation settings >");
 		AddAction(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, "switch to penalty", "switch to penalty method");
-		AddHotKey(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, 'm');
+		AddHotKey(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, 'M');
 		AddAction(MENU_CONFIG, ID_ENABLE_JOINT, "disable joints");
-		AddHotKey(MENU_CONFIG, ID_ENABLE_JOINT, 'j');
+		AddHotKey(MENU_CONFIG, ID_ENABLE_JOINT, 'J');
+		AddAction(MENU_CONFIG, ID_ENABLE_ABA, "disable ABA (non implemented)");
+		AddHotKey(MENU_CONFIG, ID_ENABLE_ABA, 'A');
 		AddAction(MENU_CONFIG, ID_INC_TIMESTEP, "increase time step");
-		AddHotKey(MENU_CONFIG, ID_INC_TIMESTEP, 'i');
+		AddHotKey(MENU_CONFIG, ID_INC_TIMESTEP, 'I');
 		AddAction(MENU_CONFIG, ID_DEC_TIMESTEP, "decrease time step");
-		AddHotKey(MENU_CONFIG, ID_DEC_TIMESTEP, 'd');
+		AddHotKey(MENU_CONFIG, ID_DEC_TIMESTEP, 'D');
 		
 	}
 	~SampleApp(){}
@@ -368,27 +386,45 @@ public: /** 派生クラスが実装する関数 **/
 				exit(0);
 			if(id == ID_TOGGLE){
 				running = !running;
-				if(running)
-					 AddAction(MENU_ALWAYS, ID_TOGGLE, "pause", "pause simulation");
-				else AddAction(MENU_ALWAYS, ID_TOGGLE, "start", "start simulation");
+				if(running){
+					AddAction(MENU_ALWAYS, ID_TOGGLE, "pause", "pause simulation");
+					message = "simulation started.";
+				}
+				else{
+					AddAction(MENU_ALWAYS, ID_TOGGLE, "start", "start simulation");
+					message = "simulation paused.";
+				}
 			}
-			if(id == ID_STEP)
+			if(id == ID_STEP){
 				fwScene->Step();
+				message = "one step simulated.";
+			}
 		}
 		if(menu == MENU_STATE){
-			if(id == ID_LOAD_STATE)
+			if(id == ID_LOAD_STATE){
 				states->LoadState(phScene);
-			if(id == ID_SAVE_STATE)
+				message = "state loaded.";
+			}
+			if(id == ID_SAVE_STATE){
 				states->SaveState(phScene);
-			if(id == ID_RELEASE_STATE)		
+				message = "state saved.";
+			}
+			if(id == ID_RELEASE_STATE){	
 				states->ReleaseState(phScene);
-			if(id == ID_READ_STATE)
+				message = "saved state is released.";
+			}
+			if(id == ID_READ_STATE){
 				phScene->ReadState("state.bin");
-			if(id == ID_WRITE_STATE)
+				message = "state read from state.bin.";
+			}
+			if(id == ID_WRITE_STATE){
 				phScene->WriteState("state.bin");
+				message = "state written to state.bin.";
+			}
 			if(id == ID_DUMP){
 				std::ofstream f("dump.bin", std::ios::binary|std::ios::out);
 				phScene->DumpObjectR(f);
+				message = "dumped to dump.bin.";
 			}
 		}
 		if(menu == MENU_CONFIG){
@@ -397,10 +433,12 @@ public: /** 派生クラスが実装する関数 **/
 				if(useLCP){
 					phScene->SetContactMode(PHSceneDesc::MODE_LCP);
 					AddAction(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, "switch to penalty", "switch to penalty method");
+					message = "switched to LCP method.";
 				}
 				else{
 					phScene->SetContactMode(PHSceneDesc::MODE_PENALTY);
 					AddAction(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, "switch to lcp", "switch to lcp method");
+					message = "switched to penalty method.";
 				}
 			}
 			if(id == ID_ENABLE_JOINT){
@@ -408,11 +446,30 @@ public: /** 派生クラスが実装する関数 **/
 				bEnable = !bEnable;
 				for(int i = 0; i < (int)phScene->NJoints(); i++)
 					phScene->GetJoint(i)->Enable(bEnable);
+				if(bEnable){
+					AddAction(MENU_CONFIG, ID_ENABLE_JOINT, "disable joints");
+					message = "joints are enabled.";
+				}
+				else{
+					AddAction(MENU_CONFIG, ID_ENABLE_JOINT, "enable joints");
+					message = "joints are disabled.";
+				}
 			}
-			if(id == ID_INC_TIMESTEP)
-				phScene->SetTimeStep(2.0 * phScene->GetTimeStep());
-			if(id == ID_DEC_TIMESTEP)
+			if(id == ID_ENABLE_ABA){
+
+			}
+			if(id == ID_INC_TIMESTEP){
+				phScene->SetTimeStep(std::min(0.1, 2.0 * phScene->GetTimeStep()));
+				ss.str("");
+				ss << "time step is now " << phScene->GetTimeStep();
+				message = ss.str();
+			}
+			if(id == ID_DEC_TIMESTEP){
 				phScene->SetTimeStep(std::max(0.001, 0.5 * phScene->GetTimeStep()));
+				ss.str("");
+				ss << "time step is now " << phScene->GetTimeStep();
+				message = ss.str();
+			}
 		}
 	}
 
@@ -424,6 +481,8 @@ public: /** FWAppの実装 **/
 		CreateSdk();
 
 		FWWinDesc windowDesc;
+		windowDesc.width = 1024;
+		windowDesc.height = 768;
 		windowDesc.title = appName;
 		CreateWin(windowDesc);
 		InitWindow();
@@ -532,10 +591,8 @@ public: /** FWAppの実装 **/
 		}
 		// TAB : メニュー切り替え
 		if(showHelp && key == '\t'){
-			Menus::iterator it = menus.find(curMenu);
-			if(++it == menus.end())
-				 curMenu = MENU_USER;
-			else curMenu = it->first;
+			if(++curMenu == MENU_COMMON_LAST)
+				curMenu = MENU_COMMON;
 		}
 
 		// 数字キー　->　シーン切り替え
@@ -545,10 +602,16 @@ public: /** FWAppの実装 **/
 		}
 
 		// キーに対応するアクションを実行
-		int id = menus[MENU_ALWAYS].Query(key);
+		int id;
+		// 常時表示メニュー
+		id = menus[MENU_ALWAYS].Query(key);
 		if(id != -1)
 			OnAction(MENU_ALWAYS, id);
-
+		// シーンメニュー
+		id = menus[MENU_SCENE + curScene].Query(key);
+		if(id != -1)
+			OnAction(MENU_SCENE + curScene, id);
+		// 共有メニュー
 		if(curMenu == MENU_EDITOR){
 			editor.Key(key);
 			editor.SetObject(phScene);

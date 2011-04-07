@@ -42,7 +42,7 @@ class MyApp : public SampleApp{
 public:
 	/// ページID
 	enum {
-		MENU_MAIN = MENU_USER,
+		MENU_MAIN = MENU_SCENE,
 	};
 	/// アクションID
 	enum {
@@ -115,18 +115,30 @@ public:
 			Vec3d v, w(0.0, 0.0, 0.2), p(0.5, 20.0, 0.0);
 			Quaterniond q = Quaterniond::Rot(Rad(30.0), 'y');
 
-			if(id == ID_BOX)
+			if(id == ID_BOX){
 				Drop(SHAPE_BOX, GRRenderIf::RED, v, w, p, q);
-			if(id == ID_CAPSULE)
+				message = "box dropped.";
+			}
+			if(id == ID_CAPSULE){
 				Drop(SHAPE_CAPSULE, GRRenderIf::GREEN, v, w, p, q);
-			if(id == ID_ROUNDCONE)	
+				message = "capsule dropped.";
+			}
+			if(id == ID_ROUNDCONE){
 				Drop(SHAPE_ROUNDCONE, GRRenderIf::BLUE, v, w, p, q);
-			if(id == ID_SPHERE)
+				message = "round cone dropped.";
+			}
+			if(id == ID_SPHERE){
 				Drop(SHAPE_SPHERE, GRRenderIf::YELLOW, v, w, p, q);
-			if(id == ID_ROCK)
+				message = "sphere dropped.";
+			}
+			if(id == ID_ROCK){
 				Drop(SHAPE_ROCK, GRRenderIf::ORANGE, v, w, p, q);
-			if(id == ID_BLOCK)
+				message = "random polyhedron dropped.";
+			}
+			if(id == ID_BLOCK){
 				Drop(SHAPE_BLOCK, GRRenderIf::CYAN, v, w, p, q);
+				message = "composite block dropped.";
+			}
 			if(id == ID_TOWER){
 				const double tower_radius = 10;
 				const int tower_height = 5;
@@ -138,11 +150,18 @@ public:
 						Drop(SHAPE_BOX, GRRenderIf::BLUE, Vec3d(), Vec3d(), Vec3d(0.5, 20, 0), Quaterniond::Rot(-theta, 'y'));
 					}
 				}
+				message = "tower built.";
 			}
 			if(id == ID_SHAKE){
 				std::cout << "F: shake floor." << std::endl;
-				if (!floorShakeAmplitude) floorShakeAmplitude = 2;
-				else floorShakeAmplitude = 0;
+				if(floorShakeAmplitude == 0.0){
+					floorShakeAmplitude = 2;
+					message = "floor shaken.";
+				}
+				else{
+					floorShakeAmplitude = 0;
+					message = "floor stopped.";
+				}
 			}
 		}
 		SampleApp::OnAction(menu, id);
