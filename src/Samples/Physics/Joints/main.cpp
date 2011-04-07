@@ -13,11 +13,7 @@
 \section secTestPatternJoints テストパターン
 - シーン0：鎖
 - シーン1：チェビシェフリンク
-- シーン2：バネダンパ入りジョイントとバネダンパ
-- シーン3：ボールジョイント1つのテスト
-- シーン4：パスジョイント
-- シーン5：バネダンパ（安定なバネダンパの確認デモ） 
-
+- シーン2：シリアルリンク
 
 \section secSpecJoints 仕様
 - 共通の操作：
@@ -63,166 +59,60 @@
   - 'm'で、バネ原点を-0.01する
 */
 
-#include <ctime>
-#include <string>
-#include <sstream>
+//#include <ctime>
+//#include <string>
+//#include <sstream>
+
+#include "../../SampleApp.h"
 
 #include "ChainHandler.h"
 #include "LinkHandler.h"
-#include "PathHandler.h"
 #include "ArmHandler.h"
-#include "BallJointHandler.h"
-#include "HingeJointHandler.h"
+//#include "PathHandler.h"
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
+
 using namespace Spr;
 using namespace std;
 
 #define ESC		27
 
-class MyApp : public FWApp{
+class MyApp : public SampleApp{
 public:
-	UTRef<ObjectStatesIf>		state;
 	vector< UTRef<Handler> >	handlers;
-	Handler*					activeHandler;
-	FWEditorOverlay				editor;
-
-	bool	bAutoStep;		///< 自動ステップ
-
+	
 public:
-	void SwitchScene(int id){
-		if(id < 0 || (int)handlers.size() <= id)
-			return;
-
-		GetSdk()->SwitchScene(GetSdk()->GetScene(id));
-		editor.SetObject(GetSdk()->GetScene()->GetPHScene());
-		activeHandler = handlers[id];
-		if(!activeHandler->bReady)
-			activeHandler->Build();
-		cameraInfo.Fit(GetSdk()->GetRender()->GetCamera(), activeHandler->GetSceneRadius());
-	}
-
-	/**
-	 brief 		キーボードコールバック関数 
-	 param		<in/--> key　　 ASCIIコード
-	 param 		<in/--> x　　　 キーが押された時のマウス座標
-	 param 		<in/--> y　　　 キーが押された時のマウス座標
-	 return 	なし
-	 */
-	virtual void Keyboard(int key, int x, int y){
-		if(key == ESC || key == 'q')
-			exit(0);
-		if(key == ' ')
-			bAutoStep = !bAutoStep;
-		if(key == ';')
-			Step();
-
-		PHSceneIf* phScene = activeHandler->GetPHScene();
-		if (key == 'W'){
-			phScene->WriteState("state.bin");
-		}
-		else if (key == 'R'){
-			phScene->ReadState("state.bin");
-		}
-		else if(key == ','){
-			state->SaveState(phScene);
-		}
-		else if(key == '.'){
-			state->LoadState(phScene);
-		}
-		else if(key == '/'){
-			state->ReleaseState(phScene);
-		}
-
-		// FWEditorで処理されなかったキー入力のみ次に回す
-		if(!editor.Key(key)){
-			//シーン切り替え
-			if(key <= 0xff && isdigit(key)){
-				SwitchScene(key - '0');
-			}
-			else{
-				activeHandler->OnKey(key);
-				// FWEditorを更新
-				editor.SetObject(GetSdk()->GetScene()->GetPHScene());
-			}
-		}
-	}
-
-	void Step(){
-		GetSdk()->Step();
-		activeHandler->OnTimer();
-	}
-
-	virtual void TimerFunc(int id){
-		if(bAutoStep)
-			Step();
-		PostRedisplay();
-	}	
-
-	virtual void Init(int argc = 0, char* argv[] = NULL){
-		SetGRAdaptee(TypeGLUT);
-		GRInit(argc, argv);
-		CreateSdk();
+	MyApp(){
+		appName		= "Joints";
 		
-		FWWinDesc windowDesc;
-		windowDesc.title = "Joints";
-		CreateWin(windowDesc);
-		InitWindow();
-
-		UTTimerIf* timer = CreateTimer();				// タイマーの生成
-		timer->SetInterval(50);
-
-		cameraInfo.zoomRange[1] = 1000.0f;
-		GetSdk()->SetDebugMode(true);
-
-		/*GRRenderIf* render = GetSdk()->GetRender();
-		GRLightDesc light;
-		light.position = Vec4f(10.0, 20.0, 20.0, 1.0);
-		light.diffuse = Vec4f(1,1,1,1) * 0.5f;
-		light.specular = Vec4f(1,1,1,1) * 0.2f;
-		light.ambient = Vec4f(1,1,1,1) * 0.0f;
-		render->PushLight(light);*/
-
-		// シーンの構築
+		// ハンドラ登録
 		handlers.push_back(new ChainHandler());
 		handlers.push_back(new LinkHandler());
 		handlers.push_back(new ArmHandler());
-		handlers.push_back(new BallJointHandler());
-		handlers.push_back(new HingeJointHandler());
-		handlers.push_back(new PathHandler());
-		for(unsigned i = 0; i < handlers.size(); i++){
-			FWSceneIf* fwScene = GetSdk()->CreateScene();
-			fwScene->GetPHScene()->SetTimeStep(0.05);
-			fwScene->GetPHScene()->SetNumIteration(20);
-			fwScene->SetRenderMode(true, false);
-			fwScene->EnableRenderAxis(true, false, false);
-			fwScene->EnableRenderForce();
-			fwScene->EnableRenderContact();
-		}
+		numScenes	= handlers.size();
+	}
+	virtual ~MyApp(){}
 
-		state = ObjectStatesIf::Create();
-		SwitchScene(0);
-		bAutoStep = false;
+	virtual void BuildScene(){
+		handlers[curScene]->BuildScene();
 	}
 
-	virtual void Display(){
-		// 描画モードの設定
-		GRRenderIf* render = GetCurrentWin()->render->Cast();
-		GRCameraDesc cam = render->GetCamera();
-		cam.front = 0.5f;
-		render->SetCamera(cam);
-		render->SetViewMatrix(cameraInfo.view.inv());
+	virtual void OnAction(int menu, int id){
+		if(menu == MENU_SCENE + curScene)
+			handlers[curScene]->OnAction(id);
+		SampleApp::OnAction(menu, id);
+	}
 
-		// 描画の実行
-		GetSdk()->Draw();
+	virtual void OnStep(){
+		SampleApp::OnStep();
+		handlers[curScene]->OnStep();
+	}
 
-		// 情報のオーバレイ
-		editor.Update();
-		editor.Draw(render);
-		
-		glutSwapBuffers();
+	virtual void OnDraw(GRRenderIf* render){
+		SampleApp::OnDraw(render);
+		handlers[curScene]->OnDraw(render);
 	}
 
 } app;
