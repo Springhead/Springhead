@@ -10,116 +10,107 @@
 
 using namespace std;
 
-void Robot::Leg::Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk){
-	CDBoxDesc bd;
-	bd.boxsize = Vec3f(0.1, 0.4, 0.1);
-	boxCrank = sdk->CreateShape(bd)->Cast();
-	bd.boxsize = Vec3f(0.1, 1.5, 0.1);
-	boxFoot = sdk->CreateShape(bd)->Cast();
-	bd.boxsize = Vec3f(0.1, 0.8, 0.1);
-	boxGuide = sdk->CreateShape(bd)->Cast();
-
-	PHSolidDesc sd;
-	//sd.mass = 0.1;
-	sd.inertia = Matrix3d::Unit() * 0.1;
-	soCrank = scene->CreateSolid(sd);
-	soCrank->AddShape(boxCrank);
-	soFoot[0] = scene->CreateSolid(sd);
-	soFoot[0]->AddShape(boxFoot);
-	soFoot[1] = scene->CreateSolid(sd);
-	soFoot[1]->AddShape(boxFoot);
-	soGuide[0] = scene->CreateSolid(sd);
-	soGuide[0]->AddShape(boxGuide);
-	soGuide[1] = scene->CreateSolid(sd);
-	soGuide[1]->AddShape(boxGuide);
-
-	// クランク
-	PHHingeJointDesc jd;
-	jd.poseSocket = base;
-	jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
-	jntCrank = scene->CreateJoint(body, soCrank, jd)->Cast();
-	jntCrank->SetDamper(1.0);
-	scene->CreateTreeNode(root, soCrank);
-	
-	const double K = 100.0, D = 10.0;
-	
-	Posed pose;
-	PHTreeNodeIf* node;
-	for(int i = 0; i < 2; i++){
-		pose.Pos() = Vec3d(0.9, 0.4, (i == 0 ? 0.06 : -0.06));
-		jd.poseSocket = base * pose;
-		jd.posePlug.Pos() = Vec3d(0.0, 0.4, (i == 0 ? -0.06 : 0.06));
-		jntGuideBody[i] = scene->CreateJoint(body, soGuide[i], jd)->Cast();
-		jntGuideBody[i]->SetDamper(D);
-		jntGuideBody[i]->SetSpring(K);
-		jntGuideBody[i]->SetTargetPosition(Rad(-90.0));
-		node = scene->CreateTreeNode(root, soGuide[i]);
-			
-		jd.poseSocket.Ori() = Quaterniond();
-		jd.poseSocket.Pos() = Vec3d(0.0, -0.4, 0.0);
-		jd.posePlug.Pos() = Vec3d(0.0, 0.7, 0.0);
-		jntFootGuide[i] = scene->CreateJoint(soGuide[i], soFoot[i], jd)->Cast();
-		scene->CreateTreeNode(node, soFoot[i]);
-		jntFootGuide[i]->SetSpring(K);
-		jntFootGuide[i]->SetDamper(D);
-		jntFootGuide[i]->SetTargetPosition(Rad(-90.0));
-	}
-	
-	// しばし待つ
-	//しばし待つ処理を入れるとPHConstraintEngineで落ちるからとりあえず外します．bt toki 2008.03.02
-/*
-	double dt = scene->GetTimeStep();
-	double T = 0.1;
-	for(double t = 0.0; t < T; t+=dt)
-		scene->Step();
-*/
-	// バネ解除
-	jntGuideBody[0]->SetSpring(0.0);
-	jntGuideBody[1]->SetSpring(0.0);
-	jntFootGuide[0]->SetSpring(0.0);
-	jntFootGuide[1]->SetSpring(0.0);
-
-	// 閉リンクの構成
-	for(int i = 0; i < 2; i++){
-		jd.poseSocket = Posed();
-		jd.poseSocket.Pos() = Vec3d(0.0, (i == 0 ? 0.1 : -0.1), (i == 0 ? 0.06: -0.06));
-		jd.posePlug.Pos() = Vec3d(0.0, -0.1+0.25, (i == 0 ? -0.06 : 0.06));
-		jntFoot[i] = scene->CreateJoint(soCrank, soFoot[i], jd)->Cast();
-	}
-	
-	scene->SetContactMode(soCrank, soFoot[0], PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soCrank, soFoot[1], PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soCrank, soGuide[0], PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soCrank, soGuide[1], PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soGuide[0], soFoot[0], PHSceneDesc::MODE_NONE);
-	scene->SetContactMode(soGuide[1], soFoot[1], PHSceneDesc::MODE_NONE);	
-}
-
-void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
+void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(0.8, 0.6, 1.0);
-	boxBody = sdk->CreateShape(bd)->Cast();
+	boxBody = phSdk->CreateShape(bd)->Cast();
+	bd.boxsize = Vec3f(0.1, 0.4, 0.1);
+	boxCrank = phSdk->CreateShape(bd)->Cast();
+	bd.boxsize = Vec3f(0.1, 1.5, 0.1);
+	boxFoot = phSdk->CreateShape(bd)->Cast();
+	bd.boxsize = Vec3f(0.1, 0.8, 0.1);
+	boxGuide = phSdk->CreateShape(bd)->Cast();
 	
 	PHSolidDesc sd;
-	soBody = scene->CreateSolid(sd);
+	soBody = phScene->CreateSolid(sd);
 	soBody->AddShape(boxBody);
 	soBody->SetPose(pose);
 	soBody->SetDynamical(false);
-	PHRootNodeIf* root = scene->CreateRootNode(soBody);
+	//PHRootNodeIf* root = phScene->CreateRootNode(soBody);
 
-	Posed poseLeg;
-	poseLeg.Pos() = Vec3d(-1.3, -0.3, 1.0);
-	leg[0].Build(soBody, root, poseLeg, scene, sdk);
-	poseLeg.Pos() = Vec3d(-1.3, -0.3, -1.0);
-	leg[2].Build(soBody, root, poseLeg, scene, sdk);
+	Posed poseLeg[4];
+	poseLeg[0].Pos() = Vec3d(-1.3, -0.3, 1.0);
+	poseLeg[2].Pos() = Vec3d(-1.3, -0.3, -1.0);
+	poseLeg[1].Pos() = Vec3d(1.3, -0.3, 1.0);
+	poseLeg[1].Ori() = Quaterniond::Rot(Rad(180.0), 'y');
+	poseLeg[3].Pos() = Vec3d(1.3, -0.3, -1.0);
+	poseLeg[3].Ori() = Quaterniond::Rot(Rad(180.0), 'y');
 	
-	poseLeg.Ori() = Quaterniond::Rot(Rad(180.0), 'y');
-	
-	poseLeg.Pos() = Vec3d(1.3, -0.3, 1.0);
-	leg[1].Build(soBody, root, poseLeg, scene, sdk);
-	poseLeg.Pos() = Vec3d(1.3, -0.3, -1.0);
-	leg[3].Build(soBody, root, poseLeg, scene, sdk);
+	for(int i = 0; i < 4; i++){		
+		PHSolidDesc sd;
+		sd.mass = 0.1;
+		sd.inertia = Matrix3d::Unit() * 0.1;
+		leg[i].soCrank = phScene->CreateSolid(sd);
+		leg[i].soCrank->AddShape(boxCrank);
+		leg[i].soFoot[0] = phScene->CreateSolid(sd);
+		leg[i].soFoot[0]->AddShape(boxFoot);
+		leg[i].soFoot[1] = phScene->CreateSolid(sd);
+		leg[i].soFoot[1]->AddShape(boxFoot);
+		leg[i].soGuide[0] = phScene->CreateSolid(sd);
+		leg[i].soGuide[0]->AddShape(boxGuide);
+		leg[i].soGuide[1] = phScene->CreateSolid(sd);
+		leg[i].soGuide[1]->AddShape(boxGuide);
 
+		// クランク
+		PHHingeJointDesc jd;
+		jd.poseSocket = poseLeg[i];
+		jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
+		leg[i].jntCrank = phScene->CreateJoint(soBody, leg[i].soCrank, jd)->Cast();
+		leg[i].jntCrank->SetDamper(1.0);
+		//phScene->CreateTreeNode(root, leg[i].soCrank);
+	
+		const double K = 100.0, D = 10.0;
+	
+		Posed pose;
+		PHTreeNodeIf* node;
+		for(int j = 0; j < 2; j++){
+			pose.Pos() = Vec3d(0.9, 0.4, (j == 0 ? 0.06 : -0.06));
+			jd.poseSocket = poseLeg[i] * pose;
+			jd.posePlug.Pos() = Vec3d(0.0, 0.4, (j == 0 ? -0.06 : 0.06));
+			leg[i].jntGuideBody[j] = phScene->CreateJoint(soBody, leg[i].soGuide[j], jd)->Cast();
+			leg[i].jntGuideBody[j]->SetDamper(D);
+			leg[i].jntGuideBody[j]->SetSpring(K);
+			leg[i].jntGuideBody[j]->SetTargetPosition(Rad(-90.0));
+			//node = phScene->CreateTreeNode(root, leg[i].soGuide[j]);
+			
+			jd.poseSocket.Ori() = Quaterniond();
+			jd.poseSocket.Pos() = Vec3d(0.0, -0.4, 0.0);
+			jd.posePlug.Pos() = Vec3d(0.0, 0.7, 0.0);
+			leg[i].jntFootGuide[j] = phScene->CreateJoint(leg[i].soGuide[j], leg[i].soFoot[j], jd)->Cast();
+			//phScene->CreateTreeNode(node, leg[i].soFoot[j]);
+			leg[i].jntFootGuide[j]->SetSpring(K);
+			leg[i].jntFootGuide[j]->SetDamper(D);
+			leg[i].jntFootGuide[j]->SetTargetPosition(Rad(-90.0));
+		}
+	
+		double dt = phScene->GetTimeStep();
+		double T = 0.1;
+		for(double t = 0.0; t < T; t+=dt)
+			phScene->Step();
+	
+		// バネ解除
+		leg[i].jntGuideBody[0]->SetSpring(0.0);
+		leg[i].jntGuideBody[1]->SetSpring(0.0);
+		leg[i].jntFootGuide[0]->SetSpring(0.0);
+		leg[i].jntFootGuide[1]->SetSpring(0.0);
+
+		// 閉リンクの構成
+		for(int j = 0; j < 2; j++){
+			jd.poseSocket = Posed();
+			jd.poseSocket.Pos() = Vec3d(0.0, (j == 0 ? 0.1 : -0.1), (j == 0 ? 0.06: -0.06));
+			jd.posePlug.Pos() = Vec3d(0.0, -0.1+0.25, (j == 0 ? -0.06 : 0.06));
+			leg[i].jntFoot[j] = phScene->CreateJoint(leg[i].soCrank, leg[i].soFoot[j], jd)->Cast();
+		}
+	
+		phScene->SetContactMode(leg[i].soCrank, leg[i].soFoot[0], PHSceneDesc::MODE_NONE);
+		phScene->SetContactMode(leg[i].soCrank, leg[i].soFoot[1], PHSceneDesc::MODE_NONE);
+		phScene->SetContactMode(leg[i].soCrank, leg[i].soGuide[0], PHSceneDesc::MODE_NONE);
+		phScene->SetContactMode(leg[i].soCrank, leg[i].soGuide[1], PHSceneDesc::MODE_NONE);
+		phScene->SetContactMode(leg[i].soGuide[0], leg[i].soFoot[0], PHSceneDesc::MODE_NONE);
+		phScene->SetContactMode(leg[i].soGuide[1], leg[i].soFoot[1], PHSceneDesc::MODE_NONE);	
+	}
+
+	// 脚のリンク同士は接触計算しない
 	vector<PHSolidIf*> group;
 	group.push_back(soBody);
 	for(int i = 0; i < 4; i++){
@@ -129,9 +120,9 @@ void Robot::Build(const Posed& pose, PHSceneIf* scene, PHSdkIf* sdk){
 		group.push_back(leg[i].soGuide[0]);
 		group.push_back(leg[i].soGuide[1]);
 	}
-	scene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);
+	phScene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);
 
-	soBody->SetDynamical(true);
+	//soBody->SetDynamical(true);
 }
 
 

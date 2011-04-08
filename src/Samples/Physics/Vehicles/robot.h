@@ -16,10 +16,9 @@ class Robot{
 public:
 	PHSolidIf*	soBody;
 	CDBoxIf*	boxBody;
+	CDBoxIf			*boxCrank, *boxFoot, *boxGuide;
 
-	class Leg{
-	public:
-		CDBoxIf			*boxCrank, *boxFoot, *boxGuide;
+	struct Leg{
 		PHSolidIf		*soCrank, *soFoot[2], *soGuide[2];
 		PHHingeJointIf	*jntCrank, *jntFoot[2], *jntFootGuide[2], *jntGuideBody[2];
 		void Build(PHSolidIf* body, PHRootNodeIf* root, const Posed& base, PHSceneIf* scene, PHSdkIf* sdk);
