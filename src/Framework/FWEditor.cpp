@@ -1,5 +1,6 @@
 #include <Framework/SprFWEditor.h>
 #include <iomanip>
+#include <Foundation/UTTypeDesc.h>
 
 namespace Spr{;
 using namespace std;
@@ -7,9 +8,9 @@ using namespace std;
 ///////////////////////////////////////////////////////////////////////////
 // FWEditor
 
-FWEditor::FieldInfo::FieldInfo(const UTTypeDesc::Field* f){
+FWEditor::FieldInfo::FieldInfo(const void* f){
 	field = f;
-	string tn = f->typeName;
+	string tn = ((UTTypeDesc::Field*)f)->typeName;
 	if(tn == "bool"){
 		nElements = 1;
 		type = TYPE_BOOL;
@@ -105,14 +106,15 @@ void FWEditor::SetObject(NamedObjectIf* obj, bool clearHist){
 		hist.clear();
 }
 
-void FWEditor::FlattenTypeDesc(const UTTypeDesc::Field* field){
+void FWEditor::FlattenTypeDesc(const void* field){
 	// collect primitive fields into an array
-	if(!field->type || field->type->bPrimitive){
+	UTTypeDesc::Field* f = (UTTypeDesc::Field*)field;
+	if(!f->type || f->type->bPrimitive){
 		fieldInfos.push_back(FieldInfo(field));
 	}
 	else{
-		for(size_t i = 0; i < field->type->composit.size(); i++)
-			FlattenTypeDesc(&field->type->composit[i]);
+		for(size_t i = 0; i < f->type->composit.size(); i++)
+			FlattenTypeDesc(&f->type->composit[i]);
 	}
 }
 
@@ -127,7 +129,8 @@ double FWEditor::Decrease(double val, bool mode){
 	else return val / 1.1;
 }
 void FWEditor::Increment(bool mode){
-	char* head = &descData[fieldInfos[curField].field->offset];
+	UTTypeDesc::Field* f = (UTTypeDesc::Field*)fieldInfos[curField].field;
+	char* head = &descData[f->offset];
 	PrimitiveType type = fieldInfos[curField].type;
 	if(type == TYPE_BOOL)
 		((bool*)head)[curElement] = true;
@@ -151,7 +154,8 @@ void FWEditor::Increment(bool mode){
 }
 
 void FWEditor::Decrement(bool mode){
-	char* head = &descData[fieldInfos[curField].field->offset];
+	UTTypeDesc::Field* f = (UTTypeDesc::Field*)fieldInfos[curField].field;
+	char* head = &descData[f->offset];
 	PrimitiveType type = fieldInfos[curField].type;
 	if(type == TYPE_BOOL)
 		((bool*)head)[curElement] = false;
@@ -328,7 +332,7 @@ void FWEditorOverlay::Draw(GRRenderIf* render){
 }
 
 void FWEditorOverlay::DrawField(GRRenderIf* render, size_t index){
-	const UTTypeDesc::Field* field = fieldInfos[index].field;
+	const UTTypeDesc::Field* field = (const UTTypeDesc::Field*)fieldInfos[index].field;
 	size_t nElem = fieldInfos[index].nElements;
 	PrimitiveType type = fieldInfos[index].type;
 

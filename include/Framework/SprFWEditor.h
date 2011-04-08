@@ -5,7 +5,6 @@
 	ObjectIfのAPIを介した表示・編集を行うクラス
  */
 
-#include <Foundation/UTTypeDesc.h>
 #include <Graphics/SprGRRender.h>
 #include <vector>
 #include <string>
@@ -15,6 +14,9 @@ namespace Spr{;
 /** FWEditor
 	basic functions for viewing and editting descriptors
  */
+
+class UTTypeDesc;
+
 class FWEditor{
 protected:
 	enum PrimitiveType{
@@ -23,11 +25,13 @@ protected:
 		TYPE_FLOAT, TYPE_DOUBLE,
 	};
 	struct FieldInfo{
-		const UTTypeDesc::Field*	field;
+		//const UTTypeDesc::Field*	field;
+		const void*					field;
 		size_t						nElements;
 		PrimitiveType				type;
 
-		FieldInfo(const UTTypeDesc::Field* f);
+		//FieldInfo(const UTTypeDesc::Field* f);
+		FieldInfo(const void* f);
 	};
 	
 	NamedObjectIf*		curObj;		///< reference to object
@@ -45,7 +49,8 @@ protected:
 	size_t NElements(std::string typeName);
 
 	/// convert composite typedesc into array of fields
-	void FlattenTypeDesc(const UTTypeDesc::Field* field);
+	//void FlattenTypeDesc(const UTTypeDesc::Field* field);
+	void FlattenTypeDesc(const void* field);
 
 	/// increment/decrement selected field[element]
 	void Increment(bool mode);
