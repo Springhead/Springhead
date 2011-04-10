@@ -21,82 +21,82 @@ PHIKEngine::PHIKEngine():numIter(25), bEnabled(false) {
 }
 
 void PHIKEngine::Step(){
+	if(!bEnabled)
+		return;
+	if(actuators.empty() || endeffectors.empty())
+		return;
+
 	//dlog = new std::ofstream("iklog.txt", ios_base::out | ios_base::app);
 	//(*dlog) << "----- ----- ----- ----- ----- ----- ----- ----- ----- ----- " << std::endl;
 
-	if (bEnabled) {
-		if (actuators.size() > 0 && endeffectors.size() > 0) {
-
-			// 計算用変数準備の前処理
-			for(size_t i=0; i<actuators.size(); ++i){
-				actuators[i]->BeforeSetupMatrix();
-			}
-
-			// 計算用変数の準備
-			for(size_t i=0; i<actuators.size(); ++i){
-				actuators[i]->SetupMatrix();
-			}
-
-			// 変化フラグのクリア
-			for(size_t i=0; i<actuators.size(); ++i){
-				actuators[i]->bActuatorAdded	= false;
-				actuators[i]->bEndEffectorAdded	= false;
-				actuators[i]->bNDOFChanged		= false;
-			}
-			for(size_t i=0; i<endeffectors.size(); ++i){
-				endeffectors[i]->bNDOFChanged	= false;
-			}
-
-			for (int nStatic=0; nStatic<1; ++nStatic) {
-
-				// ヤコビアン計算の前処理
-				for(size_t i=0; i<actuators.size(); ++i){
-					actuators[i]->BeforeCalcAllJacobian();
-				}
-
-				// ヤコビアンの計算
-				for(size_t i=0; i<actuators.size(); ++i){
-					actuators[i]->CalcAllJacobian();
-				}
-
-				// 計算の準備（α・β・γの事前計算）
-				for(size_t i=0; i<actuators.size(); ++i){
-					actuators[i]->PrepareSolve();
-				}
-
-				// 繰り返し計算の実行
-				int iter = ((numIter > 0) ? numIter : 200);
-				for(int n=0; n<iter; n++){
-					double dErr = 0;
-					for(size_t i=0; i<actuators.size(); ++i){
-						actuators[i]->ProceedSolve();
-						PTM::VVector<double> diff = actuators[i]->omega_prev - actuators[i]->omega;
-						dErr += (diff.norm() * diff.norm());
-					}
-					if ((((int)numIter) < 0) && (sqrt(dErr) < 1e-8)) { break; }
-				}
-
-				// 関節の動作
-				for(size_t i=0; i<actuators.size(); ++i){
-					//(*dlog) << "--- w[nd:" << DCAST(PHIKActuator,actuators[i])->number << "] ---" << std::endl;
-					//(*dlog) << DCAST(PHIKActuator,actuators[i])->omega << std::endl;
-
-					actuators[i]->Move();
-				}
-
-				// （試し）Static Movement
-				if (false) {
-					for (size_t n=0; n<endeffectors.size(); ++n) {
-						for (size_t i=0; i<actuators.size(); ++i) {
-							actuators[i]->MoveStatic();
-						}
-					}
-				}
-
-			}
-
-		}
+	// 計算用変数準備の前処理
+	for(size_t i=0; i<actuators.size(); ++i){
+		actuators[i]->BeforeSetupMatrix();
 	}
+
+	// 計算用変数の準備
+	for(size_t i=0; i<actuators.size(); ++i){
+		actuators[i]->SetupMatrix();
+	}
+
+	// 変化フラグのクリア
+	for(size_t i=0; i<actuators.size(); ++i){
+		actuators[i]->bActuatorAdded		= false;
+		actuators[i]->bEndEffectorAdded	= false;
+		actuators[i]->bNDOFChanged		= false;
+	}
+	for(size_t i=0; i<endeffectors.size(); ++i){
+		endeffectors[i]->bNDOFChanged	= false;
+	}
+
+	for (int nStatic=0; nStatic<1; ++nStatic) {
+
+		// ヤコビアン計算の前処理
+		for(size_t i=0; i<actuators.size(); ++i){
+			actuators[i]->BeforeCalcAllJacobian();
+		}
+
+		// ヤコビアンの計算
+		for(size_t i=0; i<actuators.size(); ++i){
+			actuators[i]->CalcAllJacobian();
+		}
+
+		// 計算の準備（α・β・γの事前計算）
+		for(size_t i=0; i<actuators.size(); ++i){
+			actuators[i]->PrepareSolve();
+		}
+
+		// 繰り返し計算の実行
+		int iter = ((numIter > 0) ? numIter : 200);
+		for(int n=0; n<iter; n++){
+			double dErr = 0;
+			for(size_t i=0; i<actuators.size(); ++i){
+				actuators[i]->ProceedSolve();
+				PTM::VVector<double> diff = actuators[i]->omega_prev - actuators[i]->omega;
+				dErr += (diff.norm() * diff.norm());
+			}
+			if ((((int)numIter) < 0) && (sqrt(dErr) < 1e-8)) { break; }
+		}
+
+		// 関節の動作
+		for(size_t i=0; i<actuators.size(); ++i){
+			//(*dlog) << "--- w[nd:" << DCAST(PHIKActuator,actuators[i])->number << "] ---" << std::endl;
+			//(*dlog) << DCAST(PHIKActuator,actuators[i])->omega << std::endl;
+
+			actuators[i]->Move();
+		}
+
+		// （試し）Static Movement
+		if (false) {
+			for (size_t n=0; n<endeffectors.size(); ++n) {
+				for (size_t i=0; i<actuators.size(); ++i) {
+					actuators[i]->MoveStatic();
+				}
+			}
+		}
+
+	}
+
 	//dlog->close();
 	//delete dlog;
 }
