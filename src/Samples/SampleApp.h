@@ -53,8 +53,9 @@ public:
 	};
 	enum ActionConfig{
 		ID_SWITCH_LCP_PENALTY,		///< LCPとペナルティ法を切り替える
-		ID_ENABLE_JOINT,			///< 関節の有効化と無効化
-		ID_ENABLE_ABA,				///< ABAの有効化と無効化
+		ID_TOGGLE_GRAVITY,			///< 重力の有効化と無効化
+		ID_TOGGLE_JOINT,			///< 関節の有効化と無効化
+		ID_TOGGLE_ABA,				///< ABAの有効化と無効化
 		ID_INC_TIMESTEP,			///< タイムステップを増やす
 		ID_DEC_TIMESTEP,			///< タイムステップを減らす
 	};
@@ -115,6 +116,7 @@ public:
 	bool					useLCP;			///< LCPかpenalty法か
 	bool					showHelp;		///< ヘルプ表示
 	int						curScene;		///< アクティブなシーンの番号
+	Vec3d					tmpGravity;		///< 重力無効化時の退避変数
 	
 	/// 属性: 派生クラスがコンストラクタで設定する
 	UTString				appName;		///< サンプル名. 派生クラスがコンストラクタで設定する
@@ -351,10 +353,12 @@ public:
 		AddMenu(MENU_CONFIG, "< simulation settings >");
 		AddAction(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, "switch to penalty", "switch to penalty method");
 		AddHotKey(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, 'M');
-		AddAction(MENU_CONFIG, ID_ENABLE_JOINT, "disable joints");
-		AddHotKey(MENU_CONFIG, ID_ENABLE_JOINT, 'J');
-		AddAction(MENU_CONFIG, ID_ENABLE_ABA, "disable ABA (non implemented)");
-		AddHotKey(MENU_CONFIG, ID_ENABLE_ABA, 'A');
+		AddAction(MENU_CONFIG, ID_TOGGLE_GRAVITY, "disable gravity");
+		AddHotKey(MENU_CONFIG, ID_TOGGLE_GRAVITY, 'G');
+		AddAction(MENU_CONFIG, ID_TOGGLE_JOINT, "disable joints");
+		AddHotKey(MENU_CONFIG, ID_TOGGLE_JOINT, 'J');
+		AddAction(MENU_CONFIG, ID_TOGGLE_ABA, "disable ABA (non implemented)");
+		AddHotKey(MENU_CONFIG, ID_TOGGLE_ABA, 'A');
 		AddAction(MENU_CONFIG, ID_INC_TIMESTEP, "increase time step");
 		AddHotKey(MENU_CONFIG, ID_INC_TIMESTEP, 'I');
 		AddAction(MENU_CONFIG, ID_DEC_TIMESTEP, "decrease time step");
@@ -441,21 +445,36 @@ public: /** 派生クラスが実装する関数 **/
 					message = "switched to penalty method.";
 				}
 			}
-			if(id == ID_ENABLE_JOINT){
-				static bool bEnable = true;
-				bEnable = !bEnable;
+			if(id == ID_TOGGLE_GRAVITY){
+				static bool enable = true;
+				enable = !enable;
+				if(enable){
+					phScene->SetGravity(tmpGravity);
+					AddAction(MENU_CONFIG, ID_TOGGLE_GRAVITY, "disable gravity");
+					message = "gravity is enabled.";
+				}
+				else{
+					tmpGravity = phScene->GetGravity();
+					phScene->SetGravity(Vec3d());
+					AddAction(MENU_CONFIG, ID_TOGGLE_GRAVITY, "enable gravity");
+					message = "gravity is disabled";
+				}
+			}
+			if(id == ID_TOGGLE_JOINT){
+				static bool enable = true;
+				enable = !enable;
 				for(int i = 0; i < (int)phScene->NJoints(); i++)
-					phScene->GetJoint(i)->Enable(bEnable);
-				if(bEnable){
-					AddAction(MENU_CONFIG, ID_ENABLE_JOINT, "disable joints");
+					phScene->GetJoint(i)->Enable(enable);
+				if(enable){
+					AddAction(MENU_CONFIG, ID_TOGGLE_JOINT, "disable joints");
 					message = "joints are enabled.";
 				}
 				else{
-					AddAction(MENU_CONFIG, ID_ENABLE_JOINT, "enable joints");
+					AddAction(MENU_CONFIG, ID_TOGGLE_JOINT, "enable joints");
 					message = "joints are disabled.";
 				}
 			}
-			if(id == ID_ENABLE_ABA){
+			if(id == ID_TOGGLE_ABA){
 
 			}
 			if(id == ID_INC_TIMESTEP){
