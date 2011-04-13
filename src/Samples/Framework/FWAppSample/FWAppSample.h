@@ -5,7 +5,7 @@
 #include <Framework/SprFWApp.h>						// Frameworkクラスが宣言されているヘッダファイル
 
 using namespace Spr;								// Springheadの名前空間
-class FWAppSample;
+
 class FWAppSample : public FWApp{
 public:
 	FWAppSample();									// コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）

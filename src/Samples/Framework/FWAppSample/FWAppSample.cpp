@@ -2,7 +2,6 @@
 #include "SampleModel.h"
 #include <iostream>
 #include <sstream>
-#include <GL/glut.h>
 
 #define ESC 27
 
@@ -26,6 +25,14 @@ void FWAppSample::Init(int argc, char* argv[]){
 	InitCameraView();										// カメラビューの初期化
 
 	CreateObject();											// 剛体を作成
+
+	FWSceneIf* fwScene = GetSdk()->GetScene();
+	fwScene->SetRenderMode(true, false);			// solidで描画
+	/// 各種、情報を表示するかどうかの設定
+	fwScene->EnableRenderAxis(bDrawInfo);		// 座標軸の表示
+	fwScene->EnableRenderForce(bDrawInfo);		// 拘束力の表示
+	fwScene->EnableRenderContact(bDrawInfo);		// 接触状態の表示
+
 
 	CreateTimer();				// タイマーの生成
 }
@@ -88,12 +95,7 @@ void FWAppSample::CreateObject(){
 void FWAppSample::Display(){
 	// 描画モードの設定
 	GetSdk()->SetDebugMode(true);				// デバックモードで描画
-	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
-	render->SetRenderMode(true, false);			// solidで描画
-	/// 各種、情報を表示するかどうかの設定
-	render->EnableRenderAxis(bDrawInfo);		// 座標軸の表示
-	render->EnableRenderForce(bDrawInfo);		// 拘束力の表示
-	render->EnableRenderContact(bDrawInfo);		// 接触状態の表示
+	GRRenderIf* render = GetCurrentWin()->render->Cast();
 
 	// カメラ座標の指定
 	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
