@@ -599,7 +599,7 @@ public: /** FWApp‚ÌŽÀ‘• **/
 		DrawHelp(render);
 
 		render->EndScene();
-		glutSwapBuffers();
+		render->SwapBuffers();
 	}
 
 	virtual void Keyboard(int key, int x, int y) {

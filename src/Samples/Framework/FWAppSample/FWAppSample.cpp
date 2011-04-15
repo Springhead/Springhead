@@ -110,7 +110,6 @@ void FWAppSample::Display(){
 	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
 	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
 	GetSdk()->Draw();
-	glutSwapBuffers();
 }
 
 void FWAppSample::Reset(){
