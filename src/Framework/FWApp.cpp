@@ -41,6 +41,33 @@ FWApp::~FWApp(){
 	if(hasGameMode) glutLeaveGameMode();
 }
 
+void FWApp::Init(int argc, char* argv[]){
+	// Å‚àŠî–{“I‚È‰Šú‰»ˆ—
+	SetGRAdaptee(TypeGLUT);
+	GRInit(argc, argv);
+
+	CreateSdk();
+	GetSdk()->CreateScene();
+	
+	FWWinDesc windowDesc;
+	windowDesc.title = "Springhead2";
+	CreateWin(windowDesc);
+	InitWindow();
+	
+	CreateTimer();
+}
+
+void FWApp::Display(){
+	GetSdk()->GetRender()->SetViewMatrix(cameraInfo.view.inv());
+	GetSdk()->Draw();
+	GetSdk()->GetRender()->SwapBuffers();
+}
+
+void FWApp::TimerFunc(int id){
+	GetSdk()->Step();
+	PostRedisplay();
+}
+
 void FWApp::EnableIdleFunc(bool on){
 	if(grAdaptee)
 		grAdaptee->EnableIdleFunc(on);

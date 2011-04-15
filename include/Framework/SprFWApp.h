@@ -52,14 +52,14 @@ public:
 	/** @brief 初期化
 		FWAppオブジェクトの初期化を行う．最初に必ず呼ぶ．
 	 */
-	virtual void Init(int argc = 0, char* argv[] = NULL)=0;
+	virtual void Init(int argc = 0, char* argv[] = NULL);
 
 	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．
 		描画処理をカスタマイズしたい場合にオーバライドする．
 		デフォルトではFWSdk::Drawが呼ばれる．
 	 */
-	virtual void Display()=0;
+	virtual void Display();
 
 	/** @brief IdleFuncの呼び出しを有効化/無効化する
 		glutの場合，glutIdleFuncに対応する．
@@ -85,7 +85,7 @@ public:
 	/** @brief タイマー処理
 		繰り返し実行を行う．
 	 */
-	virtual void TimerFunc(int id){}
+	virtual void TimerFunc(int id);
 
 	/** @brief 描画領域のサイズ変更
 		@param w 描画領域の横幅
