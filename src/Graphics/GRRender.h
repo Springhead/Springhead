@@ -80,17 +80,21 @@ public:
 	
 	virtual void SetViewport(Vec2f pos, Vec2f sz){}
 	virtual void ClearBuffer(){}
+	///	バッファの入れ替え（表示）
 	virtual void SwapBuffers(){}
+	/// 背景色の取得
 	virtual void GetClearColor(Vec4f& color){}
 	virtual void SetClearColor(const Vec4f& color){}
 	virtual void BeginScene(){}
 	virtual void EndScene(){}
 	virtual void SetViewMatrix(const Affinef& afv){}
 	virtual void GetViewMatrix(Affinef& afv){}
+	///	カレントの投影行列をafpで置き換える
 	virtual void SetProjectionMatrix(const Affinef& afp){}
 	virtual void GetProjectionMatrix(Affinef& afp){}
 	virtual void SetModelMatrix(const Affinef& afw){}
 	virtual void GetModelMatrix(Affinef& afw){}
+	///	カレントのモデル行列に対してafwを掛ける
 	virtual void MultModelMatrix(const Affinef& afw){}
 	virtual void PushModelMatrix(){}
 	virtual void PopModelMatrix(){}
