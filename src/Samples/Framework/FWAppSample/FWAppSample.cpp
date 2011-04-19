@@ -11,6 +11,8 @@ FWAppSample::FWAppSample(){
 }
 
 void FWAppSample::Init(int argc, char* argv[]){
+	// FWApp::Init(argc, argv);
+
 	SetGRAdaptee(TypeGLUT);									// CGをOpenGL(GLUT)で描画指定
 	GRInit(argc, argv);										// GLUTの初期化
 
@@ -21,7 +23,8 @@ void FWAppSample::Init(int argc, char* argv[]){
 
 	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
 	windowDesc.title = "Springhead2";						// ウィンドウのタイトル
-	AssignScene(CreateWin(windowDesc));						// ウィンドウの作成とシーンの割り当て
+	CreateWin(windowDesc);									// ウィンドウの作成とシーンの割り当て
+	InitWindow();
 	InitCameraView();										// カメラビューの初期化
 
 	CreateObject();											// 剛体を作成
@@ -93,23 +96,10 @@ void FWAppSample::CreateObject(){
 }
 
 void FWAppSample::Display(){
-	// 描画モードの設定
-	GetSdk()->SetDebugMode(true);				// デバックモードで描画
-	GRRenderIf* render = GetCurrentWin()->render->Cast();
-
-	// カメラ座標の指定
-	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
-	if (cam && cam->GetFrame()){
-		cam->GetFrame()->SetTransform(cameraInfo.view);
-	}else{
-		render->SetViewMatrix(cameraInfo.view.inv());
-	}
-
-	// 描画の実行
-	if(!GetCurrentWin()) return;
-	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
-	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
+	GetSdk()->SetDebugMode(true);
+	GetSdk()->GetRender()->SetViewMatrix(cameraInfo.view.inv());
 	GetSdk()->Draw();
+	GetSdk()->GetRender()->SwapBuffers();
 }
 
 void FWAppSample::Reset(){
