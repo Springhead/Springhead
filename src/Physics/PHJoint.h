@@ -41,7 +41,7 @@ class PHJointND : public PHJoint{
 public:
 	typedef	PTM::TVector<NDOF, double> coord_t;
 
-	int		movableAxes[NDOF];		//< ‰½”Ô–Ú‚ÌŽ²‚ªŠÖßŽ²‚Æ‚È‚é‚©
+	int		movableAxes[NDOF];		//< ŠÖß‚Ì‰Â“®Ž²‚Ì”Ô†
 	coord_t position, velocity;
 	
 	void	CompResponse(double df, int k){
