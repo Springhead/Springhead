@@ -10,10 +10,12 @@ using namespace Spr;
 
 class MyApp{
 public:
+	UTRef< FWSdkIf > fwSdk;
 	UTRef< PHSdkIf > phSdk;
 	UTRef< GRSdkIf > grSdk;
 	UTRef< GRRenderIf >		 grRender;
 	UTRef< PHSceneIf >       phScene;
+	UTRef< FWSceneIf >		 fwScene;
 	UTRef< PHSolidIf >		 solids[10];
 	UTRef< PHSolidIf >		 ssolid[5];
 	UTRef< PHSolidIf >		 Pointer[2];

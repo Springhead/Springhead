@@ -76,10 +76,13 @@ void MyApp::Init(int argc, char* argv[]){
 	glutInitWindowSize(800,600);
 	glutInitWindowPosition(800,0);
 
-	grRender = grSdk->CreateDebugRender();
+	grRender = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 	grDevice -> Init();
 
+	fwSdk = FWSdkIf::CreateSdk();
+	fwScene = fwSdk->CreateScene();
+	fwScene->SetPHScene(phScene);
 }
 
 void MyApp::SetWindow1(){
@@ -106,9 +109,7 @@ void MyApp::Display() {
 
 	grRender->SetViewMatrix(view.inv());
 	grRender->ClearBuffer();
-	
-
-	grRender->DrawScene(phScene);
+	fwScene->DrawPHScene(grRender);	
 	grRender->EndScene();
 	Constline();
 
