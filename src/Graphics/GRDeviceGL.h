@@ -78,13 +78,17 @@ public:
 	virtual void ClearBuffer();
 	virtual void BeginScene();
 	virtual void EndScene();
+	///	バッファを表示するための呼ぶ関数
 	virtual void SwapBuffers();
+	///	カレントの視点行列をafvで置き換える
 	virtual void SetViewMatrix(const Affinef& afv);
 	virtual void GetViewMatrix(Affinef& afv);
+	///	カレントの投影行列を取得する
 	virtual void SetProjectionMatrix(const Affinef& afp);
 	virtual void GetProjectionMatrix(Affinef& afp);
 	virtual void SetModelMatrix(const Affinef& afw);
 	virtual void GetModelMatrix(Affinef& afw);
+	///	カレントのモデル行列に対してafwを掛ける
 	virtual void MultModelMatrix(const Affinef& afw);
 	virtual void PushModelMatrix();
 	virtual void PopModelMatrix();
@@ -114,6 +118,7 @@ public:
 	virtual void DrawFont(Vec3f pos, const std::string str);
 	virtual void SetMaterial(const GRMaterialDesc& mat);
 	virtual void SetMaterial(const GRMaterialIf* mat);
+	///	描画する点・線の太さの設定
 	virtual void SetLineWidth(float w);
 	virtual void PushLight(const GRLightDesc& light);
 	virtual void PushLight(const GRLightIf* light){ GRDevice::PushLight(light); }
