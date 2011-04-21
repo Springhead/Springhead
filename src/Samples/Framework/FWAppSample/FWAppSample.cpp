@@ -1,43 +1,28 @@
 #include "FWAppSample.h"
 #include "SampleModel.h"
-#include <iostream>
-#include <sstream>
 
 #define ESC 27
 
-using namespace std;
 FWAppSample::FWAppSample(){
 	bDrawInfo = false;
 }
 
 void FWAppSample::Init(int argc, char* argv[]){
-	// FWApp::Init(argc, argv);
-
 	SetGRAdaptee(TypeGLUT);									// CGをOpenGL(GLUT)で描画指定
 	GRInit(argc, argv);										// GLUTの初期化
 
 	CreateSdk();											// Sdkの作成
-	GetSdk()->Clear();										// SDKの初期化
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.01);	// シミュレーションの刻み時間を設定
+	GetSdk()->CreateScene();								// Sceneの作成
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);	// シミュレーションの刻み時間を設定
 
-	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
-	windowDesc.title = "Springhead2";						// ウィンドウのタイトル
-	CreateWin(windowDesc);									// ウィンドウの作成とシーンの割り当て
-	InitWindow();
-	InitCameraView();										// カメラビューの初期化
+	FWWinDesc windowDesc;					// GLのウィンドウディスクリプタ
+	windowDesc.title = "Springhead2";		// ウィンドウのタイトル
+	CreateWin(windowDesc);					// ウィンドウの作成とシーンの割り当て
+	InitWindow();							// ウィンドウの初期化(描画するsceneを設定)
+	InitCameraView();						// カメラビューの初期化
 
-	CreateObject();											// 剛体を作成
-
-	FWSceneIf* fwScene = GetSdk()->GetScene();
-	fwScene->SetRenderMode(true, false);			// solidで描画
-	/// 各種、情報を表示するかどうかの設定
-	fwScene->EnableRenderAxis(bDrawInfo);		// 座標軸の表示
-	fwScene->EnableRenderForce(bDrawInfo);		// 拘束力の表示
-	fwScene->EnableRenderContact(bDrawInfo);		// 接触状態の表示
-
-
-	CreateTimer();				// タイマーの生成
+	CreateObject();		// 剛体を作成
+	CreateTimer();		// タイマーの生成
 }
 
 void FWAppSample::TimerFunc(int id){	
@@ -45,11 +30,8 @@ void FWAppSample::TimerFunc(int id){
 	PostRedisplay();
 }
 
-void FWAppSample::IdleFunc(){
-}
-
 void FWAppSample::InitCameraView(){
-	//	Affinef 型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
+	//	Affinef型が持つ、ストリームから行列を読み出す機能を利用して視点行列を初期化
 	std::istringstream issView(
 		"((0.9996 0.0107463 -0.0261432 -0.389004)"
 		"(-6.55577e-010 0.924909 0.380188 5.65711)"
@@ -96,6 +78,13 @@ void FWAppSample::CreateObject(){
 }
 
 void FWAppSample::Display(){
+	// 各種、情報を表示するかどうか
+	FWSceneIf* fwScene = GetSdk()->GetScene();
+	fwScene->EnableRenderAxis(bDrawInfo);		// 座標軸の表示
+	fwScene->EnableRenderForce(bDrawInfo);		// 拘束力の表示
+	fwScene->EnableRenderContact(bDrawInfo);	// 接触状態の表示
+
+	// シーンの描画
 	GetSdk()->SetDebugMode(true);
 	GetSdk()->GetRender()->SetViewMatrix(cameraInfo.view.inv());
 	GetSdk()->Draw();
@@ -104,7 +93,6 @@ void FWAppSample::Display(){
 
 void FWAppSample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->Clear();
-	FWApp::Reset();
 	CreateObject();
 }
 
