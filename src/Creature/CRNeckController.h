@@ -36,6 +36,8 @@ private:
 	/// タイマー
 	double t;
 
+	bool bEnabled;
+
 public:
 	SPR_OBJECTDEF(CRNeckController);
 	ACCESS_DESC_STATE(CRNeckController);
@@ -54,6 +56,8 @@ public:
 	/** @brief 制御処理を実行する
 	*/
 	virtual void Step();
+
+	virtual void Stop();
 
 	/** @brief 注視点を設定する
 		@param pos 注視点の３次元座標
