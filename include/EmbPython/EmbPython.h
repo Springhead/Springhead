@@ -1,0 +1,7 @@
+#include "SprEPUtility.h"
+//#include "SprEPBase.h"
+#include "SprEPFoundation.h"
+#include "SprEPCollision.h"
+#include "SprEPPhysics.h"
+#include "SprEPGraphics.h"
+#include "SprEPCreature.h"

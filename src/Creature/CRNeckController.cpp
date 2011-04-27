@@ -16,6 +16,7 @@ namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
 void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
+	this->bEnabled = true;
 	this->pos = pos;
 	this->vel = vel;
 	this->attractiveness = attractiveness;
@@ -24,9 +25,14 @@ void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 void CRNeckController::Init(){
 	orig = Quaterniond();
 	csHead  = NULL;
+	bEnabled = false;
 }
-
+void CRNeckController::Stop()
+{
+	bEnabled = false;
+}
 void CRNeckController::Step(){
+	if (!bEnabled) return;
 	if (csHead) {
 		PHSolidIf*			soHead = csHead->GetPHSolid();
 		PHIKEndEffectorIf*	efHead = csHead->GetIKEndEffector();
