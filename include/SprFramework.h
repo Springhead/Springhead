@@ -13,6 +13,7 @@
 #include "Framework/SprFWSdk.h"
 #include "Framework/SprFWInteractScene.h"
 #include "Framework/SprFWInteractPointer.h"
+#include "Framework/SprFWFemMesh.h"
 
 
 #endif
