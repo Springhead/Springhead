@@ -14,6 +14,8 @@
 
 namespace Spr{;
 
+//このクラスの機能は、何？
+//
 class FWFemMesh: public FWObject, public FWFemMeshDesc{
 protected:
 	UTRef<GRMesh> grMesh;
@@ -27,6 +29,8 @@ public:
 	virtual ObjectIf* GetChildObject(size_t pos);
 	///	子オブジェクトの追加
 	virtual bool AddChildObject(ObjectIf* o);
+	//TetGenで四面体メッシュ化
+	virtual bool IntoTetGen(GRMesh* grm);
 };
 
 }
