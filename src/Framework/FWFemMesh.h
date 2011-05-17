@@ -10,14 +10,23 @@
 
 #include <Springhead.h>
 #include <Framework/FWObject.h>
+#include <Graphics/GRMesh.h>
 
 namespace Spr{;
 
 class FWFemMesh: public FWObject, public FWFemMeshDesc{
+protected:
+	UTRef<GRMesh> grMesh;
 public:
 	SPR_OBJECTDEF(FWFemMesh);
 	ACCESS_DESC(FWFemMesh);
 	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());
+	///	子オブジェクトの数
+	virtual size_t NChildObject() const;
+	///	子オブジェクトの取得
+	virtual ObjectIf* GetChildObject(size_t pos);
+	///	子オブジェクトの追加
+	virtual bool AddChildObject(ObjectIf* o);
 };
 
 }
