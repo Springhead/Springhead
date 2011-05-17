@@ -42,7 +42,6 @@ public:
 	~MyApp(){}
 
 	virtual void BuildScene(){
-		GetSdk()->Clear();						// SDKの初期化
 		UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
 		GetSdk()->LoadScene("scene.spr", import);			// ファイルのロード
 	}
