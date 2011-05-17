@@ -19,7 +19,6 @@ class FWObject : public SceneObject, public FWObjectDesc {
 public:
 	SPR_OBJECTDEF(FWObject);
 	ACCESS_DESC(FWObject);
-	FWObjectDesc desc;
 	FWObject(const FWObjectDesc& d=FWObjectDesc()); // コンストラクタ
 
 	//

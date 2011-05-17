@@ -12,6 +12,14 @@
 #include <Framework/FWObject.h>
 
 namespace Spr{;
+
+class FWFemMesh: public FWObject, public FWFemMeshDesc{
+public:
+	SPR_OBJECTDEF(FWFemMesh);
+	ACCESS_DESC(FWFemMesh);
+	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());
+};
+
 }
 
 #endif
