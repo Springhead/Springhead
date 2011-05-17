@@ -16,8 +16,7 @@
 namespace Spr{;
 
 FWObject::FWObject(const FWObjectDesc& d/*=FWObjectDesc()*/)
-: desc(d), phSolid(NULL), grFrame(NULL)
-{
+: phSolid(NULL), grFrame(NULL), FWObjectDesc(d){
 	solidLength=0;
 }
 SceneObjectIf* FWObject::CloneObject(){

@@ -9,6 +9,17 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_FWFemMeshDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_FWInteractPointerDesc \
 protected:\
 	PHSolidIf*	pointerSolid;	\
