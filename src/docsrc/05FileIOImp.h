@@ -87,19 +87,27 @@ Xƒtƒ@ƒCƒ‹‚ðƒ[ƒh‚·‚é‚½‚ß‚É‚ÍCFrame‚ÆFrameTransformMatrix‚©‚çCGRFrame‚ð¶¬‚µ‚
 ƒ[ƒh‚µ‚½ƒtƒ@ƒCƒ‹‚Ìƒf[ƒ^‚ðŽ©“®“I‚ÉƒfƒBƒXƒNƒŠƒvƒ^‚ÉŠi”[‚µ‚½‚èC
 ƒZ[ƒu‚·‚éƒf[ƒ^‚ðŽ©“®“I‚É“Ç‚Ýo‚µ‚½‚è‚Å‚«‚Ü‚·D
 
-‚»‚±‚ÅCƒfƒBƒXƒNƒŠƒvƒ^‚ÌéŒ¾‚ð“Ç‚ñ‚ÅCŒ^‚Ìî•ñ‚ð“o˜^‚·‚éC++‚Ìƒ\[ƒXƒR[ƒh‚ð¶¬‚·‚éƒc[ƒ‹(typedesc.exe)
-‚ðŽg‚Á‚ÄCŒ^î•ñ‚ðŽÀsŽž‚É“o˜^‚µ‚Ä‚¢‚Ü‚·D
-typedesc.exe‚Ìƒ\[ƒX‚ÍC /bin/src/typedesc/ ‚É‚ ‚è‚Ü‚·D
+‚»‚±‚ÅCƒfƒBƒXƒNƒŠƒvƒ^‚ÌéŒ¾‚ð“Ç‚ñ‚ÅCŒ^‚Ìî•ñ‚ð“o˜^‚·‚éC++‚Ìƒ\[ƒXƒR[ƒh‚ð¶¬‚·‚éƒc[ƒ‹
+(SWIG‚ð‰ü•Ï‚µ‚½ bin/swig/swig.exe)‚ðŽg‚Á‚ÄCŒ^î•ñ‚ðŽÀsŽž‚É“o˜^‚µ‚Ä‚¢‚Ü‚·D
+swig.exe‚Ìƒ\[ƒX‚ÍC /bin/src/swig/ ‚É‚ ‚è‚Ü‚·D
 Foundation, Physics, Graphics ‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚ðƒrƒ‹ƒh‚·‚é‚ÆCƒRƒ“ƒpƒCƒ‹‘O‚É
 <pre>
-	/src/Foundation/MakeTypeDesc.bat SDK–¼
+	/src/Foundation/RunSwig.bat SDK–¼
 </pre>
-‚ªŽÀs‚³‚ê‚Ä typedesc.exe ‚ðŽg‚Á‚ÄŒ^î•ñ“o˜^ƒ\[ƒXƒR[ƒh 
-TypeDescDumpImp.h TypeDescDump.h ‚ð¶¬‚µ‚Ä‚­‚ê‚Ü‚·D
-XXRegisterTypeDesc.cpp ‚ª‚±‚ê‚ç‚ðƒCƒ“ƒNƒ‹[ƒh‚µ‚ÄCŒ^î•ñ‚ð
-UTTypeDescDb::theTypeDescDb ‚É“o˜^‚µ‚Ü‚·D
-Œ^î•ñ‚ÍCUTTypeDescƒIƒuƒWƒFƒNƒg‚Å•\‚³‚ê‚Ü‚·D
+‚ªŽÀs‚³‚ê‚Ä swig.exe ‚ðŽg‚Á‚ÄŒ^î•ñ“o˜^ƒ\[ƒXƒR[ƒh(SDK–¼Stub.cpp)
+‚ð¶¬‚µ‚Ä‚­‚ê‚Ü‚·D‚±‚Ìƒ\[ƒX‚ÍA
+void RegisterTypeDescSDK–¼(UTTypeDescDb* db)
+‚ðŒÄ‚Ño‚µAŒ^î•ñ‚ðUTTypeDescDb::theTypeDescDb ‚É“o˜^‚µ‚Ü‚·DŒ^î•ñ‚ÍCUTTypeDescƒIƒuƒWƒFƒNƒg‚Å•\‚³‚ê‚Ü‚·D
 
-ƒfƒBƒXƒNƒŠƒvƒ^‚ÌéŒ¾‚Ì‹L–@‚ªtypedesc‚Ì‘z’èŠO‚¾‚Æ TypeDescDumpImp.h ‚ÅƒGƒ‰[‚ª‹N‚±‚é‚±‚Æ‚ª‚ ‚è‚Ü‚·D
-‚»‚Ì‚æ‚¤‚Èê‡‚ÍC‘¼‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚ðŽQl‚ÉŠÈ’P‚È‹L–@‚É’¼‚µ‚Ä‚­‚¾‚³‚¢D
+ƒfƒBƒXƒNƒŠƒvƒ^‚ÌéŒ¾‚Ì‹L–@‚ªswig.exe‚Ì‘z’èŠO‚¾‚Æ SDK–¼Stub.cpp ‚ÅƒGƒ‰[‚ª‹N‚±‚é‚±‚Æ‚ª‚ ‚è‚Ü‚·D
+‚»‚Ì‚æ‚¤‚Èê‡‚ÍC‘¼‚ÌƒfƒBƒXƒNƒŠƒvƒ^‚ðŽQl‚É‹L–@‚É’¼‚µ‚Ä‚­‚¾‚³‚¢D
+
+\subsection secTypeDecl ƒfƒXƒNƒŠƒvƒ^”ñŒp³—p‚Ìƒ}ƒNƒ’è‹`ƒwƒbƒ_ƒtƒ@ƒCƒ‹
+ƒtƒ@ƒCƒ‹ƒZ[ƒuEƒ[ƒh‚Ì‘ÎÛ‚ÍAƒfƒXƒNƒŠƒvƒ^‚Ì•Ï”‚Å‚·‚ªA
+ŽÀ‘•ƒNƒ‰ƒX‚ÅƒfƒXƒNƒŠƒvƒ^‚ðŒp³‚µ‚½‚­‚È‚¢ê‡‚à‚ ‚è‚Ü‚·B
+i—á‚¦‚ÎAŽÀ‘•ƒNƒ‰ƒX‚ÌŠî–{ƒNƒ‰ƒX‚ª‚·‚Å‚ÉŠî–{‚ÌƒfƒXƒNƒŠƒvƒ^‚ðŒp³‚µ‚Ä‚¢‚éê‡‚È‚Çj
+‚»‚Ìê‡A”h¶‚ÌƒfƒXƒNƒŠƒvƒ^‚Ìƒƒ“ƒo‚Ì‚Ý‚ðŽÀ‘•ƒNƒ‰ƒX‚É’Ç‰Á‚µ‚½‚­‚È‚è‚Ü‚·B
+swig.exe ‚ÍA‚»‚Ì‚½‚ß‚Ìƒ}ƒNƒ(SPR_DECLMEMBEROF_XXX)‚ð
+SDK–¼Decl.hpp ‚Æ‚¢‚¤ƒtƒ@ƒCƒ‹‚Éì¬‚µ‚Ü‚·BÚ‚µ‚­‚Í \ref secCreateNonInheritLoadableObject
+‚ðŽQÆ‚µ‚Ä‚­‚¾‚³‚¢B
 */
