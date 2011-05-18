@@ -111,24 +111,23 @@ FileIO SDK の詳細は，\ref pageFileIOImp を参照してください．
  <li>ロードしたいデータを含んだディスクリプタ (例:PHSolidDesc)を作ります．
  <li>インタフェースクラス (例：PHSolidIf) を作ります．
  <li>実装クラス (例：PHSolid)を作ります．このとき実装クラスで，
-  <pre>
-  	///	デスクリプタの読み出し(コピー版)
-  	virtual bool GetDesc(void* desc) const { return false; }
-  	///	デスクリプタの読み出し(参照版)
-  	virtual const void* GetDescAddress() const { return NULL; }
-  	///	デスクリプタのサイズ
-  	virtual size_t GetDescSize() const { return 0; };
-  </pre>
-  をオーバーロードしてください．
-  </pre>
-  virtual const void* GetDescAddress() const { return NULL; }
-  </pre>
-  をオーバーロードせず、代わりに
-  </pre>
-  	///	ディスクリプタの読み出し(コピー版)
-  	virtual bool GetDesc(void* d) const;
-  </pre>
-  をオーバーロードしてもOKです．
+	<pre>
+	///	デスクリプタの読み出し(コピー版)
+	virtual bool GetDesc(void* desc) const { return false; }
+	///	デスクリプタのサイズ
+	virtual size_t GetDescSize() const { return 0; };
+	</pre>
+	をオーバーロードしてください．
+	<pre>
+	///	ディスクリプタの読み出し(コピー版)
+	virtual bool GetDesc(void* d) const;
+	</pre>
+	の代わりに
+	<pre>
+	///	ディスクリプタの読み出し(参照版)
+	virtual const void* GetDescAddress() const { return NULL; }
+	</pre>
+	をオーバーロードするとコピーが減って効率がよくなります。
  <li> シーングラフ上で，実装クラス(例：PHSolid)の先祖になるクラスのなかから，
       実装クラス(例：PHSolid)を生成するクラス(例：PHScene)を決めます．
  <li> 生成クラス(例：PHScene)のCreateObject()が実装クラス(PHSolid)を作れるように，
