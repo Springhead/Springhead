@@ -140,16 +140,23 @@ FileIO SDK の詳細は，\ref pageFileIOImp を参照してください．
       SDKのコンストラクタで1度だけ呼び出すのが良いでしょう．
       詳しくは \ref secFactory を参照ください．
 </ol>
-
-\subsection secCreateLoadableObjectAutoOverload オーバーロードの自動化
-前小節での手順3の3つの関数のオーバーロードは、オブジェクト(例:PHSolid)が、
+手順3の3つの関数のオーバーロードは、オブジェクト(例:PHSolid)が、
 デスクリプタ(例:PHSolidDesc)を継承しているならば，
   <pre>
 	ACCESS_DESC(実装クラス名);
   </pre>
 マクロを実装クラス(例:PHSolid)の宣言の中に置けば，オーバーライドしてくれます．
 
-多重継承の都合でデスクリプタ(例:PHBallJointDesc)を継承できない場合でも，
+
+\subsection secCreateNonInheritLoadableObject 非継承時のメンバ宣言の自動化
+多重継承の都合でデスクリプタ(例:PHBallJointDesc)を継承できない場合があります。
+実装クラスが別の実装クラス(=基本実装クラス)を継承する場合、基本実装クラスは既に
+基本用のDescを継承しているからです。
+DescはDescで基本用のDescを継承していますから、
+基本Descと派生Descを同時に継承すると、基本部分のメンバーがダブってしまいます。
+
+そのため、派生実装クラスではデスクリプタが継承できません。
+その場合は、
 SPR_DECLMEMBEROF_デスクリプタ名 マクロ(例:SPR_DECLMEMBEROF_PHBallJointDesc)
 を使えば自動化ができます。デスクリプタを定義すると、
 それに対応するマクロSPR_DECLMEMBEROF_デスクリプタ名マクロ
@@ -158,7 +165,7 @@ SPR_DECLMEMBEROF_デスクリプタ名 マクロ(例:SPR_DECLMEMBEROF_PHBallJointDesc)
 <pre>
 	SPR_DECLMEMBEROF_デスクリプタ名;
 </pre>
-を定義すると、3つの関数がオーバーライドされます。
+を定義すると、GetDesc()とGetDescSize()がオーバーライドされます。
 
 \section secStateLoadSave 状態の保存・再現
 ファイルへのロードセーブでは，何も無い状態からオブジェクトを生成して
