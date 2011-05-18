@@ -3,6 +3,8 @@
 #include <Graphics/GRFrame.h>
 #include <Physics/PHConstraint.h>
 #include "FWFemMesh.h"
+#include "../Samples/Physics/FEMThermo/tetgen.h"
+#include "../Samples/Physics/FEMThermo/ThermalFEM.h"
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -28,6 +30,7 @@ bool FWFemMesh::AddChildObject(ObjectIf* o){
 		GRMesh* grMesh = (GRMesh*)o;
 		//	tetgenとかやってPHを作る			//←ここに記述する処理なのか？
 		//PHMesh = IntoTetGen(grMesh);							//TetGen使うなら、GRThermoMesh.cppで記述した処理を行う関数を作る。
+		//
 		//Tetrahedralize()してできたファイルを、PHのvector又は有限個の配列に入れる。
 		return true;
 	}else{
@@ -36,9 +39,9 @@ bool FWFemMesh::AddChildObject(ObjectIf* o){
 }
 bool FWFemMesh::IntoTetGen(GRMesh* grm){
 	//定義を加えながら変換していく
-	//tetgenio::facet *f;
-	//tetgenio::polygon *p;
-	//int i;
+	tetgenio::facet *f;
+	tetgenio::polygon *p;
+	int i;
 	////頂点の開始番号
 	//FEM.in.firstnumber = 1;
 	////頂点座標と数の入力
