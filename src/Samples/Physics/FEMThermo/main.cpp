@@ -14,6 +14,7 @@ Springhead2/src/Samples/FEMThermo
 	
 */
 
+#include <Springhead.h>
 #include "../../SampleApp.h"
 
 #pragma hdrstop
