@@ -11,6 +11,8 @@
 #include <Springhead.h>
 #include <Framework/FWObject.h>
 #include <Graphics/GRMesh.h>
+//#include "tetgen.h"
+//#include "ThermalFEM.h"
 
 namespace Spr{;
 
@@ -22,7 +24,7 @@ protected:
 public:
 	SPR_OBJECTDEF(FWFemMesh);
 	ACCESS_DESC(FWFemMesh);
-	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());
+	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());		//コンストラクタ
 	///	子オブジェクトの数
 	virtual size_t NChildObject() const;
 	///	子オブジェクトの取得
@@ -31,6 +33,8 @@ public:
 	virtual bool AddChildObject(ObjectIf* o);
 	//TetGenで四面体メッシュ化
 	virtual bool IntoTetGen(GRMesh* grm);
+
+
 };
 
 }
