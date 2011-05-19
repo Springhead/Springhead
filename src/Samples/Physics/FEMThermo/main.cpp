@@ -16,7 +16,7 @@ Springhead2/src/Samples/FEMThermo
 
 
 #include "../../SampleApp.h"
-//#include "tetgen.h"
+
 
 #pragma hdrstop
 using namespace Spr;
