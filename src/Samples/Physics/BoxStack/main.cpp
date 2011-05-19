@@ -52,7 +52,7 @@ public:
 		ID_SPHERE,
 		ID_ROCK,
 		ID_BLOCK,
-		ID_TOWER,
+		//ID_TOWER,
 		ID_SHAKE,
 	};
 
@@ -78,8 +78,8 @@ public:
 		AddHotKey(MENU_MAIN, ID_ROCK, 'd');
 		AddAction(MENU_MAIN, ID_BLOCK, "drop block");
 		AddHotKey(MENU_MAIN, ID_BLOCK, 'e');
-		AddAction(MENU_MAIN, ID_TOWER, "drop tower");
-		AddHotKey(MENU_MAIN, ID_TOWER, 't');
+		//AddAction(MENU_MAIN, ID_TOWER, "drop tower");
+		//AddHotKey(MENU_MAIN, ID_TOWER, 't');
 		AddAction(MENU_MAIN, ID_SHAKE, "shake floor");
 		AddHotKey(MENU_MAIN, ID_SHAKE, 'f');
 	}
@@ -139,6 +139,7 @@ public:
 				Drop(SHAPE_BLOCK, GRRenderIf::CYAN, v, w, p, q);
 				message = "composite block dropped.";
 			}
+			/* ïsãÔçáÇ†ÇËÇ…Ç¬Ç´ñ≥å¯âª
 			if(id == ID_TOWER){
 				const double tower_radius = 10;
 				const int tower_height = 5;
@@ -151,7 +152,7 @@ public:
 					}
 				}
 				message = "tower built.";
-			}
+			}*/
 			if(id == ID_SHAKE){
 				std::cout << "F: shake floor." << std::endl;
 				if(floorShakeAmplitude == 0.0){
