@@ -34,16 +34,19 @@ public:
 		MENU_SCENE		= 1,			///< シーンメニュー
 		MENU_COMMON		= 100,			///< 共有メニュー
 		MENU_CONFIG		= MENU_COMMON,	///< パラメータ設定系
+		MENU_DRAW,						///< 描画設定系
 		MENU_STATE,						///< ステート保存系
 		MENU_EDITOR,					///< FWEditorを表示
 		MENU_COMMON_LAST,
 	};
 	/// アクションID
+	/// 常につかえるアクション
 	enum ActionAlways{
 		ID_EXIT,					///< 終了
-		ID_TOGGLE,					///< シミュレーションの開始と停止
+		ID_RUN,						///< シミュレーションの開始と停止
 		ID_STEP,					///< ステップ実行
 	};
+	/// ステートの保存と復帰（未検証）
 	enum ActionState{
 		ID_LOAD_STATE,
 		ID_SAVE_STATE,
@@ -52,6 +55,7 @@ public:
 		ID_WRITE_STATE,
 		ID_DUMP,
 	};
+	/// 物理シミュレーションの設定
 	enum ActionConfig{
 		ID_SWITCH_LCP_PENALTY,		///< LCPとペナルティ法を切り替える
 		ID_TOGGLE_GRAVITY,			///< 重力の有効化と無効化
@@ -59,7 +63,18 @@ public:
 		ID_TOGGLE_ABA,				///< ABAの有効化と無効化
 		ID_INC_TIMESTEP,			///< タイムステップを増やす
 		ID_DEC_TIMESTEP,			///< タイムステップを減らす
+		ID_INC_TIMER,				///< タイマ周期を増やす
+		ID_DEC_TIMER,				///< タイマ周期を減らす
 	};
+	/// 描画の設定
+	enum ActionDraw{
+		ID_DRAW_SOLID,				///< ソリッド
+		ID_DRAW_WIREFRAME,			///< ワイヤフレーム
+		ID_DRAW_AXIS,				///< 座標軸
+		ID_DRAW_FORCE,				///< 力
+		ID_DRAW_CONTACT,			///< 接触断面
+	};
+
 	/// 形状ID
 	enum ShapeID{
 		SHAPE_BOX,
@@ -73,9 +88,11 @@ public:
 	/// アクション情報
 	struct Action{
 		int			id;							///< アクションID
+		bool		toggle;						///< On/Offタイプのアクション
+		bool		enabled;					///< OnかOff
 		vector< pair<int, UTString> > keys;		///< キーと代替テキスト
-		UTString	brief;						///< 簡単な説明
-		UTString	detail;						///< 詳しい説明
+		UTString	desc[2];					///< 説明(0: Onにするとき, 1: Offにするとき)
+		UTString	message[2];					///< アクション後メッセージ(0: Onにしたとき，1: Offにしたとき）
 	};
 	struct Menu : map<int, Action>{
 		UTString	brief;						///< メニューの説明
@@ -113,8 +130,6 @@ public:
 	CDRoundConeIf*			shapeRoundCone;
 	
 	/// 状態
-	bool					running;		///< シミュレーション実行中フラグ
-	bool					useLCP;			///< LCPかpenalty法か
 	bool					showHelp;		///< ヘルプ表示
 	int						curScene;		///< アクティブなシーンの番号
 	Vec3d					tmpGravity;		///< 重力無効化時の退避変数
@@ -136,16 +151,23 @@ public:
 		menus[menu].brief = brief;
 	}
 	/// アクションの登録
-	void AddAction(int menu, int id, UTString brief, UTString detail = ""){
+	void AddAction(int menu, int id, UTString desc, UTString msg = "", UTString descd = "", UTString msgd = ""){
 		Action& act = menus[menu][id];
 		act.id		= id;
-		act.brief   = brief;
-		act.detail  = (detail == "" ? brief : detail);
+		act.enabled = true;
+		act.desc[0] = desc;
+		act.desc[1] = (descd == "" ? desc : descd);
+		act.message[0] = msg;
+		act.message[1] = (msgd == "" ? msg : msgd);
 	}
-
 	/// アクションとキーの対応
 	void AddHotKey(int menu, int id, int key, UTString alt = ""){
 		menus[menu][id].keys.push_back(make_pair(key, alt));
+	}
+	/// On/Offの反転
+	bool ToggleAction(int menu, int id){
+		Action& act = menus[menu][id];
+		return act.enabled = !act.enabled;
 	}
 
 	/// 床の作成
@@ -259,7 +281,7 @@ public:
 
 			// 説明
 			pos.x = xbrief;
-			render->DrawFont(pos + offset, a.brief);
+			render->DrawFont(pos + offset, (a.enabled ? a.desc[1] : a.desc[0]));
 
 			pos.y += yline;
 			pos.x = 0;
@@ -310,8 +332,6 @@ public:
 	}
 	
 	SampleApp(){
-		running		= true;
-		useLCP		= true;
 		showHelp	= false;
 		appName		= "untitled";
 		numScenes	= 1;
@@ -326,45 +346,80 @@ public:
 
 		/// いつでも有効系
 		AddMenu(MENU_ALWAYS, "");
-		AddAction(MENU_ALWAYS, ID_EXIT, "exit", "exit the application");
+		AddAction(MENU_ALWAYS, ID_EXIT, "exit");
 		AddHotKey(MENU_ALWAYS, ID_EXIT, ESC, "ESC");
 		AddHotKey(MENU_ALWAYS, ID_EXIT, 'q');
 		AddHotKey(MENU_ALWAYS, ID_EXIT, 'Q');
-		AddAction(MENU_ALWAYS, ID_TOGGLE, "start", "start simulation");
-		AddHotKey(MENU_ALWAYS, ID_TOGGLE, ' ', "space");
-		AddAction(MENU_ALWAYS, ID_STEP, "step", "step simulation");
+		AddAction(MENU_ALWAYS, ID_RUN,
+			"start", "simulation started.",
+			"pause", "simulation paused.");
+		AddHotKey(MENU_ALWAYS, ID_RUN, ' ', "space");
+		AddAction(MENU_ALWAYS, ID_STEP, "step", "one step proceeded.");
 		AddHotKey(MENU_ALWAYS, ID_STEP, ';');
 
 		/// 共有コマンドはシーンコマンドとの衝突回避のために大文字を割り当てる
 		/// ステートの保存や復帰
 		AddMenu(MENU_STATE, "< save and load states >");
-		AddAction(MENU_STATE, ID_LOAD_STATE, "load state", "load saved state");
+		AddAction(MENU_STATE, ID_LOAD_STATE, "load state", "state loaded.");
 		AddHotKey(MENU_STATE, ID_LOAD_STATE, 'L');
-		AddAction(MENU_STATE, ID_SAVE_STATE, "save state", "save current state");
+		AddAction(MENU_STATE, ID_SAVE_STATE, "save state", "state saved.");
 		AddHotKey(MENU_STATE, ID_SAVE_STATE, 'S');
-		AddAction(MENU_STATE, ID_RELEASE_STATE, "release state", "release saved state");
+		AddAction(MENU_STATE, ID_RELEASE_STATE, "release state", "saved state is released.");
 		AddHotKey(MENU_STATE, ID_RELEASE_STATE, 'X');
-		AddAction(MENU_STATE, ID_READ_STATE, "read state", "read state from state.bin");
+		AddAction(MENU_STATE, ID_READ_STATE, "read state", "state read from state.bin.");
 		AddHotKey(MENU_STATE, ID_READ_STATE, 'R');
-		AddAction(MENU_STATE, ID_WRITE_STATE, "write state", "write state to state.bin");
+		AddAction(MENU_STATE, ID_WRITE_STATE, "write state", "state written to state.bin.");
 		AddHotKey(MENU_STATE, ID_WRITE_STATE, 'W');
-		AddAction(MENU_STATE, ID_DUMP, "dump", "dump object data to dump.bin");
+		AddAction(MENU_STATE, ID_DUMP, "dump", "object data dumped to dump.bin.");
 		AddHotKey(MENU_STATE, ID_DUMP, 'D');
 		/// シミュレーション設定
 		AddMenu(MENU_CONFIG, "< simulation settings >");
-		AddAction(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, "switch to penalty", "switch to penalty method");
+		AddAction(MENU_CONFIG, ID_SWITCH_LCP_PENALTY,
+			"switch to penalty", "switched to penalty method",
+			"switch to lcp", "switched to lcp method");
 		AddHotKey(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, 'M');
-		AddAction(MENU_CONFIG, ID_TOGGLE_GRAVITY, "disable gravity");
+		AddAction(MENU_CONFIG, ID_TOGGLE_GRAVITY,
+			"enable gravity", "gravity enabled.",
+			"disable gravity", "gravity disabled.");
 		AddHotKey(MENU_CONFIG, ID_TOGGLE_GRAVITY, 'G');
-		AddAction(MENU_CONFIG, ID_TOGGLE_JOINT, "disable joints");
+		AddAction(MENU_CONFIG, ID_TOGGLE_JOINT,
+			"enable joints", "joints enabled.",
+			"disable joints", "joints disabled.");
 		AddHotKey(MENU_CONFIG, ID_TOGGLE_JOINT, 'J');
-		AddAction(MENU_CONFIG, ID_TOGGLE_ABA, "disable ABA (non implemented)");
+		AddAction(MENU_CONFIG, ID_TOGGLE_ABA,
+			"enable ABA", "not implemented.",
+			"disable ABA", "not implemented.");
 		AddHotKey(MENU_CONFIG, ID_TOGGLE_ABA, 'A');
 		AddAction(MENU_CONFIG, ID_INC_TIMESTEP, "increase time step");
 		AddHotKey(MENU_CONFIG, ID_INC_TIMESTEP, 'I');
 		AddAction(MENU_CONFIG, ID_DEC_TIMESTEP, "decrease time step");
 		AddHotKey(MENU_CONFIG, ID_DEC_TIMESTEP, 'D');
-		
+		AddAction(MENU_CONFIG, ID_INC_TIMER, "increase timer interval");
+		AddHotKey(MENU_CONFIG, ID_INC_TIMER, 'F');
+		AddAction(MENU_CONFIG, ID_DEC_TIMER, "decrease timer interval");
+		AddHotKey(MENU_CONFIG, ID_DEC_TIMER, 'S');
+		/// 描画設定系
+		AddMenu(MENU_DRAW, "< drawing setting >");
+		AddAction(MENU_DRAW, ID_DRAW_WIREFRAME,
+			"enable wireframe", "wireframe enabled.",
+			"disable wireframe", "wireframe disabled");
+		AddHotKey(MENU_DRAW, ID_DRAW_WIREFRAME, 'W');
+		AddAction(MENU_DRAW, ID_DRAW_SOLID,
+			"enable solid", "solid enabled.",
+			"disable solid", "solid disabled");
+		AddHotKey(MENU_DRAW, ID_DRAW_SOLID, 'S');
+		AddAction(MENU_DRAW, ID_DRAW_AXIS,
+			"enable axis drawing", "axis drawing enabled.",
+			"disable axis drawing", "axis drawing disabled.");
+		AddHotKey(MENU_DRAW, ID_DRAW_AXIS, 'A');
+		AddAction(MENU_DRAW, ID_DRAW_FORCE,
+			"enable force drawing", "force drawing enabled.",
+			"disable force drawing", "force drawing disabled.");
+		AddHotKey(MENU_DRAW, ID_DRAW_FORCE, 'F');
+		AddAction(MENU_DRAW, ID_DRAW_CONTACT,
+			"enable contact drawing", "contact drawing enabled.",
+			"disable contact drawing", "contact drawing disabled.");
+		AddHotKey(MENU_DRAW, ID_DRAW_CONTACT, 'C');
 	}
 	~SampleApp(){}
 
@@ -389,91 +444,46 @@ public: /** 派生クラスが実装する関数 **/
 		if(menu == MENU_ALWAYS){
 			if(id == ID_EXIT)
 				exit(0);
-			if(id == ID_TOGGLE){
-				running = !running;
-				if(running){
-					AddAction(MENU_ALWAYS, ID_TOGGLE, "pause", "pause simulation");
-					message = "simulation started.";
-				}
-				else{
-					AddAction(MENU_ALWAYS, ID_TOGGLE, "start", "start simulation");
-					message = "simulation paused.";
-				}
-			}
-			if(id == ID_STEP){
+			if(id == ID_RUN)
+				ToggleAction(menu, id);
+			if(id == ID_STEP)
 				fwScene->Step();
-				message = "one step simulated.";
-			}
 		}
 		if(menu == MENU_STATE){
-			if(id == ID_LOAD_STATE){
+			if(id == ID_LOAD_STATE)
 				states->LoadState(phScene);
-				message = "state loaded.";
-			}
-			if(id == ID_SAVE_STATE){
+			if(id == ID_SAVE_STATE)
 				states->SaveState(phScene);
-				message = "state saved.";
-			}
-			if(id == ID_RELEASE_STATE){	
+			if(id == ID_RELEASE_STATE)
 				states->ReleaseState(phScene);
-				message = "saved state is released.";
-			}
-			if(id == ID_READ_STATE){
+			if(id == ID_READ_STATE)
 				phScene->ReadState("state.bin");
-				message = "state read from state.bin.";
-			}
-			if(id == ID_WRITE_STATE){
+			if(id == ID_WRITE_STATE)
 				phScene->WriteState("state.bin");
-				message = "state written to state.bin.";
-			}
 			if(id == ID_DUMP){
 				std::ofstream f("dump.bin", std::ios::binary|std::ios::out);
 				phScene->DumpObjectR(f);
-				message = "dumped to dump.bin.";
 			}
 		}
 		if(menu == MENU_CONFIG){
 			if(id == ID_SWITCH_LCP_PENALTY){
-				useLCP = !useLCP;
-				if(useLCP){
-					phScene->SetContactMode(PHSceneDesc::MODE_LCP);
-					AddAction(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, "switch to penalty", "switch to penalty method");
-					message = "switched to LCP method.";
-				}
-				else{
-					phScene->SetContactMode(PHSceneDesc::MODE_PENALTY);
-					AddAction(MENU_CONFIG, ID_SWITCH_LCP_PENALTY, "switch to lcp", "switch to lcp method");
-					message = "switched to penalty method.";
-				}
+				if(ToggleAction(menu, id))
+					 phScene->SetContactMode(PHSceneDesc::MODE_LCP);
+				else phScene->SetContactMode(PHSceneDesc::MODE_PENALTY);
 			}
 			if(id == ID_TOGGLE_GRAVITY){
-				static bool enable = true;
-				enable = !enable;
-				if(enable){
+				if(ToggleAction(menu, id)){
 					phScene->SetGravity(tmpGravity);
-					AddAction(MENU_CONFIG, ID_TOGGLE_GRAVITY, "disable gravity");
-					message = "gravity is enabled.";
 				}
 				else{
 					tmpGravity = phScene->GetGravity();
 					phScene->SetGravity(Vec3d());
-					AddAction(MENU_CONFIG, ID_TOGGLE_GRAVITY, "enable gravity");
-					message = "gravity is disabled";
 				}
 			}
 			if(id == ID_TOGGLE_JOINT){
-				static bool enable = true;
-				enable = !enable;
+				bool on = ToggleAction(menu, id);
 				for(int i = 0; i < (int)phScene->NJoints(); i++)
-					phScene->GetJoint(i)->Enable(enable);
-				if(enable){
-					AddAction(MENU_CONFIG, ID_TOGGLE_JOINT, "disable joints");
-					message = "joints are enabled.";
-				}
-				else{
-					AddAction(MENU_CONFIG, ID_TOGGLE_JOINT, "enable joints");
-					message = "joints are disabled.";
-				}
+					phScene->GetJoint(i)->Enable(on);
 			}
 			if(id == ID_TOGGLE_ABA){
 
@@ -490,6 +500,40 @@ public: /** 派生クラスが実装する関数 **/
 				ss << "time step is now " << phScene->GetTimeStep();
 				message = ss.str();
 			}
+			if(id == ID_INC_TIMER){
+				timer->SetInterval(std::min(1000, 2 * (int)timer->GetInterval()));
+				ss.str("");
+				ss << "timer interval is now " << timer->GetInterval();
+				message = ss.str();
+			}
+			if(id == ID_DEC_TIMER){
+				timer->SetInterval(std::max(10, (int)timer->GetInterval() / 2));
+				ss.str("");
+				ss << "timer interval is now " << timer->GetInterval();
+				message = ss.str();
+			}
+		}
+		if(menu == MENU_DRAW){
+			if(id == ID_DRAW_SOLID)
+				fwScene->SetRenderMode(ToggleAction(menu, id), menus[menu][ID_DRAW_WIREFRAME].enabled);
+			if(id == ID_DRAW_WIREFRAME)
+				fwScene->SetRenderMode(menus[menu][ID_DRAW_SOLID].enabled, ToggleAction(menu, id));
+			if(id == ID_DRAW_AXIS){
+				bool on = ToggleAction(menu, id);
+				fwScene->EnableRenderAxis(on, on, on);
+			}
+			if(id == ID_DRAW_FORCE){
+				bool on = ToggleAction(menu, id);
+				fwScene->EnableRenderForce(on, on);
+			}
+			if(id == ID_DRAW_CONTACT){
+				fwScene->EnableRenderContact(ToggleAction(menu, id));
+			}
+		}
+		// この時点でメッセージが設定されていなければデフォルトメッセージ
+		if(message == ""){
+			Action& act = menus[menu][id];
+			message = act.message[!act.enabled];
 		}
 	}
 
@@ -519,26 +563,26 @@ public: /** FWAppの実装 **/
 		/// 床用の形状
 		CDBoxDesc bd;
 		bd.boxsize = Vec3d(60.0, 2.0, 40.0);
-		shapeFloor = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));		
+		shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
 		bd.boxsize.y *= 6.0;
-		shapeWall = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
+		shapeWall = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
 
 		// 形状の作成
 		bd.boxsize = Vec3f(2,2,2);
-		shapeBox = XCAST(GetSdk()->GetPHSdk()->CreateShape(bd));
+		shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
 		
 		CDSphereDesc sd;
 		sd.radius = 1;
-		shapeSphere = XCAST(GetSdk()->GetPHSdk()->CreateShape(sd));
+		shapeSphere = GetSdk()->GetPHSdk()->CreateShape(sd)->Cast();
 		
 		CDCapsuleDesc cd;
 		cd.radius = 1;
 		cd.length = 1;
-		shapeCapsule = XCAST(GetSdk()->GetPHSdk()->CreateShape(cd));
+		shapeCapsule = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
 		
 		CDRoundConeDesc rcd;
 		rcd.length = 3;
-		shapeRoundCone= XCAST(GetSdk()->GetPHSdk()->CreateShape(rcd));
+		shapeRoundCone= GetSdk()->GetPHSdk()->CreateShape(rcd)->Cast();
 		
 		/// シーンの作成
 		for(int i = 0; i < numScenes; i++){
@@ -578,7 +622,7 @@ public: /** FWAppの実装 **/
 	// タイマコールバック関数．タイマ周期で呼ばれる
 	virtual void TimerFunc(int id) {
 		/// 時刻のチェックと画面の更新を行う
-		if (running){
+		if (menus[MENU_ALWAYS][ID_RUN].enabled){
 			OnStep();
 		}
 		// 再描画要求
@@ -623,6 +667,7 @@ public: /** FWAppの実装 **/
 
 		// キーに対応するアクションを実行
 		int id;
+		message = "";
 		// 常時表示メニュー
 		id = menus[MENU_ALWAYS].Query(key);
 		if(id != -1)
