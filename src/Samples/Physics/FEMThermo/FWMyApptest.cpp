@@ -1,8 +1,8 @@
-//#include "FWMyApptest.h"
+#include "FWMyApptest.h"
 
-//#define ESC 27
+#define ESC 27
 
-//constructor
+
 //FWMyApptest::FWMyApptest(){
 //		appName = "FEMThermo";
 //
