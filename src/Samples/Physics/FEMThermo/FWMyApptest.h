@@ -16,6 +16,7 @@ public:
 	};
 
 public:	
+	//FWMyApptest();
 	//コンストラクタ
 	FWMyApptest(){
 		appName = "FEMThermo";
