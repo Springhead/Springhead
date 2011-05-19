@@ -187,11 +187,6 @@ typedef struct
 typedef struct
 {
 	PyObject_HEAD
-	UTRef<GRDebugRenderIf> ptr;
-} EPGRDebugRenderIf;
-typedef struct
-{
-	PyObject_HEAD
 	struct GRSceneDesc* ptr;
 } EPGRSceneDesc;
 typedef struct
@@ -269,6 +264,8 @@ PyObject* __EPDECL newEPGRVisualDesc(struct GRVisualDesc*);
 extern PyTypeObject EPGRVisualIfType;
 PyObject* __EPDECL newEPGRVisualIf(struct GRVisualIf);
 PyObject* __EPDECL newEPGRVisualIf(struct GRVisualIf*);
+PyObject* EPGRVisualIf_Enable( EPGRVisualIf* self,PyObject* tuple );//Overloaded
+PyObject* EPGRVisualIf_IsEnabled( EPGRVisualIf* self );
 PyObject* EPGRVisualIf_Render( EPGRVisualIf* self,EPGRRenderIf* var1 );
 PyObject* EPGRVisualIf_Rendered( EPGRVisualIf* self,EPGRRenderIf* var1 );
 
@@ -531,11 +528,17 @@ PyObject* __EPDECL newEPGRRenderBaseIf(struct GRRenderBaseIf*);
 PyObject* EPGRRenderBaseIf_BeginScene( EPGRRenderBaseIf* self );
 PyObject* EPGRRenderBaseIf_ClearBlendMatrix( EPGRRenderBaseIf* self );
 PyObject* EPGRRenderBaseIf_ClearBuffer( EPGRRenderBaseIf* self );
+PyObject* EPGRRenderBaseIf_DrawArrow( EPGRRenderBaseIf* self,PyObject* tuple );
+PyObject* EPGRRenderBaseIf_DrawBox( EPGRRenderBaseIf* self,PyObject* tuple );//Overloaded
+PyObject* EPGRRenderBaseIf_DrawCapsule( EPGRRenderBaseIf* self,PyObject* tuple );//Overloaded
 PyObject* EPGRRenderBaseIf_DrawCone( EPGRRenderBaseIf* self,PyObject* tuple );//Overloaded
 PyObject* EPGRRenderBaseIf_DrawCylinder( EPGRRenderBaseIf* self,PyObject* tuple );//Overloaded
 PyObject* EPGRRenderBaseIf_DrawDirect( EPGRRenderBaseIf* self,PyObject* tuple );//Overloaded
 PyObject* EPGRRenderBaseIf_DrawFont( EPGRRenderBaseIf* self,PyObject* tuple );//Overloaded
+PyObject* EPGRRenderBaseIf_DrawGrid( EPGRRenderBaseIf* self,PyObject* tuple );//Overloaded
+PyObject* EPGRRenderBaseIf_DrawLine( EPGRRenderBaseIf* self,PyObject* tuple );
 PyObject* EPGRRenderBaseIf_DrawList( EPGRRenderBaseIf* self,PyLongObject* var1 );
+PyObject* EPGRRenderBaseIf_DrawRoundCone( EPGRRenderBaseIf* self,PyObject* tuple );//Overloaded
 PyObject* EPGRRenderBaseIf_DrawSphere( EPGRRenderBaseIf* self,PyObject* tuple );//Overloaded
 PyObject* EPGRRenderBaseIf_EndList( EPGRRenderBaseIf* self );
 PyObject* EPGRRenderBaseIf_EndScene( EPGRRenderBaseIf* self );
@@ -547,6 +550,7 @@ PyObject* EPGRRenderBaseIf_GetViewMatrix( EPGRRenderBaseIf* self,EPAffinef* var1
 PyObject* EPGRRenderBaseIf_InitShader( EPGRRenderBaseIf* self );
 PyObject* EPGRRenderBaseIf_LoadTexture( EPGRRenderBaseIf* self,EPstring* var1 );
 PyObject* EPGRRenderBaseIf_MultModelMatrix( EPGRRenderBaseIf* self,EPAffinef* var1 );
+PyObject* EPGRRenderBaseIf_NLights( EPGRRenderBaseIf* self );
 PyObject* EPGRRenderBaseIf_PopLight( EPGRRenderBaseIf* self );
 PyObject* EPGRRenderBaseIf_PopModelMatrix( EPGRRenderBaseIf* self );
 PyObject* EPGRRenderBaseIf_PushLight( EPGRRenderBaseIf* self,PyObject* tuple );//Overloaded
@@ -573,6 +577,7 @@ PyObject* EPGRRenderBaseIf_SetVertexShader( EPGRRenderBaseIf* self,EPvoid* var1 
 PyObject* EPGRRenderBaseIf_SetViewMatrix( EPGRRenderBaseIf* self,EPAffinef* var1 );
 PyObject* EPGRRenderBaseIf_SetViewport( EPGRRenderBaseIf* self,PyObject* tuple );
 PyObject* EPGRRenderBaseIf_StartList( EPGRRenderBaseIf* self );
+PyObject* EPGRRenderBaseIf_SwapBuffers( EPGRRenderBaseIf* self );
 
 //}EPGRRenderBaseIf
 
@@ -581,11 +586,13 @@ PyObject* EPGRRenderBaseIf_StartList( EPGRRenderBaseIf* self );
 extern PyTypeObject EPGRRenderIfType;
 PyObject* __EPDECL newEPGRRenderIf(struct GRRenderIf);
 PyObject* __EPDECL newEPGRRenderIf(struct GRRenderIf*);
+PyObject* EPGRRenderIf_EnterScreenCoordinate( EPGRRenderIf* self );
 PyObject* EPGRRenderIf_GetCamera( EPGRRenderIf* self );
 PyObject* EPGRRenderIf_GetDevice( EPGRRenderIf* self );
 PyObject* EPGRRenderIf_GetPixelSize( EPGRRenderIf* self );
 PyObject* EPGRRenderIf_GetViewportPos( EPGRRenderIf* self );
 PyObject* EPGRRenderIf_GetViewportSize( EPGRRenderIf* self );
+PyObject* EPGRRenderIf_LeaveScreenCoordinate( EPGRRenderIf* self );
 PyObject* EPGRRenderIf_Reshape( EPGRRenderIf* self,PyObject* tuple );
 PyObject* EPGRRenderIf_ScreenToCamera( EPGRRenderIf* self,PyObject* tuple );//Overloaded
 PyObject* EPGRRenderIf_SetCamera( EPGRRenderIf* self,EPGRCameraDesc* var1 );
@@ -610,26 +617,6 @@ PyObject* __EPDECL newEPGRDeviceGLIf(struct GRDeviceGLIf);
 PyObject* __EPDECL newEPGRDeviceGLIf(struct GRDeviceGLIf*);
 
 //}EPGRDeviceGLIf
-
-//{*********EPGRDebugRenderIf*******
-#define EPGRDebugRenderIf_Check(ob) PyObject_TypeCheck(ob, &EPGRDebugRenderIfType)
-extern PyTypeObject EPGRDebugRenderIfType;
-PyObject* __EPDECL newEPGRDebugRenderIf(struct GRDebugRenderIf);
-PyObject* __EPDECL newEPGRDebugRenderIf(struct GRDebugRenderIf*);
-PyObject* EPGRDebugRenderIf_DrawFaceSolid( EPGRDebugRenderIf* self,PyObject* tuple );
-PyObject* EPGRDebugRenderIf_DrawFaceWire( EPGRDebugRenderIf* self,PyObject* tuple );
-PyObject* EPGRDebugRenderIf_DrawScene( EPGRDebugRenderIf* self,EPPHSceneIf* var1 );
-PyObject* EPGRDebugRenderIf_DrawSolid( EPGRDebugRenderIf* self,EPPHSolidIf* var1 );
-PyObject* EPGRDebugRenderIf_EnableGrid( EPGRDebugRenderIf* self,PyObject* tuple );//Overloaded
-PyObject* EPGRDebugRenderIf_EnableRenderAxis( EPGRDebugRenderIf* self,PyObject* tuple );//Overloaded
-PyObject* EPGRDebugRenderIf_EnableRenderContact( EPGRDebugRenderIf* self,PyObject* tuple );//Overloaded
-PyObject* EPGRDebugRenderIf_EnableRenderForce( EPGRDebugRenderIf* self,PyObject* tuple );//Overloaded
-PyObject* EPGRDebugRenderIf_EnableRenderIK( EPGRDebugRenderIf* self,PyObject* tuple );//Overloaded
-PyObject* EPGRDebugRenderIf_EnableRenderWorldAxis( EPGRDebugRenderIf* self,PyObject* tuple );//Overloaded
-PyObject* EPGRDebugRenderIf_SetMaterialSample( EPGRDebugRenderIf* self,PyLongObject* var1 );
-PyObject* EPGRDebugRenderIf_SetRenderMode( EPGRDebugRenderIf* self,PyObject* tuple );//Overloaded
-
-//}EPGRDebugRenderIf
 
 //{*********EPGRSceneDesc*******
 #define EPGRSceneDesc_Check(ob) PyObject_TypeCheck(ob, &EPGRSceneDescType)
@@ -667,8 +654,8 @@ PyObject* __EPDECL newEPGRSdkDesc(struct GRSdkDesc*);
 extern PyTypeObject EPGRSdkIfType;
 PyObject* __EPDECL newEPGRSdkIf(struct GRSdkIf);
 PyObject* __EPDECL newEPGRSdkIf(struct GRSdkIf*);
-PyObject* EPGRSdkIf_CreateDebugRender( EPGRSdkIf* self );
 PyObject* EPGRSdkIf_CreateDeviceGL( EPGRSdkIf* self );
+PyObject* EPGRSdkIf_CreateRender( EPGRSdkIf* self );
 PyObject* EPGRSdkIf_CreateScene( EPGRSdkIf* self,EPGRSceneDesc* var1 );
 PyObject* EPGRSdkIf_CreateSdk( EPGRSdkIf* self );
 PyObject* EPGRSdkIf_GetScene( EPGRSdkIf* self,PyLongObject* var1 );
