@@ -7,6 +7,9 @@
 #include "../Samples/Physics/FEMThermo/ThermalFEM.h"
 
 
+
+
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -29,8 +32,12 @@ ObjectIf* FWFemMesh::GetChildObject(size_t pos){
 bool FWFemMesh::AddChildObject(ObjectIf* o){
 	if (DCAST(GRMesh, o)){
 		GRMesh* grMesh = (GRMesh*)o;
+		GRFrameIf* grf = GetGRFrame();
 		//	tetgenとかやってPHを作る			//←ここに記述する処理なのか？
-		//PHMesh = IntoTetGen(grMesh);							//TetGen使うなら、GRThermoMesh.cppで記述した処理を行う関数を作る。
+		//grMeshにxファイルを入れる
+		//Tetgenに入れる
+		//PHMesh = IntoTetGen(grf->Cast());							//TetGen使うなら、GRThermoMesh.cppで記述した処理を行う関数を作る。
+		IntoTetGen(grf->Cast());
 		//
 		//Tetrahedralize()してできたファイルを、PHのvector又は有限個の配列に入れる。
 		return true;
@@ -39,11 +46,12 @@ bool FWFemMesh::AddChildObject(ObjectIf* o){
 	}
 }
 bool FWFemMesh::IntoTetGen(GRMesh* grm){
+	
 	//定義を加えながら変換していく
 	tetgenio::facet *f;
 	tetgenio::polygon *p;
 	int i;
-	////頂点の開始番号
+	//頂点の開始番号
 	//FEM.in.firstnumber = 1;
 	////頂点座標と数の入力
 	//FEM.in.numberofpoints = tvtxs.size();//頂点のサイズの代入
@@ -88,6 +96,7 @@ bool FWFemMesh::IntoTetGen(GRMesh* grm){
 	//FEM.out.save_elements("bar100out");
 	//FEM.out.save_faces("bar100out");
 	//return FEM.outに入っているメッシュファイル⇒これをPHに入れる
+	std::cout << "メッシュGET成功" << std::endl;
 	return true;
 }
 

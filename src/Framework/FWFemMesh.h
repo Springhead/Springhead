@@ -34,7 +34,6 @@ public:
 	//TetGen‚Ål–Ê‘ÌƒƒbƒVƒ…‰»
 	virtual bool IntoTetGen(GRMesh* grm);
 
-
 };
 
 }
