@@ -5,3 +5,4 @@
 #include "SprEPPhysics.h"
 #include "SprEPGraphics.h"
 #include "SprEPCreature.h"
+#include "EmbPython\SprEPInterPreter.h"

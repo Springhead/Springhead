@@ -15,7 +15,7 @@ def Pick(so,vec):
 print("def AddBox() \n\tReturn PHSolidIf")
 def AddBox():
 	tmp = scene.CreateSolid( desc )
-	tmp.AddShape( meshConvex )
+	tmp.AddShape( mesh )
 	Pick( tmp , Vec3d( 0,20,0 ) )
 	return tmp
 
@@ -25,14 +25,17 @@ def Reload(g = globals() , l = locals()):
 	execfile('test.py',g,l)
 
 
-def Shower(box):
+def Shower(box = None):
+	if not box:
+		box = [None] * 20
+		
 	start = time.time()
 	num = len(box)
 	
 	for i in range(num):
 		if box[i] == None :
 			box[i] = AddBox()
-	
+
 	# 10sec
 	span = 1
 	while time.time() < start + span:
@@ -43,11 +46,12 @@ def Shower(box):
 			Pick( box[i] , Vec3d(x,27,z) ) 
 			box[i].SetVelocity(Vec3d(x*1.5,10,z*1.5))
 			time.sleep(0.05)
+	return box 
 
 
 
-def PD(solid,pos,k,d,time_=10):
-	dt = 0.01
+def PD(solid,pos=Vec3d(5,15,0),k=10,d=10,time_=5):
+	dt = 0.1
 	n = int( time_ / dt )
 
 	for i in range(n):

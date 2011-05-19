@@ -10,7 +10,7 @@
 #include "..\..\include\EmbPython\SprEPUtility.h"
 #include "..\..\include\Foundation\SprObject.h"
 #include "..\..\include\Foundation\SprScene.h"
-#include "..\..\include\Foundation\UTTimer.h"
+#include "..\..\include\Foundation\SprUTTimer.h"
 typedef struct
 {
 	PyObject_HEAD

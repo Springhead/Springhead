@@ -279,6 +279,32 @@ PyObject* newEPGRVisualDesc(struct GRVisualDesc* org)
 //}GRVisualDesc
 
 //{*********EPGRVisualIf*******
+PyObject* EPGRVisualIf_Enable( EPGRVisualIf* self,PyObject* tuple )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(PyTuple_Size(tuple) == 1&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))))
+	{
+		self->ptr->Enable((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))));
+		Py_RETURN_NONE;
+	}
+	if(PyTuple_Size(tuple) == 0&&PyTuple_Size(tuple) == 0)
+	{
+		self->ptr->Enable();
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
+PyObject* EPGRVisualIf_IsEnabled( EPGRVisualIf* self )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(true)
+	{
+		PyObject* ret = (PyObject*)PyBool_FromLong(self->ptr->IsEnabled()? 1 : 0);
+		if ( ret ) return (PyObject*) ret;
+		else Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
 PyObject* EPGRVisualIf_Render( EPGRVisualIf* self,EPGRRenderIf* var1 )
 {
 	UTAutoLock lock(EPCriticalSection);
@@ -301,6 +327,8 @@ PyObject* EPGRVisualIf_Rendered( EPGRVisualIf* self,EPGRRenderIf* var1 )
 }
 static PyMethodDef EPGRVisualIf_methods[] =
 {
+	{"Enable",(PyCFunction)EPGRVisualIf_Enable,METH_VARARGS,"EPGRVisualIf::Enable"},
+	{"IsEnabled",(PyCFunction)EPGRVisualIf_IsEnabled,METH_NOARGS,"EPGRVisualIf::IsEnabled"},
 	{"Render",(PyCFunction)EPGRVisualIf_Render,METH_O,"EPGRVisualIf::Render"},
 	{"Rendered",(PyCFunction)EPGRVisualIf_Rendered,METH_O,"EPGRVisualIf::Rendered"},
 	{NULL}
@@ -3311,6 +3339,51 @@ PyObject* EPGRRenderBaseIf_ClearBuffer( EPGRRenderBaseIf* self )
 	}
 	Return_ArgError;
 }
+PyObject* EPGRRenderBaseIf_DrawArrow( EPGRRenderBaseIf* self,PyObject* tuple )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(PyTuple_Size(tuple) == 7&&EPVec3f_Check(((EPVec3f*)PyTuple_GetItem(tuple,0))) && EPVec3f_Check(((EPVec3f*)PyTuple_GetItem(tuple,1))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,2))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,3))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,4))) && PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,5))) && PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,6))))
+	{
+		self->ptr->DrawArrow((*(((EPVec3f*)PyTuple_GetItem(tuple,0))->ptr)),(*(((EPVec3f*)PyTuple_GetItem(tuple,1))->ptr)),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,2))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,3))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,4))),PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,5))),(Py_True == ((PyObject*)PyTuple_GetItem(tuple,6))));
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
+PyObject* EPGRRenderBaseIf_DrawBox( EPGRRenderBaseIf* self,PyObject* tuple )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(PyTuple_Size(tuple) == 4&&PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,2))) && PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,3))))
+	{
+		self->ptr->DrawBox(PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,2))),(Py_True == ((PyObject*)PyTuple_GetItem(tuple,3))));
+		Py_RETURN_NONE;
+	}
+	if(PyTuple_Size(tuple) == 3&&PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,2))))
+	{
+		self->ptr->DrawBox(PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,2))));
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
+PyObject* EPGRRenderBaseIf_DrawCapsule( EPGRRenderBaseIf* self,PyObject* tuple )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(PyTuple_Size(tuple) == 4&&PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))) && PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,2))) && PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,3))))
+	{
+		self->ptr->DrawCapsule(PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))),PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,2))),(Py_True == ((PyObject*)PyTuple_GetItem(tuple,3))));
+		Py_RETURN_NONE;
+	}
+	if(PyTuple_Size(tuple) == 3&&PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))) && PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,2))))
+	{
+		self->ptr->DrawCapsule(PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))),PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,2))));
+		Py_RETURN_NONE;
+	}
+	if(PyTuple_Size(tuple) == 2&&PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))))
+	{
+		self->ptr->DrawCapsule(PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))));
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
 PyObject* EPGRRenderBaseIf_DrawCone( EPGRRenderBaseIf* self,PyObject* tuple )
 {
 	UTAutoLock lock(EPCriticalSection);
@@ -3371,12 +3444,57 @@ PyObject* EPGRRenderBaseIf_DrawFont( EPGRRenderBaseIf* self,PyObject* tuple )
 	}
 	Return_ArgError;
 }
+PyObject* EPGRRenderBaseIf_DrawGrid( EPGRRenderBaseIf* self,PyObject* tuple )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(PyTuple_Size(tuple) == 3&&PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,0))) && PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,1))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,2))))
+	{
+		self->ptr->DrawGrid(PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,0))),PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,1))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,2))));
+		Py_RETURN_NONE;
+	}
+	if(PyTuple_Size(tuple) == 2&&PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,0))) && PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,1))))
+	{
+		self->ptr->DrawGrid(PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,0))),PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,1))));
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
+PyObject* EPGRRenderBaseIf_DrawLine( EPGRRenderBaseIf* self,PyObject* tuple )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(PyTuple_Size(tuple) == 2&&EPVec3f_Check(((EPVec3f*)PyTuple_GetItem(tuple,0))) && EPVec3f_Check(((EPVec3f*)PyTuple_GetItem(tuple,1))))
+	{
+		self->ptr->DrawLine((*(((EPVec3f*)PyTuple_GetItem(tuple,0))->ptr)),(*(((EPVec3f*)PyTuple_GetItem(tuple,1))->ptr)));
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
 PyObject* EPGRRenderBaseIf_DrawList( EPGRRenderBaseIf* self,PyLongObject* var1 )
 {
 	UTAutoLock lock(EPCriticalSection);
 	if(PyLong_Check(var1))
 	{
 		self->ptr->DrawList(PyLong_AsLong((PyObject*)var1));
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
+PyObject* EPGRRenderBaseIf_DrawRoundCone( EPGRRenderBaseIf* self,PyObject* tuple )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(PyTuple_Size(tuple) == 5&&PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,2))) && PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,3))) && PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,4))))
+	{
+		self->ptr->DrawRoundCone(PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,2))),PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,3))),(Py_True == ((PyObject*)PyTuple_GetItem(tuple,4))));
+		Py_RETURN_NONE;
+	}
+	if(PyTuple_Size(tuple) == 4&&PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,2))) && PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,3))))
+	{
+		self->ptr->DrawRoundCone(PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,2))),PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,3))));
+		Py_RETURN_NONE;
+	}
+	if(PyTuple_Size(tuple) == 3&&PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,2))))
+	{
+		self->ptr->DrawRoundCone(PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,2))));
 		Py_RETURN_NONE;
 	}
 	Return_ArgError;
@@ -3494,6 +3612,17 @@ PyObject* EPGRRenderBaseIf_MultModelMatrix( EPGRRenderBaseIf* self,EPAffinef* va
 	{
 		self->ptr->MultModelMatrix((*(var1->ptr)));
 		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
+PyObject* EPGRRenderBaseIf_NLights( EPGRRenderBaseIf* self )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(true)
+	{
+		PyLongObject* ret = (PyLongObject*)Py_BuildValue("i",self->ptr->NLights());
+		if ( ret ) return (PyObject*) ret;
+		else Py_RETURN_NONE;
 	}
 	Return_ArgError;
 }
@@ -3683,6 +3812,11 @@ PyObject* EPGRRenderBaseIf_SetMaterial( EPGRRenderBaseIf* self,PyObject* tuple )
 		self->ptr->SetMaterial((((EPGRMaterialIf*)PyTuple_GetItem(tuple,0))->ptr));
 		Py_RETURN_NONE;
 	}
+	if(PyTuple_Size(tuple) == 1&&PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,0))))
+	{
+		self->ptr->SetMaterial(PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,0))));
+		Py_RETURN_NONE;
+	}
 	Return_ArgError;
 }
 PyObject* EPGRRenderBaseIf_SetModelMatrix( EPGRRenderBaseIf* self,EPAffinef* var1 )
@@ -3776,16 +3910,32 @@ PyObject* EPGRRenderBaseIf_StartList( EPGRRenderBaseIf* self )
 	}
 	Return_ArgError;
 }
+PyObject* EPGRRenderBaseIf_SwapBuffers( EPGRRenderBaseIf* self )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(true)
+	{
+		self->ptr->SwapBuffers();
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
 static PyMethodDef EPGRRenderBaseIf_methods[] =
 {
 	{"BeginScene",(PyCFunction)EPGRRenderBaseIf_BeginScene,METH_NOARGS,"EPGRRenderBaseIf::BeginScene"},
 	{"ClearBlendMatrix",(PyCFunction)EPGRRenderBaseIf_ClearBlendMatrix,METH_NOARGS,"EPGRRenderBaseIf::ClearBlendMatrix"},
 	{"ClearBuffer",(PyCFunction)EPGRRenderBaseIf_ClearBuffer,METH_NOARGS,"EPGRRenderBaseIf::ClearBuffer"},
+	{"DrawArrow",(PyCFunction)EPGRRenderBaseIf_DrawArrow,METH_VARARGS,"EPGRRenderBaseIf::DrawArrow"},
+	{"DrawBox",(PyCFunction)EPGRRenderBaseIf_DrawBox,METH_VARARGS,"EPGRRenderBaseIf::DrawBox"},
+	{"DrawCapsule",(PyCFunction)EPGRRenderBaseIf_DrawCapsule,METH_VARARGS,"EPGRRenderBaseIf::DrawCapsule"},
 	{"DrawCone",(PyCFunction)EPGRRenderBaseIf_DrawCone,METH_VARARGS,"EPGRRenderBaseIf::DrawCone"},
 	{"DrawCylinder",(PyCFunction)EPGRRenderBaseIf_DrawCylinder,METH_VARARGS,"EPGRRenderBaseIf::DrawCylinder"},
 	{"DrawDirect",(PyCFunction)EPGRRenderBaseIf_DrawDirect,METH_VARARGS,"EPGRRenderBaseIf::DrawDirect"},
 	{"DrawFont",(PyCFunction)EPGRRenderBaseIf_DrawFont,METH_VARARGS,"EPGRRenderBaseIf::DrawFont"},
+	{"DrawGrid",(PyCFunction)EPGRRenderBaseIf_DrawGrid,METH_VARARGS,"EPGRRenderBaseIf::DrawGrid"},
+	{"DrawLine",(PyCFunction)EPGRRenderBaseIf_DrawLine,METH_VARARGS,"EPGRRenderBaseIf::DrawLine"},
 	{"DrawList",(PyCFunction)EPGRRenderBaseIf_DrawList,METH_O,"EPGRRenderBaseIf::DrawList"},
+	{"DrawRoundCone",(PyCFunction)EPGRRenderBaseIf_DrawRoundCone,METH_VARARGS,"EPGRRenderBaseIf::DrawRoundCone"},
 	{"DrawSphere",(PyCFunction)EPGRRenderBaseIf_DrawSphere,METH_VARARGS,"EPGRRenderBaseIf::DrawSphere"},
 	{"EndList",(PyCFunction)EPGRRenderBaseIf_EndList,METH_NOARGS,"EPGRRenderBaseIf::EndList"},
 	{"EndScene",(PyCFunction)EPGRRenderBaseIf_EndScene,METH_NOARGS,"EPGRRenderBaseIf::EndScene"},
@@ -3797,6 +3947,7 @@ static PyMethodDef EPGRRenderBaseIf_methods[] =
 	{"InitShader",(PyCFunction)EPGRRenderBaseIf_InitShader,METH_NOARGS,"EPGRRenderBaseIf::InitShader"},
 	{"LoadTexture",(PyCFunction)EPGRRenderBaseIf_LoadTexture,METH_O,"EPGRRenderBaseIf::LoadTexture"},
 	{"MultModelMatrix",(PyCFunction)EPGRRenderBaseIf_MultModelMatrix,METH_O,"EPGRRenderBaseIf::MultModelMatrix"},
+	{"NLights",(PyCFunction)EPGRRenderBaseIf_NLights,METH_NOARGS,"EPGRRenderBaseIf::NLights"},
 	{"PopLight",(PyCFunction)EPGRRenderBaseIf_PopLight,METH_NOARGS,"EPGRRenderBaseIf::PopLight"},
 	{"PopModelMatrix",(PyCFunction)EPGRRenderBaseIf_PopModelMatrix,METH_NOARGS,"EPGRRenderBaseIf::PopModelMatrix"},
 	{"PushLight",(PyCFunction)EPGRRenderBaseIf_PushLight,METH_VARARGS,"EPGRRenderBaseIf::PushLight"},
@@ -3823,6 +3974,7 @@ static PyMethodDef EPGRRenderBaseIf_methods[] =
 	{"SetViewMatrix",(PyCFunction)EPGRRenderBaseIf_SetViewMatrix,METH_O,"EPGRRenderBaseIf::SetViewMatrix"},
 	{"SetViewport",(PyCFunction)EPGRRenderBaseIf_SetViewport,METH_VARARGS,"EPGRRenderBaseIf::SetViewport"},
 	{"StartList",(PyCFunction)EPGRRenderBaseIf_StartList,METH_NOARGS,"EPGRRenderBaseIf::StartList"},
+	{"SwapBuffers",(PyCFunction)EPGRRenderBaseIf_SwapBuffers,METH_NOARGS,"EPGRRenderBaseIf::SwapBuffers"},
 	{NULL}
 };
 void EPGRRenderBaseIf_dealloc(PyObject* self)
@@ -3913,6 +4065,16 @@ PyObject* newEPGRRenderBaseIf(struct GRRenderBaseIf* org)
 //}GRRenderBaseIf
 
 //{*********EPGRRenderIf*******
+PyObject* EPGRRenderIf_EnterScreenCoordinate( EPGRRenderIf* self )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(true)
+	{
+		self->ptr->EnterScreenCoordinate();
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
 PyObject* EPGRRenderIf_GetCamera( EPGRRenderIf* self )
 {
 	UTAutoLock lock(EPCriticalSection);
@@ -3968,6 +4130,16 @@ PyObject* EPGRRenderIf_GetViewportSize( EPGRRenderIf* self )
 	}
 	Return_ArgError;
 }
+PyObject* EPGRRenderIf_LeaveScreenCoordinate( EPGRRenderIf* self )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(true)
+	{
+		self->ptr->LeaveScreenCoordinate();
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
 PyObject* EPGRRenderIf_Reshape( EPGRRenderIf* self,PyObject* tuple )
 {
 	UTAutoLock lock(EPCriticalSection);
@@ -4017,11 +4189,13 @@ PyObject* EPGRRenderIf_SetDevice( EPGRRenderIf* self,EPGRDeviceIf* var1 )
 }
 static PyMethodDef EPGRRenderIf_methods[] =
 {
+	{"EnterScreenCoordinate",(PyCFunction)EPGRRenderIf_EnterScreenCoordinate,METH_NOARGS,"EPGRRenderIf::EnterScreenCoordinate"},
 	{"GetCamera",(PyCFunction)EPGRRenderIf_GetCamera,METH_NOARGS,"EPGRRenderIf::GetCamera"},
 	{"GetDevice",(PyCFunction)EPGRRenderIf_GetDevice,METH_NOARGS,"EPGRRenderIf::GetDevice"},
 	{"GetPixelSize",(PyCFunction)EPGRRenderIf_GetPixelSize,METH_NOARGS,"EPGRRenderIf::GetPixelSize"},
 	{"GetViewportPos",(PyCFunction)EPGRRenderIf_GetViewportPos,METH_NOARGS,"EPGRRenderIf::GetViewportPos"},
 	{"GetViewportSize",(PyCFunction)EPGRRenderIf_GetViewportSize,METH_NOARGS,"EPGRRenderIf::GetViewportSize"},
+	{"LeaveScreenCoordinate",(PyCFunction)EPGRRenderIf_LeaveScreenCoordinate,METH_NOARGS,"EPGRRenderIf::LeaveScreenCoordinate"},
 	{"Reshape",(PyCFunction)EPGRRenderIf_Reshape,METH_VARARGS,"EPGRRenderIf::Reshape"},
 	{"ScreenToCamera",(PyCFunction)EPGRRenderIf_ScreenToCamera,METH_VARARGS,"EPGRRenderIf::ScreenToCamera"},
 	{"SetCamera",(PyCFunction)EPGRRenderIf_SetCamera,METH_O,"EPGRRenderIf::SetCamera"},
@@ -4320,295 +4494,6 @@ PyObject* newEPGRDeviceGLIf(struct GRDeviceGLIf* org)
 }
 
 //}GRDeviceGLIf
-
-//{*********EPGRDebugRenderIf*******
-PyObject* EPGRDebugRenderIf_DrawFaceSolid( EPGRDebugRenderIf* self,PyObject* tuple )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyTuple_Size(tuple) == 2&&EPCDFaceIf_Check(((EPCDFaceIf*)PyTuple_GetItem(tuple,0))) && EPVec3f_Check(((EPVec3f*)PyTuple_GetItem(tuple,1))))
-	{
-		self->ptr->DrawFaceSolid((((EPCDFaceIf*)PyTuple_GetItem(tuple,0))->ptr),(((EPVec3f*)PyTuple_GetItem(tuple,1))->ptr));
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_DrawFaceWire( EPGRDebugRenderIf* self,PyObject* tuple )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyTuple_Size(tuple) == 2&&EPCDFaceIf_Check(((EPCDFaceIf*)PyTuple_GetItem(tuple,0))) && EPVec3f_Check(((EPVec3f*)PyTuple_GetItem(tuple,1))))
-	{
-		self->ptr->DrawFaceWire((((EPCDFaceIf*)PyTuple_GetItem(tuple,0))->ptr),(((EPVec3f*)PyTuple_GetItem(tuple,1))->ptr));
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_DrawScene( EPGRDebugRenderIf* self,EPPHSceneIf* var1 )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(EPPHSceneIf_Check(var1))
-	{
-		self->ptr->DrawScene((var1->ptr));
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_DrawSolid( EPGRDebugRenderIf* self,EPPHSolidIf* var1 )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(EPPHSolidIf_Check(var1))
-	{
-		self->ptr->DrawSolid((var1->ptr));
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_EnableGrid( EPGRDebugRenderIf* self,PyObject* tuple )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyTuple_Size(tuple) == 3&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,2))))
-	{
-		self->ptr->EnableGrid((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,2))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 2&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))))
-	{
-		self->ptr->EnableGrid((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 1&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))))
-	{
-		self->ptr->EnableGrid((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 0&&PyTuple_Size(tuple) == 0)
-	{
-		self->ptr->EnableGrid();
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_EnableRenderAxis( EPGRDebugRenderIf* self,PyObject* tuple )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyTuple_Size(tuple) == 2&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))))
-	{
-		self->ptr->EnableRenderAxis((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 1&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))))
-	{
-		self->ptr->EnableRenderAxis((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 0&&PyTuple_Size(tuple) == 0)
-	{
-		self->ptr->EnableRenderAxis();
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_EnableRenderContact( EPGRDebugRenderIf* self,PyObject* tuple )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyTuple_Size(tuple) == 1&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))))
-	{
-		self->ptr->EnableRenderContact((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 0&&PyTuple_Size(tuple) == 0)
-	{
-		self->ptr->EnableRenderContact();
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_EnableRenderForce( EPGRDebugRenderIf* self,PyObject* tuple )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyTuple_Size(tuple) == 2&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))))
-	{
-		self->ptr->EnableRenderForce((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 1&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))))
-	{
-		self->ptr->EnableRenderForce((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 0&&PyTuple_Size(tuple) == 0)
-	{
-		self->ptr->EnableRenderForce();
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_EnableRenderIK( EPGRDebugRenderIf* self,PyObject* tuple )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyTuple_Size(tuple) == 2&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,1))))
-	{
-		self->ptr->EnableRenderIK((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,1))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 1&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))))
-	{
-		self->ptr->EnableRenderIK((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 0&&PyTuple_Size(tuple) == 0)
-	{
-		self->ptr->EnableRenderIK();
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_EnableRenderWorldAxis( EPGRDebugRenderIf* self,PyObject* tuple )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyTuple_Size(tuple) == 1&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))))
-	{
-		self->ptr->EnableRenderWorldAxis((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 0&&PyTuple_Size(tuple) == 0)
-	{
-		self->ptr->EnableRenderWorldAxis();
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_SetMaterialSample( EPGRDebugRenderIf* self,PyLongObject* var1 )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyLong_Check(var1))
-	{
-		self->ptr->SetMaterialSample(((Spr::GRDebugRenderIf::TMaterialSample)PyLong_AsLong((PyObject*)var1)));
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPGRDebugRenderIf_SetRenderMode( EPGRDebugRenderIf* self,PyObject* tuple )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyTuple_Size(tuple) == 2&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))) && PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,1))))
-	{
-		self->ptr->SetRenderMode((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))),(Py_True == ((PyObject*)PyTuple_GetItem(tuple,1))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 1&&PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,0))))
-	{
-		self->ptr->SetRenderMode((Py_True == ((PyObject*)PyTuple_GetItem(tuple,0))));
-		Py_RETURN_NONE;
-	}
-	if(PyTuple_Size(tuple) == 0&&PyTuple_Size(tuple) == 0)
-	{
-		self->ptr->SetRenderMode();
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-static PyMethodDef EPGRDebugRenderIf_methods[] =
-{
-	{"DrawFaceSolid",(PyCFunction)EPGRDebugRenderIf_DrawFaceSolid,METH_VARARGS,"EPGRDebugRenderIf::DrawFaceSolid"},
-	{"DrawFaceWire",(PyCFunction)EPGRDebugRenderIf_DrawFaceWire,METH_VARARGS,"EPGRDebugRenderIf::DrawFaceWire"},
-	{"DrawScene",(PyCFunction)EPGRDebugRenderIf_DrawScene,METH_O,"EPGRDebugRenderIf::DrawScene"},
-	{"DrawSolid",(PyCFunction)EPGRDebugRenderIf_DrawSolid,METH_O,"EPGRDebugRenderIf::DrawSolid"},
-	{"EnableGrid",(PyCFunction)EPGRDebugRenderIf_EnableGrid,METH_VARARGS,"EPGRDebugRenderIf::EnableGrid"},
-	{"EnableRenderAxis",(PyCFunction)EPGRDebugRenderIf_EnableRenderAxis,METH_VARARGS,"EPGRDebugRenderIf::EnableRenderAxis"},
-	{"EnableRenderContact",(PyCFunction)EPGRDebugRenderIf_EnableRenderContact,METH_VARARGS,"EPGRDebugRenderIf::EnableRenderContact"},
-	{"EnableRenderForce",(PyCFunction)EPGRDebugRenderIf_EnableRenderForce,METH_VARARGS,"EPGRDebugRenderIf::EnableRenderForce"},
-	{"EnableRenderIK",(PyCFunction)EPGRDebugRenderIf_EnableRenderIK,METH_VARARGS,"EPGRDebugRenderIf::EnableRenderIK"},
-	{"EnableRenderWorldAxis",(PyCFunction)EPGRDebugRenderIf_EnableRenderWorldAxis,METH_VARARGS,"EPGRDebugRenderIf::EnableRenderWorldAxis"},
-	{"SetMaterialSample",(PyCFunction)EPGRDebugRenderIf_SetMaterialSample,METH_O,"EPGRDebugRenderIf::SetMaterialSample"},
-	{"SetRenderMode",(PyCFunction)EPGRDebugRenderIf_SetRenderMode,METH_VARARGS,"EPGRDebugRenderIf::SetRenderMode"},
-	{NULL}
-};
-void EPGRDebugRenderIf_dealloc(PyObject* self)
-{
-}
-PyObject* EPGRDebugRenderIf_str()
-{
-	return Py_BuildValue("s","This is EPGRDebugRenderIf.");
-}
-int EPGRDebugRenderIf_init(EPGRDebugRenderIf* self,PyObject *args, PyObject *kwds)
-{
-	return 0;
-}
-EPGRDebugRenderIf* EPGRDebugRenderIf_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
-{
-	EPGRDebugRenderIf *self;
-	self = (EPGRDebugRenderIf*) type->tp_alloc(type,0);
-	if ( self != NULL ) EPGRDebugRenderIf_init(self,args,kwds);
-	return self;
-}
-PyTypeObject EPGRDebugRenderIfType =
-{
-	PyVarObject_HEAD_INIT(NULL,0)
-	"Graphics.EPGRDebugRenderIf",/*tp_name*/
-	sizeof(EPGRDebugRenderIf),/*tp_basicsize*/
-	0,/*tp_itemsize*/
-	(destructor)EPGRDebugRenderIf_dealloc,/*tp_dealloc*/
-	0,/*tp_print*/
-	0,/*tp_getattr*/
-	0,/*tp_setattr*/
-	0,/*tp_reserved*/
-	0,/*tp_repr*/
-	0,/*tp_as_number*/
-	0,/*tp_as_sequence*/
-	0,/*tp_as_mapping*/
-	0,/*tp_hash*/
-	0,/*tp_call*/
-	(reprfunc)EPGRDebugRenderIf_str,/*tp_str*/
-	0,/*tp_getattro*/
-	0,/*tp_setattro*/
-	0,/*tp_as_buffer*/
-	Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,/*tp_flags*/
-	"GRDebugRenderIf",/*tp_doc*/
-	0,/*tp_traverse*/
-	0,/*tp_clear*/
-	0,/*tp_richcompare*/
-	0,/*tp_weaklistoffset*/
-	0,/*tp_iter*/
-	0,/*tp_iternext*/
-	EPGRDebugRenderIf_methods,/*tp_methods*/
-	0,/*tp_members*/
-	0,/*tp_getset*/
-	&EPGRRenderIfType,/*tp_base*/
-	0,/*tp_dict*/
-	0,/*tp_descr_get*/
-	0,/*tp_descr_set*/
-	0,/*tp_dictoffset*/
-	(initproc)EPGRDebugRenderIf_init,/*tp_init*/
-	0,/*tp_alloc*/
-	(newfunc)EPGRDebugRenderIf_new,/*tp_new*/
-};
-void initEPGRDebugRenderIf(void)
-{
-	PyObject* m;
-	if ( PyType_Ready( &EPGRDebugRenderIfType ) < 0 ) return ;//Pythonクラスの作成
-	m = PyImport_AddModule("Graphics");
-	Py_INCREF(&EPGRDebugRenderIfType);
-	PyModule_AddObject(m,"GRDebugRenderIf",(PyObject *)&EPGRDebugRenderIfType);//モジュールに追加
-}
-PyObject* newEPGRDebugRenderIf(struct GRDebugRenderIf org)
-{
-	EPGRDebugRenderIf *ret = EPGRDebugRenderIf_new(&EPGRDebugRenderIfType,NULL,NULL);
-	ret->ptr = new GRDebugRenderIf();
-	*ret->ptr = org;
-	return (PyObject*)ret;
-}
-PyObject* newEPGRDebugRenderIf(struct GRDebugRenderIf* org)
-{
-	if(org == NULL)
-	{
-		Return_NewNullError;
-	}
-	EPGRDebugRenderIf *ret = EPGRDebugRenderIf_new(&EPGRDebugRenderIfType,NULL,NULL);
-	ret->ptr = org;
-	return (PyObject*)ret;
-}
-
-//}GRDebugRenderIf
 
 //{*********EPGRSceneDesc*******
 static PyMethodDef EPGRSceneDesc_methods[] =
@@ -4977,23 +4862,23 @@ PyObject* newEPGRSdkDesc(struct GRSdkDesc* org)
 //}GRSdkDesc
 
 //{*********EPGRSdkIf*******
-PyObject* EPGRSdkIf_CreateDebugRender( EPGRSdkIf* self )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(true)
-	{
-		EPGRDebugRenderIf* ret = (EPGRDebugRenderIf*)newEPGRDebugRenderIf(self->ptr->CreateDebugRender());
-		if ( ret ) return (PyObject*) ret;
-		else Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
 PyObject* EPGRSdkIf_CreateDeviceGL( EPGRSdkIf* self )
 {
 	UTAutoLock lock(EPCriticalSection);
 	if(true)
 	{
 		EPGRDeviceGLIf* ret = (EPGRDeviceGLIf*)newEPGRDeviceGLIf(self->ptr->CreateDeviceGL());
+		if ( ret ) return (PyObject*) ret;
+		else Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
+PyObject* EPGRSdkIf_CreateRender( EPGRSdkIf* self )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(true)
+	{
+		EPGRRenderIf* ret = (EPGRRenderIf*)newEPGRRenderIf(self->ptr->CreateRender());
 		if ( ret ) return (PyObject*) ret;
 		else Py_RETURN_NONE;
 	}
@@ -5065,8 +4950,8 @@ PyObject* EPGRSdkIf_RegisterSdk( EPGRSdkIf* self )
 }
 static PyMethodDef EPGRSdkIf_methods[] =
 {
-	{"CreateDebugRender",(PyCFunction)EPGRSdkIf_CreateDebugRender,METH_NOARGS,"EPGRSdkIf::CreateDebugRender"},
 	{"CreateDeviceGL",(PyCFunction)EPGRSdkIf_CreateDeviceGL,METH_NOARGS,"EPGRSdkIf::CreateDeviceGL"},
+	{"CreateRender",(PyCFunction)EPGRSdkIf_CreateRender,METH_NOARGS,"EPGRSdkIf::CreateRender"},
 	{"CreateScene",(PyCFunction)EPGRSdkIf_CreateScene,METH_O,"EPGRSdkIf::CreateScene"},
 	{"CreateSdk",(PyCFunction)EPGRSdkIf_CreateSdk,METH_NOARGS,"EPGRSdkIf::CreateSdk"},
 	{"GetScene",(PyCFunction)EPGRSdkIf_GetScene,METH_O,"EPGRSdkIf::GetScene"},
@@ -5958,7 +5843,6 @@ void initGraphics(void)
 	initEPGRRenderIf();
 	initEPGRDeviceIf();
 	initEPGRDeviceGLIf();
-	initEPGRDebugRenderIf();
 	initEPGRSceneDesc();
 	initEPGRSceneIf();
 	initEPGRSdkDesc();

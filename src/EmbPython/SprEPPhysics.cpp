@@ -1825,6 +1825,99 @@ PyObject* newEPPHIKHingeActuatorDesc(struct PHIKHingeActuatorDesc* org)
 
 //}PHIKHingeActuatorDesc
 
+//{*********EPPHConstraintEngineDesc*******
+static PyMethodDef EPPHConstraintEngineDesc_methods[] =
+{
+	{NULL}
+};
+void EPPHConstraintEngineDesc_dealloc(PyObject* self)
+{
+	delete ((EPPHConstraintEngineDesc*)self)->ptr;
+}
+PyObject* EPPHConstraintEngineDesc_str()
+{
+	return Py_BuildValue("s","This is EPPHConstraintEngineDesc.");
+}
+int EPPHConstraintEngineDesc_init(EPPHConstraintEngineDesc* self,PyObject *args, PyObject *kwds)
+{
+	return 0;
+}
+EPPHConstraintEngineDesc* EPPHConstraintEngineDesc_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
+{
+	EPPHConstraintEngineDesc *self;
+	self = (EPPHConstraintEngineDesc*) type->tp_alloc(type,0);
+	if ( self != NULL ) EPPHConstraintEngineDesc_init(self,args,kwds);
+	return self;
+}
+PyTypeObject EPPHConstraintEngineDescType =
+{
+	PyVarObject_HEAD_INIT(NULL,0)
+	"Physics.EPPHConstraintEngineDesc",/*tp_name*/
+	sizeof(EPPHConstraintEngineDesc),/*tp_basicsize*/
+	0,/*tp_itemsize*/
+	(destructor)EPPHConstraintEngineDesc_dealloc,/*tp_dealloc*/
+	0,/*tp_print*/
+	0,/*tp_getattr*/
+	0,/*tp_setattr*/
+	0,/*tp_reserved*/
+	0,/*tp_repr*/
+	0,/*tp_as_number*/
+	0,/*tp_as_sequence*/
+	0,/*tp_as_mapping*/
+	0,/*tp_hash*/
+	0,/*tp_call*/
+	(reprfunc)EPPHConstraintEngineDesc_str,/*tp_str*/
+	0,/*tp_getattro*/
+	0,/*tp_setattro*/
+	0,/*tp_as_buffer*/
+	Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,/*tp_flags*/
+	"PHConstraintEngineDesc",/*tp_doc*/
+	0,/*tp_traverse*/
+	0,/*tp_clear*/
+	0,/*tp_richcompare*/
+	0,/*tp_weaklistoffset*/
+	0,/*tp_iter*/
+	0,/*tp_iternext*/
+	EPPHConstraintEngineDesc_methods,/*tp_methods*/
+	0,/*tp_members*/
+	0,/*tp_getset*/
+	0,/*tp_base*/
+	0,/*tp_dict*/
+	0,/*tp_descr_get*/
+	0,/*tp_descr_set*/
+	0,/*tp_dictoffset*/
+	(initproc)EPPHConstraintEngineDesc_init,/*tp_init*/
+	0,/*tp_alloc*/
+	(newfunc)EPPHConstraintEngineDesc_new,/*tp_new*/
+};
+void initEPPHConstraintEngineDesc(void)
+{
+	PyObject* m;
+	if ( PyType_Ready( &EPPHConstraintEngineDescType ) < 0 ) return ;//Pythonクラスの作成
+	m = PyImport_AddModule("Physics");
+	Py_INCREF(&EPPHConstraintEngineDescType);
+	PyModule_AddObject(m,"PHConstraintEngineDesc",(PyObject *)&EPPHConstraintEngineDescType);//モジュールに追加
+}
+PyObject* newEPPHConstraintEngineDesc(struct PHConstraintEngineDesc org)
+{
+	EPPHConstraintEngineDesc *ret = EPPHConstraintEngineDesc_new(&EPPHConstraintEngineDescType,NULL,NULL);
+	ret->ptr = new PHConstraintEngineDesc();
+	*ret->ptr = org;
+	return (PyObject*)ret;
+}
+PyObject* newEPPHConstraintEngineDesc(struct PHConstraintEngineDesc* org)
+{
+	if(org == NULL)
+	{
+		Return_NewNullError;
+	}
+	EPPHConstraintEngineDesc *ret = EPPHConstraintEngineDesc_new(&EPPHConstraintEngineDescType,NULL,NULL);
+	ret->ptr = org;
+	return (PyObject*)ret;
+}
+
+//}PHConstraintEngineDesc
+
 //{*********EPPHConstraintDesc*******
 static PyMethodDef EPPHConstraintDesc_methods[] =
 {
@@ -5041,11 +5134,31 @@ PyObject* EPPHBallJointIf_IsLimit( EPPHBallJointIf* self )
 PyObject* EPPHBallJointIf_SetConstLine( EPPHBallJointIf* self,PyObject* tuple )
 {
 	UTAutoLock lock(EPCriticalSection);
-	if(PyTuple_Size(tuple) == 2&&EPchar_Check(((EPchar*)PyTuple_GetItem(tuple,0))) && PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,1))))
+	if(PyTuple_Size(tuple) == 2&&EPchar_Check(((EPchar*)PyTuple_GetItem(tuple,0))) && PyBool_Check(((PyObject*)PyTuple_GetItem(tuple,1))))
 	{
-		PyObject* ret = (PyObject*)PyBool_FromLong(self->ptr->SetConstLine((((EPchar*)PyTuple_GetItem(tuple,0))->ptr),PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,1))))? 1 : 0);
+		PyObject* ret = (PyObject*)PyBool_FromLong(self->ptr->SetConstLine((((EPchar*)PyTuple_GetItem(tuple,0))->ptr),(Py_True == ((PyObject*)PyTuple_GetItem(tuple,1))))? 1 : 0);
 		if ( ret ) return (PyObject*) ret;
 		else Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
+PyObject* EPPHBallJointIf_SetConstPoint( EPPHBallJointIf* self,PyObject* tuple )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(PyTuple_Size(tuple) == 3&&PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,0))) && PyLong_Check(((PyLongObject*)PyTuple_GetItem(tuple,1))) && PyFloat_Check(((PyFloatObject*)PyTuple_GetItem(tuple,2))))
+	{
+		self->ptr->SetConstPoint(PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,0))),PyLong_AsLong((PyObject*)((PyLongObject*)PyTuple_GetItem(tuple,1))),PyFloat_AS_DOUBLE((PyObject*)((PyFloatObject*)PyTuple_GetItem(tuple,2))));
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
+PyObject* EPPHBallJointIf_SetConstraintMode( EPPHBallJointIf* self,PyLongObject* var1 )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(PyLong_Check(var1))
+	{
+		self->ptr->SetConstraintMode(PyLong_AsLong((PyObject*)var1));
+		Py_RETURN_NONE;
 	}
 	Return_ArgError;
 }
@@ -5223,6 +5336,8 @@ static PyMethodDef EPPHBallJointIf_methods[] =
 	{"GetmotorfNorm",(PyCFunction)EPPHBallJointIf_GetmotorfNorm,METH_NOARGS,"EPPHBallJointIf::GetmotorfNorm"},
 	{"IsLimit",(PyCFunction)EPPHBallJointIf_IsLimit,METH_NOARGS,"EPPHBallJointIf::IsLimit"},
 	{"SetConstLine",(PyCFunction)EPPHBallJointIf_SetConstLine,METH_VARARGS,"EPPHBallJointIf::SetConstLine"},
+	{"SetConstPoint",(PyCFunction)EPPHBallJointIf_SetConstPoint,METH_VARARGS,"EPPHBallJointIf::SetConstPoint"},
+	{"SetConstraintMode",(PyCFunction)EPPHBallJointIf_SetConstraintMode,METH_O,"EPPHBallJointIf::SetConstraintMode"},
 	{"SetDamper",(PyCFunction)EPPHBallJointIf_SetDamper,METH_O,"EPPHBallJointIf::SetDamper"},
 	{"SetHardnessRate",(PyCFunction)EPPHBallJointIf_SetHardnessRate,METH_O,"EPPHBallJointIf::SetHardnessRate"},
 	{"SetInertia",(PyCFunction)EPPHBallJointIf_SetInertia,METH_O,"EPPHBallJointIf::SetInertia"},
@@ -8859,17 +8974,6 @@ PyObject* EPPHSolidIf_GetVelocity( EPPHSolidIf* self )
 	}
 	Return_ArgError;
 }
-PyObject* EPPHSolidIf_IsDrawn( EPPHSolidIf* self )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(true)
-	{
-		PyObject* ret = (PyObject*)PyBool_FromLong(self->ptr->IsDrawn()? 1 : 0);
-		if ( ret ) return (PyObject*) ret;
-		else Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
 PyObject* EPPHSolidIf_IsDynamical( EPPHSolidIf* self )
 {
 	UTAutoLock lock(EPCriticalSection);
@@ -8929,16 +9033,6 @@ PyObject* EPPHSolidIf_SetCenterPosition( EPPHSolidIf* self,EPVec3d* var1 )
 	if(EPVec3d_Check(var1))
 	{
 		self->ptr->SetCenterPosition((*(var1->ptr)));
-		Py_RETURN_NONE;
-	}
-	Return_ArgError;
-}
-PyObject* EPPHSolidIf_SetDrawing( EPPHSolidIf* self,PyObject* var1 )
-{
-	UTAutoLock lock(EPCriticalSection);
-	if(PyBool_Check(var1))
-	{
-		self->ptr->SetDrawing((Py_True == var1));
 		Py_RETURN_NONE;
 	}
 	Return_ArgError;
@@ -9067,14 +9161,12 @@ static PyMethodDef EPPHSolidIf_methods[] =
 	{"GetTorque",(PyCFunction)EPPHSolidIf_GetTorque,METH_NOARGS,"EPPHSolidIf::GetTorque"},
 	{"GetTreeNode",(PyCFunction)EPPHSolidIf_GetTreeNode,METH_NOARGS,"EPPHSolidIf::GetTreeNode"},
 	{"GetVelocity",(PyCFunction)EPPHSolidIf_GetVelocity,METH_NOARGS,"EPPHSolidIf::GetVelocity"},
-	{"IsDrawn",(PyCFunction)EPPHSolidIf_IsDrawn,METH_NOARGS,"EPPHSolidIf::IsDrawn"},
 	{"IsDynamical",(PyCFunction)EPPHSolidIf_IsDynamical,METH_NOARGS,"EPPHSolidIf::IsDynamical"},
 	{"IsIntegrate",(PyCFunction)EPPHSolidIf_IsIntegrate,METH_NOARGS,"EPPHSolidIf::IsIntegrate"},
 	{"NShape",(PyCFunction)EPPHSolidIf_NShape,METH_NOARGS,"EPPHSolidIf::NShape"},
 	{"SetAngularVelocity",(PyCFunction)EPPHSolidIf_SetAngularVelocity,METH_O,"EPPHSolidIf::SetAngularVelocity"},
 	{"SetCenterOfMass",(PyCFunction)EPPHSolidIf_SetCenterOfMass,METH_O,"EPPHSolidIf::SetCenterOfMass"},
 	{"SetCenterPosition",(PyCFunction)EPPHSolidIf_SetCenterPosition,METH_O,"EPPHSolidIf::SetCenterPosition"},
-	{"SetDrawing",(PyCFunction)EPPHSolidIf_SetDrawing,METH_O,"EPPHSolidIf::SetDrawing"},
 	{"SetDynamical",(PyCFunction)EPPHSolidIf_SetDynamical,METH_O,"EPPHSolidIf::SetDynamical"},
 	{"SetFramePosition",(PyCFunction)EPPHSolidIf_SetFramePosition,METH_O,"EPPHSolidIf::SetFramePosition"},
 	{"SetGravity",(PyCFunction)EPPHSolidIf_SetGravity,METH_O,"EPPHSolidIf::SetGravity"},
@@ -9505,6 +9597,7 @@ void initPhysics(void)
 	initEPPHIKBallActuatorDesc();
 	initEPPHIKHingeActuatorIf();
 	initEPPHIKHingeActuatorDesc();
+	initEPPHConstraintEngineDesc();
 	initEPPHConstraintDesc();
 	initEPPHJointDesc();
 	initEPPHJoint1DDesc();

@@ -86,6 +86,11 @@ typedef struct
 typedef struct
 {
 	PyObject_HEAD
+	struct PHConstraintEngineDesc* ptr;
+} EPPHConstraintEngineDesc;
+typedef struct
+{
+	PyObject_HEAD
 	struct PHConstraintDesc* ptr;
 } EPPHConstraintDesc;
 typedef struct
@@ -507,6 +512,14 @@ PyObject* __EPDECL newEPPHIKHingeActuatorDesc(struct PHIKHingeActuatorDesc*);
 
 //}EPPHIKHingeActuatorDesc
 
+//{*********EPPHConstraintEngineDesc*******
+#define EPPHConstraintEngineDesc_Check(ob) PyObject_TypeCheck(ob, &EPPHConstraintEngineDescType)
+extern PyTypeObject EPPHConstraintEngineDescType;
+PyObject* __EPDECL newEPPHConstraintEngineDesc(struct PHConstraintEngineDesc);
+PyObject* __EPDECL newEPPHConstraintEngineDesc(struct PHConstraintEngineDesc*);
+
+//}EPPHConstraintEngineDesc
+
 //{*********EPPHConstraintDesc*******
 #define EPPHConstraintDesc_Check(ob) PyObject_TypeCheck(ob, &EPPHConstraintDescType)
 extern PyTypeObject EPPHConstraintDescType;
@@ -791,6 +804,8 @@ PyObject* EPPHBallJointIf_GetYieldStress( EPPHBallJointIf* self );
 PyObject* EPPHBallJointIf_GetmotorfNorm( EPPHBallJointIf* self );
 PyObject* EPPHBallJointIf_IsLimit( EPPHBallJointIf* self );
 PyObject* EPPHBallJointIf_SetConstLine( EPPHBallJointIf* self,PyObject* tuple );
+PyObject* EPPHBallJointIf_SetConstPoint( EPPHBallJointIf* self,PyObject* tuple );
+PyObject* EPPHBallJointIf_SetConstraintMode( EPPHBallJointIf* self,PyLongObject* var1 );
 PyObject* EPPHBallJointIf_SetDamper( EPPHBallJointIf* self,PyFloatObject* var1 );
 PyObject* EPPHBallJointIf_SetHardnessRate( EPPHBallJointIf* self,PyFloatObject* var1 );
 PyObject* EPPHBallJointIf_SetInertia( EPPHBallJointIf* self,EPVec3d* var1 );
@@ -1115,14 +1130,12 @@ PyObject* EPPHSolidIf_GetShapePose( EPPHSolidIf* self,PyLongObject* var1 );
 PyObject* EPPHSolidIf_GetTorque( EPPHSolidIf* self );
 PyObject* EPPHSolidIf_GetTreeNode( EPPHSolidIf* self );
 PyObject* EPPHSolidIf_GetVelocity( EPPHSolidIf* self );
-PyObject* EPPHSolidIf_IsDrawn( EPPHSolidIf* self );
 PyObject* EPPHSolidIf_IsDynamical( EPPHSolidIf* self );
 PyObject* EPPHSolidIf_IsIntegrate( EPPHSolidIf* self );
 PyObject* EPPHSolidIf_NShape( EPPHSolidIf* self );
 PyObject* EPPHSolidIf_SetAngularVelocity( EPPHSolidIf* self,EPVec3d* var1 );
 PyObject* EPPHSolidIf_SetCenterOfMass( EPPHSolidIf* self,EPVec3d* var1 );
 PyObject* EPPHSolidIf_SetCenterPosition( EPPHSolidIf* self,EPVec3d* var1 );
-PyObject* EPPHSolidIf_SetDrawing( EPPHSolidIf* self,PyObject* var1 );
 PyObject* EPPHSolidIf_SetDynamical( EPPHSolidIf* self,PyObject* var1 );
 PyObject* EPPHSolidIf_SetFramePosition( EPPHSolidIf* self,EPVec3d* var1 );
 PyObject* EPPHSolidIf_SetGravity( EPPHSolidIf* self,PyObject* var1 );
