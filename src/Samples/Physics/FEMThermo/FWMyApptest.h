@@ -23,6 +23,7 @@ public:
 
 		AddAction(MENU_MAIN, ID_BOX, "drop object");
 		AddHotKey(MENU_MAIN, ID_BOX, 'd');
+
 	}
 	//デストラクタ
 	~FWMyApptest(){}
