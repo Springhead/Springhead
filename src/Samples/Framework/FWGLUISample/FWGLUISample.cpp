@@ -90,29 +90,34 @@ void FWGLUISample::TimerFunc(int id){
 }
 
 void FWGLUISample::Display(){
-	// 描画モードの設定
-	GetSdk()->SetDebugMode(true);
-	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
-	render->SetRenderMode(true, false);
-	render->EnableRenderAxis(bDrawInfo);
-	render->EnableRenderForce(bDrawInfo);
-	render->EnableRenderContact(bDrawInfo);
+		FWWin* win = GetCurrentWin();
+	if(!win)
+		return;
 
-	// カメラ座標の指定
-	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
-	if (cam && cam->GetFrame()){
-		cam->GetFrame()->SetTransform(cameraInfo.view);
-	}else{
-		GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
+	GRRenderIf* render = win->GetRender();
+	FWSceneIf*  scene  = win->GetScene();
+	
+	/// 描画モードの設定
+	GetSdk()->SetDebugMode(true);
+	scene->SetRenderMode(true, false);
+	scene->EnableRenderForce(bDrawInfo, bDrawInfo);
+	scene->EnableRenderContact(bDrawInfo);
+	
+	/// カメラ座標の指定
+	if (win->scene){
+		GRCameraIf* cam = win->scene->GetGRScene()->GetCamera();
+		if (cam && cam->GetFrame()){
+			cam->GetFrame()->SetTransform(cameraInfo.view);
+		}else{
+			render->SetViewMatrix(cameraInfo.view.inv());
+		}
 	}
 
-	// 描画の実行
-	if(!GetCurrentWin()) return;
-	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
-	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
+	/// 描画の実行
+	GetSdk()->SwitchScene(scene);
+	GetSdk()->SwitchRender(render);
 	GetSdk()->Draw();
-	glutSwapBuffers();
-	glutPostRedisplay();
+	render->SwapBuffers();
 }
 
 void FWGLUISample::Reset(){

@@ -61,31 +61,34 @@ void FWXfileLoader::Step(){
 }
 
 void FWXfileLoader::Display(){
+	FWWin* win = GetCurrentWin();
+	if(!win)
+		return;
+
+	GRRenderIf* render = win->GetRender();
+	FWSceneIf*  scene  = win->GetScene();
+	
 	/// 描画モードの設定
 	GetSdk()->SetDebugMode(bDebug);
-	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
-	render->SetRenderMode(true, false);
-//	render->EnableRenderAxis(bDebug);
-	render->EnableRenderForce(bDebug);
-	render->EnableRenderContact(bDebug);
-
+	scene->SetRenderMode(true, false);
+	scene->EnableRenderForce(bDebug, bDebug);
+	scene->EnableRenderContact(bDebug);
+	
 	/// カメラ座標の指定
-	FWWin* win = GetCurrentWin();
 	if (win->scene){
 		GRCameraIf* cam = win->scene->GetGRScene()->GetCamera();
 		if (cam && cam->GetFrame()){
 			cam->GetFrame()->SetTransform(cameraInfo.view);
 		}else{
-			GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
+			render->SetViewMatrix(cameraInfo.view.inv());
 		}
 	}
 
 	/// 描画の実行
-	if(!GetCurrentWin()) return;
-	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
-	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
+	GetSdk()->SwitchScene(scene);
+	GetSdk()->SwitchRender(render);
 	GetSdk()->Draw();
-	glutSwapBuffers();
+	render->SwapBuffers();
 }
 
 
