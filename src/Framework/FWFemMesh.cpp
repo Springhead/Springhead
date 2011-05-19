@@ -32,7 +32,9 @@ ObjectIf* FWFemMesh::GetChildObject(size_t pos){
 bool FWFemMesh::AddChildObject(ObjectIf* o){
 	if (DCAST(GRMesh, o)){
 		GRMesh* grMesh = (GRMesh*)o;
+		//
 		GRFrameIf* grf = GetGRFrame();
+		//
 		//	tetgenとかやってPHを作る			//←ここに記述する処理なのか？
 		//grMeshにxファイルを入れる
 		//Tetgenに入れる
@@ -96,7 +98,7 @@ bool FWFemMesh::IntoTetGen(GRMesh* grm){
 	//FEM.out.save_elements("bar100out");
 	//FEM.out.save_faces("bar100out");
 	//return FEM.outに入っているメッシュファイル⇒これをPHに入れる
-	std::cout << "メッシュGET成功" << std::endl;
+	std::cout << "メッシュGET成功?" << std::endl;
 	return true;
 }
 
