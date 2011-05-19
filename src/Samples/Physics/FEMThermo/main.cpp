@@ -13,14 +13,14 @@ Springhead2/src/Samples/FEMThermo
 - Escか'q'で強制終了。
 	
 */
-
-
+//
 #include "../../SampleApp.h"
-
+//#include "FWMyApptest.h"
 
 #pragma hdrstop
 using namespace Spr;
 using namespace std;
+
 
 
 class MyApp : public SampleApp{
@@ -48,7 +48,7 @@ public:
 		GetSdk()->LoadScene("scene.spr", import);			// ファイルのロード
 	}
 
-	// タイマコールバック関数．タイマ周期で呼ばれる
+	//1ステップのシミュレーション	// タイマコールバック関数．タイマ周期で呼ばれる
 	virtual void OnStep() {
 		SampleApp::OnStep();
 	}
@@ -62,6 +62,7 @@ public:
 		render->DrawFont(Vec2f(-21, 23), sstr.str());
 	}
 
+	//アクション処理
 	virtual void OnAction(int menu, int id){
 		if(menu == MENU_MAIN){
 			Vec3d v, w(0.0, 0.0, 0.2), p(0.5, 20.0, 0.0);
@@ -77,8 +78,10 @@ public:
 
 };
 
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//FWMyApptest app;
 MyApp app;
 
 /**
