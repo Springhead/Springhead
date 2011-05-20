@@ -33,13 +33,11 @@ bool FWFemMesh::AddChildObject(ObjectIf* o){
 	if (DCAST(GRMesh, o)){
 		GRMesh* grMesh = (GRMesh*)o;
 		//
-		GRFrameIf* grf = GetGRFrame();
-		//
 		//	tetgenとかやってPHを作る			//←ここに記述する処理なのか？
 		//grMeshにxファイルを入れる
 		//Tetgenに入れる
 		//PHMesh = IntoTetGen(grf->Cast());							//TetGen使うなら、GRThermoMesh.cppで記述した処理を行う関数を作る。
-		IntoTetGen(grf->Cast());
+		IntoTetGen(grMesh);
 		//
 		//Tetrahedralize()してできたファイルを、PHのvector又は有限個の配列に入れる。
 		return true;
