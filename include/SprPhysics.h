@@ -20,4 +20,5 @@
 #include "Physics/SprPHEngine.h"
 #include "Physics/SprPHNodeHandlers.h"
 #include "Physics/SprPHIK.h"
+#include "Physics/SprPHFemMesh.h"
 #endif

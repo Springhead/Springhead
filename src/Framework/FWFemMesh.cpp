@@ -16,7 +16,8 @@
 
 namespace Spr{;
 
-FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):FWFemMeshDesc(d), grMesh(NULL){
+FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
+	SetDesc(&d);
 }
 size_t FWFemMesh::NChildObject() const{
 	return FWObject::NChildObject() + (grMesh ? 1 : 0);
@@ -31,22 +32,25 @@ ObjectIf* FWFemMesh::GetChildObject(size_t pos){
 
 bool FWFemMesh::AddChildObject(ObjectIf* o){
 	if (DCAST(GRMesh, o)){
-		GRMesh* grMesh = (GRMesh*)o;
-		//
-		//	tetgenとかやってPHを作る			//←ここに記述する処理なのか？
-		//grMeshにxファイルを入れる
-		//Tetgenに入れる
-		//PHMesh = IntoTetGen(grf->Cast());							//TetGen使うなら、GRThermoMesh.cppで記述した処理を行う関数を作る。
-		IntoTetGen(grMesh);
-		//
-		//Tetrahedralize()してできたファイルを、PHのvector又は有限個の配列に入れる。
+		grMesh = (GRMesh*)o;
+		if (!phMesh) GeneratePHFemMesh();
 		return true;
 	}else{
 		return FWObject::AddChildObject(o);
 	}
 }
-bool FWFemMesh::IntoTetGen(GRMesh* grm){
+bool FWFemMesh::GeneratePHFemMesh(){
+	//	呼び出された時点で grMesh にグラフィクスのメッシュが入っている
+	//	grMeshを変換して、phMeshをつくる。
+	std::cout << "メッシュ生成" << std::endl;
 	
+	PHFemMeshDesc pmd;	
+	
+	//	以下で、grMeshからtetgenを呼び出して変換して、pmdに値を入れていけば良い。
+	//	PHFemMeshDescには、有限要素法の計算に必要なメッシュの情報を入れれば良い。
+	
+	//	以下、作ってもらえますか？ PHFemMeshDesc に必要に応じてメンバを加えてください。
+
 	//定義を加えながら変換していく
 	tetgenio::facet *f;
 	tetgenio::polygon *p;
@@ -96,7 +100,9 @@ bool FWFemMesh::IntoTetGen(GRMesh* grm){
 	//FEM.out.save_elements("bar100out");
 	//FEM.out.save_faces("bar100out");
 	//return FEM.outに入っているメッシュファイル⇒これをPHに入れる
-	std::cout << "メッシュGET成功?" << std::endl;
+	
+	phMesh = DBG_NEW PHFemMesh(pmd);
+
 	return true;
 }
 

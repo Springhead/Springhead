@@ -13,10 +13,12 @@ public:\
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		FWObject::SetDesc((FWObjectDesc*)(FWFemMeshDesc*)ptr);	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		FWObject::GetDesc((FWObjectDesc*)(FWFemMeshDesc*)ptr);	\
 		return true;	\
 	}\
 

@@ -1,3 +1,25 @@
+#define SPR_DECLMEMBEROF_PHFemMeshState \
+protected:\
+public:\
+	virtual void SetState(const void* ptr){ \
+	}\
+	virtual bool GetState(void* ptr) const { \
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemMeshDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHFemMesh::SetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFemMesh::GetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHIKEndEffectorDesc \
 protected:\
 	bool	bEnabled;	\

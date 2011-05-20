@@ -11,19 +11,24 @@
 #include <Springhead.h>
 #include <Framework/FWObject.h>
 #include <Graphics/GRMesh.h>
+#include <Physics/PHFemMesh.h>
+#include "FrameworkDecl.hpp"
+
 //#include "tetgen.h"
 //#include "ThermalFEM.h"
 
 namespace Spr{;
 
-//このクラスの機能は、何？
-//
-class FWFemMesh: public FWObject, public FWFemMeshDesc{
+/**	Framework上でのFEMメッシュ。
+	毎ステップ、PHFemMeshのFEMシミュレーション結果をGRMeshに反映させる。
+	初期化時には、GRMeshからPHFemMeshを生成する。*/
+class FWFemMesh: public FWObject{
+	SPR_OBJECTDEF(FWFemMesh);		
+	SPR_DECLMEMBEROF_FWFemMeshDesc;	//	FWFemMeshDescのメンバとGetDesc(), GetDescSize()の実装
 protected:
-	UTRef<GRMesh> grMesh;
+	GRMesh* grMesh;
+	UTRef<PHFemMesh> phMesh;
 public:
-	SPR_OBJECTDEF(FWFemMesh);
-	ACCESS_DESC(FWFemMesh);
 	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());		//コンストラクタ
 	///	子オブジェクトの数
 	virtual size_t NChildObject() const;
@@ -31,9 +36,10 @@ public:
 	virtual ObjectIf* GetChildObject(size_t pos);
 	///	子オブジェクトの追加
 	virtual bool AddChildObject(ObjectIf* o);
-	//TetGenで四面体メッシュ化
-	virtual bool IntoTetGen(GRMesh* grm);
 
+protected:
+	//	TetGenを用いて、GRMeshを四面体メッシュ化し、phMeshに格納する。
+	virtual bool GeneratePHFemMesh();
 };
 
 }

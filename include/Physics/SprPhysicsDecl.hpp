@@ -25,6 +25,8 @@
 	void Enable(bool bEnabled){	base::Enable(bEnabled);}	\
 	void SetNumIter(int numIter){	base::SetNumIter(numIter);}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshIf(base)	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKEndEffectorIf(base)	\
 	void SetSolid(PHSolidIf* solid){	base::SetSolid(solid);}	\
 	PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
