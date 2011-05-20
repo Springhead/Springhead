@@ -50,6 +50,7 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	//	PHFemMeshDescには、有限要素法の計算に必要なメッシュの情報を入れれば良い。
 	
 	//	以下、作ってもらえますか？ PHFemMeshDesc に必要に応じてメンバを加えてください。
+	//  作ります。
 
 	//定義を加えながら変換していく
 	tetgenio::facet *f;
