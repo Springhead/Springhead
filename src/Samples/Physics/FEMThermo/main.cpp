@@ -15,7 +15,6 @@ Springhead2/src/Samples/FEMThermo
 */
 //
 #include "../../SampleApp.h"
-#include "FWMyApptest.h"
 
 #pragma hdrstop
 using namespace Spr;
