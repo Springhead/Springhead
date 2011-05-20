@@ -81,9 +81,9 @@ public:
 		/// 描画設定
 		if (fwScene){
 			fwScene->SetWireMaterial(GRRenderIf::WHITE);
-			fwScene->SetRenderMode(true, true);				///< ソリッド描画，ワイヤフレーム描画
-			fwScene->EnableRenderAxis(true, true, true);		///< 座標軸
-			fwScene->SetAxisStyle(FWSceneIf::AXIS_ARROWS);	///< 座標軸のスタイル
+			fwScene->SetRenderMode(true, false);				///< ソリッド描画，ワイヤフレーム描画
+			fwScene->EnableRenderAxis(false, true, true);		///< 座標軸
+			fwScene->SetAxisStyle(FWSceneIf::AXIS_LINES);	///< 座標軸のスタイル
 			fwScene->EnableRenderForce(false, true);			///< 力
 			fwScene->EnableRenderContact(true);				///< 接触断面
 		}
@@ -105,7 +105,8 @@ public:
 
 	// 描画関数．描画要求が来たときに呼ばれる
 	virtual void OnDraw(GRRenderIf* render) {
-		SampleApp::OnDraw(render);
+		//fwScene->DrawPHScene(render);
+		fwScene->GetGRScene()->Render(render);
 
 		std::ostringstream sstr;
 		sstr << "NObj = " << phScene->NSolids();

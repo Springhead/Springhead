@@ -11,7 +11,7 @@
 #include <Framework/SprFWObject.h>
 namespace Spr{;
 
-struct FWFemMeshDesc{
+struct FWFemMeshDesc: public FWObjectDesc{
 };
 
 /** @brief Frameworkのオブジェクト
