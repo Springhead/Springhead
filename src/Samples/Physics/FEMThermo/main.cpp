@@ -43,14 +43,65 @@ public:
 	}
 	~MyApp(){}
 
-	virtual void BuildScene(){
+	virtual void Init(int argc, char* argv[]){
+		SetGRAdaptee(TypeGLUT);
+		GRInit(argc, argv);
+		CreateSdk();
+
+		FWWinDesc windowDesc;
+		windowDesc.width = 1024;
+		windowDesc.height = 768;
+		windowDesc.title = appName;
+		CreateWin(windowDesc);
+		InitWindow();
+
+
+		// 形状の作成
+		CDBoxDesc bd;
+		bd.boxsize = Vec3f(2,2,2);
+		shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
+		
+		CDSphereDesc sd;
+		sd.radius = 1;
+		shapeSphere = GetSdk()->GetPHSdk()->CreateShape(sd)->Cast();
+		
+		CDCapsuleDesc cd;
+		cd.radius = 1;
+		cd.length = 1;
+		shapeCapsule = GetSdk()->GetPHSdk()->CreateShape(cd)->Cast();
+		
+		CDRoundConeDesc rcd;
+		rcd.length = 3;
+		shapeRoundCone= GetSdk()->GetPHSdk()->CreateShape(rcd)->Cast();
+		
+		//	ファイルのロード
 		UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
 		GetSdk()->LoadScene("scene.spr", import);			// ファイルのロード
-	}
+		if (GetSdk()->NScene())	SwitchScene(GetSdk()->NScene()-1);
 
-	//1ステップのシミュレーション	// タイマコールバック関数．タイマ周期で呼ばれる
-	virtual void OnStep() {
-		SampleApp::OnStep();
+		/// 描画設定
+		if (fwScene){
+			fwScene->SetWireMaterial(GRRenderIf::WHITE);
+			fwScene->SetRenderMode(true, true);				///< ソリッド描画，ワイヤフレーム描画
+			fwScene->EnableRenderAxis(true, true, true);		///< 座標軸
+			fwScene->SetAxisStyle(FWSceneIf::AXIS_ARROWS);	///< 座標軸のスタイル
+			fwScene->EnableRenderForce(false, true);			///< 力
+			fwScene->EnableRenderContact(true);				///< 接触断面
+		}
+		if (phScene){
+			phScene = fwScene->GetPHScene();
+			phScene->SetGravity(Vec3f(0.0f, -9.8f, 0.0f));	// 重力を設定
+			phScene->SetTimeStep(0.05);
+			phScene->SetNumIteration(15);
+		
+			phScene->SetStateMode(true);
+		}
+
+		//	セーブ用のステートの用意
+		states = ObjectStatesIf::Create();		
+		// タイマ
+		timer = CreateTimer(UTTimerIf::FRAMEWORK);
+		timer->SetInterval(10);
 	}
 
 	// 描画関数．描画要求が来たときに呼ばれる
@@ -81,8 +132,8 @@ public:
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-FWMyApptest app;
-//MyApp app;
+//FWMyApptest app;
+MyApp app;
 
 /**
  brief		メイン関数
