@@ -728,8 +728,9 @@ void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize
 	}
 }
 
-/// テクスチャのロード（戻り値：テクスチャID）	
+/// テクスチャのロード（戻り値：テクスチャID）
 static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_BGR_EXT, GL_BGRA_EXT};
+//static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA};
 static boost::regex Tex3DRegex("^(.*_tex3d_)([0-9]+)(\\Q.\\E[^\\Q.\\E]+)$");
 unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	GRTexnameMap::iterator it = texnameMap.find(filename);
@@ -798,14 +799,17 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		glGenTextures(1, (GLuint *)&texId);
 		glBindTexture(GL_TEXTURE_3D, texId);
 		if (enableDebugMessage){ std::cout << "7: glBindTexture(GL_TEXTURE_3D, " << texId << ");" << std::endl; }
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage3D(GL_TEXTURE_3D, 0, nc, tx, ty, tz, 0, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
-
+		GLenum err = glGetError();	
+		if (err){
+			DSTR << "glTexImage3D glGetError:" << std::setbase(16) << err << std::endl;
+		}
 		glBindTexture(GL_TEXTURE_3D, 0);
 		if (enableDebugMessage){ std::cout << "8: glBindTexture(GL_TEXTURE_3D, " << 0 << ");" << std::endl; }
 

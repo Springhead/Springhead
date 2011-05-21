@@ -31,14 +31,18 @@ public:
 	/// アクションID
 	enum {
 		ID_BOX,
+		ID_SWITCHRENDER,
 	};
+	bool debugRender;
 
 public:
-	MyApp(){
+	MyApp():debugRender(false){
 		appName = "FEMThermo";
 
-		AddAction(MENU_MAIN, ID_BOX, "drop object");
-		AddHotKey(MENU_MAIN, ID_BOX, 'd');
+		AddAction(MENU_MAIN, ID_BOX, "drop box");
+		AddHotKey(MENU_MAIN, ID_BOX, 'b');
+		AddAction(MENU_MAIN, ID_SWITCHRENDER, "switch physics(debug)/graphics rendering");
+		AddHotKey(MENU_MAIN, ID_SWITCHRENDER, 'd');
 	}
 	~MyApp(){}
 
@@ -86,14 +90,7 @@ public:
 			fwScene->SetAxisStyle(FWSceneIf::AXIS_LINES);	///< 座標軸のスタイル
 			fwScene->EnableRenderForce(false, true);			///< 力
 			fwScene->EnableRenderContact(true);				///< 接触断面
-		}
-		if (phScene){
 			phScene = fwScene->GetPHScene();
-			phScene->SetGravity(Vec3f(0.0f, -9.8f, 0.0f));	// 重力を設定
-			phScene->SetTimeStep(0.05);
-			phScene->SetNumIteration(15);
-		
-			phScene->SetStateMode(true);
 		}
 
 		//	セーブ用のステートの用意
@@ -105,8 +102,12 @@ public:
 
 	// 描画関数．描画要求が来たときに呼ばれる
 	virtual void OnDraw(GRRenderIf* render) {
-		//fwScene->DrawPHScene(render);
-		fwScene->GetGRScene()->Render(render);
+		if (debugRender){
+			fwScene->DrawPHScene(render);
+		}else{
+			fwScene->Sync();
+			fwScene->GetGRScene()->Render(render);
+		}
 
 		std::ostringstream sstr;
 		sstr << "NObj = " << phScene->NSolids();
@@ -122,6 +123,8 @@ public:
 			if(id == ID_BOX){
 				Drop(SHAPE_BOX, GRRenderIf::RED, v, w, p, q);
 				message = "box dropped.";
+			}else if(id==ID_SWITCHRENDER){
+				debugRender = !debugRender; 
 			}
 		}
 		SampleApp::OnAction(menu, id);
