@@ -63,7 +63,7 @@ int main2D(){
 	}
 
 	CDQHLines<CDQHVtx2DSample> lines(50);
-	lines.CreateConvexHull(&*vtxs.begin(), &*vtxs.end());
+	lines.CreateConvexHull(&vtxs.front(), &vtxs.back()+1);
 	//	‚Å‚«‚½–Ê‚ð•\Ž¦
 	std::cout << lines;
 
@@ -118,7 +118,7 @@ int main3D(){
 	}
 
 	CDQHPlanes<CDQHVtx3DSample> planes(50);
-	planes.CreateConvexHull(&*vtxs.begin(), &*vtxs.end());
+	planes.CreateConvexHull(&vtxs.front(), &vtxs.back()+1);
 	//	‚Å‚«‚½–Ê‚ð•\Ž¦
 	std::cout << planes;
 	return 0;
