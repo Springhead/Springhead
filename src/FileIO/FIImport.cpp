@@ -37,7 +37,7 @@ void ImportHandler::AfterLoadData(UTLoadedData* ld, UTLoadContext* lc){
 	fc->PushFileMap(path.FullPath(), true);
 	if(fc->IsGood())
 		file->LoadImp(fc);
-	fc->fileMaps.Pop();
+	fc->PopFileMap();
 	
 }
 
