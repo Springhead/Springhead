@@ -3,17 +3,16 @@
 #include <Graphics/GRFrame.h>
 #include <Physics/PHConstraint.h>
 #include "FWFemMesh.h"
-//#include "../Samples/Physics/FEMThermo/tetgen.h"
-//#include "tetgen.h"
-//#include "../Samples/Physics/FEMThermo/ThermalFEM.h"
-
-
-
+#include "tetgen.h"
+#include "ThermalFEM.h"
 
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
+
+using namespace std;
+using namespace Spr;
 
 namespace Spr{;
 FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
@@ -59,11 +58,15 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	//定義を加えながら変換していく
 	//int i;
 	//頂点の開始番号
-#if 0
+	ThermalFEM FEM;
+	tetgenio in,out;
+	tetgenio::facet *f;
+	tetgenio::polygon *p;
+
 	in.firstnumber = 1;
 	////頂点座標と数の入力
 	in.numberofpoints = grMesh->NVertex();		//grMeshの頂点サイズの代入
-	in.pointlist = new REAL[in.numberofpoints * 3];
+	in.pointlist = DBG_NEW REAL[in.numberofpoints * 3];
 	for(int j=0; j < grMesh->NVertex(); j++){	//ThermoMeshの頂点番号はj / 3の整数部分
 		for(int k=0; k<3; ++k)
 			in.pointlist[j*3+k] = grMesh->GetVertices()[j][k];
@@ -71,22 +74,25 @@ bool FWFemMesh::GeneratePHFemMesh(){
 
 	////面の数の代入
 	in.numberoffacets = grMesh->NFace() / 3;		//faces.size()/3; /3にしているのは、なぜなのか？
-	in.facetlist = new tetgenio::facet[in.numberoffacets];
+	in.facetlist = DBG_NEW tetgenio::facet[in.numberoffacets];
 /*	in.numberoffacets
 	in.facetlist[in.numberoffacets];*/				//	tetgenio::facet 
-	in.facetmarkerlist = new int[in.numberoffacets];
+	in.facetmarkerlist = DBG_NEW int[in.numberoffacets];
 	////面の情報の入力
 	for(int j =0; j < in.numberoffacets ; j++){
-		f = &FEM.in.facetlist[(int)j];
+		f = &in.facetlist[(int)j];
 		f->numberofpolygons = 1;
-		f->polygonlist = new tetgenio::polygon[f->numberofpolygons];
+		f->polygonlist = DBG_NEW tetgenio::polygon[f->numberofpolygons];
 		f->numberofholes = 0;
 		f->holelist = NULL;
 		p = &f->polygonlist[0];
 		p->numberofvertices = 3;
-		p->vertexlist = new int[p->numberofvertices];
+		p->vertexlist = DBG_NEW int[p->numberofvertices];
 		for(int k =0; k < 3 ; k++){
-			p->vertexlist[k] = grMesh->GetFaces()[3 * j + k]+1;
+			//DSTR << "grMesh->GetFaces()[3 * j + k] " << grMesh->GetFaces()[3 * j + k] << std::endl;
+			//p->vertexlist[k] = grMesh->GetFaces()[3 * j + k];// + 1;
+			DSTR << grMesh->GetFaces()[3 * j + k].indices << endl;
+
 		}
 	}
 	for(int j = 0; j < in.numberoffacets ;j++){
@@ -103,7 +109,6 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	//return FEM.outに入っているメッシュファイル⇒これをPHに入れる
 	
 	phMesh = DBG_NEW PHFemMesh(pmd);
-#endif
 	return true;
 }
 

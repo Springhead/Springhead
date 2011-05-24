@@ -13,10 +13,7 @@
 #include <Graphics/GRMesh.h>
 #include <Physics/PHFemMesh.h>
 #include "FrameworkDecl.hpp"
-#include "tetgen.h"
 
-//#include "tetgen.h"
-//#include "ThermalFEM.h"
 
 namespace Spr{;
 
@@ -41,11 +38,8 @@ public:
 protected:
 	//	TetGenを用いて、GRMeshを四面体メッシュ化し、phMeshに格納する。
 	virtual bool GeneratePHFemMesh();
-/*	ThermalFEM FEM;
-	tetgenio in,out;
-	tetgenio::facet *f;
-	tetgenio::polygon *p;
-*/
+
+
 };
 
 }
