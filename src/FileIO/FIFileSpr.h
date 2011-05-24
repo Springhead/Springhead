@@ -17,7 +17,7 @@ class FIFileSpr:public FIFile{
 public:
 	SPR_OBJECTDEF(FIFileSpr);
 protected:
-	FIPhraseParser start, node, body, block, immediate, field, refer, data, let, right,
+	FIPhraseParser start, node, nodeBody, body, block, immediate, field, refer, data, let, right,
 		value, id, boolVal, iNum, rNum, str;
 	FISkipParser cmt;
 

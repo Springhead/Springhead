@@ -67,6 +67,17 @@ static void NameSet(const char* b, const char* e){
 	UTString n(b,e);
 	fileContext->datas.back()->SetName(UTString(b,e));
 }
+///	ノードの始まり．型を見つけてセット
+static void NodeStartFromId(const char* b, const char* e){
+	PDEBUG( DSTR << "NodeStartFromId " << idTypeId << std::endl );
+	assert(idType == IT_FIELD);
+	fileContext->fieldIts.PushType(fileContext->fieldIts.Top().type);
+	fileContext->FindField(idTypeId);
+	UTString typeName = fileContext->fieldIts.Top().field->typeName;
+	fileContext->fieldIts.Pop();
+	fileContext->NodeStart(typeName);
+	fileContext->datas.back()->SetName(idTypeId);
+}
 
 ///	ノードの終わり
 static void NodeEnd(const char* b, const char* e){
@@ -83,7 +94,7 @@ static size_t letStartDepth;
 static void SetImmediate(char c){
 	letStartDepth = fileContext->fieldIts.size();
 }
-static void LetStart(char c){
+static void LetStart(const char* b, const char* e){
 	fileContext->FindField(idTypeId);
 	letStartDepth = fileContext->fieldIts.size()+1;	//	同階層でNextしてはいけないので、+1。
 	char* base = (char*)fileContext->datas.Top()->data;
@@ -273,9 +284,9 @@ void FIFileSpr::Init(){
 	//	パーサの定義
 	//	本文用パーサ
 	start		= *(id[&SetIdType] >> node);
-	node		=  if_p(&IsNodeType)
-					 [ eps_p[&NodeStart] >> !id[&NameSet] >> (block | immediate | ExpP("'{' or '='")) ].
-					else_p[ ExpP("node type") ];
+	node		= if_p(&IsNodeType)[ 
+					eps_p[&NodeStart] >> !id[&NameSet] >> (block | immediate | ExpP("'{' or '='"))
+				  ].else_p[ ExpP("node type") ];
 	immediate	= ch_p('=')[&SetImmediate] >>
 				  while_p(&NextField)[
 					!ch_p('[')[&VectorStart] >>
@@ -292,10 +303,14 @@ void FIFileSpr::Init(){
 					*(refer | data)
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
 	refer		= ch_p('*') >> id[&RefSet];
-	data		= id[&SetIdType] >> 
-					if_p(&IsFieldName)[let | ExpP("= and left value")] >>
-					if_p(&IsNodeType)[node | ExpP("node definition")];
-	let			= ch_p('=')[&LetStart] >> right[&LetEnd];
+	data		= id[&SetIdType] >> (
+					ch_p('=') >> let | 
+					if_p(&IsNodeType)[ eps_p >> node ].else_p[ 
+						if_p(&IsFieldName)[ eps_p[&NodeStartFromId] >> block ]
+					] |
+					ExpP("node definition  or  '=' and r-value")
+				);
+	let			= eps_p[&LetStart] >> right[&LetEnd];
 	right		= do_p[
 					!ch_p('[')[&VectorStart] >>
 					while_p(&ArrayCount)[
