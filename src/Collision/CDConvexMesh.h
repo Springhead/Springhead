@@ -45,7 +45,7 @@ protected:
 	Vec3f average;
 public:
 	SPR_OBJECTDEF(CDConvexMesh);
-//	SPR_DECLMEMBEROF_CDConvexMeshDesc;
+	//	Descのメンバ、SPR_DECLMEMBEROF_CDConvexMeshDesc は使わない。代わりにGetDesc, SetDesc, GetDescSizeを使う
 
 	///	探索開始頂点番号
 	mutable int curPos;
@@ -84,8 +84,10 @@ public:
 	Vec3f* GetVertices();
 	size_t NVertex();
 
-	///
+	///	デスクリプタCDConvexMeshDescの読み書き	
 	virtual bool GetDesc(void *desc) const;
+	virtual void SetDesc(const void* desc);
+	virtual size_t GetDescSize() const { return sizeof(CDConvexMeshDesc); }
 
 	virtual int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 	virtual void Print(std::ostream& os) const;

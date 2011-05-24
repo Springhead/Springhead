@@ -48,7 +48,7 @@ namespace Spr{
 	UTRef<GRSceneIf> scene;
 	UTRef<FISdkIf> fiSdk; 
 	GRDeviceGLIf* grDevice;
-	GRDebugRenderIf* render;
+	GRRenderIf* render;
 	void FWRegisterTypeDescs();
 	void FWRegisterOldSpringheadNode();
 }
@@ -196,7 +196,7 @@ int main(int argc, char* argv[]){
 	int window = glutCreateWindow("FILoadMesh");
 	glewInit();
 
-	render = grSdk->CreateDebugRender();
+	render = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 	grDevice->Init();
 	render->SetDevice(grDevice);
