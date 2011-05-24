@@ -148,14 +148,15 @@ UTTimer::UTTimer(){
 
 UTTimer::~UTTimer(){
 	Stop();
-	/*
 	UTTimerStub::Timers& timers = UTTimerStub::Get().timers;
+	AddRef();	//	‚±‚±‚ÅAddRef‚µ‚Ä‚¨‚©‚È‚¢‚ÆA timers.erase()‚µ‚½uŠÔ‚É~UTTimer()‚ÉÄ“ü‚µ‚Ä‚µ‚Ü‚¤B
 	for(UTTimerStub::Timers::iterator it = timers.begin(); it != timers.end(); ++it){
 		if (*it == this){
 			timers.erase(it);
 			break;
 		}
-	}*/
+	}
+	DelRef();
 }
 
 unsigned SPR_CDECL UTTimerIf::NTimers(){

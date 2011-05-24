@@ -1,5 +1,5 @@
 #include <Springhead.h>
-#include "Foundation/UTTimer.h"
+#include <Foundation/UTTimer.h>
 
 #include <iostream>
 #include <map>
@@ -11,12 +11,12 @@ using namespace Spr;
 unsigned startTime;
 
 class TimerProviderGL: public UTTimerProvider{
-	struct Arg{
+	struct Arg:UTRefCount{
 		UTTimer* timer;
 		bool bStop;
 		Arg(UTTimer* t): timer(t), bStop(false){}
 	};
-	typedef std::vector<Arg*> Args;
+	typedef std::vector< UTRef<Arg> > Args;
 	Args args;
 	static void Callback(int a){
 		Arg* arg = (Arg*)a;
@@ -35,7 +35,7 @@ public:
 		Unregister();	//	タイマーからフレームワークを解除
 	}
 	bool StartTimer(UTTimer* timer){
-		args.push_back(new Arg(timer));
+		args.push_back(DBG_NEW Arg(timer));
 		glutTimerFunc(timer->GetInterval(), Callback, (int)(void*)args.back());
 		return true;
 	}
@@ -43,7 +43,7 @@ public:
 		for(Args::iterator it = args.begin(); it!= args.end(); ++it){
 			if ((*it)->timer == timer){
 				(*it)->bStop = true;
-				args.erase(it);	//	ここで、(*it)を delete してしまうと、タイマーの最後の呼び出しの時に、arg の先が無いので実行時エラーに成ってしまう。
+				args.erase(it);
 				return true;
 			}
 		}
@@ -52,12 +52,12 @@ public:
 };
 
 volatile int hogeCount;
-void CallBackHoge(void* arg){
+void CallBackHoge(int id){
 	std::cout << "hogehoge" << std::endl;
 	hogeCount++;
 }
 volatile int piyoCount;
-void CallBackPiyo(void* arg){
+void CallBackPiyo(int id){
 	std::cout << "    piyopiyo" << std::endl;
 	piyoCount++;
 }
@@ -67,12 +67,8 @@ public:
 	UTTimer timer2;
 	int count;
 	Fuga(): count(0){}
-	static void CallBackFuga(void* arg){
-		((Fuga*)arg)->Print();
-	}
-	void Print(){
-		count ++;
-		std::cout << "         " << "fugafuga " << count << std::endl;
+	static void CallBackFuga(int id){
+		std::cout << "         " << "fugafuga " << std::endl;
 	}
 };
 
@@ -104,20 +100,20 @@ int _cdecl main(int argc, char* argv[]){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 								//	たとえば、FWAppのGLUT版 に providerGL と同じ機能を持たせれば良い
 
-	timer1.SetMode(UTTimer::MULTIMEDIA);
+	timer1.SetMode(UTTimerIf::MULTIMEDIA);
 	timer1.SetResolution(20);					///	 呼びだし分解能
 	timer1.SetInterval(200);					/// 呼びだし頻度
-	timer1.SetCallback(CallBackHoge, NULL);	/// 呼びだす関数
+	timer1.SetCallback(CallBackHoge);	/// 呼びだす関数
 
-	fuga.timer2.SetMode(UTTimer::FRAMEWORK);
+	fuga.timer2.SetMode(UTTimerIf::FRAMEWORK);
 	fuga.timer2.SetResolution(5);
 	fuga.timer2.SetInterval(500);
-	fuga.timer2.SetCallback(Fuga::CallBackFuga, &fuga);	/// 呼び戻す関数は静的でなければならない
+	fuga.timer2.SetCallback(Fuga::CallBackFuga);	/// 呼び戻す関数は静的でなければならない
 
-	timer3.SetMode(UTTimer::MULTIMEDIA);
+	timer3.SetMode(UTTimerIf::MULTIMEDIA);
 	timer3.SetResolution(10);					///	 呼びだし分解能
 	timer3.SetInterval(100);					/// 呼びだし頻度
-	timer3.SetCallback(CallBackPiyo, NULL);		/// 呼びだす関数
+	timer3.SetCallback(CallBackPiyo);		/// 呼びだす関数
 
 
 	startTime = timeGetTime();
