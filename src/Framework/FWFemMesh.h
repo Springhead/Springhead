@@ -1,3 +1,4 @@
+#if 0
 /*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
@@ -49,4 +50,5 @@ protected:
 
 }
 
+#endif
 #endif
