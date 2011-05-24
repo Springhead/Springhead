@@ -3,7 +3,8 @@
 #include <Graphics/GRFrame.h>
 #include <Physics/PHConstraint.h>
 #include "FWFemMesh.h"
-#include "../Samples/Physics/FEMThermo/tetgen.h"
+//#include "../Samples/Physics/FEMThermo/tetgen.h"
+#include "tetgen.h"
 #include "../Samples/Physics/FEMThermo/ThermalFEM.h"
 
 
@@ -44,7 +45,9 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	//	grMeshを変換して、phMeshをつくる。
 	std::cout << "メッシュ生成" << std::endl;
 	
-	PHFemMeshDesc pmd;	
+	PHFemMeshDesc pmd;
+	
+
 	
 	//	以下で、grMeshからtetgenを呼び出して変換して、pmdに値を入れていけば良い。
 	//	PHFemMeshDescには、有限要素法の計算に必要なメッシュの情報を入れれば良い。
@@ -52,48 +55,45 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	//	以下、作ってもらえますか？ PHFemMeshDesc に必要に応じてメンバを加えてください。
 	//  作ります。
 
+
+
 	//定義を加えながら変換していく
-	tetgenio::facet *f;
-	tetgenio::polygon *p;
-	int i;
+	//int i;
 	//頂点の開始番号
-	//FEM.in.firstnumber = 1;
+	in.firstnumber = 1;
 	////頂点座標と数の入力
-	//FEM.in.numberofpoints = tvtxs.size();//頂点のサイズの代入
-	//FEM.in.pointlist = new REAL[FEM.in.numberofpoints * 3];
-	//for(unsigned int j=0; j < tvtxs.size(); j++){	//ThermoMeshの頂点番号はj / 3の整数部分
-	//	Vec3d rv;			//頂点の位置座標
-	//	rv = tvtxs[j].GetPos(1);	
-	//	DSTR << "rv ["<<j<<"]"<< rv <<endl;
-	//	FEM.in.pointlist[3*j] = rv.x;	//input x coordinate	// thermovertexの各座標を引っ張ってくられるようにメンバ変数に追加する			
-	//	FEM.in.pointlist[3*j+1] = rv.y;	//input y coordinate
-	//	FEM.in.pointlist[3*j+2] = rv.z;	//input z coordinate
-	//	//DSTR<<j<<"\t"<<FEM.in.pointlist[3*j]<<"\t"<<FEM.in.pointlist[3*j+1]<<"\t"<<FEM.in.pointlist[3*j+2]<<endl;		
-	//}
-	//DSTR<<"tvtxs.size() *3: " << tvtxs.size() *3 <<endl;
+	in.numberofpoints = grMesh->NVertex();		//grMeshの頂点サイズの代入
+	in.pointlist = new REAL[in.numberofpoints * 3];
+	for(int j=0; j < grMesh->NVertex(); j++){	//ThermoMeshの頂点番号はj / 3の整数部分
+		for(int k=0; k<3; ++k)
+			in.pointlist[j*3+k] = grMesh->GetVertices()[j][k];
+	}
+
 	////面の数の代入
-	//FEM.in.numberoffacets = faces.size()/3;
-	//FEM.in.facetlist = new tetgenio::facet[FEM.in.numberoffacets];
-	//FEM.in.facetmarkerlist = new int[FEM.in.numberoffacets];
+	in.numberoffacets = grMesh->NFace() / 3;		//faces.size()/3; /3にしているのは、なぜなのか？
+	in.facetlist = new tetgenio::facet[in.numberoffacets];
+/*	in.numberoffacets
+	in.facetlist[in.numberoffacets];*/				//	tetgenio::facet 
+	in.facetmarkerlist = new int[in.numberoffacets];
 	////面の情報の入力
-	//for(vector<int>::size_type i =0; i < faces.size() / 3; i++){
-	//	f = &FEM.in.facetlist[(int)i];
-	//	f->numberofpolygons = 1;
-	//	f->polygonlist = new tetgenio::polygon[f->numberofpolygons];
-	//	f->numberofholes = 0;
-	//	f->holelist = NULL;
-	//	p = &f->polygonlist[0];
-	//	p->numberofvertices = 3;
-	//	p->vertexlist = new int[p->numberofvertices];
-	//	p->vertexlist[0] = faces[3 * i]+1;
-	//	p->vertexlist[1] = faces[3 * i + 1]+1;
-	//	p->vertexlist[2] = faces[3 * i + 2]+1;
-	//}
-	//for(vector<int>::size_type i = 0; i < faces.size() /3 ;i++){
-	//	FEM.in.facetmarkerlist[i] = 0;
-	//}
-	//FEM.in.save_nodes("barin");
-	//FEM.in.save_poly("barin");
+	for(int j =0; j < in.numberoffacets ; j++){
+		f = &FEM.in.facetlist[(int)j];
+		f->numberofpolygons = 1;
+		f->polygonlist = new tetgenio::polygon[f->numberofpolygons];
+		f->numberofholes = 0;
+		f->holelist = NULL;
+		p = &f->polygonlist[0];
+		p->numberofvertices = 3;
+		p->vertexlist = new int[p->numberofvertices];
+		for(int k =0; k < 3 ; k++){
+			p->vertexlist[k] = grMesh->GetFaces()[3 * j + k]+1;
+		}
+	}
+	for(int j = 0; j < in.numberoffacets ;j++){
+		in.facetmarkerlist[j] = 0;
+	}
+	in.save_nodes("barin");
+	in.save_poly("barin");
 	////四面体メッシュ化
 	//FEM.TFEMTetrahedralize("pq100");
 	////メッシュ化したファイルの保存

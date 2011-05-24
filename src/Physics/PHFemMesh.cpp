@@ -13,10 +13,19 @@
 using namespace PTM;
 namespace Spr{;
 
+PHFemMeshDesc::PHFemMeshDesc(){
+	Init();
+}
+void PHFemMeshDesc::Init(){
+	
+}
+
+
 ///////////////////////////////////////////////////////////////////
 //	PHFemMesh
 PHFemMesh::PHFemMesh(const PHFemMeshDesc& desc, SceneIf* s):PHFemMeshDesc(desc){
 	if (s){ SetScene(s); }
 }
+
 
 }
