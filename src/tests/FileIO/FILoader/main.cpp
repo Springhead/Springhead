@@ -9,40 +9,31 @@
  Springhead2/src/tests/FileIO/FILoader/main.cpp
 
 【概要】
-  Xファイルをロードし、Physicsエンジンと接続してシミュレーションする。
+  sprファイルをロードし、Physicsエンジンと接続してシミュレーションする。
   
 【終了基準】
   ・プログラムが正常終了したら0を返す。  
  
 【処理の流れ】
-  ・Xファイルをロードする。
+  ・sprファイルをロードする。
   ・ロードした情報を出力する。
   ・Physicsエンジンと接続し、シミュレーションさせる。
-
-【テストパターン】
-  ※ 本ファイルの " #define TEST_FILEX " にて、入力ファイル名を指定する。
-　  test1.x  : 凸形状(mesh)のテスト
-    test2.x  : 凸形状(mesh)のテスト（青い箱(mesh)と床を、互いに衝突させない剛体として登録）
-    test3.x  : 凸形状(mesh)と球(sphere)のテスト
-	test4.x  : 凸形状(mesh)と球(sphere)と直方体(box)のテスト
-	test5.x  : timeStep=0.001におけるテスト（直方体１つを自由落下）
-	GRTest.x : XファイルからのグラフィックスSDKの入力テスト
-
+	ロードするファイル=test.spr  : 凸形状(mesh)と球(sphere)と直方体(box)のテスト
  */
 #include <Springhead.h>
 #include <GL/glut.h>
 
 #define	ESC				27				// Esc key
 #define EXIT_TIMER		12000			// 強制終了させるステップ数
-#define TEST_FILEX		"Kitchen_room_withDishes04.x"		// ロードするXファイル
 
 namespace Spr{
 	UTRef<PHSdkIf> phSdk;
 	UTRef<GRSdkIf> grSdk;
 	UTRef<FWSdkIf> fwSdk;
 	PHSceneIf* scene;
+	FWSceneIf* fwScene;
 	GRDeviceGLIf* grDevice;
-	GRDebugRenderIf* render;
+	GRRenderIf* render;
 	void PHRegisterTypeDescs();
 	void CDRegisterTypeDescs();
 	void GRRegisterTypeDescs();
@@ -82,85 +73,16 @@ std::vector<GRMaterialDesc> material;
  return 	なし
  */
 void display(){
-/*	render->ClearBuffer();
-	render->DrawScene(*scene);
-	render->EndScene();
-	return;
-*/
-	//	バッファクリア
 	render->ClearBuffer();
-	//render->SetMaterial(mat_red);	
-
-	PHSceneIf* scene = NULL;
-	if (phSdk->NScene()){
-		scene = phSdk->GetScene(0);
+	if (!fwScene){
+		fwScene = fwSdk->CreateScene();
+		fwScene->AddChildObject(scene);
 	}
-	if (!scene){
-		std::cout << "scene == NULL. File may not found." << std::endl;
-		exit(-1);
-	}
-	PHSolidIf **solids = scene->GetSolids();
-	for (int num=0; num < scene->NSolids(); ++num){
-		render->SetMaterial(material[num]);			// 材質設定
-
-		Affinef af;
-		solids[num]->GetPose().ToAffine(af);
-		render->PushModelMatrix();
-		render->MultModelMatrix(af);
-		
-		int nShape = solids[num]->NShape();
-		for(int s=0; s<nShape; ++s){
-			CDShapeIf* shape = solids[num]->GetShape(s);
-			Affinef af;
-			solids[num]->GetShapePose(s).ToAffine(af);
-			render->PushModelMatrix();
-			render->MultModelMatrix(af);
-			CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
-			if (mesh){
-				Vec3f* base = mesh->GetVertices();
-				for (size_t f=0; f<mesh->NFace(); ++f) {	
-					CDFaceIf* face = mesh->GetFace(f);
-					render->DrawFaceSolid(face, base);
-				}
-			}
-			CDSphereIf* sphere = DCAST(CDSphereIf, shape);
-			if (sphere){
-				float r = sphere->GetRadius();
-				GLUquadricObj* quad = gluNewQuadric();
-				gluSphere(quad, r, 16, 8);
-				gluDeleteQuadric(quad);
-			}
-			CDBoxIf* box = DCAST(CDBoxIf, shape);
-			if (box){
-#if 0			// glutによる直方体の描画版			
-				Vec3f boxsize = box->GetBoxSize();
-				glScalef(boxsize.x, boxsize.y, boxsize.z);	
-				glutSolidCube(1.0);		
-#else			// デバッグ版
-				Vec3f* base =  box->GetVertices();
-				for (size_t f=0; f<6; ++f) {	
-					CDFaceIf* face = box->GetFace(f);
-
-					for (int v=0; v<4; ++v)
-						vtx[v] = base[face->GetIndices()[v]].data;
-					Vec3f normal, edge0, edge1;
-					edge0 = vtx[1] - vtx[0];
-					edge1 = vtx[2] - vtx[0];
-					normal = edge0^edge1;
-					normal.unitize();
-					glNormal3fv(normal);
-					render->SetVertexFormat(GRVertexElement::vfP3f);
-					render->DrawDirect(GRRenderBaseIf::QUADS, vtx, 4);
-				}
-#endif 					
-			}
-			render->PopModelMatrix();
-		}
-		render->PopModelMatrix();
-	}
-
+	if (fwScene)
+		fwScene->DrawPHScene(render);
 	render->EndScene();
-	glutSwapBuffers();
+	render->SwapBuffers();
+	return;
 }
 /**
  brief     	光源の設定
@@ -262,16 +184,16 @@ int main(int argc, char* argv[]){
 	FWSdkIf::RegisterSdk();
 
 	UTRef<FISdkIf> fiSdk = FISdkIf::CreateSdk();
-	FIFileXIf* fileX = fiSdk->CreateFileX();
+	FIFileIf* file = fiSdk->CreateFileFromExt(".spr");
 	ObjectIfs objs;
 	if (argc>=2){
 		phSdk = PHSdkIf::CreateSdk();					//	PHSDKを用意して，
 		objs.push_back(phSdk);		
-		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
+		file->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
 		fwSdk = FWSdkIf::CreateSdk();					//	FWSDKを用意して，
 		objs.push_back(fwSdk);		
-		if (! fileX->Load(objs, TEST_FILEX) ) {	//	PHSDKごとロードして，
+		if (! file->Load(objs, "test.spr") ) {	//	PHSDKごとロードして，
 			DSTR << "Error: Cannot open load file. " << std::endl;
 			exit(EXIT_FAILURE);
 		}
@@ -288,7 +210,7 @@ int main(int argc, char* argv[]){
 //		objs.Push(phSdk->GetScenes()[0]);
 		objs.Push(phSdk);
 		if(grSdk) objs.Push(grSdk);
-		fileX->Save(objs, "out.x");
+		file->Save(objs, "out.spr");
 	}
 	fiSdk = NULL;	//	ファイルローダのメモリを解放．
 	objs.clear();
@@ -305,7 +227,7 @@ int main(int argc, char* argv[]){
 
 	// Graphics Sdk
 	grSdk = GRSdkIf::CreateSdk();
-	render = grSdk->CreateDebugRender();
+	render = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 	grDevice->Init();
 	render->SetDevice(grDevice);
