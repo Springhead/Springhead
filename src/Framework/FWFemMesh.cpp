@@ -4,8 +4,8 @@
 #include <Physics/PHConstraint.h>
 #include "FWFemMesh.h"
 //#include "../Samples/Physics/FEMThermo/tetgen.h"
-#include "tetgen.h"
-#include "../Samples/Physics/FEMThermo/ThermalFEM.h"
+//#include "tetgen.h"
+//#include "../Samples/Physics/FEMThermo/ThermalFEM.h"
 
 
 
@@ -16,7 +16,6 @@
 #endif
 
 namespace Spr{;
-
 FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 	SetDesc(&d);
 }
@@ -60,6 +59,7 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	//定義を加えながら変換していく
 	//int i;
 	//頂点の開始番号
+#if 0
 	in.firstnumber = 1;
 	////頂点座標と数の入力
 	in.numberofpoints = grMesh->NVertex();		//grMeshの頂点サイズの代入
@@ -103,7 +103,7 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	//return FEM.outに入っているメッシュファイル⇒これをPHに入れる
 	
 	phMesh = DBG_NEW PHFemMesh(pmd);
-
+#endif
 	return true;
 }
 

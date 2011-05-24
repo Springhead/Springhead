@@ -1,4 +1,3 @@
-#if 0
 /*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
@@ -42,13 +41,13 @@ public:
 protected:
 	//	TetGenを用いて、GRMeshを四面体メッシュ化し、phMeshに格納する。
 	virtual bool GeneratePHFemMesh();
-	ThermalFEM FEM;
+/*	ThermalFEM FEM;
 	tetgenio in,out;
 	tetgenio::facet *f;
 	tetgenio::polygon *p;
+*/
 };
 
 }
 
-#endif
 #endif
