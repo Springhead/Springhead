@@ -52,43 +52,58 @@ public:
 
 		appName = "Virtual Trajectory Tracking";
 		numLinks	= 2;
-		numScenes   = 2;
+		numScenes   = 1;
+
+		AddMenu(MENU_SCENE, "< scene settings >");
+
+		AddAction(MENU_SCENE, ID_TOGGLE_IK, "enable/disable IK");
+		AddHotKey(MENU_SCENE, ID_TOGGLE_IK, 'p');
+
+		AddAction(MENU_SCENE, ID_MOVE_TARGET0, "move left");
+		AddHotKey(MENU_SCENE, ID_MOVE_TARGET0, 'j');
+
+		AddAction(MENU_SCENE, ID_MOVE_TARGET1, "move right");
+		AddHotKey(MENU_SCENE, ID_MOVE_TARGET1, 'l');
+
+		AddAction(MENU_SCENE, ID_MOVE_TARGET2, "move upward");
+		AddHotKey(MENU_SCENE, ID_MOVE_TARGET2, 'i');
+
+		AddAction(MENU_SCENE, ID_MOVE_TARGET3, "move downward");
+		AddHotKey(MENU_SCENE, ID_MOVE_TARGET3, 'k');
+
+		AddAction(MENU_SCENE, ID_MOVE_TARGET4, "move foreward");
+		AddHotKey(MENU_SCENE, ID_MOVE_TARGET4, 'u');
+
+		AddAction(MENU_SCENE, ID_MOVE_TARGET5, "move backward");
+		AddHotKey(MENU_SCENE, ID_MOVE_TARGET5, 'o');
 	}
 
-	/*void CalcOffsetForce(){
+	void CalcOffsetForce(){
 		PHIKEngineIf* ikEngine = phScene->GetIKEngine();
 
 		states->SaveState(phScene);
 		phScene->GetIKEngine()->Enable(true);
-		ikEngine->Step();
+		phScene->Step();
 		
 		typedef std::vector<BJOffset> BJOffsets;
 		BJOffsets bjOffsets;
 	
-		for(size_t i = 0; i < phScene->NActuators(); ++i) {
-			PHIKBallActuatorIf* ac = phScene->GetActuator(i)->Cast();
+		for(size_t i = 0; i < phScene->NIKActuators(); ++i) {
+			PHIKBallActuatorIf* ac = phScene->GetIKActuator(i)->Cast();
 			if(!ac)
 				continue;
 			
-			//PHIKBallJoint* bj = ikBJ->Cast();
-			Vec3d dT = Vec3d();
-			for (int j=0; j < bj->ndof; ++j) {
-				dT += (bj->dTheta[j]/bj->bias) * bj->e[j];
-			}
-
-			PHBallJoint* jo = DCAST(PHBallJoint,bj->joint);
-
 			bjOffsets.resize(bjOffsets.size()+1);
-			bjOffsets.back().jo = jo->Cast();
-			bjOffsets.back().vel = dT / phScene->GetTimeStep();
-			bjOffsets.back().goal = jo->GetTargetPosition();
+			bjOffsets.back().jo = ac->GetJoint()->Cast();
+			bjOffsets.back().vel = ac->GetJoint()->GetTargetVelocity();
+			bjOffsets.back().goal = ac->GetJoint()->GetTargetPosition();
 
 			if (bjOffsets.back().vel.norm() > Rad(360)) {
 				bjOffsets.back().vel = bjOffsets.back().vel.unit() * Rad(360);
 			}
 		}
 
-		//states->LoadState(phScene);
+		states->LoadState(phScene);
 
 		for (size_t i=0; i<bjOffsets.size(); ++i) {
 			bjOffsets[i].damper = bjOffsets[i].jo->GetDamper();
@@ -112,7 +127,7 @@ public:
 			bjOffsets[i].jo->SetTargetVelocity(bjOffsets[i].vel);
 			bjOffsets[i].jo->SetOffsetForce(bjOffsets[i].offset);
 		}
-	}*/
+	}
 
 	virtual void BuildScene(){
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();
@@ -153,29 +168,15 @@ public:
 			
 			descBallJoint.poseSocket.Pos() = Vec3d(0.0, (i == 0 ? 0.1 : 0.5), 0.0);
 			descBallJoint.posePlug.Pos()   = Vec3d(0.0, -0.5, 0.0);
-			descBallJoint.spring = 1000.0f;
-			descBallJoint.damper =   20.0f;
+			descBallJoint.spring =   1.0f;
+			descBallJoint.damper =   0.1f;
 			PHBallJointIf* bj = phScene->CreateJoint(links.back(), so, descBallJoint)->Cast();
+
 			///// IKƒm[ƒh
-			descIKBall.spring	= 100000.0;
-			descIKBall.damper	=   2000.0;
-			descIKBall.bias		=	   1.8;
-
-			descIKBall.spring = 90000.0f;
-			descIKBall.damper =  2000.0f;
-			descIKBall.bias = 1.6;
-
-			descIKBall.spring = 80000.0f;
-			descIKBall.damper =  2000.0f;
-			descIKBall.bias = 1.4;
-
-			descIKBall.spring = 70000.0f;
-			descIKBall.damper =  2000.0f;
-			descIKBall.bias = 1.2;
-
-			descIKBall.spring = 60000.0f;
-			descIKBall.damper =  2000.0f;
-			descIKBall.bias = 1.0;
+			descIKBall.spring =   100.0f;
+			descIKBall.damper =     1.0f;
+			descIKBall.bias   =     1.0f;
+			descIKBall.bEnabled = true;
 
 			PHIKBallActuatorIf* ac = phScene->CreateIKActuator(descIKBall)->Cast();
 			ac->SetJoint(bj);
@@ -188,6 +189,8 @@ public:
 		/// -- IK§Œä“_
 		///// §Œä“_‚Ìì¬
 		descIKEE.targetPosition = Vec3d(0.0, 0.5, 0.0);
+		descIKEE.bEnabled = true;
+		descIKEE.bPosition = true;
 		endEffector = phScene->CreateIKEndEffector(descIKEE);
 		endEffector->SetSolid(links.back());
 		///// ƒm[ƒh‚Ö‚Ì“o˜^
@@ -214,7 +217,7 @@ public:
 	}
 
 	virtual void OnStep(){
-		//CalcOffsetForce();
+		CalcOffsetForce();
 		phScene->Step();
 
 		target->SetFramePosition(endEffector->GetTargetPosition());
@@ -224,9 +227,14 @@ public:
 		Vec3d goal = endEffector->GetTargetPosition();
 		goal += rel;
 		endEffector->SetTargetPosition(goal);
+		target->SetFramePosition(goal);
+
+		DSTR << "Move to " << goal << std::endl;
 	}
 
 	virtual void OnAction(int menu, int id){
+		SampleApp::OnAction(menu, id);
+
 		if(menu == MENU_SCENE){
 			if(id == ID_TOGGLE_IK){
 				bIK = !bIK;
