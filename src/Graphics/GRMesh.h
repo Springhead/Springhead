@@ -109,7 +109,6 @@ public:
 	int		NTriangle(){ return (int)triFaces.size()/3; }
 	
 	Vec3f*		GetVertices(){ return &vertices[0]; }
-
 	Vec3f*		GetNormals(){ return &normals[0]; }
 	Vec4f*		GetColors(){ return &colors[0]; }
 	Vec2f*		GetTexCoords(){ return &texCoords[0]; }
