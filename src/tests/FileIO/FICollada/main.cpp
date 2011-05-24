@@ -6,17 +6,16 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
- Springhead2/src/tests/FileIO/FILoadMesh/main.cpp
+ Springhead2/src/tests/FileIO/FICollada/main.cpp
 
 【概要】
-  ファイル入出力SDKで、Xファイルの詳細を解析させる。
-  （頂点位置、頂点インデックス、法線、マテリアル、テクスチャ）
+  多分未完成。
+  ファイル入出力SDKで、daeファイルをロード。表示する。
+  多分未完成。
 
 【終了基準】
   ・プログラムが正常終了したら0を返す。  
 
-【Note】
-  本ファイルの26行目" #define TEST_CASE " で、ロードするXファイルの入力切り替えが可能。
 
 */
 #include <Springhead.h>
@@ -31,7 +30,7 @@ namespace Spr{
 	UTRef<GRSceneIf> scene;
 	UTRef<FISdkIf> fiSdk; 
 	GRDeviceGLIf* grDevice;
-	GRDebugRenderIf* render;
+	GRRenderIf* render;
 }
 using namespace Spr;
 
@@ -134,7 +133,7 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	FWSdkIf::RegisterSdk();
+//	FISdkIf::RegisterSdk();
 
 	fiSdk = FISdkIf::CreateSdk();
 	FIFileCOLLADAIf* fileCOLLADA = fiSdk->CreateFileCOLLADA();
@@ -165,7 +164,7 @@ int main(int argc, char* argv[]){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	int window = glutCreateWindow("FILoadMesh");
 
-	render = grSdk->CreateDebugRender();
+	render = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 	grDevice->Init();
 	render->SetDevice(grDevice);
