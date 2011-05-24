@@ -43,17 +43,19 @@ int CDVertexIDs::FindPos(int id) const {
 CDConvexMesh::CDConvexMesh(){
 }
 CDConvexMesh::CDConvexMesh(const CDConvexMeshDesc& desc){
-	material = desc.material;
-	base = desc.vertices;
-	CalcFace();
+	SetDesc(&desc);
+}
+void CDConvexMesh::SetDesc(const void *ptr){
+	CDShape::SetDesc(ptr);
+	const CDConvexMeshDesc* desc = (const CDConvexMeshDesc*)ptr;
+	base = desc->vertices;
+	CalcFace();	
 }
 bool CDConvexMesh::GetDesc(void *ptr) const {
 	CDConvexMeshDesc* desc = (CDConvexMeshDesc*)ptr;
-	desc->material = material;
 	desc->vertices = base;
-	return true;
+	return CDShape::GetDesc(ptr);
 }
-
 
 bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 	Posed toL	= toW.Inv();

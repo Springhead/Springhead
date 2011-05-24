@@ -46,7 +46,9 @@ UTStack<char> tagStack;
 static void TagStart(const char* b, const char* e){
 	attrs.clear();
 	tagName = UTString(b,e);
-	if (fileContext->fieldIts.Top().HaveField(tagName)){	
+	if (fileContext->fieldIts.size() 
+		&& fileContext->fieldIts.Top().type
+		&& fileContext->fieldIts.Top().HaveField(tagName)){	
 		//	組み立て型のロード中で，メンバが見つかった場合
 		tagStack.Push(false);
 	}else{
