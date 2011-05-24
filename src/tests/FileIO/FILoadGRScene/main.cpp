@@ -34,7 +34,7 @@ namespace Spr{
 	UTRef<GRSdkIf> grSdk;
 	GRSceneIf* scene;
 	GRDeviceGLIf* grDevice;
-	GRDebugRenderIf* render;
+	GRRenderIf* render;
 	void PHRegisterTypeDescs();
 	void CDRegisterTypeDescs();
 	void GRRegisterTypeDescs();
@@ -49,13 +49,13 @@ using namespace Spr;
  return 	なし
  */
 void display(){
-	//	バッファクリア
-	render->ClearBuffer();
-	scene->Render(render);
 	if (!scene){
 		std::cout << "scene == NULL. File may not found." << std::endl;
 		exit(-1);
 	}
+	//	バッファクリア
+	render->ClearBuffer();
+	scene->Render(render);
 	render->EndScene();
 	glutSwapBuffers();
 }
@@ -87,7 +87,7 @@ void keyboard(unsigned char key, int x, int y){
 		if (states[i]){
 			states[i]->LoadState(scene);
 		}else{
-			states[i] = CreateObjectStates();
+			states[i] = Spr::ObjectStatesIf::Create();
 			states[i]->SaveState(scene);
 		}
 	}
@@ -154,7 +154,7 @@ int main(int argc, char* argv[]){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	int window = glutCreateWindow("FILoadGRScene");
 
-	render = grSdk->CreateDebugRender();
+	render = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 	grDevice->Init();
 	render->SetDevice(grDevice);
