@@ -1,4 +1,6 @@
+#ifndef SWIG
 #define TETLIBRARY
+
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //
 // TetGen                                                                    //
@@ -3430,3 +3432,5 @@ inline bool testIsBigEndian()
 }
 
 #endif // #ifndef tetgenH
+
+#endif
