@@ -12,6 +12,8 @@
 #include <Framework/FWLDHaptic3D.h>
 #include <Framework/FWInteractScene.h>
 
+namespace Spr{;
+
 class FWLDHaptic6DLoop : public FWLDHaptic3DLoop{
 public:
 	FWLDHaptic6DLoop();
@@ -31,4 +33,5 @@ public:
 
 };
 
+}
 #endif

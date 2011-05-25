@@ -8,6 +8,8 @@
 
 #include "FWImpulseHaptic.h"
 
+namespace Spr{
+
 // FWImpulseHaptic‚ÌŽÀ‘•
 ///////////////////////////////////////////////
 FWImpulseHapticLoop::FWImpulseHapticLoop(){}
@@ -257,3 +259,5 @@ void FWImpulseHaptic::UpdatePointer(){
 
 void FWImpulseHaptic::BeginKeyboard(){}
 void FWImpulseHaptic::EndKeyboard(){}
+
+}

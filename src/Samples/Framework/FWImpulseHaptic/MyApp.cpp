@@ -115,9 +115,9 @@ void MyApp::Reset(){
 
 void MyApp::IdleFunc(){
 	/// シミュレーションを進める(interactsceneがある場合はそっちを呼ぶ)
-	if(bStep) MyApp::instance->GetIAScene()->Step();
+	if(bStep) GetIAScene()->Step();
 	else if(bOneStep){
-		MyApp::instance->GetIAScene()->Step();
+		GetIAScene()->Step();
 		bOneStep = false;
 	}
 	PostRedisplay();
@@ -125,17 +125,17 @@ void MyApp::IdleFunc(){
 
 void MyApp::TimerFunc(int id){	
 	/// HapticLoopをコールバックする
-	((MyApp*)instance)->GetIAScene()->CallBackHapticLoop();
+	GetIAScene()->CallBackHapticLoop();
 }
 
 void MyApp::Display(){
 	/// 描画モードの設定
 	GetSdk()->SetDebugMode(true);
-	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
-	render->SetRenderMode(true, false);
-	render->EnableRenderAxis(bDrawInfo);
-	render->EnableRenderForce(bDrawInfo);
-	render->EnableRenderContact(bDrawInfo);
+	FWSceneIf* scene = GetSdk()->GetScene();
+	scene->SetRenderMode(true, false);
+	scene->EnableRenderAxis(bDrawInfo);
+	scene->EnableRenderForce(bDrawInfo);
+	scene->EnableRenderContact(bDrawInfo);
 
 	/// カメラ座標の指定
 	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
@@ -300,6 +300,7 @@ void MyApp::Keyboard(int key, int x, int y){
 //////////////////////////////////////////////////////////////////////////////////////
 void MyApp::DisplayContactPlane(){
 	FWInteractScene* inScene = GetIAScene()->Cast();
+	FWSceneIf* scene = GetSdk()->GetScene();
 	int N = inScene->NIASolids();
 	for(int i = 0; i <  N; i++){
 		FWInteractSolid* inSolid = inScene->GetIASolid(i);
@@ -320,7 +321,7 @@ void MyApp::DisplayContactPlane(){
 			Vec3d v2 = normal ^ v1;
 
 			Vec4f moon(1.0, 1.0, 0.8, 0.3);
-			GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
+			GRRenderIf* render = GetCurrentWin()->render;
 			render->SetMaterial( GRMaterialDesc(moon) );
 			render->PushModelMatrix();
 			Vec3d offset = 0.001 * normal;

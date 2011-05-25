@@ -14,8 +14,9 @@
 #include <Base/TMatrix.h>
 #include <vector>
 
-using namespace Spr;
 using namespace PTM;
+namespace Spr{;
+
 
 
 /** Local Dynamics‚É•K—v‚È•Ï” */
@@ -76,4 +77,5 @@ struct FWInteractInfo{
 
 typedef std::vector<FWInteractInfo> AllInteractInfo;
 
+}
 #endif

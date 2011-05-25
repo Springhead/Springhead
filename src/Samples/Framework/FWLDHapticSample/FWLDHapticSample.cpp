@@ -50,9 +50,10 @@ void FWLDHapticSample::Init(int argc, char* argv[]){
 	BuildPointer();
 
 	/// タイマの作成，設定
-	int timerId =  CreateTimer(UTTimerIf::MULTIMEDIA);
-	SetInterval(timerId , 1);
-	SetResolution(timerId , 1);
+	UTTimerIf* timer =  CreateTimer(UTTimerIf::MULTIMEDIA);
+	timer->SetInterval(1);
+	timer->SetResolution(1);
+	timer->Start();
 }
 
 void FWLDHapticSample::InitCameraView(){
@@ -101,7 +102,7 @@ void FWLDHapticSample::InitHumanInterface(){
 }
 
 void FWLDHapticSample::Reset(){
-	ReleaseAllTimer();
+	//ReleaseAllTimer();
 	GetSdk()->Clear();
 	ClearIAScenes();
 	GetSdk()->CreateScene(phsd, GRSceneDesc());	// Sceneの作成
@@ -110,7 +111,7 @@ void FWLDHapticSample::Reset(){
 	BuildScene();
 	BuildPointer();
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
-	CreateAllTimer();
+//	CreateAllTimer();
 }
 
 void FWLDHapticSample::TimerFunc(int id){	
@@ -134,12 +135,12 @@ void FWLDHapticSample::IdleFunc(){
 
 void FWLDHapticSample::Display(){
 	/// 描画モードの設定
+	FWSceneIf* scene = GetSdk()->GetScene();
 	GetSdk()->SetDebugMode(true);
-	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
-	render->SetRenderMode(true, false);
-	render->EnableRenderAxis(bDrawInfo);
-	render->EnableRenderForce(bDrawInfo);
-	render->EnableRenderContact(bDrawInfo);
+	scene->SetRenderMode(true, false);
+	scene->EnableRenderAxis(bDrawInfo);
+	scene->EnableRenderForce(bDrawInfo);
+	scene->EnableRenderContact(bDrawInfo);
 
 	/// カメラ座標の指定
 	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
@@ -230,11 +231,11 @@ void FWLDHapticSample::BuildPointer(){
 
 
 void FWLDHapticSample::Keyboard(int key, int x, int y){
-	BeginKeyboard();
+//	BeginKeyboard();
 	switch (key) {
 		case  27: //ESC
 		case 'q':
-			ReleaseAllTimer();
+//			ReleaseAllTimer();
 			exit(0);
 			break;
 		case 'r':
@@ -254,11 +255,11 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 			break;
 		case 'c':
 			{
-				ReleaseAllTimer();
+//				ReleaseAllTimer();
 				for(int i = 0; i < GetIAScene()->NIAPointers(); i++){
 					GetIAScene()->GetIAPointer(i)->Calibration();
 				}
-				CreateAllTimer();
+//				CreateAllTimer();
 			}
 			break;
 		case 'f':
@@ -321,5 +322,5 @@ void FWLDHapticSample::Keyboard(int key, int x, int y){
 		default:
 			break;
 	}
-	EndKeyboard();
+//	EndKeyboard();
 }

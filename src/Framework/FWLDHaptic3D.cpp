@@ -9,6 +9,7 @@
 #include <Framework/FWLDHaptic3D.h>
 #include <Framework/SprFWApp.h>
 
+namespace Spr{;
 
 // FWLDHaptic3DLoop‚ÌŽÀ‘•
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -1032,4 +1033,6 @@ bool FWLDHaptic3D::GetContactFlag(){
 Vec3d FWLDHaptic3D::GetPicCenterPosition(){
 	FWLDHaptic3DLoop* l = (FWLDHaptic3DLoop*)GetHapticLoop();
 	return l->GetPicCenterPosition();
+}
+
 }
