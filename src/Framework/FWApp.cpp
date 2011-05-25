@@ -23,14 +23,10 @@
 
 namespace Spr{;
 
-FWApp* FWApp::instance;
-
 FWApp::FWApp(){
-	instance = this;
 }
 
 FWApp::~FWApp(){
-	//ReleaseAllTimer();
 	int s = (int)wins.size();
 	bool hasGameMode = false;
 	for(int i = 0; i < s; i++){
@@ -227,9 +223,6 @@ void FWApp::CallDisplay(){
 void FWApp::CallReshape(int w, int h){
 	Reshape(w, h);
 }
-void FWApp::CallTimerFunc(int id){
-	TimerFunc(id);
-}
 void FWApp::CallIdleFunc(){
 	IdleFunc();
 }
@@ -304,8 +297,8 @@ void FWApp::ClearIAScenes(){
 //タイマ///////////////////////////////////////////////////////////////////////////
 
 /// UTTimerに登録するコールバック関数
-void SPR_CDECL FWApp_TimerCallback(int id){
-	FWApp* app = FWApp::instance;
+void SPR_CDECL FWApp_TimerCallback(int id, void* arg){
+	FWApp* app = (FWApp*)arg;
 	if(!app)
 		return;
 	app->TimerFunc(id);
@@ -315,7 +308,7 @@ UTTimerIf*  FWApp::CreateTimer(UTTimerIf::Mode mode){
 	/// インスタンスはコンストラクタの中でUTTimerStubに格納される
 	UTTimerIf* timer = UTTimerIf::Create();
 	timer->SetMode(mode);
-	timer->SetCallback(FWApp_TimerCallback);
+	timer->SetCallback(FWApp_TimerCallback, this);
 	return timer;
 }
 

@@ -55,7 +55,7 @@
 	bool SetResolution(unsigned int r){	return	base::SetResolution(r);}	\
 	unsigned int GetInterval(){	return	base::GetInterval();}	\
 	bool SetInterval(unsigned int i){	return	base::SetInterval(i);}	\
-	bool SetCallback(Spr::UTTimerIf::TimerFunc f){	return	base::SetCallback(f);}	\
+	bool SetCallback(Spr::UTTimerIf::TimerFunc f, void* arg){	return	base::SetCallback(f, arg);}	\
 	Spr::UTTimerIf::Mode GetMode(){	return	base::GetMode();}	\
 	bool SetMode(Spr::UTTimerIf::Mode m){	return	base::SetMode(m);}	\
 	bool IsStarted(){	return	base::IsStarted();}	\

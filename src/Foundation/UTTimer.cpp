@@ -149,14 +149,20 @@ UTTimer::UTTimer(){
 UTTimer::~UTTimer(){
 	Stop();
 	UTTimerStub::Timers& timers = UTTimerStub::Get().timers;
-	AddRef();	//	ここでAddRefしておかないと、 timers.erase()した瞬間に~UTTimer()に再入してしまう。
+	//	ここでAddRefしておかないと、 timers.erase()した瞬間に~UTTimer()に再入してしまう。
+	//	newしていないUTTimerの場合、最初から0なので2にしておかないと再入してしまう。
+	AddRef(); AddRef();	
+
 	for(UTTimerStub::Timers::iterator it = timers.begin(); it != timers.end(); ++it){
 		if (*it == this){
 			timers.erase(it);
 			break;
 		}
 	}
-	DelRef();
+	//	どうせすぐ消えるので意味ないけど、この後の処理で困るように将来なるかもしれないので一応DelRef()呼んどく。
+	//	もともと0の場合は、2回DelRef()を呼ぶと-1になってしまうので RefCount()をチェックする。
+	DelRef(); 
+	if (RefCount()>0) DelRef(); 
 }
 
 unsigned SPR_CDECL UTTimerIf::NTimers(){
@@ -301,10 +307,11 @@ bool UTTimer::Stop(){
 	return !bStarted;
 }
 
-bool UTTimer::SetCallback(UTTimerIf::TimerFunc f){
+bool UTTimer::SetCallback(UTTimerIf::TimerFunc f, void* a){
 	if (IsRunning() && !Stop())
 		return false;
 	func = f;
+	arg = a;
 	return Start();
 }
 
@@ -328,7 +335,7 @@ bool UTTimer::SetResolution(unsigned r){
 void UTTimer::Call(){
 	if (func && !bRunning){
 		bRunning = true;
-		(*func)(timerId);
+		(*func)(timerId, arg);
 		bRunning = false;
 	}
 }
