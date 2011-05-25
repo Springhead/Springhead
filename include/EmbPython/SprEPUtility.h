@@ -31,7 +31,7 @@
 PyMODINIT_FUNC __EPDECL initUtility(void);
 
 //CriticalSection—p
-#include "UTCriticalSection.h"
+#include "Utility/UTCriticalSection.h"
 extern UTCriticalSection EPCriticalSection;
 
 #endif

@@ -676,9 +676,9 @@ public:\
 protected:\
 	SpatialVector	f;	\
 	SpatialVector	F;	\
-	Vec3d	motorf;	\
-	Vec3d	limitf;	\
-	Vec3d	fs;	\
+	Spr::Vec3d	motorf;	\
+	Spr::Vec3d	limitf;	\
+	Spr::Vec3d	fs;	\
 	SpatialVector	xs;	\
 public:\
 	virtual void SetState(const void* ptr){ \
@@ -702,7 +702,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHContactPointState \
 protected:\
 	int	shapePair;	\
-	Vec3d	pos;	\
+	Spr::Vec3d	pos;	\
 public:\
 	virtual void SetState(const void* ptr){ \
 		PHConstraint::SetState((PHConstraintState*)(PHContactPointState*)ptr);	\
