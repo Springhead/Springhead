@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #ifdef SWIGSPR	//	this file is not for compile but for bin/typedesc.exe
+namespace Spr{
 struct Vec2f{ float x; float y; };
 struct Vec2d{ double x; double y; };
 struct Vec3f{ float x; float y; float z; };
@@ -22,4 +23,5 @@ struct Matrix3f{ float data[9]; };
 struct Matrix3d{ double data[9]; };
 struct Affinef{ float data[16]; };
 struct Affined{ double data[16]; };
+}
 #endif

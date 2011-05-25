@@ -33,7 +33,7 @@ struct UTTimerIf : ObjectIf{
 	};
 
 	///	コールバック関数の型
-	typedef void (SPR_CDECL *TimerFunc)(int id);
+	typedef void (SPR_CDECL *TimerFunc)(int id, void* arg);
 	///	タイマの数を取得
 	static unsigned		SPR_CDECL NTimers();
 	/// タイマを取得
@@ -55,7 +55,7 @@ struct UTTimerIf : ObjectIf{
 	bool SetInterval(unsigned i);
 	
 	/// コールバック関数の設定
-	bool SetCallback(TimerFunc f);
+	bool SetCallback(TimerFunc f, void* arg=NULL);
 	/// タイマーの動作モードの取得
 	Mode GetMode();
 	/// タイマーの動作モードの設定

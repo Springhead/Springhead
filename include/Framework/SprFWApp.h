@@ -228,10 +228,8 @@ public:
 
 /** コールバック関数*/
 public:
-	static FWApp* instance;
 	void CallDisplay();
 	void CallReshape(int w, int h);
-	void CallTimerFunc(int id);
 	void CallIdleFunc();
 	void CallKeyboard(int key, int x, int y);
 	void CallMouseButton(int button, int state, int x, int y);

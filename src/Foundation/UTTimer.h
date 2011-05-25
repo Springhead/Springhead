@@ -50,7 +50,7 @@ public:
 	unsigned GetInterval(){ return interval;}
 	bool SetInterval(unsigned i);
 	
-	bool SetCallback(UTTimerIf::TimerFunc f);
+	bool SetCallback(UTTimerIf::TimerFunc f, void* arg=NULL);
 	
 	UTTimerIf::Mode GetMode() { return mode; }
 	bool SetMode(UTTimerIf::Mode m);

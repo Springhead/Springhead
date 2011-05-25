@@ -52,13 +52,15 @@ public:
 };
 
 volatile int hogeCount;
-void CallBackHoge(int id){
-	std::cout << "hogehoge" << std::endl;
+void CallBackHoge(int id, void*){
+	std::cout << "h";
+	std::cout.flush();
 	hogeCount++;
 }
 volatile int piyoCount;
-void CallBackPiyo(int id){
-	std::cout << "    piyopiyo" << std::endl;
+void CallBackPiyo(int id, void*){
+	std::cout << "p";
+	std::cout.flush();
 	piyoCount++;
 }
 
@@ -67,8 +69,12 @@ public:
 	UTTimer timer2;
 	int count;
 	Fuga(): count(0){}
-	static void CallBackFuga(int id){
-		std::cout << "         " << "fugafuga " << std::endl;
+	static void CallBackFuga(int id, void* arg){
+		((Fuga*)arg)->Print();
+	}
+	void Print(){
+		std::cout << std::endl << "fugafuga " << count << std::endl;
+		count ++;
 	}
 };
 
@@ -83,7 +89,7 @@ void idle(){
 	providerGL.CallIdle();
 	unsigned time = timeGetTime();
 	int delta = (int)time - (int)startTime;
-	if (delta > 5250){
+	if (delta > 2000){
 		DSTR << "hoge:" << hogeCount << "  fuga:" << fuga.count << "  piyo:" << piyoCount << std::endl;
 		if (hogeCount != 26) exit(-1);
 		if (fuga.count != 10) exit(-2);
@@ -108,7 +114,7 @@ int _cdecl main(int argc, char* argv[]){
 	fuga.timer2.SetMode(UTTimerIf::FRAMEWORK);
 	fuga.timer2.SetResolution(5);
 	fuga.timer2.SetInterval(500);
-	fuga.timer2.SetCallback(Fuga::CallBackFuga);	/// ŒÄ‚Ñ–ß‚·ŠÖ”‚ÍÃ“I‚Å‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
+	fuga.timer2.SetCallback(Fuga::CallBackFuga, &fuga);	/// ŒÄ‚Ñ–ß‚·ŠÖ”‚ÍÃ“I‚Å‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
 
 	timer3.SetMode(UTTimerIf::MULTIMEDIA);
 	timer3.SetResolution(10);					///	 ŒÄ‚Ñ‚¾‚µ•ª‰ð”\
