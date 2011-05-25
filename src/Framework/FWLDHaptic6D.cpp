@@ -9,6 +9,7 @@
 #include <Framework/FWLDHaptic6D.h>
 #include <Framework/SprFWApp.h>
 
+namespace Spr{;
 
 // FWLDHaptic6DLoopの実装
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -582,4 +583,6 @@ void FWLDHaptic6D::TestSimulation6D(){
 	#ifdef DIVIDE_STEP
 		states2->LoadState(phScene);							// 元のstateに戻しシミュレーションを進める
 	#endif
+}
+
 }

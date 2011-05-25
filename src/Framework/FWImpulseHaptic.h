@@ -12,6 +12,8 @@
 #include <Framework/FWMultiRateHaptic.h>
 #include <Framework/FWInteractScene.h>
 
+namespace Spr{;
+
 class FWImpulseHapticLoop : public FWHapticLoopBase{
 	Vec3d vibV;
 	double vibT;
@@ -40,5 +42,6 @@ public:
 	virtual void EndKeyboard();
 };
 
+}
 
 #endif

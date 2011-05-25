@@ -12,6 +12,8 @@
 #include <Framework/FWMultiRateHaptic.h>
 #include <Framework/FWInteractScene.h>
 
+namespace Spr{;
+
 class FWLDHaptic3DLoop : public FWHapticLoopBase{
 private:
 	Vec3d vibV;
@@ -73,4 +75,5 @@ public:
 	Vec3d GetPicCenterPosition();
 };
 
+}
 #endif
