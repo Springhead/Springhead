@@ -480,6 +480,7 @@ struct FIPTInfo {
 FIPTInfo FIPTParse(FIIteratorT const& first_, FIIteratorT const& last,
 	FIPTPhraseParser const&  p, FIPTSkipParser const& skip);
 
+
 }	//	namespace Spr
 
 

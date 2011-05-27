@@ -221,7 +221,7 @@ public:
     template <typename ScannerT>
 	int operator()(ScannerT const& scan, result_t& /*result*/) const {
 		if (!scan.at_end()){
-			std::string str = msg + std::string(" is expected");
+			std::string str = msg + std::string(" expected");
 			fileContext->ErrorMessage(NULL, scan.first, str.c_str());
 		}
 		return -1;
