@@ -34,25 +34,37 @@ static UTStack<FIFileSpr*> fileSprs;
 static FILoadContext* fileContext;
 static FIFileSpr* fileSpr;
 
+struct MSG{
+	const char* msg;
+	MSG(const char* m):msg(m){
+	}
+	void operator() (const char* b, const char* e) const {
+		DSTR << msg << std::endl;
+	}
+};
+
 
 static UTString idTypeId;
 enum IdType{ IT_NODE, IT_FIELD, IT_UNKNOWN} idType;
 ///	Idが、型名なのか、構造体のメンバ名なのか
 static void SetIdType(const char* b, const char* e){
 	idTypeId.assign(b,e);
-	PDEBUG( DSTR << "SetIdType(" << idTypeId << ")" << std::endl; )
+	PDEBUG( DSTR << "SetIdType(" << idTypeId << ":" ; )
 	if (fileContext->fieldIts.size() && fileContext->fieldIts.Top().type && fileContext->fieldIts.Top().HaveField(idTypeId)){
 		idType = IT_FIELD;
+		PDEBUG( DSTR << "field)" << std::endl ; )
 	}else if (fileContext->typeDbs.Top()->Find(idTypeId) || fileContext->typeDbs.Top()->Find(idTypeId + "Desc")){
 		idType = IT_NODE;
+		PDEBUG( DSTR << "node)" << std::endl ; )
 	}else{
 		idType = IT_UNKNOWN;
+		PDEBUG( DSTR << "unknown)" << std::endl ; )
 	}
 }
-static bool IsNodeType(){
+static bool IsIdNode(){
 	return idType == IT_NODE;
 }
-static bool IsFieldName(){
+static bool IsIdField(){
 	return idType == IT_FIELD;
 }
 
@@ -68,7 +80,7 @@ static void NameSet(const char* b, const char* e){
 	fileContext->datas.back()->SetName(UTString(b,e));
 }
 ///	ノードの始まり．型を見つけてセット
-static void NodeStartFromId(const char* b, const char* e){
+static void NodeStartFromId(const char c){
 	PDEBUG( DSTR << "NodeStartFromId " << idTypeId << std::endl );
 	assert(idType == IT_FIELD);
 	fileContext->fieldIts.PushType(fileContext->fieldIts.Top().type);
@@ -91,15 +103,12 @@ static void NodeSkip(const char* b, const char* e){
 }
 
 static size_t letStartDepth;
-static void SetImmediate(char c){
-	letStartDepth = fileContext->fieldIts.size();
-}
 static void LetStart(const char* b, const char* e){
 	fileContext->FindField(idTypeId);
 	letStartDepth = fileContext->fieldIts.size()+1;	//	同階層でNextしてはいけないので、+1。
-	char* base = (char*)fileContext->datas.Top()->data;
 }
 static void LetEnd(const char* b, const char* e){
+	letStartDepth = 0;
 	while (fileContext->fieldIts.size() > fileContext->nodeStartDepthes.Top()) 
 		fileContext->CompositEnd();
 }
@@ -107,7 +116,10 @@ static void LetEnd(const char* b, const char* e){
 	TypeDescを見て次に読み出すべきフィールドをセットする．
 	読み出すべきフィールドがある間 true を返す．	*/
 static bool NextField(){
-	if (letStartDepth > fileContext->fieldIts.size()) return false;
+	if (letStartDepth > fileContext->fieldIts.size()){
+		PDEBUG( DSTR << "NextField:failed. letStartDepth=" << letStartDepth << "." << std::endl);
+		return false;
+	}
 
 	char* base = (char*)fileContext->datas.Top()->data;
 	bool rv = fileContext->fieldIts.NextField(base);
@@ -117,10 +129,13 @@ static bool NextField(){
 			fileContext->fieldIts.Top().field->Print(DSTR);
 			DSTR << std::endl;
 		}else {
-			DSTR << "NextField failed." << std::endl;
+			DSTR << "NextField failed. end of composition." << std::endl;
 		}
 	)
 	return rv;
+}
+static bool IsFieldValid(){
+	return fileContext->fieldIts.IsValid();
 }
 ///	配列のカウント．まだ読み出すべきデータが残っていれば true を返す．
 static bool ArrayCount(){
@@ -263,7 +278,7 @@ public:
     template <typename ScannerT>
 	int operator()(ScannerT const& scan, result_t& /*result*/) const {
 		if (!scan.at_end()){
-			std::string str = msg + std::string(" is expected");
+			std::string str = msg + std::string(" expected");
 			fileContext->ErrorMessage(NULL, scan.first, str.c_str());
 		}
 		return -1;
@@ -283,58 +298,47 @@ void FIFileSpr::Init(){
 	using namespace boost::spirit::classic;
 	//	パーサの定義
 	//	本文用パーサ
-	start		= *(id[&SetIdType] >> node);
-	node		= if_p(&IsNodeType)[ 
-					eps_p[&NodeStart] >> !id[&NameSet] >> (block | immediate | ExpP("'{' or '='"))
-				  ].else_p[ ExpP("node type") ];
-	immediate	= ch_p('=')[&SetImmediate] >>
-				  while_p(&NextField)[
-					!ch_p('[')[&VectorStart] >>
-					while_p(&ArrayCount)[
-						if_p(&IsBlock)[
-							eps_p[&BlockStart] >> right >> eps_p[&BlockEnd]
-						].else_p[
-							value[&SetVal] | ExpP("values")
+	start		=	*node;
+	node		=	id[&SetIdType] >> if_p(&IsIdNode)[ 
+						eps_p[&NodeStart] >> !id[&NameSet] >> (ch_p('{') >> block | ExpP("'{'"))
+					].else_p[ nothing_p ] | ExpP("node type");
+	block		=	*data >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
+	data		=	ch_p('*') >> id[&RefSet] |
+					id[&SetIdType] >> 
+					if_p(&IsIdNode)[	//	型名の場合は子ノード
+						eps_p[&NodeStart] >> !id[&NameSet] >> (ch_p('{') >> block | ExpP("'{'")) 
+					].else_p[
+						if_p(&IsIdField)[	//	フィールド名なら代入
+							ch_p('=') >> (
+								ch_p('{')[&NodeStartFromId] >> block	//	ブロック形式にするか
+								| eps_p[&LetStart] >> right [&LetEnd]	//	値を並べて書くか
+							)
+						].else_p [ ExpP("field or type name") ]
+					];
+	right		=	do_p[
+						!ch_p('[')[&VectorStart] >>
+						while_p(&ArrayCount)[
+							if_p(&IsBlock)[
+								eps_p[&BlockStart] >> right >> eps_p[&BlockEnd]
+							].else_p[
+								value[&SetVal]
+							]
+							>> if_p(&InVector)[ !ch_p(']')[&StopArray] ]
 						]
-						>> if_p(&InVector)[ !ch_p(']')[&StopArray] ]
-					 ]
-				  ] >> eps_p[&LetEnd] >> eps_p[&NodeEnd];
-	block		= ch_p('{') >>
-					*(refer | data)
-				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
-	refer		= ch_p('*') >> id[&RefSet];
-	data		= id[&SetIdType] >> (
-					ch_p('=') >> let | 
-					if_p(&IsNodeType)[ eps_p >> node ].else_p[ 
-						if_p(&IsFieldName)[ eps_p[&NodeStartFromId] >> block ]
-					] |
-					ExpP("node definition  or  '=' and r-value")
-				);
-	let			= eps_p[&LetStart] >> right[&LetEnd];
-	right		= do_p[
-					!ch_p('[')[&VectorStart] >>
-					while_p(&ArrayCount)[
-						if_p(&IsBlock)[
-							eps_p[&BlockStart] >> right >> eps_p[&BlockEnd]
-						].else_p[
-							value[&SetVal] | ExpP("values")
-						]
-						>> if_p(&InVector)[ !ch_p(']')[&StopArray] ]
-					]
-				  ].while_p(&NextField);
-	value		= if_p(&IsFieldBool)[ boolVal | ExpP("bool value") ] >>
-				  if_p(&IsFieldInt)[ iNum | ExpP("int value") ] >>
-				  if_p(&IsFieldReal)[ rNum | ExpP("numeric value") ] >>
-				  if_p(&IsFieldStr)[ str | ExpP("string") ];
+					].while_p(&NextField);
+	value		=	if_p(&IsFieldBool)[ boolVal | ExpP("bool value") ].else_p[
+					if_p(&IsFieldInt)[ iNum | ExpP("int value") ].else_p[
+					if_p(&IsFieldReal)[ rNum | ExpP("numeric value") ].else_p[
+					if_p(&IsFieldStr)[ str | ExpP("string") ].else_p[ nothing_p ]]]];
 
-
-	id			= lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-') ];
-	boolVal		= (str_p("true") | "TRUE" | "false" | "FALSE" | "1" | "0")[&BoolSet];
-	iNum		= id[&EnumSet] | int_p[&NumSet];
-	rNum		= real_p[&NumSet];
-	str			= lexeme_d[ 
-					ch_p('"') >> *( (ch_p('\\')>>anychar_p) | 
-						~ch_p('"') ) >> ch_p('"') ][&StrSet];
+	id			=	lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-') ];
+	boolVal		=	(str_p("true") | "TRUE" | "false" | "FALSE" | "1" | "0")[&BoolSet];
+	iNum		=	id[&EnumSet] | int_p[&NumSet];
+	rNum		=	real_p[&NumSet];
+	str			=	lexeme_d[ 
+						ch_p('"') >> *( (ch_p('\\')>>anychar_p) | 
+						~ch_p('"') ) >> ch_p('"') 
+					][&StrSet];
 
 	//	スキップパーサ(スペースとコメントを読み出すパーサ)の定義
 	cmt		=	space_p

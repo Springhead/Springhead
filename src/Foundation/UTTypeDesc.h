@@ -485,6 +485,9 @@ public:
 	bool IsBlock(){
 		return back().fieldType==UTTypeDescFieldIt::F_BLOCK;
 	}
+	bool IsValid(){
+		return back().fieldType!=UTTypeDescFieldIt::F_NONE;
+	}
 };
 
 void SPR_CDECL UTRegisterTypeDescs();
