@@ -179,74 +179,76 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	PHSdkIf::RegisterSdk();
-	GRSdkIf::RegisterSdk();
-	FWSdkIf::RegisterSdk();
+	{	//	glutMainLoop()を呼ぶと帰ってこないため、メモリリークが起きるので。
+		PHSdkIf::RegisterSdk();
+		GRSdkIf::RegisterSdk();
+		FWSdkIf::RegisterSdk();
 
-	UTRef<FISdkIf> fiSdk = FISdkIf::CreateSdk();
-	FIFileIf* file = fiSdk->CreateFileFromExt(".spr");
-	ObjectIfs objs;
-	if (argc>=2){
-		phSdk = PHSdkIf::CreateSdk();					//	PHSDKを用意して，
-		objs.push_back(phSdk);		
-		file->Load(objs, argv[1]);				//	ファイルローダに渡す方式
-	}else{
-		fwSdk = FWSdkIf::CreateSdk();					//	FWSDKを用意して，
-		objs.push_back(fwSdk);		
-		if (! file->Load(objs, "test.spr") ) {	//	PHSDKごとロードして，
-			DSTR << "Error: Cannot open load file. " << std::endl;
-			exit(EXIT_FAILURE);
-		}
-		phSdk = NULL;
-		grSdk = NULL;
-		for(unsigned  i=0; i<objs.size(); ++i){	
-			objs[i]->Print(DSTR);
-			if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);	//	PHSDKを受け取る方式
-			if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);	//	GRSdkも受け取る
-		}
-	}
-	if (phSdk && phSdk->NScene()){
+		UTRef<FISdkIf> fiSdk = FISdkIf::CreateSdk();
+		FIFileIf* file = fiSdk->CreateFileFromExt(".spr");
 		ObjectIfs objs;
-//		objs.Push(phSdk->GetScenes()[0]);
-		objs.Push(phSdk);
-		if(grSdk) objs.Push(grSdk);
-		file->Save(objs, "out.spr");
+		if (argc>=2){
+			phSdk = PHSdkIf::CreateSdk();					//	PHSDKを用意して，
+			objs.push_back(phSdk);		
+			file->Load(objs, argv[1]);				//	ファイルローダに渡す方式
+		}else{
+			fwSdk = FWSdkIf::CreateSdk();					//	FWSDKを用意して，
+			objs.push_back(fwSdk);		
+			if (! file->Load(objs, "test.spr") ) {	//	PHSDKごとロードして，
+				DSTR << "Error: Cannot open load file. " << std::endl;
+				exit(EXIT_FAILURE);
+			}
+			phSdk = NULL;
+			grSdk = NULL;
+			for(unsigned  i=0; i<objs.size(); ++i){	
+				objs[i]->Print(DSTR);
+				if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);	//	PHSDKを受け取る方式
+				if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);	//	GRSdkも受け取る
+			}
+		}
+		if (phSdk && phSdk->NScene()){
+			ObjectIfs objs;
+	//		objs.Push(phSdk->GetScenes()[0]);
+			objs.Push(phSdk);
+			if(grSdk) objs.Push(grSdk);
+			file->Save(objs, "out.spr");
+		}
+		fiSdk = NULL;	//	ファイルローダのメモリを解放．
+		objs.clear();
+		phSdk->Print(DSTR);
+
+		scene = phSdk->GetScene(0);		// Sceneの取得
+	//	shape = phSdk->GetShapes();		// Shapeの取得
+		DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NShape=" << phSdk->NShape() << std::endl;
+		if (scene) scene->SetTimeStep(0.01);
+
+		glutInit(&argc, argv);
+		glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
+		int window = glutCreateWindow("FILoader");
+
+		// Graphics Sdk
+		grSdk = GRSdkIf::CreateSdk();
+		render = grSdk->CreateRender();
+		grDevice = grSdk->CreateDeviceGL();
+		grDevice->Init();
+		render->SetDevice(grDevice);
+
+		// 視点設定
+		Affinef view;
+		view.Pos() = Vec3f(0.0, 3.0, 3.0);									// eye
+			view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
+		view = view.inv();	
+		render->SetViewMatrix(view);
+
+		setLight();			// 光源設定
+		setMaterial();		// 材質設定
+
+		vtx = DBG_NEW Vec3f[4];
+		glutDisplayFunc(display);
+		glutReshapeFunc(reshape);
+		glutKeyboardFunc(keyboard);
+		glutIdleFunc(idle);
 	}
-	fiSdk = NULL;	//	ファイルローダのメモリを解放．
-	objs.clear();
-	phSdk->Print(DSTR);
-
-	scene = phSdk->GetScene(0);		// Sceneの取得
-//	shape = phSdk->GetShapes();		// Shapeの取得
-	DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NShape=" << phSdk->NShape() << std::endl;
-	if (scene) scene->SetTimeStep(0.01);
-
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-	int window = glutCreateWindow("FILoader");
-
-	// Graphics Sdk
-	grSdk = GRSdkIf::CreateSdk();
-	render = grSdk->CreateRender();
-	grDevice = grSdk->CreateDeviceGL();
-	grDevice->Init();
-	render->SetDevice(grDevice);
-
-	// 視点設定
-	Affinef view;
-	view.Pos() = Vec3f(0.0, 3.0, 3.0);									// eye
-		view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
-	view = view.inv();	
-	render->SetViewMatrix(view);
-
-	setLight();			// 光源設定
-	setMaterial();		// 材質設定
-
-	vtx = DBG_NEW Vec3f[4];
-	glutDisplayFunc(display);
-	glutReshapeFunc(reshape);
-	glutKeyboardFunc(keyboard);
-	glutIdleFunc(idle);
 	glutMainLoop();
 	return 0;
 }
