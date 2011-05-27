@@ -44,6 +44,7 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	std::cout << "メッシュ生成" << std::endl;
 	
 	PHFemMeshDesc pmd;
+	phMesh = DBG_NEW PHFemMesh(pmd);
 	
 
 	
@@ -111,14 +112,17 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	//FEM.in.save_poly("barpq1.4a1.0in");
 	//FEM.in.save_elements("barpq1.4a0.5in");
 	////四面体メッシュ化
-	FEM.TFEMTetrahedralize("pqa");
+	FEM.TFEMTetrahedralize("pqa100");
 	////メッシュ化したファイルの保存
 	//FEM.out.save_nodes("barpq1.4a0.01out");			
-	//FEM.out.save_elements("barpqa0.0001out");
+	FEM.out.save_elements("barpqa100out");
 	//FEM.out.save_faces("barpqa0.5out");
 	//return FEM.outに入っているメッシュファイル⇒これをPHに入れる
 	
-	phMesh = DBG_NEW PHFemMesh(pmd);
+	
+
+	//phMesh->AddChildObject(FEM
+
 	return true;
 }
 
