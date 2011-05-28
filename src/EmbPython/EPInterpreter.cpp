@@ -37,12 +37,19 @@ void EPInterpreter::Initialize()
 	//SPRPYTHONPATH‚ÉSpringheadPython‚ÅŽg‚¤LIB‚ÌPATH‚ð’Ç‰Á‚µ‚Ä‚¨‚­
 	std::string newPath;
 	char buff[1024];
-	GetEnvironmentVariable("SPRPYTHONPATH",buff,1024);
+	if (!GetEnvironmentVariable("SPRPYTHONPATH",buff,1024) || !strlen(buff)){
+		DSTR << "Warning: " << "Can not find environment variable of 'SPRPYTHONPATH'. " 
+			<< "Embeded python may cause serious error." << std::endl;
+	}
 	newPath.append(buff);
 	newPath.append(";");
 	buff[0] = '\0';
 	GetEnvironmentVariable("PYTHONPATH", buff,1024);
 	newPath.append(buff);
+	if (newPath.length() <= 1){
+		DSTR << "Warning: " << "Can not find environment variable of 'PYTHONPATH' and 'SPRPYTHONPATH'. " 
+			<< "Embeded python will causes buffer over run error." << std::endl;
+	}
 	
 	SetEnvironmentVariable("PYTHONPATH", newPath.c_str());
 	// SetEnvironmentVariable("PYTHONHOME", newPath.c_str());
