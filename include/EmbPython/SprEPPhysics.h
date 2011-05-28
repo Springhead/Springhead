@@ -12,6 +12,7 @@
 #include "..\..\include\EmbPython\SprEPCollision.h"
 #include "..\..\include\Physics\SprPHDef.h"
 #include "..\..\include\Physics\SprPHEngine.h"
+#include "..\..\include\Physics\SprPHFemMesh.h"
 #include "..\..\include\Physics\SprPHIK.h"
 #include "..\..\include\Physics\SprPHJoint.h"
 #include "..\..\include\Physics\SprPHNodeHandlers.h"
@@ -43,6 +44,21 @@ typedef struct
 	PyObject_HEAD
 	UTRef<PHIKEngineIf> ptr;
 } EPPHIKEngineIf;
+typedef struct
+{
+	PyObject_HEAD
+	struct PHFemMeshState* ptr;
+} EPPHFemMeshState;
+typedef struct
+{
+	PyObject_HEAD
+	struct PHFemMeshDesc* ptr;
+} EPPHFemMeshDesc;
+typedef struct
+{
+	PyObject_HEAD
+	UTRef<PHFemMeshIf> ptr;
+} EPPHFemMeshIf;
 typedef struct
 {
 	PyObject_HEAD
@@ -410,6 +426,31 @@ PyObject* EPPHIKEngineIf_IsEnabled( EPPHIKEngineIf* self );
 PyObject* EPPHIKEngineIf_SetNumIter( EPPHIKEngineIf* self,PyLongObject* var1 );
 
 //}EPPHIKEngineIf
+
+//{*********EPPHFemMeshState*******
+#define EPPHFemMeshState_Check(ob) PyObject_TypeCheck(ob, &EPPHFemMeshStateType)
+extern PyTypeObject EPPHFemMeshStateType;
+PyObject* __EPDECL newEPPHFemMeshState(struct PHFemMeshState);
+PyObject* __EPDECL newEPPHFemMeshState(struct PHFemMeshState*);
+
+//}EPPHFemMeshState
+
+//{*********EPPHFemMeshDesc*******
+#define EPPHFemMeshDesc_Check(ob) PyObject_TypeCheck(ob, &EPPHFemMeshDescType)
+extern PyTypeObject EPPHFemMeshDescType;
+PyObject* __EPDECL newEPPHFemMeshDesc(struct PHFemMeshDesc);
+PyObject* __EPDECL newEPPHFemMeshDesc(struct PHFemMeshDesc*);
+PyObject* EPPHFemMeshDesc_Init( EPPHFemMeshDesc* self );
+
+//}EPPHFemMeshDesc
+
+//{*********EPPHFemMeshIf*******
+#define EPPHFemMeshIf_Check(ob) PyObject_TypeCheck(ob, &EPPHFemMeshIfType)
+extern PyTypeObject EPPHFemMeshIfType;
+PyObject* __EPDECL newEPPHFemMeshIf(struct PHFemMeshIf);
+PyObject* __EPDECL newEPPHFemMeshIf(struct PHFemMeshIf*);
+
+//}EPPHFemMeshIf
 
 //{*********EPPHIKEndEffectorIf*******
 #define EPPHIKEndEffectorIf_Check(ob) PyObject_TypeCheck(ob, &EPPHIKEndEffectorIfType)
