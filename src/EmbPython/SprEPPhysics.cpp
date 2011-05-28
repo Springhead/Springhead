@@ -654,6 +654,295 @@ PyObject* newEPPHIKEngineIf(struct PHIKEngineIf* org)
 
 //}PHIKEngineIf
 
+//{*********EPPHFemMeshState*******
+static PyMethodDef EPPHFemMeshState_methods[] =
+{
+	{NULL}
+};
+void EPPHFemMeshState_dealloc(PyObject* self)
+{
+	delete ((EPPHFemMeshState*)self)->ptr;
+}
+PyObject* EPPHFemMeshState_str()
+{
+	return Py_BuildValue("s","This is EPPHFemMeshState.");
+}
+int EPPHFemMeshState_init(EPPHFemMeshState* self,PyObject *args, PyObject *kwds)
+{
+	return 0;
+}
+EPPHFemMeshState* EPPHFemMeshState_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
+{
+	EPPHFemMeshState *self;
+	self = (EPPHFemMeshState*) type->tp_alloc(type,0);
+	if ( self != NULL ) EPPHFemMeshState_init(self,args,kwds);
+	return self;
+}
+PyTypeObject EPPHFemMeshStateType =
+{
+	PyVarObject_HEAD_INIT(NULL,0)
+	"Physics.EPPHFemMeshState",/*tp_name*/
+	sizeof(EPPHFemMeshState),/*tp_basicsize*/
+	0,/*tp_itemsize*/
+	(destructor)EPPHFemMeshState_dealloc,/*tp_dealloc*/
+	0,/*tp_print*/
+	0,/*tp_getattr*/
+	0,/*tp_setattr*/
+	0,/*tp_reserved*/
+	0,/*tp_repr*/
+	0,/*tp_as_number*/
+	0,/*tp_as_sequence*/
+	0,/*tp_as_mapping*/
+	0,/*tp_hash*/
+	0,/*tp_call*/
+	(reprfunc)EPPHFemMeshState_str,/*tp_str*/
+	0,/*tp_getattro*/
+	0,/*tp_setattro*/
+	0,/*tp_as_buffer*/
+	Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,/*tp_flags*/
+	"PHFemMeshState",/*tp_doc*/
+	0,/*tp_traverse*/
+	0,/*tp_clear*/
+	0,/*tp_richcompare*/
+	0,/*tp_weaklistoffset*/
+	0,/*tp_iter*/
+	0,/*tp_iternext*/
+	EPPHFemMeshState_methods,/*tp_methods*/
+	0,/*tp_members*/
+	0,/*tp_getset*/
+	0,/*tp_base*/
+	0,/*tp_dict*/
+	0,/*tp_descr_get*/
+	0,/*tp_descr_set*/
+	0,/*tp_dictoffset*/
+	(initproc)EPPHFemMeshState_init,/*tp_init*/
+	0,/*tp_alloc*/
+	(newfunc)EPPHFemMeshState_new,/*tp_new*/
+};
+void initEPPHFemMeshState(void)
+{
+	PyObject* m;
+	if ( PyType_Ready( &EPPHFemMeshStateType ) < 0 ) return ;//Pythonクラスの作成
+	m = PyImport_AddModule("Physics");
+	Py_INCREF(&EPPHFemMeshStateType);
+	PyModule_AddObject(m,"PHFemMeshState",(PyObject *)&EPPHFemMeshStateType);//モジュールに追加
+}
+PyObject* newEPPHFemMeshState(struct PHFemMeshState org)
+{
+	EPPHFemMeshState *ret = EPPHFemMeshState_new(&EPPHFemMeshStateType,NULL,NULL);
+	ret->ptr = new PHFemMeshState();
+	*ret->ptr = org;
+	return (PyObject*)ret;
+}
+PyObject* newEPPHFemMeshState(struct PHFemMeshState* org)
+{
+	if(org == NULL)
+	{
+		Return_NewNullError;
+	}
+	EPPHFemMeshState *ret = EPPHFemMeshState_new(&EPPHFemMeshStateType,NULL,NULL);
+	ret->ptr = org;
+	return (PyObject*)ret;
+}
+
+//}PHFemMeshState
+
+//{*********EPPHFemMeshDesc*******
+PyObject* EPPHFemMeshDesc_Init( EPPHFemMeshDesc* self )
+{
+	UTAutoLock lock(EPCriticalSection);
+	if(true)
+	{
+		self->ptr->Init();
+		Py_RETURN_NONE;
+	}
+	Return_ArgError;
+}
+static PyMethodDef EPPHFemMeshDesc_methods[] =
+{
+	{"Init",(PyCFunction)EPPHFemMeshDesc_Init,METH_NOARGS,"EPPHFemMeshDesc::Init"},
+	{NULL}
+};
+void EPPHFemMeshDesc_dealloc(PyObject* self)
+{
+	delete ((EPPHFemMeshDesc*)self)->ptr;
+}
+PyObject* EPPHFemMeshDesc_str()
+{
+	return Py_BuildValue("s","This is EPPHFemMeshDesc.");
+}
+int EPPHFemMeshDesc_init(EPPHFemMeshDesc* self,PyObject *args, PyObject *kwds)
+{
+	return 0;
+}
+EPPHFemMeshDesc* EPPHFemMeshDesc_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
+{
+	EPPHFemMeshDesc *self;
+	self = (EPPHFemMeshDesc*) type->tp_alloc(type,0);
+	if ( self != NULL ) EPPHFemMeshDesc_init(self,args,kwds);
+	return self;
+}
+PyTypeObject EPPHFemMeshDescType =
+{
+	PyVarObject_HEAD_INIT(NULL,0)
+	"Physics.EPPHFemMeshDesc",/*tp_name*/
+	sizeof(EPPHFemMeshDesc),/*tp_basicsize*/
+	0,/*tp_itemsize*/
+	(destructor)EPPHFemMeshDesc_dealloc,/*tp_dealloc*/
+	0,/*tp_print*/
+	0,/*tp_getattr*/
+	0,/*tp_setattr*/
+	0,/*tp_reserved*/
+	0,/*tp_repr*/
+	0,/*tp_as_number*/
+	0,/*tp_as_sequence*/
+	0,/*tp_as_mapping*/
+	0,/*tp_hash*/
+	0,/*tp_call*/
+	(reprfunc)EPPHFemMeshDesc_str,/*tp_str*/
+	0,/*tp_getattro*/
+	0,/*tp_setattro*/
+	0,/*tp_as_buffer*/
+	Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,/*tp_flags*/
+	"PHFemMeshDesc",/*tp_doc*/
+	0,/*tp_traverse*/
+	0,/*tp_clear*/
+	0,/*tp_richcompare*/
+	0,/*tp_weaklistoffset*/
+	0,/*tp_iter*/
+	0,/*tp_iternext*/
+	EPPHFemMeshDesc_methods,/*tp_methods*/
+	0,/*tp_members*/
+	0,/*tp_getset*/
+	&EPPHFemMeshStateType,/*tp_base*/
+	0,/*tp_dict*/
+	0,/*tp_descr_get*/
+	0,/*tp_descr_set*/
+	0,/*tp_dictoffset*/
+	(initproc)EPPHFemMeshDesc_init,/*tp_init*/
+	0,/*tp_alloc*/
+	(newfunc)EPPHFemMeshDesc_new,/*tp_new*/
+};
+void initEPPHFemMeshDesc(void)
+{
+	PyObject* m;
+	if ( PyType_Ready( &EPPHFemMeshDescType ) < 0 ) return ;//Pythonクラスの作成
+	m = PyImport_AddModule("Physics");
+	Py_INCREF(&EPPHFemMeshDescType);
+	PyModule_AddObject(m,"PHFemMeshDesc",(PyObject *)&EPPHFemMeshDescType);//モジュールに追加
+}
+PyObject* newEPPHFemMeshDesc(struct PHFemMeshDesc org)
+{
+	EPPHFemMeshDesc *ret = EPPHFemMeshDesc_new(&EPPHFemMeshDescType,NULL,NULL);
+	ret->ptr = new PHFemMeshDesc();
+	*ret->ptr = org;
+	return (PyObject*)ret;
+}
+PyObject* newEPPHFemMeshDesc(struct PHFemMeshDesc* org)
+{
+	if(org == NULL)
+	{
+		Return_NewNullError;
+	}
+	EPPHFemMeshDesc *ret = EPPHFemMeshDesc_new(&EPPHFemMeshDescType,NULL,NULL);
+	ret->ptr = org;
+	return (PyObject*)ret;
+}
+
+//}PHFemMeshDesc
+
+//{*********EPPHFemMeshIf*******
+static PyMethodDef EPPHFemMeshIf_methods[] =
+{
+	{NULL}
+};
+void EPPHFemMeshIf_dealloc(PyObject* self)
+{
+}
+PyObject* EPPHFemMeshIf_str()
+{
+	return Py_BuildValue("s","This is EPPHFemMeshIf.");
+}
+int EPPHFemMeshIf_init(EPPHFemMeshIf* self,PyObject *args, PyObject *kwds)
+{
+	return 0;
+}
+EPPHFemMeshIf* EPPHFemMeshIf_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
+{
+	EPPHFemMeshIf *self;
+	self = (EPPHFemMeshIf*) type->tp_alloc(type,0);
+	if ( self != NULL ) EPPHFemMeshIf_init(self,args,kwds);
+	return self;
+}
+PyTypeObject EPPHFemMeshIfType =
+{
+	PyVarObject_HEAD_INIT(NULL,0)
+	"Physics.EPPHFemMeshIf",/*tp_name*/
+	sizeof(EPPHFemMeshIf),/*tp_basicsize*/
+	0,/*tp_itemsize*/
+	(destructor)EPPHFemMeshIf_dealloc,/*tp_dealloc*/
+	0,/*tp_print*/
+	0,/*tp_getattr*/
+	0,/*tp_setattr*/
+	0,/*tp_reserved*/
+	0,/*tp_repr*/
+	0,/*tp_as_number*/
+	0,/*tp_as_sequence*/
+	0,/*tp_as_mapping*/
+	0,/*tp_hash*/
+	0,/*tp_call*/
+	(reprfunc)EPPHFemMeshIf_str,/*tp_str*/
+	0,/*tp_getattro*/
+	0,/*tp_setattro*/
+	0,/*tp_as_buffer*/
+	Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,/*tp_flags*/
+	"PHFemMeshIf",/*tp_doc*/
+	0,/*tp_traverse*/
+	0,/*tp_clear*/
+	0,/*tp_richcompare*/
+	0,/*tp_weaklistoffset*/
+	0,/*tp_iter*/
+	0,/*tp_iternext*/
+	EPPHFemMeshIf_methods,/*tp_methods*/
+	0,/*tp_members*/
+	0,/*tp_getset*/
+	&EPSceneObjectIfType,/*tp_base*/
+	0,/*tp_dict*/
+	0,/*tp_descr_get*/
+	0,/*tp_descr_set*/
+	0,/*tp_dictoffset*/
+	(initproc)EPPHFemMeshIf_init,/*tp_init*/
+	0,/*tp_alloc*/
+	(newfunc)EPPHFemMeshIf_new,/*tp_new*/
+};
+void initEPPHFemMeshIf(void)
+{
+	PyObject* m;
+	if ( PyType_Ready( &EPPHFemMeshIfType ) < 0 ) return ;//Pythonクラスの作成
+	m = PyImport_AddModule("Physics");
+	Py_INCREF(&EPPHFemMeshIfType);
+	PyModule_AddObject(m,"PHFemMeshIf",(PyObject *)&EPPHFemMeshIfType);//モジュールに追加
+}
+PyObject* newEPPHFemMeshIf(struct PHFemMeshIf org)
+{
+	EPPHFemMeshIf *ret = EPPHFemMeshIf_new(&EPPHFemMeshIfType,NULL,NULL);
+	ret->ptr = new PHFemMeshIf();
+	*ret->ptr = org;
+	return (PyObject*)ret;
+}
+PyObject* newEPPHFemMeshIf(struct PHFemMeshIf* org)
+{
+	if(org == NULL)
+	{
+		Return_NewNullError;
+	}
+	EPPHFemMeshIf *ret = EPPHFemMeshIf_new(&EPPHFemMeshIfType,NULL,NULL);
+	ret->ptr = org;
+	return (PyObject*)ret;
+}
+
+//}PHFemMeshIf
+
 //{*********EPPHIKEndEffectorIf*******
 PyObject* EPPHIKEndEffectorIf_Enable( EPPHIKEndEffectorIf* self,PyObject* var1 )
 {
@@ -9589,6 +9878,9 @@ void initPhysics(void)
 	initEPPHGravityEngineIf();
 	initEPPHPenaltyEngineIf();
 	initEPPHIKEngineIf();
+	initEPPHFemMeshState();
+	initEPPHFemMeshDesc();
+	initEPPHFemMeshIf();
 	initEPPHIKEndEffectorIf();
 	initEPPHIKEndEffectorDesc();
 	initEPPHIKActuatorIf();
