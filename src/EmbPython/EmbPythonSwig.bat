@@ -64,6 +64,7 @@ rem Arrange PART
 set HEADER=%API_INCLUDE%\EmbPython\SprEP%MODULE%.h
 move /Y %HPP% %HEADER%
 echo #include "%HEADER%" > %MODULE%.tmp
+echo #pragma warning(disable:4244) >> %MODULE%.tmp
 type %CPP% >> %MODULE%.tmp
 
 move /Y %MODULE%.tmp %CPP%
