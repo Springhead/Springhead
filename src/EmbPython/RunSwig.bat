@@ -1,11 +1,11 @@
 setlocal enabledelayedexpansion
 rem Create .i files PART
-rem call .\SwigTest.bat Base
-call .\SwigTest.bat Foundation
-call .\SwigTest.bat Collision Foundation
-call .\SwigTest.bat Graphics Physics Foundation
-call .\SwigTest.bat Physics Collision Foundation
-call .\SwigTest.bat Creature Graphics Physics Foundation
+rem call .\EmbPythonSwig.bat Base
+call .\EmbPythonSwig.bat Foundation
+call .\EmbPythonSwig.bat Collision Foundation
+call .\EmbPythonSwig.bat Graphics Physics Foundation
+call .\EmbPythonSwig.bat Physics Collision Foundation
+call .\EmbPythonSwig.bat Creature Graphics Physics Foundation
 
 
 exit 0

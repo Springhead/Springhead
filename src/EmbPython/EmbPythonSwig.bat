@@ -27,11 +27,13 @@ echo #	Do not edit. RunSwig.bat will update this file.> %MODULE%.i
 echo %%module %MODULE%>> %MODULE%.i
 echo %%include "%API_INCLUDE%/Springhead.h">> %MODULE%.i
 echo %%include "%API_INCLUDE%/base/Env.h">> %MODULE%.i
+echo %%include "%API_INCLUDE%/Python/Add_decl.h">> %MODULE%.i
 echo //--  >> %MODULE%.i
 echo #define PyAPI_FUNC(r)	r			>> %MODULE%.i
 echo #define LONG_MAX		0X7FFFFFFFL	>> %MODULE%.i
 echo #define UCHAR_MAX		0xFF		>> %MODULE%.i
 echo #define NULL			0			>> %MODULE%.i
+echo #undef __PYDECL					>> %MODULE%.i
 echo #define __PYDECL					>> %MODULE%.i
 echo //--  >> %MODULE%.i
 echo %%include "%API_INCLUDE%/Python/pyport.h">> %MODULE%.i
