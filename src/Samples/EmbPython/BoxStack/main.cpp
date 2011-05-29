@@ -260,6 +260,11 @@ void EPLoopInit(void* arg)
 		PyObject *dict = PyModule_GetDict(m);
 	
 		//Python‚ÌŒ^‚É•ÏŠ·
+//		PyObject* py_fwSdk = (PyObject*)newEPFWSdkIf(app->GetSdk());
+//		Py_INCREF(py_fwsdk);
+//		PyDict_SetItemString(dict,"fwsdk",py_fwsdk);
+
+
 		PyObject* py_sdk = (PyObject*)newEPPHSdkIf(phSdk);
 		Py_INCREF(py_sdk);
 		PyDict_SetItemString(dict,"sdk",py_sdk);
