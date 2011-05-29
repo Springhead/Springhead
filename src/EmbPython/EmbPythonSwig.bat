@@ -68,3 +68,4 @@ type %CPP% >> %MODULE%.tmp
 
 move /Y %MODULE%.tmp %CPP%
 
+:end
