@@ -58,7 +58,7 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	tetgenio::facet *f;
 	tetgenio::polygon *p;
 
-	FEM.in.firstnumber = 1;
+	FEM.in.firstnumber = 0;
 	////頂点座標と数の入力
 	FEM.in.numberofpoints = grMesh->NVertex();		//grMeshの頂点サイズの代入
 	FEM.in.pointlist = DBG_NEW REAL[FEM.in.numberofpoints * 3];
@@ -97,7 +97,7 @@ bool FWFemMesh::GeneratePHFemMesh(){
 		p->numberofvertices = faces[j].nVertices;
 		p->vertexlist = DBG_NEW int[p->numberofvertices];
 		for(int k =0; k < p->numberofvertices; k++){
-			p->vertexlist[k] = faces[j].indices[k] + 1;
+			p->vertexlist[k] = faces[j].indices[k];
 		}
 	}
 	for(int j = 0; j < FEM.in.numberoffacets ;j++){

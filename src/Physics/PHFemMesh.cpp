@@ -61,7 +61,7 @@ void PHFemMesh::SetDesc(const void* p) {
 	tets.resize(d->tets.size() / 4);
 	vertices.resize(d->vertices.size());
 	for(unsigned i=0; i<tets.size(); ++i){
-		for(unsigned j=0; i<4; ++j)
+		for(unsigned j=0; j<4; ++j)
 			tets[i].vertices[j] = d->tets[i*4+j];
 	}
 	for(unsigned i=0; i<vertices.size(); ++i){
@@ -79,6 +79,7 @@ void PHFemMesh::SetDesc(const void* p) {
 	}
 	//	neighbors‚Ìd•¡‚Ìíœ
 	for(unsigned i=0; i<vertices.size(); ++i){
+		std::sort(vertices[i].neighbors.begin(), vertices[i].neighbors.end());
 		std::vector<int>::iterator newEnd = std::unique(vertices[i].neighbors.begin(), vertices[i].neighbors.end());
 		vertices[i].neighbors.erase(newEnd, vertices[i].neighbors.end());
 	}
@@ -98,7 +99,7 @@ void PHFemMesh::SetDesc(const void* p) {
 	std::vector<PHFemMeshFace> surfaces;
 
 	for(unsigned i=0; i<faces.size(); ++i){
-		if (faces[i] == faces[i+1]){
+		if (i+1<faces.size() && faces[i] == faces[i+1]){
 			i++;
 		}else{
 			surfaces.push_back(faces[i]);
