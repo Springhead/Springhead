@@ -25,6 +25,7 @@ rem echo src files:%SRCIMP%
 
 echo #	Do not edit. RunSwig.bat will update this file.> %MODULE%.i
 echo %%module %MODULE%>> %MODULE%.i
+echo #define DOUBLECOLON :: >> %MODULE%.i
 echo %%include "../../include/Springhead.h">> %MODULE%.i
 echo %%include "../../include/base/Env.h">> %MODULE%.i
 for %%p in (%SRCINTF%) do echo %%include "%%p">> %MODULE%.i
