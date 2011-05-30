@@ -22,7 +22,8 @@ struct PHFemMeshState{
 };
 ///	FemMeshのディスクリプタ
 struct PHFemMeshDesc: public PHFemMeshState{
-
+	std::vector<Vec3d> vertices;
+	std::vector<int> tets;
 	PHFemMeshDesc();
 	void Init();
 };

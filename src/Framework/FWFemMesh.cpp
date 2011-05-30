@@ -43,17 +43,12 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	//	grMeshを変換して、phMeshをつくる。
 	std::cout << "メッシュ生成" << std::endl;
 	
-	PHFemMeshDesc pmd;
-	phMesh = DBG_NEW PHFemMesh(pmd);
-	
-
-	
 	//	以下で、grMeshからtetgenを呼び出して変換して、pmdに値を入れていけば良い。
-	//	PHFemMeshDescには、有限要素法の計算に必要なメッシュの情報を入れれば良い。
-	
-	//	以下、作ってもらえますか？ PHFemMeshDesc に必要に応じてメンバを加えてください。
-	//  作ります。
 
+
+	PHFemMeshDesc pmd;
+	
+	//TetGenで四面体メッシュ化
 
 
 	//定義を加えながら変換していく
@@ -112,17 +107,34 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	//FEM.in.save_poly("barpq1.4a1.0in");
 	//FEM.in.save_elements("barpq1.4a0.5in");
 	////四面体メッシュ化
-	FEM.TFEMTetrahedralize("pqa100");
+	//FEM.TFEMTetrahedralize("pqa100");
 	////メッシュ化したファイルの保存
 	//FEM.out.save_nodes("barpq1.4a0.01out");			
-	FEM.out.save_elements("barpqa100out");
+	//FEM.out.save_elements("barpqa100out");
 	//FEM.out.save_faces("barpqa0.5out");
 	//return FEM.outに入っているメッシュファイル⇒これをPHに入れる
-	
-	
+	FEM.in.save_nodes("barpqin");
+	FEM.in.save_poly("barpqain");
+	FEM.in.save_elements("barpqain");
 
-	//phMesh->AddChildObject(FEM
+	FEM.TFEMTetrahedralize("pqa");
+	
+	FEM.out.save_nodes("barpqaout");			
+	FEM.out.save_elements("barpqaout");
+	FEM.out.save_faces("barpqaout");
 
+	
+	//pmdに値を入れていく
+	for(int i=0; i < FEM.out.numberofpoints; i++){
+		pmd.vertices.push_back(Vec3d(FEM.out.pointlist+i*3));
+	} 
+	pmd.tets.assign(FEM.out.tetrahedronlist, FEM.out.tetrahedronlist + FEM.out.numberoftetrahedra*4);
+	
+	//phMeshに必要な値は何？熱計算に必要な物理量PHのソリッド関係は、SPRのものを使う。
+	//熱伝導の処理を書き加えながら、必要なパラメータを、descに加えて行く。
+	phMesh = DBG_NEW PHFemMesh(pmd);
+	
+	//テクスチャの処理は、FEなどで行えばよい。
 	return true;
 }
 
