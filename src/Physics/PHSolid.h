@@ -98,7 +98,6 @@ class PHScene;
 class PHConstraintEngine;
 
 struct PHSolidStatePrivate{
-protected:
 	bool		bFrozen;		///<	フリーズ状態か
 	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
 };
