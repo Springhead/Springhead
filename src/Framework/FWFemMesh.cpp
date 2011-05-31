@@ -117,11 +117,11 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	FEM.in.save_poly("barpqain");
 	FEM.in.save_elements("barpqain");
 
-	FEM.TFEMTetrahedralize("pqa");
+	FEM.TFEMTetrahedralize("pq1.1a3.0");
 	
-	FEM.out.save_nodes("barpqaout");			
-	FEM.out.save_elements("barpqaout");
-	FEM.out.save_faces("barpqaout");
+	FEM.out.save_nodes("spherepq1.414a5.0out");			
+	FEM.out.save_elements("spherepq1.414a5.0out");
+	FEM.out.save_faces("spherepq1.414a5.0out");
 
 	
 	//pmd‚É’l‚ð“ü‚ê‚Ä‚¢‚­
