@@ -18,7 +18,7 @@ namespace Spr{;
 
 class PHFemMesh: public SceneObject{
 public:
-	struct Convolusion{
+	struct Integral{
 		double volume;		//	\int {N} {N}^T dV
 		double gradient;	//	\int d{N}/dx d{N}^T/dx + d{N}/dy d{N}^T/dy + d{N}/dz d{N}^T/dz  dV
 		double surface;		//	\int {N} {N}^T dS	ï\ñ ÇÃí∏ì_ÇÃÇ›Ç™ílÇéùÇ¬
@@ -27,15 +27,24 @@ public:
 		Vec3d pos;
 		std::vector<int> tets;
 		std::vector<int> neighbors;
-		bool surfaceFlag;
-		std::vector<Convolusion> convNeighbors;
-		Convolusion convSelf;
+		std::vector<Integral> integralNeighbors;
+		Integral integralSelf;
 		FemVertex();
 	};
 	struct Tet{
 		int vertices[4];
 	};
+	class Face{
+		int sorted[3];
+	public:
+		int vertices[3];
+		void Update();
+		bool operator < (const Face& f2);
+		bool operator == (const Face& f2);
+	};
 	std::vector<FemVertex> vertices;
+	std::vector<int> surfaceVertices;
+	std::vector<Face> surfaceFaces;
 	std::vector<Tet> tets;
 	SPR_OBJECTDEF(PHFemMesh);
 	PHFemMesh(const PHFemMeshDesc& desc=PHFemMeshDesc(), SceneIf* s=NULL);

@@ -85,7 +85,7 @@ public:
 		/// 描画設定
 		if (fwScene){
 			fwScene->SetWireMaterial(GRRenderIf::WHITE);
-			fwScene->SetRenderMode(true, false);				///< ソリッド描画，ワイヤフレーム描画
+			fwScene->SetRenderMode(true, true);				///< ソリッド描画，ワイヤフレーム描画
 			fwScene->EnableRenderAxis(false, true, true);		///< 座標軸
 			fwScene->SetAxisStyle(FWSceneIf::AXIS_LINES);	///< 座標軸のスタイル
 			fwScene->EnableRenderForce(false, true);			///< 力

@@ -215,6 +215,7 @@ public:
 
 
 namespace Spr{;
+class UTLoadContext;
 
 /**	全Objectの基本型	*/
 class Object: public UTTypeInfoObjectBase, public UTRefCount{
@@ -245,6 +246,11 @@ public:
 	virtual bool DelChildObject(ObjectIf* o){ return false; }
 	///	すべての子オブジェクトの削除とプロパティのクリア
 	virtual void Clear(){}
+	/**	ファイルロード後に一度呼ばれる。ノードの設定に使う。
+		呼び出し順序に依存する処理がしたい場合は、UTLoadHandeler と UTLoadTask を使うと良い。　*/
+	virtual void Loaded(UTLoadContext*){ Setup(); }
+	///	ノードの設定をするための関数
+	virtual void Setup(){}
 
 	///	デスクリプタの読み出し(コピー版)
 	virtual bool GetDesc(void* desc) const { return false; }
