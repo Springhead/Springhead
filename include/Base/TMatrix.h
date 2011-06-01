@@ -491,7 +491,7 @@ template <class AD, class XD, class BD>
 void solve(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){
 	int i, j, ii;
 	TYPENAME XD::element_type t;
-	const size_t n = a.height();
+	const int n = (int)a.height();
 	for (i = 0; i < n; i++) {       // GaussÁ‹Ž–@‚ÌŽc‚è
 		ii = ip[i];  t = b[ii];
 		for (j = 0; j < i; j++) t -= a.item(ii, j) * x[j];

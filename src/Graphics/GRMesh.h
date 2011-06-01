@@ -114,6 +114,7 @@ public:
 	Vec2f*		GetTexCoords(){ return &texCoords[0]; }
 	GRMeshFace*	GetFaces(){ return &faces[0]; }
 	GRMeshFace*	GetFaceNormals(){ return &faceNormals[0]; }
+	unsigned*	GetTriangles(){ return &triFaces[0]; }
 	int*		GetMaterialIndices(){ return &materialList[0]; }
 	void		SwitchCoordinate();
 

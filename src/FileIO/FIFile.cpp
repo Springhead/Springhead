@@ -56,6 +56,14 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 
 	return ok;
 }
+void CallLoadedRecursive(ObjectIf* o, FILoadContext* fc, std::set<ObjectIf*>& uniqueCheck){
+	if (uniqueCheck.insert(o).second){
+		for(unsigned i=0; i<o->NChildObject(); ++i){
+			CallLoadedRecursive(o->GetChildObject(i), fc, uniqueCheck);
+		}
+		((Object*)o)->Loaded(fc);
+	}
+}
 void FIFile::Load(FILoadContext* fc){
 	LoadImp(fc);
 	
@@ -70,6 +78,11 @@ void FIFile::Load(FILoadContext* fc){
 	fc->LinkNode();
 	//	リンク後の処理
 	fc->PostTask();
+	//	ロード終了をロードしたノードに伝える
+	std::set<ObjectIf*> uniqueCheck;
+	for(unsigned i=0; i<fc->rootObjects.size();++i)
+		if (fc->rootObjects[i])
+			CallLoadedRecursive(fc->rootObjects[i], fc, uniqueCheck);
 }
 
 bool FIFile::Save(const ObjectIfs& objs, const char* fn){

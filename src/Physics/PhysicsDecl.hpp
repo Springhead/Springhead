@@ -9,14 +9,20 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHFemMeshDesc \
 protected:\
+	std::vector<(Vec3d)>	vertices;	\
+	std::vector<(int)>	tets;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHFemMesh::SetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
+		vertices = ((PHFemMeshDesc*)ptr)->vertices;	\
+		tets = ((PHFemMeshDesc*)ptr)->tets;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHFemMesh::GetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
+		((PHFemMeshDesc*)ptr)->vertices = vertices;	\
+		((PHFemMeshDesc*)ptr)->tets = tets;	\
 		return true;	\
 	}\
 

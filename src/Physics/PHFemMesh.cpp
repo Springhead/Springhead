@@ -21,10 +21,30 @@ void PHFemMeshDesc::Init(){
 }
 
 
+void PHFemMesh::Face::Update(){
+	for(int i=0; i<3; ++i) sorted[i] = vertices[i];
+	std::sort(sorted, sorted+3);
+}
+bool PHFemMesh::Face::operator < (const Face& f2){
+	const Face& f1 = *this;
+	for(int i=0; i<3; ++i){
+		if (f1.sorted[i] < f2.sorted[i]) return true;
+		if (f1.sorted[i] > f2.sorted[i]) return false;
+	}
+	return false;
+} 
+bool PHFemMesh::Face::operator == (const Face& f2){
+	const Face& f1 = *this;
+	for(int i=0; i<3; ++i){
+		if (f1.sorted[i] != f2.sorted[i]) return false;
+	}
+	return true;
+}
+
+
 ///////////////////////////////////////////////////////////////////
 //	PHFemMesh
 PHFemMesh::FemVertex::FemVertex(){
-	surfaceFlag = false;
 }
 
 
@@ -39,22 +59,6 @@ PHFemMesh::PHFemMesh(const PHFemMeshDesc& desc, SceneIf* s){
 
 }
 
-struct PHFemMeshFace{
-	int vertices[3];
-};
-bool operator < (const PHFemMeshFace& f1, const PHFemMeshFace& f2){
-	for(int i=0; i<3; ++i){
-		if (f1.vertices[i] < f2.vertices[i]) return true;
-		if (f1.vertices[i] > f2.vertices[i]) return false;
-	}
-	return false;
-} 
-bool operator == (const PHFemMeshFace& f1, const PHFemMeshFace& f2){
-	for(int i=0; i<3; ++i){
-		if (f1.vertices[i] != f2.vertices[i]) return false;
-	}
-	return true;
-}
 
 void PHFemMesh::SetDesc(const void* p) {
 	PHFemMeshDesc* d = (PHFemMeshDesc*)p;
@@ -85,31 +89,33 @@ void PHFemMesh::SetDesc(const void* p) {
 	}
 	
 	//	•\–Ê‚ð’T‚·
-	std::vector<PHFemMeshFace> faces;
+	std::vector<Face> faces;
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
-			PHFemMeshFace f;
+			Face f;
 			for(unsigned k=0; k<3; ++k)
 				f.vertices[k] = tets[i].vertices[(j+k)%4];
-			std::sort(f.vertices, f.vertices+3);
+			f.Update();
 			faces.push_back(f);
 		}
 	}
 	std::sort(faces.begin(), faces.end());
-	std::vector<PHFemMeshFace> surfaces;
 
 	for(unsigned i=0; i<faces.size(); ++i){
 		if (i+1<faces.size() && faces[i] == faces[i+1]){
 			i++;
 		}else{
-			surfaces.push_back(faces[i]);
+			surfaceFaces.push_back(faces[i]);
 		}
 	}
-	for(unsigned i=0; i<surfaces.size(); ++i){
+	for(unsigned i=0; i<surfaceFaces.size(); ++i){
 		for(unsigned j=0; j<3; ++j){
-			vertices[surfaces[i].vertices[j]].surfaceFlag = true;
+			surfaceVertices.push_back(surfaceFaces[i].vertices[j]);
 		}
 	}
+	std::sort(surfaceVertices.begin(), surfaceVertices.end());
+	std::vector<int>::iterator newEnd = std::unique(surfaceVertices.begin(), surfaceVertices.end());
+	surfaceVertices.erase(newEnd, surfaceVertices.end());
 }
 
 bool PHFemMesh::GetDesc(void* p) const {

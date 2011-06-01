@@ -28,18 +28,17 @@ protected:
 	UTRef<PHFemMesh> phMesh;
 public:
 	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());		//コンストラクタ
+	void Loaded(UTLoadContext* );
 	///	子オブジェクトの数
 	virtual size_t NChildObject() const;
 	///	子オブジェクトの取得
 	virtual ObjectIf* GetChildObject(size_t pos);
 	///	子オブジェクトの追加
 	virtual bool AddChildObject(ObjectIf* o);
-
 protected:
 	//	TetGenを用いて、GRMeshを四面体メッシュ化し、phMeshに格納する。
 	virtual bool GeneratePHFemMesh();
-
-
+	GRMesh* CreateGRFromPH();
 };
 }
 

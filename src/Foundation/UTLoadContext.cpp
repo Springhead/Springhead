@@ -659,9 +659,6 @@ ObjectIf* UTLoadContext::CreateSceneRecursive(){
 		if (obj){
 			ld->loadedObjects.Push(obj);
 			objects.Push(obj);								//	スタックに積む
-			//if (objects.size() == 1){
-			//	rootObjects.push_back(objects.Top());	//	ルートオブジェクトとして記録
-			//}
 		}
 	}
 	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
