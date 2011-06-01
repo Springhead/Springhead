@@ -144,6 +144,7 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	
 	return true;
 }
+
 GRMesh* FWFemMesh::CreateGRFromPH(){
 	//	頂点の対応表を用意
 	std::vector<int> vtxMap;
@@ -252,17 +253,22 @@ GRMesh* FWFemMesh::CreateGRFromPH(){
 			gTri2FaceMap.push_back(i);
 		}
 	}
+	//	一番近い面のマテリアルを適用する。
 	if (!grMesh->materialList.empty())
+		//	頂点に一番近い面を見つけ、多数決を取る
 		for(unsigned i=0; i<gmd.faces.size(); ++i){
 			int nearestFace[3];
 			for(unsigned j=0; j<3; ++j) nearestFace[j] = gTri2FaceMap[nearestTris[gmd.faces[i].indices[j]]];
 			if (nearestFace[1] == nearestFace[2]) gmd.materialList.push_back(grMesh->materialList[nearestFace[1]]);
 			else gmd.materialList.push_back(grMesh->materialList[nearestFace[0]]);
 		}
+	//	GRMeshを作成
 	GRMesh* rv = grMesh->GetNameManager()->CreateObject(GRMeshIf::GetIfInfoStatic(), &gmd)->Cast();
+	//	マテリアルの追加
 	for (unsigned i=0; i<grMesh->NChildObject(); ++i){
 		rv->AddChildObject(grMesh->GetChildObject(i));
 	}
+	//	テクスチャモードをコピー
 	rv->tex3d = grMesh->tex3d;
 	return rv;
 }
