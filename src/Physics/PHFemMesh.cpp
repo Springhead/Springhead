@@ -90,11 +90,20 @@ void PHFemMesh::SetDesc(const void* p) {
 	
 	//	表面を探す
 	std::vector<Face> faces;
+	//	裏表を考える必要がある。
+	/*
+					0
+
+
+			1			3
+				2
+		012, 023, 031, 321
+	*/
+	int tfs[4][3]={{0,1,2}, {0,2,3}, {0,3,1}, {3,2,1}};
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
-			Face f;
-			for(unsigned k=0; k<3; ++k)
-				f.vertices[k] = tets[i].vertices[(j+k)%4];
+			Face f;	
+			for(unsigned k=0; k<3; ++k) f.vertices[k] = tets[i].vertices[tfs[j][k]];
 			f.Update();
 			faces.push_back(f);
 		}
