@@ -19,13 +19,14 @@ namespace Spr{;
 
 /**	Framework上でのFEMメッシュ。
 	毎ステップ、PHFemMeshのFEMシミュレーション結果をGRMeshに反映させる。
-	初期化時には、GRMeshからPHFemMeshを生成する。*/
+	初期化時には、GRMeshからPHFemMeshを生成し、さらにPHFemMeshからGRMeshを生成し、grMeshとgrFrameの下のGRMeshと置き換える。*/
 class FWFemMesh: public FWObject{
 	SPR_OBJECTDEF(FWFemMesh);		
 	SPR_DECLMEMBEROF_FWFemMeshDesc;	//	FWFemMeshDescのメンバとGetDesc(), GetDescSize()の実装
 protected:
 	GRMesh* grMesh;
 	UTRef<PHFemMesh> phMesh;
+	std::vector<int> vertexIdMap;	//	grMeshからphMeshへの頂点の対応表
 public:
 	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());		//コンストラクタ
 	void Loaded(UTLoadContext* );
@@ -38,7 +39,8 @@ public:
 protected:
 	//	TetGenを用いて、GRMeshを四面体メッシュ化し、phMeshに格納する。
 	virtual bool GeneratePHFemMesh();
-	GRMesh* CreateGRFromPH();
+	//	phMeshからGRMeshを生成する。マテリアルなどはgrMeshから拾う。
+	void CreateGRFromPH();
 };
 }
 
