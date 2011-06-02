@@ -8,12 +8,18 @@
 #include "ThermalFEM.h"
 
 
+#include <Collision/CDQuickHull2DImp.h>
+
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
 
-using namespace std;
-using namespace Spr;
+#ifdef _DEBUG
+# define PDEBUG(x)	x
+#else
+# define PDEBUG(x)
+#endif
 
 namespace Spr{;
 
@@ -125,7 +131,7 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	FEM.in.save_poly("barpqain");
 	FEM.in.save_elements("barpqain");
 
-	FEM.TFEMTetrahedralize("pq1.1a0.0001");
+	FEM.TFEMTetrahedralize("pq1.5a2");
 	
 	FEM.out.save_nodes("spherepq1.1a0.0001out");			
 	FEM.out.save_elements("spherepq1.1a0.0001out");
@@ -165,103 +171,141 @@ GRMesh* FWFemMesh::CreateGRFromPH(){
 		}
 		gmd.faces.push_back(f);
 	}
-	//	phMeshの頂点に対応するGRMeshの三角形と３点の重みづけを求める。
-	unsigned* gTris = grMesh->GetTriangles();
-	Vec3f* gVtxs = grMesh->GetVertices();
-	
-	std::vector<Vec3f> gNormals, gWalls, gDirs;
-	std::vector<double> gEdgeLens;
-	gNormals.resize(grMesh->NTriangle());
-	gDirs.resize(gNormals.size() * 3);
-	gWalls.resize(gNormals.size() * 3);
-	gEdgeLens.resize(gNormals.size() * 3);
-	for(int j=0; j<grMesh->NTriangle(); ++j){
-		gNormals[j] = ((gVtxs[gTris[j*3+2]] - gVtxs[gTris[j*3]]) % (gVtxs[gTris[j*3+1]] - gVtxs[gTris[j*3]])).unit();
-		for(int k=0; k<3; ++k){
-			gDirs[j*3+k] = (gVtxs[gTris[j*3+(k+1)%3]] - gVtxs[gTris[j*3+k]]).unit();
-			gWalls[j*3+k] = (gNormals[j] % gDirs[j*3+k]).unit();
+	//	phMeshの三角形とgrMeshの三角形の対応表をつくる	重なっている面積が最大のものが対応する面
+	//	まず、法線が近いものを探し、面1と面2上の頂点の距離が近いものに限り、重なっている面積を求める。
+	std::vector<Vec3f> pnormals(gmd.faces.size());
+	for(unsigned pf=0; pf<gmd.faces.size(); ++pf){
+		assert(gmd.faces[pf].nVertices == 3);
+		pnormals[pf] = ((gmd.vertices[gmd.faces[pf].indices[2]] - gmd.vertices[gmd.faces[pf].indices[0]]) %
+		(gmd.vertices[gmd.faces[pf].indices[1]] - gmd.vertices[gmd.faces[pf].indices[0]])).unit();
+	}
+	std::vector<Vec3f> gnormals(grMesh->faces.size());
+	struct FaceWall{
+		Vec3f wall[4];
+	};
+	std::vector<FaceWall> gWalls(gnormals.size());
+	for(unsigned gf=0; gf<gnormals.size(); ++gf){
+		gnormals[gf] = ((grMesh->vertices[grMesh->faces[gf].indices[2]] - grMesh->vertices[grMesh->faces[gf].indices[0]]) %
+			(grMesh->vertices[grMesh->faces[gf].indices[1]] - grMesh->vertices[grMesh->faces[gf].indices[0]])).unit();
+		int nv = grMesh->faces[gf].nVertices;
+		for(int i=0; i<nv; ++i){
+			gWalls[gf].wall[i] = ((grMesh->vertices[grMesh->faces[gf].indices[(i+1)%nv]] - grMesh->vertices[grMesh->faces[gf].indices[i]]) % gnormals[gf]).unit();
 		}
 	}
-	std::vector<double> dists;
-	std::vector<int> nearestTris;
-	dists.resize(phMesh->surfaceVertices.size());
-	nearestTris.resize(phMesh->surfaceVertices.size());
-	for(unsigned i=0; i<phMesh->surfaceVertices.size(); ++i){
-		Vec3f pos = phMesh->vertices[phMesh->surfaceVertices[i]].pos;
-		double minDist = DBL_MAX;
-		int minId = -1;
-		for(int j=0; j<grMesh->NTriangle(); ++j){
-			double h = (pos - gVtxs[gTris[j*3]]) * gNormals[j];
-			Vec3f ph = pos - h*gNormals[j];
-			double dist;
-			int k;
-			for(k=0; k<3; ++k){
-				double d = (ph - gVtxs[gTris[j*3+k]]) * gWalls[j*3+k];
-				if (d > 0){
-					Vec3d pw = ph - d*gWalls[j*3+k];
-					double dl = (pw - gVtxs[gTris[j*3]+k]) * gDirs[gTris[j*3]+k];
-					if (dl < 0){
-						dist = sqrt(h*h + d*d + dl*dl);
-					}else if (dl > gEdgeLens[gTris[j*3]+k]){
-						dl -= gEdgeLens[gTris[j*3]+k];
-						dist = sqrt(h*h + d*d + dl*dl);
-					}else{
-						dist = sqrt(h*h + d*d);
+	std::vector<int> pFaceMap(pnormals.size());
+	for(unsigned pf=0; pf<pnormals.size(); ++pf){
+		std::vector<int> cand;
+		for(unsigned gf=0; gf<gnormals.size(); ++gf){
+			if (pnormals[pf] * gnormals[gf] > 0.8){	//	法線が遠いのはだめ
+				int i;
+				for(i=0; i<3; ++i){
+					double d = gnormals[gf] * (gmd.vertices[gmd.faces[pf].indices[i]] - grMesh->vertices[grMesh->faces[gf].indices[0]]);
+					if (d*d > 0.01) break;	//	距離が離れすぎているのはだめ
+				}	
+				if (i==3){
+					//	phの三角形の重心が、grの中の面に入っている物をさがす
+					Vec3f center;
+					for(int v=0;v<3; ++v) center += gmd.vertices[gmd.faces[pf].indices[v]];
+					center /= 3;
+					int v;
+					for(v=0; v<grMesh->faces[gf].nVertices; ++v){
+						double d = gWalls[gf].wall[v] * (center - grMesh->vertices[grMesh->faces[gf].indices[v]]);
+						if (d<0) break;
 					}
-					break;
+					if (v == grMesh->faces[gf].nVertices){
+						pFaceMap[pf] = gf;
+						//	DEBUG出力
+						//	DSTR << "center:" << center <<std::endl;
+						//	for(int v=0; v<grMesh->faces[gf].nVertices; ++v)
+						//		DSTR << "vtx" << grMesh->vertices[grMesh->faces[gf].indices[v]] << "wall:" << gWalls[gf].wall[v] << std::endl;
+						break;
+					}
 				}
 			}
-			if (k == 3){
-				dist = h;
+		}
+	}
+	PDEBUG(	DSTR << "FaceMap PHtoGR:"; )
+	PDEBUG(	for(unsigned i=0; i<pFaceMap.size(); ++i) DSTR << pFaceMap[i] << " "; )
+	PDEBUG(	DSTR << std::endl; )
+	//	対応表に応じてマテリアルリストを設定。
+	gmd.materialList.resize(grMesh->materialList.size() ? pFaceMap.size() : 0);
+	for(unsigned pf=0; pf<gmd.materialList.size(); ++pf){
+		gmd.materialList[pf] = grMesh->materialList[pFaceMap[pf]];
+	}
+	//	対応表に応じて、頂点のテクスチャ座標を作成
+	//		phの１点がgrの頂点複数に対応する場合がある。
+	//		その場合は頂点のコピーを作る必要がある。
+	std::vector<bool> vtxUsed(gmd.vertices.size(), false);
+	for(unsigned pf=0; pf<pFaceMap.size(); ++pf){		
+		for(unsigned i=0; i<3; ++i){
+			int pv = gmd.faces[pf].indices[i];
+			//	テクスチャ座標を計算
+			Vec2f texCoord;
+			Vec3f normal;
+			GRMeshFace& gFace = grMesh->faces[pFaceMap[pf]];
+			GRMeshFace* gNormal = NULL;
+			if (grMesh->normals.size()){
+				gNormal = &gFace;
+				if (grMesh->faceNormals.size()) gNormal = &grMesh->faceNormals[pFaceMap[pf]];
 			}
-			if (dist < minDist){
-				minDist = dist;
-				minId = j;
+			if (gFace.nVertices == 3){
+				Vec3f weight;
+				Matrix3f vtxs;
+				for(unsigned j=0; j<3; ++j){
+					vtxs.col(j) = grMesh->vertices[gFace.indices[j]];
+				}
+				int tmp[3];
+				vtxs.gauss(weight, gmd.vertices[pv], tmp);
+				for(unsigned j=0; j<3; ++j){
+					assert(weight[j] > -0.001);
+					texCoord += weight[j] * grMesh->texCoords[gFace.indices[j]];
+					if(gNormal) normal += weight[j] * grMesh->normals[gNormal->indices[j]];
+				}
+			}else{	//	4頂点
+				//	どの３頂点で近似すると一番良いかを調べ、その３頂点を補間
+				Vec3f weight[4];
+				Matrix3f vtxs[4];
+				double wMin[4];
+				double wMinMax = -DBL_MAX;
+				int maxId=-1;
+				for(int j=0; j<4; ++j){
+					for(int k=0; k<3; ++k){
+						vtxs[j].col(k) = grMesh->vertices[gFace.indices[k<j ? k : k+1]];
+					}
+					int tmp[3];
+					vtxs[j].gauss(weight[j], gmd.vertices[pv], tmp);
+					wMin[j] = DBL_MAX;
+					for(int l=0; l<3; ++l) if (wMin[j] > weight[j][l]) wMin[j] = weight[j][l];
+					if (wMin[j] > wMinMax){
+						wMinMax = wMin[j];
+						maxId = j;
+					}
+				}
+				for(int j=0; j<3; ++j){
+					texCoord += weight[maxId][j] * grMesh->texCoords[gFace.indices[j<maxId?j:j+1]];
+					if(gNormal)
+						normal += weight[maxId][j] * grMesh->normals[gFace.indices[j<maxId?j:j+1]];
+				}
+			}
+			gmd.texCoords.resize(gmd.vertices.size());
+			if (grMesh->normals.size()) gmd.normals.resize(gmd.vertices.size());
+			//	重複頂点の場合はコピーを作りながら代入
+			if (vtxUsed[pv]){
+				if (gmd.texCoords[pv] != texCoord || 
+					(grMesh->normals.size() && gmd.normals[pv] != normal)){	
+					//	頂点のコピーの作成
+					gmd.vertices.push_back(gmd.vertices[pv]);
+					gmd.texCoords.push_back(texCoord);
+					if (gmd.normals.size()) gmd.normals.push_back(normal);
+					gmd.faces[pf].indices[i] = gmd.vertices.size()-1;
+				}
+			}else{	//	そうでなければ、直接代入
+				gmd.texCoords[pv] = texCoord;
+				if (gmd.normals.size()) gmd.normals[pv] = normal; 
+				vtxUsed[pv] = true;
 			}
 		}
-		dists[i] = minDist;
-		nearestTris[i] = minId;
 	}
-	std::vector<Vec3d> weights;
-	weights.resize(phMesh->surfaceVertices.size());
-	for(unsigned i=0; i<phMesh->surfaceVertices.size(); ++i){
-		Matrix3f vtxs;
-		for(unsigned j=0; j<3; ++j){
-			vtxs[j] = gVtxs[gTris[nearestTris[i]*3+j]];
-		}
-		int tmp[3];
-		vtxs.trans().gauss(weights[i], phMesh->vertices[phMesh->surfaceVertices[i]].pos, tmp);
-	}
-	//	求めた重みにしたがって、テクスチャ座標を決める
-	for(unsigned i=0; i<gmd.vertices.size(); ++i){
-		gmd.texCoords.resize(gmd.vertices.size(), Vec2f());
-		for(int j=0; j<3; ++j) gmd.texCoords[i] += weights[i][j] * grMesh->texCoords[gTris[nearestTris[i]*3+j]];
-	}
-	//	求めた重みにしたがって、法線ベクトルを決める
-	if (grMesh->normals.size() == grMesh->vertices.size()){
-		gmd.normals.resize(gmd.vertices.size(), Vec2f());
-		for(unsigned i=0; i<gmd.vertices.size(); ++i){
-			for(int j=0; j<3; ++j) gmd.normals[i] += weights[i][j] * grMesh->normals[gTris[nearestTris[i]*3+j]];
-		}
-	}
-	//	一番近くの面のマテリアルを設定したい。
-	//	まず三角形と面の対応表を作る
-	std::vector<int> gTri2FaceMap;
-	for(unsigned i=0; i<grMesh->faces.size(); ++i){
-		gTri2FaceMap.push_back(i);
-		if (grMesh->faces[i].nVertices == 4){
-			gTri2FaceMap.push_back(i);
-		}
-	}
-	//	一番近い面のマテリアルを適用する。
-	if (!grMesh->materialList.empty())
-		//	頂点に一番近い面を見つけ、多数決を取る
-		for(unsigned i=0; i<gmd.faces.size(); ++i){
-			int nearestFace[3];
-			for(unsigned j=0; j<3; ++j) nearestFace[j] = gTri2FaceMap[nearestTris[gmd.faces[i].indices[j]]];
-			if (nearestFace[1] == nearestFace[2]) gmd.materialList.push_back(grMesh->materialList[nearestFace[1]]);
-			else gmd.materialList.push_back(grMesh->materialList[nearestFace[0]]);
-		}
 	//	GRMeshを作成
 	GRMesh* rv = grMesh->GetNameManager()->CreateObject(GRMeshIf::GetIfInfoStatic(), &gmd)->Cast();
 	//	マテリアルの追加
