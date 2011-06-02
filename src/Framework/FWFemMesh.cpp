@@ -49,17 +49,15 @@ void FWFemMesh::Loaded(UTLoadContext*){
 	if (!phMesh) GeneratePHFemMesh();
 	if (grFrame){
 		grFrame->DelChildObject(grMesh->Cast());
-		grFrame->AddChildObject(CreateGRFromPH()->Cast());
+		CreateGRFromPH();
+		grFrame->AddChildObject(grMesh->Cast());
 	}
 }
 bool FWFemMesh::GeneratePHFemMesh(){
 	//	呼び出された時点で grMesh にグラフィクスのメッシュが入っている
 	//	grMeshを変換して、phMeshをつくる。
-	std::cout << "メッシュ生成" << std::endl;
-	
+
 	//	以下で、grMeshからtetgenを呼び出して変換して、pmdに値を入れていけば良い。
-
-
 	PHFemMeshDesc pmd;
 	
 	//TetGenで四面体メッシュ化
@@ -131,7 +129,7 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	FEM.in.save_poly("barpqain");
 	FEM.in.save_elements("barpqain");
 
-	FEM.TFEMTetrahedralize("pq1.5a2");
+	FEM.TFEMTetrahedralize("pq1.5a0.0001");
 	
 	FEM.out.save_nodes("spherepq1.1a0.0001out");			
 	FEM.out.save_elements("spherepq1.1a0.0001out");
@@ -151,7 +149,7 @@ bool FWFemMesh::GeneratePHFemMesh(){
 	return true;
 }
 
-GRMesh* FWFemMesh::CreateGRFromPH(){
+void FWFemMesh::CreateGRFromPH(){
 	//	頂点の対応表を用意
 	std::vector<int> vtxMap;
 	vtxMap.resize(phMesh->vertices.size(), -1);
@@ -232,6 +230,8 @@ GRMesh* FWFemMesh::CreateGRFromPH(){
 	for(unsigned pf=0; pf<gmd.materialList.size(); ++pf){
 		gmd.materialList[pf] = grMesh->materialList[pFaceMap[pf]];
 	}
+	//	新しく作るGRMeshの頂点からphMeshの頂点への対応表
+	vertexIdMap.resize(gmd.vertices.size(), -1);
 	//	対応表に応じて、頂点のテクスチャ座標を作成
 	//		phの１点がgrの頂点複数に対応する場合がある。
 	//		その場合は頂点のコピーを作る必要がある。
@@ -298,10 +298,12 @@ GRMesh* FWFemMesh::CreateGRFromPH(){
 					gmd.texCoords.push_back(texCoord);
 					if (gmd.normals.size()) gmd.normals.push_back(normal);
 					gmd.faces[pf].indices[i] = gmd.vertices.size()-1;
+					vertexIdMap.push_back(phMesh->surfaceVertices[pv]);
 				}
 			}else{	//	そうでなければ、直接代入
 				gmd.texCoords[pv] = texCoord;
 				if (gmd.normals.size()) gmd.normals[pv] = normal; 
+				vertexIdMap[pv] = phMesh->surfaceVertices[pv];
 				vtxUsed[pv] = true;
 			}
 		}
@@ -314,7 +316,7 @@ GRMesh* FWFemMesh::CreateGRFromPH(){
 	}
 	//	テクスチャモードをコピー
 	rv->tex3d = grMesh->tex3d;
-	return rv;
+	grMesh = rv;
 }
 
 }
