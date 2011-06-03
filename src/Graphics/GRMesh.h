@@ -42,13 +42,12 @@ protected:
 	std::vector<float>	blendedVtxs;
 	const GRVertexElement* vtxFormat;
 	int stride;			///< 1頂点のバイト数
-	int vertexOffset;	///< 頂点座標までのオフセット
+	int positionOffset;	///< 頂点座標までのオフセット
 	int normalOffset;	///< 法線までのオフセット
 	int texOffset;		///< テクスチャ座標までのオフセット
 
-	Vec3f& Pos(std::vector<float>& v, int i){ return (Vec3f&)v[stride*i + vertexOffset]; }
+	Vec3f& Pos(std::vector<float>& v, int i){ return (Vec3f&)v[stride*i + positionOffset]; }
 	Vec3f& Normal(std::vector<float>& v, int i){ return (Vec3f&)v[stride*i + normalOffset]; }
-
 	/// 頂点バッファの作成
 	void MakeBuffer();
 	/// 頂点バッファの描画
@@ -84,20 +83,22 @@ public:
 	/// ディスプレイリストを作成する．
 	void CreateList(GRRenderIf* r);
 
-	//float* GetVertex(int i=0){							///< i番目の頂点バッファを返す
-	//	return vtxs + stride * i;
-	//}
-	//int GetNVertex(){ return nVtxs; }						///< 頂点数
+	//	頂点バッファ（への転送元バッファ）
+	float* GetVertexBuffer(){								///< 頂点バッファ（への転送元バッファ）を返す
+		if (vtxs.size()) return &vtxs[0];
+		else return NULL;
+	}
+	int GetNVertex(){ return vtxs.size()/stride; }			///< 頂点数
 	const GRVertexElement* GetVertexFormat(){				///< 頂点フォーマットを返す。
 		return vtxFormat;
 	}
+	int GetStride(){ return stride; }						///< 1頂点のデータがfloat何個分か
+	int GetNormalOffset(){ return normalOffset; }			///< 法線のオフセット(float何個分)
+	int GetPositionOffset(){ return positionOffset; }		///< 位置のオフセット(float何個分)
+	int GetTexOffset(){ return texOffset; }					///< テクスチャ座標のオフセット(float何個分)
+
 	void	EnableTex3D(bool on = true){ tex3d = on; }
 	bool	IsTex3D(){ return tex3d; }						///< 3次元テクスチャなら true
-
-	//int GetStride(){ return stride; }						///< 1頂点のデータがfloat何個分か
-	//int GetNormalOffset(){ return normalOffset; }			///< 法線のオフセット(float何個分)
-	//int GetPositionOffset(){ return positionOffset; }		///< 位置のオフセット(float何個分)
-	//int GetTexOffset(){ return texOffset; }					///< テクスチャ座標のオフセット(float何個分)
 
 	GRMesh(const GRMeshDesc& desc=GRMeshDesc());
 	~GRMesh();

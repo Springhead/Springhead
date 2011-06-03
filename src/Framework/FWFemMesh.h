@@ -29,7 +29,10 @@ protected:
 	std::vector<int> vertexIdMap;	//	grMeshからphMeshへの頂点の対応表
 public:
 	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());		//コンストラクタ
+	///	ロード後に呼ばれる。grMeshからphMeshを生成し、grMeshもphMeshに合わせたものに置き換える
 	void Loaded(UTLoadContext* );
+	///	グラフィクス表示前の同期処理
+	void Sync(bool ph2gr);
 	///	子オブジェクトの数
 	virtual size_t NChildObject() const;
 	///	子オブジェクトの取得
@@ -38,7 +41,7 @@ public:
 	virtual bool AddChildObject(ObjectIf* o);
 protected:
 	//	TetGenを用いて、GRMeshを四面体メッシュ化し、phMeshに格納する。
-	virtual bool GeneratePHFemMesh();
+	virtual bool CreatePHFromGR();
 	//	phMeshからGRMeshを生成する。マテリアルなどはgrMeshから拾う。
 	void CreateGRFromPH();
 };
