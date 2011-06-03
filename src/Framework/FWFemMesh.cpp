@@ -4,8 +4,7 @@
 #include <Physics/PHConstraint.h>
 #include <Foundation/UTLoadHandler.h>
 #include "FWFemMesh.h"
-#include "tetgen.h"
-#include "ThermalFEM.h"
+#include "FWSprTetgen.h"
 
 
 #include <Collision/CDQuickHull2DImp.h>
@@ -89,94 +88,22 @@ bool FWFemMesh::CreatePHFromGR(){
 	PHFemMeshDesc pmd;
 	
 	//TetGenで四面体メッシュ化
-
-
-	//定義を加えながら変換していく
-	//int i;
-	//頂点の開始番号
-	ThermalFEM FEM;
-	tetgenio::facet *f;
-	tetgenio::polygon *p;
-
-	FEM.in.firstnumber = 0;
-	////頂点座標と数の入力
-	FEM.in.numberofpoints = grMesh->NVertex();		//grMeshの頂点サイズの代入
-	FEM.in.pointlist = DBG_NEW REAL[FEM.in.numberofpoints * 3];
-	for(int j=0; j < grMesh->NVertex(); j++){	//ThermoMeshの頂点番号はj / 3の整数部分
-		for(int k=0; k<3; ++k)
-			FEM.in.pointlist[j*3+k] = grMesh->GetVertices()[j][k] ;
-	}
-	//for(int j=0; j < grMesh->NVertex(); j++){	//ThermoMeshの頂点番号はj / 3の整数部分
-	//	for(int k=0; k<3; ++k){
-	//		DSTR << FEM.in.pointlist[j*3+k];
-	//	}
-	//	DSTR << std::endl;
-	//}
-	//-0.50.50.5
-	//0.50.50.5
-	//0.5-0.50.5
-	//-0.5-0.50.5
-	//0.50.5-0.5
-	//0.5-0.5-0.5
-	//-0.50.5-0.5
-	//-0.5-0.5-0.5
-
-	////面の数の代入
-	FEM.in.numberoffacets = grMesh->NFace();
-	FEM.in.facetlist = DBG_NEW tetgenio::facet[FEM.in.numberoffacets];
-	FEM.in.facetmarkerlist = DBG_NEW int[FEM.in.numberoffacets];
-	////面の情報の入力
-	GRMeshFace* faces = grMesh->GetFaces();
-	for(int j =0; j < FEM.in.numberoffacets ; j++){
-		f = &FEM.in.facetlist[(int)j];
-		f->numberofpolygons = 1;
-		f->polygonlist = DBG_NEW tetgenio::polygon[f->numberofpolygons];
-		f->numberofholes = 0;
-		f->holelist = NULL;
-		p = &f->polygonlist[0];
-		p->numberofvertices = faces[j].nVertices;
-		p->vertexlist = DBG_NEW int[p->numberofvertices];
-		for(int k =0; k < p->numberofvertices; k++){
-			p->vertexlist[k] = faces[j].indices[k];
-		}
-	}
-	for(int j = 0; j < FEM.in.numberoffacets ;j++){
-		FEM.in.facetmarkerlist[j] = 0;
-	}
-	//FEM.in.save_nodes("barpq1.4a1.0in");
-	//FEM.in.save_poly("barpq1.4a1.0in");
-	//FEM.in.save_elements("barpq1.4a0.5in");
-	////四面体メッシュ化
-	//FEM.TFEMTetrahedralize("pqa100");
-	////メッシュ化したファイルの保存
-	//FEM.out.save_nodes("barpq1.4a0.01out");			
-	//FEM.out.save_elements("barpqa100out");
-	//FEM.out.save_faces("barpqa0.5out");
-	//return FEM.outに入っているメッシュファイル⇒これをPHに入れる
-	FEM.in.save_nodes("barpqin");
-	FEM.in.save_poly("barpqain");
-	FEM.in.save_elements("barpqain");
-
-	FEM.TFEMTetrahedralize("pq1.5a0.0001");
+	Vec3d* vtxsOut=NULL;
+	int* tetsOut=NULL;
+	int nVtxsOut=0, nTetsOut=0;
+	std::vector<Vec3d> vtxsIn;
+	for(unsigned i=0; i<grMesh->vertices.size(); ++i) vtxsIn.push_back(grMesh->vertices[i]);
+	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, grMesh->vertices.size(), &vtxsIn[0], grMesh->faces.size(), &grMesh->faces[0], "pq1.2a0.003");
 	
-	FEM.out.save_nodes("spherepq1.1a0.0001out");			
-	FEM.out.save_elements("spherepq1.1a0.0001out");
-	FEM.out.save_faces("spherepq1.1a0.0001out");
-
-	
-	//pmdに値を入れていく
-	for(int i=0; i < FEM.out.numberofpoints; i++){
-		pmd.vertices.push_back(Vec3d(FEM.out.pointlist+i*3));
+	//	PHMesh用のディスクリプタpmdに値を入れていく
+	for(int i=0; i < nVtxsOut; i++){
+		pmd.vertices.push_back(vtxsOut[i]);
 	} 
-	pmd.tets.assign(FEM.out.tetrahedronlist, FEM.out.tetrahedronlist + FEM.out.numberoftetrahedra*4);
-	
-	//phMeshに必要な値は何？熱計算に必要な物理量PHのソリッド関係は、SPRのものを使う。
-	//熱伝導の処理を書き加えながら、必要なパラメータを、descに加えて行く。
+	pmd.tets.assign(tetsOut, tetsOut + nTetsOut*4);
+	//	PHMeshの生成
 	phMesh = DBG_NEW PHFemMesh(pmd);
-	
 	return true;
 }
-
 void FWFemMesh::CreateGRFromPH(){
 	//	頂点の対応表を用意
 	std::vector<int> vtxMap;
@@ -346,5 +273,4 @@ void FWFemMesh::CreateGRFromPH(){
 	rv->tex3d = grMesh->tex3d;
 	grMesh = rv;
 }
-
 }
