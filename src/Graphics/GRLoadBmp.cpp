@@ -4,7 +4,7 @@
 
 namespace Spr{;
 
-static UTDllLoader dllLoader("loadBmp.dll", ".;$(SPRINGHEAD2)\\bin");	//	グローバル変数でローダーを作る．
+static UTDllLoader dllLoader("loadBmp.dll", ".;$(SPRINGHEAD2)\\bin\\win32");	//	グローバル変数でローダーを作る．
 
 
 #define DLLFUNC_CTYPE	SPR_CDECL						//	呼び出し規約
