@@ -46,7 +46,7 @@ public:
 	void		SetSolidLength(double l){ solidLength = l; }
 	bool		LoadMesh(const char* filename, const IfInfo* ii = NULL, GRFrameIf* frame = NULL);
 	void		GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
-	void		Sync(bool ph_to_gr);
+	virtual void Sync(bool ph_to_gr);
 };
 
 class FWBoneObject : public FWObject, public FWBoneObjectDesc {

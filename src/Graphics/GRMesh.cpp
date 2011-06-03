@@ -44,7 +44,7 @@ GRMesh::GRMesh(const GRMeshDesc& desc):GRMeshDesc(desc){
 	vtxFormat		= NULL;
 	stride			= -1;
 	normalOffset	= -1;
-	vertexOffset	= -1;
+	positionOffset	= -1;
 	texOffset		= -1;
 	tex3d			= false;
 
@@ -157,7 +157,7 @@ void GRMesh::MakeBuffer(){
 	if (tex3d && texCoords.size() && normals.size()){
 		stride		 = sizeof(GRVertexElement::VFT4fC4fN3fP4f)/sizeof(float);
 		normalOffset = (float*)(((GRVertexElement::VFT4fC4fN3fP4f*)NULL)->n) - (float*)NULL;
-		vertexOffset = (float*)(((GRVertexElement::VFT4fC4fN3fP4f*)NULL)->p) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFT4fC4fN3fP4f*)NULL)->p) - (float*)NULL;
 		texOffset	 = (float*)(((GRVertexElement::VFT4fC4fN3fP4f*)NULL)->t) - (float*)NULL;
 		
 		//vtxs = DBG_NEW float[stride * nVtxs];
@@ -197,7 +197,7 @@ void GRMesh::MakeBuffer(){
 	else if (texCoords.size() && normals.size() && colors.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fC4fN3fP3f)/sizeof(float);
 		normalOffset = (float*)(((GRVertexElement::VFT2fC4fN3fP3f*)NULL)->n) - (float*)NULL;
-		vertexOffset = (float*)(((GRVertexElement::VFT2fC4fN3fP3f*)NULL)->p) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFT2fC4fN3fP3f*)NULL)->p) - (float*)NULL;
 		texOffset	 = (float*)(((GRVertexElement::VFT2fC4fN3fP3f*)NULL)->t) - (float*)NULL;
 		vtxs.resize(stride * nVtxs);
 		GRVertexElement::VFT2fC4fN3fP3f* v = (GRVertexElement::VFT2fC4fN3fP3f*)&vtxs[0];
@@ -228,7 +228,7 @@ void GRMesh::MakeBuffer(){
 	else if (texCoords.size() && normals.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fN3fP3f)/sizeof(float);
 		normalOffset = (float*)(((GRVertexElement::VFT2fN3fP3f*)NULL)->n) - (float*)NULL;
-		vertexOffset = (float*)(((GRVertexElement::VFT2fN3fP3f*)NULL)->p) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFT2fN3fP3f*)NULL)->p) - (float*)NULL;
 		texOffset	 = (float*)(((GRVertexElement::VFT2fN3fP3f*)NULL)->t) - (float*)NULL;		
 		vtxs.resize(stride * nVtxs);
 		GRVertexElement::VFT2fN3fP3f* v = (GRVertexElement::VFT2fN3fP3f*)&vtxs[0];
@@ -251,7 +251,7 @@ void GRMesh::MakeBuffer(){
 	}
 	else if (texCoords.size() && colors.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fC4bP3f)/sizeof(float);
-		vertexOffset = (float*)(((GRVertexElement::VFT2fC4bP3f*)NULL)->p) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFT2fC4bP3f*)NULL)->p) - (float*)NULL;
 		texOffset	 = (float*)(((GRVertexElement::VFT2fC4bP3f*)NULL)->t) - (float*)NULL;
 		vtxs.resize(stride * nVtxs);
 		GRVertexElement::VFT2fC4bP3f* v = (GRVertexElement::VFT2fC4bP3f*)&vtxs[0];
@@ -273,7 +273,7 @@ void GRMesh::MakeBuffer(){
 	else if (normals.size() && colors.size()){
 		stride		 = sizeof(GRVertexElement::VFC4fN3fP3f)/sizeof(float);
 		normalOffset = (float*)(((GRVertexElement::VFC4fN3fP3f*)NULL)->n) - (float*)NULL;
-		vertexOffset = (float*)(((GRVertexElement::VFC4fN3fP3f*)NULL)->p) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFC4fN3fP3f*)NULL)->p) - (float*)NULL;
 		vtxs.resize(stride * nVtxs);
 		GRVertexElement::VFC4fN3fP3f* v = (GRVertexElement::VFC4fN3fP3f*)&vtxs[0];
 
@@ -296,7 +296,7 @@ void GRMesh::MakeBuffer(){
 	else if (normals.size()){
 		stride		 = sizeof(GRVertexElement::VFN3fP3f)/sizeof(float);
 		normalOffset = (float*)(((GRVertexElement::VFN3fP3f*)NULL)->n) - (float*)NULL;
-		vertexOffset = (float*)(((GRVertexElement::VFN3fP3f*)NULL)->p) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFN3fP3f*)NULL)->p) - (float*)NULL;
 		vtxs.resize(stride * nVtxs);
 		GRVertexElement::VFN3fP3f* v = (GRVertexElement::VFN3fP3f*)&vtxs[0];
 
@@ -315,7 +315,7 @@ void GRMesh::MakeBuffer(){
 	}
 	else if (tex3d && texCoords.size()){
 		stride		 = sizeof(GRVertexElement::VFT4fP4f)/sizeof(float);
-		vertexOffset = (float*)(((GRVertexElement::VFT4fP4f*)NULL)->p) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFT4fP4f*)NULL)->p) - (float*)NULL;
 		texOffset	 = (float*)(((GRVertexElement::VFT4fP4f*)NULL)->t) - (float*)NULL;
 		vtxs.resize(stride * nVtxs);
 		GRVertexElement::VFT4fP4f* v = (GRVertexElement::VFT4fP4f*)&vtxs[0];
@@ -333,7 +333,7 @@ void GRMesh::MakeBuffer(){
 	}
 	else if (texCoords.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fP3f)/sizeof(float);
-		vertexOffset = (float*)(((GRVertexElement::VFT2fP3f*)NULL)->p) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFT2fP3f*)NULL)->p) - (float*)NULL;
 		vtxs.resize(stride * nVtxs);
 		GRVertexElement::VFT2fP3f* v = (GRVertexElement::VFT2fP3f*)&vtxs[0];
 
@@ -347,7 +347,7 @@ void GRMesh::MakeBuffer(){
 	}
 	else if (colors.size()){
 		stride		 = sizeof(GRVertexElement::VFC4bP3f)/sizeof(float);
-		vertexOffset = (float*)(((GRVertexElement::VFC4bP3f*)NULL)->p) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFC4bP3f*)NULL)->p) - (float*)NULL;
 		vtxs.resize(stride * nVtxs);
 		GRVertexElement::VFC4bP3f* v = (GRVertexElement::VFC4bP3f*)&vtxs[0];
 
@@ -364,7 +364,7 @@ void GRMesh::MakeBuffer(){
 	}
 	else{
 		stride		 = sizeof(GRVertexElement::VFP3f)/sizeof(float);
-		vertexOffset = (float*)(((GRVertexElement::VFP3f*)NULL)->p) - (float*)NULL;
+		positionOffset = (float*)(((GRVertexElement::VFP3f*)NULL)->p) - (float*)NULL;
 		vtxs.resize(stride * nVtxs);
 		GRVertexElement::VFC4bP3f* v = (GRVertexElement::VFC4bP3f*)&vtxs[0];
 
@@ -433,7 +433,7 @@ void GRMesh::Render(GRRenderIf* r){
 			MakeBuffer();
 		render = r;
 
-		if (vertexOffset >= 0){
+		if (positionOffset >= 0){
 			for(int v = 0; v < NVertex(); ++v)
 				Pos(blendedVtxs, v).clear();
 

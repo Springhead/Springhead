@@ -26,6 +26,34 @@ namespace Spr{;
 FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 	SetDesc(&d);
 }
+void FWFemMesh::Sync(bool ph2gr){	
+	//	テスト用
+	static double value, delta;
+	if (value <= 0) delta = 0.01;
+	if (value >= 1) delta = -0.01;
+	value += delta;
+
+	//	同期処理
+	FWObject::Sync(ph2gr);
+	if (ph2gr && grMesh->IsTex3D()){
+		float* gvtx = grMesh->GetVertexBuffer();
+		if (gvtx){
+			int tex = grMesh->GetTexOffset();
+			int stride = grMesh->GetStride();
+			for(unsigned gv=0; gv<vertexIdMap.size(); ++gv){
+				int pv = vertexIdMap[gv];
+				//	PHから何らかの物理量を取ってくる
+				phMesh->vertices[pv].integralSelf.volume;
+				//	GRのテクスチャ座標として設定する。	s t r q の rを設定
+				gvtx[stride*gv + tex + 2] = value + gvtx[stride*gv];
+			}
+		}	
+	}else{
+		assert(0);	//	not supported.
+	}
+}
+
+
 size_t FWFemMesh::NChildObject() const{
 	return FWObject::NChildObject() + (grMesh ? 1 : 0);
 }
@@ -46,14 +74,14 @@ bool FWFemMesh::AddChildObject(ObjectIf* o){
 	}
 }
 void FWFemMesh::Loaded(UTLoadContext*){
-	if (!phMesh) GeneratePHFemMesh();
+	if (!phMesh) CreatePHFromGR();
 	if (grFrame){
 		grFrame->DelChildObject(grMesh->Cast());
 		CreateGRFromPH();
 		grFrame->AddChildObject(grMesh->Cast());
 	}
 }
-bool FWFemMesh::GeneratePHFemMesh(){
+bool FWFemMesh::CreatePHFromGR(){
 	//	呼び出された時点で grMesh にグラフィクスのメッシュが入っている
 	//	grMeshを変換して、phMeshをつくる。
 
