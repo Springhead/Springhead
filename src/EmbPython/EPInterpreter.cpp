@@ -23,13 +23,17 @@ EPInterpreter* EPInterpreter::Create()
 
 EPInterpreter::EPInterpreter()
 {
-	this->State = EPState::UNSTARTED;
+	this->State = UNSTARTED;
 }
 
 EPInterpreter::~EPInterpreter()
 {
-	this->State = EPState::STOP;
+	this->State = STOP;
 }
+
+
+extern "C" { PyObject* PyInit__Base(void); }
+
 
 void EPInterpreter::Initialize()
 {
@@ -58,6 +62,14 @@ void EPInterpreter::Initialize()
 	//パイソン初期化
 	Py_Initialize();
 
+	PyObject*m = PyInit__Base();
+	PyObject *modules = PyImport_GetModuleDict();
+	if (PyDict_SetItemString(modules, "_Base", m) != 0) {
+		Py_DECREF(m);
+	}
+
+
+
 	////手作りクラスの初期化
 	initUtility();
 
@@ -71,17 +83,17 @@ void EPInterpreter::Initialize()
 
 void EPInterpreter::Run(void* arg)
 {
-	if( this->State == EPState::UNSTARTED || this->State == EPState::STOP)
+	if( this->State == UNSTARTED || this->State == STOP)
 	{
 		_beginthread(EPLoopLauncher, 0 , arg);
-		this->State = EPState::RUN;
+		this->State = RUN;
 	}
 }
 
 void EPInterpreter::Stop()
 {
-	if( this->State != EPState::UNSTARTED)
-		this->State = EPState::STOP;
+	if( this->State != UNSTARTED)
+		this->State = STOP;
 }
 
 bool EPInterpreter::BindInt(int i)
@@ -92,7 +104,7 @@ bool EPInterpreter::BindInt(int i)
 void EPInterpreter::EPLoopLauncher(void* arg)
 {
 	EPInterpreter::instance->EPLoopInit(arg);
-	while(EPInterpreter::instance->State == EPState::RUN)
+	while(EPInterpreter::instance->State == RUN)
 	{
 		EPInterpreter::instance->EPLoop(arg);
 	}

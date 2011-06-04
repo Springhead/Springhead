@@ -5,14 +5,14 @@
 
 namespace Spr{
 
-enum EPState{
-	RUN,
-	STOP,
-	UNSTARTED,
-};
 
 class EPInterpreter{
 public:
+	enum EPState{
+		RUN,
+		STOP,
+		UNSTARTED,
+	};
 	static EPInterpreter* Create();
 	EPState State;
 	EPInterpreter();
