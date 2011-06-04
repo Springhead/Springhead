@@ -3,6 +3,7 @@
 %{
 #include <Springhead.h>
 %}
+%include "PyPTM.i"
 
 %include "../../include/Springhead.h"
 %include "../../include/base/Env.h"
