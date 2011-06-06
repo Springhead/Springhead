@@ -11,16 +11,22 @@ using namespace Spr;
 
 // const T* を渡すコンストラクタのためのtypemap
 %define INPUT_ARRAY_TYPEMAP(type, argname, ndim)
-%typemap(typecheck) type const * argname %{
-	PyList_Check($input);
-	$1 = PyList_Size($input) == ndim;
+%typemap(typecheck) const type * argname %{
+	$1 = (PyTuple_Check($input) && (PyTuple_Size($input) == ndim))
+			|| (PyList_Check($input) && (PyList_Size($input) == ndim));
 %}
 %typemap(in) type const * argname(type temp[ndim]) %{
-	for(int i = 0; i < ndim; i++)
-		temp[i] = (type) PyFloat_AsDouble(PyList_GetItem($input, i));
+	if (PyTuple_Check($input)){
+		for(int i = 0; i < ndim; i++)
+			temp[i] = (type) PyFloat_AsDouble(PyList_GetItem($input, i));
+	}else if (PyTuple_Check($input)){
+		for(int i = 0; i < ndim; i++)
+			temp[i] = (type) PyFloat_AsDouble(PyTuple_GetItem($input, i
+	}
 	$1 = temp;
 %}
 %enddef
+
 INPUT_ARRAY_TYPEMAP(float, _2f, 2)	//Vec2f
 INPUT_ARRAY_TYPEMAP(float, _3f, 3)	//Vec3f
 INPUT_ARRAY_TYPEMAP(float, _4f, 4)	//Vec4f
@@ -42,8 +48,8 @@ void	unitize();
 	
 %define VEC_CONSTRUCTOR(vec, elem, argname)
 vec();
-vec(const vec&);
-vec(const elem* argname);
+vec(vec&);
+vec(elem* argname);
 %enddef
 
 %define VEC_EXTEND(vec, elem)
@@ -115,18 +121,18 @@ class Vec2f{
 public:
 	float x, y;
 	VEC_MEMBER(Vec2f)
-	static Vec2f Zero();
 	VEC_CONSTRUCTOR(Vec2f, float, _2f)
 	Vec2f(float xi, float yi);
+	void Test(const float* _2f);
 };
 %extend Vec2f{
 	VEC_EXTEND(Vec2f, float)
 }
+
 class Vec2d{
 public:
 	double x, y;
 	VEC_MEMBER(Vec2d)
-	static Vec2d Zero();
 	VEC_CONSTRUCTOR(Vec2d, double, _2d)
 	Vec2d(double xi, double yi);
 };
@@ -138,7 +144,6 @@ class Vec3f{
 public:
 	float x, y, z;
 	VEC_MEMBER(Vec3f)
-	static Vec3f Zero();
 	VEC_CONSTRUCTOR(Vec3f, float, _3f)
 	Vec3f(float xi, float yi, float zi);
 };
@@ -149,7 +154,6 @@ class Vec3d{
 public:
 	double x, y, z;
 	VEC_MEMBER(Vec3d)
-	static Vec3d Zero();
 	VEC_CONSTRUCTOR(Vec3d, double, _3d)
 	Vec3d(double xi, double yi, double zi);
 };
@@ -161,7 +165,6 @@ class Vec4f{
 public:
 	float x, y, z, w;
 	VEC_MEMBER(Vec4f)
-	static Vec4f Zero();
 	VEC_CONSTRUCTOR(Vec4f, float, _4f)
 	Vec4f(float xi, float yi, float zi, float wi);
 };
@@ -172,7 +175,6 @@ class Vec4d{
 public:
 	double x, y, z, w;
 	VEC_MEMBER(Vec4d)
-	static Vec4d Zero();
 	VEC_CONSTRUCTOR(Vec4d, double, _4d)
 	Vec4d(double xi, double yi, double zi, double wi);
 };
@@ -264,12 +266,6 @@ bool IsUnitary(Matrix3d r);
 
 // TAffineだけはグラフィクス系との親和性を考慮してfloat, double両方の具現化をポートする
 
-%rename("trn")  Affine2f::getTrn;
-%rename("trn=") Affine2f::setTrn;
-%rename("pos")  Affine2f::getPos;
-%rename("pos=") Affine2f::setPos;
-%rename("rot")  Affine2f::getRot;
-%rename("rot=") Affine2f::setRot;
 %extend Affine2f{
 	MAT_EXTEND(Affine2f, Vec2f, float)
 	void setTrn(const Vec2f& v){
@@ -304,12 +300,6 @@ public:
 	Affine2f();
 };
 
-%rename("trn")  Affinef::getTrn;
-%rename("trn=") Affinef::setTrn;
-%rename("pos")  Affinef::getPos;
-%rename("pos=") Affinef::setPos;
-%rename("rot")  Affinef::getRot;
-%rename("rot=") Affinef::setRot;
 %extend Affinef{
 	MAT_EXTEND(Affinef, Vec3f, float)
 	void setTrn(const Vec3f& v){
@@ -360,12 +350,6 @@ public:
 	Affinef();
 };
 
-%rename("trn")  Affine2d::getTrn;
-%rename("trn=") Affine2d::setTrn;
-%rename("pos")  Affine2d::getPos;
-%rename("pos=") Affine2d::setPos;
-%rename("rot")  Affine2d::getRot;
-%rename("rot=") Affine2d::setRot;
 %extend Affine2d{
 	MAT_EXTEND(Affine2d, Vec2d, double)
 	void setTrn(const Vec2d& v){
@@ -401,12 +385,6 @@ public:
 	Affine2d();
 };
 
-%rename("trn")  Affined::getTrn;
-%rename("trn=") Affined::setTrn;
-%rename("pos")  Affined::getPos;
-%rename("pos=") Affined::setPos;
-%rename("rot")  Affined::getRot;
-%rename("rot=") Affined::setRot;
 %extend Affined{
 	MAT_EXTEND(Affined, Vec3d, double)
 	void setTrn(const Vec3d& v){
@@ -457,8 +435,6 @@ public:
 	Affined();
 };
 
-%rename("v") Quaterniond::getV;
-%rename("v=") Quaterniond::setV;
 %extend Quaterniond{
 	double __getitem__(size_t index){
 		return $self->operator[](index);
@@ -518,10 +494,6 @@ public:
 double dot(const Quaterniond& q1, const Quaterniond& q2);
 Quaterniond interpolate(double t, const Quaterniond& q1, const Quaterniond& q2);
 
-%rename("pos") Posed::getPos;
-%rename("pos=") Posed::setPos;
-%rename("ori") Posed::getOri;
-%rename("ori=") Posed::setOri;
 %extend Posed{
 	Vec3d transform(Vec3d v){
 		return *$self * v;
