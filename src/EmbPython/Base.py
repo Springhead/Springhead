@@ -75,12 +75,11 @@ class Vec2f(_object):
     def size(self): return _Base.Vec2f_size(self)
     def unit(self): return _Base.Vec2f_unit(self)
     def unitize(self): return _Base.Vec2f_unitize(self)
-    __swig_getmethods__["Zero"] = lambda x: _Base.Vec2f_Zero
-    if _newclass:Zero = staticmethod(_Base.Vec2f_Zero)
     def __init__(self, *args): 
         this = _Base.new_Vec2f(*args)
         try: self.this.append(this)
         except: self.this = this
+    def Test(self, *args): return _Base.Vec2f_Test(self, *args)
     def __getitem__(self, *args): return _Base.Vec2f___getitem__(self, *args)
     def __setitem__(self, *args): return _Base.Vec2f___setitem__(self, *args)
     def __add__(self, *args): return _Base.Vec2f___add__(self, *args)
@@ -90,10 +89,6 @@ class Vec2f(_object):
     __del__ = lambda self : None;
 Vec2f_swigregister = _Base.Vec2f_swigregister
 Vec2f_swigregister(Vec2f)
-
-def Vec2f_Zero():
-  return _Base.Vec2f_Zero()
-Vec2f_Zero = _Base.Vec2f_Zero
 
 class Vec2d(_object):
     __swig_setmethods__ = {}
@@ -114,8 +109,6 @@ class Vec2d(_object):
     def size(self): return _Base.Vec2d_size(self)
     def unit(self): return _Base.Vec2d_unit(self)
     def unitize(self): return _Base.Vec2d_unitize(self)
-    __swig_getmethods__["Zero"] = lambda x: _Base.Vec2d_Zero
-    if _newclass:Zero = staticmethod(_Base.Vec2d_Zero)
     def __init__(self, *args): 
         this = _Base.new_Vec2d(*args)
         try: self.this.append(this)
@@ -129,10 +122,6 @@ class Vec2d(_object):
     __del__ = lambda self : None;
 Vec2d_swigregister = _Base.Vec2d_swigregister
 Vec2d_swigregister(Vec2d)
-
-def Vec2d_Zero():
-  return _Base.Vec2d_Zero()
-Vec2d_Zero = _Base.Vec2d_Zero
 
 class Vec3f(_object):
     __swig_setmethods__ = {}
@@ -156,8 +145,6 @@ class Vec3f(_object):
     def size(self): return _Base.Vec3f_size(self)
     def unit(self): return _Base.Vec3f_unit(self)
     def unitize(self): return _Base.Vec3f_unitize(self)
-    __swig_getmethods__["Zero"] = lambda x: _Base.Vec3f_Zero
-    if _newclass:Zero = staticmethod(_Base.Vec3f_Zero)
     def __init__(self, *args): 
         this = _Base.new_Vec3f(*args)
         try: self.this.append(this)
@@ -171,10 +158,6 @@ class Vec3f(_object):
     __del__ = lambda self : None;
 Vec3f_swigregister = _Base.Vec3f_swigregister
 Vec3f_swigregister(Vec3f)
-
-def Vec3f_Zero():
-  return _Base.Vec3f_Zero()
-Vec3f_Zero = _Base.Vec3f_Zero
 
 class Vec3d(_object):
     __swig_setmethods__ = {}
@@ -198,8 +181,6 @@ class Vec3d(_object):
     def size(self): return _Base.Vec3d_size(self)
     def unit(self): return _Base.Vec3d_unit(self)
     def unitize(self): return _Base.Vec3d_unitize(self)
-    __swig_getmethods__["Zero"] = lambda x: _Base.Vec3d_Zero
-    if _newclass:Zero = staticmethod(_Base.Vec3d_Zero)
     def __init__(self, *args): 
         this = _Base.new_Vec3d(*args)
         try: self.this.append(this)
@@ -213,10 +194,6 @@ class Vec3d(_object):
     __del__ = lambda self : None;
 Vec3d_swigregister = _Base.Vec3d_swigregister
 Vec3d_swigregister(Vec3d)
-
-def Vec3d_Zero():
-  return _Base.Vec3d_Zero()
-Vec3d_Zero = _Base.Vec3d_Zero
 
 class Vec4f(_object):
     __swig_setmethods__ = {}
@@ -243,8 +220,6 @@ class Vec4f(_object):
     def size(self): return _Base.Vec4f_size(self)
     def unit(self): return _Base.Vec4f_unit(self)
     def unitize(self): return _Base.Vec4f_unitize(self)
-    __swig_getmethods__["Zero"] = lambda x: _Base.Vec4f_Zero
-    if _newclass:Zero = staticmethod(_Base.Vec4f_Zero)
     def __init__(self, *args): 
         this = _Base.new_Vec4f(*args)
         try: self.this.append(this)
@@ -258,10 +233,6 @@ class Vec4f(_object):
     __del__ = lambda self : None;
 Vec4f_swigregister = _Base.Vec4f_swigregister
 Vec4f_swigregister(Vec4f)
-
-def Vec4f_Zero():
-  return _Base.Vec4f_Zero()
-Vec4f_Zero = _Base.Vec4f_Zero
 
 class Vec4d(_object):
     __swig_setmethods__ = {}
@@ -288,8 +259,6 @@ class Vec4d(_object):
     def size(self): return _Base.Vec4d_size(self)
     def unit(self): return _Base.Vec4d_unit(self)
     def unitize(self): return _Base.Vec4d_unitize(self)
-    __swig_getmethods__["Zero"] = lambda x: _Base.Vec4d_Zero
-    if _newclass:Zero = staticmethod(_Base.Vec4d_Zero)
     def __init__(self, *args): 
         this = _Base.new_Vec4d(*args)
         try: self.this.append(this)
@@ -303,10 +272,6 @@ class Vec4d(_object):
     __del__ = lambda self : None;
 Vec4d_swigregister = _Base.Vec4d_swigregister
 Vec4d_swigregister(Vec4d)
-
-def Vec4d_Zero():
-  return _Base.Vec4d_Zero()
-Vec4d_Zero = _Base.Vec4d_Zero
 
 class Matrix2f(_object):
     __swig_setmethods__ = {}
@@ -671,9 +636,12 @@ class Affine2f(_object):
     def __add__(self, *args): return _Base.Affine2f___add__(self, *args)
     def __sub__(self, *args): return _Base.Affine2f___sub__(self, *args)
     def __mul__(self, *args): return _Base.Affine2f___mul__(self, *args)
-    def trn(self): return _Base.Affine2f_trn(self)
-    def pos(self): return _Base.Affine2f_pos(self)
-    def rot(self): return _Base.Affine2f_rot(self)
+    def setTrn(self, *args): return _Base.Affine2f_setTrn(self, *args)
+    def getTrn(self): return _Base.Affine2f_getTrn(self)
+    def setPos(self, *args): return _Base.Affine2f_setPos(self, *args)
+    def getPos(self): return _Base.Affine2f_getPos(self)
+    def setRot(self, *args): return _Base.Affine2f_setRot(self, *args)
+    def getRot(self): return _Base.Affine2f_getRot(self)
     __swig_destroy__ = _Base.delete_Affine2f
     __del__ = lambda self : None;
 Affine2f_swigregister = _Base.Affine2f_swigregister
@@ -785,9 +753,12 @@ class Affinef(_object):
     def __add__(self, *args): return _Base.Affinef___add__(self, *args)
     def __sub__(self, *args): return _Base.Affinef___sub__(self, *args)
     def __mul__(self, *args): return _Base.Affinef___mul__(self, *args)
-    def trn(self): return _Base.Affinef_trn(self)
-    def pos(self): return _Base.Affinef_pos(self)
-    def rot(self): return _Base.Affinef_rot(self)
+    def setTrn(self, *args): return _Base.Affinef_setTrn(self, *args)
+    def getTrn(self): return _Base.Affinef_getTrn(self)
+    def setPos(self, *args): return _Base.Affinef_setPos(self, *args)
+    def getPos(self): return _Base.Affinef_getPos(self)
+    def setRot(self, *args): return _Base.Affinef_setRot(self, *args)
+    def getRot(self): return _Base.Affinef_getRot(self)
     __swig_destroy__ = _Base.delete_Affinef
     __del__ = lambda self : None;
 Affinef_swigregister = _Base.Affinef_swigregister
@@ -876,9 +847,12 @@ class Affine2d(_object):
     def __add__(self, *args): return _Base.Affine2d___add__(self, *args)
     def __sub__(self, *args): return _Base.Affine2d___sub__(self, *args)
     def __mul__(self, *args): return _Base.Affine2d___mul__(self, *args)
-    def trn(self): return _Base.Affine2d_trn(self)
-    def pos(self): return _Base.Affine2d_pos(self)
-    def rot(self): return _Base.Affine2d_rot(self)
+    def setTrn(self, *args): return _Base.Affine2d_setTrn(self, *args)
+    def getTrn(self): return _Base.Affine2d_getTrn(self)
+    def setPos(self, *args): return _Base.Affine2d_setPos(self, *args)
+    def getPos(self): return _Base.Affine2d_getPos(self)
+    def setRot(self, *args): return _Base.Affine2d_setRot(self, *args)
+    def getRot(self): return _Base.Affine2d_getRot(self)
     __swig_destroy__ = _Base.delete_Affine2d
     __del__ = lambda self : None;
 Affine2d_swigregister = _Base.Affine2d_swigregister
@@ -986,9 +960,12 @@ class Affined(_object):
     def __add__(self, *args): return _Base.Affined___add__(self, *args)
     def __sub__(self, *args): return _Base.Affined___sub__(self, *args)
     def __mul__(self, *args): return _Base.Affined___mul__(self, *args)
-    def trn(self): return _Base.Affined_trn(self)
-    def pos(self): return _Base.Affined_pos(self)
-    def rot(self): return _Base.Affined_rot(self)
+    def setTrn(self, *args): return _Base.Affined_setTrn(self, *args)
+    def getTrn(self): return _Base.Affined_getTrn(self)
+    def setPos(self, *args): return _Base.Affined_setPos(self, *args)
+    def getPos(self): return _Base.Affined_getPos(self)
+    def setRot(self, *args): return _Base.Affined_setRot(self, *args)
+    def getRot(self): return _Base.Affined_getRot(self)
     __swig_destroy__ = _Base.delete_Affined
     __del__ = lambda self : None;
 Affined_swigregister = _Base.Affined_swigregister
@@ -1070,7 +1047,8 @@ class Quaterniond(_object):
     def __sub__(self, *args): return _Base.Quaterniond___sub__(self, *args)
     def __mul__(self, *args): return _Base.Quaterniond___mul__(self, *args)
     def transform(self, *args): return _Base.Quaterniond_transform(self, *args)
-    def v(self): return _Base.Quaterniond_v(self)
+    def setV(self, *args): return _Base.Quaterniond_setV(self, *args)
+    def getV(self): return _Base.Quaterniond_getV(self)
     __swig_destroy__ = _Base.delete_Quaterniond
     __del__ = lambda self : None;
 Quaterniond_swigregister = _Base.Quaterniond_swigregister
@@ -1137,8 +1115,10 @@ class Posed(_object):
         except: self.this = this
     def transform(self, *args): return _Base.Posed_transform(self, *args)
     def __mul__(self, *args): return _Base.Posed___mul__(self, *args)
-    def pos(self): return _Base.Posed_pos(self)
-    def ori(self): return _Base.Posed_ori(self)
+    def setPos(self, *args): return _Base.Posed_setPos(self, *args)
+    def getPos(self): return _Base.Posed_getPos(self)
+    def setOri(self, *args): return _Base.Posed_setOri(self, *args)
+    def getOri(self): return _Base.Posed_getOri(self)
     __swig_destroy__ = _Base.delete_Posed
     __del__ = lambda self : None;
 Posed_swigregister = _Base.Posed_swigregister
@@ -1155,162 +1135,6 @@ Posed_Trn = _Base.Posed_Trn
 def Posed_Rot(*args):
   return _Base.Posed_Rot(*args)
 Posed_Rot = _Base.Posed_Rot
-
-
-def Radf(*args):
-  return _Base.Radf(*args)
-Radf = _Base.Radf
-
-def Degf(*args):
-  return _Base.Degf(*args)
-Degf = _Base.Degf
-class UTTypeInfo(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, UTTypeInfo, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, UTTypeInfo, name)
-    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined - class is abstract")
-    __repr__ = _swig_repr
-    __swig_setmethods__["className"] = _Base.UTTypeInfo_className_set
-    __swig_getmethods__["className"] = _Base.UTTypeInfo_className_get
-    if _newclass:className = _swig_property(_Base.UTTypeInfo_className_get, _Base.UTTypeInfo_className_set)
-    __swig_setmethods__["base"] = _Base.UTTypeInfo_base_set
-    __swig_getmethods__["base"] = _Base.UTTypeInfo_base_get
-    if _newclass:base = _swig_property(_Base.UTTypeInfo_base_get, _Base.UTTypeInfo_base_set)
-    def Inherit(self, *args): return _Base.UTTypeInfo_Inherit(self, *args)
-    def ClassName(self): return _Base.UTTypeInfo_ClassName(self)
-    def CreateInstance(self): return _Base.UTTypeInfo_CreateInstance(self)
-    __swig_destroy__ = _Base.delete_UTTypeInfo
-    __del__ = lambda self : None;
-UTTypeInfo_swigregister = _Base.UTTypeInfo_swigregister
-UTTypeInfo_swigregister(UTTypeInfo)
-cvar = _Base.cvar
-M_PI = cvar.M_PI
-
-class UTTypeInfoObjectBase(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, UTTypeInfoObjectBase, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, UTTypeInfoObjectBase, name)
-    def __init__(self, *args, **kwargs): raise AttributeError("No constructor defined - class is abstract")
-    __repr__ = _swig_repr
-    def GetTypeInfo(self): return _Base.UTTypeInfoObjectBase_GetTypeInfo(self)
-UTTypeInfoObjectBase_swigregister = _Base.UTTypeInfoObjectBase_swigregister
-UTTypeInfoObjectBase_swigregister(UTTypeInfoObjectBase)
-
-
-def UTAcastError(*args):
-  return _Base.UTAcastError(*args)
-UTAcastError = _Base.UTAcastError
-
-def __lt__(*args):
-  return _Base.__lt__(*args)
-__lt__ = _Base.__lt__
-class UTStringLess(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, UTStringLess, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, UTStringLess, name)
-    __repr__ = _swig_repr
-    def __call__(self, *args): return _Base.UTStringLess___call__(self, *args)
-    def __init__(self): 
-        this = _Base.new_UTStringLess()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _Base.delete_UTStringLess
-    __del__ = lambda self : None;
-UTStringLess_swigregister = _Base.UTStringLess_swigregister
-UTStringLess_swigregister(UTStringLess)
-
-class UTPadding(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, UTPadding, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, UTPadding, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["len"] = _Base.UTPadding_len_set
-    __swig_getmethods__["len"] = _Base.UTPadding_len_get
-    if _newclass:len = _swig_property(_Base.UTPadding_len_get, _Base.UTPadding_len_set)
-    def __init__(self, *args): 
-        this = _Base.new_UTPadding(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _Base.delete_UTPadding
-    __del__ = lambda self : None;
-UTPadding_swigregister = _Base.UTPadding_swigregister
-UTPadding_swigregister(UTPadding)
-
-
-def __lshift__(*args):
-  return _Base.__lshift__(*args)
-__lshift__ = _Base.__lshift__
-class UTEatWhite(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, UTEatWhite, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, UTEatWhite, name)
-    __repr__ = _swig_repr
-    def __init__(self): 
-        this = _Base.new_UTEatWhite()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _Base.delete_UTEatWhite
-    __del__ = lambda self : None;
-UTEatWhite_swigregister = _Base.UTEatWhite_swigregister
-UTEatWhite_swigregister(UTEatWhite)
-
-
-def __rshift__(*args):
-  return _Base.__rshift__(*args)
-__rshift__ = _Base.__rshift__
-class UTRefCount(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, UTRefCount, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, UTRefCount, name)
-    __repr__ = _swig_repr
-    def __init__(self, *args): 
-        this = _Base.new_UTRefCount(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _Base.delete_UTRefCount
-    __del__ = lambda self : None;
-    def AddRef(self): return _Base.UTRefCount_AddRef(self)
-    def DelRef(self): return _Base.UTRefCount_DelRef(self)
-    def RefCount(self): return _Base.UTRefCount_RefCount(self)
-UTRefCount_swigregister = _Base.UTRefCount_swigregister
-UTRefCount_swigregister(UTRefCount)
-
-
-def getAxisMap2D(*args):
-  return _Base.getAxisMap2D(*args)
-getAxisMap2D = _Base.getAxisMap2D
-
-def getAxisMap3D(*args):
-  return _Base.getAxisMap3D(*args)
-getAxisMap3D = _Base.getAxisMap3D
-class SwingTwist(_object):
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, SwingTwist, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, SwingTwist, name)
-    __repr__ = _swig_repr
-    def SwingDir(self): return _Base.SwingTwist_SwingDir(self)
-    def Swing(self): return _Base.SwingTwist_Swing(self)
-    def Twist(self): return _Base.SwingTwist_Twist(self)
-    def ToQuaternion(self, *args): return _Base.SwingTwist_ToQuaternion(self, *args)
-    def FromQuaternion(self, *args): return _Base.SwingTwist_FromQuaternion(self, *args)
-    def Jacobian(self, *args): return _Base.SwingTwist_Jacobian(self, *args)
-    def JacobianInverse(self, *args): return _Base.SwingTwist_JacobianInverse(self, *args)
-    def Coriolis(self, *args): return _Base.SwingTwist_Coriolis(self, *args)
-    def __init__(self): 
-        this = _Base.new_SwingTwist()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _Base.delete_SwingTwist
-    __del__ = lambda self : None;
-SwingTwist_swigregister = _Base.SwingTwist_swigregister
-SwingTwist_swigregister(SwingTwist)
 
 # This file is compatible with both classic and new-style classes.
 
