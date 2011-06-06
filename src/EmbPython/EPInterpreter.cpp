@@ -62,12 +62,12 @@ void EPInterpreter::Initialize()
 	//パイソン初期化
 	Py_Initialize();
 
+	//	_Baseモジュールの登録
 	PyObject*m = PyInit__Base();
 	PyObject *modules = PyImport_GetModuleDict();
 	if (PyDict_SetItemString(modules, "_Base", m) != 0) {
 		Py_DECREF(m);
 	}
-
 
 
 	////手作りクラスの初期化
