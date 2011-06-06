@@ -4,8 +4,11 @@
 # Do not make changes to this file unless you know what you are doing--modify
 # the SWIG interface file instead.
 
-import _Base
 
+
+from sys import version_info
+import _Base
+del version_info
 try:
     _swig_property = property
 except NameError:
