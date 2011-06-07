@@ -154,6 +154,7 @@ public:																	\
 // Rubyなどのポートで使用されるキャスト
 #define SPR_IF_HLANG_CAST(cls) static cls##If* Cast(ObjectIf* o){return DCAST(cls##If, o);}
 
+
 #ifdef SWIGSPR
  #define SPR_IFDEF(cls)	SPR_IFDEF(cls)
  #define SPR_VIFDEF(cls)	SPR_VIFDEF(cls)
