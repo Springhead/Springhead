@@ -20,6 +20,22 @@ EPVec3d_clear(EPVec3d* self)
 static PyObject*
 EPVec3d_str(EPVec3d* self)
 {
+	//int _NUM =3;
+
+	//for (int i = 0 ; i < _NUM ; i++)
+	//{
+	//	 self->ptr->data[i]
+	//	 ret = PyObject_Str(PyFloat);
+	//}
+	
+	
+	//for (int i = 0 ; i < _NUM ; i++)
+	//{
+	//	PyObject* PyTuple_GetItem(	PyObject *p, Py_ssize_t pos)
+	//	self->ptr->data
+	//}
+
+
 	PyObject* val, *ret;
 	val = Py_BuildValue("fff",self->ptr->X(),self->ptr->Y(),self->ptr->Z());
 	ret = PyObject_Str(val);
@@ -33,7 +49,6 @@ EPVec3d_set(EPVec3d *self,PyObject* data)
 {
 	double dx,dy,dz;
 	PyArg_ParseTuple(data,"ddd",&dx,&dy,&dz);
-
 	self->ptr->x = dx;
 	self->ptr->y = dy;
 	self->ptr->z = dz;

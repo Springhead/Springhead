@@ -4,7 +4,11 @@
 #ifdef SWIG
 #define __EPDECL
 #else
+#if _DEBUG
 #define __EPDECL __cdecl
+#else
+#define __EPDECL __fastcall
+#endif
 #endif
 
 //springhead

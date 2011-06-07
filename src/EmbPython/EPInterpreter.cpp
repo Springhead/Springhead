@@ -32,7 +32,7 @@ EPInterpreter::~EPInterpreter()
 }
 
 
-extern "C" { PyObject* PyInit__SprPy(void); }
+extern "C" { __declspec(dllexport) PyObject* PyInit__SprPy(void); }
 
 
 void EPInterpreter::Initialize()
