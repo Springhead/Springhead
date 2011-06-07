@@ -22,6 +22,41 @@ HISdkIf* SPR_CDECL HISdkIf::CreateSdk(){
 	HISdk* rv = DBG_NEW HISdk;
 	return rv->Cast();
 }
+void SPR_CDECL HISdkIf::RegisterSdk(){
+	static bool bFirst = true;
+	if (!bFirst) return;
+	bFirst=false;
+/*
+	Sdk::RegisterFactory(DBG_NEW PHSdkFactory());
+	PHSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHScene));
+
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSolid));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHRootNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHGear));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHHingeJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSliderJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPathJoint));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPath));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSpring));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHHingeJointNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSliderJointNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointNode));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPathJointNode));
+
+
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKBallActuator));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKHingeActuator));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKEndEffector));
+
+	PHSolidIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFrame));
+
+	PHRegisterTypeDescs();
+	PHRegisterLoadHandlers();
+	CDRegisterTypeDescs();
+*/
+}
+
 
 HISdk::HISdk(const HISdkDesc& desc){
 	vpool = new HIVirtualDevicePool;
