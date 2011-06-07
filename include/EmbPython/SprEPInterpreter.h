@@ -27,7 +27,7 @@ public:
 
 private:
 	static EPInterpreter* instance;
-	static void EPLoopLauncher(void *arg);
+	static void SPR_CDECL EPLoopLauncher(void *arg);
 };
 
 };	//namespace Spr

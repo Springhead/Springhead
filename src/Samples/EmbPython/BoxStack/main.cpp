@@ -220,6 +220,10 @@ void EPLoopInit(void* arg)
 		//PyRun_SimpleString("import Creature\n");
 		//PyRun_SimpleString("from Creature import *\n");
 
+		
+		PyRun_SimpleString("import Sprpy\n");
+		
+
 
 		PHSdkIf* phSdk = app->GetSdk()->GetPHSdk();
 		PHSceneIf* scene = app->GetSdk()->GetScene()->GetPHScene();
@@ -263,6 +267,8 @@ void EPLoopInit(void* arg)
 //		PyObject* py_fwSdk = (PyObject*)newEPFWSdkIf(app->GetSdk());
 //		Py_INCREF(py_fwsdk);
 //		PyDict_SetItemString(dict,"fwsdk",py_fwsdk);
+
+		//SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FWSdkIf, 0 |  0 );
 
 
 		PyObject* py_sdk = (PyObject*)newEPPHSdkIf(phSdk);
