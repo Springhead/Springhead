@@ -1,12 +1,8 @@
-%module PTM
-
 %include "workaround.i"
 
 %{
 #include "Base/TQuaternion.h"
 #include "Base/Affine.h"
-using namespace PTM;
-using namespace Spr;
 %}
 
 // const T* を渡すコンストラクタのためのtypemap
@@ -34,7 +30,6 @@ INPUT_ARRAY_TYPEMAP(double, _2d, 2)	//Vec2d
 INPUT_ARRAY_TYPEMAP(double, _3d, 3)	//Vec3d
 INPUT_ARRAY_TYPEMAP(double, _4d, 4)	//Vec4d, Quaterniond
 INPUT_ARRAY_TYPEMAP(double, _7d, 7)	//Posed
-
 
 %define VEC_MEMBER(type)
 void	clear();
@@ -113,6 +108,10 @@ mat __mul__(elem k){
 	return *$self * k;
 }
 %enddef
+
+
+
+namespace Spr{
 
 double Deg(double rad);
 double Rad(double deg);
@@ -264,7 +263,6 @@ public:
 bool IsUnitary(Matrix3d r);
 
 // TAffineだけはグラフィクス系との親和性を考慮してfloat, double両方の具現化をポートする
-
 %extend Affine2f{
 	MAT_EXTEND(Affine2f, Vec2f, float)
 	void setTrn(const Vec2f& v){
@@ -535,3 +533,4 @@ public:
 
 	VEC_CONSTRUCTOR(Posed, double, _7d)
 };
+}	//	namespace Spr

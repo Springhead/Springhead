@@ -271,6 +271,7 @@ void EPLoopInit(void* arg)
 //		PyDict_SetItemString(dict,"fwsdk",py_fwsdk);
 
 		//SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FWSdkIf, 0 |  0 );
+		PyRun_SimpleString("import SprPy\n");
 
 		PyObject *fwSdk = SprPy_RapFWSDK(app->GetSdk());
 		Py_INCREF(fwSdk);
