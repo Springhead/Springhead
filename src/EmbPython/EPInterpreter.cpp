@@ -32,7 +32,7 @@ EPInterpreter::~EPInterpreter()
 }
 
 
-extern "C" { PyObject* PyInit__Base(void); }
+extern "C" { PyObject* PyInit__SprPy(void); }
 
 
 void EPInterpreter::Initialize()
@@ -62,10 +62,10 @@ void EPInterpreter::Initialize()
 	//パイソン初期化
 	Py_Initialize();
 
-	//	_Baseモジュールの登録
-	PyObject*m = PyInit__Base();
+	//	_SprPyモジュールの登録
+	PyObject*m = PyInit__SprPy();
 	PyObject *modules = PyImport_GetModuleDict();
-	if (PyDict_SetItemString(modules, "_Base", m) != 0) {
+	if (PyDict_SetItemString(modules, "_SprPy", m) != 0) {
 		Py_DECREF(m);
 	}
 

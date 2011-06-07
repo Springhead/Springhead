@@ -21,7 +21,7 @@ using namespace Spr;
 			temp[i] = (type) PyFloat_AsDouble(PyList_GetItem($input, i));
 	}else if (PyTuple_Check($input)){
 		for(int i = 0; i < ndim; i++)
-			temp[i] = (type) PyFloat_AsDouble(PyTuple_GetItem($input, i
+			temp[i] = (type) PyFloat_AsDouble(PyTuple_GetItem($input, i));
 	}
 	$1 = temp;
 %}
@@ -123,7 +123,6 @@ public:
 	VEC_MEMBER(Vec2f)
 	VEC_CONSTRUCTOR(Vec2f, float, _2f)
 	Vec2f(float xi, float yi);
-	void Test(const float* _2f);
 };
 %extend Vec2f{
 	VEC_EXTEND(Vec2f, float)
