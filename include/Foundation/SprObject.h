@@ -138,15 +138,19 @@ public:																	\
 		return NULL;													\
 	}																	\
 
+#endif // !SWIG
+
 ///	ディスクリプタが持つべきメンバの宣言部．
+#ifndef SWIG
 #define SPR_DESCDEF(cls)												\
 public:																	\
 	const static IfInfo* GetIfInfo(){									\
 		return cls##If::GetIfInfoStatic();								\
 	}																	\
 
-#endif // !SWIG
-
+#else
+#define SPR_DESCDEF(cls)
+#endif
 // Rubyなどのポートで使用されるキャスト
 #define SPR_IF_HLANG_CAST(cls) static cls##If* Cast(ObjectIf* o){return DCAST(cls##If, o);}
 
@@ -162,7 +166,11 @@ public:																	\
  #endif
 #endif
 
+#ifndef SWIG
 #define SPR_OVERRIDEMEMBERFUNCOF(cls, base)	SPR_OVERRIDEMEMBERFUNCOF_##cls(base)
+#else
+#define SPR_OVERRIDEMEMBERFUNCOF(cls, base)
+#endif
 
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
