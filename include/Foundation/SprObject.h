@@ -123,8 +123,7 @@ public:																	\
 	const IfInfo* SPR_CDECL GetIfInfo() const ;							\
 	static const IfInfo* SPR_CDECL GetIfInfoStatic();					\
 	static void* operator new(size_t) {									\
-		assert(0);	/*	Don't allocate interfaces	*/					\
-		return (void*)1;												\
+		return (void*)0;												\
 	}																	\
 	static void operator delete(void* pv) { /*	nothing	to do */ }		\
 	/*	‘ŠŒÝƒLƒƒƒXƒg	*/												\
