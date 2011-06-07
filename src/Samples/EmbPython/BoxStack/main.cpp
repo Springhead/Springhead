@@ -48,6 +48,8 @@ void fps(){
 	}
 }*/
 
+extern PyObject* SprPy_RapFWSDK(FWSdkIf *sdk);
+
 class MyApp : public SampleApp{
 public:
 	/// ƒy[ƒWID
@@ -221,7 +223,7 @@ void EPLoopInit(void* arg)
 		//PyRun_SimpleString("from Creature import *\n");
 
 		
-		PyRun_SimpleString("import Sprpy\n");
+		//PyRun_SimpleString("import Sprpy\n");
 		
 
 
@@ -270,10 +272,11 @@ void EPLoopInit(void* arg)
 
 		//SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FWSdkIf, 0 |  0 );
 
+		PyObject *fwSdk = SprPy_RapFWSDK(app->GetSdk());
+		Py_INCREF(fwSdk);
+		PyDict_SetItemString(dict,"sdk",fwSdk);
 
 		PyObject* py_sdk = (PyObject*)newEPPHSdkIf(phSdk);
-		Py_INCREF(py_sdk);
-		PyDict_SetItemString(dict,"sdk",py_sdk);
 
 		PyObject* py_scene = (PyObject*)newEPPHSceneIf(scene);
 		Py_INCREF(py_scene);
