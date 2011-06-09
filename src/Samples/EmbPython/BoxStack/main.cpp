@@ -48,8 +48,6 @@ void fps(){
 	}
 }*/
 
-extern PyObject* SprPy_RapFWSDK(FWSdkIf *sdk);
-
 class MyApp : public SampleApp{
 public:
 	/// ページID
@@ -198,6 +196,10 @@ void EPLoop(void* arg)
 	//	PyRun_InteractiveOne(stdin,"stdin py loop");
 	//}
 }
+
+PyObject* SprPy_PassFWSdkIf(FWSdkIf *ob);
+
+
 //ループ実行直前に１度だけ呼ばれる
 void EPLoopInit(void* arg)
 	{
@@ -273,7 +275,7 @@ void EPLoopInit(void* arg)
 		//SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FWSdkIf, 0 |  0 );
 		PyRun_SimpleString("import SprPy\n");
 
-		PyObject *fwSdk = SprPy_RapFWSDK(app->GetSdk());
+		PyObject *fwSdk = SprPy_PassFWSdkIf(app->GetSdk());
 		Py_INCREF(fwSdk);
 		PyDict_SetItemString(dict,"sdk",fwSdk);
 
