@@ -24,7 +24,6 @@
 namespace Spr{;
 
 struct PHSdkIf;
-
 struct CDShapeIf;
 struct CDShapeDesc;
 struct PHEngineIf;

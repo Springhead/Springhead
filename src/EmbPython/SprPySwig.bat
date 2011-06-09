@@ -24,6 +24,14 @@ for %%p in (%SRCINTF%) do echo %%include "%%p">> %FILE%
 
 rem SWIG PART
 swig -c++ -w312,319,325,362,401,402 -python -static_link %MODULE%.i 
+
+echo PyObject* SprPy_PassFWSdkIf(FWSdkIf *ob){>>SprPy_wrap.cxx
+echo PyObject * res;>>SprPy_wrap.cxx
+echo res = SWIG_NewPointerObj(ob, SWIGTYPE_p_Spr__FWSdkIf, 0);>>SprPy_wrap.cxx
+echo return res;>>SprPy_wrap.cxx
+echo }>>SprPy_wrap.cxx
+
 rem 2> %0.log
 copy SprPy.py ..\..\bin\src\Python\Lib
 :end
+pause
