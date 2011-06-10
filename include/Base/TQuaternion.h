@@ -488,30 +488,16 @@ public:
 	}
 
 	/**@name	‰Šú‰»‚Æ\’z	*/
+	TPose(const TVec3<ET>& p, const TQuaternion<ET>& q = TQuaternion<ET>()){
+		Pos() = p;
+		Ori() = q;
+	}
 	///	’PˆÊs—ñ
 	static TPose<ET> Unit(){
 		TPose<ET> y;
 		//PTM::init_unitize(y);
 		y.Pos() = TVec3<ET>();
 		y.Ori() = TQuaternion<ET>();
-		return y;
-	}
-
-	/// —^‚¦‚ç‚ê‚½ˆÊ’u‚Å‚ÌPose‚ğ‰Šú‰»‚µ‚Ä•Ô‚·
-	static TPose<ET> Unit(const TVec3<ET> &v){
-		TPose<ET> y;
-		//PTM::init_unitize(y);
-		y.Pos() = v;
-		y.Ori() = TQuaternion<ET>();
-		return y;
-	}
-
-	/// —^‚¦‚ç‚ê‚½‰ñ“]‚Å‚ÌPose‚ğ‰Šú‰»‚µ‚Ä•Ô‚·
-	static TPose<ET> Unit(const TQuaternion<ET> &q){
-		TPose<ET> y;
-		//PTM::init_unitize(y);
-		y.Pos() = TVec3<ET>();
-		y.Ori() = q;
 		return y;
 	}
 
@@ -533,25 +519,28 @@ public:
 		y.Ori() = TQuaternion<ET>(wi, xi, yi, zi);
 		return y;
 	}
-
 	static TPose<ET> Rot(ET angle, const TVec3<element_type>& axis){ 
 		TPose<ET> y;
 		y.Pos() = TVec3<ET>();
 		y.Ori() = TQuaternion<ET>::Rot(angle, axis);
 		return y;
 	}
-
 	static TPose<ET> Rot(ET angle, char axis){
 		TPose<ET> y;
 		y.Pos() = TVec3<ET>();
 		y.Ori() = TQuaternion<ET>::Rot(angle, axis);
 		return y;
 	}
-
 	static TPose<ET> Rot(const TVec3<ET>& rot){
 		TPose<ET> y;
 		y.Pos() = TVec3<ET>();
 		y.Ori() = TQuaternion<ET>::Rot(rot);
+		return y;
+	}
+	static TPose<ET> Rot(const TQuaternion<ET> &q){
+		TPose<ET> y;
+		y.Pos() = TVec3<ET>();
+		y.Ori() = q;
 		return y;
 	}
 
