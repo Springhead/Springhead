@@ -1,5 +1,6 @@
 setlocal enabledelayedexpansion
-rem Create .i files PART
+@echo off
+call .\EmbPythonSwig.bat Utility
 rem call .\EmbPythonSwig.bat Base
 call .\EmbPythonSwig.bat Foundation
 call .\EmbPythonSwig.bat Collision Foundation
