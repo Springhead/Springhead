@@ -6,9 +6,16 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
+/**
+	- マルチウィンドウのデモ
+	 - 1つのシーンを2つのウィンドウで表示する．
+	 - 1つはデバッグ描画，もう1つは非デバッグ描画
+ **/
+
 #include "FWMultiWinSample.h"
 
 FWMultiWinSample app;
+
 int __cdecl main(int argc, char* argv[]){	
 	app.Init(argc, argv);	
 	app.StartMainLoop();
