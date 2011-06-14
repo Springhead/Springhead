@@ -16,31 +16,17 @@
 #ifndef FWMULTIWIN_SAMPLE_H
 #define FWMULTIWIN_SAMPLE_H
 
-#include <Framework/SprFWApp.h>
 #include <Springhead.h>
-#include <vector>
+#include <Framework/SprFWApp.h>
 
 using namespace Spr;
 
 class FWMultiWinSample : public FWApp{
-private:
-	int				nWin;			//< 作るウィンドウの数
-	string			fileName;		//< 読み込むファイルの名前
-	vector<string>	winNames;		//< Windowの名前
 public:
 	FWMultiWinSample();	
 	virtual void Init(int argc, char* argv[]);
 	virtual void TimerFunc(int id);
-	virtual void Display();
 	virtual void Keyboard(int key, int x, int y);
-
-	void InitCameraView();
-	void Reset();
-	void Step();
-	void DebugDisplay(bool bDebug);
-	void BuildScene();
-	void CreateJointScene(PHSceneIf* phScene);
-	
 };
 
 #endif
