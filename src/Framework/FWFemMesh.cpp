@@ -42,9 +42,9 @@ void FWFemMesh::Sync(bool ph2gr){
 			for(unsigned gv=0; gv<vertexIdMap.size(); ++gv){
 				int pv = vertexIdMap[gv];
 				//	PHから何らかの物理量を取ってくる
-				phMesh->vertices[pv].integralSelf.volume;
+				//	value = phMeshの派生クラス->thermo[pv];
 				//	GRのテクスチャ座標として設定する。	s t r q の rを設定
-				gvtx[stride*gv + tex + 2] = value + gvtx[stride*gv];
+				gvtx[stride*gv + tex + 2] = value + gvtx[stride*gv];	//	gvtx[stride*gv]で場所によって違う深度を拾ってくることに
 			}
 		}	
 	}else{
@@ -116,11 +116,11 @@ void FWFemMesh::CreateGRFromPH(){
 	for(unsigned i=0; i< phMesh->surfaceVertices.size(); ++i) 
 		gmd.vertices.push_back(phMesh->vertices[ phMesh->surfaceVertices[i] ].pos);
 	//	表面の三角形を設定
-	for(unsigned i=0; i< phMesh->surfaceFaces.size(); ++i) {
+	for(unsigned i=0; i< phMesh->nSurfaceFace; ++i) {
 		GRMeshFace f;
 		f.nVertices = 3;
 		for(int j=0; j<3; ++j){
-			f.indices[j] = vtxMap[phMesh->surfaceFaces[i].vertices[j]];
+			f.indices[j] = vtxMap[phMesh->faces[i].vertices[j]];
 		}
 		gmd.faces.push_back(f);
 	}

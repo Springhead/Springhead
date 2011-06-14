@@ -80,7 +80,7 @@ public:
 	int id;
 	///	idの最大値
 	static int maxId;
-	///	desc型についての詳細な情報
+	///	型についての詳細な情報
 	UTTypeDesc* desc;
 	///	基本インタフェースリスト
 	const IfInfo** baseList;

@@ -18,34 +18,60 @@ namespace Spr{;
 
 class PHFemMesh: public SceneObject{
 public:
-	struct Integral{
-		double volume;		//	\int {N} {N}^T dV
-		double gradient;	//	\int d{N}/dx d{N}^T/dx + d{N}/dy d{N}^T/dy + d{N}/dz d{N}^T/dz  dV
-		double surface;		//	\int {N} {N}^T dS	表面の頂点のみが値を持つ
-	};
+	//	頂点
 	struct FemVertex{
 		Vec3d pos;
 		std::vector<int> tets;
-		std::vector<int> neighbors;
-		std::vector<Integral> integralNeighbors;
-		Integral integralSelf;
+		std::vector<int> edges;
 		FemVertex();
 	};
+	//	四面体
 	struct Tet{
-		int vertices[4];
+		int vertices[4];	//	頂点ID
+		int edges[6];		//	対応する辺のID。0:辺01, 1:辺12, 2:辺20, 3:辺03, 4:辺13, 5:辺23
+		int& edge(int i, int j);
 	};
+	//	四面体の面。
 	class Face{
+		///	比較するための、ソート済みの頂点id。Update()で更新。
 		int sorted[3];
 	public:
+		///	頂点ID。順番で面の表裏を表す。
 		int vertices[3];
 		void Update();
+		///	頂点IDで比較
 		bool operator < (const Face& f2);
+		///	頂点IDで比較
 		bool operator == (const Face& f2);
 	};
+	//	辺
+	struct Edge{
+		Edge(int v1=-1, int v2=-1);
+		int vertices[2];
+		///	頂点IDで比較
+		bool operator < (const Edge& e2);
+		///	頂点IDで比較
+		bool operator == (const Edge& e2);
+	};
+	//	基本情報(生成時に与えられる情報)
+	///	頂点
 	std::vector<FemVertex> vertices;
-	std::vector<int> surfaceVertices;
-	std::vector<Face> surfaceFaces;
+	///	四面体
 	std::vector<Tet> tets;
+	
+	//	以下は基本情報から計算して求める。
+	///	物体表面の頂点のID
+	std::vector<int> surfaceVertices;
+	///	物体表面の面
+	std::vector<Face> faces;
+	///	面のうち物体表面のものが、faces[0]..faces[nSurfaceFace-1]
+	unsigned nSurfaceFace;
+	///	物体表面の辺
+	std::vector<Edge> edges;
+	///	辺のうち物体表面のものが、edges[0]..edges[nSurfaceEdge]
+	unsigned nSurfaceEdge;
+
+	
 	SPR_OBJECTDEF(PHFemMesh);
 	PHFemMesh(const PHFemMeshDesc& desc=PHFemMeshDesc(), SceneIf* s=NULL);
 	//	デスクリプタのサイズ
@@ -54,7 +80,8 @@ public:
 	virtual bool GetDesc(void* desc) const ;
 	// デスクリプタの設定
 	virtual void SetDesc(const void* desc);
-	
+	//	四面体単位の係数行列を、頂点単位の係数行列へ変換する。
+	void Tet2Vertex();
 
 };
 
