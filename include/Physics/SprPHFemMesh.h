@@ -28,9 +28,20 @@ struct PHFemMeshDesc: public PHFemMeshState{
 	void Init();
 };
 
-///	FemMeshのインタフェース
+///	FEM用の四面体メッシュ
 struct PHFemMeshIf : public SceneObjectIf{
 	SPR_IFDEF(PHFemMesh);
+};
+
+///	FemMeshThermoのディスクリプタ
+struct PHFemMeshThermoDesc: public PHFemMeshDesc{
+	PHFemMeshThermoDesc();
+	void Init();
+};
+
+///	温度のFEM用のメッシュ
+struct PHFemMeshThermoIf : public PHFemMeshIf{
+	SPR_IFDEF(PHFemMeshThermo);
 };
 
 //@}

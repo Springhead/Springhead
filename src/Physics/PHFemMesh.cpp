@@ -16,10 +16,8 @@ namespace Spr{;
 PHFemMeshDesc::PHFemMeshDesc(){
 	Init();
 }
-void PHFemMeshDesc::Init(){
-	
+void PHFemMeshDesc::Init(){	
 }
-
 
 void PHFemMesh::Face::Update(){
 	for(int i=0; i<3; ++i) sorted[i] = vertices[i];
@@ -77,13 +75,7 @@ PHFemMesh::FemVertex::FemVertex(){
 PHFemMesh::PHFemMesh(const PHFemMeshDesc& desc, SceneIf* s){
 	SetDesc(&desc);
 	if (s){ SetScene(s); }
-
-	//ThermalFEMの実装を追加していく
-
-	//計算の関数については、ガウス・ザイデルで　
-
 }
-
 
 void PHFemMesh::SetDesc(const void* p) {
 	PHFemMeshDesc* d = (PHFemMeshDesc*)p;
@@ -102,18 +94,8 @@ void PHFemMesh::SetDesc(const void* p) {
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
 			vertices[tets[i].vertices[j]].tets.push_back(i);
-//			for(unsigned k=0; k<4; ++k)
-//				if (j!=k) vertices[tets[i].vertices[j]].neighbors.push_back(tets[i].vertices[k]);
 		}
 	}
-/*
-	//	neighborsの重複の削除
-	for(unsigned i=0; i<vertices.size(); ++i){
-		std::sort(vertices[i].neighbors.begin(), vertices[i].neighbors.end());
-		std::vector<int>::iterator newEnd = std::unique(vertices[i].neighbors.begin(), vertices[i].neighbors.end());
-		vertices[i].neighbors.erase(newEnd, vertices[i].neighbors.end());
-	}
-*/	
 	//	表面を探す
 	std::vector<Face> allFaces;
 	//	裏表を考える必要がある。
@@ -225,38 +207,6 @@ bool PHFemMesh::GetDesc(void* p) const {
 		d->vertices[i] = vertices[i].pos;
 	}
 	return true;
-}
-
-/*
-	有限要素法では、要素（＝四面体）の体積や面積の積分から、各ノードの物理量を求める。
-	各ノードは複数の四面体で共有されているので、それらの合成を持つことになる。
-
-	頂点と頂点の間に係数がある。
-	    d    
-		     x
-
-i         x  d  o
-
-j		     o  d
-
-		i j 
-	Ax + b = 0,  (D-F)x + b = 0 x = D^{-1} F x -  D^{-1} b, x = D^{-1} F x - b'
-	x_i =   (F_i * x)/D_ii - b_i/D_ii
-	i->j, j->i で同じ係数(F_ij, F_ji)が必要だが、計算は上から行うので、両方から係数が見えないとならない。
-	
-	1. 全四面体について係数を求め、i<jに係数を記録していく
-	2. ijの係数をjiにコピー
-		頂点i -> ijの係数 <- 頂点j とするか？	(2なし)
-		頂点i -> ijの係数  頂点j -> jiの係数　とするか？	(2あり)
-
-	頂点に隣のID(i->j)=辺を記録しておきたい。
-	四面体からも、頂点iの(i->j)のうちどのjが自分に含まれるかすぐ分かると良い。
-	四面体に辺への参照を持たせたい
-	
-	∴辺構造体が必要
-		頂点i -> ijの係数 <- 頂点j とするのが良い	(2なし)
-*/
-void PHFemMesh::Tet2Vertex(){
 }
 
 }
