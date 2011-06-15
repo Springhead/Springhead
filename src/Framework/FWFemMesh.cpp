@@ -3,7 +3,7 @@
 #include <Graphics/GRFrame.h>
 #include <Physics/PHConstraint.h>
 #include <Foundation/UTLoadHandler.h>
-#include "FWFemMesh.h"
+#include "FWFemMeshThremo.h"
 #include "FWSprTetgen.h"
 
 
@@ -85,7 +85,7 @@ bool FWFemMesh::CreatePHFromGR(){
 	//	grMeshを変換して、phMeshをつくる。
 
 	//	以下で、grMeshからtetgenを呼び出して変換して、pmdに値を入れていけば良い。
-	PHFemMeshDesc pmd;
+	PHFemMeshThermoDesc pmd;
 	
 	//TetGenで四面体メッシュ化
 	Vec3d* vtxsOut=NULL;
@@ -101,7 +101,7 @@ bool FWFemMesh::CreatePHFromGR(){
 	} 
 	pmd.tets.assign(tetsOut, tetsOut + nTetsOut*4);
 	//	PHMeshの生成
-	phMesh = DBG_NEW PHFemMesh(pmd);
+	phMesh = DBG_NEW PHFemMeshThermo(pmd);
 	return true;
 }
 void FWFemMesh::CreateGRFromPH(){
