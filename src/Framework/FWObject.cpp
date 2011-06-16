@@ -5,10 +5,15 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Framework.h"
-#include <Graphics/GRFrame.h>
+#include <Framework/FWObject.h>
+#include <Framework/FWScene.h>
+#include <Framework/FWSdk.h>
 #include <Physics/PHConstraint.h>
-
+#include <Physics/PHSdk.h>
+#include <Graphics/GRFrame.h>
+#include <Graphics/GRMesh.h>
+#include <FileIO/FISdk.h>
+#include <FileIO/FIFileX.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -93,6 +98,16 @@ bool FWObject::AddChildObject(ObjectIf* o){
 		return true;
 	}
 	return false;
+}
+
+ObjectIf* FWObject::GetChildObject(size_t pos){
+	if (pos==0) if (phSolid) return phSolid; else return grFrame;
+	if (pos==1) if (phSolid) return grFrame; else return NULL;
+	return NULL;
+}
+
+size_t FWObject::NChildObject() const {
+	return phSolid ? (grFrame ? 2 : 1) : (grFrame ? 1 : 0);
 }
 
 bool FWObject::LoadMesh(const char* filename, const IfInfo* ii, GRFrameIf* frame){
@@ -263,6 +278,30 @@ bool FWBoneObject::AddChildObject(ObjectIf* o){
 		Modify();
 	}
 	return rv;
+}
+
+ObjectIf* FWBoneObject::GetChildObject(size_t pos){
+	bool objs[] = {phSolid!=NULL, grFrame!=NULL, phJoint!=NULL, endFrame!=NULL};
+	int cnt = -1;
+	int i=0;
+	for (; i<4; ++i) {
+		if (objs[i]) { cnt++; }
+		if (cnt==pos) { break; }
+	}
+	if (i == 0) { return phSolid;  }
+	if (i == 1) { return grFrame;  }
+	if (i == 2) { return phJoint;  }
+	if (i == 3) { return endFrame; }
+	return NULL;
+}
+
+size_t FWBoneObject::NChildObject() const {
+	bool objs[] = {phSolid!=NULL, grFrame!=NULL, phJoint!=NULL, endFrame!=NULL};
+	int cnt = 0;
+	for (int i=0; i<4; ++i) {
+		if (objs[i]) { cnt++; }
+	}
+	return cnt;
 }
 
 void FWBoneObject::Modify() {

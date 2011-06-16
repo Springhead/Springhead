@@ -8,10 +8,8 @@
 #ifndef FWOBJECT_H
 #define FWOBJECT_H
 
-#include <Springhead.h>
 #include <Framework/SprFWObject.h>
 #include <Foundation/Object.h>
-#include <Foundation/Scene.h>
 
 namespace Spr{;
 
@@ -29,14 +27,8 @@ public:
 	//
 	virtual SceneObjectIf* CloneObject(); 
 	virtual bool		AddChildObject(ObjectIf* o);
-	virtual ObjectIf* GetChildObject(size_t pos){
-		if (pos==0) if (phSolid) return phSolid; else return grFrame;
-		if (pos==1) if (phSolid) return grFrame; else return NULL;
-		return NULL;
-	}
-	virtual size_t NChildObject() const {
-		return phSolid ? (grFrame ? 2 : 1) : (grFrame ? 1 : 0);
-	}
+	virtual ObjectIf* GetChildObject(size_t pos);
+	virtual size_t NChildObject() const;
 
 	PHSolidIf*	GetPHSolid(){ return phSolid; }
 	void		SetPHSolid(PHSolidIf* s){ phSolid = s; }
@@ -60,31 +52,9 @@ public:
 	UTRef< GRFrameIf > endFrame;
 	Posed sockOffset;
 	//
-	virtual bool AddChildObject(ObjectIf* o);
-	
-	virtual ObjectIf* GetChildObject(size_t pos){
-		bool objs[] = {phSolid!=NULL, grFrame!=NULL, phJoint!=NULL, endFrame!=NULL};
-		int cnt = -1;
-		int i=0;
-		for (; i<4; ++i) {
-			if (objs[i]) { cnt++; }
-			if (cnt==pos) { break; }
-		}
-		if (i == 0) { return phSolid;  }
-		if (i == 1) { return grFrame;  }
-		if (i == 2) { return phJoint;  }
-		if (i == 3) { return endFrame; }
-		return NULL;
-	}
-	virtual size_t NChildObject() const {
-		bool objs[] = {phSolid!=NULL, grFrame!=NULL, phJoint!=NULL, endFrame!=NULL};
-		int cnt = 0;
-		for (int i=0; i<4; ++i) {
-			if (objs[i]) { cnt++; }
-		}
-		return cnt;
-	}
-
+	virtual bool AddChildObject(ObjectIf* o);	
+	virtual ObjectIf* GetChildObject(size_t pos);
+	virtual size_t NChildObject() const;
 	virtual void Sync();
 	virtual void Modify();
 

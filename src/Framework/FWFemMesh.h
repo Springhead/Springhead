@@ -8,14 +8,14 @@
 #ifndef FWFEMMESH_H
 #define FWFEMMESH_H
 
-#include <Springhead.h>
+#include <Framework/SprFWFemMesh.h>
 #include <Framework/FWObject.h>
-#include <Graphics/GRMesh.h>
 #include <Physics/PHFemMesh.h>
 #include "FrameworkDecl.hpp"
 
-
 namespace Spr{;
+
+class GRMesh;
 
 /**	Framework上でのFEMメッシュ。
 	毎ステップ、PHFemMeshのFEMシミュレーション結果をGRMeshに反映させる。

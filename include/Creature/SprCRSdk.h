@@ -8,6 +8,8 @@
 #ifndef SPR_CRSDKIF_H
 #define SPR_CRSDKIF_H
 
+#include <Foundation/SprScene.h>
+
 namespace Spr{;
 
 //@{

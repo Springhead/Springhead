@@ -5,9 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Graphics.h"
-#include "GRMesh.h"
-#include <GL/glut.h>
+#include <Graphics/GRMesh.h>
+#include <Graphics/GRRender.h>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 using namespace std;
 

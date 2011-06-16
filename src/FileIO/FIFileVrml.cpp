@@ -1,10 +1,14 @@
 // VrmlParser.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
 //
 
-#include "FIFileVrml.h"
-#include <list>
-#include <stack>
+#include <FileIO/FIFileVRML.h>
+#include <FileIO/FILoadContext.h>
+#include <FileIO/FISaveContext.h>
 #include <boost/spirit/include/classic_regex.hpp>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
+
 namespace Spr{;
 using namespace boost::spirit::classic;
 
@@ -77,7 +81,7 @@ static void OnFieldId(const char* first, const char* last){
 //----------------------------------------------------------------------------
 //	FIFileVRML
 
-FIFileVRML::FIFileVRML(){
+FIFileVRML::FIFileVRML(const FIFileVRMLDesc& desc){
 	Init();
 }
 void FIFileVRML::PushLoaderContext(FILoadContext* fc){

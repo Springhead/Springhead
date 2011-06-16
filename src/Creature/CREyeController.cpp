@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CREyeController.h"
+#include <Creature/CREyeController.h>
 
 #define CREYECTRL_DEBUG true
 

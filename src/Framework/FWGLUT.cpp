@@ -1,39 +1,55 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
 #ifdef _MSC_VER
 #	include <windows.h>
 #endif
 #include <GL/glew.h>
+#include <GL/glut.h>
+#include <Framework/SprFWApp.h>
 #include <Framework/FWGLUT.h>
+#include <Framework/FWSdk.h>
+#include <Graphics/GRSdk.h>
+#include <HumanInterface/HISdk.h>
 #include <sstream>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 using namespace std;
 
 namespace Spr{;
 
 // FWWinGLUT /////////////////////////////////////////////////////////////////////
-void FWWinGLUT::Position(int left, int top){
+void FWWinGLUT::SetPosition(int left, int top){
+	glutSetWindow(id);
 	glutPositionWindow(left, top);
 	fullscreen = false;
 }
-void FWWinGLUT::Reshape(int width, int height){
+void FWWinGLUT::SetSize(int width, int height){
+	glutSetWindow(id);
 	glutReshapeWindow(width, height);
 	fullscreen = false;
 	this->width = width;
 	this->height = height;
 }
 void FWWinGLUT::SetTitle(UTString t){
+	glutSetWindow(id);
 	glutSetWindowTitle(t.c_str());
 	title = t;
 }
-void FWWinGLUT::FullScreen(){
+void FWWinGLUT::SetFullScreen(){
+	glutSetWindow(id);
 	glutFullScreen();
 	fullscreen = true;
 }
 
 // FWGLUT /////////////////////////////////////////////////////////////////////
-FWGLUTDesc::FWGLUTDesc(){
-}
-
-FWGLUT::FWGLUT(){
+FWGLUT::FWGLUT(FWApp* a):FWGraphicsAdaptee(a){
 	idleFuncFlag = true;
 };
 
@@ -71,6 +87,7 @@ void FWGLUT::GlutIdleFunc(){
 	// FWApp::IdleFuncを呼ぶ
 	instance->fwApp->CallIdleFunc();
 }
+/*
 void FWGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
 	instance->fwApp->CallKeyboard((int)key, x, y);
 }
@@ -87,13 +104,14 @@ void FWGLUT::GlutMotionFunc(int x, int y){
 void FWGLUT::GlutJoystickFunc(unsigned int buttonMask, int x, int y, int z){
 	instance->fwApp->CallJoystick(buttonMask, x, y, z);
 }
+*/
 void FWGLUT::AtExit(){
 	instance->fwApp->AtExit();
 }
 
 /** Init *////////////////////////////////////////////////////////////////
 
-void FWGLUT::Init(int argc, char* argv[]){
+void FWGLUT::Init(int argc, char** argv){
 	instance = this;
 	if(argc == 0){
 		argc = 1;
@@ -106,6 +124,15 @@ void FWGLUT::Init(int argc, char* argv[]){
 
 	// UTTimerProviderとして登録
 	Register();
+
+	// グラフィクスデバイスを作成
+	grDevice = fwApp->GetSdk()->GetGRSdk()->CreateDeviceGL();
+	grDevice->Init();
+
+	// キーボード・マウスとジョイスティックデバイスの登録
+	HISdkIf* hiSdk = fwApp->GetSdk()->GetHISdk();
+	hiSdk->AddRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic());
+	hiSdk->AddRealDevice(DRJoyStickGLUTIf::GetIfInfoStatic());
 }
 
 bool FWGLUT::StartTimer(UTTimer* timer){
@@ -139,55 +166,78 @@ void FWGLUT::LeaveGameMode(){
 /** ウィンドウ *////////////////////////////////////////////////////////////////
 
 ///	ウィンドウを作成し、ウィンドウ IDを返す
-FWWin* FWGLUT::CreateWin(const FWWinDesc& d){
+FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc){
 	int wid=0;
-	if(d.fullscreen){	//< フルスクリーンの場合のウィンドウ生成
+
+	// フルスクリーンの場合のウィンドウ生成
+	if(desc.fullscreen){	
 		std::stringstream gameMode;
-		gameMode << d.width << "x" << d.height << ":32@60";
+		gameMode << desc.width << "x" << desc.height << ":32@60";
 		glutGameModeString(gameMode.str().c_str());
 #ifdef _MSC_VER
 		Sleep(100);
 #endif
 		wid	= glutEnterGameMode();
-	}else{				//< ウィンドウモードの場合の生成
-		if (d.parentWindow){
-			wid = glutCreateSubWindow(d.parentWindow, d.left, d.top, d.width, d.height);
-		}else{
-			glutInitWindowSize(d.width, d.height);
-			glutInitWindowPosition(d.left, d.top);
-			wid = glutCreateWindow(d.title.c_str());
+	}
+	// ウィンドウモードの場合の生成
+	else{
+		if (desc.parentWindow){
+			wid = glutCreateSubWindow(desc.parentWindow, desc.left, desc.top, desc.width, desc.height);
+		}
+		else{
+			glutInitWindowSize(desc.width, desc.height);
+			glutInitWindowPosition(desc.left, desc.top);
+			wid = glutCreateWindow(desc.title.c_str());
 		}
 	}
-	//	このWindowのglewコンテキストの初期化
+	// このWindowのglewコンテキストの初期化
 	int rv = glewInit();
-	//	windowに関連するコールバックの設定
+
+	// windowに関連するコールバックの設定
 	glutDisplayFunc(FWGLUT::GlutDisplayFunc);
 	glutReshapeFunc(FWGLUT::GlutReshapeFunc);
+	/*
 	glutKeyboardFunc(FWGLUT::GlutKeyboardFunc);
 	glutSpecialFunc(FWGLUT::GlutSpecialFunc);
 	glutMouseFunc(FWGLUT::GlutMouseFunc);
 	glutMotionFunc(FWGLUT::GlutMotionFunc);
 	int pollInterval = 10;	// int pollInterval : glutJoystickFuncを使うときに使う何か．読み込み時間に関係しているらしい．
 	glutJoystickFunc(FWGLUT::GlutJoystickFunc, pollInterval);
+	*/
+
+	// ウィンドウを作成
+	FWWinGLUT* win = DBG_NEW FWWinGLUT(wid, desc);
 	
-	FWWin* win = DBG_NEW FWWinGLUT(wid, d, fwApp->GetSdk()->CreateRender());
-	win->SetID(glutGetWindow());	//現在のwindowのIDを設定
-	return win;
+	// キーボード・マウスとジョイスティックの仮想デバイスを作成して関連付け
+	HISdkIf* hiSdk = fwApp->GetSdk()->GetHISdk();
+	HIRealDeviceIf* dr;
+	if(desc.useKeyMouse){
+		dr = hiSdk->FindRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic());
+		win->keyMouse = dr->Rent(DVKeyMouseIf::GetIfInfoStatic(), "", wid)->Cast();
+	}
+	if(desc.useJoyStick){
+		dr = hiSdk->FindRealDevice(DRJoyStickGLUTIf::GetIfInfoStatic());
+		win->joyStick = dr->Rent(DVJoyStickIf::GetIfInfoStatic(), "", wid)->Cast();
+	}
+
+	return win->Cast();
 }
+
 ///	ウィンドウを破棄する
-void FWGLUT::DestroyWin(FWWin* w){
-	if (w->fullscreen){
+void FWGLUT::DestroyWin(FWWinIf* w){
+	if (w->GetFullScreen()){
 		glutLeaveGameMode();
-	}else{
+	}
+	else{
 		glutDestroyWindow(w->GetID());
 	}
 };
 ///	カレントウィンドウを設定する
-void FWGLUT::SetCurrentWin(FWWin* w){
+void FWGLUT::SetCurrentWin(FWWinIf* w){
 	glutSetWindow(w->GetID());
 };
 ///	カレントウィンドウを返す。
-FWWin* FWGLUT::GetCurrentWin(){
+FWWinIf* FWGLUT::GetCurrentWin(){
 	return fwApp->GetWinFromId(glutGetWindow());
 }
 ///	カレントウィンドウのIDを返す。

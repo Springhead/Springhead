@@ -5,14 +5,11 @@
 - プログラムの機能
  - 床の上に箱が載っているだけのシーン。
  - 描画は \ref pagePhysics のデバッグ表示のみ。
- - d キーで、接触力や接触部情報の表示のON/OFF。
 - ソースについて
  - シーンの構築は、C++言語でAPIを呼び出して行う。
  - \ref pageFramework と \ref pagePhysics のみを使用
 */
 
-//#define SIMPLEST_APP
-#ifdef SIMPLEST_APP
 #include <Springhead.h>
 #include <Framework/SprFWApp.h>
 using namespace Spr;
@@ -42,10 +39,6 @@ public:
 		GetSdk()->SetDebugMode(true);
 	}
 } app;
-#else
-#include "FWAppSample.h"
-FWAppSample app;
-#endif
 
 int main(int argc, char* argv[]){
 	app.Init(argc, argv);

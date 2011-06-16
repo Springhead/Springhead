@@ -9,51 +9,71 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "Device.h"
 #pragma hdrstop
-#include <HumanInterface/HISdk.h>
-//#include "DREzUSB.h"
+#include <HumanInterface/DRUsb20Simple.h>
+#include <HumanInterface/DREzUSB.h>
 
 #ifdef _WIN32
+#include <windows.h>
 #include <winioctl.h>
 #endif
+
+#include <sstream>
+using namespace std;
 
 //////////////////////////////////////////////////////////////////////
 // 構築/消滅
 //////////////////////////////////////////////////////////////////////
 namespace Spr {;
 
-DRUsb20Simple::VirtualDeviceDa::VirtualDeviceDa(DRUsb20Simple* r, int c): realDevice(r), ch(c){
-	sprintf(name, "%s D/A Ch %d", realDevice->Name(), ch);
-}
-DRUsb20Simple::VirtualDeviceCounter::VirtualDeviceCounter(DRUsb20Simple* r, int c): realDevice(r), ch(c) {
-	sprintf(name, "%s counter Ch %d", realDevice->Name(), ch);
-}
-DRUsb20Simple::VirtualDevicePio::VirtualDevicePio(DRUsb20Simple* r, int c): realDevice(r), ch(c) {
-	sprintf(name, "%s PIO Ch %d", realDevice->Name(), ch);
-}
+DRUsb20Simple::DRUsb20Simple(const DRUsb20SimpleDesc& d){
+	channel = d.channel;
 
-DRUsb20Simple::DRUsb20Simple(const DRUsb20SimpleDesc& d)
-{
-	channel = d.number;
-	sprintf(name, "Cyberse USB2.0 Simple #%d", channel);
 	hSpidar = NULL;
 	for(int i=0; i<8; i++){
-		daOut[i] = 0;
-		adIn[i]=0;
-		count[i] = 0;
-		countOffset[i] = 0;
-		pioLevel[i] = 0;
+		daOut[i]		= 0;
+		adIn[i]			= 0;
+		count[i]		= 0;
+		countOffset[i]	= 0;
+		pioLevel[i]		= 0;
 	}
 }
 
-DRUsb20Simple::~DRUsb20Simple()
-{
+DRUsb20Simple::~DRUsb20Simple(){
 }
+
 bool DRUsb20Simple::Init(){
-	return FindDevice(channel);
+	stringstream ss;
+	ss << "Cyverse USB2.0 Simple #" << channel;
+	SetName(ss.str().c_str());
+
+	int i, chMax = 0x100;
+	for(i = 0; i < chMax; ++i){
+		hSpidar = UsbOpen(i);
+		if (!hSpidar)
+			continue;
+		if (UsbVidPid(hSpidar) != GetVidPid()){
+			UsbClose(hSpidar);
+			continue;
+		}		
+		Reset();
+		Update();
+		if (channel == -1 || channel == ReadRotarySwitch())
+			break;
+		UsbClose(hSpidar);
+	}
+	if(i == chMax)
+		return false;
+
+	for(i = 0; i < 8; i++){
+		AddChildObject((DBG_NEW Da(this, i))->Cast());
+		AddChildObject((DBG_NEW Counter(this, i))->Cast());
+		AddChildObject((DBG_NEW Pio(this, i))->Cast());
+	}
+	return true;
 }
-bool DRUsb20Simple::InitAny(){
+
+/*bool DRUsb20Simple::InitAny(){
 	for(int i=0; i < 0x100; ++i){
 		hSpidar = UsbOpen(i);
 		if (hSpidar == INVALID_HANDLE_VALUE) return false;
@@ -64,25 +84,10 @@ bool DRUsb20Simple::InitAny(){
 //		}
 	}
 	return false;
-}
-bool DRUsb20Simple::FindDevice(int ch){
-	for(int i=0; i < 0x100; ++i){
-		hSpidar = UsbOpen(i);
-		if (hSpidar == INVALID_HANDLE_VALUE) return false;
-	//	if (UsbVidPid(hSpidar) != 0x0CEC0203){	//	USB2.0版アンプのVIDとPID
-		if (UsbVidPid(hSpidar) == 0x0CEC0205){	//	SH版アンプのVIDとPID
-			UsbClose(hSpidar);
-			continue;
-		}		
-		Reset();
-		Update();
-		if (ch == RotarySwitch()) return true;
-		UsbClose(hSpidar);
-	}
-	return false;
-}
+}*/
 
-HANDLE DRUsb20Simple::UsbOpen(int id){
+void* DRUsb20Simple::UsbOpen(int id){
+#ifdef _WIN32
 	std::ostringstream name;
 	name << "\\\\.\\Ezusb-" << id;
 	HANDLE rv = CreateFile(name.str().c_str(),
@@ -92,24 +97,32 @@ HANDLE DRUsb20Simple::UsbOpen(int id){
 				OPEN_EXISTING,
 				0,
 				NULL);
+	if(rv == INVALID_HANDLE_VALUE)
+		return 0;
 	return rv;
+#else
+	return 0;
+#endif
 }
-bool DRUsb20Simple::UsbClose(HANDLE& h){
+bool DRUsb20Simple::UsbClose(void*& h){
+#ifdef _WIN32
 	bool rv = CloseHandle(h) != 0;
 	h = NULL;
 	return rv;
+#endif
+	return false;
 }
 
-void DRUsb20Simple::Register(HISdkIf* intf){
+/*void DRUsb20Simple::Register(HISdkIf* intf){
 	HISdk* sdk = intf->Cast();
 	for(int i=0; i<8; i++){
-		sdk->RegisterVirtualDevice((new VirtualDeviceDa(this, i))->Cast());
-		sdk->RegisterVirtualDevice((new VirtualDeviceCounter(this, i))->Cast());
-		sdk->RegisterVirtualDevice((new VirtualDevicePio(this, i))->Cast());
+		sdk->RegisterVirtualDevice((new DVDa(this, i))->Cast());
+		sdk->RegisterVirtualDevice((new DVCounter(this, i))->Cast());
+		sdk->RegisterVirtualDevice((new DVPio(this, i))->Cast());
 	}
-}
+}*/
 
-void DRUsb20Simple::Voltage(int ch, float v){
+void DRUsb20Simple::WriteVoltage(int ch, float v){
 	assert(0 <= ch && ch < 8);
 	const float DigitPerVolt[]={	//	DA指令値/出力電圧 アンプごとに異なるので計測値をアンプに書いておき，読み出す必要がある．
 		415.0f,
@@ -123,23 +136,23 @@ void DRUsb20Simple::Voltage(int ch, float v){
 	};
 	daOut[ch] = (int)(v * DigitPerVolt[ch]);
 }
-void DRUsb20Simple::Digit(int ch, int v){
+void DRUsb20Simple::WriteDigit(int ch, int v){
 	daOut[ch] = v;
 }
-void DRUsb20Simple::Count(int ch, long c){
+void DRUsb20Simple::WriteCount(int ch, long c){
 	countOffset[ch] = - (count[ch] - c); 
 }
-long DRUsb20Simple::Count(int ch){
+long DRUsb20Simple::ReadCount(int ch){
 	return count[ch] + countOffset[ch];
 }
-void DRUsb20Simple::Pio(int ch, bool level){
+void DRUsb20Simple::WritePio(int ch, bool level){
 	pioLevel[ch] = level ? 1 : 0;
 }
-bool DRUsb20Simple::Pio(int ch) {
+bool DRUsb20Simple::ReadPio(int ch) {
 	if(pioLevel[ch]) return true;
 	else return false;
 }
-int DRUsb20Simple::RotarySwitch(){
+int DRUsb20Simple::ReadRotarySwitch(){
 	int sw=0;
 	for(int i=0; i<4; ++i){
 		sw |= pioLevel[i+4] << i;
@@ -158,6 +171,7 @@ void DRUsb20Simple::Reset(){
 }
 
 void DRUsb20Simple::UsbReset(){
+#ifdef _WIN32
 	BULK_TRANSFER_CONTROL bulkControl;
 	int nBytes = 0;
 	int i;
@@ -182,9 +196,11 @@ void DRUsb20Simple::UsbReset(){
 		outPacketSize,
 		(unsigned long *)&nBytes,
 		NULL);
-
+#endif
 }
+
 void DRUsb20Simple::UsbCounterClear(){
+#ifdef _WIN32
 	// エンコーダカウンタクリア
 	UCHAR outBuffer[32];
 	outBuffer[0] = 0xA2;
@@ -202,10 +218,14 @@ void DRUsb20Simple::UsbCounterClear(){
 		outPacketSize,
 		(unsigned long *)&nBytes,
 		NULL);
+#endif
 }
+
+//----------------------------------------------------------------------
+// D/A出力
+
 void DRUsb20Simple::UsbDaSet(){
-	//----------------------------------------------------------------------
-	// D/A出力
+#ifdef _WIN32
 	WORD  outPacketSize;
 	int nBytes = 0;
 
@@ -233,8 +253,11 @@ void DRUsb20Simple::UsbDaSet(){
 		outPacketSize,
 		(unsigned long *)&nBytes,
 		NULL);
+#endif
 }
+
 void DRUsb20Simple::UsbCounterGet(){
+#ifdef _WIN32
 	// ホストからデバイス側へ
 	// PipeNum:1 type:blk Endpoint:2 OUT MaxPktSize:0x200(512bytes)
 	BULK_TRANSFER_CONTROL bulkControl;
@@ -297,9 +320,11 @@ void DRUsb20Simple::UsbCounterGet(){
 	for(int i=0;i<8;i++){
 		count[i] = piBuffer[i];
 	}
+#endif
 }
 
-DWORD DRUsb20Simple::UsbVidPid(HANDLE h){
+unsigned DRUsb20Simple::UsbVidPid(void* h){
+#ifdef _WIN32
 	USB_DEVICE_DESCRIPTOR desc;
 	DWORD nBytes=0;
 	if (DeviceIoControl(h,
@@ -312,6 +337,7 @@ DWORD DRUsb20Simple::UsbVidPid(HANDLE h){
 		   NULL)){
 		return (desc.idVendor << 16) | desc.idProduct;
 	}
+#endif
 	return 0;
 }
 

@@ -12,49 +12,45 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include <Base/Affine.h>
+#include <HumanInterface/HIDevice.h>
 
-#include <HumanInterface/HIRealDevice.h>
-#include "DVOrientationBase.h"
-#include "DVPioBase.h"
-#include <base/Affine.h>
+/**
+	NEC/TOKINの3Dモーションセンサを使用するためのクラス
+	使用するにはコンパイラが見つけられる場所に
+		Tkinput.h, Tkinputdef.h, Tuadapio.h, TKINPUT_I.C
+	をおき，
+		#define SPR_USE_TOKIN3D
+	とマクロ定義してSpringheadをビルドする．
+	上記ファイルは著作権の都合上Springheadには含まれない．
+ */
+
+// #define SPR_USE_TOKIN3D
 
 namespace Spr {
 class SPR_DLL DRTokin3D: public HIRealDevice{
 public:
+	SPR_OBJECTDEF_NOIF(DRTokin3D);
+
 	///	仮想デバイス
-	class DVOrientation:public DVOrientationBase{
-	protected:
-		DRTokin3D* realDevice;
+	class DVOri: public DVOrientation{
 	public:
-		DVOrientation(DRTokin3D* r):realDevice(r){}
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		virtual const char* Name() const{ return realDevice->Name(); }
-		virtual void GetOrientationMatrix(Matrix3f& ori){
-			realDevice->GetMatrix(ori);
-		}
-		virtual void GetMatrix(Matrix3f& ori){
-			realDevice->GetMatrix(ori);
-		}
-		virtual Vec3f GetEuler(){
-			return realDevice->GetEuler();
-		}
+		DVOri(DRTokin3D* r):DVOrientation(r){}
+		DRTokin3D* GetRealDevice() { return realDevice->Cast(); }
+
+		virtual void GetOrientationMatrix(Matrix3f& ori){ GetRealDevice()->GetMatrix(ori); }
+		virtual void GetMatrix(Matrix3f& ori){ GetRealDevice()->GetMatrix(ori); }
+		virtual Vec3f GetEuler(){ return GetRealDevice()->GetEuler(); }
 	};
-	class DVInputPort:public DVInputPortBase{
-	protected:
-		DRTokin3D* realDevice;
-		int ch;
-		char name[256];
+	class DVIn: public DVInputPort{
 	public:
-		DVInputPort(DRTokin3D* r, int c);
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		virtual const char* Name() const{ return name; }
-		virtual int Get(){
-			return realDevice->GetPort(ch);
-		}
+		DVIn(DRTokin3D* r, int c):DVInputPort(r, c){}
+		DRTokin3D* GetRealDevice() { return realDevice->Cast(); }
+		
+		virtual int Get(){ return GetRealDevice()->GetPort(portNo); }
 	};
 protected:
 	void* intf;
-	char name[1024];
 public:
 	///
 	DRTokin3D();
@@ -63,9 +59,7 @@ public:
 	///	初期化
 	virtual bool Init();
 	///	登録
-	virtual void Register(HIVirtualDevicePool& vpool);
-	///	名前
-	virtual const char* Name() const { return name; }
+	//virtual void Register(HIVirtualDevicePool& vpool);
 	///	方向行列
 	virtual void GetMatrix(Matrix3f& ori);
 	///	オイラー角の取得

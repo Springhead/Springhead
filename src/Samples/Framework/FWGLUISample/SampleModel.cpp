@@ -5,7 +5,7 @@ PHSolidIf* CreateBox(FWSdkIf* fwSdk){
 	PHSolidDesc desc;
 	desc.mass = 0.05;
 	desc.inertia *= 0.033;
-	PHSolidIf* soBox = fwSdk->GetScene()->GetPHScene()->CreateSolid(desc);
+	PHSolidIf* soBox = fwSdk->GetScene(0)->GetPHScene()->CreateSolid(desc);
 	// 形状の作成
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(2,2,2);
@@ -21,7 +21,7 @@ PHSolidIf* CreateSphere(FWSdkIf* fwSdk){
 	PHSolidDesc desc;
 	desc.mass = 0.05;
 	desc.inertia *= 0.03;
-	PHSolidIf* soSphere = fwSdk->GetScene()->GetPHScene()->CreateSolid(desc);
+	PHSolidIf* soSphere = fwSdk->GetScene(0)->GetPHScene()->CreateSolid(desc);
 	// 形状の作成
 	CDSphereDesc sd;
 	sd.radius = 2.0;
@@ -37,7 +37,7 @@ PHSolidIf* CreateCapsule(FWSdkIf* fwSdk){
 	PHSolidDesc desc;
 	desc.mass = 0.05;
 	desc.inertia *= 1;
-	PHSolidIf*  soCapsule = fwSdk->GetScene()->GetPHScene()->CreateSolid(desc);
+	PHSolidIf*  soCapsule = fwSdk->GetScene(0)->GetPHScene()->CreateSolid(desc);
 	// 形状の作成
 	CDCapsuleDesc cd;
 	cd.length = 3.0;
@@ -54,7 +54,7 @@ PHSolidIf* CreateRoundCone(FWSdkIf* fwSdk){
 	PHSolidDesc desc;
 	desc.mass = 0.05;
 	desc.inertia *= 1;
-	PHSolidIf*  soRCone = fwSdk->GetScene()->GetPHScene()->CreateSolid(desc);
+	PHSolidIf*  soRCone = fwSdk->GetScene(0)->GetPHScene()->CreateSolid(desc);
 	// 形状の作成
 	CDRoundConeDesc rd;
 	rd.length = 3.0;

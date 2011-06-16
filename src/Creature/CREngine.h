@@ -8,10 +8,12 @@
 #ifndef CRENGINE_H
 #define CRENGINE_H
 
-#include <SprFoundation.h>
 #include <Foundation/Object.h>
+#include <Creature/SprCREngine.h>
 
 namespace Spr {;
+
+struct GRRenderIf;
 
 ///	クリーチャのエンジンの基本クラス．
 class CREngine : public SceneObject {

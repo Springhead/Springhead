@@ -8,10 +8,9 @@
 #ifndef CRATTENTIONCONTROLLER_H
 #define CRATTENTIONCONTROLLER_H
 
-#include <Springhead.h>
-
 #include <Foundation/Object.h>
-#include "CREngine.h"
+#include <Creature/SprCRGazeController.h>
+#include <Creature/CREngine.h>
 
 //@{
 namespace Spr{;

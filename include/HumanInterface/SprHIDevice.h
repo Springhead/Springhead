@@ -20,71 +20,95 @@ struct HISdkIf;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
+/**
+	デバイスの基本クラス
+ **/
+struct HIDeviceIf : NamedObjectIf{
+	SPR_IFDEF(HIDevice);
 
-///	実デバイス．インタフェースカードとか，USBデバイスとか，
-struct HIRealDeviceIf:  public ObjectIf{
-	SPR_IFDEF(HIRealDevice);
 	///	デバイスの名前．クラスと対応するボードのIDなどから自動で決まる名前．設定不可．
-	const char* Name();
-	///	初期化
+	//const char* GetDeviceName() const;	
+
+};
+
+struct HIVirtualDeviceIf;
+
+/**
+	実デバイス．インタフェースカードとか，USBデバイスとか，
+ **/
+struct HIRealDeviceIf : HIDeviceIf{
+	SPR_IFDEF(HIRealDevice);
+
+	/// デバイス名を取得
+	//UTString	GetDeviceName();
+
+	///	初期化と仮想デバイスの登録
 	bool Init();
 	///	仮想デバイスの登録
-	void Register(HISdkIf* sdk);
+	//void Register(HISdkIf* sdk);
+
+	/// 仮想デバイスの取得
+	HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);
+	/// 仮想デバイスの返却
+	bool				Return(HIVirtualDeviceIf* dv);
+
 	///	状態の更新
 	void Update();
 };
 
-///	バーチャルデバイス．A/D, D/Aの1チャンネル分とか，機能としてのデバイス．
-struct HIVirtualDeviceIf:  public ObjectIf{
+/**
+	バーチャルデバイス．A/D, D/Aの1チャンネル分とか，機能としてのデバイス．
+ **/
+struct HIVirtualDeviceIf : HIDeviceIf{
 	SPR_IFDEF(HIVirtualDevice);
-public:
-	///	デバイスの名前
-	const char* Name() const;
-	///	デバイスの種類
-	const char* Type() const;
+
+	/// ポート番号を取得（ポート番号を持つデバイスのみ）
+	int	GetPortNo() const;
+	
+	/// 使用状態の取得
+	bool IsUsed();
+
 	///	実デバイスへのポインタ
-	HIRealDeviceIf* RealDevice();
-	///	ダンプ出力
-	void Print(std::ostream& o) const;
+	HIRealDeviceIf* GetRealDevice();
+	
 	///
 	void Update();
 };
 
-struct DVAdBaseIf:public HIVirtualDeviceIf{
-	SPR_IFDEF(DVAdBase);
-public:
+/**
+	A/D変換
+ **/
+struct DVAdIf : HIVirtualDeviceIf{
+	SPR_IFDEF(DVAd);
+
 	///	入力デジタル値の取得
 	int Digit();
 	///	入力電圧の取得
 	float Voltage();
-	///	デバイスの名前
-	const char* Name() const;
-	///	デバイスの種類
-	const char* Type() const;
 };
-struct DVDaBaseIf:public HIVirtualDeviceIf{
-	SPR_IFDEF(DVDaBase);
-public:
+
+/**
+	D/A変換
+ **/
+struct DVDaIf : HIVirtualDeviceIf{
+	SPR_IFDEF(DVDa);
+
 	///	出力するデジタル値の設定
 	void Digit(int d);
 	///	出力電圧の設定
 	void Voltage(float volt);
-	///	デバイスの名前
-	const char* Name() const;
-	///	デバイスの種類
-	const char* Type();
 };
-struct DVCounterBaseIf:public HIVirtualDeviceIf{
-	SPR_IFDEF(DVCounterBase);
-public:
+
+/**
+	カウンタ
+ **/
+struct DVCounterIf : HIVirtualDeviceIf{
+	SPR_IFDEF(DVCounter);
+
 	///	カウンタ値の設定
 	void Count(long count);
 	///	カウンタ値の読み出し
 	long Count();
-	///	デバイスの名前
-	const char* Name() const;
-	///	デバイスの種類
-	const char* Type() const;
 };
 
 ///	入出力ポートのための定数の定義などだけを行う．
@@ -92,20 +116,34 @@ struct DVPortEnum{
 	enum TLevel {LEVEL_LO, LEVEL_HI};
 	enum TDir {DIR_IN, DIR_OUT};
 };
-///
-struct DVPioBaseIf:public HIVirtualDeviceIf, public DVPortEnum{
-	SPR_IFDEF(DVPioBase);
-public:
+
+/**
+	パラレルI/O
+ **/
+struct DVPioIf : public HIVirtualDeviceIf, public DVPortEnum{
+	SPR_IFDEF(DVPio);
+
 	///	ポートのロジックレベルの入力。Hi:true Lo:false
 	int Get();
 	///	ポートのロジックレベルの出力。Hi:true Lo:false
 	void Set(int l);
-	///	デバイスの名前
-	const char* Name() const;
-	///	デバイスの種類
-	const char* Type() const;
 };
 
+/**
+	力の入力
+ */
+struct DVForceIf : public HIVirtualDeviceIf{
+	SPR_IFDEF(DVForce);
+
+	///	自由度の取得
+	int GetDOF();
+	///	力の取得
+	float GetForce(int ch);
+	///	力の取得
+	void GetForce3(Vec3f& f);
+	///	力の取得
+	void GetForce6(Vec3f& f, Vec3f& t);
+};
 
 //@}
 }

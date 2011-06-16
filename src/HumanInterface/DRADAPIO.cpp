@@ -5,41 +5,51 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Device.h"
-#include <Foundation/UTDllLoader.h>
+//#include "Device.h"
 #pragma hdrstop
-//#include "DRAdapio.h"
+#include <Foundation/UTDllLoader.h>
+#include <HumanInterface/DRAdapio.h>
 
+#include <sstream>
 using namespace std;
 
 namespace Spr {
 static UTDllLoader dllLoader("TUADAPIO.DLL");	//	グローバル変数でローダーを作る．
 	
-DRAdapio::DVDA::DVDA(DRAdapio* r, int c): realDevice(r), ch(c) {
-	sprintf(name, "%s D/A ch %d", realDevice->Name(), ch);
-}
-DRAdapio::DVAD::DVAD(DRAdapio* r, int c): realDevice(r), ch(c) {
-	sprintf(name, "%s A/D ch %d", realDevice->Name(), ch);
-}
 DRAdapio::DRAdapio(int i){
 	id = i;
-	sprintf(name, "ADAPIO %d", id);
 }
+
 DRAdapio::~DRAdapio(){
 	CloseDevice();
 }
+
 /// 初期化
 bool DRAdapio::Init(){
-	return dllLoader.Load() && Adapio_Device_Open(id)==0;
+	stringstream ss;
+	ss << "ADAPIO " << id;
+	SetName(ss.str().c_str());
+
+	if(dllLoader.Load() && Adapio_Device_Open(id)==0){
+		for(int i=0; i<8; i++){
+			AddChildObject((new Ad(this, i))->Cast());
+		}
+		for(int i=0; i<8; i++){
+			AddChildObject((new Da(this, i))->Cast());
+		}
+		return true;
+	}
+	return false;
 }
-void DRAdapio::Register(HIVirtualDevicePool& vpool){
+
+/*void DRAdapio::Register(HIVirtualDevicePool& vpool){
 	for(int i=0; i<8; i++){
 		vpool.Register(new DVAD(this, i));
 	}
 	for(int i=0; i<8; i++){
 		vpool.Register(new DVDA(this, i));
 	}
-}
+}*/
 ///	電圧出力
 void DRAdapio::DAVoltage(int ch, float v){
 	int dat = (int) (v / 2.5f) * 0x100;

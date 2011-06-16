@@ -8,8 +8,8 @@
 #ifndef FIFILEX_H
 #define FIFILEX_H
 
-#include "FIFile.h"
-#include "FISpirit.h"
+#include <FileIO/FIFile.h>
+#include <FileIO/FISpirit.h>
 
 namespace Spr{;
 
@@ -23,7 +23,7 @@ protected:
 	FISkipParser cmt;
 
 public:
-	FIFileX();
+	FIFileX(const FIFileXDesc& desc = FIFileXDesc());
 	void LoadImp(FILoadContext* fc);
 	virtual void PushLoaderContext(FILoadContext* fc);
 	virtual void PopLoaderContext();

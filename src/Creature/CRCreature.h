@@ -8,11 +8,8 @@
 #ifndef CRCREATURE_H
 #define CRCREATURE_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
 #include <Foundation/Scene.h>
-
+#include <Creature/SprCRCreature.h>
 #include <vector>
 
 //@{

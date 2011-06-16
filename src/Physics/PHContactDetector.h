@@ -8,7 +8,6 @@
 #ifndef PHCONTACTDETECTOR_H
 #define PHCONTACTDETECTOR_H
 
-//#include <SprPhysics.h>
 #include <vector>
 #include <Base/Combination.h>
 #include <Collision/CDDetectorImp.h>

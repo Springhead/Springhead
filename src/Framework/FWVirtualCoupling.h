@@ -9,7 +9,6 @@
 #ifndef FWVIRTUALCOUPLING_H
 #define  FWVIRTUALCOUPLING_H
 
-#include <Springhead.h>
 #include <Framework/FWInteractAdaptee.h>
 
 namespace Spr{;

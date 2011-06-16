@@ -1,19 +1,16 @@
 #ifndef VRMLPARSER_H
 #define VRMLPARSER_H
-#include "FileIO.h"
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
 
-#include <Foundation/UTLoadHandler.h>
-#include <fstream>
-#include <sstream>
-#include <Springhead.h>
-#include <map>
+#include <FileIO/FIFile.h>
+#include <FileIO/FISpirit.h>
 
 namespace Spr{;
 
-class FIFileVRML:public FIFile{
+class FIFileVRML : public FIFile{
 public:
 	SPR_OBJECTDEF(FIFileVRML);
 protected:
@@ -33,7 +30,7 @@ protected:
 	std::map<std::string, FIPhraseParser> valueParsers;
 
 public:
-	FIFileVRML();
+	FIFileVRML(const FIFileVRMLDesc& desc = FIFileVRMLDesc());
 	void LoadImp(FILoadContext* fc);
 	virtual void PushLoaderContext(FILoadContext* fc);
 	virtual void PopLoaderContext();

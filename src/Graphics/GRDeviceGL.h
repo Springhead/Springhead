@@ -12,9 +12,9 @@
 #ifndef GRDEVICEGL_H
 #define GRDEVICEGL_H
 
+#include <Graphics/GRRender.h>
 #include <map>
 #include <stack>
-#include <SprGraphics.h>
 
 namespace Spr{;
 

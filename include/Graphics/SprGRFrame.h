@@ -15,7 +15,8 @@
 
 #ifndef SPR_GRFrame_H
 #define SPR_GRFrame_H
-#include <SprFoundation.h>
+
+#include <Foundation/SprObject.h>
 
 namespace Spr{;
 

@@ -5,7 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CRTrajectoryController.h"
+#include <Creature/CRTrajectoryController.h>
+#include <Creature/SprCRBody.h>
+#include <Creature/SprCRCreature.h>
+#include <Physics/SprPHScene.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop

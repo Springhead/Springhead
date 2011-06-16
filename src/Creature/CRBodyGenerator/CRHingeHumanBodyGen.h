@@ -8,13 +8,7 @@
 #ifndef CRHINGEHUMANBODYGEN_H
 #define CRHINGEHUMANBODYGEN_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-
-#include <vector>
-
-#include "CRBodyGen.h"
+#include <Creature/CRBodyGenerator/CRBodyGen.h>
 
 //@{
 namespace Spr{;

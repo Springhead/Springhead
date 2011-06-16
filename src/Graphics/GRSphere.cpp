@@ -5,10 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Graphics.h"
-#include "GRSphere.h"
-#include <GL/glut.h>
-
+#include <Graphics/GRSphere.h>
+#include <Graphics/GRRender.h>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 namespace Spr{;
 GRSphere::GRSphere(const GRSphereDesc& desc):GRSphereDesc(desc){

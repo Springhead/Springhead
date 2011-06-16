@@ -8,13 +8,10 @@
 #ifndef SPR_GRRENDER_H
 #define SPR_GRRENDER_H
 
-#include <float.h>
-#include <Physics/SprPHSolid.h>
-#include <Physics/SprPHScene.h>
-#include <Collision/SprCDShape.h>
 #include <Graphics/SprGRFrame.h>
 #include <Graphics/SprGRVertex.h>
 #include <Graphics/SprGRShader.h>
+
 namespace Spr{;
 
 /**	\addtogroup	gpGraphics	*/
@@ -234,7 +231,7 @@ struct GRRenderBaseIf: public ObjectIf{
 		ORANGE,
 		BLOWN,
 		LIGHT_BLUE,
-		MIDIUM_PURPLE,
+		MEDIUM_PURPLE,
 		DARK_GREEN,
 		DARK_VIOLET,
 		DARK_CYAN,
@@ -324,13 +321,13 @@ struct GRRenderBaseIf: public ObjectIf{
 	 */
 	void	DrawGrid(float size, int slice, float lineWidth = 1.0f);
 	
-	///	DiplayList の作成(記録開始)
+	///	ディスプレイリストの作成(記録開始)
 	int StartList();
-	///	DiplayList の終了(記録終了)
+	///	ディスプレイリストの終了(記録終了)
 	void EndList();
-	///	DisplayListの表示
+	///	ディスプレイリストの描画
 	void DrawList(int i);
-	///	DisplayListの解放
+	///	ディスプレイリストの解放
 	void ReleaseList(int i);
 
 	/// フォントの設定(Windows限定)
@@ -404,13 +401,13 @@ struct GRRenderIf: public GRRenderBaseIf{
 	GRDeviceIf* GetDevice();
 	///	カメラの設定
 	void SetCamera(const GRCameraDesc& cam);
-	///	カメラの設定
+	///	カメラの取得
 	const GRCameraDesc& GetCamera();
 	///	スクリーン(ウィンドウ)サイズ変更時のViewportと射影行列を設定
 	void Reshape(Vec2f pos, Vec2f screenSize);
-	/// Viewportの基点座標の取得
+	/// ビューポートの基点座標の取得
 	Vec2f GetViewportPos();
-	/// Viewportのサイズの取得
+	/// ビューポートのサイズの取得
 	Vec2f GetViewportSize();
 	/// 1ピクセルの物理サイズを取得
 	Vec2f GetPixelSize();

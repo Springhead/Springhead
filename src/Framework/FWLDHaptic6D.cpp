@@ -7,7 +7,9 @@
  */
 
 #include <Framework/FWLDHaptic6D.h>
-#include <Framework/SprFWApp.h>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 namespace Spr{;
 
@@ -77,9 +79,9 @@ struct SolidVertex{
 typedef std::vector< SolidVertex > SolidVertices;
 
 
-std::vector<string> saveDeviceForce;
-std::vector<string> saveDevicePosition;
-std::vector<string> saveProxyPosition;
+std::vector<UTString> saveDeviceForce;
+std::vector<UTString> saveDevicePosition;
+std::vector<UTString> saveProxyPosition;
 
 
 //#define SIMPLEX
@@ -291,8 +293,8 @@ void FWLDHaptic6DLoop::ConstraintBasedRendering(){
 }
 
 
-std::vector<string> saveSolidForce;
-std::vector<string> saveSolidPosition;
+std::vector<UTString> saveSolidForce;
+std::vector<UTString> saveSolidPosition;
 void FWLDHaptic6DLoop::LocalDynamics6D(){
 	for(int i = 0; i < NIASolids(); i++){
 		FWInteractSolid* iSolid = FWHapticLoopBase::GetIASolid(i);

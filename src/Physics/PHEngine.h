@@ -9,10 +9,10 @@
 #define PHEngine_H
 
 #include <Foundation/Object.h>
-#include <SprPhysics.h>
+#include <Physics/SprPHEngine.h>
+#include <Physics/SprPHScene.h>
 
 namespace Spr {;
-
 
 ///	シーンの振舞い（ビヘイビア）を管理するエンジン
 /// ビヘイビアの分類と優先順位

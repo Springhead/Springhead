@@ -91,7 +91,7 @@ public:
 	virtual void			SetNumIteration(int n);
 	PHJointIf*				CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc);
 	int						NJoints() const;
-	PHConstraintIf*			GetJoint(int i);
+	PHJointIf*				GetJoint(int i);
 	int						NContacts() const;
 	PHContactPointIf*		GetContact(int i);
 	int						NSolidPairs() const;
@@ -141,7 +141,7 @@ public:
 	///	ÉVÅ[ÉìÇãÛÇ…Ç∑ÇÈÅD
 	void					Clear();
 	virtual void			SetGravity(const Vec3d& accel);
-	virtual Vec3f			GetGravity();
+	virtual Vec3d			GetGravity();
 	int						NEngines();
 	PHEngineIf*				GetEngine(int i);
 	PHConstraintEngineIf*	GetConstraintEngine();

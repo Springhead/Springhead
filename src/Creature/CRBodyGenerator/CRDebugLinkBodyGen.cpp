@@ -5,8 +5,9 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CRDebugLinkBodyGen.h"
-
+#include <Creature/CRBodyGenerator/CRDebugLinkBodyGen.h>
+#include <Physics/PHSolid.h>
+#include <Physics/PHSdk.h>
 #ifndef USE_HDRSTOP
 #pragma hdrstop
 #endif

@@ -8,12 +8,11 @@
 #ifndef PHCONTACTSURFACE_H
 #define PHCONTACTSURFACE_H
 
-#include <SprPhysics.h>
-#include "PHContactPoint.h"
-
-class PHShapePairForLCP;
+#include <Physics/PHContactPoint.h>
 
 namespace Spr{;
+
+class PHShapePairForLCP;
 
 class PHContactSurface : public PHContactPoint{
 public:

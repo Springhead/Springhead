@@ -8,7 +8,7 @@
 #ifndef PHJOINT_H
 #define PHJOINT_H
 
-#include <SprPhysics.h>
+#include <Physics/SprPHJoint.h>
 #include <Physics/PHConstraint.h>
 #include <Physics/PHJointLimit.h>
 #include <Physics/PHMotor.h>

@@ -8,13 +8,16 @@
 #ifndef CREYECONTROLLER_H
 #define CREYECONTROLLER_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-#include "CREngine.h"
+#include <Creature/CREngine.h>
+#include <Creature/SprCRGazeController.h>
 
 //@{
 namespace Spr{;
+
+struct PHSolidIf;
+struct PHHingeJointIf;
+struct PHBallJointIf;
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief サッケード用コントローラ(CREyeControllerが内部で使う、非APIクラス)
 */

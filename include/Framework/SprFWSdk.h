@@ -8,17 +8,28 @@
 #ifndef SPR_FWSDKIF_H
 #define SPR_FWSDKIF_H
 
-#include <Framework/SprFWScene.h>
-#include <Physics/SprPHSdk.h>
-#include <Graphics/SprGRSdk.h>
-#include <FileIO/SprFISdk.h>
+#include <Physics/SprPHScene.h>
+#include <Graphics/SprGRScene.h>
+#include <Framework/SprFWInteractScene.h>
 
 namespace Spr{;
 
-struct FWSdkDesc{
-};
-
+struct ImportIf;
 struct FWSceneIf;
+struct FISdkIf;
+struct HISdkIf;
+
+struct FWSdkDesc{};
+
+/** @brief Framework SDK
+	FWSdk -
+		PHSdk
+		GRSdk
+		FISdk
+		HISdk
+		FWScene[]
+		GRRender[]
+ */
 struct FWSdkIf : SdkIf {
 	SPR_IFDEF(FWSdk);
 
@@ -72,53 +83,67 @@ struct FWSdkIf : SdkIf {
 		@param scene
 		シーンsceneをアクティブにする
 	 */
-	void	SwitchScene(FWSceneIf* scene);
+	//void	SwitchScene(FWSceneIf* scene);
 
 	/** @brief シーンを取得する
-		@param index 取得するシーンのインデックス．省略するとアクティブシーンを取得する．
+		@param index 取得するシーンのインデックス
 	 */
-	FWSceneIf* GetScene(int index = -1);
+	FWSceneIf* GetScene(int index);
+
 	/** @brief シーンを混ぜる
 		scene1に含まれる全ての要素をscene0に移動し，scene1を削除する．
 	 */
 	void	MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
+
+	/// インタラクションシーンを作成する
+	FWInteractSceneIf*	CreateIAScene(const FWInteractSceneDesc& desc);
+	/// インタラクションシーンを取得する
+	FWInteractSceneIf*	GetIAScene(int index);
+	/// インタラクションシーンの数
+	int		NIAScenes();
+	/// インタラクションシーンをクリアする
+	void	ClearIAScenes();
 
 	/** @brief レンダラを作成する
 		レンダラを作成し，レンダラリストに追加する．
 		
 		＊引数でDeviceをGLかD3Dかを指定できるようにするべき
 	 */
-	GRRenderIf*	CreateRender();
-	/** @brief レンダラの個数を取得する
-	 */
-	int NRender() const;
-	/** @brief レンダラを取得する
-	 */
-	GRRenderIf* GetRender(int index = -1);
-	/** @brief レンダラをアクティブにする
-	 */
-	void SwitchRender(GRRenderIf* render);
+	//GRRenderIf*	CreateRender();
+
+	/** @brief レンダラの個数を取得する */
+	//int NRender() const;
 	
-	/// PHSdkオブジェクトを取得する
+	/** @brief レンダラを取得する */
+	//GRRenderIf* GetRender(int index = -1);
+	
+	/** @brief レンダラをアクティブにする */
+	//void SwitchRender(GRRenderIf* render);
+
+	
+	/// Physics SDK(PHSdk)オブジェクトを取得する
 	PHSdkIf* GetPHSdk();
 
-	/// GRSdkオブジェクトを取得する
+	/// Graphics SDK(GRSdk)オブジェクトを取得する
 	GRSdkIf* GetGRSdk();
 
-	/// FISdkオブジェクトを取得する
+	/// FileIO SDK(FISdk)オブジェクトを取得する
 	FISdkIf* GetFISdk();
+
+	/// HumanInterface SDK(HISdk)オブジェクトを取得する
+	HISdkIf* GetHISdk();
 
 	/** @brief デバッグ描画モードの取得
 	 */
-	bool GetDebugMode();
+	//bool GetDebugMode();
 
 	/** @brief デバッグ描画モードの設定
 	 */
-	void SetDebugMode(bool debug = true);
+	//void SetDebugMode(bool debug = true);
 
 	/** @brief シミュレーションの実行
 	 */
-	void Step();
+	//void Step();
 
 	/** @brief 描画を実行
 		アクティブなシーンとアクティブなレンダラを使って描画を行う．
@@ -129,18 +154,18 @@ struct FWSdkIf : SdkIf {
 		通常描画モードではまずSync関数によりPhysicsシーンの状態がGraphicsシーングラフに反映された後，
 		シーングラフの形状データやマテリアル、テクスチャを利用して描画が行われる。
 	 */
-	void Draw();
+	//void Draw();
 
 	/** @brief 描画領域のサイズを設定する
 		@param w 描画領域の横幅
 		@param h 描画領域の縦幅
 		アクティブなレンダラの描画領域を設定する
 	 */
-	void Reshape(int w, int h);
+	//void Reshape(int w, int h);
 
 	/** @brief DSTR出力のデバッグ情報の表示の可否を設定
 	 */
-	void SetDSTR(bool f);
+	//void SetDSTR(bool f);
 
 	static void SPR_CDECL RegisterSdk();
 };

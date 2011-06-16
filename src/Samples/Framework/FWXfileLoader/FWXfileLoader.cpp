@@ -24,15 +24,15 @@ void FWXfileLoader::Init(int argc, char* argv[]){
 	FWWinDesc windowDesc;					// GLのウィンドウディスクリプタ
 	windowDesc.title = "FWXfileLoader";		// ウィンドウのタイトル
 	CreateWin(windowDesc);					// ウィンドウの作成
-	GetCurrentWin()->SetScene(GetSdk()->GetScene());
-
+	GetWin(0)->SetRenderMode(false);
+	
 	/// カメラビューの初期化
-	InitCameraView();	
+	//InitCameraView();	
 
 	CreateTimer();
 }
 
-void FWXfileLoader::InitCameraView(){
+/*void FWXfileLoader::InitCameraView(){
 	///　カメラビューの初期化
 	std::istringstream issView(
 		"((0.999816 -0.0126615 0.0144361 -0.499499)"
@@ -41,27 +41,27 @@ void FWXfileLoader::InitCameraView(){
 		"(     0      0      0      1))"
 		);
 	issView >> cameraInfo.view;
-}
+}*/
 
 void FWXfileLoader::Reset(){
 	GetSdk()->Clear();		
 	GetSdk()->LoadScene("./xFiles/sceneSample.x");
-	GetCurrentWin()->SetScene(GetSdk()->GetScene());
+	GetCurrentWin()->SetScene(GetSdk()->GetScene(0));
 }
 
-void FWXfileLoader::TimerFunc(int id){
+/*void FWXfileLoader::TimerFunc(int id){
 	Step();
-}
+}*/
 
-void FWXfileLoader::IdleFunc(){
-}
-void FWXfileLoader::Step(){
+//void FWXfileLoader::IdleFunc(){
+//}
+/*void FWXfileLoader::Step(){
 	GetSdk()->Step();
 	PostRedisplay();
-}
+}*/
 
-void FWXfileLoader::Display(){
-	FWWin* win = GetCurrentWin();
+/*void FWXfileLoader::Display(){
+	FWWinIf* win = GetCurrentWin();
 	if(!win)
 		return;
 
@@ -75,8 +75,8 @@ void FWXfileLoader::Display(){
 	scene->EnableRenderContact(bDebug);
 	
 	/// カメラ座標の指定
-	if (win->scene){
-		GRCameraIf* cam = win->scene->GetGRScene()->GetCamera();
+	if (win->GetScene()){
+		GRCameraIf* cam = win->GetScene()->GetGRScene()->GetCamera();
 		if (cam && cam->GetFrame()){
 			cam->GetFrame()->SetTransform(cameraInfo.view);
 		}else{
@@ -89,8 +89,7 @@ void FWXfileLoader::Display(){
 	GetSdk()->SwitchRender(render);
 	GetSdk()->Draw();
 	render->SwapBuffers();
-}
-
+}*/
 
 void FWXfileLoader::Keyboard(int key, int x, int y){
 	switch (key) {
@@ -102,7 +101,7 @@ void FWXfileLoader::Keyboard(int key, int x, int y){
 			Reset();			// ファイルの再読み込み
 			break;
 		case 'w':				// カメラ初期化
-			InitCameraView();	
+		//	InitCameraView();	
 			break;
 		case 'd':				// デバック表示
 			bDebug = !bDebug;

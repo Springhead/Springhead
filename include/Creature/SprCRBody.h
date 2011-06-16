@@ -8,8 +8,7 @@
 #ifndef SPR_CRBODYIF_H
 #define SPR_CRBODYIF_H
 
-#include <SprFoundation.h>
-#include <SprPhysics.h>
+#include <Foundation/SprObject.h>
 
 namespace Spr{;
 
@@ -17,6 +16,8 @@ namespace Spr{;
 
 struct PHSolidIf;
 struct PHJointIf;
+struct PHIKActuatorIf;
+struct PHIKEndEffectorIf;
 
 // ------------------------------------------------------------------------------
 

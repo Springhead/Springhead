@@ -10,10 +10,11 @@
 #define FWINTERACT_POINTERIF_H
 
 #include <Foundation/SprObject.h>
-#include <Physics/SprPHSolid.h>
-#include <HumanInterface/SprHIBase.h>
 
 namespace Spr{;
+
+struct PHSolidIf;
+struct HIBaseIf;
 
 struct FWInteractPointerDesc{
 public:

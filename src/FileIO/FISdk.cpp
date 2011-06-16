@@ -5,11 +5,17 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FileIO.h"
+#include <FileIO/FISdk.h>
+#include <FileIO/FIFileX.h>
+#include <FileIO/FIFileCOLLADA.h>
+#include <FileIO/FIFileBinary.h>
+#include <FileIO/FIFileSpr.h>
+#include <FileIO/FIFileVRML.h>
+#include <FileIO/FIImport.h>
+#include <stdlib.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
-#include <stdlib.h>
 
 namespace Spr{;
 
@@ -20,17 +26,31 @@ FISdkIf* SPR_CDECL FISdkIf::CreateSdk(){
 	return rv->Cast();
 }
 
+void SPR_CDECL FIRegisterTypeDescs();
+void SPR_CDECL FISdkIf::RegisterSdk(){
+	static bool bFirst = true;
+	if (!bFirst) return;
+	bFirst=false;
+
+	Sdk::RegisterFactory(DBG_NEW FISdkFactory());
+	FIRegisterTypeDescs();
+
+	FISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(FIFileX));
+	FISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(FIFileVRML));
+	FISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(FIFileCOLLADA));
+	FISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(FIFileBinary));
+	FISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(FIFileSpr));
+
+	FISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(Import));
+
+	UTLoadHandlerDbPool::Get("FileIO")->insert(DBG_NEW ImportHandler);
+}
+
 //----------------------------------------------------------------------------
 //	FISdk
-void SPR_CDECL FIRegisterTypeDescs();
 
 FISdk::FISdk(){
-	FIRegisterTypeDescs();
-	static bool bFirst = true;
-	if (bFirst){
-		UTLoadHandlerDbPool::Get("FileIO")->insert(DBG_NEW ImportHandler);
-		bFirst = false;
-	}
+	FISdkIf::RegisterSdk();
 }
 
 FISdk::~FISdk(){
@@ -39,8 +59,9 @@ FISdk::~FISdk(){
 void FISdk::Clear(){
 	Sdk::Clear();
 	files.clear();
+	imports.clear();
 }
-ObjectIf* FISdk::CreateObject(const IfInfo* info, const void* desc){
+/*ObjectIf* FISdk::CreateObject(const IfInfo* info, const void* desc){
 	ObjectIf* rv = Object::CreateObject(info, desc);
 	if(!rv){
 		if(info->Inherit(FIFileXIf::GetIfInfoStatic())){
@@ -57,9 +78,25 @@ ObjectIf* FISdk::CreateObject(const IfInfo* info, const void* desc){
 		}
 	}
 	return rv;
+}*/
+
+bool FISdk::AddChildObject(ObjectIf* o){
+	FIFile* file = o->Cast();
+	if(file){
+		file->sdk = this;
+		files.push_back(file);
+		return true;
+	}
+	Import* imp = o->Cast();
+	if(imp){
+		imports.push_back(imp);
+		return true;
+	}
+	return false;
 }
+
 bool FISdk::DelChildObject(ObjectIf* o){
-	FIFileIf* file = DCAST(FIFileIf, o);
+	FIFileIf* file = o->Cast();
 	if(file){
 		Files::iterator it = find(files.begin(), files.end(), file->Cast());
 		if(it != files.end()){
@@ -67,46 +104,59 @@ bool FISdk::DelChildObject(ObjectIf* o){
 			return true;
 		}
 	}
+	ImportIf* imp = o->Cast();
+	if(imp){
+		Imports::iterator it = find(imports.begin(), imports.end(), imp->Cast());
+		if(it != imports.end()){
+			imports.erase(it);
+			return true;
+		}
+	}
 	return false;
 }
 
 FIFileXIf* FISdk::CreateFileX(){
-	FIFileX* rv = DBG_NEW FIFileX;
-	rv->sdk = this;
-	files.push_back(rv);
-	return rv->Cast();
+	//FIFileX* rv = DBG_NEW FIFileX;
+	//rv->sdk = this;
+	//files.push_back(rv);
+	//return rv->Cast();
+	return DCAST(FIFileXIf, CreateObject(FIFileXIf::GetIfInfoStatic(), &FIFileXDesc()));
 }
 
 FIFileSprIf* FISdk::CreateFileSpr(){
-	FIFileSpr* rv = DBG_NEW FIFileSpr;
-	rv->sdk = this;
-	files.push_back(rv);
-	return rv->Cast();
+	//FIFileSpr* rv = DBG_NEW FIFileSpr;
+	//rv->sdk = this;
+	//files.push_back(rv);
+	//return rv->Cast();
+	return DCAST(FIFileSprIf, CreateObject(FIFileSprIf::GetIfInfoStatic(), &FIFileSprDesc()));
 }
 
 FIFileVRMLIf* FISdk::CreateFileVRML(){
-	FIFileVRML* rv = DBG_NEW FIFileVRML;
-	rv->sdk = this;
-	files.push_back(rv);
-	return rv->Cast();
+	//FIFileVRML* rv = DBG_NEW FIFileVRML;
+	//rv->sdk = this;
+	//files.push_back(rv);
+	//return rv->Cast();
+	return DCAST(FIFileVRMLIf, CreateObject(FIFileVRMLIf::GetIfInfoStatic(), &FIFileVRMLDesc()));
 }
 
 FIFileCOLLADAIf* FISdk::CreateFileCOLLADA(){
-	FIFileCOLLADA* rv = DBG_NEW FIFileCOLLADA;
-	rv->sdk = this;
-	files.push_back(rv);
-	return rv->Cast();
+	//FIFileCOLLADA* rv = DBG_NEW FIFileCOLLADA;
+	//rv->sdk = this;
+	//files.push_back(rv);
+	//return rv->Cast();
+	return DCAST(FIFileCOLLADAIf, CreateObject(FIFileCOLLADAIf::GetIfInfoStatic(), &FIFileCOLLADADesc()));
 }
 
 FIFileBinaryIf* FISdk::CreateFileBinary(){
-	FIFileBinary* rv = DBG_NEW FIFileBinary;
-	rv->sdk = this;
-	files.push_back(rv);
-	return rv->Cast();
+	//FIFileBinary* rv = DBG_NEW FIFileBinary;
+	//rv->sdk = this;
+	//files.push_back(rv);
+	//return rv->Cast();
+	return DCAST(FIFileBinaryIf, CreateObject(FIFileBinaryIf::GetIfInfoStatic(), &FIFileBinaryDesc()));
 }
 
 FIFileIf* FISdk::CreateFile(const IfInfo* ii){
-	if(ii == FIFileXIf::GetIfInfoStatic())
+/*	if(ii == FIFileXIf::GetIfInfoStatic())
 		return CreateFileX();
 	if(ii == FIFileVRMLIf::GetIfInfoStatic())
 		return CreateFileVRML();
@@ -114,7 +164,8 @@ FIFileIf* FISdk::CreateFile(const IfInfo* ii){
 		return CreateFileCOLLADA();
 	if(ii == FIFileBinaryIf::GetIfInfoStatic())
 		return CreateFileBinary();
-	return NULL;
+	return NULL;*/
+	return DCAST(FIFileIf, CreateObject(ii, 0));
 }
 
 FIFileIf* FISdk::CreateFileFromExt(UTString filename){
@@ -141,20 +192,23 @@ FIFileIf* FISdk::CreateFileFromExt(UTString filename){
 }
 
 ImportIf* FISdk::CreateImport(){
-	Import* import = DBG_NEW Import;
-	imports.push_back(import);
-	return import->Cast();
+	//Import* import = DBG_NEW Import;
+	//imports.push_back(import);
+	//return import->Cast();
+	ImportIf* imp = CreateObject(ImportIf::GetIfInfoStatic(), &ImportDesc())->Cast();
+	AddChildObject(imp);
+	return imp;
 }
 
 ImportIf*	FISdk::CreateImport(ImportIf* parent, UTString path, ObjectIf* owner, const ObjectIfs& children){
-	Import* import = DBG_NEW Import;
-	import->path = path;
-	import->ownerObj = owner;
-	import->childObjs = children;
+	Import* imp = CreateObject(ImportIf::GetIfInfoStatic(), &ImportDesc())->Cast();
+	imp->path = path;
+	imp->ownerObj = owner;
+	imp->childObjs = children;
 
-	DCAST(Import, parent)->AddChild(import);
+	DCAST(Import, parent)->AddChild(imp);
 
-	return import->Cast();
+	return imp->Cast();
 }
 
 }

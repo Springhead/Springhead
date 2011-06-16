@@ -8,8 +8,7 @@
 #ifndef SPR_CRSCENEIF_H
 #define SPR_CRSCENEIF_H
 
-#include <SprFoundation.h>
-#include <SprPhysics.h>
+#include <Foundation/SprScene.h>
 
 namespace Spr{;
 

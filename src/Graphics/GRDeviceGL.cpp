@@ -5,8 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Graphics.h"
+#include <Graphics/GRDeviceGL.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 #define USE_GREW
 //#define GLEW_MX

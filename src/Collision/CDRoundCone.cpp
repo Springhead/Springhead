@@ -5,12 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Springhead.h>
-#include <Foundation/Object.h>
-#include "Collision.h"
-#include <set>
+#include <Collision/CDRoundCone.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "CDQuickHull3DImp.h"
+#endif
 
 namespace Spr{;
 

@@ -8,8 +8,8 @@
 #ifndef FIFILESPR_H
 #define FIFILESPR_H
 
-#include "FIFile.h"
-#include "FISpirit.h"
+#include <FileIO/FIFile.h>
+#include <FileIO/FISpirit.h>
 
 namespace Spr{;
 
@@ -22,7 +22,7 @@ protected:
 	FISkipParser cmt;
 
 public:
-	FIFileSpr();
+	FIFileSpr(const FIFileSprDesc& desc = FIFileSprDesc());
 	void LoadImp(FILoadContext* fc);
 	virtual void PushLoaderContext(FILoadContext* fc);
 	virtual void PopLoaderContext();

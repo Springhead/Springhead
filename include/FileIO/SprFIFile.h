@@ -14,6 +14,7 @@
 namespace Spr{;
 
 class UTTypeDescDb;
+
 ///	ファイルローダ・セーバ
 struct FIFileIf: public ObjectIf{
 	SPR_IFDEF(FIFile);
@@ -48,6 +49,7 @@ struct FIFileIf: public ObjectIf{
 	/// 汎用性が低いのでObjectIfにデバッグ出力レベルを設定するAPIをつけるべきか？tazz
 	void SetDSTR(bool f);
 };
+
 ///	Sprファイルのファイルローダとセーバ
 struct FIFileSprIf: public FIFileIf{
 	SPR_IFDEF(FIFileSpr);
@@ -55,6 +57,9 @@ struct FIFileSprIf: public FIFileIf{
 	bool Load(ObjectIfs& objs, const char* fn);
 	///	セーブ
 	bool Save(const ObjectIfs& objs, const char* fn);
+};
+struct FIFileSprDesc{
+	SPR_DESCDEF(FIFileSpr);
 };
 
 ///	DirectXファイルのファイルローダとセーバ
@@ -65,6 +70,9 @@ struct FIFileXIf: public FIFileIf{
 	///	セーブ
 	bool Save(const ObjectIfs& objs, const char* fn);
 };
+struct FIFileXDesc{
+	SPR_DESCDEF(FIFileX);
+};
 
 ///	DirectXファイルのファイルローダとセーバ
 struct FIFileVRMLIf: public FIFileIf{
@@ -74,7 +82,9 @@ struct FIFileVRMLIf: public FIFileIf{
 	///	セーブ
 	bool Save(const ObjectIfs& objs, const char* fn);
 };
-
+struct FIFileVRMLDesc{
+	SPR_DESCDEF(FIFileVRML);
+};
 
 ///	COLLADAファイルのファイルローダとセーバ
 struct FIFileCOLLADAIf: public FIFileIf{
@@ -84,6 +94,9 @@ struct FIFileCOLLADAIf: public FIFileIf{
 	///	セーブ
 	bool Save(const ObjectIfs& objs, const char* fn);
 };
+struct FIFileCOLLADADesc{
+	SPR_DESCDEF(FIFileCOLLADA);
+};
 
 ///	バイナリファイルのファイルローダとセーバ
 struct FIFileBinaryIf: public FIFileIf{
@@ -92,6 +105,9 @@ struct FIFileBinaryIf: public FIFileIf{
 	bool Load(ObjectIfs& objs, const char* fn);
 	///	セーブ
 	bool Save(const ObjectIfs& objs, const char* fn);
+};
+struct FIFileBinaryDesc{
+	SPR_DESCDEF(FIFileBinary);
 };
 
 }

@@ -8,7 +8,7 @@
 #ifndef PHTREENODE_H
 #define PHTREENODE_H
 
-#include <SprPhysics.h>
+#include <Physics/SprPHJoint.h>
 #include <Physics/PHJoint.h>
 #include <Physics/PhysicsDecl.hpp>
 

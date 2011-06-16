@@ -13,9 +13,7 @@
 #define GRRENDER_H
 
 #include <Graphics/SprGRRender.h>
-#include <Foundation/Scene.h>
-#include "GRFrame.h"
-#include "GRSphere.h"
+#include <Graphics/GRFrame.h>
 
 namespace Spr{;
 

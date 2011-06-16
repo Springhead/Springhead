@@ -5,12 +5,9 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/**
- *	@file SprHISdk.h
- *	@brief ヒューマンインタフェースSDK
-*/
-#ifndef SPR_HIDRUsbIF_H
-#define SPR_HIDRUsbIF_H
+
+#ifndef SPR_HI_DRUSB_H
+#define SPR_HI_DRUSB_H
 #include <HumanInterface/SprHIBase.h>
 
 namespace Spr{;
@@ -18,24 +15,31 @@ namespace Spr{;
 /** \addtogroup gpPhysics */
 //@{
 
-
-//	デスクリプタ
-struct DRUsb20SimpleDesc{
-	int number;
-	DRUsb20SimpleDesc(): number(10){}
-};
+/**
+	CyverseのUSBデバイス
+ **/
 
 ///	
 struct DRUsb20SimpleIf : public HIRealDeviceIf{
 	SPR_IFDEF(DRUsb20Simple);
 };
+struct DRUsb20SimpleDesc{
+	SPR_DESCDEF(DRUsb20Simple);
 
-struct DRUsb20Sh4Desc: public DRUsb20SimpleDesc{
-	DRUsb20Sh4Desc(){number = 0;}
+	int channel;		///< 使用チャンネル．-1なら任意
+
+	DRUsb20SimpleDesc(): channel(10){}
 };
+
+
 ///
 struct DRUsb20Sh4If : public HIRealDeviceIf{
 	SPR_IFDEF(DRUsb20Sh4);
+};
+struct DRUsb20Sh4Desc: public DRUsb20SimpleDesc{
+	SPR_DESCDEF(DRUsb20Sh4);
+	
+	DRUsb20Sh4Desc(){ channel = 0; }
 };
 
 //@}

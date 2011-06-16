@@ -8,14 +8,10 @@
 #ifndef PH_IKACTUATOR_H
 #define PH_IKACTUATOR_H
 
-#include <SprPhysics.h>
+#include <Physics/SprPHIK.h>
 #include <Foundation/Object.h>
-#include <Physics/PHEngine.h>
 #include <Physics/PHIKEndEffector.h>
-
 #include "PhysicsDecl.hpp"
-
-#include <vector>
 #include <set>
 #include <map>
 
@@ -168,33 +164,9 @@ public:
 	bool IsEnabled(){ return bEnabled; }
 
 	// --- --- --- --- ---
-
-	virtual bool AddChildObject(ObjectIf* o){
-		PHIKEndEffectorIf* cp = o->Cast();
-		if (cp) {
-			RegisterEndEffector(cp);
-			return true;
-		}
-		return false;
-	}
-
-	virtual ObjectIf* GetChildObject(size_t pos){
-		for (ESetIter it=linkedEndEffectors.begin(); it!=linkedEndEffectors.end(); ++it) {
-			if (pos == 0) {
-				return (*it)->Cast();
-			}
-			pos--;
-		}
-		return NULL;
-	}
-
-	size_t NChildObject() {
-		int cnt = 0;
-		for (ESetIter it=linkedEndEffectors.begin(); it!=linkedEndEffectors.end(); ++it) {
-			cnt++;
-		}
-		return cnt;
-	}
+	virtual bool		AddChildObject(ObjectIf* o);
+	virtual ObjectIf*	GetChildObject(size_t pos);
+	virtual	size_t		NChildObject()const;
 
 	// --- --- --- --- --- --- --- --- --- ---
 	// Non API Methods
@@ -292,33 +264,9 @@ public:
 
 	// --- --- --- --- ---
 
-	virtual bool AddChildObject(ObjectIf* o){
-		PHBallJointIf* jo = o->Cast();
-		if (jo) {
-			this->joint = jo;
-			PHBallJointDesc dJ; DCAST(PHBallJointIf,this->joint)->GetDesc(&dJ);
-			this->jSpring = dJ.spring;
-			this->jDamper = dJ.damper;
-			this->jGoal   = dJ.targetPosition;
-			return true;
-		}
-		return PHIKActuator::AddChildObject(o);
-	}
-
-	virtual ObjectIf* GetChildObject(size_t pos){
-		if (pos == 0 && this->joint != NULL) { return this->joint; }
-		if (this->joint != NULL) {
-			return PHIKActuator::GetChildObject(pos - 1);
-		} else {
-			return PHIKActuator::GetChildObject(pos);
-		}
-		return NULL;
-	}
-
-	size_t NChildObject() {
-		if (this->joint != NULL) { return 1 + PHIKActuator::NChildObject(); }
-		return PHIKActuator::NChildObject();
-	}
+	virtual bool		AddChildObject(ObjectIf* o);
+	virtual ObjectIf*	GetChildObject(size_t pos);
+	virtual	size_t		NChildObject()const;
 
 	// --- --- --- --- --- --- --- --- --- ---
 	// Non API Methods
@@ -404,31 +352,9 @@ public:
 	virtual PHHingeJointIf* GetJoint() { return this->joint; }
 
 	// --- --- --- --- ---
-
-	virtual bool AddChildObject(ObjectIf* o){
-		PHHingeJointIf* jo = o->Cast();
-		if (jo) {
-			this->joint = jo;
-			this->jSpring = DCAST(PHHingeJointIf,this->joint)->GetSpring();
-			this->jDamper = DCAST(PHHingeJointIf,this->joint)->GetDamper();
-			this->jGoal   = DCAST(PHHingeJointIf,this->joint)->GetTargetPosition();
-			return true;
-		}
-		return PHIKActuator::AddChildObject(o);
-	}
-	virtual ObjectIf* GetChildObject(size_t pos){
-		if (pos == 0 && this->joint != NULL) { return this->joint; }
-		if (this->joint != NULL) {
-			return PHIKActuator::GetChildObject(pos - 1);
-		} else {
-			return PHIKActuator::GetChildObject(pos);
-		}
-		return NULL;
-	}
-	size_t NChildObject() {
-		if (this->joint != NULL) { return 1 + PHIKActuator::NChildObject(); }
-		return PHIKActuator::NChildObject();
-	}
+	virtual bool		AddChildObject(ObjectIf* o);
+	virtual ObjectIf*	GetChildObject(size_t pos);
+	virtual	size_t		NChildObject()const;
 
 	// --- --- --- --- --- --- --- --- --- ---
 	// Non API Methods

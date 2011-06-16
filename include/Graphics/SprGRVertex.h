@@ -7,6 +7,7 @@
  */
 #ifndef SPR_GRVERTEX_H
 #define SPR_GRVERTEX_H
+
 #include <Base/Affine.h>
 
 namespace Spr{;

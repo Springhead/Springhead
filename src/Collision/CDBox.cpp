@@ -5,12 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Springhead.h>
-#include <Foundation/Object.h>
-#include "Collision.h"
-#include <set>
+#include <Collision/CDBox.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "CDQuickHull3DImp.h"
+#endif
 
 namespace Spr{;
 const double sqEpsilon = 1e-4;
@@ -207,7 +205,7 @@ Vec3f* CDBox::GetVertices(){
 	return &*base.begin();
 }
 
-CDFaceIf* CDBox::GetFace(size_t i){
+CDFaceIf* CDBox::GetFace(int i){
 	return qfaces.at(i).Cast();
 }
 

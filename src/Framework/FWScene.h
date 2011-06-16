@@ -8,14 +8,18 @@
 #ifndef FWSCENE_H
 #define FWSCENE_H
 
-#include <Springhead.h>
 #include <Framework/SprFWScene.h>
 #include <Framework/SprFWObject.h>
 #include <Framework/SprFWBone.h>
-#include <Foundation/Object.h>
 #include <Foundation/Scene.h>
+#include <HumanInterface/HIBase.h>
 
 namespace Spr{;
+
+struct CDConvexMeshIf;
+struct CDFaceIf;
+struct PHSceneIf;
+struct GRSceneIf;
 
 class FWSdk;
 
@@ -39,17 +43,18 @@ public:
 	typedef std::vector< UTRef<FWObjectIf> >		FWObjects;
 	typedef std::vector< UTRef<FWBoneIf> >			FWBones;
 	typedef std::vector< UTRef<FWStructureIf> >		FWStructures;
-	typedef std::vector< UTRef<HIForceDevice6D> >	FWHumanInterfaces;
+	typedef std::vector< UTRef<HIHaptic> >			FWHumanInterfaces;
 	
 	FWSdk*				sdk;						///<	親SDKへの参照
 	FWObjects			fwObjects;					///<	物理とグラフィックスのオブジェクトのリンク
 	FWBones				fwBones;					///<	物理とグラフィックスのBoneのリンク
 	FWStructures		fwStructures;				///<	BoneObjectの集合体であるFWStructureへのリンク
-	UTRef<PHSceneIf>	phScene;					///<	物理シミュレーション用のシーン
-	UTRef<GRSceneIf>	grScene;					///<	グラフィックス用のシーン
+	PHSceneIf*			phScene;					///<	物理シミュレーション用のシーン
+	GRSceneIf*			grScene;					///<	グラフィックス用のシーン
 
 	/// 描画制御フラグ
 	std::map<ObjectIf*, bool>	renderObject;
+	bool		renderPHScene;
 	bool		renderSolid, renderWire;
 	bool		renderAxisWorld, renderAxisSolid, renderAxisConst;
 	bool		renderForceSolid, renderForceConst;
@@ -104,12 +109,13 @@ public:
 
 	/** 描画機能
 	 */
-	void	DrawPHScene			(GRRenderIf* render);
-	void	DrawSolid			(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire);
-	void	DrawShape			(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire);
-	void	DrawConstraint		(GRRenderIf* render, PHConstraintIf* con);
-	void	DrawContact			(GRRenderIf* render, PHContactPointIf* con);
-	void	DrawIK				(GRRenderIf* render, PHIKEngineIf* ikEngine);
+	void	Draw			(GRRenderIf* render, bool ph_or_gr);
+	void	DrawPHScene		(GRRenderIf* render);
+	void	DrawSolid		(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire);
+	void	DrawShape		(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire);
+	void	DrawConstraint	(GRRenderIf* render, PHConstraintIf* con);
+	void	DrawContact		(GRRenderIf* render, PHContactPointIf* con);
+	void	DrawIK			(GRRenderIf* render, PHIKEngineIf* ikEngine);
 	
 	/// 描画制御
 	void	SetRenderMode		(bool solid, bool wire);

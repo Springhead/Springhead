@@ -15,6 +15,16 @@ namespace Spr {;
 class FIFile;
 class Import;
 
+class FISdkFactory : public FactoryBase {
+public:
+	const IfInfo* GetIfInfo() const {
+		return FISdkIf::GetIfInfoStatic();
+	}
+	ObjectIf* Create(const void* desc, ObjectIf*){
+		return FISdkIf::CreateSdk();
+	}
+};
+
 class SPR_DLL FISdk:public Sdk{
 public:
 	SPR_OBJECTDEF(FISdk);
@@ -23,9 +33,11 @@ public:
 
 	typedef std::vector< UTRef<Import> > Imports;
 	Imports imports;
-	
+
+public:
 	FISdk();
 	~FISdk();
+
 	FIFileXIf*			CreateFileX();
 	FIFileSprIf*		CreateFileSpr();
 	FIFileVRMLIf*		CreateFileVRML();
@@ -37,9 +49,10 @@ public:
 	ImportIf*			CreateImport();
 	ImportIf*			CreateImport(ImportIf* parent, UTString path, ObjectIf* owner, const ObjectIfs& children);
 
-	bool DelChildObject(ObjectIf* o);
-	void Clear();
-	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
+	virtual void Clear();
+	//ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 };
 
 }

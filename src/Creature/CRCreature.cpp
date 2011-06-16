@@ -5,12 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CRCreature.h"
-
-#include "CRBody.h"
-#include "CREngine.h"
-#include "CRScene.h"
-
+#include <Creature/CRCreature.h>
+#include <Creature/CREngine.h>
+#include <Creature/CRBody.h>
+#include <Creature/CRScene.h>
+#include <Physics/SprPHScene.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

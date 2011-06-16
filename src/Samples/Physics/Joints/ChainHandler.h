@@ -29,11 +29,10 @@ public:
 	int					springLevel;
 	int					damperLevel;
 
-	double				rangeMin, rangeMax;	///< 関節可動範囲
 	double				spring, damper;		///< バネ係数，ダンパ係数
 
 public:
-	ChainHandler(){
+	ChainHandler(SampleApp* a):Handler(a){
 		rootPos		= Vec3d(0.0, 20.0, 0.0);
 		iniPos		= Vec3d(10, 10, 0);
 
@@ -42,9 +41,8 @@ public:
 		springLevel = 0;
 		damperLevel = 0;
 
-		SampleApp* app = GetApp();
 		app->AddAction(MENU_CHAIN, ID_HINGE, "create hinge");
-		app->AddHotKey(MENU_CHAIN, ID_HINGE, 'h');
+		app->AddHotKey(MENU_CHAIN, ID_HINGE, 'j');	///< hだとhelpと重複する
 		app->AddAction(MENU_CHAIN, ID_SLIDER, "create slider");
 		app->AddHotKey(MENU_CHAIN, ID_SLIDER, 's');
 		app->AddAction(MENU_CHAIN, ID_BALL, "create ball");
@@ -95,10 +93,10 @@ public:
 		}
 	}
 	virtual void BuildScene(){
-		soFloor = GetApp()->CreateFloor();
+		soFloor = app->CreateFloor();
 
 		PHSolidIf* so = GetPHScene()->CreateSolid();
-		so->AddShape(GetApp()->shapeBox);
+		so->AddShape(app->shapeBox);
 		so->SetFramePosition(rootPos);
 		so->SetDynamical(false);
 		links.push_back(so);
@@ -109,16 +107,16 @@ public:
 		PHSolidIf* so;
 		if(id == ID_HINGE || id == ID_BALL || id == ID_SLIDER){
 			so = phScene->CreateSolid();
-			so->AddShape(GetApp()->shapeBox);
+			so->AddShape(app->shapeBox);
 			so->SetFramePosition(iniPos);
 		}
 		if(id == ID_HINGE){
 			PHHingeJointDesc jdesc;
 			jdesc.poseSocket.Pos() = Vec3d( 1.1,  -1.1,  0);
 			jdesc.posePlug.Pos() = Vec3d(-1.1, 1.1,  0);
-			jdesc.lower = rangeMin;
-			jdesc.upper = rangeMax;
 			jdesc.damper = damper;
+			jdesc.lower = Rad(20.0);
+			jdesc.upper = Rad(30.0);
 			joints.push_back(phScene->CreateJoint(links.back(), so, jdesc));
 		}
 		if(id == ID_SLIDER){
@@ -127,8 +125,6 @@ public:
 			jdesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90.0), 'y');
 			jdesc.posePlug.Pos() = Vec3d(0,  1.1, 0);
 			jdesc.posePlug.Ori() = Quaterniond::Rot(Rad(90.0), 'y');
-			jdesc.lower = rangeMin;
-			jdesc.upper = rangeMax;
 			joints.push_back(phScene->CreateJoint(links.back(), so, jdesc));
 		}
 		if(id == ID_BALL){

@@ -5,18 +5,17 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FileIO.h"
+#include <Foundation/UTLoadHandler.h>
+#include <FileIO/FIFileCOLLADA.h>
+#include <FileIO/FIFileCOLLADAHandler.h>
+#include <FileIO/FILoadContext.h>
+#include <FileIO/FISaveContext.h>
+#include <fstream>
+#include <sstream>
+#include <boost/bind.hpp>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
-
-#include "FIFileCOLLADA.h"
-#include "FIFileCOLLADAHandler.h"
-#include <Foundation/UTLoadHandler.h>
-#include <fstream>
-#include <sstream>
-#include <Springhead.h>
-#include <boost/bind.hpp>
 
 namespace Spr{;
 
@@ -231,7 +230,7 @@ typedef boost::spirit::classic::functor_parser<ExpectParser> ExpP;
 using namespace FileCOLLADA;
 
 
-FIFileCOLLADA::FIFileCOLLADA(){
+FIFileCOLLADA::FIFileCOLLADA(const FIFileCOLLADADesc& desc){
 	Init();
 }
 

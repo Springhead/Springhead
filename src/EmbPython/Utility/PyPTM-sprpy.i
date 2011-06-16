@@ -548,14 +548,15 @@ public:
 	Posed Inv() const;
 	
 	static Posed Unit();
-	static Posed Unit(const Vec3d& v);
-	static Posed Unit(const Quaterniond &q);
+	//static Posed Unit(const Vec3d& v);
+	//static Posed Unit(const Quaterniond &q);
 	static Posed Trn(double px, double py, double pz);
 	static Posed Trn(const Vec3d &v);
 	static Posed Rot(double wi, double xi, double yi, double zi);
 	static Posed Rot(double angle, const Vec3d& axis);
 	static Posed Rot(double angle, char axis);
 	static Posed Rot(const Vec3d& rot);
+	static Posed Rot(const Quaterniond& q);
 
 	void FromAffine(const Affined& f);
 	void ToAffine(Affined& af) const;

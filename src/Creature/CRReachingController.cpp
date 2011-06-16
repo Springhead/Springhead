@@ -5,8 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CRReachingController.h"
-
+#include <Creature/CRReachingController.h>
+#include <Creature/SprCRBody.h>
+#include <Creature/SprCRCreature.h>
+#include <Physics/SprPHScene.h>
+#include <Graphics/SprGRRender.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

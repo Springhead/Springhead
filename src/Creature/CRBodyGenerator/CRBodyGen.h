@@ -8,12 +8,17 @@
 #ifndef CR_BODYGEN_H
 #define CR_BODYGEN_H
 
-#include <Springhead.h>
-
 #include <Foundation/Object.h>
+#include <Physics/SprPHJoint.h>
+#include <vector>
 
 //@{
 namespace Spr{;
+
+struct PHSdkIf;
+struct PHIKActuatorIf;
+struct PHIKEndEffectorIf;
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief ボディ
 */
@@ -53,8 +58,8 @@ protected:
 	
 	/** @brief 関節を作る
 	*/
-	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc);
-	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBallJointDesc desc);
+	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, const PHHingeJointDesc& desc);
+	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, const PHBallJointDesc& desc);
 
 	/** @brief CDBoxのInertiaを計算する（慣性テンソルの対角要素には値が入って，慣性乗積は0）
 		@param CDBoxDesc::boxsize, PHSolidDesc::mass
@@ -73,13 +78,7 @@ protected:
 	void SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint);
 
 public:
-	CRBodyGen(){}
-	CRBodyGen(const CRBodyGenDesc& desc, PHSceneIf* s=NULL) 
-		: CRBodyGenDesc(desc)
-	{
-		phScene		= s;
-		phSdk		= phScene->GetSdk();
-	}
+	CRBodyGen(const CRBodyGenDesc& desc = CRBodyGenDesc(), PHSceneIf* s = 0);
 
 	/** @brief 初期化を行う
 	*/

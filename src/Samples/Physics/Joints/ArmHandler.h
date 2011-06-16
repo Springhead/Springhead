@@ -30,7 +30,7 @@ public:
 	bool						useABA;			///< ABA‚ðŽg‚¤‚©‚Ç‚¤‚©
 
 public:
-	ArmHandler(){
+	ArmHandler(SampleApp* a):Handler(a){
 		nLinks		= 5;
 		linkSize	= 5.0;
 		jointSpring = 2000;
@@ -40,7 +40,6 @@ public:
 		useExternal	= false;
 		useABA		= false;
 
-		SampleApp* app = GetApp();
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_0, "move ball");
 		app->AddHotKey(MENU_ARM, ID_MOVE_BALL_0, 's');
 		app->AddAction(MENU_ARM, ID_MOVE_BALL_1, "move ball");
@@ -56,7 +55,7 @@ public:
 	}
 
 	virtual void BuildScene(){
-		soFloor = GetApp()->CreateFloor();
+		soFloor = app->CreateFloor();
 		
 		PHSdkIf* phSdk = GetPHSdk();
 		PHSceneIf* phScene = GetPHScene();

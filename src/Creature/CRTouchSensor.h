@@ -8,13 +8,8 @@
 #ifndef CRTOUCHSENSOR_H
 #define CRTOUCHSENSOR_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-
-#include <vector>
-
-#include "CREngine.h"
+#include <Creature/CREngine.h>
+#include <Creature/SprCRTouchSensor.h>
 
 //@{
 namespace Spr{;

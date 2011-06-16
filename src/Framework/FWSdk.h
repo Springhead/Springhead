@@ -7,11 +7,13 @@
  */
 #ifndef FWSDK_H
 #define FWSDK_H
-#include <Foundation/Foundation.h>
+
 #include <Framework/SprFWSdk.h>
-#include <Graphics/SprGRRender.h>
+#include <Foundation/Scene.h>
 
 namespace Spr {;
+
+struct FIFileIf;
 
 class FWSdkFactory : public FactoryBase {
 public:
@@ -25,64 +27,82 @@ public:
 
 class SPR_DLL FWSdk:public Sdk{
 protected:
-	///	シーン
-	typedef std::vector< UTRef<FWSceneIf> > FWScenes;	//< GRRenderにもScenesがあってScenes型typedefでは上手く動かない．
-	FWScenes scenes;
+	// SDKs
+	UTRef<PHSdkIf>	phSdk;
+	UTRef<GRSdkIf>	grSdk;
+	UTRef<FISdkIf>	fiSdk;
+	UTRef<HISdkIf>	hiSdk;
 
+	///	シーン
+	typedef std::vector< UTRef<FWSceneIf> > FWScenes;
+	FWScenes scenes;
+	/// アクティブシーン
+	//FWSceneIf*		curScene;
+
+	/// インタラクション用シーン
+	FWInteractSceneIf*					curIAScene;
+	FWInteractScenes					iaScenes;
+	
 	/// レンダラ
 	typedef std::vector< UTRef<GRRenderIf> > Renders;
 	Renders renders;
-
-	/// アクティブシーンとレンダラ
-	FWSceneIf*	curScene;
-	GRRenderIf*	curRender;
-
-	// SDKs
-	UTRef<PHSdkIf> phSdk;
-	UTRef<GRSdkIf> grSdk;
-	UTRef<FISdkIf> fiSdk;
+	//GRRenderIf*		curRender;
 	
-	bool debugMode;
-	bool DSTRFlag;
+	//bool debugMode;
+	//bool DSTRFlag;
+
+protected:
+	FIFileIf* CreateFile(UTString ext, const IfInfo* ii);
+	void CreateSdks();
+
 public:
 	SPR_OBJECTDEF(FWSdk);
 	FWSdk();
 	~FWSdk();
 
-	virtual FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
-	virtual bool LoadScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
-	virtual bool SaveScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
-	virtual int NScene() const{	return (int)scenes.size(); }
-	virtual void SwitchScene(FWSceneIf* scene){ curScene = scene; }
-	virtual FWSceneIf* GetScene(int i = -1);
-	virtual void MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
+	/// SDK関係
+	PHSdkIf* GetPHSdk(){ return phSdk; }
+	GRSdkIf* GetGRSdk(){ return grSdk; }
+	FISdkIf* GetFISdk(){ return fiSdk; }
+	HISdkIf* GetHISdk(){ return hiSdk; }
 
-	virtual GRRenderIf*	CreateRender();
-	virtual int NRender() const{return (int)renders.size();}
-	virtual GRRenderIf* GetRender(int index = -1);
-	virtual void SwitchRender(GRRenderIf* render){ curRender = render; }
-
-	virtual bool GetDebugMode(){return debugMode;}
-	virtual void SetDebugMode(bool debug = true){debugMode = debug;}
-
-	virtual size_t NChildObject() const { return NScene(); }
-	virtual ObjectIf* GetChildObject(size_t i){ return GetScene((int)i); }
+	/// シーン関係
+	FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
+	bool LoadScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
+	bool SaveScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
+	int NScene() const{	return (int)scenes.size(); }
+	//void SwitchScene(FWSceneIf* scene){ curScene = scene; }
+	FWSceneIf* GetScene(int i = -1);
+	void MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
+	
+	/// インタラクションシーン関係
+	FWInteractSceneIf*				CreateIAScene(const FWInteractSceneDesc& desc);
+	FWInteractSceneIf*				GetIAScene(int i = -1);
+	int								NIAScenes(){ return iaScenes.size(); }
+	void							ClearIAScenes();
+	
+	/// レンダラ関係
+	//GRRenderIf*	CreateRender();
+	//int NRender() const{return (int)renders.size();}
+	//GRRenderIf* GetRender(int index = -1);
+	//void SwitchRender(GRRenderIf* render){ curRender = render; }
+	//bool GetDebugMode(){return debugMode;}
+	//void SetDebugMode(bool debug = true){debugMode = debug;}
+	
+	/// その他
+	//void Step();
+	//void Draw();
+	//void Reshape(int w, int h);
+	//void SetDSTR(bool f){ DSTRFlag = f; }
+	
+	// Objectの仮想関数の実装
+	virtual size_t NChildObject() const;
+	virtual ObjectIf* GetChildObject(size_t i);
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);
-	virtual PHSdkIf* GetPHSdk(){ return phSdk; }
-	virtual GRSdkIf* GetGRSdk(){ return grSdk; }
-	virtual FISdkIf* GetFISdk(){ return fiSdk; }
-
 	virtual void Clear();
-	virtual void Step();
-	virtual void Draw();
-	virtual void Reshape(int w, int h);
-
-	void SetDSTR(bool f){ DSTRFlag = f; }
 	
-protected:
-	FIFileIf* CreateFile(UTString ext, const IfInfo* ii);
-	void CreateSdks();
 };
+
 }
 #endif

@@ -8,16 +8,16 @@
 #ifndef CRGRABCONTROLLER_H
 #define CRGRABCONTROLLER_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-
-#include "CREngine.h"
-
+#include <Creature/CREngine.h>
+#include <Creature/SprCRReachController.h>
 #include <map>
 
 //@{
 namespace Spr{;
+
+struct PHSpringIf;
+struct CRBodyIf;
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief îcéùÉRÉìÉgÉçÅ[Éâ
 */

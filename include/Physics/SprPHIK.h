@@ -12,10 +12,13 @@
 #ifndef SPR_PHIKIf_H
 #define SPR_PHIKIf_H
 
-#include <SprFoundation.h>
-#include <SprPhysics.h>
+#include <Foundation/SprObject.h>
 
 namespace Spr{;
+
+struct PHSolidIf;
+struct PHHingeJointIf;
+struct PHBallJointIf;
 
 /** \addtogroup gpPhysics */
 //@{

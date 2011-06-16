@@ -5,16 +5,21 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Framework.h"
-#include "Framework/FWSdk.h"
-#include "Framework/FWOldSpringheadNode.h"
-#include "Framework/FWObject.h"
-#include "Framework/FWFemMesh.h"
-#include "Physics/PHSdk.h"
-#include "Physics/PHScene.h"
-#include "Graphics/GRSdk.h"
-#include "Graphics/GRScene.h"
-#include "Foundation/UTPath.h"
+
+#include <Framework/FWSdk.h>
+#include <Framework/FWOldSpringheadNode.h>
+#include <Framework/FWObject.h>
+#include <Framework/FWScene.h>
+#include <Framework/FWInteractScene.h>
+#include <Framework/FWFemMesh.h>
+#include <Physics/PHSdk.h>
+#include <Physics/PHScene.h>
+#include <Graphics/GRSdk.h>
+#include <Graphics/GRScene.h>
+#include <FileIO/FISdk.h>
+#include <HumanInterface/HISdk.h>
+#include <Foundation/UTPath.h>
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -50,6 +55,7 @@ FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
 	FWSdkIf::RegisterSdk();
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
+	
 	return rv->Cast();
 }
 
@@ -58,19 +64,27 @@ FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
 FWSdk::FWSdk(){
 	name="fwSdk";
 	CreateSdks();
-	curScene = NULL;
-	curRender = NULL;
-	debugMode = false;
-	DSTRFlag = true;
+	//curScene = NULL;
+	//curRender = NULL;
+	//debugMode = false;
+	//DSTRFlag = true;
 }
 void FWSdk::CreateSdks(){
 	phSdk = PHSdkIf::CreateSdk();
 	DCAST(PHSdk, phSdk)->SetNameManager(this);
 	phSdk->SetName("phSdk");
+	
 	grSdk = GRSdkIf::CreateSdk();
 	DCAST(GRSdk, grSdk)->SetNameManager(this);
 	grSdk->SetName("grSdk");
+	
 	fiSdk = FISdkIf::CreateSdk();
+	DCAST(FISdk, fiSdk)->SetNameManager(this);
+	fiSdk->SetName("fiSdk");
+
+	hiSdk = HISdkIf::CreateSdk();
+	DCAST(HISdk, hiSdk)->SetNameManager(this);
+	hiSdk->SetName("hiSdk");
 }
 
 FWSdk::~FWSdk(){
@@ -124,7 +138,7 @@ bool FWSdk::LoadScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectI
 	
 	FIFileIf* file = CreateFile(path.Ext(), ii);
 	if (ex) file->SetImport(ex);
-	file->SetDSTR(DSTRFlag);
+	//file->SetDSTR(DSTRFlag);
 	//	ファイルのロード
 	if(!file->Load(*objs, filename.data()) ) {
 		DSTR << "Error: Cannot load file " << filename.c_str() << std::endl;
@@ -132,12 +146,12 @@ bool FWSdk::LoadScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectI
 		return false;
 	}
 	//	ロードしたシーンを取得
-	if(DSTRFlag) DSTR << "Loaded " << NScene() - first << " scenes." << std::endl;
-	if(DSTRFlag) DSTR << "LoadFile Complete." << std::endl;
-	for(int i=first; i<NScene(); ++i){
-		curScene = GetScene(i);
-		if(DSTRFlag)curScene->Print(DSTR);
-	}
+	//if(DSTRFlag) DSTR << "Loaded " << NScene() - first << " FWScene." << std::endl;
+	//if(DSTRFlag) DSTR << "LoadFile Complete." << std::endl;
+	//for(int i=first; i<NScene(); ++i){
+	//	curScene = GetScene(i);
+	//	if(DSTRFlag)curScene->Print(DSTR);
+	//}
 	return true;
 }
 
@@ -163,7 +177,7 @@ bool FWSdk::SaveScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectI
 }
 
 FWSceneIf* FWSdk::GetScene(int i){
-	if(i == -1)return curScene;
+	//if(i == -1)return curScene;
     if(0 <= i && i < NScene())
 		return scenes[i];
 	return NULL;
@@ -198,13 +212,35 @@ void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 	for(int i = 0; i < scene1->NObject(); i++){
 		scene0->AddChildObject(scene1->GetObjects()[i]);
 	}
-	if(curScene == scene1)
-		curScene = scene0;
+	//if(curScene == scene1)
+	//	curScene = scene0;
 
 	scenes.erase(it1);
 }
 
-GRRenderIf*	FWSdk::CreateRender(){
+FWInteractSceneIf* FWSdk::CreateIAScene(const FWInteractSceneDesc &desc){
+	FWInteractScene* iaScene = DBG_NEW FWInteractScene(desc);
+	iaScenes.push_back(iaScene->Cast());
+	iaScene->CreateIAAdaptee(desc.iaMode);
+	if(desc.iaMode == LOCAL_DYNAMICS_3D || desc.iaMode == LOCAL_DYNAMICS_6D){
+		iaScene->SetHMode(desc.hMode);
+	}
+	curIAScene = iaScene->Cast();
+	return curIAScene;
+}
+
+FWInteractSceneIf* FWSdk::GetIAScene(int i){
+	if(i == -1) return curIAScene;
+	if(0 <= i && i < NIAScenes()) return iaScenes[i];
+	return NULL;
+}
+
+void FWSdk::ClearIAScenes(){ 
+	iaScenes.clear();
+	curIAScene = NULL;
+}
+
+/*GRRenderIf*	FWSdk::CreateRender(){
 	GRRenderIf* render = GetGRSdk()->CreateRender();
 	GRDeviceIf* dev = GetGRSdk()->CreateDeviceGL();
 	dev->Init();
@@ -218,16 +254,16 @@ GRRenderIf*	FWSdk::CreateRender(){
 	render->SetViewMatrix(view);
 
 	renders.push_back(render);
-	curRender = render;
+	//curRender = render;
 	return render;
-}
+}*/
 
-GRRenderIf* FWSdk::GetRender(int i){
+/*GRRenderIf* FWSdk::GetRender(int i){
 	if(i == -1)return curRender;
     if(0 <= i && i < NRender())
 		return renders[i];
 	return NULL;
-}
+}*/
 
 bool FWSdk::AddChildObject(ObjectIf* o){
 	FWScene* s = DCAST(FWScene, o);
@@ -235,7 +271,7 @@ bool FWSdk::AddChildObject(ObjectIf* o){
 		if (std::find(scenes.begin(), scenes.end(), s->Cast()) == scenes.end()){
 			scenes.push_back(s->Cast());
 			s->sdk = this;
-			curScene = s->Cast();
+			//curScene = s->Cast();
 			return true;
 		}
 	}
@@ -249,6 +285,16 @@ bool FWSdk::AddChildObject(ObjectIf* o){
 		grSdk = gs;
 		return true;
 	}
+	FISdkIf* fs = DCAST(FISdkIf, o);
+	if (fs) {
+		fiSdk = fs;
+		return true;
+	}
+	HISdkIf* hs = DCAST(HISdkIf, o);
+	if (hs) {
+		hiSdk = hs;
+		return true;
+	}
 	return false;
 }
 
@@ -258,12 +304,20 @@ bool FWSdk::DelChildObject(ObjectIf* o){
 		FWScenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
 		if(it != scenes.end()){
 			scenes.erase(it);
-			if(curScene == s)
-				curScene = (scenes.empty() ? NULL : scenes[0]);
+			//if(curScene == s)
+			//	curScene = (scenes.empty() ? NULL : scenes[0]);
 			return true;
 		}
 	}
 	return false;
+}
+
+size_t FWSdk::NChildObject() const {
+	return NScene();
+}
+
+ObjectIf* FWSdk::GetChildObject(size_t i){
+	return GetScene((int)i);
 }
 
 void FWSdk::Clear(){
@@ -272,37 +326,30 @@ void FWSdk::Clear(){
 	phSdk = NULL;
 	grSdk = NULL;
 	fiSdk = NULL;
+	hiSdk = NULL;
 	scenes.clear();
-	curScene = NULL;
+	//curScene = NULL;
 	// レンダラはシーンオブジェクトではないのでここでは削除しない．
 	// ClearRender APIを追加するかは要検討
 	//renders.clear();
 	//curRender = NULL;
 	CreateSdks();
 }
+/*
 void FWSdk::Step(){
 	if (curScene)
 		curScene->Step();
 }
 
 void FWSdk::Draw(){
-	if(!curRender)return;
-	curRender->ClearBuffer();
-	curRender->BeginScene();
-	if (curScene){
-		if(debugMode)
-			curScene->DrawPHScene(curRender);
-		else if(curScene->GetGRScene()){
-			curScene->Sync();
-			curScene->GetGRScene()->Render(curRender);
-		}
-	}
-	//curScene->Draw(curRender, debugMode);
-	curRender->EndScene();
+	if(!curRender || !curScene)
+		return;
+	curScene->Draw(curRender);
 }
+
 void FWSdk::Reshape(int w, int h){
 	if (curRender)
 		curRender->Reshape(Vec2f(), Vec2f(w,h));
 }
-
+*/
 }

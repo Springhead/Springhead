@@ -11,10 +11,9 @@
  */
 #ifndef GRSDK_H
 #define GRSDK_H
-#include <SprGraphics.h>
-#include <Foundation/Foundation.h>
-#include <Graphics/GRScene.h>
 
+#include <Graphics/SprGRSdk.h>
+#include <Graphics/GRScene.h>
 
 namespace Spr {;
 struct GRSceneIf;

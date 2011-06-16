@@ -7,9 +7,9 @@
  */
 
 #include <Framework/FWMultiRateHaptic.h>
-#include <Framework/SprFWApp.h>
-#include <Physics/PHConstraintEngine.h>
-#include <sstream>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 namespace Spr{;
 

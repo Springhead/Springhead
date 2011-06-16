@@ -8,6 +8,8 @@
 #include "DRWinDriver.h"
 #pragma hdrstop
 
+#ifdef _WIN32
+
 namespace Spr {
 //---------------------------------------------------------------
 //	DRLoadWindowsDriver
@@ -99,3 +101,5 @@ bool DRLoadWindowsDriver::IsStart(){
 }
 
 }	//	namespace Spr
+
+#endif

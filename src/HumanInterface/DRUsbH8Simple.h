@@ -5,68 +5,55 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#if !defined(AFX_DRUSBH8_H__618658E7_7169_4BF7_A25E_562BC6BDEE17__INCLUDED_)
-#define AFX_DRUSBH8_H__618658E7_7169_4BF7_A25E_562BC6BDEE17__INCLUDED_
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#ifndef DR_USBH8SIMPLE_H
+#define DR_USBH8SIMPLE_H
 
-#include "DVCounterBase.h"
-#include "DVDaBase.h"
-#include <HumanInterface/HIRealDevice.h>
+#include <HumanInterface/HIDevice.h>
 
 namespace Spr {
 
-///	CyverseのUSB８軸モータドライバH8版のドライバ.
-class SPR_DLL DRUsbH8Simple:public HIRealDevice
-{
+/**
+	CyverseのUSB８軸モータドライバH8版のドライバ.
+ **/
+class SPR_DLL DRUsbH8Simple: public HIRealDevice{
 public:
+	SPR_OBJECTDEF_NOIF(DRUsbH8Simple);
+
 	///	仮想デバイス
-	class VirtualDeviceDa:public DVDaBase{
-	protected:
-		int ch;
-		DRUsbH8Simple* realDevice;
-		char name[100];
+	class Da: public DVDa{
 	public:
-		VirtualDeviceDa(DRUsbH8Simple* r, int c);
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		virtual void Voltage(float v){ realDevice->Voltage(ch, v); }
-		virtual void Digit(int v){ realDevice->Digit(ch, v); }
-		virtual const char* Name() const{ return name; }
+		Da(DRUsbH8Simple* r, int c):DVDa(r, c){}
+		DRUsbH8Simple* GetRealDevice() { return realDevice->Cast(); }
+
+		virtual void Voltage(float v){ GetRealDevice()->Voltage(portNo, v); }
+		virtual void Digit(int v){ GetRealDevice()->Digit(portNo, v); }
 	};
-	class VirtualDeviceCounter:public DVCounterBase{
-	protected:
-		int ch;
-		DRUsbH8Simple* realDevice;
-		char name[100];
+	class Counter: public DVCounter{
 	public:
-		VirtualDeviceCounter(DRUsbH8Simple* r, int c);
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
+		Counter(DRUsbH8Simple* r, int c):DVCounter(r, c){}
+		DRUsbH8Simple* GetRealDevice() { return realDevice->Cast(); }
+
 		///	カウンタ値の設定
-		virtual void Count(long c){ realDevice->Count(ch, c); }
+		virtual void Count(long c){ GetRealDevice()->Count(portNo, c); }
 		///	カウンタ値の読み出し
-		virtual long Count(){ return realDevice->Count(ch); }
-		///	名前
-		virtual const char* Name() const{ return name; }
+		virtual long Count(){ return GetRealDevice()->Count(portNo); }
 	};
-//----------------------------------------------------------------------------
+
 protected:
-	char name[100];
-	int channel;
-	HANDLE hSpidar;
+	int		channel;
+	void*	hSpidar;
 	
-	int sign[8];
-	long count[8];
-	long countOffset[8];
-	int daOut[8];
+	int		sign[8];
+	long	count[8];
+	long	countOffset[8];
+	int		daOut[8];
 public:
-	DRUsbH8Simple(int ch);
-	///	デバイスの名前
-	virtual const char* Name() const { return name; }
+	DRUsbH8Simple(int ch=0);
+
 	///	初期化
 	virtual bool Init();
 	///	仮想デバイスの登録
-	virtual void Register(HIVirtualDevicePool& vpool);
+	//virtual void Register(HIVirtualDevicePool& vpool);
 
 	///	電圧出力
 	void Voltage(int ch, float v);
@@ -82,4 +69,4 @@ public:
 
 }	//	namespace Spr;
 
-#endif // !defined(AFX_DRUSBH8_H__618658E7_7169_4BF7_A25E_562BC6BDEE17__INCLUDED_)
+#endif

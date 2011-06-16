@@ -49,22 +49,67 @@ public:
 	///	Init human interface
 	virtual bool Init(const void* desc){ return false; }
 };
-class HIPosition:public virtual HIBase{
+
+/*class HIPosition:public virtual HIBase{
 public:
 	SPR_OBJECTDEF(HIPosition);
 	virtual Vec3f GetPosition();
 };
+
 class HIOrientation:public virtual HIBase{
 public:
 	SPR_OBJECTDEF(HIOrientation);
 	virtual Quaternionf GetOrientation();
-};
+};*/
 
-class HIPose:public HIPosition, public HIOrientation{
+//class HIPose:public HIPosition, public HIOrientation{
+class HIPose: public HIBase{
 public:
 	SPR_OBJECTDEF(HIPose);
-	virtual Quaternionf GetOrientation();
-	virtual Posef GetPose();
+	virtual Vec3f		GetPosition(){ return Vec3f(); }
+	virtual Quaternionf GetOrientation(){ return Quaternionf(); }
+	virtual Posef		GetPose(){
+		Posef rv;
+		rv.Ori() = GetOrientation();
+		rv.Pos() = GetPosition();
+		return rv;
+	}
+	virtual Affinef		GetAffine(){
+		Affinef aff;
+		GetPose().ToAffine(aff);
+		return aff;
+	}
+
+};
+
+
+class SPR_DLL HIHaptic: public HIPose{
+protected:
+	float alpha;
+	Vec3f vel, angVel;
+	Vec3f lastPos;
+	Quaternionf lastOri;
+public:
+	SPR_OBJECTDEF_ABST(HIHaptic);
+	///
+	HIHaptic(){ alpha = 0.8f; }
+	///
+	virtual ~HIHaptic(){}
+	virtual void Update(float dt);
+
+	/**@name	デバイスの状態	*/
+	//@{
+	///	デバイスの速度を返す
+	virtual Vec3f GetVelocity(){ return vel; }
+	///	デバイスの角速度を返す
+	virtual Vec3f GetAngularVelocity(){ return angVel; }
+	///	デバイスの実際の提示トルクを返す
+	virtual Vec3f GetTorque(){ return Vec3f(); }
+	///	デバイスの実際の提示力を返す
+	virtual Vec3f GetForce(){ return Vec3f(); }
+	///	デバイスの目標出力とトルク出力を設定する
+	virtual void SetForce(const Vec3f& f, const Vec3f& t = Vec3f()){}
+	//@}
 };
 	
 }

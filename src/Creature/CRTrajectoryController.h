@@ -8,14 +8,15 @@
 #ifndef CRTRAJECTORYCONTROLLER_H
 #define CRTRAJECTORYCONTROLLER_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-
-#include "CREngine.h"
+#include <Creature/CREngine.h>
+#include <Creature/SprCRTrajectoryController.h>
 
 //@{
 namespace Spr{;
+
+struct PHJointIf;
+struct CRBodyIf;
+
 /** @brief ‹O“¹‰^“®ƒRƒ“ƒgƒ[ƒ‰
 */
 class CRTrajectoryController : public CREngine, public CRTrajectoryControllerDesc {

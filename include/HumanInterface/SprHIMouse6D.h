@@ -5,26 +5,29 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/**
- *	@file SprDRDevice.h
- *	@brief ヒューマンインタフェースを作るための材料になるデバイスのクラス．たとえば，D/A,A/D,PIOなど．
-*/
+#ifndef SPR_HI_MOUSE6D_H
+#define SPR_HI_MOUSE6D_H
 
-#ifndef SPR_HIMouse6D_H
-#define SPR_HIMouse6D_H
-#include <SprFoundation.h>
+#include <HumanInterface/SprHIDevice.h>
+#include <HumanInterface/SprHIKeyMouse.h>
 
 namespace Spr{;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
-struct DVKeyMouseIf;
-
-///	マウスとキーボードによるカメラ姿勢などの6自由度入力
+/**
+	マウスとキーボードによるカメラ姿勢などの6自由度入力
+ **/
 struct HIMouse6DIf: public HIPoseIf{
 	SPR_VIFDEF(HIMouse6D);
-	DVKeyMouseIf* GetKeyMouse();
+
+	DVKeyMouseIf*	GetKeyMouse();
+	void			SetKeyMouse(DVKeyMouseIf* dv);
 };
+struct HIMouse6DDesc{
+	SPR_DESCDEF(HIMouse6D);
+};
+
 
 //@}
 }

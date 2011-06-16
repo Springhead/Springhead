@@ -89,24 +89,12 @@
 //#include "DRContecIsaDa.h"
 #include "DREzUSB.h"
 //#include "DRNittaForce.h"
-#include <HumanInterface/HIRealDevice.h>
-#include <HumanInterface/HIRealDevicePool.h>
+#include "HIDevice.h"
 #include "DRTokin3D.h"
 #include "DRUPP.h"
 //#include "DRUsb20Sh4.h"
 //#include "DRUsb20Simple.h"
 //#include "DRUsbH8Simple.h"
 #include "DRUsbH8SimpleDef.h"
-#include "DVADBase.h"
-#include "DVCounterBase.h"
-#include "DVDABase.h"
-#include "DVForceBase.h"
-#include "DVOrientationBase.h"
-#include "DVPIOBase.h"
-#include <HumanInterface/HIVirtualDevice.h>
-#include <HumanInterface/HIVirtualDevicePool.h>
-#include "Tkinput.h"
-#include "Tkinputdef.h"
-#include "Tuadapio.h"
 
 

@@ -7,6 +7,7 @@
  */
 #ifndef SPR_GRSHADER_H
 #define SPR_GRSHADER_H
+
 #include <Base/Affine.h>
 
 namespace Spr{;

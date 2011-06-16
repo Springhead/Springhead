@@ -5,16 +5,15 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FileIO.h"
+#include <Foundation/UTLoadHandler.h>
+#include <FileIO/FIFileSpr.h>
+#include <FileIO/FILoadContext.h>
+#include <FileIO/FISaveContext.h>
+#include <fstream>
+#include <sstream>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
-
-#include "FIFileSpr.h"
-#include <Foundation/UTLoadHandler.h>
-#include <fstream>
-#include <sstream>
-#include <Springhead.h>
 
 namespace Spr{;
 
@@ -289,7 +288,7 @@ typedef boost::spirit::classic::functor_parser<ExpectParser> ExpP;
 using namespace FileSpr;
 
 
-FIFileSpr::FIFileSpr():depthFromField(-1){
+FIFileSpr::FIFileSpr(const FIFileSprDesc& desc):depthFromField(-1){
 	Init();
 }
 

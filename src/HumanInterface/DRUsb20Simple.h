@@ -9,135 +9,110 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef SPR_DRUSB20SIMPLE_H
-#define SPR_DRUSB20SIMPLE_H
+#ifndef DR_USB20SIMPLE_H
+#define DR_USB20SIMPLE_H
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
-#include <HumanInterface/HIRealDevice.h>
-#include "DVCounterBase.h"
-#include "DVDaBase.h"
-#include "DVPioBase.h"
-#include <HumanInterface/HIRealDevice.h>
-#include <windows.h>
+#include <HumanInterface/HIDevice.h>
+#include <HumanInterface/SprHIDRUsb.h>
+#include <HumanInterface/HumanInterfaceDecl.hpp>
 
 namespace Spr {
 
-///	CyverseのUSB2.0(LDR-SPIDAR-AMP)のドライバ
+/**
+	CyverseのUSB2.0(LDR-SPIDAR-AMP)のドライバ
+ **/
 class SPR_DLL DRUsb20Simple : public HIRealDevice{
 public:
 	SPR_OBJECTDEF(DRUsb20Simple);
-	///	仮想デバイス(DA)
-	class VirtualDeviceDa:public DVDaBase{
-	protected:
-		int ch;
-		DRUsb20Simple* realDevice;
-		char name[100];
-	public:
-		VirtualDeviceDa(DRUsb20Simple* r, int c);
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		virtual void Voltage(float v){ realDevice->Voltage(ch, v); }
-		virtual void Digit(int v){ realDevice->Digit(ch, v); }
-		virtual const char* Name() const{ return name; }
-		///	更新
-		virtual void Update(){ realDevice->Update(); }
+	SPR_DECLMEMBEROF_DRUsb20SimpleDesc;
 
+	///	仮想デバイス(DA)
+	class Da: public DVDa{
+	public:
+		Da(DRUsb20Simple* r, int c):DVDa(r, c){}
+		DRUsb20Simple* GetRealDevice() { return realDevice->Cast(); }
+		
+		virtual void Voltage(float v){ GetRealDevice()->WriteVoltage(portNo, v); }
+		virtual void Digit(int v){ GetRealDevice()->WriteDigit(portNo, v); }
+		virtual void Update(){ GetRealDevice()->Update(); }
 	};
 	///	仮想デバイス(Counter)
-	class VirtualDeviceCounter:public DVCounterBase{
-	protected:
-		int ch;
-		DRUsb20Simple* realDevice;
-		char name[100];
+	class Counter: public DVCounter{
 	public:
-		VirtualDeviceCounter(DRUsb20Simple* r, int c);
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		///	カウンタ値の設定
-		virtual void Count(long c){ realDevice->Count(ch, c); }
-		///	カウンタ値の読み出し
-		virtual long Count(){ return realDevice->Count(ch); }
-		///	名前
-		virtual const char* Name() const{ return name; }
-		///	更新
-		virtual void Update(){ realDevice->Update(); }
+		Counter(DRUsb20Simple* r, int c):DVCounter(r, c){}
+		DRUsb20Simple* GetRealDevice() { return realDevice->Cast(); }
+		
+		virtual void Count(long c){ GetRealDevice()->WriteCount(portNo, c); }
+		virtual long Count(){ return GetRealDevice()->ReadCount(portNo); }
+		virtual void Update(){ GetRealDevice()->Update(); }
 	};
 	///	仮想デバイス(Pio)
-	class VirtualDevicePio:public DVPioBase{
-	protected:
-		int ch;
-		DRUsb20Simple* realDevice;
-		char name[100];
+	class Pio: public DVPio{
 	public:
-		VirtualDevicePio(DRUsb20Simple* r, int c);
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		virtual void Set(int l){ realDevice->Pio(ch, l!=0); }
-		virtual int Get(){ return realDevice->Pio(ch) ? 1 : 0; }
-		virtual const char* Name() const{ return name; }
-		///	更新
-		virtual void Update(){ realDevice->Update(); }
+		Pio(DRUsb20Simple* r, int c):DVPio(r, c){}
+		DRUsb20Simple* GetRealDevice() { return realDevice->Cast(); }
+
+		virtual void Set(int l){ GetRealDevice()->WritePio(portNo, l!=0); }
+		virtual int Get(){ return GetRealDevice()->ReadPio(portNo) ? 1 : 0; }
+		virtual void Update(){ GetRealDevice()->Update(); }
 	};
 
 //----------------------------------------------------------------------------
 protected:
-	char name[100];
-	int channel;
-	HANDLE hSpidar;
+	void*	hSpidar;
 
-	int sign[8]; //DA出力用の符号
-	long count[8];
-	long countOffset[8];
-	int daOut[8];
-	int adIn[8];
-	int pioLevel[16];
+	int		sign[8]; //DA出力用の符号
+	long	count[8];
+	long	countOffset[8];
+	int		daOut[8];
+	int		adIn[8];
+	int		pioLevel[16];
 
 public:
 	///	コンストラクタ	chは背面のスイッチになる予定
 	DRUsb20Simple(const DRUsb20SimpleDesc& d=DRUsb20SimpleDesc());
 	virtual ~DRUsb20Simple();
 
-	///	デバイスの名前
-	virtual const char* Name() const { return name; }
 	///	初期化
 	virtual bool Init();
 	///	初期化(チャンネル, PIDVIDを気にせずに初期化)
-	virtual bool InitAny();
+	//virtual bool InitAny();
 	///	仮想デバイスの登録
-	void Register(HISdkIf* intf);
+	//void Register(HISdkIf* intf);
 	
 	///	電圧出力
-	void Voltage(int ch, float v);
+	void WriteVoltage(int ch, float v);
 	///	電圧出力(数値指定)
-	void Digit(int ch, int v);
+	void WriteDigit(int ch, int v);
 	///	カウンタ値の設定
-	void Count(int ch, long c);
+	void WriteCount(int ch, long c);
 	///	カウンタ値の読み出し
-	long Count(int ch);
+	long ReadCount(int ch);
 	///	状態の更新
 	virtual void Update();
 	
 	///	PIOポートの設定
-	void Pio(int ch, bool level);
+	void WritePio(int ch, bool level);
 	///	PIOポートの読み出し
-	bool Pio(int ch);
+	bool ReadPio(int ch);
 	///	スイッチ（ポートの上位5-8ビット）の読み出し
-	int RotarySwitch();
+	int ReadRotarySwitch();
 
 	/// リセット
 	virtual void Reset();
 
 	///	USBのファイルハンドル
-	HANDLE GetHandle(){ return hSpidar; };
+	void* GetHandle(){ return hSpidar; };
 protected:
-	virtual void UsbReset();
-	virtual void UsbCounterGet();
-	virtual void UsbCounterClear();
-	virtual void UsbDaSet();
-	virtual DWORD UsbVidPid(HANDLE h);
-	virtual bool FindDevice(int ch);
-	virtual HANDLE UsbOpen(int id);
-	virtual bool UsbClose(HANDLE& h);
+	virtual unsigned	GetVidPid(){ return 0x0CEC0203; }
+
+	virtual void		UsbReset();
+	virtual void		UsbCounterGet();
+	virtual void		UsbCounterClear();
+	virtual void		UsbDaSet();
+	virtual unsigned	UsbVidPid(void* h);
+	virtual void*		UsbOpen(int id);
+	virtual bool		UsbClose(void*& h);
 };
 
 } //namespace Spr

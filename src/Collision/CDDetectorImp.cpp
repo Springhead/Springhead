@@ -5,12 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Collision.h"
+#include <Collision/CDDetectorImp.h>
+#include <Collision/CDConvexMesh.h>
+#include <Collision/CDSphere.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "CDDetectorImp.h"
-#include "CDQuickHull3DImp.h"
-#include <float.h>
-#include <fstream>
+#endif
 
 namespace Spr {;
 const double epsilon = 1e-8;

@@ -8,12 +8,14 @@
 #ifndef SPR_FWBONEIF_H
 #define SPR_FWBONEIF_H
 
-#include <Foundation/SprScene.h>
-#include <Physics/SprPHSolid.h>
-#include <Graphics/SprGRFrame.h>
-//#include <Base/Affine.h>
+#include <Foundation/SprObject.h>
+
 namespace Spr{;
 
+struct CDRoundConeIf;
+struct PHSolidIf;
+struct PHJointIf;
+struct GRFrameIf;
 struct FWSceneIf;
 
 struct FWBoneDesc{

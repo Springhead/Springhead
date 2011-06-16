@@ -5,12 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Springhead.h>
-#include <Foundation/Object.h>
-#include "Collision.h"
+#include <Collision/CDConvexMesh.h>
+#include <Collision/CDQuickHull3DImp.h>
 #include <set>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "CDQuickHull3DImp.h"
+#endif
 
 #define CD_EPSILON	HULL_EPSILON
 #define CD_INFINITE	HULL_INFINITE
@@ -279,16 +279,16 @@ std::vector<int>& CDConvexMesh::FindNeighbors(int vtx){
 	return neighbor[vtx];
 }
 
-CDFaceIf* CDConvexMesh::GetFace(size_t i){
+CDFaceIf* CDConvexMesh::GetFace(int i){
 	return faces.at(i).Cast();
 }
-size_t CDConvexMesh::NFace(){
+int CDConvexMesh::NFace(){
 	return faces.size();
 }
 Vec3f* CDConvexMesh::GetVertices(){
 	return &*base.begin();
 }
-size_t CDConvexMesh::NVertex(){
+int CDConvexMesh::NVertex(){
 	return base.size();
 }
 

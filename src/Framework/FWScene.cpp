@@ -5,13 +5,15 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FWScene.h"
-#include "FWObject.h"
-#include <Graphics/GRScene.h>
+#include <Framework/FWScene.h>
+#include <Framework/FWObject.h>
+#include <Framework/FWSdk.h>
 #include <Physics/PHScene.h>
-#include <Physics/PHConstraintEngine.h>
+#include <Physics/PHSdk.h>
 #include <Physics/PHContactPoint.h>
-
+#include <Physics/PHConstraintEngine.h>
+#include <Graphics/GRScene.h>
+#include <Graphics/GRSdk.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -20,6 +22,7 @@ namespace Spr{;
 
 FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	// デフォルト描画設定
+	renderPHScene = true;
 	// ソリッド描画のみ
 	renderSolid = true;
 	renderWire  = false;
@@ -221,6 +224,20 @@ void FWScene::Step(){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // 描画系
+
+void FWScene::Draw(GRRenderIf* render, bool ph_or_gr){
+	render->ClearBuffer();
+	render->BeginScene();
+	
+	if(ph_or_gr)
+		DrawPHScene(render);
+	else if(GetGRScene()){
+		Sync();
+		GetGRScene()->Render(render);
+	}
+
+	render->EndScene();
+}
 
 /// シーン内の全てのオブジェクトをレンダリングする
 void FWScene::DrawPHScene(GRRenderIf* render){
@@ -540,13 +557,13 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 void FWScene::DrawMesh(GRRenderIf* render, CDConvexMeshIf* mesh, bool solid){
 	Vec3f* base = mesh->GetVertices();
 	if(solid){
-		for (size_t f=0; f<mesh->NFace(); ++f) {	
+		for (int f=0; f<mesh->NFace(); ++f) {	
 			CDFaceIf* face = mesh->GetFace(f);
 			this->DrawFaceSolid(render, face, base);
 		}
 	}
 	else{
-		for (size_t f=0; f<mesh->NFace(); ++f) {	
+		for (int f=0; f<mesh->NFace(); ++f) {	
 			CDFaceIf* face = mesh->GetFace(f);
 			this->DrawFaceWire(render, face, base);
 		}

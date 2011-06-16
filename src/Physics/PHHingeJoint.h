@@ -8,7 +8,7 @@
 #ifndef PHHINGEJOINT_H
 #define PHHINGEJOINT_H
 
-#include <SprPhysics.h>
+#include <Physics/SprPHJoint.h>
 #include <Physics/PHConstraint.h>
 #include <Physics/PHTreeNode.h>
 

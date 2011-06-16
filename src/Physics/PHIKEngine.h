@@ -8,13 +8,8 @@
 #ifndef PH_IKENGINE_H
 #define PH_IKENGINE_H
 
-#include <SprPhysics.h>
-#include <Foundation/Object.h>
+#include <Physics/SprPHIK.h>
 #include <Physics/PHEngine.h>
-
-#include <vector>
-#include <set>
-#include <map>
 
 namespace Spr{;
 

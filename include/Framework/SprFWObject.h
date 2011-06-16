@@ -8,15 +8,17 @@
 #ifndef SPR_FWOBJECTIF_H
 #define SPR_FWOBJECTIF_H
 
-#include <Foundation/SprScene.h>
-#include <Physics/SprPHSolid.h>
-#include <Graphics/SprGRFrame.h>
-#include <Base/Affine.h>
+#include <Foundation/SprObject.h>
+#include <Collision/SprCDShape.h>
+
 namespace Spr{;
 
-struct FWSceneIf;
-struct GRMeshIf;
 struct CDConvexMeshIf;
+struct PHSolidIf;
+struct PHJointIf;
+struct GRMeshIf;
+struct GRFrameIf;
+struct FWSceneIf;
 
 struct FWObjectDesc{
 };

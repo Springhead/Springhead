@@ -8,9 +8,7 @@
 #ifndef CDSPHERE_H
 #define CDSPHERE_H
 
-#include <SprCollision.h>
-#include <Foundation/Object.h>
-#include "CDConvex.h"
+#include <Collision/CDConvex.h>
 
 namespace Spr{;
 
@@ -38,9 +36,8 @@ public:
 
 	virtual int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 
-	
-	/// ‹…‘Ì‚Ì”¼Œa‚ðŽæ“¾
-	float GetRadius();
+	float	GetRadius(){ return radius; }
+	void	SetRadius(float r){ radius = r; }
 };
 
 	

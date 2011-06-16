@@ -21,10 +21,9 @@ namespace Spr{;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
-struct DRRealDeviceIf;
-
-/**	@brief	ヒューマンインタフェースの基本クラス	*/
-struct HIBaseIf: public NamedObjectIf{
+/**	@brief	ヒューマンインタフェースの基本クラス
+ **/
+struct HIBaseIf : NamedObjectIf{
 	SPR_IFDEF(HIBase);
 	///	キャリブレーションの前に行う処理
 	bool BeforeCalibration();
@@ -46,23 +45,42 @@ struct HIBaseIf: public NamedObjectIf{
 };
 
 /**	@brief	位置入力インタフェース	*/
-struct HIPositionIf: public HIBaseIf{
+/*struct HIPositionIf : HIBaseIf{
 	SPR_VIFDEF(HIPosition);
 	Vec3f GetPosition();
-};
+};*/
 
 /**	@brief	角度入力インタフェース	*/
-struct HIOrientationIf: public HIBaseIf{
+/*struct HIOrientationIf : HIBaseIf{
 	SPR_VIFDEF(HIOrientation);
 	Quaternionf GetOrientation();
-};
+};*/
 
 /**	@brief	姿勢(=位置＋角度)入力インタフェース	*/
-struct HIPoseIf: public HIPositionIf{
+struct HIPoseIf : HIBaseIf{
 	SPR_VIFDEF(HIPose);
-	SPR_OVERRIDEMEMBERFUNCOF(HIBaseIf, HIPositionIf);
-	Quaternionf GetOrientation();
-	Posef GetPose();
+	//SPR_OVERRIDEMEMBERFUNCOF(HIBaseIf, HIPositionIf);
+	
+	Vec3f			GetPosition();
+	Quaternionf		GetOrientation();
+	Posef			GetPose();
+	Affinef			GetAffine();
+};
+
+/** @brief	6自由度力覚インタフェースの基本クラス
+ **/
+struct HIHapticIf : HIPoseIf{
+	SPR_VIFDEF(HIHaptic);
+	///デバイスの速度を返す
+	Vec3f GetVelocity();
+	///デバイスの角速度を返す
+	Vec3f GetAngularVelocity();
+	///	デバイスの実際の提示トルクを返す
+	Vec3f GetTorque();
+	///	デバイスの実際の提示力を返す
+	Vec3f GetForce();
+	///	デバイスの目標出力とトルク出力を設定する
+	void SetForce(const Vec3f& f, const Vec3f& t = Vec3f());
 };
 
 //@}

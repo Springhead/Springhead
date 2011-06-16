@@ -5,9 +5,17 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
-#pragma hdrstop
+#include <Physics/PHSolid.h>
+#include <Physics/PHScene.h>
+#include <Physics/PHTreeNode.h>
+#include <Physics/PHForceField.h>
+#include <Physics/PHPenaltyEngine.h>
+#include <Physics/PHConstraintEngine.h>
+#include <Collision/CDShape.h>
 #include <float.h>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 using namespace PTM;
 namespace Spr{;
@@ -243,14 +251,16 @@ void PHSolid::UpdateVelocity(double dt){
 	if(!IsIntegrate()) return;
 	if(IsDynamical() && !IsFrozen()){
 		v += dv;
-//		DSTR << "v:" << v.w().norm();
-//		DSTR << "dv:" << dv.w().norm() << std::endl;
-		v.w() *= DCAST(PHScene,GetScene())->GetAirResistanceRate();
 
+		// ‹ó‹C’ïRŒW”‚ð‚©‚¯‚é
+		PHSceneIf* scene = GetScene()->Cast();
+		v *= scene->GetAirResistanceRate();
+
+		// Šp‘¬“x‚Ì§ŒÀ@i—vAPI‰»j
 		double vMax = 100;
-		if (v.w().norm() > 100) v.w() = v.w().unit() * vMax;
+		if (v.w().norm() > 100)
+			v.w() = v.w().unit() * vMax;
 
-		//oldAngVel = GetAngularVelocity();
 		SetVelocity       (GetOrientation() * v.v());
 		SetAngularVelocity(GetOrientation() * v.w());
 	}

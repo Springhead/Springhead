@@ -8,65 +8,57 @@
 #ifndef DRADAPIO_H
 #define DRADAPIO_H
 
-#include <HumanInterface/HIRealDevice.h>
-#include "DVDaBase.h"
-#include "DVAdBase.h"
+#include <HumanInterface/HIDevice.h>
 #include "tuadapio.h"
 
 namespace Spr {
 
 ///	タートル工業のA/D・D/A・PIO用のドライバ.
-class SPR_DLL DRAdapio:public HIRealDevice{
+class SPR_DLL DRAdapio: public HIRealDevice{
 public:
+	SPR_OBJECTDEF_NOIF(DRAdapio);
+
 	///	仮想デバイス
-	class DVDA:public DVDaBase{
-	protected:
-		int ch;
-		DRAdapio* realDevice;
-		char name[100];
+	class Da: public DVDa{
 	public:
-		DVDA(DRAdapio* r, int c);
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		virtual void Voltage(float v){ realDevice->DAVoltage(ch, v); }
-		virtual void Digit(int d){ realDevice->DADigit(ch, d); }
-		virtual const char* Name() const{ return name; }
+		Da(DRAdapio* r, int c):DVDa(r, c){}
+		DRAdapio* GetRealDevice() { return realDevice->Cast(); }
+
+		virtual void Voltage(float v){ GetRealDevice()->DAVoltage(portNo, v); }
+		virtual void Digit(int d){ GetRealDevice()->DADigit(portNo, d); }
 	};
-	class DVAD:public DVAdBase{
-	protected:
-		int ch;
-		DRAdapio* realDevice;
-		char name[100];
+	class Ad: public DVAd{
 	public:
-		DVAD(DRAdapio* r, int c);
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		virtual int Digit(){ return realDevice->ADDigit(ch); }
-		virtual float Voltage(){ return realDevice->ADVoltage(ch); }
-		virtual const char* Name() const{ return name; }
+		Ad(DRAdapio* r, int c):DVAd(r, c){}
+		DRAdapio* GetRealDevice() { return realDevice->Cast(); }
+
+		virtual int Digit(){ return GetRealDevice()->ADDigit(portNo); }
+		virtual float Voltage(){ return GetRealDevice()->ADVoltage(portNo); }
 	};
 protected:
-	char name[100];
 	int id;
 public:
 	/**	コンストラクタ
 		@param id		ADAPIOが複数ある場合，何番目のデバイスかを指定．*/
 	DRAdapio(int id=0);
 	virtual ~DRAdapio();
-	///	デバイスの名前
-	virtual const char* Name() const { return name; }
+
 	///	初期化
 	virtual bool Init();
 	///	仮想デバイスの登録
-	virtual void Register(HIVirtualDevicePool& vpool);
+	//virtual void Register(HIVirtualDevicePool& vpool);
+
 	///	電圧出力
 	void DAVoltage(int ch, float v);
 	void DADigit(int ch, int d);
+	
 	///	電圧入力
 	float ADVoltage(int ch);
 	int ADDigit(int ch);
+	
 	/// 終了処理
-	virtual void CloseDevice();
+	void CloseDevice();
 };
-
 
 }	//	namespace Spr
 

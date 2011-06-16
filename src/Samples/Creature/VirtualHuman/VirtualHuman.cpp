@@ -30,9 +30,9 @@ VirtualHuman::VirtualHuman(){
 void VirtualHuman::Init(int argc, char* argv[]){
 	CreateSdk();
 	SetGRAdaptee(VirtualHuman::TypeGLUT);
-	GetGRAdaptee()->Init(argc, argv);
-	GetSdk()->Clear();
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
+	GRInit(argc, argv);
+	
+	GetSdk()->CreateScene();
 	crSdk = Spr::CRSdkIf::CreateSdk();
 	CRCreatureDesc d;
 	creature = crSdk->CreateCreature(d);
@@ -41,14 +41,13 @@ void VirtualHuman::Init(int argc, char* argv[]){
 	FWWinDesc windowDesc;
 	windowDesc.title = "Virtual Human Sample";
 	window = CreateWin(windowDesc);
-	window->scene = GetSdk()->GetScene();
-
+	
 	InitCameraView();
 }
 
 void VirtualHuman::Reset(int sceneNum){
 	GetSdk()->Clear();
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
+	GetSdk()->CreateScene();
 
 	bGravity	= true;
 	bDebug		= false;
@@ -58,7 +57,7 @@ void VirtualHuman::Reset(int sceneNum){
 
 	BuildScene(sceneNum);
 
-	GetCurrentWin()->SetScene(GetSdk()->GetScene());
+	GetCurrentWin()->SetScene(GetSdk()->GetScene(0));
 	InitCameraView();
 }
 

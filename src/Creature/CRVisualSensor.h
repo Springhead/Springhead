@@ -8,15 +8,9 @@
 #ifndef CRVISUALSENSOR_H
 #define CRVISUALSENSOR_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-
-#include <vector>
-#include <algorithm>
+#include <Creature/CREngine.h>
+#include <Creature/SprCRVisualSensor.h>
 #include <set>
-
-#include "CREngine.h"
 
 //@{
 namespace Spr{;

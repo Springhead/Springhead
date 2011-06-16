@@ -8,9 +8,9 @@
 #ifndef DRKeyMouseGLUT_H
 #define DRKeyMouseGLUT_H
 
-#include <HumanInterface/HIVirtualDevice.h>
-#include <HumanInterface/DVKeyMouse.h>
+#include <HumanInterface/HIDevice.h>
 #include <GL/glut.h>
+#include <deque>
 
 #ifndef GLUTCALLBACK
 #define GLUTCALLBACK
@@ -18,51 +18,68 @@
 
 namespace Spr {;
 
-///	DVKeyMouse
-class DRKeyMouseGLUT:public HIRealDevice{
+/** GLUT版キーボード・マウスの実装
+
+	イベント処理の流れ：
+	・staticのコールバックをglutに登録する
+	・staticコールバックから実デバイスのインスタンス（シングルトン）のコールバックを呼ぶ
+	・実マウスのコールバックから，ポート番号とカレントウィンドウIDが一致する仮想デバイスを探し，
+	　そのコールバックを呼ぶ
+
+ */
+class DRKeyMouseGLUT: public HIRealDevice{
 public:
 	SPR_OBJECTDEF(DRKeyMouseGLUT);
 	///	仮想デバイス(KeyMouse)
-	class KeyMouse:public DVKeyMouse{
-	protected:
-		char name[100];
-		DRKeyMouseGLUT* glut;
+	class DV: public DVKeyMouse{
 	public:
-		KeyMouse(DRKeyMouseGLUT* w);
-		///	デバイスの名前
-		virtual const char* Name() const{ return name; }
-		///	ハンドラの設定
-		virtual void SetHandler(DVKeyMouseHandler* h);
-		///	マウスボタン・キーボード状態取得
-		virtual int GetKeyState(int key);
-		///	マウス位置取得関数	0が最新，1以上は過去の履歴を取得
-		virtual DVKeyMouseIf::DVMousePosition GetMousePosition(int count=0);
-		///
-		virtual HIRealDeviceIf* RealDevice(){ return glut->Cast(); }
+		// マウス位置を記憶するリングバッファ
+		std::deque<Vec2i>	mousePoints;
+	public:
+
+		DV(DRKeyMouseGLUT* dr, int ch):DVKeyMouse(dr, ch){
+			mousePoints.resize(64);
+		}
+		DRKeyMouseGLUT* GetRealDevice(){ return realDevice->Cast(); }
+		
+		virtual void OnMouse(int button, int state, int x, int y);
+		virtual void OnMouseMove(int button, int x, int y, int zdelta);
+		virtual void GetMousePosition(int& x, int& y, int& time, int count=0);
 	};
-protected:
-	char name[100];
-	DVKeyMouseHandler* handler;
-	static DRKeyMouseGLUT* This;
+
+	// マウスボタンの状態
+	int	buttonState;
+
 public:
-	DRKeyMouseGLUT();
-	///	初期化
+	DRKeyMouseGLUT(const DRKeyMouseGLUTDesc& desc = DRKeyMouseGLUTDesc());
+	
+	///	HIRealDeviceの仮想関数
 	virtual bool Init();
-	///	仮想デバイスの登録
-	void Register(HISdkIf* intf);
-	///	デバイスの名前
-	virtual const char* Name() const { return name; }
-	///	デバイスの種類
-	static const char* TypeS() { return "KeyMouse"; }
-	///	デバイスの種類
-	virtual const char* Type() const{ return TypeS(); }
-	///	ハンドラの設定
-	virtual void SetHandler(DVKeyMouseHandler* h){
-		handler = h;
-	}
-	static void GLUTCALLBACK OnMouse(int button, int state, int x, int y);
-	static void GLUTCALLBACK OnMotion(int x, int y);
-	static void GLUTCALLBACK OnPassiveMotion(int x, int y);
+	//virtual void Register(HISdkIf* intf);
+	virtual HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);
+
+	/// DRWinDeviceBaseの仮想関数
+	//virtual void RegisterCallback();
+
+	/// GLUTキーコードからSpringhead共通キーコードへの変換
+	int	ConvertKeyCode(int key, bool spr_to_glut, bool special);
+
+	///
+	void OnMouse		(int button, int state, int x, int y);
+	void OnMotion		(int x, int y);
+	void OnPassiveMotion(int x, int y);
+	void OnKey			(unsigned char ch, int x, int y);
+	void OnSpecialKey	(int ch, int x, int y);
+
+	/// ウィンドウIDとデバイスとの対応
+	//typedef std::map<int, DRKeyMouseGLUT*> KeyMouseMap;
+	static 	DRKeyMouseGLUT* instance;
+	/// staticのコールバック関数
+	static void GLUTCALLBACK OnMouseStatic			(int button, int state, int x, int y);
+	static void GLUTCALLBACK OnMotionStatic			(int x, int y);
+	static void GLUTCALLBACK OnPassiveMotionStatic	(int x, int y);
+	static void GLUTCALLBACK OnKeyStatic			(unsigned char ch, int x, int y);
+	static void GLUTCALLBACK OnSpecialKeyStatic		(int ch, int x, int y);
 };
 
 }	//	namespace Spr

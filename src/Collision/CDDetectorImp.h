@@ -7,10 +7,9 @@
  */
 #ifndef CDDETECTORIMP_H
 #define CDDETECTORIMP_H
-#include "CDQuickHull3D.h"
-#include "CDConvexMesh.h"
-#include "CDSphere.h"
-#include "CDBox.h"
+
+#include <Collision/CDQuickHull3DImp.h>
+#include <Collision/CDConvex.h>
 
 namespace Spr {;
 
@@ -19,6 +18,7 @@ namespace Spr {;
 
 class CDFace;
 class CDConvex;
+struct PHSdkIf;
 
 /// ShapeÇÃëgÇÃèÛë‘
 struct CDShapePairSt{

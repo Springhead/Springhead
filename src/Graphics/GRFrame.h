@@ -9,7 +9,8 @@
 #define GRFrame_H
 
 #include <Graphics/SprGRScene.h>
-#include <Foundation/Scene.h>
+#include <Foundation/Object.h>
+#include <map>
 
 namespace Spr{;
 

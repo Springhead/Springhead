@@ -5,10 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
-#include <iostream>
-#include <iomanip>
+#include <Physics/PHMotor.h>
+#include <Physics/PHJoint.h>
+#include <Physics/PHBallJoint.h>
+#include <Physics/PHConstraintEngine.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 using namespace PTM;
 using namespace std;

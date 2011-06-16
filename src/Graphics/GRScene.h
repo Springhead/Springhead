@@ -7,15 +7,17 @@
  */
 #ifndef GRSCENE_H
 #define GRSCENE_H
+
 #include <Graphics/SprGRScene.h>
-#include <Foundation/Scene.h>
 #include <Graphics/GRFrame.h>
 #include <Graphics/GRRender.h>
+#include <Foundation/Scene.h>
 
 namespace Spr {;
 
 class GRCamera;
 class GRAnimationController;
+
 /**	シーングラフのトップノード．光源・視点を持つ．
 	レンダラとシーングラフの関係が深いため，
 	レンダラが違うとシーングラフはそのまま使用できない．
@@ -43,8 +45,7 @@ public:
 	///	シーンを空にする．
 	void Clear();
 
-	virtual GRVisualIf* CreateVisual(const IfInfo* info, 
-		const GRVisualDesc& desc, GRFrameIf* parent = NULL);
+	virtual GRVisualIf* CreateVisual(const IfInfo* info, const GRVisualDesc& desc, GRFrameIf* parent = NULL);
 	virtual GRFrameIf* GetWorld(){return world->Cast();}
 	virtual void		SetCamera(const GRCameraDesc& desc);
 	virtual GRCameraIf* GetCamera(){return camera->Cast();}

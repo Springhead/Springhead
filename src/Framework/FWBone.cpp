@@ -4,9 +4,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FWBone.h"
-#include <Graphics/GRFrame.h>
-
+#include <Framework/FWBone.h>
+#include <Framework/FWScene.h>
+#include <Framework/FWSdk.h>
+#include <Physics/PHScene.h>
+#include <Physics/PHSdk.h>
+#include <Graphics/GRMesh.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -224,11 +227,11 @@ void FWBoneCreate::ContactCanceler(){
 void FWBoneCreate::FWSkinMeshAdapt(){
 	for(size_t i=0; i<bone.size(); ++i){
 		//ボーン１の設定をする（並行行列のみのアフィン行列更新）
-		fwObject.push_back(fwSdk->GetScene()->CreateFWObject());
+		fwObject.push_back(fwSdk->GetScene(0)->CreateFWObject());
 		fwObject[i]->SetPHSolid(bone[i]->phSolid);
 		fwObject[i]->SetGRFrame(bone[i]->grFrame);
 		fwObject[i]->SetSolidLength(bone[i]->length);
-		fwSdk->GetScene()->SetFWBones(DCAST(FWBoneIf,bone[i]));
+		fwSdk->GetScene(0)->SetFWBones(DCAST(FWBoneIf,bone[i]));
 	}
 }
 

@@ -5,9 +5,23 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
-#pragma hdrstop
+#include <Physics/PHSdk.h>
+#include <Physics/PHScene.h>
+#include <Physics/PHHingeJoint.h>
+#include <Physics/PHSliderJoint.h>
+#include <Physics/PHBallJoint.h>
+#include <Physics/PHPathJoint.h>
+#include <Physics/PHSpring.h>
+#include <Physics/PHTreeNode.h>
+#include <Physics/PHGear.h>
+#include <Collision/CDBox.h>
+#include <Collision/CDSphere.h>
+#include <Collision/CDCapsule.h>
+#include <Collision/CDRoundCone.h>
+#include <Collision/CDConvexMesh.h>
+#include <Collision/CDConvexMeshInterpolate.h>
 #include <stdlib.h>
+#pragma hdrstop
 
 namespace Spr{;
 
@@ -77,14 +91,11 @@ PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
 	AddChildObject(rv); 
 	return rv;
 }
-PHSceneIf* PHSdk::CreateScene(){
-	return CreateScene(PHSceneDesc());
-}
 int PHSdk::NScene(){
 	return scenes.size();
 }
-PHSceneIf* PHSdk::GetScene(size_t i){
-	if (i < scenes.size()) return scenes[i];
+PHSceneIf* PHSdk::GetScene(int i){
+	if (i < (int)scenes.size()) return scenes[i];
 	return NULL;
 }
 void PHSdk::MergeScene(PHSceneIf* scene0, PHSceneIf* scene1){

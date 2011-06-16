@@ -57,7 +57,7 @@ public:
 	// 子インポートエントリの中からDOMノードがdataであるObjectDataPairを列挙
 	//void EnumByData(ObjectIfs& objs, UTLoadedData* data);
 
-	Import(){ loadOnly = false; }
+	Import(const ImportDesc& desc = ImportDesc()){ loadOnly = false; }
 };
 
 }

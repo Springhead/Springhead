@@ -5,31 +5,35 @@
 #include "Windows.h"
 
 void MyApp::Init(int argc, char* argv[]){
-	SetGRAdaptee(TypeGLUT);
-	GRInit(argc, argv);										// Sdkの作成
+	// Sdkの作成
 	CreateSdk();
-	GetSdk()->Clear();										// SDKの初期化
+	// グラフィクス初期化
+	SetGRAdaptee(TypeGLUT);
+	GRInit(argc, argv);
+	// シーンをロード
 	GetSdk()->LoadScene(FILE_NAME);
-	TexInit();
-	FWWinDesc windowDesc;									// GLのウィンドウディスクリプタ
-	windowDesc.title = "Springhead2";						// ウィンドウのタイトル
-	CreateWin(windowDesc);									// ウィンドウの作成
-	InitWindow();
-
-	int timerId = CreateTimer(TIMER_IDLE);				// タイマーの生成
+	//TexInit();
+	// ウィンドウ
+	CreateWin();
+	GetWin(0)->SetRenderMode(false);
+	// タイマ
+	UTTimerIf* timer = CreateTimer();
+	timer->SetInterval(10);
 }
+
 void MyApp::TimerFunc(int id){
-	GRAnimationControllerIf* anim = GetSdk()->GetScene()->GetGRScene()->GetAnimationController();
+	GRAnimationControllerIf* anim = GetCurrentWin()->GetScene()->GetGRScene()->GetAnimationController();
 	anim->ResetPose();
 	static float time;
 	anim->BlendPose(ANIMATION_SET_NAME, time, 1);
 	time += 1;
-	if (time > FRAME_NUMBER - 1) time = 0;
-	Sleep(10);
-	glutPostRedisplay();
+	if (time > FRAME_NUMBER - 1)
+		time = 0;
+	
+	PostRedisplay();
 }
 
-void MyApp::Display(){
+/*void MyApp::Display(){
 	static int timing = 0;
 	FWWin* win = GetWin(0);
 	win->render->ClearBuffer();
@@ -47,77 +51,76 @@ void MyApp::Display(){
 	win->render->SetMaterial(material);
 
 	DrawTexQuad();
-	FWSceneIf* fwScene = GetSdk()->GetScene();
-	if(fwScene) fwScene->Draw(win->render, false);
+	//FWSceneIf* fwScene = GetSdk()->GetScene();
+	//if(fwScene) fwScene->Draw(win->render, false);
+	GetSdk()->Draw();
 
 	win->render->EndScene();
 	glutSwapBuffers();
-}
+}*/
 
 void MyApp::Keyboard(int key, int x, int y){
-	if (key==0x1b){
-		exit(0);
-	}
-	GRCameraIf* cam;
+//	GRCameraIf* cam;
 	switch(key){
+	case DVKeyCode::ESC:
+				exit(0);
+
+/*	case('a'):	GetSdk()->GetScene()->FindObject(cam, "cam");
+				cameraInfo.view = cam->GetFrame()->GetTransform();
+				cameraInfo.view =  Affinef::Rot(Rad(5), 'y') * cameraInfo.view;
+				cam->GetFrame()->SetTransform(cameraInfo.view);
+				break;
 	
-		case('a'):	GetSdk()->GetScene()->FindObject(cam, "cam");
-					cameraInfo.view = cam->GetFrame()->GetTransform();
-					cameraInfo.view =  Affinef::Rot(Rad(5), 'y') * cameraInfo.view;
-					cam->GetFrame()->SetTransform(cameraInfo.view);
-					break;
+	case('s'):  GetSdk()->GetScene()->FindObject(cam, "cam");
+				cameraInfo.view = cam->GetFrame()->GetTransform();
+				cameraInfo.view =  Affinef::Rot(Rad(-5), 'y') * cameraInfo.view;
+				cam->GetFrame()->SetTransform(cameraInfo.view);
+				break;
 	
-		case('s'):  GetSdk()->GetScene()->FindObject(cam, "cam");
-					cameraInfo.view = cam->GetFrame()->GetTransform();
-					cameraInfo.view =  Affinef::Rot(Rad(-5), 'y') * cameraInfo.view;
-					cam->GetFrame()->SetTransform(cameraInfo.view);
-					break;
-	
-		case('w'):  GetSdk()->GetScene()->FindObject(cam, "cam");
-					cameraInfo.view = cam->GetFrame()->GetTransform();
-					cameraInfo.view =  Affinef::Rot(Rad(5), 'x') * cameraInfo.view;
-					cam->GetFrame()->SetTransform(cameraInfo.view);
-					break;
+	case('w'):  GetSdk()->GetScene()->FindObject(cam, "cam");
+				cameraInfo.view = cam->GetFrame()->GetTransform();
+				cameraInfo.view =  Affinef::Rot(Rad(5), 'x') * cameraInfo.view;
+				cam->GetFrame()->SetTransform(cameraInfo.view);
+				break;
 
-		case('z'):  GetSdk()->GetScene()->FindObject(cam, "cam");
-					cameraInfo.view = cam->GetFrame()->GetTransform();
-					cameraInfo.view =  Affinef::Rot(Rad(-5), 'x') * cameraInfo.view;
-					cam->GetFrame()->SetTransform(cameraInfo.view);
-					break;
+	case('z'):  GetSdk()->GetScene()->FindObject(cam, "cam");
+				cameraInfo.view = cam->GetFrame()->GetTransform();
+				cameraInfo.view =  Affinef::Rot(Rad(-5), 'x') * cameraInfo.view;
+				cam->GetFrame()->SetTransform(cameraInfo.view);
+				break;
 
-		case('e'):  GetSdk()->GetScene()->FindObject(cam, "cam");
-					cameraInfo.view = cam->GetFrame()->GetTransform();
-					cameraInfo.view =  Affinef::Rot(Rad(5), 'z') * cameraInfo.view;
-					cam->GetFrame()->SetTransform(cameraInfo.view);
-					break;
+	case('e'):  GetSdk()->GetScene()->FindObject(cam, "cam");
+				cameraInfo.view = cam->GetFrame()->GetTransform();
+				cameraInfo.view =  Affinef::Rot(Rad(5), 'z') * cameraInfo.view;
+				cam->GetFrame()->SetTransform(cameraInfo.view);
+				break;
 
-		case('x'):  GetSdk()->GetScene()->FindObject(cam, "cam");
-					cameraInfo.view = cam->GetFrame()->GetTransform();
-					cameraInfo.view =  Affinef::Rot(Rad(-5), 'z') * cameraInfo.view;
-					cam->GetFrame()->SetTransform(cameraInfo.view);
-					break;
+	case('x'):  GetSdk()->GetScene()->FindObject(cam, "cam");
+				cameraInfo.view = cam->GetFrame()->GetTransform();
+				cameraInfo.view =  Affinef::Rot(Rad(-5), 'z') * cameraInfo.view;
+				cam->GetFrame()->SetTransform(cameraInfo.view);
+				break;
 
-		case('d'):  GetSdk()->GetScene()->FindObject(cam, "cam");
-					cameraInfo.view = cam->GetFrame()->GetTransform();
-					cameraInfo.view = cameraInfo.view * Affinef::Trn(0,0,0.1);
-					cam->GetFrame()->SetTransform(cameraInfo.view);
-					break;
+	case('d'):  GetSdk()->GetScene()->FindObject(cam, "cam");
+				cameraInfo.view = cam->GetFrame()->GetTransform();
+				cameraInfo.view = cameraInfo.view * Affinef::Trn(0,0,0.1);
+				cam->GetFrame()->SetTransform(cameraInfo.view);
+				break;
 
-		case('f'):  GetSdk()->GetScene()->FindObject(cam, "cam");
-					cameraInfo.view = cam->GetFrame()->GetTransform();
-					cameraInfo.view = cameraInfo.view * Affinef::Trn(0,0,-0.1);
-					cam->GetFrame()->SetTransform(cameraInfo.view);
-					break;
-
+	case('f'):  GetSdk()->GetScene()->FindObject(cam, "cam");
+				cameraInfo.view = cam->GetFrame()->GetTransform();
+				cameraInfo.view = cameraInfo.view * Affinef::Trn(0,0,-0.1);
+				cam->GetFrame()->SetTransform(cameraInfo.view);
+				break;*/
 	}
 }
-void MyApp::TexInit(){
+/*void MyApp::TexInit(){
 	texSize = 256;
 	for (int i = 0 ; i < texSize ; i++) {
 		int r = (i * 0xFF) / texSize;
 		for (int j = 0 ; j < texSize ; j++) {
 			bits[i][j][0] = 0xFF;//(GLubyte)r;
-			bits[i][j][1] = (GLubyte)(( j * 0xFF ) / texSize);
+			bits[i][j][1] = (unsigned char)(( j * 0xFF ) / texSize);
 			bits[i][j][2] = 0xFF;//(GLubyte)~r;
 		}
 	}
@@ -126,14 +129,7 @@ void MyApp::TexInit(){
 }
 void MyApp::DrawTexQuad(){
 	glEnable(GL_TEXTURE_2D);
-	//GRMaterialDesc material;
-	//material.ambient  = Vec4d(0.0, 0.0, 0.0, 0.0);
-	//material.emissive = Vec4d(1.0, 1.0, 1.0, 1.0);
-	//material.diffuse  = Vec4d(0.0, 0.0, 0.0, 0.0);
-	//material.specular = Vec4d(0.0, 0.0, 0.0, 0.0);
-	//material.power	  = 0.0;
 	FWWin* win = GetWin(0);
-	//win->render->SetMaterial(material);
 	glBindTexture(GL_TEXTURE_2D , texName);
 	glTexImage2D(
 		GL_TEXTURE_2D , 0 , 3 , texSize , texSize,
@@ -145,21 +141,6 @@ void MyApp::DrawTexQuad(){
 		glTexCoord2f(1 , 1); glVertex2f(	win->width/2,  win->height/2);
 		glTexCoord2f(1 , 0); glVertex2f(	win->width/2, -win->height/2);	
 	glEnd();
-}
-
-/*
-void idle(void){
-	Affinef afV;
-	afV.LookAt(Vec3f(10,0,0), Vec3f(0,1,0));
-	GRAnimationControllerIf* anim = GetSdk()->GetScene()->GetGRScene()->GetAnimationController();
-	anim->ResetPose();
-	static float time;
-	anim->BlendPose(ANIMATION_SET_NAME, time, 1);
-	time += 1;
-	if (time > FRAME_NUMBER - 1) time = 0;
-	Sleep(10);
-	glutPostRedisplay();
-}
-*/
+}*/
 
 

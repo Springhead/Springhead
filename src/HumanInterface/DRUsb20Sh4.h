@@ -9,48 +9,42 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef SPR_DRUsb20Sh4_H
-#define SPR_DRUsb20Sh4_H
-
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
+#ifndef DR_USB20SH4_H
+#define DR_USB20SH4_H
 
 #include "DRUsb20Simple.h"
-#include "DVAdBase.h"
 
-namespace Spr {
+namespace Spr {;
 
-///	USB2.0 SH アンプ のドライバ
+/**
+	USB2.0 SH アンプ のドライバ
+ **/
 class SPR_DLL DRUsb20Sh4 : public DRUsb20Simple{
-//----------------------------------------------------------------------------
 protected:
 	float adVoltPerDigit;
 public:
 	SPR_OBJECTDEF(DRUsb20Sh4);
+	SPR_DECLMEMBEROF_DRUsb20Sh4Desc;
+
 	///	仮想デバイス(DA)
-	class VirtualDeviceAd:public DVAdBase{
-	protected:
-		int ch;
-		DRUsb20Sh4* realDevice;
-		char name[100];
+	class DV: public DVAd{
 	public:
-		VirtualDeviceAd(DRUsb20Sh4* r, int c);
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		virtual float Voltage(){ return realDevice->AdVoltage(ch); }
-		virtual int Digit(){ return realDevice->AdDigit(ch); }
-		virtual const char* Name() const{ return name; }
+		DV(DRUsb20Sh4* r, int c):DVAd(r, c){}
+		DRUsb20Sh4* GetRealDevice() { return realDevice->Cast(); }
+		
+		virtual float Voltage(){ return GetRealDevice()->AdVoltage(portNo); }
+		virtual int Digit(){ return GetRealDevice()->AdDigit(portNo); }
 	};
 
 	///	コンストラクタ	chは背面のスイッチになる予定
 	DRUsb20Sh4(const DRUsb20Sh4Desc& d = DRUsb20Sh4Desc());
-	/// リセット
-	virtual void Reset();
+	
+	virtual bool Init();
 	///	virtual device の登録
-	virtual void Register(HISdkIf* sdkIf);	
+	//virtual void Register(HISdkIf* sdkIf);	
 
-	float AdVoltage(int ch){ return adIn[ch] * adVoltPerDigit; }
-	int AdDigit(int ch){ return adIn[ch]; }
+	float	AdVoltage(int ch){ return adIn[ch] * adVoltPerDigit; }
+	int		AdDigit(int ch){ return adIn[ch]; }
 	
 	///	状態の更新
 	virtual void Update();
@@ -60,11 +54,12 @@ public:
 	///	512byteの受信
 	virtual void UsbRecv(unsigned char* inBuffer);
 protected:
+	virtual unsigned	GetVidPid(){ return 0x0CEC0205; }
+
 	virtual void UsbUpdate();
-	virtual bool FindDevice(int ch);
 
 };
 
 } //namespace Spr
 
-#endif // SPR_DRUsb20Sh4_H
+#endif

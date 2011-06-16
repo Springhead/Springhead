@@ -8,7 +8,8 @@
 #ifndef PHGEAR_H
 #define PHGEAR_H
 
-#include <SprPhysics.h>
+#include <Foundation/Object.h>
+#include <Physics/SprPHJoint.h>
 #include <Physics/PhysicsDecl.hpp>
 
 namespace Spr{;

@@ -8,9 +8,8 @@
 #ifndef CDCapsule_H
 #define CDCapsule_H
 
-#include <SprCollision.h>
 #include <Foundation/Object.h>
-#include "CDConvex.h"
+#include <Collision/CDConvex.h>
 
 namespace Spr{;
 	
@@ -34,8 +33,10 @@ public:
 	
 	virtual Matrix3f CalcMomentOfInertia();
 
-	float GetRadius();
-	float GetLength();
+	float	GetRadius(){ return radius; }
+	void	SetRadius(float r){ radius = r; }
+	float	GetLength(){ return length; }
+	void	SetLength(float l){ length = l; }
 
 	int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 };

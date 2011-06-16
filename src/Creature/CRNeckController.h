@@ -8,14 +8,14 @@
 #ifndef CRNECKCONTROLLER_H
 #define CRNECKCONTROLLER_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-
-#include "CREngine.h"
+#include <Creature/CREngine.h>
+#include <Creature/SprCRGazeController.h>
 
 //@{
 namespace Spr{;
+
+struct CRIKSolidIf;
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 首（頭部）運動コントローラ
 */

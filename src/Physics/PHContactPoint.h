@@ -8,12 +8,11 @@
 #ifndef PHCONTACTPOINT_H
 #define PHCONTACTPOINT_H
 
-#include <SprPhysics.h>
-#include "PHConstraint.h"
-
-class PHShapePairForLCP;
+#include <Physics/PHConstraint.h>
 
 namespace Spr{;
+
+class PHShapePairForLCP;
 
 struct PHContactPointState:public PHConstraintState{
 	int shapePair;

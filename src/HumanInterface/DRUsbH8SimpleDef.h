@@ -1,10 +1,6 @@
 #ifndef DRUSBH8SIMPLEDEF_H
 #define DRUSBH8SIMPLEDEF_H
 
-#ifdef _WIN32
-#include <winioctl.h>
-#endif
-
 ///////////////////////////////////////////////////////////
 //  Spidar user application interface
 //  Copyright (c) 2001, CyVerse Corporation

@@ -5,21 +5,22 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Device.h"
+//#include "Device.h"
 #pragma hdrstop
 #include "DRPortIO.h"
+#include "DRContecIsaDa.h"
 
 namespace Spr {
 
-DRContecIsaDa::VirtualDevice::VirtualDevice(DRContecIsaDa* r, int c): realDevice(r), ch(c) {
-	sprintf(name, "%s Channel %d", realDevice->Name(), ch);
-}
 DRContecIsaDa::DRContecIsaDa(int a){
 	address = a;
-	sprintf(name, "Contec ISA D/A at 0x%03X", address);
-	WBGetPortIO();
 }
 bool DRContecIsaDa::Init(){
+	char str[256];
+	sprintf(str, "Contec ISA D/A at 0x%03X", address);
+	SetName(str);
+	WBGetPortIO();
+
 	if (address == 0) return false;
 	_outp(address+0x2,0x01);					//	range set mode Ç…Ç∑ÇÈ
 	_outp(address+0x0,0x00);					//	channel 0 to 3
@@ -29,13 +30,18 @@ bool DRContecIsaDa::Init(){
 	_outp(address+0x0,0x04);					//	channel 4 to 7
 	_outp(address+0x1,0x00);					//	range data set 0Å`10[V]
 	_outp(address+0x2,0x00);					//	í èÌÉÇÅ[Éh
+	
+	for(int i=0; i<8; i++){
+		AddChildObject((new Da(this, i))->Cast());
+	}
+	
 	return true;
 }
-void DRContecIsaDa::Register(HIVirtualDevicePool& vpool){
+/*void DRContecIsaDa::Register(HIVirtualDevicePool& vpool){
 	for(int i=0; i<8; i++){
-		vpool.Register(new VirtualDevice(this, i));
+		vpool.Register(new DV(this, i));
 	}
-}
+}*/
 void DRContecIsaDa::Voltage(int ch, float volt){
 	if (address == 0) return;
 
@@ -50,5 +56,6 @@ void DRContecIsaDa::Digit(int ch, int value){
 														//	OUTPUT DATA (LOW)
 	_outp(address+0x1,(unsigned char)(value >> 4));		//	            (HIGH)
 }
+
 }	//	namespace Spr
 

@@ -5,10 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Springhead.h>
-#include "CDConvexMeshInterpolate.h"
-#include <set>
+#include <Collision/CDConvexMeshInterpolate.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 #define CD_EPSILON	HULL_EPSILON
 #define CD_INFINITE	HULL_INFINITE

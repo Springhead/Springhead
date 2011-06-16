@@ -8,8 +8,8 @@
 #ifndef GRBlendMesh_H
 #define GRBlendMesh_H
 
-#include <SprGraphics.h>
-#include "GRFrame.h"
+#include <Graphics/SprGRBlendMesh.h>
+#include <Graphics/GRFrame.h>
 
 namespace Spr{;
 

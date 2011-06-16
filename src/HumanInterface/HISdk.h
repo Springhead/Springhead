@@ -9,6 +9,9 @@
 #define HISDK_H
 #include <Foundation/Foundation.h>
 #include <HumanInterface/SprHISdk.h>
+#include <HumanInterface/HIBase.h>
+
+#include <vector>
 
 namespace Spr {;
 
@@ -22,49 +25,42 @@ public:
 	}
 };
 
-class HIVirtualDevicePool;
-class HIRealDevicePool;
+typedef	std::vector< UTRef<HIRealDeviceIf> >	DRPool;
+typedef std::vector< UTRef<HIBaseIf> >			HIPool;
 
-class SPR_DLL HISdk:public Sdk{
+class SPR_DLL HISdk: public Sdk{
 protected:
-	UTRef<HIVirtualDevicePool> vpool;
-	UTRef<HIRealDevicePool> rpool;
+	//HIVirtualDevicePool				dvPool;		///< 仮想デバイスプール
+	//HIRealDevicePool					drPool;		///< 実デバイスプール
+	DRPool					drPool;
+	HIPool					hiPool;		///< ヒューマンインタフェースのプール
+
 public:
 	SPR_OBJECTDEF(HISdk);
 	HISdk(const HISdkDesc& = HISdkDesc());
+
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t i);
 	virtual bool AddChildObject(ObjectIf* o);
-
-	///	SDKの初期化
-	virtual void Init();
-	///	作成・登録したRealDevice/VirtualDevice/HumanInterfaceをすべて削除
 	virtual void Clear();
-	///	Rent virtual device.
-	virtual HIVirtualDeviceIf* RentVirtualDevice(const char* type, const char* name=NULL);
-	virtual HIVirtualDeviceIf* RentVirtualDeviceNo(const char* type,int No=0 ,const char* name=NULL);
-	///	Return virutal device.
-	virtual bool ReturnVirtualDevice(HIVirtualDeviceIf* dev);
-	
-	///	Register real device.
-	virtual void RegisterRealDevice(HIRealDeviceIf* dev);	
-	///	Get real device.
-	virtual HIRealDeviceIf* FindRealDevice(const char* name=NULL);
-	///	Register virutal device.
-	virtual void RegisterVirtualDevice(HIVirtualDeviceIf* dev);
-	///	ヒューマンインタフェースの作成
-	virtual UTRef<HIBaseIf> CreateHumanInterface(const IfInfo* keyInfo);
-	virtual UTRef<HIBaseIf> CreateHumanInterface(const char* name);
-	///	Create and register real device.
-	virtual bool AddRealDevice(const IfInfo* keyInfo, const void* desc=NULL);
 
-	//	SDK生成、登録関数
-	///	HISdkのインスタンスを作成
+	/// インタフェースの実装
+	//void Init();	
+	HIVirtualDeviceIf* RentVirtualDevice(const IfInfo* ii, const char* name=NULL, int portNo = -1);
+	//HIVirtualDeviceIf* RentVirtualDeviceNo(const char* type,int No=0 ,const char* name=NULL);
+	bool ReturnVirtualDevice(HIVirtualDeviceIf* dev);
+	
+	void			RegisterRealDevice(HIRealDeviceIf* dev);	
+	HIRealDeviceIf* FindRealDevice(const char* name);
+	HIRealDeviceIf*	FindRealDevice(const IfInfo* ii);
+	void			RegisterVirtualDevice(HIVirtualDeviceIf* dev);
+	HIBaseIf*		CreateHumanInterface(const IfInfo* keyInfo);
+	HIBaseIf*		CreateHumanInterface(const char* name);
+	HIRealDeviceIf* AddRealDevice(const IfInfo* keyInfo, const void* desc=NULL);
+
 	static HISdkIf* SPR_CDECL CreateSdk();
-	///	HISdkをファイルローダーなどに登録
-	static void SPR_CDECL RegisterSdk();
-	///	中身の表示
-	void Print(std::ostream& o) const;
+	//static void SPR_CDECL RegisterSdk();
+	//void Print(std::ostream& o) const;
 };
 
 }

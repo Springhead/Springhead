@@ -5,16 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FileIO.h"
+#include <FileIO/FIFileX.h>
+#include <FileIO/FILoadContext.h>
+#include <FileIO/FISaveContext.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
-
-#include "FIFileX.h"
-#include <Foundation/UTLoadHandler.h>
-#include <fstream>
-#include <sstream>
-#include <Springhead.h>
 
 namespace Spr{;
 
@@ -231,7 +227,7 @@ typedef boost::spirit::classic::functor_parser<ExpectParser> ExpP;
 }
 using namespace FileX;
 
-FIFileX::FIFileX(){
+FIFileX::FIFileX(const FIFileXDesc& desc){
 	Init();
 }
 void FIFileX::Init(){

@@ -90,11 +90,9 @@ protected:
 //
 
 UTTimerProvider::UTTimerProvider(){
-
 }
 
 UTTimerProvider::~UTTimerProvider(){
-	Unregister();
 }
 
 void UTTimerProvider::Register(){

@@ -10,7 +10,7 @@
 
 #include <SprCollision.h>
 #include <Foundation/Object.h>
-#include "CDConvex.h"
+#include <Collision/CDConvex.h>
 
 namespace Spr{;
 
@@ -64,7 +64,7 @@ public:
 	/// 直方体のサイズを取得
 	Vec3f GetBoxSize();
 	Vec3f* GetVertices();
-	CDFaceIf* GetFace(size_t i);
+	CDFaceIf* GetFace(int i);
 
 	/// 直方体のサイズを設定
 	Vec3f SetBoxSize(Vec3f boxSize);

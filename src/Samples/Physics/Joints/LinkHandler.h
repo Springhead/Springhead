@@ -22,11 +22,10 @@ public:
 	double					damper;
 
 public:
-	LinkHandler(){
+	LinkHandler(SampleApp* a):Handler(a){
 		spring = 30.0;
 		damper = 10.0;
 		
-		SampleApp* app = GetApp();
 		app->AddAction(MENU_LINK, ID_TORQUE_PLUS, "positive torque");
 		app->AddHotKey(MENU_LINK, ID_TORQUE_PLUS, 'a');
 		app->AddAction(MENU_LINK, ID_TORQUE_ZERO, "zero torque");
@@ -55,7 +54,7 @@ public:
 		PHSdkIf*	phSdk	= GetPHSdk();
 		PHSceneIf*	phScene = GetPHScene();
 
-		soFloor = GetApp()->CreateFloor();
+		soFloor = app->CreateFloor();
 		
 		CDBoxDesc bd;
 		soBox.resize(3);

@@ -8,9 +8,9 @@
 #ifndef PHSHAPE_H
 #define PHSHAPE_H
 
-#include <SprCollision.h>
 #include <Foundation/Object.h>
-#include "CollisionDecl.hpp"
+#include <Collision/SprCDShape.h>
+#include <Collision/CollisionDecl.hpp>
 
 namespace Spr{;
 
@@ -31,14 +31,15 @@ public:
 	void	SetDensity(float d){ material.density = d; }
 	float	GetDensity(){ return material.density; }
 
-	void SetSpringDamper(float spring, float damper){
-		material.reflexSpringK = spring;
-		material.reflexDamperD = damper;
-		material.frictionSpringK = spring;
-		material.frictionDamperD = damper;
-	}
-	float GetSpringK(){return material.reflexSpringK;}
-	float GetDamperD(){return material.reflexDamperD;}
+	void	SetReflexSpring(float K){ material.reflexSpring = K; }
+	float	GetReflexSpring(){return material.reflexSpring;}
+	void	SetReflexDamper(float D){ material.reflexDamper = D; }
+	float	GetReflexDamper(){return material.reflexDamper;}
+	void	SetFrictionSpring(float K){ material.frictionSpring = K; }
+	float	GetFrictionSpring(){return material.frictionSpring;}
+	void	SetFrictionDamper(float D){ material.frictionDamper = D; }
+	float	GetFrictionDamper(){return material.frictionDamper;}
+	
 	void SetVibration(float vibA, float vibB, float vibW){
 		material.vibA = vibA;
 		material.vibB = vibB;
@@ -57,8 +58,8 @@ public:
 	void SetVibContact(bool vibContact){material.vibContact = vibContact;}
 	bool GetVibContact(){return material.vibContact;}
 
-	PHMaterial	GetMaterial(){return material;}
-	void		SetMaterial(PHMaterial mat){material = mat;}
+	const PHMaterial&	GetMaterial(){return material;}
+	void				SetMaterial(const PHMaterial& mat){material = mat;}
 
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose)=0;
 	virtual bool IsInside(const Vec3f& p){ return false; }

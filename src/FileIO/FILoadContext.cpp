@@ -5,11 +5,6 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FileIO.h"
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
-
 #ifdef _WIN32
 #include <Windows.h>
 #else
@@ -17,6 +12,12 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#endif
+
+#include <FileIO/FILoadContext.h>
+
+#ifdef USE_HDRSTOP
+#pragma hdrstop
 #endif
 
 using namespace std;

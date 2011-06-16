@@ -5,7 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FileIO.h"
+#include <FileIO/FIFile.h>
+#include <FileIO/FIImport.h>
+#include <FileIO/FILoadContext.h>
+#include <FileIO/FISaveContext.h>
+#include <FileIO/FISdk.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

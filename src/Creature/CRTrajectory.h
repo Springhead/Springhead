@@ -8,14 +8,15 @@
 #ifndef CRTRAJECTORY_H
 #define CRTRAJECTORY_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-
-#include "CREngine.h"
+#include <Creature/CREngine.h>
+#include <Creature/SprCRTrajectoryController.h>
 
 //@{
 namespace Spr{;
+
+struct PHSolidIf;
+struct CRIKSolidIf;
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 個々の手先軌道
 */
@@ -30,14 +31,7 @@ public:
 	SPR_OBJECTDEF(CRTrajectory);
 	ACCESS_DESC(CRTrajectory);
 
-	CRTrajectory()
-	{
-		solid = NULL;
-		soCur = NULL;
-	}
-	CRTrajectory(const CRTrajectoryDesc& desc) 
-		: CRTrajectoryDesc(desc)
-	{
+	CRTrajectory(const CRTrajectoryDesc& desc = CRTrajectoryDesc()) : CRTrajectoryDesc(desc){
 		solid = NULL;
 		soCur = NULL;
 	}
@@ -88,61 +82,11 @@ public:
 
 	/** @brief 軌道運動開始
 	*/
-	void Start() {
-		time = 0;
-		bEnabled = true;
-		posStart = solid->GetPHSolid()->GetPose()*posInSolid;
-		velStart = solid->GetPHSolid()->GetVelocity() + PTM::cross(solid->GetPHSolid()->GetAngularVelocity(), posInSolid);
-		CalcTrajectory();
-		currentPosition = GetPosition();
-		currentOrientation = GetOrientation();
-
-		solid->GetIKEndEffector()->Enable(true);
-	}
+	void Start();
 
 	/** @brief 時刻を1ステップ進める
 	*/
-	void Step() {
-		if (soCur==NULL) {
-			/*
-			PHSceneIf* phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
-			PHSolidDesc descSo;
-			descSo.dynamical = false;
-			soCur = phScene->CreateSolid(descSo);
-			CDBoxDesc descBox;
-			descBox.boxsize = Vec3f(0.2, 0.2, 0.2);
-			soCur->AddShape(phScene->GetSdk()->CreateShape(descBox));
-			phScene->SetContactMode(soCur, PHSceneDesc::MODE_NONE);
-			*/
-		}
-
-		if (bEnabled) {
-			if (posEnabled) {
-				// restart if too far
-				if ((GetPosition() - solid->GetPHSolid()->GetPose()*posInSolid).norm() > 2.0) {
-					// Start();
-				}
-
-				// restart if jump
-				if ((GetPosition() - currentPosition).norm() > 0.5) {
-					Start();
-				}
-			}
-
-			currentPosition = GetPosition();
-			currentOrientation = GetOrientation();
-
-			time += DCAST(CRCreatureIf,GetScene())->GetPHScene()->GetTimeStep();
-
-			// std::cout << time << " : " << GetPosition() << std::endl;
-
-			// std::cout << posInSolid << std::endl;
-			solid->GetIKEndEffector()->SetTargetPosition(GetPosition(), posInSolid);
-			if (soCur) {
-				soCur->SetFramePosition(GetPosition());
-			}
-		}
-	}
+	void Step();
 
 	/** @brief 到達目標時間をセット
 	*/
@@ -178,28 +122,9 @@ public:
 
 	/** @brief 子要素関連
 	*/
-	virtual bool AddChildObject(ObjectIf* o) {
-		CRIKSolidIf* so = o->Cast();
-		if (so) {
-			solid = so;
-			return true;
-		}
-		return false;
-	}
-
-	virtual ObjectIf* GetChildObject(size_t pos) {
-		if (pos == 0) {
-			return solid->Cast();
-		}
-		return NULL;
-	}
-
-	virtual size_t NChildObject() {
-		if (solid != NULL) {
-			return 1;
-		}
-		return 0;
-	}
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual ObjectIf* GetChildObject(size_t pos);
+	virtual size_t NChildObject() const;
 
 	// --- --- --- --- --- --- ---
 	// Non API Methods

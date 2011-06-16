@@ -5,12 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Springhead.h>
-#include <Foundation/Scene.h>
-#include "Collision.h"
-#include <set>
+#include <Collision/CDSphere.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "CDQuickHull3DImp.h"
+#endif
 
 namespace Spr{;
 	
@@ -42,10 +40,6 @@ bool CDSphere::FindCutRing(CDCutRing& r, const Posed& toW) {
 	return false;
 }
 
-// ‹…‘Ì‚Ì”¼Œa‚ðŽæ“¾
-float CDSphere::GetRadius() {
-	return radius;
-}
 bool CDSphere::IsInside(const Vec3f& p){
 	return p.square() < radius * radius;
 }

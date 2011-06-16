@@ -2,11 +2,14 @@
 #include <Springhead.h>
 #include <HumanInterface/SprHIDRUsb.h>
 #include <iomanip>
+
 using namespace Spr;
 
-
 int __cdecl main(){
+	// HumanInterface SDKを作成
 	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
+
+	// Spidar制御用ハードウェアの初期化
 	DRUsb20SimpleDesc usbSimpleDesc;
 	sdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 	DRUsb20Sh4Desc usb20Sh4Desc;
@@ -19,6 +22,7 @@ int __cdecl main(){
 	sdk->Init();
 	sdk->Print(DSTR);
 
+	// Spidarインタフェース作成
 	UTRef<HISpidar4If> spg = sdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidar4Desc("SpidarG6X3R"));
 

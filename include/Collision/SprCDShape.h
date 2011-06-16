@@ -11,8 +11,6 @@
 
 namespace Spr{;
 
-struct PHMaterial;
-
 /**	\defgroup	gpShape	形状・接触判定クラス	*/	
 //@{
 /**	@file SprCDShape.h
@@ -34,18 +32,43 @@ struct PHMaterial;
 	階層構造は物理ライブラリとは別に，シーングラフライブラリが持つ
 */
 
+struct PHMaterial;
+
 ///	形状の基本クラス
 struct CDShapeIf : public NamedObjectIf{
 	SPR_IFDEF(CDShape);
-
+	/// 静止摩擦係数の設定
 	void	SetStaticFriction(float mu0);
+	/// 静止摩擦係数の取得
 	float	GetStaticFriction();
+	/// 動摩擦係数の設定
 	void	SetDynamicFriction(float mu);
+	/// 動摩擦係数の取得
 	float	GetDynamicFriction();
+	/// 跳ね返り係数の設定
 	void	SetElasticity(float e);
+	/// 跳ね返り係数の取得
 	float	GetElasticity();
+	/// 密度の設定
 	void	SetDensity(float d);
+	/// 密度の取得
 	float	GetDensity();
+	/// 跳ね返りバネ係数の設定
+	void	SetReflexSpring(float K);
+	/// 跳ね返りバネ係数の取得
+	float	GetReflexSpring();
+	/// 跳ね返りダンパ係数の設定
+	void	SetReflexDamper(float D);
+	/// 跳ね返りダンパ係数の取得
+	float	GetReflexDamper();
+	/// 摩擦バネ係数の設定
+	void	SetFrictionSpring(float K);
+	/// 摩擦バネ係数の取得
+	float	GetFrictionSpring();
+	/// 摩擦ダンパ係数の設定
+	void	SetFrictionDamper(float D);
+	/// 摩擦ダンパ係数の取得
+	float	GetFrictionDamper();
 
 	void SetVibration(float vibA, float vibB, float vibW);
 	void SetVibA(float vibA);
@@ -59,16 +82,16 @@ struct CDShapeIf : public NamedObjectIf{
 	void SetVibContact(bool vibContact);
 	bool GetVibContact();
 
-	void SetSpringDamper(float spring, float damper);
-	float GetSpringK();
-	float GetDamperD();
+	/// 物性をまとめて取得
+	const PHMaterial&	GetMaterial();
+	/// 物性をまとめて設定
+	void				SetMaterial(const PHMaterial& mat);
 
+	/// 幾何計算
 	float	CalcVolume();			///< 体積を計算
 	Vec3f	CalcCenterOfMass();		///< 質量中心
 	Matrix3f CalcMomentOfInertia();	///< 質量当たりの質量中心に関する慣性行列（massを掛けて使う）
 
-	PHMaterial	GetMaterial();
-	void		SetMaterial(PHMaterial mat);
 
 };
 
@@ -111,10 +134,10 @@ struct PHMaterial{
 	//	LCP(PHConstarintEngine)による拘束力計算用
 	float e;				///< 跳ね返り係数
 	//	ペナルティ法(PHPenaltyEngine)のためのバネ・ダンパ係数
-	float reflexSpringK;
-	float reflexDamperD;
-	float frictionSpringK;
-	float frictionDamperD;
+	float reflexSpring;
+	float reflexDamper;
+	float frictionSpring;
+	float frictionDamper;
 	
 	//	固有振動提示のための係数
 	float vibA;				///< 振幅係数
@@ -133,10 +156,10 @@ struct CDShapeDesc{
 /**	凸形状のメッシュ*/
 struct CDConvexMeshIf: public CDConvexIf{
 	SPR_IFDEF(CDConvexMesh);
-	CDFaceIf* GetFace(size_t i);
-	size_t NFace();
+	CDFaceIf* GetFace(int i);
+	int NFace();
 	Vec3f* GetVertices();
-	size_t NVertex();
+	int NVertex();
 };
 /**	凸形状のメッシュのディスクリプタ	*/	
 struct CDConvexMeshDesc: public CDShapeDesc{
@@ -159,7 +182,8 @@ struct CDConvexMeshInterpolateDesc: public CDConvexMeshDesc{
 /** 球体　*/
 struct CDSphereIf: public CDConvexIf{
 	SPR_IFDEF(CDSphere);
-	float GetRadius();
+	float	GetRadius();
+	void	SetRadius(float r);
 };	
 /** 球体のディスクリプタ　*/
 struct CDSphereDesc: public CDShapeDesc{
@@ -173,8 +197,10 @@ struct CDSphereDesc: public CDShapeDesc{
 /** カプセル　*/
 struct CDCapsuleIf: public CDConvexIf{
 	SPR_IFDEF(CDCapsule);
-	float GetRadius();
-	float GetLength();
+	float	GetRadius();
+	void	SetRadius(float r);
+	float	GetLength();
+	void	SetLength(float l);
 };	
 /** カプセルのディスクリプタ　*/
 struct CDCapsuleDesc: public CDShapeDesc{
@@ -212,7 +238,7 @@ struct CDBoxIf: public CDConvexIf{
 	SPR_IFDEF(CDBox);
 	Vec3f GetBoxSize();
 	Vec3f* GetVertices();
-	CDFaceIf* GetFace(size_t i);
+	CDFaceIf* GetFace(int i);
 	Vec3f SetBoxSize(Vec3f boxsize);
 };
 /** 直方体のディスクリプタ */
