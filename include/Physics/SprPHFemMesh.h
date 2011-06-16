@@ -12,6 +12,7 @@
 #ifndef SPR_PHFemMeshIf_H
 #define SPR_PHFemMeshIf_H
 
+#include <Foundation/SprObject.h>
 
 /**	\addtogroup gpPhysics	*/
 //@{

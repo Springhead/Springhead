@@ -16,7 +16,10 @@
 
 namespace Spr{;
 
+FWApp* FWApp::instance = 0;
+
 FWApp::FWApp(){
+	instance = this;
 }
 
 FWApp::~FWApp(){

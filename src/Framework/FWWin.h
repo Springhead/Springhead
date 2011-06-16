@@ -15,7 +15,7 @@ public:
 	SPR_OBJECTDEF(FWWin);
 
 	int					id;				///< ウィンドウID
-	bool				renderMode;		///< デバッグ描画モード
+	bool				debugMode;		///< デバッグ描画モード
 	
 	GRRenderIf*			render;			///< レンダラ
 	FWSceneIf*			scene;			///< シーン
@@ -62,8 +62,8 @@ public:
 		dragger->SetCallback(this);
 	}
 	// 描画モードの設定と取得
-	void	SetRenderMode(bool ph_or_gr){ renderMode = ph_or_gr; }
-	bool	GetRenderMode(){ return renderMode; }
+	void	SetDebugMode(bool ph_or_gr){ debugMode = ph_or_gr; }
+	bool	GetDebugMode(){ return debugMode; }
 	// 描画
 	void	Display();
 	// サイズ変更時処理
@@ -72,14 +72,7 @@ public:
 	// HITrackballCallbackの関数
 	virtual void OnUpdatePose(HITrackballIf*, bool dir);
 
-	FWWin(int wid = 0, const FWWinDesc& desc = FWWinDesc()):FWWinDesc(desc), id(wid){
-		render		= 0;
-		scene		= 0;
-		keyMouse	= 0;
-		joyStick	= 0;
-		trackball	= 0;
-		dragger		= 0;
-	}
+	FWWin(int wid = 0, const FWWinDesc& desc = FWWinDesc());
 	virtual ~FWWin(){}
 };
 

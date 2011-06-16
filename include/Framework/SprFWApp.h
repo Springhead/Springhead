@@ -20,20 +20,10 @@ struct FWGraphicsAdapteeIf;
 	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
 	FWAppおよびその派生クラスは例外であり，ユーザはFWAppあるいはその派生クラスを継承し，
 	仮想関数をオーバライドすることによって独自機能を実装する．
-
-	FWApp -
-		1 FWSdk -
-			n FWScene
-			n GRRender
-		1 FWGraphicsAdaptee
-		n FWWindow
-			1 [FWScene]
-			1 [GRRender]
-		1 hiSdk
-
  */
 class FWApp : public UTRefCount, public DVKeyMouseHandler{
 protected:
+	static FWApp*				instance;	///< 唯一のFWAppインスタンス
 	UTRef<FWSdkIf>				fwSdk;		///< Framework SDK	
 	
 	UTRef<FWGraphicsAdapteeIf>	grAdaptee;	///< グラフィクスシステムのアダプティ
@@ -151,6 +141,9 @@ public:
 	}
 
 	//　FWAppのインタフェース -----------------------------------------
+
+	/** @brief FWAppインスタンスを取得する */
+	static FWApp* GetApp(){ return instance; }
 
 	/** @brief SDKを取得する
 	*/

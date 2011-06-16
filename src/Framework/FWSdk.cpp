@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
+#include <Framework/SprFWApp.h>
 #include <Framework/FWSdk.h>
 #include <Framework/FWOldSpringheadNode.h>
 #include <Framework/FWObject.h>
@@ -177,7 +178,8 @@ bool FWSdk::SaveScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectI
 }
 
 FWSceneIf* FWSdk::GetScene(int i){
-	//if(i == -1)return curScene;
+	if(i == -1)
+		return FWApp::GetApp()->GetCurrentWin()->GetScene();
     if(0 <= i && i < NScene())
 		return scenes[i];
 	return NULL;
@@ -258,13 +260,6 @@ void FWSdk::ClearIAScenes(){
 	return render;
 }*/
 
-/*GRRenderIf* FWSdk::GetRender(int i){
-	if(i == -1)return curRender;
-    if(0 <= i && i < NRender())
-		return renders[i];
-	return NULL;
-}*/
-
 bool FWSdk::AddChildObject(ObjectIf* o){
 	FWScene* s = DCAST(FWScene, o);
 	if (s){
@@ -335,21 +330,29 @@ void FWSdk::Clear(){
 	//curRender = NULL;
 	CreateSdks();
 }
-/*
+
+bool FWSdk::GetDebugMode(){
+	return FWApp::GetApp()->GetCurrentWin()->GetDebugMode();
+}
+void FWSdk::SetDebugMode(bool debug){
+	FWApp::GetApp()->GetCurrentWin()->SetDebugMode(debug);
+}
 void FWSdk::Step(){
-	if (curScene)
-		curScene->Step();
+	FWApp::GetApp()->GetCurrentWin()->GetScene()->Step();
 }
 
 void FWSdk::Draw(){
-	if(!curRender || !curScene)
-		return;
-	curScene->Draw(curRender);
+	FWWinIf* win = FWApp::GetApp()->GetCurrentWin();
+	win->GetScene()->Draw(win->GetRender(), win->GetDebugMode());
 }
 
 void FWSdk::Reshape(int w, int h){
-	if (curRender)
-		curRender->Reshape(Vec2f(), Vec2f(w,h));
+	FWApp::GetApp()->GetCurrentWin()->Reshape(w, h);
 }
-*/
+
+GRRenderIf* FWSdk::GetRender(){
+	return FWApp::GetApp()->GetCurrentWin()->GetRender();
+}
+
+
 }

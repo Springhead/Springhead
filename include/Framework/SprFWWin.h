@@ -88,8 +88,8 @@ struct FWWinIf : ObjectIf{
 	void			SetDragger(HIDraggerIf* dv);
 
 	/// 描画モード設定
-	void	SetRenderMode(bool ph_or_gr);
-	bool	GetRenderMode();
+	void	SetDebugMode(bool ph_or_gr);
+	bool	GetDebugMode();
 	/// 描画
 	void	Display();
 	/// サイズ変更時の処理

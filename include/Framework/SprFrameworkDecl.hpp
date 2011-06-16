@@ -160,6 +160,12 @@
 	GRSdkIf* GetGRSdk(){	return	base::GetGRSdk();}	\
 	Spr::FISdkIf* GetFISdk(){	return	base::GetFISdk();}	\
 	Spr::HISdkIf* GetHISdk(){	return	base::GetHISdk();}	\
+	bool GetDebugMode(){	return	base::GetDebugMode();}	\
+	void SetDebugMode(bool debug){	base::SetDebugMode(debug);}	\
+	void Step(){	base::Step();}	\
+	void Draw(){	base::Draw();}	\
+	void Reshape(int w, int h){	base::Reshape(w, h);}	\
+	Spr::GRRenderIf* GetRender(){	return	base::GetRender();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWWinIf(base)	\
 	void SetPosition(int left, int top){	base::SetPosition(left, top);}	\
@@ -185,8 +191,8 @@
 	void SetTrackball(Spr::HITrackballIf* dv){	base::SetTrackball(dv);}	\
 	Spr::HIDraggerIf* GetDragger(){	return	base::GetDragger();}	\
 	void SetDragger(Spr::HIDraggerIf* dv){	base::SetDragger(dv);}	\
-	void SetRenderMode(bool ph_or_gr){	base::SetRenderMode(ph_or_gr);}	\
-	bool GetRenderMode(){	return	base::GetRenderMode();}	\
+	void SetDebugMode(bool ph_or_gr){	base::SetDebugMode(ph_or_gr);}	\
+	bool GetDebugMode(){	return	base::GetDebugMode();}	\
 	void Display(){	base::Display();}	\
 	void Reshape(int w, int h){	base::Reshape(w, h);}	\
 

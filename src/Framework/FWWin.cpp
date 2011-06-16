@@ -16,15 +16,24 @@
 
 namespace Spr{;
 
+FWWin::FWWin(int wid, const FWWinDesc& desc):FWWinDesc(desc), id(wid){
+	render		= 0;
+	scene		= 0;
+	keyMouse	= 0;
+	joyStick	= 0;
+	trackball	= 0;
+	dragger		= 0;
+	debugMode	= true;
+}
+	
 void FWWin::Display(){
 	// GRSceneにカメラフレームが無い場合はトラックボールを直接ビュー変換に反映する
 	if(!scene->GetGRScene() || !scene->GetGRScene()->GetCamera() || !scene->GetGRScene()->GetCamera()->GetFrame()){
 		render->SetViewMatrix(trackball->GetAffine().inv());
 	}
-	scene->Draw(render, renderMode);
+	scene->Draw(render, debugMode);
 	render->SwapBuffers();
 }
-
 void FWWin::Reshape(int w, int h){
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }

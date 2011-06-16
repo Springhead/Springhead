@@ -8,7 +8,7 @@
 #ifndef PHFEMMESH_H
 #define PHFEMMESH_H
 
-#include <SprPhysics.h>
+#include <Physics/SprPHFemMesh.h>
 #include <Foundation/Object.h>
 #include <Physics/PHScene.h>
 
