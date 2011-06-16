@@ -22,6 +22,17 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_FWGraphicsAdapteeDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_FWInteractPointerDesc \
 protected:\
 	PHSolidIf*	pointerSolid;	\
@@ -165,6 +176,50 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_FWWinDesc \
+protected:\
+	int	width;	\
+	int	height;	\
+	int	left;	\
+	int	top;	\
+	int	parentWindow;	\
+	UTString	title;	\
+	bool	fullscreen;	\
+	bool	useKeyMouse;	\
+	bool	useJoyStick;	\
+	bool	useTrackball;	\
+	bool	useDragger;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		width = ((FWWinDesc*)ptr)->width;	\
+		height = ((FWWinDesc*)ptr)->height;	\
+		left = ((FWWinDesc*)ptr)->left;	\
+		top = ((FWWinDesc*)ptr)->top;	\
+		parentWindow = ((FWWinDesc*)ptr)->parentWindow;	\
+		title = ((FWWinDesc*)ptr)->title;	\
+		fullscreen = ((FWWinDesc*)ptr)->fullscreen;	\
+		useKeyMouse = ((FWWinDesc*)ptr)->useKeyMouse;	\
+		useJoyStick = ((FWWinDesc*)ptr)->useJoyStick;	\
+		useTrackball = ((FWWinDesc*)ptr)->useTrackball;	\
+		useDragger = ((FWWinDesc*)ptr)->useDragger;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((FWWinDesc*)ptr)->width = width;	\
+		((FWWinDesc*)ptr)->height = height;	\
+		((FWWinDesc*)ptr)->left = left;	\
+		((FWWinDesc*)ptr)->top = top;	\
+		((FWWinDesc*)ptr)->parentWindow = parentWindow;	\
+		((FWWinDesc*)ptr)->title = title;	\
+		((FWWinDesc*)ptr)->fullscreen = fullscreen;	\
+		((FWWinDesc*)ptr)->useKeyMouse = useKeyMouse;	\
+		((FWWinDesc*)ptr)->useJoyStick = useJoyStick;	\
+		((FWWinDesc*)ptr)->useTrackball = useTrackball;	\
+		((FWWinDesc*)ptr)->useDragger = useDragger;	\
 		return true;	\
 	}\
 

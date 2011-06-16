@@ -8,10 +8,9 @@
 #ifndef CDCONVEXMESH_H
 #define CDCONVEXMESH_H
 
-#include <SprCollision.h>
-#include <vector>
 #include <Foundation/Object.h>
-#include "CDConvex.h"
+#include <Collision/CDConvex.h>
+#include <vector>
 
 namespace Spr{;
 
@@ -79,10 +78,10 @@ public:
 	///	頂点バッファを返す。
 	virtual Vec3f* GetBase(){return &*base.begin();}	
 
-	CDFaceIf* GetFace(size_t i);
-	size_t NFace();
+	CDFaceIf* GetFace(int i);
+	int NFace();
 	Vec3f* GetVertices();
-	size_t NVertex();
+	int NVertex();
 
 	///	デスクリプタCDConvexMeshDescの読み書き	
 	virtual bool GetDesc(void *desc) const;

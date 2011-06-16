@@ -8,14 +8,16 @@
 #ifndef PHMOTOR_H
 #define PHMOTOR_H
 
-#include <SprPhysics.h>
+#include <Physics/SprPHJoint.h>
 #include <Physics/PhysicsDecl.hpp>
+#include <Physics/PHSpatial.h>
 
 namespace Spr{;
 
 class PHScene;
 class PHConstraintEngine;
 class PHJoint1D;
+class PHBallJoint;
 
 /* 定義不要？
 	struct SpatialVectorArray2{

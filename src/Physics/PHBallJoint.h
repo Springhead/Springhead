@@ -10,7 +10,6 @@
 #ifndef PHBALLJOINT_H
 #define PHBALLJOINT_H
 
-#include <SprPhysics.h>
 #include <Physics/PHJoint.h>
 #include <Physics/PHTreeNode.h>
 #include <Physics/PHJointLimit.h>

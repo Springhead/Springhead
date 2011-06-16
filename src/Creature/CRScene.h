@@ -8,12 +8,8 @@
 #ifndef CRSCENE_H
 #define CRSCENE_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
 #include <Foundation/Scene.h>
-
-#include <vector>
+#include <Creature/SprCRScene.h>
 
 //@{
 namespace Spr{;

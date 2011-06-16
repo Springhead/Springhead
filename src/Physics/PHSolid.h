@@ -8,14 +8,15 @@
 #ifndef PHSOLID_H
 #define PHSOLID_H
 
-#include <SprPhysics.h>
-#include <Foundation/Object.h>
-#include <Collision/CDShape.h>
-#include <Physics/PHScene.h>
+#include <Physics/SprPHSolid.h>
 #include <Physics/PHEngine.h>
 #include <Physics/PHSpatial.h>
+#include <Collision/SprCDShape.h>
+#include <Foundation/Object.h>
 
 namespace Spr{;
+
+class CDShape;
 
 ///	バウンディングボックスの実装
 class PHBBox{

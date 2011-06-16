@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Foundation/Foundation.h>
-#include <Framework/Framework.h>
+#include <Foundation/UTTypeDesc.h>
+#include <Framework/FWSdk.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

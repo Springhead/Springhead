@@ -5,11 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-
 #include <Framework/FWGrabCoupling.h>
-#include <Framework/SprFWApp.h>
-#include <Physics/PHConstraintEngine.h>
-#include <sstream>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 namespace Spr{;
 
@@ -18,52 +17,49 @@ FWGrabCoupling::FWGrabCoupling(){
 	cluchTrans = Posed();
 }
 void FWGrabCoupling::CreatePointerSolid(){
+	if(!vcSolid.empty())
+		return;
+
 	bool grabFlag = true;
 
-	if(grabFlag){
-		if(vcSolid.size()== 0 ){
-			int N = NIAPointers();
-			for(int i = 0; i < N; i++){
-				PHSolidIf* pSolid = GetIAPointer(i)->GetPointerSolid(); //物理シミュレーションのポインタ
-				pSolid->SetMass(1e30f);
-				pSolid->SetInertia(1e30f*Matrix3d().Unit());
-				pSolid->SetGravity(false);
-				pSolid->SetIntegrate(false);
-				pSolid->SetDynamical(false);
-				GetPHScene()->SetContactMode(pSolid,PHSceneDesc::MODE_NONE);
-
-			}
-		}
-	}else{
-		if(vcSolid.size()== 0 ){
-			int N = NIAPointers();
-			for(int i = 0; i < N; i++){
-				PHSolidIf* pSolid = GetIAPointer(i)->GetPointerSolid(); //物理シミュレーションのポインタ
-				
-				//vcSolidの作成(インタフェースに同期して動くshapeのないポインタ)
-				PHSolidDesc desc;
-				desc.mass = 1e20f;
-				desc.inertia *= 1e30f;
-				vcSolid.push_back( GetPHScene()->CreateSolid(desc) );
-				vcSolid[i]->SetGravity(false);
-				vcSolid[i]->SetIntegrate(false);
-				vcSolid[i]->SetDynamical(false);
-
-				//vcJointの作成
-				PHSpringDesc jointDesc;
-				{
-					jointDesc.poseSocket.Pos()	= Vec3f(0.0f, 0.0f, 0.0f);
-					jointDesc.posePlug.Pos()	= Vec3f(0.0f, 0.0f, 0.0f);
-					jointDesc.spring			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->springK;
-					jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->damperD;
-					jointDesc.springOri			= GetIAPointer(i)->springOriK;
-					jointDesc.damperOri			= GetIAPointer(i)->damperOriD;
-				}
-				vcJoint.push_back( GetPHScene()->CreateJoint(vcSolid[i], pSolid, jointDesc) );
-			}
-		}
+	int N = NIAPointers();
+	for(int i = 0; i < N; i++){
+		PHSolidIf* pSolid = GetIAPointer(i)->GetPointerSolid(); //物理シミュレーションのポインタ
+		pSolid->SetMass(1e30f);
+		pSolid->SetInertia(1e30f*Matrix3d().Unit());
+		pSolid->SetGravity(false);
+		pSolid->SetIntegrate(false);
+		pSolid->SetDynamical(false);
+		GetPHScene()->SetContactMode(pSolid,PHSceneDesc::MODE_NONE);
 	}
+#if 0			
+	int N = NIAPointers();
+	for(int i = 0; i < N; i++){
+		PHSolidIf* pSolid = GetIAPointer(i)->GetPointerSolid(); //物理シミュレーションのポインタ
+		//vcSolidの作成(インタフェースに同期して動くshapeのないポインタ)
+		PHSolidDesc desc;
+		desc.mass = 1e20f;
+		desc.inertia *= 1e30f;
+		vcSolid.push_back( GetPHScene()->CreateSolid(desc) );
+		vcSolid[i]->SetGravity(false);
+		vcSolid[i]->SetIntegrate(false);
+		vcSolid[i]->SetDynamical(false);
+
+		//vcJointの作成
+		PHSpringDesc jointDesc;
+		{
+			jointDesc.poseSocket.Pos()	= Vec3f(0.0f, 0.0f, 0.0f);
+			jointDesc.posePlug.Pos()	= Vec3f(0.0f, 0.0f, 0.0f);
+			jointDesc.spring			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->springK;
+			jointDesc.damper			= Vec3f(1.0f, 1.0f, 1.0f) * GetIAPointer(i)->damperD;
+			jointDesc.springOri			= GetIAPointer(i)->springOriK;
+			jointDesc.damperOri			= GetIAPointer(i)->damperOriD;
+		}
+		vcJoint.push_back( GetPHScene()->CreateJoint(vcSolid[i], pSolid, jointDesc) );
+	}
+#endif
 }
+
 void FWGrabCoupling::GrabSolid(){
 	//ポインタの接触判定から判定する方法
 	int N = NIAPointers();
@@ -290,56 +286,55 @@ void FWGrabCoupling::AdjustSpring(double n){
 }
 
 void FWGrabCoupling::UpdateInterface(){
-
-	
 	int N = NIAPointers();
-		double pdt = GetPHScene()->GetTimeStep();
-		for(int i = 0; i < N; i++){
-			FWInteractPointer* iPointer = GetIAPointer(i)->Cast();
-			double s = iPointer->GetWorldScale() * iPointer->GetPosScale();
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				//6自由度インタフェースの場合
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-				hif->Update((float)pdt);
-				PHSolid* hiSolid = &iPointer->hiSolid;
-				Posed hifPose;
+	double pdt = GetPHScene()->GetTimeStep();
 
-				hifPose.Pos() = (Vec3d)hif->GetPosition() * s;
-				hifPose.Ori() = hif->GetOrientation();
-				Posed newCameraPose; 
-				newCameraPose.Ori() = GetIAPointer(i)->GetCameraOri();
+	for(int i = 0; i < N; i++){
+		FWInteractPointer* iPointer = GetIAPointer(i)->Cast();
+		double s = iPointer->GetWorldScale() * iPointer->GetPosScale();
+		if(DCAST(HIHapticIf, iPointer->GetHI())){
+			//6自由度インタフェースの場合
+			HIHapticIf* hif = iPointer->GetHI()->Cast();
+			hif->Update((float)pdt);
+			PHSolid* hiSolid = &iPointer->hiSolid;
+			Posed hifPose;
 
-				//Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition()*hifPose;
-				Posed origin = GetIAPointer(i)->GetCameraOrigin();
+			hifPose.Pos() = hif->GetPosition() * s;
+			hifPose.Ori() = hif->GetOrientation();
+			Posed newCameraPose; 
+			newCameraPose.Ori() = GetIAPointer(i)->GetCameraOri();
+
+			//Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition()*hifPose;
+			Posed origin = GetIAPointer(i)->GetCameraOrigin();
 				
-				Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition() * GetIAPointer(i)->cameraPose * hifPose * origin;
-				origin  = hifPose.Inv() * newCameraPose.Inv() * GetIAPointer(i)->cameraPose * hifPose * origin;
-				GetIAPointer(i)->SetCameraOrigin(origin);
-				GetIAPointer(i)->cameraPose = newCameraPose;
+			Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition() * GetIAPointer(i)->cameraPose * hifPose * origin;
+			origin  = hifPose.Inv() * newCameraPose.Inv() * GetIAPointer(i)->cameraPose * hifPose * origin;
+			GetIAPointer(i)->SetCameraOrigin(origin);
+			GetIAPointer(i)->cameraPose = newCameraPose;
 
-				//hiSolidPose =	cameraPose*hiSolidPose; //カメラの移動に対して移動方向を変更
-				if(!cluchFlag){
-					hiSolid->SetPose(cluchTrans * hiSolidPose);
-					hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
-					hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
-					cluchPose[0] = cluchTrans * hiSolidPose;
-				}else{
-					//クラッチ時
-					cluchPose[1] = hiSolidPose;
-					cluchTrans = cluchPose[0] * cluchPose[1].Inv();
-				}
-			}else{
-				//3自由度インタフェースの場合
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-				hif->Update((float)pdt);
-				PHSolid* hiSolid = &iPointer->hiSolid;
+			//hiSolidPose =	cameraPose*hiSolidPose; //カメラの移動に対して移動方向を変更
+			if(!cluchFlag){
+				hiSolid->SetPose(cluchTrans * hiSolidPose);
 				hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
-				Posed hifPose;
-				hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
-				Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition()*GetIAPointer(i)->GetPointersCalibPosition() * hifPose;
-				hiSolid->SetPose(hiSolidPose);
+				hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
+				cluchPose[0] = cluchTrans * hiSolidPose;
+			}else{
+				//クラッチ時
+				cluchPose[1] = hiSolidPose;
+				cluchTrans = cluchPose[0] * cluchPose[1].Inv();
 			}
+		}else{
+			//3自由度インタフェースの場合
+			HIHapticIf* hif = iPointer->GetHI()->Cast();
+			hif->Update((float)pdt);
+			PHSolid* hiSolid = &iPointer->hiSolid;
+			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
+			Posed hifPose;
+			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
+			Posed hiSolidPose = GetIAPointer(i)->GetDefaultPosition()*GetIAPointer(i)->GetPointersCalibPosition() * hifPose;
+			hiSolid->SetPose(hiSolidPose);
 		}
+	}
 }
 void FWGrabCoupling::UpdatePointerDirect(){
 	//直接ポインタを更新する
@@ -361,15 +356,15 @@ void FWGrabCoupling::UpdateGrabPointer(){
 	SpatialVector outForce;
 	FWInteractPointer* iPointer;
 	for(int i = 0; i<N ; i++){
-			PHSolidIf* pSolid = GetIAPointer(i)->GetPointerSolid(); //物理シミュレーションのポインタ
-			iPointer = GetIAPointer(i)->Cast();
-			PHSolid* hiSolid = &iPointer->hiSolid;					//インタフェースの位置を格納したPHSolid
-			hiSolid->SetPose(hiSolid->GetPose());				//vcSolidの位置をインタフェースの位置にする
+		PHSolidIf* pSolid = GetIAPointer(i)->GetPointerSolid(); //物理シミュレーションのポインタ
+		iPointer = GetIAPointer(i)->Cast();
+		PHSolid* hiSolid = &iPointer->hiSolid;					//インタフェースの位置を格納したPHSolid
+		hiSolid->SetPose(hiSolid->GetPose());				//vcSolidの位置をインタフェースの位置にする
 
-			//ジョイントに働く力(world座標系)を取得
-			outForce = SpatialVector();
-			Posed jPose;
-			Posed cPose = iPointer->GetCameraOrigin();
+		//ジョイントに働く力(world座標系)を取得
+		outForce = SpatialVector();
+		Posed jPose;
+		Posed cPose = iPointer->GetCameraOrigin();
 
 		if(GetIAPointer(i)->GetGrabFlag()==3){
 			//GrabSolidの場合
@@ -402,28 +397,8 @@ void FWGrabCoupling::UpdateGrabPointer(){
 			}
 		}
 		lastOutForce = outForce;
-		//outForce.v() = Vec3d(0.0,0.0,0.0);
 
-		//DSTR<<outForce<<std::endl;
-
-		/// インタフェースへ力を出力
-		if(iPointer->bForce){
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(outForce.v(), outForce.w());
-			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(outForce.v());
-			}
-		}else{
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(Vec3d(), Vec3d());
-			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(Vec3d());
-			}		
-		}
+		iPointer->OutputForce(outForce);
 	}
 	UpdatePointerDirect();
 }
@@ -457,25 +432,7 @@ void FWGrabCoupling::UpdatePointer(){
 
 		DSTR<<jPose * outForce.v() * (-s)<<" 変換後 "<<cPose *jPose * outForce.v() * (-s)<<std::endl;
 
-		/// インタフェースへ力を出力
-		if(iPointer->bForce){
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(outForce.v(), outForce.w());
-			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(outForce.v());
-			}
-		}else{
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(Vec3d(), Vec3d());
-			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(Vec3d());
-			}		
-		}
-
+		iPointer->OutputForce(outForce);
 	}
 }
 

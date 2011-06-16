@@ -14,13 +14,16 @@
 	しかし，似ている箇所があります．もし派生物だと認定された場合，
 	ライセンスがLGPLとなります．ご注意ください．
 */
-#include "Collision.h"
 #pragma hdrstop
 
-#include "CDDetectorImp.h"
-#include <Foundation/Scene.h>
+#include <Collision/CDBox.h>
+#include <Collision/CDSphere.h>
+#include <Collision/CDCapsule.h>
+#include <Collision/CDRoundCone.h>
+#include <Collision/CDConvexMesh.h>
+#include <Collision/CDDetectorImp.h>
+#include <Physics/SprPHSdk.h>
 #include <fstream>
-//#include <windows.h>
 
 bool bGJKDebug;
 

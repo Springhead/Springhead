@@ -8,21 +8,20 @@ FWAppSample::FWAppSample(){
 }
 
 void FWAppSample::Init(int argc, char* argv[]){
-	SetGRAdaptee(TypeGLUT);									// CGをOpenGL(GLUT)で描画指定
-	GRInit(argc, argv);										// GLUTの初期化
-
 	CreateSdk();											// Sdkの作成
 	GetSdk()->CreateScene();								// Sceneの作成
 	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);	// シミュレーションの刻み時間を設定
 
+	SetGRAdaptee(TypeGLUT);									// CGをOpenGL(GLUT)で描画指定
+	GRInit(argc, argv);										// GLUTの初期化
+
 	FWWinDesc windowDesc;					// GLのウィンドウディスクリプタ
 	windowDesc.title = "Springhead2";		// ウィンドウのタイトル
 	CreateWin(windowDesc);					// ウィンドウの作成とシーンの割り当て
-	InitWindow();							// ウィンドウの初期化(描画するsceneを設定)
 	InitCameraView();						// カメラビューの初期化
 
-	CreateObject();		// 剛体を作成
-	CreateTimer();		// タイマーの生成
+	CreateObjects();		// 剛体を作成
+	CreateTimer();			// タイマーの生成
 }
 
 void FWAppSample::TimerFunc(int id){	
@@ -38,10 +37,10 @@ void FWAppSample::InitCameraView(){
 		"(0.0282657 -0.380037 0.92454 13.7569)"
 		"(     0      0      0      1))"
 	);
-	issView >> cameraInfo.view;
+	GetCurrentWin()->GetTrackball()->SetAffine(issView);
 }
 
-void FWAppSample::CreateObject(){
+void FWAppSample::CreateObjects(){
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 	PHSolidDesc desc;
 	CDBoxDesc bd;
@@ -86,14 +85,14 @@ void FWAppSample::Display(){
 
 	// シーンの描画
 	GetSdk()->SetDebugMode(true);
-	GetSdk()->GetRender()->SetViewMatrix(cameraInfo.view.inv());
+	GetSdk()->GetRender()->SetViewMatrix(GetCurrentWin()->GetTrackball()->GetAffine().inv());
 	GetSdk()->Draw();
 	GetSdk()->GetRender()->SwapBuffers();
 }
 
 void FWAppSample::Reset(){
 	GetSdk()->GetScene()->GetPHScene()->Clear();
-	CreateObject();
+	CreateObjects();
 }
 
 void FWAppSample::Keyboard(int key, int x, int y){

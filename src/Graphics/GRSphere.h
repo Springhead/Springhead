@@ -8,8 +8,8 @@
 #ifndef GRSphere_H
 #define GRSphere_H
 
-#include <SprGraphics.h>
-#include "GRFrame.h"
+#include <Graphics/SprGRSphere.h>
+#include <Graphics/GRFrame.h>
 
 namespace Spr{;
 

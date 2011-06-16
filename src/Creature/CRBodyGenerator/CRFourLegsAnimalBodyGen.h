@@ -8,15 +8,7 @@
 #ifndef CRFOURLEGSANIMALBODYGEN_H
 #define CRFOURLEGSANIMALBODYGEN_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-#include <Physics/PHConstraint.h>
-#include <Physics/PhysicsDecl.hpp>
-
-#include <vector>
-
-#include "CRBodyGen.h"
+#include <Creature/CRBodyGenerator/CRBodyGen.h>
 
 //@{
 namespace Spr{;

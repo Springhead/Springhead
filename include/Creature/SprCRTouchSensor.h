@@ -8,7 +8,11 @@
 #ifndef SPR_CR_TOUCHSENSOR_IF_H
 #define SPR_CR_TOUCHSENSOR_IF_H
 
+#include <Creature/SprCREngine.h>
+
 namespace Spr{;
+
+struct PHSolidIf;
 
 struct CRContactInfo {
 	double		dimension;

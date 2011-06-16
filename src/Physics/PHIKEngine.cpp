@@ -5,10 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
+#include <Physics/PHIKEngine.h>
+#include <Physics/PHIKActuator.h>
+#include <Physics/PHIKEndEffector.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "PHIKEngine.h"
-#include "Physics/PHJoint.h"
+#endif
 
 using namespace std;
 namespace Spr{

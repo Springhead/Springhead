@@ -11,9 +11,12 @@
 */
 #ifndef SPR_PHJOINTIf_H
 #define SPR_PHJOINTIf_H
+
 #include <Foundation/SprObject.h>
 
 namespace Spr{;
+
+struct PHSolidIf;
 
 /** \addtogroup gpPhysics */
 //@{
@@ -258,16 +261,6 @@ struct PHJoint1DIf : public PHJointIf{
 	 */
 	void	GetRange(double& lower, double& upper);
 
-	/** @brief モータトルクを設定する
-		@param torque モータトルク
-	 */
-	void	SetMotorTorque(double t);
-
-	/** @brief モータトルクを取得する
-		@return モータトルク
-	 */
-	double	GetMotorTorque();
-
 	//void	SetDesiredPosition(double p, double t);	/// 目標変位を設定する
 	//double	GetDesiredPosition();				/// 目標変位を取得する
 
@@ -342,6 +335,17 @@ struct PHJoint1DIf : public PHJointIf{
 		@return 補正値
 	*/
 	double	GetOffsetForce();
+
+	/// SetOffsetForceと等価．どちらかのみで十分　tazz
+	/** @brief モータトルクを設定する
+		@param torque モータトルク
+	 */
+	void	SetMotorTorque(double t);
+
+	/** @brief モータトルクを取得する
+		@return モータトルク
+	 */
+	double	GetMotorTorque();
 
 	/** @brief 関節の出すことができる最大トルク(N)の絶対値を設定する
 		@param max ある関節の最大トルク(0～DBL_MAX)

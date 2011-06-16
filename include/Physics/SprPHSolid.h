@@ -11,6 +11,7 @@
 */
 #ifndef SPR_PHSolidIf_H
 #define SPR_PHSolidIf_H
+
 #include <Foundation/SprObject.h>
 
 /**	\addtogroup gpPhysics	*/
@@ -26,8 +27,6 @@ struct PHFrameIf: public SceneObjectIf{
 	Posed GetPose();
 	void SetPose(Posed p);
 };
-
-
 
 ///	剛体のステート
 struct PHSolidState{

@@ -462,7 +462,7 @@ PyObject* EPPosed_Inv( EPPosed* self );
 PyObject* EPPosed_Rot( EPPosed* self,PyObject* tuple );//Overloaded
 PyObject* EPPosed_ToAffine( EPPosed* self,EPAffined* var1 );
 PyObject* EPPosed_Trn( EPPosed* self,PyObject* tuple );//Overloaded
-PyObject* EPPosed_Unit( EPPosed* self,PyObject* tuple );//Overloaded
+PyObject* EPPosed_Unit( EPPosed* self );
 PyObject* EPPosed_clear( EPPosed* self );
 PyObject* EPPosed_norm( EPPosed* self );
 PyObject* EPPosed_resize( EPPosed* self,PyLongObject* var1 );

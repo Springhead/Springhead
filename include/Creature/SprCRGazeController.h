@@ -8,6 +8,8 @@
 #ifndef SPR_CR_EYECONTROLLER_IF_H
 #define SPR_CR_EYECONTROLLER_IF_H
 
+#include <Creature/SprCREngine.h>
+
 namespace Spr{;
 
 // ------------------------------------------------------------------------------

@@ -1,15 +1,14 @@
-#include "Framework.h"
-#include <Framework/SprFWFemMesh.h>
-#include <Graphics/GRFrame.h>
-#include <Physics/PHConstraint.h>
-#include <Foundation/UTLoadHandler.h>
-#include "FWFemMeshThremo.h"
-#include "FWSprTetgen.h"
-
-
-#include <Collision/CDQuickHull2DImp.h>
-
-
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+#include <Framework/FWFemMesh.h>
+#include <Framework/FWSprTetGen.h>
+#include <Physics/PHFemMeshThermo.h>
+#include <Graphics/GRMesh.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

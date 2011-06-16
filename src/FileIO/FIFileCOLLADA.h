@@ -8,8 +8,8 @@
 #ifndef FIFILECOLLADA_H
 #define FIFILECOLLADA_H
 
-#include "FIFile.h"
-#include "FISpirit.h"
+#include <FileIO/FIFile.h>
+#include <FileIO/FISpirit.h>
 
 namespace Spr{;
 
@@ -21,7 +21,7 @@ protected:
 		property, id, string, text, data, boolVal, iNum, rNum, str, exp;
 	FISkipParser cmt;
 public:
-	FIFileCOLLADA();
+	FIFileCOLLADA(const FIFileCOLLADADesc& desc = FIFileCOLLADADesc());
 	void LoadImp(FILoadContext* fc);
 	virtual void PushLoaderContext(FILoadContext* fc);
 	virtual void PopLoaderContext();

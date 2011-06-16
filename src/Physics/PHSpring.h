@@ -8,9 +8,9 @@
 #ifndef PHSPRING_H
 #define PHSPRING_H
 
-#include <SprPhysics.h>
-#include <Foundation/Object.h>
-#include <Physics/PHJoint.h>
+#include <Physics/SprPHJoint.h>
+#include <Physics/PHConstraint.h>
+#include <Physics/PHTreeNode.h>
 
 namespace Spr{;
 

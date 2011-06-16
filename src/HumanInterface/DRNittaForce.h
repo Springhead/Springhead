@@ -12,8 +12,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include <HumanInterface/HIRealDevice.h>
-#include "DVForceBase.h"
+#include <HumanInterface/HIDevice.h>
 #include <base/Affine.h>
 
 namespace Spr {
@@ -21,16 +20,16 @@ namespace Spr {
 
 class SPR_DLL DRNittaForce: public HIRealDevice{
 public:
+	SPR_OBJECTDEF_NOIF(DRNittaForce);
+
 	///	仮想デバイス
-	class VirtualDevice:public DVForceBase{
-	protected:
-		DRNittaForce* realDevice;
+	class DV: public DVForce{
 	public:
-		VirtualDevice(DRNittaForce* r):realDevice(r){}
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		virtual const char* Name() const{ return realDevice->Name(); }
-		virtual int GetDOF() const { return 6; }
-		virtual float GetForce(int ch) const { return realDevice->GetForce(ch); }
+		DV(DRNittaForce* r):DVForce(r){}
+		DRNittaForce* GetRealDevice(){ return realDevice->Cast(); }
+		
+		virtual int GetDOF() { return 6; }
+		virtual float GetForce(int ch) { return GetRealDevice()->GetForce(ch); }
 	};
 
 	enum{
@@ -60,7 +59,6 @@ public:
 		DOF					=	6
 	};
 protected:
-	char name[100];
 	unsigned int baseAdr;
 	unsigned int boardNumber;
 	unsigned short software_ver_no;
@@ -72,15 +70,13 @@ protected:
 
 public:
 	///
-	DRNittaForce(int boardNum);
+	DRNittaForce(int boardNum=0);
 	///
 	virtual ~DRNittaForce();
 	///	初期化
 	virtual bool Init();
 	///	登録
-	virtual void Register(HIVirtualDevicePool& vpool);
-	///	名前
-	virtual const char* Name() const { return name; }
+	//virtual void Register(HIVirtualDevicePool& vpool);
 	///	ボード上のタイマーの読み出し
 	unsigned short GetCounter2K();
 	///	ボード上のタイマーの読み出し

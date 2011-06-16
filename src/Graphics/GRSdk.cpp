@@ -5,13 +5,14 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Graphics/Graphics.h>
+#include <Graphics/GRSdk.h>
+#include <Graphics/GRMesh.h>
+#include <Graphics/GRBlendMesh.h>
+#include <Graphics/GRSphere.h>
+#include <Graphics/GRDeviceGL.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "GRScene.h"
-#include "GRMesh.h"
-#include "GRBlendMesh.h"
-#include "GRSphere.h"
-#include "GRFrame.h"
+#endif
 
 namespace Spr{;
 GRSdkIf* SPR_CDECL GRSdkIf::CreateSdk(){

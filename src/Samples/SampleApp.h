@@ -15,7 +15,7 @@
 #include <Springhead.h>
 #include <Framework/SprFWApp.h>
 #include <Framework/SprFWEditor.h>
-
+#include <map>
 
 using namespace std;
 using namespace Spr;
@@ -195,9 +195,10 @@ public:
 		if(id < 0 || numScenes <= id)
 			return;
 		curScene = id;
-		GetSdk()->SwitchScene(GetSdk()->GetScene(id));
-		fwScene = GetSdk()->GetScene();
+		// id番目のシーンを選択
+		fwScene = GetSdk()->GetScene(id);
 		phScene = fwScene->GetPHScene();
+		GetCurrentWin()->SetScene(fwScene);
 		editor.SetObject(phScene);
 		//cameraInfo.Fit(GetSdk()->GetRender()->GetCamera(), activeHandler->GetSceneRadius());
 	}
@@ -425,7 +426,7 @@ public:
 
 public: /** 派生クラスが実装する関数 **/
 
-	///
+	/// シーン構築を行う．
 	virtual void BuildScene(){}
 
 	/// 1ステップのシミュレーション
@@ -540,19 +541,19 @@ public: /** 派生クラスが実装する関数 **/
 public: /** FWAppの実装 **/
 
 	virtual void Init(int argc, char* argv[]){
+		CreateSdk();
+
 		SetGRAdaptee(TypeGLUT);
 		GRInit(argc, argv);
-		CreateSdk();
 
 		FWWinDesc windowDesc;
 		windowDesc.width = 1024;
 		windowDesc.height = 768;
 		windowDesc.title = appName;
 		CreateWin(windowDesc);
-		InitWindow();
-
+		
 		/// 光源設定
-		GRRenderIf* render = GetSdk()->GetRender();
+		GRRenderIf* render = GetCurrentWin()->GetRender();
 		GRLightDesc ld;
 		ld.diffuse  = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
 		ld.specular = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -609,7 +610,6 @@ public: /** FWAppの実装 **/
 			// シーン構築
 			curScene = i;
 			BuildScene();
-	
 		}
 		states = ObjectStatesIf::Create();
 		SwitchScene(0);
@@ -631,14 +631,15 @@ public: /** FWAppの実装 **/
 
 	// 描画関数．描画要求が来たときに呼ばれる
 	virtual void Display() {
-		GRRenderIf *render = GetSdk()->GetRender();
+		FWWinIf* win = GetCurrentWin();
+		GRRenderIf *render = win->GetRender();
 		render->ClearBuffer();
 		render->BeginScene();
 
 		GRCameraDesc camera = render->GetCamera();
-		camera.front = 0.3;
+		camera.front = 0.3f;
 		render->SetCamera(camera);
-		render->SetViewMatrix(cameraInfo.view.inv());
+		render->SetViewMatrix(win->GetTrackball()->GetAffine().inv());
 
 		OnDraw(render);
 		DrawHelp(render);

@@ -12,14 +12,14 @@ public:
 	bool bDebug;									///< デバックモードの切り替え
 	FWXfileLoader();								///< コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
 	virtual void Init(int argc, char* argv[]);		///< GLUTの初期化
-	virtual void TimerFunc(int id);
-	virtual void IdleFunc();
-	virtual void Display();							///< 描画
+	//virtual void TimerFunc(int id);
+	//virtual void IdleFunc();
+	//virtual void Display();							///< 描画
 	virtual void Keyboard(int key, int x, int y);	///< キーボード関数
 
-	void InitCameraView();							///< カメラ座標				
+	//void InitCameraView();							///< カメラ座標				
 	void Reset();
-	void Step();									///< シミュレーションを1ステップ進める
+	//void Step();									///< シミュレーションを1ステップ進める
 }; 
 
 #endif

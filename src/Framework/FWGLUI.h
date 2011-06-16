@@ -1,30 +1,24 @@
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
 #ifndef FWGLUI_H
 #define FWGLUI_H
-#include <sstream>
-#include <string>
-#include <vector>
-#include <Springhead.h>
+
 #include <Framework/FWGLUT.h>
-#include <Framework/SprFWApp.h>
 #include <GL/glui.h>
 
-using namespace std;
-
 namespace Spr{;
-
-
-class FWGLUIDesc{
-public:
-	int		fromTop;					//< 別ウィンドウを生成するときの上からのdot数
-	int		fromLeft;					//< 別ウィンドウを生成するときの左からのdot数
-	int		subPosition;				//< OpenGL描画ウィンドウの中にGUIを組み込んでしまう場合の組み込む場所
-	char*	gluiName;					//< 別ウィンドウを作成する場合のウィンドウの名前
-	bool	createOtherWindow;			//< GUIを別ウィンドウにするかどうか
+/*
+struct FWGLUIDesc{
 	
 	//デフォルトコンストラクタ
 	FWGLUIDesc();
 };
-
+*/
 /** @brief GLUIを用いるアプリケーションクラス
 		   基本的にFWAppGLUIを自分のアプリケーションのクラスに継承させ，
 		   DesignGUIを必ずオーバーライドして使用する.
@@ -38,17 +32,30 @@ public:
 		   (クラス内の関数定義は必ず__thiscallになる)   
 	*/
 
-class FWGLUI :public FWGLUT, public FWGLUIDesc{
+class FWGLUI : public FWGLUT/*, public FWGLUIDesc*/{
+//public:
+//	SPR_OBJECTDEF_NOIF(FWGLUI);
 protected:
 	std::vector<GLUI*> guis;
+
+	int		fromTop;					//< 別ウィンドウを生成するときの上からのdot数
+	int		fromLeft;					//< 別ウィンドウを生成するときの左からのdot数
+	int		subPosition;				//< OpenGL描画ウィンドウの中にGUIを組み込んでしまう場合の組み込む場所
+	char*	gluiName;					//< 別ウィンドウを作成する場合のウィンドウの名前
+	bool	createOtherWindow;			//< GUIを別ウィンドウにするかどうか
+
 public:
-	~FWGLUI();
 	virtual void SPR_CDECL DesignGUI(){};
 	/** GLUIのメインループをスタートする
 		FWGLUTのStartMainLoop()とは中身が異なるので消さないこと．
 	 */
-	virtual void StartMainLoop();			
-	virtual GLUI*		 CreateGUI(int wid = 0, FWGLUIDesc desc = FWGLUIDesc());
+	virtual void	StartMainLoop();			
+	//virtual GLUI*	CreateGUI(int wid = 0, FWGLUIDesc desc = FWGLUIDesc());
+	GLUI* CreateGUI(int wid = 0, int top = 50, int left = 30, int subPos = GLUI_SUBWINDOW_RIGHT,
+		char* name = "Menu", bool other = true);
+
+	FWGLUI(FWApp* a=0):FWGLUT(a){}
+	~FWGLUI();
 };
 
 }

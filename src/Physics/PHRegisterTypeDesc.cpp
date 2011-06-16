@@ -5,9 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Foundation/Foundation.h>
+#include <Foundation/UTTypeDesc.h>
 #include <Physics/PHSdk.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 namespace Spr{ 
 static UTTypeDesc* desc; 

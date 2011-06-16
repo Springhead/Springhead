@@ -7,7 +7,8 @@
  */
 #ifndef PHSDK_H
 #define PHSDK_H
-#include <Foundation/Foundation.h>
+
+#include <Foundation/Scene.h>
 #include <Physics/SprPHSdk.h>
 
 namespace Spr {;
@@ -41,10 +42,9 @@ public:
 	~PHSdk();
 
 	virtual void			Clear();
-	virtual PHSceneIf*		CreateScene();
 	virtual PHSceneIf*		CreateScene(const PHSceneDesc& desc);
 	virtual int				NScene();
-	virtual PHSceneIf*		GetScene(size_t i);
+	virtual PHSceneIf*		GetScene(int i);
 	virtual void			MergeScene(PHSceneIf* scene0, PHSceneIf* scene1);
 	virtual CDShapeIf*		CreateShape(const IfInfo* ii, const CDShapeDesc& desc);
 	virtual int				NShape(){ return (int)shapes.size(); }

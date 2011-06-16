@@ -7,9 +7,9 @@
  */
 
 #include <Framework/FWVirtualCoupling.h>
-#include <Framework/SprFWApp.h>
-#include <Physics/PHConstraintEngine.h>
-#include <sstream>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 namespace Spr{;
 
@@ -141,9 +141,9 @@ void FWVirtualCoupling::UpdateInterface(){
 		for(int i = 0; i < N; i++){
 			FWInteractPointer* iPointer = GetIAPointer(i)->Cast();
 			double s = iPointer->GetWorldScale() * iPointer->GetPosScale();
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
+			if(DCAST(HIHapticIf, iPointer->GetHI())){
 				//6自由度インタフェースの場合
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+				HIHapticIf* hif = iPointer->GetHI()->Cast();
 				hif->Update((float)pdt);
 				PHSolid* hiSolid = &iPointer->hiSolid;
 				hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
@@ -155,7 +155,7 @@ void FWVirtualCoupling::UpdateInterface(){
 				hiSolid->SetPose(hiSolidPose);
 			}else{
 				//3自由度インタフェースの場合
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+				HIHapticIf* hif = iPointer->GetHI()->Cast();
 				hif->Update((float)pdt);
 				PHSolid* hiSolid = &iPointer->hiSolid;
 				hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
@@ -198,19 +198,19 @@ void FWVirtualCoupling::UpdatePointer(){
 
 		/// インタフェースへ力を出力
 		if(iPointer->bForce){
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+			if(DCAST(HIHapticIf, iPointer->GetHI())){
+				HIHapticIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(outForce.v(), outForce.w());
 			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+				HIHapticIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(outForce.v());
 			}
 		}else{
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
+			if(DCAST(HIHapticIf, iPointer->GetHI())){
+				HIHapticIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(Vec3d(), Vec3d());
 			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
+				HIHapticIf* hif = iPointer->GetHI()->Cast();
 				hif->SetForce(Vec3d());
 			}		
 		}

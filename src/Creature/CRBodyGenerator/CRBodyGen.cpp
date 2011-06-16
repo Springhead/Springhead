@@ -5,33 +5,41 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CRBodyGen.h"
-
+#include <Creature/CRBodyGenerator/CRBodyGen.h>
+#include <Physics/SprPHScene.h>
+#include <algorithm>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
 
 namespace Spr{
 
-PHJointIf* CRBodyGen::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHHingeJointDesc desc){
+CRBodyGen::CRBodyGen(const CRBodyGenDesc& desc, PHSceneIf* s):CRBodyGenDesc(desc){
+	phScene		= s;
+	phSdk		= phScene->GetSdk();
+}
+
+PHJointIf* CRBodyGen::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, const PHHingeJointDesc& desc){
 	PHJointIf* joint;
 	if (jointOrder == PLUG_PARENT) {
 		joint = phScene->CreateJoint(soChild, soParent, desc);
 	} else { // SOCKET_PARENT
-		Posed pp=desc.posePlug, ps=desc.poseSocket;
-		desc.posePlug=ps; desc.poseSocket=pp;
-		joint = phScene->CreateJoint(soParent, soChild, desc);
+		PHHingeJointDesc descSwap;
+		descSwap = desc;
+		std::swap(descSwap.posePlug, descSwap.poseSocket);
+		joint = phScene->CreateJoint(soParent, soChild, descSwap);
 	}
 	return joint;
 }
 
-PHJointIf* CRBodyGen::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, PHBallJointDesc desc){
+PHJointIf* CRBodyGen::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, const PHBallJointDesc& desc){
 	PHJointIf* joint;
 	if (jointOrder == PLUG_PARENT) {
 		joint = phScene->CreateJoint(soChild, soParent, desc);
 	} else { // SOCKET_PARENT
-		Posed pp=desc.posePlug, ps=desc.poseSocket;
-		desc.posePlug=ps; desc.poseSocket=pp;
+		PHBallJointDesc descSwap;
+		descSwap = desc;
+		std::swap(descSwap.posePlug, descSwap.poseSocket);
 		joint = phScene->CreateJoint(soParent, soChild, desc);
 	}
 	return joint;

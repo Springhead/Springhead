@@ -9,11 +9,11 @@
 #define SPR_FWINTERACT_SCENEIF_H
 
 #include <Foundation/SprScene.h>
-#include <Framework/SprFWScene.h>
 #include <Framework/SprFWInteractPointer.h>
 
-
 namespace Spr{;
+
+struct FWSceneIf;
 
 class FWInteractAdaptee;
 
@@ -52,7 +52,6 @@ public:
 struct FWInteractSceneIf : public SceneIf{
 public:
 	SPR_IFDEF(FWInteractScene);
-
 
 	FWSceneIf* GetScene();
 	void CreateIAAdaptee(FWInteractMode mode);

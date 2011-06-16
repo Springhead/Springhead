@@ -5,10 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
+#include <Physics/PHIKEndEffector.h>
+#include <Physics/PHIKActuator.h>
+#include <Physics/PHSolid.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "PHIKEndEffector.h"
-#include "Physics/PHJoint.h"
+#endif
 
 using namespace std;
 namespace Spr{;
@@ -41,6 +43,22 @@ PHIKEndEffectorDesc::PHIKEndEffectorDesc() {
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // IKEndEffector
+
+bool PHIKEndEffector::AddChildObject(ObjectIf* o){
+	PHSolidIf* so = o->Cast();
+	if (so) { this->solid = so; return true; }
+	return false;
+}
+
+ObjectIf* PHIKEndEffector::GetChildObject(size_t pos){
+	if (pos == 0 && this->solid != NULL) { return this->solid; }
+	return NULL;
+}
+
+size_t PHIKEndEffector::NChildObject() const {
+	if (this->solid != NULL) { return 1; }
+	return 0;
+}
 
 void PHIKEndEffector::Enable(bool enable){
 	this->bEnabled = enable;

@@ -8,7 +8,7 @@
 #ifndef PHJOINTLIMIT_H
 #define PHJOINTLIMIT_H
 
-#include <SprPhysics.h>
+#include <Base/TQuaternion.h>
 #include <Physics/PhysicsDecl.hpp>
 
 namespace Spr{;

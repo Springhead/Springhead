@@ -20,9 +20,13 @@ namespace Spr{;
 //@{
 
 /**	@brief	NovintFalconのインタフェース	*/
-struct HINovintFalconIf: public HIForceInterface6DIf{
+struct HINovintFalconIf: public HIHapticIf{
 	SPR_VIFDEF(HINovintFalcon);
 };
+struct HINovintFalconDesc{
+	SPR_DESCDEF(HINovintFalcon);
+};
+
 
 //@}
 }

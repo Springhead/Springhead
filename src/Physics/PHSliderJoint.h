@@ -8,7 +8,7 @@
 #ifndef PHSLIDERJOINT_H
 #define PHSLIDERJOINT_H
 
-#include <SprPhysics.h>
+#include <Physics/SprPHJoint.h>
 #include <Physics/PHConstraint.h>
 #include <Physics/PHTreeNode.h>
 

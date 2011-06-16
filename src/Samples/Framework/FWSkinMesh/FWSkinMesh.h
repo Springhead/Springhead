@@ -42,15 +42,15 @@ class MyApp;
 class MyApp: public FWApp{
 public:
 	int texSize;
-	GLubyte bits[256][256][4];
-	GLuint texName;
+	unsigned char	bits[256][256][4];
+	unsigned int	texName;
 
 	virtual void Init(int argc, char* argv[]);
-	virtual void Display();
+	//virtual void Display();
 	virtual void TimerFunc(int id);
 	virtual void Keyboard(int key, int x, int y);
-	void TexInit();
-	void DrawTexQuad();
+	//void TexInit();
+	//void DrawTexQuad();
 };
 
 #endif

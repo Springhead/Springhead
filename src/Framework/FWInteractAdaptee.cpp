@@ -5,12 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-
 #include <Framework/FWInteractAdaptee.h>
 #include <Framework/FWInteractScene.h>
-#include <Physics/PHConstraintEngine.h>
+#include <Collision/CDConvex.h>
 #include <Collision/CDDetectorImp.h>
-#include <iostream>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 namespace Spr{;
 
@@ -27,48 +28,24 @@ void FWHapticLoopBase::UpdateInterface(){
 	for(int i = 0; i < N; i++){
 		FWInteractPointer* iPointer = GetIAPointer(i)->Cast();
 		double s = iPointer->GetWorldScale() * iPointer->GetPosScale();
-		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-			//6自由度インタフェースの場合
-			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-			hif->Update((float)hdt);
-			PHSolid* hiSolid = &iPointer->hiSolid;
-			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
-			hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
-			Posed hifPose;
-			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
-			hifPose.Ori()=hif->GetOrientation();
-			hiSolid->SetPose(GetIAPointer(i)->GetDefaultPosition() * hifPose);
-		}else{
-			//3自由度インタフェースの場合
-			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-			hif->Update((float)hdt);
-			PHSolid* hiSolid = &iPointer->hiSolid;
-			hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
-			Posed hifPose;
-			hifPose.Pos()=(Vec3d)hif->GetPosition() * s;
-			hiSolid->SetPose(GetIAPointer(i)->GetDefaultPosition() * hifPose);
-		}
+
+		HIHapticIf* hif = iPointer->GetHI()->Cast();
+		hif->Update((float)hdt);
+		PHSolid* hiSolid = &iPointer->hiSolid;
+		hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
+		hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
+		Posed hifPose;
+		hifPose.Pos() = (Vec3d)hif->GetPosition() * s;
+		hifPose.Ori() = hif->GetOrientation();
+		hiSolid->SetPose(GetIAPointer(i)->GetDefaultPosition() * hifPose);
 	}
 }
 
 void FWHapticLoopBase::SetRenderedForce(HIBaseIf* hi, bool bForce, SpatialVector f){
-	if(bForce){
-		if(DCAST(HIForceInterface6DIf, hi)){
-			HIForceInterface6DIf* hif = hi->Cast();
-			hif->SetForce(f.v(), f.w());	
-		}else{
-			HIForceInterface3DIf* hif = hi->Cast();
-			hif->SetForce(f.v());
-		}
-	}else{
-		if(DCAST(HIForceInterface6DIf, hi)){
-			HIForceInterface6DIf* hif = hi->Cast();
-			hif->SetForce(Vec3d(), Vec3d());
-		}else{
-			HIForceInterface3DIf* hif = hi->Cast();
-			hif->SetForce(Vec3d());
-		}		
-	}
+	HIHapticIf* hif = hi->Cast();
+	if(bForce)
+		 hif->SetForce(f.v(), f.w());
+	else hif->SetForce(Vec3f(), Vec3f());
 }
 
 /** FWInteractAdapteeの実装 */

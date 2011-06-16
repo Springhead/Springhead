@@ -10,18 +10,12 @@
 
 #include <Framework/SprFWObject.h>
 
-
 namespace Spr{;
 
 struct FWFemMeshDesc: public FWObjectDesc{
 };
 
-/** @brief Frameworkのオブジェクト
-	剛体（PhysicsモジュールのPHSolid）とシーングラフのフレーム（GraphicsモジュールのGRFrame）を
-	関連付けるオブジェクト．
-	これによってシミュレーションによる剛体の位置の変化がシーングラフに自動的に反映される．
-	Frameworkを利用する場合はPHSceneIf::CreateSolidやGRSceneIf::CreateFrameの代わりに
-	FWSceneIf::CreateObjectを使用する．
+/** 
  */
 struct FWFemMeshIf : FWObjectIf {
 	SPR_IFDEF(FWFemMesh);

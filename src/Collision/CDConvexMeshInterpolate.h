@@ -8,8 +8,7 @@
 #ifndef CDCONVEXMESHINTERPOLATE_H
 #define CDCONVEXMESHINTERPOLATE_H
 
-#include <SprCollision.h>
-#include "CDConvexMesh.h"
+#include <Collision/CDConvexMesh.h>
 
 namespace Spr{;
 

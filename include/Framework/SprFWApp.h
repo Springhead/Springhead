@@ -8,45 +8,51 @@
 #ifndef SPR_FWAPP_H
 #define SPR_FWAPP_H
 
-#include <Springhead.h>
-#include <Framework/SprFWInteractScene.h>
-#include <Framework/SprFWGraphicsAdaptee.h>
-#include <Framework/SprFWAppInfo.h>
-#include <map>
-#include <vector>
-#include <GL/glut.h>
-
+#include <HumanInterface/SprHIKeyMouse.h>
+#include <Framework/SprFWWin.h>
 
 namespace Spr{;
+
+struct FWSdkIf;
+struct FWGraphicsAdapteeIf;
 
 /** @brief アプリケーションクラス
 	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
 	FWAppおよびその派生クラスは例外であり，ユーザはFWAppあるいはその派生クラスを継承し，
 	仮想関数をオーバライドすることによって独自機能を実装する．
+
+	FWApp -
+		1 FWSdk -
+			n FWScene
+			n GRRender
+		1 FWGraphicsAdaptee
+		n FWWindow
+			1 [FWScene]
+			1 [GRRender]
+		1 hiSdk
+
  */
-class FWApp : public UTRefCount{
-private:
-	UTRef<FWSdkIf>			fwSdk;		///< Framework SDK
-	UTRef<HISdkIf>			hiSdk;		///< HumanInterface SDK
-public:
-	FWApp();
-	virtual ~FWApp();
-
+class FWApp : public UTRefCount, public DVKeyMouseHandler{
 protected:
-	FWMouseInfo				mouseInfo;		///< マウス情報
-	FWUICamera				cameraInfo;		///< カメラ情報
-	FWDragger				dragInfo;		///< 剛体ドラッグ情報
-
-	Wins		wins;				///< ウィンドウ情報
+	UTRef<FWSdkIf>				fwSdk;		///< Framework SDK	
+	
+	UTRef<FWGraphicsAdapteeIf>	grAdaptee;	///< グラフィクスシステムのアダプティ
+		
+	// ウィンドウ
+	typedef std::vector< UTRef<FWWinIf> > Wins;
+	Wins		wins;
 	
 	/** @brief ウィンドウにシーンを与える
 		@param win シーンを割り当てるウィンドウ
 		winに，既存のウィンドウが割り当てられていないシーンを割り当てる．
 		該当するシーンが見つからない場合，あるいはwinに既にシーンが割り当てられている場合は何もしない．
 	*/
-	void	AssignScene(FWWin* win);
+	void	AssignScene(FWWinIf* win);
 
 public:
+	FWApp();
+	virtual ~FWApp();
+
 // 派生クラスで定義する必要がある仮想関数 -----------------------------
 
 	/** @brief 初期化
@@ -124,14 +130,34 @@ public:
 	 */
 	virtual void AtExit(){}
 
-//　FWAppのインタフェース -----------------------------------------
+	/** DVKeyMouseHandlerの仮想関数
+		デフォルトではFWAppの従来のイベントハンドラを呼びだすのみ．
+		こちらを直接オーバライドしてもよい．
+	 **/
+	virtual bool OnMouse(int button, int state, int x, int y){
+		MouseButton(button, state, x, y);
+		return true;
+	}
+	virtual bool OnMouseMove(int state, int x, int y, int zdelta){
+		MouseMove(x, y);
+		return true;
+	}
+	virtual bool OnDoubleClick(int button, int x, int y){
+		return false;
+	}
+	virtual bool OnKey(int state, int key, int x, int y){
+		Keyboard(key, x, y);
+		return true;
+	}
+
+	//　FWAppのインタフェース -----------------------------------------
 
 	/** @brief SDKを取得する
 	*/
 	FWSdkIf*	GetSdk(){ return fwSdk; }
 
 	/** @brief SDKを作成する
-	*/
+	 */
 	void		CreateSdk();
 
 	/** @brief ウィンドウに対応するコンテキストを作る
@@ -139,73 +165,50 @@ public:
 		ウィンドウを作成する．対応するレンダラは新しく作成され，
 		既存のウィンドウが割り当てられていないシーンが関連づけられる．
 	 */
-	FWWin*		CreateWin(const FWWinDesc& desc = FWWinDesc());
-	
-	/** @brief ウィンドウの初期化
-		ウィンドウを1つ作成し，これにアクティブシーンを割り当てる簡易関数．
-		既に1つ以上のウィンドウがある場合は何もしない．
-		AssignScene(CreateWin())と等価．
-		＊無くてもよいか？
-	 */
-	void		InitWindow();
-
-	/** @brief ウィンドウの数 
-	*/
+	FWWinIf*	CreateWin(const FWWinDesc& desc = FWWinDesc());
+	/** @brief ウィンドウの数 */
 	int			NWin(){ return (int)wins.size(); }
-
+	
 	/**	@brief ウィンドウをIDから探す
 		@param wid ウィンドウID
 		glutの場合，widはglutGetWindowが返す識別子．
 	*/
-	FWWin*		GetWinFromId(int wid);
+	FWWinIf*	GetWinFromId(int wid);
 
 	/** @brief ウィンドウを取得する
 		@param index 何番目のウィンドウを取得するか
 		indexで指定されたウィンドウを取得する．
 		DestroyWinを呼ぶとインデックスは変化するので注意が必要．
 	 */
-	FWWin*		GetWin(int index);
+	FWWinIf*	GetWin(int index);
 
 	/** @brief 現在のウィンドウを取得する
 	*/
-	FWWin*		GetCurrentWin();
+	FWWinIf*	GetCurrentWin();
 
 	/** @brief ウィンドウを削除する
 	 */
-	void DestroyWin(FWWin* win);
+	void DestroyWin(FWWinIf* win);
 
 	/** @brief 現在のウィンドウを設定する
 	 */
-	void SetCurrentWin(FWWin* win);
+	void SetCurrentWin(FWWinIf* win);
 
 	/** @brief カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
 	 */
 	void PostRedisplay();
 
-	/// 外部から取得する必要はあるか？　tazz
+	
 	/** @brief カメラ情報を返す
 		@return camInfo
 	*/
-	FWUICamera*	GetCameraInfo(){return &cameraInfo;}
-
-	// 削除候補
-	/// 初期状態にする
-	void	Clear(){}
-	/// リセットする
-	void	Reset(){}
+	//FWUICamera*	GetCameraInfo(){return &cameraInfo;}
 
 	/** @brief Ctrl, Shift, Altの状態を返す
 		個々の派生クラスで実装される
 	 */
 	int	GetModifier();
-
-
-// ------------------------------------------------------------------------
 	
-/** 描画パート */
-private:
-	UTRef<FWGraphicsAdaptee>	grAdaptee;	//グラフィクスシステムのアダプティ
-public:
 	enum grAdapteeType{
 		TypeNone,	///< アダプタ無し
 		TypeGLUT,	///< GLUT
@@ -219,7 +222,7 @@ public:
 	/** @brief 描画の設定を取得
 		FWGraphicsAdapteeを取得する．　
 	 */
-	FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;}; //将来的には削除したい
+	//FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;}; //将来的には削除したい
 
 	/** @brief FWGraphicsAdapteeの初期化
 		FWGraphicsAdapteeの初期化を行う．最初に必ず呼ぶ．
@@ -236,23 +239,6 @@ public:
 	void CallMouseMove(int x, int y);
 	void CallJoystick(unsigned int buttonMask, int x, int y, int z);
 
-/** FWInteraction */
-///////////////////////////////////////////////////////////////////////////////////
-protected:
-	FWInteractSceneIf*					curIAScene;
-	FWInteractScenes					iaScenes;
-	std::vector<UTRef < HIBaseIf > >	humanInterfaces;
-public:
-	void							CreateHISdk();
-	HISdkIf*						GetHISdk();
-	void							AddHI(HIBaseIf* hi);
-	HIBaseIf*						GetHI(int i);
-	FWInteractSceneIf*				CreateIAScene(const FWInteractSceneDesc& desc);
-	FWInteractSceneIf*				GetIAScene(int i = -1);
-	int								NIAScenes();
-	void							ClearIAScenes();
-///////////////////////////////////////////////////////////////////////////////////
-
 public:
 
 	/** @brief タイマーを作成する
@@ -260,6 +246,15 @@ public:
 		@return			タイマオブジェクト
 	 */
 	UTTimerIf*	CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
+
+public:
+	/**  削除候補API  **/
+	/// ウィンドウを1つだけ作成
+	void	InitWindow(){ if(!NWin()) CreateWin(); }
+	/// 初期状態にする
+	void	Clear(){}
+	/// リセットする
+	void	Reset(){}
 
 };
 

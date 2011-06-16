@@ -5,11 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
-#pragma hdrstop
+#include <Physics/PHPenaltyEngine.h>
 #include <float.h>
 #include <Collision/CDDetectorImp.h>
 #include <Base/Affine.h>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 using namespace PTM;
 namespace Spr{;
@@ -66,10 +68,10 @@ void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine*
 	//	ÚG—ÍŒvZ‚Ì€”õ
 	float rs[2], rd[2], fs[2], fd[2], sf[2], df[2];
 	for(int i=0; i<2; ++i){
-		rs[i] = sp->shape[i]->GetMaterial().reflexSpringK;
-		rd[i] = sp->shape[i]->GetMaterial().reflexDamperD;
-		fs[i] = sp->shape[i]->GetMaterial().frictionSpringK;
-		fd[i] = sp->shape[i]->GetMaterial().frictionDamperD;
+		rs[i] = sp->shape[i]->GetMaterial().reflexSpring;
+		rd[i] = sp->shape[i]->GetMaterial().reflexDamper;
+		fs[i] = sp->shape[i]->GetMaterial().frictionSpring;
+		fd[i] = sp->shape[i]->GetMaterial().frictionDamper;
 		sf[i] = sp->shape[i]->GetMaterial().mu0;
 		df[i] = sp->shape[i]->GetMaterial().mu;
 	}

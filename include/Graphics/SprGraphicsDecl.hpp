@@ -160,8 +160,8 @@
 	void Render(Spr::GRRenderIf* r){	base::Render(r);}	\
 	Spr::GRFrameIf* GetWorld(){	return	base::GetWorld();}	\
 	Spr::GRCameraIf* GetCamera(){	return	base::GetCamera();}	\
-	Spr::GRAnimationControllerIf* GetAnimationController(){	return	base::GetAnimationController();}	\
 	void SetCamera(const Spr::GRCameraDesc& desc){	base::SetCamera(desc);}	\
+	Spr::GRAnimationControllerIf* GetAnimationController(){	return	base::GetAnimationController();}	\
 	Spr::GRVisualIf* CreateVisual(const IfInfo* info, const Spr::GRVisualDesc& desc, Spr::GRFrameIf* parent){	return	base::CreateVisual(info, desc, parent);}	\
 	Spr::GRSdkIf* GetSdk(){	return	base::GetSdk();}	\
 

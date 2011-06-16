@@ -7,7 +7,9 @@
  */
 
 #include <Framework/FWLDHaptic3D.h>
-#include <Framework/SprFWApp.h>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 namespace Spr{;
 
@@ -54,12 +56,8 @@ void FWLDHaptic3DLoop::Step(){
 void FWLDHaptic3DLoop::HapticRendering3D(){
 	for(int j = 0; j < NIAPointers(); j++){
 		FWInteractPointer* iPointer = GetIAPointer(j)->Cast();
-		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-		}else{
-			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-		}
-
+		HIHapticIf* hif = iPointer->GetHI()->Cast();
+		
 		SpatialVector outForce = SpatialVector();
 
 		for(int i = 0; i < NIASolids(); i++){
@@ -120,13 +118,9 @@ void FWLDHaptic3DLoop::HapticRendering(){
 				contactFlag[1].push_back(false);
 				oVibForce.push_back(Vec3d(0,0,0));
 			}
-		}		
-		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-		}else{
-			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-		}
-
+		}	
+		HIHapticIf* hif = iPointer->GetHI()->Cast();
+		
 		SpatialVector outForce = SpatialVector();
 		PicVibration(NIASolids());
 
@@ -346,12 +340,8 @@ void FWLDHaptic3DLoop::Proxy(){
 				oVibForce.push_back(Vec3d(0,0,0));
 			}
 		}
-		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-		}else{
-			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-		}
-
+		HIHapticIf* hif = iPointer->GetHI()->Cast();
+		
 		SpatialVector outForce = SpatialVector();
 		PicVibration(NIASolids());
 
@@ -444,29 +434,10 @@ void FWLDHaptic3DLoop::Proxy(){
 		}
 
 		/// インタフェースへ力を出力
-		if(iPointer->bForce){
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(outForce.v(), Vec3d());
-				#ifdef TORQUE
-					hif->SetForce(outForce.v(), outForce.w());
-				#endif
-			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(outForce.v());
-			}
-		}else{
-			if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-				HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(Vec3d(), Vec3d());
-				#ifdef TORQUE
-					hif->SetForce(Vec3d(), Vec3d());
-				#endif
-			}else{
-				HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-				hif->SetForce(Vec3d());
-			}		
-		}
+		if(iPointer->bForce)
+			 hif->SetForce(outForce.v(), outForce.w());
+		else hif->SetForce(Vec3f(), Vec3f());
+		
 	}
 	for(int k=0;k<NIASolids();k++){
 		if((*contactFlag).size()>0){
@@ -492,12 +463,8 @@ void FWLDHaptic3DLoop::ProxySimulation(){
 				contactFlag[1].push_back(false);
 			}
 		}
-		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-		}else{
-			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-		}
-
+		HIHapticIf* hif = iPointer->GetHI()->Cast();
+		
 		SpatialVector outForce = SpatialVector();
 		for(int i = 0; i < NIASolids(); i++){
 			FWInteractSolid* iSolid = GetIASolid(i);
@@ -623,29 +590,9 @@ void FWLDHaptic3DLoop::ProxySimulation(){
 			pLastPoint[j][i] = pPoint;
 
 			/// インタフェースへ力を出力
-			if(iPointer->bForce){
-				if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-					HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-					hif->SetForce(outForce.v(), Vec3d());
-					#ifdef TORQUE
-						hif->SetForce(outForce.v(), outForce.w());
-					#endif
-				}else{
-					HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-					hif->SetForce(outForce.v());
-				}
-			}else{
-				if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-					HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-					hif->SetForce(Vec3d(), Vec3d());
-					#ifdef TORQUE
-					hif->SetForce(Vec3d(), Vec3d());
-					#endif
-				}else{
-					HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-					hif->SetForce(Vec3d());
-				}		
-			}
+			if(iPointer->bForce)
+				 hif->SetForce(outForce.v(), outForce.w());
+			else hif->SetForce(Vec3f(), Vec3f());
 		}
 	}
 	for(int k=0;k<NIASolids();k++){

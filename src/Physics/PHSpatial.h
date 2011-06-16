@@ -8,8 +8,6 @@
 #ifndef PHSPATIAL_H
 #define PHSPATIAL_H
 
-//#include <SprPhysics.h>
-
 /**
  SpatialVector	  V(v, w) = [v; w];
  SpatialTransform X(R, r) = [R^T, -R^T * r%; O, R^T];

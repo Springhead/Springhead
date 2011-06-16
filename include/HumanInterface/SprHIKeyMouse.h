@@ -11,63 +11,146 @@
 #include <HumanInterface/SprHIBase.h>
 namespace Spr {;
 
+/** 仮想キーボード・マウス
+	
+	・キー・マウスイベントを処理するクラスはDVKeyMouseHandlerを継承しイベントハンドラを実装する
+	・その上でDVKeyMouseBaseIf::AddHandlerで自身を登録する
+	・ハンドラは複数登録可能．
+	　先に登録されたハンドラから優先的に呼び出し，falseが返された場合のみ次のハンドラを呼び出す．
+
+ */
+
+/// 押されているキー，ボタンの状態を示すフラグ
+struct DVButtonMask{
+	enum{
+		LBUTTON		= 0x01,
+		RBUTTON		= 0x02,
+		MBUTTON		= 0x04,
+		SHIFT		= 0x08,
+		CONTROL		= 0x10,
+		ALT			= 0x20,
+	};
+};
+struct DVButtonSt{
+	enum{
+		DOWN = 0,
+		UP	 = 1,
+	};
+};
+struct DVKeySt{
+	enum{
+		PRESSED		= 0x01,		///< 押されている
+		TOGGLE_ON	= 0x02,		///< トグルされている(caps lockなど)
+	};
+};
+/** ascii以外の特殊キーコード．値はGLUTの特殊キーコードに256を加算したもの．
+ **/	
+struct DVKeyCode{
+	enum{
+		ESC						= 27,
+		OFFSET					= 256,
+		F1, 
+		F2,
+		F3,
+		F4,
+		F5,
+		F6,
+		F7,
+		F8,
+		F9,
+		F10,
+		F11,
+		F12,
+		LEFT					= 100 + OFFSET,
+		UP,
+		RIGHT,
+		DOWN,
+		PAGE_UP,
+		PAGE_DOWN,
+		HOME,
+		END,
+		INSERT,
+	};
+};
+
 struct DVKeyMouseHandler{
-	/// 押されているキー，ボタンの状態を示すフラグ
-	enum ButtonState{
-		NONE,
-		LBUTTON = 0x01,
-		RBUTTON = 0x02,
-		SHIFT   = 0x04,
-		CONTROL = 0x08,
-		MBUTTON = 0x10,
-	};
-	/** マウスが動いたときの処理
-		@param keyState 押されているキー，ボタンの状態
+	/** @brief マウスクリック時の処理
+		@param button	押されているキー，ボタンの状態．ButtonState列挙子の値
+		@param state	ボタンダウンかボタンアップか
+		@param x		カーソルのx座標
+		@param y		カーソルのy座標
+	 */
+	virtual bool OnMouse(int button, int state, int x, int y){ return false; }
+	/** @brief ダブルクリック時の処理
+		@param button	押されているキー，ボタンの状態．ButtonState列挙子の値
+		@param x		カーソルのx座標
+		@param y		カーソルのy座標
+	 */
+	virtual bool OnDoubleClick(int button, int x, int y){ return false; }
+	/** @brief マウスが動いたときの処理
+		@param button	押されているキー，ボタンの状態．ButtonState列挙子の値
+		@param x		カーソルのx座標
+		@param y		カーソルのy座標
+		@param zdelta	マウスホイールの変化量
+		
+		zdeltaはマウスホイールに対応するデバイスを使用する場合のみ有効．
 	*/
-	bool OnMouseMove(int keyState, int x, int y, int zdelta);
-	///
-	bool OnClick(int keyState, int x, int y);
-	///
-	bool OnDoubleClick(int keyState, int x, int y);
-	///	キー処理
-	bool OnKey(bool isDown, int vkey, int keyState, int x, int y);
+	virtual bool OnMouseMove(int state, int x, int y, int zdelta){ return false; }
+	/** @brief キー入力処理
+		@param state	キーの状態．KeyState列挙子の値
+		@param key		キーコード
+		@param x		カーソルのx座標
+		@param y		カーソルのy座標
+	 */
+	virtual bool OnKey(int state, int key, int x, int y){ return false; }
 };
 
-
-///	DVKeyMouse
-struct DVKeyMouseIf:public HIVirtualDeviceIf{
-	///	マウスの位置を返すための構造体
-	struct DVMousePosition{
-		int x;
-		int y;
-		unsigned time;
-	};
-	///	キーの状態
-	enum DVKeyState{
-		NONE	= 0,
-		PRESS	= 1,
-		TOGGLE_ON = 2,
-		BOTH	= PRESS|TOGGLE_ON,
-	};
+/**
+	キーボード・マウス仮想デバイス
+ **/
+struct DVKeyMouseIf: public HIVirtualDeviceIf{
 	SPR_IFDEF(DVKeyMouse);
-	///	デバイスの名前
-	const char* Name() const ;
-	///	ハンドラの設定
-	void SetHandler(DVKeyMouseHandler* h);
-	///	マウスボタン・キーボード状態取得
+	
+	///	ハンドラの追加
+	void AddHandler(DVKeyMouseHandler* h);
+	/// ハンドラの削除
+	void RemoveHandler(DVKeyMouseHandler* h);
+
+	/**	@brief マウスボタン・キーボード状態取得
+		@param	key		windowsの仮想キーコード
+		win32マウス限定．
+	 */
 	int GetKeyState(int key);
-	///	マウス位置取得関数	0が最新，1以上は過去の履歴を取得
-	DVKeyMouseIf::DVMousePosition GetMousePosition(int count=0);
+
+	/**	@brief 現在および過去のマウス位置を取得
+		@param x		x座標
+		@param y		y座標
+		@param time		タイムスタンプ
+		@param count	いくつ前の情報を取得するか
+		countは[0,63]の範囲が有効．0ならば最新，1以上は過去の履歴を取得する．
+		Win32とGLUTで挙動が異なるので注意．GLUTではtime値は無効．
+	 */
+	void GetMousePosition(int& x, int& y, int& time, int count=0);
 };
 
-///	DRKeyMouseWin32
-struct DRKeyMouseWin32If:public HIRealDeviceIf{
+/**
+	Win32マウス
+ **/
+struct DRKeyMouseWin32If: public HIRealDeviceIf{
 	SPR_IFDEF(DRKeyMouseWin32);
 };
+struct DRKeyMouseWin32Desc{
+	SPR_DESCDEF(DRKeyMouseWin32);
+};
 
-///	DRKeyMouseGLUT
-struct DRKeyMouseGLUTIf:public HIRealDeviceIf{
+/**
+	GLUTマウス
+ **/
+struct DRKeyMouseGLUTIf: public HIRealDeviceIf{
 	SPR_IFDEF(DRKeyMouseGLUT);
+};
+struct DRKeyMouseGLUTDesc{
+	SPR_DESCDEF(DRKeyMouseGLUT);
 };
 
 }	//	namespace Spr

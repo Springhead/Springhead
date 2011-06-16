@@ -5,7 +5,7 @@
 	ObjectIfのAPIを介した表示・編集を行うクラス
  */
 
-#include <Graphics/SprGRRender.h>
+#include <Foundation/SprObject.h>
 #include <vector>
 #include <string>
 
@@ -16,6 +16,7 @@ namespace Spr{;
  */
 
 class UTTypeDesc;
+struct GRRenderIf;
 
 class FWEditor{
 protected:

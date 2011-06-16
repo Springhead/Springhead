@@ -1,10 +1,10 @@
 #ifndef VR_HAPTIC_HDSPIDARMOTOR_H
 #define VR_HAPTIC_HDSPIDARMOTOR_H
 
-#include "Base/Affine.h"
-#include "DVDaBase.h"
-#include "DVAdBase.h"
-#include "DVCounterBase.h"
+#include <Base/Affine.h>
+#include <HumanInterface/HIDevice.h>
+#include <HumanInterface/HIBase.h>
+#include <HumanInterface/SprHISpidar.h>
 
 namespace Spr {
 
@@ -15,11 +15,11 @@ public:
 
 	//@{	デバイスアクセス
 	///	使用するD/A.
-	DVDaBaseIf* da;
+	DVDaIf* da;
 	///	使用するエンコーダのカウンタ.
-	DVCounterBaseIf* counter;
+	DVCounterIf* counter;
 	///	使用するA/D.
-	DVAdBaseIf* ad;
+	DVAdIf* ad;
 	//@}
 	///	出力した力
 	float force;

@@ -67,6 +67,7 @@ struct FISdkIf : public SdkIf{
 	void Clear();
 
 	static  FISdkIf* SPR_CDECL CreateSdk();
+	static void SPR_CDECL RegisterSdk();
 };
 
 //@}

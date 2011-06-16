@@ -10,6 +10,21 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWFemMeshIf(base)	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_FWGraphicsAdapteeIf(base)	\
+	void Init(int argc, char** argv){	base::Init(argc, argv);}	\
+	void StartMainLoop(){	base::StartMainLoop();}	\
+	void EnableIdleFunc(bool on){	base::EnableIdleFunc(on);}	\
+	void EnterGameMode(){	base::EnterGameMode();}	\
+	void LeaveGameMode(){	base::LeaveGameMode();}	\
+	FWWinIf* CreateWin(const FWWinDesc& d){	return	base::CreateWin(d);}	\
+	void DestroyWin(FWWinIf* w){	base::DestroyWin(w);}	\
+	void SetCurrentWin(FWWinIf* w){	base::SetCurrentWin(w);}	\
+	FWWinIf* GetCurrentWin(){	return	base::GetCurrentWin();}	\
+	int GetWinFromId(){	return	base::GetWinFromId();}	\
+	void PostRedisplay(){	base::PostRedisplay();}	\
+	int GetModifiers(){	return	base::GetModifiers();}	\
+	GRDeviceIf* GetGRDevice(){	return	base::GetGRDevice();}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractPointerIf(base)	\
 	void SetPointerSolid(PHSolidIf* solid){	base::SetPointerSolid(solid);}	\
 	PHSolidIf* GetPointerSolid(){	return	base::GetPointerSolid();}	\
@@ -95,6 +110,7 @@
 	Spr::FWObjectIf** GetObjects(){	return	base::GetObjects();}	\
 	void Sync(bool ph_to_gr){	base::Sync(ph_to_gr);}	\
 	void Step(){	base::Step();}	\
+	void Draw(GRRenderIf* grRender, bool debug){	base::Draw(grRender, debug);}	\
 	void DrawPHScene(GRRenderIf* render){	base::DrawPHScene(render);}	\
 	void DrawSolid(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire){	base::DrawSolid(render, solid, solid_or_wire);}	\
 	void DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid){	base::DrawShape(render, shape, solid);}	\
@@ -134,20 +150,43 @@
 	bool LoadScene(UTString filename, ImportIf* ex, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::LoadScene(filename, ex, ii, objs);}	\
 	bool SaveScene(UTString filename, ImportIf* ex, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::SaveScene(filename, ex, ii, objs);}	\
 	int NScene()const{	return	base::NScene();}	\
-	void SwitchScene(Spr::FWSceneIf* scene){	base::SwitchScene(scene);}	\
 	Spr::FWSceneIf* GetScene(int index){	return	base::GetScene(index);}	\
 	void MergeScene(Spr::FWSceneIf* scene0, Spr::FWSceneIf* scene1){	base::MergeScene(scene0, scene1);}	\
-	GRRenderIf* CreateRender(){	return	base::CreateRender();}	\
-	int NRender()const{	return	base::NRender();}	\
-	GRRenderIf* GetRender(int index){	return	base::GetRender(index);}	\
-	void SwitchRender(GRRenderIf* render){	base::SwitchRender(render);}	\
+	Spr::FWInteractSceneIf* CreateIAScene(const Spr::FWInteractSceneDesc& desc){	return	base::CreateIAScene(desc);}	\
+	Spr::FWInteractSceneIf* GetIAScene(int index){	return	base::GetIAScene(index);}	\
+	int NIAScenes(){	return	base::NIAScenes();}	\
+	void ClearIAScenes(){	base::ClearIAScenes();}	\
 	PHSdkIf* GetPHSdk(){	return	base::GetPHSdk();}	\
 	GRSdkIf* GetGRSdk(){	return	base::GetGRSdk();}	\
 	FISdkIf* GetFISdk(){	return	base::GetFISdk();}	\
-	bool GetDebugMode(){	return	base::GetDebugMode();}	\
-	void SetDebugMode(bool debug){	base::SetDebugMode(debug);}	\
-	void Step(){	base::Step();}	\
-	void Draw(){	base::Draw();}	\
+	HISdkIf* GetHISdk(){	return	base::GetHISdk();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWWinIf(base)	\
+	void SetPosition(int left, int top){	base::SetPosition(left, top);}	\
+	void SetSize(int width, int height){	base::SetSize(width, height);}	\
+	void SetTitle(UTString title){	base::SetTitle(title);}	\
+	UTString GetTitle(){	return	base::GetTitle();}	\
+	void SetFullScreen(bool full){	base::SetFullScreen(full);}	\
+	bool GetFullScreen(){	return	base::GetFullScreen();}	\
+	Vec2i GetPosition(){	return	base::GetPosition();}	\
+	int GetWidth(){	return	base::GetWidth();}	\
+	int GetHeight(){	return	base::GetHeight();}	\
+	int GetID(){	return	base::GetID();}	\
+	void SetID(int newID){	base::SetID(newID);}	\
+	Spr::GRRenderIf* GetRender(){	return	base::GetRender();}	\
+	void SetRender(Spr::GRRenderIf* data){	base::SetRender(data);}	\
+	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
+	void SetScene(Spr::FWSceneIf* s){	base::SetScene(s);}	\
+	DVKeyMouseIf* GetKeyMouse(){	return	base::GetKeyMouse();}	\
+	void SetKeyMouse(DVKeyMouseIf* dv){	base::SetKeyMouse(dv);}	\
+	DVJoyStickIf* GetJoyStick(){	return	base::GetJoyStick();}	\
+	void SetJoyStick(DVJoyStickIf* dv){	base::SetJoyStick(dv);}	\
+	HITrackballIf* GetTrackball(){	return	base::GetTrackball();}	\
+	void SetTrackball(HITrackballIf* dv){	base::SetTrackball(dv);}	\
+	HIDraggerIf* GetDragger(){	return	base::GetDragger();}	\
+	void SetDragger(HIDraggerIf* dv){	base::SetDragger(dv);}	\
+	void SetRenderMode(bool ph_or_gr){	base::SetRenderMode(ph_or_gr);}	\
+	bool GetRenderMode(){	return	base::GetRenderMode();}	\
+	void Display(){	base::Display();}	\
 	void Reshape(int w, int h){	base::Reshape(w, h);}	\
-	void SetDSTR(bool f){	base::SetDSTR(f);}	\
 

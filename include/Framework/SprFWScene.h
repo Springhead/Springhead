@@ -9,16 +9,21 @@
 #define SPR_FWSCENEIF_H
 
 #include <Foundation/SprScene.h>
-#include <Physics/SprPHScene.h>
-#include <Graphics/SprGRScene.h>
-#include <Graphics/SprGRRender.h>
-#include <Framework/SprFWBone.h>
-#include <Framework/SprFWObject.h>
 
 namespace Spr{;
 
+struct CDShapeIf;
+struct PHSolidIf;
+struct PHConstraintIf;
+struct PHContactPointIf;
+struct PHIKEngineIf;
+struct PHSceneIf;
+struct GRSceneIf;
+struct GRRenderIf;
 struct FWObjectDesc;
 struct FWObjectIf;
+struct FWBoneIf;
+struct FWStructureIf;
 
 struct FWSceneDesc{
 };
@@ -52,6 +57,8 @@ public:
 	void		SetGRScene(GRSceneIf* s);
 
 	/** @brief 空のFrameworkオブジェクトを作成する
+		作成された時点でPHSolidとGRFrameは割り当てられていないので，
+		SetPHSolid, SetGRFrameで割り当てる必要がある．
 	 */
 	FWObjectIf*	CreateFWObject();
 
@@ -76,7 +83,7 @@ public:
 		@param debug	デバッグ描画か
 
 	 */
-	//void Draw(GRRenderIf* grRender, bool debug = false);
+	void Draw(GRRenderIf* grRender, bool debug);
 
 	/** @brief	Physicsシーンをレンダリングする
 		@param	render	レンダラ
@@ -121,9 +128,11 @@ public:
 	 */
 	void DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine);
 
-	/**	 @brief 描画モードの設定
-		 @param solid	ソリッド描画のオン/オフ
-		 @param wire	ワイヤフレーム描画のオン/オフ
+	/**	@brief 描画モードの設定
+		@param ph_or_gr	PHSceneを描画するかGRSceneを描画するか
+		@param solid	ソリッド描画のオン/オフ
+		@param wire		ワイヤフレーム描画のオン/オフ
+		solidとwireはPHSceenを描画するときのみ有効．
 	 */
 	void SetRenderMode(bool solid = true, bool wire = false);
 

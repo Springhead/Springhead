@@ -8,9 +8,7 @@
 #ifndef CDRoundCone_H
 #define CDRoundCone_H
 
-#include <SprCollision.h>
-#include <Foundation/Object.h>
-#include "CDConvex.h"
+#include <Collision/CDConvex.h>
 
 namespace Spr{;
 	

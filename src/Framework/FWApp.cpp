@@ -6,16 +6,9 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Framework/SprFWApp.h>
-
-#include "FWScene.h"
-#include "FWSdk.h"
-#include "FWOldSpringheadNode.h"
-#include <Physics/PHSdk.h>
-#include <Graphics/GRSdk.h>
 #include <Framework/FWGLUT.h>
 #include <Framework/FWGLUI.h>
 #include <Framework/FWInteractScene.h>
-#include <Framework/SprFWGraphicsAdaptee.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -27,40 +20,39 @@ FWApp::FWApp(){
 }
 
 FWApp::~FWApp(){
-	int s = (int)wins.size();
-	bool hasGameMode = false;
-	for(int i = 0; i < s; i++){
-		if(wins[i]->fullscreen == true){
-			hasGameMode = true; break;
+	bool hasFullScreen = false;
+	for(int i = 0; i < (int)wins.size(); i++){
+		if(wins[i]->GetFullScreen()){
+			hasFullScreen = true;
+			break;
 		}
 	}
-	if(hasGameMode) glutLeaveGameMode();
+	if(hasFullScreen)
+		grAdaptee->LeaveGameMode();
 }
 
 void FWApp::Init(int argc, char* argv[]){
 	// 最も基本的な初期化処理
+	// SDK初期化
+	CreateSdk();
+	// シーンを作成
+	GetSdk()->CreateScene();
+	// グラフィクスをGLUTで初期化
 	SetGRAdaptee(TypeGLUT);
 	GRInit(argc, argv);
-
-	CreateSdk();
-	GetSdk()->CreateScene();
-	
-	FWWinDesc windowDesc;
-	windowDesc.title = "Springhead2";
-	CreateWin(windowDesc);
-	InitWindow();
-	
+	// ウィンドウを作成
+	CreateWin();
+	// タイマを作成
 	CreateTimer();
 }
 
 void FWApp::Display(){
-	GetSdk()->GetRender()->SetViewMatrix(cameraInfo.view.inv());
-	GetSdk()->Draw();
-	GetSdk()->GetRender()->SwapBuffers();
+	GetCurrentWin()->Display();
 }
 
 void FWApp::TimerFunc(int id){
-	GetSdk()->Step();
+	//GetSdk()->Step();
+	GetCurrentWin()->GetScene()->Step();
 	PostRedisplay();
 }
 
@@ -76,25 +68,27 @@ void FWApp::StartMainLoop(){
 
 // 派生クラスで定義することのできる仮想関数/////////////////////////////////
 void FWApp::Reshape(int w, int h){
-	if(GetCurrentWin())
+	/*if(GetCurrentWin()){
 		fwSdk->SwitchRender(GetCurrentWin()->GetRender());
-	fwSdk->Reshape(w, h);
+		fwSdk->Reshape(w, h);
+	}*/
+	GetCurrentWin()->Reshape(w, h);
 }
 
 void FWApp::MouseButton(int button, int state, int x, int y){
 	// ctrl+left カーソルで剛体を動かす
-	if(fwSdk->GetScene() && (mouseInfo.left && mouseInfo.ctrl)){
+	/*if(fwSdk->GetScene() && (mouseInfo.left && mouseInfo.ctrl)){
 		dragInfo.Init(fwSdk->GetScene()->GetPHScene(), cameraInfo.view, fwSdk->GetRender());
 		dragInfo.Grab(x, y);
 	}
 
 	if(state == BUTTON_UP && button == LEFT_BUTTON)
-		dragInfo.Release();
+		dragInfo.Release();*/
 }
 
 void FWApp::MouseMove(int x, int y){
 	// 視点移動(回転)
-	if(mouseInfo.left && !mouseInfo.ctrl && !mouseInfo.alt){
+	/*if(mouseInfo.left && !mouseInfo.ctrl && !mouseInfo.alt){
 		cameraInfo.Rotate(mouseInfo.pos.x - mouseInfo.lastPos.x, mouseInfo.pos.y - mouseInfo.lastPos.y,
 			GetSdk()->GetRender()->GetPixelSize());
 	}
@@ -113,7 +107,7 @@ void FWApp::MouseMove(int x, int y){
 	// 剛体ドラッグ
 	if(mouseInfo.left && mouseInfo.ctrl)
 		dragInfo.Drag(x, y);
-
+	*/
 }
 
 //　FWAppのインタフェース ///////////////////////////////////////////////////////
@@ -122,36 +116,61 @@ void FWApp::CreateSdk(){
 	fwSdk = FWSdkIf::CreateSdk();
 }
 
-void FWApp::AssignScene(FWWin* win){
+void FWApp::AssignScene(FWWinIf* win){
 	if (win->GetScene()) return;
+	
+	// 既存のどのウィンドウにも割り当てられていないシーンを探す
 	for(int i = GetSdk()->NScene() - 1; i >= 0; --i){
+		FWSceneIf* scene = GetSdk()->GetScene(i);
 		Wins::iterator it;
 		for(it = wins.begin(); it != wins.end(); ++it){
-			if ((*it)->GetScene() == GetSdk()->GetScene(i)) break;
+			if ((*it)->GetScene() == scene) break;
 		}
-		if (it == wins.end()){	//	対応するwindowがないscene
-			win->scene = GetSdk()->GetScene(i);
+		if (it == wins.end()){
+			win->SetScene(scene);
 			return;
 		}
 	}
 }
 
-FWWin* FWApp::CreateWin(const FWWinDesc& desc){
+FWWinIf* FWApp::CreateWin(const FWWinDesc& desc){
 	if(!grAdaptee)
 		return NULL;
-	FWWin* win = grAdaptee->CreateWin(desc);
+
+	FWWinIf* win = grAdaptee->CreateWin(desc);
+
+	// 自身をキーボード・マウスハンドラに登録
+	win->GetKeyMouse()->AddHandler(this);
+
+	HISdkIf* hiSdk = GetSdk()->GetHISdk();
+	// トラックボールとドラッガーを作成
+	if(desc.useKeyMouse && desc.useTrackball)
+		win->SetTrackball(hiSdk->CreateHumanInterface(HITrackballIf::GetIfInfoStatic())->Cast());
+	if(desc.useKeyMouse && desc.useDragger)
+		win->SetDragger(hiSdk->CreateHumanInterface(HIDraggerIf::GetIfInfoStatic())->Cast());
+
 	wins.push_back(win);
+
+	// シーンの割当て
+	AssignScene(win);
+	// レンダラ割当て
+	GRRenderIf* render = GetSdk()->GetGRSdk()->CreateRender();
+	render->SetDevice(grAdaptee->GetGRDevice());
+	// このコンテキストに対してGRDeviceGL::Initを呼ぶ
+	render->GetDevice()->Init();
+	win->SetRender(render);
+
 	return win;
 }
 
-void FWApp::InitWindow(){
+/*void FWApp::InitWindow(){
 	if(!NWin() && grAdaptee){
 		CreateWin();
 		wins.back()->SetScene(GetSdk()->GetScene());
 	}
-}
+}*/
 
-FWWin* FWApp::GetWinFromId(int wid){
+FWWinIf* FWApp::GetWinFromId(int wid){
 	for(Wins::iterator i = wins.begin(); i != wins.end(); i++){
 		if((*i)->GetID() == wid)
 			return *i;
@@ -159,24 +178,24 @@ FWWin* FWApp::GetWinFromId(int wid){
 	return NULL;
 }
 
-FWWin* FWApp::GetWin(int pos){
+FWWinIf* FWApp::GetWin(int pos){
 	if(0 <= pos && pos < NWin())
 		return wins[pos];
 	return NULL;
 }
 
-FWWin* FWApp::GetCurrentWin(){
+FWWinIf* FWApp::GetCurrentWin(){
 	if(!grAdaptee)
 		return NULL;
 	return grAdaptee->GetCurrentWin();
 }
 
-void FWApp::DestroyWin(FWWin* win){
+void FWApp::DestroyWin(FWWinIf* win){
 	if(grAdaptee)
 		grAdaptee->DestroyWin(win);
 }
 
-void FWApp::SetCurrentWin(FWWin* win){
+void FWApp::SetCurrentWin(FWWinIf* win){
 	if(grAdaptee)
 		grAdaptee->SetCurrentWin(win);
 }
@@ -196,19 +215,18 @@ int FWApp::GetModifier(){
 
 void FWApp::SetGRAdaptee(grAdapteeType type){
 	switch (type) {
-		case TypeNone:
-			grAdaptee = NULL;
-			break;
-		case TypeGLUT:
-			grAdaptee= new FWGLUT;
-			break;
-		case TypeGLUI:
-			grAdaptee= new FWGLUI;
-			break;
+	case TypeNone:
+		grAdaptee = NULL;
+		break;
+	case TypeGLUT:{
+		FWGLUT* glut = DBG_NEW FWGLUT(this);
+		grAdaptee = glut->Cast();
+		}break;
+	case TypeGLUI:{
+		FWGLUI* glui = DBG_NEW FWGLUI(this);
+		grAdaptee = glui->Cast();
+		}break;
 	}
-	if(grAdaptee)
-		grAdaptee->SetAdapter(this);
-	//instance = this;
 }
 
 void FWApp::GRInit(int argc, char* argv[]){
@@ -227,26 +245,24 @@ void FWApp::CallIdleFunc(){
 	IdleFunc();
 }
 void FWApp::CallKeyboard(int key, int x, int y){
-	for(int i = 0; i < NIAScenes(); i++){
-		FWInteractScene* iaScene = GetIAScene(i)->Cast();
+	for(int i = 0; i < GetSdk()->NIAScenes(); i++){
+		FWInteractScene* iaScene = GetSdk()->GetIAScene(i)->Cast();
 		iaScene->BeginKeyboard();
 	}
 
 	Keyboard(key, x, y);
 
-	for(int i = 0; i < NIAScenes(); i++){
-		FWInteractScene* iaScene = GetIAScene(i)->Cast();
+	for(int i = 0; i < GetSdk()->NIAScenes(); i++){
+		FWInteractScene* iaScene = GetSdk()->GetIAScene(i)->Cast();
 		iaScene->EndKeyboard();
 	}
 }
 void FWApp::CallMouseButton(int button, int state, int x, int y){
-	mouseInfo.Button(button, state, x, y, GetModifier());
-
+	//mouseInfo.Button(button, state, x, y, GetModifier());
 	MouseButton(button, state, x, y);
 }
 void FWApp::CallMouseMove(int x, int y){
-	mouseInfo.Move(x, y);
-
+	//mouseInfo.Move(x, y);
 	MouseMove(x, y);
 }
 
@@ -254,45 +270,6 @@ void FWApp::CallJoystick(unsigned int buttonMask, int x, int y, int z){
 	Joystick(buttonMask, x, y, z);
 }
 
-/** FWInteraction */
- ////////////////////////////////////////////////////////////////
-void FWApp::CreateHISdk(){
-	hiSdk = HISdkIf::CreateSdk();
-}
-
-HISdkIf* FWApp::GetHISdk(){
-	return hiSdk;
-}
-
-void FWApp::AddHI(HIBaseIf* hi){
-	humanInterfaces.push_back(hi);
-}
-
-HIBaseIf* FWApp::GetHI(int i){
-	if((unsigned)i <humanInterfaces.size()) return humanInterfaces[i];
-	else						  return NULL;
-}
-
-FWInteractSceneIf* FWApp::CreateIAScene(const FWInteractSceneDesc &desc){
-	FWInteractScene* iaScene = DBG_NEW FWInteractScene(desc);
-	iaScenes.push_back(iaScene->Cast());
-	iaScene->CreateIAAdaptee(desc.iaMode);
-	if(desc.iaMode == LOCAL_DYNAMICS_3D || desc.iaMode == LOCAL_DYNAMICS_6D){
-		iaScene->SetHMode(desc.hMode);
-	}
-	curIAScene = iaScene->Cast();
-	return curIAScene;
-}
-FWInteractSceneIf* FWApp::GetIAScene(int i){
-	if(i == -1) return curIAScene;
-	if(0 <= i && i < NIAScenes()) return iaScenes[i];
-	return NULL;
-}
-int FWApp::NIAScenes(){ return (int)iaScenes.size(); }
-void FWApp::ClearIAScenes(){ 
-	iaScenes.clear();
-	curIAScene = NULL;
-}
 
 //タイマ///////////////////////////////////////////////////////////////////////////
 

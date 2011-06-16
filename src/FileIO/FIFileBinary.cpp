@@ -5,15 +5,15 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "FileIO.h"
+#include <Foundation/UTLoadHandler.h>
+#include <FileIO/FIFileBinary.h>
+#include <FileIO/FILoadContext.h>
+#include <FileIO/FISaveContext.h>
+#include <fstream>
+#include <sstream>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
-
-#include <Foundation/UTLoadHandler.h>
-#include <fstream>
-#include <sstream>
-#include <Springhead.h>
 
 namespace Spr{;
 
@@ -49,7 +49,7 @@ enum{
 	ID_REF
 };
 
-FIFileBinary::FIFileBinary(){
+FIFileBinary::FIFileBinary(const FIFileBinaryDesc& desc){
 	Init();
 }
 void FIFileBinary::Init(){

@@ -5,8 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CRBallHumanBodyGen.h"
-
+#include <Creature/CRBodyGenerator/CRBallHumanBodyGen.h>
+#include <Collision/SprCDShape.h>
+#include <Physics/SprPHSdk.h>
+#include <Physics/SprPHScene.h>
+#include <Physics/SprPHSolid.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif

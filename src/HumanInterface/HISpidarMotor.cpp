@@ -9,11 +9,6 @@ namespace Spr {
 
 
 HISpidarMotor::HISpidarMotor(){
-	maxForce = 20.0f;
-	minForce = 0.5f;
-	voltPerNewton = 0.365296803653f;
-	currentPerVolt = 1.0f;
-	lengthPerPulse = 2.924062107079e-5f;
 	da = NULL;
 	counter = NULL;
 	ad = NULL;
@@ -83,11 +78,11 @@ void HISpidarMotor::GetCalibrationData(float dt){
 void HISpidarMotor::GetVdd(){
 	if (!ad || !da) return;
 	da->Voltage(0);
-	da->RealDevice()->Update();
+	da->GetRealDevice()->Update();
 	vdd = 0;
 	const int MEASURE_TIMES = 10;
 	for(int i=0; i<MEASURE_TIMES; ++i){
-		da->RealDevice()->Update();
+		da->GetRealDevice()->Update();
 		vdd += ad->Voltage();
 	}
 	vdd /= MEASURE_TIMES;

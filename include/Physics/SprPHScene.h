@@ -90,16 +90,16 @@ struct PHSceneDesc: public PHSceneState{
 		各EngineのAPIを介して全パラメータが取得・設定可能だが，以下のパラメータは
 		頻繁に用いるのでPHSceneIfからもアクセスできるようにしてある．（要検討）
 	 */
-	Vec3f	gravity;		///< 重力加速度ベクトル．デフォルト値は(0.0f, -9.8f, 0.0f)．
-	double	airResistanceRate; ///<毎ステップ剛体の速度に掛けられる倍率　デフォルト値は1.0.
-	int		numIteration;	///< LCPの反復回数
+	Vec3d	gravity;			///< 重力加速度ベクトル
+	double	airResistanceRate;	///< 毎ステップ剛体の速度に掛けられる倍率
+	int		numIteration;		///< LCPの反復回数
 
 	PHSceneDesc(){Init();}
 	void Init(){
 		PHSceneState::Init();
-		gravity			= Vec3f(0,-9.8f,0);
-		airResistanceRate = 1.0;
-		numIteration	= 15;
+		gravity				= Vec3d(0.0, -9.8, 0.0);
+		airResistanceRate	= 1.0;
+		numIteration		= 15;
 	}
 };
 
@@ -167,11 +167,6 @@ public:
 	 */
 	void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 
-	///	@brief LCPソルバの計算回数の取得．MODE_LCPの場合の拘束力の繰り返し近似計算の回数．
-	int GetNumIteration();
-	///	@brief LCPソルバの計算回数の設定．
-	void SetNumIteration(int n);
-	
 	/** @brief 関節を作成する
 		@param lhs 関節を取り付ける剛体
 		@param rhs 関節を取り付ける剛体
@@ -192,7 +187,7 @@ public:
 
 	/** @brief 関節を取得する
 	 */
-	PHConstraintIf* GetJoint(int i);
+	PHJointIf* GetJoint(int i);
 
 	/** @brief 接触拘束の数を取得する
 	 */
@@ -331,19 +326,6 @@ public:
 	 */
 	void SetCount(unsigned count);
 
-	/** @brief シーンの時刻を進める
-	 */
-	void Step();
-	void ClearForce();
-	void GenerateForce();
-	void Integrate();
-	void IntegratePart1();
-	void IntegratePart2();
-
-	/** @brief シーンを空にする
-	 */
-	void Clear();
-
 	/** @brief 重力を設定する
 		@param accel 重力加速度ベクトル
 	 */
@@ -364,6 +346,32 @@ public:
 		@return 回転に対する空気抵抗の割合　標準は1.0 比率を下げるとシミュレーションが安定する(PHSolid::UpdateVelocity()内で呼ばれる）
 	 */
 	double GetAirResistanceRate();
+
+	///	@brief LCPソルバの計算回数の取得．MODE_LCPの場合の拘束力の繰り返し近似計算の回数．
+	int GetNumIteration();
+	///	@brief LCPソルバの計算回数の設定．
+	void SetNumIteration(int n);
+
+	/** @brief 状態の保存 (ObjectStates の保存）に，
+		Constraints が持つ拘束力を含めるかどうか設定する．
+	*/
+	void SetStateMode(bool bConstraints);
+
+	/** @brief シーンの時刻を進める
+	 */
+	void Step();
+	
+	void ClearForce();
+	void GenerateForce();
+	void Integrate();
+	void IntegratePart1();
+	void IntegratePart2();
+
+	/** @brief シーンを空にする
+	 */
+	void Clear();
+
+	/// エンジンアクセス用API	(公開の是非については要検討)
 
 	int NEngines();
 	/** @brief i番目のエンジンを取得する
@@ -386,11 +394,6 @@ public:
 		@return PenaltyEngineへのポインタ
 	*/
 	PHPenaltyEngineIf*  GetPenaltyEngine();
-
-	/** @brief 状態の保存 (ObjectStates の保存）に，
-		Constraints が持つ拘束力を含めるかどうか設定する．
-	*/
-	void SetStateMode(bool bConstraints);
 
 	/** @brief IKEngineを取得する
 		@return IKEngineへのポインタ

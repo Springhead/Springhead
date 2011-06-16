@@ -5,11 +5,9 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-
 #ifndef FWGRABCOUPLING_H
-#define  FWGRABCOUPLING_H
+#define FWGRABCOUPLING_H
 
-#include <Springhead.h>
 #include <Framework/FWInteractAdaptee.h>
 
 namespace Spr{;

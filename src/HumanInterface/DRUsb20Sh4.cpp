@@ -9,26 +9,32 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "Device.h"
 #pragma hdrstop
 
-#include <HumanInterface/HISdk.h>
+#include <HumanInterface/DRUsb20Sh4.h>
+#include <HumanInterface/DREzUSB.h>
 
 #ifdef _WIN32
+#include <windows.h>
 #include <winioctl.h>
 #endif
 
+#include <sstream>
+using namespace std;
+
 namespace Spr {;
-DRUsb20Sh4::VirtualDeviceAd::VirtualDeviceAd(DRUsb20Sh4* r, int c): realDevice(r), ch(c) {
-	sprintf(name, "%s A/D Ch %d", realDevice->Name(), ch);
-}
 
 DRUsb20Sh4::DRUsb20Sh4(const DRUsb20Sh4Desc& d):DRUsb20Simple(d){
-	sprintf(name, "Cyberse USB2.0 SH4 #%d", channel);
 	adVoltPerDigit = 24.0f/4096.0f;
 }
 
-void DRUsb20Sh4::Reset(){
+bool DRUsb20Sh4::Init(){
+	stringstream ss;
+	ss << "Cyberse USB2.0 SH4 #" << channel;
+	SetName(ss.str().c_str());
+#ifdef _WIN32
+	DRUsb20Simple::Init();
+
 	DWORD pipeNum = 2;
 	if (hSpidar != INVALID_HANDLE_VALUE){
 		OVERLAPPED ov;
@@ -40,15 +46,22 @@ void DRUsb20Sh4::Reset(){
 			IOCTL_Ezusb_RESETPIPE,
 			&pipeNum, sizeof(pipeNum), NULL, 0, NULL, &ov);
 	}
+
+	for(int i = 0; i < 8; i++)
+		AddChildObject((DBG_NEW DV(this, i))->Cast());
+	return true;
+#endif
+	return false;
 }
 
-void DRUsb20Sh4::Register(HISdkIf* sdkIf){
+/*void DRUsb20Sh4::Register(HISdkIf* sdkIf){
 	DRUsb20Simple::Register(sdkIf);
 	HISdk* sdk = sdkIf->Cast();
 	for(int i=0; i<8; i++){
-		sdk->RegisterVirtualDevice((new VirtualDeviceAd(this, i))->Cast());
+		sdk->RegisterVirtualDevice((new DV(this, i))->Cast());
 	}
-}
+}*/
+
 void DRUsb20Sh4::Update(){
 	UsbUpdate();
 }
@@ -61,6 +74,7 @@ void DRUsb20Sh4::Update(){
 
 
 void DRUsb20Sh4::UsbUpdate(){
+#ifdef _WIN32
 	UCHAR outBuffer[PACKET_SIZE];
 	UCHAR inBuffer[PACKET_SIZE];
 
@@ -120,8 +134,11 @@ void DRUsb20Sh4::UsbUpdate(){
 	info |= (DWORD)(inBuffer[cur++]) << 16;
 	info |= (DWORD)(inBuffer[cur++]) << 24;
 //	DSTR << "info:" << info << std::endl;
+#endif
 }
+
 void DRUsb20Sh4::UsbSend(unsigned char* outBuffer){
+#ifdef _WIN32
 	if (hSpidar == INVALID_HANDLE_VALUE) return;
 	BULK_TRANSFER_CONTROL bulkControl;
 	bulkControl.pipeNum = 1;
@@ -134,8 +151,11 @@ void DRUsb20Sh4::UsbSend(unsigned char* outBuffer){
 		outBuffer,
 		outPacketSize,
 		(unsigned long *)&nBytes, NULL);
+#endif
 }
+
 void DRUsb20Sh4::UsbRecv(unsigned char* inBuffer){
+#ifdef _WIN32
 	if (hSpidar == INVALID_HANDLE_VALUE) return;
 	BULK_TRANSFER_CONTROL bulkControl;
 	bulkControl.pipeNum = 2;
@@ -149,8 +169,10 @@ void DRUsb20Sh4::UsbRecv(unsigned char* inBuffer){
 		inPacketSize,
 		(unsigned long *)&nBytes,
 		NULL);
+#endif
 }
-bool DRUsb20Sh4::FindDevice(int ch){
+
+/*bool DRUsb20Sh4::FindDevice(int ch){
 	for(int i=0; i < 0x100; ++i){
 		hSpidar = UsbOpen(i);
 		if (hSpidar == INVALID_HANDLE_VALUE) return false;
@@ -164,7 +186,7 @@ bool DRUsb20Sh4::FindDevice(int ch){
 		UsbClose(hSpidar);
 	}
 	return INVALID_HANDLE_VALUE;
-}
+}*/
 
 } //namespace Spr
 

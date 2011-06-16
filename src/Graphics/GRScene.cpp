@@ -5,12 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Graphics.h"
+#include <Graphics/GRScene.h>
+#include <Graphics/GRSdk.h>
+#include <Graphics/GRMesh.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "GRScene.h"
-#include "GRMesh.h"
-#include "GRFrame.h"
-#include <sstream>
+#endif
 
 namespace Spr{;
 

@@ -9,7 +9,6 @@
 #ifndef FWINTERACT_ADAPTEE_H
 #define FWINTERACT_ADAPTEE_H
 
-#include <Springhead.h>
 #include <Framework/FWInteractPointer.h>
 #include <Framework/FWInteractSolid.h>
 

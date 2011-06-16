@@ -8,8 +8,8 @@
 #ifndef GRMesh_H
 #define GRMesh_H
 
-#include <SprGraphics.h>
-#include "GRFrame.h"
+#include <Graphics/SprGRMesh.h>
+#include <Graphics/GRFrame.h>
 
 namespace Spr{;
 

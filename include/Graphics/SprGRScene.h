@@ -16,6 +16,7 @@
 #ifndef SPR_GRScene_H
 #define SPR_GRScene_H
 
+#include <Foundation/SprScene.h>
 #include <Graphics/SprGRFrame.h>
 #include <Graphics/SprGRRender.h>
 
@@ -39,12 +40,12 @@ struct GRSceneIf: public SceneIf{
 	///	カメラの取得
 	GRCameraIf* GetCamera();
 
+	/// カメラの作成・設定
+	void SetCamera(const GRCameraDesc& desc = GRCameraDesc());
+
 	///	アニメーションコントローラの取得
 	GRAnimationControllerIf* GetAnimationController();
-
-	/// カメラの作成・設定
-	void SetCamera(const GRCameraDesc& desc);
-
+	
 	/** @brief ビジュアルの作成
 		@param desc ビジュアルのデスクリプタ
 		@param parent 親フレーム

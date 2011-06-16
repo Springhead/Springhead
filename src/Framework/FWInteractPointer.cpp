@@ -154,4 +154,11 @@ int FWInteractPointer::GetGrabFlag(){
 	return grabFlag;
 }
 
+void FWInteractPointer::OutputForce(const SpatialVector& f){
+	HIHapticIf* hif = GetHI()->Cast();
+	if(bForce)
+		 hif->SetForce(f.v(), f.w());
+	else hif->SetForce(Vec3f(), Vec3f());
+}
+
 }

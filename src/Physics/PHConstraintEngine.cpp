@@ -5,14 +5,17 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
+#include <Physics/PHConstraintEngine.h>
+#include <Physics/PHHingeJoint.h>
+#include <Physics/PHSliderJoint.h>
+#include <Physics/PHBallJoint.h>
+#include <Physics/PHPathJoint.h>
+#include <Physics/PHSpring.h>
+#include <Physics/PHContactPoint.h>
+#include <Physics/PHContactSurface.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include <float.h>
-#include <Collision/CDDetectorImp.h>
-#include <Collision/CDQuickHull2D.h>
-#include <Collision/CDQuickHull2DImp.h>
-#include <Collision/CDCutRing.h>
-#include <Base/VectorDebug.h>
+#endif
 
 using namespace PTM;
 using namespace std;

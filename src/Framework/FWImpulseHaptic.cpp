@@ -5,8 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-
-#include "FWImpulseHaptic.h"
+#include <Framework/FWImpulseHaptic.h>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 namespace Spr{
 
@@ -59,13 +61,8 @@ void FWImpulseHapticLoop::HapticRendering(){
 				// oVibForce.push_back(Vec3d(0,0,0));
 			}
 		}
-
-		if(DCAST(HIForceInterface6DIf, iPointer->GetHI())){
-			HIForceInterface6DIf* hif = iPointer->GetHI()->Cast();
-		}else{
-			HIForceInterface3DIf* hif = iPointer->GetHI()->Cast();
-		}
-
+		HIHapticIf* hif = iPointer->GetHI()->Cast();
+		
 		SpatialVector outForce = SpatialVector();
 
 		for(int i = 0; i < NIASolids(); i++){

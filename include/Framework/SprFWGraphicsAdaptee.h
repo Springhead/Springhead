@@ -1,60 +1,54 @@
-#ifndef FW_GRAPHICSADAPTEE_H
-#define FW_GRAPHICSADAPTEE_H
+#ifndef SPR_FW_GRAPHICSADAPTEE_H
+#define SPR_FW_GRAPHICSADAPTEE_H
 
-#include <Springhead.h>
-
-using namespace std;
+#include <Framework/SprFWWin.h>
 
 namespace Spr{;
 
-class FWApp;
-class FWWin;
-class FWWinDesc;
-typedef void SPR_CDECL FWTimerFunc(int id);
+struct GRDeviceIf;
 
-class FWGraphicsAdapteeDesc{
-public:
-	FWGraphicsAdapteeDesc(){};
-};
+struct FWGraphicsAdapteeDesc{};
 
-class FWGraphicsAdaptee : public FWGraphicsAdapteeDesc, public UTRefCount{
-protected:
-	FWApp*	 fwApp;
-public:	
-	FWGraphicsAdaptee(){};
-	void SetAdapter(FWApp* a){ fwApp = a; }	// FWAppの設定
-	FWApp* GetFWApp(){ return fwApp; }		// FWAppの取得
-	
+/** FWGraphicsAdaptee
+	処理系に依存したウィンドウの作成・管理機能
+	＊機能を考えるとFWWindowManagerの方が合う気がする tazz
+ */
+
+struct FWGraphicsAdapteeIf : ObjectIf{	
+	SPR_IFDEF(FWGraphicsAdaptee);
+
 	///	初期化を行う。最初にこれを呼ぶ必要がある。
-	virtual void Init(int argc = 0, char* argv[] = NULL){}
+	// ＊ char* argv[]という書式はswigが未対応の模様
+	void Init(int argc = 0, char** argv = NULL);
 	
-	/** タイマ */
 	/// mainloopを呼び，タイマーをスタートする
-	virtual void StartMainLoop()=0;
+	void StartMainLoop();
 
 	/// Idle callbackの有効化/無効化
-	virtual void EnableIdleFunc(bool on = true)=0;
+	void EnableIdleFunc(bool on = true);
 
 	/// フルスクリーンモードへの切り替え．API名は暫定的にGLUTに準拠
-	virtual void EnterGameMode()=0;
-	virtual void LeaveGameMode()=0;
+	void EnterGameMode();
+	void LeaveGameMode();
 
 	/** ウィンドウ */
 	///	ウィンドウを作成し、ウィンドウ IDを返す
-	virtual FWWin* CreateWin(const FWWinDesc& d){return NULL;};
+	FWWinIf* CreateWin(const FWWinDesc& d);
 	///	ウィンドウを破棄する
-	virtual void DestroyWin(FWWin* w){};
+	void DestroyWin(FWWinIf* w);
 	///	カレントウィンドウを設定する
-	virtual void SetCurrentWin(FWWin* w){};
+	void SetCurrentWin(FWWinIf* w);
 	///	カレントウィンドウを返す。
-	virtual FWWin* GetCurrentWin(){return NULL;};
+	FWWinIf* GetCurrentWin();
 	///	カレントウィンドウを返す。
-	virtual int GetWinFromId(){return NULL;};
+	int GetWinFromId();
 	/// カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
-	virtual void PostRedisplay(){};
+	void PostRedisplay();
 	/// Shift,Ctrl,Altのステートを返す
-	virtual int GetModifiers(){return NULL;};
+	int GetModifiers();
 
+	/// グラフィクスデバイスの取得
+	GRDeviceIf*	GetGRDevice();
 };
 
 }

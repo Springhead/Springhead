@@ -286,8 +286,11 @@ public:
 	virtual void DumpObjectR(std::ostream& os, int level=0) const;
 
 protected:
+	/// 開き括弧
 	virtual void PrintHeader(std::ostream& os, bool bClose) const;
+	/// 子オブジェクトをPrint
 	virtual void PrintChildren(std::ostream& os) const;
+	/// 閉じ括弧
 	virtual void PrintFooter(std::ostream& os) const;
 
 	///	GetDesc()の前に呼ばれる
@@ -366,7 +369,7 @@ template <class T, class IF, class DESC>
 class FactoryImpTemplate: public FactoryBase{
 public:
 	virtual ObjectIf* Create(const void* desc, ObjectIf* parent){
-		T* t = DBG_NEW T(*(DESC*)desc);
+		T* t = (desc ? DBG_NEW T(*(DESC*)desc) : DBG_NEW T());
 
 		//	シーンの設定
 		SceneObject* o = DCAST(SceneObject, t);

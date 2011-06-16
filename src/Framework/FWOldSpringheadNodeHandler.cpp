@@ -15,8 +15,11 @@
 #include <Graphics/GRSphere.h>
 #include <Graphics/GRRender.h>
 #include <Graphics/GRScene.h>
+#include <Graphics/GRSdk.h>
 #include <Physics/PHSolid.h>
 #include <Physics/PHJoint.h>
+#include <Physics/PHScene.h>
+#include <Physics/PHSdk.h>
 #include <Framework/FWOldSpringheadNodeHandler.h>
 #include <Framework/FWObject.h>
 #include <Framework/FWScene.h>

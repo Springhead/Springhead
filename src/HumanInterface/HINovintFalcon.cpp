@@ -120,8 +120,12 @@ UTDllLoader* HINovintFalcon::sDllLoader;
 #undef dllLoader
 
 
-HINovintFalcon::HINovintFalcon():deviceHandle(HDL_INVALID_HANDLE),button(0), good(false){
+HINovintFalcon::HINovintFalcon(const HINovintFalconDesc& desc){
+	deviceHandle = HDL_INVALID_HANDLE;
+	button = 0;
+	good = false;
 }
+
 HINovintFalcon::~HINovintFalcon(){
 	if (dll){
 		hdlUninitDevice(deviceHandle);
@@ -209,7 +213,7 @@ void HINovintFalcon::Update(float dt){
 		Vec3d f = force;
 		hdlSetToolForce(f);
 	}
-	HIForceInterface6D::Update(dt);
+	HIHaptic::Update(dt);
 }
 
 }//	namespace Spr

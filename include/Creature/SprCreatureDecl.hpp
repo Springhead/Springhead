@@ -7,8 +7,8 @@
 	void SetPHSolid(Spr::PHSolidIf* so){	base::SetPHSolid(so);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRIKSolidIf(base)	\
-	PHIKEndEffectorIf* GetIKEndEffector(){	return	base::GetIKEndEffector();}	\
-	void SetIKEndEffector(PHIKEndEffectorIf* ikEE){	base::SetIKEndEffector(ikEE);}	\
+	Spr::PHIKEndEffectorIf* GetIKEndEffector(){	return	base::GetIKEndEffector();}	\
+	void SetIKEndEffector(Spr::PHIKEndEffectorIf* ikEE){	base::SetIKEndEffector(ikEE);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRJointIf(base)	\
 	Spr::PHJointIf* GetPHJoint(){	return	base::GetPHJoint();}	\
@@ -16,8 +16,8 @@
 	void SetSpringRatio(double springRatio, double damperRatio){	base::SetSpringRatio(springRatio, damperRatio);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRIKJointIf(base)	\
-	PHIKActuatorIf* GetIKActuator(){	return	base::GetIKActuator();}	\
-	void SetIKActuator(PHIKActuatorIf* ikAct){	base::SetIKActuator(ikAct);}	\
+	Spr::PHIKActuatorIf* GetIKActuator(){	return	base::GetIKActuator();}	\
+	void SetIKActuator(Spr::PHIKActuatorIf* ikAct){	base::SetIKActuator(ikAct);}	\
 	void SetIKSpringRatio(double springRatio, double damperRatio){	base::SetIKSpringRatio(springRatio, damperRatio);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRBodyIf(base)	\
@@ -39,14 +39,14 @@
 	Spr::CRSceneIf* CreateScene(const IfInfo* ii, const Spr::CRSceneDesc& desc){	return	base::CreateScene(ii, desc);}	\
 	Spr::CRSceneIf* GetScene(int i){	return	base::GetScene(i);}	\
 	int NScenes(){	return	base::NScenes();}	\
-	PHSceneIf* GetPHScene(){	return	base::GetPHScene();}	\
+	Spr::PHSceneIf* GetPHScene(){	return	base::GetPHScene();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CREngineIf(base)	\
 	int GetPriority()const{	return	base::GetPriority();}	\
 	void Step(){	base::Step();}	\
 	void SetEnable(bool enable){	base::SetEnable(enable);}	\
 	bool IsEnabled(){	return	base::IsEnabled();}	\
-	void Render(GRRenderIf* render){	base::Render(render);}	\
+	void Render(Spr::GRRenderIf* render){	base::Render(render);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CREyeControllerIf(base)	\
 	void LookAt(Vec3f pos, Vec3f vel){	base::LookAt(pos, vel);}	\

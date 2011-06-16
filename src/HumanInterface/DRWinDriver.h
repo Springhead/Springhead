@@ -5,9 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef WBWINDRIVER_H
-#define WBWINDRIVER_H
+#ifndef DR_WINDRIVER_H
+#define DR_WINDRIVER_H
 
+#ifdef _WIN32
 
 #include <Foundation/UTPath.h>
 #include <base/BaseUtility.h>
@@ -15,6 +16,7 @@
 #include <winsvc.h>
 
 namespace Spr {
+
 ///	Windowsのデバイスドライバを開くクラス
 class SPR_DLL DRLoadWindowsDriver{
 protected:
@@ -58,6 +60,8 @@ protected:
 };
 
 }	//	namespace Spr
+
+#endif
 
 #endif
 

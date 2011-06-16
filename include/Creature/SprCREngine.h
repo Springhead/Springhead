@@ -8,12 +8,13 @@
 #ifndef SPR_CRENGINEIF_H
 #define SPR_CRENGINEIF_H
 
-#include <SprFoundation.h>
+#include <Foundation/SprObject.h>
 
 namespace Spr{;
 
 //@{
 
+struct GRRenderIf;
 struct CRCreatureIf;
 
 ///	クリーチャ・エンジンの基本クラス

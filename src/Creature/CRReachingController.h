@@ -8,11 +8,8 @@
 #ifndef CRREACHINGCONTROLLER_H
 #define CRREACHINGCONTROLLER_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-
-#include "CREngine.h"
+#include <Creature/CREngine.h>
+#include <Creature/SprCRReachController.h>
 
 //@{
 namespace Spr{;

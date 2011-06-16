@@ -8,6 +8,8 @@
 #ifndef BASE_COMBINATION_H
 #define BASE_COMBINATION_H
 
+#include <assert.h>
+
 /**	@file Combination.h ‘g‚İ‡‚í‚¹”z—ñ‚Ì’è‹`*/
 namespace Spr {;
 

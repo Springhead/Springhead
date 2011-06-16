@@ -11,15 +11,14 @@
 */
 #ifndef SPR_PHSDKIF_H
 #define SPR_PHSDKIF_H
+
 #include <Collision/SprCDShape.h>
+#include <Physics/SprPHScene.h>
 
 namespace Spr{;
 
 /** \addtogroup gpPhysics 物理エンジンSDK */
 //@{
-
-struct PHSceneIf;
-struct PHSceneDesc;
 
 //	自動ロードのための中身なしのデスクリプタ
 struct PHSdkDesc{
@@ -30,13 +29,11 @@ struct PHSdkIf : public SdkIf{
 	SPR_IFDEF(PHSdk);
 	//	API
 	///	Sceneの作成
-	PHSceneIf* CreateScene();
-	///	Sceneの作成
-	PHSceneIf* CreateScene(const PHSceneDesc& desc);
+	PHSceneIf* CreateScene(const PHSceneDesc& desc = PHSceneDesc());
 	///	Sceneの数を取得
 	int NScene();
 	///	Sceneの取得
-	PHSceneIf* GetScene(size_t i);
+	PHSceneIf* GetScene(int i);
 	/// Sceneのマージ
 	void MergeScene(PHSceneIf* scene0, PHSceneIf* scene1);
 	/** @brief Shapeを作成する

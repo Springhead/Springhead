@@ -20,15 +20,16 @@ public:
 	std::vector<PHJointIf*>		jntLink;		///< 関節のインタフェース
 	std::vector<PHTreeNodeIf*>	nodeTree;		///< ABA（関節座標シミュレーション）のためのツリーノード
 
-public:
-	Handler(){}
+	SampleApp*		app;
 
-	SampleApp*	GetApp(){ return (SampleApp*)FWApp::instance; }
-	FWSdkIf*	GetFWSdk(){ return FWApp::instance->GetSdk(); }
+public:
+	Handler(SampleApp* a){ app = a; }
+
+	FWSdkIf*	GetFWSdk(){ return app->GetSdk(); }
 	PHSdkIf*	GetPHSdk(){ return GetFWSdk()->GetPHSdk(); }
-	FWSceneIf*	GetFWScene(){ return GetFWSdk()->GetScene(); }
+	FWSceneIf*	GetFWScene(){ return GetFWSdk()->GetScene(app->curScene); }
 	PHSceneIf*	GetPHScene(){ return GetFWScene()->GetPHScene(); }
-	
+
 	virtual void BuildScene(){}
 	virtual void OnAction(int id){}
 	virtual void OnStep(){}

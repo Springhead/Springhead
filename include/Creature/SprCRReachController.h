@@ -8,10 +8,13 @@
 #ifndef SPR_CR_REACHCONTROLLER_IF_H
 #define SPR_CR_REACHCONTROLLER_IF_H
 
+#include <Creature/SprCREngine.h>
+
 namespace Spr{;
 
 // ------------------------------------------------------------------------------
 
+struct PHSolidIf;
 struct CRIKSolidIf;
 
 /// 到達運動コントローラのインターフェース

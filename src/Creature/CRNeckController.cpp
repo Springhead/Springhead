@@ -5,9 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CRNeckController.h"
-#include <string>
-
+#include <Creature/CRNeckController.h>
+#include <Creature/SprCRBody.h>
+#include <Creature/SprCRCreature.h>
+#include <Physics/SprPHSolid.h>
+#include <Physics/SprPHIK.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -60,7 +62,7 @@ void CRNeckController::Step(){
 		for (size_t i=0; i<body->NChildObject(); ++i) {
 			CRIKSolidIf* cso = body->GetChildObject(i)->Cast();
 			if (cso) {
-				if (std::string("Head")  == cso->GetLabel()) { csHead  = cso; }
+				if (UTString("Head")  == cso->GetLabel()) { csHead  = cso; }
 			}
 		}
 	}

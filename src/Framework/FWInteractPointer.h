@@ -11,8 +11,8 @@
 
 #include <Foundation/Object.h>
 #include <Framework/SprFWInteractPointer.h>
-#include <Physics/PHSolid.h>
 #include <Framework/FWInteractInfo.h>
+#include <Physics/PHSolid.h>
 
 namespace Spr{;
 
@@ -39,6 +39,7 @@ public:
 	double correctionSpringK;
 	double correctionDamperD;
 
+public:
 	FWInteractPointer();
 	FWInteractPointer(const FWInteractPointerDesc& desc);
 
@@ -80,6 +81,8 @@ public:
 	double		 GetSpringK();
 	void		 SetDamperD(double d);
 	double		 GetDamperD();
+
+	void		OutputForce(const SpatialVector& f);
 };
 
 }

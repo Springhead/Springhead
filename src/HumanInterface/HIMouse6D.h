@@ -5,11 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef HIMouse6D6D_H
-#define HIMouse6D6D_H
+#ifndef HI_MOUSE6D_H
+#define HI_MOUSE6D_H
 
 #include <HumanInterface/HIBase.h>
-#include <HumanInterface/DVKeyMouse.h>
+#include <HumanInterface/HIDevice.h>
 
 namespace Spr {;
 
@@ -17,16 +17,16 @@ class SPR_DLL HIMouse6D: public HIPose, public DVKeyMouseHandler{
 public:
 	SPR_OBJECTDEF(HIMouse6D);
 
-	UTRef<DVKeyMouse> keyMouse;
-	DVKeyMouseHandler::ButtonState btnState;
+	DVKeyMouseIf*	keyMouse;
+	int				btnState;
 
-	virtual DVKeyMouseIf* GetKeyMouse(){ return keyMouse->Cast(); }
+public:
+	DVKeyMouseIf*	GetKeyMouse(){ return keyMouse; }
+	void			SetKeyMouse(DVKeyMouseIf* dv);
 
 	/// 
-	HIMouse6D(){ bGood = false; }
+	HIMouse6D(const HIMouse6DDesc& desc = HIMouse6DDesc()){}
 	virtual ~HIMouse6D(){}
-
-	bool IsGood(){return bGood;}
 
 	/// マウスの初期化
 	virtual bool Init(const void* desc);
@@ -34,10 +34,13 @@ public:
 	///	押されているボタンに応じてpos,oriを更新する。Shiftが押されているときはaxisを更新する。
 	void Update(float dt);
 
-	///	まとめて，メッセージを処理する場合
-	bool PreviewMessage(void* m);
-	///@name 個別のメッセージハンドラで呼び出す場合
-	//@{
+	/// DVKeyMouseHandlerの関数
+	virtual bool OnMouse(int button, int state, int x, int y);
+	virtual bool OnDoubleClick(int button, int x, int y);
+	virtual bool OnMouseMove(int state, int x, int y, int zdelta);
+	virtual bool OnKey(int state, int key, int x, int y);
+
+	/*
 	///	キー処理
 	virtual bool OnKeyDown(unsigned nChar);
 	/// ドラッグ時の処理
@@ -56,9 +59,7 @@ public:
 	virtual void OnShiftLButtonDClick();
 	/// ホイールをまわしたときの処理(ポインタor基準座標軸をZ軸方向に水平移動)
 	virtual void OnWheel(unsigned int state, short dz);
-	//@}
-
-	
+	*/
 
 	///	位置の取得
 	Vec3f GetPos(){ return pos; }
@@ -100,8 +101,6 @@ public:
 //<-
 
 protected:
-	// マウスがアクティブかどうかのフラグ
-	bool bGood;
 	// マウスの座標(old:前ステップ，new:現ステップ)
 	int oldX, oldY, newX, newY;
 	// マウスの座標と仮想世界とのスケール調整用パラメータ

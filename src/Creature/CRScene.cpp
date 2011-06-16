@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "CRScene.h"
+#include <Creature/CRScene.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop

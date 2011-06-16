@@ -14,6 +14,7 @@
 namespace Spr{;
 
 class Import;
+class FISdk;
 
 class FISaveContext: public UTFileContext{
 public:

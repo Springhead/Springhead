@@ -8,9 +8,6 @@
 #ifndef PH_FORCEFIELD_H
 #define PH_FORCEFIELD_H
 
-#include <SprPhysics.h>
-#include <Foundation/Object.h>
-#include <Physics/PHScene.h>
 #include <Physics/PHEngine.h>
 #include <Physics/PHSolid.h>
 
@@ -20,7 +17,7 @@ class PHGravityEngine : public PHEngine{
 	SPR_OBJECTDEF_NOIF(PHGravityEngine);
 public:
 	PHSolids solids;
-	Vec3f	accel;
+	Vec3d	accel;
 
 	int GetPriority() const {return SGBP_GRAVITYENGINE;}
 	void Step();

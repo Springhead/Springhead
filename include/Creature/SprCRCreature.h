@@ -8,12 +8,12 @@
 #ifndef SPR_CRCREATUREIF_H
 #define SPR_CRCREATUREIF_H
 
-#include <SprFoundation.h>
+#include <Foundation/SprObject.h>
 
 namespace Spr{;
 
 //@{
-
+struct PHSceneIf;
 struct CRBodyIf;
 struct CRBodyDesc;
 struct CREngineIf;

@@ -8,11 +8,8 @@
 #ifndef CRGAZECONTROLLER_H
 #define CRGAZECONTROLLER_H
 
-#include <Springhead.h>
-
-#include <Foundation/Object.h>
-
-#include "CREngine.h"
+#include <Creature/CREngine.h>
+#include <Creature/SprCRGazeController.h>
 
 //@{
 namespace Spr{;

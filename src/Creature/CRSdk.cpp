@@ -5,24 +5,26 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Creature/CRSdk.h"
+#include <Creature/CRSdk.h>
+#include <Creature/CRScene.h>
+#include <Creature/CRCreature.h>
+#include <Creature/CRBody.h>
 
+#include <Creature/CRTouchSensor.h>
+#include <Creature/CRVisualSensor.h>
+
+#include <Creature/CREyeController.h>
+#include <Creature/CRNeckController.h>
+#include <Creature/CRGazeController.h>
+#include <Creature/CRAttentionController.h>
+#include <Creature/CRReachingController.h>
+#include <Creature/CRTrajectoryController.h>
+#include <Creature/CRTrajectory.h>
+#include <Creature/CRGrabController.h>
+
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-
-#include "Creature/CRCreature.h"
-#include "Creature/CRBody.h"
-
-#include "Creature/CRTouchSensor.h"
-#include "Creature/CRVisualSensor.h"
-
-#include "Creature/CREyeController.h"
-#include "Creature/CRNeckController.h"
-#include "Creature/CRGazeController.h"
-#include "Creature/CRAttentionController.h"
-#include "Creature/CRReachingController.h"
-#include "Creature/CRTrajectoryController.h"
-#include "Creature/CRTrajectory.h"
-#include "Creature/CRGrabController.h"
+#endif
 
 using namespace std;
 

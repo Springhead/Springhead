@@ -575,7 +575,7 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHSceneDesc \
 protected:\
-	Vec3f	gravity;	\
+	Vec3d	gravity;	\
 	double	airResistanceRate;	\
 	int	numIteration;	\
 public:\

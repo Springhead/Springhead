@@ -8,13 +8,9 @@
 #ifndef PH_IKENDEFFECTOR_H
 #define PH_IKENDEFFECTOR_H
 
-#include <SprPhysics.h>
 #include <Foundation/Object.h>
-#include <Physics/PHEngine.h>
-
-#include <vector>
+#include <Physics/SprPHIK.h>
 #include <set>
-#include <map>
 
 namespace Spr{;
 
@@ -199,21 +195,9 @@ public:
 
 	// --- --- --- --- ---
 
-	virtual bool AddChildObject(ObjectIf* o){
-		PHSolidIf* so = o->Cast();
-		if (so) { this->solid = so; return true; }
-		return false;
-	}
-
-	virtual ObjectIf* GetChildObject(size_t pos){
-		if (pos == 0 && this->solid != NULL) { return this->solid; }
-		return NULL;
-	}
-
-	size_t NChildObject() const {
-		if (this->solid != NULL) { return 1; }
-		return 0;
-	}
+	virtual bool		AddChildObject(ObjectIf* o);
+	virtual ObjectIf*	GetChildObject(size_t pos);
+	virtual	size_t		NChildObject() const;
 	
 	// --- --- --- --- --- --- --- --- --- ---
 	// Non API Methods

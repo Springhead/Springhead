@@ -5,12 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Graphics.h"
+#include <Graphics/GRRender.h>
+#include <boost/regex.hpp>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
-#include <iomanip>
-#include <sstream>
-#include "boost/regex.hpp"
 
 namespace Spr {;
 
@@ -34,9 +34,9 @@ GRRender::GRRender(){
 	(itr++)->diffuse = Vec4f(1.0, 1.0, 1.0, 1.0);			// white
 	(itr++)->diffuse = Vec4f(0.5, 0.5, 0.5, 1.0);			// gray
 	(itr++)->diffuse = Vec4f(1.0, 0.27, 0.0, 1.0);			// orange
-	(itr++)->diffuse = Vec4f(0.198, 0.0, 0.0, 1.0);			// blown
+	(itr++)->diffuse = Vec4f(0.198, 0.0, 0.0, 1.0);			// brown
 	(itr++)->diffuse = Vec4f(0.676, 0.844, 0.898, 1.0);		// light blue
-	(itr++)->diffuse = Vec4f(0.574, 0.438, 0.855, 1.0);		// midium purple
+	(itr++)->diffuse = Vec4f(0.574, 0.438, 0.855, 1.0);		// medium purple
 	(itr++)->diffuse = Vec4f(0.0, 0.391, 0.0, 1.0);			// dark green
 	(itr++)->diffuse = Vec4f(0.578, 0.0, 0.824, 1.0);		// dark violet
 	(itr++)->diffuse = Vec4f(0.0, 0.543, 0.543, 1.0);		// dark cyan

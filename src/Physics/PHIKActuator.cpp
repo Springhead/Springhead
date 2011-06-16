@@ -5,10 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
+#include <Physics/PHIKActuator.h>
+#include <Physics/PHHingeJoint.h>
+#include <Physics/PHBallJoint.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "PHIKActuator.h"
-#include "Physics/PHJoint.h"
+#endif
 
 using namespace std;
 namespace Spr{;
@@ -29,6 +31,33 @@ PHIKActuatorDesc::PHIKActuatorDesc() {
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // IKActuator
+
+bool PHIKActuator::AddChildObject(ObjectIf* o){
+	PHIKEndEffectorIf* cp = o->Cast();
+	if (cp) {
+		RegisterEndEffector(cp);
+		return true;
+	}
+	return false;
+}
+
+ObjectIf* PHIKActuator::GetChildObject(size_t pos){
+	for (ESetIter it=linkedEndEffectors.begin(); it!=linkedEndEffectors.end(); ++it) {
+		if (pos == 0) {
+			return (*it)->Cast();
+		}
+		pos--;
+	}
+	return NULL;
+}
+
+size_t PHIKActuator::NChildObject() const{
+	int cnt = 0;
+	for (ESetIter it=linkedEndEffectors.begin(); it!=linkedEndEffectors.end(); ++it) {
+		cnt++;
+	}
+	return cnt;
+}
 
 // --- --- --- --- ---
 void PHIKActuator::SetupMatrix(){
@@ -210,6 +239,34 @@ void PHIKActuator::RegisterEndEffector(PHIKEndEffectorIf* endeffector){
 }
 
 // --- --- --- --- ---
+bool PHIKBallActuator::AddChildObject(ObjectIf* o){
+	PHBallJointIf* jo = o->Cast();
+	if (jo) {
+		this->joint = jo;
+		PHBallJointDesc dJ; DCAST(PHBallJointIf,this->joint)->GetDesc(&dJ);
+		this->jSpring = dJ.spring;
+		this->jDamper = dJ.damper;
+		this->jGoal   = dJ.targetPosition;
+		return true;
+	}
+	return PHIKActuator::AddChildObject(o);
+}
+
+ObjectIf* PHIKBallActuator::GetChildObject(size_t pos){
+	if (pos == 0 && this->joint != NULL) { return this->joint; }
+	if (this->joint != NULL) {
+		return PHIKActuator::GetChildObject(pos - 1);
+	} else {
+		return PHIKActuator::GetChildObject(pos);
+	}
+	return NULL;
+}
+
+size_t PHIKBallActuator::NChildObject() const{
+	if (this->joint != NULL) { return 1 + PHIKActuator::NChildObject(); }
+	return PHIKActuator::NChildObject();
+}
+
 void PHIKBallActuator::BeforeSetupMatrix(){
 	// 姿勢制御をするエンドエフェクタが無ければ自由度を２に下げる（冗長性回避のため）
 
@@ -406,6 +463,31 @@ void PHIKBallActuator::MoveToNaturalPosition(){
 }
 
 // --- --- --- --- ---
+bool PHIKHingeActuator::AddChildObject(ObjectIf* o){
+	PHHingeJointIf* jo = o->Cast();
+	if (jo) {
+		this->joint = jo;
+		this->jSpring = DCAST(PHHingeJointIf,this->joint)->GetSpring();
+		this->jDamper = DCAST(PHHingeJointIf,this->joint)->GetDamper();
+		this->jGoal   = DCAST(PHHingeJointIf,this->joint)->GetTargetPosition();
+		return true;
+	}
+	return PHIKActuator::AddChildObject(o);
+}
+ObjectIf* PHIKHingeActuator::GetChildObject(size_t pos){
+	if (pos == 0 && this->joint != NULL) { return this->joint; }
+	if (this->joint != NULL) {
+		return PHIKActuator::GetChildObject(pos - 1);
+	} else {
+		return PHIKActuator::GetChildObject(pos);
+	}
+	return NULL;
+}
+size_t PHIKHingeActuator::NChildObject() const{
+	if (this->joint != NULL) { return 1 + PHIKActuator::NChildObject(); }
+	return PHIKActuator::NChildObject();
+}
+
 void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 	int n = endeffector->number;
 	PHHingeJoint* j = DCAST(PHHingeJoint,joint);

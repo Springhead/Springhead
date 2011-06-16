@@ -8,7 +8,6 @@
 #ifndef PHCONSTRAINT_H
 #define PHCONSTRAINT_H
 
-#include <SprPhysics.h>
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHSpatial.h>
 #include <vector>

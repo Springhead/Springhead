@@ -8,41 +8,35 @@
 #ifndef VR_DRCONTECISADA_H
 #define VR_DRCONTECISADA_H
 
-#include <HumanInterface/HIRealDevice.h>
-#include "DVDaBase.h"
+#include <HumanInterface/HIDevice.h>
 
 namespace Spr {
 
 ///	ContecのISA D/Aカード用のドライバ.
-class SPR_DLL DRContecIsaDa:public HIRealDevice{
+class SPR_DLL DRContecIsaDa: public HIRealDevice{
 public:
+	SPR_OBJECTDEF_NOIF(DRContecIsaDa);
+
 	///	仮想デバイス
-	class VirtualDevice:public DVDaBase{
-	protected:
-		int ch;
-		DRContecIsaDa* realDevice;
-		char name[100];
+	class Da: public DVDa{
 	public:
-		VirtualDevice(DRContecIsaDa* r, int c);
-		virtual HIRealDeviceIf* RealDevice() { return realDevice->Cast(); }
-		virtual void Voltage(float v){ realDevice->Voltage(ch, v); }
-		virtual void Digit(int d){ realDevice->Digit(ch, d); }
-		virtual const char* Name() const{ return name; }
+		Da(DRContecIsaDa* r, int c):DVDa(r, c){}
+		DRContecIsaDa* GetRealDevice() { return realDevice->Cast(); }
+		
+		virtual void Voltage(float v){ GetRealDevice()->Voltage(portNo, v); }
+		virtual void Digit(int d){ GetRealDevice()->Digit(portNo, d); }
 	};
 protected:
-	char name[100];
 	///	D/AのIOアドレス
 	int address;
 public:
 	/**	コンストラクタ
 		@param address		D/AのI/Oアドレス	*/
-	DRContecIsaDa(int address);
-	///	デバイスの名前
-	virtual const char* Name() const { return name; }
+	DRContecIsaDa(int address = 0);
 	///	初期化
 	virtual bool Init();
 	///	仮想デバイスの登録
-	virtual void Register(HIVirtualDevicePool& vpool);
+	//virtual void Register(HIVirtualDevicePool& vpool);
 
 	///	電圧出力
 	void Voltage(int ch, float v);

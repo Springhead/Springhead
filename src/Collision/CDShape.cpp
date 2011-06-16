@@ -5,9 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Collision.h"
-#include <Foundation/Scene.h>
+#include <Collision/CDShape.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 namespace Spr{;
 
@@ -17,10 +18,10 @@ PHMaterial::PHMaterial(){
 	e = 0.4f;
 	density = 1.0f;
 
-	reflexSpringK = 5.0f;
-	reflexDamperD = 0.1f;
-	frictionSpringK = 5.0;
-	frictionDamperD = 0.1f;
+	reflexSpring = 5.0f;
+	reflexDamper = 0.1f;
+	frictionSpring = 5.0;
+	frictionDamper = 0.1f;
 	vibA = 0;
 	vibB = 0;
 	vibW = 0;

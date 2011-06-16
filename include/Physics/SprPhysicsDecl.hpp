@@ -105,8 +105,6 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHJoint1DIf(base)	\
 	void SetRange(double lower, double upper){	base::SetRange(lower, upper);}	\
 	void GetRange(double& lower, double& upper){	base::GetRange(lower, upper);}	\
-	void SetMotorTorque(double t){	base::SetMotorTorque(t);}	\
-	double GetMotorTorque(){	return	base::GetMotorTorque();}	\
 	void SetTargetVelocity(double v){	base::SetTargetVelocity(v);}	\
 	double GetTargetVelocity(){	return	base::GetTargetVelocity();}	\
 	void SetTrajectoryVelocity(double v){	base::SetTrajectoryVelocity(v);}	\
@@ -121,6 +119,8 @@
 	double GetVelocity(){	return	base::GetVelocity();}	\
 	void SetOffsetForce(double dat){	base::SetOffsetForce(dat);}	\
 	double GetOffsetForce(){	return	base::GetOffsetForce();}	\
+	void SetMotorTorque(double t){	base::SetMotorTorque(t);}	\
+	double GetMotorTorque(){	return	base::GetMotorTorque();}	\
 	void SetTorqueMax(double max){	base::SetTorqueMax(max);}	\
 	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
 	bool IsLimit(){	return	base::IsLimit();}	\
@@ -241,11 +241,9 @@
 	void SetContactMode(PHSolidIf** group, size_t length, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(group, length, mode);}	\
 	void SetContactMode(PHSolidIf* solid, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(solid, mode);}	\
 	void SetContactMode(Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(mode);}	\
-	int GetNumIteration(){	return	base::GetNumIteration();}	\
-	void SetNumIteration(int n){	base::SetNumIteration(n);}	\
 	Spr::PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const Spr::PHJointDesc& desc){	return	base::CreateJoint(lhs, rhs, ii, desc);}	\
 	int NJoints()const{	return	base::NJoints();}	\
-	Spr::PHConstraintIf* GetJoint(int i){	return	base::GetJoint(i);}	\
+	Spr::PHJointIf* GetJoint(int i){	return	base::GetJoint(i);}	\
 	int NContacts()const{	return	base::NContacts();}	\
 	Spr::PHContactPointIf* GetContact(int i){	return	base::GetContact(i);}	\
 	Spr::PHRootNodeIf* CreateRootNode(PHSolidIf* root, const Spr::PHRootNodeDesc& desc){	return	base::CreateRootNode(root, desc);}	\
@@ -272,6 +270,13 @@
 	void SetTimeStep(double dt){	base::SetTimeStep(dt);}	\
 	unsigned int GetCount()const{	return	base::GetCount();}	\
 	void SetCount(unsigned int count){	base::SetCount(count);}	\
+	void SetGravity(const Vec3d& accel){	base::SetGravity(accel);}	\
+	Vec3d GetGravity(){	return	base::GetGravity();}	\
+	void SetAirResistanceRate(double rate){	base::SetAirResistanceRate(rate);}	\
+	double GetAirResistanceRate(){	return	base::GetAirResistanceRate();}	\
+	int GetNumIteration(){	return	base::GetNumIteration();}	\
+	void SetNumIteration(int n){	base::SetNumIteration(n);}	\
+	void SetStateMode(bool bConstraints){	base::SetStateMode(bConstraints);}	\
 	void Step(){	base::Step();}	\
 	void ClearForce(){	base::ClearForce();}	\
 	void GenerateForce(){	base::GenerateForce();}	\
@@ -279,23 +284,17 @@
 	void IntegratePart1(){	base::IntegratePart1();}	\
 	void IntegratePart2(){	base::IntegratePart2();}	\
 	void Clear(){	base::Clear();}	\
-	void SetGravity(const Vec3d& accel){	base::SetGravity(accel);}	\
-	Vec3d GetGravity(){	return	base::GetGravity();}	\
-	void SetAirResistanceRate(double rate){	base::SetAirResistanceRate(rate);}	\
-	double GetAirResistanceRate(){	return	base::GetAirResistanceRate();}	\
 	int NEngines(){	return	base::NEngines();}	\
 	Spr::PHEngineIf* GetEngine(int i){	return	base::GetEngine(i);}	\
 	Spr::PHConstraintEngineIf* GetConstraintEngine(){	return	base::GetConstraintEngine();}	\
 	Spr::PHGravityEngineIf* GetGravityEngine(){	return	base::GetGravityEngine();}	\
 	Spr::PHPenaltyEngineIf* GetPenaltyEngine(){	return	base::GetPenaltyEngine();}	\
-	void SetStateMode(bool bConstraints){	base::SetStateMode(bConstraints);}	\
 	Spr::PHIKEngineIf* GetIKEngine(){	return	base::GetIKEngine();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSdkIf(base)	\
-	Spr::PHSceneIf* CreateScene(){	return	base::CreateScene();}	\
 	Spr::PHSceneIf* CreateScene(const Spr::PHSceneDesc& desc){	return	base::CreateScene(desc);}	\
 	int NScene(){	return	base::NScene();}	\
-	Spr::PHSceneIf* GetScene(size_t i){	return	base::GetScene(i);}	\
+	Spr::PHSceneIf* GetScene(int i){	return	base::GetScene(i);}	\
 	void MergeScene(Spr::PHSceneIf* scene0, Spr::PHSceneIf* scene1){	base::MergeScene(scene0, scene1);}	\
 	Spr::CDShapeIf* CreateShape(const IfInfo* ii, const Spr::CDShapeDesc& desc){	return	base::CreateShape(ii, desc);}	\
 	int NShape(){	return	base::NShape();}	\

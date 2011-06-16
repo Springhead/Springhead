@@ -5,10 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
-#pragma hdrstop
 #include <Foundation/UTLoadContext.h>
 #include <Foundation/UTLoadHandler.h>
+#include <Physics/SprPHNodeHandlers.h>
+#include <Physics/SprPHScene.h>
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 namespace Spr{;
 

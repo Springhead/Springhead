@@ -5,21 +5,22 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Device.h"
+//#include "Device.h"
 #pragma hdrstop
 #include "DRPortIO.h"
-
+#include "DRContecIsaCounter.h"
 
 namespace Spr {
 
-DRContecIsaCounter::VirtualDevice::VirtualDevice(DRContecIsaCounter* r, int c): realDevice(r), ch(c) {
-	sprintf(name, "%s Channel %d", realDevice->Name(), ch);
-}
 DRContecIsaCounter::DRContecIsaCounter(int a){
 	address = a;
-	sprintf(name, "Contec ISA Counter at 0x%03X", address);
 }
+
 bool DRContecIsaCounter::Init(){
+	char str[256];
+	sprintf(str, "Contec ISA Counter at 0x%03X", address);
+	SetName(str);
+
 	if (address == 0) return true;
 	WBGetPortIO();
 	//	ボードが存在することを確認
@@ -41,13 +42,18 @@ bool DRContecIsaCounter::Init(){
 		_outp(address    , 0x16);				//	sense reset
 		_outp(address+0x1, 0xff);
 	}
+
+	for(int i=0; i<4; i++){
+		AddChildObject((new DV(this, i))->Cast());
+	}
+
 	return true;
 }
-void DRContecIsaCounter::Register(HIVirtualDevicePool& vpool){
+/*void DRContecIsaCounter::Register(HIVirtualDevicePool& vpool){
 	for(int i=0; i<4; i++){
-		vpool.Register(new VirtualDevice(this, i));
+		vpool.Register(new DV(this, i));
 	}
-}
+}*/
 void DRContecIsaCounter::Count(int ch, long n){
 	if (address == 0) return;
 	unsigned char low,middle,high;

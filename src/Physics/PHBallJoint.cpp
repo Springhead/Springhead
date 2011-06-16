@@ -8,9 +8,11 @@
  *　SwingDirの制限は入っていません。必要な人が頑張って実装してください(by toki 2007.12.05)
  *
  */
-#include "Physics.h"
-#include <fstream>
+#include <Physics/PHBallJoint.h>
+#include <Physics/PHConstraintEngine.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 using namespace PTM;
 using namespace std;

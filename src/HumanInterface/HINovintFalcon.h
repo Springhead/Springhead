@@ -1,14 +1,12 @@
 #ifndef HINOVINTFALCON_H
 #define HINOVINTFALCON_H
 
-#include "HIHaptic.h"
-
 namespace Spr {;
 
 class UTDllLoader; 
 /**	@JA	Novint社のFalcon。３自由度力覚インタフェース
 	@EN	A Novint company's Falcon interface. A 3 DOF haptic interface. @@*/
-class SPR_DLL HINovintFalcon: public HIForceInterface6D{
+class SPR_DLL HINovintFalcon: public HIHaptic{
 public:
 	static UTDllLoader* sDllLoader;
 protected:
@@ -22,7 +20,7 @@ public:
 	///	デバイスのタイプ
 	SPR_OBJECTDEF(HINovintFalcon);
 
-	HINovintFalcon();
+	HINovintFalcon(const HINovintFalconDesc& desc = HINovintFalconDesc());
 	virtual ~HINovintFalcon();
 	///	デバイスの初期化(使用前に呼ぶ)
 	virtual bool Init(const void* desc);

@@ -8,11 +8,10 @@
 #ifndef CDCONVEX_H
 #define CDCONVEX_H
 
-#include <SprCollision.h>
 #include <Foundation/Object.h>
-#include "CDShape.h"
-#include "CDCutRing.h"
-#include "CollisionDecl.hpp"
+#include <Collision/CDShape.h>
+#include <Collision/CDCutRing.h>
+#include <Collision/CollisionDecl.hpp>
 
 namespace Spr{;
 

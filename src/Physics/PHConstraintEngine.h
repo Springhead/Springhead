@@ -8,19 +8,19 @@
 #ifndef PHCONSTRAINTENGINE_H
 #define PHCONSTRAINTENGINE_H
 
-#include "PHContactDetector.h"
-#include "PHConstraint.h"
-#include "PHGear.h"
-#include "PHPathJoint.h"
-#include "PHBallJoint.h"
 #include <Collision/CDDetectorImp.h>
+#include <Physics/PHConstraint.h>
+#include <Physics/PHGear.h>
+#include <Physics/PHContactDetector.h>
 
 namespace Spr{;
 
 class PHSolid;
 class PHJoint;
+class PHJoint1D;
 class PHRootNode;
 class PHConstraintEngine;
+class PHPath;
 
 ///	å`èÛÇÃëg
 class PHShapePairForLCP: public CDShapePair{

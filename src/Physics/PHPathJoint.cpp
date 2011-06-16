@@ -5,8 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
+#include <Physics/PHPathJoint.h>
+#include <Physics/PHConstraintEngine.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 using namespace PTM;
 using namespace std;

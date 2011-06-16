@@ -8,9 +8,9 @@
 #ifndef CRSDK_H
 #define CRSDK_H
 
-#include <Springhead.h>
-#include <Foundation/Foundation.h>
+#include <Foundation/Scene.h>
 #include <Creature/SprCRSdk.h>
+#include <Creature/SprCRCreature.h>
 
 namespace Spr {;
 

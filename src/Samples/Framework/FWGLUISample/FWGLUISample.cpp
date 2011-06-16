@@ -17,7 +17,7 @@ void FWGLUISample::Init(int argc, char* argv[]){
 	CreateSdk();			// Sdkの作成
 	GetSdk()->Clear();		// SDKの初期化
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneの作成
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);	// シミュレーションの刻み時間を設定
+	GetSdk()->GetScene(0)->GetPHScene()->SetTimeStep(0.05);	// シミュレーションの刻み時間を設定
 
 	FWWinDesc windowDesc;					// GLのウィンドウディスクリプタ
 	windowDesc.title = "FWAppSample";		// ウィンドウのタイトル
@@ -49,7 +49,7 @@ void FWGLUISample::InitCameraView(){
 }
 
 void FWGLUISample::CreateObjects(){
-	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
+	PHSceneIf* phscene = GetSdk()->GetScene(0)->GetPHScene();
 	PHSolidDesc desc;
 	CDBoxDesc bd;
 
@@ -98,7 +98,7 @@ void FWGLUISample::Display(){
 	FWSceneIf*  scene  = win->GetScene();
 	
 	/// 描画モードの設定
-	GetSdk()->SetDebugMode(true);
+	win->SetDebugMode(true);
 	scene->SetRenderMode(true, false);
 	scene->EnableRenderForce(bDrawInfo, bDrawInfo);
 	scene->EnableRenderContact(bDrawInfo);
@@ -121,7 +121,7 @@ void FWGLUISample::Display(){
 }
 
 void FWGLUISample::Reset(){
-	GetSdk()->GetScene()->GetPHScene()->Clear();
+	GetSdk()->GetScene(0)->GetPHScene()->Clear();
 	CreateObjects();
 }
 

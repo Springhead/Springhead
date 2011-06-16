@@ -5,9 +5,16 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Physics.h"
-#pragma hdrstop
+#include <Physics/PHScene.h>
+#include <Physics/PHSdk.h>
+#include <Physics/PHJoint.h>
+#include <Physics/PHTreeNode.h>
+#include <Physics/PHPathJoint.h>
+#include <Physics/PHForceField.h>
+#include <Physics/PHPenaltyEngine.h>
+#include <Physics/PHConstraintEngine.h>
 #include <sstream>
+#pragma hdrstop
 
 namespace Spr{;
 
@@ -50,7 +57,7 @@ void PHScene::AfterSetDesc(){
 }
 void PHScene::BeforeGetDesc() const{
 	// Engine‚ÌAPI‚ð‰î‚µ‚Ä•ÏX‚³‚ê‚é‰Â”\«‚à‚ ‚é‚Ì‚Å
-	(Vec3f&)gravity = gravityEngine->accel;
+	(Vec3d&)gravity = gravityEngine->accel;
 	(int&)numIteration = constraintEngine->numIter;
 }
 PHSdkIf* PHScene::GetSdk(){
@@ -83,8 +90,8 @@ PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii
 int PHScene::NJoints()const{
 	return constraintEngine->joints.size();
 }
-PHConstraintIf* PHScene::GetJoint(int i){
-	return DCAST(PHConstraintIf, constraintEngine->joints[i]);
+PHJointIf* PHScene::GetJoint(int i){
+	return DCAST(PHJointIf, constraintEngine->joints[i]);
 }
 int PHScene::NContacts()const{
 	return constraintEngine->points.size();
@@ -274,7 +281,7 @@ void PHScene::SetGravity(const Vec3d& accel){
 	assert(ge);
 	ge->accel = accel;
 }
-Vec3f PHScene::GetGravity(){
+Vec3d PHScene::GetGravity(){
 	PHGravityEngine* ge;
 	engines.Find(ge);
 	assert(ge);

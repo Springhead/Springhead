@@ -5,12 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Springhead.h>
-#include <Foundation/Object.h>
-#include "Collision.h"
-#include <set>
+#include <Collision/CDCapsule.h>
+#ifdef USE_HDRSTOP
 #pragma hdrstop
-#include "CDQuickHull3DImp.h"
+#endif
 
 namespace Spr{;
 
@@ -84,13 +82,6 @@ bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	}else{
 		return false;
 	}
-}
-
-float CDCapsule::GetRadius() {
-	return radius;
-}
-float CDCapsule::GetLength() {
-	return length;
 }
 
 Matrix3f CDCapsule::CalcMomentOfInertia(){

@@ -8,7 +8,12 @@
 #ifndef SPR_PHENGINEIF_H
 #define SPR_PHENGINEIF_H
 
+#include <Foundation/SprObject.h>
+
 namespace Spr{;
+
+struct PHConstraintsIf;
+
 /** \addtogroup gpPhysics */
 //@{
 

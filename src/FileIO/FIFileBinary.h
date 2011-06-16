@@ -8,7 +8,7 @@
 #ifndef FIFILEBINARY_H
 #define FIFILEBINARY_H
 
-#include "FIFile.h"
+#include <FileIO/FIFile.h>
 
 namespace Spr{;
 
@@ -23,7 +23,7 @@ protected:
 	void LoadBlock();
 	int LoadNode();
 public:
-	FIFileBinary();
+	FIFileBinary(const FIFileBinaryDesc& desc = FIFileBinaryDesc());
 	void LoadImp(FILoadContext* fc);
 	//virtual void PushLoaderContext(FILoadContext* fc);
 	//virtual void PopLoaderContext();

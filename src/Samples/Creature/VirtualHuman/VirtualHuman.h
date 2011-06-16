@@ -5,8 +5,8 @@
 
 #include <Springhead.h>
 #include <Framework/SprFWApp.h>
-#include <Physics/PHIK.h>
-#include <Creature/CRCreature.h>
+#include <Physics/SprPHIK.h>
+#include <Creature/SprCRCreature.h>
 
 #include "Creature/CRBodyGenerator/CRBallHumanBodyGen.h"
 
@@ -16,7 +16,7 @@ using namespace std;
 
 class VirtualHuman : public FWApp{
 public:
-	FWWin* window;
+	FWWinIf* window;
 
 	Vec3d gravity;
 
@@ -60,7 +60,7 @@ public:
 	void UpdateCursor(int x, int y);
 	bool LoadScene(UTString filename);
 	void CalcWritheness();
-	void RenderWritheness(GRDebugRenderIf* curRender);
+	void RenderWritheness(GRRenderIf* curRender);
 }; 
 
 extern VirtualHuman app;

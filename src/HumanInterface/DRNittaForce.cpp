@@ -5,24 +5,22 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Device.h"
 #pragma hdrstop
 #include <Foundation/UTDllLoader.h>
-#include "DRPortIO.h"
+#include <HumanInterface/DRPortIO.h>
+#include <HumanInterface/DRNittaForce.h>
 
 namespace Spr {
-
 
 DRNittaForce::DRNittaForce(int n){
 	if (n>10){
 		baseAdr = n;
 		boardNumber = -1;
-		sprintf(name, "Nitta 6DOF force sensor at 0x%03X", baseAdr);
 	}else{
 		boardNumber = n;
 		baseAdr = -1;
-		sprintf(name, "Nitta 6DOF force sensor #%d", boardNumber);
 	}
+
 	for(int i=0; i < DOF; ++i){
 		force[i] = 0;
 		full_range[i] = 1;
@@ -41,7 +39,7 @@ static UTDllLoader dllLoader("jr3.dll");	//	グローバル変数でローダーを作る．
 
 //	int DllFunc(int arg)  の場合
 //	DWORD DllExport JR3read(short boardNumber, short address, short* data) ;
-#define DLLFUNC_RTYPE	DWORD		//	返り値の型 voidの場合は定義してはならない．
+#define DLLFUNC_RTYPE	unsigned	//	返り値の型 voidの場合は定義してはならない．
 #define DLLFUNC_NAME	JR3read		//	関数名
 #define DLLFUNC_STR		"JR3read"
 #define DLLFUNC_ARGDEF		(short boardNumber, short address, short* data)	
@@ -50,7 +48,7 @@ static UTDllLoader dllLoader("jr3.dll");	//	グローバル変数でローダーを作る．
 									//	関数呼び出しの引数
 #include <Foundation/UTDllLoaderImpl.h>
 //	DWORD DllExport JR3write(short boardNumber, short address, short data) ;
-#define DLLFUNC_RTYPE	DWORD		//	返り値の型 voidの場合は定義してはならない．
+#define DLLFUNC_RTYPE	unsigned	//	返り値の型 voidの場合は定義してはならない．
 #define DLLFUNC_NAME	JR3write	//	関数名
 #define DLLFUNC_STR		"JR3write"
 #define DLLFUNC_ARGDEF		(short boardNumber, short address, short data)	
@@ -76,6 +74,12 @@ void DRNittaForce::WriteReg(unsigned short a, unsigned short d){
 	}
 }	
 bool DRNittaForce::Init(){
+	char str[256];
+	if (baseAdr != -1)
+		 sprintf(str, "Nitta 6DOF force sensor at 0x%03X", baseAdr);
+	else sprintf(str, "Nitta 6DOF force sensor #%d", boardNumber);
+	SetName(str);
+
 	if (baseAdr != -1){	//	直接アクセスの場合はGiveIO.sysを使ってポートへのアクセス許可をもらう
 		WBGetPortIO();
 	}
@@ -92,11 +96,12 @@ bool DRNittaForce::Init(){
 	if (software_ver_no == 0xFFFF && serial_no == 0xFFFF && model_no == 0xFFFF){
 		return false;
 	}
+	AddChildObject((DBG_NEW DV(this))->Cast());
 	return true;
 }
-void DRNittaForce::Register(HIVirtualDevicePool& vpool){
-	vpool.Register(new VirtualDevice(this));
-}
+/*void DRNittaForce::Register(HIVirtualDevicePool& vpool){
+	vpool.Register(new DV(this));
+}*/
 void DRNittaForce::ReadForce(int ch){
 	unsigned short raw;
 	ReadReg(force_addr+ch, &raw);
@@ -114,8 +119,7 @@ unsigned short DRNittaForce::GetCounter8K(){
 	return raw;
 }
 
-void DRNittaForce::Reset()
-{	
+void DRNittaForce::Reset(){	
 	unsigned short i;
 	unsigned short raw;
 	ReadReg(fx0_addr, &raw);   ReadReg(0x88, &i);   WriteReg(0x88, i + raw);	 
