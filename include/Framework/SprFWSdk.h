@@ -87,8 +87,9 @@ struct FWSdkIf : SdkIf {
 
 	/** @brief シーンを取得する
 		@param index 取得するシーンのインデックス
+		indexに-1を指定するとカレントウィンドウのシーンを返す
 	 */
-	FWSceneIf* GetScene(int index);
+	FWSceneIf* GetScene(int index = -1);
 
 	/** @brief シーンを混ぜる
 		scene1に含まれる全ての要素をscene0に移動し，scene1を削除する．
@@ -114,12 +115,8 @@ struct FWSdkIf : SdkIf {
 	/** @brief レンダラの個数を取得する */
 	//int NRender() const;
 	
-	/** @brief レンダラを取得する */
-	//GRRenderIf* GetRender(int index = -1);
-	
 	/** @brief レンダラをアクティブにする */
 	//void SwitchRender(GRRenderIf* render);
-
 	
 	/// Physics SDK(PHSdk)オブジェクトを取得する
 	PHSdkIf* GetPHSdk();
@@ -133,36 +130,20 @@ struct FWSdkIf : SdkIf {
 	/// HumanInterface SDK(HISdk)オブジェクトを取得する
 	HISdkIf* GetHISdk();
 
-	/** @brief デバッグ描画モードの取得
-	 */
-	//bool GetDebugMode();
-
-	/** @brief デバッグ描画モードの設定
-	 */
-	//void SetDebugMode(bool debug = true);
-
-	/** @brief シミュレーションの実行
-	 */
-	//void Step();
-
-	/** @brief 描画を実行
-		アクティブなシーンとアクティブなレンダラを使って描画を行う．
-
-		デバッグ描画モードではGraphicsのシーングラフ情報を使わずに，
-		Physicsシーンの剛体が持つ衝突判定用形状データや，拘束力などの描画が行われる．
-		
-		通常描画モードではまずSync関数によりPhysicsシーンの状態がGraphicsシーングラフに反映された後，
-		シーングラフの形状データやマテリアル、テクスチャを利用して描画が行われる。
-	 */
-	//void Draw();
-
-	/** @brief 描画領域のサイズを設定する
-		@param w 描画領域の横幅
-		@param h 描画領域の縦幅
-		アクティブなレンダラの描画領域を設定する
-	 */
-	//void Reshape(int w, int h);
-
+	/// 以下は互換性維持のために残してあるが，カレントウィンドウへリダイレクトするのみ
+	/** @brief デバッグ描画モードの取得 */
+	bool GetDebugMode();
+	/** @brief デバッグ描画モードの設定 */
+	void SetDebugMode(bool debug = true);
+	/** @brief シミュレーションの実行 */
+	void Step();
+	/** @brief 描画を実行 */
+	void Draw();
+	/** @brief 描画領域のサイズを設定する */
+	void Reshape(int w, int h);
+	/** @brief レンダラを取得する */
+	GRRenderIf* GetRender();
+	
 	/** @brief DSTR出力のデバッグ情報の表示の可否を設定
 	 */
 	//void SetDSTR(bool f);

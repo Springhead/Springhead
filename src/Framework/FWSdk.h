@@ -84,15 +84,14 @@ public:
 	/// ƒŒƒ“ƒ_ƒ‰ŠÖŒW
 	//GRRenderIf*	CreateRender();
 	//int NRender() const{return (int)renders.size();}
-	//GRRenderIf* GetRender(int index = -1);
 	//void SwitchRender(GRRenderIf* render){ curRender = render; }
-	//bool GetDebugMode(){return debugMode;}
-	//void SetDebugMode(bool debug = true){debugMode = debug;}
 	
-	/// ‚»‚Ì‘¼
-	//void Step();
-	//void Draw();
-	//void Reshape(int w, int h);
+	bool GetDebugMode();
+	void SetDebugMode(bool debug);
+	void Step();
+	void Draw();
+	void Reshape(int w, int h);
+	GRRenderIf* GetRender();
 	//void SetDSTR(bool f){ DSTRFlag = f; }
 	
 	// Object‚Ì‰¼‘zŠÖ”‚ÌÀ‘•
