@@ -8,7 +8,6 @@
 #ifndef HI_DEVICE_H
 #define HI_DEVICE_H
 
-#include <HumanInterface/SprHISdk.h>
 #include <HumanInterface/SprHIDevice.h>
 #include <HumanInterface/SprHIKeyMouse.h>
 #include <HumanInterface/SprHIJoyStick.h>

@@ -7,9 +7,6 @@
  */
 #include <Physics/PHContactSurface.h>
 #include <Physics/PHConstraintEngine.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 #define USE_ROTATEFRICTION 1//‰ñ“]–€C‚Ì§ŒÀ‚ğs‚¤‚©‚Ç‚¤‚©
 

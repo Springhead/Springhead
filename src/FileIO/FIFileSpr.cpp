@@ -11,9 +11,6 @@
 #include <FileIO/FISaveContext.h>
 #include <fstream>
 #include <sstream>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 

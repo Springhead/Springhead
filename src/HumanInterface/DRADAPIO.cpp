@@ -5,12 +5,14 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-//#include "Device.h"
-#pragma hdrstop
-#include <Foundation/UTDllLoader.h>
 #include <HumanInterface/DRAdapio.h>
-
+#include <Foundation/UTDllLoader.h>
 #include <sstream>
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
+
+
 using namespace std;
 
 namespace Spr {

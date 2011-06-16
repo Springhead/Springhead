@@ -22,10 +22,6 @@
 #include <Creature/CRTrajectory.h>
 #include <Creature/CRGrabController.h>
 
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
-
 using namespace std;
 
 namespace Spr{;

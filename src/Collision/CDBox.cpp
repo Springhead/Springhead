@@ -6,9 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Collision/CDBox.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 const double sqEpsilon = 1e-4;

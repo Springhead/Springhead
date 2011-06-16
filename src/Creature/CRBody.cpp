@@ -8,9 +8,6 @@
 #include <Creature/CRBody.h>
 #include <Physics/PHSolid.h>
 #include <Physics/PHIKActuator.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{
 

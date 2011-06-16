@@ -61,7 +61,7 @@ void VirtualHuman::Reset(int sceneNum){
 	InitCameraView();
 }
 
-void VirtualHuman::InitCameraView(){
+/*void VirtualHuman::InitCameraView(){
 	istringstream iss(
 		"((0.9996 0.00141267 -0.0282299 -0.0937266)"
 		"(1.59067e-012 0.99875 0.0499792 0.165937)"
@@ -69,7 +69,7 @@ void VirtualHuman::InitCameraView(){
 		"(	   0      0      0      1))"
 		);
 	iss >> cameraInfo.view;
-}
+}*/
 
 bool VirtualHuman::LoadScene(UTString filename){
 	//filename末端に改行コード( = 0x0a)が含まれているとロードされないので，あれば最初に削除する
@@ -98,7 +98,6 @@ bool VirtualHuman::LoadScene(UTString filename){
 	DSTR << "Loaded " << GetSdk()->NScene() - first << " scenes." << std::endl;
 	DSTR << "LoadFile Complete." << std::endl;
 	for(int i=first; i<GetSdk()->NScene(); ++i){
-		GetSdk()->SwitchScene(GetSdk()->GetScene(i));
 		GetSdk()->GetScene(i)->Print(DSTR);
 	}
 	return true;
@@ -112,7 +111,7 @@ void VirtualHuman::BuildScene(int sceneNum){
 	LoadScene(filename);
 
 	PHSdkIf*	phSdk	= GetSdk()->GetPHSdk();
-	PHSceneIf*	phScene	= GetSdk()->GetScene()->GetPHScene();
+	PHSceneIf*	phScene	= GetSdk()->GetScene(0)->GetPHScene();
 
 	/*
 	{

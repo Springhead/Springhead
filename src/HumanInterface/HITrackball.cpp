@@ -5,8 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "HITrackball.h"
+#include <HumanInterface/HITrackball.h>
 #include <Graphics/SprGRRender.h>
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 
 namespace Spr {;
 

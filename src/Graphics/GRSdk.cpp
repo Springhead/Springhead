@@ -10,9 +10,6 @@
 #include <Graphics/GRBlendMesh.h>
 #include <Graphics/GRSphere.h>
 #include <Graphics/GRDeviceGL.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 GRSdkIf* SPR_CDECL GRSdkIf::CreateSdk(){

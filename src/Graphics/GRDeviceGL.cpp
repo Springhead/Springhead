@@ -6,9 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Graphics/GRDeviceGL.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 #define USE_GREW
 //#define GLEW_MX
@@ -23,7 +20,6 @@
 # include <windows.h>
 #endif
 #include <stack>
-
 
 #include <GL/glut.h>
 #include "GRLoadBmp.h"

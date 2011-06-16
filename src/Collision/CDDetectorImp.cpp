@@ -8,9 +8,6 @@
 #include <Collision/CDDetectorImp.h>
 #include <Collision/CDConvexMesh.h>
 #include <Collision/CDSphere.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr {;
 const double epsilon = 1e-8;

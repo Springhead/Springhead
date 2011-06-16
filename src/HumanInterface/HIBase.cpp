@@ -5,10 +5,9 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "HumanInterface.h"
-#include <HumanInterface/SprHIBase.h>
-#include <HumanInterface/SprHIDevice.h>
-#ifdef _WIN32
+#include <HumanInterface/HIBase.h>
+#include <HumanInterface/HIDevice.h>
+#ifdef USE_HDRSTOP
  #pragma hdrstop
 #endif
 

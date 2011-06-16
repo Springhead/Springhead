@@ -5,13 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "HumanInterface.h"
-#include "HIDevice.h"
+#include <HumanInterface/HIDevice.h>
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 
-#include <sstream>
 using namespace std;
-
-#pragma hdrstop
 
 namespace Spr {;
 

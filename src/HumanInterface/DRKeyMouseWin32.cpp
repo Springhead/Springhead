@@ -12,9 +12,11 @@
 
 #include <HumanInterface/HISdk.h>
 #include <HumanInterface/DRKeyMouseWin32.h>
-
 #ifdef _WIN32
 # include <windows.h>
+#endif
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
 #endif
 
 namespace Spr {;

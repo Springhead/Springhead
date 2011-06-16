@@ -1,9 +1,8 @@
 #ifndef HI_SPIDAR_H
 #define HI_SPIDAR_H
 
-#include "HISpidarMotor.h"
-#include "HISpidarCalc.h"
-
+#include <HumanInterface/HISpidarMotor.h>
+#include <HumanInterface/HISpidarCalc.h>
 #include <vector>
 
 /**	4–{Ž…‚ÌSPIDAR.

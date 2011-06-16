@@ -9,7 +9,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#pragma hdrstop
 #include <HumanInterface/DRUsb20Simple.h>
 #include <HumanInterface/DREzUSB.h>
 
@@ -19,6 +18,11 @@
 #endif
 
 #include <sstream>
+
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
+
 using namespace std;
 
 //////////////////////////////////////////////////////////////////////

@@ -6,9 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <FileIO/FISpirit.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 #if defined(__BORLANDC__)
 # pragma option push -pc

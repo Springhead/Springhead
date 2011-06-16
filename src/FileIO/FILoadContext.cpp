@@ -13,12 +13,11 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #endif
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 
 #include <FileIO/FILoadContext.h>
-
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace std;
 

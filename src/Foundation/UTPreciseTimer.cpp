@@ -5,7 +5,6 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#pragma hdrstop
 #pragma comment(lib, "winmm.lib")
 
 #include "UTPreciseTimer.h"

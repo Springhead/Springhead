@@ -7,10 +7,6 @@
  */
 #include <Creature/CRVisualSensor.h>
 
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
-
 namespace Spr{
 void CRVisualSensor::Init(){
 	/*

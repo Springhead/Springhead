@@ -13,9 +13,6 @@
 #include <fstream>
 #include <sstream>
 #include <boost/bind.hpp>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 

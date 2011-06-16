@@ -9,6 +9,7 @@
 #define SPR_HIKEYMOUSE_H
 
 #include <HumanInterface/SprHIBase.h>
+
 namespace Spr {;
 
 /** 仮想キーボード・マウス

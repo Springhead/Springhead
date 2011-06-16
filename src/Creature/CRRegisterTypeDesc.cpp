@@ -6,10 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#include <Foundation/Foundation.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
+#include <Foundation/UTTypeDesc.h>
 
 namespace Spr{ 
 extern void RegisterTypeDescCreature(UTTypeDescDb* db);

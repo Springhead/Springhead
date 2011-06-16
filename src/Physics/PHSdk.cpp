@@ -21,7 +21,6 @@
 #include <Collision/CDConvexMesh.h>
 #include <Collision/CDConvexMeshInterpolate.h>
 #include <stdlib.h>
-#pragma hdrstop
 
 namespace Spr{;
 

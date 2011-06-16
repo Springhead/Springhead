@@ -8,6 +8,7 @@
 
 #ifndef SPR_HI_DRUSB_H
 #define SPR_HI_DRUSB_H
+
 #include <HumanInterface/SprHIBase.h>
 
 namespace Spr{;

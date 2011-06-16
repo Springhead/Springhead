@@ -6,10 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Physics/PHFemMesh.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
-//#include <float.h>
 
 using namespace PTM;
 namespace Spr{;

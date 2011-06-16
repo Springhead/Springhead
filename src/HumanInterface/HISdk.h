@@ -7,7 +7,8 @@
  */
 #ifndef HISDK_H
 #define HISDK_H
-#include <Foundation/Foundation.h>
+
+#include <Foundation/Scene.h>
 #include <HumanInterface/SprHISdk.h>
 #include <HumanInterface/HIBase.h>
 

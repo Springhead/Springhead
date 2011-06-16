@@ -10,9 +10,6 @@
 #include <Creature/SprCRCreature.h>
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHIK.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---

@@ -12,7 +12,8 @@
 
 #ifndef SPR_HIDevice_H
 #define SPR_HIDevice_H
-#include <SprFoundation.h>
+
+#include <Foundation/SprObject.h>
 
 namespace Spr{;
 struct HISdkIf;

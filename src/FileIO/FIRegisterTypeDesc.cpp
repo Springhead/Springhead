@@ -7,9 +7,6 @@
  */
 #include <Foundation/UTTypeDesc.h>
 #include <FileIO/FISdk.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace Spr;
 //static UTTypeDesc* desc; 

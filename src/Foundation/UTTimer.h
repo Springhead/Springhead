@@ -6,6 +6,7 @@
 
 #include <Base/Env.h>
 #include <Foundation/Object.h>
+#include <Foundation/SprUTTimer.h>
 
 namespace Spr {
 

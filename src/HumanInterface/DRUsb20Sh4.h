@@ -12,7 +12,7 @@
 #ifndef DR_USB20SH4_H
 #define DR_USB20SH4_H
 
-#include "DRUsb20Simple.h"
+#include <HumanInterface/DRUsb20Simple.h>
 
 namespace Spr {;
 

@@ -5,10 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Springhead.h>
-#pragma hdrstop
-#include "Object.h"
-#include "Scene.h"
+#include <Foundation/Scene.h>
 #include <sstream>
 #include <iomanip>
 

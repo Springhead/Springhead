@@ -14,7 +14,6 @@
 #include <Physics/PHPenaltyEngine.h>
 #include <Physics/PHConstraintEngine.h>
 #include <sstream>
-#pragma hdrstop
 
 namespace Spr{;
 

@@ -5,10 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-//#include "Device.h"
-#pragma hdrstop
-#include "DRPortIO.h"
-#include "DRContecIsaDa.h"
+#include <HumanInterface/DRContecIsaDa.h>
+#include <HumanInterface/DRPortIO.h>
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 
 namespace Spr {
 

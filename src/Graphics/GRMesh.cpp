@@ -7,9 +7,6 @@
  */
 #include <Graphics/GRMesh.h>
 #include <Graphics/GRRender.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace std;
 

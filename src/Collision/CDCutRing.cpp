@@ -6,9 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Collision/CDCutRing.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 CDQHLines<CDCutLine> CDCutRing::vtxs(1000);		//	ˆê”Ô“à‘¤‚Ì“Ê‘½ŠpŒ`‚Ì’¸“_

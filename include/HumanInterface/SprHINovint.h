@@ -12,6 +12,7 @@
 
 #ifndef SPR_HINovint_H
 #define SPR_HINovint_H
+
 #include <HumanInterface/SprHIBase.h>
 
 namespace Spr{;
