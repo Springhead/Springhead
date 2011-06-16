@@ -14,8 +14,6 @@
 	しかし，似ている箇所があります．もし派生物だと認定された場合，
 	ライセンスがLGPLとなります．ご注意ください．
 */
-#pragma hdrstop
-
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
 #include <Collision/CDCapsule.h>

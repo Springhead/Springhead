@@ -13,9 +13,6 @@
 #include <Physics/PHConstraintEngine.h>
 #include <Collision/CDShape.h>
 #include <float.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace PTM;
 namespace Spr{;

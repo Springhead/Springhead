@@ -8,6 +8,7 @@
 #ifndef SPR_FWAPP_H
 #define SPR_FWAPP_H
 
+#include <Foundation/SprUTTimer.h>
 #include <HumanInterface/SprHIKeyMouse.h>
 #include <Framework/SprFWWin.h>
 

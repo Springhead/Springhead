@@ -7,7 +7,6 @@
  */
 #include <Foundation/UTTypeDesc.h>
 #include <Graphics/GRSdk.h>
-#pragma hdrstop
 
 namespace Spr{ 
 static UTTypeDesc* desc; 

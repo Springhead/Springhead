@@ -1,6 +1,8 @@
 #ifndef HINOVINTFALCON_H
 #define HINOVINTFALCON_H
 
+#include <HumanInterface/HIBase.h>
+
 namespace Spr {;
 
 class UTDllLoader; 

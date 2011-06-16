@@ -8,9 +8,6 @@
 #include <Physics/PHConstraint.h>
 #include <Physics/PHTreeNode.h>
 #include <Physics/PHConstraintEngine.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace std;
 using namespace PTM;

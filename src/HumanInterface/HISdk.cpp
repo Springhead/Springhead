@@ -15,6 +15,9 @@
 #include <HumanInterface/HIMouse6D.h>
 #include <HumanInterface/HITrackball.h>
 #include <HumanInterface/HIDragger.h>
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 
 namespace Spr {;
 

@@ -7,9 +7,6 @@
  */
 #include <Foundation/UTLoadHandler.h>
 #include <FileIO/FISaveContext.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace std;
 

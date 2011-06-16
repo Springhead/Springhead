@@ -8,9 +8,6 @@
 #include <Graphics/GRScene.h>
 #include <Graphics/GRSdk.h>
 #include <Graphics/GRMesh.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 

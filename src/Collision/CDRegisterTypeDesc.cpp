@@ -5,8 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#pragma hdrstop
-#include <Foundation/Foundation.h>
+#include <Foundation/UTTypeDesc.h>
 #include <Physics/PHSdk.h>
 
 namespace Spr{ 

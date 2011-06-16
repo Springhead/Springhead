@@ -7,10 +7,6 @@
  */
 #include <Graphics/GRRender.h>
 #include <boost/regex.hpp>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
-
 
 namespace Spr {;
 

@@ -8,9 +8,6 @@
 #include <FileIO/FIFileX.h>
 #include <FileIO/FILoadContext.h>
 #include <FileIO/FISaveContext.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 

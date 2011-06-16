@@ -5,9 +5,6 @@
 #include <FileIO/FILoadContext.h>
 #include <FileIO/FISaveContext.h>
 #include <boost/spirit/include/classic_regex.hpp>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 using namespace boost::spirit::classic;

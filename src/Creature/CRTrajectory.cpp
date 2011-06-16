@@ -11,9 +11,6 @@
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHScene.h>
 #include <Physics/SprPHIK.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---

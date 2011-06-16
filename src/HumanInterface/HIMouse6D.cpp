@@ -5,9 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "HumanInterface.h"
-#pragma hdrstop
-#include "HIMouse6D.h"
+#include <HumanInterface/HIMouse6D.h>
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 
 namespace Spr {;
 

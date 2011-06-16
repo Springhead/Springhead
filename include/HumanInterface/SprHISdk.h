@@ -11,7 +11,9 @@
 */
 #ifndef SPR_HISdkIF_H
 #define SPR_HISdkIF_H
+
 #include <HumanInterface/SprHIBase.h>
+#include <Foundation/SprScene.h>
 
 namespace Spr{;
 

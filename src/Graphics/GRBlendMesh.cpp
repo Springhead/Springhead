@@ -7,9 +7,6 @@
  */
 #include <Graphics/GRBlendMesh.h>
 #include <Graphics/GRRender.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 GRBlendMesh::GRBlendMesh(const GRBlendMeshDesc& desc):GRBlendMeshDesc(desc){

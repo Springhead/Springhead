@@ -6,9 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Creature/CREngine.h>
-#ifndef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace std;
 

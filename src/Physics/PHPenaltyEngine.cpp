@@ -9,9 +9,6 @@
 #include <float.h>
 #include <Collision/CDDetectorImp.h>
 #include <Base/Affine.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace PTM;
 namespace Spr{;

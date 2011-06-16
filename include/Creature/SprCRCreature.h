@@ -8,7 +8,7 @@
 #ifndef SPR_CRCREATUREIF_H
 #define SPR_CRCREATUREIF_H
 
-#include <Foundation/SprObject.h>
+#include <Foundation/SprScene.h>
 
 namespace Spr{;
 

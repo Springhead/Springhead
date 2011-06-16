@@ -10,9 +10,6 @@
 #include <FileIO/FILoadContext.h>
 #include <FileIO/FISaveContext.h>
 #include <FileIO/FISdk.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace std;
 

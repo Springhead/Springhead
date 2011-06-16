@@ -5,8 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "Device.h"
-#pragma hdrstop
+#include <HumanInterface/DRUPP.h>
+#include <algorithm>
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 // UPP control class
 //     Original works S.HASEGAWA (for ARMS-IV G.O.D.)
 //     Modefied by T.NAKAUE (for ARMS-VII)

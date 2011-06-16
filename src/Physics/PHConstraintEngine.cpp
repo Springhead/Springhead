@@ -13,9 +13,6 @@
 #include <Physics/PHSpring.h>
 #include <Physics/PHContactPoint.h>
 #include <Physics/PHContactSurface.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace PTM;
 using namespace std;

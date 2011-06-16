@@ -9,9 +9,6 @@
 #include <Foundation/UTLoadHandler.h>
 #include <Physics/SprPHNodeHandlers.h>
 #include <Physics/SprPHScene.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 

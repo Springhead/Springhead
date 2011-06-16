@@ -8,7 +8,7 @@
 #ifndef FOUNDATION_OBJECT_H
 #define FOUNDATION_OBJECT_H
 
-#include <SprFoundation.h>
+#include <Foundation/SprObject.h>
 #include <Base/Base.h>
 #include <iostream>
 #include <fstream>

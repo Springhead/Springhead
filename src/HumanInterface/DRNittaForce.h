@@ -8,10 +8,6 @@
 #ifndef DEVICE_DRNITTAFORCE_H
 #define DEVICE_DRNITTAFORCE_H
 
-#if _MSC_VER > 1000
-#pragma once
-#endif // _MSC_VER > 1000
-
 #include <HumanInterface/HIDevice.h>
 #include <base/Affine.h>
 

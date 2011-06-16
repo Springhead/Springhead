@@ -8,9 +8,6 @@
 #include <Physics/PHIKEndEffector.h>
 #include <Physics/PHIKActuator.h>
 #include <Physics/PHSolid.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace std;
 namespace Spr{;

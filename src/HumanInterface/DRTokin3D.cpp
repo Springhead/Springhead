@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include "DRTokin3D.h"
+#include <HumanInterface/DRTokin3D.h>
 
 // NEC Tokin 3Dを使用するためのコードのインクルード
 #ifdef SPR_USE_TOKIN3D
@@ -15,7 +15,9 @@
 # include "TKINPUT_I.C"
 #endif
 
-#pragma hdrstop
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 
 namespace Spr {;
 

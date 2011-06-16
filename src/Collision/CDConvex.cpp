@@ -8,9 +8,6 @@
 #include <Collision/CDConvex.h>
 #include <Collision/CDBox.h>
 #include <Collision/CDDetectorImp.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 

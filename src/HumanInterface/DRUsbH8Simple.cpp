@@ -6,7 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#pragma hdrstop
 #include <HumanInterface/DRUsbH8Simple.h>
 #include <HumanInterface/DRUsbH8SimpleDef.h>
 
@@ -16,6 +15,11 @@
 #endif
 
 #include <sstream>
+
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
+
 using namespace std;
 
 namespace Spr {

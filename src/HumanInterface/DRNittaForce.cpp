@@ -5,10 +5,12 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#pragma hdrstop
 #include <Foundation/UTDllLoader.h>
 #include <HumanInterface/DRPortIO.h>
 #include <HumanInterface/DRNittaForce.h>
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 
 namespace Spr {
 

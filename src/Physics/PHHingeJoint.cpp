@@ -7,9 +7,6 @@
  */
 #include <Physics/PHHingeJoint.h>
 #include <Physics/PHConstraintEngine.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 using namespace PTM;
 using namespace std;

@@ -7,9 +7,6 @@
  */
 #include <Graphics/GRSphere.h>
 #include <Graphics/GRRender.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 GRSphere::GRSphere(const GRSphereDesc& desc):GRSphereDesc(desc){

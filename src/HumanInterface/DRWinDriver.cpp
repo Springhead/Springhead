@@ -6,7 +6,9 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "DRWinDriver.h"
-#pragma hdrstop
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 
 #ifdef _WIN32
 

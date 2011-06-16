@@ -7,10 +7,6 @@
  */
 #include <Creature/CRGazeController.h>
 
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
-
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 

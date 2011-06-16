@@ -9,7 +9,7 @@
 #define DRADAPIO_H
 
 #include <HumanInterface/HIDevice.h>
-#include "tuadapio.h"
+#include <HumanInterface/tuadapio.h>
 
 namespace Spr {
 

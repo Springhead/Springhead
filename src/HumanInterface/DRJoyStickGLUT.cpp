@@ -8,6 +8,9 @@
 
 #include <HumanInterface/DRJoyStickGLUT.h>
 #include <HumanInterface/HISdk.h>
+#ifdef USE_HDRSTOP
+ #pragma hdrstop
+#endif
 
 namespace Spr {;
 

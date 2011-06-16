@@ -7,9 +7,6 @@
  */
 #include <Physics/PHEngine.h>
 #include <Physics/PHScene.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 

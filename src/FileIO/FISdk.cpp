@@ -13,9 +13,6 @@
 #include <FileIO/FIFileVRML.h>
 #include <FileIO/FIImport.h>
 #include <stdlib.h>
-#ifdef USE_HDRSTOP
-#pragma hdrstop
-#endif
 
 namespace Spr{;
 
