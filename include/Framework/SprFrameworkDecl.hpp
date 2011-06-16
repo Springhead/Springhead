@@ -1,11 +1,11 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_FWBoneIf(base)	\
-	PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
-	void SetPHSolid(PHSolidIf* s){	base::SetPHSolid(s);}	\
-	GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
-	void SetGRFrame(GRFrameIf* f){	base::SetGRFrame(f);}	\
-	CDRoundConeIf* GetShape(){	return	base::GetShape();}	\
+	Spr::PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
+	void SetPHSolid(Spr::PHSolidIf* s){	base::SetPHSolid(s);}	\
+	Spr::GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
+	void SetGRFrame(Spr::GRFrameIf* f){	base::SetGRFrame(f);}	\
+	Spr::CDRoundConeIf* GetShape(){	return	base::GetShape();}	\
 	void SetShapeRadius(double r1, double r2){	base::SetShapeRadius(r1, r2);}	\
-	PHJointIf* GetJoint(){	return	base::GetJoint();}	\
+	Spr::PHJointIf* GetJoint(){	return	base::GetJoint();}	\
 	void SetJointKDD2(double K, double D, double D2){	base::SetJointKDD2(K, D, D2);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWFemMeshIf(base)	\
@@ -23,13 +23,13 @@
 	int GetWinFromId(){	return	base::GetWinFromId();}	\
 	void PostRedisplay(){	base::PostRedisplay();}	\
 	int GetModifiers(){	return	base::GetModifiers();}	\
-	GRDeviceIf* GetGRDevice(){	return	base::GetGRDevice();}	\
+	Spr::GRDeviceIf* GetGRDevice(){	return	base::GetGRDevice();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractPointerIf(base)	\
-	void SetPointerSolid(PHSolidIf* solid){	base::SetPointerSolid(solid);}	\
-	PHSolidIf* GetPointerSolid(){	return	base::GetPointerSolid();}	\
-	void SetHI(HIBaseIf* hi){	base::SetHI(hi);}	\
-	HIBaseIf* GetHI(){	return	base::GetHI();}	\
+	void SetPointerSolid(Spr::PHSolidIf* solid){	base::SetPointerSolid(solid);}	\
+	Spr::PHSolidIf* GetPointerSolid(){	return	base::GetPointerSolid();}	\
+	void SetHI(Spr::HIBaseIf* hi){	base::SetHI(hi);}	\
+	Spr::HIBaseIf* GetHI(){	return	base::GetHI();}	\
 	void SetPosScale(double s){	base::SetPosScale(s);}	\
 	double GetPosScale(){	return	base::GetPosScale();}	\
 	void SetForceScale(double s){	base::SetForceScale(s);}	\
@@ -76,21 +76,21 @@
 	Vec3d GetPicCenterPosition(){	return	base::GetPicCenterPosition();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWObjectIf(base)	\
-	PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
-	void SetPHSolid(PHSolidIf* s){	base::SetPHSolid(s);}	\
-	GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
-	void SetGRFrame(GRFrameIf* f){	base::SetGRFrame(f);}	\
-	bool LoadMesh(const char* filename, const IfInfo* ii, GRFrameIf* frame){	return	base::LoadMesh(filename, ii, frame);}	\
-	void GenerateCDMesh(GRFrameIf* frame, const PHMaterial& mat){	base::GenerateCDMesh(frame, mat);}	\
+	Spr::PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
+	void SetPHSolid(Spr::PHSolidIf* s){	base::SetPHSolid(s);}	\
+	Spr::GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
+	void SetGRFrame(Spr::GRFrameIf* f){	base::SetGRFrame(f);}	\
+	bool LoadMesh(const char* filename, const IfInfo* ii, Spr::GRFrameIf* frame){	return	base::LoadMesh(filename, ii, frame);}	\
+	void GenerateCDMesh(Spr::GRFrameIf* frame, const PHMaterial& mat){	base::GenerateCDMesh(frame, mat);}	\
 	void Sync(bool ph_to_gr){	base::Sync(ph_to_gr);}	\
 	double GetSolidLength(){	return	base::GetSolidLength();}	\
 	void SetSolidLength(double l){	base::SetSolidLength(l);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWBoneObjectIf(base)	\
-	PHJointIf* GetPHJoint(){	return	base::GetPHJoint();}	\
-	void SetPHJoint(PHJointIf* j){	base::SetPHJoint(j);}	\
-	GRFrameIf* GetEndFrame(){	return	base::GetEndFrame();}	\
-	void SetEndFrame(GRFrameIf* f){	base::SetEndFrame(f);}	\
+	Spr::PHJointIf* GetPHJoint(){	return	base::GetPHJoint();}	\
+	void SetPHJoint(Spr::PHJointIf* j){	base::SetPHJoint(j);}	\
+	Spr::GRFrameIf* GetEndFrame(){	return	base::GetEndFrame();}	\
+	void SetEndFrame(Spr::GRFrameIf* f){	base::SetEndFrame(f);}	\
 	void SetAdaptType(int t){	base::SetAdaptType(t);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWStructureIf(base)	\
@@ -101,26 +101,26 @@
 	void AddBone(Spr::FWBoneObjectIf* o){	base::AddBone(o);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSceneIf(base)	\
-	PHSceneIf* GetPHScene(){	return	base::GetPHScene();}	\
-	void SetPHScene(PHSceneIf* s){	base::SetPHScene(s);}	\
-	GRSceneIf* GetGRScene(){	return	base::GetGRScene();}	\
-	void SetGRScene(GRSceneIf* s){	base::SetGRScene(s);}	\
+	Spr::PHSceneIf* GetPHScene(){	return	base::GetPHScene();}	\
+	void SetPHScene(Spr::PHSceneIf* s){	base::SetPHScene(s);}	\
+	Spr::GRSceneIf* GetGRScene(){	return	base::GetGRScene();}	\
+	void SetGRScene(Spr::GRSceneIf* s){	base::SetGRScene(s);}	\
 	Spr::FWObjectIf* CreateFWObject(){	return	base::CreateFWObject();}	\
 	int NObject()const{	return	base::NObject();}	\
 	Spr::FWObjectIf** GetObjects(){	return	base::GetObjects();}	\
 	void Sync(bool ph_to_gr){	base::Sync(ph_to_gr);}	\
 	void Step(){	base::Step();}	\
-	void Draw(GRRenderIf* grRender, bool debug){	base::Draw(grRender, debug);}	\
-	void DrawPHScene(GRRenderIf* render){	base::DrawPHScene(render);}	\
-	void DrawSolid(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire){	base::DrawSolid(render, solid, solid_or_wire);}	\
-	void DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid){	base::DrawShape(render, shape, solid);}	\
-	void DrawConstraint(GRRenderIf* render, PHConstraintIf* con){	base::DrawConstraint(render, con);}	\
-	void DrawContact(GRRenderIf* render, PHContactPointIf* con){	base::DrawContact(render, con);}	\
-	void DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine){	base::DrawIK(render, ikEngine);}	\
+	void Draw(Spr::GRRenderIf* grRender, bool debug){	base::Draw(grRender, debug);}	\
+	void DrawPHScene(Spr::GRRenderIf* render){	base::DrawPHScene(render);}	\
+	void DrawSolid(Spr::GRRenderIf* render, Spr::PHSolidIf* solid, bool solid_or_wire){	base::DrawSolid(render, solid, solid_or_wire);}	\
+	void DrawShape(Spr::GRRenderIf* render, Spr::CDShapeIf* shape, bool solid){	base::DrawShape(render, shape, solid);}	\
+	void DrawConstraint(Spr::GRRenderIf* render, Spr::PHConstraintIf* con){	base::DrawConstraint(render, con);}	\
+	void DrawContact(Spr::GRRenderIf* render, Spr::PHContactPointIf* con){	base::DrawContact(render, con);}	\
+	void DrawIK(Spr::GRRenderIf* render, Spr::PHIKEngineIf* ikEngine){	base::DrawIK(render, ikEngine);}	\
 	void SetRenderMode(bool solid, bool wire){	base::SetRenderMode(solid, wire);}	\
 	void EnableRender(Spr::ObjectIf* obj, bool enable){	base::EnableRender(obj, enable);}	\
-	void SetSolidMaterial(int mat, PHSolidIf* solid){	base::SetSolidMaterial(mat, solid);}	\
-	void SetWireMaterial(int mat, PHSolidIf* solid){	base::SetWireMaterial(mat, solid);}	\
+	void SetSolidMaterial(int mat, Spr::PHSolidIf* solid){	base::SetSolidMaterial(mat, solid);}	\
+	void SetWireMaterial(int mat, Spr::PHSolidIf* solid){	base::SetWireMaterial(mat, solid);}	\
 	void EnableRenderAxis(bool world, bool solid, bool con){	base::EnableRenderAxis(world, solid, con);}	\
 	void SetAxisMaterial(int matX, int matY, int matZ){	base::SetAxisMaterial(matX, matY, matZ);}	\
 	void SetAxisScale(float scaleWorld, float scaleSolid, float scaleCon){	base::SetAxisScale(scaleWorld, scaleSolid, scaleCon);}	\
@@ -147,8 +147,8 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSdkIf(base)	\
 	Spr::FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc){	return	base::CreateScene(phdesc, grdesc);}	\
-	bool LoadScene(UTString filename, ImportIf* ex, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::LoadScene(filename, ex, ii, objs);}	\
-	bool SaveScene(UTString filename, ImportIf* ex, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::SaveScene(filename, ex, ii, objs);}	\
+	bool LoadScene(UTString filename, Spr::ImportIf* ex, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::LoadScene(filename, ex, ii, objs);}	\
+	bool SaveScene(UTString filename, Spr::ImportIf* ex, const IfInfo* ii, Spr::ObjectIfs* objs){	return	base::SaveScene(filename, ex, ii, objs);}	\
 	int NScene()const{	return	base::NScene();}	\
 	Spr::FWSceneIf* GetScene(int index){	return	base::GetScene(index);}	\
 	void MergeScene(Spr::FWSceneIf* scene0, Spr::FWSceneIf* scene1){	base::MergeScene(scene0, scene1);}	\
@@ -158,8 +158,8 @@
 	void ClearIAScenes(){	base::ClearIAScenes();}	\
 	PHSdkIf* GetPHSdk(){	return	base::GetPHSdk();}	\
 	GRSdkIf* GetGRSdk(){	return	base::GetGRSdk();}	\
-	FISdkIf* GetFISdk(){	return	base::GetFISdk();}	\
-	HISdkIf* GetHISdk(){	return	base::GetHISdk();}	\
+	Spr::FISdkIf* GetFISdk(){	return	base::GetFISdk();}	\
+	Spr::HISdkIf* GetHISdk(){	return	base::GetHISdk();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWWinIf(base)	\
 	void SetPosition(int left, int top){	base::SetPosition(left, top);}	\
@@ -177,14 +177,14 @@
 	void SetRender(Spr::GRRenderIf* data){	base::SetRender(data);}	\
 	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
 	void SetScene(Spr::FWSceneIf* s){	base::SetScene(s);}	\
-	DVKeyMouseIf* GetKeyMouse(){	return	base::GetKeyMouse();}	\
-	void SetKeyMouse(DVKeyMouseIf* dv){	base::SetKeyMouse(dv);}	\
-	DVJoyStickIf* GetJoyStick(){	return	base::GetJoyStick();}	\
-	void SetJoyStick(DVJoyStickIf* dv){	base::SetJoyStick(dv);}	\
-	HITrackballIf* GetTrackball(){	return	base::GetTrackball();}	\
-	void SetTrackball(HITrackballIf* dv){	base::SetTrackball(dv);}	\
-	HIDraggerIf* GetDragger(){	return	base::GetDragger();}	\
-	void SetDragger(HIDraggerIf* dv){	base::SetDragger(dv);}	\
+	Spr::DVKeyMouseIf* GetKeyMouse(){	return	base::GetKeyMouse();}	\
+	void SetKeyMouse(Spr::DVKeyMouseIf* dv){	base::SetKeyMouse(dv);}	\
+	Spr::DVJoyStickIf* GetJoyStick(){	return	base::GetJoyStick();}	\
+	void SetJoyStick(Spr::DVJoyStickIf* dv){	base::SetJoyStick(dv);}	\
+	Spr::HITrackballIf* GetTrackball(){	return	base::GetTrackball();}	\
+	void SetTrackball(Spr::HITrackballIf* dv){	base::SetTrackball(dv);}	\
+	Spr::HIDraggerIf* GetDragger(){	return	base::GetDragger();}	\
+	void SetDragger(Spr::HIDraggerIf* dv){	base::SetDragger(dv);}	\
 	void SetRenderMode(bool ph_or_gr){	base::SetRenderMode(ph_or_gr);}	\
 	bool GetRenderMode(){	return	base::GetRenderMode();}	\
 	void Display(){	base::Display();}	\

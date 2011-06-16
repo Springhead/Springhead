@@ -35,8 +35,8 @@ public:\
 
 #define SPR_DECLMEMBEROF_FWInteractPointerDesc \
 protected:\
-	PHSolidIf*	pointerSolid;	\
-	HIBaseIf*	humanInterface;	\
+	Spr::PHSolidIf*	pointerSolid;	\
+	Spr::HIBaseIf*	humanInterface;	\
 	double	springK;	\
 	double	damperD;	\
 	double	springOriK;	\

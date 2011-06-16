@@ -26,6 +26,19 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHFemMeshThermoDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHFemMesh::SetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFemMesh::GetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHIKEndEffectorDesc \
 protected:\
 	bool	bEnabled;	\

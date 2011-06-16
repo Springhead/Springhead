@@ -42,7 +42,7 @@ bool PHIKActuator::AddChildObject(ObjectIf* o){
 }
 
 ObjectIf* PHIKActuator::GetChildObject(size_t pos){
-	for (ESetIter it=linkedEndEffectors.begin(); it!=linkedEndEffectors.end(); ++it) {
+	for (ESet::iterator it=linkedEndEffectors.begin(); it!=linkedEndEffectors.end(); ++it) {
 		if (pos == 0) {
 			return (*it)->Cast();
 		}
@@ -53,7 +53,7 @@ ObjectIf* PHIKActuator::GetChildObject(size_t pos){
 
 size_t PHIKActuator::NChildObject() const{
 	int cnt = 0;
-	for (ESetIter it=linkedEndEffectors.begin(); it!=linkedEndEffectors.end(); ++it) {
+	for (ESet::const_iterator it=linkedEndEffectors.begin(); it!=linkedEndEffectors.end(); ++it) {
 		cnt++;
 	}
 	return cnt;
@@ -75,7 +75,7 @@ void PHIKActuator::SetupMatrix(){
 		beta.clear();
 
 		// Γ
-		for(ASetIter act=linkedActuators.begin(); act!=linkedActuators.end(); ++act) {
+		for(ASet::iterator act=linkedActuators.begin(); act!=linkedActuators.end(); ++act) {
 			if (this->bNDOFChanged || ((*act)->bNDOFChanged && (*act)->bEnabled) || this->bActuatorAdded) {
 				gamma[(*act)->number].resize(this->ndof, (*act)->ndof);
 				// std::cout << "Γ[" << number << ", " << (*act)->number << "] : (" << this->ndof << "," << (*act)->ndof << ")" << std::endl;
@@ -90,7 +90,7 @@ void PHIKActuator::SetupMatrix(){
 		gamma[this->number].clear();
 
 		// Ｊ（ヤコビアン）
-		for (ESetIter eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef) {
+		for (ESet::iterator eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef) {
 			if (this->bNDOFChanged || ((*eef)->bNDOFChanged && (*eef)->bEnabled) || this->bEndEffectorAdded) {
 				Mj[(*eef)->number].resize((*eef)->ndof, this->ndof);
 				// std::cout << "Ｊ[" << (*eef)->number << ", " << this->number << "] : (" << (*eef)->ndof << "," << this->ndof << ")" << std::endl;
@@ -111,7 +111,7 @@ void PHIKActuator::SetupMatrix(){
 }
 
 void PHIKActuator::CalcAllJacobian(){
-	for(ESetIter eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef){
+	for(ESet::iterator eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef){
 		if (! DCAST(PHIKEndEffector,*eef)->bEnabled) { continue; }
 
 		int n = DCAST(PHIKEndEffector,*eef)->number;
@@ -126,7 +126,7 @@ void PHIKActuator::PrepareSolve(){
 	if (!bEnabled) { return; }
 
 	for (int i=0; i< ndof; ++i) {
-		for(ESetIter eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef){
+		for(ESet::iterator eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef){
 			if (! (*eef)->bEnabled) { continue; }
 			int eef_n = (*eef)->number;
 			PTM::VVector<double> eef_v = (*eef)->GetTempTarget();
@@ -141,7 +141,7 @@ void PHIKActuator::PrepareSolve(){
 				beta[i]  += ( (Mj[eef_n][k][i]/bias) * (eef_v[k]) );
 
 				// γ[act_y, this]
-				for(ASetIter act=linkedActuators.begin(); act!=linkedActuators.end(); ++act){
+				for(ASet::iterator act=linkedActuators.begin(); act!=linkedActuators.end(); ++act){
 					if (!((*act)->bEnabled)) { continue; }
 					int act_n = (*act)->number;
 					for (int j=0; j<(*act)->ndof; ++j) {
@@ -170,7 +170,7 @@ void PHIKActuator::PrepareSolve(){
 	//(*dlog) << "--- beta[" << number << "] ---" << std::endl;
 	//(*dlog) << beta << std::endl;
 
-	for(ASetIter act=linkedActuators.begin(); act!=linkedActuators.end(); ++act){
+	for(ASet::iterator act=linkedActuators.begin(); act!=linkedActuators.end(); ++act){
 		if (!((*act)->IsEnabled())) { continue; }
 		int act_n = (*act)->number;
 		//(*dlog) << "--- gamma[" << number << "][" << n_y_n << "] ---" << std::endl;
@@ -190,7 +190,7 @@ void PHIKActuator::ProceedSolve(){
 		double delta_epsilon = 0;
 
 		// δ
-		for(ASetIter act=linkedActuators.begin(); act!=linkedActuators.end(); ++act){
+		for(ASet::iterator act=linkedActuators.begin(); act!=linkedActuators.end(); ++act){
 			if (!((*act)->IsEnabled())) { continue; }
 			int act_n = (*act)->number;
 			if (gamma.find(act_n) != gamma.end()) {
@@ -225,7 +225,7 @@ void PHIKActuator::ProceedSolve(){
 
 void PHIKActuator::RegisterEndEffector(PHIKEndEffectorIf* endeffector){
 	ASet* la = &(DCAST(PHIKEndEffector,endeffector)->linkedActuators);
-	for(ASetIter act=la->begin(); act!=la->end(); ++act){
+	for(ASet::iterator act=la->begin(); act!=la->end(); ++act){
 		linkedActuators.insert(*act); bActuatorAdded = true;
 		PHIKActuator* self = this;
 		if ((*act)->linkedActuators.find(self) == (*act)->linkedActuators.end()) {
@@ -271,7 +271,7 @@ void PHIKBallActuator::BeforeSetupMatrix(){
 	// 姿勢制御をするエンドエフェクタが無ければ自由度を２に下げる（冗長性回避のため）
 
 	bool bFound = false;;
-	for(ESetIter eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef){
+	for(ESet::iterator eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef){
 		if ((*eef)->bEnabled && (*eef)->bOrientation) {
 			bFound = true;
 		}
@@ -299,7 +299,7 @@ void PHIKBallActuator::CalcAxis(){
 	e[1] = Vec3d(0,1,0);
 	e[2] = Vec3d(0,0,1);
 
-	for(ESetIter eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef){
+	for(ESet::iterator eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef){
 		if ((*eef)->bEnabled && !(*eef)->bOrientation) {
 			// 関節の回転中心
 			PHBallJoint* j = DCAST(PHBallJoint,joint);

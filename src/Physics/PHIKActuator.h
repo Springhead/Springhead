@@ -30,9 +30,7 @@ public:
 
 	/// 簡略表記用typedef
 	typedef std::set<PHIKEndEffector*>	ESet;
-	typedef ESet::iterator				ESetIter;
 	typedef std::set<PHIKActuator*>		ASet;
-	typedef ASet::iterator				ASetIter;
 	
 	/// このアクチュエータで動かせるエンドエフェクタのリスト
 	ESet linkedEndEffectors;

@@ -1,7 +1,7 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHEngineIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintEngineIf(base)	\
-	PHConstraintsIf* GetContactPoints(){	return	base::GetContactPoints();}	\
+	Spr::PHConstraintsIf* GetContactPoints(){	return	base::GetContactPoints();}	\
 	void SetVelCorrectionRate(double value){	base::SetVelCorrectionRate(value);}	\
 	double GetVelCorrectionRate(){	return	base::GetVelCorrectionRate();}	\
 	void SetPosCorrectionRate(double value){	base::SetPosCorrectionRate(value);}	\
@@ -27,9 +27,11 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshIf(base)	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshThermoIf(base)	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKEndEffectorIf(base)	\
-	void SetSolid(PHSolidIf* solid){	base::SetSolid(solid);}	\
-	PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
+	void SetSolid(Spr::PHSolidIf* solid){	base::SetSolid(solid);}	\
+	Spr::PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
 	void Enable(bool enable){	base::Enable(enable);}	\
 	bool IsEnabled(){	return	base::IsEnabled();}	\
 	void EnablePositionControl(bool enable){	base::EnablePositionControl(enable);}	\
@@ -66,16 +68,16 @@
 	bool IsEnabled(){	return	base::IsEnabled();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKBallActuatorIf(base)	\
-	void SetJoint(PHBallJointIf* joint){	base::SetJoint(joint);}	\
-	PHBallJointIf* GetJoint(){	return	base::GetJoint();}	\
+	void SetJoint(Spr::PHBallJointIf* joint){	base::SetJoint(joint);}	\
+	Spr::PHBallJointIf* GetJoint(){	return	base::GetJoint();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKHingeActuatorIf(base)	\
-	void SetJoint(PHHingeJointIf* joint){	base::SetJoint(joint);}	\
-	PHHingeJointIf* GetJoint(){	return	base::GetJoint();}	\
+	void SetJoint(Spr::PHHingeJointIf* joint){	base::SetJoint(joint);}	\
+	Spr::PHHingeJointIf* GetJoint(){	return	base::GetJoint();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintIf(base)	\
-	PHSolidIf* GetSocketSolid(){	return	base::GetSocketSolid();}	\
-	PHSolidIf* GetPlugSolid(){	return	base::GetPlugSolid();}	\
+	Spr::PHSolidIf* GetSocketSolid(){	return	base::GetSocketSolid();}	\
+	Spr::PHSolidIf* GetPlugSolid(){	return	base::GetPlugSolid();}	\
 	Spr::PHSceneIf* GetScene()const{	return	base::GetScene();}	\
 	void Enable(bool bEnable){	base::Enable(bEnable);}	\
 	bool IsEnabled(){	return	base::IsEnabled();}	\
@@ -93,8 +95,8 @@
 	Vec3d GetLimitf(){	return	base::GetLimitf();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintsIf(base)	\
-	Spr::PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs){	return	base::FindBySolidPair(lhs, rhs);}	\
-	Vec3d GetTotalForce(PHSolidIf* lhs, PHSolidIf* rhs){	return	base::GetTotalForce(lhs, rhs);}	\
+	Spr::PHConstraintIf* FindBySolidPair(Spr::PHSolidIf* lhs, Spr::PHSolidIf* rhs){	return	base::FindBySolidPair(lhs, rhs);}	\
+	Vec3d GetTotalForce(Spr::PHSolidIf* lhs, Spr::PHSolidIf* rhs){	return	base::GetTotalForce(lhs, rhs);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHContactPointIf(base)	\
 
@@ -232,24 +234,24 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSceneIf(base)	\
 	Spr::PHSdkIf* GetSdk(){	return	base::GetSdk();}	\
-	PHSolidIf* CreateSolid(const PHSolidDesc& desc){	return	base::CreateSolid(desc);}	\
+	Spr::PHSolidIf* CreateSolid(const PHSolidDesc& desc){	return	base::CreateSolid(desc);}	\
 	int NSolids()const{	return	base::NSolids();}	\
-	PHSolidIf** GetSolids(){	return	base::GetSolids();}	\
+	Spr::PHSolidIf** GetSolids(){	return	base::GetSolids();}	\
 	int NSolidPairs()const{	return	base::NSolidPairs();}	\
 	PHSolidPairForLCPIf* GetSolidPair(int i, int j){	return	base::GetSolidPair(i, j);}	\
-	void SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(lhs, rhs, mode);}	\
-	void SetContactMode(PHSolidIf** group, size_t length, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(group, length, mode);}	\
-	void SetContactMode(PHSolidIf* solid, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(solid, mode);}	\
+	void SetContactMode(Spr::PHSolidIf* lhs, Spr::PHSolidIf* rhs, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(lhs, rhs, mode);}	\
+	void SetContactMode(Spr::PHSolidIf** group, size_t length, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(group, length, mode);}	\
+	void SetContactMode(Spr::PHSolidIf* solid, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(solid, mode);}	\
 	void SetContactMode(Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(mode);}	\
-	Spr::PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const Spr::PHJointDesc& desc){	return	base::CreateJoint(lhs, rhs, ii, desc);}	\
+	Spr::PHJointIf* CreateJoint(Spr::PHSolidIf* lhs, Spr::PHSolidIf* rhs, const IfInfo* ii, const Spr::PHJointDesc& desc){	return	base::CreateJoint(lhs, rhs, ii, desc);}	\
 	int NJoints()const{	return	base::NJoints();}	\
 	Spr::PHJointIf* GetJoint(int i){	return	base::GetJoint(i);}	\
 	int NContacts()const{	return	base::NContacts();}	\
 	Spr::PHContactPointIf* GetContact(int i){	return	base::GetContact(i);}	\
-	Spr::PHRootNodeIf* CreateRootNode(PHSolidIf* root, const Spr::PHRootNodeDesc& desc){	return	base::CreateRootNode(root, desc);}	\
+	Spr::PHRootNodeIf* CreateRootNode(Spr::PHSolidIf* root, const Spr::PHRootNodeDesc& desc){	return	base::CreateRootNode(root, desc);}	\
 	int NRootNodes()const{	return	base::NRootNodes();}	\
 	Spr::PHRootNodeIf* GetRootNode(int i){	return	base::GetRootNode(i);}	\
-	Spr::PHTreeNodeIf* CreateTreeNode(Spr::PHTreeNodeIf* parent, PHSolidIf* child, const Spr::PHTreeNodeDesc& desc){	return	base::CreateTreeNode(parent, child, desc);}	\
+	Spr::PHTreeNodeIf* CreateTreeNode(Spr::PHTreeNodeIf* parent, Spr::PHSolidIf* child, const Spr::PHTreeNodeDesc& desc){	return	base::CreateTreeNode(parent, child, desc);}	\
 	Spr::PHGearIf* CreateGear(Spr::PHJoint1DIf* lhs, Spr::PHJoint1DIf* rhs, const Spr::PHGearDesc& desc){	return	base::CreateGear(lhs, rhs, desc);}	\
 	int NGears()const{	return	base::NGears();}	\
 	Spr::PHGearIf* GetGear(int i){	return	base::GetGear(i);}	\
