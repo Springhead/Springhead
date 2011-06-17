@@ -68,7 +68,6 @@ PHFemMesh::FemVertex::FemVertex(){
 }
 
 
-
 PHFemMesh::PHFemMesh(const PHFemMeshDesc& desc, SceneIf* s){
 	SetDesc(&desc);
 	if (s){ SetScene(s); }
@@ -205,5 +204,47 @@ bool PHFemMesh::GetDesc(void* p) const {
 	}
 	return true;
 }
+
+#define DET2_INV_TMATRIXBASE(a,b,c,d)	(a*d - b*c)
+inline Matrix3d invDet(const Matrix3d& a){
+	Matrix3d rtv;
+	rtv.item(0,0) = DET2_INV_TMATRIXBASE(a.item(1,1), a.item(1,2), a.item(2,1), a.item(2,2));
+	rtv.item(1,0) = DET2_INV_TMATRIXBASE(a.item(1,2), a.item(1,0), a.item(2,2), a.item(2,0));
+	rtv.item(2,0) = DET2_INV_TMATRIXBASE(a.item(1,0), a.item(1,1), a.item(2,0), a.item(2,1));
+		
+	rtv.item(0,1) = DET2_INV_TMATRIXBASE(a.item(2,1), a.item(2,2), a.item(0,1), a.item(0,2));
+	rtv.item(1,1) = DET2_INV_TMATRIXBASE(a.item(2,2), a.item(2,0), a.item(0,2), a.item(0,0));
+	rtv.item(2,1) = DET2_INV_TMATRIXBASE(a.item(2,0), a.item(2,1), a.item(0,0), a.item(0,1));
+	
+	rtv.item(0,2) = DET2_INV_TMATRIXBASE(a.item(0,1), a.item(0,2), a.item(1,1), a.item(1,2));
+	rtv.item(1,2) = DET2_INV_TMATRIXBASE(a.item(0,2), a.item(0,0), a.item(1,2), a.item(1,0));
+	rtv.item(2,2) = DET2_INV_TMATRIXBASE(a.item(0,0), a.item(0,1), a.item(1,0), a.item(1,1));
+	return rtv;
+}
+
+//	後で記録すべき変数を考えることにしてとりあえず、計算だけしてみる。
+void PHFemMesh::UpdateJacobian(){
+	for(unsigned t=0; t<tets.size(); ++t){
+		Matrix3d J;	//	各四面体の直交座標系(ξ,η,ζ)から四面体(x,y,z)へのヤコビアン (d(x,y,z) / d(ξ,η,ζ))
+		for(int i=1; i<3; ++i){
+			for(int j=0; j<3; ++j){
+				J[i][j] = vertices[tets[t].vertices[i+1]].pos[j] - vertices[tets[t].vertices[0]].pos[j];
+			}
+		}
+		Matrix3d A = invDet(J);
+		Vec4d Nx = Vec4d(- A[0][0] - A[0][1] -A[0][2],  A[0][0],  A[0][1],  A[0][2]);
+		Vec4d Ny = Vec4d(- A[1][0] - A[1][1] -A[1][2],  A[1][0],  A[1][1],  A[1][2]);
+		Vec4d Nz = Vec4d(- A[2][0] - A[2][1] -A[2][2],  A[2][0],  A[2][1],  A[2][2]);
+		Affined Km;
+		for(int i=0; i<4; ++i){
+			for(int j=0; j<4; ++j){
+				Km[i][j] = Nx[i]*Nx[j] + Ny[i]*Ny[j] + Nz[i]*Nz[j];
+			}
+		}
+
+	}
+}
+
+
 
 }

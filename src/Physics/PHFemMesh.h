@@ -104,7 +104,14 @@ public:
 	///	辺のうち物体表面のものが、edges[0]..edges[nSurfaceEdge]
 	unsigned nSurfaceEdge;
 	//@}
+
+	/// @name 四面体の計算	対象によらずに必要になる形状関数のXXを計算する関数
+	//@{
+	void UpdateJacobian();
 	
+	//@}
+
+
 	SPR_OBJECTDEF(PHFemMesh);
 	PHFemMesh(const PHFemMeshDesc& desc=PHFemMeshDesc(), SceneIf* s=NULL);
 	///	デスクリプタのサイズ
@@ -113,6 +120,7 @@ public:
 	virtual bool GetDesc(void* desc) const ;
 	///デスクリプタの設定。ここで、頂点座標と四面体の4頂点のIDの情報から、面や辺についての情報を計算しておく。
 	virtual void SetDesc(const void* desc);
+
 };
 
 
