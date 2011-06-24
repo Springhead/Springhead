@@ -10,21 +10,6 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWFemMeshIf(base)	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_FWGraphicsAdapteeIf(base)	\
-	void Init(int argc, char** argv){	base::Init(argc, argv);}	\
-	void StartMainLoop(){	base::StartMainLoop();}	\
-	void EnableIdleFunc(bool on){	base::EnableIdleFunc(on);}	\
-	void EnterGameMode(){	base::EnterGameMode();}	\
-	void LeaveGameMode(){	base::LeaveGameMode();}	\
-	FWWinIf* CreateWin(const FWWinDesc& d){	return	base::CreateWin(d);}	\
-	void DestroyWin(FWWinIf* w){	base::DestroyWin(w);}	\
-	void SetCurrentWin(FWWinIf* w){	base::SetCurrentWin(w);}	\
-	FWWinIf* GetCurrentWin(){	return	base::GetCurrentWin();}	\
-	int GetWinFromId(){	return	base::GetWinFromId();}	\
-	void PostRedisplay(){	base::PostRedisplay();}	\
-	int GetModifiers(){	return	base::GetModifiers();}	\
-	Spr::GRDeviceIf* GetGRDevice(){	return	base::GetGRDevice();}	\
-
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractPointerIf(base)	\
 	void SetPointerSolid(Spr::PHSolidIf* solid){	base::SetPointerSolid(solid);}	\
 	Spr::PHSolidIf* GetPointerSolid(){	return	base::GetPointerSolid();}	\
@@ -164,21 +149,77 @@
 	void SetDebugMode(bool debug){	base::SetDebugMode(debug);}	\
 	void Step(){	base::Step();}	\
 	void Draw(){	base::Draw();}	\
-	void Reshape(int w, int h){	base::Reshape(w, h);}	\
 	Spr::GRRenderIf* GetRender(){	return	base::GetRender();}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_FWWinIf(base)	\
-	void SetPosition(int left, int top){	base::SetPosition(left, top);}	\
-	void SetSize(int width, int height){	base::SetSize(width, height);}	\
-	void SetTitle(UTString title){	base::SetTitle(title);}	\
-	UTString GetTitle(){	return	base::GetTitle();}	\
-	void SetFullScreen(bool full){	base::SetFullScreen(full);}	\
-	bool GetFullScreen(){	return	base::GetFullScreen();}	\
+#define SPR_OVERRIDEMEMBERFUNCOF_FWWinBaseIf(base)	\
+	int GetID(){	return	base::GetID();}	\
 	Vec2i GetPosition(){	return	base::GetPosition();}	\
+	void SetPosition(int left, int top){	base::SetPosition(left, top);}	\
 	int GetWidth(){	return	base::GetWidth();}	\
 	int GetHeight(){	return	base::GetHeight();}	\
-	int GetID(){	return	base::GetID();}	\
-	void SetID(int newID){	base::SetID(newID);}	\
+	void SetSize(int width, int height){	base::SetSize(width, height);}	\
+	UTString GetTitle(){	return	base::GetTitle();}	\
+	void SetTitle(UTString title){	base::SetTitle(title);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWControlIf(base)	\
+	void SetAlign(int align){	base::SetAlign(align);}	\
+	int GetStyle(){	return	base::GetStyle();}	\
+	void SetStyle(int style){	base::SetStyle(style);}	\
+	int GetInt(){	return	base::GetInt();}	\
+	void SetInt(int val){	base::SetInt(val);}	\
+	float GetFloat(){	return	base::GetFloat();}	\
+	void SetFloat(float val){	base::SetFloat(val);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWPanelIf(base)	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWButtonIf(base)	\
+	void SetChecked(bool on){	base::SetChecked(on);}	\
+	bool IsChecked(){	return	base::IsChecked();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWStaticTextIf(base)	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWTextBoxIf(base)	\
+	void SetIntRange(int rmin, int rmax){	base::SetIntRange(rmin, rmax);}	\
+	void GetIntRange(int& rmin, int& rmax){	base::GetIntRange(rmin, rmax);}	\
+	void SetFloatRange(float rmin, float rmax){	base::SetFloatRange(rmin, rmax);}	\
+	void GetFloatRange(float& rmin, float& rmax){	base::GetFloatRange(rmin, rmax);}	\
+	const char* GetString(){	return	base::GetString();}	\
+	void SetString(char* str){	base::SetString(str);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWListBoxIf(base)	\
+	void AddItem(UTString label){	base::AddItem(label);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWRotationControlIf(base)	\
+	Matrix3f GetRotation(){	return	base::GetRotation();}	\
+	void SetRotation(const Matrix3f& rot){	base::SetRotation(rot);}	\
+	float GetDamping(){	return	base::GetDamping();}	\
+	void SetDamping(float d){	base::SetDamping(d);}	\
+	void Reset(){	base::Reset();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWTranslationControlIf(base)	\
+	Vec3f GetTranslation(){	return	base::GetTranslation();}	\
+	void SetTranslation(Vec3f p){	base::SetTranslation(p);}	\
+	float GetSpeed(){	return	base::GetSpeed();}	\
+	void SetSpeed(float sp){	base::SetSpeed(sp);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWDialogIf(base)	\
+	Spr::FWControlIf* CreateControl(const IfInfo* ii, const Spr::FWControlDesc& desc, Spr::FWPanelIf* parent){	return	base::CreateControl(ii, desc, parent);}	\
+	Spr::FWButtonIf* CreatePushButton(UTString label, Spr::FWPanelIf* parent){	return	base::CreatePushButton(label, parent);}	\
+	Spr::FWButtonIf* CreateCheckButton(UTString label, bool checked, Spr::FWPanelIf* parent){	return	base::CreateCheckButton(label, checked, parent);}	\
+	Spr::FWButtonIf* CreateRadioButton(UTString label, Spr::FWPanelIf* parent){	return	base::CreateRadioButton(label, parent);}	\
+	Spr::FWStaticTextIf* CreateStaticText(UTString text, Spr::FWPanelIf* parent){	return	base::CreateStaticText(text, parent);}	\
+	Spr::FWTextBoxIf* CreateTextBox(UTString label, UTString text, int style, Spr::FWPanelIf* parent){	return	base::CreateTextBox(label, text, style, parent);}	\
+	Spr::FWPanelIf* CreatePanel(UTString label, int style, Spr::FWPanelIf* parent){	return	base::CreatePanel(label, style, parent);}	\
+	Spr::FWPanelIf* CreateRadioGroup(Spr::FWPanelIf* parent){	return	base::CreateRadioGroup(parent);}	\
+	Spr::FWRotationControlIf* CreateRotationControl(UTString label, Spr::FWPanelIf* parent){	return	base::CreateRotationControl(label, parent);}	\
+	Spr::FWTranslationControlIf* CreateTranslationControl(UTString label, int style, Spr::FWPanelIf* parent){	return	base::CreateTranslationControl(label, style, parent);}	\
+	Spr::FWListBoxIf* CreateListBox(UTString label, Spr::FWPanelIf* parent){	return	base::CreateListBox(label, parent);}	\
+	void CreateColumn(bool sep, Spr::FWPanelIf* parent){	base::CreateColumn(sep, parent);}	\
+	void CreateSeparator(Spr::FWPanelIf* parent){	base::CreateSeparator(parent);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_FWWinIf(base)	\
+	void SetFullScreen(){	base::SetFullScreen();}	\
+	bool GetFullScreen(){	return	base::GetFullScreen();}	\
 	Spr::GRRenderIf* GetRender(){	return	base::GetRender();}	\
 	void SetRender(Spr::GRRenderIf* data){	base::SetRender(data);}	\
 	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
@@ -194,5 +235,5 @@
 	void SetDebugMode(bool ph_or_gr){	base::SetDebugMode(ph_or_gr);}	\
 	bool GetDebugMode(){	return	base::GetDebugMode();}	\
 	void Display(){	base::Display();}	\
-	void Reshape(int w, int h){	base::Reshape(w, h);}	\
+	Spr::FWDialogIf* CreateDialog(const Spr::FWDialogDesc& desc){	return	base::CreateDialog(desc);}	\
 

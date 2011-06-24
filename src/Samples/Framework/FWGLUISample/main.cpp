@@ -1,19 +1,63 @@
-#include "FWGLUISample.h"
-/**
-\page pageFWAppSample フレームワークSDKを使った一番簡単なサンプル
- Springhead2/src/Samples/FWAppSample
+/*
+ *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+#include "../../SampleApp.h"
 
-- プログラムの機能
- - 床の上に箱が載っているだけのシーン。
- - 描画は \ref pagePhysics のデバッグ表示のみ。
- - d キーで、接触力や接触部情報の表示のON/OFF。
-- ソースについて
- - シーンの構築は、C++言語でAPIを呼び出して行う。
- - \ref pageFramework と \ref pagePhysics のみを使用
-*/
+#pragma hdrstop
+using namespace Spr;
+using namespace std;
+
+class MyApp : public SampleApp{
+public:
+	FWWinIf*		mainWin;
+	FWDialogIf*		topDlg;
+
+public:
+	MyApp(){
+
+	}
+
+	void InitGUI(){
+		FWWinIf*	mainWin = GetCurrentWin();
+		
+		// 埋め込みダイアログ
+		FWDialogDesc dlgDesc;
+		dlgDesc.dock = true;
+		dlgDesc.dockPos = FWDialogDesc::DOCK_TOP;
+		FWDialogIf*		topDlg = mainWin->CreateDialog(dlgDesc);
+		FWPanelIf* frame = topDlg->CreatePanel("group", FWPanelDesc::EMBOSSED);
+		FWPanelIf* group = topDlg->CreateRadioGroup(frame);
+		topDlg->CreateRadioButton("1", group);
+		topDlg->CreateRadioButton("2", group);
+		topDlg->CreateRadioButton("3", group);
+		topDlg->CreateColumn(true);
+		topDlg->CreateRotationControl("rot");
+		topDlg->CreateColumn(false);
+		topDlg->CreateTranslationControl("trn");
+
+	}
+	
+	virtual void Init(int argc, char* argv[]){
+		SetGRAdaptee(TypeGLUI);
+		SampleApp::Init(argc, argv);
+
+		InitGUI();
+	}
+	virtual void Keyboard(int key, int x, int y){
+		SampleApp::Keyboard(key, x, y);
+	}
+
+	virtual void OnControlUpdate(FWControlIf* ctrl){
+		
+	}
+
+} app;
 
 int _cdecl main(int argc, char* argv[]){
-	FWGLUISample app;
 	app.Init(argc, argv);
 	app.StartMainLoop();
 	return 0;

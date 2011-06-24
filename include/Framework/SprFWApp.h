@@ -15,7 +15,7 @@
 namespace Spr{;
 
 struct FWSdkIf;
-struct FWGraphicsAdapteeIf;
+class FWGraphicsAdaptee;
 
 /** @brief アプリケーションクラス
 	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
@@ -27,8 +27,6 @@ protected:
 	static FWApp*				instance;	///< 唯一のFWAppインスタンス
 	UTRef<FWSdkIf>				fwSdk;		///< Framework SDK	
 	
-	UTRef<FWGraphicsAdapteeIf>	grAdaptee;	///< グラフィクスシステムのアダプティ
-		
 	// ウィンドウ
 	typedef std::vector< UTRef<FWWinIf> > Wins;
 	Wins		wins;
@@ -141,6 +139,16 @@ public:
 		return true;
 	}
 
+	/** @brief GUI系イベントハンドラ
+		@param ctrl	更新が生じたコントロール
+		更新イベントの発生条件は以下のとおり：
+		FWButtonIf:				ボタンが押された
+		FWTextBoxIf:			テキストが変更された
+		FWRotationControlIf:	回転した
+		FWTranslationControlIf:	平行移動した
+	 **/
+	virtual void OnControlUpdate(FWControlIf* ctrl){}
+
 	//　FWAppのインタフェース -----------------------------------------
 
 	/** @brief FWAppインスタンスを取得する */
@@ -155,11 +163,13 @@ public:
 	void		CreateSdk();
 
 	/** @brief ウィンドウに対応するコンテキストを作る
-		@param desc	ディスクリプタ
+		@param desc		ディスクリプタ
+		@param parent	親ウィンドウ
 		ウィンドウを作成する．対応するレンダラは新しく作成され，
 		既存のウィンドウが割り当てられていないシーンが関連づけられる．
+		parentが指定された場合はparentを親ウィンドウとする子ウィンドウを作成する
 	 */
-	FWWinIf*	CreateWin(const FWWinDesc& desc = FWWinDesc());
+	FWWinIf*	CreateWin(const FWWinDesc& desc = FWWinDesc(), FWWinIf* parent = 0);
 	/** @brief ウィンドウの数 */
 	int			NWin(){ return (int)wins.size(); }
 	
@@ -192,18 +202,12 @@ public:
 	 */
 	void PostRedisplay();
 
-	
-	/** @brief カメラ情報を返す
-		@return camInfo
-	*/
-	//FWUICamera*	GetCameraInfo(){return &cameraInfo;}
-
 	/** @brief Ctrl, Shift, Altの状態を返す
 		個々の派生クラスで実装される
 	 */
 	int	GetModifier();
 	
-	enum grAdapteeType{
+	enum{
 		TypeNone,	///< アダプタ無し
 		TypeGLUT,	///< GLUT
 		TypeGLUI,	///< GLUI
@@ -211,27 +215,18 @@ public:
 	/** @brief 描画の設定
 		FWGraphicsAdapteeを設定する．最初に必ず呼ぶ．
 	 */
-	void SetGRAdaptee(grAdapteeType type);
-
-	/** @brief 描画の設定を取得
-		FWGraphicsAdapteeを取得する．　
-	 */
-	//FWGraphicsAdaptee* GetGRAdaptee(){return grAdaptee;}; //将来的には削除したい
+	void SetGRAdaptee(int type);
 
 	/** @brief FWGraphicsAdapteeの初期化
 		FWGraphicsAdapteeの初期化を行う．最初に必ず呼ぶ．
 	 */
-	void GRInit(int argc = 0, char* argv[] = NULL);
+	/*	SetGRAdapteeとGRInitを分離する意味がほとんど無いので，
+		こちらの引数でタイプを指定できるようにした．
+		GRInitに先立ってSetGRAdapteeで選択されている場合はそちらを優先する
 
-/** コールバック関数*/
-public:
-	void CallDisplay();
-	void CallReshape(int w, int h);
-	void CallIdleFunc();
-	void CallKeyboard(int key, int x, int y);
-	void CallMouseButton(int button, int state, int x, int y);
-	void CallMouseMove(int x, int y);
-	void CallJoystick(unsigned int buttonMask, int x, int y, int z);
+		tazz
+	 */
+	void GRInit(int argc = 0, char* argv[] = NULL, int type = TypeGLUT);
 
 public:
 

@@ -16,6 +16,8 @@
 
 namespace Spr {;
 
+class HIVirtualDevice;
+
 /// デバイスの基本クラス
 class SPR_DLL HIDevice : public NamedObject{
 public:
@@ -28,7 +30,7 @@ public:
 	SPR_OBJECTDEF_ABST(HIRealDevice);
 	
 	/// 提供する仮想デバイスの配列
-	std::vector<HIVirtualDeviceIf*>	dvPool;
+	std::vector< UTRef<HIVirtualDevice> >	dvPool;
 public:
 	///	初期化と仮想デバイスの登録
 	virtual bool Init(){ return false; }

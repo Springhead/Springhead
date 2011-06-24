@@ -17,39 +17,20 @@ namespace Spr{;
 /**
 	FWGraphicsAdapteeのGLUTによる実装
  */
-
-class FWWinGLUT : public FWWin{
-public:
-	SPR_OBJECTDEF_NOIF(FWWinGLUT);
-
-	FWWinGLUT(){}
-	FWWinGLUT(int wid, const FWWinDesc& d):FWWin(wid, d){}
-	virtual void SetFullScreen();
-	virtual void SetPosition(int left, int top);
-	virtual void SetSize(int width, int height);
-	virtual void SetTitle(UTString t);
-};
-
-//struct FWGLUTDesc{};
-
-class FWGLUT : public FWGraphicsAdaptee, public UTTimerProvider/*, public FWGLUTDesc*/{
+class FWGLUT : public FWGraphicsAdaptee, public UTTimerProvider{
 public:
 	SPR_OBJECTDEF_NOIF(FWGLUT);
 protected:
 	bool	idleFuncFlag;	///< IdleFuncの呼び出しに関するFlag	
 	bool	timerRestart;	///< タイマコールバック内でタイマの再登録をするか
 
+	static FWGLUT*	GetInstance();
+
 	/** コールバック関数*/
-	static FWGLUT* instance;
 	static void SPR_CDECL GlutDisplayFunc();
 	static void SPR_CDECL GlutReshapeFunc(int w, int h);
 	static void SPR_CDECL GlutTimerFunc(int id);
 	static void SPR_CDECL GlutIdleFunc();
-	//static void SPR_CDECL GlutKeyboardFunc(unsigned char key, int x, int y);
-	//static void SPR_CDECL GlutSpecialFunc(int key, int x, int y);
-	//static void SPR_CDECL GlutMouseFunc(int button, int state, int x, int y);
-	//static void SPR_CDECL GlutMotionFunc(int x, int y);
-	//static void SPR_CDECL GlutJoystickFunc(unsigned int buttonMask, int x, int y, int z);
 	static void SPR_CDECL AtExit();
 public:	
 	///	GLUTの初期化を行う。最初にこれを呼ぶ必要がある。
@@ -66,21 +47,24 @@ public:
 
 	/** ウィンドウ */
 	///	ウィンドウを作成し、ウィンドウ IDを返す
-	virtual FWWinIf* CreateWin(const FWWinDesc& d=FWWinDesc());
+	virtual FWWinIf* CreateWin(const FWWinDesc& d, FWWinIf* parent);
 	///	ウィンドウを破棄する
 	virtual void DestroyWin(FWWinIf* w);
 	///	カレントウィンドウを設定する
 	virtual void SetCurrentWin(FWWinIf* w);
 	///	カレントウィンドウを返す。
-	virtual FWWinIf* GetCurrentWin();	
-	///	カレントウィンドウを返す。
-	virtual int GetWinFromId();
+	virtual int GetCurrentWin();	
 	///カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
 	virtual void PostRedisplay();
 	/// Shift,Ctrl,Altのステートを返す
 	virtual int GetModifiers();
-
-	FWGLUT(FWApp* a=0);
+	/// ウィンドウ属性操作
+	virtual void	SetSize			(FWWinBase* win, int width, int height);
+	virtual void	SetTitle		(FWWinBase* win, UTString title);
+	virtual void	SetPosition		(FWWinBase* win, int left, int top);
+	virtual void	SetFullScreen	(FWWin* win);
+	
+	FWGLUT();
 	~FWGLUT();
 
 };

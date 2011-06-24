@@ -35,7 +35,6 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 	winDesc.left	= 10;
 	winDesc.top		= 30;
 	winDesc.fullscreen = false;
-	winDesc.parentWindow = 0;
 	
 	for(int i = 0; i < 5; i++)
 		CreateWin(winDesc);
@@ -60,11 +59,11 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 	GetWin(4)->SetScene(GetSdk()->GetScene(3));
 
 	/// •`‰æƒ‚[ƒhÝ’è
-	GetWin(0)->SetRenderMode(true);
-	GetWin(1)->SetRenderMode(false);
-	GetWin(2)->SetRenderMode(true);
-	GetWin(3)->SetRenderMode(true);
-	GetWin(4)->SetRenderMode(true);
+	GetWin(0)->SetDebugMode(true);
+	GetWin(1)->SetDebugMode(false);
+	GetWin(2)->SetDebugMode(true);
+	GetWin(3)->SetDebugMode(true);
+	GetWin(4)->SetDebugMode(true);
 	
 	for(int i = 0; i < GetSdk()->NScene(); i++){
 		FWSceneIf* scene = GetSdk()->GetScene(i);

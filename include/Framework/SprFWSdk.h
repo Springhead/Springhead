@@ -139,8 +139,6 @@ struct FWSdkIf : SdkIf {
 	void Step();
 	/** @brief 描画を実行 */
 	void Draw();
-	/** @brief 描画領域のサイズを設定する */
-	void Reshape(int w, int h);
 	/** @brief レンダラを取得する */
 	GRRenderIf* GetRender();
 	

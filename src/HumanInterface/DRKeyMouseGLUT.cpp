@@ -85,7 +85,7 @@ HIVirtualDeviceIf* DRKeyMouseGLUT::Rent(const IfInfo* ii, const char* n, int por
 
 	// 既存の仮想デバイスがなければ作成
 	if(!dv){
-		DVKeyMouse* km = (DBG_NEW DV(this, portNo))->Cast();
+		DVKeyMouse* km = DBG_NEW DV(this, portNo);
 		AddChildObject(km->Cast());
 		
 		// カレントウィンドウにコールバックを登録

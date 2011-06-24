@@ -346,10 +346,6 @@ void FWSdk::Draw(){
 	win->GetScene()->Draw(win->GetRender(), win->GetDebugMode());
 }
 
-void FWSdk::Reshape(int w, int h){
-	FWApp::GetApp()->GetCurrentWin()->Reshape(w, h);
-}
-
 GRRenderIf* FWSdk::GetRender(){
 	return FWApp::GetApp()->GetCurrentWin()->GetRender();
 }
