@@ -53,6 +53,9 @@ size_t	FWWin::NChildObject() const{
 }
 	
 void FWWin::Display(){
+	if(!scene)
+		return;
+
 	// GRSceneにカメラフレームが無い場合はトラックボールを直接ビュー変換に反映する
 	if(!scene->GetGRScene() || !scene->GetGRScene()->GetCamera() || !scene->GetGRScene()->GetCamera()->GetFrame()){
 		render->SetViewMatrix(trackball->GetAffine().inv());
@@ -85,6 +88,9 @@ void FWWin::SetSize(int width, int height){
 }
 
 void FWWin::OnUpdatePose(HITrackballIf*, bool dir){
+	if(!scene)
+		return;
+
 	// トラックボールとGRSceneのカメラフレームの同期
 	GRCameraIf* cam = GetScene()->GetGRScene()->GetCamera();
 	if(!cam)

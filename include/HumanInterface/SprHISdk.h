@@ -20,49 +20,6 @@ namespace Spr{;
 /** \addtogroup gpHumanInterface ヒューマンインタフェースSDK */
 //@{
 
-/** デバイス名一覧
-	[DR] ADAPIO n
-	[DV] ADAPIO n D/A ch m
-	[DV] ADAPIO n A/D ch m
-	
-	[DR] Contec ISA Counter at 0xXXX
-	[DV] Contec ISA Counter at 0xXXX Channel m
-
-	[DR] Contec ISA D/A at 0xXXX
-	[DV] Contec ISA D/A at 0xXXX Channel m
-
-	[DR] KeyMouseWin32
-	[DV] KeyMouseWin32
-
-	[DR] KeyMouseGLUT
-	[DV] KeyMouseGLUT
-
-	[DR] Nitta 6DOF force sensor at 0xXXX
-	[DV] Nitta 6DOF force sensor at 0xXXX
-
-	[DR] Tokin 3D motion sensor
-	[DV] Tokin 3D motion sensor input port ch m
-
-	[DR] Cyberse USB2.0 SH4 #%d
-	[DV] Cyberse USB2.0 SH4 #%d A/D Ch %d
-
-	[DR] Cyberse USB2.0 Simple #%d
-	[DV] Cyberse USB2.0 Simple #%d D/A Ch %d
-	[DV] Cyberse USB2.0 Simple #%d counter Ch %d
-	[DV] Cyberse USB2.0 Simple #%d PIO Ch %d
-
-	[DR] Cyberse USB H8 Simple #%d
-	[DV] Cyberse USB H8 Simple #%d D/A Ch %d
-	[DV] Cyberse USB H8 Simple #%d counter Ch %d
-
-
- */
-
-/** 仮想デバイス名一覧
-	
-
- */
-
 //	自動ロードのための中身なしのデスクリプタ
 struct HISdkDesc{
 };
