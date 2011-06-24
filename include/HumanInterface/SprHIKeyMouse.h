@@ -76,20 +76,20 @@ struct DVKeyCode{
 
 struct DVKeyMouseHandler{
 	/** @brief マウスクリック時の処理
-		@param button	押されているキー，ボタンの状態．ButtonState列挙子の値
-		@param state	ボタンダウンかボタンアップか
+		@param button	DVButtonMask列挙子の組み合わせ
+		@param state	DVButtonSt列挙子の値
 		@param x		カーソルのx座標
 		@param y		カーソルのy座標
 	 */
 	virtual bool OnMouse(int button, int state, int x, int y){ return false; }
 	/** @brief ダブルクリック時の処理
-		@param button	押されているキー，ボタンの状態．ButtonState列挙子の値
+		@param button	ButtonMask列挙子の組み合わせ
 		@param x		カーソルのx座標
 		@param y		カーソルのy座標
 	 */
 	virtual bool OnDoubleClick(int button, int x, int y){ return false; }
 	/** @brief マウスが動いたときの処理
-		@param button	押されているキー，ボタンの状態．ButtonState列挙子の値
+		@param button	ButtonMask列挙子の組み合わせ
 		@param x		カーソルのx座標
 		@param y		カーソルのy座標
 		@param zdelta	マウスホイールの変化量
@@ -98,8 +98,8 @@ struct DVKeyMouseHandler{
 	*/
 	virtual bool OnMouseMove(int state, int x, int y, int zdelta){ return false; }
 	/** @brief キー入力処理
-		@param state	キーの状態．KeyState列挙子の値
-		@param key		キーコード
+		@param state	DVKeySt列挙子の値
+		@param key		asciiコードかDVKeyCode列挙子の値
 		@param x		カーソルのx座標
 		@param y		カーソルのy座標
 	 */
