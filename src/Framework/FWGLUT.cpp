@@ -6,7 +6,8 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #ifdef _MSC_VER
-#	include <windows.h>
+# include <windows.h>
+# undef CreateDialog
 #endif
 #include <GL/glew.h>
 #include <GL/glut.h>
@@ -24,48 +25,26 @@ using namespace std;
 
 namespace Spr{;
 
-// FWWinGLUT /////////////////////////////////////////////////////////////////////
-void FWWinGLUT::SetPosition(int left, int top){
-	glutSetWindow(id);
-	glutPositionWindow(left, top);
-	fullscreen = false;
-}
-void FWWinGLUT::SetSize(int width, int height){
-	glutSetWindow(id);
-	glutReshapeWindow(width, height);
-	fullscreen = false;
-	this->width = width;
-	this->height = height;
-}
-void FWWinGLUT::SetTitle(UTString t){
-	glutSetWindow(id);
-	glutSetWindowTitle(t.c_str());
-	title = t;
-}
-void FWWinGLUT::SetFullScreen(){
-	glutSetWindow(id);
-	glutFullScreen();
-	fullscreen = true;
-}
-
-// FWGLUT /////////////////////////////////////////////////////////////////////
-FWGLUT::FWGLUT(FWApp* a):FWGraphicsAdaptee(a){
+FWGLUT::FWGLUT(){
 	idleFuncFlag = true;
 };
 
-FWGLUT* FWGLUT::instance;
-
 FWGLUT::~FWGLUT(){
-	FWGLUT::AtExit();
-	instance = NULL;	
+}
+
+FWGLUT* FWGLUT::GetInstance(){
+	return (FWGLUT*)&*(FWGraphicsAdaptee::instance);
 }
 
 /** コールバック関数*///////////////////////////////////////////////////////
 void FWGLUT::GlutDisplayFunc(){
-	instance->fwApp->CallDisplay();	
+	FWApp::GetApp()->Display();	
 }
 void FWGLUT::GlutReshapeFunc(int w, int h){
-	instance->fwApp->CallReshape(w, h);
+	FWWinIf* win = FWApp::GetApp()->GetCurrentWin();
+	int l = 0, t = 0;
+	FWGraphicsAdaptee::instance->CalcViewport(&l, &t, &w, &h);
+	win->GetRender()->Reshape(Vec2f(l, t), Vec2f(w,h));
 }
 void FWGLUT::GlutTimerFunc(int value){
 	UTTimerIf* timer = UTTimerIf::Get(value);
@@ -74,7 +53,7 @@ void FWGLUT::GlutTimerFunc(int value){
 	timer->Call();
 
 	// タイマーの再設定
-	if(instance->timerRestart)
+	if(GetInstance()->timerRestart)
 		glutTimerFunc(timer->GetInterval(), GlutTimerFunc, timer->GetID());
 
 }
@@ -85,34 +64,15 @@ void FWGLUT::GlutIdleFunc(){
 	UTTimerProvider::CallIdle();
 
 	// FWApp::IdleFuncを呼ぶ
-	instance->fwApp->CallIdleFunc();
+	FWApp::GetApp()->IdleFunc();
 }
-/*
-void FWGLUT::GlutKeyboardFunc(unsigned char key, int x, int y){
-	instance->fwApp->CallKeyboard((int)key, x, y);
-}
-void FWGLUT::GlutSpecialFunc(int key, int x, int y){
-	// GlutKeyboardFuncと重複しないようにビットを立てる
-	instance->fwApp->CallKeyboard(key | 0x100, x, y);
-}
-void FWGLUT::GlutMouseFunc(int button, int state, int x, int y){
-	instance->fwApp->CallMouseButton(button, state, x, y);
-}
-void FWGLUT::GlutMotionFunc(int x, int y){
-	instance->fwApp->CallMouseMove(x, y);
-}
-void FWGLUT::GlutJoystickFunc(unsigned int buttonMask, int x, int y, int z){
-	instance->fwApp->CallJoystick(buttonMask, x, y, z);
-}
-*/
 void FWGLUT::AtExit(){
-	instance->fwApp->AtExit();
+	FWApp::GetApp()->AtExit();
 }
 
 /** Init *////////////////////////////////////////////////////////////////
 
 void FWGLUT::Init(int argc, char** argv){
-	instance = this;
 	if(argc == 0){
 		argc = 1;
 		char* dummy[] = {"", NULL};
@@ -126,11 +86,11 @@ void FWGLUT::Init(int argc, char** argv){
 	Register();
 
 	// グラフィクスデバイスを作成
-	grDevice = fwApp->GetSdk()->GetGRSdk()->CreateDeviceGL();
+	grDevice = FWApp::GetApp()->GetSdk()->GetGRSdk()->CreateDeviceGL();
 	grDevice->Init();
 
 	// キーボード・マウスとジョイスティックデバイスの登録
-	HISdkIf* hiSdk = fwApp->GetSdk()->GetHISdk();
+	HISdkIf* hiSdk = FWApp::GetApp()->GetSdk()->GetHISdk();
 	hiSdk->AddRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic());
 	hiSdk->AddRealDevice(DRJoyStickGLUTIf::GetIfInfoStatic());
 }
@@ -166,7 +126,7 @@ void FWGLUT::LeaveGameMode(){
 /** ウィンドウ *////////////////////////////////////////////////////////////////
 
 ///	ウィンドウを作成し、ウィンドウ IDを返す
-FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc){
+FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 	int wid=0;
 
 	// フルスクリーンの場合のウィンドウ生成
@@ -181,8 +141,8 @@ FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc){
 	}
 	// ウィンドウモードの場合の生成
 	else{
-		if (desc.parentWindow){
-			wid = glutCreateSubWindow(desc.parentWindow, desc.left, desc.top, desc.width, desc.height);
+		if(parent){
+			wid = glutCreateSubWindow(parent->GetID(), desc.left, desc.top, desc.width, desc.height);
 		}
 		else{
 			glutInitWindowSize(desc.width, desc.height);
@@ -196,20 +156,14 @@ FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc){
 	// windowに関連するコールバックの設定
 	glutDisplayFunc(FWGLUT::GlutDisplayFunc);
 	glutReshapeFunc(FWGLUT::GlutReshapeFunc);
-	/*
-	glutKeyboardFunc(FWGLUT::GlutKeyboardFunc);
-	glutSpecialFunc(FWGLUT::GlutSpecialFunc);
-	glutMouseFunc(FWGLUT::GlutMouseFunc);
-	glutMotionFunc(FWGLUT::GlutMotionFunc);
-	int pollInterval = 10;	// int pollInterval : glutJoystickFuncを使うときに使う何か．読み込み時間に関係しているらしい．
-	glutJoystickFunc(FWGLUT::GlutJoystickFunc, pollInterval);
-	*/
 
 	// ウィンドウを作成
-	FWWinGLUT* win = DBG_NEW FWWinGLUT(wid, desc);
+	FWWin* win = DBG_NEW FWWin();
+	win->SetDesc(&desc);
+	win->id = wid;
 	
 	// キーボード・マウスとジョイスティックの仮想デバイスを作成して関連付け
-	HISdkIf* hiSdk = fwApp->GetSdk()->GetHISdk();
+	HISdkIf* hiSdk = FWApp::GetApp()->GetSdk()->GetHISdk();
 	HIRealDeviceIf* dr;
 	if(desc.useKeyMouse){
 		dr = hiSdk->FindRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic());
@@ -237,11 +191,7 @@ void FWGLUT::SetCurrentWin(FWWinIf* w){
 	glutSetWindow(w->GetID());
 };
 ///	カレントウィンドウを返す。
-FWWinIf* FWGLUT::GetCurrentWin(){
-	return fwApp->GetWinFromId(glutGetWindow());
-}
-///	カレントウィンドウのIDを返す。
-int FWGLUT::GetWinFromId(){
+int FWGLUT::GetCurrentWin(){
 	return glutGetWindow();
 }
 ///カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
@@ -252,5 +202,23 @@ void FWGLUT::PostRedisplay(){
 int FWGLUT::GetModifiers(){
 	return glutGetModifiers();
 };
+
+void FWGLUT::SetPosition(FWWinBase* win, int left, int top){
+	glutSetWindow(win->id);
+	glutPositionWindow(left, top);
+}
+void FWGLUT::SetSize(FWWinBase* win, int width, int height){
+	glutSetWindow(win->id);
+	glutReshapeWindow(width, height);
+}
+void FWGLUT::SetTitle(FWWinBase* win, UTString t){
+	glutSetWindow(win->id);
+	glutSetWindowTitle(t.c_str());
+}
+void FWGLUT::SetFullScreen(FWWin* win){
+	glutSetWindow(win->id);
+	glutFullScreen();
+}
+
 
 }

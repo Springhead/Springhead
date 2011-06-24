@@ -90,7 +90,6 @@ public:
 	void SetDebugMode(bool debug);
 	void Step();
 	void Draw();
-	void Reshape(int w, int h);
 	GRRenderIf* GetRender();
 	//void SetDSTR(bool f){ DSTRFlag = f; }
 	

@@ -542,10 +542,8 @@ public: /** FWApp‚ÌŽÀ‘• **/
 
 	virtual void Init(int argc, char* argv[]){
 		CreateSdk();
-
-		SetGRAdaptee(TypeGLUT);
 		GRInit(argc, argv);
-
+		
 		FWWinDesc windowDesc;
 		windowDesc.width = 1024;
 		windowDesc.height = 768;

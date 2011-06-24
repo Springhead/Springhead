@@ -11,14 +11,6 @@
 #include <Framework/FWGLUT.h>
 #include <GL/glui.h>
 
-namespace Spr{;
-/*
-struct FWGLUIDesc{
-	
-	//デフォルトコンストラクタ
-	FWGLUIDesc();
-};
-*/
 /** @brief GLUIを用いるアプリケーションクラス
 		   基本的にFWAppGLUIを自分のアプリケーションのクラスに継承させ，
 		   DesignGUIを必ずオーバーライドして使用する.
@@ -32,32 +24,130 @@ struct FWGLUIDesc{
 		   (クラス内の関数定義は必ず__thiscallになる)   
 	*/
 
-class FWGLUI : public FWGLUT/*, public FWGLUIDesc*/{
-//public:
-//	SPR_OBJECTDEF_NOIF(FWGLUI);
-protected:
-	std::vector<GLUI*> guis;
+namespace Spr{;
 
-	int		fromTop;					//< 別ウィンドウを生成するときの上からのdot数
-	int		fromLeft;					//< 別ウィンドウを生成するときの左からのdot数
-	int		subPosition;				//< OpenGL描画ウィンドウの中にGUIを組み込んでしまう場合の組み込む場所
-	char*	gluiName;					//< 別ウィンドウを作成する場合のウィンドウの名前
-	bool	createOtherWindow;			//< GUIを別ウィンドウにするかどうか
-
+class FWGLUI : public FWGLUT{
 public:
-	virtual void SPR_CDECL DesignGUI(){};
+	SPR_OBJECTDEF_NOIF(FWGLUI);
+protected:
+	//std::vector<GLUI*> guis;
+
+	//int		fromTop;					//< 別ウィンドウを生成するときの上からのdot数
+	//int		fromLeft;					//< 別ウィンドウを生成するときの左からのdot数
+	//int		subPosition;				//< OpenGL描画ウィンドウの中にGUIを組み込んでしまう場合の組み込む場所
+	//char*	gluiName;					//< 別ウィンドウを作成する場合のウィンドウの名前
+	//bool	createOtherWindow;			//< GUIを別ウィンドウにするかどうか
+
+	// コールバック処理を行うコントロールの配列
+	// ボタン，テキストボックス
+	std::vector<FWControl*>	ctrls;
+
+	/// インスタンス取得
+	static FWGLUI* GetInstance();
+
+	/** コールバック関数*/
+	static void SPR_CDECL GLUIUpdateFunc(int id);
+	
+public:
+	//virtual void SPR_CDECL DesignGUI(){};
 	/** GLUIのメインループをスタートする
 		FWGLUTのStartMainLoop()とは中身が異なるので消さないこと．
 	 */
-	virtual void	StartMainLoop();			
-	//virtual GLUI*	CreateGUI(int wid = 0, FWGLUIDesc desc = FWGLUIDesc());
-	GLUI* CreateGUI(int wid = 0, int top = 50, int left = 30, int subPos = GLUI_SUBWINDOW_RIGHT,
-		char* name = "Menu", bool other = true);
+	virtual void		StartMainLoop();
+	virtual void		CalcViewport(int* l, int* t, int* w, int* h);
 
-	FWGLUI(FWApp* a=0):FWGLUT(a){}
+	virtual FWDialog*	CreateDialog	(FWWin* owner, const FWDialogDesc& desc);
+	virtual FWControl*	CreateControl	(FWDialog* owner, const IfInfo* ii, const FWControlDesc& desc, FWPanel* parent);
+	virtual void		CreateColumn	(FWDialog* owner, bool sep, FWPanel* panel);
+	virtual void		CreateSeparator	(FWDialog* owner, FWPanel* panel);
+	virtual void		SetSize			(FWWinBase* win, int width, int height);
+	virtual void		SetLabel		(FWControl* win, UTString label);
+	virtual void		SetAlign		(FWControl* ctrl, int align);
+	virtual int			GetInt			(FWControl* ctrl);
+	virtual void		SetInt			(FWControl* ctrl, int val);
+	virtual float		GetFloat		(FWControl* ctrl);
+	virtual void		SetFloat		(FWControl* ctrl, float val);
+	virtual void		SetChecked		(FWButton*	btn,  bool on);
+	virtual bool		IsChecked		(FWButton*	btn);
+	virtual void		SetIntRange		(FWTextBox* text, int rmin, int rmax);
+	virtual void		SetFloatRange	(FWTextBox* text, float rmin, float rmax);
+	virtual const char*	GetString		(FWTextBox* text);
+	virtual void		SetString		(FWTextBox* text, char* str);
+	virtual Matrix3f	GetRotation		(FWRotationControl* rotCtrl);
+	virtual void		SetRotation		(FWRotationControl* rotCtrl, const Matrix3f& rot);
+	virtual void		SetDamping		(FWRotationControl* rotCtrl, float d);
+	virtual void		Reset			(FWRotationControl* rotCtrl);
+	virtual	Vec3f		GetTranslation	(FWTranslationControl* trnCtrl);
+	virtual	void		SetTranslation	(FWTranslationControl* trnCtrl, Vec3f p);
+	virtual void		SetSpeed		(FWTranslationControl* trnCtrl, float sp);
+	virtual void		AddItem			(FWListBox*	listBox, UTString label);
+
+	FWGLUI(){}
 	~FWGLUI();
 };
+/*
+class FWWinGLUI : public FWWinGLUT{
+public:
+	virtual FWDialogIf*		CreateDialog(const FWDialogDesc& desc);
+};
 
+class FWDialogGLUI : public FWDialog{
+public:
+	virtual FWControlIf*	CreateControl(const FWControlDesc& desc);
+};
+
+class FWControlGLUI : public FWControl{
+public:
+	virtual UTString	GetLabel();
+	virtual void		SetLabel(UTString label);
+	virtual void		SetAlign(int align);
+	virtual int			GetStyle();
+	virtual void		SetStyle(int style);
+};
+
+class FWPanelGLUI : public FWPanel{
+public:
+	virtual void	Open(bool on = true);
+	virtual void	CreateColumn(bool sep = true);
+	virtual void	CreateSeparator();
+};
+
+class FWButtonGLUI : public FWButton{
+public:
+	virtual void	SetChecked(bool on = true);
+	virtual bool	IsChecked();
+
+	virtual	void		SetRadioGroup(FWPanelIf*);
+	virtual	FWPanelIf*	GetRadioGroup();
+};
+
+class FWStaticTextGLUI : public FWStaticText{
+public:
+
+};
+
+class FWTextBoxGLUI : public FWTextBox{
+public:
+	virtual void	SetIntRange(int rmin, int rmax);
+	virtual void	GetIntRange(int& rmin, int& rmax);
+	virtual void	SetFloatRange(int rmin, int rmax);
+	virtual void	GetFloatRange(int& rmin, int& rmax);
+
+};
+
+class FWListBoxGLUI : public FWListBox{
+public:
+
+};
+
+class FWRotationControlGLUI : public FWRotationControl{
+public:
+};
+
+class FWTranslationControlGLUI : public FWTranslationControl{
+public:
+};
+*/
 }
 
 #endif

@@ -17,6 +17,7 @@
 namespace Spr{;
 
 FWApp* FWApp::instance = 0;
+UTRef<FWGraphicsAdaptee> FWGraphicsAdaptee::instance = 0;
 
 FWApp::FWApp(){
 	instance = this;
@@ -31,7 +32,7 @@ FWApp::~FWApp(){
 		}
 	}
 	if(hasFullScreen)
-		grAdaptee->LeaveGameMode();
+		FWGraphicsAdaptee::instance->LeaveGameMode();
 }
 
 void FWApp::Init(int argc, char* argv[]){
@@ -40,8 +41,7 @@ void FWApp::Init(int argc, char* argv[]){
 	CreateSdk();
 	// シーンを作成
 	GetSdk()->CreateScene();
-	// グラフィクスをGLUTで初期化
-	SetGRAdaptee(TypeGLUT);
+	// ウィンドウマネジャ初期化
 	GRInit(argc, argv);
 	// ウィンドウを作成
 	CreateWin();
@@ -60,22 +60,15 @@ void FWApp::TimerFunc(int id){
 }
 
 void FWApp::EnableIdleFunc(bool on){
-	if(grAdaptee)
-		grAdaptee->EnableIdleFunc(on);
+	FWGraphicsAdaptee::instance->EnableIdleFunc(on);
 }
 void FWApp::StartMainLoop(){
-	if(grAdaptee)
-		grAdaptee->StartMainLoop();
+	FWGraphicsAdaptee::instance->StartMainLoop();
 }
 
 
 // 派生クラスで定義することのできる仮想関数/////////////////////////////////
 void FWApp::Reshape(int w, int h){
-	/*if(GetCurrentWin()){
-		fwSdk->SwitchRender(GetCurrentWin()->GetRender());
-		fwSdk->Reshape(w, h);
-	}*/
-	GetCurrentWin()->Reshape(w, h);
 }
 
 void FWApp::MouseButton(int button, int state, int x, int y){
@@ -116,6 +109,8 @@ void FWApp::MouseMove(int x, int y){
 //　FWAppのインタフェース ///////////////////////////////////////////////////////
 
 void FWApp::CreateSdk(){
+	if(fwSdk)
+		return;
 	fwSdk = FWSdkIf::CreateSdk();
 }
 
@@ -136,11 +131,8 @@ void FWApp::AssignScene(FWWinIf* win){
 	}
 }
 
-FWWinIf* FWApp::CreateWin(const FWWinDesc& desc){
-	if(!grAdaptee)
-		return NULL;
-
-	FWWinIf* win = grAdaptee->CreateWin(desc);
+FWWinIf* FWApp::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
+	FWWinIf* win = FWGraphicsAdaptee::instance->CreateWin(desc, parent);
 
 	// 自身をキーボード・マウスハンドラに登録
 	win->GetKeyMouse()->AddHandler(this);
@@ -158,20 +150,13 @@ FWWinIf* FWApp::CreateWin(const FWWinDesc& desc){
 	AssignScene(win);
 	// レンダラ割当て
 	GRRenderIf* render = GetSdk()->GetGRSdk()->CreateRender();
-	render->SetDevice(grAdaptee->GetGRDevice());
+	render->SetDevice(FWGraphicsAdaptee::instance->GetGRDevice());
 	// このコンテキストに対してGRDeviceGL::Initを呼ぶ
 	render->GetDevice()->Init();
 	win->SetRender(render);
 
 	return win;
 }
-
-/*void FWApp::InitWindow(){
-	if(!NWin() && grAdaptee){
-		CreateWin();
-		wins.back()->SetScene(GetSdk()->GetScene());
-	}
-}*/
 
 FWWinIf* FWApp::GetWinFromId(int wid){
 	for(Wins::iterator i = wins.begin(); i != wins.end(); i++){
@@ -188,66 +173,48 @@ FWWinIf* FWApp::GetWin(int pos){
 }
 
 FWWinIf* FWApp::GetCurrentWin(){
-	if(!grAdaptee)
-		return NULL;
-	return grAdaptee->GetCurrentWin();
+	return GetWinFromId(FWGraphicsAdaptee::instance->GetCurrentWin());
 }
 
 void FWApp::DestroyWin(FWWinIf* win){
-	if(grAdaptee)
-		grAdaptee->DestroyWin(win);
+	FWGraphicsAdaptee::instance->DestroyWin(win);
 }
 
 void FWApp::SetCurrentWin(FWWinIf* win){
-	if(grAdaptee)
-		grAdaptee->SetCurrentWin(win);
+	FWGraphicsAdaptee::instance->SetCurrentWin(win);
 }
 
 void FWApp::PostRedisplay(){
-	if(grAdaptee)
-		grAdaptee->PostRedisplay();
+	FWGraphicsAdaptee::instance->PostRedisplay();
 }
 
 int FWApp::GetModifier(){
-	if(!grAdaptee)
-		return 0;
-	return grAdaptee->GetModifiers();
+	return FWGraphicsAdaptee::instance->GetModifiers();
 }
 
 // 描画パート////////////////////////////////////////////////////////////////////
 
-void FWApp::SetGRAdaptee(grAdapteeType type){
+void FWApp::SetGRAdaptee(int type){
 	switch (type) {
 	case TypeNone:
-		grAdaptee = NULL;
+		FWGraphicsAdaptee::instance = 0;
 		break;
-	case TypeGLUT:{
-		FWGLUT* glut = DBG_NEW FWGLUT(this);
-		grAdaptee = glut->Cast();
-		}break;
-	case TypeGLUI:{
-		FWGLUI* glui = DBG_NEW FWGLUI(this);
-		grAdaptee = glui->Cast();
-		}break;
+	case TypeGLUT:
+		FWGraphicsAdaptee::instance = DBG_NEW FWGLUT();
+		break;
+	case TypeGLUI:
+		FWGraphicsAdaptee::instance = DBG_NEW FWGLUI();
+		break;
 	}
 }
 
-void FWApp::GRInit(int argc, char* argv[]){
-	if(grAdaptee)
-		grAdaptee->Init(argc, argv);
+void FWApp::GRInit(int argc, char* argv[], int type){
+	if(!FWGraphicsAdaptee::instance)
+		SetGRAdaptee(type);
+	FWGraphicsAdaptee::instance->Init(argc, argv);
 }
 
-/**コールバック関数*/
-void FWApp::CallDisplay(){
-	Display();
-}
-void FWApp::CallReshape(int w, int h){
-	Reshape(w, h);
-}
-void FWApp::CallIdleFunc(){
-	IdleFunc();
-}
-void FWApp::CallKeyboard(int key, int x, int y){
+/*void FWApp::CallKeyboard(int key, int x, int y){
 	for(int i = 0; i < GetSdk()->NIAScenes(); i++){
 		FWInteractScene* iaScene = GetSdk()->GetIAScene(i)->Cast();
 		iaScene->BeginKeyboard();
@@ -259,20 +226,7 @@ void FWApp::CallKeyboard(int key, int x, int y){
 		FWInteractScene* iaScene = GetSdk()->GetIAScene(i)->Cast();
 		iaScene->EndKeyboard();
 	}
-}
-void FWApp::CallMouseButton(int button, int state, int x, int y){
-	//mouseInfo.Button(button, state, x, y, GetModifier());
-	MouseButton(button, state, x, y);
-}
-void FWApp::CallMouseMove(int x, int y){
-	//mouseInfo.Move(x, y);
-	MouseMove(x, y);
-}
-
-void FWApp::CallJoystick(unsigned int buttonMask, int x, int y, int z){
-	Joystick(buttonMask, x, y, z);
-}
-
+}*/
 
 //タイマ///////////////////////////////////////////////////////////////////////////
 

@@ -34,6 +34,6 @@ namespace Spr{}
 #include <Base/TinyMat.h>
 #include <Base/TQuaternion.h>
 #include <Base/Affine.h>
-#include "StrBufBase.h"
+#include <Base/StrBufBase.h>
 
 #endif

@@ -43,7 +43,7 @@ bool HIRealDevice::Return(HIVirtualDeviceIf* dv){
 }
 
 bool HIRealDevice::AddChildObject(ObjectIf* o){
-	HIVirtualDeviceIf* dv = o->Cast();
+	HIVirtualDevice* dv = o->Cast();
 	if(dv){
 		dvPool.push_back(dv);
 		return true;
@@ -54,7 +54,7 @@ bool HIRealDevice::AddChildObject(ObjectIf* o){
 ObjectIf* HIRealDevice::GetChildObject(size_t i){
 	if(i >= dvPool.size())
 		return 0;
-	return dvPool[i];
+	return dvPool[i]->Cast();
 }
 
 size_t HIRealDevice::NChildObject() const{

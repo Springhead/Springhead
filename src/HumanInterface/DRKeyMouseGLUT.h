@@ -10,6 +10,7 @@
 
 #include <HumanInterface/HIDevice.h>
 #include <GL/glut.h>
+#include <vector>
 #include <deque>
 
 #ifndef GLUTCALLBACK
