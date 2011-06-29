@@ -71,6 +71,11 @@ PHFemMesh::FemVertex::FemVertex(){
 PHFemMesh::PHFemMesh(const PHFemMeshDesc& desc, SceneIf* s){
 	SetDesc(&desc);
 	if (s){ SetScene(s); }
+
+	//ThermalFEMの実装を追加していく
+
+	//計算の関数については、ガウス・ザイデルで　
+		
 }
 
 void PHFemMesh::SetDesc(const void* p) {
