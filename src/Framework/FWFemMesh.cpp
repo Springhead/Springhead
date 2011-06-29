@@ -3,6 +3,7 @@
 #include <Graphics/GRFrame.h>
 #include <Graphics/GRMesh.h>
 #include <Physics/PHConstraint.h>
+#include <Physics/PHFemMeshThermo.h>
 #include <Foundation/UTLoadHandler.h>
 #include "FWFemMesh.h"
 #include "FWSprTetgen.h"
