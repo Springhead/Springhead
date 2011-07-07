@@ -246,7 +246,8 @@ void PHFemMesh::UpdateJacobian(){
 				Km[i][j] = Nx[i]*Nx[j] + Ny[i]*Ny[j] + Nz[i]*Nz[j];
 			}
 		}
-
+		//hozonnga hituyouna monowo sagasu 
+		//kakunin shinagara yaru 
 	}
 }
 

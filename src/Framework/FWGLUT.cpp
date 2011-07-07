@@ -86,6 +86,7 @@ void FWGLUT::Init(int argc, char** argv){
 	Register();
 
 	// グラフィクスデバイスを作成
+	DSTR << FWApp::GetApp()->GetSdk() << endl;
 	grDevice = FWApp::GetApp()->GetSdk()->GetGRSdk()->CreateDeviceGL();
 	grDevice->Init();
 

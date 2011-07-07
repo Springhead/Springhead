@@ -47,9 +47,11 @@ public:
 	~MyApp(){}
 
 	virtual void Init(int argc, char* argv[]){
+		CreateSdk();
+		GetSdk()->CreateScene();
 		SetGRAdaptee(TypeGLUT);
 		GRInit(argc, argv);
-		CreateSdk();
+		//CreateSdk();
 
 		FWWinDesc windowDesc;
 		windowDesc.width = 1024;
@@ -80,7 +82,8 @@ public:
 		//	ファイルのロード
 		UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
 		GetSdk()->LoadScene("scene.spr", import);			// ファイルのロード
-		if (GetSdk()->NScene())	SwitchScene(GetSdk()->NScene()-1);
+		numScenes = GetSdk()->NScene();
+		if (numScenes) SwitchScene(GetSdk()->NScene()-1);
 
 		/// 描画設定
 		if (fwScene){
@@ -129,6 +132,7 @@ public:
 		}
 		SampleApp::OnAction(menu, id);
 	}
+
 
 };
 
