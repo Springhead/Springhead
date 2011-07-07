@@ -33,6 +33,8 @@ public:
 	virtual bool GetDesc(void* desc) const;
 	///デスクリプタの設定。
 	virtual void SetDesc(const void* desc);
+	//熱伝導計算本体
+	
 };
 
 
