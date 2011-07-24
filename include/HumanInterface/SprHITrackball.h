@@ -59,10 +59,10 @@ struct HITrackballDesc{
 		trackball	= false;		///< デフォルトでターンテーブル
 		target		= Vec3f();
 
-		longitude	= Rad(0.0f);
-		latitude	= Rad(0.0f);
-		lonRange	= Vec2f(Rad(-180.0f), Rad(180.0f));
-		latRange	= Vec2f(Rad(- 80.0f), Rad( 80.0f));
+		longitude	= Radf(0.0f);
+		latitude	= Radf(0.0f);
+		lonRange	= Vec2f(Radf(-180.0f), Radf(180.0f));
+		latRange	= Vec2f(Radf(- 80.0f), Radf( 80.0f));
 		distance	= 1.0f;
 		distRange	= Vec2f(0.1f, 100.0f);
 		rotGain		= 0.01f;
