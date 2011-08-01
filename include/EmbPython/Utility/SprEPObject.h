@@ -26,7 +26,7 @@ typedef struct
 /////////////////////////////////////メソッド登録用
 ///voidのメソッドの定義
 
-PyObject* EPObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds);
+PyObject*  EPObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds);
 EPObject* newEPObject();
 EPObject* newEPObject(const void*);
 
