@@ -136,7 +136,7 @@ public:
 	virtual void SetLighting(bool l){}
 
 	virtual unsigned int LoadTexture(const std::string filename){return 0;}
-	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb){}
+	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb){}
 	virtual void InitShader(){}
 	virtual void SetShaderFormat(GRShaderFormat::ShaderType type){}	
 	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){return 0;}

@@ -131,7 +131,7 @@ public:
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest);
 	virtual void SetLighting(bool on);
 	virtual unsigned int LoadTexture(const std::string filename);
-	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb);
+	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format,const char* tb);
 	virtual void InitShader();
 	virtual void SetShaderFormat(GRShaderFormat::ShaderType type);	
 	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader);

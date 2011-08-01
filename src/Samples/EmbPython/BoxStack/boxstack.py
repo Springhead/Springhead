@@ -43,12 +43,20 @@ def Shower(box = None):
 			spent = time.time() - start
 			x = ( spent / span * 14  + 4 ) * math.cos( 2 * math.pi * i / num )
 			z = ( spent / span * 14  + 4 ) * math.sin( 2 * math.pi * i / num )
-			Pick( box[i] , Vec3d(x,27,z) ) 
+			Pick( box[i] , Vec3d(x,27.0,z) ) 
 			box[i].SetVelocity(Vec3d(x*1.5,10,z*1.5))
 			time.sleep(0.05)
 	return box 
 
-
+	
+def MoveRnd(so):
+	start = time.time()
+	span = 5	#5sec
+	
+	while time.time() < start + span:
+		v = Vec3d((random.random()-0.5)*15,(random.random()-0.5)*25,(random.random()-0.5)*15)
+		so.SetVelocity(so.GetVelocity()+v)
+		time.sleep(0.5)
 
 def PD(solid,pos=Vec3d(5,15,0),k=10,d=10,time_=5):
 	dt = 0.1
@@ -61,11 +69,8 @@ def PD(solid,pos=Vec3d(5,15,0),k=10,d=10,time_=5):
 if __name__ == "__main__":
 	print("v1 = Vec3d() v2 = Vec3d()")
 	
-	v1 = Vec3d()
-	v2 = Vec3d()
-	
-	v1.Set(1,2,3)
-	v2.Set(3,4,5)
+	v1 = Vec3d(1.0,2.0,3.0)
+	v2 = Vec3d(4.0,5.0,6.0)
 	
 	print( v1 , v2 )
 	
@@ -81,7 +86,10 @@ if __name__ == "__main__":
 	
 	v3 = Vec3d(1,2,3)
 	
-	print( "box = [None] * 20" )
 	print( "Shower(box)!!" )
 	
-	soList = scene.GetSolids()
+	#soList = scene.GetSolids()
+	
+	box = [None] * 20
+
+	

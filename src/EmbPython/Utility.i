@@ -1,7 +1,6 @@
 %module Utility
-//%include "workaround.i"
 
-%{
+%begin %{
 #include "Base/TQuaternion.h"
 #include "Base/Affine.h"
 
@@ -15,25 +14,28 @@
 #endif
 #endif
 
-//springhead
-#include "Utility/SprEPIfInfo.h"
-#include "Utility/SprEPUTString.h"
 //swig
-#include "Utility/SprEPErrors.h"
-
-//std
+#include "Utility/SprEPFoundation.h"
+#include "Utility/SprEPObject.h"
 #include "Utility/SprEPvoid.h"
-#include "Utility/SprEPostream.h"
-#include "Utility/SprEPistream.h"
-#include "Utility/SprEPstring.h"
-#include "Utility/SprEPchar.h"
-#include "Utility/SprEPunsignedint.h"
-#include "Utility/SprEPunsignedlong.h"
+#include "Utility/SprEPCast.h"
+#include "Utility/UTCriticalSection.h"//CriticalSection用
+#include <string>
 
-void __EPDECL initUtility(void);
-
-//CriticalSection用
-#include "Utility/UTCriticalSection.h"
+using namespace std;
 %}
+
+
+namespace Spr{
+
+	class IfInfo{};
+	class ostream{};
+	class istream{};
+	class UTString{};
+
+	//クリティカルセクション
+	UTCriticalSection EPCriticalSection;
+
+}//namespace
 
 %include "./Utility/PyPTM-sprpy.i"

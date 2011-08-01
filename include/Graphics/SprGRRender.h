@@ -376,7 +376,7 @@ struct GRRenderBaseIf: public ObjectIf{
 	/// テクスチャのロード（戻り値：テクスチャID）
 	unsigned int LoadTexture(const std::string filename);
 	/// テクスチャ画像の設定
-	void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb);
+	void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb);
 	/// シェーダの初期化
 	void InitShader();
 	/// シェーダフォーマットの設定

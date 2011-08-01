@@ -531,7 +531,7 @@ struct PHBallJointIf : public PHJointIf{
 	/**@brief 拘束位置を設定する
 	   @param 拘束位置のファイルを読み込む
     */
-	bool SetConstLine(char* fileName, bool i);
+	bool SetConstLine(const char* fileName, bool i);
 	/**@brief 拘束位置を設定する
 	   @param [way][0]スイング方位角　[1]スイング角　[2]ツイスト角min　[3]ツイスト角max　[4]傾き
     */

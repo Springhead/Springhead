@@ -53,6 +53,8 @@ void EPInterpreter::Initialize()
 	if (newPath.length() <= 1){
 		DSTR << "Warning: " << "Can not find environment variable of 'PYTHONPATH' and 'SPRPYTHONPATH'. " 
 			<< "Embeded python will causes buffer over run error." << std::endl;
+		printf("Error: Python Lib not found ");
+		assert(0);
 	}
 	
 	SetEnvironmentVariable("PYTHONPATH", newPath.c_str());
@@ -63,11 +65,11 @@ void EPInterpreter::Initialize()
 	Py_Initialize();
 
 	//	_SprPyƒ‚ƒWƒ…[ƒ‹‚Ì“o˜^
-	PyObject*m = PyInit__SprPy();
-	PyObject *modules = PyImport_GetModuleDict();
-	if (PyDict_SetItemString(modules, "_SprPy", m) != 0) {
-		Py_DECREF(m);
-	}
+	//PyObject*m = PyInit__SprPy();
+	//PyObject *modules = PyImport_GetModuleDict();
+	//if (PyDict_SetItemString(modules, "_SprPy", m) != 0) {
+	//	Py_DECREF(m);
+	//}
 
 
 	////Žèì‚èƒNƒ‰ƒX‚Ì‰Šú‰»
@@ -77,8 +79,9 @@ void EPInterpreter::Initialize()
 	initFoundation();
 	initCollision();
 	initPhysics();
-	//initGraphics();
-	//initCreature();
+	initGraphics();
+	initCreature();
+	//initFramework();
 }
 
 void EPInterpreter::Run(void* arg)
