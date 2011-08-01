@@ -5,7 +5,7 @@
 
 /////////////////////////////////////メソッド登録用
 ///voidのメソッドの定義
-static PyMethodDef EPvoid_methods[] =
+static PyMethodDef EPvoidObject_methods[] =
 {
 	{NULL}
 };
@@ -15,38 +15,40 @@ static PyMethodDef EPvoid_methods[] =
 
 //////////////////////////////////////////init
 static int
-EPvoid_init(EPvoid* self,PyObject *args, PyObject *kwds)
+EPvoidObject_init(EPvoidObject* self,PyObject *args, PyObject *kwds)
 {
 	return 0;
 }
 //////////////////////////////////////////new
 static PyObject*
-EPvoid_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
+EPvoidObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
 {
-	EPvoid *self;
-	self = ( EPvoid*) type->tp_alloc(type,0);
+	EPvoidObject *self;
+	self = ( EPvoidObject*) type->tp_alloc(type,0);
 	if ( self != NULL)
 	{
-		EPvoid_init(self,args,kwds);
+		EPvoidObject_init(self,args,kwds);
 	}
 	return (PyObject *)self;
 }
 ////////////////////////////////////////////dealloc
 static void
-EPvoid_dealloc(EPvoid* self)
+EPvoidObject_dealloc(EPvoidObject* self)
 {
 	//PythonでいらなくてもSpringheadで使ってるかもしれない
-	//delete(self->ptr);
+
+	if ( self->mm == EP_MM_PY )
+		delete(self->ptr);
 	self->ob_base.ob_type->tp_free((PyObject*)self);
 }
 
-PyTypeObject EPvoidType =
+PyTypeObject EPvoidObjectType =
 {
 	PyVarObject_HEAD_INIT(NULL,0)
 	"Test.void",             /*tp_name*/
-	sizeof(EPvoid),             /*tp_basicsize*/
+	sizeof(EPvoidObject),             /*tp_basicsize*/
 	0,                         /*tp_itemsize*/
-	(destructor)EPvoid_dealloc,                        /*tp_dealloc*/
+	(destructor)EPvoidObject_dealloc,                        /*tp_dealloc*/
 	0,                         /*tp_print*/
 	0,                         /*tp_getattr*/
 	0,                         /*tp_setattr*/
@@ -69,44 +71,48 @@ PyTypeObject EPvoidType =
 	0,		               /* tp_weaklistoffset */
 	0,		               /* tp_iter */
 	0,		               /* tp_iternext */
-	EPvoid_methods,             /* tp_methods */
-	0,//EPvoid_members,             /* tp_members */
+	EPvoidObject_methods,             /* tp_methods */
+	0,//EPvoidObject_members,             /* tp_members */
 	0,                         /* tp_getset */
 	0,                         /* tp_base */
 	0,                         /* tp_dict */
 	0,                         /* tp_descr_get */
 	0,                         /* tp_descr_set */
 	0,                         /* tp_dictoffset */
-	(initproc)EPvoid_init,      /* tp_init */
+	(initproc)EPvoidObject_init,      /* tp_init */
 	0,                         /* tp_alloc */
-	EPvoid_new,                 /* tp_new */
+	EPvoidObject_new,                 /* tp_new */
 
 };
 
-PyMODINIT_FUNC initEPvoid(void)
+PyMODINIT_FUNC initEPvoidObject(void)
 {
 	PyObject* m;
 
 	//Pythonクラスの作成
-	if ( PyType_Ready( &EPvoidType ) < 0 ) return NULL ;
+	if ( PyType_Ready( &EPvoidObjectType ) < 0 ) return NULL ;
 
 	m = PyImport_AddModule("Utility");
 
 	//モジュールに追加
-	Py_INCREF(&EPvoidType);
-	PyModule_AddObject(m,"void",(PyObject *)&EPvoidType);
+	Py_INCREF(&EPvoidObjectType);
+	PyModule_AddObject(m,"void",(PyObject *)&EPvoidObjectType);
 	return m;
 }
 
-EPvoid* newEPvoid()
+PyObject* newEPvoid()
 {
-	return (EPvoid*)EPvoid_new(&EPvoidType,NULL,NULL);
+	
+	EPvoidObject* obj = (EPvoidObject*)EPvoidObject_new(&EPvoidObjectType,NULL,NULL);
+	obj->mm = EP_MM_PY;
+	return (PyObject*)obj;
 }
 
-EPvoid* newEPvoid (const void* ptr)
+PyObject* newEPvoid(const void* ptr)
 {
-	EPvoid* ret = (EPvoid*)EPvoid_new(&EPvoidType,NULL,NULL);
-	*ret->ptr = ptr;
+	PyObject* ret = EPvoidObject_new(&EPvoidObjectType,NULL,NULL);
+	((EPvoidObject*)ret)->ptr = ptr;
+	((EPvoidObject*)ret)->mm = EP_MM_SPR;
 
 	return ret;
 }

@@ -129,7 +129,7 @@
 	void SetAlphaMode(Spr::GRRenderBaseIf::TBlendFunc src, Spr::GRRenderBaseIf::TBlendFunc dest){	base::SetAlphaMode(src, dest);}	\
 	void SetLighting(bool l){	base::SetLighting(l);}	\
 	unsigned int LoadTexture(const std::string filename){	return	base::LoadTexture(filename);}	\
-	void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb){	base::SetTextureImage(id, components, xsize, ysize, format, tb);}	\
+	void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb){	base::SetTextureImage(id, components, xsize, ysize, format, tb);}	\
 	void InitShader(){	base::InitShader();}	\
 	void SetShaderFormat(GRShaderFormat::ShaderType type){	base::SetShaderFormat(type);}	\
 	bool CreateShader(std::string vShaderFile, std::string fShaderFile, Spr::GRHandler& shader){	return	base::CreateShader(vShaderFile, fShaderFile, shader);}	\

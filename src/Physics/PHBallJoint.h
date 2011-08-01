@@ -104,7 +104,7 @@ public:
 						}
 	virtual bool		IsLimit(){return limit.anyLimit;}
 	/// S‘©“_‚Ì“ü—Í
-	virtual bool		SetConstLine(char* fileName , bool i){ return limit.SetConstLine(fileName, i); }
+	virtual bool		SetConstLine(const char* fileName , bool i){ return limit.SetConstLine(fileName, i); }
 	virtual void		SetConstPoint(int num, int way, double a){limit.SetConstPoint(num,way,a);}
 	/// S‘©“_‚ÌÀ•W‚Ìæ“¾
 	virtual double		GetConstLine(int num, int way){ return limit.splinePoints[0].swingUpper[num][way]; }

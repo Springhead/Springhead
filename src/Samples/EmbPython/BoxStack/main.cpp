@@ -218,17 +218,15 @@ void EPLoopInit(void* arg)
 		PyRun_SimpleString("import Physics\n");
 		PyRun_SimpleString("from Physics import *\n");
 
-		//PyRun_SimpleString("import Graphics\n");
+		PyRun_SimpleString("import Graphics\n");
 		//PyRun_SimpleString("from Graphics import *\n");
 
-		//PyRun_SimpleString("import Creature\n");
+		PyRun_SimpleString("import Creature\n");
 		//PyRun_SimpleString("from Creature import *\n");
-
 		
-		//PyRun_SimpleString("import Sprpy\n");
+		PyRun_SimpleString("import Framework\n");
+		//PyRun_SimpleString("from Framework import *\n");
 		
-
-
 		PHSdkIf* phSdk = app->GetSdk()->GetPHSdk();
 		PHSceneIf* scene = app->GetSdk()->GetScene()->GetPHScene();
 		PHSolidIf* so1 = scene->CreateSolid();
@@ -259,10 +257,7 @@ void EPLoopInit(void* arg)
 			mesh = DCAST(CDConvexMeshIf, phSdk->CreateShape(md));
 			mesh->SetName("meshConvex");
 		}
-
-		//////cのpyobjectをpythonで読めるようにする
-		//PyObject *m = PyImport_AddModule("Test");
-	
+			
 		//////cのpyobjectをpythonで読めるようにする
 		PyObject *m = PyImport_AddModule("__main__");
 		PyObject *dict = PyModule_GetDict(m);
@@ -273,27 +268,27 @@ void EPLoopInit(void* arg)
 //		PyDict_SetItemString(dict,"fwsdk",py_fwsdk);
 
 		//SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FWSdkIf, 0 |  0 );
-		PyRun_SimpleString("import SprPy\n");
+		//PyRun_SimpleString("import SprPy\n");
 
-		PyObject *fwSdk = SprPy_PassFWSdkIf(app->GetSdk());
-		Py_INCREF(fwSdk);
-		PyDict_SetItemString(dict,"sdk",fwSdk);
+		//PyObject *fwSdk = SprPy_PassFWSdkIf(app->GetSdk());
+		//Py_INCREF(fwSdk);
+		//PyDict_SetItemString(dict,"sdk",fwSdk);
 
-		PyObject* py_sdk = (PyObject*)newEPPHSdkIf(phSdk);
+		PyObject* py_sdk = (PyObject*)newEPPHSdkIfObject(phSdk);
 
-		PyObject* py_scene = (PyObject*)newEPPHSceneIf(scene);
+		PyObject* py_scene = (PyObject*)newEPPHSceneIfObject(scene);
 		Py_INCREF(py_scene);
 		PyDict_SetItemString(dict,"scene",py_scene);
 
-		PyObject* py_desc = (PyObject*)newEPPHSolidDesc(desc);
+		PyObject* py_desc = (PyObject*)newEPPHSolidDescObject(desc);
 		Py_INCREF(py_desc);
 		PyDict_SetItemString(dict,"desc",py_desc);
 
-		PyObject* py_meshConvex = (PyObject*)newEPCDConvexMeshIf(mesh);
+		PyObject* py_meshConvex = (PyObject*)newEPCDConvexMeshIfObject(mesh);
 		Py_INCREF(py_meshConvex);
 		PyDict_SetItemString(dict,"mesh",py_meshConvex);
-
-		//ファイルの読み取り
+		
+		////ファイルの読み取り
 		ifstream file("boxstack.py");
 		string data("");
 		string buff;

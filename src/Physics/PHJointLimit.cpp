@@ -107,7 +107,7 @@ PHBallJointLimit::PHBallJointLimit(){
 	constNumCondition = 0;
 }
 
-bool PHBallJointLimit::SetConstLine(char* fileName , bool i){
+bool PHBallJointLimit::SetConstLine(const char* fileName , bool i){
 	int n = 0;
 	int Num;
 	if(i) Num = 0;

@@ -689,7 +689,7 @@ void GRDeviceGL::SetLighting(bool on){
 	else glDisable(GL_LIGHTING);
 }
 
-void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, char* tb){
+void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb){
 	unsigned int texId=0;
 
 	char *texbuf = NULL;

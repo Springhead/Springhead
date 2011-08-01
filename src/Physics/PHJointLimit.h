@@ -91,7 +91,7 @@ public:
 	void	CheckLimit();
 	void	SplineLimit();
 	void	SwingTwistLimit();
-	bool	SetConstLine(char* fileName , bool i);
+	bool	SetConstLine(const char* fileName , bool i);
 	void	SetConstPoint(int num, int way, double a);
 	double	GetConstLine(int num, int way){ return splinePoints[0].swingUpper[num][way]; }
 

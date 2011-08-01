@@ -156,7 +156,7 @@
 	void SetTwistRange(Vec2d range){	base::SetTwistRange(range);}	\
 	void GetTwistRange(Vec2d& range){	base::GetTwistRange(range);}	\
 	void SetTwistPole(Vec2d range){	base::SetTwistPole(range);}	\
-	bool SetConstLine(char* fileName, bool i){	return	base::SetConstLine(fileName, i);}	\
+	bool SetConstLine(const char* fileName, bool i){	return	base::SetConstLine(fileName, i);}	\
 	void SetConstPoint(int Num, int way, double a){	base::SetConstPoint(Num, way, a);}	\
 	double GetConstLine(int Num, int way){	return	base::GetConstLine(Num, way);}	\
 	void SetMotorTorque(const Vec3d& torque){	base::SetMotorTorque(torque);}	\
