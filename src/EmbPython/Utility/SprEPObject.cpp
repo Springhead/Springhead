@@ -78,7 +78,7 @@ PyTypeObject EPObjectType =
 	0,                         /* tp_dictoffset */
 	(initproc)EPObject_init,      /* tp_init */
 	0,                         /* tp_alloc */
-	EPObject_new,                 /* tp_new */
+	(newfunc)EPObject_new,                 /* tp_new */
 
 };
 

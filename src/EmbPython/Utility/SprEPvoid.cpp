@@ -81,7 +81,7 @@ PyTypeObject EPvoidObjectType =
 	0,                         /* tp_dictoffset */
 	(initproc)EPvoidObject_init,      /* tp_init */
 	0,                         /* tp_alloc */
-	EPvoidObject_new,                 /* tp_new */
+	(newfunc)EPvoidObject_new,                 /* tp_new */
 
 };
 
