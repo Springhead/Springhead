@@ -14,17 +14,14 @@
 
 namespace Spr {;
 
-typedef unsigned int	uint;
-typedef unsigned long	ulong;
-
 //----------------------------------------------------------------------------------------------------------
 //	UTTimerStub		UTTimerのインスタンスを保持するシングルトン
 //
 class UTTimerStub{
 	///< マルチメディアタイマの分解能
-	uint resolution;		///< 現在の設定値
-	uint resolutionMin;		///< システムがサポートする最小値
-	uint resolutionMax;		///< システムがサポートする最大値
+	unsigned int resolution;		///< 現在の設定値
+	unsigned int resolutionMin;		///< システムがサポートする最小値
+	unsigned int resolutionMax;		///< システムがサポートする最大値
 public:
 	typedef std::vector<UTTimerProvider*> Providers;
 	typedef std::vector< UTRef<UTTimer> > Timers;
@@ -42,16 +39,16 @@ public:
 	}
 	/// タイマの登録
 	void AddTimer(UTTimer* timer){
-		timer->timerId = timers.size();
+		timer->timerId = (unsigned int)timers.size();
 		timers.push_back(timer);
 	}
 	/// マルチメディアタイマの最小分解能
-	uint ResolutionMin(){
+	unsigned int ResolutionMin(){
 		if (!resolutionMin) GetCaps();
 		return resolutionMin;
 	}
 	/// マルチメディアタイマの最大分解能
-	uint ResolutionMax(){
+	unsigned int ResolutionMax(){
 		if (!resolutionMax) GetCaps();
 		return resolutionMax;
 	}
@@ -169,7 +166,7 @@ UTTimer::~UTTimer(){
 }
 
 unsigned SPR_CDECL UTTimerIf::NTimers(){
-	return UTTimerStub::Get().timers.size();
+	return (unsigned)UTTimerStub::Get().timers.size();
 }
 
 UTTimerIf* SPR_CDECL UTTimerIf::Get(unsigned i){
@@ -197,17 +194,17 @@ bool UTTimer::SetMode(UTTimerIf::Mode m){
 }
 
 #if defined _WIN32
-void SPR_STDCALL UTTimer_MMTimerCallback(uint uID, uint, ulong dwUser, ulong, ulong){
-	UTTimerStub::Get().timers[dwUser]->Call();
+void (__stdcall UTTimer_MMTimerCallback)(unsigned uID, unsigned, ulong_ptr dwUser, ulong_ptr, ulong_ptr){
+	UTTimerStub::Get().timers[(int)dwUser]->Call();
 }
 
-ulong SPR_STDCALL UTTimer_ThreadCallback(void* arg){
+unsigned long SPR_STDCALL UTTimer_ThreadCallback(void* arg){
 	UTTimer* timer = UTTimerStub::Get().timers[(int)arg];
-	ulong lastCall = timeGetTime();
+	unsigned long lastCall = timeGetTime();
 	
 	while(!timer->bStopThread){
-		ulong now = timeGetTime();
-		ulong nextCall = lastCall + timer->GetInterval();
+		unsigned long now = timeGetTime();
+		unsigned long nextCall = lastCall + timer->GetInterval();
 		int delta = (int)nextCall - (int)now;
 		if (delta > 0){
 			Sleep(delta);
@@ -223,6 +220,7 @@ ulong SPR_STDCALL UTTimer_ThreadCallback(void* arg){
 # error UTTimer: Not yet implemented.		//	未実装
 #endif
 
+
 bool UTTimer::Start(){
 	if (bStarted)
 		return true;
@@ -232,7 +230,7 @@ bool UTTimer::Start(){
 #if defined _WIN32
 		bStarted = true;
 		stub.UpdateResolution();
-		timerIdImpl = timeSetEvent(interval, resolution, UTTimer_MMTimerCallback, timerId, TIME_PERIODIC);
+		timerIdImpl = timeSetEvent(interval, resolution, UTTimer_MMTimerCallback , timerId, TIME_PERIODIC);
 		if (!timerIdImpl){
 			bStarted = false;
 			stub.UpdateResolution();
@@ -241,8 +239,8 @@ bool UTTimer::Start(){
 	}
 	else if(mode == UTTimerIf::THREAD){
 #if defined _WIN32
-		ulong id=0;
-		timerIdImpl = (uint)CreateThread(NULL, 0x1000, UTTimer_ThreadCallback, (void*)timerId, 0, &id);
+		unsigned long id=0;
+		timerIdImpl = (unsigned int)CreateThread(NULL, 0x1000, UTTimer_ThreadCallback, (void*)timerId, 0, &id);
 		if (timerIdImpl){
 			SetThreadPriority((HANDLE)timerIdImpl, THREAD_PRIORITY_TIME_CRITICAL);//THREAD_PRIORITY_ABOVE_NORMAL);
 			bStarted = true;
@@ -318,7 +316,7 @@ bool UTTimer::SetCallback(UTTimerIf::TimerFunc f, void* a){
 	return Start();
 }
 
-bool UTTimer::SetInterval(uint i){
+bool UTTimer::SetInterval(unsigned int i){
 	if (IsRunning() && !Stop())
 		return false;
 	interval = i;

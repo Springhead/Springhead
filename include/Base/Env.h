@@ -91,6 +91,13 @@
  #endif
 #endif
 
+//	x64‘Î‰ž
+#ifdef _WIN64
+typedef unsigned __int64 ulong_ptr;
+#else
+typedef unsigned long ulong_ptr;
+#endif
+
 //	SWIG—p
 #ifdef SWIGSPR
 namespace PTM{

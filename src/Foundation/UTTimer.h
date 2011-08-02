@@ -66,8 +66,7 @@ public:
 protected:
 	friend class UTTimerProvider;
 	friend unsigned long SPR_STDCALL UTTimer_ThreadCallback(void* arg);
-	friend void SPR_STDCALL UTTimer_MMTimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long);
-
+	friend void SPR_STDCALL UTTimer_MMTimerCallback(unsigned int uID, unsigned int, ulong_ptr dwUser, ulong_ptr, ulong_ptr);
 };
 
 ///	フレームワークによるタイマー処理のためのコールバッククラス
