@@ -54,8 +54,6 @@ ObjectIf* CRCreature::GetChildObject(size_t i) {
 }
 
 bool CRCreature::AddChildObject(ObjectIf* o){
-	DSTR << o->GetIfInfo()->ClassName() << std::endl;
-
 	CRBodyIf* b = DCAST(CRBodyIf, o);
 	if (b){
 		if (std::find(bodies.begin(), bodies.end(), b) == bodies.end()){

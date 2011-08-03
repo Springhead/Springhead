@@ -75,6 +75,19 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_CRBodyControllerDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		CREngine::SetDesc((CREngineDesc*)(CRBodyControllerDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CREngine::GetDesc((CREngineDesc*)(CRBodyControllerDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_CRCreatureDesc \
 protected:\
 public:\

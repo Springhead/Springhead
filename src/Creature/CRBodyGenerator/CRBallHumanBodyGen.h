@@ -106,30 +106,31 @@ struct CRBallHumanBodyGenDesc : CRBodyGenDesc {
 // ボールジョイントを用いた人体モデル・クラスの実装
 class CRBallHumanBodyGen : public CRBodyGen, public CRBallHumanBodyGenDesc {
 private:
-	void InitBody();
+	void GenerateBody();
 	void CreateWaist();
 	void CreateAbdomen();
 	void CreateChest();
 
-	void InitHead();
+	void GenerateHead();
 	void CreateNeck();
 	void CreateHead();
 
-	void InitArms();
+	void GenerateArms();
 	void CreateUpperArm(LREnum lr);
 	void CreateLowerArm(LREnum lr);
 	void CreateHand(LREnum lr);
 
-	void InitEyes();
+	void GenerateEyes();
 	void CreateEye(LREnum lr);
 
-	void InitLegs();
+	void GenerateLegs();
 	void CreateUpperLeg(LREnum lr);
 	void CreateLowerLeg(LREnum lr);
 	void CreateFoot(LREnum lr);
 
 	void InitContact();
 	void InitSolidPose();
+	void InitIK();
 
 	void SetJointSpringDamper(PHBallJointDesc  &ballDesc,  double springOrig, double damperOrig, double actuatorMass);
 	void SetJointSpringDamper(PHHingeJointDesc &hingeDesc, double springOrig, double damperOrig, double actuatorMass);
@@ -139,32 +140,17 @@ private:
 
 public:
 	CRBallHumanBodyGen(){}
-	CRBallHumanBodyGen(const CRBallHumanBodyGenDesc& desc, PHSceneIf* s=NULL) 
+	CRBallHumanBodyGen(const CRBallHumanBodyGenDesc& desc) 
 		: CRBallHumanBodyGenDesc(desc) 
-		, CRBodyGen((const CRBodyGenDesc&)desc, s)
+		, CRBodyGen((const CRBodyGenDesc&)desc)
 	{
 		solids.resize(CRBallHumanBodyGenDesc::SO_NSOLIDS);
 		joints.resize(CRBallHumanBodyGenDesc::JO_NJOINTS);
-		ikActuators.resize(CRBallHumanBodyGenDesc::JO_NJOINTS);
-		ikEndEffectors.resize(3*CRBallHumanBodyGenDesc::SO_NSOLIDS);
-
-		InitBody();
-		InitHead();
-		InitArms();
-		InitEyes();
-		InitLegs();
-
-		InitSolidPose();
-		InitContact();
 	}
 
 	/** @brief 初期化を実行する
 	*/
-	virtual void Init();
-
-	// インタフェースの実装
-	virtual int		NBallJoints();				//< ボディに含まれているボールジョイントの数を返す
-	virtual int		NHingeJoints();				//< ボディに含まれているヒンジジョイントの数を返す
+	virtual CRBodyIf* Generate(CRCreatureIf* crCreature);
 };
 
 }

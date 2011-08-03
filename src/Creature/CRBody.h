@@ -11,6 +11,8 @@
 #include <Foundation/Object.h>
 #include <Creature/SprCRBody.h>
 
+#include <map>
+
 //@{
 namespace Spr{;
 
@@ -202,6 +204,10 @@ protected:
 	typedef std::vector< UTRef<CRJointIf> > CRJoints;
 	CRJoints joints;
 
+	/// ラベルから構成要素へのマップ
+	typedef std::map<UTString, CRBodyPartIf*> LabelMap;
+	LabelMap labelMap;
+
 public:
 	SPR_OBJECTDEF(CRBody);
 	ACCESS_DESC(CRBody);
@@ -211,6 +217,10 @@ public:
 		: CRBodyDesc(desc)
 	{
 	}
+
+	/** @brief ラベルから構成要素を探す
+	*/
+	virtual CRBodyPartIf* FindByLabel(UTString label);
 
 	/** @brief 剛体の数を得る
 	*/

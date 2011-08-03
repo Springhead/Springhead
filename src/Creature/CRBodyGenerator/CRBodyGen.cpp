@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Creature/CRBodyGenerator/CRBodyGen.h>
+#include <Creature/SprCRBody.h>
 #include <Physics/SprPHScene.h>
 #include <algorithm>
 #ifdef USE_HDRSTOP
@@ -14,46 +15,93 @@
 
 namespace Spr{
 
-CRBodyGen::CRBodyGen(const CRBodyGenDesc& desc, PHSceneIf* s):CRBodyGenDesc(desc){
-	phScene		= s;
-	phSdk		= phScene->GetSdk();
+CRBodyGen::CRBodyGen(const CRBodyGenDesc& desc):CRBodyGenDesc(desc){
 }
 
-PHJointIf* CRBodyGen::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, const PHHingeJointDesc& desc){
-	PHJointIf* joint;
-	if (jointOrder == PLUG_PARENT) {
-		joint = phScene->CreateJoint(soChild, soParent, desc);
-	} else { // SOCKET_PARENT
-		PHHingeJointDesc descSwap;
-		descSwap = desc;
-		std::swap(descSwap.posePlug, descSwap.poseSocket);
-		joint = phScene->CreateJoint(soParent, soChild, descSwap);
-	}
-	return joint;
+CRIKJointIf* CRBodyGen::CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent, const PHHingeJointDesc& desc){
+	PHSceneIf* phScene = crCreature->GetPHScene();
+
+	PHHingeJointDesc d = desc;
+	d.posePlug = desc.poseSocket;
+	d.poseSocket = desc.posePlug;
+	PHJointIf* phJoint = phScene->CreateJoint(soParent->GetPHSolid(), soChild->GetPHSolid(), d);
+
+	PHIKHingeActuatorDesc descIKAct; descIKAct.bEnabled = true;
+	descIKAct.spring = desc.spring * 10;
+	descIKAct.damper = desc.damper * 1;
+	PHIKActuatorIf*	phIKAct = phScene->CreateIKActuator(descIKAct);
+	phIKAct->AddChildObject(phJoint);
+
+	CRIKJointDesc descIKJoint;
+	CRIKJointIf* crJoint = crBody->CreateObject(CRIKJointIf::GetIfInfoStatic(), &descIKJoint)->Cast();
+
+	crJoint->AddChildObject(phJoint);
+	crJoint->AddChildObject(phIKAct);
+
+	crBody->AddChildObject(crJoint);
+
+	return crJoint;
 }
 
-PHJointIf* CRBodyGen::CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, const PHBallJointDesc& desc){
-	PHJointIf* joint;
-	if (jointOrder == PLUG_PARENT) {
-		joint = phScene->CreateJoint(soChild, soParent, desc);
-	} else { // SOCKET_PARENT
-		PHBallJointDesc descSwap;
-		descSwap = desc;
-		std::swap(descSwap.posePlug, descSwap.poseSocket);
-		joint = phScene->CreateJoint(soParent, soChild, desc);
-	}
-	return joint;
+CRIKJointIf* CRBodyGen::CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent, const PHBallJointDesc& desc){
+	PHSceneIf* phScene = crCreature->GetPHScene();
+
+	PHBallJointDesc d = desc;
+	d.posePlug = desc.poseSocket;
+	d.poseSocket = desc.posePlug;
+	PHJointIf* phJoint = phScene->CreateJoint(soParent->GetPHSolid(), soChild->GetPHSolid(), d);
+
+	PHIKBallActuatorDesc descIKAct; descIKAct.bEnabled = true;
+	descIKAct.spring = desc.spring * 10;
+	descIKAct.damper = desc.damper * 1;
+	PHIKActuatorIf*	phIKAct = phScene->CreateIKActuator(descIKAct);
+	phIKAct->AddChildObject(phJoint);
+
+	CRIKJointDesc descIKJoint;
+	CRIKJointIf* crJoint = crBody->CreateObject(CRIKJointIf::GetIfInfoStatic(), &descIKJoint)->Cast();
+
+	crJoint->AddChildObject(phJoint);
+	crJoint->AddChildObject(phIKAct);
+
+	crBody->AddChildObject(crJoint);
+
+	return crJoint;
 }
 
-void CRBodyGen::Init(){
-	for(size_t i = 0; i < joints.size(); i++){
-		if(solids.front() == joints[i]->GetSocketSolid()){
-			SetInitPosition(solids.front(), joints[i]);
-		}
-	}
+CRIKSolidIf* CRBodyGen::CreateSolid(const PHSolidDesc& desc) {
+	PHSceneIf* phScene = crCreature->GetPHScene();
+
+	PHSolidIf* phSolid = phScene->CreateSolid(desc);
+
+	PHIKEndEffectorDesc descIKEE;
+	descIKEE.bEnabled = false;
+	// descIKEE.targetLocalPosition = Vec3d(0,0,0.1);
+	PHIKEndEffectorIf* phIKEE = phScene->CreateIKEndEffector(descIKEE);
+	phIKEE->AddChildObject(phSolid);
+
+	CRIKSolidDesc descIKSolid;
+	CRIKSolidIf* crSolid = crBody->CreateObject(CRIKSolidIf::GetIfInfoStatic(), &descIKSolid)->Cast();
+
+	crSolid->AddChildObject(phSolid);
+	crSolid->AddChildObject(phIKEE);
+
+	crBody->AddChildObject(crSolid);
+
+	return crSolid;
 }
 
+CRBodyIf* CRBodyGen::Generate(CRCreatureIf* crCreature){
+	this->crCreature = crCreature;
+	
+	CRBodyDesc descBody;
+	crBody = crCreature->CreateBody(descBody);
+
+	return NULL;
+}
+
+// これ要るのか？
 void CRBodyGen::SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint){
+	/*
 	PHSolidIf*	nextParent		= childJoint->GetPlugSolid();
 	Posed sp, pp; //< socket, plugのpose
 	childJoint->GetSocketPose(sp);
@@ -75,58 +123,12 @@ void CRBodyGen::SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint){
 			SetInitPosition(nextParent, joints[i]);
 		}
 	}
+	*/
 }
 
-int CRBodyGen::NSolids(){
-	return solids.size();
-}
 
-PHSolidIf* CRBodyGen::GetSolid(int i){
-	return ((size_t)i < solids.size()) ? solids[i] : NULL;
-}
-
-int CRBodyGen::NJoints(){
-	return joints.size();
-}
-
-PHJointIf* CRBodyGen::GetJoint(int i){
-	return ((size_t)i < joints.size()) ? joints[i] : NULL;
-}
-
-int CRBodyGen::NBallJoints(){
-	int counterNBallJoint = 0;
-	for(unsigned int i = 0; i < joints.size(); i++){
-		if(DCAST(PHBallJointIf, joints[i]))
-			counterNBallJoint ++;
-	}
-	return counterNBallJoint;
-}	
-
-int CRBodyGen::NHingeJoints(){
-	int counterNHingeJoint = 0;
-	for(unsigned int i = 0; i< joints.size(); i++){
-		if(DCAST(PHHingeJointIf, joints[i]))
-			 counterNHingeJoint ++;
-	}
-	return counterNHingeJoint;
-}
-
-int CRBodyGen::NIKActuators(){
-	return ikActuators.size();
-}
-
-PHIKActuatorIf* CRBodyGen::GetIKActuator(int i){
-	return ((size_t)i < ikActuators.size()) ? ikActuators[i] : NULL;
-}
-
-int CRBodyGen::NControlPoints(){
-	return ikEndEffectors.size();
-}
-
-PHIKEndEffectorIf* CRBodyGen::GetControlPoint(int i){
-	return ((size_t)i < ikEndEffectors.size()) ? ikEndEffectors[i] : NULL;
-}
-
+// これらの関数はCRBodyに移動予定（mitake）
+#if 0
 Vec3d CRBodyGen::GetCenterOfMass(){
 	/// 重心を求める時に使うi番目までの重心の小計
 	double totalWeight = 0;
@@ -264,5 +266,6 @@ double CRBodyGen::GetPotentialEnergy(){
 
 	return ans;
 }
+#endif
 
 }//< end of namespace Spr

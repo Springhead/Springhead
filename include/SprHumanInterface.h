@@ -22,4 +22,5 @@
 #include <HumanInterface/SprHITrackball.h>
 #include <HumanInterface/SprHIDragger.h>
 #include <HumanInterface/SprHIDRUsb.h>
+#include <HumanInterface/SprHISpaceNavigator.h>
 #endif

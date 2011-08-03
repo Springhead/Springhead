@@ -198,6 +198,21 @@ bool CRIKJoint::DelChildObject(ObjectIf* o) {
 
 //-------------------------------------------------------------------------------------------------
 
+CRBodyPartIf* CRBody::FindByLabel(UTString label) {
+	LabelMap::iterator it = labelMap.find(label);
+	if (it != labelMap.end()) {
+		return (*it).second;
+	} else {
+		for (size_t i=0; i<solids.size(); ++i) {
+			if (label == solids[i]->GetLabel()) {
+				labelMap[label] = solids[i];
+				return solids[i];
+			}
+		}
+	}
+	return NULL;
+}
+
 Vec3d CRBody::GetCenterOfMass(){
 	/// 重心を求める時に使うi番目までの重心の小計
 	double totalWeight = 0;
@@ -252,6 +267,9 @@ bool CRBody::AddChildObject(ObjectIf* o){
 		if (std::find(solids.begin(), solids.end(), s) == solids.end()){
 			solids.push_back(s);
 			DCAST(SceneObject, s)->SetScene(DCAST(CRBodyIf,this)->GetScene());
+			if (std::string(s->GetLabel()) != "") {
+				labelMap[std::string(s->GetLabel())] = s;
+			}
 			return true;
 		}
 	}
@@ -261,6 +279,9 @@ bool CRBody::AddChildObject(ObjectIf* o){
 		if (std::find(joints.begin(), joints.end(), j) == joints.end()){
 			joints.push_back(j);
 			DCAST(SceneObject, j)->SetScene(DCAST(CRBodyIf,this)->GetScene());
+			if (std::string(j->GetLabel()) != "") {
+				labelMap[std::string(j->GetLabel())] = j;
+			}
 			return true;
 		}
 	}
@@ -269,6 +290,16 @@ bool CRBody::AddChildObject(ObjectIf* o){
 }
 
 bool CRBody::DelChildObject(ObjectIf* o){
+	CRBodyPartIf* b = o->Cast();
+	if (b) {
+		for (LabelMap::iterator it = labelMap.begin(); it!=labelMap.end(); ++it) {
+			if (it->second == b) {
+				labelMap.erase(it);
+				break;
+			}
+		}
+	}
+
 	CRSolidIf* s = DCAST(CRSolidIf, o);
 	if (s){
 		CRSolids::iterator it = std::find(solids.begin(), solids.end(), s);

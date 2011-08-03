@@ -21,12 +21,21 @@
 	void SetIKSpringRatio(double springRatio, double damperRatio){	base::SetIKSpringRatio(springRatio, damperRatio);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRBodyIf(base)	\
+	Spr::CRBodyPartIf* FindByLabel(UTString label){	return	base::FindByLabel(label);}	\
 	int NSolids(){	return	base::NSolids();}	\
 	Spr::CRSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
 	int NJoints(){	return	base::NJoints();}	\
 	Spr::CRJointIf* GetJoint(int i){	return	base::GetJoint(i);}	\
 	Vec3d GetCenterOfMass(){	return	base::GetCenterOfMass();}	\
 	double GetSumOfMass(){	return	base::GetSumOfMass();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_CRBodyControllerIf(base)	\
+	void SetTargetPos(UTString effector, Vec3d pos){	base::SetTargetPos(effector, pos);}	\
+	void SetTargetOri(UTString effector, Quaterniond ori){	base::SetTargetOri(effector, ori);}	\
+	void SetTargetPose(UTString effector, Posed pose){	base::SetTargetPose(effector, pose);}	\
+	void SetTimeLimit(UTString effector, float timeLimit){	base::SetTimeLimit(effector, timeLimit);}	\
+	void Plan(){	base::Plan();}	\
+	void Restart(UTString effector){	base::Restart(effector);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRCreatureIf(base)	\
 	void Step(){	base::Step();}	\

@@ -111,6 +111,10 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HINovintFalconIf(base)	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_HISpaceNavigatorIf(base)	\
+	bool SetPose(Posef pose){	return	base::SetPose(pose);}	\
+	bool PreviewMessage(void* m){	return	base::PreviewMessage(m);}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpidarIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpidar4If(base)	\
