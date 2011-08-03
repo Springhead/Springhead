@@ -9,6 +9,7 @@
 #include <Creature/CRScene.h>
 #include <Creature/CRCreature.h>
 #include <Creature/CRBody.h>
+#include <Creature/CRBodyController.h>
 
 #include <Creature/CRTouchSensor.h>
 #include <Creature/CRVisualSensor.h>
@@ -36,6 +37,7 @@ void SPR_CDECL CRSdkIf::RegisterSdk(){
 	CRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRCreature));
 
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRBody));
+	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRBodyController));
 
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRTouchSensor));
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRVisualSensor));

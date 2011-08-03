@@ -29,10 +29,13 @@ void CRTrajectoryController::Step() {
 
 		if (enable) {
 			phScene->GetIKEngine()->Enable(true);
+			/*
+			phScene->GetIKEngine()->Enable(true);
 			CompJointAngle();
 			phScene->GetIKEngine()->Enable(false);
-			// CompOffsetForce();
+			CompOffsetForce();
 			phScene->GetIKEngine()->Enable(false);
+			*/
 		}
 
 	} else {
@@ -49,6 +52,8 @@ void CRTrajectoryController::Init() {
 
 void CRTrajectoryController::CompJointAngle() {
 	PHSceneIf* phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
+
+	states->SaveState(phScene);
 
 	jointTargetValues.clear();
 

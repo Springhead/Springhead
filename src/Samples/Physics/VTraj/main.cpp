@@ -6,12 +6,14 @@ class MyApp : public SampleApp{
 public:
 	enum {
 		ID_TOGGLE_IK,
+		ID_TOGGLE_VT,
 		ID_MOVE_TARGET0,
 		ID_MOVE_TARGET1,
 		ID_MOVE_TARGET2,
 		ID_MOVE_TARGET3,
 		ID_MOVE_TARGET4,
 		ID_MOVE_TARGET5,
+		ID_DROP_OBJECT,
 	};
 
 	struct BJOffset {
@@ -22,35 +24,26 @@ public:
 		Quaterniond    goal;
 	};
 
-	CDShapeIf*						shapeBase;
-	CDShapeIf*						shapeLink;
-	CDShapeIf*						shapeTarget;
-
 	vector<PHSolidIf*>				links;
 	PHSolidIf*						target;
 	vector<PHBallJointIf*>			joints;
 	vector<PHIKBallActuatorIf*>		actuators;
-	//vector<PHIKEndEffectorIf*>		endEffectors;
 	PHIKEndEffectorIf*				endEffector;
-
-	PHSolidDesc				descSolid;
-	CDBoxDesc				descBox;
-	PHBallJointDesc			descBallJoint;
-	PHIKBallActuatorDesc	descIKBall;
-	PHIKEndEffectorDesc		descIKEE;
 
 	bool	bStep;
 	bool	bOneStep;
 	bool	bIK;
+	bool	bVT;
 	int		numLinks;
 
 public:
 	MyApp(){
 		bStep		= true;
 		bOneStep	= false;
-		bIK			= true;
+		bIK			= false;
+		bVT			= true;
 
-		appName = "Virtual Trajectory Tracking";
+		appName = "IK and Virtual Trajectory Tracking Sample";
 		numLinks	= 2;
 		numScenes   = 1;
 
@@ -58,6 +51,9 @@ public:
 
 		AddAction(MENU_SCENE, ID_TOGGLE_IK, "enable/disable IK");
 		AddHotKey(MENU_SCENE, ID_TOGGLE_IK, 'p');
+
+		AddAction(MENU_SCENE, ID_TOGGLE_VT, "enable/disable Trajectory Tracking");
+		AddHotKey(MENU_SCENE, ID_TOGGLE_VT, 'v');
 
 		AddAction(MENU_SCENE, ID_MOVE_TARGET0, "move left");
 		AddHotKey(MENU_SCENE, ID_MOVE_TARGET0, 'j');
@@ -76,9 +72,90 @@ public:
 
 		AddAction(MENU_SCENE, ID_MOVE_TARGET5, "move backward");
 		AddHotKey(MENU_SCENE, ID_MOVE_TARGET5, 'o');
+
+		AddAction(MENU_SCENE, ID_DROP_OBJECT,  "drop object");
+		AddHotKey(MENU_SCENE, ID_DROP_OBJECT,  'n');
 	}
 
 	void CalcOffsetForce(){
+		states->SaveState(phScene);
+		for (size_t i=0; i<phScene->NJoints(); ++i) {
+			PHBallJointIf* jo = phScene->GetJoint(i)->Cast();
+			jo->SetDamper(DBL_MAX);
+		}
+		phScene->Step();
+		states->LoadState(phScene);
+		for (size_t i=0; i<phScene->NJoints(); ++i) {
+			PHBallJointIf* jo = phScene->GetJoint(i)->Cast();
+            // jo->SetTargetPosition(Quaterniond());
+			// jo->SetTargetVelocity(Vec3d());
+			// jo->SetSpring(0);
+			jo->SetDamper(0);
+		}
+
+		return;
+
+
+
+
+
+		std::vector<double> dampers;
+		dampers.resize(phScene->NJoints());
+
+		std::vector<Quaterniond> goals;
+		goals.resize(phScene->NJoints());
+
+		std::vector<Vec3d> vels;
+		vels.resize(phScene->NJoints());
+
+		states->SaveState(phScene);
+
+		// ---
+
+		// phScene->GetIKEngine()->Enable(true);
+		// phScene->Step();
+
+		// for (size_t i=0; i<dampers.size(); ++i) {
+		// 	PHBallJointIf* jo = phScene->GetJoint(i)->Cast();
+		// 	goals[i] = jo->GetTargetPosition();
+		// }
+
+		// states->LoadState(phScene);
+
+		// ---
+
+		for (size_t i=0; i<dampers.size(); ++i) {
+			PHBallJointIf* jo = phScene->GetJoint(i)->Cast();
+			dampers[i] = jo->GetDamper();
+			// vels[i] = jo->GetTargetVelocity();
+			jo->SetDamper(DBL_MAX);
+		}
+
+		// phScene->GetIKEngine()->Enable(false);
+
+		phScene->Step();
+
+		states->LoadState(phScene);
+
+		// ---
+
+		for (size_t i=0; i<dampers.size(); ++i) {
+			PHBallJointIf* jo = phScene->GetJoint(i)->Cast();
+			// jo->SetTargetPosition(goals[i]);
+			// jo->SetTargetVelocity(vels[i]);
+            jo->SetTargetPosition(Quaterniond());
+			jo->SetTargetVelocity(Vec3d());
+			jo->SetSpring(0);
+			jo->SetDamper(dampers[i]);
+		}
+
+		return;
+
+
+
+
+		///------------------------------------------------------------
+
 		PHIKEngineIf* ikEngine = phScene->GetIKEngine();
 
 		states->SaveState(phScene);
@@ -108,51 +185,57 @@ public:
 		for (size_t i=0; i<bjOffsets.size(); ++i) {
 			bjOffsets[i].damper = bjOffsets[i].jo->GetDamper();
 			bjOffsets[i].jo->SetDamper(DBL_MAX);
-			bjOffsets[i].jo->SetTargetVelocity(bjOffsets[i].vel);
+			// bjOffsets[i].jo->SetTargetVelocity(bjOffsets[i].vel);
 		}
 
 		phScene->GetIKEngine()->Enable(false);
 
 		phScene->Step();
 
+		/*
 		for (size_t i=0; i<bjOffsets.size(); ++i) {
 			bjOffsets[i].offset = bjOffsets[i].jo->GetOffsetForce();
 		}
+		*/
 
 		states->LoadState(phScene);
 
 		for (size_t i=0; i<bjOffsets.size(); ++i) {
 			bjOffsets[i].jo->SetDamper(bjOffsets[i].damper);
 			bjOffsets[i].jo->SetTargetPosition(bjOffsets[i].goal);
-			bjOffsets[i].jo->SetTargetVelocity(bjOffsets[i].vel);
-			bjOffsets[i].jo->SetOffsetForce(bjOffsets[i].offset);
+			// bjOffsets[i].jo->SetTargetVelocity(bjOffsets[i].vel);
+			// bjOffsets[i].jo->SetTargetVelocity(Vec3d(0,0,0));
+			/*
+			Vec3d offset = bjOffsets[i].offset;
+			std::cout << offset << std::endl;
+			if (offset.norm() > 3000.0) {
+				offset = offset.unit() * 3000.0;
+			}
+			*/
+			// bjOffsets[i].jo->SetOffsetForce(offset);
 		}
 	}
 
 	virtual void BuildScene(){
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();
 
-		// ボールジョイント２つの直線状リンク
-		descBallJoint.spring =   0.01;
-		descBallJoint.damper = 400.0;
-		descIKBall.spring = 0.1f;
-		descIKBall.damper = 0.001f;
-		
-		descBallJoint.spring =   0.01f;
-		descBallJoint.damper =   400.0f;
-		descIKBall.spring = 0.1f;
-		descIKBall.damper = 0.001f;
-		
 		///// 形状
+		CDBoxDesc descBox;
+
 		descBox.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		shapeBase = phSdk->CreateShape(descBox);
+		CDShapeIf* shapeBase = phSdk->CreateShape(descBox);
+
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
-		shapeLink = phSdk->CreateShape(descBox);
+		CDShapeIf* shapeLink = phSdk->CreateShape(descBox);
+
 		descBox.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		shapeTarget = phSdk->CreateShape(descBox);
+		CDShapeIf* shapeTarget = phSdk->CreateShape(descBox);
 		
-		/// -- ルート剛体
-		///// 剛体
+		///// 剛体・関節
+		PHSolidDesc descSolid;
+		PHBallJointDesc			descBallJoint;
+		PHIKBallActuatorDesc	descIKBall;
+
 		descSolid.dynamical = false;
 		descSolid.mass		= 1.0;
 		PHSolidIf* base = phScene->CreateSolid(descSolid);
@@ -161,22 +244,29 @@ public:
 
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
-			
 		for(int i = 0; i < numLinks; i++){
 			PHSolidIf* so = phScene->CreateSolid(descSolid);
 			so->AddShape(shapeLink);
-			
+
+			///// 関節
 			descBallJoint.poseSocket.Pos() = Vec3d(0.0, (i == 0 ? 0.1 : 0.5), 0.0);
 			descBallJoint.posePlug.Pos()   = Vec3d(0.0, -0.5, 0.0);
-			descBallJoint.spring =   1.0f;
-			descBallJoint.damper =   0.1f;
+			/*
+			descBallJoint.spring =  300.0f;
+			descBallJoint.damper =   10.0f;
+			*/
+			descBallJoint.spring =   0.0f;
+			descBallJoint.damper =   0.0f;
 			PHBallJointIf* bj = phScene->CreateJoint(links.back(), so, descBallJoint)->Cast();
 
-			///// IKノード
-			descIKBall.spring =   100.0f;
-			descIKBall.damper =     1.0f;
+			///// IK関節（アクチュエータ）
+			/*
+			descIKBall.spring =   1000.0f;
+			descIKBall.damper =    100.0f;
+			*/
+			descIKBall.spring =    10.0f;
+			descIKBall.damper =     5.0f;
 			descIKBall.bias   =     1.0f;
-			descIKBall.bEnabled = true;
 
 			PHIKBallActuatorIf* ac = phScene->CreateIKActuator(descIKBall)->Cast();
 			ac->SetJoint(bj);
@@ -186,16 +276,17 @@ public:
 			actuators.push_back(ac);
 		}
 
-		/// -- IK制御点
-		///// 制御点の作成
+		///// IK制御点
+		PHIKEndEffectorDesc		descIKEE;
+
+		///// -- 制御点の作成
 		descIKEE.targetPosition = Vec3d(0.0, 0.5, 0.0);
-		descIKEE.bEnabled = true;
-		descIKEE.bPosition = true;
 		endEffector = phScene->CreateIKEndEffector(descIKEE);
 		endEffector->SetSolid(links.back());
-		///// ノードへの登録
-		for(int i = 0; i < (int)actuators.size(); i++)
+		///// -- ノードへの登録
+		for(int i = 0; i < (int)actuators.size(); i++) {
 			actuators[i]->RegisterEndEffector(endEffector);
+		}
 		
 		///// 制御点を指し示す剛体
 		descSolid.dynamical = false;
@@ -209,15 +300,29 @@ public:
 		phScene->GetIKEngine()->Enable(bIK);
 		
 		/// その他の設定
-		phScene->SetContactMode(PHSceneDesc::MODE_NONE);
-		phScene->SetGravity(Vec3d(0.0, -9.8, 0.0));
+		for (int i=0; i<links.size(); ++i) {
+			for (int j=0; j<links.size(); ++j) {
+				if (i!=j) {
+					phScene->SetContactMode(links[i], links[j], PHSceneDesc::MODE_NONE);
+				}
+			}
+			phScene->SetContactMode(links[i], target, PHSceneDesc::MODE_NONE);
+		}
+		// phScene->SetGravity(Vec3d(0.0, -9.8, 0.0));
+		phScene->SetGravity(Vec3d(0.0, 0.0, 0.0));
 		phScene->SetTimeStep(0.01);
 		phScene->SetNumIteration(15);
-
 	}
 
 	virtual void OnStep(){
-		CalcOffsetForce();
+		if (bVT) {
+			CalcOffsetForce();
+		} else {
+			for (size_t i=0; i<phScene->NJoints(); ++i) {
+				PHBallJointIf* jo = phScene->GetJoint(i)->Cast();
+				jo->SetOffsetForce(Vec3d(0,0,0));
+			}
+		}
 		phScene->Step();
 
 		target->SetFramePosition(endEffector->GetTargetPosition());
@@ -228,8 +333,6 @@ public:
 		goal += rel;
 		endEffector->SetTargetPosition(goal);
 		target->SetFramePosition(goal);
-
-		DSTR << "Move to " << goal << std::endl;
 	}
 
 	virtual void OnAction(int menu, int id){
@@ -241,11 +344,15 @@ public:
 				DSTR << (bIK ? "IK ON" : "IK OFF") << endl;
 				phScene->GetIKEngine()->Enable(bIK);
 			}
+			if(id == ID_TOGGLE_VT){
+				bVT = !bVT;
+				DSTR << (bVT ? "VT ON" : "VT OFF") << endl;
+			}
 			if(id == ID_MOVE_TARGET0){
-				MoveTarget(Vec3d(0.2, 0.0, 0.0));
+				MoveTarget(Vec3d(-0.2, 0.0, 0.0));
 			}
 			if(id == ID_MOVE_TARGET1){
-				MoveTarget(Vec3d(-0.2, 0.0, 0.0));
+				MoveTarget(Vec3d(0.2, 0.0, 0.0));
 			}
 			if(id == ID_MOVE_TARGET2){
 				MoveTarget(Vec3d(0.0, 0.2, 0.0));
@@ -259,54 +366,13 @@ public:
 			if(id == ID_MOVE_TARGET5){
 				MoveTarget(Vec3d(0.0, 0.0, -0.2));
 			}
-			/*case 'L':
-				{
-					Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
-					relGoal += Vec3f(+0.2f,  0.0f,  0.0f);
-					ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
-				}
-				break;
-
-			case 'J':
-				{
-					Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
-					relGoal += Vec3f(-0.2f,  0.0f,  0.0f);
-					ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
-				}
-				break;
-
-			case 'I':
-				{
-					Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
-					relGoal += Vec3f( 0.0f, +0.2f,  0.0f);
-					ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
-				}
-				break;
-
-			case 'K':
-				{
-					Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
-					relGoal += Vec3f( 0.0f, -0.2f,  0.0f);
-					ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
-				}
-				break;
-
-			case 'U':
-				{
-					Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
-					relGoal += Vec3f( 0.0f,  0.0f, +0.2f);
-					ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
-				}
-				break;
-
-			case 'O':
-				{
-					Vec3d relGoal = ikPosCtl2->GetTargetPosition() - ikPosCtl1->GetTargetPosition();
-					relGoal += Vec3f( 0.0f,  0.0f, -0.2f);
-					ikPosCtl2->SetTargetPosition(relGoal + ikPosCtl1->GetTargetPosition());
-				}
-				break;
-				*/
+			if(id == ID_DROP_OBJECT){
+				Drop(SHAPE_SPHERE, 0, Vec3d(), Vec3d(), Vec3d(8,0,0), Quaterniond());
+				PHSolidIf* so = phScene->GetSolids()[phScene->NSolids() - 1];
+				so->SetMass(5.0);
+				so->SetVelocity(Vec3d(-8,2,0));
+				phScene->SetContactMode(so, target, PHSceneDesc::MODE_NONE);
+			}
 		}
 	}
 

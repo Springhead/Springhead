@@ -116,6 +116,10 @@ struct CRIKJointDesc : CRJointDesc {
 struct CRBodyIf : SceneObjectIf{
 	SPR_IFDEF(CRBody);
 
+	/** @brief ラベルから構成要素を探す
+	*/
+	CRBodyPartIf* FindByLabel(UTString label);
+
 	/** @brief 構成剛体の数を得る
 	*/
 	int NSolids();

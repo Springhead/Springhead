@@ -18,10 +18,24 @@
 // クリーチャ（１体）
 #include "Creature/SprCRCreature.h"
 
-// CREngine : クリーチャを動かすアルゴリズム群（感覚・運動・行動決定など）
+// ボディ : クリーチャの身体
+#include "Creature/SprCRBody.h"
+
+// CREngine : クリーチャを動かすアルゴリズム群（感覚・運動・行動決定など）の基本クラス
 #include "Creature/SprCREngine.h"
 
+// クリーチャの身体を動作させる基本コントローラ
+#include "Creature/SprCRBodyController.h"
+
+// 個々のコントローラ
 #include "Creature/SprCRGazeController.h"
+// #include "Creature/SprCRBalanceController.h"
+
+
+
+// ... Will Be Obsolete
+
+// 個々のエンジン
 #include "Creature/SprCRReachController.h"
 #include "Creature/SprCRTrajectoryController.h"
 
@@ -30,8 +44,5 @@
 
 // CRScene : クリーチャの記憶構造
 #include "Creature/SprCRScene.h"
-
-// ボディ : 剛体関節モデルの生成を補助するクラス
-#include "Creature/SprCRBody.h"
 
 #endif

@@ -10,6 +10,9 @@
 
 #include <Foundation/Object.h>
 #include <Physics/SprPHJoint.h>
+#include <Physics/SprPHSolid.h>
+#include <Creature/SprCRBody.h>
+#include <Creature/SprCRCreature.h>
 #include <vector>
 
 //@{
@@ -20,16 +23,9 @@ struct PHIKActuatorIf;
 struct PHIKEndEffectorIf;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief ボディ
+/** @brief ボディ構築クラスのベース
 */
 struct CRBodyGenDesc{
-	/// プラグ側を親剛体にするかソケット側を親剛体にするか
-	//enum CRHumanJointOrder{
-	enum CRCreatureJointOrder{
-		SOCKET_PARENT,
-		PLUG_PARENT,
-	} jointOrder;
-
 	CRBodyGenDesc(){
 	}
 };
@@ -38,29 +34,41 @@ class CRBodyGen : public CRBodyGenDesc {
 protected:
 	enum LREnum{LEFTPART=-1, RIGHTPART=+1};
 
+	// 対象Creature
+	CRCreatureIf* crCreature;
+
+	// 作成されるBody
+	CRBodyIf* crBody;
+
 	/// ボディを構成する剛体
-	std::vector< UTRef<PHSolidIf> > solids;	
+	std::vector< UTRef<CRIKSolidIf> > solids;	
 	
 	/// ボディを構成する関節
-	std::vector< UTRef<PHJointIf> > joints;
+	std::vector< UTRef<CRIKJointIf> > joints;
 
-	/// IKノード
-	std::vector< UTRef<PHIKActuatorIf> > ikActuators;
-
-	/// 制御点
-	std::vector< UTRef<PHIKEndEffectorIf> > ikEndEffectors;
-
-	/// 所属するシーン
-	PHSceneIf*		phScene;
-
-	/// 所属するSdk
-	PHSdkIf*		phSdk;
-	
 	/** @brief 関節を作る
 	*/
-	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, const PHHingeJointDesc& desc);
-	PHJointIf* CreateJoint(PHSolidIf* soChild, PHSolidIf* soParent, const PHBallJointDesc& desc);
+	CRIKJointIf* CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent, const PHHingeJointDesc& desc);
+	CRIKJointIf* CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent, const PHBallJointDesc& desc);
 
+	/** @brief 剛体を作る
+	*/
+	CRIKSolidIf* CreateSolid(const PHSolidDesc& desc);
+
+	/** @brief すべての剛体の初期姿勢を目標角に収束したものとして初期化する	
+	*/
+	void SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint);
+
+public:
+	CRBodyGen(const CRBodyGenDesc& desc = CRBodyGenDesc());
+
+	/** @brief ボディを生成する
+	*/
+	virtual CRBodyIf* Generate(CRCreatureIf* crCreature);
+
+
+	// これらの関数はCRBodyに移動予定（mitake）
+	#if 0
 	/** @brief CDBoxのInertiaを計算する（慣性テンソルの対角要素には値が入って，慣性乗積は0）
 		@param CDBoxDesc::boxsize, PHSolidDesc::mass
 		@return 慣性テンソル
@@ -71,58 +79,6 @@ protected:
 		@brief childのポテンシャルエネルギーを計算する
 	*/
 	double CalcPotential(Posed parentPos, PHSolidIf* parentSolid, PHJointIf* childJoint);
-
-	/**
-		@brief すべての剛体の初期姿勢を目標角に収束したものとして初期化する
-	*/
-	void SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint);
-
-public:
-	CRBodyGen(const CRBodyGenDesc& desc = CRBodyGenDesc(), PHSceneIf* s = 0);
-
-	/** @brief 初期化を行う
-	*/
-	virtual void				Init();
-
-	/** @brief 剛体の数を得る
-	*/
-	virtual int					NSolids();
-
-	/** @brief i番目の剛体を得る
-	*/
-	virtual PHSolidIf*			GetSolid(int i);
-
-	/** @brief 関節の数を得る
-	*/
-	virtual int					NJoints();
-
-	/** @brief i番目の関節を得る
-	*/
-	virtual PHJointIf*			GetJoint(int i);
-
-	/** @brief ボールジョイントの数を返す
-	*/
-	virtual int NBallJoints();
-
-	/** @brief ヒンジジョイントの数を返す
-	*/
-	virtual int NHingeJoints();
-
-	/** @brief IKノードの数を得る
-	*/
-	int NIKActuators();
-
-	/** @brief i番目のIKノードを得る
-	*/
-	PHIKActuatorIf* GetIKActuator(int i);
-
-	/** @brief IK制御点の数を得る
-	*/
-	int NControlPoints();
-
-	/** @brief i番目のIK制御点を得る
-	*/
-	PHIKEndEffectorIf* GetControlPoint(int i);
 
 	/** @brief ボディの重心座標を得る
 	*/
@@ -166,7 +122,7 @@ public:
 		@brief 現在の位置エネルギーを返す
 	*/
 	virtual double GetPotentialEnergy();
-
+	#endif
 };
 }
 //@}

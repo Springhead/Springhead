@@ -12,6 +12,7 @@
 #include <HumanInterface/DRUsb20Sh4.h>
 #include <HumanInterface/HISpidar.h>
 #include <HumanInterface/HINovintFalcon.h>
+#include <HumanInterface/HISpaceNavigator.h>
 #include <HumanInterface/HIMouse6D.h>
 #include <HumanInterface/HITrackball.h>
 #include <HumanInterface/HIDragger.h>
@@ -40,6 +41,7 @@ void SPR_CDECL HISdkIf::RegisterSdk(){
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidarG));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIMouse6D));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HINovintFalcon));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpaceNavigator));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HITrackball));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIDragger));
 }
