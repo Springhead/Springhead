@@ -42,9 +42,17 @@ void FWGLUT::GlutDisplayFunc(){
 }
 void FWGLUT::GlutReshapeFunc(int w, int h){
 	FWWinIf* win = FWApp::GetApp()->GetCurrentWin();
+	// 埋め込みGUIコントロールがある場合を想定してビューポートの計算を行う
 	int l = 0, t = 0;
 	FWGraphicsAdaptee::instance->CalcViewport(&l, &t, &w, &h);
 	win->GetRender()->Reshape(Vec2f(l, t), Vec2f(w,h));
+	// 新しいウィンドウサイズを記憶
+	FWWinBase* winBase = win->Cast();
+	FWWinBaseDesc desc;
+	winBase->FWWinBase::GetDesc(&desc);
+	desc.width = w;
+	desc.height = h;
+	winBase->FWWinBase::SetDesc(&desc);
 }
 void FWGLUT::GlutTimerFunc(int value){
 	UTTimerIf* timer = UTTimerIf::Get(value);
