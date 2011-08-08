@@ -92,6 +92,7 @@ public:
 	// タイマコールバック関数．タイマ周期で呼ばれる
 	virtual void OnStep() {
 		SampleApp::OnStep();
+
 		// 床を揺らす
 		if (soFloor){
 			double time = phScene->GetCount() * phScene->GetTimeStep();

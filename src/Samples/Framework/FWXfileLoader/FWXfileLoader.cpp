@@ -24,7 +24,7 @@ void FWXfileLoader::Init(int argc, char* argv[]){
 	FWWinDesc windowDesc;					// GLのウィンドウディスクリプタ
 	windowDesc.title = "FWXfileLoader";		// ウィンドウのタイトル
 	CreateWin(windowDesc);					// ウィンドウの作成
-	GetWin(0)->SetRenderMode(false);
+	//GetWin(0)->SetRenderMode(false);
 	
 	/// カメラビューの初期化
 	//InitCameraView();	
