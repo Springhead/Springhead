@@ -6,14 +6,14 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
-\page pageBoxStack キー入力で箱を生成して積み上げるサンプル
-Springhead2/src/Samples/BoxStack
+\page pagePyCreature キー入力で箱を生成して積み上げるサンプル
+Springhead2/src/Samples/PyCreature
 
-\section secQuitBoxStack 終了基準
+\section secQuitPyCreature 終了基準
 - Escか'q'で強制終了。
 - ' ', 'm', 'd', 'c', 'v', 'z', 'x'で箱が落ちてくる
 	
-\section secFlowBoxStack 処理の流れ
+\section secFlowPyCreature 処理の流れ
 - シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
   剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。
 - 接触エンジンを拘束エンジンに設定する。
