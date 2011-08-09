@@ -93,5 +93,6 @@ if __name__ == "__main__":
 	box = [None] * 20
 
 crBodyCtl.SetTargetPos("right_hand",Vec3d(0,0,1))
-
+crBodyCtl.SetTimeLimit("right_hand",1.0)
+crBodyCtl.Restart("right_hand")
 	
