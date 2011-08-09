@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
-\page pagePyCreature キー入力で箱を生成して積み上げるサンプル
+\page pagePyCreature PythonでCRCreatureの機能を使用するサンプル
 Springhead2/src/Samples/PyCreature
 
 \section secQuitPyCreature 終了基準
@@ -14,11 +14,8 @@ Springhead2/src/Samples/PyCreature
 - ' ', 'm', 'd', 'c', 'v', 'z', 'x'で箱が落ちてくる
 	
 \section secFlowPyCreature 処理の流れ
-- シミュレーションに必要な情報(剛体の形状・質量・慣性テンソルなど)を設定する。
-  剛体の形状はOpenGLで指定するのではなく、Solid自体で持たせる。
-- 接触エンジンを拘束エンジンに設定する。
-- 与えられた条件により⊿t(=0.1)秒後の位置の変化を積分し、OpenGLでシミュレーションする。  
-- ユーザのキー入力に対しSolidを発生させる。
+- CRBodyGeneratorでボディを作成、CRBodyControllerによってボディを駆動する。
+- CRBodyControllerにはpythonコンソールから変数としてアクセス可能。メソッドを呼ぶことでpythonからCreatureの機能を使用できる。
 */
 
 
