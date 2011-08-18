@@ -155,13 +155,14 @@
 	int GetID(){	return	base::GetID();}	\
 	Vec2i GetPosition(){	return	base::GetPosition();}	\
 	void SetPosition(int left, int top){	base::SetPosition(left, top);}	\
-	int GetWidth(){	return	base::GetWidth();}	\
-	int GetHeight(){	return	base::GetHeight();}	\
+	Vec2i GetSize(){	return	base::GetSize();}	\
 	void SetSize(int width, int height){	base::SetSize(width, height);}	\
 	UTString GetTitle(){	return	base::GetTitle();}	\
 	void SetTitle(UTString title){	base::SetTitle(title);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWControlIf(base)	\
+	UTString GetLabel(){	return	base::GetLabel();}	\
+	void SetLabel(UTString l){	base::SetLabel(l);}	\
 	void SetAlign(int align){	base::SetAlign(align);}	\
 	int GetStyle(){	return	base::GetStyle();}	\
 	void SetStyle(int style){	base::SetStyle(style);}	\
@@ -236,4 +237,5 @@
 	bool GetDebugMode(){	return	base::GetDebugMode();}	\
 	void Display(){	base::Display();}	\
 	Spr::FWDialogIf* CreateDialog(const Spr::FWDialogDesc& desc){	return	base::CreateDialog(desc);}	\
+	void CalcViewport(int& left, int& top, int& width, int& height){	base::CalcViewport(left, top, width, height);}	\
 

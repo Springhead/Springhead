@@ -369,6 +369,7 @@ protected:\
 	bool	fullscreen;	\
 	bool	useKeyMouse;	\
 	bool	useJoyStick;	\
+	int	joyStickPollInterval;	\
 	bool	useTrackball;	\
 	bool	useDragger;	\
 public:\
@@ -378,6 +379,7 @@ public:\
 		fullscreen = ((FWWinDesc*)ptr)->fullscreen;	\
 		useKeyMouse = ((FWWinDesc*)ptr)->useKeyMouse;	\
 		useJoyStick = ((FWWinDesc*)ptr)->useJoyStick;	\
+		joyStickPollInterval = ((FWWinDesc*)ptr)->joyStickPollInterval;	\
 		useTrackball = ((FWWinDesc*)ptr)->useTrackball;	\
 		useDragger = ((FWWinDesc*)ptr)->useDragger;	\
 		AfterSetDesc();	\
@@ -389,6 +391,7 @@ public:\
 		((FWWinDesc*)ptr)->fullscreen = fullscreen;	\
 		((FWWinDesc*)ptr)->useKeyMouse = useKeyMouse;	\
 		((FWWinDesc*)ptr)->useJoyStick = useJoyStick;	\
+		((FWWinDesc*)ptr)->joyStickPollInterval = joyStickPollInterval;	\
 		((FWWinDesc*)ptr)->useTrackball = useTrackball;	\
 		((FWWinDesc*)ptr)->useDragger = useDragger;	\
 		return true;	\

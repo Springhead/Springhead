@@ -86,7 +86,6 @@ public:
 		@param w 描画領域の横幅
 		@param h 描画領域の縦幅
 		ユーザによってウィンドウサイズが変更されたときなどに呼ばれる．
-		デフォルトではFWSdk::Reshapeが呼ばれる．
 	 */
 	virtual void Reshape(int w, int h);
 

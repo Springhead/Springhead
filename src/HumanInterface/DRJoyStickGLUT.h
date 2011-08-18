@@ -40,15 +40,11 @@ public:
 	///	初期化
 	virtual bool Init();
 	///	仮想デバイスの登録
-	//virtual void Register(HISdkIf* intf);
-	//virtual void RegisterCallback();
 	virtual HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);
 
 	void OnUpdate(unsigned int buttonMask, int x, int y, int z);
 	void SetPollInterval(DVJoyStick* dv);
 	
-	//typedef std::map<int, DRJoyStickGLUT*> JoyStickMap;
-	//static 	JoyStickMap		joyStickMap;
 	static DRJoyStickGLUT*	instance;
 	static void GLUTCALLBACK OnUpdateStatic(unsigned int buttonMask, int x, int y, int z);
 };

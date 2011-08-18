@@ -21,11 +21,26 @@ namespace Spr{;
 //-------------------------------------------------------------------------------------------------
 // FWWinBase
 
+Vec2i FWWinBase::GetPosition(){
+	Vec2i pos = FWGraphicsAdaptee::instance->GetPosition(this);
+	left = pos.x;
+	top  = pos.y;
+	return pos;
+}
+
 void FWWinBase::SetPosition(int l, int t){
 	FWGraphicsAdaptee::instance->SetPosition(this, l, t);
 	left = l;
 	top  = t;
 }
+
+Vec2i FWWinBase::GetSize(){
+	Vec2i sz = FWGraphicsAdaptee::instance->GetSize(this);
+	width  = sz.x;
+	height = sz.y;
+	return sz;
+}
+
 void FWWinBase::SetSize(int w, int h){
 	FWGraphicsAdaptee::instance->SetSize(this, w, h);
 	width  = w;
@@ -70,6 +85,10 @@ FWDialogIf*	FWWin::CreateDialog(const FWDialogDesc& desc){
 		AddChildObject(dlg);
 	}
 	return dlg;
+}
+
+void FWWin::CalcViewport(int& l, int& t, int& w, int& h){
+	FWGraphicsAdaptee::instance->CalcViewport(l, t, w, h);
 }
 
 void FWWin::SetFullScreen(){
@@ -147,7 +166,7 @@ FWTextBoxIf* FWDialog::CreateTextBox(UTString label, UTString text, int style, F
 	desc.style = style;
 	desc.label = label;
 	desc.text = text;
-	return CreateControl(FWButtonIf::GetIfInfoStatic(), desc, parent)->Cast();
+	return CreateControl(FWTextBoxIf::GetIfInfoStatic(), desc, parent)->Cast();
 }
 
 FWPanelIf* FWDialog::CreatePanel(UTString label, int style, FWPanelIf* parent){

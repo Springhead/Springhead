@@ -71,16 +71,6 @@ public:
 	void OnPassiveMotion(int x, int y);
 	void OnKey			(unsigned char ch, int x, int y);
 	void OnSpecialKey	(int ch, int x, int y);
-
-	/// ウィンドウIDとデバイスとの対応
-	//typedef std::map<int, DRKeyMouseGLUT*> KeyMouseMap;
-	static 	DRKeyMouseGLUT* instance;
-	/// staticのコールバック関数
-	static void GLUTCALLBACK OnMouseStatic			(int button, int state, int x, int y);
-	static void GLUTCALLBACK OnMotionStatic			(int x, int y);
-	static void GLUTCALLBACK OnPassiveMotionStatic	(int x, int y);
-	static void GLUTCALLBACK OnKeyStatic			(unsigned char ch, int x, int y);
-	static void GLUTCALLBACK OnSpecialKeyStatic		(int ch, int x, int y);
 };
 
 }	//	namespace Spr

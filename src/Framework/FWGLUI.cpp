@@ -20,18 +20,26 @@ FWGLUI* FWGLUI::GetInstance(){
 FWGLUI::~FWGLUI(){
 }
 
-void FWGLUI::StartMainLoop(){
-	instance = this;
-	
-	// gluiを使うならFWAppGLUT::GlutTimerFuncはGLUI_Masterの管理下に置く必要がある
-	GLUI_Master.set_glutTimerFunc(1, FWGLUT::GlutTimerFunc, 0);
-	GLUI_Master.set_glutIdleFunc(FWGLUT::GlutIdleFunc);
-	
-	FWGLUT::StartMainLoop();
+void FWGLUI::EnableIdleFunc(bool on){
+	idleFuncFlag = on;
+	// GLUIに渡す
+	GLUI_Master.set_glutIdleFunc(on ? FWGLUT::GlutIdleFunc : NULL);
 }
 
-void FWGLUI::CalcViewport(int* l, int* t, int* w, int* h){
-	GLUI_Master.get_viewport_area(l, t, w, h);
+void FWGLUI::CalcViewport(int& l, int& t, int& w, int& h){
+	GLUI_Master.get_viewport_area(&l, &t, &w, &h);
+}
+
+void FWGLUI::RegisterCallbacks(){
+	glutDisplayFunc		 (FWGLUT::GlutDisplayFunc);
+	glutMotionFunc		 (FWGLUT::GlutMotionFunc);
+	glutPassiveMotionFunc(FWGLUT::GlutPassiveMotionFunc);
+
+	// 以下4つはGLUIが乗っ取る必要がある
+	GLUI_Master.set_glutReshapeFunc	(FWGLUT::GlutReshapeFunc);
+	GLUI_Master.set_glutMouseFunc	(FWGLUT::GlutMouseFunc);
+	GLUI_Master.set_glutKeyboardFunc(FWGLUT::GlutKeyFunc);
+	GLUI_Master.set_glutSpecialFunc	(FWGLUT::GlutSpecialKeyFunc);
 }
 
 FWDialog*	FWGLUI::CreateDialog(FWWin* owner, const FWDialogDesc& desc){
@@ -119,8 +127,8 @@ FWControl* FWGLUI::CreateControl(FWDialog* owner, const IfInfo* ii, const FWCont
 	}
 	else if(ii == FWStaticTextIf::GetIfInfoStatic()){
 		if(par)
-			 glui->add_statictext_to_panel(gluiPanel, desc.label.c_str());
-		else glui->add_statictext(desc.label.c_str());
+			 handle = glui->add_statictext_to_panel(gluiPanel, desc.label.c_str());
+		else handle = glui->add_statictext(desc.label.c_str());
 		ctrls.push_back(DBG_NEW FWStaticText());
 	}
 	else if(ii == FWTextBoxIf::GetIfInfoStatic()){
@@ -235,42 +243,42 @@ bool FWGLUI::IsChecked(FWButton* btn){
 }
 
 void FWGLUI::SetIntRange(FWTextBox* text, int rmin, int rmax){
-	GLUI_EditText* gluiText = (GLUI_EditText*)text;
+	GLUI_EditText* gluiText = (GLUI_EditText*)text->handle;
 	gluiText->set_int_limits(rmin, rmax);
 }
 
 void FWGLUI::SetFloatRange(FWTextBox* text, float rmin, float rmax){
-	GLUI_EditText* gluiText = (GLUI_EditText*)text;
+	GLUI_EditText* gluiText = (GLUI_EditText*)text->handle;
 	gluiText->set_float_limits(rmin, rmax);
 }
 
 const char* FWGLUI::GetString(FWTextBox* text){
-	GLUI_EditText* gluiText = (GLUI_EditText*)text;
+	GLUI_EditText* gluiText = (GLUI_EditText*)text->handle;
 	return gluiText->get_text();
 }
 
 void FWGLUI::SetString(FWTextBox* text, char* str){
-	GLUI_EditText* gluiText = (GLUI_EditText*)text;
+	GLUI_EditText* gluiText = (GLUI_EditText*)text->handle;
 	gluiText->set_text(str);
 }
 
 int	FWGLUI::GetInt(FWControl* ctrl){
-	GLUI_Control* gluiCtrl = (GLUI_Control*)ctrl;
+	GLUI_Control* gluiCtrl = (GLUI_Control*)ctrl->handle;
 	return gluiCtrl->get_int_val();
 }
 
 void FWGLUI::SetInt(FWControl* ctrl, int val){
-	GLUI_Control* gluiCtrl = (GLUI_Control*)ctrl;
+	GLUI_Control* gluiCtrl = (GLUI_Control*)ctrl->handle;
 	gluiCtrl->set_int_val(val);
 }
 
 float FWGLUI::GetFloat(FWControl* ctrl){
-	GLUI_Control* gluiCtrl = (GLUI_Control*)ctrl;
+	GLUI_Control* gluiCtrl = (GLUI_Control*)ctrl->handle;
 	return gluiCtrl->get_float_val();
 }
 
 void FWGLUI::SetFloat(FWControl* ctrl, float val){
-	GLUI_Control* gluiCtrl = (GLUI_Control*)ctrl;
+	GLUI_Control* gluiCtrl = (GLUI_Control*)ctrl->handle;
 	gluiCtrl->set_int_val(val);
 }
 

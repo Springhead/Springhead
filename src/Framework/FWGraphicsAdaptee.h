@@ -54,7 +54,7 @@ public:
 	/// Shift,Ctrl,Altのステートを返す
 	virtual int GetModifiers(){ return NULL; }
 	/// 再描画時のビューポート計算
-	virtual void CalcViewport(int* l, int* t, int* w, int* h){}
+	virtual void CalcViewport(int& l, int& t, int& w, int& h){}
 
 	/// ダイアログ作成
 	virtual FWDialog*	CreateDialog(FWWin* owner, const FWDialogDesc& desc){ return 0; }
@@ -63,9 +63,11 @@ public:
 	virtual void	CreateColumn	 (FWDialog* owner, bool sep, FWPanel* panel){}
 	virtual void	CreateSeparator	 (FWDialog* owner, FWPanel* panel){}
 	/// 属性操作
+	virtual Vec2i	GetPosition		(FWWinBase* win){ return Vec2i(); }
+	virtual void	SetPosition		(FWWinBase* win, int left, int top){}
+	virtual Vec2i	GetSize			(FWWinBase* win){ return Vec2i(); }
 	virtual void	SetSize			(FWWinBase* win, int width, int height){}
 	virtual void	SetTitle		(FWWinBase* win, UTString title){}
-	virtual void	SetPosition		(FWWinBase* win, int left, int top){}
 	virtual void	SetFullScreen	(FWWin* win){}
 	virtual void	SetLabel		(FWControl* ctrl, UTString label){}
 	virtual void	SetAlign		(FWControl* ctrl, int align){}

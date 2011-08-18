@@ -87,7 +87,6 @@ struct FWSdkIf : SdkIf {
 
 	/** @brief シーンを取得する
 		@param index 取得するシーンのインデックス
-		indexに-1を指定するとカレントウィンドウのシーンを返す
 	 */
 	FWSceneIf* GetScene(int index = -1);
 

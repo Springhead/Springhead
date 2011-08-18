@@ -42,8 +42,6 @@ void DRKeyMouseGLUT::DV::OnMouseMove(int button, int x, int y, int zdelta){
 //	DRKeyMouseGLUT
 //
 
-DRKeyMouseGLUT* DRKeyMouseGLUT::instance = 0;
-
 int	DRKeyMouseGLUT::ConvertKeyCode(int key, bool spr_to_glut, bool special){
 	if(spr_to_glut)
 		return (key < 256 ? key : key - 256);
@@ -51,34 +49,13 @@ int	DRKeyMouseGLUT::ConvertKeyCode(int key, bool spr_to_glut, bool special){
 }
 
 DRKeyMouseGLUT::DRKeyMouseGLUT(const DRKeyMouseGLUTDesc& desc){
-	instance = this;
 	buttonState = 0;
 }
 
 bool DRKeyMouseGLUT::Init(){
 	SetName("KeyMouseGLUT");
-	//RegisterCallback();
-
-	// カレントウィンドウのIDを取得して対応付け
-	//keyMouseMap[glutGetWindow()] = this;
-
 	return true;
 }
-
-/*void DRKeyMouseGLUT::RegisterCallback(){
-	// カレントウィンドウにコールバックを登録
-	glutMouseFunc(OnMouseStatic);
-	glutMotionFunc(OnMotionStatic);
-	glutPassiveMotionFunc(OnPassiveMotionStatic);
-	glutKeyboardFunc(OnKeyStatic);
-	glutSpecialFunc(OnSpecialKeyStatic);
-}*/
-
-/*void DRKeyMouseGLUT::Register(HISdkIf* intf){
-	HISdk* sdk = intf->Cast();
-	dvKeyMouse = DBG_NEW DRKeyMouseGLUT::DV(this);
-	sdk->RegisterVirtualDevice(dvKeyMouse->Cast());
-}*/
 
 HIVirtualDeviceIf* DRKeyMouseGLUT::Rent(const IfInfo* ii, const char* n, int portNo){
 	HIVirtualDeviceIf* dv = HIRealDevice::Rent(ii, n, portNo);
@@ -87,14 +64,6 @@ HIVirtualDeviceIf* DRKeyMouseGLUT::Rent(const IfInfo* ii, const char* n, int por
 	if(!dv){
 		DVKeyMouse* km = DBG_NEW DV(this, portNo);
 		AddChildObject(km->Cast());
-		
-		// カレントウィンドウにコールバックを登録
-		glutMouseFunc(OnMouseStatic);
-		glutMotionFunc(OnMotionStatic);
-		glutPassiveMotionFunc(OnPassiveMotionStatic);
-		glutKeyboardFunc(OnKeyStatic);
-		glutSpecialFunc(OnSpecialKeyStatic);
-
 		dv = km->Cast();
 	}
 
@@ -165,47 +134,6 @@ void DRKeyMouseGLUT::OnSpecialKey(int ch, int x, int y){
 		if(dv && dv->GetPortNo() == wid)
 			dv->OnKey(true, key, x, y);
 	}
-}
-
-void GLUTCALLBACK DRKeyMouseGLUT::OnMouseStatic(int button, int state, int x, int y){
-	/*int wid = glutGetWindow();
-	for(KeyMouseMap::iterator it = keyMouseMap.begin(); it != keyMouseMap.end(); it++){
-		if(it->first == wid)
-			it->second->OnMouse(button, state, x, y);
-	}*/
-	instance->OnMouse(button, state, x, y);
-}
-void GLUTCALLBACK DRKeyMouseGLUT::OnMotionStatic(int x, int y){
-	/*int wid = glutGetWindow();
-	for(KeyMouseMap::iterator it = keyMouseMap.begin(); it != keyMouseMap.end(); it++){
-		if(it->first == wid)
-			it->second->OnMotion(x, y);
-	}*/
-	instance->OnMotion(x, y);
-}
-void GLUTCALLBACK DRKeyMouseGLUT::OnPassiveMotionStatic(int x, int y){
-	/*int wid = glutGetWindow();
-	for(KeyMouseMap::iterator it = keyMouseMap.begin(); it != keyMouseMap.end(); it++){
-		if(it->first == wid)
-			it->second->OnPassiveMotion(x, y);
-	}*/
-	instance->OnPassiveMotion(x, y);
-}
-void GLUTCALLBACK DRKeyMouseGLUT::OnKeyStatic(unsigned char ch, int x, int y){
-	/*int wid = glutGetWindow();
-	for(KeyMouseMap::iterator it = keyMouseMap.begin(); it != keyMouseMap.end(); it++){
-		if(it->first == wid)
-			it->second->OnKey(ch, x, y);
-	}*/
-	instance->OnKey(ch, x, y);
-}
-void GLUTCALLBACK DRKeyMouseGLUT::OnSpecialKeyStatic(int ch, int x, int y){
-	/*int wid = glutGetWindow();
-	for(KeyMouseMap::iterator it = keyMouseMap.begin(); it != keyMouseMap.end(); it++){
-		if(it->first == wid)
-			it->second->OnSpecialKey(ch, x, y);
-	}*/
-	instance->OnSpecialKey(ch, x, y);
 }
 
 }	//	namespace Spr
