@@ -21,14 +21,16 @@ public:
 	void*		handle;		///< 内部オブジェクトのハンドル
 	
 	int			GetID()			{ return id; }
-	Vec2i		GetPosition()	{ return Vec2i(left, top); }
-	int			GetWidth()		{ return width; }
-	int			GetHeight()		{ return height; }
-	UTString	GetTitle()		{ return title; }
 	
-	virtual void	SetPosition(int left, int top);
-	virtual void	SetSize(int width, int height);
+	UTString	GetTitle()		{ return title; }
 	void		SetTitle(UTString title);
+	
+	Vec2i			GetPosition();
+	virtual void	SetPosition(int left, int top);
+	
+	Vec2i			GetSize();	
+	virtual void	SetSize(int width, int height);
+	
 };
 
 class FWWin : public FWWinBase, public HITrackballCallback, public HIDraggerCallback{
@@ -49,9 +51,11 @@ public:
 public:
 	// ダイアログの作成
 	FWDialogIf*		CreateDialog(const FWDialogDesc& desc);
+	// ビューポート計算
+	void	CalcViewport(int& left, int& top, int& width, int& height);
 	// フルスクリーン
-	void		SetFullScreen();
-	bool		GetFullScreen(){ return fullscreen; }
+	void	SetFullScreen();
+	bool	GetFullScreen(){ return fullscreen; }
 	//
 	virtual void	SetPosition(int left, int top);
 	virtual void	SetSize(int width, int height);

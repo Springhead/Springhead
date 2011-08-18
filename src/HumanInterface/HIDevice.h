@@ -279,10 +279,6 @@ public:
 	// 登録されているハンドラを呼び出す
 	void OnUpdate(int buttonMask, int x, int y, int z);
 
-	///	デバイスの種類
-	//static const char* GetDeviceTypeStatic() { return "JoyStick"; }
-	//virtual const char* GetDeviceType() const{ return GetDeviceTypeStatic(); }
-
 	virtual void SetPollInterval(int ms){}
 	virtual int  GetPollInterval(){ return pollInterval; }
 

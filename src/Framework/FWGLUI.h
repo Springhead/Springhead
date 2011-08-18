@@ -30,14 +30,6 @@ class FWGLUI : public FWGLUT{
 public:
 	SPR_OBJECTDEF_NOIF(FWGLUI);
 protected:
-	//std::vector<GLUI*> guis;
-
-	//int		fromTop;					//< 別ウィンドウを生成するときの上からのdot数
-	//int		fromLeft;					//< 別ウィンドウを生成するときの左からのdot数
-	//int		subPosition;				//< OpenGL描画ウィンドウの中にGUIを組み込んでしまう場合の組み込む場所
-	//char*	gluiName;					//< 別ウィンドウを作成する場合のウィンドウの名前
-	//bool	createOtherWindow;			//< GUIを別ウィンドウにするかどうか
-
 	// コールバック処理を行うコントロールの配列
 	// ボタン，テキストボックス
 	std::vector<FWControl*>	ctrls;
@@ -48,13 +40,10 @@ protected:
 	/** コールバック関数*/
 	static void SPR_CDECL GLUIUpdateFunc(int id);
 	
+	virtual void RegisterCallbacks();
 public:
-	//virtual void SPR_CDECL DesignGUI(){};
-	/** GLUIのメインループをスタートする
-		FWGLUTのStartMainLoop()とは中身が異なるので消さないこと．
-	 */
-	virtual void		StartMainLoop();
-	virtual void		CalcViewport(int* l, int* t, int* w, int* h);
+	virtual void EnableIdleFunc(bool on = true);
+	virtual void CalcViewport(int& l, int& t, int& w, int& h);
 
 	virtual FWDialog*	CreateDialog	(FWWin* owner, const FWDialogDesc& desc);
 	virtual FWControl*	CreateControl	(FWDialog* owner, const IfInfo* ii, const FWControlDesc& desc, FWPanel* parent);

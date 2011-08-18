@@ -34,15 +34,14 @@ struct FWWinBaseIf : ObjectIf{
 
 	/// IDを取得する
 	int		GetID();
+
 	/// 位置を取得する
 	Vec2i	GetPosition();
 	/// 位置を変更する
 	void	SetPosition(int left, int top);
 	
-	/// 幅を取得する
-	int		GetWidth();
-	/// 高さを取得する
-	int		GetHeight();
+	/// サイズを取得する
+	Vec2i	GetSize();
 	/// サイズを変更する
 	void	SetSize(int width, int height);
 	
@@ -75,13 +74,18 @@ struct FWWinBaseDesc{
 struct FWControlIf : FWWinBaseIf{
 	SPR_IFDEF(FWControl);
 
+	/// ラベルの取得
+	UTString	GetLabel();
+	/// ラベルの設定
+	void		SetLabel(UTString l);
+
 	/// 配置の設定
-	void		SetAlign(int align);
+	void	SetAlign(int align);
 
 	/// スタイルの取得
-	int			GetStyle();
+	int		GetStyle();
 	/// スタイルの設定
-	void		SetStyle(int style);
+	void	SetStyle(int style);
 
 	/// int値を取得
 	int		GetInt();
@@ -104,6 +108,11 @@ struct FWControlDesc{
 	UTString	label;
 	int			align;
 	int			style;
+
+	FWControlDesc(){
+		align = ALIGN_LEFT;
+		style = 0;
+	}
 };
 
 
@@ -390,6 +399,16 @@ struct FWWinIf : FWWinBaseIf{
 		このウィンドウの子としてダイアログを作成する
 	 **/
 	FWDialogIf*		CreateDialog(const FWDialogDesc& desc = FWDialogDesc());
+
+	/** @brief	ビューポートの計算
+		@param	left
+		@param	top
+		@param	width
+		@param	height
+		ドッキングタイプのダイアログがある場合，それを除いた残りの領域を計算する．
+		カレントウィンドウである必要がある
+	 */
+	void	CalcViewport(int& left, int& top, int& width, int& height);
 };
 struct FWWinDesc : FWWinBaseDesc{
 	SPR_DESCDEF(FWWin);
@@ -398,6 +417,7 @@ struct FWWinDesc : FWWinBaseDesc{
 	bool		fullscreen;		///<	フルスクリーンにするかどうか
 	bool		useKeyMouse;	///<	キーボード・マウスデバイスを使用するか
 	bool		useJoyStick;	///<	ジョイスティックデバイスを使用するか
+	int			joyStickPollInterval;
 	bool		useTrackball;	///<	トラックボールインタフェースを使用するか
 	bool		useDragger;		///<	ドラッガーインタフェースを使用するか
 
@@ -406,6 +426,7 @@ struct FWWinDesc : FWWinBaseDesc{
 		fullscreen		= false;
 		useKeyMouse		= true;
 		useJoyStick		= false;
+		joyStickPollInterval = 10;
 		useTrackball	= true;
 		useDragger		= true;
 	}

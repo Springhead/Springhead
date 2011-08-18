@@ -14,16 +14,13 @@
 
 namespace Spr {;
 
-//DRJoyStickGLUT::JoyStickMap		joyStickMap;
 DRJoyStickGLUT* DRJoyStickGLUT::instance = 0;
-	
+
 DRJoyStickGLUT::DRJoyStickGLUT(){
-	instance = this;
 }
 
 bool DRJoyStickGLUT::Init(){
 	SetName("JoyStickGLUT");
-	//RegisterCallback();
 	return true;
 }
 
@@ -41,21 +38,13 @@ HIVirtualDeviceIf* DRJoyStickGLUT::Rent(const IfInfo* ii, const char* n, int por
 	return dv;
 }
 
-/*void DRJoyStickGLUT::RegisterCallback(){
-	glutJoystickFunc(OnUpdateStatic, pollInterval);
-}*/
-
 void DRJoyStickGLUT::SetPollInterval(DVJoyStick* dv){
 	int wid = dv->GetPortNo();
+	int widCur = glutGetWindow();
 	glutSetWindow(wid);
 	glutJoystickFunc(OnUpdateStatic, dv->pollInterval);
+	glutSetWindow(widCur);
 }
-
-/*void DRJoyStickGLUT::Register(HISdkIf* intf){
-	HISdk* sdk = intf->Cast();
-	dvJoyStick = DBG_NEW DRJoyStickGLUT::DV(this);
-	sdk->RegisterVirtualDevice(dvJoyStick->Cast());
-}*/
 
 void DRJoyStickGLUT::OnUpdate(unsigned int buttonMask, int x, int y, int z){
 	int wid = glutGetWindow();
@@ -67,11 +56,6 @@ void DRJoyStickGLUT::OnUpdate(unsigned int buttonMask, int x, int y, int z){
 }
 
 void GLUTCALLBACK DRJoyStickGLUT::OnUpdateStatic(unsigned int buttonMask, int x, int y, int z){
-	/*int wid = glutGetWindow();
-	for(JoyStickMap::iterator it = joyStickMap.begin(); it != joyStickMap.end(); it++){
-		if(it->first == wid)
-			it->second->OnUpdate(buttonMask, x, y, z);
-	}*/
 	instance->OnUpdate(buttonMask, x, y, z);
 }
 

@@ -16,6 +16,8 @@
 #include <Framework/FWSdk.h>
 #include <Graphics/GRSdk.h>
 #include <HumanInterface/HISdk.h>
+#include <HumanInterface/DRKeyMouseGLUT.h>
+#include <HumanInterface/DRJoyStickGLUT.h>
 #include <sstream>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -37,15 +39,19 @@ FWGLUT* FWGLUT::GetInstance(){
 }
 
 /** コールバック関数*///////////////////////////////////////////////////////
+
 void FWGLUT::GlutDisplayFunc(){
 	FWApp::GetApp()->Display();	
 }
+
 void FWGLUT::GlutReshapeFunc(int w, int h){
 	FWWinIf* win = FWApp::GetApp()->GetCurrentWin();
 	// 埋め込みGUIコントロールがある場合を想定してビューポートの計算を行う
 	int l = 0, t = 0;
-	FWGraphicsAdaptee::instance->CalcViewport(&l, &t, &w, &h);
+	FWGraphicsAdaptee::instance->CalcViewport(l, t, w, h);
 	win->GetRender()->Reshape(Vec2f(l, t), Vec2f(w,h));
+	// アプリケーションにも通知（子ウィンドウのリサイズなどのため）
+	FWApp::GetApp()->Reshape(w, h);
 	// 新しいウィンドウサイズを記憶
 	FWWinBase* winBase = win->Cast();
 	FWWinBaseDesc desc;
@@ -54,6 +60,7 @@ void FWGLUT::GlutReshapeFunc(int w, int h){
 	desc.height = h;
 	winBase->FWWinBase::SetDesc(&desc);
 }
+
 void FWGLUT::GlutTimerFunc(int value){
 	UTTimerIf* timer = UTTimerIf::Get(value);
 	if(!timer)
@@ -74,6 +81,27 @@ void FWGLUT::GlutIdleFunc(){
 	// FWApp::IdleFuncを呼ぶ
 	FWApp::GetApp()->IdleFunc();
 }
+
+void FWGLUT::GlutMouseFunc(int button, int state, int x, int y){
+	FWGLUT::GetInstance()->keyMouse->OnMouse(button, state, x, y);
+}
+
+void FWGLUT::GlutMotionFunc(int x, int y){
+	FWGLUT::GetInstance()->keyMouse->OnMotion(x, y);
+}
+
+void FWGLUT::GlutPassiveMotionFunc(int x, int y){
+	FWGLUT::GetInstance()->keyMouse->OnPassiveMotion(x, y);
+}
+
+void FWGLUT::GlutKeyFunc(unsigned char ch, int x, int y){
+	FWGLUT::GetInstance()->keyMouse->OnKey(ch, x, y);
+}
+
+void FWGLUT::GlutSpecialKeyFunc(int ch, int x, int y){
+	FWGLUT::GetInstance()->keyMouse->OnSpecialKey(ch, x, y);
+}
+
 void FWGLUT::AtExit(){
 	FWApp::GetApp()->AtExit();
 }
@@ -100,8 +128,8 @@ void FWGLUT::Init(int argc, char** argv){
 
 	// キーボード・マウスとジョイスティックデバイスの登録
 	HISdkIf* hiSdk = FWApp::GetApp()->GetSdk()->GetHISdk();
-	hiSdk->AddRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic());
-	hiSdk->AddRealDevice(DRJoyStickGLUTIf::GetIfInfoStatic());
+	keyMouse = hiSdk->AddRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic())->Cast();
+	joyStick = hiSdk->AddRealDevice(DRJoyStickGLUTIf::GetIfInfoStatic())->Cast();
 }
 
 bool FWGLUT::StartTimer(UTTimer* timer){
@@ -163,8 +191,8 @@ FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 	int rv = glewInit();
 
 	// windowに関連するコールバックの設定
-	glutDisplayFunc(FWGLUT::GlutDisplayFunc);
-	glutReshapeFunc(FWGLUT::GlutReshapeFunc);
+	RegisterCallbacks();
+	
 
 	// ウィンドウを作成
 	FWWin* win = DBG_NEW FWWin();
@@ -184,6 +212,16 @@ FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 	}
 
 	return win->Cast();
+}
+
+void FWGLUT::RegisterCallbacks(){
+	glutDisplayFunc		 (FWGLUT::GlutDisplayFunc);
+	glutReshapeFunc		 (FWGLUT::GlutReshapeFunc);
+	glutMouseFunc		 (FWGLUT::GlutMouseFunc);
+	glutMotionFunc		 (FWGLUT::GlutMotionFunc);
+	glutPassiveMotionFunc(FWGLUT::GlutPassiveMotionFunc);
+	glutKeyboardFunc	 (FWGLUT::GlutKeyFunc);
+	glutSpecialFunc		 (FWGLUT::GlutSpecialKeyFunc);
 }
 
 ///	ウィンドウを破棄する
@@ -211,10 +249,23 @@ void FWGLUT::PostRedisplay(){
 int FWGLUT::GetModifiers(){
 	return glutGetModifiers();
 };
-
+Vec2i FWGLUT::GetPosition(FWWinBase* win){
+	Vec2i pos;
+	glutSetWindow(win->id);
+	pos.x = glutGet(GLUT_WINDOW_X);
+	pos.y = glutGet(GLUT_WINDOW_Y);
+	return pos;
+}
 void FWGLUT::SetPosition(FWWinBase* win, int left, int top){
 	glutSetWindow(win->id);
 	glutPositionWindow(left, top);
+}
+Vec2i FWGLUT::GetSize(FWWinBase* win){
+	Vec2i sz;
+	glutSetWindow(win->id);
+	sz.x = glutGet(GLUT_WINDOW_WIDTH);
+	sz.y = glutGet(GLUT_WINDOW_HEIGHT);
+	return sz;
 }
 void FWGLUT::SetSize(FWWinBase* win, int width, int height){
 	glutSetWindow(win->id);
