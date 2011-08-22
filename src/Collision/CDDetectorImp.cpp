@@ -187,6 +187,123 @@ found:;
 	}
 	return true;
 }
+
+bool CDShapePair::DetectContinuously2(unsigned ct, const Posed& pose0, const Posed& pose1, 
+		const Vec3d& shapeCenter0, const Vec3d& shapeCenter1, SpatialVector& v0, SpatialVector& v1, Vec3d& cog0, Vec3d cog1, double dt){
+	//	for debug dump
+	Vec3d lastNormal = normal;
+	int lastLCC = lastContactCount;
+	shapePoseW[0] = pose0;
+	shapePoseW[1] = pose1;	
+	if (lastContactCount == unsigned(ct-1) ){	
+		double dist;
+		//	法線向きに判定するとどれだけ戻ると離れるか分かる．
+		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+			-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+		if (res <= 0) {	//	範囲内では、接触していない場合
+			return false;
+		}
+		depth = -dist;
+		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
+		goto found;
+	}else{
+		//	初めての接触の場合
+		Vec3d delta0 = (v0.v() + (v0.w() ^  (shapeCenter0-cog0)))  * dt;
+		Vec3d delta1 = (v1.v() + (v1.w() ^  (shapeCenter1-cog1)))  * dt;
+		Vec3d delta = delta1-delta0;
+		double end = delta.norm();
+		if (end > epsilon){	//	速度がある場合
+			shapePoseW[0].Pos() -= delta0;
+			shapePoseW[1].Pos() -= delta1;
+			Vec3d dir = delta / end;
+			double dist;
+			int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+				dir, -DBL_MAX, end, normal, closestPoint[0], closestPoint[1], dist);
+			if (res <= 0) return false;
+			if (!(0.9 < normal.norm() && normal.norm() < 1.1)){
+				DSTR << "normal error in " << std::endl;
+				int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+					dir, -DBL_MAX, end, normal, closestPoint[0], closestPoint[1], dist);
+			}
+
+			if (dist >= 0){	//	今回の移動で接触していれば
+				double toi = dist / end;
+				shapePoseW[0].Pos() += toi*delta0;
+				shapePoseW[1].Pos() += toi*delta1;
+				center = commonPoint = shapePoseW[0] * closestPoint[0];
+				depth = -(1-toi) * delta * normal;
+				goto found;
+			}
+			//	とりあえず、現在の位置で接触しているかどうか確認する。
+			shapePoseW[0].Pos() += delta0;
+			shapePoseW[1].Pos() += delta1;
+			double tmp;
+			if (ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+				-dir, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], tmp) <= 0)
+				return false;	//	接触していない場合は抜ける。
+		}
+		/*	速度0の場合、または toi < 0 の場合、ここに来る。
+			このようなことが起こる原因には、次の可能性がある。
+			- 回転が原因で接触が起きたため、重心速度に基づくtoiでは、接触検出できない。
+			- 速度が小さすぎてtoiが計算できない。
+			- 最初から接触していた。
+			- ユーザによる非物理移動が原因で接触が起きたため、toiで接触検出できない。
+
+			このような場合は、形状の中心間を結ぶベクトルを仮法線として、
+			仮法線の向きで接触法線を求めてこれを本法線とする。
+			本法線の向きで、侵入量と法線、最近傍点を計算する。
+
+			この処理では、例えば広い床の上の小さなサイコロが床を横に飛んでいくという
+			問題が起こる。
+		*/
+		//	仮法線（形状の中心を結ぶ向き）の計算
+		Vec3d tmpNormal = shapePoseW[1]*shape[1]->CalcCenterOfMass() - shapePoseW[0]*shape[0]->CalcCenterOfMass();
+		double norm = tmpNormal.norm();
+		if (norm > epsilon) tmpNormal /= norm;
+		else tmpNormal = Vec3d(0,1,0);
+		double dist;
+
+		//	仮法線の向きで接触法線を求める。
+		int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+			-tmpNormal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+		if (res <= 0) return false;
+
+		//	法線を更新してもう一度やってみる。
+		res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+			-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+		if (res <= 0) return false;
+		depth = -dist;
+		center = commonPoint = shapePoseW[0] * closestPoint[0];
+		center -= 0.5f*depth*normal;
+		goto found;
+	}
+found:;
+	if (lastContactCount == unsigned(ct-1)){
+		state = CONTINUE;
+	}else{
+		state = NEW;
+		static bool bShow = false;
+		if (bShow){
+			DSTR << "New contact: " << shape[0]->GetName() << "-" << 
+				shape[1]->GetName() << std::endl;
+		}
+	}
+	lastContactCount = ct;
+
+	//	debug dump
+	if (depth > 10){
+		DSTR << "depth=" << depth << std::endl;
+		UTRef<CDShapePair> sp = new CDShapePair(*this);
+		sp->lastContactCount = lastLCC;
+		sp->normal = lastNormal;
+//		SaveDetectContinuously(sp, ct, pose0, delta0, pose1, delta1);
+		DSTR << "SaveDetectDetectContinuously() called" << std::endl;
+		assert(0);
+	}
+	return true;
+}
+
+
 void CDShapePair::CalcNormal(){
 	if (state == NEW){
 		//	凸形状の中心を離す向きを仮法線にする．

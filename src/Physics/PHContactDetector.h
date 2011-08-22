@@ -136,6 +136,58 @@ public:
 		return found;
 	}
 
+	bool ContDetect2(TEngine* engine, unsigned int ct, double dt){
+		if(!bEnabled)return false;
+		// いずれかのSolidに形状が割り当てられていない場合は接触なし
+		if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
+		// 両方ともフリーズ状態の場合は接触なし
+		if(solid[0]->IsFrozen() && solid[1]->IsFrozen())
+			return false;
+		
+		std::vector<Posed> shapePose[2];
+		std::vector<Vec3d> shapeCenter[2];
+		for(int i = 0; i < 2; i++){
+			shapePose[i].resize(solid[i]->NShape());
+			shapeCenter[i].resize(solid[i]->NShape());
+			for(int j = 0; j < solid[i]->NShape(); j++){
+				CDConvex* convex = DCAST(CDConvex, solid[i]->GetShape(j));
+				Posed lp = solid[i]->GetShapePose(j);
+				shapeCenter[i][j] = lp * convex->CalcCenterOfMass();
+				shapePose[i][j] = solid[i]->GetPose() * lp;
+			}
+		}
+		SpatialVector v0(solid[0]->GetVelocity(), solid[0]->GetAngularVelocity());
+		SpatialVector v1(solid[1]->GetVelocity(), solid[1]->GetAngularVelocity());
+		Vec3d cog0 = solid[0]->GetCenterOfMass();
+		Vec3d cog1 = solid[1]->GetCenterOfMass();
+
+		// 全てのshape pairについて交差を調べる
+		bool found = false;
+		TShapePair* sp;
+		for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
+			sp = shapePairs.item(i, j);
+			//このshape pairの交差判定/法線と接触の位置を求める．
+			if(sp->DetectContinuously2(ct, shapePose[0][i], shapePose[1][j], 
+				shapeCenter[0][i], shapeCenter[1][j], v0, v1, cog0, cog1, dt)){
+				assert(0.9 < sp->normal.norm() && sp->normal.norm() < 1.1);
+				found = true;
+				OnContDetect(sp, engine, ct, dt);
+			}
+		}
+		// フリーズの解除
+		if(found){
+			if(solid[0]->IsDynamical() && !solid[1]->IsFrozen()){
+				solid[0]->SetFrozen(false);
+			}
+			else if(solid[1]->IsDynamical() && !solid[0]->IsFrozen()){
+				solid[1]->SetFrozen(false);
+			}
+		}
+
+		return found;
+	}
+
+
 	void SetSt(const PHSolidPairSt& s){
 		*((PHSolidPairSt*)this) = s;
 	}
@@ -535,7 +587,11 @@ public:
 					ptimerForCd.Stop();
 #endif
 					// 全ての剛体の組み合わせについて接触検知を行う
+#if USERNAME==hase	//	長谷川用デバッグコード
+					found |= solidPairs.item(f1, f2)->ContDetect2((TEngine*)this, ct, dt); 
+#else
 					found |= solidPairs.item(f1, f2)->ContDetect((TEngine*)this, ct, dt); 
+#endif
 #ifdef REPORT_TIME
 					ptimerForCd.Start();
 #endif
