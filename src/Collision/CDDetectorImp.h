@@ -11,6 +11,8 @@
 #include <Collision/CDQuickHull3DImp.h>
 #include <Collision/CDConvex.h>
 
+#include <Physics/PHSpatial.h>	//	PHSpacial.hをBaseかFoundationに移動することを希望
+
 namespace Spr {;
 
 #define CD_EPSILON	HULL_EPSILON
@@ -55,6 +57,16 @@ public:
 	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	///	連続接触判定．同時に法線/中心なども計算してしまう．
 	bool DetectContinuously(unsigned ct, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1);
+
+	/**	連続接触判定．同時に法線/中心なども計算．
+		- ct	ステップカウント
+		- pose0	Shape0の姿勢
+		- pose1 Shape1の姿勢
+		- v0	剛体0の速度・角速度
+
+	*/
+	bool DetectContinuously2(unsigned ct, const Posed& pose0, const Posed& pose1, 
+		const Vec3d& shapeCenter0, const Vec3d& shapeCenter1, SpatialVector& v0, SpatialVector& v1, Vec3d& cog0, Vec3d cog1, double dt);
 
 	///	法線の計算
 	void CalcNormal();
