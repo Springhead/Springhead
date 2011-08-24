@@ -79,6 +79,8 @@ public:
 
 	HISpidar4(const HISpidar4Desc& desc = HISpidar4Desc());
 	virtual ~HISpidar4();
+	Vec3f	GetPosition(){ return HISpidarCalc3Dof::GetPosition(); }
+
 protected:
 	/**	出力可能な力を計算し、その出力の得点を計算する.
 		@param disable	使用しない糸の番号
@@ -100,7 +102,7 @@ protected:
 
 /**
 	4-wire Spidar double grip
-	内部計算は独自実装（なぜ？）
+	内部計算は独自実装（直接位置計算を行う方式）
  */
 class HISpidar4D: public HISpidar4{
 public:
@@ -153,6 +155,8 @@ public:
 	///	デバイスの初期化(使用前に呼ぶ)
 	virtual bool Init(const void* desc);
 	virtual bool Calibration();
+	Vec3f	GetPosition(){ return HISpidarCalc6Dof::GetPosition(); }
+	Quaternionf GetOrientation(){ return HISpidarCalc6Dof::GetOrientation(); }
 	virtual Vec3f GetTorque(){ return HISpidarCalc6Dof::GetTorque(); }
 	virtual Vec3f GetForce(){ return HISpidarCalc6Dof::GetForce(); }
 	virtual void SetForce(const Vec3f& f, const Vec3f& t = Vec3f()){ HISpidarCalc6Dof::SetForce(f, t); }		
