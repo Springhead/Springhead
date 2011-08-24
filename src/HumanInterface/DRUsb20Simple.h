@@ -104,8 +104,11 @@ public:
 	///	USBのファイルハンドル
 	void* GetHandle(){ return hSpidar; };
 protected:
-	virtual unsigned	GetVidPid(){ return 0x0CEC0203; }
+	//	デバイスを見つけ、チャンネルを返す。チャンネルが指定された場合、指定したチャンネルのデバイスしか返さない。
+	//	失敗すると-1を返す。
+	int FindDevice(int ch=-1);
 
+	virtual unsigned	GetVidPid(){ return 0x0CEC0203; }
 	virtual void		UsbReset();
 	virtual void		UsbCounterGet();
 	virtual void		UsbCounterClear();
