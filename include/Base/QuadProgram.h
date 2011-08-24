@@ -84,6 +84,7 @@ public:
 	//
 	// QP Main Function
 	int Solve(){
+		if (matR.height() < 1) return -1;
 		int i = 0;
 		//while(1){
 		for(;i<10;i++){

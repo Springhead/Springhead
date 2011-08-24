@@ -26,10 +26,9 @@ struct HISdkIf;
  **/
 struct HIDeviceIf : NamedObjectIf{
 	SPR_IFDEF(HIDevice);
-
-	///	デバイスの名前．クラスと対応するボードのIDなどから自動で決まる名前．設定不可．
-	//const char* GetDeviceName() const;	
-
+private:
+	///	デバイスの名前は、クラスと対応するボードのIDなどから自動で決まるので、設定不可。
+	void SetName(const char* n);	
 };
 
 struct HIVirtualDeviceIf;
