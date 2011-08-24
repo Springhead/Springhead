@@ -1,72 +1,76 @@
+/*
+ *  Copyright (c) 2003-2011, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
+/*	SPIDARG6の出力を確認するためのプログラム
+	マルチメディアタイマの割り込みを使うことで，
+	約1msの更新が可能．
+*/
+
 #include <conio.h>
 #include <Springhead.h>
-#include <HumanInterface/SprHIDRUsb.h>
-#include <iomanip>
-#include "Foundation/UTMMTimer.h"
+#include <windows.h>
+
 using namespace Spr;
 
+// 各種変数
 UTRef<HISpidarGIf> spg;
+float dt = 0.001f;		// 更新周期
+double K = 5000;		// バネ係数
+double D = 5;			// ダンパ係数
+double fy = -0.009;		// 力覚提示位置
 
-Vec3d ForceRenderring(){
-	double K = 5000;
-	double D = 0.0;
+// マルチメディアタイマのコールバック関数
+void SPR_CDECL CallBackLoop(int id, void* arg){
+	spg->Update(dt);
 
-	Vec3d F = Vec3d(0.0, 0.0, 0.0);
-	double fY  = -0.01; //床の位置
-	double pY  = spg->GetPosition().y; //ポインタの位置
-	double pvY = spg->GetVelocity().y; //ポインタの速度
-	double dy  = pY-fY;		//床とポインタの位置の差
-	double dv  = pvY - 0;   //床とポインタの速度差
-	
-	if(dy<0){
-		F.y= -K*dy - D*dv;		//力の計算
-	}
-	/*
-	-0.05<F.y<0.05の範囲で変化
+	double py  = spg->GetPosition().y;	//ポインタの位置
+	double pvy = spg->GetVelocity().y;	//ポインタの速度
+	double dy  = py-fy;					//床とポインタの位置の差
+	double dv  = pvy - 0;				//床とポインタの速度差
 
+	Vec3d f = Vec3d();
+#if 1
+	if(dy < 0)	f.y= -K * dy - D * dv;		//力の計算
+#else	
+	if(dy< 0)	f.y = 5;
+#endif
+	spg->SetForce(f, Vec3d());
 
-
-	*/
-	//if(dy<0)F.y = 5;
-	//DSTR<<"F:"<<F<<"dy:"<<dy<<"dv"<<dv<<std::endl;
-	return F;
+	//std::cout << spg->GetPosition() << std::endl;
 }
 
-void CallBackLoop(void* arg){
-	spg->Update(0.001f);
-	Vec3f spgpos = spg->GetPosition();
-	//std::cout << std::setprecision(2) << spgpos << std::endl;
-	Vec3f f(0.0, 0.0, 0.0);
-	f = ForceRenderring();
-	
-	spg->SetForce(f, Vec3f());
-}
-
-int __cdecl main(){
+void __cdecl main(){
 	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
 	DRUsb20SimpleDesc usbSimpleDesc;
 	sdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 	DRUsb20Sh4Desc usb20Sh4Desc;
 	for(int i=0; i<10; ++i){
-		usb20Sh4Desc.number = i;
+		usb20Sh4Desc.channel = i;
 		sdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
 	}
 	sdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-
-	sdk->Init();
 	sdk->Print(DSTR);
+	sdk->Print(std::cout);
+
 	spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
 	spg->Calibration();
 
-	Spr::UTMMTimer timer1;				/// マルチメディアタイマの宣言
-	timer1.Resolution(1);				///	 呼びだし分解能
-	timer1.Interval(1);					/// 呼びだし頻度
-	timer1.Set(CallBackLoop, NULL);		/// 呼びだす関数
-	timer1.Create();					/// マルチメディアタイマスタート
-
+	UTTimerIf* timer = UTTimerIf::Create();				
+	timer->SetMode(UTTimerIf::MULTIMEDIA);		// タイマのモード設定(MULTIMEDIA or THREAD)
+	timer->SetResolution(1);					// 分解能(ms)
+	timer->SetInterval((unsigned int)dt*1000);	// 刻み(ms)
+	timer->SetCallback(CallBackLoop, NULL);		// 呼びだす関数
+	timer->Start();								// タイマスタート
+	
+	std::cout << "Start the application. " << std::endl;
+	std::cout << "Press any key to exit." << std::endl;
 	while(!_kbhit()){}
-	Sleep(10);
-	timer1.Release();
-	return 0;
+	timer->Stop();
+	exit(0);
 }
