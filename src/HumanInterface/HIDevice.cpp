@@ -29,7 +29,7 @@ HIVirtualDeviceIf* HIRealDevice::Rent(const IfInfo* ii, const char* n, int portN
 	
 	for(int i = 0; i < (int)NChildObject(); i++){
 		HIVirtualDeviceIf* dv = GetChildObject(i)->Cast();
-		if(dv && dv->GetIfInfo() == ii && dv->GetPortNo() == portNo && !dv->IsUsed()){
+		if(dv && dv->GetIfInfo() == ii && (portNo==-1 || portNo == dv->GetPortNo()) && !dv->IsUsed()){
 			DCAST(HIVirtualDevice, dv)->SetUsed(true);
 			return dv;
 		}
