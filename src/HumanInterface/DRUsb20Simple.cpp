@@ -46,49 +46,42 @@ DRUsb20Simple::DRUsb20Simple(const DRUsb20SimpleDesc& d){
 DRUsb20Simple::~DRUsb20Simple(){
 }
 
-bool DRUsb20Simple::Init(){
-	stringstream ss;
-	ss << "Cyverse USB2.0 Simple #" << channel;
-	SetName(ss.str().c_str());
-
-	int i, chMax = 0x100;
-	for(i = 0; i < chMax; ++i){
+int DRUsb20Simple::FindDevice(int ch){
+	for(int i=0; i < 0x100; ++i){
 		hSpidar = UsbOpen(i);
-		if (!hSpidar)
-			continue;
+		if (hSpidar == INVALID_HANDLE_VALUE) return false;
 		if (UsbVidPid(hSpidar) != GetVidPid()){
 			UsbClose(hSpidar);
 			continue;
 		}		
 		Reset();
 		Update();
-		if (channel == -1 || channel == ReadRotarySwitch())
-			break;
+		if (ch == -1) ch = ReadRotarySwitch();
+		if (ch == ReadRotarySwitch()) return ch;
 		UsbClose(hSpidar);
 	}
-	if(i == chMax)
-		return false;
+	return -1;
+}
 
-	for(i = 0; i < 8; i++){
+bool DRUsb20Simple::Init(){
+	//	チャンネルが合致するUSBデバイスを探す
+	int find = FindDevice(channel);
+	if (find >= 0) channel = find;
+	//	名前の設定
+	stringstream ss;
+	ss << "Cyverse USB2.0 Simple #" << channel;
+	SetName(ss.str().c_str());
+
+	if (find<0) return false;
+
+	//	デバイスの登録
+	for(int i = 0; i < 8; i++){
 		AddChildObject((DBG_NEW Da(this, i))->Cast());
 		AddChildObject((DBG_NEW Counter(this, i))->Cast());
 		AddChildObject((DBG_NEW Pio(this, i))->Cast());
 	}
 	return true;
 }
-
-/*bool DRUsb20Simple::InitAny(){
-	for(int i=0; i < 0x100; ++i){
-		hSpidar = UsbOpen(i);
-		if (hSpidar == INVALID_HANDLE_VALUE) return false;
-		return true;
-//		if (UsbVidPid(hSpidar) == 0x0CEC0205){	//	SH版アンプのVIDとPID
-//			UsbClose(hSpidar);
-//			return true;
-//		}
-	}
-	return false;
-}*/
 
 void* DRUsb20Simple::UsbOpen(int id){
 #ifdef _WIN32
@@ -116,15 +109,6 @@ bool DRUsb20Simple::UsbClose(void*& h){
 #endif
 	return false;
 }
-
-/*void DRUsb20Simple::Register(HISdkIf* intf){
-	HISdk* sdk = intf->Cast();
-	for(int i=0; i<8; i++){
-		sdk->RegisterVirtualDevice((new DVDa(this, i))->Cast());
-		sdk->RegisterVirtualDevice((new DVCounter(this, i))->Cast());
-		sdk->RegisterVirtualDevice((new DVPio(this, i))->Cast());
-	}
-}*/
 
 void DRUsb20Simple::WriteVoltage(int ch, float v){
 	assert(0 <= ch && ch < 8);

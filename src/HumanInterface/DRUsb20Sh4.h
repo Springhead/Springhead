@@ -26,10 +26,10 @@ public:
 	SPR_OBJECTDEF(DRUsb20Sh4);
 	SPR_DECLMEMBEROF_DRUsb20Sh4Desc;
 
-	///	仮想デバイス(DA)
-	class DV: public DVAd{
+	///	仮想デバイス(A/Dコンバータ)
+	class Ad: public DVAd{
 	public:
-		DV(DRUsb20Sh4* r, int c):DVAd(r, c){}
+		Ad(DRUsb20Sh4* r, int c):DVAd(r, c){}
 		DRUsb20Sh4* GetRealDevice() { return realDevice->Cast(); }
 		
 		virtual float Voltage(){ return GetRealDevice()->AdVoltage(portNo); }
@@ -48,16 +48,17 @@ public:
 	
 	///	状態の更新
 	virtual void Update();
+	/// リセット
+	virtual void Reset();
 
+
+protected:
+	virtual unsigned	GetVidPid(){ return 0x0CEC0205; }
+	virtual void UsbUpdate();
 	///	512byteの送信
 	virtual void UsbSend(unsigned char* outBuffer);
 	///	512byteの受信
 	virtual void UsbRecv(unsigned char* inBuffer);
-protected:
-	virtual unsigned	GetVidPid(){ return 0x0CEC0205; }
-
-	virtual void UsbUpdate();
-
 };
 
 } //namespace Spr

@@ -33,38 +33,15 @@ DRUsb20Sh4::DRUsb20Sh4(const DRUsb20Sh4Desc& d):DRUsb20Simple(d){
 }
 
 bool DRUsb20Sh4::Init(){
+	//	初期化（チャンネルに合うUSBデバイスを見つけて、D/A カウンタ PIOを登録する。）
+	bool rv = DRUsb20Simple::Init();
+	//	初期化に成功していたら、A/Dを登録する。
+	if (rv) for(int i = 0; i < 8; i++) AddChildObject((DBG_NEW Ad(this, i))->Cast());
 	stringstream ss;
 	ss << "Cyberse USB2.0 SH4 #" << channel;
 	SetName(ss.str().c_str());
-#ifdef _WIN32
-	DRUsb20Simple::Init();
-
-	DWORD pipeNum = 2;
-	if (hSpidar != INVALID_HANDLE_VALUE){
-		OVERLAPPED ov;
-		memset(&ov, 0, sizeof(ov));
-		DeviceIoControl(hSpidar,
-			IOCTL_Ezusb_ABORTPIPE,
-			&pipeNum, sizeof(pipeNum), NULL, 0, NULL, &ov);
-		DeviceIoControl(hSpidar,
-			IOCTL_Ezusb_RESETPIPE,
-			&pipeNum, sizeof(pipeNum), NULL, 0, NULL, &ov);
-	}
-
-	for(int i = 0; i < 8; i++)
-		AddChildObject((DBG_NEW DV(this, i))->Cast());
-	return true;
-#endif
-	return false;
+	return rv;
 }
-
-/*void DRUsb20Sh4::Register(HISdkIf* sdkIf){
-	DRUsb20Simple::Register(sdkIf);
-	HISdk* sdk = sdkIf->Cast();
-	for(int i=0; i<8; i++){
-		sdk->RegisterVirtualDevice((new DV(this, i))->Cast());
-	}
-}*/
 
 void DRUsb20Sh4::Update(){
 	UsbUpdate();
@@ -175,7 +152,19 @@ void DRUsb20Sh4::UsbRecv(unsigned char* inBuffer){
 		NULL);
 #endif
 }
-
+void DRUsb20Sh4::Reset(){
+	DWORD pipeNum = 2;
+	if (hSpidar != INVALID_HANDLE_VALUE){
+		OVERLAPPED ov;
+		memset(&ov, 0, sizeof(ov));
+		DeviceIoControl(hSpidar,
+			IOCTL_Ezusb_ABORTPIPE,
+			&pipeNum, sizeof(pipeNum), NULL, 0, NULL, &ov);
+		DeviceIoControl(hSpidar,
+			IOCTL_Ezusb_RESETPIPE,
+			&pipeNum, sizeof(pipeNum), NULL, 0, NULL, &ov);	
+	}
+}
 /*bool DRUsb20Sh4::FindDevice(int ch){
 	for(int i=0; i < 0x100; ++i){
 		hSpidar = UsbOpen(i);
