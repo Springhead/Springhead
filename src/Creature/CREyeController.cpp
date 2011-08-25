@@ -5,9 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Creature/CREyeController.h>
+#include "CREyeController.h"
 
 #define CREYECTRL_DEBUG true
+
+#ifdef USE_HDRSTOP
+#pragma hdrstop
+#endif
 
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -96,201 +100,116 @@ Vec2d CRPursuitController::GetREyeAngle(){
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
-void CRPhysicalEye::Init(){
-	/*
-	for (int i=0; i<creature->NBodies(); ++i) {
-		CRHingeHumanBodyGenIf* hingeBody = DCAST(CRHingeHumanBodyGenIf, creature->GetBody(i));
-		if (hingeBody) {
-			soLEye  = hingeBody->GetSolid(CRHingeHumanBodyGenDesc::SO_LEFT_EYE);	
-			soREye  = hingeBody->GetSolid(CRHingeHumanBodyGenDesc::SO_RIGHT_EYE);	
-			soHead  = hingeBody->GetSolid(CRHingeHumanBodyGenDesc::SO_HEAD);	
-			joLEyeX = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyGenDesc::JO_LEFT_EYE_X));
-			joLEyeY = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyGenDesc::JO_LEFT_EYE_Y));	
-			joREyeX = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyGenDesc::JO_RIGHT_EYE_X));	
-			joREyeY = DCAST(PHHingeJointIf, hingeBody->GetJoint(CRHingeHumanBodyGenDesc::JO_RIGHT_EYE_Y));	
-		}
-		CRBallHumanBodyIf* ballBody = DCAST(CRBallHumanBodyIf, creature->GetBody(i));
-		if (ballBody) {
-			soLEye  = ballBody->GetSolid(CRBallHumanBodyDesc::SO_LEFT_EYE);	
-			soREye  = ballBody->GetSolid(CRBallHumanBodyDesc::SO_RIGHT_EYE);	
-			soHead  = ballBody->GetSolid(CRBallHumanBodyDesc::SO_HEAD);	
-			joLEye = DCAST(PHBallJointIf, ballBody->GetJoint(CRBallHumanBodyDesc::JO_LEFT_EYE));
-			joREye = DCAST(PHBallJointIf, ballBody->GetJoint(CRBallHumanBodyDesc::JO_RIGHT_EYE));	
-		}
-	}
-	*/
-}
-
 void CRPhysicalEye::SetTarget(Vec3d pos, Vec3d vel){
 	targetPos = pos;
 	targetVel = vel;
 }
 
 void CRPhysicalEye::Control(Vec2d angleLEye, Vec2d angleREye){
-	/*
-	if (joLEyeX && joLEyeY && joREyeX && joREyeY) {
-		Control(joLEyeX, joLEyeY, angleLEye);
-		Control(joREyeX, joREyeY, angleREye);
-	} else if (joLEye && joREye) {
+	if (joLEye && joREye) {
 		Control(joLEye, angleLEye);
 		Control(joREye, angleREye);
 	}
-	*/
 }
 
 Vec2d CRPhysicalEye::GetAxisL(){
-	/*
 	Quaterniond qToLocal = soHead->GetPose().Ori().Inv();
 	Vec3d axisVec = qToLocal * soLEye->GetPose().Ori() * Vec3d(0,0,-1);
 	Vec2d angle   = Vec3ToAngle(axisVec);
+	// std::cout << "La : " << Deg(angle) << std::endl;
 	return angle;
-	*/
-	return Vec2d();
 }
 
 Vec2d CRPhysicalEye::GetAxisR(){
-	/*
 	Quaterniond qToLocal = soHead->GetPose().Ori().Inv();
 	Vec3d axisVec = qToLocal * soREye->GetPose().Ori() * Vec3d(0,0,-1);
 	Vec2d angle   = Vec3ToAngle(axisVec);
+	// std::cout << "Ra : " << Deg(angle) << std::endl;
 	return angle;
-	*/
-	return Vec2d();
 }
 
 Vec2d CRPhysicalEye::GetTargetFromL(){
-	/*
 	Quaterniond qToLocal = soHead->GetPose().Ori().Inv();
 	Vec3d target = qToLocal * (targetPos - soLEye->GetPose().Pos());
 	Vec2d angle  = Vec3ToAngle(target);
+	// std::cout << "L : " << target << " : " << Deg(angle) << std::endl;
 	return angle;
-	*/
-	return Vec2d();
 }
 
 Vec2d CRPhysicalEye::GetTargetFromR(){
-	/*
 	Quaterniond qToLocal = soHead->GetPose().Ori().Inv();
 	Vec3d target = qToLocal * (targetPos - soREye->GetPose().Pos());
 	Vec2d angle  = Vec3ToAngle(target);
+	// std::cout << "R : " << Deg(angle) << std::endl;
 	return angle;
-	*/
-	return Vec2d();
 }
 
 Vec2d CRPhysicalEye::GetHeadAngle(){
-	/*
 	Vec3d axisVec = soHead->GetPose().Ori() * Vec3d(0,0,-1);
 	Vec2d angle   = Vec3ToAngle(axisVec);
+	// std::cout << "H : " << Deg(angle) << std::endl;
 	return angle;
-	*/
-	return Vec2d();
 }
 
 Vec2d CRPhysicalEye::GetHeadAngvel(){
-	/*
 	Vec3d angvel = soHead->GetPose().Ori().Inv() * soHead->GetAngularVelocity();
 	return Vec2d(angvel[0], angvel[1]);
-	*/
-	return Vec2d();
-}
-
-void CRPhysicalEye::Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angle){
-	/*
-	double lower, upper;
-	if (joLEyeX->GetChildObject(1)==soLEye) {
-		joX->GetRange(lower, upper);
-		if (lower < upper) {
-			if (angle[0] < lower) {
-				joX->SetTargetPosition(lower);
-			} else if (upper < angle[0]) {
-				joX->SetTargetPosition(upper);
-			} else {
-				joX->SetTargetPosition(angle[0]);
-			}
-		} else {
-			joX->SetTargetPosition(angle[0]);
-		}
-
-		joY->GetRange(lower, upper);
-		if (lower < upper) {
-			if (angle[1] < lower) {
-				joY->SetTargetPosition(lower);
-			} else if (upper < angle[1]) {
-				joY->SetTargetPosition(upper);
-			} else {
-				joY->SetTargetPosition(angle[1]);
-			}
-		} else {
-			joY->SetTargetPosition(angle[1]);
-		}
-	} else {
-		joX->GetRange(lower, upper);
-		if (lower < upper) {
-			if (-angle[0] < lower) {
-				joX->SetTargetPosition(lower);
-			} else if (upper < -angle[0]) {
-				joX->SetTargetPosition(upper);
-			} else {
-				joX->SetTargetPosition(-angle[0]);
-			}
-		} else {
-			joX->SetTargetPosition(angle[0]);
-		}
-
-		joY->GetRange(lower, upper);
-		if (lower < upper) {
-			if (-angle[1] < lower) {
-				joY->SetTargetPosition(lower);
-			} else if (upper < -angle[1]) {
-				joY->SetTargetPosition(upper);
-			} else {
-				joY->SetTargetPosition(-angle[1]);
-			}
-		} else {
-			joY->SetTargetPosition(angle[1]);
-		}
-	}
-	*/
 }
 
 void CRPhysicalEye::Control(PHBallJointIf* jo, Vec2d angle){
-	/*
 	// std::cout << Deg(angle[0]) << ", " << Deg(angle[1]) << std::endl;
-	Quaterniond q = Quaterniond::Rot(angle[1],'y') * Quaterniond::Rot(angle[0],'x');
+	Quaterniond q = Quaterniond::Rot(-angle[1],'y') * Quaterniond::Rot(-angle[0],'x');
+	// Quaterniond q = Quaterniond::Rot(Rad(45),'x');
 	jo->SetTargetPosition(q);
-	*/
 }
 
 Vec2d CRPhysicalEye::Vec3ToAngle(Vec3d v){
-	double d = sqrt(v.X()*v.X()+v.Z()*v.Z());
-	return(Vec2d( atan2(v.Y(), d), atan2(-v.X(), -v.Z()) ));
+	double d = sqrt(v.X()*v.X()+v.Y()*v.Y());
+	return(Vec2d( atan2(-v.Z(), d), atan2(v.X(), v.Y()) ));
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
+bool CREyeController::AddChildObject(ObjectIf* o){
+	body = o->Cast();
+
+	if (body) {
+		return true;
+	}
+
+	return false;
+}
+
+ObjectIf* CREyeController::GetChildObject(size_t pos){
+	if (pos==0) {
+		return body;
+	}
+
+	return NULL;
+}
+
+size_t CREyeController::NChildObject() const{
+	return( (body==NULL) ? 0 : 1 );
+}
+
 void CREyeController::LookAt(Vec3f pos, Vec3f vel){
-	// physicalEye.SetTarget(pos, vel);
+	physicalEye.SetTarget(pos, vel);
 }
 
 void CREyeController::Init(){
-	// CRController::Init();
-
-	// physicalEye.Init();
 }
 
 void CREyeController::Step(){
-	// CRController::Step();
-
 	// êßå‰èÛë‘ÇÃëJà⁄
-	// controlState = GetNextState(controlState);
+	controlState = GetNextState(controlState);
 
 	// é¿ç€ÇÃä·ãÖâ^ìÆêßå‰ÇÃé¿çs
-	// Control();
+	Control();
+
+	// std::cout << " -------------------------- " << std::endl;
 }
 
 CREyeControllerState::ControlState CREyeController::GetNextState(ControlState currentCS){
-	/*
 	Vec2d eL = physicalEye.GetTargetFromL() - physicalEye.GetAxisL();
 	Vec2d eR = physicalEye.GetTargetFromR() - physicalEye.GetAxisR();
 
@@ -320,13 +239,10 @@ CREyeControllerState::ControlState CREyeController::GetNextState(ControlState cu
 
 	// Ç±Ç±Ç…ÇÕÇ±Ç»Ç¢ÇÕÇ∏ÇæÇØÇ«
 	return CS_SACCADE;
-	*/
-	return CS_SACCADE;
 }
 
 void CREyeController::Control(){
-	/*
-	double dt = DCAST(PHSceneIf, GetScene())->GetTimeStep() / 10.0;
+	double dt = DCAST(CRCreatureIf,GetScene())->GetPHScene()->GetTimeStep() / 10.0;
 
 	switch(controlState){
 	case CS_SACCADE: 
@@ -358,7 +274,6 @@ void CREyeController::Control(){
 	default:
 		break;
 	}
-	*/
 }
 
 bool CREyeController::IsSaccading(){

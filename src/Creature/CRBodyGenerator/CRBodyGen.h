@@ -12,6 +12,7 @@
 #include <Physics/SprPHJoint.h>
 #include <Physics/SprPHSolid.h>
 #include <Creature/SprCRBody.h>
+#include <Creature/SprCRBodyPart.h>
 #include <Creature/SprCRCreature.h>
 #include <vector>
 

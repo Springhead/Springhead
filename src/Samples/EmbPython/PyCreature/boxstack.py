@@ -92,7 +92,22 @@ if __name__ == "__main__":
 	
 	box = [None] * 20
 
-crBodyCtl.SetTargetPos("right_hand",Vec3d(0,0,1))
-crBodyCtl.SetTimeLimit("right_hand",1.0)
-crBodyCtl.Restart("right_hand")
-	
+
+right_hand.SetViewArea(Posed(1,0,0,0,0,0,0), 2, 2)
+
+
+if False:
+	last_pos = Vec3d(0,0,0)
+	dtInt = 0
+	dt = scene.GetTimeStep()
+	while True:
+		dtInt += dt
+		curr_pos = pointer.GetPose().getPos()
+		if (curr_pos - last_pos).norm() > 0.0001:
+			v = (curr_pos - last_pos).norm() * (1 / dtInt)
+			last_pos = curr_pos
+			dtInt = 0
+			if v > 0.1:
+				right_hand.SetTargetPos(pointer.GetPose().getPos())
+				right_hand.SetTimeLimit(0.2)
+				right_hand.Start()

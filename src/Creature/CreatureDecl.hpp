@@ -1,3 +1,14 @@
+#define SPR_DECLMEMBEROF_CRBodyDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_CRBodyPartDesc \
 protected:\
 	std::string	label;	\
@@ -64,30 +75,6 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_CRBodyDesc \
-protected:\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_CRBodyControllerDesc \
-protected:\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		CREngine::SetDesc((CREngineDesc*)(CRBodyControllerDesc*)ptr);	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		CREngine::GetDesc((CREngineDesc*)(CRBodyControllerDesc*)ptr);	\
-		return true;	\
-	}\
-
 #define SPR_DECLMEMBEROF_CRCreatureDesc \
 protected:\
 public:\
@@ -124,16 +111,31 @@ public:\
 
 #define SPR_DECLMEMBEROF_CREyeControllerDesc \
 protected:\
+	std::string	labelHeadSolid;	\
+	std::string	labelLEyeSolid;	\
+	std::string	labelREyeSolid;	\
+	std::string	labelLEyeJoint;	\
+	std::string	labelREyeJoint;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CREngine::SetDesc((CREngineDesc*)(CREyeControllerDesc*)ptr);	\
 		CREyeController::SetState((CREyeControllerState*)(CREyeControllerDesc*)ptr);	\
+		labelHeadSolid = ((CREyeControllerDesc*)ptr)->labelHeadSolid;	\
+		labelLEyeSolid = ((CREyeControllerDesc*)ptr)->labelLEyeSolid;	\
+		labelREyeSolid = ((CREyeControllerDesc*)ptr)->labelREyeSolid;	\
+		labelLEyeJoint = ((CREyeControllerDesc*)ptr)->labelLEyeJoint;	\
+		labelREyeJoint = ((CREyeControllerDesc*)ptr)->labelREyeJoint;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		CREngine::GetDesc((CREngineDesc*)(CREyeControllerDesc*)ptr);	\
 		CREyeController::GetState((CREyeControllerState*)(CREyeControllerDesc*)ptr);	\
+		((CREyeControllerDesc*)ptr)->labelHeadSolid = labelHeadSolid;	\
+		((CREyeControllerDesc*)ptr)->labelLEyeSolid = labelLEyeSolid;	\
+		((CREyeControllerDesc*)ptr)->labelREyeSolid = labelREyeSolid;	\
+		((CREyeControllerDesc*)ptr)->labelLEyeJoint = labelLEyeJoint;	\
+		((CREyeControllerDesc*)ptr)->labelREyeJoint = labelREyeJoint;	\
 		return true;	\
 	}\
 
@@ -148,22 +150,19 @@ public:\
 
 #define SPR_DECLMEMBEROF_CRNeckControllerDesc \
 protected:\
-	float	lowerAttractiveness;	\
-	float	upperAttractiveness;	\
+	std::string	labelHeadSolid;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CREngine::SetDesc((CREngineDesc*)(CRNeckControllerDesc*)ptr);	\
 		CRNeckController::SetState((CRNeckControllerState*)(CRNeckControllerDesc*)ptr);	\
-		lowerAttractiveness = ((CRNeckControllerDesc*)ptr)->lowerAttractiveness;	\
-		upperAttractiveness = ((CRNeckControllerDesc*)ptr)->upperAttractiveness;	\
+		labelHeadSolid = ((CRNeckControllerDesc*)ptr)->labelHeadSolid;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		CREngine::GetDesc((CREngineDesc*)(CRNeckControllerDesc*)ptr);	\
 		CRNeckController::GetState((CRNeckControllerState*)(CRNeckControllerDesc*)ptr);	\
-		((CRNeckControllerDesc*)ptr)->lowerAttractiveness = lowerAttractiveness;	\
-		((CRNeckControllerDesc*)ptr)->upperAttractiveness = upperAttractiveness;	\
+		((CRNeckControllerDesc*)ptr)->labelHeadSolid = labelHeadSolid;	\
 		return true;	\
 	}\
 
@@ -188,19 +187,6 @@ public:\
 		BeforeGetDesc();	\
 		CREngine::GetDesc((CREngineDesc*)(CRGazeControllerDesc*)ptr);	\
 		CRGazeController::GetState((CRGazeControllerState*)(CRGazeControllerDesc*)ptr);	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_CRAttentionControllerDesc \
-protected:\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		CREngine::SetDesc((CREngineDesc*)(CRAttentionControllerDesc*)ptr);	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		CREngine::GetDesc((CREngineDesc*)(CRAttentionControllerDesc*)ptr);	\
 		return true;	\
 	}\
 

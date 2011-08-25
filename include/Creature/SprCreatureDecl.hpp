@@ -1,6 +1,17 @@
+#define SPR_OVERRIDEMEMBERFUNCOF_CRBodyIf(base)	\
+	Spr::CRBodyPartIf* FindByLabel(UTString label){	return	base::FindByLabel(label);}	\
+	void Step(){	base::Step();}	\
+	int NSolids(){	return	base::NSolids();}	\
+	Spr::CRSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
+	int NJoints(){	return	base::NJoints();}	\
+	Spr::CRJointIf* GetJoint(int i){	return	base::GetJoint(i);}	\
+	Vec3d GetCenterOfMass(){	return	base::GetCenterOfMass();}	\
+	double GetSumOfMass(){	return	base::GetSumOfMass();}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_CRBodyPartIf(base)	\
 	const char* GetLabel()const{	return	base::GetLabel();}	\
 	void SetLabel(const char* str){	base::SetLabel(str);}	\
+	void Step(){	base::Step();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRSolidIf(base)	\
 	Spr::PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
@@ -9,6 +20,16 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_CRIKSolidIf(base)	\
 	Spr::PHIKEndEffectorIf* GetIKEndEffector(){	return	base::GetIKEndEffector();}	\
 	void SetIKEndEffector(Spr::PHIKEndEffectorIf* ikEE){	base::SetIKEndEffector(ikEE);}	\
+	void SetTargetPos(Vec3d pos){	base::SetTargetPos(pos);}	\
+	void SetTargetOri(Quaterniond ori){	base::SetTargetOri(ori);}	\
+	void SetTargetPose(Posed pose){	base::SetTargetPose(pose);}	\
+	void SetTimeLimit(float timeLimit){	base::SetTimeLimit(timeLimit);}	\
+	void Start(){	base::Start();}	\
+	void Stop(){	base::Stop();}	\
+	void Plan(){	base::Plan();}	\
+	void SetViewArea(Posed relativePose, double horizRange, double vertRange){	base::SetViewArea(relativePose, horizRange, vertRange);}	\
+	int NVisibleSolids(){	return	base::NVisibleSolids();}	\
+	Spr::PHSolidIf* GetVisibleSolid(int i){	return	base::GetVisibleSolid(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRJointIf(base)	\
 	Spr::PHJointIf* GetPHJoint(){	return	base::GetPHJoint();}	\
@@ -19,23 +40,6 @@
 	Spr::PHIKActuatorIf* GetIKActuator(){	return	base::GetIKActuator();}	\
 	void SetIKActuator(Spr::PHIKActuatorIf* ikAct){	base::SetIKActuator(ikAct);}	\
 	void SetIKSpringRatio(double springRatio, double damperRatio){	base::SetIKSpringRatio(springRatio, damperRatio);}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRBodyIf(base)	\
-	Spr::CRBodyPartIf* FindByLabel(UTString label){	return	base::FindByLabel(label);}	\
-	int NSolids(){	return	base::NSolids();}	\
-	Spr::CRSolidIf* GetSolid(int i){	return	base::GetSolid(i);}	\
-	int NJoints(){	return	base::NJoints();}	\
-	Spr::CRJointIf* GetJoint(int i){	return	base::GetJoint(i);}	\
-	Vec3d GetCenterOfMass(){	return	base::GetCenterOfMass();}	\
-	double GetSumOfMass(){	return	base::GetSumOfMass();}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRBodyControllerIf(base)	\
-	void SetTargetPos(UTString effector, Vec3d pos){	base::SetTargetPos(effector, pos);}	\
-	void SetTargetOri(UTString effector, Quaterniond ori){	base::SetTargetOri(effector, ori);}	\
-	void SetTargetPose(UTString effector, Posed pose){	base::SetTargetPose(effector, pose);}	\
-	void SetTimeLimit(UTString effector, float timeLimit){	base::SetTimeLimit(effector, timeLimit);}	\
-	void Plan(){	base::Plan();}	\
-	void Restart(UTString effector){	base::Restart(effector);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRCreatureIf(base)	\
 	void Step(){	base::Step();}	\
@@ -62,12 +66,10 @@
 	bool IsSaccading(){	return	base::IsSaccading();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRNeckControllerIf(base)	\
-	void LookAt(Vec3f pos, Vec3f vel, float attractiveness){	base::LookAt(pos, vel, attractiveness);}	\
+	void LookAt(Vec3f pos, Vec3f vel, float ratio){	base::LookAt(pos, vel, ratio);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRGazeControllerIf(base)	\
 	void LookAt(Vec3f pos, Vec3f vel, float attractiveness){	base::LookAt(pos, vel, attractiveness);}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_CRAttentionControllerIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRReachingControllerIf(base)	\
 	void SetPos(Vec3f pos){	base::SetPos(pos);}	\

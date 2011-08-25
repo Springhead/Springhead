@@ -7,6 +7,7 @@
  */
 #include <Creature/CRReachingController.h>
 #include <Creature/SprCRBody.h>
+#include <Creature/SprCRBodyPart.h>
 #include <Creature/SprCRCreature.h>
 #include <Physics/SprPHScene.h>
 #include <Graphics/SprGRRender.h>
