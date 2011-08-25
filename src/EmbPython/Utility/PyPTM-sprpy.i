@@ -64,7 +64,7 @@ PyObject* __repr__(){
 }
 
 PyObject* __str__(){
-	PyObject* repr = EP##vec##Object___repr__(self);
+	PyObject* repr = EP##vec##___repr__(self);
 	PyObject* prefix = PyUnicode_FromString( #vec );
 	PyUnicode_AppendAndDel( &prefix, repr);
 	return prefix;
@@ -191,6 +191,18 @@ public:
 	VEC_EXTEND(Vec4d, double)
 }
 EXTEND_NEW(Vec4d)
+
+class Vec4i{
+public:
+	int x, y, z, w;
+	VEC_MEMBER(Vec4i)
+	VEC_CONSTRUCTOR(Vec4i, int, _4i)
+	Vec4d(int xi, int yi, int zi, int wi);
+};
+%extend Vec4i{
+	VEC_EXTEND(Vec4i, int)
+}
+EXTEND_NEW(Vec4i)
 
 class Matrix2f{
 public:
@@ -621,5 +633,51 @@ public:
 	Posed(double,double,double,double,double,double,double);
 };
 EXTEND_NEW(Posed)
+
+
+%extend Posed{
+	Vec3d transform(Vec3d var1){
+		return *$self * var1;
+	}
+	Posed __mul__(Posed var1){
+		return *$self * var1;
+	}
+	void setPos(const Vec3d& var1){
+		$self->Pos() = var1;
+	}
+	Vec3d getPos(){
+		return $self->Pos();
+	}
+	void setOri(const Quaterniond& var1){
+		$self->Ori() = var1;
+	}
+	Quaterniond getOri(){
+		return $self->Ori();
+	}
+}
+class Posef{
+public:
+	float w,x,y,z;
+	float px, py, pz;
+	VEC_MEMBER(Posef)
+	Posef Inv() const;
+	
+	static Posef Unit();
+	static Posef Trn(float px, float py, float pz);
+	static Posef Trn(const Vec3f &v);
+	static Posef Rot(float wi, float xi, float yi, float zi);
+	static Posef Rot(float angle, const Vec3f& axis);
+	static Posef Rot(float angle, char axis);
+	static Posef Rot(const Vec3f& rot);
+	static Posef Rot(const Quaternionf& q);
+
+	void FromAffine(const Affinef& f);
+	void ToAffine(Affinef& af) const;
+
+	VEC_CONSTRUCTOR(Posef, float, _7f)
+	Posef(const Vec3f& p,const Quaternionf& q); 
+	Posef(float,float,float,float,float,float,float);
+};
+EXTEND_NEW(Posef)
 
 }	//	namespace Spr

@@ -80,7 +80,7 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWStructureIf(base)	\
 	Spr::FWBoneObjectIf* GetBone(int n){	return	base::GetBone(n);}	\
-	Spr::FWBoneObjectIf* GetBone(char* n){	return	base::GetBone(n);}	\
+	Spr::FWBoneObjectIf* GetBone(const char* n){	return	base::GetBone(n);}	\
 	int GetBoneSize(){	return	base::GetBoneSize();}	\
 	void SetPose(Posed p){	base::SetPose(p);}	\
 	void AddBone(Spr::FWBoneObjectIf* o){	base::AddBone(o);}	\

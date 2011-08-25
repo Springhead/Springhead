@@ -109,7 +109,7 @@ struct FWStructureIf : SceneObjectIf {
 	/// BoneObjectをナンバーで指定して取得する
 	FWBoneObjectIf* GetBone(int n);
 	/// BoneObjectを名前で指定して取得する
-	FWBoneObjectIf* GetBone(char* n);
+	FWBoneObjectIf* GetBone(const char* n);
 	/// BoneObjectのサイズを取得する
 	int GetBoneSize();
 	/// FWBoneObjectの位置を設定する

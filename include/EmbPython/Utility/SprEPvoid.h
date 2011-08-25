@@ -11,8 +11,8 @@ using namespace Spr;
 
 
 
-/********************************EPvoidObject*************************************/
-#define EPvoidObject_Check(ob) (((PyObject*)ob)->ob_type == &EPvoidObjectType)
+/********************************EPvoid*************************************/
+#define EPvoid_Check(ob) (((PyObject*)ob)->ob_type == &EPvoidType)
 ///////////////////////////////////オブジェクトの宣言////////////
 typedef struct
 {
@@ -21,18 +21,18 @@ typedef struct
 	///全てpublic?
 	const void *ptr;
 	MemoryManager mm;
-} EPvoidObject;
+} EPvoid;
 
 /////////////////////////////////////メソッド登録用
 ///voidのメソッドの定義
 
-PyObject* EPvoidObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds);
+PyObject* EPvoid_new(PyTypeObject *type,PyObject *args, PyObject *kwds);
 PyObject* newEPvoid();
 PyObject* newEPvoid(const void*);
 
 //////////////////////////////////////オブジェクトのタイプ宣言
-extern PyTypeObject EPvoidObjectType;
+extern PyTypeObject EPvoidType;
 //////////////////////////////////////オブジェクト（モジュールの）初期化関数
-PyMODINIT_FUNC initEPvoidObject(void) ;
+PyMODINIT_FUNC initEPvoid(void) ;
 
 #endif

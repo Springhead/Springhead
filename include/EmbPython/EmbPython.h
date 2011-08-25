@@ -4,5 +4,7 @@
 #include "SprEPPhysics.h"
 #include "SprEPGraphics.h"
 #include "SprEPCreature.h"
-//#include "SprEPFramework.h"
+#include "SprEPFileIO.h"
+#include "SprEPHumanInterface.h"
+#include "SprEPFramework.h"
 #include "SprEPInterpreter.h"

@@ -211,6 +211,9 @@ void EPLoopInit(void* arg)
 
 		PyRun_SimpleString("import Foundation\n");
 		//PyRun_SimpleString("from Foundation import *\n");
+		
+		PyRun_SimpleString("import FileIO\n");
+		//PyRun_SimpleString("from FileIO import *\n");
 
 		PyRun_SimpleString("import Collision\n");
 		//PyRun_SimpleString("from Collision import *\n");
@@ -223,6 +226,9 @@ void EPLoopInit(void* arg)
 
 		PyRun_SimpleString("import Creature\n");
 		//PyRun_SimpleString("from Creature import *\n");
+
+		PyRun_SimpleString("import HumanInterface\n");
+		//PyRun_SimpleString("from HumanInterface import *\n");
 		
 		PyRun_SimpleString("import Framework\n");
 		//PyRun_SimpleString("from Framework import *\n");
@@ -274,17 +280,17 @@ void EPLoopInit(void* arg)
 		//Py_INCREF(fwSdk);
 		//PyDict_SetItemString(dict,"sdk",fwSdk);
 
-		PyObject* py_sdk = (PyObject*)newEPPHSdkIfObject(phSdk);
+		PyObject* py_sdk = (PyObject*)newEPPHSdkIf(phSdk);
 
-		PyObject* py_scene = (PyObject*)newEPPHSceneIfObject(scene);
+		PyObject* py_scene = (PyObject*)newEPPHSceneIf(scene);
 		Py_INCREF(py_scene);
 		PyDict_SetItemString(dict,"scene",py_scene);
 
-		PyObject* py_desc = (PyObject*)newEPPHSolidDescObject(desc);
+		PyObject* py_desc = (PyObject*)newEPPHSolidDesc(desc);
 		Py_INCREF(py_desc);
 		PyDict_SetItemString(dict,"desc",py_desc);
 
-		PyObject* py_meshConvex = (PyObject*)newEPCDConvexMeshIfObject(mesh);
+		PyObject* py_meshConvex = (PyObject*)newEPCDConvexMeshIf(mesh);
 		Py_INCREF(py_meshConvex);
 		PyDict_SetItemString(dict,"mesh",py_meshConvex);
 		
@@ -298,7 +304,6 @@ void EPLoopInit(void* arg)
 		file.close();
 
 		PyRun_SimpleString(data.c_str());
-
 	}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
