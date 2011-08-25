@@ -9,7 +9,8 @@
 #include <Creature/CRScene.h>
 #include <Creature/CRCreature.h>
 #include <Creature/CRBody.h>
-#include <Creature/CRBodyController.h>
+#include <Creature/CRBodyPart.h>
+// #include <Creature/CRBodyController.h>
 
 #include <Creature/CRTouchSensor.h>
 #include <Creature/CRVisualSensor.h>
@@ -17,7 +18,7 @@
 #include <Creature/CREyeController.h>
 #include <Creature/CRNeckController.h>
 #include <Creature/CRGazeController.h>
-#include <Creature/CRAttentionController.h>
+// #include <Creature/CRAttentionController.h>
 #include <Creature/CRReachingController.h>
 #include <Creature/CRTrajectoryController.h>
 #include <Creature/CRTrajectory.h>
@@ -37,7 +38,7 @@ void SPR_CDECL CRSdkIf::RegisterSdk(){
 	CRSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRCreature));
 
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRBody));
-	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRBodyController));
+	// CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRBodyController));
 
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRTouchSensor));
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRVisualSensor));
@@ -45,7 +46,7 @@ void SPR_CDECL CRSdkIf::RegisterSdk(){
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CREyeController));
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRNeckController));
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRGazeController));
-	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRAttentionController));
+	// CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRAttentionController));
 
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRReachingController));
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRReachingControllers));

@@ -20,12 +20,10 @@
 
 // ボディ : クリーチャの身体
 #include "Creature/SprCRBody.h"
+#include "Creature/SprCRBodyPart.h"
 
 // CREngine : クリーチャを動かすアルゴリズム群（感覚・運動・行動決定など）の基本クラス
 #include "Creature/SprCREngine.h"
-
-// クリーチャの身体を動作させる基本コントローラ
-#include "Creature/SprCRBodyController.h"
 
 // 個々のコントローラ
 #include "Creature/SprCRGazeController.h"

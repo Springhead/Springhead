@@ -7,6 +7,7 @@
  */
 #include <Creature/CRTrajectory.h>
 #include <Creature/SprCRBody.h>
+#include <Creature/SprCRBodyPart.h>
 #include <Creature/SprCRCreature.h>
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHScene.h>

@@ -7,194 +7,9 @@
  */
 #include <Creature/CRBody.h>
 #include <Physics/PHSolid.h>
-#include <Physics/PHIKActuator.h>
 
 namespace Spr{
 
-//-------------------------------------------------------------------------------------------------
-
-size_t CRSolid::NChildObject() const {
-	if (solid) { return 1; } else { return 0; }
-}
-ObjectIf* CRSolid::GetChildObject(size_t i) {
-	if (i==0) { return solid; }
-	else { return NULL; }
-}
-bool CRSolid::AddChildObject(ObjectIf* o) {
-	solid = o->Cast();
-	return(solid!=NULL);
-}
-bool CRSolid::DelChildObject(ObjectIf* o) {
-	if (o==solid) {
-		solid = NULL;
-		return true;
-	}
-	return false;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-size_t CRIKSolid::NChildObject() const {
-	return( (solid ? 1 : 0) + (ikEndEffector ? 1 : 0) );
-}
-
-ObjectIf* CRIKSolid::GetChildObject(size_t i) {
-	if (solid) {
-		if (i==0) {
-			return solid;
-		} else if (i==1) {
-			return ikEndEffector;
-		}
-	} else {
-		if (i==0) {
-			return ikEndEffector;
-		}
-	}
-	return NULL;
-}
-
-bool CRIKSolid::AddChildObject(ObjectIf* o) {
-	PHSolidIf* so = o->Cast();
-	if (so) { solid = so; return true; }
-
-	PHIKEndEffectorIf* ikef = o->Cast();
-	if (ikef) { ikEndEffector = ikef; return true; }
-		
-	return false;
-}
-
-bool CRIKSolid::DelChildObject(ObjectIf* o) {
-	PHSolidIf* so = o->Cast();
-	if (so && so==solid) { solid = NULL; return true; }
-
-	PHIKEndEffectorIf* eef = o->Cast();
-	if (eef && eef==ikEndEffector) { ikEndEffector = NULL; return true; }
-
-	return false;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CRJoint::SetSpringRatio(double springRatio, double damperRatio) {
-	if (PHBallJointIf* bj = joint->Cast()) {
-		if (spring < 0) {
-			spring = bj->GetSpring();
-		}
-		if (damper < 0) {
-			damper = bj->GetDamper();
-		}
-		bj->SetSpring(spring*springRatio); bj->SetDamper(damper*damperRatio);
-		std::cout << "bj_ssr : " << spring * springRatio << std::endl;
-	}
-	if (PHHingeJointIf* hj = joint->Cast()) {
-		if (spring < 0) {
-			spring = hj->GetSpring();
-		}
-		if (damper < 0) {
-			damper = hj->GetDamper();
-		}
-		hj->SetSpring(spring*springRatio); hj->SetDamper(damper*damperRatio);
-		std::cout << "hj_ssr : " << spring * springRatio << std::endl;
-	}
-}
-
-size_t CRJoint::NChildObject() const {
-	if (joint) { return 1; } else { return 0; }
-}
-ObjectIf* CRJoint::GetChildObject(size_t i) {
-	if (i==0) { return joint; } else { return NULL; }
-}
-bool CRJoint::AddChildObject(ObjectIf* o) {
-	joint = o->Cast();
-	return(joint!=NULL);
-}
-bool CRJoint::DelChildObject(ObjectIf* o) {
-	if (o==joint) { joint = NULL; return true; }
-	return false;
-}
-
-//-------------------------------------------------------------------------------------------------
-
-void CRIKJoint::SetIKActuator(PHIKActuatorIf* ikAct) {
-	ikActuator = ikAct;
-	ikSpring = ikAct->GetSpring();
-	ikDamper = ikAct->GetDamper();
-}
-void CRIKJoint::SetSpringRatio(double springRatio, double damperRatio) {
-	if (PHBallJointIf* bj = joint->Cast()) {
-		if (spring < 0) {
-			spring = bj->GetSpring();
-		}
-		if (damper < 0) {
-			damper = bj->GetDamper();
-		}
-		bj->SetSpring(spring*springRatio); bj->SetDamper(damper*damperRatio);
-		DCAST(PHIKBallActuator,ikActuator)->jSpring = spring*springRatio;
-		DCAST(PHIKBallActuator,ikActuator)->jDamper = damper*damperRatio;
-		std::cout << "bj_ssr : " << spring * springRatio << std::endl;
-	}
-	if (PHHingeJointIf* hj = joint->Cast()) {
-		if (spring < 0) {
-			spring = hj->GetSpring();
-		}
-		if (damper < 0) {
-			damper = hj->GetDamper();
-		}
-		hj->SetSpring(spring*springRatio); hj->SetDamper(damper*damperRatio);
-		DCAST(PHIKHingeActuator,ikActuator)->jSpring = spring*springRatio;
-		DCAST(PHIKHingeActuator,ikActuator)->jDamper = damper*damperRatio;
-		std::cout << "hj_ssr : " << spring * springRatio << std::endl;
-	}
-}
-
-void CRIKJoint::SetIKSpringRatio(double springRatio, double damperRatio) {
-	if (ikSpring < 0) {
-		ikSpring = ikActuator->GetSpring();
-	}
-	if (ikDamper < 0) {
-		ikDamper = ikActuator->GetDamper();
-	}
-	ikActuator->SetSpring(ikSpring*springRatio); ikActuator->SetDamper(ikDamper*damperRatio);
-}
-
-size_t CRIKJoint::NChildObject() const {
-	return( (joint ? 1 : 0) + (ikActuator ? 1 : 0) );
-}
-
-ObjectIf* CRIKJoint::GetChildObject(size_t i) {
-	if (joint) {
-		if (i==0) {
-			return joint;
-		} else if (i==1) {
-			return ikActuator;
-		}
-	} else {
-		if (i==0) {
-			return ikActuator;
-		}
-	}
-	return NULL;
-}
-
-bool CRIKJoint::AddChildObject(ObjectIf* o) {
-	PHJointIf* jo = o->Cast();
-	if (jo) { joint = jo; return true; }
-
-	PHIKActuatorIf* ikact = o->Cast();
-	if (ikact) { ikActuator = ikact; return true; }
-		
-	return false;
-}
-
-bool CRIKJoint::DelChildObject(ObjectIf* o) {
-	PHJointIf* jo = o->Cast();
-	if (jo && jo==joint) { joint = NULL; return true; }
-
-	PHIKActuatorIf* act = o->Cast();
-	if (act && act==ikActuator) { ikActuator = NULL; return true; }
-
-	return false;
-}
 
 //-------------------------------------------------------------------------------------------------
 
@@ -211,6 +26,15 @@ CRBodyPartIf* CRBody::FindByLabel(UTString label) {
 		}
 	}
 	return NULL;
+}
+
+void CRBody::Step() {
+	for (size_t i=0; i<solids.size(); ++i) {
+		solids[i]->Step();
+	}
+	for (size_t i=0; i<joints.size(); ++i) {
+		joints[i]->Step();
+	}
 }
 
 Vec3d CRBody::GetCenterOfMass(){

@@ -16,6 +16,9 @@ namespace Spr{;
 // -------------------------------------------------------------------------
 
 void CRCreature::Step() {
+	for (size_t i=0; i<bodies.size();  ++i) {
+		bodies[i]->Step();
+	}
 	for (size_t i=0; i<engines.size(); ++i) {
 		if (engines[i]->IsEnabled()) {
 			engines[i]->Step();

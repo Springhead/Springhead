@@ -7,6 +7,7 @@
  */
 #include <Creature/CRNeckController.h>
 #include <Creature/SprCRBody.h>
+#include <Creature/SprCRBodyPart.h>
 #include <Creature/SprCRCreature.h>
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHIK.h>
@@ -40,17 +41,13 @@ void CRNeckController::Step(){
 		Vec3d rotUp		= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,0,-1), Vec3d(0,1,0));
 		Vec3d rot		= rotLook + 0.3*rotUp;
 
-		if (!(attractiveness <= lowerAttractiveness)) {
-			if (attractiveness < upperAttractiveness) {
-				rot = rot * ((attractiveness - lowerAttractiveness) / (upperAttractiveness - lowerAttractiveness));
-			}
+		// rot = rot * ((attractiveness - lowerAttractiveness) / (upperAttractiveness - lowerAttractiveness));
 
-			Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
-			efHead->SetTargetOrientation(qt*soHead->GetPose().Ori());
+		Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
+		efHead->SetTargetOrientation(qt*soHead->GetPose().Ori());
 
-			efHead->EnableOrientationControl(true);
-			efHead->Enable(true);
-		}
+		efHead->EnableOrientationControl(true);
+		efHead->Enable(true);
 	} else {
 		// ‚¢‚¸‚êAddChildObject‚ÅŽw’è‚·‚é‚æ‚¤‚É‚·‚×‚« (mitake, 09/07/19)
 		CRBodyIf* body = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetBody(0);

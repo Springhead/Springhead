@@ -87,7 +87,7 @@ public:
 	CRSdkIf*				crSdk;
 	CRCreatureIf*			crCreature;
 	CRBodyIf*				crBody;
-	CRBodyControllerIf*		crBodyCtl;
+	// CRBodyControllerIf*		crBodyCtl;
 
 	HISpaceNavigatorIf*		spcNav;
 	PHSolidIf*				soPointer;
@@ -140,7 +140,6 @@ public:
 		descSN.hWnd = &hWnd;
 		spcNav = hiSdk->CreateHumanInterface(HISpaceNavigatorIf::GetIfInfoStatic())->Cast();
 		spcNav->Init(&descSN);
-		// spcNav->SetPose(Posef(Vec3f(0,-1.5,0), Quaternionf()));
 		spcNav->SetPose(Posef(Vec3f(0,0,0.5), Quaternionf()));
 
 		// ウィンドウプロシージャを置き換え
@@ -165,11 +164,6 @@ public:
 		bodyGen = DBG_NEW CRBallHumanBodyGen(descBody);
 		crBody = bodyGen->Generate(crCreature);
 		DCAST(CRIKSolidIf, crBody->FindByLabel("waist"))->GetPHSolid()->SetDynamical(false);		
-
-		// Body Controllerの作成
-		CRBodyControllerDesc descBodyCtl;
-		crBodyCtl = crCreature->CreateEngine(descBodyCtl)->Cast();
-		crBodyCtl->AddChildObject(crBody);
 
 		// --- --- --- --- ---
 		// ポインタ剛体
@@ -291,8 +285,10 @@ public:
 				so->SetVelocity(Vec3d(-8,0,0));
 			}
 			if(id == ID_REACH_HAND){
-				crBodyCtl->SetTargetPos("right_hand", soPointer->GetPose().Pos());
-				crBodyCtl->SetTimeLimit("right_hand", 1.0);
+				CRIKSolidIf* is = crBody->FindByLabel("right_hand")->Cast();
+				is->SetTargetPos(soPointer->GetPose().Pos());
+				is->SetTimeLimit(1.0);
+				is->Start();
 			}
 		}
 		SampleApp::OnAction(menu, id);
@@ -404,9 +400,21 @@ void EPLoopInit(void* arg)
 		Py_INCREF(py_meshConvex);
 		PyDict_SetItemString(dict,"mesh",py_meshConvex);
 		
-		PyObject* py_bodyctl = (PyObject*)newEPCRBodyControllerIfObject(app->crBodyCtl);
-		Py_INCREF(py_bodyctl);
-		PyDict_SetItemString(dict,"crBodyCtl",py_bodyctl);
+		PyObject* py_body = (PyObject*)newEPCRBodyIfObject(app->crBody);
+		Py_INCREF(py_body);
+		PyDict_SetItemString(dict,"crBody",py_body);
+
+		PyObject* py_righthand = (PyObject*)newEPCRIKSolidIfObject(DCAST(CRIKSolidIf,app->crBody->FindByLabel("right_hand")));
+		Py_INCREF(py_righthand);
+		PyDict_SetItemString(dict,"right_hand",py_righthand);
+
+		PyObject* py_lefthand = (PyObject*)newEPCRIKSolidIfObject(DCAST(CRIKSolidIf,app->crBody->FindByLabel("left_hand")));
+		Py_INCREF(py_lefthand);
+		PyDict_SetItemString(dict,"left_hand",py_lefthand);
+
+		PyObject* py_pointer = (PyObject*)newEPPHSolidIfObject(app->soPointer);
+		Py_INCREF(py_pointer);
+		PyDict_SetItemString(dict,"pointer",py_pointer);
 
 		////ファイルの読み取り
 		ifstream file("boxstack.py");

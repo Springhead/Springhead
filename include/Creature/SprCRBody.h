@@ -14,103 +14,9 @@ namespace Spr{;
 
 //@{
 
-struct PHSolidIf;
-struct PHJointIf;
-struct PHIKActuatorIf;
-struct PHIKEndEffectorIf;
-
-// ------------------------------------------------------------------------------
-
-/// クリーチャのボディを構成する要素
-struct CRBodyPartIf : SceneObjectIf {
-	SPR_IFDEF(CRBodyPart);
-
-	/** @brief ラベル（役割を示す文字列：Handなど）の取得
-	 */
-	const char* GetLabel() const;
-
-	/** @brief ラベル（役割を示す文字列：Handなど）の設定
-	 */
-	void SetLabel(const char* str);
-};
-struct CRBodyPartDesc {
-	SPR_DESCDEF(CRBodyPart);
-	std::string	label;			///<	ラベル（役割を示す文字列：Handなど）
-};
-
-/// クリーチャのボディを構成する剛体
-struct CRSolidIf : CRBodyPartIf {
-	SPR_IFDEF(CRSolid);
-
-	/** @brief PHSolidを取得
-	 */
-	PHSolidIf* GetPHSolid();
-
-	/** @brief PHSolidを設定
-	 */
-	void SetPHSolid(PHSolidIf* so);
-};
-struct CRSolidDesc : CRBodyPartDesc {
-	SPR_DESCDEF(CRSolid);
-};
-
-/// クリーチャのボディを構成するIKエンドエフェクタ付きの剛体
-struct CRIKSolidIf : CRSolidIf {
-	SPR_IFDEF(CRIKSolid);
-
-	/** @brief IKエンドエフェクタを取得
-	 */
-	PHIKEndEffectorIf* GetIKEndEffector();
-
-	/** @brief IKエンドエフェクタを設定
-	 */
-	void SetIKEndEffector(PHIKEndEffectorIf* ikEE);
-};
-struct CRIKSolidDesc : CRSolidDesc {
-	SPR_DESCDEF(CRSolid);
-};
-
-/// クリーチャのボディを構成する関節
-struct CRJointIf : CRBodyPartIf {
-	SPR_IFDEF(CRJoint);
-
-	/** @brief PHJointを取得
-	 */
-	PHJointIf* GetPHJoint();
-
-	/** @brief PHJointを設定
-	 */
-	void SetPHJoint(PHJointIf* jo);
-
-	/** @brief バネダンパ係数の倍数を設定
-	 */
-	void SetSpringRatio(double springRatio, double damperRatio);
-};
-struct CRJointDesc : CRBodyPartDesc {
-	SPR_DESCDEF(CRJoint);
-};
-
-/// クリーチャのボディを構成するIKアクチュエータ付きの関節
-struct CRIKJointIf : CRJointIf {
-	SPR_IFDEF(CRIKJoint);
-
-	/** @brief IKアクチュエータを取得
-	 */
-	PHIKActuatorIf* GetIKActuator();
-
-	/** @brief IKアクチュエータを設定
-	 */
-	void SetIKActuator(PHIKActuatorIf* ikAct);
-
-	/** @brief バネダンパ係数の倍数を設定
-	 */
-	void SetIKSpringRatio(double springRatio, double damperRatio);
-};
-struct CRIKJointDesc : CRJointDesc {
-	SPR_DESCDEF(CRJoint);
-};
-
-// ------------------------------------------------------------------------------
+struct CRBodyPartIf;
+struct CRSolidIf;
+struct CRJointIf;
 
 /// クリーチャのボディモデルのインターフェイス
 struct CRBodyIf : SceneObjectIf{
@@ -119,6 +25,10 @@ struct CRBodyIf : SceneObjectIf{
 	/** @brief ラベルから構成要素を探す
 	*/
 	CRBodyPartIf* FindByLabel(UTString label);
+
+	/** @brief ボディに関するステップ処理を行う
+	*/
+	void Step();
 
 	/** @brief 構成剛体の数を得る
 	*/

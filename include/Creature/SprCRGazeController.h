@@ -5,10 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef SPR_CR_EYECONTROLLER_IF_H
-#define SPR_CR_EYECONTROLLER_IF_H
-
-#include <Creature/SprCREngine.h>
+#ifndef SPR_CR_GAZECONTROLLER_IF_H
+#define SPR_CR_GAZECONTROLLER_IF_H
 
 namespace Spr{;
 
@@ -41,7 +39,21 @@ struct CREyeControllerState{
 struct CREyeControllerDesc: public CREyeControllerState, public CREngineDesc{
 	SPR_DESCDEF(CREyeController);
 
+	/// 頭部剛体を指定するラベル
+	std::string labelHeadSolid;
+	/// 眼球剛体を指定するラベル
+	std::string labelLEyeSolid;
+	std::string labelREyeSolid;
+	/// 眼球関節を指定するラベル
+	std::string labelLEyeJoint;
+	std::string labelREyeJoint;
+
 	CREyeControllerDesc(){
+		labelHeadSolid = "head";
+		labelLEyeSolid = "left_eye";
+		labelREyeSolid = "right_eye";
+		labelLEyeJoint = "left_eye_joint";
+		labelREyeJoint = "right_eye_joint";
 	}
 };
 
@@ -52,10 +64,11 @@ struct CRNeckControllerIf : CREngineIf{
 	SPR_IFDEF(CRNeckController);
 
 	/** @brief 注視点を設定する
-		@param pos 注視点の３次元座標
-		@param vel 注視点の移動速度ベクトル
+		@param pos   注視点の３次元座標
+		@param vel   注視点の移動速度ベクトル
+		@param ratio 運動割合（1:完全に対象の方を向く 0:全く動かない）
 	*/
-	void LookAt(Vec3f pos, Vec3f vel, float attractiveness);
+	void LookAt(Vec3f pos, Vec3f vel, float ratio);
 };
 
 /// 首運動コントローラのステート
@@ -66,14 +79,11 @@ struct CRNeckControllerState{
 struct CRNeckControllerDesc: public CRNeckControllerState, public CREngineDesc{
 	SPR_DESCDEF(CRNeckController);
 
-	/// 首を動かしはじめるAttractivenessの閾値
-	float lowerAttractiveness;
-	/// 首を完全に対象に向けるAttractivenessの閾値
-	float upperAttractiveness;
+	/// 頭部剛体を指定するラベル
+	std::string labelHeadSolid;
 
 	CRNeckControllerDesc(){
-		lowerAttractiveness = -1.0;
-		upperAttractiveness =  0.0;
+		labelHeadSolid = "head";
 	}
 };
 
@@ -103,22 +113,6 @@ struct CRGazeControllerDesc: public CRGazeControllerState, public CREngineDesc{
 	}
 };
 
-// ------------------------------------------------------------------------------
-
-/// 注意コントローラのインタフェース
-struct CRAttentionControllerIf : CREngineIf{
-	SPR_IFDEF(CRAttentionController);
-
-};
-
-/// 注意コントローラのデスクリプタ
-struct CRAttentionControllerDesc : public CREngineDesc{
-	SPR_DESCDEF(CRAttentionController);
-
-	CRAttentionControllerDesc(){
-	}
-};
-
 }
 
-#endif // SPR_CR_EYECONTROLLER_IF_H
+#endif // SPR_CR_GAZECONTROLLER_IF_H

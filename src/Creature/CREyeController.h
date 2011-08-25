@@ -8,16 +8,13 @@
 #ifndef CREYECONTROLLER_H
 #define CREYECONTROLLER_H
 
-#include <Creature/CREngine.h>
-#include <Creature/SprCRGazeController.h>
+#include <Springhead.h>
+
+#include <Foundation/Object.h>
+#include "CREngine.h"
 
 //@{
 namespace Spr{;
-
-struct PHSolidIf;
-struct PHHingeJointIf;
-struct PHBallJointIf;
-
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief サッケード用コントローラ(CREyeControllerが内部で使う、非APIクラス)
 */
@@ -118,15 +115,11 @@ public:
 /** @brief 眼球コントローラの物理レイヤ(CREyeControllerが内部で使う、非APIクラス)
 */
 class CRPhysicalEye {
-private:
-	/// 制御対象のクリーチャ
-	CRCreatureIf* creature;
-
+public:
 	/// 制御に使用する剛体
 	PHSolidIf *soLEye, *soREye, *soHead;
 
 	/// 制御に使用する関節
-	PHHingeJointIf *joLEyeX, *joLEyeY, *joREyeX, *joREyeY;
 	PHBallJointIf  *joLEye,  *joREye;
 
 	/// 視標位置
@@ -134,7 +127,6 @@ private:
 
 	/** @brief 片目に関して制御
 	*/
-	void Control(PHHingeJointIf* joX, PHHingeJointIf* joY, Vec2d angle);
 	void Control(PHBallJointIf*  jo, Vec2d angle);
 
 	/** @brief (0,0,-1)と成す角を、右手系でX軸・Y軸周りの回転として求める
@@ -146,15 +138,8 @@ private:
 public:
 	CRPhysicalEye() {
 		soLEye = soREye = soHead = NULL;
-		joLEyeX = joLEyeY = joREyeX = joREyeY = NULL;
 		joLEye = joREye = NULL;
 	}
-
-	void SetCreature(CRCreatureIf* c) { creature = c; }
-
-	/** @brief 初期化を実行する
-	*/
-	void Init();
 
 	/** @brief ３次元空間内の視標位置を設定する（絶対位置）
 	*/
@@ -211,6 +196,9 @@ private:
 	/// サッケードコントローラ
 	CRSaccadeController saccadeCtrl;
 
+	/// 制御対象のボディ
+	CRBodyIf* body;
+
 public:
 	SPR_OBJECTDEF(CREyeController);
 	ACCESS_DESC_STATE(CREyeController);
@@ -219,10 +207,12 @@ public:
 	CREyeController(const CREyeControllerDesc& desc) 
 		: CREyeControllerDesc(desc) 
 	{
-		// 従来ここで↓こんな感じのことをやっていたが今はたぶんこれでは動かない
-		// ので別の場所に移す必要がある（09/06/20 mitake）
-		// physicalEye->SetCreature(GetScene()->Cast());
+		body = NULL;
 	}
+
+	virtual bool		AddChildObject(ObjectIf* o);
+	virtual ObjectIf*	GetChildObject(size_t pos);
+	virtual	size_t		NChildObject()const;
 
 	/** @brief 初期化を実行する
 	*/
