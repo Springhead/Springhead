@@ -375,7 +375,7 @@ FWBoneObjectIf* FWStructure::GetBone(int n){
 	return NULL;
 }
 
-FWBoneObjectIf* FWStructure::GetBone(char* n){
+FWBoneObjectIf* FWStructure::GetBone(const char* n){
 	std::string name = n;
 	for(int i=0; i < (int)fwBones.size(); i++){
 		std::string getName = fwBones[i]->GetName();

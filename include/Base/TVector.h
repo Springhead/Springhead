@@ -344,7 +344,7 @@ public:
 	///	ベクトルのノルム(大きさ)の2乗を返す.
 	element_type square() const { return PTM::dot(exp(),exp()); }
 	///	ベクトルのノルム(大きさ)を返す.
-	element_type norm() const { return element_type( sqrt(square()) ); }
+	element_type norm() const { return element_type( sqrt((double)square()) ); }
 	///	単位ベクトルにする．
 	void unitize(){ div(norm()); }
 	///	クリッピングする(bとeを頂点とする矩形内に収まるようにする).

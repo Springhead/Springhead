@@ -28,10 +28,11 @@ using namespace std;
 
 namespace Spr{
 
+%feature("not_newable","1");
 	class IfInfo{};
 	class ostream{};
 	class istream{};
-	class UTString{};
+%feature("not_newable","");
 
 	//クリティカルセクション
 	UTCriticalSection EPCriticalSection;

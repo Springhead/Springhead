@@ -91,6 +91,11 @@ if __name__ == "__main__":
 	#soList = scene.GetSolids()
 	
 	box = [None] * 20
+	
+def RHMove(pos = Vec3d(0,0,1)):
+	crBodyCtl.SetTargetPos("right_hand",pos)
+	crBodyCtl.SetTimeLimit("right_hand", 1.0)
+	crBodyCtl.Restart("right_hand")
 
 
 right_hand.SetViewArea(Posed(1,0,0,0,0,0,0), 2, 2)

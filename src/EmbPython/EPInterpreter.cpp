@@ -63,25 +63,18 @@ void EPInterpreter::Initialize()
 
 	//パイソン初期化
 	Py_Initialize();
-
-	//	_SprPyモジュールの登録
-	//PyObject*m = PyInit__SprPy();
-	//PyObject *modules = PyImport_GetModuleDict();
-	//if (PyDict_SetItemString(modules, "_SprPy", m) != 0) {
-	//	Py_DECREF(m);
-	//}
-
-
-	////手作りクラスの初期化
-	initUtility();
+	
 
 	////モジュール読み込み
+	initUtility();
 	initFoundation();
+	initFileIO();
 	initCollision();
 	initPhysics();
 	initGraphics();
 	initCreature();
-	//initFramework();
+	initHumanInterface();
+	initFramework();
 }
 
 void EPInterpreter::Run(void* arg)

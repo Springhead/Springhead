@@ -24,7 +24,7 @@ typedef enum FWInteractMode{
 	VIRTUAL_COUPLING,
 	GRAB_COUPLING,
 	IMPULSE
-}IAMode;
+};
 
 typedef enum FWHapticMode{
 	PENALTY3D,
@@ -32,7 +32,7 @@ typedef enum FWHapticMode{
 	CONSTRAINT,
 	PROXY,
 	PROXYSIMULATION
-}HMode;
+};
 
 struct FWInteractSceneDesc{
 public:

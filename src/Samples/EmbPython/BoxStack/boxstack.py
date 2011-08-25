@@ -48,7 +48,7 @@ def Shower(box = None):
 			time.sleep(0.05)
 	return box 
 
-	
+
 def MoveRnd(so):
 	start = time.time()
 	span = 5	#5sec

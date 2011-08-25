@@ -14,6 +14,9 @@
 #define SPR_DLL					
 //---
 %ignore Spr::FWGraphicsAdaptee::Init;
+%ignore Spr::FWInteractSceneIf::GetIAAdaptee; //APIの不整合がありコンパイル不可なので
+%ignore Spr::FWSceneIf::GetObjects; // **が出てくるので未対応
+%ignore Spr::FWSdkIf::GetFISdk; //FileIO SDKは未対応。。。これから追加するかも
 
 //--
 %begin%{
@@ -21,9 +24,11 @@
 #include "../../include/Python/Python.h"
 #include "../../include/EmbPython/SprEPUtility.h"
 #include "../../include/EmbPython/SprEPFoundation.h"
+#include "../../include/EmbPython/SprEPFileIO.h"
 #include "../../include/EmbPython/SprEPPhysics.h"
 #include "../../include/EmbPython/SprEPGraphics.h"
 #include "../../include/EmbPython/SprEPHumanInterface.h"
+#include "../../include/Framework/SprFWBone.h"
 %}
 //--  
 %include "../../include/Framework/SprFWBone.h"

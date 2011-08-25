@@ -386,33 +386,33 @@ void EPLoopInit(void* arg)
 		//Py_INCREF(fwSdk);
 		//PyDict_SetItemString(dict,"sdk",fwSdk);
 
-		PyObject* py_sdk = (PyObject*)newEPPHSdkIfObject(phSdk);
+		PyObject* py_sdk = (PyObject*)newEPPHSdkIf(phSdk);
 
-		PyObject* py_scene = (PyObject*)newEPPHSceneIfObject(scene);
+		PyObject* py_scene = (PyObject*)newEPPHSceneIf(scene);
 		Py_INCREF(py_scene);
 		PyDict_SetItemString(dict,"scene",py_scene);
 
-		PyObject* py_desc = (PyObject*)newEPPHSolidDescObject(desc);
+		PyObject* py_desc = (PyObject*)newEPPHSolidDesc(desc);
 		Py_INCREF(py_desc);
 		PyDict_SetItemString(dict,"desc",py_desc);
 
-		PyObject* py_meshConvex = (PyObject*)newEPCDConvexMeshIfObject(mesh);
+		PyObject* py_meshConvex = (PyObject*)newEPCDConvexMeshIf(mesh);
 		Py_INCREF(py_meshConvex);
 		PyDict_SetItemString(dict,"mesh",py_meshConvex);
 		
-		PyObject* py_body = (PyObject*)newEPCRBodyIfObject(app->crBody);
+		PyObject* py_body = (PyObject*)newEPCRBodyIf(app->crBody);
 		Py_INCREF(py_body);
 		PyDict_SetItemString(dict,"crBody",py_body);
 
-		PyObject* py_righthand = (PyObject*)newEPCRIKSolidIfObject(DCAST(CRIKSolidIf,app->crBody->FindByLabel("right_hand")));
+		PyObject* py_righthand = (PyObject*)newEPCRIKSolidIf(DCAST(CRIKSolidIf,app->crBody->FindByLabel("right_hand")));
 		Py_INCREF(py_righthand);
 		PyDict_SetItemString(dict,"right_hand",py_righthand);
 
-		PyObject* py_lefthand = (PyObject*)newEPCRIKSolidIfObject(DCAST(CRIKSolidIf,app->crBody->FindByLabel("left_hand")));
+		PyObject* py_lefthand = (PyObject*)newEPCRIKSolidIf(DCAST(CRIKSolidIf,app->crBody->FindByLabel("left_hand")));
 		Py_INCREF(py_lefthand);
 		PyDict_SetItemString(dict,"left_hand",py_lefthand);
 
-		PyObject* py_pointer = (PyObject*)newEPPHSolidIfObject(app->soPointer);
+		PyObject* py_pointer = (PyObject*)newEPPHSolidIf(app->soPointer);
 		Py_INCREF(py_pointer);
 		PyDict_SetItemString(dict,"pointer",py_pointer);
 

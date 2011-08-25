@@ -21,6 +21,7 @@ for %%f in (%API_INCLUDE%/%MODULE%/*.h) do set SRCINTF=!SRCINTF! %API_INCLUDE%/%
 rem .iファイルを手書きするときはここにモジュール名を追加
 if "%MODULE%" == "Utility" goto swig
 if "%MODULE%" == "Framework" goto swig
+if "%MODULE%" == "Physics" goto swig
 
 :makeif
 echo ========================= MODULE %MODULE% =============================
@@ -102,6 +103,10 @@ echo %%ignore Spr::DebugCSV;>> %MODULE%.i
 echo //--->>%MODULE%.i
 exit /b
 
+:Extend_FileIO
+echo //--->>%MODULE%.i
+exit /b
+
 :Extend_Collision
 echo //--->>%MODULE%.i
 echo %%include "Utility/EPObject.i">>%MODULE%.i
@@ -121,6 +126,7 @@ echo %%ignore Spr::PHJoint1DIf::GetRange;>> %MODULE%.i
 
 echo %%include "Utility/EPObject.i">>%MODULE%.i
 echo EXTEND_NEW(PHSolidDesc)>>%MODULE%.i
+echo APPEND_CONSTRUCTOR(PHSolidState)>>%MODULE%.i
 echo //--->>%MODULE%.i
 exit /b
 
@@ -173,5 +179,10 @@ exit /b
 
 :Extend_HumanInterface
 echo //--->>%MODULE%.i
-exit /b
+echo %%ignore Spr::DVKeyMouseIf::GetMousePosition; //参照渡しして値を入れてもらうような関数をどうにかする>> %MODULE%.i
+echo %%ignore Spr::HITrackballIf::GetAngle; //同上>> %MODULE%.i
+echo %%ignore Spr::HITrackballIf::GetDistanceRange; //同上>> %MODULE%.i
+echo %%ignore Spr::HITrackballIf::GetLatitudeRange; //同上>> %MODULE%.i
+echo %%ignore Spr::HITrackballIf::GetLongitudeRange; //同上>> %MODULE%.i
 
+exit /b
