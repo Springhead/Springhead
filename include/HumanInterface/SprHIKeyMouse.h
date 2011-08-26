@@ -48,7 +48,12 @@ struct DVKeySt{
  **/	
 struct DVKeyCode{
 	enum{
+		BACKSPACE				= 8,
+		TAB						= 9,
+		CR						= 13,
+		ENTER					= CR,
 		ESC						= 27,
+		DELETE					= 127,
 		OFFSET					= 256,
 		F1, 
 		F2,
