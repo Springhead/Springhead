@@ -2,6 +2,8 @@
 #define SPREPCAST_H
 #include <Python.h>
 #include <string>
+#include <map>
+#include "SprEPObject.h"
 
 double PyObject_asDouble(PyObject* obj);
 
@@ -40,4 +42,10 @@ public:
 #define CONVERT_WCHARSTR_TO_CHARSTR(wcp) ConvertStr(wcp).GetBuffer()
 #define CONVERT_WCHARSTR_TO_STRING(wcp) ConvertStr(wcp).GetString()
 
+//runtime downcast—p
+typedef void (*EPCastfunc)(EPObject* obj);
+typedef std::map<std::string,EPCastfunc> EPCastfuncMap;
+extern EPCastfuncMap EPObject_CastfuncMap;
+void EPObject_RegistCastfunc(std::string,EPCastfunc);
+void EPObject_RuntimeDCast(EPObject* obj,std::string cls);
 #endif

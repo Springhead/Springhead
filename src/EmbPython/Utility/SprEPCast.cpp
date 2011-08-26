@@ -77,3 +77,18 @@ const char* ConvertStr::GetBuffer()
 {
 	return buff;
 }
+
+
+EPCastfuncMap EPObject_CastMap;
+
+void EPObject_RegistCastfunc(string cls,EPCastfunc func)
+{
+	EPObject_CastMap.insert(pair<string,EPCastfunc>(cls,func));
+}
+
+void EPObject_RuntimeDCast(EPObject* obj,string cls)
+{
+	EPCastfuncMap::iterator it = EPObject_CastMap.find(cls);
+	if(it != EPObject_CastMap.end()) 
+		it->second(obj);
+}
