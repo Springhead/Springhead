@@ -9,6 +9,7 @@
 	bool Init(const void* desc){	return	base::Init(desc);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HIDeviceIf(base)	\
+	void SetName(const char* n){	base::SetName(n);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HIRealDeviceIf(base)	\
 	bool Init(){	return	base::Init();}	\
