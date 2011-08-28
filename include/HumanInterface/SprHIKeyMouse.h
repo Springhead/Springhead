@@ -45,7 +45,7 @@ struct DVKeySt{
 	};
 };
 /** ascii以外の特殊キーコード．値はGLUTの特殊キーコードに256を加算したもの．
- **/	
+ **/
 struct DVKeyCode{
 	enum{
 		BACKSPACE				= 8,
@@ -53,7 +53,7 @@ struct DVKeyCode{
 		CR						= 13,
 		ENTER					= CR,
 		ESC						= 27,
-		DELETE					= 127,
+		DEL						= 127,
 		OFFSET					= 256,
 		F1, 
 		F2,
