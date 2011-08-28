@@ -23,6 +23,7 @@ Springhead2/src/Samples/PyCreature
 #include <EmbPython/EmbPython.h>
 
 #include <vector>
+#include <sstream>
 #include <Creature/CRBodyGenerator/CRBallHumanBodyGen.h>
 #include "windows.h"
 
@@ -145,6 +146,23 @@ public:
 		// ウィンドウプロシージャを置き換え
 		OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
+
+		// メニューのデフォルトを切り替え
+		menus[MENU_DRAW][ID_DRAW_AXIS].enabled = false;
+		fwScene->EnableRenderAxis(false, false, false);
+
+		menus[MENU_DRAW][ID_DRAW_FORCE].enabled = false;
+		fwScene->EnableRenderForce(false, false);
+
+		menus[MENU_DRAW][ID_DRAW_CONTACT].enabled = false;
+		fwScene->EnableRenderContact(false);
+
+		menus[MENU_DRAW][ID_DRAW_WIREFRAME].enabled = false;
+		menus[MENU_DRAW][ID_DRAW_SOLID].enabled = true;
+		fwScene->SetRenderMode(menus[MENU_DRAW][ID_DRAW_SOLID].enabled, menus[MENU_DRAW][ID_DRAW_WIREFRAME].enabled);
+
+		// カメラの初期位置を設定
+		GetCurrentWin()->GetTrackball()->SetPosition(Vec3d(2,0,0));
 	}
 
 	virtual void BuildScene(){
