@@ -1,10 +1,6 @@
 #ifndef HISPACENAVIGATOR_H
 #define HISPACENAVIGATOR_H
 
-#ifdef _WIN32
- #include <windows.h>
-#endif
-
 #include <HumanInterface/HIBase.h>
 
 namespace Spr{;
@@ -27,7 +23,7 @@ public:
 
 private:
 	Posef currPose;
-	HWND  hWnd;
+	void *hWnd;
 
 	void Translate(Vec3f trn);
 	void Rotate(Vec3f rot);

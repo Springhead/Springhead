@@ -1,5 +1,9 @@
 #include <HumanInterface/HISpaceNavigator.h>
 
+#ifdef _WIN32
+ #include <windows.h>
+#endif
+
 #include <boost/scoped_array.hpp>
 
 #ifdef USE_HDRSTOP
@@ -11,7 +15,8 @@
 namespace Spr {;
 
 bool HISpaceNavigator::Init(const void* desc) {
-	hWnd = (*(HWND*)(((HISpaceNavigatorDesc*)desc)->hWnd));
+	// hWnd = (*(HWND*)(((HISpaceNavigatorDesc*)desc)->hWnd));
+	hWnd = ((HISpaceNavigatorDesc*)desc)->hWnd;
 
 	currPose = Posed();
 
@@ -20,7 +25,7 @@ bool HISpaceNavigator::Init(const void* desc) {
 	UINT uiNumDevices = sizeof(sRawInputDevices) / sizeof(sRawInputDevices[0]);
 	UINT cbSize = sizeof(sRawInputDevices[0]);
 	for (size_t i=0; i<uiNumDevices; ++i) {
-		sRawInputDevices[i].hwndTarget = hWnd;
+		sRawInputDevices[i].hwndTarget = (  *((HWND*)hWnd)  );
 	}
 	::RegisterRawInputDevices(sRawInputDevices, uiNumDevices, cbSize);
 
