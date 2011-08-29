@@ -434,10 +434,23 @@ void EPLoopInit(void* arg)
 		Py_INCREF(py_pointer);
 		PyDict_SetItemString(dict,"pointer",py_pointer);
 
-		////ファイルの読み取り
-		ifstream file("boxstack.py");
+
+		//// creatureのループを別スレッドで開始
+		ifstream file("creature.py");
 		string data("");
 		string buff;
+
+		while( file && getline(file,buff) )
+			data += buff + string("\n");
+		file.close();
+
+		PyRun_SimpleString(data.c_str());
+
+
+
+		////ファイルの読み取り
+		file = ifstream("boxstack.py");
+		data = "";
 
 		while( file && getline(file,buff) )
 			data += buff + string("\n");

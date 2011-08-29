@@ -7,6 +7,7 @@ import sys
 import time
 import math
 
+
 print("def Pick(PHSolidIf,Vec3d)")
 def Pick(so,vec):
 	so.SetFramePosition( vec )
@@ -94,7 +95,7 @@ if __name__ == "__main__":
 
 	right_hand.SetViewArea(Posed(1,0,0,0,0,0,0), 2, 2)
 
-	if False:
+	if True:
 		last_pos = Vec3d(0,0,0)
 		dtInt = 0
 		dt = scene.GetTimeStep()
