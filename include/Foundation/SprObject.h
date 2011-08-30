@@ -147,6 +147,16 @@ public:																	\
 		return cls##If::GetIfInfoStatic();								\
 	}																	\
 
+#define SPR_DESCDEF_VIRTUAL(cls)										\
+public:																	\
+	const static IfInfo* GetIfInfo(){									\
+		return cls##If::GetIfInfoStatic();								\
+	}																	\
+	virtual const IfInfo* GetIfInfoVirtual(){							\
+		return cls##If::GetIfInfoStatic();								\
+	}																	\
+
+
 #else
 #define SPR_DESCDEF(cls)
 #endif
