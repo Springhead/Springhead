@@ -7,8 +7,6 @@ import sys
 import time
 import math
 
-test = Vec3d(2,1,2)
-
 print("def Pick(PHSolidIf,Vec3d)")
 def Pick(so,vec):
 	so.SetFramePosition( vec )
@@ -26,7 +24,7 @@ print("def Reload()")
 def Reload(g = globals() , l = locals()):
 	execfile('test.py',g,l)
 
-print ("def Shower( box = None)")
+
 def Shower(box = None):
 	if not box:
 		box = [None] * 20
@@ -50,7 +48,7 @@ def Shower(box = None):
 			time.sleep(0.05)
 	return box 
 
-	
+
 def MoveRnd(so):
 	start = time.time()
 	span = 5	#5sec
@@ -94,12 +92,4 @@ if __name__ == "__main__":
 	
 	box = [None] * 20
 
-
-
-def RHMove(pos = Vec3d(0,0,1)):
-	crBodyCtl.SetTargetPos("right_hand",pos)
-	crBodyCtl.SetTimeLimit("right_hand", 1.0)
-	crBodyCtl.Restart("right_hand")
-
-
-
+	
