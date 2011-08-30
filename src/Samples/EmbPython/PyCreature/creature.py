@@ -11,13 +11,13 @@ import threading
 
 
 class Creature(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-        self.i = 0
+	def __init__(self):
+		threading.Thread.__init__(self)
+		self.i = 0
 
-    def run(self):
-        print("Start creature thread")
-        #time.sleep(5)
+	def run(self):
+		print("Start creature thread")
+		#time.sleep(5)
 
 		right_hand.SetViewArea(Posed(1,0,0,0,0,0,0), 2, 2)
 
