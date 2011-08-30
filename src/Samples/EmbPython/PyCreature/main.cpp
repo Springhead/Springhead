@@ -88,7 +88,9 @@ public:
 	CRSdkIf*				crSdk;
 	CRCreatureIf*			crCreature;
 	CRBodyIf*				crBody;
-	// CRBodyControllerIf*		crBodyCtl;
+
+	PHSceneIf*				umvelt;
+	FWSceneIf*				fwUmvelt;
 
 	HISpaceNavigatorIf*		spcNav;
 	PHSolidIf*				soPointer;
@@ -172,6 +174,20 @@ public:
 		crSdk = CRSdkIf::CreateSdk();
 
 		// --- --- --- --- ---
+		// 環世界シーン
+		PHSceneDesc descScene; phScene->GetDesc(&descScene);
+		fwUmvelt = fwSdk->CreateScene(descScene);
+		umvelt   = fwUmvelt->GetPHScene();
+
+		/*{
+			PHSolidDesc descSolid; descSolid.dynamical = false;
+			PHSolidIf* so = umvelt->CreateSolid(descSolid);
+			CDBoxDesc descBox;
+			descBox.boxsize = Vec3d(1,1,1);
+			so->AddShape(phSdk->CreateShape(descBox));
+		}*/
+
+		// --- --- --- --- ---
 		// クリーチャの作成
 		CRCreatureDesc descCreature;
 		crCreature = crSdk->CreateCreature(descCreature);
@@ -231,6 +247,9 @@ public:
 		GRCameraDesc cd;
 		render->SetCamera(cd);
 		SampleApp::OnDraw(render);
+
+		fwUmvelt->SetRenderMode(false, true);
+		fwUmvelt->DrawPHScene(render);
 
 		std::ostringstream sstr;
 		sstr << "NObj = " << phScene->NSolids();
@@ -434,6 +453,9 @@ void EPLoopInit(void* arg)
 		Py_INCREF(py_pointer);
 		PyDict_SetItemString(dict,"pointer",py_pointer);
 
+		PyObject* py_umvelt = (PyObject*)newEPPHSceneIf(app->umvelt);
+		Py_INCREF(py_umvelt);
+		PyDict_SetItemString(dict,"umvelt",py_umvelt);
 
 		//// creatureのループを別スレッドで開始
 		ifstream file("creature.py");
@@ -445,8 +467,6 @@ void EPLoopInit(void* arg)
 		file.close();
 
 		PyRun_SimpleString(data.c_str());
-
-
 
 		////ファイルの読み取り
 		file = ifstream("boxstack.py");
