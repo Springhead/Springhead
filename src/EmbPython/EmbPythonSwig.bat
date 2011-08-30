@@ -18,13 +18,14 @@ set PATH=..\..\bin;..\..\bin\swig
 set SRCINTF=
 for %%f in (%API_INCLUDE%/%MODULE%/*.h) do set SRCINTF=!SRCINTF! %API_INCLUDE%/%MODULE%/%%f
 
+echo ========================= MODULE %MODULE% =============================
+
 rem .iファイルを手書きするときはここにモジュール名を追加
 if "%MODULE%" == "Utility" goto swig
 if "%MODULE%" == "Framework" goto swig
 if "%MODULE%" == "Physics" goto swig
 
 :makeif
-echo ========================= MODULE %MODULE% =============================
 echo Create .i file part
 echo #	Do not edit. RunSwig.bat will update this file.> %MODULE%.i
 echo #pragma SWIG nowarn=-401-325>> %MODULE%.i
@@ -111,6 +112,11 @@ exit /b
 echo //--->>%MODULE%.i
 echo %%include "Utility/EPObject.i">>%MODULE%.i
 echo EXTEND_NEW(PHMaterial)>>%MODULE%.i
+
+echo //%%extend Spr::CDShapeDesc{>>%MODULE%.i
+echo //const IfInfo* GetIfInfo();>>%MODULE%.i
+echo //}>>%MODULE%.i
+
 echo //--->>%MODULE%.i
 exit /b
 
