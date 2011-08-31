@@ -116,7 +116,7 @@ bool HISpaceNavigator::PreviewMessage(void *m) {
 }
 
 void HISpaceNavigator::Translate(Vec3f trn) {
-	currPose.Pos() += Quaterniond::Rot(Rad(90), 'x') * (trn * 0.0001);
+	currPose.Pos() += Quaterniond::Rot(Rad(90), 'x') * (trn * 0.001);
 }
 
 void HISpaceNavigator::Rotate(Vec3f rot) {
