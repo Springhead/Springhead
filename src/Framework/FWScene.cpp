@@ -272,6 +272,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 	}
 
 	// ƒOƒŠƒbƒh
+	render->SetLighting(false);
 	if(renderGridX){
 		render->PushModelMatrix();
 		render->MultModelMatrix(Affinef::Trn(gridOffset.x, 0.0f, 0.0f));
@@ -295,7 +296,8 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		render->DrawGrid(gridSize.z, gridSlice.z);
 		render->PopModelMatrix();
 	}
-	
+	render->SetLighting(true);
+
 	// „‘Ì
 	PHSolidIf **solids = phScene->GetSolids();
 	for(int i = 0; i < phScene->NSolids(); ++i){

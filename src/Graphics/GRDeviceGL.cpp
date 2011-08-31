@@ -468,7 +468,6 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 		glListBase(fontBase);											// 	ディスプレイリストを渡す.	
 		glCallLists(str.size(), GL_UNSIGNED_BYTE, str.c_str());		// 文字列を渡す.
 		glPopAttrib();
-		return;
 	}
 	else{
 		glColor3f(1.0f, 1.0f, 1.0f);		// 白限定（暫定）
