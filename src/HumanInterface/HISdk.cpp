@@ -10,6 +10,7 @@
 #include <HumanInterface/DRKeyMouseGLUT.h>
 #include <HumanInterface/DRUsb20Simple.h>
 #include <HumanInterface/DRUsb20Sh4.h>
+#include <HumanInterface/DRCyUsb20Sh4.h>
 #include <HumanInterface/HISpidar.h>
 #include <HumanInterface/HINovintFalcon.h>
 #include <HumanInterface/HISpaceNavigator.h>
@@ -36,6 +37,7 @@ void SPR_CDECL HISdkIf::RegisterSdk(){
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRKeyMouseGLUT));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRUsb20Simple));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRUsb20Sh4));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRCyUsb20Sh4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidar4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidar4D));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidarG));

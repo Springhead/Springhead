@@ -42,6 +42,13 @@ struct DRUsb20Sh4Desc: public DRUsb20SimpleDesc{
 	
 	DRUsb20Sh4Desc(){ channel = 0; }
 };
+struct DRCyUsb20Sh4If : public DRUsb20Sh4If{
+	SPR_IFDEF(DRCyUsb20Sh4);
+};
+struct DRCyUsb20Sh4Desc:public DRUsb20Sh4Desc{
+	SPR_DESCDEF(DRCyUsb20Sh4);
+};
+
 
 //@}
 
