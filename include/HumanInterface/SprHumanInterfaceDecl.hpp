@@ -49,6 +49,8 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_DRUsb20Sh4If(base)	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_DRCyUsb20Sh4If(base)	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_DVJoyStickIf(base)	\
 	void AddHandler(Spr::DVJoyStickHandler* h){	base::AddHandler(h);}	\
 	void RemoveHandler(Spr::DVJoyStickHandler* h){	base::RemoveHandler(h);}	\

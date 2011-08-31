@@ -14,6 +14,12 @@ int __cdecl main(){
 		usb20Sh4Desc.channel = i;
 		sdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
 	}
+	DRCyUsb20Sh4Desc cyDesc;
+	for(int i=0; i<10; ++i){
+		cyDesc.channel = i;
+		sdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+	}
+
 	sdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 	sdk->Print(DSTR);
 
