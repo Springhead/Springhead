@@ -44,8 +44,8 @@ public:
 
 //runtime downcast—p
 typedef void (*EPCastfunc)(EPObject* obj);
-typedef std::map<std::string,EPCastfunc> EPCastfuncMap;
+typedef std::map<const IfInfo*,EPCastfunc> EPCastfuncMap;
 extern EPCastfuncMap EPObject_CastfuncMap;
-void EPObject_RegistCastfunc(std::string,EPCastfunc);
-void EPObject_RuntimeDCast(EPObject* obj,std::string cls);
+void EPObject_RegistCastfunc(const IfInfo*,EPCastfunc);
+void EPObject_RuntimeDCast(EPObject* obj,const IfInfo* ifinfo);
 #endif

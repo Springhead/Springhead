@@ -16,7 +16,6 @@
 %ignore Spr::FWGraphicsAdaptee::Init;
 %ignore Spr::FWInteractSceneIf::GetIAAdaptee; //APIの不整合がありコンパイル不可なので
 %ignore Spr::FWSceneIf::GetObjects; // **が出てくるので未対応
-%ignore Spr::FWSdkIf::GetFISdk; //FileIO SDKは未対応。。。これから追加するかも
 
 //--
 %begin%{
