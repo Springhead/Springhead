@@ -276,6 +276,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		render->PushModelMatrix();
 		render->MultModelMatrix(Affinef::Trn(gridOffset.x, 0.0f, 0.0f));
 		render->MultModelMatrix(Affinef::Rot(Rad(90.0f), 'y'));
+		render->SetMaterial(matGrid.x);
 		render->DrawGrid(gridSize.x, gridSlice.x);
 		render->PopModelMatrix();
 	}
@@ -283,12 +284,14 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		render->PushModelMatrix();
 		render->MultModelMatrix(Affinef::Trn(0.0f, gridOffset.y, 0.0f));
 		render->MultModelMatrix(Affinef::Rot(Rad(90.0f), 'x'));
+		render->SetMaterial(matGrid.y);
 		render->DrawGrid(gridSize.y, gridSlice.y);
 		render->PopModelMatrix();
 	}
 	if(renderGridZ){
 		render->PushModelMatrix();
 		render->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, gridOffset.z));
+		render->SetMaterial(matGrid.z);
 		render->DrawGrid(gridSize.z, gridSlice.z);
 		render->PopModelMatrix();
 	}
