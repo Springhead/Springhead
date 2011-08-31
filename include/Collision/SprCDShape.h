@@ -149,7 +149,7 @@ struct PHMaterial{
 
 ///	形状のディスクリプタ(基本クラス)
 struct CDShapeDesc{
-	SPR_DESCDEF_VIRTUAL(CDShape);
+	SPR_DESCDEF(CDShape);
 	PHMaterial material;	///<	材質
 };
 
@@ -164,7 +164,7 @@ struct CDConvexMeshIf: public CDConvexIf{
 };
 /**	凸形状のメッシュのディスクリプタ	*/	
 struct CDConvexMeshDesc: public CDShapeDesc{
-	SPR_DESCDEF_VIRTUAL(CDConvexMesh);
+	SPR_DESCDEF(CDConvexMesh);
 	CDConvexMeshDesc():CDShapeDesc(){}
 	std::vector<Vec3f> vertices;	///<	頂点の座標
 };
@@ -175,7 +175,7 @@ struct CDConvexMeshInterpolateIf: public CDConvexMeshIf{
 };
 /**	凸形状のメッシュのディスクリプタ	*/	
 struct CDConvexMeshInterpolateDesc: public CDConvexMeshDesc{
-	SPR_DESCDEF_VIRTUAL(CDConvexMeshInterpolate);
+	SPR_DESCDEF(CDConvexMeshInterpolate);
 	CDConvexMeshInterpolateDesc():CDConvexMeshDesc(){}
 };
 
@@ -188,7 +188,7 @@ struct CDSphereIf: public CDConvexIf{
 };	
 /** 球体のディスクリプタ　*/
 struct CDSphereDesc: public CDShapeDesc{
-	SPR_DESCDEF_VIRTUAL(CDSphere);
+	SPR_DESCDEF(CDSphere);
 	CDSphereDesc():CDShapeDesc(){
 		radius = 1.0f;
 	}
@@ -205,7 +205,7 @@ struct CDCapsuleIf: public CDConvexIf{
 };	
 /** カプセルのディスクリプタ　*/
 struct CDCapsuleDesc: public CDShapeDesc{
-	SPR_DESCDEF_VIRTUAL(CDCapsule);
+	SPR_DESCDEF(CDCapsule);
 	CDCapsuleDesc():CDShapeDesc(){
 		radius = 1.0f;
 		length = 1.0f;
@@ -225,7 +225,7 @@ struct CDRoundConeIf: public CDConvexIf{
 };	
 /** CDRoundConeIfのディスクリプタ　*/
 struct CDRoundConeDesc: public CDShapeDesc{
-	SPR_DESCDEF_VIRTUAL(CDRoundCone);
+	SPR_DESCDEF(CDRoundCone);
 	CDRoundConeDesc():CDShapeDesc(){
 		radius = Vec2f(1.2f, 0.8f);
 		length = 1.0f;
@@ -244,7 +244,7 @@ struct CDBoxIf: public CDConvexIf{
 };
 /** 直方体のディスクリプタ */
 struct CDBoxDesc: public CDShapeDesc{
-	SPR_DESCDEF_VIRTUAL(CDBox);
+	SPR_DESCDEF(CDBox);
 	CDBoxDesc():CDShapeDesc(){
 		boxsize = Vec3f(1.0f, 1.0f, 1.0f);
 	}

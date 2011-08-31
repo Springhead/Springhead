@@ -169,14 +169,15 @@ FWBoneObject::FWBoneObject(const FWBoneObjectDesc& d/*=FWBoneObjectDesc()*/)
 	AdaptType = GRFRAME_TO_PHSOLID;
 }
 
-void FWBoneObject::Sync(){
+void FWBoneObject::Sync(bool ph_to_gr){
 	if(AdaptType==GRFRAME_TO_PHSOLID){
 		if (phSolid && grFrame && phJoint){
 			//PHSolid‚ÌˆÊ’u‚ÉGRFrame‚ð‡‚í‚¹‚é
 			Posed jointPosition;
-			jointPosition.Ori() = DCAST(PHConstraint,phJoint)->Xjrel.q * sockOffset.Ori().Inv();
+			jointPosition.Ori() = phJoint->GetRelativePoseQ() * sockOffset.Ori().Inv();
 			Posed poseSocket; phJoint->GetSocketPose(poseSocket);
 			Posed pose = poseSocket * jointPosition;
+
 			Affinef af; pose.ToAffine(af);
 			DCAST(GRFrame, grFrame)->SetTransform(af);
 

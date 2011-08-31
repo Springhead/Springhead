@@ -55,7 +55,7 @@ public:
 	virtual bool AddChildObject(ObjectIf* o);	
 	virtual ObjectIf* GetChildObject(size_t pos);
 	virtual size_t NChildObject() const;
-	virtual void Sync();
+	virtual void Sync(bool ph_to_gr);
 	virtual void Modify();
 
 	PHJointIf*	GetPHJoint(){ return phJoint; }
