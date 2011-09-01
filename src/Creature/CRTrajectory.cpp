@@ -63,7 +63,8 @@ void CRTrajectory::Step() {
 		// std::cout << time << " : " << GetPosition() << std::endl;
 
 		// std::cout << posInSolid << std::endl;
-		solid->GetIKEndEffector()->SetTargetPosition(GetPosition(), posInSolid);
+		solid->GetIKEndEffector()->SetTargetPosition(GetPosition());
+		solid->GetIKEndEffector()->SetTargetLocalPosition(posInSolid);
 		if (soCur) {
 			soCur->SetFramePosition(GetPosition());
 		}

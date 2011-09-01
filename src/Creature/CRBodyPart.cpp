@@ -86,7 +86,7 @@ void CRIKSolid::Step() {
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // ‹O“¹‰^“®
 void CRIKSolid::SetTargetPos(Vec3d pos) {
-	initPos  = solid->GetPose().Pos();
+	initPos  = solid->GetPose() * ikEndEffector->GetTargetLocalPosition();
 	finalPos = pos;
 	bCtlPos  = true;
 	ikEndEffector->Enable(true);
@@ -101,10 +101,8 @@ void CRIKSolid::SetTargetOri(Quaterniond ori) {
 }
 
 void CRIKSolid::SetTargetPose(Posed pose) {
-	finalPos = pose.Pos();
-	bCtlPos  = true;
-	finalOri = pose.Ori();
-	bCtlOri  = true;
+	SetTargetPos(pose.Pos());
+	SetTargetOri(pose.Ori());
 }
 
 void CRIKSolid::SetTimeLimit(float timeLimit) {
@@ -112,6 +110,13 @@ void CRIKSolid::SetTimeLimit(float timeLimit) {
 }
 
 void CRIKSolid::StepTrajectory() {
+	// --
+	PHSolidIf* soDebug = DCAST(CRCreatureIf,GetScene())->GetPHScene()->FindObject("soDebug")->Cast();
+	if (soDebug) {
+		DCAST(CRCreatureIf,GetScene())->GetPHScene()->SetContactMode(soDebug, PHSceneDesc::MODE_NONE);
+	}
+	// --
+
 	double dt = DCAST(CRCreatureIf,GetScene())->GetPHScene()->GetTimeStep();
 
 	// ˆÊ’u§Œä
@@ -132,6 +137,7 @@ void CRIKSolid::StepTrajectory() {
 		if (dir.norm() != 0) { dir /= dir.norm(); }
 		Vec3d currPos = finalPos + dir*(finalPos - initPos).norm()*length;
 		ikEndEffector->SetTargetPosition(currPos);
+		if (soDebug) { soDebug->SetFramePosition(currPos); }
 
 		if (time > timeLimit) {
 			bCtlPos = false;
@@ -171,7 +177,17 @@ void CRIKSolid::StepSearchArea() {
 		PHSceneIf* phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
 		for (size_t i=0; i<phScene->NSolids(); ++i) {
 			PHSolidIf* so = phScene->GetSolids()[i];
-			foundSolids.push_back(so); // ‚Æ‚è‚ ‚¦‚¸
+
+			Vec3d localPos = (solid->GetPose() * relativePose).Inv() * so->GetPose().Pos();
+			if (localPos.norm() != 0) {
+				localPos = localPos.unit();
+			}
+
+			Vec2d theta = Vec2d(atan2(localPos.X(), localPos.Z()), atan2(localPos.Y(), localPos.Z()));
+			theta.Y() *= (horizRange / vertRange);
+			if (theta.norm() < (horizRange / 2.0)) {
+				foundSolids.push_back(so);
+			}
 		}
 	}
 }
