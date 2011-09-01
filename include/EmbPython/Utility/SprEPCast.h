@@ -1,5 +1,6 @@
 #ifndef SPREPCAST_H
 #define SPREPCAST_H
+#include <Springhead.h>
 #include <Python.h>
 #include <string>
 #include <map>
@@ -9,7 +10,9 @@ double PyObject_asDouble(PyObject* obj);
 
 long PyObject_asLong(PyObject* obj);
 
-//char* PyObject_asChar(PyObject* obj);
+Vec3d* PyObject_asVec3d(PyObject* obj);
+Vec3f* PyObject_asVec3f(PyObject* obj);
+
 
 template<class T> PyObject* PyFloat_fromAny(T val)
 {

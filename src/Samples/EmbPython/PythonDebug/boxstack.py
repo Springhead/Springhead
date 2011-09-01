@@ -92,4 +92,8 @@ if __name__ == "__main__":
 	
 	box = [None] * 20
 
-	
+	boxDesc = Collision.CDBoxDesc()
+	print("boxDesc.boxsize =",boxDesc.boxsize)
+	print( "boxDesc.boxsize = Vec3d(1,2,3)" )
+	boxDesc.boxsize = Vec3d(1,2,3)
+	print("boxDesc.boxsize =",boxDesc.boxsize)
