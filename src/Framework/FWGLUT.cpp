@@ -65,11 +65,11 @@ void FWGLUT::GlutTimerFunc(int value){
 	UTTimerIf* timer = UTTimerIf::Get(value);
 	if(!timer)
 		return;
-	timer->Call();
-
-	// タイマーの再設定
-	if(GetInstance()->timerRestart)
+	// タイマーが稼働中ならコールバックを呼び再登録する
+	if(timer->IsStarted()){
+		timer->Call();
 		glutTimerFunc(timer->GetInterval(), GlutTimerFunc, timer->GetID());
+	}
 
 }
 void FWGLUT::GlutIdleFunc(){
@@ -134,12 +134,11 @@ void FWGLUT::Init(int argc, char** argv){
 
 bool FWGLUT::StartTimer(UTTimer* timer){
 	glutTimerFunc(timer->GetInterval(), GlutTimerFunc, timer->timerId);
-	timerRestart = true;
 	return true;
 }
 
 bool FWGLUT::StopTimer(UTTimer* timer){
-	timerRestart = false;
+	// タイマコールバックにおいて再登録を止めるのでここでは何もしない
 	return true;
 }
 
