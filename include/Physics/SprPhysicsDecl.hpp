@@ -36,7 +36,8 @@
 	bool IsEnabled(){	return	base::IsEnabled();}	\
 	void EnablePositionControl(bool enable){	base::EnablePositionControl(enable);}	\
 	void SetPositionPriority(double priority){	base::SetPositionPriority(priority);}	\
-	void SetTargetPosition(Vec3d position, Vec3d localPosition){	base::SetTargetPosition(position, localPosition);}	\
+	void SetTargetPosition(Vec3d position){	base::SetTargetPosition(position);}	\
+	void SetTargetLocalPosition(Vec3d localPosition){	base::SetTargetLocalPosition(localPosition);}	\
 	Vec3d GetTargetPosition(){	return	base::GetTargetPosition();}	\
 	Vec3d GetTargetLocalPosition(){	return	base::GetTargetLocalPosition();}	\
 	void EnableOrientationControl(bool enable){	base::EnableOrientationControl(enable);}	\

@@ -124,10 +124,11 @@ public:
 
 	/** @brief 位置の目標値を設定する
 	*/
-	void SetTargetPosition(Vec3d position, Vec3d localPosition) {
-		targetPosition		= position;
-		targetLocalPosition	= localPosition;
-	}
+	void SetTargetPosition(Vec3d position) { targetPosition = position; }
+
+	/** @brief 剛体において到達させたい位置の剛体ローカル座標を設定する
+	*/
+	void SetTargetLocalPosition(Vec3d localPosition) { targetLocalPosition = localPosition; }
 
 	/** @brief 設定された位置の目標値を取得する
 	*/
