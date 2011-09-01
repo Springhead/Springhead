@@ -293,10 +293,10 @@ bool UTTimer::Stop(){
 #endif
 	}
 	else if (mode == UTTimerIf::FRAMEWORK){
-		bStarted = false;
 		if (provider && provider->StopTimer(this)){
 			timerIdImpl = 0;
 			provider = NULL;
+			bStarted = false;
 		}
 		else{
 			bStarted = true;

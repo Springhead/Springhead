@@ -25,8 +25,7 @@ public:
 	SPR_OBJECTDEF_NOIF(FWGLUT);
 protected:
 	bool	idleFuncFlag;	///< IdleFuncの呼び出しに関するFlag	
-	bool	timerRestart;	///< タイマコールバック内でタイマの再登録をするか
-
+	
 	DRKeyMouseGLUT*	keyMouse;
 	DRJoyStickGLUT*	joyStick;
 
