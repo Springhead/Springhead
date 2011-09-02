@@ -43,7 +43,6 @@ Vec3d PyObject_asVec3d(PyObject* obj)
 
 Vec3f PyObject_asVec3f(PyObject* obj)
 {
-	PyErr_BadInternalCall();
 	if( obj->ob_type == &EPVec3fType)
 		return *EPObject_Cast(obj,Vec3f);
 	if( obj->ob_type == &EPVec3dType)

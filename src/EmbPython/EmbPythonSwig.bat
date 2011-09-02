@@ -23,7 +23,7 @@ echo ========================= MODULE %MODULE% =============================
 rem .iファイルを手書きするときはここにモジュール名を追加
 if "%MODULE%" == "Utility" goto swig
 if "%MODULE%" == "Framework" goto swig
-if "%MODULE%" == "Physics" goto swig
+rem if "%MODULE%" == "Physics" goto swig
 
 :makeif
 echo Create .i file part
@@ -126,13 +126,12 @@ echo %%ignore Spr::PHIKActuatorIf::GetRawSolution;>> %MODULE%.i
 echo %%ignore Spr::PHSceneIf::CreateIKEndEffector;>> %MODULE%.i
 echo %%ignore Spr::PHSceneIf::CreateIKActuator;>> %MODULE%.i
 echo %%ignore Spr::PHSceneIf::GetSolids;>> %MODULE%.i
-echo %%ignore Spr::PHSceneIf::SetContactMode;>> %MODULE%.i
 echo %%ignore Spr::PHJoint1DIf::GetRange;>> %MODULE%.i
-
+echo %%ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t,PHSceneDesc::ContactMode);>>%MODULE%.i
+echo %%ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t);>>%MODULE%.i
 
 echo %%include "Utility/EPObject.i">>%MODULE%.i
 echo EXTEND_NEW(PHSolidDesc)>>%MODULE%.i
-echo APPEND_CONSTRUCTOR(PHSolidState)>>%MODULE%.i
 echo //--->>%MODULE%.i
 exit /b
 
