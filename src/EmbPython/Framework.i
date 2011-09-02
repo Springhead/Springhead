@@ -17,6 +17,10 @@
 %ignore Spr::FWInteractSceneIf::GetIAAdaptee; //APIの不整合がありコンパイル不可なので
 %ignore Spr::FWSceneIf::GetObjects; // **が出てくるので未対応
 
+%extend Spr::FWBoneIf{
+  static const IfInfo* GetIfInfoStatic();
+}
+
 //--
 %begin%{
 #include "../../include/Springhead.h"
