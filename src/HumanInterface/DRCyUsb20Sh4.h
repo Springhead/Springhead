@@ -28,6 +28,10 @@ public:
 protected:
 	///	
 	virtual void*		UsbOpen(int id);
+	void Reset();
+	void UsbSend(unsigned char* outBuffer);
+	void UsbRecv(unsigned char* inBuffer);
+	unsigned UsbVidPid(void* h);
 };
 
 } //namespace Spr
