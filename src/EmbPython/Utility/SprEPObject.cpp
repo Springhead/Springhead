@@ -9,18 +9,13 @@ static PyMethodDef EPObject_methods[] =
 	{NULL}
 };
 
-/////////////////////////////////////////メンバ変数登録用
-/*未実装*/
-
 //////////////////////////////////////////init
-static int
-EPObject_init(EPObject* self,PyObject *args, PyObject *kwds)
+static int __PYDECL EPObject_init(EPObject* self,PyObject *args, PyObject *kwds)
 {
 	return 0;
 }
 //////////////////////////////////////////new
-static PyObject*
-EPObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
+static PyObject* __PYDECL EPObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
 {
 	EPObject *self;
 	self = ( EPObject*) type->tp_alloc(type,0);
@@ -31,18 +26,42 @@ EPObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
 	return (PyObject *)self;
 }
 ////////////////////////////////////////////dealloc
-static void
-EPObject_dealloc(EPObject* self)
+static void __PYDECL EPObject_dealloc(EPObject* self)
 {
 	//PythonでいらなくてもSpringheadで使ってるかもしれない
 	//delete(self->ptr);
 	self->ob_base.ob_type->tp_free((PyObject*)self);
 }
 
+//比較演算子オーバーロード
+static PyObject* __PYDECL EPObject_richcmp(PyObject *obj1, PyObject *obj2, int op)
+{
+	//EPObjectは == で比較したとき、同じSpringheadのインスタンスへのポインタの場合はTrue,それ以外はFalseを返す
+    PyObject *result;
+	int c;
+
+	if ( !EPObject_Check(obj1) || !EPObject_Check(obj2) ) c = 0;
+	else
+	{
+		switch (op) {
+		//case Py_LT: c = size1 <  size2; break;
+		//case Py_LE: c = size1 <= size2; break;
+		case Py_EQ: c = EPObject_Ptr(obj1) == EPObject_Ptr(obj2)  ; break;
+		case Py_NE: c = EPObject_Ptr(obj1) != EPObject_Ptr(obj2); break;
+		//case Py_GT: c = size1 >  size2; break;
+		//case Py_GE: c = size1 >= size2; break;
+		}
+	}
+
+    result = c ? Py_True : Py_False;
+    Py_INCREF(result);
+    return result;
+ }
+
 PyTypeObject EPObjectType =
 {
 	PyVarObject_HEAD_INIT(NULL,0)
-	"Test.void",             /*tp_name*/
+	"Utility.EPObject",             /*tp_name*/
 	sizeof(EPObject),             /*tp_basicsize*/
 	0,                         /*tp_itemsize*/
 	(destructor)EPObject_dealloc,                        /*tp_dealloc*/
@@ -61,15 +80,15 @@ PyTypeObject EPObjectType =
 	0,                         /*tp_setattro*/
 	0,                         /*tp_as_buffer*/
 	Py_TPFLAGS_DEFAULT | Py_TPFLAGS_BASETYPE , /*tp_flags*/
-	"void",           /* tp_doc */
+	"EPObject",           /* tp_doc */
 	0,		               /* tp_traverse */
 	0,		               /* tp_clear */
-	0,		               /* tp_richcompare */
+	EPObject_richcmp,		               /* tp_richcompare */
 	0,		               /* tp_weaklistoffset */
 	0,		               /* tp_iter */
 	0,		               /* tp_iternext */
 	EPObject_methods,             /* tp_methods */
-	0,//EPObject_members,             /* tp_members */
+	0,			             /* tp_members */
 	0,                         /* tp_getset */
 	0,                         /* tp_base */
 	0,                         /* tp_dict */
@@ -93,7 +112,7 @@ PyMODINIT_FUNC initEPObject(void)
 
 	//モジュールに追加
 	Py_INCREF(&EPObjectType);
-	PyModule_AddObject(m,"void",(PyObject *)&EPObjectType);
+	PyModule_AddObject(m,"EPObject",(PyObject *)&EPObjectType);
 	return m;
 }
 
