@@ -7,14 +7,14 @@ using namespace Spr;
 
 int __cdecl main(){
 	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
-	DRUsb20SimpleDesc usbSimpleDesc;
+/*	DRUsb20SimpleDesc usbSimpleDesc;
 	sdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 	DRUsb20Sh4Desc usb20Sh4Desc;
 	for(int i=0; i<10; ++i){
 		usb20Sh4Desc.channel = i;
 		sdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
 	}
-	DRCyUsb20Sh4Desc cyDesc;
+*/	DRCyUsb20Sh4Desc cyDesc;
 	for(int i=0; i<10; ++i){
 		cyDesc.channel = i;
 		sdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
