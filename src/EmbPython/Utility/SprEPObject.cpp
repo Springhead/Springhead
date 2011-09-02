@@ -2,16 +2,32 @@
 
 
 
+static PyObject* __PYDECL EPObject_dir(PyObject* self)
+{
+	return PyObject_Dir(self);
+}
+
+
+static PyObject* __PYDECL EPObject_type(PyObject* self)
+{
+	return PyObject_Type(self);
+}
+
+
+
 /////////////////////////////////////メソッド登録用
 ///voidのメソッドの定義
 static PyMethodDef EPObject_methods[] =
 {
+	{"dir",(PyCFunction)EPObject_dir,METH_NOARGS,"EPObject::dir"},
+	{"type",(PyCFunction)EPObject_dir,METH_NOARGS,"EPObject::type"},
 	{NULL}
 };
 
 //////////////////////////////////////////init
 static int __PYDECL EPObject_init(EPObject* self,PyObject *args, PyObject *kwds)
 {
+	self->ptr == NULL;
 	return 0;
 }
 //////////////////////////////////////////new
@@ -21,7 +37,7 @@ static PyObject* __PYDECL EPObject_new(PyTypeObject *type,PyObject *args, PyObje
 	self = ( EPObject*) type->tp_alloc(type,0);
 	if ( self != NULL)
 	{
-		EPObject_init(self,args,kwds);
+		//特にやることなし
 	}
 	return (PyObject *)self;
 }
