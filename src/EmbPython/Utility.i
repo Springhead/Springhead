@@ -39,4 +39,4 @@ namespace Spr{
 
 }//namespace
 
-%include "./Utility/PyPTM-sprpy.i"
+%include "./Utility/PyPTM.i"
