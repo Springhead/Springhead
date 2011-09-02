@@ -27,34 +27,34 @@ long PyObject_asLong(PyObject* obj)
 	return 0;
 }
 
-//最適化をoffにしないとキャストがされない
-#pragma optimize("",off)
-Vec3d* PyObject_asVec3d(PyObject* obj)
+Vec3d PyObject_asVec3d(PyObject* obj)
 {
 	if( obj->ob_type == &EPVec3dType)
-		return EPObject_Cast(obj,Vec3d);
+		return *EPObject_Cast(obj,Vec3d);
 	if( obj->ob_type == &EPVec3fType)
-		return &((Vec3d)*EPObject_Cast(obj,Vec3f));
+		return ((Vec3d)*EPObject_Cast(obj,Vec3f));
 	if( obj->ob_type == &EPVec3fType)
-		return &((Vec3d)*EPObject_Cast(obj,Vec3i));
+		return ((Vec3d)*EPObject_Cast(obj,Vec3i));
 
 	DSTR << "PyObject_asVec3dにおいてキャストが正常に行われませんでした";
 	assert(0);
+	return Vec3d();
 }
 
-Vec3f* PyObject_asVec3f(PyObject* obj)
+Vec3f PyObject_asVec3f(PyObject* obj)
 {
+	PyErr_BadInternalCall();
 	if( obj->ob_type == &EPVec3fType)
-		return EPObject_Cast(obj,Vec3f);
+		return *EPObject_Cast(obj,Vec3f);
 	if( obj->ob_type == &EPVec3dType)
-		return &((Vec3f)*EPObject_Cast(obj,Vec3d));
+		return ((Vec3f)*EPObject_Cast(obj,Vec3d));
 	if( obj->ob_type == &EPVec3fType)
-		return &((Vec3f)*EPObject_Cast(obj,Vec3i));
-
+		return ((Vec3f)*EPObject_Cast(obj,Vec3i));
+	
 	DSTR << "PyObject_asVec3fにおいてキャストが正常に行われませんでした";
 	assert(0);
+	return Vec3f();
 }
-#pragma optimize("",on)
 
 //char* PyObject_asChar(PyObject* obj)
 //{
