@@ -16,7 +16,7 @@
 #include <winioctl.h>
 #include <setupapi.h>
 #pragma comment(lib, "setupapi.lib")
-#include "cyioctl.h"
+#include "cyioctl.hpp"
 #endif
 
 #include <sstream>
