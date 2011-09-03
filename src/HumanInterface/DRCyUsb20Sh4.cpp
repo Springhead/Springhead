@@ -39,6 +39,7 @@ DRCyUsb20Sh4::DRCyUsb20Sh4(const DRCyUsb20Sh4Desc& d):DRUsb20Sh4(d), sendBuf(NUL
 DRCyUsb20Sh4::~DRCyUsb20Sh4(){
 	delete [] sendBuf;
 	delete [] recvBuf;
+	if (hSpidar) CloseHandle(hSpidar);
 }
 
 void* DRCyUsb20Sh4::UsbOpen(int id){
@@ -81,11 +82,11 @@ void* DRCyUsb20Sh4::UsbOpen(int id){
 	                         FILE_SHARE_WRITE | FILE_SHARE_READ, 
 	                         NULL, 
 	                         OPEN_EXISTING, 
-	                         FILE_FLAG_OVERLAPPED, 
+	                         /*FILE_FLAG_OVERLAPPED*/ 0, 
 	                         NULL); 
 				free(functionClassDeviceData); 
 				SetupDiDestroyDeviceInfoList(hwDeviceInfo); 
-				std::cout << "Device Open" << std::endl;
+				//std::cout << "Device Open" << std::endl;
 			}
 		}
 	}
@@ -95,6 +96,28 @@ void* DRCyUsb20Sh4::UsbOpen(int id){
 	return 0;
 #endif
 }
+bool DRCyUsb20Sh4::UsbClose(void*& h){
+#ifdef _WIN32
+	if(h){
+/*		DWORD dwBytes = 0;
+		UCHAR Address = 0x86;
+		DeviceIoControl(h, IOCTL_ADAPT_ABORT_PIPE, &Address, sizeof(UCHAR),	NULL, 0, &dwBytes, NULL);
+		Address = 0x02;
+		DeviceIoControl(h, IOCTL_ADAPT_ABORT_PIPE, &Address, sizeof(UCHAR),	NULL, 0, &dwBytes, NULL);
+*/
+
+//		bool rv = CloseHandle(h) != 0;
+//		std::cout << "Device Close" << std::endl;
+		h = NULL;
+//		return rv;
+		//	‚È‚º‚©Close‚ÉŽžŠÔ‚ª‚©‚©‚é‚Ì‚Å
+	}
+	return false;
+#endif
+	return false;
+}
+
+
 
 void DRCyUsb20Sh4::Reset(){
 	if (hSpidar){
@@ -130,11 +153,12 @@ void DRCyUsb20Sh4::UsbSend(unsigned char* outBuffer){
 	memcpy(sendStart, outBuffer, PACKET_SIZE);
 	DWORD dwReturnBytes=0;
 	
+	SetLastError(0);
 	DeviceIoControl(hSpidar, IOCTL_ADAPT_SEND_NON_EP0_TRANSFER,
 		sendBuf, sendBufLen, sendBuf, sendBufLen, &dwReturnBytes, NULL);
 	DWORD e = GetLastError();
-	if (e) DSTR << "error:" << e << std::endl;
-	std::cout << "Send" << std::endl;
+	if (e) DSTR << "DRCyUsb20Sh4::UsbSend() error:" << e << std::endl;
+	//std::cout << "Send" << std::endl;
 #endif
 }
 
@@ -142,12 +166,13 @@ void DRCyUsb20Sh4::UsbRecv(unsigned char* inBuffer){
 #ifdef _WIN32
 	if (!hSpidar) return;
 	DWORD dwReturnBytes=0;
+	SetLastError(0);
 	DeviceIoControl(hSpidar, IOCTL_ADAPT_SEND_NON_EP0_TRANSFER,
 		recvBuf, recvBufLen, recvBuf, recvBufLen, &dwReturnBytes, NULL);
 	DWORD e = GetLastError();
-	if (e) DSTR << "error:" << e << std::endl;	
+	if (e) DSTR << "DRCyUsb20Sh4::UsbRecv() error:" << e << std::endl;	
 	memcpy(inBuffer, recvStart, PACKET_SIZE);
-	std::cout << "Recv" << std::endl;
+	//std::cout << "Recv" << std::endl;
 #endif
 }
 
