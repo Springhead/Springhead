@@ -103,9 +103,13 @@ void* DRUsb20Simple::UsbOpen(int id){
 }
 bool DRUsb20Simple::UsbClose(void*& h){
 #ifdef _WIN32
-	bool rv = CloseHandle(h) != 0;
-	h = NULL;
-	return rv;
+	if(h){
+		bool rv = CloseHandle(h) != 0;
+		std::cout << "Device Close" << std::endl;
+		h = NULL;
+		return rv;
+	}
+	return false;
 #endif
 	return false;
 }

@@ -24,6 +24,7 @@ public:
 	SPR_OBJECTDEF(DRCyUsb20Sh4);
 
 	DRCyUsb20Sh4(const DRCyUsb20Sh4Desc& d = DRCyUsb20Sh4Desc());
+	~DRCyUsb20Sh4();
 	
 protected:
 	///	
@@ -32,6 +33,14 @@ protected:
 	void UsbSend(unsigned char* outBuffer);
 	void UsbRecv(unsigned char* inBuffer);
 	unsigned UsbVidPid(void* h);
+	void SetupBuffer();
+	unsigned char* sendBuf;
+	int sendBufLen;
+	unsigned char* sendStart;
+
+	unsigned char* recvBuf;
+	int recvBufLen;
+	unsigned char* recvStart;
 };
 
 } //namespace Spr

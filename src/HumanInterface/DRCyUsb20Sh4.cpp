@@ -33,8 +33,12 @@ namespace Spr {;
 static GUID CYUSBDRV_GUID = {0xae18aa60, 0x7f6a, 0x11d4, 0x97, 0xdd, 0x0, 0x1, 0x2, 0x29, 0xb9, 0x59};
 const int PACKET_SIZE = 512;
 
-DRCyUsb20Sh4::DRCyUsb20Sh4(const DRCyUsb20Sh4Desc& d):DRUsb20Sh4(d){
-
+DRCyUsb20Sh4::DRCyUsb20Sh4(const DRCyUsb20Sh4Desc& d):DRUsb20Sh4(d), sendBuf(NULL), recvBuf(NULL){
+	SetupBuffer();
+}
+DRCyUsb20Sh4::~DRCyUsb20Sh4(){
+	delete [] sendBuf;
+	delete [] recvBuf;
 }
 
 void* DRCyUsb20Sh4::UsbOpen(int id){
@@ -81,6 +85,7 @@ void* DRCyUsb20Sh4::UsbOpen(int id){
 	                         NULL); 
 				free(functionClassDeviceData); 
 				SetupDiDestroyDeviceInfoList(hwDeviceInfo); 
+				std::cout << "Device Open" << std::endl;
 			}
 		}
 	}
@@ -93,66 +98,56 @@ void* DRCyUsb20Sh4::UsbOpen(int id){
 
 void DRCyUsb20Sh4::Reset(){
 	if (hSpidar){
-		for(UCHAR pipeNum = 1; pipeNum<=2; ++pipeNum){
-			DWORD dwBytes = 0;
-			DeviceIoControl(hSpidar, IOCTL_ADAPT_ABORT_PIPE,
-				&pipeNum, sizeof(pipeNum), NULL, 0, &dwBytes, NULL);
-			DeviceIoControl(hSpidar,
-				IOCTL_ADAPT_RESET_PIPE,
-				&pipeNum, sizeof(pipeNum), NULL, 0, &dwBytes, NULL);
-		}
+		DWORD dwBytes = 0;
+		DeviceIoControl(hSpidar, IOCTL_ADAPT_RESET_PARENT_PORT, NULL, 0, NULL, 0, &dwBytes, NULL);
+		DWORD e = GetLastError();
+		if (e) DSTR << "DRCyUsb20Sh4::Reset(): error code = " << e << std::endl;
 	}
 }
+void DRCyUsb20Sh4::SetupBuffer(){
+	sendBufLen = sizeof(SINGLE_TRANSFER) + PACKET_SIZE;
+	if (!sendBuf) sendBuf = new unsigned char[sendBufLen];
+	sendStart = sendBuf + sizeof(SINGLE_TRANSFER);
+	SINGLE_TRANSFER* transfer = (SINGLE_TRANSFER*)sendBuf;
+	memset(transfer, 0, sizeof(SINGLE_TRANSFER));
+	transfer->ucEndpointAddress = 2;
+	transfer->BufferOffset = sizeof(SINGLE_TRANSFER);
+	transfer->BufferLength = PACKET_SIZE;
+	
+	recvBufLen = sizeof(SINGLE_TRANSFER) + PACKET_SIZE;
+	if (!recvBuf) recvBuf = new unsigned char[recvBufLen];
+	recvStart = recvBuf + sizeof(SINGLE_TRANSFER);
+	transfer = (SINGLE_TRANSFER*)recvBuf;
+	memset(transfer, 0, sizeof(SINGLE_TRANSFER));
+	transfer->ucEndpointAddress = 0x86;
+	transfer->BufferOffset = sizeof(SINGLE_TRANSFER);
+	transfer->BufferLength = PACKET_SIZE;
+}
+
 void DRCyUsb20Sh4::UsbSend(unsigned char* outBuffer){
 #ifdef _WIN32
 	if (!hSpidar) return;
-	SINGLE_TRANSFER transfer;
-	memset(&transfer, 0, sizeof(transfer));
-	transfer.ucEndpointAddress = 1;
-	DWORD dwReturnBytes;
-	OVERLAPPED ov;
-	DeviceIoControl(hSpidar, IOCTL_ADAPT_SEND_NON_EP0_DIRECT,
-		&transfer, sizeof (SINGLE_TRANSFER), outBuffer, PACKET_SIZE, &dwReturnBytes, &ov);
-/*
-	BULK_TRANSFER_CONTROL bulkControl;
-	bulkControl.pipeNum = 1;
-	WORD outPacketSize = PACKET_SIZE;
-	int nBytes = 0;
-	DeviceIoControl (hSpidar,
-		IOCTL_EZUSB_BULK_WRITE,
-		&bulkControl,
-		sizeof(BULK_TRANSFER_CONTROL),
-		outBuffer,
-		outPacketSize,
-		(unsigned long *)&nBytes, NULL);
-*/
+	memcpy(sendStart, outBuffer, PACKET_SIZE);
+	DWORD dwReturnBytes=0;
+	
+	DeviceIoControl(hSpidar, IOCTL_ADAPT_SEND_NON_EP0_TRANSFER,
+		sendBuf, sendBufLen, sendBuf, sendBufLen, &dwReturnBytes, NULL);
+	DWORD e = GetLastError();
+	if (e) DSTR << "error:" << e << std::endl;
+	std::cout << "Send" << std::endl;
 #endif
 }
 
 void DRCyUsb20Sh4::UsbRecv(unsigned char* inBuffer){
 #ifdef _WIN32
 	if (!hSpidar) return;
-	SINGLE_TRANSFER transfer;
-	memset(&transfer, 0, sizeof(transfer));
-	transfer.ucEndpointAddress = 0x82;
-	DWORD dwReturnBytes;
-	OVERLAPPED ov;
-	DeviceIoControl(hSpidar, IOCTL_ADAPT_SEND_NON_EP0_DIRECT,
-		&transfer, sizeof (SINGLE_TRANSFER), inBuffer, PACKET_SIZE, &dwReturnBytes, &ov);
-/*
-	BULK_TRANSFER_CONTROL bulkControl;
-	bulkControl.pipeNum = 2;
-	WORD inPacketSize = PACKET_SIZE;
-	int nBytes = 0;
-	DeviceIoControl (hSpidar,
-		IOCTL_EZUSB_BULK_READ,
-		&bulkControl,
-		sizeof(BULK_TRANSFER_CONTROL),
-		inBuffer,
-		inPacketSize,
-		(unsigned long *)&nBytes,
-		NULL);
-*/
+	DWORD dwReturnBytes=0;
+	DeviceIoControl(hSpidar, IOCTL_ADAPT_SEND_NON_EP0_TRANSFER,
+		recvBuf, recvBufLen, recvBuf, recvBufLen, &dwReturnBytes, NULL);
+	DWORD e = GetLastError();
+	if (e) DSTR << "error:" << e << std::endl;	
+	memcpy(inBuffer, recvStart, PACKET_SIZE);
+	std::cout << "Recv" << std::endl;
 #endif
 }
 
