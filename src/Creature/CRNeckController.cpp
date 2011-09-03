@@ -33,33 +33,25 @@ void CRNeckController::Stop()
 }
 void CRNeckController::Step(){
 	if (!bEnabled) return;
-	if (csHead) {
-		PHSolidIf*			soHead = csHead->GetPHSolid();
-		PHIKEndEffectorIf*	efHead = csHead->GetIKEndEffector();
-
-		Vec3d rotLook	= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,1,0), (pos-(soHead->GetPose().Pos())).unit());
-		Vec3d rotUp		= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,0,-1), Vec3d(0,1,0));
-		Vec3d rot		= rotLook + 0.3*rotUp;
-
-		// rot = rot * ((attractiveness - lowerAttractiveness) / (upperAttractiveness - lowerAttractiveness));
-
-		Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
-		efHead->SetTargetOrientation(qt*soHead->GetPose().Ori());
-
-		efHead->EnableOrientationControl(true);
-		efHead->Enable(true);
-	} else {
-		// ‚¢‚¸‚êAddChildObject‚ÅŽw’è‚·‚é‚æ‚¤‚É‚·‚×‚« (mitake, 09/07/19)
+	if (!csHead) {
 		CRBodyIf* body = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetBody(0);
-		PHSceneIf* phScene = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetPHScene();
-
-		for (size_t i=0; i<body->NChildObject(); ++i) {
-			CRIKSolidIf* cso = body->GetChildObject(i)->Cast();
-			if (cso) {
-				if (UTString("Head")  == cso->GetLabel()) { csHead  = cso; }
-			}
-		}
+		csHead = body->FindByLabel(labelHeadSolid)->Cast();
 	}
+
+	PHSolidIf*			soHead = csHead->GetPHSolid();
+	PHIKEndEffectorIf*	efHead = csHead->GetIKEndEffector();
+
+	Vec3d rotLook	= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,1,0), (pos-(soHead->GetPose().Pos())).unit());
+	Vec3d rotUp		= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,0,-1), Vec3d(0,1,0));
+	// Vec3d rotLook	= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,1,0), (pos-(soHead->GetPose().Pos())).unit());
+	// Vec3d rotUp		= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,0,-1), Vec3d(0,1,0));
+	Vec3d rot		= rotLook + 0.5*rotUp;
+
+	Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
+	efHead->SetTargetOrientation(qt*soHead->GetPose().Ori());
+
+	efHead->EnableOrientationControl(true);
+	efHead->Enable(true);
 }
 
 }

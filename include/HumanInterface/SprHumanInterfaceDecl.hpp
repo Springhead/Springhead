@@ -116,6 +116,8 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpaceNavigatorIf(base)	\
 	bool SetPose(Posef pose){	return	base::SetPose(pose);}	\
+	Vec3f GetTrnDelta(){	return	base::GetTrnDelta();}	\
+	Vec3f GetRotDelta(){	return	base::GetRotDelta();}	\
 	bool PreviewMessage(void* m){	return	base::PreviewMessage(m);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpidarIf(base)	\

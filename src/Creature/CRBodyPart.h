@@ -225,6 +225,25 @@ public:
 	/** @brief ‚PƒXƒeƒbƒv
 	*/
 	void StepSearchArea();
+
+	// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+	// ÚGˆê——
+
+	/** @brief ÚG‚Ì”‚ğ•Ô‚·
+	*/
+	virtual int NContacts();
+
+	/** @brief i”Ô–Ú‚ÌÚG‚ÌÚG—Í‚ğ•Ô‚·
+	*/
+	virtual Vec3f GetContactForce(int i);
+
+	/** @brief i”Ô–Ú‚ÌÚG‚Ì–ÊÏ‚ğ•Ô‚·
+	*/
+	virtual double GetContactArea(int i);
+
+	/** @brief i”Ô–Ú‚ÌÚG‚ÌˆÊ’u‚ğ•Ô‚·
+	*/
+	virtual Vec3f GetContactPosition(int i);
 };
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---

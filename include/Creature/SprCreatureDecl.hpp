@@ -30,6 +30,10 @@
 	void SetViewArea(Posed relativePose, double horizRange, double vertRange){	base::SetViewArea(relativePose, horizRange, vertRange);}	\
 	int NVisibleSolids(){	return	base::NVisibleSolids();}	\
 	Spr::PHSolidIf* GetVisibleSolid(int i){	return	base::GetVisibleSolid(i);}	\
+	int NContacts(){	return	base::NContacts();}	\
+	Vec3f GetContactForce(int i){	return	base::GetContactForce(i);}	\
+	double GetContactArea(int i){	return	base::GetContactArea(i);}	\
+	Vec3f GetContactPosition(int i){	return	base::GetContactPosition(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRJointIf(base)	\
 	Spr::PHJointIf* GetPHJoint(){	return	base::GetPHJoint();}	\

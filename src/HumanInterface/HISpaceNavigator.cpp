@@ -116,11 +116,13 @@ bool HISpaceNavigator::PreviewMessage(void *m) {
 }
 
 void HISpaceNavigator::Translate(Vec3f trn) {
-	currPose.Pos() += Quaterniond::Rot(Rad(90), 'x') * (trn * 0.001);
+	dTrn = Quaterniond::Rot(Rad(90), 'x') * (trn * 0.001);
+	currPose.Pos() += dTrn;
 }
 
 void HISpaceNavigator::Rotate(Vec3f rot) {
-	currPose.Ori() = Quaterniond::Rot((Quaterniond::Rot(Rad(90), 'x') * rot) * 0.0001) * currPose.Ori();
+	dRot = (Quaterniond::Rot(Rad(90), 'x') * rot) * 0.0001;
+	currPose.Ori() = Quaterniond::Rot(dRot) * currPose.Ori();
 }
 
 }
