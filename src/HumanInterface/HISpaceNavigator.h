@@ -18,12 +18,16 @@ public:
 	virtual Quaternionf		GetOrientation();
 	virtual Posef			GetPose();
 	virtual Affinef			GetAffine();
+	virtual Vec3f			GetTrnDelta() { return dTrn; }
+	virtual Vec3f			GetRotDelta() { return dRot; }
+
 
 	virtual bool			PreviewMessage(void *m);
 
 private:
 	Posef currPose;
 	void *hWnd;
+	Vec3d dTrn,dRot;
 
 	void Translate(Vec3f trn);
 	void Rotate(Vec3f rot);

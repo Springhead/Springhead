@@ -204,6 +204,25 @@ PHSolidIf* CRIKSolid::GetVisibleSolid(int i) {
 	}
 }
 
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+// ï®ëÃíTçı
+int CRIKSolid::NContacts() {
+	return 0;
+}
+
+Vec3f CRIKSolid::GetContactForce(int i) {
+	return Vec3f();
+}
+
+double CRIKSolid::GetContactArea(int i) {
+	return 0;
+}
+
+Vec3f CRIKSolid::GetContactPosition(int i) {
+	return Vec3f();
+}
+
+
 //-------------------------------------------------------------------------------------------------
 
 void CRJoint::SetSpringRatio(double springRatio, double damperRatio) {

@@ -58,7 +58,13 @@ public:
 
 	/** @brief i番目の剛体を得る
 	*/
-	virtual CRSolidIf* GetSolid(int i) { return solids[i]; }
+	virtual CRSolidIf* GetSolid(int i) {
+		if (0<=i && i<solids.size()) {
+			return solids[i];
+		} else {
+			return NULL;
+		}
+	}
 
 	/** @brief 関節の数を得る
 	*/
@@ -66,7 +72,13 @@ public:
 
 	/** @brief i番目の関節を得る
 	*/
-	virtual CRJointIf* GetJoint(int i) { return joints[i]; }
+	virtual CRJointIf* GetJoint(int i) {
+		if (0<=i && i<joints.size()) {
+			return joints[i];
+		} else {
+			return NULL;
+		}
+	}
 
 	/** @brief ボディの重心座標を得る
 	*/

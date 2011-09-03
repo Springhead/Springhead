@@ -24,6 +24,12 @@ struct HISpaceNavigatorIf: public HIPoseIf{
 	///	現在の姿勢を設定
 	bool SetPose(Posef pose);
 
+	/// 位置の差分を取得
+	Vec3f GetTrnDelta();
+
+	/// 回転の差分を取得
+	Vec3f GetRotDelta();
+
 	/// RAW Input Windowsメッセージを解釈する
 	bool PreviewMessage(void *m);
 };

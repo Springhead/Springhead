@@ -131,10 +131,23 @@ struct CRIKSolidIf : CRSolidIf {
 	PHSolidIf* GetVisibleSolid(int i);
 	
 	// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-	// ÚGƒoƒbƒtƒ@
+	// ÚGˆê——
 
-	// Not implemented now
+	/** @brief ÚG‚Ì”‚ğ•Ô‚·
+	*/
+	int NContacts();
 
+	/** @brief i”Ô–Ú‚ÌÚG‚ÌÚG—Í‚ğ•Ô‚·
+	*/
+	Vec3f GetContactForce(int i);
+
+	/** @brief i”Ô–Ú‚ÌÚG‚Ì–ÊÏ‚ğ•Ô‚·
+	*/
+	double GetContactArea(int i);
+
+	/** @brief i”Ô–Ú‚ÌÚG‚ÌˆÊ’u‚ğ•Ô‚·
+	*/
+	Vec3f GetContactPosition(int i);
 };
 struct CRIKSolidDesc : CRSolidDesc {
 	SPR_DESCDEF(CRSolid);
