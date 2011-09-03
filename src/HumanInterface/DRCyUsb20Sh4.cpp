@@ -94,11 +94,12 @@ void* DRCyUsb20Sh4::UsbOpen(int id){
 void DRCyUsb20Sh4::Reset(){
 	if (hSpidar){
 		for(UCHAR pipeNum = 1; pipeNum<=2; ++pipeNum){
+			DWORD dwBytes = 0;
 			DeviceIoControl(hSpidar, IOCTL_ADAPT_ABORT_PIPE,
-				&pipeNum, sizeof(pipeNum), NULL, 0, NULL, NULL);
+				&pipeNum, sizeof(pipeNum), NULL, 0, &dwBytes, NULL);
 			DeviceIoControl(hSpidar,
 				IOCTL_ADAPT_RESET_PIPE,
-				&pipeNum, sizeof(pipeNum), NULL, 0, NULL, NULL);
+				&pipeNum, sizeof(pipeNum), NULL, 0, &dwBytes, NULL);
 		}
 	}
 }
@@ -133,7 +134,7 @@ void DRCyUsb20Sh4::UsbRecv(unsigned char* inBuffer){
 	if (!hSpidar) return;
 	SINGLE_TRANSFER transfer;
 	memset(&transfer, 0, sizeof(transfer));
-	transfer.ucEndpointAddress = 2;
+	transfer.ucEndpointAddress = 0x82;
 	DWORD dwReturnBytes;
 	OVERLAPPED ov;
 	DeviceIoControl(hSpidar, IOCTL_ADAPT_SEND_NON_EP0_DIRECT,
