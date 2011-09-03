@@ -41,11 +41,10 @@
 
 #ifndef DRIVER
 
-#ifndef CTL_CODE
- #include <devioctl.h>
-#endif
-
 #include <PSHPACK1.H>
+typedef unsigned char UCHAR;
+typedef unsigned short USHORT;
+typedef unsigned long ULONG;
 
 #define DIR_HOST_TO_DEVICE 0
 #define DIR_DEVICE_TO_HOST 1
