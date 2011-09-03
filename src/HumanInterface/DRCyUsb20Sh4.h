@@ -29,10 +29,13 @@ public:
 protected:
 	///	
 	virtual void*		UsbOpen(int id);
+	virtual bool		UsbClose(void*& h);
 	void Reset();
 	void UsbSend(unsigned char* outBuffer);
 	void UsbRecv(unsigned char* inBuffer);
 	unsigned UsbVidPid(void* h);
+
+
 	void SetupBuffer();
 	unsigned char* sendBuf;
 	int sendBufLen;
