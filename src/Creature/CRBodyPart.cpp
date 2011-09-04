@@ -81,6 +81,7 @@ bool CRIKSolid::DelChildObject(ObjectIf* o) {
 void CRIKSolid::Step() {
 	StepTrajectory();
 	StepSearchArea();
+	StepListContact();
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -205,23 +206,107 @@ PHSolidIf* CRIKSolid::GetVisibleSolid(int i) {
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ï®ëÃíTçı
+// ê⁄êGàÍóó
 int CRIKSolid::NContacts() {
-	return 0;
+	return contactList.size();
 }
 
 Vec3f CRIKSolid::GetContactForce(int i) {
-	return Vec3f();
+	return contactList[i].force;
 }
 
 double CRIKSolid::GetContactArea(int i) {
-	return 0;
+	return contactList[i].area;
 }
 
 Vec3f CRIKSolid::GetContactPosition(int i) {
-	return Vec3f();
+	return contactList[i].position;
 }
 
+PHSolidIf* CRIKSolid::GetContactSolid(int i) {
+	return contactList[i].solid;
+}
+
+void CRIKSolid::StepListContact() {
+	PHSceneIf* phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
+	contactList.clear();
+
+	int stepCount = phScene->GetCount();
+
+	PHSolidPairForLCPIf* solidPair;
+	PHShapePairForLCPIf* shapePair;
+
+	// é©ï™ÇÃçÑëÃî‘çÜÇíTÇ∑
+	int num_my_solid;
+	for (size_t i=0; i<phScene->NSolids(); ++i) {
+		if (phScene->GetSolids()[i] == solid) {
+			num_my_solid = i;
+		}
+	}
+	
+	for (size_t i=0; i<phScene->NSolids(); ++i) {
+		solidPair = NULL;
+		shapePair = NULL;
+
+		PHSolidIf* soTarget = phScene->GetSolids()[i];
+
+		int i1, i2;
+		PHSolidIf *s1, *s2;
+		if (i < num_my_solid) {
+			i1 = i;
+			i2 = num_my_solid;
+			s1 = soTarget;
+			s2 = solid;
+		} else if (num_my_solid < i) {
+			i1 = num_my_solid;
+			i2 = i;
+			s1 = solid;
+			s2 = soTarget;
+		} else {
+			continue;
+		}
+
+		solidPair = phScene->GetSolidPair(i, num_my_solid);
+		PHConstraintIf* constraint = phScene->GetConstraintEngine()->GetContactPoints()->FindBySolidPair(soTarget, solid);
+
+		if (!solidPair || !constraint) { continue; }
+		Vec3d force = phScene->GetConstraintEngine()->GetContactPoints()->GetTotalForce(soTarget, solid);
+
+		for (size_t c1=0; c1<s1->NShape(); ++c1) {
+			for (size_t c2=0; c2<s2->NShape(); ++c2) {
+				if (shapePair = solidPair->GetShapePair(c1, c2)) {
+					int       contactStat      = solidPair->GetContactState(c1, c2);
+					unsigned  lastContactCount = solidPair->GetLastContactCount(c1, c2);
+					
+					if (contactStat==1 || (contactStat==2 && (lastContactCount==stepCount-1))) {
+						// ê⁄êGñ êœÇãÅÇﬂÇÈ
+						double area = 0;
+						if (shapePair->NSectionVertexes() > 3) {
+							Vec3d v0 = shapePair->GetSectionVertex(0);
+							for (size_t v=2; v<shapePair->NSectionVertexes(); ++v) {
+								Vec3d v1 = shapePair->GetSectionVertex(v-1);
+								Vec3d v2 = shapePair->GetSectionVertex(v);
+
+								double a=(v2-v0).norm(), b=(v1-v0).norm(), c=(v2-v1).norm();
+								double s = (a+b+c)/2.0;
+								area += sqrt(s*(s-a)*(s-b)*(s-c));
+							}
+						}
+
+						// ê⁄êGèÓïÒÇÃí«â¡
+						ContactInfo contact;
+						contact.position = solidPair->GetCommonPoint(c1, c2);
+						contact.solid    = soTarget;
+						contact.force    = force;
+						contact.area     = area;
+
+						contactList.push_back(contact);
+					}
+				}
+			}
+		}
+	}
+}
 
 //-------------------------------------------------------------------------------------------------
 

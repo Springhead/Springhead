@@ -34,6 +34,7 @@
 	Vec3f GetContactForce(int i){	return	base::GetContactForce(i);}	\
 	double GetContactArea(int i){	return	base::GetContactArea(i);}	\
 	Vec3f GetContactPosition(int i){	return	base::GetContactPosition(i);}	\
+	Spr::PHSolidIf* GetContactSolid(int i){	return	base::GetContactSolid(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRJointIf(base)	\
 	Spr::PHJointIf* GetPHJoint(){	return	base::GetPHJoint();}	\

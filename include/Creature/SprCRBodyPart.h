@@ -148,6 +148,10 @@ struct CRIKSolidIf : CRSolidIf {
 	/** @brief i”Ô–Ú‚ÌÚG‚ÌˆÊ’u‚ğ•Ô‚·
 	*/
 	Vec3f GetContactPosition(int i);
+
+	/** @brief i”Ô–Ú‚ÌÚG‚Ì‘Šè„‘Ì‚ğ•Ô‚·
+	*/
+	PHSolidIf* GetContactSolid(int i);
 };
 struct CRIKSolidDesc : CRSolidDesc {
 	SPR_DESCDEF(CRSolid);
