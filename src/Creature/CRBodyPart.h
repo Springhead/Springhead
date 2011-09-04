@@ -109,6 +109,15 @@ private:
 	double		vertRange;
 	std::vector<PHSolidIf*> foundSolids;
 
+	/// 接触リスト
+	struct ContactInfo{
+		Vec3f      force;
+		double     area;
+		Vec3f      position;
+		PHSolidIf* solid;
+	};
+	std::vector<ContactInfo> contactList;
+
 	virtual void InitVars() {
 		ikEndEffector = NULL;
 		bCtlPos = bCtlOri = bCtlVel = bCtlAvl = false;
@@ -244,6 +253,14 @@ public:
 	/** @brief i番目の接触の位置を返す
 	*/
 	virtual Vec3f GetContactPosition(int i);
+
+	/** @brief i番目の接触の相手剛体を返す
+	*/
+	PHSolidIf* GetContactSolid(int i);
+
+	/** @brief １ステップ
+	*/
+	void StepListContact();
 };
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
