@@ -178,6 +178,7 @@ void CRIKSolid::StepSearchArea() {
 		PHSceneIf* phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
 		for (size_t i=0; i<phScene->NSolids(); ++i) {
 			PHSolidIf* so = phScene->GetSolids()[i];
+			if (so->NShape() == 0) { continue; }
 
 			Vec3d localPos = (solid->GetPose() * relativePose).Inv() * so->GetPose().Pos();
 			if (localPos.norm() != 0) {
@@ -266,11 +267,11 @@ void CRIKSolid::StepListContact() {
 			continue;
 		}
 
-		solidPair = phScene->GetSolidPair(i, num_my_solid);
-		PHConstraintIf* constraint = phScene->GetConstraintEngine()->GetContactPoints()->FindBySolidPair(soTarget, solid);
+		solidPair = phScene->GetSolidPair(i1, i2);
+		PHConstraintIf* constraint = phScene->GetConstraintEngine()->GetContactPoints()->FindBySolidPair(s1, s2);
 
 		if (!solidPair || !constraint) { continue; }
-		Vec3d force = phScene->GetConstraintEngine()->GetContactPoints()->GetTotalForce(soTarget, solid);
+		Vec3d force = phScene->GetConstraintEngine()->GetContactPoints()->GetTotalForce(s1, s2);
 
 		for (size_t c1=0; c1<s1->NShape(); ++c1) {
 			for (size_t c2=0; c2<s2->NShape(); ++c2) {
