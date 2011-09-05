@@ -87,11 +87,15 @@ void CRIKSolid::Step() {
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // ‹O“¹‰^“®
 void CRIKSolid::SetTargetPos(Vec3d pos) {
-	initPos  = solid->GetPose() * ikEndEffector->GetTargetLocalPosition();
-	finalPos = pos;
-	bCtlPos  = true;
-	ikEndEffector->Enable(true);
-	ikEndEffector->EnablePositionControl(true);
+	if (!bCtlPos) {
+		initPos  = solid->GetPose() * ikEndEffector->GetTargetLocalPosition();
+		finalPos = pos;
+		bCtlPos  = true;
+		ikEndEffector->Enable(true);
+		ikEndEffector->EnablePositionControl(true);
+	} else {
+		finalPos = pos;
+	}
 }
 
 void CRIKSolid::SetTargetOri(Quaterniond ori) {
@@ -158,6 +162,7 @@ void CRIKSolid::Start() {
 
 void CRIKSolid::Stop() {
 	bEnable = false;
+	ikEndEffector->Enable(false);
 }
 
 void CRIKSolid::Plan() {
