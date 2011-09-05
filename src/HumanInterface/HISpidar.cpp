@@ -488,6 +488,7 @@ bool HISpidarG::Init(const void* pDesc){
 }
 
 bool HISpidarG::Calibration(){
+	if (!bGood) return false;
 	//	ポインタを原点(中心)に置いて、キャリブレーションを行う
 	for(unsigned i = 0; i < motors.size(); i++)
 		motors[i].SetLength( (motors[i].pos - motors[i].jointPos).norm() );
@@ -508,6 +509,7 @@ void HISpidarG::Update(float dt){
 }
 
 void HISpidarG::MakeWireVec(){
+	if (!bGood) return;
 	for(unsigned int i=0; i<motors.size(); ++i){
 		wireDirection[i] = motors[i].pos - (ori*motors[i].jointPos + pos);
 		calculatedLength[i] = wireDirection[i].norm();
@@ -520,6 +522,7 @@ void HISpidarG::UpdatePos(){
 }
 
 void HISpidarG::MeasureWire(){
+	if (!bGood) return;
 	for(unsigned int i=0; i<motors.size(); ++i){
 		measuredLength[i] = motors[i].GetLength();
 	}	
