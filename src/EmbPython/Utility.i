@@ -23,6 +23,9 @@
 #include <string>
 
 using namespace std;
+
+#define EP_AS_BUILTIN 1
+
 %}
 
 
