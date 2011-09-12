@@ -7,8 +7,9 @@ goto end
 :ListSrc
 set TARGET=%9 %8 %7 %6 %5 %4 %3 %2
 set MODULE=%2
-set CPP=SprEP%MODULE%.cpp
-set HPP=SprEP%MODULE%.h
+set CPP=EP%MODULE%.cpp
+set HPP=EP%MODULE%.h
+set SPRH=SprEP%MODULE%.h
 set API_INCLUDE=../../include
 
 rem makefile‚Ìì¬‚ÆMake‚ÌŽÀs
@@ -69,14 +70,18 @@ call swig.exe -cpperraswarn -sprpy -c++ %MODULE%.i & if errorlevel 1 echo !!!!SW
 
 :astyle
 echo AStyle Part
-call ..\..\bin\AStyle.exe  --style=allman --indent=tab "%CPP%" "%HPP%" & if errorlevel 1 @pause
+call ..\..\bin\AStyle.exe  --style=allman --indent=tab "%CPP%" "%HPP%" "%SPRH%" & if errorlevel 1 @pause
 del /Q .\SprEP%MODULE%.*.orig
+del /Q .\EP%MODULE%.*.orig
 
 :arrange
 echo Arrange Part
-set HEADER=%API_INCLUDE%\EmbPython\SprEP%MODULE%.h
-move /Y %HPP% %HEADER%
-echo #include "%HEADER%" > %MODULE%.tmp
+set APIHEADER=%API_INCLUDE%\EmbPython\SprEP%MODULE%.h
+set HEADER=EP%MODULE%.h
+
+move /Y %SPRH% %APIHEADER%
+echo #include "%APIHEADER%" > %MODULE%.tmp
+echo #include "%HEADER%" >> %MODULE%.tmp
 echo #pragma warning(disable:4244) >> %MODULE%.tmp
 type %CPP% >> %MODULE%.tmp
 

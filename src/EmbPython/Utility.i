@@ -15,11 +15,11 @@
 #endif
 
 //swig
-#include "Utility/SprEPFoundation.h"
+#include "Utility/SprEPError.h"
 #include "Utility/SprEPObject.h"
 #include "Utility/SprEPvoid.h"
 #include "Utility/SprEPCast.h"
-#include "Utility/UTCriticalSection.h"//CriticalSection—p
+#include "Utility/SprUTCriticalSection.h"//CriticalSection—p
 #include <string>
 
 using namespace std;
