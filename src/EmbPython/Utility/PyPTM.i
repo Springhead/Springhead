@@ -53,8 +53,8 @@ PyObject* __repr__(){
 	PyObject* buf = PyUnicode_FromString("(");
 	PyObject* end = PyUnicode_FromString(" )");
 
+	char data_buf[32];
 	for( int i=0 ; i < size ; i++){
-		char data_buf[16];
 		sprintf(data_buf,"%c%.3lf", (i==0?' ':','),$self->data[i] );
 		PyUnicode_AppendAndDel(&buf,PyUnicode_FromFormat(data_buf));
 	}
@@ -111,6 +111,40 @@ vec __mul__(vec var1){
 mat __mul__(elem var1){
 	return *$self * var1;
 }
+PyObject* tuple(){
+	int size =  $self->WIDTH * $self->HEIGHT;
+	PyObject* buf;
+	PyObject* tuple =  PyTuple_New(size);
+
+	for( int i=0 ; i < size ; i++){
+		buf = Py_BuildValue("d",$self->data[i]);
+		PyTuple_SetItem( tuple , i, buf);
+	}
+	return tuple;
+}
+
+PyObject* __repr__(){
+	int size = $self->WIDTH * $self->HEIGHT;
+	PyObject* buf = PyUnicode_FromString("(");
+	PyObject* end = PyUnicode_FromString(" )");
+
+	char data_buf[32];
+	for( int i=0 ; i < size ; i++){
+		sprintf(data_buf,"%c%.3lf", (i==0?' ':','),$self->data[i] );
+		PyUnicode_AppendAndDel(&buf,PyUnicode_FromFormat(data_buf));
+	}
+	PyUnicode_AppendAndDel(&buf,end);
+	
+	return buf;
+}
+
+PyObject* __str__(){
+	PyObject* repr = EP##vec##___repr__(self);
+	PyObject* prefix = PyUnicode_FromString( #vec );
+	PyUnicode_AppendAndDel( &prefix, repr);
+	return prefix;
+}
+
 %enddef
 
 

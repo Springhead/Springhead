@@ -3,10 +3,16 @@
 
 #include <Python/Python.h>
 #include <Springhead.h>
-#include "SprEPFoundation.h"
+#include "SprEPError.h"
 
 using namespace Spr;
 
+
+
+enum MemoryManager{
+	EP_MM_SPR = 0,
+	EP_MM_PY
+};
 
 
 

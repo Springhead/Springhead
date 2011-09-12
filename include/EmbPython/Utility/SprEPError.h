@@ -1,5 +1,5 @@
-#ifndef SPREPFOUNDATION_H
-#define SPREPFOUNDATION_H
+#ifndef SPREPERROR_H
+#define SPREPERROR_H
 
 #define Return_Error_Int(msg){\
 	PyErr_SetString( PyExc_Exception, msg );\
@@ -24,16 +24,5 @@
 	PyErr_Print();\
 	Py_RETURN_NONE;\
 }
-
-#define Return_NewNullError {\
-	PyErr_SetString( PyExc_SystemError, "Created Object by NULL." );\
-	PyErr_Print();\
-	Py_RETURN_NONE;\
-}
-
-enum MemoryManager{
-	EP_MM_SPR = 0,
-	EP_MM_PY
-};
 
 #endif

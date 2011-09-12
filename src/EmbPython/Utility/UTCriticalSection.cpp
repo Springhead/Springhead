@@ -1,4 +1,4 @@
-#include "..\..\..\include\EmbPython\Utility\UTCriticalSection.h"
+#include "..\..\..\include\EmbPython\Utility\SprUTCriticalSection.h"
 
 #include <windows.h>
 
