@@ -27,7 +27,7 @@ static PyMethodDef EPObject_methods[] =
 //////////////////////////////////////////init
 static int __PYDECL EPObject_init(EPObject* self,PyObject *args, PyObject *kwds)
 {
-	self->ptr == NULL;
+	self->ptr = NULL;
 	return 0;
 }
 //////////////////////////////////////////new
