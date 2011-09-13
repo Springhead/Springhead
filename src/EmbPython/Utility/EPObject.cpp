@@ -20,7 +20,7 @@ static PyObject* __PYDECL EPObject_type(PyObject* self)
 static PyMethodDef EPObject_methods[] =
 {
 	{"dir",(PyCFunction)EPObject_dir,METH_NOARGS,"EPObject::dir"},
-	{"type",(PyCFunction)EPObject_dir,METH_NOARGS,"EPObject::type"},
+	{"type",(PyCFunction)EPObject_type,METH_NOARGS,"EPObject::type"},
 	{NULL}
 };
 
@@ -132,15 +132,15 @@ PyMODINIT_FUNC initEPObject(void)
 	return m;
 }
 
-EPObject* newEPObject()
+PyObject* newEPObject()
 {
-	return (EPObject*)EPObject_new(&EPObjectType,NULL,NULL);
+	return EPObject_new(&EPObjectType,NULL,NULL);
 }
 
-EPObject* newEPObject(const void* ptr)
+PyObject* newEPObject(const void* ptr)
 {
-	EPObject* ret = (EPObject*)EPObject_new(&EPObjectType,NULL,NULL);
-	ret->ptr = ptr;
+	PyObject* ret = (EPObject_new(&EPObjectType,NULL,NULL));
+	EPObject_Ptr(ret) = ptr;
 
 	return ret;
 }
