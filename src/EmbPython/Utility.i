@@ -16,7 +16,6 @@
 
 //swig
 #include "Utility/SprEPObject.h"
-#include "Utility/SprEPvoid.h"
 #include "Utility/SprEPCast.h"
 #include "Utility/SprUTCriticalSection.h"//CriticalSection—p
 #include <string>
