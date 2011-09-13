@@ -32,8 +32,8 @@ typedef struct
 ///voidのメソッドの定義
 
 PyObject* __PYDECL EPObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds);
-EPObject* newEPObject();
-EPObject* newEPObject(const void*);
+PyObject* newEPObject();
+PyObject* newEPObject(const void*);
 
 //////////////////////////////////////オブジェクトのタイプ宣言
 extern PyTypeObject EPObjectType;
