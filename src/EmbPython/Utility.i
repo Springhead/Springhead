@@ -15,7 +15,6 @@
 #endif
 
 //swig
-#include "Utility/SprEPError.h"
 #include "Utility/SprEPObject.h"
 #include "Utility/SprEPvoid.h"
 #include "Utility/SprEPCast.h"

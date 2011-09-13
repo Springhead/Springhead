@@ -3,7 +3,6 @@
 
 #include <Python/Python.h>
 #include <Springhead.h>
-#include "SprEPError.h"
 
 using namespace Spr;
 
