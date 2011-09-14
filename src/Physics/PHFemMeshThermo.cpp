@@ -55,7 +55,7 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 			unsigned int dmnN = vertices.size();
 			Tvec.resize(dmnN,1);
 			for(std::vector<unsigned int>::size_type i=0; i < dmnN ; i++){
-				Tvec[i][1] = vertices[i].temp;
+				Tvec[i][0] = vertices[i].temp;
 			}
 
 
