@@ -33,7 +33,18 @@ public:
 	virtual bool GetDesc(void* desc) const;
 	///デスクリプタの設定。
 	virtual void SetDesc(const void* desc);
+	///熱伝導シミュレーションでエンジンが用いるステップ
+	void Step(double dt);
+
+	PTM::VMatrixCol<double> Tvec;
+
+protected:
 	//熱伝導計算本体
+	void CreateK();
+	void CreteC();
+	void CreateF();
+	void CreateTempMatrix();	//節点の温度が入った行列を作る
+	void CreateMatrix();
 	
 };
 

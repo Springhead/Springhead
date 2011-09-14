@@ -28,14 +28,26 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHFemMeshThermoDesc \
 protected:\
+	double	roh;	\
+	double	thconduct;	\
+	double	consts;	\
+	double	heat_trans;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHFemMesh::SetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
+		roh = ((PHFemMeshThermoDesc*)ptr)->roh;	\
+		thconduct = ((PHFemMeshThermoDesc*)ptr)->thconduct;	\
+		consts = ((PHFemMeshThermoDesc*)ptr)->consts;	\
+		heat_trans = ((PHFemMeshThermoDesc*)ptr)->heat_trans;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHFemMesh::GetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
+		((PHFemMeshThermoDesc*)ptr)->roh = roh;	\
+		((PHFemMeshThermoDesc*)ptr)->thconduct = thconduct;	\
+		((PHFemMeshThermoDesc*)ptr)->consts = consts;	\
+		((PHFemMeshThermoDesc*)ptr)->heat_trans = heat_trans;	\
 		return true;	\
 	}\
 

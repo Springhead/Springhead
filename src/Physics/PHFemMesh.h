@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  Copyright (c) 2003-2011, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
@@ -56,12 +56,14 @@ public:
 		std::vector<int> tets;
 		std::vector<int> edges;
 		FemVertex();
+		double temp;		//	温度
 	};
 	//	四面体
 	struct Tet{
 		int vertices[4];	//	頂点ID																																	  
 		int edges[6];		//	対応する辺のID。0:辺01, 1:辺12, 2:辺20, 3:辺03, 4:辺13, 5:辺23
 		int& edge(int i, int j);
+		double volume;		//	積分計算で用いるための体積
 	};
 	//	四面体の面。
 	class Face{
@@ -75,6 +77,8 @@ public:
 		bool operator < (const Face& f2);
 		///	頂点IDで比較
 		bool operator == (const Face& f2);
+		//行列計算に用いるための面積
+		double area;
 	};
 	//	辺
 	struct Edge{
@@ -122,7 +126,8 @@ public:
 	virtual bool GetDesc(void* desc) const ;
 	///デスクリプタの設定。ここで、頂点座標と四面体の4頂点のIDの情報から、面や辺についての情報を計算しておく。
 	virtual void SetDesc(const void* desc);
-
+	///	時刻をdt進める処理。PHFemEngineが呼び出す。
+	virtual void Step(double dt);
 };
 
 
