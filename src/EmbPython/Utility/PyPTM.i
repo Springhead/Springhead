@@ -51,11 +51,11 @@ PyObject* tuple(){
 PyObject* __repr__(){
 	int size = $self->SIZE;
 	PyObject* buf = PyUnicode_FromString("(");
-	PyObject* end = PyUnicode_FromString(" )");
+	PyObject* end = PyUnicode_FromString(")");
 
 	char data_buf[32];
 	for( int i=0 ; i < size ; i++){
-		sprintf(data_buf,"%c%.3lf", (i==0?' ':','),$self->data[i] );
+		sprintf(data_buf,"%s%.3lf", (i==0?"":","),$self->data[i] );
 		PyUnicode_AppendAndDel(&buf,PyUnicode_FromFormat(data_buf));
 	}
 	PyUnicode_AppendAndDel(&buf,end);
@@ -70,6 +70,42 @@ PyObject* __str__(){
 	return prefix;
 }
 
+%enddef
+
+%define VEC_EXTEND_EXPRESSION(vec,elem)
+PyObject* tuple(){
+	int size = $self->SIZE;
+	PyObject* buf;
+	PyObject* tuple =  PyTuple_New(size);
+
+	for( int i=0 ; i < size ; i++){
+		buf = Py_BuildValue("d",$self->data[i]);
+		PyTuple_SetItem( tuple , i, buf);
+	}
+	return tuple;
+}
+
+PyObject* __repr__(){
+	int size = $self->SIZE;
+	PyObject* buf = PyUnicode_FromString("(");
+	PyObject* end = PyUnicode_FromString(")");
+
+	char data_buf[32];
+	for( int i=0 ; i < size ; i++){
+		sprintf(data_buf,"%s%.3lf", (i==0?"":","),$self->data[i] );
+		PyUnicode_AppendAndDel(&buf,PyUnicode_FromFormat(data_buf));
+	}
+	PyUnicode_AppendAndDel(&buf,end);
+	
+	return buf;
+}
+
+PyObject* __str__(){
+	PyObject* repr = EP##vec##___repr__(self);
+	PyObject* prefix = PyUnicode_FromString( #vec );
+	PyUnicode_AppendAndDel( &prefix, repr);
+	return prefix;
+}
 %enddef
 
 %define MAT_MEMBER(mat, vec)
@@ -112,26 +148,37 @@ mat __mul__(elem var1){
 	return *$self * var1;
 }
 PyObject* tuple(){
-	int size =  $self->WIDTH * $self->HEIGHT;
+	int w = $self->WIDTH;
+	int h = $self->HEIGHT;
 	PyObject* buf;
-	PyObject* tuple =  PyTuple_New(size);
-
-	for( int i=0 ; i < size ; i++){
-		buf = Py_BuildValue("d",$self->data[i]);
-		PyTuple_SetItem( tuple , i, buf);
+	PyObject* row = PyTuple_New(w);
+	
+	for( int i=0 ; i < h ; i++){
+		PyObject* col = PyTuple_New(h);
+		for ( int j=0 ; j < w ; j++){
+			buf = Py_BuildValue("d",$self->data[j][i]);
+			PyTuple_SetItem( col , j, buf);
+		}
+		PyTuple_SetItem(row, i , col);
 	}
-	return tuple;
+	return row;
 }
 
 PyObject* __repr__(){
-	int size = $self->WIDTH * $self->HEIGHT;
+	int w = $self->WIDTH;
+	int h = $self->HEIGHT;
+	
 	PyObject* buf = PyUnicode_FromString("(");
-	PyObject* end = PyUnicode_FromString(" )");
+	PyObject* end = PyUnicode_FromString(")");
 
 	char data_buf[32];
-	for( int i=0 ; i < size ; i++){
-		sprintf(data_buf,"%c%.3lf", (i==0?' ':','),$self->data[i] );
-		PyUnicode_AppendAndDel(&buf,PyUnicode_FromFormat(data_buf));
+	for( int i=0 ; i < h ; i++){
+		PyUnicode_AppendAndDel(&buf,PyUnicode_FromString("("));
+		for ( int j=0 ; j < w ; j++){
+			sprintf(data_buf,"%s%.1lf", (j==0?"":","),$self->data[j][i] );
+			PyUnicode_AppendAndDel(&buf,PyUnicode_FromFormat(data_buf));
+		}
+		PyUnicode_AppendAndDel(&buf,PyUnicode_FromString(")"));
 	}
 	PyUnicode_AppendAndDel(&buf,end);
 	
@@ -139,8 +186,8 @@ PyObject* __repr__(){
 }
 
 PyObject* __str__(){
-	PyObject* repr = EP##vec##___repr__(self);
-	PyObject* prefix = PyUnicode_FromString( #vec );
+	PyObject* repr = EP##mat##___repr__(self);
+	PyObject* prefix = PyUnicode_FromString( #mat );
 	PyUnicode_AppendAndDel( &prefix, repr);
 	return prefix;
 }
@@ -501,6 +548,8 @@ public:
 EXTEND_NEW(Affined)
 
 %extend Quaterniond{
+	VEC_EXTEND_EXPRESSION(Vec4d,double)
+
 	double __getitem__(size_t var1){
 		return $self->operator[](var1);
 	}
@@ -563,6 +612,7 @@ EXTEND_NEW(Quaterniond)
 
 
 %extend Quaternionf{
+	VEC_EXTEND_EXPRESSION(Vec4f,float)
 	float __getitem__(size_t var1){
 		return $self->operator[](var1);
 	}
@@ -669,23 +719,23 @@ public:
 EXTEND_NEW(Posed)
 
 
-%extend Posed{
-	Vec3d transform(Vec3d var1){
+%extend Posef{
+	Vec3f transform(Vec3f var1){
 		return *$self * var1;
 	}
-	Posed __mul__(Posed var1){
+	Posef __mul__(Posef var1){
 		return *$self * var1;
 	}
-	void setPos(const Vec3d& var1){
+	void setPos(const Vec3f& var1){
 		$self->Pos() = var1;
 	}
-	Vec3d getPos(){
+	Vec3f getPos(){
 		return $self->Pos();
 	}
-	void setOri(const Quaterniond& var1){
+	void setOri(const Quaternionf& var1){
 		$self->Ori() = var1;
 	}
-	Quaterniond getOri(){
+	Quaternionf getOri(){
 		return $self->Ori();
 	}
 }

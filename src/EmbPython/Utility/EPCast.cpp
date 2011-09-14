@@ -27,33 +27,63 @@ long PyObject_asLong(PyObject* obj)
 	return 0;
 }
 
-Vec3d PyObject_asVec3d(PyObject* obj)
-{
-	if( obj->ob_type == &EPVec3dType)
-		return *EPObject_Cast(obj,Vec3d);
-	if( obj->ob_type == &EPVec3fType)
-		return ((Vec3d)*EPObject_Cast(obj,Vec3f));
-	if( obj->ob_type == &EPVec3fType)
-		return ((Vec3d)*EPObject_Cast(obj,Vec3i));
-
-	DSTR << "PyObject_asVec3dにおいてキャストが正常に行われませんでした";
-	assert(0);
-	return Vec3d();
+#define PyObject_as3(N,S,T)									\
+N##S##T PyObject_as##N##S##T##(PyObject* obj){				\
+if( obj->ob_type == &EP##N##S##dType)						\
+	return ((##N##S##T##)*EPObject_Cast(obj,N##S##d));		\
+	if( obj->ob_type == &EP##N##S##fType)					\
+	return ((##N##S##T##)*EPObject_Cast(obj,N##S##f));		\
+	DSTR << "CastError at PyObject_as3(" #N #S #T ")\n";	\
+assert(0);													\
+return N##S##T##();											\
 }
 
-Vec3f PyObject_asVec3f(PyObject* obj)
-{
-	if( obj->ob_type == &EPVec3fType)
-		return *EPObject_Cast(obj,Vec3f);
-	if( obj->ob_type == &EPVec3dType)
-		return ((Vec3f)*EPObject_Cast(obj,Vec3d));
-	if( obj->ob_type == &EPVec3fType)
-		return ((Vec3f)*EPObject_Cast(obj,Vec3i));
-	
-	DSTR << "PyObject_asVec3fにおいてキャストが正常に行われませんでした";
-	assert(0);
-	return Vec3f();
+PyObject_as3(Vec,2,d)
+PyObject_as3(Vec,2,f)
+PyObject_as3(Vec,3,d)
+PyObject_as3(Vec,3,f)
+PyObject_as3(Vec,4,d)
+PyObject_as3(Vec,4,f)
+
+
+PyObject_as3(Matrix,2,d)
+PyObject_as3(Matrix,2,f)
+PyObject_as3(Matrix,3,d)
+PyObject_as3(Matrix,3,f)
+
+
+PyObject_as3(Affine,2,d)
+PyObject_as3(Affine,2,f)
+
+//Matrix3d PyObject_asMatrix3d(PyObject* obj)
+//{
+//	if( obj->ob_type == &EPMatrix3dType )
+//		return *EPObject_Cast(obj,Matrix3d);
+//	if( obj->ob_type == &EPMatrix3fType )
+//		return (Matrix3d)*EPObject_Cast(obj,Matrix3f);
+//	
+//	DSTR << "PyObject_asMatrix3dにおいてキャストが正常に行われませんでした";
+//	assert(0);
+//	return Matrix3d();
+//}
+
+#define PyObject_as2(N,T)									\
+N##T PyObject_as##N##T##(PyObject* obj){					\
+	if( obj->ob_type == &EP##N##dType )						\
+	return (##N##T##)*EPObject_Cast(obj,##N##d);			\
+	if( obj->ob_type == &EP##N##fType )						\
+	return (##N##T##)*EPObject_Cast(obj,##N##f);			\
+	DSTR << "CastError at PyObject_as2(" #N #T ")\n";		\
+	assert(0);												\
+	return Affine##T##();									\
 }
+
+PyObject_as2(Affine,d)
+PyObject_as2(Affine,f)
+PyObject_as2(Quaternion,d)
+PyObject_as2(Quaternion,f)
+PyObject_as2(Pose,d)
+PyObject_as2(Pose,f)
 
 //char* PyObject_asChar(PyObject* obj)
 //{
