@@ -36,6 +36,10 @@ struct PHFemMeshIf : public SceneObjectIf{
 
 ///	FemMeshThermoのディスクリプタ
 struct PHFemMeshThermoDesc: public PHFemMeshDesc{
+	double roh;		//	密度
+	double thconduct;	//	熱伝導率
+	double consts;		//	比熱
+	double heat_trans;	//	熱伝達率
 	PHFemMeshThermoDesc();
 	void Init();
 };
