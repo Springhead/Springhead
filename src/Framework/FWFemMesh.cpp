@@ -110,6 +110,7 @@ bool FWFemMesh::CreatePHFromGR(){
 void FWFemMesh::CreateGRFromPH(){
 	//	’¸“_‚Ì‘Î‰ž•\‚ð—pˆÓ
 	std::vector<int> vtxMap;
+	DSTR<< "phMesh->vertices.size()" << phMesh->vertices.size() <<std::endl;
 	vtxMap.resize(phMesh->vertices.size(), -1);
 	for(unsigned i=0; i<phMesh->surfaceVertices.size(); ++i){
 		vtxMap[phMesh->surfaceVertices[i]] = i;
