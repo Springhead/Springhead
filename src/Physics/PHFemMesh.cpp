@@ -67,6 +67,8 @@ int& PHFemMesh::Tet::edge(int i, int j){
 PHFemMesh::FemVertex::FemVertex(){
 }
 
+void PHFemMesh::Step(double dt){
+}
 
 PHFemMesh::PHFemMesh(const PHFemMeshDesc& desc, SceneIf* s){
 	SetDesc(&desc);
