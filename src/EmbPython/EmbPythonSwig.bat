@@ -117,11 +117,6 @@ exit /b
 echo //--->>%MODULE%.i
 echo %%include "Utility/EPObject.i">>%MODULE%.i
 echo EXTEND_NEW(PHMaterial)>>%MODULE%.i
-
-echo %%extend Spr::CDShapeIf{>>%MODULE%.i
-echo static const IfInfo* GetIfInfoStatic();>>%MODULE%.i
-echo }>>%MODULE%.i
-
 echo //--->>%MODULE%.i
 exit /b
 
