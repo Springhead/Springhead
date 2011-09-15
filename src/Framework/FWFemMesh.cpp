@@ -105,6 +105,8 @@ bool FWFemMesh::CreatePHFromGR(){
 	pmd.tets.assign(tetsOut, tetsOut + nTetsOut*4);
 	//	PHMesh‚Ì¶¬
 	phMesh = DBG_NEW PHFemMeshThermo(pmd);
+	if (GetPHSolid() && GetPHSolid()->GetScene())
+		GetPHSolid()->GetScene()->AddChildObject(phMesh->Cast());
 	return true;
 }
 void FWFemMesh::CreateGRFromPH(){

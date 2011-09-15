@@ -121,6 +121,12 @@ public:
 
 	SPR_IFDEF(PHIKEngine);
 };
+
+struct PHFemEngineIf : PHEngineIf{
+public:
+	SPR_IFDEF(PHFemEngine);
+};
+
 //@}
 }
 #endif

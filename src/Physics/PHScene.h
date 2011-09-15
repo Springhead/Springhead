@@ -14,6 +14,7 @@
 #include <Physics/PHIKEngine.h>
 #include <Physics/PHIKActuator.h>
 #include <Physics/PHIKEndEffector.h>
+#include <Physics/PHFemEngine.h>
 
 namespace Spr {;
 
@@ -26,6 +27,7 @@ class PHGravityEngine;
 struct PHConstraintDesc;
 struct PHJointDesc;
 class PHScene;
+class PHFemEngine;
 
 class SPR_DLL PHRay : public SceneObject, public PHRayDesc{
 	SPR_OBJECTDEF(PHRay);
@@ -56,6 +58,7 @@ protected:
 	PHGravityEngine*		gravityEngine;
 	PHIKEngine*				ikEngine;
 	PHRays					rays;
+	PHFemEngine*			femEngine;
 	double					timeStepInv;	///< timeStepの逆数．高速化用
 public:
 	
@@ -119,6 +122,8 @@ public:
 	PHIKEndEffectorIf*		CreateIKEndEffector(const IfInfo* ii, const PHIKEndEffectorDesc& desc = PHIKEndEffectorDesc());
 	int						NIKEndEffectors();
 	PHIKEndEffectorIf*		GetIKEndEffector(int i);
+	int						NFemMeshes()const;
+	PHFemMeshIf*			GetFemMesh(int i);
 
 	/// 積分ステップを返す
 	double					GetTimeStep()const{return timeStep;}
