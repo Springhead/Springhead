@@ -204,32 +204,9 @@ void PHFemMeshThermo::CreateMatk2(Tet tets){
 	////四面体の節点0,1,2で作る三角形の面積
 	//DSTR << " 取れたよ三角形の面積 " << CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[2] ) << std::endl;
 
-	
-
 	int hogehoge1 =0;
 
 	//k21 + k22 + k23 + k24
-
-
-
-	//for(int i =0; i <4 ; i++){
-	//	for(int j=0; j < 4 ; j++){
-	//		if(i==0){
-	//			Matk2[i][j] = 0;
-	//		}
-	//		else if(i==1){
-	//			Matk2[i][j] = 0;
-	//		}
-	//		else if(i==2){
-	//			Matk2[i][j] = 0;
-	//		}
-	//		else if(i==3){
-	//			Matk2[i][j] = 0;
-	//		}
-	//	}
-	//}
-	//Matk2[i][j]
-	//Matk2array[0] = Matk2[] 
 
 }
 
