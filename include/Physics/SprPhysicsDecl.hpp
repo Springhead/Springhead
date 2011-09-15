@@ -25,6 +25,8 @@
 	void Enable(bool bEnabled){	base::Enable(bEnabled);}	\
 	void SetNumIter(int numIter){	base::SetNumIter(numIter);}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PHFemEngineIf(base)	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshThermoIf(base)	\
@@ -249,6 +251,8 @@
 	Spr::PHJointIf* GetJoint(int i){	return	base::GetJoint(i);}	\
 	int NContacts()const{	return	base::NContacts();}	\
 	Spr::PHContactPointIf* GetContact(int i){	return	base::GetContact(i);}	\
+	int NFemMeshes()const{	return	base::NFemMeshes();}	\
+	Spr::PHFemMeshIf* GetFemMesh(int i){	return	base::GetFemMesh(i);}	\
 	Spr::PHRootNodeIf* CreateRootNode(Spr::PHSolidIf* root, const Spr::PHRootNodeDesc& desc){	return	base::CreateRootNode(root, desc);}	\
 	int NRootNodes()const{	return	base::NRootNodes();}	\
 	Spr::PHRootNodeIf* GetRootNode(int i){	return	base::GetRootNode(i);}	\

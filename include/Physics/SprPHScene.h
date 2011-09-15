@@ -20,6 +20,7 @@
 #include <Physics/SprPHJoint.h>
 #include <Physics/SprPHIK.h>
 #include <Physics/SprPHEngine.h>
+#include <Physics/SprPHFemMesh.h>
 
 namespace Spr{;
 
@@ -196,6 +197,14 @@ public:
 	/** @brief 接触拘束を取得する
 	 */
 	PHContactPointIf* GetContact(int i);
+
+	/** @brief FEM Meshの数を取得する
+	 */
+	int NFemMeshes()const;
+
+	/** @brief FEM Meshを取得する
+	 */
+	PHFemMeshIf* GetFemMesh(int i);
 
 	/** @brief ルートノードを作成する
 		@param root ルートノードとなる剛体

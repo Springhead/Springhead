@@ -47,6 +47,9 @@ void PHScene::Init(){
 	ikEngine = DBG_NEW PHIKEngine;
 	engines.Add(ikEngine);
 
+	femEngine = DBG_NEW PHFemEngine;
+	engines.Add(femEngine);
+
 	AfterSetDesc();
 }
 void PHScene::AfterSetDesc(){
@@ -183,6 +186,12 @@ int PHScene::NIKEndEffectors(){
 }
 PHIKEndEffectorIf* PHScene::GetIKEndEffector(int i){
 	return ikEngine->endeffectors[i]->Cast();
+}
+int PHScene::NFemMeshes() const {
+	return femEngine->meshes.size();
+}
+PHFemMeshIf* PHScene::GetFemMesh(int i){
+	return femEngine->meshes[i]->Cast();
 }
 
 void PHScene::Clear(){
@@ -360,6 +369,9 @@ bool PHScene::AddChildObject(ObjectIf* o){
 	PHIKEndEffectorIf* ikPoint = DCAST(PHIKEndEffectorIf, o);
 	if(ikPoint && ikEngine->AddChildObject(o))
 		ok = true;
+	PHFemMeshIf* fem = o->Cast();
+	if (fem && femEngine->AddChildObject(o))
+		ok = true;
 
 	// MergeScene‚È‚Ç‚Å‘¼‚ÌScene‚©‚çˆÚ“®‚µ‚Ä‚­‚éê‡‚à‚ ‚é‚Ì‚ÅŠ—LŒ ‚ðXV‚·‚é
 	if(ok){
@@ -384,6 +396,8 @@ bool PHScene::AddChildObject(ObjectIf* o){
 				sprintf(name, "iknode%d", NIKActuators()-1);
 			else if(ikPoint)
 				sprintf(name, "ikpoint%d", NIKEndEffectors()-1);
+			else if(fem)
+				sprintf(name, "fem%d", NFemMeshes()-1);
 			so->SetName(name);
 		}
 	}
