@@ -79,7 +79,7 @@ public:
 		///	頂点IDで比較
 		bool operator == (const Face& f2);
 		//行列計算に用いるための面積
-		double area;
+		double area;			//四面体の各面の面積
 	};
 	//	辺
 	struct Edge{

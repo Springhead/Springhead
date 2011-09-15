@@ -816,7 +816,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		
 		bool loadFromFile = (filename.c_str()[0]!=':');
 		
-		if (loadFromFile) { 
+		if (loadFromFile) {
 			// paintLib でファイルをロード．
 			int h = LoadBmpCreate(filename.c_str());
 			if (!h) {
