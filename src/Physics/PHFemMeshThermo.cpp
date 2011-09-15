@@ -109,6 +109,7 @@ double PHFemMeshThermo::CalcTriangleArea(int id0, int id1, int id2){
 	double area=0.0;
 
 	//行列式を用いて面積を求める
+	//triarea =
 	//|  1     1     1   |
 	//|x2-x1 y2-y1 z2-z1 |
 	//|x3-x1 y3-y1 z3-z1 |
@@ -126,11 +127,19 @@ double PHFemMeshThermo::CalcTriangleArea(int id0, int id1, int id2){
 		//					x3(節点3のx(pos第i成分)目)	-	x1(〃)
 		triarea[2][i] = vertices[id2].pos[i] - vertices[id0].pos[i];
 	}
-	area = triarea.det() / 2.0;
-	//areaは面積なので、求めた値が負ならば正にする
-	if(area < 0.0){
-		area *= -1.0;
-	}
+	double m1,m2,m3 = 0.0;
+	m1 = triarea[1][1] * triarea[2][2] - triarea[1][2] * triarea[2][1];
+	m2 = triarea[2][0] * triarea[1][2] - triarea[1][0] * triarea[2][2];
+	m3 = triarea[1][0] * triarea[2][1] - triarea[2][0] * triarea[1][1];
+
+	area = sqrt(m1 * m1 + m2 * m2 + m3 * m3) / 2.0;
+
+	////↓は間違い？
+	////area = triarea.det() / 2.0;
+	////areaは面積なので、求めた値が負ならば正にする
+	//if(area < 0.0){
+	//	area *= -1.0;
+	//}
 	DSTR << "三角形の面積は : " << area << std::endl; 
 	//0番目の節点は40,1番目の節点は134,2番目の節点は79 の座標で計算してみた
 	//三角形を求める行列 : 2.75949e-005 * 1 = 2.75949 × 10-5(byGoogle計算機) [m^2] = 2.75949 × 10-1 [cm^2]なので、ネギのメッシュのスケールなら大体あっているはず
