@@ -175,6 +175,22 @@ void PHFemMesh::SetDesc(const void* p) {
 			vertices[edges[i].vertices[j]].edges.push_back(i);
 		}
 	}
+	//	Žl–Ê‘Ì‚É–Ê‚ð’Ç‰Á
+	for(unsigned i=0; i<tets.size(); ++i){
+		for(unsigned j=0; j<4; ++j){
+			Face f;
+			for(unsigned k=0; k<3; ++k) f.vertices[k] = tets[i].vertices[k<j ? k : k+1];
+			f.Update();
+			unsigned k;
+			for(k=0; k<faces.size(); ++k){
+				if (faces[k] == f){
+					tets[i].faces[j] = k;
+					break;
+				}
+			}
+			assert(k < faces.size());
+		}
+	}
 	//	Žl–Ê‘Ì‚É•Ó‚ð’Ç‰Á
 	for(unsigned i=0; i<tets.size(); ++i){
 		int count = 0;

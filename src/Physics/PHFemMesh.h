@@ -61,6 +61,7 @@ public:
 	//	四面体
 	struct Tet{
 		int vertices[4];	//	頂点ID																																	  
+		int faces[4];		//	表面４つ
 		int edges[6];		//	対応する辺のID。0:辺01, 1:辺12, 2:辺20, 3:辺03, 4:辺13, 5:辺23
 		int& edge(int i, int j);
 		double volume;		//	積分計算で用いるための体積
@@ -97,24 +98,23 @@ public:
 	std::vector<Tet> tets;
 	//@}
 	
-	/// @name 一時変数	基本情報から計算して求める。
+	/// @name 追加情報	基本情報からSetDesc()が計算して求める。
 	//@{
 	///	物体表面の頂点のID
 	std::vector<int> surfaceVertices;
-	///	物体表面の面
+	///	面
 	std::vector<Face> faces;
 	///	面のうち物体表面のものが、faces[0]..faces[nSurfaceFace-1]
 	unsigned nSurfaceFace;
-	///	物体表面の辺
+	///	辺
 	std::vector<Edge> edges;
-	///	辺のうち物体表面のものが、edges[0]..edges[nSurfaceEdge]
+	///	辺のうち物体表面のものが、edges[0]..edges[nSurfaceEdge-1]
 	unsigned nSurfaceEdge;
 	//@}
 
 	/// @name 四面体の計算	対象によらずに必要になる形状関数のXXを計算する関数
 	//@{
 	void UpdateJacobian();
-	
 	//@}
 
 
