@@ -52,7 +52,7 @@ public:
 	PTM::TMatrixRow<4,4,double> Matk1;		//CreateMatk1()
 	PTM::TMatrixRow<4,4,double> Matk2;		//CreateMatk2()
 	//int Matk2array[4];						//matk2が入った配列		//CreateMatk2array()
-	PTM::TMatrixRow<4,4,double> Matk2array[4];
+	PTM::TMatrixRow<4,4,double> Matk2array[4];	//k21,k22,k23,k24の4×4行列の入れ物
 	PTM::TMatrixRow<4,4,double> Matk;		//Matk=Matk1+Matk2+Matk3	matk1~3を合成した要素剛性行列	CreateMatkLocal()
 	PTM::TMatrixRow<4,4,double> Matc;		//
 	PTM::TMatrixCol<4,1,double> Matf3;		//f3:外側の面に面している面のみ計算する　要注意
