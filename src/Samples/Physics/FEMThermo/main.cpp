@@ -195,7 +195,7 @@ public:
 		//体積を求める
 		
 		//行列計算のテストを行う関数
-		TestMatrixFunc();
+		//TestMatrixFunc();
 	}
 	void CreateMeshTempVec(){
 		//TetGen()で作成したデータから、節点の並び順を取得して、温度が入った縦ベクトルを作る

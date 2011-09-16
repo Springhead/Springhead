@@ -103,12 +103,13 @@ void PHFemMeshThermo::CreateMatkLocal(){
 	//k2を作る
 	for(unsigned i = 0; i< tets.size() ; i++){
 		CreateMatk2(tets[i]);
+		int hogehogehoge=0;
 	}
 }
 double PHFemMeshThermo::CalcTriangleArea(int id0, int id1, int id2){
 	double area=0.0;
 
-	//行列式を用いて面積を求める
+	//行列式の成分を用いて面積を求める
 	//triarea =
 	//|  1     1     1   |
 	//|x2-x1 y2-y1 z2-z1 |
@@ -134,15 +135,12 @@ double PHFemMeshThermo::CalcTriangleArea(int id0, int id1, int id2){
 
 	area = sqrt(m1 * m1 + m2 * m2 + m3 * m3) / 2.0;
 
-	////↓は間違い？
-	////area = triarea.det() / 2.0;
-	////areaは面積なので、求めた値が負ならば正にする
-	//if(area < 0.0){
-	//	area *= -1.0;
-	//}
-	DSTR << "三角形の面積は : " << area << std::endl; 
+	//	for debug
+	//DSTR << "三角形の面積は : " << area << std::endl; 
+
 	//0番目の節点は40,1番目の節点は134,2番目の節点は79 の座標で計算してみた
 	//三角形を求める行列 : 2.75949e-005 * 1 = 2.75949 × 10-5(byGoogle計算機) [m^2] = 2.75949 × 10-1 [cm^2]なので、ネギのメッシュのスケールなら大体あっているはず
+
 	return area;
 }
 
@@ -151,13 +149,18 @@ void PHFemMeshThermo::CreateMatk2(Tet tets){
 	//四面体を構成する4節点を節点の配列(Tetsには、節点の配列が作ってある)に入っている順番を使って、面の計算を行ったり、行列の計算を行ったりする。
 	//そのため、この関数の引数に、四面体要素の番号を取る
 
-
-	//for(int i =0; i < tets.size(); i++){
-	//	tets[i].vertices
-	//}
-
-	PTM::TMatrixRow<4,4,double> Matk2temp;
+	//最後に入れる行列を初期化
+	for(unsigned i =0; i < 4 ;i++){
+		for(unsigned j =0; j < 4 ;j++){
+			Matk2[i][j] = 0.0;
+		}
+	}
 	//1)	一時使用行列tempにすべて入れてしまう
+	//|2 1 1 1 |
+	//|1 2 1 1 |
+	//|1 1 2 1 |
+	//|1 1 1 2 |	を作る
+	PTM::TMatrixRow<4,4,double> Matk2temp;
 	for(int i =0; i <4 ; i++){
 		for(int j=0; j < 4 ; j++){
 			if(i==j){
@@ -169,54 +172,79 @@ void PHFemMeshThermo::CreateMatk2(Tet tets){
 	}
 	//for debug
 	//DSTR << Matk2temp << std::endl;
-	//|2 1 1 1 |
-	//|1 2 1 1 |
-	//|1 1 2 1 |
-	//|1 1 1 2 |
-
+	
 	//2)	
-	//k21を作る
-	Matk2array[0] = Matk2temp;
-	//1行n列を0に
-	for(int i=0;i<4;i++){
-		Matk2array[0][0][i] = 0.0;
-	}
-	//n行1列を0に
-	for(int i=0;i<4;i++){
-		Matk2array[0][i][0] = 0.0;
-	}
-	//k_21=
-	//|0 0 0 0 |
-	//|0 2 1 1 |
-	//|0 1 2 1 |
-	//|0 1 1 2 |
-	//
-	DSTR << Matk2array[0] << std::endl;
+	//l=0の時k21,1:k22, 2:k23, 3:k24	を生成
+	for(unsigned l= 0 ; l < 4; l++){
+		Matk2array[l] = Matk2temp;
+		//	1行i列を0に
+		for(int i=0;i<4;i++){
+			Matk2array[l][l][i] = 0.0;
+		}
+		//	i行1列を0に
+		for(int i=0;i<4;i++){
+			Matk2array[l][i][l] = 0.0;
+		}
+		//	k_21	
+		// =	|0 0 0 0 |
+		//		|0 2 1 1 |
+		//		|0 1 2 1 |
+		//		|0 1 1 2 |
+		//	for debug
+		//DSTR <<"Matk2array[" << l << "] : " << std::endl;
+		//DSTR << Matk2array[l] << std::endl;
 
-	//係数の積をとる
-	//この節点で構成される四面体の面積の積をとる
+		//係数の積をとる
+		//この節点で構成される四面体の面積の積をとる
 
-	//節点を見てみよう♪
-	for(unsigned i =0; i < 4 ; i++){
-		DSTR << i <<"番目の節点は" << tets.vertices[i] << std::endl;
+		//節点を見てみよう♪
+		//for(unsigned i =0; i < 4 ; i++){
+		//	DSTR << "k2"<< l << "行列の "<< i <<"番目の節点は" << tets.vertices[i] << std::endl;
+		//}
+	
+		//四面体の節点1,2,3(0以外)で作る三角形の面積
+		//l==0番目の時、 123	を代入する
+		//l==1			0 23
+		//l==2			01 3
+		//l==3			012
+		//をCalcTriangleAreaに入れることができるようにアルゴリズムを考える。
+		//k21
+		if(l==0){
+			Matk2array[l] = heatTrans * (1.0/12.0) * CalcTriangleArea( tets.vertices[1],tets.vertices[2],tets.vertices[3] ) * Matk2array[l];
+		}
+		//	k22
+		else if(l==1){
+			Matk2array[l] = heatTrans * (1.0/12.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[2],tets.vertices[3] ) * Matk2array[l];
+		}
+		//	k23
+		else if(l==2){
+			Matk2array[l] = heatTrans * (1.0/12.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[3] ) * Matk2array[l];
+		}
+		//	k24
+		else if(l==3){
+			Matk2array[l] = heatTrans * (1.0/12.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[2] ) * Matk2array[l];
+		}
+		//for debug
+		//DSTR << "Matk2array[" << l << "]の完成版は↓" << std::endl;
+		//DSTR << Matk2array[l] << std::endl;
+	}
+
+	//k2 = k21 + k22 + k23 + k24
+	for(unsigned i=0; i < 4; i++){
+		Matk2 += Matk2array[i];
+		//	for debug
+		//DSTR << "Matk2 に Matk2array = k2" << i+1 <<"まで加算した行列" << std::endl;
+		//DSTR << Matk2 << std::endl;
 	}
 	
-	//四面体の節点1,2,3(0以外)で作る三角形の面積
-	Matk2array[0] = heatTrans * (1.0/12.0) * CalcTriangleArea( tets.vertices[1],tets.vertices[2],tets.vertices[3] ) * Matk2array[0];
-	//これでk21ができているはず
-	//for debug
-	DSTR << "Matk2array[0]の完成版は⇒" << Matk2array[0] << std::endl;
-
-	//同様にして、k22~k24を作り、k2に合算する
-
-	//for debug
-	////四面体の節点0,1,2で作る三角形の面積
-	//DSTR << " 取れたよ三角形の面積 " << CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[2] ) << std::endl;
-
-	int hogehoge1 =0;
-
-	//k21 + k22 + k23 + k24
-
+	DSTR << "節点（";
+	for(unsigned i =0; i < 4; i++){
+		DSTR << tets.vertices[i] << "," ;
+	}
+	DSTR << ")で構成される四面体の" << std::endl;
+	DSTR << "Matk2 : " << std::endl;
+	DSTR << Matk2 << std::endl;
+	int hogeshishi =0;
 }
 
 void PHFemMeshThermo::SetInitThermoConductionParam(double thConduct0,double roh0,double specificHeat0,double heatTrans0){
@@ -236,9 +264,10 @@ void PHFemMeshThermo::CreateTempMatrix(){
 	//for(unsigned int i =0; i < dmnN; i++){
 	//	DSTR << i <<" : " << TVecAll[i][0] << std::endl;
 	//}
-	for(std::vector<unsigned int>::size_type i =0; i < vertices.size(); i++){
-		DSTR << i << " : " << &vertices[i] << std::endl;
-	}
+	//for debug
+	//for(std::vector<unsigned int>::size_type i =0; i < vertices.size(); i++){
+	//	DSTR << i << " : " << &vertices[i] << std::endl;
+	//}
 
 }
 
