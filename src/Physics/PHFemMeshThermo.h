@@ -45,26 +45,27 @@ public:
 	//kやfに関しては、面ごとに計算した係数行列を格納する配列Mat(k/f)arrayを定義
 	
 	//節点温度ベクトル
-	PTM::TMatrixCol<4,1,double> TVec;		//要素の節点温度ベクトル
-	PTM::VMatrixCol<double> TVecAll;		//全体の節点温度ベクトル
+	PTM::TMatrixCol<4,1,double> TVec;			//要素の節点温度ベクトル
+	PTM::VMatrixCol<double> TVecAll;			//全体の節点温度ベクトル
 
 	//要素の係数行列
-	PTM::TMatrixRow<4,4,double> Matk1;		//CreateMatk1()
-	PTM::TMatrixRow<4,4,double> Matk2;		//CreateMatk2()
+	PTM::TMatrixRow<4,4,double> Matk1;			//CreateMatk1()
+	PTM::TMatrixRow<4,4,double> Matk2;			//CreateMatk2()
 	//int Matk2array[4];						//matk2が入った配列		//CreateMatk2array()
-	PTM::TMatrixRow<4,4,double> Matk2array[4];	//k21,k22,k23,k24の4×4行列の入れ物
-	PTM::TMatrixRow<4,4,double> Matk;		//Matk=Matk1+Matk2+Matk3	matk1~3を合成した要素剛性行列	CreateMatkLocal()
-	PTM::TMatrixRow<4,4,double> Matc;		//
-	PTM::TMatrixCol<4,1,double> Matf3;		//f3:外側の面に面している面のみ計算する　要注意
-	int Matf3array[4];						//
-	PTM::TMatrixCol<4,1,double> Matf;		//f1~f4を合算した縦ベクトル
+	PTM::TMatrixRow<4,4,double> Matk1array[4];	//Kmの3つの4×4行列の入れ物　Matk1を作るまでの間の一時的なデータ置場
+	PTM::TMatrixRow<4,4,double> Matk2array[4];	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
+	PTM::TMatrixRow<4,4,double> Matk;			//Matk=Matk1+Matk2+Matk3	matk1~3を合成した要素剛性行列	CreateMatkLocal()
+	PTM::TMatrixRow<4,4,double> Matc;			//
+	PTM::TMatrixCol<4,1,double> Vecf3;			//f3:外側の面に面している面のみ計算する　要注意
+	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
+	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
 
 	//全体の係数行列
-	PTM::VMatrixRow<double> MatKall;		//[K]の全体剛性行列		//CreateMatKall()
-	PTM::VMatrixRow<double> MatCall;		//[C]
-	PTM::VMatrixRow<double> MatFall;		//{F}の全体剛性ベクトル
+	PTM::VMatrixRow<double> MatKall;			//[K]の全体剛性行列		//CreateMatKall()
+	PTM::VMatrixRow<double> MatCall;			//[C]
+	PTM::VMatrixRow<double> MatFall;			//{F}の全体剛性ベクトル
 
-	void SetVerticesTemp(double temp);		//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
+	void SetVerticesTemp(double temp);			//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
 	//熱伝達境界条件の時はすべての引数を満たす　温度固定境界条件を用いたいときには、熱伝達率（最後の引数）を入力しない。また、毎Step実行時に特定節点の温度を一定温度に保つようにする。
 	void SetInitThermoConductionParam(double thConduct,double roh,double specificHeat,double heatTrans);		//熱伝導率、密度、比熱、熱伝達率などのパラメーターを設定・代入
 
@@ -72,26 +73,35 @@ public:
 protected:
 	//熱伝導計算本体
 	//[K]熱伝導マトリクスを作る関数群
-	void CreateMatk1();
-	void CreateMatk2(Tet tet);		//四面体ごとに作るので、四面体を引数に取る
+	void CreateMatk1k(Tet tets);				//kimura方式の計算法
+	void CreateMatk1b(Tet tets);				//yagawa1983の計算法の3次元拡張した計算法 b:book の意味
+	void CreateMatk2(Tet tets);					//四面体ごとに作るので、四面体を引数に取る
 	void CreateMatk2array();
 	void CreateMatkLocal();
 	void CreateMatKall();
 
 	void CreateMatTest();
-	void CreteC();
-	void CreateF();
-	void CreateTempMatrix();	//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
+	void CreateMatcLocal();
+	void CreateMatc(Tet tets);					//cの要素剛性行列を作る関数
+	void CreateVecfLocal();						//
+	void CreateVecf3(Tet tets);					//
+	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
+	void CreateLocalMatrixAndSet();				//K,C,Fすべての行列・ベクトルについて要素剛性行列を作って、エッジに入れる	又は	全体剛性行列を作る関数
 	void CreateMatrix();
+	void SetkcfParam(Tet tets);					//エッジや頂点にk,c,fの要素剛性行列の係数を設定する関数	すべての四面体について要素剛性行列を求め、k,c,fに値を入れると、次の要素について処理を実行する	
 	double CalcTriangleArea(int id0, int id2, int id3);		//節点IDを入れると、その点で構成された三角形の面積を求める　四面体での面積分で使用
-	double CalcTetrahedraVol(int tetra);					//四面体のIDを入れると、その体積を計算してくれる関数
+	double CalcTetrahedraVolume(Tet tets);		////四面体のIDを入れると、その体積を計算してくれる関数
+
+	PTM::TMatrixRow<4,4,double> Create44Mat21();	//共通で用いる、4×4の2と1でできた行列を返す関数
+	//あるいは、引数を入れると、引数を変えてくれる関数
+	PTM::TMatrixCol<4,1,double> Create41Vec1();		//共通で用いる、4×1の1でできた行列(ベクトル)を返す関数
 
 	//熱計算に用いるパラメータ
-	double thConduct;		//熱伝導率
-	double heatTrans;		//熱伝達率
-	double roh;				//密度
-	double specificHeat;	//比熱
-	double dt;				//時間刻み幅
+	double thConduct;				//熱伝導率
+	double heatTrans;				//熱伝達率
+	double roh;						//密度
+	double specificHeat;			//比熱
+	double dt;						//時間刻み幅
 	
 };
 
