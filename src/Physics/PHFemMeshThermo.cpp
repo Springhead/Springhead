@@ -70,12 +70,13 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	
 	//k2の行列を作る
 	//CreateMatk2array();
+//	CreateLocalMatrixAndSet();
 	CreateMatkLocal();
 	
 	//CreateMatKall();
 
-	//CreateC();
-	//CreateF();
+	CreateMatcLocal();
+	CreateVecfLocal();
 	//PrepareGaussSeidel();
 		//ガウスザイデルで計算するために、クランクニコルソンの差分式の形で行列を作る。行列DやF、-bなどを作り、ガウスザイデルで計算ステップを実行直前まで
 	//ガウスザイデルの計算を単位ステップ時間ごとに行う
@@ -86,26 +87,305 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 		//SetChemicalSimulation();
 		//化学変化シミュレーションに必要な温度などのパラメータを渡す
 	//温度変化や化学シミュレーションの結果はグラフィクス表示を行う
-	
-
 }
 
+
+
+void PHFemMeshThermo::CreateLocalMatrixAndSet(){
+	//K,C,Fの行列を作る関数を呼び出して、作らせる
+	for(unsigned i = 0; i< tets.size() ; i++){
+		//tetsを引数にいれると、その行列・ベクトルを作ってくれて、できた行列、ベクトルを基に係数を設定しくれる
+		//こうすれば、各要素剛性行列でfor文を回さなくてもよくなる
+		//CreateMatkLocal(tets);
+		//CreateMatcLocal(tets);
+		//CreateVecfLocal(tets);
+
+		//tetsを入れて作らせる
+//		SetkcfParam(tets);
+
+	}
+
+}
+void PHFemMeshThermo::SetkcfParam(Tet tets){
+}
 
 bool PHFemMeshThermo::GetDesc(void* p) const {
 	PHFemMeshThermoDesc* d = (PHFemMeshThermoDesc*)p;
 	return PHFemMesh::GetDesc(d);
 }
 
-void PHFemMeshThermo::CreateMatkLocal(){
-	//k1を作る
-	//CreateMatk1();
+void PHFemMeshThermo::CreateMatc(Tet tets){
+	//最後に入れる行列を初期化
+	for(unsigned i =0; i < 4 ;i++){
+		for(unsigned j =0; j < 4 ;j++){
+			Matc[i][j] = 0.0;
+		}
+	}
+	//Matc に21でできた行列を入れる
+	Matc = Create44Mat21();
+	//	for debug
+		//DSTR << "Matc " << Matc << " ⇒ ";
+	Matc = roh * specificHeat * CalcTetrahedraVolume(tets) / 20.0 * Matc;
+	//	debug	//係数の積をとる
+		//DSTR << Matc << std::endl;
+		//int hogemat =0 ;
+}
 
-	//k2を作る
+void PHFemMeshThermo::CreateMatcLocal(){
+	//Matcの初期化は、Matcを作る関数でやっているので、省略
+	//すべての要素について係数行列を作る
 	for(unsigned i = 0; i< tets.size() ; i++){
-		CreateMatk2(tets[i]);
-		int hogehogehoge=0;
+		//c
+		CreateMatc(tets[i]);
+		int mathoge=0;
+		//	(ガウスザイデルを使った計算時)要素毎に作った行列の成分より、エッジに係数を格納する
+		//	or	(ガウスザイデルを使わない計算時)要素ごとの計算が終わるたびに、要素剛性行列の成分だけをエッジや点に作る変数に格納しておく	#ifedefでモード作って、どちらもできるようにしておいても良いけどw
+
 	}
 }
+
+
+void PHFemMeshThermo::CreateVecfLocal(){
+	//Vecfの初期化
+	for(unsigned i =0; i < 4 ; i++){
+			Vecf[i][0] = 0.0;
+	}
+	//すべての要素について係数行列を作る
+	for(unsigned i = 0; i< tets.size() ; i++){
+		//f1を作る
+		//f2を作る
+		//f3を作る
+		CreateVecf3(tets[i]);
+		//f4を作る
+		int hogehoge=0;
+		//f1,f2,f3,f4を加算する
+		Vecf = Vecf3;	
+		//	for debug
+		DSTR << "Vecf : " << std::endl;
+		DSTR << Vecf << std::endl;
+		DSTR << "Vecf3 : " << std::endl;
+		DSTR << Vecf3 << std::endl;
+		//	(ガウスザイデルを使った計算時)要素毎に作った行列の成分より、エッジに係数を格納する
+		//	or	(ガウスザイデルを使わない計算時)要素ごとの計算が終わるたびに、要素剛性行列の成分だけをエッジや点に作る変数に格納しておく	#ifedefでモード作って、どちらもできるようにしておいても良いけどw
+
+	}	
+}
+
+void PHFemMeshThermo::CreateMatkLocal(){
+	//Matkの初期化
+	for(unsigned i =0; i < 4 ; i++){
+		for(unsigned j =0; j < 4 ; j++){
+			Matk[i][j] = 0.0;
+		}
+	}
+	//すべての要素について係数行列を作る
+	for(unsigned i = 0; i< tets.size() ; i++){
+		//k1を作る
+		//体積の求積関数
+		CalcTetrahedraVolume(tets[i]);
+		CreateMatk1k(tets[i]);
+//		CreateMatk1b(tets[i]);
+		//k2を作る
+		CreateMatk2(tets[i]);
+		int hogehogehoge=0;
+		//k1,k2,k3を加算する
+		Matk = Matk2;	
+		//	for debug
+		DSTR << "Matk : " << std::endl;
+		DSTR << Matk << std::endl;
+		DSTR << "Matk2 : " << std::endl;
+		DSTR << Matk2 << std::endl;
+		//	(ガウスザイデルを使った計算時)要素毎に作った行列の成分より、エッジに係数を格納する
+		//	or	(ガウスザイデルを使わない計算時)要素ごとの計算が終わるたびに、要素剛性行列の成分だけをエッジや点に作る変数に格納しておく	#ifedefでモード作って、どちらもできるようにしておいても良いけどw
+
+	}
+}
+
+void PHFemMeshThermo::CreateMatk1b(Tet tets){
+	//yagawa1983を基にノートに式展開した計算式
+}
+
+void PHFemMeshThermo::CreateMatk1k(Tet tets){
+	//この計算を呼び出すときに、各四面体ごとに計算するため、四面体の0番から順にこの計算を行う
+	//四面体を構成する4節点を節点の配列(Tetsには、節点の配列が作ってある)に入っている順番を使って、面の計算を行ったり、行列の計算を行ったりする。
+	//そのため、この関数の引数に、四面体要素の番号を取る
+
+	//最後に入れる行列を初期化
+	for(unsigned i =0; i < 4 ;i++){
+		for(unsigned j =0; j < 4 ;j++){
+			Matk1[i][j] = 0.0;
+		}
+	}
+
+	//	A行列　=	a11 a12 a13
+	//				a21 a22 a23
+	//				a31 a32 a33
+	//を生成
+	PTM::TMatrixRow<4,4,double> Matk1A;
+	FemVertex p[4];
+	for(unsigned i = 0; i< 4 ; i++){
+		p[i]= vertices[tets.vertices[i]];
+	}
+	
+	Matk1A[0][0] = (p[2].pos.y - p[0].pos.y) * (p[3].pos.z - p[0].pos.z) - (p[2].pos.z - p[0].pos.z) * (p[3].pos.y - p[0].pos.y);
+	DSTR << Matk1A[0][0] << std::endl;
+	Matk1A[0][1] = (p[1].pos.z - p[0].pos.z) * (p[3].pos.y - p[0].pos.y) - (p[1].pos.y - p[0].pos.y) * (p[3].pos.z - p[0].pos.z);
+	Matk1A[0][2] = (p[1].pos.y - p[0].pos.y) * (p[2].pos.z - p[0].pos.z) - (p[1].pos.z - p[0].pos.z) * (p[2].pos.y - p[0].pos.y);
+
+	Matk1A[1][0] = (p[2].pos.z - p[0].pos.z) * (p[3].pos.x - p[0].pos.x) - (p[2].pos.x - p[0].pos.x) * (p[3].pos.z - p[0].pos.z);
+	Matk1A[1][1] = (p[1].pos.x - p[0].pos.x) * (p[3].pos.z - p[0].pos.z) - (p[1].pos.z - p[0].pos.z) * (p[3].pos.x - p[0].pos.x);
+	Matk1A[1][2] = (p[1].pos.z - p[0].pos.z) * (p[2].pos.x - p[0].pos.x) - (p[1].pos.x - p[0].pos.x) * (p[2].pos.z - p[0].pos.z);
+
+	Matk1A[2][0] = (p[2].pos.x - p[0].pos.x) * (p[3].pos.y - p[0].pos.y) - (p[2].pos.y - p[0].pos.y) * (p[3].pos.x - p[0].pos.x);
+	Matk1A[2][1] = (p[1].pos.y - p[0].pos.y) * (p[3].pos.x - p[0].pos.x) - (p[1].pos.x - p[0].pos.x) * (p[3].pos.y - p[0].pos.y);
+	Matk1A[2][2] = (p[1].pos.x - p[0].pos.x) * (p[2].pos.y - p[0].pos.y) - (p[1].pos.y - p[0].pos.y) * (p[2].pos.x - p[0].pos.x);
+
+	DSTR << "Matk1A : " << Matk1A << std::endl; 
+	int hogeshi =0;
+
+	//a11 ~ a33 を行列に入れて、[N~T] [N] を計算させる
+	
+	for(unsigned l= 0 ; l < 3; l++){
+		//	k_21	
+		// =	|0 0 0 0 |
+		//		|0 2 1 1 |
+		//		|0 1 2 1 |
+		//		|0 1 1 2 |
+		//	for debug
+		//DSTR <<"Matk2array[" << l << "] : " << std::endl;
+		//DSTR << Matk2array[l] << std::endl;
+
+		//係数の積をとる
+		//この節点で構成される四面体の面積の積をとる
+
+		//節点を見てみよう♪
+		//for(unsigned i =0; i < 4 ; i++){
+		//	DSTR << "k2"<< l << "行列の "<< i <<"番目の節点は" << tets.vertices[i] << std::endl;
+		//}
+	
+		//四面体の節点1,2,3(0以外)で作る三角形の面積
+		//l==0番目の時、 123	を代入する
+		//l==1			0 23
+		//l==2			01 3
+		//l==3			012
+		//をCalcTriangleAreaに入れることができるようにアルゴリズムを考える。
+
+	}
+		//	for debug
+		//DSTR << "Matk2 に Matk2array = k2" << i+1 <<"まで加算した行列" << std::endl;
+		//DSTR << Matk2 << std::endl;
+	
+	//for debug
+	//DSTR << "節点（";
+	//for(unsigned i =0; i < 4; i++){
+	//	DSTR << tets.vertices[i] << "," ;
+	//}
+	//DSTR << ")で構成される四面体の" << std::endl;
+	//DSTR << "Matk2 : " << std::endl;
+	//DSTR << Matk2 << std::endl;
+	//int hogeshishi =0;
+}
+
+void PHFemMeshThermo::CreateVecf3(Tet tets){
+	//最後に入れる行列を初期化
+	for(unsigned i =0; i < 4 ;i++){
+		Vecf3[i][0] = 0.0;
+	}	
+	//l=0の時f31,1:f32, 2:f33, 3:k34	を生成
+	for(unsigned l= 0 ; l < 4; l++){
+		//Matk2array[l] = Matk2temp;
+		Vecf3array[l] = Create41Vec1();
+		//	l行を0に
+		for(int i=0;i<4;i++){
+			Vecf3array[l][l][i] = 0.0;
+		}
+		//	f_3	
+		// =	| 0 | + | 1 |+...
+		//		| 1 |   | 0 |
+		//		| 1 |   | 1 |
+		//		| 1 |   | 1 |
+		//	for debug
+		//DSTR << "Vecf3array[" << l << "] : " << std::endl;
+		//DSTR << Vecf3array[l] << std::endl;
+
+		//係数の積をとる
+		//この節点で構成される四面体の面積の積をとる
+		//四面体の節点1,2,3(0以外)で作る三角形の面積
+		//l==0番目の時、 123	を代入する
+		//l==1			0 23
+		//l==2			01 3
+		//l==3			012
+		//をCalcTriangleAreaに入れることができるようにアルゴリズムを考える。
+		//k21
+		if(l==0){
+			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[1],tets.vertices[2],tets.vertices[3] ) * Vecf3array[l];
+		}
+		//	k22
+		else if(l==1){
+			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[2],tets.vertices[3] ) * Vecf3array[l];
+		}
+		//	k23
+		else if(l==2){
+			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[3] ) * Vecf3array[l];
+		}
+		//	k24
+		else if(l==3){
+			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[2] ) * Vecf3array[l];
+		}
+		//for debug
+		//DSTR << "Vecf3array[" << l << "]の完成版は↓" << std::endl;
+		//DSTR << Vecf3array[l] << std::endl;
+	}
+
+	//f3 = f31 + f32 + f33 + f34
+	for(unsigned i=0; i < 4; i++){
+		Vecf3 += Vecf3array[i];
+		//	for debug
+		//DSTR << "Vecf3 に Vecf3array = f3" << i+1 <<"まで加算した行列" << std::endl;
+		//DSTR << Vecf3 << std::endl;
+	}
+	
+	//for debug
+	//DSTR << "節点（";
+	//for(unsigned i =0; i < 4; i++){
+	//	DSTR << tets.vertices[i] << "," ;
+	//}
+	//DSTR << ")で構成される四面体の" << std::endl;
+	//DSTR << "Vecf3 : " << std::endl;
+	//DSTR << Vecf3 << std::endl;
+	//int hogeshishi =0;
+}
+
+
+double PHFemMeshThermo::CalcTetrahedraVolume(Tet tets){
+	PTM::TMatrixRow<4,4,double> tempMat44;
+	for(unsigned i =0; i < 4; i++){
+		for(unsigned j =0; j < 4; j++){
+			if(i == 0){
+				tempMat44[i][j] = 1.0;
+			}
+			else if(i == 1){
+				tempMat44[i][j] = vertices[tets.vertices[j]].pos.x;
+			}
+			else if(i == 2){
+				tempMat44[i][j] = vertices[tets.vertices[j]].pos.y;
+			}
+			else if(i == 3){
+				tempMat44[i][j] = vertices[tets.vertices[j]].pos.z;
+			}
+			
+		}
+	}
+	//	for debug
+	//DSTR << tempMat44 << std::endl;
+	//for(unsigned i =0; i < 4 ;i++){
+	//	DSTR << vertices[tets.vertices[i]].pos.x << " , " << vertices[tets.vertices[i]].pos.y << " , " << vertices[tets.vertices[i]].pos.z << std::endl; 
+	//}
+	//DSTR << tempMat44.det() << std::endl;
+	//int hogever = 0;
+	return tempMat44.det() / 6.0;
+}
+
 double PHFemMeshThermo::CalcTriangleArea(int id0, int id1, int id2){
 	double area=0.0;
 
@@ -144,6 +424,32 @@ double PHFemMeshThermo::CalcTriangleArea(int id0, int id1, int id2){
 	return area;
 }
 
+PTM::TMatrixCol<4,1,double> PHFemMeshThermo::Create41Vec1(){
+	PTM::TMatrixCol<4,1,double> Mat1temp;
+	for(int i =0; i <4 ; i++){
+				Mat1temp[i][0] = 1.0;
+	}
+	return Mat1temp;
+}
+
+PTM::TMatrixRow<4,4,double> PHFemMeshThermo::Create44Mat21(){
+	//|2 1 1 1 |
+	//|1 2 1 1 |
+	//|1 1 2 1 |
+	//|1 1 1 2 |	を作る
+	PTM::TMatrixRow<4,4,double> MatTemp;
+	for(int i =0; i <4 ; i++){
+		for(int j=0; j < 4 ; j++){
+			if(i==j){
+				MatTemp[i][j] = 2.0;
+			}else{
+				MatTemp[i][j] = 1.0;
+			}
+		}
+	}
+	return MatTemp;
+}
+
 void PHFemMeshThermo::CreateMatk2(Tet tets){
 	//この計算を呼び出すときに、各四面体ごとに計算するため、四面体の0番から順にこの計算を行う
 	//四面体を構成する4節点を節点の配列(Tetsには、節点の配列が作ってある)に入っている順番を使って、面の計算を行ったり、行列の計算を行ったりする。
@@ -155,28 +461,12 @@ void PHFemMeshThermo::CreateMatk2(Tet tets){
 			Matk2[i][j] = 0.0;
 		}
 	}
-	//1)	一時使用行列tempにすべて入れてしまう
-	//|2 1 1 1 |
-	//|1 2 1 1 |
-	//|1 1 2 1 |
-	//|1 1 1 2 |	を作る
-	PTM::TMatrixRow<4,4,double> Matk2temp;
-	for(int i =0; i <4 ; i++){
-		for(int j=0; j < 4 ; j++){
-			if(i==j){
-				Matk2temp[i][j] = 2.0;
-			}else{
-				Matk2temp[i][j] = 1.0;
-			}
-		}
-	}
-	//for debug
-	//DSTR << Matk2temp << std::endl;
-	
+
 	//2)	
 	//l=0の時k21,1:k22, 2:k23, 3:k24	を生成
 	for(unsigned l= 0 ; l < 4; l++){
-		Matk2array[l] = Matk2temp;
+		//Matk2array[l] = Matk2temp;
+		Matk2array[l] = Create44Mat21();
 		//	1行i列を0に
 		for(int i=0;i<4;i++){
 			Matk2array[l][l][i] = 0.0;
@@ -237,14 +527,15 @@ void PHFemMeshThermo::CreateMatk2(Tet tets){
 		//DSTR << Matk2 << std::endl;
 	}
 	
-	DSTR << "節点（";
-	for(unsigned i =0; i < 4; i++){
-		DSTR << tets.vertices[i] << "," ;
-	}
-	DSTR << ")で構成される四面体の" << std::endl;
-	DSTR << "Matk2 : " << std::endl;
-	DSTR << Matk2 << std::endl;
-	int hogeshishi =0;
+	//for debug
+	//DSTR << "節点（";
+	//for(unsigned i =0; i < 4; i++){
+	//	DSTR << tets.vertices[i] << "," ;
+	//}
+	//DSTR << ")で構成される四面体の" << std::endl;
+	//DSTR << "Matk2 : " << std::endl;
+	//DSTR << Matk2 << std::endl;
+	//int hogeshishi =0;
 }
 
 void PHFemMeshThermo::SetInitThermoConductionParam(double thConduct0,double roh0,double specificHeat0,double heatTrans0){
