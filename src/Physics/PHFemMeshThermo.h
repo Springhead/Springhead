@@ -65,6 +65,11 @@ public:
 	PTM::VMatrixRow<double> MatCall;			//[C]
 	PTM::VMatrixRow<double> MatFall;			//{F}の全体剛性ベクトル
 
+	//全体の剛性行列の代わり
+	PTM::VMatrixRow<double> DMatKAll;			//全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
+	PTM::VMatrixRow<double> DMatCAll;			//全体剛性行列Cの対角成分
+	PTM::VMatrixRow<double> DMatAll_;			//全体剛性行列KとCの対角成分の定数倍和の逆数をとったもの	ガウスザイデルの計算に利用する
+
 	void SetVerticesTemp(double temp);			//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
 	//熱伝達境界条件の時はすべての引数を満たす　温度固定境界条件を用いたいときには、熱伝達率（最後の引数）を入力しない。また、毎Step実行時に特定節点の温度を一定温度に保つようにする。
 	void SetInitThermoConductionParam(double thConduct,double roh,double specificHeat,double heatTrans);		//熱伝導率、密度、比熱、熱伝達率などのパラメーターを設定・代入
