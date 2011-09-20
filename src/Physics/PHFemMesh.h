@@ -57,6 +57,8 @@ public:
 		std::vector<int> edges;
 		FemVertex();
 		double temp;		//	温度
+		double k;			//	全体剛性行列Kの要素　計算に利用
+		double c;			//	同上
 	};
 	//	四面体
 	struct Tet{
@@ -89,6 +91,8 @@ public:
 		bool operator < (const Edge& e2);
 		///	頂点IDで比較
 		bool operator == (const Edge& e2);
+		double k;		//全体剛性行列Kの要素
+		double c;		//	
 	};
 	///	基本情報(生成時にデスクリプタから与えられる情報)
 	//@{
