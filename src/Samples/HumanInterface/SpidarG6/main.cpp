@@ -25,6 +25,7 @@ int __cdecl main(){
 
 	UTRef<HISpidarGIf> spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+	spg->Calibration();
 	int t = 0;
 	while(!_kbhit()){
 		t += 1;
