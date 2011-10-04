@@ -43,7 +43,8 @@ public:
 	//熱流束ベクトルの		f:f1~f4の加算したもの,	体積分の	f1:内部発熱による項,	面積分の	f2:熱流束境界条件,	f3:熱伝達境界条件,	f4:熱輻射境界条件
 	//体積分の場合:要素1つにつき1つの行列、面積分の場合:要素内の各面ごとに1つで計4つの行列なので配列に入れる
 	//kやfに関しては、面ごとに計算した係数行列を格納する配列Mat(k/f)arrayを定義
-	
+	//	Col:列単位の行列	Row:行単位の行列
+
 	//節点温度ベクトル
 	PTM::TMatrixCol<4,1,double> TVec;			//要素の節点温度ベクトル
 	PTM::VMatrixCol<double> TVecAll;			//全体の節点温度ベクトル
@@ -61,14 +62,16 @@ public:
 	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
 
 	//全体の係数行列
-	PTM::VMatrixRow<double> MatKall;			//[K]の全体剛性行列		//CreateMatKall()
-	PTM::VMatrixRow<double> MatCall;			//[C]
-	PTM::VMatrixRow<double> MatFall;			//{F}の全体剛性ベクトル
+	PTM::VMatrixRow<double> MatKAll;			//[K]の全体剛性行列		//CreateMatKall()
+	PTM::VMatrixRow<double> MatCAll;			//[C]
+	PTM::VMatrixCol<double> MatFAll;			//{F}の全体剛性ベクトル
 
 	//全体の剛性行列の代わり
 	PTM::VMatrixRow<double> DMatKAll;			//全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
 	PTM::VMatrixRow<double> DMatCAll;			//全体剛性行列Cの対角成分
-	PTM::VMatrixRow<double> DMatAll_;			//全体剛性行列KとCの対角成分の定数倍和の逆数をとったもの	ガウスザイデルの計算に利用する
+	PTM::VMatrixRow<double> _DMatAll;			//全体剛性行列KとCの対角成分の定数倍和の逆数をとったもの	ガウスザイデルの計算に利用する
+	PTM::VMatrixCol<double> bVecAll;			//ガウスザイデルの計算に用いる定数行列bの縦ベクトル	Rowである必要はあるのか？⇒Colにした
+	//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
 
 	void SetVerticesTemp(double temp);			//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
 	//熱伝達境界条件の時はすべての引数を満たす　温度固定境界条件を用いたいときには、熱伝達率（最後の引数）を入力しない。また、毎Step実行時に特定節点の温度を一定温度に保つようにする。
@@ -96,6 +99,8 @@ protected:
 	void SetkcfParam(Tet tets);					//エッジや頂点にk,c,fの要素剛性行列の係数を設定する関数	すべての四面体について要素剛性行列を求め、k,c,fに値を入れると、次の要素について処理を実行する	
 	double CalcTriangleArea(int id0, int id2, int id3);		//節点IDを入れると、その点で構成された三角形の面積を求める　四面体での面積分で使用
 	double CalcTetrahedraVolume(Tet tets);		////四面体のIDを入れると、その体積を計算してくれる関数
+	void PrepareStep();							//Step()で必要な変数を計算する関数
+	//double CalcbVec(int vtxid,
 
 	PTM::TMatrixRow<4,4,double> Create44Mat21();	//共通で用いる、4×4の2と1でできた行列を返す関数
 	//あるいは、引数を入れると、引数を変えてくれる関数
@@ -106,7 +111,9 @@ protected:
 	double heatTrans;				//熱伝達率
 	double roh;						//密度
 	double specificHeat;			//比熱
-	double dt;						//時間刻み幅
+//	double dt;						//時間刻み幅
+
+	bool deformed;					//形状が変わったかどうか
 	
 };
 

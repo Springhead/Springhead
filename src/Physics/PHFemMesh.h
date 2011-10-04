@@ -92,7 +92,8 @@ public:
 		///	頂点IDで比較
 		bool operator == (const Edge& e2);
 		double k;		//全体剛性行列Kの要素
-		double c;		//	
+		double c;		//
+		double b;		//ガウスザイデル計算で用いる定数b
 	};
 	///	基本情報(生成時にデスクリプタから与えられる情報)
 	//@{
