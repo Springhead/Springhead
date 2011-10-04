@@ -18,6 +18,9 @@ PHFemMeshThermoDesc::PHFemMeshThermoDesc(){
 	Init();
 }
 void PHFemMeshThermoDesc::Init(){
+	//ディスクリプタの生成時に呼ばれるコンストラクタで呼ばれる
+	//ディスクリプタ生成時の初期化したいことを書きこむ
+	//以下の関数の中で行っている初期化の類をここでやるのが良さそう
 	//ディスクリプタに入れる値の初期化?
 	
 
@@ -28,13 +31,80 @@ void PHFemMeshThermoDesc::Init(){
 
 
 PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
+	deformed = true;			//変数の初期化、形状が変わったかどうか
 	SetDesc(&desc);
 	if (s){ SetScene(s); }
-	
+}
+void PHFemMeshThermo::PrepareStep(){
+	//ガウスザイデルに必要な、計算式の係数を計算する
+	double dt = DCAST(PHSceneIf, GetScene())->GetTimeStep();
+	//係数bやDMatAll_などをここで作る
+	//bVecAllのリサイズ
+	//bVecAllに計算結果を格納
+	//ただし、[K],[C]などは全体剛性行列を作っているのではなく、成分ごとにEdges構造体に入っているので、この値を用いる
+	//係数行列b生成ループ⇒このループをガウスザイデル計算の最初の一回だけやったほうが、forループが1回少なくなるので、計算速そう。けど、if文が必要
 }
 void PHFemMeshThermo::Step(double dt){
-	//	
+	//dtはPHFemEngine.cppで取得
+	bool DoCalc =true;											//初回だけ定数ベクトル-bの計算を行うbool
+	int NofCyc =10;												//計算回数
+	for(unsigned i=0; i < NofCyc; i++){							//ガウスザイデルの計算ループ
+		if(DoCalc){
+			if(deformed){												//D_iiの作成　形状が更新された際に1度だけ行えばよい
+				for(unsigned j =0; j < vertices.size() ; j++){
+					_DMatAll[0][j] = 1.0/ ( 1.0/2 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] );									//1 / D__ii	を求める
+					//値が入っているかをチェック
+					int debughogeshi =0;
+				}
+				deformed = false;
+			}
+			for(unsigned j =0; j < vertices.size() ; j++){		//初回ループだけ	係数ベクトルbVecAllの成分を計算
+				bVecAll[j][0] = 0.0;							//bVecAll[j][0]の初期化
+				//節点が属すedges毎に　対角成分(j,j)と非対角成分(j,?)毎に計算
+				//対角成分は、vertices[j].k or .c に入っている値を、非対角成分はedges[hoge].vertices[0] or vertices[1] .k or .cに入っている値を用いる
+				//ⅰ)非対角成分について
+				for(unsigned k =0;k < vertices[j].edges.size() ; k++){
+					unsigned edgeId = vertices[j].edges[k]; 
+					if( j != edges[edgeId].vertices[0]){					//節点番号jとedges.vertices[0]が異なる節点番号の時:非対角成分
+						unsigned vtxid0 = edges[edgeId].vertices[0];
+						bVecAll[j][0] += (-1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0][0];
+					}
+					else if( j != edges[edgeId].vertices[1] ){			//節点番号jとedges.vertices[1]が異なる節点番号の時:非対角成分
+						unsigned vtxid1 = edges[edgeId].vertices[1];
+						bVecAll[j][0] += (-1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid1][0];
+					}
+					else{
+						//上記のどちらでもない場合、エラー
+						DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
+					}
+				}
+				//ⅱ)対角成分について
+				bVecAll[j][0] += (-1.0/2.0 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] ) * TVecAll[j][0];
+				//{F}を加算
+				bVecAll[j][0] += + MatFAll[j][0];		//Fを加算
+				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
+				bVecAll[j][0] += bVecAll[j][0] * _DMatAll[0][j];
+				//値が入っているか、正常そうかをチェック
+				DSTR << "bVecAll[j][0] : " << bVecAll[j][0] << std::endl;
+				int debughogeshi =0;
+			}
+			DoCalc = false;			//初回のループだけで利用
+		}		//if(DoCalc){...}
+		for(unsigned j =0; j < vertices.size() ; j++){
+			//T(t+dt) = の式
+			//vertices[j].temp = 
+			//j行目の計算を行う
+			//j行目に値を格納する
+
+			//定数ベクトル-bを上記で求めているので、マイナスbとついているが、式としては、毎行でbVecAllを加算すればよい。
+		}
+
+	}
+	
 }
+
+
+
 void PHFemMeshThermo::CreateMatrix(){
 }
 
@@ -43,8 +113,14 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	PHFemMeshThermoDesc* d = (PHFemMeshThermoDesc*)p;
 	PHFemMesh::SetDesc(d);
 	
-	//時間刻み幅	dtの設定
-	PHFemMeshThermo::dt = 0.01;
+	////時間刻み幅	dtの設定
+	//PHFemMeshThermo::dt = 0.01;
+
+	//シーンから、シーンの時間ステップを取得する⇒以下のコードでは、GetTimeStepしようとすると、NULLが返ってくるので、PHEngineで行う
+	//DSTR << DCAST(PHSceneIf, GetScene()) << std::endl;
+	//DSTR << DCAST(PHSceneIf, GetScene())->GetTimeStep() << std::endl;
+	//int hogeshimitake =0;
+
 
 	//各種メンバ変数の初期化⇒コンストラクタでできたほうがいいかもしれない。
 	//Edges
@@ -52,6 +128,9 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 		edges[i].c = 0.0;
 		edges[i].k = 0.0;
 	}
+
+	//行列の成分数などを初期化
+	bVecAll.resize(vertices.size(),1);
 
 	//行列を作る
 		//行列を作るために必要な節点や四面体の情報は、PHFemMeshThermoの構造体に入っている。
@@ -79,12 +158,15 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	//k2の行列を作る
 	//CreateMatk2array();
 //	CreateLocalMatrixAndSet();
+
+	//各行列を作って、ガウスザイデルで計算するための係数の基本を作る。Timestepの入っている項は、このソース(SetDesc())では、実現できないことが分かった(NULLが返ってくる)
 	CreateMatkLocal();
 	
-	//CreateMatKall();
-
+	//CreateMatKall();		//CreateMatkLocal();に実装したので、後程分ける。
 	CreateMatcLocal();
 	CreateVecfLocal();
+
+	//以下は、エンジンに実装する
 	//PrepareGaussSeidel();
 		//ガウスザイデルで計算するために、クランクニコルソンの差分式の形で行列を作る。行列DやF、-bなどを作り、ガウスザイデルで計算ステップを実行直前まで
 	//ガウスザイデルの計算を単位ステップ時間ごとに行う
@@ -140,6 +222,14 @@ void PHFemMeshThermo::CreateMatc(Tet tets){
 }
 
 void PHFemMeshThermo::CreateMatcLocal(){
+	//	使用する行列の初期化
+	//DMatCAll：対角行列の成分の入った行列のサイズを定義:配列として利用	幅:vertices.size(),高さ:1
+	DMatCAll.resize(1,vertices.size()); //(h,w)
+	//値の初期化
+	for(unsigned i=0;i<vertices.size();i++){
+		DMatCAll[0][i] = 0.0;
+	}
+
 	//Matcの初期化は、Matcを作る関数でやっているので、省略
 	//すべての要素について係数行列を作る
 	for(unsigned i = 0; i< tets.size() ; i++){
@@ -148,8 +238,45 @@ void PHFemMeshThermo::CreateMatcLocal(){
 		int mathoge=0;
 		//	(ガウスザイデルを使った計算時)要素毎に作った行列の成分より、エッジに係数を格納する
 		//	or	(ガウスザイデルを使わない計算時)要素ごとの計算が終わるたびに、要素剛性行列の成分だけをエッジや点に作る変数に格納しておく	#ifedefでモード作って、どちらもできるようにしておいても良いけどw
-
+		for(unsigned j=1; j < 4; j++){
+			int vtxid0 = tets[i].vertices[j];
+			//	下三角行列部分についてのみ実行
+			//	j==1:k=0, j==2:k=0,1, j==3:k=0,1,2
+			for(unsigned k = 0; k < j; k++){
+				int vtxid1 = tets[i].vertices[k];
+					for(unsigned l =0; l < vertices[vtxid0].edges.size(); l++){
+						for(unsigned m =0; m < vertices[vtxid1].edges.size(); m++){
+							if(vertices[vtxid0].edges[l] == vertices[vtxid1].edges[m]){
+								edges[vertices[vtxid0].edges[l]].c += Matc[j][k];		//同じものが二つあるはずだから半分にする。上三角化下三角だけ走査するには、どういうfor文ｓにすれば良いのか？
+								//DSTR << edges[vertices[vtxid0].edges[l]].k << std::endl;
+							}
+						}
+					}
+			}
+		}
+		//対角成分を対角成分の全体剛性行列から抜き出した1×nの行列に代入する
+		//j=0~4まで代入(上のループでは、jは対角成分の範囲しかないので、値が入らない成分が出てしまう)
+		for(unsigned j =0;j<4;j++){
+			DMatCAll[0][tets[i].vertices[j]] = Matc[j][j];
+		}
 	}
+
+	//	for debug
+	//DSTR << "DMatCAll : " << std::endl;
+	//for(unsigned j =0;j < vertices.size();j++){
+	//	DSTR << j << "th : " << DMatCAll[0][j] << std::endl;
+	//}
+	// ネギについて非0成分になった。
+
+	//	調べる
+	//DMatKAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
+	// try catch文にする
+	for(unsigned j = 0; j < vertices.size() ; j++){
+		if(DMatKAll[0][j] ==0.0){
+			DSTR << "DMatKAll[0][" << j << "] element is blank" << std::endl;
+		}
+	}
+	int piyodebug =0;
 }
 
 
@@ -158,6 +285,9 @@ void PHFemMeshThermo::CreateVecfLocal(){
 	for(unsigned i =0; i < 4 ; i++){
 			Vecf[i][0] = 0.0;
 	}
+	//全体剛性ベクトルFのサイズを規定
+	MatFAll.resize(vertices.size(),1);
+
 	//すべての要素について係数行列を作る
 	for(unsigned i = 0; i< tets.size() ; i++){
 		//f1を作る
@@ -169,14 +299,37 @@ void PHFemMeshThermo::CreateVecfLocal(){
 		//f1,f2,f3,f4を加算する
 		Vecf = Vecf3;	
 		//	for debug
-		DSTR << "Vecf : " << std::endl;
-		DSTR << Vecf << std::endl;
-		DSTR << "Vecf3 : " << std::endl;
-		DSTR << Vecf3 << std::endl;
+		//DSTR << "Vecf : " << std::endl;
+		//DSTR << Vecf << std::endl;
+		//DSTR << "Vecf3 : " << std::endl;
+		//DSTR << Vecf3 << std::endl;
 		//	(ガウスザイデルを使った計算時)要素毎に作った行列の成分より、エッジに係数を格納する
 		//	or	(ガウスザイデルを使わない計算時)要素ごとの計算が終わるたびに、要素剛性行列の成分だけをエッジや点に作る変数に格納しておく	#ifedefでモード作って、どちらもできるようにしておいても良いけどw
 
-	}	
+		//要素の節点番号の場所に、その節点のfの値を入れる
+		//j:要素の中の何番目か
+		for(unsigned j =0;j < 4; j++){
+			int vtxid0 = tets[i].vertices[j];
+			MatFAll[vtxid0][0] = Vecf[j][0];
+		}
+	}
+	//	for debug
+	//MatFAllに値が入ったのかどうかを調べる 2011.09.21全部に値が入っていることを確認した
+	//DSTR << "MatFAll : " << std::endl;
+	//for(unsigned j =0; j < vertices.size() ; j++){
+	//	DSTR << j << " ele is :  " << MatFAll[j][0] << std::endl;
+	//}
+	//int hogeshi =0;
+
+	//	調べる
+	//DMatFAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
+	// try catch文にする
+	for(unsigned j = 0; j < vertices.size() ; j++){
+		if(MatFAll[j][0] ==0.0){
+			DSTR << "MatFAll[" << j << "][0] element is blank" << std::endl;
+		}
+	}
+	//int hogef =0;
 }
 
 void PHFemMeshThermo::CreateMatkLocal(){
@@ -380,18 +533,22 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 		//k21
 		if(l==0){
 			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[1],tets.vertices[2],tets.vertices[3] ) * Vecf3array[l];
+			//DSTR << "Vecf3array[" << l << "] : " << Vecf3array[l] << std::endl;
 		}
 		//	k22
 		else if(l==1){
 			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[2],tets.vertices[3] ) * Vecf3array[l];
+			//DSTR << "Vecf3array[" << l << "] : " << Vecf3array[l] << std::endl;
 		}
 		//	k23
 		else if(l==2){
 			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[3] ) * Vecf3array[l];
+			//DSTR << "Vecf3array[" << l << "] : " << Vecf3array[l] << std::endl;
 		}
 		//	k24
 		else if(l==3){
 			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[2] ) * Vecf3array[l];
+			//DSTR << "Vecf3array[" << l << "] : " << Vecf3array[l] << std::endl;
 		}
 		//for debug
 		//DSTR << "Vecf3array[" << l << "]の完成版は↓" << std::endl;

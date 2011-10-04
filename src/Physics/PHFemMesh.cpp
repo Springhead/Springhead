@@ -68,6 +68,10 @@ PHFemMesh::FemVertex::FemVertex(){
 }
 
 void PHFemMesh::Step(double dt){
+	//熱伝導計算の実装を行う？
+	//ここから、PHFemMeshThermoのStepを呼んで、実行させる。
+	
+
 }
 
 PHFemMesh::PHFemMesh(const PHFemMeshDesc& desc, SceneIf* s){
