@@ -52,12 +52,27 @@ void PHFemMeshThermo::Step(double dt){
 		if(DoCalc){
 			if(deformed){												//D_iiの作成　形状が更新された際に1度だけ行えばよい
 				for(unsigned j =0; j < vertices.size() ; j++){
-					_DMatAll[0][j] = 1.0/ ( 1.0/2 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] );									//1 / D__ii	を求める
+					//for(unsigned k =0;k < vertices.size(); k++){
+					//	DSTR << "DMatCAll "<< k << " : " << DMatCAll[0][k] << std::endl;
+					//}
+					_DMatAll.resize(1,vertices.size());
+					_DMatAll[0][j] = 1.0/ ( 1.0/2.0 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] );									//1 / D__ii	を求める
 					//値が入っているかをチェック
+					//DSTR << "_DMatAll[0][" << j << "] : " << _DMatAll[0][j]  << std::endl;
 					int debughogeshi =0;
 				}
 				deformed = false;
+				//	for DEBUG
+				//DSTR << "_DMatAll : " << std::endl;
+				//for(unsigned j =0; j < vertices.size() ;j++){
+				//	DSTR << j << " : " << _DMatAll[0][j] << std::endl;
+				//}
+				//int hogeshi=0;
 			}
+			//	 1      1 
+			//	--- ( - - [K] +  
+			//	D_jj    2 
+			//
 			for(unsigned j =0; j < vertices.size() ; j++){		//初回ループだけ	係数ベクトルbVecAllの成分を計算
 				bVecAll[j][0] = 0.0;							//bVecAll[j][0]の初期化
 				//節点が属すedges毎に　対角成分(j,j)と非対角成分(j,?)毎に計算
@@ -77,6 +92,10 @@ void PHFemMeshThermo::Step(double dt){
 						//上記のどちらでもない場合、エラー
 						DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
 					}
+					//	for Debug
+					//DSTR << "edges[" << edgeId << "].vertices[0] : " << edges[edgeId].vertices[0] << std::endl;
+					//DSTR << "edges[" << edgeId << "].vertices[1] : " << edges[edgeId].vertices[1] << std::endl;
+					//int hogeshi =0;
 				}
 				//ⅱ)対角成分について
 				bVecAll[j][0] += (-1.0/2.0 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] ) * TVecAll[j][0];
@@ -84,13 +103,17 @@ void PHFemMeshThermo::Step(double dt){
 				bVecAll[j][0] += + MatFAll[j][0];		//Fを加算
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
 				bVecAll[j][0] += bVecAll[j][0] * _DMatAll[0][j];
-				//値が入っているか、正常そうかをチェック
-				DSTR << "bVecAll[j][0] : " << bVecAll[j][0] << std::endl;
-				int debughogeshi =0;
 			}
 			DoCalc = false;			//初回のループだけで利用
+			//値が入っているか、正常そうかをチェック
+			DSTR << "bVecAll[j][0] : " << std::endl;
+			for(unsigned j =0;j <vertices.size() ; j++){
+				DSTR << j << " : "<< bVecAll[j][0] << std::endl;
+			}
+			int debughogeshi =0;
 		}		//if(DoCalc){...}
 		for(unsigned j =0; j < vertices.size() ; j++){
+			TVecAll[j][0] = _DMatAll[j][0] *( );
 			//T(t+dt) = の式
 			//vertices[j].temp = 
 			//j行目の計算を行う
@@ -100,7 +123,17 @@ void PHFemMeshThermo::Step(double dt){
 		}
 
 	}
-	
+	//以下をエンジンに実装する
+	//PrepareGaussSeidel();
+		//ガウスザイデルで計算するために、クランクニコルソンの差分式の形で行列を作る。行列DやF、-bなどを作り、ガウスザイデルで計算ステップを実行直前まで
+	//ガウスザイデルの計算を単位ステップ時間ごとに行う
+		//ガウスザイデルの計算
+		//CalcGaussSeidel();
+	//（形状が変わったら、マトリクスやベクトルを作り直す）
+	//温度変化・最新の時間の{T}縦ベクトルに記載されている節点温度を基に化学変化シミュレーションを行う
+		//SetChemicalSimulation();
+		//化学変化シミュレーションに必要な温度などのパラメータを渡す
+	//温度変化や化学シミュレーションの結果はグラフィクス表示を行う
 }
 
 
@@ -165,18 +198,7 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	//CreateMatKall();		//CreateMatkLocal();に実装したので、後程分ける。
 	CreateMatcLocal();
 	CreateVecfLocal();
-
-	//以下は、エンジンに実装する
-	//PrepareGaussSeidel();
-		//ガウスザイデルで計算するために、クランクニコルソンの差分式の形で行列を作る。行列DやF、-bなどを作り、ガウスザイデルで計算ステップを実行直前まで
-	//ガウスザイデルの計算を単位ステップ時間ごとに行う
-		//ガウスザイデルの計算
-		//CalcGaussSeidel();
-	//（形状が変わったら、マトリクスやベクトルを作り直す）
-	//温度変化・最新の時間の{T}縦ベクトルに記載されている節点温度を基に化学変化シミュレーションを行う
-		//SetChemicalSimulation();
-		//化学変化シミュレーションに必要な温度などのパラメータを渡す
-	//温度変化や化学シミュレーションの結果はグラフィクス表示を行う
+	int hogeshidebug =0;
 }
 
 
@@ -262,18 +284,18 @@ void PHFemMeshThermo::CreateMatcLocal(){
 	}
 
 	//	for debug
-	//DSTR << "DMatCAll : " << std::endl;
-	//for(unsigned j =0;j < vertices.size();j++){
-	//	DSTR << j << "th : " << DMatCAll[0][j] << std::endl;
-	//}
+	DSTR << "DMatCAll : " << std::endl;
+	for(unsigned j =0;j < vertices.size();j++){
+		DSTR << j << "th : " << DMatCAll[0][j] << std::endl;
+	}
 	// ネギについて非0成分になった。
 
 	//	調べる
 	//DMatKAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
 	// try catch文にする
 	for(unsigned j = 0; j < vertices.size() ; j++){
-		if(DMatKAll[0][j] ==0.0){
-			DSTR << "DMatKAll[0][" << j << "] element is blank" << std::endl;
+		if(DMatCAll[0][j] ==0.0){
+			DSTR << "DMatCAll[0][" << j << "] element is blank" << std::endl;
 		}
 	}
 	int piyodebug =0;
@@ -505,14 +527,16 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 	for(unsigned i =0; i < 4 ;i++){
 		Vecf3[i][0] = 0.0;
 	}	
-	//l=0の時f31,1:f32, 2:f33, 3:k34	を生成
+	//l=0の時f31,1:f32, 2:f33, 3:f34	を生成
 	for(unsigned l= 0 ; l < 4; l++){
 		//Matk2array[l] = Matk2temp;
 		Vecf3array[l] = Create41Vec1();
 		//	l行を0に
-		for(int i=0;i<4;i++){
-			Vecf3array[l][l][i] = 0.0;
-		}
+		//for(int i=0;i<4;i++){
+		//	Vecf3array[l][l][i] = 0.0;
+		//}
+		Vecf3array[l][l][0] = 0.0;
+		//array[n][m][l]	= narray[n],m行l列
 		//	f_3	
 		// =	| 0 | + | 1 |+...
 		//		| 1 |   | 0 |
@@ -553,6 +577,10 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 		//for debug
 		//DSTR << "Vecf3array[" << l << "]の完成版は↓" << std::endl;
 		//DSTR << Vecf3array[l] << std::endl;
+		if(DMatCAll == NULL){
+			//DSTR <<"i : "<< i << ", l : " << l << std::endl;
+			DSTR <<"l : " << l << std::endl;
+		}
 	}
 
 	//f3 = f31 + f32 + f33 + f34
