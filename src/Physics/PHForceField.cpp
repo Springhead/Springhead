@@ -19,11 +19,27 @@ void PHGravityEngine::Step(){
 	}
 }
 
+void PHGravityEngine::Clear(){
+	solids.clear();
+}
+
 bool PHGravityEngine::AddChildObject(ObjectIf* o){
-	PHSolid* s = DCAST(PHSolid, o);
-	if(s && !solids.Find(s)){
+	PHSolid* s = o->Cast();
+	if(s && std::find(solids.begin(), solids.end(), s) == solids.end()){
 		solids.push_back(s);
 		return true;
+	}
+	return false;
+}
+
+bool PHGravityEngine::DelChildObject(ObjectIf* o){
+	PHSolid* s = o->Cast();
+	if(s){
+		PHSolids::iterator it = std::find(solids.begin(), solids.end(), s);
+		if(it != solids.end()){
+			solids.erase(it);
+			return true;
+		}
 	}
 	return false;
 }

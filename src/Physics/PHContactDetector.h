@@ -269,7 +269,7 @@ public:
 	///< „‘Ì‚Ì’Ç‰Á
 	virtual bool AddChildObject(ObjectIf* o){
 		PHSolid* s = DCAST(PHSolid, o);
-		if(s && !solids.Find(s)){
+		if(s && std::find(solids.begin(), solids.end(), s) == solids.end()){
 			solids.push_back(s);
 			int N = (int)solids.size();
 			assert(solidPairs.height() == N-1 && solidPairs.width() == N-1);
@@ -372,7 +372,10 @@ public:
 	}
 	///< Solid‚ÉShape‚ª’Ç‰Á‚³‚ê‚½‚Æ‚«‚ÉSolid‚©‚çŒÄ‚Î‚ê‚é
 	void UpdateShapePairs(PHSolid* solid){
-		int isolid = (int)(solids.Find(solid) - &solids[0]);
+		PHSolids::iterator it = std::find(solids.begin(), solids.end(), solid);
+		if(it == solids.end())
+			return;
+		int isolid = (int)(it - solids.begin());
 		int i, j;
 		TSolidPair* sp;
 		PHSolid *slhs, *srhs;

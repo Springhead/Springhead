@@ -218,12 +218,11 @@ void PHConstraintEngine::Clear(){
 }
 
 PHJoint* PHConstraintEngine::CreateJoint(const IfInfo* ii, const PHJointDesc& desc, PHSolid* lhs, PHSolid* rhs){
-	UTRef<PHSolid> *plhs, *prhs;
-	plhs = solids.Find(lhs);
-	prhs = solids.Find(rhs);
-	if(!plhs || !prhs)
-		return NULL;
-	
+	if(std::find(solids.begin(), solids.end(), lhs) == solids.end())
+		return 0;
+	if(std::find(solids.begin(), solids.end(), rhs) == solids.end())
+		return 0;
+
 	PHJoint* joint = NULL;
 	if(ii == PHHingeJointIf::GetIfInfoStatic())
 		joint = DBG_NEW PHHingeJoint();
@@ -247,8 +246,7 @@ PHRootNode* PHConstraintEngine::CreateRootNode(const PHRootNodeDesc& desc, PHSol
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 		if((*it)->FindBySolid(solid))
 			return NULL;
-	PHSolids::iterator it = find(solids.begin(), solids.end(), solid);
-	if(it == solids.end())
+	if(find(solids.begin(), solids.end(), solid) == solids.end())
 		return NULL;
 	
 	PHRootNode* root = DBG_NEW PHRootNode();

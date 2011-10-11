@@ -308,6 +308,7 @@ public:
 };
 class PHSolids : public std::vector< UTRef<PHSolid> >{
 public:
+	/* 以下削除候補
 	UTRef<PHSolid> Erase(const PHSolid* s){
 		iterator it = std::find(begin(), end(), s);
 		if (it == end()) return NULL;
@@ -322,7 +323,7 @@ public:
 	}
 	UTRef<PHSolid>* Find(const PHSolid* s) const {
 		return ((PHSolids*)this)->Find(s);
-	}
+	}*/
 };
 
 /**	Solidを保持するクラス．Solidの更新も行う．	*/

@@ -475,10 +475,14 @@ public: /** ”h¶ƒNƒ‰ƒX‚ªŽÀ‘•‚·‚éŠÖ” **/
 			if(id == ID_TOGGLE_GRAVITY){
 				if(ToggleAction(menu, id)){
 					phScene->SetGravity(tmpGravity);
+					//for(int i = 0; i < phScene->NSolids(); i++)
+					//	phScene->GetSolids()[i]->SetGravity(true);
 				}
 				else{
 					tmpGravity = phScene->GetGravity();
 					phScene->SetGravity(Vec3d());
+					//for(int i = 0; i < phScene->NSolids(); i++)
+					//	phScene->GetSolids()[i]->SetGravity(false);
 				}
 			}
 			if(id == ID_TOGGLE_JOINT){
