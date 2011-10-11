@@ -46,7 +46,7 @@ void PHFemMeshThermo::PrepareStep(){
 }
 void PHFemMeshThermo::Step(double dt){
 	//dtはPHFemEngine.cppで取得
-	bool DoCalc =true;											//初回だけ定数ベクトル-bの計算を行うbool
+	bool DoCalc =true;											//初回だけ定数ベクトルbの計算を行うbool
 	int NofCyc =10;												//計算回数
 	for(unsigned i=0; i < NofCyc; i++){							//ガウスザイデルの計算ループ
 		if(DoCalc){
@@ -69,9 +69,9 @@ void PHFemMeshThermo::Step(double dt){
 				//}
 				//int hogeshi=0;
 			}
-			//	 1      1 
-			//	--- ( - - [K] +  
-			//	D_jj    2 
+			//	 1      1        1  
+			//	--- ( - - [K] + --- ){T(t)} + {F} 
+			//	D_jj    2       ⊿t
 			//
 			for(unsigned j =0; j < vertices.size() ; j++){		//初回ループだけ	係数ベクトルbVecAllの成分を計算
 				bVecAll[j][0] = 0.0;							//bVecAll[j][0]の初期化
@@ -79,7 +79,8 @@ void PHFemMeshThermo::Step(double dt){
 				//対角成分は、vertices[j].k or .c に入っている値を、非対角成分はedges[hoge].vertices[0] or vertices[1] .k or .cに入っている値を用いる
 				//ⅰ)非対角成分について
 				for(unsigned k =0;k < vertices[j].edges.size() ; k++){
-					unsigned edgeId = vertices[j].edges[k]; 
+					unsigned edgeId = vertices[j].edges[k];
+					//リファクタリング	以下の条件分岐についてj>edges[edgeId].vertices[0] とそうでない時とで分けたほうが漏れが出る心配はない？
 					if( j != edges[edgeId].vertices[0]){					//節点番号jとedges.vertices[0]が異なる節点番号の時:非対角成分
 						unsigned vtxid0 = edges[edgeId].vertices[0];
 						bVecAll[j][0] += (-1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0][0];
@@ -100,35 +101,72 @@ void PHFemMeshThermo::Step(double dt){
 				//ⅱ)対角成分について
 				bVecAll[j][0] += (-1.0/2.0 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] ) * TVecAll[j][0];
 				//{F}を加算
-				bVecAll[j][0] += + MatFAll[j][0];		//Fを加算
+				bVecAll[j][0] += MatFAll[j][0];		//Fを加算
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
 				bVecAll[j][0] += bVecAll[j][0] * _DMatAll[0][j];
 			}
 			DoCalc = false;			//初回のループだけで利用
 			//値が入っているか、正常そうかをチェック
-			DSTR << "bVecAll[j][0] : " << std::endl;
-			for(unsigned j =0;j <vertices.size() ; j++){
-				DSTR << j << " : "<< bVecAll[j][0] << std::endl;
-			}
+//			DSTR << "bVecAll[j][0] : " << std::endl;
+//			for(unsigned j =0;j <vertices.size() ; j++){
+//				DSTR << j << " : "<< bVecAll[j][0] << std::endl;
+//			}
 			int debughogeshi =0;
 		}		//if(DoCalc){...}
+		//	 1      
+		//	--- [F]{T(t+dt)}
+		//	D_jj 		
+		//[F] = 1/2 [K] +1/dt [C] から対角成分を除し(-1)をかけたもの
+		//エッジに入っている成分に-1をかけるのではなく、最後に-1をかける。
+		//
 		for(unsigned j =0; j < vertices.size() ; j++){
-			TVecAll[j][0] = _DMatAll[j][0] *( );
 			//T(t+dt) = の式
-			//vertices[j].temp = 
-			//j行目の計算を行う
-			//j行目に値を格納する
-
-			//定数ベクトル-bを上記で求めているので、マイナスbとついているが、式としては、毎行でbVecAllを加算すればよい。
+			//	まずtempkjを作る
+			double tempkj = 0.0;
+			for(unsigned k =0;k < vertices[j].edges.size() ; k++){
+				unsigned edgeId = vertices[j].edges[k]; 
+				if( j != edges[edgeId].vertices[0]){					//節点番号jとedges.vertices[0]が異なる節点番号の時:非対角成分
+					unsigned vtxid0 = edges[edgeId].vertices[0];
+					//TVecAll[j][0] +=_DMatAll[j][0] * -(1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0][0] + bVecAll[j][0]; 
+					tempkj += (1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0][0];
+				}
+				else if( j != edges[edgeId].vertices[1] ){			//節点番号jとedges.vertices[1]が異なる節点番号の時:非対角成分
+					unsigned vtxid1 = edges[edgeId].vertices[1];
+					tempkj += (1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid1][0];
+				}
+				else{
+					//上記のどちらでもない場合、エラー
+					DSTR << "edges.vertex has 3 vertexies or any other problem" <<std::endl;
+				}
+				//	for Debug
+				//DSTR << "TVecAll:"
+				//DSTR << "edges[" << edgeId << "].vertices[0] : " << edges[edgeId].vertices[0] << std::endl;
+				//DSTR << "edges[" << edgeId << "].vertices[1] : " << edges[edgeId].vertices[1] << std::endl;
+				//int hogeshi =0;
+			}
+			//	TVecAllの計算
+			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) - bVecAll[j][0];
+			int hofgeshi =0;
+			DSTR << i << "回目の計算、" << j <<"行目のtempkj: " << tempkj << std::endl;
+			tempkj =0.0;
 		}
-
+		//	for Debug
+		for(unsigned j=0;j < vertices.size();j++){
+			//DSTR << "tempk" << j << " : " << tempkj << std::endl;
+			int hogeshi__ =0;
+			//TVecAll[j][0]の計算結果を代入する
+			//定数ベクトルbを上で計算、毎行でbVecAllを減算すればよい。
+			DSTR << i << "回目の計算の " << "TVecAll[" << j << "][0] : " << TVecAll[j][0] << std::endl;
+		}
+		for(unsigned j=0;j < vertices.size();j++){
+			//DSTR << "tempk" << j << " : " << tempkj << std::endl;
+			int hogeshi__ =0;
+			//TVecAll[j][0]の計算結果を代入する
+			//定数ベクトルbを上で計算、毎行でbVecAllを減算すればよい。
+			DSTR << i << "回目の計算の " << "bVecAll[" << j << "][0] : " << bVecAll[j][0] << std::endl;
+		}
 	}
-	//以下をエンジンに実装する
-	//PrepareGaussSeidel();
-		//ガウスザイデルで計算するために、クランクニコルソンの差分式の形で行列を作る。行列DやF、-bなどを作り、ガウスザイデルで計算ステップを実行直前まで
-	//ガウスザイデルの計算を単位ステップ時間ごとに行う
-		//ガウスザイデルの計算
-		//CalcGaussSeidel();
+	//CalcGaussSeidel();
 	//（形状が変わったら、マトリクスやベクトルを作り直す）
 	//温度変化・最新の時間の{T}縦ベクトルに記載されている節点温度を基に化学変化シミュレーションを行う
 		//SetChemicalSimulation();
