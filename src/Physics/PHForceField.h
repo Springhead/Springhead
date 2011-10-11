@@ -16,13 +16,15 @@ namespace Spr{;
 class PHGravityEngine : public PHEngine{
 	SPR_OBJECTDEF_NOIF(PHGravityEngine);
 public:
-	PHSolids solids;
-	Vec3d	accel;
+	PHSolids solids;		///< 重力を加える剛体の配列
+	Vec3d	accel;			///< 重力加速度
 
-	int GetPriority() const {return SGBP_GRAVITYENGINE;}
+	int GetPriority() const { return SGBP_GRAVITYENGINE; }
 	void Step();
-	void Clear(){solids.clear();}
+	
+	virtual void Clear();
 	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
 };
 
 }
