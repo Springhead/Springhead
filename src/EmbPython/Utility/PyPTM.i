@@ -278,7 +278,7 @@ public:
 	int x, y, z, w;
 	VEC_MEMBER(Vec4i)
 	VEC_CONSTRUCTOR(Vec4i, int, _4i)
-	Vec4d(int xi, int yi, int zi, int wi);
+	Vec4i(int xi, int yi, int zi, int wi);
 };
 %extend Vec4i{
 	VEC_EXTEND(Vec4i, int)
