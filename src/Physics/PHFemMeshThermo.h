@@ -64,7 +64,7 @@ public:
 	//全体の係数行列
 	PTM::VMatrixRow<double> MatKAll;			//[K]の全体剛性行列		//CreateMatKall()
 	PTM::VMatrixRow<double> MatCAll;			//[C]
-	PTM::VMatrixCol<double> MatFAll;			//{F}の全体剛性ベクトル
+	PTM::VMatrixCol<double> VecFAll;			//{F}の全体剛性ベクトル
 
 	//全体の剛性行列の代わり
 	PTM::VMatrixRow<double> DMatKAll;			//全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
