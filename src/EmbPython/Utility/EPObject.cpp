@@ -1,6 +1,6 @@
 #include "..\..\..\include\EmbPython\Utility\SprEPObject.h"
-
-
+#include "..\..\..\include\EmbPython\Utility\SprEPCast.h"
+#include "..\..\..\include\EmbPython\SprEPFoundation.h"
 
 static PyObject* __PYDECL EPObject_dir(PyObject* self)
 {
@@ -13,6 +13,24 @@ static PyObject* __PYDECL EPObject_type(PyObject* self)
 	return PyObject_Type(self);
 }
 
+static PyObject* __PYDECL EPObject_cast(PyObject* self, PyObject* to)
+{
+	if( PyUnicode_Check(to) )
+	{
+		EPObject_RuntimeDCast((EPObject*)self, ConvertStr( to ).GetBuffer() );
+	}
+	else if( EPIfInfo_Check(to) )
+	{
+		EPObject_RuntimeDCast((EPObject*)self, EPObject_Cast(self,IfInfo));
+	}
+	else
+	{
+		PyErr_BadArgument();
+		return NULL;
+	}
+	Py_RETURN_NONE;
+}
+
 
 
 /////////////////////////////////////ÉÅÉ\ÉbÉhìoò^óp
@@ -21,6 +39,7 @@ static PyMethodDef EPObject_methods[] =
 {
 	{"dir",(PyCFunction)EPObject_dir,METH_NOARGS,"EPObject::dir"},
 	{"type",(PyCFunction)EPObject_type,METH_NOARGS,"EPObject::type"},
+	{"cast",(PyCFunction)EPObject_cast,METH_O,"EPObject::cast"},
 	{NULL}
 };
 
