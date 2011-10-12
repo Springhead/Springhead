@@ -101,7 +101,7 @@ void PHFemMeshThermo::Step(double dt){
 				//ⅱ)対角成分について
 				bVecAll[j][0] += (-1.0/2.0 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] ) * TVecAll[j][0];
 				//{F}を加算
-				bVecAll[j][0] += MatFAll[j][0];		//Fを加算
+				bVecAll[j][0] += VecFAll[j][0];		//Fを加算
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
 				bVecAll[j][0] += bVecAll[j][0] * _DMatAll[0][j];
 			}
@@ -127,12 +127,16 @@ void PHFemMeshThermo::Step(double dt){
 				unsigned edgeId = vertices[j].edges[k]; 
 				if( j != edges[edgeId].vertices[0]){					//節点番号jとedges.vertices[0]が異なる節点番号の時:非対角成分
 					unsigned vtxid0 = edges[edgeId].vertices[0];
+					DSTR << "TVecAll["<< vtxid0<<"][0] : " << TVecAll[vtxid0][0] <<std::endl;
 					//TVecAll[j][0] +=_DMatAll[j][0] * -(1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0][0] + bVecAll[j][0]; 
 					tempkj += (1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0][0];
+					DSTR << "tempkj : " << tempkj <<std::endl;
 				}
 				else if( j != edges[edgeId].vertices[1] ){			//節点番号jとedges.vertices[1]が異なる節点番号の時:非対角成分
 					unsigned vtxid1 = edges[edgeId].vertices[1];
+					DSTR << "TVecAll["<< vtxid1<<"][0] : " << TVecAll[vtxid1][0] <<std::endl;
 					tempkj += (1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid1][0];
+					DSTR << "tempkj : " << tempkj <<std::endl;
 				}
 				else{
 					//上記のどちらでもない場合、エラー
@@ -147,6 +151,9 @@ void PHFemMeshThermo::Step(double dt){
 			//	TVecAllの計算
 			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) - bVecAll[j][0];
 			int hofgeshi =0;
+			if(TVecAll[j][0] != 0.0){
+				DSTR << "!=0 TVecAll["<< j<<"][0] : " << TVecAll[j][0] <<std::endl;
+			}
 			DSTR << i << "回目の計算、" << j <<"行目のtempkj: " << tempkj << std::endl;
 			tempkj =0.0;
 		}
@@ -346,7 +353,7 @@ void PHFemMeshThermo::CreateVecfLocal(){
 			Vecf[i][0] = 0.0;
 	}
 	//全体剛性ベクトルFのサイズを規定
-	MatFAll.resize(vertices.size(),1);
+	VecFAll.resize(vertices.size(),1);
 
 	//すべての要素について係数行列を作る
 	for(unsigned i = 0; i< tets.size() ; i++){
@@ -370,23 +377,23 @@ void PHFemMeshThermo::CreateVecfLocal(){
 		//j:要素の中の何番目か
 		for(unsigned j =0;j < 4; j++){
 			int vtxid0 = tets[i].vertices[j];
-			MatFAll[vtxid0][0] = Vecf[j][0];
+			VecFAll[vtxid0][0] = Vecf[j][0];
 		}
 	}
 	//	for debug
-	//MatFAllに値が入ったのかどうかを調べる 2011.09.21全部に値が入っていることを確認した
-	//DSTR << "MatFAll : " << std::endl;
+	//VecFAllに値が入ったのかどうかを調べる 2011.09.21全部に値が入っていることを確認した
+	//DSTR << "VecFAll : " << std::endl;
 	//for(unsigned j =0; j < vertices.size() ; j++){
-	//	DSTR << j << " ele is :  " << MatFAll[j][0] << std::endl;
+	//	DSTR << j << " ele is :  " << VecFAll[j][0] << std::endl;
 	//}
 	//int hogeshi =0;
 
 	//	調べる
-	//DMatFAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
+	//DVecFAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
 	// try catch文にする
 	for(unsigned j = 0; j < vertices.size() ; j++){
-		if(MatFAll[j][0] ==0.0){
-			DSTR << "MatFAll[" << j << "][0] element is blank" << std::endl;
+		if(VecFAll[j][0] ==0.0){
+			DSTR << "VecFAll[" << j << "][0] element is blank" << std::endl;
 		}
 	}
 	//int hogef =0;
@@ -561,9 +568,10 @@ void PHFemMeshThermo::CreateMatk1k(Tet tets){
 }
 
 void PHFemMeshThermo::CreateVecf3(Tet tets){
-	//最後に入れる行列を初期化
+	//	初期化
 	for(unsigned i =0; i < 4 ;i++){
-		Vecf3[i][0] = 0.0;
+		Vecf3[i][0] = 0.0;		//最後に入れる行列を初期化
+		vertices[tets.vertices[i]].Tc =0.0;	//
 	}	
 	//l=0の時f31,1:f32, 2:f33, 3:f34	を生成
 	for(unsigned l= 0 ; l < 4; l++){
@@ -575,7 +583,7 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 		//}
 		Vecf3array[l][l][0] = 0.0;
 		//array[n][m][l]	= narray[n],m行l列
-		//	f_3	
+		//	f_3	(Vecf3array[0], Vecf3array[1],..)
 		// =	| 0 | + | 1 |+...
 		//		| 1 |   | 0 |
 		//		| 1 |   | 1 |
@@ -596,21 +604,37 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 		if(l==0){
 			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[1],tets.vertices[2],tets.vertices[3] ) * Vecf3array[l];
 			//DSTR << "Vecf3array[" << l << "] : " << Vecf3array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			for(unsigned m=0; m<4; m++){
+				Vecf3array[l][m][0] = vertices[tets.vertices[m]].Tc * Vecf3array[l][m][0];
+			}
 		}
 		//	k22
 		else if(l==1){
 			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[2],tets.vertices[3] ) * Vecf3array[l];
 			//DSTR << "Vecf3array[" << l << "] : " << Vecf3array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			for(unsigned m=0; m<4; m++){
+				Vecf3array[l][m][0] = vertices[tets.vertices[m]].Tc * Vecf3array[l][m][0];
+			}
 		}
 		//	k23
 		else if(l==2){
 			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[3] ) * Vecf3array[l];
 			//DSTR << "Vecf3array[" << l << "] : " << Vecf3array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			for(unsigned m=0; m<4; m++){
+				Vecf3array[l][m][0] = vertices[tets.vertices[m]].Tc * Vecf3array[l][m][0];
+			}
 		}
 		//	k24
 		else if(l==3){
 			Vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[2] ) * Vecf3array[l];
 			//DSTR << "Vecf3array[" << l << "] : " << Vecf3array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			for(unsigned m=0; m<4; m++){
+				Vecf3array[l][m][0] = vertices[tets.vertices[m]].Tc * Vecf3array[l][m][0];
+			}
 		}
 		//for debug
 		//DSTR << "Vecf3array[" << l << "]の完成版は↓" << std::endl;
@@ -629,6 +653,9 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 		//DSTR << Vecf3 << std::endl;
 	}
 	
+	//	f1,f2,f3,f4	を計算する際に、[0][0]成分から[3][0]成分までの非0成分について、先にTcをかけてしまう
+
+
 	//for debug
 	//DSTR << "節点（";
 	//for(unsigned i =0; i < 4; i++){

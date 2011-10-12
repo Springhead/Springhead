@@ -59,6 +59,7 @@ public:
 		double temp;		//	温度
 		double k;			//	全体剛性行列Kの要素　計算に利用
 		double c;			//	同上
+		double Tc;			//	節点周囲の流体温度
 	};
 	//	四面体
 	struct Tet{
