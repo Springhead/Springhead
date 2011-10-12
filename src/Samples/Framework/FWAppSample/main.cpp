@@ -12,6 +12,7 @@
 
 #include <Springhead.h>
 #include <Framework/SprFWApp.h>
+//#include "Samples\SampleApp.h"
 using namespace Spr;
 
 class MyApp : public FWApp{
@@ -28,19 +29,19 @@ public:
 		floor->SetDynamical(false);
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
 		floor->AddShape(phSdk->CreateShape(bd));
-		floor->SetFramePosition(Vec3d(0, -1.0, 0));
+		floor->SetFramePosition(Vec3d(0, -1.0, -1.0));
 	
 		// ” ‚ðì¬
 		PHSolidIf* box = phscene->CreateSolid();
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		box->AddShape(phSdk->CreateShape(bd));
-		box->SetFramePosition(Vec3d(0.0, 1.0, 0.0));
+		box->SetFramePosition(Vec3d(0.0, 1.0, -1.0));
 
 		GetSdk()->SetDebugMode(true);
 	}
 } app;
 
-int main(int argc, char* argv[]){
+int _cdecl main(int argc, char* argv[]){
 	app.Init(argc, argv);
 	app.StartMainLoop();
 	return 0;

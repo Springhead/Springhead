@@ -54,6 +54,7 @@ void FWApp::Display(){
 }
 
 void FWApp::TimerFunc(int id){
+	UserFunc();
 	//GetSdk()->Step();
 	GetCurrentWin()->GetScene()->Step();
 	PostRedisplay();

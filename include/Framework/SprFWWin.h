@@ -63,8 +63,8 @@ struct FWWinBaseDesc{
 	FWWinBaseDesc(){
 		width = 640;
 		height = 480;
-		left = 0;
-		top = 0;
+		left = 100;
+		top = 100;
 		title = "Springhead2";
 	};
 };
