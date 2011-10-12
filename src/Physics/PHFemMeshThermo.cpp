@@ -44,8 +44,8 @@ void PHFemMeshThermo::PrepareStep(){
 	//ただし、[K],[C]などは全体剛性行列を作っているのではなく、成分ごとにEdges構造体に入っているので、この値を用いる
 	//係数行列b生成ループ⇒このループをガウスザイデル計算の最初の一回だけやったほうが、forループが1回少なくなるので、計算速そう。けど、if文が必要
 }
-void PHFemMeshThermo::Step(double dt){
-	//dtはPHFemEngine.cppで取得
+void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(double dt){
+	//dtはPHFemEngine.cppで取得する動力学シミュレーションのステップ時間
 	bool DoCalc =true;											//初回だけ定数ベクトルbの計算を行うbool
 	int NofCyc =10;												//計算回数
 	for(unsigned i=0; i < NofCyc; i++){							//ガウスザイデルの計算ループ
@@ -173,7 +173,11 @@ void PHFemMeshThermo::Step(double dt){
 		//	DSTR << i << "回目の計算の " << "bVecAll[" << j << "][0] : " << bVecAll[j][0] << std::endl;
 		//}
 	}
-	//CalcGaussSeidel();
+}
+
+void PHFemMeshThermo::Step(double dt){
+	CalcHeatTransUsingGaussSeidel(dt);			//ガウスザイデル法で熱伝導計算を解く
+
 	//（形状が変わったら、マトリクスやベクトルを作り直す）
 	//温度変化・最新の時間の{T}縦ベクトルに記載されている節点温度を基に化学変化シミュレーションを行う
 		//SetChemicalSimulation();
