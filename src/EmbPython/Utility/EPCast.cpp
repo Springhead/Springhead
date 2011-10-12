@@ -151,3 +151,15 @@ void EPObject_RuntimeDCast(EPObject* obj,const IfInfo* ifinfo)
 	if(it != EPObject_CastMap.end()) 
 		it->second(obj);
 }
+
+void EPObject_RuntimeDCast(EPObject* obj,const char* name)
+{
+	for ( EPCastfuncMap::iterator it = EPObject_CastMap.begin(); it != EPObject_CastMap.end() ; it++)
+	{
+		if(strcmp(it->first->className,name) == 0 ) 
+		{
+			it->second(obj);
+			break;
+		}
+	}
+}
