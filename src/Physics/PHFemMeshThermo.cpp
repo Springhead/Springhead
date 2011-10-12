@@ -122,21 +122,19 @@ void PHFemMeshThermo::Step(double dt){
 		for(unsigned j =0; j < vertices.size() ; j++){
 			//T(t+dt) = の式
 			//	まずtempkjを作る
-			double tempkj = 0.0;
+			double tempkj = 0.0;			//ガウスザイデルの途中計算で出てくるFの成分計算に使用する一時変数
 			for(unsigned k =0;k < vertices[j].edges.size() ; k++){
 				unsigned edgeId = vertices[j].edges[k]; 
 				if( j != edges[edgeId].vertices[0]){					//節点番号jとedges.vertices[0]が異なる節点番号の時:非対角成分
 					unsigned vtxid0 = edges[edgeId].vertices[0];
-					DSTR << "TVecAll["<< vtxid0<<"][0] : " << TVecAll[vtxid0][0] <<std::endl;
+					//DSTR << "TVecAll["<< vtxid0<<"][0] : " << TVecAll[vtxid0][0] <<std::endl;
 					//TVecAll[j][0] +=_DMatAll[j][0] * -(1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0][0] + bVecAll[j][0]; 
 					tempkj += (1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0][0];
-					DSTR << "tempkj : " << tempkj <<std::endl;
 				}
 				else if( j != edges[edgeId].vertices[1] ){			//節点番号jとedges.vertices[1]が異なる節点番号の時:非対角成分
 					unsigned vtxid1 = edges[edgeId].vertices[1];
-					DSTR << "TVecAll["<< vtxid1<<"][0] : " << TVecAll[vtxid1][0] <<std::endl;
+					//DSTR << "TVecAll["<< vtxid1<<"][0] : " << TVecAll[vtxid1][0] <<std::endl;
 					tempkj += (1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid1][0];
-					DSTR << "tempkj : " << tempkj <<std::endl;
 				}
 				else{
 					//上記のどちらでもない場合、エラー
@@ -150,28 +148,30 @@ void PHFemMeshThermo::Step(double dt){
 			}
 			//	TVecAllの計算
 			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) - bVecAll[j][0];
-			int hofgeshi =0;
-			if(TVecAll[j][0] != 0.0){
-				DSTR << "!=0 TVecAll["<< j<<"][0] : " << TVecAll[j][0] <<std::endl;
-			}
-			DSTR << i << "回目の計算、" << j <<"行目のtempkj: " << tempkj << std::endl;
-			tempkj =0.0;
+			
+			////	for DEBUG
+			//int hofgeshi =0;
+			//if(TVecAll[j][0] != 0.0){
+			//	DSTR << "!=0 TVecAll["<< j<<"][0] : " << TVecAll[j][0] <<std::endl;
+			//}
+			//DSTR << i << "回目の計算、" << j <<"行目のtempkj: " << tempkj << std::endl;
+			//tempkj =0.0;
 		}
-		//	for Debug
-		for(unsigned j=0;j < vertices.size();j++){
-			//DSTR << "tempk" << j << " : " << tempkj << std::endl;
-			int hogeshi__ =0;
-			//TVecAll[j][0]の計算結果を代入する
-			//定数ベクトルbを上で計算、毎行でbVecAllを減算すればよい。
-			DSTR << i << "回目の計算の " << "TVecAll[" << j << "][0] : " << TVecAll[j][0] << std::endl;
-		}
-		for(unsigned j=0;j < vertices.size();j++){
-			//DSTR << "tempk" << j << " : " << tempkj << std::endl;
-			int hogeshi__ =0;
-			//TVecAll[j][0]の計算結果を代入する
-			//定数ベクトルbを上で計算、毎行でbVecAllを減算すればよい。
-			DSTR << i << "回目の計算の " << "bVecAll[" << j << "][0] : " << bVecAll[j][0] << std::endl;
-		}
+		////	for Debug
+		//for(unsigned j=0;j < vertices.size();j++){
+		//	//DSTR << "tempk" << j << " : " << tempkj << std::endl;
+		//	int hogeshi__ =0;
+		//	//TVecAll[j][0]の計算結果を代入する
+		//	//定数ベクトルbを上で計算、毎行でbVecAllを減算すればよい。
+		//	DSTR << i << "回目の計算の " << "TVecAll[" << j << "][0] : " << TVecAll[j][0] << std::endl;
+		//}
+		//for(unsigned j=0;j < vertices.size();j++){
+		//	//DSTR << "tempk" << j << " : " << tempkj << std::endl;
+		//	int hogeshi__ =0;
+		//	//TVecAll[j][0]の計算結果を代入する
+		//	//定数ベクトルbを上で計算、毎行でbVecAllを減算すればよい。
+		//	DSTR << i << "回目の計算の " << "bVecAll[" << j << "][0] : " << bVecAll[j][0] << std::endl;
+		//}
 	}
 	//CalcGaussSeidel();
 	//（形状が変わったら、マトリクスやベクトルを作り直す）
@@ -388,14 +388,18 @@ void PHFemMeshThermo::CreateVecfLocal(){
 	//}
 	//int hogeshi =0;
 
-	//	調べる
-	//DVecFAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
-	// try catch文にする
-	for(unsigned j = 0; j < vertices.size() ; j++){
-		if(VecFAll[j][0] ==0.0){
-			DSTR << "VecFAll[" << j << "][0] element is blank" << std::endl;
-		}
-	}
+	////	調べる
+	////DVecFAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
+	//// try catch文にする
+	//for(unsigned j = 0; j < vertices.size() ; j++){
+	//	if(VecFAll[j][0] ==0.0){
+	//		DSTR << "VecFAll[" << j << "][0] element is blank" << std::endl;
+	//	}
+	//}
+
+
+	//	注意
+	//	f3を使用する場合:周囲流体温度Tcが0の節点の要素は0になるため、温度の設定が必要
 	//int hogef =0;
 }
 
