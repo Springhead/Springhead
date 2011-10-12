@@ -101,6 +101,7 @@ protected:
 	double CalcTetrahedraVolume(Tet tets);		////四面体のIDを入れると、その体積を計算してくれる関数
 	void PrepareStep();							//Step()で必要な変数を計算する関数
 	//double CalcbVec(int vtxid,
+	void CalcHeatTransUsingGaussSeidel(double dt);		//	ガウスザイデル法で熱伝導を計算する関数
 
 	PTM::TMatrixRow<4,4,double> Create44Mat21();	//共通で用いる、4×4の2と1でできた行列を返す関数
 	//あるいは、引数を入れると、引数を変えてくれる関数
