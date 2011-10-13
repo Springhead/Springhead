@@ -13,9 +13,12 @@ def Pick(so,vec):
 	so.SetVelocity( Vec3d(0,0,0) ) 
 
 print("def AddBox() \n\tReturn PHSolidIf")
-def AddBox():
+def AddBox(_mesh=None):
 	tmp = scene.CreateSolid( desc )
-	tmp.AddShape( mesh )
+	if _mesh:
+		tmp.AddShape( _mesh )
+	else:
+		tmp.AddShape( mesh )
 	Pick( tmp , Vec3d( 0,20,0 ) )
 	return tmp
 
@@ -91,5 +94,19 @@ if __name__ == "__main__":
 	#soList = scene.GetSolids()
 	
 	box = [None] * 20
+
+
+
+	myMeshDesc = CDConvexMeshDesc()
+	myVertices = []
+	
+	mesh.GetDesc(myMeshDesc)
+	
+	for i in range(len(myMeshDesc.vertices)):
+		myVertices.append(myMeshDesc.vertices[i] * i * 0.5)
+	
+	myMeshDesc.vertices = myVertices
+	mesh.SetDesc(myMeshDesc)
+	
 
 	
