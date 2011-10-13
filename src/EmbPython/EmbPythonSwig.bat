@@ -132,6 +132,7 @@ echo %%ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t);>>%MODULE%.i
 
 echo %%include "Utility/EPObject.i">>%MODULE%.i
 echo EXTEND_NEW(PHSolidDesc)>>%MODULE%.i
+echo EXTEND_NEW(PHPathPoint)>>%MODULE%.i
 echo //--->>%MODULE%.i
 exit /b
 
@@ -171,6 +172,8 @@ echo %%include "Utility/EPObject.i">>%MODULE%.i
 echo EXTEND_NEW(GRAnimationKey)>>%MODULE%.i
 echo EXTEND_NEW(GRCameraDesc)>>%MODULE%.i
 echo EXTEND_NEW(GRVertexElement)>>%MODULE%.i
+echo EXTEND_NEW(GRKey)>>%MODULE%.i
+echo EXTEND_NEW(GRMeshFace)>>%MODULE%.i
 echo //--->>%MODULE%.i
 
 exit /b
@@ -189,5 +192,10 @@ echo %%ignore Spr::HITrackballIf::GetAngle; //“¯ã>> %MODULE%.i
 echo %%ignore Spr::HITrackballIf::GetDistanceRange; //“¯ã>> %MODULE%.i
 echo %%ignore Spr::HITrackballIf::GetLatitudeRange; //“¯ã>> %MODULE%.i
 echo %%ignore Spr::HITrackballIf::GetLongitudeRange; //“¯ã>> %MODULE%.i
+
+echo //--->>%MODULE%.i
+echo %%include "Utility/EPObject.i">>%MODULE%.i
+echo EXTEND_NEW(HISpidarMotorDesc)>>%MODULE%.i
+echo //--->>%MODULE%.i
 
 exit /b
