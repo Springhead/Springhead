@@ -205,33 +205,33 @@ void EPLoopInit(void* arg)
 	{
 		MyApp* app = (MyApp*)arg;
 		//
-		////Pythonでモジュールの使用宣言
-		PyRun_SimpleString("import Utility\n");
-		PyRun_SimpleString("from Utility import *\n");
+		//////Pythonでモジュールの使用宣言
+		//PyRun_SimpleString("import Utility\n");
+		//PyRun_SimpleString("from Utility import *\n");
 
-		PyRun_SimpleString("import Foundation\n");
-		//PyRun_SimpleString("from Foundation import *\n");
-		
-		PyRun_SimpleString("import FileIO\n");
-		//PyRun_SimpleString("from FileIO import *\n");
+		//PyRun_SimpleString("import Foundation\n");
+		////PyRun_SimpleString("from Foundation import *\n");
+		//
+		//PyRun_SimpleString("import FileIO\n");
+		////PyRun_SimpleString("from FileIO import *\n");
 
-		PyRun_SimpleString("import Collision\n");
-		//PyRun_SimpleString("from Collision import *\n");
+		//PyRun_SimpleString("import Collision\n");
+		////PyRun_SimpleString("from Collision import *\n");
 
-		PyRun_SimpleString("import Physics\n");
-		PyRun_SimpleString("from Physics import *\n");
+		//PyRun_SimpleString("import Physics\n");
+		//PyRun_SimpleString("from Physics import *\n");
 
-		PyRun_SimpleString("import Graphics\n");
-		//PyRun_SimpleString("from Graphics import *\n");
+		//PyRun_SimpleString("import Graphics\n");
+		////PyRun_SimpleString("from Graphics import *\n");
 
-		PyRun_SimpleString("import Creature\n");
-		//PyRun_SimpleString("from Creature import *\n");
+		//PyRun_SimpleString("import Creature\n");
+		////PyRun_SimpleString("from Creature import *\n");
 
-		PyRun_SimpleString("import HumanInterface\n");
-		//PyRun_SimpleString("from HumanInterface import *\n");
-		
-		PyRun_SimpleString("import Framework\n");
-		//PyRun_SimpleString("from Framework import *\n");
+		//PyRun_SimpleString("import HumanInterface\n");
+		////PyRun_SimpleString("from HumanInterface import *\n");
+		//
+		//PyRun_SimpleString("import Framework\n");
+		////PyRun_SimpleString("from Framework import *\n");
 		
 		PHSdkIf* phSdk = app->GetSdk()->GetPHSdk();
 		PHSceneIf* scene = app->GetSdk()->GetScene()->GetPHScene();
