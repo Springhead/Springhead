@@ -50,6 +50,6 @@ typedef void (*EPCastfunc)(EPObject* obj);
 typedef std::map<const IfInfo*,EPCastfunc> EPCastfuncMap;
 extern EPCastfuncMap EPObject_CastMap;
 void EPObject_RegistCastfunc(const IfInfo*,EPCastfunc);
-void EPObject_RuntimeDCast(EPObject* obj,const IfInfo* ifinfo);
-void EPObject_RuntimeDCast(EPObject* obj,const char* name);
+void __PYDECL EPObject_RuntimeDCast(EPObject* obj,const IfInfo* ifinfo);
+void __PYDECL EPObject_RuntimeDCast(EPObject* obj,const char* name);
 #endif

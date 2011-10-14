@@ -21,7 +21,7 @@ static PyObject* __PYDECL EPObject_cast(PyObject* self, PyObject* to)
 	}
 	else if( EPIfInfo_Check(to) )
 	{
-		EPObject_RuntimeDCast((EPObject*)self, EPObject_Cast(self,IfInfo));
+		EPObject_RuntimeDCast((EPObject*)self, EPObject_Cast(to,IfInfo));
 	}
 	else
 	{
@@ -37,7 +37,7 @@ static PyObject* __PYDECL EPObject_cast(PyObject* self, PyObject* to)
 ///voidのメソッドの定義
 static PyMethodDef EPObject_methods[] =
 {
-	{"dir",(PyCFunction)EPObject_dir,METH_NOARGS,"EPObject::dir"},
+	{"dir",(PyCFunction)EPObject_dir,METH_NOARGS|METH_CLASS,"EPObject::dir"},
 	{"type",(PyCFunction)EPObject_type,METH_NOARGS,"EPObject::type"},
 	{"cast",(PyCFunction)EPObject_cast,METH_O,"EPObject::cast"},
 	{NULL}

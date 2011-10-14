@@ -145,14 +145,14 @@ void EPObject_RegistCastfunc(const IfInfo* ifinfo,EPCastfunc func)
 	EPObject_CastMap.insert(pair<const IfInfo*,EPCastfunc>(ifinfo,func));
 }
 
-void EPObject_RuntimeDCast(EPObject* obj,const IfInfo* ifinfo)
+void __PYDECL EPObject_RuntimeDCast(EPObject* obj,const IfInfo* ifinfo)
 {
 	EPCastfuncMap::iterator it = EPObject_CastMap.find(ifinfo);
 	if(it != EPObject_CastMap.end()) 
 		it->second(obj);
 }
 
-void EPObject_RuntimeDCast(EPObject* obj,const char* name)
+void __PYDECL EPObject_RuntimeDCast(EPObject* obj,const char* name)
 {
 	for ( EPCastfuncMap::iterator it = EPObject_CastMap.begin(); it != EPObject_CastMap.end() ; it++)
 	{
