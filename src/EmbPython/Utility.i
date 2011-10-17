@@ -22,7 +22,8 @@
 
 using namespace std;
 
-#define EP_AS_BUILTIN 1
+#define EP_MODULE_NAME "Spr"
+#define EP_USE_SUBMODULE
 
 %}
 

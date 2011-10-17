@@ -48,6 +48,23 @@ PyObject* tuple(){
 	return tuple;
 }
 
+//vector< vector<int> > testa(){
+//	vector<int> v;
+//	v.push_back(1);
+//	v.push_back(2);
+//	v.push_back(3);
+//	
+//	vector<int> v1;
+//	v1.push_back(5);
+//	v1.push_back(6);
+//	v1.push_back(7);
+//	
+//	vector< vector<int> > vv;
+//	vv.push_back(v);
+//	vv.push_back(v1);
+//	return vv;
+//}
+
 PyObject* __repr__(){
 	int size = $self->SIZE;
 	PyObject* buf = PyUnicode_FromString("(");

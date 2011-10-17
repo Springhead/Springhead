@@ -17,6 +17,7 @@
 %ignore Spr::FWInteractSceneIf::GetIAAdaptee; //APIの不整合がありコンパイル不可なので
 %ignore Spr::FWSceneIf::GetObjects; // **が出てくるので未対応
 %ignore Spr::FWSceneIf::GetFWBones;//UTRefを使ってる。未対応
+%ignore Spr::FWSceneIf::AddHumanInterface;//HIForceDevice6DがAPIヘッダで定義されていない
 %extend Spr::FWBoneIf{
   static const IfInfo* GetIfInfoStatic();
 }
