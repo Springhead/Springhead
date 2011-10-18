@@ -23,7 +23,7 @@
 using namespace std;
 
 #define EP_MODULE_NAME "Spr"
-#define EP_USE_SUBMODULE
+//#define EP_USE_SUBMODULE
 
 %}
 
