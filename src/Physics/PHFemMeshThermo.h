@@ -111,6 +111,9 @@ protected:
 	void UpdateVertexTemp(unsigned vtxid);			//	計算結果としての温度をTVecAllから節点に更新する
 	void UpdateVertexTempAll(unsigned size);		//	計算結果としての温度をTVecAllから全節点に更新する
 
+	void ScilabTest();								//	Scilabを使ってみる関数
+	void UsingFixedTempBoundaryCondition(unsigned id,double temp);			//	温度固定境界条件
+	void UsingHeatTransferBoundaryCondition();		//	熱伝達境界条件
 
 	PTM::TMatrixRow<4,4,double> Create44Mat21();	//共通で用いる、4×4の2と1でできた行列を返す関数
 	//あるいは、引数を入れると、引数を変えてくれる関数
