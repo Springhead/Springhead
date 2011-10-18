@@ -96,7 +96,7 @@ bool FWFemMesh::CreatePHFromGR(){
 	int nVtxsOut=0, nTetsOut=0;
 	std::vector<Vec3d> vtxsIn;
 	for(unsigned i=0; i<grMesh->vertices.size(); ++i) vtxsIn.push_back(grMesh->vertices[i]);
-	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, grMesh->vertices.size(), &vtxsIn[0], grMesh->faces.size(), &grMesh->faces[0], "pq1.2a0.003");
+	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, grMesh->vertices.size(), &vtxsIn[0], grMesh->faces.size(), &grMesh->faces[0], "pq1.2a0.3");//a0.003
 	
 	//	PHMesh用のディスクリプタpmdに値を入れていく
 	for(int i=0; i < nVtxsOut; i++){

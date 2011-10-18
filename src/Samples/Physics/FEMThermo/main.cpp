@@ -84,7 +84,7 @@ public:
 		
 		//	ファイルのロード
 		UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-		GetSdk()->LoadScene("scene.spr", import);			// ファイルのロード
+		GetSdk()->LoadScene("scene2.spr", import);			// ファイルのロード
 		numScenes = GetSdk()->NScene();
 		if (numScenes) SwitchScene(GetSdk()->NScene()-1);
 
@@ -198,12 +198,7 @@ public:
 		//TestMatrixFunc();
 	}
 	void CreateMeshTempVec(){
-		//TetGen()で作成したデータから、節点の並び順を取得して、温度が入った縦ベクトルを作る
-		//ベクトルの数を代入する
-		//int n = 
-		
-		//TVector<n,double> vec; 
-		//行列の各
+
 	}
 	void SetThermoConductionParam(){
 
@@ -211,57 +206,8 @@ public:
 	void CreatePHFemMeshThermo(){
 		PHFemMeshThermoIf* phmesht;
 		PHFemMeshThermoDesc desc;
-		//FWFemMesh::CreatePHFromGR()でTetgenに代入して PHFemMeshThermoDesc pmd; を作っている。
-		////四面体の数だけ代入する
-		////int Ntets = //Tetgenで得た？要素の数
-		//for(int i=0 ; i < Ntets ; i++){
-		//	desc.tets[i] = ;
-		//}
-		////節点の数だけ代入する
-		//int NVertices = //Tetgenで得た？節点の数
-		//for(int i=0 ; i < Nvertics ; i++){
-		//	desc.vertices[i] = ;
-		//}
-
-
-
 	}
 	void CreateKele(){
-
-	}
-
-	void TestMatrixFunc(){
-
-		////ディスクリプタの実体を作って、オブジェクトを作る時に、ディスクリプタを入れる。SPIDARのディスクリプタ使う時と同じ感じ。
-		//PHFemMeshThermoDesc desc;
-		//desc.tets = ;
-		//desc.vertice = ;
-		////シーンを取ってくる phscene sceneobject に属しているオブジェクト シーンオブジェクトは、作る時に、どのシーンに属しているのかを伝える必要がある。
-		//PHFemMeshThermo phftmesh(desc,s);//引数を入れる
-
-		PTM::VMatrixCol<double> Tvec;
-		TMatrixRow<4,4,double> mat;              // 2行2列の行が詰った行列を宣言
-												   // TMatrixColだと列が詰った行列になる
-		//四面体vectorなどから再帰命令などで入力
-		mat[0][0] = 1;  mat[0][1] = 1;	mat[0][2] = 1;	mat[0][3] = 1;          // 0行0列 = 1;  0行1列 = 2;
-		mat[1][0] = 3;  mat[1][1] = 4;	mat[1][2] = 2;	mat[1][3] = 2;          // 1行0列 = 3;  1行1列 = 4;
-		mat[2][0] = 2;	mat[2][1] = 2;	mat[2][2] = 2;	mat[2][3] = 2;
-		mat[3][0] = 2;	mat[3][1] = 2;	mat[3][2] = 2;	mat[3][3] = 2;
-
-		TVector<4,float> vec;                   // 4次元のベクトルを宣言
-		vec[0] = 1; vec[1] = 0; vec[2] = 1; vec[3] = 0; 
-		std::cout << mat;
-		std::cout << vec << std::endl;
-		std::cout << mat * vec << std::endl;    // 掛け算
-		std::cout << mat + mat << std::endl;    // 足し算
-		std::cout << mat - mat << std::endl;    // 引き算
-		std::cout << mat.trans() << std::endl;  // 転置
-		std::cout << mat.inv() << std::endl;    // 逆行列
-		//return 0;
-
-		//double elemK2[4][4];
-		//double elemK3[4][4];
-
 
 	}
 
