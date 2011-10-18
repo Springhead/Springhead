@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  Copyright (c) 2003 - 2011, Fumihiro Kato, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
@@ -35,6 +35,19 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 	SetDesc(&desc);
 	if (s){ SetScene(s); }
 }
+
+void PHFemMeshThermo::SetThermalBoundaryCondition(){
+	//温度固定境界条件
+	//SetVerticesTemp(2,200.0);
+	for(unsigned i =0;i < 20; i++){
+		SetVerticesTemp(i,200);
+	}
+
+	//熱伝達境界条件
+	//節点の周囲流体温度の設定(K,C,Fなどの行列ベクトルの作成後に実行必要あり)
+	//SetLocalFluidTemp(2,200.0);
+}
+
 void PHFemMeshThermo::PrepareStep(){
 	//ガウスザイデルに必要な、計算式の係数を計算する
 	double dt = DCAST(PHSceneIf, GetScene())->GetTimeStep();
@@ -44,10 +57,11 @@ void PHFemMeshThermo::PrepareStep(){
 	//ただし、[K],[C]などは全体剛性行列を作っているのではなく、成分ごとにEdges構造体に入っているので、この値を用いる
 	//係数行列b生成ループ⇒このループをガウスザイデル計算の最初の一回だけやったほうが、forループが1回少なくなるので、計算速そう。けど、if文が必要
 }
-void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(double dt){
+
+void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 	//dtはPHFemEngine.cppで取得する動力学シミュレーションのステップ時間
 	bool DoCalc =true;											//初回だけ定数ベクトルbの計算を行うbool
-	int NofCyc =10;												//計算回数
+	std::ofstream ofs("log.txt");
 	for(unsigned i=0; i < NofCyc; i++){							//ガウスザイデルの計算ループ
 		if(DoCalc){
 			if(deformed){												//D_iiの作成　形状が更新された際に1度だけ行えばよい
@@ -56,7 +70,13 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(double dt){
 					//	DSTR << "DMatCAll "<< k << " : " << DMatCAll[0][k] << std::endl;
 					//}
 					_DMatAll.resize(1,vertices.size());
-					_DMatAll[0][j] = 1.0/ ( 1.0/2.0 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] );									//1 / D__ii	を求める
+					_DMatAll[0][j] = 1.0/ ( 1.0/2.0 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] );		//1 / D__ii	を求める
+					//1.0/dt = 500 
+					//DSTR << "DMatKAll : "  << DMatKAll << std::endl;
+					//DSTR << "DMatCAll : "  << DMatCAll << std::endl;
+					//DSTR << "1.0/dt : " << 1.0/dt <<std::endl;
+					//DSTR <<  1.0/dt *DMatCAll[0][j] << std::endl;		//0.001のオーダー
+					//DSTR << 1.0/2.0 * DMatKAll[0][j] << std::endl;		//0.0003前後のオーダー
 					//値が入っているかをチェック
 					//DSTR << "_DMatAll[0][" << j << "] : " << _DMatAll[0][j]  << std::endl;
 					int debughogeshi =0;
@@ -70,7 +90,7 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(double dt){
 				//int hogeshi=0;
 			}
 			//	 1      1        1  
-			//	--- ( - - [K] + --- ){T(t)} + {F} 
+			//	--- ( - - [K] + ---[C] ){T(t)} + {F} 
 			//	D_jj    2       ⊿t
 			//
 			for(unsigned j =0; j < vertices.size() ; j++){		//初回ループだけ	係数ベクトルbVecAllの成分を計算
@@ -100,17 +120,21 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(double dt){
 				}
 				//ⅱ)対角成分について
 				bVecAll[j][0] += (-1.0/2.0 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] ) * TVecAll[j][0];
+				DSTR << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;
 				//{F}を加算
 				bVecAll[j][0] += VecFAll[j][0];		//Fを加算
+				//DSTR << " VecFAll[" << j << "][0] : "  << VecFAll[j][0] << std::endl;
+				DSTR << std::endl;
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
-				bVecAll[j][0] += bVecAll[j][0] * _DMatAll[0][j];
+				bVecAll[j][0] = bVecAll[j][0] * _DMatAll[0][j];
+				DSTR << "bVecAll[" << j <<"][0] * _DMatAll : " << bVecAll[j][0] << std::endl;
 			}
 			DoCalc = false;			//初回のループだけで利用
 			//値が入っているか、正常そうかをチェック
-//			DSTR << "bVecAll[j][0] : " << std::endl;
-//			for(unsigned j =0;j <vertices.size() ; j++){
-//				DSTR << j << " : "<< bVecAll[j][0] << std::endl;
-//			}
+			//DSTR << "bVecAll[j][0] : " << std::endl;
+			//for(unsigned j =0;j <vertices.size() ; j++){
+			//	DSTR << j << " : "<< bVecAll[j][0] << std::endl;
+			//}
 			int debughogeshi =0;
 		}		//if(DoCalc){...}
 		//	 1      
@@ -125,10 +149,11 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(double dt){
 			double tempkj = 0.0;			//ガウスザイデルの途中計算で出てくるFの成分計算に使用する一時変数
 			for(unsigned k =0;k < vertices[j].edges.size() ; k++){
 				unsigned edgeId = vertices[j].edges[k]; 
-				if( j != edges[edgeId].vertices[0]){					//節点番号jとedges.vertices[0]が異なる節点番号の時:非対角成分
+				if( j != edges[edgeId].vertices[0]){					//節点番号jとedges.vertices[0]が異なる節点番号の時:非対角成分		//OK
 					unsigned vtxid0 = edges[edgeId].vertices[0];
 					//DSTR << "TVecAll["<< vtxid0<<"][0] : " << TVecAll[vtxid0][0] <<std::endl;
 					//TVecAll[j][0] +=_DMatAll[j][0] * -(1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0][0] + bVecAll[j][0]; 
+					//DSTR << "j : " << j << ", vtxid0 : " << vtxid0 <<", edges[edgeId].vertices[0] : " << edges[edgeId].vertices[0] <<  std::endl;
 					tempkj += (1.0/2.0 * edges[edgeId].k + 1.0/dt * edges[edgeId].c ) * TVecAll[vtxid0][0];
 				}
 				else if( j != edges[edgeId].vertices[1] ){			//節点番号jとedges.vertices[1]が異なる節点番号の時:非対角成分
@@ -148,7 +173,6 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(double dt){
 			}
 			//	TVecAllの計算
 			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) - bVecAll[j][0];
-			
 			////	for DEBUG
 			//int hofgeshi =0;
 			//if(TVecAll[j][0] != 0.0){
@@ -156,6 +180,12 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(double dt){
 			//}
 			//DSTR << i << "回目の計算、" << j <<"行目のtempkj: " << tempkj << std::endl;
 			//tempkj =0.0;
+			ofs << j << std::endl;
+			ofs << "tempkj: "<< tempkj << std::endl;
+			ofs << "DMatAll[0][j] * ( -1.0 * tempkj) :" <<_DMatAll[0][j] * ( -1.0 * tempkj) << std::endl;
+			ofs << "bVecAll[j][0] :  " <<  bVecAll[j][0] << std::endl;
+			ofs << "  TVecAll[j][0] : " << TVecAll[j][0] << std::endl;
+			ofs << std::endl;
 		}
 		////	for Debug
 		//for(unsigned j=0;j < vertices.size();j++){
@@ -172,20 +202,74 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(double dt){
 		//	//定数ベクトルbを上で計算、毎行でbVecAllを減算すればよい。
 		//	DSTR << i << "回目の計算の " << "bVecAll[" << j << "][0] : " << bVecAll[j][0] << std::endl;
 		//}
+		DSTR << i <<  "th Cyc" << std::endl; 
+		DSTR << i << "回目の計算、TVecAll : " <<std::endl;
+		DSTR << TVecAll << std::endl;
+		ofs << i <<  "th Cyc" << std::endl;
+		ofs << i << "回目の計算、TVecAll : " <<std::endl;
+		ofs << TVecAll << std::endl;
+		ofs << "bVecAll: " <<std::endl;
+		ofs << bVecAll << std::endl;
+		ofs << "_DMatAll: " <<std::endl; 
+		ofs << _DMatAll <<std::endl;
+		int piyopiyoyo =0;
 	}
 }
 
-void PHFemMeshThermo::Step(double dt){
-	CalcHeatTransUsingGaussSeidel(dt);			//ガウスザイデル法で熱伝導計算を解く
+void PHFemMeshThermo::UpdateVertexTempAll(unsigned size){
+	for(unsigned i=0;i < size;i++){
+		vertices[i].temp = TVecAll[i][0];
+	}
+}
+void PHFemMeshThermo::UpdateVertexTemp(unsigned vtxid){
+		vertices[vtxid].temp = TVecAll[vtxid][0];
+}
 
+
+void PHFemMeshThermo::Step(double dt){
+	
+	//境界条件を設定:温度の設定
+	SetThermalBoundaryCondition();
+	//
+	CalcHeatTransUsingGaussSeidel(10,dt);			//ガウスザイデル法で熱伝導計算を解く
+
+	//温度を表示してみる
+	//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
+
+	//温度のベクトルから節点へ温度の反映
+	UpdateVertexTempAll(vertices.size());
+
+
+	for(unsigned i =0;i<vertices.size();i++){
+		if(vertices[i].temp !=0){
+			DSTR << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
+		}
+	}
+	int hogehoge=0;
+
+
+	//DSTR << "TVecAll : " <<std::endl;
+	//DSTR << TVecAll << std::endl;
+	//DSTR << "bVecAll : " <<std::endl;
+	//DSTR << bVecAll << std::endl;
+
+
+	//	for	DEBUG	節点3とエッジ対を作る節点を表示
+	//for(unsigned i =0; i < vertices[3].edges.size();i++){
+	//	DSTR << "edges[vertices[3].edges[" << i << "]].vertices[0] : " << edges[vertices[3].edges[i]].vertices[0] << std::endl;
+	//	DSTR << "edges[vertices[3].edges[" << i << "]].vertices[1] : " << edges[vertices[3].edges[i]].vertices[1] << std::endl;
+	//}
+	//for(unsigned i =0; i < vertices[3].edges.size();i++){
+	//	DSTR << "vertices[3].edges[" << i << "] : " << vertices[3].edges[i] << std::endl;
+	//}
+	int hogeshi = 0;
+	//	for DEBUG
 	//（形状が変わったら、マトリクスやベクトルを作り直す）
 	//温度変化・最新の時間の{T}縦ベクトルに記載されている節点温度を基に化学変化シミュレーションを行う
 		//SetChemicalSimulation();
 		//化学変化シミュレーションに必要な温度などのパラメータを渡す
 	//温度変化や化学シミュレーションの結果はグラフィクス表示を行う
 }
-
-
 
 void PHFemMeshThermo::CreateMatrix(){
 }
@@ -333,10 +417,10 @@ void PHFemMeshThermo::CreateMatcLocal(){
 	}
 
 	//	for debug
-	DSTR << "DMatCAll : " << std::endl;
-	for(unsigned j =0;j < vertices.size();j++){
-		DSTR << j << "th : " << DMatCAll[0][j] << std::endl;
-	}
+	//DSTR << "DMatCAll : " << std::endl;
+	//for(unsigned j =0;j < vertices.size();j++){
+	//	DSTR << j << "th : " << DMatCAll[0][j] << std::endl;
+	//}
 	// ネギについて非0成分になった。
 
 	//	調べる
@@ -864,12 +948,22 @@ void PHFemMeshThermo::SetInitThermoConductionParam(double thConduct0,double roh0
 	heatTrans = heatTrans0;
 }
 
+
+void PHFemMeshThermo::SetTempAllToTVecAll(unsigned size){
+	for(unsigned i =0; i < size;i++){
+		TVecAll[i][0] = vertices[i].temp;
+	}
+}
+
+
 void PHFemMeshThermo::CreateTempMatrix(){
 	unsigned int dmnN = vertices.size();
 	TVecAll.resize(dmnN,1);
-	for(std::vector<unsigned int>::size_type i=0; i < dmnN ; i++){
-		TVecAll[i][0] = vertices[i].temp;
-	}
+	SetTempAllToTVecAll(dmnN);
+	//for(std::vector<unsigned int>::size_type i=0; i < dmnN ; i++){
+	//	TVecAll[i][0] = vertices[i].temp;
+	//}
+
 	//for Debug
 	//for(unsigned int i =0; i < dmnN; i++){
 	//	DSTR << i <<" : " << TVecAll[i][0] << std::endl;
@@ -881,53 +975,27 @@ void PHFemMeshThermo::CreateTempMatrix(){
 
 }
 
+
+void PHFemMeshThermo::SetTempToTVecAll(unsigned vtxid){
+	TVecAll[vtxid][0] = vertices[vtxid].temp;
+}
+
+void PHFemMeshThermo::SetLocalFluidTemp(unsigned i,double temp){
+	vertices[i].Tc = temp;			//節点の周囲流体温度の設定
+}
+
+void PHFemMeshThermo::SetVerticesTemp(unsigned i,double temp){
+	vertices[i].temp = temp;
+	SetTempToTVecAll(i);
+}
+
 void PHFemMeshThermo::SetVerticesTemp(double temp){
 	for(std::vector<unsigned int>::size_type i=0; i < vertices.size() ; i++){
 			vertices[i].temp = temp;
 		}
 }
 
-void PHFemMeshThermo::CreateMatTest(){
-
-	TMatrixRow<4,4,double> mat;              // 2行2列の行が詰った行列を宣言
-				                               // TMatrixColだと列が詰った行列になる
-	//四面体vectorなどから再帰命令などで入力
-    mat[0][0] = 1;  mat[0][1] = 1;	mat[0][2] = 1;	mat[0][3] = 1;          // 0行0列 = 1;  0行1列 = 2;
-    mat[1][0] = 3;  mat[1][1] = 4;	mat[1][2] = 2;	mat[1][3] = 2;          // 1行0列 = 3;  1行1列 = 4;
-	mat[2][0] = 2;	mat[2][1] = 2;	mat[2][2] = 2;	mat[2][3] = 2;
-	mat[3][0] = 2;	mat[3][1] = 2;	mat[3][2] = 2;	mat[3][3] = 2;
-
-    TVector<2,float> vec;                   // 2次元のベクトルを宣言
-    vec[0] = 1; vec[1] = 0;
-    std::cout << mat;
-    std::cout << vec << std::endl;
-    std::cout << mat * vec << std::endl;    // 掛け算
-    std::cout << mat + mat << std::endl;    // 足し算
-    std::cout << mat - mat << std::endl;    // 引き算
-    std::cout << mat.trans() << std::endl;  // 転置
-    std::cout << mat.inv() << std::endl;    // 逆行列
-    //return 0;
-
-	double elemK2[4][4];
-	double elemK3[4][4];
-	//η=0 三行と三列を0にする。
-	double alpha;	//熱伝達率をどこかで定義
-	int hogehoge;//ξηζのどれを0にするか⇒どういう条件判定がいいのか知らん。
-	for(int i=0; i<4; i++){
-		for(int j=0; j<4 ;j++){
-			if( i = j){
-				elemK2[i][j] = 1/12;
-			}
-			elemK2[i][j] = 1/24;
-			if(j=hogehoge){
-				elemK2[i][j] =0.0;	//j列を0に
-			}
-			if(i=hogehoge){
-				elemK2[i][j] =0.0;		//i行を0に
-			}
-		}
-		
-	}
-}
 
 }
+
+

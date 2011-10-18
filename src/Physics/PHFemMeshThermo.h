@@ -73,10 +73,14 @@ public:
 	PTM::VMatrixCol<double> bVecAll;			//ガウスザイデルの計算に用いる定数行列bの縦ベクトル	Rowである必要はあるのか？⇒Colにした
 	//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
 
-	void SetVerticesTemp(double temp);			//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
+	void SetVerticesTemp(double temp);					//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
+	void SetVerticesTemp(unsigned i,double temp);		// 節点iの温度をtemp度に設定し、それをTVEcAllに反映
+	void SetLocalFluidTemp(unsigned i,double temp);		//	接点iの周囲の節点温度をtemp度に設定
+	
 	//熱伝達境界条件の時はすべての引数を満たす　温度固定境界条件を用いたいときには、熱伝達率（最後の引数）を入力しない。また、毎Step実行時に特定節点の温度を一定温度に保つようにする。
 	void SetInitThermoConductionParam(double thConduct,double roh,double specificHeat,double heatTrans);		//熱伝導率、密度、比熱、熱伝達率などのパラメーターを設定・代入
 
+	void SetThermalBoundaryCondition();				//	熱伝導境界条件の設定
 
 protected:
 	//熱伝導計算本体
@@ -88,7 +92,6 @@ protected:
 	void CreateMatkLocal();
 	void CreateMatKall();
 
-	void CreateMatTest();
 	void CreateMatcLocal();
 	void CreateMatc(Tet tets);					//cの要素剛性行列を作る関数
 	void CreateVecfLocal();						//
@@ -101,7 +104,13 @@ protected:
 	double CalcTetrahedraVolume(Tet tets);		////四面体のIDを入れると、その体積を計算してくれる関数
 	void PrepareStep();							//Step()で必要な変数を計算する関数
 	//double CalcbVec(int vtxid,
-	void CalcHeatTransUsingGaussSeidel(double dt);		//	ガウスザイデル法で熱伝導を計算する関数
+	void CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt);		//	ガウスザイデル法で熱伝導を計算 NofCyc:繰り返し計算回数,dt:ステップ時間
+
+	void SetTempAllToTVecAll(unsigned size);		//	TVecAllに全節点の温度を設定する関数
+	void SetTempToTVecAll(unsigned vtxid);			//	TVecAllに特定の節点の温度を設定する関数
+	void UpdateVertexTemp(unsigned vtxid);			//	計算結果としての温度をTVecAllから節点に更新する
+	void UpdateVertexTempAll(unsigned size);		//	計算結果としての温度をTVecAllから全節点に更新する
+
 
 	PTM::TMatrixRow<4,4,double> Create44Mat21();	//共通で用いる、4×4の2と1でできた行列を返す関数
 	//あるいは、引数を入れると、引数を変えてくれる関数
