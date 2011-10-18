@@ -17,23 +17,23 @@ vec(vec&);
 %enddef
 
 %define VEC_EXTEND(vec, elem)
-elem __getitem__(size_t var1){
-	return $self->operator[](var1);
+elem __getitem__(size_t $var1){
+	return $self->operator[]($var1);
 }
-void __setitem__(size_t var1, elem var2){
-	$self->operator[](var1) = var2;
+void __setitem__(size_t $var1, elem $var2){
+	$self->operator[]($var1) = $var2;
 }
-vec __add__(vec var1){
-	return *$self + var1;
+vec __add__(vec $var1){
+	return *$self + $var1;
 }
-vec __sub__(vec var1){
-	return *$self - var1;
+vec __sub__(vec $var1){
+	return *$self - $var1;
 }
-vec __mul__(elem var1){
-	return *$self * var1;
+vec __mul__(elem $var1){
+	return *$self * $var1;
 }
-elem __mul__(vec var1){
-	return *$self * var1;
+elem __mul__(vec $var1){
+	return *$self * $var1;
 }
 
 PyObject* tuple(){
@@ -143,26 +143,26 @@ mat(const mat&);
 %enddef
 
 %define MAT_EXTEND(mat, vec, elem)
-elem __getitem__(size_t var1, size_t var2){
-	return (*$self)[var1][var2];
+elem __getitem__(size_t $var1, size_t $var2){
+	return (*$self)[$var1][$var2];
 }
-void __setitem__(size_t var1, size_t var2, elem var3){
-	(*$self)[var1][var2] = var3;
+void __setitem__(size_t $var1, size_t $var2, elem $var3){
+	(*$self)[$var1][$var2] = $var3;
 }
-mat __add__(mat var1){
-	return *$self + var1;
+mat __add__(mat $var1){
+	return *$self + $var1;
 }
-mat __sub__(mat var1){
-	return *$self - var1;
+mat __sub__(mat $var1){
+	return *$self - $var1;
 }
-mat __mul__(mat var1){
-	return *$self * var1;
+mat __mul__(mat $var1){
+	return *$self * $var1;
 }
-vec __mul__(vec var1){
-	return *$self * var1;
+vec __mul__(vec $var1){
+	return *$self * $var1;
 }
-mat __mul__(elem var1){
-	return *$self * var1;
+mat __mul__(elem $var1){
+	return *$self * $var1;
 }
 PyObject* tuple(){
 	int w = $self->WIDTH;
@@ -393,20 +393,20 @@ EXTEND_NEW(Matrix3d)
 // TAffineだけはグラフィクス系との親和性を考慮してfloat, double両方の具現化をポートする
 %extend Affine2f{
 	MAT_EXTEND(Affine2f, Vec2f, float)
-	void setTrn(const Vec2f& var1){
-		$self->Trn() = var1;
+	void setTrn(const Vec2f& $var1){
+		$self->Trn() = $var1;
 	}
 	Vec2f getTrn(){
 		return $self->Trn();
 	}
-	void setPos(const Vec2f& var1){
-		$self->Pos() = var1;
+	void setPos(const Vec2f& $var1){
+		$self->Pos() = $var1;
 	}
 	Vec2f getPos(){
 		return $self->Pos();
 	}
-	void setRot(const Matrix2f& var1){
-		$self->Rot() = var1;
+	void setRot(const Matrix2f& $var1){
+		$self->Rot() = $var1;
 	}
 	Matrix2f getRot(){
 		return $self->Rot();
@@ -428,20 +428,20 @@ EXTEND_NEW(Affine2f)
 
 %extend Affinef{
 	MAT_EXTEND(Affinef, Vec3f, float)
-	void setTrn(const Vec3f& var1){
-		$self->Trn() = var1;
+	void setTrn(const Vec3f& $var1){
+		$self->Trn() = $var1;
 	}
 	Vec3f getTrn(){
 		return $self->Trn();
 	}
-	void setPos(const Vec3f& var1){
-		$self->Pos() = var1;
+	void setPos(const Vec3f& $var1){
+		$self->Pos() = $var1;
 	}
 	Vec3f getPos(){
 		return $self->Pos();
 	}
-	void setRot(const Matrix3f& var1){
-		$self->Rot() = var1;
+	void setRot(const Matrix3f& $var1){
+		$self->Rot() = $var1;
 	}
 	Matrix3f getRot(){
 		return $self->Rot();
@@ -479,20 +479,20 @@ EXTEND_NEW(Affinef)
 
 %extend Affine2d{
 	MAT_EXTEND(Affine2d, Vec2d, double)
-	void setTrn(const Vec2d& var1){
-		$self->Trn() = var1;
+	void setTrn(const Vec2d& $var1){
+		$self->Trn() = $var1;
 	}
 	Vec2d getTrn(){
 		return $self->Trn();
 	}
-	void setPos(const Vec2d& var1){
-		$self->Pos() = var1;
+	void setPos(const Vec2d& $var1){
+		$self->Pos() = $var1;
 	}
 	Vec2d getPos(){
 		return $self->Pos();
 	}
-	void setRot(const Matrix2d& var1){
-		$self->Rot() = var1;
+	void setRot(const Matrix2d& $var1){
+		$self->Rot() = $var1;
 	}
 	Matrix2d getRot(){
 		return $self->Rot();
@@ -515,20 +515,20 @@ EXTEND_NEW(Affine2d)
 
 %extend Affined{
 	MAT_EXTEND(Affined, Vec3d, double)
-	void setTrn(const Vec3d& var1){
-		$self->Trn() = var1;
+	void setTrn(const Vec3d& $var1){
+		$self->Trn() = $var1;
 	}
 	Vec3d getTrn(){
 		return $self->Trn();
 	}
-	void setPos(const Vec3d& var1){
-		$self->Pos() = var1;
+	void setPos(const Vec3d& $var1){
+		$self->Pos() = $var1;
 	}
 	Vec3d getPos(){
 		return $self->Pos();
 	}
-	void setRot(const Matrix3d& var1){
-		$self->Rot() = var1;
+	void setRot(const Matrix3d& $var1){
+		$self->Rot() = $var1;
 	}
 	Matrix3d getRot(){
 		return $self->Rot();
@@ -567,27 +567,30 @@ EXTEND_NEW(Affined)
 %extend Quaterniond{
 	VEC_EXTEND_EXPRESSION(Vec4d,double)
 
-	double __getitem__(size_t var1){
-		return $self->operator[](var1);
+	double __getitem__(size_t $var1){
+		return $self->operator[]($var1);
 	}
-	void __setitem__(size_t var1, double var2){
-		$self->operator[](var1) = var2;
+	void __setitem__(size_t $var1, double $var2){
+		$self->operator[]($var1) = $var2;
 	}
-	Quaterniond __add__(Quaterniond var1){
-		return *$self + var1;
+	Quaterniond __add__(Quaterniond $var1){
+		return *$self + $var1;
 	}
-	Quaterniond __sub__(Quaterniond var1){
-		return *$self - var1;
+	Quaterniond __sub__(Quaterniond $var1){
+		return *$self - $var1;
 	}
-	Quaterniond __mul__(Quaterniond var1){
-		return *$self * var1;	
+	Quaterniond __mul__(Quaterniond $var1){
+		return *$self * $var1;	
 	}
-	Vec3d transform(Vec3d var1){
-		return *$self * var1;
+	Quaterniond __mul__(Vec3d $var1){
+		return *$self * $var1;
+	}
+	Vec3d transform(Vec3d $var1){
+		return *$self * $var1;
 	}
 	
-	void setV(const Vec3d& var1){
-		$self->V() = var1;
+	void setV(const Vec3d& $var1){
+		$self->V() = $var1;
 	}
 	Vec3d getV(){
 		return $self->V();
@@ -630,27 +633,27 @@ EXTEND_NEW(Quaterniond)
 
 %extend Quaternionf{
 	VEC_EXTEND_EXPRESSION(Vec4f,float)
-	float __getitem__(size_t var1){
-		return $self->operator[](var1);
+	float __getitem__(size_t $var1){
+		return $self->operator[]($var1);
 	}
-	void __setitem__(size_t var1, float var2){
-		$self->operator[](var1) = var2;
+	void __setitem__(size_t $var1, float $var2){
+		$self->operator[]($var1) = $var2;
 	}
-	Quaternionf __add__(Quaternionf var1){
-		return *$self + var1;
+	Quaternionf __add__(Quaternionf $var1){
+		return *$self + $var1;
 	}
-	Quaternionf __sub__(Quaternionf var1){
-		return *$self - var1;
+	Quaternionf __sub__(Quaternionf $var1){
+		return *$self - $var1;
 	}
-	Quaternionf __mul__(Quaternionf var1){
-		return *$self * var1;	
+	Quaternionf __mul__(Quaternionf $var1){
+		return *$self * $var1;	
 	}
-	Vec3f transform(Vec3f var1){
-		return *$self * var1;
+	Vec3f transform(Vec3f $var1){
+		return *$self * $var1;
 	}
 	
-	void setV(const Vec3f& var1){
-		$self->V() = var1;
+	void setV(const Vec3f& $var1){
+		$self->V() = $var1;
 	}
 	Vec3f getV(){
 		return $self->V();
@@ -691,20 +694,20 @@ EXTEND_NEW(Quaternionf)
 
 
 %extend Posed{
-	Vec3d transform(Vec3d var1){
-		return *$self * var1;
+	Vec3d transform(Vec3d $var1){
+		return *$self * $var1;
 	}
-	Posed __mul__(Posed var1){
-		return *$self * var1;
+	Posed __mul__(Posed $var1){
+		return *$self * $var1;
 	}
-	void setPos(const Vec3d& var1){
-		$self->Pos() = var1;
+	void setPos(const Vec3d& $var1){
+		$self->Pos() = $var1;
 	}
 	Vec3d getPos(){
 		return $self->Pos();
 	}
-	void setOri(const Quaterniond& var1){
-		$self->Ori() = var1;
+	void setOri(const Quaterniond& $var1){
+		$self->Ori() = $var1;
 	}
 	Quaterniond getOri(){
 		return $self->Ori();
@@ -737,20 +740,20 @@ EXTEND_NEW(Posed)
 
 
 %extend Posef{
-	Vec3f transform(Vec3f var1){
-		return *$self * var1;
+	Vec3f transform(Vec3f $var1){
+		return *$self * $var1;
 	}
-	Posef __mul__(Posef var1){
-		return *$self * var1;
+	Posef __mul__(Posef $var1){
+		return *$self * $var1;
 	}
-	void setPos(const Vec3f& var1){
-		$self->Pos() = var1;
+	void setPos(const Vec3f& $var1){
+		$self->Pos() = $var1;
 	}
 	Vec3f getPos(){
 		return $self->Pos();
 	}
-	void setOri(const Quaternionf& var1){
-		$self->Ori() = var1;
+	void setOri(const Quaternionf& $var1){
+		$self->Ori() = $var1;
 	}
 	Quaternionf getOri(){
 		return $self->Ori();
