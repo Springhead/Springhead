@@ -5,6 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#include <SciLab/SprSciLab.h>
 #include <Physics/PHFemMeshThermo.h>
 #include<Base/Affine.h>
 
@@ -37,15 +38,7 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 }
 
 void PHFemMeshThermo::SetThermalBoundaryCondition(){
-	//温度固定境界条件
-	//SetVerticesTemp(2,200.0);
-	for(unsigned i =0;i < 20; i++){
-		SetVerticesTemp(i,200);
-	}
-
-	//熱伝達境界条件
-	//節点の周囲流体温度の設定(K,C,Fなどの行列ベクトルの作成後に実行必要あり)
-	//SetLocalFluidTemp(2,200.0);
+	
 }
 
 void PHFemMeshThermo::PrepareStep(){
@@ -58,12 +51,75 @@ void PHFemMeshThermo::PrepareStep(){
 	//係数行列b生成ループ⇒このループをガウスザイデル計算の最初の一回だけやったほうが、forループが1回少なくなるので、計算速そう。けど、if文が必要
 }
 
+void PHFemMeshThermo::ScilabTest(){
+	if (!ScilabStart()) std::cout << "Error : ScilabStart \n";
+
+	//	行列の読み書き
+	Matrix2f A;
+	A.Ex() = Vec2f(1,2);
+	A.Ey() = Vec2f(3,4);
+	std::cout << "A:  " << A ;
+	std::cout << "A00:" << A[0][0] << std::endl;
+	std::cout << "A01:" << A[0][1] << std::endl;
+	std::cout << "A10:" << A[1][0] << std::endl;
+	std::cout << "A11:" << A[1][1] << std::endl;
+	
+	ScilabSetMatrix("A", A);
+	ScilabJob("b=[4;5]");
+	std::cout << "A=";
+	ScilabJob("disp(A);");
+	std::cout << "b=";
+	ScilabJob("disp(b);");
+	std::cout << "x=A\\b" << std::endl;
+	ScilabJob("A,b,x=A\\b;");
+	
+	ScilabGetMatrix(A, "A");
+	SCMatrix b = ScilabMatrix("b");
+	SCMatrix x = ScilabMatrix("x");
+	std::cout << "x:" << x << std::endl;
+
+	ScilabJob("y = A;");
+	SCMatrix y = ScilabMatrix("y");
+	std::cout << "y=" << y;
+	y = 2*A;
+	std::cout << "y = 2*A is done by C++ code" << std::endl;
+	std::cout << "y=";
+	ScilabJob("disp(y);");
+	std::cout << A;
+	std::cout << y;
+	ScilabJob("clear;");
+
+	//	グラフ描画
+	ScilabJob("t = 0:0.01:2*3.141592653;");
+	ScilabJob("x = sin(t);");
+	ScilabJob("y = cos(t);");
+	ScilabJob("plot2d(x, y);");
+	for(int i=0; i<100000; ++i){
+		ScilabJob("");
+	}
+	ScilabEnd();
+}
+
+void PHFemMeshThermo::UsingFixedTempBoundaryCondition(unsigned id,double temp){
+	//温度固定境界条件
+	SetVerticesTemp(id,temp);
+	//for(unsigned i =0;i < vertices.size()/3; i++){
+	//	SetVerticesTemp(i,temp);
+	//}
+}
+
+void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(){
+	//熱伝達境界条件
+	//節点の周囲流体温度の設定(K,C,Fなどの行列ベクトルの作成後に実行必要あり)
+	//SetLocalFluidTemp(2,200.0);
+}
+
 void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 	//dtはPHFemEngine.cppで取得する動力学シミュレーションのステップ時間
-	bool DoCalc =true;											//初回だけ定数ベクトルbの計算を行うbool
+	bool DoCalc =true;											//初回だけ定数ベクトルbの計算を行うbool		//NofCycが0の時にすればいいのかも
 	std::ofstream ofs("log.txt");
 	for(unsigned i=0; i < NofCyc; i++){							//ガウスザイデルの計算ループ
-		if(DoCalc){
+		if(DoCalc){												
 			if(deformed){												//D_iiの作成　形状が更新された際に1度だけ行えばよい
 				for(unsigned j =0; j < vertices.size() ; j++){
 					//for(unsigned k =0;k < vertices.size(); k++){
@@ -93,6 +149,7 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 			//	--- ( - - [K] + ---[C] ){T(t)} + {F} 
 			//	D_jj    2       ⊿t
 			//
+
 			for(unsigned j =0; j < vertices.size() ; j++){		//初回ループだけ	係数ベクトルbVecAllの成分を計算
 				bVecAll[j][0] = 0.0;							//bVecAll[j][0]の初期化
 				//節点が属すedges毎に　対角成分(j,j)と非対角成分(j,?)毎に計算
@@ -128,6 +185,7 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
 				bVecAll[j][0] = bVecAll[j][0] * _DMatAll[0][j];
 				DSTR << "bVecAll[" << j <<"][0] * _DMatAll : " << bVecAll[j][0] << std::endl;
+				DSTR << "TVecAll[" << j <<"][0] : " << TVecAll[j][0] << std::endl;
 			}
 			DoCalc = false;			//初回のループだけで利用
 			//値が入っているか、正常そうかをチェック
@@ -137,6 +195,12 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 			//}
 			int debughogeshi =0;
 		}		//if(DoCalc){...}
+
+		if(i == 0){
+				for(unsigned j=0;j <vertices.size() ;j++){
+					TVecAll[j][0] = 0.0;
+				}
+		}
 		//	 1      
 		//	--- [F]{T(t+dt)}
 		//	D_jj 		
@@ -213,6 +277,11 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		ofs << "_DMatAll: " <<std::endl; 
 		ofs << _DMatAll <<std::endl;
 		int piyopiyoyo =0;
+		double tempTemp=0.0;
+		for(unsigned j=0;j <vertices.size() ; j++){
+			tempTemp += TVecAll[j][0];
+		}
+		DSTR <<"全節点の温度の和 : " << tempTemp << std::endl; 
 	}
 }
 
@@ -228,8 +297,9 @@ void PHFemMeshThermo::UpdateVertexTemp(unsigned vtxid){
 
 void PHFemMeshThermo::Step(double dt){
 	
+//	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
-	SetThermalBoundaryCondition();
+	UsingFixedTempBoundaryCondition(0,1.0);
 	//
 	CalcHeatTransUsingGaussSeidel(10,dt);			//ガウスザイデル法で熱伝導計算を解く
 
