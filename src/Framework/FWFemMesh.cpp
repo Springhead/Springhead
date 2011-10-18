@@ -203,6 +203,7 @@ void FWFemMesh::CreateGRFromPH(){
 			Vec2f texCoord;
 			Vec3f normal;
 			GRMeshFace& gFace = grMesh->faces[pFaceMap[pf]];
+			GRMeshFace& gFaceNormal = grMesh->faceNormals[pFaceMap[pf]];
 			GRMeshFace* gNormal = NULL;
 			if (grMesh->normals.size()){
 				gNormal = &gFace;
@@ -243,8 +244,9 @@ void FWFemMesh::CreateGRFromPH(){
 				}
 				for(int j=0; j<3; ++j){
 					texCoord += weight[maxId][j] * grMesh->texCoords[gFace.indices[j<maxId?j:j+1]];
-					if(gNormal)
-						normal += weight[maxId][j] * grMesh->normals[gFace.indices[j<maxId?j:j+1]];
+					if(gNormal){
+						normal += weight[maxId][j] * grMesh->normals[gFaceNormal.indices[j<maxId?j:j+1]];
+					}
 				}
 			}
 			gmd.texCoords.resize(gmd.vertices.size());
