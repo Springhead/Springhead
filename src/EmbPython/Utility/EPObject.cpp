@@ -136,19 +136,34 @@ PyTypeObject EPObjectType =
 
 };
 
-PyMODINIT_FUNC initEPObject(void)
+void __PYDECL initEPObject(PyObject *rootModule)
 {
-	PyObject* m;
-
 	//Pythonクラスの作成
-	if ( PyType_Ready( &EPObjectType ) < 0 ) return NULL ;
+	if ( PyType_Ready( &EPObjectType ) < 0 ) return ;
 
-	m = PyImport_AddModule("Utility");
+	string package;
 
-	//モジュールに追加
+	if(rootModule) package = PyModule_GetName(rootModule);
+	else
+	{
+#ifdef EP_MODULE_NAME
+		package = EP_MODULE_NAME ".";
+		rootModule = PyImport_AddModule( EP_MODULE_NAME );
+#else
+		package = "";
+		rootModule = PyImport_AddModule("__main__");
+#endif
+	}
+#ifdef EP_USE_SUBMODULE
+	PyObject *subModule = PyImport_AddModule( (package+"Utility").c_str() );
+	Py_INCREF(subModule);
+	PyModule_AddObject(rootModule,"Utility",subModule);
+#else
+	PyObject *subModule = rootModule;
+#endif
+
 	Py_INCREF(&EPObjectType);
-	PyModule_AddObject(m,"EPObject",(PyObject *)&EPObjectType);
-	return m;
+	PyModule_AddObject(subModule,"EPObject",(PyObject*)&EPObjectType);
 }
 
 PyObject* newEPObject()
