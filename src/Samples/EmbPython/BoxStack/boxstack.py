@@ -5,7 +5,11 @@
 
 import sys
 import time
+import threading
 import math
+import random
+
+from Spr import *
 
 print("def Pick(PHSolidIf,Vec3d)")
 def Pick(so,vec):
@@ -61,13 +65,43 @@ def MoveRnd(so):
 		so.SetVelocity(so.GetVelocity()+v)
 		time.sleep(0.5)
 
-def PD(solid,pos=Vec3d(5,15,0),k=10,d=10,time_=5):
-	dt = 0.1
-	n = int( time_ / dt )
 
+class PD( threading.Thread):
+	def __init__(self,so,pos=Vec3d(5,15,0),k=10,d=10):
+		self.so = so
+		self.pos= pos
+		self.k = k
+		self.d = d
+		threading.Thread.__init__(self)
+
+	def run(self):
+		dt = 0.1
+
+		while(True):
+			self.so.AddForce( (self.pos - self.so.GetFramePosition())*self.k + (Vec3d(0,0,0) - self.so.GetVelocity())*self.d ) 
+			time.sleep(dt)
+		
+def Chain(n):
+	tList = []
+	oldx = None
+	oldy = None
+	oldz = None
 	for i in range(n):
-		solid.AddForce( (pos - solid.GetFramePosition())*k - solid.GetVelocity()*d ) 
-		time.sleep(dt)
+		t = PD(AddBox())
+		tList.append(t)
+		
+		x = oldx     if oldx else (random.random()-0.5)*40
+		y = oldy - 7 if oldy else random.random()*40+ 8 * n
+		z = oldz     if oldz else (random.random()-0.5)*40
+
+		oldx = x
+		oldy = y
+		oldz = z
+
+		t.pos = Vec3d( x, y, z)
+		t.start()
+
+	return tList
 
 if __name__ == "__main__":
 	print("v1 = Vec3d() v2 = Vec3d()")
