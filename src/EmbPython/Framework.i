@@ -27,6 +27,7 @@
 #include "../../include/Springhead.h"
 #include "../../include/Python/Python.h"
 #include "../../include/EmbPython/SprEPUtility.h"
+#include "../../include/EmbPython/SprEPBase.h"
 #include "../../include/EmbPython/SprEPFoundation.h"
 #include "../../include/EmbPython/SprEPFileIO.h"
 #include "../../include/EmbPython/SprEPPhysics.h"

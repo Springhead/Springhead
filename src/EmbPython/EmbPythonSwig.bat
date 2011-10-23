@@ -22,7 +22,7 @@ for %%f in (%API_INCLUDE%/%MODULE%/*.h) do set SRCINTF=!SRCINTF! %API_INCLUDE%/%
 echo ========================= MODULE %MODULE% =============================
 
 rem .iファイルを手書きするときはここにモジュール名を追加
-if "%MODULE%" == "Utility" goto swig
+if "%MODULE%" == "Base" goto swig
 if "%MODULE%" == "Framework" goto swig
 rem if "%MODULE%" == "Physics" goto swig
 
@@ -51,6 +51,7 @@ echo %%begin%%{>> %MODULE%.i
 echo #include "%API_INCLUDE%/Springhead.h">> %MODULE%.i
 echo #include "%API_INCLUDE%/Python/Python.h">> %MODULE%.i
 echo #include "%API_INCLUDE%/EmbPython/SprEPUtility.h">> %MODULE%.i
+echo #include "%API_INCLUDE%/EmbPython/SprEPBase.h">> %MODULE%.i
 if not "%9"=="" echo #include "%API_INCLUDE%/EmbPython/SprEP%9.h">> %MODULE%.i
 if not "%8"=="" echo #include "%API_INCLUDE%/EmbPython/SprEP%8.h">> %MODULE%.i
 if not "%7"=="" echo #include "%API_INCLUDE%/EmbPython/SprEP%7.h">> %MODULE%.i

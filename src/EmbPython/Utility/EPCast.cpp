@@ -1,7 +1,7 @@
 #include "..\..\..\include\EmbPython\Utility\SprEPCast.h"
 using namespace std;
 #include <locale>
-#include "EmbPython/SprEPUtility.h"
+#include "EmbPython/SprEPBase.h"
 
 double PyObject_asDouble(PyObject* obj)
 {
