@@ -67,6 +67,7 @@ void EPInterpreter::Initialize()
 
 	////ƒ‚ƒWƒ…[ƒ‹“Ç‚İ‚İ
 	initUtility();
+	initBase();
 	initFoundation();
 	initFileIO();
 	initCollision();

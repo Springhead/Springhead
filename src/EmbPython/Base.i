@@ -1,4 +1,4 @@
-%module Utility
+%module Base
 
 %begin %{
 #include "Base/TQuaternion.h"
@@ -15,15 +15,12 @@
 #endif
 
 //swig
+#include "SprEPUtility.h"
 #include "Utility/SprEPObject.h"
 #include "Utility/SprEPCast.h"
-#include "Utility/SprUTCriticalSection.h"//CriticalSection用
 #include <string>
 
 using namespace std;
-
-#define EP_MODULE_NAME "Spr"
-//#define EP_USE_SUBMODULE
 
 %}
 
@@ -35,9 +32,6 @@ namespace Spr{
 	class ostream{};
 	class istream{};
 %feature("not_newable","");
-
-	//クリティカルセクション
-	UTCriticalSection EPCriticalSection;
 
 }//namespace
 

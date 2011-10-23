@@ -1,6 +1,8 @@
 #include "..\..\..\include\EmbPython\Utility\SprEPObject.h"
 #include "..\..\..\include\EmbPython\Utility\SprEPCast.h"
 #include "..\..\..\include\EmbPython\SprEPFoundation.h"
+#include "..\..\..\include\EmbPython\SprEPUtility.h"
+#include "..\..\..\include\EmbPython\SprEPBase.h"
 
 static PyObject* __PYDECL EPObject_dir(PyObject* self)
 {

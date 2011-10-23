@@ -1,7 +1,6 @@
 setlocal enabledelayedexpansion
 @echo off
-call .\EmbPythonSwig.bat Utility
-rem call .\EmbPythonSwig.bat Base
+call .\EmbPythonSwig.bat Base
 call .\EmbPythonSwig.bat Foundation
 call .\EmbPythonSwig.bat FileIO Foundation
 call .\EmbPythonSwig.bat Collision Foundation
