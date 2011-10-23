@@ -28,7 +28,8 @@ extern "C" __declspec(dllexport) PyObject* _cdecl PyInit_Spr(void) {
 	module_Spr = PyModule_Create(&Sprmodule);
 	PyObject *dict = PyModule_GetDict(module_Spr);
 
-	initUtility(module_Spr);
+	initUtility();
+	initBase(module_Spr);
 	initFoundation(module_Spr);
 	initFileIO(module_Spr);
 	initCollision(module_Spr);
