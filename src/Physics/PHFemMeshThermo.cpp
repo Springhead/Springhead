@@ -7,7 +7,7 @@
  */
 #include <SciLab/SprSciLab.h>
 #include <Physics/PHFemMeshThermo.h>
-#include<Base/Affine.h>
+#include <Base/Affine.h>
 
 
 using namespace PTM;
@@ -297,7 +297,7 @@ void PHFemMeshThermo::UpdateVertexTemp(unsigned vtxid){
 
 void PHFemMeshThermo::Step(double dt){
 	
-//	ScilabTest();									//	Scilabを使うテスト
+	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
 	UsingFixedTempBoundaryCondition(0,1.0);
 	//
@@ -649,6 +649,18 @@ void PHFemMeshThermo::CreateMatkLocal(){
 
 void PHFemMeshThermo::CreateMatk1b(Tet tets){
 	//yagawa1983を基にノートに式展開した計算式
+	unsigned i=0;
+	unsigned j=0;
+	unsigned k=0;
+	unsigned l=0;
+	//double a[4];
+	DSTR << i <<std::endl;
+	DSTR << j <<std::endl;
+	DSTR << k <<std::endl;
+	DSTR << l <<std::endl;
+	//double a[i]=0.0;
+
+
 }
 
 void PHFemMeshThermo::CreateMatk1k(Tet tets){
