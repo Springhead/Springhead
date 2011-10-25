@@ -251,8 +251,9 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 				//int hogeshi =0;
 			}
 			//	TVecAllの計算
-//			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) - bVecAll[j][0];
-			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];
+			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//	-b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]なので、bVecAllはただの加算でよい
+			//TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];   // -b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]なので、bVecAllはただの加算でよい
+//			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//この計算式だと、まともそうな値が出るが・・・理論的にはどうなのか、分からない。。。
 			////	for DEBUG
 			//int hofgeshi =0;
 			//if(TVecAll[j][0] != 0.0){
