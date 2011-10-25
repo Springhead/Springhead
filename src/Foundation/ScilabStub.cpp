@@ -24,8 +24,8 @@ SC_IMP_STACKVAR(dbg);
 
 bool StartScilab(char* SCIpath, char *ScilabStartup,int *Stacksize){
 	if (!dllLoader.Load("LibScilab.dll", 
-		"C:\\Program Files\\scilab-5.3.3\\bin;D:\\Program Files\\scilab-5.0.3\\bin;"
 		"C:\\Program Files (x86)\\scilab-5.3.3\\bin;"
+		"C:\\Program Files\\scilab-5.3.3\\bin;D:\\Program Files\\scilab-5.0.3\\bin;"
 		"C:\\Program Files\\scilab-5.0.3\\bin;D:\\Program Files\\scilab-5.0.3\\bin;"
 		"C:\\Program Files (x86)\\scilab-5.0.3\\bin;"
 		"C:\\Program Files\\scilab-4.1.2\\bin;D:\\Program Files\\scilab-4.1.2\\bin;"
