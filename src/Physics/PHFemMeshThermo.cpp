@@ -14,6 +14,7 @@ using namespace PTM;
 
 namespace Spr{;
 
+#define UseMatAll
 
 PHFemMeshThermoDesc::PHFemMeshThermoDesc(){
 	Init();
@@ -50,6 +51,15 @@ void PHFemMeshThermo::PrepareStep(){
 	//ただし、[K],[C]などは全体剛性行列を作っているのではなく、成分ごとにEdges構造体に入っているので、この値を用いる
 	//係数行列b生成ループ⇒このループをガウスザイデル計算の最初の一回だけやったほうが、forループが1回少なくなるので、計算速そう。けど、if文が必要
 }
+
+void PHFemMeshThermo::CreateMatKAll(){
+
+}
+
+void PHFemMeshThermo::CreateMatCAll(){
+
+}
+
 
 void PHFemMeshThermo::ScilabTest(){
 	if (!ScilabStart()) std::cout << "Error : ScilabStart \n";
@@ -97,7 +107,7 @@ void PHFemMeshThermo::ScilabTest(){
 	for(int i=0; i<100000; ++i){
 		ScilabJob("");
 	}
-	ScilabEnd();
+//	ScilabEnd();
 }
 
 void PHFemMeshThermo::UsingFixedTempBoundaryCondition(unsigned id,double temp){
@@ -115,6 +125,8 @@ void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(){
 }
 
 void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
+	//dt = 0.0000000000001 * dt;		//デバッグ用に、dtをものすごく小さくしても、節点0がマイナスになるのか、調べた
+	
 	//dtはPHFemEngine.cppで取得する動力学シミュレーションのステップ時間
 	bool DoCalc =true;											//初回だけ定数ベクトルbの計算を行うbool		//NofCycが0の時にすればいいのかも
 	std::ofstream ofs("log.txt");
@@ -196,11 +208,14 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 			int debughogeshi =0;
 		}		//if(DoCalc){...}
 
+#ifdef DEBUG
+		//	念のため、計算前の初期温度を0にしている。
 		if(i == 0){
 				for(unsigned j=0;j <vertices.size() ;j++){
 					TVecAll[j][0] = 0.0;
 				}
 		}
+#endif
 		//	 1      
 		//	--- [F]{T(t+dt)}
 		//	D_jj 		
@@ -236,7 +251,8 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 				//int hogeshi =0;
 			}
 			//	TVecAllの計算
-			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) - bVecAll[j][0];
+//			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) - bVecAll[j][0];
+			TVecAll[j][0] =	_DMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];
 			////	for DEBUG
 			//int hofgeshi =0;
 			//if(TVecAll[j][0] != 0.0){
@@ -281,7 +297,8 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		for(unsigned j=0;j <vertices.size() ; j++){
 			tempTemp += TVecAll[j][0];
 		}
-		DSTR <<"全節点の温度の和 : " << tempTemp << std::endl; 
+		DSTR << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;
+		DSTR << std::endl;
 	}
 }
 
@@ -297,11 +314,11 @@ void PHFemMeshThermo::UpdateVertexTemp(unsigned vtxid){
 
 void PHFemMeshThermo::Step(double dt){
 	
-	ScilabTest();									//	Scilabを使うテスト
+//	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
 	UsingFixedTempBoundaryCondition(0,1.0);
 	//
-	CalcHeatTransUsingGaussSeidel(10,dt);			//ガウスザイデル法で熱伝導計算を解く
+	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く
 
 	//温度を表示してみる
 	//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
@@ -482,7 +499,7 @@ void PHFemMeshThermo::CreateMatcLocal(){
 		//対角成分を対角成分の全体剛性行列から抜き出した1×nの行列に代入する
 		//j=0~4まで代入(上のループでは、jは対角成分の範囲しかないので、値が入らない成分が出てしまう)
 		for(unsigned j =0;j<4;j++){
-			DMatCAll[0][tets[i].vertices[j]] = Matc[j][j];
+			DMatCAll[0][tets[i].vertices[j]] += Matc[j][j];
 		}
 	}
 
@@ -575,6 +592,17 @@ void PHFemMeshThermo::CreateMatkLocal(){
 		DMatKAll[0][i] = 0.0;
 	}
 
+#ifdef UseMatAll
+	//MatKAllの初期化
+	MatKAll.resize(vertices.size(),vertices.size());
+	for(unsigned i=0;i<vertices.size();i++){
+		for(unsigned j=0;j<vertices.size();j++){
+			MatKAll[i][j] = 0.0;
+		}
+	}
+#endif
+
+
 	//すべての要素について係数行列を作る
 	for(unsigned i = 0; i< tets.size() ; i++){
 		//	k1を作る	体積の求積関数
@@ -618,11 +646,45 @@ void PHFemMeshThermo::CreateMatkLocal(){
 					}
 			}
 		}
+
+#ifdef UseMatAll
+		//SciLabで使うために、全体剛性行列を作る
+		//Matkから作る
+		for(unsigned j=0; j<4 ; j++){
+			for(unsigned k=0; k<4 ;k++){
+				MatKAll[tets[i].vertices[j]][tets[i].vertices[k]] += Matk[j][k];
+			}
+		}
+
+		////edgesに入った係数から作る
+		//for(unsigned j=1; j < 4; j++){
+		//	int vtxid0 = tets[i].vertices[j];
+		//	//	下三角行列部分についてのみ実行
+		//	//	j==1:k=0, j==2:k=0,1, j==3:k=0,1,2
+		//	for(unsigned k = 0; k < j; k++){
+		//		int vtxid1 = tets[i].vertices[k];
+		//			for(unsigned l =0; l < vertices[vtxid0].edges.size(); l++){
+		//				for(unsigned m =0; m < vertices[vtxid1].edges.size(); m++){
+		//					if(vertices[vtxid0].edges[l] == vertices[vtxid1].edges[m]){
+		//						edges[vertices[vtxid0].edges[l]].k += Matk[j][k];		//同じものが二つあるはずだから半分にする。上三角化下三角だけ走査するには、どういうfor文ｓにすれば良いのか？
+		//						//DSTR << edges[vertices[vtxid0].edges[l]].k << std::endl;
+		//					}
+		//				}
+		//			}
+		//	}
+		//}
+
+#endif
+
 		//対角成分を対角成分の全体剛性行列から抜き出した1×nの行列に代入する
 		//j=0~4まで代入(上のループでは、jは対角成分の範囲しかないので、値が入らない成分が出てしまう)
 		for(unsigned j =0;j<4;j++){
-			DMatKAll[0][tets[i].vertices[j]] = Matk[j][j];
-		}						
+			DMatKAll[0][tets[i].vertices[j]] += Matk[j][j];
+			DSTR << "Matk[" << j << "][" << j << "] : " << Matk[j][j] << std::endl;
+			DSTR << "DMatKAll[0][" << tets[i].vertices[j] << "] : " << DMatKAll[0][tets[i].vertices[j]] << std::endl;
+			int hoge4 =0;
+		}
+		DSTR << std::endl;	//改行
 	}//	四面体のfor文の最後
 	
 	//	for debug
@@ -645,6 +707,16 @@ void PHFemMeshThermo::CreateMatkLocal(){
 			DSTR << "DMatKAll[0][" << j << "] element is blank" << std::endl;
 		}
 	}
+
+	DSTR << "MatKAll : " << MatKAll <<std::endl;
+	DSTR << "DMatKAll : " <<DMatKAll << std::endl;
+	for(unsigned j =0;j<vertices.size();j++){
+		if(MatKAll[j][j] != DMatKAll[0][j]){
+			DSTR << j <<" 成分の要素はおかしい！調査が必要である。 " <<std::endl;
+		}
+	}
+	int hoge5 =0;
+
 }
 
 void PHFemMeshThermo::CreateMatk1b(Tet tets){

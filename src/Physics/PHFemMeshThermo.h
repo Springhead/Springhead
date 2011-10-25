@@ -61,9 +61,11 @@ public:
 	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
 	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
 
-	//全体の係数行列
+	//全体の係数行列	//SciLabで使用
 	PTM::VMatrixRow<double> MatKAll;			//[K]の全体剛性行列		//CreateMatKall()
 	PTM::VMatrixRow<double> MatCAll;			//[C]
+
+	//	ガウスザイデル計算時に使用している
 	PTM::VMatrixCol<double> VecFAll;			//{F}の全体剛性ベクトル
 
 	//全体の剛性行列の代わり
@@ -72,6 +74,9 @@ public:
 	PTM::VMatrixRow<double> _DMatAll;			//全体剛性行列KとCの対角成分の定数倍和の逆数をとったもの	ガウスザイデルの計算に利用する
 	PTM::VMatrixCol<double> bVecAll;			//ガウスザイデルの計算に用いる定数行列bの縦ベクトル	Rowである必要はあるのか？⇒Colにした
 	//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
+
+
+
 
 	void SetVerticesTemp(double temp);					//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
 	void SetVerticesTemp(unsigned i,double temp);		// 節点iの温度をtemp度に設定し、それをTVEcAllに反映
@@ -98,7 +103,10 @@ protected:
 	void CreateVecf3(Tet tets);					//
 	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
 	void CreateLocalMatrixAndSet();				//K,C,Fすべての行列・ベクトルについて要素剛性行列を作って、エッジに入れる	又は	全体剛性行列を作る関数
-	void CreateMatrix();
+	
+	//	何用に用いる？	行列作成の関数をまとめるだけ？
+	void CreateMatrix();					
+
 	void SetkcfParam(Tet tets);					//エッジや頂点にk,c,fの要素剛性行列の係数を設定する関数	すべての四面体について要素剛性行列を求め、k,c,fに値を入れると、次の要素について処理を実行する	
 	double CalcTriangleArea(int id0, int id2, int id3);		//節点IDを入れると、その点で構成された三角形の面積を求める　四面体での面積分で使用
 	double CalcTetrahedraVolume(Tet tets);		////四面体のIDを入れると、その体積を計算してくれる関数
@@ -114,6 +122,10 @@ protected:
 	void ScilabTest();								//	Scilabを使ってみる関数
 	void UsingFixedTempBoundaryCondition(unsigned id,double temp);			//	温度固定境界条件
 	void UsingHeatTransferBoundaryCondition();		//	熱伝達境界条件
+
+	//SciLabで固有値を求めるために全体剛性行列を作る
+	void CreateMatKAll();						//	Kの全体剛性行列
+	void CreateMatCAll();						//	Cの全体剛性行列
 
 	PTM::TMatrixRow<4,4,double> Create44Mat21();	//共通で用いる、4×4の2と1でできた行列を返す関数
 	//あるいは、引数を入れると、引数を変えてくれる関数
