@@ -38,6 +38,6 @@ PyObject* newEPObject(const void*);
 //////////////////////////////////////オブジェクトのタイプ宣言
 extern PyTypeObject EPObjectType;
 //////////////////////////////////////オブジェクト（モジュールの）初期化関数
-void __PYDECL initEPObject(PyObject* dict =NULL) ;
+void initEPObject(PyObject* dict =NULL) ;
 
 #endif
