@@ -409,7 +409,7 @@ void multi(TMatrixBase<4, 4, RD>& r, const TMatrixBase<4, 4, AD>& a, const TMatr
 #undef CALC
 }
 
-///	行列式	サイズ：変数
+///	行列式	サイズ：変数 非破壊
 template <class AD>
 TYPENAME AD::element_type det(const MatrixImp<AD>& a){
 	TYPENAME AD::ret_type tmp(a);
@@ -419,7 +419,7 @@ TYPENAME AD::element_type det(const MatrixImp<AD>& a){
 	w.resize(a.height());
 	return lu(tmp, ip, w);
 }
-///	行列式	サイズ：テンプレート
+///	行列式	サイズ：テンプレート 非破壊
 template <size_t H, size_t W, class AD>
 TYPENAME AD::element_type det(const TMatrixBaseBase<H,W,AD>& a){
 	TYPENAME AD::ret_type tmp(a);
@@ -539,7 +539,7 @@ void cholesky(MatrixImp<AD>& a, VectorImp<BD>& s){
 		s.item(i) /= a.item(i,i);
 	}
 }
-///	ガウスの消去法，作業領域(行交換の記録)として， int ip[height()];  が必要．
+///	ガウスの消去法，作業領域(行交換の記録)として， int ip[height()];  が必要．行列aを破壊．
 template <class AD, class XD, class BD>
 TYPENAME AD::element_type gauss(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){
 	TYPENAME AD::element_type det_;		// 行列式
@@ -551,7 +551,7 @@ TYPENAME AD::element_type gauss(MatrixImp<AD>& a, VectorImp<XD>& x, const Vector
 }
 
 /**	逆行列を求める．
-	@param a		元の行列(LU分解される)
+	@param a		元の行列、破壊(LU分解)される
 	@param b		逆行列
 	@param ip		作業領域(行交換の記録)
 	@param weight	作業領域(行の重み付け)
@@ -584,7 +584,7 @@ TYPENAME AD::element_type inv(MatrixImp<RD>& r, MatrixImp<AD>& a, int* ip, TYPEN
 	return det;
 }
 
-///	 逆行列を返す．
+///	 逆行列を返す．非破壊．
 template <class AD>
 TYPENAME AD::ret_type inv(const MatrixImp<AD>& a){
 	typedef TYPENAME AD::ret_type ret_type;
@@ -596,7 +596,7 @@ TYPENAME AD::ret_type inv(const MatrixImp<AD>& a){
 	inv(r, tmp, (int*)ip, (TYPENAME AD::element_type*)w);
 	return r;
 }
-///	 逆行列を返す．	サイズ：テンプレート
+///	 逆行列を返す．	サイズ：テンプレート a非破壊
 template <class AD, size_t H, size_t W>
 TYPENAME AD::ret_type inv(const TMatrixBaseBase<H,W,AD>& a){
 	TYPENAME AD::ret_type r, tmp(a);
@@ -741,11 +741,11 @@ public:
 	void multi(element_type b){ PTM::multi(exp(), b); }
 	///	LU分解を行う。thisを書き換える。行列式を返す。
 	element_type lu(int* ip, element_type* weight){ return PTM::lu(exp(), ip, weight); }
-	//	(*this) x + b = 0 の1次方程式を解く．LU分解済みの行列でないとだめ．
+	//	(*this) x + b = 0 の1次方程式を解く．this はLU分解済みの行列でないとだめ．
 	template <class XD, class BD> void solve(VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){ PTM::solve(exp(), x, b, ip); }
 	///	コレスキー法
 	template <class VBASE> void cholesky(VectorImp<VBASE>& s){ PTM::cholesky(exp(), s); }
-	///	ガウスの消去法，作業領域(行交換の記録)として， int ip[height()];  が必要．
+	///	ガウスの消去法，作業領域(行交換の記録)として， int ip[height()];  が必要．行列を破壊(lu分解してQになる)
 	template <class XD, class BD> element_type gauss(VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){ return PTM::gauss(exp(), x, b, ip); }
 	///	逆行列を求める。
 	template <class B> element_type inv(MatrixImp<B>& a_inv, int* ip, element_type* weight) { return PTM::inv(a_inv, exp(), ip, weight); }
