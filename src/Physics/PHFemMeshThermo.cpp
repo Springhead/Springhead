@@ -15,6 +15,8 @@ using namespace PTM;
 namespace Spr{;
 
 #define UseMatAll
+//#define DEBUG
+
 
 PHFemMeshThermoDesc::PHFemMeshThermoDesc(){
 	Init();
@@ -118,10 +120,15 @@ void PHFemMeshThermo::UsingFixedTempBoundaryCondition(unsigned id,double temp){
 	//}
 }
 
-void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(){
+void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp){
 	//熱伝達境界条件
 	//節点の周囲流体温度の設定(K,C,Fなどの行列ベクトルの作成後に実行必要あり)
-	//SetLocalFluidTemp(2,200.0);
+	if(vertices[id].Tc != temp){					//更新する節点のTcが変化した時だけ、TcやFベクトルを更新する
+		SetLocalFluidTemp(id,temp);
+		//熱伝達境界条件が使われるように、する。
+		CreateVecfLocal();		//	Tcを含むベクトルを更新する
+	}
+
 }
 
 void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
@@ -139,7 +146,7 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 					//}
 					_DMatAll.resize(1,vertices.size());
 					_DMatAll[0][j] = 1.0/ ( 1.0/2.0 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] );		//1 / D__ii	を求める
-					//1.0/dt = 500 
+					//1.0/dt = 500 d
 					//DSTR << "DMatKAll : "  << DMatKAll << std::endl;
 					//DSTR << "DMatCAll : "  << DMatCAll << std::endl;
 					//DSTR << "1.0/dt : " << 1.0/dt <<std::endl;
@@ -317,9 +324,25 @@ void PHFemMeshThermo::Step(double dt){
 	
 //	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
-	UsingFixedTempBoundaryCondition(0,1.0);
+//	UsingFixedTempBoundaryCondition(0,200.0);
+	
+	//	食材メッシュの表面の節点に、周囲の流体温度を与える
+	//	周囲の流体温度は、フライパンの表面温度や、食材の入っている液体内の温度の分布から、その場所での周囲流体温度を判別する。
+	//	位置座標から判別するコードをここに記述
+	//UsingHeatTransferBoundaryCondition(unsigned id,double temp);
+	//	周囲流体温度を150.0度とする		//エネルギー保存則より、周囲流体温度の低下や、流体への供給熱量は制限されるべき
+	for(unsigned i =0; i < surfaceVertices.size(); i++){
+		UsingHeatTransferBoundaryCondition(surfaceVertices[i],150.0);
+	}
+	DSTR << "VecFAll : " <<std::endl;
+	DSTR << VecFAll << std::endl;
+		
+
 	//
+	//dt = dt *0.01;		誤差1度程度になる
+	//dt = dt;				収束した時の、計算誤差？（マイナスになっている節点温度がそれなりに大きくなる。）
 	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く
+	
 
 	//温度を表示してみる
 	//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
@@ -327,13 +350,17 @@ void PHFemMeshThermo::Step(double dt){
 	//温度のベクトルから節点へ温度の反映
 	UpdateVertexTempAll(vertices.size());
 
-
 	for(unsigned i =0;i<vertices.size();i++){
 		if(vertices[i].temp !=0){
 			DSTR << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
 		}
 	}
 	int hogehoge=0;
+
+	//節点温度を画面に表示する⇒3次元テクスチャを使ったテクスチャ切り替えに値を渡す⇒関数化
+	//
+
+
 
 
 	//DSTR << "TVecAll : " <<std::endl;
@@ -363,6 +390,13 @@ void PHFemMeshThermo::CreateMatrix(){
 }
 
 
+void PHFemMeshThermo::InitTcAll(){
+	for(unsigned i =0; i <vertices.size();i++){
+		vertices[i].Tc = 0.0;
+	}
+}
+
+
 void PHFemMeshThermo::SetDesc(const void* p) {
 	PHFemMeshThermoDesc* d = (PHFemMeshThermoDesc*)p;
 	PHFemMesh::SetDesc(d);
@@ -375,6 +409,8 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	//DSTR << DCAST(PHSceneIf, GetScene())->GetTimeStep() << std::endl;
 	//int hogeshimitake =0;
 
+
+	//%%%	初期化類		%%%//
 
 	//各種メンバ変数の初期化⇒コンストラクタでできたほうがいいかもしれない。
 	//Edges
@@ -393,7 +429,9 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	//節点温度の初期設定(行列を作る前に行う)
 	SetVerticesTemp(0.0);
 
-			
+	//周囲流体温度の初期化(0.0度にする)
+	InitTcAll();
+
 	//節点の初期温度を設定する⇒{T}縦ベクトルに代入
 		//{T}縦ベクトルを作成する。以降のK,C,F行列・ベクトルの節点番号は、この縦ベクトルの節点の並び順に合わせる?
 		
@@ -818,7 +856,6 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 	//	初期化
 	for(unsigned i =0; i < 4 ;i++){
 		Vecf3[i][0] = 0.0;		//最後に入れる行列を初期化
-		vertices[tets.vertices[i]].Tc =0.0;	//
 	}	
 	//l=0の時f31,1:f32, 2:f33, 3:f34	を生成
 	for(unsigned l= 0 ; l < 4; l++){
