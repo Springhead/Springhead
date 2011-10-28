@@ -93,7 +93,19 @@ static PyObject* __PYDECL EPObject_richcmp(PyObject *obj1, PyObject *obj2, int o
     result = c ? Py_True : Py_False;
     Py_INCREF(result);
     return result;
- }
+}
+
+//辞書のキーにするために必要
+static long __PYDECL EPObject_hash(PyObject *obj)
+{
+	//EPObjectのptrをハッシュ値として使う 
+	if ( EPObject_Ptr(obj) == 0 ) {
+		PyErr_SetString( PyErr_Spr_NullReference , "Null Reference in EPObject.__hash__");
+		return -1;
+	}
+	else 
+		return (long)EPObject_Ptr(obj);
+}
 
 PyTypeObject EPObjectType =
 {
@@ -110,7 +122,7 @@ PyTypeObject EPObjectType =
 	0,                         /*tp_as_number*/
 	0,                         /*tp_as_sequence*/
 	0,                         /*tp_as_mapping*/
-	0,                         /*tp_hash */
+	(hashfunc)EPObject_hash,                         /*tp_hash */
 	0,                         /*tp_call*/
 	0,                         /*tp_str*/
 	0,                         /*tp_getattro*/
@@ -138,7 +150,7 @@ PyTypeObject EPObjectType =
 
 };
 
-void __PYDECL initEPObject(PyObject *rootModule)
+void initEPObject(PyObject *rootModule)
 {
 	//Pythonクラスの作成
 	if ( PyType_Ready( &EPObjectType ) < 0 ) return ;

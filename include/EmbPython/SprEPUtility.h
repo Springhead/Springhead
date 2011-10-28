@@ -16,5 +16,5 @@
 extern Spr::UTCriticalSection EPCriticalSection;
 extern PyObject* PyErr_Spr_NullReference;
 
-void __EPDECL initUtility();
+void initUtility(PyObject *rootModule = NULL);
 #endif
