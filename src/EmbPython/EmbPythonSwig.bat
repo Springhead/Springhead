@@ -121,22 +121,6 @@ echo EXTEND_NEW(PHMaterial)>>%MODULE%.i
 echo //--->>%MODULE%.i
 exit /b
 
-:Extend_Physics
-echo //--->>%MODULE%.i
-echo %%ignore Spr::PHIKActuatorIf::GetRawSolution;>> %MODULE%.i
-echo %%ignore Spr::PHSceneIf::CreateIKEndEffector;>> %MODULE%.i
-echo %%ignore Spr::PHSceneIf::CreateIKActuator;>> %MODULE%.i
-echo %%ignore Spr::PHSceneIf::GetSolids;>> %MODULE%.i
-echo %%ignore Spr::PHJoint1DIf::GetRange;>> %MODULE%.i
-echo %%ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t,PHSceneDesc::ContactMode);>>%MODULE%.i
-echo %%ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t);>>%MODULE%.i
-
-echo %%include "Utility/EPObject.i">>%MODULE%.i
-echo EXTEND_NEW(PHSolidDesc)>>%MODULE%.i
-echo EXTEND_NEW(PHPathPoint)>>%MODULE%.i
-echo //--->>%MODULE%.i
-exit /b
-
 :Extend_Graphics
 echo //--->>%MODULE%.i
 echo %%ignore Spr::GRRenderBaseIf::DrawIndexed;>> %MODULE%.i
