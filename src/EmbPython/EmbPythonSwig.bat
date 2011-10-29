@@ -24,7 +24,7 @@ echo ========================= MODULE %MODULE% =============================
 rem .iファイルを手書きするときはここにモジュール名を追加
 if "%MODULE%" == "Base" goto swig
 if "%MODULE%" == "Framework" goto swig
-rem if "%MODULE%" == "Physics" goto swig
+if "%MODULE%" == "Physics" goto swig
 
 :makeif
 echo Create .i file part
