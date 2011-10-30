@@ -119,6 +119,7 @@ bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3
 				depth = -(1-toi) * delta * normal;
 				goto found;
 			}
+			//	過去に接触していたという判定：回転で接触が起きたと考えられる。
 			//	とりあえず、現在の位置で接触しているかどうか確認する。
 			shapePoseW[0].Pos() += delta0;
 			shapePoseW[1].Pos() += delta1;
@@ -134,27 +135,47 @@ bool CDShapePair::DetectContinuously(unsigned ct, const Posed& pose0, const Vec3
 			- 最初から接触していた。
 			- ユーザによる非物理移動が原因で接触が起きたため、toiで接触検出できない。
 
-			このような場合は、形状の中心間を結ぶベクトルを仮法線として、
-			仮法線の向きで接触法線を求めてこれを本法線とする。
-			本法線の向きで、侵入量と法線、最近傍点を計算する。
+			×このような場合は、形状の中心間を結ぶベクトルを仮法線として、
+			×仮法線の向きで接触法線を求めてこれを本法線とする。
+			×本法線の向きで、侵入量と法線、最近傍点を計算する。
+			×この処理では、例えば広い床の上の小さなサイコロが床を横に飛んでいくという
+			×問題が起こる。
+				//	仮法線（形状の中心を結ぶ向き）の計算
+				Vec3d tmpNormal = shapePoseW[1]*shape[1]->CalcCenterOfMass() - shapePoseW[0]*shape[0]->CalcCenterOfMass();
+				double norm = tmpNormal.norm();
+				if (norm > epsilon) tmpNormal /= norm;
+				else tmpNormal = Vec3d(0,1,0);
+				double dist;
 
-			この処理では、例えば広い床の上の小さなサイコロが床を横に飛んでいくという
-			問題が起こる。
+				//	仮法線の向きで接触法線を求める。
+				int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+					-tmpNormal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+				if (res <= 0) return false;
+
+				//	法線を更新してもう一度やってみる。
+				res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+					-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+				if (res <= 0) return false;
+				depth = -dist;
+				center = commonPoint = shapePoseW[0] * closestPoint[0];
+				center -= 0.5f*depth*normal;
+				goto found;
+				
+			そこで、上記はやめて、
+			離れていたはずの前ステップの姿勢に戻して、普通のGJKをやってみると
+			法線が求まるはず。
+			この法線の向きに、現ステップの位置から戻して、接触点等を見つける
 		*/
-		//	仮法線（形状の中心を結ぶ向き）の計算
-		Vec3d tmpNormal = shapePoseW[1]*shape[1]->CalcCenterOfMass() - shapePoseW[0]*shape[0]->CalcCenterOfMass();
-		double norm = tmpNormal.norm();
-		if (norm > epsilon) tmpNormal /= norm;
-		else tmpNormal = Vec3d(0,1,0);
+		//	普通のGJKで法線を計算
+		Posed shapePoseWPrev[2] = {
+			shapePoseW[0],
+			shapePoseW[1]
+		};
+		FindClosestPoints(shape[0], shape[1], shapePoseWPrev[0], shapePoseWPrev[1], 
+			normal, closestPoint[0], closestPoint[1]);
 		double dist;
-
-		//	仮法線の向きで接触法線を求める。
+		//	求めた法線で接触位置を求める
 		int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
-			-tmpNormal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
-		if (res <= 0) return false;
-
-		//	法線を更新してもう一度やってみる。
-		res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 			-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
 		if (res <= 0) return false;
 		depth = -dist;
@@ -252,29 +273,71 @@ bool CDShapePair::DetectContinuously2(unsigned ct, const Posed& pose0, const Pos
 			このような場合は、形状の中心間を結ぶベクトルを仮法線として、
 			仮法線の向きで接触法線を求めてこれを本法線とする。
 			本法線の向きで、侵入量と法線、最近傍点を計算する。
-
 			この処理では、例えば広い床の上の小さなサイコロが床を横に飛んでいくという
 			問題が起こる。
+			Vec3d tmpNormal = shapePoseW[1]*shape[1]->CalcCenterOfMass() - shapePoseW[0]*shape[0]->CalcCenterOfMass();
+			double norm = tmpNormal.norm();
+			if (norm > epsilon) tmpNormal /= norm;
+			else tmpNormal = Vec3d(0,1,0);
+			double dist;
+
+			//	仮法線の向きで接触法線を求める。
+			int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+				-tmpNormal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+			if (res <= 0) return false;
+
+			//	法線を更新してもう一度やってみる。
+			res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+				-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+			if (res <= 0) return false;
+			depth = -dist;
+			center = commonPoint = shapePoseW[0] * closestPoint[0];
+			center -= 0.5f*depth*normal;
 		*/
-		//	仮法線（形状の中心を結ぶ向き）の計算
-		Vec3d tmpNormal = shapePoseW[1]*shape[1]->CalcCenterOfMass() - shapePoseW[0]*shape[0]->CalcCenterOfMass();
-		double norm = tmpNormal.norm();
-		if (norm > epsilon) tmpNormal /= norm;
-		else tmpNormal = Vec3d(0,1,0);
-		double dist;
-
-		//	仮法線の向きで接触法線を求める。
-		int res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+		//	1ステップ前の姿勢に戻して
+		Posed shapePoseWPrev[2] = { shapePoseW[0], shapePoseW[1] };
+		shapePoseWPrev[0].Pos() -= delta0;
+		shapePoseWPrev[1].Pos() -= delta1;
+		Quaterniond dAng0_ = Quaterniond::Rot(-v0.w() * dt);
+		Quaterniond dAng1_ = Quaterniond::Rot(-v1.w() * dt);
+		shapePoseWPrev[0].Ori() = dAng0_ * shapePoseWPrev[0].Ori();
+		shapePoseWPrev[1].Ori() = dAng1_ * shapePoseWPrev[1].Ori();
+		//	普通のGJKで法線を計算 初めての接触だから、1ステップ前には接触していなかったはず。
+		Vec3d tmpNormal;
+		double dist = FindClosestPoints(shape[0], shape[1], shapePoseWPrev[0], shapePoseWPrev[1], 
+			tmpNormal, closestPoint[0], closestPoint[1]);
+		if (dist > 1e-5){
+			tmpNormal *= -1.0/dist;
+		}else{
+			//	どうやら、すごく近かったので、うまく法線が計算できなかった。
+			//	とりあえず、以前の法線を使う。(のは良くないかもしれない。これが原因で深い接触が起きることがある）
+			if (ct - lastContactCount <100){
+				tmpNormal = lastNormal;
+			}else{
+				//	最初から重なってたみたいだから、接触がなかったことにする。
+				return false;
+			}
+		}
+		//	求めた法線で接触位置を求める
+		//	法線向きに判定するとどれだけ戻ると離れるか分かる．
+		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 			-tmpNormal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
-		if (res <= 0) return false;
-
-		//	法線を更新してもう一度やってみる。
-		res = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
-			-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
-		if (res <= 0) return false;
+		if (res <= 0) {	//	範囲内では、接触していない場合
+			//	ここに来るのは速度が０のばあいで、接触していない場合のはずだが、
+			//	たまにそれ以外も来る。by hase 2011.10.30
+			//	そもそもその向きに動かしても接触しない場合か？
+			assert(!(end > epsilon));
+			return false;
+		}
 		depth = -dist;
-		center = commonPoint = shapePoseW[0] * closestPoint[0];
-		center -= 0.5f*depth*normal;
+		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
+		if (depth > 5){
+			DSTR << "depth:" << depth << std::endl;
+			dist = FindClosestPoints(shape[0], shape[1], shapePoseWPrev[0], shapePoseWPrev[1], 
+				tmpNormal, closestPoint[0], closestPoint[1]);
+			assert(0);
+		}
+
 		goto found;
 	}
 found:;

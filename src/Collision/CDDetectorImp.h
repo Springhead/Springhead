@@ -134,9 +134,9 @@ namespace GJK{
 
 #if 1
 /// GJKÇ≈ç≈ãﬂñTì_ëŒÇå©Ç¬ÇØÇÈ
-void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
+double FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 					   const Posed& a2w, const Posed& b2w,
-					   Vec3d& pa, Vec3d& pb);
+					   Vec3d& v, Vec3d& pa, Vec3d& pb);
 #endif
 
 class CDFace;
