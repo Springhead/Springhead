@@ -822,10 +822,9 @@ inline bool IsDegenerate(const Vec3d& w) {
 	}
 	return false;
 }
-void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
+double FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 					  const Posed& a2w, const Posed& b2w,
-					  Vec3d& pa, Vec3d& pb) {
-	Vec3d v;
+					  Vec3d& v, Vec3d& pa, Vec3d& pb) {
 	Vec3f p_0, q_0;
 	a->Support(p_0, Vec3d());
 	b->Support(q_0, Vec3d());
@@ -861,6 +860,7 @@ void FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 		}
 	}
 	CalcPoints(usedBits, pa, pb);
+	return dist;
 }
 #endif
 #endif

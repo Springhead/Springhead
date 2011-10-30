@@ -289,7 +289,8 @@ int FWInteractAdaptee::FindNearestPoint(const CDConvexIf* a, const CDConvexIf* b
 	/// GJKで近傍点を求め，力覚ポインタ最近傍の物体を決定する
 	CDConvex* ca = DCAST(CDConvex, a);
 	CDConvex* cb = DCAST(CDConvex, b);
-	FindClosestPoints(ca, cb, a2w, b2w, pa, pb);	///< GJKで近傍点の算出
+	Vec3d v;
+	FindClosestPoints(ca, cb, a2w, b2w, v, pa, pb);	///< GJKで近傍点の算出
 	Vec3d wa = a2w * pa;							///< 剛体近傍点のワールド座標
 	Vec3d wb = b2w * pb;							///< 力覚ポインタ近傍点のワールド座標
 	Vec3d a2b = wb - wa;							///< 剛体から力覚ポインタへのベクトル
