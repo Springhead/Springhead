@@ -99,71 +99,52 @@ bool CDShapePair::DetectContinuously2(unsigned ct, const Posed& pose0, const Pos
 				goto found;
 			}
 		}
-		//	並進位置を元に戻す
+		//	速度がないか、回転しただけで接触したか、最初から接触していたかの場合、ここに来る。
+		//	まず、並進位置を現在位置に戻す
 		shapePoseW[0].Pos() += delta0;
 		shapePoseW[1].Pos() += delta1;
-		if (end > epsilon){	//	速度がある場合
-			//	とりあえず、現在の位置から速度の逆向きにスイープさせて、どこかで接触が起きてるか確認
-			double tmp;
-			if (ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
-				-dir, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], tmp) <= 0)
-				return false;	//	どこでも接触していない場合は抜ける
-		}
-		//	今回の移動で接触しないが、すでに接触している可能性がある。
-		//	1ステップ前の姿勢(=接触する前)に戻す。
-		Posed shapePoseWPrev[2] = { shapePoseW[0], shapePoseW[1] };
-		delta0 = (v0.v() + (v0.w() ^  (shapeCenter0-cog0)))  * dt;
-		delta1 = (v1.v() + (v1.w() ^  (shapeCenter1-cog1)))  * dt;
-		shapePoseWPrev[0].Pos() -= delta0;
-		shapePoseWPrev[1].Pos() -= delta1;
-		Quaterniond dAng0_ = Quaterniond::Rot(-v0.w() * dt);
-		Quaterniond dAng1_ = Quaterniond::Rot(-v1.w() * dt);
-		shapePoseWPrev[0].Ori() = dAng0_ * shapePoseWPrev[0].Ori();
-		shapePoseWPrev[1].Ori() = dAng1_ * shapePoseWPrev[1].Ori();
-		//	普通のGJKで法線を計算 初めての接触だから、1ステップ前には接触していなかったはず。
-		Vec3d tmpNormal;
-		double dist = FindClosestPoints(shape[0], shape[1], shapePoseWPrev[0], shapePoseWPrev[1], 
-			tmpNormal, closestPoint[0], closestPoint[1]);
-		if (dist > 1e-4){
-			tmpNormal *= -1.0/dist;
-		}else{
-			//	すごく近いか、すでに重なっていてうまく法線が計算できなかった。
-			//	直近に接触があったならば、その時の法線を使う。
-/*
-			if (lastContactCount!=-2 && ct - lastContactCount <10){
-				tmpNormal = lastNormal;
-				assert(tmpNormal.norm() > epsilon);
-			}else{
-*/
-				//	初めての接触でかつ、最初から接触している場合
-				//	仕方ないので、６方向にずらして接触を解消してみて、一番移動量が少ない向きを採用する。
-				static Vec3d tmpN[] = {Vec3d(0,0,1), Vec3d(0,0,-1), Vec3d(0,1,0), Vec3d(0,-1,0), Vec3d(1,0,0), Vec3d(-1,0,0)};
-				double tmpDist, minDist=-DBL_MAX;
-				for(int i=0; i<6; ++i){				
-					int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
-						-tmpN[i], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], tmpDist);
-					if (res>0){
-						if (tmpDist > minDist){
-							minDist = tmpDist;
-							if (normal*tmpN[i] > 0) tmpNormal = normal;
-							else tmpNormal = tmpN[i];
-						}
-					}
-				}
-				//DSTR << "minDist:" << minDist << " normal:" << tmpNormal << std::endl;
-//			}
-		}
-		//	求めた法線で接触位置を求める
-		//	法線向きに判定するとどれだけ戻ると離れるか分かる．
+
+		//	なんとか少ない移動量で侵入を解消できるような法線を見つける。
+		//	以前の法線の向きで判定してみて、侵入が移動量(end)より小さければその向きを採用
+		static Vec3d tmpN[6];
+		double dist;
+		if (lastNormal.square() > epsilon) tmpN[0] = lastNormal;
+		else tmpN[0] = Vec3d(0,1,0);
 		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
-			-tmpNormal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+			-tmpN[0], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+		if (res <= 0) return false;
+		int foundId = 0;
+		double minD = dist;
+		if (-dist > end){	//	侵入量が大きかったので、他の向きを試す。
+			tmpN[1] = -tmpN[0];
+			tmpN[2] = Vec3d(1,0,0) ^ tmpN[0];
+			if (tmpN[2].square() < 0.2) tmpN[2] = Vec3d(0,0,1) ^ tmpN[0];
+			tmpN[2].unitize();
+			tmpN[3] = -tmpN[2];
+			tmpN[4] = tmpN[0] ^ tmpN[2];
+			tmpN[5] = -tmpN[4];
+			for(int i=1; i<6; ++i){
+				int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+					-tmpN[i], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+				if (res <=0) return false;
+				if (-dist <= end){	//	この向きに決定
+					foundId = i;
+					break;
+				}
+				if (-dist < -minD){
+					foundId = i;
+					minD = dist;
+				}
+			}
+		}
+		//	tmpN[foundId]を仮法線として、接触位置・侵入量・法線を求める
+		res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+			-tmpN[foundId], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
 		if (res <= 0) return false;	//	法線の向きに離してから現在位置まで近づけても接触が起きない場合なので、接触なし。
 		depth = -dist;
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
 		if (depth > 5 || depth < 0){
 			DSTR << "depth:" << depth << std::endl;
-			dist = FindClosestPoints(shape[0], shape[1], shapePoseWPrev[0], shapePoseWPrev[1], 
-				tmpNormal, closestPoint[0], closestPoint[1]);
 			assert(0);
 		}
 		goto found;
@@ -184,9 +165,6 @@ found:;
 	//	debug dump
 	if (depth > 5 || depth < 0){
 		DSTR << "depth=" << depth << std::endl;
-		UTRef<CDShapePair> sp = new CDShapePair(*this);
-		sp->lastContactCount = lastLCC;
-		sp->normal = lastNormal;
 		assert(0);
 	}
 	return true;

@@ -157,7 +157,7 @@ public:
 			if(id == ID_SHAKE){
 				std::cout << "F: shake floor." << std::endl;
 				if(floorShakeAmplitude == 0.0){
-					floorShakeAmplitude = 2;
+					floorShakeAmplitude = 2.5;
 					message = "floor shaken.";
 				}
 				else{
