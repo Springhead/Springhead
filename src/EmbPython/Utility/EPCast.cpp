@@ -75,7 +75,7 @@ N##T PyObject_as##N##T##(PyObject* obj){					\
 	return (##N##T##)*EPObject_Cast(obj,##N##f);			\
 	DSTR << "CastError at PyObject_as2(" #N #T ")\n";		\
 	assert(0);												\
-	return Affine##T##();									\
+	return N##T##();									\
 }
 
 PyObject_as2(Affine,d)

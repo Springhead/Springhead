@@ -72,7 +72,7 @@ PyObject* __repr__(){
 
 	char data_buf[32];
 	for( int i=0 ; i < size ; i++){
-		sprintf(data_buf,"%s%.3lf", (i==0?"":","),$self->data[i] );
+		sprintf_s(data_buf,"%s%.3lf", (i==0?"":","),$self->data[i] );
 		PyUnicode_AppendAndDel(&buf,PyUnicode_FromFormat(data_buf));
 	}
 	PyUnicode_AppendAndDel(&buf,end);
@@ -109,7 +109,7 @@ PyObject* __repr__(){
 
 	char data_buf[32];
 	for( int i=0 ; i < size ; i++){
-		sprintf(data_buf,"%s%.3lf", (i==0?"":","),$self->data[i] );
+		sprintf_s(data_buf,"%s%.3lf", (i==0?"":","),$self->data[i] );
 		PyUnicode_AppendAndDel(&buf,PyUnicode_FromFormat(data_buf));
 	}
 	PyUnicode_AppendAndDel(&buf,end);
@@ -192,7 +192,7 @@ PyObject* __repr__(){
 	for( int i=0 ; i < h ; i++){
 		PyUnicode_AppendAndDel(&buf,PyUnicode_FromString("("));
 		for ( int j=0 ; j < w ; j++){
-			sprintf(data_buf,"%s%.1lf", (j==0?"":","),$self->data[j][i] );
+			sprintf_s(data_buf,"%s%.1lf", (j==0?"":","),$self->data[j][i] );
 			PyUnicode_AppendAndDel(&buf,PyUnicode_FromFormat(data_buf));
 		}
 		PyUnicode_AppendAndDel(&buf,PyUnicode_FromString(")"));
