@@ -313,8 +313,11 @@ bool CDShapePair::DetectContinuously2(unsigned ct, const Posed& pose0, const Pos
 			}else{
 				//	初めての接触でかつ、最初から接触している。ContactAnalysisを使うしかない。
 				DSTR << "体積で法線を求めないとどうにもならない場合です" << std::endl;
-				//	未実装
-				return false;
+				static CDContactAnalysis ca;
+				bUseContactVolume = true;
+				ca.FindIntersection(this);
+				ca.IntegrateNormal(this);
+				tmpNormal = iNormal;
 			}
 		}
 		//	求めた法線で接触位置を求める
@@ -570,8 +573,6 @@ void CDContactAnalysis::IntegrateNormal(CDShapePair* cp){
 				cp->iNormal = (cp->shapePoseW[1].Pos() - cp->shapePoseW[0].Pos()).unit();
 			}
 		}
-/**/
-		assert(0);	//	知らない形状
 	}
 	if (cp->iNormal.square() < 1e-20){
 		DEBUG_EVAL( DSTR << "iNormal error."; )
