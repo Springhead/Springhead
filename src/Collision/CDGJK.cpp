@@ -652,7 +652,7 @@ inline void CalcDet() {
 		det[15][3] =	det[ 7][0] * (dotp[0][0] - dotp[0][3]) + 
 						det[ 7][1] * (dotp[1][0] - dotp[1][3]) + 
 						det[ 7][2] * (dotp[2][0] - dotp[2][3]);
-	}	
+	}
 }
 
 
