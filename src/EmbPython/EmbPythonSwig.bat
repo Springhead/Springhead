@@ -159,6 +159,7 @@ echo EXTEND_NEW(GRCameraDesc)>>%MODULE%.i
 echo EXTEND_NEW(GRVertexElement)>>%MODULE%.i
 echo EXTEND_NEW(GRKey)>>%MODULE%.i
 echo EXTEND_NEW(GRMeshFace)>>%MODULE%.i
+echo EXTEND_N_GETS_TO_LIST(Spr::GRFrameIf,NChildren,GetChildren,GRVisualIf)>>%MODULE%.i
 echo //--->>%MODULE%.i
 
 exit /b
@@ -167,6 +168,18 @@ exit /b
 echo //--->>%MODULE%.i
 echo %%include "Utility/EPObject.i">>%MODULE%.i
 echo EXTEND_NEW(CRContactInfo)>>%MODULE%.i
+echo EXTEND_N_GET_TO_LIST(Spr::CRSdkIf		,NCreatures		,GetCreature	,CRCreatureIf	)>>%MODULE%.i
+echo EXTEND_N_GET_TO_LIST(Spr::CRCreatureIf	,NScenes		,GetScene			,CRSceneIf		)>>%MODULE%.i
+echo EXTEND_N_GET_TO_LIST(Spr::CRCreatureIf	,NEngines		,GetEngine			,CREngineIf		)>>%MODULE%.i
+rem echo EXTEND_N_GET_TO_LIST(Spr::CRCreatureIf	,NBodies		,GetBody		,CRBodyIf		)>>%MODULE%.i  Bodys‚É‚È‚Á‚Ä‚µ‚Ü‚¤
+rem echo EXTEND_N_GET_TO_LIST(Spr::CRIKSolidIf	,NContacts		,GetContactForce	,Vec3f			)>>%MODULE%.i  RuntimeDownCast‚ª‚Å‚«‚È‚¢
+rem echo EXTEND_N_GET_TO_LIST(Spr::CRIKSolidIf	,NContacts		,GetContactArea		,double			)>>%MODULE%.i newEPdouble‚É‚È‚Á‚Ä‚µ‚Ü‚¤
+rem echo EXTEND_N_GET_TO_LIST(Spr::CRIKSolidIf	,NContacts		,GetContactPosition	,Vec3f			)>>%MODULE%.i  RuntimeDownCast‚ª‚Å‚«‚È‚¢
+echo EXTEND_N_GET_TO_LIST(Spr::CRIKSolidIf	,NContacts		,GetContactSolid	,PHSolidIf		)>>%MODULE%.i
+echo EXTEND_N_GET_TO_LIST(Spr::CRIKSolidIf	,NVisibleSolids	,GetVisibleSolid	,PHSolidIf		)>>%MODULE%.i
+echo EXTEND_N_GET_TO_LIST(Spr::CRBodyIf		,NJoints		,GetJoint			,CRJointIf		)>>%MODULE%.i
+echo EXTEND_N_GET_TO_LIST(Spr::CRBodyIf		,NSolids		,GetSolid			,CRSolidIf		)>>%MODULE%.i
+echo EXTEND_N_GET_TO_LIST(Spr::CRBodyIf		,NSolids		,GetSolid			,CRSolidIf		)>>%MODULE%.i
 echo //--->>%MODULE%.i
 exit /b
 
