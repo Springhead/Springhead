@@ -22,6 +22,12 @@
   static const IfInfo* GetIfInfoStatic();
 }
 
+%include "Utility/EPObject.i"
+EXTEND_N_GETS_TO_LIST(Spr::FWSceneIf,NObject,GetObjects,FWObjectIf)
+
+EXTEND_N_GET_TO_LIST(Spr::FWSdkIf			,NIAScenes			,GetIAScene			,FWInteractSceneIf		)
+EXTEND_N_GET_TO_LIST(Spr::FWInteractSceneIf	,NIAPointers		,GetIAPointer		,FWInteractPointerIf	)
+
 //--
 %begin%{
 #include "../../include/Springhead.h"

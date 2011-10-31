@@ -23,6 +23,19 @@
 %include "Utility/EPObject.i"
 EXTEND_NEW(PHSolidDesc)
 EXTEND_NEW(PHPathPoint)
+EXTEND_N_GETS_TO_LIST(Spr::PHSceneIf,NSolids,GetSolids,PHSolidIf)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NJoints			,GetJoint			,PHJointIf			)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NContacts			,GetContact			,PHContactPointIf	)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NFemMeshes			,GetFemMesh			,PHFemMeshIf		)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NRootNodes			,GetRootNode		,PHRootNodeIf		)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NGears				,GetGear			,PHGearIf			)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NPaths				,GetPath			,PHPathIf			)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NRays				,GetRay				,PHRayIf			)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NIKActuators		,GetIKActuator		,PHIKActuatorIf		)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NIKEndEffectors	,GetIKEndEffector	,PHIKEndEffectorIf	)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NEngines			,GetEngine			,PHEngineIf			)
+//EXTEND_N_GET_TO_LIST(Spr::PHShapePairForLCPIf	,NSectionVertexes	,GetSectionVertex	,Vec3d				) //RuntimeDownCast‚ª‚Å‚«‚È‚¢
+
 //---
 %begin%{
 #include "../../include/Springhead.h"
@@ -42,19 +55,3 @@ EXTEND_NEW(PHPathPoint)
 %include "../../include/Physics/SprPHScene.h"
 %include "../../include/Physics/SprPHSdk.h"
 %include "../../include/Physics/SprPHSolid.h"
-
-%extend Spr::PHSceneIf{
-	PyObject* GetSolids(){
-		int nsolids = $self->NSolids();
-		PyObject* pySolids = PyTuple_New(nsolids);
-		PyObject* pySolid;
-		PHSolidIf** solids = $self->GetSolids();
-
-		for ( int i = 0 ; i < nsolids ; i ++){
-			pySolid = newEPPHSolidIf(solids[i]);
-			PyTuple_SET_ITEM(pySolids,i,pySolid);
-		}
-		return pySolids;
-	}
-}
-
