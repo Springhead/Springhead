@@ -129,10 +129,12 @@ bool CDShapePair::DetectContinuously2(unsigned ct, const Posed& pose0, const Pos
 		}else{
 			//	すごく近いか、すでに重なっていてうまく法線が計算できなかった。
 			//	直近に接触があったならば、その時の法線を使う。
+/*
 			if (lastContactCount!=-2 && ct - lastContactCount <10){
 				tmpNormal = lastNormal;
 				assert(tmpNormal.norm() > epsilon);
 			}else{
+*/
 				//	初めての接触でかつ、最初から接触している場合
 				//	仕方ないので、６方向にずらして接触を解消してみて、一番移動量が少ない向きを採用する。
 				static Vec3d tmpN[] = {Vec3d(0,0,1), Vec3d(0,0,-1), Vec3d(0,1,0), Vec3d(0,-1,0), Vec3d(1,0,0), Vec3d(-1,0,0)};
@@ -149,15 +151,13 @@ bool CDShapePair::DetectContinuously2(unsigned ct, const Posed& pose0, const Pos
 					}
 				}
 				//DSTR << "minDist:" << minDist << " normal:" << tmpNormal << std::endl;
-			}
+//			}
 		}
 		//	求めた法線で接触位置を求める
 		//	法線向きに判定するとどれだけ戻ると離れるか分かる．
 		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 			-tmpNormal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
-		if (res <= 0) {	//	法線の向きに離してから現在位置まで近づけても接触が起きない場合なので、接触なし。
-			return false;
-		}
+		if (res <= 0) return false;	//	法線の向きに離してから現在位置まで近づけても接触が起きない場合なので、接触なし。
 		depth = -dist;
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
 		if (depth > 5 || depth < 0){
