@@ -311,13 +311,22 @@ bool CDShapePair::DetectContinuously2(unsigned ct, const Posed& pose0, const Pos
 				tmpNormal = lastNormal;
 				assert(tmpNormal.norm() > epsilon);
 			}else{
-				//	初めての接触でかつ、最初から接触している。ContactAnalysisを使うしかない。
-				DSTR << "体積で法線を求めないとどうにもならない場合です" << std::endl;
-				static CDContactAnalysis ca;
-				bUseContactVolume = true;
-				ca.FindIntersection(this);
-				ca.IntegrateNormal(this);
-				tmpNormal = iNormal;
+				//	初めての接触でかつ、最初から接触している場合
+				//	仕方ないので、６方向にずらして接触を解消してみて、一番移動量が少ない向きを採用する。
+				Vec3d tmpN[] = {Vec3d(0,0,1), Vec3d(0,0,-1), Vec3d(0,1,0), Vec3d(0,-1,0), Vec3d(1,0,0), Vec3d(-1,0,0)};
+				double tmpDist, minDist=-DBL_MAX;
+				for(int i=0; i<6; ++i){				
+					int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
+						-tmpN[i], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], tmpDist);
+					if (res>0){
+						if (tmpDist > minDist){
+							minDist = tmpDist;
+							if (normal*tmpN[i] > 0) tmpNormal = normal;
+							else tmpNormal = tmpN[i];
+						}
+					}
+				}
+				//DSTR << "minDist:" << minDist << " normal:" << tmpNormal << std::endl;
 			}
 		}
 		//	求めた法線で接触位置を求める
