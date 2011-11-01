@@ -14,8 +14,8 @@
 #define SPR_DLL					
 //---
 %ignore Spr::PHIKActuatorIf::GetRawSolution;
-%ignore Spr::PHSceneIf::CreateIKEndEffector;
-%ignore Spr::PHSceneIf::CreateIKActuator;
+//%ignore Spr::PHSceneIf::CreateIKEndEffector;
+//%ignore Spr::PHSceneIf::CreateIKActuator;
 %ignore Spr::PHSceneIf::GetSolids;
 %ignore Spr::PHJoint1DIf::GetRange;
 %ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t,PHSceneDesc::ContactMode);
