@@ -50,8 +50,7 @@ CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk);
 				- 以前の法線が数回前ならそれを使う
 				- 以前の法線も無ければ、６方向に動かして、移動量が少ないものを仮法線として採用。
 */
-bool CDShapePair::DetectContinuously2(unsigned ct, const Posed& pose0, const Posed& pose1, 
-		const Vec3d& shapeCenter0, const Vec3d& shapeCenter1, SpatialVector& v0, SpatialVector& v1, Vec3d& cog0, Vec3d cog1, double dt){
+bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1, Vec3d& delta0, Vec3d& delta1, double dt){
 	//	for debug dump
 	Vec3d lastNormal = normal;
 	int lastLCC = lastContactCount;
@@ -69,10 +68,7 @@ bool CDShapePair::DetectContinuously2(unsigned ct, const Posed& pose0, const Pos
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
 		goto found;
 	}else{										//	初めての接触の場合
-		//	並進のみ1ステップ分*α戻す
-		double alpha = 2;
-		Vec3d delta0 = (v0.v() + (v0.w() ^  (shapeCenter0-cog0)))  * dt * alpha;
-		Vec3d delta1 = (v1.v() + (v1.w() ^  (shapeCenter1-cog1)))  * dt * alpha;
+		//	並進の移動分を戻す
 		Vec3d delta = delta1-delta0;
 		double end = delta.norm();
 		Vec3d dir;
@@ -101,8 +97,8 @@ bool CDShapePair::DetectContinuously2(unsigned ct, const Posed& pose0, const Pos
 		}
 		//	速度がないか、回転しただけで接触したか、最初から接触していたかの場合、ここに来る。
 		//	まず、並進位置を現在位置に戻す
-		shapePoseW[0].Pos() += delta0;
-		shapePoseW[1].Pos() += delta1;
+		shapePoseW[0].Pos() = pose0.Pos();
+		shapePoseW[1].Pos() = pose1.Pos();	
 
 		//	なんとか少ない移動量で侵入を解消できるような法線を見つける。
 		//	以前の法線の向きで判定してみて、侵入が移動量(end)より小さければその向きを採用
@@ -154,11 +150,12 @@ found:;
 		state = CONTINUE;
 	}else{
 		state = NEW;
-		static bool bShow = false;
+/*		static bool bShow = false;
 		if (bShow){
 			DSTR << "New contact: " << shape[0]->GetName() << "-" << 
 				shape[1]->GetName() << std::endl;
 		}
+*/
 	}
 	lastContactCount = ct;
 
@@ -192,6 +189,7 @@ void CDShapePair::CalcNormal(){
 	center = shapePoseW[0] * closestPoint[0];
 	center -= 0.5f*depth*normal;
 }
+
 
 
 void CDContactAnalysisFace::Print(std::ostream& os) const {

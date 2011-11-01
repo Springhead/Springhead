@@ -59,7 +59,7 @@ public:
 
 	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt){}	///< 交差が検知されたときの処理
 	virtual void OnContDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt){}	///< 交差が検知されたときの処理
-	
+	//	接触判定
 	bool Detect(TEngine* engine, unsigned int ct, double dt){
 		if(!bEnabled)return false;
 
@@ -84,7 +84,8 @@ public:
 		return found;
 	}
 
-	bool ContDetect2(TEngine* engine, unsigned int ct, double dt){
+	//	連続（移動を考慮した）接触判定
+	bool ContDetect(TEngine* engine, unsigned int ct, double dt){
 		if(!bEnabled)return false;
 		// いずれかのSolidに形状が割り当てられていない場合は接触なし
 		if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
@@ -92,22 +93,24 @@ public:
 		if(solid[0]->IsFrozen() && solid[1]->IsFrozen())
 			return false;
 		
-		std::vector<Posed> shapePose[2];
-		std::vector<Vec3d> shapeCenter[2];
-		for(int i = 0; i < 2; i++){
+		static std::vector<Posed> shapePose[2];
+		static std::vector<Vec3d> shapeCenter[2];
+		for(int i=0; i < 2; i++){
 			shapePose[i].resize(solid[i]->NShape());
 			shapeCenter[i].resize(solid[i]->NShape());
-			for(int j = 0; j < solid[i]->NShape(); j++){
+			for(int j=0; j < solid[i]->NShape(); j++){
 				CDConvex* convex = DCAST(CDConvex, solid[i]->GetShape(j));
 				Posed lp = solid[i]->GetShapePose(j);
 				shapeCenter[i][j] = lp * convex->CalcCenterOfMass();
 				shapePose[i][j] = solid[i]->GetPose() * lp;
 			}
 		}
-		SpatialVector v0(solid[0]->GetVelocity(), solid[0]->GetAngularVelocity());
-		SpatialVector v1(solid[1]->GetVelocity(), solid[1]->GetAngularVelocity());
-		Vec3d cog0 = solid[0]->GetCenterOfMass();
-		Vec3d cog1 = solid[1]->GetCenterOfMass();
+		//	１ステップ前の並進移動量×α倍だけ戻す。
+		//	２倍くらい戻した方が、離れる確率が高いし、そのくらいなら戻ってもおかしなことにはならないので。
+		double alpha = 2;
+		Vec3d vt[2] = {solid[0]->GetVelocity() * dt * alpha, solid[1]->GetVelocity() * dt * alpha};
+		Vec3d wt[2] = {solid[0]->GetAngularVelocity() * dt * alpha, solid[1]->GetAngularVelocity() * dt * alpha};
+		Vec3d delta[2] = {vt[0] - (wt[0]^solid[0]->GetCenterOfMass()), vt[1] - (wt[1] ^  solid[1]->GetCenterOfMass())};
 
 		// 全てのshape pairについて交差を調べる
 		bool found = false;
@@ -115,8 +118,9 @@ public:
 		for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
 			sp = shapePairs.item(i, j);
 			//このshape pairの交差判定/法線と接触の位置を求める．
-			if(sp->DetectContinuously2(ct, shapePose[0][i], shapePose[1][j], 
-				shapeCenter[0][i], shapeCenter[1][j], v0, v1, cog0, cog1, dt)){
+			if(sp->ContDetect(ct, shapePose[0][i], shapePose[1][j], 
+				//	剛体ではなく、形状の移動量なので、形状の中心位置で移動量を補正する。
+				delta[0] + (wt[0]^shapeCenter[0][i]),  delta[1] + (wt[1]^shapeCenter[1][j]), dt)){
 				assert(0.9 < sp->normal.norm() && sp->normal.norm() < 1.1);
 				found = true;
 				OnContDetect(sp, engine, ct, dt);
@@ -131,10 +135,8 @@ public:
 				solid[1]->SetFrozen(false);
 			}
 		}
-
 		return found;
 	}
-
 
 	void SetSt(const PHSolidPairSt& s){
 		*((PHSolidPairSt*)this) = s;
@@ -142,10 +144,8 @@ public:
 	void GetSt(PHSolidPairSt& s){
 		s = *this;
 	}
-
 	///指定したsolidを返す
 	PHSolidIf* GetSolid(int i){return solid[i]->Cast();}
-
 };
 
 ///	PHContactDetectorの状態
@@ -538,7 +538,7 @@ public:
 					ptimerForCd.Stop();
 #endif
 					// 全ての剛体の組み合わせについて接触検知を行う
-					found |= solidPairs.item(f1, f2)->ContDetect2((TEngine*)this, ct, dt); 
+					found |= solidPairs.item(f1, f2)->ContDetect((TEngine*)this, ct, dt); 
 #ifdef REPORT_TIME
 					ptimerForCd.Start();
 #endif
