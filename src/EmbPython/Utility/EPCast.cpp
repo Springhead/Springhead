@@ -116,8 +116,9 @@ ConvertStr::ConvertStr( PyObject *obj )
 	{
 		Py_ssize_t size = PyObject_Length( obj );
 		buff = new char[size+1];
-		//setlocale( LC_CTYPE, "jpn" );
+		setlocale( LC_CTYPE, "japanese" );
 		int ret = wcstombs(buff,(const wchar_t*)PyUnicode_AS_DATA(obj),size);
+		if (ret == -1) assert(0);//ïœä∑ÉGÉâÅ[ 
 		buff[ret] = '\0';
 	}
 }
