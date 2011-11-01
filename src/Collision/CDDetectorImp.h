@@ -55,16 +55,16 @@ public:
 	}
 	///	ÚG”»’è
 	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
+	//	ÚG”»’è‚Ég‚¤A–@üŒvZB
+	void CalcNormal();
+
 	/**	˜A‘±ÚG”»’èD“¯‚É–@ü/’†S‚È‚Ç‚àŒvZD
 		- ct	ƒXƒeƒbƒvƒJƒEƒ“ƒg
 		- pose0	Shape0‚Ìp¨
 		- pose1 Shape1‚Ìp¨
-		- v0	„‘Ì0‚Ì‘¬“xEŠp‘¬“x		*/
-	bool DetectContinuously2(unsigned ct, const Posed& pose0, const Posed& pose1, 
-		const Vec3d& shapeCenter0, const Vec3d& shapeCenter1, SpatialVector& v0, SpatialVector& v1, Vec3d& cog0, Vec3d cog1, double dt);
-
-	///	–@ü‚ÌŒvZ
-	void CalcNormal();
+		- delta0 Shape0‚Ì•ÀiˆÚ“®—Ê
+		- delta1 Shape1‚Ì•ÀiˆÚ“®—Ê		*/
+	bool ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1, Vec3d& delta0, Vec3d& delta1, double dt);
 
 	/// Œ`ó‚ğæ“¾‚·‚é
 	CDShapeIf* GetShape(int i){ return shape[i]->Cast(); }
