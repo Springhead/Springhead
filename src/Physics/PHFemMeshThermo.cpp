@@ -196,15 +196,17 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 				}
 				//ⅱ)対角成分について
 				bVecAll[j][0] += (-1.0/2.0 * DMatKAll[0][j] + 1.0/dt * DMatCAll[0][j] ) * TVecAll[j][0];
-				DSTR << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;
+				ofs << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;			// DSTR
 				//{F}を加算
 				bVecAll[j][0] += VecFAll[j][0];		//Fを加算
 				//DSTR << " VecFAll[" << j << "][0] : "  << VecFAll[j][0] << std::endl;
-				DSTR << std::endl;
+				//DSTR << std::endl;
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
 				bVecAll[j][0] = bVecAll[j][0] * _DMatAll[0][j];
-				DSTR << "bVecAll[" << j <<"][0] * _DMatAll : " << bVecAll[j][0] << std::endl;
-				DSTR << "TVecAll[" << j <<"][0] : " << TVecAll[j][0] << std::endl;
+				ofs << "bVecAll[" << j <<"][0] * _DMatAll : " << bVecAll[j][0] << std::endl;
+				//	DSTR <<  "bVecAll[" << j <<"][0] * _DMatAll : " << bVecAll[j][0] << std::endl;
+				ofs << "TVecAll[" << j <<"][0] : " << TVecAll[j][0] << std::endl;
+				//	DSTR << "TVecAll[" << j <<"][0] : " << TVecAll[j][0] << std::endl;
 			}
 			DoCalc = false;			//初回のループだけで利用
 			//値が入っているか、正常そうかをチェック
@@ -290,9 +292,10 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		//	//定数ベクトルbを上で計算、毎行でbVecAllを減算すればよい。
 		//	DSTR << i << "回目の計算の " << "bVecAll[" << j << "][0] : " << bVecAll[j][0] << std::endl;
 		//}
-		DSTR << i <<  "th Cyc" << std::endl; 
-		DSTR << i << "回目の計算、TVecAll : " <<std::endl;
-		DSTR << TVecAll << std::endl;
+
+		//DSTR << i <<  "th Cyc" << std::endl; 
+		//DSTR << i << "回目の計算、TVecAll : " <<std::endl;
+		//DSTR << TVecAll << std::endl;
 		ofs << i <<  "th Cyc" << std::endl;
 		ofs << i << "回目の計算、TVecAll : " <<std::endl;
 		ofs << TVecAll << std::endl;
@@ -305,8 +308,9 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		for(unsigned j=0;j <vertices.size() ; j++){
 			tempTemp += TVecAll[j][0];
 		}
-		DSTR << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;
-		DSTR << std::endl;
+		//	DSTR
+		ofs << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;
+		ofs << std::endl;
 	}
 }
 
@@ -319,23 +323,33 @@ void PHFemMeshThermo::UpdateVertexTemp(unsigned vtxid){
 		vertices[vtxid].temp = TVecAll[vtxid][0];
 }
 
+void PHFemMeshThermo::TexChange(unsigned id,double tz){
+
+}
+
 
 void PHFemMeshThermo::Step(double dt){
-	
+	std::ofstream ofs("log.txt");
 //	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
-//	UsingFixedTempBoundaryCondition(0,200.0);
+	//UsingFixedTempBoundaryCondition(0,200.0);
 	
+	//%%%%		熱伝達境界条件		%%%%//
 	//	食材メッシュの表面の節点に、周囲の流体温度を与える
 	//	周囲の流体温度は、フライパンの表面温度や、食材の入っている液体内の温度の分布から、その場所での周囲流体温度を判別する。
 	//	位置座標から判別するコードをここに記述
 	//UsingHeatTransferBoundaryCondition(unsigned id,double temp);
 	//	周囲流体温度を150.0度とする		//エネルギー保存則より、周囲流体温度の低下や、流体への供給熱量は制限されるべき
-	for(unsigned i =0; i < surfaceVertices.size(); i++){
+
+	for(unsigned i =0; i < 1; i++){
 		UsingHeatTransferBoundaryCondition(surfaceVertices[i],150.0);
 	}
-	DSTR << "VecFAll : " <<std::endl;
-	DSTR << VecFAll << std::endl;
+
+	//for(unsigned i =0; i < surfaceVertices.size(); i++){
+	//	UsingHeatTransferBoundaryCondition(surfaceVertices[i],150.0);
+	//}
+	//DSTR << "VecFAll : " <<std::endl;
+	//DSTR << VecFAll << std::endl;
 		
 
 	//
@@ -352,7 +366,7 @@ void PHFemMeshThermo::Step(double dt){
 
 	for(unsigned i =0;i<vertices.size();i++){
 		if(vertices[i].temp !=0){
-			DSTR << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
+			ofs << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
 		}
 	}
 	int hogehoge=0;
