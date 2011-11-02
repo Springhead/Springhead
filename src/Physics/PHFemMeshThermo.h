@@ -145,6 +145,10 @@ protected:
 	void CreateMatKAll();						//	Kの全体剛性行列
 	void CreateMatCAll();						//	Cの全体剛性行
 
+	void TexChange(unsigned id,double tz);		//		GRへ移植　やり方を先生に聞く
+	void SetTexZ(unsigned id,double tz);		//	テクスチャ座標を変更
+
+
 	PTM::TMatrixRow<4,4,double> Create44Mat21();	//共通で用いる、4×4の2と1でできた行列を返す関数
 	//あるいは、引数を入れると、引数を変えてくれる関数
 	PTM::TMatrixCol<4,1,double> Create41Vec1();		//共通で用いる、4×1の1でできた行列(ベクトル)を返す関数

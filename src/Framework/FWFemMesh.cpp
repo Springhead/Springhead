@@ -35,6 +35,25 @@ void FWFemMesh::Sync(bool ph2gr){
 	if (value >= 1) delta = -0.01;
 	value += delta;
 
+	//negitest
+	//焦げテクスチャの枚数
+	unsigned kogetex =5;
+	//サーモテクスチャの枚数
+	unsigned thtex = 5;
+	//水分テクスチャの枚数
+	unsigned watex = 2;
+	
+	double dtex =(double) 1.0 / ( kogetex + thtex + watex);		//	テクスチャ奥行座標の層間隔
+	double texstart = dtex /2.0;								//	テクスチャ座標の初期値 = 焦げテクスチャのスタート座標
+	double thstart = texstart + kogetex * dtex ;				//	サーモのテクスチャのスタート座標
+	double wastart = texstart + kogetex * dtex + thtex * dtex;	//	水分量表示テクスチャのスタート座標
+
+	//	50度刻み:テクスチャの深さ計算(0~50)	( vertices.temp - 50.0 ) * dtex / 50.0
+	//	50度刻み:テクスチャの深さ計算(50~100)	( vertices.temp - 100.0 ) * dtex / 50.0
+	//	50度刻み:テクスチャの深さ計算(100~150)	( vertices.temp - 150.0 ) * dtex / 50.0
+	//	これを満たすように、50,100,150度などを変数にしてもよい。が、他に流用しないし、一目でわかりやすいので、このままでいいかも。
+	//	50度刻みごとにdtexを加算せずに、gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;だけでやるのも手
+
 	//	同期処理
 	FWObject::Sync(ph2gr);
 	if (ph2gr && grMesh->IsTex3D()){
@@ -45,9 +64,58 @@ void FWFemMesh::Sync(bool ph2gr){
 			for(unsigned gv=0; gv<vertexIdMap.size(); ++gv){
 				int pv = vertexIdMap[gv];
 				//	PHから何らかの物理量を取ってくる
+						//phから節点の温度を取ってくる
+				//PHFemMeshThermoの各節点の温度を取ってくる。
+				//温度の値に応じて、↑の係数を用いて、テクスチャ座標を計算する
 				//	value = phMeshの派生クラス->thermo[pv];
 				//	GRのテクスチャ座標として設定する。	s t r q の rを設定
-				gvtx[stride*gv + tex + 2] = value + gvtx[stride*gv];	//	gvtx[stride*gv]で場所によって違う深度を拾ってくることに
+				//gvtx[stride*gv + tex + 2] = value + gvtx[stride*gv];	//	gvtx[stride*gv]で場所によって違う深度を拾ってくることに
+				//gvtx[stride*gv + tex + 2] = 0.1 + value;
+				////gvtx[stride*gv + tex + 2] = thstart;
+//				gvtx[stride*gv + tex + 2] = thstart;
+
+				//	どのテクスチャにするかの条件分岐を作る
+				//	直前のテクスチャ座標を保存しておく。なければ、初期値を設定
+				//	テクスチャの表示モードを切り替えるSWをキーボードから切り替え⇒SampleApp.hのAddHotkey、AddAction周りをいじる
+				
+				//	CADThermoの該当部分のソース
+				//if(tvtxs[j].temp <= tvtxs[j].temp5){		//tvtxs[j].wmass > wmass * ratio1
+				//	texz	= texbegin;
+				//	double texznew =diff * grad + texz;//実質,テクスチャ座標の初期値
+				//	////前のテクスチャｚ座標よりも今回の計算値が深かったら、この計算結果を反映させる
+				//	if(tvtxs[j].tex1memo <= texznew){			//初めはこの条件がなくてもいいけれど、一度温度が上がって、冷めてからは必要になる
+				//		tvtxs[j].SetTexZ(tratio * dl + texz);	//テクスチャのZ座標を決定する。//表示テクスチャはその線形和を表示させるので、Z座標も線形和で表示するので、線形和の計算を使用
+				//		tvtxs[j].tex1memo = tratio * dl + texz;	//tex1memoを更新する
+				//	}
+				//}
+
+				double temp = phMesh->vertices[pv].temp;
+				//	一個前のテクスチャ？⇒緑
+				if( temp < 0){				//	暫定的にひとつ前のテクスチャにする?何か、色を割り当てる。一目でわかる色に。
+					gvtx[stride*gv + tex + 2] = thstart - dtex /10.0;			//thstart直前は真っ黒焦げテクスチャなので、その適当値。サーモが非テクスチャ化されたら、別の色に。
+				}
+				//	緑⇒黄色
+				else if(temp <= 50.0 ){		//temp <0の時、どうしようか？	0.0 < temp	の条件を無くした
+					double yellow = temp * dtex / 50.0 + thstart;
+					gvtx[stride*gv + tex + 2] = temp * dtex / 50.0 + thstart;
+				}
+				//	黄色⇒オレンジ
+				else if(50.0 < temp && temp <= 100.0){
+					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;
+				}
+				//	オレンジ⇒赤
+				else if(100.0 < temp && temp <= 150.0){
+					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;
+				}
+				//	赤⇒ピンク
+				else if(150.0 < temp && temp <= 200.0){
+					double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+				}
+				//	ピンク	:色固定
+				else if(200.0 < temp){
+					gvtx[stride*gv + tex + 2] = dtex * 4.0 + thstart;
+				}
 			}
 		}	
 	}else{
