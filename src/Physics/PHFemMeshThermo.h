@@ -164,6 +164,10 @@ protected:
 	//%%%%%%%%		バイナリスイッチの宣言		%%%%%%%%//
 	bool deformed;					//形状が変わったかどうか
 	
+	unsigned long StepCount;			//	Step数のカウントアップ		// 
+	unsigned long StepCount_;			//	Step数のカウントアップ		// 
+	std::ofstream templog;
+
 };
 
 

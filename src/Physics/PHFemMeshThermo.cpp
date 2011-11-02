@@ -38,6 +38,8 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 	deformed = true;			//変数の初期化、形状が変わったかどうか
 	SetDesc(&desc);
 	if (s){ SetScene(s); }
+	StepCount =0;				// ステップ数カウンタ
+	StepCount_ =0;				// ステップ数カウンタ
 }
 
 void PHFemMeshThermo::SetThermalBoundaryCondition(){
@@ -329,22 +331,24 @@ void PHFemMeshThermo::TexChange(unsigned id,double tz){
 
 
 void PHFemMeshThermo::Step(double dt){
-	std::ofstream ofs("log.txt");
+
+	//std::ofstream templog("templog.txt");
+	std::ofstream ofs_("log_.txt");
 //	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
-	//UsingFixedTempBoundaryCondition(0,200.0);
+//	UsingFixedTempBoundaryCondition(0,200.0);
 	
 	//%%%%		熱伝達境界条件		%%%%//
 	//	食材メッシュの表面の節点に、周囲の流体温度を与える
 	//	周囲の流体温度は、フライパンの表面温度や、食材の入っている液体内の温度の分布から、その場所での周囲流体温度を判別する。
 	//	位置座標から判別するコードをここに記述
 	//UsingHeatTransferBoundaryCondition(unsigned id,double temp);
-	//	周囲流体温度を150.0度とする		//エネルギー保存則より、周囲流体温度の低下や、流体への供給熱量は制限されるべき
+	//エネルギー保存則より、周囲流体温度の低下や、流体への供給熱量は制限されるべき
 
-	for(unsigned i =0; i < 1; i++){
-		UsingHeatTransferBoundaryCondition(surfaceVertices[i],150.0);
-	}
-
+	//for(unsigned i =0; i < 2; i++){
+	//	UsingHeatTransferBoundaryCondition(surfaceVertices[i],200.0);
+	//}
+	UsingHeatTransferBoundaryCondition(0,200.0);
 	//for(unsigned i =0; i < surfaceVertices.size(); i++){
 	//	UsingHeatTransferBoundaryCondition(surfaceVertices[i],150.0);
 	//}
@@ -366,11 +370,25 @@ void PHFemMeshThermo::Step(double dt){
 
 	for(unsigned i =0;i<vertices.size();i++){
 		if(vertices[i].temp !=0){
-			ofs << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
+			ofs_ << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
 		}
 	}
 	int hogehoge=0;
 
+	//	節点の温度の推移履歴の保存
+	if(StepCount ==0){
+		templog <<"ステップ数"<<",";
+		for(unsigned i=0; i<vertices.size();i++){
+			templog << "節点" << i << "の温度" << ",";
+		}
+		templog <<"," << std::endl;
+		}
+	templog << StepCount << ", ";
+	for(unsigned i=0; i<vertices.size();i++){
+		templog << vertices[i].temp << ",";
+	}
+	templog <<"," << std::endl;
+	//templog;
 	//節点温度を画面に表示する⇒3次元テクスチャを使ったテクスチャ切り替えに値を渡す⇒関数化
 	//
 
@@ -398,6 +416,13 @@ void PHFemMeshThermo::Step(double dt){
 		//SetChemicalSimulation();
 		//化学変化シミュレーションに必要な温度などのパラメータを渡す
 	//温度変化や化学シミュレーションの結果はグラフィクス表示を行う
+	StepCount += 1;
+	if(StepCount >= 1000*1000*1000){
+		StepCount = 0;
+		StepCount_ += 1;
+	}
+	int temphogeshi =0;
+
 }
 
 void PHFemMeshThermo::CreateMatrix(){
@@ -472,6 +497,12 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	CreateMatcLocal();
 	CreateVecfLocal();
 	int hogeshidebug =0;
+
+	//	節点温度推移の書き出し
+	templog.open("templog.csv");
+
+
+	
 }
 
 
