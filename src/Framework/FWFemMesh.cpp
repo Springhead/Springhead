@@ -101,7 +101,7 @@ void FWFemMesh::Sync(bool ph2gr){
 				}
 				//	黄色⇒オレンジ
 				else if(50.0 < temp && temp <= 100.0){
-					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;
+					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex /	 50.0 + thstart;
 				}
 				//	オレンジ⇒赤
 				else if(100.0 < temp && temp <= 150.0){

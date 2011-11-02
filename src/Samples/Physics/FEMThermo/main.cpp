@@ -35,6 +35,8 @@ public:
 	enum {
 		ID_BOX,
 		ID_SWITCHRENDER,
+		ID_TEMPUP,
+		ID_TEMPDN
 	};
 	bool debugRender;
 
@@ -42,6 +44,10 @@ public:
 	MyApp():debugRender(false){
 		appName = "FEMThermo";
 
+		AddAction(MENU_MAIN, ID_TEMPUP, "Tc UP 20degree");
+		AddHotKey(MENU_MAIN, ID_TEMPUP, 'o');
+		AddAction(MENU_MAIN, ID_TEMPDN, "Tc DOWN 20degree");
+		AddHotKey(MENU_MAIN, ID_TEMPDN, 'O');
 		AddAction(MENU_MAIN, ID_BOX, "drop box");
 		AddHotKey(MENU_MAIN, ID_BOX, 'b');
 		AddAction(MENU_MAIN, ID_SWITCHRENDER, "switch physics(debug)/graphics rendering");
@@ -131,7 +137,13 @@ public:
 				message = "box dropped.";
 			}else if(id==ID_SWITCHRENDER){
 				debugRender = !debugRender; 
+			}else if(id=ID_TEMPUP){
+				FWObjectIf** fwobject = fwScene->GetObjects();	
+				//fwScene
+			}else if(id=ID_TEMPDN){
+
 			}
+
 		}
 		SampleApp::OnAction(menu, id);
 	}
