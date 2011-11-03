@@ -43,14 +43,18 @@ CDConvex* LoadShape(std::istream& file, PHSdkIf* sdk);
 		速度の向きに接触するまですすめる
 
 	2.接触している場合
-		回転させる前の姿勢に戻す
-		普通のGJK
-			- 法線がきちんと求まれば、その法線を使う
-			- 距離が近すぎ or 接触済みの場合
-				- 以前の法線が数回前ならそれを使う
-				- 以前の法線も無ければ、６方向に動かして、移動量が少ないものを仮法線として採用。
+		- 以前の法線があればそれを使う
+		- 以前の法線も無ければ、６方向に動かして、移動量が少ないものを仮法線として採用。
 */
+
+//	BoxStackで、HIT_COUNTを試した結果：
+//	hits: 75962 21608 1731 255 284 76 84 / 100000
+//	#define HIT_COUNT
+
 bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1, Vec3d& delta0, Vec3d& delta1, double dt){
+#ifdef HIT_COUNT
+	static int hits[7];
+#endif
 	//	for debug dump
 	Vec3d lastNormal = normal;
 	int lastLCC = lastContactCount;
@@ -92,6 +96,9 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 					DSTR << "depth:" << depth << " delta * normal >= 0" << std::endl;
 					return false;
 				}
+#ifdef HIT_COUNT
+				hits[0] ++;
+#endif
 				goto found;
 			}
 		}
@@ -133,6 +140,9 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 				}
 			}
 		}
+#ifdef HIT_COUNT
+		hits[foundId+1] ++;
+#endif
 		//	tmpN[foundId]を仮法線として、接触位置・侵入量・法線を求める
 		res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
 			-tmpN[foundId], -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
@@ -141,7 +151,7 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 		center = commonPoint = shapePoseW[0] * closestPoint[0] - 0.5*normal*depth;
 		if (depth > 5 || depth < 0){
 			DSTR << "depth:" << depth << std::endl;
-			assert(0);
+			//assert(0);
 		}
 		goto found;
 	}
@@ -156,13 +166,22 @@ found:;
 				shape[1]->GetName() << std::endl;
 		}
 */
+#ifdef HIT_COUNT
+		DSTR << "hits:";
+		int sum=0;
+		for(int i=0; i<sizeof(hits)/sizeof(hits[0]); ++i){
+			DSTR << " " << hits[i];
+			sum += hits[i];
+		}
+		DSTR << " / " << sum << std::endl;
+#endif
 	}
 	lastContactCount = ct;
 
 	//	debug dump
 	if (depth > 5 || depth < 0){
 		DSTR << "depth=" << depth << std::endl;
-		assert(0);
+		//assert(0);
 	}
 	return true;
 }

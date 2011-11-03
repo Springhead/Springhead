@@ -95,7 +95,7 @@ bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 			float cosB = sqrt(1-sinB*sinB);
 			float is = depth / sinB * cosB;	//	ÚG–Ê‚Æ’†Sü‚ğ”¼Œa‚¸‚ç‚µ‚½ü‚Æ‚ÌŒğ“_
 			if (is < end) end = is;
-			if (end+1e-4 < start){//0.001 < start){
+			if (end+length/20 < start){//0.001 < start){
 				DSTR << "CDRoundCone::FindCutRing() may have a problem" << std::endl;
 			}
 			if (end <= start) return false;
