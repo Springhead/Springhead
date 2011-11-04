@@ -178,8 +178,9 @@ void PHConstraint::CompResponse(double df, int j){
 		if(solid[i]->IsArticulated()){
 			(Vec6d&)dfs = J[i].row(j) * df;
 			solid[i]->treeNode->CompResponse(dfs, true, false);
+		} else {
+			solid[i]->dv += T[i].row(j) * df;
 		}
-		else solid[i]->dv += T[i].row(j) * df;
 	}
 }
 

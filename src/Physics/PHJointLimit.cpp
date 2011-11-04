@@ -614,8 +614,8 @@ void PHBallJointLimit::SetupLCP(){
 		if(A[i]+dA[i]==0) Ainv[i] = FLT_MAX;
 		else{
 			Ainv[i] = 1.0 / (A[i] + dA[i]);
-			joint->f[i] *= joint->engine->shrinkRate;
-			joint->CompResponse(joint->f[i], i);
+			joint->f[joint->movableAxes[i]] *= joint->engine->shrinkRate;
+			joint->CompResponse(joint->f[joint->movableAxes[i]], i);
 		}
 	}
 }
