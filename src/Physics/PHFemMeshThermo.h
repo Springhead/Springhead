@@ -81,6 +81,13 @@ protected:
 	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
 	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
 
+	//行列kの計算用の係数行列
+	PTM::TMatrixRow<3,3,double> mata;
+	PTM::TMatrixRow<3,3,double> matb;
+	PTM::TMatrixRow<3,3,double> matc;
+	PTM::TMatrixRow<3,3,double> matd;
+
+
 	//全体の係数行列	//SciLabで使用
 	PTM::VMatrixRow<double> MatKAll;			//[K]の全体剛性行列		//CreateMatKall()
 	PTM::VMatrixRow<double> MatCAll;			//[C]
@@ -107,6 +114,7 @@ protected:
 	void CreateMatk2(Tet tets);					//四面体ごとに作るので、四面体を引数に取る
 	void CreateMatk2array();
 	void CreateMatkLocal();
+//	void CreateDumMatkLocal();					//	全要素が0のダミーk
 	void CreateMatKall();
 	//	[C]:熱容量マトリクスを作る関数
 	void CreateMatcLocal();						//	matC1,C2,C3・・・毎に分割すべき？
