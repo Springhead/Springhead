@@ -16,6 +16,8 @@ namespace Spr{;
 
 #define UseMatAll
 //#define DEBUG
+//#define DumK
+
 
 
 PHFemMeshThermoDesc::PHFemMeshThermoDesc(){
@@ -125,11 +127,11 @@ void PHFemMeshThermo::UsingFixedTempBoundaryCondition(unsigned id,double temp){
 void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp){
 	//熱伝達境界条件
 	//節点の周囲流体温度の設定(K,C,Fなどの行列ベクトルの作成後に実行必要あり)
-	if(vertices[id].Tc != temp){					//更新する節点のTcが変化した時だけ、TcやFベクトルを更新する
+//	if(vertices[id].Tc != temp){					//更新する節点のTcが変化した時だけ、TcやFベクトルを更新する
 		SetLocalFluidTemp(id,temp);
 		//熱伝達境界条件が使われるように、する。
 		CreateVecfLocal();		//	Tcを含むベクトルを更新する
-	}
+//	}
 
 }
 
@@ -314,6 +316,7 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		ofs << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;
 		ofs << std::endl;
 	}
+//	deformed = true;
 }
 
 void PHFemMeshThermo::UpdateVertexTempAll(unsigned size){
@@ -337,10 +340,16 @@ void PHFemMeshThermo::Step(double dt){
 //	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
 //	UsingFixedTempBoundaryCondition(0,200.0);
+//	UsingFixedTempBoundaryCondition(1,200.0);
+//	UsingFixedTempBoundaryCondition(2,200.0);
+	unsigned texid_ =7;
+	UsingFixedTempBoundaryCondition(texid_,200.0);
+//	UsingFixedTempBoundaryCondition(3,50.0);
+//	UsingFixedTempBoundaryCondition(4,150.0);
 	
 	//%%%%		熱伝達境界条件		%%%%//
 	//	食材メッシュの表面の節点に、周囲の流体温度を与える
-	//	周囲の流体温度は、フライパンの表面温度や、食材の入っている液体内の温度の分布から、その場所での周囲流体温度を判別する。
+	//	周囲の流体温度は、フライパンの表面温度や、食材のUsingFixedTempBoundaryCondition(0,200.0);液体内の温度の分布から、その場所での周囲流体温度を判別する。
 	//	位置座標から判別するコードをここに記述
 	//UsingHeatTransferBoundaryCondition(unsigned id,double temp);
 	//エネルギー保存則より、周囲流体温度の低下や、流体への供給熱量は制限されるべき
@@ -348,13 +357,12 @@ void PHFemMeshThermo::Step(double dt){
 	//for(unsigned i =0; i < 2; i++){
 	//	UsingHeatTransferBoundaryCondition(surfaceVertices[i],200.0);
 	//}
-	UsingHeatTransferBoundaryCondition(0,200.0);
+//	UsingHeatTransferBoundaryCondition(7,200.0);
 	//for(unsigned i =0; i < surfaceVertices.size(); i++){
 	//	UsingHeatTransferBoundaryCondition(surfaceVertices[i],150.0);
 	//}
 	//DSTR << "VecFAll : " <<std::endl;
 	//DSTR << VecFAll << std::endl;
-		
 
 	//
 	//dt = dt *0.01;		誤差1度程度になる
@@ -684,7 +692,7 @@ void PHFemMeshThermo::CreateMatkLocal(){
 			MatKAll[i][j] = 0.0;
 		}
 	}
-#endif
+#endif UseMatAll
 
 
 	//すべての要素について係数行列を作る
@@ -720,14 +728,17 @@ void PHFemMeshThermo::CreateMatkLocal(){
 			//	j==1:k=0, j==2:k=0,1, j==3:k=0,1,2
 			for(unsigned k = 0; k < j; k++){
 				int vtxid1 = tets[i].vertices[k];
-					for(unsigned l =0; l < vertices[vtxid0].edges.size(); l++){
-						for(unsigned m =0; m < vertices[vtxid1].edges.size(); m++){
-							if(vertices[vtxid0].edges[l] == vertices[vtxid1].edges[m]){
-								edges[vertices[vtxid0].edges[l]].k += Matk[j][k];		//同じものが二つあるはずだから半分にする。上三角化下三角だけ走査するには、どういうfor文ｓにすれば良いのか？
-								//DSTR << edges[vertices[vtxid0].edges[l]].k << std::endl;
-							}
+				for(unsigned l =0; l < vertices[vtxid0].edges.size(); l++){
+					for(unsigned m =0; m < vertices[vtxid1].edges.size(); m++){
+						if(vertices[vtxid0].edges[l] == vertices[vtxid1].edges[m]){
+							edges[vertices[vtxid0].edges[l]].k += Matk[j][k];		//同じものが二つあるはずだから半分にする。上三角化下三角だけ走査するには、どういうfor文ｓにすれば良いのか？
+							//DSTR << edges[vertices[vtxid0].edges[l]].k << std::endl;
+#ifdef DumK
+							edges[vertices[vtxid0].edges[l]].k = 0.0;
+#endif DumK
 						}
 					}
+				}
 			}
 		}
 
@@ -758,6 +769,23 @@ void PHFemMeshThermo::CreateMatkLocal(){
 		//	}
 		//}
 
+#endif UseMatAll
+
+#ifdef DumK
+		//MatKAllの初期化
+		MatKAll.resize(vertices.size(),vertices.size());
+		for(unsigned i=0;i<vertices.size();i++){
+			for(unsigned j=0;j<vertices.size();j++){
+				MatKAll[i][j] = 0.0;
+			}
+		}
+		//SciLabで使うために、全体剛性行列を作る
+		//Matkから作る
+		for(unsigned j=0; j<4 ; j++){
+			for(unsigned k=0; k<4 ;k++){
+				MatKAll[tets[i].vertices[j]][tets[i].vertices[k]] = 0.0;;
+			}
+		}
 #endif
 
 		//対角成分を対角成分の全体剛性行列から抜き出した1×nの行列に代入する
@@ -769,7 +797,23 @@ void PHFemMeshThermo::CreateMatkLocal(){
 			int hoge4 =0;
 		}
 		DSTR << std::endl;	//改行
+
+		//std::ofstream MatKAll("MatKAll.csv");
+		//for(){
+		//	MatKAll
+		//	}
+
+
+#ifdef DumK
+		for(unsigned j=0;j<4;j++){
+			DMatKAll[0][tets[i].vertices[j]] = 0.0;
+			int hogeshi =0;
+		} 
+#endif DumK
+
 	}//	四面体のfor文の最後
+
+
 	
 	//	for debug
 	//要素25の0~3番目の節点が何か表示する
@@ -782,7 +826,7 @@ void PHFemMeshThermo::CreateMatkLocal(){
 	//for(unsigned j=0;j < vertices[63].tets.size();j++){
 	//	DSTR << vertices[63].tets[j] <<std::endl;
 	//}
-
+		
 	//	調べる
 	//DMatKAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
 	// try catch文にする
@@ -794,11 +838,13 @@ void PHFemMeshThermo::CreateMatkLocal(){
 
 	DSTR << "MatKAll : " << MatKAll <<std::endl;
 	DSTR << "DMatKAll : " <<DMatKAll << std::endl;
+#ifdef UseMatAll
 	for(unsigned j =0;j<vertices.size();j++){
 		if(MatKAll[j][j] != DMatKAll[0][j]){
 			DSTR << j <<" 成分の要素はおかしい！調査が必要である。 " <<std::endl;
 		}
 	}
+#endif UseMatAll
 	int hoge5 =0;
 
 }
@@ -815,6 +861,36 @@ void PHFemMeshThermo::CreateMatk1b(Tet tets){
 	DSTR << k <<std::endl;
 	DSTR << l <<std::endl;
 	//double a[i]=0.0;
+
+	//a_1~a_4, ... , c_4	を作成
+	//行列式の入れ物
+	double a[4];
+	double b[4];
+	double c[4];
+
+	//要素を構成する節点の座標の入れ物
+	double x[4];
+	double y[4];
+	double z[4];
+	//x,y,z座標を格納
+	for(unsigned m=0; m < 4;m++){
+		x[m] = vertices[tets.vertices[m]].pos.x;
+		y[m] = vertices[tets.vertices[m]].pos.y;
+		z[m] = vertices[tets.vertices[m]].pos.z;
+	}
+	for(unsigned m =0;m<4;m++){
+		//a[m] = (-1)^m * det;
+	}
+	//a[i]
+
+	//a_i~c_iにdetを格納
+
+		//if(i=0){j=1,k=2,l=3}
+		//if(i=1){j=2,k=3,l=1}
+		//if(i=2){j=3,k=0,l=1}
+		//if(i=3){j=0,k=1,l=2}
+
+	//a~cの多項式をK1に代入
 
 
 }
