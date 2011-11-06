@@ -70,7 +70,7 @@ protected:
 	PTM::VMatrixCol<double> TVecAll;			//全体の節点温度ベクトル
 
 	//要素の係数行列
-	PTM::TMatrixRow<4,4,double> Matk1;			//CreateMatk1()
+	PTM::TMatrixRow<4,4,double> Matk1;			//CreateMatk1k() / k1b
 	PTM::TMatrixRow<4,4,double> Matk2;			//CreateMatk2()
 	//int Matk2array[4];						//matk2が入った配列		//CreateMatk2array()
 	PTM::TMatrixRow<4,4,double> Matk1array[4];	//Kmの3つの4×4行列の入れ物　Matk1を作るまでの間の一時的なデータ置場
@@ -137,7 +137,7 @@ protected:
 	void SetkcfParam(Tet tets);					//エッジや頂点にk,c,fの要素剛性行列の係数を設定する関数	すべての四面体について要素剛性行列を求め、k,c,fに値を入れると、次の要素について処理を実行する	
 	double CalcTriangleArea(int id0, int id2, int id3);		//節点IDを入れると、その点で構成された三角形の面積を求める　四面体での面積分で使用
 	double CalcTetrahedraVolume(Tet tets);		////四面体のIDを入れると、その体積を計算してくれる関数
-	void PrepareStep();							//Step()で必要な変数を計算する関数
+	//void PrepareStep();							//Step()で必要な変数を計算する関数
 	//double CalcbVec(int vtxid,
 	void CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt);		//	ガウスザイデル法で熱伝導を計算 NofCyc:繰り返し計算回数,dt:ステップ時間
 

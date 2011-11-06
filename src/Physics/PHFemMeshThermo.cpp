@@ -48,15 +48,15 @@ void PHFemMeshThermo::SetThermalBoundaryCondition(){
 	
 }
 
-void PHFemMeshThermo::PrepareStep(){
-	//ガウスザイデルに必要な、計算式の係数を計算する
-	double dt = DCAST(PHSceneIf, GetScene())->GetTimeStep();
-	//係数bやDMatAll_などをここで作る
-	//bVecAllのリサイズ
-	//bVecAllに計算結果を格納
-	//ただし、[K],[C]などは全体剛性行列を作っているのではなく、成分ごとにEdges構造体に入っているので、この値を用いる
-	//係数行列b生成ループ⇒このループをガウスザイデル計算の最初の一回だけやったほうが、forループが1回少なくなるので、計算速そう。けど、if文が必要
-}
+//void PHFemMeshThermo::PrepareStep(){
+//	//ガウスザイデルに必要な、計算式の係数を計算する
+//	double dt = DCAST(PHSceneIf, GetScene())->GetTimeStep();
+//	//係数bやDMatAll_などをここで作る
+//	//bVecAllのリサイズ
+//	//bVecAllに計算結果を格納
+//	//ただし、[K],[C]などは全体剛性行列を作っているのではなく、成分ごとにEdges構造体に入っているので、この値を用いる
+//	//係数行列b生成ループ⇒このループをガウスザイデル計算の最初の一回だけやったほうが、forループが1回少なくなるので、計算速そう。けど、if文が必要
+//}
 
 void PHFemMeshThermo::CreateMatKAll(){
 
@@ -488,7 +488,8 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	//熱伝導率、密度、比熱、熱伝達率　のパラメーターを設定・代入
 		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
 		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
-		SetInitThermoConductionParam(0.574,970,1.96,25);
+		//SetInitThermoConductionParam(0.574,970,1.96,25);
+		SetInitThermoConductionParam(0.574,970,0.196,25 * 0.0001);
 		//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
 
 	//計算に用いるマトリクス、ベクトルを作成（メッシュごとの要素剛性行列/ベクトル⇒全体剛性行列/ベクトル）
@@ -697,10 +698,17 @@ void PHFemMeshThermo::CreateMatkLocal(){
 
 	//すべての要素について係数行列を作る
 	for(unsigned i = 0; i< tets.size() ; i++){
-		//	k1を作る	体積の求積関数
-		CreateMatk1k(tets[i]);
-//		CreateMatk1b(tets[i]);
+		//	k1を作る	k1kでも、k1bでもどちらでも構わない
+//		CreateMatk1k(tets[i]);			//	k理論を根拠に、加筆して、形状関数を導出
+		//DSTR << " Matk1k : " <<std::endl;
+		//DSTR << Matk1 <<std::endl;
+
+		CreateMatk1b(tets[i]);			//	書籍の理論を根拠に、公式を用いて形状関数を導出
+		//DSTR << " Matk1b : " <<std::endl;
+		//DSTR << Matk1 <<std::endl;
+
 		//k2を作る
+
 		CreateMatk2(tets[i]);
 		int hogehogehoge=0;
 		//k1,k2,k3を加算する(使っている数値だけ)
@@ -855,15 +863,9 @@ void PHFemMeshThermo::CreateMatk1b(Tet tets){
 	unsigned j=0;
 	unsigned k=0;
 	unsigned l=0;
-	//double a[4];
-	DSTR << i <<std::endl;
-	DSTR << j <<std::endl;
-	DSTR << k <<std::endl;
-	DSTR << l <<std::endl;
-	//double a[i]=0.0;
 
 	//a_1~a_4, ... , c_4	を作成
-	//行列式の入れ物
+	//係数(符号)×行列式の入れ物
 	double a[4];
 	double b[4];
 	double c[4];
@@ -872,26 +874,145 @@ void PHFemMeshThermo::CreateMatk1b(Tet tets){
 	double x[4];
 	double y[4];
 	double z[4];
-	//x,y,z座標を格納
+	//要素内の4節点のx,y,z座標を格納
 	for(unsigned m=0; m < 4;m++){
 		x[m] = vertices[tets.vertices[m]].pos.x;
 		y[m] = vertices[tets.vertices[m]].pos.y;
 		z[m] = vertices[tets.vertices[m]].pos.z;
 	}
-	for(unsigned m =0;m<4;m++){
-		//a[m] = (-1)^m * det;
-	}
+
+	//mata~matc
 	//a[i]
+	for(unsigned i =0;i<4;i++){
+		double fugou =0.0;				// (-1)^i の符号の定義
 
-	//a_i~c_iにdetを格納
+		//	fugou の符号判定
+		if(i == 0 || i == 2){		//0,2の時、(-1)^1,3 = -1
+			fugou = -1.0;
+		}
+		else{					//1,3の時、(-1)^0,2 = 1
+			fugou = 1.0;
+		}
+		
+		//i,j,k,lの関係セット⇒配列の要素にしてもいいかも。i[4],if(i[0]=0){i[1](=j)=1, i[2](=k)=2, i[3](=l)=3}	if(i[0]=1){i[1](=j)=2, i[2](=k)=3, i[3](=l)=0}
+		if(i==0){		j=1;	k=2;	l=3;	}
+		else if(i==1){	j=2;	k=3;	l=0;	}
+		else if(i==2){	j=3;	k=0;	l=1;	}
+		else if(i==3){	j=0;	k=1;	l=2;	}
 
-		//if(i=0){j=1,k=2,l=3}
-		//if(i=1){j=2,k=3,l=1}
-		//if(i=2){j=3,k=0,l=1}
-		//if(i=3){j=0,k=1,l=2}
+		// a_iの作成
+		for(unsigned m =0;m<3;m++){						//	1の成分への代入はついで
+			mata[m][0] = 1.0;
+		}
+		mata[0][1] = y[j];
+		mata[1][1] = y[k];
+		mata[2][1] = y[l];
+
+		mata[0][2] = z[j];
+		mata[1][2] = z[k];
+		mata[2][2] = z[l];
+
+		a[i] = fugou * mata.det();
+
+		//DSTR << "mata : " <<std::endl;
+		//DSTR << mata << std::endl;
+
+		//DSTR << "mata.det() : " <<std::endl;
+		//DSTR << mata.det() << std::endl;
+
+		//DSTR << "a[" << i << "] : " <<std::endl;
+		//DSTR << a[i] << std::endl;
+
+
+		// b_iの作成
+		matb[0][0]=x[j];
+		matb[1][0]=x[k];
+		matb[2][0]=x[l];
+
+		for(unsigned m =0;m<3;m++){						//	1の成分への代入はついで
+			matb[m][1] = 1.0;
+		}
+
+		matb[0][2]=z[j];
+		matb[1][2]=z[k];
+		matb[2][2]=z[l];
+
+		b[i] = fugou * matb.det();
+
+		//DSTR << "matb : " <<std::endl;
+		//DSTR << matb << std::endl;
+		//DSTR << "matb.det() : " <<std::endl;
+		//DSTR << matb.det() << std::endl;
+
+		//DSTR << "b[" << i << "] : " <<std::endl;
+		//DSTR << b[i] << std::endl;
+
+		// c_iの作成
+		matc[0][0]=x[j];
+		matc[1][0]=x[k];
+		matc[2][0]=x[l];
+
+		matc[0][1]=y[j];
+		matc[1][1]=y[k];
+		matc[2][1]=y[l];
+
+		for(unsigned m =0;m<3;m++){						//	1の成分への代入はついで
+			matc[m][2] = 1.0;
+		}
+
+		//DSTR << "matc : " <<std::endl;
+		//DSTR << matc << std::endl;
+		//DSTR << "matc.det() : " <<std::endl;
+		//DSTR << matc.det() << std::endl;
+
+		c[i] = fugou * matc.det();
+		
+		//	for debug　要素ごとのa_i~c_iの算出
+		//DSTR << "a["<< i << "] : " << a[i] << std::endl;
+		//DSTR << "b["<< i << "] : " << b[i] << std::endl;
+		//DSTR << "c["<< i << "] : " << c[i] << std::endl;
+		//DSTR << std::endl;
+		int debughogeshi =0;
+	}
+	
+	//	Matk1の成分にa_i ~ c_iの多項式を代入	きれいすぎるが、下のコードで良い！	対角成分も非対角成分も、全部、下のコード
+	//	改善案		下三角と対角成分だけ、計算し、上三角は下三角を代入でもよい。
+	for(unsigned i =0;i<4;i++){
+		for(unsigned j =0;j<4;j++){
+			Matk1[i][j] = a[i] * a[j] +b[i] * b[j] + c[i] * c[j];
+		}
+	}
+
+	////	上記よりコストの少ないコード?
+	//Matk[0][0] = a[0] * a[0] +b[0] * b[0] + c[0] * c[0];
+	//Matk[1][1] = a[1] * a[1] +b[1] * b[1] + c[1] * c[1];
+	//Matk[2][2] = a[2] * a[2] +b[2] * b[2] + c[2] * c[2];
+	//Matk[3][3] = a[3] * a[3] +b[3] * b[3] + c[3] * c[3];
+
+	//Matk[0][1] = a[0] * a[1] + b[0] * b[1] + c[0] * c[1];
+	//Matk[1][0] = Matk[0][1];
+
+	//Matk[0][2] = a[0] * a[2] + b[0] * b[2] + c[0] * c[2];
+	//Matk[2][0] = Matk[0][2];
+
+	//Matk[0][3] = a[0] * a[3] + b[0] * b[3] + c[0] * c[3];
+	//Matk[3][0] = Matk[0][3];
+
+	//	for DEBUG
+	//DSTR << "Matk1 : " << std::endl;
+	//DSTR << Matk1 << std::endl;
+	int debughogeshi2 =0;
+	
+	//係数の積
+	Matk1 = thConduct / (6 *  CalcTetrahedraVolume(tets)) * Matk1;
+
+	//	for DEBUG
+	//DSTR << "係数積後の Matk1 : " << std::endl;
+	//DSTR << Matk1 << std::endl;
+	int debughogeshi3 =0;
 
 	//a~cの多項式をK1に代入
-
+	//matk1(4x4)に代入
 
 }
 
@@ -968,7 +1089,7 @@ void PHFemMeshThermo::CreateMatk1k(Tet tets){
 	//int hogehoge =0;
 
 	//K1
-	Matk1 = thConduct / (36 * CalcTetrahedraVolume(tets) ) * Matk1;
+	Matk1 = thConduct / (6 * CalcTetrahedraVolume(tets) ) * Matk1;
 	//DSTR << "Matk1 : " << Matk1 << std::endl;
 	//int hogedebug =0;
 }
