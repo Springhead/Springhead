@@ -43,11 +43,11 @@ public:
 		AddAction(MENU_SCENE, ID_STOP, "stop");
 		AddHotKey(MENU_SCENE, ID_STOP, 's');
 
-		running = false;
+		ToggleAction(MENU_ALWAYS, ID_RUN);
 	}
 
 	virtual void BuildScene(){
-		//CreateFloor();								//	°
+		CreateFloor();								//	°
 		Posed pose;
 		pose.Pos() = Vec3d(3.0, 2.0, 0.0);
 		robot.Build(pose, phScene, GetSdk()->GetPHSdk());			//	ƒƒ{ƒbƒg

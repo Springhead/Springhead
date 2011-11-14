@@ -192,7 +192,6 @@ public:
 	static CDQHPlanes<CDContactAnalysisFace> planes;	///<	面
 	bool isValid;						///<	交差部分のポリゴンは有効？
 	//@}
-	std::vector<Vec3f> tvtxs[2];		///<	対象の2つの凸多面体のCommonPoint系での頂点の座標
 	/**	共通部分の形状を求める．
 		結果は，共通部分を構成する面を vtxs.begin() から返り値までに，
 		共通部分を構成する頂点を， planes.begin から planes.end のうちの

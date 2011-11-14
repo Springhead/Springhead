@@ -40,6 +40,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 		PHSolidDesc sd;
 		sd.mass = 0.1;
 		sd.inertia = Matrix3d::Unit() * 0.1;
+		sd.pose = poseLeg[i];	//	とりあえず、4箇所にばらすために利用
 		leg[i].soCrank = phScene->CreateSolid(sd);
 		leg[i].soCrank->AddShape(boxCrank);
 		leg[i].soFoot[0] = phScene->CreateSolid(sd);
@@ -48,6 +49,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 		leg[i].soFoot[1]->AddShape(boxFoot);
 		leg[i].soGuide[0] = phScene->CreateSolid(sd);
 		leg[i].soGuide[0]->AddShape(boxGuide);
+		sd.pose.Ori() = Quaterniond::Rot(Rad(160), 'z') * sd.pose.Ori();
 		leg[i].soGuide[1] = phScene->CreateSolid(sd);
 		leg[i].soGuide[1]->AddShape(boxGuide);
 
@@ -83,11 +85,6 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 			leg[i].jntFootGuide[j]->SetTargetPosition(Rad(-90.0));
 		}
 	
-		double dt = phScene->GetTimeStep();
-		double T = 0.1;
-		for(double t = 0.0; t < T; t+=dt)
-			phScene->Step();
-	
 		// バネ解除
 		leg[i].jntGuideBody[0]->SetSpring(0.0);
 		leg[i].jntGuideBody[1]->SetSpring(0.0);
@@ -122,11 +119,15 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 	}
 	phScene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);
 
-	//soBody->SetDynamical(true);
+	//	落ち着くまで待つ
+	double dt = phScene->GetTimeStep();
+	double T = 1.0;
+	for(double t = 0.0; t < T; t+=dt) phScene->Step();
+	soBody->SetDynamical(true);
 }
 
 
-const double speed = 10.0;
+const double speed = 1.0;
 void Robot::Stop(){
 	leg[0].jntCrank->SetMotorTorque(0);
 	leg[1].jntCrank->SetMotorTorque(0);

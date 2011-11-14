@@ -7,6 +7,7 @@
  */
 #include <Collision/CDDetectorImp.h>
 #include <Collision/CDConvexMesh.h>
+#include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
 
 namespace Spr {;
@@ -274,31 +275,49 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 	vtxBuffer.clear();
 	vtxs.clear();
 	if (bUseContactVolume){
-		if (DCAST(CDConvexMesh, cp->shape[0]) && DCAST(CDConvexMesh, cp->shape[1])){
-			isValid = true;
-			CDConvexMesh* poly[2];
-			poly[0] = (CDConvexMesh*) cp->shape[0];
-			poly[1] = (CDConvexMesh*) cp->shape[1];
-			for(int i=0; i<2; ++i){
-				Posed afw = cp->shapePoseW[i];
-				afw.Pos() -= cp->commonPoint;
-				tvtxs[i].resize(poly[i]->base.size());
-				for(unsigned v=0; v<tvtxs[i].size(); ++v){
-					tvtxs[i][v] = afw * poly[i]->base[v];
+		std::vector<Vec3f> normals[2];
+		std::vector<float> dists[2];
+		isValid = true;
+		for(int i=0; i<2; ++i){
+			Posed afw = cp->shapePoseW[i];
+			afw.Pos() -= cp->commonPoint;
+			if (DCAST(CDConvexMesh, cp->shape[i])){
+				CDConvexMesh* poly = (CDConvexMesh*) cp->shape[i];
+				normals[i].resize(poly->nPlanes);
+				dists[i].resize(poly->nPlanes);
+				for(int j=0; j<normals[i].size(); ++j){
+					normals[i][j] = afw.Ori() * poly->faces[j].normal;
+					dists[i][j] = normals[i][j] * (afw * poly->base[poly->faces[j].vtxs[0]]);
 				}
-				for(CDFaces::iterator it = poly[i]->faces.begin();
-					it != poly[i]->faces.begin() + poly[i]->nPlanes; ++it){
-					vtxBuffer.push_back(CDContactAnalysisFace());
-					vtxBuffer.back().face = &*it;
-					vtxBuffer.back().id = i;
-					if (!vtxBuffer.back().CalcDualVtx(&*tvtxs[i].begin())){
-						DSTR << "Common Local: " << cp->shapePoseW[i].Inv() * cp->commonPoint 
-							<< std::endl;
-						for(unsigned int v=0; v<poly[i]->base.size(); ++v){
-							DSTR << poly[i]->base[v] << std::endl;
+			} else if (DCAST(CDBox, cp->shape[i])){
+				CDBox* box = (CDBox*) cp->shape[i];
+				normals[i].resize(6);
+				dists[i].resize(6);
+				for(int j=0; j<normals[i].size(); ++j){
+					normals[i][j] = afw.Ori() * box->qfaces[j].normal;
+					dists[i][j] = normals[i][j] * (afw * box->base[box->qfaces[j].vtxs[0]]);
+				}
+			} else {
+				isValid = false;
+			}
+		}
+		if (isValid){
+			for(int i=0; i<2; ++i){
+				for(int j=0; j<normals[i].size(); ++j){
+					#if 1	//	debug	hase
+						if (dists[i][j] < -1e-3){
+							DSTR << "Error: distance=" << dists[i][j] << " < 0" << std::endl;
+							DSTR << "Common Local: " << cp->shapePoseW[i].Inv() * cp->commonPoint 
+								<< std::endl;
+							assert(0);
 						}
-						assert(0);
-					}
+					#endif
+					if (dists[i][j] < CD_EPSILON) dists[i][j] = CD_EPSILON;
+					if (dists[i][j] > CD_INFINITE) dists[i][j] = CD_INFINITE;
+					vtxBuffer.push_back(CDContactAnalysisFace());
+					vtxBuffer.back().id = i;
+					vtxBuffer.back().normal = normals[i][j];
+					vtxBuffer.back().dist = dists[i][j];
 				}
 			}
 			for(VtxBuffer::iterator it=vtxBuffer.begin(); it != vtxBuffer.end(); ++it){
