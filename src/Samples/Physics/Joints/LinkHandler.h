@@ -23,8 +23,8 @@ public:
 
 public:
 	LinkHandler(SampleApp* a):Handler(a){
-		spring = 30.0;
-		damper = 10.0;
+		spring = 30000.0;
+		damper = 10000.0;
 		
 		app->AddAction(MENU_LINK, ID_TORQUE_PLUS, "positive torque");
 		app->AddHotKey(MENU_LINK, ID_TORQUE_PLUS, 'a');
@@ -37,7 +37,7 @@ public:
 		app->AddAction(MENU_LINK, ID_VEL_ZERO, "zero velocity");
 		app->AddHotKey(MENU_LINK, ID_VEL_ZERO, 'g');
 		app->AddAction(MENU_LINK, ID_VEL_MINUS, "negative velocity");
-		app->AddHotKey(MENU_LINK, ID_VEL_MINUS, 'h');
+		app->AddHotKey(MENU_LINK, ID_VEL_MINUS, 'y');
 		app->AddAction(MENU_LINK, ID_POS_PLUS, "positive position");
 		app->AddHotKey(MENU_LINK, ID_POS_PLUS, 'j');
 		app->AddAction(MENU_LINK, ID_POS_ZERO, "zero position");
@@ -46,7 +46,6 @@ public:
 		app->AddHotKey(MENU_LINK, ID_POS_MINUS, 'l');
 		app->AddAction(MENU_LINK, ID_CREATE_PATH, "create path joint");
 		app->AddHotKey(MENU_LINK, ID_CREATE_PATH, 'p');
-		
 	}
 	virtual ~LinkHandler(){}
 
@@ -99,7 +98,9 @@ public:
 
 		phScene->SetContactMode(&soBox[0], 3, PHSceneDesc::MODE_NONE);
 		//phScene->SetContactMode(PHSceneDesc::MODE_NONE);
-
+		
+		//	Å‰‚ÍABA‚ð–³Œø‰»	
+		app->OnAction(SampleApp::MENU_CONFIG, SampleApp::ID_TOGGLE_ABA);
 	}
 
 	virtual void OnAction(int id){
@@ -110,21 +111,25 @@ public:
 		//PHPathJointIf* path = (jntLink.size() == 5 ? DCAST(PHPathJointIf, jntLink[4]) : NULL); 
 
 		if(id == ID_TORQUE_PLUS)
-			hinge->SetMotorTorque(1.0);
+			hinge->SetMotorTorque(0.4);
 		if(id == ID_TORQUE_ZERO)
 			hinge->SetMotorTorque(0.0);
 		if(id == ID_TORQUE_MINUS)
-			hinge->SetMotorTorque(-1.0);	
+			hinge->SetMotorTorque(-0.4);	
+		if(	id == ID_TORQUE_PLUS || id == ID_TORQUE_ZERO || id == ID_TORQUE_MINUS ){
+			hinge->SetSpring(0.0);
+			hinge->SetDamper(0.0);
+		}
+
 		if(id == ID_VEL_PLUS)
 			hinge->SetTargetVelocity(Rad(180));
 		if(id == ID_VEL_ZERO)
 			hinge->SetTargetVelocity(Rad(0.0));
 		if(id == ID_VEL_MINUS)
 			hinge->SetTargetVelocity(Rad(-180.0));
-		if(	id == ID_TORQUE_PLUS || id == ID_TORQUE_ZERO || id == ID_TORQUE_MINUS ||
-			id == ID_VEL_PLUS    || id == ID_VEL_ZERO    || id == ID_TORQUE_MINUS ){
+		if(	id == ID_VEL_PLUS || id == ID_VEL_ZERO || id == ID_VEL_MINUS ){
 			hinge->SetSpring(0.0);
-			hinge->SetDamper(0.0);
+			hinge->SetDamper(damper);
 		}
 
 		if(id == ID_POS_PLUS)
