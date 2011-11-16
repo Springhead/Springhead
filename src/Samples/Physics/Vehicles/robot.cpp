@@ -26,7 +26,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 	soBody->AddShape(boxBody);
 	soBody->SetPose(pose);
 	soBody->SetDynamical(false);
-	//PHRootNodeIf* root = phScene->CreateRootNode(soBody);
+	PHRootNodeIf* root = phScene->CreateRootNode(soBody);
 
 	Posed poseLeg[4];
 	poseLeg[0].Pos() = Vec3d(-1.3, -0.3, 1.0);
@@ -40,7 +40,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 		PHSolidDesc sd;
 		sd.mass = 0.1;
 		sd.inertia = Matrix3d::Unit() * 0.1;
-		sd.pose = poseLeg[i];	//	とりあえず、4箇所にばらすために利用
+		sd.pose.Pos() = Vec3d(2,1,0);
 		leg[i].soCrank = phScene->CreateSolid(sd);
 		leg[i].soCrank->AddShape(boxCrank);
 		leg[i].soFoot[0] = phScene->CreateSolid(sd);
@@ -59,9 +59,9 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 		jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
 		leg[i].jntCrank = phScene->CreateJoint(soBody, leg[i].soCrank, jd)->Cast();
 		leg[i].jntCrank->SetDamper(1.0);
-		//phScene->CreateTreeNode(root, leg[i].soCrank);
+		if (i==0) phScene->CreateTreeNode(root, leg[i].soCrank);
 	
-		const double K = 100.0, D = 10.0;
+		const double K = 100.0, D = 0.01;
 	
 		Posed pose;
 		PHTreeNodeIf* node;
@@ -80,17 +80,8 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 			jd.posePlug.Pos() = Vec3d(0.0, 0.7, 0.0);
 			leg[i].jntFootGuide[j] = phScene->CreateJoint(leg[i].soGuide[j], leg[i].soFoot[j], jd)->Cast();
 			//phScene->CreateTreeNode(node, leg[i].soFoot[j]);
-			leg[i].jntFootGuide[j]->SetSpring(K);
-			leg[i].jntFootGuide[j]->SetDamper(D);
-			leg[i].jntFootGuide[j]->SetTargetPosition(Rad(-90.0));
 		}
 	
-		// バネ解除
-		leg[i].jntGuideBody[0]->SetSpring(0.0);
-		leg[i].jntGuideBody[1]->SetSpring(0.0);
-		leg[i].jntFootGuide[0]->SetSpring(0.0);
-		leg[i].jntFootGuide[1]->SetSpring(0.0);
-
 		// 閉リンクの構成
 		for(int j = 0; j < 2; j++){
 			jd.poseSocket = Posed();
@@ -98,13 +89,6 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 			jd.posePlug.Pos() = Vec3d(0.0, -0.1+0.25, (j == 0 ? -0.06 : 0.06));
 			leg[i].jntFoot[j] = phScene->CreateJoint(leg[i].soCrank, leg[i].soFoot[j], jd)->Cast();
 		}
-	
-		phScene->SetContactMode(leg[i].soCrank, leg[i].soFoot[0], PHSceneDesc::MODE_NONE);
-		phScene->SetContactMode(leg[i].soCrank, leg[i].soFoot[1], PHSceneDesc::MODE_NONE);
-		phScene->SetContactMode(leg[i].soCrank, leg[i].soGuide[0], PHSceneDesc::MODE_NONE);
-		phScene->SetContactMode(leg[i].soCrank, leg[i].soGuide[1], PHSceneDesc::MODE_NONE);
-		phScene->SetContactMode(leg[i].soGuide[0], leg[i].soFoot[0], PHSceneDesc::MODE_NONE);
-		phScene->SetContactMode(leg[i].soGuide[1], leg[i].soFoot[1], PHSceneDesc::MODE_NONE);	
 	}
 
 	// 脚のリンク同士は接触計算しない
@@ -121,13 +105,22 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 
 	//	落ち着くまで待つ
 	double dt = phScene->GetTimeStep();
-	double T = 1.0;
+	double T = 5.0;
 	for(double t = 0.0; t < T; t+=dt) phScene->Step();
+
+	// バネ解除
+	for(int i=0; i<4; ++i){
+		leg[i].jntGuideBody[0]->SetSpring(0.0);
+		leg[i].jntGuideBody[1]->SetSpring(0.0);
+		leg[i].jntFootGuide[0]->SetSpring(0.0);
+		leg[i].jntFootGuide[1]->SetSpring(0.0);
+	}
 	soBody->SetDynamical(true);
+
 }
 
 
-const double speed = 1.0;
+const double speed = 0.3;
 void Robot::Stop(){
 	leg[0].jntCrank->SetMotorTorque(0);
 	leg[1].jntCrank->SetMotorTorque(0);

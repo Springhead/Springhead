@@ -164,6 +164,9 @@ void PHConstraint::CompResponseMatrix(){
 //		if(!constr[j])continue;
 		if(A[constrainedAxes[j]] < Amin || A[constrainedAxes[j]] < epsabs){
 //			constr[j] = false;
+			targetAxis--;
+			for(int k=j; k<targetAxis; ++k) constr[k] = constr[k+1];
+			j--;
 			DSTR <<this->GetName()<<":"<< constrainedAxes[j] << "-th constraint ill-conditioned! disabled." << endl;
 		}
 		else

@@ -388,8 +388,8 @@ public:
 			"disable joints", "joints disabled.");
 		AddHotKey(MENU_CONFIG, ID_TOGGLE_JOINT, 'J');
 		AddAction(MENU_CONFIG, ID_TOGGLE_ABA,
-			"enable ABA", "not implemented.",
-			"disable ABA", "not implemented.");
+			"enable ABA", "ABA enabled.",
+			"disable ABA", "ABA disabled.");
 		AddHotKey(MENU_CONFIG, ID_TOGGLE_ABA, 'A');
 		AddAction(MENU_CONFIG, ID_INC_TIMESTEP, "increase time step");
 		AddHotKey(MENU_CONFIG, ID_INC_TIMESTEP, 'I');
@@ -491,7 +491,11 @@ public: /** ”h¶ƒNƒ‰ƒX‚ªŽÀ‘•‚·‚éŠÖ” **/
 					phScene->GetJoint(i)->Enable(on);
 			}
 			if(id == ID_TOGGLE_ABA){
-
+				bool on = ToggleAction(menu, id);
+				for(int i=0; i<phScene->NRootNodes(); ++i){
+					PHRootNodeIf* rn = phScene->GetRootNode(i);
+					rn->Enable(on);
+				}
 			}
 			if(id == ID_INC_TIMESTEP){
 				phScene->SetTimeStep(std::min(0.1, 2.0 * phScene->GetTimeStep()));
