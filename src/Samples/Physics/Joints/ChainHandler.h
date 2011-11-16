@@ -50,7 +50,7 @@ public:
 		app->AddAction(MENU_CHAIN, ID_GEAR, "create gear (not implemented)");
 		app->AddHotKey(MENU_CHAIN, ID_GEAR, 'g');
 	}
-	~ChainHandler();
+	~ChainHandler(){}
 
 	void UpdateJoint(PHJointIf* jnt){
 		PHHingeJointIf* hinge = DCAST(PHHingeJointIf, joints.back());

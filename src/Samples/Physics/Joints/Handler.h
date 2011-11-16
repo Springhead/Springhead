@@ -24,6 +24,7 @@ public:
 
 public:
 	Handler(SampleApp* a){ app = a; }
+	virtual ~Handler(){}
 
 	FWSdkIf*	GetFWSdk(){ return app->GetSdk(); }
 	PHSdkIf*	GetPHSdk(){ return GetFWSdk()->GetPHSdk(); }

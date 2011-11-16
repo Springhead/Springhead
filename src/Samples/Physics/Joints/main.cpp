@@ -88,9 +88,9 @@ public:
 		appName		= "Joints";
 		
 		// ƒnƒ“ƒhƒ‰“o˜^
-		handlers.push_back(new ChainHandler(this));
-		handlers.push_back(new LinkHandler(this));
-		handlers.push_back(new ArmHandler(this));
+		handlers.push_back(DBG_NEW ChainHandler(this));
+		handlers.push_back(DBG_NEW LinkHandler(this));
+		handlers.push_back(DBG_NEW ArmHandler(this));
 		numScenes	= handlers.size();
 	}
 	virtual ~MyApp(){}
