@@ -48,7 +48,7 @@ public:
 	//	その際に以下の関数を用いれば良い。
 	void UsingFixedTempBoundaryCondition(unsigned id,double temp);			//	温度固定境界条件:S_1	指定節点の温度を変える
 	void UsingHeatTransferBoundaryCondition(unsigned id,double temp);		//	熱伝達境界条件:S_3		指定節点の周囲流体温度を変える	
-
+	//Set に
 
 
 
@@ -66,8 +66,10 @@ protected:
 	//	Col:列単位の行列	Row:行単位の行列
 
 	//節点温度ベクトル
-	PTM::TMatrixCol<4,1,double> TVec;			//要素の節点温度ベクトル
-	PTM::VMatrixCol<double> TVecAll;			//全体の節点温度ベクトル
+//	PTM::TMatrixCol<4,1,double> TVec;			//要素の節点温度ベクトル
+	PTM::TVector<4,double> TVec;				//要素の節点温度ベクトル		//_		//不要?
+//	PTM::VMatrixCol<double> TVecAll;			//全体の節点温度ベクトル		//_
+	PTM::VVector<double> TVecAll;				//移行	
 
 	//要素の係数行列
 	PTM::TMatrixRow<4,4,double> Matk1;			//CreateMatk1k() / k1b
@@ -77,9 +79,15 @@ protected:
 	PTM::TMatrixRow<4,4,double> Matk2array[4];	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
 	PTM::TMatrixRow<4,4,double> Matk;			//Matk=Matk1+Matk2+Matk3	matk1~3を合成した要素剛性行列	CreateMatkLocal()
 	PTM::TMatrixRow<4,4,double> Matc;			//
-	PTM::TMatrixCol<4,1,double> Vecf3;			//f3:外側の面に面している面のみ計算する　要注意
-	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
-	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
+//	PTM::TMatrixCol<4,1,double> Vecf3;			//f3:外側の面に面している面のみ計算する　要注意
+//	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
+//	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
+	PTM::TVector<4,double> vecf3;			//f3:外側の面に面している面のみ計算する　要注意
+	PTM::TVector<4,double> vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
+	PTM::TVector<4,double> vecf;			//f1~f4を合算した縦ベクトル
+
+//	PTM::VVector<double> Vechoge;
+	//	変数は小文字　関数は大文字
 
 	//行列kの計算用の係数行列
 	PTM::TMatrixRow<3,3,double> mata;
