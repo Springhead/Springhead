@@ -115,11 +115,13 @@ ConvertStr::ConvertStr( PyObject *obj )
 	if(PyUnicode_Check(obj))
 	{
 		Py_ssize_t size = PyObject_Length( obj );
-		buff = new char[size+1];
+		buff = new char[size*2+1];
+
 		setlocale( LC_CTYPE, "japanese" );
-		int ret = wcstombs(buff,(const wchar_t*)PyUnicode_AS_DATA(obj),size);
+		int ret = wcstombs(buff,(const wchar_t*)PyUnicode_AS_DATA(obj),size*2);
 		if (ret == -1) assert(0);//ïœä∑ÉGÉâÅ[ 
 		buff[ret] = '\0';
+		
 	}
 }
 

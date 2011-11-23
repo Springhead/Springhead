@@ -46,7 +46,7 @@
 %enddef
 
 %define EXTEND_N_GET_TO_LIST(CLS,NMETHOD,GETMETHOD,GETCLS)
-%ignore CLS##::##GETMETHOD;
+//%ignore CLS##::##GETMETHOD;
 %extend CLS{
 	PyObject* GETMETHOD##s(){
 		int nobjs = $self->NMETHOD();
