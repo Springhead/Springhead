@@ -147,7 +147,9 @@ protected:
 	double CalcTetrahedraVolume(Tet tets);		////四面体のIDを入れると、その体積を計算してくれる関数
 	//void PrepareStep();							//Step()で必要な変数を計算する関数
 	//double CalcbVec(int vtxid,
-	void CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt);		//	ガウスザイデル法で熱伝導を計算 NofCyc:繰り返し計算回数,dt:ステップ時間
+	void CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt);		//	（クランクニコルソン法を用いた）ガウスザイデル法で熱伝導を計算 NofCyc:繰り返し計算回数,dt:ステップ時間
+	void CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double eps);		//	（前進・クランクニコルソン・後退積分に対応)ガウスザイデル法で熱伝導を計算 NofCyc:繰り返し計算回数,dt:ステップ時間,e:積分の種類 0.0:前進積分,0.5:クランクニコルソン差分式,1.0:後退積分・陰解法
+
 
 	void SetTempAllToTVecAll(unsigned size);		//	TVecAllに全節点の温度を設定する関数
 	void SetTempToTVecAll(unsigned vtxid);			//	TVecAllに特定の節点の温度を設定する関数
