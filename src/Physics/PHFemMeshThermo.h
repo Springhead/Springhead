@@ -72,13 +72,13 @@ protected:
 	PTM::VVector<double> TVecAll;				//移行	
 
 	//要素の係数行列
-	PTM::TMatrixRow<4,4,double> Matk1;			//CreateMatk1k() / k1b
-	PTM::TMatrixRow<4,4,double> Matk2;			//CreateMatk2()
+	PTM::TMatrixRow<4,4,double> matk1;			//CreateMatk1k() / k1b
+	PTM::TMatrixRow<4,4,double> matk2;			//CreateMatk2()
 	//int Matk2array[4];						//matk2が入った配列		//CreateMatk2array()
-	PTM::TMatrixRow<4,4,double> Matk1array[4];	//Kmの3つの4×4行列の入れ物　Matk1を作るまでの間の一時的なデータ置場
-	PTM::TMatrixRow<4,4,double> Matk2array[4];	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
-	PTM::TMatrixRow<4,4,double> Matk;			//Matk=Matk1+Matk2+Matk3	matk1~3を合成した要素剛性行列	CreateMatkLocal()
-	PTM::TMatrixRow<4,4,double> Matc;			//
+	PTM::TMatrixRow<4,4,double> matk1array[4];	//Kmの3つの4×4行列の入れ物　Matk1を作るまでの間の一時的なデータ置場
+	PTM::TMatrixRow<4,4,double> matk2array[4];	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
+	PTM::TMatrixRow<4,4,double> matk;			//Matk=Matk1+Matk2+Matk3	matk1~3を合成した要素剛性行列	CreateMatkLocal()
+	PTM::TMatrixRow<4,4,double> matc;			//
 //	PTM::TMatrixCol<4,1,double> Vecf3;			//f3:外側の面に面している面のみ計算する　要注意
 //	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
 //	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
@@ -92,21 +92,21 @@ protected:
 	//行列kの計算用の係数行列
 	PTM::TMatrixRow<3,3,double> mata;
 	PTM::TMatrixRow<3,3,double> matb;
-	PTM::TMatrixRow<3,3,double> matc;
+	PTM::TMatrixRow<3,3,double> matcc;
 	PTM::TMatrixRow<3,3,double> matd;
 
 
 	//全体の係数行列	//SciLabで使用
-	PTM::VMatrixRow<double> MatKAll;			//[K]の全体剛性行列		//CreateMatKall()
-	PTM::VMatrixRow<double> MatCAll;			//[C]
+	PTM::VMatrixRow<double> matKAll;			//[K]の全体剛性行列		//CreateMatKall()
+	PTM::VMatrixRow<double> matCAll;			//[C]
 
 	//	ガウスザイデル計算時に使用している
-	PTM::VMatrixCol<double> VecFAll;			//{F}の全体剛性ベクトル
+	PTM::VMatrixCol<double> vecFAll;			//{F}の全体剛性ベクトル
 
 	//全体の剛性行列の代わり
-	PTM::VMatrixRow<double> DMatKAll;			//全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
-	PTM::VMatrixRow<double> DMatCAll;			//全体剛性行列Cの対角成分
-	PTM::VMatrixRow<double> _DMatAll;			//全体剛性行列KとCの対角成分の定数倍和の逆数をとったもの	ガウスザイデルの計算に利用する
+	PTM::VMatrixRow<double> dMatKAll;			//全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
+	PTM::VMatrixRow<double> dMatCAll;			//全体剛性行列Cの対角成分
+	PTM::VMatrixRow<double> _dMatAll;			//全体剛性行列KとCの対角成分の定数倍和の逆数をとったもの	ガウスザイデルの計算に利用する
 	PTM::VMatrixCol<double> bVecAll;			//ガウスザイデルの計算に用いる定数行列bの縦ベクトル	Rowである必要はあるのか？⇒Colにした
 	//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
 
