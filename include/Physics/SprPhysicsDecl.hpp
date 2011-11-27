@@ -242,6 +242,7 @@
 	Spr::PHSolidIf** GetSolids(){	return	base::GetSolids();}	\
 	int NSolidPairs()const{	return	base::NSolidPairs();}	\
 	PHSolidPairForLCPIf* GetSolidPair(int i, int j){	return	base::GetSolidPair(i, j);}	\
+	PHSolidPairForLCPIf* GetSolidPair(Spr::PHSolidIf* lhs, Spr::PHSolidIf* rhs, bool& bSwap){	return	base::GetSolidPair(lhs, rhs, bSwap);}	\
 	void SetContactMode(Spr::PHSolidIf* lhs, Spr::PHSolidIf* rhs, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(lhs, rhs, mode);}	\
 	void SetContactMode(Spr::PHSolidIf** group, size_t length, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(group, length, mode);}	\
 	void SetContactMode(Spr::PHSolidIf* solid, Spr::PHSceneDesc::ContactMode mode){	base::SetContactMode(solid, mode);}	\
@@ -358,6 +359,7 @@
 	Vec3d GetSectionVertex(int i){	return	base::GetSectionVertex(i);}	\
 	double GetContactDimension(){	return	base::GetContactDimension();}	\
 	Vec3d GetNormalVector(){	return	base::GetNormalVector();}	\
+	void GetClosestPoints(Vec3d& pa, Vec3d& pb){	base::GetClosestPoints(pa, pb);}	\
 	Spr::CDShapeIf* GetShape(int i){	return	base::GetShape(i);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSolidPairForLCPIf(base)	\

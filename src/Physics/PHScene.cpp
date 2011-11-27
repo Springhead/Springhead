@@ -110,6 +110,22 @@ PHSolidPairForLCPIf* PHScene::GetSolidPair(int i, int j){
 	return constraintEngine->solidPairs.item(i, j)->Cast();
 }
 
+PHSolidPairForLCPIf* PHScene::GetSolidPair(PHSolidIf* lhs, PHSolidIf* rhs, bool& bSwap){
+	bSwap = false;
+	int l, r = -1;
+	PHSolidIf** solid = GetSolids();
+	for(int i = 0; i < NSolids(); i++){
+		if(solid[i] == lhs) l = i;
+		if(solid[i] == rhs) r = i;
+	}
+	if(l == -1 || r == -1) return NULL;
+	if(l > r){
+		std::swap(l, r);
+		bSwap = true;
+	}
+	return GetSolidPair(l, r);
+}
+
 PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc){
 	PHRootNode* node = constraintEngine->CreateRootNode(desc, root->Cast());
 	AddChildObject(node->Cast());
@@ -193,6 +209,11 @@ int PHScene::NFemMeshes() const {
 PHFemMeshIf* PHScene::GetFemMesh(int i){
 	return femEngine->meshes[i]->Cast();
 }
+
+void PHScene::FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids){
+	constraintEngine->FindNeigboringSolids(solid, range, nsolids);
+}
+
 
 void PHScene::Clear(){
 	engines.Clear();

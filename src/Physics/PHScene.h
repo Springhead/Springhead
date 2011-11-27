@@ -99,6 +99,7 @@ public:
 	PHContactPointIf*		GetContact(int i);
 	int						NSolidPairs() const;
 	PHSolidPairForLCPIf*	GetSolidPair(int i, int j);
+	PHSolidPairForLCPIf*	GetSolidPair(PHSolidIf* lhs, PHSolidIf* rhs, bool& bSwap);
 //	UTCombination<UTRef<PHSolidPairForLCPIf>>	GetSolidPair();
 	PHRootNodeIf*			CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());
 	int						NRootNodes() const;
@@ -124,6 +125,8 @@ public:
 	PHIKEndEffectorIf*		GetIKEndEffector(int i);
 	int						NFemMeshes()const;
 	PHFemMeshIf*			GetFemMesh(int i);
+
+	void 					FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids);
 
 	/// 積分ステップを返す
 	double					GetTimeStep()const{return timeStep;}
