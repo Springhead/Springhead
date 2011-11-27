@@ -557,6 +557,80 @@ public:
 #endif
 		return found;
 	}
+
+	void RotateBBox(PHSolid* s, Vec3f &min, Vec3f &max){
+		min += (Vec3f)s->GetFramePosition();
+		max += (Vec3f)s->GetFramePosition();
+
+		for(int i = 0; i < 3; i++){
+			Matrix3f mat;
+			s->GetOrientation().ToMatrix(mat);
+			for(int j = 0; j < 3; j++){
+				float e = mat[i][j] * s->bbox.GetBBoxMin()[j];
+				float f = mat[i][j] * s->bbox.GetBBoxMax()[j];
+				if(e < f){
+					min[i] += e; max[i] += f;
+				}else{
+					min[i] += f; max[i] += e;
+				}
+			}
+		}
+	}
+
+	///< ある剛体の近傍の剛体をAABBでみつける（rangeはBBoxをさらにrange分だけ広げる）
+	void FindNeigboringSolids(PHSolidIf* qsolid, double range, PHSolidIfs& nsolids){
+		nsolids.clear();
+		Vec3f qMin, qMax;	// クエリのBBox
+		Vec3f range3d = Vec3f(1.0, 1.0, 1.0) * range; // 検出閾値
+		// クエリBBoxをrange3d分だけ広げる
+		qMin -= range3d;
+		qMax += range3d;
+		// クエリの回転に応じてBBoxを回転させる
+		RotateBBox(qsolid->Cast(), qMin, qMax);
+		
+		int N = solids.size();
+		for(int i = 0; i < N; i++){
+			if(qsolid == solids[i]->Cast()) continue;	// クエリがsolidsと一致した場合は次のループへ
+			Vec3f soMin, soMax; // solidのBBox
+			RotateBBox(solids[i], soMin, soMax);
+
+			int isLocal = 0;		// いくつの軸で交差しているかどうか
+			for(int i = 0; i < 3; i++){
+				int in = 0;	// その軸で交差しているかどうか
+				// クエリのBBox内にソリッドのBBoxがあったら交差
+				if(qMin[i] <= soMin[i] && soMin[i] <= qMax[i]) in++; 
+				if(qMin[i] <= soMax[i] && soMax[i] <= qMax[i]) in++; 
+				// ソリッドのBox内にクエリのBBoxがあったら交差
+				if(soMin[i] <= qMin[i] && qMin[i] <= soMax[i]) in++;
+				if(soMin[i] <= qMax[i] && qMax[i] <= soMax[i]) in++;
+				// inが1以上ならその軸で交差
+				if(in > 0) isLocal++;
+#if 0
+					DSTR << i << " qMin[i] = " << qMin[i] << "  soMin[i] = " << soMin[i] << "  qMax[i] = " << qMax[i] << std::endl;
+					DSTR << i << " qMin[i] = "  << qMin[i] << "  soMax[i] = " << soMax[i] << "  qMax[i] = " << qMax[i] << std::endl;
+					DSTR << i << " soMin[i] = " << soMin[i] << "  qMin[i] = " << qMin[i] << "  soMax[i] = " << soMax[i] << std::endl;
+					DSTR << i << " soMin[i] = " << soMin[i] << "  qMax[i] = " << qMax[i] << "  soMax[i] = " << soMax[i] << std::endl;
+			}
+				DSTR << "isLocal" << isLocal <<  std::endl;
+				DSTR << "------------------------" << std::endl;
+#else
+			}
+#endif
+			// 2.近傍物体と判定
+			if(isLocal > 2){
+				nsolids.push_back(solids[i]);
+			}
+		}
+	}
+
+	///< ある剛体ペアの最近傍点をみつける
+	int FindClosestPoint(PHSolidIf* a, PHSolidIf* b, 
+			Vec3d& normal, Vec3d& pa, Vec3d& pb){
+		
+	
+	
+	
+	}
 };
 
 }

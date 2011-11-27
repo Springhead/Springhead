@@ -58,6 +58,10 @@ public:
 		return normal / normal.norm();
 	}
 
+	void GetClosestPoints(Vec3d& pa, Vec3d& pb){
+		pa = shapePoseW[0] * closestPoint[0];
+		pb = shapePoseW[1] * closestPoint[1];
+	}
 };
 
 /// Solid‚Ì‘g

@@ -140,6 +140,15 @@ public:
 	*/
 	PHSolidPairForLCPIf* GetSolidPair(int i, int j);
 
+	/** @brief SolidPairを取得する
+		@param lhs 組みの片方の剛体へのポインタ
+		@param rhs 組みのもう片方の剛体へのポインタ
+		@param bSwap スワップされた場合はsoiid[0] = lhs, solid[1] = rhsとなる
+		@return 剛体のペア
+	*/
+	PHSolidPairForLCPIf* GetSolidPair(PHSolidIf* lhs, PHSolidIf* rhs, bool& bSwap);
+
+
 	/** @brief 指定した剛体同士の接触のモードを設定する
 		@param lhs 組の片方の剛体へのポインタ
 		@param rhs 組のもう片方の剛体へのポインタ

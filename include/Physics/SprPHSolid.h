@@ -306,6 +306,10 @@ struct PHShapePairForLCPIf : public ObjectIf{
 	*/
 	Vec3d GetNormalVector();
 
+	/** @brief 最近接点のペアを取得する
+	*/
+	void GetClosestPoints(Vec3d& pa, Vec3d& pb);
+
 	/// 形状を取得する
 	CDShapeIf* GetShape(int i);
 };

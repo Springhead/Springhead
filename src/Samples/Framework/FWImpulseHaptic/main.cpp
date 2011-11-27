@@ -1,4 +1,5 @@
-#include "MyApp.h"
+//#include "MyApp.h"
+#include "dev.h"
 
 MyApp app;
 
