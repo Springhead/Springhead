@@ -525,15 +525,17 @@ void PHFemMeshThermo::Step(double dt){
 	std::ofstream ofs_("log_.txt");
 //	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
-	UsingFixedTempBoundaryCondition(0,200.0);
-//	UsingFixedTempBoundaryCondition(1,200.0);
-//	UsingFixedTempBoundaryCondition(2,200.0);
+//	UsingFixedTempBoundaryCondition(0,200.0);
 
-	// a) 時間離散化時に台形公式利用で振動する加熱方式
-	//if(StepCount == 0){
-	//	unsigned texid_ =7;
-	//	UsingFixedTempBoundaryCondition(texid_,200.0);
-	//}
+	//	実験用のコード
+	//	a) 時間離散化時に台形公式利用、前進・後退差分で振動する加熱方式
+	if(StepCount == 0){
+		unsigned texid_ =7;
+		UsingFixedTempBoundaryCondition(texid_,200.0);
+	}
+
+	//	b) 断熱過程の実験
+	//	熱伝達率を0にする。温度固定境界条件で加熱。
 
 	//	UsingFixedTempBoundaryCondition(3,50.0);
 //	UsingFixedTempBoundaryCondition(4,150.0);
@@ -549,6 +551,7 @@ void PHFemMeshThermo::Step(double dt){
 	//	UsingHeatTransferBoundaryCondition(surfaceVertices[i],200.0);
 	//}
 //	UsingHeatTransferBoundaryCondition(7,200.0);
+//	UsingHeatTransferBoundaryCondition(0,200.0);
 	//for(unsigned i =0; i < surfaceVertices.size(); i++){
 	//	UsingHeatTransferBoundaryCondition(surfaceVertices[i],150.0);
 	//}
@@ -560,7 +563,7 @@ void PHFemMeshThermo::Step(double dt){
 	//dt = dt;				収束した時の、計算誤差？（マイナスになっている節点温度がそれなりに大きくなる。）
 //	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く
 	
-	CalcHeatTransUsingGaussSeidel(20,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
+	CalcHeatTransUsingGaussSeidel(20,dt,0.5);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
 
 	//温度を表示してみる
 	//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
@@ -578,12 +581,14 @@ void PHFemMeshThermo::Step(double dt){
 	//	節点の温度の推移履歴の保存
 	if(StepCount ==0){
 		templog <<"ステップ数"<<",";
+		templog <<"熱シミュレーション時間"<<",";
 		for(unsigned i=0; i<vertices.size();i++){
 			templog << "節点" << i << "の温度" << ",";
 		}
 		templog <<"," << std::endl;
 		}
 	templog << StepCount << ", ";
+	templog << StepCount * dt << ", ";
 	for(unsigned i=0; i<vertices.size();i++){
 		templog << vertices[i].temp << ",";
 	}
@@ -891,11 +896,11 @@ void PHFemMeshThermo::CreateMatkLocal(){
 	//すべての要素について係数行列を作る
 	for(unsigned i = 0; i< tets.size() ; i++){
 		//	k1を作る	k1kでも、k1bでもどちらでも構わない
-//		CreateMatk1k(tets[i]);			//	k理論を根拠に、加筆して、形状関数を導出
+		CreateMatk1k(tets[i]);			//	k理論を根拠に、加筆して、形状関数を導出
 		//DSTR << " matk1k : " <<std::endl;
 		//DSTR << matk1 <<std::endl;
 
-		CreateMatk1b(tets[i]);			//	書籍の理論を根拠に、公式を用いて形状関数を導出
+//		CreateMatk1b(tets[i]);			//	書籍の理論を根拠に、公式を用いて形状関数を導出
 		//DSTR << " matk1b : " <<std::endl;
 		//DSTR << matk1 <<std::endl;
 
@@ -1193,7 +1198,7 @@ void PHFemMeshThermo::CreateMatk1b(Tet tets){
 	//	for DEBUG
 	//DSTR << "matk1 : " << std::endl;
 	//DSTR << matk1 << std::endl;
-	int debughogeshi2 =0;
+	//int debughogeshi2 =0;
 	
 	//係数の積
 	matk1 = thConduct / (6 *  CalcTetrahedraVolume(tets)) * matk1;
@@ -1279,6 +1284,9 @@ void PHFemMeshThermo::CreateMatk1k(Tet tets){
 	//DSTR << "Nz^T * Nz : " << Nz.trans() * Nz << std::endl;
 	//DSTR << "matk1 : " << matk1 << std::endl;
 	//int hogehoge =0;
+
+	//	for	DEBUG
+	//DSTR << "matk1 : " << matk1 << std::endl;
 
 	//K1
 	matk1 = thConduct / (6 * CalcTetrahedraVolume(tets) ) * matk1;
