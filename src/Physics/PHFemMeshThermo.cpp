@@ -1201,7 +1201,7 @@ void PHFemMeshThermo::CreateMatk1b(Tet tets){
 	//int debughogeshi2 =0;
 	
 	//ŒW”‚ÌÏ
-	matk1 = thConduct / (6 *  CalcTetrahedraVolume(tets)) * matk1;
+	matk1 = thConduct / (36 *  CalcTetrahedraVolume(tets)) * matk1;		//—˜_‚ªŠÔˆá‚Á‚Ä‚¢‚½‚Ì‚ÅAC³
 
 	//	for DEBUG
 	//DSTR << "ŒW”ÏŒã‚Ì matk1 : " << std::endl;
@@ -1289,7 +1289,7 @@ void PHFemMeshThermo::CreateMatk1k(Tet tets){
 	//DSTR << "matk1 : " << matk1 << std::endl;
 
 	//K1
-	matk1 = thConduct / (6 * CalcTetrahedraVolume(tets) ) * matk1;
+	matk1 = thConduct / (36 * CalcTetrahedraVolume(tets) ) * matk1;
 	//DSTR << "matk1 : " << matk1 << std::endl;
 	//int hogedebug =0;
 }
