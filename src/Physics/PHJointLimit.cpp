@@ -615,12 +615,8 @@ void PHBallJointLimit::SetupLCP(){
 		else{
 			Ainv[i] = 1.0 / (A[i] + dA[i]);
 
-			// ‚±‚ê‚Å‚Í‚¾‚ß‚¾‚Á‚½‚ç‚µ‚¢@imitakej
-			// joint->f[joint->movableAxes[i]] *= joint->engine->shrinkRate;
-			// joint->CompResponse(joint->f[joint->movableAxes[i]], i);
-
-			joint->f[i] *= joint->engine->shrinkRate;
-			joint->CompResponse(joint->f[i], i);
+			joint->limitf[i] *= joint->engine->shrinkRate;
+			joint->CompResponse(joint->limitf[i], i);
 		}
 	}
 }
