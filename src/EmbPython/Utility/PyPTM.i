@@ -35,7 +35,6 @@ vec __mul__(elem $var1){
 elem __mul__(vec $var1){
 	return *$self * $var1;
 }
-
 PyObject* tuple(){
 	int size = $self->SIZE;
 	PyObject* buf;
@@ -88,6 +87,25 @@ PyObject* __str__(){
 }
 
 %enddef
+
+%define VEC2_EXTEND(vec,elem)
+elem CrossR(vec $var1){
+	return PTM::cross(*$self,$var1);
+}
+elem CrossL(vec $var1){
+	return PTM::cross(*$self,$var1);
+}
+%enddef
+
+%define VEC3_EXTEND(vec,elem)
+vec CrossR(vec $var1){
+	return PTM::cross(*$self,$var1);
+}
+vec CrossL(vec $var1){
+	return PTM::cross(*$self,$var1);
+}
+%enddef
+
 
 %define VEC_EXTEND_EXPRESSION(vec,elem)
 PyObject* tuple(){
@@ -227,6 +245,7 @@ public:
 };
 %extend Vec2f{
 	VEC_EXTEND(Vec2f, float)
+	VEC2_EXTEND(Vec2f,float)
 }
 EXTEND_NEW(Vec2f)
 
@@ -239,6 +258,7 @@ public:
 };
 %extend Vec2d{
 	VEC_EXTEND(Vec2d, double)
+	VEC2_EXTEND(Vec2d, double)
 }
 EXTEND_NEW(Vec2d)
 
@@ -251,6 +271,7 @@ public:
 };
 %extend Vec3f{
 	VEC_EXTEND(Vec3f, float)
+	VEC3_EXTEND(Vec3f, float)
 }
 EXTEND_NEW(Vec3f)
 
@@ -263,6 +284,7 @@ public:
 };
 %extend Vec3d{
 	VEC_EXTEND(Vec3d, double)
+	VEC3_EXTEND(Vec3d, double)
 }
 EXTEND_NEW(Vec3d)
 
@@ -582,10 +604,7 @@ EXTEND_NEW(Affined)
 	Quaterniond __mul__(Quaterniond $var1){
 		return *$self * $var1;	
 	}
-	Quaterniond __mul__(Vec3d $var1){
-		return *$self * $var1;
-	}
-	Vec3d transform(Vec3d $var1){
+	Vec3d __mul__(Vec3d $var1){
 		return *$self * $var1;
 	}
 	
@@ -648,7 +667,7 @@ EXTEND_NEW(Quaterniond)
 	Quaternionf __mul__(Quaternionf $var1){
 		return *$self * $var1;	
 	}
-	Vec3f transform(Vec3f $var1){
+	Vec3f __mul__(Vec3f $var1){
 		return *$self * $var1;
 	}
 	
