@@ -35,6 +35,7 @@ EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NRays				,GetRay				,PHRayIf			)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NIKActuators		,GetIKActuator		,PHIKActuatorIf		)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NIKEndEffectors	,GetIKEndEffector	,PHIKEndEffectorIf	)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NEngines			,GetEngine			,PHEngineIf			)
+EXTEND_N_GET_TO_LIST(Spr::PHSolidIf				,NShape				,GetShape			,CDShapeIf			)
 //EXTEND_N_GET_TO_LIST(Spr::PHShapePairForLCPIf	,NSectionVertexes	,GetSectionVertex	,Vec3d				) //RuntimeDownCast‚ª‚Å‚«‚È‚¢
 EXTEND_N_GET_TO_LIST(Spr::PHSolidIf				,NShape				,GetShape			,CDShapeIf			)
 //---
