@@ -563,7 +563,7 @@ void PHFemMeshThermo::Step(double dt){
 	//dt = dt;				収束した時の、計算誤差？（マイナスになっている節点温度がそれなりに大きくなる。）
 //	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く
 	
-	CalcHeatTransUsingGaussSeidel(20,dt,0.5);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
+	CalcHeatTransUsingGaussSeidel(20,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
 
 	//温度を表示してみる
 	//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
@@ -997,8 +997,8 @@ void PHFemMeshThermo::CreateMatkLocal(){
 		//j=0~4まで代入(上のループでは、jは対角成分の範囲しかないので、値が入らない成分が出てしまう)
 		for(unsigned j =0;j<4;j++){
 			dMatKAll[0][tets[i].vertices[j]] += matk[j][j];
-			DSTR << "matk[" << j << "][" << j << "] : " << matk[j][j] << std::endl;
-			DSTR << "dMatKAll[0][" << tets[i].vertices[j] << "] : " << dMatKAll[0][tets[i].vertices[j]] << std::endl;
+			//DSTR << "matk[" << j << "][" << j << "] : " << matk[j][j] << std::endl;
+			//DSTR << "dMatKAll[0][" << tets[i].vertices[j] << "] : " << dMatKAll[0][tets[i].vertices[j]] << std::endl;
 			int hoge4 =0;
 		}
 		DSTR << std::endl;	//改行
