@@ -1,7 +1,7 @@
 #ifndef SPREPCAST_H
 #define SPREPCAST_H
 #include <Springhead.h>
-#include <Python.h>
+#include <Python/Python.h>
 #include <string>
 #include <map>
 #include "SprEPObject.h"
