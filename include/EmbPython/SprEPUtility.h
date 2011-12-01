@@ -8,7 +8,7 @@
 #endif
 
 #include "Utility/SprUTCriticalSection.h"//CriticalSection—p
-#include <Python.h>
+#include <Python/Python.h>
 
 #define EP_MODULE_NAME "Spr"
 //#define EP_USE_SUBMODULE
