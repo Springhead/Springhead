@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#include "../../Springhead2/src/Samples/SampleApp.h"
+#include "../../SampleApp.h"
 
 #include <EmbPython/EmbPython.h>
 
