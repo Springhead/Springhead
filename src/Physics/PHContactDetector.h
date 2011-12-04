@@ -100,9 +100,16 @@ public:
 			shapeCenter[i].resize(solid[i]->NShape());
 			for(int j=0; j < solid[i]->NShape(); j++){
 				CDConvex* convex = DCAST(CDConvex, solid[i]->GetShape(j));
-				Posed lp = solid[i]->GetShapePose(j);
-				shapeCenter[i][j] = lp * convex->CalcCenterOfMass();
-				shapePose[i][j] = solid[i]->GetPose() * lp;
+				if(convex){
+					Posed lp = solid[i]->GetShapePose(j);
+					shapeCenter[i][j] = lp * convex->CalcCenterOfMass();
+					shapePose[i][j] = solid[i]->GetPose() * lp;
+				}else{
+					solid[i]->DelChildObject(solid[i]->GetFrame(j));
+					shapePose[i].resize(solid[i]->NShape());
+					shapeCenter[i].resize(solid[i]->NShape());
+					j--;
+				}
 			}
 		}
 		//	１ステップ前の並進移動量×α倍だけ戻す。
@@ -350,6 +357,40 @@ public:
 				n->shape[1] = srhs->GetShape(j)->Cast();
 				sp->shapePairs.item(slhs->NShape()-1, j) = n;
 			}
+		}
+	}
+	///< SolidにShapeが削除されたときにSolidから呼ばれる
+	void DelShapePairs(PHSolid* solid, int delPos){
+		PHSolids::iterator it = std::find(solids.begin(), solids.end(), solid);
+		if(it == solids.end())
+			return;
+		int isolid = (int)(it - solids.begin());
+		int i, j;
+		PHSolid *slhs, *srhs;
+		TSolidPair* sp;
+		for(i = 0; i < isolid; i++){
+			sp = solidPairs.item(i, isolid);
+			slhs = sp->solid[0];
+			srhs = solid;
+			//	消えたShapeに対応する行を詰める
+			for(j = 0; j < slhs->NShape(); j++){
+				for(int k=delPos+1; k<srhs->NShape(); ++k)
+					sp->shapePairs.item(j, k-1) = sp->shapePairs.item(j, k);
+			}
+			//	サイズの更新
+			sp->shapePairs.resize(solid->NShape(), srhs->NShape());
+		}
+		for(i = isolid+1; i < (int)solids.size(); i++){
+			sp = solidPairs.item(isolid, i);
+			slhs = solid;
+			srhs = sp->solid[1];
+			//	消えたShapeに対応する行を詰める
+			for(j = 0; j < srhs->NShape(); j++){
+				for(int k=delPos+1; k<srhs->NShape(); ++k)
+					sp->shapePairs.item(k-1, j) = sp->shapePairs.item(k, j);
+			}
+			//	サイズの更新
+			sp->shapePairs.resize(solid->NShape(), srhs->NShape());
 		}
 	}
 

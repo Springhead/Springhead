@@ -88,7 +88,8 @@ public:
 	PHFrame(const PHFrameDesc& desc);
 	void	CompInertia();
 	virtual ObjectIf* GetChildObject(size_t pos);
-	virtual bool AddChildObject(ObjectIf * o);
+	virtual bool AddChildObject(ObjectIf* o);
+	virtual bool DelChildObject(ObjectIf* o);
 	virtual size_t NChildObject() const;
 	virtual Posed GetPose();
 	virtual void SetPose(Posed p);
@@ -152,6 +153,7 @@ public:
 	CDShapeIf* CreateAndAddShape(const IfInfo* info, const CDShapeDesc& desc);
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	bool AddChildObject(ObjectIf* obj);
+	bool DelChildObject(ObjectIf* obj);
 	size_t NChildObject() const{
 		return frames.size();
 	}
@@ -250,6 +252,8 @@ public:
 	int			NFrame();
 	///	shapeを、位置指定込みで追加する．
 	void		AddFrame(PHFrameIf* frame);	
+	///	
+	void		DelFrame(int i);
 	///	frameで取得
 	PHFrameIf*	GetFrame(int i);
 
@@ -259,6 +263,8 @@ public:
 	CDShapeIf*	GetShape(int i);
 	///	shape を この剛体が持つSpr::CDShapeのリスト の最後に追加する．
 	void		AddShape(CDShapeIf* shape);
+	///	この剛体が持つshapeを全て削除
+	void		DelShape(CDShapeIf* shape);
 	///	この剛体が持つ i番目の SPR::CDShape のこの剛体から見た姿勢を取得
 	Posed		GetShapePose(int i);
 	///	この剛体が持つ i番目の SPR::CDShape のこの剛体から見た姿勢を設定

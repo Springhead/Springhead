@@ -100,6 +100,15 @@ bool PHFrame::AddChildObject(ObjectIf * o){
 	}
 	return false;
 }
+bool PHFrame::DelChildObject(ObjectIf* obj){
+	CDShape* s = obj->Cast();
+	if (s == shape){
+		shape = NULL;
+		if (solid) solid->DelChildObject(Cast());
+		return true;
+	}
+	return false;
+}
 size_t PHFrame::NChildObject() const {
 	if (shape) return 1;
 	return 0;
@@ -170,6 +179,21 @@ bool PHSolid::AddChildObject(ObjectIf* obj){
 	}
 	if (DCAST(CDShapeIf, obj)){
 		AddShape(DCAST(CDShapeIf, obj));
+		return true;
+	}
+	return false;
+}
+bool PHSolid::DelChildObject(ObjectIf* obj){
+	if (DCAST(PHFrameIf, obj)){
+		PHFrameIf* f = obj->Cast();
+		for(int i=0; i<NFrame(); ++i){
+			if (GetFrame(i) == f) DelFrame(i);
+			i--;
+		}
+		return true;
+	}
+	if (DCAST(CDShapeIf, obj)){
+		DelShape(DCAST(CDShapeIf, obj));
 		return true;
 	}
 	return false;
@@ -434,16 +458,6 @@ PHFrameIf* PHSolid::GetFrame(int i){
 void PHSolid::AddFrame(PHFrameIf* fi){
 	PHFrame* f = fi->Cast();
 	assert(f);
-	if (f->shape){
-		CDShape* sh = DCAST(CDShape, f->shape);
-		for(unsigned i=0; i<frames.size(); ++i){
-			if (frames[i]->shape == sh){
-				DSTR << sh->GetName() << "warning : yPHSolid::AddFrame(CDShapeIf* shape)zTried Adding the same shape twice. Skip registration." << std::endl;
-				return;
-			}
-		}
-	}
-
 	frames.push_back(f->Cast());
 	frames.back()->solid = this;
 	if (frames.back()->shape){
@@ -454,6 +468,14 @@ void PHSolid::AddFrame(PHFrameIf* fi){
 		scene->constraintEngine->UpdateShapePairs(this);
 	}
 }
+void PHSolid::DelFrame(int i){
+	frames.erase(frames.begin()+i);
+	CalcBBox();
+	//ÚGƒGƒ“ƒWƒ“‚ÌshapePairs‚ðXV‚·‚é
+	PHScene* scene = DCAST(PHScene, GetScene());
+	scene->penaltyEngine->DelShapePairs(this, i);
+	scene->constraintEngine->DelShapePairs(this, i);	
+}
 void PHSolid::AddShape(CDShapeIf* shape){
 	CDShape* sh = DCAST(CDShape, shape);
 	frames.push_back(DBG_NEW PHFrame());
@@ -463,6 +485,14 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	PHScene* scene = DCAST(PHScene,GetScene());
 	scene->penaltyEngine->UpdateShapePairs(this);
 	scene->constraintEngine->UpdateShapePairs(this);
+}
+void PHSolid::DelShape(CDShapeIf* shape){
+	CDShape* sh = DCAST(CDShape, shape);
+	for(unsigned i=0; i<frames.size(); ++i)
+		if (frames[i]->shape == sh){
+			DelFrame(i);
+			i--;
+		}
 }
 
 Posed	PHSolid::GetShapePose(int i){
