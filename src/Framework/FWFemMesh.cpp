@@ -286,7 +286,13 @@ void FWFemMesh::CreateGRFromPH(){
 				int tmp[3];
 				vtxs.gauss(weight, gmd.vertices[pv], tmp);
 				for(unsigned j=0; j<3; ++j){
-					assert(weight[j] > -2.0);
+					if (weight[j] <= -0.001){
+						DSTR << "グラフィクスの3頂点\t"; 
+						for(unsigned k=0; k<3; ++k){
+							DSTR << grMesh->vertices[gFace.indices[k]] << "\t";
+						}
+						DSTR << "の外側に物理の頂点:\t" << gmd.vertices[pv] << "があります" << std::endl;
+					}
 					texCoord += weight[j] * grMesh->texCoords[gFace.indices[j]];
 					if(gNormal) normal += weight[j] * grMesh->normals[gNormal->indices[j]];
 				}
@@ -311,6 +317,13 @@ void FWFemMesh::CreateGRFromPH(){
 					}
 				}
 				for(int j=0; j<3; ++j){
+					if (weight[maxId][j] <= -0.001){
+						DSTR << "グラフィクスの3頂点\t"; 
+						for(unsigned k=0; k<3; ++k){
+							DSTR << grMesh->vertices[gFace.indices[k]] << "\t";
+						}
+						DSTR << "の外側に物理の頂点:\t" << gmd.vertices[pv] << "があります" << std::endl;
+					}
 					texCoord += weight[maxId][j] * grMesh->texCoords[gFace.indices[j<maxId?j:j+1]];
 					if(gNormal){
 						normal += weight[maxId][j] * grMesh->normals[gFaceNormal.indices[j<maxId?j:j+1]];
