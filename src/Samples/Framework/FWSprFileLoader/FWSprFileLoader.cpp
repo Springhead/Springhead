@@ -43,7 +43,7 @@ void FWSprfileLoader::InitCameraView(){
 		"(-0.019202 -0.659263 0.751667 10.0918)"
 		"(     0      0      0      1))"
 		);
-	issView >> cameraInfo.view;
+//	issView >> cameraInfo.view;
 }
 
 void FWSprfileLoader::Reset(){

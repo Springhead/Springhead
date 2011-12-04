@@ -286,7 +286,7 @@ void FWFemMesh::CreateGRFromPH(){
 				int tmp[3];
 				vtxs.gauss(weight, gmd.vertices[pv], tmp);
 				for(unsigned j=0; j<3; ++j){
-					assert(weight[j] > -0.001);
+					assert(weight[j] > -2.0);
 					texCoord += weight[j] * grMesh->texCoords[gFace.indices[j]];
 					if(gNormal) normal += weight[j] * grMesh->normals[gNormal->indices[j]];
 				}
