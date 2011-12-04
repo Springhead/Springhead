@@ -167,6 +167,11 @@ protected:
 	void SetTexZ(unsigned id,double tz);		//	テクスチャ座標を変更
 
 
+	void HeatTransFromPanToFoodShell();									//	伝導伝熱：食材の外殻のフライパンや鉄板に近い節点から熱が伝わる		//	食材、調理器具を引数に
+	
+	//	放射伝熱を有効にしたい食材のFWFemMesh？のIf、加熱器具のFWFemMeshのIf,熱輻射の浸透深さを代入
+	void HeatRadientToFood(char foodID,char panID,double fluxdepth);						//	放射伝熱：食材の外殻から数ミリ以内の節点に対して、加熱器具から熱が伝わる
+												//
 	PTM::TMatrixRow<4,4,double> Create44Mat21();	//共通で用いる、4×4の2と1でできた行列を返す関数
 	//あるいは、引数を入れると、引数を変えてくれる関数
 	PTM::TMatrixCol<4,1,double> Create41Vec1();		//共通で用いる、4×1の1でできた行列(ベクトル)を返す関数

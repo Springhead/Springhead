@@ -518,6 +518,34 @@ void PHFemMeshThermo::TexChange(unsigned id,double tz){
 
 }
 
+void PHFemMeshThermo::HeatTransFromPanToFoodShell(){
+	//if(pan){
+	//	Affinef afPan = pan->GetGRFrame()->GetWorldTransform();
+	//	Affinef afMesh = tmesh.obj->GetGRFrame()->GetWorldTransform();
+	//	Affinef afMeshToPan = afPan.inv() * afMesh;	
+	//}
+
+	//shape pair solid pair
+	
+
+	//	2物体の接触面から、加熱する節点を決める。
+	//	Shape pair のSolid pare辺りに記述がある
+
+
+
+	//	接触面からの距離が一定距離以内なら
+
+	//	熱伝達境界条件で、熱伝達
+
+	//	熱伝達境界条件で熱伝達後、フライパンの熱は吸熱というか、減るが、それは有限要素法をどのように結合してやればいいのか？
+	
+	//	節点周囲のTcと熱伝達率αによって、熱が伝わるので、ここで、フライパンから熱を伝えたい節点のTcと熱伝達率を設定する
+
+	//	熱伝達率は、相手との関係によって異なるので、節点が何と接しているかによって変更する
+
+
+}
+
 
 void PHFemMeshThermo::Step(double dt){
 
@@ -557,6 +585,12 @@ void PHFemMeshThermo::Step(double dt){
 	//}
 	//DSTR << "vecFAll : " <<std::endl;
 	//DSTR << vecFAll << std::endl;
+
+
+	//	フライパンから食材への熱伝達のための
+	HeatTransFromPanToFoodShell();
+	//	test　shapepairを取ってくる
+	//GetScene()->
 
 	//
 	//dt = dt *0.01;		誤差1度程度になる
