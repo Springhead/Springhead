@@ -40,6 +40,7 @@ struct FWObjectIf : SceneObjectIf {
 	GRFrameIf* GetGRFrame();
 	/// GRFrameを設定する
 	void SetGRFrame(GRFrameIf* f);
+	/// PHFEMMeshを取得する
 
 	/** @brief グラフィクス用メッシュをロードするヘルパ関数
 		@param filename ファイル名

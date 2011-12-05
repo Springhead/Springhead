@@ -125,13 +125,22 @@ void FWFemMesh::Sync(bool ph2gr){
 
 
 size_t FWFemMesh::NChildObject() const{
-	return FWObject::NChildObject() + (grMesh ? 1 : 0);
+	return FWObject::NChildObject() + (grMesh ? 1 : 0) + (phMesh ? 1 : 0);
 }
 ObjectIf* FWFemMesh::GetChildObject(size_t pos){
 	if (pos < FWObject::NChildObject()){
 		return FWObject::GetChildObject(pos);
+	}else{
+		pos -= FWObject::NChildObject();
+	}	
+	if (grMesh){
+		if (pos == 0) return grMesh->Cast();
+		else pos --;
 	}
-	if (grMesh && pos < NChildObject()) return grMesh->Cast();
+	if (phMesh){
+		if (pos == 0) return phMesh->Cast();
+		else pos --;
+	}
 	return NULL;
 }
 bool FWFemMesh::AddChildObject(ObjectIf* o){

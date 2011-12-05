@@ -19,6 +19,8 @@ struct FWFemMeshDesc: public FWObjectDesc{
  */
 struct FWFemMeshIf : FWObjectIf {
 	SPR_IFDEF(FWFemMesh);
+	PHFemMeshIf* GetPHMesh();
+
 };
 
 

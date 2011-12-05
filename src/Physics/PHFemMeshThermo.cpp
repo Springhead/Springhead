@@ -8,7 +8,8 @@
 #include <SciLab/SprSciLab.h>
 #include <Physics/PHFemMeshThermo.h>
 #include <Base/Affine.h>
-
+//#include <Framework/FWObject.h>
+//#include <Framework/sprFWObject.h>
 
 using namespace PTM;
 
@@ -23,7 +24,6 @@ namespace Spr{;
 PHFemMeshThermoDesc::PHFemMeshThermoDesc(){
 	Init();
 	int katooon =1;
-	//pan		= DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
 }
 void PHFemMeshThermoDesc::Init(){
 	//ディスクリプタの生成時に呼ばれるコンストラクタで呼ばれる
@@ -31,6 +31,9 @@ void PHFemMeshThermoDesc::Init(){
 	//以下の関数の中で行っている初期化の類をここでやるのが良さそう
 	//ディスクリプタに入れる値の初期化?
 	
+	//pan		= DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
+	//PHSolidIf* phFloor = this->
+	//phFloor
 
 }
 
@@ -44,6 +47,8 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 	if (s){ SetScene(s); }
 	StepCount =0;				// ステップ数カウンタ
 	StepCount_ =0;				// ステップ数カウンタ
+	//phFloor =  DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
+	//GetFramePosition();
 }
 
 void PHFemMeshThermo::SetThermalBoundaryCondition(){
@@ -533,7 +538,17 @@ void PHFemMeshThermo::HeatTransFromPanToFoodShell(){
 	//	2物体の接触面から、加熱する節点を決める。
 	//	Shape pair のSolid pare辺りに記述がある
 
-
+	//	最外殻の節点を世界座標に変換し、そのフライパン又は、鉄板を基にした座標系に変換した座標値が、ある座標以下なら
+	//	最外殻の節点に熱伝達する
+	//PHSolidIf* phs ;
+//	Affinef afPan = phs
+	//Affinef afPan = pan->GetGRFrame()->GetWorldTransform();
+	//Affinef afMesh = tmesh.obj->GetGRFrame()->GetWorldTransform();
+	//Affinef afMeshToPan = afPan.inv() * afMesh;	
+//	for(unsigned i=-0; i < surfaceVertices.size();i++){
+//		if(vertices[surfaceVertices[i]].pos){};
+//		//vertices[surfaceVertices[i]].Tc;
+//	}
 
 	//	接触面からの距離が一定距離以内なら
 

@@ -32,6 +32,8 @@ struct PHFemMeshDesc: public PHFemMeshState{
 ///	FEM用の四面体メッシュ
 struct PHFemMeshIf : public SceneObjectIf{
 	SPR_IFDEF(PHFemMesh);
+	int GetSurfaceVertex(int id);
+	int NSurfaceVertices();
 };
 
 ///	FemMeshThermoのディスクリプタ

@@ -194,7 +194,11 @@ protected:
 
 	//%%%	アプリケーション	%%%//
 
-	FWObjectIf*					pan;
+	PHSolidIf* phFloor;
+	PHSolidIf* phFood;
+	//FWObjectIf					fwpan;
+	//FWObjectIf*					fwpan;
+	//UTRef<FWObjectIf*>			fwpan_;
 
 };
 
