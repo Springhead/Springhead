@@ -50,6 +50,14 @@ public:
 	void UsingHeatTransferBoundaryCondition(unsigned id,double temp);		//	”M“`’B‹«ŠEğŒ:S_3		w’èß“_‚ÌüˆÍ—¬‘Ì‰·“x‚ğ•Ï‚¦‚é	
 	//Set ‚É
 
+	int GetSurfaceVertex(int id){return surfaceVertices[id];};
+	int NSurfaceVertices(){return surfaceVertices.size();};
+	void SetVertexTc(int id,double temp){
+		vertices[id].Tc = temp;
+	};
+	Vec3d GetPose(unsigned id){ return vertices[id].pos; };
+	Vec3d GetSufVtxPose(unsigned id){return vertices[surfaceVertices[id]].pos; };
+
 
 
 protected:

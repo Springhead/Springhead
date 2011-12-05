@@ -28,10 +28,13 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemEngineIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshIf(base)	\
-	int GetSurfaceVertex(int id){	return	base::GetSurfaceVertex(id);}	\
-	int NSurfaceVertices(){	return	base::NSurfaceVertices();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshThermoIf(base)	\
+	int GetSurfaceVertex(int id){	return	base::GetSurfaceVertex(id);}	\
+	int NSurfaceVertices(){	return	base::NSurfaceVertices();}	\
+	void SetVertexTc(int id, double temp){	base::SetVertexTc(id, temp);}	\
+	Vec3d GetPose(int id){	return	base::GetPose(id);}	\
+	Vec3d GetSufVtxPose(unsigned int id){	return	base::GetSufVtxPose(id);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKEndEffectorIf(base)	\
 	void SetSolid(Spr::PHSolidIf* solid){	base::SetSolid(solid);}	\

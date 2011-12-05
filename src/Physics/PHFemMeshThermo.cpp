@@ -604,12 +604,12 @@ void PHFemMeshThermo::Step(double dt){
 	//DSTR << vecFAll << std::endl;
 
 
-	//	フライパンから食材への熱伝達のための
+	//	フライパンから食材への熱伝達のための	⇒アプリケーションなので、main()関数に移行
 	HeatTransFromPanToFoodShell();
 	//	test　shapepairを取ってくる
 	//GetScene()->
 
-	//
+
 	//dt = dt *0.01;		誤差1度程度になる
 	//dt = dt;				収束した時の、計算誤差？（マイナスになっている節点温度がそれなりに大きくなる。）
 //	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く
@@ -737,7 +737,7 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
 		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
 		//SetInitThermoConductionParam(0.574,970,1.96,25);
-		SetInitThermoConductionParam(0.574,970,0.196,25 * 0.0001);
+		SetInitThermoConductionParam(0.574,970,0.196,25 * 0.0001 * 1000.0);
 		//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
 
 	//計算に用いるマトリクス、ベクトルを作成（メッシュごとの要素剛性行列/ベクトル⇒全体剛性行列/ベクトル）

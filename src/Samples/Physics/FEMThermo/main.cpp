@@ -188,58 +188,65 @@ public:
 		//tmesh->GetScene();
 		
 		if(pan && tmesh){
+			//	フライパンの世界座標を入手
 			Affinef afPan = pan->GetGRFrame()->GetWorldTransform();
+			//	加熱物体の世界座標を入手
 			Affinef afMesh = tmesh->GetGRFrame()->GetWorldTransform();
+			//	afPanから見た、afMeshの座標系への変換行列を入手
 			Affinef afMeshToPan = afPan.inv() * afMesh;
 			//DSTR << afPan <<std::endl;
 			//DSTR << afMesh <<std::endl;
 			//DSTR << afMeshToPan <<std::endl;
 
-	
-			//size_t nchObj = tmesh->NChildObject();
+			PHFemMeshIf* phm = tmesh->GetPHMesh();
+//			int nOfSurfaceVtx = phm->NSurfaceVertices();
+
+			///	フライパンにとっての原点からの距離に応じて、加熱する
+			////	最外殻の節点のフライパンからの座標
+			double tempTc =200.0;
+			
+			//	pfemの定義
+			//	何をしようとしたコード？
 			PHFemMeshThermoIf* pfem = NULL;
+
 			for(int i=0; i<tmesh->NChildObject() && !pfem; ++i){
 				pfem = tmesh->GetChildObject(i)->Cast();
-				int kattoon =0;
+				//	pfemが取れていることを確認
 				if(pfem){
-					DSTR <<"i : " << i << "th pfem->GetName(): " << pfem->GetName() << std::endl;
-					//pfem->GetPHMesh();
-					int katton1 =1;
+					DSTR << pfem->NSurfaceVertices() <<std::endl;
+					for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
+						Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
+						Vec3d posOnPan = afMeshToPan * pfemPose;
+						DSTR << j <<"th pfemPose: " << pfemPose << std::endl;
+						//Vec3d pfemPose_ = pfem->GetSufVtxPose(pfem->GetSurfaceVertex(j));
+						//DSTR << j <<"th pfemPose_: " << pfemPose_ << std::endl;
+						if(pfemPose.y >= -0.01 && pfemPose.y <= 0.0 ){
+							/// vertexの節点の座標がある範囲にある時、熱伝達境界条件で加熱する
+							pfem->SetVertexTc(j,tempTc);
+							DSTR << j << "th vertex.Tcに" << tempTc << "を設定" <<std::endl;
+							//Tcの更新？
+						}
+					}
 				}
 			}
-			DSTR << "tmesh->GetPHMesh(): " << tmesh->GetPHMesh()<< std::endl;;
-			PHFemMeshIf* phm = tmesh->GetPHMesh();
-			int nOfSurfaceVtx = phm->NSurfaceVertices();
-			for(unsigned i =0; i <nOfSurfaceVtx;i++){
-				DSTR << i <<  "th phm->GetSurfaceVertex(i): " << phm->GetSurfaceVertex(i) << std::endl;
-			} 
 			int kattton =0;
-
-
-			//////	最外殻の節点のフライパンからの座標
-			//for(unsigned i=-0; i < surfaceVertices.size();i++){
-			//	if(vertices[surfaceVertices[i]].pos){};
-			//	//vertices[surfaceVertices[i]].Tc;
+		
+			//for(unsigned i=-0; i < nOfSurfaceVtx; i++){
+			//	DSTR <<i <<"th: phm->GetPose(i): " << phm->GetPose(i) << std::endl;
+			//	if(posOnPan.y >= -1.0 && posOnPan.y <= 0.3){
+			//		DSTR << i << "th posOnPan.y: " << posOnPan.y << std::endl; 
+			//	}
 			//}
-
-		//	for
-		//	Vec3f posOnPan = afMeshToPan * tmesh.tvtxs[j].GetPos();
-		//	int katoon =1;
+			
 		}
 
-		//	フライパンにとっての原点からの距離に応じて、加熱する
+		
 
 		//char grName = "";
 		//char phName = "";
 
 		//GRFrameIf* findFrame = DCAST(GRFrameIf, GetSdk()->GetScene()->GetGRScene()->FindObject(grName));
 		//PHSolidIf* findSolid = DCAST(PHSolidIf, GetSdk()->GetScene()->GetPHScene()->FindObject(phName));
-
-		//if(pan){
-		//	Affinef afPan = pan->GetGRFrame()->GetWorldTransform();
-		//	Affinef afMesh = tmesh.obj->GetGRFrame()->GetWorldTransform();
-		//	Affinef afMeshToPan = afPan.inv() * afMesh;	
-		//}
 		//PHFemMeshThermoオブジェクトを作り、main関数で使えるようにする関数
 			//CreatePHFemMeshThermo();
 		//総節点数、総要素数、節点座標、要素の構成などを登録
