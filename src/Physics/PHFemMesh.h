@@ -136,8 +136,14 @@ public:
 	///	時刻をdt進める処理。PHFemEngineが呼び出す。
 	virtual void Step(double dt);
 	///	
-	int GetSurfaceVertex(int id){return surfaceVertices[id];};
-	int NSurfaceVertices(){return surfaceVertices.size();};
+	//int GetSurfaceVertex(int id){return surfaceVertices[id];};
+	//int NSurfaceVertices(){return surfaceVertices.size();};
+	//void SetVertexTc(int id,double temp){
+	//	vertices[id].Tc = temp;
+	//};
+	/////
+	//Vec3d GetPose(unsigned id){ vertices[id].pos; };
+	//Vec3d GetSufVtxPose(unsigned id){ vertices[surfaceVertices[id]].pos; };
 };
 
 

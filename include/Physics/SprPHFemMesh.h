@@ -32,8 +32,11 @@ struct PHFemMeshDesc: public PHFemMeshState{
 ///	FEM用の四面体メッシュ
 struct PHFemMeshIf : public SceneObjectIf{
 	SPR_IFDEF(PHFemMesh);
-	int GetSurfaceVertex(int id);
-	int NSurfaceVertices();
+	//int GetSurfaceVertex(int id);
+	//int NSurfaceVertices();
+	//void SetVertexTc(int id,double temp);
+	//Vec3d GetPose(unsigned id);
+	//Vec3d GetSufVtxPose(unsigned id);
 };
 
 ///	FemMeshThermoのディスクリプタ
@@ -49,6 +52,11 @@ struct PHFemMeshThermoDesc: public PHFemMeshDesc{
 ///	温度のFEM用のメッシュ
 struct PHFemMeshThermoIf : public PHFemMeshIf{
 	SPR_IFDEF(PHFemMeshThermo);
+	int GetSurfaceVertex(int id);
+	int NSurfaceVertices();
+	void SetVertexTc(int id,double temp);
+	Vec3d GetPose(int id);
+	Vec3d GetSufVtxPose(unsigned id);
 };
 
 //@}
