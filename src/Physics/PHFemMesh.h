@@ -135,6 +135,9 @@ public:
 	virtual void SetDesc(const void* desc);
 	///	時刻をdt進める処理。PHFemEngineが呼び出す。
 	virtual void Step(double dt);
+	///	
+	int GetSurfaceVertex(int id){return surfaceVertices[id];};
+	int NSurfaceVertices(){return surfaceVertices.size();};
 };
 
 

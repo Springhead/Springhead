@@ -28,6 +28,8 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemEngineIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshIf(base)	\
+	int GetSurfaceVertex(int id){	return	base::GetSurfaceVertex(id);}	\
+	int NSurfaceVertices(){	return	base::NSurfaceVertices();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshThermoIf(base)	\
 

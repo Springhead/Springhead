@@ -9,6 +9,7 @@
 	void SetJointKDD2(double K, double D, double D2){	base::SetJointKDD2(K, D, D2);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWFemMeshIf(base)	\
+	PHFemMeshIf* GetPHMesh(){	return	base::GetPHMesh();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWInteractPointerIf(base)	\
 	void SetPointerSolid(Spr::PHSolidIf* solid){	base::SetPointerSolid(solid);}	\
