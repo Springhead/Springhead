@@ -191,6 +191,11 @@ protected:
 	unsigned long StepCount_;			//	Step数のカウントアップ		// 
 	std::ofstream templog;
 
+
+	//%%%	アプリケーション	%%%//
+
+	FWObjectIf*					pan;
+
 };
 
 

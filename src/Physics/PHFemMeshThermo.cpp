@@ -22,6 +22,8 @@ namespace Spr{;
 
 PHFemMeshThermoDesc::PHFemMeshThermoDesc(){
 	Init();
+	int katooon =1;
+	//pan		= DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
 }
 void PHFemMeshThermoDesc::Init(){
 	//ディスクリプタの生成時に呼ばれるコンストラクタで呼ばれる
