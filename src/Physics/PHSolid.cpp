@@ -11,6 +11,7 @@
 #include <Physics/PHForceField.h>
 #include <Physics/PHPenaltyEngine.h>
 #include <Physics/PHConstraintEngine.h>
+#include <Physics/PHHapticEngine.h>
 #include <Collision/CDShape.h>
 #include <float.h>
 
@@ -466,6 +467,7 @@ void PHSolid::AddFrame(PHFrameIf* fi){
 		PHScene* scene = DCAST(PHScene,GetScene());
 		scene->penaltyEngine->UpdateShapePairs(this);
 		scene->constraintEngine->UpdateShapePairs(this);
+		scene->hapticEngine->UpdateShapePairs(this);
 	}
 }
 void PHSolid::DelFrame(int i){
@@ -485,6 +487,7 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	PHScene* scene = DCAST(PHScene,GetScene());
 	scene->penaltyEngine->UpdateShapePairs(this);
 	scene->constraintEngine->UpdateShapePairs(this);
+	scene->hapticEngine->UpdateShapePairs(this);
 }
 void PHSolid::DelShape(CDShapeIf* shape){
 	CDShape* sh = DCAST(CDShape, shape);

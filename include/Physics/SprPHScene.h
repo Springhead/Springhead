@@ -418,6 +418,19 @@ public:
 	*/
 	PHIKEngineIf*  GetIKEngine();
 
+	/** @brief HapticEngineを取得する
+		@return HapticEngineへのポインタ
+	*/
+	PHHapticEngineIf* GetHapticEngine();
+
+	/** @breif HapticPointerを作成する
+		@retrun HapticPointerへのポインタ
+	*/
+	PHHapticPointerIf* CreateHapticPointer();
+	
+	/** @breif HapticLoopを更新する
+	*/
+	void StepHapticLoop();
 };
 
 //@}

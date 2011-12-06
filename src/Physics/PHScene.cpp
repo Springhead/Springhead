@@ -13,6 +13,7 @@
 #include <Physics/PHForceField.h>
 #include <Physics/PHPenaltyEngine.h>
 #include <Physics/PHConstraintEngine.h>
+#include <Physics/PHHapticEngine.h>
 #include <sstream>
 
 namespace Spr{;
@@ -49,6 +50,9 @@ void PHScene::Init(){
 
 	femEngine = DBG_NEW PHFemEngine;
 	engines.Add(femEngine);
+
+	hapticEngine = DBG_NEW PHHapticEngine;
+	engines.Add(hapticEngine);
 
 	AfterSetDesc();
 }
@@ -210,9 +214,9 @@ PHFemMeshIf* PHScene::GetFemMesh(int i){
 	return femEngine->meshes[i]->Cast();
 }
 
-void PHScene::FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids){
-	constraintEngine->FindNeigboringSolids(solid, range, nsolids);
-}
+//void PHScene::FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids){
+//	constraintEngine->FindNeigboringSolids(solid, range, nsolids);
+//}
 
 
 void PHScene::Clear(){
@@ -354,7 +358,8 @@ bool PHScene::AddChildObject(ObjectIf* o){
 		if(	solids->AddChildObject(o) &&
 			gravityEngine->AddChildObject(o) &&
 			penaltyEngine->AddChildObject(o) &&
-			constraintEngine->AddChildObject(o))
+			constraintEngine->AddChildObject(o) &&
+			hapticEngine->AddChildObject(o))
 		{
             SetContactMode(solid->Cast(), PHSceneDesc::MODE_LCP);	//デフォルトでLCP
 			solid->scene = this;
@@ -485,6 +490,20 @@ PHPenaltyEngineIf* PHScene::GetPenaltyEngine(){
 
 PHIKEngineIf* PHScene::GetIKEngine(){
 	return XCAST(ikEngine);
+}
+
+PHHapticEngineIf* PHScene::GetHapticEngine(){
+	return XCAST(hapticEngine);
+}
+
+PHHapticPointerIf* PHScene::CreateHapticPointer(){
+	UTRef< PHHapticPointer > p = DBG_NEW PHHapticPointer();
+	AddChildObject(p->Cast());
+	return p->Cast();	
+}
+
+void PHScene::StepHapticLoop(){
+	hapticEngine->StepHapticLoop();
 }
 
 size_t PHScene::GetStateSize() const{
