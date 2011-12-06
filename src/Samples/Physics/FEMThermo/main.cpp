@@ -206,7 +206,7 @@ public:
 			double tempTc =200.0;
 			
 			//	pfemの定義
-			//	何をしようとしたコード？
+			//	PHFemMEshThermの節点を取ってきて、加熱する
 			PHFemMeshThermoIf* pfem = NULL;
 
 			for(int i=0; i<tmesh->NChildObject() && !pfem; ++i){
@@ -217,13 +217,14 @@ public:
 					for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
 						Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
 						Vec3d posOnPan = afMeshToPan * pfemPose;
-						DSTR << j <<"th pfemPose: " << pfemPose << std::endl;
+						//DSTR << j <<"th pfemPose: " << pfemPose << std::endl;
 						//Vec3d pfemPose_ = pfem->GetSufVtxPose(pfem->GetSurfaceVertex(j));
 						//DSTR << j <<"th pfemPose_: " << pfemPose_ << std::endl;
 						if(pfemPose.y >= -0.01 && pfemPose.y <= 0.0 ){
 							/// vertexの節点の座標がある範囲にある時、熱伝達境界条件で加熱する
 							pfem->SetVertexTc(j,tempTc);
-							DSTR << j << "th vertex.Tcに" << tempTc << "を設定" <<std::endl;
+							//UsingHeatTransferBoundaryCondition		を呼び出す
+							//DSTR << j << "th vertex.Tcに" << tempTc << "を設定" <<std::endl;
 							//Tcの更新？
 						}
 					}
