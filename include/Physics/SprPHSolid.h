@@ -348,6 +348,9 @@ struct PHSolidPairForLCPIf : public ObjectIf{
 	PHShapePairForLCPIf* GetShapePair(int i, int j);
 };
 
+struct PHHapticPointerIf : public PHSolidIf{
+	SPR_IFDEF(PHHapticPointer);
+};
 
 //@}
 

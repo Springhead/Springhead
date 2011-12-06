@@ -127,6 +127,10 @@ public:
 	SPR_IFDEF(PHFemEngine);
 };
 
+struct PHHapticEngineIf : PHEngineIf{
+public:
+	SPR_IFDEF(PHHapticEngine);
+};
 //@}
 }
 #endif

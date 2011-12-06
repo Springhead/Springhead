@@ -53,7 +53,7 @@ public:
 	void SetState(const CDShapePairSt& s){
 		(CDShapePairSt&)*this = s;
 	}
-	///	接触判定
+	///	接触判定．接触が見つかった場合に接触状態を更新
 	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	//	接触判定時に使う、法線計算。
 	void CalcNormal();
@@ -68,6 +68,8 @@ public:
 
 	/// 形状を取得する
 	CDShapeIf* GetShape(int i){ return shape[i]->Cast(); }
+	/// closestpointをワールド座標系で取得する
+	Vec3d GetClosestPointOnWorld(int i){ return shapePoseW[i] * closestPoint[i]; }
 };
 //	デバッグ用ツール
 void CallDetectContinuously(std::istream& file, PHSdkIf* sdk);

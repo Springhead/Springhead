@@ -16,6 +16,7 @@
 #include <Physics/PHIKEndEffector.h>
 #include <Physics/PHFemEngine.h>
 
+
 namespace Spr {;
 
 class CDShape;
@@ -24,10 +25,11 @@ class PHSolidContainer;
 class PHPenaltyEngine;
 class PHConstraintEngine;
 class PHGravityEngine;
+class PHFemEngine;
+class PHHapticEngine;
 struct PHConstraintDesc;
 struct PHJointDesc;
 class PHScene;
-class PHFemEngine;
 
 class SPR_DLL PHRay : public SceneObject, public PHRayDesc{
 	SPR_OBJECTDEF(PHRay);
@@ -59,6 +61,7 @@ protected:
 	PHIKEngine*				ikEngine;
 	PHRays					rays;
 	PHFemEngine*			femEngine;
+	PHHapticEngine*			hapticEngine;
 	double					timeStepInv;	///< timeStepの逆数．高速化用
 public:
 	
@@ -126,7 +129,7 @@ public:
 	int						NFemMeshes()const;
 	PHFemMeshIf*			GetFemMesh(int i);
 
-	void 					FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids);
+	//void 					FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids);
 
 	/// 積分ステップを返す
 	double					GetTimeStep()const{return timeStep;}
@@ -156,6 +159,9 @@ public:
 	PHGravityEngineIf*		GetGravityEngine();
 	PHPenaltyEngineIf*		GetPenaltyEngine();
 	PHIKEngineIf*			GetIKEngine();
+	PHHapticEngineIf*		GetHapticEngine();
+	PHHapticPointerIf*		CreateHapticPointer();
+	void					StepHapticLoop();
 	ObjectIf*				CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t			NChildObject() const;
 	virtual ObjectIf*		GetChildObject(size_t pos);

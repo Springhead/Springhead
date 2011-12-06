@@ -27,6 +27,8 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemEngineIf(base)	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_PHHapticEngineIf(base)	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshThermoIf(base)	\
@@ -303,6 +305,9 @@
 	Spr::PHGravityEngineIf* GetGravityEngine(){	return	base::GetGravityEngine();}	\
 	Spr::PHPenaltyEngineIf* GetPenaltyEngine(){	return	base::GetPenaltyEngine();}	\
 	Spr::PHIKEngineIf* GetIKEngine(){	return	base::GetIKEngine();}	\
+	Spr::PHHapticEngineIf* GetHapticEngine(){	return	base::GetHapticEngine();}	\
+	PHHapticPointerIf* CreateHapticPointer(){	return	base::CreateHapticPointer();}	\
+	void StepHapticLoop(){	base::StepHapticLoop();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSdkIf(base)	\
 	Spr::PHSceneIf* CreateScene(const Spr::PHSceneDesc& desc){	return	base::CreateScene(desc);}	\
@@ -374,4 +379,6 @@
 	unsigned int GetLastContactCount(int i, int j){	return	base::GetLastContactCount(i, j);}	\
 	double GetContactDepth(int i, int j){	return	base::GetContactDepth(i, j);}	\
 	Spr::PHShapePairForLCPIf* GetShapePair(int i, int j){	return	base::GetShapePair(i, j);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHHapticPointerIf(base)	\
 
