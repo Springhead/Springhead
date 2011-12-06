@@ -53,7 +53,9 @@ public:
 	int GetSurfaceVertex(int id){return surfaceVertices[id];};
 	int NSurfaceVertices(){return surfaceVertices.size();};
 	void SetVertexTc(int id,double temp){
-		vertices[id].Tc = temp;
+		UsingHeatTransferBoundaryCondition(id,temp);
+		//vertices[id].Tc = temp;
+		
 	};
 	Vec3d GetPose(unsigned id){ return vertices[id].pos; };
 	Vec3d GetSufVtxPose(unsigned id){return vertices[surfaceVertices[id]].pos; };

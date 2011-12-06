@@ -55,16 +55,6 @@ void PHFemMeshThermo::SetThermalBoundaryCondition(){
 	
 }
 
-//void PHFemMeshThermo::PrepareStep(){
-//	//ガウスザイデルに必要な、計算式の係数を計算する
-//	double dt = DCAST(PHSceneIf, GetScene())->GetTimeStep();
-//	//係数bやDMatAll_などをここで作る
-//	//bVecAllのリサイズ
-//	//bVecAllに計算結果を格納
-//	//ただし、[K],[C]などは全体剛性行列を作っているのではなく、成分ごとにEdges構造体に入っているので、この値を用いる
-//	//係数行列b生成ループ⇒このループをガウスザイデル計算の最初の一回だけやったほうが、forループが1回少なくなるので、計算速そう。けど、if文が必要
-//}
-
 void PHFemMeshThermo::CreateMatKAll(){
 
 }
@@ -574,10 +564,10 @@ void PHFemMeshThermo::Step(double dt){
 
 	//	実験用のコード
 	//	a) 時間離散化時に台形公式利用、前進・後退差分で振動する加熱方式
-	if(StepCount == 0){
-		unsigned texid_ =7;
-		UsingFixedTempBoundaryCondition(texid_,200.0);
-	}
+	//if(StepCount == 0){
+	//	unsigned texid_ =7;
+	//	UsingFixedTempBoundaryCondition(texid_,200.0);
+	//}
 
 	//	b) 断熱過程の実験
 	//	熱伝達率を0にする。温度固定境界条件で加熱。
