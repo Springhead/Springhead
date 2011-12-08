@@ -84,6 +84,7 @@ public:
 		bool operator == (const Face& f2);
 		//行列計算に用いるための面積
 		double area;			//四面体の各面の面積
+		double heatTransRatio;		//	その面における熱伝達率
 	};
 	//	辺
 	struct Edge{

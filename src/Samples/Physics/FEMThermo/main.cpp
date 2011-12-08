@@ -90,7 +90,7 @@ public:
 		
 		//	ファイルのロード
 		UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-		GetSdk()->LoadScene("sceneTHtest.spr", import);			// ファイルのロード			// scene.spr:negiをロード, scene2.spr:デバッグ用の直方体, scene3.spr:穴あきcheeseをロード, sceneTHtest.spr:フライパンなどインポートのテスト
+		GetSdk()->LoadScene("sceneTHtest3.spr", import);			// ファイルのロード			// scene.spr:negiをロード, scene2.spr:デバッグ用の直方体, scene3.spr:穴あきcheeseをロード, sceneTHtest.spr:フライパンなどインポートのテスト
 		numScenes = GetSdk()->NScene();
 		if (numScenes) SwitchScene(GetSdk()->NScene()-1);
 
@@ -172,7 +172,8 @@ public:
 		//	フライパンを取ってくる
 		FWObjectIf* pan		=	DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
 		//	食材を取ってくる
-		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+//		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwCheese")->Cast();
 		//	ワールド座標に変換する
 
 		//DSTR <<"pan: " << pan << std::endl;
@@ -220,6 +221,7 @@ public:
 						//DSTR << j <<"th pfemPose: " << pfemPose << std::endl;
 						//Vec3d pfemPose_ = pfem->GetSufVtxPose(pfem->GetSurfaceVertex(j));
 						//DSTR << j <<"th pfemPose_: " << pfemPose_ << std::endl;
+						/// cube_test.x用
 						if(pfemPose.y >= -0.01 && pfemPose.y <= 0.0 ){
 							/// vertexの節点の座標がある範囲にある時、熱伝達境界条件で加熱する
 							pfem->SetVertexTc(j,tempTc);
@@ -240,8 +242,10 @@ public:
 			//}
 			
 		}
+		int nSolidsPair	=	GetSdk()->GetPHSdk()->GetScene(0)->NSolidPairs();
+		int nSolid		=	GetSdk()->GetPHSdk()->GetScene(0)->NSolids();
 
-		
+//		PHSolidPairForLCPIf* solidPair = GetSdk()->GetPHSdk()->GetScene(0)->GetSolidPair(
 
 		//char grName = "";
 		//char phName = "";

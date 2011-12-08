@@ -55,7 +55,12 @@ public:
 	void SetVertexTc(int id,double temp){
 		UsingHeatTransferBoundaryCondition(id,temp);
 		//vertices[id].Tc = temp;
-		
+	};
+	void SetVertexTc(int id,double temp,double heatTrans){
+		UsingHeatTransferBoundaryCondition(id,temp);
+		//vertices[id].Tc = temp;
+		//	‚»‚Ìß“_‚Å‚Ì”M“`’B—¦‚ğİ’è
+		//	”M“`’B‚ğŠÜ‚Şs—ñ‚ğXV
 	};
 	Vec3d GetPose(unsigned id){ return vertices[id].pos; };
 	Vec3d GetSufVtxPose(unsigned id){return vertices[surfaceVertices[id]].pos; };
@@ -189,7 +194,7 @@ protected:
 	//%%%%%%%%		•Ï”‚ÌéŒ¾		%%%%%%%%//
 	//”MŒvZ‚É—p‚¢‚éƒpƒ‰ƒ[ƒ^
 	double thConduct;				//”M“`“±—¦
-	double heatTrans;				//”M“`’B—¦
+	double heatTrans;				//”M“`’B—¦			//class ß“_‚É‚ÍAheatTransRatio‚ª‘¶İ‚·‚é
 	double roh;						//–§“x
 	double specificHeat;			//”ä”M
 //	double dt;						//ŠÔ‚İ•
