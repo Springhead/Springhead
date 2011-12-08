@@ -35,6 +35,7 @@
 	int GetSurfaceVertex(int id){	return	base::GetSurfaceVertex(id);}	\
 	int NSurfaceVertices(){	return	base::NSurfaceVertices();}	\
 	void SetVertexTc(int id, double temp){	base::SetVertexTc(id, temp);}	\
+	void SetVertexTc(int id, double temp, double heatTrans){	base::SetVertexTc(id, temp, heatTrans);}	\
 	Vec3d GetPose(int id){	return	base::GetPose(id);}	\
 	Vec3d GetSufVtxPose(unsigned int id){	return	base::GetSufVtxPose(id);}	\
 

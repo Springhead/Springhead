@@ -55,6 +55,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	int GetSurfaceVertex(int id);
 	int NSurfaceVertices();
 	void SetVertexTc(int id,double temp);
+	void SetVertexTc(int id,double temp,double heatTrans);
 	Vec3d GetPose(int id);
 	Vec3d GetSufVtxPose(unsigned id);
 };

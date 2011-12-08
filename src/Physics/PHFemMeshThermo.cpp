@@ -1369,6 +1369,9 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 		//をCalcTriangleAreaに入れることができるようにアルゴリズムを考える。
 		//k21
 		if(l==0){
+			//三角形面を構成する3頂点の熱伝達率の相加平均
+			//double tempHTR = (vertices[tets.vertices[1]].heatTransRatio + vertices[tets.vertices[2]].heatTransRatio + vertices[tets.vertices[3]].heatTransRatio ) / 3.0;		//HTR:HeatTransRatio
+			//vecf3array[l] = tempHTR * (1.0/3.0) * CalcTriangleArea( tets.vertices[1],tets.vertices[2],tets.vertices[3] ) * vecf3array[l];
 			vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[1],tets.vertices[2],tets.vertices[3] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
 			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
@@ -1378,6 +1381,8 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 		}
 		//	k22
 		else if(l==1){
+			//double tempHTR = (vertices[tets.vertices[0]].heatTransRatio + vertices[tets.vertices[2]].heatTransRatio + vertices[tets.vertices[3]].heatTransRatio ) / 3.0;		//HTR:HeatTransRatio
+			//vecf3array[l] = tempHTR * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[2],tets.vertices[3] ) * vecf3array[l];
 			vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[2],tets.vertices[3] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
 			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
@@ -1387,6 +1392,8 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 		}
 		//	k23
 		else if(l==2){
+			//double tempHTR = (vertices[tets.vertices[0]].heatTransRatio + vertices[tets.vertices[1]].heatTransRatio + vertices[tets.vertices[3]].heatTransRatio ) / 3.0;		//HTR:HeatTransRatio
+			//vecf3array[l] = tempHTR * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[3] ) * vecf3array[l];
 			vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[3] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
 			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
@@ -1396,6 +1403,8 @@ void PHFemMeshThermo::CreateVecf3(Tet tets){
 		}
 		//	k24
 		else if(l==3){
+			//double tempHTR = (vertices[tets.vertices[0]].heatTransRatio + vertices[tets.vertices[1]].heatTransRatio + vertices[tets.vertices[2]].heatTransRatio ) / 3.0;		//HTR:HeatTransRatio
+			//vecf3array[l] = tempHTR * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[2] ) * vecf3array[l];
 			vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets.vertices[0],tets.vertices[1],tets.vertices[2] ) * vecf3array[l];
 			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
 			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
