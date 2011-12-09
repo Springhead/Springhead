@@ -747,3 +747,20 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHHapticEngineDesc \
+protected:\
+	bool	bHaptic;	\
+	double	hdt;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		bHaptic = ((PHHapticEngineDesc*)ptr)->bHaptic;	\
+		hdt = ((PHHapticEngineDesc*)ptr)->hdt;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHHapticEngineDesc*)ptr)->bHaptic = bHaptic;	\
+		((PHHapticEngineDesc*)ptr)->hdt = hdt;	\
+		return true;	\
+	}\
+

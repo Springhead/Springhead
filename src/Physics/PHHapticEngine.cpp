@@ -1,5 +1,5 @@
 #include <Physics/PHHapticEngine.h>
-#include <Physics/PHHapticRenderMulti.h>
+#include <Physics/PHHapticRenderImpulse.h>
 
 namespace Spr{;
 
@@ -19,19 +19,17 @@ bool PHShapePairForHaptic::DetectClosestPoints(unsigned ct, const Posed& pose0, 
 	shapePoseW[1] = pose1;
 	
 	Vec3d sep;
-	bool rv = FindClosestPoints(shape[0], shape[1], shapePoseW[0], shapePoseW[1],
+	double dist = FindClosestPoints(shape[0], shape[1], shapePoseW[0], shapePoseW[1],
 									sep, closestPoint[0], closestPoint[1]);
-	double dist = (GetClosestPointOnWorld(1) - GetClosestPointOnWorld(0)).norm();
-	if(rv){
-		if(dist > 1e-5)	state = NONE;	// ÚG‚µ‚Ä‚¢‚È‚¢
-		else{							// ÚG
-			commonPoint = shapePoseW[0] * closestPoint[0];
-			if (lastContactCount == unsigned(ct-1))	state = CONTINUE;
-			else state = NEW;
-			lastContactCount = ct;
-		}
-	}else state = NONE;
-	return rv;
+	//double dist = (GetClosestPointOnWorld(1) - GetClosestPointOnWorld(0)).norm();
+	if(dist > 1e-5)	state = NONE;	// ÚG‚µ‚Ä‚¢‚È‚¢
+	else{							// ÚG
+		commonPoint = shapePoseW[0] * closestPoint[0];
+		if (lastContactCount == unsigned(ct-1))	state = CONTINUE;
+		else state = NEW;
+		lastContactCount = ct;
+	}
+	return true;
 }
 
 int PHShapePairForHaptic::OnDetectClosestPoints(unsigned ct, const Vec3d& center0){
@@ -61,8 +59,8 @@ bool PHSolidPairForHaptic::Detect(engine_type* engine, unsigned int ct, double d
 	return PHSolidPair::Detect(engine, ct, dt);
 }
 
-void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngineImp* engine, unsigned ct, double dt){
-	if(sp->state == CDShapePair::State::NEW || sp->state == CDShapePair::State::CONTINUE){
+void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* engine, unsigned ct, double dt){
+	if(sp->state == sp->NEW || sp->state == sp->CONTINUE){
 		sp->OnDetectClosestPoints(ct, solid[0]->GetCenterPosition());
 	}
 	if(inLocal == 1){
@@ -76,16 +74,74 @@ void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngineImp*
 
 
 //----------------------------------------------------------------------------
-// PHHapticEngineImp
+// PHHapticRenderImp
 
-void PHHapticEngineImp::Step(){
-	UpdateHapticPointer();
-	StartDetection();
+double PHHapticRenderImp::GetPhysicsTimeStep(){
+	return engine->GetScene()->GetTimeStep();
+}
+double PHHapticRenderImp::GetHapticTimeStep(){
+	return engine->hdt;
 }
 
-void PHHapticEngineImp::UpdateHapticPointer(){};
+int PHHapticRenderImp::NHapticPointers(){
+	return engine->hapticPointers.size();
+}
+PHHapticPointer** PHHapticRenderImp::GetHapticPointers(){
+	return engine->hapticPointers.empty() ? NULL : (PHHapticPointer**)&*engine->hapticPointers.begin();
+}
+int PHHapticRenderImp::NHapticSolids(){
+	return engine->hapticSolids.size();
+}
+PHSolidsForHaptic** PHHapticRenderImp::GetHapticSolids(){
+	return engine->hapticPointers.empty() ? NULL : (PHSolidsForHaptic**)&*engine->hapticSolids.begin();
+}
+PHSolidPairForHaptic* PHHapticRenderImp::GetSolidPairForHaptic(int i, int j){
+	return engine->solidPairs.item(i, j);
+}
 
-void PHHapticEngineImp::StartDetection(){
+//----------------------------------------------------------------------------
+// PHHapticEngine
+PHHapticEngineDesc::PHHapticEngineDesc(){
+	bHaptic = false;
+	hdt = 0.001;
+}
+
+PHHapticEngine::PHHapticEngine(){
+		bHaptic = false;
+		renderImp = DBG_NEW PHHapticRenderImpulse();
+		renderImp->engine = this;
+		renderMode = NONE;
+		renderImps.push_back(renderImp);
+}
+
+void PHHapticEngine::SetRenderMode(RenderMode r){
+	renderMode = r;
+
+	switch(renderMode){
+		case NONE:
+				DSTR << "You must set haptic render mode." << std::endl; 
+			break;
+		case IMPULSE:		
+			for(int i = 0; i < (int)renderImps.size(); i++){
+				if(DCAST(PHHapticRenderImpulse, renderImps[i])){
+					renderImp = renderImps[i];
+					return;
+				}
+			}
+			renderImp = DBG_NEW PHHapticRenderImpulse();
+			break;
+		default:
+				return;
+			break;
+	}
+	renderImp->engine = this;
+	renderImps.push_back(renderImp);
+}
+
+
+void PHHapticEngine::UpdateHapticPointer(){};
+
+void PHHapticEngine::StartDetection(){
 	UpdateEdgeList();
 	for(int i = 0; i < (int)hapticPointers.size(); i++){
 		Detect(hapticPointers[i]);
@@ -100,7 +156,7 @@ void PHHapticEngineImp::StartDetection(){
 	}
 }
 
-void PHHapticEngineImp::UpdateEdgeList(){
+void PHHapticEngine::UpdateEdgeList(){
 	edges.clear();
 	Vec3f dir[3] = { Vec3f(1, 0, 0), Vec3f(0, 1, 0), Vec3f(0, 0, 1) };
 	for(int i = 0; i < (int)solids.size(); i++){
@@ -114,7 +170,7 @@ void PHHapticEngineImp::UpdateEdgeList(){
 	}
 }
 
-void PHHapticEngineImp::Detect(PHHapticPointer* q){
+void PHHapticEngine::Detect(PHHapticPointer* q){
 	int ct = GetScene()->GetCount();
 	int dt = GetScene()->GetTimeStep();
 	const int pointerID = q->GetID();
@@ -176,7 +232,7 @@ void PHHapticEngineImp::Detect(PHHapticPointer* q){
 	}
 }
 
-bool PHHapticEngineImp::AddChildObject(ObjectIf* o){
+bool PHHapticEngine::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s && std::find(solids.begin(), solids.end(), s) == solids.end()){
 		solids.push_back(s);				// solids‚Ésolid‚ð•Û‘¶(pointer‚àŠÜ‚Ü‚ê‚é)
@@ -205,7 +261,7 @@ bool PHHapticEngineImp::AddChildObject(ObjectIf* o){
 	return false;
 }
 
-bool PHHapticEngineImp::DelChildObject(ObjectIf* o){
+bool PHHapticEngine::DelChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s){
 		PHSolids::iterator is = find(solids.begin(), solids.end(), s);
@@ -230,20 +286,4 @@ bool PHHapticEngineImp::DelChildObject(ObjectIf* o){
 	return false;
 }
 
-//----------------------------------------------------------------------------
-// PHHapticEngine
-
-void PHHapticEngine::SetRenderMode(RenderMode r){
-	renderMode = r;
-	switch(renderMode){
-		case NONE:
-			 renderImp = DBG_NEW PHHapticRenderMulti();
-			break;
-		case IMPULSE:
-			//render = DBG_NEW 
-			break;
-		default:
-			break;
-	}
-}
 } // namespace Spr

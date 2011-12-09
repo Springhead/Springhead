@@ -10,6 +10,7 @@ void MyApp::Init(int argc, char* argv[]){
 		FWApp::Init(argc, argv);
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();
 		phscene = GetSdk()->GetScene()->GetPHScene();
+		phscene->SetTimeStep(0.05);
 		CDBoxDesc bd;
 		
 		// °‚ðì¬
@@ -42,8 +43,11 @@ void MyApp::Init(int argc, char* argv[]){
 
 		//box = phscene->CreateHapticPointer();
 		//box->AddShape(phSdk->CreateShape(bd));
+
+		DSTR << phscene << std::endl;
 		PHHapticEngine* h = phscene->GetHapticEngine()->Cast();
-		h->SetRenderMode(PHHapticEngine::NONE);
+		h->SetRenderMode(PHHapticEngine::IMPULSE);
+		h->EnableHaptic(true);
 
 		UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);
 		timer->SetResolution(1);					// •ª‰ð”\(ms)
@@ -57,9 +61,10 @@ void MyApp::TimerFunc(int id){
 	if(timerID == id){
 		phscene->StepHapticLoop();
 	}else{
-		UserFunc();
-		//GetSdk()->Step();
-		GetCurrentWin()->GetScene()->Step();
+		//UserFunc();
+		PHHapticEngine* h = GetCurrentWin()->GetScene()->GetPHScene()->GetHapticEngine()->Cast();
+		h->StepSimulation();
+
 		PostRedisplay();
 		//DSTR << "Step Scene" << std::endl;
 	}
@@ -69,7 +74,8 @@ void MyApp::TimerFunc(int id){
 void MyApp::UserFunc(){
 	PHScene* p = phscene->Cast();
 	PHHapticEngine* h = p->GetHapticEngine()->Cast();
-	
+	DSTR << h->renderImps.size() << std::endl;
+
 }
 
 void MyApp::ContactAnalysis(){
