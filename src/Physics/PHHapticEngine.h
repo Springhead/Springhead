@@ -8,8 +8,10 @@
 #ifndef PHHAPTICENGINE_H
 #define PHHAPTICENGINE_H
 
+#include <Springhead.h>
 #include <Physics/PHContactDetector.h>
 
+using namespace PTM;
 namespace Spr{;
 
 //----------------------------------------------------------------------------
@@ -21,6 +23,7 @@ protected:
 	float localRange;
 public:
 	std::vector<int> neighborSolidIDs;
+	HIBaseIf* humanInterface;
 	PHHapticPointer(){ localRange = 1.0; }
 	void	SetID(int id){ solidID = id; }
 	int		GetID(){ return solidID; }
@@ -55,7 +58,8 @@ class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
 class PHSolidPairForHaptic;
 class PHShapePairForHaptic : public CDShapePair{
 public:	
-	PHSolidPairForHaptic* solidPair;
+	//PHSolidPairForHaptic* solidPair;
+
 	Posed lastShapePoseW[2];
 	Vec3d lastClosestPoint[2];	///< 前回の近傍物体の接触点(ローカル座標)
 	Vec3d lastNormal;			///< 前回の近傍物体の提示面の法線
@@ -64,6 +68,11 @@ public:
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< Vec3d > pointerSection;	///< ポインタの接触頂点(ローカル座標)
 	std::vector< Vec3d > solidSection;		///< 剛体の接触頂点(ローカル座標)
+
+	Vec3d test_force;				///< 予測シミュレーションで使うテスト力
+	Vec3d test_torque;				///< 予測シミュレーションで使うテストトルク
+	Vec3d impulse;					///< 物理プロセスが1ステップ終わるまでに力覚ポインタが加えた力積
+
 
 	PHShapePairForHaptic(){}
 	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
@@ -76,13 +85,19 @@ public:
 //----------------------------------------------------------------------------
 // PHSolidPairForHaptic
 class PHHapticEngineImp;
-class PHSolidPairForHaptic : public PHSolidPair< PHShapePairForHaptic, PHHapticEngineImp >, public Object{
+class PHSolidPairForHaptic : public PHSolidPair< PHShapePairForHaptic, PHHapticEngine >, public Object{
 public:
-	typedef PHSolidPair<PHShapePairForHaptic, PHHapticEngineImp> base_type;
+	typedef PHSolidPair<PHShapePairForHaptic, PHHapticEngine> base_type;
 	typedef base_type::shapepair_type shapepair_type;
 	typedef base_type::engine_type engine_type;
 
 	int inLocal;	// 0:NONE, 1:in local first, 2:in local
+	struct Accelerance{
+		Vec3d force;					// LocalDynamicsで使う力
+		TMatrixRow<6, 3, double> A;		// LocalDynamicsで使うアクセレランス
+		std::vector< Vec3d > f;			// LocalDynamics6Dで使う力
+		TMatrixRow<6, 6, double> Minv;  // LocalDynamics6Dで使うアクセレランス
+	} accelerance;
 	
 	/// 交差が検知された後の処理
 	virtual bool Detect(engine_type* engine, unsigned int ct, double dt);
@@ -94,77 +109,89 @@ public:
 protected:
 };
 
-//----------------------------------------------------------------------------
-// PHHapticEngineImp
-class PHHapticEngineImp : public PHContactDetector< PHShapePairForHaptic, PHSolidPairForHaptic, PHHapticEngineImp >{
-public:
-
-	PHHapticPointers hapticPointers;
-	PHSolidsForHaptic hapticSolids;
-	struct Edge{ Vec3f min, max; };
-	std::vector< Edge > edges;
-
-	///< シミュレーションループの更新（PHScene::Integrate()からコール）
-	virtual void Step();
-	///< 力覚ポインタの状態の更新
-	virtual void UpdateHapticPointer();
-	///< 力覚レンダリング用の衝突判定開始
-	virtual void StartDetection();
-	///< BBoxの向きを更新
-	virtual void UpdateEdgeList();
-	///< ある剛体の近傍の剛体をAABBでみつける（rangeはBBoxをさらにrange分だけ広げる
-	virtual void Detect(PHHapticPointer* q);
-	int GetPriority() const {return SGBP_HAPTICENGINE;}
-	///< 剛体の追加
-	virtual bool AddChildObject(ObjectIf* o);
-	///< 剛体の削除
-	virtual bool DelChildObject(ObjectIf* o);
-
-
-	/// HapticLoopの更新
-	virtual void StepHapticLoop(){};
-};
 
 //----------------------------------------------------------------------------
-// PHHapticEngine
-class PHHapticRenderImp : public UTRefCount{
+// PHHapticRenderImp
+class PHHapticRenderImp : public SceneObject{
+	SPR_OBJECTDEF_NOIF(PHHapticRenderImp);
 public:
-	PHHapticEngineImp* engineImp;
+	PHHapticEngine* engine;
 	PHHapticRenderImp(){}
 	virtual void Step(){};
 	virtual void StepHapticLoop(){};
+
+	double GetPhysicsTimeStep();
+	double GetHapticTimeStep();
+	int NHapticPointers();
+	PHHapticPointer** GetHapticPointers();
+	int NHapticSolids();
+	PHSolidsForHaptic** GetHapticSolids();
+	PHSolidPairForHaptic* GetSolidPairForHaptic(int i, int j);
+
+	///< デバック用シミュレーション実行
+	virtual void StepSimulation(){};
 };
 
 //----------------------------------------------------------------------------
 // PHHapticEngine
-class PHHapticEngine : public PHContactDetector< PHShapePairForHaptic, PHSolidPairForHaptic, PHHapticEngine >{
-	SPR_OBJECTDEF1(PHHapticEngine, PHEngine);
-public:
+
+
+struct PHHapticEngineDesc{
 	bool bHaptic;
-	PHHapticEngineImp* engineImp;
+	double hdt;
+	PHHapticEngineDesc();
+};
+class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector< PHShapePairForHaptic, PHSolidPairForHaptic, PHHapticEngine >{
+public:
+	SPR_OBJECTDEF1(PHHapticEngine, PHEngine);
+	ACCESS_DESC(PHHapticEngine);
 	PHHapticRenderImp* renderImp;
+	std::vector< PHHapticRenderImp* > renderImps;
+	PHHapticPointers hapticPointers;
+	PHSolidsForHaptic hapticSolids;
+	typedef std::vector< HIBaseIf* > HIBaseIfs;
+	HIBaseIfs humanInterfaces;
+
+	struct Edge{ Vec3f min, max; };
+	std::vector< Edge > edges;
+
 	enum RenderMode{
 		NONE,
 		IMPULSE,
 	} renderMode;
 
-	PHHapticEngine(){
-		bHaptic = false;
-		engineImp = DBG_NEW PHHapticEngineImp();
-		renderImp = DBG_NEW PHHapticRenderImp();
-	}
-	virtual void EnableHaptic(bool b){ bHaptic = b; }
-	virtual void SetScene(SceneIf* s){ 
-		PHEngine::SetScene(s);
-		engineImp->SetScene(s);
-	}
-	void SetRenderMode(RenderMode r);
-	virtual void Step(){ if(bHaptic) renderImp->Step(); }
-	virtual bool AddChildObject(ObjectIf* o){ return engineImp->AddChildObject(o); }
-	virtual bool DelChildObject(ObjectIf* o){ return engineImp->DelChildObject(o); }
-	virtual void UpdateShapePairs(PHSolid* solid){ engineImp->UpdateShapePairs(solid); }
+	PHHapticEngine();
 
+	///< 力覚提示計算のON/OFF
+	void EnableHaptic(bool b){ bHaptic = b; }
+	///< レンダリングモードの選択
+	void SetRenderMode(RenderMode r);
+	///< シミュレーションループの更新（PHScene::Integrate()からコール）
+	virtual void Step(){ if(bHaptic) renderImp->Step(); }
+	///< 力覚ループの更新	
 	virtual void StepHapticLoop(){ if(bHaptic) renderImp->StepHapticLoop(); }
+	///< 力覚ループの刻み
+	void SetHapticTimeStep(double dt = 0.001){ hdt = dt; }
+
+	///< 力覚ポインタの状態の更新
+	virtual void UpdateHapticPointer();
+	///< 力覚レンダリング用の衝突判定開始
+	virtual void StartDetection();
+	///< BBoxの向きを更新
+	void UpdateEdgeList();
+	///< ある剛体の近傍の剛体をAABBでみつける（rangeはBBoxをさらにrange分だけ広げる
+	void Detect(PHHapticPointer* q);
+	int GetPriority() const {return SGBP_HAPTICENGINE;}
+	///< 剛体の追加
+	bool AddChildObject(ObjectIf* o);
+	///< 剛体の削除
+	bool DelChildObject(ObjectIf* o);
+
+	///< デバック用シミュレーション実行
+	///（PHScene::Stepの変わりに呼ぶ）
+	virtual void StepSimulation(){ renderImp->StepSimulation(); }
+
+
 
 };
 
