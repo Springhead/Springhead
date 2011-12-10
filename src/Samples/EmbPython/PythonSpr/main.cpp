@@ -137,6 +137,7 @@ void EPLoopInit(void* arg) {
 	PyObject *dict = PyModule_GetDict(m);
 
 	ACCESS_SPR_FROM_PY(FWSceneIf,			fwScene,		app->fwScene		);
+	ACCESS_SPR_FROM_PY(HITrackballIf,		hiTrackball,	app->GetCurrentWin()->GetTrackball() );
 	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator,	app->spaceNavigator	);
 
 	ostringstream loadfile;
