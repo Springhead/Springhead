@@ -126,6 +126,7 @@ void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp
 	//節点の周囲流体温度の設定(K,C,Fなどの行列ベクトルの作成後に実行必要あり)
 //	if(vertices[id].Tc != temp){					//更新する節点のTcが変化した時だけ、TcやFベクトルを更新する
 		SetLocalFluidTemp(id,temp);
+		vertices[id].heatTransRatio = heatTransRatio;
 		//熱伝達境界条件が使われるように、する。				///	＋＝してベクトルを作っているので、下のコードでは、余計に足してしまっていて、正しい行列を作れない。
 		//for(unsigned i =0;i < vertices[id].tets.size();i++){
 		//	CreateVecfLocal(tets[vertices[id].tets[i]]);		//	Tcを含むベクトルを更新する
@@ -144,8 +145,13 @@ void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp
 //	if(vertices[id].Tc != temp){					//更新する節点のTcが変化した時だけ、TcやFベクトルを更新する
 		SetLocalFluidTemp(id,temp);
 		//熱伝達境界条件が使われるように、する。
-		for(unsigned i =0;i < vertices[id].tets.size();i++){
-			CreateVecfLocal(tets[vertices[id].tets[i]]);		//	Tcを含むベクトルを更新する
+		//for(unsigned i =0;i < vertices[id].tets.size();i++){
+		//	CreateVecfLocal(tets[vertices[id].tets[i]]);		//	Tcを含むベクトルを更新する
+		//}
+		InitCreateVecf();
+		for(unsigned i=0; i < tets.size();i++){
+			CreateVecfLocal(tets[i]);				///	VeecFの再作成
+													///	MatK2の再作成→matK1はmatk1の変数に入れておいて、matk2だけ、作って、加算
 		}
 //	}
 }
@@ -809,7 +815,7 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
 		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
 		//SetInitThermoConductionParam(0.574,970,1.96,25);
-	SetInitThermoConductionParam(0.574,970,0.196,25 * 0.0001 * 1000.0);
+	SetInitThermoConductionParam(0.574,970,0.196,25 * 0.0001 * 1.0);
 		//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
 
 	//計算に用いるマトリクス、ベクトルを作成（メッシュごとの要素剛性行列/ベクトル⇒全体剛性行列/ベクトル）
@@ -915,20 +921,20 @@ void PHFemMeshThermo::CreateMatcLocal(Tet tets){
 
 
 	//	for debug
-	DSTR << "dMatCAll : " << std::endl;
-	for(unsigned j =0;j < vertices.size();j++){
-		DSTR << j << "th : " << dMatCAll[0][j] << std::endl;
-	}
+	//DSTR << "dMatCAll : " << std::endl;
+	//for(unsigned j =0;j < vertices.size();j++){
+	//	DSTR << j << "th : " << dMatCAll[0][j] << std::endl;
+	//}
 	// ネギについて非0成分になった。
 
 	//	調べる
 	//dMatKAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
 	// try catch文にする
-	for(unsigned j = 0; j < vertices.size() ; j++){
-		if(dMatCAll[0][j] ==0.0){
-			DSTR << "dMatCAll[0][" << j << "] element is blank" << std::endl;
-		}
-	}
+	//for(unsigned j = 0; j < vertices.size() ; j++){
+	//	if(dMatCAll[0][j] ==0.0){
+	//		DSTR << "dMatCAll[0][" << j << "] element is blank" << std::endl;
+	//	}
+	//}
 	int piyodebug =0;
 }
 
@@ -1115,7 +1121,8 @@ void PHFemMeshThermo::CreateMatkLocal(Tet tets){
 	// try catch文にする
 	for(unsigned j = 0; j < vertices.size() ; j++){
 		if(dMatKAll[0][j] ==0.0){
-			DSTR << "dMatKAll[0][" << j << "] element is blank" << std::endl;
+			DSTR << "Creating dMatKAll error!? : dMatKAll[0][" << j << "] element is blank" << std::endl;
+			DSTR << "If " << j <<" 's blank eroors didn't banished until display simulation scene, I recommened Source Code Check!" <<std::endl;  
 		}
 	}
 

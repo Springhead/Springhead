@@ -49,7 +49,7 @@ public:
 	//	その際に以下の関数を用いれば良い。
 	void UsingFixedTempBoundaryCondition(unsigned id,double temp);			//	温度固定境界条件:S_1	指定節点の温度を変える
 	void UsingHeatTransferBoundaryCondition(unsigned id,double temp);		//	熱伝達境界条件:S_3		指定節点の周囲流体温度を変える	
-	void UsingHeatTransferBoundaryCondition(unsigned id,double temp,double heatTransratio);		///	熱伝達率も設定可能な関数
+	void UsingHeatTransferBoundaryCondition(unsigned id,double temp,double heatTransratio);		///	熱伝達率も設定可能な関数		///	名前を変えるべき　要改善
 	//Set に
 
 	int GetSurfaceVertex(int id){return surfaceVertices[id];};
@@ -58,9 +58,7 @@ public:
 		UsingHeatTransferBoundaryCondition(id,temp);				/// PHFemMeshThermo::SetLocalFluidTemp()で周囲流体温度の設定、CreateVecfLocal()の更新
 	};
 	void SetVertexTc(int id,double temp,double heatTransRatio){			///	熱伝達率を変更できるIf
-		UsingHeatTransferBoundaryCondition(id,temp);
-		vertices[id].heatTransRatio = heatTransRatio;				///	その節点での熱伝達率を設定
-		//	熱伝達を含む行列を更新
+		UsingHeatTransferBoundaryCondition(id,temp,heatTransRatio);		//	熱伝達を含む行列を更新
 	};
 	Vec3d GetPose(unsigned id){ return vertices[id].pos; };
 	Vec3d GetSufVtxPose(unsigned id){return vertices[surfaceVertices[id]].pos; };
