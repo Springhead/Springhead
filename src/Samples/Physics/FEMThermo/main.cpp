@@ -90,7 +90,7 @@ public:
 		
 		//	ファイルのロード
 		UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-		GetSdk()->LoadScene("sceneTHtest3.spr", import);			// ファイルのロード			// scene.spr:negiをロード, scene2.spr:デバッグ用の直方体, scene3.spr:穴あきcheeseをロード, sceneTHtest.spr:フライパンなどインポートのテスト
+		GetSdk()->LoadScene("sceneTHtest.spr", import);			// ファイルのロード			// scene.spr:negiをロード, scene2.spr:デバッグ用の直方体, scene3.spr:穴あきcheeseをロード, sceneTHtest.spr:フライパンなどインポートのテスト
 		numScenes = GetSdk()->NScene();
 		if (numScenes) SwitchScene(GetSdk()->NScene()-1);
 
@@ -172,8 +172,8 @@ public:
 		//	フライパンを取ってくる
 		FWObjectIf* pan		=	DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
 		//	食材を取ってくる
-//		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
-		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwCheese")->Cast();
+		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+//		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwCheese")->Cast();
 		//	ワールド座標に変換する
 
 		//DSTR <<"pan: " << pan << std::endl;
@@ -214,7 +214,7 @@ public:
 				pfem = tmesh->GetChildObject(i)->Cast();
 				//	pfemが取れていることを確認
 				if(pfem){
-					DSTR << pfem->NSurfaceVertices() <<std::endl;
+					//DSTR << pfem->NSurfaceVertices() <<std::endl;
 					for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
 						Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
 						Vec3d posOnPan = afMeshToPan * pfemPose;
@@ -225,6 +225,10 @@ public:
 						if(pfemPose.y >= -0.01 && pfemPose.y <= 0.0 ){
 							/// vertexの節点の座標がある範囲にある時、熱伝達境界条件で加熱する
 							pfem->SetVertexTc(j,tempTc);
+							//DSTR << "pfem->GetStepCount(): " << pfem->GetStepCount() << std::endl;
+							//DSTR << "afPan: " << afPan <<std::endl;
+							//DSTR << "afMesh: " << afMesh <<std::endl;
+							//DSTR << "pfemPose.y: " << pfemPose.y << std::endl;
 							//UsingHeatTransferBoundaryCondition		を呼び出す
 							//DSTR << j << "th vertex.Tcに" << tempTc << "を設定" <<std::endl;
 							//Tcの更新？

@@ -39,6 +39,7 @@ public:
 	void SetVerticesTemp(double temp);					//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
 	void SetVerticesTemp(unsigned i,double temp);		// 節点iの温度をtemp度に設定し、それをTVEcAllに反映
 	void SetLocalFluidTemp(unsigned i,double temp);		//	接点iの周囲の節点温度をtemp度に設定
+	void UpdateheatTransRatio(unsigned id,double heatTrransRatio);	///	頂点の熱伝達率を更新し、行列を作り直す
 
 	//%%%%%%%%		熱伝導境界条件の設定関数の宣言		%%%%%%%%//
 	void SetThermalBoundaryCondition();				//	熱伝導境界条件の設定
@@ -48,24 +49,27 @@ public:
 	//	その際に以下の関数を用いれば良い。
 	void UsingFixedTempBoundaryCondition(unsigned id,double temp);			//	温度固定境界条件:S_1	指定節点の温度を変える
 	void UsingHeatTransferBoundaryCondition(unsigned id,double temp);		//	熱伝達境界条件:S_3		指定節点の周囲流体温度を変える	
+	void UsingHeatTransferBoundaryCondition(unsigned id,double temp,double heatTransratio);		///	熱伝達率も設定可能な関数
 	//Set に
 
 	int GetSurfaceVertex(int id){return surfaceVertices[id];};
 	int NSurfaceVertices(){return surfaceVertices.size();};
-	void SetVertexTc(int id,double temp){
-		UsingHeatTransferBoundaryCondition(id,temp);
-		//vertices[id].Tc = temp;
+	void SetVertexTc(int id,double temp){							///	熱伝達率は変えない
+		UsingHeatTransferBoundaryCondition(id,temp);				/// PHFemMeshThermo::SetLocalFluidTemp()で周囲流体温度の設定、CreateVecfLocal()の更新
 	};
-	void SetVertexTc(int id,double temp,double heatTrans){
+	void SetVertexTc(int id,double temp,double heatTransRatio){			///	熱伝達率を変更できるIf
 		UsingHeatTransferBoundaryCondition(id,temp);
-		//vertices[id].Tc = temp;
-		//	その節点での熱伝達率を設定
+		vertices[id].heatTransRatio = heatTransRatio;				///	その節点での熱伝達率を設定
 		//	熱伝達を含む行列を更新
 	};
 	Vec3d GetPose(unsigned id){ return vertices[id].pos; };
 	Vec3d GetSufVtxPose(unsigned id){return vertices[surfaceVertices[id]].pos; };
 
+	unsigned long StepCount;			//	Step数のカウントアップ		// 
+	unsigned long StepCount_;			//	Step数のカウントアップ	StepCountが何週目かを表すカウント	// 
 
+	unsigned long GetStepCount(){return StepCount;};
+	unsigned long GetStepCountCyc(){return StepCount_;};
 
 protected:
 	//PHFemMeshThermo内のみで用いる計算
@@ -131,19 +135,24 @@ protected:
 	//	温度固定境界条件を用いたいときには、熱伝達率（最後の引数）を入力しない。また、毎Step実行時に特定節点の温度を一定温度に保つようにする。
 	void SetInitThermoConductionParam(double thConduct,double roh,double specificHeat,double heatTrans);		//熱伝導率、密度、比熱、熱伝達率などのパラメーターを設定・代入
 
+	void SetHeatTransRatioToAllVertex();	//SetInit で設定している熱伝達係数を、節点(FemVertex)の構造体のメンバ変数に代入
+
+	void PrepareCreateMatrix();					///	行列作成で用いる入れ物などの初期化
+	void InitCreateVecf();						///	Vecfの作成前に実行する初期化処理
+
 	//	[K]:熱伝導マトリクスを作る関数群
 	void CreateMatk1k(Tet tets);				//kimura方式の計算法
 	void CreateMatk1b(Tet tets);				//yagawa1983の計算法の3次元拡張した計算法 b:book の意味
 	void CreateMatk2(Tet tets);					//四面体ごとに作るので、四面体を引数に取る
 	void CreateMatk2array();
-	void CreateMatkLocal();
+	void CreateMatkLocal(Tet tets);
 //	void CreateDumMatkLocal();					//	全要素が0のダミーk
 	void CreateMatKall();
 	//	[C]:熱容量マトリクスを作る関数
-	void CreateMatcLocal();						//	matC1,C2,C3・・・毎に分割すべき？
+	void CreateMatcLocal(Tet tets);						//	matC1,C2,C3・・・毎に分割すべき？
 	void CreateMatc(Tet tets);					//cの要素剛性行列を作る関数
 	//	{F}:熱流束ベクトルを作る関数
-	void CreateVecfLocal();						//
+	void CreateVecfLocal(Tet tets);						//
 	void CreateVecf3(Tet tets);					//
 	//	{T}:節点温度ベクトルを作る関数
 	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
@@ -202,8 +211,7 @@ protected:
 	//%%%%%%%%		バイナリスイッチの宣言		%%%%%%%%//
 	bool deformed;					//形状が変わったかどうか
 	
-	unsigned long StepCount;			//	Step数のカウントアップ		// 
-	unsigned long StepCount_;			//	Step数のカウントアップ		// 
+	
 	std::ofstream templog;
 
 
