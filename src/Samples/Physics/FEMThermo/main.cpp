@@ -204,7 +204,8 @@ public:
 
 			///	フライパンにとっての原点からの距離に応じて、加熱する
 			////	最外殻の節点のフライパンからの座標
-			double tempTc =200.0;
+			double tempTc =10.0;			//negitest 10.0		///	cheese 100.0
+
 			
 			//	pfemの定義
 			//	PHFemMEshThermの節点を取ってきて、加熱する
@@ -214,6 +215,12 @@ public:
 				pfem = tmesh->GetChildObject(i)->Cast();
 				//	pfemが取れていることを確認
 				if(pfem){
+					///	加熱温度の上がり方を制限
+					if(tempTc <= 250.0){ tempTc += tempTc * pfem->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
+					else{
+						tempTc = 250.0;
+					}
+
 					//DSTR << pfem->NSurfaceVertices() <<std::endl;
 					for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
 						Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
@@ -222,13 +229,14 @@ public:
 						//Vec3d pfemPose_ = pfem->GetSufVtxPose(pfem->GetSurfaceVertex(j));
 						//DSTR << j <<"th pfemPose_: " << pfemPose_ << std::endl;
 						/// cube_test.x用
-						if(pfemPose.y >= -0.01 && pfemPose.y <= 0.0 ){
+						if(pfemPose.y >= -0.01 && pfemPose.y <= 0.00 ){				///	pfemPose.y >= -0.0076 && pfemPose.y <= -0.0074 
 							/// vertexの節点の座標がある範囲にある時、熱伝達境界条件で加熱する
-							pfem->SetVertexTc(j,tempTc);
+//							pfem->SetVertexTc(j,tempTc);
+							pfem->SetVertexTc(j,tempTc,25.0);
 							//DSTR << "pfem->GetStepCount(): " << pfem->GetStepCount() << std::endl;
 							//DSTR << "afPan: " << afPan <<std::endl;
 							//DSTR << "afMesh: " << afMesh <<std::endl;
-							//DSTR << "pfemPose.y: " << pfemPose.y << std::endl;
+							DSTR << "j: "<<j<< ", pfemPose.y: " << pfemPose.y << std::endl;
 							//UsingHeatTransferBoundaryCondition		を呼び出す
 							//DSTR << j << "th vertex.Tcに" << tempTc << "を設定" <<std::endl;
 							//Tcの更新？
