@@ -72,12 +72,27 @@ void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine*
 		sf[i] = sp->shape[i]->GetMaterial().mu0;
 		df[i] = sp->shape[i]->GetMaterial().mu;
 	}
+
+#if 0
 	//	2010.07.30 バネ・ダンパを半分にしました。
 	reflexSpring    = ave(rs[0], rs[1]) * convertedMass / (float)(4*dt*dt);
 	reflexDamper    = ave(rd[0], rd[1]) * convertedMass / (float)(2*dt);
 	frictionSpring  = ave(fs[0], fs[1]) * convertedMass / (float)(4*dt*dt);
 	frictionDamper  = ave(fd[0], fd[1]) * convertedMass / (float)(2*dt);
-	if (reflexSpring > convertedMass / (float)(2*dt*dt)) 
+#else	
+	// 2011.12.12 susa
+	// http://springhead.info/control.pdf の記述だと下記のようになる
+	// また，ave(rs[0], rs[1])=0.2，ave(rd[0], rd[1])=0.6
+	// reflexSpring = 2000, reflexDamper = 3, convertedMass = 5.0e-3
+	// となるように設定すると，それっぽい挙動が得られる．
+	reflexSpring    = 2 * ave(rs[0], rs[1]) * convertedMass / (float)(dt*dt);
+	reflexDamper    = ave(rd[0], rd[1]) * convertedMass / (float)dt;	
+	frictionSpring  = 2 * ave(fs[0], fs[1]) * convertedMass / (float)(dt*dt);
+	frictionDamper  = ave(fd[0], fd[1]) * convertedMass / (float)dt;
+	//DSTR << reflexSpring << reflexDamper << std::endl;
+#endif
+	// ifに対しての処理が書かれていない．このままだとstaticFrictionが設定されない
+	//if (reflexSpring > convertedMass / (float)(2*dt*dt)) 
 
 
 	staticFriction  = ave(sf[0], sf[1]);
@@ -140,7 +155,7 @@ void PHSolidPairForPenalty::GenerateForce(){
 //	凸形状対に発生する反力の計算と最大摩擦力の計算
 //	すべて commonPoint を原点とした座標系で計算する．
 void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContactAnalysis* analyzer){
-	DSTR << "---------------------------------------------------------" << std::endl;
+	//DSTR << "---------------------------------------------------------" << std::endl;
 	cp->Clear();
 	Vec3f cog[2] = {solid[0]->GetCenterPosition() - cp->commonPoint, solid[1]->GetCenterPosition() - cp->commonPoint};
 	/*CDConvexMesh* cmesh[2] = {
@@ -329,7 +344,7 @@ void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, V
 	cp->reflexDamperTorque += triRefMomDa;
 
 	if (abs(a_b_normal) > 1.0){
-		DSTR << "a_b_normal:" << a_b_normal << " f:" << triFric << "  s:" << triRefSp.y << "  d:" << triRefDa.y << std::endl;
+		//DSTR << "a_b_normal:" << a_b_normal << " f:" << triFric << "  s:" << triRefSp.y << "  d:" << triRefDa.y << std::endl;
 	}
 	cp->dynaFric += triFric;
 	cp->dynaFricMom += triFricMom;
