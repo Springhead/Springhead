@@ -450,10 +450,10 @@ void CDContactAnalysis::CalcNormal(CDShapePair* cp){
 	int res = ContFindCommonPoint(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], 
 		-cp->normal, -DBL_MAX, 0, cp->normal, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
 	if (res <= 0){
-		DSTR << "Error in CDContactAnalysis::CalcNormal(): res:" << res << "dist:" << cp->depth << -n << std::endl;
-		DSTR << "cp:" << cp->shapePoseW[0]*cp->closestPoint[0] << cp->shapePoseW[1]*cp->closestPoint[1] << std::endl; 
-		ContFindCommonPointSaveParam(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], 
-			-n, -DBL_MAX, 0, n, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
+		//DSTR << "Error in CDContactAnalysis::CalcNormal(): res:" << res << "dist:" << cp->depth << -n << std::endl;
+		//DSTR << "cp:" << cp->shapePoseW[0]*cp->closestPoint[0] << cp->shapePoseW[1]*cp->closestPoint[1] << std::endl; 
+		//ContFindCommonPointSaveParam(cp->shape[0], cp->shape[1], cp->shapePoseW[0], cp->shapePoseW[1], 
+		//	-n, -DBL_MAX, 0, n, cp->closestPoint[0], cp->closestPoint[1], cp->depth);
 	}
 	cp->depth *= -1;
 	cp->center = cp->shapePoseW[0] * cp->closestPoint[0];
