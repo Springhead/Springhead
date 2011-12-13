@@ -37,16 +37,17 @@ void FWFemMesh::Sync(bool ph2gr){
 
 	//negitest
 	//焦げテクスチャの枚数
-	unsigned kogetex =5;
+	unsigned kogetex	= 5;
 	//サーモテクスチャの枚数
-	unsigned thtex = 5;
+	unsigned thtex		= 6;
 	//水分テクスチャの枚数
-	unsigned watex = 2;
+	unsigned watex		= 2;
 	
 	double dtex =(double) 1.0 / ( kogetex + thtex + watex);		//	テクスチャ奥行座標の層間隔
 	double texstart = dtex /2.0;								//	テクスチャ座標の初期値 = 焦げテクスチャのスタート座標
-	double thstart = texstart + kogetex * dtex ;				//	サーモのテクスチャのスタート座標
-	double wastart = texstart + kogetex * dtex + thtex * dtex;	//	水分量表示テクスチャのスタート座標
+	double wastart = texstart + kogetex * dtex ;	//	水分量表示テクスチャのスタート座標
+	double thstart = texstart + kogetex * dtex + 1.0 * dtex ;				//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
+	
 
 	//	50度刻み:テクスチャの深さ計算(0~50)	( vertices.temp - 50.0 ) * dtex / 50.0
 	//	50度刻み:テクスチャの深さ計算(50~100)	( vertices.temp - 100.0 ) * dtex / 50.0
@@ -90,31 +91,39 @@ void FWFemMesh::Sync(bool ph2gr){
 				//}
 
 				double temp = phMesh->vertices[pv].temp;
-				//	一個前のテクスチャ？⇒緑
-				if( temp < 0){				//	暫定的にひとつ前のテクスチャにする?何か、色を割り当てる。一目でわかる色に。
-					gvtx[stride*gv + tex + 2] = thstart - dtex /10.0;			//thstart直前は真っ黒焦げテクスチャなので、その適当値。サーモが非テクスチャ化されたら、別の色に。
+				// -50.0~0.0:aqua to blue		///	ここだけ、texzは座標値が減る
+				if(temp <= -50.0){
+					gvtx[stride*gv + tex + 2] = thstart;
 				}
-				//	緑⇒黄色
-				else if(temp <= 50.0 ){		//temp <0の時、どうしようか？	0.0 < temp	の条件を無くした
-					double yellow = temp * dtex / 50.0 + thstart;
-					gvtx[stride*gv + tex + 2] = temp * dtex / 50.0 + thstart;
+				else if(-50.0 < temp && temp <= 0){				//	暫定的にひとつ前のテクスチャにする?何か、色を割り当てる。一目でわかる色に。
+					gvtx[stride*gv + tex + 2] = (thstart ) + ((temp + 50.0) * dtex /50.0);			//thstart直前は真っ黒焦げテクスチャなので、その適当値。サーモが非テクスチャ化されたら、別の色に。
 				}
-				//	黄色⇒オレンジ
+				//	0~50.0:blue to green
+				else if(0.0 < temp && temp <= 50.0 ){
+					//double green = temp * dtex / 50.0 + thstart;
+					gvtx[stride*gv + tex + 2] = temp * dtex / 50.0 + thstart + dtex;
+				}
+				//	50.0~100.0:green to yellow
 				else if(50.0 < temp && temp <= 100.0){
-					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex /	 50.0 + thstart;
+					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex /	 50.0 + thstart + 2 * dtex;
 				}
-				//	オレンジ⇒赤
+				//	100.0~150:yellow to orange	
 				else if(100.0 < temp && temp <= 150.0){
-					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;
+					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
 				}
-				//	赤⇒ピンク
+				//	150~200:orange to red
 				else if(150.0 < temp && temp <= 200.0){
 					double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
-					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
 				}
-				//	ピンク	:色固定
-				else if(200.0 < temp){
-					gvtx[stride*gv + tex + 2] = dtex * 4.0 + thstart;
+				//	200~250:red to purple
+				else if(200.0 < temp && temp <= 250.0){
+					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
+				}
+				///	250~:only purple
+				else if(250.0 < temp){
+					gvtx[stride*gv + tex + 2] = dtex * 6.0 + thstart;
+					//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
 				}
 			}
 		}	

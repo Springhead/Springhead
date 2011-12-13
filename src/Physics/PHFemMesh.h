@@ -112,7 +112,7 @@ public:
 	std::vector<int> surfaceVertices;
 	///	面
 	std::vector<Face> faces;
-	///	面のうち物体表面のものが、faces[0]..faces[nSurfaceFace-1]
+	///	面のうち物体表面のものが、faces[0]..faces[nSurfaceFace-1]	以降は内側の面:faces[nSurfaceFace]..faces[faces.size()]
 	unsigned nSurfaceFace;
 	///	辺
 	std::vector<Edge> edges;
