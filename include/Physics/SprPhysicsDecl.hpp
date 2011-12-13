@@ -40,6 +40,7 @@
 	Vec3d GetSufVtxPose(unsigned int id){	return	base::GetSufVtxPose(id);}	\
 	unsigned long GetStepCount(){	return	base::GetStepCount();}	\
 	unsigned long GetStepCountCyc(){	return	base::GetStepCountCyc();}	\
+	void SetVertexTemp(unsigned int id, double temp){	base::SetVertexTemp(id, temp);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKEndEffectorIf(base)	\
 	void SetSolid(Spr::PHSolidIf* solid){	base::SetSolid(solid);}	\
