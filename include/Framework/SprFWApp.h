@@ -233,12 +233,21 @@ public:
 	void GRInit(int argc = 0, char* argv[] = NULL, int type = TypeGLUT);
 
 public:
+	// タイマー
+	typedef std::vector< UTRef<UTTimerIf> > Timers;
+	Timers timers;
 
 	/** @brief タイマーを作成する
 		@param	mode	タイマの種類
 		@return			タイマオブジェクト
 	 */
 	UTTimerIf*	CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
+
+	/** @breif タイマーを取得する
+		@param タイマー番号
+		@return タイマーオブジェクト
+	*/
+	UTTimerIf* GetTimer(int i);
 
 public:
 	/**  削除候補API  **/

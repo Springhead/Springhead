@@ -244,7 +244,13 @@ UTTimerIf*  FWApp::CreateTimer(UTTimerIf::Mode mode){
 	UTTimerIf* timer = UTTimerIf::Create();
 	timer->SetMode(mode);
 	timer->SetCallback(FWApp_TimerCallback, this);
+	timers.push_back(timer);
 	return timer;
+}
+
+UTTimerIf* FWApp::GetTimer(int i){
+	if((int)timers.size() > 0) return timers[i];
+	return NULL;
 }
 
 }
