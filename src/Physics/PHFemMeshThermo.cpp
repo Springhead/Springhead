@@ -115,9 +115,9 @@ void PHFemMeshThermo::ScilabTest(){
 
 void PHFemMeshThermo::UsingFixedTempBoundaryCondition(unsigned id,double temp){
 	//温度固定境界条件
-	SetVerticesTemp(id,temp);
+	SetVertexTemp(id,temp);
 	//for(unsigned i =0;i < vertices.size()/3; i++){
-	//	SetVerticesTemp(i,temp);
+	//	SetVertexTemp(i,temp);
 	//}
 }
 
@@ -800,7 +800,7 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 			//PHFemMeshThermoのオブジェクトを作る際に、ディスクリプタに値を設定して作る
 		
 	//節点温度の初期設定(行列を作る前に行う)
-	SetVerticesTemp(-50.0);			///	初期温度の設定
+	SetVerticesTempAll(0.0);			///	初期温度の設定
 
 	//周囲流体温度の初期化(0.0度にする)
 	InitTcAll();
@@ -1581,6 +1581,23 @@ PTM::TMatrixRow<4,4,double> PHFemMeshThermo::Create44Mat21(){
 	}
 	return MatTemp;
 }
+void PHFemMeshThermo::CreateMatk2f(Face faces){
+	//初期化
+	
+	////最後に入れる行列を初期化
+	//for(unsigned i =0; i < 4 ;i++){
+	//	for(unsigned j =0; j < 4 ;j++){
+	//		matk2[i][j] = 0.0;
+	//	}
+	//}
+
+	//処理
+	//CreateMAtk2fを呼ぶ関数をこれでくくる	for(unsigned i=0;i < nSurfaceFace - 1 ; i++){}
+	if(faces.area ==0) faces.area = CalcTriangleArea(faces.vertices[0],faces.vertices[1],faces.vertices[2]);
+	//for(unsigned i=0; i < 3;i++){
+	//	vertices[faces.vertices[i]].tets
+	//}
+}
 
 void PHFemMeshThermo::CreateMatk2(Tet tets){
 	//この計算を呼び出すときに、各四面体ごとに計算するため、四面体の0番から順にこの計算を行う
@@ -1738,12 +1755,12 @@ void PHFemMeshThermo::SetLocalFluidTemp(unsigned i,double temp){
 	vertices[i].Tc = temp;			//節点の周囲流体温度の設定
 }
 
-void PHFemMeshThermo::SetVerticesTemp(unsigned i,double temp){
+void PHFemMeshThermo::SetVertexTemp(unsigned i,double temp){
 	vertices[i].temp = temp;
 	SetTempToTVecAll(i);
 }
 
-void PHFemMeshThermo::SetVerticesTemp(double temp){
+void PHFemMeshThermo::SetVerticesTempAll(double temp){
 	for(std::vector<unsigned int>::size_type i=0; i < vertices.size() ; i++){
 			vertices[i].temp = temp;
 		}

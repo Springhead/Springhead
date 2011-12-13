@@ -60,6 +60,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	Vec3d GetSufVtxPose(unsigned id);
 	unsigned long GetStepCount();		///	カウント１
 	unsigned long GetStepCountCyc();		///	カウント１が何週目か	計算式:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
+	void SetVertexTemp(unsigned id,double temp);
 };
 
 //@}

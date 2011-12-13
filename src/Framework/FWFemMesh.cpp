@@ -30,11 +30,12 @@ FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 }
 void FWFemMesh::Sync(bool ph2gr){	
 	//	テスト用
-	static double value, delta;
-	if (value <= 0) delta = 0.01;
-	if (value >= 1) delta = -0.01;
-	value += delta;
+	//static double value, delta;
+	//if (value <= 0) delta = 0.01;
+	//if (value >= 1) delta = -0.01;
+	//value += delta;
 
+	///	テクスチャと温度、水分量との対応表は、Samples/Physics/FEMThermo/テクスチャの色と温度の対応.xls	を参照のこと
 	//negitest
 	//焦げテクスチャの枚数
 	unsigned kogetex	= 5;
@@ -90,13 +91,14 @@ void FWFemMesh::Sync(bool ph2gr){
 				//	}
 				//}
 
+				//サーモが非テクスチャ化された場合、テクスチャのロードは不要になるので、以下のコードを変更
 				double temp = phMesh->vertices[pv].temp;
-				// -50.0~0.0:aqua to blue		///	ここだけ、texzは座標値が減る
+				// -50.0~0.0:aqua to blue
 				if(temp <= -50.0){
 					gvtx[stride*gv + tex + 2] = thstart;
 				}
-				else if(-50.0 < temp && temp <= 0){				//	暫定的にひとつ前のテクスチャにする?何か、色を割り当てる。一目でわかる色に。
-					gvtx[stride*gv + tex + 2] = (thstart ) + ((temp + 50.0) * dtex /50.0);			//thstart直前は真っ黒焦げテクスチャなので、その適当値。サーモが非テクスチャ化されたら、別の色に。
+				else if(-50.0 < temp && temp <= 0){	
+					gvtx[stride*gv + tex + 2] = (thstart ) + ((temp + 50.0) * dtex /50.0);
 				}
 				//	0~50.0:blue to green
 				else if(0.0 < temp && temp <= 50.0 ){

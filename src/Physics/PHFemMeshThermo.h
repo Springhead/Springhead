@@ -36,8 +36,8 @@ public:
 	///熱伝導シミュレーションでエンジンが用いるステップ		//(オーバーライド)
 	void Step(double dt);
 
-	void SetVerticesTemp(double temp);					//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
-	void SetVerticesTemp(unsigned i,double temp);		// 節点iの温度をtemp度に設定し、それをTVEcAllに反映
+	void SetVerticesTempAll(double temp);					//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
+	void SetVertexTemp(unsigned i,double temp);		// 節点iの温度をtemp度に設定し、それをTVEcAllに反映
 	void SetLocalFluidTemp(unsigned i,double temp);		//	接点iの周囲の節点温度をtemp度に設定
 	void UpdateheatTransRatio(unsigned id,double heatTrransRatio);	///	頂点の熱伝達率を更新し、行列を作り直す
 
@@ -142,6 +142,8 @@ protected:
 	void CreateMatk1k(Tet tets);				//kimura方式の計算法
 	void CreateMatk1b(Tet tets);				//yagawa1983の計算法の3次元拡張した計算法 b:book の意味
 	void CreateMatk2(Tet tets);					//四面体ごとに作るので、四面体を引数に取る
+	void CreateMatk2f(Face faces);				//四面体ごとに作る式になっているが、外殻の三角形face毎に作る　facesのf
+
 	void CreateMatk2array();
 	void CreateMatkLocal(Tet tets);
 //	void CreateDumMatkLocal();					//	全要素が0のダミーk
