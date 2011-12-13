@@ -800,7 +800,7 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 			//PHFemMeshThermoのオブジェクトを作る際に、ディスクリプタに値を設定して作る
 		
 	//節点温度の初期設定(行列を作る前に行う)
-	SetVerticesTemp(0.0);
+	SetVerticesTemp(-50.0);			///	初期温度の設定
 
 	//周囲流体温度の初期化(0.0度にする)
 	InitTcAll();
@@ -1519,7 +1519,7 @@ double PHFemMeshThermo::CalcTetrahedraVolume(Tet tets){
 }
 
 double PHFemMeshThermo::CalcTriangleArea(int id0, int id1, int id2){
-	double area=0.0;
+	double area=0.0;								///	要改善	faces[id].areaに値を入れる 
 
 	//行列式の成分を用いて面積を求める
 	//triarea =
