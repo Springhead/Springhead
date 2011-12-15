@@ -55,12 +55,14 @@ public:
 		Vec3d pos;
 		std::vector<int> tets;
 		std::vector<int> edges;
+		std::vector<int> faces;
 		FemVertex();
 		double temp;		//	温度
 		double k;			//	全体剛性行列Kの要素　計算に利用
 		double c;			//	同上
 		double Tc;			//	節点周囲の流体温度
 		double heatTransRatio;		//	その節点での熱伝達率
+		bool vtxDeformed;		//	四面体の変形でこの節点がローカル座標基準で移動したかどうか
 	};
 	//	四面体
 	struct Tet{
@@ -69,6 +71,10 @@ public:
 		int edges[6];		//	対応する辺のID。0:辺01, 1:辺12, 2:辺20, 3:辺03, 4:辺13, 5:辺23
 		int& edge(int i, int j);
 		double volume;		//	積分計算で用いるための体積
+		//matk1,matk2 -> matk[3] に統合予定
+		PTM::TMatrixRow<4,4,double> matk[3];
+		PTM::TMatrixRow<4,4,double> matk1;
+		PTM::TMatrixRow<4,4,double> matk2;
 	};
 	//	四面体の面。
 	class Face{
@@ -83,8 +89,11 @@ public:
 		///	頂点IDで比較
 		bool operator == (const Face& f2);
 		//行列計算に用いるための面積
-		double area;			//四面体の各面の面積
-		double heatTransRatio;		//	その面における熱伝達率
+		double area;				///	四面体の各面の面積
+		double heatTransRatio;		///	その面における熱伝達率		///	構成節点の熱伝達率の相加平均す		///	すべての関数で、この値を更新できていないので、信用できない。
+		bool alphaUpdated;			///	属する頂点の熱伝達率が更新された際にtrueに	
+		bool deformed;				///	属する頂点の移動により、変形されたとき
+
 	};
 	//	辺
 	struct Edge{

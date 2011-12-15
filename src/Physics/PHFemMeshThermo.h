@@ -15,6 +15,11 @@ namespace Spr{;
 ///	熱のFEM用のメッシュ
 class PHFemMeshThermo: public PHFemMesh{
 public:
+	/////	FemMeshThermo
+	//struct FemMeshThermo{		
+	//	bool alphaUpdated;			///	メッシュ内の一つでも、節点の熱伝達率が更新されたかどうか→K2,F3に影響
+	//	bool hUpdated;				///	熱輻射率が更新されたか
+	//};
 	SPR_OBJECTDEF(PHFemMeshThermo);
 
 	//	頂点
@@ -89,8 +94,8 @@ protected:
 	PTM::VVector<double> TVecAll;				//移行	
 
 	//要素の係数行列
-	PTM::TMatrixRow<4,4,double> matk1;			//CreateMatk1k() / k1b
-	PTM::TMatrixRow<4,4,double> matk2;			//CreateMatk2()
+//	PTM::TMatrixRow<4,4,double> matk1;			//CreateMatk1k() / k1b				///	struct Tetへ移植
+//	PTM::TMatrixRow<4,4,double> matk2;			//CreateMatk2()						///	
 	//int Matk2array[4];						//matk2が入った配列		//CreateMatk2array()
 	PTM::TMatrixRow<4,4,double> matk1array[4];	//Kmの3つの4×4行列の入れ物　Matk1を作るまでの間の一時的なデータ置場
 	PTM::TMatrixRow<4,4,double> matk2array[4];	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
@@ -135,25 +140,31 @@ protected:
 
 	void SetHeatTransRatioToAllVertex();	//SetInit で設定している熱伝達係数を、節点(FemVertex)の構造体のメンバ変数に代入
 
-	void PrepareCreateMatrix();					///	行列作成で用いる入れ物などの初期化
+	void InitCreateMatC();					///	行列作成で用いる入れ物などの初期化
 	void InitCreateVecf();						///	Vecfの作成前に実行する初期化処理
+	void InitCreateMatk();						///	Matkの作成前に実行する初期化処理
+
+	///	熱伝達率が変化した時などの再計算用の初期化関数
+	void InitCreateVecf_();				
+	void InitCreateMatk_();
 
 	//	[K]:熱伝導マトリクスを作る関数群
-	void CreateMatk1k(Tet tets);				//kimura方式の計算法
-	void CreateMatk1b(Tet tets);				//yagawa1983の計算法の3次元拡張した計算法 b:book の意味
-	void CreateMatk2(Tet tets);					//四面体ごとに作るので、四面体を引数に取る
+	void CreateMatk1k(unsigned id);				//kimura方式の計算法													///	k1ktに改称する
+	void CreateMatk1b(unsigned id,Tet tets);				//yagawa1983の計算法の3次元拡張した計算法 b:book の意味					///	k1btに改称する
+	void CreateMatk2(unsigned id,Tet tets);					//四面体ごとに作るので、四面体を引数に取る 内外すべての四面体について行う
 	void CreateMatk2f(Face faces);				//四面体ごとに作る式になっているが、外殻の三角形face毎に作る　facesのf
+	void CreateMatk2t(unsigned id);				//四面体ごとに作る　tetsのt
 
 	void CreateMatk2array();
-	void CreateMatkLocal(Tet tets);
+	void CreateMatkLocal(unsigned i);
 //	void CreateDumMatkLocal();					//	全要素が0のダミーk
 	void CreateMatKall();
 	//	[C]:熱容量マトリクスを作る関数
-	void CreateMatcLocal(Tet tets);						//	matC1,C2,C3・・・毎に分割すべき？
-	void CreateMatc(Tet tets);					//cの要素剛性行列を作る関数
+	void CreateMatcLocal(unsigned id);						//	matC1,C2,C3・・・毎に分割すべき？
+	void CreateMatc(unsigned id);					//cの要素剛性行列を作る関数
 	//	{F}:熱流束ベクトルを作る関数
-	void CreateVecfLocal(Tet tets);						//
-	void CreateVecf3(Tet tets);					//
+	void CreateVecfLocal(unsigned id);						//	四面体メッシュのIDを引数に
+	void CreateVecf3(unsigned id);					//
 	//	{T}:節点温度ベクトルを作る関数
 	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
 	void CreateLocalMatrixAndSet();				//K,C,Fすべての行列・ベクトルについて要素剛性行列を作って、エッジに入れる	又は	全体剛性行列を作る関数
@@ -209,8 +220,10 @@ protected:
 //	double dt;						//時間刻み幅
 
 	//%%%%%%%%		バイナリスイッチの宣言		%%%%%%%%//
-	bool deformed;					//形状が変わったかどうか
-	
+	///	PHFemMeshに属する構造体、クラスで定義されている同様のboolが更新されたら、こちらも更新する
+	///	条件利用後にはfalseに戻す。初期値はtrue	for	初期化
+	bool deformed;					///	形状が変わったかどうか		///	構造体に持っていてほしい
+	bool alphaUpdated;				///	熱伝達率が更新、matk2,Vecf3等が更新されたか
 	
 	std::ofstream templog;
 

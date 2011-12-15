@@ -11,11 +11,13 @@ public:\
 protected:\
 	std::vector<(Vec3d)>	vertices;	\
 	std::vector<(int)>	tets;	\
+	std::vector<(int)>	faces;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHFemMesh::SetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
 		vertices = ((PHFemMeshDesc*)ptr)->vertices;	\
 		tets = ((PHFemMeshDesc*)ptr)->tets;	\
+		faces = ((PHFemMeshDesc*)ptr)->faces;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -23,6 +25,7 @@ public:\
 		PHFemMesh::GetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
 		((PHFemMeshDesc*)ptr)->vertices = vertices;	\
 		((PHFemMeshDesc*)ptr)->tets = tets;	\
+		((PHFemMeshDesc*)ptr)->faces = faces;	\
 		return true;	\
 	}\
 

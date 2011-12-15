@@ -216,6 +216,12 @@ void PHFemMesh::SetDesc(const void* p) {
 		}
 		assert(count == 6);
 	}
+	//	’¸“_‚É‘®‚·‚é–Ê‚ð’Ç‰Á
+	for(unsigned i=0;i<faces.size();i++){
+		for(unsigned j=0;j<3;j++){
+			vertices[faces[i].vertices[j]].faces.push_back(i);
+		}
+	}
 }
 
 bool PHFemMesh::GetDesc(void* p) const {
