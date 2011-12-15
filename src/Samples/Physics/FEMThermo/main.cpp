@@ -211,7 +211,7 @@ public:
 			//	PHFemMEshThermの節点を取ってきて、加熱する
 			PHFemMeshThermoIf* pfem = NULL;
 
-			for(int i=0; i<tmesh->NChildObject() && !pfem; ++i){
+			for(unsigned int i=0; i<tmesh->NChildObject() && !pfem; ++i){
 				pfem = tmesh->GetChildObject(i)->Cast();
 				//	pfemが取れていることを確認
 				if(pfem){
@@ -232,11 +232,15 @@ public:
 						if(pfemPose.y >= -0.01 && pfemPose.y <= 0.00 ){				///	pfemPose.y >= -0.0076 && pfemPose.y <= -0.0074 
 							/// vertexの節点の座標がある範囲にある時、熱伝達境界条件で加熱する
 //							pfem->SetVertexTc(j,tempTc);
+
+
 							pfem->SetVertexTc(j,tempTc,25.0);
+							//pfem->SetVertexTemp(j,25.0);
+
 							//DSTR << "pfem->GetStepCount(): " << pfem->GetStepCount() << std::endl;
 							//DSTR << "afPan: " << afPan <<std::endl;
 							//DSTR << "afMesh: " << afMesh <<std::endl;
-							DSTR << "j: "<<j<< ", pfemPose.y: " << pfemPose.y << std::endl;
+				//			DSTR << "j: "<<j<< ", pfemPose.y: " << pfemPose.y << std::endl;
 							//UsingHeatTransferBoundaryCondition		を呼び出す
 							//DSTR << j << "th vertex.Tcに" << tempTc << "を設定" <<std::endl;
 							//Tcの更新？

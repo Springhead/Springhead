@@ -25,6 +25,7 @@ struct PHFemMeshState{
 struct PHFemMeshDesc: public PHFemMeshState{
 	std::vector<Vec3d> vertices;
 	std::vector<int> tets;
+	std::vector<int> faces;
 	PHFemMeshDesc();
 	void Init();
 };
