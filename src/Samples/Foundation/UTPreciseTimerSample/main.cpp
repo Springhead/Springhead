@@ -6,21 +6,42 @@
 #include <GL/glut.h>
 #include <windows.h>
 #include <Foundation/UTPreciseTimer.h>
+#include <Foundation/UTQPTimer.h>
 
 using namespace Spr;
 
-unsigned int dt = 1;	// ms
+unsigned int dt = 1;	// 繰り返し間隔ms
+int mt = 5000;			// 測定時間ms
+
 UTPreciseTimer pTimer;	// μs単位で計測可能なタイマ
-std::vector< unsigned long > time;
+UTQPTimer qTimer;		// マルチスレッド対応版
+std::vector< Vec2d > time;
 
 void CPSCounter(double intervalms, double periodms);
 void SPR_CDECL CallBack(int id, void* arg){
-	time.push_back(pTimer.Stop());
-	//DSTR << time.back() << std::endl;
+	Vec2d sec;
+#if 1
+	// 1ループ間の計測用
+	sec.x = pTimer.Stop() * 1e-6;
+	sec.y = qTimer.Stop() * 1e-6;
+	time.push_back(sec);
 	pTimer.Clear();
+	qTimer.Clear();
 	pTimer.Start();
+	qTimer.Start();
+#else
+	// あるアルゴリズムが終了するまでにかかる時間計測用
+	pTimer.Clear();
+	qTimer.Clear();
+	pTimer.Start();
+	qTimer.Start();
+	for(int i = 0; i < 10; i++)
+		std::cout << "Springhead2!" << std::endl;
+	sec.x = pTimer.Stop() * 1e-6;
+	sec.y = qTimer.Stop() * 1e-6;
+	time.push_back(sec);
+#endif
 	//CPSCounter(dt, 1000);
-	//Sleep(2000);
 }
 
 // （オプション）CPSを表示する関数
@@ -49,18 +70,22 @@ int _cdecl main(int argc, char* argv[]){
 	timer1->SetResolution(1);					///	呼びだし分解能ms
 	timer1->SetInterval(dt);					/// 呼びだし頻度ms
 	timer1->SetCallback(CallBack, NULL);		/// 呼びだす関数
-	timer1->Start();							/// マルチメディアタイマスタート
+	timer1->Start();							/// タイマスタート
+	std::cout << "Start the mearsurement." << std::endl;
+	std::cout << "Pleas wait " << mt * 0.001 << " seconds." << std::endl; 
+	Sleep(mt);								/// 5sec間計測
+	timer1->Stop();							/// タイマストップ
+
+	std::cout << "Saving the data to a file." << std::endl;
+	/// 計測データをcsvで出力
+	CSVOUT << "count" << "," << "Precise timer [s]" << "," << "QPTimer [s]" << std::endl;
+	for(int i = 0; i < time.size(); i++){
+		CSVOUT << i << "," << time[i].x << "," << time[i].y << std::endl;
+	}
+	std::cout << "Complete!" << std::endl;
 
 	std::cout << "Press any key to exit." << std::endl;
-
 	while(!_kbhit()){}
-	timer1->Stop();
-
-	/// 計測データをxlsで出力
-	std::ofstream ofs("UTPreciseTimerSample.xls");
-	for(int i = 0; i < time.size(); i++){
-		ofs << i << "\t" << time[i] << std::endl;
-	}
 
 	return 0;
 }
