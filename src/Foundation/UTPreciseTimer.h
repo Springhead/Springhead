@@ -14,6 +14,8 @@ namespace Spr{;
 /** Precise timer using CPU clock
     Modified from PreciseTimer.h written by Kajimoto in Tachi Lab. at Univ. of Tokyo. */
 
+// マルチスレッドでの計測の場合は，UTQPTimerを使う
+
 union UTLargeInteger{
 	struct {
 		unsigned long lowPart;

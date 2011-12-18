@@ -53,6 +53,20 @@ public:
 	float GetForce(){
 		return force;
 	}
+	/// 最小出力の設定
+	void SetLimitMinForce(float f){
+		minForce = f;
+	}
+	/// 最大出力の設定
+	void SetLimitMaxForce(float f){
+		maxForce = f;
+	}
+	/// 最小最大出力の取得
+	Vec2f GetLimitForce(){
+		Vec2f f;
+		f.x = minForce; f.y = maxForce;
+		return f;
+	}
 	///	電流値の取得
 	float GetCurrent(){
 		return force * voltPerNewton * currentPerVolt;

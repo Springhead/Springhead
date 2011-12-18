@@ -58,6 +58,10 @@ public:
 
 	///	最低張力を出力
 	void SetMinForce();
+	/// 全てのモータに対して最小出力を設定
+	void SetLimitMinForce(float f);
+	/// 全てのモータに対して最大出力を設定
+	void SetLimitMaxForce(float f);
 	
 	virtual bool Init(const void* desc);
 	virtual bool BeforeCalibration(){
