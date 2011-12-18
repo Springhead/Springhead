@@ -52,6 +52,15 @@ void HISpidar::SetMinForce(){
 	Update(0.001f);
 }
 
+void HISpidar::SetLimitMinForce(float f){
+	for(int i = 0; i < (int)motors.size(); i++)
+		motors[i].SetLimitMinForce(f);
+}
+
+void HISpidar::SetLimitMaxForce(float f){
+	for(int i = 0; i < (int)motors.size(); i++)
+		motors[i].SetLimitMaxForce(f);
+}
 //----------------------------------------------------------------------------
 // HISpidar4Desc
 

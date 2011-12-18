@@ -23,9 +23,16 @@ namespace Spr{;
 struct HISpidarMotorIf: public HIBaseIf{
 	SPR_IFDEF(HISpidarMotor);
 
+	/// 出力の設定
 	void SetForce(float f);
 	///	実際に出力した力の取得
 	float GetForce();
+	/// 最小出力の設定
+	void SetLimitMinForce(float f);
+	/// 最小出力の設定
+	void SetLimitMaxForce(float f);
+	/// 最小最大出力の取得
+	Vec2f GetLimitForce();
 	///	電流値の取得
 	float GetCurrent();
 	///	現在の糸の長さの設定
@@ -76,6 +83,10 @@ struct HISpidarMotorDesc{
 
 struct HISpidarIf : public HIHapticIf{
 	SPR_VIFDEF(HISpidar);
+	/// 最小出力の設定
+	void SetLimitMinForce(float f);
+	/// 最大出力の設定
+	void SetLimitMaxForce(float f);
 };
 struct HISpidarDesc{
 	SPR_DESCDEF(HISpidar);

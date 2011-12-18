@@ -81,6 +81,9 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpidarMotorIf(base)	\
 	void SetForce(float f){	base::SetForce(f);}	\
 	float GetForce(){	return	base::GetForce();}	\
+	void SetLimitMinForce(float f){	base::SetLimitMinForce(f);}	\
+	void SetLimitMaxForce(float f){	base::SetLimitMaxForce(f);}	\
+	Vec2f GetLimitForce(){	return	base::GetLimitForce();}	\
 	float GetCurrent(){	return	base::GetCurrent();}	\
 	void SetLength(float l){	base::SetLength(l);}	\
 	float GetLength(){	return	base::GetLength();}	\
@@ -121,6 +124,8 @@
 	bool PreviewMessage(void* m){	return	base::PreviewMessage(m);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpidarIf(base)	\
+	void SetLimitMinForce(float f){	base::SetLimitMinForce(f);}	\
+	void SetLimitMaxForce(float f){	base::SetLimitMaxForce(f);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpidar4If(base)	\
 	Spr::HISpidarMotorIf* GetMotor(size_t i){	return	base::GetMotor(i);}	\
