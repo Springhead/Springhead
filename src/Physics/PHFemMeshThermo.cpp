@@ -640,16 +640,14 @@ void PHFemMeshThermo::Step(double dt){
 	//DSTR << "vecFAll : " <<std::endl;
 	//DSTR << vecFAll << std::endl;
 
-
-	//	フライパンから食材への熱伝達のための	⇒アプリケーションなので、main()関数に移行
-	//HeatTransFromPanToFoodShell();
 	//	test　shapepairを取ってくる
 	//GetScene()->
 
-
 	//dt = dt *0.01;		誤差1度程度になる
 	//dt = dt;				収束した時の、計算誤差？（マイナスになっている節点温度がそれなりに大きくなる。）
-//	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く
+	
+	///>	ガウスザイデル法の設定
+	//	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く　クランクニコルソン法のみを使いたい場合
 	
 	CalcHeatTransUsingGaussSeidel(20,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
 
@@ -683,10 +681,6 @@ void PHFemMeshThermo::Step(double dt){
 	templog <<"," << std::endl;
 	//templog;
 	//節点温度を画面に表示する⇒3次元テクスチャを使ったテクスチャ切り替えに値を渡す⇒関数化
-	//
-
-
-
 
 	//DSTR << "TVecAll : " <<std::endl;
 	//DSTR << TVecAll << std::endl;
@@ -879,12 +873,16 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	SetInitThermoConductionParam(0.574,970,0.196,25 * 0.0001 * 1.0);
 		//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
 
-	//計算に用いるマトリクス、ベクトルを作成（メッシュごとの要素剛性行列/ベクトル⇒全体剛性行列/ベクトル）
+	//>	熱放射率の設定
+	SetThermalEmissivityToVerticesAll(0.0);				///	暫定値0.0で初期化	：熱放射はしないｗ
+
+	//>	行列の作成　行列の作成に必要な変数はこの行以前に設定が必要
+		//計算に用いるマトリクス、ベクトルを作成（メッシュごとの要素剛性行列/ベクトル⇒全体剛性行列/ベクトル）
 		//{T}縦ベクトルの節点の並び順に並ぶように、係数行列を加算する。係数行列には、面積や体積、熱伝達率などのパラメータの積をしてしまったものを入れる。
 	
-	//k2の行列を作る
-	//CreateMatk2array();
-//	CreateLocalMatrixAndSet();
+
+	//CreateLocalMatrixAndSet();			//> 以下の処理を、この関数に集約
+
 	InitCreateMatC();					///	CreateMatCの初期化
 	InitCreateVecf();					///	CreateVecfの初期化
 	InitCreateMatk();					///	CreateMatKの初期化
@@ -904,21 +902,21 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 
 
 
-void PHFemMeshThermo::CreateLocalMatrixAndSet(){
-	//K,C,Fの行列を作る関数を呼び出して、作らせる
-	for(unsigned i = 0; i< tets.size() ; i++){
-		//tetsを引数にいれると、その行列・ベクトルを作ってくれて、できた行列、ベクトルを基に係数を設定しくれる
-		//こうすれば、各要素剛性行列でfor文を回さなくてもよくなる
-		//CreateMatkLocal(tets);
-		//CreateMatcLocal(tets);
-		//CreateVecfLocal(tets);
-
-		//tetsを入れて作らせる
-//		SetkcfParam(tets);
-
-	}
-
-}
+//void PHFemMeshThermo::CreateLocalMatrixAndSet(){
+//	//K,C,Fの行列を作る関数を呼び出して、作らせる
+//	for(unsigned i = 0; i< tets.size() ; i++){
+//		//tetsを引数にいれると、その行列・ベクトルを作ってくれて、できた行列、ベクトルを基に係数を設定しくれる
+//		//こうすれば、各要素剛性行列でfor文を回さなくてもよくなる
+//		//CreateMatkLocal(tets);
+//		//CreateMatcLocal(tets);
+//		//CreateVecfLocal(tets);
+//
+//		//tetsを入れて作らせる
+////		SetkcfParam(tets);
+//
+//	}
+//
+//}
 void PHFemMeshThermo::SetkcfParam(Tet tets){
 }
 
@@ -999,11 +997,12 @@ void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 	//f1を作る
 	//f2を作る
 	//f3を作る
-	CreateVecf3(id);
+	CreateVecf3(id);				//>	tets[id].vecf[2];の初期化や、への代入
 	//f4を作る
 	int hogehoge=0;
 	//f1,f2,f3,f4を加算する
-	vecf = vecf3;	
+	//vecf = vecf3;
+	vecf = tets[id].vecf[2];		//>	+ tets[id].vecf[0] + tets[id].vecf[1] + tets[id].vecf[3] の予定
 	//	for debug
 	//DSTR << "vecf : " << std::endl;
 	//DSTR << vecf << std::endl;
@@ -1042,23 +1041,22 @@ void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 }
 
 void PHFemMeshThermo::CreateMatkLocal(unsigned id){
-	//すべての要素について係数行列を作る
-	//	k1を作る	k1kでも、k1bでもどちらでも構わない
+	//すべての四面体要素について係数行列を作る
+
+	//	k1を作る	k1kでも、k1bでもどちらでも構わない	どりらが速いか調べる
 	///	変形した時だけ生成する
-	if(deformed){	CreateMatk1k(id);}			//	k理論を根拠に、加筆して、形状関数を導出
+	if(deformed){	CreateMatk1k(id);}			//	k理論を根拠に、加筆して、形状関数を導出	
+//	if(deformed){	CreateMatk1b(id);}			//	書籍の理論を根拠に、公式を用いて形状関数を導出
 	//DSTR << "tets[id].matk1: " << tets[id].matk1 << std::endl;
-	
-//	if(deformed){	CreateMatk1b(tets);}			//	書籍の理論を根拠に、公式を用いて形状関数を導出
-	//DSTR << " matk1b : " <<std::endl;
-	//DSTR << matk1 <<std::endl;
 
 	//k2を作る
 	CreateMatk2t(id);
+	//CreateMatk2(id,tets[id]);			///	使用しない
 	//DSTR << "tets[id].matk2: " << tets[id].matk2 << std::endl;
-//		CreateMatk2(tets);
 	int hogehogehoge=0;
+
 	//k1,k2,k3を加算する(使っている数値だけ)
-	matk = tets[id].matk1 + tets[id].matk2;	
+	matk = tets[id].matk[0] + tets[id].matk[1];	
 	//DSTR << "matk: " << matk << std::endl;
 
 	//	(ガウスザイデルを使った計算時)要素毎に作った行列の成分より、エッジに係数を格納する
@@ -1186,7 +1184,7 @@ void PHFemMeshThermo::CreateMatkLocal(unsigned id){
 
 }
 
-void PHFemMeshThermo::CreateMatk1b(unsigned id,Tet tets){
+void PHFemMeshThermo::CreateMatk1b(unsigned id){
 	//yagawa1983を基にノートに式展開した計算式
 	unsigned i=0;
 	unsigned j=0;
@@ -1205,9 +1203,9 @@ void PHFemMeshThermo::CreateMatk1b(unsigned id,Tet tets){
 	double z[4];
 	//要素内の4節点のx,y,z座標を格納
 	for(unsigned m=0; m < 4;m++){
-		x[m] = vertices[tets.vertices[m]].pos.x;
-		y[m] = vertices[tets.vertices[m]].pos.y;
-		z[m] = vertices[tets.vertices[m]].pos.z;
+		x[m] = vertices[tets[id].vertices[m]].pos.x;
+		y[m] = vertices[tets[id].vertices[m]].pos.y;
+		z[m] = vertices[tets[id].vertices[m]].pos.z;
 	}
 
 	//mata~matc
@@ -1308,7 +1306,7 @@ void PHFemMeshThermo::CreateMatk1b(unsigned id,Tet tets){
 	//	改善案		下三角と対角成分だけ、計算し、上三角は下三角を代入でもよい。
 	for(unsigned i =0;i<4;i++){
 		for(unsigned j =0;j<4;j++){
-			tets.matk1[i][j] = a[i] * a[j] +b[i] * b[j] + c[i] * c[j];
+			tets[id].matk[0][i][j] = a[i] * a[j] +b[i] * b[j] + c[i] * c[j];
 		}
 	}
 
@@ -1333,14 +1331,14 @@ void PHFemMeshThermo::CreateMatk1b(unsigned id,Tet tets){
 	//int debughogeshi2 =0;
 	
 	//係数の積
-	tets.matk1 = thConduct / (36 *  CalcTetrahedraVolume(tets)) * tets.matk1;		//理論が間違っていたので、修正
+	tets[id].matk[0]= thConduct / (36 *  CalcTetrahedraVolume(tets[id])) * tets[id].matk[0];		//理論が間違っていたので、修正
 
 	//	for DEBUG
 	//DSTR << "係数積後の matk1 : " << std::endl;
 	//DSTR << matk1 << std::endl;
 	int debughogeshi3 =0;
 
-	DSTR << "Inner Function matk1b _ tets.matk1 "<< tets.matk1 << std::endl;  
+	DSTR << "Inner Function matk1b _ tets["<< id << "].matk[0] "<< tets[id].matk[0] << std::endl;  
 	//a~cの多項式をK1に代入
 	//matk1(4x4)に代入
 
@@ -1352,11 +1350,13 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 	//そのため、この関数の引数に、四面体要素の番号を取る
 
 	//最後に入れる行列を初期化
-	for(unsigned i =0; i < 4 ;i++){
-		for(unsigned j =0; j < 4 ;j++){
-			tets[id].matk1[i][j] = 0.0;
-		}
-	}
+	tets[id].matk[0].clear();
+	//for(unsigned i =0; i < 4 ;i++){
+	//	for(unsigned j =0; j < 4 ;j++){
+	//		//tets[id].matk1[i][j] = 0.0;
+	//		tets[id].matk[0][i][j] = 0.0;
+	//	}
+	//}
 
 	//	A行列　=	a11 a12 a13
 	//				a21 a22 a23
@@ -1407,8 +1407,9 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 	Nz[0][3] = matk1A[2][2];
 
 	//	Km の算出
-	tets[id].matk1 = Nx.trans() * Nx + Ny.trans() * Ny + Nz.trans() * Nz;
-	
+	//tets[id].matk1 = Nx.trans() * Nx + Ny.trans() * Ny + Nz.trans() * Nz;
+	tets[id].matk[0] = Nx.trans() * Nx + Ny.trans() * Ny + Nz.trans() * Nz;
+
 	////	for debug
 	//DSTR << "Nx : " << Nx << std::endl;
 	//DSTR << "Nx^T : " << Nx.trans() << std::endl;
@@ -1424,7 +1425,8 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 	//K1
 //	matk1 = thConduct / (36 * CalcTetrahedraVolume(tets) ) * matk1;
 	
-	tets[id].matk1 = thConduct / (36 * CalcTetrahedraVolume(tets[id]) ) * tets[id].matk1;
+	//tets[id].matk1 = thConduct / (36 * CalcTetrahedraVolume(tets[id]) ) * tets[id].matk1;
+	tets[id].matk[0] = thConduct / (36 * CalcTetrahedraVolume(tets[id]) ) * tets[id].matk[0];
 	//DSTR << "Inner Function _tets[id].matk1 : " << tets[id].matk1 << std::endl;
 
 }
@@ -1432,7 +1434,8 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 void PHFemMeshThermo::CreateVecf3(unsigned id){
 	//	初期化
 	for(unsigned i =0; i < 4 ;i++){
-		vecf3[i] = 0.0;		//最後に入れる行列を初期化
+		//vecf3[i] = 0.0;		//最後に入れる行列を初期化
+		tets[id].vecf[2][i] =0.0;
 	}	
 	//l=0の時f31,1:f32, 2:f33, 3:f34	を生成
 	for(unsigned l= 0 ; l < 4; l++){
@@ -1518,7 +1521,8 @@ void PHFemMeshThermo::CreateVecf3(unsigned id){
 
 	//f3 = f31 + f32 + f33 + f34
 	for(unsigned i=0; i < 4; i++){
-		vecf3 += vecf3array[i];
+		//vecf3 += vecf3array[i];
+		tets[id].vecf[2] += vecf3array[i];
 		//	for debug
 		//DSTR << "vecf3 に vecf3array = f3" << i+1 <<"まで加算した行列" << std::endl;
 		//DSTR << vecf3 << std::endl;
@@ -1631,6 +1635,72 @@ PTM::TMatrixRow<4,4,double> PHFemMeshThermo::Create44Mat21(){
 	}
 	return MatTemp;
 }
+void PHFemMeshThermo::CreateMatk3t(unsigned id){
+	//l=0の時k21,1の時:k22, 2の時:k23, 3の時:k24	を生成
+	for(unsigned l= 0 ; l < 4; l++){
+		//matk2array[l] = matk2temp;
+		matk3array[l] = Create44Mat21();
+		//	1行i列を0に
+		for(int i=0;i<4;i++){
+			matk3array[l][l][i] = 0.0;
+		}
+		//	i行1列を0に
+		for(int i=0;i<4;i++){
+			matk3array[l][i][l] = 0.0;
+		}
+	}
+
+	///	初期化
+	tets[id].matk[2].clear();
+	
+	for(unsigned l= 0 ; l < 4; l++){
+		///	四面体の各面(l = 0 ～ 3) についてメッシュ表面かどうかをチェックする。表面なら、行列を作ってmatk2arrayに入れる
+		//faces[tets.faces[i]].sorted;		/// 1,24,58みたいな節点番号が入っている
+		///	行列型の入れ物を用意
+
+		//faces[tets.faces[l]].vertices;
+		if(tets[id].faces[l] < nSurfaceFace && faces[tets[id].faces[l]].alphaUpdated ){			///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある
+			//最後に入れる行列を初期化
+			for(unsigned i =0; i < 4 ;i++){
+				for(unsigned j =0; j < 4 ;j++){
+					tets[id].matk[2][i][j] = 0.0;
+				}
+			}
+			///	四面体の三角形の面積を計算		///	この関数の外で面積分の面積計算を実装する。移動する
+			if(faces[tets[id].faces[l]].area ==0 || faces[tets[id].faces[l]].deformed ){		///	面積が計算されていない時（はじめ） or deformed(変形した時・初期状態)がtrueの時		///	条件の追加	面積が0か ||(OR) αが更新されたか
+				faces[tets[id].faces[l]].area = CalcTriangleArea(faces[tets[id].faces[l]].vertices[0], faces[tets[id].faces[l]].vertices[1], faces[tets[id].faces[l]].vertices[2]);
+				faces[tets[id].faces[l]].deformed = false;
+			}
+			///	計算結果を行列に代入
+			///	areaの計算に使っていない点が入っている行と列を除いた行列の積をとる
+			///	積分計算を根本から考える
+			unsigned vtx = tets[id].vertices[0] + tets[id].vertices[1] + tets[id].vertices[2] + tets[id].vertices[3];
+			//DSTR << "vtx: " << vtx <<std::endl;
+				///	area計算に使われていない節点ID：ID
+			unsigned ID = vtx -( faces[tets[id].faces[l]].vertices[0] + faces[tets[id].faces[l]].vertices[1] + faces[tets[id].faces[l]].vertices[2] );
+			//DSTR << "メッシュ表面の面は次の3頂点からなる。" << std::endl;
+			//DSTR << "faces[tets.faces[l]].vertices[0]: " << faces[tets.faces[l]].vertices[0] <<std::endl;
+			//DSTR << "faces[tets.faces[l]].vertices[1]: " << faces[tets.faces[l]].vertices[1] <<std::endl;
+			//DSTR << "faces[tets.faces[l]].vertices[2]: " << faces[tets.faces[l]].vertices[2] <<std::endl;
+			//DSTR << "ID: " << ID <<"のときの節点と対面する面で面積分を計算する"<<std::endl;
+			for(unsigned j=0;j<4;j++){
+				if(tets[id].vertices[j] == ID){					///	形状関数が１、（すなわち）このfaceに対面する頂点　と一致したら　その時のfaceで面積分する
+					///	j番目の行列の成分を0にしたmatk2arrayで計算する
+					///	外殻にないメッシュ面の面積は0で初期化しておく
+					faces[tets[id].faces[l]].thermalEmissivity = (vertices[faces[tets[id].faces[l]].vertices[0]].thermalEmissivity + vertices[faces[tets[id].faces[l]].vertices[1]].thermalEmissivity 
+						+ vertices[faces[tets[id].faces[l]].vertices[2]].thermalEmissivity ) / 3.0;		///	当該faceの熱伝達率を構成節点での値の相加平均をとる
+					///	熱輻射率を計算、熱輻射率も、節点の熱輻射率から計算？
+
+					///	以下の[]は上までの[l]と異なる。
+					///	IDが何番目かによって、形状関数の係数が異なるので、
+					tets[id].matk[2] += faces[tets[id].faces[l]].thermalEmissivity * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];
+					//DSTR << "tets[id].matk2にfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "を加算: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
+					//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
+				}
+			}
+		}
+	}
+}
 void PHFemMeshThermo::CreateMatk2t(unsigned id){
 
 	//l=0の時k21,1の時:k22, 2の時:k23, 3の時:k24	を生成
@@ -1648,11 +1718,13 @@ void PHFemMeshThermo::CreateMatk2t(unsigned id){
 	}
 
 	///	初期化
-	for(unsigned i =0; i < 4 ;i++){
-		for(unsigned j =0; j < 4 ;j++){
-			tets[id].matk2[i][j] = 0.0;
-		}
-	}
+	tets[id].matk[1].clear();
+	//for(unsigned i =0; i < 4 ;i++){
+	//	for(unsigned j =0; j < 4 ;j++){
+	//		//tets[id].matk2[i][j] = 0.0;
+	//		tets[id].matk[1][i][j] = 0.0;
+	//	}
+	//}
 
 	//	Check
 	//DSTR << "matk2array:" << std::endl;
@@ -1676,7 +1748,8 @@ void PHFemMeshThermo::CreateMatk2t(unsigned id){
 			for(unsigned i =0; i < 4 ;i++){
 				for(unsigned j =0; j < 4 ;j++){
 					//matk2[i][j] = 0.0;
-					tets[id].matk2[i][j] = 0.0;
+					//tets[id].matk2[i][j] = 0.0;
+					tets[id].matk[1][i][j] = 0.0;
 				}
 			}
 			///	四面体の三角形の面積を計算		///	この関数の外で面積分の面積計算を実装する。移動する
@@ -1704,8 +1777,8 @@ void PHFemMeshThermo::CreateMatk2t(unsigned id){
 						+ vertices[faces[tets[id].faces[l]].vertices[2]].heatTransRatio ) / 3.0;		///	当該faceの熱伝達率を構成節点での値の相加平均をとる
 					///	以下の[]は上までの[l]と異なる。
 					///	IDが何番目かによって、形状関数の係数が異なるので、
-
-					tets[id].matk2 += faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];
+					//tets[id].matk2 += faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];
+					tets[id].matk[1] += faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];
 					//DSTR << "tets[id].matk2にfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "を加算: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
 					//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
 				}
@@ -1748,25 +1821,6 @@ void PHFemMeshThermo::CreateMatk2t(unsigned id){
 	
 	//DSTR << "Inner Function _ matk2t tets[id].matk2: " <<tets[id].matk2 << std::endl;
 }
-
-void PHFemMeshThermo::CreateMatk2f(Face faces){
-	//初期化
-	
-	////最後に入れる行列を初期化
-	//for(unsigned i =0; i < 4 ;i++){
-	//	for(unsigned j =0; j < 4 ;j++){
-	//		matk2[i][j] = 0.0;
-	//	}
-	//}
-
-	//処理
-	//CreateMAtk2fを呼ぶ関数をこれでくくる	for(unsigned i=0;i < nSurfaceFace - 1 ; i++){}
-//	if(faces.area ==0) faces.area = CalcTriangleArea(faces.vertices[0],faces.vertices[1],faces.vertices[2]);
-	//for(unsigned i=0; i < 3;i++){
-	//	vertices[faces.vertices[i]].tets
-	//}
-}
-
 void PHFemMeshThermo::CreateMatk2(unsigned id,Tet tets){
 	//この計算を呼び出すときに、各四面体ごとに計算するため、四面体の0番から順にこの計算を行う
 	//四面体を構成する4節点を節点の配列(Tetsには、節点の配列が作ってある)に入っている順番を使って、面の計算を行ったり、行列の計算を行ったりする。
@@ -1776,7 +1830,7 @@ void PHFemMeshThermo::CreateMatk2(unsigned id,Tet tets){
 	for(unsigned i =0; i < 4 ;i++){
 		for(unsigned j =0; j < 4 ;j++){
 			//matk2[i][j] = 0.0;
-			tets.matk2[i][j] = 0.0;
+			tets.matk[1][i][j] = 0.0;
 		}
 	}
 
@@ -1848,7 +1902,7 @@ void PHFemMeshThermo::CreateMatk2(unsigned id,Tet tets){
 
 	//k2 = k21 + k22 + k23 + k24
 	for(unsigned i=0; i < 4; i++){
-		tets.matk2 += matk2array[i];
+		tets.matk[1] += matk2array[i];
 		//	for debug
 		//DSTR << "matk2 に matk2array = k2" << i+1 <<"まで加算した行列" << std::endl;
 		//DSTR << matk2 << std::endl;
@@ -1871,7 +1925,14 @@ void PHFemMeshThermo::SetInitThermoConductionParam(double thConduct0,double roh0
 	specificHeat = specificHeat0;
 	heatTrans = heatTrans0;
 }
-
+void PHFemMeshThermo::SetThermalEmissivityToVtx(unsigned id,double thermalEmissivity){
+	vertices[id].thermalEmissivity = thermalEmissivity;
+}
+void PHFemMeshThermo::SetThermalEmissivityToVerticesAll(double thermalEmissivity){
+	for(unsigned i =0; i < vertices.size(); i++){
+		vertices[i].thermalEmissivity = thermalEmissivity;
+	}
+}
 void PHFemMeshThermo::SetHeatTransRatioToAllVertex(){
 	for(unsigned i =0; i < vertices.size() ; i++){
 		vertices[i].heatTransRatio = heatTrans;

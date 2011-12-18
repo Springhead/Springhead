@@ -55,15 +55,22 @@ public:
 	void UsingFixedTempBoundaryCondition(unsigned id,double temp);			//	温度固定境界条件:S_1	指定節点の温度を変える
 	void UsingHeatTransferBoundaryCondition(unsigned id,double temp);		//	熱伝達境界条件:S_3		指定節点の周囲流体温度を変える	
 	void UsingHeatTransferBoundaryCondition(unsigned id,double temp,double heatTransratio);		///	熱伝達率も設定可能な関数		///	名前を変えるべき　要改善
-	//Set に
+	//	改称案
+	//SetVtxtoFixedBC
+	//SetVtxtoTranferBC
+	//SetVtxHTRtoTranferBC
+
+	///	凡例->wiki
+	//BC=BoundaryCondition
+	//HTR=HeatTransferRatio
 
 	int GetSurfaceVertex(int id){return surfaceVertices[id];};
 	int NSurfaceVertices(){return surfaceVertices.size();};
-	void SetVertexTc(int id,double temp){							///	熱伝達率は変えない
-		UsingHeatTransferBoundaryCondition(id,temp);				/// PHFemMeshThermo::SetLocalFluidTemp()で周囲流体温度の設定、CreateVecfLocal()の更新
+	void SetVertexTc(int id,double temp){								///	周囲流体温度を更新	熱伝達率は変えない
+		UsingHeatTransferBoundaryCondition(id,temp);					/// PHFemMeshThermo::SetLocalFluidTemp()で周囲流体温度の設定、CreateVecfLocal()の更新
 	};
-	void SetVertexTc(int id,double temp,double heatTransRatio){			///	熱伝達率を変更できるIf
-		UsingHeatTransferBoundaryCondition(id,temp,heatTransRatio);		//	熱伝達を含む行列を更新
+	void SetVertexTc(int id,double temp,double heatTransRatio){			///	周囲流体温度を更新		熱伝達率を変更できるIf
+		UsingHeatTransferBoundaryCondition(id,temp,heatTransRatio);		//	熱伝達境界条件を設定：熱伝達率を含む行列が対象
 	};
 	Vec3d GetPose(unsigned id){ return vertices[id].pos; };
 	Vec3d GetSufVtxPose(unsigned id){return vertices[surfaceVertices[id]].pos; };
@@ -85,13 +92,11 @@ protected:
 	//熱流束ベクトルの		f:f1~f4の加算したもの,	体積分の	f1:内部発熱による項,	面積分の	f2:熱流束境界条件,	f3:熱伝達境界条件,	f4:熱輻射境界条件
 	//体積分の場合:要素1つにつき1つの行列、面積分の場合:要素内の各面ごとに1つで計4つの行列なので配列に入れる
 	//kやfに関しては、面ごとに計算した係数行列を格納する配列Mat(k/f)arrayを定義
-	//	Col:列単位の行列	Row:行単位の行列
+	//	Col:列単位の行列	Row:行単位の行列	hogeVector:ベクトル
 
 	//節点温度ベクトル
-//	PTM::TMatrixCol<4,1,double> TVec;			//要素の節点温度ベクトル
-	PTM::TVector<4,double> TVec;				//要素の節点温度ベクトル		//_		//不要?
-//	PTM::VMatrixCol<double> TVecAll;			//全体の節点温度ベクトル		//_
-	PTM::VVector<double> TVecAll;				//移行	
+	PTM::TVector<4,double> TVec;				///>	要素の節点温度ベクトル		//_		//不要?
+	PTM::VVector<double> TVecAll;				///>	全体の節点温度ベクトル
 
 	//要素の係数行列
 //	PTM::TMatrixRow<4,4,double> matk1;			//CreateMatk1k() / k1b				///	struct Tetへ移植
@@ -99,6 +104,8 @@ protected:
 	//int Matk2array[4];						//matk2が入った配列		//CreateMatk2array()
 	PTM::TMatrixRow<4,4,double> matk1array[4];	//Kmの3つの4×4行列の入れ物　Matk1を作るまでの間の一時的なデータ置場
 	PTM::TMatrixRow<4,4,double> matk2array[4];	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
+	PTM::TMatrixRow<4,4,double> matk3array[4];	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
+
 	PTM::TMatrixRow<4,4,double> matk;			//Matk=Matk1+Matk2+Matk3	matk1~3を合成した要素剛性行列	CreateMatkLocal()
 	PTM::TMatrixRow<4,4,double> matc;			//
 //	PTM::TMatrixCol<4,1,double> Vecf3;			//f3:外側の面に面している面のみ計算する　要注意
@@ -138,6 +145,9 @@ protected:
 	//	温度固定境界条件を用いたいときには、熱伝達率（最後の引数）を入力しない。また、毎Step実行時に特定節点の温度を一定温度に保つようにする。
 	void SetInitThermoConductionParam(double thConduct,double roh,double specificHeat,double heatTrans);		//熱伝導率、密度、比熱、熱伝達率などのパラメーターを設定・代入
 
+	void SetThermalEmissivityToVtx(unsigned id,double thermalEmissivity);			///	熱放射率を節点 id に設定する関数
+	void SetThermalEmissivityToVerticesAll(double thermalEmissivity);					///	熱放射率を全節点に設定
+
 	void SetHeatTransRatioToAllVertex();	//SetInit で設定している熱伝達係数を、節点(FemVertex)の構造体のメンバ変数に代入
 
 	void InitCreateMatC();					///	行列作成で用いる入れ物などの初期化
@@ -149,11 +159,13 @@ protected:
 	void InitCreateMatk_();
 
 	//	[K]:熱伝導マトリクスを作る関数群
-	void CreateMatk1k(unsigned id);				//kimura方式の計算法													///	k1ktに改称する
-	void CreateMatk1b(unsigned id,Tet tets);				//yagawa1983の計算法の3次元拡張した計算法 b:book の意味					///	k1btに改称する
-	void CreateMatk2(unsigned id,Tet tets);					//四面体ごとに作るので、四面体を引数に取る 内外すべての四面体について行う
-	void CreateMatk2f(Face faces);				//四面体ごとに作る式になっているが、外殻の三角形face毎に作る　facesのf
-	void CreateMatk2t(unsigned id);				//四面体ごとに作る　tetsのt
+	void CreateMatk1k(unsigned id);					//>	kimura式を参考にして(惑いながら)導出した計算法													///	k1ktに改称する
+	void CreateMatk1b(unsigned id);		//>	yagawa1983の計算法の3次元拡張した計算法 b:book の意味					///	k1btに改称する
+	void CreateMatk2(unsigned id,Tet tets);			//>	四面体ごとに作るので、四面体を引数に取る 内外すべての四面体について行う
+	//void CreateMatk2f(Face faces);					//>	四面体ごとに作る式になっているが、外殻の三角形face毎に作る　facesのf
+	void CreateMatk2t(unsigned id);					//>	四面体ごとに作る　tetsのt
+	void CreateMatk3t(unsigned id);					//>	四面体(tets)のt 毎に生成
+
 
 	void CreateMatk2array();
 	void CreateMatkLocal(unsigned i);

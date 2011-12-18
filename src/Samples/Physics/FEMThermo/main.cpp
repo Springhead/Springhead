@@ -15,6 +15,7 @@ Springhead2/src/Samples/FEMThermo
 */
 //
 #include "../../SampleApp.h"
+#include <list>
 
 #pragma hdrstop
 
@@ -211,6 +212,9 @@ public:
 			//	PHFemMEshThermの節点を取ってきて、加熱する
 			PHFemMeshThermoIf* pfem = NULL;
 
+			///	メッシュのPosOnPan座標を入れて、座標が小さい順に並べる
+			std::list<double> posOnPany;
+
 			for(unsigned int i=0; i<tmesh->NChildObject() && !pfem; ++i){
 				pfem = tmesh->GetChildObject(i)->Cast();
 				//	pfemが取れていることを確認
@@ -228,19 +232,18 @@ public:
 						//DSTR << j <<"th pfemPose: " << pfemPose << std::endl;
 						//Vec3d pfemPose_ = pfem->GetSufVtxPose(pfem->GetSurfaceVertex(j));
 						//DSTR << j <<"th pfemPose_: " << pfemPose_ << std::endl;
-						/// cube_test.x用
-						if(pfemPose.y >= -0.01 && pfemPose.y <= 0.00 ){				///	pfemPose.y >= -0.0076 && pfemPose.y <= -0.0074 
-							/// vertexの節点の座標がある範囲にある時、熱伝達境界条件で加熱する
+
+						//> メッシュの表面の節点vertex座標があるフライパン座標系のとある範囲にある時、熱伝達境界条件で加熱する
+						if(posOnPan.y >= -0.03 && posOnPan.y <= -0.02 ){				///	pfemPose.y >= -0.0076 && pfemPose.y <= -0.0074 /// cube_test.x用	//	 -0.01 <= pfemPose.y <= 0.0
+						//if(posOnPan.y >= -0.03 && posOnPan.y <= -0.020 ){		///	cheese
 //							pfem->SetVertexTc(j,tempTc);
-
-
 							pfem->SetVertexTc(j,tempTc,25.0);
 							//pfem->SetVertexTemp(j,25.0);
-
 							//DSTR << "pfem->GetStepCount(): " << pfem->GetStepCount() << std::endl;
 							//DSTR << "afPan: " << afPan <<std::endl;
 							//DSTR << "afMesh: " << afMesh <<std::endl;
-				//			DSTR << "j: "<<j<< ", pfemPose.y: " << pfemPose.y << std::endl;
+							posOnPany.push_back(posOnPan.y);
+							//DSTR << "j: "<<j<< ", posOnPan.y: " << posOnPan.y << std::endl;
 							//UsingHeatTransferBoundaryCondition		を呼び出す
 							//DSTR << j << "th vertex.Tcに" << tempTc << "を設定" <<std::endl;
 							//Tcの更新？
@@ -248,6 +251,12 @@ public:
 					}
 				}
 			}
+			posOnPany.sort();
+	//		DSTR << "posOnPany.front(): " <<posOnPany.front() << std::endl;
+			//for(unsigned i=0;i<50;i++){
+			//	DSTR << posOnPany[i] << std::endl;
+			//}
+
 			int kattton =0;
 		
 			//for(unsigned i=-0; i < nOfSurfaceVtx; i++){
