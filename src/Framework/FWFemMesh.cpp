@@ -197,6 +197,16 @@ bool FWFemMesh::CreatePHFromGR(){
 		GetPHSolid()->GetScene()->AddChildObject(phMesh->Cast());
 	return true;
 }
+struct FaceMap{
+	FaceMap(){
+		vtxs[0] = vtxs[1] = vtxs[2] = -1;
+		face = -1;
+	}
+	int vtxs[3];
+	int& operator [](int i) {return vtxs[i]; }
+	int face;
+};
+
 void FWFemMesh::CreateGRFromPH(){
 	//	頂点の対応表を用意
 	std::vector<int> vtxMap;
@@ -238,45 +248,77 @@ void FWFemMesh::CreateGRFromPH(){
 			gWalls[gf].wall[i] = ((grMesh->vertices[grMesh->faces[gf].indices[(i+1)%nv]] - grMesh->vertices[grMesh->faces[gf].indices[i]]) % gnormals[gf]).unit();
 		}
 	}
-	std::vector<int> pFaceMap(pnormals.size());
+	std::vector< FaceMap > pFaceMap(pnormals.size());
 	for(unsigned pf=0; pf<pnormals.size(); ++pf){
-		std::vector<int> cand;
+		//	物理の平面(pf)と同一平面に載っているグラフィクスの平面を列挙
+		std::vector<int> gfCands;
 		for(unsigned gf=0; gf<gnormals.size(); ++gf){
-			if (pnormals[pf] * gnormals[gf] > 0.8){	//	法線が遠いのはだめ
-				int i;
-				for(i=0; i<3; ++i){
-					double d = gnormals[gf] * (gmd.vertices[gmd.faces[pf].indices[i]] - grMesh->vertices[grMesh->faces[gf].indices[0]]);
-					if (d*d > 0.01) break;	//	距離が離れすぎているのはだめ
-				}	
-				if (i==3){
-					//	phの三角形の重心が、grの中の面に入っている物をさがす
-					Vec3f center;
-					for(int v=0;v<3; ++v) center += gmd.vertices[gmd.faces[pf].indices[v]];
-					center /= 3;
-					int v;
-					for(v=0; v<grMesh->faces[gf].nVertices; ++v){
-						double d = gWalls[gf].wall[v] * (center - grMesh->vertices[grMesh->faces[gf].indices[v]]);
-						if (d<0) break;
-					}
-					if (v == grMesh->faces[gf].nVertices){
-						pFaceMap[pf] = gf;
-						//	DEBUG出力
-						//	DSTR << "center:" << center <<std::endl;
-						//	for(int v=0; v<grMesh->faces[gf].nVertices; ++v)
-						//		DSTR << "vtx" << grMesh->vertices[grMesh->faces[gf].indices[v]] << "wall:" << gWalls[gf].wall[v] << std::endl;
-						break;
-					}
+			if (pnormals[pf] * gnormals[gf] > 0.999){	//	法線が遠いのはだめ
+				int pv;
+				for(pv=0; pv<3; ++pv){
+					double d = gnormals[gf] * (gmd.vertices[gmd.faces[pf].indices[pv]] - grMesh->vertices[grMesh->faces[gf].indices[0]]);
+					if (d*d > 1e-8) break;	//	距離が離れすぎているのはだめ
+				}
+				if (pv==3) gfCands.push_back(gf);
+			}
+		}
+		//	pfの各頂点に対応するgfを見つける
+		std::vector<int> gfForPv[3];
+		for(unsigned pv=0; pv<3; ++pv){
+			for(unsigned i=0; i<gfCands.size(); ++i){
+				int gf = gfCands[i];
+				int gv;
+				for(gv=0; gv<grMesh->faces[gf].nVertices; ++gv){
+					double d = gWalls[gf].wall[gv] * (gmd.vertices[gmd.faces[pf].indices[pv]] - grMesh->vertices[grMesh->faces[gf].indices[gv]]);
+					if (d < -1e-6) break;
+				}
+				if (gv == grMesh->faces[gf].nVertices){
+					gfForPv[pv].push_back(gf);
 				}
 			}
 		}
+		//	３物理頂点が、１つのグラフィクス三角形を共有する場合、共有するものを優先
+		std::vector< std::pair<int, int> > votes;
+		for(int i=0; i<3; ++i){
+			for(unsigned j=0; j<gfForPv[i].size(); ++j){
+				unsigned k;
+				for(k=0; k<votes.size(); ++k){
+					if (votes[k].second == gfForPv[i][j]){
+						votes[k].first ++;
+						break;
+					}
+				}
+				if (k==votes.size()) votes.push_back(std::make_pair(1, gfForPv[i][j]));
+			}
+		}
+		std::sort(votes.begin(), votes.end(), std::greater<std::pair<int, int> >());
+		for(int i=0; i<3; ++i){
+			for(unsigned j=0; j<votes.size(); ++j){
+				for(unsigned k=0; k<gfForPv[i].size(); ++k){
+					if (votes[j].second == gfForPv[i][k]){
+						pFaceMap[pf][i] = gfForPv[i][k];
+						goto nextPv;
+					}
+				}
+			}
+			nextPv:;
+		}
+		if (pFaceMap[pf][0] == pFaceMap[pf][1]) pFaceMap[pf].face = pFaceMap[pf][0];
+		else if (pFaceMap[pf][1] == pFaceMap[pf][2]) pFaceMap[pf].face = pFaceMap[pf][1];
+		else if (pFaceMap[pf][2] == pFaceMap[pf][0]) pFaceMap[pf].face = pFaceMap[pf][2];
+		else pFaceMap[pf].face = pFaceMap[pf][0];
 	}
-	PDEBUG(	DSTR << "FaceMap PHtoGR:"; )
-	PDEBUG(	for(unsigned i=0; i<pFaceMap.size(); ++i) DSTR << pFaceMap[i] << " "; )
-	PDEBUG(	DSTR << std::endl; )
+#if 0
+	DSTR << "FaceMap PHtoGR:\n";
+	for(unsigned i=0; i<pFaceMap.size(); ++i)
+		DSTR << pFaceMap[i].face << ":" << pFaceMap[i][0] << " " << pFaceMap[i][1] << " " << pFaceMap[i][2] << ", ";
+	DSTR << std::endl;
+#endif
+
 	//	対応表に応じてマテリアルリストを設定。
 	gmd.materialList.resize(grMesh->materialList.size() ? pFaceMap.size() : 0);
 	for(unsigned pf=0; pf<gmd.materialList.size(); ++pf){
-		gmd.materialList[pf] = grMesh->materialList[pFaceMap[pf]];
+		gmd.materialList[pf] = grMesh->materialList[pFaceMap[pf].face];
 	}
 	//	新しく作るGRMeshの頂点からphMeshの頂点への対応表
 	vertexIdMap.resize(gmd.vertices.size(), -1);
@@ -290,12 +332,12 @@ void FWFemMesh::CreateGRFromPH(){
 			//	テクスチャ座標を計算
 			Vec2f texCoord;
 			Vec3f normal;
-			GRMeshFace& gFace = grMesh->faces[pFaceMap[pf]];
-			GRMeshFace& gFaceNormal = grMesh->faceNormals[pFaceMap[pf]];
+			GRMeshFace& gFace = grMesh->faces[pFaceMap[pf][i]];
+			GRMeshFace& gFaceNormal = grMesh->faceNormals[pFaceMap[pf].face];
 			GRMeshFace* gNormal = NULL;
 			if (grMesh->normals.size()){
 				gNormal = &gFace;
-				if (grMesh->faceNormals.size()) gNormal = &grMesh->faceNormals[pFaceMap[pf]];
+				if (grMesh->faceNormals.size()) gNormal = &grMesh->faceNormals[pFaceMap[pf].face];
 			}
 			if (gFace.nVertices == 3){
 				Vec3f weight;
@@ -307,11 +349,17 @@ void FWFemMesh::CreateGRFromPH(){
 				vtxs.gauss(weight, gmd.vertices[pv], tmp);
 				for(unsigned j=0; j<3; ++j){
 					if (weight[j] <= -0.001){
-						DSTR << "グラフィクスの3頂点\t"; 
+						DSTR << "グラフィクスの3頂点の外側に物理の頂点があります。" << std::endl; 
 						for(unsigned k=0; k<3; ++k){
-							DSTR << grMesh->vertices[gFace.indices[k]] << "\t";
+							for(unsigned ax=0; ax<3; ++ax){
+								DSTR << grMesh->vertices[gFace.indices[k]][ax];
+								DSTR << (ax==2 ? "\n" : "\t");
+							}
 						}
-						DSTR << "の外側に物理の頂点:\t" << gmd.vertices[pv] << "があります" << std::endl;
+						for(unsigned ax=0; ax<3; ++ax){
+							DSTR << gmd.vertices[pv][ax];
+							DSTR << (ax==2 ? "\n" : "\t");
+						}
 					}
 					texCoord += weight[j] * grMesh->texCoords[gFace.indices[j]];
 					if(gNormal) normal += weight[j] * grMesh->normals[gNormal->indices[j]];
@@ -381,4 +429,5 @@ void FWFemMesh::CreateGRFromPH(){
 	rv->tex3d = grMesh->tex3d;
 	grMesh = rv;
 }
+
 }

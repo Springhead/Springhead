@@ -30,20 +30,24 @@ so2.SetAngularVelocity(Vec3d(0,0,0))
 so2.SetVelocity(Vec3d(0,0,0))
 
 descJoint = PHBallJointDesc()
-descJoint.spring = 10.0
-descJoint.damper = 0.1
 descJoint.poseSocket = Posed(1,0,0,0, 0,0,0)
 descJoint.posePlug = Posed(1,0,0,0, 0,0,2)
-descJoint.targetPosition = Quaterniond(1, 2, 0, 0)
+descJoint.spring = 10.0
+descJoint.damper = 1.0
+descJoint.targetPosition = Quaterniond().Rot(1.0, Vec3d(1,0,0))
 jo = phScene.CreateJoint(so1, so2, PHBallJoint.GetIfInfoStatic(), descJoint)
+for i in range(0,500):
+	phScene.Step()
 
+descSolid.pose = Posed(1,0,0,0, 0,2,-2)
+box = phScene.CreateSolid(descSolid)
+descSolid.pose = Posed(1,0,0,0, 0,10,-2)
+sphere = phScene.CreateSolid(descSolid)
+box.AddShape(phSdk.CreateShape(CDBox.GetIfInfoStatic(), descBox))
+descSp = CDSphereDesc()
+sphere.AddShape(phSdk.CreateShape(CDSphere.GetIfInfoStatic(), descSp))
 
-#descSolid.pose = Posed(1,0,0,0, 0,2,2)
-#box = phScene.CreateSolid(descSolid)
-#descSolid.pose = Posed(1,0,0,0, 0,4,2)
-#sphere = phScene.CreateSolid(descSolid)
-#box.AddShape(phSdk.CreateShape(CDBox.GetIfInfoStatic(), descBox))
-#descSp = CDSphereDesc()
-#sphere.AddShape(phSdk.CreateShape(CDSphere.GetIfInfoStatic(), descSp))
-
-
+o = ObjectStates().Create()
+o.SaveState(phScene)
+p = ObjectStates().Create()
+p.SaveState(phScene)

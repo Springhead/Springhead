@@ -64,6 +64,7 @@ public:
 		this->argv = argv;
 
 		SampleApp::Init(argc, argv);
+		ToggleAction(MENU_ALWAYS, ID_RUN);
 		curScene = 0;
 
 		HWND hWnd = FindWindow(L"GLUT", L"Python with Springhead");
@@ -84,23 +85,19 @@ public:
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
 	}	
 
-	/// 1ステップのシミュレーション：しない
 	virtual void OnStep(){
+		UTAutoLock critical(EPCriticalSection);
+		fwScene->Step();
 	}
 
-	/*
 	// 描画関数．描画要求が来たときに呼ばれる
 	virtual void OnDraw(GRRenderIf* render) {
 		UTAutoLock critical(EPCriticalSection);
-
-		GRCameraDesc cd = render->GetCamera();
-		render->SetCamera(cd);
-		GetSdk()->GetScene(0)->SetRenderMode(true, false);
-		GetSdk()->GetScene(0)->DrawPHScene(render);
+		SampleApp::OnDraw(render);
 	}
-	*/
 
 	virtual void OnAction(int menu, int id){
+		UTAutoLock critical(EPCriticalSection);
 		SampleApp::OnAction(menu, id);
 	}
 

@@ -146,7 +146,7 @@ public:
 	SPR_OBJECTDEF1(PHHapticEngine, PHEngine);
 	ACCESS_DESC(PHHapticEngine);
 	PHHapticRenderImp* renderImp;
-	std::vector< PHHapticRenderImp* > renderImps;
+	std::vector< UTRef<PHHapticRenderImp> > renderImps;
 	PHHapticPointers hapticPointers;
 	PHSolidsForHaptic hapticSolids;
 	typedef std::vector< HIBaseIf* > HIBaseIfs;
