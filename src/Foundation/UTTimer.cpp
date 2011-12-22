@@ -30,7 +30,9 @@ public:
 	Timers		timers;			///< タイマの配列
 
 	UTTimerStub(): resolution(0), resolutionMin(0), resolutionMax(0){}
-
+	~UTTimerStub(){
+		for(unsigned i=0; i<timers.size(); ++i) timers[i]->Stop();
+	}
 public:
 	/// 唯一のインスタンスを取得
 	static UTTimerStub& UTTimerStub::Get(){
@@ -95,6 +97,7 @@ UTTimerProvider::UTTimerProvider(){
 }
 
 UTTimerProvider::~UTTimerProvider(){
+	Unregister();
 }
 
 void UTTimerProvider::Register(){
@@ -104,16 +107,18 @@ void UTTimerProvider::Register(){
 
 void UTTimerProvider::Unregister(){
 	UTTimerStub& stub = UTTimerStub::Get();
-	for(UTTimerStub::Providers::iterator it = stub.providers.begin(); it != stub.providers.end(); ++it){
-		if (*it == this){
-			// このプロバイダを利用しているタイマを停止する
-			for(UTTimerStub::Timers::iterator t = stub.timers.begin(); t != stub.timers.end(); ++t){
-				if ((*t)->IsStarted() && (*t)->GetMode() == UTTimerIf::FRAMEWORK && (*t)->provider == this){
-					(*t)->Stop();
-				}
-			}
-			stub.providers.erase(it);
-			return;
+	// このプロバイダを利用しているタイマを停止する
+	for(unsigned i=0; i<stub.timers.size(); ++i){
+		UTTimer* t = stub.timers[i];
+		if (t->IsStarted() && t->GetMode() == UTTimerIf::FRAMEWORK && t->provider == this){
+			t->Stop();
+		}
+	}
+	for(unsigned i=0; i<stub.providers.size(); ++i){
+		UTTimerProvider* p = stub.providers[i];
+		if (p == this){
+			stub.providers.erase(stub.providers.begin()+i);
+			break;
 		}
 	}
 }
@@ -152,10 +157,9 @@ UTTimer::~UTTimer(){
 	//	ここでAddRefしておかないと、 timers.erase()した瞬間に~UTTimer()に再入してしまう。
 	//	newしていないUTTimerの場合、最初から0なので2にしておかないと再入してしまう。
 	AddRef(); AddRef();	
-
-	for(UTTimerStub::Timers::iterator it = timers.begin(); it != timers.end(); ++it){
-		if (*it == this){
-			timers.erase(it);
+	for(unsigned int i=0; i<timers.size(); ++i){
+		if (timers[i] == this){
+			timers.erase(timers.begin()+i);
 			break;
 		}
 	}
