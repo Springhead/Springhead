@@ -111,6 +111,12 @@ public:
 		// タイマ
 		timer = CreateTimer(UTTimerIf::FRAMEWORK);
 		timer->SetInterval(10);
+
+		//> 原点座標の格納	
+		//FWObjectIf* pan_		=	DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("Pan"));
+		//Affinef afPan_ = pan_->GetGRFrame()->GetWorldTransform();
+		//Affinef afPan_ = pan_->GetGRFrame()->GetWorldTransform();
+		///	原点座放＝＞ローカル座標系の(0,0,0)のはず
 	}
 
 	// 描画関数．描画要求が来たときに呼ばれる
@@ -173,8 +179,8 @@ public:
 		//	フライパンを取ってくる
 		FWObjectIf* pan		=	DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
 		//	食材を取ってくる
-		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
-//		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwCheese")->Cast();
+//		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwCheese")->Cast();
 		//	ワールド座標に変換する
 
 		//DSTR <<"pan: " << pan << std::endl;
@@ -234,8 +240,8 @@ public:
 						//DSTR << j <<"th pfemPose_: " << pfemPose_ << std::endl;
 
 						//> メッシュの表面の節点vertex座標があるフライパン座標系のとある範囲にある時、熱伝達境界条件で加熱する
-						if(posOnPan.y >= -0.03 && posOnPan.y <= -0.02 ){				///	pfemPose.y >= -0.0076 && pfemPose.y <= -0.0074 /// cube_test.x用	//	 -0.01 <= pfemPose.y <= 0.0
-						//if(posOnPan.y >= -0.03 && posOnPan.y <= -0.020 ){		///	cheese
+						//if(posOnPan.y >= -0.03 && posOnPan.y <= -0.02 ){				///	pfemPose.y >= -0.0076 && pfemPose.y <= -0.0074 /// cube_test.x用	//	 -0.01 <= pfemPose.y <= 0.0
+						if(posOnPan.y >= -0.03 && posOnPan.y <= -0.020 ){		///	cheese
 //							pfem->SetVertexTc(j,tempTc);
 							pfem->SetVertexTc(j,tempTc,25.0);
 							//pfem->SetVertexTemp(j,25.0);
@@ -281,58 +287,55 @@ public:
 			//CreatePHFemMeshThermo();
 		//総節点数、総要素数、節点座標、要素の構成などを登録
 			//PHFemMeshThermoのオブジェクトを作る際に、ディスクリプタに値を設定して作る
-			
-		//節点の初期温度を設定する⇒{T}縦ベクトルに代入
-			//{T}縦ベクトルを作成する。以降のK,C,F行列・ベクトルの節点番号は、この縦ベクトルの節点の並び順に合わせる。
-			//CreateMeshTempVec();
-		//熱伝導率、熱伝達率、密度、比熱などのパラメーターを設定・代入
-			//PHFemMEshThermoのメンバ変数の値を代入
-			//SetThermoConductionParam();
-			//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
-
-		//計算に用いるマトリクス、ベクトルを作成（メッシュごとの要素剛性行列/ベクトル⇒全体剛性行列/ベクトル）
-			//{T}縦ベクトルの節点の並び順に並ぶように、係数行列を加算する。係数行列には、面積や体積、熱伝達率などのパラメータの積をしてしまったものを入れる。
-		//CreateK1();
-		//CreateK2();
-		//CreateC();
-		//CreateF();
-		//PrepareGaussSeidel();
-			//ガウスザイデルで計算するために、クランクニコルソンの差分式の形で行列を作る。行列DやF、-bなどを作り、ガウスザイデルで計算ステップを実行直前まで
-		//ガウスザイデルの計算を単位ステップ時間ごとに行う
-			//ガウスザイデルの計算
-			//CalcGaussSeidel();
+		
 		//（形状が変わったら、マトリクスやベクトルを作り直す）
 		//温度変化・最新の時間の{T}縦ベクトルに記載されている節点温度を基に化学変化シミュレーションを行う
 			//SetChemicalSimulation();
 			//化学変化シミュレーションに必要な温度などのパラメータを渡す
 		//温度変化や化学シミュレーションの結果はグラフィクス表示を行う
 			
-		//以下、削除予定
-		//CreatePHFemMeshThermo();
-		//[K]行列を作る
-		//CreateKele();
-		//[C]行列を作る
-		//{F}ベクトルを作る
-		//面積を求める
-		//体積を求める
-		
-		//行列計算のテストを行う関数
-		//TestMatrixFunc();
 	}
-	void CreateMeshTempVec(){
+	//>	対流・放射伝熱の距離に比例・反比例して加える熱量が変わる関数の実装
+	void hogehoge(){
+		///	底の位置
+		double topOfPan=0.0;
+		///	食材の位置
+		double altitudeOfFood=0.0;
 
-	}
-	void SetThermoConductionParam(){
+		///	対流、輻射による比例？係数
+		double a_0 = 0;
+			///	一変数近似が良いか、多変数近似が良いか
+				/// 比例係数、a * x^3 +  b * x^2  + c * x^1
+		///	その食材のx,y位置の射影のフライパン表面の温度
+		double tempP=0.0;
+				///	食べ物と同じxy位置(世界座標)のフライパンの温度を取ってくる？
+		 a_0 * (topOfPan - altitudeOfFood) * tempP; ///	単位の次元[K/m]
 
 	}
 	void CreatePHFemMeshThermo(){
 		PHFemMeshThermoIf* phmesht;
 		PHFemMeshThermoDesc desc;
 	}
-	void CreateKele(){
+	void SetInductionHeating(double radius,double width,double heatFlux){						//>	磁束→熱流束　heatFlux
+		double inRadius = radius - width /2;		//> 内半径
+		double outRadius = radius + width /2; 		//>	外半径
+
+		//>　内半径と外半径の間をtempで加熱する
+
+
+
 
 	}
+	void SetInductionHeating2(double radius,double width,double temp,double ){			//>	半径の内側又は外側に行くにつれて、加熱流束が減衰する
+		double inRadius = radius - width /2;		//> 内半径
+		double outRadius = radius + width /2; 		//>	外半径
 
+		//>　内半径と外半径の間をtempで加熱する
+
+
+
+
+	}
 	void CopyTheFood(){
 
 	}
