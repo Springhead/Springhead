@@ -48,8 +48,7 @@ public:
 	Vec3d   iNormal;				///< Ï•ª‚É‚æ‚é–@ü
 
 public:
-	CDShapePair(){
-	}
+	CDShapePair():state(NONE){}
 	void SetState(const CDShapePairSt& s){
 		(CDShapePairSt&)*this = s;
 	}
