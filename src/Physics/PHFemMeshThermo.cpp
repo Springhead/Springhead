@@ -51,6 +51,25 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 	//GetFramePosition();
 }
 
+void PHFemMeshThermo::CalcVtxDisFromOrigin(){
+	//double origin = GetScene()->GetChildObject(
+	//this->GetScene()->Get
+	///不要　GRMeshThermo自身の原点を取得する⇒main()で初期化やって、後で移植
+	/// PHFemMeshIf* pan		=	DCAST(PHFemMeshIf*,GetScene()->FindObject("Pan"));
+	//>	nSurfaceの内、x,z座標から距離を求めてsqrt(2乗和)、それをFemVertexに格納する
+	///同心円系の計算に利用する　distanse from origin
+
+	//> 以下で取得する位置は、世界座標系!？ローカル座標系の位置の取り方を知りたい!!!
+	for(unsigned i=0;i < NSurfaceVertices(); i++){
+		double len = sqrt(vertices[surfaceVertices[i]].pos.x * vertices[surfaceVertices[i]].pos.x + vertices[surfaceVertices[i]].pos.z *vertices[surfaceVertices[i]].pos.z);
+		vertices[surfaceVertices[i]].disFromOrigin = len;
+		DSTR << i << "th verticies pos: " << vertices[surfaceVertices[i]].pos << std::endl;
+		DSTR << i << "th distans from origin: " << len << std::endl;
+		DSTR << std::endl;
+	}
+	int kadoon =0;
+}
+
 void PHFemMeshThermo::SetThermalBoundaryCondition(){
 	
 }
@@ -898,6 +917,9 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	int hogeshidebug =0;
 	//	節点温度推移の書き出し
 	templog.open("templog.csv");
+
+	//> 必要な処理
+	CalcVtxDisFromOrigin();
 }
 
 

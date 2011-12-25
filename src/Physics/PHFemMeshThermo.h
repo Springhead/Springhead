@@ -80,6 +80,8 @@ public:
 
 	unsigned long GetStepCount(){return StepCount;};
 	unsigned long GetStepCountCyc(){return StepCount_;};
+	
+	void CalcVtxDisFromOrigin();			///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
 
 protected:
 	//PHFemMeshThermo内のみで用いる計算

@@ -64,6 +64,7 @@ public:
 		double heatTransRatio;		//	その節点での熱伝達率
 		bool vtxDeformed;		//	四面体の変形でこの節点がローカル座標基準で移動したかどうか
 		double thermalEmissivity;	///	熱放射率　節点での
+		double disFromOrigin;		//>	x-z平面でのローカル座標の原点からの距離
 	};
 	//	四面体
 	struct Tet{
