@@ -15,6 +15,9 @@ Springhead2/src/Samples/FEMThermo
 */
 //
 #include "../../SampleApp.h"
+#include <Framework/FWFemMesh.h>
+#include <Collision/CDConvexMesh.h>
+#include <Physics/PHConstraintEngine.h>
 #include <list>
 
 #pragma hdrstop
@@ -23,7 +26,6 @@ using namespace PTM;
 
 using namespace Spr;
 using namespace std;
-
 
 
 class MyApp : public SampleApp{
@@ -91,7 +93,7 @@ public:
 		
 		//	ファイルのロード
 		UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-		GetSdk()->LoadScene("sceneTHTest4.spr", import);			// ファイルのロード			// scene.spr:negiをロード, scene2.spr:デバッグ用の直方体, scene3.spr:穴あきcheeseをロード, sceneTHtest.spr:フライパンなどインポートのテスト
+		GetSdk()->LoadScene("sceneTHTest.spr", import);			// ファイルのロード			// scene.spr:negiをロード, scene2.spr:デバッグ用の直方体, scene3.spr:穴あきcheeseをロード, sceneTHtest.spr:フライパンなどインポートのテスト
 		numScenes = GetSdk()->NScene();
 		if (numScenes) SwitchScene(GetSdk()->NScene()-1);
 
@@ -174,8 +176,189 @@ public:
 		HeatConductionStep();
 		
 	}
+	inline double dist2D2(const Vec3d& a, const Vec3d& b){
+		return Square(a.x-b.x) + Square(a.y-b.y);
+	}
+	struct CondVtx{
+		int id;
+		Vec3d pos;
+		struct Less{
+			int axis;
+			Less(int a):axis(a){}
+			bool operator() (const CondVtx& a, const CondVtx& b) const { return a.pos[axis] < b.pos[axis]; }
+		};
+	};
 	void HeatConductionStep(){
+#if 1
+		FWFemMesh* fmesh[2];
+		fmesh[0] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+		fmesh[1] = GetSdk()->GetScene()->FindObject("fwPan")->Cast();
+		if (!(fmesh[0] && fmesh[1])){
+			DSTR << "対象のFWFemMeshが見つかりません" << std::endl;
+			return;
+		}
+		PHSolid* solids[2];
+		solids[0] = fmesh[0]->GetPHSolid()->Cast();
+		solids[1] = fmesh[1]->GetPHSolid()->Cast();
+		PHFemMesh* pmesh[2];
+		pmesh[0] = fmesh[0]->GetPHMesh()->Cast();
+		pmesh[1] = fmesh[1]->GetPHMesh()->Cast();
+		//	FEMMeshは接触判定がなくCDConvexMeshにある。CDConvexMeshの位置を取ってくる
+		if (solids[0]->NShape() != 1 || solids[0]->NShape() !=1){
+			DSTR << "複数形状には未対応" << std::endl;
+			return;
+		}
+		PHScene* scene = solids[0]->GetScene()->Cast();
+		bool bSwap;
+		PHSolidPairForLCP* pair = scene->GetSolidPair(solids[0]->Cast(), solids[1]->Cast(), bSwap)->Cast();
+		if (bSwap) std::swap(pmesh[0], pmesh[1]);	
+		PHShapePairForLCP* sp = pair->GetShapePair(0,0)->Cast();
+		if (sp->state == CDShapePair::NONE){
+			//	未接触なので、GJKを呼ぶ
+			sp->shapePoseW[0] = solids[0]->GetPose() * solids[0]->GetShapePose(0);
+			sp->shapePoseW[1] = solids[1]->GetPose() * solids[1]->GetShapePose(0);
+			if (bSwap) std::swap(sp->shapePoseW[0], sp->shapePoseW[1]);	
+			Vec3d sep;
+			double dist = FindClosestPoints(sp->shape[0], sp->shape[1], sp->shapePoseW[0], sp->shapePoseW[1], sep, sp->closestPoint[0], sp->closestPoint[1]);
+			if (dist < 1e-10){
+				//	かなり近いので、法線が怪しいので、警告をだしておく。
+				DSTR << "２物体が非常に近いが、接触しはしていない微妙な状態"  << std::endl;
+			}
+			sp->depth = -dist;
+			sp->normal = sp->shapePoseW[1]*sp->closestPoint[1] - sp->shapePoseW[0]*sp->closestPoint[0];
+			sp->normal.unitize();
+		}
+		const double isoLen = 0.02;	//	これ以上離れると伝導しない距離
+		if (sp->depth > -isoLen){
+			//	距離が近い頂点を列挙。ついでに法線に垂直な平面上での座標を求めておく。
+			typedef std::vector<CondVtx> CondVtxs;
+			CondVtxs condVtxs[2];
+			Matrix3d coords;
+			if (sp->normal.x < sp->normal.y) coords.Rot(sp->normal, Vec3d(1,0,0), 'z');
+			else coords.Rot(sp->normal, Vec3d(0,1,0), 'z');
+			Matrix3d coords_inv = coords.inv();			
+			for(int i=0; i<2; ++i){
+				Vec3d normal = sp->shapePoseW[i].Ori().Inv() * sp->normal * (i==0 ? 1 : -1);
+				for(unsigned v=0; v < pmesh[i]->surfaceVertices.size(); ++v){
+					double vd = (sp->closestPoint[i] - pmesh[i]->vertices[pmesh[i]->surfaceVertices[v]].pos) * normal;
+					vd -= sp->depth;
+					if (vd < isoLen) {
+						CondVtx c;
+						c.id = pmesh[i]->surfaceVertices[v];
+						c.pos = coords_inv * (sp->shapePoseW[i] * pmesh[i]->vertices[c.id].pos);
+						condVtxs[i].push_back(c);
+					}
+				}
+			}
+			//	法線に垂直な平面上でソートして、BBoxが重ならない部分は捨てる。
+			//	本来は、CDConvex::FindCutRing()を使って良い感じにやりたいところ。凸分解ができたらやりたい。
+			Vec2d bboxMin, bboxMax;
+			for(int axis = 0; axis<2; ++axis){
+				for(int i=0; i<2; ++i){
+					std::sort(condVtxs[i].begin(), condVtxs[i].end(), CondVtx::Less(axis));
+				}
+				bboxMin[axis] = condVtxs[0].size() ? condVtxs[0].front().pos[axis] : DBL_MAX;
+				bboxMin[axis] = std::min(bboxMin[axis], condVtxs[1].size() ? condVtxs[1].front().pos[axis] : DBL_MAX);
+				for(int i=0; i<2; ++i){
+					CondVtx tmp;
+					tmp.pos[axis] = bboxMin[axis];
+					CondVtxs::iterator it = std::lower_bound(condVtxs[i].begin(), condVtxs[i].end(), tmp, CondVtx::Less(axis));
+					condVtxs[i].erase(condVtxs[i].begin(), it);
+				}
+				bboxMax[axis] = condVtxs[0].size() ? condVtxs[0].back().pos[axis] : DBL_MIN;
+				bboxMax[axis] = std::max(bboxMax[axis], condVtxs[1].size() ? condVtxs[1].back().pos[axis] : DBL_MIN);
+				for(int i=0; i<2; ++i){
+					CondVtx tmp;
+					tmp.pos[axis] = bboxMax[axis];
+					CondVtxs::iterator it = std::upper_bound(condVtxs[i].begin(), condVtxs[i].end(), tmp, CondVtx::Less(axis));
+					condVtxs[i].erase(it, condVtxs[i].end());
+				}
+			}
+			/*	熱伝達率 α [W/(m^2 K)] を用いると、境界上で q = α(T-Tc) (T:接点温度 Tc:周囲の流体等の温度)
+				２物体の接触だと、T1-α1->Tc-α2->T2 となると考えられる。
+				q = α1(T1-Tc) = α2(Tc-T2) より (α1+α2)Tc = α1T1 + α2T2
+				Tc = (α1T1 + α2T2)/(α1+α2)
+				q = α1(T1-(α1T1 + α2T2)/(α1+α2)) = α1T1 - α1(α1T1 + α2T2)/(α1+α2)
+				  = (α1α2T1 - α1α2T2)/(α1+α2) = α'(T1-T2)  α' = α1α2/(α1+α2)	*/
+			/*	qとQについての考察
+				qは単位面積あたりなので、頂点間の熱の移動量Qに直すには、頂点が代表する面積を掛ける必要がある。
+				本来は、三角形の重なりと形状関数から求めるべきもの。
+				しかし、重なり具合は毎ステップ変わるので、この計算は大変。簡略化を考える。
+				頂点は頂点を含む三角形に勢力を持つ。三角形の重なりより、頂点の距離の意味が大きい。
+				距離が近いものを割り当てていくが、後で飛び地が出てはいけない。
+				そこで、１点から初めて徐々に割り当て領域を大きくして行く。これでずれは起きても飛び地はでない。
+				
+				頂点の面積は、頂点を含む三角形達の面積の和の1/3。				
+			*/
+			//	bboxの中心近くの頂点を見つける
+			double xCenter = 0.5*(bboxMin.x + bboxMax.x);
+			int centerVtx[2];
+			for(int i=0; i<2; ++i){
+				CondVtx tmp;
+				tmp.pos[1] = 0.5*(bboxMin.y+bboxMax.y);
+				CondVtxs::iterator it = std::lower_bound(condVtxs[i].begin(), condVtxs[i].end(), tmp, CondVtx::Less(1));
+				int cit = it - condVtxs[i].begin();
+				double minDistX = DBL_MAX;
+				for(int y=0; y<5; ++y){
+					if (cit-y >= 0 && cit-y < (int)condVtxs[i].size()){
+						double dist = std::abs(condVtxs[i][cit-y].pos.x - xCenter);
+						if (dist < minDistX){
+							centerVtx[i] = cit-y;
+							minDistX = dist;
+						}
+					}
+					if (cit+y < (int)condVtxs[i].size()){
+						double dist = std::abs(condVtxs[i][cit+y].pos.x - xCenter);
+						if (dist < minDistX){
+							centerVtx[i] = cit+y;
+							minDistX = dist;
+						}
+					}
+				}
+			}
+			//	centerVtx[i]と一番近い頂点を探す
+			//	verticesからcondVtxへの対応表を作る
+			std::vector<int> vtx2Cond[2];
+			for(int i=0; i<2; ++i){
+				vtx2Cond[i].resize(pmesh[i]->vertices.size(), -1);
+				for(unsigned j=0; j<condVtxs[i].size(); ++j){
+					vtx2Cond[i][condVtxs[i][j].id] = j;
+				}
+			}
+			int closestVtx[2];
+			double minDist2[2];
+			for(int i=0; i<2; ++i){
+				Vec3d pos = condVtxs[1-i][centerVtx[1-i]].pos;
+				int minId = condVtxs[i][centerVtx[i]].id;
+				int vid;
+				do {
+					vid = minId;
+					minDist2[i] = dist2D2(condVtxs[i][vtx2Cond[i][vid]].pos, pos);
+					for(unsigned e=0; e < pmesh[i]->vertices[vid].edges.size(); ++e){
+						PHFemMesh::Edge& edge = pmesh[i]->edges[pmesh[i]->vertices[vid].edges[e]];
+						int next = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0]; 
+						if (vtx2Cond[i][next]>=0){
+							double d2 = dist2D2(condVtxs[i][vtx2Cond[i][next]].pos, pos);
+							if (d2 < minDist2[i]){
+								minDist2[i] = d2;
+								minId = next;
+							}
+						}
+					}
+				} while(minId != vid);
+				closestVtx[i] = vid;
+			}
+			//	より近いほうを closestVtx[2] に入れる。
+			if (minDist2[0] < minDist2[1]) closestVtx[1] = centerVtx[1];
+			else closestVtx[0] = centerVtx[0];
+			
+			//	ここから対応を広げていく
 
+		}
+		
+		
+
+#else
 		//	フライパンを取ってくる
 		FWObjectIf* pan		=	DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
 		//	食材を取ってくる
@@ -294,6 +477,7 @@ public:
 			//化学変化シミュレーションに必要な温度などのパラメータを渡す
 		//温度変化や化学シミュレーションの結果はグラフィクス表示を行う
 			
+#endif
 	}
 	//>	対流・放射伝熱の距離に比例・反比例して加える熱量が変わる関数の実装
 	void hogehoge(){
