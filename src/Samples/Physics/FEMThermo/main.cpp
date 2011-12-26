@@ -223,8 +223,9 @@ public:
 	void FindNext(std::vector<int>& next, const std::vector<int>& cur, const std::vector<int>& used, CondVtxs& condVtxs){
 		for(unsigned i=0; i<cur.size(); ++i){
 			for(unsigned e=0; e < condVtxs.pmesh->vertices[condVtxs[cur[i]].id].edges.size(); ++e){
-				PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[condVtxs[cur[i]].id].edges[e]];
-				int f = edge.vertices[0] == cur[i] ? edge.vertices[1] : edge.vertices[0]; 
+				int vid = condVtxs[cur[i]].id;
+				PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[vid].edges[e]];
+				int f = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0]; 
 				int cf = condVtxs.vtx2Cond[f];
 				if (cf>=0){
 					if (std::find(used.begin(), used.end(), cf) == used.end()
@@ -267,27 +268,29 @@ public:
 	//	condVtxs の中から、pos に近い3点を from を起点に探索して idsに返す。posを補間する重みをwegihtsに返す。
 	void FindNearest3(int *ids, double* weights, const Vec3d& pos, CondVtxs& condVtxs, int from){
 		int minId = from;
+		double minDist2;
 		int cid;
 		do{
 			cid = minId;
-			double minDist2 = dist2D2(condVtxs[cid].pos, pos);
+			minDist2 = dist2D2(condVtxs[cid].pos, pos);
 			int vid = condVtxs[cid].id;
 			for(unsigned e=0; e < condVtxs.pmesh->vertices[vid].edges.size(); ++e){
 				PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[vid].edges[e]];
 				int next = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0]; 
-				if (condVtxs.vtx2Cond[next]>=0){
-					double d2 = dist2D2(condVtxs[condVtxs.vtx2Cond[next]].pos, pos);
+				int cnext = condVtxs.vtx2Cond[next];
+				if (cnext>=0){
+					double d2 = dist2D2(condVtxs[cnext].pos, pos);
 					if (d2 < minDist2){
 						minDist2 = d2;
-						minId = next;
+						minId = cnext;
 					}
 				}
 			}
 		}while(cid != minId);
 		//	隣の頂点で近いものを２つ見つける
-		double minDist2 = DBL_MAX;
+		double min1Dist2 = DBL_MAX;
 		double min2Dist2 = DBL_MAX;
-		minId = -1;
+		int min1Id = -1;
 		int min2Id = -1;
 		int vid = condVtxs[cid].id;
 		for(unsigned e=0; e < condVtxs.pmesh->vertices[vid].edges.size(); ++e){
@@ -296,18 +299,26 @@ public:
 			int cnext = condVtxs.vtx2Cond[next];
 			if (cnext>=0){
 				double d2 = dist2D2(condVtxs[cnext].pos, pos);
-				if (d2 < minDist2){
-					min2Dist2 = minDist2;
-					minDist2 = d2;
-					min2Id = minId;
-					minId = cnext;
+				if (d2 < min1Dist2){
+					min2Dist2 = min1Dist2;
+					min1Dist2 = d2;
+					min2Id = min1Id;
+					min1Id = cnext;
 				}
 			}
 		}
 		ids[0] = cid;
-		ids[1] = minId;
+		ids[1] = min1Id;
 		ids[2] = min2Id;
-		CalcWeight3(weights, pos, condVtxs[ids[0]].pos, condVtxs[ids[1]].pos, condVtxs[ids[2]].pos);
+		if (min1Id == -1){
+			weights[0] = 1; weights[1] = weights[2] = 0;
+		}else if (min2Id == -1){
+			weights[0] = min1Dist2 / (minDist2 + min1Dist2);
+			weights[1] = minDist2 / (minDist2 + min1Dist2);
+			weights[2] = 0;
+		}else{
+			CalcWeight3(weights, pos, condVtxs[ids[0]].pos, condVtxs[ids[1]].pos, condVtxs[ids[2]].pos);
+		}
 	}
 	void HeatConductionStep(){
 #if 1
@@ -482,7 +493,7 @@ public:
 					for(unsigned j=0; j<cur[i].size();++j){
 						std::vector<int> ids(3, -1);
 						double weights[3];
-						FindNearest3(&ids[0], weights, condVtxs[i][cur[i][j]].pos, condVtxs[1-i], cur[1-i][0]);
+						FindNearest3(&ids[0], weights, condVtxs[i][cur[i][j]].pos, condVtxs[1-i], cur[1-i].size() ? cur[1-i].back() : used[1-i].back());
 						double a = condVtxs[i][cur[i][j]].area;
 						double rest = a;
 						while(rest > 0){
