@@ -228,7 +228,7 @@ bool PHFemMesh::GetDesc(void* p) const {
 	PHFemMeshDesc* d = (PHFemMeshDesc*)p;
 	d->tets.resize(tets.size() * 4);
 	for(unsigned i=0; i<tets.size(); ++i){
-		for(unsigned j=0; i<4; ++j)
+		for(unsigned j=0; j<4; ++j)
 			d->tets[i*4+j] = tets[i].vertices[j];
 	}
 	d->vertices.resize(vertices.size());
