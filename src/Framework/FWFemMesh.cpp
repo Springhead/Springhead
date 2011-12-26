@@ -155,13 +155,17 @@ ObjectIf* FWFemMesh::GetChildObject(size_t pos){
 	return NULL;
 }
 bool FWFemMesh::AddChildObject(ObjectIf* o){
+	PHFemMesh* pm = o->Cast();
+	if (pm){
+		phMesh = pm;
+		return true;
+	}
 	GRMesh* mesh = o->Cast();
 	if (mesh){
 		grMesh = mesh;
 		return true;
-	}else{
-		return FWObject::AddChildObject(o);
 	}
+	return FWObject::AddChildObject(o);
 }
 void FWFemMesh::Loaded(UTLoadContext*){
 	if (!phMesh) CreatePHFromGR();
