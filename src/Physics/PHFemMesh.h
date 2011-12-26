@@ -65,6 +65,7 @@ public:
 		bool vtxDeformed;		//	四面体の変形でこの節点がローカル座標基準で移動したかどうか
 		double thermalEmissivity;	///	熱放射率　節点での
 		double disFromOrigin;		//>	x-z平面でのローカル座標の原点からの距離
+		double heatFluxValue;		//>	熱流束値
 	};
 	//	四面体
 	struct Tet{
@@ -97,6 +98,8 @@ public:
 		bool alphaUpdated;			///	属する頂点の熱伝達率が更新された際にtrueに	
 		bool deformed;				///	属する頂点の移動により、変形されたとき
 		double thermalEmissivity;	///	熱放射率
+		double heatflux;			///	熱流束値　構成する３節点の相加平均で計算
+
 	};
 	//	辺
 	struct Edge{

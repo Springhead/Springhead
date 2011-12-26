@@ -72,6 +72,9 @@ public:
 	void SetVertexTc(int id,double temp,double heatTransRatio){			///	周囲流体温度を更新		熱伝達率を変更できるIf
 		UsingHeatTransferBoundaryCondition(id,temp,heatTransRatio);		//	熱伝達境界条件を設定：熱伝達率を含む行列が対象
 	};
+	void SetVertexHeatFlux(int id,double heatFlux);						//> 節点の熱流束を設定する
+	void SetVtxHeatFluxAll(double heatFlux);							//> 全節点の熱流束を設定する
+
 	Vec3d GetPose(unsigned id){ return vertices[id].pos; };
 	Vec3d GetSufVtxPose(unsigned id){return vertices[surfaceVertices[id]].pos; };
 
@@ -116,7 +119,8 @@ protected:
 	PTM::TVector<4,double> vecf3;			//f3:外側の面に面している面のみ計算する　要注意
 	PTM::TVector<4,double> vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
 	PTM::TVector<4,double> vecf;			//f1~f4を合算した縦ベクトル
-
+	PTM::TVector<4,double> vecf2;
+	PTM::TVector<4,double> vecf2array[4];
 //	PTM::VVector<double> Vechoge;
 	//	変数は小文字　関数は大文字
 
@@ -178,7 +182,10 @@ protected:
 	void CreateMatc(unsigned id);					//cの要素剛性行列を作る関数
 	//	{F}:熱流束ベクトルを作る関数
 	void CreateVecfLocal(unsigned id);						//	四面体メッシュのIDを引数に
-	void CreateVecf3(unsigned id);					//
+	void CreateVecf3(unsigned id);					//	熱伝達率は相加平均、周囲流体温度は各々を形状関数に？
+	void CreateVecf3_(unsigned id);					//	熱伝達率も、周囲流体温度も相加平均
+	void CreateVecf2(unsigned id);					//	四面体のIDを引数に
+
 	//	{T}:節点温度ベクトルを作る関数
 	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
 	void CreateLocalMatrixAndSet();				//K,C,Fすべての行列・ベクトルについて要素剛性行列を作って、エッジに入れる	又は	全体剛性行列を作る関数

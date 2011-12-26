@@ -93,18 +93,38 @@ public:
 		
 		//	ファイルのロード
 		UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-		GetSdk()->LoadScene("sceneTHTest.spr", import);			// ファイルのロード			// scene.spr:negiをロード, scene2.spr:デバッグ用の直方体, scene3.spr:穴あきcheeseをロード, sceneTHtest.spr:フライパンなどインポートのテスト
+		GetSdk()->LoadScene("sceneTHTest4.spr", import);			// ファイルのロード			// scene.spr:negiをロード, scene2.spr:デバッグ用の直方体, scene3.spr:穴あきcheeseをロード, sceneTHtest.spr:フライパンなどインポートのテスト
 		numScenes = GetSdk()->NScene();
 		if (numScenes) SwitchScene(GetSdk()->NScene()-1);
 
 		//	FEMMeshを保存してみる
-		FWFemMeshIf* fm = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
-		if (fm && fm->GetPHMesh()){
-			FIFileSprIf* spr = GetSdk()->GetFISdk()->CreateFileSpr();
-			ObjectIfs objs;
-			objs.Push(fm->GetPHMesh());
-			spr->Save(objs, "femmesh.spr");
+		FWFemMeshIf* fm[2] = {GetSdk()->GetScene()->FindObject("fwNegi")->Cast(), GetSdk()->GetScene()->FindObject("fwPan")->Cast()};
+		//FWFemMeshIf* fm[1] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+		//FWFemMeshIf* fm[1] = GetSdk()->GetScene()->FindObject("fwPan")->Cast();
+		
+		DSTR << "fm[0]: " << fm[0] <<std::endl;
+		DSTR << "fm[1]: " << fm[1] <<std::endl;
+		int hasek =0;
+		//> 上の２つが同じアドレスだが・・・いいのか？
+
+		ObjectIfs objs;
+		FIFileSprIf* spr = GetSdk()->GetFISdk()->CreateFileSpr();
+		for(unsigned i= 0; i < 2; i++){
+			if (fm[i] && fm[i]->GetPHMesh()){
+				objs.Push(fm[i]->GetPHMesh());
+			}
 		}
+		spr->Save(objs, "femmesh.spr");
+
+		//> 元のコード
+		//FWFemMeshIf* fm[1] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+		//FWFemMeshIf* fm = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+		//if (fm && fm->GetPHMesh()){
+		//	FIFileSprIf* spr = GetSdk()->GetFISdk()->CreateFileSpr();
+		//	ObjectIfs objs;
+		//	objs.Push(fm->GetPHMesh());
+		//	spr->Save(objs, "femmeshPan.spr");
+		//}
 
 		/// 描画設定
 		if (fwScene){
