@@ -97,6 +97,15 @@ public:
 		numScenes = GetSdk()->NScene();
 		if (numScenes) SwitchScene(GetSdk()->NScene()-1);
 
+		//	FEMMeshを保存してみる
+		FWFemMeshIf* fm = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+		if (fm && fm->GetPHMesh()){
+			FIFileSprIf* spr = GetSdk()->GetFISdk()->CreateFileSpr();
+			ObjectIfs objs;
+			objs.Push(fm->GetPHMesh());
+			spr->Save(objs, "femmesh.spr");
+		}
+
 		/// 描画設定
 		if (fwScene){
 			fwScene->SetWireMaterial(GRRenderIf::WHITE);
@@ -176,18 +185,130 @@ public:
 		HeatConductionStep();
 		
 	}
-	inline double dist2D2(const Vec3d& a, const Vec3d& b){
+	inline static double dist2D2(const Vec3d& a, const Vec3d& b){
 		return Square(a.x-b.x) + Square(a.y-b.y);
 	}
 	struct CondVtx{
 		int id;
 		Vec3d pos;
+		double area;
+		double assign;
+		CondVtx():id(-1), area(0), assign(0){}
+		void AddCompanion(int id, double a){
+			for(unsigned i=0; i<companions.size(); ++i){
+				if (companions[i].id == id){
+					companions[i].area += a;
+					return;
+				}
+			}
+			companions.push_back(Companion(id, area));
+		}
+		struct Companion{
+			int id;
+			double area;
+			Companion(int i, double a):id(i), area(a){}
+		};
+		std::vector<Companion> companions;
 		struct Less{
 			int axis;
 			Less(int a):axis(a){}
 			bool operator() (const CondVtx& a, const CondVtx& b) const { return a.pos[axis] < b.pos[axis]; }
 		};
 	};
+	struct CondVtxs:public std::vector<CondVtx>{
+		PHFemMesh* pmesh;
+		std::vector<int> vtx2Cond;
+	};
+	//	curの隣で、usedに含まれない頂点を列挙
+	void FindNext(std::vector<int>& next, const std::vector<int>& cur, const std::vector<int>& used, CondVtxs& condVtxs){
+		for(unsigned i=0; i<cur.size(); ++i){
+			for(unsigned e=0; e < condVtxs.pmesh->vertices[condVtxs[cur[i]].id].edges.size(); ++e){
+				PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[condVtxs[cur[i]].id].edges[e]];
+				int f = edge.vertices[0] == cur[i] ? edge.vertices[1] : edge.vertices[0]; 
+				int cf = condVtxs.vtx2Cond[f];
+				if (cf>=0){
+					if (std::find(used.begin(), used.end(), cf) == used.end()
+						&& std::find(cur.begin(), cur.end(), cf) == cur.end()
+						&& std::find(next.begin(), next.end(), cf) == next.end())
+						next.push_back(cf);
+				}
+			}
+		}
+	}
+	//	condVtxsのなかから、fromsの隣の割り当てに空きがある頂点を列挙し、posに近い順にソートして返す。
+	struct Dist2Less{
+		Vec3d pos;
+		CondVtxs& condVtxs;
+		Dist2Less(Vec3d p, CondVtxs& c):pos(p),condVtxs(c){}
+		bool operator () (int a, int b)const{
+			return dist2D2(condVtxs[a].pos, pos) < dist2D2(condVtxs[b].pos, pos); 
+		}
+	};
+	void FindNearests(std::vector<int>& nears, const Vec3d& pos, CondVtxs& condVtxs, const std::vector<int>& froms){
+		FindNext(nears, froms, std::vector<int>(), condVtxs);
+		for(unsigned i=0; i<nears.size(); ++i){
+			if (condVtxs[nears[i]].area - condVtxs[nears[i]].assign <= 0){
+				nears.erase(nears.begin()+i);
+				i--;
+			}
+		}
+		std::sort(nears.begin(), nears.end(), Dist2Less(pos, condVtxs));
+	}
+	static void CalcWeight3(double* weights, Vec3d pos, Vec3d p0, Vec3d p1, Vec3d p2){
+		Vec3d a = p1-p0;
+		Vec3d b = p2-p0;
+		Vec2d v(pos.x-p0.x, pos.y-p0.y);
+		Matrix2d mat(a.x, b.x, a.y, b.y);
+		Vec2d w = mat.inv() * v;
+		weights[0] = 1- w[0] - w[1];
+		weights[1] = w[0];
+		weights[2] = w[1];
+	}
+	//	condVtxs の中から、pos に近い3点を from を起点に探索して idsに返す。posを補間する重みをwegihtsに返す。
+	void FindNearest3(int *ids, double* weights, const Vec3d& pos, CondVtxs& condVtxs, int from){
+		int minId = from;
+		int cid;
+		do{
+			cid = minId;
+			double minDist2 = dist2D2(condVtxs[cid].pos, pos);
+			int vid = condVtxs[cid].id;
+			for(unsigned e=0; e < condVtxs.pmesh->vertices[vid].edges.size(); ++e){
+				PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[vid].edges[e]];
+				int next = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0]; 
+				if (condVtxs.vtx2Cond[next]>=0){
+					double d2 = dist2D2(condVtxs[condVtxs.vtx2Cond[next]].pos, pos);
+					if (d2 < minDist2){
+						minDist2 = d2;
+						minId = next;
+					}
+				}
+			}
+		}while(cid != minId);
+		//	隣の頂点で近いものを２つ見つける
+		double minDist2 = DBL_MAX;
+		double min2Dist2 = DBL_MAX;
+		minId = -1;
+		int min2Id = -1;
+		int vid = condVtxs[cid].id;
+		for(unsigned e=0; e < condVtxs.pmesh->vertices[vid].edges.size(); ++e){
+			PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[vid].edges[e]];
+			int next = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0];
+			int cnext = condVtxs.vtx2Cond[next];
+			if (cnext>=0){
+				double d2 = dist2D2(condVtxs[cnext].pos, pos);
+				if (d2 < minDist2){
+					min2Dist2 = minDist2;
+					minDist2 = d2;
+					min2Id = minId;
+					minId = cnext;
+				}
+			}
+		}
+		ids[0] = cid;
+		ids[1] = minId;
+		ids[2] = min2Id;
+		CalcWeight3(weights, pos, condVtxs[ids[0]].pos, condVtxs[ids[1]].pos, condVtxs[ids[2]].pos);
+	}
 	void HeatConductionStep(){
 #if 1
 		FWFemMesh* fmesh[2];
@@ -200,9 +321,6 @@ public:
 		PHSolid* solids[2];
 		solids[0] = fmesh[0]->GetPHSolid()->Cast();
 		solids[1] = fmesh[1]->GetPHSolid()->Cast();
-		PHFemMesh* pmesh[2];
-		pmesh[0] = fmesh[0]->GetPHMesh()->Cast();
-		pmesh[1] = fmesh[1]->GetPHMesh()->Cast();
 		//	FEMMeshは接触判定がなくCDConvexMeshにある。CDConvexMeshの位置を取ってくる
 		if (solids[0]->NShape() != 1 || solids[0]->NShape() !=1){
 			DSTR << "複数形状には未対応" << std::endl;
@@ -211,7 +329,6 @@ public:
 		PHScene* scene = solids[0]->GetScene()->Cast();
 		bool bSwap;
 		PHSolidPairForLCP* pair = scene->GetSolidPair(solids[0]->Cast(), solids[1]->Cast(), bSwap)->Cast();
-		if (bSwap) std::swap(pmesh[0], pmesh[1]);	
 		PHShapePairForLCP* sp = pair->GetShapePair(0,0)->Cast();
 		if (sp->state == CDShapePair::NONE){
 			//	未接触なので、GJKを呼ぶ
@@ -230,22 +347,23 @@ public:
 		}
 		const double isoLen = 0.02;	//	これ以上離れると伝導しない距離
 		if (sp->depth > -isoLen){
-			//	距離が近い頂点を列挙。ついでに法線に垂直な平面上での座標を求めておく。
-			typedef std::vector<CondVtx> CondVtxs;
 			CondVtxs condVtxs[2];
+			condVtxs[0].pmesh = fmesh[bSwap? 1:0]->GetPHMesh()->Cast();
+			condVtxs[1].pmesh = fmesh[bSwap? 0:1]->GetPHMesh()->Cast();
+			//	距離が近い頂点を列挙。ついでに法線に垂直な平面上での座標を求めておく。
 			Matrix3d coords;
 			if (sp->normal.x < sp->normal.y) coords.Rot(sp->normal, Vec3d(1,0,0), 'z');
 			else coords.Rot(sp->normal, Vec3d(0,1,0), 'z');
 			Matrix3d coords_inv = coords.inv();			
 			for(int i=0; i<2; ++i){
 				Vec3d normal = sp->shapePoseW[i].Ori().Inv() * sp->normal * (i==0 ? 1 : -1);
-				for(unsigned v=0; v < pmesh[i]->surfaceVertices.size(); ++v){
-					double vd = (sp->closestPoint[i] - pmesh[i]->vertices[pmesh[i]->surfaceVertices[v]].pos) * normal;
+				for(unsigned v=0; v < condVtxs[i].pmesh->surfaceVertices.size(); ++v){
+					double vd = (sp->closestPoint[i] - condVtxs[i].pmesh->vertices[condVtxs[i].pmesh->surfaceVertices[v]].pos) * normal;
 					vd -= sp->depth;
 					if (vd < isoLen) {
 						CondVtx c;
-						c.id = pmesh[i]->surfaceVertices[v];
-						c.pos = coords_inv * (sp->shapePoseW[i] * pmesh[i]->vertices[c.id].pos);
+						c.id = condVtxs[i].pmesh->surfaceVertices[v];
+						c.pos = coords_inv * (sp->shapePoseW[i] * condVtxs[i].pmesh->vertices[c.id].pos);
 						condVtxs[i].push_back(c);
 					}
 				}
@@ -318,42 +436,115 @@ public:
 			}
 			//	centerVtx[i]と一番近い頂点を探す
 			//	verticesからcondVtxへの対応表を作る
-			std::vector<int> vtx2Cond[2];
 			for(int i=0; i<2; ++i){
-				vtx2Cond[i].resize(pmesh[i]->vertices.size(), -1);
+				condVtxs[i].vtx2Cond.resize(condVtxs[i].pmesh->vertices.size(), -1);
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
-					vtx2Cond[i][condVtxs[i][j].id] = j;
+					condVtxs[i].vtx2Cond[condVtxs[i][j].id] = j;
 				}
 			}
 			int closestVtx[2];
 			double minDist2[2];
 			for(int i=0; i<2; ++i){
 				Vec3d pos = condVtxs[1-i][centerVtx[1-i]].pos;
-				int minId = condVtxs[i][centerVtx[i]].id;
-				int vid;
+				int minId = centerVtx[i];
+				int cid;
 				do {
-					vid = minId;
-					minDist2[i] = dist2D2(condVtxs[i][vtx2Cond[i][vid]].pos, pos);
-					for(unsigned e=0; e < pmesh[i]->vertices[vid].edges.size(); ++e){
-						PHFemMesh::Edge& edge = pmesh[i]->edges[pmesh[i]->vertices[vid].edges[e]];
+					cid = minId;
+					minDist2[i] = dist2D2(condVtxs[i][cid].pos, pos);
+					int vid = condVtxs[i][cid].id;
+					for(unsigned e=0; e < condVtxs[i].pmesh->vertices[vid].edges.size(); ++e){
+						PHFemMesh::Edge& edge = condVtxs[i].pmesh->edges[condVtxs[i].pmesh->vertices[vid].edges[e]];
 						int next = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0]; 
-						if (vtx2Cond[i][next]>=0){
-							double d2 = dist2D2(condVtxs[i][vtx2Cond[i][next]].pos, pos);
+						int cnext = condVtxs[i].vtx2Cond[next];
+						if (cnext>=0){
+							double d2 = dist2D2(condVtxs[i][cnext].pos, pos);
 							if (d2 < minDist2[i]){
 								minDist2[i] = d2;
-								minId = next;
+								minId = cnext;
 							}
 						}
 					}
-				} while(minId != vid);
-				closestVtx[i] = vid;
+				} while(minId != cid);
+				closestVtx[i] = cid;
 			}
 			//	より近いほうを closestVtx[2] に入れる。
 			if (minDist2[0] < minDist2[1]) closestVtx[1] = centerVtx[1];
 			else closestVtx[0] = centerVtx[0];
-			
 			//	ここから対応を広げていく
-
+			std::vector<int> cur[2];
+			cur[0].push_back(closestVtx[0]);
+			cur[1].push_back(closestVtx[1]);
+			//	割り当て済みの頂点はこちらに移す
+			std::vector<int> used[2];
+			while(cur[0].size() || cur[1].size()){
+				//	curについて熱流束の係数（熱伝達率）を求め、対応する頂点を見つける
+				for(int i=0; i<2; ++i){
+					for(unsigned j=0; j<cur[i].size();++j){
+						std::vector<int> ids(3, -1);
+						double weights[3];
+						FindNearest3(&ids[0], weights, condVtxs[i][cur[i][j]].pos, condVtxs[1-i], cur[1-i][0]);
+						double a = condVtxs[i][cur[i][j]].area;
+						double rest = a;
+						while(rest > 0){
+							double nextWeights[3] = {weights[0], weights[1], weights[2]};
+							for(int k=0; k<3; ++k){
+								if (condVtxs[1-i][ids[k]].area - condVtxs[1-i][ids[k]].assign > a * weights[k]){
+									double delta = a * weights[k];
+									condVtxs[1-i][ids[k]].assign += delta;
+									condVtxs[1-i][ids[k]].AddCompanion(cur[i][j], delta);
+									condVtxs[i][cur[i][j]].AddCompanion(ids[k], delta);
+									rest -= delta;
+								}else{
+									double delta = condVtxs[1-i][ids[k]].area - condVtxs[1-i][ids[k]].assign;
+									condVtxs[1-i][ids[k]].assign = condVtxs[1-i][ids[k]].area;
+									condVtxs[1-i][ids[k]].AddCompanion(cur[i][j], delta);
+									condVtxs[i][cur[i][j]].AddCompanion(ids[k], delta);
+									rest -= delta;
+									//	いっぱいなので、残り２つに振り分ける
+									nextWeights[k] = 0;
+									int k1 = (k+1)%3; int k2 = (k+2)%3;
+									double wsum = nextWeights[k1]+nextWeights[k2];
+									if (wsum < 0) goto filled;
+									double d1 = nextWeights[k1]/wsum * weights[k];
+									double d2 = nextWeights[k2]/wsum * weights[k];
+									nextWeights[k1] += d1; nextWeights[k2] += d2;
+								}
+							}
+							a = rest;
+						}
+filled:;
+						//	３点では吸収しきれなかったので、そばの頂点をどんどん探して割り当てていく
+						while (rest > 0){
+							std::vector<int> nears;
+							FindNearests(nears, condVtxs[i][cur[i][j]].pos, condVtxs[1-i], ids);	//	隣の空いてる頂点を近い順に返す。
+							for(unsigned k=0; rest > 0 && k<nears.size(); ++k){
+								if (condVtxs[1-i][nears[k]].area - condVtxs[1-i][nears[k]].assign > rest){
+									condVtxs[1-i][nears[k]].assign += rest;
+									condVtxs[1-i][nears[k]].AddCompanion(cur[i][j], rest);
+									condVtxs[i][cur[i][j]].AddCompanion(nears[k], rest);
+									rest = 0;
+								}else{
+									double delta = condVtxs[1-i][nears[k]].area - condVtxs[1-i][nears[k]].assign;
+									condVtxs[1-i][nears[k]].AddCompanion(cur[i][j], delta);
+									condVtxs[i][cur[i][j]].AddCompanion(nears[k], delta);
+									rest -= delta;
+									condVtxs[1-i][nears[k]].assign = condVtxs[1-i][nears[k]].area;
+								}
+							}
+							if (rest > 0){
+								ids.insert(ids.end(), nears.begin(), nears.end());
+								nears.clear();
+							}
+						}
+					}
+				}
+				for(int i=0; i<2; ++i){
+					std::vector<int> next;
+					FindNext(next, cur[i], used[i], condVtxs[i]);
+					used[i].insert(used[i].end(), cur[i].begin(), cur[i].end());
+					cur[i] = next;
+				}
+			}
 		}
 		
 		
