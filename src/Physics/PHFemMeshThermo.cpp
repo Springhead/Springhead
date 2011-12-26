@@ -57,7 +57,7 @@ void PHFemMeshThermo::CalcVtxDisFromOrigin(){
 	///不要　GRMeshThermo自身の原点を取得する⇒main()で初期化やって、後で移植
 	/// PHFemMeshIf* pan		=	DCAST(PHFemMeshIf*,GetScene()->FindObject("Pan"));
 	//>	nSurfaceの内、x,z座標から距離を求めてsqrt(2乗和)、それをFemVertexに格納する
-	///同心円系の計算に利用する　distanse from origin
+	///同心円系の計算に利用する　distance from origin
 
 	//> 以下で取得する位置は、世界座標系!？ローカル座標系の位置の取り方を知りたい!!!
 	for(unsigned i=0;i < NSurfaceVertices(); i++){
@@ -193,6 +193,16 @@ void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp
 													///	MatK2の再作成→matK1はmatk1の変数に入れておいて、matk2だけ、作って、加算
 		}
 //	}
+}
+
+void PHFemMeshThermo::SetVertexHeatFlux(int id,double heatFlux){
+	vertices[id].heatFluxValue = heatFlux;
+}
+
+void PHFemMeshThermo::SetVtxHeatFluxAll(double heatFlux){
+	for(unsigned i=0; i < vertices.size() ;i++){
+		SetVertexHeatFlux(i,heatFlux);
+	}
 }
 
 void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
@@ -892,6 +902,9 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	SetInitThermoConductionParam(0.574,970,0.196,25 * 0.0001 * 1.0);
 		//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
 
+	//> 熱流束の初期化
+	SetVtxHeatFluxAll(0.0);
+
 	//>	熱放射率の設定
 	SetThermalEmissivityToVerticesAll(0.0);				///	暫定値0.0で初期化	：熱放射はしないｗ
 
@@ -1017,14 +1030,14 @@ void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 	
 	//すべての要素について係数行列を作る
 	//f1を作る
-	//f2を作る
-	//f3を作る
-	CreateVecf3(id);				//>	tets[id].vecf[2];の初期化や、への代入
+	//>	熱流束境界条件	f2を作る			
+	CreateVecf2(id);			//>	tets[id].vecf[1] を初期化,代入		熱流束は相加平均で求める
+	//>	熱伝達境界条件	f3を作る
+	CreateVecf3(id);			//>	tets[id].vecf[2] を初期化,代入		熱伝達率は相加平均、周囲流体温度は節点の形状関数？ごとに求める
+	//CreateVecf3_(id);			//>	tets[id].vecf[2] を初期化,代入		熱伝達率、周囲流体温度を相加平均で求める
 	//f4を作る
-	int hogehoge=0;
 	//f1,f2,f3,f4を加算する
-	//vecf = vecf3;
-	vecf = tets[id].vecf[2];		//>	+ tets[id].vecf[0] + tets[id].vecf[1] + tets[id].vecf[3] の予定
+	vecf = tets[id].vecf[1] + tets[id].vecf[2];		//>	+ tets[id].vecf[0] +  tets[id].vecf[3] の予定
 	//	for debug
 	//DSTR << "vecf : " << std::endl;
 	//DSTR << vecf << std::endl;
@@ -1453,6 +1466,235 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 
 }
 
+
+void PHFemMeshThermo::CreateVecf2(unsigned id){
+	//	初期化
+	for(unsigned i =0; i < 4 ;i++){
+		//最後に入れる行列を初期化
+		tets[id].vecf[1][i] =0.0;				//>	f3 = vecf[1] 
+	}	
+	//l=0の時f31,1:f32, 2:f33, 3:f34	を生成
+	for(unsigned l= 0 ; l < 4; l++){
+		//matk2array[l] = matk2temp;
+		vecf2array[l] = Create41Vec1();
+		//	l行を0に
+		vecf2array[l][l] = 0.0;
+
+		//array[n][m][l]	= narray[n],m行l列
+		//	f_3	(vecf3array[0], vecf3array[1],..)
+		// =	| 0 | + | 1 |+...
+		//		| 1 |   | 0 |
+		//		| 1 |   | 1 |
+		//		| 1 |   | 1 |
+
+		//	for debug
+		//DSTR << "vecf3array[" << l << "] : " << std::endl;
+		//DSTR << vecf3array[l] << std::endl;
+
+		//係数の積をとる
+		//この節点で構成される四面体の面積の積をとる
+		//四面体の節点1,2,3(0以外)で作る三角形の面積
+		//l==0番目の時、 123	を代入する
+		//l==1			0 23
+		//l==2			01 3
+		//l==3			012
+		//をCalcTriangleAreaに入れることができるようにアルゴリズムを考える。
+
+		//>	CreateMatk2tのようなアルゴリズムに変更予定
+		//k21
+		if(l==0){
+			//>	三角形面を構成する3頂点の熱流束の相加平均
+			double tempHF = (vertices[tets[id].vertices[1]].heatFluxValue + vertices[tets[id].vertices[2]].heatFluxValue + vertices[tets[id].vertices[3]].heatFluxValue ) / 3.0;		//HTR:HeatTransRatio
+			vecf2array[l] = tempHF * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[1],tets[id].vertices[2],tets[id].vertices[3] ) * vecf2array[l];
+			//DSTR << "vecf2array[" << l << "] : " << vecf2array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			
+			////>	不要？
+			//for(unsigned m=0; m<4; m++){
+			//	vecf2array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf2array[l][m];
+			//}
+		}
+		//	k22
+		else if(l==1){
+			double tempHF = (vertices[tets[id].vertices[0]].heatFluxValue + vertices[tets[id].vertices[2]].heatFluxValue + vertices[tets[id].vertices[3]].heatFluxValue ) / 3.0;		//HTR:HeatTransRatio
+			vecf2array[l] = tempHF * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[2],tets[id].vertices[3] ) * vecf2array[l];
+			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[2],tets[id].vertices[3] ) * vecf3array[l];
+			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			//for(unsigned m=0; m<4; m++){
+			//	vecf2array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf2array[l][m];
+			//}
+		}
+		//	k23
+		else if(l==2){
+			double tempHF = (vertices[tets[id].vertices[0]].heatFluxValue + vertices[tets[id].vertices[1]].heatFluxValue + vertices[tets[id].vertices[3]].heatFluxValue ) / 3.0;		//HTR:HeatTransRatio
+			vecf2array[l] = tempHF * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[3] ) * vecf2array[l];
+			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[3] ) * vecf3array[l];
+			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			//for(unsigned m=0; m<4; m++){
+			//	vecf2array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf2array[l][m];
+			//}
+		}
+		//	k24
+		else if(l==3){
+			double tempHF = (vertices[tets[id].vertices[0]].heatFluxValue + vertices[tets[id].vertices[1]].heatFluxValue + vertices[tets[id].vertices[2]].heatFluxValue ) / 3.0;		//HTR:HeatTransRatio
+			vecf2array[l] = tempHF * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[2] ) * vecf2array[l];
+			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[2] ) * vecf3array[l];
+			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			//for(unsigned m=0; m<4; m++){
+			//	vecf2array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf2array[l][m];
+			//}
+		}
+		//for debug
+		//DSTR << "vecf3array[" << l << "]の完成版は↓" << std::endl;
+		//DSTR << vecf3array[l] << std::endl;
+		//if(dMatCAll == NULL){
+		//	//DSTR <<"i : "<< i << ", l : " << l << std::endl;
+		//	DSTR << "dMatCAll == NULL" <<std::endl;
+		//	DSTR <<"l : " << l << std::endl;
+		//}
+	}
+
+	//f3 = f31 + f32 + f33 + f34
+	for(unsigned i=0; i < 4; i++){
+		//vecf3 += vecf3array[i];
+		tets[id].vecf[1] += vecf2array[i];
+		//	for debug
+		//DSTR << "vecf3 に vecf3array = f3" << i+1 <<"まで加算した行列" << std::endl;
+		//DSTR << vecf3 << std::endl;
+	}
+	
+	//	f1,f2,f3,f4	を計算する際に、[0][0]成分から[3][0]成分までの非0成分について、先にTcをかけてしまう
+
+
+	//for debug
+	//DSTR << "節点（";
+	//for(unsigned i =0; i < 4; i++){
+	//	DSTR << tets[id].vertices[i] << "," ;
+	//}
+	//DSTR << ")で構成される四面体の" << std::endl;
+	//DSTR << "vecf3 : " << std::endl;
+	//DSTR << vecf3 << std::endl;
+	//int hogeshishi =0;
+}
+
+void PHFemMeshThermo::CreateVecf3_(unsigned id){
+	//	初期化
+	for(unsigned i =0; i < 4 ;i++){
+		//vecf3[i] = 0.0;		//最後に入れる行列を初期化
+		tets[id].vecf[2][i] =0.0;
+	}	
+	//l=0の時f31,1:f32, 2:f33, 3:f34	を生成
+	for(unsigned l= 0 ; l < 4; l++){
+		//matk2array[l] = matk2temp;
+		vecf3array[l] = Create41Vec1();
+		//	l行を0に
+		//for(int i=0;i<4;i++){
+		//	vecf3array[l][l][i] = 0.0;
+		//}
+		vecf3array[l][l] = 0.0;
+		//array[n][m][l]	= narray[n],m行l列
+		//	f_3	(vecf3array[0], vecf3array[1],..)
+		// =	| 0 | + | 1 |+...
+		//		| 1 |   | 0 |
+		//		| 1 |   | 1 |
+		//		| 1 |   | 1 |
+		//	for debug
+		//DSTR << "vecf3array[" << l << "] : " << std::endl;
+		//DSTR << vecf3array[l] << std::endl;
+
+		//係数の積をとる
+		//この節点で構成される四面体の面積の積をとる
+		//四面体の節点1,2,3(0以外)で作る三角形の面積
+		//l==0番目の時、 123	を代入する
+		//l==1			0 23
+		//l==2			01 3
+		//l==3			012
+		//をCalcTriangleAreaに入れることができるようにアルゴリズムを考える。
+		//k21
+		if(l==0){
+			//三角形面を構成する3頂点の熱伝達率の相加平均
+			double tempHTR = (vertices[tets[id].vertices[1]].heatTransRatio + vertices[tets[id].vertices[2]].heatTransRatio + vertices[tets[id].vertices[3]].heatTransRatio ) / 3.0;		//HTR:HeatTransRatio
+			double avgTc = (vertices[tets[id].vertices[1]].Tc + vertices[tets[id].vertices[2]].Tc + vertices[tets[id].vertices[3]].Tc ) / 3.0;
+			vecf3array[l] = tempHTR * avgTc * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[1],tets[id].vertices[2],tets[id].vertices[3] ) * vecf3array[l];
+			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
+			
+			//>	↓は本当？
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			//for(unsigned m=0; m<4; m++){
+			//	vecf3array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf3array[l][m];
+			//}
+		}
+		//	k22
+		else if(l==1){
+			double tempHTR = (vertices[tets[id].vertices[0]].heatTransRatio + vertices[tets[id].vertices[2]].heatTransRatio + vertices[tets[id].vertices[3]].heatTransRatio ) / 3.0;		//HTR:HeatTransRatio
+			double avgTc = (vertices[tets[id].vertices[0]].Tc + vertices[tets[id].vertices[2]].Tc + vertices[tets[id].vertices[3]].Tc ) / 3.0;		//HTR:HeatTransRatio
+			vecf3array[l] = tempHTR * avgTc * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[2],tets[id].vertices[3] ) * vecf3array[l];
+			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			//for(unsigned m=0; m<4; m++){
+			//	vecf3array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf3array[l][m];
+			//}
+		}
+		//	k23
+		else if(l==2){
+			double tempHTR = (vertices[tets[id].vertices[0]].heatTransRatio + vertices[tets[id].vertices[1]].heatTransRatio + vertices[tets[id].vertices[3]].heatTransRatio ) / 3.0;		//HTR:HeatTransRatio
+			double avgTc = (vertices[tets[id].vertices[0]].Tc + vertices[tets[id].vertices[1]].Tc + vertices[tets[id].vertices[3]].Tc ) / 3.0;		//HTR:HeatTransRatio
+			vecf3array[l] = tempHTR * avgTc * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[3] ) * vecf3array[l];
+			//vecf3array[l] = heatTrans * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[3] ) * vecf3array[l];
+			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			//for(unsigned m=0; m<4; m++){
+			//	vecf3array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf3array[l][m];
+			//}
+		}
+		//	k24
+		else if(l==3){
+			double tempHTR = (vertices[tets[id].vertices[0]].heatTransRatio + vertices[tets[id].vertices[1]].heatTransRatio + vertices[tets[id].vertices[2]].heatTransRatio ) / 3.0;		//HTR:HeatTransRatio
+			double avgTc = (vertices[tets[id].vertices[0]].Tc + vertices[tets[id].vertices[1]].Tc + vertices[tets[id].vertices[2]].Tc ) / 3.0;		//HTR:HeatTransRatio
+			vecf3array[l] = tempHTR * avgTc * (1.0/3.0) * CalcTriangleArea( tets[id].vertices[0],tets[id].vertices[1],tets[id].vertices[2] ) * vecf3array[l];
+			//DSTR << "vecf3array[" << l << "] : " << vecf3array[l] << std::endl;
+			//Vecの節点毎にその節点での周囲流体温度Tcとの積を行う
+			//for(unsigned m=0; m<4; m++){
+			//	vecf3array[l][m] = vertices[tets[id].vertices[m]].Tc * vecf3array[l][m];
+			//}
+		}
+		//for debug
+		//DSTR << "vecf3array[" << l << "]の完成版は↓" << std::endl;
+		//DSTR << vecf3array[l] << std::endl;
+		//if(dMatCAll == NULL){
+		//	//DSTR <<"i : "<< i << ", l : " << l << std::endl;
+		//	DSTR << "dMatCAll == NULL" <<std::endl;
+		//	DSTR <<"l : " << l << std::endl;
+		//}
+	}
+
+	//f3 = f31 + f32 + f33 + f34
+	for(unsigned i=0; i < 4; i++){
+		//vecf3 += vecf3array[i];
+		tets[id].vecf[2] += vecf3array[i];
+		//	for debug
+		//DSTR << "vecf3 に vecf3array = f3" << i+1 <<"まで加算した行列" << std::endl;
+		//DSTR << vecf3 << std::endl;
+	}
+	
+	//	f1,f2,f3,f4	を計算する際に、[0][0]成分から[3][0]成分までの非0成分について、先にTcをかけてしまう
+
+
+	//for debug
+	//DSTR << "節点（";
+	//for(unsigned i =0; i < 4; i++){
+	//	DSTR << tets[id].vertices[i] << "," ;
+	//}
+	//DSTR << ")で構成される四面体の" << std::endl;
+	//DSTR << "vecf3 : " << std::endl;
+	//DSTR << vecf3 << std::endl;
+	//int hogeshishi =0;
+}
+
+
 void PHFemMeshThermo::CreateVecf3(unsigned id){
 	//	初期化
 	for(unsigned i =0; i < 4 ;i++){
@@ -1784,7 +2026,8 @@ void PHFemMeshThermo::CreateMatk2t(unsigned id){
 			///	積分計算を根本から考える
 			unsigned vtx = tets[id].vertices[0] + tets[id].vertices[1] + tets[id].vertices[2] + tets[id].vertices[3];
 			//DSTR << "vtx: " << vtx <<std::endl;
-				///	area計算に使われていない節点ID：ID
+			
+			///	area計算に使われていない節点ID：ID
 			unsigned ID = vtx -( faces[tets[id].faces[l]].vertices[0] + faces[tets[id].faces[l]].vertices[1] + faces[tets[id].faces[l]].vertices[2] );
 			//DSTR << "メッシュ表面の面は次の3頂点からなる。" << std::endl;
 			//DSTR << "faces[tets.faces[l]].vertices[0]: " << faces[tets.faces[l]].vertices[0] <<std::endl;
