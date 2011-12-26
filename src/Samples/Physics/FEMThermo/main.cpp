@@ -215,10 +215,10 @@ public:
 	};
 	struct CondVtx{
 		int id;
-		Vec3d pos;
+		Vec3d pos;	//	x,yは接触面上での位置、zは接触面からの距離
 		double area;
 		double assign;
-		CondVtx():id(-1), area(1), assign(0){}
+		CondVtx():id(-1), area(0), assign(0){}
 		struct Companion{
 			int id;
 			double area;
@@ -286,13 +286,6 @@ public:
 	};
 	void FindNearests(std::vector<int>& nears, const Vec3d& pos, CondVtxs& condVtxs, const std::vector<int>& froms){
 		FindNext(nears, froms, std::vector<int>(), condVtxs);
-/*		for(unsigned i=0; i<nears.size(); ++i){
-			if (condVtxs[nears[i]].area - condVtxs[nears[i]].assign <= 0){
-				nears.erase(nears.begin()+i);
-				i--;
-			}
-		}
-*/
 		std::sort(nears.begin(), nears.end(), Dist2Less(pos, condVtxs));
 	}
 	static void CalcWeight3(double* weights, Vec3d pos, Vec3d p0, Vec3d p1, Vec3d p2){
@@ -394,6 +387,7 @@ public:
 	}
 	void HeatConductionStep(){
 #if 1
+		//	2物体を取り出す
 		FWFemMesh* fmesh[2];
 		fmesh[0] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
 		fmesh[1] = GetSdk()->GetScene()->FindObject("fwPan")->Cast();
@@ -410,6 +404,7 @@ public:
 			return;
 		}
 		PHScene* scene = solids[0]->GetScene()->Cast();
+		//	接触ペアを見つけて、未判定なら判定する。
 		bool bSwap;
 		PHSolidPairForLCP* pair = scene->GetSolidPair(solids[0]->Cast(), solids[1]->Cast(), bSwap)->Cast();
 		PHShapePairForLCP* sp = pair->GetShapePair(0,0)->Cast();
@@ -428,6 +423,24 @@ public:
 			sp->normal = sp->shapePoseW[1]*sp->closestPoint[1] - sp->shapePoseW[0]*sp->closestPoint[0];
 			sp->normal.unitize();
 		}
+
+		//	距離が近ければ伝熱の処理
+		/*	熱伝達率 α [W/(m^2 K)] を用いると、境界上で q = α(T-Tc) (T:接点温度 Tc:周囲の流体等の温度)
+			２物体の接触だと、T1-α1->Tc-α2->T2 となると考えられる。
+			q = α1(T1-Tc) = α2(Tc-T2) より (α1+α2)Tc = α1T1 + α2T2
+			Tc = (α1T1 + α2T2)/(α1+α2)
+			q = α1(T1-(α1T1 + α2T2)/(α1+α2)) = α1T1 - α1(α1T1 + α2T2)/(α1+α2)
+				= (α1α2T1 - α1α2T2)/(α1+α2) = α'(T1-T2)  α' = α1α2/(α1+α2)	*/
+		/*	qとQについての考察
+			qは単位面積あたりなので、頂点間の熱の移動量Qに直すには、頂点が代表する面積を掛ける必要がある。
+			本来は、三角形の重なりと形状関数から求めるべきもの。
+			しかし、重なり具合は毎ステップ変わるので、この計算は大変。簡略化を考える。
+			頂点は頂点を含む三角形に勢力を持つ。三角形の重なりより、頂点の距離の意味が大きい。
+			距離が近いものを割り当てていくが、後で飛び地が出てはいけない。
+			そこで、１点から初めて徐々に割り当て領域を大きくして行く。これでずれは起きても飛び地はでない。
+				
+			頂点の面積は、頂点を含む三角形達の面積の和の1/3。				
+		*/
 		const double isoLen = 0.02;	//	これ以上離れると伝導しない距離
 		if (sp->depth > -isoLen){
 			CondVtxs condVtxs[2];
@@ -437,16 +450,17 @@ public:
 			Matrix3d coords;
 			if (sp->normal.x < sp->normal.y) coords.Rot(sp->normal, Vec3d(1,0,0), 'z');
 			else coords.Rot(sp->normal, Vec3d(0,1,0), 'z');
-			Matrix3d coords_inv = coords.inv();			
+			Matrix3d coords_inv = coords.inv();
 			for(int i=0; i<2; ++i){
-				Vec3d normal = sp->shapePoseW[i].Ori().Inv() * sp->normal * (i==0 ? 1 : -1);
+				Vec3d normalL = sp->shapePoseW[i].Ori().Inv() * sp->normal * (i==0 ? 1 : -1);
 				for(unsigned v=0; v < condVtxs[i].pmesh->surfaceVertices.size(); ++v){
-					double vd = (sp->closestPoint[i] - condVtxs[i].pmesh->vertices[condVtxs[i].pmesh->surfaceVertices[v]].pos) * normal;
+					double vd = (sp->closestPoint[i] - condVtxs[i].pmesh->vertices[condVtxs[i].pmesh->surfaceVertices[v]].pos) * normalL;
 					vd -= sp->depth;
 					if (vd < isoLen) {
 						CondVtx c;
 						c.id = condVtxs[i].pmesh->surfaceVertices[v];
 						c.pos = coords_inv * (sp->shapePoseW[i] * condVtxs[i].pmesh->vertices[c.id].pos);
+						c.pos.z = vd + (sp->depth/2);	//	中面からの距離にしておく。
 						condVtxs[i].push_back(c);
 					}
 				}
@@ -475,22 +489,6 @@ public:
 					condVtxs[i].erase(it, condVtxs[i].end());
 				}
 			}
-			/*	熱伝達率 α [W/(m^2 K)] を用いると、境界上で q = α(T-Tc) (T:接点温度 Tc:周囲の流体等の温度)
-				２物体の接触だと、T1-α1->Tc-α2->T2 となると考えられる。
-				q = α1(T1-Tc) = α2(Tc-T2) より (α1+α2)Tc = α1T1 + α2T2
-				Tc = (α1T1 + α2T2)/(α1+α2)
-				q = α1(T1-(α1T1 + α2T2)/(α1+α2)) = α1T1 - α1(α1T1 + α2T2)/(α1+α2)
-				  = (α1α2T1 - α1α2T2)/(α1+α2) = α'(T1-T2)  α' = α1α2/(α1+α2)	*/
-			/*	qとQについての考察
-				qは単位面積あたりなので、頂点間の熱の移動量Qに直すには、頂点が代表する面積を掛ける必要がある。
-				本来は、三角形の重なりと形状関数から求めるべきもの。
-				しかし、重なり具合は毎ステップ変わるので、この計算は大変。簡略化を考える。
-				頂点は頂点を含む三角形に勢力を持つ。三角形の重なりより、頂点の距離の意味が大きい。
-				距離が近いものを割り当てていくが、後で飛び地が出てはいけない。
-				そこで、１点から初めて徐々に割り当て領域を大きくして行く。これでずれは起きても飛び地はでない。
-				
-				頂点の面積は、頂点を含む三角形達の面積の和の1/3。				
-			*/
 			//	対応する頂点のない頂点を削除する。
 			//		まずverticesからcondVtxへの対応表を作る
 			for(int i=0; i<2; ++i){
@@ -499,20 +497,37 @@ public:
 					condVtxs[i].vtx2Cond[condVtxs[i][j].id] = j;
 				}
 			}
-			//	対応する頂点が見つからなければ、頂点を削除する。
+			//	対応する頂点が見つからない頂点を、削除のためにマーク。
+			std::vector<int> eraseVtxs[2];
 			for(int i=0; i<2; ++i){
 				int from = 0;
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
 					int found = from;
 					double dist = FindNearest(condVtxs[i][j].pos, condVtxs[1-i], found);
-					if (dist > 0.02){	//	平面距離が2cm以上の頂点は削除
-						condVtxs[i].erase(condVtxs[i].begin() + i);
-						i--;
+					if (dist > isoLen){	//	平面距離がisoLen以上の頂点は削除
+						eraseVtxs[i].push_back(i);
 					}else{
 						from = found;
 					}
 				}
 			}
+			//	マークした頂点を削除
+			for(int i=0; i<2; ++i){
+				for(int j=eraseVtxs[i].size()-1; j>0; --j){
+					condVtxs[i].erase(condVtxs[i].begin() + eraseVtxs[i][j]);
+				}
+			}
+			//	verticesからcondVtxへの対応表を作る
+			for(int i=0; i<2; ++i){
+				condVtxs[i].vtx2Cond.clear();
+				condVtxs[i].vtx2Cond.resize(condVtxs[i].pmesh->vertices.size(), -1);
+				for(unsigned j=0; j<condVtxs[i].size(); ++j){
+					condVtxs[i].vtx2Cond[condVtxs[i][j].id] = j;
+				}
+			}
+			//	頂点の担当する面積を計算する
+			//	TODO
+			
 
 			//	bboxの中心近くの頂点を見つける
 			double xCenter = 0.5*(bboxMin.x + bboxMax.x);
@@ -541,13 +556,6 @@ public:
 				}
 			}
 			//	centerVtx[i]と一番近い頂点を探す
-			//	verticesからcondVtxへの対応表を作る
-			for(int i=0; i<2; ++i){
-				condVtxs[i].vtx2Cond.resize(condVtxs[i].pmesh->vertices.size(), -1);
-				for(unsigned j=0; j<condVtxs[i].size(); ++j){
-					condVtxs[i].vtx2Cond[condVtxs[i][j].id] = j;
-				}
-			}
 			int closestVtx[2];
 			double minDist2[2];
 			for(int i=0; i<2; ++i){
