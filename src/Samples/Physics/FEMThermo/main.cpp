@@ -188,21 +188,17 @@ public:
 	inline static double dist2D2(const Vec3d& a, const Vec3d& b){
 		return Square(a.x-b.x) + Square(a.y-b.y);
 	}
+	struct CondVtx;
+	struct CondVtxs:public std::vector<CondVtx>{
+		PHFemMesh* pmesh;
+		std::vector<int> vtx2Cond;
+	};
 	struct CondVtx{
 		int id;
 		Vec3d pos;
 		double area;
 		double assign;
-		CondVtx():id(-1), area(0), assign(0){}
-		void AddCompanion(int id, double a){
-			for(unsigned i=0; i<companions.size(); ++i){
-				if (companions[i].id == id){
-					companions[i].area += a;
-					return;
-				}
-			}
-			companions.push_back(Companion(id, area));
-		}
+		CondVtx():id(-1), area(1), assign(0){}
 		struct Companion{
 			int id;
 			double area;
@@ -215,10 +211,33 @@ public:
 			bool operator() (const CondVtx& a, const CondVtx& b) const { return a.pos[axis] < b.pos[axis]; }
 		};
 	};
-	struct CondVtxs:public std::vector<CondVtx>{
-		PHFemMesh* pmesh;
-		std::vector<int> vtx2Cond;
-	};
+	void AddCompanion(CondVtxs& v1, int id1, CondVtxs& v2, int id2, double a){
+		assert(a > 0);
+		v1[id1].assign += a;
+		v2[id2].assign += a;
+		assert(v1[id1].area - v1[id1].assign > -1e8 );
+		assert(v2[id2].area - v2[id2].assign > -1e8 );
+		unsigned i;
+		for(i=0; i<v1[id1].companions.size(); ++i){
+			if (v1[id1].companions[i].id == id2){
+				v1[id1].companions[i].area += a;
+				break;
+			}
+		}
+		if (i == v1[id1].companions.size()){
+			v1[id1].companions.push_back(CondVtx::Companion(id2, a));
+		}
+		for(i=0; i<v2[id2].companions.size(); ++i){
+			if (v2[id2].companions[i].id == id1){
+				v2[id2].companions[i].area += a;
+				break;
+			}
+		}
+		if (i == v2[id2].companions.size()){
+			v2[id2].companions.push_back(CondVtx::Companion(id1, a));
+		}
+	}
+
 	//	curの隣で、usedに含まれない頂点を列挙
 	void FindNext(std::vector<int>& next, const std::vector<int>& cur, const std::vector<int>& used, CondVtxs& condVtxs){
 		for(unsigned i=0; i<cur.size(); ++i){
@@ -247,12 +266,13 @@ public:
 	};
 	void FindNearests(std::vector<int>& nears, const Vec3d& pos, CondVtxs& condVtxs, const std::vector<int>& froms){
 		FindNext(nears, froms, std::vector<int>(), condVtxs);
-		for(unsigned i=0; i<nears.size(); ++i){
+/*		for(unsigned i=0; i<nears.size(); ++i){
 			if (condVtxs[nears[i]].area - condVtxs[nears[i]].assign <= 0){
 				nears.erase(nears.begin()+i);
 				i--;
 			}
 		}
+*/
 		std::sort(nears.begin(), nears.end(), Dist2Less(pos, condVtxs));
 	}
 	static void CalcWeight3(double* weights, Vec3d pos, Vec3d p0, Vec3d p1, Vec3d p2){
@@ -264,6 +284,30 @@ public:
 		weights[0] = 1- w[0] - w[1];
 		weights[1] = w[0];
 		weights[2] = w[1];
+	}
+	double FindNearest(const Vec3d& pos, CondVtxs condVtxs, int& found){
+		int minId = found;
+		double minDist2;
+		int cid;
+		do{
+			cid = minId;
+			minDist2 = dist2D2(condVtxs[cid].pos, pos);
+			int vid = condVtxs[cid].id;
+			for(unsigned e=0; e < condVtxs.pmesh->vertices[vid].edges.size(); ++e){
+				PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[vid].edges[e]];
+				int next = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0]; 
+				int cnext = condVtxs.vtx2Cond[next];
+				if (cnext>=0){
+					double d2 = dist2D2(condVtxs[cnext].pos, pos);
+					if (d2 < minDist2){
+						minDist2 = d2;
+						minId = cnext;
+					}
+				}
+			}
+		}while(cid != minId);
+		found = cid;
+		return sqrt(minDist2);
 	}
 	//	condVtxs の中から、pos に近い3点を from を起点に探索して idsに返す。posを補間する重みをwegihtsに返す。
 	void FindNearest3(int *ids, double* weights, const Vec3d& pos, CondVtxs& condVtxs, int from){
@@ -313,11 +357,19 @@ public:
 		if (min1Id == -1){
 			weights[0] = 1; weights[1] = weights[2] = 0;
 		}else if (min2Id == -1){
-			weights[0] = min1Dist2 / (minDist2 + min1Dist2);
-			weights[1] = minDist2 / (minDist2 + min1Dist2);
+			double mind1 = sqrt(min1Dist2);
+			double mind = sqrt(minDist2);
+			weights[0] = mind1 / (mind+ mind1);
+			weights[1] = mind / (mind+ mind1);
 			weights[2] = 0;
 		}else{
-			CalcWeight3(weights, pos, condVtxs[ids[0]].pos, condVtxs[ids[1]].pos, condVtxs[ids[2]].pos);
+			double mind2 = sqrt(min2Dist2);
+			double mind1 = sqrt(min1Dist2);
+			double mind = sqrt(minDist2);
+			double sum2 = (mind + mind1 + mind2)*2;
+			weights[0] = (mind1 + mind2) / sum2;
+			weights[1] = (mind + mind2) / sum2;
+			weights[2] = (mind + mind1) / sum2;
 		}
 	}
 	void HeatConductionStep(){
@@ -419,6 +471,29 @@ public:
 				
 				頂点の面積は、頂点を含む三角形達の面積の和の1/3。				
 			*/
+			//	対応する頂点のない頂点を削除する。
+			//		まずverticesからcondVtxへの対応表を作る
+			for(int i=0; i<2; ++i){
+				condVtxs[i].vtx2Cond.resize(condVtxs[i].pmesh->vertices.size(), -1);
+				for(unsigned j=0; j<condVtxs[i].size(); ++j){
+					condVtxs[i].vtx2Cond[condVtxs[i][j].id] = j;
+				}
+			}
+			//	対応する頂点が見つからなければ、頂点を削除する。
+			for(int i=0; i<2; ++i){
+				int from = 0;
+				for(unsigned j=0; j<condVtxs[i].size(); ++j){
+					int found = from;
+					double dist = FindNearest(condVtxs[i][j].pos, condVtxs[1-i], found);
+					if (dist > 0.02){	//	平面距離が2cm以上の頂点は削除
+						condVtxs[i].erase(condVtxs[i].begin() + i);
+						i--;
+					}else{
+						from = found;
+					}
+				}
+			}
+
 			//	bboxの中心近くの頂点を見つける
 			double xCenter = 0.5*(bboxMin.x + bboxMax.x);
 			int centerVtx[2];
@@ -491,55 +566,52 @@ public:
 				//	curについて熱流束の係数（熱伝達率）を求め、対応する頂点を見つける
 				for(int i=0; i<2; ++i){
 					for(unsigned j=0; j<cur[i].size();++j){
+						double a = condVtxs[i][cur[i][j]].area - condVtxs[i][cur[i][j]].assign;
+						if (a <= 1e-10) continue;
 						std::vector<int> ids(3, -1);
 						double weights[3];
 						FindNearest3(&ids[0], weights, condVtxs[i][cur[i][j]].pos, condVtxs[1-i], cur[1-i].size() ? cur[1-i].back() : used[1-i].back());
-						double a = condVtxs[i][cur[i][j]].area;
 						double rest = a;
-						while(rest > 0){
-							double nextWeights[3] = {weights[0], weights[1], weights[2]};
+						while(rest > 1e-10){
 							for(int k=0; k<3; ++k){
+								if (ids[k] < 0) continue;
 								if (condVtxs[1-i][ids[k]].area - condVtxs[1-i][ids[k]].assign > a * weights[k]){
 									double delta = a * weights[k];
-									condVtxs[1-i][ids[k]].assign += delta;
-									condVtxs[1-i][ids[k]].AddCompanion(cur[i][j], delta);
-									condVtxs[i][cur[i][j]].AddCompanion(ids[k], delta);
+									AddCompanion(condVtxs[1-i], ids[k], condVtxs[i], cur[i][j], delta);
 									rest -= delta;
 								}else{
 									double delta = condVtxs[1-i][ids[k]].area - condVtxs[1-i][ids[k]].assign;
-									condVtxs[1-i][ids[k]].assign = condVtxs[1-i][ids[k]].area;
-									condVtxs[1-i][ids[k]].AddCompanion(cur[i][j], delta);
-									condVtxs[i][cur[i][j]].AddCompanion(ids[k], delta);
-									rest -= delta;
-									//	いっぱいなので、残り２つに振り分ける
-									nextWeights[k] = 0;
-									int k1 = (k+1)%3; int k2 = (k+2)%3;
-									double wsum = nextWeights[k1]+nextWeights[k2];
-									if (wsum < 0) goto filled;
-									double d1 = nextWeights[k1]/wsum * weights[k];
-									double d2 = nextWeights[k2]/wsum * weights[k];
-									nextWeights[k1] += d1; nextWeights[k2] += d2;
+									if (delta > 0){
+										AddCompanion(condVtxs[1-i], ids[k], condVtxs[i], cur[i][j], delta);
+										rest -= delta;
+									}
+									//	いっぱいなので、weightを0にしておく
+									weights[k] = 0;
 								}
 							}
+							double wsum = weights[0] + weights[1] + weights[2];
+							if (wsum == 0) goto filled;
+							for(int k=0; k<3; ++k) weights[k] /= wsum;
 							a = rest;
 						}
 filled:;
 						//	３点では吸収しきれなかったので、そばの頂点をどんどん探して割り当てていく
 						while (rest > 0){
 							std::vector<int> nears;
-							FindNearests(nears, condVtxs[i][cur[i][j]].pos, condVtxs[1-i], ids);	//	隣の空いてる頂点を近い順に返す。
+							if (ids[2] == -1) ids.resize(2);
+							if (ids[1] == -1) ids.resize(1);
+							FindNearests(nears, condVtxs[i][cur[i][j]].pos, condVtxs[1-i], ids);	//	隣の頂点を近い順に返す。
+							if (nears.size() == 0) break;
 							for(unsigned k=0; rest > 0 && k<nears.size(); ++k){
 								if (condVtxs[1-i][nears[k]].area - condVtxs[1-i][nears[k]].assign > rest){
-									condVtxs[1-i][nears[k]].assign += rest;
-									condVtxs[1-i][nears[k]].AddCompanion(cur[i][j], rest);
-									condVtxs[i][cur[i][j]].AddCompanion(nears[k], rest);
+									AddCompanion(condVtxs[1-i], nears[k], condVtxs[i], cur[i][j], rest);
 									rest = 0;
 								}else{
 									double delta = condVtxs[1-i][nears[k]].area - condVtxs[1-i][nears[k]].assign;
-									condVtxs[1-i][nears[k]].AddCompanion(cur[i][j], delta);
-									condVtxs[i][cur[i][j]].AddCompanion(nears[k], delta);
-									rest -= delta;
-									condVtxs[1-i][nears[k]].assign = condVtxs[1-i][nears[k]].area;
+									if (delta > 0){
+										AddCompanion(condVtxs[1-i], nears[k], condVtxs[i], cur[i][j], delta);
+										rest -= delta;
+									}
 								}
 							}
 							if (rest > 0){
