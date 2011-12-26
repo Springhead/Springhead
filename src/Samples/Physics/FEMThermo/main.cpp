@@ -451,10 +451,11 @@ public:
 			if (sp->normal.x < sp->normal.y) coords.Rot(sp->normal, Vec3d(1,0,0), 'z');
 			else coords.Rot(sp->normal, Vec3d(0,1,0), 'z');
 			Matrix3d coords_inv = coords.inv();
+			Vec3d normalL[2];
 			for(int i=0; i<2; ++i){
-				Vec3d normalL = sp->shapePoseW[i].Ori().Inv() * sp->normal * (i==0 ? 1 : -1);
+				normalL[i] = sp->shapePoseW[i].Ori().Inv() * sp->normal * (i==0 ? 1 : -1);
 				for(unsigned v=0; v < condVtxs[i].pmesh->surfaceVertices.size(); ++v){
-					double vd = (sp->closestPoint[i] - condVtxs[i].pmesh->vertices[condVtxs[i].pmesh->surfaceVertices[v]].pos) * normalL;
+					double vd = (sp->closestPoint[i] - condVtxs[i].pmesh->vertices[condVtxs[i].pmesh->surfaceVertices[v]].pos) * normalL[i];
 					vd -= sp->depth;
 					if (vd < isoLen) {
 						CondVtx c;
@@ -526,9 +527,23 @@ public:
 				}
 			}
 			//	頂点の担当する面積を計算する
-			//	TODO
-			
-
+			for(int i=0; i<2; ++i){
+				for(unsigned j=0; j<condVtxs[i].size(); ++j){
+					condVtxs[i][j].area = 0;
+					int vid = condVtxs[i][j].id;
+					for(int k=0; k<condVtxs[i].pmesh->vertices[vid].faces.size(); ++k){
+						if (condVtxs[i].pmesh->vertices[vid].faces[k] < condVtxs[i].pmesh->nSurfaceFace){
+							PHFemMesh::Face& face = condVtxs[i].pmesh->faces[condVtxs[i].pmesh->vertices[vid].faces[k]];
+							Vec3d a = condVtxs[i].pmesh->vertices[face.vertices[2]].pos - condVtxs[i].pmesh->vertices[face.vertices[0]].pos;
+							Vec3d b = condVtxs[i].pmesh->vertices[face.vertices[1]].pos - condVtxs[i].pmesh->vertices[face.vertices[0]].pos;
+							double ip = normalL[i] * (a^b).unit();
+							if (ip > 0){
+								condVtxs[i][j].area += ip * face.area / 3;
+							}
+						}
+					}
+				}
+			}
 			//	bboxの中心近くの頂点を見つける
 			double xCenter = 0.5*(bboxMin.x + bboxMax.x);
 			int centerVtx[2];
@@ -595,18 +610,20 @@ public:
 				for(int i=0; i<2; ++i){
 					for(unsigned j=0; j<cur[i].size();++j){
 						double a = condVtxs[i][cur[i][j]].area - condVtxs[i][cur[i][j]].assign;
-						if (a <= 1e-10) continue;
+						if (a <= 1e-11) continue;
 						std::vector<int> ids(3, -1);
 						double weights[3];
 						FindNearest3(&ids[0], weights, condVtxs[i][cur[i][j]].pos, condVtxs[1-i], cur[1-i].size() ? cur[1-i].back() : used[1-i].back());
 						double rest = a;
-						while(rest > 1e-10){
+						while(rest > 1e-11){
 							for(int k=0; k<3; ++k){
 								if (ids[k] < 0) continue;
 								if (condVtxs[1-i][ids[k]].area - condVtxs[1-i][ids[k]].assign > a * weights[k]){
 									double delta = a * weights[k];
-									AddCompanion(condVtxs[1-i], ids[k], condVtxs[i], cur[i][j], delta);
-									rest -= delta;
+									if (delta > 0){
+										AddCompanion(condVtxs[1-i], ids[k], condVtxs[i], cur[i][j], delta);
+										rest -= delta;
+									}
 								}else{
 									double delta = condVtxs[1-i][ids[k]].area - condVtxs[1-i][ids[k]].assign;
 									if (delta > 0){
