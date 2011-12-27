@@ -63,8 +63,8 @@ void PHFemMeshThermo::CalcVtxDisFromOrigin(){
 	for(unsigned i=0;i < NSurfaceVertices(); i++){
 		double len = sqrt(vertices[surfaceVertices[i]].pos.x * vertices[surfaceVertices[i]].pos.x + vertices[surfaceVertices[i]].pos.z *vertices[surfaceVertices[i]].pos.z);
 		vertices[surfaceVertices[i]].disFromOrigin = len;
-		//DSTR << i << "th verticies pos: " << vertices[surfaceVertices[i]].pos << std::endl;
-		//DSTR << i << "th distans from origin: " << len << std::endl;
+		DSTR << i << "th verticies pos: " << vertices[surfaceVertices[i]].pos << std::endl;
+		DSTR << i << "th distans from origin: " << len << std::endl;
 		DSTR << std::endl;
 	}
 	int kadoon =0;

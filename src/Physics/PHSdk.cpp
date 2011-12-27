@@ -14,6 +14,8 @@
 #include <Physics/PHSpring.h>
 #include <Physics/PHTreeNode.h>
 #include <Physics/PHGear.h>
+#include <Physics/PHFemMesh.h>
+#include <Physics/PHFemMeshThermo.h>
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
 #include <Collision/CDCapsule.h>
@@ -58,7 +60,8 @@ void PHSdkIf::RegisterSdk(){
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSliderJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPathJointNode));
-
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMesh));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMeshThermo));
 
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKBallActuator));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKHingeActuator));
