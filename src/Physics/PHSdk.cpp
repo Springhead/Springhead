@@ -46,6 +46,8 @@ void PHSdkIf::RegisterSdk(){
 
 	Sdk::RegisterFactory(DBG_NEW PHSdkFactory());
 	PHSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHScene));
+	PHSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMesh));
+	PHSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMeshThermo));
 
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSolid));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHRootNode));
@@ -60,8 +62,6 @@ void PHSdkIf::RegisterSdk(){
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSliderJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPathJointNode));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMesh));
-	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMeshThermo));
 
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKBallActuator));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKHingeActuator));
