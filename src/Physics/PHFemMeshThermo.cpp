@@ -2270,6 +2270,10 @@ void PHFemMeshThermo::SetVerticesTempAll(double temp){
 }
 
 
+void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt){
+	vecFAll[id][0] = dqdt;
+}
+
 }
 
 

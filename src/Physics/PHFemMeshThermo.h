@@ -44,7 +44,10 @@ public:
 	void SetVerticesTempAll(double temp);					//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
 	void SetVertexTemp(unsigned i,double temp);		// 節点iの温度をtemp度に設定し、それをTVEcAllに反映
 	void SetLocalFluidTemp(unsigned i,double temp);		//	接点iの周囲の節点温度をtemp度に設定
-	void UpdateheatTransRatio(unsigned id,double heatTrransRatio);	///	頂点の熱伝達率を更新し、行列を作り直す
+	void UpdateheatTransRatio(unsigned id,double heatTransRatio);	///	頂点の熱伝達率を更新し、行列を作り直す
+
+	// If としての実装
+	void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt);
 
 	//%%%%%%%%		熱伝導境界条件の設定関数の宣言		%%%%%%%%//
 	void SetThermalBoundaryCondition();				//	熱伝導境界条件の設定
@@ -134,10 +137,11 @@ protected:
 	//全体の係数行列	//SciLabで使用
 	PTM::VMatrixRow<double> matKAll;			//[K]の全体剛性行列		//CreateMatKall()
 	PTM::VMatrixRow<double> matCAll;			//[C]
-
+public:
 	//	ガウスザイデル計算時に使用している
 	PTM::VMatrixCol<double> vecFAll;			//{F}の全体剛性ベクトル
 
+protected:
 	//全体の剛性行列の代わり
 	PTM::VMatrixRow<double> dMatKAll;			//全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
 	PTM::VMatrixRow<double> dMatCAll;			//全体剛性行列Cの対角成分
