@@ -86,7 +86,9 @@ PHFemMesh::PHFemMesh(const PHFemMeshDesc& desc, SceneIf* s){
 
 void PHFemMesh::SetDesc(const void* p) {
 	PHFemMeshDesc* d = (PHFemMeshDesc*)p;
+	tets.clear();
 	tets.resize(d->tets.size() / 4);
+	vertices.clear();
 	vertices.resize(d->vertices.size());
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j)
@@ -125,6 +127,7 @@ void PHFemMesh::SetDesc(const void* p) {
 	}
 	std::sort(allFaces.begin(), allFaces.end());
 
+	faces.clear();
 	std::vector<Face> ifaces;
 	for(unsigned i=0; i<allFaces.size(); ++i){
 		if (i+1<allFaces.size() && allFaces[i] == allFaces[i+1]){
@@ -136,6 +139,7 @@ void PHFemMesh::SetDesc(const void* p) {
 	}
 	nSurfaceFace = faces.size();
 	faces.insert(faces.end(), ifaces.begin(), ifaces.end());
+	surfaceVertices.clear();
 	//	•\–Ê‚Ì’¸“_‚Ì—ñ‹“
 	for(unsigned i=0; i<nSurfaceFace; ++i){
 		for(unsigned j=0; j<3; ++j){
@@ -148,6 +152,7 @@ void PHFemMesh::SetDesc(const void* p) {
 
 	//	•Ó‚Ì—ñ‹“
 	//	‚Ü‚¸•\–Ê‚Ì•Ó
+	edges.clear();
 	for(unsigned i=0; i<nSurfaceFace; ++i){
 		for(unsigned j=0; j<3; ++j){
 			edges.push_back(Edge(faces[i].vertices[j], faces[i].vertices[(j+1)%3]));
