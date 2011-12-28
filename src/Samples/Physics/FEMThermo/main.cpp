@@ -18,6 +18,7 @@ Springhead2/src/Samples/FEMThermo
 #include <Framework/FWFemMesh.h>
 #include <Collision/CDConvexMesh.h>
 #include <Physics/PHConstraintEngine.h>
+#include <Physics/PHFemMeshThermo.h>
 #include <list>
 
 #pragma hdrstop
@@ -220,7 +221,9 @@ public:
 	}
 	struct CondVtx;
 	struct CondVtxs:public std::vector<CondVtx>{
-		PHFemMesh* pmesh;
+		//PHFemMesh* pmesh;
+		//
+		PHFemMeshThermo* pmesh;
 		std::vector<int> vtx2Cond;
 	};
 	struct CondVtx{
@@ -433,6 +436,8 @@ public:
 			sp->normal = sp->shapePoseW[1]*sp->closestPoint[1] - sp->shapePoseW[0]*sp->closestPoint[0];
 			sp->normal.unitize();
 		}
+
+		//	距離:dist
 
 		//	距離が近ければ伝熱の処理
 		/*	熱伝達率 α [W/(m^2 K)] を用いると、境界上で q = α(T-Tc) (T:接点温度 Tc:周囲の流体等の温度)
@@ -683,9 +688,55 @@ filled:;
 					cur[i] = next;
 				}
 			}
+
+			for(unsigned i =0;i < condVtxs[0].size(); i++){
+				condVtxs[0].pmesh->vertices[condVtxs[0][i].id].temp;
+				condVtxs[0].pmesh->vertices[condVtxs[0][i].id].heatTransRatio;
+				//	対応する節点(companions[j])の温度を使って熱伝達の計算を行う
+				for(unsigned j =0;j < condVtxs[0][i].companions.size(); j++){
+					double dqdt = 
+					condVtxs[0].pmesh->vertices[condVtxs[0][i].id].heatTransRatio * ( condVtxs[0].pmesh->vertices[condVtxs[0][i].id].temp 
+					- condVtxs[1].pmesh->vertices[condVtxs[0][i].companions[j].id].temp ) * condVtxs[0][i].companions[j].area ;//
+					// condvtx[0]のVecf にdqdt を足す
+					condVtxs[0].pmesh->SetvecFAll(condVtxs[0][i].id,dqdt);
+					// condVtx[1]のcompanion.id番目のVecfから引く
+					condVtxs[1].pmesh->SetvecFAll(condVtxs[0][i].companions[j].id,-dqdt);
+				}
+			}
 		}
+
 		
+		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwPan")->Cast();
+		PHFemMeshIf* phpanmesh = tmesh->GetPHMesh();
 		
+		PHFemMeshThermoIf* pfem = NULL;
+
+			///	メッシュのPosOnPan座標を入れて、座標が小さい順に並べる
+			//std::list<double> posOnPany;
+
+			double tempTc =10.0;
+			for(unsigned int i=0; i<tmesh->NChildObject() && !pfem; ++i){
+				pfem = tmesh->GetChildObject(i)->Cast();
+				//	pfemが取れていることを確認
+				if(pfem){
+					///	加熱温度の上がり方を制限
+					if(tempTc <= 250.0){ tempTc += tempTc * pfem->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
+					else{
+						tempTc = 250.0;
+					}
+
+					//DSTR << pfem->NSurfaceVertices() <<std::endl;
+					for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
+						Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
+						if( pfemPose.y < 0.0){
+							//pfem[j].SetVertexTemp(j,100.0);
+							pfem->SetVertexTc(j,tempTc,25.0);
+						}
+					}
+				}
+			}
+
+
 
 #else
 		//	フライパンを取ってくる
