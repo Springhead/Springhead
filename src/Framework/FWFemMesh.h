@@ -42,7 +42,7 @@ public:
 	/// phMeshを取得
 	PHFemMeshIf* GetPHMesh(){return phMesh->Cast();	};
 
-protected:
+//protected:
 	//	TetGenを用いて、GRMeshを四面体メッシュ化し、phMeshに格納する。
 	virtual bool CreatePHFromGR();
 	//	phMeshからGRMeshを生成する。マテリアルなどはgrMeshから拾う。

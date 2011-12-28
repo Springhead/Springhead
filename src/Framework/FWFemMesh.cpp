@@ -312,6 +312,9 @@ void FWFemMesh::CreateGRFromPH(){
 		else if (pFaceMap[pf][1] == pFaceMap[pf][2]) pFaceMap[pf].face = pFaceMap[pf][1];
 		else if (pFaceMap[pf][2] == pFaceMap[pf][0]) pFaceMap[pf].face = pFaceMap[pf][2];
 		else pFaceMap[pf].face = pFaceMap[pf][0];
+		if (pFaceMap[pf].face == -1){
+			return;
+		}
 	}
 #if 0
 	DSTR << "FaceMap PHtoGR:\n";

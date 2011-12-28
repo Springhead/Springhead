@@ -98,14 +98,22 @@ public:
 		if (numScenes) SwitchScene(GetSdk()->NScene()-1);
 
 		//	FEMMeshを保存してみる
-		FWFemMeshIf* fm[2] = {GetSdk()->GetScene()->FindObject("fwNegi")->Cast(), GetSdk()->GetScene()->FindObject("fwPan")->Cast()};
+		FWFemMesh* fm[2] = {GetSdk()->GetScene()->FindObject("fwNegi")->Cast(), GetSdk()->GetScene()->FindObject("fwPan")->Cast()};
 		//FWFemMeshIf* fm[1] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
 		//FWFemMeshIf* fm[1] = GetSdk()->GetScene()->FindObject("fwPan")->Cast();
 		
-		DSTR << "fm[0]: " << fm[0] <<std::endl;
-		DSTR << "fm[1]: " << fm[1] <<std::endl;
+		PHFemMeshThermoDesc d;		//	入れ物を作る
+		fm[1]->GetPHMesh()->GetDesc(&d);			//	アドレスを渡す
+		for(unsigned i=0; i < d.vertices.size(); i++){
+			d.vertices[i].y = 0.5 *d.vertices[i].y;
+		}
+		fm[1]->GetPHMesh()->SetDesc(&d);
+		fm[1]->CreateGRFromPH();
+
+
+		//DSTR << "fm[0]: " << fm[0] <<std::endl;
+		//DSTR << "fm[1]: " << fm[1] <<std::endl;
 		int hasek =0;
-		//> 上の２つが同じアドレスだが・・・いいのか？
 
 		ObjectIfs objs;
 		FIFileSprIf* spr = GetSdk()->GetFISdk()->CreateFileSpr();
@@ -125,6 +133,8 @@ public:
 		//	objs.Push(fm->GetPHMesh());
 		//	spr->Save(objs, "femmeshPan.spr");
 		//}
+
+//		fm[1]->GetPHSolid()->GetPose()
 
 		/// 描画設定
 		if (fwScene){

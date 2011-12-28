@@ -958,6 +958,10 @@ void PHFemMeshThermo::SetkcfParam(Tet tets){
 bool PHFemMeshThermo::GetDesc(void* p) const {
 	PHFemMeshThermoDesc* d = (PHFemMeshThermoDesc*)p;
 	return PHFemMesh::GetDesc(d);
+	d->consts = specificHeat;
+	d->heat_trans = heatTrans;
+	d->roh = roh;
+	d->thconduct = thConduct;
 }
 
 void PHFemMeshThermo::CreateMatc(unsigned id){
