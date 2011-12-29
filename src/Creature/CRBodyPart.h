@@ -102,6 +102,7 @@ private:
 
 	/// 有効か
 	bool bEnable;
+	bool bPause;
 
 	/// 物体探索エリア
 	Posed		relativePose;
@@ -122,6 +123,7 @@ private:
 		ikEndEffector = NULL;
 		bCtlPos = bCtlOri = bCtlVel = bCtlAvl = false;
 		bEnable = false;
+		bPause  = false;
 
 		relativePose = Posed();
 		horizRange = vertRange = -1;
@@ -204,6 +206,10 @@ public:
 	/** @brief 動作開始
 	*/
 	void Start();
+
+	/** @brief 動作の一時停止
+	*/
+	void Pause();
 
 	/** @brief 動作停止
 	*/

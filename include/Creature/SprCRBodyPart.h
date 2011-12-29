@@ -104,6 +104,10 @@ struct CRIKSolidIf : CRSolidIf {
 	*/
 	void Start();
 
+	/** @brief “®ì‚Ìˆê’â~
+	*/
+	void Pause();
+
 	/** @brief “®ì’â~
 	*/
 	void Stop();
