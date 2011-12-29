@@ -25,6 +25,7 @@
 	void SetTargetPose(Posed pose){	base::SetTargetPose(pose);}	\
 	void SetTimeLimit(float timeLimit){	base::SetTimeLimit(timeLimit);}	\
 	void Start(){	base::Start();}	\
+	void Pause(){	base::Pause();}	\
 	void Stop(){	base::Stop();}	\
 	void Plan(){	base::Plan();}	\
 	void SetViewArea(Posed relativePose, double horizRange, double vertRange){	base::SetViewArea(relativePose, horizRange, vertRange);}	\

@@ -1,5 +1,5 @@
-#include <windows.h>
 #include <Springhead.h>
+#include <windows.h>
 #include <HumanInterface/SprHIDRUsb.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -342,19 +342,20 @@ void MyApp::Keyboard(unsigned char key, int x, int y){
 			else if(jointsNum == 2)
 				fileName = "leftShoulder.txt";
 			else fileName = "ConData.txt";
-			joints[jointsNum]->SetConstLine(fileName, 1);
+			// joints[jointsNum]->SetConstLine(fileName, 1);
+			joints[jointsNum]->SetConstLine("rightShoulder.txt", 1);
 			loadData(fileName);
 			joints[jointsNum]->SetConstraintMode(PHBallJointDesc::Spline);
 			break;
 		case ':':
 			fileName = "circle.txt";
-			joints[jointsNum]->SetConstLine(fileName, 1);
+			// joints[jointsNum]->SetConstLine(fileName, 1);
 			loadData(fileName);
 			joints[jointsNum]->SetConstraintMode(PHBallJointDesc::Spline);
 			break;
 		case 'i':
 			fileName = "Clear.txt";
-			joints[jointsNum]->SetConstLine(fileName, 1);
+			// joints[jointsNum]->SetConstLine(fileName, 1);
 			loadData(fileName);
 			joints[jointsNum]->SetConstraintMode(PHBallJointDesc::Spline);
 			break;

@@ -156,13 +156,23 @@ void CRIKSolid::StepTrajectory() {
 }
 
 void CRIKSolid::Start() {
-	time = 0.0f;
+	if (!bEnable && !bPause) {
+		time = 0.0f;
+	}
 	bEnable = true;
+	bPause = false;
+}
+
+void CRIKSolid::Pause() {
+	bEnable = false;
+	bPause  = true;
 }
 
 void CRIKSolid::Stop() {
 	bEnable = false;
+	bPause  = false;
 	ikEndEffector->Enable(false);
+	time = 0.0f;
 }
 
 void CRIKSolid::Plan() {
