@@ -705,40 +705,54 @@ filled:;
 			}
 		}
 
+		//以下の計算が何かが、重い！！！！上下のコードは重くない。
+		//	以下の計算は、上のコードが動いているのか知りたくて、急ごしらえのコピペコードなので、きちんとした実装を書いて、熱伝達を試す
+		//	以下、同心円となる環境を作る
+
+		//>	同心円の部分は、熱流束境界条件を加える
 		
-		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwPan")->Cast();
-		PHFemMeshIf* phpanmesh = tmesh->GetPHMesh();
+		//	Panのphmeshを取ってくる
+
+		//　SUrfaceMEshのfaceについて、faceの節点が、
+
+
+		//	distFromOriginが既定の範囲内にある時、
+		//	熱流束を加える
+
+		//	
+
 		
-		PHFemMeshThermoIf* pfem = NULL;
-
-			///	メッシュのPosOnPan座標を入れて、座標が小さい順に並べる
-			//std::list<double> posOnPany;
-
-			double tempTc =10.0;
-			for(unsigned int i=0; i<tmesh->NChildObject() && !pfem; ++i){
-				pfem = tmesh->GetChildObject(i)->Cast();
-				//	pfemが取れていることを確認
-				if(pfem){
-					///	加熱温度の上がり方を制限
-					if(tempTc <= 250.0){ tempTc += tempTc * pfem->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
-					else{
-						tempTc = 250.0;
-					}
-
-					//DSTR << pfem->NSurfaceVertices() <<std::endl;
-					for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
-						Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
-						if( pfemPose.y < 0.0){
-							//pfem[j].SetVertexTemp(j,100.0);
-							pfem->SetVertexTc(j,tempTc,25.0);
-						}
-					}
-				}
-			}
+		//FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwPan")->Cast();
+		//PHFemMeshIf* phpanmesh = tmesh->GetPHMesh();
+		//PHFemMeshThermoIf* pfem = NULL;
+		//double tempTc =10.0;
+		//for(unsigned int i=0; i<tmesh->NChildObject() && !pfem; ++i){
+		//	pfem = tmesh->GetChildObject(i)->Cast();
+		//	if(pfem){
+		//		///	加熱温度の上がり方を制限
+		//		if(tempTc <= 250.0){ tempTc += tempTc * pfem->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
+		//		else{
+		//			tempTc = 250.0;
+		//		}
+		//		for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
+		//			Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
+		//			//DSTR << j << " th pfemPose.y: " << pfemPose.y << std::endl;		// -0.0016 と 0.0016 が入っている。マイナスの方だけ加熱
+		//			//	同心円状に加熱
+		//			//	test code 下側全部に加熱
+		//			if( pfemPose.y < 0.0){
+		//				//pfem->SetVertexTc(j,tempTc,25.0);			//>	この関数の呼び出しが激重
+		//				//もはや、↑は使わない。熱伝達境界条件は、#if以下のコードを利用
+		//			}
+		//		}
+		//	}
+		//}
 
 
 
 #else
+
+//#endif
+//#if 0
 		//	フライパンを取ってくる
 		FWObjectIf* pan		=	DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
 		//	食材を取ってくる

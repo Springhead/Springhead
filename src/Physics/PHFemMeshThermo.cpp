@@ -195,6 +195,68 @@ void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp
 //	}
 }
 
+void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
+	//> ベクトルを作る命令
+	///	内半径と外半径の間の節点に熱流束境界条件を設定
+
+	//> 加熱する四面体面の面積の総和を求める
+	double faceS = 0.0;
+	for(unsigned i=0;i < nSurfaceFace; i++){
+		unsigned nObinnerVtx = 0;
+		if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);
+		for(unsigned j=0;j<3;j++){
+			if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
+				nObinnerVtx += 1;
+			}
+		}
+		if( nObinnerVtx == 1)			faces[i].fluxarea = 1.0/3.0 * faces[i].area;
+		else if(nObinnerVtx == 2)		faces[i].fluxarea = 2.0/3.0 * faces[i].area;
+		else if(nObinnerVtx == 3)		faces[i].fluxarea = faces[i].area;
+		else if(nObinnerVtx == 0)		faces[i].fluxarea = 0;
+
+		if(faces[i].fluxarea >= 0){
+			faceS = faces[i].fluxarea;
+		}else{
+			assert(0);
+		}
+	}
+
+	//> dqdt を単位面積あたりに直す([1/m^2])
+	double dqdtds = dqdtAll / faceS;
+
+	//>	以下、熱流束をfacesに格納する
+	//>	熱流束の面積計算はfluxareaを用いて行う
+	for(unsigned i=0;i < nSurfaceFace; i++){
+		faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+	}
+
+	//↑をつかって、CreateMatk2tをコピーした関数で、Vecf2?を作る基に
+
+	//>	熱量は、dqdtdsを用いる
+
+	
+	
+	///	
+	// nSurfaceVertex　の内で、disFromOoriginが　r <= <=R の範囲内に入っている節点を探す
+
+	//> r <= <= Rの中心から放射状に加熱
+
+	//	節点でdqdtの値を更新する
+
+	//　以下は、ベクトルを作る関数の仕事
+	//	節点の属する表面の面で、計算する
+	// heatFluxValueを基に計算を進める
+
+	//	ガウスザイデル計算できるように処理など、準備する
+	
+	//	初期化でｒ、Rの計算をする　以降、変更があれば更新する
+	//> nSurfaceFaces　の節点の内
+
+	//
+
+}
+/// face毎に作ってしまうのが良いのか、verticesごとにやるのがいいのか。どっちがいいか分からないので、ひとまず、vertices毎に作ってしまおう
+
 void PHFemMeshThermo::SetVertexHeatFlux(int id,double heatFlux){
 	vertices[id].heatFluxValue = heatFlux;
 }
@@ -854,6 +916,10 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	//DSTR << DCAST(PHSceneIf, GetScene())->GetTimeStep() << std::endl;
 	//int hogeshimitake =0;
 
+	//>	IHからの単位時間当たりの加熱熱量
+	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
+	CalcIHdqdt(0.05,0.11,231.9);			/// 単位 m,m,J/sec			// 0.05,0.11は適当値
+	//	この後で、熱流束ベクトルを計算する関数を呼び出す
 
 	//%%%	初期化類		%%%//
 
