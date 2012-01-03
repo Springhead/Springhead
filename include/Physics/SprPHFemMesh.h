@@ -63,6 +63,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	unsigned long GetStepCountCyc();		///	ƒJƒEƒ“ƒg‚P‚ª‰½T–Ú‚©	ŒvZ®:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
 	void SetVertexTemp(unsigned id,double temp);
 	void SetvecFAll(unsigned id,double dqdt);
+	void SetRohSpheat(double roh,double Cp);		//‘fŞŒÅ—L‚Ì•¨«
 };
 
 //@}

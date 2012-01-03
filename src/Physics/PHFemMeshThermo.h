@@ -110,6 +110,7 @@ protected:
 	void CreateVecf3(unsigned id);					//	熱伝達率は相加平均、周囲流体温度は各々を形状関数に？
 	void CreateVecf3_(unsigned id);					//	熱伝達率も、周囲流体温度も相加平均
 	void CreateVecf2(unsigned id);					//	四面体のIDを引数に
+	void CreateVecf2surface(unsigned id);			//> 四面体IDに含まれるfaceの内、表面のfaceについてだけ計算
 
 	//	{T}:節点温度ベクトルを作る関数
 	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
