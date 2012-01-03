@@ -461,7 +461,7 @@ public:
 				
 			頂点の面積は、頂点を含む三角形達の面積の和の1/3。				
 		*/
-		const double isoLen = 0.02;	//	これ以上離れると伝導しない距離
+		const double isoLen = 0.005;	//	これ以上離れると伝導しない距離
 		if (sp->depth > -isoLen){
 			CondVtxs condVtxs[2];
 			condVtxs[0].pmesh = fmesh[bSwap? 1:0]->GetPHMesh()->Cast();
@@ -695,13 +695,14 @@ filled:;
 			}
 			/// 2物体の間で熱伝達境界条件利用による熱伝達計算を行う
 			for(unsigned i =0;i < condVtxs[0].size(); i++){
-				condVtxs[0].pmesh->vertices[condVtxs[0][i].id].temp;
-				condVtxs[0].pmesh->vertices[condVtxs[0][i].id].heatTransRatio;
 				//	対応する節点(companions[j])の温度を使って熱伝達の計算を行う
 				for(unsigned j =0;j < condVtxs[0][i].companions.size(); j++){
 					double dqdt = 
 					condVtxs[0].pmesh->vertices[condVtxs[0][i].id].heatTransRatio * ( condVtxs[0].pmesh->vertices[condVtxs[0][i].id].temp 
 					- condVtxs[1].pmesh->vertices[condVtxs[0][i].companions[j].id].temp ) * condVtxs[0][i].companions[j].area ;//
+					
+					dqdt *= 1e4;
+
 					// condvtx[0]のVecf にdqdt を足す
 					condVtxs[0].pmesh->SetvecFAll(condVtxs[0][i].id,dqdt);
 					// condVtx[1]のcompanion.id番目のVecfから引く
