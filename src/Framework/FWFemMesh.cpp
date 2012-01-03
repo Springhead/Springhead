@@ -46,8 +46,8 @@ void FWFemMesh::Sync(bool ph2gr){
 	
 	double dtex =(double) 1.0 / ( kogetex + thtex + watex);		//	テクスチャ奥行座標の層間隔
 	double texstart = dtex /2.0;								//	テクスチャ座標の初期値 = 焦げテクスチャのスタート座標
-	double wastart = texstart + kogetex * dtex ;	//	水分量表示テクスチャのスタート座標
-	double thstart = texstart + kogetex * dtex + 1.0 * dtex ;				//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
+	double wastart = texstart + kogetex * dtex ;				//	水分量表示テクスチャのスタート座標
+	double thstart = texstart + kogetex * dtex + 1.0 * dtex ;	//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
 	
 
 	//	50度刻み:テクスチャの深さ計算(0~50)	( vertices.temp - 50.0 ) * dtex / 50.0

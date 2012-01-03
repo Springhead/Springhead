@@ -99,6 +99,7 @@ public:
 		bool deformed;				///	属する頂点の移動により、変形されたとき
 		double thermalEmissivity;	///	熱放射率
 		double heatflux;			///	熱流束値　構成する３節点の相加平均で計算
+		double fluxarea;			//>	 熱流束の計算に用いる、faceのエリア
 
 	};
 	//	辺

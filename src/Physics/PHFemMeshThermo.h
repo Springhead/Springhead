@@ -88,6 +88,7 @@ public:
 	unsigned long GetStepCountCyc(){return StepCount_;};
 	
 	void CalcVtxDisFromOrigin();			///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
+	void CalcIHdqdt(double r,double R,double dqdtAll);			///	IHヒーターの設定
 
 protected:
 	//PHFemMeshThermo内のみで用いる計算
@@ -243,6 +244,7 @@ protected:
 	double roh;						//密度
 	double specificHeat;			//比熱
 //	double dt;						//時間刻み幅
+//	double dqdtAll;					//	総量
 
 	//%%%%%%%%		バイナリスイッチの宣言		%%%%%%%%//
 	///	PHFemMeshに属する構造体、クラスで定義されている同様のboolが更新されたら、こちらも更新する
