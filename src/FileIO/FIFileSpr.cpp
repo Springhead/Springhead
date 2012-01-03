@@ -15,7 +15,7 @@
 namespace Spr{;
 
 #ifdef _DEBUG
-#define TRACE_PARSE
+//#define TRACE_PARSE
 #endif
 
 #ifdef TRACE_PARSE

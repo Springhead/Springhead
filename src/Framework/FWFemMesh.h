@@ -23,7 +23,7 @@ class GRMesh;
 class FWFemMesh: public FWObject{
 	SPR_OBJECTDEF(FWFemMesh);		
 	SPR_DECLMEMBEROF_FWFemMeshDesc;	//	FWFemMeshDesc‚Ìƒƒ“ƒo‚ÆGetDesc(), GetDescSize()‚ÌÀ‘•
-protected:
+//protected:
 	GRMesh* grMesh;
 	UTRef<PHFemMesh> phMesh;
 	std::vector<int> vertexIdMap;	//	grMesh‚©‚çphMesh‚Ö‚Ì’¸“_‚Ì‘Î‰•\
