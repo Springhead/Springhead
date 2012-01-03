@@ -19,6 +19,7 @@ Springhead2/src/Samples/FEMThermo
 #include <Collision/CDConvexMesh.h>
 #include <Physics/PHConstraintEngine.h>
 #include <Physics/PHFemMeshThermo.h>
+#include <Graphics/GRMesh.h>
 #include <list>
 
 #pragma hdrstop
@@ -109,7 +110,11 @@ public:
 			d.vertices[i].y = 0.5 *d.vertices[i].y;
 		}
 		fm[1]->GetPHMesh()->SetDesc(&d);
+		
+		//	PHMesh‚©‚çGRMesh‚ðì‚éB
+		fm[1]->grFrame->DelChildObject(fm[1]->grMesh->Cast());
 		fm[1]->CreateGRFromPH();
+		fm[1]->grFrame->AddChildObject(fm[1]->grMesh->Cast());
 
 
 		//DSTR << "fm[0]: " << fm[0] <<std::endl;
