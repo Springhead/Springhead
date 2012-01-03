@@ -404,7 +404,7 @@ public:
 		}
 	}
 	void HeatConductionStep(){
-#if 0
+#if 1
 		//	2物体を取り出す
 		FWFemMesh* fmesh[2];
 		fmesh[0] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
@@ -760,33 +760,33 @@ filled:;
 		//}
 
 
-		FWFemMeshIf* tmeshN	= GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
-		PHFemMeshIf* phpanmeshN = tmeshN->GetPHMesh();
-		PHFemMeshThermoIf* pfemN = NULL;
-		double tempTcN =10.0;
-		for(unsigned int i=0; i<tmeshN->NChildObject() && !pfemN; ++i){
-			pfemN = tmeshN->GetChildObject(i)->Cast();
-			if(pfemN){
-				///	加熱温度の上がり方を制限
-				//if(tempTcN <= 250.0){ tempTcN += tempTcN * pfemN->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
-				//else{
-				//	tempTcN = 250.0;
-				//}
-				//for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
-				//	Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
-				//	//DSTR << j << " th pfemPose.y: " << pfemPose.y << std::endl;		// -0.0016 と 0.0016 が入っている。マイナスの方だけ加熱
-				//	//	同心円状に加熱
-				//	//	test code 下側全部に加熱
-				//	if( pfemPose.y < 0.0){
-				//		//pfem->SetVertexTc(j,tempTc,25.0);			//>	この関数の呼び出しが激重
-				//		//もはや、↑は使わない。熱伝達境界条件は、#if以下のコードを利用
-				//	}
-				//}
-				for(unsigned j=0;j<5;j++){
-					pfemN->SetVertexTc(j,200.0,25.0);
-				}
-			}
-		}
+		//FWFemMeshIf* tmeshN	= GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+		//PHFemMeshIf* phpanmeshN = tmeshN->GetPHMesh();
+		//PHFemMeshThermoIf* pfemN = NULL;
+		//double tempTcN =10.0;
+		//for(unsigned int i=0; i<tmeshN->NChildObject() && !pfemN; ++i){
+		//	pfemN = tmeshN->GetChildObject(i)->Cast();
+		//	if(pfemN){
+		//		///	加熱温度の上がり方を制限
+		//		//if(tempTcN <= 250.0){ tempTcN += tempTcN * pfemN->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
+		//		//else{
+		//		//	tempTcN = 250.0;
+		//		//}
+		//		//for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
+		//		//	Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
+		//		//	//DSTR << j << " th pfemPose.y: " << pfemPose.y << std::endl;		// -0.0016 と 0.0016 が入っている。マイナスの方だけ加熱
+		//		//	//	同心円状に加熱
+		//		//	//	test code 下側全部に加熱
+		//		//	if( pfemPose.y < 0.0){
+		//		//		//pfem->SetVertexTc(j,tempTc,25.0);			//>	この関数の呼び出しが激重
+		//		//		//もはや、↑は使わない。熱伝達境界条件は、#if以下のコードを利用
+		//		//	}
+		//		//}
+		//		for(unsigned j=0;j<5;j++){
+		//			pfemN->SetVertexTc(j,200.0,25.0);
+		//		}
+		//	}
+		//}
 
 #else
 
