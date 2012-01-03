@@ -61,11 +61,19 @@ void PHFemMeshThermo::CalcVtxDisFromOrigin(){
 
 	//> 以下で取得する位置は、世界座標系!？ローカル座標系の位置の取り方を知りたい!!!
 	for(unsigned i=0;i < NSurfaceVertices(); i++){
-		double len = sqrt(vertices[surfaceVertices[i]].pos.x * vertices[surfaceVertices[i]].pos.x + vertices[surfaceVertices[i]].pos.z *vertices[surfaceVertices[i]].pos.z);
-		vertices[surfaceVertices[i]].disFromOrigin = len;
-		DSTR << i << "th verticies pos: " << vertices[surfaceVertices[i]].pos << std::endl;
-		DSTR << i << "th distans from origin: " << len << std::endl;
-		DSTR << std::endl;
+		if(vertices[surfaceVertices[i]].pos.y < 0){
+			double len = sqrt(vertices[surfaceVertices[i]].pos.x * vertices[surfaceVertices[i]].pos.x + vertices[surfaceVertices[i]].pos.z *vertices[surfaceVertices[i]].pos.z);
+			vertices[surfaceVertices[i]].disFromOrigin = len;
+			for(unsigned j=0; j < vertices[surfaceVertices[i]].faces.size();j++){ 
+				faces[vertices[surfaceVertices[i]].faces[j]].isIHheated = true;				//> IH加熱の対象候補面(pos.y<0が一つ目の条件)
+			}
+		}else{
+			//>	物体の下底面でない場合には、0を入れて、計算から除外する
+			vertices[surfaceVertices[i]].disFromOrigin = 0.0;
+		}
+		//DSTR << i << "th verticies pos: " << vertices[surfaceVertices[i]].pos << std::endl;
+		//DSTR << i << "th distans from origin: " << len << std::endl;
+		//DSTR << std::endl;
 	}
 	int kadoon =0;
 }
@@ -207,31 +215,41 @@ void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
 	//> 加熱する四面体面の面積の総和を求める
 	double faceS = 0.0;
 	for(unsigned i=0;i < nSurfaceFace; i++){
-		unsigned nObinnerVtx = 0;
-		if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);
-		for(unsigned j=0;j<3;j++){
-			if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
-				nObinnerVtx += 1;
+		if(faces[i].isIHheated){			// faceの節点のy座標が負の場合→IH加熱の対象節点
+			unsigned nObinnerVtx = 0;
+			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);
+			for(unsigned j=0;j<3;j++){
+				if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
+					nObinnerVtx += 1;
+				}
 			}
+			if( nObinnerVtx == 1)			faces[i].fluxarea = 1.0/3.0 * faces[i].area;
+			else if(nObinnerVtx == 2)		faces[i].fluxarea = 2.0/3.0 * faces[i].area;
+			else if(nObinnerVtx == 3)		faces[i].fluxarea = faces[i].area;
+			else if(nObinnerVtx == 0)		faces[i].fluxarea = 0;
+
+			if(faces[i].fluxarea >= 0){		faceS = faces[i].fluxarea;
+			}else{		assert(0);	}		//	faces[i].fluxareaに0未満の数字が入っているのに加算しようとしている
+			DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
 		}
-		if( nObinnerVtx == 1)			faces[i].fluxarea = 1.0/3.0 * faces[i].area;
-		else if(nObinnerVtx == 2)		faces[i].fluxarea = 2.0/3.0 * faces[i].area;
-		else if(nObinnerVtx == 3)		faces[i].fluxarea = faces[i].area;
-		else if(nObinnerVtx == 0)		faces[i].fluxarea = 0;
-
-		if(faces[i].fluxarea >= 0){		faceS = faces[i].fluxarea;
-		}else{		assert(0);	}		//	faces[i].fluxareaに0未満の数字が入っているのに加算しようとしている
 	}
 
-	//> dqdt を単位面積あたりに直す([1/m^2])
-	double dqdtds = dqdtAll / faceS;
-
-	//>	以下、熱流束をfacesに格納する
-	//>	熱流束の面積計算はfluxareaを用いて行う
 	for(unsigned i=0;i < nSurfaceFace; i++){
-		faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+		DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
 	}
 
+	if(faceS > 0){
+		//> dqdt を単位面積あたりに直す([1/m^2])
+		double dqdtds = dqdtAll / faceS;
+		DSTR << "dqdtds:  " << dqdtds << std::endl;
+		//>	以下、熱流束をfacesに格納する
+		//>	熱流束の面積計算はfluxareaを用いて行う
+		for(unsigned i=0;i < nSurfaceFace; i++){
+			faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+			DSTR << "faces[" << i <<"].heatflux" << faces[i].heatflux <<std::endl;
+		}
+	}
+	int katoon =0;
 	//↑をつかって、CreateMatk2tをコピーした関数で、Vecf2?を作る基に
 
 	//>	熱量は、dqdtdsを用いる
@@ -702,8 +720,9 @@ void PHFemMeshThermo::Step(double dt){
 	//	熱伝達率を0にする。温度固定境界条件で加熱。
 
 	//	UsingFixedTempBoundaryCondition(3,50.0);
-//	UsingFixedTempBoundaryCondition(4,150.0);
-	
+	for(unsigned i=0 ;i<vertices.size();i++){
+		UsingFixedTempBoundaryCondition(i,200.0);
+	}	
 	//%%%%		熱伝達境界条件		%%%%//
 	//	食材メッシュの表面の節点に、周囲の流体温度を与える
 	//	周囲の流体温度は、フライパンの表面温度や、食材のUsingFixedTempBoundaryCondition(0,200.0);液体内の温度の分布から、その場所での周囲流体温度を判別する。
@@ -738,6 +757,10 @@ void PHFemMeshThermo::Step(double dt){
 
 	//温度のベクトルから節点へ温度の反映
 	UpdateVertexTempAll(vertices.size());
+	for(unsigned i =0;i<vertices.size();i++){
+		DSTR << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
+	}
+	int templogkatoon =0;
 
 	for(unsigned i =0;i<vertices.size();i++){
 		if(vertices[i].temp !=0){
@@ -907,10 +930,7 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	//DSTR << DCAST(PHSceneIf, GetScene())->GetTimeStep() << std::endl;
 	//int hogeshimitake =0;
 
-	//>	IHからの単位時間当たりの加熱熱量
-	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
-	CalcIHdqdt(0.05,0.11,231.9);			/// 単位 m,m,J/sec			// 0.05,0.11は適当値
-	//	この後で、熱流束ベクトルを計算する関数を呼び出す
+	
 
 	//%%%	初期化類		%%%//
 
@@ -968,9 +988,17 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	//>	行列の作成　行列の作成に必要な変数はこの行以前に設定が必要
 		//計算に用いるマトリクス、ベクトルを作成（メッシュごとの要素剛性行列/ベクトル⇒全体剛性行列/ベクトル）
 		//{T}縦ベクトルの節点の並び順に並ぶように、係数行列を加算する。係数行列には、面積や体積、熱伝達率などのパラメータの積をしてしまったものを入れる。
-	
+
+
+	//> IHのために必要な処理
+	CalcVtxDisFromOrigin();
+	//>	IHからの単位時間当たりの加熱熱量
+	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
+	CalcIHdqdt(0.05,0.11,231.9);			/// 単位 m,m,J/sec			// 0.05,0.11は適当値
+	//	この後で、熱流束ベクトルを計算する関数を呼び出す
 
 	//CreateLocalMatrixAndSet();			//> 以下の処理を、この関数に集約
+
 
 	InitCreateMatC();					///	CreateMatCの初期化
 	InitCreateVecf();					///	CreateVecfの初期化
@@ -988,8 +1016,7 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	//	節点温度推移の書き出し
 	templog.open("templog.csv");
 
-	//> 必要な処理
-	CalcVtxDisFromOrigin();
+	
 }
 
 
@@ -1067,8 +1094,7 @@ void PHFemMeshThermo::CreateMatcLocal(unsigned id){
 		dMatCAll[0][tets[id].vertices[j]] += matc[j][j];
 	}
 
-
-	//	for debug
+	////	for debug
 	//DSTR << "dMatCAll : " << std::endl;
 	//for(unsigned j =0;j < vertices.size();j++){
 	//	DSTR << j << "th : " << dMatCAll[0][j] << std::endl;
@@ -1091,8 +1117,9 @@ void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 	
 	//すべての要素について係数行列を作る
 	//f1を作る
-	//>	熱流束境界条件	f2を作る			
-	CreateVecf2(id);			//>	tets[id].vecf[1] を初期化,代入		熱流束は相加平均で求める
+	//>	熱流束境界条件	vecf2を作る			
+	//CreateVecf2(id);				//>	tets[id].vecf[1] を初期化,代入		熱流束は相加平均で求める
+	CreateVecf2surface(id);			//
 	//>	熱伝達境界条件	f3を作る
 	CreateVecf3(id);			//>	tets[id].vecf[2] を初期化,代入		熱伝達率は相加平均、周囲流体温度は節点の形状関数？ごとに求める
 	//CreateVecf3_(id);			//>	tets[id].vecf[2] を初期化,代入		熱伝達率、周囲流体温度を相加平均で求める
@@ -1145,9 +1172,9 @@ void PHFemMeshThermo::CreateMatkLocal(unsigned id){
 //	if(deformed){	CreateMatk1b(id);}			//	書籍の理論を根拠に、公式を用いて形状関数を導出
 	//DSTR << "tets[id].matk1: " << tets[id].matk1 << std::endl;
 
-	//k2を作る
-	CreateMatk2t(id);
-	//CreateMatk2(id,tets[id]);			///	使用しない
+	//熱伝達境界条件に必要な、k2を作るか否か
+	CreateMatk2t(id);					///	熱伝達境界条件
+	//CreateMatk2(id,tets[id]);			///	この関数は使用しない
 	//DSTR << "tets[id].matk2: " << tets[id].matk2 << std::endl;
 	int hogehogehoge=0;
 
@@ -1268,6 +1295,13 @@ void PHFemMeshThermo::CreateMatkLocal(unsigned id){
 //	}
 
 	//DSTR << "matKAll : " << matKAll <<std::endl;
+	//for(unsigned i=0;i<vertices.size();i++){
+	//	for(unsigned j=0;j <  vertices.size();j++){
+	//		if(matKAll[i][j] !=0){
+	//			DSTR << "matKAll[" << i <<"][" << j << "]: " << matKAll[i][j] <<std::endl;
+	//		}
+	//	}
+	//}
 	//DSTR << "dMatKAll : " <<dMatKAll << std::endl;
 #ifdef UseMatAll
 	for(unsigned j =0;j<vertices.size();j++){
@@ -1527,6 +1561,59 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 
 }
 
+void PHFemMeshThermo::CreateVecf2surface(unsigned id){
+	tets[id].vecf[1].clear();			//	初期化
+	//l=0の時f21,1の時:f22, 2の時:f23, 3の時:f24	を生成
+	for(unsigned l= 0 ; l < 4; l++){
+		vecf2array[l] = Create41Vec1();
+		vecf2array[l][l] = 0.0;			//	l行を0に
+	}
+
+	for(unsigned l= 0 ; l < 4; l++){
+		///	四面体の各面(l = 0 ～ 3) についてメッシュ表面かどうかをチェックする。表面なら、行列を作ってvecf2arrayに入れる
+		//faces[tets.faces[i]].sorted;		/// 1,24,58みたいな節点番号が入っている
+		///	行列型の入れ物を用意
+
+		//faces[tets.faces[l]].vertices;
+		if(tets[id].faces[l] < nSurfaceFace && faces[tets[id].faces[l]].fluxarea > 0 ){			///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある
+			///	四面体の三角形の面積を計算		///	この関数の外で面積分の面積計算を実装する。移動する
+			if(faces[tets[id].faces[l]].area ==0 || faces[tets[id].faces[l]].deformed ){		///	面積が計算されていない時（はじめ） or deformed(変形した時・初期状態)がtrueの時		///	条件の追加	面積が0か ||(OR) αが更新されたか
+				faces[tets[id].faces[l]].area = CalcTriangleArea(faces[tets[id].faces[l]].vertices[0], faces[tets[id].faces[l]].vertices[1], faces[tets[id].faces[l]].vertices[2]);
+				faces[tets[id].faces[l]].deformed = false;
+			}
+			///	計算結果を行列に代入
+			///	areaの計算に使っていない点が入っている行を除いたベクトルの積をとる
+			///	積分計算を根本から考える
+			unsigned vtx = tets[id].vertices[0] + tets[id].vertices[1] + tets[id].vertices[2] + tets[id].vertices[3];			
+			///	area計算に使われていない節点ID：ID
+			unsigned ID = vtx -( faces[tets[id].faces[l]].vertices[0] + faces[tets[id].faces[l]].vertices[1] + faces[tets[id].faces[l]].vertices[2] );
+			for(unsigned j=0;j<4;j++){
+				if(tets[id].vertices[j] == ID){					///	形状関数が１、（すなわち）このfaceに対面する頂点　と一致したら　その時のfaceで面積分する
+					///	j番目の行列の成分を0にしたmatk2arrayで計算する
+					///	外殻にないメッシュ面の面積は0で初期化しておく
+					///	以下の[]は上までの[l]と異なる。
+					///	IDが何番目かによって、形状関数の係数が異なるので、
+					//tets[id].matk2 += faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];
+					tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux * (1.0/3.0) * faces[tets[id].faces[l]].area * vecf2array[j];
+					//DSTR << "tets[id].matk2にfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "を加算: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
+					//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
+				}
+				//else{
+				//	///	IDと一致しない場合には、matk2array[j]には全成分0を入れる
+				//	///	としたいところだが、
+				//	//matk2array[j] =0.0 * matk2array[j];
+				//	//DSTR << "matk2array[" << j << "]: " << matk2array[j] << std::endl;
+				//}
+			}
+		}
+		///	SurfaceFaceじゃなかったら、matk2arrayには0を入れる
+		//else{
+		//	//matk2array[l];
+		//}
+	}
+
+
+}
 
 void PHFemMeshThermo::CreateVecf2(unsigned id){
 	//	初期化

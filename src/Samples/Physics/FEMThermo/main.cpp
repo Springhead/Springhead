@@ -404,7 +404,7 @@ public:
 		}
 	}
 	void HeatConductionStep(){
-#if 1
+#if 0
 		//	2物体を取り出す
 		FWFemMesh* fmesh[2];
 		fmesh[0] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
@@ -693,7 +693,7 @@ filled:;
 					cur[i] = next;
 				}
 			}
-
+			/// 2物体の間で熱伝達境界条件利用による熱伝達計算を行う
 			for(unsigned i =0;i < condVtxs[0].size(); i++){
 				condVtxs[0].pmesh->vertices[condVtxs[0][i].id].temp;
 				condVtxs[0].pmesh->vertices[condVtxs[0][i].id].heatTransRatio;
@@ -740,7 +740,7 @@ filled:;
 		//for(unsigned int i=0; i<tmesh->NChildObject() && !pfem; ++i){
 		//	pfem = tmesh->GetChildObject(i)->Cast();
 		//	if(pfem){
-		//		///	加熱温度の上がり方を制限
+		//			加熱温度の上がり方を制限
 		//		if(tempTc <= 250.0){ tempTc += tempTc * pfem->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
 		//		else{
 		//			tempTc = 250.0;
@@ -755,10 +755,38 @@ filled:;
 		//				//もはや、↑は使わない。熱伝達境界条件は、#if以下のコードを利用
 		//			}
 		//		}
+		//		pfem->SetVertexTc(0,200.0,25.0);
 		//	}
 		//}
 
 
+		FWFemMeshIf* tmeshN	= GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
+		PHFemMeshIf* phpanmeshN = tmeshN->GetPHMesh();
+		PHFemMeshThermoIf* pfemN = NULL;
+		double tempTcN =10.0;
+		for(unsigned int i=0; i<tmeshN->NChildObject() && !pfemN; ++i){
+			pfemN = tmeshN->GetChildObject(i)->Cast();
+			if(pfemN){
+				///	加熱温度の上がり方を制限
+				//if(tempTcN <= 250.0){ tempTcN += tempTcN * pfemN->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
+				//else{
+				//	tempTcN = 250.0;
+				//}
+				//for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
+				//	Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
+				//	//DSTR << j << " th pfemPose.y: " << pfemPose.y << std::endl;		// -0.0016 と 0.0016 が入っている。マイナスの方だけ加熱
+				//	//	同心円状に加熱
+				//	//	test code 下側全部に加熱
+				//	if( pfemPose.y < 0.0){
+				//		//pfem->SetVertexTc(j,tempTc,25.0);			//>	この関数の呼び出しが激重
+				//		//もはや、↑は使わない。熱伝達境界条件は、#if以下のコードを利用
+				//	}
+				//}
+				for(unsigned j=0;j<5;j++){
+					pfemN->SetVertexTc(j,200.0,25.0);
+				}
+			}
+		}
 
 #else
 
@@ -829,7 +857,8 @@ filled:;
 
 						//> メッシュの表面の節点vertex座標があるフライパン座標系のとある範囲にある時、熱伝達境界条件で加熱する
 						//if(posOnPan.y >= -0.03 && posOnPan.y <= -0.02 ){				///	pfemPose.y >= -0.0076 && pfemPose.y <= -0.0074 /// cube_test.x用	//	 -0.01 <= pfemPose.y <= 0.0
-						if(posOnPan.y >= -0.03 && posOnPan.y <= -0.020 ){		///	cheese
+						//if(posOnPan.y >= -0.03 && posOnPan.y <= -0.020 ){		///	cheese
+						if(posOnPan.y >= -0.0076 && posOnPan.y <= -0.0070 ){
 //							pfem->SetVertexTc(j,tempTc);
 							pfem->SetVertexTc(j,tempTc,25.0);
 							//pfem->SetVertexTemp(j,25.0);
@@ -845,8 +874,8 @@ filled:;
 					}
 				}
 			}
-			posOnPany.sort();
-	//		DSTR << "posOnPany.front(): " <<posOnPany.front() << std::endl;
+			//posOnPany.sort();
+			//DSTR << "posOnPany.front(): " <<posOnPany.front() << std::endl;
 			//for(unsigned i=0;i<50;i++){
 			//	DSTR << posOnPany[i] << std::endl;
 			//}

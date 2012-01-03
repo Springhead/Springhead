@@ -42,6 +42,7 @@
 	unsigned long GetStepCountCyc(){	return	base::GetStepCountCyc();}	\
 	void SetVertexTemp(unsigned int id, double temp){	base::SetVertexTemp(id, temp);}	\
 	void SetvecFAll(unsigned int id, double dqdt){	base::SetvecFAll(id, dqdt);}	\
+	void SetRohSpheat(double roh, double Cp){	base::SetRohSpheat(roh, Cp);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKEndEffectorIf(base)	\
 	void SetSolid(Spr::PHSolidIf* solid){	base::SetSolid(solid);}	\
