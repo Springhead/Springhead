@@ -195,8 +195,13 @@ void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp
 //	}
 }
 
+void PHFemMeshThermo::SetRohSpheat(double Roh,double Spheat){
+	//> 密度、比熱 of メッシュのグローバル変数(=メッシュ固有の値)を更新
+	roh = Roh;
+	specificHeat = Spheat;
+}
+
 void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
-	//> ベクトルを作る命令
 	///	内半径と外半径の間の節点に熱流束境界条件を設定
 
 	//> 加熱する四面体面の面積の総和を求める
@@ -214,11 +219,8 @@ void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
 		else if(nObinnerVtx == 3)		faces[i].fluxarea = faces[i].area;
 		else if(nObinnerVtx == 0)		faces[i].fluxarea = 0;
 
-		if(faces[i].fluxarea >= 0){
-			faceS = faces[i].fluxarea;
-		}else{
-			assert(0);
-		}
+		if(faces[i].fluxarea >= 0){		faceS = faces[i].fluxarea;
+		}else{		assert(0);	}		//	faces[i].fluxareaに0未満の数字が入っているのに加算しようとしている
 	}
 
 	//> dqdt を単位面積あたりに直す([1/m^2])
@@ -234,25 +236,14 @@ void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
 
 	//>	熱量は、dqdtdsを用いる
 
-	
-	
-	///	
-	// nSurfaceVertex　の内で、disFromOoriginが　r <= <=R の範囲内に入っている節点を探す
-
 	//> r <= <= Rの中心から放射状に加熱
 
 	//	節点でdqdtの値を更新する
 
 	//　以下は、ベクトルを作る関数の仕事
 	//	節点の属する表面の面で、計算する
-	// heatFluxValueを基に計算を進める
-
+	//  vertices[].heatFluxValueを基に計算を進める
 	//	ガウスザイデル計算できるように処理など、準備する
-	
-	//	初期化でｒ、Rの計算をする　以降、変更があれば更新する
-	//> nSurfaceFaces　の節点の内
-
-	//
 
 }
 /// face毎に作ってしまうのが良いのか、verticesごとにやるのがいいのか。どっちがいいか分からないので、ひとまず、vertices毎に作ってしまおう
