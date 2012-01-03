@@ -721,6 +721,12 @@ filled:;
 
 		//	
 
+
+		//	密度、比熱を素材ごとに設定
+		//	熱流束を加える範囲を設定？
+			//　アプリケーションで変える必要はない？→PHFemMeshThermo()で設定、せいぜい加熱モードを選ぶのがアプリケーション
+
+
 		
 		//FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwPan")->Cast();
 		//PHFemMeshIf* phpanmesh = tmesh->GetPHMesh();
