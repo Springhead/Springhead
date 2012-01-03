@@ -228,27 +228,33 @@ void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
 			else if(nObinnerVtx == 3)		faces[i].fluxarea = faces[i].area;
 			else if(nObinnerVtx == 0)		faces[i].fluxarea = 0;
 
-			if(faces[i].fluxarea >= 0){		faceS = faces[i].fluxarea;
+			if(faces[i].fluxarea >= 0){	
+				faceS += faces[i].fluxarea;
 			}else{		assert(0);	}		//	faces[i].fluxareaに0未満の数字が入っているのに加算しようとしている
-			DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
+			//DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
 		}
 	}
 
-	for(unsigned i=0;i < nSurfaceFace; i++){
-		DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
-	}
+	//for(unsigned i=0;i < nSurfaceFace; i++){
+	//	DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
+	//}
 
 	if(faceS > 0){
 		//> dqdt を単位面積あたりに直す([1/m^2])
 		double dqdtds = dqdtAll / faceS;
-		DSTR << "dqdtds:  " << dqdtds << std::endl;
+//		DSTR << "dqdtds:  " << dqdtds << std::endl;
 		//>	以下、熱流束をfacesに格納する
 		//>	熱流束の面積計算はfluxareaを用いて行う
 		for(unsigned i=0;i < nSurfaceFace; i++){
-			faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
-			DSTR << "faces[" << i <<"].heatflux" << faces[i].heatflux <<std::endl;
+			if(faces[i].isIHheated){
+				faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+//				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
+			}
 		}
 	}
+	
+	//　以上、値は入っているようだ
+
 	int katoon =0;
 	//↑をつかって、CreateMatk2tをコピーした関数で、Vecf2?を作る基に
 
@@ -720,9 +726,10 @@ void PHFemMeshThermo::Step(double dt){
 	//	熱伝達率を0にする。温度固定境界条件で加熱。
 
 	//	UsingFixedTempBoundaryCondition(3,50.0);
-	for(unsigned i=0 ;i<vertices.size();i++){
+	for(unsigned i=0 ;i<1;i++){
 		UsingFixedTempBoundaryCondition(i,200.0);
-	}	
+	}
+
 	//%%%%		熱伝達境界条件		%%%%//
 	//	食材メッシュの表面の節点に、周囲の流体温度を与える
 	//	周囲の流体温度は、フライパンの表面温度や、食材のUsingFixedTempBoundaryCondition(0,200.0);液体内の温度の分布から、その場所での周囲流体温度を判別する。
@@ -750,16 +757,16 @@ void PHFemMeshThermo::Step(double dt){
 	///>	ガウスザイデル法の設定
 	//	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く　クランクニコルソン法のみを使いたい場合
 	
-	CalcHeatTransUsingGaussSeidel(20,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
+	CalcHeatTransUsingGaussSeidel(5,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
 
 	//温度を表示してみる
 	//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
 
 	//温度のベクトルから節点へ温度の反映
 	UpdateVertexTempAll(vertices.size());
-	for(unsigned i =0;i<vertices.size();i++){
-		DSTR << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
-	}
+	//for(unsigned i =0;i<vertices.size();i++){
+	//	DSTR << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
+	//}
 	int templogkatoon =0;
 
 	for(unsigned i =0;i<vertices.size();i++){
@@ -947,6 +954,8 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 		faces[i].area = 0.0;
 		faces[i].heatTransRatio = 0.0;
 		faces[i].deformed = true;				//初期状態は、変形後とする
+		faces[i].fluxarea =0.0;
+		faces[i].heatflux =0.0;
 	}
 
 	///	vertex
@@ -1146,7 +1155,7 @@ void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 	//for(unsigned j =0; j < vertices.size() ; j++){
 	//	DSTR << j << " ele is :  " << vecFAll[j][0] << std::endl;
 	//}
-	//int hogeshi =0;
+	int hogeshi =0;
 
 	////	調べる
 	////vecFAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
