@@ -316,7 +316,11 @@ public:
 		weights[1] = w[0];
 		weights[2] = w[1];
 	}
-	double FindNearest(const Vec3d& pos, CondVtxs condVtxs, int& found){
+	double FindNearest(const Vec3d& pos, CondVtxs& condVtxs, int& found){
+		if (condVtxs.size() == 0){
+			found = -1;
+			return DBL_MAX;
+		}
 		int minId = found;
 		double minDist2;
 		int cid;
@@ -468,8 +472,8 @@ public:
 			condVtxs[1].pmesh = fmesh[bSwap? 0:1]->GetPHMesh()->Cast();
 			//	距離が近い頂点を列挙。ついでに法線に垂直な平面上での座標を求めておく。
 			Matrix3d coords;
-			if (sp->normal.x < sp->normal.y) coords.Rot(sp->normal, Vec3d(1,0,0), 'z');
-			else coords.Rot(sp->normal, Vec3d(0,1,0), 'z');
+			if (std::abs(sp->normal.x) < std::abs(sp->normal.y)) coords = Matrix3d::Rot(sp->normal, Vec3d(1,0,0), 'z');
+			else coords = Matrix3d::Rot(sp->normal, Vec3d(0,1,0), 'z');
 			Matrix3d coords_inv = coords.inv();
 			Vec3d normalL[2];
 			for(int i=0; i<2; ++i){
@@ -493,16 +497,18 @@ public:
 				for(int i=0; i<2; ++i){
 					std::sort(condVtxs[i].begin(), condVtxs[i].end(), CondVtx::Less(axis));
 				}
-				bboxMin[axis] = condVtxs[0].size() ? condVtxs[0].front().pos[axis] : DBL_MAX;
-				bboxMin[axis] = std::min(bboxMin[axis], condVtxs[1].size() ? condVtxs[1].front().pos[axis] : DBL_MAX);
+				bboxMin[axis] = condVtxs[0].size() ? condVtxs[0].front().pos[axis] : DBL_MIN;
+				bboxMin[axis] = std::max(bboxMin[axis], condVtxs[1].size() ? condVtxs[1].front().pos[axis] : DBL_MIN);
+				bboxMin[axis] -= isoLen;
 				for(int i=0; i<2; ++i){
 					CondVtx tmp;
 					tmp.pos[axis] = bboxMin[axis];
 					CondVtxs::iterator it = std::lower_bound(condVtxs[i].begin(), condVtxs[i].end(), tmp, CondVtx::Less(axis));
 					condVtxs[i].erase(condVtxs[i].begin(), it);
 				}
-				bboxMax[axis] = condVtxs[0].size() ? condVtxs[0].back().pos[axis] : DBL_MIN;
-				bboxMax[axis] = std::max(bboxMax[axis], condVtxs[1].size() ? condVtxs[1].back().pos[axis] : DBL_MIN);
+				bboxMax[axis] = condVtxs[0].size() ? condVtxs[0].back().pos[axis] : DBL_MAX;
+				bboxMax[axis] = std::min(bboxMax[axis], condVtxs[1].size() ? condVtxs[1].back().pos[axis] : DBL_MAX);
+				bboxMax[axis] += isoLen;
 				for(int i=0; i<2; ++i){
 					CondVtx tmp;
 					tmp.pos[axis] = bboxMax[axis];
@@ -537,6 +543,10 @@ public:
 				for(int j=eraseVtxs[i].size()-1; j>0; --j){
 					condVtxs[i].erase(condVtxs[i].begin() + eraseVtxs[i][j]);
 				}
+				if (condVtxs[i].size() == 0){
+					DSTR << "Can not find companion vertex on object " << i << std::endl;
+					return;
+				}
 			}
 			//	verticesからcondVtxへの対応表を作る
 			for(int i=0; i<2; ++i){
@@ -566,7 +576,7 @@ public:
 			}
 			//	bboxの中心近くの頂点を見つける
 			double xCenter = 0.5*(bboxMin.x + bboxMax.x);
-			int centerVtx[2];
+			int centerVtx[2] = {-1, -1};
 			for(int i=0; i<2; ++i){
 				CondVtx tmp;
 				tmp.pos[1] = 0.5*(bboxMin.y+bboxMax.y);
@@ -589,6 +599,7 @@ public:
 						}
 					}
 				}
+				assert(centerVtx[i]>=0);
 			}
 			//	centerVtx[i]と一番近い頂点を探す
 			int closestVtx[2];
@@ -693,6 +704,33 @@ filled:;
 					cur[i] = next;
 				}
 			}
+
+
+			//	位置の確認
+/*			for(unsigned i=0; i<2; ++i){
+				DSTR << "mesh" << i << " " << condVtxs[i].size() << "/" 
+					<< condVtxs[i].pmesh->vertices.size() << "vtxs" << std::endl;
+				for(unsigned j=0; j<condVtxs[i].size(); ++j){
+					Vec3d pos = sp->shapePoseW[i] * condVtxs[i].pmesh->vertices[condVtxs[i][j].id].pos;
+					//Vec3d pos = condVtxs[i][j].pos;
+					for(int ax=0; ax<3; ++ax){
+						DSTR << "\t" << pos[ax];
+					}
+					DSTR << std::endl;
+				}
+				DSTR << "Outside:" << std::endl;
+				for(unsigned j=0; j<condVtxs[i].vtx2Cond.size(); ++j){
+					if (condVtxs[i].vtx2Cond[j] < 0){
+						Vec3d pos = sp->shapePoseW[i] * condVtxs[i].pmesh->vertices[j].pos;
+						for(int ax=0; ax<3; ++ax){
+							DSTR << "\t" << pos[ax];
+						}
+						DSTR << std::endl;
+					}
+				}
+			}
+*/
+
 			/// 2物体の間で熱伝達境界条件利用による熱伝達計算を行う
 			for(unsigned i =0;i < condVtxs[0].size(); i++){
 				//	対応する節点(companions[j])の温度を使って熱伝達の計算を行う
@@ -704,9 +742,9 @@ filled:;
 					dqdt *= 1e4;
 
 					// condvtx[0]のVecf にdqdt を足す
-					condVtxs[0].pmesh->SetvecFAll(condVtxs[0][i].id,dqdt);
+					condVtxs[0].pmesh->SetvecFAll(condVtxs[0][i].id,-dqdt);
 					// condVtx[1]のcompanion.id番目のVecfから引く
-					condVtxs[1].pmesh->SetvecFAll(condVtxs[0][i].companions[j].id,-dqdt);
+					condVtxs[1].pmesh->SetvecFAll(condVtxs[1][condVtxs[0][i].companions[j].id].id, +dqdt);
 				}
 			}
 		}
