@@ -23,18 +23,12 @@ namespace Spr{;
 
 PHFemMeshThermoDesc::PHFemMeshThermoDesc(){
 	Init();
-	int katooon =1;
 }
 void PHFemMeshThermoDesc::Init(){
-	//ディスクリプタの生成時に呼ばれるコンストラクタで呼ばれる
-	//ディスクリプタ生成時の初期化したいことを書きこむ
-	//以下の関数の中で行っている初期化の類をここでやるのが良さそう
-	//ディスクリプタに入れる値の初期化?
-	
-	//pan		= DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
-	//PHSolidIf* phFloor = this->
-	//phFloor
-
+	thConduct = 0.574;
+	rho = 970;
+	heatTrans = 25;
+	specificHeat = 0.196;
 }
 
 ///////////////////////////////////////////////////////////////////
