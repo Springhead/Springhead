@@ -206,8 +206,6 @@ public:
 		SampleApp::OnStep();
 		PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 		//if(phscene)		cout << phscene << endl;
-		SceneObjectIf* phSceneObject;
-		PHFemMeshIf* phFemMesh;
 		size_t Nobject = GetSdk()->GetPHSdk()->GetObjectIf()->NChildObject();
 		//‚È‚ñ‚©‚µ‚çƒAƒhƒŒƒX‚ªŽæ‚ê‚Ä‚¢‚é‚Ì‚Í•ª‚©‚Á‚½
 		//for(int i=0; i< Nobject ;i++){
@@ -561,7 +559,7 @@ public:
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
 					condVtxs[i][j].area = 0;
 					int vid = condVtxs[i][j].vid;
-					for(int k=0; k<condVtxs[i].pmesh->vertices[vid].faces.size(); ++k){
+					for(unsigned k=0; k<condVtxs[i].pmesh->vertices[vid].faces.size(); ++k){
 						if (condVtxs[i].pmesh->vertices[vid].faces[k] < condVtxs[i].pmesh->nSurfaceFace){
 							PHFemMesh::Face& face = condVtxs[i].pmesh->faces[condVtxs[i].pmesh->vertices[vid].faces[k]];
 							Vec3d a = condVtxs[i].pmesh->vertices[face.vertices[2]].pos - condVtxs[i].pmesh->vertices[face.vertices[0]].pos;

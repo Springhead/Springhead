@@ -9,9 +9,9 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHFemMeshDesc \
 protected:\
-	std::vector<(Vec3d)>	vertices;	\
-	std::vector<(int)>	tets;	\
-	std::vector<(int)>	faces;	\
+	std::vector< Vec3d >	vertices;	\
+	std::vector< int >	tets;	\
+	std::vector< int >	faces;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHFemMesh::SetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
@@ -31,26 +31,26 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHFemMeshThermoDesc \
 protected:\
-	double	roh;	\
-	double	thconduct;	\
-	double	consts;	\
-	double	heat_trans;	\
+	double	rho;	\
+	double	thConduct;	\
+	double	heatTrans;	\
+	double	specificHeat;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHFemMesh::SetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
-		roh = ((PHFemMeshThermoDesc*)ptr)->roh;	\
-		thconduct = ((PHFemMeshThermoDesc*)ptr)->thconduct;	\
-		consts = ((PHFemMeshThermoDesc*)ptr)->consts;	\
-		heat_trans = ((PHFemMeshThermoDesc*)ptr)->heat_trans;	\
+		rho = ((PHFemMeshThermoDesc*)ptr)->rho;	\
+		thConduct = ((PHFemMeshThermoDesc*)ptr)->thConduct;	\
+		heatTrans = ((PHFemMeshThermoDesc*)ptr)->heatTrans;	\
+		specificHeat = ((PHFemMeshThermoDesc*)ptr)->specificHeat;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHFemMesh::GetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
-		((PHFemMeshThermoDesc*)ptr)->roh = roh;	\
-		((PHFemMeshThermoDesc*)ptr)->thconduct = thconduct;	\
-		((PHFemMeshThermoDesc*)ptr)->consts = consts;	\
-		((PHFemMeshThermoDesc*)ptr)->heat_trans = heat_trans;	\
+		((PHFemMeshThermoDesc*)ptr)->rho = rho;	\
+		((PHFemMeshThermoDesc*)ptr)->thConduct = thConduct;	\
+		((PHFemMeshThermoDesc*)ptr)->heatTrans = heatTrans;	\
+		((PHFemMeshThermoDesc*)ptr)->specificHeat = specificHeat;	\
 		return true;	\
 	}\
 
@@ -443,7 +443,7 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHPathDesc \
 protected:\
-	std::vector<(Spr::PHPathPoint)>	points;	\
+	std::vector< Spr::PHPathPoint >	points;	\
 	bool	bLoop;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
