@@ -28,7 +28,7 @@ void PHFemMeshThermoDesc::Init(){
 	thConduct = 0.574;
 	rho = 970;
 	heatTrans = 25;
-	specificHeat = 0.196;
+	specificHeat = 0.196;		//1960
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -217,8 +217,8 @@ void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
 					nObinnerVtx += 1;
 				}
 			}
-			if( nObinnerVtx == 1)			faces[i].fluxarea = 1.0/3.0 * faces[i].area;
-			else if(nObinnerVtx == 2)		faces[i].fluxarea = 2.0/3.0 * faces[i].area;
+			if( nObinnerVtx == 1)			faces[i].fluxarea = 1.5/3.0 * faces[i].area;//faces[i].fluxarea = 1.0/3.0 * faces[i].area;
+			else if(nObinnerVtx == 2)		faces[i].fluxarea = 2.8/3.0 * faces[i].area;//faces[i].fluxarea = 2.0/3.0 * faces[i].area;
 			else if(nObinnerVtx == 3)		faces[i].fluxarea = faces[i].area;
 			else if(nObinnerVtx == 0)		faces[i].fluxarea = 0;
 
@@ -751,14 +751,15 @@ void PHFemMeshThermo::Step(double dt){
 	
 	///>	ガウスザイデル法の設定
 	//	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く　クランクニコルソン法のみを使いたい場合
-	
-	CalcHeatTransUsingGaussSeidel(5,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
 
-	//温度を表示してみる
-	//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
+//	dNdt = 10.0 * dt;
+		CalcHeatTransUsingGaussSeidel(5,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
 
-	//温度のベクトルから節点へ温度の反映
-	UpdateVertexTempAll(vertices.size());
+		//温度を表示してみる
+		//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
+
+		//温度のベクトルから節点へ温度の反映
+		UpdateVertexTempAll(vertices.size());
 	//for(unsigned i =0;i<vertices.size();i++){
 	//	DSTR << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
 	//}
@@ -977,7 +978,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
 		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
 		//SetInitThermoConductionParam(0.574,970,1.96,25);
-	SetInitThermoConductionParam(0.574,970,0.196,25 * 0.01);		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱,　heatTrans:熱伝達率
+	SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.01);		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
 		//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
 
 	//> 熱流束の初期化
@@ -995,7 +996,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	CalcVtxDisFromOrigin();
 	//>	IHからの単位時間当たりの加熱熱量
 	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
-	CalcIHdqdt(0.04,0.11,231.9 * 0.002 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
+	CalcIHdqdt(0.04,0.095,231.9 * 0.005 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
 
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
 
@@ -1017,6 +1018,9 @@ void PHFemMeshThermo::AfterSetDesc() {
 	int hogeshidebug =0;
 	//	節点温度推移の書き出し
 	templog.open("templog.csv");
+
+	// カウントの初期化
+	Ndt =0;
 
 	
 }
