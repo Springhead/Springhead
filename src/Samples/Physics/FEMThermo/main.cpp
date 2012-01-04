@@ -206,6 +206,8 @@ public:
 		SampleApp::OnStep();
 		PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 		//if(phscene)		cout << phscene << endl;
+		SceneObjectIf* phSceneObject;
+		PHFemMeshIf* phFemMesh;
 		size_t Nobject = GetSdk()->GetPHSdk()->GetObjectIf()->NChildObject();
 		//‚È‚ñ‚©‚µ‚çƒAƒhƒŒƒX‚ªŽæ‚ê‚Ä‚¢‚é‚Ì‚Í•ª‚©‚Á‚½
 		//for(int i=0; i< Nobject ;i++){
@@ -559,7 +561,7 @@ public:
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
 					condVtxs[i][j].area = 0;
 					int vid = condVtxs[i][j].vid;
-					for(unsigned k=0; k<condVtxs[i].pmesh->vertices[vid].faces.size(); ++k){
+					for(int k=0; k<condVtxs[i].pmesh->vertices[vid].faces.size(); ++k){
 						if (condVtxs[i].pmesh->vertices[vid].faces[k] < condVtxs[i].pmesh->nSurfaceFace){
 							PHFemMesh::Face& face = condVtxs[i].pmesh->faces[condVtxs[i].pmesh->vertices[vid].faces[k]];
 							Vec3d a = condVtxs[i].pmesh->vertices[face.vertices[2]].pos - condVtxs[i].pmesh->vertices[face.vertices[0]].pos;
@@ -737,10 +739,11 @@ filled:;
 					condVtxs[0].pmesh->vertices[condVtxs[0][i].vid].heatTransRatio * ( condVtxs[0].pmesh->vertices[condVtxs[0][i].vid].temp 
 					- condVtxs[1].pmesh->vertices[condVtxs[0][i].companions[j].id].temp ) * condVtxs[0][i].companions[j].area ;//
 					
-					dqdt *= 1e4;
+					//>	dqdt *= 1e4;
 
 					// condvtx[0]‚ÌVecf ‚Édqdt ‚ð‘«‚·
 					condVtxs[0].pmesh->SetvecFAll(condVtxs[0][i].vid,-dqdt);
+
 					// condVtx[1]‚Ìcompanion.id”Ô–Ú‚ÌVecf‚©‚çˆø‚­
 					condVtxs[1].pmesh->SetvecFAll(condVtxs[1][condVtxs[0][i].companions[j].id].vid, +dqdt);
 				}
