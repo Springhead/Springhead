@@ -251,6 +251,10 @@ public:
 	///	メッシュ固有のパラメータの設定
 	void SetRohSpheat(double roh,double Cp);	// 素材固有の密度、比熱の設定
 
+	/// dtを定数倍する
+	unsigned Ndt;
+	double dNdt;
+
 };
 
 

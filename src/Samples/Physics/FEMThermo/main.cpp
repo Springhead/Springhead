@@ -739,7 +739,7 @@ filled:;
 					condVtxs[0].pmesh->vertices[condVtxs[0][i].vid].heatTransRatio * ( condVtxs[0].pmesh->vertices[condVtxs[0][i].vid].temp 
 					- condVtxs[1].pmesh->vertices[condVtxs[0][i].companions[j].id].temp ) * condVtxs[0][i].companions[j].area ;//
 					
-					//>	dqdt *= 1e4;
+						dqdt *= 1e3;
 
 					// condvtx[0]‚ÌVecf ‚Édqdt ‚ð‘«‚·
 					condVtxs[0].pmesh->SetvecFAll(condVtxs[0][i].vid,-dqdt);
