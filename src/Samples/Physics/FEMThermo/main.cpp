@@ -232,11 +232,11 @@ public:
 		std::vector<int> vtx2Cond;
 	};
 	struct CondVtx{
-		int id;
+		int vid;
 		Vec3d pos;	//	x,yは接触面上での位置、zは接触面からの距離
 		double area;
 		double assign;
-		CondVtx():id(-1), area(0), assign(0){}
+		CondVtx():vid(-1), area(0), assign(0){}
 		struct Companion{
 			int id;
 			double area;
@@ -279,8 +279,8 @@ public:
 	//	curの隣で、usedに含まれない頂点を列挙
 	void FindNext(std::vector<int>& next, const std::vector<int>& cur, const std::vector<int>& used, CondVtxs& condVtxs){
 		for(unsigned i=0; i<cur.size(); ++i){
-			for(unsigned e=0; e < condVtxs.pmesh->vertices[condVtxs[cur[i]].id].edges.size(); ++e){
-				int vid = condVtxs[cur[i]].id;
+			for(unsigned e=0; e < condVtxs.pmesh->vertices[condVtxs[cur[i]].vid].edges.size(); ++e){
+				int vid = condVtxs[cur[i]].vid;
 				PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[vid].edges[e]];
 				int f = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0]; 
 				int cf = condVtxs.vtx2Cond[f];
@@ -327,7 +327,7 @@ public:
 		do{
 			cid = minId;
 			minDist2 = dist2D2(condVtxs[cid].pos, pos);
-			int vid = condVtxs[cid].id;
+			int vid = condVtxs[cid].vid;
 			for(unsigned e=0; e < condVtxs.pmesh->vertices[vid].edges.size(); ++e){
 				PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[vid].edges[e]];
 				int next = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0]; 
@@ -352,7 +352,7 @@ public:
 		do{
 			cid = minId;
 			minDist2 = dist2D2(condVtxs[cid].pos, pos);
-			int vid = condVtxs[cid].id;
+			int vid = condVtxs[cid].vid;
 			for(unsigned e=0; e < condVtxs.pmesh->vertices[vid].edges.size(); ++e){
 				PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[vid].edges[e]];
 				int next = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0]; 
@@ -371,7 +371,7 @@ public:
 		double min2Dist2 = DBL_MAX;
 		int min1Id = -1;
 		int min2Id = -1;
-		int vid = condVtxs[cid].id;
+		int vid = condVtxs[cid].vid;
 		for(unsigned e=0; e < condVtxs.pmesh->vertices[vid].edges.size(); ++e){
 			PHFemMesh::Edge& edge = condVtxs.pmesh->edges[condVtxs.pmesh->vertices[vid].edges[e]];
 			int next = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0];
@@ -483,8 +483,8 @@ public:
 					vd -= sp->depth;
 					if (vd < isoLen) {
 						CondVtx c;
-						c.id = condVtxs[i].pmesh->surfaceVertices[v];
-						c.pos = coords_inv * (sp->shapePoseW[i] * condVtxs[i].pmesh->vertices[c.id].pos);
+						c.vid = condVtxs[i].pmesh->surfaceVertices[v];
+						c.pos = coords_inv * (sp->shapePoseW[i] * condVtxs[i].pmesh->vertices[c.vid].pos);
 						c.pos.z = vd + (sp->depth/2);	//	中面からの距離にしておく。
 						condVtxs[i].push_back(c);
 					}
@@ -521,7 +521,7 @@ public:
 			for(int i=0; i<2; ++i){
 				condVtxs[i].vtx2Cond.resize(condVtxs[i].pmesh->vertices.size(), -1);
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
-					condVtxs[i].vtx2Cond[condVtxs[i][j].id] = j;
+					condVtxs[i].vtx2Cond[condVtxs[i][j].vid] = j;
 				}
 			}
 			//	対応する頂点が見つからない頂点を、削除のためにマーク。
@@ -553,14 +553,14 @@ public:
 				condVtxs[i].vtx2Cond.clear();
 				condVtxs[i].vtx2Cond.resize(condVtxs[i].pmesh->vertices.size(), -1);
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
-					condVtxs[i].vtx2Cond[condVtxs[i][j].id] = j;
+					condVtxs[i].vtx2Cond[condVtxs[i][j].vid] = j;
 				}
 			}
 			//	頂点の担当する面積を計算する
 			for(int i=0; i<2; ++i){
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
 					condVtxs[i][j].area = 0;
-					int vid = condVtxs[i][j].id;
+					int vid = condVtxs[i][j].vid;
 					for(int k=0; k<condVtxs[i].pmesh->vertices[vid].faces.size(); ++k){
 						if (condVtxs[i].pmesh->vertices[vid].faces[k] < condVtxs[i].pmesh->nSurfaceFace){
 							PHFemMesh::Face& face = condVtxs[i].pmesh->faces[condVtxs[i].pmesh->vertices[vid].faces[k]];
@@ -611,7 +611,7 @@ public:
 				do {
 					cid = minId;
 					minDist2[i] = dist2D2(condVtxs[i][cid].pos, pos);
-					int vid = condVtxs[i][cid].id;
+					int vid = condVtxs[i][cid].vid;
 					for(unsigned e=0; e < condVtxs[i].pmesh->vertices[vid].edges.size(); ++e){
 						PHFemMesh::Edge& edge = condVtxs[i].pmesh->edges[condVtxs[i].pmesh->vertices[vid].edges[e]];
 						int next = edge.vertices[0] == vid ? edge.vertices[1] : edge.vertices[0]; 
@@ -736,15 +736,15 @@ filled:;
 				//	対応する節点(companions[j])の温度を使って熱伝達の計算を行う
 				for(unsigned j =0;j < condVtxs[0][i].companions.size(); j++){
 					double dqdt = 
-					condVtxs[0].pmesh->vertices[condVtxs[0][i].id].heatTransRatio * ( condVtxs[0].pmesh->vertices[condVtxs[0][i].id].temp 
+					condVtxs[0].pmesh->vertices[condVtxs[0][i].vid].heatTransRatio * ( condVtxs[0].pmesh->vertices[condVtxs[0][i].vid].temp 
 					- condVtxs[1].pmesh->vertices[condVtxs[0][i].companions[j].id].temp ) * condVtxs[0][i].companions[j].area ;//
 					
 					dqdt *= 1e4;
 
 					// condvtx[0]のVecf にdqdt を足す
-					condVtxs[0].pmesh->SetvecFAll(condVtxs[0][i].id,-dqdt);
+					condVtxs[0].pmesh->SetvecFAll(condVtxs[0][i].vid,-dqdt);
 					// condVtx[1]のcompanion.id番目のVecfから引く
-					condVtxs[1].pmesh->SetvecFAll(condVtxs[1][condVtxs[0][i].companions[j].id].id, +dqdt);
+					condVtxs[1].pmesh->SetvecFAll(condVtxs[1][condVtxs[0][i].companions[j].id].vid, +dqdt);
 				}
 			}
 		}
