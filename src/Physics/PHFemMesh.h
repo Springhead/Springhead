@@ -11,6 +11,7 @@
 #include <Physics/SprPHFemMesh.h>
 #include <Foundation/Object.h>
 #include <Physics/PHScene.h>
+#include <Physics/PhysicsDecl.hpp>
 
 namespace Spr{;
 
@@ -49,6 +50,7 @@ j行	| 		     o  d  |　
 	∴辺構造体 Edge が必要
 **/
 class PHFemMesh: public SceneObject{
+	SPR_DECLMEMBEROF_PHFemMeshDesc;
 public:
 	//	頂点
 	struct FemVertex{
@@ -143,13 +145,9 @@ public:
 
 
 	SPR_OBJECTDEF(PHFemMesh);
+
+
 	PHFemMesh(const PHFemMeshDesc& desc=PHFemMeshDesc(), SceneIf* s=NULL);
-	///	デスクリプタのサイズ
-	virtual size_t GetDescSize() const { return sizeof(PHFemMeshDesc); };
-	///	デスクリプタの読み出し(コピー版)
-	virtual bool GetDesc(void* desc) const ;
-	///デスクリプタの設定。ここで、頂点座標と四面体の4頂点のIDの情報から、面や辺についての情報を計算しておく。
-	virtual void SetDesc(const void* desc);
 	///	時刻をdt進める処理。PHFemEngineが呼び出す。
 	virtual void Step(double dt);
 	///	

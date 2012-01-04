@@ -9,6 +9,7 @@
 #define PHFEMMESHTHERMO_H
 
 #include <Physics/PHFemMesh.h>
+#include <Physics/PhysicsDecl.hpp>
 
 namespace Spr{;
 
@@ -159,9 +160,11 @@ protected:
 	//%%%%%%%%		変数の宣言		%%%%%%%%//
 	//熱計算に用いるパラメータ
 	double thConduct;				//熱伝導率
-	double heatTrans;				//熱伝達率			//class 節点には、heatTransRatioが存在する
 	double roh;						//密度
 	double specificHeat;			//比熱
+	double heatTrans;				//熱伝達率			//class 節点には、heatTransRatioが存在する
+	
+	
 //	double dt;						//時間刻み幅
 //	double dqdtAll;					//	総量
 

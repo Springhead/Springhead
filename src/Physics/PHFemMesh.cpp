@@ -14,6 +14,7 @@ PHFemMeshDesc::PHFemMeshDesc(){
 	Init();
 }
 void PHFemMeshDesc::Init(){	
+	
 }
 
 void PHFemMesh::Face::Update(){
