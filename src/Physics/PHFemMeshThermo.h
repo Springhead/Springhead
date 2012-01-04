@@ -15,7 +15,8 @@ namespace Spr{;
 
 ///	熱のFEM用のメッシュ
 class PHFemMeshThermo: public PHFemMesh{
-
+	SPR_OBJECTDEF(PHFemMeshThermo);
+	SPR_DECLMEMBEROF_PHFemMeshThermoDesc;
 protected:
 	//PHFemMeshThermo内のみで用いる計算
 
@@ -157,17 +158,6 @@ protected:
 	//あるいは、引数を入れると、引数を変えてくれる関数
 	PTM::TMatrixCol<4,1,double> Create41Vec1();		//共通で用いる、4×1の1でできた行列(ベクトル)を返す関数
 
-	//%%%%%%%%		変数の宣言		%%%%%%%%//
-	//熱計算に用いるパラメータ
-	double thConduct;				//熱伝導率
-	double roh;						//密度
-	double specificHeat;			//比熱
-	double heatTrans;				//熱伝達率			//class 節点には、heatTransRatioが存在する
-	
-	
-//	double dt;						//時間刻み幅
-//	double dqdtAll;					//	総量
-
 	//%%%%%%%%		バイナリスイッチの宣言		%%%%%%%%//
 	///	PHFemMeshに属する構造体、クラスで定義されている同様のboolが更新されたら、こちらも更新する
 	///	条件利用後にはfalseに戻す。初期値はtrue	for	初期化
@@ -191,7 +181,6 @@ public:
 	//	bool alphaUpdated;			///	メッシュ内の一つでも、節点の熱伝達率が更新されたかどうか→K2,F3に影響
 	//	bool hUpdated;				///	熱輻射率が更新されたか
 	//};
-	SPR_OBJECTDEF(PHFemMeshThermo);
 
 	//	頂点
 	struct StateVar{
@@ -203,15 +192,9 @@ public:
 	std::vector<Coeff> edgeCoeffs;
 	
 	PHFemMeshThermo(const PHFemMeshThermoDesc& desc=PHFemMeshThermoDesc(), SceneIf* s=NULL);
-	///	デスクリプタのサイズ
-	virtual size_t GetDescSize() const { return sizeof(PHFemMeshThermoDesc); };
-	///	デスクリプタの読み出し(コピー版)
-	virtual bool GetDesc(void* desc) const;
-	///デスクリプタの設定。
-	virtual void SetDesc(const void* desc);
+	void AfterSetDesc();		//	伝熱行列の計算など
 	///熱伝導シミュレーションでエンジンが用いるステップ		//(オーバーライド)
 	void Step(double dt);
-
 	void SetVerticesTempAll(double temp);					//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
 	void SetVertexTemp(unsigned i,double temp);		// 節点iの温度をtemp度に設定し、それをTVEcAllに反映
 	void SetLocalFluidTemp(unsigned i,double temp);		//	接点iの周囲の節点温度をtemp度に設定

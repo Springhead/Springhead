@@ -60,7 +60,7 @@ void PHFemMeshThermo::CalcVtxDisFromOrigin(){
 	///同心円系の計算に利用する　distance from origin
 
 	//> 以下で取得する位置は、世界座標系!？ローカル座標系の位置の取り方を知りたい!!!
-	for(unsigned i=0;i < NSurfaceVertices(); i++){
+	for(int i=0; i<NSurfaceVertices(); i++){
 		if(vertices[surfaceVertices[i]].pos.y < 0){
 			double len = sqrt(vertices[surfaceVertices[i]].pos.x * vertices[surfaceVertices[i]].pos.x + vertices[surfaceVertices[i]].pos.z *vertices[surfaceVertices[i]].pos.z);
 			vertices[surfaceVertices[i]].disFromOrigin = len;
@@ -203,9 +203,9 @@ void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp
 //	}
 }
 
-void PHFemMeshThermo::SetRohSpheat(double Roh,double Spheat){
+void PHFemMeshThermo::SetRohSpheat(double r,double Spheat){
 	//> 密度、比熱 of メッシュのグローバル変数(=メッシュ固有の値)を更新
-	roh = Roh;
+	rho = r;
 	specificHeat = Spheat;
 }
 
@@ -926,10 +926,7 @@ void PHFemMeshThermo::InitCreateVecf(){
 	vecFAll.clear();						///	初期化
 }
 
-void PHFemMeshThermo::SetDesc(const void* p) {
-	PHFemMeshThermoDesc* d = (PHFemMeshThermoDesc*)p;
-	PHFemMesh::SetDesc(d);
-	roh = d->roh;
+void PHFemMeshThermo::AfterSetDesc() {	
 	////時間刻み幅	dtの設定
 	//PHFemMeshThermo::dt = 0.01;
 
@@ -1050,15 +1047,6 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 void PHFemMeshThermo::SetkcfParam(Tet tets){
 }
 
-bool PHFemMeshThermo::GetDesc(void* p) const {
-	PHFemMeshThermoDesc* d = (PHFemMeshThermoDesc*)p;
-	return PHFemMesh::GetDesc(d);
-	d->consts = specificHeat;
-	d->heat_trans = heatTrans;
-	d->roh = roh;
-	d->thconduct = thConduct;
-}
-
 void PHFemMeshThermo::CreateMatc(unsigned id){
 	//最後に入れる行列を初期化
 	for(unsigned i =0; i < 4 ;i++){
@@ -1070,7 +1058,7 @@ void PHFemMeshThermo::CreateMatc(unsigned id){
 	matc = Create44Mat21();
 	//	for debug
 		//DSTR << "matc " << matc << " ⇒ ";
-	matc = roh * specificHeat * CalcTetrahedraVolume(tets[id]) / 20.0 * matc;
+	matc = rho * specificHeat * CalcTetrahedraVolume(tets[id]) / 20.0 * matc;
 	//	debug	//係数の積をとる
 		//DSTR << matc << std::endl;
 		//int hogemat =0 ;
@@ -1586,7 +1574,7 @@ void PHFemMeshThermo::CreateVecf2surface(unsigned id){
 		///	行列型の入れ物を用意
 
 		//faces[tets.faces[l]].vertices;
-		if(tets[id].faces[l] < nSurfaceFace && faces[tets[id].faces[l]].fluxarea > 0 ){			///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある
+		if(tets[id].faces[l] < (int)nSurfaceFace && faces[tets[id].faces[l]].fluxarea > 0 ){			///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある
 			///	四面体の三角形の面積を計算		///	この関数の外で面積分の面積計算を実装する。移動する
 			if(faces[tets[id].faces[l]].area ==0 || faces[tets[id].faces[l]].deformed ){		///	面積が計算されていない時（はじめ） or deformed(変形した時・初期状態)がtrueの時		///	条件の追加	面積が0か ||(OR) αが更新されたか
 				faces[tets[id].faces[l]].area = CalcTriangleArea(faces[tets[id].faces[l]].vertices[0], faces[tets[id].faces[l]].vertices[1], faces[tets[id].faces[l]].vertices[2]);
@@ -2082,7 +2070,7 @@ void PHFemMeshThermo::CreateMatk3t(unsigned id){
 		///	行列型の入れ物を用意
 
 		//faces[tets.faces[l]].vertices;
-		if(tets[id].faces[l] < nSurfaceFace && faces[tets[id].faces[l]].alphaUpdated ){			///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある
+		if(tets[id].faces[l] < (int)nSurfaceFace && faces[tets[id].faces[l]].alphaUpdated ){			///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある
 			//最後に入れる行列を初期化
 			for(unsigned i =0; i < 4 ;i++){
 				for(unsigned j =0; j < 4 ;j++){
@@ -2166,7 +2154,7 @@ void PHFemMeshThermo::CreateMatk2t(unsigned id){
 		///	行列型の入れ物を用意
 
 		//faces[tets.faces[l]].vertices;
-		if(tets[id].faces[l] < nSurfaceFace && faces[tets[id].faces[l]].alphaUpdated ){			///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある
+		if(tets[id].faces[l] < (int)nSurfaceFace && faces[tets[id].faces[l]].alphaUpdated ){			///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある
 			//最後に入れる行列を初期化
 			for(unsigned i =0; i < 4 ;i++){
 				for(unsigned j =0; j < 4 ;j++){
@@ -2345,7 +2333,7 @@ void PHFemMeshThermo::CreateMatk2(unsigned id,Tet tets){
 
 void PHFemMeshThermo::SetInitThermoConductionParam(double thConduct0,double roh0,double specificHeat0,double heatTrans0){
 	thConduct = thConduct0;
-	roh = roh0;
+	rho = roh0;
 	specificHeat = specificHeat0;
 	heatTrans = heatTrans0;
 }

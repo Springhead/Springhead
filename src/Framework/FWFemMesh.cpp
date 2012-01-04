@@ -168,7 +168,7 @@ bool FWFemMesh::AddChildObject(ObjectIf* o){
 	return FWObject::AddChildObject(o);
 }
 void FWFemMesh::Loaded(UTLoadContext*){
-	if (!phMesh) CreatePHFromGR();
+	if (!phMesh && grMesh) CreatePHFromGR();
 	if (grFrame){
 		grFrame->DelChildObject(grMesh->Cast());
 		CreateGRFromPH();

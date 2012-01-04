@@ -42,10 +42,10 @@ struct PHFemMeshIf : public SceneObjectIf{
 
 ///	FemMeshThermo‚ÌƒfƒBƒXƒNƒŠƒvƒ^
 struct PHFemMeshThermoDesc: public PHFemMeshDesc{
-	double roh;		//	–§“x
-	double thconduct;	//	”M“`“±—¦
-	double consts;		//	”ä”M
-	double heat_trans;	//	”M“`’B—¦
+	double rho;						//	–§“x
+	double thConduct;				//”M“`“±—¦
+	double heatTrans;				//”M“`’B—¦			//class ß“_‚É‚ÍAheatTransRatio‚ª‘¶İ‚·‚é
+	double specificHeat;			//”ä”M
 	PHFemMeshThermoDesc();
 	void Init();
 };
