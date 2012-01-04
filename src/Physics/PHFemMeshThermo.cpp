@@ -710,6 +710,7 @@ void PHFemMeshThermo::HeatTransFromPanToFoodShell(){
 void PHFemMeshThermo::Step(double dt){
 
 	//std::ofstream templog("templog.txt");
+
 	std::ofstream ofs_("log_.txt");
 //	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
@@ -726,9 +727,9 @@ void PHFemMeshThermo::Step(double dt){
 	//	熱伝達率を0にする。温度固定境界条件で加熱。
 
 	//	UsingFixedTempBoundaryCondition(3,50.0);
-	for(unsigned i=0 ;i<1;i++){
-		UsingFixedTempBoundaryCondition(i,200.0);
-	}
+	//for(unsigned i=0 ;i<1;i++){
+	//	UsingFixedTempBoundaryCondition(i,200.0);
+	//}
 
 	//%%%%		熱伝達境界条件		%%%%//
 	//	食材メッシュの表面の節点に、周囲の流体温度を与える
@@ -750,7 +751,7 @@ void PHFemMeshThermo::Step(double dt){
 
 	//	test　shapepairを取ってくる
 	//GetScene()->
-
+	
 	//dt = dt *0.01;		誤差1度程度になる
 	//dt = dt;				収束した時の、計算誤差？（マイナスになっている節点温度がそれなりに大きくなる。）
 	
@@ -928,7 +929,7 @@ void PHFemMeshThermo::InitCreateVecf(){
 void PHFemMeshThermo::SetDesc(const void* p) {
 	PHFemMeshThermoDesc* d = (PHFemMeshThermoDesc*)p;
 	PHFemMesh::SetDesc(d);
-	
+	roh = d->roh;
 	////時間刻み幅	dtの設定
 	//PHFemMeshThermo::dt = 0.01;
 
@@ -985,7 +986,7 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
 		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
 		//SetInitThermoConductionParam(0.574,970,1.96,25);
-	SetInitThermoConductionParam(0.574,970,0.196,25 * 0.0001 * 1.0);
+	SetInitThermoConductionParam(0.574,970,0.196,25 * 0.01);		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱,　heatTrans:熱伝達率
 		//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
 
 	//> 熱流束の初期化
@@ -1003,7 +1004,8 @@ void PHFemMeshThermo::SetDesc(const void* p) {
 	CalcVtxDisFromOrigin();
 	//>	IHからの単位時間当たりの加熱熱量
 	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
-	CalcIHdqdt(0.05,0.11,231.9);			/// 単位 m,m,J/sec			// 0.05,0.11は適当値
+	CalcIHdqdt(0.04,0.11,231.9 * 0.002 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
+
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
 
 	//CreateLocalMatrixAndSet();			//> 以下の処理を、この関数に集約
