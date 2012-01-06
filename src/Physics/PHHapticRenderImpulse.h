@@ -10,7 +10,7 @@ namespace Spr{;
 class PHHapticLoopImpulse : public PHHapticLoopImp{
 	SPR_OBJECTDEF_NOIF(PHHapticLoopImpulse);
 public:
-	virtual void Step(){};
+	virtual void Step();
 };
 
 //----------------------------------------------------------------------------
@@ -22,7 +22,9 @@ protected:
 public:
 	PHHapticRenderImpulse(){ hapticLoop = &hapticLoopImpulse; }
 	virtual void Step();
-	virtual void RunSync(){}
+	virtual void SyncHaptic2Physic();	
+	virtual void SyncPhysic2Haptic();	
+
 };
 
 }
