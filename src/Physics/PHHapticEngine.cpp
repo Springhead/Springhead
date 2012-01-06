@@ -3,6 +3,30 @@
 
 namespace Spr{;
 
+
+//----------------------------------------------------------------------------
+// PHHapticPointer
+void PHHapticPointer::UpdateInterface(float dt){
+	double s = GetWorldScale() * GetPosScale();
+	HIHapticIf* hif = humanInterface->Cast();
+	hif->Update(dt);
+	hiSolid->SetVelocity((Vec3d)hif->GetVelocity() * s);
+	hiSolid->SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
+	Posed pose;
+	pose.Pos() = (Vec3d)hif->GetPosition() * s;
+	pose.Ori() = hif->GetOrientation();
+	hiSolid->SetPose(GetDefaultPose() * pose);	
+}
+
+void PHHapticPointer::UpdateHapticPointer(){
+	hiSolid->SetMass(GetMass());
+	hiSolid->SetInertia(GetInertia());
+	SetVelocity(hiSolid->GetVelocity());
+	SetAngularVelocity(hiSolid->GetAngularVelocity());
+	SetFramePosition(hiSolid->GetFramePosition());
+	SetOrientation(hiSolid->GetOrientation());
+}
+
 //----------------------------------------------------------------------------
 // PHSapePairForHaptic
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
@@ -84,20 +108,33 @@ double PHHapticRenderImp::GetHapticTimeStep(){
 }
 
 int PHHapticRenderImp::NHapticPointers(){
-	return engine->hapticPointers.size();
-}
-PHHapticPointer** PHHapticRenderImp::GetHapticPointers(){
-	return engine->hapticPointers.empty() ? NULL : (PHHapticPointer**)&*engine->hapticPointers.begin();
+	return (int)engine->hapticPointers.size();
 }
 int PHHapticRenderImp::NHapticSolids(){
-	return engine->hapticSolids.size();
+	return (int)engine->hapticSolids.size();
 }
-PHSolidsForHaptic** PHHapticRenderImp::GetHapticSolids(){
-	return engine->hapticPointers.empty() ? NULL : (PHSolidsForHaptic**)&*engine->hapticSolids.begin();
+PHHapticPointer* PHHapticRenderImp::GetHapticPointer(int i){
+	return engine->hapticPointers[i];
+}
+PHSolidForHaptic* PHHapticRenderImp::GetHapticSolid(int i){
+	return engine->hapticSolids[i];
 }
 PHSolidPairForHaptic* PHHapticRenderImp::GetSolidPairForHaptic(int i, int j){
 	return engine->solidPairs.item(i, j);
 }
+PHHapticPointers* PHHapticRenderImp::GetHapticPointers(){
+	return &engine->hapticPointers;
+}
+PHSolidsForHaptic* PHHapticRenderImp::GetHapticSolids(){
+	return &engine->hapticSolids;
+}
+
+//PHHapticPointers* PHHapticRenderImp::GetHapticPointers(){
+//	return engine->hapticPointers.empty() ? NULL : (PHHapticPointers*)&*engine->hapticPointers.begin();
+//}
+//PHSolidForHaptic** PHHapticRenderImp::GetHapticSolids(){
+//	return engine->hapticSolids.empty() ? NULL : (PHSolidForHaptic**)&*engine->hapticSolids.begin();
+//}
 
 //----------------------------------------------------------------------------
 // PHHapticEngine
@@ -149,9 +186,16 @@ void PHHapticEngine::StartDetection(){
 	for(int i = 0; i < (int)hapticSolids.size(); i++){
 		PHSolidForHaptic* h = hapticSolids[i];
 		if(DCAST(PHHapticPointer, h->solid)) continue;
-		if(h->NLocal == 0 && h->NLocalFirst > 0)	h->doSim = 1;
-		else if(h->NLocal > 0)	h->doSim = 2;
-		else	h->doSim = 0;
+		if(h->NLocal == 0 && h->NLocalFirst > 0){
+			// はじめて近傍になった
+			h->doSim = 1;
+		}else if(h->NLocal > 0){
+			// 近傍状態を継続
+			h->doSim = 2;
+		}else{
+			// 近傍でない
+			h->doSim = 0;
+		}
 		h->NLocal = 0; h->NLocalFirst = 0;
 	}
 }
@@ -210,9 +254,8 @@ void PHHapticEngine::Detect(PHHapticPointer* q){
 		}
 #endif
 		// 2.近傍物体と判定
-		int a, b;
-		a = pointerID;
-		b = i;
+		int a = pointerID;
+		int b = i;
 		if(a > b) std::swap(a, b);
 		PHSolidPairForHaptic* sp = solidPairs.item(a, b);
 		PHSolidForHaptic* h = hapticSolids[i];
@@ -236,10 +279,10 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s && std::find(solids.begin(), solids.end(), s) == solids.end()){
 		solids.push_back(s);				// solidsにsolidを保存(pointerも含まれる)
-		hapticSolids.resize(hapticSolids.size() + 1);
 		PHSolidForHaptic* h = DBG_NEW PHSolidForHaptic();
-		hapticSolids.back() = h;
-		h->solid = s;
+		h->solid = s;		
+		hapticSolids.push_back(h);
+
 		int N = (int)solids.size();	
 		assert(solidPairs.height() == N-1 && solidPairs.width() == N-1);
 		solidPairs.resize(N, N);

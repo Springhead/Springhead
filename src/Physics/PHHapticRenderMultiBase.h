@@ -5,20 +5,35 @@
 
 namespace Spr{;
 
-
+//----------------------------------------------------------------------------
+// PHHapticLoopImp
 class PHHapticLoopImp : public SceneObject{
 	SPR_OBJECTDEF_NOIF(PHHapticLoopImp);
 public:
-	PHHapticRenderImp* renderImp;
 	int loopCount;
+	PHHapticRenderImp* renderImp;
+	PHHapticPointers hapticPointers;
+	PHSolidsForHaptic hapticSolids;
+	UTCombination< UTRef<PHSolidPairForHaptic> > solidPairs; 
+
 	PHHapticLoopImp(){}
 	virtual void Step(){};
-
 	double GetPhysicsTimeStep();
 	double GetHapticTimeStep();
+	int NHapticPointers();
+	int NHapticSolids();
+	PHHapticPointer* GetHapticPointer(int i);
+	PHSolidForHaptic* GetHapticSolid(int i);
+	PHSolidPairForHaptic* GetSolidPairForHaptic(int i, int j);
+	PHHapticPointers* GetHapticPointers();
+	PHSolidsForHaptic* GetHapticSolids();
+	
+	//PHHapticPointers* GetHapticPointers();
+	//PHSolidForHaptic** GetHapticSolids();
 };
 
-
+//----------------------------------------------------------------------------
+// PHHapticRenderMultiBase
 class PHHapticRenderMultiBase : public PHHapticRenderImp{
 	SPR_OBJECTDEF_NOIF(PHHapticRenderMultiBase);
 protected:
@@ -29,12 +44,16 @@ protected:
 public:
 	PHHapticLoopImp* hapticLoop;
 	PHHapticRenderMultiBase();
-	virtual void Step();
-	virtual void StepSimulation();
-
-	virtual void StepHapticLoop();
+	virtual void StepHapticLoop();	// hapticloop
+	virtual void Step(){}			// phengine->phhapticengineから呼ばれる
 	void Sync();
-	virtual void RunSync(){}
+	virtual void UpdateHapticPointer(); // hapticスレッド側のhapticpointerの状態をphysicsへ同期
+	virtual void UpdateArrays();
+	virtual void SyncHaptic2Physic(){}	// hapticスレッドからphysicsスレッドへの同期
+	virtual void SyncPhysic2Haptic(){}	// physicsスレッドからhapticスレッドへの同期
+
+	//デバック用コード
+	virtual void StepSimulation();
 };
 
 }

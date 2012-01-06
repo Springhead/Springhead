@@ -36,15 +36,10 @@ void MyApp::Init(int argc, char* argv[]){
 		box->SetFramePosition(Vec3d(0.0, 0.2f, 0.0));
 		box->SetDynamical(false);
 		pointer = box;
-		range = 0.5;
 		GetSdk()->SetDebugMode(true);
 		PHHapticPointer* b = box->Cast();
-		b->SetLocalRange(1);
+		b->SetLocalRange(10);
 
-		//box = phscene->CreateHapticPointer();
-		//box->AddShape(phSdk->CreateShape(bd));
-
-		DSTR << phscene << std::endl;
 		PHHapticEngine* h = phscene->GetHapticEngine()->Cast();
 		h->SetRenderMode(PHHapticEngine::IMPULSE);
 		h->EnableHaptic(true);
@@ -69,7 +64,6 @@ void MyApp::TimerFunc(int id){
 		//DSTR << "Step Scene" << std::endl;
 	}
 }
-
 
 void MyApp::UserFunc(){
 	PHScene* p = phscene->Cast();

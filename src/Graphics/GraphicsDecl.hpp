@@ -1,13 +1,13 @@
 #define SPR_DECLMEMBEROF_GRBlendMeshDesc \
 protected:\
-	std::vector<(Vec3f)>	positions;	\
-	std::vector<(Vec3f)>	normals;	\
-	std::vector<(Vec4f)>	colors;	\
-	std::vector<(Vec2f)>	texCoords;	\
-	std::vector<(size_t)>	faces;	\
-	std::vector<(Vec4f)>	blends;	\
-	std::vector<(Vec4f)>	matrixIndices;	\
-	std::vector<(Vec4f)>	numMatrix;	\
+	std::vector< Vec3f >	positions;	\
+	std::vector< Vec3f >	normals;	\
+	std::vector< Vec4f >	colors;	\
+	std::vector< Vec2f >	texCoords;	\
+	std::vector< size_t >	faces;	\
+	std::vector< Vec4f >	blends;	\
+	std::vector< Vec4f >	matrixIndices;	\
+	std::vector< Vec4f >	numMatrix;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		positions = ((GRBlendMeshDesc*)ptr)->positions;	\
@@ -75,7 +75,7 @@ public:\
 
 #define SPR_DECLMEMBEROF_GRAnimationDesc \
 protected:\
-	std::vector<(Spr::GRAnimationKey)>	keys;	\
+	std::vector< Spr::GRAnimationKey >	keys;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		keys = ((GRAnimationDesc*)ptr)->keys;	\
@@ -112,8 +112,8 @@ public:\
 #define SPR_DECLMEMBEROF_GRSkinWeightDesc \
 protected:\
 	Affinef	offset;	\
-	std::vector<(unsigned int)>	indices;	\
-	std::vector<(float)>	weights;	\
+	std::vector< unsigned int >	indices;	\
+	std::vector< float >	weights;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		offset = ((GRSkinWeightDesc*)ptr)->offset;	\
@@ -131,13 +131,13 @@ public:\
 
 #define SPR_DECLMEMBEROF_GRMeshDesc \
 protected:\
-	std::vector<(Vec3f)>	vertices;	\
-	std::vector<(Spr::GRMeshFace)>	faces;	\
-	std::vector<(Vec3f)>	normals;	\
-	std::vector<(Spr::GRMeshFace)>	faceNormals;	\
-	std::vector<(Vec4f)>	colors;	\
-	std::vector<(Vec2f)>	texCoords;	\
-	std::vector<(int)>	materialList;	\
+	std::vector< Vec3f >	vertices;	\
+	std::vector< Spr::GRMeshFace >	faces;	\
+	std::vector< Vec3f >	normals;	\
+	std::vector< Spr::GRMeshFace >	faceNormals;	\
+	std::vector< Vec4f >	colors;	\
+	std::vector< Vec2f >	texCoords;	\
+	std::vector< int >	materialList;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		GRVisual::SetDesc((GRVisualDesc*)(GRMeshDesc*)ptr);	\

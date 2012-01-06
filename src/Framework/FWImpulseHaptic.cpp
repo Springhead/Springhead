@@ -174,7 +174,7 @@ void FWImpulseHaptic::SyncHaptic2Physic(){
 			if(!iInfo->flag.blocal || iInfo->flag.bfirstlocal) continue;
 			Vec3d cPoint = iInfo->toHaptic.pose * iInfo->toHaptic.closest_point;	// 近傍物体の接触点
 			Vec3d force = iInfo->toPhysic.impulse;							// 近傍物体に加える力
-			iInfo->toPhysic.impulse = Vec3d();											// 近傍物体に加わる力積の初期化
+			iInfo->toPhysic.impulse = Vec3d();								// 近傍物体に加わる力積の初期化
 			PHSolid* ps = GetIASolid(j)->sceneSolid;
 			ps->AddForce(force, cPoint);						// 近傍物体の接触点に力覚ポインタからの力を加える
 		}
