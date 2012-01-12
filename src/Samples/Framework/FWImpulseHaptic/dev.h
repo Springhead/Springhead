@@ -9,10 +9,14 @@ using namespace Spr;
 class MyApp : public FWApp{
 public:
 	PHSceneIf* phscene;
-	PHSolidIf* pointer;
+	PHHapticPointerIf* pointer;
 	double range;
 	int timerID;
+	UTRef<HISpidarGIf> spg;
+	UTRef<HISdkIf> hiSdk;
+	UTTimerIf* timer;
 
+	void InitInterface();
 	void Init(int argc = 0, char* argv[] = 0);
 	void UserFunc();
 	void ContactAnalysis();

@@ -888,7 +888,18 @@ template <class	AD, class BD>
 TYPENAME AD::ret_type operator ^ (const TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b) {
 	return cross(a, b);
 }
-
+/**	補間
+	@param t 補間量0-1
+	@param a ベクトル
+	@param b 同じサイズのベクトル
+*/
+template <class AD, class BD>
+TYPENAME AD::ret_type interpolate(TYPENAME AD::element_type& t,const VectorImp<AD>& a, const VectorImp<BD>& b){
+	assert(b.size() == a. size());
+	TYPENAME AD::ret_type c(a);
+	if(t > (TYPENAME AD::element_type)1.0) t = (TYPENAME AD::element_type)1.0;
+	return c = a + ((TYPENAME AD::ret_type)b - a) * t;
+}
 //@}
 
 }	//	namespace PTM

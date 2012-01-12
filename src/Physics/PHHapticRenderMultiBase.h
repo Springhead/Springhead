@@ -14,10 +14,14 @@ public:
 	PHHapticRenderImp* renderImp;
 	PHHapticPointers hapticPointers;
 	PHSolidsForHaptic hapticSolids;
-	UTCombination< UTRef<PHSolidPairForHaptic> > solidPairs; 
+	//UTCombination< UTRef<PHSolidPairForHaptic> > solidPairs;
+	PHSolidPairsForHaptic solidPairs;
 
 	PHHapticLoopImp(){}
 	virtual void Step(){};
+	virtual void UpdateInterface();
+	virtual void HapticRendering(){};
+
 	double GetPhysicsTimeStep();
 	double GetHapticTimeStep();
 	int NHapticPointers();
@@ -27,6 +31,7 @@ public:
 	PHSolidPairForHaptic* GetSolidPairForHaptic(int i, int j);
 	PHHapticPointers* GetHapticPointers();
 	PHSolidsForHaptic* GetHapticSolids();
+	PHSolidPairsForHaptic* GetSolidPairsForHaptic();
 	
 	//PHHapticPointers* GetHapticPointers();
 	//PHSolidForHaptic** GetHapticSolids();
