@@ -14,7 +14,7 @@ public:\
 
 #define SPR_DECLMEMBEROF_CDConvexMeshDesc \
 protected:\
-	std::vector<(Vec3f)>	vertices;	\
+	std::vector< Vec3f >	vertices;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CDShape::SetDesc((CDShapeDesc*)(CDConvexMeshDesc*)ptr);	\

@@ -605,6 +605,17 @@ TPose<EA> operator * (const TPose<EA>& a, const TPose<EB>& b){
 	return rv;
 }
 
+/// Pose‚Ì•âŠÔ
+template <class EA, class EB>
+TPose<EA> interpolate(EA t, const TPose<EA>& p0, const TPose<EB>& p1){
+	TQuaternion<EA> quat = interpolate(t, p0.Ori(), p1.Ori());
+	TVec3<EA> pos = interpolate(t, p0.Pos(), p1.Pos());
+	TPose<EA> pose;
+	pose.Pos() = pos;
+	pose.Ori() = quat;
+	return pose;
+}
+
 ///	float”ÅTPose.
 typedef TPose<float> Posef;
 ///	double”ÅTPose.

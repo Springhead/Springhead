@@ -285,7 +285,7 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 				CDConvexMesh* poly = (CDConvexMesh*) cp->shape[i];
 				normals[i].resize(poly->nPlanes);
 				dists[i].resize(poly->nPlanes);
-				for(int j=0; j<normals[i].size(); ++j){
+				for(int j=0; j<(int)normals[i].size(); ++j){
 					normals[i][j] = afw.Ori() * poly->faces[j].normal;
 					dists[i][j] = normals[i][j] * (afw * poly->base[poly->faces[j].vtxs[0]]);
 				}
@@ -293,7 +293,7 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 				CDBox* box = (CDBox*) cp->shape[i];
 				normals[i].resize(6);
 				dists[i].resize(6);
-				for(int j=0; j<normals[i].size(); ++j){
+				for(int j=0; j<(int)normals[i].size(); ++j){
 					normals[i][j] = afw.Ori() * box->qfaces[j].normal;
 					dists[i][j] = normals[i][j] * (afw * box->base[box->qfaces[j].vtxs[0]]);
 				}
@@ -303,7 +303,7 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 		}
 		if (isValid){
 			for(int i=0; i<2; ++i){
-				for(int j=0; j<normals[i].size(); ++j){
+				for(int j=0; j<(int)normals[i].size(); ++j){
 					#if 1	//	debug	hase
 						if (dists[i][j] < -1e-3){
 							DSTR << "Error: distance=" << dists[i][j] << " < 0" << std::endl;

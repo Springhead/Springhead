@@ -12,6 +12,7 @@
 #include <Physics/PHSdk.h>
 #include <Physics/PHContactPoint.h>
 #include <Physics/PHConstraintEngine.h>
+#include <Physics/PHHapticEngine.h>
 #include <Graphics/GRScene.h>
 #include <Graphics/GRSdk.h>
 #ifdef USE_HDRSTOP
@@ -350,6 +351,13 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		}
 	}
 
+	if(renderHaptic){
+		PHHapticEngineIf* hapticEngine = phScene->GetHapticEngine();
+		if(hapticEngine){
+			DrawHaptic(render, hapticEngine);
+		}
+	}
+
 	if(defLight) render->PopLight();
 	if (cam) cam->Rendered(render);
 
@@ -559,6 +567,53 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 	render->SetDepthTest(true);
 }
 
+void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
+	render->SetLighting(false);
+	render->SetDepthTest(false);
+
+	render->PushModelMatrix();
+	render->SetModelMatrix(Affinef());
+
+	PHHapticEngine* he = DCAST(PHHapticEngine, hapticEngine);
+	for (int i = 0; i < (int)he->NHapticPointers(); i++){
+		PHHapticPointer* pointer = he->GetHapticPointer(i);
+		int nNeighbors = (int)pointer->neighborSolidIDs.size();
+		for(int j = 0; j < nNeighbors; j++){
+			int solidID = pointer->neighborSolidIDs[j];
+			PHSolidPairForHaptic* solidPair = he->solidPairs.item(i, solidID);
+			for(int k = 0; k < solidPair->solid[0]->NShape(); k++){
+				for(int l = 0; l < solidPair->solid[1]->NShape(); l++){
+					PHShapePairForHaptic* sp = solidPair->shapePairs.item(k, l);
+					for(int m = 0; m < 2; m++){
+						Posed p;
+						p.Pos() = sp->shapePoseW[m] * sp->closestPoint[m];
+						Affinef aff;
+						p.ToAffine(aff);
+						render->PushModelMatrix();
+						render->MultModelMatrix(aff);
+						render->DrawSphere(0.01, 10, 10, true);
+						render->PopModelMatrix();
+					}
+					for(int n = 0; n < sp->intersectionVertices.size(); n++){
+						Posed p;
+						p.Pos() = sp->shapePoseW[0] * sp->intersectionVertices[n];
+						Affinef aff;
+						p.ToAffine(aff);
+						render->PushModelMatrix();
+						render->MultModelMatrix(aff);
+						render->DrawSphere(0.01, 10, 10, true);
+						render->PopModelMatrix();
+					}
+				}
+			}
+		}
+	}
+
+	render->PopModelMatrix();
+	render->SetLighting(true);
+	render->SetDepthTest(true);
+}
+
 void FWScene::DrawMesh(GRRenderIf* render, CDConvexMeshIf* mesh, bool solid){
 	Vec3f* base = mesh->GetVertices();
 	if(solid){
@@ -725,6 +780,9 @@ void FWScene::SetIKMaterial(int mat){
 }
 void FWScene::SetIKScale(float scale){
 	scaleIK = scale;
+}
+void FWScene::EnableRenderHaptic(bool enable){
+	renderHaptic = enable;
 }
 bool FWScene::IsRenderEnabled(ObjectIf* obj){
 	std::map<ObjectIf*, bool>::iterator it = renderObject.find(obj);

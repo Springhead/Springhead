@@ -5,10 +5,32 @@
 #include <Physics\PHPenaltyEngine.h>
 #include <Physics\PHConstraintEngine.h>
 
+using namespace Spr;
+
+void MyApp::InitInterface(){
+	hiSdk = HISdkIf::CreateSdk();
+	DRUsb20SimpleDesc usbSimpleDesc;
+	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
+	DRUsb20Sh4Desc usb20Sh4Desc;
+	for(int i=0; i<10; ++i){
+		usb20Sh4Desc.channel = i;
+		hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+	}
+	hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
+	hiSdk->Print(DSTR);
+	hiSdk->Print(std::cout);
+
+	spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+	spg->Calibration();
+}
+
 
 void MyApp::Init(int argc, char* argv[]){
 		FWApp::Init(argc, argv);
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();
+		HISdkIf* hiSdk = GetSdk()->GetHISdk();
+		InitInterface();
 		phscene = GetSdk()->GetScene()->GetPHScene();
 		phscene->SetTimeStep(0.05);
 		CDBoxDesc bd;
@@ -18,33 +40,42 @@ void MyApp::Init(int argc, char* argv[]){
 		floor->SetDynamical(false);
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
 		floor->AddShape(phSdk->CreateShape(bd));
-		floor->SetFramePosition(Vec3d(0, -0.5, 0.0));
+		floor->SetFramePosition(Vec3d(0, -1.0, 0.0));
 	
-		// î†ÇçÏê¨
-		for(int i = 0; i < 10; i++){
-			PHSolidIf* box = phscene->CreateSolid();
-			box->SetMass(1.0);
-			bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-			box->AddShape(phSdk->CreateShape(bd));
-			box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * box->GetMass());
-			box->SetFramePosition(Vec3d(0.0, 1.0 * i, 0));
-		}
+		//// î†ÇçÏê¨
+		//for(int i = 0; i < 10; i++){
+		//	PHSolidIf* box = phscene->CreateSolid();
+		//	box->SetMass(1.0);
+		//	bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
+		//	box->AddShape(phSdk->CreateShape(bd));
+		//	box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * box->GetMass());
+		//	box->SetFramePosition(Vec3d(0.0, 1.0 * i, 0));
+		//}
 
-		PHHapticPointerIf* box = phscene->CreateHapticPointer();
+		pointer = phscene->CreateHapticPointer();
+		CDSphereDesc cd;
+		cd.radius = 0.1f;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		box->AddShape(phSdk->CreateShape(bd));
-		box->SetFramePosition(Vec3d(0.0, 0.2f, 0.0));
-		box->SetDynamical(false);
-		pointer = box;
-		GetSdk()->SetDebugMode(true);
-		PHHapticPointer* b = box->Cast();
+		pointer->AddShape(phSdk->CreateShape(cd));
+		//pointer->AddShape(phSdk->CreateShape(cd));
+		//pointer->SetShapePose(0, Posed::Trn(-0.1f, 0, 0));
+		//pointer->SetShapePose(1, Posed::Trn(0.1f, 0, 0));
+		pointer->SetFramePosition(Vec3d(0.0, 0.2f, 0.0));
+		pointer->SetDynamical(false);
+		pointer->SetIntegrate(false);
+		pointer->SetHumanInterface(spg);
+		PHHapticPointer* b = pointer->Cast();
 		b->SetLocalRange(10);
+		b->SetPosScale(50);
+		b->bDebugControl = true;
+
+		GetSdk()->SetDebugMode(true);
 
 		PHHapticEngine* h = phscene->GetHapticEngine()->Cast();
 		h->SetRenderMode(PHHapticEngine::IMPULSE);
 		h->EnableHaptic(true);
 
-		UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);
+		timer = CreateTimer(UTTimerIf::MULTIMEDIA);
 		timer->SetResolution(1);					// ï™âî\(ms)
 		timer->SetInterval(1);	// çèÇ›(ms)
 		timerID = timer->GetID();
@@ -57,6 +88,7 @@ void MyApp::TimerFunc(int id){
 		phscene->StepHapticLoop();
 	}else{
 		//UserFunc();
+
 		PHHapticEngine* h = GetCurrentWin()->GetScene()->GetPHScene()->GetHapticEngine()->Cast();
 		h->StepSimulation();
 
@@ -88,6 +120,23 @@ void MyApp::Keyboard(int key, int x, int y){
 		//case 's':
 		//	range -= 0.5;
 		//	break;
+		case 'c':
+			{
+				timer->Stop();
+				spg->Calibration();
+				timer->Start();
+			}
+			break;
+		case 'f':
+			{
+				pointer->EnableForce(true);
+			}
+			break;
+		case 'g':
+			{
+				pointer->EnableForce(false);
+			}
+			break;
 		case 'a':
 			{
 				Vec3d pos = pointer->GetFramePosition();

@@ -589,14 +589,17 @@ public:\
 #define SPR_DECLMEMBEROF_PHSceneState \
 protected:\
 	double	timeStep;	\
+	double	haptictimeStep;	\
 	unsigned int	count;	\
 public:\
 	virtual void SetState(const void* ptr){ \
 		timeStep = ((PHSceneState*)ptr)->timeStep;	\
+		haptictimeStep = ((PHSceneState*)ptr)->haptictimeStep;	\
 		count = ((PHSceneState*)ptr)->count;	\
 	}\
 	virtual bool GetState(void* ptr) const { \
 		((PHSceneState*)ptr)->timeStep = timeStep;	\
+		((PHSceneState*)ptr)->haptictimeStep = haptictimeStep;	\
 		((PHSceneState*)ptr)->count = count;	\
 		return true;	\
 	}\
@@ -753,17 +756,14 @@ public:\
 #define SPR_DECLMEMBEROF_PHHapticEngineDesc \
 protected:\
 	bool	bHaptic;	\
-	double	hdt;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		bHaptic = ((PHHapticEngineDesc*)ptr)->bHaptic;	\
-		hdt = ((PHHapticEngineDesc*)ptr)->hdt;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		((PHHapticEngineDesc*)ptr)->bHaptic = bHaptic;	\
-		((PHHapticEngineDesc*)ptr)->hdt = hdt;	\
 		return true;	\
 	}\
 

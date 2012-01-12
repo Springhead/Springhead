@@ -60,7 +60,7 @@ public:
 	bool		renderForceSolid, renderForceConst;
 	bool		renderContact;
 	bool		renderGridX, renderGridY, renderGridZ;
-	bool		renderIK;
+	bool		renderIK, renderHaptic;
 	/// ï`âÊÉXÉPÅ[Éã
 	float		scaleAxisWorld, scaleAxisSolid, scaleAxisConst;
 	float		scaleForce, scaleMoment;
@@ -116,6 +116,7 @@ public:
 	void	DrawConstraint	(GRRenderIf* render, PHConstraintIf* con);
 	void	DrawContact		(GRRenderIf* render, PHContactPointIf* con);
 	void	DrawIK			(GRRenderIf* render, PHIKEngineIf* ikEngine);
+	void	DrawHaptic		(GRRenderIf* render, PHHapticEngineIf* hapticEngine);
 	
 	/// ï`âÊêßå‰
 	void	SetRenderMode		(bool solid, bool wire);
@@ -142,6 +143,8 @@ public:
 	void	EnableRenderIK		(bool enable);
 	void	SetIKMaterial		(int mat);
 	void	SetIKScale			(float scale);
+
+	void	EnableRenderHaptic	(bool enable);
 
 	//void	EnableRender		(int item, bool enable = true, ObjectIf* obj = 0);
 	//void	SetSolidMaterial	(int item, int mat, ObjectIf* obj = 0);

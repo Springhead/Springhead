@@ -103,6 +103,7 @@
 	void DrawConstraint(Spr::GRRenderIf* render, Spr::PHConstraintIf* con){	base::DrawConstraint(render, con);}	\
 	void DrawContact(Spr::GRRenderIf* render, Spr::PHContactPointIf* con){	base::DrawContact(render, con);}	\
 	void DrawIK(Spr::GRRenderIf* render, Spr::PHIKEngineIf* ikEngine){	base::DrawIK(render, ikEngine);}	\
+	void DrawHaptic(Spr::GRRenderIf* render, Spr::PHHapticEngineIf* hapticEngine){	base::DrawHaptic(render, hapticEngine);}	\
 	void SetRenderMode(bool solid, bool wire){	base::SetRenderMode(solid, wire);}	\
 	void EnableRender(Spr::ObjectIf* obj, bool enable){	base::EnableRender(obj, enable);}	\
 	void SetSolidMaterial(int mat, Spr::PHSolidIf* solid){	base::SetSolidMaterial(mat, solid);}	\
@@ -122,6 +123,7 @@
 	void EnableRenderIK(bool enable){	base::EnableRenderIK(enable);}	\
 	void SetIKMaterial(int mat){	base::SetIKMaterial(mat);}	\
 	void SetIKScale(float scale){	base::SetIKScale(scale);}	\
+	void EnableRenderHaptic(bool enable){	base::EnableRenderHaptic(enable);}	\
 	void AddHumanInterface(Spr::HIForceDevice6D* d){	base::AddHumanInterface(d);}	\
 	void SetFWBones(Spr::FWBoneIf* b){	base::SetFWBones(b);}	\
 	std::vector< UTRef< Spr::FWBoneIf > > GetFWBones(){	return	base::GetFWBones();}	\

@@ -70,11 +70,13 @@ public:
 struct PHSceneState{
 	/// 積分ステップ[s]
 	double timeStep;
+	double haptictimeStep;
 	/// 積分した回数
 	unsigned count;
 	PHSceneState(){Init();}
 	void Init(){
 		timeStep = 0.005;
+		haptictimeStep = 0.001;
 		count = 0;
 	}
 };
@@ -332,7 +334,17 @@ public:
 		@param dt 積分ステップ
 	 */
 	void SetTimeStep(double dt);
-	
+
+	/** @brief 積分ステップを取得する
+		@return 積分ステップ
+	 */
+	double GetHapticTimeStep()const;
+
+	/** @brief 積分ステップを設定する
+		@param dt 積分ステップ
+	 */
+	void SetHapticTimeStep(double dt);
+
 	/** @brief カウント数を取得する
 		@return カウント数
 		シーンが作成されてから現在までにStep()を実行した回数を返す．

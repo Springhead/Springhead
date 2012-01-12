@@ -135,6 +135,10 @@ public:
 	double					GetTimeStep()const{return timeStep;}
 	/// 積分ステップを設定する
 	void					SetTimeStep(double dt);
+	/// 力覚積分ステップを返す
+	double					GetHapticTimeStep()const{ return haptictimeStep; }
+	/// 力覚積分ステップを設定する
+	void					SetHapticTimeStep(double dt){ haptictimeStep = dt; }
 	/// カウント数を返す
 	unsigned				GetCount()const{return count;}
 	/// カウント数を設定する

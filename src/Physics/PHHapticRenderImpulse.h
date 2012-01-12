@@ -11,6 +11,7 @@ class PHHapticLoopImpulse : public PHHapticLoopImp{
 	SPR_OBJECTDEF_NOIF(PHHapticLoopImpulse);
 public:
 	virtual void Step();
+	virtual void HapticRendering();
 };
 
 //----------------------------------------------------------------------------
@@ -20,7 +21,7 @@ class PHHapticRenderImpulse : public PHHapticRenderMultiBase{
 protected:
 	PHHapticLoopImpulse hapticLoopImpulse;
 public:
-	PHHapticRenderImpulse(){ hapticLoop = &hapticLoopImpulse; }
+	PHHapticRenderImpulse();
 	virtual void Step();
 	virtual void SyncHaptic2Physic();	
 	virtual void SyncPhysic2Haptic();	

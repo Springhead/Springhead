@@ -17,6 +17,7 @@ struct PHSolidIf;
 struct PHConstraintIf;
 struct PHContactPointIf;
 struct PHIKEngineIf;
+struct PHHapticEngineIf;
 struct PHSceneIf;
 struct GRSceneIf;
 struct GRRenderIf;
@@ -128,6 +129,12 @@ public:
 	 */
 	void DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine);
 
+	/**	@brief	Haptic情報を描画する
+		@param	render			レンダラ
+		@param	hapticEngine	Hapticエンジン
+	 */
+	void DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine);
+
 	/**	@brief 描画モードの設定
 		@param ph_or_gr	PHSceneを描画するかGRSceneを描画するか
 		@param solid	ソリッド描画のオン/オフ
@@ -183,6 +190,8 @@ public:
 	void SetIKMaterial(int mat);
 	void SetIKScale(float scale);
 
+	/** @brief Hapticの計算結果の描画 */
+	void EnableRenderHaptic(bool enable = true);
 	
 	void AddHumanInterface(HIForceDevice6D* d);
 

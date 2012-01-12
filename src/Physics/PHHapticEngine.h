@@ -16,15 +16,20 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHHapticPointer
+class PHSolidsForHaptic;
+class PHSolidPairForHaptic;
+typedef UTCombination< UTRef<PHSolidPairForHaptic> > PHSolidPairsForHaptic;
 class PHHapticPointer : public PHSolid{
 	SPR_OBJECTDEF(PHHapticPointer);
 protected:
-	int solidID;
+	int pointerID;
+	int pointerSolidID;
 	float localRange;
 	double worldScale;
 	double posScale;
 	Posed defaultPose;
 public:
+	bool bDebugControl;
 	bool bForce;
 	bool bVibration;
 	std::vector<int> neighborSolidIDs;
@@ -35,14 +40,21 @@ public:
 		localRange = 1.0; 
 		worldScale = 1.0;
 		posScale = 1.0;
+		bDebugControl = false;
 		bForce = false;
 		bVibration = false;
 	}
 
-	void	SetID(int id){ solidID = id; }
-	int		GetID(){ return solidID; }
+	void	SetPointerID(int id){ pointerID = id; }
+	int		GetPointerID(){ return pointerID; }
+	void	SetSolidID(int id){ pointerSolidID = id; }
+	int		GetSolidID(){ return pointerSolidID; }
+	void	SetHumanInterface(HIBaseIf* hi){ humanInterface = hi; }
 	void	UpdateInterface(float dt);
 	void	UpdateHapticPointer();
+	void	SetForce(SpatialVector f);
+	void	HapticRendering(PHSolidsForHaptic* hsolids, PHSolidPairsForHaptic* sps, double loopCount);
+	void	MultiPointRendering(PHSolidsForHaptic* hsolids, PHSolidPairsForHaptic* sps, double loopCount);
 	void	SetLocalRange(float r){ localRange = r; } 
 	float	GetLocalRange(){ return localRange; }
 	void	SetPosScale(double scale){ posScale = scale; }
@@ -51,7 +63,7 @@ public:
 	double	GetWorldScale(){ return worldScale; }
 	void	SetDefaultPose(Posed p){ defaultPose = p; }
 	Posed	GetDefaultPose(){ return defaultPose; }
-	void	DisplayForce(bool b){ bForce = b; }
+	void	EnableForce(bool b){ bForce = b; }
 	void	DisplayVibration(bool b){ bVibration = b; }
 };
 class PHHapticPointers : public std::vector< UTRef< PHHapticPointer > >{};
@@ -61,18 +73,20 @@ class PHHapticPointers : public std::vector< UTRef< PHHapticPointer > >{};
 class PHSolidForHaptic : public UTRefCount{  
 	//SPR_OBJECTDEF(PHSolidForHaptic);
 public:
-	PHSolid* solid;
-	bool bPointer;		// 力覚ポインタであるかどうか
-	int NLocalFirst;	// はじめて近傍になる力覚ポインタの数（衝突判定で利用）
-	int NLocal;			// 近傍な力覚ポインタの数（衝突判定で利用）
-	int doSim;			// 近傍であるかどうか 0:近傍でない，1:はじめて近傍，2:継続して近傍
+	PHSolid* sceneSolid;
+	PHSolid localSolid;
+	bool bPointer;			// 力覚ポインタであるかどうか
+	int NLocalFirst;		// はじめて近傍になる力覚ポインタの数（衝突判定で利用）
+	int NLocal;				// 近傍な力覚ポインタの数（衝突判定で利用）
+	int doSim;				// 近傍であるかどうか 0:近傍でない，1:はじめて近傍，2:継続して近傍
 
 	SpatialVector b;				///< 予測シミュレーションで求めたモビリティ（重力等の定数項）
 	SpatialVector curb;				///< 通常シミュレーションででた定数項
 	SpatialVector lastb;			///< 前回の予測シミュレーションで求めた定数項
 	PHSolidForHaptic(){
-		solid = NULL;		bPointer = false;
-		NLocalFirst = 0;	NLocal = 0;	doSim = 0;
+		bPointer = false;
+		NLocalFirst = 0;	
+		NLocal = 0;	doSim = 0;
 	}
 };
 class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
@@ -80,13 +94,16 @@ class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
 
 //----------------------------------------------------------------------------
 // PHShapePairForHaptic
+
+
 class PHSolidPairForHaptic;
 class PHShapePairForHaptic : public CDShapePair{
 public:	
 	//PHSolidPairForHaptic* solidPair;
-
-	Posed lastShapePoseW[2];
-	Vec3d lastClosestPoint[2];	///< 前回の近傍物体の接触点(ローカル座標)
+	// 0:pointer、1:solid
+	// Vec3d normalは力覚ポインタから剛体への法線ベクトル
+	Posed lastShapePoseW[2];	///< 前回の形状姿勢
+	Vec3d lastClosestPoint[2];	///< 前回の近傍点(ローカル座標)
 	Vec3d lastNormal;			///< 前回の近傍物体の提示面の法線
 	double sectionDepth;
 	double lastSectionDepth;
@@ -95,11 +112,11 @@ public:
 	std::vector< Vec3d > solidSection;		///< 剛体の接触頂点(ローカル座標)
 
 	PHShapePairForHaptic(){}
-	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	/// 接触判定．近傍点対を常時更新
-	bool DetectClosestPoints(unsigned ct, const Posed& pose0, const Posed& pose1);
-	int OnDetectClosestPoints(unsigned ct, const Vec3d& center0);
-
+	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
+	/// 接触時の判定
+	int OnDetect(unsigned ct, const Vec3d& center0);
+	bool AnalyzeContactRegion();
 };
 
 //----------------------------------------------------------------------------
@@ -115,6 +132,7 @@ public:
 	typedef base_type::shapepair_type shapepair_type;
 	typedef base_type::engine_type engine_type;
 
+	PHHapticPointer* pointer;
 	int inLocal;	// 0:NONE, 1:in local first, 2:in local
 	struct Accelerance{
 		Vec3d force;					// LocalDynamicsで使う力
@@ -129,15 +147,9 @@ public:
 
 	std::vector< ImpulsePoint > impulsePoints;
 
-
 	/// 交差が検知された後の処理
 	virtual bool Detect(engine_type* engine, unsigned int ct, double dt);
 	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< 交差が検知されたときの処理
-	/// 
-	
-	//void Setup(unsigned int ct, double dt);
-	//void GenerateForce();
-protected:
 };
 
 //----------------------------------------------------------------------------
@@ -152,7 +164,6 @@ public:
 
 	double GetPhysicsTimeStep();
 	double GetHapticTimeStep();
-
 
 	int NHapticPointers();
 	int NHapticSolids();
@@ -171,11 +182,8 @@ public:
 
 //----------------------------------------------------------------------------
 // PHHapticEngine
-
-
 struct PHHapticEngineDesc{
 	bool bHaptic;
-	double hdt;
 	PHHapticEngineDesc();
 };
 class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector< PHShapePairForHaptic, PHSolidPairForHaptic, PHHapticEngine >{
@@ -199,16 +207,19 @@ public:
 
 	PHHapticEngine();
 
-	///< 力覚提示計算のON/OFF
-	void EnableHaptic(bool b){ bHaptic = b; }
-	///< レンダリングモードの選択
-	void SetRenderMode(RenderMode r);
 	///< シミュレーションループの更新（PHScene::Integrate()からコール）
 	virtual void Step(){ if(bHaptic) renderImp->Step(); }
 	///< 力覚ループの更新	
 	virtual void StepHapticLoop(){ if(bHaptic) renderImp->StepHapticLoop(); }
-	///< 力覚ループの刻み
-	void SetHapticTimeStep(double dt = 0.001){ hdt = dt; }
+
+	///< 力覚提示計算のON/OFF
+	void EnableHaptic(bool b){ bHaptic = b; }
+	///< レンダリングモードの選択
+	void SetRenderMode(RenderMode r);
+	///< 力覚ポインタの数を返す
+	int NHapticPointers(){ return (int)hapticPointers.size(); }
+	///< 力覚ポインタへのポインタを返す
+	PHHapticPointer* GetHapticPointer(int i){ return hapticPointers[i]; }
 
 	///< 力覚ポインタの状態の更新
 	virtual void UpdateHapticPointer();
@@ -217,18 +228,17 @@ public:
 	///< BBoxの向きを更新
 	void UpdateEdgeList();
 	///< ある剛体の近傍の剛体をAABBでみつける（rangeはBBoxをさらにrange分だけ広げる
-	void Detect(PHHapticPointer* q);
+	void Detect(PHHapticPointer* pointer);
 	int GetPriority() const {return SGBP_HAPTICENGINE;}
 	///< 剛体の追加
 	bool AddChildObject(ObjectIf* o);
 	///< 剛体の削除
 	bool DelChildObject(ObjectIf* o);
+	void UpdateShapePairs(PHSolid* solid);
 
 	///< デバック用シミュレーション実行
 	///（PHScene::Stepの変わりに呼ぶ）
 	virtual void StepSimulation(){ renderImp->StepSimulation(); }
-
-
 
 };
 

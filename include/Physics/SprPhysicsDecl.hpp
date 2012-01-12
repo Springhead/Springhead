@@ -289,6 +289,8 @@
 	double GetTimeStep()const{	return	base::GetTimeStep();}	\
 	double GetTimeStepInv()const{	return	base::GetTimeStepInv();}	\
 	void SetTimeStep(double dt){	base::SetTimeStep(dt);}	\
+	double GetHapticTimeStep()const{	return	base::GetHapticTimeStep();}	\
+	void SetHapticTimeStep(double dt){	base::SetHapticTimeStep(dt);}	\
 	unsigned int GetCount()const{	return	base::GetCount();}	\
 	void SetCount(unsigned int count){	base::SetCount(count);}	\
 	void SetGravity(const Vec3d& accel){	base::SetGravity(accel);}	\
@@ -387,4 +389,6 @@
 	Spr::PHShapePairForLCPIf* GetShapePair(int i, int j){	return	base::GetShapePair(i, j);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHapticPointerIf(base)	\
+	void SetHumanInterface(Spr::HIBaseIf* hi){	base::SetHumanInterface(hi);}	\
+	void EnableForce(bool b){	base::EnableForce(b);}	\
 

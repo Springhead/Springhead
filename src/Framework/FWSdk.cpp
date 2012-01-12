@@ -49,6 +49,7 @@ void SPR_CDECL FWSdkIf::RegisterSdk(){
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHScene));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRSdk));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRScene));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(HISdk));
 }
 
 FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
@@ -56,6 +57,7 @@ FWSdkIf* SPR_CDECL FWSdkIf::CreateSdk(){
 	FWSdkIf::RegisterSdk();
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
+	HISdkIf::RegisterSdk();
 	
 	return rv->Cast();
 }
