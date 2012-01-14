@@ -580,7 +580,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 		int nNeighbors = (int)pointer->neighborSolidIDs.size();
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = pointer->neighborSolidIDs[j];
-			PHSolidPairForHaptic* solidPair = he->solidPairs.item(i, solidID);
+			PHSolidPairForHaptic* solidPair = he->solidPairs.item(solidID, i);
 			for(int k = 0; k < solidPair->solid[0]->NShape(); k++){
 				for(int l = 0; l < solidPair->solid[1]->NShape(); l++){
 					PHShapePairForHaptic* sp = solidPair->shapePairs.item(k, l);
@@ -591,17 +591,17 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 						p.ToAffine(aff);
 						render->PushModelMatrix();
 						render->MultModelMatrix(aff);
-						render->DrawSphere(0.01, 10, 10, true);
+						render->DrawSphere(0.01f, 10, 10, true);
 						render->PopModelMatrix();
 					}
-					for(int n = 0; n < sp->intersectionVertices.size(); n++){
+					for(int n = 0; n < (int)sp->intersectionVertices.size(); n++){
 						Posed p;
-						p.Pos() = sp->shapePoseW[0] * sp->intersectionVertices[n];
+						p.Pos() = sp->shapePoseW[1] * sp->intersectionVertices[n];
 						Affinef aff;
 						p.ToAffine(aff);
 						render->PushModelMatrix();
 						render->MultModelMatrix(aff);
-						render->DrawSphere(0.01, 10, 10, true);
+						render->DrawSphere(0.01f, 10, 10, true);
 						render->PopModelMatrix();
 					}
 				}

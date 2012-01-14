@@ -64,7 +64,7 @@ void PHHapticRenderImpulse::SyncHaptic2Physic(){
 		// ãﬂñTï®ëÃÇÃêî
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = hpointer->neighborSolidIDs[j];
-			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(hpointerID, solidID);
+			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(solidID, hpointerID);
 			PHSolidPairForHaptic* ppair = GetSolidPairForHaptic(hpointerID, solidID);
 
 			// óÕÇÃìØä˙ÅiãåToPhysic)
@@ -100,8 +100,8 @@ void PHHapticRenderImpulse::SyncPhysic2Haptic(){
 		const int nNeighbors = ppointer->neighborSolidIDs.size();
 		for(int j = 0; j < nNeighbors; j++){
 			const int solidID = ppointer->neighborSolidIDs[j];
-			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(ppointerID, solidID);
-			PHSolidPairForHaptic* ppair = GetSolidPairForHaptic(ppointerID, solidID);
+			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(solidID, ppointerID);
+			PHSolidPairForHaptic* ppair = GetSolidPairForHaptic(solidID, ppointerID);
 			*hpair = *ppair;
 		}
 	}

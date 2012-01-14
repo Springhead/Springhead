@@ -14,6 +14,23 @@
 using namespace PTM;
 namespace Spr{;
 
+struct PHIntermediateRepresentation{
+	int solidID;		// どの剛体と侵入しているか
+	Vec3d ortho;		// 侵入方向，normが侵入量
+	Vec3d normal;		// 面法線
+	Vec3d r;			// 力覚ポインタの重心からの接触点までのベクトル
+	Vec3d vertex;		// 力覚ポンタの侵入点(world)
+	Vec3d solidPoint;	// 中間表現面にvertexを投影した位置(world)
+	Vec3d force;		// 侵入解除で求まる力
+	Posed interpolation_pose; // 剛体の補間姿勢
+	PHIntermediateRepresentation(){
+		solidID = -1;
+		ortho = normal = r = solidPoint = force = Vec3d();
+	}
+};
+typedef PHIntermediateRepresentation PHIr;
+typedef std::vector< PHIr > PHIrs;
+
 //----------------------------------------------------------------------------
 // PHHapticPointer
 class PHSolidsForHaptic;
@@ -100,8 +117,8 @@ class PHSolidPairForHaptic;
 class PHShapePairForHaptic : public CDShapePair{
 public:	
 	//PHSolidPairForHaptic* solidPair;
-	// 0:pointer、1:solid
-	// Vec3d normalは力覚ポインタから剛体への法線ベクトル
+	// 0:solid、1:pointer
+	// Vec3d normalは剛体から力覚ポインタへの法線ベクトル
 	Posed lastShapePoseW[2];	///< 前回の形状姿勢
 	Vec3d lastClosestPoint[2];	///< 前回の近傍点(ローカル座標)
 	Vec3d lastNormal;			///< 前回の近傍物体の提示面の法線
@@ -117,6 +134,7 @@ public:
 	/// 接触時の判定
 	int OnDetect(unsigned ct, const Vec3d& center0);
 	bool AnalyzeContactRegion();
+	PHIr CompIntermediateRepresentation();
 };
 
 //----------------------------------------------------------------------------
