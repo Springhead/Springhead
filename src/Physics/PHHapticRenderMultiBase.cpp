@@ -133,17 +133,17 @@ void PHHapticRenderMultiBase::UpdateArrays(){
 
 	// 3. solidPairの増加分
 	UTCombination< UTRef<PHSolidPairForHaptic> >* hsolidPairs = &hapticLoop->solidPairs;
-	hsolidPairs->resize(pNpointers, pNsolids);
+	hsolidPairs->resize(pNsolids, pNpointers);
 	// 力覚ポインタ増加分
-	for(int i = hNpointers; i < pNpointers; i++){
-		for(int j = 0; j < pNsolids; j++){
+	for(int i = 0; i < pNsolids; i++){
+		for(int j = hNpointers; j < pNpointers; j++){
 			hsolidPairs->item(i, j) = DBG_NEW PHSolidPairForHaptic();
 			*hsolidPairs->item(i, j) = *GetSolidPairForHaptic(i, j);	
 		}
 	}
 	// solidの増加分
-	for(int i = 0; i < pNpointers; i++){
-		for(int j = hNsolids; j < pNsolids; j++){
+	for(int i = hNsolids; i < pNsolids; i++){
+		for(int j = 0; j < pNpointers; j++){
 			hsolidPairs->item(i, j) = DBG_NEW PHSolidPairForHaptic();
 			*hsolidPairs->item(i, j) = *GetSolidPairForHaptic(i, j);	
 		}

@@ -7,7 +7,7 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 // PHSapePairForHaptic
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
-	// 0:力覚ポインタ, 1:剛体
+	// 0:剛体, 1:力覚ポインタ
 	// 前回の状態を保存
 	for(int i = 0; i < 2; i++){
 		lastShapePoseW[i] = shapePoseW[i];
@@ -25,7 +25,7 @@ bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& 
 									sep, closestPoint[0], closestPoint[1]);
 	Vec3d w0 = shapePoseW[0] * closestPoint[0];
 	Vec3d w1 = shapePoseW[1] * closestPoint[1];
-	normal = (w1 - w0).unit();		// 力覚ポインタから剛体への法線ベクトル
+	normal = (w1 - w0).unit();		// 剛体->力覚ポインタへの法線ベクトル
 	commonPoint = (w0 + w1) * 0.5;	// 共有点
 
 	if(dist > 1e-3){
@@ -61,7 +61,7 @@ int PHShapePairForHaptic::OnDetect(unsigned ct, const Vec3d& center0){
 	return cp;
 }
 
-#define SELECTION // 中間表現の面に載っている点は接触点としない
+#define SELECTION 1 // 中間表現の面に載っている点は接触点としない
 extern bool bUseContactVolume;
 bool PHShapePairForHaptic::AnalyzeContactRegion(){
 
@@ -70,24 +70,25 @@ bool PHShapePairForHaptic::AnalyzeContactRegion(){
 	analyzer.FindIntersection(this->Cast());
 	bUseContactVolume = false;
 
-	// 面が見つからなかった、shapeがconvex or boxではなかった場合
-	if(analyzer.planes.size() == 0){
-		intersectionVertices.push_back(closestPoint[0]);
-		return false;
-	}
 	// 侵入領域の頂点の取得
 	for(CDQHPlane< CDContactAnalysisFace >* it = analyzer.planes.begin; it != analyzer.planes.end; ++it){
 		if(it->deleted) continue;
 		Vec3d point = it->normal/it->dist + commonPoint;	// 双対変換（面から点へ）	
 
-		// 0:力覚ポインタ, 1:剛体
-#ifdef SELECTION
-		Vec3d w1 = shapePoseW[1] * closestPoint[1];	// 中間表現面上の点（剛体の近傍点）
-		double dot = (point - w1) * normal;
-		if(dot > 1e-5)	intersectionVertices.push_back(shapePoseW[0].Inv() * point);
-#else
-		intersectionVertices.push_back(shapePoseW[0].Inv() * point);
-#endif
+		// 0:剛体, 1:力覚ポインタ
+		if(SELECTION){
+			Vec3d w0 = shapePoseW[0] * closestPoint[0];	// 中間表現面上の点（剛体の近傍点）
+			double dot = (point - w0) * normal;
+			if(dot < -1e-5)	intersectionVertices.push_back(shapePoseW[1].Inv() * point);
+		}else{
+			intersectionVertices.push_back(shapePoseW[0].Inv() * point);
+		}
+	}
+	// 面が見つからなかった、shapeがconvex or boxではなかった場合
+	if(intersectionVertices.size() == 0){
+		DSTR << "hoge" << std::endl;
+		intersectionVertices.push_back(closestPoint[1]);
+		return false;
 	}
 	return true;
 }
@@ -102,13 +103,11 @@ bool PHSolidPairForHaptic::Detect(engine_type* engine, unsigned int ct, double d
 void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* engine, unsigned ct, double dt){
 	sp->intersectionVertices.clear();
 	if(sp->state == sp->NEW || sp->state == sp->CONTINUE){
-		// 接触している場合、CCDGJKで近傍点対を再取得
-		sp->OnDetect(ct, solid[0]->GetCenterPosition());
-		// 侵入領域の頂点を取得
-		sp->AnalyzeContactRegion();
+		sp->OnDetect(ct, solid[1]->GetCenterPosition());	// CCDGJKで近傍点対を再取得
+		sp->AnalyzeContactRegion();		// 侵入領域の頂点を取得
 	}else{
 		// 接触していない場合、近傍点を侵入領域の頂点とする
-		sp->intersectionVertices.push_back(sp->closestPoint[0]);
+		sp->intersectionVertices.push_back(sp->closestPoint[1]);
 	}
 
 	// はじめて近傍の場合
@@ -239,7 +238,6 @@ void PHHapticEngine::UpdateEdgeList(){
 void PHHapticEngine::Detect(PHHapticPointer* pointer){
 	int ct = GetScene()->GetCount();
 	int dt = GetScene()->GetTimeStep();
-	const int pointerID = pointer->GetPointerID();
 	const int pointerSolidID = pointer->GetSolidID();
 	Vec3f range3d = Vec3f(1.0, 1.0, 1.0) * pointer->GetLocalRange(); // 検出閾値
 	// pointerのBBoxをrange3d分だけ拡げる
@@ -277,7 +275,8 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 		}
 #endif
 		// 2.近傍物体と判定
-		PHSolidPairForHaptic* sp = solidPairs.item(pointerID, i);
+		const int pointerID = pointer->GetPointerID();
+		PHSolidPairForHaptic* sp = solidPairs.item(i, pointerID);
 		if(nAxes == 3){
 			sp->Detect(this, ct, dt);	// 形状毎の近傍点探索、接触解析
 			pointer->neighborSolidIDs.push_back(i);
@@ -341,7 +340,9 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 		int NSolids = (int)solids.size();
 		int NPointers = (int)hapticPointers.size();
 
+		// PHSolidPairFoHapticを追加 行 solid, 列 pointer
 		// PHSolidがPHHapticPointerの場合
+		// 行，列を追加
 		PHHapticPointer* p = DCAST(PHHapticPointer, o);
 		if(p){
 			NPointers += 1;
@@ -349,21 +350,22 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 			p->SetSolidID(NSolids - 1);
 			hapticPointers.push_back(p);
 			h->bPointer = true;
-			solidPairs.resize(NPointers, NSolids);
+			solidPairs.resize(NSolids, NPointers);
 			for(int i = 0; i < NSolids; i++){
-				solidPairs.item(NPointers - 1, i) = DBG_NEW PHSolidPairForHaptic();
-				solidPairs.item(NPointers - 1, i)->Init(s, solids[i]);
-				solidPairs.item(NPointers - 1, i)->pointer = p;
+				solidPairs.item(i, NPointers - 1) = DBG_NEW PHSolidPairForHaptic();
+				solidPairs.item(i, NPointers - 1)->Init(solids[i], s);
+				solidPairs.item(i, NPointers - 1)->pointer = p;
 			}
 			if(s->NShape())	UpdateShapePairs(s);
 			return true;
 		}
 
 		// PHSolidの場合
-		solidPairs.resize(NPointers, NSolids);
+		// 行のみ追加
+		solidPairs.resize(NSolids, NPointers);
 		for(int i = 0; i < NPointers; i++){
-			solidPairs.item(i, NSolids - 1) = DBG_NEW PHSolidPairForHaptic();
-			solidPairs.item(i, NSolids - 1)->Init(hapticPointers[i], solids[NSolids - 1]);	
+			solidPairs.item(NSolids - 1, i) = DBG_NEW PHSolidPairForHaptic();
+			solidPairs.item(NSolids - 1, i)->Init(solids[NSolids - 1], hapticPointers[i]);	
 		}
 		if(s->NShape())	UpdateShapePairs(s);
 		return true;
@@ -374,27 +376,27 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 
 // 未完成
 bool PHHapticEngine::DelChildObject(ObjectIf* o){
-	PHSolid* s = DCAST(PHSolid, o);
-	if(s){
-		PHSolids::iterator is = find(solids.begin(), solids.end(), s);
-		if(is != solids.end() && solids.size() > 0){
-			int idx = (int)(is - solids.begin());
-			solids.erase(is);
-			solidPairs.erase_col(idx);
-			PHSolidsForHaptic::iterator it;
-			for(it = hapticSolids.begin(); it < hapticSolids.end(); it++){
-				if(DCAST(PHSolid, (*it)->sceneSolid) == s) hapticSolids.erase(it);
-			}
-			PHHapticPointer* p = DCAST(PHHapticPointer, o);
-			if(p){
-				PHHapticPointers::iterator ip = find(hapticPointers.begin(), hapticPointers.end(), p);
-				if(ip != hapticPointers.end() && hapticPointers.size() > 0){
-					hapticPointers.erase(ip);
-				}
-			}
-		}
-		return true;
-	}
+	//PHSolid* s = DCAST(PHSolid, o);
+	//if(s){
+	//	PHSolids::iterator is = find(solids.begin(), solids.end(), s);
+	//	if(is != solids.end() && solids.size() > 0){
+	//		int idx = (int)(is - solids.begin());
+	//		solids.erase(is);
+	//		solidPairs.erase_col(idx);
+	//		PHSolidsForHaptic::iterator it;
+	//		for(it = hapticSolids.begin(); it < hapticSolids.end(); it++){
+	//			if(DCAST(PHSolid, (*it)->sceneSolid) == s) hapticSolids.erase(it);
+	//		}
+	//		PHHapticPointer* p = DCAST(PHHapticPointer, o);
+	//		if(p){
+	//			PHHapticPointers::iterator ip = find(hapticPointers.begin(), hapticPointers.end(), p);
+	//			if(ip != hapticPointers.end() && hapticPointers.size() > 0){
+	//				hapticPointers.erase(ip);
+	//			}
+	//		}
+	//	}
+	//	return true;
+	//}
 	return false;
 }
 
@@ -406,11 +408,11 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 	int i, j;
 	PHSolidPairForHaptic* sp;
 	PHSolid *slhs, *srhs;
-	// solidの場合(列の更新）
+	// solidの場合(行の更新）
 	for(i = 0; i < NHapticPointers(); i++){
-		sp = solidPairs.item(i, isolid);
-		slhs = sp->solid[0];
-		srhs = solid;
+		sp = solidPairs.item(isolid, i);
+		slhs = solid;
+		srhs = sp->solid[1];
 		sp->shapePairs.resize(slhs->NShape(), srhs->NShape());
 		for(j = 0; j < slhs->NShape(); j++){
 			PHShapePairForHaptic* n = DBG_NEW PHShapePairForHaptic();
@@ -422,12 +424,12 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 
 	PHHapticPointer* pointer = DCAST(PHHapticPointer, solid);
 	if(!pointer) return;
-	// PHHapticPointerの場合（行の更新）
+	// PHHapticPointerの場合（列の更新）
 	int pointerID = pointer->GetPointerID();
 	for(i = 0; i < (int)solids.size(); i++){
-		sp = solidPairs.item(pointerID, i);
-		slhs = solid;
-		srhs = sp->solid[1];
+		sp = solidPairs.item(i, pointerID);
+		slhs = sp->solid[0];
+		srhs = solid;
 		sp->shapePairs.resize(slhs->NShape(), srhs->NShape());
 		for(j = 0; j < slhs->NShape(); j++){
 			PHShapePairForHaptic* n = DBG_NEW PHShapePairForHaptic();
