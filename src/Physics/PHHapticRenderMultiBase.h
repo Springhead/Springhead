@@ -1,5 +1,5 @@
-#ifndef PHHAPTICRENDER_MULTIBASE_H
-#define PHHAPTICRENDER_MULTIBASE_H
+#ifndef PH_HAPTICRENDER_MULTIBASE_H
+#define PH_HAPTICRENDER_MULTIBASE_H
 
 #include <Physics/PHHapticEngine.h>
 
@@ -14,7 +14,6 @@ public:
 	PHHapticRenderImp* renderImp;
 	PHHapticPointers hapticPointers;
 	PHSolidsForHaptic hapticSolids;
-	//UTCombination< UTRef<PHSolidPairForHaptic> > solidPairs;
 	PHSolidPairsForHaptic solidPairs;
 
 	PHHapticLoopImp(){}
@@ -32,9 +31,6 @@ public:
 	PHHapticPointers* GetHapticPointers();
 	PHSolidsForHaptic* GetHapticSolids();
 	PHSolidPairsForHaptic* GetSolidPairsForHaptic();
-	
-	//PHHapticPointers* GetHapticPointers();
-	//PHSolidForHaptic** GetHapticSolids();
 };
 
 //----------------------------------------------------------------------------

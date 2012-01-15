@@ -9,6 +9,7 @@ using namespace Spr;
 
 void MyApp::InitInterface(){
 	hiSdk = HISdkIf::CreateSdk();
+# if 0
 	DRUsb20SimpleDesc usbSimpleDesc;
 	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 	DRUsb20Sh4Desc usb20Sh4Desc;
@@ -23,6 +24,11 @@ void MyApp::InitInterface(){
 	spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
 	spg->Calibration();
+#else
+	spg = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
+	HIXbox360ControllerIf* con = DCAST(HIXbox360ControllerIf,spg);
+	con->Init();
+#endif
 }
 
 
@@ -56,7 +62,7 @@ void MyApp::Init(int argc, char* argv[]){
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		pointer->AddShape(phSdk->CreateShape(cd));
+		pointer->AddShape(phSdk->CreateShape(bd));
 		//pointer->AddShape(phSdk->CreateShape(cd));
 		//pointer->SetShapePose(0, Posed::Trn(-0.1f, 0, 0));
 		//pointer->SetShapePose(1, Posed::Trn(0.1f, 0, 0));
@@ -67,33 +73,34 @@ void MyApp::Init(int argc, char* argv[]){
 		PHHapticPointer* b = pointer->Cast();
 		b->SetLocalRange(10);
 		b->SetPosScale(50);
-		b->bDebugControl = true;
+		//b->bDebugControl = true;
 
 		GetSdk()->SetDebugMode(true);
 
 		PHHapticEngine* h = phscene->GetHapticEngine()->Cast();
-		h->SetRenderMode(PHHapticEngine::IMPULSE);
 		h->EnableHaptic(true);
-
+#if 0
+		h->SetRenderMode(PHHapticEngine::MULTI);
+#else
+		h->SetRenderMode(PHHapticEngine::SINGLE);
+		phscene->SetTimeStep(0.001);
+#endif
 		timer = CreateTimer(UTTimerIf::MULTIMEDIA);
 		timer->SetResolution(1);					// 分解能(ms)
 		timer->SetInterval(1);	// 刻み(ms)
 		timerID = timer->GetID();
 		timer->Start();		// タイマスタート
-
 }
 
 void MyApp::TimerFunc(int id){
 	if(timerID == id){
-		phscene->StepHapticLoop();
-	}else{
-		//UserFunc();
-
+		//phscene->StepHapticLoop();
 		PHHapticEngine* h = GetCurrentWin()->GetScene()->GetPHScene()->GetHapticEngine()->Cast();
 		h->StepSimulation();
-
+	}else{
+		//PHHapticEngine* h = GetCurrentWin()->GetScene()->GetPHScene()->GetHapticEngine()->Cast();
+		//h->StepSimulation();
 		PostRedisplay();
-		//DSTR << "Step Scene" << std::endl;
 	}
 }
 
@@ -112,6 +119,8 @@ void MyApp::Keyboard(int key, int x, int y){
 	double distance = 0.05;
 	switch(key){
 		case 'q':
+			GetTimer(0)->Stop();
+			timer->Stop();
 			exit(0);
 			break;
 		//case 'a':

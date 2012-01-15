@@ -14,7 +14,8 @@ void PHHapticLoopImpulse::Step(){
 void PHHapticLoopImpulse::HapticRendering(){
 	for(int i = 0; i < NHapticPointers(); i++){
 		//GetHapticPointer(i)->HapticRendering(GetHapticSolids(), GetSolidPairsForHaptic(), loopCount);
-		GetHapticPointer(i)->MultiPointRendering(GetHapticSolids(), GetSolidPairsForHaptic(), loopCount);
+		GetHapticPointer(i)->MultiPointRendering(GetHapticSolids(), GetSolidPairsForHaptic(), 
+			loopCount, GetPhysicsTimeStep(), GetHapticTimeStep());
 	}
 }
 

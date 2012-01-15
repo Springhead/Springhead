@@ -241,13 +241,14 @@ public:
 		@param	mode	タイマの種類
 		@return			タイマオブジェクト
 	 */
-	UTTimerIf*	CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
+	UTTimerIf* CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
 
 	/** @breif タイマーを取得する
 		@param タイマー番号
 		@return タイマーオブジェクト
 	*/
 	UTTimerIf* GetTimer(int i);
+	int	NTimers(){ return (int)timers.size(); }
 
 public:
 	/**  削除候補API  **/

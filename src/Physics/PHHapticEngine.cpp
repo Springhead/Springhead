@@ -1,5 +1,6 @@
 #include <Physics/PHHapticEngine.h>
 #include <Physics/PHHapticRenderImpulse.h>
+#include <Physics/PHHapticRenderSingleBase.h>
 
 namespace Spr{;
 
@@ -65,6 +66,8 @@ int PHShapePairForHaptic::OnDetect(unsigned ct, const Vec3d& center0){
 extern bool bUseContactVolume;
 bool PHShapePairForHaptic::AnalyzeContactRegion(){
 
+	// 1/15releaseにするとfindintersectionで落ちる
+	//DSTR << normal << " " << shapePoseW[0] * closestPoint[0] << " " << shapePoseW[1] * closestPoint[1] << std::endl;
 	bUseContactVolume = true;
 	static CDContactAnalysis analyzer;
 	analyzer.FindIntersection(this->Cast());
@@ -90,6 +93,7 @@ bool PHShapePairForHaptic::AnalyzeContactRegion(){
 		intersectionVertices.push_back(closestPoint[1]);
 		return false;
 	}
+
 	return true;
 }
 
@@ -109,6 +113,11 @@ void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* en
 		// 接触していない場合、近傍点を侵入領域の頂点とする
 		sp->intersectionVertices.push_back(sp->closestPoint[1]);
 	}
+
+	//DSTR << "--------" << std::endl;
+	//for(int i = 0; i < sp->intersectionVertices.size(); i++){
+	//	DSTR << sp->shapePoseW[1] * sp->intersectionVertices[i] << std::endl;
+	//}
 
 	// はじめて近傍の場合
 	if(inLocal == 1){
@@ -149,13 +158,9 @@ PHHapticPointers* PHHapticRenderImp::GetHapticPointers(){
 PHSolidsForHaptic* PHHapticRenderImp::GetHapticSolids(){
 	return &engine->hapticSolids;
 }
-
-//PHHapticPointers* PHHapticRenderImp::GetHapticPointers(){
-//	return engine->hapticPointers.empty() ? NULL : (PHHapticPointers*)&*engine->hapticPointers.begin();
-//}
-//PHSolidForHaptic** PHHapticRenderImp::GetHapticSolids(){
-//	return engine->hapticSolids.empty() ? NULL : (PHSolidForHaptic**)&*engine->hapticSolids.begin();
-//}
+PHSolidPairsForHaptic* PHHapticRenderImp::GetSolidPairsForHaptic(){
+	return &engine->solidPairs;
+}
 
 //----------------------------------------------------------------------------
 // PHHapticEngine
@@ -178,7 +183,7 @@ void PHHapticEngine::SetRenderMode(RenderMode r){
 		case NONE:
 				DSTR << "You must set haptic render mode." << std::endl; 
 			break;
-		case IMPULSE:		
+		case MULTI:		
 			for(int i = 0; i < (int)renderImps.size(); i++){
 				if(DCAST(PHHapticRenderImpulse, renderImps[i])){
 					renderImp = renderImps[i];
@@ -187,6 +192,15 @@ void PHHapticEngine::SetRenderMode(RenderMode r){
 			}
 			renderImp = DBG_NEW PHHapticRenderImpulse();
 			break;
+		case SINGLE:		
+			for(int i = 0; i < (int)renderImps.size(); i++){
+				if(DCAST(PHHapticRenderSingleBase, renderImps[i])){
+					renderImp = renderImps[i];
+					return;
+				}
+			}
+			renderImp = DBG_NEW PHHapticRenderSingleBase();
+			break;		
 		default:
 				return;
 			break;

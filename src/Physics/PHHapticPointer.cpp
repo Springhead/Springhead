@@ -104,8 +104,11 @@ void PHHapticPointer::HapticRendering(PHSolidsForHaptic* hsolids, PHSolidPairsFo
 }
 
 
-void PHHapticPointer::MultiPointRendering(PHSolidsForHaptic* hsolids, PHSolidPairsForHaptic* sps, double loopCount){		
+void PHHapticPointer::MultiPointRendering(PHSolidsForHaptic* hsolids, PHSolidPairsForHaptic* sps, 
+											double loopCount, double pdt, double hdt){		
+	
 	PHIrs irs;
+	irs.clear();
 	int nNeighbors = neighborSolidIDs.size();
 	for(int i = 0; i < nNeighbors; i++){
 		int solidID = neighborSolidIDs[i];
@@ -124,8 +127,6 @@ void PHHapticPointer::MultiPointRendering(PHSolidsForHaptic* hsolids, PHSolidPai
 
 				// 剛体の面の法線補間
 				// 前回の法線と現在の法線の間を補間しながら更新
-				double pdt = scene->GetTimeStep();
-				double hdt = scene->GetHapticTimeStep();
 				double syncCount = pdt / hdt;
 				double t = loopCount / syncCount;
 				Vec3d interpolation_normal = interpolate(t, lastNormal, normal);
@@ -155,32 +156,32 @@ void PHHapticPointer::MultiPointRendering(PHSolidsForHaptic* hsolids, PHSolidPai
 			}
 		}
 	}
-
 	SpatialVector outForce = SpatialVector();
-	double K = 100;
-	double D = 0.1;
 	int NIrs = irs.size();
-	K /= (double)NIrs;
-	D /= (double)NIrs;
-	for(int i = 0; i < NIrs; i++){
-		PHIr ir = irs[i];
-		PHSolid* hsolid = &hsolids->at(ir.solidID)->localSolid;
-		Vec3d ortho = ir.ortho;
-		Vec3d wiv = ir.vertex;
-		Vec3d solidPoint = ir.solidPoint;
-		Vec3d dv = GetPointVelocity(wiv) - hsolid->GetPointVelocity(solidPoint);
-		Vec3d dvortho = dv.norm() * ir.normal;
+	if(NIrs > 0){
+		double K = 100;
+		double D = 0.1;
+		K /= (double)NIrs;
+		D /= (double)NIrs;
+		for(int i = 0; i < NIrs; i++){
+			PHIr ir = irs[i];
+			PHSolid* hsolid = &hsolids->at(ir.solidID)->localSolid;
+			Vec3d ortho = ir.ortho;
+			Vec3d wiv = ir.vertex;
+			Vec3d solidPoint = ir.solidPoint;
+			Vec3d dv = GetPointVelocity(wiv) - hsolid->GetPointVelocity(solidPoint);
+			Vec3d dvortho = dv.norm() * ir.normal;
 
-
-		Vec3d addforce = -1 * (K * ortho + D * dvortho);
-		double ws4 = pow(GetWorldScale(), 4);
-		outForce.v() += addforce / ws4;
-		outForce.w() = Vec3d();
+			Vec3d addforce = -1 * (K * ortho + D * dvortho);
+			double ws4 = pow(GetWorldScale(), 4);
+			outForce.v() += addforce / ws4;
+			outForce.w() = Vec3d();
 		
-/*		ImpulsePoint ip;
-		ip.contactPointW = interpolation_sPoint;
-		ip.impulse = -1 * addforce;
-		solidPair->impulsePoints.push_back(ip);*/	
+	/*		ImpulsePoint ip;
+			ip.contactPointW = interpolation_sPoint;
+			ip.impulse = -1 * addforce;
+			solidPair->impulsePoints.push_back(ip);*/	
+		}
 	}
 		
 	SetForce(outForce);

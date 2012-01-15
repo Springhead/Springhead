@@ -17,6 +17,7 @@
 #include <HumanInterface/HIMouse6D.h>
 #include <HumanInterface/HITrackball.h>
 #include <HumanInterface/HIDragger.h>
+#include <HumanInterface/HIXbox360Controller.h>
 #ifdef USE_HDRSTOP
  #pragma hdrstop
 #endif
@@ -46,6 +47,7 @@ void SPR_CDECL HISdkIf::RegisterSdk(){
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpaceNavigator));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HITrackball));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIDragger));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIXbox360Controller));
 }
 
 HISdk::HISdk(const HISdkDesc& desc){

@@ -173,3 +173,6 @@
 	void SetKeyMouse(Spr::DVKeyMouseIf* dv){	base::SetKeyMouse(dv);}	\
 	void SetCallback(Spr::HITrackballCallback* callback){	base::SetCallback(callback);}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_HIXbox360ControllerIf(base)	\
+	bool Init(){	return	base::Init();}	\
+
