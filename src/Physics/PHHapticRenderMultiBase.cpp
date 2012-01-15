@@ -41,14 +41,6 @@ PHSolidPairsForHaptic* PHHapticLoopImp::GetSolidPairsForHaptic(){
 	return &solidPairs;
 }
 
-//PHHapticPointers* PHHapticLoopImp::GetHapticPointers(){
-//	return hapticPointers.empty() ? NULL : (PHHapticPointers*)&*hapticPointers.begin();
-//}
-//
-//PHSolidForHaptic** PHHapticLoopImp::GetHapticSolids(){
-//	return hapticSolids.empty() ? NULL : (PHSolidForHaptic**)&*hapticSolids.begin();
-//}
-
 //----------------------------------------------------------------------------
 // PHHapticRenderMultiBase
 PHHapticRenderMultiBase::PHHapticRenderMultiBase(){

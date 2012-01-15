@@ -71,7 +71,8 @@ public:
 	void	UpdateHapticPointer();
 	void	SetForce(SpatialVector f);
 	void	HapticRendering(PHSolidsForHaptic* hsolids, PHSolidPairsForHaptic* sps, double loopCount);
-	void	MultiPointRendering(PHSolidsForHaptic* hsolids, PHSolidPairsForHaptic* sps, double loopCount);
+	void	MultiPointRendering(PHSolidsForHaptic* hsolids, PHSolidPairsForHaptic* sps, 
+									double loopCount, double pdt, double hdt);
 	void	SetLocalRange(float r){ localRange = r; } 
 	float	GetLocalRange(){ return localRange; }
 	void	SetPosScale(double scale){ posScale = scale; }
@@ -143,7 +144,7 @@ struct ImpulsePoint{
 	Vec3d contactPointW;
 	Vec3d impulse;
 };
-class PHHapticEngineImp;
+
 class PHSolidPairForHaptic : public PHSolidPair< PHShapePairForHaptic, PHHapticEngine >, public Object{
 public:
 	typedef PHSolidPair<PHShapePairForHaptic, PHHapticEngine> base_type;
@@ -190,9 +191,7 @@ public:
 	PHSolidPairForHaptic* GetSolidPairForHaptic(int i, int j);
 	PHHapticPointers* GetHapticPointers();
 	PHSolidsForHaptic* GetHapticSolids();
-
-//	PHHapticPointers* GetHapticPointers();
-//	PHSolidForHaptic** GetHapticSolids();
+	PHSolidPairsForHaptic* GetSolidPairsForHaptic();
 
 	///< デバック用シミュレーション実行
 	virtual void StepSimulation(){};
@@ -220,7 +219,8 @@ public:
 
 	enum RenderMode{
 		NONE,
-		IMPULSE,
+		MULTI,
+		SINGLE,
 	} renderMode;
 
 	PHHapticEngine();

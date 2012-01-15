@@ -23,4 +23,5 @@
 #include <HumanInterface/SprHIDragger.h>
 #include <HumanInterface/SprHIDRUsb.h>
 #include <HumanInterface/SprHISpaceNavigator.h>
+#include <HumanInterface/SprHIXbox360Controller.h>
 #endif

@@ -12,7 +12,7 @@ public:
 	PHHapticPointerIf* pointer;
 	double range;
 	int timerID;
-	UTRef<HISpidarGIf> spg;
+	UTRef<HIBaseIf> spg;
 	UTRef<HISdkIf> hiSdk;
 	UTTimerIf* timer;
 
