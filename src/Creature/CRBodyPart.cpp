@@ -133,6 +133,12 @@ void CRIKSolid::StepTrajectory() {
 	double dt = DCAST(CRCreatureIf,GetScene())->GetPHScene()->GetTimeStep();
 
 	// ˆÊ’u§Œä
+	Vec3f finalPosAbs=finalPos, initPosAbs=initPos;
+	if (originSolid) {
+		initPosAbs  = originSolid->GetPose() * initPosAbs;
+		finalPosAbs = originSolid->GetPose() * finalPosAbs;
+	}
+
 	if (bCtlPos && bEnable) {
 		time += (float)dt;
 
@@ -147,12 +153,6 @@ void CRIKSolid::StepTrajectory() {
 			deltaLength = 0;
 		}
 
-		Vec3f finalPosAbs=finalPos, initPosAbs=initPos;
-		if (originSolid) {
-			initPosAbs  = originSolid->GetPose() * initPosAbs;
-			finalPosAbs = originSolid->GetPose() * finalPosAbs;
-		}
-
 		Vec3f dir = (solid->GetPose() * ikEndEffector->GetTargetLocalPosition())-finalPosAbs;
 		if (dir.norm() != 0) { dir /= dir.norm(); }
 
@@ -163,8 +163,11 @@ void CRIKSolid::StepTrajectory() {
 
 		if (time > timeLimit) {
 			bCtlPos = false;
-			ikEndEffector->Enable(false);
 		}
+	}
+
+	if (bEnable && time > timeLimit) {
+		ikEndEffector->SetTargetPosition(finalPosAbs);
 	}
 
 	// p¨§Œä
@@ -174,7 +177,7 @@ void CRIKSolid::StepTrajectory() {
 }
 
 void CRIKSolid::Start() {
-	if (!bEnable && !bPause) {
+	if ((!bEnable && !bPause) || (time > timeLimit)) {
 		time = 0.0f;
 	}
 	ikEndEffector->Enable(true);
