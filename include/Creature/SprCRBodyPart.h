@@ -80,6 +80,11 @@ struct CRIKSolidIf : CRSolidIf {
 	// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 	// 軌道運動
 
+	/** @brief 到達の相対基準となる剛体を設定 NULLだと絶対位置
+		@param solid 基準剛体
+	*/
+	void SetOriginSolid(PHSolidIf* solid);
+
 	/** @brief 目標位置の設定
 		@param pos 目標位置
 	*/

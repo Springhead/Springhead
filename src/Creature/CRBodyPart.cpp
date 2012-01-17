@@ -86,6 +86,10 @@ void CRIKSolid::Step() {
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // ‹O“¹‰^“®
+void CRIKSolid::SetOriginSolid(PHSolidIf* solid) {
+	originSolid = solid;
+}
+
 void CRIKSolid::SetTargetPos(Vec3d pos) {
 	if (!bCtlPos) {
 		initPos  = solid->GetPose() * ikEndEffector->GetTargetLocalPosition();
@@ -95,6 +99,10 @@ void CRIKSolid::SetTargetPos(Vec3d pos) {
 		ikEndEffector->EnablePositionControl(true);
 	} else {
 		finalPos = pos;
+	}
+	if (originSolid) {
+		initPos  = originSolid->GetPose().Inv() * initPos;
+		finalPos = originSolid->GetPose().Inv() * finalPos;
 	}
 }
 
@@ -138,14 +146,24 @@ void CRIKSolid::StepTrajectory() {
 			length = 0;
 			deltaLength = 0;
 		}
-		Vec3f dir = (solid->GetPose() * ikEndEffector->GetTargetLocalPosition())-finalPos;
+
+		Vec3f finalPosAbs=finalPos, initPosAbs=initPos;
+		if (originSolid) {
+			initPosAbs  = originSolid->GetPose() * initPosAbs;
+			finalPosAbs = originSolid->GetPose() * finalPosAbs;
+		}
+
+		Vec3f dir = (solid->GetPose() * ikEndEffector->GetTargetLocalPosition())-finalPosAbs;
 		if (dir.norm() != 0) { dir /= dir.norm(); }
-		Vec3d currPos = finalPos + dir*(finalPos - initPos).norm()*length;
+
+		Vec3d currPos = finalPosAbs + dir*(finalPosAbs - initPosAbs).norm()*length;
 		ikEndEffector->SetTargetPosition(currPos);
 		if (soDebug) { soDebug->SetFramePosition(currPos); }
+		// if (soDebug) { soDebug->SetFramePosition(finalPosAbs); }
 
 		if (time > timeLimit) {
 			bCtlPos = false;
+			ikEndEffector->Enable(false);
 		}
 	}
 
@@ -159,6 +177,7 @@ void CRIKSolid::Start() {
 	if (!bEnable && !bPause) {
 		time = 0.0f;
 	}
+	ikEndEffector->Enable(true);
 	bEnable = true;
 	bPause = false;
 }

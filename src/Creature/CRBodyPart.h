@@ -88,6 +88,9 @@ private:
 	/// 予測シミュレーション用の状態格納変数
 	// UTRef<ObjectStatesIf> state;
 
+	/// 到達位置の相対基準剛体
+	PHSolidIf* originSolid;
+
 	/// 経過時間
 	float time;
 
@@ -124,6 +127,8 @@ private:
 		bCtlPos = bCtlOri = bCtlVel = bCtlAvl = false;
 		bEnable = false;
 		bPause  = false;
+
+		originSolid = NULL;
 
 		relativePose = Posed();
 		horizRange = vertRange = -1;
@@ -178,6 +183,11 @@ public:
 
 	// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 	// 軌道運動
+
+	/** @brief 到達の相対基準となる剛体を設定 NULLだと絶対位置
+		@param solid 基準剛体
+	*/
+	void SetOriginSolid(PHSolidIf* solid);
 
 	/** @brief 目標位置の設定
 		@param pos 目標位置

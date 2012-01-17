@@ -20,6 +20,7 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_CRIKSolidIf(base)	\
 	Spr::PHIKEndEffectorIf* GetIKEndEffector(){	return	base::GetIKEndEffector();}	\
 	void SetIKEndEffector(Spr::PHIKEndEffectorIf* ikEE){	base::SetIKEndEffector(ikEE);}	\
+	void SetOriginSolid(Spr::PHSolidIf* solid){	base::SetOriginSolid(solid);}	\
 	void SetTargetPos(Vec3d pos){	base::SetTargetPos(pos);}	\
 	void SetTargetOri(Quaterniond ori){	base::SetTargetOri(ori);}	\
 	void SetTargetPose(Posed pose){	base::SetTargetPose(pose);}	\
