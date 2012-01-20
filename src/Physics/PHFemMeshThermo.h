@@ -247,7 +247,10 @@ public:
 	
 	void CalcVtxDisFromOrigin();			///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
 	void CalcIHdqdt(double r,double R,double dqdtAll);			///	IHヒーターの設定
+	void CalcIHdqdt2(double r,double R,double dqdtAll);			///	IHヒーターの設定
+	void CalcIHdqdt3(double r,double R,double dqdtAll);			///	IHヒーターの設定	1頂点でも領域内に入っているときには、それをIH計算の領域に加算する
 
+	Vec2d CalcIntersectionPoint(unsigned id0,unsigned id1,double r,double R);		/// id0.id1を結んだ線分と、半径rまたはRの円が交わる交点を求める。(ｓ，ｙ)座標を返す
 	///	メッシュ固有のパラメータの設定
 	void SetRohSpheat(double roh,double Cp);	// 素材固有の密度、比熱の設定
 
