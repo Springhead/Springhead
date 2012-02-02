@@ -89,20 +89,9 @@
 	Spr::CRReachingControllerIf* GetReachingController(Spr::PHSolidIf* solid){	return	base::GetReachingController(solid);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRGrabControllerIf(base)	\
-	bool Reach(Spr::PHSolidIf* solid, float radius){	return	base::Reach(solid, radius);}	\
-	bool IsReachable(Spr::PHSolidIf* solid){	return	base::IsReachable(solid);}	\
-	bool IsReachable(Spr::PHSolidIf* solid, float safety){	return	base::IsReachable(solid, safety);}	\
-	bool IsReachComplete(){	return	base::IsReachComplete();}	\
-	bool Uphold(){	return	base::Uphold();}	\
-	bool IsUpholdable(){	return	base::IsUpholdable();}	\
-	bool IsUpholdComplete(){	return	base::IsUpholdComplete();}	\
-	bool Place(Vec3d pos){	return	base::Place(pos);}	\
-	bool IsPlaceable(Vec3d pos){	return	base::IsPlaceable(pos);}	\
-	bool IsPlaceable(Vec3d pos, float safety){	return	base::IsPlaceable(pos, safety);}	\
-	bool IsPlaceComplete(){	return	base::IsPlaceComplete();}	\
-	void Abort(){	base::Abort();}	\
-	void AbortAll(){	base::AbortAll();}	\
-	Spr::CRGrabControllerIf::CRGCControlState GetControlState(){	return	base::GetControlState();}	\
+	void Grab(Spr::PHSolidIf* targetSolid){	base::Grab(targetSolid);}	\
+	Spr::PHSolidIf* GetGrabbingSolid(){	return	base::GetGrabbingSolid();}	\
+	void Release(){	base::Release();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRSceneIf(base)	\
 

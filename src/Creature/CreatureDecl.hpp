@@ -218,26 +218,14 @@ public:\
 
 #define SPR_DECLMEMBEROF_CRGrabControllerDesc \
 protected:\
-	double	rateSpringSoften;	\
-	double	rateDamperSoften;	\
-	double	rateSpringHarden;	\
-	double	rateDamperHarden;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CREngine::SetDesc((CREngineDesc*)(CRGrabControllerDesc*)ptr);	\
-		rateSpringSoften = ((CRGrabControllerDesc*)ptr)->rateSpringSoften;	\
-		rateDamperSoften = ((CRGrabControllerDesc*)ptr)->rateDamperSoften;	\
-		rateSpringHarden = ((CRGrabControllerDesc*)ptr)->rateSpringHarden;	\
-		rateDamperHarden = ((CRGrabControllerDesc*)ptr)->rateDamperHarden;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		CREngine::GetDesc((CREngineDesc*)(CRGrabControllerDesc*)ptr);	\
-		((CRGrabControllerDesc*)ptr)->rateSpringSoften = rateSpringSoften;	\
-		((CRGrabControllerDesc*)ptr)->rateDamperSoften = rateDamperSoften;	\
-		((CRGrabControllerDesc*)ptr)->rateSpringHarden = rateSpringHarden;	\
-		((CRGrabControllerDesc*)ptr)->rateDamperHarden = rateDamperHarden;	\
 		return true;	\
 	}\
 
