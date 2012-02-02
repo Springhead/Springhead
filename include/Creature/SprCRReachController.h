@@ -67,91 +67,28 @@ struct CRReachingControllersDesc : public CREngineDesc{
 };
 
 // ------------------------------------------------------------------------------
-/// 把持コントローラ
+/// 把持コントローラ（つかんで，離すだけ）
 struct CRGrabControllerIf : CREngineIf{
 	SPR_IFDEF(CRGrabController);
 
-	/** @brief 物体の所へ手を伸ばしてつかむ．
-	*** @return true: Reach開始した． false: その物体へは手が届かない．
+	/** @brief 指定した物体をつかむ．
 	*/
-	bool Reach(PHSolidIf* solid, float radius);
+	void Grab(PHSolidIf* targetSolid);
 
-	/** @brief 対象SolidへReachが可能かどうかを返す（距離とか）
+	/** @brief つかんでいる物体を返す．つかんでいなければNULL
 	*/
-	bool IsReachable(PHSolidIf* solid);
+	PHSolidIf* GetGrabbingSolid();
 
-	/** @brief 対象SolidへReachが可能かどうかを返す（距離とか）
-	*** @param safety 安全係数：1以下の係数，距離をsafety倍して計算．1.0のときぎりぎり到達可能
+	/** @brief つかんでいる物体を放す．
 	*/
-	bool IsReachable(PHSolidIf* solid, float safety);
-
-	/** @brief Reachが完了したかどうかを返す
-	*/
-	bool IsReachComplete();
-
-	/** @brief 現在物体をつかんでいれば，その物体を手元に引き寄せ保持する．
-	*** @return true: Uphold開始した． false: 物体をつかんでいない(Reach未完了含む．)
-	*/
-	bool Uphold();
-
-	/** @brief Upholdが可能かどうかを返す
-	*/
-	bool IsUpholdable();
-
-	/** @brief Upholdが完了したかどうかを返す
-	*/
-	bool IsUpholdComplete();
-
-	/** @brief 現在物体をつかんでいれば，その物体を特定の場所に置く．
-	*** @return true: Place開始した． false: その場所へは手が届かない，または物体を持ってない．
-	*/
-	bool Place(Vec3d pos);
-
-	/** @brief Placeが可能かどうかを返す
-	*/
-	bool IsPlaceable(Vec3d pos);
-
-	/** @brief Placeが可能かどうかを返す
-	*** @param safety 安全係数：1以下の係数，距離をsafety倍して計算．1.0のときぎりぎり到達可能
-	*/
-	bool IsPlaceable(Vec3d pos, float safety);
-
-	/** @brief Placeが完了したかどうかを返す
-	*/
-	bool IsPlaceComplete();
-
-	/** @brief 現在の動作を中断する
-	*/
-	void Abort();
-
-	/** @brief すべての把持動作を中断する
-	*/
-	void AbortAll();
-
-	/** @brief 現在の動作状態を返す
-	*/
-	enum CRGCControlState {
-		CRGC_STANDBY=0,
-		CRGC_REACH,  CRGC_REACH_COMPLETE,
-		CRGC_UPHOLD, CRGC_UPHOLD_COMPLETE,
-		CRGC_PLACE,  CRGC_PLACE_COMPLETE,
-	};
-	CRGrabControllerIf::CRGCControlState GetControlState();
+	void Release();
 };
 
 /// 把持コントローラのデスクリプタ
 struct CRGrabControllerDesc : public CREngineDesc {
 	SPR_DESCDEF(CRGrabController);
 
-	/// 体を柔らかくするためのバネダンパへの係数
-	double rateSpringSoften, rateDamperSoften;
-
-	/// 体をかたくするためのバネダンパへの係数
-	double rateSpringHarden, rateDamperHarden;
-
 	CRGrabControllerDesc(){
-		rateSpringSoften = 0.0;  rateDamperSoften = 0.5;
-		rateSpringHarden = 1.5;  rateDamperHarden = 1.5;
 	}
 };
 

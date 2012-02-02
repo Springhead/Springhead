@@ -10,6 +10,11 @@
 
 #include <Creature/CREngine.h>
 #include <Creature/SprCRReachController.h>
+#include <Creature/SprCRBodyPart.h>
+#include <Creature/SprCRCreature.h>
+#include <Physics/SprPHJoint.h>
+#include <Physics/SprPHSolid.h>
+#include <Physics/SprPHScene.h>
 #include <map>
 
 //@{
@@ -23,43 +28,18 @@ struct CRBodyIf;
 */
 class CRGrabController : public CREngine, public CRGrabControllerDesc {
 private:
-	/// 下位のコントローラ：ReachingController
-	CRReachingControllerIf *reachLeft, *reachRight, *reachChest;
+	/// この剛体をつかって掴む
+	CRSolidIf* solid;
 
-	/// ボディ
-	CRBodyIf* body;
+	/// 連結用バネ
+	PHSpringIf* grabSpring;
 
-	/// 腰の剛体（いろいろ基準になる）
-	PHSolidIf *soWaist, *soWaistT;
-
-	/// 胸の剛体（やはりいろいろ基準になる）
-	PHSolidIf *soChest, *soChestT;
-
-	/// 腰を中心に到達可能な距離
-	float reachableDistance;
-
-	/// 腰からみた肩の高さ
-	float shoulderHeightFromWaist;
-
-	/// 把持対象のSolid
-	PHSolidIf* targetSolid;
-
-	/// 把持対象の大きさ（半径）
-	float targetRadius;
-
-	/// 把持した物体を置く(Place)時の目標位置
-	Vec3f placePos;
-
-	/// 現在の制御状態
-	CRGrabControllerIf::CRGCControlState controlState;
-
-	/// 現在の物体を把持するためのSpringのペア
-	typedef std::pair<PHSpringIf*, PHSpringIf*> SpringPair;
-	SpringPair grabSpring;
+	/// 把持中の剛体
+	PHSolidIf* grabbingSolid;
 
 	/// 把持を行うための作成済Springのマップ
-	//// 把持対象の剛体→（左手連結ばね・右手連結ばね）
-	typedef std::map< PHSolidIf*, std::pair<PHSpringIf*, PHSpringIf*> > GrabSpringMap;
+	//// 把持対象の剛体→連結用ばね
+	typedef std::map< PHSolidIf*, PHSpringIf* > GrabSpringMap;
 	GrabSpringMap grabSpringMap;
 
 public:
@@ -70,76 +50,69 @@ public:
 	CRGrabController(const CRGrabControllerDesc& desc) 
 		: CRGrabControllerDesc(desc) 
 	{
+		grabSpring    = NULL;
+		grabbingSolid = NULL;
+		solid         = NULL;
 	}
 
-	/** @brief 初期化
-	*/
-	virtual void Init();
+	/// ChildObject．把持に使う剛体（solid : CRSolid）を追加する
+	virtual bool AddChildObject(ObjectIf* o) {
+		if (!solid) { solid = o->Cast(); if(solid){ return true; }}
+		return false;
+	}
+	virtual size_t NChildObject() const {
+		return(solid?1:0);
+	}
+	virtual ObjectIf* GetChildObject(size_t i) {
+		if (i==0 && solid) { return solid->Cast(); }
+		return NULL;
+	}
 
-	/** @brief １ステップ
-	*/
-	virtual void Step();
+	/// 初期化
+	virtual void Init() {}
 
-	/** @brief 物体の所へ手を伸ばしてつかむ．
-	*** @return true: Reach開始した． false: その物体へは手が届かない．
-	*/
-	virtual bool Reach(PHSolidIf* solid, float radius);
+	/// 1ステップ
+	virtual void Step() {}
 
-	/** @brief 対象SolidへReachが可能かどうかを返す（距離とか）
-	*/
-	virtual bool IsReachable(PHSolidIf* solid);
+	/// 指定した物体をつかむ．
+	void Grab(PHSolidIf* targetSolid) {
+		PHSceneIf *phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
 
-	/** @brief 対象SolidへReachが可能かどうかを返す（距離とか）
-	*** @param safety 安全係数：1以下の係数，距離をsafety倍して計算．1.0のときぎりぎり到達可能
-	*/
-	virtual bool IsReachable(PHSolidIf* solid, float safety);
+		Posed relpose = solid->GetPHSolid()->GetPose().Inv() * targetSolid->GetPose();
 
-	/** @brief Reachが完了したかどうかを返す
-	*/
-	virtual bool IsReachComplete();
+		GrabSpringMap::iterator it = grabSpringMap.find(targetSolid);
+		if (it==grabSpringMap.end()) {
+			PHSpringDesc descSpring;
+			descSpring.bEnabled = false;
+			descSpring.spring   = Vec3d(1,1,1) * 500;
+			descSpring.damper   = Vec3d(1,1,1) *   5;
+			PHSpringIf* spring = phScene->CreateJoint(solid->GetPHSolid(), targetSolid, descSpring)->Cast();
 
-	/** @brief 現在物体をつかんでいれば，その物体を手元に引き寄せ保持する．
-	*** @return true: Uphold開始した． false: 物体をつかんでいない(Reach未完了含む．)
-	*/
-	virtual bool Uphold();
+			grabSpringMap[targetSolid] = spring;
+			grabSpring = spring;
+		} else {
+			grabSpring = it->second;
+		}
 
-	/** @brief Upholdが可能かどうかを返す
-	*/
-	virtual bool IsUpholdable();
+		Posed pose;
+		grabSpring->Enable(true);
+		grabSpring->SetPlugPose(Posed());
+		grabSpring->SetSocketPose(relpose);
 
-	/** @brief Upholdが完了したかどうかを返す
-	*/
-	virtual bool IsUpholdComplete();
+		grabbingSolid = targetSolid;
+	}
 
-	/** @brief 現在物体をつかんでいれば，その物体を特定の場所に置く．
-	*** @return true: Place開始した． false: その場所へは手が届かない，または物体を持ってない．
-	*/
-	virtual bool Place(Vec3d pos);
+	/// つかんでいる物体を返す．つかんでいなければNULL
+	PHSolidIf* GetGrabbingSolid() {
+		return grabbingSolid;
+	}
 
-	/** @brief Placeが可能かどうかを返す
-	*/
-	virtual bool IsPlaceable(Vec3d pos);
-
-	/** @brief Placeが可能かどうかを返す
-	*** @param safety 安全係数：1以下の係数，距離をsafety倍して計算．1.0のときぎりぎり到達可能
-	*/
-	virtual bool IsPlaceable(Vec3d pos, float safety);
-
-	/** @brief Placeが完了したかどうかを返す．
-	*/
-	virtual bool IsPlaceComplete();
-
-	/** @brief 動作を中断する
-	*/
-	virtual void Abort();
-
-	/** @brief すべての把持動作を中断する
-	*/
-	virtual void AbortAll();
-
-	/** @brief 現在の動作状態を返す
-	*/
-	virtual CRGrabControllerIf::CRGCControlState GetControlState();
+	/// つかんでいる物体を放す．
+	void Release() {
+		grabSpring->Enable(false);
+		grabbingSolid = NULL;
+		grabSpring    = NULL;
+	}
 };
 }
 //@}
