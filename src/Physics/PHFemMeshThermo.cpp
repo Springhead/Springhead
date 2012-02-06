@@ -204,6 +204,7 @@ void PHFemMeshThermo::SetRohSpheat(double r,double Spheat){
 }
 
 std::vector<Vec2d> PHFemMeshThermo::CalcIntersectionPoint2(unsigned id0,unsigned id1,double r,double R){
+	//	2点を通る直線は1つ	2つの定数を求める
 	double constA = 0.0;
 	double constB = 0.0;
 	///	rと交点
@@ -226,63 +227,72 @@ std::vector<Vec2d> PHFemMeshThermo::CalcIntersectionPoint2(unsigned id0,unsigned
 	}
 	/// vtxId0 < vtxId1 が保証されている
 
+	//	2点で交わることが前提
 	//> 2点のdisFromOriginをr,Rと比較してどちらと交わるかを判別する。
-	if( (r <= vertices[vtxId0].disFromOrigin && vertices[vtxId0].disFromOrigin <= R) ^ (r <= vertices[vtxId1].disFromOrigin && vertices[vtxId1].disFromOrigin <= R)){
-		//> 円環との交点を求める
-		// x-z平面で考えている
-		/// constA,B:vtxId0.vtxId1を通る直線の傾きと切片　/// aconsta,constbは正負構わない
-		constA = ( vertices[vtxId0].pos.z - vertices[vtxId1].pos.z) / ( vertices[vtxId0].pos.x - vertices[vtxId1].pos.x);
-		constB = vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x;
+	//> 円環との交点を求める
+	// x-z平面で考えている
+	/// constA,B:vtxId0.vtxId1を通る直線の傾きと切片　/// aconsta,constbは正負構わない
+	constA = ( vertices[vtxId0].pos.z - vertices[vtxId1].pos.z) / ( vertices[vtxId0].pos.x - vertices[vtxId1].pos.x);
+	DSTR << "vertices[vtxId0].pos.z - vertices[vtxId1].pos.z : " << vertices[vtxId0].pos.z - vertices[vtxId1].pos.z << std::endl;
+	DSTR << "vertices[vtxId0].pos.x: " << vertices[vtxId0].pos.x << std::endl;
+	DSTR << "vertices[vtxId1].pos.x: " << vertices[vtxId1].pos.x << std::endl;
+	DSTR << "vertices[vtxId0].pos.z: " << vertices[vtxId0].pos.z <<std::endl;
+	DSTR << "vertices[vtxId0].pos.z: " << vertices[vtxId1].pos.z <<std::endl;
 
-		///	交点の座標を計算
-		if(vertices[vtxId0].disFromOrigin < r){		/// 半径rの円と交わるとき
-			//CalcYfromXatcross(vtxId0,vtxId1,r);	//関数化しない
-			//> 以下、関数化,vtxId0,1,r:引数、constYを返す
-			constX1 = (- constA * constB + sqrt(r * r *(constA * constA + 1.0) - constB * constB));
-			constX1_ = (- constA * constB - sqrt(r * r *(constA * constA + 1.0) - constB * constB));
-			// どちらかが頂点の間にある　大小がわからないので、orで、点1のx座標、2のx座標と、その入れ替えと、作る
-			//> 線分の両端の点の間にあるとき
-			if( (vertices[vtxId0].pos.x <= constX1 && constX1 <= vertices[vtxId1].pos.x) || (vertices[vtxId1].pos.x <= constX1 && constX1 <= vertices[vtxId0].pos.x) ){
-				constY1 = sqrt(r * r - constX1 * constX1 );
-			}else{
-				constY1 = sqrt(r * r - constX1_ * constX1_ );
-				constX1 = constX1_;		///		点のx座標はconstX_が正しい事がわかった。
-			}
-		}else if(vertices[vtxId0].disFromOrigin < R){		/// 半径Rの円と交わるとき
-			constX1 = (- constA * constB + sqrt(R * R *(constA * constA + 1.0) - constB * constB));
-			constX1_ = (- constA * constB - sqrt(R * R *(constA * constA + 1.0) - constB * constB));
-			// どちらかが頂点の間にある　大小がわからないので、orで、点1のx座標、2のx座標と、その入れ替えと、作る
-			//> 線分の両端の点の間にあるとき
-			if( (vertices[vtxId0].pos.x <= constX1 && constX1 <= vertices[vtxId1].pos.x) || (vertices[vtxId1].pos.x <= constX1 && constX1 <= vertices[vtxId0].pos.x) ){
-				constY1 = sqrt(R * R - constX1 * constX1 );
-			}else{
-				constY1 = sqrt(R * R - constX1_ * constX1_ );
-				constX1 = constX1_;		///		点のx座標はconstX_が正しい事がわかった。
-			}
-		
+	constB = vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x;
+	DSTR << "vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x : " << vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x << std::endl;
+
+	DSTR << "constA: " << constA << std::endl;
+	DSTR << "constB: " << constB << std::endl;
+
+	///	交点の座標を計算
+	if(vertices[vtxId0].disFromOrigin < r){		/// 半径rの円と交わるとき
+		//CalcYfromXatcross(vtxId0,vtxId1,r);	//関数化しない
+		//> 以下、関数化,vtxId0,1,r:引数、constYを返す
+		constX1 = (- constA * constB + sqrt(r * r *(constA * constA + 1.0) - constB * constB));
+		constX1_ = (- constA * constB - sqrt(r * r *(constA * constA + 1.0) - constB * constB));
+		// どちらかが頂点の間にある　大小がわからないので、orで、点1のx座標、2のx座標と、その入れ替えと、作る
+		//> 線分の両端の点の間にあるとき
+		if( (vertices[vtxId0].pos.x <= constX1 && constX1 <= vertices[vtxId1].pos.x) || (vertices[vtxId1].pos.x <= constX1 && constX1 <= vertices[vtxId0].pos.x) ){
+			constY1 = sqrt(r * r - constX1 * constX1 );
+		}else{
+			constY1 = sqrt(r * r - constX1_ * constX1_ );
+			constX1 = constX1_;		///		点のx座標はconstX_が正しい事がわかった。
 		}
-		//> どちらとも交わるとき
-		else if(vertices[vtxId0].disFromOrigin < r && R < vertices[vtxId1].disFromOrigin){
-			//> 定数が2つ欲しい
-			constX1 = (- constA * constB + sqrt(r * r *(constA * constA + 1.0) - constB * constB));
-			constX1_ = (- constA * constB - sqrt(r * r *(constA * constA + 1.0) - constB * constB));
-			// どちらかが頂点の間にある　大小がわからないので、orで、点1のx座標、2のx座標と、その入れ替えと、作る
-			//> 線分の両端の点の間にあるとき
-			if( (vertices[vtxId0].pos.x <= constX1 && constX1 <= vertices[vtxId1].pos.x) || (vertices[vtxId1].pos.x <= constX1 && constX1 <= vertices[vtxId0].pos.x) ){
-				constY1 = sqrt(r * r - constX1 * constX1 );
-			}else{
-				constY1 = sqrt(r * r - constX1_ * constX1_ );
-				constX1 = constX1_;		///		点のx座標はconstX_が正しい事がわかった。
-			}
-			constX2 = (- constA * constB + sqrt(R * R *(constA * constA + 1.0) - constB * constB));
-			constX2_ = (- constA * constB - sqrt(R * R *(constA * constA + 1.0) - constB * constB));
-			//> 線分の両端の点の間にあるとき
-			if( (vertices[vtxId0].pos.x <= constX2 && constX2 <= vertices[vtxId1].pos.x) || (vertices[vtxId1].pos.x <= constX2 && constX2 <= vertices[vtxId0].pos.x) ){
-				constY2 = sqrt(R * R - constX2 * constX2 );
-			}else{
-				constY2 = sqrt(R * R - constX2_ * constX2_ );
-				constX2 = constX2_;		///		点のx座標はconstX_が正しい事がわかった。
-			}
+	}else if(vertices[vtxId0].disFromOrigin < R){		/// 半径Rの円と交わるとき
+		constX1 = (- constA * constB + sqrt(R * R *(constA * constA + 1.0) - constB * constB));
+		constX1_ = (- constA * constB - sqrt(R * R *(constA * constA + 1.0) - constB * constB));
+		// どちらかが頂点の間にある　大小がわからないので、orで、点1のx座標、2のx座標と、その入れ替えと、作る
+		//> 線分の両端の点の間にあるとき
+		if( (vertices[vtxId0].pos.x <= constX1 && constX1 <= vertices[vtxId1].pos.x) || (vertices[vtxId1].pos.x <= constX1 && constX1 <= vertices[vtxId0].pos.x) ){
+			constY1 = sqrt(R * R - constX1 * constX1 );
+		}else{
+			constY1 = sqrt(R * R - constX1_ * constX1_ );
+			constX1 = constX1_;		///		点のx座標はconstX_が正しい事がわかった。
+		}
+		
+	}
+	//> どちらとも交わるとき
+	else if(vertices[vtxId0].disFromOrigin < r && R < vertices[vtxId1].disFromOrigin){
+		//> 定数が2つ欲しい
+		constX1 = (- constA * constB + sqrt(r * r *(constA * constA + 1.0) - constB * constB));
+		constX1_ = (- constA * constB - sqrt(r * r *(constA * constA + 1.0) - constB * constB));
+		// どちらかが頂点の間にある　大小がわからないので、orで、点1のx座標、2のx座標と、その入れ替えと、作る
+		//> 線分の両端の点の間にあるとき
+		if( (vertices[vtxId0].pos.x <= constX1 && constX1 <= vertices[vtxId1].pos.x) || (vertices[vtxId1].pos.x <= constX1 && constX1 <= vertices[vtxId0].pos.x) ){
+			constY1 = sqrt(r * r - constX1 * constX1 );
+		}else{
+			constY1 = sqrt(r * r - constX1_ * constX1_ );
+			constX1 = constX1_;		///		点のx座標はconstX_が正しい事がわかった。
+		}
+		constX2 = (- constA * constB + sqrt(R * R *(constA * constA + 1.0) - constB * constB));
+		constX2_ = (- constA * constB - sqrt(R * R *(constA * constA + 1.0) - constB * constB));
+		//> 線分の両端の点の間にあるとき
+		if( (vertices[vtxId0].pos.x <= constX2 && constX2 <= vertices[vtxId1].pos.x) || (vertices[vtxId1].pos.x <= constX2 && constX2 <= vertices[vtxId0].pos.x) ){
+			constY2 = sqrt(R * R - constX2 * constX2 );
+		}else{
+			constY2 = sqrt(R * R - constX2_ * constX2_ );
+			constX2 = constX2_;		///		点のx座標はconstX_が正しい事がわかった。
 		}
 	}
 	std::vector<Vec2d> intersection;
@@ -341,7 +351,7 @@ Vec2d PHFemMeshThermo::CalcIntersectionPoint(unsigned id0,unsigned id1,double r,
 				constY = sqrt(r * r - constX_ * constX_ );
 				constX = constX_;		///		点のx座標はconstX_が正しい事がわかった。
 			}
-		}else if(r < vertices[vtxId0].disFromOrigin < R){		/// 半径Rの円と交わるとき
+		}else if(r < vertices[vtxId0].disFromOrigin && vertices[vtxId0].disFromOrigin < R){		/// 半径Rの円と交わるとき
 			constX = (- constA * constB + sqrt(r * R *(constA * constA + 1.0) - constB * constB));
 			constX_ = (- constA * constB - sqrt(r * R *(constA * constA + 1.0) - constB * constB));
 			// どちらかが頂点の間にある　大小がわからないので、orで、点1のx座標、2のx座標と、その入れ替えと、作る
@@ -463,6 +473,8 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 			else if(vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin < radius  && Radius < vertices[faces[i].vertices[(nearestvtxnum + 1)%3]].disFromOrigin ){	//>	頂点が領域0と1にあるとき
 				//> 交点を求め、交点の値をvectorに代入する
 				//Vec4d vtxXZ = CalcIntersectionPoint2(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius);
+				DSTR << "nearestvtxnum: " << nearestvtxnum <<std::endl;
+				DSTR << "(nearestvtxnum+1)%3: " << (nearestvtxnum+1)%3 <<std::endl;
 				tempXZ = CalcIntersectionPoint2(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius);
 				DSTR << "case3 tempXZ[0]" << tempXZ[0] << std::endl;
 				if(tempXZ.size() >2){DSTR << "case3 tempXZ[1]" << tempXZ[1] << std::endl;}
@@ -1893,7 +1905,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
 	CalcIHdqdt(0.04,0.095,231.9 * 0.005 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
 //	CalcIHdqdt2(0.04,0.095,231.9 * 0.005 * 1e6);
-	CalcIHdqdt4(0.04,0.095,231.9 * 0.005 * 1e6);
+//	CalcIHdqdt4(0.04,0.095,231.9 * 0.005 * 1e6);
 	CalcIHdqdt5(0.04,0.095,231.9 * 0.005 * 1e6);
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
 
