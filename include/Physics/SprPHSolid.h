@@ -33,6 +33,7 @@ struct PHSolidState{
 	Vec3d		velocity;		///<	‘¬“x			(WorldŒn)
 	Vec3d		angVelocity;	///<	Šp‘¬“x			(WorldŒn)
 	Posed		pose;			///<	ˆÊ’u‚ÆŒü‚«		(WorldŒn)
+	Posed		lastPose;		///<	‘O‰ñ‚ÌˆÊ’u‚ÆŒü‚«(WorldŒn)
 	Vec3d		force;			///<	‘O‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚Á‚½—Í(WorldŒn)
 	Vec3d		torque;			///<	‘O‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚Á‚½ƒgƒ‹ƒN(WorldŒn)
 	Vec3d		nextForce;		///<	ŽŸ‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚é—Í(WorldŒn)

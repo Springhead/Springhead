@@ -266,6 +266,112 @@ bool CDContactAnalysisFace::CalcDualVtx(Vec3f* base){
 //----------------------------------------------------------------------------
 //	CDContactAnalysis
 //
+
+//void CDContactAnalysis::CalcDistance(const CDFaces::iterator it, const Vec3f* base, const Vec3d common, Vec3f &normal, float &dist){
+//	normal = (base[it->vtxs[1]] - base[it->vtxs[0]]) ^ 
+//		(base[it->vtxs[2]] - base[it->vtxs[0]]);
+//	DEBUG_EVAL( if ( normal.norm() < CD_EPSILON || !finite( normal.norm()) ){
+//		DSTR << "normal is too small." << std::endl; } 
+//	)
+//	normal.unitize();
+//	dist = normal * (base[it->vtxs[0]] - common);
+//}
+//
+//#define COMMON_EPSILON 10e-5
+//bool CDContactAnalysis::CorrectCommonPoint(CDShapePair* cp){
+//	//DSTR << "------" << std::endl;
+//	if (!bUseContactVolume) return 0;
+//
+//	if (DCAST(CDConvexMesh, cp->shape[0]) && DCAST(CDConvexMesh, cp->shape[1])){
+//		CDConvexMesh* poly[2];
+//		poly[0] = (CDConvexMesh*) cp->shape[0];
+//		poly[1] = (CDConvexMesh*) cp->shape[1];
+//		Vec3f* base[2];
+//		for(int i=0; i<2; ++i){
+//			Posed afw = cp->shapePoseW[i];
+//			tvtxs[i].resize(poly[i]->base.size());
+//			for(unsigned v=0; v<tvtxs[i].size(); ++v){
+//				tvtxs[i][v] = afw * poly[i]->base[v];
+//			}
+//			base[i] = &*tvtxs[i].begin();
+//		}
+//
+//		Vec3d common = cp->commonPoint;
+//		Vec3d dirBuffer = Vec3d();
+//		for(int i = 0; i<2; i++){	
+//			for(CDFaces::iterator it = poly[i]->faces.begin();
+//				it != poly[i]->faces.begin() + poly[i]->nPlanes; ++it){
+//				Vec3f normal = Vec3f();
+//				float dist = 0.0f;
+//				CalcDistance(it, base[i], common, normal, dist);
+//				//DSTR << "dist = " << dist << std::endl;
+//				if(dist <= 0){
+//					//DSTR << "start =" << common << std::endl;
+//					
+//					Vec3d dir = normal + dirBuffer;
+//					dir.unitize();
+//					dir = -1 * dir;
+//
+//					float dot = dir * normal; 
+//					Vec3f p = -normal * (abs(dist) + COMMON_EPSILON);
+//					float k = 0.0f;
+//					if(abs(normal[0]) > 0){
+//						k = p[0] / (dot * normal[0]);
+//					}else if(abs(normal[1]) > 0){
+//						k = p[1] / (dot * normal[1]);
+//					}else{
+//						k = p[2] / (dot * normal[2]);
+//					}
+//					common += k * dir;
+//
+//					if(i == 0){
+//						for(CDFaces::iterator ite = poly[i]->faces.begin();
+//							ite == it; ite++){
+//							CalcDistance(ite, base[i], common, normal, dist);
+//							//DSTR << "		" <<dist << std::endl;
+//							if(dist <= 0) dirBuffer += normal;
+//						}
+//					}else{
+//						int j = 0;
+//						for(CDFaces::iterator ite = poly[j]->faces.begin();
+//							ite != poly[j]->faces.begin() + poly[j]->nPlanes; ite++){
+//							CalcDistance(ite, base[j], common, normal, dist);
+//							//DSTR << "		" <<dist << std::endl;
+//							if(dist <= 0) dirBuffer += normal;		
+//						}
+//						j = 1;
+//						for(CDFaces::iterator ite = poly[j]->faces.begin();
+//							ite != it + 1; ite++){
+//							CalcDistance(ite, base[j], common, normal, dist);
+//							//DSTR << "		" <<dist << std::endl;
+//							if(dist <= 0) dirBuffer += normal;		
+//						}
+//					}
+//
+//				}
+//			}
+//		}
+//		////DSTR << "---" << std::endl;
+//		//for(int i=0; i<2; ++i){
+//		//	for(CDFaces::iterator it = poly[i]->faces.begin();
+//		//		it != poly[i]->faces.begin() + poly[i]->nPlanes; it++){
+//		//		Vec3f normal;
+//		//		float dist;
+//		//		CalcDistance(it, base[i], common, normal, dist);
+//		//		//DSTR << dist << std::endl;
+//		//		if(dist < CD_EPSILON){
+//		//			//DSTR << "		" << dist << std::endl;
+//		//			return 0;
+//		//		}
+//		//	}
+//		//}
+//		correctionCommonPoint = common;
+//		return 1;
+//	}
+//	//DSTR << "You must use Convex Mesh to Correct Common Point" << std::endl;
+//	return 0;
+//}
+
 #define CONTACT_ANALYSIS_BUFFER	2000
 CDContactAnalysis::VtxBuffer CDContactAnalysis::vtxBuffer(CONTACT_ANALYSIS_BUFFER);
 CDContactAnalysis::Vtxs CDContactAnalysis::vtxs(CONTACT_ANALYSIS_BUFFER);
@@ -314,7 +420,11 @@ CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
 					#endif
 					if (dists[i][j] < CD_EPSILON) dists[i][j] = CD_EPSILON;
 					if (dists[i][j] > CD_INFINITE) dists[i][j] = CD_INFINITE;
-					vtxBuffer.push_back(CDContactAnalysisFace());
+					// VC2010‚ÅvtxBuffer.push_back(CDContactAnalysisFace());
+					// ‚Æ‚·‚é‚Ævector‚Åinvalid floting point overflow‚ª‚Å‚é
+					// 2012/1/16 susa
+					CDContactAnalysisFace caf;
+					vtxBuffer.push_back(caf);
 					vtxBuffer.back().id = i;
 					vtxBuffer.back().normal = normals[i][j];
 					vtxBuffer.back().dist = dists[i][j];

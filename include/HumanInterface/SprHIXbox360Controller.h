@@ -16,10 +16,17 @@ namespace Spr{;
 struct HIXbox360ControllerIf : public HIHapticIf{
 	SPR_VIFDEF(HIXbox360Controller);
 	bool Init();
+	void SetVibration(Vec2f lr);
 };
 
 struct HIXbox360ControllerDesc{
 	SPR_DESCDEF(HIXbox360Controller);
+	float maxVelocity;
+	float maxAngularVelocity;
+	HIXbox360ControllerDesc(){
+		maxVelocity = 2e-2f;
+		maxAngularVelocity = 3.0f; 
+	}
 };
 }
 

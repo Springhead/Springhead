@@ -568,14 +568,39 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 }
 
 void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
+	// アクセス違反が結構起きるのでなんとかしないといけない
+	PHHapticEngine* he = DCAST(PHHapticEngine, hapticEngine);
+	int Npointers = he->NHapticPointers();
+	if(Npointers == 0) return;
+
+	// プロキシの描画
+	for(int i = 0; i< he->NHapticPointers(); i++){
+		PHHapticPointer* pointer = he->GetHapticPointer(i);
+		Posed proxyPose = pointer->proxyPose;
+		Affinef aff;
+		proxyPose.ToAffine(aff);
+		render->PushModelMatrix();
+		render->MultModelMatrix(aff);
+	
+		for(int j = 0; j < pointer->NShape(); ++j){
+			CDShapeIf* shape = pointer->GetShape(j);
+			if(IsRenderEnabled(shape)){
+				pointer->GetShapePose(j).ToAffine(aff);
+				render->PushModelMatrix();
+				render->MultModelMatrix(aff);
+				DrawShape(render, shape, false);
+				render->PopModelMatrix();
+			}
+		}
+		render->PopModelMatrix();
+	}
+
 	render->SetLighting(false);
 	render->SetDepthTest(false);
 
 	render->PushModelMatrix();
 	render->SetModelMatrix(Affinef());
-
-	PHHapticEngine* he = DCAST(PHHapticEngine, hapticEngine);
-	for (int i = 0; i < (int)he->NHapticPointers(); i++){
+	for (int i = 0; i < Npointers; i++){
 		PHHapticPointer* pointer = he->GetHapticPointer(i);
 		int nNeighbors = (int)pointer->neighborSolidIDs.size();
 		for(int j = 0; j < nNeighbors; j++){
@@ -585,25 +610,50 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 				for(int l = 0; l < solidPair->solid[1]->NShape(); l++){
 					PHShapePairForHaptic* sp = solidPair->shapePairs.item(k, l);
 					for(int m = 0; m < 2; m++){
+						// 近傍点対
 						Posed p;
 						p.Pos() = sp->shapePoseW[m] * sp->closestPoint[m];
 						Affinef aff;
 						p.ToAffine(aff);
 						render->PushModelMatrix();
 						render->MultModelMatrix(aff);
+						render->SetMaterial(GRRenderIf::WHITE);
 						render->DrawSphere(0.01f, 10, 10, true);
 						render->PopModelMatrix();
 					}
-					for(int n = 0; n < (int)sp->intersectionVertices.size(); n++){
+					// 接触点
+					for(int m = 0; m < (int)sp->intersectionVertices.size(); m++){
 						Posed p;
-						p.Pos() = sp->shapePoseW[1] * sp->intersectionVertices[n];
+						p.Pos() = sp->shapePoseW[1] * sp->intersectionVertices[m];
 						Affinef aff;
 						p.ToAffine(aff);
 						render->PushModelMatrix();
 						render->MultModelMatrix(aff);
+						render->SetMaterial(GRRenderIf::YELLOW);
 						render->DrawSphere(0.01f, 10, 10, true);
 						render->PopModelMatrix();
 					}
+
+					// 面
+					Posed p;	// 面の位置姿勢
+					p.Pos() = sp->shapePoseW[0] * sp->closestPoint[0];
+					Vec3d vec = Vec3d(0.0, 1.0, 0.0);
+					double angle = acos(vec * sp->normal);
+					Vec3d axis = vec % sp->normal;
+					if(axis.norm() < 1e-5) axis = vec;
+					p.Ori() = Quaterniond::Rot(angle, axis);
+					
+					Affinef aff;
+					p.ToAffine(aff);
+					Vec4f moon(1.0, 1.0, 0.8, 0.3);
+					render->PushModelMatrix();
+					render->MultModelMatrix(aff);
+					render->SetMaterial( GRMaterialDesc(moon) );
+					render->SetAlphaTest(true);
+					render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
+					render->DrawBox(0.2f, 0.005f, 0.2f, true);
+					render->PopModelMatrix();
+					render->SetAlphaTest(false);
 				}
 			}
 		}

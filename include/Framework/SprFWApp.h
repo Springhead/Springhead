@@ -84,6 +84,7 @@ public:
 
 	/** @brief タイマー処理
 		繰り返し実行を行う．
+		デフォルトではid = 0でコールバック
 	 */
 	virtual void TimerFunc(int id);
 

@@ -18,10 +18,8 @@
 
 namespace Spr{;
 
-class HIXbox360Controller : public HIHaptic{
-public:
-	SPR_OBJECTDEF(HIXbox360Controller);
-
+class HIXbox360Controller :public HIXbox360ControllerDesc, public HIHaptic{
+protected:
 	DWORD controllerID;
 	XINPUT_STATE state;
 	Vec2i thumbL;
@@ -32,25 +30,33 @@ public:
 	Vec2f n_thumbR;
 	float n_leftTrigger;
 	float n_rightTrigger;
-	float trnScale; // [m/s]
-	float rotScale; // [rad/s]
 	float ts, rs;
 	float vibScale;
 	Posef currPose;
-	HIXbox360Controller(const HIXbox360ControllerDesc& desc = HIXbox360ControllerDesc()){}
+public:
+	SPR_OBJECTDEF(HIXbox360Controller);
+	HIXbox360Controller(const HIXbox360ControllerDesc& desc = HIXbox360ControllerDesc()){
+		controllerID = -1;
+	}
+
 
 	virtual bool Init();
-	void Update(float dt);
-	void UpdateState();
-	void UpdatePose(float dt);
-	void Comp6DoF();
-	void Comp3DoF();
-	void CheckDeadZone();
-
+	virtual void Update(float dt);
+	virtual void UpdateState();
+	virtual void UpdatePose(float dt);
+	virtual void Comp6DoF();
+	virtual void Comp3DoF();
+	virtual void CheckDeadZone();
+	virtual void SetMaxVelocity(float v);
+	virtual void SetMaxAngularVelocity(float v);
 	virtual Posef GetPose();
 	virtual Vec3f GetPosition();
 	virtual Quaternionf GetOrientation();
-	void SetVibration(Vec2f lr);
+	virtual Vec3f GetVelocity();
+	virtual Vec3f GetAngularVelocity();
+	virtual void SetVibration(Vec2f lr);
+	//virtual 
+
 };
 
 

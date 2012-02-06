@@ -1,7 +1,7 @@
-#ifndef PHHAPTICRENDER_IMPULSE_H
-#define PHHAPTICRENDER_IMPULSE_H
+#ifndef PHHAPTICENGINE_IMPULSE_H
+#define PHHAPTICENGINE_IMPULSE_H
 
-#include <Physics/PHHapticRenderMultiBase.h>
+#include <Physics/PHHapticEngineMultiBase.h>
 
 namespace Spr{;
 
@@ -12,17 +12,19 @@ class PHHapticLoopImpulse : public PHHapticLoopImp{
 public:
 	virtual void Step();
 	virtual void HapticRendering();
+	//virtual void ConstraintBasedRendering(PHHapticRenderInfo irs);
 };
 
 //----------------------------------------------------------------------------
-// PHHapticRenderImpulse
-class PHHapticRenderImpulse : public PHHapticRenderMultiBase{
-	SPR_OBJECTDEF_NOIF(PHHapticRenderImpulse);
+// PHHapticEngineImpulse
+class PHHapticEngineImpulse : public PHHapticEngineMultiBase{
+	SPR_OBJECTDEF_NOIF(PHHapticEngineImpulse);
 protected:
 	PHHapticLoopImpulse hapticLoopImpulse;
 public:
-	PHHapticRenderImpulse();
-	virtual void Step();
+	PHHapticEngineImpulse();
+	virtual void Step1();
+	virtual void Step2();
 	virtual void SyncHaptic2Physic();	
 	virtual void SyncPhysic2Haptic();	
 

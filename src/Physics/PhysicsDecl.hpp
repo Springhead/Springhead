@@ -656,6 +656,7 @@ protected:\
 	Vec3d	velocity;	\
 	Vec3d	angVelocity;	\
 	Posed	pose;	\
+	Posed	lastPose;	\
 	Vec3d	force;	\
 	Vec3d	torque;	\
 	Vec3d	nextForce;	\
@@ -665,6 +666,7 @@ public:\
 		velocity = ((PHSolidState*)ptr)->velocity;	\
 		angVelocity = ((PHSolidState*)ptr)->angVelocity;	\
 		pose = ((PHSolidState*)ptr)->pose;	\
+		lastPose = ((PHSolidState*)ptr)->lastPose;	\
 		force = ((PHSolidState*)ptr)->force;	\
 		torque = ((PHSolidState*)ptr)->torque;	\
 		nextForce = ((PHSolidState*)ptr)->nextForce;	\
@@ -674,6 +676,7 @@ public:\
 		((PHSolidState*)ptr)->velocity = velocity;	\
 		((PHSolidState*)ptr)->angVelocity = angVelocity;	\
 		((PHSolidState*)ptr)->pose = pose;	\
+		((PHSolidState*)ptr)->lastPose = lastPose;	\
 		((PHSolidState*)ptr)->force = force;	\
 		((PHSolidState*)ptr)->torque = torque;	\
 		((PHSolidState*)ptr)->nextForce = nextForce;	\

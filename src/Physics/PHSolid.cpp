@@ -96,6 +96,7 @@ bool PHFrame::AddChildObject(ObjectIf * o){
 			PHScene* scene = DCAST(PHScene,solid->GetScene());
 			scene->penaltyEngine->UpdateShapePairs(solid);
 			scene->constraintEngine->UpdateShapePairs(solid);
+			scene->hapticEngine->UpdateShapePairs(solid);
 		}
 		return true;
 	}
@@ -297,6 +298,7 @@ void PHSolid::UpdateVelocity(double dt){
 }
 void PHSolid::UpdatePosition(double dt){
 	if(IsFrozen() || !IsIntegrate()) return;
+	lastPose = GetPose();
 	// SetOrientation -> SetCenterPositionの順に呼ぶ必要がある．逆だとSetOrientationによって重心位置がずれてしまう tazz
 	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w() * dt + dV.w())).unit());
 	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
@@ -330,6 +332,7 @@ void PHSolid::Step(){
 	Vec3d dv, dw;				//<	速度・角速度の変化量
 	Vec3d	_angvel[4];			//<	数値積分係数
 	Vec3d	_angacc[4];
+	lastPose = pose;
 	switch(GetIntegrationMode()){
 	case PHINT_EULER:
 		//平行移動量の積分

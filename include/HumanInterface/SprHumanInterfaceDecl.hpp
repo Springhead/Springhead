@@ -175,4 +175,5 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HIXbox360ControllerIf(base)	\
 	bool Init(){	return	base::Init();}	\
+	void SetVibration(Vec2f lr){	base::SetVibration(lr);}	\
 
