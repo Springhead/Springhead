@@ -100,7 +100,8 @@ public:
 		double thermalEmissivity;	///	熱放射率
 		double heatflux;			///	熱流束値　構成する３節点の相加平均で計算
 		double fluxarea;			//>	 熱流束の計算に用いる、faceのエリア
-		bool isIHheated;				//	IHで加熱する可能性のある面　段階的に絞る
+		bool mayIHheated;				//	IHで加熱する可能性のある面　段階的に絞る
+		std::vector<Vec2d> innerIH;	///	IH加熱領域内に入る座標点の入ったベクター
 	};
 	//	辺
 	struct Edge{
