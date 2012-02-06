@@ -7,19 +7,19 @@ namespace Spr{;
 #define DIS_SHORT 32767
 #define DIS_USHORT 65535
 
+static int Ncontrollers = 0;
 bool HIXbox360Controller::Init(){
 	DSTR << "Connecting Xbox Controller." << std::endl;
 	DWORD dwResult;    
-	for (DWORD i = 0; i< MAX_CONTROLLERS; i++ ){
-		XINPUT_STATE s;
-		ZeroMemory( &s, sizeof(XINPUT_STATE) );
-		dwResult = XInputGetState( i, &s);
+	for (DWORD i = Ncontrollers; i < MAX_CONTROLLERS; i++ ){
+		ZeroMemory( &state, sizeof(XINPUT_STATE) );
+		dwResult = XInputGetState( i, &state);
 
 		if( dwResult == ERROR_SUCCESS ){ 
 			DSTR << "Succeed to connect." << std::endl;
 			DSTR << "Controller ID " << i << std::endl;
 			controllerID = i;
-			state = s;
+			Ncontrollers += 1;
 			return true;
 		}else{
 			DSTR << "Failed to connect Xbox Controller." << std::endl;
@@ -48,22 +48,28 @@ void HIXbox360Controller::Update(float dt){
 }
 
 void HIXbox360Controller::UpdateState(){
-	XINPUT_STATE s;
-	ZeroMemory( &s, sizeof(XINPUT_STATE) );
+	ZeroMemory( &state, sizeof(XINPUT_STATE) );
 
-	DWORD dwResult = XInputGetState(controllerID, &s);
-	if(dwResult != ERROR_SUCCESS) std::cout << "error" << std::endl;
-	state = s;
+	DWORD dwResult = XInputGetState(controllerID, &state);
+	if(dwResult != ERROR_SUCCESS){
+		//std::cout << "Can not update the Xbox360Controller states." << std::endl;
+	}
 	CheckDeadZone();
 }
 
 void HIXbox360Controller::UpdatePose(float dt){
-	trnScale = 1e-2;
-	rotScale = 2; 
-	ts = trnScale * dt;
-	rs = rotScale * dt;
+	ts = maxVelocity * dt;
+	rs = maxAngularVelocity * dt;
 	Comp6DoF();
 	//Comp3DoF();
+	Vec3f pos = GetPosition();
+	Quaternionf ori = GetOrientation();
+	Vec3f v = (pos - lastPos) / dt;
+	Vec3f av = (ori * lastOri.Inv()).Rotation() / dt;
+	vel = alpha*vel + (1-alpha)*v;
+	angVel = alpha*angVel + (1-alpha)*av;
+	lastPos = pos;
+	lastOri = ori;
 }
 
 void HIXbox360Controller::Comp6DoF(){
@@ -116,6 +122,14 @@ void HIXbox360Controller::CheckDeadZone(){
 	}
 }
 
+void HIXbox360Controller::SetMaxVelocity(float v){
+	maxVelocity = v;
+}
+
+void HIXbox360Controller::SetMaxAngularVelocity(float v){
+	maxAngularVelocity = v;
+}
+
 Posef HIXbox360Controller::GetPose(){
 	return currPose;
 }
@@ -126,6 +140,14 @@ Vec3f HIXbox360Controller::GetPosition(){
 
 Quaternionf HIXbox360Controller::GetOrientation(){
 	return currPose.Ori();
+}
+
+Vec3f HIXbox360Controller::GetVelocity(){
+	return vel;
+}
+
+Vec3f HIXbox360Controller::GetAngularVelocity(){
+	return angVel;
 }
 
 void HIXbox360Controller::SetVibration(Vec2f lr){

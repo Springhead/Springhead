@@ -193,6 +193,20 @@ public:
 	static CDQHPlanes<CDContactAnalysisFace> planes;	///<	面
 	bool isValid;						///<	交差部分のポリゴンは有効？
 	//@}
+
+	//Vec3d correctionCommonPoint;		///<	補正CommonPoint(World座標系) CDContactAnalysis::CorrectCommonPoint()で更新される
+	//std::vector<Vec3f> tvtxs[2];		///<	対象の2つの凸多面体のCommonPoint系での頂点の座標
+	///** 共通部分に含まれる共有点を求める.
+	//	返り値は共有点.
+	//	cp の shapePoseW に shape[0], shape[1]の頂点をWorld系に変換する変換行列が入っていなければならない.
+	//	また、GJKで求めたcommon pointを入れておくと収束が早くなるかも。
+	//**/
+	//void CalcDistance(const CDFaces::iterator it, const Vec3f* base, const Vec3d common, Vec3f &normal, float &dist);
+	///** 共通部分の共有点を求める。
+	//	戻り値は共有点があるとtrue, ないとfalseを返す
+	//	ある場合はcorrectionCommonPointが更新される。
+	//*/
+	//bool CorrectCommonPoint(CDShapePair* cp);
 	/**	共通部分の形状を求める．
 		結果は，共通部分を構成する面を vtxs.begin() から返り値までに，
 		共通部分を構成する頂点を， planes.begin から planes.end のうちの

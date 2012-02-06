@@ -45,22 +45,31 @@ void SPR_CDECL CallBackLoop(int id, void* arg){
 }
 
 void __cdecl main(){
-	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
+	// 力覚インタフェースとの接続設定
+	UTRef<HISdkIf> hiSdk = HISdkIf::CreateSdk();
+	// win32
 	DRUsb20SimpleDesc usbSimpleDesc;
-	sdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
+	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 	DRUsb20Sh4Desc usb20Sh4Desc;
 	for(int i=0; i<10; ++i){
 		usb20Sh4Desc.channel = i;
-		sdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+		hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
 	}
-	sdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-	sdk->Print(DSTR);
-	sdk->Print(std::cout);
+	// win64
+	DRCyUsb20Sh4Desc cyDesc;
+	for(int i=0; i<10; ++i){
+		cyDesc.channel = i;
+		hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+	}
+	hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
+	hiSdk->Print(DSTR);
+	hiSdk->Print(std::cout);
 
-	spg = sdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+	spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
 	spg->Calibration();
 
+	// マルチメディアタイマーの設定
 	UTTimerIf* timer = UTTimerIf::Create();				
 	timer->SetMode(UTTimerIf::MULTIMEDIA);		// タイマのモード設定(MULTIMEDIA or THREAD)
 	timer->SetResolution(1);					// 分解能(ms)

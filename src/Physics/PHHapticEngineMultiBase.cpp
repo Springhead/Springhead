@@ -1,4 +1,4 @@
-#include <Physics/PHHapticRenderMultiBase.h>
+#include <Physics/PHHapticEngineMultiBase.h>
 
 namespace Spr{;
 //----------------------------------------------------------------------------
@@ -7,14 +7,14 @@ namespace Spr{;
 void PHHapticLoopImp::UpdateInterface(){
 	for(int i = 0; i < NHapticPointers(); i++){
 		GetHapticPointer(i)->UpdateInterface((float)GetHapticTimeStep());
-		GetHapticPointer(i)->UpdateHapticPointer();
+		GetHapticPointer(i)->UpdateDirect();
 	}
 }
 double PHHapticLoopImp::GetPhysicsTimeStep(){
-	return renderImp->GetPhysicsTimeStep();
+	return engineImp->GetPhysicsTimeStep();
 }
 double PHHapticLoopImp::GetHapticTimeStep(){
-	return renderImp->GetHapticTimeStep();
+	return engineImp->GetHapticTimeStep();
 }
 int PHHapticLoopImp::NHapticPointers(){
 	return (int)hapticPointers.size();
@@ -42,24 +42,24 @@ PHSolidPairsForHaptic* PHHapticLoopImp::GetSolidPairsForHaptic(){
 }
 
 //----------------------------------------------------------------------------
-// PHHapticRenderMultiBase
-PHHapticRenderMultiBase::PHHapticRenderMultiBase(){
+// PHHapticEngineMultiBase
+PHHapticEngineMultiBase::PHHapticEngineMultiBase(){
 	bSync = false;
 	bCalcPhys =  true;
 	hapticCount = 1;
 }
 
-void PHHapticRenderMultiBase::StepHapticLoop(){
+void PHHapticEngineMultiBase::StepHapticLoop(){
 	hapticLoop->Step();
-	Sync();
+	SyncThreads();
 }
 
-void PHHapticRenderMultiBase::Sync(){
+void PHHapticEngineMultiBase::SyncThreads(){
 	if(bSync){ 
 		/// 同期の実行
-		UpdateHapticPointer();			
+		SyncHapticPointers();			
 		SyncHaptic2Physic();
-		UpdateArrays();
+		SyncArrays();
 		SyncPhysic2Haptic();
 		/// 同期終了処理
 		hapticLoop->loopCount = 0;		// HapticLoopのカウント初期化
@@ -77,31 +77,37 @@ void PHHapticRenderMultiBase::Sync(){
 	hapticCount++;
 }
 
-void PHHapticRenderMultiBase::UpdateHapticPointer(){
+void PHHapticEngineMultiBase::SyncHapticPointers(){
 	for(int i = 0; i < hapticLoop->NHapticPointers(); i++){
 		PHHapticPointer* ppointer = GetHapticPointer(i);
 		PHHapticPointer* hpointer = hapticLoop->GetHapticPointer(i);
-		// physics側の変更をhaptic側へ反映
-		// haptic <--------- physics
-		// 変数が増えてきたらまとめる
-		hpointer->bDebugControl = ppointer->bDebugControl;
-		hpointer->bForce = ppointer->bForce;
-		hpointer->bVibration = ppointer->bVibration;
-		// haptic側のポインタの状態をphysics側のポインタへ反映
+		/* haptic側のポインタの状態をphysics側のポインタへ反映
 		// physics <-------- haptic
+		*/
+		// 1.ポインタの位置姿勢の同期
 		if(ppointer->bDebugControl){
-			// physicsからの入力を反映
-			*ppointer->hiSolid = *DCAST(PHSolid, ppointer);
-			*hpointer->hiSolid = *ppointer->hiSolid;
+			// physicsからの入力をhapticへ
+			ppointer->hiSolid = *DCAST(PHSolid, ppointer);
+			hpointer->hiSolid = ppointer->hiSolid;
 		}else{
 			// hapticからの入力をphysicsへ
-			*ppointer->hiSolid = *hpointer->hiSolid;
+			ppointer->hiSolid = hpointer->hiSolid;
 		}
-		ppointer->UpdateHapticPointer();
+		ppointer->UpdateDirect();
+		
+		// 2.情報の同期
+		PHHapticPointerSt* pst = (PHHapticPointerSt*)ppointer;
+		PHHapticPointerSt* hst = (PHHapticPointerSt*)hpointer;
+		*pst = *hst;
+
+		/* physics側の変更をhaptic側へ反映
+		// haptic <--------- physics
+		*/
+		*hpointer = *ppointer;
 	}
 }
 
-void PHHapticRenderMultiBase::UpdateArrays(){
+void PHHapticEngineMultiBase::SyncArrays(){
 	// haptic <------------- physics
 	// Physicsで新しく追加されたオブジェクトをHaptic側にコピー
 	// 1.力覚ポインタの増加分
@@ -109,8 +115,7 @@ void PHHapticRenderMultiBase::UpdateArrays(){
 	int pNpointers = NHapticPointers();				// physics側のポインタ数
 	PHHapticPointers* hpointers = hapticLoop->GetHapticPointers();
 	for(int i = hNpointers; i < pNpointers; i++){
-		hpointers->push_back(DBG_NEW PHHapticPointer());
-		*hpointers->back() = *GetHapticPointer(i);
+		hpointers->push_back(DBG_NEW PHHapticPointer(*GetHapticPointer(i)));
 	}
 
 	// 2. Solidの増加分
@@ -119,25 +124,24 @@ void PHHapticRenderMultiBase::UpdateArrays(){
 	if(hNsolids == pNsolids) return;
 	PHSolidsForHaptic* hsolids = hapticLoop->GetHapticSolids();
 	for(int i = hNsolids; i < (int)pNsolids; i++){
-		hsolids->push_back(DBG_NEW PHSolidForHaptic());
-		*hsolids->back() = *GetHapticSolid(i);
+		hsolids->push_back(DBG_NEW PHSolidForHaptic(*GetHapticSolid(i)));
 	}
 
-	// 3. solidPairの増加分
-	UTCombination< UTRef<PHSolidPairForHaptic> >* hsolidPairs = &hapticLoop->solidPairs;
+	// 3. solidPair, shapePairの増加分
+	// 3.1 力覚ポインタの増加分
+	PHSolidPairsForHaptic* hsolidPairs = hapticLoop->GetSolidPairsForHaptic();
 	hsolidPairs->resize(pNsolids, pNpointers);
-	// 力覚ポインタ増加分
 	for(int i = 0; i < pNsolids; i++){
 		for(int j = hNpointers; j < pNpointers; j++){
-			hsolidPairs->item(i, j) = DBG_NEW PHSolidPairForHaptic();
-			*hsolidPairs->item(i, j) = *GetSolidPairForHaptic(i, j);	
+			PHSolidPairForHaptic* psolidPair = GetSolidPairForHaptic(i, j);
+			hsolidPairs->item(i, j) = DBG_NEW PHSolidPairForHaptic(*psolidPair);
 		}
 	}
-	// solidの増加分
+	// 3.2 solidの増加分
 	for(int i = hNsolids; i < pNsolids; i++){
 		for(int j = 0; j < pNpointers; j++){
-			hsolidPairs->item(i, j) = DBG_NEW PHSolidPairForHaptic();
-			*hsolidPairs->item(i, j) = *GetSolidPairForHaptic(i, j);	
+			PHSolidPairForHaptic* psolidPair = GetSolidPairForHaptic(i, j);
+			hsolidPairs->item(i, j) = DBG_NEW PHSolidPairForHaptic(*psolidPair);
 		}
 	}
 	//DSTR << "--------------" << std::endl;
@@ -146,10 +150,11 @@ void PHHapticRenderMultiBase::UpdateArrays(){
 	//DSTR << hapticLoop->GetHapticPointer(0)->neighborSolidIDs.size() << std::endl;
 }
 
+
 // デバック用コード
 // 旧版、PHScene::Step()が内蔵されているので
 // ここで呼ぶわけにはいかない
-void PHHapticRenderMultiBase::StepSimulation(){
+void PHHapticEngineMultiBase::StepSimulation(){
 	if (bSync) return;
 	if (bCalcPhys){
 		/// シミュレーションの実行
@@ -163,8 +168,6 @@ void PHHapticRenderMultiBase::StepSimulation(){
 	bSync = true;
 	bCalcPhys = true;	
 }
-
-
 
 
 }

@@ -1,20 +1,22 @@
-#ifndef PH_HAPTICRENDER_MULTIBASE_H
-#define PH_HAPTICRENDER_MULTIBASE_H
+#ifndef PH_HAPTICENGINE_MULTIBASE_H
+#define PH_HAPTICENGINE_MULTIBASE_H
 
 #include <Physics/PHHapticEngine.h>
+#include <Physics/PHHapticRenderBase.h>
 
 namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHHapticLoopImp
-class PHHapticLoopImp : public SceneObject{
+class PHHapticLoopImp : public PHHapticRenderBase, public SceneObject{
 	SPR_OBJECTDEF_NOIF(PHHapticLoopImp);
-public:
-	int loopCount;
-	PHHapticRenderImp* renderImp;
+protected:
 	PHHapticPointers hapticPointers;
 	PHSolidsForHaptic hapticSolids;
 	PHSolidPairsForHaptic solidPairs;
+public:
+	PHHapticEngineImp* engineImp;
+	int loopCount;
 
 	PHHapticLoopImp(){}
 	virtual void Step(){};
@@ -34,9 +36,9 @@ public:
 };
 
 //----------------------------------------------------------------------------
-// PHHapticRenderMultiBase
-class PHHapticRenderMultiBase : public PHHapticRenderImp{
-	SPR_OBJECTDEF_NOIF(PHHapticRenderMultiBase);
+// PHHapticEngineMultiBase
+class PHHapticEngineMultiBase : public PHHapticEngineImp{
+	SPR_OBJECTDEF_NOIF(PHHapticEngineMultiBase);
 protected:
 	volatile int	hapticCount;
 	volatile bool	bSync;
@@ -44,12 +46,13 @@ protected:
 
 public:
 	PHHapticLoopImp* hapticLoop;
-	PHHapticRenderMultiBase();
+	PHHapticEngineMultiBase();
 	virtual void StepHapticLoop();	// hapticloop
-	virtual void Step(){}			// phengine->phhapticengineから呼ばれる
-	void Sync();
-	virtual void UpdateHapticPointer(); // hapticスレッド側のhapticpointerの状態をphysicsへ同期
-	virtual void UpdateArrays();
+	virtual void Step1(){}
+	virtual void Step2(){}
+	void SyncThreads();
+	virtual void SyncHapticPointers(); // hapticスレッド側のhapticpointerの状態をphysicsへ同期
+	virtual void SyncArrays();
 	virtual void SyncHaptic2Physic(){}	// hapticスレッドからphysicsスレッドへの同期
 	virtual void SyncPhysic2Haptic(){}	// physicsスレッドからhapticスレッドへの同期
 

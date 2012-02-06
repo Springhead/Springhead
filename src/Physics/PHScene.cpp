@@ -53,6 +53,9 @@ void PHScene::Init(){
 
 	hapticEngine = DBG_NEW PHHapticEngine;
 	engines.Add(hapticEngine);
+	PHHapticPseudEngine* hpe = DBG_NEW PHHapticPseudEngine;
+	hpe->engine = hapticEngine;
+	engines.Add(hpe);
 
 	AfterSetDesc();
 }
@@ -213,11 +216,6 @@ int PHScene::NFemMeshes() const {
 PHFemMeshIf* PHScene::GetFemMesh(int i){
 	return femEngine->meshes[i]->Cast();
 }
-
-//void PHScene::FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids){
-//	constraintEngine->FindNeigboringSolids(solid, range, nsolids);
-//}
-
 
 void PHScene::Clear(){
 	engines.Clear();
@@ -503,7 +501,7 @@ PHHapticPointerIf* PHScene::CreateHapticPointer(){
 }
 
 void PHScene::StepHapticLoop(){
-	hapticEngine->StepHapticLoop();
+	if(hapticEngine) hapticEngine->StepHapticLoop();
 }
 
 size_t PHScene::GetStateSize() const{

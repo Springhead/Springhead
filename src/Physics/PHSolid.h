@@ -201,6 +201,7 @@ public:
 
 	Posed		GetPose() const { return pose; }
 	void		SetPose(const Posed& p) { pose = p;}
+	Posed		GetLastPose() const { return lastPose; }
 	Vec3d		GetFramePosition() const {return pose.Pos();}
 	void		SetFramePosition(const Vec3d& p){pose.Pos() = p;}
 	Vec3d		GetDeltaPosition() const ;
