@@ -46,30 +46,104 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 }
 
 void PHFemMeshThermo::CalcVtxDisFromOrigin(){
-	//double origin = GetScene()->GetChildObject(
-	//this->GetScene()->Get
-	///不要　GRMeshThermo自身の原点を取得する⇒main()で初期化やって、後で移植
-	/// PHFemMeshIf* pan		=	DCAST(PHFemMeshIf*,GetScene()->FindObject("Pan"));
 	//>	nSurfaceの内、x,z座標から距離を求めてsqrt(2乗和)、それをFemVertexに格納する
-	///同心円系の計算に利用する　distance from origin
-
-	//> 以下で取得する位置は、世界座標系!？ローカル座標系の位置の取り方を知りたい!!!
-	for(int i=0; i<NSurfaceVertices(); i++){
-		if(vertices[surfaceVertices[i]].pos.y < 0){
-			double len = sqrt(vertices[surfaceVertices[i]].pos.x * vertices[surfaceVertices[i]].pos.x + vertices[surfaceVertices[i]].pos.z *vertices[surfaceVertices[i]].pos.z);
-			vertices[surfaceVertices[i]].disFromOrigin = len;
-			for(unsigned j=0; j < vertices[surfaceVertices[i]].faces.size();j++){ 
-				faces[vertices[surfaceVertices[i]].faces[j]].mayIHheated = true;				//> IH加熱の対象候補面(pos.y<0が一つ目の条件)
-			}
-		}else{
-			//>	物体の下底面でない場合には、0を入れて、計算から除外する
-			vertices[surfaceVertices[i]].disFromOrigin = 0.0;
-		}
-		//DSTR << i << "th verticies pos: " << vertices[surfaceVertices[i]].pos << std::endl;
-		//DSTR << i << "th distans from origin: " << len << std::endl;
-		//DSTR << std::endl;
+	//> 同心円系の計算に利用する　distance from origin
+	
+	/// 判定フラグの初期化
+	for(int i=0; i<nSurfaceFace; i++){
+		faces[i].mayIHheated = false;
 	}
+	/// 初期化
+	for(unsigned i =0;i<vertices.size();i++){
+		vertices[i].disFromOrigin =0.0;
+	}
+
+	/// debug
+	//DSTR << "faces.size(): " << faces.size() << std::endl;
+
+	//>	コメントを追加したら消去
+	///	
+	//for(int i=0; i < NSurfaceVertices(); i++){
+	//	if(vertices[surfaceVertices[i]].pos.y < 0){			//	食材の下底面のにあるfaceだけを探す		///	
+	//		/// 原点からの距離を計算し代入
+	//		double len = sqrt(vertices[surfaceVertices[i]].pos.x * vertices[surfaceVertices[i]].pos.x + vertices[surfaceVertices[i]].pos.z *vertices[surfaceVertices[i]].pos.z);
+	//		vertices[surfaceVertices[i]].disFromOrigin = len;
+	//		///	
+	//		for(unsigned j=0; j < vertices[surfaceVertices[i]].faces.size();j++){
+	//			if(vertices[surfaceVertices[i]].faces[j] < nSurfaceFace){	/// surfaceFaceであることを確認
+	//				faces[vertices[surfaceVertices[i]].faces[j]].mayIHheated = true;				//> IH加熱の対象候補面(pos.y<0が一つ目の条件)
+	//				//	faceの節点でy座標以外が同じ節点が含まれていないことを確認する必要がある？
+	//			}
+	//		}
+	//	}
+	//	//DSTR << i << "th verticies pos: " << vertices[surfaceVertices[i]].pos << std::endl;
+	//	//DSTR << i << "th distans from origin: " << len << std::endl;
+	//	//DSTR << std::endl;
+	//}
+	//>	作りなおす
+	//for( unsigned i=0;i< nSurfaceFace;i++){
+	//	//> 表面のfaceの全節点のy座標が負ならば、そのfaceをIH加熱のface面と判定し、フラグを与える
+	//	for( unsigned j=0;j<3;j++){
+	//		if(vertices[faces[i].vertices[j]].pos.y < 0.0){
+	//			faces[i].mayIHheated = true;
+	//			break;										//	最低1つ見つかれば良い
+	//		}
+	//	}
+	//	//> その節点のx-z平面における原点からの距離を求める
+	//	if(faces[i].mayIHheated){
+	//		for(unsigned j=0; j<3; j++){
+	//			vertices[faces[i].vertices[j]].disFromOrigin = sqrt(vertices[faces[i].vertices[j]].pos.x * vertices[faces[i].vertices[j]].pos.x + vertices[faces[i].vertices[j]].pos.z * vertices[faces[i].vertices[j]].pos.z);
+	//		}
+	//	}
+	//}					//>	側面の加熱を止められないことが問題
+	
+	//> 表面faceの内、原点から各faceの節点のローカル(x,z)座標系での平面上の距離の計算を、faceの全節点のy座標が負のものに対して、IH加熱の可能性を示すフラグを設定
+	for(unsigned i=0;i<nSurfaceFace;i++){
+		//> 表面のfaceの全節点のy座標が負ならば、そのfaceをIH加熱のface面と判定し、フラグを与える
+		if(vertices[faces[i].vertices[0]].pos.y < 0.0 && vertices[faces[i].vertices[1]].pos.y < 0.0 && vertices[faces[i].vertices[2]].pos.y < 0.0){
+			faces[i].mayIHheated = true;
+			//	(x,z)平面におけるmayIHheatedのface全節点の原点からの距離を計算する
+			for(unsigned j=0; j<3; j++){
+				vertices[faces[i].vertices[j]].disFromOrigin = sqrt(vertices[faces[i].vertices[j]].pos.x * vertices[faces[i].vertices[j]].pos.x + vertices[faces[i].vertices[j]].pos.z * vertices[faces[i].vertices[j]].pos.z);
+			}
+		}
+	}
+
+	//>	座標値を確認する
+	for(unsigned i=0; i < nSurfaceFace; i++){
+		if(faces[i].mayIHheated){
+			/// 3つの頂点の組み＝辺のx,zが同じで、y座標だけが異なる点の組みがないことを確認する
+			for(unsigned j=0;j<3;j++){
+				if(vertices[faces[i].vertices[j]].pos.x == vertices[faces[i].vertices[(j+1)%3]].pos.x
+					&& vertices[faces[i].vertices[j]].pos.z == vertices[faces[i].vertices[(j+1)%3]].pos.z
+					 && vertices[faces[i].vertices[j]].pos.y != vertices[faces[i].vertices[(j+1)%3]].pos.y){
+					DSTR <<i << "th: " << vertices[faces[i].vertices[j]].pos << " : " << vertices[faces[i].vertices[(j+1)%3]].pos << " : " << vertices[faces[i].vertices[(j+2)%3]].pos<<std::endl;
+					DSTR << "error" << std::endl;
+					assert(0);
+				}
+			}
+		}
+	}
+
 	int kadoon =0;
+	/// debug	
+	//unsigned katoonNum =0;
+	//for(unsigned i=0;i < nSurfaceFace;i++){
+	//	if(faces[i].mayIHheated){katoonNum +=1;}
+	//}
+	//DSTR << "number of faces.mayIHheated: " << katoonNum << std::endl;		///		761/980(nSurfaceFace)
+
+	//> debug
+	//for(unsigned i=0; i<nSurfaceFace; i++){
+	//	if(faces[i].mayIHheated){
+	//		for(unsigned j=0;j<3;j++){
+	//			//if(vertices[faces[i].vertices[j]].pos.y  < 0.0){
+	//				DSTR << "vertices[faces[" << i << "].vertices[" << j << "]].pos" << vertices[faces[i].vertices[j]].pos << std::endl;
+	//			//}
+	//		}
+	//	}
+	//}
+	int debughensu = 0;
 }
 
 void PHFemMeshThermo::SetThermalBoundaryCondition(){
@@ -232,18 +306,29 @@ std::vector<Vec2d> PHFemMeshThermo::CalcIntersectionPoint2(unsigned id0,unsigned
 	//> 円環との交点を求める
 	// x-z平面で考えている
 	/// constA,B:vtxId0.vtxId1を通る直線の傾きと切片　/// aconsta,constbは正負構わない
+	DSTR << "id0: " << id0 << ", id1: " << id1 <<std::endl;
 	constA = ( vertices[vtxId0].pos.z - vertices[vtxId1].pos.z) / ( vertices[vtxId0].pos.x - vertices[vtxId1].pos.x);
-	DSTR << "vertices[vtxId0].pos.z - vertices[vtxId1].pos.z : " << vertices[vtxId0].pos.z - vertices[vtxId1].pos.z << std::endl;
-	DSTR << "vertices[vtxId0].pos.x: " << vertices[vtxId0].pos.x << std::endl;
-	DSTR << "vertices[vtxId1].pos.x: " << vertices[vtxId1].pos.x << std::endl;
 	DSTR << "vertices[vtxId0].pos.z: " << vertices[vtxId0].pos.z <<std::endl;
 	DSTR << "vertices[vtxId0].pos.z: " << vertices[vtxId1].pos.z <<std::endl;
+	DSTR << "dz: vertices[vtxId0].pos.z - vertices[vtxId1].pos.z : " << vertices[vtxId0].pos.z - vertices[vtxId1].pos.z << std::endl;
 
+	DSTR << "vertices[vtxId0].pos.x: " << vertices[vtxId0].pos.x << std::endl;
+	DSTR << "vertices[vtxId1].pos.x: " << vertices[vtxId1].pos.x << std::endl;
+	DSTR << "dx: vertices[vtxId0].pos.x - vertices[vtxId1].pos.x: " << vertices[vtxId0].pos.x - vertices[vtxId1].pos.x << std::endl;
+
+	DSTR << "constA = dz / dx: " << constA << std::endl;
+	if(vertices[vtxId0].pos.z == vertices[vtxId1].pos.z && vertices[vtxId0].pos.x == vertices[vtxId1].pos.x){
+		DSTR << "vertices[vtxId0].pos.y: " << vertices[vtxId0].pos.y << ", vertices[vtxId1].pos.y: " << vertices[vtxId1].pos.y << std::endl;
+		if(vertices[vtxId0].pos.y == vertices[vtxId1].pos.y)
+			DSTR << "id[" << id0 <<"], id[" << id1 << "] は同じ頂点 !" << std::endl;
+	}
+	
 	constB = vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x;
-	DSTR << "vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x : " << vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x << std::endl;
+	DSTR << "constB = vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x : " << vertices[vtxId0].pos.z - constA * vertices[vtxId0].pos.x << std::endl;
 
-	DSTR << "constA: " << constA << std::endl;
-	DSTR << "constB: " << constB << std::endl;
+	//DSTR << "constA: " << constA << std::endl;
+	//DSTR << "constB: " << constB << std::endl;
+	DSTR << std::endl;
 
 	///	交点の座標を計算
 	if(vertices[vtxId0].disFromOrigin < r){		/// 半径rの円と交わるとき
@@ -391,12 +476,22 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 	//>	2.vectorには、辺0,1,2の順に領域内の頂点や交点が入っているが、これを元に三角形分割を行う。三角形分割ができたら、各三角形を求める。三角形の総和を、このfaceの加熱領域とする。
 	//>	3.vectorの点における形状関数を求めて、擬似体積（重なっている面積×形状関数の値）を使って、四面体内の各点における形状関数の面積分を求める。求めた値は、熱流束ベクトルの成分として要素剛性行列の成分に代入する。
 	//>	4.毎ステップ、同じ熱流束の値をベクトル成分に加える
+	
+	/// debug
+	//unsigned numIHheated0 = 0; 
+	//for(unsigned i=0; i < nSurfaceFace;i++){
+	//	if(faces[i].mayIHheated){	
+	//		DSTR << i << " ; "  << std::endl;
+	//		numIHheated0 +=1;
+	//	}
+	//}
+	//DSTR << "numIHheated0 / nSurfaceFace: " << numIHheated0 << " / " << nSurfaceFace << std::endl;	////	761 / 980	ってほとんどじゃないか！半分位にならないとおかしいはずだが・・・　ローカルy座標値がマイナスのものを選んでいるので
 
 	//> raius,RadiusについてmayIHheatedの確度を上げてから、円環領域と重なっている形状を求める
 	for(unsigned i=0;i < nSurfaceFace; i++){
 		if(faces[i].mayIHheated){			// faceの節点のy座標が負の場合→IH加熱の対象節点 円環の範囲内に入っているとは限らない
 			for(unsigned j=0;j<3;j++){
-				/// 円環領域内にface頂点が含まれ無い
+				/// 円環領域内にface頂点が含まれる
 				if(radius <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= Radius){
 					faces[i].mayIHheated = true;
 					break;		//>	見つかったら、判定はtrueのままで良い。最内側のforを抜ける
@@ -404,9 +499,17 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 				else{
 					faces[i].mayIHheated = false;
 				}
-				//> 円環領域の内・外側にfaceの辺の頂点がある
-				if(vertices[faces[i].vertices[j%3]].disFromOrigin < radius && Radius < vertices[faces[i].vertices[(j+1)%3]].disFromOrigin 
-					|| vertices[faces[i].vertices[(j+1)%3]].disFromOrigin < radius && Radius < vertices[faces[i].vertices[j%3]].disFromOrigin){
+				//> （円環領域には含まれず）円環領域より内・外側にfaceの辺の頂点がある	vertices[j%3] と vertices[(j+1)%3]　で作る辺があるとき
+				if(vertices[faces[i].vertices[j]].disFromOrigin < radius && Radius < vertices[faces[i].vertices[(j+1)%3]].disFromOrigin 
+					|| vertices[faces[i].vertices[(j+1)%3]].disFromOrigin < radius && Radius < vertices[faces[i].vertices[j]].disFromOrigin){
+						faces[i].mayIHheated = true;
+						break;		//>	同上
+				}else{
+					faces[i].mayIHheated = false;
+				}
+				//>	円環領域内にface辺のどちらかの頂点が含まれるとき
+				if(radius <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin < Radius && Radius < vertices[faces[i].vertices[(j+1)%3]].disFromOrigin
+					|| radius <= vertices[faces[i].vertices[(j+1)%3]].disFromOrigin && vertices[faces[i].vertices[(j+1)%3]].disFromOrigin < Radius && Radius < vertices[faces[i].vertices[j]].disFromOrigin){
 						faces[i].mayIHheated = true;
 						break;		//>	同上
 				}else{
@@ -418,15 +521,16 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 	//> debug
 	//>	mayIHheatedのフラグが立っているfaceにその面積の形状関数を与えてみる。	重なる面積をきちんと計算と、少しでも引っかかっていれば、加熱面に入れてしまう計算、試す
 	//> CalcIHdqdt3 or 4
+	/// debug
 	unsigned numIHheated = 0; 
 	for(unsigned i=0; i < nSurfaceFace;i++){
-		if(faces[i].mayIHheated){
-			DSTR << i << " ; "  << std::endl;
+		if(faces[i].mayIHheated){	
+			//DSTR << i << " ; "  << std::endl;
 			numIHheated +=1;
 		}
 	}
-	DSTR << "numIHheated / nSurfaceFace: " << numIHheated << " / " << nSurfaceFace << std::endl;		///:	鉄板:264/980
-	
+	DSTR << "numIHheated / nSurfaceFace: " << numIHheated << " / " << nSurfaceFace << std::endl;		///:	表面faceの内、加熱節点を含むfaceの数、鉄板:264/980　こんなもんかな 
+	new char[10];
 	//> 交点を求め、faces構造体のvectorに領域内の頂点や交点を格納
 	for(unsigned i=0;i < nSurfaceFace; i++){
 		if(faces[i].mayIHheated){		////	may から 確実になった
@@ -559,7 +663,7 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 					}
 					if(tempjudge == 0){
 						faces[i].innerIH.push_back(tempcoord);
-						DSTR << "tempcoord: " << tempcoord <<std::endl;
+//						DSTR << "tempcoord: " << tempcoord <<std::endl;
 					}
 					for(unsigned k=0;k < intersectVtx.size();k++){
 						DSTR << k << "th: " << intersectVtx[k] << std::endl;
@@ -584,7 +688,7 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 					}
 					if(tempjudge == 0){
 						faces[i].innerIH.push_back(tempcoord);
-						DSTR << "tempcoord: " << tempcoord <<std::endl;
+//						DSTR << "tempcoord: " << tempcoord <<std::endl;
 					}
 					for(unsigned k=0;k < intersectVtx.size();k++){
 						DSTR << k << "th: " << intersectVtx[k] << std::endl;
