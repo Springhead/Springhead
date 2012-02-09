@@ -443,6 +443,18 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 	//}
 	//DSTR << "numIHheated0 / nSurfaceFace: " << numIHheated0 << " / " << nSurfaceFace << std::endl;	////	761 / 980	ってほとんどじゃないか！半分位にならないとおかしいはずだが・・・　ローカルy座標値がマイナスのものを選んでいるので
 
+	//	debug	mayIHheatedの確度を上げる前の数を知りたい
+	/// debug
+	unsigned numIHheated0 = 0; 
+	for(unsigned i=0; i < nSurfaceFace;i++){
+		if(faces[i].mayIHheated){	
+			//DSTR << i << " ; "  << std::endl;
+			numIHheated0 +=1;
+		}
+	}
+	DSTR << "numIHheated0 / nSurfaceFace: " << numIHheated0 << " / " << nSurfaceFace << std::endl;
+
+	//	face頂点のどれか1つが、円環領域に入っているfaceだけ、trueに、それ以外は、falseに
 	//> raius,RadiusについてmayIHheatedの確度を上げてから、円環領域と重なっている形状を求める
 	for(unsigned i=0;i < nSurfaceFace; i++){
 		if(faces[i].mayIHheated){			// faceの節点のy座標が負の場合→IH加熱の対象節点 円環の範囲内に入っているとは限らない
@@ -455,7 +467,7 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 				else{
 					faces[i].mayIHheated = false;
 				}
-				//> （円環領域には含まれず）円環領域より内・外側にfaceの辺の頂点がある	vertices[j%3] と vertices[(j+1)%3]　で作る辺があるとき
+				//> （円環領域には含まれず）円環領域より内側と外側にfaceの辺の頂点がある	vertices[j%3] と vertices[(j+1)%3]　で作る辺があるとき
 				if(vertices[faces[i].vertices[j]].disFromOrigin < radius && Radius < vertices[faces[i].vertices[(j+1)%3]].disFromOrigin 
 					|| vertices[faces[i].vertices[(j+1)%3]].disFromOrigin < radius && Radius < vertices[faces[i].vertices[j]].disFromOrigin){
 						faces[i].mayIHheated = true;
@@ -463,9 +475,11 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 				}else{
 					faces[i].mayIHheated = false;
 				}
-				//>	円環領域内にface辺のどちらかの頂点が含まれるとき
+				//>	円環領域内にface辺のどちらかの頂点が含まれるとき(r<P1<R<P2,P1<r<P2<R,(とPa1,P2を入れ替えたもの))
 				if(radius <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin < Radius && Radius < vertices[faces[i].vertices[(j+1)%3]].disFromOrigin
-					|| radius <= vertices[faces[i].vertices[(j+1)%3]].disFromOrigin && vertices[faces[i].vertices[(j+1)%3]].disFromOrigin < Radius && Radius < vertices[faces[i].vertices[j]].disFromOrigin){
+					|| radius <= vertices[faces[i].vertices[(j+1)%3]].disFromOrigin && vertices[faces[i].vertices[(j+1)%3]].disFromOrigin < Radius && Radius < vertices[faces[i].vertices[j]].disFromOrigin
+					|| vertices[faces[i].vertices[j]].disFromOrigin <= radius && radius < vertices[faces[i].vertices[(j+1)%3]].disFromOrigin && vertices[faces[i].vertices[(j+1)%3]].disFromOrigin < Radius
+					|| vertices[faces[i].vertices[(j+1)%3]].disFromOrigin <= radius && radius < vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin < Radius){
 						faces[i].mayIHheated = true;
 						break;		//>	同上
 				}else{
@@ -477,6 +491,7 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 	//> debug
 	//>	mayIHheatedのフラグが立っているfaceにその面積の形状関数を与えてみる。	重なる面積をきちんと計算と、少しでも引っかかっていれば、加熱面に入れてしまう計算、試す
 	//> CalcIHdqdt3 or 4
+
 	/// debug
 	unsigned numIHheated = 0; 
 	for(unsigned i=0; i < nSurfaceFace;i++){
@@ -486,33 +501,31 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 		}
 	}
 	DSTR << "numIHheated / nSurfaceFace: " << numIHheated << " / " << nSurfaceFace << std::endl;		///:	表面faceの内、加熱節点を含むfaceの数、鉄板:264/980　こんなもんかな 
-	new char[10];
+	
 	//> 交点を求め、faces構造体のvectorに領域内の頂点や交点を格納
 	for(unsigned i=0;i < nSurfaceFace; i++){
-		if(faces[i].mayIHheated){		////	may から 確実になった
+		if(faces[i].mayIHheated){		////	may から 確実になっているはず
 			//>	頂点を入れるvector or 配列		//>	円環領域と重なる形状を計算するために、重なる領域内にあるface頂点、辺との交点をfaceの辺0~2の順にvectorに格納していく。格納時に重複が無いようにする
+			//	どちらを使っているのか？↓
 			std::vector<Vec2d> intersectVtx;
-			//Vec2d tempXZ[4] = {Vec2d(0.0, 0.0),Vec2d(0.0, 0.0),Vec2d(0.0, 0.0),Vec2d(0.0, 0.0)};
 			std::vector<Vec2d> tempXZ;
-			// 不要
-			//for(unsigned j =0;j<4; j++){
-			//	DSTR << "tempXZ[" << j <<"]: " << tempXZ[j] << std::endl;
-			//}
-			//Vec2d innertVtx[12];		//>	vectorから配列に変更する→静的メモリ確保,けど、vectorの方がコードは楽?メモリの開放を忘れずに
-			//unsigned judge[2] = {0,0};		///	judge[0],[1]の順に原点に近い点の判定結果
-			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);		// 面積計算が済んでなければ計算する
-			
+			//	area計算されてなければ、計算しておく
+			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);
 			//>	face内の頂点のdisFromOriginの値でソート
-			unsigned nearestvtxnum		=	0;				///	原点に一番近い頂点のface頂点番号
+			unsigned nearestvtxnum		=	0;				///	原点に一番近い頂点のface頂点番号(0~2)
 			for(unsigned j=0;j<3;j++){
 				double hikaku = DBL_MAX;
 				if(hikaku > vertices[faces[i].vertices[j]].disFromOrigin){	hikaku = vertices[faces[i].vertices[j]].disFromOrigin;	nearestvtxnum = j;}
 			}
 
 			///	頂点の組みからなる辺について、内側の頂点から領域内の頂点又は、辺と交わる交点をvectorに格納していく
-			//Vec2d vtxXZ[4];
-			//for(unsigned)
-			//={0.0, 0.0};
+			// 領域内(radiusより外側　かつ　Radiusより内側)にスタート頂点がある時
+			//	無いとき
+				//	radiusより内側にあるとき
+					//	対をなす頂点がRadiusより内側の時
+					//	外側の時
+				//	Radiusより外側にあるとき
+					//	assert(0);
 			/// 領域内にスタート頂点があるとき
 			if(radius < vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin && vertices[faces[i].vertices[(nearestvtxnum+1)%3]].disFromOrigin < Radius){	///	頂点が領域内にあるとき
 				intersectVtx.push_back( Vec2d(vertices[faces[i].vertices[nearestvtxnum]].pos.x,vertices[faces[i].vertices[nearestvtxnum]].pos.z) );
