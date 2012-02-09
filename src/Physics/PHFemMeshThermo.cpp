@@ -50,7 +50,7 @@ void PHFemMeshThermo::CalcVtxDisFromOrigin(){
 	//> 同心円系の計算に利用する　distance from origin
 	
 	/// 判定フラグの初期化
-	for(int i=0; i<nSurfaceFace; i++){
+	for(unsigned i=0; i<nSurfaceFace; i++){
 		faces[i].mayIHheated = false;
 	}
 	/// 初期化
@@ -61,42 +61,6 @@ void PHFemMeshThermo::CalcVtxDisFromOrigin(){
 	/// debug
 	//DSTR << "faces.size(): " << faces.size() << std::endl;
 
-	//>	コメントを追加したら消去
-	///	
-	//for(int i=0; i < NSurfaceVertices(); i++){
-	//	if(vertices[surfaceVertices[i]].pos.y < 0){			//	食材の下底面のにあるfaceだけを探す		///	
-	//		/// 原点からの距離を計算し代入
-	//		double len = sqrt(vertices[surfaceVertices[i]].pos.x * vertices[surfaceVertices[i]].pos.x + vertices[surfaceVertices[i]].pos.z *vertices[surfaceVertices[i]].pos.z);
-	//		vertices[surfaceVertices[i]].disFromOrigin = len;
-	//		///	
-	//		for(unsigned j=0; j < vertices[surfaceVertices[i]].faces.size();j++){
-	//			if(vertices[surfaceVertices[i]].faces[j] < nSurfaceFace){	/// surfaceFaceであることを確認
-	//				faces[vertices[surfaceVertices[i]].faces[j]].mayIHheated = true;				//> IH加熱の対象候補面(pos.y<0が一つ目の条件)
-	//				//	faceの節点でy座標以外が同じ節点が含まれていないことを確認する必要がある？
-	//			}
-	//		}
-	//	}
-	//	//DSTR << i << "th verticies pos: " << vertices[surfaceVertices[i]].pos << std::endl;
-	//	//DSTR << i << "th distans from origin: " << len << std::endl;
-	//	//DSTR << std::endl;
-	//}
-	//>	作りなおす
-	//for( unsigned i=0;i< nSurfaceFace;i++){
-	//	//> 表面のfaceの全節点のy座標が負ならば、そのfaceをIH加熱のface面と判定し、フラグを与える
-	//	for( unsigned j=0;j<3;j++){
-	//		if(vertices[faces[i].vertices[j]].pos.y < 0.0){
-	//			faces[i].mayIHheated = true;
-	//			break;										//	最低1つ見つかれば良い
-	//		}
-	//	}
-	//	//> その節点のx-z平面における原点からの距離を求める
-	//	if(faces[i].mayIHheated){
-	//		for(unsigned j=0; j<3; j++){
-	//			vertices[faces[i].vertices[j]].disFromOrigin = sqrt(vertices[faces[i].vertices[j]].pos.x * vertices[faces[i].vertices[j]].pos.x + vertices[faces[i].vertices[j]].pos.z * vertices[faces[i].vertices[j]].pos.z);
-	//		}
-	//	}
-	//}					//>	側面の加熱を止められないことが問題
-	
 	//> 表面faceの内、原点から各faceの節点のローカル(x,z)座標系での平面上の距離の計算を、faceの全節点のy座標が負のものに対して、IH加熱の可能性を示すフラグを設定
 	for(unsigned i=0;i<nSurfaceFace;i++){
 		//> 表面のfaceの全節点のy座標が負ならば、そのfaceをIH加熱のface面と判定し、フラグを与える
@@ -109,6 +73,7 @@ void PHFemMeshThermo::CalcVtxDisFromOrigin(){
 		}
 	}
 
+	//	debug		//>	高速化対応時にはコメントアウトする
 	//>	座標値を確認する
 	for(unsigned i=0; i < nSurfaceFace; i++){
 		if(faces[i].mayIHheated){
@@ -131,18 +96,9 @@ void PHFemMeshThermo::CalcVtxDisFromOrigin(){
 	//for(unsigned i=0;i < nSurfaceFace;i++){
 	//	if(faces[i].mayIHheated){katoonNum +=1;}
 	//}
-	//DSTR << "number of faces.mayIHheated: " << katoonNum << std::endl;		///		761/980(nSurfaceFace)
+	//DSTR << "number of faces.mayIHheated: " << katoonNum << std::endl;		///		174/980(nSurfaceFace)
 
-	//> debug
-	//for(unsigned i=0; i<nSurfaceFace; i++){
-	//	if(faces[i].mayIHheated){
-	//		for(unsigned j=0;j<3;j++){
-	//			//if(vertices[faces[i].vertices[j]].pos.y  < 0.0){
-	//				DSTR << "vertices[faces[" << i << "].vertices[" << j << "]].pos" << vertices[faces[i].vertices[j]].pos << std::endl;
-	//			//}
-	//		}
-	//	}
-	//}
+
 	int debughensu = 0;
 }
 
@@ -1212,6 +1168,67 @@ void PHFemMeshThermo::CalcIHdqdt2(double r,double R,double dqdtAll){
 
 }
 
+void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll){
+	///	内半径と外半径の間の節点に熱流束境界条件を設定
+
+	//> 加熱する四面体面の面積の総和を求める
+	double faceS = 0.0;
+	for(unsigned i=0;i < nSurfaceFace; i++){
+		if(faces[i].mayIHheated){			// faceの節点のy座標が負の場合→IH加熱の対象節点
+			unsigned nObinnerVtx = 0;
+			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);
+			for(unsigned j=0;j<3;j++){
+				if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
+					nObinnerVtx += 1;
+				}
+			}
+			if( nObinnerVtx == 1)			faces[i].fluxarea = faces[i].area;//faces[i].fluxarea = 1.0/3.0 * faces[i].area;
+			else if(nObinnerVtx == 2)		faces[i].fluxarea = faces[i].area;//faces[i].fluxarea = 2.0/3.0 * faces[i].area;
+			else if(nObinnerVtx == 3)		faces[i].fluxarea = faces[i].area;
+			else if(nObinnerVtx == 0)		faces[i].fluxarea = 0;
+
+			if(faces[i].fluxarea >= 0){	
+				faceS += faces[i].fluxarea;
+			}else{		assert(0);	}		//	faces[i].fluxareaに0未満の数字が入っているのに加算しようとしている
+			//DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
+		}
+	}
+
+	//for(unsigned i=0;i < nSurfaceFace; i++){
+	//	DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
+	//}
+
+	if(faceS > 0){
+		//> dqdt を単位面積あたりに直す([1/m^2])
+		double dqdtds = dqdtAll / faceS;
+//		DSTR << "dqdtds:  " << dqdtds << std::endl;
+		//>	以下、熱流束をfacesに格納する
+		//>	熱流束の面積計算はfluxareaを用いて行う
+		for(unsigned i=0;i < nSurfaceFace; i++){
+			if(faces[i].mayIHheated){
+				faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+//				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
+			}
+		}
+	}
+	
+	//　以上、値は入っているようだ
+
+	int katoon =0;
+	//↑をつかって、CreateMatk2tをコピーした関数で、Vecf2?を作る基に
+
+	//>	熱量は、dqdtdsを用いる
+
+	//> r <= <= Rの中心から放射状に加熱
+
+	//	節点でdqdtの値を更新する
+
+	//　以下は、ベクトルを作る関数の仕事
+	//	節点の属する表面の面で、計算する
+	//  vertices[].heatFluxValueを基に計算を進める
+	//	ガウスザイデル計算できるように処理など、準備する
+
+}
 
 
 void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
@@ -2003,13 +2020,14 @@ void PHFemMeshThermo::AfterSetDesc() {
 		//{T}縦ベクトルの節点の並び順に並ぶように、係数行列を加算する。係数行列には、面積や体積、熱伝達率などのパラメータの積をしてしまったものを入れる。
 
 
-	//> IHのために必要な処理
+	//> IH加熱するfaceをある程度(表面face && 下底面)絞る、関係しそうなface節点の原点からの距離を計算し、face[].mayIHheatedを判定
 	CalcVtxDisFromOrigin();
 	//>	IHからの単位時間当たりの加熱熱量
 	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
 	CalcIHdqdt(0.04,0.095,231.9 * 0.005 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
-//	CalcIHdqdt2(0.04,0.095,231.9 * 0.005 * 1e6);
-//	CalcIHdqdt4(0.04,0.095,231.9 * 0.005 * 1e6);
+//	CalcIHdqdt_atleast(0.04,0.095,231.9 * 0.005 * 1e6);		///	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
+		//	CalcIHdqdt2(0.04,0.095,231.9 * 0.005 * 1e6);
+	//	CalcIHdqdt4(0.04,0.095,231.9 * 0.005 * 1e6);
 	CalcIHdqdt5(0.04,0.095,231.9 * 0.005 * 1e6);
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
 

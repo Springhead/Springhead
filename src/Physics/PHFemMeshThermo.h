@@ -247,6 +247,7 @@ public:
 	
 	void CalcVtxDisFromOrigin();			///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
 	void CalcIHdqdt(double r,double R,double dqdtAll);			///	IHヒーターの設定
+	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);		///	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
 	void CalcIHdqdt2(double r,double R,double dqdtAll);			///	IHヒーターの設定
 	void CalcIHdqdt3(double r,double R,double dqdtAll);			///	IHヒーターの設定	1頂点でも領域内に入っているときには、それをIH計算の領域に加算する
 	void CalcIHdqdt4(double radius,double Radius,double dqdtAll);			///	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。

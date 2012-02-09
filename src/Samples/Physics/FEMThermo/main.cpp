@@ -206,8 +206,8 @@ public:
 		SampleApp::OnStep();
 		PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 		//if(phscene)		cout << phscene << endl;
-		SceneObjectIf* phSceneObject;
-		PHFemMeshIf* phFemMesh;
+//		SceneObjectIf* phSceneObject;			//>	未使用
+//		PHFemMeshIf* phFemMesh;					//>	未使用
 		size_t Nobject = GetSdk()->GetPHSdk()->GetObjectIf()->NChildObject();
 		//なんかしらアドレスが取れているのは分かった
 		//for(int i=0; i< Nobject ;i++){
@@ -561,7 +561,7 @@ public:
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
 					condVtxs[i][j].area = 0;
 					int vid = condVtxs[i][j].vid;
-					for(int k=0; k<condVtxs[i].pmesh->vertices[vid].faces.size(); ++k){
+					for(unsigned k=0; k<condVtxs[i].pmesh->vertices[vid].faces.size(); ++k){
 						if (condVtxs[i].pmesh->vertices[vid].faces[k] < condVtxs[i].pmesh->nSurfaceFace){
 							PHFemMesh::Face& face = condVtxs[i].pmesh->faces[condVtxs[i].pmesh->vertices[vid].faces[k]];
 							Vec3d a = condVtxs[i].pmesh->vertices[face.vertices[2]].pos - condVtxs[i].pmesh->vertices[face.vertices[0]].pos;
@@ -967,7 +967,7 @@ filled:;
 		///	その食材のx,y位置の射影のフライパン表面の温度
 		double tempP=0.0;
 				///	食べ物と同じxy位置(世界座標)のフライパンの温度を取ってくる？
-		 a_0 * (topOfPan - altitudeOfFood) * tempP; ///	単位の次元[K/m]
+		 double tempconstFemhoge =	a_0 * (topOfPan - altitudeOfFood) * tempP; ///	単位の次元[K/m]
 
 	}
 	void CreatePHFemMeshThermo(){
