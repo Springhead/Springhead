@@ -507,8 +507,8 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 		if(faces[i].mayIHheated){		////	may から 確実になっているはず
 			//>	頂点を入れるvector or 配列		//>	円環領域と重なる形状を計算するために、重なる領域内にあるface頂点、辺との交点をfaceの辺0~2の順にvectorに格納していく。格納時に重複が無いようにする
 			//	どちらを使っているのか？↓
-			std::vector<Vec2d> intersectVtx;
-			std::vector<Vec2d> tempXZ;
+			std::vector<Vec2d> intersection;		//	交点
+			std::vector<Vec2d> tempXZ;				//	領域内の点を格納するvector
 			//	area計算されてなければ、計算しておく
 			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);
 			//>	face内の頂点のdisFromOriginの値でソート
@@ -518,6 +518,40 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 				if(hikaku > vertices[faces[i].vertices[j]].disFromOrigin){	hikaku = vertices[faces[i].vertices[j]].disFromOrigin;	nearestvtxnum = j;}
 			}
 
+			///	3点を原点に近い順に並べる///クイックソートにしたいけど、とりあえず、作った。
+			int vtxmin[3];
+			vtxmin[0] = faces[i].vertices[0];
+			vtxmin[1] = 0;
+			vtxmin[2] = 0;
+			if(vertices[faces[i].vertices[1]].disFromOrigin < vertices[faces[i].vertices[0]].disFromOrigin ){
+				vtxmin[0] = faces[i].vertices[1];
+				vtxmin[1] = faces[i].vertices[0];
+			}else{
+				vtxmin[1] = faces[i].vertices[1];
+			}
+			if(vertices[faces[i].vertices[2]].disFromOrigin < vertices[vtxmin[0]].disFromOrigin){
+				vtxmin[2] = vtxmin[1];
+				vtxmin[1] = vtxmin[0];
+				vtxmin[0] = faces[i].vertices[2];
+			}else if(vertices[vtxmin[0]].disFromOrigin < vertices[faces[i].vertices[2]].disFromOrigin && vertices[faces[i].vertices[2]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin){
+				vtxmin[2] = vtxmin[1];
+				vtxmin[1] = faces[i].vertices[2];
+			}else if(vertices[vtxmin[1]].disFromOrigin < vertices[faces[i].vertices[2]].disFromOrigin ){
+				vtxmin[2] = faces[i].vertices[2];
+			}
+			//>	小さい順になっていないので、assert
+			if(!(vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin && vertices[vtxmin[1]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin 
+				&& vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin)){
+					assert(0);	}
+			DSTR << "小さい順 ";
+			for(unsigned j=0; j <3; j++){
+				faces[i].ascendVtx[j] = vtxmin[j];
+				DSTR << vertices[vtxmin[j]].disFromOrigin;
+				if(j<2){ DSTR << ", ";}
+			}
+			DSTR << std::endl;
+			int smallOrder0 =0;
+			
 			///	頂点の組みからなる辺について、内側の頂点から領域内の頂点又は、辺と交わる交点をvectorに格納していく
 			// 領域内(radiusより外側　かつ　Radiusより内側)にスタート頂点がある時
 			//	無いとき
@@ -528,7 +562,7 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 					//	assert(0);
 			/// 領域内にスタート頂点があるとき
 			if(radius < vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin && vertices[faces[i].vertices[(nearestvtxnum+1)%3]].disFromOrigin < Radius){	///	頂点が領域内にあるとき
-				intersectVtx.push_back( Vec2d(vertices[faces[i].vertices[nearestvtxnum]].pos.x,vertices[faces[i].vertices[nearestvtxnum]].pos.z) );
+				intersection.push_back( Vec2d(vertices[faces[i].vertices[nearestvtxnum]].pos.x,vertices[faces[i].vertices[nearestvtxnum]].pos.z) );
 			}
 			/// 内円とだけ交点をもつとき
 			else if(vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin < radius && vertices[faces[i].vertices[(nearestvtxnum+1)%3]].disFromOrigin < Radius){
