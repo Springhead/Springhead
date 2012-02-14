@@ -253,6 +253,8 @@ public:
 	void CalcIHdqdt4(double radius,double Radius,double dqdtAll);			///	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。
 	void CalcIHdqdt5(double radius,double Radius,double dqdtAll);			///	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。
 
+	Vec3i ArrangeFacevtxdisAscendingOrder(int faceID);	/// faceの頂点をfaceの属する物体の原点に近い順に並べる
+
 	Vec2d CalcIntersectionPoint(unsigned id0,unsigned id1,double r,double R);		/// 1点と交わることを想定:id0.id1を結んだ線分と、半径rまたはRの円が交わる交点を求める。(ｓ，ｙ)座標を返す
 	std::vector<Vec2d> CalcIntersectionPoint2(unsigned id0,unsigned id1,double r,double R);		/// 2点と交わることを想定:			同上
 	//Vec4d CalcIntersectionPoint4(unsigned id0,unsigned id1,double r,double R);		/// 4点と交わることを想定:			同上

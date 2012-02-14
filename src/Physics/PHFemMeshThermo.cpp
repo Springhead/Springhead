@@ -417,6 +417,43 @@ Vec2d PHFemMeshThermo::CalcIntersectionPoint(unsigned id0,unsigned id1,double r,
 		return interSection;
 }
 
+Vec3i PHFemMeshThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
+	///	3点を原点に近い順に並べる		//>	クイックソートにしたいかも？
+	int vtxmin[3];
+	vtxmin[0] = faces[faceID].vertices[0];
+	vtxmin[1] = 0;
+	vtxmin[2] = 0;
+	if(vertices[faces[faceID].vertices[1]].disFromOrigin < vertices[faces[faceID].vertices[0]].disFromOrigin ){
+		vtxmin[0] = faces[faceID].vertices[1];
+		vtxmin[1] = faces[faceID].vertices[0];
+	}else{
+		vtxmin[1] = faces[faceID].vertices[1];
+	}
+	if(vertices[faces[faceID].vertices[2]].disFromOrigin < vertices[vtxmin[0]].disFromOrigin){
+		vtxmin[2] = vtxmin[1];
+		vtxmin[1] = vtxmin[0];
+		vtxmin[0] = faces[faceID].vertices[2];
+	}else if(vertices[vtxmin[0]].disFromOrigin < vertices[faces[faceID].vertices[2]].disFromOrigin && vertices[faces[faceID].vertices[2]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin){
+		vtxmin[2] = vtxmin[1];
+		vtxmin[1] = faces[faceID].vertices[2];
+	}else if(vertices[vtxmin[1]].disFromOrigin < vertices[faces[faceID].vertices[2]].disFromOrigin ){
+		vtxmin[2] = faces[faceID].vertices[2];
+	}
+	//>	小さい順になっていないときは、assert(0)
+	if(!(vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin && vertices[vtxmin[1]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin 
+		&& vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin)){		assert(0);	}
+	/// debug
+	DSTR << "小さい順 ";
+	for(unsigned j=0; j <3; j++){
+		faces[faceID].ascendVtx[j] = vtxmin[j];
+		DSTR << vertices[vtxmin[j]].disFromOrigin;
+		if(j<2){ DSTR << ", ";}
+	}
+	DSTR << std::endl;
+	//> 返す準備
+	Vec3i vtxarray = Vec3i(vtxmin[0],vtxmin[1],vtxmin[2]);
+	return vtxarray;
+}
 void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 	//> radius value check
 	if(Radius <= radius){
@@ -518,38 +555,43 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 				if(hikaku > vertices[faces[i].vertices[j]].disFromOrigin){	hikaku = vertices[faces[i].vertices[j]].disFromOrigin;	nearestvtxnum = j;}
 			}
 
-			///	3点を原点に近い順に並べる///クイックソートにしたいけど、とりあえず、作った。
-			int vtxmin[3];
-			vtxmin[0] = faces[i].vertices[0];
-			vtxmin[1] = 0;
-			vtxmin[2] = 0;
-			if(vertices[faces[i].vertices[1]].disFromOrigin < vertices[faces[i].vertices[0]].disFromOrigin ){
-				vtxmin[0] = faces[i].vertices[1];
-				vtxmin[1] = faces[i].vertices[0];
-			}else{
-				vtxmin[1] = faces[i].vertices[1];
-			}
-			if(vertices[faces[i].vertices[2]].disFromOrigin < vertices[vtxmin[0]].disFromOrigin){
-				vtxmin[2] = vtxmin[1];
-				vtxmin[1] = vtxmin[0];
-				vtxmin[0] = faces[i].vertices[2];
-			}else if(vertices[vtxmin[0]].disFromOrigin < vertices[faces[i].vertices[2]].disFromOrigin && vertices[faces[i].vertices[2]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin){
-				vtxmin[2] = vtxmin[1];
-				vtxmin[1] = faces[i].vertices[2];
-			}else if(vertices[vtxmin[1]].disFromOrigin < vertices[faces[i].vertices[2]].disFromOrigin ){
-				vtxmin[2] = faces[i].vertices[2];
-			}
-			//>	小さい順になっていないので、assert
-			if(!(vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin && vertices[vtxmin[1]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin 
-				&& vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin)){
-					assert(0);	}
-			DSTR << "小さい順 ";
-			for(unsigned j=0; j <3; j++){
-				faces[i].ascendVtx[j] = vtxmin[j];
-				DSTR << vertices[vtxmin[j]].disFromOrigin;
-				if(j<2){ DSTR << ", ";}
-			}
-			DSTR << std::endl;
+			///	3点を原点に近い順に並べる
+
+			//> 不要
+			//int vtxmin[3];
+			//vtxmin[0] = faces[i].vertices[0];
+			//vtxmin[1] = 0;
+			//vtxmin[2] = 0;
+			//if(vertices[faces[i].vertices[1]].disFromOrigin < vertices[faces[i].vertices[0]].disFromOrigin ){
+			//	vtxmin[0] = faces[i].vertices[1];
+			//	vtxmin[1] = faces[i].vertices[0];
+			//}else{
+			//	vtxmin[1] = faces[i].vertices[1];
+			//}
+			//if(vertices[faces[i].vertices[2]].disFromOrigin < vertices[vtxmin[0]].disFromOrigin){
+			//	vtxmin[2] = vtxmin[1];
+			//	vtxmin[1] = vtxmin[0];
+			//	vtxmin[0] = faces[i].vertices[2];
+			//}else if(vertices[vtxmin[0]].disFromOrigin < vertices[faces[i].vertices[2]].disFromOrigin && vertices[faces[i].vertices[2]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin){
+			//	vtxmin[2] = vtxmin[1];
+			//	vtxmin[1] = faces[i].vertices[2];
+			//}else if(vertices[vtxmin[1]].disFromOrigin < vertices[faces[i].vertices[2]].disFromOrigin ){
+			//	vtxmin[2] = faces[i].vertices[2];
+			//}
+			////>	小さい順になっていないので、assert
+			//if(!(vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin && vertices[vtxmin[1]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin 
+			//	&& vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin)){
+			//		assert(0);	}
+			//DSTR << "小さい順 ";
+			//for(unsigned j=0; j <3; j++){
+			//	faces[i].ascendVtx[j] = vtxmin[j];
+			//	DSTR << vertices[vtxmin[j]].disFromOrigin;
+			//	if(j<2){ DSTR << ", ";}
+			//}
+			//DSTR << std::endl;
+
+			Vec3i vtxOrder = ArrangeFacevtxdisAscendingOrder(i);		///	ArrangeVtxdisAscendingOrder(int faceID,int vtx0,int vtx1,int vtx2)
+			//DSTR <<  "小さい順か確認: " << vertices[vtxOrder[0]].disFromOrigin << ", "<< vertices[vtxOrder[1]].disFromOrigin << ", "<< vertices[vtxOrder[2]].disFromOrigin << std::endl;
 			int smallOrder0 =0;
 			
 			///	頂点の組みからなる辺について、内側の頂点から領域内の頂点又は、辺と交わる交点をvectorに格納していく
