@@ -443,12 +443,11 @@ Vec3i PHFemMeshThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
 	if(!(vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin && vertices[vtxmin[1]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin 
 		&& vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin)){		assert(0);	}
 	/// debug
-	DSTR << "小さい順 ";
-	for(unsigned j=0; j <3; j++){
-		faces[faceID].ascendVtx[j] = vtxmin[j];
-		DSTR << vertices[vtxmin[j]].disFromOrigin;
-		if(j<2){ DSTR << ", ";}
-	}
+	//DSTR << "小さい順 ";
+	//for(unsigned j=0; j <3; j++){
+	//	DSTR << vertices[vtxmin[j]].disFromOrigin;
+	//	if(j<2){ DSTR << ", ";}
+	//}
 	DSTR << std::endl;
 	/// face内の配列にface内の順番を格納
 	for(unsigned i=0;i<3;i++){
@@ -576,7 +575,15 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 					vtxexistarea[j] = 2;
 				}
 			}
+			//> debug
+			//DSTR << "頂点の領域番号: " ;
+			//for(unsigned j =0;j<3;j++){
+			//	DSTR << vtxexistarea[j];
+			//	if(j<2) DSTR << ", ";
+			//}
+			//DSTR << std::endl;
 			int vtxexistareadebug =0;
+			/// 2012.3.14ここまで
 
 			///	頂点の組みからなる辺について、内側の頂点から領域内の頂点又は、辺と交わる交点をvectorに格納していく
 			// 領域内(radiusより外側　かつ　Radiusより内側)にスタート頂点がある時
