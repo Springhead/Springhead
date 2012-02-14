@@ -52,15 +52,4 @@ void PHHapticPointer::SetForce(SpatialVector f){
 	else hif->SetForce(Vec3f(), Vec3f());
 }
 
-
-void PHHapticPointer::ReflectRenderdForce2Solid(PHSolidsForHaptic* hsolids){
-	for(int i = 0; i < (int)allIrs.size(); i++){
-		int solidID = allIrs[i].solidID;
-		Vec3d point = allIrs[i].contactPointW;
-		PHSolid* solid = hsolids->at(solidID)->sceneSolid;
-		solid->AddForce(allIrs[i].force, point);
-	}
-	allIrs.clear();
-}
-
 }

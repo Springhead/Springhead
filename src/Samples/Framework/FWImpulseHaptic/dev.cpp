@@ -4,11 +4,13 @@
 #include <Physics\PHHapticEngine.h>
 #include <Physics\PHPenaltyEngine.h>
 #include <Physics\PHConstraintEngine.h>
+#include <Windows.h>
 
 using namespace Spr;
 
 #define SPIDAR 0
-#define MULTI 1
+// 0:single, 1:impulsemulti, 2:LD
+#define ENGINETYPE 2
 #define DEBUG_CON 0
 #define DEBUG_RENDER 1
 
@@ -19,7 +21,7 @@ void MyApp::InitInterface(){
 	DRUsb20SimpleDesc usbSimpleDesc;
 	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 	DRUsb20Sh4Desc usb20Sh4Desc;
-	for(int i=0; i<10; ++i){
+	for(int i=0; i< 10; ++i){
 		usb20Sh4Desc.channel = i;
 		hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
 	}
@@ -54,39 +56,40 @@ void MyApp::Init(int argc, char* argv[]){
 		CDBoxDesc bd;
 		
 		// 床を作成
+		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
+		bd.material.mu= 0.5;
+		bd.material.mu0 = 0.5;
+		bd.material.e = 0.0;
 		PHSolidIf* floor = phscene->CreateSolid();
 		floor->SetDynamical(false);
-		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
-		bd.material.mu= 0.0;
-		bd.material.mu0 = 0.0;
 		floor->AddShape(phSdk->CreateShape(bd));
 		floor->SetFramePosition(Vec3d(0, -1.0, 0.0));
 	
 		// 箱を作成
-		for(int i = 0; i < 0; i++){
+		for(int i = 0; i < 1; i++){
 			PHSolidIf* box = phscene->CreateSolid();
 			sobox = box;
-			box->SetMass(0.5);
+			box->SetMass(0.1);
 			bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-			bd.boxsize = Vec3f(2, 0.2, 2);
+			//bd.boxsize = Vec3f(2, 0.2, 2);
 			box->AddShape(phSdk->CreateShape(bd));
 			box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * box->GetMass());
-			box->SetFramePosition(Vec3d(-0.5, 1.0 * i, 0));
+			box->SetFramePosition(Vec3d(-0.5, 0.0, 0.0));
 		}
 
 		pointer = phscene->CreateHapticPointer();
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		pointer->AddShape(phSdk->CreateShape(cd));
-		pointer->SetFramePosition(Vec3d(0.0, 0.2f, 0.0));
+		pointer->AddShape(phSdk->CreateShape(bd));
+		pointer->SetFramePosition(Vec3d(0.0, 0.0, 0.0));
 		pointer->SetDynamical(false);
 		pointer->SetIntegrate(false);
 		pointer->SetHumanInterface(spg);
 		pointer->SetInertia(pointer->GetInertia());
 		phscene->SetContactMode(pointer, PHSceneDesc::MODE_NONE);
 		PHHapticPointer* b = pointer->Cast();
-		b->SetLocalRange(10);
+		b->SetLocalRange(0.5);
 		b->SetPosScale(50);
 		b->bDebugControl = DEBUG_CON;
 
@@ -95,13 +98,16 @@ void MyApp::Init(int argc, char* argv[]){
 
 		PHHapticEngine* h = phscene->GetHapticEngine()->Cast();
 		h->EnableHaptic(true);
-#if MULTI
-		h->SetHapticEngineType(PHHapticEngine::MULTI_THREAD);
-#else
+#if ENGINETYPE == 0
 		h->SetHapticEngineType(PHHapticEngine::SINGLE_THREAD);
 		phscene->SetTimeStep(0.001);
+#elif ENGINETYPE == 1
+		h->SetHapticEngineType(PHHapticEngine::MULTI_THREAD);
+#elif ENGINETYPE == 2
+		h->SetHapticEngineType(PHHapticEngine::LOCAL_DYNAMICS);
 #endif
 		physicsTimerID = GetTimer(0)->GetID();
+		GetTimer(0)->SetMode(UTTimerIf::IDLE);
 		timer = CreateTimer(UTTimerIf::MULTIMEDIA);
 		timer->SetResolution(1);					// 分解能(ms)
 		timer->SetInterval(1);	// 刻み(ms)h
@@ -109,12 +115,12 @@ void MyApp::Init(int argc, char* argv[]){
 		timer->Start();		// タイマスタート
 }
 
-#if MULTI
+#if ENGINETYPE > 0
 void MyApp::TimerFunc(int id){
 	if(hapticTimerID == id){
 		phscene->StepHapticLoop();
 	}else{
-		//sobox->SetVelocity(Vec3d(0.2, 0.0, 0.0));
+		//CSVOUT << sobox->GetFramePosition().y << std::endl;
 		PHHapticEngine* he = phscene->GetHapticEngine()->Cast();
 		he->StepSimulation();
 		PostRedisplay();
@@ -140,8 +146,10 @@ void MyApp::Keyboard(int key, int x, int y){
 	double distance = 0.05;
 	switch(key){
 		case 'q':
-			GetTimer(0)->Stop();
-			timer->Stop();
+			for(int i = 0; i < NTimers(); i++){
+				GetTimer(i)->Stop();
+			}
+			Sleep(1000);
 			exit(0);
 			break;
 		//case 'a':

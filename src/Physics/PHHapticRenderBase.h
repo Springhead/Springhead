@@ -18,10 +18,11 @@ public:
 		bool bInterpolatePose;
 		bool bMultiPoints;
 	};
-	virtual void HapticRendering(PHHapticRenderInfo hri);
+
 	virtual PHIrs CompIntermediateRepresentation(PHHapticPointer* pointer, PHHapticRenderInfo hri);
-	virtual void PenaltyBasedRendering(PHHapticPointer* pointer, PHHapticRenderInfo hri);
+	virtual void PenaltyBasedRendering(PHHapticRenderInfo hri);
 	virtual void ConstraintBasedRendering(PHHapticRenderInfo hri);
+	virtual void ReflectForce2Solid(PHSolidsForHaptic* hsolids, double hdt, double pdt);
 	virtual void VirtualCoupling(PHHapticPointer* pointer);
 	// ガウスザイデル法を使いAx+b>0を解く
 	template <class AD, class XD, class BD>

@@ -257,7 +257,6 @@ public:
 
 	int NSolidPairs() const{
 		int n = (int)solids.size();
-		DSTR << n << std::endl;
 		return n * (n - 1) / 2;
 	}
 	int NShapePairs() const{
