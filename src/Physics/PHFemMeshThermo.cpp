@@ -450,6 +450,10 @@ Vec3i PHFemMeshThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
 		if(j<2){ DSTR << ", ";}
 	}
 	DSTR << std::endl;
+	/// face内の配列にface内の順番を格納
+	for(unsigned i=0;i<3;i++){
+		faces[faceID].ascendVtx[i] = vtxmin[i];
+	}
 	//> 返す準備
 	Vec3i vtxarray = Vec3i(vtxmin[0],vtxmin[1],vtxmin[2]);
 	return vtxarray;
@@ -556,44 +560,24 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 			}
 
 			///	3点を原点に近い順に並べる
-
-			//> 不要
-			//int vtxmin[3];
-			//vtxmin[0] = faces[i].vertices[0];
-			//vtxmin[1] = 0;
-			//vtxmin[2] = 0;
-			//if(vertices[faces[i].vertices[1]].disFromOrigin < vertices[faces[i].vertices[0]].disFromOrigin ){
-			//	vtxmin[0] = faces[i].vertices[1];
-			//	vtxmin[1] = faces[i].vertices[0];
-			//}else{
-			//	vtxmin[1] = faces[i].vertices[1];
-			//}
-			//if(vertices[faces[i].vertices[2]].disFromOrigin < vertices[vtxmin[0]].disFromOrigin){
-			//	vtxmin[2] = vtxmin[1];
-			//	vtxmin[1] = vtxmin[0];
-			//	vtxmin[0] = faces[i].vertices[2];
-			//}else if(vertices[vtxmin[0]].disFromOrigin < vertices[faces[i].vertices[2]].disFromOrigin && vertices[faces[i].vertices[2]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin){
-			//	vtxmin[2] = vtxmin[1];
-			//	vtxmin[1] = faces[i].vertices[2];
-			//}else if(vertices[vtxmin[1]].disFromOrigin < vertices[faces[i].vertices[2]].disFromOrigin ){
-			//	vtxmin[2] = faces[i].vertices[2];
-			//}
-			////>	小さい順になっていないので、assert
-			//if(!(vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin && vertices[vtxmin[1]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin 
-			//	&& vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin)){
-			//		assert(0);	}
-			//DSTR << "小さい順 ";
-			//for(unsigned j=0; j <3; j++){
-			//	faces[i].ascendVtx[j] = vtxmin[j];
-			//	DSTR << vertices[vtxmin[j]].disFromOrigin;
-			//	if(j<2){ DSTR << ", ";}
-			//}
-			//DSTR << std::endl;
-
 			Vec3i vtxOrder = ArrangeFacevtxdisAscendingOrder(i);		///	ArrangeVtxdisAscendingOrder(int faceID,int vtx0,int vtx1,int vtx2)
 			//DSTR <<  "小さい順か確認: " << vertices[vtxOrder[0]].disFromOrigin << ", "<< vertices[vtxOrder[1]].disFromOrigin << ", "<< vertices[vtxOrder[2]].disFromOrigin << std::endl;
-			int smallOrder0 =0;
+			int smallOrder0 = 0;
 			
+			//> face内の各頂点が属している領域を判定 0 | 1 | 2
+			unsigned vtxexistarea[3];
+			for(unsigned j=0;j<3;j++){
+				if( vertices[vtxOrder[j]].disFromOrigin < radius){
+					vtxexistarea[j] = 0;
+				/// 円弧上を含み、円弧上も円環領域内と定義する
+				}else if(radius <= vertices[vtxOrder[j]].disFromOrigin && vertices[vtxOrder[j]].disFromOrigin <= Radius ){
+					vtxexistarea[j] = 1;
+				}else if(Radius < vertices[vtxOrder[j]].disFromOrigin){
+					vtxexistarea[j] = 2;
+				}
+			}
+			int vtxexistareadebug =0;
+
 			///	頂点の組みからなる辺について、内側の頂点から領域内の頂点又は、辺と交わる交点をvectorに格納していく
 			// 領域内(radiusより外側　かつ　Radiusより内側)にスタート頂点がある時
 			//	無いとき
