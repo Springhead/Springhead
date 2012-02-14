@@ -88,7 +88,7 @@ public:
 		///	頂点ID。順番で面の表裏を表す。
 		int vertices[3];
 		///	原点から近い順にvertices[3]を並べ替えた頂点ID
-		int ascendVtx[3];
+		int ascendVtx[3];	///	毎熱Stepで使う？使わない？
 		void Update();
 		///	頂点IDで比較
 		bool operator < (const Face& f2);
