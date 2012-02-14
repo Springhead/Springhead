@@ -18,7 +18,10 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 // PHSolidForHaptic
 struct PHSolidForHapticSt{
+public:
 	PHSolid localSolid;		// sceneSolidのクローン
+	Vec3d force;			// 力覚レンダリングによって加わる全ての力
+	Vec3d torque;;			// 力覚レンダリングによって加わる全てのトルク
 };
 
 class PHSolidForHaptic : public PHSolidForHapticSt, public UTRefCount{  
@@ -37,6 +40,9 @@ public:
 	int NLocal;				// 近傍な力覚ポインタの数（衝突判定で利用）
 	PHSolidForHaptic();
 	PHSolidForHaptic(const PHSolidForHaptic& s);
+	PHSolid* GetLocalSolid(){ return &localSolid; }
+	void AddForce(Vec3d f);
+	void AddForce(Vec3d f, Vec3d r);
 };
 class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
 
@@ -45,17 +51,13 @@ class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
 class PHSolidPairForHaptic;
 class PHShapePairForHaptic : public CDShapePair{
 public:	
-	//PHSolidPairForHaptic* solidPair;
 	// 0:solid、1:pointer
 	// Vec3d normalは剛体から力覚ポインタへの法線ベクトル
 	Posed lastShapePoseW[2];	///< 前回の形状姿勢
 	Vec3d lastClosestPoint[2];	///< 前回の近傍点(ローカル座標)
 	Vec3d lastNormal;			///< 前回の近傍物体の提示面の法線
-	//double sectionDepth;
-	//double lastSectionDepth;
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
-	//std::vector< Vec3d > pointerSection;	///< ポインタの接触頂点(ローカル座標)
-	//std::vector< Vec3d > solidSection;		///< 剛体の接触頂点(ローカル座標)
+	std::vector< UTRef< PHIr > > irs;
 
 	PHShapePairForHaptic();
 	PHShapePairForHaptic(const PHShapePairForHaptic& s);
@@ -64,21 +66,14 @@ public:
 	/// 接触時の判定
 	int OnDetect(unsigned ct, const Vec3d& center0);
 	bool AnalyzeContactRegion();
-	bool CompIntermediateRepresentation(PHIrs &irs, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
+	bool CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
 };
 
 //----------------------------------------------------------------------------
-// PHSolidPairForHaptic
-//struct ImpulsePoint{
-//	Vec3d contactPointW;
-//	Vec3d impulse;
-//};
 
 struct PHSolidPairForHapticSt{
-	Vec3d test_force;				///< 予測シミュレーションで使うテスト力
-	Vec3d test_torque;				///< 予測シミュレーションで使うテストトルク
-	//Vec3d impulse;					///< 物理プロセスが1ステップ終わるまでに力覚ポインタが加えた力積
-	//std::vector< ImpulsePoint > impulsePoints;
+	Vec3d force;			///< LD, Predictionで使うテスト力
+	Vec3d torque;			///< LD, Predictionで使うテストトルク
 
 	Posed interpolationPose;	///< 剛体の補間姿勢
 	Posed lastInterpolationPose;
@@ -93,18 +88,11 @@ struct PHSolidPairForHapticSt{
 
 class PHSolidPairForHaptic : public PHSolidPairForHapticSt, public PHSolidPair< PHShapePairForHaptic, PHHapticEngine >, public Object{
 public:
-	//typedef PHSolidPair<PHShapePairForHaptic, PHHapticEngine> base_type;
-	//typedef base_type::shapepair_type shapepair_type;
-	//typedef base_type::engine_type engine_type;
 	int solidID[2];
 	
 	int inLocal;	// 0:NONE, 1:in local first, 2:in local
-	struct Accelerance{
-		Vec3d force;					// LocalDynamicsで使う力
-		TMatrixRow<6, 3, double> A;		// LocalDynamicsで使うアクセレランス
-		std::vector< Vec3d > f;			// LocalDynamics6Dで使う力
-		TMatrixRow<6, 6, double> Minv;  // LocalDynamics6Dで使うアクセレランス
-	} accelerance;
+	TMatrixRow<6, 3, double> A;		// LocalDynamicsで使うアクセレランス
+	TMatrixRow<6, 6, double> Minv;  // LocalDynamics6Dで使うアクセレランス
 	
 	PHSolidPairForHaptic();
 	PHSolidPairForHaptic(const PHSolidPairForHaptic& s);
@@ -112,6 +100,7 @@ public:
 	virtual bool Detect(engine_type* engine, unsigned int ct, double dt);
 	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< 交差が検知されたときの処理
 	virtual PHIrs CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose, bool bPoints);
+	virtual bool CompFrictionIntermediateRepresentation(PHShapePairForHaptic* sp);
 };
 class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> >{};
 
@@ -148,6 +137,7 @@ public:
 
 struct PHHapticEngineDesc{
 	bool bHaptic;
+	bool bPhysicStep;
 	PHHapticEngineDesc();
 };
 class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector< PHShapePairForHaptic, PHSolidPairForHaptic, PHHapticEngine >{
@@ -165,17 +155,17 @@ public:
 	std::vector< Edge > edges;
 
 	enum EngineType{
-		NONE,
-		MULTI_THREAD,
 		SINGLE_THREAD,
+		MULTI_THREAD,
+		LOCAL_DYNAMICS,
 	} engineType;
 
 
 	PHHapticEngine();
 
 	///< シミュレーションループの更新（PHScene::Integrate()からコール）
-	virtual void Step(){ if(bHaptic) engineImp->Step1(); }
-	virtual void Step2(){ if(bHaptic) engineImp->Step2(); }
+	virtual void Step(){ if(bHaptic && bPhysicStep) engineImp->Step1(); }
+	virtual void Step2(){ if(bHaptic && bPhysicStep) engineImp->Step2(); }
 	///< 力覚ループの更新	
 	virtual void StepHapticLoop(){ if(bHaptic) engineImp->StepHapticLoop(); }
 

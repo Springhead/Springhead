@@ -655,6 +655,8 @@ public:\
 protected:\
 	Vec3d	velocity;	\
 	Vec3d	angVelocity;	\
+	Vec3d	lastVelocity;	\
+	Vec3d	lastAngVelocity;	\
 	Posed	pose;	\
 	Posed	lastPose;	\
 	Vec3d	force;	\
@@ -665,6 +667,8 @@ public:\
 	virtual void SetState(const void* ptr){ \
 		velocity = ((PHSolidState*)ptr)->velocity;	\
 		angVelocity = ((PHSolidState*)ptr)->angVelocity;	\
+		lastVelocity = ((PHSolidState*)ptr)->lastVelocity;	\
+		lastAngVelocity = ((PHSolidState*)ptr)->lastAngVelocity;	\
 		pose = ((PHSolidState*)ptr)->pose;	\
 		lastPose = ((PHSolidState*)ptr)->lastPose;	\
 		force = ((PHSolidState*)ptr)->force;	\
@@ -675,6 +679,8 @@ public:\
 	virtual bool GetState(void* ptr) const { \
 		((PHSolidState*)ptr)->velocity = velocity;	\
 		((PHSolidState*)ptr)->angVelocity = angVelocity;	\
+		((PHSolidState*)ptr)->lastVelocity = lastVelocity;	\
+		((PHSolidState*)ptr)->lastAngVelocity = lastAngVelocity;	\
 		((PHSolidState*)ptr)->pose = pose;	\
 		((PHSolidState*)ptr)->lastPose = lastPose;	\
 		((PHSolidState*)ptr)->force = force;	\
@@ -759,14 +765,17 @@ public:\
 #define SPR_DECLMEMBEROF_PHHapticEngineDesc \
 protected:\
 	bool	bHaptic;	\
+	bool	bPhysicStep;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		bHaptic = ((PHHapticEngineDesc*)ptr)->bHaptic;	\
+		bPhysicStep = ((PHHapticEngineDesc*)ptr)->bPhysicStep;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		((PHHapticEngineDesc*)ptr)->bHaptic = bHaptic;	\
+		((PHHapticEngineDesc*)ptr)->bPhysicStep = bPhysicStep;	\
 		return true;	\
 	}\
 

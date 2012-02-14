@@ -32,6 +32,8 @@ struct PHFrameIf: public SceneObjectIf{
 struct PHSolidState{
 	Vec3d		velocity;		///<	‘¬“x			(WorldŒn)
 	Vec3d		angVelocity;	///<	Šp‘¬“x			(WorldŒn)
+	Vec3d		lastVelocity;	///<	‘O‰ñ‚Ì‘¬“x		(WorldŒn)
+	Vec3d		lastAngVelocity;///<	‘O‰ñ‚ÌŠp‘¬“x	(WorldŒn)
 	Posed		pose;			///<	ˆÊ’u‚ÆŒü‚«		(WorldŒn)
 	Posed		lastPose;		///<	‘O‰ñ‚ÌˆÊ’u‚ÆŒü‚«(WorldŒn)
 	Vec3d		force;			///<	‘O‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚Á‚½—Í(WorldŒn)

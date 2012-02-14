@@ -22,7 +22,7 @@ void PHHapticLoopImpulse::HapticRendering(){
 	hri.loopCount = loopCount;
 	hri.bInterpolatePose = true;
 	hri.bMultiPoints = true;
-	//PHHapticRenderBase::HapticRendering(hri);
+	//PenaltyBasedRendering(hri);
 	ConstraintBasedRendering(hri);
 }
 
@@ -47,7 +47,7 @@ void PHHapticEngineImpulse::SyncHaptic2Physic(){
 		PHHapticPointer* hpointer = hapticLoop->GetHapticPointer(i);
 		int hpointerID = hpointer->GetPointerID();
 		int nNeighbors = hpointer->neighborSolidIDs.size();
-		// 近傍物体の数
+		// 近傍物体であるペアだけ同期
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = hpointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(solidID, hpointerID);
@@ -56,9 +56,8 @@ void PHHapticEngineImpulse::SyncHaptic2Physic(){
 			PHSolidPairForHapticSt* pst = (PHSolidPairForHapticSt*)ppair;
 			*pst = *hst;	// haptic側で保持しておくべき情報を同期
 		}
-		// 力を近傍物体に加える
-		hpointer->ReflectRenderdForce2Solid(hapticLoop->GetHapticSolids());
 	}
+	hapticLoop->ReflectForce2Solid(hapticLoop->GetHapticSolids(), GetHapticTimeStep(), GetPhysicsTimeStep());
 }
 
 void PHHapticEngineImpulse::SyncPhysic2Haptic(){
@@ -67,8 +66,8 @@ void PHHapticEngineImpulse::SyncPhysic2Haptic(){
 	for(int i = 0; i < NHapticSolids(); i++){
 		PHSolidForHaptic* psolid = GetHapticSolid(i);
 		PHSolidForHaptic* hsolid = hapticLoop->GetHapticSolid(i);
-		psolid->localSolid = *psolid->sceneSolid;	//	impulseの場合は常時sceneで管理されているsolidと同期				
-		*hsolid = PHSolidForHaptic(*psolid);		// LocalDynamicsの場合はdosimによって同期情報をかえる必要がある
+		*psolid->GetLocalSolid() = *psolid->sceneSolid;	//	impulseの場合は常時sceneで管理されているsolidと同期				
+		*hsolid = PHSolidForHaptic(*psolid);			// LocalDynamicsの場合はdosimによって同期情報をかえる必要がある
 	}
 	// solidpair, shapepairの同期
 	// 近傍物体のみ同期させる

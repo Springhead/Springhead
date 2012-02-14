@@ -50,7 +50,7 @@ public:
 	virtual void StepHapticLoop();	// hapticloop
 	virtual void Step1(){}
 	virtual void Step2(){}
-	void SyncThreads();
+	virtual void SyncThreads();
 	virtual void SyncHapticPointers(); // hapticスレッド側のhapticpointerの状態をphysicsへ同期
 	virtual void SyncArrays();
 	virtual void SyncHaptic2Physic(){}	// hapticスレッドからphysicsスレッドへの同期

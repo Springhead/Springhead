@@ -285,6 +285,8 @@ void PHSolid::UpdateVelocity(double dt){
 		if (v.w().norm() > 100)
 			v.w() = v.w().unit() * vMax;
 
+		lastVelocity = GetVelocity();
+		lastAngVelocity = GetAngularVelocity();
 		SetVelocity       (GetOrientation() * v.v());
 		SetAngularVelocity(GetOrientation() * v.w());
 	}
@@ -333,6 +335,8 @@ void PHSolid::Step(){
 	Vec3d	_angvel[4];			//<	”’lÏ•ªŒW”
 	Vec3d	_angacc[4];
 	lastPose = pose;
+	lastVelocity = GetVelocity();
+	lastAngVelocity = GetAngularVelocity();
 	switch(GetIntegrationMode()){
 	case PHINT_EULER:
 		//•½sˆÚ“®—Ê‚ÌÏ•ª

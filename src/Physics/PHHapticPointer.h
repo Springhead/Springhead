@@ -9,16 +9,15 @@ namespace Spr{;
 class PHSolidsForHaptic;
 class PHSolidPairForHaptic;
 class PHSolidPairsForHaptic;
+class PHShapePairForHaptic;
 
-struct PHIntermediateRepresentation{
+struct PHIntermediateRepresentation :public UTRefCount{
 	int solidID;		// どの剛体と侵入しているか
 	double depth;		///< 侵入量
 	Vec3d normal;		// 面法線
 	Vec3d r;			// 力覚ポインタの重心からの接触点までのベクトル
 	Vec3d pointerPointW;	// 力覚ポンタの侵入点(world)
-	Vec3d pointerPointL;	// 力覚ポンタの侵入点(world)
 	Vec3d contactPointW;	// 中間表現面にvertexを投影した位置(world)
-	Vec3d contactPointL;	
 	Vec3d pointerPointVel;
 	Vec3d contactPointVel;
 	Posed interpolation_pose; // 形状の補間姿勢
@@ -26,15 +25,16 @@ struct PHIntermediateRepresentation{
 	Vec3d force;		// 剛体に与える力
 	float mu;
 	float mu0;
-	PHSolidPairForHaptic* solidPair;
+	//PHSolidPairForHaptic* solidPair;
+	//PHShapePairForHaptic* shapePair;
 	PHIntermediateRepresentation(){
 		solidID = -1;
 		f = 0.0;
-		solidPair = NULL;
+		//solidPair = NULL;
 	}
 };
 typedef PHIntermediateRepresentation PHIr;
-typedef std::vector< PHIr > PHIrs;
+typedef std::vector< PHIr* > PHIrs;
 
 //struct PHIntermediateRepresentationForShape{
 //	PHIrs irs;
@@ -88,7 +88,6 @@ public:
 	void	UpdateInterface(float dt);
 	void	UpdateDirect();
 	void	SetForce(SpatialVector f);
-	void	ReflectRenderdForce2Solid(PHSolidsForHaptic* hsolids);
 	void	SetLocalRange(float r){ localRange = r; } 
 	float	GetLocalRange(){ return localRange; }
 	void	SetPosScale(double scale){ posScale = scale; }

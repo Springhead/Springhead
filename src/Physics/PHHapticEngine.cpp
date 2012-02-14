@@ -1,21 +1,29 @@
 #include <Physics/PHHapticEngine.h>
 #include <Physics/PHHapticEngineImpulse.h>
 #include <Physics/PHHapticEngineSingleBase.h>
+#include <Physics/PHHapticEngineLD.h>
 
 namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHSolidForHaptic
+
 PHSolidForHaptic::PHSolidForHaptic(){
 	bPointer = false;	
 	doSim = 0;	
-	NLocalFirst = 0;	
+	NLocalFirst = 0;
 	NLocal = 0;
 }
 PHSolidForHaptic::PHSolidForHaptic(const PHSolidForHaptic& s){
 	*this = s;
 }
-
+void PHSolidForHaptic::AddForce(Vec3d f){
+	force += f;
+}
+void PHSolidForHaptic::AddForce(Vec3d f, Vec3d r){
+	torque += (r - localSolid.pose * localSolid.center) ^ f;
+	force += f;
+}
 //----------------------------------------------------------------------------
 // PHSapePairForHaptic
 PHShapePairForHaptic::PHShapePairForHaptic(){}
@@ -107,7 +115,8 @@ bool PHShapePairForHaptic::AnalyzeContactRegion(){
 	return true;
 }
 
-bool PHShapePairForHaptic::CompIntermediateRepresentation(PHIrs &irs, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints){
+bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints){
+	irs.clear();
 	Vec3d sPoint = curShapePoseW[0] * closestPoint[0];	// 今回のsolidの近傍点（World)
 	Vec3d pPoint = curShapePoseW[1] * closestPoint[1];	// 今回のpointerの近傍点（World)
 	Vec3d last_sPoint = lastShapePoseW[0] * lastClosestPoint[0]; // 前回の剛体近傍点（World)
@@ -122,8 +131,14 @@ bool PHShapePairForHaptic::CompIntermediateRepresentation(PHIrs &irs, Posed curS
 		// sPoint = shapePoseW[0] * closestPoint[0]
 		//interpolation_sPoint = interpolate(t, last_sPoint, shapePoseW[0] * closestPoint[0]);
 	}
+
+
 	Vec3d dir = pPoint - interpolation_sPoint;			
 	double dot = dir * interpolation_normal;
+	
+	//DSTR << sPoint << std::endl;
+	//DSTR << curShapePoseW[0] << "," << closestPoint[0] << std::endl;
+
 	if(dot >= 0.0) return false;
 	if(bPoints){
 		for(int i = 0; i < (int)intersectionVertices.size(); i++){
@@ -131,35 +146,33 @@ bool PHShapePairForHaptic::CompIntermediateRepresentation(PHIrs &irs, Posed curS
 			Vec3d wiv = curShapePoseW[1] * iv; 	// ポインタの侵入点(world)
 			dot = (wiv - interpolation_sPoint) * interpolation_normal;	// デバイスの侵入点から中間面上の点へのベクトルのノルム（デバイスの侵入量）
 			if(dot > 0.0)	continue;
-			PHIr ir;
-			ir.normal = interpolation_normal;
-			ir.pointerPointW = wiv;
-			ir.pointerPointL = curShapePoseW[1].Inv() * wiv;
+			PHIr* ir = DBG_NEW PHIr();
+			//ir->shapePair = this;
+			ir->normal = interpolation_normal;
+			ir->pointerPointW = wiv;
 			Vec3d ortho = dot * interpolation_normal; // 剛体の近傍点からデバイス侵入点までのベクトルを面法線へ射影
-			ir.contactPointW = wiv - ortho;		// solidの接触点(world)
-			ir.contactPointL = curShapePoseW[0].Inv() * ir.contactPointW;					
-			ir.depth = ortho.norm();
-			ir.interpolation_pose = curShapePoseW[0];
-			ir.mu = (shape[0]->GetDynamicFriction() + shape[1]->GetDynamicFriction()) * 0.5;
-			ir.mu0 = (shape[0]->GetStaticFriction() + shape[1]->GetStaticFriction()) * 0.5;
+			ir->contactPointW = wiv - ortho;		// solidの接触点(world)
+			ir->depth = ortho.norm();
+			ir->interpolation_pose = curShapePoseW[0];
+			ir->mu = (shape[0]->GetDynamicFriction() + shape[1]->GetDynamicFriction()) * 0.5;
+			ir->mu0 = (shape[0]->GetStaticFriction() + shape[1]->GetStaticFriction()) * 0.5;
 			irs.push_back(ir);
 		}
 	}else{
-		PHIr ir;
-		ir.normal = interpolation_normal;
-		ir.pointerPointW = pPoint;
-		ir.pointerPointL = closestPoint[1];
+		PHIr* ir = DBG_NEW PHIr();
+		ir->normal = interpolation_normal;
+		ir->pointerPointW = pPoint;
 		Vec3d ortho = dot * interpolation_normal;
-		ir.contactPointW = pPoint - ortho;
-		ir.contactPointL = curShapePoseW[0].Inv() * ir.contactPointW;					
-		ir.depth = ortho.norm();
-		ir.interpolation_pose = curShapePoseW[0];
-		ir.mu = (shape[0]->GetDynamicFriction() + shape[1]->GetDynamicFriction()) * 0.5;
-		ir.mu0 = (shape[0]->GetStaticFriction() + shape[1]->GetStaticFriction()) * 0.5;
+		ir->contactPointW = pPoint - ortho;
+		ir->depth = ortho.norm();
+		ir->interpolation_pose = curShapePoseW[0];
+		ir->mu = (shape[0]->GetDynamicFriction() + shape[1]->GetDynamicFriction()) * 0.5;
+		ir->mu0 = (shape[0]->GetStaticFriction() + shape[1]->GetStaticFriction()) * 0.5;
 		irs.push_back(ir);
 	}
 	return true;
 }
+
 
 //----------------------------------------------------------------------------
 // PHSolidPairForHaptic
@@ -203,6 +216,8 @@ void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* en
 		}
 		sp->lastNormal = sp->normal;
 	}	
+
+	//CSVOUT << (sp->shapePoseW[0] * sp->closestPoint[0]).y << "," << (sp->shapePoseW[1] * sp->closestPoint[1]).y << std::endl;
 }
 
 PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose, bool bPoints){
@@ -216,62 +231,112 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 	if(bInterpolatePose){
 		interpolationPose = interpolate(t, curSolid[0]->GetLastPose(), curSolid[0]->GetPose());
 	}
+
+	// 接触したとして摩擦計算のための相対位置を計算
+	PHHapticPointer* pointer = DCAST(PHHapticPointer, curSolid[1]);
+#if 1
+	// 相対摩擦
+	if(frictionState == FREE){
+		frictionState = STATIC;
+		initialRelativePose =  pointer->GetPose() * interpolationPose.Inv();
+	}else{
+		initialRelativePose =  pointer->lastProxyPose * lastInterpolationPose.Inv();
+	}
+	relativePose = initialRelativePose * interpolationPose * pointer->GetPose().Inv();		
+#else
+	// 絶対摩擦
+	if(frictionState == FREE){
+		frictionState = STATIC;
+		initialRelativePose = Posed();
+	}else{
+		initialRelativePose =  pointer->lastProxyPose * pointer->GetPose().Inv();
+	}
+	relativePose = initialRelativePose;
+#endif
+
+	//DSTR << "pose" << pointer->GetPose() << std::endl;
+	//DSTR << "lastProxy" << pointer->lastProxyPose << std::endl;
+	//DSTR << "ini" << initialRelativePose << std::endl;
+	//DSTR << "relativePose" << relativePose << std::endl;
+
 	// 中間表現の作成
 	PHIrs irs;
 	for(int i = 0; i < curSolid[0]->NShape(); i++){
 		for(int j = 0; j < curSolid[1]->NShape(); j++){
 			PHShapePairForHaptic* sp = shapePairs.item(i, j);
-			if(sp->state == sp->NONE) continue;
 			Posed curShapePoseW[2];
 			curShapePoseW[0] = interpolationPose * curSolid[0]->GetShapePose(i);
 			curShapePoseW[1] = curSolid[1]->GetPose() * curSolid[1]->GetShapePose(j);
-			if(sp->CompIntermediateRepresentation(irs, curShapePoseW, t, bInterpolatePose, bPoints)){
-			}				
+			sp->CompIntermediateRepresentation(curShapePoseW, t, bInterpolatePose, bPoints);
+			for(int k = 0; k < (int)sp->irs.size(); k++){
+				PHIr* ir = sp->irs[k];
+				ir->solidID = solidID[0];
+				ir->r = ir->pointerPointW - curSolid[1]->GetCenterPosition();
+				ir->contactPointVel = curSolid[0]->GetPointVelocity(ir->contactPointW);
+				ir->pointerPointVel = curSolid[1]->GetPointVelocity(ir->pointerPointW);	
+			}
+#if 0
+			CompFrictionIntermediateRepresentation(sp);
+#endif
+			for(int k = 0; k < (int)sp->irs.size(); k++){
+				irs.push_back(sp->irs[k]);
+			}
 		}
 	}
 
-	if(irs.size() > 0){
-		// 接触あり
-		for(int i = 0; i < (int)irs.size(); i++){
-			irs[i].solidID = solidID[0];
-			irs[i].solidPair = this;
-			irs[i].r = irs[i].pointerPointW - curSolid[1]->GetCenterPosition();
-			irs[i].contactPointVel = curSolid[0]->GetPointVelocity(irs[i].contactPointW);
-			irs[i].pointerPointVel = curSolid[1]->GetPointVelocity(irs[i].pointerPointW);			
-		}
-		// 摩擦状態の更新
-		PHHapticPointer* pointer = DCAST(PHHapticPointer, curSolid[1]);
-#if 1
-		// 相対摩擦
-		if(frictionState == FREE){
-			frictionState = STATIC;
-			initialRelativePose =  pointer->GetPose() * interpolationPose.Inv();
-		}else{
-			initialRelativePose =  pointer->lastProxyPose * lastInterpolationPose.Inv();
-		}
-		relativePose = initialRelativePose * interpolationPose * pointer->GetPose().Inv();		
-#else
-		// 絶対摩擦
-		if(frictionState == FREE){
-			frictionState = STATIC;
-			initialRelativePose = Posed();
-		}else{
-			initialRelativePose =  pointer->lastProxyPose * pointer->GetPose().Inv();
-		}
-		relativePose = initialRelativePose;
-#endif
-
-		DSTR << "pose" << pointer->GetPose() << std::endl;
-		DSTR << "lastProxy" << pointer->lastProxyPose << std::endl;
-		DSTR << "ini" << initialRelativePose << std::endl;
-		DSTR << "relativePose" << relativePose << std::endl;
-	}else{
+	if(irs.size() == 0){
 		// 接触なし
 		frictionState = FREE;
 		initialRelativePose = Posed();
 		relativePose = Posed();
 	}
 	return irs;
+}
+
+bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairForHaptic* sp){
+	// 摩擦
+	int Nirs = sp->irs.size();
+	if(Nirs == 0) return false;
+	for(int i = 0; i < Nirs; i++){
+		PHIr* ir = sp->irs[i];
+		double mu = ir->mu;	// 動摩擦係数
+		mu = 10;
+				
+		double l = mu * ir->depth; // 摩擦円錐半径
+		Vec3d vps = ir->pointerPointW;
+		Vec3d vq = relativePose * ir->pointerPointW;
+		Vec3d dq = (vq - vps) * ir->normal * ir->normal;
+		Vec3d vqs = vq - dq;
+		Vec3d tangent = vqs - vps;
+
+		//DSTR << "vps" << vps << std::endl;
+		//DSTR << "vq" << vq << std::endl;
+		//DSTR << "tangent " << tangent << tangent.norm() << std::endl;
+
+		PHIr* fricIr = DBG_NEW PHIr();
+		*fricIr = *ir;
+		double epsilon = 1e-5;
+		if(tangent.norm() < epsilon){
+			// 静止状態
+			delete fricIr;
+			//DSTR << "rest" << std::endl;
+		}
+		if(epsilon < tangent.norm() && tangent.norm() <= l){
+			//静摩擦（静止摩擦半径内）
+			fricIr->normal = tangent.unit();
+			fricIr->depth = tangent.norm();
+			sp->irs.push_back(fricIr);
+			//DSTR << "static friction" << std::endl;
+		}
+		if(epsilon < l && l < tangent.norm()){
+			// 動摩擦
+			fricIr->normal = tangent.unit();
+			fricIr->depth = l;
+			sp->irs.push_back(fricIr);
+			//DSTR << "dynamic friction" << std::endl;
+		}
+	}
+	return true;
 }
 
 //----------------------------------------------------------------------------
@@ -311,10 +376,10 @@ PHSolidPairsForHaptic* PHHapticEngineImp::GetSolidPairsForHaptic(){
 // PHHapticEngine
 PHHapticEngineDesc::PHHapticEngineDesc(){
 	bHaptic = false;
+	bPhysicStep = true;
 }
 
 PHHapticEngine::PHHapticEngine(){
-		bHaptic = false;
 		engineImp = DBG_NEW PHHapticEngineImpulse();
 		engineImp->engine = this;
 		engineType = MULTI_THREAD;
@@ -323,20 +388,7 @@ PHHapticEngine::PHHapticEngine(){
 
 void PHHapticEngine::SetHapticEngineType(EngineType e){
 	engineType = e;
-
 	switch(engineType){
-		case NONE:
-				DSTR << "You must set haptic render mode." << std::endl; 
-			break;
-		case MULTI_THREAD:		
-			for(int i = 0; i < (int)engineImps.size(); i++){
-				if(DCAST(PHHapticEngineImpulse, engineImps[i])){
-					engineImp = engineImps[i];
-					return;
-				}
-			}
-			engineImp = DBG_NEW PHHapticEngineImpulse();
-			break;
 		case SINGLE_THREAD:		
 			for(int i = 0; i < (int)engineImps.size(); i++){
 				if(DCAST(PHHapticEngineSingleBase, engineImps[i])){
@@ -346,9 +398,27 @@ void PHHapticEngine::SetHapticEngineType(EngineType e){
 			}
 			engineImp = DBG_NEW PHHapticEngineSingleBase();
 			break;		
-		default:
-				return;
+		case MULTI_THREAD:		
+			for(int i = 0; i < (int)engineImps.size(); i++){
+				if(DCAST(PHHapticEngineImpulse, engineImps[i])){
+					engineImp = engineImps[i];
+					return;
+				}
+			}
+			engineImp = DBG_NEW PHHapticEngineImpulse();
 			break;
+		case LOCAL_DYNAMICS:
+			for(int i = 0; i < (int)engineImps.size(); i++){
+				if(DCAST(PHHapticEngineLD, engineImps[i])){
+					engineImp = engineImps[i];
+					return;
+				}
+			}
+			engineImp = DBG_NEW PHHapticEngineLD();
+			break;
+		default:
+			assert(0);
+			return;
 	}
 	engineImp->engine = this;
 	engineImps.push_back(engineImp);
@@ -441,7 +511,7 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 			sp->Detect(this, ct, dt);	// 形状毎の近傍点探索、接触解析
 			pointer->neighborSolidIDs.push_back(i);
 			PHSolidForHaptic* h = hapticSolids[i];
-			h->localSolid = *h->sceneSolid;	// 近傍と判定されたのでコピー
+			*h->GetLocalSolid() = *h->sceneSolid;	// 近傍と判定されたのでコピー
 			if(sp->inLocal == 0){
 				// 初めて近傍になった
 				sp->inLocal = 1;	
@@ -466,7 +536,7 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 		solids.push_back(s);				
 		PHSolidForHaptic* h = DBG_NEW PHSolidForHaptic();
 		h->sceneSolid = s;
-		h->localSolid = *s;
+		*h->GetLocalSolid() = *s;
 		hapticSolids.push_back(h);
 
 		int NSolids = (int)solids.size();
