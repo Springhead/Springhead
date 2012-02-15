@@ -8,9 +8,10 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHHapticEngineSingleBase
-class PHHapticEngineSingleBase : public PHHapticRenderBase, public PHHapticEngineImp{
+class PHHapticEngineSingleBase : public PHHapticEngineImp{
 	SPR_OBJECTDEF_NOIF(PHHapticEngineSingleBase);
 public:
+	PHHapticRenderBase hapticRender;
 	PHHapticEngineSingleBase();
 	virtual void Step1();
 	virtual void Step2();

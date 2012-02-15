@@ -12,42 +12,27 @@ class PHSolidPairsForHaptic;
 class PHShapePairForHaptic;
 
 struct PHIntermediateRepresentation :public UTRefCount{
-	int solidID;		// どの剛体と侵入しているか
-	double depth;		///< 侵入量
-	Vec3d normal;		// 面法線
-	Vec3d r;			// 力覚ポインタの重心からの接触点までのベクトル
-	Vec3d pointerPointW;	// 力覚ポンタの侵入点(world)
-	Vec3d contactPointW;	// 中間表現面にvertexを投影した位置(world)
-	Vec3d pointerPointVel;
-	Vec3d contactPointVel;
-	Posed interpolation_pose; // 形状の補間姿勢
-	double f;			// 侵入解除計算で接触点が並進移動に作用する大きさ
-	Vec3d force;		// 剛体に与える力
+	int solidID;				///< 剛体のID(PHSolidsForHapitcとPHSolidPairForHaptic)と侵入しているか
+	PHSolidPairForHaptic* solidPair;	///< PHSolidPairForHapticへのポインタ
+	double depth;				///< 侵入量
+	Vec3d normal;				///< 面法線
+	Vec3d r;					///< 力覚ポインタの重心からの接触点までのベクトル
+	Vec3d pointerPointW;		///< 力覚ポンタの侵入点(world)
+	Vec3d contactPointW;		///< 中間表現面にvertexを投影した位置(world)
+	Vec3d pointerPointVel;		///< 力覚ポインタ側の接触点の速度(world)
+	Vec3d contactPointVel;		///< 剛体側の接触点の速度(world)
+	Posed interpolation_pose;	///< 形状の補間姿勢
+	double f;					///< 侵入解除計算で接触点が並進移動に作用する大きさ
 	float mu;
 	float mu0;
-	//PHSolidPairForHaptic* solidPair;
-	//PHShapePairForHaptic* shapePair;
 	PHIntermediateRepresentation(){
 		solidID = -1;
 		f = 0.0;
-		//solidPair = NULL;
+		solidPair = NULL;
 	}
 };
 typedef PHIntermediateRepresentation PHIr;
 typedef std::vector< PHIr* > PHIrs;
-
-//struct PHIntermediateRepresentationForShape{
-//	PHIrs irs;
-//};
-//typedef PHIntermediateRepresentationForShape PHIrShape;
-//typedef std::vector< PHIrShape > PHIrShapes;
-//
-//struct PHIntermediateRepresentationForSolid{
-//	PHIrShapes irShapes;
-//};
-//typedef PHIntermediateRepresentationForSolid PHIrSolid;
-//typedef std::vector< PHIrSolid > PHIrSolids;
-
 
 //----------------------------------------------------------------------------
 // PHHapticPointer

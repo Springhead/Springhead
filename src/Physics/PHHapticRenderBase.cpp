@@ -2,6 +2,24 @@
 
 namespace Spr{;
 
+void PHHapticRenderBase::HapticRendering(PHHapticRenderInfo hri){
+	switch (mode){
+		case PENALTY1POINT:
+			PenaltyBasedRendering(hri);
+			break;
+		case PENALTY6D:
+			PenaltyBasedRendering(hri);
+			break;
+		case CONSTRAINT:
+			ConstraintBasedRendering(hri);
+			break;
+		case VIRTUALCOUPLING:
+			//VirtualCoupling(NULL);
+			break;
+	}
+
+}
+
 PHIrs PHHapticRenderBase::CompIntermediateRepresentation(PHHapticPointer* pointer, PHHapticRenderInfo hri){
 	PHSolidsForHaptic* hsolids = hri.hsolids;
 	PHSolidPairsForHaptic* sps = hri.sps;
@@ -30,6 +48,18 @@ PHIrs PHHapticRenderBase::CompIntermediateRepresentation(PHHapticPointer* pointe
 	return irs;
 }
 
+// 力覚レンダリング
+// 実装予定
+// 球型ポインタのみが使えるProxy3DoF(池田くんが作った奴）
+// proxyに質量を与え、stick-slip frictionが提示できるproxy simulation
+// 凸形状が使えるPenaltyBasedRendering(multiple point intermediate representation)
+// 凸形状が使えるconstratint based rendering
+// 凸形状が使えるvirtual coupling
+
+
+// PHSolidForHapticのsolidはポインタなので、physics側への剛体のポインタになってる
+// 複製する必要がある
+
 void PHHapticRenderBase::PenaltyBasedRendering(PHHapticRenderInfo hri){
 	for(int p = 0; p < (int)hri.pointers->size(); p++){
 		PHHapticPointer* pointer = hri.pointers->at(p);
@@ -37,7 +67,7 @@ void PHHapticRenderBase::PenaltyBasedRendering(PHHapticRenderInfo hri){
 		SpatialVector outForce = SpatialVector();
 		int NIrs = irs.size();
 		if(NIrs > 0){
-			double K = 100;
+			double K = 50;
 			double D = 0.1;
 			for(int i = 0; i < NIrs; i++){
 				PHIr* ir = irs[i];
@@ -49,8 +79,13 @@ void PHHapticRenderBase::PenaltyBasedRendering(PHHapticRenderInfo hri){
 				outForce.v() += addforce;
 				outForce.w() += Vec3d();
 			
-				irs[i]->force = -1 * addforce * hri.hdt / hri.pdt;
-				hri.hsolids->at(irs[i]->solidID)->AddForce(irs[i]->force, irs[i]->contactPointW);
+				Vec3d pointForce = -1 * addforce;
+				//irs[i]->force = pointForce;
+				hri.hsolids->at(irs[i]->solidID)->AddForce(pointForce, irs[i]->contactPointW);
+				PHSolid* localSolid = &hri.hsolids->at(irs[i]->solidID)->localSolid;
+				PHSolidPairForHaptic* sp = hri.sps->item(irs[i]->solidID, pointer->GetPointerID());
+				sp->force += pointForce;	// あるポインタが剛体に加える力
+				sp->torque += (irs[i]->contactPointW - localSolid->GetPose() * localSolid->GetCenterPosition()) ^ pointForce;
 			}
 		}
 		pointer->SetForce(outForce);
@@ -148,28 +183,20 @@ void PHHapticRenderBase::ConstraintBasedRendering(PHHapticRenderInfo hri){
 				Vec3d pointForce = Vec3d();	// 各接触点に働く力
 				Vec3d dir = irs[i]->normal * irs[i]->depth;
 				for(int j = 0; j < 3; j++){
-					pointForce[j] = ratio[j] * dir[j] *  hri.hdt / hri.pdt;
+					pointForce[j] = ratio[j] * dir[j];// *  hri.hdt / hri.pdt;
 				}
-				irs[i]->force = pointForce;
-				hri.sps->item(irs[i]->solidID, pointer->GetPointerID())->force = pointForce;
-				hri.hsolids->at(irs[i]->solidID)->AddForce(pointForce, irs[i]->contactPointW);
+				//irs[i]->force = pointForce;
+				hri.hsolids->at(irs[i]->solidID)->AddForce(pointForce, irs[i]->contactPointW);	// 各ポインタが剛体に加えた全ての力
+				PHSolid* localSolid = &hri.hsolids->at(irs[i]->solidID)->localSolid;
+				PHSolidPairForHaptic* sp = hri.sps->item(irs[i]->solidID, pointer->GetPointerID());
+				sp->force += pointForce;	// あるポインタが剛体に加える力
+				sp->torque += (irs[i]->contactPointW - localSolid->GetPose() * localSolid->GetCenterPosition()) ^ pointForce;
+				//DSTR << sp->force << std::endl;
+				//DSTR << sp->torque << std::endl;
 			}
 		}
 		pointer->SetForce(outForce);
 		//CSVOUT << outForce.v().y << std::endl;
-	}
-}
-
-void PHHapticRenderBase::ReflectForce2Solid(PHSolidsForHaptic* hsolids, double hdt, double pdt){
-//	DSTR << "----------" << std::endl;
-	for(int i = 0; i < (int)hsolids->size(); i++){
-		if(hsolids->at(i)->bPointer) continue;
-		PHSolidForHaptic* hsolid = hsolids->at(i);
-		PHSolid* sceneSolid = hsolid->sceneSolid;
-		sceneSolid->AddForce(hsolid->force);
-		sceneSolid->AddTorque(hsolid->torque);
-		hsolid->force.clear();
-		hsolid->torque.clear();
 	}
 }
 
@@ -178,17 +205,7 @@ void PHHapticRenderBase::VirtualCoupling(PHHapticPointer* pointer){
 
 
 
-// 1/11力覚レンダリング
-// 実装予定
-// 球型ポインタのみが使えるProxy3DoF(池田くんが作った奴）
-// proxyに質量を与え、stick-slip frictionが提示できるproxy simulation
-// 凸形状が使えるmultiple point intermediate representation
-// 凸形状が使えるconstratint based rendering
-// 凸形状が使えるvirtual coupling
 
-
-// PHSolidForHapticのsolidはポインタなので、physics側への剛体のポインタになってる
-// 複製する必要がある
 
 
 }

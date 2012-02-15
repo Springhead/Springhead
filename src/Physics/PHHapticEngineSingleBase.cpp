@@ -20,8 +20,19 @@ void PHHapticEngineSingleBase::Step1(){
 	hri.loopCount = 1.0;
 	hri.bInterpolatePose = false;
 	hri.bMultiPoints = false;
-	//HapticRendering(hri);
-	ConstraintBasedRendering(hri);
+	hapticRender.SetRenderMode(PHHapticRenderBase::PENALTY6D);
+	hapticRender.SetRenderMode(PHHapticRenderBase::CONSTRAINT);
+	hapticRender.HapticRendering(hri);
+	//レンダリングした力をシーンに反映
+	for(int i = 0; i < (int)NHapticSolids(); i++){
+		PHSolidForHaptic* hsolid = GetHapticSolid(i);
+		if(hsolid->bPointer) continue;
+		PHSolid* sceneSolid = hsolid->sceneSolid;
+		sceneSolid->AddForce(hsolid->force);
+		sceneSolid->AddTorque(hsolid->torque);
+		hsolid->force.clear();
+		hsolid->torque.clear();
+	}
 }
 
 void PHHapticEngineSingleBase::Step2(){}
