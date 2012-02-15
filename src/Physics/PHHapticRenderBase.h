@@ -6,24 +6,32 @@
 
 namespace Spr{;
 
+struct PHHapticRenderInfo{
+	PHHapticPointers*		pointers;
+	PHSolidsForHaptic*		hsolids;
+	PHSolidPairsForHaptic*	sps;
+	int loopCount;
+	double pdt;
+	double hdt;
+	bool bInterpolatePose;
+	bool bMultiPoints;
+};
+
 class PHHapticRenderBase{
 public:
-	struct PHHapticRenderInfo{
-		PHHapticPointers*		pointers;
-		PHSolidsForHaptic*		hsolids;
-		PHSolidPairsForHaptic*	sps;
-		int loopCount;
-		double pdt;
-		double hdt;
-		bool bInterpolatePose;
-		bool bMultiPoints;
-	};
-
+	enum RenderMode{
+		PENALTY1POINT,
+		PENALTY6D,
+		CONSTRAINT,
+		VIRTUALCOUPLING,
+	} mode;
+	virtual void SetRenderMode(RenderMode m){ mode = m; }
+	virtual void HapticRendering(PHHapticRenderInfo hri);
 	virtual PHIrs CompIntermediateRepresentation(PHHapticPointer* pointer, PHHapticRenderInfo hri);
 	virtual void PenaltyBasedRendering(PHHapticRenderInfo hri);
 	virtual void ConstraintBasedRendering(PHHapticRenderInfo hri);
-	virtual void ReflectForce2Solid(PHSolidsForHaptic* hsolids, double hdt, double pdt);
 	virtual void VirtualCoupling(PHHapticPointer* pointer);
+
 	// ガウスザイデル法を使いAx+b>0を解く
 	template <class AD, class XD, class BD>
 	void GaussSeidel(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b){

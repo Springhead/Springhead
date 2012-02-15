@@ -22,8 +22,9 @@ void PHHapticLoopImpulse::HapticRendering(){
 	hri.loopCount = loopCount;
 	hri.bInterpolatePose = true;
 	hri.bMultiPoints = true;
-	//PenaltyBasedRendering(hri);
-	ConstraintBasedRendering(hri);
+	hapticRender.SetRenderMode(PHHapticRenderBase::CONSTRAINT);
+	hapticRender.SetRenderMode(PHHapticRenderBase::PENALTY6D);
+	hapticRender.HapticRendering(hri);
 }
 
 
@@ -57,7 +58,16 @@ void PHHapticEngineImpulse::SyncHaptic2Physic(){
 			*pst = *hst;	// haptic側で保持しておくべき情報を同期
 		}
 	}
-	hapticLoop->ReflectForce2Solid(hapticLoop->GetHapticSolids(), GetHapticTimeStep(), GetPhysicsTimeStep());
+	// レンダリングした力をシーンに反映
+	for(int i = 0; i < (int)hapticLoop->NHapticSolids(); i++){
+		PHSolidForHaptic* hsolid = hapticLoop->GetHapticSolid(i);
+		if(hsolid->bPointer) continue;
+		PHSolid* sceneSolid = hsolid->sceneSolid;
+		sceneSolid->AddForce(hsolid->force * GetHapticTimeStep() / GetPhysicsTimeStep());
+		sceneSolid->AddTorque(hsolid->torque * GetHapticTimeStep() / GetPhysicsTimeStep());
+		hsolid->force.clear();
+		hsolid->torque.clear();
+	}
 }
 
 void PHHapticEngineImpulse::SyncPhysic2Haptic(){

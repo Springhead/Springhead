@@ -14,9 +14,6 @@ PHSolidForHaptic::PHSolidForHaptic(){
 	NLocalFirst = 0;
 	NLocal = 0;
 }
-PHSolidForHaptic::PHSolidForHaptic(const PHSolidForHaptic& s){
-	*this = s;
-}
 void PHSolidForHaptic::AddForce(Vec3d f){
 	force += f;
 }
@@ -226,6 +223,8 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 	// LocalDynamicsの場合は法線の補間のみでよい。
 	// 法線の補間はPHShapePairForHapticでやる。
 	*/
+	force.clear();
+	torque.clear();
 	lastInterpolationPose = interpolationPose;
 	interpolationPose = curSolid[0]->GetPose();
 	if(bInterpolatePose){
@@ -271,6 +270,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 			for(int k = 0; k < (int)sp->irs.size(); k++){
 				PHIr* ir = sp->irs[k];
 				ir->solidID = solidID[0];
+				ir->solidPair = this;
 				ir->r = ir->pointerPointW - curSolid[1]->GetCenterPosition();
 				ir->contactPointVel = curSolid[0]->GetPointVelocity(ir->contactPointW);
 				ir->pointerPointVel = curSolid[1]->GetPointVelocity(ir->pointerPointW);	

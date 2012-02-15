@@ -10,7 +10,7 @@ using namespace Spr;
 
 #define SPIDAR 0
 // 0:single, 1:impulsemulti, 2:LD
-#define ENGINETYPE 2
+#define ENGINETYPE 1
 #define DEBUG_CON 0
 #define DEBUG_RENDER 1
 
@@ -53,13 +53,17 @@ void MyApp::Init(int argc, char* argv[]){
 		phscene = GetSdk()->GetScene()->GetPHScene();
 		phscene->SetTimeStep(0.05);
 		
+		//GetCurrentWin()->GetTrackball()->SetMode(true);
+		Vec3d pos = Vec3d(0, 0, 1.21825);
+		GetCurrentWin()->GetTrackball()->SetPosition(pos);
+
 		CDBoxDesc bd;
 		
 		// °‚ðì¬
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
 		bd.material.mu= 0.5;
 		bd.material.mu0 = 0.5;
-		bd.material.e = 0.0;
+		bd.material.e = 0.1;
 		PHSolidIf* floor = phscene->CreateSolid();
 		floor->SetDynamical(false);
 		floor->AddShape(phSdk->CreateShape(bd));
@@ -81,7 +85,7 @@ void MyApp::Init(int argc, char* argv[]){
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		pointer->AddShape(phSdk->CreateShape(bd));
+		pointer->AddShape(phSdk->CreateShape(cd));
 		pointer->SetFramePosition(Vec3d(0.0, 0.0, 0.0));
 		pointer->SetDynamical(false);
 		pointer->SetIntegrate(false);
@@ -103,8 +107,10 @@ void MyApp::Init(int argc, char* argv[]){
 		phscene->SetTimeStep(0.001);
 #elif ENGINETYPE == 1
 		h->SetHapticEngineType(PHHapticEngine::MULTI_THREAD);
+		phscene->SetTimeStep(0.02);
 #elif ENGINETYPE == 2
 		h->SetHapticEngineType(PHHapticEngine::LOCAL_DYNAMICS);
+		phscene->SetTimeStep(0.02);
 #endif
 		physicsTimerID = GetTimer(0)->GetID();
 		GetTimer(0)->SetMode(UTTimerIf::IDLE);
@@ -162,10 +168,8 @@ void MyApp::Keyboard(int key, int x, int y){
 			{
 				timer->Stop();
 				spg->Calibration();
-				Affinef aff;
-				GetCurrentWin()->GetRender()->GetViewMatrix(aff);
-				DSTR << "ViewMatrix" << std::endl;
-				DSTR << aff << std::endl;
+				DSTR << "CameraPosition" << std::endl;
+				DSTR << GetCurrentWin()->GetTrackball()->GetPosition() << std::endl;
 				timer->Start();
 			}
 			break;

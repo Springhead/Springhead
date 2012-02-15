@@ -8,12 +8,13 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHHapticLoopImp
-class PHHapticLoopImp : public PHHapticRenderBase, public SceneObject{
+class PHHapticLoopImp : public SceneObject{
 	SPR_OBJECTDEF_NOIF(PHHapticLoopImp);
 protected:
 	PHHapticPointers hapticPointers;
 	PHSolidsForHaptic hapticSolids;
 	PHSolidPairsForHaptic solidPairs;
+	PHHapticRenderBase hapticRender;
 public:
 	PHHapticEngineImp* engineImp;
 	int loopCount;

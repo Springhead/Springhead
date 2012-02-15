@@ -17,14 +17,14 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHSolidForHaptic
+//Haptic側からPhysics側へ渡す情報
 struct PHSolidForHapticSt{
 public:
-	PHSolid localSolid;		// sceneSolidのクローン
 	Vec3d force;			// 力覚レンダリングによって加わる全ての力
 	Vec3d torque;;			// 力覚レンダリングによって加わる全てのトルク
 };
-
-class PHSolidForHaptic : public PHSolidForHapticSt, public UTRefCount{  
+// Physics側からHaptic側へ渡す情報
+struct PHSolidForHapticSt2{
 public:
 	PHSolid* sceneSolid;	// PHSceneが持つ剛体
 	
@@ -34,12 +34,16 @@ public:
 	SpatialVector b;		///< 予測シミュレーションで求めたモビリティ（重力等の定数項）
 	SpatialVector curb;		///< 通常シミュレーションででた定数項
 	SpatialVector lastb;	///< 前回の予測シミュレーションで求めた定数項
+};
+
+class PHSolidForHaptic : public PHSolidForHapticSt, public PHSolidForHapticSt2, public UTRefCount{  
+public:
+	PHSolid localSolid;		// sceneSolidのクローン
 
 	// 衝突判定用の一時変数
 	int NLocalFirst;		// はじめて近傍になる力覚ポインタの数（衝突判定で利用）
 	int NLocal;				// 近傍な力覚ポインタの数（衝突判定で利用）
 	PHSolidForHaptic();
-	PHSolidForHaptic(const PHSolidForHaptic& s);
 	PHSolid* GetLocalSolid(){ return &localSolid; }
 	void AddForce(Vec3d f);
 	void AddForce(Vec3d f, Vec3d r);
@@ -72,8 +76,8 @@ public:
 //----------------------------------------------------------------------------
 
 struct PHSolidPairForHapticSt{
-	Vec3d force;			///< LD, Predictionで使うテスト力
-	Vec3d torque;			///< LD, Predictionで使うテストトルク
+	Vec3d force;			///< 力覚ポインタがこの剛体に加える力
+	Vec3d torque;			///< 力覚ポインタがこの剛体に加えるトルク
 
 	Posed interpolationPose;	///< 剛体の補間姿勢
 	Posed lastInterpolationPose;
