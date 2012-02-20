@@ -87,8 +87,6 @@ public:
 	public:
 		///	頂点ID。順番で面の表裏を表す。
 		int vertices[3];
-		///	原点から近い順にvertices[3]を並べ替えた頂点ID
-		int ascendVtx[3];	///	毎熱Stepで使う？使わない？
 		void Update();
 		///	頂点IDで比較
 		bool operator < (const Face& f2);
@@ -96,6 +94,10 @@ public:
 		bool operator == (const Face& f2);
 		//行列計算に用いるための面積
 		double area;				///	四面体の各面の面積
+
+		//>	熱計算特有のパラメータ　継承して使う
+		///	原点から近い順にvertices[3]を並べ替えた頂点ID
+		int ascendVtx[3];	///	毎熱Stepで使う？使わない？
 		double heatTransRatio;		///	その面における熱伝達率		///	構成節点の熱伝達率の相加平均す		///	すべての関数で、この値を更新できていないので、信用できない。
 		bool alphaUpdated;			///	属する頂点の熱伝達率が更新された際にtrueに	
 		bool deformed;				///	属する頂点の移動により、変形されたとき
@@ -103,7 +105,10 @@ public:
 		double heatflux;			///	熱流束値　構成する３節点の相加平均で計算
 		double fluxarea;			//>	 熱流束の計算に用いる、faceのエリア
 		bool mayIHheated;				//	IHで加熱する可能性のある面　段階的に絞る
-		std::vector<Vec2d> innerIH;	///	IH加熱領域内に入る座標点の入ったベクター
+		std::vector<Vec2d>	ihvtx;//[12];	//	vectorにしなくても、数は最大、以下くらい。vectorだと領域を使いすぎるので.
+		//Vec2d ihvtx[12];			//	IH加熱領域内に入る点の(x,z)座標 (x,z)
+		//unsigned ninnerVtx;			//	IH加熱領域内に入る点の(x,z)座標の数
+		std::vector<Vec3d> shapefunc;//[12];		//	IH加熱領域内に入る点の形状関数(f1,f2,f3)
 	};
 	//	辺
 	struct Edge{
