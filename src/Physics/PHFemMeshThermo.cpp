@@ -797,7 +797,8 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 						}
 					}
 					if(tempjudge == 0){
-						faces[i].innerIH.push_back(tempcoord);
+						//faces[i].innerIH.push_back(tempcoord);
+						faces[i].ihvtx.push_back(tempcoord);
 //						DSTR << "tempcoord: " << tempcoord <<std::endl;
 					}
 					for(unsigned k=0;k < intersectVtx.size();k++){
@@ -822,7 +823,7 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 						}
 					}
 					if(tempjudge == 0){
-						faces[i].innerIH.push_back(tempcoord);
+						faces[i].ihvtx.push_back(tempcoord);
 //						DSTR << "tempcoord: " << tempcoord <<std::endl;
 					}
 					for(unsigned k=0;k < intersectVtx.size();k++){
@@ -840,7 +841,8 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 					//> ‹‚ß‚½Œð“_‚ð‘ã“ü‚·‚é
 					Vec2d vtxXZ = Vec2d(0.0,0.0);		//> Œð“_‚ÌÀ•W‚ð‘ã“ü
 					//> Œð“_‚Ìvector‚ÉŠi”[
-					faces[i].innerIH.push_back(vtxXZ);
+					faces[i].ihvtx.push_back(vtxXZ);
+					//faces[i].innerIH.push_back(vtxXZ);
 					//intersectVtx.push_back(vtxXZ);
 				}
 				else if(judge[0] == 1 && judge [1]==2 )
@@ -932,7 +934,7 @@ void PHFemMeshThermo::CalcIHdqdt4(double radius,double Radius,double dqdtAll){
 						}
 					}
 					if(tempjudge == 0){
-						faces[i].innerIH.push_back(tempcoord);
+						faces[i].ihvtx.push_back(tempcoord);
 						DSTR << "tempcoord: " << tempcoord <<std::endl;
 					}
 					for(unsigned k=0;k < intersectVtx.size();k++){
@@ -957,7 +959,7 @@ void PHFemMeshThermo::CalcIHdqdt4(double radius,double Radius,double dqdtAll){
 						}
 					}
 					if(tempjudge == 0){
-						faces[i].innerIH.push_back(tempcoord);
+						faces[i].ihvtx.push_back(tempcoord);
 						DSTR << "tempcoord: " << tempcoord <<std::endl;
 					}
 					for(unsigned k=0;k < intersectVtx.size();k++){
@@ -975,7 +977,7 @@ void PHFemMeshThermo::CalcIHdqdt4(double radius,double Radius,double dqdtAll){
 					//> ‹‚ß‚½Œð“_‚ð‘ã“ü‚·‚é
 					Vec2d vtxXZ = Vec2d(0.0,0.0);		//> Œð“_‚ÌÀ•W‚ð‘ã“ü
 					//> Œð“_‚Ìvector‚ÉŠi”[
-					faces[i].innerIH.push_back(vtxXZ);
+					faces[i].ihvtx.push_back(vtxXZ);
 					//intersectVtx.push_back(vtxXZ);
 				}
 				else if(judge[0] == 1 && judge [1]==2 )
