@@ -19,10 +19,10 @@ class PHFemMeshThermo: public PHFemMesh{
 	SPR_DECLMEMBEROF_PHFemMeshThermoDesc;
 protected:
 	//	これって、faceの中が適当じゃないか？
-	struct IHVtx{
-		std::vector<Vec2d> intersection;		//	この交点を
-		double shapefunction[3];				//	形状関数の
-	}
+	//struct IHVtx{
+	//	std::vector<Vec2d> intersection;		//	この交点を
+	//	double shapefunction[3];				//	形状関数の
+	//}
 
 
 
