@@ -18,6 +18,14 @@ class PHFemMeshThermo: public PHFemMesh{
 	SPR_OBJECTDEF(PHFemMeshThermo);
 	SPR_DECLMEMBEROF_PHFemMeshThermoDesc;
 protected:
+	//	これって、faceの中が適当じゃないか？
+	struct IHVtx{
+		std::vector<Vec2d> intersection;		//	この交点を
+		double shapefunction[3];				//	形状関数の
+	}
+
+
+
 	//PHFemMeshThermo内のみで用いる計算
 
 	//%%%%%%%%		行列の宣言・定義		%%%%%%%%//	
@@ -174,6 +182,7 @@ protected:
 	//FWObjectIf					fwpan;
 	//FWObjectIf*					fwpan;
 	//UTRef<FWObjectIf*>			fwpan_;
+
 
 public:
 	/////	FemMeshThermo

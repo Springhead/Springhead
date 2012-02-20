@@ -419,7 +419,7 @@ Vec2d PHFemMeshThermo::CalcIntersectionPoint(unsigned id0,unsigned id1,double r,
 
 Vec3i PHFemMeshThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
 	///	3点を原点に近い順に並べる		//>	クイックソートにしたいかも？
-	int vtxmin[3];
+	int vtxmin[3];		///	通しの頂点番号を入れる
 	vtxmin[0] = faces[faceID].vertices[0];
 	vtxmin[1] = 0;
 	vtxmin[2] = 0;
@@ -455,7 +455,7 @@ Vec3i PHFemMeshThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
 	}
 	//> 返す準備
 	Vec3i vtxarray = Vec3i(vtxmin[0],vtxmin[1],vtxmin[2]);
-	return vtxarray;
+	return vtxarray;		///	通しの頂点番号を返す
 }
 void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 	//> radius value check
@@ -544,12 +544,12 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 	
 	//> 交点を求め、faces構造体のvectorに領域内の頂点や交点を格納
 	for(unsigned i=0;i < nSurfaceFace; i++){
-		if(faces[i].mayIHheated){		////	may から 確実になっているはず
+		if(faces[i].mayIHheated){		////	may から 確実になった
 			//>	頂点を入れるvector or 配列		//>	円環領域と重なる形状を計算するために、重なる領域内にあるface頂点、辺との交点をfaceの辺0~2の順にvectorに格納していく。格納時に重複が無いようにする
-			//	どちらを使っているのか？↓
-			std::vector<Vec2d> intersection;		//	交点
+			//	faceクラスに移行中
+			std::vector<Vec2d> intersection;		//	領域内にある頂点と交点を格納
 			std::vector<Vec2d> tempXZ;				//	領域内の点を格納するvector
-			//	area計算されてなければ、計算しておく
+			//	area:face面積を計算されてなければ、計算
 			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);
 			//>	face内の頂点のdisFromOriginの値でソート
 			unsigned nearestvtxnum		=	0;				///	原点に一番近い頂点のface頂点番号(0~2)
@@ -557,23 +557,16 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 				double hikaku = DBL_MAX;
 				if(hikaku > vertices[faces[i].vertices[j]].disFromOrigin){	hikaku = vertices[faces[i].vertices[j]].disFromOrigin;	nearestvtxnum = j;}
 			}
-
 			///	3点を原点に近い順に並べる
 			Vec3i vtxOrder = ArrangeFacevtxdisAscendingOrder(i);		///	ArrangeVtxdisAscendingOrder(int faceID,int vtx0,int vtx1,int vtx2)
 			//DSTR <<  "小さい順か確認: " << vertices[vtxOrder[0]].disFromOrigin << ", "<< vertices[vtxOrder[1]].disFromOrigin << ", "<< vertices[vtxOrder[2]].disFromOrigin << std::endl;
-			int smallOrder0 = 0;
-			
-			//> face内の各頂点が属している領域を判定 0 | 1 | 2
-			unsigned vtxexistarea[3];
+			/// face内の各頂点が属している領域を判定 0 | 1 | 2
+			unsigned vtxdiv[3];		///	頂点が存在している領域
 			for(unsigned j=0;j<3;j++){
-				if( vertices[vtxOrder[j]].disFromOrigin < radius){
-					vtxexistarea[j] = 0;
+				if( vertices[vtxOrder[j]].disFromOrigin < radius){			vtxdiv[j] = 0;
 				/// 円弧上を含み、円弧上も円環領域内と定義する
-				}else if(radius <= vertices[vtxOrder[j]].disFromOrigin && vertices[vtxOrder[j]].disFromOrigin <= Radius ){
-					vtxexistarea[j] = 1;
-				}else if(Radius < vertices[vtxOrder[j]].disFromOrigin){
-					vtxexistarea[j] = 2;
-				}
+				}else if(radius <= vertices[vtxOrder[j]].disFromOrigin && vertices[vtxOrder[j]].disFromOrigin <= Radius ){	vtxdiv[j] = 1;
+				}else if(Radius < vertices[vtxOrder[j]].disFromOrigin){		vtxdiv[j] = 2;	}
 			}
 			//> debug
 			//DSTR << "頂点の領域番号: " ;
@@ -584,6 +577,112 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 			//DSTR << std::endl;
 			int vtxexistareadebug =0;
 			/// 2012.3.14ここまで
+
+			//	排列の成分の値の変化を見て、始点、交点、辺対となる点を順にvectorに格納していく
+			
+			//	vectorに入れる際の注意!!! %%%%%%%%%%%%%%%%%%
+			// %%%	vtxOrder[ 原点から近い頂点の順(0,1,2) ]:その頂点IDの原点に近い順に並べ替えてIDを格納		(例:vtxOrder[0] = (ID)278, [1] = (ID)35, [2] = (ID)76 etc)
+			// %%%	vtxdiv[ 原点から近い頂点の順(0,1,2) ]:その頂点が円環領域の内側（1）か外側(0,2)かを表す
+
+			//>	faceの辺ごとに場合分け
+			///	 j と(隣の) (j+1)%3 とで対を成す辺について
+			for(unsigned j=0;j<3;j++){
+				//debug
+				DSTR <<"j: " << j << ", vtxOrder[j]: " << vtxOrder[j] << ", vtxOrder[(j+1)%3]: " << vtxOrder[(j+1)%3] << std::endl;
+				DSTR << "vertices[vtxOrder[j]].pos: (" << vertices[vtxOrder[j]].pos.x  << ", "<< vertices[vtxOrder[j]].pos.z << ") " << std::endl;
+				DSTR << "vertices[vtxOrder[(j+1)%3]].pos: (" << vertices[vtxOrder[(j+1)%3]].pos.x  << ", "<< vertices[vtxOrder[(j+1)%3]].pos.z << ") " << std::endl; 
+				//DSTR << "vertices[vtxOrder[(j+1)%3]].pos.x: " << vertices[vtxOrder[(j+1)%3]].pos.x << std::endl;
+				DSTR << std::endl;
+
+				//	0の領域にある辺
+				if(vtxdiv[j] == 0 && vtxdiv[(j+1)%3] == 0){
+					//	いずれの点をも領域内vectorには入れない
+				}
+				//	内半径と交わる辺(内→外と外→内)
+				else if(vtxdiv[j] == 0 && vtxdiv[(j+1)%3] - vtxdiv[j] > 0 || vtxdiv[j] == 1 && vtxdiv[(j+1)%3] - vtxdiv[j] < 0){
+					//	(始点（↑で入れている場合には不要））と内半径とを、対の点に入れる
+					if(vtxdiv[(j+1)%3] - vtxdiv[j] > 0){	//内→外
+						//	内半径との交点を求める
+						// CalcIntersectionVtxhogehoge()
+						//	内半径との交点のx,z座標を入れる
+						//intersection.push_back()
+						//組対点の座標をintersectionに入れる
+						//	置き換え//intersection.push_back(Vec2d(vertices[vtxdiv[(j+1)%3]].pos.x,vertices[vtxdiv[(j+1)%3]].pos.z));
+						faces[i].ihvtx.push_back(Vec2d(vertices[vtxOrder[(j+1)%3]].pos.x,	vertices[vtxOrder[(j+1)%3]].pos.z));
+						//> 形状関数を格納する		//ここで分かる形状関数は、頂点間の距離から分かる線形補間係数　すなわち、割合　０＜＝～＜＝１で良くて、最後に、行列に入れる前に、割合以外を入れればいいのかな？
+						double f[3]={0.0, 0.0, 0.0};
+						//Vec3d shapef = Vec3d(f);
+						faces[i].shapefunc.push_back(Vec3d(f));
+					}else if(vtxdiv[(j+1)%3] - vtxdiv[j] < 0){		//外→内
+						//	内半径との交点を求める
+						//	内半径との交点だけを入れる
+					}
+					//	組対点を入れる
+				}
+				//	円環領域内にある辺
+				else if(vtxdiv[j] == 1 && vtxdiv[(j+1)%3] == 1){
+					//	(始点を入れているのなら、)辺対点をvectorに入れる
+					//	始点は入れずとも、最後に入るはず
+					////intersection.push_back(Vec2d(vertices[vtxdiv[(j+1)%3]].pos.x,vertices[vtxdiv[(j+1)%3]].pos.z));
+					faces[i].ihvtx.push_back(Vec2d(vertices[vtxOrder[(j+1)%3]].pos.x,	vertices[vtxOrder[(j+1)%3]].pos.z));
+				}
+				//	外半径と交わる辺(内→外、外→内)
+				else if(vtxdiv[j] == 1 && vtxdiv[(j+1)%3] == 2 || vtxdiv[j] == 2 && vtxdiv[(j+1)%3] == 1){
+					// 内向きか外向きかを、符号で判定することで、上の	or	のどちらかを判定し、vectorに入れる順番を変える
+					//	外半径との交点を求める
+					//	内→外 2 - 1 = 1 > 0
+					if(vtxdiv[(j+1)%3] - vtxdiv[j] > 0){
+						//	交点を格納
+
+						//	組対点のX,Z座標を格納
+						faces[i].ihvtx.push_back(Vec2d(vertices[vtxOrder[(j+1)%3]].pos.x,	vertices[vtxOrder[(j+1)%3]].pos.z));
+						////	?→	intersection.push_back(Vec2d(vertices[vtxOrder[(j+1)%3]].pos.x,vertices[vtxOrder[(j+1)%3]].pos.z));
+						
+					}
+					//	外→内 1 - 2 = -1 < 0
+					else if(vtxdiv[(j+1)%3] - vtxdiv[j] < 0){
+
+					}
+					else if(vtxdiv[(j+1)%3] - vtxdiv[j] == 0) assert(0);
+					//	(始点がvectorに入っていることを確認する)交点をvectorに入れる
+				}
+				//	内半径と外半径とのどちらとも交わる辺(内→外、外→内)
+				else if(vtxdiv[j] == 0 && vtxdiv[(j+1)%3] == 2 || vtxdiv[j] == 2 && vtxdiv[(j+1)%3] == 0){
+					// 内向きか外向きかを、符号で判定することで、上の	or	のどちらかを判定し、vectorに入れる順番を変える
+					//どちらとも交わる条件
+				}
+				//	内半径と外半径と交わる辺(外側から内側へ)
+				//else if(){
+				//}
+					//	if文の中で、差分がプラスかマイナスで判定できそう
+				
+				//	外半径の外側にある辺
+				else if(vtxdiv[j] == 2 && vtxdiv[(j+1)%3] == 2){
+					//	外半径の外側にある条件
+				}
+				//内側から外側に行く辺は上で記述できるが、外側から内側に向かう辺をこれで記述できるのか？
+			}
+
+			//	以下、再帰形式にする前のお試しコード	→	不要
+
+			//	0の領域にある辺
+			if(vtxdiv[0] == 0 && vtxdiv[1] == 0 ){
+				//	vectorには入れない
+			}
+
+			//	内半径と交わる辺
+			if(vtxdiv[0] == 0 && vtxdiv[1] - vtxdiv[0] > 0){
+
+			}
+
+			//	円環領域内にある辺
+			
+			//	外半径と交わる辺
+
+			//	内半径と外半径と交わる辺
+
+			//	外半径の外側にある辺
+
 
 			///	頂点の組みからなる辺について、内側の頂点から領域内の頂点又は、辺と交わる交点をvectorに格納していく
 			// 領域内(radiusより外側　かつ　Radiusより内側)にスタート頂点がある時
