@@ -255,17 +255,29 @@ public:
 
 	
 	void CalcVtxDisFromOrigin();			///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
-	void CalcIHdqdt(double r,double R,double dqdtAll);			///	IHヒーターの設定
-	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);		///	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
-	void CalcIHdqdt2(double r,double R,double dqdtAll);			///	IHヒーターの設定
-	void CalcIHdqdt3(double r,double R,double dqdtAll);			///	IHヒーターの設定	1頂点でも領域内に入っているときには、それをIH計算の領域に加算する
-	void CalcIHdqdt4(double radius,double Radius,double dqdtAll);			///	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。
-	void CalcIHdqdt5(double radius,double Radius,double dqdtAll);			///	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。
 
-	Vec3i ArrangeFacevtxdisAscendingOrder(int faceID);	/// faceの頂点をfaceの属する物体の原点に近い順に並べる
+	void CalcIHdqdt(double r,double R,double dqdtAll);				//	IHヒーターの設定
+	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);		//	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
+	void CalcIHdqdt2(double r,double R,double dqdtAll);				//	IHヒーターの設定
+	void CalcIHdqdt3(double r,double R,double dqdtAll);				//	IHヒーターの設定	1頂点でも領域内に入っているときには、それをIH計算の領域に加算する
+	void CalcIHdqdt4(double radius,double Radius,double dqdtAll);	//	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。
+	//	face頂点のIH加熱時の行列成分を計算	半径10cm程度の円弧と、円環幅数cm幅をまたぐ程度の三角形サイズを想定
+	void CalcIHdqdt5(double radius,double Radius,double dqdtAll);
 
-	Vec2d CalcIntersectionPoint(unsigned id0,unsigned id1,double r,double R);		/// 1点と交わることを想定:id0.id1を結んだ線分と、半径rまたはRの円が交わる交点を求める。(ｓ，ｙ)座標を返す
-	std::vector<Vec2d> CalcIntersectionPoint2(unsigned id0,unsigned id1,double r,double R);		/// 2点と交わることを想定:			同上
+	// face頂点を物体原点から近い順に並べかえ、faceクラス変数:ascendVtx[0~2]に近い順の頂点IDを格納;ascendVtx[0]が原点最寄り	
+	void ArrangeFacevtxdisAscendingOrder(int faceID);
+
+	// 1点と交わることを想定:id0.id1を結んだ線分と、半径rまたはRの円が交わる交点を求める。(ｓ，ｙ)座標を返す
+	Vec2d CalcIntersectionPoint(unsigned id0,unsigned id1,double r,double R);
+	// 半径r,Rの円弧と2点で作る線分の交点を求める
+	//	...r、Rの2円弧と交わる2交点
+	std::vector<Vec2d> CalcIntersectionPoint2(unsigned id0,unsigned id1,double r,double R);
+	// 半径rの円弧と線分の交点座標を１つ計算
+	Vec2d CalcVtxCircleAndLine(
+		unsigned id0,	//	線分の両端点の頂点番号（0 ~ vertices.size()）
+		unsigned id1,
+		double radius	//	半径
+		);
 	//Vec4d CalcIntersectionPoint4(unsigned id0,unsigned id1,double r,double R);		/// 4点と交わることを想定:			同上
 	///	メッシュ固有のパラメータの設定
 	void SetRohSpheat(double roh,double Cp);	// 素材固有の密度、比熱の設定
