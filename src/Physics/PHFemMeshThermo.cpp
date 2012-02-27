@@ -417,7 +417,7 @@ Vec2d PHFemMeshThermo::CalcIntersectionPoint(unsigned id0,unsigned id1,double r,
 		return interSection;
 }
 
-Vec3i PHFemMeshThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
+void PHFemMeshThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
 	///	3点を原点に近い順に並べる		//>	クイックソートにしたいかも？
 	int vtxmin[3];		///	通しの頂点番号を入れる
 	vtxmin[0] = faces[faceID].vertices[0];
@@ -440,8 +440,8 @@ Vec3i PHFemMeshThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
 		vtxmin[2] = faces[faceID].vertices[2];
 	}
 	//>	小さい順になっていないときは、assert(0)
-	if(!(vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin && vertices[vtxmin[1]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin 
-		&& vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin)){		assert(0);	}
+	if( !(vertices[vtxmin[0]].disFromOrigin < vertices[vtxmin[1]].disFromOrigin && vertices[vtxmin[1]].disFromOrigin < vertices[vtxmin[2]].disFromOrigin )
+		){	assert(0);}
 	/// debug
 	//DSTR << "小さい順 ";
 	//for(unsigned j=0; j <3; j++){
@@ -449,16 +449,111 @@ Vec3i PHFemMeshThermo::ArrangeFacevtxdisAscendingOrder(int faceID){
 	//	if(j<2){ DSTR << ", ";}
 	//}
 	DSTR << std::endl;
-	/// face内の配列にface内の順番を格納
+	/// face内の配列にface内での原点から近い順番を格納
 	for(unsigned i=0;i<3;i++){
 		faces[faceID].ascendVtx[i] = vtxmin[i];
 	}
+	//DSTR << "vtxmin[0~2]:  " << vtxmin[0] <<" ," << vtxmin[1] << " ,"  << vtxmin[2] << std::endl;	
+	//vtxmin[0~2]:  11 ,324 ,281 ,vtxmin[0~2]:  353 ,11 ,324 この順に原点に近い
+
+	//	以下、削除
 	//> 返す準備
-	Vec3i vtxarray = Vec3i(vtxmin[0],vtxmin[1],vtxmin[2]);
-	return vtxarray;		///	通しの頂点番号を返す
+	//Vec3i vtxarray = Vec3i(vtxmin[0],vtxmin[1],vtxmin[2]);
+	//	ex	vtxarray: (    11    324    281)	,vtxarray: (   353     11    324)
+	//DSTR << "vtxarray: " << vtxarray << std::endl; 
+	//return vtxarray;		///	通しの頂点番号を返す
 }
+Vec2d PHFemMeshThermo::CalcVtxCircleAndLine(unsigned id0,unsigned id1,double radius){
+	//	x-z平面での半径rの円環と線分の交点の座標を求める
+	//	関数が呼ばれる条件：交わることが明白なとき、交わる円弧の半径と、円弧の内・外側の頂点を引受け計算
+
+	// ...2点を通る直線の方程式の傾きと切片を求める
+	double constA = 0.0;	//	傾き
+	double constB = 0.0;	//	切片
+	double constX1 = 0.0;	//	交点のx 座標１
+	double constX1_ = 0.0;	//		  x 座標候補２
+	double constZ1 = 0.0;	//		  Y 座標
+	double constZ1_ = 0.0;	//		  Y 座標候補２
+
+	//	...頂点番号を原点に近い＝小さい順( id0 < id1 )に並び替え
+	if( vertices[ id1 ].disFromOrigin	<	vertices[ id0 ].disFromOrigin ){
+		unsigned farfromOriginId = id0;
+		id0 = id1;
+		id1 = farfromOriginId;
+	}	// id0 < id1 を保証
+
+	// ...傾きと切片を求める
+	//
+	constA = ( vertices[id0].pos.z - vertices[id1].pos.z) / ( vertices[id0].pos.x - vertices[id1].pos.x);
+	constB = vertices[id0].pos.z - constA * vertices[id0].pos.x;
+	if(!constA && !constB){
+		DSTR << "直線の式の切片と傾きが共に0" << std::endl;
+		assert(0);
+	}
+	DSTR << "constA: " << constA << ",  " << "constB: " << constB <<std::endl; 
+
+	//debug
+	//DSTR << "id0: " << id0 << ", id1: " << id1 <<std::endl;
+	//DSTR << "vertices[id0].pos.z: " << vertices[id0].pos.z <<std::endl;
+	//DSTR << "vertices[id0].pos.z: " << vertices[id1].pos.z <<std::endl;
+	//DSTR << "dz: vertices[id0].pos.z - vertices[id1].pos.z : " << vertices[id0].pos.z - vertices[id1].pos.z << std::endl;
+	//DSTR << "vertices[id0].pos.x: " << vertices[id0].pos.x << std::endl;
+	//DSTR << "vertices[id1].pos.x: " << vertices[id1].pos.x << std::endl;
+	//DSTR << "dx: vertices[id0].pos.x - vertices[id1].pos.x: " << vertices[id0].pos.x - vertices[id1].pos.x << std::endl;
+
+	// for Check Debug
+	//DSTR << "constA = dz / dx: " << constA << std::endl;
+	//if(vertices[id0].pos.z == vertices[id1].pos.z && vertices[id0].pos.x == vertices[id1].pos.x){
+	//	DSTR << "vertices[id0].pos.y: " << vertices[id0].pos.y << ", vertices[id1].pos.y: " << vertices[id1].pos.y << std::endl;
+	//	if(vertices[id0].pos.y == vertices[id1].pos.y)
+	//		DSTR << "id[" << id0 <<"], id[" << id1 << "] は同じ頂点 !" << std::endl;
+	//}
+	//DSTR << "constB = vertices[id0].pos.z - constA * vertices[id0].pos.x : " << vertices[id0].pos.z - constA * vertices[id0].pos.x << std::endl;
+	//DSTR << "constA: " << constA << std::endl;
+	//DSTR << "constB: " << constB << std::endl;
+	//DSTR << std::endl;
+
+	///	.交点の座標を計算
+	if(vertices[id0].disFromOrigin <= radius && radius <= vertices[id1].disFromOrigin ){		/// 半径rの円と交わるべき
+		double radius2 = radius * radius;
+		constX1  = (- constA * constB + sqrt(radius2 * (constA * constA + 1.0) - constB * constB )  )  /  (constA * constA + 1);
+		constX1_ = (- constA * constB - sqrt(radius2 * (constA * constA + 1.0) - constB * constB )  )  /  (constA * constA + 1);
+		// 交点のx座標がが線分の両端点のx座標間にあるとき
+		if( (vertices[id0].pos.x <= constX1 && constX1 <= vertices[id1].pos.x) || (vertices[id1].pos.x <= constX1 && constX1 <= vertices[id0].pos.x) ){
+			constZ1 = sqrt(radius2 - constX1  * constX1  );
+			constZ1_ = - sqrt(radius2 - constX1  * constX1  );
+			//	交点のz座標も両端点のz座標間にあるとき
+			if( (vertices[id0].pos.z <= constZ1_ && constZ1_ <= vertices[id1].pos.z) || (vertices[id1].pos.z <= constZ1_ && constZ1_ <= vertices[id0].pos.z) ){
+				constZ1 = constZ1_;
+			}
+
+		}else{
+			constX1 = constX1_;		///		点のx座標はconstX_が正しい事がわかった。
+			constZ1  =   sqrt(radius2 - constX1  * constX1  );
+			constZ1_ = - sqrt(radius2 - constX1  * constX1  );
+			//	交点のz座標も両端点のz座標間にあるとき
+			if( (vertices[id0].pos.z <= constZ1_ && constZ1_ <= vertices[id1].pos.z) || (vertices[id1].pos.z <= constZ1_ && constZ1_ <= vertices[id0].pos.z) ){
+				constZ1 = constZ1_;
+			}
+		}
+	}else{
+		DSTR << "CalcVtxCircleAndLine()関数のこの頂点組みと円弧は交わりません" << std::endl;
+		constX1 = 0.0;
+		constZ1 = 0.0;
+//		DSTR << vertices[id0].disFromOrigin <<
+		DSTR << "(id0, vertices[id0].disFromOrigin): " << id0 << vertices[id0].disFromOrigin << ", (id1, vertices[id1].disFromOrigin): " << id1 << vertices[id1].disFromOrigin << ", radius: " << radius << std::endl;  
+		assert(0);
+	}
+	Vec2d intersection = Vec2d(constX1,constZ1);
+	DSTR << __FILE__  << "(" <<  __LINE__ << "):"<< "intersection: " << intersection << std::endl;
+	//":" <<  __TIME__ << 
+	//return interSection;
+	return intersection;
+
+}	//	CalcVtxCircleAndLine() :difinition
+
 void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
-	//> radius value check
+	// radius value check
 	if(Radius <= radius){
 		DSTR << "inner radius size is larger than outer Radius " << std::endl;
 		DSTR << "check and set another value" << std::endl;
@@ -484,7 +579,6 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 	//DSTR << "numIHheated0 / nSurfaceFace: " << numIHheated0 << " / " << nSurfaceFace << std::endl;	////	761 / 980	ってほとんどじゃないか！半分位にならないとおかしいはずだが・・・　ローカルy座標値がマイナスのものを選んでいるので
 
 	//	debug	mayIHheatedの確度を上げる前の数を知りたい
-	/// debug
 	unsigned numIHheated0 = 0; 
 	for(unsigned i=0; i < nSurfaceFace;i++){
 		if(faces[i].mayIHheated){	
@@ -525,9 +619,9 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 				}else{
 					faces[i].mayIHheated = false;
 				}
-			}
-		}
-	}
+			}		//	for
+		}		//	if
+	}		//	for
 	//> debug
 	//>	mayIHheatedのフラグが立っているfaceにその面積の形状関数を与えてみる。	重なる面積をきちんと計算と、少しでも引っかかっていれば、加熱面に入れてしまう計算、試す
 	//> CalcIHdqdt3 or 4
@@ -542,32 +636,30 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 	}
 	DSTR << "numIHheated / nSurfaceFace: " << numIHheated << " / " << nSurfaceFace << std::endl;		///:	表面faceの内、加熱節点を含むfaceの数、鉄板:264/980　こんなもんかな 
 	
-	//> 交点を求め、faces構造体のvectorに領域内の頂点や交点を格納
+	//	.. 交点を求め、faces構造体のvectorに領域内の頂点や交点を格納
 	for(unsigned i=0;i < nSurfaceFace; i++){
-		if(faces[i].mayIHheated){		////	may から 確実になった
-			//>	頂点を入れるvector or 配列		//>	円環領域と重なる形状を計算するために、重なる領域内にあるface頂点、辺との交点をfaceの辺0~2の順にvectorに格納していく。格納時に重複が無いようにする
-			//	faceクラスに移行中
-			std::vector<Vec2d> intersection;		//	領域内にある頂点と交点を格納
-			std::vector<Vec2d> tempXZ;				//	領域内の点を格納するvector
+		if(faces[i].mayIHheated){		//	may → 「確実」に変化済みのフラグ
 			//	area:face面積を計算されてなければ、計算
 			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);
-			//>	face内の頂点のdisFromOriginの値でソート
-			unsigned nearestvtxnum		=	0;				///	原点に一番近い頂点のface頂点番号(0~2)
-			for(unsigned j=0;j<3;j++){
-				double hikaku = DBL_MAX;
-				if(hikaku > vertices[faces[i].vertices[j]].disFromOrigin){	hikaku = vertices[faces[i].vertices[j]].disFromOrigin;	nearestvtxnum = j;}
-			}
-			///	3点を原点に近い順に並べる
-			Vec3i vtxOrder = ArrangeFacevtxdisAscendingOrder(i);		///	ArrangeVtxdisAscendingOrder(int faceID,int vtx0,int vtx1,int vtx2)
+			////	face内の頂点のdisFromOriginの値でソート
+			//unsigned nearestvtxnum		=	0;				///	原点に一番近い頂点のface頂点番号(0~2)
+			//for(unsigned j=0;j<3;j++){
+			//	double hikaku = DBL_MAX;
+			//	if(hikaku > vertices[faces[i].vertices[j]].disFromOrigin){	hikaku = vertices[faces[i].vertices[j]].disFromOrigin;	nearestvtxnum = j;}
+			//}
+			// ... 3点を原点に近い順に並べる		vtxOrder:近い順に格納,番目が近い順番、格納値が頂点番号 ==	faces[i].ascendVtx[3]
+			ArrangeFacevtxdisAscendingOrder(i);		///	ArrangeVtxdisAscendingOrder(int faceID,int vtx0,int vtx1,int vtx2)
 			//DSTR <<  "小さい順か確認: " << vertices[vtxOrder[0]].disFromOrigin << ", "<< vertices[vtxOrder[1]].disFromOrigin << ", "<< vertices[vtxOrder[2]].disFromOrigin << std::endl;
-			/// face内の各頂点が属している領域を判定 0 | 1 | 2
-			unsigned vtxdiv[3];		///	頂点が存在している領域
+			// ... face内の各頂点が属している領域を判定 0 | 1 | 2	///	faces[i].ascendVtx[0~2]に該当する頂点が　円環領域の前後のどこに存在しているか
+			unsigned vtxdiv[3];		//	原点から近い順:0~2に並べ替えられた頂点IDに対応する領域内外の区分け　配列
 			for(unsigned j=0;j<3;j++){
-				if( vertices[vtxOrder[j]].disFromOrigin < radius){			vtxdiv[j] = 0;
+				if( vertices[faces[i].ascendVtx[j]].disFromOrigin < radius){			vtxdiv[j] = 0;
 				/// 円弧上を含み、円弧上も円環領域内と定義する
-				}else if(radius <= vertices[vtxOrder[j]].disFromOrigin && vertices[vtxOrder[j]].disFromOrigin <= Radius ){	vtxdiv[j] = 1;
-				}else if(Radius < vertices[vtxOrder[j]].disFromOrigin){		vtxdiv[j] = 2;	}
+				}else if(radius <= vertices[faces[i].ascendVtx[j]].disFromOrigin && vertices[faces[i].ascendVtx[j]].disFromOrigin <= Radius ){	vtxdiv[j] = 1;
+				}else if(Radius < vertices[faces[i].ascendVtx[j]].disFromOrigin){		vtxdiv[j] = 2;	}
+				DSTR << "faces[i].ascendVtx[j]: " << faces[i].ascendVtx[j] << std::endl;
 			}
+
 			//> debug
 			//DSTR << "頂点の領域番号: " ;
 			//for(unsigned j =0;j<3;j++){
@@ -576,9 +668,9 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 			//}
 			//DSTR << std::endl;
 			int vtxexistareadebug =0;
-			/// 2012.3.14ここまで
+			//... 2012.2.14ここまで...
 
-			//	排列の成分の値の変化を見て、始点、交点、辺対となる点を順にvectorに格納していく
+			//...	配列の成分の値の変化を見て、始点、交点、辺対となる点を順にvectorに格納していく
 			
 			//	vectorに入れる際の注意!!! %%%%%%%%%%%%%%%%%%
 			// %%%	vtxOrder[ 原点から近い頂点の順(0,1,2) ]:その頂点IDの原点に近い順に並べ替えてIDを格納		(例:vtxOrder[0] = (ID)278, [1] = (ID)35, [2] = (ID)76 etc)
@@ -588,27 +680,38 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 			///	 j と(隣の) (j+1)%3 とで対を成す辺について
 			for(unsigned j=0;j<3;j++){
 				//debug
-				DSTR <<"j: " << j << ", vtxOrder[j]: " << vtxOrder[j] << ", vtxOrder[(j+1)%3]: " << vtxOrder[(j+1)%3] << std::endl;
-				DSTR << "vertices[vtxOrder[j]].pos: (" << vertices[vtxOrder[j]].pos.x  << ", "<< vertices[vtxOrder[j]].pos.z << ") " << std::endl;
-				DSTR << "vertices[vtxOrder[(j+1)%3]].pos: (" << vertices[vtxOrder[(j+1)%3]].pos.x  << ", "<< vertices[vtxOrder[(j+1)%3]].pos.z << ") " << std::endl; 
+				DSTR <<"j: " << j << ", faces[i].ascendVtx[j]: " << faces[i].ascendVtx[j] << ", faces[i].ascendVtx[(j+1)%3]: " << faces[i].ascendVtx[(j+1)%3] << std::endl;
+				DSTR << "vertices[faces[i].ascendVtx[j]].pos: (" << vertices[faces[i].ascendVtx[j]].pos.x  << ", "<< vertices[faces[i].ascendVtx[j]].pos.z << ") " << std::endl;
+				DSTR << "vertices[faces[i].ascendVtx[(j+1)%3]].pos: (" << vertices[faces[i].ascendVtx[(j+1)%3]].pos.x  << ", "<< vertices[faces[i].ascendVtx[(j+1)%3]].pos.z << ") " << std::endl; 
 				//DSTR << "vertices[vtxOrder[(j+1)%3]].pos.x: " << vertices[vtxOrder[(j+1)%3]].pos.x << std::endl;
 				DSTR << std::endl;
 
-				//	0の領域にある辺
+				//	↑で値を見ることはできた。この頂点でいいのか？
+
+				//	0の領域にある辺:
 				if(vtxdiv[j] == 0 && vtxdiv[(j+1)%3] == 0){
 					//	いずれの点をも領域内vectorには入れない
 				}
-				//	内半径と交わる辺(内→外と外→内)
+				//	内半径とだけ交わる辺(内:0→外:1と外:1→内:0):
 				else if(vtxdiv[j] == 0 && vtxdiv[(j+1)%3] - vtxdiv[j] > 0 || vtxdiv[j] == 1 && vtxdiv[(j+1)%3] - vtxdiv[j] < 0){
 					//	(始点（↑で入れている場合には不要））と内半径とを、対の点に入れる
 					if(vtxdiv[(j+1)%3] - vtxdiv[j] > 0){	//内→外
 						//	内半径との交点を求める
+						DSTR << "vtxdiv[" << j << "]: " << vtxdiv[j] << ", " << "vtxdiv[ " << (j+1)%3 << "]: " << vtxdiv[(j+1)%3] << std::endl;
+						DSTR << "ascendVtx[" << j << "]: " << faces[i].ascendVtx[j] << ", " << "ascendVtx[ " << (j+1)%3 << "]: " << faces[i].ascendVtx[(j+1)%3] << std::endl;
+						DSTR << j << "," << (j+1)%3 << "の原点からの距離" << vertices[faces[i].ascendVtx[j]].disFromOrigin << ", " << vertices[faces[i].ascendVtx[(j+1)%3]].disFromOrigin << std::endl; 
+						DSTR << "radius: " << radius << std::endl; 
+						DSTR << "vertices[" << faces[i].ascendVtx[j] << "].pos.x, .z : " <<  vertices[faces[i].ascendVtx[j]].pos.x << ", "<<  vertices[faces[i].ascendVtx[j]].pos.z <<std::endl;
+						DSTR << "vertices[" << faces[i].ascendVtx[(j+1)%3] << "].pos.x, .z : " <<  vertices[faces[i].ascendVtx[(j+1)%3]].pos.x << ", "<<  vertices[faces[i].ascendVtx[(j+1)%3]].pos.z <<std::endl;
+						DSTR << "CalcVtxCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , radius) " << CalcVtxCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , radius) << std::endl;
+						faces[i].ihvtx.push_back( CalcVtxCircleAndLine( faces[i].ascendVtx[ j ] , faces[i].ascendVtx[ (j+1)%3 ] , radius) );
+//						DSTR << "faces[i].vertices[ " << j << "と " << (j+1)%3 << "], radius: " << radius <<" の交点: " << CalcVtxCircleAndLine( faces[i].vertices[ j ] , faces[i].vertices[ (j+1)%3 ] , radius) << std::endl;
 						// CalcIntersectionVtxhogehoge()
 						//	内半径との交点のx,z座標を入れる
 						//intersection.push_back()
 						//組対点の座標をintersectionに入れる
 						//	置き換え//intersection.push_back(Vec2d(vertices[vtxdiv[(j+1)%3]].pos.x,vertices[vtxdiv[(j+1)%3]].pos.z));
-						faces[i].ihvtx.push_back(Vec2d(vertices[vtxOrder[(j+1)%3]].pos.x,	vertices[vtxOrder[(j+1)%3]].pos.z));
+						faces[i].ihvtx.push_back(Vec2d(vertices[faces[i].ascendVtx[(j+1)%3]].pos.x,	vertices[faces[i].ascendVtx[(j+1)%3]].pos.z));
 						//> 形状関数を格納する		//ここで分かる形状関数は、頂点間の距離から分かる線形補間係数　すなわち、割合　０＜＝～＜＝１で良くて、最後に、行列に入れる前に、割合以外を入れればいいのかな？
 						double f[3]={0.0, 0.0, 0.0};
 						//Vec3d shapef = Vec3d(f);
@@ -624,7 +727,7 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 					//	(始点を入れているのなら、)辺対点をvectorに入れる
 					//	始点は入れずとも、最後に入るはず
 					////intersection.push_back(Vec2d(vertices[vtxdiv[(j+1)%3]].pos.x,vertices[vtxdiv[(j+1)%3]].pos.z));
-					faces[i].ihvtx.push_back(Vec2d(vertices[vtxOrder[(j+1)%3]].pos.x,	vertices[vtxOrder[(j+1)%3]].pos.z));
+					faces[i].ihvtx.push_back(Vec2d(vertices[faces[i].ascendVtx[(j+1)%3]].pos.x,	vertices[faces[i].ascendVtx[(j+1)%3]].pos.z));
 				}
 				//	外半径と交わる辺(内→外、外→内)
 				else if(vtxdiv[j] == 1 && vtxdiv[(j+1)%3] == 2 || vtxdiv[j] == 2 && vtxdiv[(j+1)%3] == 1){
@@ -635,7 +738,7 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 						//	交点を格納
 
 						//	組対点のX,Z座標を格納
-						faces[i].ihvtx.push_back(Vec2d(vertices[vtxOrder[(j+1)%3]].pos.x,	vertices[vtxOrder[(j+1)%3]].pos.z));
+						faces[i].ihvtx.push_back(Vec2d(vertices[faces[i].ascendVtx[(j+1)%3]].pos.x,	vertices[faces[i].ascendVtx[(j+1)%3]].pos.z));
 						////	?→	intersection.push_back(Vec2d(vertices[vtxOrder[(j+1)%3]].pos.x,vertices[vtxOrder[(j+1)%3]].pos.z));
 						
 					}
@@ -660,78 +763,51 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 				else if(vtxdiv[j] == 2 && vtxdiv[(j+1)%3] == 2){
 					//	外半径の外側にある条件
 				}
-				//内側から外側に行く辺は上で記述できるが、外側から内側に向かう辺をこれで記述できるのか？
-			}
+				//	内側から外側に行く辺は上で記述できるが、外側から内側に向かう辺をこれで記述できるのか？
+			}	//	for(unsigned j=0;j<3;j++){
 
-			//	以下、再帰形式にする前のお試しコード	→	不要
-
-			//	0の領域にある辺
-			if(vtxdiv[0] == 0 && vtxdiv[1] == 0 ){
-				//	vectorには入れない
-			}
-
-			//	内半径と交わる辺
-			if(vtxdiv[0] == 0 && vtxdiv[1] - vtxdiv[0] > 0){
-
-			}
-
-			//	円環領域内にある辺
-			
-			//	外半径と交わる辺
-
-			//	内半径と外半径と交わる辺
-
-			//	外半径の外側にある辺
-
-
-			///	頂点の組みからなる辺について、内側の頂点から領域内の頂点又は、辺と交わる交点をvectorに格納していく
-			// 領域内(radiusより外側　かつ　Radiusより内側)にスタート頂点がある時
-			//	無いとき
-				//	radiusより内側にあるとき
-					//	対をなす頂点がRadiusより内側の時
-					//	外側の時
-				//	Radiusより外側にあるとき
-					//	assert(0);
+// 以下　旧コード
+			/// 旧コード
 			/// 領域内にスタート頂点があるとき
-			if(radius < vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin && vertices[faces[i].vertices[(nearestvtxnum+1)%3]].disFromOrigin < Radius){	///	頂点が領域内にあるとき
-				intersection.push_back( Vec2d(vertices[faces[i].vertices[nearestvtxnum]].pos.x,vertices[faces[i].vertices[nearestvtxnum]].pos.z) );
-			}
-			/// 内円とだけ交点をもつとき
-			else if(vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin < radius && vertices[faces[i].vertices[(nearestvtxnum+1)%3]].disFromOrigin < Radius){
-				//Vec2d vtxXZ = CalcIntersectionPoint(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius);
-				tempXZ.push_back( CalcIntersectionPoint(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius) );
-				DSTR << "case1 tempXZ[0]" << tempXZ[0] << std::endl;
-			}
-			//>	外円とだけ交点をもつとき
-			else if(radius < vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin && vertices[faces[i].vertices[(nearestvtxnum+1)%3]].disFromOrigin < Radius){
-				//Vec2d vtxXZ = CalcIntersectionPoint(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius);
-				tempXZ.push_back( CalcIntersectionPoint(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius) );
-				DSTR << "case2 tempXZ[0]" << tempXZ[0] << std::endl;
-			}
-			//>		内円と外円と交点を持つ場合
-			else if(vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin < radius  && Radius < vertices[faces[i].vertices[(nearestvtxnum + 1)%3]].disFromOrigin ){	//>	頂点が領域0と1にあるとき
-				//> 交点を求め、交点の値をvectorに代入する
-				//Vec4d vtxXZ = CalcIntersectionPoint2(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius);
-				DSTR << "nearestvtxnum: " << nearestvtxnum <<std::endl;
-				DSTR << "(nearestvtxnum+1)%3: " << (nearestvtxnum+1)%3 <<std::endl;
-				tempXZ = CalcIntersectionPoint2(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius);
-				DSTR << "case3 tempXZ[0]" << tempXZ[0] << std::endl;
-				if(tempXZ.size() >2){DSTR << "case3 tempXZ[1]" << tempXZ[1] << std::endl;}
-				//> 交点は、内円と、外円と2つ存在する
-				// 2つの交点に分割
-				//Vec2d vtxXZ0;
-				//vtxXZ0[0] = vtxXZ[0];
-				//vtxXZ0[1] = vtxXZ[1];
-				//Vec2d vtxXZ1;
-				//vtxXZ1[2] = vtxXZ[2];
-				//vtxXZ1[3] = vtxXZ[3];
-			}
-			for(unsigned j=0; j< tempXZ.size();j++){
-				DSTR << "tempXZ[" << j << "]" << tempXZ[j] << std::endl;
-			}
+			//if(radius < vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin && vertices[faces[i].vertices[(nearestvtxnum+1)%3]].disFromOrigin < Radius){	///	頂点が領域内にあるとき
+			//	intersection.push_back( Vec2d(vertices[faces[i].vertices[nearestvtxnum]].pos.x,vertices[faces[i].vertices[nearestvtxnum]].pos.z) );
+			//}
+			///// 内円とだけ交点をもつとき
+			//else if(vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin < radius && vertices[faces[i].vertices[(nearestvtxnum+1)%3]].disFromOrigin < Radius){
+			//	//Vec2d vtxXZ = CalcIntersectionPoint(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius);
+			//	tempXZ.push_back( CalcIntersectionPoint(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius) );
+			//	DSTR << "case1 tempXZ[0]" << tempXZ[0] << std::endl;
+			//}
+			////>	外円とだけ交点をもつとき
+			//else if(radius < vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin && vertices[faces[i].vertices[(nearestvtxnum+1)%3]].disFromOrigin < Radius){
+			//	//Vec2d vtxXZ = CalcIntersectionPoint(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius);
+			//	tempXZ.push_back( CalcIntersectionPoint(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius) );
+			//	DSTR << "case2 tempXZ[0]" << tempXZ[0] << std::endl;
+			//}
+			////>		内円と外円と交点を持つ場合
+			//else if(vertices[faces[i].vertices[nearestvtxnum]].disFromOrigin < radius  && Radius < vertices[faces[i].vertices[(nearestvtxnum + 1)%3]].disFromOrigin ){	//>	頂点が領域0と1にあるとき
+			//	//> 交点を求め、交点の値をvectorに代入する
+			//	//Vec4d vtxXZ = CalcIntersectionPoint2(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius);
+			//	DSTR << "nearestvtxnum: " << nearestvtxnum <<std::endl;
+			//	DSTR << "(nearestvtxnum+1)%3: " << (nearestvtxnum+1)%3 <<std::endl;
+			//	tempXZ = CalcIntersectionPoint2(faces[i].vertices[nearestvtxnum],faces[i].vertices[(nearestvtxnum+1)%3],radius,Radius);
+			//	DSTR << "case3 tempXZ[0]" << tempXZ[0] << std::endl;
+			//	if(tempXZ.size() >2){DSTR << "case3 tempXZ[1]" << tempXZ[1] << std::endl;}
+			//	//> 交点は、内円と、外円と2つ存在する
+			//	// 2つの交点に分割
+			//	//Vec2d vtxXZ0;
+			//	//vtxXZ0[0] = vtxXZ[0];
+			//	//vtxXZ0[1] = vtxXZ[1];
+			//	//Vec2d vtxXZ1;
+			//	//vtxXZ1[2] = vtxXZ[2];
+			//	//vtxXZ1[3] = vtxXZ[3];
+			//}
+			//for(unsigned j=0; j< tempXZ.size();j++){
+			//	DSTR << "tempXZ[" << j << "]" << tempXZ[j] << std::endl;
+			//}
 			
-		}
-	}
+		}	//	if(mayIHheated)
+	}	//	for(faces[i]
 
 
 	//>	Step	1.の実装
@@ -862,275 +938,275 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 
 
 
-void PHFemMeshThermo::CalcIHdqdt4(double radius,double Radius,double dqdtAll){
-	///	内半径と外半径の間の節点に熱流束境界条件を設定
-	//> 四面体面の三角形と円環領域の重複部分の形状・面積を求める当たり判定を計算する。
-	//>	切り取り形状に応じた形状関数を求め、熱流束ベクトルの成分に代入し、計算する
-
-	//> 1.円環領域と重なるface三角形の形状を算出する。領域に含まれる頂点、face三角形の辺との交点を求めてvecteorに格納する
-	//>	2.vectorには、辺0,1,2の順に領域内の頂点や交点が入っているが、これを元に三角形分割を行う。三角形分割ができたら、各三角形を求める。三角形の総和を、このfaceの加熱領域とする。
-	//>	3.vectorの点における形状関数を求めて、擬似体積（重なっている面積×形状関数の値）を使って、四面体内の各点における形状関数の面積分を求める。求めた値は、熱流束ベクトルの成分として要素剛性行列の成分に代入する。
-	//>	4.毎ステップ、同じ熱流束の値をベクトル成分に加える
-
-	//>	Step	1.の実装
-	//>	radius:内半径、Radius:外半径,　dqdtAll:単位時間あたりに入ってくる全熱量
-
-	//%%	手順 
-	//> isHeated(->nearIHHeater)のfacesの内、3つの節点全部について、特定半径の中に入っているものがあるかどうかをチェックする。
-	//>	入っているものを、見つけたら、面積計算をしたいが、ここで、何個の節点が入っているかによって場合分けを行う。
-	//>	３つ:faceの面積をfaceSに代入する	1~2つ:面積を近似計算するために、3節点の内、どの節点と節点で構成された辺が内半径rまたは、外半径Rと交わっているか判定
-	//>	交わっている場合には、その交点を求める。求めた交点と内半径以上外半径以内の領域にあるface内の節点を用いて、三角形を作り、その面積を求める。
-
-	//>	1.1領域と重複する面積をface毎に求める
-	double faceS = 0.0;
-	for(unsigned i=0;i < nSurfaceFace; i++){
-		if(faces[i].mayIHheated){			// faceの節点のy座標が負の場合→IH加熱の対象節点 円環の範囲内に入っているとは限らない
-			unsigned nObinnerVtx = 0;
-
-			unsigned innervtx[4] = {0,0,0,0};
-			//>	頂点を入れるvector or 配列		//>	円環領域と重なる形状を計算するために、重なる領域内にあるface頂点、辺との交点をfaceの辺0~2の順にvectorに格納していく。格納時に重複が無いようにする
-			std::vector<Vec2d> intersectVtx;
-			//Vec2d innertVtx[12];		//>	vectorから配列に変更する→静的メモリ確保,けど、vectorの方がコードは楽?メモリの開放を忘れずに
-			unsigned judge[2] = {0,0};		///	judge[0],[1]の順に原点に近い点の判定結果
-			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);		// 面積計算が済んでなければ計算する
-			
-			//> 領域内に入っている点が見つかり次第、faceの頂点を含め、face.vectorに入れる。faceの頂点を入れる場合には、重複がないかを調べる。
-
-			/// faceの各辺の両端の点について条件判定 ////	jは0から順に書いているだけで、faceの辺番号ではない
-			for(unsigned j=0; j < 3; j++){
-				///	face内の点の組(辺)について、その辺の組が
-				/// vtx[(0+j)%3]について,原点に近い順に並び替え	//> == :同じ距離の時、何もしない。
-				unsigned vtx0 = faces[i].vertices[(j+0)%3];
-				unsigned vtx1 = faces[i].vertices[(j+1)%3];
-				if(vertices[vtx0].disFromOrigin > vertices[vtx1].disFromOrigin){
-					vtx0 = faces[i].vertices[(j+1)%3];
-					vtx1 = faces[i].vertices[(j+0)%3];
-				}
-				///		   ＼      ＼	
-				///  ・	  ・ )  ・   )	 ・
-				///			/       /	 	
-				///  ↑     ↑   　↑	 ↑	
-				/// 原点　内半径　外半径 face頂点	
-				/// judge[0]:vtx0, judge[1]:vtx1が領域内にあるかどうか (O(=Origin) < vtx0.disFromOrigin < vtx1.disFromOrigin )
-				///	vtx0が r<, < R, else 領域ごとにjudge[]
-
-				///	3点全部が領域内にあるとき、ただvectorに格納するだけでは、重複する頂点が出てきてしまう。
-				///	ので、3点が全部領域内にあるときは、push_backの前に、除外する必要がある。
-				///	同じ座標の点がvectorに入っていないか確認してから格納する
-
-				//> 関数化する
-				if(vertices[vtx0].disFromOrigin < radius){judge[0] =0;}
-				else if(Radius < vertices[vtx0].disFromOrigin){judge[0] =2;}
-				else{
-					///	faces三角形頂点の格納
-					judge[0] = 1;
-					//> 領域内の頂点を格納
-					Vec2d tempcoord = Vec2d(vertices[vtx0].pos.x,vertices[vtx0].pos.z);		
-					//>	同じ座標値の点がなければ、格納。findっていう関数があったような気がする.	map ? list?
-					unsigned tempjudge =0;
-					for(unsigned k =0; k < intersectVtx.size(); k++){
-						if(intersectVtx[k] == tempcoord){
-							tempjudge += 1;
-						}
-					}
-					if(tempjudge == 0){
-						faces[i].ihvtx.push_back(tempcoord);
-						DSTR << "tempcoord: " << tempcoord <<std::endl;
-					}
-					for(unsigned k=0;k < intersectVtx.size();k++){
-						DSTR << k << "th: " << intersectVtx[k] << std::endl;
-					}
-					//DSTR << "faces[i].innerIH: " << faces[i].innerIH.end() << std::endl;
-				}
-				
-				///	vtx1が r<, < R, else 領域ごとにjudge[]
-				if(vertices[vtx1].disFromOrigin < radius){judge[1] =0;}
-				else if(Radius < vertices[vtx1].disFromOrigin){judge[1] =2;}
-				else{
-					///	faces三角形頂点の格納
-					judge[1] = 1;
-					//> 領域内の頂点を格納
-					Vec2d tempcoord = Vec2d(vertices[vtx1].pos.x,vertices[vtx1].pos.z);
-					//>	同じ座標値の点がなければ、格納。findっていう関数があったような気がする.	map ? list?
-					unsigned tempjudge =0;
-					for(unsigned k =0; k < intersectVtx.size(); k++){
-						if(intersectVtx[k] == tempcoord){
-							tempjudge += 1;
-						}
-					}
-					if(tempjudge == 0){
-						faces[i].ihvtx.push_back(tempcoord);
-						DSTR << "tempcoord: " << tempcoord <<std::endl;
-					}
-					for(unsigned k=0;k < intersectVtx.size();k++){
-						DSTR << k << "th: " << intersectVtx[k] << std::endl;
-					}
-					//DSTR << "faces[i].innerIH: " << faces[i].innerIH.end() << std::endl;					//DSTR << "faces[i].innerIH: " << faces[i].innerIH[i].end() << std::endl;
-				}
-
-				//> 交点の格納
-				/// faceの辺の両端の頂点でjudgeの値が異なる	→	円との交点を求める
-				/// 内半径(r),外半径(R)との交点を求める	[0]!=[1]:交点を持つ、どちらかが、r,Rとの交点を持つ
-				if(judge[0] == 0 && judge [1]==1 )
-				{
-					//> radiusとの交点を求める
-					//> 求めた交点を代入する
-					Vec2d vtxXZ = Vec2d(0.0,0.0);		//> 交点の座標を代入
-					//> 交点のvectorに格納
-					faces[i].ihvtx.push_back(vtxXZ);
-					//intersectVtx.push_back(vtxXZ);
-				}
-				else if(judge[0] == 1 && judge [1]==2 )
-				{
-					//> Rとの交点を求める
-					//> 求めた交点をvectorに格納する
-				}
-				else if(judge[0] == 1 && judge [1]==2 )
-				{
-					//> r,Rとの交点を求める
-					//> 求めた交点をvectorに格納する
-				}
-			}
-			
-
-
-			/// 以下、コピペ前のコードのため、多分、不要。交点を求めるアルゴリズムだけ、上に転用する
+//void PHFemMeshThermo::CalcIHdqdt4(double radius,double Radius,double dqdtAll){
+//	///	内半径と外半径の間の節点に熱流束境界条件を設定
+//	//> 四面体面の三角形と円環領域の重複部分の形状・面積を求める当たり判定を計算する。
+//	//>	切り取り形状に応じた形状関数を求め、熱流束ベクトルの成分に代入し、計算する
 //
-//			//> 置き換えと0,1を入れ替えるだけ(=ポリモーフィズム)で残りの実装も作る
-//				// 下記処理を関数化する?。点のIDを入れれば、同じ処理をする関数
-//				//> 0-1で交点を作っているとき true false は論演算の排他的論理和XORでtrue時、交点を計算する 00=0,01=10=1,11=0; 片方の点が範囲内で、もう一方が範囲外の場合、trueになる
+//	//> 1.円環領域と重なるface三角形の形状を算出する。領域に含まれる頂点、face三角形の辺との交点を求めてvecteorに格納する
+//	//>	2.vectorには、辺0,1,2の順に領域内の頂点や交点が入っているが、これを元に三角形分割を行う。三角形分割ができたら、各三角形を求める。三角形の総和を、このfaceの加熱領域とする。
+//	//>	3.vectorの点における形状関数を求めて、擬似体積（重なっている面積×形状関数の値）を使って、四面体内の各点における形状関数の面積分を求める。求めた値は、熱流束ベクトルの成分として要素剛性行列の成分に代入する。
+//	//>	4.毎ステップ、同じ熱流束の値をベクトル成分に加える
+//
+//	//>	Step	1.の実装
+//	//>	radius:内半径、Radius:外半径,　dqdtAll:単位時間あたりに入ってくる全熱量
+//
+//	//%%	手順 
+//	//> isHeated(->nearIHHeater)のfacesの内、3つの節点全部について、特定半径の中に入っているものがあるかどうかをチェックする。
+//	//>	入っているものを、見つけたら、面積計算をしたいが、ここで、何個の節点が入っているかによって場合分けを行う。
+//	//>	３つ:faceの面積をfaceSに代入する	1~2つ:面積を近似計算するために、3節点の内、どの節点と節点で構成された辺が内半径rまたは、外半径Rと交わっているか判定
+//	//>	交わっている場合には、その交点を求める。求めた交点と内半径以上外半径以内の領域にあるface内の節点を用いて、三角形を作り、その面積を求める。
+//
+//	//>	1.1領域と重複する面積をface毎に求める
+//	double faceS = 0.0;
+//	for(unsigned i=0;i < nSurfaceFace; i++){
+//		if(faces[i].mayIHheated){			// faceの節点のy座標が負の場合→IH加熱の対象節点 円環の範囲内に入っているとは限らない
+//			unsigned nObinnerVtx = 0;
+//
+//			unsigned innervtx[4] = {0,0,0,0};
+//			//>	頂点を入れるvector or 配列		//>	円環領域と重なる形状を計算するために、重なる領域内にあるface頂点、辺との交点をfaceの辺0~2の順にvectorに格納していく。格納時に重複が無いようにする
+//			std::vector<Vec2d> intersectVtx;
+//			//Vec2d innertVtx[12];		//>	vectorから配列に変更する→静的メモリ確保,けど、vectorの方がコードは楽?メモリの開放を忘れずに
+//			unsigned judge[2] = {0,0};		///	judge[0],[1]の順に原点に近い点の判定結果
+//			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);		// 面積計算が済んでなければ計算する
 //			
-//				//> 円環の範囲内に入っていたら、mayIHheatedをtrueに、あるいは、falseにする(一応)
+//			//> 領域内に入っている点が見つかり次第、faceの頂点を含め、face.vectorに入れる。faceの頂点を入れる場合には、重複がないかを調べる。
 //
-//				/// faces[i]の頂点が何個、領域内に入っているかを見つける
-//			for(unsigned j=0;j<3;j++){
-//				if( radius <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= Radius){
-//					nObinnerVtx += 1;
-//					innervtx[j] = 1;
+//			/// faceの各辺の両端の点について条件判定 ////	jは0から順に書いているだけで、faceの辺番号ではない
+//			for(unsigned j=0; j < 3; j++){
+//				///	face内の点の組(辺)について、その辺の組が
+//				/// vtx[(0+j)%3]について,原点に近い順に並び替え	//> == :同じ距離の時、何もしない。
+//				unsigned vtx0 = faces[i].vertices[(j+0)%3];
+//				unsigned vtx1 = faces[i].vertices[(j+1)%3];
+//				if(vertices[vtx0].disFromOrigin > vertices[vtx1].disFromOrigin){
+//					vtx0 = faces[i].vertices[(j+1)%3];
+//					vtx1 = faces[i].vertices[(j+0)%3];
 //				}
-//			}
+//				///		   ＼      ＼	
+//				///  ・	  ・ )  ・   )	 ・
+//				///			/       /	 	
+//				///  ↑     ↑   　↑	 ↑	
+//				/// 原点　内半径　外半径 face頂点	
+//				/// judge[0]:vtx0, judge[1]:vtx1が領域内にあるかどうか (O(=Origin) < vtx0.disFromOrigin < vtx1.disFromOrigin )
+//				///	vtx0が r<, < R, else 領域ごとにjudge[]
 //
-//			//> nObinnerVtxの値で条件分岐
-//			
-//			///	faceの辺が、円弧と交わる交点を求める
-//			if(nObinnerVtx == 1){
-//				Vec2d vtxXY[3];			/// faceの辺と半径r,Rとの交点のx,z座標　最大３点
-//				for(unsigned j=0;j<3;j++){		///	faceを構成する3頂点について
-//					unsigned k = 0;
-//					unsigned m = 0;
-//					k = (j+1)%3;		///	j=0;k=1, j=1;k=2, j=2;k=0 
-//					m = (j+2)%3;
-//					//vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[i].vertices[k],r,R);
-//					//DSTR << "vtxXY[" << j << "]: " << vtxXY[j] << std::endl; 
-//					if(innervtx[j] ==1){			/// faces[i]のj番目の節点が円環領域内に入っている
-//					/// j番目の頂点とエッジを構成する点(他の２点)を使って、半径r,Rと交わる点を算出する						
-//					//> j 0,1,2
-//						if(j == 0){	/// 頂点jと辺を作る頂点を使って、辺と交わる交点を求める
-//							//k = (j+1)%3;		///	j=0;k=1, j=1;k=2, j=2;k=0 
-//						vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[i].vertices[k],radius,Radius);
-//						vtxXY[k] = CalcIntersectionPoint(faces[i].vertices[j],faces[i].vertices[m],radius,Radius);
-//						}
-//						else if(j == 1){
-//						vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[0].vertices[1],radius,Radius);
-//						vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[2].vertices[2],radius,Radius);
-//						}
-//						else if(j == 2){
-//						vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[0].vertices[1],radius,Radius);
-//						vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[1].vertices[2],radius,Radius);
-//						}
-//						else{
-//							assert(0);
-//							DSTR << "Error in PHFemMeshThermo::CalcIHdqdt2(hogehoge) 領域判定にミス" << std::endl;
+//				///	3点全部が領域内にあるとき、ただvectorに格納するだけでは、重複する頂点が出てきてしまう。
+//				///	ので、3点が全部領域内にあるときは、push_backの前に、除外する必要がある。
+//				///	同じ座標の点がvectorに入っていないか確認してから格納する
+//
+//				//> 関数化する
+//				if(vertices[vtx0].disFromOrigin < radius){judge[0] =0;}
+//				else if(Radius < vertices[vtx0].disFromOrigin){judge[0] =2;}
+//				else{
+//					///	faces三角形頂点の格納
+//					judge[0] = 1;
+//					//> 領域内の頂点を格納
+//					Vec2d tempcoord = Vec2d(vertices[vtx0].pos.x,vertices[vtx0].pos.z);		
+//					//>	同じ座標値の点がなければ、格納。findっていう関数があったような気がする.	map ? list?
+//					unsigned tempjudge =0;
+//					for(unsigned k =0; k < intersectVtx.size(); k++){
+//						if(intersectVtx[k] == tempcoord){
+//							tempjudge += 1;
 //						}
 //					}
+//					if(tempjudge == 0){
+//						faces[i].ihvtx.push_back(tempcoord);
+//						DSTR << "tempcoord: " << tempcoord <<std::endl;
+//					}
+//					for(unsigned k=0;k < intersectVtx.size();k++){
+//						DSTR << k << "th: " << intersectVtx[k] << std::endl;
+//					}
+//					//DSTR << "faces[i].innerIH: " << faces[i].innerIH.end() << std::endl;
+//				}
+//				
+//				///	vtx1が r<, < R, else 領域ごとにjudge[]
+//				if(vertices[vtx1].disFromOrigin < radius){judge[1] =0;}
+//				else if(Radius < vertices[vtx1].disFromOrigin){judge[1] =2;}
+//				else{
+//					///	faces三角形頂点の格納
+//					judge[1] = 1;
+//					//> 領域内の頂点を格納
+//					Vec2d tempcoord = Vec2d(vertices[vtx1].pos.x,vertices[vtx1].pos.z);
+//					//>	同じ座標値の点がなければ、格納。findっていう関数があったような気がする.	map ? list?
+//					unsigned tempjudge =0;
+//					for(unsigned k =0; k < intersectVtx.size(); k++){
+//						if(intersectVtx[k] == tempcoord){
+//							tempjudge += 1;
+//						}
+//					}
+//					if(tempjudge == 0){
+//						faces[i].ihvtx.push_back(tempcoord);
+//						DSTR << "tempcoord: " << tempcoord <<std::endl;
+//					}
+//					for(unsigned k=0;k < intersectVtx.size();k++){
+//						DSTR << k << "th: " << intersectVtx[k] << std::endl;
+//					}
+//					//DSTR << "faces[i].innerIH: " << faces[i].innerIH.end() << std::endl;					//DSTR << "faces[i].innerIH: " << faces[i].innerIH[i].end() << std::endl;
+//				}
+//
+//				//> 交点の格納
+//				/// faceの辺の両端の頂点でjudgeの値が異なる	→	円との交点を求める
+//				/// 内半径(r),外半径(R)との交点を求める	[0]!=[1]:交点を持つ、どちらかが、r,Rとの交点を持つ
+//				if(judge[0] == 0 && judge [1]==1 )
+//				{
+//					//> radiusとの交点を求める
+//					//> 求めた交点を代入する
+//					Vec2d vtxXZ = Vec2d(0.0,0.0);		//> 交点の座標を代入
+//					//> 交点のvectorに格納
+//					faces[i].ihvtx.push_back(vtxXZ);
+//					//intersectVtx.push_back(vtxXZ);
+//				}
+//				else if(judge[0] == 1 && judge [1]==2 )
+//				{
+//					//> Rとの交点を求める
+//					//> 求めた交点をvectorに格納する
+//				}
+//				else if(judge[0] == 1 && judge [1]==2 )
+//				{
+//					//> r,Rとの交点を求める
+//					//> 求めた交点をvectorに格納する
 //				}
 //			}
-//				//for(unsigned j=0;j<3;j++){
-//				//	/// face内の節点を順番にチェックする
-//				//	unsigned k =0;
-//				//	k = (j+1)%3;		///	j=0;k=1, j=1;k=2, j=2;k=0 
-//				//	if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
-//				//	}
-//				//	if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
-//				//		//> j,kをfaces[i].vertices[j],faces[i].vertices[k]として代入
-//				//		CalcIntersectionPoint(faces[i].vertices[0],faces[i].vertices[1],r,R);
-//				//	}
-//				//}
-//
-//				//> r -> radius
-//				//> R -> Radius
 //			
-//				/// 座標(consX ,constY)が円と三角形の辺との交点
-//			
-//				//unsigned vtxId0 = faces[i].vertices[0];
-//				//unsigned vtxId1 = faces[i].vertices[1];
-//		
-////			free(innervtx);		//> メモリの解放	//配列は動的メモリではないのでfreeで開放できない
-//		
-//		
-//			////> 1-2で交点を作っているとき	//
-//			//else if( (r <= vertices[faces[i].vertices[1]].disFromOrigin && vertices[faces[i].vertices[1]].disFromOrigin <= R) ^ (vertices[faces[i].vertices[2]].disFromOrigin && vertices[faces[i].vertices[2]].disFromOrigin <= R)){
-//			//	//> 円環との交点を求める
-//			//	int katoon00 =0;
-//			//}
-//			////> 0-2で交点を作っているとき
-//			//else if( (r <= vertices[faces[i].vertices[0]].disFromOrigin && vertices[faces[i].vertices[0]].disFromOrigin <= R) ^ (vertices[faces[i].vertices[2]].disFromOrigin && vertices[faces[i].vertices[2]].disFromOrigin <= R)){
-//			//	//> 円環との交点を求める
-//			//	int katoon000 =0;
-//			//}
 //
-//			//for(unsigned j=0;j<3;j++){
-//			//	if( (r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R) * (r <= vertices[faces[i].vertices[j+1]].disFromOrigin && vertices[faces[i].vertices[j+1]].disFromOrigin <= R)){
-//			//		if(r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R)
-//			//		nObinnerVtx += 1;
-//			//	}
-//			//}
-//			//if( nObinnerVtx == 1)			faces[i].fluxarea = 1.5/3.0 * faces[i].area;//faces[i].fluxarea = 1.0/3.0 * faces[i].area;
-//			//else if(nObinnerVtx == 2)		faces[i].fluxarea = 2.8/3.0 * faces[i].area;//faces[i].fluxarea = 2.0/3.0 * faces[i].area;
-//			//else if(nObinnerVtx == 3)		faces[i].fluxarea = faces[i].area;
-//			//else if(nObinnerVtx == 0)		faces[i].fluxarea = 0;
 //
-//			//if(faces[i].fluxarea >= 0){	
-//			//	faceS += faces[i].fluxarea;
-//			//}else{	assert(0);	}		//	faces[i].fluxareaに0未満の数字が入っているのに加算しようとしている
-//			//DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;	
-	}
-
-	//for(unsigned i=0;i < nSurfaceFace; i++){
-	//	DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
-	//}
-
-		if(faceS > 0){
-			//> dqdt を単位面積あたりに直す([1/m^2])
-			double dqdtds = dqdtAll / faceS;
-	//		DSTR << "dqdtds:  " << dqdtds << std::endl;
-			//>	以下、熱流束をfacesに格納する
-			//>	熱流束の面積計算はfluxareaを用いて行う
-			for(unsigned i=0;i < nSurfaceFace; i++){
-				if(faces[i].mayIHheated){
-					faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
-	//				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
-				}
-			}
-		}
-	
-		//　以上、値は入っているようだ
-
-		int katoon =0;
-		//↑をつかって、CreateMatk2tをコピーした関数で、Vecf2?を作る基に
-
-		//>	熱量は、dqdtdsを用いる
-
-		//> r <= <= Rの中心から放射状に加熱
-
-		//	節点でdqdtの値を更新する
-
-		//　以下は、ベクトルを作る関数の仕事
-		//	節点の属する表面の面で、計算する
-		//  vertices[].heatFluxValueを基に計算を進める
-		//	ガウスザイデル計算できるように処理など、準備する
-	}
-}
+//			/// 以下、コピペ前のコードのため、多分、不要。交点を求めるアルゴリズムだけ、上に転用する
+////
+////			//> 置き換えと0,1を入れ替えるだけ(=ポリモーフィズム)で残りの実装も作る
+////				// 下記処理を関数化する?。点のIDを入れれば、同じ処理をする関数
+////				//> 0-1で交点を作っているとき true false は論演算の排他的論理和XORでtrue時、交点を計算する 00=0,01=10=1,11=0; 片方の点が範囲内で、もう一方が範囲外の場合、trueになる
+////			
+////				//> 円環の範囲内に入っていたら、mayIHheatedをtrueに、あるいは、falseにする(一応)
+////
+////				/// faces[i]の頂点が何個、領域内に入っているかを見つける
+////			for(unsigned j=0;j<3;j++){
+////				if( radius <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= Radius){
+////					nObinnerVtx += 1;
+////					innervtx[j] = 1;
+////				}
+////			}
+////
+////			//> nObinnerVtxの値で条件分岐
+////			
+////			///	faceの辺が、円弧と交わる交点を求める
+////			if(nObinnerVtx == 1){
+////				Vec2d vtxXY[3];			/// faceの辺と半径r,Rとの交点のx,z座標　最大３点
+////				for(unsigned j=0;j<3;j++){		///	faceを構成する3頂点について
+////					unsigned k = 0;
+////					unsigned m = 0;
+////					k = (j+1)%3;		///	j=0;k=1, j=1;k=2, j=2;k=0 
+////					m = (j+2)%3;
+////					//vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[i].vertices[k],r,R);
+////					//DSTR << "vtxXY[" << j << "]: " << vtxXY[j] << std::endl; 
+////					if(innervtx[j] ==1){			/// faces[i]のj番目の節点が円環領域内に入っている
+////					/// j番目の頂点とエッジを構成する点(他の２点)を使って、半径r,Rと交わる点を算出する						
+////					//> j 0,1,2
+////						if(j == 0){	/// 頂点jと辺を作る頂点を使って、辺と交わる交点を求める
+////							//k = (j+1)%3;		///	j=0;k=1, j=1;k=2, j=2;k=0 
+////						vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[i].vertices[k],radius,Radius);
+////						vtxXY[k] = CalcIntersectionPoint(faces[i].vertices[j],faces[i].vertices[m],radius,Radius);
+////						}
+////						else if(j == 1){
+////						vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[0].vertices[1],radius,Radius);
+////						vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[2].vertices[2],radius,Radius);
+////						}
+////						else if(j == 2){
+////						vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[0].vertices[1],radius,Radius);
+////						vtxXY[j] = CalcIntersectionPoint(faces[i].vertices[j],faces[1].vertices[2],radius,Radius);
+////						}
+////						else{
+////							assert(0);
+////							DSTR << "Error in PHFemMeshThermo::CalcIHdqdt2(hogehoge) 領域判定にミス" << std::endl;
+////						}
+////					}
+////				}
+////			}
+////				//for(unsigned j=0;j<3;j++){
+////				//	/// face内の節点を順番にチェックする
+////				//	unsigned k =0;
+////				//	k = (j+1)%3;		///	j=0;k=1, j=1;k=2, j=2;k=0 
+////				//	if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
+////				//	}
+////				//	if( r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R){
+////				//		//> j,kをfaces[i].vertices[j],faces[i].vertices[k]として代入
+////				//		CalcIntersectionPoint(faces[i].vertices[0],faces[i].vertices[1],r,R);
+////				//	}
+////				//}
+////
+////				//> r -> radius
+////				//> R -> Radius
+////			
+////				/// 座標(consX ,constY)が円と三角形の辺との交点
+////			
+////				//unsigned vtxId0 = faces[i].vertices[0];
+////				//unsigned vtxId1 = faces[i].vertices[1];
+////		
+//////			free(innervtx);		//> メモリの解放	//配列は動的メモリではないのでfreeで開放できない
+////		
+////		
+////			////> 1-2で交点を作っているとき	//
+////			//else if( (r <= vertices[faces[i].vertices[1]].disFromOrigin && vertices[faces[i].vertices[1]].disFromOrigin <= R) ^ (vertices[faces[i].vertices[2]].disFromOrigin && vertices[faces[i].vertices[2]].disFromOrigin <= R)){
+////			//	//> 円環との交点を求める
+////			//	int katoon00 =0;
+////			//}
+////			////> 0-2で交点を作っているとき
+////			//else if( (r <= vertices[faces[i].vertices[0]].disFromOrigin && vertices[faces[i].vertices[0]].disFromOrigin <= R) ^ (vertices[faces[i].vertices[2]].disFromOrigin && vertices[faces[i].vertices[2]].disFromOrigin <= R)){
+////			//	//> 円環との交点を求める
+////			//	int katoon000 =0;
+////			//}
+////
+////			//for(unsigned j=0;j<3;j++){
+////			//	if( (r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R) * (r <= vertices[faces[i].vertices[j+1]].disFromOrigin && vertices[faces[i].vertices[j+1]].disFromOrigin <= R)){
+////			//		if(r <= vertices[faces[i].vertices[j]].disFromOrigin && vertices[faces[i].vertices[j]].disFromOrigin <= R)
+////			//		nObinnerVtx += 1;
+////			//	}
+////			//}
+////			//if( nObinnerVtx == 1)			faces[i].fluxarea = 1.5/3.0 * faces[i].area;//faces[i].fluxarea = 1.0/3.0 * faces[i].area;
+////			//else if(nObinnerVtx == 2)		faces[i].fluxarea = 2.8/3.0 * faces[i].area;//faces[i].fluxarea = 2.0/3.0 * faces[i].area;
+////			//else if(nObinnerVtx == 3)		faces[i].fluxarea = faces[i].area;
+////			//else if(nObinnerVtx == 0)		faces[i].fluxarea = 0;
+////
+////			//if(faces[i].fluxarea >= 0){	
+////			//	faceS += faces[i].fluxarea;
+////			//}else{	assert(0);	}		//	faces[i].fluxareaに0未満の数字が入っているのに加算しようとしている
+////			//DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;	
+//	}
+//
+//	//for(unsigned i=0;i < nSurfaceFace; i++){
+//	//	DSTR << "faces[" << i << "].fluxarea: " << faces[i].fluxarea << std::endl;
+//	//}
+//
+//		if(faceS > 0){
+//			//> dqdt を単位面積あたりに直す([1/m^2])
+//			double dqdtds = dqdtAll / faceS;
+//	//		DSTR << "dqdtds:  " << dqdtds << std::endl;
+//			//>	以下、熱流束をfacesに格納する
+//			//>	熱流束の面積計算はfluxareaを用いて行う
+//			for(unsigned i=0;i < nSurfaceFace; i++){
+//				if(faces[i].mayIHheated){
+//					faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+//	//				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
+//				}
+//			}
+//		}
+//	
+//		//　以上、値は入っているようだ
+//
+//		int katoon =0;
+//		//↑をつかって、CreateMatk2tをコピーした関数で、Vecf2?を作る基に
+//
+//		//>	熱量は、dqdtdsを用いる
+//
+//		//> r <= <= Rの中心から放射状に加熱
+//
+//		//	節点でdqdtの値を更新する
+//
+//		//　以下は、ベクトルを作る関数の仕事
+//		//	節点の属する表面の面で、計算する
+//		//  vertices[].heatFluxValueを基に計算を進める
+//		//	ガウスザイデル計算できるように処理など、準備する
+//	}
+//}
 
 
 void PHFemMeshThermo::CalcIHdqdt3(double r,double R,double dqdtAll){

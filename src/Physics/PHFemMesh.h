@@ -97,7 +97,7 @@ public:
 
 		//>	熱計算特有のパラメータ　継承して使う
 		///	原点から近い順にvertices[3]を並べ替えた頂点ID
-		int ascendVtx[3];	///	毎熱Stepで使う？使わない？
+		int ascendVtx[3];			///	毎熱Stepで使う？使わない？
 		double heatTransRatio;		///	その面における熱伝達率		///	構成節点の熱伝達率の相加平均す		///	すべての関数で、この値を更新できていないので、信用できない。
 		bool alphaUpdated;			///	属する頂点の熱伝達率が更新された際にtrueに	
 		bool deformed;				///	属する頂点の移動により、変形されたとき
