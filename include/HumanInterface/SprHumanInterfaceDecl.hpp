@@ -176,4 +176,18 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_HIXbox360ControllerIf(base)	\
 	bool Init(){	return	base::Init();}	\
 	void SetVibration(Vec2f lr){	base::SetVibration(lr);}	\
+	bool UP(){	return	base::UP();}	\
+	bool DOWN(){	return	base::DOWN();}	\
+	bool LEFT(){	return	base::LEFT();}	\
+	bool RIGHT(){	return	base::RIGHT();}	\
+	bool START(){	return	base::START();}	\
+	bool BACK(){	return	base::BACK();}	\
+	bool LTHUMB(){	return	base::LTHUMB();}	\
+	bool RTHUMB(){	return	base::RTHUMB();}	\
+	bool LSHOULDER(){	return	base::LSHOULDER();}	\
+	bool RSHOULDER(){	return	base::RSHOULDER();}	\
+	bool A(){	return	base::A();}	\
+	bool B(){	return	base::B();}	\
+	bool X(){	return	base::X();}	\
+	bool Y(){	return	base::Y();}	\
 

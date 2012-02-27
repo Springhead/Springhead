@@ -6,13 +6,17 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 // PHHapticPointer
 PHHapticPointer::PHHapticPointer(){
+	reflexSpring = 300;
+	reflexDamper = 0.1;
 	localRange = 1.0; 
-	worldScale = 1.0;
 	posScale = 1.0;
 	bDebugControl = false;
 	bForce = false;
+	bFriction = true;
 	bVibration = false;
 	rotaionalWeight = 1e5;
+	dynamical = false;
+	integrate = false;
 }
 PHHapticPointer::PHHapticPointer(const PHHapticPointer& p){
 	*this = p;
@@ -21,7 +25,7 @@ PHHapticPointer::PHHapticPointer(const PHHapticPointer& p){
 void PHHapticPointer::UpdateInterface(float dt){
 	if(bDebugControl) return;
 	// HumanInterface‚©‚çó‘Ô‚ðŽæ“¾
-	double s = GetWorldScale() * GetPosScale();
+	double s = GetPosScale();
 	HIHapticIf* hif = DCAST(HIHapticIf, humanInterface);
 	hif->Update(dt);
 	hiSolid.SetVelocity((Vec3d)hif->GetVelocity() * s);
@@ -45,11 +49,16 @@ void PHHapticPointer::UpdateDirect(){
 	targetProxy = GetPose();
 }
 
-void PHHapticPointer::SetForce(SpatialVector f){
+void PHHapticPointer::AddHapticForce(SpatialVector f){
+	hapticForce += f;
+}
+
+void PHHapticPointer::DisplayHapticForce(){
 	HIHapticIf* hif = DCAST(HIHapticIf, humanInterface);
 	if(bForce)
-		 hif->SetForce(f.v(), f.w());
+		 hif->SetForce(hapticForce.v(), hapticForce.w());
 	else hif->SetForce(Vec3f(), Vec3f());
+	hapticForce.clear(0.0);
 }
 
 }

@@ -351,13 +351,6 @@ struct PHSolidPairForLCPIf : public ObjectIf{
 	PHShapePairForLCPIf* GetShapePair(int i, int j);
 };
 
-struct HIBaseIf;
-struct PHHapticPointerIf : public PHSolidIf{
-	SPR_IFDEF(PHHapticPointer);
-	void SetHumanInterface(HIBaseIf* hi);
-	void EnableForce(bool b);
-};
-
 //@}
 
 }	//	namespace Spr

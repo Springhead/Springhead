@@ -21,6 +21,7 @@
 #include <Physics/SprPHIK.h>
 #include <Physics/SprPHEngine.h>
 #include <Physics/SprPHFemMesh.h>
+#include <Physics/SprPHHaptic.h>
 
 namespace Spr{;
 

@@ -9,22 +9,18 @@ namespace Spr{;
 void PHHapticLoopImpulse::Step(){
 	UpdateInterface();
 	HapticRendering();
-
 }
 
 void PHHapticLoopImpulse::HapticRendering(){
-	PHHapticRenderInfo hri;
-	hri.pointers = GetHapticPointers();
-	hri.hsolids = GetHapticSolids();
-	hri.sps = GetSolidPairsForHaptic();
-	hri.hdt = GetHapticTimeStep();
-	hri.pdt = GetPhysicsTimeStep();
-	hri.loopCount = loopCount;
-	hri.bInterpolatePose = true;
-	hri.bMultiPoints = true;
-	hapticRender.SetRenderMode(PHHapticRenderBase::CONSTRAINT);
-	hapticRender.SetRenderMode(PHHapticRenderBase::PENALTY6D);
-	hapticRender.HapticRendering(hri);
+	PHHapticRenderInfo info;
+	info.pointers = GetHapticPointers();
+	info.hsolids = GetHapticSolids();
+	info.sps = GetSolidPairsForHaptic();
+	info.hdt = GetHapticTimeStep();
+	info.pdt = GetPhysicsTimeStep();
+	info.loopCount = loopCount;
+	info.bInterpolatePose = true;
+	GetHapticRender()->HapticRendering(info);
 }
 
 

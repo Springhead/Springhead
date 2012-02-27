@@ -22,6 +22,7 @@ class HIXbox360Controller :public HIXbox360ControllerDesc, public HIHaptic{
 protected:
 	DWORD controllerID;
 	XINPUT_STATE state;
+	bool key[14];
 	Vec2i thumbL;
 	Vec2i thumbR;
 	int leftTrigger;
@@ -39,7 +40,6 @@ public:
 		controllerID = -1;
 	}
 
-
 	virtual bool Init();
 	virtual void Update(float dt);
 	virtual void UpdateState();
@@ -55,7 +55,21 @@ public:
 	virtual Vec3f GetVelocity();
 	virtual Vec3f GetAngularVelocity();
 	virtual void SetVibration(Vec2f lr);
-	//virtual 
+	
+	bool UP(){ return key[0]; }
+	bool DOWN(){ return key[1]; }
+	bool LEFT(){ return key[2]; }
+	bool RIGHT(){ return key[3]; };
+	bool START(){ return key[4]; };
+	bool BACK(){ return key[5]; };
+	bool LTHUMB(){ return key[6]; };
+	bool RTHUMB(){ return key[7]; };
+	bool LSHOULDER(){ return key[8]; };
+	bool RSHOULDER(){ return key[9]; };
+	bool A(){ return key[10]; };
+	bool B(){ return key[11]; };
+	bool X(){ return key[12]; };
+	bool Y(){ return key[13]; };
 
 };
 

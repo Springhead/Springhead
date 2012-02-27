@@ -2,7 +2,7 @@
 #define PH_HAPTICENGINE_SINGLEBASE_H
 
 #include <Physics/PHHapticEngine.h>
-#include <Physics/PHHapticRenderBase.h>
+#include <Physics/PHHapticRender.h>
 
 namespace Spr{;
 
@@ -11,12 +11,15 @@ namespace Spr{;
 class PHHapticEngineSingleBase : public PHHapticEngineImp{
 	SPR_OBJECTDEF_NOIF(PHHapticEngineSingleBase);
 public:
-	PHHapticRenderBase hapticRender;
 	PHHapticEngineSingleBase();
 	virtual void Step1();
 	virtual void Step2();
 	virtual void UpdateInterface();
 	virtual void UpdateHapticPointer();
+
+	PHHapticRender* GetHapticRender(){
+		return engine->hapticRender;
+	}
 
 	//デバック用コード
 	virtual void StepSimulation();

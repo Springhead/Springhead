@@ -33,6 +33,26 @@ void HIXbox360Controller::Update(float dt){
 	UpdateState();
 	XINPUT_GAMEPAD g = state.Gamepad;
 
+	// 各種キー
+	for(int i = 0; i < 14; i++){
+		key[i] = false;
+	}
+	if(g.wButtons & XINPUT_GAMEPAD_DPAD_UP)			key[0] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_DPAD_DOWN)		key[1] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_DPAD_LEFT)		key[2] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_DPAD_RIGHT)		key[3] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_START)			key[4] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_BACK)			key[5] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_LEFT_THUMB)		key[6] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_RIGHT_THUMB)		key[7] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_LEFT_SHOULDER)	key[8] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_RIGHT_SHOULDER)	key[9] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_A)				key[10] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_B)				key[11] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_X)				key[12] = true;
+	if(g.wButtons & XINPUT_GAMEPAD_Y)				key[13] = true;
+
+	// アナログスティック、ボタン
 	thumbL = Vec2i((int)g.sThumbLX, (int)g.sThumbLY);
 	thumbR = Vec2i((int)g.sThumbRX, (int)g.sThumbRY);
 	leftTrigger = (int)g.bLeftTrigger;

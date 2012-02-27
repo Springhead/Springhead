@@ -6,7 +6,9 @@
 
 namespace Spr{;
 
-struct PHHapticRenderInfo{
+
+
+struct PHHapticRenderInfo : public PHHapticRenderDesc{
 	PHHapticPointers*		pointers;
 	PHSolidsForHaptic*		hsolids;
 	PHSolidPairsForHaptic*	sps;
@@ -14,23 +16,27 @@ struct PHHapticRenderInfo{
 	double pdt;
 	double hdt;
 	bool bInterpolatePose;
-	bool bMultiPoints;
 };
 
-class PHHapticRenderBase{
+class PHHapticRender : public PHHapticRenderInfo, public SceneObject{
 public:
-	enum RenderMode{
-		PENALTY1POINT,
-		PENALTY6D,
-		CONSTRAINT,
-		VIRTUALCOUPLING,
-	} mode;
-	virtual void SetRenderMode(RenderMode m){ mode = m; }
-	virtual void HapticRendering(PHHapticRenderInfo hri);
-	virtual PHIrs CompIntermediateRepresentation(PHHapticPointer* pointer, PHHapticRenderInfo hri);
-	virtual void PenaltyBasedRendering(PHHapticRenderInfo hri);
-	virtual void ConstraintBasedRendering(PHHapticRenderInfo hri);
-	virtual void VirtualCoupling(PHHapticPointer* pointer);
+	SPR_OBJECTDEF(PHHapticRender);
+	ACCESS_DESC(PHHapticRender);
+	HapticRenderMode mode;
+	bool bMultiPoints;
+
+	PHHapticRender();
+	// API
+	virtual void SetHapticRenderMode(HapticRenderMode m);
+	virtual void EnableMultiPoints(bool b);
+
+	// Implementation
+	virtual void HapticRendering(PHHapticRenderInfo info);
+	virtual void DisplayHapticForce();
+	virtual PHIrs CompIntermediateRepresentation(PHHapticPointer* pointer);
+	virtual void PenaltyBasedRendering();
+	virtual void ConstraintBasedRendering();
+	virtual void VibrationRendering();
 
 	// ガウスザイデル法を使いAx+b>0を解く
 	template <class AD, class XD, class BD>

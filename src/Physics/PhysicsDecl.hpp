@@ -1,3 +1,14 @@
+#define SPR_DECLMEMBEROF_PHHapticEngineDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHFemMeshState \
 protected:\
 public:\
@@ -51,6 +62,17 @@ public:\
 		((PHFemMeshThermoDesc*)ptr)->thConduct = thConduct;	\
 		((PHFemMeshThermoDesc*)ptr)->heatTrans = heatTrans;	\
 		((PHFemMeshThermoDesc*)ptr)->specificHeat = specificHeat;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHHapticRenderDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -818,23 +840,6 @@ public:\
 		PHConstraint::GetState((PHConstraintState*)(PHContactPointState*)ptr);	\
 		((PHContactPointState*)ptr)->shapePair = shapePair;	\
 		((PHContactPointState*)ptr)->pos = pos;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHHapticEngineDesc \
-protected:\
-	bool	bHaptic;	\
-	bool	bPhysicStep;	\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		bHaptic = ((PHHapticEngineDesc*)ptr)->bHaptic;	\
-		bPhysicStep = ((PHHapticEngineDesc*)ptr)->bPhysicStep;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((PHHapticEngineDesc*)ptr)->bHaptic = bHaptic;	\
-		((PHHapticEngineDesc*)ptr)->bPhysicStep = bPhysicStep;	\
 		return true;	\
 	}\
 

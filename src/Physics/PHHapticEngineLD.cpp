@@ -9,19 +9,15 @@ void PHHapticLoopLD::Step(){
 	LocalDynamics();
 }
 void PHHapticLoopLD::HapticRendering(){
-	PHHapticRenderInfo hri;
-	hri.pointers = GetHapticPointers();
-	hri.hsolids = GetHapticSolids();
-	hri.sps = GetSolidPairsForHaptic();
-	hri.hdt = GetHapticTimeStep();
-	hri.pdt = GetPhysicsTimeStep();
-	hri.loopCount = loopCount;
-	hri.bInterpolatePose = false;
-	hri.bMultiPoints = false;
-	//PenaltyBasedRendering(hri);
-	//ConstraintBasedRendering(hri);
-	PHHapticRenderBase hapticRender;
-	hapticRender.ConstraintBasedRendering(hri);
+	PHHapticRenderInfo info;
+	info.pointers = GetHapticPointers();
+	info.hsolids = GetHapticSolids();
+	info.sps = GetSolidPairsForHaptic();
+	info.hdt = GetHapticTimeStep();
+	info.pdt = GetPhysicsTimeStep();
+	info.loopCount = loopCount;
+	info.bInterpolatePose = false;
+	GetHapticRender()->HapticRendering(info);
 }
 
 void PHHapticLoopLD::LocalDynamics(){
@@ -53,7 +49,7 @@ void PHHapticLoopLD::LocalDynamics(){
  		localSolid->SetUpdated(true);
 		localSolid->Step();
 		if(i == 1){
-			CSVOUT << localSolid->GetFramePosition().y << "," << vel.v().y << "," << hsolid->b.v().y * hdt << std::endl;
+			//CSVOUT << localSolid->GetFramePosition().y << "," << vel.v().y << "," << hsolid->b.v().y * hdt << std::endl;
 			//CSVOUT << localSolid->GetVelocity().y << ","
 			//<< (hsolid->curb - hsolid->lastb).v().y *  pdt << ","
 			//<< hsolid->b.v().y * hdt << std::endl;

@@ -6,10 +6,10 @@
 
 namespace Spr{;
 
-class PHSolidsForHaptic;
+//class PHSolidsForHaptic;
 class PHSolidPairForHaptic;
-class PHSolidPairsForHaptic;
-class PHShapePairForHaptic;
+//class PHSolidPairsForHaptic;
+//class PHShapePairForHaptic;
 
 struct PHIntermediateRepresentation :public UTRefCount{
 	int solidID;				///< çÑëÃÇÃID(PHSolidsForHapitcÇ∆PHSolidPairForHaptic)Ç∆êNì¸ÇµÇƒÇ¢ÇÈÇ©
@@ -23,8 +23,10 @@ struct PHIntermediateRepresentation :public UTRefCount{
 	Vec3d contactPointVel;		///< çÑëÃë§ÇÃê⁄êGì_ÇÃë¨ìx(world)
 	Posed interpolation_pose;	///< å`èÛÇÃï‚ä‘épê®
 	double f;					///< êNì¸âèúåvéZÇ≈ê⁄êGì_Ç™ï¿êià⁄ìÆÇ…çÏópÇ∑ÇÈëÂÇ´Ç≥
-	float mu;
-	float mu0;
+	float springK;					///< ÉoÉlåWêî
+	float damperD;					///< É_ÉìÉpåWêî
+	float mu;					///< ìÆñÄéCåWêî
+	float mu0;					///< ç≈ëÂê√é~ñÄéCåWêî(ç≈ëÂê√é~ñÄéCÇÕñ¢é¿ëï)
 	PHIntermediateRepresentation(){
 		solidID = -1;
 		f = 0.0;
@@ -37,7 +39,6 @@ typedef std::vector< PHIr* > PHIrs;
 //----------------------------------------------------------------------------
 // PHHapticPointer
 struct PHHapticPointerSt{
-	PHIrs allIrs;
 	Vec3d last_dr;
 	Vec3d last_dtheta;
 	Posed proxyPose;	// ñÄéCåvéZópÇÃÉvÉçÉLÉV
@@ -49,15 +50,18 @@ class PHHapticPointer : public PHHapticPointerSt, public PHSolid{
 protected:
 	int pointerID;
 	int pointerSolidID;
+	float reflexSpring, reflexDamper;
+	float reflexSpringOri, reflexDamperOri;
 	float localRange;
-	double worldScale;
 	double posScale;
 	Posed defaultPose;
 	double rotaionalWeight;
+	SpatialVector hapticForce;
 
 public:
 	bool bDebugControl;
 	bool bForce;
+	bool bFriction;
 	bool bVibration;
 	std::vector<int> neighborSolidIDs;
 	PHSolid hiSolid;
@@ -65,26 +69,38 @@ public:
 	PHHapticPointer();
 	PHHapticPointer(const PHHapticPointer& p);
 
-	void	SetPointerID(int id){ pointerID = id; }
-	int		GetPointerID(){ return pointerID; }
-	void	SetSolidID(int id){ pointerSolidID = id; }
-	int		GetSolidID(){ return pointerSolidID; }
+	//API
 	void	SetHumanInterface(HIBaseIf* hi){ humanInterface = hi; }
-	void	UpdateInterface(float dt);
-	void	UpdateDirect();
-	void	SetForce(SpatialVector f);
+	void	EnableForce(bool b){ bForce = b; }
+	void	EnableFriction(bool b){ bFriction = b; }
+	void	EnableVibration(bool b){ bVibration = b; }
+	void	EnableDebugControl(bool b){ bDebugControl = b; }
+	void	SetReflexSpring(float s){ reflexSpring = s; }
+	float	GetReflexSpring(){ return reflexSpring; }
+	void	SetReflexDamper(float d){ reflexDamper = d; }
+	float	GetReflexDamper(){ return reflexDamper; }
+	void	SetReflexSpringOri(float s){ reflexSpringOri = s; }
+	float	GetReflexSpringOri(){ return reflexSpringOri; }
+	void	SetReflexDamperOri(float d){ reflexDamperOri = d; }
+	float	GetReflexDamperOri(){ return reflexDamperOri; }
 	void	SetLocalRange(float r){ localRange = r; } 
 	float	GetLocalRange(){ return localRange; }
 	void	SetPosScale(double scale){ posScale = scale; }
 	double	GetPosScale(){ return posScale; }
-	void	SetWorldScale(double scale){ worldScale = scale; }
-	double	GetWorldScale(){ return worldScale; }
 	void	SetRotationalWeight(double w){ rotaionalWeight = w; }
 	double	GetRotationalWeight(){ return rotaionalWeight ; }
 	void	SetDefaultPose(Posed p){ defaultPose = p; }
 	Posed	GetDefaultPose(){ return defaultPose; }
-	void	EnableForce(bool b){ bForce = b; }
-	void	DisplayVibration(bool b){ bVibration = b; }
+
+	// Implementation
+	void	SetPointerID(int id){ pointerID = id; }
+	int		GetPointerID(){ return pointerID; }
+	void	SetSolidID(int id){ pointerSolidID = id; }
+	int		GetSolidID(){ return pointerSolidID; }
+	void	UpdateInterface(float dt);
+	void	UpdateDirect();
+	void	AddHapticForce(SpatialVector f);
+	void	DisplayHapticForce();
 };
 class PHHapticPointers : public std::vector< UTRef< PHHapticPointer > >{};
 

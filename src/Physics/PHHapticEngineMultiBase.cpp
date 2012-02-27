@@ -40,6 +40,9 @@ PHSolidsForHaptic* PHHapticLoopImp::GetHapticSolids(){
 PHSolidPairsForHaptic* PHHapticLoopImp::GetSolidPairsForHaptic(){
 	return &solidPairs;
 }
+PHHapticRender* PHHapticLoopImp::GetHapticRender(){
+	return engineImp->GetHapticRender();
+}
 
 //----------------------------------------------------------------------------
 // PHHapticEngineMultiBase
@@ -117,6 +120,9 @@ void PHHapticEngineMultiBase::SyncArrays(){
 	for(int i = hNpointers; i < pNpointers; i++){
 		hpointers->push_back(DBG_NEW PHHapticPointer(*GetHapticPointer(i)));
 	}
+	//DSTR << "------------" << std::endl;
+	//DSTR << pNpointers << hNpointers << std::endl;
+	//DSTR << hNpointers << std::endl;
 
 	// 2. Solidの増加分
 	const int hNsolids = hapticLoop->NHapticSolids();
@@ -160,7 +166,7 @@ void PHHapticEngineMultiBase::StepSimulation(){
 	if (bCalcPhys){
 		/// シミュレーションの実行
 		engine->GetScene()->Step();
-		/// ここでpostredisplayを呼びたい
+		/// ここでpostredisplayを呼びたい?
 		bCalcPhys = false;
 	}
 	double pdt = GetPhysicsTimeStep();

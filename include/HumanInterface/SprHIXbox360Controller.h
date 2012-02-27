@@ -17,6 +17,21 @@ struct HIXbox360ControllerIf : public HIHapticIf{
 	SPR_VIFDEF(HIXbox360Controller);
 	bool Init();
 	void SetVibration(Vec2f lr);
+	bool UP();
+	bool DOWN();
+	bool LEFT();
+	bool RIGHT();
+	bool START();
+	bool BACK();
+	bool LTHUMB();
+	bool RTHUMB();
+	bool LSHOULDER();
+	bool RSHOULDER();
+	bool A();
+	bool B();
+	bool X();
+	bool Y();
+
 };
 
 struct HIXbox360ControllerDesc{

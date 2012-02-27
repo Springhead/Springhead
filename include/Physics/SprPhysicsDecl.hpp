@@ -28,6 +28,9 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemEngineIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHapticEngineIf(base)	\
+	void EnableHapticEngine(bool b){	base::EnableHapticEngine(b);}	\
+	void SetHapticEngineMode(Spr::PHHapticEngineDesc::HapticEngineMode mode){	base::SetHapticEngineMode(mode);}	\
+	Spr::PHHapticRenderIf* GetHapticRender(){	return	base::GetHapticRender();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshIf(base)	\
 
@@ -43,6 +46,33 @@
 	void SetVertexTemp(unsigned int id, double temp){	base::SetVertexTemp(id, temp);}	\
 	void SetvecFAll(unsigned int id, double dqdt){	base::SetvecFAll(id, dqdt);}	\
 	void SetRohSpheat(double roh, double Cp){	base::SetRohSpheat(roh, Cp);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHHapticRenderIf(base)	\
+	void SetHapticRenderMode(Spr::PHHapticRenderDesc::HapticRenderMode m){	base::SetHapticRenderMode(m);}	\
+	void EnableMultiPoints(bool b){	base::EnableMultiPoints(b);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHHapticPointerIf(base)	\
+	void SetHumanInterface(Spr::HIBaseIf* hi){	base::SetHumanInterface(hi);}	\
+	void EnableForce(bool b){	base::EnableForce(b);}	\
+	void EnableFriction(bool b){	base::EnableFriction(b);}	\
+	void EnableVibration(bool b){	base::EnableVibration(b);}	\
+	void EnableDebugControl(bool b){	base::EnableDebugControl(b);}	\
+	void SetReflexSpring(float s){	base::SetReflexSpring(s);}	\
+	float GetReflexSpring(){	return	base::GetReflexSpring();}	\
+	void SetReflexDamper(float d){	base::SetReflexDamper(d);}	\
+	float GetReflexDamper(){	return	base::GetReflexDamper();}	\
+	void SetReflexSpringOri(float s){	base::SetReflexSpringOri(s);}	\
+	float GetReflexSpringOri(){	return	base::GetReflexSpringOri();}	\
+	void SetReflexDamperOri(float d){	base::SetReflexDamperOri(d);}	\
+	float GetReflexDamperOri(){	return	base::GetReflexDamperOri();}	\
+	void SetLocalRange(float r){	base::SetLocalRange(r);}	\
+	float GetLocalRange(){	return	base::GetLocalRange();}	\
+	void SetPosScale(double scale){	base::SetPosScale(scale);}	\
+	double GetPosScale(){	return	base::GetPosScale();}	\
+	void SetRotationalWeight(double w){	base::SetRotationalWeight(w);}	\
+	double GetRotationalWeight(){	return	base::GetRotationalWeight();}	\
+	void SetDefaultPose(Posed p){	base::SetDefaultPose(p);}	\
+	Posed GetDefaultPose(){	return	base::GetDefaultPose();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHIKEndEffectorIf(base)	\
 	void SetSolid(Spr::PHSolidIf* solid){	base::SetSolid(solid);}	\
@@ -327,7 +357,7 @@
 	Spr::PHPenaltyEngineIf* GetPenaltyEngine(){	return	base::GetPenaltyEngine();}	\
 	Spr::PHIKEngineIf* GetIKEngine(){	return	base::GetIKEngine();}	\
 	Spr::PHHapticEngineIf* GetHapticEngine(){	return	base::GetHapticEngine();}	\
-	PHHapticPointerIf* CreateHapticPointer(){	return	base::CreateHapticPointer();}	\
+	Spr::PHHapticPointerIf* CreateHapticPointer(){	return	base::CreateHapticPointer();}	\
 	void StepHapticLoop(){	base::StepHapticLoop();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSdkIf(base)	\
@@ -400,8 +430,4 @@
 	unsigned int GetLastContactCount(int i, int j){	return	base::GetLastContactCount(i, j);}	\
 	double GetContactDepth(int i, int j){	return	base::GetContactDepth(i, j);}	\
 	Spr::PHShapePairForLCPIf* GetShapePair(int i, int j){	return	base::GetShapePair(i, j);}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_PHHapticPointerIf(base)	\
-	void SetHumanInterface(Spr::HIBaseIf* hi){	base::SetHumanInterface(hi);}	\
-	void EnableForce(bool b){	base::EnableForce(b);}	\
 
