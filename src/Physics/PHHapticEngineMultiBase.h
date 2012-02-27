@@ -2,7 +2,7 @@
 #define PH_HAPTICENGINE_MULTIBASE_H
 
 #include <Physics/PHHapticEngine.h>
-#include <Physics/PHHapticRenderBase.h>
+#include <Physics/PHHapticRender.h>
 
 namespace Spr{;
 
@@ -14,7 +14,6 @@ protected:
 	PHHapticPointers hapticPointers;
 	PHSolidsForHaptic hapticSolids;
 	PHSolidPairsForHaptic solidPairs;
-	PHHapticRenderBase hapticRender;
 public:
 	PHHapticEngineImp* engineImp;
 	int loopCount;
@@ -34,6 +33,7 @@ public:
 	PHHapticPointers* GetHapticPointers();
 	PHSolidsForHaptic* GetHapticSolids();
 	PHSolidPairsForHaptic* GetSolidPairsForHaptic();
+	PHHapticRender* GetHapticRender();
 };
 
 //----------------------------------------------------------------------------

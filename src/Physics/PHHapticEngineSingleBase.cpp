@@ -11,18 +11,15 @@ void PHHapticEngineSingleBase::Step1(){
 	engine->StartDetection();
 	UpdateInterface();
 	UpdateHapticPointer();
-	PHHapticRenderInfo hri;
-	hri.pointers = GetHapticPointers();
-	hri.hsolids = GetHapticSolids();
-	hri.sps = GetSolidPairsForHaptic();
-	hri.hdt = GetPhysicsTimeStep();
-	hri.pdt = GetPhysicsTimeStep();
-	hri.loopCount = 1.0;
-	hri.bInterpolatePose = false;
-	hri.bMultiPoints = false;
-	hapticRender.SetRenderMode(PHHapticRenderBase::PENALTY6D);
-	hapticRender.SetRenderMode(PHHapticRenderBase::CONSTRAINT);
-	hapticRender.HapticRendering(hri);
+	PHHapticRenderInfo info;
+	info.pointers = GetHapticPointers();
+	info.hsolids = GetHapticSolids();
+	info.sps = GetSolidPairsForHaptic();
+	info.hdt = GetPhysicsTimeStep();
+	info.pdt = GetPhysicsTimeStep();
+	info.loopCount = 1.0;
+	info.bInterpolatePose = false;
+	GetHapticRender()->HapticRendering(info);
 	//レンダリングした力をシーンに反映
 	for(int i = 0; i < (int)NHapticSolids(); i++){
 		PHSolidForHaptic* hsolid = GetHapticSolid(i);
@@ -35,7 +32,8 @@ void PHHapticEngineSingleBase::Step1(){
 	}
 }
 
-void PHHapticEngineSingleBase::Step2(){}
+void PHHapticEngineSingleBase::Step2(){
+}
 
 void PHHapticEngineSingleBase::UpdateInterface(){
 	for(int i = 0; i < NHapticPointers(); i++){

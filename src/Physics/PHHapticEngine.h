@@ -70,7 +70,7 @@ public:
 	/// 接触時の判定
 	int OnDetect(unsigned ct, const Vec3d& center0);
 	bool AnalyzeContactRegion();
-	bool CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
+	bool CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bMultiPoints);
 };
 
 //----------------------------------------------------------------------------
@@ -83,8 +83,12 @@ struct PHSolidPairForHapticSt{
 	Posed lastInterpolationPose;
 	Posed initialRelativePose;	///< 接触開始時の相対位置姿勢
 	Posed relativePose;			///< 接触中の相対位置姿勢
+
+	int contactCount;
+	Vec3d vibrationVel;
 	enum FrictionState{
 		FREE,
+		FIRST,
 		STATIC,
 		DYNAMIC,
 	} frictionState;
@@ -110,6 +114,7 @@ class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> 
 
 //----------------------------------------------------------------------------
 // PHHapticEngineImp
+class PHHapticRender;
 class PHHapticEngineImp : public SceneObject{
 	SPR_OBJECTDEF_NOIF(PHHapticEngineImp);
 public:
@@ -130,26 +135,21 @@ public:
 	PHHapticPointers* GetHapticPointers();
 	PHSolidsForHaptic* GetHapticSolids();
 	PHSolidPairsForHaptic* GetSolidPairsForHaptic();
+	PHHapticRender* GetHapticRender();
 
 	///< デバック用シミュレーション実行
-	virtual void StepSimulation(){};
+	virtual void StepSimulation();
 };
 
 //----------------------------------------------------------------------------
 // PHHapticEngine
-
-
-struct PHHapticEngineDesc{
-	bool bHaptic;
-	bool bPhysicStep;
-	PHHapticEngineDesc();
-};
 class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector< PHShapePairForHaptic, PHSolidPairForHaptic, PHHapticEngine >{
 public:
 	SPR_OBJECTDEF1(PHHapticEngine, PHEngine);
 	ACCESS_DESC(PHHapticEngine);
 	UTRef< PHHapticEngineImp > engineImp;
 	std::vector< UTRef<PHHapticEngineImp> > engineImps;
+	UTRef< PHHapticRender > hapticRender;
 	PHHapticPointers hapticPointers;
 	PHSolidsForHaptic hapticSolids;
 	typedef std::vector< HIBaseIf* > HIBaseIfs;
@@ -158,29 +158,32 @@ public:
 	struct Edge{ Vec3f min, max; };
 	std::vector< Edge > edges;
 
-	enum EngineType{
-		SINGLE_THREAD,
-		MULTI_THREAD,
-		LOCAL_DYNAMICS,
-	} engineType;
-
-
+	bool bHapticEngine;
+	bool bPhysicStep;
+	HapticEngineMode engineMode;
 	PHHapticEngine();
 
-	///< シミュレーションループの更新（PHScene::Integrate()からコール）
-	virtual void Step(){ if(bHaptic && bPhysicStep) engineImp->Step1(); }
-	virtual void Step2(){ if(bHaptic && bPhysicStep) engineImp->Step2(); }
-	///< 力覚ループの更新	
-	virtual void StepHapticLoop(){ if(bHaptic) engineImp->StepHapticLoop(); }
 
+	//-------------------------------------------------------------------
+	// APIの実装
 	///< 力覚提示計算のON/OFF
-	void EnableHaptic(bool b){ bHaptic = b; }
+	void EnableHapticEngine(bool b){ bHapticEngine = b; }
+	///< エンジンモードの選択
+	void SetHapticEngineMode(HapticEngineMode mode);
 	///< レンダリングモードの選択
-	void SetHapticEngineType(EngineType e);
+	PHHapticRenderIf* GetHapticRender();
 	///< 力覚ポインタの数を返す
 	int NHapticPointers(){ return (int)hapticPointers.size(); }
 	///< 力覚ポインタへのポインタを返す
 	PHHapticPointer* GetHapticPointer(int i){ return hapticPointers[i]; }
+
+	//-------------------------------------------------------------------
+	// PHHapticEngineの実装
+	///< シミュレーションループの更新（PHScene::Integrate()からコール）
+	virtual void Step(){ if(bHapticEngine && bPhysicStep) engineImp->Step1(); }
+	virtual void Step2(){ if(bHapticEngine && bPhysicStep) engineImp->Step2(); }
+	///< 力覚ループの更新	
+	virtual void StepHapticLoop(){ if(bHapticEngine) engineImp->StepHapticLoop(); }
 
 	///< 力覚ポインタの状態の更新
 	virtual void UpdateHapticPointer();

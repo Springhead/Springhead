@@ -10,7 +10,7 @@ using namespace Spr;
 
 #define SPIDAR 0
 // 0:single, 1:impulsemulti, 2:LD
-#define ENGINETYPE 1
+#define ENGINETYPE 2
 #define DEBUG_CON 0
 #define DEBUG_RENDER 1
 
@@ -61,8 +61,8 @@ void MyApp::Init(int argc, char* argv[]){
 		
 		// °‚ðì¬
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
-		bd.material.mu= 0.5;
-		bd.material.mu0 = 0.5;
+		bd.material.mu= 0.7;
+		bd.material.mu0 = 0.7;
 		bd.material.e = 0.1;
 		PHSolidIf* floor = phscene->CreateSolid();
 		floor->SetDynamical(false);
@@ -73,7 +73,7 @@ void MyApp::Init(int argc, char* argv[]){
 		for(int i = 0; i < 1; i++){
 			PHSolidIf* box = phscene->CreateSolid();
 			sobox = box;
-			box->SetMass(0.1);
+			box->SetMass(0.5);
 			bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 			//bd.boxsize = Vec3f(2, 0.2, 2);
 			box->AddShape(phSdk->CreateShape(bd));
@@ -86,30 +86,35 @@ void MyApp::Init(int argc, char* argv[]){
 		cd.radius = 0.1f;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		pointer->AddShape(phSdk->CreateShape(cd));
-		pointer->SetFramePosition(Vec3d(0.0, 0.0, 0.0));
-		pointer->SetDynamical(false);
-		pointer->SetIntegrate(false);
+		pointer->SetDefaultPose(Posed());
 		pointer->SetHumanInterface(spg);
 		pointer->SetInertia(pointer->GetInertia());
+		pointer->SetLocalRange(0.5);
+		pointer->SetPosScale(50);
+		pointer->SetReflexSpring(5000);
+		pointer->SetReflexDamper(0.1);
+		pointer->EnableDebugControl(DEBUG_CON);
+		pointer->EnableFriction(false);
+		pointer->EnableVibration(true);
 		phscene->SetContactMode(pointer, PHSceneDesc::MODE_NONE);
-		PHHapticPointer* b = pointer->Cast();
-		b->SetLocalRange(0.5);
-		b->SetPosScale(50);
-		b->bDebugControl = DEBUG_CON;
 
 		GetSdk()->SetDebugMode(true);
 		GetSdk()->GetScene()->EnableRenderHaptic(DEBUG_RENDER);
 
-		PHHapticEngine* h = phscene->GetHapticEngine()->Cast();
-		h->EnableHaptic(true);
+		PHHapticEngineIf* h = phscene->GetHapticEngine();
+		h->EnableHapticEngine(true);
+		PHHapticRenderIf* render = h->GetHapticRender();
+		render->SetHapticRenderMode(PHHapticRenderDesc::CONSTRAINT);
+		//render->SetHapticRenderMode(PHHapticRenderDesc::PENALTY);
+		render->EnableMultiPoints(false);
 #if ENGINETYPE == 0
-		h->SetHapticEngineType(PHHapticEngine::SINGLE_THREAD);
+		h->SetHapticEngineMode(PHHapticEngine::SINGLE_THREAD);
 		phscene->SetTimeStep(0.001);
 #elif ENGINETYPE == 1
-		h->SetHapticEngineType(PHHapticEngine::MULTI_THREAD);
+		h->SetHapticEngineMode(PHHapticEngine::MULTI_THREAD);
 		phscene->SetTimeStep(0.02);
 #elif ENGINETYPE == 2
-		h->SetHapticEngineType(PHHapticEngine::LOCAL_DYNAMICS);
+		h->SetHapticEngineMode(PHHapticEngine::LOCAL_DYNAMICS);
 		phscene->SetTimeStep(0.02);
 #endif
 		physicsTimerID = GetTimer(0)->GetID();
@@ -156,14 +161,21 @@ void MyApp::Keyboard(int key, int x, int y){
 				GetTimer(i)->Stop();
 			}
 			Sleep(1000);
+			GetSdk()->Clear();
 			exit(0);
 			break;
-		//case 'a':
-		//	range += 0.5;
-		//	break;
-		//case 's':
-		//	range -= 0.5;
-		//	break;
+		case '1':
+			{
+				phscene->GetHapticEngine()->GetHapticRender()->SetHapticRenderMode(PHHapticRenderDesc::PENALTY);
+				DSTR << "Penalty mode" << std::endl;
+				break;
+			}
+		case '2':
+			{
+				phscene->GetHapticEngine()->GetHapticRender()->SetHapticRenderMode(PHHapticRenderDesc::CONSTRAINT);
+				DSTR << "Constraint mode" << std::endl;
+				break;
+			}
 		case 'c':
 			{
 				timer->Stop();
