@@ -14,6 +14,9 @@ using namespace PTM;
 using namespace std;
 namespace Spr{;
 
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// PHContactSurface
+
 PHContactSurface::PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1, std::vector<Vec3d> sec){
 	shapePair = sp;
 	pos = p;
@@ -40,6 +43,9 @@ PHContactSurface::PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp,
 		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = solid[i]->GetOrientation().Conjugated() * qlocal;
 		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
 	}
+
+	nMovableAxes   = 0;
+	InitTargetAxes();
 }
 
 PHContactSurface::PHContactSurface(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1, std::vector<Vec3d> sec){
@@ -87,14 +93,47 @@ PHContactSurface::PHContactSurface(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, 
 		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = solid[i]->GetOrientation().Conjugated() * qjabs;
 		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
 	}
+
+	nMovableAxes   = 0;
+	InitTargetAxes();	
 }
 
-void PHContactSurface::SetConstrainedIndex(int* con){
-//	con[0] = con[1] = con[2] = con[3] = con[4] = con[5] = true;
-	 for(int i = 0; i<6;i++){
-		con[i] = i;
+void PHContactSurface::IterateLCP() {
+	if (!bEnabled || !bFeasible) { return; }
+	
+	SpatialVector fnew, df;
+
+	// -- 力
+	for (int i=0; i<3; ++i) {
+		// Gauss-Seidel Iteration
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i]*f[i] + b[i] + db[i] 
+				+ J[0].row(i)*solid[0]->dv + J[1].row(i)*solid[1]->dv);
+
+		// Projection
+		Projection(fnew[i], i);
+
+		// Comp Response & Update f
+		df[i] = fnew[i] - f[i];
+		CompResponse(df[i], i);
+		f[i] = fnew[i];
 	}
-	targetAxis = 6;
+
+	// -- トルク
+	// Gauss-Seidel Iteration
+	for (int i=3; i<6; ++i) {
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i]*f[i] + b[i] + db[i] 
+				+ J[0].row(i)*solid[0]->dv + J[1].row(i)*solid[1]->dv);
+	}
+
+	// Projection
+	ProjectionTorque(fnew);
+
+	// Comp Response & Update f
+	for (int i=3; i<6; ++i) {
+		df[i] = fnew[i] - f[i];
+		CompResponse(df[i], i);
+		f[i] = fnew[i];
+	}
 }
 
 void PHContactSurface::CompBias(){
@@ -154,12 +193,12 @@ void PHContactSurface::CompBias(){
 #endif
 }
 
-void PHContactSurface::Projection(double& f, int k){
+void PHContactSurface::Projection(double& f_, int k){
 	static double flim;
 	if(k == 0){	//垂直抗力 >= 0の制約
-		f = max(0.0, f);
+		f_ = max(0.0, f_);
 		//	最大静止摩擦
-		flim = 0.5 * (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0) * f;	}
+		flim = 0.5 * (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0) * f_;	}
 	else if(k == 1 || k == 2){
 		//	動摩擦を試しに実装してみる。
 		double fu;
@@ -171,64 +210,20 @@ void PHContactSurface::Projection(double& f, int k){
 				* flim;	
 		}
 		if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	静止摩擦
-			if (f > flim) f = fu;
-			else if (f < -flim) f = -fu;
+			if (f_ > flim) f_ = fu;
+			else if (f_ < -flim) f_ = -fu;
 		}else{					//	動摩擦
-			if (f > fu) f = fu;
-			else if (f < -fu) f = -fu;		
+			if (f_ > fu) f_ = fu;
+			else if (f_ < -fu) f_ = -fu;		
 		}
 #if 0
 		//|摩擦力| <= 最大静止摩擦の制約
 		//	・摩擦力の各成分が最大静止摩擦よりも小さくても合力は超える可能性があるので本当はおかしい。
 		//	・静止摩擦と動摩擦が同じ値でないと扱えない。
 		//摩擦係数は両者の静止摩擦係数の平均とする
-		f = min(max(-flim, f), flim);
+		f_ = min(max(-flim, f_), flim);
 #endif
-		assert(f < 10000);
-	}
-}
-
-void PHContactSurface::IterateLCP(){
-	if(!bEnabled || !bFeasible || bArticulated)
-		return;
-	FPCK_FINITE(f.v());
-
-	SpatialVector fnew, df;
-
-	for(int j = 0; j < targetAxis; j++){
-//		if(!constr[j])continue;
-		int i = constrainedAxes[j];
-		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
-				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
-
-		// とりあえず落ちないように間に合わせのコード
-		if (!FPCK_FINITE(fnew[i])) fnew[i] = f[i]; //naga 特定条件下では間に合わせのコードでも落ちる
-		if (!FPCK_FINITE(fnew[0])){
-			FPCK_FINITE(b[0]);
-//			DSTR << AinvJ[0].vv << AinvJ[1].vv;
-//			DSTR << AinvJ[0].vw << AinvJ[1].vw;
-//			DSTR << dA.v[j];
-//			DSTR << std::endl;
-//			DSTR << "f.v:" << f.v << "b.v:" << b.v << std::endl;
-			DSTR << "s0:" << (solid[0]->dv) << std::endl;
-			DSTR << "s1:" << (solid[1]->dv)  << std::endl;
-		}
-		if(j > 2)continue;	//トルクは全トルクの計算が終わってから、Projectionする
-		Projection(fnew[i], i);
-		df[j] = fnew[i] - f[i];
-		CompResponse(df[i],i);
-		f[j] = fnew[i];
-	}
-
-	//トルクのProjection　
-	//fnew全部使って行う
-	ProjectionTorque(fnew);
-
-	//剛体に加える(各トルクでProjection以降のことやる)
-	for(int j = 3; j < 6; j++){
-		df[j] = fnew[j] - f[j];
-		CompResponse(df[j],j);
-		f[j] = fnew[j];
+		assert(f_ < 10000);
 	}
 }
 

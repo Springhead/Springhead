@@ -13,6 +13,7 @@
 #define SPR_PHJOINTIf_H
 
 #include <Foundation/SprObject.h>
+#include <Physics/SprPHJointLimit.h>
 
 namespace Spr{;
 
@@ -42,80 +43,13 @@ struct PHConstraintEngineDesc{
 /** \defgroup gpJoint ジョイント*/
 //@{
 
-/// 拘束のディスクリプタ
+/// 拘束のデスクリプタ
 struct PHConstraintDesc{
-	/// 有効/無効フラグ
-	bool bEnabled;
-	/// 剛体から見た関節の位置と傾き
-	Posed poseSocket;
+	bool bEnabled;      ///< 有効/無効フラグ
+	Posed poseSocket;   ///< 剛体から見た関節の位置と傾き
 	Posed posePlug;
+
 	PHConstraintDesc():bEnabled(true){}
-};
-
-/// 関節のディスクリプタ	<	何もメンバを追加しない場合は，typedefと別名定義を FIDesc.cppに追加で．
-//typedef PHConstraintDesc	PHJointDesc;
-struct PHJointDesc : public PHConstraintDesc{
-	/*enum PHControlMode{
-		MODE_TORQUE=0,
-		MODE_POSITION,
-		MODE_VELOCITY,
-		MODE_TRAJ,
-	} mode;*/
-	enum PHDeformationType{
-		ELASTIC =0,
-		PLASTIC =1,
-		ELASTIC_PLASTIC =2
-	}type;
-
-		PHJointDesc();	
-};
-/// 1軸関節のディスクリプタ
-struct PHJoint1DDesc : public PHJointDesc{
-	double	lower, upper;	///< 可動範囲. lower < upperのときに有効となる
-	double	spring;			///< バネ係数
-	double  targetPosition;	///< バネの制御目標
-	double  damper;			///< ダンパ係数
-	double	targetVelocity; ///< 目標速度
-	double	offsetForce;	///< 慣性項を計算して入れる場合に使用．
-	//double	torque;		///< モータトルク
-	double	rangeSpring;	///< 可動範囲バネ
-	double	rangeDamper;	///< 可動範囲ダンパ
-	double	fMax;			///< 関節にかけられる最大の力
-	double	secondDamper;	///< 二個目のダンパ係数
-	double  yieldStress;	///< 降伏応力
-	double  hardnessRate;	///< 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
-	PHJoint1DDesc();
-};
-
-
-/** @brief ツリーノードのディスクリプタ
- */
-struct PHTreeNodeDesc{
-	bool bEnabled;
-	PHTreeNodeDesc(){
-		bEnabled = true;
-	}
-};
-struct PHRootNodeDesc : public PHTreeNodeDesc{
-	PHRootNodeDesc(){}
-};
-struct PHTreeNode1DDesc : public PHTreeNodeDesc{
-};
-struct PHHingeJointNodeDesc : public PHTreeNode1DDesc{
-};
-struct PHSliderJointNodeDesc : public PHTreeNode1DDesc{
-};
-struct PHPathJointNodeDesc : public PHTreeNode1DDesc{
-};
-struct PHBallJointNodeDesc : public PHTreeNodeDesc{
-};
-
-/// ギアのディスクリプタ
-struct PHGearDesc{
-	double ratio;		///< ギア比
-	PHGearDesc(){
-		ratio = 1.0;
-	}
 };
 
 struct PHSceneIf;
@@ -154,11 +88,6 @@ struct PHConstraintIf : public SceneObjectIf{
 	void GetPlugPose(Posed& pose);
 	void SetPlugPose(const Posed& pose);
 	
-	/** @brief 拘束の種類を取得する
-		@return 拘束の種類
-	 */
-	//PHConstraintDesc::ConstraintType GetConstraintType();
-
 	/** @brief 拘束する剛体間の相対位置・姿勢を取得
 		@param p ソケットに対するプラグの位置と向き
 	 */
@@ -188,17 +117,6 @@ struct PHConstraintIf : public SceneObjectIf{
 		拘束力と拘束トルクをソケットのローカル座標系で返す
 	 */
 	void GetConstraintForce(Vec3d& f, Vec3d& t);
-
-	/** @brief PHMotorの拘束力を取得
-		@return 拘束モーメント
-	*/
-	Vec3d GetMotorf();
-
-	/** @brief PHJointLimitの拘束力を取得
-		@return 拘束モーメント
-	*/
-	Vec3d GetLimitf();
-
 };
 
 /// 拘束の集合のインタフェース
@@ -220,79 +138,117 @@ struct PHConstraintsIf : public SceneObjectIf{
 	Vec3d GetTotalForce(PHSolidIf* lhs, PHSolidIf* rhs);
 };
 
+// -----  -----  -----  -----  -----
+
 /// 接触点拘束のインタフェース
 struct PHContactPointIf : public PHConstraintIf{
 	SPR_IFDEF(PHContactPoint);
+};
+
+// -----  -----  -----  -----  -----
+
+/// 関節のデスクリプタ
+struct PHJointDesc : public PHConstraintDesc {
+	double	fMax;			///< 関節の出すことができる最大の力
+	PHJointDesc() {
+		fMax = FLT_MAX;
+	}
 };
 
 /// 関節のインタフェース
 struct PHJointIf : public PHConstraintIf{
 	SPR_IFDEF(PHJoint);
 
-	/**関節のControlModeの取得,設定する*/
-	//PHJointDesc::PHControlMode	GetMode();
-	//void	SetMode(PHJointDesc::PHControlMode mode);
+	/** @brief 関節の出すことができる最大拘束力(N)の絶対値を設定する
+		@param max ある関節の最大拘束力(0～DBL_MAX)
+	*/
+	void SetMaxForce(double max);
 
-	/** @brief 変形のタイプを取得する
-		@return 0:ELASTIC,1:PLASTIC,2:ELASTIC_PLASTIC
-	 */
-	int		GetDefomationType();	
-	/** @brief 変形のタイプを設定する
-		@param input 0:ELASTIC,1:PLASTIC,2:ELASTIC_PLASTIC
-	 */
-	void	SetDefomationType(int t);	
-
-
+	/** @brief 関節の出すことができる最大拘束力(N)の絶対値を取得する
+	*/
+	double GetMaxForce();
 };
 
+// -----  -----  -----  -----  -----
+
+/// 1軸関節のデスクリプタ
+struct PH1DJointDesc : public PHJointDesc {
+	double spring;
+	double damper;
+	double secondDamper;
+	double targetPosition;
+	double targetVelocity;
+	double offsetForce;
+	double yieldStress;
+	double hardnessRate;
+	double secondMoment;
+
+	PH1DJointDesc() {
+		spring          = 0;
+		damper          = 0;
+		secondDamper    = FLT_MAX;
+		targetPosition  = 0;
+		targetVelocity  = 0;
+		offsetForce     = 0;
+		yieldStress     = FLT_MAX;
+		hardnessRate    = 1.0;
+	}
+};
+
+// struct PH1DJointLimitIf;
+// struct PH1DJointLimitDesc;
 /// 1軸関節のインタフェース
-struct PHJoint1DIf : public PHJointIf{
-	SPR_IFDEF(PHJoint1D);
+struct PH1DJointIf : public PHJointIf{
+	SPR_IFDEF(PH1DJoint);
 
-	/** @brief 可動範囲を設定する
-		@param lower 可動範囲の下限
-		@param upper 可動範囲の上限
+	/** @brief 可動域制限を作成する
 	 */
-	void	SetRange(double lower, double upper);
-	
-	/** @brief 可動範囲を取得する
-		@param lower 可動範囲の下限を取得する変数への参照
-		@param upper 可動範囲の上限を取得する変数への参照
+	PH1DJointLimitIf* CreateLimit(const PH1DJointLimitDesc& desc = PH1DJointLimitDesc());
+
+	/** @brief 関節変位を取得する
+		@return 関節変位
 	 */
-	void	GetRange(double& lower, double& upper);
+	double	GetPosition();
 
-	//void	SetDesiredPosition(double p, double t);	/// 目標変位を設定する
-	//double	GetDesiredPosition();				/// 目標変位を取得する
-
-	/** @brief 目標速度を設定する
-		@param vel 目標速度
+	/** @brief 関節速度を取得する
+		@return 関節速度
 	 */
-	void	SetTargetVelocity(double v);
+	double	GetVelocity();
 
-	/** @brief 目標速度を取得する
-		@return 目標速度
+	/** @brief 関節可動域拘束を取得する
+		@return 関節可動域拘束
 	 */
-	double	GetTargetVelocity();
-	
-	/** @brief 目標軌道の速度を設定する
-		@param v 目標軌道の速度
-	*/
-	void SetTrajectoryVelocity(double v);
-
-	/** @brief 目標軌道の速度を取得する
-		@return 目標軌道の速度
-	*/
-	double GetTrajectoryVelocity();
+	PH1DJointLimitIf* GetLimit();
 
 	/** @brief バネ係数を設定する
 		@param spring バネ係数
 	 */
-	void	SetSpring(double spring);
+	void SetSpring(double spring);
 
 	/** @brief バネ係数を取得する
 		@return バネ係数
 	 */
-	double	GetSpring();
+	double GetSpring();
+
+	/** @brief ダンパ係数を設定する
+		@param damper ダンパ係数
+	 */
+	void	SetDamper(double damper);
+
+	/** @brief ダンパ係数を取得する
+		@return ダンパ係数
+	 */
+	double	GetDamper();
+
+	/** @brief 二個目のダンパ係数を取得する
+		@return 二個目のダンパ係数
+	 */
+	double  GetSecondDamper();
+
+	/** @brief 二個目のダンパ係数を設定する
+		@param input 二個目のダンパ係数
+	 */
+	void	SetSecondDamper(double input);
 
 	/** @brief バネの制御目標を設定する
 		@param targetPosition バネの制御目標
@@ -306,139 +262,94 @@ struct PHJoint1DIf : public PHJointIf{
 	 */
 	double	GetTargetPosition();
 
-	/** @brief ダンパ係数を設定する
-		@param damper ダンパ係数
+	/** @brief 目標速度を設定する
+		@param vel 目標速度
 	 */
-	void	SetDamper(double damper);
+	void	SetTargetVelocity(double v);
 
-	/** @brief ダンパ係数を取得する
-		@return ダンパ係数
+	/** @brief 目標速度を取得する
+		@return 目標速度
 	 */
-	double	GetDamper();
+	double GetTargetVelocity();
 
-	/** @brief 関節変位を取得する
-		@return 関節変位
-	 */
-	double	GetPosition();
-
-	/** @brief 関節速度を取得する
-		@return 関節速度
-	 */
-	double	GetVelocity();
-	
 	/** @brief 定数項を代入する
 		@param 代入する値
 	*/
-	void	SetOffsetForce(double dat);
+	void SetOffsetForce(double dat);
 
 	/** @brief 補正力を得る
 		@return 補正値
 	*/
-	double	GetOffsetForce();
+	double GetOffsetForce();
 
-	/// SetOffsetForceと等価．どちらかのみで十分　tazz
-	/** @brief モータトルクを設定する
-		@param torque モータトルク
-	 */
-	void	SetMotorTorque(double t);
-
-	/** @brief モータトルクを取得する
-		@return モータトルク
-	 */
-	double	GetMotorTorque();
-
-	/** @brief 関節の出すことができる最大トルク(N)の絶対値を設定する
-		@param max ある関節の最大トルク(0～DBL_MAX)
-	*/
-	void SetTorqueMax(double max);
-
-	/** @brief 関節の出すことができる最大トルク(N)の絶対値を取得する
-	*/
-	double GetTorqueMax();
-
-	/** @brief 可動域にかかっているかどうかを取得する
-		@return かかっていればtrue
-	*/
-	bool IsLimit();
-
-		/** @brief 二個目のダンパ係数を取得する
-		@return 二個目のダンパ係数
-	 */
-	double  GetSecondDamper();
-
-	/** @brief 二個目のダンパ係数を設定する
-		@param input 二個目のダンパ係数
-	 */
-	void	SetSecondDamper(double input);
 	/** @brief 降伏応力を設定する
 		@return 降伏応力
 	 */
 	double GetYieldStress();
+
 	/** @brief 降伏応力を取得する
 		@param input 降伏応力
 	 */
     void SetYieldStress(const double yS);
+
 	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を設定する
 		@return 硬くする倍率
 	 */
 	double GetHardnessRate();
+
 	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を取得する
 		@param input 硬くする倍率
 	 */
 	void SetHardnessRate(const double hR);
-	
-	/** @brief 変形のタイプを表示する
-		@return 変形のタイプ
-	 */
-	PHJointDesc::PHDeformationType 	GetDeformationMode();
 
-
-	/** @brief バネ係数を設定する
-		@param spring バネ係数
+	/** @brief 断面二次モーメントを設定する
+		@param secondMoment 断面二次モーメント
 	 */
-	void	SetRangeSpring(double rSpring);
+	void SetSecondMoment(const double& sM);
 
-	/** @brief バネ係数を取得する
-		@return バネ係数
+	/** @brief 断面二次モーメントを取得する
+		@return 断面二次モーメント
 	 */
-	double	GetRangeSpring();
+	double GetSecondMoment();
 
-	/** @brief ダンパ係数を設定する
-		@param damper ダンパ係数
-	 */
-	void	SetRangeDamper(double rDamper);
-
-	/** @brief ダンパ係数を取得する
-		@return ダンパ係数
-	 */
-	double	GetRangeDamper();
+	/** @brief Motorの出力した力を返す
+		@return 力
+	*/
+	double GetMotorForce();
 };
 
 /// ヒンジのインタフェース
-struct PHHingeJointIf : public PHJoint1DIf{
+struct PHHingeJointIf : public PH1DJointIf{
 	SPR_IFDEF(PHHingeJoint);
 };
-/// ヒンジのディスクリプタ
-struct PHHingeJointDesc : public PHJoint1DDesc{
+
+/// ヒンジのデスクリプタ
+struct PHHingeJointDesc : public PH1DJointDesc{
 	SPR_DESCDEF(PHHingeJoint);
 	PHHingeJointDesc(){}
 };
 
-
 /// スライダのインタフェース
-struct PHSliderJointIf : public PHJoint1DIf{
+struct PHSliderJointIf : public PH1DJointIf{
 	SPR_IFDEF(PHSliderJoint);
 };
-/// スライダのディスクリプタ
-struct PHSliderJointDesc : public PHJoint1DDesc{
-	SPR_DESCDEF(PHSliderJoint);
-	
-	bool bConstraintY;
-	bool bConstraintRollX;
-	bool bConstraintRollZ;
 
-	PHSliderJointDesc();
+/// スライダのデスクリプタ
+struct PHSliderJointDesc : public PH1DJointDesc{
+	SPR_DESCDEF(PHSliderJoint);
+	// 以下のオプションは，現状ではABAを有効にするとうまく機能しないので注意．<!!>
+	bool bConstraintY;      ///< 並進Y軸を拘束するか デフォルトtrue
+	bool bConstraintRollX;  ///< 回転X軸を拘束するか デフォルトtrue
+	bool bConstraintRollZ;  ///< 回転Z軸を拘束するか デフォルトtrue
+
+	PHSliderJointDesc() {
+		bConstraintY		= true;
+		bConstraintRollX	= true;
+		bConstraintRollZ	= true;
+	}
 };
+
+// -----  -----  -----  -----  -----
 
 /// パス上の1つの点
 struct PHPathPoint{
@@ -447,12 +358,14 @@ struct PHPathPoint{
 	PHPathPoint(){}
 	PHPathPoint(double _s, Posed _pose):s(_s), pose(_pose){}
 };
-/// パスのディスクリプタ
+
+/// パスのデスクリプタ
 struct PHPathDesc{
 	std::vector<PHPathPoint> points;	///< パス上の点列
 	bool bLoop;							///< trueならばループパス，falseならばオープンパス．デフォルトはfalse．
 	PHPathDesc():bLoop(false){}
 };
+
 /// パスのインタフェース
 struct PHPathIf : public SceneObjectIf{
 	SPR_IFDEF(PHPath);
@@ -477,79 +390,31 @@ struct PHPathIf : public SceneObjectIf{
 };
 
 /// パスジョイントのインタフェース
-struct PHPathJointIf : public PHJoint1DIf{
+struct PHPathJointIf : public PH1DJointIf{
 	SPR_IFDEF(PHPathJoint);
 	void SetPosition(double q);
 };
-/// パスジョイントのディスクリプタ
-struct PHPathJointDesc : public PHJoint1DDesc{
+/// パスジョイントのデスクリプタ
+struct PHPathJointDesc : public PH1DJointDesc{
 	SPR_DESCDEF(PHPathJoint);
 	PHPathJointDesc(){}
 };
 
+// -----  -----  -----  -----  -----
+
+// struct PHBallJointLimitIf;
+// struct PHBallJointLimitDesc;
+struct PHBallJointMotorIf;
 /// ボールジョイントのインタフェース
 struct PHBallJointIf : public PHJointIf{
 	SPR_IFDEF(PHBallJoint);
 
-	
-	/** @brief スイング角の可動範囲を設定する
-		@param lower 最小スイング角度
-		@param upper 最大スイング角度
-		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
-		（デフォルトで可動域制限は無効になっている）
+	/** @brief 可動域制限を作成する
 	 */
-	void SetSwingRange(Vec2d range);
-	/** @brief スイング角の可動範囲を取得する
-		@param lower 最大スイング角度
-		@param upper 最大スイング角度
-		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
-		（デフォルトで可動域制限は無効になっている）
-	 */
-	void GetSwingRange(Vec2d& range);
-
-	/** @brief ツイスト角の可動範囲を設定する
-		@param lower 最小ツイスト角度
-		@param upper 最大ツイスト角度
-		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
-		（デフォルトで可動域制限は無効になっている）
-	 */
-	void SetTwistRange(Vec2d range);
-	/** @brief ツイスト角の可動範囲を取得する
-		@param lower 最大ツイスト角度
-		@param upper 最大ツイスト角度
-		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
-		（デフォルトで可動域制限は無効になっている）
-	 */
-	void GetTwistRange(Vec2d& range);
-	/** @brief 極値でのツイスト角の可動範囲を設定する。ConstLineとともに使用
-		@param lower 最小ツイスト角度
-		@param upper 最大ツイスト角度
-		可動範囲制限を無効化するにはディスクリプタで書き換えなければ良い
-		（デフォルトで可動域制限は無効になっている）
-	 */
-	void SetTwistPole(Vec2d range);
-	/**@brief 拘束位置を設定する
-	   @param 拘束位置のファイルを読み込む
-    */
-	bool SetConstLine(char* fileName, bool i);
-	/**@brief 拘束位置を設定する
-	   @param [way][0]スイング方位角　[1]スイング角　[2]ツイスト角min　[3]ツイスト角max　[4]傾き
-    */
-	void SetConstPoint(int Num, int way, double a);
-	/**@brief 拘束位置を取得する
-	   @param [way][0]スイング方位角　[1]スイング角　[2]ツイスト角min　[3]ツイスト角max　[4]傾き
-    */
-	double GetConstLine(int Num, int way);
-
-	/** @brief モータトルクを設定する
-		@param torque モータトルク
-	 */
-	void SetMotorTorque(const Vec3d& torque);
-
-	/** @brief モータトルクを取得する
-		@return モータトルク
-	 */
-	Vec3d GetMotorTorque();
+	PHBallJointLimitIf* CreateLimit(const IfInfo* ii, const PHBallJointLimitDesc& desc = PHBallJointLimitDesc());
+	template <class T> PHBallJointLimitIf* CreateLimit(const T& desc){
+		return CreateLimit(T::GetIfInfo(), desc);
+	}
 
 	/** @brief 関節変位を取得する
 		@return スイング方位角，スイング角，ツイスト角からなるベクトル
@@ -566,22 +431,10 @@ struct PHBallJointIf : public PHJointIf{
 	 */
 	Vec3d GetVelocity();
 
-	/** @brief 関節の出せる最大トルクを設定する
-		@param max 最大トルク
-	*/
-	void SetTorqueMax(double max);
-
-	/** @brief 関節の出せる最大トルクを取得する
-	*/
-	double GetTorqueMax();
-
-	/** @brief 制御の目標向きを設定する
-	*/
-	void SetTargetPosition(Quaterniond p);
-	
-	/** @brief 制御の目標向きを取得する
-	*/
-	Quaterniond GetTargetPosition();
+	/** @brief 関節可動域拘束を取得する
+		@return 関節可動域拘束
+	 */
+	PHBallJointLimitIf* GetLimit();
 
 	/** @brief バネ係数を設定する
 		@param spring バネ係数
@@ -603,7 +456,25 @@ struct PHBallJointIf : public PHJointIf{
 	 */
 	double	GetDamper();
 
-	/** @brief 速度制御に切り替え，速度を設定する
+	/** @brief 二個目のダンパ係数を取得する
+		@return 二個目のダンパ係数
+	 */
+	Vec3d  GetSecondDamper();
+
+	/** @brief 二個目のダンパ係数を設定する
+		@param input 二個目のダンパ係数
+	 */
+	void	SetSecondDamper(Vec3d damper2);
+
+	/** @brief 制御の目標向きを設定する
+	*/
+	void SetTargetPosition(Quaterniond p);
+	
+	/** @brief 制御の目標向きを取得する
+	*/
+	Quaterniond GetTargetPosition();
+
+	/** @brief 速度制御の目標速度を設定する
 	*/
 	void  SetTargetVelocity(Vec3d q);
 
@@ -611,111 +482,82 @@ struct PHBallJointIf : public PHJointIf{
 	*/
 	Vec3d GetTargetVelocity();
 
-	/** @brief 軌道追従制御に切り替え，目標速度を設定する
-	*/
-	void SetTrajectoryVelocity(Vec3d q);
-	
-	/** @brief 軌道追従制御の目標速度項を取得する
-	*/
-	Vec3d GetTrajectoryVelocity();
-
-	/** @brief 定数項を設定する	
+	/** @brief 力のオフセットを設定する	
 	*/
 	void SetOffsetForce(Vec3d ofst);
 
-	/**	@brief 定数項を取得する
+	/**	@brief 力のオフセットを取得する
 	*/
 	Vec3d GetOffsetForce();
 
-	/** @brief 可動域にかかっているかどうかを取得する
-		@return かかっていればtrue
-	*/
-	bool IsLimit();
-
-	/** @brief 二個目のダンパ係数を取得する
-		@return 二個目のダンパ係数
-	 */
-	double  GetSecondDamper();
-
-	/** @brief 二個目のダンパ係数を設定する
-		@param input 二個目のダンパ係数
-	 */
-	void	SetSecondDamper(double input);
-	/** @brief 降伏応力を設定する
-		@return 降伏応力
-	 */
-	double GetYieldStress();
 	/** @brief 降伏応力を取得する
 		@param input 降伏応力
 	 */
     void SetYieldStress(const double yS);
-	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を設定する
-		@return 硬くする倍率
+
+	/** @brief 降伏応力を設定する
+		@return 降伏応力
 	 */
-	double GetHardnessRate();
+	double GetYieldStress();
+
 	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を取得する
 		@param input 硬くする倍率
 	 */
 	void SetHardnessRate(const double hR);
 	
-	/** @brief 断面2次モーメントを設定する
-		@return 断面2次モーメントVec3d(x,y,z)
+	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を設定する
+		@return 硬くする倍率
 	 */
-	Vec3d	GetInertia();	
+	double GetHardnessRate();
+
 	/** @brief 断面2次モーメントを設定する
 		@param input 断面2次モーメントVec3d(x,y,z)
 	 */
-	void	SetInertia(const Vec3d i);
-	
-	/** @brief 変形のタイプを表示する
-		@return 変形のタイプ
+	void	SetSecondMoment(const Vec3d m);
+
+	/** @brief 断面2次モーメントを設定する
+		@return 断面2次モーメントVec3d(x,y,z)
 	 */
-	PHJointDesc::PHDeformationType 	GetDeformationMode();
+	Vec3d	GetSecondMoment();	
 
-	/** @brief Jointに加わっている力の過去5ステップ分を平均したノルムを取得する
-		@return Jointに加わっている力の過去5ステップ分を平均したノルム
-	 */
-	double GetmotorfNorm();	
-
-	void SetConstraintMode(int t);
-
+	/** @brief Motorの出力した力を返す
+		@return 力
+	*/
+	Vec3d GetMotorForce();
 };
 
-/// ボールジョイントのディスクリプタ
-struct PHBallJointDesc : public PHJointDesc{
+/// ボールジョイントのデスクリプタ
+struct PHBallJointDesc : public PHJointDesc {
 	SPR_DESCDEF(PHBallJoint);
-	double			spring;			 ///< バネ係数
-	double			damper;			 ///< ダンパ係数
-	Vec2d			limitSwing;		 ///< swing角の可動域（[0] or .lower, [1] or .upper）
-	Vec2d			limitSwingDir;	 ///< swing方位角の可動域（[0] or .lower, [1] or .upper）
-	Vec2d			limitTwist;		 ///< twist角の可動域（[0] or .lower, [1] or .upper）
-	Vec3d			limitDir;		 ///< 可動域の中心ベクトル
-	Quaterniond		targetPosition;  ///< バネダンパの制御目標
-	Vec3d			targetVelocity;  ///< 目標となる回転ベクトル
-	Vec3d			offsetForce;	 ///< 定数項（軌道追従制御の加速度の項を入れるのに使ったりする）
-	//Vec3d			torque;			 ///< モータトルク
-	double			fMax;			 ///< 関節にかけられる最大の力(絶対値)
-	Vec2d			poleTwist;		 ///< spline拘束でSwing角0のときのTwist角可動域（[0] or .lower, [1] or .upper）
-	
-	double secondDamper;			///< 第２ダンパ係数
-	double yieldStress;				///< 降伏応力
-	double hardnessRate;			///< 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
-	Vec3d  Inertia;					///< 断面２次モーメント
-	
-	enum PHConstraintType{
-		non = 0,
-		SwingTwist =1,
-		Spline =2,
-		Jacobian =3
-	}ConstMode;
+	double spring;
+	double damper;
+	Vec3d  secondDamper;
+	Quaterniond targetPosition;
+	Vec3d  targetVelocity;
+	Vec3d  offsetForce;
+	double yieldStress;
+	double hardnessRate;
+	Vec3d  secondMoment;
 
-	PHBallJointDesc();		///< ディスクリプタのコンストラクタ
+	PHBallJointDesc() {
+		spring          = 0;
+		damper          = 0;
+		secondDamper    = Vec3d(FLT_MAX, FLT_MAX, FLT_MAX);
+		targetPosition  = Quaterniond();
+		targetVelocity  = Vec3d();
+		offsetForce     = Vec3d();
+		yieldStress     = FLT_MAX;
+		hardnessRate    = 1.0;
+	}
 };
 
+// -----  -----  -----  -----  -----
 
+struct PHSpringMotorIf;
 /// バネダンパのインタフェース
 struct PHSpringIf : public PHJointIf{
 	SPR_IFDEF(PHSpring);
+
 	/** @brief バネ係数を設定する
 		@param spring バネ係数
 	 */
@@ -736,6 +578,16 @@ struct PHSpringIf : public PHJointIf{
 	 */
 	Vec3d GetDamper();
 
+	/** @brief 並進の第二ダンパ係数を設定する
+		@param secondDamper 並進の第二ダンパ係数
+	 */
+	void SetSecondDamper(const Vec3d& secondDamper);
+
+	/** @brief 並進の第二ダンパ係数を取得する
+		@return 並進の第二ダンパ係数
+	 */
+	Vec3d GetSecondDamper();
+
 	/** @brief バネ係数を設定する
 		@param spring バネ係数
 	 */
@@ -755,21 +607,94 @@ struct PHSpringIf : public PHJointIf{
 		@return ダンパ係数
 	 */
 	double GetDamperOri();
+
+	/** @brief 回転の第二ダンパ係数を設定する
+		@param secondDamperOri 回転の第二ダンパ係数
+	 */
+	void SetSecondDamperOri(const double& secondDamperOri);
+
+	/** @brief 回転の第二ダンパ係数を取得する
+		@return 回転の第二ダンパ係数
+	 */
+	double GetSecondDamperOri();
+
+	/** @brief 降伏応力を設定する
+		@param yieldStress 降伏応力
+	 */
+	void SetYieldStress(const double& yieldStress);
+
+	/** @brief 降伏応力を取得する
+		@return 降伏応力
+	 */
+	double GetYieldStress();
+
+	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を設定する
+		@return 硬くする倍率
+	 */
+	void SetHardnessRate(const double& hardnessRate);
+
+	/** @brief 降伏応力以下の場合にダンパを硬くする倍率を取得する
+		@param input 硬くする倍率
+	 */
+	double GetHardnessRate();
+
+	/** @brief 断面二次モーメントを設定する
+		@param secondMoment 断面二次モーメント
+	 */
+	void SetSecondMoment(const Vec3d& secondMoment);
+
+	/** @brief 断面二次モーメントを取得する
+		@return 断面二次モーメント
+	 */
+	Vec3d GetSecondMoment();
 };
 
-/// バネダンパのディスクリプタ
-struct PHSpringDesc : public PHJointDesc{
+/// バネダンパのデスクリプタ
+struct PHSpringDesc : public PHJointDesc {
 	SPR_DESCDEF(PHSpring);
-	Vec3d		spring;		///< バネ係数
-	Vec3d		damper;		///< ダンパ係数
-	double		springOri;
-	double		damperOri;
-	double		fMax;			///< 関節にかけられる最大の力
-	Vec3d		secondDamper;		// 二個目のダンパ係数
-	double		yieldStress;		// 降伏応力
-	double		hardnessRate;		// 降伏応力以下の場合に二個目のダンパ係数に掛ける比率
-	
-	PHSpringDesc();
+	Vec3d  spring;
+	Vec3d  damper;
+	Vec3d  secondDamper;
+	double springOri;
+	double damperOri;
+	double secondDamperOri;
+	double yieldStress;
+	double hardnessRate;
+	Vec3d  secondMoment;
+
+	PHSpringDesc() {
+		spring          = Vec3d();
+		damper          = Vec3d();
+		secondDamper    = Vec3d(FLT_MAX, FLT_MAX, FLT_MAX);
+		springOri       = 0;
+		damperOri       = 0;
+		secondDamperOri = FLT_MAX;
+		yieldStress     = FLT_MAX;
+		hardnessRate    = 1.0;
+	}
+};
+
+// -----  -----  -----  -----  -----
+
+/// ツリーノードのデスクリプタ
+struct PHTreeNodeDesc{
+	bool bEnabled;
+	PHTreeNodeDesc(){
+		bEnabled = true;
+	}
+};
+struct PHRootNodeDesc : public PHTreeNodeDesc{
+	PHRootNodeDesc(){}
+};
+struct PHTreeNode1DDesc : public PHTreeNodeDesc{
+};
+struct PHHingeJointNodeDesc : public PHTreeNode1DDesc{
+};
+struct PHSliderJointNodeDesc : public PHTreeNode1DDesc{
+};
+struct PHPathJointNodeDesc : public PHTreeNode1DDesc{
+};
+struct PHBallJointNodeDesc : public PHTreeNodeDesc{
 };
 
 /// ツリーノードのインタフェース
@@ -812,6 +737,16 @@ struct PHPathJointNodeIf : public PHTreeNode1DIf{
 };
 struct PHBallJointNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHBallJointNode);
+};
+
+// -----  -----  -----  -----  -----
+
+/// ギアのデスクリプタ
+struct PHGearDesc{
+	double ratio;		///< ギア比
+	PHGearDesc(){
+		ratio = 1.0;
+	}
 };
 
 /// ギアのインタフェース

@@ -114,22 +114,19 @@ public:\
 protected:\
 	bool	bEnabled;	\
 	float	bias;	\
-	double	spring;	\
-	double	damper;	\
+	double	velocityGain;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		bEnabled = ((PHIKActuatorDesc*)ptr)->bEnabled;	\
 		bias = ((PHIKActuatorDesc*)ptr)->bias;	\
-		spring = ((PHIKActuatorDesc*)ptr)->spring;	\
-		damper = ((PHIKActuatorDesc*)ptr)->damper;	\
+		velocityGain = ((PHIKActuatorDesc*)ptr)->velocityGain;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		((PHIKActuatorDesc*)ptr)->bEnabled = bEnabled;	\
 		((PHIKActuatorDesc*)ptr)->bias = bias;	\
-		((PHIKActuatorDesc*)ptr)->spring = spring;	\
-		((PHIKActuatorDesc*)ptr)->damper = damper;	\
+		((PHIKActuatorDesc*)ptr)->velocityGain = velocityGain;	\
 		return true;	\
 	}\
 
@@ -234,69 +231,202 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHJointDesc \
 protected:\
-	enum Spr::PHJointDesc::PHDeformationType	type;	\
+	double	fMax;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHConstraint::SetDesc((PHConstraintDesc*)(PHJointDesc*)ptr);	\
-		type = ((PHJointDesc*)ptr)->type;	\
+		fMax = ((PHJointDesc*)ptr)->fMax;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHConstraint::GetDesc((PHConstraintDesc*)(PHJointDesc*)ptr);	\
-		((PHJointDesc*)ptr)->type = type;	\
+		((PHJointDesc*)ptr)->fMax = fMax;	\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHJoint1DDesc \
+#define SPR_DECLMEMBEROF_PH1DJointDesc \
 protected:\
-	double	lower;	\
-	double	upper;	\
 	double	spring;	\
-	double	targetPosition;	\
 	double	damper;	\
+	double	secondDamper;	\
+	double	targetPosition;	\
 	double	targetVelocity;	\
 	double	offsetForce;	\
-	double	rangeSpring;	\
-	double	rangeDamper;	\
-	double	fMax;	\
-	double	secondDamper;	\
 	double	yieldStress;	\
 	double	hardnessRate;	\
+	double	secondMoment;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
-		PHJoint::SetDesc((PHJointDesc*)(PHJoint1DDesc*)ptr);	\
-		lower = ((PHJoint1DDesc*)ptr)->lower;	\
-		upper = ((PHJoint1DDesc*)ptr)->upper;	\
-		spring = ((PHJoint1DDesc*)ptr)->spring;	\
-		targetPosition = ((PHJoint1DDesc*)ptr)->targetPosition;	\
-		damper = ((PHJoint1DDesc*)ptr)->damper;	\
-		targetVelocity = ((PHJoint1DDesc*)ptr)->targetVelocity;	\
-		offsetForce = ((PHJoint1DDesc*)ptr)->offsetForce;	\
-		rangeSpring = ((PHJoint1DDesc*)ptr)->rangeSpring;	\
-		rangeDamper = ((PHJoint1DDesc*)ptr)->rangeDamper;	\
-		fMax = ((PHJoint1DDesc*)ptr)->fMax;	\
-		secondDamper = ((PHJoint1DDesc*)ptr)->secondDamper;	\
-		yieldStress = ((PHJoint1DDesc*)ptr)->yieldStress;	\
-		hardnessRate = ((PHJoint1DDesc*)ptr)->hardnessRate;	\
+		PHJoint::SetDesc((PHJointDesc*)(PH1DJointDesc*)ptr);	\
+		spring = ((PH1DJointDesc*)ptr)->spring;	\
+		damper = ((PH1DJointDesc*)ptr)->damper;	\
+		secondDamper = ((PH1DJointDesc*)ptr)->secondDamper;	\
+		targetPosition = ((PH1DJointDesc*)ptr)->targetPosition;	\
+		targetVelocity = ((PH1DJointDesc*)ptr)->targetVelocity;	\
+		offsetForce = ((PH1DJointDesc*)ptr)->offsetForce;	\
+		yieldStress = ((PH1DJointDesc*)ptr)->yieldStress;	\
+		hardnessRate = ((PH1DJointDesc*)ptr)->hardnessRate;	\
+		secondMoment = ((PH1DJointDesc*)ptr)->secondMoment;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		PHJoint::GetDesc((PHJointDesc*)(PHJoint1DDesc*)ptr);	\
-		((PHJoint1DDesc*)ptr)->lower = lower;	\
-		((PHJoint1DDesc*)ptr)->upper = upper;	\
-		((PHJoint1DDesc*)ptr)->spring = spring;	\
-		((PHJoint1DDesc*)ptr)->targetPosition = targetPosition;	\
-		((PHJoint1DDesc*)ptr)->damper = damper;	\
-		((PHJoint1DDesc*)ptr)->targetVelocity = targetVelocity;	\
-		((PHJoint1DDesc*)ptr)->offsetForce = offsetForce;	\
-		((PHJoint1DDesc*)ptr)->rangeSpring = rangeSpring;	\
-		((PHJoint1DDesc*)ptr)->rangeDamper = rangeDamper;	\
-		((PHJoint1DDesc*)ptr)->fMax = fMax;	\
-		((PHJoint1DDesc*)ptr)->secondDamper = secondDamper;	\
-		((PHJoint1DDesc*)ptr)->yieldStress = yieldStress;	\
-		((PHJoint1DDesc*)ptr)->hardnessRate = hardnessRate;	\
+		PHJoint::GetDesc((PHJointDesc*)(PH1DJointDesc*)ptr);	\
+		((PH1DJointDesc*)ptr)->spring = spring;	\
+		((PH1DJointDesc*)ptr)->damper = damper;	\
+		((PH1DJointDesc*)ptr)->secondDamper = secondDamper;	\
+		((PH1DJointDesc*)ptr)->targetPosition = targetPosition;	\
+		((PH1DJointDesc*)ptr)->targetVelocity = targetVelocity;	\
+		((PH1DJointDesc*)ptr)->offsetForce = offsetForce;	\
+		((PH1DJointDesc*)ptr)->yieldStress = yieldStress;	\
+		((PH1DJointDesc*)ptr)->hardnessRate = hardnessRate;	\
+		((PH1DJointDesc*)ptr)->secondMoment = secondMoment;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHHingeJointDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PH1DJoint::SetDesc((PH1DJointDesc*)(PHHingeJointDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PH1DJoint::GetDesc((PH1DJointDesc*)(PHHingeJointDesc*)ptr);	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHSliderJointDesc \
+protected:\
+	bool	bConstraintY;	\
+	bool	bConstraintRollX;	\
+	bool	bConstraintRollZ;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PH1DJoint::SetDesc((PH1DJointDesc*)(PHSliderJointDesc*)ptr);	\
+		bConstraintY = ((PHSliderJointDesc*)ptr)->bConstraintY;	\
+		bConstraintRollX = ((PHSliderJointDesc*)ptr)->bConstraintRollX;	\
+		bConstraintRollZ = ((PHSliderJointDesc*)ptr)->bConstraintRollZ;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PH1DJoint::GetDesc((PH1DJointDesc*)(PHSliderJointDesc*)ptr);	\
+		((PHSliderJointDesc*)ptr)->bConstraintY = bConstraintY;	\
+		((PHSliderJointDesc*)ptr)->bConstraintRollX = bConstraintRollX;	\
+		((PHSliderJointDesc*)ptr)->bConstraintRollZ = bConstraintRollZ;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHPathDesc \
+protected:\
+	std::vector< Spr::PHPathPoint >	points;	\
+	bool	bLoop;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		points = ((PHPathDesc*)ptr)->points;	\
+		bLoop = ((PHPathDesc*)ptr)->bLoop;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHPathDesc*)ptr)->points = points;	\
+		((PHPathDesc*)ptr)->bLoop = bLoop;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHPathJointDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PH1DJoint::SetDesc((PH1DJointDesc*)(PHPathJointDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PH1DJoint::GetDesc((PH1DJointDesc*)(PHPathJointDesc*)ptr);	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHBallJointDesc \
+protected:\
+	double	spring;	\
+	double	damper;	\
+	Vec3d	secondDamper;	\
+	Quaterniond	targetPosition;	\
+	Vec3d	targetVelocity;	\
+	Vec3d	offsetForce;	\
+	double	yieldStress;	\
+	double	hardnessRate;	\
+	Vec3d	secondMoment;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHJoint::SetDesc((PHJointDesc*)(PHBallJointDesc*)ptr);	\
+		spring = ((PHBallJointDesc*)ptr)->spring;	\
+		damper = ((PHBallJointDesc*)ptr)->damper;	\
+		secondDamper = ((PHBallJointDesc*)ptr)->secondDamper;	\
+		targetPosition = ((PHBallJointDesc*)ptr)->targetPosition;	\
+		targetVelocity = ((PHBallJointDesc*)ptr)->targetVelocity;	\
+		offsetForce = ((PHBallJointDesc*)ptr)->offsetForce;	\
+		yieldStress = ((PHBallJointDesc*)ptr)->yieldStress;	\
+		hardnessRate = ((PHBallJointDesc*)ptr)->hardnessRate;	\
+		secondMoment = ((PHBallJointDesc*)ptr)->secondMoment;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHJoint::GetDesc((PHJointDesc*)(PHBallJointDesc*)ptr);	\
+		((PHBallJointDesc*)ptr)->spring = spring;	\
+		((PHBallJointDesc*)ptr)->damper = damper;	\
+		((PHBallJointDesc*)ptr)->secondDamper = secondDamper;	\
+		((PHBallJointDesc*)ptr)->targetPosition = targetPosition;	\
+		((PHBallJointDesc*)ptr)->targetVelocity = targetVelocity;	\
+		((PHBallJointDesc*)ptr)->offsetForce = offsetForce;	\
+		((PHBallJointDesc*)ptr)->yieldStress = yieldStress;	\
+		((PHBallJointDesc*)ptr)->hardnessRate = hardnessRate;	\
+		((PHBallJointDesc*)ptr)->secondMoment = secondMoment;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHSpringDesc \
+protected:\
+	Vec3d	spring;	\
+	Vec3d	damper;	\
+	Vec3d	secondDamper;	\
+	double	springOri;	\
+	double	damperOri;	\
+	double	secondDamperOri;	\
+	double	yieldStress;	\
+	double	hardnessRate;	\
+	Vec3d	secondMoment;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHJoint::SetDesc((PHJointDesc*)(PHSpringDesc*)ptr);	\
+		spring = ((PHSpringDesc*)ptr)->spring;	\
+		damper = ((PHSpringDesc*)ptr)->damper;	\
+		secondDamper = ((PHSpringDesc*)ptr)->secondDamper;	\
+		springOri = ((PHSpringDesc*)ptr)->springOri;	\
+		damperOri = ((PHSpringDesc*)ptr)->damperOri;	\
+		secondDamperOri = ((PHSpringDesc*)ptr)->secondDamperOri;	\
+		yieldStress = ((PHSpringDesc*)ptr)->yieldStress;	\
+		hardnessRate = ((PHSpringDesc*)ptr)->hardnessRate;	\
+		secondMoment = ((PHSpringDesc*)ptr)->secondMoment;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHJoint::GetDesc((PHJointDesc*)(PHSpringDesc*)ptr);	\
+		((PHSpringDesc*)ptr)->spring = spring;	\
+		((PHSpringDesc*)ptr)->damper = damper;	\
+		((PHSpringDesc*)ptr)->secondDamper = secondDamper;	\
+		((PHSpringDesc*)ptr)->springOri = springOri;	\
+		((PHSpringDesc*)ptr)->damperOri = damperOri;	\
+		((PHSpringDesc*)ptr)->secondDamperOri = secondDamperOri;	\
+		((PHSpringDesc*)ptr)->yieldStress = yieldStress;	\
+		((PHSpringDesc*)ptr)->hardnessRate = hardnessRate;	\
+		((PHSpringDesc*)ptr)->secondMoment = secondMoment;	\
 		return true;	\
 	}\
 
@@ -406,166 +536,98 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHHingeJointDesc \
-protected:\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		PHJoint1D::SetDesc((PHJoint1DDesc*)(PHHingeJointDesc*)ptr);	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHJoint1D::GetDesc((PHJoint1DDesc*)(PHHingeJointDesc*)ptr);	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHSliderJointDesc \
-protected:\
-	bool	bConstraintY;	\
-	bool	bConstraintRollX;	\
-	bool	bConstraintRollZ;	\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		PHJoint1D::SetDesc((PHJoint1DDesc*)(PHSliderJointDesc*)ptr);	\
-		bConstraintY = ((PHSliderJointDesc*)ptr)->bConstraintY;	\
-		bConstraintRollX = ((PHSliderJointDesc*)ptr)->bConstraintRollX;	\
-		bConstraintRollZ = ((PHSliderJointDesc*)ptr)->bConstraintRollZ;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHJoint1D::GetDesc((PHJoint1DDesc*)(PHSliderJointDesc*)ptr);	\
-		((PHSliderJointDesc*)ptr)->bConstraintY = bConstraintY;	\
-		((PHSliderJointDesc*)ptr)->bConstraintRollX = bConstraintRollX;	\
-		((PHSliderJointDesc*)ptr)->bConstraintRollZ = bConstraintRollZ;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHPathDesc \
-protected:\
-	std::vector< Spr::PHPathPoint >	points;	\
-	bool	bLoop;	\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		points = ((PHPathDesc*)ptr)->points;	\
-		bLoop = ((PHPathDesc*)ptr)->bLoop;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((PHPathDesc*)ptr)->points = points;	\
-		((PHPathDesc*)ptr)->bLoop = bLoop;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHPathJointDesc \
-protected:\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		PHJoint1D::SetDesc((PHJoint1DDesc*)(PHPathJointDesc*)ptr);	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHJoint1D::GetDesc((PHJoint1DDesc*)(PHPathJointDesc*)ptr);	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHBallJointDesc \
+#define SPR_DECLMEMBEROF_PH1DJointLimitDesc \
 protected:\
 	double	spring;	\
 	double	damper;	\
-	Vec2d	limitSwing;	\
-	Vec2d	limitSwingDir;	\
-	Vec2d	limitTwist;	\
-	Vec3d	limitDir;	\
-	Quaterniond	targetPosition;	\
-	Vec3d	targetVelocity;	\
-	Vec3d	offsetForce;	\
-	double	fMax;	\
-	Vec2d	poleTwist;	\
-	double	secondDamper;	\
-	double	yieldStress;	\
-	double	hardnessRate;	\
-	Vec3d	Inertia;	\
-	enum Spr::PHBallJointDesc::PHConstraintType	ConstMode;	\
+	Vec2d	range;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
-		PHJoint::SetDesc((PHJointDesc*)(PHBallJointDesc*)ptr);	\
-		spring = ((PHBallJointDesc*)ptr)->spring;	\
-		damper = ((PHBallJointDesc*)ptr)->damper;	\
-		limitSwing = ((PHBallJointDesc*)ptr)->limitSwing;	\
-		limitSwingDir = ((PHBallJointDesc*)ptr)->limitSwingDir;	\
-		limitTwist = ((PHBallJointDesc*)ptr)->limitTwist;	\
-		limitDir = ((PHBallJointDesc*)ptr)->limitDir;	\
-		targetPosition = ((PHBallJointDesc*)ptr)->targetPosition;	\
-		targetVelocity = ((PHBallJointDesc*)ptr)->targetVelocity;	\
-		offsetForce = ((PHBallJointDesc*)ptr)->offsetForce;	\
-		fMax = ((PHBallJointDesc*)ptr)->fMax;	\
-		poleTwist = ((PHBallJointDesc*)ptr)->poleTwist;	\
-		secondDamper = ((PHBallJointDesc*)ptr)->secondDamper;	\
-		yieldStress = ((PHBallJointDesc*)ptr)->yieldStress;	\
-		hardnessRate = ((PHBallJointDesc*)ptr)->hardnessRate;	\
-		Inertia = ((PHBallJointDesc*)ptr)->Inertia;	\
-		ConstMode = ((PHBallJointDesc*)ptr)->ConstMode;	\
+		spring = ((PH1DJointLimitDesc*)ptr)->spring;	\
+		damper = ((PH1DJointLimitDesc*)ptr)->damper;	\
+		range = ((PH1DJointLimitDesc*)ptr)->range;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		PHJoint::GetDesc((PHJointDesc*)(PHBallJointDesc*)ptr);	\
-		((PHBallJointDesc*)ptr)->spring = spring;	\
-		((PHBallJointDesc*)ptr)->damper = damper;	\
-		((PHBallJointDesc*)ptr)->limitSwing = limitSwing;	\
-		((PHBallJointDesc*)ptr)->limitSwingDir = limitSwingDir;	\
-		((PHBallJointDesc*)ptr)->limitTwist = limitTwist;	\
-		((PHBallJointDesc*)ptr)->limitDir = limitDir;	\
-		((PHBallJointDesc*)ptr)->targetPosition = targetPosition;	\
-		((PHBallJointDesc*)ptr)->targetVelocity = targetVelocity;	\
-		((PHBallJointDesc*)ptr)->offsetForce = offsetForce;	\
-		((PHBallJointDesc*)ptr)->fMax = fMax;	\
-		((PHBallJointDesc*)ptr)->poleTwist = poleTwist;	\
-		((PHBallJointDesc*)ptr)->secondDamper = secondDamper;	\
-		((PHBallJointDesc*)ptr)->yieldStress = yieldStress;	\
-		((PHBallJointDesc*)ptr)->hardnessRate = hardnessRate;	\
-		((PHBallJointDesc*)ptr)->Inertia = Inertia;	\
-		((PHBallJointDesc*)ptr)->ConstMode = ConstMode;	\
+		((PH1DJointLimitDesc*)ptr)->spring = spring;	\
+		((PH1DJointLimitDesc*)ptr)->damper = damper;	\
+		((PH1DJointLimitDesc*)ptr)->range = range;	\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHSpringDesc \
+#define SPR_DECLMEMBEROF_PHBallJointLimitState \
 protected:\
-	Vec3d	spring;	\
-	Vec3d	damper;	\
-	double	springOri;	\
-	double	damperOri;	\
-	double	fMax;	\
-	Vec3d	secondDamper;	\
-	double	yieldStress;	\
-	double	hardnessRate;	\
+	Vec3d	f;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		f = ((PHBallJointLimitState*)ptr)->f;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		((PHBallJointLimitState*)ptr)->f = f;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHBallJointLimitDesc \
+protected:\
+	double	spring;	\
+	double	damper;	\
+	Vec3d	limitDir;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
-		PHJoint::SetDesc((PHJointDesc*)(PHSpringDesc*)ptr);	\
-		spring = ((PHSpringDesc*)ptr)->spring;	\
-		damper = ((PHSpringDesc*)ptr)->damper;	\
-		springOri = ((PHSpringDesc*)ptr)->springOri;	\
-		damperOri = ((PHSpringDesc*)ptr)->damperOri;	\
-		fMax = ((PHSpringDesc*)ptr)->fMax;	\
-		secondDamper = ((PHSpringDesc*)ptr)->secondDamper;	\
-		yieldStress = ((PHSpringDesc*)ptr)->yieldStress;	\
-		hardnessRate = ((PHSpringDesc*)ptr)->hardnessRate;	\
+		PHBallJointLimit::SetState((PHBallJointLimitState*)(PHBallJointLimitDesc*)ptr);	\
+		spring = ((PHBallJointLimitDesc*)ptr)->spring;	\
+		damper = ((PHBallJointLimitDesc*)ptr)->damper;	\
+		limitDir = ((PHBallJointLimitDesc*)ptr)->limitDir;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		PHJoint::GetDesc((PHJointDesc*)(PHSpringDesc*)ptr);	\
-		((PHSpringDesc*)ptr)->spring = spring;	\
-		((PHSpringDesc*)ptr)->damper = damper;	\
-		((PHSpringDesc*)ptr)->springOri = springOri;	\
-		((PHSpringDesc*)ptr)->damperOri = damperOri;	\
-		((PHSpringDesc*)ptr)->fMax = fMax;	\
-		((PHSpringDesc*)ptr)->secondDamper = secondDamper;	\
-		((PHSpringDesc*)ptr)->yieldStress = yieldStress;	\
-		((PHSpringDesc*)ptr)->hardnessRate = hardnessRate;	\
+		PHBallJointLimit::GetState((PHBallJointLimitState*)(PHBallJointLimitDesc*)ptr);	\
+		((PHBallJointLimitDesc*)ptr)->spring = spring;	\
+		((PHBallJointLimitDesc*)ptr)->damper = damper;	\
+		((PHBallJointLimitDesc*)ptr)->limitDir = limitDir;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHBallJointConeLimitDesc \
+protected:\
+	Vec2d	limitSwing;	\
+	Vec2d	limitSwingDir;	\
+	Vec2d	limitTwist;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHBallJointLimit::SetDesc((PHBallJointLimitDesc*)(PHBallJointConeLimitDesc*)ptr);	\
+		limitSwing = ((PHBallJointConeLimitDesc*)ptr)->limitSwing;	\
+		limitSwingDir = ((PHBallJointConeLimitDesc*)ptr)->limitSwingDir;	\
+		limitTwist = ((PHBallJointConeLimitDesc*)ptr)->limitTwist;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHBallJointLimit::GetDesc((PHBallJointLimitDesc*)(PHBallJointConeLimitDesc*)ptr);	\
+		((PHBallJointConeLimitDesc*)ptr)->limitSwing = limitSwing;	\
+		((PHBallJointConeLimitDesc*)ptr)->limitSwingDir = limitSwingDir;	\
+		((PHBallJointConeLimitDesc*)ptr)->limitTwist = limitTwist;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHBallJointSplineLimitDesc \
+protected:\
+	std::vector< Spr::PHSplineLimitNode >	nodes;	\
+	Vec2d	poleTwist;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHBallJointLimit::SetDesc((PHBallJointLimitDesc*)(PHBallJointSplineLimitDesc*)ptr);	\
+		nodes = ((PHBallJointSplineLimitDesc*)ptr)->nodes;	\
+		poleTwist = ((PHBallJointSplineLimitDesc*)ptr)->poleTwist;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHBallJointLimit::GetDesc((PHBallJointLimitDesc*)(PHBallJointSplineLimitDesc*)ptr);	\
+		((PHBallJointSplineLimitDesc*)ptr)->nodes = nodes;	\
+		((PHBallJointSplineLimitDesc*)ptr)->poleTwist = poleTwist;	\
 		return true;	\
 	}\
 
@@ -722,26 +784,23 @@ public:\
 protected:\
 	SpatialVector	f;	\
 	SpatialVector	F;	\
-	Spr::Vec3d	motorf;	\
-	Spr::Vec3d	limitf;	\
-	Spr::Vec3d	fs;	\
 	SpatialVector	xs;	\
+	SpatialVector	fAvg;	\
+	bool	bYielded;	\
 public:\
 	virtual void SetState(const void* ptr){ \
 		f = ((PHConstraintState*)ptr)->f;	\
 		F = ((PHConstraintState*)ptr)->F;	\
-		motorf = ((PHConstraintState*)ptr)->motorf;	\
-		limitf = ((PHConstraintState*)ptr)->limitf;	\
-		fs = ((PHConstraintState*)ptr)->fs;	\
 		xs = ((PHConstraintState*)ptr)->xs;	\
+		fAvg = ((PHConstraintState*)ptr)->fAvg;	\
+		bYielded = ((PHConstraintState*)ptr)->bYielded;	\
 	}\
 	virtual bool GetState(void* ptr) const { \
 		((PHConstraintState*)ptr)->f = f;	\
 		((PHConstraintState*)ptr)->F = F;	\
-		((PHConstraintState*)ptr)->motorf = motorf;	\
-		((PHConstraintState*)ptr)->limitf = limitf;	\
-		((PHConstraintState*)ptr)->fs = fs;	\
 		((PHConstraintState*)ptr)->xs = xs;	\
+		((PHConstraintState*)ptr)->fAvg = fAvg;	\
+		((PHConstraintState*)ptr)->bYielded = bYielded;	\
 		return true;	\
 	}\
 

@@ -288,7 +288,7 @@ PHPath* PHConstraintEngine::CreatePath(const PHPathDesc& desc){
 	return path;
 }
 
-PHGear* PHConstraintEngine::CreateGear(const PHGearDesc& desc, PHJoint1D* lhs, PHJoint1D* rhs){
+PHGear* PHConstraintEngine::CreateGear(const PHGearDesc& desc, PH1DJoint* lhs, PH1DJoint* rhs){
 	PHGear* gear = DBG_NEW PHGear();
 	gear->joint[0] = lhs;
 	gear->joint[1] = rhs;

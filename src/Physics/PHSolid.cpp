@@ -244,7 +244,7 @@ void PHSolid::UpdateCacheLCP(double dt){
 	f.w() = qc * nextTorque;
 	v.v() = qc * GetVelocity();
 	v.w() = qc * GetAngularVelocity();
-	
+
 	// ƒcƒŠ[‚É‘®‚·‚éê‡‚ÍPHRootNode::SetupDynamics‚Ådv‚ªŒvZ‚³‚ê‚é
 	if(IsArticulated())return;
 	

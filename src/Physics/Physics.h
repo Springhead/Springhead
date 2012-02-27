@@ -19,6 +19,8 @@
 #include "PHConstraint.h"
 #include "PHContactPoint.h"
 #include "PHJoint.h"
+#include "PHJointLimit.h"
+#include "PHJointMotor.h"
 #include "PHHingeJoint.h"
 #include "PHSliderJoint.h"
 #include "PHBallJoint.h"

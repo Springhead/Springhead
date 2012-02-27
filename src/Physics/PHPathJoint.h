@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
@@ -32,12 +32,12 @@ namespace Spr{;
 	本当の拘束条件は[p; q] in im(f)だが非線形なので扱えない．
  */
 
-/// 関節の軌道のキーフレームを持ち，補完して返したりヤコビアンを計算したりするクラス
-struct PHPathPointWithJacobian : public PHPathPoint{
+struct PHPathPointWithJacobian : public PHPathPoint {
 	Matrix6d	J;
 };
 
-class PHPath : public SceneObject, public std::vector<PHPathPointWithJacobian>{
+/// 関節の軌道のキーフレームを持ち，補完して返したりヤコビアンを計算したりするクラス
+class PHPath : public SceneObject, public std::vector<PHPathPointWithJacobian> {
 	bool bReady;
 	bool bLoop;	//[-pi, pi]の無限回転関節
 	iterator Find(double &s);
@@ -58,11 +58,15 @@ public:
 };
 
 class PHPathJoint;
-class PHPathJointNode : public PHTreeNode1D{
+
+/// パス関節に対応するツリーノード
+class PHPathJointNode : public PHTreeNode1D {
 public:
 	SPR_OBJECTDEF(PHPathJointNode);
 	SPR_DECLMEMBEROF_PHPathJointNodeDesc;
+
 	PHPathJoint* GetJoint(){return PHTreeNode1D::GetJoint()->Cast();}
+
 	virtual void CompJointJacobian();
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
@@ -71,24 +75,31 @@ public:
 	PHPathJointNode(const PHPathJointNodeDesc& desc = PHPathJointNodeDesc()){}
 };
 
-class PHPathJoint : public PHJoint1D{
+/// パス関節
+class PHPathJoint : public PH1DJoint {
 public:
 	SPR_OBJECTDEF(PHPathJoint);
 	SPR_DECLMEMBEROF_PHPathJointDesc;
 
 	UTRef<PHPath> path;
-	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::PATHJOINT;}
-	virtual PHTreeNode* CreateTreeNode(){
-		return DBG_NEW PHPathJointNode();
-	}
-	virtual void SetPosition(double pos){position[0] = pos;}
-	virtual bool AddChildObject(ObjectIf* o);
+
+	/// コンストラクタ
+	PHPathJoint(const PHPathJointDesc& desc = PHPathJointDesc());
+
+	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
+	virtual PHTreeNode* CreateTreeNode(){ return DBG_NEW PHPathJointNode(); }
+
+	// ----- PHConstraintの派生クラスで実装する機能
+
+	virtual void UpdateJointState();
 	virtual void ModifyJacobian();
 	virtual void CompBias();
-	virtual void UpdateJointState();
-	//virtual void CompError(double dt);
-	//virtual void ProjectionCorrection(double& F, int k);
-	PHPathJoint(const PHPathJointDesc& desc = PHPathJointDesc());
+
+	// ----- インタフェースの実装
+
+	virtual void SetPosition(double pos){position[0] = pos;}
+	virtual bool AddChildObject(ObjectIf* o);
+
 };
 
 }

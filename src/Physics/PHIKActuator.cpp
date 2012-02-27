@@ -12,20 +12,6 @@
 using namespace std;
 namespace Spr{;
 
-//static std::ofstream *dlog;
-
-// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// IKActuatorDesc
-
-PHIKActuatorDesc::PHIKActuatorDesc() {
-	bEnabled = true;
-
-	bias = 1.0;
-
-	spring = 0.0;
-	damper = 0.0;
-}
-
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // IKActuator
 
@@ -66,7 +52,6 @@ void PHIKActuator::SetupMatrix(){
 		if (this->bNDOFChanged) {
 			alpha.resize(this->ndof);
 			beta.resize(this->ndof);
-			// std::cout << "α[" << number << "] : " << this->ndof << std::endl;
 		}
 		alpha.clear();
 		beta.clear();
@@ -75,7 +60,6 @@ void PHIKActuator::SetupMatrix(){
 		for(ASet::iterator act=linkedActuators.begin(); act!=linkedActuators.end(); ++act) {
 			if (this->bNDOFChanged || ((*act)->bNDOFChanged && (*act)->bEnabled) || this->bActuatorAdded) {
 				gamma[(*act)->number].resize(this->ndof, (*act)->ndof);
-				// std::cout << "Γ[" << number << ", " << (*act)->number << "] : (" << this->ndof << "," << (*act)->ndof << ")" << std::endl;
 			}
 			gamma[(*act)->number].clear();
 		}
@@ -90,7 +74,6 @@ void PHIKActuator::SetupMatrix(){
 		for (ESet::iterator eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef) {
 			if (this->bNDOFChanged || ((*eef)->bNDOFChanged && (*eef)->bEnabled) || this->bEndEffectorAdded) {
 				Mj[(*eef)->number].resize((*eef)->ndof, this->ndof);
-				// std::cout << "Ｊ[" << (*eef)->number << ", " << this->number << "] : (" << (*eef)->ndof << "," << this->ndof << ")" << std::endl;
 			}
 			Mj[(*eef)->number].clear();
 		}
@@ -113,29 +96,27 @@ void PHIKActuator::CalcAllJacobian(){
 
 		int n = DCAST(PHIKEndEffector,*eef)->number;
 		CalcJacobian(*eef);
-
-		//(*dlog) << "--- J[nd:" << number << "][cp:" << n << "] ---" << std::endl;
-		//(*dlog) << Mj[n] << std::endl;
 	}
 }
 
 void PHIKActuator::PrepareSolve(){
 	if (!bEnabled) { return; }
 
+	PHIKEngineIf* engine = DCAST(PHSceneIf,GetScene())->GetIKEngine();
+
 	for (int i=0; i< ndof; ++i) {
 		for(ESet::iterator eef=linkedEndEffectors.begin(); eef!=linkedEndEffectors.end(); ++eef){
 			if (! (*eef)->bEnabled) { continue; }
 			int eef_n = (*eef)->number;
-			PTM::VVector<double> eef_v = (*eef)->GetTempTarget();
 
-			//(*dlog) << "--- v[cp:" << eef_n << "] ---" << std::endl;
-			//(*dlog) << eef_v << std::endl;
+			PTM::VVector<double> eef_v;
+			(*eef)->GetTempTarget(eef_v);
 
 			for (int k=0; k < (*eef)->ndof; ++k) {
 
 				// α、β
 				alpha[i] += ( (Mj[eef_n][k][i]/bias) * (Mj[eef_n][k][i]) );
-				beta[i]  += ( (Mj[eef_n][k][i]/bias) * (eef_v[k]) );
+				beta[i]  += ( (Mj[eef_n][k][i]/bias) * (eef_v[k])  );
 
 				// γ[act_y, this]
 				for(ASet::iterator act=linkedActuators.begin(); act!=linkedActuators.end(); ++act){
@@ -151,7 +132,6 @@ void PHIKActuator::PrepareSolve(){
 				// γ[this, this]
 				for (int j=0; j<ndof; ++j) {
 					if (i!=j) {
-						//(*dlog) << number << ":" << i << ":" << j << ": += " << (Mj[eef_n][k][i]/bias) << ", " << (Mj[eef_n][k][j]/bias) << std::endl;
 						gamma[number][i][j] += ( (Mj[eef_n][k][i]/bias) * (Mj[eef_n][k][j]/bias) );
 					}
 				}
@@ -160,28 +140,12 @@ void PHIKActuator::PrepareSolve(){
 		}
 	}
 
-
-	//(*dlog) << "--- alpha[" << number << "] ---" << std::endl;
-	//(*dlog) << alpha << std::endl;
-
-	//(*dlog) << "--- beta[" << number << "] ---" << std::endl;
-	//(*dlog) << beta << std::endl;
-
-	for(ASet::iterator act=linkedActuators.begin(); act!=linkedActuators.end(); ++act){
-		if (!((*act)->IsEnabled())) { continue; }
-		int act_n = (*act)->number;
-		//(*dlog) << "--- gamma[" << number << "][" << n_y_n << "] ---" << std::endl;
-		//(*dlog) << gamma[n_y_n] << std::endl;
-	}
-	//(*dlog) << "--- gamma[" << number << "][" << number << "] ---" << std::endl;
-	//(*dlog) << gamma[number] << std::endl;
-
 	omega.clear();
 	omega_prev.clear();
 }
 
 void PHIKActuator::ProceedSolve(){
-	omega_prev = omega;
+	omega_prev  = omega;
 
 	for (int i=0; i<ndof; ++i) {
 		double delta_epsilon = 0;
@@ -192,7 +156,7 @@ void PHIKActuator::ProceedSolve(){
 			int act_n = (*act)->number;
 			if (gamma.find(act_n) != gamma.end()) {
 				for (int k=0; k<(*act)->ndof; ++k) {
-					delta_epsilon += ( (gamma[act_n][i][k]) * ((*act)->omega[k]) );
+					delta_epsilon   += ( (gamma[act_n][i][k]) * ((*act)->omega[k])  );
 				}
 			}
 		}
@@ -201,7 +165,7 @@ void PHIKActuator::ProceedSolve(){
 		for (int k=0; k<ndof; ++k) {
 			if (k!=i) {
 				if (gamma.find(number) != gamma.end()) {
-					delta_epsilon += ( (gamma[number][i][k]) * (omega[k]) );
+					delta_epsilon   += ( (gamma[number][i][k]) * (omega[k])  );
 				}
 			}
 		}
@@ -213,7 +177,7 @@ void PHIKActuator::ProceedSolve(){
 		} else {
 			invAlpha = 1e+20;
 		}
-		omega[i] = invAlpha * (beta[i] - delta_epsilon);
+		omega[i]  = invAlpha * (beta[i]  - delta_epsilon);
 	}
 
 	// 後処理
@@ -240,10 +204,6 @@ bool PHIKBallActuator::AddChildObject(ObjectIf* o){
 	PHBallJointIf* jo = o->Cast();
 	if (jo) {
 		this->joint = jo;
-		PHBallJointDesc dJ; DCAST(PHBallJointIf,this->joint)->GetDesc(&dJ);
-		this->jSpring = dJ.spring;
-		this->jDamper = dJ.damper;
-		this->jGoal   = dJ.targetPosition;
 		return true;
 	}
 	return PHIKActuator::AddChildObject(o);
@@ -362,101 +322,38 @@ void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 			}
 		}
 	}
-
-	// std::cout << "Jb_" << number << " : " << std::endl << Mj[n] << std::endl;
 }
 
 void PHIKBallActuator::Move(){
 	if (!bEnabled) { return; }
 
-	// std::cout << "ω_" << number << " : " << omega << std::endl;
-	// std::cout << "   with e : " << e[0] << e[1] << e[2] << std::endl;
+	// 回転軸ベクトルにする
+	Vec3d  w = Vec3d();
+	for (int i=0; i<ndof; ++i) { w += ( omega[i]/bias) * e[i]; }
 
-	if (true/*omega.norm() < Rad(360)*/) {
-
-		// 回転軸ベクトルにする
-		Vec3d w = Vec3d();
-		for (int i=0; i<ndof; ++i) {
-			w += (omega[i]/bias) * e[i];
-		}
-
-		// Axis-Angle表現にする
-		double angle = w.norm();
-		Vec3d axis = w;
-		if (angle != 0) {
-			axis = axis / angle;
-		} else {
-			axis = Vec3d(1,0,0);
-		}
-
-		// Quaternionにする
-		Quaterniond dQ = Quaterniond::Rot(angle, axis);
-
-		// 関節のローカル座標をもとめる
-		PHBallJoint* j = DCAST(PHBallJoint,joint);
-		PHBallJointDesc d; j->GetDesc(&d);
-		Vec3d Pj = j->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
-		Quaterniond Qj = (j->solid[0]->GetPose() * d.poseSocket).Ori();
-
-		// 関節のローカル座標系にする
-		Quaterniond pos = Qj.Inv() * dQ * Qj * joint->GetPosition();
-
-		Vec3d targetPosition = pos.RotationHalf();
-		Vec3d orig = jGoal.RotationHalf();
-
-		Vec3d newGoal;
-		if (jSpring + spring != 0) {
-			newGoal = (jSpring*orig + spring*targetPosition) * (1/(jSpring + spring));
-		} else {
-			newGoal = Vec3d();
-		}
-
-		pos = Quaterniond::Rot(newGoal.norm(), (newGoal.norm()!=0)?(newGoal.unit()):(Vec3d(1,0,0)));
-
-		// 関節を動かす
-		joint->SetSpring(jSpring + spring);
-		joint->SetDamper(jDamper + damper);
-		joint->SetTargetPosition(pos);
-
-		/*
-		Vec3d vel = dT / DCAST(PHSceneIf,GetScene())->GetTimeStep();
-		if (vel.norm() > Rad(360)) {
-			vel = vel.unit() * Rad(360);
-		}
-		joint->SetMode(PHBallJointDesc::MODE_VELOCITY);
-		joint->SetTargetVelocity(vel);
-		*/
-
+	// Axis-Angle表現にする
+	double  angle =  w.norm();
+	Vec3d axis = w;
+	if (angle != 0) {
+		axis = axis / angle;
 	} else {
-		std::cout << "Divergence! : IKBall" << std::endl;
+		axis = Vec3d(1,0,0);
 	}
 
+	// Quaternionにする
+	Quaterniond diffQ = Quaterniond::Rot( angle,  axis);
+
+	// 関節ローカル系に直す
+	Posed poseSocket; joint->GetSocketPose(poseSocket);
+	Posed poseSolid = joint->GetSocketSolid()->GetPose();
+	
+	Vec3d       Pj    = (poseSolid * poseSocket) * Vec3d(0,0,0);
+	Quaterniond Qj    = (poseSolid * poseSocket).Ori();
+	Vec3d       diff  = (Qj.Inv() * diffQ * Qj).RotationHalf();
+
+	joint->SetTargetVelocity(velocityGain * diff);
+
 	return;
-}
-
-void PHIKBallActuator::MoveStatic() {
-	Move();
-	PHSolidIf* soParent = joint->GetSocketSolid();
-	PHSolidIf* soChild  = joint->GetPlugSolid();
-
-	PHBallJointDesc d;
-	joint->GetDesc(&d);
-	Posed poseSocket = d.poseSocket;
-	Posed posePlug   = d.posePlug;
-
-	Posed q=Posed(), p;
-	q.Ori() = joint->GetTargetPosition();
-
-	p = soParent->GetPose() * poseSocket * q * posePlug.Inv();
-	soChild->SetPose(p);
-
-	DCAST(PHConstraint,joint)->UpdateState();
-}
-
-void PHIKBallActuator::MoveToNaturalPosition(){
-	joint->SetSpring(jSpring);
-	joint->SetDamper(jDamper);
-	joint->SetTargetPosition(jGoal);
 }
 
 // --- --- --- --- ---
@@ -464,13 +361,11 @@ bool PHIKHingeActuator::AddChildObject(ObjectIf* o){
 	PHHingeJointIf* jo = o->Cast();
 	if (jo) {
 		this->joint = jo;
-		this->jSpring = DCAST(PHHingeJointIf,this->joint)->GetSpring();
-		this->jDamper = DCAST(PHHingeJointIf,this->joint)->GetDamper();
-		this->jGoal   = DCAST(PHHingeJointIf,this->joint)->GetTargetPosition();
 		return true;
 	}
 	return PHIKActuator::AddChildObject(o);
 }
+
 ObjectIf* PHIKHingeActuator::GetChildObject(size_t pos){
 	if (pos == 0 && this->joint != NULL) { return this->joint; }
 	if (this->joint != NULL) {
@@ -480,6 +375,7 @@ ObjectIf* PHIKHingeActuator::GetChildObject(size_t pos){
 	}
 	return NULL;
 }
+
 size_t PHIKHingeActuator::NChildObject() const{
 	if (this->joint != NULL) { return 1 + PHIKActuator::NChildObject(); }
 	return PHIKActuator::NChildObject();
@@ -512,75 +408,15 @@ void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 			Mj[n][i+stride][0] = Rm[i];
 		}
 	}
-
-	// std::cout << "Jh_" << number << " : " << std::endl << Mj[n] << std::endl;
 }
 
 void PHIKHingeActuator::Move(){
 	if (!bEnabled) { return; }
 
-	static const double Pi = 3.141592653589;
+	double  diff = omega[0]/bias;
+	joint->SetTargetVelocity(velocityGain * diff);
 
-	// 新しい回転角度
-	double angle  = joint->GetPosition() + (omega[0]/bias);
-
-	double newGoal;
-	if (jSpring + spring != 0) {
-		newGoal = (jSpring*jGoal + spring*angle) * (1/(jSpring + spring));
-	} else {
-		newGoal = 0;
-	}
-
-	// トルクを実現するためのオフセットの追加
-	/*
-	double torque = tau[0];
-	newGoal += torque * Rad(16) / joint->GetSpring();
-	*/
-
-	// 関節を動かす
-	if (abs(newGoal) < Rad(360)) {
-		joint->SetSpring(jSpring + spring);
-		joint->SetDamper(jDamper + damper);
-		joint->SetTargetPosition(newGoal);
-	} else {
-		std::cout << "Divergence! : IKHinge" << std::endl;
-	}
-}
-
-void PHIKHingeActuator::MoveStatic() {
-	Move();
-	PHSolidIf* soParent = joint->GetSocketSolid();
-	PHSolidIf* soChild  = joint->GetPlugSolid();
-
-	PHHingeJointDesc d;
-	joint->GetDesc(&d);
-	Posed poseSocket = d.poseSocket;
-	Posed posePlug   = d.posePlug;
-
-	Posed q=Posed(), p;
-	q.Ori() = Quaterniond::Rot(joint->GetTargetPosition(), 'z');
-
-	p = soParent->GetPose() * poseSocket * q * posePlug.Inv();
-	soChild->SetPose(p);
-
-	DCAST(PHConstraint,joint)->UpdateState();
-}
-
-void PHIKHingeActuator::MoveToNaturalPosition(){
-	joint->SetSpring(jSpring);
-	joint->SetDamper(jDamper);
-	joint->SetTargetPosition(jGoal);
-}
-
-void PHIKHingeActuator::AfterProceedSolve(){
-	// 可動域制限（テスト）
-	/*
-	if (joint->GetPosition() > Rad(30) && omega[0] > 0) {
-		omega[0] = 0;
-	} else if (joint->GetPosition() < Rad(-30) && omega[0] < 0) {
-		omega[0] = 0;
-	}
-	*/
+	return;
 }
 
 }

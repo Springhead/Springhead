@@ -153,7 +153,7 @@ PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, co
 	return node->Cast();
 }
 
-PHGearIf* PHScene::CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc){
+PHGearIf* PHScene::CreateGear(PH1DJointIf* lhs, PH1DJointIf* rhs, const PHGearDesc& desc){
 	PHGear* gear = constraintEngine->CreateGear(desc, lhs->Cast(), rhs->Cast());
 	AddChildObject(gear->Cast());
 	return gear->Cast();
@@ -369,10 +369,6 @@ bool PHScene::AddChildObject(ObjectIf* o){
 	if(con && constraintEngine->AddChildObject(con)){
 		ok = true;
 	}
-	PHBallJointIf* ball = DCAST(PHBallJointIf, o);
-	if(ball && constraintEngine->AddChildObject(o)){
-		ok = true;
-	}
 	PHTreeNodeIf* node = DCAST(PHTreeNodeIf, o);
 	if(node && constraintEngine->AddChildObject(o))
 		ok = true;
@@ -538,7 +534,7 @@ void PHScene::SetState(const void* s){
 	*(PHSceneState*)this = *(const PHSceneState*)p;
 	p += sizeof(PHSceneState);
 	if (constraintEngine){
-	//	constraintEngine->SetState(p);
+		constraintEngine->SetState(p);  // なぜコメントアウトされていたのか？？(2012/1/28, mitake) <!!>
 	}
 }
 

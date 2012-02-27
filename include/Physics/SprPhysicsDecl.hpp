@@ -72,14 +72,11 @@
 	void ProceedSolve(){	base::ProceedSolve();}	\
 	PTM::VVector< double > GetRawSolution(){	return	base::GetRawSolution();}	\
 	void Move(){	base::Move();}	\
-	void MoveToNaturalPosition(){	base::MoveToNaturalPosition();}	\
 	void RegisterEndEffector(Spr::PHIKEndEffectorIf* endeffector){	base::RegisterEndEffector(endeffector);}	\
 	void SetBias(float bias){	base::SetBias(bias);}	\
 	float GetBias(){	return	base::GetBias();}	\
-	void SetSpring(double spring){	base::SetSpring(spring);}	\
-	double GetSpring(){	return	base::GetSpring();}	\
-	void SetDamper(double damper){	base::SetDamper(damper);}	\
-	double GetDamper(){	return	base::GetDamper();}	\
+	void SetVelocityGain(double velocityGain){	base::SetVelocityGain(velocityGain);}	\
+	double GetVelocityGain(){	return	base::GetVelocityGain();}	\
 	void Enable(bool enable){	base::Enable(enable);}	\
 	bool IsEnabled(){	return	base::IsEnabled();}	\
 
@@ -107,8 +104,6 @@
 	Quaternionf GetAbsolutePoseQ(){	return	base::GetAbsolutePoseQ();}	\
 	void GetRelativeVelocity(Vec3d& v, Vec3d& w){	base::GetRelativeVelocity(v, w);}	\
 	void GetConstraintForce(Vec3d& f, Vec3d& t){	base::GetConstraintForce(f, t);}	\
-	Vec3d GetMotorf(){	return	base::GetMotorf();}	\
-	Vec3d GetLimitf(){	return	base::GetLimitf();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintsIf(base)	\
 	Spr::PHConstraintIf* FindBySolidPair(Spr::PHSolidIf* lhs, Spr::PHSolidIf* rhs){	return	base::FindBySolidPair(lhs, rhs);}	\
@@ -117,42 +112,33 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHContactPointIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHJointIf(base)	\
-	int GetDefomationType(){	return	base::GetDefomationType();}	\
-	void SetDefomationType(int t){	base::SetDefomationType(t);}	\
+	void SetMaxForce(double max){	base::SetMaxForce(max);}	\
+	double GetMaxForce(){	return	base::GetMaxForce();}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_PHJoint1DIf(base)	\
-	void SetRange(double lower, double upper){	base::SetRange(lower, upper);}	\
-	void GetRange(double& lower, double& upper){	base::GetRange(lower, upper);}	\
-	void SetTargetVelocity(double v){	base::SetTargetVelocity(v);}	\
-	double GetTargetVelocity(){	return	base::GetTargetVelocity();}	\
-	void SetTrajectoryVelocity(double v){	base::SetTrajectoryVelocity(v);}	\
-	double GetTrajectoryVelocity(){	return	base::GetTrajectoryVelocity();}	\
-	void SetSpring(double spring){	base::SetSpring(spring);}	\
-	double GetSpring(){	return	base::GetSpring();}	\
-	void SetTargetPosition(double targetPosition){	base::SetTargetPosition(targetPosition);}	\
-	double GetTargetPosition(){	return	base::GetTargetPosition();}	\
-	void SetDamper(double damper){	base::SetDamper(damper);}	\
-	double GetDamper(){	return	base::GetDamper();}	\
+#define SPR_OVERRIDEMEMBERFUNCOF_PH1DJointIf(base)	\
+	PH1DJointLimitIf* CreateLimit(const PH1DJointLimitDesc& desc){	return	base::CreateLimit(desc);}	\
 	double GetPosition(){	return	base::GetPosition();}	\
 	double GetVelocity(){	return	base::GetVelocity();}	\
-	void SetOffsetForce(double dat){	base::SetOffsetForce(dat);}	\
-	double GetOffsetForce(){	return	base::GetOffsetForce();}	\
-	void SetMotorTorque(double t){	base::SetMotorTorque(t);}	\
-	double GetMotorTorque(){	return	base::GetMotorTorque();}	\
-	void SetTorqueMax(double max){	base::SetTorqueMax(max);}	\
-	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
-	bool IsLimit(){	return	base::IsLimit();}	\
+	PH1DJointLimitIf* GetLimit(){	return	base::GetLimit();}	\
+	void SetSpring(double spring){	base::SetSpring(spring);}	\
+	double GetSpring(){	return	base::GetSpring();}	\
+	void SetDamper(double damper){	base::SetDamper(damper);}	\
+	double GetDamper(){	return	base::GetDamper();}	\
 	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
 	void SetSecondDamper(double input){	base::SetSecondDamper(input);}	\
+	void SetTargetPosition(double targetPosition){	base::SetTargetPosition(targetPosition);}	\
+	double GetTargetPosition(){	return	base::GetTargetPosition();}	\
+	void SetTargetVelocity(double v){	base::SetTargetVelocity(v);}	\
+	double GetTargetVelocity(){	return	base::GetTargetVelocity();}	\
+	void SetOffsetForce(double dat){	base::SetOffsetForce(dat);}	\
+	double GetOffsetForce(){	return	base::GetOffsetForce();}	\
 	double GetYieldStress(){	return	base::GetYieldStress();}	\
 	void SetYieldStress(const double yS){	base::SetYieldStress(yS);}	\
 	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
 	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
-	Spr::PHJointDesc::PHDeformationType GetDeformationMode(){	return	base::GetDeformationMode();}	\
-	void SetRangeSpring(double rSpring){	base::SetRangeSpring(rSpring);}	\
-	double GetRangeSpring(){	return	base::GetRangeSpring();}	\
-	void SetRangeDamper(double rDamper){	base::SetRangeDamper(rDamper);}	\
-	double GetRangeDamper(){	return	base::GetRangeDamper();}	\
+	void SetSecondMoment(const double& sM){	base::SetSecondMoment(sM);}	\
+	double GetSecondMoment(){	return	base::GetSecondMoment();}	\
+	double GetMotorForce(){	return	base::GetMotorForce();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHingeJointIf(base)	\
 
@@ -167,55 +153,50 @@
 	void SetPosition(double q){	base::SetPosition(q);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHBallJointIf(base)	\
-	void SetSwingRange(Vec2d range){	base::SetSwingRange(range);}	\
-	void GetSwingRange(Vec2d& range){	base::GetSwingRange(range);}	\
-	void SetTwistRange(Vec2d range){	base::SetTwistRange(range);}	\
-	void GetTwistRange(Vec2d& range){	base::GetTwistRange(range);}	\
-	void SetTwistPole(Vec2d range){	base::SetTwistPole(range);}	\
-	bool SetConstLine(char* fileName, bool i){	return	base::SetConstLine(fileName, i);}	\
-	void SetConstPoint(int Num, int way, double a){	base::SetConstPoint(Num, way, a);}	\
-	double GetConstLine(int Num, int way){	return	base::GetConstLine(Num, way);}	\
-	void SetMotorTorque(const Vec3d& torque){	base::SetMotorTorque(torque);}	\
-	Vec3d GetMotorTorque(){	return	base::GetMotorTorque();}	\
+	PHBallJointLimitIf* CreateLimit(const IfInfo* ii, const PHBallJointLimitDesc& desc){	return	base::CreateLimit(ii, desc);}	\
 	Vec3d GetAngle(){	return	base::GetAngle();}	\
 	Quaterniond GetPosition(){	return	base::GetPosition();}	\
 	Vec3d GetVelocity(){	return	base::GetVelocity();}	\
-	void SetTorqueMax(double max){	base::SetTorqueMax(max);}	\
-	double GetTorqueMax(){	return	base::GetTorqueMax();}	\
-	void SetTargetPosition(Quaterniond p){	base::SetTargetPosition(p);}	\
-	Quaterniond GetTargetPosition(){	return	base::GetTargetPosition();}	\
+	PHBallJointLimitIf* GetLimit(){	return	base::GetLimit();}	\
 	void SetSpring(double spring){	base::SetSpring(spring);}	\
 	double GetSpring(){	return	base::GetSpring();}	\
 	void SetDamper(double damper){	base::SetDamper(damper);}	\
 	double GetDamper(){	return	base::GetDamper();}	\
+	Vec3d GetSecondDamper(){	return	base::GetSecondDamper();}	\
+	void SetSecondDamper(Vec3d damper2){	base::SetSecondDamper(damper2);}	\
+	void SetTargetPosition(Quaterniond p){	base::SetTargetPosition(p);}	\
+	Quaterniond GetTargetPosition(){	return	base::GetTargetPosition();}	\
 	void SetTargetVelocity(Vec3d q){	base::SetTargetVelocity(q);}	\
 	Vec3d GetTargetVelocity(){	return	base::GetTargetVelocity();}	\
-	void SetTrajectoryVelocity(Vec3d q){	base::SetTrajectoryVelocity(q);}	\
-	Vec3d GetTrajectoryVelocity(){	return	base::GetTrajectoryVelocity();}	\
 	void SetOffsetForce(Vec3d ofst){	base::SetOffsetForce(ofst);}	\
 	Vec3d GetOffsetForce(){	return	base::GetOffsetForce();}	\
-	bool IsLimit(){	return	base::IsLimit();}	\
-	double GetSecondDamper(){	return	base::GetSecondDamper();}	\
-	void SetSecondDamper(double input){	base::SetSecondDamper(input);}	\
-	double GetYieldStress(){	return	base::GetYieldStress();}	\
 	void SetYieldStress(const double yS){	base::SetYieldStress(yS);}	\
-	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
+	double GetYieldStress(){	return	base::GetYieldStress();}	\
 	void SetHardnessRate(const double hR){	base::SetHardnessRate(hR);}	\
-	Vec3d GetInertia(){	return	base::GetInertia();}	\
-	void SetInertia(const Vec3d i){	base::SetInertia(i);}	\
-	Spr::PHJointDesc::PHDeformationType GetDeformationMode(){	return	base::GetDeformationMode();}	\
-	double GetmotorfNorm(){	return	base::GetmotorfNorm();}	\
-	void SetConstraintMode(int t){	base::SetConstraintMode(t);}	\
+	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
+	void SetSecondMoment(const Vec3d m){	base::SetSecondMoment(m);}	\
+	Vec3d GetSecondMoment(){	return	base::GetSecondMoment();}	\
+	Vec3d GetMotorForce(){	return	base::GetMotorForce();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHSpringIf(base)	\
 	void SetSpring(const Vec3d& spring){	base::SetSpring(spring);}	\
 	Vec3d GetSpring(){	return	base::GetSpring();}	\
 	void SetDamper(const Vec3d& damper){	base::SetDamper(damper);}	\
 	Vec3d GetDamper(){	return	base::GetDamper();}	\
+	void SetSecondDamper(const Vec3d& secondDamper){	base::SetSecondDamper(secondDamper);}	\
+	Vec3d GetSecondDamper(){	return	base::GetSecondDamper();}	\
 	void SetSpringOri(const double spring){	base::SetSpringOri(spring);}	\
 	double GetSpringOri(){	return	base::GetSpringOri();}	\
 	void SetDamperOri(const double damper){	base::SetDamperOri(damper);}	\
 	double GetDamperOri(){	return	base::GetDamperOri();}	\
+	void SetSecondDamperOri(const double& secondDamperOri){	base::SetSecondDamperOri(secondDamperOri);}	\
+	double GetSecondDamperOri(){	return	base::GetSecondDamperOri();}	\
+	void SetYieldStress(const double& yieldStress){	base::SetYieldStress(yieldStress);}	\
+	double GetYieldStress(){	return	base::GetYieldStress();}	\
+	void SetHardnessRate(const double& hardnessRate){	base::SetHardnessRate(hardnessRate);}	\
+	double GetHardnessRate(){	return	base::GetHardnessRate();}	\
+	void SetSecondMoment(const Vec3d& secondMoment){	base::SetSecondMoment(secondMoment);}	\
+	Vec3d GetSecondMoment(){	return	base::GetSecondMoment();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHTreeNodeIf(base)	\
 	void Enable(bool bEnable){	base::Enable(bEnable);}	\
@@ -236,6 +217,38 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHBallJointNodeIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHGearIf(base)	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PH1DJointLimitIf(base)	\
+	void SetRange(Vec2d range){	base::SetRange(range);}	\
+	void GetRange(Vec2d& range){	base::GetRange(range);}	\
+	void SetSpring(double spring){	base::SetSpring(spring);}	\
+	double GetSpring(){	return	base::GetSpring();}	\
+	void SetDamper(double damper){	base::SetDamper(damper);}	\
+	double GetDamper(){	return	base::GetDamper();}	\
+	bool IsOnLimit(){	return	base::IsOnLimit();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHBallJointLimitIf(base)	\
+	void SetSpring(double rSpring){	base::SetSpring(rSpring);}	\
+	double GetSpring(){	return	base::GetSpring();}	\
+	void SetDamper(double rDamper){	base::SetDamper(rDamper);}	\
+	double GetDamper(){	return	base::GetDamper();}	\
+	void SetLimitDir(Vec3d limDir){	base::SetLimitDir(limDir);}	\
+	Vec3d GetLimitDir(){	return	base::GetLimitDir();}	\
+	bool IsOnLimit(){	return	base::IsOnLimit();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHBallJointConeLimitIf(base)	\
+	void SetSwingRange(Vec2d range){	base::SetSwingRange(range);}	\
+	void GetSwingRange(Vec2d& range){	base::GetSwingRange(range);}	\
+	void SetTwistRange(Vec2d range){	base::SetTwistRange(range);}	\
+	void GetTwistRange(Vec2d& range){	base::GetTwistRange(range);}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_PHBallJointSplineLimitIf(base)	\
+	void AddNode(Spr::PHSplineLimitNode node){	base::AddNode(node);}	\
+	void AddNode(double S, double SD, double dS, double dSD, double tMin, double tMax){	base::AddNode(S, SD, dS, dSD, tMin, tMax);}	\
+	void AddNode(Spr::PHSplineLimitNode node, int pos){	base::AddNode(node, pos);}	\
+	void AddNode(double S, double SD, double dS, double dSD, double tMin, double tMax, int pos){	base::AddNode(S, SD, dS, dSD, tMin, tMax, pos);}	\
+	void SetPoleTwistRange(Vec2d range){	base::SetPoleTwistRange(range);}	\
+	void GetPoleTwistRange(Vec2d& range){	base::GetPoleTwistRange(range);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHRayIf(base)	\
 	Vec3d GetOrigin(){	return	base::GetOrigin();}	\
@@ -271,7 +284,7 @@
 	int NRootNodes()const{	return	base::NRootNodes();}	\
 	Spr::PHRootNodeIf* GetRootNode(int i){	return	base::GetRootNode(i);}	\
 	Spr::PHTreeNodeIf* CreateTreeNode(Spr::PHTreeNodeIf* parent, Spr::PHSolidIf* child, const Spr::PHTreeNodeDesc& desc){	return	base::CreateTreeNode(parent, child, desc);}	\
-	Spr::PHGearIf* CreateGear(Spr::PHJoint1DIf* lhs, Spr::PHJoint1DIf* rhs, const Spr::PHGearDesc& desc){	return	base::CreateGear(lhs, rhs, desc);}	\
+	Spr::PHGearIf* CreateGear(Spr::PH1DJointIf* lhs, Spr::PH1DJointIf* rhs, const Spr::PHGearDesc& desc){	return	base::CreateGear(lhs, rhs, desc);}	\
 	int NGears()const{	return	base::NGears();}	\
 	Spr::PHGearIf* GetGear(int i){	return	base::GetGear(i);}	\
 	Spr::PHPathIf* CreatePath(const Spr::PHPathDesc& desc){	return	base::CreatePath(desc);}	\

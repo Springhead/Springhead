@@ -27,8 +27,6 @@ CRIKJointIf* CRBodyGen::CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent,
 	PHJointIf* phJoint = phScene->CreateJoint(soParent->GetPHSolid(), soChild->GetPHSolid(), d);
 
 	PHIKHingeActuatorDesc descIKAct; descIKAct.bEnabled = true;
-	descIKAct.spring = desc.spring * 10;
-	descIKAct.damper = desc.damper * 1;
 	PHIKActuatorIf*	phIKAct = phScene->CreateIKActuator(descIKAct);
 	phIKAct->AddChildObject(phJoint);
 
@@ -52,8 +50,6 @@ CRIKJointIf* CRBodyGen::CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent,
 	PHJointIf* phJoint = phScene->CreateJoint(soParent->GetPHSolid(), soChild->GetPHSolid(), d);
 
 	PHIKBallActuatorDesc descIKAct; descIKAct.bEnabled = true;
-	descIKAct.spring = desc.spring * 10;
-	descIKAct.damper = desc.damper * 1;
 	PHIKActuatorIf*	phIKAct = phScene->CreateIKActuator(descIKAct);
 	phIKAct->AddChildObject(phJoint);
 

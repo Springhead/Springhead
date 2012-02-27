@@ -108,7 +108,7 @@ public:
 	int						NRootNodes() const;
 	PHRootNodeIf*			GetRootNode(int i);
 	PHTreeNodeIf*			CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc());
-	PHGearIf*				CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc = PHGearDesc());
+	PHGearIf*				CreateGear(PH1DJointIf* lhs, PH1DJointIf* rhs, const PHGearDesc& desc = PHGearDesc());
 	int						NGears() const;
 	PHGearIf*				GetGear(int i);
 	PHPathIf*				CreatePath(const PHPathDesc& desc = PHPathDesc());

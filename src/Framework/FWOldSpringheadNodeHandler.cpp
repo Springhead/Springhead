@@ -912,7 +912,8 @@ public:
 	public:
 		PHScene* phScene;
 		JointCreator* parent;
-		PHJoint1DDesc desc;
+		PH1DJointDesc desc;
+		PH1DJointLimitDesc descLimit;
 		int nType;
 		PHSolid* solid;
 		UTString name;
@@ -945,6 +946,7 @@ public:
 					phSceneIf->CreateJoint(solid->Cast(), parent->solid->Cast(), (const PHSliderJointDesc&)desc) : 
 					phSceneIf->CreateJoint(solid->Cast(), parent->solid->Cast(), (const PHHingeJointDesc&)desc));
 				j->SetName(name.c_str());
+				j->AddChildObject(phSceneIf->CreateObject(PH1DJointLimitIf::GetIfInfoStatic(), &descLimit));
 			}
 		}
 	};
@@ -978,8 +980,8 @@ public:
 		j->desc.spring = d.fPValue;
 		j->desc.damper = d.fDValue;
 		j->desc.targetPosition = d.fInput;
-		j->desc.lower = d.fMinPosition;
-		j->desc.upper = d.fMaxPosition;
+
+		j->descLimit.range = Vec2d(d.fMinPosition, d.fMaxPosition);
 		
 		j->parent = (JointCreator*)DCAST(UTLoadTask, fc->objects.Top());
 		j->phScene = FindPHScene(fc);

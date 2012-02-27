@@ -32,6 +32,8 @@ public:
 	// --- --- --- --- ---
 
 	bool	bEnabled;
+	bool	bTrajectory;
+	bool	bTest;
 	size_t	numIter;
 
 	// --- --- --- --- --- --- --- --- --- ---
@@ -41,9 +43,9 @@ public:
 	int  GetPriority() const {return SGBP_INVERSEKINEMATICS;}
 	void Step();
 	void Clear();
-	void Enable(bool bEnabled){ this->bEnabled = bEnabled; }
-	bool IsEnabled(){ return this->bEnabled; }
-	void SetNumIter(int numIter){ this->numIter = numIter; }
+	bool IsEnabled()                        { return this->bEnabled; }
+	void Enable(bool bEnabled)              { this->bEnabled    = bEnabled; }
+	void SetNumIter(int numIter)            { this->numIter     = numIter; }
 
 	// --- --- --- --- ---
 

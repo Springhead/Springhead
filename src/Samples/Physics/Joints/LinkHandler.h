@@ -111,11 +111,11 @@ public:
 		//PHPathJointIf* path = (jntLink.size() == 5 ? DCAST(PHPathJointIf, jntLink[4]) : NULL); 
 
 		if(id == ID_TORQUE_PLUS)
-			hinge->SetMotorTorque(0.4);
+			hinge->SetOffsetForce(0.4);
 		if(id == ID_TORQUE_ZERO)
-			hinge->SetMotorTorque(0.0);
+			hinge->SetOffsetForce(0.0);
 		if(id == ID_TORQUE_MINUS)
-			hinge->SetMotorTorque(-0.4);	
+			hinge->SetOffsetForce(-0.4);	
 		if(	id == ID_TORQUE_PLUS || id == ID_TORQUE_ZERO || id == ID_TORQUE_MINUS ){
 			hinge->SetSpring(0.0);
 			hinge->SetDamper(0.0);

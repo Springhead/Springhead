@@ -205,8 +205,7 @@ public:
 
 	/** @brief Žb’è–Ú•W’n“_‚ðŽæ“¾‚·‚é
 	*/
-	PTM::VVector<double> GetTempTarget();
-
+	void GetTempTarget(PTM::VVector<double> &v);
 };
 
 }

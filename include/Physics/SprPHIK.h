@@ -131,7 +131,7 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 struct PHIKEndEffectorDesc {
 	SPR_DESCDEF(PHIKEndEffector);
 
-	bool   bEnabled;					///< エンドエフェクタを作動させるかどうか
+	bool   bEnabled;				///< エンドエフェクタを作動させるかどうか
 
 	bool   bPosition;				///< 位置制御を有効にするかどうか
 	bool   bOrientation;			///< 姿勢制御を有効にするかどうか
@@ -176,10 +176,6 @@ struct PHIKActuatorIf : SceneObjectIf{
 	*/
 	void Move();
 
-	/** @brief 自然位置に戻る
-	*/
-	void MoveToNaturalPosition();
-
 	// --- --- --- --- ---
 
 	/** @brief このアクチュエータを使って動かせるエンドエフェクタ、を登録する
@@ -196,21 +192,13 @@ struct PHIKActuatorIf : SceneObjectIf{
 	*/
 	float GetBias();
 
-	/** @brief 駆動のためのバネ係数を設定する
+	/** @brief 速度制御の比例係数を設定する
 	*/
-	void SetSpring(double spring);
+	void SetVelocityGain(double velocityGain);
 
-	/** @brief 駆動のためのバネ係数を取得
+	/** @brief 速度制御の比例係数を取得する
 	*/
-	double GetSpring();
-
-	/** @brief 駆動のためのダンパ係数を設定する
-	*/
-	void SetDamper(double damper);
-
-	/** @brief 駆動のためのダンパ係数を取得
-	*/
-	double GetDamper();
+	double GetVelocityGain();
 
 	/** @brief 有効・無効を設定する
 	*/
@@ -225,14 +213,15 @@ struct PHIKActuatorIf : SceneObjectIf{
 struct PHIKActuatorDesc{
 	SPR_DESCDEF(PHIKActuator);
 
-	bool bEnabled;  ///< 有効かどうか
+	bool bEnabled;        ///< 有効かどうか
+	float	bias;	      ///< 動かしにくさの係数
+	double  velocityGain; ///< 速度制御の比例係数
 
-	float	bias;	///< 動かしにくさの係数
-
-	double	spring;	///< 駆動用バネのバネ係数
-	double	damper;	///< 駆動用バネのダンパ係数
-
-	PHIKActuatorDesc();
+	PHIKActuatorDesc() {
+		bEnabled     = true;
+		bias         = 1.0;
+		velocityGain = 10.0;
+	}
 };
 
 /// ３軸アクチュエータ（PHBallJointを駆動する）

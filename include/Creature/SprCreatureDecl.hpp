@@ -91,6 +91,7 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_CRGrabControllerIf(base)	\
 	void Grab(Spr::PHSolidIf* targetSolid){	base::Grab(targetSolid);}	\
 	Spr::PHSolidIf* GetGrabbingSolid(){	return	base::GetGrabbingSolid();}	\
+	Spr::PHSolidIf* GetSolid(){	return	base::GetSolid();}	\
 	void Release(){	base::Release();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRSceneIf(base)	\

@@ -127,7 +127,7 @@ public:
 	typedef PTM::TMatrixCol<6, NDOF, double> Matrix6Nd;
 	typedef PTM::TMatrixCol<NDOF, NDOF, double> MatrixNd;
 	
-	PHJointND<NDOF>* GetJoint(){return (PHJointND<NDOF>*)DCAST(PHJoint , joint);}
+	PHNDJoint<NDOF>* GetJoint(){return (PHNDJoint<NDOF>*)DCAST(PHJoint , joint);}
 
 	/// ABAä÷åWÇÃä÷êî
 	virtual void ResetGearNode();
@@ -186,7 +186,7 @@ public:
 	SPR_OBJECTDEF_ABST1(PHTreeNode1D, PHTreeNode);
 	SPR_DECLMEMBEROF_PHTreeNode1DDesc;
 	
-	PHJoint1D*		GetJoint(){return DCAST(PHJoint1D, joint);}
+	PH1DJoint*		GetJoint(){return DCAST(PH1DJoint, joint);}
 	//virtual void	CompBias();
 	//virtual void	Projection(double& f, int k);
 	

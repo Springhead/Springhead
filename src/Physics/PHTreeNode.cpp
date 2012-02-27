@@ -108,7 +108,7 @@ void PHTreeNode::CompSpatialTransform(){
 	//DSTR << (Posed&)joint->Xj[0] << std::endl;
 	//DSTR << (Posed&)joint->Xj[1] << std::endl;
 	//DSTR << (Posed&)joint->Xjrel << std::endl;
-	DSTR << std::endl;
+	//DSTR << std::endl;
 	Xcj = joint->Xj[1].inv() * SpatialTransform(Vec3d(), joint->Xjrel.q);
 }
 
@@ -631,7 +631,7 @@ void PHTreeNodeND<NDOF>::SetupLCP(){
 	if(gearNode && gearNode != this)
 		return;
 
-	PHJointND<NDOF>* j = GetJoint();
+	PHNDJoint<NDOF>* j = GetJoint();
 	bool con, constrAtAll = false;
 	for(int i = 0; i < NDOF; i++){
 		con = j->constr[j->movableAxes[i]];
@@ -688,7 +688,7 @@ PHTreeNode1D::PHTreeNode1D(){
 }
 /*
 void PHTreeNode1D::CompBias(){
-	PHJoint1D* j = GetJoint();
+	PH1DJoint* j = GetJoint();
 	
 	double diff;
 	double dt = scene->GetTimeStep(), dtinv = 1.0 / dt;
@@ -703,13 +703,13 @@ void PHTreeNode1D::CompBias(){
 	}
 
 	double D = j->damper, K = j->spring, targetPosition = j->targetPosition;
-	PHJoint1D* jchild;
+	PH1DJoint* jchild;
 	// ギアトレインの先頭の場合，連動している関節のバネダンパ係数を足し合わせる
 	if(gearNode){
 		double Di, Ki, ratio;
 		targetPosition = K * j->targetPosition;
 		for(int i = 0; i < (int)gearChildren.size(); i++){
-			jchild = DCAST(PHJoint1D, gearChildren[i]->GetJoint());
+			jchild = DCAST(PH1DJoint, gearChildren[i]->GetJoint());
 			if(!jchild)continue;	// 自由度の異なる関節との連動：起こり得ないはず
 			ratio = gearChildren[i]->gear->GetRatio();
 			Di = ratio * ratio * jchild->damper;
@@ -735,7 +735,7 @@ void PHTreeNode1D::CompBias(){
 }
 
 void PHTreeNode1D::Projection(double& _f, int k){
-	PHJoint1D* j = GetJoint();
+	PH1DJoint* j = GetJoint();
 	if(j->onLower)
 		_f = max(0.0, _f);
 	if(j->onUpper)

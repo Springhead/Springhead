@@ -107,6 +107,11 @@ public:
 		return grabbingSolid;
 	}
 
+	/// ”c‚Ég—p‚·‚é„‘Ì‚ğ•Ô‚·
+	PHSolidIf* GetSolid() {
+		return solid->GetPHSolid();
+	}
+
 	/// ‚Â‚©‚ñ‚Å‚¢‚é•¨‘Ì‚ğ•ú‚·D
 	void Release() {
 		grabSpring->Enable(false);
