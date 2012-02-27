@@ -9,6 +9,7 @@
 #define PH_IKACTUATOR_H
 
 #include <Physics/SprPHIK.h>
+#include <Physics/SprPHJoint.h>
 #include <Foundation/Object.h>
 #include <Physics/PHIKEndEffector.h>
 #include "PhysicsDecl.hpp"
@@ -117,10 +118,6 @@ public:
 	*/
 	virtual void Move(){}
 
-	/** @brief 自然位置に戻る
-	*/
-	virtual void MoveToNaturalPosition(){}
-
 	// --- --- --- --- ---
 
 	/** @brief このアクチュエータを使って動かせるエンドエフェクタ、を登録する
@@ -129,39 +126,23 @@ public:
 
 	// --- --- --- --- ---
 
-	/** @brief 動かしにくさを設定する
+	/** @brief 動かしにくさを設定・取得する
 	*/
-	void SetBias(float bias){ this->bias = bias; }
+	void  SetBias(float bias){ this->bias = bias; }
+	float GetBias()          { return bias; }
 
-	/** @brief 動かしにくさを取得する
+	/** @brief 速度制御の比例係数を設定・取得する
 	*/
-	float GetBias(){ return bias; }
+	void   SetVelocityGain(double velocityGain){ this->velocityGain = velocityGain; }
+	double GetVelocityGain()                   { return velocityGain; }
 
-	/** @brief 駆動のためのバネ係数を設定する
+	/** @brief 有効・無効を設定・取得する
 	*/
-	void SetSpring(double spring){ this->spring = spring; }
-
-	/** @brief 駆動のためのバネ係数を取得
-	*/
-	double GetSpring(){ return spring; }
-
-	/** @brief 駆動のためのダンパ係数を設定する
-	*/
-	void SetDamper(double damper){ this->damper = damper; }
-
-	/** @brief 駆動のためのダンパ係数を取得
-	*/
-	double GetDamper(){ return damper; }
-
-	/** @brief 有効・無効を設定する
-	*/
-	void Enable(bool enable){ bEnabled = enable; if (!enable) { MoveToNaturalPosition(); } }
-
-	/** @brief 有効・無効を取得する
-	*/
-	bool IsEnabled(){ return bEnabled; }
+	void Enable(bool enable){ bEnabled = enable; }
+	bool IsEnabled()        { return bEnabled; }
 
 	// --- --- --- --- ---
+
 	virtual bool		AddChildObject(ObjectIf* o);
 	virtual ObjectIf*	GetChildObject(size_t pos);
 	virtual	size_t		NChildObject()const;
@@ -192,11 +173,6 @@ public:
 	/** @brief 繰返し計算の一ステップの後に行う処理
 	*/
 	virtual void AfterProceedSolve() {}
-
-	/** @brief 接続した剛体を直接目標姿勢に移動する
-	*/
-	virtual void MoveStatic() {}
-
 };
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -208,11 +184,6 @@ public:
 
 	/// 制御対象の関節
 	PHBallJointIf* joint;
-
-	/// 制御対象関節のバネダンパ初期値と基準姿勢
-	double			jSpring;
-	double			jDamper;
-	Quaterniond		jGoal;
 
 	/// IKの回転軸
 	Vec3d e[3];
@@ -245,10 +216,6 @@ public:
 	/** @brief 計算結果に従って制御対象を動かす
 	*/
 	virtual void Move();
-
-	/** @brief 自然位置に戻る
-	*/
-	virtual void MoveToNaturalPosition();
 
 	// --- --- --- --- ---
 
@@ -284,11 +251,6 @@ public:
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual void CalcJacobian(PHIKEndEffector* endeffector);
-
-	/** @brief 接続した剛体を直接目標姿勢に移動する
-	*/
-	virtual void MoveStatic();
-
 };
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -300,11 +262,6 @@ public:
 
 	/// 制御対象の関節
 	PHHingeJointIf *joint;
-
-	/// 制御対象関節のバネダンパ初期値と基準姿勢
-	double		jSpring;
-	double		jDamper;
-	double		jGoal;
 
 	// --- --- --- --- --- --- --- --- --- ---
 
@@ -335,10 +292,6 @@ public:
 	*/
 	virtual void Move();
 
-	/** @brief 自然位置に戻る
-	*/
-	virtual void MoveToNaturalPosition();
-
 	// --- --- --- --- ---
 
 	/** @brief 動作対象の関節を設定する（１アクチュエータにつき１関節が必ず対応する）
@@ -350,6 +303,7 @@ public:
 	virtual PHHingeJointIf* GetJoint() { return this->joint; }
 
 	// --- --- --- --- ---
+
 	virtual bool		AddChildObject(ObjectIf* o);
 	virtual ObjectIf*	GetChildObject(size_t pos);
 	virtual	size_t		NChildObject()const;
@@ -360,15 +314,6 @@ public:
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual void CalcJacobian(PHIKEndEffector* endeffector);
-
-	/** @brief 繰返し計算の一ステップの後に行う処理
-	*/
-	virtual void AfterProceedSolve();
-
-	/** @brief 接続した剛体を直接目標姿勢に移動する
-	*/
-	virtual void MoveStatic();
-
 };
 
 }

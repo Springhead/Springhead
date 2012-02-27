@@ -16,17 +16,11 @@ namespace Spr{
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // IKEngine
-PHIKEngine::PHIKEngine():numIter(25), bEnabled(false) { 
-}
+PHIKEngine::PHIKEngine():numIter(25), bEnabled(false), bTrajectory(false), bTest(false) {}
 
 void PHIKEngine::Step(){
-	if(!bEnabled)
-		return;
-	if(actuators.empty() || endeffectors.empty())
-		return;
-
-	//dlog = new std::ofstream("iklog.txt", ios_base::out | ios_base::app);
-	//(*dlog) << "----- ----- ----- ----- ----- ----- ----- ----- ----- ----- " << std::endl;
+	if(!bEnabled) return;
+	if(actuators.empty() || endeffectors.empty()) return;
 
 	// 計算用変数準備の前処理
 	for(size_t i=0; i<actuators.size(); ++i){
@@ -40,7 +34,7 @@ void PHIKEngine::Step(){
 
 	// 変化フラグのクリア
 	for(size_t i=0; i<actuators.size(); ++i){
-		actuators[i]->bActuatorAdded		= false;
+		actuators[i]->bActuatorAdded	= false;
 		actuators[i]->bEndEffectorAdded	= false;
 		actuators[i]->bNDOFChanged		= false;
 	}
@@ -79,25 +73,9 @@ void PHIKEngine::Step(){
 
 		// 関節の動作
 		for(size_t i=0; i<actuators.size(); ++i){
-			//(*dlog) << "--- w[nd:" << DCAST(PHIKActuator,actuators[i])->number << "] ---" << std::endl;
-			//(*dlog) << DCAST(PHIKActuator,actuators[i])->omega << std::endl;
-
 			actuators[i]->Move();
 		}
-
-		// （試し）Static Movement
-		if (false) {
-			for (size_t n=0; n<endeffectors.size(); ++n) {
-				for (size_t i=0; i<actuators.size(); ++i) {
-					actuators[i]->MoveStatic();
-				}
-			}
-		}
-
 	}
-
-	//dlog->close();
-	//delete dlog;
 }
 
 void PHIKEngine::Clear(){

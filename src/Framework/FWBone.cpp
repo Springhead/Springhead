@@ -36,7 +36,7 @@ void FWBone::SetJointKDD2(double K,double D, double D2){
 	PHBallJointIf* ball=joint->Cast();
 	ball->SetSpring(K);
 	ball->SetDamper(D);
-	ball->SetSecondDamper(D2);
+	ball->SetSecondDamper(Vec3d(1,1,1)*D2);
 }
 
 //Boot‚ğŒÄ‚×‚Î‚·‚×‚Ä‚Ìˆ—‚ª©“®‚Ås‚í‚ê‚é-------------------------------------------------------
@@ -192,7 +192,7 @@ void FWBoneCreate::FWJointCreate(){
 					d3Ball.posePlug			= bone[i]->jointData.PlugPos;
 					d3Ball.spring			= bone[i]->jointData.K;
 					d3Ball.damper			= bone[i]->jointData.D1;
-					d3Ball.secondDamper		= bone[i]->jointData.D2;
+					d3Ball.secondDamper		= Vec3d(1,1,1)*bone[i]->jointData.D2;
 					d3Ball.yieldStress		= bone[i]->jointData.yieldStress;
 					d3Ball.hardnessRate		= bone[i]->jointData.hardnessRate;
 				}

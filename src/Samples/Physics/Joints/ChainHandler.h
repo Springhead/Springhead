@@ -55,15 +55,17 @@ public:
 	void UpdateJoint(PHJointIf* jnt){
 		PHHingeJointIf* hinge = DCAST(PHHingeJointIf, joints.back());
 		if(hinge){
+			PH1DJointLimitIf* limit = hinge->GetLimit()->Cast();
 			hinge->SetTargetPosition(Rad(20.0) * (double)(posLevel - 5));
-			hinge->SetRange(-Rad(20.0) * rangeLevel, Rad(20.0) * rangeLevel);
+			limit->SetRange(Vec2d(-Rad(20.0) * rangeLevel, Rad(20.0) * rangeLevel));
 			hinge->SetSpring(springLevel);
 			hinge->SetDamper(damperLevel);
 		}
 		PHSliderJointIf* slider = DCAST(PHSliderJointIf, joints.back());
 		if(slider){
+			PH1DJointLimitIf* limit = slider->GetLimit()->Cast();
 			slider->SetTargetPosition(0.1 * (double)(posLevel - 5));
-			slider->SetRange(-0.1 * rangeLevel, 0.1 * rangeLevel);
+			limit->SetRange(Vec2d(-0.1 * rangeLevel, 0.1 * rangeLevel));
 			slider->SetSpring(springLevel);
 			slider->SetDamper(damperLevel);
 		}
@@ -85,8 +87,9 @@ public:
 			}
 			ball->SetTargetPosition(ori);
 
-			ball->SetSwingRange(Vec2d(-Rad(20.0) * rangeLevel, Rad(20.0) * rangeLevel));
-			ball->SetTwistRange(Vec2d(-Rad(20.0) * rangeLevel, Rad(20.0) * rangeLevel));
+			PHBallJointConeLimitIf* limit = ball->GetLimit()->Cast();
+			limit->SetSwingRange(Vec2d(-Rad(20.0) * rangeLevel, Rad(20.0) * rangeLevel));
+			limit->SetTwistRange(Vec2d(-Rad(20.0) * rangeLevel, Rad(20.0) * rangeLevel));
 
 			ball->SetSpring(springLevel);
 			ball->SetDamper(damperLevel);
@@ -115,9 +118,10 @@ public:
 			jdesc.poseSocket.Pos() = Vec3d( 1.1,  -1.1,  0);
 			jdesc.posePlug.Pos() = Vec3d(-1.1, 1.1,  0);
 			jdesc.damper = damper;
-			jdesc.lower = Rad(20.0);
-			jdesc.upper = Rad(30.0);
 			joints.push_back(phScene->CreateJoint(links.back(), so, jdesc));
+			PH1DJointLimitDesc ldesc;
+			ldesc.range = Vec2d(Rad(20.0), Rad(30.0));
+			DCAST(PH1DJointIf,joints.back())->CreateLimit(ldesc);
 		}
 		if(id == ID_SLIDER){
 			PHSliderJointDesc jdesc;
@@ -126,6 +130,8 @@ public:
 			jdesc.posePlug.Pos() = Vec3d(0,  1.1, 0);
 			jdesc.posePlug.Ori() = Quaterniond::Rot(Rad(90.0), 'y');
 			joints.push_back(phScene->CreateJoint(links.back(), so, jdesc));
+			PH1DJointLimitDesc ldesc;
+			DCAST(PH1DJointIf,joints.back())->CreateLimit(ldesc);
 		}
 		if(id == ID_BALL){
 			PHBallJointDesc jdesc;
@@ -135,6 +141,8 @@ public:
 			jdesc.poseSocket.Pos() = Vec3d(-1.01, -1.01, -1.01);
 			jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 			joints.push_back(phScene->CreateJoint(links.back(), so, jdesc));
+			PHBallJointConeLimitDesc ldesc;
+			DCAST(PHBallJointIf,joints.back())->CreateLimit(ldesc);
 		}
 		if(id == ID_HINGE || id == ID_BALL || id == ID_SLIDER){
 			links.push_back(so);
@@ -179,7 +187,7 @@ public:
 				size_t m = jntLink.size();
 				PHGearDesc gdesc;
 				gdesc.ratio = 1.0;
-				phScene->CreateGear(DCAST(PHJoint1DIf, jntLink[m-2]), DCAST(PHJoint1DIf, jntLink[m-1]), gdesc);
+				phScene->CreateGear(DCAST(PH1DJointIf, jntLink[m-2]), DCAST(PH1DJointIf, jntLink[m-1]), gdesc);
 			}*/
 		}
 	}

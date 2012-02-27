@@ -28,20 +28,23 @@ public:
 };
 
 ///	スライダ関節
-class PHSliderJoint : public PHJoint1D{
+class PHSliderJoint : public PH1DJoint{
 public:
 	SPR_OBJECTDEF(PHSliderJoint);
 	SPR_DECLMEMBEROF_PHSliderJointDesc;
 
-	//virtual PHConstraintDesc::ConstraintType GetConstraintType(){return PHConstraintDesc::SLIDERJOINT;}
-	//virtual void SetConstrainedIndex(bool* con);
+	/// コンストラクタ
+	PHSliderJoint(const PHSliderJointDesc& desc = PHSliderJointDesc());
+
+	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
+	virtual PHTreeNode* CreateTreeNode(){ return DBG_NEW PHSliderJointNode(); }
+
+	// ----- PHConstraintの派生クラスで実装する機能
+
+	virtual void SetupAxisIndex();
 	virtual void CompBias();
 	virtual void CompError();
 	virtual void UpdateJointState();
-	virtual PHTreeNode* CreateTreeNode(){
-		return DBG_NEW PHSliderJointNode();
-	}
-	PHSliderJoint(const PHSliderJointDesc& desc = PHSliderJointDesc());
 };
 
 }

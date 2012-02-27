@@ -12,6 +12,7 @@
 #include <Physics/PHBallJoint.h>
 #include <Physics/PHPathJoint.h>
 #include <Physics/PHSpring.h>
+#include <Physics/PHJointLimit.h>
 #include <Physics/PHTreeNode.h>
 #include <Physics/PHGear.h>
 #include <Physics/PHFemMesh.h>
@@ -56,6 +57,11 @@ void PHSdkIf::RegisterSdk(){
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPathJoint));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHPath));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSpring));
+
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PH1DJointLimit));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointConeLimit));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointSplineLimit));
+	
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHHingeJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSliderJointNode));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHBallJointNode));

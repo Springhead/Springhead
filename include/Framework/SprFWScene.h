@@ -129,6 +129,12 @@ public:
 	 */
 	void DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine);
 
+	/** @brief ŠÖß‰Â“®ˆæ‚ğ•`‰æ‚·‚é
+		@param	render	ƒŒƒ“ƒ_ƒ‰
+		@param	con		ŠÖß
+	 */
+	void DrawLimit(GRRenderIf* render, PHConstraintIf* con);
+
 	/**	@brief	Hapticî•ñ‚ğ•`‰æ‚·‚é
 		@param	render			ƒŒƒ“ƒ_ƒ‰
 		@param	hapticEngine	HapticƒGƒ“ƒWƒ“
@@ -189,6 +195,9 @@ public:
 	void EnableRenderIK(bool enable = true);
 	void SetIKMaterial(int mat);
 	void SetIKScale(float scale);
+
+	/**  @brief ŠÖß‰Â“®ˆæ‚Ì•`‰æ */
+	void EnableRenderLimit(bool enable = true);
 
 	/** @brief Haptic‚ÌŒvZŒ‹‰Ê‚Ì•`‰æ */
 	void EnableRenderHaptic(bool enable = true);

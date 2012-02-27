@@ -24,7 +24,7 @@ PHGear::PHGear(const PHGearDesc& desc){
 }
 
 bool PHGear::AddChildObject(ObjectIf* o){
-	PHJoint1D* j = DCAST(PHJoint1D, o);
+	PH1DJoint* j = DCAST(PH1DJoint, o);
 	if(j){
 		if(!joint[0]){
 			joint[0] = j;
@@ -39,7 +39,7 @@ bool PHGear::AddChildObject(ObjectIf* o){
 }
 
 bool PHGear::DelChildObject(ObjectIf* o){
-	PHJoint1D* j = DCAST(PHJoint1D, o);
+	PH1DJoint* j = DCAST(PH1DJoint, o);
 	if(j){
 		if(j == joint[0]){
 			joint[0] = NULL;

@@ -41,15 +41,21 @@ void CRNeckController::Step(){
 	PHSolidIf*			soHead = csHead->GetPHSolid();
 	PHIKEndEffectorIf*	efHead = csHead->GetIKEndEffector();
 
+	// <!!> UpVector / FrontVectorをデスクリプタで指定可能にしたほうがいいと思う
 	Vec3d rotLook	= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,1,0), (pos-(soHead->GetPose().Pos())).unit());
 	Vec3d rotUp		= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,0,-1), Vec3d(0,1,0));
 	// Vec3d rotLook	= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,1,0), (pos-(soHead->GetPose().Pos())).unit());
 	// Vec3d rotUp		= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,0,-1), Vec3d(0,1,0));
+
 	Vec3d rot		= rotLook + 0.5*rotUp;
 
 	Quaterniond qt = Quaterniond::Rot(rot.norm(), rot.unit());
 	efHead->SetTargetOrientation(qt*soHead->GetPose().Ori());
 
+	// <!!> TBI 頭部位置制御を実装する
+	// efHead->SetTargetPosition(Vec3d(0,3,0));
+
+	efHead->EnablePositionControl(true);
 	efHead->EnableOrientationControl(true);
 	efHead->Enable(true);
 }

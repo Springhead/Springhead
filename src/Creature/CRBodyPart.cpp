@@ -159,7 +159,6 @@ void CRIKSolid::StepTrajectory() {
 		Vec3d currPos = finalPosAbs + dir*(finalPosAbs - initPosAbs).norm()*length;
 		ikEndEffector->SetTargetPosition(currPos);
 		if (soDebug) { soDebug->SetFramePosition(currPos); }
-		// if (soDebug) { soDebug->SetFramePosition(finalPosAbs); }
 
 		if (time > timeLimit) {
 			bCtlPos = false;
@@ -390,10 +389,13 @@ bool CRJoint::DelChildObject(ObjectIf* o) {
 
 void CRIKJoint::SetIKActuator(PHIKActuatorIf* ikAct) {
 	ikActuator = ikAct;
-	ikSpring = ikAct->GetSpring();
-	ikDamper = ikAct->GetDamper();
+	// ikSpring = ikAct->GetSpring();
+	// ikDamper = ikAct->GetDamper();
 }
+
+// Will Be Obsoleted <!!>
 void CRIKJoint::SetSpringRatio(double springRatio, double damperRatio) {
+	/*
 	if (PHBallJointIf* bj = joint->Cast()) {
 		if (spring < 0) {
 			spring = bj->GetSpring();
@@ -418,9 +420,12 @@ void CRIKJoint::SetSpringRatio(double springRatio, double damperRatio) {
 		DCAST(PHIKHingeActuator,ikActuator)->jDamper = damper*damperRatio;
 		std::cout << "hj_ssr : " << spring * springRatio << std::endl;
 	}
+	*/
 }
 
+// Will Be Obsoleted <!!>
 void CRIKJoint::SetIKSpringRatio(double springRatio, double damperRatio) {
+	/*
 	if (ikSpring < 0) {
 		ikSpring = ikActuator->GetSpring();
 	}
@@ -428,6 +433,7 @@ void CRIKJoint::SetIKSpringRatio(double springRatio, double damperRatio) {
 		ikDamper = ikActuator->GetDamper();
 	}
 	ikActuator->SetSpring(ikSpring*springRatio); ikActuator->SetDamper(ikDamper*damperRatio);
+	*/
 }
 
 size_t CRIKJoint::NChildObject() const {

@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
@@ -14,8 +14,8 @@
 
 namespace Spr{;
 
-///	ヒンジ関節のツリーノード
-class PHHingeJointNode : public PHTreeNode1D{
+///	ヒンジ関節に対応するツリーノード
+class PHHingeJointNode : public PHTreeNode1D {
 public:
 	SPR_OBJECTDEF(PHHingeJointNode);
 	SPR_DECLMEMBEROF_PHHingeJointNodeDesc;
@@ -28,20 +28,27 @@ public:
 };
 
 ///	ヒンジ関節
-class PHHingeJoint : public PHJoint1D{
+class PHHingeJoint : public PH1DJoint {
 public:
 	SPR_OBJECTDEF(PHHingeJoint);
 	SPR_DECLMEMBEROF_PHHingeJointDesc;
 
-	virtual double GetDeviation();
-	virtual void CompBias();
-	virtual void UpdateJointState();
-	virtual PHTreeNode* CreateTreeNode(){
-		return DBG_NEW PHHingeJointNode();
-	}
-	virtual void CompError();
-	
+	/// コンストラクタ
 	PHHingeJoint(const PHHingeJointDesc& desc = PHHingeJointDesc());
+
+	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
+	virtual PHTreeNode* CreateTreeNode(){ return DBG_NEW PHHingeJointNode(); }
+
+	// ----- PHConstraintの派生クラスで実装する機能
+
+	virtual void UpdateJointState();
+	virtual void CompBias();
+	virtual void CompError();
+
+	// ----- インタフェースの実装
+
+	virtual double GetDeviation();
+
 };
 
 }

@@ -15,103 +15,14 @@ using namespace PTM;
 using namespace std;
 
 namespace Spr{;
-//----------------------------------------------------------------------------
-// PHBallJointDesc
-
-PHBallJointDesc::PHBallJointDesc(){
-	spring			= 0.0;
-	damper			= 0.0;
-	limitSwing[0]	= FLT_MAX;
-	limitSwing[1]	= FLT_MAX;
-	limitTwist[0]	= FLT_MAX;
-	limitTwist[1]	= FLT_MAX;	
-	limitSwingDir[0]= FLT_MAX;
-	limitSwingDir[1]= FLT_MAX;
-	poleTwist		= Vec2d(FLT_MAX,FLT_MAX);
-	limitDir		= Vec3d(0.0, 0.0, 1.0);
-	targetPosition			= Quaterniond(1, 0, 0, 0);
-	fMax			= FLT_MAX;
-	offsetForce		= Vec3d();
-
-	secondDamper	= 0.0;
-	yieldStress		= 0.0;
-	hardnessRate	= 1.0;
-	Inertia			= Vec3d(1.0,1.0,1.0);
-	type			= ELASTIC;
-	ConstMode		= SwingTwist;
-}
-
-//----------------------------------------------------------------------------
-// PHBallJoint
-PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
-	SetDesc(&desc);
-	movableAxes[0] = 3;
-	movableAxes[1] = 4;
-	movableAxes[2] = 5;
-
-	limit.joint = this;
-	motor.joint = this;
-
-}
-
-void PHBallJoint::SetupLCP(){
-	PHJoint::SetupLCP();
-	limit.SetupLCP(); //円形での拘束はなおりました
-	motor.SetupLCP();
-}
-
-void PHBallJoint::IterateLCP(){
-	PHJoint::IterateLCP();
-	limit.IterateLCP(); //円形での拘束はなおりました
-//	motor.IterateLCP();
-}
-
-void PHBallJoint::CompBias(){
-	//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ
-	db.v_range(0,3) = Xjrel.r * GetScene()->GetTimeStepInv();
-	db.v_range(0,3) *= engine->velCorrectionRate;
-}
-
-void PHBallJoint::UpdateJointState(){
-	// Jc.Ez() : Socketに対するPlugの向いている方向(旧currentVector)
-	Jc.Ez() = Xjrel.q * Vec3d(0.0, 0.0, 1.0);
-	const double eps = 1.0e-10;
-	Vec3d tmp = Jc.Ez() - limitDir;
-	double n = tmp.square();
-	Jc.Ex() = (n > eps ? cross(Jc.Ez(), tmp).unit() : Xjrel.q * Vec3d(1.0, 0.0, 0.0));
-	Jc.Ey() = cross(Jc.Ez(), Jc.Ex());
-	Jcinv   = Jc.trans();
-}
-
-void PHBallJoint::CompError(){
-	B.v_range(0,3) = Xjrel.r;
-}
-
-PHJointDesc::PHDeformationType PHBallJoint::GetDeformationMode(){
-	switch(type){
-	case PHJointDesc::ELASTIC_PLASTIC:
-		if(motor.yieldFlag)return PHJointDesc::PLASTIC;
-		else  return PHJointDesc::ELASTIC;
-	default: 
-		return type;
-	}
-}
-
-
-//----------------------------------------------------------------------------
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHBallJointNode
+
 void PHBallJointNode::CompJointJacobian(){
 	PHBallJoint* j = GetJoint();
-	//SwingTwist& angle = (SwingTwist&)(j->position);
-	//angle.Jacobian(Jst);
-	//Matrix3d test = Jst * Jcinv;
 	Quaterniond q = j->Xjrel.q;
 	for(int i = 0; i < 3; i++)
 		J.col(i).sub_vector(PTM::TSubVectorDim<0,3>()).clear();
-	/*J[0].w() = 2.0 * Vec3d(-q.x, -q.y, -q.z);
-	J[1].w() = 2.0 * Vec3d( q.w,  q.z, -q.y);
-    J[2].w() = 2.0 * Vec3d(-q.z,  q.w,  q.x);
-    J[3].w() = 2.0 * Vec3d( q.y, -q.x,  q.w);*/
 	J.col(0).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(1.0, 0.0, 0.0);
 	J.col(1).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 1.0, 0.0);
 	J.col(2).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 0.0, 1.0);
@@ -119,10 +30,6 @@ void PHBallJointNode::CompJointJacobian(){
 }
 
 void PHBallJointNode::CompJointCoriolisAccel(){
-	//PHBallJoint* j = GetJoint();
-	//cj.v().clear();
-	//((SwingTwist&)(j->position)).Coriolis(cj.w(), j->velocity);
-	//cj.w.clear();
 	cj.clear();		//関節座標をquaternionにとる場合コリオリ項は0
 }
 
@@ -135,14 +42,88 @@ void PHBallJointNode::UpdateJointPosition(double dt){
 void PHBallJointNode::CompRelativePosition(){
 	PHBallJoint* j = GetJoint();
 	j->Xjrel.r.clear();
-	//j->Xjrel.qはUpdateJointPositionで更新済み
 }
 
 void PHBallJointNode::CompRelativeVelocity(){
 	PHBallJoint* j = GetJoint();
 	j->vjrel.v().clear();
-	//j->vjrel.w() = ((Quaterniond&)j->position).AngularVelocity((Quaterniond&)j->velocity);
 	j->vjrel.w() = j->velocity;
+}
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// PHBallJoint
+
+PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
+	SetDesc(&desc);
+	nMovableAxes   = 3;
+	movableAxes[0] = 3;
+	movableAxes[1] = 4;
+	movableAxes[2] = 5;
+	InitTargetAxes();
+
+	limit = NULL;
+	motor.joint = this;
+}
+
+void PHBallJoint::SetupLCP(){
+	PHJoint::SetupLCP();
+	if (limit) { limit->SetupLCP(); }
+}
+
+void PHBallJoint::IterateLCP(){
+	PHJoint::IterateLCP();
+	if (limit) { limit->IterateLCP(); }
+}
+
+void PHBallJoint::CompBias(){
+	//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ
+	db.v_range(0,3) = Xjrel.r * GetScene()->GetTimeStepInv();
+	db.v_range(0,3) *= engine->velCorrectionRate;
+
+	motor.CompBias();
+}
+
+void PHBallJoint::UpdateJointState(){
+	// positionの更新：BallJointの position はSwingTwist座標系の角度値とする
+
+	// Swing角の計算
+	Vec3d  lD = Vec3d(); if(limit){ lD = limit->GetLimitDir(); }
+	Vec3d  ez = Xjrel.q * Vec3d(0.0, 0.0, 1.0);
+	double  c = dot(lD, ez); c = max(-1.0, min(c, 1.0));
+	position[0] = acos(c);
+
+	// Swing方位角の計算
+	if (ez.x == 0) {
+		position[1] = (ez.y >= 0) ? M_PI/2.0 : 3*M_PI/2.0;
+	} else {
+		position[1] = atan(ez.y / ez.x);
+		if (ez.x < 0) {
+			position[1] +=   M_PI;
+		} else if (ez.x > 0 && ez.y < 0) {
+			position[1] += 2*M_PI;
+		}
+	}
+
+	// Twist角の計算
+	Quaterniond qSwing;
+	Vec3d  halfEz = 0.5*(Vec3d(0,0,1) + ez);
+	double l = halfEz.norm();
+	if (l > 1e-20) {
+		qSwing.V() = cross(halfEz/l, Vec3d(0,0,1));
+		qSwing.W() = sqrt(1 - qSwing.V().square());
+	} else {
+		qSwing.V() = Vec3d(1,0,0);
+		qSwing.W() = 0;
+	}
+	Quaterniond qTwist = qSwing * Xjrel.q;
+	position[2] = qTwist.Theta();
+	if (qTwist.z < 0) { position[2] *= -1; } ///< Twist回転軸が反対を向くことがあるのでその対策
+	if (position[2] < -M_PI) { position[2] += 2*M_PI; }
+	if (position[2] >  M_PI) { position[2] -= 2*M_PI; }
+}
+
+void PHBallJoint::CompError(){
+	B.v_range(0,3) = Xjrel.r;
 }
 
 }

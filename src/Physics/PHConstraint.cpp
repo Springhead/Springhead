@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  Copyright (c) 2003-2010, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
@@ -13,72 +13,185 @@ using namespace std;
 using namespace PTM;
 namespace Spr{;
 
-//----------------------------------------------------------------------------
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHConstraint
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-PHConstraint::PHConstraint(){
+
+// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+PHConstraint::PHConstraint() {
 	solid[0] = solid[1] = NULL;
+
 	f.clear();
 	F.clear();
+
 	bEnabled = true;
 	bInactive[0] = true;
 	bInactive[1] = true;
 	bArticulated = false;
-	for(int i=0;i<6;i++){
-		fMaxDt[i] = FLT_MAX;
+
+	for(int i=0; i<6; i++){
+		fMaxDt[i] =  FLT_MAX;
 		fMinDt[i] = -FLT_MAX;
 	}
 }
 
-PHSceneIf* PHConstraint::GetScene() const{
-	return DCAST(PHSceneIf, SceneObject::GetScene());
-}
-
-//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// ƒCƒ“ƒ^ƒtƒF[ƒX(PHConstraintIf‚Ì‹@”\)‚ÌÀ‘•,ƒI[ƒo[ƒ‰ƒCƒh   cf.SprPHJoint.h
-
-bool PHConstraint::AddChildObject(ObjectIf* o){
-	PHSolid* s = DCAST(PHSolid, o);
-	if(s){
-		//PHSolids::iterator it = (PHSolids::iterator) GetScene()->constraintEngine->solids.Find(s);
-		//if(it == GetScene()->constraintEngine->solids.end())
-		//	return false;
-		if(!solid[0]){
-			solid[0] = s;
-			return true;
-		}
-		if(!solid[1]){
-			solid[1] = s;
-			return true;
-		}
+void PHConstraint::InitTargetAxes() {
+	// movableAxes‚Ìc‚è‚ÅtargetAxes‚ğì‚éD
+	nTargetAxes = 0;
+	for (int i=0; i<6; ++i) {
+		bool bMovable = false;
+		for (int n=0; n<nMovableAxes; ++n) { if (i==movableAxes[n]) { bMovable = true; }  }
+		if (bMovable) { continue; }
+		targetAxes[nTargetAxes++] = i;
 	}
-	return false;
-}
-size_t PHConstraint::NChildObject() const{
-	return (solid[0] ? 1 : 0) + (solid[1] ? 1 : 0);
-}
-ObjectIf* PHConstraint::GetChildObject(size_t i){
-	return solid[i]->Cast();
 }
 
-void PHConstraint::AfterSetDesc(){
-	SceneObject::AfterSetDesc();
-}
+// ----- ƒGƒ“ƒWƒ“‚©‚çŒÄ‚Ño‚³‚ê‚éŠÖ”
 
-//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-// ‚±‚ÌƒNƒ‰ƒX“à‚Ì‹@”\.
+void PHConstraint::UpdateState() {
+	// „‘Ì‚Ìó‘Ô‚ğXV‚·‚éi‚±‚±‚Å‚â‚é‚×‚«‚©‚Í—vŒŸ“¢I­‚È‚­‚Æ‚à‚±‚±ˆÈ‘O‚ÉUpdate‚³‚ê‚Ä‚È‚¢‚Æ³‚µ‚¢’l‚ªo‚È‚¢ <!!>j
+	for (int i=0; i<2; i++) { solid[i]->UpdateCacheLCP(GetScene()->GetTimeStep()); }
 
-void PHConstraint::UpdateState(){
 	// „‘Ì‚Ì‘Š‘ÎˆÊ’u‚©‚çƒ„ƒRƒrƒAƒ“CŠÖß‘¬“xEˆÊ’u‚ğ‹tZ‚·‚é
 	CompJacobian();
-	//e„‘Ì‚Ì’†S‚©‚çŒ©‚½‘¬“x‚ÆCq„‘Ì‚Ì’†S‚©‚çŒ©‚½‘¬“x‚ğSocketÀ•WŒn‚©‚çŒ©‚½‘¬“x‚É—¼•û’¼‚µ‚ÄC‘Š‘Î‘¬“x‚ğæ‚éD
+
+	// e„‘Ì‚Ì’†S‚©‚çŒ©‚½‘¬“x‚ÆCq„‘Ì‚Ì’†S‚©‚çŒ©‚½‘¬“x‚ğ
+	// SocketÀ•WŒn‚©‚çŒ©‚½‘¬“x‚É—¼•û’¼‚µ‚ÄC‘Š‘Î‘¬“x‚ğæ‚éD
 	vjrel = Js[1] * solid[1]->v - Js[0] * solid[0]->v;
+
+	// ŠÖßÀ•W‚ÌˆÊ’uE‘¬“x‚ğXV‚·‚é
 	UpdateJointState();
 }
 
+void PHConstraint::SetupLCP() {
+	// ÀŒ»‰Â”\‚ÈS‘©‚Å‚ ‚é‚©
+	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
+	if(!bEnabled || !bFeasible) { return; }
+	
+	// S‘©²ƒtƒ‰ƒO‚ÌƒNƒŠƒA <<‚±‚±‚©‚çaxes.CreateList()‚Ü‚Åaxes[n]‚Íg‚¦‚È‚¢DEnable/Disable/IsEnabled‚Ì‚İ>>
+	axes.Clear();
 
-void PHConstraint::CompJacobian(){ // S‘©‚·‚é2‚Â‚Ì„‘Ì‚ÌŠe‘¬“x‚©‚ç‘Š‘Î‘¬“x‚Ö‚Ìƒ„ƒRƒrƒAƒ“‚ğŒvZ
+	// Projection—p‚ÌÅ‘åEÅ¬’l‚ğƒŠƒZƒbƒg‚·‚é
+	for (int i=0; i<6; i++) { fMinDt[i] = -FLT_MAX; fMaxDt[i] =  FLT_MAX; }
+
+	// S‘©‚·‚é©—R“x‚ÌŒˆ’è
+	SetupAxisIndex();
+
+	// LCP‚ÌÀ•W‚Ìæ‚è•û‚ª“Áê‚ÈŠÖß‚Íƒ„ƒRƒrƒAƒ“‚ÉÀ•W•ÏŠ·‚ğ‚©‚¯‚é
+	ModifyJacobian();
+
+	// LCP‚ÌŒW”A, b‚Ì•â³’ldA, db‚ğŒvZ
+	dA.clear();
+	db.clear();
+	CompBias();
+
+	// LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚ğŒvZ
+	CompResponseMatrix();
+
+	// LCP‚ÌbƒxƒNƒgƒ‹ == ˜_•¶’†‚Ìw[t]‚ğŒvZ
+	b = J[0] * solid[0]->v + J[1] * solid[1]->v;  //vjrel‚Å‚Í‚È‚¢ ’l‚É‚æ‚Á‚Ä‚Í•Ï‚í‚Á‚ÄS‘©‚µ‚È‚­‚È‚é
+
+	// ‚±‚±‚Ü‚Å‚ÅŒˆ’è‚³‚ê‚½S‘©²ƒtƒ‰ƒO‚ğg‚Á‚Ä²”Ô†ƒŠƒXƒg‚ğì¬@<<‚±‚±‚©‚ç‚Íaxes[n]‚ğg—p‰Â”\>>
+	axes.CreateList();
+
+	// S‘©—Í‚Ì‰Šú’l‚ğXV
+	//   S‘©—Í‚Í‘O‰ñ‚Ì’l‚ğk¬‚µ‚½‚à‚Ì‚ğ‰Šú’l‚Æ‚·‚éD
+	//   ‘O‰ñ‚Ì’l‚»‚Ì‚Ü‚Ü‚ğ‰Šú’l‚É‚·‚é‚ÆCS‘©—Í‚ªŸ‘æ‚É‘‘å‚·‚é‚Æ‚¢‚¤Œ»Û‚ª¶‚¶‚éD
+	//   ‚±‚ê‚ÍCLCP‚ğ—LŒÀ‰ñiÀÛ‚É‚Í10‰ñ’ö“xj‚Ì”½•œ‚Å‘Å‚¿Ø‚é‚½‚ß‚¾‚Æv‚í‚ê‚éD
+	//   0ƒxƒNƒgƒ‹‚ğ‰Šú’l‚É—p‚¢‚Ä‚à—Ç‚¢‚ªC‚±‚Ìê‡”äŠr“I‘½‚­‚Ì”½•œ‰ñ”‚ğ—v‚·‚éD
+	for (int n=0; n<axes.size(); ++n) {
+		f[axes[n]] *= axes.IsContinued(axes[n]) ? engine->shrinkRate : 0;
+	}
+
+	// S‘©—Í‰Šú’l‚É‚æ‚é‘¬“x•Ï‰»—Ê‚ğŒvZ
+	SpatialVector fs;
+	for (int i=0; i<2; ++i) {
+		if (!solid[i]->IsDynamical() || !IsInactive(i)) { continue; }
+		if (solid[i]->IsArticulated()) {
+			(Vec6d&)fs = J[i].trans() * f;
+			solid[i]->treeNode->CompResponse(fs, true, false);
+		} else {
+			solid[i]->dv += T[i].trans() * f;
+		}
+	}
+}
+
+void PHConstraint::IterateLCP() {
+	if (!bEnabled || !bFeasible) { return; }
+	
+	SpatialVector fnew, df;
+
+	for (int n=0; n<axes.size(); ++n) {
+		// Gauss-Seidel Iteration
+		int i = axes[n];
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i]*f[i] + b[i] + db[i] 
+				+ J[0].row(i)*solid[0]->dv + J[1].row(i)*solid[1]->dv);
+
+		// Projection
+		Projection(fnew[i], i);
+
+		// Comp Response & Update f
+		df[i] = fnew[i] - f[i];
+		CompResponse(df[i], i);
+		f[i] = fnew[i];
+	}
+}
+
+void PHConstraint::SetupCorrectionLCP() {
+	if(!bEnabled || !bFeasible || bArticulated) { return; }
+
+	for (int n=0; n<axes.size(); ++n) {
+		F[axes[n]] *= engine->shrinkRateCorrection;
+	}
+	B.clear();
+	CompError();
+	
+	// velocity update‚É‚æ‚é‰e‹¿‚ğ‰ÁZ
+	B += (J[0] * (solid[0]->v + solid[0]->dv)
+			+ J[1] * (solid[1]->v + solid[1]->dv)) * GetScene()->GetTimeStep();
+	B *= engine->posCorrectionRate;
+		
+	// S‘©—Í‰Šú’l‚É‚æ‚éˆÊ’u•Ï‰»—Ê‚ğŒvZ
+	SpatialVector Fs;
+	for(int i = 0; i < 2; i++){
+		if (!solid[i]->IsDynamical() || !IsInactive(i)) { continue; }
+		if (solid[i]->IsArticulated()) {
+			(Vec6d&)Fs = J[i].trans() * F;
+			solid[i]->treeNode->CompResponse(Fs, true, true);
+		} else {
+			solid[i]->dV += T[i].trans() * F;
+		}
+	}
+}
+
+void PHConstraint::IterateCorrectionLCP() {
+	if(!bEnabled || !bFeasible || bArticulated) { return; }
+	
+	SpatialVector Fnew, dF, dFs;
+
+	for (int n=0; n<axes.size(); ++n) {
+		int k = axes[n];
+		Fnew[k] = F[k] - Ainv[k] * (B[k] + J[0].row(k) * solid[0]->dV + J[1].row(k) * solid[1]->dV);
+		ProjectionCorrection(Fnew[k], k);
+		dF[k] = Fnew[k] - F[k];
+		for (int i=0; i<2; i++) {
+			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
+			if(solid[i]->IsArticulated()){
+				(Vec6d&)dFs = J[i].row(k) * dF[k];
+				solid[i]->treeNode->CompResponse(dFs, true, true);			
+			} else {
+				solid[i]->dV += T[i].row(k) * dF[k];
+			}
+		}
+		F[k] = Fnew[k];
+	}
+}
+
+// ----- ‚±‚ÌƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+
+void PHConstraint::CompJacobian() {
+	// S‘©‚·‚é2‚Â‚Ì„‘Ì‚ÌŠe‘¬“x‚©‚ç‘Š‘Î‘¬“x‚Ö‚Ìƒ„ƒRƒrƒAƒ“‚ğŒvZ
 	// Xj[i] : „‘Ì‚Ì¿—Ê’†S‚©‚çƒ\ƒPƒbƒg/ƒvƒ‰ƒO‚Ö‚Ì•ÏŠ·
+
 	Xj[0].r    = poseSocket.Pos() - solid[0]->center;
 	Xj[0].q    = poseSocket.Ori();
 	Xj[1].r    = posePlug.Pos() - solid[1]->center;
@@ -95,253 +208,103 @@ void PHConstraint::CompJacobian(){ // S‘©‚·‚é2‚Â‚Ì„‘Ì‚ÌŠe‘¬“x‚©‚ç‘Š‘Î‘¬“x‚Ö‚Ìƒ
 	J[0] = Js[0];
 	J[0] *= -1.0;	//”½ì—p
 	J[1] = Js[1];
-	
-	/*
-	//Šp‘¬“x‚Ì¶‚©‚ç‚©‚¯‚é‚Æquaternion‚ÌŠÔ”÷•ª‚ª“¾‚ç‚ê‚és—ñ
-	Matrix3d E(
-		 qjrel.W(),  qjrel.Z(), -qjrel.Y(),
-		-qjrel.Z(),  qjrel.W(),  qjrel.X(),
-		 qjrel.Y(), -qjrel.X(),  qjrel.W());
-	E *= 0.5;
-	Jqv[0].clear();
-	Jqw[0] = E * Jww[0];
-	Jqv[1].clear();
-	Jqw[1] = E * Jww[1];
-	*/
 }
 
-/*	A‚Ì‘ÎŠp¬•ª‚ğŒvZ‚·‚éDA = J * M^-1 * J^T
-	As—ñ‚ÍS‘©—Í‚©‚ç‘¬“x•Ï‰»‚Ö‚Ì‰e‹¿‚Ì‹­‚³‚ğ•\‚·s—ñ‚È‚Ì‚ÅC
-	‚»‚Ì‘ÎŠp¬•ª‚Í‚ ‚éS‘©—Í¬•ª‚©‚ç©•ª©g‚ÌS‘©‘¬“x¬•ª‚Ö‚Ì‰e‹¿‚Ì‹­‚³‚ğ•\‚·
- */
-void PHConstraint::CompResponseMatrix(){
-	int i, j;
+void PHConstraint::CompResponseMatrix() {
+	// A‚Ì‘ÎŠp¬•ª‚ğŒvZ‚·‚éDA = J * M^-1 * J^T
+	// As—ñ‚ÍS‘©—Í‚©‚ç‘¬“x•Ï‰»‚Ö‚Ì‰e‹¿‚Ì‹­‚³‚ğ•\‚·s—ñ‚È‚Ì‚ÅC
+	// ‚»‚Ì‘ÎŠp¬•ª‚Í‚ ‚éS‘©—Í¬•ª‚©‚ç©•ª©g‚ÌS‘©‘¬“x¬•ª‚Ö‚Ì‰e‹¿‚Ì‹­‚³‚ğ•\‚·
+
 	A.clear();
-	PHRootNode* root[2];
-	if(solid[0]->IsArticulated())
-		root[0] = solid[0]->treeNode->GetRootNode();
-	if(solid[1]->IsArticulated())
-		root[1] = solid[1]->treeNode->GetRootNode();
+	PHRootNode* root[2] = {
+		solid[0]->IsArticulated() ? solid[0]->treeNode->GetRootNode() : NULL,
+		solid[1]->IsArticulated() ? solid[1]->treeNode->GetRootNode() : NULL,
+	};
 
 	SpatialVector df;
-	for(i = 0; i < 2; i++){
-		if(solid[i]->IsDynamical()){
-			if(solid[i]->IsArticulated()){
-				for(j = 0; j < 6; j++){
+	for (int i=0; i<2; ++i) {
+		if (solid[i]->IsDynamical()) {
+			if (solid[i]->IsArticulated()) {
+				// -- ABA --
+				for (int j=0; j<6; ++j) {
 					(Vec6d&)df = J[i].row(j);
 					solid[i]->treeNode->CompResponse(df, false, false);
 					A[j] += J[i].row(j) * solid[i]->treeNode->da;
-					int ic = !i;
 					//‚à‚¤•Ğ•û‚Ì„‘Ì‚à“¯ˆê‚ÌƒcƒŠ[‚É‘®‚·‚éê‡‚Í‚»‚Ì‰e‹¿€‚à‰ÁZ
-					if(solid[ic]->IsArticulated() && root[i] == root[ic])
-						A[j] += J[ic].row(j) * solid[ic]->treeNode->da;
+					if(solid[!i]->IsArticulated() && root[i] == root[!i]) {
+						A[j] += J[!i].row(j) * solid[!i]->treeNode->da;
+					}
 				}
-			}
-			else{
+			} else {
+				// -- LCP --
 				// T = M^-1 * J^T
 				T[i].vv() = J[i].vv() * solid[i]->minv;
 				T[i].vw() = J[i].vw() * solid[i]->Iinv;
 				T[i].wv() = J[i].wv() * solid[i]->minv;
 				T[i].ww() = J[i].ww() * solid[i]->Iinv;
-				for(j = 0; j < 6; j++)
-					// A == ˜_•¶’†‚ÌJ * M^-1 * J^T, Gauss Seidel–@‚ÌD
+
+				// A == ˜_•¶’†‚ÌJ * M^-1 * J^T, Gauss Seidel–@‚ÌD
+				for(int j=0; j<6; ++j) {
 					A[j] += J[i].row(j) * T[i].row(j);
+				}
 			}
 		}
 	}
-	/** Å‘å‚Ì‘ÎŠp—v‘f‚Æ‚Ì”ä‚ªeps‚æ‚è‚à¬‚³‚¢‘ÎŠp—v‘f‚ª‚ ‚éê‡C
-		”’l“I•sˆÀ’è«‚ÌŒ´ˆö‚Æ‚È‚é‚Ì‚Å‚»‚Ì¬•ª‚ÍS‘©‘ÎÛ‚©‚çœŠO‚·‚é
-		–eps‚ğ‘å‚«‚­‚Æ‚é‚ÆC•K—v‚ÈS‘©‚Ü‚Å–³Œø‰»‚³‚ê‚Ä‚µ‚Ü‚¤‚Ì‚ÅA’²®‚ÍTd‚ÉB
-	 */
-	const double eps = 0.000001, epsabs = 1.0e-10;
-	double Amax = 0.0, Amin;
-	for(j = 0; j < targetAxis; j++)
-//		if(constr[j] && A[j] > Amax)
-		if(A[constrainedAxes[j]] > Amax)
-			Amax = A[constrainedAxes[j]];
+
+	// Å‘å‚Ì‘ÎŠp—v‘f‚Æ‚Ì”ä‚ªeps‚æ‚è‚à¬‚³‚¢‘ÎŠp—v‘f‚ª‚ ‚éê‡C
+	// ”’l“I•sˆÀ’è«‚ÌŒ´ˆö‚Æ‚È‚é‚Ì‚Å‚»‚Ì¬•ª‚ÍS‘©‘ÎÛ‚©‚çœŠO‚·‚é
+	// –eps‚ğ‘å‚«‚­‚Æ‚é‚ÆC•K—v‚ÈS‘©‚Ü‚Å–³Œø‰»‚³‚ê‚Ä‚µ‚Ü‚¤‚Ì‚ÅA’²®‚ÍTd‚ÉB
+	const double eps = 1.0e-6, epsabs = 1.0e-10;
+	double Amax=0.0, Amin;
+	for(int i=0; i<6; ++i) {
+		if(axes.IsEnabled(i) && A[i] > Amax) { Amax = A[i]; }
+	}
 	Amin = Amax * eps;
-	for(j = 0; j < targetAxis; j++){
-//		if(!constr[j])continue;
-		if(A[constrainedAxes[j]] < Amin || A[constrainedAxes[j]] < epsabs){
-//			constr[j] = false;
-			targetAxis--;
-			for(int k=j; k<targetAxis; ++k) constr[k] = constr[k+1];
-			j--;
-			DSTR <<this->GetName()<<":"<< constrainedAxes[j] << "-th constraint ill-conditioned! disabled." << endl;
-		}
-		else
-			Ainv[constrainedAxes[j]] = 1.0 / (A[constrainedAxes[j]] + dA[constrainedAxes[j]]);
-	}
-}
 
-void PHConstraint::CompResponse(double df, int j){
-	SpatialVector dfs;
-	for(int i = 0; i < 2; i++){
-		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
-		if(solid[i]->IsArticulated()){
-			(Vec6d&)dfs = J[i].row(j) * df;
-			solid[i]->treeNode->CompResponse(dfs, true, false);
-		} else {
-			solid[i]->dv += T[i].row(j) * df;
-		}
-	}
-}
-
-void PHConstraint::SetupLCP(){
-	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
-	if(!bEnabled || !bFeasible)
-		return;
-
-	/* S‘©—Í‚Í‘O‰ñ‚Ì’l‚ğk¬‚µ‚½‚à‚Ì‚ğ‰Šú’l‚Æ‚·‚éD
-	   ‘O‰ñ‚Ì’l‚»‚Ì‚Ü‚Ü‚ğ‰Šú’l‚É‚·‚é‚ÆCS‘©—Í‚ªŸ‘æ‚É‘‘å‚·‚é‚Æ‚¢‚¤Œ»Û‚ª¶‚¶‚éD
-	   ‚±‚ê‚ÍCLCP‚ğ—LŒÀ‰ñiÀÛ‚É‚Í10‰ñ’ö“xj‚Ì”½•œ‚Å‘Å‚¿Ø‚é‚½‚ß‚¾‚Æv‚í‚ê‚éD
-	   0ƒxƒNƒgƒ‹‚ğ‰Šú’l‚É—p‚¢‚Ä‚à—Ç‚¢‚ªC‚±‚Ìê‡”äŠr“I‘½‚­‚Ì”½•œ‰ñ”‚ğ—v‚·‚éD
-	  */
-	
-	// S‘©‚·‚é©—R“x‚ÌŒˆ’èCS‘©—Í‚Ì‰Šú‰»
-	//bool con[6];
-	SetConstrainedIndex(constrainedAxes);
-	for(int i = 0; i < targetAxis; i++){
-		//if(con[i] && constr[i]){				// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
-			f[constrainedAxes[i]] *= engine->shrinkRate;
-		//}else{
-		//	f[i] = 0.0;							// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
-		//}
-		//constr[i] = con[i];
-	}
-
-	FPCK_FINITE(f.v());
-
-	// LCP‚ÌÀ•W‚Ìæ‚è•û‚ª“Áê‚ÈŠÖß‚Íƒ„ƒRƒrƒAƒ“‚ÉÀ•W•ÏŠ·‚ğ‚©‚¯‚é
-	ModifyJacobian();
-
-	// LCP‚ÌŒW”A, b‚Ì•â³’ldA, db‚ğŒvZ
-	dA.clear();
-	db.clear();
-	
-	// LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚ğŒvZ
-	CompResponseMatrix();
-
-	// ABA‚Ìê‡‚Í‚±‚±‚Ü‚Å
-	if(bArticulated)return;
-
-	CompBias();	// Œë·C³‚Ì‚½‚ß‚Ì•â³’lD
-	
-	// LCP‚ÌbƒxƒNƒgƒ‹ == ˜_•¶’†‚Ìw[t], ƒoƒlEƒ_ƒ“ƒp‚Ídb‚Å•â³‚·‚é
-	b = J[0] * solid[0]->v + J[1] * solid[1]->v;	//vjrel‚Å‚Í‚È‚¢	’l‚É‚æ‚Á‚Ä‚Í•Ï‚í‚Á‚ÄS‘©‚µ‚È‚­‚È‚é
-
-	// S‘©—Í‰Šú’l‚É‚æ‚é‘¬“x•Ï‰»—Ê‚ğŒvZ
-	SpatialVector fs;
-	for(int i = 0; i < 2; i++){
-		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
-		if(solid[i]->IsArticulated()){
-			(Vec6d&)fs = J[i].trans() * f;
-			solid[i]->treeNode->CompResponse(fs, true, false);
-		}
-		else solid[i]->dv += T[i].trans() * f;
-	}
-
-}
-
-void PHConstraint::IterateLCP(){
-	if(!bEnabled || !bFeasible || bArticulated)
-		return;
-	FPCK_FINITE(f.v());
-
-	SpatialVector fnew, df;
-	for(int j = 0; j < targetAxis; j++){
-//		if(!constr[j])continue;
-		int i = constrainedAxes[j];
-		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i] * f[i] + b[i] + db[i] 
-				+ J[0].row(i) * solid[0]->dv + J[1].row(i) * solid[1]->dv);
-
-		// ‚Æ‚è‚ ‚¦‚¸—‚¿‚È‚¢‚æ‚¤‚ÉŠÔ‚É‡‚í‚¹‚ÌƒR[ƒh
-		//if (!FPCK_FINITE(fnew[j])) fnew[j] = f[j]; //naga “Á’èğŒ‰º‚Å‚ÍŠÔ‚É‡‚í‚¹‚ÌƒR[ƒh‚Å‚à—‚¿‚é
-
-		if (!FPCK_FINITE(fnew[0])){
-			FPCK_FINITE(b[0]);
-//			DSTR << AinvJ[0].vv << AinvJ[1].vv;
-//			DSTR << AinvJ[0].vw << AinvJ[1].vw;
-//			DSTR << dA.v[j];
-//			DSTR << std::endl;
-//			DSTR << "f.v:" << f.v << "b.v:" << b.v << std::endl;
-			DSTR << "s0:" << (solid[0]->dv) << std::endl;
-			DSTR << "s1:" << (solid[1]->dv)  << std::endl;
-		}
-		//PHContactPoint‚Ì‚Æ‚«‚Ì–€C‚ÌŒvZ‚ÉProjection‚ğ—p‚¢‚éBContactSurface‚Í•Ê‚ÌIterateLCP‚É‚Í‚¢‚é
-		//‚»‚êˆÈŠO‚Ì‚Æ‚«‚Ífnew‚Ìmax,min‚Ìˆ—‚É‚Ü‚Æ‚ß‚é‚±‚Æ‚ª‚Å‚«‚éB
-		if(DCAST(PHContactPointIf,this))
-			Projection(fnew[i], i);
-		else{
-			fnew[i] = max(fMinDt[i],fnew[i]);
-			fnew[i] = min(fMaxDt[i],fnew[i]);
-		}
-		df[i] = fnew[i] - f[i];
-		CompResponse(df[i], i);
-		f[i] = fnew[i];
-	}
-}
-
-void PHConstraint::SetupCorrectionLCP(){
-	if(!bEnabled || !bFeasible || bArticulated)
-		return;
-	//	S‘©‚·‚é©—R“x‚ÌŒˆ’è
-	//bool con[6];
-	//SetConstrainedIndexCorrection(con);
-	for(int i = 0; i < targetAxis; i++){
-		//if(con[i] && constrCorrection[i]){		// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
-			 F[constrainedAxes[i]] *= engine->shrinkRateCorrection;
-		//}else{
-		//	F[i] = 0.0;							// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
-		//}
-		//constrCorrection[i] = con[i];
-	}
-	B.clear();
-	CompError();
-	
-	// velocity update‚É‚æ‚é‰e‹¿‚ğ‰ÁZ
-	B += (J[0] * (solid[0]->v + solid[0]->dv)
-			+ J[1] * (solid[1]->v + solid[1]->dv)) * GetScene()->GetTimeStep();
-	B *= engine->posCorrectionRate;
-		
-	// S‘©—Í‰Šú’l‚É‚æ‚éˆÊ’u•Ï‰»—Ê‚ğŒvZ
-	SpatialVector Fs;
-	for(int i = 0; i < 2; i++){
-		if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
-		if(solid[i]->IsArticulated()){
-			(Vec6d&)Fs = J[i].trans() * F;
-			solid[i]->treeNode->CompResponse(Fs, true, true);
-		}
-		else solid[i]->dV += T[i].trans() * F;
-	}
-}
-
-void PHConstraint::IterateCorrectionLCP(){
-	if(!bEnabled || !bFeasible || bArticulated)
-		return;
-	
-	SpatialVector Fnew, dF, dFs;
-	int i, j;
-	for(j = 0; j < targetAxis; j++){
-//		if(!constrCorrection[j]) continue;
-		int k = constrainedAxes[j];
-		Fnew[k] = F[k] - Ainv[k] * (B[k] + J[0].row(k) * solid[0]->dV + J[1].row(k) * solid[1]->dV);
-		ProjectionCorrection(Fnew[k], k);
-		dF[k] = Fnew[k] - F[k];
-		for(i = 0; i < 2; i++){
-			if(!solid[i]->IsDynamical() || !IsInactive(i))continue;
-			if(solid[i]->IsArticulated()){
-				(Vec6d&)dFs = J[i].row(k) * dF[k];
-				solid[i]->treeNode->CompResponse(dFs, true, true);			
+	for(int i=0; i<6; ++i) {
+		if (axes.IsEnabled(i)) {
+			if(A[i] < Amin || A[i] < epsabs){
+				axes.Disable(i);
+				DSTR << this->GetName() << ": Axis " << i << " ill-conditioned! Disabled.  A= " << A[i] << endl;
+			} else {
+				Ainv[i] = 1.0 / (A[i] + dA[i]);
 			}
-			else solid[i]->dV += T[i].row(k) * dF[k];
 		}
-		F[k] = Fnew[k];
 	}
 }
 
-void PHConstraint::GetRelativeVelocity(Vec3d &v, Vec3d &w){
-	for(int i = 0; i < 2; i++){
+void PHConstraint::CompResponse(double df, int i) {
+	SpatialVector dfs;
+	for (int k=0; k<2; ++k) {
+		if (!solid[k]->IsDynamical() || !IsInactive(k)) { continue; }
+		if (solid[k]->IsArticulated()) {
+			(Vec6d&)dfs = J[k].row(i) * df;
+			solid[k]->treeNode->CompResponse(dfs, true, false);
+		} else {
+			solid[k]->dv += T[k].row(i) * df;
+		}
+	}
+}
+
+// ----- –{—ˆ‚Í”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\‚ÌCƒfƒtƒHƒ‹ƒg“®ì
+
+void PHConstraint::SetupAxisIndex() {
+	if (!bArticulated) {
+		for (int n=0; n<nTargetAxes; ++n) {
+			axes.Enable(targetAxes[n]);
+		}
+	}
+}
+
+/// S‘©—Í‚ÌË‰e
+void PHConstraint::Projection(double& f_, int i) {
+	f_ = min(max(fMinDt[i], f_), fMaxDt[i]);
+}
+
+// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+
+void PHConstraint::GetRelativeVelocity(Vec3d &v, Vec3d &w) {
+	for (int i=0; i<2; i++) {
 		solid[i]->UpdateCacheLCP(GetScene()->GetTimeStep());
 	}
 	UpdateState();
@@ -349,9 +312,36 @@ void PHConstraint::GetRelativeVelocity(Vec3d &v, Vec3d &w){
 	w = vjrel.w();
 }
 
-void PHConstraint::GetConstraintForce(Vec3d& _f, Vec3d& _t){
+void PHConstraint::GetConstraintForce(Vec3d& _f, Vec3d& _t) {
 	_f = f.v() / GetScene()->GetTimeStep();
 	_t = f.w() / GetScene()->GetTimeStep();
+}
+
+bool PHConstraint::AddChildObject(ObjectIf* o) {
+	PHSolid* s = DCAST(PHSolid, o);
+	if (s) {
+		if (!solid[0]) {
+			solid[0] = s;
+			return true;
+		}
+		if (!solid[1]) {
+			solid[1] = s;
+			return true;
+		}
+	}
+	return false;
+}
+
+size_t PHConstraint::NChildObject() const {
+	return (solid[0] ? 1 : 0) + (solid[1] ? 1 : 0);
+}
+
+ObjectIf* PHConstraint::GetChildObject(size_t i) {
+	return solid[i]->Cast();
+}
+
+void PHConstraint::AfterSetDesc() {
+	SceneObject::AfterSetDesc();
 }
 
 }

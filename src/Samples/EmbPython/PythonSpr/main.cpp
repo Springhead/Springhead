@@ -83,6 +83,8 @@ public:
 		// ウィンドウプロシージャを置き換え
 		OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
+
+		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
 	}	
 
 	virtual void OnStep(){

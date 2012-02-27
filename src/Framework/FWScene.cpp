@@ -13,6 +13,9 @@
 #include <Physics/PHContactPoint.h>
 #include <Physics/PHConstraintEngine.h>
 #include <Physics/PHHapticEngine.h>
+#include <Physics/PHBallJoint.h>
+#include <Physics/PHHingeJoint.h>
+#include <Physics/PHSliderJoint.h>
 #include <Graphics/GRScene.h>
 #include <Graphics/GRSdk.h>
 #ifdef USE_HDRSTOP
@@ -31,6 +34,7 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	renderAxisWorld = renderAxisSolid = renderAxisConst = false;
 	renderForceSolid = renderForceConst	= false;
 	renderGridX = renderGridY = renderGridZ = false;
+	renderLimit     = false;
 	renderContact	= false;
 	renderIK		= false;
 	// 倍率は等倍
@@ -341,6 +345,15 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 			}
 		}
 	}
+
+	// 関節可動域
+	if(renderLimit){
+		for(int i = 0; i < phScene->NJoints(); ++i){
+			PHConstraintIf* con = phScene->GetJoint(i);
+			if(IsRenderEnabled(con))
+				DrawLimit(render, con);
+		}
+	}
 	
 	// Inverse Kinematics
 	if(renderIK){
@@ -460,6 +473,153 @@ void FWScene::DrawConstraint(GRRenderIf* render, PHConstraintIf* con){
 			render->SetLighting(true);
 		}
 		render->PopModelMatrix();
+	}
+
+	// 追加拘束座標系（一部のJointLimitが関節本体とは別に持っている）
+	if(renderAxisConst){
+		PHBallJoint* bj = con->Cast();
+		if (bj) {
+			PHBallJointLimit* limit = bj->GetLimit()->Cast();
+			if (limit) {
+				con->GetSocketSolid()->GetPose().ToAffine(aff);
+				Matrix3d Jcinv = bj->limit->J[0] * bj->J[0].ww().inv();
+				aff.Rot() = Jcinv.trans() * aff.Rot();
+				aff.Trn() = con->GetPlugSolid()->GetPose().Pos();
+
+				render->PushModelMatrix();
+				render->MultModelMatrix(aff);
+				render->SetLighting(false);
+				DrawCoordinateAxis(render, scaleAxisConst*0.5, false);
+				render->SetLighting(true);
+				render->PopModelMatrix();
+			}
+		}
+	}
+}
+
+void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
+	Affinef aff;
+
+	Posed sock, plug;
+	con->GetSocketPose(sock);
+	con->GetPlugPose(plug);
+
+	if (renderLimit) {
+
+		// ボールジョイントのLimit
+		PHBallJoint* bj = con->Cast();
+		if (bj) {
+			(con->GetPlugSolid()->GetPose() * plug).ToAffine(aff);
+			render->PushModelMatrix();
+			render->MultModelMatrix(aff);
+			render->SetLighting(false);
+			render->SetMaterial(matAxis.z);
+			float vtx[2][3] = {{0,0,0}, {0,0,1}};
+			size_t idx[2] = {0, 1};
+			render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
+			render->SetLighting(true);
+			render->PopModelMatrix();
+
+			(con->GetSocketSolid()->GetPose() * sock).ToAffine(aff);
+			render->PushModelMatrix();
+			render->MultModelMatrix(aff);
+			render->SetLighting(false);
+
+			// Spline可動域曲線の表示
+			PHBallJointSplineLimit* spL = bj->GetLimit()->Cast();
+			if (spL) {
+				for (int i=0; i<spL->limitCurve.NEdges(); ++i) {
+					SplinePoint pt = spL->limitCurve.GetPointOnEdge(i, 0);
+					if (i==0) {
+						render->SetMaterial(matAxis.x);
+					} else if (i%2==0) {
+						render->SetMaterial(matAxis.y);
+					} else {
+						render->SetMaterial(matAxis.z);
+					}
+					for (double t=0; t<1.0; t+=0.1) {
+						pt.t = t; pt.Update();
+						Vec3d p0 = Vec3d(sin(pt.pos[0])*cos(pt.pos[1]), sin(pt.pos[0])*sin(pt.pos[1]), cos(pt.pos[0]));
+
+						pt.t = (t+0.1 > 1.0) ? 1.0 : (t+0.1); pt.Update();
+						Vec3d p1 = Vec3d(sin(pt.pos[0])*cos(pt.pos[1]), sin(pt.pos[0])*sin(pt.pos[1]), cos(pt.pos[0]));
+
+						float vtx[2][3] = {{p0[0], p0[1], p0[2]}, {p1[0], p1[1], p1[2]}};
+						size_t idx[2] = {0, 1};
+						render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
+					}
+				}
+			}
+
+			// 円形可動域曲線の表示
+			PHBallJointConeLimit* coL = bj->GetLimit()->Cast();
+			if (coL) {
+				// （注）現状limitDirには非対応<!!>
+				Vec2d lim; coL->GetSwingRange(lim);
+				for (double t=0; t<2*M_PI; t+=Rad(10)) {
+					double z = cos(lim[1]);
+					double r = z * tan(lim[1]);
+					float vtx[2][3] = {{r*cos(t), r*sin(t), z}, {r*cos(t+Rad(10)), r*sin(t+Rad(10)), z}};
+					size_t idx[2] = {0, 1};
+					render->SetMaterial(matAxis.z);
+					render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
+				}
+			}
+
+			render->SetLighting(true);
+			render->PopModelMatrix();
+		}
+
+		// ヒンジジョイントのLimit
+		PHHingeJoint* hj = con->Cast();
+		if (hj) {
+			PH1DJointLimit* limit = hj->GetLimit()->Cast();
+			if (limit) {
+				con->GetSocketSolid()->GetPose().ToAffine(aff);
+				render->PushModelMatrix();
+				render->MultModelMatrix(aff);
+				render->SetLighting(false);
+				Vec2d lim; limit->GetRange(lim);
+				if (lim[0] < lim[1]) {
+					for (double t=lim[0]; t<lim[1]; t+=Rad(5)) {
+						double r = 1.0;
+						float vtx[2][3] = {{r*cos(t), r*sin(t), 0.0}, {r*cos(t+Rad(10)), r*sin(t+Rad(10)), 0.0}};
+						size_t idx[2] = {0, 1};
+						render->SetMaterial(matAxis.z);
+						render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
+					}
+				}
+				{
+					render->SetMaterial(matAxis.z);
+					float vtx[2][3] = {{0,0,0}, {1*cos(hj->GetPosition()),1*sin(hj->GetPosition()),0}};
+					size_t idx[2] = {0, 1};
+					render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
+				}
+				render->SetLighting(true);
+				render->PopModelMatrix();
+			}
+		}
+
+		// スライダジョイントののLimit
+		PHSliderJoint* sj = con->Cast();
+		if (sj) {
+			PH1DJointLimit* limit = sj->GetLimit()->Cast();
+			if (limit) {
+				con->GetSocketSolid()->GetPose().ToAffine(aff);
+				render->PushModelMatrix();
+				render->MultModelMatrix(aff);
+				render->SetLighting(false);
+				Vec2d lim; limit->GetRange(lim);
+				if (lim[0] < lim[1]) {
+					float vtx[2][3] = {{lim[0], 0, 0}, {lim[1], 0, 0}};
+					size_t idx[2] = {0, 1};
+					render->SetMaterial(matAxis.z);
+					render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
+				}
+				render->SetLighting(true);
+				render->PopModelMatrix();
+			}
+		}
 	}
 }
 
@@ -830,6 +990,9 @@ void FWScene::SetIKMaterial(int mat){
 }
 void FWScene::SetIKScale(float scale){
 	scaleIK = scale;
+}
+void FWScene::EnableRenderLimit(bool enable){
+	renderLimit = enable;
 }
 void FWScene::EnableRenderHaptic(bool enable){
 	renderHaptic = enable;

@@ -12,8 +12,9 @@ using namespace PTM;
 using namespace std;
 namespace Spr{;
 
-//----------------------------------------------------------------------------
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHContactPoint
+
 PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1){
 	shapePair = sp;
 	pos = p;
@@ -30,6 +31,12 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = solid[i]->GetOrientation().Conjugated() * qlocal;
 		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
 	}
+
+	nMovableAxes   = 3;
+	movableAxes[0] = 3;
+	movableAxes[1] = 4;
+	movableAxes[2] = 5;
+	InitTargetAxes();	
 }
 
 PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1){
@@ -69,15 +76,12 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 		(i == 0 ? poseSocket : posePlug).Ori() = Xj[i].q = solid[i]->GetOrientation().Conjugated() * qjabs;
 		(i == 0 ? poseSocket : posePlug).Pos() = Xj[i].r = solid[i]->GetOrientation().Conjugated() * rjabs[i];
 	}
-}
 
-void PHContactPoint::SetConstrainedIndex(int* con){
-//	con[0] = con[1] = con[2] = true;
-//	con[3] = con[4] = con[5] = false;
-	for(int i = 0;i<3;i++){
-		con[i] = i;
-	}
-	targetAxis = 3;
+	nMovableAxes   = 3;
+	movableAxes[0] = 3;
+	movableAxes[1] = 4;
+	movableAxes[2] = 5;
+	InitTargetAxes();	
 }
 
 void PHContactPoint::CompBias(){
@@ -137,12 +141,12 @@ void PHContactPoint::CompBias(){
 #endif
 }
 
-void PHContactPoint::Projection(double& f, int k){
+void PHContactPoint::Projection(double& f_, int i) {
 	static double flim;
-	if(k == 0){	//‚’¼R—Í >= 0‚Ì§–ñ
-		f = max(0.0, f);
+	if(i == 0){	//‚’¼R—Í >= 0‚Ì§–ñ
+		f_ = max(0.0, f_);
 		//	Å‘åÃ~–€C
-		flim = 0.5 * (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0) * f;	}
+		flim = 0.5 * (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0) * f_;	}
 	else{
 		//	“®–€C‚ğ‚µ‚ÉÀ‘•‚µ‚Ä‚İ‚éB
 		double fu;
@@ -154,20 +158,20 @@ void PHContactPoint::Projection(double& f, int k){
 				* flim;	
 		}
 		if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	Ã~–€C
-			if (f > flim) f = fu;
-			else if (f < -flim) f = -fu;
+			if (f_ > flim) f_ = fu;
+			else if (f_ < -flim) f_ = -fu;
 		}else{					//	“®–€C
-			if (f > fu) f = fu;
-			else if (f < -fu) f = -fu;		
+			if (f_ > fu) f_ = fu;
+			else if (f_ < -fu) f_ = -fu;		
 		}
 #if 0
 		//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ
 		//	E–€C—Í‚ÌŠe¬•ª‚ªÅ‘åÃ~–€C‚æ‚è‚à¬‚³‚­‚Ä‚à‡—Í‚Í’´‚¦‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å–{“–‚Í‚¨‚©‚µ‚¢B
 		//	EÃ~–€C‚Æ“®–€C‚ª“¯‚¶’l‚Å‚È‚¢‚Æˆµ‚¦‚È‚¢B
 		//–€CŒW”‚Í—¼Ò‚ÌÃ~–€CŒW”‚Ì•½‹Ï‚Æ‚·‚é
-		f = min(max(-flim, f), flim);
+		f_ = min(max(-flim, f_), flim);
 #endif
-		assert(f < 10000);
+		assert(f_ < 10000);
 	}
 }
 

@@ -14,7 +14,7 @@ namespace Spr{
 //static std::ofstream *dlog;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// IKEngine
+// FEMEngine
 PHFemEngine::PHFemEngine(){ 
 }
 

@@ -20,9 +20,12 @@
 %ignore Spr::PHJoint1DIf::GetRange;
 %ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t,PHSceneDesc::ContactMode);
 %ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t);
+%ignore Spr::PHSceneIf::GetSolidPair(PHSolidIf*, PHSolidIf*, bool&);
+%ignore Spr::PHHapticPointerIf::SetHumanInterface(HIBaseIf* hi);
 %include "Utility/EPObject.i"
 EXTEND_NEW(PHSolidDesc)
 EXTEND_NEW(PHPathPoint)
+EXTEND_NEW(PHSplineLimitNode)
 EXTEND_N_GETS_TO_LIST(Spr::PHSceneIf,NSolids,GetSolids,PHSolidIf)
 EXTEND_N_GET_TO_LIST(Spr::PHSdkIf				,NShape				,GetShape			,CDShapeIf			)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NJoints			,GetJoint			,PHJointIf			)
@@ -36,7 +39,7 @@ EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NIKActuators		,GetIKActuator		,PHIKActua
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NIKEndEffectors	,GetIKEndEffector	,PHIKEndEffectorIf	)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NEngines			,GetEngine			,PHEngineIf			)
 EXTEND_N_GET_TO_LIST(Spr::PHSolidIf				,NShape				,GetShape			,CDShapeIf			)
-//EXTEND_N_GET_TO_LIST(Spr::PHShapePairForLCPIf	,NSectionVertexes	,GetSectionVertex	,Vec3d				) //RuntimeDownCast‚ª‚Å‚«‚È‚¢
+//EXTEND_N_GET_TO_LIST(Spr::PHShapePairForLCPIf	,NSectionVertexes	,GetSectionVertex	,Vec3d				) //RuntimeDownCastï¿½ï¿½ï¿½Å‚ï¿½ï¿½È‚ï¿½
 EXTEND_N_GET_TO_LIST(Spr::PHSolidIf				,NShape				,GetShape			,CDShapeIf			)
 //---
 %begin%{
@@ -53,6 +56,7 @@ EXTEND_N_GET_TO_LIST(Spr::PHSolidIf				,NShape				,GetShape			,CDShapeIf			)
 %include "../../include/Physics/SprPHFemMesh.h"
 %include "../../include/Physics/SprPHIK.h"
 %include "../../include/Physics/SprPHJoint.h"
+%include "../../include/Physics/SprPHJointLimit.h"
 %include "../../include/Physics/SprPHNodeHandlers.h"
 %include "../../include/Physics/SprPHScene.h"
 %include "../../include/Physics/SprPHSdk.h"

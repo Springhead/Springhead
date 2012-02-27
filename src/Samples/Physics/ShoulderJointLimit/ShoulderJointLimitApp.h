@@ -38,7 +38,7 @@ public:
 	//UTRef< PHHingeJointIf >	 joint[4];
 	UTRef< PHSpringIf >	 Spring;
 	UTRef< PHSpringIf >	 spring[3];
-	UTRef< PHJoint1DIf >	 joint1;
+	UTRef< PH1DJointIf >	 joint1;
 	bool bLeftButton, bRightButton,bMiddleButton;
 	// ƒJƒƒ‰ˆÊ’u
 	double CameraZoom;

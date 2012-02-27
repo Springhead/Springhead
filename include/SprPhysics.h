@@ -17,6 +17,7 @@
 #include "Physics/SprPHScene.h"
 #include "Physics/SprPHSolid.h"
 #include "Physics/SprPHJoint.h"
+#include "Physics/SprPHJointLimit.h"
 #include "Physics/SprPHEngine.h"
 #include "Physics/SprPHNodeHandlers.h"
 #include "Physics/SprPHIK.h"

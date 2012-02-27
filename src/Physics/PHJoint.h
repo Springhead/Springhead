@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  Copyright (c) 2003-2010, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
@@ -11,135 +11,134 @@
 #include <Physics/SprPHJoint.h>
 #include <Physics/PHConstraint.h>
 #include <Physics/PHJointLimit.h>
-#include <Physics/PHMotor.h>
+#include <Physics/PHJointMotor.h>
 #include <Physics/PhysicsDecl.hpp>
-
 
 namespace Spr{;
 
-class PHJoint : public PHConstraint{
+class PHJoint : public PHConstraint {
 public:
 	SPR_OBJECTDEF_ABST(PHJoint);
 	SPR_DECLMEMBEROF_PHJointDesc;
-	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
-	virtual PHTreeNode* CreateTreeNode(){return NULL;}
-	//ControlModeを取得,設定する
-	//virtual PHJointDesc::PHControlMode	GetMode() {return mode;}
-	//virtual void	SetMode(PHJointDesc::PHControlMode mode) {this->mode = mode;}
 
-	virtual void	SetDefomationType(int t)		{type = (PHJointDesc::PHDeformationType)t;}
-	virtual int 	GetDefomationType()				{return (int)type;}
 	/// コンストラクタ
-	PHJoint();
+	PHJoint() {}
+
+	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
+	virtual PHTreeNode* CreateTreeNode(){ return NULL; }
+
+	// ----- インタフェースの実装
+
+	void	SetMaxForce(double max){ fMax = fabs(max); }
+	double	GetMaxForce(){ return fMax; }
 };
 
 template<int NDOF> class PHTreeNodeND;
 
-
 template<int NDOF>
-class PHJointND : public PHJoint{
+class PHNDJoint : public PHJoint {
+protected:
+	friend class PHTreeNodeND<NDOF>;
+
 public:
-	typedef	PTM::TVector<NDOF, double> coord_t;
+	/// 関節の位置・速度
+	PTM::TVector<NDOF,double> position, velocity;
 
-	int		movableAxes[NDOF];		//< 関節の可動軸の番号
-	coord_t position, velocity;
-	
-	void	CompResponse(double df, int k){
-		PHConstraint::CompResponse(df, movableAxes[k]);
-	}
-
-	virtual void SetConstrainedIndex(int* con){
-		//std::fill(con, con+6, true);
-		//for(int i = 0; i < NDOF; i++)
-		//	con[movableAxes[i]] = false;
-		for(int i = 0; i < 6;i++){
-			con[i] = i;
-		}
-		for(int i = NDOF-1; i >= 0;i--){
-			for(int j = movableAxes[i];j < 5;j++){
-				con[j] = con[j+1];
-			}
-		}
-		targetAxis = 6-NDOF;
-	}
-
-	PHJointND(){
+	/// コンストラクタ
+	PHNDJoint(){
 		position.clear();
 		velocity.clear();
-		targetAxis = 6-NDOF;
+		nMovableAxes = NDOF;
 	}
-protected:
-	//virtual coord_t GetTorqueND() = 0;
-	friend class PHTreeNodeND<NDOF>;
 };
 
-class PHJoint1D : public PHJointND<1>{
+class PH1DJoint : public PHNDJoint<1> {
 protected:
 	friend class PHTreeNode1D;
-	friend class PHJointLimit1D;
-	friend class PHMotor1D;
+	friend class PH1DJointLimit;
+	friend class PH1DJointMotor;
 
-	PHJointLimit1D	limit;			///< 可動範囲拘束
-	PHMotor1D		motor;			///< モータ
+	PH1DJointLimit* limit;			///< 可動範囲拘束
+	PH1DJointMotor  motor;			///< モータ
 
-	//virtual coord_t GetTorqueND(){ return (coord_t&)torque; }
 public:
-	SPR_OBJECTDEF_ABST1(PHJoint1D, PHJoint);
-	SPR_DECLMEMBEROF_PHJoint1DDesc;
+	SPR_OBJECTDEF_ABST1(PH1DJoint, PHJoint);
+	SPR_DECLMEMBEROF_PH1DJointDesc;
 
-	/// インタフェースの実装
-	double	GetPosition() const {return position[0];}
-	double	GetVelocity() const {return velocity[0];}
-	void	SetMotorTorque(double t){ offsetForce = t; }
-	double	GetMotorTorque() const { return offsetForce; }
-	void	SetRange(double l, double u){lower = l, upper = u;}
-	void	GetRange(double& l, double& u) const {l = lower, u = upper;}
-	void	SetTargetVelocity(double v){targetVelocity = v;}
-	double	GetTargetVelocity() const {return targetVelocity;}
-	void	SetTrajectoryVelocity(double v){targetVelocity = v;}
-	double  GetTrajectoryVelocity(){return targetVelocity;}
-	void	SetSpring(double K){spring = K;}
-	double	GetSpring() const {return spring;}
-	void	SetTargetPosition(double org){ targetPosition = org;}
-	double	GetTargetPosition() const {return targetPosition;}
-	void	SetDamper(double D){damper = D;}
-	double	GetDamper() const {return damper;}
-	void	SetOffsetForce(double dat){ offsetForce = dat; }
-	double	GetOffsetForce(){ return offsetForce;}
-	bool	IsLimit(){ return (limit.onLower || limit.onUpper); }
-	void	SetTorqueMax(double max){fMax = fabs(max); }
-	double	GetTorqueMax(){return fMax;}
-	void	SetRangeSpring(double rSpring){ rangeSpring = rSpring;}
-	double	GetRangeSpring(){return rangeSpring;};
-	void	SetRangeDamper(double rDamper){ rangeDamper = rDamper;}
-	double	GetRangeDamper(){return rangeDamper;};
+	/// コンストラクタ
+	PH1DJoint() {
+		motor.joint = this;
+		limit = NULL;
+	}
+
+	// ----- PHConstraintの派生クラスで実装する機能
+
+	/// どの自由度を速度拘束するかを設定
+	virtual void SetupAxisIndex() {
+		PHJoint::SetupAxisIndex();
+		motor.SetupAxisIndex();
+		if (limit) { limit->SetupAxisIndex(); }
+	}
 	
+	/// LCPの補正値の計算．誤差修正用
+	virtual void CompBias() {
+		PHJoint::CompBias();
+		motor.CompBias();
+		if (limit) { limit->CompBias(); }
+	}
 
-	/// インタフェースの実装
-	double  GetSecondDamper()				{return secondDamper;}
-	void	SetSecondDamper(double input)	{secondDamper = input;}
-	double  GetYieldStress()				{return yieldStress;}
-	void	SetYieldStress(double input)	{yieldStress = input;}
-	double  GetHardnessRate()				{return hardnessRate;}
-	void	SetHardnessRate(double input)	{hardnessRate = input;}
-	PHJointDesc::PHDeformationType GetDeformationMode();
-
-
-	/// オーバライド
-	virtual void	SetupLCP();
-//	virtual	void	IterateLCP();		//IterateLCPをConstraintと統合した。
-	virtual void	SetupCorrectionLCP();
-	virtual void	IterateCorrectionLCP();
-	//virtual void	AddMotorTorque(){f[movableAxes[0]] = torque * GetScene()->GetTimeStep();}
-	//virtual void	SetConstrainedIndexCorrection(bool* con);
-	//virtual void	CompJointBias();
-	//virtual void	Projection(double& f, int k);
-	//virtual void	ProjectionCorrection(double& F, int k);
+	// ----- このクラスと，このクラスから派生するクラスの機能
 
 	/// バネ中点（目標角度）からの偏差を返す．回転関節がオーバライドする
-	virtual double	GetDeviation(){ return GetPosition() - targetPosition; }
+	virtual double	GetDeviation(){
+		return GetPosition() - GetTargetPosition();
+	}
 
-	PHJoint1D();
+	// ----- インタフェースの実装
+
+	/// ChildObject．可動域を追加できる
+	virtual bool AddChildObject(ObjectIf* o) {
+		if (!limit) { limit = o->Cast(); if(limit){ limit->joint=this;return true; }}
+		return PHConstraint::AddChildObject(o);
+	}
+	virtual size_t NChildObject() const {
+		return((limit?1:0)+PHConstraint::NChildObject());
+	}
+	virtual ObjectIf* GetChildObject(size_t i) {
+		if (i==0 && limit) { return limit->Cast(); }
+		return PHConstraint::GetChildObject(i - (limit ? 1 : 0));
+	}
+
+	PH1DJointLimitIf* CreateLimit(const PH1DJointLimitDesc& desc) {
+		PH1DJointLimitIf* limit = GetScene()->CreateObject(PH1DJointLimitIf::GetIfInfoStatic(), &desc)->Cast();
+		if (limit) { AddChildObject(limit); }
+		return limit;
+	}
+
+	double	GetPosition() { UpdateState(); return position[0]; }
+	double	GetVelocity() { UpdateState(); return velocity[0]; }
+
+	PH1DJointLimitIf* GetLimit() { return limit->Cast(); }
+
+	virtual void SetSpring(const double& spring) { this->spring = spring; }
+	virtual double GetSpring() { return spring; }
+	virtual void SetDamper(const double& damper) { this->damper = damper; }
+	virtual double GetDamper() { return damper; }
+	virtual void SetSecondDamper(const double& secondDamper) { this->secondDamper = secondDamper; }
+	virtual double GetSecondDamper() { return secondDamper; }
+	virtual void SetTargetPosition(const double& targetPosition) { this->targetPosition = targetPosition; }
+	virtual double GetTargetPosition() { return targetPosition; }
+	virtual void SetTargetVelocity(const double& targetVelocity) { this->targetVelocity = targetVelocity; }
+	virtual double GetTargetVelocity() { return targetVelocity; }
+	virtual void SetOffsetForce(const double& offsetForce) { this->offsetForce = offsetForce; }
+	virtual double GetOffsetForce() { return offsetForce; }
+	virtual void SetYieldStress(const double& yieldStress) { this->yieldStress = yieldStress; }
+	virtual double GetYieldStress() { return yieldStress; }
+	virtual void SetHardnessRate(const double& hardnessRate) { this->hardnessRate = hardnessRate; }
+	virtual double GetHardnessRate() { return hardnessRate; }
+	virtual void SetSecondMoment(double sM) { secondMoment = sM; }
+	virtual double GetSecondMoment() { return secondMoment; }
+	virtual double GetMotorForce() { if (limit) { if (limit->IsOnLimit()) return 0; } return(f[movableAxes[0]] / GetScene()->GetTimeStep()); }
 };
 
 }

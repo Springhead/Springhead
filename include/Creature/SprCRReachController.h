@@ -79,6 +79,10 @@ struct CRGrabControllerIf : CREngineIf{
 	*/
 	PHSolidIf* GetGrabbingSolid();
 
+	/** @brief ”c‚Ég—p‚·‚é„‘Ì‚ğ•Ô‚·
+	*/
+	PHSolidIf* GetSolid();
+
 	/** @brief ‚Â‚©‚ñ‚Å‚¢‚é•¨‘Ì‚ğ•ú‚·D
 	*/
 	void Release();

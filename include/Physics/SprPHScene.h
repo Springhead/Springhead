@@ -253,7 +253,7 @@ public:
 		rhs->GetPosition() = desc.ratio * lhs->GetPosition()
 		‚ğ–‚½‚·‚æ‚¤‚ÉS‘©‚³‚ê‚éD
 	 */
-	PHGearIf* CreateGear(PHJoint1DIf* lhs, PHJoint1DIf* rhs, const PHGearDesc& desc = PHGearDesc());
+	PHGearIf* CreateGear(PH1DJointIf* lhs, PH1DJointIf* rhs, const PHGearDesc& desc = PHGearDesc());
 	
 	/** @brief ƒMƒA‚Ì”
 	 */

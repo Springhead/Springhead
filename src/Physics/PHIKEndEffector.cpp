@@ -59,19 +59,15 @@ size_t PHIKEndEffector::NChildObject() const {
 
 void PHIKEndEffector::Enable(bool enable){
 	this->bEnabled = enable;
-	if (!enable) {
-		for(ASetIter act=linkedActuators.begin(); act!=linkedActuators.end(); ++act){
-			(*act)->MoveToNaturalPosition();
-		}
-	}
 }
 
-PTM::VVector<double> PHIKEndEffector::GetTempTarget(){
-	PTM::VVector<double> v;
+void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 	v.resize(ndof);
 
+	PHIKEngineIf* engine = DCAST(PHSceneIf,GetScene())->GetIKEngine();
+	double dt = DCAST(PHSceneIf,GetScene())->GetTimeStep();
+
 	if (bPosition) {
-		// std::cout << solid->GetName() << " : " << targetLocalPosition << std::endl;
 		Vec3d solidPos = solid->GetPose()*targetLocalPosition;
 		Vec3d dir = (targetPosition - solidPos) * positionPriority;
 		double epsilon = 1.0 * positionPriority;
@@ -101,10 +97,6 @@ PTM::VVector<double> PHIKEndEffector::GetTempTarget(){
 		int stride = (bPosition ? 3 : 0);
 		for (int i=0; i<3; ++i) { v[i+stride] = v_o[i]; }
 	}
-
-	// std::cout << "EE_" << number << " : TG : " << v << std::endl;
-
-	return v;
 }
 
 }

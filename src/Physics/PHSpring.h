@@ -11,48 +11,65 @@
 #include <Physics/SprPHJoint.h>
 #include <Physics/PHConstraint.h>
 #include <Physics/PHTreeNode.h>
+#include <Physics/PHJointMotor.h>
 
 namespace Spr{;
 
 class PHSpring : public PHJoint{
-	//Vec3d spring, damper;
-	//double springOri, damperOri;
+	friend class PHSpringMotor;
+
+	/// 関節コントローラ．PHSpringは6自由度関節（＝拘束しない）であり，実質的なコントロールはMotorが担当．
+	PHSpringMotor  motor;
+
 public:
 	SPR_OBJECTDEF(PHSpring);
 	SPR_DECLMEMBEROF_PHSpringDesc;
 
-	virtual void SetSpring(const Vec3d& s){spring = s;}
-	virtual Vec3d GetSpring(){return spring;}
-	virtual void SetDamper(const Vec3d& d){damper = d;}
-	virtual Vec3d GetDamper(){return damper;}
+	/// コンストラクタ
+	PHSpring(const PHSpringDesc& desc = PHSpringDesc()) {
+		motor.joint = this;
 
-	virtual void SetSpringOri(const double spring){springOri = spring;}
-	virtual double GetSpringOri(){return springOri;}
-	virtual void SetDamperOri(const double damper){damperOri = damper;}
-	virtual double GetDamperOri(){return damperOri;}
+		SetDesc(&desc);
 
-	//virtual void SetDesc(const void* desc);
-	virtual void SetConstrainedIndex(int* con);
-	virtual void SetConstrainedIndexCorrection(bool* con);
-	virtual void CompBias();
-	virtual void IterateLCP();
-	void ElasticDeformation();
-	void PlasticDeformation();
+		nMovableAxes = 6;
+		for (int i=0; i<6; ++i) { movableAxes[i] = i; }
+		InitTargetAxes();
+	}
 
-	/// インタフェースの実装
-	Vec3d	GetSecondDamper()				{return secondDamper;}
-	void	SetSecondDamper(Vec3d input)	{secondDamper = input;}
-	double  GetYieldStress()				{return yieldStress;}
-	void	SetYieldStress(double input)	{yieldStress = input;}
-	double  GetHardnessRate()				{return hardnessRate;}
-	void	SetHardnessRate(double input)	{hardnessRate = input;}
-	void	SetDefomationType(int t)		{type = (PHJointDesc::PHDeformationType)t;}
-	int 	GetDefomationType()				{return (int)type;}
-	PHJointDesc::PHDeformationType 	GetDeformationMode(){};
+	// ----- PHConstraintの派生クラスで実装する機能
 
-	bool	yieldFlag;		    // 降伏応力のフラグ
+	/// どの自由度を速度拘束するかを設定
+	virtual void SetupAxisIndex() {
+		PHJoint::SetupAxisIndex();
+		motor.SetupAxisIndex();
+	}
 
-	PHSpring(const PHSpringDesc& desc = PHSpringDesc());
+	/// LCPの補正値の計算．誤差修正用
+	virtual void CompBias() {
+		PHJoint::CompBias();
+		motor.CompBias();
+	}
+
+	// ----- インタフェースの実装
+
+	virtual void SetSpring(const Vec3d& spring) { this->spring = spring; }
+	virtual Vec3d GetSpring() { return spring; }
+	virtual void SetDamper(const Vec3d& damper) { this->damper = damper; }
+	virtual Vec3d GetDamper() { return damper; }
+	virtual void SetSecondDamper(const Vec3d& secondDamper) { this->secondDamper = secondDamper; }
+	virtual Vec3d GetSecondDamper() { return secondDamper; }
+	virtual void SetSpringOri(const double& springOri) { this->springOri = springOri; }
+	virtual double GetSpringOri() { return springOri; }
+	virtual void SetDamperOri(const double& damperOri) { this->damperOri = damperOri; }
+	virtual double GetDamperOri() { return damperOri; }
+	virtual void SetSecondDamperOri(const double& secondDamperOri) { this->secondDamperOri = secondDamperOri; }
+	virtual double GetSecondDamperOri() { return secondDamperOri; }
+	virtual void SetYieldStress(const double& yieldStress) { this->yieldStress = yieldStress; }
+	virtual double GetYieldStress() { return yieldStress; }
+	virtual void SetHardnessRate(const double& hardnessRate) { this->hardnessRate = hardnessRate; }
+	virtual double GetHardnessRate() { return hardnessRate; }
+	virtual void SetSecondMoment(Vec3d sM) { secondMoment = sM; }
+	virtual Vec3d GetSecondMoment() { return secondMoment; }
 };
 
 }

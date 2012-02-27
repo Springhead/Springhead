@@ -10,10 +10,12 @@
 
 using namespace PTM;
 using namespace std;
+
 namespace Spr{;
 
-//----------------------------------------------------------------------------
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHPath
+
 PHPath::PHPath(const PHPathDesc& desc){
 	SetDesc(&desc);
 }
@@ -125,10 +127,7 @@ void PHPath::CompJacobian(){
 		w = (it->pose.Ori()).AngularVelocity(qd);		//1/2 * w * q = qd		=> 2 * qd * q~ = w
 		it->J.row(5).SUBVEC(0,3) =  v;
 		it->J.row(5).SUBVEC(3,3) =  w;
-		//double ninv = 1.0 / it->J.row(5).norm();
-		//it->J.row(5).unitize();// *= ninv;
 		Orthogonalize(it->J);
-		//it->J.row(5) *= ninv;
 	}
 	bReady = true;
 }
@@ -177,33 +176,56 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 	J = ((rhs.s - s) * tmp) * lhs.J + ((s - lhs.s) * tmp) * rhs.J;
 }
 
-//----------------------------------------------------------------------------
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
+// PHPathJointNode
+
+void PHPathJointNode::CompJointJacobian(){
+	PHPathJoint* j = GetJoint();
+	Matrix6d Jq;
+	j->path->GetJacobian(j->position[0], Jq);
+	(Vec6d&)J[0] = Jq.row(5);
+	PHTreeNode1D::CompJointJacobian();
+}
+
+void PHPathJointNode::CompJointCoriolisAccel(){
+	cj.clear();
+}
+
+void PHPathJointNode::CompRelativeVelocity(){
+	PHPathJoint* j = GetJoint();
+	Matrix6d Jq;
+	j->path->GetJacobian(j->position[0], Jq);
+	(Vec6d&)j->vjrel = Jq.row(5) * j->velocity[0];
+}
+
+void PHPathJointNode::CompRelativePosition(){
+	PHPathJoint* j = GetJoint();
+	Posed p;
+	j->path->GetPose(j->position[0], p);
+	j->Xjrel.q = p.Ori();
+	j->Xjrel.r = p.Pos();
+}
+
+void PHPathJointNode::UpdateJointPosition(double dt){
+	PHTreeNode1D::UpdateJointPosition(dt);
+	PHPathJoint* j = GetJoint();
+	if(j->path->IsLoop())
+		j->path->Rollover(j->position[0]);
+}
+
+// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHPathJoint
 
 PHPathJoint::PHPathJoint(const PHPathJointDesc& desc){
 	SetDesc(&desc);
+	
+	// 可動軸・拘束軸の設定
+	nMovableAxes   = 1;
 	movableAxes[0] = 5;
+	InitTargetAxes();
 }
 
-bool PHPathJoint::AddChildObject(ObjectIf* o){
-	PHPath* p = DCAST(PHPath, o);
-	if(p){
-		path = p;
-		//可動範囲はリセットされる
-		// 周期パスならば可動範囲無し
-		// 非周期パスならば初端と終端を可動範囲とする
-		if(path->IsLoop()){
-			lower = upper = 0.0;
-		}
-		else{
-			lower = path->front().s;
-			upper = path->back().s;
-		}
-		position[0] = velocity[0] = 0.0;
-		return true;
-	}
-	return PHConstraint::AddChildObject(o);
-}
+// ----- エンジンから呼び出される関数
 
 void PHPathJoint::UpdateJointState(){
 	Matrix6d J;
@@ -214,6 +236,8 @@ void PHPathJoint::UpdateJointState(){
 	position[0] += velocity[0] * GetScene()->GetTimeStep();
 	path->Rollover(position[0]);
 }
+
+// ----- PHConstraintの派生クラスで実装される機能
 
 void PHPathJoint::ModifyJacobian(){
 	Matrix6d Jq;
@@ -227,71 +251,35 @@ void PHPathJoint::CompBias(){
 	Posed p;
 	path->GetPose(position[0], p);
 	db.v() = ((Xjrel.r - p.Pos()) * dtinv/* + vjrel.v()*/);
-	//db.w() = (Xjrel.q.AngularVelocity((Xjrel.q - p.Ori()) * dtinv) + vjrel.w());
 	db.w().clear();
 	Matrix6d Jq;
 	path->GetJacobian(position[0], Jq);
 	(Vec6d&)db = Jq * db;
 	db.w().z = 0.0;
 	db *= engine->velCorrectionRate;
+
+	// 親クラスのCompBias．motor,limitのCompBiasが呼ばれるので最後に呼ぶ
+	PH1DJoint::CompBias();
 }
 
-/*void PHPathJoint::CompError(double dt){
-	if(!path)return;
-	
-	B.SUBVEC(0, 3) = rjrel - pnew.Pos();
-	DSTR << rjrel << pnew.Pos() << qjrel << pnew.Ori() << endl;
-	if(qjrel.V() * pnew.Ori().V() < 0.0){
-		 B.SUBVEC(3, 3) = qjrel.V() + pnew.Ori().V();
-		// DSTR << "p";
-	}
-	else{
-		B.SUBVEC(3, 3) = qjrel.V() - pnew.Ori().V();
-		//DSTR << "n";
-	}
-	//DSTR << B << endl;
-	//B.SUBVEC(3, 3) = qjrel.V() - pnew.Ori().V();
-	//B = -B;
-}*/
+// ----- インタフェースの実装
 
-/*void PHPathJoint::ProjectionCorrection(double& F, int k){
-	if(k == 5){
-		if(on_lower)
-			F = max(0.0, F);
-		if(on_upper)
-			F = min(0.0, F);
+bool PHPathJoint::AddChildObject(ObjectIf* o){
+	PHPath* p = DCAST(PHPath, o);
+	if(p){
+		path = p;
+		//可動範囲はリセットされる
+		// 周期パスならば可動範囲無し
+		// 非周期パスならば初端と終端を可動範囲とする
+		if (path->IsLoop()) {
+			if (limit) { limit->SetRange(Vec2d(0,0)); }
+		} else {
+			if (limit) { limit->SetRange(Vec2d(path->front().s, path->back().s)); }
+		}
+		position[0] = velocity[0] = 0.0;
+		return true;
 	}
-}*/
-
-//-----------------------------------------------------------------------------
-void PHPathJointNode::CompJointJacobian(){
-	PHPathJoint* j = GetJoint();
-	Matrix6d Jq;
-	j->path->GetJacobian(j->position[0], Jq);
-	(Vec6d&)J[0] = Jq.row(5);
-	PHTreeNode1D::CompJointJacobian();
-}
-void PHPathJointNode::CompJointCoriolisAccel(){
-	cj.clear();
-}
-void PHPathJointNode::CompRelativeVelocity(){
-	PHPathJoint* j = GetJoint();
-	Matrix6d Jq;
-	j->path->GetJacobian(j->position[0], Jq);
-	(Vec6d&)j->vjrel = Jq.row(5) * j->velocity[0];
-}
-void PHPathJointNode::CompRelativePosition(){
-	PHPathJoint* j = GetJoint();
-	Posed p;
-	j->path->GetPose(j->position[0], p);
-	j->Xjrel.q = p.Ori();
-	j->Xjrel.r = p.Pos();
-}
-void PHPathJointNode::UpdateJointPosition(double dt){
-	PHTreeNode1D::UpdateJointPosition(dt);
-	PHPathJoint* j = GetJoint();
-	if(j->path->IsLoop())
-		j->path->Rollover(j->position[0]);
+	return PHConstraint::AddChildObject(o);
 }
 
 }

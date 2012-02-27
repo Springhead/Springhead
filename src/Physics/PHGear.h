@@ -16,7 +16,7 @@ namespace Spr{;
 
 class PHScene;
 class PHConstraintEngine;
-class PHJoint1D;
+class PH1DJoint;
 
 /**
 	ギア：１自由度関節を連動させる拘束
@@ -28,7 +28,7 @@ public:
 
 	PHScene*			scene;
 	PHConstraintEngine* engine;
-	PHJoint1D*		joint[2];		///< 連動させる関節
+	PH1DJoint*		joint[2];		///< 連動させる関節
 	bool			bArticulated;
 	double			A, Ainv, b;
 	double			f;
@@ -46,7 +46,7 @@ public:
 
 class PHGears : public std::vector< UTRef<PHGear> >{
 public:
-	PHGear* FindByJointPair(PHJoint1D* lhs, PHJoint1D* rhs){
+	PHGear* FindByJointPair(PH1DJoint* lhs, PH1DJoint* rhs){
 		for(iterator it = begin(); it != end(); it++)
 			if((*it)->joint[0] == lhs && (*it)->joint[1] == rhs)
 				return *it;
