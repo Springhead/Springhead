@@ -539,17 +539,14 @@ Vec2d PHFemMeshThermo::CalcVtxCircleAndLine(unsigned id0,unsigned id1,double rad
 		DSTR << "CalcVtxCircleAndLine()関数のこの頂点組みと円弧は交わりません" << std::endl;
 		constX1 = 0.0;
 		constZ1 = 0.0;
-//		DSTR << vertices[id0].disFromOrigin <<
 		DSTR << "(id0, vertices[id0].disFromOrigin): " << id0 << vertices[id0].disFromOrigin << ", (id1, vertices[id1].disFromOrigin): " << id1 << vertices[id1].disFromOrigin << ", radius: " << radius << std::endl;  
 		assert(0);
 	}
 	Vec2d intersection = Vec2d(constX1,constZ1);
-	DSTR << __FILE__  << "(" <<  __LINE__ << "):"<< "intersection: " << intersection << std::endl;
+	DSTR << __FILE__  << "(" <<  __LINE__ << "):"<< "intersection Vtx (x,z)= " << intersection << std::endl;
 	//":" <<  __TIME__ << 
-	//return interSection;
 	return intersection;
-
-}	//	CalcVtxCircleAndLine() :difinition
+}		//	CalcVtxCircleAndLine() :difinition
 
 void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 	// radius value check
@@ -651,13 +648,17 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 			//DSTR <<  "小さい順か確認: " << vertices[vtxOrder[0]].disFromOrigin << ", "<< vertices[vtxOrder[1]].disFromOrigin << ", "<< vertices[vtxOrder[2]].disFromOrigin << std::endl;
 			// ... face内の各頂点が属している領域を判定 0 | 1 | 2	///	faces[i].ascendVtx[0~2]に該当する頂点が　円環領域の前後のどこに存在しているか
 			unsigned vtxdiv[3];		//	原点から近い順:0~2に並べ替えられた頂点IDに対応する領域内外の区分け　配列
+			
+			//DSTR << "faces[i].ascendVtx[0~2]:" ;
 			for(unsigned j=0;j<3;j++){
 				if( vertices[faces[i].ascendVtx[j]].disFromOrigin < radius){			vtxdiv[j] = 0;
 				/// 円弧上を含み、円弧上も円環領域内と定義する
 				}else if(radius <= vertices[faces[i].ascendVtx[j]].disFromOrigin && vertices[faces[i].ascendVtx[j]].disFromOrigin <= Radius ){	vtxdiv[j] = 1;
 				}else if(Radius < vertices[faces[i].ascendVtx[j]].disFromOrigin){		vtxdiv[j] = 2;	}
-				DSTR << "faces[i].ascendVtx[j]: " << faces[i].ascendVtx[j] << std::endl;
+				//DSTR << faces[i].ascendVtx[j] ;
+				//if(j <  2) DSTR << ", " ;
 			}
+			//DSTR << std::endl;
 
 			//> debug
 			//DSTR << "頂点の領域番号: " ;
@@ -679,13 +680,10 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 			///	 j と(隣の) (j+1)%3 とで対を成す辺について
 			for(unsigned j=0;j<3;j++){
 				//debug
-				DSTR <<"j: " << j << ", faces[i].ascendVtx[j]: " << faces[i].ascendVtx[j] << ", faces[i].ascendVtx[(j+1)%3]: " << faces[i].ascendVtx[(j+1)%3] << std::endl;
-				DSTR << "vertices[faces[i].ascendVtx[j]].pos: (" << vertices[faces[i].ascendVtx[j]].pos.x  << ", "<< vertices[faces[i].ascendVtx[j]].pos.z << ") " << std::endl;
-				DSTR << "vertices[faces[i].ascendVtx[(j+1)%3]].pos: (" << vertices[faces[i].ascendVtx[(j+1)%3]].pos.x  << ", "<< vertices[faces[i].ascendVtx[(j+1)%3]].pos.z << ") " << std::endl; 
-				//DSTR << "vertices[vtxOrder[(j+1)%3]].pos.x: " << vertices[vtxOrder[(j+1)%3]].pos.x << std::endl;
-				DSTR << std::endl;
-
-				//	↑で値を見ることはできた。この頂点でいいのか？
+				//DSTR <<"j: " << j << ", faces[i].ascendVtx[j]: " << faces[i].ascendVtx[j] << ", faces[i].ascendVtx[(j+1)%3]: " << faces[i].ascendVtx[(j+1)%3] << std::endl;
+				//DSTR << "vertices[faces[i].ascendVtx[j]].pos: (" << vertices[faces[i].ascendVtx[j]].pos.x  << ", "<< vertices[faces[i].ascendVtx[j]].pos.z << ") " << std::endl;
+				//DSTR << "vertices[faces[i].ascendVtx[(j+1)%3]].pos: (" << vertices[faces[i].ascendVtx[(j+1)%3]].pos.x  << ", "<< vertices[faces[i].ascendVtx[(j+1)%3]].pos.z << ") " << std::endl; 
+				//DSTR << std::endl;
 
 				//	0の領域にある辺:
 				if(vtxdiv[j] == 0 && vtxdiv[(j+1)%3] == 0){
@@ -2037,7 +2035,7 @@ void PHFemMeshThermo::Step(double dt){
 	//	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く　クランクニコルソン法のみを使いたい場合
 
 //	dNdt = 10.0 * dt;
-		CalcHeatTransUsingGaussSeidel(5,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
+		CalcHeatTransUsingGaussSeidel(3,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
 
 		//温度を表示してみる
 		//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;

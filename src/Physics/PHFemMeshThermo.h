@@ -18,14 +18,6 @@ class PHFemMeshThermo: public PHFemMesh{
 	SPR_OBJECTDEF(PHFemMeshThermo);
 	SPR_DECLMEMBEROF_PHFemMeshThermoDesc;
 protected:
-	//	これって、faceの中が適当じゃないか？
-	//struct IHVtx{
-	//	std::vector<Vec2d> intersection;		//	この交点を
-	//	double shapefunction[3];				//	形状関数の
-	//}
-
-
-
 	//PHFemMeshThermo内のみで用いる計算
 
 	//%%%%%%%%		行列の宣言・定義		%%%%%%%%//	
@@ -71,52 +63,57 @@ protected:
 
 
 	//全体の係数行列	//SciLabで使用
-	PTM::VMatrixRow<double> matKAll;			//[K]の全体剛性行列		//CreateMatKall()
-	PTM::VMatrixRow<double> matCAll;			//[C]
+	PTM::VMatrixRow<double> matKAll;		//[K]の全体剛性行列		//CreateMatKall()
+	PTM::VMatrixRow<double> matCAll;		//[C]
 
 	//全体の剛性行列の代わり
-	PTM::VMatrixRow<double> dMatKAll;			//全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
-	PTM::VMatrixRow<double> dMatCAll;			//全体剛性行列Cの対角成分
-	PTM::VMatrixRow<double> _dMatAll;			//全体剛性行列KとCの対角成分の定数倍和の逆数をとったもの	ガウスザイデルの計算に利用する
-	PTM::VMatrixCol<double> bVecAll;			//ガウスザイデルの計算に用いる定数行列bの縦ベクトル	Rowである必要はあるのか？⇒Colにした
+	PTM::VMatrixRow<double> dMatKAll;		// 全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
+	PTM::VMatrixRow<double> dMatCAll;		// 全体剛性行列Cの対角成分
+	PTM::VMatrixRow<double> _dMatAll;		// 全体剛性行列KとCの対角成分の定数倍和の逆数をとったもの	ガウスザイデルの計算に利用する
+	PTM::VMatrixCol<double> bVecAll;		// ガウスザイデルの計算に用いる定数行列bの縦ベクトル	Rowである必要はあるのか？⇒Colにした
 	//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
 
 	//%%%		関数の宣言		%%%%%%%%//
 	//%%%%%%		熱伝導計算本体		%%%//
 	//	熱伝達境界条件の時はすべての引数を満たす必要がある。
 	//	温度固定境界条件を用いたいときには、熱伝達率（最後の引数）を入力しない。また、毎Step実行時に特定節点の温度を一定温度に保つようにする。
-	void SetInitThermoConductionParam(double thConduct,double roh,double specificHeat,double heatTrans);		//熱伝導率、密度、比熱、熱伝達率などのパラメーターを設定・代入
+	void SetInitThermoConductionParam(
+		double thConduct,		// thConduct:熱伝導率
+		double roh,				// roh:密度
+		double specificHeat,	// specificHeat:比熱 J/ (K・kg):1960
+		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
+		);
 
 	void SetThermalEmissivityToVtx(unsigned id,double thermalEmissivity);			///	熱放射率を節点 id に設定する関数
 	void SetThermalEmissivityToVerticesAll(double thermalEmissivity);					///	熱放射率を全節点に設定
 
 	void SetHeatTransRatioToAllVertex();	//SetInit で設定している熱伝達係数を、節点(FemVertex)の構造体のメンバ変数に代入
 
-	void InitCreateMatC();					///	行列作成で用いる入れ物などの初期化
-	void InitCreateVecf();						///	Vecfの作成前に実行する初期化処理
-	void InitCreateMatk();						///	Matkの作成前に実行する初期化処理
+	void InitCreateMatC();			///	行列作成で用いる入れ物などの初期化
+	void InitCreateVecf();			///	Vecfの作成前に実行する初期化処理
+	void InitCreateMatk();			///	Matkの作成前に実行する初期化処理
 
 	///	熱伝達率が変化した時などの再計算用の初期化関数
 	void InitCreateVecf_();				
 	void InitCreateMatk_();
 
 	//	[K]:熱伝導マトリクスを作る関数群
-	void CreateMatk1k(unsigned id);					//>	kimura式を参考にして(惑いながら)導出した計算法													///	k1ktに改称する
-	void CreateMatk1b(unsigned id);		//>	yagawa1983の計算法の3次元拡張した計算法 b:book の意味					///	k1btに改称する
-	void CreateMatk2(unsigned id,Tet tets);			//>	四面体ごとに作るので、四面体を引数に取る 内外すべての四面体について行う
-	//void CreateMatk2f(Face faces);					//>	四面体ごとに作る式になっているが、外殻の三角形face毎に作る　facesのf
-	void CreateMatk2t(unsigned id);					//>	四面体ごとに作る　tetsのt
-	void CreateMatk3t(unsigned id);					//>	四面体(tets)のt 毎に生成
+	void CreateMatk1k(unsigned id);			// kimura式を参考にして(惑いながら)導出した計算法			//>	k1ktに改称する
+	void CreateMatk1b(unsigned id);			// yagawa1983の計算法の3次元拡張した計算法 b:book の意味	//>	k1btに改称する
+	void CreateMatk2(unsigned id,Tet tets);		// 四面体ごとに作るので、四面体を引数に取る 内外すべての四面体について行う
+	//void CreateMatk2f(Face faces);		// 四面体ごとに作る式になっているが、外殻の三角形face毎に作る　facesのf
+	void CreateMatk2t(unsigned id);			// 四面体ごとに作る　tetsのt
+	void CreateMatk3t(unsigned id);			// 四面体(tets)のt 毎に生成
 
 	void CreateMatk2array();
 	void CreateMatkLocal(unsigned i);
 //	void CreateDumMatkLocal();					//	全要素が0のダミーk
 	void CreateMatKall();
 	//	[C]:熱容量マトリクスを作る関数
-	void CreateMatcLocal(unsigned id);						//	matC1,C2,C3・・・毎に分割すべき？
-	void CreateMatc(unsigned id);					//cの要素剛性行列を作る関数
+	void CreateMatcLocal(unsigned id);			//	matC1,C2,C3・・・毎に分割すべき？
+	void CreateMatc(unsigned id);				// cの要素剛性行列を作る関数
 	//	{F}:熱流束ベクトルを作る関数
-	void CreateVecfLocal(unsigned id);						//	四面体メッシュのIDを引数に
+	void CreateVecfLocal(unsigned id);				//	四面体メッシュのIDを引数に
 	void CreateVecf3(unsigned id);					//	熱伝達率は相加平均、周囲流体温度は各々を形状関数に？
 	void CreateVecf3_(unsigned id);					//	熱伝達率も、周囲流体温度も相加平均
 	void CreateVecf2(unsigned id);					//	四面体のIDを引数に
@@ -132,15 +129,26 @@ protected:
 	//	何用に用いる？	行列作成の関数をまとめるだけ？
 	void CreateMatrix();					
 
-	//	k,c,f共通で用いる計算関数
-	void SetkcfParam(Tet tets);					//エッジや頂点にk,c,fの要素剛性行列の係数を設定する関数	すべての四面体について要素剛性行列を求め、k,c,fに値を入れると、次の要素について処理を実行する	
-	double CalcTriangleArea(int id0, int id2, int id3);		//節点IDを入れると、その点で構成された三角形の面積を求める　四面体での面積分で使用
-	double CalcTetrahedraVolume(Tet tets);		////四面体のIDを入れると、その体積を計算してくれる関数
-	//void PrepareStep();							//Step()で必要な変数を計算する関数
+	//%%%		k,c,f共通で用いる計算関数		%%%//
+	// エッジや頂点にk,c,fの要素剛性行列の係数を設定	すべての四面体について要素剛性行列を求め、k,c,fに値を入れると、次の要素について処理を実行
+	void SetkcfParam(Tet tets);
+	// 頂点ID　３点から成る三角形の求積　(四面体の三角形面積分等で利用)
+	double CalcTriangleArea(int id0, int id2, int id3);		
+	double CalcTetrahedraVolume(Tet tets);			// 四面体のIDを入れると、その体積を計算してくれる関数
+	//void PrepareStep();							// Step()で必要な変数を計算する関数
 	//double CalcbVec(int vtxid,
-	void CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt);		//	（クランクニコルソン法を用いた）ガウスザイデル法で熱伝導を計算 NofCyc:繰り返し計算回数,dt:ステップ時間
-	void CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double eps);		//	（前進・クランクニコルソン・後退積分に対応)ガウスザイデル法で熱伝導を計算 NofCyc:繰り返し計算回数,dt:ステップ時間,e:積分の種類 0.0:前進積分,0.5:クランクニコルソン差分式,1.0:後退積分・陰解法
-
+	
+	//	（クランクニコルソン法を用いた）ガウスザイデル法で熱伝導を計算
+	void CalcHeatTransUsingGaussSeidel(
+		unsigned NofCyc,	// NofCyc:繰り返し計算回数
+		double dt			// dt:ステップ時間
+		);
+	// （前進・クランクニコルソン・後退積分に対応)ガウスザイデル法で熱伝導を計算 
+	void CalcHeatTransUsingGaussSeidel(
+		unsigned NofCyc,		// NofCyc:繰り返し計算回数
+		double dt,				// dt:ステップ時間
+		double eps				// eps:積分の種類 0.0:前進積分,0.5:クランクニコルソン差分式,1.0:後退積分・陰解法
+		);		
 
 	void SetTempAllToTVecAll(unsigned size);		//	TVecAllに全節点の温度を設定する関数
 	void SetTempToTVecAll(unsigned vtxid);			//	TVecAllに特定の節点の温度を設定する関数
