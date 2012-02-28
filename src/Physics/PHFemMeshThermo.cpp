@@ -518,7 +518,7 @@ Vec2d PHFemMeshThermo::CalcVtxCircleAndLine(unsigned id0,unsigned id1,double rad
 		double radius2 = radius * radius;
 		constX1  = (- constA * constB + sqrt(radius2 * (constA * constA + 1.0) - constB * constB )  )  /  (constA * constA + 1);
 		constX1_ = (- constA * constB - sqrt(radius2 * (constA * constA + 1.0) - constB * constB )  )  /  (constA * constA + 1);
-		// 交点のx座標がが線分の両端点のx座標間にあるとき
+		// 交点のx座標が線分の両端点のx座標間にあるとき
 		if( (vertices[id0].pos.x <= constX1 && constX1 <= vertices[id1].pos.x) || (vertices[id1].pos.x <= constX1 && constX1 <= vertices[id0].pos.x) ){
 			constZ1 = sqrt(radius2 - constX1  * constX1  );
 			constZ1_ = - sqrt(radius2 - constX1  * constX1  );
@@ -526,7 +526,6 @@ Vec2d PHFemMeshThermo::CalcVtxCircleAndLine(unsigned id0,unsigned id1,double rad
 			if( (vertices[id0].pos.z <= constZ1_ && constZ1_ <= vertices[id1].pos.z) || (vertices[id1].pos.z <= constZ1_ && constZ1_ <= vertices[id0].pos.z) ){
 				constZ1 = constZ1_;
 			}
-
 		}else{
 			constX1 = constX1_;		///		点のx座標はconstX_が正しい事がわかった。
 			constZ1  =   sqrt(radius2 - constX1  * constX1  );
