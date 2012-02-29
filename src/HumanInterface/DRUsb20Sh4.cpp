@@ -100,13 +100,13 @@ void DRUsb20Sh4::UsbUpdate(){
 	UCHAR pio[2];
 	pio[0] = inBuffer[cur++];
 	pio[1] = inBuffer[cur++];
-//	DSTR << "PIO:";
+	//DSTR << "PIO:";
 	for(int i=0; i<16; ++i){
 		pioLevel[i] = (pio[i/8] & (0x01 << (i%8))) ? 1 : 0;
-//		DSTR << pioLevel[i];
+		//DSTR << pioLevel[i];
 	}
-//	DSTR << " " << RotarySwitch();
-//	DSTR << std::endl;
+	//DSTR << " " << RotarySwitch();
+	//DSTR << std::endl;
 
 	//	info‚Á‚Ä‚È‚ÉH
 	DWORD info;

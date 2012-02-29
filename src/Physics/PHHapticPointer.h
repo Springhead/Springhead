@@ -32,6 +32,7 @@ struct PHIntermediateRepresentation :public UTRefCount{
 		f = 0.0;
 		solidPair = NULL;
 	}
+	bool operator < (const PHIntermediateRepresentation& s) const { return depth < s.depth; }
 };
 typedef PHIntermediateRepresentation PHIr;
 typedef std::vector< PHIr* > PHIrs;

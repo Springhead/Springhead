@@ -33,7 +33,7 @@ namespace Spr {;
 DRUsb20Simple::DRUsb20Simple(const DRUsb20SimpleDesc& d){
 	channel = d.channel;
 
-	hSpidar = NULL;
+	hSpidar = INVALID_HANDLE_VALUE;
 	for(int i=0; i<8; i++){
 		daOut[i]		= 0;
 		adIn[i]			= 0;
@@ -94,8 +94,7 @@ void* DRUsb20Simple::UsbOpen(int id){
 				OPEN_EXISTING,
 				0,
 				NULL);
-	if(rv == INVALID_HANDLE_VALUE)
-		return 0;
+	INVALID_HANDLE_VALUE;
 	return rv;
 #else
 	return 0;

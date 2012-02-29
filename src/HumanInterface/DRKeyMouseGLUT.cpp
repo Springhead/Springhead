@@ -61,12 +61,11 @@ HIVirtualDeviceIf* DRKeyMouseGLUT::Rent(const IfInfo* ii, const char* n, int por
 	HIVirtualDeviceIf* dv = HIRealDevice::Rent(ii, n, portNo);
 
 	// 既存の仮想デバイスがなければ作成
-	if(!dv){
+	if(!dv && DVKeyMouseIf::GetIfInfoStatic()->Inherit(ii)){
 		DVKeyMouse* km = DBG_NEW DV(this, portNo);
 		AddChildObject(km->Cast());
 		dv = km->Cast();
 	}
-
 	return dv;
 }
 

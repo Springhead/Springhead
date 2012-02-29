@@ -9,11 +9,11 @@ using namespace Spr;
 class MyApp : public FWApp{
 public:
 	PHSceneIf* phscene;
-	PHHapticPointerIf* pointer;
+	PHHapticPointerIf* pointer, *pointer2;
 	double range;
 	int physicsTimerID;
 	int hapticTimerID;
-	UTRef<HIBaseIf> spg;
+	UTRef<HIBaseIf> spg, spg2;
 	UTRef<HISdkIf> hiSdk;
 	UTTimerIf* timer;
 	PHSolidIf* sobox;

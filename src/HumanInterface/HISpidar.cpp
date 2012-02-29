@@ -31,6 +31,7 @@ bool HISpidar::Init(const void* pDesc){
 	int nMotor = desc.motors.size();
 	motors.resize(nMotor);
 	
+	sdk->Print(DSTR);
 	size_t i;
 	for(i = 0; i < motors.size(); ++i){
 		motors[i].SetDesc(&desc.motors[i]);

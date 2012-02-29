@@ -39,7 +39,7 @@ DRCyUsb20Sh4::DRCyUsb20Sh4(const DRCyUsb20Sh4Desc& d):DRUsb20Sh4(d), sendBuf(NUL
 DRCyUsb20Sh4::~DRCyUsb20Sh4(){
 	delete [] sendBuf;
 	delete [] recvBuf;
-	if (hSpidar) CloseHandle(hSpidar);
+	if (hSpidar != INVALID_HANDLE_VALUE) CloseHandle(hSpidar);
 }
 
 void* DRCyUsb20Sh4::UsbOpen(int id){
@@ -48,7 +48,7 @@ void* DRCyUsb20Sh4::UsbOpen(int id){
 	SP_DEVICE_INTERFACE_DATA  devInterfaceData; 
 	PSP_INTERFACE_DEVICE_DETAIL_DATA functionClassDeviceData; 
 
-	HANDLE hDevice = NULL;
+	HANDLE hDevice = INVALID_HANDLE_VALUE;
 	ULONG requiredLength = 0; 
 	int deviceNumber = id;  // Can be other values if more than 1 device connected to driver 
 
@@ -90,7 +90,6 @@ void* DRCyUsb20Sh4::UsbOpen(int id){
 			}
 		}
 	}
-	if(hDevice == INVALID_HANDLE_VALUE) return 0;
 	return hDevice;
 #else
 	return 0;
@@ -108,7 +107,7 @@ bool DRCyUsb20Sh4::UsbClose(void*& h){
 
 //		bool rv = CloseHandle(h) != 0;
 //		std::cout << "Device Close" << std::endl;
-		h = NULL;
+		h = INVALID_HANDLE_VALUE;
 //		return rv;
 		//	‚È‚º‚©Close‚ÉŽžŠÔ‚ª‚©‚©‚é‚Ì‚Å
 	}
@@ -120,7 +119,7 @@ bool DRCyUsb20Sh4::UsbClose(void*& h){
 
 
 void DRCyUsb20Sh4::Reset(){
-	if (hSpidar){
+	if (hSpidar != INVALID_HANDLE_VALUE){
 		DWORD dwBytes = 0;
 		DeviceIoControl(hSpidar, IOCTL_ADAPT_RESET_PARENT_PORT, NULL, 0, NULL, 0, &dwBytes, NULL);
 		DWORD e = GetLastError();
@@ -149,7 +148,7 @@ void DRCyUsb20Sh4::SetupBuffer(){
 
 void DRCyUsb20Sh4::UsbSend(unsigned char* outBuffer){
 #ifdef _WIN32
-	if (!hSpidar) return;
+	if (hSpidar == INVALID_HANDLE_VALUE) return;
 	memcpy(sendStart, outBuffer, PACKET_SIZE);
 	DWORD dwReturnBytes=0;
 	
@@ -158,13 +157,13 @@ void DRCyUsb20Sh4::UsbSend(unsigned char* outBuffer){
 		sendBuf, sendBufLen, sendBuf, sendBufLen, &dwReturnBytes, NULL);
 	DWORD e = GetLastError();
 	if (e) DSTR << "DRCyUsb20Sh4::UsbSend() error:" << e << std::endl;
-	//std::cout << "Send" << std::endl;
+	std::cout << "Send" << std::endl;
 #endif
 }
 
 void DRCyUsb20Sh4::UsbRecv(unsigned char* inBuffer){
 #ifdef _WIN32
-	if (!hSpidar) return;
+	if (hSpidar == INVALID_HANDLE_VALUE) return;
 	DWORD dwReturnBytes=0;
 	SetLastError(0);
 	DeviceIoControl(hSpidar, IOCTL_ADAPT_SEND_NON_EP0_TRANSFER,
