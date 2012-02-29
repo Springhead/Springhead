@@ -7,7 +7,12 @@ using namespace Spr;
 
 int __cdecl main(){
 	// 力覚インタフェースとの接続設定
-	UTRef<HISdkIf> hiSdk = HISdkIf::CreateSdk();
+	UTRef<FWSdkIf> fwSdk = FWSdkIf::CreateSdk();
+	HISdkIf* hiSdk = fwSdk->GetHISdk();
+	DSTR << hiSdk << std::endl;
+
+	//UTRef<HISdkIf> hiSdk = HISdkIf::CreateSdk();
+
 	// win32
 	DRUsb20SimpleDesc usbSimpleDesc;
 	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);

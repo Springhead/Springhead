@@ -15,16 +15,18 @@ using namespace Spr;
 #define DEBUG_RENDER 1
 
 void MyApp::InitInterface(){
-	hiSdk = HISdkIf::CreateSdk();
+	hiSdk = GetSdk()->GetHISdk();
+	//hiSdk = HISdkIf::CreateSdk();
+	//hiSdk->Print(DSTR);
 
 #if SPIDAR
 	DRUsb20SimpleDesc usbSimpleDesc;
 	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
-	DRUsb20Sh4Desc usb20Sh4Desc;
-	for(int i=0; i< 10; ++i){
-		usb20Sh4Desc.channel = i;
-		hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
-	}
+	//DRUsb20Sh4Desc usb20Sh4Desc;
+	//for(int i=0; i< 10; ++i){
+	//	usb20Sh4Desc.channel = i;
+	//	hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+	//}
 	DRCyUsb20Sh4Desc cyDesc;
 	for(int i=0; i<10; ++i){
 		cyDesc.channel = i;
@@ -42,13 +44,15 @@ void MyApp::InitInterface(){
 	HIXbox360ControllerIf* con = DCAST(HIXbox360ControllerIf,spg);
 	con->Init();
 #endif
+	spg2 = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
+	HIXbox360ControllerIf* con2 = DCAST(HIXbox360ControllerIf, spg2);
+	con2->Init();
 }
 
 
 void MyApp::Init(int argc, char* argv[]){
 		FWApp::Init(argc, argv);
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();
-		HISdkIf* hiSdk = GetSdk()->GetHISdk();
 		InitInterface();
 		phscene = GetSdk()->GetScene()->GetPHScene();
 		phscene->SetTimeStep(0.05);
@@ -94,9 +98,22 @@ void MyApp::Init(int argc, char* argv[]){
 		pointer->SetReflexSpring(5000);
 		pointer->SetReflexDamper(0.1);
 		pointer->EnableDebugControl(DEBUG_CON);
-		pointer->EnableFriction(false);
+		pointer->EnableFriction(true);
 		pointer->EnableVibration(true);
 		phscene->SetContactMode(pointer, PHSceneDesc::MODE_NONE);
+
+		pointer2 = phscene->CreateHapticPointer();
+		pointer2->AddShape(phSdk->CreateShape(cd));
+		pointer2->SetDefaultPose(Posed());
+		pointer2->SetHumanInterface(spg2);
+		pointer2->SetInertia(pointer->GetInertia());
+		pointer2->SetLocalRange(0.5);
+		pointer2->SetPosScale(50);
+		pointer2->SetReflexSpring(5000);
+		pointer2->SetReflexDamper(0.1);
+		pointer2->EnableFriction(true);
+		pointer2->EnableVibration(true);
+		phscene->SetContactMode(pointer2, PHSceneDesc::MODE_NONE);
 
 		GetSdk()->SetDebugMode(true);
 		GetSdk()->GetScene()->EnableRenderHaptic(DEBUG_RENDER);
@@ -160,8 +177,6 @@ void MyApp::Keyboard(int key, int x, int y){
 			for(int i = 0; i < NTimers(); i++){
 				GetTimer(i)->Stop();
 			}
-			Sleep(1000);
-			GetSdk()->Clear();
 			exit(0);
 			break;
 		case '1':

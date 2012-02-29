@@ -231,6 +231,7 @@ void PHHapticRender::VibrationRendering(){
 			SpatialVector vibForce;
 			vibForce.v() = vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT);		//U“®ŒvŽZ
 			pointer->AddHapticForce(vibForce);
+			//DSTR << vibT << std::endl;
 		}
 	}
 }

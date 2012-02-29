@@ -164,6 +164,7 @@ bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2]
 		ir->interpolation_pose = curShapePoseW[0];
 		irs.push_back(ir);
 	}
+	//std::sort(irs.begin, irs.end()):
 	return true;
 }
 
@@ -298,9 +299,9 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 	for(int i = 0; i < Nirs; i++){
 		PHIr* ir = sp->irs[i];
 		double mu = ir->mu;	// “®–€ŽCŒW”
-		mu = 10;
 				
-		double l = mu * ir->depth; // –€ŽC‰~”¼Œa
+		double l = mu * ir->depth;		// –€ŽC‰~”¼Œa
+
 		Vec3d vps = ir->pointerPointW;
 		Vec3d vq = relativePose * ir->pointerPointW;
 		Vec3d dq = (vq - vps) * ir->normal * ir->normal;
@@ -326,6 +327,7 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 			sp->irs.push_back(fricIr);
 			//DSTR << "static friction" << std::endl;
 		}
+
 		if(epsilon < l && l < tangent.norm()){
 			// “®–€ŽC
 			fricIr->normal = tangent.unit();
@@ -337,6 +339,52 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 	return true;
 }
 
+bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp){
+	// –€ŽC
+
+	int Nirs = sp->irs.size();
+	if(Nirs == 0) return false;
+	for(int i = 0; i < Nirs; i++){
+		PHIr* ir = sp->irs[i];
+		double mu = ir->mu;	// “®–€ŽCŒW”				
+		double l = mu * ir->depth;		// –€ŽC‰~”¼Œa
+
+		Vec3d vps = ir->pointerPointW;
+		Vec3d vq = relativePose * ir->pointerPointW;
+		Vec3d dq = (vq - vps) * ir->normal * ir->normal;
+		Vec3d vqs = vq - dq;
+		Vec3d tangent = vqs - vps;
+
+		//DSTR << "vps" << vps << std::endl;
+		//DSTR << "vq" << vq << std::endl;
+		//DSTR << "tangent " << tangent << tangent.norm() << std::endl;
+
+		PHIr* fricIr = DBG_NEW PHIr();
+		*fricIr = *ir;
+		double epsilon = 1e-5;
+		if(tangent.norm() < epsilon){
+			// ÃŽ~ó‘Ô
+			delete fricIr;
+			//DSTR << "rest" << std::endl;
+		}
+		if(epsilon < tangent.norm() && tangent.norm() <= l){
+			//Ã–€ŽCiÃŽ~–€ŽC”¼Œa“àj
+			fricIr->normal = tangent.unit();
+			fricIr->depth = tangent.norm();
+			sp->irs.push_back(fricIr);
+			//DSTR << "static friction" << std::endl;
+		}
+
+		if(epsilon < l && l < tangent.norm()){
+			// “®–€ŽC
+			fricIr->normal = tangent.unit();
+			fricIr->depth = l;
+			sp->irs.push_back(fricIr);
+			//DSTR << "dynamic friction" << std::endl;
+		}
+	}
+	return true;
+}
 //----------------------------------------------------------------------------
 // PHHapticEngineImp
 double PHHapticEngineImp::GetPhysicsTimeStep(){

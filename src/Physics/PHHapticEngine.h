@@ -109,6 +109,7 @@ public:
 	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< Œð·‚ªŒŸ’m‚³‚ê‚½‚Æ‚«‚Ìˆ—
 	virtual PHIrs CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose, bool bPoints);
 	virtual bool CompFrictionIntermediateRepresentation(PHShapePairForHaptic* sp);
+	virtual bool CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp);
 };
 class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> >{};
 
