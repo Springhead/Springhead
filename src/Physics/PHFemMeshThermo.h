@@ -13,7 +13,7 @@
 
 namespace Spr{;
 
-///	熱のFEM用のメッシュ
+///	熱伝導FEM計算クラス
 class PHFemMeshThermo: public PHFemMesh{
 	SPR_OBJECTDEF(PHFemMeshThermo);
 	SPR_DECLMEMBEROF_PHFemMeshThermoDesc;
@@ -38,18 +38,26 @@ protected:
 //	PTM::TMatrixRow<4,4,double> matk1;			//CreateMatk1k() / k1b				///	struct Tetへ移植
 //	PTM::TMatrixRow<4,4,double> matk2;			//CreateMatk2()						///	
 	//int Matk2array[4];						//matk2が入った配列		//CreateMatk2array()
-	PTM::TMatrixRow<4,4,double> matk1array[4];	//Kmの3つの4×4行列の入れ物　Matk1を作るまでの間の一時的なデータ置場
-	PTM::TMatrixRow<4,4,double> matk2array[4];	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
-	PTM::TMatrixRow<4,4,double> matk3array[4];	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
+	//Kmの3つの4×4行列の入れ物　Matk1を作るまでの間の一時的なデータ置場
+	PTM::TMatrixRow<4,4,double> matk1array[4];
+	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
+	PTM::TMatrixRow<4,4,double> matk2array[4];
+	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
+	PTM::TMatrixRow<4,4,double> matk3array[4];
 
-	PTM::TMatrixRow<4,4,double> matk;			//Matk=Matk1+Matk2+Matk3	matk1~3を合成した要素剛性行列	CreateMatkLocal()
+	//Matk=Matk1+Matk2+Matk3	matk1~3を合成した要素剛性行列	CreateMatkLocal()
+	PTM::TMatrixRow<4,4,double> matk;			
 	PTM::TMatrixRow<4,4,double> matc;			//
 //	PTM::TMatrixCol<4,1,double> Vecf3;			//f3:外側の面に面している面のみ計算する　要注意
 //	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
 //	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
-	PTM::TVector<4,double> vecf3;			//f3:外側の面に面している面のみ計算する　要注意
-	PTM::TVector<4,double> vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
-	PTM::TVector<4,double> vecf;			//f1~f4を合算した縦ベクトル
+	
+	//f3:外側の面に面している面のみ計算する　要注意
+	PTM::TVector<4,double> vecf3;
+	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
+	PTM::TVector<4,double> vecf3array[4];
+	//f1~f4を合算した縦ベクトル
+	PTM::TVector<4,double> vecf;			
 	PTM::TVector<4,double> vecf2;
 	PTM::TVector<4,double> vecf2array[4];
 //	PTM::VVector<double> Vechoge;
@@ -62,15 +70,21 @@ protected:
 	PTM::TMatrixRow<3,3,double> matd;
 
 
-	//全体の係数行列	//SciLabで使用
-	PTM::VMatrixRow<double> matKAll;		//[K]の全体剛性行列		//CreateMatKall()
-	PTM::VMatrixRow<double> matCAll;		//[C]
+	// 全体の係数行列	//SciLabで使用
+	// ..[K]の全体剛性行列		//CreateMatKall()
+	PTM::VMatrixRow<double> matKAll;
+	// ..[C]
+	PTM::VMatrixRow<double> matCAll;
 
-	//全体の剛性行列の代わり
-	PTM::VMatrixRow<double> dMatKAll;		// 全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
-	PTM::VMatrixRow<double> dMatCAll;		// 全体剛性行列Cの対角成分
-	PTM::VMatrixRow<double> _dMatAll;		// 全体剛性行列KとCの対角成分の定数倍和の逆数をとったもの	ガウスザイデルの計算に利用する
-	PTM::VMatrixCol<double> bVecAll;		// ガウスザイデルの計算に用いる定数行列bの縦ベクトル	Rowである必要はあるのか？⇒Colにした
+	// 全体の剛性行列の代わり
+	// ..全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
+	PTM::VMatrixRow<double> dMatKAll;
+	// ..全体剛性行列Cの対角成分
+	PTM::VMatrixRow<double> dMatCAll;
+	// ..全体剛性行列KとCの対角成分の定数倍和の逆数をとったもの	ガウスザイデルの計算に利用する
+	PTM::VMatrixRow<double> _dMatAll;
+	// ..ガウスザイデルの計算に用いる定数行列bの縦ベクトル	Rowである必要はあるのか？⇒Colにした
+	PTM::VMatrixCol<double> bVecAll;
 	//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
 
 	//%%%		関数の宣言		%%%%%%%%//
@@ -98,12 +112,17 @@ protected:
 	void InitCreateMatk_();
 
 	//	[K]:熱伝導マトリクスを作る関数群
-	void CreateMatk1k(unsigned id);			// kimura式を参考にして(惑いながら)導出した計算法			//>	k1ktに改称する
-	void CreateMatk1b(unsigned id);			// yagawa1983の計算法の3次元拡張した計算法 b:book の意味	//>	k1btに改称する
-	void CreateMatk2(unsigned id,Tet tets);		// 四面体ごとに作るので、四面体を引数に取る 内外すべての四面体について行う
+	//	..kimura式を参考にして(惑いながら)導出した計算法			//>	k1ktに改称する
+	void CreateMatk1k(unsigned id);
+	//	..yagawa1983の計算法の3次元拡張した計算法 b:book の意味	//>	k1btに改称する
+	void CreateMatk1b(unsigned id);
+	//	..四面体ごとに作るので、四面体を引数に取る 内外すべての四面体について行う
+	void CreateMatk2(unsigned id,Tet tets);
 	//void CreateMatk2f(Face faces);		// 四面体ごとに作る式になっているが、外殻の三角形face毎に作る　facesのf
-	void CreateMatk2t(unsigned id);			// 四面体ごとに作る　tetsのt
-	void CreateMatk3t(unsigned id);			// 四面体(tets)のt 毎に生成
+	//	..四面体ごとに作る　tetsのt
+	void CreateMatk2t(unsigned id);
+	//	..四面体(tets)のt 毎に生成
+	void CreateMatk3t(unsigned id);
 
 	void CreateMatk2array();
 	void CreateMatkLocal(unsigned i);
@@ -168,7 +187,8 @@ protected:
 	void HeatTransFromPanToFoodShell();									//	伝導伝熱：食材の外殻のフライパンや鉄板に近い節点から熱が伝わる		//	食材、調理器具を引数に
 	
 	//	放射伝熱を有効にしたい食材のFWFemMesh？のIf、加熱器具のFWFemMeshのIf,熱輻射の浸透深さを代入
-	void HeatRadientToFood(char foodID,char panID,double fluxdepth);						//	放射伝熱：食材の外殻から数ミリ以内の節点に対して、加熱器具から熱が伝わる
+	//	..放射伝熱：食材の外殻から数ミリ以内の節点に対して、加熱器具から熱が伝わる
+	void HeatRadientToFood(char foodID,char panID,double fluxdepth);
 												//
 	PTM::TMatrixRow<4,4,double> Create44Mat21();	//共通で用いる、4×4の2と1でできた行列を返す関数
 	//あるいは、引数を入れると、引数を変えてくれる関数
@@ -210,12 +230,16 @@ public:
 	
 	PHFemMeshThermo(const PHFemMeshThermoDesc& desc=PHFemMeshThermoDesc(), SceneIf* s=NULL);
 	void AfterSetDesc();		//	伝熱行列の計算など
-	///熱伝導シミュレーションでエンジンが用いるステップ		//(オーバーライド)
+	/// 熱伝導シミュレーションでエンジンが用いるステップをオーバーライド		
 	void Step(double dt);
-	void SetVerticesTempAll(double temp);					//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
-	void SetVertexTemp(unsigned i,double temp);		// 節点iの温度をtemp度に設定し、それをTVEcAllに反映
-	void SetLocalFluidTemp(unsigned i,double temp);		//	接点iの周囲の節点温度をtemp度に設定
-	void UpdateheatTransRatio(unsigned id,double heatTransRatio);	///	頂点の熱伝達率を更新し、行列を作り直す
+	//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
+	void SetVerticesTempAll(double temp);
+	// 節点iの温度をtemp度に設定し、それをTVEcAllに反映
+	void SetVertexTemp(unsigned i,double temp);
+	//	接点iの周囲の節点温度をtemp度に設定
+	void SetLocalFluidTemp(unsigned i,double temp);
+	///	頂点の熱伝達率を更新し、行列を作り直す
+	void UpdateheatTransRatio(unsigned id,double heatTransRatio);
 
 	// If としての実装
 	void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt);
@@ -223,16 +247,21 @@ public:
 	//%%%%%%%%		熱伝導境界条件の設定関数の宣言		%%%%%%%%//
 	void SetThermalBoundaryCondition();				//	熱伝導境界条件の設定
 
-	//	使い方
-	//	温度を加えたい節点や節点周りの流体は、その節点のx,y,z座標から特定する。
-	//	その際に以下の関数を用いれば良い。
-	void UsingFixedTempBoundaryCondition(unsigned id,double temp);			//	温度固定境界条件:S_1	指定節点の温度を変える
-	void UsingHeatTransferBoundaryCondition(unsigned id,double temp);		//	熱伝達境界条件:S_3		指定節点の周囲流体温度を変える	
-	void UsingHeatTransferBoundaryCondition(unsigned id,double temp,double heatTransratio);		///	熱伝達率も設定可能な関数		///	名前を変えるべき　要改善
+	//%%%%%%	使い方		%%%%%//
+	//	温度境界条件　を設定関数群
+	//	..温度固定境界条件:S_1		指定節点の温度を変える
+	void UsingFixedTempBoundaryCondition(unsigned id,double temp);
+	//	..熱伝達境界条件:S_3		指定節点の周囲流体温度を変える
+	void UsingHeatTransferBoundaryCondition(unsigned id,double temp);
+	//	熱伝達率も設定可能な関数	//>	名前を変えるべき　要改善
+	void UsingHeatTransferBoundaryCondition(unsigned id,double temp,double heatTransratio);
+	
+	//	以下、考え途中
 	//	改称案
 	//SetVtxtoFixedBC
 	//SetVtxtoTranferBC
 	//SetVtxHTRtoTranferBC
+	//	温度を加えたい節点や節点周りの流体は、その節点のx,y,z座標から特定すればいい？	温度境界条件Tcの設定など
 
 	///	凡例->wiki
 	//BC=BoundaryCondition
@@ -240,30 +269,41 @@ public:
 
 	int GetSurfaceVertex(int id){return surfaceVertices[id];};
 	int NSurfaceVertices(){return surfaceVertices.size();};
-	void SetVertexTc(int id,double temp){								///	周囲流体温度を更新	熱伝達率は変えない
-		UsingHeatTransferBoundaryCondition(id,temp);					/// PHFemMeshThermo::SetLocalFluidTemp()で周囲流体温度の設定、CreateVecfLocal()の更新
+	//	周囲流体温度を更新	熱伝達率は変えない
+	void SetVertexTc(int id,double temp){
+		// ...PHFemMeshThermo::SetLocalFluidTemp()で周囲流体温度の設定、CreateVecfLocal()の更新
+		UsingHeatTransferBoundaryCondition(id,temp);
 	};
-	void SetVertexTc(int id,double temp,double heatTransRatio){			///	周囲流体温度を更新		熱伝達率を変更できるIf
-		UsingHeatTransferBoundaryCondition(id,temp,heatTransRatio);		//	熱伝達境界条件を設定：熱伝達率を含む行列が対象
+	///	周囲流体温度を更新		熱伝達率を変更できるIf
+	void SetVertexTc(int id,double temp,double heatTransRatio){
+		//	..熱伝達境界条件を設定：熱伝達率を含む行列が対象
+		UsingHeatTransferBoundaryCondition(id,temp,heatTransRatio);	
 	};
-	void SetVertexHeatFlux(int id,double heatFlux);						//> 節点の熱流束を設定する
-	void SetVtxHeatFluxAll(double heatFlux);							//> 全節点の熱流束を設定する
+	// 節点の熱流束を設定する
+	void SetVertexHeatFlux(int id,double heatFlux);
+	// 全節点の熱流束を設定する
+	void SetVtxHeatFluxAll(double heatFlux);
 
 	Vec3d GetPose(unsigned id){ return vertices[id].pos; };
 	Vec3d GetSufVtxPose(unsigned id){return vertices[surfaceVertices[id]].pos; };
 
-	unsigned long StepCount;			//	Step数のカウントアップ		// 
-	unsigned long StepCount_;			//	Step数のカウントアップ	StepCountが何週目かを表すカウント	// 
-
+	//%%%	Stepカウントのための変数、関数定義		%%%//
+	unsigned long StepCount;			//	Step数カウントアップの加算係数	
+	unsigned long StepCount_;			//	Step数カウントアップの加算係数	StepCountが何週目かを表すカウント 
+	//	StepCount数カウントアップ
 	unsigned long GetStepCount(){return StepCount;};
+	//	StepCountの周回カウントアップ
 	unsigned long GetStepCountCyc(){return StepCount_;};
 
-	//	ガウスザイデル計算時に使用している
-	PTM::VMatrixCol<double> vecFAll;			//{F}の全体剛性ベクトル
 
-	
-	void CalcVtxDisFromOrigin();			///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
+	//	ガウスザイデル計算で用いる関数群
+	//	..{F}の 全体 剛性ベクトル
+	PTM::VMatrixCol<double> vecFAll;			
 
+	///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
+	void CalcVtxDisFromOrigin();
+
+	//	IHによ四面体のface面の熱流束加熱のための行列成分計算関数
 	void CalcIHdqdt(double r,double R,double dqdtAll);				//	IHヒーターの設定
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);		//	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
 	void CalcIHdqdt2(double r,double R,double dqdtAll);				//	IHヒーターの設定
@@ -271,6 +311,8 @@ public:
 	void CalcIHdqdt4(double radius,double Radius,double dqdtAll);	//	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。
 	//	face頂点のIH加熱時の行列成分を計算	半径10cm程度の円弧と、円環幅数cm幅をまたぐ程度の三角形サイズを想定
 	void CalcIHdqdt5(double radius,double Radius,double dqdtAll);
+	//	DSTR に交点計算結果を表示する
+	void ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,double radius);
 
 	// face頂点を物体原点から近い順に並べかえ、faceクラス変数:ascendVtx[0~2]に近い順の頂点IDを格納;ascendVtx[0]が原点最寄り	
 	void ArrangeFacevtxdisAscendingOrder(int faceID);
