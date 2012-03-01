@@ -560,6 +560,9 @@ void PHFemMeshThermo::ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNu
 }
 
 void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
+	//	face構造体の中のihareaを計算
+	//	形状関数の計算は、iharea を用いて、CalcVecf2surface()等で行う		→クラス化しようか？
+
 	// radius value check
 	if(Radius <= radius){
 		DSTR << "inner radius size is larger than outer Radius " << std::endl;
@@ -779,6 +782,9 @@ void PHFemMeshThermo::CalcIHdqdt5(double radius,double Radius,double dqdtAll){
 				}
 				//	内側から外側に行く辺は上で記述できるが、外側から内側に向かう辺をこれで記述できるのか？
 			}	//	for(unsigned j=0;j<3;j++){
+			// ..IH面積に追加
+
+			//faces[i].iharea = 
 
 // 以下　旧コード
 			/// 旧コード

@@ -213,6 +213,13 @@ protected:
 
 
 public:
+	//	PHFemMEsh.h内のクラスから熱伝導特有のパラメータを継承して使う
+	class thFemVertex :public FemVertex{
+		double heatflux2;
+	};
+	std::vector<thFemVertex> thvertices;
+	//	上記継承で近日中に、熱計算パラメータを継承する。振動FEM解析でも、上位クラス・構造体が使えるように準備しておく
+
 	/////	FemMeshThermo
 	//struct FemMeshThermo{		
 	//	bool alphaUpdated;			///	メッシュ内の一つでも、節点の熱伝達率が更新されたかどうか→K2,F3に影響
@@ -313,6 +320,8 @@ public:
 	void CalcIHdqdt5(double radius,double Radius,double dqdtAll);
 	//	DSTR に交点計算結果を表示する
 	void ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,double radius);
+	//	△分割前のvectorから三角形分割面積和を求積
+	double CalcDivTriArea(std::vector<double> trivec);
 
 	// face頂点を物体原点から近い順に並べかえ、faceクラス変数:ascendVtx[0~2]に近い順の頂点IDを格納;ascendVtx[0]が原点最寄り	
 	void ArrangeFacevtxdisAscendingOrder(int faceID);
