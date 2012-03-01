@@ -51,7 +51,8 @@ j行	| 		     o  d  |　
 class PHFemMesh: public SceneObject{
 public:
 	//	頂点
-	struct FemVertex{
+	class FemVertex{
+	public:
 		Vec3d pos;
 		std::vector<int> tets;
 		std::vector<int> edges;
@@ -68,7 +69,8 @@ public:
 		double heatFluxValue;		//>	熱流束値
 	};
 	//	四面体
-	struct Tet{
+	class Tet{
+	public:
 		int vertices[4];	//	頂点ID																																	  
 		int faces[4];		//	表面４つ
 		int edges[6];		//	対応する辺のID。0:辺01, 1:辺12, 2:辺20, 3:辺03, 4:辺13, 5:辺23
@@ -94,7 +96,7 @@ public:
 		bool operator == (const Face& f2);
 		//行列計算に用いるための面積
 		double area;				///	四面体の各面の面積
-
+		double iharea;				//	IH加熱するface内の面積
 		//>	熱計算特有のパラメータ　継承して使う
 		///	原点から近い順にvertices[3]を並べ替えた頂点ID
 		int ascendVtx[3];			///	毎熱Stepで使う？使わない？
