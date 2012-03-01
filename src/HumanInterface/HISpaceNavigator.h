@@ -3,13 +3,15 @@
 
 #include <HumanInterface/HIBase.h>
 
+#include <vector>
+
 namespace Spr{;
 
 class HISpaceNavigator: public HIPose{
 public:
 	SPR_OBJECTDEF(HISpaceNavigator);
 
-	HISpaceNavigator(const HISpaceNavigatorDesc& desc = HISpaceNavigatorDesc()) {}
+	HISpaceNavigator(const HISpaceNavigatorDesc& desc = HISpaceNavigatorDesc()) { hWnd=NULL; hDevice=NULL; }
 
 	virtual bool			Init(const void* desc);
 	virtual bool			Calibration();
@@ -21,12 +23,17 @@ public:
 	virtual Vec3f			GetTrnDelta() { return dTrn; }
 	virtual Vec3f			GetRotDelta() { return dRot; }
 
-
 	virtual bool			PreviewMessage(void *m);
 
 private:
+	static std::vector<void*> deviceHandles;
+
+	static const int VENDOR_ID = 0x046d;
+	static const int PID_BEGIN = 0xc625;
+	static const int PID_END   = 0xc629;
+
+	void *hWnd, *hDevice;
 	Posef currPose;
-	void *hWnd;
 	Vec3d dTrn,dRot;
 
 	void Translate(Vec3f trn);

@@ -14,6 +14,7 @@ public:
 		UNSTARTED,
 	};
 	static EPInterpreter* Create();
+	static void           Destroy();
 	EPState State;
 	EPInterpreter();
 	~EPInterpreter();

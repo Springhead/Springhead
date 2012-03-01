@@ -47,7 +47,9 @@ public:
 		ID_RESET,
 	};
 
-	HISpaceNavigatorIf*		spaceNavigator;
+	UTRef<HISdkIf>             hiSdk;
+	UTRef<HISpaceNavigatorIf>  spaceNavigator0;
+	UTRef<HISpaceNavigatorIf>  spaceNavigator1;
 
 	int argc;
 	char** argv;
@@ -67,25 +69,28 @@ public:
 		ToggleAction(MENU_ALWAYS, ID_RUN);
 		curScene = 0;
 
-		HWND hWnd = FindWindow(L"GLUT", L"Python with Springhead");
-
-		HISdkIf* hiSdk = HISdkIf::CreateSdk();
+		hiSdk = HISdkIf::CreateSdk();
 
 		// --- --- --- --- ---
 		// SpaceNavigator
 
+		HWND hWnd = FindWindow(L"GLUT", L"Python with Springhead");
 		HISpaceNavigatorDesc descSN;
 		descSN.hWnd = &hWnd;
-		spaceNavigator = hiSdk->CreateHumanInterface(HISpaceNavigatorIf::GetIfInfoStatic())->Cast();
-		spaceNavigator->Init(&descSN);
-		spaceNavigator->SetPose(Posef(Vec3f(0,0,5.0), Quaternionf()));
+		spaceNavigator0 = hiSdk->CreateHumanInterface(HISpaceNavigatorIf::GetIfInfoStatic())->Cast();
+		spaceNavigator0->Init(&descSN);
+		spaceNavigator0->SetPose(Posef(Vec3f(0,0,5.0), Quaternionf()));
+
+		spaceNavigator1 = hiSdk->CreateHumanInterface(HISpaceNavigatorIf::GetIfInfoStatic())->Cast();
+		spaceNavigator1->Init(&descSN);
+		spaceNavigator1->SetPose(Posef(Vec3f(0,0,-5.0), Quaternionf()));
 
 		// ウィンドウプロシージャを置き換え
 		OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
 
 		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
-	}	
+	}
 
 	virtual void OnStep(){
 		UTAutoLock critical(EPCriticalSection);
@@ -135,9 +140,10 @@ void EPLoopInit(void* arg) {
 	PyObject *m = PyImport_AddModule("__main__");
 	PyObject *dict = PyModule_GetDict(m);
 
-	ACCESS_SPR_FROM_PY(FWSceneIf,			fwScene,		app->fwScene		);
-	ACCESS_SPR_FROM_PY(HITrackballIf,		hiTrackball,	app->GetCurrentWin()->GetTrackball() );
-	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator,	app->spaceNavigator	);
+	ACCESS_SPR_FROM_PY(FWSceneIf,			fwScene,			app->fwScene		);
+	ACCESS_SPR_FROM_PY(HITrackballIf,		hiTrackball,		app->GetCurrentWin()->GetTrackball() );
+	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator0,	app->spaceNavigator0	);
+	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator1,	app->spaceNavigator1	);
 
 	ostringstream loadfile;
 	loadfile << "__mainfilename__ ='";
@@ -163,11 +169,15 @@ LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	m.message	= msg;
 	m.wParam	= wParam;
 	m.lParam	= lParam;
-	if (app.spaceNavigator->PreviewMessage(&m)) {
+	if (app.spaceNavigator0->PreviewMessage(&m)) {
+		return 0L;
+	}
+	if (app.spaceNavigator1->PreviewMessage(&m)) {
 		return 0L;
 	}
 	return CallWindowProc(OldWndProc, hWnd, msg, wParam, lParam);
 }
+
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /**
