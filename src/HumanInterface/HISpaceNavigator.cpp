@@ -10,26 +10,58 @@
  #pragma hdrstop
 #endif
 
-#define LOGITECH_VENDOR_ID 0x46d
-
 namespace Spr {;
 
+std::vector<void*> HISpaceNavigator::deviceHandles;
+
 bool HISpaceNavigator::Init(const void* desc) {
-	// hWnd = (*(HWND*)(((HISpaceNavigatorDesc*)desc)->hWnd));
+	currPose = Posed();
 	hWnd = ((HISpaceNavigatorDesc*)desc)->hWnd;
 
-	currPose = Posed();
+	if (hWnd) {
+		UINT numDevices;
 
-	// Raw Input‚ðŽó‚¯•t‚¯‚é‚æ‚¤“o˜^
-	RAWINPUTDEVICE sRawInputDevices[] = { {0x01, 0x08, 0x00, 0x00} };
-	UINT uiNumDevices = sizeof(sRawInputDevices) / sizeof(sRawInputDevices[0]);
-	UINT cbSize = sizeof(sRawInputDevices[0]);
-	for (size_t i=0; i<uiNumDevices; ++i) {
-		sRawInputDevices[i].hwndTarget = (  *((HWND*)hWnd)  );
+		// Ú‘±‚³‚ê‚Ä‚¢‚éSpaceNavigator‚ðŠm”F‚µ‚ÄƒfƒoƒCƒXƒnƒ“ƒhƒ‹‚ðT‚¦‚Ä‚¨‚­
+		GetRawInputDeviceList(NULL, &numDevices, sizeof(RAWINPUTDEVICELIST));
+		RAWINPUTDEVICELIST* deviceList = new RAWINPUTDEVICELIST[numDevices];
+		if (GetRawInputDeviceList(deviceList, &numDevices, sizeof(RAWINPUTDEVICELIST)) != numDevices) { }
+		for (size_t i=0; i<numDevices; ++i) {
+			if (deviceList[i].dwType == RIM_TYPEHID) {
+				RID_DEVICE_INFO info;
+				UINT cbSize = info.cbSize = sizeof(info);
+
+				if (! GetRawInputDeviceInfo(deviceList[i].hDevice, RIDI_DEVICEINFO, &info, &cbSize)) { continue; }
+				if (! (info.hid.dwVendorId == VENDOR_ID))                                            { continue; }
+				if (! (PID_BEGIN <= info.hid.dwProductId && info.hid.dwProductId <= PID_END))        { continue; }
+
+				// Space Navigator‚ð‚Ý‚Â‚¯‚½
+				bool bAlreadyUsed = false;
+				for (int i=0; i<deviceHandles.size(); ++i) {
+					if (deviceHandles[i] == deviceList[i].hDevice) { bAlreadyUsed = true; }
+				}
+				if (!bAlreadyUsed) {
+					deviceHandles.push_back(deviceList[i].hDevice);
+					hDevice = deviceList[i].hDevice;
+					break;
+				}
+			}
+		}
+		delete deviceList;
+
+		// Raw Input‚ðŽó‚¯•t‚¯‚é‚æ‚¤“o˜^
+		RAWINPUTDEVICE sRawInputDevices[] = { {0x01, 0x08, 0x00, 0x00} };
+		numDevices  = sizeof(sRawInputDevices) / sizeof(sRawInputDevices[0]);
+		UINT cbSize = sizeof(sRawInputDevices[0]);
+		for (size_t i=0; i<numDevices; ++i) {
+			sRawInputDevices[i].hwndTarget = (  *((HWND*)hWnd)  );
+			sRawInputDevices[i].dwFlags    = RIDEV_INPUTSINK;
+		}
+		::RegisterRawInputDevices(sRawInputDevices, numDevices, cbSize);
+
+		return true;
+	} else {
+		return false;
 	}
-	::RegisterRawInputDevices(sRawInputDevices, uiNumDevices, cbSize);
-
-	return true;
 }
 
 bool HISpaceNavigator::Calibration() {
@@ -83,33 +115,46 @@ bool HISpaceNavigator::PreviewMessage(void *m) {
 	dwSize = sizeof(RID_DEVICE_INFO);
 
 	if (GetRawInputDeviceInfo(pRawInput->header.hDevice, RIDI_DEVICEINFO, &sRidDeviceInfo, &dwSize) != dwSize) return false;
-	if (sRidDeviceInfo.hid.dwVendorId != LOGITECH_VENDOR_ID) return false;
+	if (sRidDeviceInfo.hid.dwVendorId != VENDOR_ID) return false;
 
-	// ----- ----- ----- ----- -----
-	// Motion data comes in two packages
-	// Orientation is a right handed coordinate system with Z down;
-	// this is the standard HID orientation
-	if (pRawInput->data.hid.bRawData[0] == 0x01) {
-		// Translation vector
-		short* pnData = reinterpret_cast<short*>(&pRawInput->data.hid.bRawData[1]);
-		short X = pnData[0];
-		short Y = pnData[1];
-		short Z = pnData[2];
-		Translate(Vec3d(X,Y,Z));
-		return true;
-	} else if (pRawInput->data.hid.bRawData[0] == 0x02) {
-		// Directed rotation vector (NOT Euler)
-		short* pnData = reinterpret_cast<short*>(&pRawInput->data.hid.bRawData[1]);
-		short rX = pnData[0];
-		short rY = pnData[1];
-		short rZ = pnData[2];
-		Rotate(Vec3d(rX,rY,rZ));
-		return true;
-	} else if (pRawInput->data.hid.bRawData[0] == 0x03) {
-		// State of the keys
-		unsigned long dwKeystate = *reinterpret_cast<unsigned long *>(&pRawInput->data.hid.bRawData[1]);
-		/// std::cout << "key : " << dwKeystate << std::endl;
-		return true;
+	if (hDevice==NULL) {
+		bool bAlreadyUsed = false;
+		for (int i=0; i<deviceHandles.size(); ++i) {
+			if (deviceHandles[i] == pRawInput->header.hDevice) { bAlreadyUsed = true; }
+		}
+		if (!bAlreadyUsed) {
+			deviceHandles.push_back(pRawInput->header.hDevice);
+			hDevice = pRawInput->header.hDevice;
+		}
+	}
+
+	if (pRawInput->header.hDevice == hDevice) {
+		// ----- ----- ----- ----- -----
+		// Motion data comes in two packages
+		// Orientation is a right handed coordinate system with Z down;
+		// this is the standard HID orientation
+		if (pRawInput->data.hid.bRawData[0] == 0x01) {
+			// Translation vector
+			short* pnData = reinterpret_cast<short*>(&pRawInput->data.hid.bRawData[1]);
+			short X = pnData[0];
+			short Y = pnData[1];
+			short Z = pnData[2];
+			Translate(Vec3d(X,Y,Z));
+			return true;
+		} else if (pRawInput->data.hid.bRawData[0] == 0x02) {
+			// Directed rotation vector (NOT Euler)
+			short* pnData = reinterpret_cast<short*>(&pRawInput->data.hid.bRawData[1]);
+			short rX = pnData[0];
+			short rY = pnData[1];
+			short rZ = pnData[2];
+			Rotate(Vec3d(rX,rY,rZ));
+			return true;
+		} else if (pRawInput->data.hid.bRawData[0] == 0x03) {
+			// State of the keys
+			unsigned long dwKeystate = *reinterpret_cast<unsigned long *>(&pRawInput->data.hid.bRawData[1]);
+			/// std::cout << "key : " << dwKeystate << std::endl;
+			return true;
+		}
 	}
 
 	return false;

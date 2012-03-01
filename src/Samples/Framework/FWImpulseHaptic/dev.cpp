@@ -6,6 +6,8 @@
 #include <Physics\PHConstraintEngine.h>
 #include <Windows.h>
 
+#include <Physics\PHHapticEngineLD.h>
+
 using namespace Spr;
 
 #define SPIDAR 0
@@ -177,6 +179,17 @@ void MyApp::Keyboard(int key, int x, int y){
 			for(int i = 0; i < NTimers(); i++){
 				GetTimer(i)->Stop();
 			}
+
+			{
+				PHHapticEngine*   h  = phscene->GetHapticEngine()->Cast();
+				if (h) {
+					PHHapticEngineLD* hi = h->engineImp->Cast();
+					if (hi) {
+						hi->states->ReleaseState(phscene);
+					}
+				}
+			}
+
 			exit(0);
 			break;
 		case '1':

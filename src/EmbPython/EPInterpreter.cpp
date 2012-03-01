@@ -11,14 +11,20 @@ using namespace Spr;
 #include <windows.h>
 #endif
 
-EPInterpreter* EPInterpreter::instance = 0;
+EPInterpreter* EPInterpreter::instance = NULL;
 
 EPInterpreter* EPInterpreter::Create()
 {
-	if( EPInterpreter::instance == 0)
+	if( EPInterpreter::instance == NULL)
 		EPInterpreter::instance = new EPInterpreter();
 	
 	return EPInterpreter::instance;
+}
+
+void EPInterpreter::Destroy()
+{
+	if( EPInterpreter::instance != NULL)
+		delete(EPInterpreter::instance);
 }
 
 EPInterpreter::EPInterpreter()
@@ -31,6 +37,14 @@ EPInterpreter::~EPInterpreter()
 	this->State = STOP;
 }
 
+// ƒvƒƒOƒ‰ƒ€I—¹‚ÉEPInterpreter::instance‚ğdelete‚µ‚Ä‚­‚ê‚é‚Ğ‚Æ
+class EPInterpreterDestroyer {
+public:
+	~EPInterpreterDestroyer() {
+		EPInterpreter::Destroy();
+	}
+};
+static EPInterpreterDestroyer epid;
 
 extern "C" { __declspec(dllexport) PyObject* PyInit__SprPy(void); }
 
