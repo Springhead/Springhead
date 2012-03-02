@@ -72,9 +72,10 @@ class SpaceNavigatorThread(threading.Thread):
 		while True:
 			p = self.spcNav.GetPose().getPos()
 			self.soPointer.SetFramePosition(Vec3d(p.x, p.y, 0))
+			time.sleep(0.01)
 
-spaceNav = SpaceNavigatorThread(soPB, spaceNavigator0)
-spaceNav.start()
+# spaceNav = SpaceNavigatorThread(soPB, spaceNavigator0)
+# spaceNav.start()
 
 
 class SpaceNavigatorViewpointThread(threading.Thread):
@@ -85,9 +86,34 @@ class SpaceNavigatorViewpointThread(threading.Thread):
 
 	def run(self):
 		while True:
-			p = self.spcNav.GetPose().getPos()
-			hiTrackball.SetPosition(Vec3f(p.x, p.y, p.z))
+			cam = Posef()
+			cam.setOri(hiTrackball.GetOrientation())
+			pos = hiTrackball.GetPosition()+cam.transform(self.spcNav.GetTrnDelta())
+			hiTrackball.SetPosition(pos)
+			print(pos, " -> ", hiTrackball.GetPosition())
+			time.sleep(0.01)
 
-spaceNav1 = SpaceNavigatorViewpointThread(soPB1, spaceNavigator1)
+# spaceNav1 = SpaceNavigatorViewpointThread(soPB1, spaceNavigator0)
+# spaceNav1.start()
+
+def test():
+	ori = hiTrackball.GetOrientation()
+	hiTrackball.SetOrientation(ori)
+	print(ori * Vec3d(0,0,1), " -> ", hiTrackball.GetOrientation() * Vec3d(0,0,1))
+
+
+
+class SpaceNavigatorVieworientationThread(threading.Thread):
+	def __init__(self, soPointer, spcNav):
+		self.soPointer = soPointer
+		self.spcNav    = spcNav
+		threading.Thread.__init__(self)
+
+	def run(self):
+		while True:
+			hiTrackball.SetOrientation(self.spcNav.GetOrientation())
+			time.sleep(0.01)
+
+spaceNav1 = SpaceNavigatorVieworientationThread(soPB1, spaceNavigator0)
 spaceNav1.start()
 

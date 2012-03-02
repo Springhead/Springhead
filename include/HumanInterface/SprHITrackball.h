@@ -129,6 +129,9 @@ struct HITrackballIf : HIPoseIf{
 	/// 指定された視点位置から経度，緯度，距離を逆算
 	void	SetPosition(Vec3f pos);
 
+	/// 指定されたカメラ姿勢から経度，緯度，注視点を逆算
+	void	SetOrientation(Quaternionf ori);
+
 	/// マウスによる操作のオン/オフ
 	void	Enable(bool on = true);
 

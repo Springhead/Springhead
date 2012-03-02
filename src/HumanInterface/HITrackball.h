@@ -52,6 +52,7 @@ public:
 	float	GetTrnGain(){ return trnGain; }
 
 	void	SetPosition(Vec3f pos);
+	void	SetOrientation(Quaternionf ori);
 
 	void	SetRotMask(int mask){ rotMask = mask; }
 	void	SetZoomMask(int mask){ zoomMask = mask; }

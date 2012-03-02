@@ -5,6 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+/**
+ *	@file SprHISpaceNavigator.h
+ *	@brief 3Dconnexion SpaceNavigator 6自由度入力デバイス
+*/
+
 #ifndef SPR_HI_SPACENAVIGATOR_H
 #define SPR_HI_SPACENAVIGATOR_H
 
@@ -15,9 +20,7 @@ namespace Spr{;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
-/**
-	3Dconnexion Space Navigator
- **/
+/**	@brief SpaceNavigatorのインタフェース */
 struct HISpaceNavigatorIf: public HIPoseIf{
 	SPR_VIFDEF(HISpaceNavigator);
 

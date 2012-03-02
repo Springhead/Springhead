@@ -51,9 +51,19 @@ void HITrackball::UpdateView(){
 void HITrackball::SetPosition(Vec3f p){
 	pos			= p;
 	Vec3f r		= pos - target;
+	Vec3f r_xz	= r; r_xz.y = 0;
 	distance	= r.norm();
+	latitude	= atan2(r.y, r_xz.norm());
 	longitude	= atan2(r.x, r.z);
-	latitude	= atan2(r.y, distance);
+	UpdateView();
+}
+
+void HITrackball::SetOrientation(Quaternionf ori){
+	target		= pos + ori*Vec3f(0,0,-distance);
+	Vec3f r		= pos - target;
+	Vec3f r_xz	= r; r_xz.y = 0;
+	latitude	= atan2(r.y, r_xz.norm());
+	longitude	= atan2(r.x, r.z);
 	UpdateView();
 }
 
