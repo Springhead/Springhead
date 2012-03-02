@@ -1,3 +1,11 @@
+/*
+ *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+
+ */
 #ifndef HISPACENAVIGATOR_H
 #define HISPACENAVIGATOR_H
 
@@ -7,6 +15,7 @@
 
 namespace Spr{;
 
+// 3DConnexion SpaceNavigator. 6自由度入力デバイス
 class HISpaceNavigator: public HIPose{
 public:
 	SPR_OBJECTDEF(HISpaceNavigator);

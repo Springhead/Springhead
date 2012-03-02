@@ -165,6 +165,7 @@
 	float GetTrnGain(){	return	base::GetTrnGain();}	\
 	void Fit(const Spr::GRCameraDesc& cam, float radius){	base::Fit(cam, radius);}	\
 	void SetPosition(Vec3f pos){	base::SetPosition(pos);}	\
+	void SetOrientation(Quaternionf ori){	base::SetOrientation(ori);}	\
 	void Enable(bool on){	base::Enable(on);}	\
 	void SetRotMask(int mask){	base::SetRotMask(mask);}	\
 	void SetZoomMask(int mask){	base::SetZoomMask(mask);}	\

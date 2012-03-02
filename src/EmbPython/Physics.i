@@ -61,3 +61,4 @@ EXTEND_N_GET_TO_LIST(Spr::PHSolidIf				,NShape				,GetShape			,CDShapeIf			)
 %include "../../include/Physics/SprPHScene.h"
 %include "../../include/Physics/SprPHSdk.h"
 %include "../../include/Physics/SprPHSolid.h"
+%include "../../include/Physics/SprPHHaptic.h"
