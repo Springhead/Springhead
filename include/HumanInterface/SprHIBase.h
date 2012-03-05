@@ -65,16 +65,14 @@ struct HIPoseIf : HIBaseIf{
 	Quaternionf		GetOrientation();
 	Posef			GetPose();
 	Affinef			GetAffine();
+	Vec3f			GetVelocity();
+	Vec3f			GetAngularVelocity();
 };
 
 /** @brief	6自由度力覚インタフェースの基本クラス
  **/
 struct HIHapticIf : HIPoseIf{
 	SPR_VIFDEF(HIHaptic);
-	///デバイスの速度を返す
-	Vec3f GetVelocity();
-	///デバイスの角速度を返す
-	Vec3f GetAngularVelocity();
 	///	デバイスの実際の提示トルクを返す
 	Vec3f GetTorque();
 	///	デバイスの実際の提示力を返す
