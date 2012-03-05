@@ -7,6 +7,14 @@ import threading
 INF = 3.4e+38
 rad = 3.14/180.0;
 
+def to_quat(vec4):
+	rv=Quaternionf()
+	rv.w = vec4.w
+	rv.x = vec4.x
+	rv.y = vec4.y
+	rv.z = vec4.z
+	return rv
+
 hiTrackball.SetPosition(Vec3f(50, 0, 0))
 
 initPose = Posef()
@@ -17,6 +25,7 @@ initPose.setPos(Vec3f( 50,0,0))
 spaceNavigator1.SetPose(initPose)
 
 fwScene.EnableRenderLimit(True)
+fwScene.EnableRenderGrid(False,True,False)
 
 phScene = fwScene.GetPHScene()
 phSdk   = phScene.GetSdk()
@@ -71,7 +80,7 @@ class SpaceNavigatorThread(threading.Thread):
 	def run(self):
 		while True:
 			p = self.spcNav.GetPose().getPos()
-			self.soPointer.SetFramePosition(Vec3d(p.x, p.y, 0))
+			self.soPointer.SetFramePosition(Vec3d(p.x, p.y, p.z))
 			time.sleep(0.01)
 
 # spaceNav = SpaceNavigatorThread(soPB, spaceNavigator0)
@@ -88,7 +97,7 @@ class SpaceNavigatorViewpointThread(threading.Thread):
 		while True:
 			cam = Posef()
 			cam.setOri(hiTrackball.GetOrientation())
-			pos = hiTrackball.GetPosition()+cam.transform(self.spcNav.GetTrnDelta())
+			pos = hiTrackball.GetPosition()+cam.transform(self.spcNav.GetVelocity() / phScene.GetTimeStep())
 			hiTrackball.SetPosition(pos)
 			print(pos, " -> ", hiTrackball.GetPosition())
 			time.sleep(0.01)
@@ -103,17 +112,32 @@ def test():
 
 
 
-class SpaceNavigatorVieworientationThread(threading.Thread):
-	def __init__(self, soPointer, spcNav):
+class SpaceNavigatorViewThread(threading.Thread):
+	def __init__(self, soPointer, spcNav0, spcNav1):
 		self.soPointer = soPointer
-		self.spcNav    = spcNav
+		self.spcNav0   = spcNav0
+		self.spcNav1   = spcNav1
 		threading.Thread.__init__(self)
 
 	def run(self):
+		self.spcNav0.SetMaxVelocity(2.0)
+		self.spcNav0.SetMaxAngularVelocity(30*rad)
 		while True:
-			hiTrackball.SetOrientation(self.spcNav.GetOrientation())
+			dV   = self.spcNav0.GetVelocity()        * phScene.GetTimeStep()
+			dQ   = self.spcNav1.GetAngularVelocity() * phScene.GetTimeStep()
+
+			ori0 = hiTrackball.GetOrientation()
+			pos0 = hiTrackball.GetPosition()
+
+			pos1 =                 ori0*dV  + pos0
+			ori1 = Quaternionf.Rot(ori0*dQ) * ori0
+
+			hiTrackball.SetPosition(pos1)
+			hiTrackball.SetOrientation(ori1)
+
+			# print(pos1,ori1)
 			time.sleep(0.01)
 
-spaceNav1 = SpaceNavigatorVieworientationThread(soPB1, spaceNavigator0)
+spaceNav1 = SpaceNavigatorViewThread(soPB1, spaceNavigator0, spaceNavigator0)
 spaceNav1.start()
 

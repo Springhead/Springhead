@@ -98,10 +98,10 @@
 	Quaternionf GetOrientation(){	return	base::GetOrientation();}	\
 	Posef GetPose(){	return	base::GetPose();}	\
 	Affinef GetAffine(){	return	base::GetAffine();}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_HIHapticIf(base)	\
 	Vec3f GetVelocity(){	return	base::GetVelocity();}	\
 	Vec3f GetAngularVelocity(){	return	base::GetAngularVelocity();}	\
+
+#define SPR_OVERRIDEMEMBERFUNCOF_HIHapticIf(base)	\
 	Vec3f GetTorque(){	return	base::GetTorque();}	\
 	Vec3f GetForce(){	return	base::GetForce();}	\
 	void SetForce(const Vec3f& f, const Vec3f& t){	base::SetForce(f, t);}	\
@@ -119,8 +119,8 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpaceNavigatorIf(base)	\
 	bool SetPose(Posef pose){	return	base::SetPose(pose);}	\
-	Vec3f GetTrnDelta(){	return	base::GetTrnDelta();}	\
-	Vec3f GetRotDelta(){	return	base::GetRotDelta();}	\
+	void SetMaxVelocity(float mV){	base::SetMaxVelocity(mV);}	\
+	void SetMaxAngularVelocity(float mAV){	base::SetMaxAngularVelocity(mAV);}	\
 	bool PreviewMessage(void* m){	return	base::PreviewMessage(m);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HISpidarIf(base)	\

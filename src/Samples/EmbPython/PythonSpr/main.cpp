@@ -77,6 +77,7 @@ public:
 		HWND hWnd = FindWindow(L"GLUT", L"Python with Springhead");
 		HISpaceNavigatorDesc descSN;
 		descSN.hWnd = &hWnd;
+
 		spaceNavigator0 = hiSdk->CreateHumanInterface(HISpaceNavigatorIf::GetIfInfoStatic())->Cast();
 		spaceNavigator0->Init(&descSN);
 		spaceNavigator0->SetPose(Posef(Vec3f(0,0,5.0), Quaternionf()));
@@ -94,6 +95,8 @@ public:
 
 	virtual void OnStep(){
 		UTAutoLock critical(EPCriticalSection);
+		spaceNavigator0->Update(fwScene->GetPHScene()->GetTimeStep());
+		spaceNavigator1->Update(fwScene->GetPHScene()->GetTimeStep());
 		fwScene->Step();
 	}
 

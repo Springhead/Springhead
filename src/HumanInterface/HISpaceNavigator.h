@@ -16,21 +16,36 @@
 namespace Spr{;
 
 // 3DConnexion SpaceNavigator. 6自由度入力デバイス
-class HISpaceNavigator: public HIPose{
+class HISpaceNavigator: public HISpaceNavigatorDesc, public HIPose{
 public:
 	SPR_OBJECTDEF(HISpaceNavigator);
 
-	HISpaceNavigator(const HISpaceNavigatorDesc& desc = HISpaceNavigatorDesc()) { hWnd=NULL; hDevice=NULL; }
+	HISpaceNavigator(const HISpaceNavigatorDesc& desc = HISpaceNavigatorDesc()) {
+		hWnd=desc.hWnd;
+		maxVelocity = desc.maxVelocity;
+		maxAngularVelocity = desc.maxAngularVelocity;
+		
+		hDevice=NULL;
+		velocity = Vec3d(); angularVelocity = Vec3d();
+	}
 
 	virtual bool			Init(const void* desc);
 	virtual bool			Calibration();
+
+	virtual void			Update(float dt);
+
 	virtual bool			SetPose(Posef pose);
+	virtual Posef			GetPose();
+
 	virtual Vec3f			GetPosition();
 	virtual Quaternionf		GetOrientation();
-	virtual Posef			GetPose();
 	virtual Affinef			GetAffine();
-	virtual Vec3f			GetTrnDelta() { return dTrn; }
-	virtual Vec3f			GetRotDelta() { return dRot; }
+
+	virtual Vec3f			GetVelocity()			{ return velocity; }
+	virtual Vec3f			GetAngularVelocity()	{ return angularVelocity; }
+
+	virtual void			SetMaxVelocity(float mV)         { maxVelocity = mV; }
+	virtual void			SetMaxAngularVelocity(float mAV) { maxAngularVelocity = mAV; }
 
 	virtual bool			PreviewMessage(void *m);
 
@@ -41,12 +56,11 @@ private:
 	static const int PID_BEGIN = 0xc625;
 	static const int PID_END   = 0xc629;
 
-	void *hWnd, *hDevice;
-	Posef currPose;
-	Vec3d dTrn,dRot;
+	static const int INPUT_ABS_MAX = 350; // SpaceNavigatorの取り得る絶対値の最大値
 
-	void Translate(Vec3f trn);
-	void Rotate(Vec3f rot);
+	void *hDevice;
+	Posef currPose;
+	Vec3d velocity, angularVelocity;
 };
 
 }

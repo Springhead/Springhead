@@ -69,9 +69,18 @@ bool HISpaceNavigator::Calibration() {
 	return true;
 }
 
+void HISpaceNavigator::Update(float dt) {
+	currPose.Pos() += (velocity * dt);
+	currPose.Ori() = Quaterniond::Rot(angularVelocity * dt) * currPose.Ori();
+}
+
 bool HISpaceNavigator::SetPose(Posef pose) {
 	currPose = pose;
 	return true;
+}
+
+Posef HISpaceNavigator::GetPose() {
+	return currPose;
 }
 
 Vec3f HISpaceNavigator::GetPosition() {
@@ -80,10 +89,6 @@ Vec3f HISpaceNavigator::GetPosition() {
 
 Quaternionf HISpaceNavigator::GetOrientation() {
 	return currPose.Ori();
-}
-
-Posef HISpaceNavigator::GetPose() {
-	return currPose;
 }
 
 Affinef HISpaceNavigator::GetAffine() {
@@ -139,7 +144,7 @@ bool HISpaceNavigator::PreviewMessage(void *m) {
 			short X = pnData[0];
 			short Y = pnData[1];
 			short Z = pnData[2];
-			Translate(Vec3d(X,Y,Z));
+			velocity = Quaterniond::Rot(Rad(90), 'x') * (Vec3d(X,Y,Z)) * (maxVelocity / (double)(INPUT_ABS_MAX));
 			return true;
 		} else if (pRawInput->data.hid.bRawData[0] == 0x02) {
 			// Directed rotation vector (NOT Euler)
@@ -147,7 +152,7 @@ bool HISpaceNavigator::PreviewMessage(void *m) {
 			short rX = pnData[0];
 			short rY = pnData[1];
 			short rZ = pnData[2];
-			Rotate(Vec3d(rX,rY,rZ));
+			angularVelocity = (Quaterniond::Rot(Rad(90), 'x') * Vec3d(rX,rY,rZ)) * (maxAngularVelocity / (double)(INPUT_ABS_MAX));
 			return true;
 		} else if (pRawInput->data.hid.bRawData[0] == 0x03) {
 			// State of the keys
@@ -159,15 +164,4 @@ bool HISpaceNavigator::PreviewMessage(void *m) {
 
 	return false;
 }
-
-void HISpaceNavigator::Translate(Vec3f trn) {
-	dTrn = Quaterniond::Rot(Rad(90), 'x') * ((Vec3d)trn * 0.001);
-	currPose.Pos() += dTrn;
-}
-
-void HISpaceNavigator::Rotate(Vec3f rot) {
-	dRot = (Quaterniond::Rot(Rad(90), 'x') * (Vec3d)rot) * 0.0001;
-	currPose.Ori() = Quaterniond::Rot(dRot) * currPose.Ori();
-}
-
 }

@@ -79,14 +79,15 @@ public:
 		GetPose().ToAffine(aff);
 		return aff;
 	}
-
+	virtual Vec3f GetVelocity(){ return Vec3f(); }
+	virtual Vec3f GetAngularVelocity(){ return Vec3f(); }
 };
 
 
 class SPR_DLL HIHaptic: public HIPose{
 protected:
-	float alpha;
 	Vec3f vel, angVel;
+	float alpha;
 	Vec3f lastPos;
 	Quaternionf lastOri;
 public:
@@ -99,16 +100,16 @@ public:
 
 	/**@name	デバイスの状態	*/
 	//@{
-	///	デバイスの速度を返す
-	virtual Vec3f GetVelocity(){ return vel; }
-	///	デバイスの角速度を返す
-	virtual Vec3f GetAngularVelocity(){ return angVel; }
 	///	デバイスの実際の提示トルクを返す
 	virtual Vec3f GetTorque(){ return Vec3f(); }
 	///	デバイスの実際の提示力を返す
 	virtual Vec3f GetForce(){ return Vec3f(); }
 	///	デバイスの目標出力とトルク出力を設定する
 	virtual void SetForce(const Vec3f& f, const Vec3f& t = Vec3f()){}
+	///	デバイスの速度を返す
+	virtual Vec3f GetVelocity(){ return vel; }
+	///	デバイスの角速度を返す
+	virtual Vec3f GetAngularVelocity(){ return angVel; }
 	//@}
 };
 	

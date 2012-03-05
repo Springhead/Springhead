@@ -27,11 +27,11 @@ struct HISpaceNavigatorIf: public HIPoseIf{
 	///	現在の姿勢を設定
 	bool SetPose(Posef pose);
 
-	/// 位置の差分を取得
-	Vec3f GetTrnDelta();
+	///	限界まで押し込んだ時の移動速度を設定する
+	void SetMaxVelocity(float mV);
 
-	/// 回転の差分を取得
-	Vec3f GetRotDelta();
+	///	限界までひねった時の回転速度を設定する
+	void SetMaxAngularVelocity(float mAV);
 
 	/// RAW Input Windowsメッセージを解釈する
 	bool PreviewMessage(void *m);
@@ -40,6 +40,14 @@ struct HISpaceNavigatorDesc{
 	SPR_DESCDEF(HISpaceNavigator);
 
 	void* hWnd;
+	float maxVelocity;
+	float maxAngularVelocity;
+
+	HISpaceNavigatorDesc() {
+		hWnd = NULL;
+		maxVelocity = 1;
+		maxAngularVelocity = 1; 
+	}
 };
 
 
