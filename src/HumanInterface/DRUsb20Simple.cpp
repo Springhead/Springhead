@@ -49,7 +49,7 @@ DRUsb20Simple::~DRUsb20Simple(){
 int DRUsb20Simple::FindDevice(int ch){
 	for(int i=0; i < 0x100; ++i){
 		hSpidar = UsbOpen(i);
-		if (hSpidar == INVALID_HANDLE_VALUE) return false;
+		if (hSpidar == INVALID_HANDLE_VALUE) return -1;
 		if (UsbVidPid(hSpidar) != GetVidPid()){
 			UsbClose(hSpidar);
 			continue;
@@ -94,7 +94,6 @@ void* DRUsb20Simple::UsbOpen(int id){
 				OPEN_EXISTING,
 				0,
 				NULL);
-	INVALID_HANDLE_VALUE;
 	return rv;
 #else
 	return 0;

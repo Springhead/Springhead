@@ -19,8 +19,8 @@ PHMaterial::PHMaterial(){
 	reflexDamper = 0.1f;
 	frictionSpring = 5.0;
 	frictionDamper = 0.1f;
-	vibA = -110;
-	vibB = 100;
+	vibA = -30;
+	vibB = 90;
 	vibW = 300;
 	vibT = 0;
 	vibContact = false;

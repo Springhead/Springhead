@@ -36,9 +36,7 @@ protected:
 	Posef currPose;
 public:
 	SPR_OBJECTDEF(HIXbox360Controller);
-	HIXbox360Controller(const HIXbox360ControllerDesc& desc = HIXbox360ControllerDesc()){
-		controllerID = -1;
-	}
+	HIXbox360Controller(const HIXbox360ControllerDesc& desc = HIXbox360ControllerDesc());
 
 	virtual bool Init();
 	virtual void Update(float dt);

@@ -11,6 +11,7 @@
 #include <Springhead.h>
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHHapticPointer.h>
+#include <Physics/PHHapticRender.h>
 
 using namespace PTM;
 namespace Spr{;
@@ -186,8 +187,6 @@ public:
 	///< 力覚ループの更新	
 	virtual void StepHapticLoop(){ if(bHapticEngine) engineImp->StepHapticLoop(); }
 
-	///< 力覚ポインタの状態の更新
-	virtual void UpdateHapticPointer();
 	///< 力覚レンダリング用の衝突判定開始
 	virtual void StartDetection();
 	///< BBoxの向きを更新
@@ -199,7 +198,10 @@ public:
 	bool AddChildObject(ObjectIf* o);
 	///< 剛体の削除
 	bool DelChildObject(ObjectIf* o);
+	///< ShapePairの更新
 	void UpdateShapePairs(PHSolid* solid);
+	///< 接触モードの変更
+	virtual void SetContactMode();
 
 	///< デバック用シミュレーション実行
 	///（PHScene::Stepの変わりに呼ぶ）

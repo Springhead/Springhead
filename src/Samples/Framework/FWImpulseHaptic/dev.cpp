@@ -10,25 +10,23 @@
 
 using namespace Spr;
 
-#define SPIDAR 0
+#define SPIDAR 1
 // 0:single, 1:impulsemulti, 2:LD
-#define ENGINETYPE 2
-#define DEBUG_CON 0
+#define ENGINETYPE 1
+#define DEBUG_CON 1
 #define DEBUG_RENDER 1
 
 void MyApp::InitInterface(){
 	hiSdk = GetSdk()->GetHISdk();
-	//hiSdk = HISdkIf::CreateSdk();
-	//hiSdk->Print(DSTR);
 
 #if SPIDAR
 	DRUsb20SimpleDesc usbSimpleDesc;
 	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
-	//DRUsb20Sh4Desc usb20Sh4Desc;
-	//for(int i=0; i< 10; ++i){
-	//	usb20Sh4Desc.channel = i;
-	//	hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
-	//}
+	DRUsb20Sh4Desc usb20Sh4Desc;
+	for(int i=0; i< 10; ++i){
+		usb20Sh4Desc.channel = i;
+		hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+	}
 	DRCyUsb20Sh4Desc cyDesc;
 	for(int i=0; i<10; ++i){
 		cyDesc.channel = i;
@@ -41,14 +39,16 @@ void MyApp::InitInterface(){
 	spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
 	spg->Calibration();
+	spg2 = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+	spg2->Init(&HISpidarGDesc("SpidarG6X3L"));
+	spg2->Calibration();
 #else
 	spg = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
 	HIXbox360ControllerIf* con = DCAST(HIXbox360ControllerIf,spg);
-	con->Init();
-#endif
 	spg2 = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
 	HIXbox360ControllerIf* con2 = DCAST(HIXbox360ControllerIf, spg2);
-	con2->Init();
+#endif
+
 }
 
 
@@ -59,7 +59,6 @@ void MyApp::Init(int argc, char* argv[]){
 		phscene = GetSdk()->GetScene()->GetPHScene();
 		phscene->SetTimeStep(0.05);
 		
-		//GetCurrentWin()->GetTrackball()->SetMode(true);
 		Vec3d pos = Vec3d(0, 0, 1.21825);
 		GetCurrentWin()->GetTrackball()->SetPosition(pos);
 
@@ -67,8 +66,8 @@ void MyApp::Init(int argc, char* argv[]){
 		
 		// °‚ðì¬
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
-		bd.material.mu= 0.7;
-		bd.material.mu0 = 0.7;
+		bd.material.mu= 0.3;//0.7;
+		bd.material.mu0 = 0.3;//0.7;
 		bd.material.e = 0.1;
 		PHSolidIf* floor = phscene->CreateSolid();
 		floor->SetDynamical(false);
@@ -79,43 +78,45 @@ void MyApp::Init(int argc, char* argv[]){
 		for(int i = 0; i < 1; i++){
 			PHSolidIf* box = phscene->CreateSolid();
 			sobox = box;
-			box->SetMass(0.5);
-			bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
+			box->SetMass(0.1);
+			bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f) * 2;
 			//bd.boxsize = Vec3f(2, 0.2, 2);
 			box->AddShape(phSdk->CreateShape(bd));
 			box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * box->GetMass());
 			box->SetFramePosition(Vec3d(-0.5, 0.0, 0.0));
+			box->SetFramePosition(Vec3d(-0.5, -0.4, 0.0));
+			//box->SetDynamical(false);
 		}
 
 		pointer = phscene->CreateHapticPointer();
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
+		cd.material.mu = 2.0;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		pointer->AddShape(phSdk->CreateShape(cd));
+		pointer->AddShape(phSdk->CreateShape(bd));
 		pointer->SetDefaultPose(Posed());
 		pointer->SetHumanInterface(spg);
 		pointer->SetInertia(pointer->GetInertia());
-		pointer->SetLocalRange(0.5);
+		pointer->SetLocalRange(0.1);
 		pointer->SetPosScale(50);
 		pointer->SetReflexSpring(5000);
 		pointer->SetReflexDamper(0.1);
 		pointer->EnableDebugControl(DEBUG_CON);
-		pointer->EnableFriction(true);
-		pointer->EnableVibration(true);
-		phscene->SetContactMode(pointer, PHSceneDesc::MODE_NONE);
+		//pointer->EnableFriction(false);
+		//pointer->EnableVibration(true);
+		//phscene->SetContactMode(pointer, PHSceneDesc::MODE_NONE);
 
-		pointer2 = phscene->CreateHapticPointer();
-		pointer2->AddShape(phSdk->CreateShape(cd));
-		pointer2->SetDefaultPose(Posed());
-		pointer2->SetHumanInterface(spg2);
-		pointer2->SetInertia(pointer->GetInertia());
-		pointer2->SetLocalRange(0.5);
-		pointer2->SetPosScale(50);
-		pointer2->SetReflexSpring(5000);
-		pointer2->SetReflexDamper(0.1);
-		pointer2->EnableFriction(true);
-		pointer2->EnableVibration(true);
-		phscene->SetContactMode(pointer2, PHSceneDesc::MODE_NONE);
+		//pointer2 = phscene->CreateHapticPointer();
+		//pointer2->AddShape(phSdk->CreateShape(bd));
+		//pointer2->SetDefaultPose(Posed());
+		//pointer2->SetHumanInterface(spg2);
+		//pointer2->SetInertia(pointer->GetInertia());
+		//pointer2->SetLocalRange(0.5);
+		//pointer2->SetPosScale(50);
+		//pointer2->SetReflexSpring(5000);
+		//pointer2->SetReflexDamper(0.1);
+		//pointer2->EnableFriction(true);
+		//pointer2->EnableVibration(true);
 
 		GetSdk()->SetDebugMode(true);
 		GetSdk()->GetScene()->EnableRenderHaptic(DEBUG_RENDER);
@@ -125,7 +126,7 @@ void MyApp::Init(int argc, char* argv[]){
 		PHHapticRenderIf* render = h->GetHapticRender();
 		render->SetHapticRenderMode(PHHapticRenderDesc::CONSTRAINT);
 		//render->SetHapticRenderMode(PHHapticRenderDesc::PENALTY);
-		render->EnableMultiPoints(false);
+		//render->EnableMultiPoints(false);
 #if ENGINETYPE == 0
 		h->SetHapticEngineMode(PHHapticEngine::SINGLE_THREAD);
 		phscene->SetTimeStep(0.001);
@@ -168,7 +169,6 @@ void MyApp::TimerFunc(int id){
 
 void MyApp::UserFunc(){
 
-
 }
 
 
@@ -180,15 +180,15 @@ void MyApp::Keyboard(int key, int x, int y){
 				GetTimer(i)->Stop();
 			}
 
-			{
-				PHHapticEngine*   h  = phscene->GetHapticEngine()->Cast();
-				if (h) {
-					PHHapticEngineLD* hi = h->engineImp->Cast();
-					if (hi) {
-						hi->states->ReleaseState(phscene);
-					}
-				}
-			}
+			//{
+			//	PHHapticEngine*   h  = phscene->GetHapticEngine()->Cast();
+			//	if (h) {
+			//		PHHapticEngineLD* hi = h->engineImp->Cast();
+			//		if (hi) {
+			//			hi->states->ReleaseState(phscene);
+			//		}
+			//	}
+			//}
 
 			exit(0);
 			break;
@@ -208,6 +208,7 @@ void MyApp::Keyboard(int key, int x, int y){
 			{
 				timer->Stop();
 				spg->Calibration();
+				spg2->Calibration();
 				DSTR << "CameraPosition" << std::endl;
 				DSTR << GetCurrentWin()->GetTrackball()->GetPosition() << std::endl;
 				timer->Start();
@@ -216,11 +217,13 @@ void MyApp::Keyboard(int key, int x, int y){
 		case 'f':
 			{
 				pointer->EnableForce(true);
+				//pointer2->EnableForce(true);
 			}
 			break;
 		case 'g':
 			{
 				pointer->EnableForce(false);
+				//pointer2->EnableForce(false);
 			}
 			break;
 		case 'a':

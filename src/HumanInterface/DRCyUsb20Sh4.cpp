@@ -157,7 +157,7 @@ void DRCyUsb20Sh4::UsbSend(unsigned char* outBuffer){
 		sendBuf, sendBufLen, sendBuf, sendBufLen, &dwReturnBytes, NULL);
 	DWORD e = GetLastError();
 	if (e) DSTR << "DRCyUsb20Sh4::UsbSend() error:" << e << std::endl;
-	std::cout << "Send" << std::endl;
+	//std::cout << "Send" << std::endl;
 #endif
 }
 

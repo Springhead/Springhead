@@ -100,7 +100,7 @@ bool PHShapePairForHaptic::AnalyzeContactRegion(){
 		if(SELECTION){
 			Vec3d w0 = shapePoseW[0] * closestPoint[0];	// 中間表現面上の点（剛体の近傍点）
 			double dot = (point - w0) * normal;
-			if(dot < -1e-5)	intersectionVertices.push_back(shapePoseW[1].Inv() * point);
+			if(dot < -1e-2)	intersectionVertices.push_back(shapePoseW[1].Inv() * point);
 		}else{
 			intersectionVertices.push_back(shapePoseW[1].Inv() * point);
 		}
@@ -164,7 +164,6 @@ bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2]
 		ir->interpolation_pose = curShapePoseW[0];
 		irs.push_back(ir);
 	}
-	//std::sort(irs.begin, irs.end()):
 	return true;
 }
 
@@ -327,7 +326,6 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 			sp->irs.push_back(fricIr);
 			//DSTR << "static friction" << std::endl;
 		}
-
 		if(epsilon < l && l < tangent.norm()){
 			// 動摩擦
 			fricIr->normal = tangent.unit();
@@ -340,51 +338,52 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 }
 
 bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp){
-	// 摩擦
+	// 摩擦(最大静止摩擦版）未実装
 
-	int Nirs = sp->irs.size();
-	if(Nirs == 0) return false;
-	for(int i = 0; i < Nirs; i++){
-		PHIr* ir = sp->irs[i];
-		double mu = ir->mu;	// 動摩擦係数				
-		double l = mu * ir->depth;		// 摩擦円錐半径
+	//int Nirs = sp->irs.size();
+	//if(Nirs == 0) return false;
+	//for(int i = 0; i < Nirs; i++){
+	//	PHIr* ir = sp->irs[i];
+	//	double mu = ir->mu;	// 動摩擦係数				
+	//	double l = mu * ir->depth;		// 摩擦円錐半径
 
-		Vec3d vps = ir->pointerPointW;
-		Vec3d vq = relativePose * ir->pointerPointW;
-		Vec3d dq = (vq - vps) * ir->normal * ir->normal;
-		Vec3d vqs = vq - dq;
-		Vec3d tangent = vqs - vps;
+	//	Vec3d vps = ir->pointerPointW;
+	//	Vec3d vq = relativePose * ir->pointerPointW;
+	//	Vec3d dq = (vq - vps) * ir->normal * ir->normal;
+	//	Vec3d vqs = vq - dq;
+	//	Vec3d tangent = vqs - vps;
 
-		//DSTR << "vps" << vps << std::endl;
-		//DSTR << "vq" << vq << std::endl;
-		//DSTR << "tangent " << tangent << tangent.norm() << std::endl;
+	//	//DSTR << "vps" << vps << std::endl;
+	//	//DSTR << "vq" << vq << std::endl;
+	//	//DSTR << "tangent " << tangent << tangent.norm() << std::endl;
 
-		PHIr* fricIr = DBG_NEW PHIr();
-		*fricIr = *ir;
-		double epsilon = 1e-5;
-		if(tangent.norm() < epsilon){
-			// 静止状態
-			delete fricIr;
-			//DSTR << "rest" << std::endl;
-		}
-		if(epsilon < tangent.norm() && tangent.norm() <= l){
-			//静摩擦（静止摩擦半径内）
-			fricIr->normal = tangent.unit();
-			fricIr->depth = tangent.norm();
-			sp->irs.push_back(fricIr);
-			//DSTR << "static friction" << std::endl;
-		}
+	//	PHIr* fricIr = DBG_NEW PHIr();
+	//	*fricIr = *ir;
+	//	double epsilon = 1e-5;
+	//	if(tangent.norm() < epsilon){
+	//		// 静止状態
+	//		delete fricIr;
+	//		//DSTR << "rest" << std::endl;
+	//	}
+	//	if(epsilon < tangent.norm() && tangent.norm() <= l){
+	//		//静摩擦（静止摩擦半径内）
+	//		fricIr->normal = tangent.unit();
+	//		fricIr->depth = tangent.norm();
+	//		sp->irs.push_back(fricIr);
+	//		//DSTR << "static friction" << std::endl;
+	//	}
 
-		if(epsilon < l && l < tangent.norm()){
-			// 動摩擦
-			fricIr->normal = tangent.unit();
-			fricIr->depth = l;
-			sp->irs.push_back(fricIr);
-			//DSTR << "dynamic friction" << std::endl;
-		}
-	}
+	//	if(epsilon < l && l < tangent.norm()){
+	//		// 動摩擦
+	//		fricIr->normal = tangent.unit();
+	//		fricIr->depth = l;
+	//		sp->irs.push_back(fricIr);
+	//		//DSTR << "dynamic friction" << std::endl;
+	//	}
+	//}
 	return true;
 }
+
 //----------------------------------------------------------------------------
 // PHHapticEngineImp
 double PHHapticEngineImp::GetPhysicsTimeStep(){
@@ -482,9 +481,9 @@ PHHapticRenderIf* PHHapticEngine::GetHapticRender(){
 	return hapticRender->Cast(); 
 }
 
-void PHHapticEngine::UpdateHapticPointer(){};
-
 void PHHapticEngine::StartDetection(){
+	// ContactModeの設定
+	SetContactMode();
 	// AABBの更新
 	UpdateEdgeList();
 	// 力覚ポインタごとに近傍物体を見つける
@@ -535,7 +534,7 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 	int N = hapticSolids.size();
 	pointer->neighborSolidIDs.clear();
 	for(int i = 0; i < N; i++){
-		if(i == pointerSolidID) continue;
+		if(i == pointerSolidID) continue;	// ポインタと剛体が同じ場合
 		Vec3f soMin = edges[i].min;
 		Vec3f soMax = edges[i].max;
 		int nAxes = 0;		// いくつの軸で交差しているかどうか
@@ -564,6 +563,7 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 		// 2.近傍物体と判定
 		const int pointerID = pointer->GetPointerID();
 		PHSolidPairForHaptic* sp = solidPairs.item(i, pointerID);
+		if(DCAST(PHHapticPointer, sp->solid[0])) continue;	// 剛体がポインタの場合
 		if(nAxes == 3){
 			sp->Detect(this, ct, dt);	// 形状毎の近傍点探索、接触解析
 			pointer->neighborSolidIDs.push_back(i);
@@ -630,12 +630,8 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 			solidPairs.item(NSolids - 1, i)->solidID[1] = hapticPointers[i]->GetSolidID();	
 		}
 		if(s->NShape())	UpdateShapePairs(s);
-		return true;
 
-		// 力覚ポインタをシーンの接触から切る
-		for(int i = 0; i < NPointers; i++){
-			GetScene()->SetContactMode(hapticPointers[i]->Cast(), PHSceneDesc::MODE_NONE);
-		}
+		return true;
 	}
 	return false;
 }
@@ -705,6 +701,13 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 			n->shape[1] = s[1]->GetShape(s[1]->NShape()-1)->Cast(); 
 			sp->shapePairs.item(j, s[1]->NShape()-1) = n;
 		}
+	}
+}
+
+void PHHapticEngine::SetContactMode(){
+	// 力覚ポインタをシーンの接触から切る
+	for(int i = 0; i < hapticPointers.size(); i++){
+		GetScene()->SetContactMode(hapticPointers[i]->Cast(), PHSceneDesc::MODE_NONE);
 	}
 }
 

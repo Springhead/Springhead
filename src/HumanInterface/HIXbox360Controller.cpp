@@ -8,25 +8,25 @@ namespace Spr{;
 #define DIS_USHORT 65535
 
 static int Ncontrollers = 0;
-bool HIXbox360Controller::Init(){
-	DSTR << "Connecting Xbox Controller." << std::endl;
-	DWORD dwResult;    
-	for (DWORD i = Ncontrollers; i < MAX_CONTROLLERS; i++ ){
-		ZeroMemory( &state, sizeof(XINPUT_STATE) );
-		dwResult = XInputGetState( i, &state);
 
-		if( dwResult == ERROR_SUCCESS ){ 
-			DSTR << "Succeed to connect." << std::endl;
-			DSTR << "Controller ID " << i << std::endl;
-			controllerID = i;
-			Ncontrollers += 1;
-			return true;
-		}else{
-			DSTR << "Failed to connect Xbox Controller." << std::endl;
-			return false;
-		}
+HIXbox360Controller::HIXbox360Controller(const HIXbox360ControllerDesc& desc){
+	controllerID = Ncontrollers;
+	Init();
+	Ncontrollers += 1;
+	if(Ncontrollers > MAX_CONTROLLERS) DSTR << "Can not connect a XboxController anymore!" << std::endl;
+}
+
+bool HIXbox360Controller::Init(){
+	DSTR << "Connecting Xbox Controller " << controllerID << "." << std::endl;
+	ZeroMemory( &state, sizeof(XINPUT_STATE) );
+	DWORD dwResult = XInputGetState( controllerID, &state);
+	if( dwResult == ERROR_SUCCESS ){ 
+		DSTR << "Succeed to connect." << std::endl;
+		return true;
+	}else{
+		DSTR << "Failed to connect Xbox Controller." << std::endl;
+		return false;
 	}
-	return false;
 }
 
 void HIXbox360Controller::Update(float dt){
