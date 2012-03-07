@@ -1,12 +1,40 @@
 #ifndef PH_HAPTICRENDERBASE_H
 #define PH_HAPTICRENDERBASE_H
 
-#include <Physics/PHHapticEngine.h>
 #include <Physics/PHHapticPointer.h>
 
+using namespace PTM;
 namespace Spr{;
 
+class PHSolidsForHaptic;
+class PHSolidPairForHaptic;
+class PHSolidPairsForHaptic;
+class PHShapePairForHaptic;
 
+struct PHIntermediateRepresentation :public UTRefCount{
+	int solidID;				///< „‘Ì‚ÌID(PHSolidsForHapitc‚ÆPHSolidPairForHaptic)‚ÆN“ü‚µ‚Ä‚¢‚é‚©
+	PHSolidPairForHaptic* solidPair;	///< PHSolidPairForHaptic‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	double depth;				///< N“ü—Ê
+	Vec3d normal;				///< –Ê–@ü
+	Vec3d r;					///< —ÍŠoƒ|ƒCƒ“ƒ^‚ÌdS‚©‚ç‚ÌÚG“_‚Ü‚Å‚ÌƒxƒNƒgƒ‹
+	Vec3d pointerPointW;		///< —ÍŠoƒ|ƒ“ƒ^‚ÌN“ü“_(world)
+	Vec3d contactPointW;		///< ’†ŠÔ•\Œ»–Ê‚Évertex‚ð“Š‰e‚µ‚½ˆÊ’u(world)
+	Vec3d pointerPointVel;		///< —ÍŠoƒ|ƒCƒ“ƒ^‘¤‚ÌÚG“_‚Ì‘¬“x(world)
+	Vec3d contactPointVel;		///< „‘Ì‘¤‚ÌÚG“_‚Ì‘¬“x(world)
+	Posed interpolation_pose;	///< Œ`ó‚Ì•âŠÔŽp¨
+	double f;					///< N“ü‰ðœŒvŽZ‚ÅÚG“_‚ª•ÀiˆÚ“®‚Éì—p‚·‚é‘å‚«‚³
+	float springK;					///< ƒoƒlŒW”
+	float damperD;					///< ƒ_ƒ“ƒpŒW”
+	float mu;					///< “®–€ŽCŒW”
+	float mu0;					///< Å‘åÃŽ~–€ŽCŒW”(Å‘åÃŽ~–€ŽC‚Í–¢ŽÀ‘•)
+	PHIntermediateRepresentation(){
+		solidID = -1;
+		f = 0.0;
+		solidPair = NULL;
+	}
+};
+typedef PHIntermediateRepresentation PHIr;
+typedef std::vector< PHIr* > PHIrs;
 
 struct PHHapticRenderInfo : public PHHapticRenderDesc{
 	PHHapticPointers*		pointers;
@@ -37,6 +65,7 @@ public:
 	virtual void PenaltyBasedRendering();
 	virtual void ConstraintBasedRendering();
 	virtual void VibrationRendering();
+	virtual void VirtualCoupling();
 
 	// ƒKƒEƒXƒUƒCƒfƒ‹–@‚ðŽg‚¢Ax+b>0‚ð‰ð‚­
 	template <class AD, class XD, class BD>

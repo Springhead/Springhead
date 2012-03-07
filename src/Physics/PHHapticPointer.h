@@ -6,37 +6,6 @@
 
 namespace Spr{;
 
-//class PHSolidsForHaptic;
-class PHSolidPairForHaptic;
-//class PHSolidPairsForHaptic;
-//class PHShapePairForHaptic;
-
-struct PHIntermediateRepresentation :public UTRefCount{
-	int solidID;				///< „‘Ì‚ÌID(PHSolidsForHapitc‚ÆPHSolidPairForHaptic)‚ÆN“ü‚µ‚Ä‚¢‚é‚©
-	PHSolidPairForHaptic* solidPair;	///< PHSolidPairForHaptic‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	double depth;				///< N“ü—Ê
-	Vec3d normal;				///< –Ê–@ü
-	Vec3d r;					///< —ÍŠoƒ|ƒCƒ“ƒ^‚ÌdS‚©‚ç‚ÌÚG“_‚Ü‚Å‚ÌƒxƒNƒgƒ‹
-	Vec3d pointerPointW;		///< —ÍŠoƒ|ƒ“ƒ^‚ÌN“ü“_(world)
-	Vec3d contactPointW;		///< ’†ŠÔ•\Œ»–Ê‚Évertex‚ð“Š‰e‚µ‚½ˆÊ’u(world)
-	Vec3d pointerPointVel;		///< —ÍŠoƒ|ƒCƒ“ƒ^‘¤‚ÌÚG“_‚Ì‘¬“x(world)
-	Vec3d contactPointVel;		///< „‘Ì‘¤‚ÌÚG“_‚Ì‘¬“x(world)
-	Posed interpolation_pose;	///< Œ`ó‚Ì•âŠÔŽp¨
-	double f;					///< N“ü‰ðœŒvŽZ‚ÅÚG“_‚ª•ÀiˆÚ“®‚Éì—p‚·‚é‘å‚«‚³
-	float springK;					///< ƒoƒlŒW”
-	float damperD;					///< ƒ_ƒ“ƒpŒW”
-	float mu;					///< “®–€ŽCŒW”
-	float mu0;					///< Å‘åÃŽ~–€ŽCŒW”(Å‘åÃŽ~–€ŽC‚Í–¢ŽÀ‘•)
-	PHIntermediateRepresentation(){
-		solidID = -1;
-		f = 0.0;
-		solidPair = NULL;
-	}
-	bool operator < (const PHIntermediateRepresentation& s) const { return depth < s.depth; }
-};
-typedef PHIntermediateRepresentation PHIr;
-typedef std::vector< PHIr* > PHIrs;
-
 //----------------------------------------------------------------------------
 // PHHapticPointer
 struct PHHapticPointerSt{
@@ -64,8 +33,10 @@ public:
 	bool bForce;
 	bool bFriction;
 	bool bVibration;
+	bool bVirtualCoupling;
 	std::vector<int> neighborSolidIDs;
 	PHSolid hiSolid;
+	PHSolidIf* vcSolid;
 	HIBaseIf* humanInterface;
 	PHHapticPointer();
 	PHHapticPointer(const PHHapticPointer& p);

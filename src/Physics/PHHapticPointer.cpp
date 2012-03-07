@@ -7,7 +7,7 @@ namespace Spr{;
 // PHHapticPointer
 PHHapticPointer::PHHapticPointer(){
 	reflexSpring = 300;
-	reflexDamper = 0.1;
+	reflexDamper = 0.1f;
 	localRange = 1.0; 
 	posScale = 1.0;
 	bDebugControl = false;
@@ -58,7 +58,9 @@ void PHHapticPointer::DisplayHapticForce(){
 	if(bForce)
 		 hif->SetForce(hapticForce.v(), hapticForce.w());
 	else hif->SetForce(Vec3f(), Vec3f());
+	//CSVOUT << hapticForce.v().x << std::endl;
 	hapticForce.clear(0.0);
 }
+
 
 }
