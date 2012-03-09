@@ -214,11 +214,11 @@ void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* en
 	//CSVOUT << (sp->shapePoseW[0] * sp->closestPoint[0]).y << "," << (sp->shapePoseW[1] * sp->closestPoint[1]).y << std::endl;
 }
 
-PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose, bool bMultiPoints){
+PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose){
 	/* —ÍŠoˆÀ’è‰»‚Ì‚½‚ß‚Ì•âŠÔ
 	// Impulse‚Ìê‡‚Í‘ŠŽè‚Ì„‘Ì‚ÌPose‚Ì•âŠÔ‚ª•K—vB
 	// LocalDynamics‚Ìê‡‚Í–@ü‚Ì•âŠÔ‚Ì‚Ý‚Å‚æ‚¢B
-	// –@ü‚Ì•âŠÔ‚ÍPHShapePairForHaptic‚Å‚â‚éB
+	// –@ü‚Ì•âŠÔ‚ÍPHShapePairForHaptic‚Å‚â‚éBh
 	*/
 	force.clear();
 	torque.clear();
@@ -266,7 +266,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 			Posed curShapePoseW[2];
 			curShapePoseW[0] = interpolationPose * curSolid[0]->GetShapePose(i);
 			curShapePoseW[1] = curSolid[1]->GetPose() * curSolid[1]->GetShapePose(j);
-			sp->CompIntermediateRepresentation(curShapePoseW, t, bInterpolatePose, bMultiPoints);
+			sp->CompIntermediateRepresentation(curShapePoseW, t, bInterpolatePose, pointer->bMultiPoints);
 			for(int k = 0; k < (int)sp->irs.size(); k++){
 				PHIr* ir = sp->irs[k];
 				ir->solidID = solidID[0];
@@ -297,8 +297,7 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 	if(Nirs == 0) return false;
 	for(int i = 0; i < Nirs; i++){
 		PHIr* ir = sp->irs[i];
-		double mu = ir->mu;	// “®–€ŽCŒW”
-				
+		double mu = ir->mu;	// “®–€ŽCŒW”	
 		double l = mu * ir->depth;		// –€ŽC‰~”¼Œa
 
 		Vec3d vps = ir->pointerPointW;
@@ -311,26 +310,26 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 		//DSTR << "vq" << vq << std::endl;
 		//DSTR << "tangent " << tangent << tangent.norm() << std::endl;
 
-		PHIr* fricIr = DBG_NEW PHIr();
-		*fricIr = *ir;
 		double epsilon = 1e-5;
+		//DSTR << "---------" << std::endl;
 		if(tangent.norm() < epsilon){
 			// ÃŽ~ó‘Ô
-			delete fricIr;
 			//DSTR << "rest" << std::endl;
 		}
 		if(epsilon < tangent.norm() && tangent.norm() <= l){
 			//Ã–€ŽCiÃŽ~–€ŽC”¼Œa“àj
-			fricIr->normal = tangent.unit();
-			fricIr->depth = tangent.norm();
-			sp->irs.push_back(fricIr);
+			sp->irs.push_back(DBG_NEW PHIr());
+			*sp->irs.back() = *ir;
+			sp->irs.back()->normal = tangent.unit();
+			sp->irs.back()->depth = tangent.norm();
 			//DSTR << "static friction" << std::endl;
 		}
 		if(epsilon < l && l < tangent.norm()){
 			// “®–€ŽC
-			fricIr->normal = tangent.unit();
-			fricIr->depth = l;
-			sp->irs.push_back(fricIr);
+			sp->irs.push_back(DBG_NEW PHIr());
+			*sp->irs.back() = *ir;
+			sp->irs.back()->normal = tangent.unit();
+			sp->irs.back()->depth = l;
 			//DSTR << "dynamic friction" << std::endl;
 		}
 	}
@@ -475,10 +474,6 @@ void PHHapticEngine::SetHapticEngineMode(HapticEngineMode mode){
 	}
 	engineImp->engine = this;
 	engineImps.push_back(engineImp);
-}
-
-PHHapticRenderIf* PHHapticEngine::GetHapticRender(){ 
-	return hapticRender->Cast(); 
 }
 
 void PHHapticEngine::StartDetection(){

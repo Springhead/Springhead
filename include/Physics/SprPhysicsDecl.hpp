@@ -30,7 +30,6 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHapticEngineIf(base)	\
 	void EnableHapticEngine(bool b){	base::EnableHapticEngine(b);}	\
 	void SetHapticEngineMode(Spr::PHHapticEngineDesc::HapticEngineMode mode){	base::SetHapticEngineMode(mode);}	\
-	Spr::PHHapticRenderIf* GetHapticRender(){	return	base::GetHapticRender();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshIf(base)	\
 
@@ -47,16 +46,15 @@
 	void SetvecFAll(unsigned int id, double dqdt){	base::SetvecFAll(id, dqdt);}	\
 	void SetRohSpheat(double roh, double Cp){	base::SetRohSpheat(roh, Cp);}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_PHHapticRenderIf(base)	\
-	void SetHapticRenderMode(Spr::PHHapticRenderDesc::HapticRenderMode m){	base::SetHapticRenderMode(m);}	\
-	void EnableMultiPoints(bool b){	base::EnableMultiPoints(b);}	\
-
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHapticPointerIf(base)	\
 	void SetHumanInterface(Spr::HIBaseIf* hi){	base::SetHumanInterface(hi);}	\
+	void SetHapticRenderMode(Spr::PHHapticPointerDesc::HapticRenderMode m){	base::SetHapticRenderMode(m);}	\
 	void EnableForce(bool b){	base::EnableForce(b);}	\
 	void EnableFriction(bool b){	base::EnableFriction(b);}	\
 	void EnableVibration(bool b){	base::EnableVibration(b);}	\
+	void EnableMultiPoints(bool b){	base::EnableMultiPoints(b);}	\
 	void EnableDebugControl(bool b){	base::EnableDebugControl(b);}	\
+	void EnableDirectControl(bool b){	base::EnableDirectControl(b);}	\
 	void SetReflexSpring(float s){	base::SetReflexSpring(s);}	\
 	float GetReflexSpring(){	return	base::GetReflexSpring();}	\
 	void SetReflexDamper(float d){	base::SetReflexDamper(d);}	\

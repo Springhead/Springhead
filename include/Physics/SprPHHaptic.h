@@ -10,30 +10,29 @@
 #ifndef SPR_PHHAPTIC_H
 #define SPR_PHHAPTIC_H
 
-#include <Foundation/SprObject.h>
+//#include <Foundation/SprObject.h>
 
 namespace Spr{;
 
-struct PHHapticRenderDesc{
+struct PHHapticPointerDesc{
 	enum HapticRenderMode{
 		PENALTY,
 		CONSTRAINT,
+		VC,
 	};
-};
-struct PHHapticRenderIf : public PHHapticRenderDesc, public SceneObjectIf{
-	SPR_IFDEF(PHHapticRender);
-	void SetHapticRenderMode(HapticRenderMode m);
-	void EnableMultiPoints(bool b);
 };
 
 struct HIBaseIf;
-struct PHHapticPointerIf : public PHSolidIf{
+struct PHHapticPointerIf : public PHHapticPointerDesc, public PHSolidIf{
 	SPR_IFDEF(PHHapticPointer);
 	void	SetHumanInterface(HIBaseIf* hi);
+	void	SetHapticRenderMode(HapticRenderMode m);
 	void	EnableForce(bool b);	
 	void	EnableFriction(bool b);
 	void	EnableVibration(bool b);
+	void	EnableMultiPoints(bool b);
 	void	EnableDebugControl(bool b);
+	void	EnableDirectControl(bool b);
 
 	void	SetReflexSpring(float s);
 	float	GetReflexSpring();

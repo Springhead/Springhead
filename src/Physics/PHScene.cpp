@@ -53,7 +53,7 @@ void PHScene::Init(){
 
 	hapticEngine = DBG_NEW PHHapticEngine;
 	engines.Add(hapticEngine);
-	PHHapticPseudEngine* hpe = DBG_NEW PHHapticPseudEngine;
+	PHHapticEngineCallStep2* hpe = DBG_NEW PHHapticEngineCallStep2;
 	hpe->engine = hapticEngine;
 	engines.Add(hpe);
 

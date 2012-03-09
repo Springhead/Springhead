@@ -8,7 +8,7 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHHapticPointer
-struct PHHapticPointerSt{
+struct PHHapticPointerSt : public PHHapticPointerDesc{
 	Vec3d last_dr;
 	Vec3d last_dtheta;
 	Posed proxyPose;	// 摩擦計算用のプロキシ
@@ -17,6 +17,7 @@ struct PHHapticPointerSt{
 };
 class PHHapticPointer : public PHHapticPointerSt, public PHSolid{
 	SPR_OBJECTDEF(PHHapticPointer);
+	ACCESS_DESC(PHHapticPointer);
 protected:
 	int pointerID;
 	int pointerSolidID;
@@ -29,11 +30,14 @@ protected:
 	SpatialVector hapticForce;
 
 public:
-	bool bDebugControl;
+	bool bDebugControl;		// physicsLoopから力覚ポインタを操作するためのフラグ
+	bool bDirectControl;	// hapticLoopから力覚ポインタを操作するためのフラグ
 	bool bForce;
 	bool bFriction;
 	bool bVibration;
+	bool bMultiPoints;
 	bool bVirtualCoupling;
+	HapticRenderMode hapticRenderMode;
 	std::vector<int> neighborSolidIDs;
 	PHSolid hiSolid;
 	PHSolidIf* vcSolid;
@@ -43,10 +47,13 @@ public:
 
 	//API
 	void	SetHumanInterface(HIBaseIf* hi){ humanInterface = hi; }
+	void	SetHapticRenderMode(HapticRenderMode m){ hapticRenderMode = m; }
 	void	EnableForce(bool b){ bForce = b; }
 	void	EnableFriction(bool b){ bFriction = b; }
+	void	EnableMultiPoints(bool b){ bMultiPoints = b; }
 	void	EnableVibration(bool b){ bVibration = b; }
 	void	EnableDebugControl(bool b){ bDebugControl = b; }
+	void	EnableDirectControl(bool b){ bDirectControl = b; }
 	void	SetReflexSpring(float s){ reflexSpring = s; }
 	float	GetReflexSpring(){ return reflexSpring; }
 	void	SetReflexDamper(float d){ reflexDamper = d; }

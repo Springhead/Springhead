@@ -11,12 +11,15 @@ PHHapticPointer::PHHapticPointer(){
 	localRange = 1.0; 
 	posScale = 1.0;
 	bDebugControl = false;
+	bDirectControl = false;
 	bForce = false;
 	bFriction = true;
+	bMultiPoints = true;
 	bVibration = false;
 	rotaionalWeight = 1e5;
 	dynamical = false;
 	integrate = false;
+	hapticRenderMode = CONSTRAINT;
 }
 PHHapticPointer::PHHapticPointer(const PHHapticPointer& p){
 	*this = p;
@@ -34,6 +37,14 @@ void PHHapticPointer::UpdateInterface(float dt){
 	pose.Pos() = (Vec3d)hif->GetPosition() * s;
 	pose.Ori() =    hif->GetOrientation();
 	hiSolid.SetPose(GetDefaultPose() * pose);
+	
+	if(!bDirectControl) return;
+	// デバックのための擬似入力
+	Vec3d debug_vel = Vec3d(-0.1, 0.0, 0.0);
+	static Posed debug_pose = defaultPose;
+	debug_pose.Pos() = debug_pose.Pos() + debug_vel * dt;
+	hiSolid.SetVelocity(debug_vel);
+	hiSolid.SetPose(debug_pose);
 }
 
 void PHHapticPointer::UpdateDirect(){

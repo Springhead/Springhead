@@ -65,7 +65,7 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHHapticRenderDesc \
+#define SPR_DECLMEMBEROF_PHHapticPointerDesc \
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \

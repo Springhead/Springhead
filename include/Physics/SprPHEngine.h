@@ -13,7 +13,6 @@
 namespace Spr{;
 
 struct PHConstraintsIf;
-struct PHHapticRenderIf;
 
 /** \addtogroup gpPhysics */
 //@{
@@ -141,7 +140,6 @@ public:
 	SPR_IFDEF(PHHapticEngine);
 	void EnableHapticEngine(bool b);
 	void SetHapticEngineMode(HapticEngineMode mode);
-	PHHapticRenderIf* GetHapticRender();
 
 };
 //@}

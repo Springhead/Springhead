@@ -108,7 +108,7 @@ public:
 	/// 交差が検知された後の処理
 	virtual bool Detect(engine_type* engine, unsigned int ct, double dt);
 	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< 交差が検知されたときの処理
-	virtual PHIrs CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose, bool bPoints);
+	virtual PHIrs CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose);
 	virtual bool CompFrictionIntermediateRepresentation(PHShapePairForHaptic* sp);
 	virtual bool CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp);
 };
@@ -172,8 +172,6 @@ public:
 	void EnableHapticEngine(bool b){ bHapticEngine = b; }
 	///< エンジンモードの選択
 	void SetHapticEngineMode(HapticEngineMode mode);
-	///< レンダリングモードの選択
-	PHHapticRenderIf* GetHapticRender();
 	///< 力覚ポインタの数を返す
 	int NHapticPointers(){ return (int)hapticPointers.size(); }
 	///< 力覚ポインタへのポインタを返す
@@ -210,9 +208,9 @@ public:
 };
 
 // PHSceneからStep()を2回呼ぶための擬似クラス
-class PHHapticPseudEngine : public PHEngine{
+class PHHapticEngineCallStep2 : public PHEngine{
 public:
-	SPR_OBJECTDEF_NOIF(PHHapticPseudEngine);
+	SPR_OBJECTDEF_NOIF(PHHapticEngineCallStep2);
 	UTRef< PHHapticEngine > engine;
 	int GetPriority() const { return SGBP_HAPTICENGINE2; }
 	virtual void Step(){ engine->Step2(); }
