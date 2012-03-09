@@ -36,7 +36,7 @@ struct PHIntermediateRepresentation :public UTRefCount{
 typedef PHIntermediateRepresentation PHIr;
 typedef std::vector< PHIr* > PHIrs;
 
-struct PHHapticRenderInfo : public PHHapticRenderDesc{
+struct PHHapticRenderInfo{// : public PHHapticRenderDesc{
 	PHHapticPointers*		pointers;
 	PHSolidsForHaptic*		hsolids;
 	PHSolidPairsForHaptic*	sps;
@@ -48,24 +48,17 @@ struct PHHapticRenderInfo : public PHHapticRenderDesc{
 
 class PHHapticRender : public PHHapticRenderInfo, public SceneObject{
 public:
-	SPR_OBJECTDEF(PHHapticRender);
-	ACCESS_DESC(PHHapticRender);
-	HapticRenderMode mode;
-	bool bMultiPoints;
-
+	SPR_OBJECTDEF_NOIF(PHHapticRender);
 	PHHapticRender();
-	// API
-	virtual void SetHapticRenderMode(HapticRenderMode m);
-	virtual void EnableMultiPoints(bool b);
 
 	// Implementation
 	virtual void HapticRendering(PHHapticRenderInfo info);
 	virtual void DisplayHapticForce();
 	virtual PHIrs CompIntermediateRepresentation(PHHapticPointer* pointer);
-	virtual void PenaltyBasedRendering();
-	virtual void ConstraintBasedRendering();
-	virtual void VibrationRendering();
-	virtual void VirtualCoupling();
+	virtual void PenaltyBasedRendering(PHHapticPointer* pointer);
+	virtual void ConstraintBasedRendering(PHHapticPointer* pointer);
+	virtual void VibrationRendering(PHHapticPointer* pointer);
+	virtual void VirtualCoupling(PHHapticPointer* pointer);
 
 	// ガウスザイデル法を使いAx+b>0を解く
 	template <class AD, class XD, class BD>

@@ -8,13 +8,16 @@
 
 #include <Physics\PHHapticEngineLD.h>
 
+#define SUSA_DEV
+
 using namespace Spr;
 
 #define SPIDAR 1
 // 0:single, 1:impulsemulti, 2:LD
 #define ENGINETYPE 1
-#define DEBUG_CON 1
-#define DEBUG_RENDER 1
+#define DEBUG_CON 0
+#define DEBUG_RENDER 0
+#define DIRECT_CON 1
 
 void MyApp::InitInterface(){
 	hiSdk = GetSdk()->GetHISdk();
@@ -66,8 +69,8 @@ void MyApp::Init(int argc, char* argv[]){
 		
 		// è∞ÇçÏê¨
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
-		bd.material.mu= 0.3;//0.7;
-		bd.material.mu0 = 0.3;//0.7;
+		bd.material.mu= 0.0;//0.7;
+		bd.material.mu0 = 0.0;//0.7;
 		bd.material.e = 0.1;
 		PHSolidIf* floor = phscene->CreateSolid();
 		floor->SetDynamical(false);
@@ -75,26 +78,26 @@ void MyApp::Init(int argc, char* argv[]){
 		floor->SetFramePosition(Vec3d(0, -1.0, 0.0));
 	
 		// î†ÇçÏê¨
-		for(int i = 0; i < 1; i++){
+		for(int i = 0; i < 2; i++){
 			PHSolidIf* box = phscene->CreateSolid();
-			sobox = box;
-			box->SetMass(0.1);
-			bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f) * 2;
-			//bd.boxsize = Vec3f(2, 0.2, 2);
+			box->SetMass(0.1 * 10);
+			float size = 0.3f;
+			bd.boxsize.clear(size);
 			box->AddShape(phSdk->CreateShape(bd));
 			box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * box->GetMass());
-			box->SetFramePosition(Vec3d(-0.5, 0.0, 0.0));
-			box->SetFramePosition(Vec3d(-0.5, -0.4, 0.0));
+			box->SetFramePosition(Vec3d(-0.5 - size * i, -0.3, 0.0));
 			//box->SetDynamical(false);
 		}
 
 		pointer = phscene->CreateHapticPointer();
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
-		cd.material.mu = 2.0;
+		cd.material.mu = 0.0;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		pointer->AddShape(phSdk->CreateShape(bd));
-		pointer->SetDefaultPose(Posed());
+		pointer->AddShape(phSdk->CreateShape(cd));
+		Posed dpose;
+		dpose.Pos() = Vec3d(0.0, -0.35, 0.0);
+		pointer->SetDefaultPose(dpose);
 		pointer->SetHumanInterface(spg);
 		pointer->SetInertia(pointer->GetInertia());
 		pointer->SetLocalRange(0.1);
@@ -102,7 +105,8 @@ void MyApp::Init(int argc, char* argv[]){
 		pointer->SetReflexSpring(5000);
 		pointer->SetReflexDamper(0.1);
 		pointer->EnableDebugControl(DEBUG_CON);
-		//pointer->EnableFriction(false);
+		pointer->EnableDirectControl(DIRECT_CON);
+		pointer->EnableFriction(false);
 		//pointer->EnableVibration(true);
 		//phscene->SetContactMode(pointer, PHSceneDesc::MODE_NONE);
 
@@ -115,7 +119,7 @@ void MyApp::Init(int argc, char* argv[]){
 		//pointer2->SetPosScale(50);
 		//pointer2->SetReflexSpring(5000);
 		//pointer2->SetReflexDamper(0.1);
-		//pointer2->EnableFriction(true);
+		//pointer2->EnableFriction(false);
 		//pointer2->EnableVibration(true);
 
 		GetSdk()->SetDebugMode(true);
@@ -123,9 +127,6 @@ void MyApp::Init(int argc, char* argv[]){
 
 		PHHapticEngineIf* h = phscene->GetHapticEngine();
 		h->EnableHapticEngine(true);
-		PHHapticRenderIf* render = h->GetHapticRender();
-		render->SetHapticRenderMode(PHHapticRenderDesc::CONSTRAINT);
-		//render->SetHapticRenderMode(PHHapticRenderDesc::PENALTY);
 		//render->EnableMultiPoints(false);
 #if ENGINETYPE == 0
 		h->SetHapticEngineMode(PHHapticEngine::SINGLE_THREAD);
@@ -194,13 +195,13 @@ void MyApp::Keyboard(int key, int x, int y){
 			break;
 		case '1':
 			{
-				phscene->GetHapticEngine()->GetHapticRender()->SetHapticRenderMode(PHHapticRenderDesc::PENALTY);
+				pointer->SetHapticRenderMode(PHHapticPointerDesc::PENALTY);
 				DSTR << "Penalty mode" << std::endl;
 				break;
 			}
 		case '2':
 			{
-				phscene->GetHapticEngine()->GetHapticRender()->SetHapticRenderMode(PHHapticRenderDesc::CONSTRAINT);
+				pointer->SetHapticRenderMode(PHHapticPointerDesc::CONSTRAINT);
 				DSTR << "Constraint mode" << std::endl;
 				break;
 			}
@@ -216,14 +217,14 @@ void MyApp::Keyboard(int key, int x, int y){
 			break;
 		case 'f':
 			{
-				pointer->EnableForce(true);
-				//pointer2->EnableForce(true);
+				if(pointer) pointer->EnableForce(true);
+				if(pointer2) pointer2->EnableForce(true);
 			}
 			break;
 		case 'g':
 			{
-				pointer->EnableForce(false);
-				//pointer2->EnableForce(false);
+				if(pointer)pointer->EnableForce(false);
+				if(pointer2)pointer2->EnableForce(false);
 			}
 			break;
 		case 'a':
