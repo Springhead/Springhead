@@ -178,12 +178,6 @@ struct PHIKActuatorIf : SceneObjectIf{
 
 	// --- --- --- --- ---
 
-	/** @brief このアクチュエータを使って動かせるエンドエフェクタ、を登録する
-	*/
-	void RegisterEndEffector(PHIKEndEffectorIf* endeffector);
-
-	// --- --- --- --- ---
-
 	/** @brief 動かしにくさを設定する
 	*/
 	void SetBias(float bias);

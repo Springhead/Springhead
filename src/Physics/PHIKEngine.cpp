@@ -35,7 +35,6 @@ void PHIKEngine::Step(){
 	// 変化フラグのクリア
 	for(size_t i=0; i<actuators.size(); ++i){
 		actuators[i]->bActuatorAdded	= false;
-		actuators[i]->bEndEffectorAdded	= false;
 		actuators[i]->bNDOFChanged		= false;
 	}
 	for(size_t i=0; i<endeffectors.size(); ++i){

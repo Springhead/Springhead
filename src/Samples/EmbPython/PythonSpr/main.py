@@ -42,12 +42,63 @@ def AddSolid():
 	so.AddShape(phSdk.CreateShape(CDBox.GetIfInfoStatic(), descBox))
 	return so
 
-def AddJoint(so1, so2):
+def AddJoint(so1, so2, ikaParent=None):
 	descJoint = PHHingeJointDesc()
 	descJoint.poseSocket = Posed(1,0,0,0, 0, 2,0)
 	descJoint.posePlug   = Posed(1,0,0,0, 0,-2,0)
+	descJoint.damper = 100.0
 	jo = phScene.CreateJoint(so1, so2, PHHingeJoint.GetIfInfoStatic(), descJoint)
-	return jo
+	descIKA = PHIKHingeActuatorDesc()
+	descIKA.velocityGain = 10.0
+	ika = phScene.CreateIKActuator(PHIKHingeActuator.GetIfInfoStatic(), descIKA)
+	ika.AddChildObject(jo)
+	if not ikaParent==None:
+		ikaParent.AddChildObject(ika)
+	return ika
+
+so0 = AddSolid(); so0.SetDynamical(False)
+so1 = AddSolid()
+so2 = AddSolid()
+so3 = AddSolid()
+so4 = AddSolid()
+so5 = AddSolid()
+so6 = AddSolid()
+
+ika0 = AddJoint(so0, so1)
+ika1 = AddJoint(so1, so2, ika0)
+ika2 = AddJoint(so2, so3, ika1)
+ika3 = AddJoint(so3, so4, ika2)
+ika4 = AddJoint(so2, so5, ika1)
+ika5 = AddJoint(so5, so6, ika4)
+
+descIKE = PHIKEndEffectorDesc()
+ike0 = phScene.CreateIKEndEffector(PHIKEndEffector.GetIfInfoStatic(), descIKE); ike0.AddChildObject(so4)
+ike1 = phScene.CreateIKEndEffector(PHIKEndEffector.GetIfInfoStatic(), descIKE); ike1.AddChildObject(so6)
+
+# ike0 = phScene.CreateIKEndEffector(PHIKEndEffector.GetIfInfoStatic(), descIKE); ike0.AddChildObject(so2)
+# ika1.AddChildObject(ike0)
+
+# ike0 = phScene.CreateIKEndEffector(PHIKEndEffector.GetIfInfoStatic(), descIKE); ike0.AddChildObject(so1)
+# ika0.AddChildObject(ike0)
+
+ika3.AddChildObject(ike0)
+ika5.AddChildObject(ike1)
+
+ike0.SetTargetPosition(Vec3d(2,5,0))
+ike0.Enable(True)
+
+ike1.SetTargetPosition(Vec3d(4,5,0))
+ike1.Enable(True)
+
+for i in range(0,10):
+	phScene.Step()
+
+phScene.GetIKEngine().Enable(True)
+phScene.Step()
+
+phScene.SetContactMode(0)
+
+
 
 # Pointer-base
 soPB = phScene.CreateSolid(PHSolidDesc())
@@ -78,38 +129,22 @@ class SpaceNavigatorThread(threading.Thread):
 		threading.Thread.__init__(self)
 
 	def run(self):
+		self.spcNav.SetMaxVelocity(3.0)
+		self.spcNav.SetMaxAngularVelocity(30*rad)
 		while True:
-			p = self.spcNav.GetPose().getPos()
-			self.soPointer.SetFramePosition(Vec3d(p.x, p.y, p.z))
+			dV   = self.spcNav.GetVelocity() * phScene.GetTimeStep()
+
+			if dV.norm() > 1e-5:
+				dV += (dV.unit() * (dV.norm() ** 3))
+
+			ori0 = hiTrackball.GetOrientation()
+			pos0 = self.soPointer.GetPose().getPos()
+			pos1 = ori0*dV + pos0
+			self.soPointer.SetFramePosition(pos1)
 			time.sleep(0.01)
 
-# spaceNav = SpaceNavigatorThread(soPB, spaceNavigator0)
-# spaceNav.start()
-
-
-class SpaceNavigatorViewpointThread(threading.Thread):
-	def __init__(self, soPointer, spcNav):
-		self.soPointer = soPointer
-		self.spcNav    = spcNav
-		threading.Thread.__init__(self)
-
-	def run(self):
-		while True:
-			cam = Posef()
-			cam.setOri(hiTrackball.GetOrientation())
-			pos = hiTrackball.GetPosition()+cam.transform(self.spcNav.GetVelocity() / phScene.GetTimeStep())
-			hiTrackball.SetPosition(pos)
-			print(pos, " -> ", hiTrackball.GetPosition())
-			time.sleep(0.01)
-
-# spaceNav1 = SpaceNavigatorViewpointThread(soPB1, spaceNavigator0)
-# spaceNav1.start()
-
-def test():
-	ori = hiTrackball.GetOrientation()
-	hiTrackball.SetOrientation(ori)
-	print(ori * Vec3d(0,0,1), " -> ", hiTrackball.GetOrientation() * Vec3d(0,0,1))
-
+spaceNav = SpaceNavigatorThread(soPB, spaceNavigator1)
+spaceNav.start()
 
 
 class SpaceNavigatorViewThread(threading.Thread):
@@ -141,3 +176,4 @@ class SpaceNavigatorViewThread(threading.Thread):
 spaceNav1 = SpaceNavigatorViewThread(soPB1, spaceNavigator0, spaceNavigator0)
 spaceNav1.start()
 
+phScene.SetContactMode(0)

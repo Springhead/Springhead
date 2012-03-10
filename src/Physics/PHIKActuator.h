@@ -29,15 +29,21 @@ public:
 	SPR_OBJECTDEF(PHIKActuator);
 	SPR_DECLMEMBEROF_PHIKActuatorDesc;
 
-	/// 簡略表記用typedef
-	typedef std::set<PHIKEndEffector*>	ESet;
-	typedef std::set<PHIKActuator*>		ASet;
-	
-	/// このアクチュエータで動かせるエンドエフェクタのリスト
-	ESet linkedEndEffectors;
+	// 関節ツリー上でつながったアクチュエータ
+	// ※ 計算に必要となるのは
+	//    「先祖と子孫にあたるアクチュエータすべて」
+	//      （“「このアクチュエータで動かせるいずれかのエンドエフェクタ」を動かせる他のアクチュエータ” にあたる）
+	//    「子孫にあたるアクチュエータにつながれたエンドエフェクタすべて」
+	//      （“このアクチュエータで動かせるエンドエフェクタ” にあたる）
 
-	/// 「このアクチュエータで動かせるいずれかのエンドエフェクタ」を動かせる他のアクチュエータ
-	ASet linkedActuators;
+	/// 直系祖先・子孫（自分含む）・直接の子供
+	std::vector<PHIKActuator*> ascendant, descendant, children;
+	/// 祖先・子孫にまとめてアクセスする関数
+	PHIKActuator* link(size_t i) { return (i<ascendant.size()) ? ascendant[i] : descendant[i-ascendant.size()]; }
+	int nLinks() {return ascendant.size()+descendant.size();}
+
+	/// このアクチュエータで直接つながれたエンドエフェクタ．1アクチュエータに対し1エンドエフェクタが対応
+	PHIKEndEffector* eef;
 
 	// --- --- --- --- ---
 
@@ -49,9 +55,6 @@ public:
 
 	/// 自由度変化フラグ
 	bool bNDOFChanged;
-
-	/// エンドエフェクタ追加フラグ
-	bool bEndEffectorAdded;
 
 	/// アクチュエータ追加フラグ
 	bool bActuatorAdded;
@@ -81,8 +84,9 @@ public:
 	virtual void Init() {
 		number = -1;
 		bNDOFChanged = true;
-		bEndEffectorAdded = false;
 		bActuatorAdded = false;
+		eef = NULL;
+		if (descendant.size()==0) { descendant.push_back(this); }
 	}
 
 	/** @brief デフォルトコンストラクタ
@@ -117,12 +121,6 @@ public:
 	/** @brief 計算結果に従って制御対象を動かす
 	*/
 	virtual void Move(){}
-
-	// --- --- --- --- ---
-
-	/** @brief このアクチュエータを使って動かせるエンドエフェクタ、を登録する
-	*/
-	void RegisterEndEffector(PHIKEndEffectorIf* endeffector);
 
 	// --- --- --- --- ---
 

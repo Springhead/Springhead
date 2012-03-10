@@ -100,7 +100,6 @@
 	void ProceedSolve(){	base::ProceedSolve();}	\
 	PTM::VVector< double > GetRawSolution(){	return	base::GetRawSolution();}	\
 	void Move(){	base::Move();}	\
-	void RegisterEndEffector(Spr::PHIKEndEffectorIf* endeffector){	base::RegisterEndEffector(endeffector);}	\
 	void SetBias(float bias){	base::SetBias(bias);}	\
 	float GetBias(){	return	base::GetBias();}	\
 	void SetVelocityGain(double velocityGain){	base::SetVelocityGain(velocityGain);}	\
