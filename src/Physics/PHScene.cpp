@@ -413,9 +413,9 @@ bool PHScene::AddChildObject(ObjectIf* o){
 			else if(ray)
 				sprintf(name, "ray%d", NRays() - 1);
 			else if(ikNode)
-				sprintf(name, "iknode%d", NIKActuators()-1);
+				sprintf(name, "ikact%d", NIKActuators()-1);
 			else if(ikPoint)
-				sprintf(name, "ikpoint%d", NIKEndEffectors()-1);
+				sprintf(name, "ikeef%d", NIKEndEffectors()-1);
 			else if(fem)
 				sprintf(name, "fem%d", NFemMeshes()-1);
 			so->SetName(name);
