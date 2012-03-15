@@ -68,7 +68,10 @@ public:
 	double	GetPosScale(){ return posScale; }
 	void	SetRotationalWeight(double w){ rotaionalWeight = w; }
 	double	GetRotationalWeight(){ return rotaionalWeight ; }
-	void	SetDefaultPose(Posed p){ defaultPose = p; }
+	void	SetDefaultPose(Posed p){ 
+		SetPose(p);
+		defaultPose = p; 
+	}
 	Posed	GetDefaultPose(){ return defaultPose; }
 
 	// Implementation

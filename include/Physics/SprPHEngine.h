@@ -140,7 +140,7 @@ public:
 	SPR_IFDEF(PHHapticEngine);
 	void EnableHapticEngine(bool b);
 	void SetHapticEngineMode(HapticEngineMode mode);
-
+	void StepPhysicsSimulation();
 };
 //@}
 }

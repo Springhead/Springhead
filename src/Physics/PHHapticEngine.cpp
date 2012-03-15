@@ -418,7 +418,7 @@ PHSolidPairsForHaptic* PHHapticEngineImp::GetSolidPairsForHaptic(){
 PHHapticRender* PHHapticEngineImp::GetHapticRender(){
 	return engine->hapticRender->Cast();
 }
-void PHHapticEngineImp::StepSimulation(){
+void PHHapticEngineImp::StepPhysicsSimulation(){
 	engine->GetScene()->Step();
 }
 
