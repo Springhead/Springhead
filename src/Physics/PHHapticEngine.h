@@ -35,6 +35,7 @@ public:
 	SpatialVector b;		///< 予測シミュレーションで求めたモビリティ（重力等の定数項）
 	SpatialVector curb;		///< 通常シミュレーションででた定数項
 	SpatialVector lastb;	///< 前回の予測シミュレーションで求めた定数項
+	SpatialVector bimpact;
 };
 
 class PHSolidForHaptic : public PHSolidForHapticSt, public PHSolidForHapticSt2, public UTRefCount{  
@@ -140,7 +141,7 @@ public:
 	PHHapticRender* GetHapticRender();
 
 	///< デバック用シミュレーション実行
-	virtual void StepSimulation();
+	virtual void StepPhysicsSimulation();
 };
 
 //----------------------------------------------------------------------------
@@ -203,7 +204,7 @@ public:
 
 	///< デバック用シミュレーション実行
 	///（PHScene::Stepの変わりに呼ぶ）
-	virtual void StepSimulation(){ engineImp->StepSimulation(); }
+	virtual void StepPhysicsSimulation(){ engineImp->StepPhysicsSimulation(); }
 
 };
 

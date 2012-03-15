@@ -33,6 +33,11 @@ PHHapticEngineImpulse::PHHapticEngineImpulse(){
 
 void PHHapticEngineImpulse::Step1(){};
 void PHHapticEngineImpulse::Step2(){
+	for(int i = 0; i < NHapticSolids(); i++){
+		PHSolid* solid = GetHapticSolid(i)->sceneSolid;
+		if(i == 1)
+			CSVOUT << solid->GetVelocity().y << "," << solid->GetFramePosition().y  << std::endl;
+	}
 	engine->StartDetection();
 }
 

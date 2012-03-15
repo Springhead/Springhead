@@ -58,7 +58,7 @@ public:
 	virtual void SyncPhysic2Haptic(){}	// physicsスレッドからhapticスレッドへの同期
 
 	//デバック用コード
-	virtual void StepSimulation();
+	virtual void StepPhysicsSimulation();
 };
 
 }

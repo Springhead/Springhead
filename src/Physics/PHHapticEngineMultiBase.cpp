@@ -159,14 +159,11 @@ void PHHapticEngineMultiBase::SyncArrays(){
 
 // デバック用コード
 // 旧版、PHScene::Step()が内蔵されているので
-// ここで呼ぶわけにはいかない
-// 2/13ただし、表にださないと描画が怪しくなるのでなんとかする必要がある
-void PHHapticEngineMultiBase::StepSimulation(){
+void PHHapticEngineMultiBase::StepPhysicsSimulation(){
 	if (bSync) return;
 	if (bCalcPhys){
 		/// シミュレーションの実行
 		engine->GetScene()->Step();
-		/// ここでpostredisplayを呼びたい?
 		bCalcPhys = false;
 	}
 	double pdt = GetPhysicsTimeStep();

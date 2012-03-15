@@ -27,7 +27,7 @@ struct PHHapticPointerIf : public PHHapticPointerDesc, public PHSolidIf{
 	SPR_IFDEF(PHHapticPointer);
 	void	SetHumanInterface(HIBaseIf* hi);
 	void	SetHapticRenderMode(HapticRenderMode m);
-	void	EnableForce(bool b);	
+	void	EnableForce(bool b);
 	void	EnableFriction(bool b);
 	void	EnableVibration(bool b);
 	void	EnableMultiPoints(bool b);

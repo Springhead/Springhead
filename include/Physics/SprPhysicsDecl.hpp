@@ -30,6 +30,7 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHapticEngineIf(base)	\
 	void EnableHapticEngine(bool b){	base::EnableHapticEngine(b);}	\
 	void SetHapticEngineMode(Spr::PHHapticEngineDesc::HapticEngineMode mode){	base::SetHapticEngineMode(mode);}	\
+	void StepPhysicsSimulation(){	base::StepPhysicsSimulation();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshIf(base)	\
 

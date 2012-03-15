@@ -6,9 +6,9 @@
 namespace Spr{;
 
 //----------------------------------------------------------------------------
-// PHHapticLoopLD
-class PHHapticLoopLD : public PHHapticLoopImp{
-	SPR_OBJECTDEF_NOIF(PHHapticLoopLD);
+// PHHapticLoopLDDev
+class PHHapticLoopLDDev : public PHHapticLoopImp{
+	SPR_OBJECTDEF_NOIF(PHHapticLoopLDDev);
 public:
 	virtual void Step();
 	virtual void HapticRendering();
@@ -17,19 +17,22 @@ public:
 
 //----------------------------------------------------------------------------
 // PHHapticEngineLD
-class PHHapticEngineLD : public PHHapticEngineMultiBase{
-	SPR_OBJECTDEF_NOIF(PHHapticEngineLD);
+class PHHapticEngineLDDev : public PHHapticEngineMultiBase{
+	SPR_OBJECTDEF_NOIF(PHHapticEngineLDDev);
 protected:
-	PHHapticLoopLD hapticLoopLD;
+	PHHapticLoopLDDev hapticLoopLD;
 	UTRef<ObjectStatesIf> states, states2;
 
+	Vec3d phvel;
+
 public:
-	PHHapticEngineLD();
+	PHHapticEngineLDDev();
 	virtual void Step1();
 	virtual void Step2();
 	virtual void PredictSimulation3D();
 	virtual void SyncHaptic2Physic();	
-	virtual void SyncPhysic2Haptic();
+	virtual void SyncPhysic2Haptic();	
+
 };
 
 }

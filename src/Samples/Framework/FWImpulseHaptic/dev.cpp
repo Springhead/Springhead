@@ -8,16 +8,14 @@
 
 #include <Physics\PHHapticEngineLD.h>
 
-#define SUSA_DEV
-
 using namespace Spr;
 
 #define SPIDAR 1
 // 0:single, 1:impulsemulti, 2:LD
-#define ENGINETYPE 1
+#define ENGINETYPE 2
 #define DEBUG_CON 0
 #define DEBUG_RENDER 0
-#define DIRECT_CON 1
+#define DIRECT_CON 0
 
 void MyApp::InitInterface(){
 	hiSdk = GetSdk()->GetHISdk();
@@ -61,6 +59,8 @@ void MyApp::Init(int argc, char* argv[]){
 		InitInterface();
 		phscene = GetSdk()->GetScene()->GetPHScene();
 		phscene->SetTimeStep(0.05);
+		//phscene->SetGravity(Vec3d());
+		//phscene->GetConstraintEngine()->SetContactCorrectionRate(0.0);
 		
 		Vec3d pos = Vec3d(0, 0, 1.21825);
 		GetCurrentWin()->GetTrackball()->SetPosition(pos);
@@ -71,24 +71,39 @@ void MyApp::Init(int argc, char* argv[]){
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
 		bd.material.mu= 0.0;//0.7;
 		bd.material.mu0 = 0.0;//0.7;
-		bd.material.e = 0.1;
+		bd.material.e = 0.0;
 		PHSolidIf* floor = phscene->CreateSolid();
 		floor->SetDynamical(false);
 		floor->AddShape(phSdk->CreateShape(bd));
 		floor->SetFramePosition(Vec3d(0, -1.0, 0.0));
 	
+#if 1
 		// î†ÇçÏê¨
-		for(int i = 0; i < 2; i++){
+		for(int i = 0; i < 1; i++){
 			PHSolidIf* box = phscene->CreateSolid();
+			if(i == 0){
+				sobox = box;
+				sobox->SetName("susabox");
+			}
 			box->SetMass(0.1 * 10);
 			float size = 0.3f;
 			bd.boxsize.clear(size);
 			box->AddShape(phSdk->CreateShape(bd));
 			box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * box->GetMass());
-			box->SetFramePosition(Vec3d(-0.5 - size * i, -0.3, 0.0));
+			box->SetFramePosition(Vec3d(-0.5 - (size + 0.1)* i, -0.35, 0.0));
+			box->SetFramePosition(Vec3d(-0.5 - size * i, -0.35, 0.0));
+			box->SetFramePosition(Vec3d(-0.5 - size * i, 1.0, 0.0));
 			//box->SetDynamical(false);
 		}
-
+#else
+		PHSolidIf* box = phscene->CreateSolid();
+		box->SetMass(2.0);
+		float size = 0.3f;
+		bd.boxsize = Vec3d(size * 2, size, size);
+		box->AddShape(phSdk->CreateShape(bd));
+		box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * box->GetMass());
+		box->SetFramePosition(Vec3d(-0.5 - 0.15, -0.35, 0.0));
+#endif
 		pointer = phscene->CreateHapticPointer();
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
@@ -97,13 +112,14 @@ void MyApp::Init(int argc, char* argv[]){
 		pointer->AddShape(phSdk->CreateShape(cd));
 		Posed dpose;
 		dpose.Pos() = Vec3d(0.0, -0.35, 0.0);
+		pointer->SetFramePosition(dpose.Pos());
 		pointer->SetDefaultPose(dpose);
 		pointer->SetHumanInterface(spg);
 		pointer->SetInertia(pointer->GetInertia());
-		pointer->SetLocalRange(0.1);
+		pointer->SetLocalRange(0.5);
 		pointer->SetPosScale(50);
 		pointer->SetReflexSpring(5000);
-		pointer->SetReflexDamper(0.1);
+		pointer->SetReflexDamper(0.1 * 0.0);
 		pointer->EnableDebugControl(DEBUG_CON);
 		pointer->EnableDirectControl(DIRECT_CON);
 		pointer->EnableFriction(false);
@@ -152,7 +168,6 @@ void MyApp::TimerFunc(int id){
 	if(hapticTimerID == id){
 		phscene->StepHapticLoop();
 	}else{
-		//CSVOUT << sobox->GetFramePosition().y << std::endl;
 		PHHapticEngine* he = phscene->GetHapticEngine()->Cast();
 		he->StepSimulation();
 		PostRedisplay();
@@ -161,6 +176,9 @@ void MyApp::TimerFunc(int id){
 #else
 void MyApp::TimerFunc(int id){
 	if(hapticTimerID == id){
+		//static float time = 0;
+		//time += 0.001;
+		//CSVOUT << time << "," << sobox->GetFramePosition().x << std::endl;
 		phscene->Step();
 	}else if(physicsTimerID == id){
 		PostRedisplay();
@@ -253,7 +271,22 @@ void MyApp::Keyboard(int key, int x, int y){
 			break;	
 		case ' ':
 			{
-				
+			for(int i = 0; i < NTimers(); i++){
+				GetTimer(i)->Stop();
+			}
+			PHSolidIf* box = phscene->CreateSolid();
+			box->SetMass(0.1 * 10);
+			float size = 0.3f;
+			CDBoxDesc bd;
+			bd.boxsize.clear(size);
+			box->AddShape(GetSdk()->GetPHSdk()->CreateShape(bd));
+			box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * box->GetMass());
+			box->SetFramePosition(Vec3d(-0.5, 1.0, 0.0));
+			//box->SetDynamical(false);
+			PHHapticEngine* e = phscene->GetHapticEngine()->Cast();
+			for(int i = 0; i < NTimers(); i++){
+				GetTimer(i)->Start();
+			}
 			}
 		default:
 			break;

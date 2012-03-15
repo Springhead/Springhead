@@ -1,14 +1,14 @@
-#include <Physics/PHHapticEngineLD.h>
+#include <Physics/PHHapticEngineLDDev.h>
 
 namespace Spr{;
 //----------------------------------------------------------------------------
-// PHHapticLoopLD
-void PHHapticLoopLD::Step(){
+// PHHapticLoopLDDev
+void PHHapticLoopLDDev::Step(){
 	UpdateInterface();
 	HapticRendering();
 	LocalDynamics();
 }
-void PHHapticLoopLD::HapticRendering(){
+void PHHapticLoopLDDev::HapticRendering(){
 	PHHapticRenderInfo info;
 	info.pointers = GetHapticPointers();
 	info.hsolids = GetHapticSolids();
@@ -20,7 +20,7 @@ void PHHapticLoopLD::HapticRendering(){
 	GetHapticRender()->HapticRendering(info);
 }
 
-void PHHapticLoopLD::LocalDynamics(){
+void PHHapticLoopLDDev::LocalDynamics(){
 	double pdt = GetPhysicsTimeStep();
 	double hdt = GetHapticTimeStep();
 	for(int i = 0; i < NHapticSolids(); i++){
@@ -41,6 +41,7 @@ void PHHapticLoopLD::LocalDynamics(){
 			vel += (sp->A * sp->force) * hdt;			// 力覚ポインタからの力による速度変化
 		}
 		vel += hsolid->b * hdt;
+		//DSTR << hsolid->bimpact << "," << hsolid->b << "," << vel << std::endl;
 		localSolid->SetVelocity(vel.v());		
 		localSolid->SetAngularVelocity(vel.w());
 		localSolid->SetOrientation(( Quaterniond::Rot(vel.w() * hdt) * localSolid->GetOrientation()).unit());
@@ -48,21 +49,27 @@ void PHHapticLoopLD::LocalDynamics(){
 
  		localSolid->SetUpdated(true);
 		localSolid->Step();
+		if(i == 1){
+			//CSVOUT << localSolid->GetFramePosition().y << "," << vel.v().y << "," << hsolid->b.v().y * hdt << std::endl;
+			//CSVOUT << localSolid->GetVelocity().y << ","
+			//<< (hsolid->curb - hsolid->lastb).v().y *  pdt << ","
+			//<< hsolid->b.v().y * hdt << std::endl;
+		}
 	}
 }
 
 //----------------------------------------------------------------------------
-// PHHapticEngineLD
-PHHapticEngineLD::PHHapticEngineLD(){
+// PHHapticEngineLDDev
+PHHapticEngineLDDev::PHHapticEngineLDDev(){
 	hapticLoop = &hapticLoopLD;
 	hapticLoop->engineImp = this;
 	states = ObjectStatesIf::Create();
 	states2 = ObjectStatesIf::Create();
 }
 
-void PHHapticEngineLD::Step1(){
+void PHHapticEngineLDDev::Step1(){
 }
-void PHHapticEngineLD::Step2(){
+void PHHapticEngineLDDev::Step2(){
 	// 更新後の速度、前回の速度差から定数項を計算
 	for(int i = 0; i < NHapticSolids(); i++){
 		// 近傍の剛体のみ
@@ -74,6 +81,7 @@ void PHHapticEngineLD::Step2(){
 		lastvel.v() = solid->GetLastVelocity();
 		lastvel.w() = solid->GetLastAngularVelocity();
 		GetHapticSolid(i)->curb = (curvel - lastvel) / GetPhysicsTimeStep();
+		phvel = curvel;
 	}
 
 	engine->StartDetection();
@@ -81,7 +89,7 @@ void PHHapticEngineLD::Step2(){
 }
 
 /// 1対1のshapeで、1点の接触のみ対応
-void PHHapticEngineLD::PredictSimulation3D(){
+void PHHapticEngineLDDev::PredictSimulation3D(){
 	engine->bPhysicStep = false;
 	/** PHSolidForHapticのdosim > 0の物体に対してテスト力を加え，
 		すべての近傍物体について，アクセレランスを計算する */
@@ -125,9 +133,23 @@ void PHHapticEngineLD::PredictSimulation3D(){
 
 		hsolid->lastb = hsolid->b;
 		double pdt = phScene->GetTimeStep();
-		hsolid->b = (nextvel - curvel)/pdt;
+		SpatialVector preb = (nextvel - curvel)/pdt;
+		hsolid->b = preb;
+		//double dot = hsolid->curb * preb;
+		//hsolid->b = SpatialVector();
+		//hsolid->b.v() = phScene->GetGravity();
+		//hsolid->bimpact = preb;
+		//hsolid->bimpact += -hsolid->b.v();
 
 		states->LoadState(phScene);						// 現在の状態に戻す
+
+		//if(i == 1){
+		//	DSTR << "-------" << std::endl;
+		//	//DSTR << dot << std::endl;
+		//	//DSTR << hsolid->sceneSolid->GetLastVelocity().y << "," << "curvel" << curvel.v().y << "    " << "nextvel" << nextvel.v().y << std::endl;  
+		//	DSTR << hsolid->curb << "," << hsolid->b << "," << hsolid->bimpact << std::endl;
+		//	//CSVOUT << hsolid->sceneSolid->GetFramePosition().y << "," << curvel.v().y << std::endl;
+		//}
 
 		/// HapticPointerの数だけ力を加える予測シミュレーション
 		for(int j = 0; j < NHapticPointers(); j++){
@@ -175,15 +197,14 @@ void PHHapticEngineLD::PredictSimulation3D(){
 				nextvel.v() = phSolid->GetVelocity();
 				nextvel.w() = phSolid->GetAngularVelocity();
 				u.col(m) = (nextvel - curvel) / pdt - hsolid->b;
+				//DSTR << force.col(m) << force.col(m).norm() << std::endl;
+				//DSTR << nextvel - curvel << std::endl;
 				states->LoadState(phScene);			
-				//DSTR << "force.col" << m << " " << force.col(m) << force.col(m).norm() << std::endl;
 			}
 
 			solidPair->A = u  * force.inv();	// m/(Ns2)
-			//DSTR << "b" << std::endl;
-			//DSTR << hsolid->b << std::endl;
-			//DSTR << "A" << std::endl;
 			//DSTR << solidPair->A << std::endl;
+			//if(i == 1) CSVOUT << hsolid->b.v().y << std::endl;
 		}
 	}
 #endif
@@ -194,7 +215,7 @@ void PHHapticEngineLD::PredictSimulation3D(){
 	engine->bPhysicStep = true;
 }
 
-void PHHapticEngineLD::SyncHaptic2Physic(){
+void PHHapticEngineLDDev::SyncHaptic2Physic(){
 #if 1
 	// physics <------ haptic
 	// PHSolidForHapticの同期
@@ -224,6 +245,7 @@ void PHHapticEngineLD::SyncHaptic2Physic(){
 		PHSolid* localSolid = hsolid->GetLocalSolid();
 		PHSolidForHaptic* psolid = GetHapticSolid(i);
 		SpatialVector b = (psolid->b + (psolid->curb - psolid->lastb)) * pdt;	// モビリティ定数項
+		//b = SpatialVector();
 		Vec3d v = localSolid->GetVelocity() + b.v();			// 反映速度
 		Vec3d w = localSolid->GetAngularVelocity() + b.w();		// 反映角速度
 
@@ -234,6 +256,14 @@ void PHHapticEngineLD::SyncHaptic2Physic(){
 		sceneSolid->SetVelocity(v);
 		sceneSolid->SetAngularVelocity(w);
 		sceneSolid->SetPose(localSolid->GetPose());
+		//DSTR << phvel << ", " << v << std::endl;
+		//if(i == 1){
+		//	DSTR << "physicsvel" << svel.y << "," << "hapticvel" << localSolid->GetVelocity().y << std::endl;
+		//	DSTR << "mergevel" << sceneSolid->GetVelocity().y << std::endl;
+		//	DSTR << "nextb" << psolid->b << std::endl;
+		//	DSTR << b << std::endl;
+		//	CSVOUT << svel.y << "," << spos.y << "," <<  localSolid->GetVelocity().y << "," << localSolid->GetFramePosition().y << "," << v.y << std::endl;
+		//}
 
 		PHSolidForHapticSt* hst = (PHSolidForHapticSt*)hsolid;
 		PHSolidForHapticSt* pst = (PHSolidForHapticSt*)GetHapticSolid(i);
@@ -242,7 +272,8 @@ void PHHapticEngineLD::SyncHaptic2Physic(){
 #endif
 }
 
-void PHHapticEngineLD::SyncPhysic2Haptic(){
+void PHHapticEngineLDDev::SyncPhysic2Haptic(){
+#if 1
 	// haptic <------ physics
 	// PHSolidForHapticの同期
 	for(int i = 0; i < NHapticSolids(); i++){
@@ -265,8 +296,10 @@ void PHHapticEngineLD::SyncPhysic2Haptic(){
 			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(solidID, ppointerID);
 			PHSolidPairForHaptic* ppair = GetSolidPairForHaptic(solidID, ppointerID);
 			*hpair = PHSolidPairForHaptic(*ppair);
+			//DSTR << hpair->A << std::endl;
 		}
 	}
+#endif
 }
 
 }
