@@ -11,12 +11,12 @@
 #include <Framework/FWOldSpringheadNode.h>
 #include <Framework/FWObject.h>
 #include <Framework/FWScene.h>
-#include <Framework/FWInteractScene.h>
 #include <Framework/FWFemMesh.h>
 #include <Physics/PHSdk.h>
 #include <Physics/PHScene.h>
 #include <Graphics/GRSdk.h>
 #include <Graphics/GRScene.h>
+#include <SprFileIO.h>
 #include <FileIO/FISdk.h>
 #include <HumanInterface/HISdk.h>
 #include <Foundation/UTPath.h>
@@ -222,27 +222,6 @@ void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 	scenes.erase(it1);
 }
 
-FWInteractSceneIf* FWSdk::CreateIAScene(const FWInteractSceneDesc &desc){
-	FWInteractScene* iaScene = DBG_NEW FWInteractScene(desc);
-	iaScenes.push_back(iaScene->Cast());
-	iaScene->CreateIAAdaptee(desc.iaMode);
-	if(desc.iaMode == LOCAL_DYNAMICS_3D || desc.iaMode == LOCAL_DYNAMICS_6D){
-		iaScene->SetHMode(desc.hMode);
-	}
-	curIAScene = iaScene->Cast();
-	return curIAScene;
-}
-
-FWInteractSceneIf* FWSdk::GetIAScene(int i){
-	if(i == -1) return curIAScene;
-	if(0 <= i && i < NIAScenes()) return iaScenes[i];
-	return NULL;
-}
-
-void FWSdk::ClearIAScenes(){ 
-	iaScenes.clear();
-	curIAScene = NULL;
-}
 
 /*GRRenderIf*	FWSdk::CreateRender(){
 	GRRenderIf* render = GetGRSdk()->CreateRender();
