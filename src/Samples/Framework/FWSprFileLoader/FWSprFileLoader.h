@@ -1,25 +1,28 @@
+/*
+ *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
 #ifndef FWSPRFILE_LOADER_H							// ヘッダファイルを作る時のおまじない
 #define FWSPRFILE_LOADER_H							// 同上
 
-#include <Springhead.h>								// SpringheadのIf型を使うためのヘッダファイル
+#include <Springhead.h>								// SpringheadのAPIを使うためのヘッダファイル
 #include <Framework/SprFWApp.h>						// Frameworkクラスが宣言されているヘッダファイル
 
 using namespace Spr;								// Springheadの名前空間
 
 class FWSprfileLoader : public FWApp{
 public:
-	std::string fileName;
-	bool bDebug;									///< デバックモードの切り替え
+	std::string fileName;							///< ロードするファイル名
 	FWSprfileLoader();								///< コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
-	virtual void Init(int argc, char* argv[]);		///< GLUTの初期化
-	virtual void TimerFunc(int id);
-	virtual void IdleFunc();
-	virtual void Display();							///< 描画
+	virtual void Init(int argc, char* argv[]);		///< アプリケーションの初期化
 	virtual void Keyboard(int key, int x, int y);	///< キーボード関数
 
-	void InitCameraView();							///< カメラ座標				
-	void Reset();
-	void Step();									///< シミュレーションを1ステップ進める
+	void InitCameraView();							///< 初期カメラ位置の設定		
+	void Reset();									///< リセット
 }; 
 
 #endif
