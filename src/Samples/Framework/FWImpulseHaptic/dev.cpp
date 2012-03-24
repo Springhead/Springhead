@@ -169,7 +169,7 @@ void MyApp::TimerFunc(int id){
 		phscene->StepHapticLoop();
 	}else{
 		PHHapticEngine* he = phscene->GetHapticEngine()->Cast();
-		he->StepSimulation();
+		he->StepPhysicsSimulation();
 		PostRedisplay();
 	}
 }

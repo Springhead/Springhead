@@ -13,10 +13,6 @@
 #include "Framework/FWScene.h"
 #include "Framework/FWObject.h"
 #include "Framework/FWSdk.h"
-#include "Framework/FWInteractScene.h"
-#include "Framework/FWInteractPointer.h"
-#include "Framework/FWLDHaptic.h"
-
 
 
 #endif

@@ -38,10 +38,6 @@ protected:
 	FWScenes scenes;
 	/// アクティブシーン
 	//FWSceneIf*		curScene;
-
-	/// インタラクション用シーン
-	FWInteractSceneIf*					curIAScene;
-	FWInteractScenes					iaScenes;
 	
 	/// レンダラ
 	typedef std::vector< UTRef<GRRenderIf> > Renders;
@@ -74,13 +70,7 @@ public:
 	//void SwitchScene(FWSceneIf* scene){ curScene = scene; }
 	FWSceneIf* GetScene(int i = -1);
 	void MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
-	
-	/// インタラクションシーン関係
-	FWInteractSceneIf*				CreateIAScene(const FWInteractSceneDesc& desc);
-	FWInteractSceneIf*				GetIAScene(int i = -1);
-	int								NIAScenes(){ return iaScenes.size(); }
-	void							ClearIAScenes();
-	
+		
 	/// レンダラ関係
 	//GRRenderIf*	CreateRender();
 	//int NRender() const{return (int)renders.size();}

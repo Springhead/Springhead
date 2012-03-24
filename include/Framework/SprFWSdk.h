@@ -10,7 +10,6 @@
 
 #include <Physics/SprPHScene.h>
 #include <Graphics/SprGRScene.h>
-#include <Framework/SprFWInteractScene.h>
 
 namespace Spr{;
 
@@ -94,15 +93,6 @@ struct FWSdkIf : SdkIf {
 		scene1に含まれる全ての要素をscene0に移動し，scene1を削除する．
 	 */
 	void	MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
-
-	/// インタラクションシーンを作成する
-	FWInteractSceneIf*	CreateIAScene(const FWInteractSceneDesc& desc);
-	/// インタラクションシーンを取得する
-	FWInteractSceneIf*	GetIAScene(int index);
-	/// インタラクションシーンの数
-	int		NIAScenes();
-	/// インタラクションシーンをクリアする
-	void	ClearIAScenes();
 
 	/** @brief レンダラを作成する
 		レンダラを作成し，レンダラリストに追加する．

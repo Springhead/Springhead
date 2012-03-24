@@ -11,8 +11,6 @@
 #include "Framework/SprFWObject.h"
 #include "Framework/SprFWScene.h"
 #include "Framework/SprFWSdk.h"
-#include "Framework/SprFWInteractScene.h"
-#include "Framework/SprFWInteractPointer.h"
 #include "Framework/SprFWFemMesh.h"
 #include "Framework/SprFWWin.h"
 

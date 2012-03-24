@@ -5,10 +5,11 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#include <Springhead.h>
 #include <Framework/SprFWApp.h>
+//#include <Framework/SprFWSdk.h>
 #include <Framework/FWGLUT.h>
 #include <Framework/FWGLUI.h>
-#include <Framework/FWInteractScene.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -214,20 +215,6 @@ void FWApp::GRInit(int argc, char* argv[], int type){
 		SetGRAdaptee(type);
 	FWGraphicsAdaptee::instance->Init(argc, argv);
 }
-
-/*void FWApp::CallKeyboard(int key, int x, int y){
-	for(int i = 0; i < GetSdk()->NIAScenes(); i++){
-		FWInteractScene* iaScene = GetSdk()->GetIAScene(i)->Cast();
-		iaScene->BeginKeyboard();
-	}
-
-	Keyboard(key, x, y);
-
-	for(int i = 0; i < GetSdk()->NIAScenes(); i++){
-		FWInteractScene* iaScene = GetSdk()->GetIAScene(i)->Cast();
-		iaScene->EndKeyboard();
-	}
-}*/
 
 //É^ÉCÉ}///////////////////////////////////////////////////////////////////////////
 

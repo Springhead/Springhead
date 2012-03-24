@@ -11,56 +11,6 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_FWFemMeshIf(base)	\
 	PHFemMeshIf* GetPHMesh(){	return	base::GetPHMesh();}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_FWInteractPointerIf(base)	\
-	void SetPointerSolid(Spr::PHSolidIf* solid){	base::SetPointerSolid(solid);}	\
-	Spr::PHSolidIf* GetPointerSolid(){	return	base::GetPointerSolid();}	\
-	void SetHI(Spr::HIBaseIf* hi){	base::SetHI(hi);}	\
-	Spr::HIBaseIf* GetHI(){	return	base::GetHI();}	\
-	void SetPosScale(double s){	base::SetPosScale(s);}	\
-	double GetPosScale(){	return	base::GetPosScale();}	\
-	void SetForceScale(double s){	base::SetForceScale(s);}	\
-	double GetForceScale(){	return	base::GetForceScale();}	\
-	void SetTorqueScale(double s){	base::SetTorqueScale(s);}	\
-	double GetTorqueScale(){	return	base::GetTorqueScale();}	\
-	void SetLocalRange(double r){	base::SetLocalRange(r);}	\
-	double GetLocalRange(){	return	base::GetLocalRange();}	\
-	void SetPointersCalibPosition(Posed p){	base::SetPointersCalibPosition(p);}	\
-	Posed GetPointersCalibPosition(){	return	base::GetPointersCalibPosition();}	\
-	void SetDefaultPosition(Posed p){	base::SetDefaultPosition(p);}	\
-	Posed GetDefaultPosition(){	return	base::GetDefaultPosition();}	\
-	void SetSpringCoeff(double k){	base::SetSpringCoeff(k);}	\
-	double GetSpringCoeff(){	return	base::GetSpringCoeff();}	\
-	void SetDamperCoeff(double d){	base::SetDamperCoeff(d);}	\
-	double GetDamperCoeff(){	return	base::GetDamperCoeff();}	\
-	void EnableForce(bool b){	base::EnableForce(b);}	\
-	void EnableVibration(bool b){	base::EnableVibration(b);}	\
-	void Calibration(){	base::Calibration();}	\
-	void SetGrabFlag(int f){	base::SetGrabFlag(f);}	\
-	int GetGrabFlag(){	return	base::GetGrabFlag();}	\
-	void SetCameraOri(Quaterniond q){	base::SetCameraOri(q);}	\
-	Quaterniond GetCameraOri(){	return	base::GetCameraOri();}	\
-	void SetSpringK(double k){	base::SetSpringK(k);}	\
-	double GetSpringK(){	return	base::GetSpringK();}	\
-	void SetDamperD(double d){	base::SetDamperD(d);}	\
-	double GetDamperD(){	return	base::GetDamperD();}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_FWInteractSceneIf(base)	\
-	Spr::FWSceneIf* GetScene(){	return	base::GetScene();}	\
-	void CreateIAAdaptee(Spr::FWInteractMode mode){	base::CreateIAAdaptee(mode);}	\
-	Spr::FWInteractAdaptee* GetIAAdaptee(){	return	base::GetIAAdaptee();}	\
-	Spr::FWInteractPointerIf* CreateIAPointer(const Spr::FWInteractPointerDesc& desc){	return	base::CreateIAPointer(desc);}	\
-	Spr::FWInteractPointerIf* GetIAPointer(int i){	return	base::GetIAPointer(i);}	\
-	int NIAPointers(){	return	base::NIAPointers();}	\
-	Spr::FWInteractMode GetIAMode(){	return	base::GetIAMode();}	\
-	Spr::FWHapticMode GetHMode(){	return	base::GetHMode();}	\
-	void SetHMode(Spr::FWHapticMode hMode){	base::SetHMode(hMode);}	\
-	void Init(){	base::Init();}	\
-	void Clear(){	base::Clear();}	\
-	void Step(){	base::Step();}	\
-	void CallBackHapticLoop(){	base::CallBackHapticLoop();}	\
-	bool GetContactFlag(){	return	base::GetContactFlag();}	\
-	Vec3d GetPicCenterPosition(){	return	base::GetPicCenterPosition();}	\
-
 #define SPR_OVERRIDEMEMBERFUNCOF_FWObjectIf(base)	\
 	Spr::PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
 	void SetPHSolid(Spr::PHSolidIf* s){	base::SetPHSolid(s);}	\
@@ -142,10 +92,6 @@
 	int NScene()const{	return	base::NScene();}	\
 	Spr::FWSceneIf* GetScene(int index){	return	base::GetScene(index);}	\
 	void MergeScene(Spr::FWSceneIf* scene0, Spr::FWSceneIf* scene1){	base::MergeScene(scene0, scene1);}	\
-	Spr::FWInteractSceneIf* CreateIAScene(const Spr::FWInteractSceneDesc& desc){	return	base::CreateIAScene(desc);}	\
-	Spr::FWInteractSceneIf* GetIAScene(int index){	return	base::GetIAScene(index);}	\
-	int NIAScenes(){	return	base::NIAScenes();}	\
-	void ClearIAScenes(){	base::ClearIAScenes();}	\
 	PHSdkIf* GetPHSdk(){	return	base::GetPHSdk();}	\
 	GRSdkIf* GetGRSdk(){	return	base::GetGRSdk();}	\
 	Spr::FISdkIf* GetFISdk(){	return	base::GetFISdk();}	\
