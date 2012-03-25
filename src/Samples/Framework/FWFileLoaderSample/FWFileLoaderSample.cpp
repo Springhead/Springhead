@@ -20,30 +20,27 @@ FWFileLoaderSample::FWFileLoaderSample(){
 }
 
 void FWFileLoaderSample::Init(int argc, char* argv[]){
-	/// シミュレーションの初期化
-	FWApp::Init();									// アプリケーションの初期化
-	UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();	// 
+	CreateSdk();			// SDKの作成
+	UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
 	GetSdk()->LoadScene(fileName, import);			// ファイルのロード
 	GetSdk()->SaveScene("save.spr", import);		// ファイルのセーブテスト
+	GRInit(argc, argv);		// ウィンドウマネジャ初期化
+	CreateWin();			// ウィンドウを作成
+	CreateTimer();			// タイマを作成
 
-	PHSolidIf* solid = GetSdk()->GetScene()->GetPHScene()->CreateSolid();
-	CDBoxDesc bd;
-	bd.boxsize.clear(1.0);
-	solid->AddShape(GetSdk()->GetPHSdk()->CreateShape(bd));
-	solid->SetDynamical(false);
-
-	/// カメラビューの初期化
-	InitCameraView();
-	GetSdk()->GetScene()->EnableRenderAxis(true);
-	GetSdk()->GetScene()->EnableRenderContact(true);
-
+	InitCameraView();		// カメラビューの初期化
+	GetSdk()->SetDebugMode(false);						// デバックモードの無効化
+	GetSdk()->GetScene()->EnableRenderAxis(true);		// 座標軸の表示
+	GetSdk()->GetScene()->EnableRenderContact(true);	// 接触領域の表示
 }
 
 void FWFileLoaderSample::InitCameraView(){
+	Vec3d pos = Vec3d(-0.978414, 11.5185, 24.4473);		// カメラ初期位置
+	GetCurrentWin()->GetTrackball()->SetPosition(pos);	// カメラ初期位置の設定
 }
 
 void FWFileLoaderSample::Reset(){
-	GetSdk()->Clear();		
+	GetSdk()->ClearScenes();
 	GetSdk()->LoadScene(fileName);
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 }
@@ -58,7 +55,7 @@ void FWFileLoaderSample::Keyboard(int key, int x, int y){
 			break;
 		case 'r':
 			// ファイルの再読み込み
-			Reset();			
+			Reset();
 			break;
 		case 'w':
 			// カメラ位置の初期化
@@ -67,11 +64,13 @@ void FWFileLoaderSample::Keyboard(int key, int x, int y){
 		case 'd':				
 			{
 				// デバック表示
-				static bool bDebug = true;
+				static bool bDebug = GetSdk()->GetDebugMode();
 				if(bDebug)	bDebug = false;
 				else		bDebug = true;
 				GetSdk()->SetDebugMode(bDebug);
 				DSTR << "Debug Mode " << bDebug << std::endl;
+				//DSTR << "CameraPosition" << std::endl;
+				//DSTR << GetCurrentWin()->GetTrackball()->GetPosition() << std::endl;
 			}
 			break;
 		default:
