@@ -6,18 +6,18 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#ifndef FWSPRFILE_LOADER_H							// ヘッダファイルを作る時のおまじない
-#define FWSPRFILE_LOADER_H							// 同上
+#ifndef FW_FILELOADER_SAMPLE_H						// ヘッダファイルを作る時のおまじない
+#define FW_FILELOADER_SAMPLE_H						// 同上
 
 #include <Springhead.h>								// SpringheadのAPIを使うためのヘッダファイル
 #include <Framework/SprFWApp.h>						// Frameworkクラスが宣言されているヘッダファイル
 
 using namespace Spr;								// Springheadの名前空間
 
-class FWSprfileLoader : public FWApp{
+class FWFileLoaderSample : public FWApp{
 public:
 	std::string fileName;							///< ロードするファイル名
-	FWSprfileLoader();								///< コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
+	FWFileLoaderSample();							///< コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
 	virtual void Init(int argc, char* argv[]);		///< アプリケーションの初期化
 	virtual void Keyboard(int key, int x, int y);	///< キーボード関数
 

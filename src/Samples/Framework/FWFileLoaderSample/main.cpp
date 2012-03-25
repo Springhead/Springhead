@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#include "FWSprFileLoader.h"
+#include "FWFileLoaderSample.h"
 /**
 	シンプルなSprfileローダー
 	シミュレーションはglutIdleFuncで進める
@@ -16,7 +16,7 @@
 	d		: デバック表示切り替え
 */
 
-FWSprfileLoader app;
+FWFileLoaderSample app;
 int _cdecl main(int argc, char* argv[]){
 	app.Init(argc, argv);
 	app.StartMainLoop();

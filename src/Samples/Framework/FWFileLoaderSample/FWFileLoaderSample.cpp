@@ -6,20 +6,25 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#include "FWSprFileLoader.h"
+#include "FWFileLoaderSample.h"
 
+#define USE_SPRFILE
 #define ESC 27
 
-FWSprfileLoader::FWSprfileLoader(){
-	fileName = "./SprFiles/sceneSample.spr";
+FWFileLoaderSample::FWFileLoaderSample(){
+#ifdef USE_SPRFILE
+	fileName = "./files/sceneSample.spr";	// sprファイル
+#else
+	fileName = "./files/sceneSample.x";		// xファイル
+#endif
 }
 
-void FWSprfileLoader::Init(int argc, char* argv[]){
+void FWFileLoaderSample::Init(int argc, char* argv[]){
 	/// シミュレーションの初期化
-	FWApp::Init();
-	UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
+	FWApp::Init();									// アプリケーションの初期化
+	UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();	// 
 	GetSdk()->LoadScene(fileName, import);			// ファイルのロード
-	GetSdk()->SaveScene("save.spr", import);		///	ファイルのセーブテスト
+	GetSdk()->SaveScene("save.spr", import);		// ファイルのセーブテスト
 
 	PHSolidIf* solid = GetSdk()->GetScene()->GetPHScene()->CreateSolid();
 	CDBoxDesc bd;
@@ -34,30 +39,34 @@ void FWSprfileLoader::Init(int argc, char* argv[]){
 
 }
 
-void FWSprfileLoader::InitCameraView(){
+void FWFileLoaderSample::InitCameraView(){
 }
 
-void FWSprfileLoader::Reset(){
+void FWFileLoaderSample::Reset(){
 	GetSdk()->Clear();		
 	GetSdk()->LoadScene(fileName);
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 }
 
 
-void FWSprfileLoader::Keyboard(int key, int x, int y){
+void FWFileLoaderSample::Keyboard(int key, int x, int y){
 	switch (key) {
 		case ESC:
 		case 'q':
+			// アプリケーションの終了
 			exit(0);
 			break;
 		case 'r':
-			Reset();			// ファイルの再読み込み
+			// ファイルの再読み込み
+			Reset();			
 			break;
-		case 'w':				// カメラ初期化
+		case 'w':
+			// カメラ位置の初期化
 			InitCameraView();	
 			break;
-		case 'd':				// デバック表示
+		case 'd':				
 			{
+				// デバック表示
 				static bool bDebug = true;
 				if(bDebug)	bDebug = false;
 				else		bDebug = true;
