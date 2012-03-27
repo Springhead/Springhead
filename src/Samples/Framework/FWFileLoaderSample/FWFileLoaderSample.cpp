@@ -40,7 +40,7 @@ void FWFileLoaderSample::InitCameraView(){
 }
 
 void FWFileLoaderSample::Reset(){
-	GetSdk()->ClearScenes();
+	GetSdk()->Clear();
 	GetSdk()->LoadScene(fileName);
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 }
