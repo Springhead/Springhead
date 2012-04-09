@@ -5,9 +5,8 @@ using namespace Spr;
 
 int __cdecl main(){
 	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
-	sdk->Init();
 	sdk->Print(DSTR);
-	UTRef<HIForceInterface6DIf> intf = sdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
+	UTRef<HINovintFalconIf> intf = sdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
 	intf->Init(NULL);
 	int t = 0;
 	for(int i=0; !kbhit() && i<100000; ++i){
