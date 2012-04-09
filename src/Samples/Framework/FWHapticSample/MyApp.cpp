@@ -4,7 +4,7 @@ using namespace Spr;
 
 // ヒューマンインタフェースの切り替え
 // 0:SPIDAR-G6, 1:XBoxController
-#define HUMAN_INTERFACE 0
+#define HUMAN_INTERFACE 2
 // 力覚エンジンの切り替え
 // 0:single, 1:impulsemulti, 2:LD
 #define ENGINETYPE 2
@@ -37,6 +37,9 @@ void MyApp::InitInterface(){
 #elif HUMAN_INTERFACE == 1
 	spg = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
 	HIXbox360ControllerIf* con = DCAST(HIXbox360ControllerIf,spg);
+#elif HUMAN_INTERFACE == 2
+	spg = hiSdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
+	spg->Init(NULL);
 #endif
 }
 
@@ -74,7 +77,7 @@ void MyApp::Init(int argc, char* argv[]){
 		cd.radius = 0.1f;
 		cd.material.mu = 0.4;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		pointer->AddShape(phSdk->CreateShape(bd));	// シェイプの追加
+		//pointer->AddShape(phSdk->CreateShape(bd));	// シェイプの追加
 		pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
 		Posed defaultPose;
 		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);
