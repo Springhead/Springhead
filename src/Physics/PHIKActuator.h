@@ -39,8 +39,8 @@ public:
 	/// 直系祖先・子孫（自分含む）・直接の子供
 	std::vector<PHIKActuator*> ascendant, descendant, children;
 	/// 祖先・子孫にまとめてアクセスする関数
-	PHIKActuator* link(size_t i) { return (i<ascendant.size()) ? ascendant[i] : descendant[i-ascendant.size()]; }
-	int nLinks() {return ascendant.size()+descendant.size();}
+	PHIKActuator* Link(size_t i) { return (i<ascendant.size()) ? ascendant[i] : descendant[i-ascendant.size()]; }
+	int NLinks() {return ascendant.size()+descendant.size();}
 
 	/// このアクチュエータで直接つながれたエンドエフェクタ．1アクチュエータに対し1エンドエフェクタが対応
 	PHIKEndEffector* eef;

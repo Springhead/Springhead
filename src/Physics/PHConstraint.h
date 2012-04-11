@@ -205,6 +205,9 @@ public:
 	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w);
 	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t);
 
+	virtual Vec3d		 GetForce();
+	virtual Vec3d		 GetTorque();
+
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject() const;
 	virtual ObjectIf*	 GetChildObject(size_t i);

@@ -50,7 +50,7 @@ public:
 	// --- --- --- --- ---
 
 	PHIKActuator*		CreateIKActuator(const IfInfo* ii, const PHIKActuatorDesc& desc);
-	PHIKEndEffector*	CreateIKEndEffector(const IfInfo* ii, const PHIKEndEffectorDesc& desc);
+	PHIKEndEffector*	CreateIKEndEffector(const PHIKEndEffectorDesc& desc);
 	virtual bool		AddChildObject(ObjectIf* o);
 };
 

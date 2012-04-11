@@ -15,6 +15,9 @@ def to_quat(vec4):
 	rv.z = vec4.z
 	return rv
 
+def callback():
+	print("hoge")
+
 hiTrackball.SetPosition(Vec3f(50, 0, 0))
 
 initPose = Posef()
@@ -32,6 +35,8 @@ phSdk   = phScene.GetSdk()
 
 phScene.SetGravity(Vec3d(0,-9.8,0))
 
+ikEngine = phScene.GetIKEngine()
+
 ## ----- ----- ----- ----- -----
 
 def AddSolid():
@@ -46,7 +51,8 @@ def AddJoint(so1, so2, ikaParent=None):
 	descJoint = PHHingeJointDesc()
 	descJoint.poseSocket = Posed(1,0,0,0, 0, 2,0)
 	descJoint.posePlug   = Posed(1,0,0,0, 0,-2,0)
-	descJoint.damper = 100.0
+	descJoint.spring =     10.0
+	descJoint.damper =      1.0
 	jo = phScene.CreateJoint(so1, so2, PHHingeJoint.GetIfInfoStatic(), descJoint)
 	descIKA = PHIKHingeActuatorDesc()
 	descIKA.velocityGain = 10.0
@@ -56,49 +62,25 @@ def AddJoint(so1, so2, ikaParent=None):
 		ikaParent.AddChildObject(ika)
 	return ika
 
-so0 = AddSolid(); so0.SetDynamical(False)
-so1 = AddSolid()
-so2 = AddSolid()
-so3 = AddSolid()
-so4 = AddSolid()
-so5 = AddSolid()
-so6 = AddSolid()
+## ----- ----- ----- ----- -----
+## Test Code
 
-ika0 = AddJoint(so0, so1)
-ika1 = AddJoint(so1, so2, ika0)
-ika2 = AddJoint(so2, so3, ika1)
-ika3 = AddJoint(so3, so4, ika2)
-ika4 = AddJoint(so2, so5, ika1)
-ika5 = AddJoint(so5, so6, ika4)
+solid = AddSolid()
+solid.SetFramePosition(Vec3d(0,0,0))
+print("SetFramePosition(Vec3d) ok.")
 
-descIKE = PHIKEndEffectorDesc()
-ike0 = phScene.CreateIKEndEffector(PHIKEndEffector.GetIfInfoStatic(), descIKE); ike0.AddChildObject(so4)
-ike1 = phScene.CreateIKEndEffector(PHIKEndEffector.GetIfInfoStatic(), descIKE); ike1.AddChildObject(so6)
+solid.SetFramePosition(Vec3f(0,0,0))
+print("SetFramePosition(Vec3f) ok.")
 
-# ike0 = phScene.CreateIKEndEffector(PHIKEndEffector.GetIfInfoStatic(), descIKE); ike0.AddChildObject(so2)
-# ika1.AddChildObject(ike0)
+solid.SetOrientation(Quaterniond(1,0,0,0))
+print("SetOrientation(Quaterniond) ok.")
 
-# ike0 = phScene.CreateIKEndEffector(PHIKEndEffector.GetIfInfoStatic(), descIKE); ike0.AddChildObject(so1)
-# ika0.AddChildObject(ike0)
+solid.SetOrientation(Quaternionf(1,0,0,0))
+print("SetOrientation(Quaternionf) ok.")
 
-ika3.AddChildObject(ike0)
-ika5.AddChildObject(ike1)
+exit()
 
-ike0.SetTargetPosition(Vec3d(2,5,0))
-ike0.Enable(True)
-
-ike1.SetTargetPosition(Vec3d(4,5,0))
-ike1.Enable(True)
-
-for i in range(0,10):
-	phScene.Step()
-
-phScene.GetIKEngine().Enable(True)
-phScene.Step()
-
-phScene.SetContactMode(0)
-
-
+## ----- ----- ----- ----- -----
 
 # Pointer-base
 soPB = phScene.CreateSolid(PHSolidDesc())
@@ -110,7 +92,10 @@ soPB1.SetDynamical(False)
 # Pointer
 soP = phScene.CreateSolid(PHSolidDesc())
 soP.SetFramePosition(Vec3d(-10,0,0))
-soP.AddShape(phSdk.CreateShape(CDSphere.GetIfInfoStatic(), CDSphereDesc()))
+# soP.AddShape(phSdk.CreateShape(CDSphere.GetIfInfoStatic(), CDSphereDesc()))
+boxDesc = CDBoxDesc()
+boxDesc.boxsize = Vec3d(1,2,3)
+soP.AddShape(phSdk.CreateShape(CDBox.GetIfInfoStatic(), boxDesc))
 
 # Pointer Spring
 descSpring = PHSpringDesc()
@@ -133,6 +118,7 @@ class SpaceNavigatorThread(threading.Thread):
 		self.spcNav.SetMaxAngularVelocity(30*rad)
 		while True:
 			dV   = self.spcNav.GetVelocity() * phScene.GetTimeStep()
+			dQ   = self.spcNav.GetAngularVelocity() * phScene.GetTimeStep()
 
 			if dV.norm() > 1e-5:
 				dV += (dV.unit() * (dV.norm() ** 3))
@@ -141,6 +127,10 @@ class SpaceNavigatorThread(threading.Thread):
 			pos0 = self.soPointer.GetPose().getPos()
 			pos1 = ori0*dV + pos0
 			self.soPointer.SetFramePosition(pos1)
+
+			ori0_= self.soPointer.GetPose().getOri()
+			ori1 = Quaterniond.Rot(ori0*dQ) * Quaterniond(ori0_.w, ori0_.x, ori0_.y, ori0_.z)
+			self.soPointer.SetOrientation(ori1)
 			time.sleep(0.01)
 
 spaceNav = SpaceNavigatorThread(soPB, spaceNavigator1)
@@ -156,7 +146,7 @@ class SpaceNavigatorViewThread(threading.Thread):
 
 	def run(self):
 		self.spcNav0.SetMaxVelocity(2.0)
-		self.spcNav0.SetMaxAngularVelocity(30*rad)
+		self.spcNav0.SetMaxAngularVelocity(10*rad)
 		while True:
 			dV   = self.spcNav0.GetVelocity()        * phScene.GetTimeStep()
 			dQ   = self.spcNav1.GetAngularVelocity() * phScene.GetTimeStep()

@@ -1,9 +1,8 @@
-/** \page pageEmbPython 埋め込みPythonモジュール
-
+/** \page pageEmbPython Python言語との連携機能
 
 \contents
 
-\section sec_EmbPythonAbst 埋め込みPythonの概要
+\section sec_EmbPythonAbst 概要
 
 PythonインタプリタからSpringheadを触れるようにするモジュールです。
 実行するとPythonインタプリタが起動し、Pythonインタプリタからシーンに触ることなどができます。

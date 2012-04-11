@@ -132,6 +132,8 @@
 	Quaternionf GetAbsolutePoseQ(){	return	base::GetAbsolutePoseQ();}	\
 	void GetRelativeVelocity(Vec3d& v, Vec3d& w){	base::GetRelativeVelocity(v, w);}	\
 	void GetConstraintForce(Vec3d& f, Vec3d& t){	base::GetConstraintForce(f, t);}	\
+	Vec3d GetForce(){	return	base::GetForce();}	\
+	Vec3d GetTorque(){	return	base::GetTorque();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHConstraintsIf(base)	\
 	Spr::PHConstraintIf* FindBySolidPair(Spr::PHSolidIf* lhs, Spr::PHSolidIf* rhs){	return	base::FindBySolidPair(lhs, rhs);}	\
@@ -324,7 +326,7 @@
 	Spr::PHIKActuatorIf* CreateIKActuator(const IfInfo* ii, const Spr::PHIKActuatorDesc& desc){	return	base::CreateIKActuator(ii, desc);}	\
 	int NIKActuators(){	return	base::NIKActuators();}	\
 	Spr::PHIKActuatorIf* GetIKActuator(int i){	return	base::GetIKActuator(i);}	\
-	Spr::PHIKEndEffectorIf* CreateIKEndEffector(const IfInfo* ii, const Spr::PHIKEndEffectorDesc& desc){	return	base::CreateIKEndEffector(ii, desc);}	\
+	Spr::PHIKEndEffectorIf* CreateIKEndEffector(const Spr::PHIKEndEffectorDesc& desc){	return	base::CreateIKEndEffector(desc);}	\
 	int NIKEndEffectors(){	return	base::NIKEndEffectors();}	\
 	Spr::PHIKEndEffectorIf* GetIKEndEffector(int i){	return	base::GetIKEndEffector(i);}	\
 	double GetTimeStep()const{	return	base::GetTimeStep();}	\

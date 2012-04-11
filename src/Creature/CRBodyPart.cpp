@@ -158,7 +158,7 @@ void CRIKSolid::StepTrajectory() {
 
 		Vec3d currPos = finalPosAbs + dir*(finalPosAbs - initPosAbs).norm()*length;
 		ikEndEffector->SetTargetPosition(currPos);
-		if (soDebug) { soDebug->SetFramePosition(currPos); }
+		if (soDebug) { soDebug->SetFramePosition(initPosAbs); }
 
 		if (time > timeLimit) {
 			bCtlPos = false;

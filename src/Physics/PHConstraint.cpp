@@ -317,6 +317,14 @@ void PHConstraint::GetConstraintForce(Vec3d& _f, Vec3d& _t) {
 	_t = f.w() / GetScene()->GetTimeStep();
 }
 
+Vec3d PHConstraint::GetForce() {
+	return( f.v() / GetScene()->GetTimeStep() );
+}
+
+Vec3d PHConstraint::GetTorque() {
+	return( f.w() / GetScene()->GetTimeStep() );
+}
+
 bool PHConstraint::AddChildObject(ObjectIf* o) {
 	PHSolid* s = DCAST(PHSolid, o);
 	if (s) {

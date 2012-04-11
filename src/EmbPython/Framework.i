@@ -22,11 +22,28 @@
   static const IfInfo* GetIfInfoStatic();
 }
 
+%ignore Spr::FWApp::GetTimer;
+%ignore Spr::FWApp::CreateTimer;
+%ignore Spr::FWApp::timers;
+%ignore Spr::FWApp::GRInit;
+%ignore Spr::FWApp::Init;
+%ignore Spr::FWTextBoxIf::GetIntRange;
+%ignore Spr::FWTextBoxIf::GetFloatRange;
+%ignore Spr::FWWinIf::CalcViewport;
+
+%ignore Spr::EPApp::menus;
+%ignore Spr::EPApp::ss;
+%ignore Spr::EPApp::editor;
+%ignore Spr::EPApp::timer;
+%ignore Spr::EPApp::states;
+
+
 %include "Utility/EPObject.i"
 EXTEND_N_GETS_TO_LIST(Spr::FWSceneIf,NObject,GetObjects,FWObjectIf)
 
-EXTEND_N_GET_TO_LIST(Spr::FWSdkIf			,NIAScenes			,GetIAScene			,FWInteractSceneIf		)
-EXTEND_N_GET_TO_LIST(Spr::FWInteractSceneIf	,NIAPointers		,GetIAPointer		,FWInteractPointerIf	)
+namespace Spr{
+class UTRefCount {};
+}
 
 //--
 %begin%{
@@ -40,14 +57,19 @@ EXTEND_N_GET_TO_LIST(Spr::FWInteractSceneIf	,NIAPointers		,GetIAPointer		,FWInte
 #include "../../include/EmbPython/SprEPGraphics.h"
 #include "../../include/EmbPython/SprEPHumanInterface.h"
 #include "../../include/Framework/SprFWBone.h"
+#include "../../include/Framework/SprFWWin.h"
+#include "../../include/Framework/SprFWApp.h"
+#include "../../include/EmbPython/SprEPApp.h"
 %}
 //--  
 %include "../../include/Framework/SprFWBone.h"
 %include "../../include/Framework/SprFWFemMesh.h"
-%include "../../include/Framework/SprFWInteractPointer.h"
-%include "../../include/Framework/SprFWInteractScene.h"
 %include "../../include/Framework/SprFWObject.h"
 %include "../../include/Framework/SprFWScene.h"
 %include "../../include/Framework/SprFWSdk.h"
-
+%include "../../include/Framework/SprFWWin.h"
+%include "../../include/Framework/SprFWApp.h"
+%include "../../include/EmbPython/SprEPApp.h"
 //--
+
+

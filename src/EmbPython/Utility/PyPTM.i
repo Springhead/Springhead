@@ -262,6 +262,19 @@ public:
 }
 EXTEND_NEW(Vec2d)
 
+class Vec2i{
+public:
+	int x, y;
+	VEC_MEMBER(Vec2i)
+	VEC_CONSTRUCTOR(Vec2i, int, _2i)
+	Vec2i(int xi, int yi);
+};
+%extend Vec2i{
+	VEC_EXTEND(Vec2i, int)
+	VEC2_EXTEND(Vec2i, int)
+}
+EXTEND_NEW(Vec2i)
+
 class Vec3f{
 public:
 	float x, y, z;

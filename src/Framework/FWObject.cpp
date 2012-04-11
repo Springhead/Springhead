@@ -267,6 +267,7 @@ bool FWBoneObject::AddChildObject(ObjectIf* o){
 			rv = true;
 		}
 	}
+	/* // これ要らない気がする．何の目的で設置したか後で考え直すこと <!!>(mitake)
 	if ((phJoint==NULL&&endFrame==NULL)){
 		//最初のFrameに関する処理(Center)
 		if(phSolid && grFrame){
@@ -275,6 +276,7 @@ bool FWBoneObject::AddChildObject(ObjectIf* o){
 			phSolid->SetPose(absPose);
 		}
 	}
+	*/
 	if (grFrame && endFrame && phSolid && phJoint) {
 		Modify();
 	}
