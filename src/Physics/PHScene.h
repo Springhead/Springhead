@@ -120,10 +120,10 @@ public:
 	double					GetAirResistanceRate(){return airResistanceRate;}
 	void					SetAirResistanceRate(double rate){airResistanceRate =rate;}
 
-	PHIKActuatorIf*				CreateIKActuator(const IfInfo* ii, const PHIKActuatorDesc& desc = PHIKActuatorDesc());
+	PHIKActuatorIf*			CreateIKActuator(const IfInfo* ii, const PHIKActuatorDesc& desc = PHIKActuatorDesc());
 	int						NIKActuators();
-	PHIKActuatorIf*				GetIKActuator(int i);
-	PHIKEndEffectorIf*		CreateIKEndEffector(const IfInfo* ii, const PHIKEndEffectorDesc& desc = PHIKEndEffectorDesc());
+	PHIKActuatorIf*			GetIKActuator(int i);
+	PHIKEndEffectorIf*		CreateIKEndEffector(const PHIKEndEffectorDesc& desc = PHIKEndEffectorDesc());
 	int						NIKEndEffectors();
 	PHIKEndEffectorIf*		GetIKEndEffector(int i);
 	int						NFemMeshes()const;

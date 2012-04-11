@@ -199,8 +199,8 @@ int PHScene::NIKActuators(){
 PHIKActuatorIf* PHScene::GetIKActuator(int i){
 	return ikEngine->actuators[i]->Cast();
 }
-PHIKEndEffectorIf* PHScene::CreateIKEndEffector(const IfInfo* ii, const PHIKEndEffectorDesc& desc){
-	PHIKEndEffector* endeffector = ikEngine->CreateIKEndEffector(ii, desc)->Cast();
+PHIKEndEffectorIf* PHScene::CreateIKEndEffector(const PHIKEndEffectorDesc& desc){
+	PHIKEndEffector* endeffector = ikEngine->CreateIKEndEffector(desc)->Cast();
 	AddChildObject(endeffector->Cast());
 	return endeffector->Cast();
 }

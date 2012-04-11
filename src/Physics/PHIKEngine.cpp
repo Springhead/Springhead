@@ -41,6 +41,19 @@ void PHIKEngine::Step(){
 		endeffectors[i]->bNDOFChanged	= false;
 	}
 
+	// エンドエフェクタの有効・無効に基づいてアクチュエータの有効・無効を切替え
+	for(size_t i=0; i<actuators.size(); ++i){
+		actuators[i]->Enable(false);
+	}
+	for(size_t i=0; i<actuators.size(); ++i){
+		if (actuators[i]->eef->IsEnabled()) {
+			actuators[i]->Enable(true);
+			for(size_t j=0; j<actuators[i]->ascendant.size(); ++j){
+				actuators[i]->ascendant[j]->Enable(true);
+			}
+		}
+	}
+
 	for (int nStatic=0; nStatic<1; ++nStatic) {
 
 		// ヤコビアン計算の前処理
@@ -104,14 +117,12 @@ PHIKActuator* PHIKEngine::CreateIKActuator(const IfInfo* ii, const PHIKActuatorD
 	return ikactuator;
 }
 
-PHIKEndEffector* PHIKEngine::CreateIKEndEffector(const IfInfo* ii, const PHIKEndEffectorDesc& desc){
+PHIKEndEffector* PHIKEngine::CreateIKEndEffector(const PHIKEndEffectorDesc& desc){
 	PHIKEndEffector* ikendeffector = NULL;
 
-	if (ii == PHIKEndEffectorIf::GetIfInfoStatic()) {
-		ikendeffector = DBG_NEW PHIKEndEffector();
-		DCAST(PHIKEndEffectorIf,ikendeffector)->SetDesc(&desc);
+	ikendeffector = DBG_NEW PHIKEndEffector();
+	DCAST(PHIKEndEffectorIf,ikendeffector)->SetDesc(&desc);
 
-	}
 	return ikendeffector;
 }
 

@@ -5,6 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+
+/** \addtogroup gpPhysics */
+//@{
+
 /**
  *	@file SprPHIK.h
  *	@brief ‹t‰^“®Šw(IK)ŒvŽZ
@@ -20,10 +24,7 @@ struct PHSolidIf;
 struct PHHingeJointIf;
 struct PHBallJointIf;
 
-/** \addtogroup gpPhysics */
-//@{
-
-/** \defgroup gpJoint ‹t‰^“®Šw(IK)ŒvŽZ*/
+/** \defgroup gpIK ‹t‰^“®Šw(IK)ŒvŽZ*/
 //@{
 
 // ------------------------------------------------------------------------------

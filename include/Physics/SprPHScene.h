@@ -306,12 +306,9 @@ public:
 	 */
 	PHIKActuatorIf* GetIKActuator(int i);
 
-	/** @brief IKの制御点を作成する．
+	/** @brief IKのエンドエフェクタを作成する．
 	 */
-	PHIKEndEffectorIf*	 CreateIKEndEffector(const IfInfo* ii, const PHIKEndEffectorDesc& desc = PHIKEndEffectorDesc());
-	template <class T> PHIKEndEffectorIf* CreateIKEndEffector(const T& desc){
-		return CreateIKEndEffector(T::GetIfInfo(), desc);
-	}
+	PHIKEndEffectorIf*	 CreateIKEndEffector(const PHIKEndEffectorDesc& desc = PHIKEndEffectorDesc());
 
 	/** @brief IKエンドエフェクタの数
 	 */

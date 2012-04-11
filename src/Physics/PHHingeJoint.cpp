@@ -55,6 +55,11 @@ PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc) {
 void PHHingeJoint::UpdateJointState(){
 	//Ž²•ûŒü‚ÌS‘©‚Í‡’v‚µ‚Ä‚¢‚é‚à‚Ì‚Æ‰¼’è‚µ‚ÄŠp“x‚ðŒ©‚é
 	position[0] = Xjrel.q.Theta();
+
+	// -ƒÎ`ƒÎ‚Ì”ÍˆÍ‚ÉŽû‚ß‚é
+	position[0] = ( (position[0] / (2*M_PI)) - floor(position[0] / (2*M_PI)) ) * (2*M_PI);
+	if (position[0] > M_PI) { position[0] -= 2 * M_PI; }
+
 	if (Xjrel.q.Axis().Z() < 0.0) { position = -position; }
 	velocity[0] = vjrel.w().z;
 }

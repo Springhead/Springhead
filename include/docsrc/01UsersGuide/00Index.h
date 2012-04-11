@@ -10,6 +10,8 @@
  - \subpage pageGraphics
  - \subpage pageFileIO
  - \subpage pageFramework
+ - \subpage pageCreature
+ - \subpage pageEmbPython
 
 から構成されます．
 <br><br><br>
@@ -38,6 +40,15 @@
 
 \ref pageFileIO
 では，シーングラフのロード・セーブについての説明をします．
+
+\ref pageFramework
+では，物理シミュレーション・グラフィックス・ファイル入出力を統合し，アプリケーションとして動作させるためのフレームワークについて説明します．
+
+\ref pageCreature
+では，自律型のキャラクタを実現するための機能について説明します．
+
+\ref pageEmbPython
+では，スクリプト言語Pythonとの連携（Pythonの組み込み・Pythonへの組み込み）について説明します．
 
 <br>
 

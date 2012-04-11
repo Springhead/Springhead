@@ -86,28 +86,21 @@ void PHIKActuator::SetupMatrix(){
 		alpha.clear();
 		beta.clear();
 
-		// Γ
-		for (int i=0; i<nLinks(); ++i) {
-			if (link(i)==this) { continue; } // <!!> this,thisと統合するならこれはいらない
-			if (this->bNDOFChanged || (link(i)->bNDOFChanged && link(i)->bEnabled) || this->bActuatorAdded) {
-				gamma[link(i)->number].resize(this->ndof, link(i)->ndof);
+		// Γ（自分自身を相手とするΓも含む）
+		for (int nLink=0; nLink<NLinks(); ++nLink) {
+			if (this->bNDOFChanged || (Link(nLink)->bNDOFChanged && Link(nLink)->bEnabled) || this->bActuatorAdded) {
+				gamma[Link(nLink)->number].resize(this->ndof, Link(nLink)->ndof);
 			}
-			gamma[link(i)->number].clear();
+			gamma[Link(nLink)->number].clear();
 		}
-
-		// Γの特殊ケース（相手となるアクチュエータが自分自身であるΓ）
-		if (this->bNDOFChanged) {
-			gamma[this->number].resize(this->ndof,this->ndof);
-		}
-		gamma[this->number].clear();
 
 		// Ｊ（ヤコビアン）
-		for (int i=0; i<descendant.size(); ++i) {
-			PHIKEndEffector* child_eef = descendant[i]->eef; if (child_eef==NULL) { continue; }
-			if (this->bNDOFChanged || (child_eef->bNDOFChanged && child_eef->bEnabled) || this->bActuatorAdded) {
-				Mj[child_eef->number].resize(child_eef->ndof, this->ndof);
+		for (int nDesc=0; nDesc<descendant.size(); ++nDesc) {
+			PHIKEndEffector* childEef = descendant[nDesc]->eef; if (childEef==NULL) { continue; }
+			if (this->bNDOFChanged || (childEef->bNDOFChanged && childEef->bEnabled) || this->bActuatorAdded) {
+				Mj[childEef->number].resize(childEef->ndof, this->ndof);
 			}
-			Mj[child_eef->number].clear();
+			Mj[childEef->number].clear();
 		}
 
 		// ω、τ
@@ -123,10 +116,10 @@ void PHIKActuator::SetupMatrix(){
 }
 
 void PHIKActuator::CalcAllJacobian(){
-	for (int i=0; i<descendant.size(); ++i) {
-		PHIKEndEffector* child_eef = descendant[i]->eef;
-		if (child_eef==NULL || !(child_eef->bEnabled)) { continue; }
-		CalcJacobian(child_eef);
+	for (int nDesc=0; nDesc<descendant.size(); ++nDesc) {
+		PHIKEndEffector* childEef = descendant[nDesc]->eef;
+		if (childEef==NULL || !(childEef->bEnabled)) { continue; }
+		CalcJacobian(childEef);
 	}
 }
 
@@ -136,36 +129,29 @@ void PHIKActuator::PrepareSolve(){
 	PHIKEngineIf* engine = DCAST(PHSceneIf,GetScene())->GetIKEngine();
 
 	for (int i=0; i< ndof; ++i) {
-		for (int j=0; j<descendant.size(); ++j) {
-			PHIKEndEffector* child_eef = descendant[j]->eef;
-			if (child_eef==NULL || !(child_eef->bEnabled)) { continue; }
+		for (int nDesc=0; nDesc<descendant.size(); ++nDesc) {
+			PHIKEndEffector* childEef = descendant[nDesc]->eef;
+			if (childEef==NULL || !(childEef->bEnabled)) { continue; }
 
-			int eef_n = child_eef->number;
+			int eef_n = childEef->number;
 
 			PTM::VVector<double> eef_v;
-			child_eef->GetTempTarget(eef_v);
+			childEef->GetTempTarget(eef_v);
 
-			for (int k=0; k < child_eef->ndof; ++k) {
+			for (int k=0; k < childEef->ndof; ++k) {
 
 				// α、β
 				alpha[i] += ( (Mj[eef_n][k][i]/bias) * (Mj[eef_n][k][i]) );
 				beta[i]  += ( (Mj[eef_n][k][i]/bias) * (eef_v[k])  );
 
-				// γ[act_y, this]  <!!> link(m)がthisを含むようになったので this<->this も統合できるかも
-				for (int m=0; m < nLinks(); ++m) {
-					if (link(m)==this || !(link(m)->bEnabled)) { continue; }
-					int act_n = link(m)->number;
-					for (int j=0; j<link(m)->ndof; ++j) {
-						if (link(m)->Mj.find(eef_n) != link(m)->Mj.end()) {
-							gamma[act_n][i][j] += ( (Mj[eef_n][k][i]/bias) * (link(m)->Mj[eef_n][k][j] / link(m)->bias) );
+				// γ[act_y, this] （act_y == this の場合を含む）
+				for (int nLink=0; nLink < NLinks(); ++nLink) {
+					if (!(Link(nLink)->bEnabled)) { continue; }
+					int act_n = Link(nLink)->number;
+					for (int j=0; j<Link(nLink)->ndof; ++j) {
+						if (Link(nLink)->Mj.find(eef_n) != Link(nLink)->Mj.end()) {
+							gamma[act_n][i][j] += ( (Mj[eef_n][k][i]/bias) * (Link(nLink)->Mj[eef_n][k][j] / Link(nLink)->bias) );
 						}
-					}
-				}
-
-				// γ[this, this]
-				for (int j=0; j<ndof; ++j) {
-					if (i!=j) {
-						gamma[number][i][j] += ( (Mj[eef_n][k][i]/bias) * (Mj[eef_n][k][j]/bias) );
 					}
 				}
 
@@ -184,12 +170,12 @@ void PHIKActuator::ProceedSolve(){
 		double delta_epsilon = 0;
 
 		// δ
-		for (int j=0; j < nLinks(); ++j) {
-			if (link(j)==this || !(link(j)->IsEnabled())) { continue; }
-			int act_n = link(j)->number;
+		for (int nLink=0; nLink < NLinks(); ++nLink) {
+			if (Link(nLink)==this || !(Link(nLink)->IsEnabled())) { continue; }
+			int act_n = Link(nLink)->number;
 			if (gamma.find(act_n) != gamma.end()) {
-				for (int k=0; k<link(j)->ndof; ++k) {
-					delta_epsilon   += ( (gamma[act_n][i][k]) * (link(j)->omega[k]) );
+				for (int k=0; k<Link(nLink)->ndof; ++k) {
+					delta_epsilon   += ( (gamma[act_n][i][k]) * (Link(nLink)->omega[k]) );
 				}
 			}
 		}
@@ -274,16 +260,16 @@ void PHIKBallActuator::CalcAxis(){
 	e[1] = Vec3d(0,1,0);
 	e[2] = Vec3d(0,0,1);
 
-	for (int i=0; i<descendant.size(); ++i) {
-		PHIKEndEffector* eef = descendant[i]->eef; if (eef==NULL) { continue; }
-		if (eef->bEnabled && !eef->bOrientation) {
+	for (int nDesc=0; nDesc<descendant.size(); ++nDesc) {
+		PHIKEndEffector* childEef = descendant[nDesc]->eef; if (childEef==NULL) { continue; }
+		if (childEef->bEnabled && !childEef->bOrientation) {
 			// 関節の回転中心
 			PHBallJoint* j = DCAST(PHBallJoint,joint);
 			PHBallJointDesc d; j->GetDesc(&d);
 			Vec3d Pj = j->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
 
 			// エンドエフェクタ位置
-			Vec3d Pe = eef->solid->GetPose() * eef->targetLocalPosition;
+			Vec3d Pe = childEef->solid->GetPose() * childEef->targetLocalPosition;
 
 			// 関節回転中心<->エンドエフェクタ 軸
 			Vec3d e0 = (Pe - Pj);
