@@ -277,7 +277,9 @@ bool UTTimer::Stop(){
 	if (mode == UTTimerIf::MULTIMEDIA){
 #ifdef _WIN32
 		timeKillEvent(timerIdImpl);
-		for(int i=0; bRunning && i<100; i++) Sleep(10); 
+		// 実行中のコールバックの終了を待つ
+		for(int i=0; bRunning && i<100; i++)
+			Sleep(10); 
 		if (bRunning)
 			DSTR << "UTTimer MULTIMEDIA mode: Can not stop the timer callback. There may be a dead lock problem." << std::endl;
 		timerIdImpl = 0;
@@ -313,7 +315,7 @@ bool UTTimer::Stop(){
 }
 
 bool UTTimer::SetCallback(UTTimerIf::TimerFunc f, void* a){
-	if (IsRunning() && !Stop())
+	if (IsStarted() && !Stop())
 		return false;
 	func = f;
 	arg = a;
@@ -321,7 +323,7 @@ bool UTTimer::SetCallback(UTTimerIf::TimerFunc f, void* a){
 }
 
 bool UTTimer::SetInterval(unsigned int i){
-	if (IsRunning() && !Stop())
+	if (IsStarted() && !Stop())
 		return false;
 	interval = i;
 	return Start();
