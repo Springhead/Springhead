@@ -3,7 +3,7 @@
 @INCLUDE = ./common.doxy
 
 INPUT      = ./ \
-				../src/Framework/FWOldSpringheadNode.h \
+				../src/Framework/FWOldSpringheadNodeHandler.h \
 				../src/Samples/doc.h ../src/Samples
 FILE_PATTERNS          = *.h *.dox main.cpp
 

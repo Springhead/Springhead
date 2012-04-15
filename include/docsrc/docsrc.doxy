@@ -1,5 +1,5 @@
 @INCLUDE = ./common.doxy
-INPUT = ./docsrc
+INPUT = ./docsrc ../src/Framework/FWOldSpringheadNodeHandler.h
 
 HTML_OUTPUT = ./html
 GENERATE_TAGFILE       = ./html/springhead.tag
