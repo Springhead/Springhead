@@ -33,6 +33,8 @@
 
 static bool enableDebugMessage = false;
 
+typedef unsigned int uint;
+
 namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDeviceGL
@@ -40,6 +42,9 @@ namespace Spr {;
 void GRDeviceGL::Init(){
 	nLights = 0;
 	fontBase = -1;
+	pointSmooth = false;
+	lineSmooth = false;
+
 	glDrawBuffer(GL_BACK);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
@@ -295,11 +300,36 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	glFinish();	
 }
 
+void GRDeviceGL::DrawPoint(Vec3f p){
+	glBegin(GL_POINTS);
+	glVertex3f(p.x, p.y, p.z);
+	glEnd();
+}
+
 void GRDeviceGL::DrawLine(Vec3f p0, Vec3f p1){
 	glBegin(GL_LINES);
 	glVertex3fv((const float*)&p0);
 	glVertex3fv((const float*)&p1);
 	glEnd();
+}
+
+inline Vec3f Spline(float s, const Vec3f& p0, const Vec3f& v0, const Vec3f& p1, const Vec3f& v1){
+	float s2 = s*s, s3 = s2 * s;	
+	return (1.0 - 3.0*s2 + 2.0*s3) * p0 + (s - 2.0*s2 + s3) * v0 + (3.0*s2 - 2.0*s3) * p1 + (-s2 + s3) * v1;	
+}
+
+void GRDeviceGL::DrawSpline(Vec3f p0, Vec3f v0, Vec3f p1, Vec3f v1, int ndiv){
+	float dt = 1.0f / (float)ndiv;
+	float t0 = 0.0f, t1 = dt;
+	Vec3f a, b;
+	a = Spline(t0, p0, v0, p1, v1);
+	for(int i = 0; i < ndiv; i++){
+		b = Spline(t1, p0, v0, p1, v1);
+		DrawLine(a, b);
+		a = b;
+		t0 = t1;
+		t1 += dt;
+	}
 }
 
 void GRDeviceGL::DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid){
@@ -406,6 +436,49 @@ void GRDeviceGL::DrawRoundCone(float rbottom, float rtop, float height, int slic
 
 }
 
+void GRDeviceGL::DrawCurve(const Curve3f& curve){
+	size_t N = curve.NPoints();
+
+	// 点を描画
+	for(uint i = 0; i < N; i++)
+		DrawPoint(curve.GetPos(i));
+	
+	if(N < 2)
+		return;
+
+	int type = curve.GetType();
+	if(type == Interpolate::LinearDiff){
+		for(uint i = 0; i < N-1; i++)
+			DrawLine(curve.GetPos(i), curve.GetPos(i+1));		
+	}
+	else if(type == Interpolate::LinearInt){
+		float h;
+		Vec3f p;
+		Vec3f v;
+		for(uint i = 0; i < N-1; i++){
+			h = curve.GetTime(i+1) - curve.GetTime(i);
+			p = curve.GetPos(i);
+			v = curve.GetVel(i);
+			DrawLine(p, p + v * h);
+		}
+	}
+	else{
+		// それ以外の曲線は折れ線近似で描画
+		float t0 = curve.GetTime(0);
+		float t1 = curve.GetTime(N-1);
+		const float ndiv = 100.0f;
+		float dt = (t1 - t0) / ndiv;
+		Vec3f p0 = curve.GetPos(t0);
+		Vec3f p1;
+		for(float t = t0 + dt; t < t1; t += dt){
+			p1 = curve.GetPos(t);
+			DrawLine(p0, p1);
+			p0 = p1;
+		}
+		DrawLine(p0, curve.GetPos(t1));
+	}
+}
+
 void GRDeviceGL::DrawGrid(float size, int slice, float lineWidth){
 	/*double range = 5000;
 	GRMaterialDesc mat;
@@ -457,6 +530,7 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str){
 
 /// 3次元テキストの描画（GLオンリー版でfontは指定なし）.. Vec3f pos
 void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
+	bool lighting = glIsEnabled(GL_LIGHTING);
 	glDisable(GL_LIGHTING);
 	if(fontBase != -1){
 		glBindTexture(GL_TEXTURE_3D,0);								//直前に使用した3Dテクスチャを文字色に反映させない.
@@ -478,7 +552,8 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 			glutBitmapCharacter(GLUT_BITMAP_8_BY_13, *iter);
 		}
 	}
-	glEnable(GL_LIGHTING);
+	if(lighting)
+		glEnable(GL_LIGHTING);
 }
 
 void GRDeviceGL::SetFont(const GRFont& font){
@@ -559,7 +634,7 @@ void GRDeviceGL::SetFont(const GRFont& font){
 }
 
 void GRDeviceGL::SetMaterial(const GRMaterialIf* mi){
-	GRMaterial* mat = (GRMaterial*)mi;
+	GRMaterial* mat = mi->Cast();
 	currentMaterial = * mat;
 	if (mat->texnameAbs.length()) currentMaterial.texname = mat->texnameAbs;
 	SetMaterial(currentMaterial);
@@ -594,10 +669,25 @@ void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	}
 	currentMaterial = mat;
 }
-/// 描画する点・線の太さの設定
-void GRDeviceGL::SetLineWidth(float w){
+
+void GRDeviceGL::SetPointSize(float sz, bool smooth){
+	if(pointSmooth && !smooth)
+		glDisable(GL_POINT_SMOOTH);
+	if(!pointSmooth && smooth)
+		glEnable(GL_POINT_SMOOTH);
+	pointSmooth = smooth;
+	glPointSize(sz);
+}
+
+void GRDeviceGL::SetLineWidth(float w, bool smooth){
+	if(lineSmooth && !smooth)
+		glDisable(GL_LINE_SMOOTH);
+	if(!lineSmooth && smooth)
+		glEnable(GL_LINE_SMOOTH);
+	lineSmooth = smooth;
 	glLineWidth(w);
 }
+
 /// 光源スタックをPush
 void GRDeviceGL::PushLight(const GRLightDesc& light){
 	if (nLights < GL_MAX_LIGHTS) {
@@ -632,8 +722,8 @@ void GRDeviceGL::SetDepthWrite(bool b){
 }
 /// デプステストを有効/無効にする
 void GRDeviceGL::SetDepthTest(bool b){
-if (b) glEnable(GL_DEPTH_TEST);
-	else glDisable(GL_DEPTH_TEST);
+	if(b) glEnable(GL_DEPTH_TEST);
+	else  glDisable(GL_DEPTH_TEST);
 }
 /// デプスバッファ法に用いる判定条件を指定する
 void GRDeviceGL::SetDepthFunc(GRRenderBaseIf::TDepthFunc f){
@@ -654,8 +744,8 @@ void GRDeviceGL::SetDepthFunc(GRRenderBaseIf::TDepthFunc f){
 }
 /// アルファブレンディングを有効/無効にする
 void GRDeviceGL::SetAlphaTest(bool b){
-if (b) glEnable(GL_BLEND);
-	else glDisable(GL_BLEND);
+	if(b) glEnable(GL_BLEND);
+	else  glDisable(GL_BLEND);
 }
 /// アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 void GRDeviceGL::SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){
@@ -684,8 +774,8 @@ void GRDeviceGL::SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TB
 	glBlendFunc(glfac[0], glfac[1]);
 }
 void GRDeviceGL::SetLighting(bool on){
-	if (on) glEnable(GL_LIGHTING);
-	else glDisable(GL_LIGHTING);
+	if(on) glEnable(GL_LIGHTING);
+	else   glDisable(GL_LIGHTING);
 }
 
 void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb){

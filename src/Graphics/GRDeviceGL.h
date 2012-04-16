@@ -28,6 +28,9 @@ protected:
 	size_t	vertexSize;					///< 頂点のサイズ
 	bool	vertexColor;				///< 頂点が色を持つかどうか
 	GRMaterialDesc currentMaterial;		///< 現在のマテリアル
+
+	bool	pointSmooth;				///< DrawPointにアンチエイリアスかけるか
+	bool	lineSmooth;					///< DrawLineにアンチエイリアスかけるか
 	
 	/**
 	 *	@name	マトリックス変数
@@ -97,9 +100,11 @@ public:
 	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id);
 	virtual void SetVertexFormat(const GRVertexElement* e);
 	virtual void SetVertexShader(void* s);
-	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
-	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+	virtual void DrawDirect		(GRRenderBaseIf::TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
+	virtual void DrawIndexed	(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+	virtual void DrawPoint		(Vec3f p);
 	virtual void DrawLine		(Vec3f p0, Vec3f p1);
+	virtual void DrawSpline		(Vec3f p0, Vec3f v0, Vec3f p1, Vec3f v1, int ndiv);
 	virtual void DrawArrow		(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid);
 	virtual void DrawBox		(float sx, float sy, float sz, bool solid=true);
 	virtual void DrawSphere		(float radius, int slices, int stacks, bool solid=true);
@@ -107,6 +112,7 @@ public:
 	virtual void DrawCylinder	(float radius, float height, int slice, bool solid=true);
 	virtual void DrawCapsule	(float radius, float height, int slice=20, bool solid=true);
 	virtual void DrawRoundCone	(float rbottom, float rtop, float height, int slice=20, bool solid=true);
+	virtual void DrawCurve		(const Curve3f& curve);
 	virtual void DrawGrid		(float size, int slice, float lineWidth);
 
 	virtual int  StartList();
@@ -118,8 +124,8 @@ public:
 	virtual void DrawFont(Vec3f pos, const std::string str);
 	virtual void SetMaterial(const GRMaterialDesc& mat);
 	virtual void SetMaterial(const GRMaterialIf* mat);
-	///	描画する点・線の太さの設定
-	virtual void SetLineWidth(float w);
+	virtual void SetPointSize(float sz, bool smooth);
+	virtual void SetLineWidth(float w, bool smooth);
 	virtual void PushLight(const GRLightDesc& light);
 	virtual void PushLight(const GRLightIf* light){ GRDevice::PushLight(light); }
 	virtual void PopLight();
