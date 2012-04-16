@@ -297,8 +297,19 @@ struct GRRenderBaseIf: public ObjectIf{
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画
 	void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count);
 
+	/// 点を描画
+	void	DrawPoint(Vec3f p);
 	/// 線分を描画
 	void	DrawLine(Vec3f p0, Vec3f p1);
+	/** @brief スプライン曲線を描画
+		@param	p0		始点
+		@param	p1		終点
+		@param	v0		始点での微係数
+		@param	v1		終点での微係数
+		@param	ndiv	折れ線近似の分割数
+		スプライン曲線をp(s)とすると, p(0) = p0, p(1) = p1，(d/ds)p(0) = v0, (d/ds)p(1) = v1が成り立つ．
+	 **/
+	void	DrawSpline(Vec3f p0, Vec3f v0, Vec3f p1, Vec3f v1, int ndiv = 12);
 	/// 矢印を描画
 	void	DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid);
 	/// 直方体を描画
@@ -320,7 +331,11 @@ struct GRRenderBaseIf: public ObjectIf{
 		xy面上にグリッドを描画する
 	 */
 	void	DrawGrid(float size, int slice, float lineWidth = 1.0f);
-	
+	/** 曲線を描画
+		@param	curve		曲線
+	 **/
+	void	DrawCurve(const Curve3f& curve);
+
 	///	ディスプレイリストの作成(記録開始)
 	int StartList();
 	///	ディスプレイリストの終了(記録終了)
@@ -330,7 +345,10 @@ struct GRRenderBaseIf: public ObjectIf{
 	///	ディスプレイリストの解放
 	void ReleaseList(int i);
 
-	/// フォントの設定(Windows限定)
+	/** @brief	フォントの設定(Windows限定)
+		@param	font	フォントに関する設定
+		Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	
+	 */
 	void SetFont(const GRFont& font);
 	
 	/** @brief	2次元テキストの描画
@@ -340,8 +358,6 @@ struct GRRenderBaseIf: public ObjectIf{
 	/** @brief	3次元テキストの描画
 		@param  pos		World座標系での書き始めの位置，ビューポートをはみ出すと何も表示されなくなるので注意．
 		@param	str		書く文字列(bitmapfontで書ける物のみ)
-		@param	font	フォントに関する設定
-		Windows環境(VC)でのみfontをサポートし、他の環境ではfontを指定しても利用されない。	
 	 */
 	void DrawFont(Vec3f pos, const std::string str);
 
@@ -351,9 +367,16 @@ struct GRRenderBaseIf: public ObjectIf{
 	void SetMaterial(const GRMaterialIf* mat);
 	/// 描画マテリアルの設定（予約マテリアルの名前で指定）
 	void SetMaterial(int matname);
-
-	///	描画する点・線の太さの設定
-	void SetLineWidth(float w);
+	/** @brief 描画する点の大きさの設定
+		@param sz		大きさ
+		@param smooth	アンチエイリアシングするか
+	 **/
+	void SetPointSize(float sz, bool smooth = false);
+	/** @brief 描画する線の太さの設定
+		@param w		太さ
+		@param smooth	アンチエイリアシングするか
+	 **/
+	void SetLineWidth(float w, bool smooth = false);
 	///	光源スタックをPush
 	void PushLight(const GRLightDesc& light);
 	void PushLight(const GRLightIf* light);

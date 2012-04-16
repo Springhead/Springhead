@@ -98,7 +98,9 @@
 	void DrawIndexed(Spr::GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){	base::DrawIndexed(ty, idx, vtx, count, stride);}	\
 	void DrawArrays(Spr::GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){	base::DrawArrays(ty, arrays, count);}	\
 	void DrawArrays(Spr::GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){	base::DrawArrays(ty, idx, arrays, count);}	\
+	void DrawPoint(Vec3f p){	base::DrawPoint(p);}	\
 	void DrawLine(Vec3f p0, Vec3f p1){	base::DrawLine(p0, p1);}	\
+	void DrawSpline(Vec3f p0, Vec3f v0, Vec3f p1, Vec3f v1, int ndiv){	base::DrawSpline(p0, v0, p1, v1, ndiv);}	\
 	void DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid){	base::DrawArrow(p0, p1, rbar, rhead, lhead, slice, solid);}	\
 	void DrawBox(float sx, float sy, float sz, bool solid){	base::DrawBox(sx, sy, sz, solid);}	\
 	void DrawSphere(float radius, int slices, int stacks, bool solid){	base::DrawSphere(radius, slices, stacks, solid);}	\
@@ -107,6 +109,7 @@
 	void DrawCapsule(float radius, float height, int slice, bool solid){	base::DrawCapsule(radius, height, slice, solid);}	\
 	void DrawRoundCone(float rbottom, float rtop, float height, int slice, bool solid){	base::DrawRoundCone(rbottom, rtop, height, slice, solid);}	\
 	void DrawGrid(float size, int slice, float lineWidth){	base::DrawGrid(size, slice, lineWidth);}	\
+	void DrawCurve(const Curve3f& curve){	base::DrawCurve(curve);}	\
 	int StartList(){	return	base::StartList();}	\
 	void EndList(){	base::EndList();}	\
 	void DrawList(int i){	base::DrawList(i);}	\
@@ -117,7 +120,8 @@
 	void SetMaterial(const Spr::GRMaterialDesc& mat){	base::SetMaterial(mat);}	\
 	void SetMaterial(const Spr::GRMaterialIf* mat){	base::SetMaterial(mat);}	\
 	void SetMaterial(int matname){	base::SetMaterial(matname);}	\
-	void SetLineWidth(float w){	base::SetLineWidth(w);}	\
+	void SetPointSize(float sz, bool smooth){	base::SetPointSize(sz, smooth);}	\
+	void SetLineWidth(float w, bool smooth){	base::SetLineWidth(w, smooth);}	\
 	void PushLight(const Spr::GRLightDesc& light){	base::PushLight(light);}	\
 	void PushLight(const Spr::GRLightIf* light){	base::PushLight(light);}	\
 	void PopLight(){	base::PopLight();}	\

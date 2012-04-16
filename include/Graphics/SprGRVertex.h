@@ -74,6 +74,7 @@ struct GRVertexElement {
     unsigned char usageIndex;
 
 	GRVertexElement();
+	static GRVertexElement Position2f(size_t o);
 	static GRVertexElement Position3f(size_t o);
 	static GRVertexElement Position4f(size_t o);
 	static GRVertexElement Normal3f(size_t o);
@@ -94,6 +95,7 @@ struct GRVertexElement {
 
 	///	@name 典型的な頂点フォーマット．シェーダーを指定せずレンダリングできる．
 	//@{
+	static const GRVertexElement vfP2f[];
 	static const GRVertexElement vfP3f[];
 	static const GRVertexElement vfC4bP3f[];
 	static const GRVertexElement vfN3fP3f[];
@@ -123,6 +125,9 @@ struct GRVertexElement {
 	
 	/// @name 典型的な頂点フォーマットに対するデータ構造
 	//@{
+	struct VFP2f{
+		Vec2f p;
+	};
 	struct VFP3f{
 		Vec3f p;
 	};
