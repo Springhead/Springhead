@@ -20,6 +20,7 @@
 #include "Base/TinyVec.h"
 #include "Base/TinyMat.h"
 #include "Base/TQuaternion.h"
+#include "Base/TCurve.h"
 #include "Base/Affine.h"
 #include "Base/BaseTypeInfo.h"
 
