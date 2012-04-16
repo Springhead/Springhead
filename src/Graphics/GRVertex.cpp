@@ -17,6 +17,13 @@ GRVertexElement::GRVertexElement(){
 	usage=0;
 	usageIndex=0;
 }
+GRVertexElement GRVertexElement::Position2f(size_t o){
+	GRVertexElement rv;
+	rv.offset = o;
+	rv.type = GRVET_FLOAT2;
+	rv.usage = GRVEU_POSITION;
+	return rv;
+}
 GRVertexElement GRVertexElement::Position3f(size_t o){
 	GRVertexElement rv;
 	rv.offset = o;
@@ -90,6 +97,10 @@ GRVertexElement GRVertexElement::BlendNf(size_t o, size_t n){
  *  初期化処理
  *	オフセット値を引数で与え、頂点バッファの各メンバに対するオフセット値、データ型などを設定する
  */
+const GRVertexElement GRVertexElement::vfP2f[] = {
+	GRVertexElement::Position2f(0),
+	GRVertexElement(),
+};
 const GRVertexElement GRVertexElement::vfP3f[] = {
 	GRVertexElement::Position3f(0),
 	GRVertexElement(),

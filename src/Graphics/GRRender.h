@@ -104,7 +104,9 @@ public:
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){}
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
  	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count){}
+	virtual void DrawPoint(Vec3f p){}
 	virtual void DrawLine(Vec3f p0, Vec3f p1){}
+	virtual void DrawSpline(Vec3f p0, Vec3f v0, Vec3f p1, Vec3f v1, int ndiv){}
 	virtual void DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid){}
 	virtual void DrawBox(float sx, float sy, float sz, bool solid=true){}
 	virtual void DrawSphere(float radius, int slices, int stacks, bool solid=true){}
@@ -112,6 +114,7 @@ public:
 	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true){}
 	virtual void DrawCapsule(float radius, float height, int slice=20, bool solid=true){}
 	virtual void DrawRoundCone(float rbottom, float rtop, float height, int slice=20, bool solid=true){}
+	virtual void DrawCurve(const Curve3f& curve){}
 	virtual void DrawGrid(float size, int slice, float lineWidth){}
 	virtual int	 StartList(){return 0;}
 	virtual void EndList(){}
@@ -123,7 +126,8 @@ public:
 	virtual void SetMaterial(const GRMaterialDesc& mat){}
 	virtual void SetMaterial(const GRMaterialIf* mat){}
 	virtual void SetMaterial(int matname){}
-	virtual void SetLineWidth(float w){}
+	virtual void SetPointSize(float sz, bool smooth = false){}
+	virtual void SetLineWidth(float w, bool smooth = false){}
 	virtual void PushLight(const GRLightDesc& light){}
 	virtual void PushLight(const GRLightIf* light){}
 	virtual void PopLight(){}
@@ -186,7 +190,10 @@ public:
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty,												\
 		size_t* idx, void* vtx, size_t ct, size_t st=0)														\
 		{ ptr DrawIndexed(ty, idx, vtx, ct, st); }															\
+	virtual void DrawPoint(Vec3f p){ ptr DrawPoint(p); }													\
 	virtual void DrawLine(Vec3f p0, Vec3f p1){ ptr DrawLine(p0, p1); }										\
+	virtual void DrawSpline(Vec3f p0, Vec3f v0, Vec3f p1, Vec3f v1, int ndiv)								\
+		{ ptr DrawSpline(p0, v0, p1, v1, ndiv); }															\
 	virtual void DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid)	\
 		{ ptr DrawArrow(p0, p1, rbar, rhead, lhead, slice, solid); }										\
 	virtual void DrawBox(float sx, float sy, float sz, bool solid=true)										\
@@ -201,6 +208,8 @@ public:
 		{ ptr DrawCapsule(radius, height, slice, solid); }													\
 	virtual void DrawRoundCone(float rbottom, float rtop, float height, int slice=20, bool solid=true)		\
 		{ ptr DrawRoundCone(rbottom, rtop, height, slice, solid); }											\
+	virtual void DrawCurve(const Curve3f& curve)															\
+		{ ptr DrawCurve(curve); }																			\
 	virtual void DrawGrid(float size, int slice, float lineWidth)											\
 		{ ptr DrawGrid(size, slice, lineWidth); }															\
 	virtual int StartList()																					\
@@ -214,7 +223,8 @@ public:
     virtual void DrawFont(Vec3f pos, const std::string str){ ptr DrawFont(pos, str); }						\
 	virtual void SetMaterial(const GRMaterialDesc& mat){ ptr SetMaterial(mat); }							\
 	virtual void SetMaterial(const GRMaterialIf* mat){ ptr SetMaterial(mat); }								\
-	virtual void SetLineWidth(float w){ ptr SetLineWidth(w); }												\
+	virtual void SetPointSize(float sz, bool smooth){ ptr SetPointSize(sz, smooth); }						\
+	virtual void SetLineWidth(float w, bool smooth){ ptr SetLineWidth(w, smooth); }							\
 	virtual void PushLight(const GRLightDesc& light){ ptr PushLight(light);}								\
 	virtual void PushLight(const GRLightIf* light){ ptr PushLight(light);}									\
 	virtual void PopLight(){ ptr PopLight(); }																\
