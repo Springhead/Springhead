@@ -111,7 +111,8 @@ public:
 	virtual void DrawBox(float sx, float sy, float sz, bool solid=true){}
 	virtual void DrawSphere(float radius, int slices, int stacks, bool solid=true){}
  	virtual void DrawCone(float radius, float height, int slice, bool solid=true){}
-	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true){}
+	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true, bool cap=true){}
+	virtual void DrawDisk(float radius, int slice, bool solid=true){}
 	virtual void DrawCapsule(float radius, float height, int slice=20, bool solid=true){}
 	virtual void DrawRoundCone(float rbottom, float rtop, float height, int slice=20, bool solid=true){}
 	virtual void DrawCurve(const Curve3f& curve){}
@@ -202,8 +203,10 @@ public:
 		{ ptr DrawSphere(radius, stacks, slice, solid); }													\
 	virtual void DrawCone(float radius, float height, int slice, bool solid=true)							\
 		{ ptr DrawCone(radius, height, slice, solid); }														\
-	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true)						\
-		{ ptr DrawCylinder(radius, height, slice, solid); }													\
+	virtual void DrawCylinder(float radius, float height, int slice, bool solid=true, bool cap=true)		\
+		{ ptr DrawCylinder(radius, height, slice, solid, cap); }											\
+	virtual void	DrawDisk(float radius, int slice, bool solid=true)										\
+		{ ptr DrawDisk(radius, slice, solid); }																\
 	virtual void DrawCapsule(float radius, float height, int slice=20, bool solid=true)						\
 		{ ptr DrawCapsule(radius, height, slice, solid); }													\
 	virtual void DrawRoundCone(float rbottom, float rtop, float height, int slice=20, bool solid=true)		\

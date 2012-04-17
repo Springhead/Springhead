@@ -347,7 +347,7 @@ void GRDeviceGL::DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lh
 	this->PushModelMatrix();
 	this->MultModelMatrix(aff);
 	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, 0.5f * l));
-	DrawCylinder(rbar, l, slice, solid);
+	DrawCylinder(rbar, l, slice, solid, false);
 	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, 0.5f * l));
 	DrawCone(rhead, lhead, slice, solid);
 	this->PopModelMatrix();
@@ -372,25 +372,60 @@ void GRDeviceGL::DrawCone(float radius, float height, int slice, bool solid){
 	else glutWireCone(radius, height, slice, 1);
 }
 
-void GRDeviceGL::DrawCylinder(float radius, float height, int slice, bool solid){
-	// åªèÛÇ≈ÇÕë§ñ ÇÃÇ›
+void GRDeviceGL::DrawCylinder(float radius, float height, int slice, bool solid, bool cap){
+	float hhalf = 0.5f * height;
+	
+	// ë§ñ 
 	glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
-	float step = (float)(M_PI * 2.0f) / (float)slice;
-	float t = 0.0;
 	float x,y;
 	for (int i=0; i<=slice; i++) {
-		x=sin(t);
-		y=cos(t);
+		x = GetSin(i, slice);
+		y = GetCos(i, slice);
 		glNormal3f(x, y, 0.0);
-		glVertex3f(radius * x, radius * y, -height/2);
-		glVertex3f(radius * x, radius * y,  height/2);
-		t += step;
+		glVertex3f(radius * x, radius * y, -hhalf);
+		glVertex3f(radius * x, radius * y,  hhalf);
 	}
 	glEnd();
+
+	// è„ñ ÅEâ∫ñ 
+	if(cap){
+		PushModelMatrix();
+		MultModelMatrix(Affinef::Trn(0.0f, 0.0f, -hhalf));
+		DrawDisk(radius, slice, solid);
+		MultModelMatrix(Affinef::Trn(0.0f, 0.0f, height));
+		MultModelMatrix(Affinef::Rot((float)Rad(180.0), 'x'));
+		DrawDisk(radius, slice, solid);
+		PopModelMatrix();
+	}	
+}
+
+void GRDeviceGL::DrawDisk(float radius, int slice, bool solid){
+	float x, y;
+	if(solid){
+		glBegin(GL_TRIANGLE_FAN);
+		glNormal3f(0.0f, 0.0f, 1.0f);
+		glVertex3f(0.0f, 0.0f, 0.0f);
+		for(int i = 0; i <= slice; i++){
+			x = GetSin(i, slice);
+			y = GetCos(i, slice);
+			glVertex3f(radius * x, radius * y, 0.0f);
+		}
+		glEnd();
+	}
+	else{
+		glBegin(GL_LINES);
+		for(int i = 0; i < slice; i++){
+			x = GetSin(i, slice);
+			y = GetCos(i, slice);
+			glVertex3f(0.0f, 0.0f, 0.0f);
+			glVertex3f(radius * x, radius * y, 0.0f);
+		}
+		glEnd();
+	}
 }
 
 void GRDeviceGL::DrawCapsule(float radius, float height, int slice, bool solid){
-	DrawCylinder(radius, height, 20, solid);
+	DrawCylinder(radius, height, 20, solid, false);
 
 	this->PushModelMatrix();
 	glTranslatef(0,0,-height/2);
@@ -412,17 +447,14 @@ void GRDeviceGL::DrawRoundCone(float rbottom, float rtop, float height, int slic
 
 		// ë§ñ Çï`âÊ
 		glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
-		float step = (float)(M_PI * 2.0f) / (float)slice;
-		float t = 0.0;
 		float x,y,st;
 		for (int i=0; i<=slice; i++) {
-			x=sin(t);
-			y=cos(t);
+			x = GetSin(i, slice);
+			y = GetCos(i, slice);
 			st = sin(theta);
 			glNormal3f(x*st, y*st, cos(theta));
 			glVertex3f(R0 * x, R0 * y, Z0);
 			glVertex3f(R1 * x, R1 * y, Z1);
-			t += step;
 		}
 		glEnd();
 	}

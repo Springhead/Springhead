@@ -319,7 +319,9 @@ struct GRRenderBaseIf: public ObjectIf{
 	/// ‰~‚Ì•`‰æ
 	void	DrawCone(float radius, float height, int slice, bool solid=true);
 	/// ‰~“›‚Ì•`‰æ
-	void	DrawCylinder(float radius, float height, int slice, bool solid=true);
+	void	DrawCylinder(float radius, float height, int slice, bool solid=true, bool cap=true);
+	/// ‰~”Â‚Ì•`‰æ
+	void	DrawDisk(float radius, int slice, bool solid=true);
 	/// ƒJƒvƒZƒ‹‚Ì•`‰æ
 	void	DrawCapsule(float radius, float height, int slice=20, bool solid=true);
 	/// ‹…‰~‚Ì•`‰æ
