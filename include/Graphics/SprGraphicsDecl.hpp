@@ -105,7 +105,8 @@
 	void DrawBox(float sx, float sy, float sz, bool solid){	base::DrawBox(sx, sy, sz, solid);}	\
 	void DrawSphere(float radius, int slices, int stacks, bool solid){	base::DrawSphere(radius, slices, stacks, solid);}	\
 	void DrawCone(float radius, float height, int slice, bool solid){	base::DrawCone(radius, height, slice, solid);}	\
-	void DrawCylinder(float radius, float height, int slice, bool solid){	base::DrawCylinder(radius, height, slice, solid);}	\
+	void DrawCylinder(float radius, float height, int slice, bool solid, bool cap){	base::DrawCylinder(radius, height, slice, solid, cap);}	\
+	void DrawDisk(float radius, int slice, bool solid){	base::DrawDisk(radius, slice, solid);}	\
 	void DrawCapsule(float radius, float height, int slice, bool solid){	base::DrawCapsule(radius, height, slice, solid);}	\
 	void DrawRoundCone(float rbottom, float rtop, float height, int slice, bool solid){	base::DrawRoundCone(rbottom, rtop, height, slice, solid);}	\
 	void DrawGrid(float size, int slice, float lineWidth){	base::DrawGrid(size, slice, lineWidth);}	\

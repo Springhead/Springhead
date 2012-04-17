@@ -72,6 +72,39 @@ protected:
 	GRShaderFormat::ShaderType shaderType;				///< シェーダのロケーションタイプ
 	/** @} */	
 
+	/** sin, cosのキャッシュ
+	 */
+	struct tri_array{
+		std::vector<float>	_sin;
+		std::vector<float>	_cos;
+
+		void Create(int slice){
+			_sin.resize(slice);
+			_cos.resize(slice);
+			float step = (2.0f * (float)M_PI) / (float)slice;
+			float t = 0.0f;
+			for(int i = 0; i < slice; i++){
+				_sin[i] = sinf(t);
+				_cos[i] = cosf(t);
+				t += step;
+			}
+		}
+	};
+	std::map<int, tri_array>	tri_cache;
+
+	float	GetSin(int i, int slice){
+		tri_array& arr = tri_cache[slice];
+		if(arr._cos.empty())
+			arr.Create(slice);
+		return arr._sin[i%slice];
+	}
+	float	GetCos(int i, int slice){
+		tri_array& arr = tri_cache[slice];
+		if(arr._cos.empty())
+			arr.Create(slice);
+		return arr._cos[i%slice];
+	}
+	
 public:
 	///	コンストラクタ
 	GRDeviceGL(){}
@@ -109,7 +142,8 @@ public:
 	virtual void DrawBox		(float sx, float sy, float sz, bool solid=true);
 	virtual void DrawSphere		(float radius, int slices, int stacks, bool solid=true);
 	virtual void DrawCone		(float radius, float height, int slice, bool solid=true);
-	virtual void DrawCylinder	(float radius, float height, int slice, bool solid=true);
+	virtual void DrawCylinder	(float radius, float height, int slice, bool solid=true, bool cap=true);
+	virtual void DrawDisk		(float radius, int slice, bool solid=true);
 	virtual void DrawCapsule	(float radius, float height, int slice=20, bool solid=true);
 	virtual void DrawRoundCone	(float rbottom, float rtop, float height, int slice=20, bool solid=true);
 	virtual void DrawCurve		(const Curve3f& curve);
