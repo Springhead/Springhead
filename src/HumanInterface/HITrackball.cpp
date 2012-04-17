@@ -22,6 +22,7 @@ HITrackball::HITrackball(const HITrackballDesc& desc):HITrackballDesc(desc){
 	keyMouse = 0;
 	callback = 0;
 	enabled = true;
+	ready = false;
 }
 
 bool HITrackball::Init(const void* desc){
@@ -46,6 +47,70 @@ void HITrackball::UpdateView(){
 	}
 	if(callback)
 		callback->OnUpdatePose(Cast(), true);
+	ready = true;
+}
+
+void HITrackball::SetMode(bool m){
+	trackball = m;
+	UpdateView();
+}
+
+bool HITrackball::GetMode(){
+	return trackball;
+}
+
+void HITrackball::SetTarget(Vec3f t){
+	target = t;
+	UpdateView();
+}
+
+Vec3f HITrackball::GetTarget(){
+	return target;
+}
+
+void HITrackball::SetAngle(float lon, float lat){
+	longitude = lon, latitude = lat;
+	UpdateView();
+}
+
+void HITrackball::GetAngle(float& lon, float& lat){
+	lon = latitude, lat = latitude;
+}
+
+void HITrackball::SetDistance(float dist){
+	distance = dist;
+	UpdateView();
+}
+
+float HITrackball::GetDistance(){
+	return distance;
+}
+
+void HITrackball::SetLongitudeRange(float rmin, float rmax){
+	lonRange[0] = rmin, lonRange[1] = rmax;
+	UpdateView();
+}
+
+void HITrackball::GetLongitudeRange(float& rmin, float& rmax){
+	rmin = lonRange[0], rmax = lonRange[1];
+}
+
+void HITrackball::SetLatitudeRange(float rmin, float rmax){
+	latRange[0] = rmin, latRange[1] = rmax;
+	UpdateView();
+}
+
+void HITrackball::GetLatitudeRange(float& rmin, float& rmax){
+	rmin = latRange[0], rmax = latRange[1];
+}
+
+void HITrackball::SetDistanceRange(float rmin, float rmax){
+	distRange[0] = rmin, distRange[1] = rmax;
+	UpdateView();
+}
+
+void HITrackball::GetDistanceRange(float& rmin, float& rmax){
+	rmin = distRange[0], rmax = distRange[1];
 }
 
 void HITrackball::SetPosition(Vec3f p){

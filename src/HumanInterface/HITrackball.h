@@ -24,26 +24,28 @@ public:
 
 	HITrackballCallback*	callback;
 	bool			enabled;
+	bool			ready;
+
 public:
 	DVKeyMouseIf*	GetKeyMouse(){ return keyMouse; }
 	void			SetKeyMouse(DVKeyMouseIf* dv);
 
 	void	SetCallback(HITrackballCallback* cb){ callback = cb; }
 
-	void	SetMode(bool m){ trackball = m; }
-	bool	GetMode(){ return trackball; }
-	void	SetTarget(Vec3f t){ target = t; }
-	Vec3f	GetTarget(){ return target; }
-	void	SetAngle(float lon, float lat){ longitude = lon, latitude = lat; }
-	void	GetAngle(float& lon, float& lat){ lon = latitude, lat = latitude; }
-	void	SetDistance(float dist){ distance = dist; }
-	float	GetDistance(){ return distance; }
-	void	SetLongitudeRange(float rmin, float rmax){ lonRange[0] = rmin, lonRange[1] = rmax; }
-	void	GetLongitudeRange(float& rmin, float& rmax){ rmin = lonRange[0], rmax = lonRange[1]; }
-	void	SetLatitudeRange(float rmin, float rmax){ latRange[0] = rmin, latRange[1] = rmax; }
-	void	GetLatitudeRange(float& rmin, float& rmax){ rmin = latRange[0], rmax = latRange[1]; }
-	void	SetDistanceRange(float rmin, float rmax){ distRange[0] = rmin, distRange[1] = rmax; }
-	void	GetDistanceRange(float& rmin, float& rmax){ rmin = distRange[0], rmax = distRange[1]; }
+	void	SetMode(bool m);
+	bool	GetMode();
+	void	SetTarget(Vec3f t);
+	Vec3f	GetTarget();
+	void	SetAngle(float lon, float lat);
+	void	GetAngle(float& lon, float& lat);
+	void	SetDistance(float dist);
+	float	GetDistance();
+	void	SetLongitudeRange(float rmin, float rmax);
+	void	GetLongitudeRange(float& rmin, float& rmax);
+	void	SetLatitudeRange(float rmin, float rmax);
+	void	GetLatitudeRange(float& rmin, float& rmax);
+	void	SetDistanceRange(float rmin, float rmax);
+	void	GetDistanceRange(float& rmin, float& rmax);
 	void	SetRotGain(float g){ rotGain = g; }
 	float	GetRotGain(){ return rotGain; }
 	void	SetZoomGain(float g){ zoomGain = g; }
