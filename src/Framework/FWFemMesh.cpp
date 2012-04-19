@@ -30,21 +30,28 @@ FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 	SetDesc(&d);
 }
 
-void FWFemMesh::DrawIHBorder(){
-	phMesh->
-	GetIHbandDrawVtx();
-	phMesh->Get
-	Vec2d VtxX = phMesh->;
+void FWFemMesh::DrawIHBorder(double xs, double xe){
+	//phMesh->
+	//GetIHbandDrawVtx();
+	//phMesh->Get
+	//Vec2d VtxX = phMesh->;
+
+	//xs:0.095,xe=0.01
+	//	値を直打ち
+	Vec3d xS = Vec3d(xs, 0.0, 0.0);
+	Vec3d xE = Vec3d(xe, 0.0, 0.0);
+	Vec3d wS = this->GetGRFrame()->GetWorldTransform() * xS;
+	Vec3d wE = this->GetGRFrame()->GetWorldTransform() * xE;
+
 	glBegin(GL_LINES);
-	glVertex3d(VtxX[0], 0.0, 0.5);
-	glVertex3d(VtxX[0], 0.0, -0.5);
+	glVertex3d(wS[0], wS[1], wS[2]);
+	glVertex3d(wS[0], wS[1], wS[2]+0.2);
 	glEnd();
 
 	glBegin(GL_LINES);
-	glVertex3d(VtxX[1], 0.0, 0.5);
-	glVertex3d(VtxX[1], 0.0, -0.5);
+	glVertex3d(wE[0], wE[1], wE[2]);
+	glVertex3d(wE[0], wE[1], wE[2]+0.2);
 	glEnd();
-
 }
 
 void FWFemMesh::DrawIHBorderXZPlane(){
@@ -142,7 +149,7 @@ void FWFemMesh::Sync(bool ph2gr){
 	//	XZ平面を描画
 	DrawIHBorderXZPlane();
 	//	IH加熱領域の境界線を引く
-	DrawIHBorder();
+	DrawIHBorder(0.095,0.1);
 
 
 	///	テクスチャと温度、水分量との対応表は、Samples/Physics/FEMThermo/テクスチャの色と温度の対応.xls	を参照のこと
