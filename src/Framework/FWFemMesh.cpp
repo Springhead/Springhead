@@ -8,7 +8,8 @@
 #include "FWFemMesh.h"
 #include "FWSprTetgen.h"
 
-
+#include <GL/glew.h>
+#include <GL/glut.h>
 
 #include <Collision/CDQuickHull2DImp.h>
 
@@ -28,12 +29,121 @@ namespace Spr{;
 FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 	SetDesc(&d);
 }
+
+void FWFemMesh::DrawIHBorder(){
+	phMesh->
+	GetIHbandDrawVtx();
+	phMesh->Get
+	Vec2d VtxX = phMesh->;
+	glBegin(GL_LINES);
+	glVertex3d(VtxX[0], 0.0, 0.5);
+	glVertex3d(VtxX[0], 0.0, -0.5);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex3d(VtxX[1], 0.0, 0.5);
+	glVertex3d(VtxX[1], 0.0, -0.5);
+	glEnd();
+
+}
+
+void FWFemMesh::DrawIHBorderXZPlane(){
+	Vec3d origin = Vec3d(0.0, 0.0, 0.0);
+	origin = origin + Vec3d(0.07,0.0,-0.05); 
+	Vec3d wpos = this->GetGRFrame()->GetWorldTransform() * origin;
+	double dl = 0.1;
+	glBegin(GL_QUADS);
+	glVertex3d( wpos.x - dl, wpos.y, wpos.z - dl);
+	glVertex3d( wpos.x - dl, wpos.y, wpos.z + dl);
+	glVertex3d( wpos.x + dl, wpos.y, wpos.z + dl);
+	glVertex3d( wpos.x + dl, wpos.y, wpos.z - dl);
+	glEnd();
+
+}
+void FWFemMesh::DrawFaceEdge(){
+	//	使用例
+	//	phMesh->GetFaceEdgeVtx(0,1);
+	for(unsigned i =0; i < phMesh->GetNFace();i++){
+		for(unsigned j =0;j < 3;j++){
+			glBegin(GL_LINES);
+			Vec3d wpos = this->GetGRFrame()->GetWorldTransform() * phMesh->GetFaceEdgeVtx(i,j);
+			double posx = wpos.x;
+			double posy = wpos.y;
+			double posz = wpos.z;
+			glVertex3d(wpos.x,wpos.y,wpos.z);
+			wpos = this->GetGRFrame()->GetWorldTransform() * phMesh->GetFaceEdgeVtx(i,(j+1)%3);
+			posx = wpos.x;
+			posy = wpos.y;
+			posz = wpos.z;
+			glVertex3d(wpos.x,wpos.y,wpos.z);
+			glEnd();
+			//glFlush();	//ただちに実行
+		}
+	}
+
+	//	gomi
+	//PHFemMeshIf* phfem = this->GetPHMesh();
+	//std::vector<Vec3f> fev;
+	//fev.push_back( phMesh->GetFaceEdgeVtx(0));
+	//GRMeshDesc gmd;
+	//for(unsigned i ; i < gmd.vertices.size(); i++){
+	//}
+}
+
+void FWFemMesh::DrawEdge(Vec3d vtx0, Vec3d vtx1){
+	Vec3d pos0 = vtx0;
+	Vec3d pos1 = vtx1;
+	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * pos0; //* ローカル座標を 世界座標への変換して代入
+	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * pos1; //* ローカル座標を 世界座標への変換して代入
+	glColor3d(1.0,0.0,0.0);
+	glBegin(GL_LINES);
+		glVertex3f(wpos0[0],wpos0[1],wpos0[2]);
+		glVertex3f(wpos0[0] + wpos1[0], wpos0[1] + wpos1[1], wpos0[2] + wpos1[2]);
+	glEnd();
+	glFlush();
+}
+
+void FWFemMesh::DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1){
+	Vec3d pos0 = Vec3f(x0,y0,z0);
+	Vec3d pos1 = Vec3f(x1,y1,z1);
+	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * pos0; //* ローカル座標を 世界座標への変換して代入
+	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * pos1; //* ローカル座標を 世界座標への変換して代入
+	glColor3d(1.0,0.0,0.0);
+	glBegin(GL_LINES);
+		glVertex3f(wpos0[0],wpos0[1],wpos0[2]);
+		glVertex3f(wpos0[0] + wpos1[0], wpos0[1] + wpos1[1], wpos0[2] + wpos1[2]);
+	glEnd();
+	glFlush();
+}
+
+void FWFemMesh::DrawVtxLine(float length, float x, float y, float z){
+	Vec3d pos = Vec3f(x,y,z);
+	Vec3d wpos = this->GetGRFrame()->GetWorldTransform() * pos; //* ローカル座標を 世界座標への変換して代入
+	glColor3d(1.0,0.0,0.0);
+	glBegin(GL_LINES);
+		glVertex3f(wpos.x,wpos.y,wpos.z);
+		wpos.y = wpos.y + length;
+		glVertex3f(wpos.x,wpos.y,wpos.z);
+	glEnd();
+	glFlush();
+}
+
+
 void FWFemMesh::Sync(bool ph2gr){	
 	//	テスト用
 	//static double value, delta;
 	//if (value <= 0) delta = 0.01;
 	//if (value >= 1) delta = -0.01;
 	//value += delta;
+
+	//	デバッグ用
+	// face辺を描画
+	DrawFaceEdge();
+	//	XZ平面を描画
+	DrawIHBorderXZPlane();
+	//	IH加熱領域の境界線を引く
+	DrawIHBorder();
+
 
 	///	テクスチャと温度、水分量との対応表は、Samples/Physics/FEMThermo/テクスチャの色と温度の対応.xls	を参照のこと
 	//negitest

@@ -97,6 +97,8 @@ public:
 		//行列計算に用いるための面積
 		double area;				///	四面体の各面の面積
 		double iharea;				//	IH加熱するface内の面積
+		double ihareaRatio;			//	sigma(iharea):メッシュの総加熱面積 に占める割合
+		double ihdqdt;				//  faceが受け取るIHコイルからの熱流束量 = IHdqdtAll * ihareaRatio; 	
 		//>	熱計算特有のパラメータ　継承して使う
 		///	原点から近い順にvertices[3]を並べ替えた頂点ID
 		int ascendVtx[3];			///	毎熱Stepで使う？使わない？
@@ -104,7 +106,7 @@ public:
 		bool alphaUpdated;			///	属する頂点の熱伝達率が更新された際にtrueに	
 		bool deformed;				///	属する頂点の移動により、変形されたとき
 		double thermalEmissivity;	///	熱放射率
-		double heatflux;			///	熱流束値　構成する３節点の相加平均で計算
+		double heatflux;			///	熱流束値　構成する３節点の相加平均で計算?
 		double fluxarea;			//>	 熱流束の計算に用いる、faceのエリア
 		bool mayIHheated;				//	IHで加熱する可能性のある面　段階的に絞る
 		std::vector<Vec2d>	ihvtx;//[12];	//	vectorにしなくても、数は最大、以下くらい。vectorだと領域を使いすぎるので.
@@ -164,7 +166,19 @@ public:
 	virtual void SetDesc(const void* desc);
 	///	時刻をdt進める処理。PHFemEngineが呼び出す。
 	virtual void Step(double dt);
-	///	
+	//std::vector<Spr::PHFemMesh::Edge> GetEdge();
+	//	faceの数を返す
+	unsigned GetNFace();
+	//	Face辺の両端点の座標を返す
+	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
+	//	Face辺の両端点の座標を返す
+	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
+	//	頂点の座標を返す
+	//Vec3d GetVtx(unsigned id);
+	//	IH境界領域のX座標を求める
+	//Vec2d GetIHBorderX();
+	
+
 	//int GetSurfaceVertex(int id){return surfaceVertices[id];};
 	//int NSurfaceVertices(){return surfaceVertices.size();};
 	//void SetVertexTc(int id,double temp){

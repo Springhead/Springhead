@@ -37,6 +37,10 @@ bool PHFemMesh::Face::operator == (const Face& f2){
 	return true;
 }
 
+// std::vector<Spr::PHFemMesh::Edge> PHFemMesh::GetEdge(){
+//	return edges;
+//}
+
 PHFemMesh::Edge::Edge(int v1, int v2){
 	if (v1>v2) std::swap(v1, v2);
 	assert(v1==-1 && v2==-1 || v1 < v2);
@@ -285,6 +289,25 @@ void PHFemMesh::UpdateJacobian(){
 	}
 }
 
+unsigned PHFemMesh::GetNFace(){
+	return faces.size();
+}
 
+std::vector<Vec3d> PHFemMesh::GetFaceEdgeVtx(unsigned id){
+	std::vector<Vec3d> fev;
+	for(unsigned i=0;i<3;i++){
+		fev.push_back( vertices[faces[id].vertices[i]].pos);
+	}
+	return fev;
+}
+
+Vec3d PHFemMesh::GetFaceEdgeVtx(unsigned id, unsigned vtx){
+	return vertices[faces[id].vertices[vtx]].pos;	
+}
+
+
+//Vec2d PHFemMesh::GetIHBorderX(){
+//	return Vec2d(0.0, 0.0);
+//}
 
 }

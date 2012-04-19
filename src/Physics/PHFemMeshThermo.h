@@ -87,6 +87,9 @@ protected:
 	PTM::VMatrixCol<double> bVecAll;
 	//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
 
+	// 表示用	//デバッグ
+	Vec2d IHLineVtxX;		//	IH加熱の境界線を引く	x軸の最小地、最大値が格納
+
 	//%%%		関数の宣言		%%%%%%%%//
 	//%%%%%%		熱伝導計算本体		%%%//
 	//	熱伝達境界条件の時はすべての引数を満たす必要がある。
@@ -214,10 +217,12 @@ protected:
 
 public:
 	//	PHFemMEsh.h内のクラスから熱伝導特有のパラメータを継承して使う
-	class thFemVertex :public FemVertex{
-		double heatflux2;
-	};
-	std::vector<thFemVertex> thvertices;
+
+	//	継承例　以下のように継承して、熱伝導特有のパラメータを用いる
+	//class thFemVertex :public FemVertex{
+	//	double heatflux2;
+	//};
+	//std::vector<thFemVertex> thvertices;
 	//	上記継承で近日中に、熱計算パラメータを継承する。振動FEM解析でも、上位クラス・構造体が使えるように準備しておく
 
 	/////	FemMeshThermo
@@ -313,11 +318,13 @@ public:
 	//	IHによ四面体のface面の熱流束加熱のための行列成分計算関数
 	void CalcIHdqdt(double r,double R,double dqdtAll);				//	IHヒーターの設定
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);		//	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
+	void CalcIHdqdtband(double xS,double xE,double dqdtAll);		//	帯状に加熱、x軸で切る
+	void CalcIHdqdtband_(double xS,double xE,double dqdtAll);		//	帯状に加熱、x軸で切る mayIHheatedを使わない
 	void CalcIHdqdt2(double r,double R,double dqdtAll);				//	IHヒーターの設定
 	void CalcIHdqdt3(double r,double R,double dqdtAll);				//	IHヒーターの設定	1頂点でも領域内に入っているときには、それをIH計算の領域に加算する
 	void CalcIHdqdt4(double radius,double Radius,double dqdtAll);	//	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。
 	//	face頂点のIH加熱時の行列成分を計算	半径10cm程度の円弧と、円環幅数cm幅をまたぐ程度の三角形サイズを想定
-	void CalcIHdqdt5(double radius,double Radius,double dqdtAll);
+	void CalcIHarea(double radius,double Radius,double dqdtAll);
 	//	DSTR に交点計算結果を表示する
 	void ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,double radius);
 	//	△分割前のvectorから三角形分割面積和を求積
@@ -332,7 +339,7 @@ public:
 	//	...r、Rの2円弧と交わる2交点
 	std::vector<Vec2d> CalcIntersectionPoint2(unsigned id0,unsigned id1,double r,double R);
 	// 半径rの円弧と線分の交点座標を１つ計算
-	Vec2d CalcVtxCircleAndLine(
+	Vec2d CalcIntersectionOfCircleAndLine(
 		unsigned id0,	//	線分の両端点の頂点番号（0 ~ vertices.size()）
 		unsigned id1,
 		double radius	//	半径
@@ -344,6 +351,14 @@ public:
 	/// dtを定数倍する
 	unsigned Ndt;
 	double dNdt;
+
+
+	//エッジの描画
+	void DrawEdge(unsigned id0, unsigned id1);
+
+	//	x軸と垂直なIH加熱の帯領域に線を引くために必要
+	void SetIHbandDrawVtx(double xS, double xE);
+	Vec2d GetIHbandDrawVtx();
 
 };
 

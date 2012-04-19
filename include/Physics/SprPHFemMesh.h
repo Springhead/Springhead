@@ -38,6 +38,8 @@ struct PHFemMeshIf : public SceneObjectIf{
 	//void SetVertexTc(int id,double temp);
 	//Vec3d GetPose(unsigned id);
 	//Vec3d GetSufVtxPose(unsigned id);
+	//std::vector<Spr::PHFemMesh::Edge> GetEdge();
+	
 };
 
 ///	FemMeshThermoのディスクリプタ
@@ -64,6 +66,10 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void SetVertexTemp(unsigned id,double temp);
 	void SetvecFAll(unsigned id,double dqdt);
 	void SetRohSpheat(double roh,double Cp);		//素材固有の物性
+	unsigned GetNFace();
+	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
+	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
+	Vec2d GetIHbandDrawVtx();
 };
 
 //@}

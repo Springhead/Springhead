@@ -47,7 +47,17 @@ public:
 	virtual bool CreatePHFromGR();
 	//	phMeshからGRMeshを生成する。マテリアルなどはgrMeshから拾う。
 	void CreateGRFromPH();
-	
+
+	//	メッシュのface辺を描画
+	void DrawVtxLine(float length, float x, float y, float z);
+	void DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1);
+	void DrawEdge(Vec3d vtx0, Vec3d vtx1);
+	//void DrawEdge(unsigned id0, unsigned id1);
+	//	メッシュのface辺を描画
+	void DrawFaceEdge();
+	//	IH加熱領域の境界線を引く
+	void DrawIHBorderXZPlane();
+	void DrawIHBorder();
 };
 }
 
