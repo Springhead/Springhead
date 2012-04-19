@@ -57,7 +57,7 @@ public:
 	void DrawFaceEdge();
 	//	IH‰Á”M—Ìˆæ‚Ì‹«ŠEü‚ğˆø‚­
 	void DrawIHBorderXZPlane();
-	void DrawIHBorder();
+	void DrawIHBorder(double xs, double xe);
 };
 }
 
