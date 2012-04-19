@@ -125,9 +125,11 @@ exit /b
 echo //--->>%MODULE%.i
 echo %%ignore Spr::GRRenderBaseIf::DrawIndexed;>> %MODULE%.i
 echo %%ignore Spr::GRRenderBaseIf::DrawArrays;>> %MODULE%.i
+echo %%ignore Spr::GRRenderBaseIf::DrawCurve;>> %MODULE%.i
 echo %%ignore Spr::GRRenderBaseIf::CreateShader;>> %MODULE%.i
 echo %%ignore Spr::GRFrameIf::GetChildren;>> %MODULE%.i
 rem ポインタの配列、ポインタのポインタなど未対応なため
+echo %%ignore Spr::GRVertexElement::vfP2f;>> %MODULE%.i
 echo %%ignore Spr::GRVertexElement::vfP3f;>> %MODULE%.i
 echo %%ignore Spr::GRVertexElement::vfC4bP3f;>> %MODULE%.i
 echo %%ignore Spr::GRVertexElement::vfN3fP3f;>> %MODULE%.i
