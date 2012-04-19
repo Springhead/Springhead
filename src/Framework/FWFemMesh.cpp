@@ -36,7 +36,7 @@ void FWFemMesh::DrawIHBorder(double xs, double xe){
 	//phMesh->Get
 	//Vec2d VtxX = phMesh->;
 
-	//xs:0.095,xe=0.01
+	//xs:0.095,xe=0.1
 	//	’l‚ð’¼‘Å‚¿
 	Vec3d xS = Vec3d(xs, 0.0, 0.0);
 	Vec3d xE = Vec3d(xe, 0.0, 0.0);
