@@ -46,6 +46,10 @@
 	void SetVertexTemp(unsigned int id, double temp){	base::SetVertexTemp(id, temp);}	\
 	void SetvecFAll(unsigned int id, double dqdt){	base::SetvecFAll(id, dqdt);}	\
 	void SetRohSpheat(double roh, double Cp){	base::SetRohSpheat(roh, Cp);}	\
+	unsigned int GetNFace(){	return	base::GetNFace();}	\
+	std::vector< Vec3d > GetFaceEdgeVtx(unsigned int id){	return	base::GetFaceEdgeVtx(id);}	\
+	Vec3d GetFaceEdgeVtx(unsigned int id, unsigned int vtx){	return	base::GetFaceEdgeVtx(id, vtx);}	\
+	Vec2d GetIHbandDrawVtx(){	return	base::GetIHbandDrawVtx();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHapticPointerIf(base)	\
 	void SetHumanInterface(Spr::HIBaseIf* hi){	base::SetHumanInterface(hi);}	\
