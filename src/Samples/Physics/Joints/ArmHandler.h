@@ -56,6 +56,7 @@ public:
 
 	virtual void BuildScene(){
 		soFloor = app->CreateFloor();
+		soFloor->SetFramePosition(Vec3d(0,-30,0));
 		
 		PHSdkIf* phSdk = GetPHSdk();
 		PHSceneIf* phScene = GetPHScene();
@@ -107,6 +108,7 @@ public:
 			descSpring.damper = handDamper * Vec3d(1,1,1);
 			spring = DCAST(PHSpringIf, phScene->CreateJoint(links.back(), ball, descSpring));
 		}
+		links.front()->SetDynamical(false);
 
 		phScene->SetContactMode(PHSceneDesc::MODE_NONE);		// ÚG‚ğØ‚é
 	}

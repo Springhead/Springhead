@@ -14,8 +14,6 @@ public:
 		ID_POS_MINUS,
 		ID_CREATE_PATH,
 	};
-
-	PHSolidIf*				soFloor;
 	vector<PHSolidIf*>		soBox;
 
 	double					spring;

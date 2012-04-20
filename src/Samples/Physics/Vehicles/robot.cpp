@@ -64,7 +64,6 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 		const double K = 100.0, D = 0.01;
 	
 		Posed pose;
-		PHTreeNodeIf* node;
 		for(int j = 0; j < 2; j++){
 			pose.Pos() = Vec3d(0.9, 0.4, (j == 0 ? 0.06 : -0.06));
 			jd.poseSocket = poseLeg[i] * pose;
@@ -120,38 +119,38 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 }
 
 
-const double speed = 0.3;
+const double speed = 3;
 void Robot::Stop(){
-	leg[0].jntCrank->SetMotorTorque(0);
-	leg[1].jntCrank->SetMotorTorque(0);
-	leg[2].jntCrank->SetMotorTorque(0);
-	leg[3].jntCrank->SetMotorTorque(0);
+	leg[0].jntCrank->SetOffsetForce(0);
+	leg[1].jntCrank->SetOffsetForce(0);
+	leg[2].jntCrank->SetOffsetForce(0);
+	leg[3].jntCrank->SetOffsetForce(0);
 }
 
 void Robot::Forward(){
-	leg[0].jntCrank->SetMotorTorque(speed);
-	leg[1].jntCrank->SetMotorTorque(-speed);
-	leg[2].jntCrank->SetMotorTorque(speed);
-	leg[3].jntCrank->SetMotorTorque(-speed);
+	leg[0].jntCrank->SetOffsetForce(speed);
+	leg[1].jntCrank->SetOffsetForce(-speed);
+	leg[2].jntCrank->SetOffsetForce(speed);
+	leg[3].jntCrank->SetOffsetForce(-speed);
 }
 
 void Robot::Backward(){
-	leg[0].jntCrank->SetMotorTorque(-speed);
-	leg[1].jntCrank->SetMotorTorque(speed);
-	leg[2].jntCrank->SetMotorTorque(-speed);
-	leg[3].jntCrank->SetMotorTorque(speed);
+	leg[0].jntCrank->SetOffsetForce(-speed);
+	leg[1].jntCrank->SetOffsetForce(speed);
+	leg[2].jntCrank->SetOffsetForce(-speed);
+	leg[3].jntCrank->SetOffsetForce(speed);
 }
 
 void Robot::TurnLeft(){
-	leg[0].jntCrank->SetMotorTorque(speed);
-	leg[1].jntCrank->SetMotorTorque(-speed);
-	leg[2].jntCrank->SetMotorTorque(-speed);
-	leg[3].jntCrank->SetMotorTorque(speed);
+	leg[0].jntCrank->SetOffsetForce(speed);
+	leg[1].jntCrank->SetOffsetForce(-speed);
+	leg[2].jntCrank->SetOffsetForce(-speed);
+	leg[3].jntCrank->SetOffsetForce(speed);
 }
 
 void Robot::TurnRight(){
-	leg[0].jntCrank->SetMotorTorque(-speed);
-	leg[1].jntCrank->SetMotorTorque(speed);
-	leg[2].jntCrank->SetMotorTorque(speed);
-	leg[3].jntCrank->SetMotorTorque(-speed);
+	leg[0].jntCrank->SetOffsetForce(-speed);
+	leg[1].jntCrank->SetOffsetForce(speed);
+	leg[2].jntCrank->SetOffsetForce(speed);
+	leg[3].jntCrank->SetOffsetForce(-speed);
 }
