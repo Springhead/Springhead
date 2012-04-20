@@ -60,9 +60,9 @@ public:
 	int count;
 	Fuga(): count(0){}
 	static void CallBackFuga(int id, void* arg){
-		((Fuga*)arg)->Print();
+		((Fuga*)arg)->Print(id);
 	}
-	void Print(){
+	void Print(int id){
 		count ++;
 		std::cout << "         " << "fugafuga:" << id << " - "  << count << std::endl;
 	}
