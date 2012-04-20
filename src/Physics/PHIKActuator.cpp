@@ -27,13 +27,13 @@ bool PHIKActuator::AddChildObject(ObjectIf* o){
 		// 自分の子にする
 		children.push_back(actuator);
 		this->bActuatorAdded = true;
-		for (int j=0; j<actuator->descendant.size(); ++j) {
+		for (int j=0; j<(int)actuator->descendant.size(); ++j) {
 			// 新たな子の子孫を紹介してもらう
 			descendant.push_back(actuator->descendant[j]);
 			// 新たな子の子孫に自分が祖先である事を教える
 			actuator->descendant[j]->ascendant.push_back(this);
 			actuator->descendant[j]->bActuatorAdded = true;
-			for (int i=0; i<ascendant.size(); ++i) {
+			for (int i=0; i<(int)ascendant.size(); ++i) {
 				// 自分の祖先に新たな子の事を伝える
 				ascendant[i]->descendant.push_back(actuator->descendant[j]);
 				ascendant[i]->bActuatorAdded = true;
@@ -95,7 +95,7 @@ void PHIKActuator::SetupMatrix(){
 		}
 
 		// Ｊ（ヤコビアン）
-		for (int nDesc=0; nDesc<descendant.size(); ++nDesc) {
+		for (int nDesc=0; nDesc<(int)descendant.size(); ++nDesc) {
 			PHIKEndEffector* childEef = descendant[nDesc]->eef; if (childEef==NULL) { continue; }
 			if (this->bNDOFChanged || (childEef->bNDOFChanged && childEef->bEnabled) || this->bActuatorAdded) {
 				Mj[childEef->number].resize(childEef->ndof, this->ndof);
@@ -116,7 +116,7 @@ void PHIKActuator::SetupMatrix(){
 }
 
 void PHIKActuator::CalcAllJacobian(){
-	for (int nDesc=0; nDesc<descendant.size(); ++nDesc) {
+	for (int nDesc=0; nDesc<(int)descendant.size(); ++nDesc) {
 		PHIKEndEffector* childEef = descendant[nDesc]->eef;
 		if (childEef==NULL || !(childEef->bEnabled)) { continue; }
 		CalcJacobian(childEef);
@@ -129,7 +129,7 @@ void PHIKActuator::PrepareSolve(){
 	PHIKEngineIf* engine = DCAST(PHSceneIf,GetScene())->GetIKEngine();
 
 	for (int i=0; i< ndof; ++i) {
-		for (int nDesc=0; nDesc<descendant.size(); ++nDesc) {
+		for (int nDesc=0; nDesc<(int)descendant.size(); ++nDesc) {
 			PHIKEndEffector* childEef = descendant[nDesc]->eef;
 			if (childEef==NULL || !(childEef->bEnabled)) { continue; }
 
@@ -232,7 +232,7 @@ void PHIKBallActuator::BeforeSetupMatrix(){
 	// 姿勢制御をするエンドエフェクタが無ければ自由度を２に下げる（冗長性回避のため）
 
 	bool bFound = false;;
-	for (int i=0; i<descendant.size(); ++i) {
+	for (int i=0; i<(int)descendant.size(); ++i) {
 		if (descendant[i]->eef && descendant[i]->eef->bEnabled && descendant[i]->eef->bOrientation) {
 			bFound = true;
 		}
@@ -260,7 +260,7 @@ void PHIKBallActuator::CalcAxis(){
 	e[1] = Vec3d(0,1,0);
 	e[2] = Vec3d(0,0,1);
 
-	for (int nDesc=0; nDesc<descendant.size(); ++nDesc) {
+	for (int nDesc=0; nDesc<(int)descendant.size(); ++nDesc) {
 		PHIKEndEffector* childEef = descendant[nDesc]->eef; if (childEef==NULL) { continue; }
 		if (childEef->bEnabled && !childEef->bOrientation) {
 			// 関節の回転中心

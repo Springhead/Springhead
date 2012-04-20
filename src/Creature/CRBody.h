@@ -59,7 +59,7 @@ public:
 	/** @brief i”Ô–Ú‚Ì„‘Ì‚ğ“¾‚é
 	*/
 	virtual CRSolidIf* GetSolid(int i) {
-		if (0<=i && i<solids.size()) {
+		if (0<=i && i<(int)solids.size()) {
 			return solids[i];
 		} else {
 			return NULL;
@@ -73,7 +73,7 @@ public:
 	/** @brief i”Ô–Ú‚ÌŠÖß‚ğ“¾‚é
 	*/
 	virtual CRJointIf* GetJoint(int i) {
-		if (0<=i && i<joints.size()) {
+		if (0<=i && i<(int)joints.size()) {
 			return joints[i];
 		} else {
 			return NULL;
