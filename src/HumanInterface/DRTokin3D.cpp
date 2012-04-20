@@ -10,12 +10,27 @@
 #else
 #include <HumanInterface/DRTokin3D.h>
 namespace Spr {;
+
 DRTokin3D::DRTokin3D(){}
+
 DRTokin3D::~DRTokin3D(){}
+
 bool DRTokin3D::Init(){
 	SetName("Tokin 3D motion sensor");
 	return false;
 }
-void DRTokin3D::GetMatrix(Matrix3f& ori){Vec3f DRTokin3D::GetEuler(){return Vec3f(-FLT_MAX,-FLT_MAX,-FLT_MAX);}
-int DRTokin3D::GetPort(int ch){return -1;}
+
+void DRTokin3D::GetMatrix(Matrix3f& ori){
+
+}
+
+Vec3f DRTokin3D::GetEuler(){
+	return Vec3f(-FLT_MAX,-FLT_MAX,-FLT_MAX);
+}
+
+int DRTokin3D::GetPort(int ch){
+	return -1;
+}
+
 }	//	namespace Spr
+#endif USE_CLOSED_SRC
