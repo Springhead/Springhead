@@ -701,7 +701,7 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 
 void PHHapticEngine::SetContactMode(){
 	// 力覚ポインタをシーンの接触から切る
-	for(int i = 0; i < hapticPointers.size(); i++){
+	for(int i = 0; i < (int)hapticPointers.size(); i++){
 		GetScene()->SetContactMode(hapticPointers[i]->Cast(), PHSceneDesc::MODE_NONE);
 	}
 }

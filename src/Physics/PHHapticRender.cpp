@@ -7,7 +7,7 @@ PHHapticRender::PHHapticRender(){}
 
 void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
 	*(PHHapticRenderInfo*)this = info;
-	for(int i = 0; i < pointers->size(); i++){
+	for(int i = 0; i < (int)pointers->size(); i++){
 		PHHapticPointer* pointer = pointers->at(i);
 		switch (pointer->hapticRenderMode){
 			case PHHapticPointerDesc::PENALTY:

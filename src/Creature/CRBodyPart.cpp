@@ -212,7 +212,7 @@ void CRIKSolid::StepSearchArea() {
 	if (horizRange > 0 && vertRange > 0) {
 		foundSolids.clear();
 		PHSceneIf* phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
-		for (size_t i=0; i<phScene->NSolids(); ++i) {
+		for (int i=0; i<phScene->NSolids(); ++i) {
 			PHSolidIf* so = phScene->GetSolids()[i];
 			if (so->NShape() == 0) { continue; }
 
@@ -235,7 +235,7 @@ int CRIKSolid::NVisibleSolids() {
 }
 
 PHSolidIf* CRIKSolid::GetVisibleSolid(int i) {
-	if (0 <= i && i < foundSolids.size()) {
+	if (0 <= i && i < (int)foundSolids.size()) {
 		return foundSolids[i];
 	} else {
 		return NULL;
@@ -275,13 +275,13 @@ void CRIKSolid::StepListContact() {
 
 	// Ž©•ª‚Ì„‘Ì”Ô†‚ð’T‚·
 	int num_my_solid;
-	for (size_t i=0; i<phScene->NSolids(); ++i) {
+	for (int i=0; i<phScene->NSolids(); ++i) {
 		if (phScene->GetSolids()[i] == solid) {
 			num_my_solid = i;
 		}
 	}
 	
-	for (size_t i=0; i<phScene->NSolids(); ++i) {
+	for (int i=0; i<phScene->NSolids(); ++i) {
 		solidPair = NULL;
 		shapePair = NULL;
 
@@ -309,8 +309,8 @@ void CRIKSolid::StepListContact() {
 		if (!solidPair || !constraint) { continue; }
 		Vec3d force = phScene->GetConstraintEngine()->GetContactPoints()->GetTotalForce(s1, s2);
 
-		for (size_t c1=0; c1<s1->NShape(); ++c1) {
-			for (size_t c2=0; c2<s2->NShape(); ++c2) {
+		for (int c1=0; c1<s1->NShape(); ++c1) {
+			for (int c2=0; c2<s2->NShape(); ++c2) {
 				if (shapePair = solidPair->GetShapePair(c1, c2)) {
 					int       contactStat      = solidPair->GetContactState(c1, c2);
 					unsigned  lastContactCount = solidPair->GetLastContactCount(c1, c2);
@@ -320,7 +320,7 @@ void CRIKSolid::StepListContact() {
 						double area = 0;
 						if (shapePair->NSectionVertexes() > 3) {
 							Vec3d v0 = shapePair->GetSectionVertex(0);
-							for (size_t v=2; v<shapePair->NSectionVertexes(); ++v) {
+							for (int v=2; v<shapePair->NSectionVertexes(); ++v) {
 								Vec3d v1 = shapePair->GetSectionVertex(v-1);
 								Vec3d v2 = shapePair->GetSectionVertex(v);
 

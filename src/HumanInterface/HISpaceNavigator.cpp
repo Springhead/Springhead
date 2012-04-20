@@ -36,7 +36,7 @@ bool HISpaceNavigator::Init(const void* desc) {
 
 				// Space Navigator‚ð‚Ý‚Â‚¯‚½
 				bool bAlreadyUsed = false;
-				for (int i=0; i<deviceHandles.size(); ++i) {
+				for (int i=0; i<(int)deviceHandles.size(); ++i) {
 					if (deviceHandles[i] == deviceList[i].hDevice) { bAlreadyUsed = true; }
 				}
 				if (!bAlreadyUsed) {
@@ -124,7 +124,7 @@ bool HISpaceNavigator::PreviewMessage(void *m) {
 
 	if (hDevice==NULL) {
 		bool bAlreadyUsed = false;
-		for (int i=0; i<deviceHandles.size(); ++i) {
+		for (int i=0; i<(int)deviceHandles.size(); ++i) {
 			if (deviceHandles[i] == pRawInput->header.hDevice) { bAlreadyUsed = true; }
 		}
 		if (!bAlreadyUsed) {

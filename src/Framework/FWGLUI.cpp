@@ -239,7 +239,7 @@ bool FWGLUI::IsChecked(FWButton* btn){
 	if(btn->GetStyle() != FWButtonDesc::CHECK_BUTTON)
 		return false;
 	GLUI_Checkbox* gluiCheck = (GLUI_Checkbox*)btn->handle;
-	return (bool)gluiCheck->get_int_val();
+	return !!(gluiCheck->get_int_val());
 }
 
 void FWGLUI::SetIntRange(FWTextBox* text, int rmin, int rmax){
