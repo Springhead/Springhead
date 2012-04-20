@@ -50,8 +50,8 @@ public:
 	}
 };
 
-void CallBackHoge(void* arg){
-	std::cout << "hogehoge" << std::endl;
+void CallBackHoge(int id, void* arg){
+	std::cout << "hogehoge:" << id << std::endl;
 }
 
 class Fuga{
@@ -59,12 +59,12 @@ public:
 	UTTimer timer2;
 	int count;
 	Fuga(): count(0){}
-	static void CallBackFuga(void* arg){
+	static void CallBackFuga(int id, void* arg){
 		((Fuga*)arg)->Print();
 	}
 	void Print(){
 		count ++;
-		std::cout << "         " << "fugafuga " << count << std::endl;
+		std::cout << "         " << "fugafuga:" << id << " - "  << count << std::endl;
 	}
 };
 
@@ -86,12 +86,12 @@ int _cdecl main(int argc, char* argv[]){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 								//	たとえば、FWAppのGLUT版 に providerGL と同じ機能を持たせれば良い
 
-	timer1.SetMode(UTTimer::MULTIMEDIA);
+	timer1.SetMode(UTTimerIf::MULTIMEDIA);
 	timer1.SetResolution(500);					///	 呼びだし分解能
 	timer1.SetInterval(100);					/// 呼びだし頻度
 	timer1.SetCallback(CallBackHoge, NULL);	/// 呼びだす関数
 
-	fuga.timer2.SetMode(UTTimer::IDLE);
+	fuga.timer2.SetMode(UTTimerIf::IDLE);
 	fuga.timer2.SetResolution(500);
 	fuga.timer2.SetInterval(500);
 	fuga.timer2.SetCallback(Fuga::CallBackFuga, &fuga);	/// 呼び戻す関数は静的でなければならない

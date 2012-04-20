@@ -155,7 +155,8 @@ void VirtualHuman::BuildScene(int sceneNum){
 		if (creature) {
 			// ƒ{ƒfƒB
 			CRBallHumanBodyGenDesc bodyGenDesc;
-			bodyGen = new CRBallHumanBodyGen(bodyGenDesc, phScene);
+			bodyGen = DBG_NEW CRBallHumanBodyGen(bodyGenDesc);
+			phScene->AddChildObject(bodyGen);
 
 			PHSolidIf* waist = bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_WAIST);
 			waist->SetDynamical(false);
