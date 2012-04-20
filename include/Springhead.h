@@ -12,6 +12,8 @@
 #ifndef SPRINGHEAD_H
 #define SPRINGHEAD_H
 
+#include "SprDefs.h"
+
 #include "SprBase.h"
 #include "SprFoundation.h"
 #include "SprCollision.h"
