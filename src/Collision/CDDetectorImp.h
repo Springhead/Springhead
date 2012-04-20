@@ -70,9 +70,6 @@ public:
 	/// closestpointをワールド座標系で取得する
 	Vec3d GetClosestPointOnWorld(int i){ return shapePoseW[i] * closestPoint[i]; }
 };
-//	デバッグ用ツール
-void CallDetectContinuously(std::istream& file, PHSdkIf* sdk);
-void SaveDetectContinuously(CDShapePair* sp, unsigned ct, const Posed& pose0, const Vec3d& delta0, const Posed& pose1, const Vec3d& delta1);
 
 ///	BBox同士の交差判定．交差していれば true．
 bool FASTCALL BBoxIntersection(Posed postureA, Vec3f centerA, Vec3f extentA,
