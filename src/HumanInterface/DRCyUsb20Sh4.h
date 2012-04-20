@@ -5,10 +5,6 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-// DRUsb20Sh4.h: DRUsb20Sh4 クラスのインターフェイス
-//
-//////////////////////////////////////////////////////////////////////
-
 #ifndef DR_CyUSB20SH4_H
 #define DR_CyUSB20SH4_H
 
