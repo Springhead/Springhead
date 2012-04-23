@@ -553,10 +553,10 @@ public: /** FWApp‚ÌŽÀ‘• **/
 		GRInit(argc, argv);
 		
 		FWWinDesc windowDesc;
-		// windowDesc.width = 1024;
-		// windowDesc.height = 768;
-		windowDesc.width = 1280;
-		windowDesc.height = 720;
+		windowDesc.width = 1024;
+		windowDesc.height = 768;
+		// windowDesc.width = 1280;
+		// windowDesc.height = 720;
 		windowDesc.title = appName;
 		CreateWin(windowDesc);
 		
