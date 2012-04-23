@@ -14,7 +14,7 @@
 
 namespace Spr {;
 
-class SPR_DLL HITrackball: public HIPose, public HITrackballDesc, public DVKeyMouseHandler{
+class SPR_DLL HITrackball: public HIPose, public HITrackballDesc, public DVKeyMouseCallback{
 public:
 	SPR_OBJECTDEF(HITrackball);
 
@@ -76,7 +76,7 @@ public:
 	virtual Vec3f		GetPosition(){ return pos; }
 	virtual Quaternionf GetOrientation(){ return ori; }
 
-	/// DVKeyMouseHandlerÇÃä÷êî
+	/// DVKeyMouseCallbackÇÃä÷êî
 	virtual bool OnMouseMove(int state, int x, int y, int zdelta);
 
 	HITrackball(const HITrackballDesc& desc = HITrackballDesc());

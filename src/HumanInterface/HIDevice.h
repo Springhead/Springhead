@@ -231,22 +231,22 @@ public:
 };
 
 template<class T>
-class DVHandlerContainer{
+class DVCallbackContainer{
 public:
-	typedef std::vector<T*>	Handlers;
-	Handlers	handlers;
+	typedef std::vector<T*>	Callbacks;
+	Callbacks	callbacks;
 
-	void AddHandler(T* h){
-		if(find(handlers.begin(), handlers.end(), h) == handlers.end())
-			handlers.push_back(h);
+	void AddCallback(T* cb){
+		if(find(callbacks.begin(), callbacks.end(), cb) == callbacks.end())
+			callbacks.push_back(cb);
 	}
-	void RemoveHandler(T* h){
-		handlers.erase(find(handlers.begin(), handlers.end(), h));
+	void RemoveCallback(T* cb){
+		callbacks.erase(find(callbacks.begin(), callbacks.end(), cb));
 	}
 };
 
 ///	DVKeyMouse
-class SPR_DLL DVKeyMouse: public DVHandlerContainer<DVKeyMouseHandler>, public HIVirtualDevice{
+class SPR_DLL DVKeyMouse: public DVCallbackContainer<DVKeyMouseCallback>, public HIVirtualDevice{
 public:
 	SPR_OBJECTDEF_ABST(DVKeyMouse);
 public:
@@ -268,7 +268,7 @@ public:
 
 //-------------------------------------------------------------------------------------------------
 ///	DVJoyStick
-class SPR_DLL DVJoyStick: public DVHandlerContainer<DVJoyStickHandler>, public HIVirtualDevice{
+class SPR_DLL DVJoyStick: public DVCallbackContainer<DVJoyStickCallback>, public HIVirtualDevice{
 public:
 	SPR_OBJECTDEF_ABST(DVJoyStick);
 

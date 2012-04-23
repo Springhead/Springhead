@@ -52,16 +52,16 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_DRCyUsb20Sh4If(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_DVJoyStickIf(base)	\
-	void AddHandler(Spr::DVJoyStickHandler* h){	base::AddHandler(h);}	\
-	void RemoveHandler(Spr::DVJoyStickHandler* h){	base::RemoveHandler(h);}	\
+	void AddCallback(Spr::DVJoyStickCallback* cb){	base::AddCallback(cb);}	\
+	void RemoveCallback(Spr::DVJoyStickCallback* cb){	base::RemoveCallback(cb);}	\
 	void SetPollInterval(int ms){	base::SetPollInterval(ms);}	\
 	int GetPollInterval(){	return	base::GetPollInterval();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_DRJoyStickGLUTIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_DVKeyMouseIf(base)	\
-	void AddHandler(Spr::DVKeyMouseHandler* h){	base::AddHandler(h);}	\
-	void RemoveHandler(Spr::DVKeyMouseHandler* h){	base::RemoveHandler(h);}	\
+	void AddCallback(Spr::DVKeyMouseCallback* cb){	base::AddCallback(cb);}	\
+	void RemoveCallback(Spr::DVKeyMouseCallback* cb){	base::RemoveCallback(cb);}	\
 	int GetKeyState(int key){	return	base::GetKeyState(key);}	\
 	void GetMousePosition(int& x, int& y, int& time, int count){	base::GetMousePosition(x, y, time, count);}	\
 

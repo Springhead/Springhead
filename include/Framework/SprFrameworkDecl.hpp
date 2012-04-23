@@ -182,8 +182,6 @@
 	void SetJoyStick(Spr::DVJoyStickIf* dv){	base::SetJoyStick(dv);}	\
 	Spr::HITrackballIf* GetTrackball(){	return	base::GetTrackball();}	\
 	void SetTrackball(Spr::HITrackballIf* dv){	base::SetTrackball(dv);}	\
-	Spr::HIDraggerIf* GetDragger(){	return	base::GetDragger();}	\
-	void SetDragger(Spr::HIDraggerIf* dv){	base::SetDragger(dv);}	\
 	void SetDebugMode(bool ph_or_gr){	base::SetDebugMode(ph_or_gr);}	\
 	bool GetDebugMode(){	return	base::GetDebugMode();}	\
 	void Display(){	base::Display();}	\

@@ -13,12 +13,9 @@
 namespace Spr {;
 
 /** 仮想キーボード・マウス
-	
-	・キー・マウスイベントを処理するクラスはDVKeyMouseHandlerを継承しイベントハンドラを実装する
-	・その上でDVKeyMouseBaseIf::AddHandlerで自身を登録する
+	・キー・マウスイベントを処理するクラスはDVKeyMouseCallbackを継承しイベントハンドラを実装する
+	・その上でDVKeyMouseBaseIf::AddCallbackで自身を登録する
 	・ハンドラは複数登録可能．
-	　先に登録されたハンドラから優先的に呼び出し，falseが返された場合のみ次のハンドラを呼び出す．
-
  */
 
 /// 押されているキー，ボタンの状態を示すフラグ
@@ -79,7 +76,7 @@ struct DVKeyCode{
 	};
 };
 
-struct DVKeyMouseHandler{
+struct DVKeyMouseCallback{
 	/** @brief マウスクリック時の処理
 		@param button	DVButtonMask列挙子の組み合わせ
 		@param state	DVButtonSt列挙子の値
@@ -101,7 +98,7 @@ struct DVKeyMouseHandler{
 		
 		zdeltaはマウスホイールに対応するデバイスを使用する場合のみ有効．
 	*/
-	virtual bool OnMouseMove(int state, int x, int y, int zdelta){ return false; }
+	virtual bool OnMouseMove(int button, int x, int y, int zdelta){ return false; }
 	/** @brief キー入力処理
 		@param state	DVKeySt列挙子の値
 		@param key		asciiコードかDVKeyCode列挙子の値
@@ -118,12 +115,13 @@ struct DVKeyMouseIf: public HIVirtualDeviceIf{
 	SPR_IFDEF(DVKeyMouse);
 	
 	///	ハンドラの追加
-	void AddHandler(DVKeyMouseHandler* h);
+	void AddCallback(DVKeyMouseCallback* cb);
 	/// ハンドラの削除
-	void RemoveHandler(DVKeyMouseHandler* h);
+	void RemoveCallback(DVKeyMouseCallback* cb);
 
 	/**	@brief マウスボタン・キーボード状態取得
-		@param	key		windowsの仮想キーコード
+		@param	key		DVKeyCodeの値
+		@return			DVKeyStの値
 		win32マウス限定．
 	 */
 	int GetKeyState(int key);

@@ -106,7 +106,7 @@ void FWWin::SetSize(int width, int height){
 	fullscreen = false;
 }
 
-void FWWin::OnUpdatePose(HITrackballIf*, bool dir){
+void FWWin::OnUpdatePose(HITrackballIf*){
 	if(!scene)
 		return;
 
@@ -118,12 +118,7 @@ void FWWin::OnUpdatePose(HITrackballIf*, bool dir){
 	if(!camFrame)
 		return;
 
-	if(dir){
-		camFrame->SetTransform(trackball->GetAffine());
-	}
-	else{
-		trackball->SetPosition(camFrame->GetTransform().Pos());
-	}
+	camFrame->SetTransform(trackball->GetAffine());
 }
 
 //-------------------------------------------------------------------------------------------------

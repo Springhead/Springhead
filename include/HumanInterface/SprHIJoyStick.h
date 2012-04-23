@@ -24,7 +24,7 @@ struct DVJoyStickMask{
 /** 仮想ジョイスティック
 	・使用方法は仮想マウスと同様
  */
-struct DVJoyStickHandler{
+struct DVJoyStickCallback{
 	/** @brief マウスが動いたときの処理
 		@param buttonMask 押されているボタンの状態
 		@param x		ジョイスティックx座標（左右）
@@ -44,9 +44,9 @@ struct DVJoyStickIf: public HIVirtualDeviceIf{
 	SPR_IFDEF(DVJoyStick);
 	
 	///	ハンドラの追加
-	void AddHandler(DVJoyStickHandler* h);
+	void AddCallback(DVJoyStickCallback* cb);
 	/// ハンドラの削除
-	void RemoveHandler(DVJoyStickHandler* h);
+	void RemoveCallback(DVJoyStickCallback* cb);
 
 	// ポーリング周期の設定
 	void SetPollInterval(int ms);

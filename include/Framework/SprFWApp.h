@@ -22,7 +22,7 @@ class FWGraphicsAdaptee;
 	FWAppおよびその派生クラスは例外であり，ユーザはFWAppあるいはその派生クラスを継承し，
 	仮想関数をオーバライドすることによって独自機能を実装する．
  */
-class FWApp : public UTRefCount, public DVKeyMouseHandler{
+class FWApp : public UTRefCount, public DVKeyMouseCallback{
 protected:
 	static FWApp*				instance;	///< 唯一のFWAppインスタンス
 	UTRef<FWSdkIf>				fwSdk;		///< Framework SDK	
@@ -132,7 +132,7 @@ public:
 		MouseButton(button, state, x, y);
 		return true;
 	}
-	virtual bool OnMouseMove(int state, int x, int y, int zdelta){
+	virtual bool OnMouseMove(int button, int x, int y, int zdelta){
 		MouseMove(x, y);
 		return true;
 	}

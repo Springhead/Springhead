@@ -305,8 +305,11 @@ Matrix3d SplinePoint::CompJacobian() {
 Vec4d ClosedSplineCurve::GetEdgeSwingCoeff(int i) {
 	Vec4d c;
 	int i0 = i-1, i1 = i;
-	if (i0 <  0)            { i0 += nodes->size(); }
-	if (i1 >= nodes->size()) { i1 -= nodes->size(); }
+	int sz = (int)nodes->size();
+	if (i0 < 0)
+		i0 += sz;
+	if (i1 >= sz)
+		i1 -= sz;
 
 	double  s0 = (*nodes)[i0].swing;
 	double  s1 = (*nodes)[i1].swing;
@@ -324,8 +327,11 @@ Vec4d ClosedSplineCurve::GetEdgeSwingCoeff(int i) {
 Vec4d ClosedSplineCurve::GetEdgeSwingDirCoeff(int i) {
 	Vec4d c;
 	int i0 = i-1, i1 = i;
-	if (i0 <  0)            { i0 += nodes->size(); }
-	if (i1 >= nodes->size()) { i1 -= nodes->size(); }
+	int sz = (int)nodes->size();
+	if (i0 < 0)
+		i0 += sz;
+	if (i1 >= sz)
+		i1 -= sz;
 
 	double  s0 = (*nodes)[i0].swingDir;
 	double  s1 = (*nodes)[i1].swingDir;

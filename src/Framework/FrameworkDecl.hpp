@@ -295,7 +295,6 @@ protected:\
 	bool	useJoyStick;	\
 	int	joyStickPollInterval;	\
 	bool	useTrackball;	\
-	bool	useDragger;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		FWWinBase::SetDesc((FWWinBaseDesc*)(FWWinDesc*)ptr);	\
@@ -305,7 +304,6 @@ public:\
 		useJoyStick = ((FWWinDesc*)ptr)->useJoyStick;	\
 		joyStickPollInterval = ((FWWinDesc*)ptr)->joyStickPollInterval;	\
 		useTrackball = ((FWWinDesc*)ptr)->useTrackball;	\
-		useDragger = ((FWWinDesc*)ptr)->useDragger;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -317,7 +315,6 @@ public:\
 		((FWWinDesc*)ptr)->useJoyStick = useJoyStick;	\
 		((FWWinDesc*)ptr)->joyStickPollInterval = joyStickPollInterval;	\
 		((FWWinDesc*)ptr)->useTrackball = useTrackball;	\
-		((FWWinDesc*)ptr)->useDragger = useDragger;	\
 		return true;	\
 	}\
 

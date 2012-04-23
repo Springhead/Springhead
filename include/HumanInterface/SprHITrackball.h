@@ -80,11 +80,8 @@ struct HITrackballDesc{
 struct HITrackballCallback{
 	/** @brief 向きの更新
 		@param trackball	呼び出し元のトラックボール
-		@param dir			更新の向き．
-							trueならばトラックボールのposeをコールバック側に反映し，
-							falseならばコールバック側のposeをトラックボールに設定する．
 	 */
-	virtual void OnUpdatePose(HITrackballIf* trackball, bool dir){}
+	virtual void OnUpdatePose(HITrackballIf* trackball){}
 };
 
 struct GRCameraDesc;
