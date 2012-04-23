@@ -148,7 +148,7 @@ inline P InterpolateOri(T t, T t0, P p0, V v0, T t1, P p1, V v1, int type){
 }
 
 template<class P, class V, class T>
-inline P InterpolateAngvel(T t, T t0, P p0, V v0, T t1, P p1, V v1, int type){
+inline V InterpolateAngvel(T t, T t0, P p0, V v0, T t1, P p1, V v1, int type){
 	if(type == Interpolate::Constant)
 		return V();
 
@@ -174,7 +174,7 @@ inline P InterpolateAngvel(T t, T t0, P p0, V v0, T t1, P p1, V v1, int type){
 }
 
 template<class P, class V, class T>
-inline P InterpolateAngacc(T t, T t0, P p0, V v0, T t1, P p1, V v1, int type){
+inline V InterpolateAngacc(T t, T t0, P p0, V v0, T t1, P p1, V v1, int type){
 	if(type == Interpolate::Constant)
 		return V();
 	if(type == Interpolate::SlerpInt)
