@@ -20,11 +20,11 @@ def Steps(n):
 	d = datetime.datetime.today()
 	print('%s:%s:%s.%s \n' % (d.hour, d.minute, d.second, d.microsecond))
 
-hiTrackball.SetPosition(Vec3f(50, 0, 0))
+hiTrackball.SetPosition(Vec3f(0, 0, 50))
 
 initPose = Posef()
 initPose.setPos(Vec3f(-10,0,0))
-spaceNavigator.SetPose(initPose)
+spaceNavigator0.SetPose(initPose)
 
 fwScene.EnableRenderLimit(True)
 
@@ -128,7 +128,7 @@ ika2 = phScene.CreateIKActuator(PHIKHingeActuator.GetIfInfoStatic(), descIKA)
 ika2.AddChildObject(jo2)
 
 # Link2 = End Effector
-ike1 = phScene.CreateIKEndEffector(PHIKEndEffector.GetIfInfoStatic(), descIKE)
+ike1 = phScene.CreateIKEndEffector(descIKE)
 ike1.AddChildObject(so2)
 ika1.AddChildObject(ike1)
 ika2.AddChildObject(ike1)
@@ -188,7 +188,7 @@ class SpaceNavigatorThread(threading.Thread):
 
 	def run(self):
 		while True:
-			p = spaceNavigator.GetPose().getPos()
+			p = spaceNavigator0.GetPose().getPos()
 			self.soPointer.SetFramePosition(Vec3d(p.x, p.y, 0))
 
 spaceNav = SpaceNavigatorThread(so3)
