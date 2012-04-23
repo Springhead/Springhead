@@ -79,13 +79,13 @@ public:
 
 	void CalcOffsetForce(){
 		states->SaveState(phScene);
-		for (size_t i=0; i<phScene->NJoints(); ++i) {
+		for (int i=0; i<phScene->NJoints(); ++i) {
 			PHBallJointIf* jo = phScene->GetJoint(i)->Cast();
 			jo->SetDamper(DBL_MAX);
 		}
 		phScene->Step();
 		states->LoadState(phScene);
-		for (size_t i=0; i<phScene->NJoints(); ++i) {
+		for (int i=0; i<phScene->NJoints(); ++i) {
 			PHBallJointIf* jo = phScene->GetJoint(i)->Cast();
             // jo->SetTargetPosition(Quaterniond());
 			// jo->SetTargetVelocity(Vec3d());
@@ -165,7 +165,7 @@ public:
 		typedef std::vector<BJOffset> BJOffsets;
 		BJOffsets bjOffsets;
 	
-		for(size_t i = 0; i < phScene->NIKActuators(); ++i) {
+		for(int i = 0; i < phScene->NIKActuators(); ++i) {
 			PHIKBallActuatorIf* ac = phScene->GetIKActuator(i)->Cast();
 			if(!ac)
 				continue;
@@ -251,21 +251,11 @@ public:
 			///// 関節
 			descBallJoint.poseSocket.Pos() = Vec3d(0.0, (i == 0 ? 0.1 : 0.5), 0.0);
 			descBallJoint.posePlug.Pos()   = Vec3d(0.0, -0.5, 0.0);
-			/*
-			descBallJoint.spring =  300.0f;
-			descBallJoint.damper =   10.0f;
-			*/
-			descBallJoint.spring =   0.0f;
-			descBallJoint.damper =   0.0f;
+			descBallJoint.spring = 10.0f;
+			descBallJoint.damper = 5.0f;
 			PHBallJointIf* bj = phScene->CreateJoint(links.back(), so, descBallJoint)->Cast();
 
 			///// IK関節（アクチュエータ）
-			/*
-			descIKBall.spring =   1000.0f;
-			descIKBall.damper =    100.0f;
-			*/
-			descIKBall.spring =    10.0f;
-			descIKBall.damper =     5.0f;
 			descIKBall.bias   =     1.0f;
 
 			PHIKBallActuatorIf* ac = phScene->CreateIKActuator(descIKBall)->Cast();
@@ -285,7 +275,7 @@ public:
 		endEffector->SetSolid(links.back());
 		///// -- ノードへの登録
 		for(int i = 0; i < (int)actuators.size(); i++) {
-			actuators[i]->RegisterEndEffector(endEffector);
+			actuators[i]->AddChildObject(endEffector);
 		}
 		
 		///// 制御点を指し示す剛体
@@ -300,8 +290,8 @@ public:
 		phScene->GetIKEngine()->Enable(bIK);
 		
 		/// その他の設定
-		for (int i=0; i<links.size(); ++i) {
-			for (int j=0; j<links.size(); ++j) {
+		for (unsigned i=0; i<links.size(); ++i) {
+			for (unsigned j=0; j<links.size(); ++j) {
 				if (i!=j) {
 					phScene->SetContactMode(links[i], links[j], PHSceneDesc::MODE_NONE);
 				}
@@ -318,7 +308,7 @@ public:
 		if (bVT) {
 			CalcOffsetForce();
 		} else {
-			for (size_t i=0; i<phScene->NJoints(); ++i) {
+			for (int i=0; i<phScene->NJoints(); ++i) {
 				PHBallJointIf* jo = phScene->GetJoint(i)->Cast();
 				jo->SetOffsetForce(Vec3d(0,0,0));
 			}
