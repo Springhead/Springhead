@@ -164,7 +164,7 @@ class SpaceNavigatorThread(threading.Thread):
 
 	def run(self):
 		while True:
-			p = spaceNavigator.GetPose().getPos()
+			p = spaceNavigator0.GetPose().getPos()
 			self.soPointer.SetFramePosition(Vec3d(p.x, p.y, p.z))
 
 spaceNav = SpaceNavigatorThread(soPointer)
