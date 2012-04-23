@@ -146,9 +146,6 @@ void GRMesh::SwitchCoordinate(){
 }
 
 void GRMesh::MakeBuffer(){
-	//if (vtxs)
-	//	delete vtxs;
-	//vtxs = NULL;
 	vtxs.clear();
 
 	int nVtxs = max(max(vertices.size(), normals.size()), max(colors.size(), texCoords.size()));
