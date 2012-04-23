@@ -142,6 +142,8 @@ struct DVKeyMouseIf: public HIVirtualDeviceIf{
  **/
 struct DRKeyMouseWin32If: public HIRealDeviceIf{
 	SPR_IFDEF(DRKeyMouseWin32);
+	//	Windowsメッセージを渡し、マウスとキーボードのイベントの処理をさせる。
+	bool PreviewMessage(void* m);
 };
 struct DRKeyMouseWin32Desc{
 	SPR_DESCDEF(DRKeyMouseWin32);

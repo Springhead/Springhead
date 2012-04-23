@@ -66,6 +66,7 @@
 	void GetMousePosition(int& x, int& y, int& time, int count){	base::GetMousePosition(x, y, time, count);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_DRKeyMouseWin32If(base)	\
+	bool PreviewMessage(void* m){	return	base::PreviewMessage(m);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_DRKeyMouseGLUTIf(base)	\
 
