@@ -70,7 +70,8 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_DRKeyMouseGLUTIf(base)	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HISdkIf(base)	\
-	Spr::HIVirtualDeviceIf* RentVirtualDevice(const IfInfo* ii, const char* name, int portNo){	return	base::RentVirtualDevice(ii, name, portNo);}	\
+	Spr::HIVirtualDeviceIf* RentVirtualDevice(const IfInfo* ii, const char* rname, int portNum){	return	base::RentVirtualDevice(ii, rname, portNum);}	\
+	Spr::HIVirtualDeviceIf* RentVirtualDevice(const char* itype, const char* rname, int portNum){	return	base::RentVirtualDevice(itype, rname, portNum);}	\
 	bool ReturnVirtualDevice(Spr::HIVirtualDeviceIf* dev){	return	base::ReturnVirtualDevice(dev);}	\
 	Spr::HIRealDeviceIf* AddRealDevice(const IfInfo* keyInfo, const void* desc){	return	base::AddRealDevice(keyInfo, desc);}	\
 	Spr::HIRealDeviceIf* FindRealDevice(const char* name){	return	base::FindRealDevice(name);}	\
@@ -105,15 +106,6 @@
 	Vec3f GetTorque(){	return	base::GetTorque();}	\
 	Vec3f GetForce(){	return	base::GetForce();}	\
 	void SetForce(const Vec3f& f, const Vec3f& t){	base::SetForce(f, t);}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_HIDraggerIf(base)	\
-	void SetCallback(Spr::HIDraggerCallback* callback){	base::SetCallback(callback);}	\
-	DVKeyMouseIf* GetKeyMouse(){	return	base::GetKeyMouse();}	\
-	void SetKeyMouse(DVKeyMouseIf* dv){	base::SetKeyMouse(dv);}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_HIMouse6DIf(base)	\
-	Spr::DVKeyMouseIf* GetKeyMouse(){	return	base::GetKeyMouse();}	\
-	void SetKeyMouse(Spr::DVKeyMouseIf* dv){	base::SetKeyMouse(dv);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_HINovintFalconIf(base)	\
 

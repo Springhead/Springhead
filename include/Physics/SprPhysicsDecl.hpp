@@ -52,7 +52,6 @@
 	Vec2d GetIHbandDrawVtx(){	return	base::GetIHbandDrawVtx();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHapticPointerIf(base)	\
-	void SetHumanInterface(Spr::HIBaseIf* hi){	base::SetHumanInterface(hi);}	\
 	void SetHapticRenderMode(Spr::PHHapticPointerDesc::HapticRenderMode m){	base::SetHapticRenderMode(m);}	\
 	void EnableForce(bool b){	base::EnableForce(b);}	\
 	void EnableFriction(bool b){	base::EnableFriction(b);}	\

@@ -5,8 +5,9 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#include <Springhead.h>
 #ifdef USE_CLOSED_SRC
-#include "../../closed/HumanInterface/CyUsb20Sh4.cpp"
+#include "../../closed/HumanInterface/DRCyUsb20Sh4.cpp"
 #else
 #include "DRCyUsb20Sh4.h"
 namespace Spr {;

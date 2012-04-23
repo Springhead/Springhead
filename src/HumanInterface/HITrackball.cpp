@@ -23,13 +23,21 @@ HITrackball::HITrackball(const HITrackballDesc& desc):HITrackballDesc(desc){
 	callback = 0;
 	enabled = true;
 	ready = false;
+	//	コンストラクション後に、SetSceneかSetNameManagerされるので、ここではGetSdk()は使えない。
 }
 
 bool HITrackball::Init(const void* desc){
+	if (desc) SetDesc(desc);
+	if (!keyMouse){
+		DVKeyMouseIf* dv = GetSdk()->RentVirtualDevice(DVKeyMouseIf::GetIfInfoStatic())->Cast();
+		if (!dv) return false;
+		SetKeyMouse(dv);
+	}
 	return true;
 }
 
 void HITrackball::SetKeyMouse(DVKeyMouseIf* dv){
+	if (keyMouse) keyMouse->RemoveHandler(this);
 	keyMouse = dv;
 	keyMouse->AddHandler(this);
 }

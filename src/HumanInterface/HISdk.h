@@ -26,14 +26,13 @@ public:
 	}
 };
 
+class SPR_DLL HISdk: public Sdk{
+public:
 typedef	std::vector< UTRef<HIRealDeviceIf> >	DRPool;
 typedef std::vector< UTRef<HIBaseIf> >			HIPool;
 
-class SPR_DLL HISdk: public Sdk{
 protected:
-	//HIVirtualDevicePool				dvPool;		///< 仮想デバイスプール
-	//HIRealDevicePool					drPool;		///< 実デバイスプール
-	DRPool					drPool;
+	DRPool					drPool;		///< 実デバイスのプール
 	HIPool					hiPool;		///< ヒューマンインタフェースのプール
 
 public:
@@ -46,9 +45,8 @@ public:
 	virtual void Clear();
 
 	/// インタフェースの実装
-	//void Init();	
-	HIVirtualDeviceIf* RentVirtualDevice(const IfInfo* ii, const char* name=NULL, int portNo = -1);
-	//HIVirtualDeviceIf* RentVirtualDeviceNo(const char* type,int No=0 ,const char* name=NULL);
+	HIVirtualDeviceIf* RentVirtualDevice(const IfInfo* ii, const char* name=NULL, int portNum = -1);
+	HIVirtualDeviceIf* RentVirtualDevice(const char* type, const char* name=NULL, int portNum = -1);
 	bool ReturnVirtualDevice(HIVirtualDeviceIf* dev);
 	
 	void			RegisterRealDevice(HIRealDeviceIf* dev);	
@@ -60,8 +58,6 @@ public:
 	HIRealDeviceIf* AddRealDevice(const IfInfo* keyInfo, const void* desc=NULL);
 
 	static HISdkIf* SPR_CDECL CreateSdk();
-	//static void SPR_CDECL RegisterSdk();
-	//void Print(std::ostream& o) const;
 };
 
 }

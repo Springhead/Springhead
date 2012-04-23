@@ -40,8 +40,6 @@ public:
 	DRUsb20Sh4(const DRUsb20Sh4Desc& d = DRUsb20Sh4Desc());
 	
 	virtual bool Init();
-	///	virtual device の登録
-	//virtual void Register(HISdkIf* sdkIf);	
 
 	float	AdVoltage(int ch){ return adIn[ch] * adVoltPerDigit; }
 	int		AdDigit(int ch){ return adIn[ch]; }
@@ -53,6 +51,9 @@ public:
 
 
 protected:
+	//	名前のベース部分
+	virtual const char* BaseName() const {return "Cyverse USB2.0 Sh4";}
+
 	virtual unsigned	GetVidPid(){ return 0x0CEC0205; }
 	virtual void UsbUpdate();
 	///	512byteの送信

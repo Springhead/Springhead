@@ -28,22 +28,18 @@ struct HISdkDesc{
 struct HISdkIf: public NameManagerIf{
 	SPR_IFDEF(HISdk);
 
-	///	SDKの初期化
-	//void Init();
-	
 	/** @brief	仮想デバイスを借りてくる	Rent virtual device from device pool
-		@param	type	デバイスの種類
-		@param	name	デバイスの名前
-		@param	portNo	ポート番号
+		@param	type	仮想デバイスの種類
+		@param	name	実デバイスの名前
+		@param	portNum	実デバイス内の何個目の仮想デバイスを使用するか指定
 
-		種類，名前およびポート番号がの合致する未使用のデバイスを探し，
-		最初に見つかったデバイスを使用状態にしてから返す．
-		nameがNULLの場合は名前は任意．
-		portNoが-1の場合はポート番号は任意．
-		該当するデバイスが見つからない場合はNULLが返される．
-	 */
-	HIVirtualDeviceIf* RentVirtualDevice(const IfInfo* ii, const char* name=NULL, int portNo = -1);
-	//HIVirtualDeviceIf* RentVirtualDeviceNo(const char* type, int No, const char* name=NULL );
+		仮想デバイスの種類，実デバイス名が合致するデバイスを探す。
+		デバイスが見つかり、未使用の場合は、使用状態にして返す。
+		デバイスが見つからないか、使用中の場合はNULLを返す。
+		nameがNULLの場合実デバイス名は任意。
+		portNumが-1の時は最初の空いているデバイス。	*/
+	HIVirtualDeviceIf* RentVirtualDevice(const IfInfo* ii, const char* rname=NULL, int portNum = -1);
+	HIVirtualDeviceIf* RentVirtualDevice(const char* itype, const char* rname=NULL, int portNum = -1);
 	
 	/** @brief	仮想デバイスを返却する	Return virtual device to device pool
 		デバイスを未使用状態にする
@@ -60,7 +56,6 @@ struct HISdkIf: public NameManagerIf{
 		@param win		関連づけるウィンドウ
 		@param desc
 	 */
-	//bool AddRealKeyMouse(const IfInfo* keyInfo, void* win, const void* desc=NULL);
 
 	/**	@brief 実デバイスを取得	Get real device.
 	 */

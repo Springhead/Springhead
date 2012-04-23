@@ -29,13 +29,13 @@ void PHHapticPointer::UpdateInterface(float dt){
 	if(bDebugControl) return;
 	// HumanInterface‚©‚çó‘Ô‚ðŽæ“¾
 	double s = GetPosScale();
-	HIHapticIf* hif = DCAST(HIHapticIf, humanInterface);
-	hif->Update(dt);
-	hiSolid.SetVelocity((Vec3d)hif->GetVelocity() * s);
-	hiSolid.SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
+//	HIHapticIf* hif = DCAST(HIHapticIf, humanInterface);
+//	hif->Update(dt);
+//	hiSolid.SetVelocity((Vec3d)hif->GetVelocity() * s);
+//	hiSolid.SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
 	Posed pose;
-	pose.Pos() = (Vec3d)hif->GetPosition() * s;
-	pose.Ori() =    hif->GetOrientation();
+//	pose.Pos() = (Vec3d)hif->GetPosition() * s;
+//	pose.Ori() =    hif->GetOrientation();
 	hiSolid.SetPose(GetDefaultPose() * pose);
 	
 	if(!bDirectControl) return;
@@ -65,10 +65,10 @@ void PHHapticPointer::AddHapticForce(SpatialVector f){
 }
 
 void PHHapticPointer::DisplayHapticForce(){
-	HIHapticIf* hif = DCAST(HIHapticIf, humanInterface);
-	if(bForce)
-		 hif->SetForce(hapticForce.v(), hapticForce.w());
-	else hif->SetForce(Vec3f(), Vec3f());
+//	HIHapticIf* hif = DCAST(HIHapticIf, humanInterface);
+//	if(bForce)
+//		 hif->SetForce(hapticForce.v(), hapticForce.w());
+//	else hif->SetForce(Vec3f(), Vec3f());
 	//CSVOUT << hapticForce.v().x << std::endl;
 	hapticForce.clear(0.0);
 }

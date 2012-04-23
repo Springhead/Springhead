@@ -21,7 +21,7 @@ BoxStack::BoxStack(){
 }
 
 void BoxStack::Init(int argc, char* argv[]){
-	FWAppGLUT::Init(argc, argv);
+	FWApp::Init(argc, argv);
 
 	GetSdk()->Clear();															// SDK�̍쐬
 	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Scene�̍쐬
@@ -36,7 +36,7 @@ void BoxStack::Init(int argc, char* argv[]){
 	FWWinDesc windowDesc;
 	windowDesc.title = "FWAppBoxStack";
 	window = CreateWin(windowDesc);
-	window->scene = GetSdk()->GetScene();
+	window->SetScene(GetSdk()->GetScene());
 
 	InitCameraView();
 }
@@ -56,7 +56,7 @@ void BoxStack::Reset(){
 	InitCameraView();
 }
 void BoxStack::InitCameraView(){
-	cameraInfo.view[0][0] = 0.9996;
+/*	cameraInfo.view[0][0] = 0.9996;
 	cameraInfo.view[0][1] = 0.0107463;
 	cameraInfo.view[0][2] = -0.0261432;
 	cameraInfo.view[0][3] = -0.389004;
@@ -71,7 +71,7 @@ void BoxStack::InitCameraView(){
 	cameraInfo.view[3][0] = 0;
 	cameraInfo.view[3][1] = 0;
 	cameraInfo.view[3][2] = 0;
-	cameraInfo.view[3][3] = 1;
+	cameraInfo.view[3][3] = 1;	*/
 }
 
 void BoxStack::DesignObject(){

@@ -13,14 +13,12 @@
 #define SPR_HUMANINTERFACE_H
 #include <HumanInterface/SprHISdk.h>
 #include <HumanInterface/SprHIBase.h>
-#include <HumanInterface/SprHIMouse6D.h>
 #include <HumanInterface/SprHISpidar.h>
 #include <HumanInterface/SprHINovint.h>
 #include <HumanInterface/SprHIDevice.h>
 #include <HumanInterface/SprHIKeyMouse.h>
 #include <HumanInterface/SprHIJoyStick.h>
 #include <HumanInterface/SprHITrackball.h>
-#include <HumanInterface/SprHIDragger.h>
 #include <HumanInterface/SprHIDRUsb.h>
 #include <HumanInterface/SprHISpaceNavigator.h>
 #include <HumanInterface/SprHIXbox360Controller.h>

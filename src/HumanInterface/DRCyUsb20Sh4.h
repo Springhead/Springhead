@@ -23,6 +23,8 @@ public:
 	~DRCyUsb20Sh4();
 	
 protected:
+	//	名前のベース部分
+	virtual const char* BaseName() const {return "Cyverse USB2.0 Sh4 on CyUSB";}
 	///	
 	virtual void*		UsbOpen(int id);
 	virtual bool		UsbClose(void*& h);

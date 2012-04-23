@@ -15,9 +15,7 @@
 #include <HumanInterface/HISpidar.h>
 #include <HumanInterface/HINovintFalcon.h>
 #include <HumanInterface/HISpaceNavigator.h>
-#include <HumanInterface/HIMouse6D.h>
 #include <HumanInterface/HITrackball.h>
-#include <HumanInterface/HIDragger.h>
 #include <HumanInterface/HIXbox360Controller.h>
 #ifdef USE_HDRSTOP
  #pragma hdrstop
@@ -29,12 +27,15 @@ HISdkIf* SPR_CDECL HISdkIf::CreateSdk(){
 	HISdk* rv = DBG_NEW HISdk;
 	return rv->Cast();
 }
+
+extern void SPR_CDECL HIRegisterTypeDescs();
 void SPR_CDECL HISdkIf::RegisterSdk(){
 	static bool bFirst = true;
 	if (!bFirst) return;
 	bFirst=false;
-
 	Sdk::RegisterFactory(DBG_NEW HISdkFactory());
+	HIRegisterTypeDescs();
+
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRKeyMouseWin32));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRKeyMouseGLUT));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(DRUsb20Simple));
@@ -43,12 +44,11 @@ void SPR_CDECL HISdkIf::RegisterSdk(){
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidar4));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidar4D));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpidarG));
-	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIMouse6D));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HINovintFalcon));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpaceNavigator));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HITrackball));
-	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIDragger));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIXbox360Controller));
+
 }
 
 HISdk::HISdk(const HISdkDesc& desc){
@@ -112,28 +112,21 @@ void HISdk::Clear(){
 	hiPool.clear();
 }
 
-HIVirtualDeviceIf* HISdk::RentVirtualDevice(const IfInfo* ii, const char* name, int portNo){
-	// 既存の仮想デバイスプールを探す
-	//  初期化時に仮想デバイスを登録するデバイスはこちらになる
+HIVirtualDeviceIf* HISdk::RentVirtualDevice(const IfInfo* ii, const char* name, int port){
 	HIVirtualDeviceIf* dev;
-	//dev = dvPool.Rent(type, name, portNo);
-	//if(dev)
-	//	return dev->Cast();
-	// なければ実デバイスに問い合わせて動的に作成
-	//  マウスやジョイスティックなど，ウィンドウ生成に合わせて仮想デバイスが作成されるものはこちら
 	for(DRPool::iterator it = drPool.begin(); it != drPool.end(); it++){
-		dev = (*it)->Rent(ii, name, portNo);
+		dev = (*it)->Rent(ii, name, port);
 		if(dev)
 			return dev->Cast();
 	}
 	return 0;
 }
-/*HIVirtualDeviceIf* HISdk::RentVirtualDeviceNo(const char* type, int No, const char* name){
-	return dvPool.RentNo(type, No)->Cast();
-}*/
+HIVirtualDeviceIf* HISdk::RentVirtualDevice(const char* type, const char* name, int port){
+	IfInfo* info = IfInfo::Find(type);
+	return RentVirtualDevice(info, name, port);
+}
 bool HISdk::ReturnVirtualDevice(HIVirtualDeviceIf* dev){
 	return dev->GetRealDevice()->Return(dev);
-//	return dvPool.Return(dev->Cast());
 }
 
 HIRealDeviceIf* HISdk::AddRealDevice(const IfInfo* keyInfo, const void* desc){
@@ -162,22 +155,5 @@ HIRealDeviceIf*	HISdk::FindRealDevice(const IfInfo* ii){
 	}
 	return NULL;
 }
-
-//void HISdk::RegisterRealDevice(HIRealDeviceIf* dev){
-//	drPool.Register(dev->Cast());
-//}
-//void HISdk::RegisterVirtualDevice(HIVirtualDeviceIf* dev){
-//	dvPool.Register(dev->Cast());
-//}
-/*void HISdk::Print(std::ostream& o) const{
-	int w = o.width();
-	o.width(0);
-	o << UTPadding(w) << "<HISdk>" << std::endl;
-	o.width(w+2);
-	//o << dvPool;
-	o << drPool;
-	o << UTPadding(w) << "</HISdk>" << std::endl;
-	o.width(w);
-}*/
 
 }
