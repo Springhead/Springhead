@@ -22,7 +22,17 @@ LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 using namespace Spr;
 UTRef<HISdkIf> sdk;
 UTRef<HITrackballIf> trackball;
-void _cdecl Disp(){}
+void _cdecl Disp(){
+	glClear(GL_COLOR_BUFFER_BIT);
+	glColor3f(1,1,1);
+	glRasterPos2f(-0.95, 0.3);
+	char* p = "Drag this area to change the pose.";
+	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
+	glRasterPos2f(-0.95, -0.3);
+	p = "To quit, press 'Q'.";
+	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
+	glFlush();
+}
 
 
 //	ÉÅÉCÉìÇÃèàóù
@@ -61,6 +71,7 @@ void _cdecl Idle(){
 
 int __cdecl main(int argc, char* argv[]){
 	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
 	glutCreateWindow("KeyMouse Test");
 	glutIdleFunc(Idle);
 	glutDisplayFunc(Disp);
