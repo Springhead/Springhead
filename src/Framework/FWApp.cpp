@@ -136,15 +136,15 @@ void FWApp::AssignScene(FWWinIf* win){
 FWWinIf* FWApp::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 	FWWinIf* win = FWGraphicsAdaptee::instance->CreateWin(desc, parent);
 
-	// 自身をキーボード・マウスハンドラに登録
-	win->GetKeyMouse()->AddHandler(this);
+	// 自身をキーボード・マウスコールバックに登録
+	win->GetKeyMouse()->AddCallback(this);
 
 	HISdkIf* hiSdk = GetSdk()->GetHISdk();
 	// トラックボールとドラッガーを作成
 	if(desc.useKeyMouse && desc.useTrackball)
 		win->SetTrackball(hiSdk->CreateHumanInterface(HITrackballIf::GetIfInfoStatic())->Cast());
-	if(desc.useKeyMouse && desc.useDragger)
-		win->SetDragger(hiSdk->CreateHumanInterface(HIDraggerIf::GetIfInfoStatic())->Cast());
+	//if(desc.useKeyMouse && desc.useDragger)
+	//	win->SetDragger(hiSdk->CreateHumanInterface(HIDraggerIf::GetIfInfoStatic())->Cast());
 
 	wins.push_back(win);
 

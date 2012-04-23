@@ -17,7 +17,7 @@ struct GRRenderIf;
 struct DVKeyMouseIf;
 struct DVJoyStickIf;
 struct HITrackballIf;
-struct HIDraggerIf;
+//struct HIDraggerIf;
 struct FWSceneIf;
 struct FWPanelIf;
 struct FWStaticTextIf;
@@ -385,8 +385,8 @@ struct FWWinIf : FWWinBaseIf{
 	HITrackballIf*	GetTrackball();
 	void			SetTrackball(HITrackballIf* dv);
 	/// ドラッガー
-	HIDraggerIf*	GetDragger();
-	void			SetDragger(HIDraggerIf* dv);
+	//HIDraggerIf*	GetDragger();
+	//void			SetDragger(HIDraggerIf* dv);
 
 	/// 描画モード設定
 	void	SetDebugMode(bool ph_or_gr);
@@ -419,7 +419,7 @@ struct FWWinDesc : FWWinBaseDesc{
 	bool		useJoyStick;	///<	ジョイスティックデバイスを使用するか
 	int			joyStickPollInterval;
 	bool		useTrackball;	///<	トラックボールインタフェースを使用するか
-	bool		useDragger;		///<	ドラッガーインタフェースを使用するか
+	//bool		useDragger;		///<	ドラッガーインタフェースを使用するか
 
 	FWWinDesc(){
 		debugMode		= true;
@@ -428,7 +428,7 @@ struct FWWinDesc : FWWinBaseDesc{
 		useJoyStick		= false;
 		joyStickPollInterval = 10;
 		useTrackball	= true;
-		useDragger		= true;
+		//useDragger		= true;
 	}
 };
 

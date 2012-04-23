@@ -5,7 +5,6 @@
 #include <Framework/FrameworkDecl.hpp>
 #include <Foundation/Object.h>
 #include <HumanInterface/SprHITrackball.h>
-#include <HumanInterface/SprHIDragger.h>
 #include <vector>
 
 namespace Spr{;
@@ -33,7 +32,7 @@ public:
 	
 };
 
-class FWWin : public FWWinBase, public HITrackballCallback, public HIDraggerCallback{
+class FWWin : public FWWinBase, public HITrackballCallback/*, public HIDraggerCallback*/{
 public:
 	SPR_OBJECTDEF(FWWin);
 	SPR_DECLMEMBEROF_FWWinDesc;
@@ -44,7 +43,7 @@ public:
 	DVKeyMouseIf*		keyMouse;		///< キーボード・マウス
 	DVJoyStickIf*		joyStick;		///< ジョイスティック
 	HITrackballIf*		trackball;		///< トラックボール
-	HIDraggerIf*		dragger;		///< ドラッガー
+	//HIDraggerIf*		dragger;		///< ドラッガー
 
 	std::vector<FWDialogIf*>	childDlg;
 
@@ -77,12 +76,12 @@ public:
 		trackball->SetKeyMouse(keyMouse);
 		trackball->SetCallback(this);
 	}
-	HIDraggerIf*	GetDragger(){ return dragger; }
+	/*HIDraggerIf*	GetDragger(){ return dragger; }
 	void			SetDragger(HIDraggerIf* dv){
 		dragger = dv;
 		dragger->SetKeyMouse(keyMouse);
 		dragger->SetCallback(this);
-	}
+	}*/
 
 	// 描画モードの設定と取得
 	void	SetDebugMode(bool ph_or_gr){ debugMode = ph_or_gr; }
@@ -95,7 +94,7 @@ public:
 	size_t	NChildObject() const;
 
 	// HITrackballCallbackの関数
-	virtual void OnUpdatePose(HITrackballIf*, bool dir);
+	virtual void OnUpdatePose(HITrackballIf*);
 
 	FWWin(){
 		render		= 0;
@@ -103,7 +102,7 @@ public:
 		keyMouse	= 0;
 		joyStick	= 0;
 		trackball	= 0;
-		dragger		= 0;
+		//dragger		= 0;
 	}
 	virtual ~FWWin(){}
 };

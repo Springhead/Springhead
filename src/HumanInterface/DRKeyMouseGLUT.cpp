@@ -122,7 +122,7 @@ void DRKeyMouseGLUT::OnKey(unsigned char ch, int x, int y){
 	for(int i = 0; i < (int)NChildObject(); i++){
 		DVKeyMouse* dv = GetChildObject(i)->Cast();
 		if(dv && dv->GetPortNo() == wid)
-			dv->OnKey(true, key, x, y);
+			dv->OnKey(DVKeySt::PRESSED, key, x, y);
 	}
 }
 void DRKeyMouseGLUT::OnSpecialKey(int ch, int x, int y){
@@ -131,7 +131,7 @@ void DRKeyMouseGLUT::OnSpecialKey(int ch, int x, int y){
 	for(int i = 0; i < (int)NChildObject(); i++){
 		DVKeyMouse* dv = GetChildObject(i)->Cast();
 		if(dv && dv->GetPortNo() == wid)
-			dv->OnKey(true, key, x, y);
+			dv->OnKey(DVKeySt::PRESSED, key, x, y);
 	}
 }
 

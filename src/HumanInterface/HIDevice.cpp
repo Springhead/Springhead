@@ -87,29 +87,29 @@ HIVirtualDevice::HIVirtualDevice(HIRealDevice* dev, int ch){
 //-------------------------------------------------------------------------------------------------
 
 void DVKeyMouse::OnMouse(int button, int state, int x, int y){
-	for(Handlers::iterator it = handlers.begin(); it != handlers.end(); it++)
+	for(Callbacks::iterator it = callbacks.begin(); it != callbacks.end(); it++)
 		(*it)->OnMouse(button, state, x, y);
 }
 
 void DVKeyMouse::OnDoubleClick(int button, int x, int y){
-	for(Handlers::iterator it = handlers.begin(); it != handlers.end(); it++)
+	for(Callbacks::iterator it = callbacks.begin(); it != callbacks.end(); it++)
 		(*it)->OnDoubleClick(button, x, y);
 }
 
 void DVKeyMouse::OnMouseMove(int button, int x, int y, int zdelta){
-	for(Handlers::iterator it = handlers.begin(); it != handlers.end(); it++)
+	for(Callbacks::iterator it = callbacks.begin(); it != callbacks.end(); it++)
 		(*it)->OnMouseMove(button, x, y, zdelta);
 }
 
 void DVKeyMouse::OnKey(int state, int key, int x, int y){
-	for(Handlers::iterator it = handlers.begin(); it != handlers.end(); it++)
+	for(Callbacks::iterator it = callbacks.begin(); it != callbacks.end(); it++)
 		(*it)->OnKey(state, key, x, y);
 }
 
 //-------------------------------------------------------------------------------------------------
 
 void DVJoyStick::OnUpdate(int buttonMask, int x, int y, int z){
-	for(Handlers::iterator it = handlers.begin(); it != handlers.end(); it++)
+	for(Callbacks::iterator it = callbacks.begin(); it != callbacks.end(); it++)
 		(*it)->OnUpdate(buttonMask, x, y, z);
 }
 

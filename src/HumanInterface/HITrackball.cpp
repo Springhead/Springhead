@@ -37,9 +37,9 @@ bool HITrackball::Init(const void* desc){
 }
 
 void HITrackball::SetKeyMouse(DVKeyMouseIf* dv){
-	if (keyMouse) keyMouse->RemoveHandler(this);
+	if (keyMouse) keyMouse->RemoveCallback(this);
 	keyMouse = dv;
-	keyMouse->AddHandler(this);
+	keyMouse->AddCallback(this);
 }
 
 void HITrackball::UpdateView(){
@@ -54,7 +54,7 @@ void HITrackball::UpdateView(){
 		ori = Quaternionf::Rot(longitude, 'y') * Quaternionf::Rot(-latitude, 'x');
 	}
 	if(callback)
-		callback->OnUpdatePose(Cast(), true);
+		callback->OnUpdatePose(Cast());
 	ready = true;
 }
 
