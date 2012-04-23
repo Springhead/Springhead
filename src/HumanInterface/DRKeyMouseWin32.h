@@ -34,7 +34,6 @@ public:
 	///	初期化
 	virtual bool Init();
 	///	仮想デバイスの登録
-	//virtual void Register(HISdkIf* intf);
 	virtual HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);
 
 	/// windows仮想キーコードからSpringhead共通キーコードへの変換
@@ -45,6 +44,14 @@ public:
 
 	///	Win32メッセージを見て，マウスボタンのイベント処理をする．
 	bool PreviewMessage(void* m);
+	void UpdateMousePos(int x, int y);
+	
+	struct MousePos{
+		int x, y;
+		unsigned time;
+	};
+	enum { NHISTORY = 10 };
+	MousePos history[NHISTORY];
 };
 
 }	//	namespace Spr

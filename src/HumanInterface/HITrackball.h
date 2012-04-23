@@ -70,7 +70,7 @@ public:
 	
 	// HIBase‚ÌŠÖ”
 	virtual bool Init(const void* desc);
-	virtual void Update(float dt);
+
 
 	// HIPose‚ÌŠÖ”
 	virtual Vec3f		GetPosition(){ return pos; }

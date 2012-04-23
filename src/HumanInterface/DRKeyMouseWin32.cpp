@@ -70,30 +70,6 @@ int	DRKeyMouseWin32::ConvertKeyCode(int key, bool spr_to_win32){
 	return key;
 }	
 
-int DRKeyMouseWin32::GetKeyState(int key){
-	int rv = 0;
-	short got = ::GetKeyState(ConvertKeyCode(key, true));
-	if (got & 0x1)
-		rv |= DVKeySt::TOGGLE_ON;
-	if (got & 0x8000)
-		rv |= DVKeySt::PRESSED;
-	return rv;
-}
-
-void DRKeyMouseWin32::GetMousePosition(int& x, int& y, int& time, int count){
-	MOUSEMOVEPOINT points[64];
-	int nPoint = GetMouseMovePointsEx(sizeof(MOUSEMOVEPOINT), NULL, points, 64, GMMP_USE_HIGH_RESOLUTION_POINTS);
-	if (count < nPoint){
-		time = points[count].time;
-		x = points[count].x;
-		y = points[count].y;
-	}else{
-		time = 0;
-		x = 0;
-		y = 0;
-	}
-};
-
 DRKeyMouseWin32::DRKeyMouseWin32(const DRKeyMouseWin32Desc& desc){
 }
 
@@ -101,11 +77,6 @@ bool DRKeyMouseWin32::Init(){
 	SetName("KeyMouseWin32");
 	return true;
 }
-
-/*void DRKeyMouseWin32::Register(HISdkIf* intf){
-	HISdk* sdk = intf->Cast();
-	sdk->RegisterVirtualDevice((new DRKeyMouseWin32::DV(this))->Cast());
-}*/
 
 HIVirtualDeviceIf* DRKeyMouseWin32::Rent(const IfInfo* ii, const char* n, int portNo){
 	HIVirtualDeviceIf* dv = HIRealDevice::Rent(ii, n, portNo);
@@ -131,6 +102,31 @@ int ConvertKeyState(unsigned fwKeys){
 	return button;
 }
 
+//	ƒL[‚ÌŽæ“¾
+int DRKeyMouseWin32::GetKeyState(int key){
+	int rv = 0;
+	short got = ::GetKeyState(ConvertKeyCode(key, true));
+	if (got & 0x1)
+		rv |= DVKeySt::TOGGLE_ON;
+	if (got & 0x8000)
+		rv |= DVKeySt::PRESSED;
+	return rv;
+}
+void DRKeyMouseWin32::GetMousePosition(int& xo, int& yo, int& timeo, int count){
+	if (count > NHISTORY-1) count = NHISTORY-1;
+	xo = history[count].x;
+	yo = history[count].y;
+	timeo = history[count].time;
+};
+void DRKeyMouseWin32::UpdateMousePos(int x, int y){
+	for(int i=NHISTORY-1; i>0; --i){
+		history[i] = history[i-1];
+	}
+	history[0].x = x;
+	history[0].y = y;
+	history[0].time = GetTickCount();
+}
+
 bool DRKeyMouseWin32::PreviewMessage(void* m){
 	MSG* msg = (MSG*)m;
 
@@ -148,13 +144,13 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 		if (btnState == DVButtonSt::UP)
 			ReleaseCapture();
 
-		int button = ConvertKeyState(msg->wParam);  // key flags		
+		int button = ConvertKeyState(msg->wParam);  // key flags
 		int x = (short)LOWORD(msg->lParam);  // horizontal position of cursor 
 		int y = (short)HIWORD(msg->lParam);  // vertical position of cursor 
+		UpdateMousePos(x,y);
 		if (btnState == DVButtonSt::DOWN)
 			SetCapture(msg->hwnd);
-		//return dvKeyMouse->OnKey(bKeyDown, vk, keyState, x, y);
-		//dvKeyMouse->OnMouse(button, btnState, x, y);
+
 		for(int i = 0; i < (int)NChildObject(); i++){
 			DVKeyMouse* dv = GetChildObject(i)->Cast();
 			if(dv && dv->GetPortNo() == (int)msg->hwnd)
@@ -167,7 +163,7 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 		int button = ConvertKeyState(msg->wParam);  // key flags		
 		int x = (short)LOWORD(msg->lParam);	// horizontal position of cursor 
 		int y = (short)HIWORD(msg->lParam);	// vertical position of cursor 
-		//dvKeyMouse->OnMouseMove(button, x, y, 0);
+		UpdateMousePos(x, y);
 		for(int i = 0; i < (int)NChildObject(); i++){
 			DVKeyMouse* dv = GetChildObject(i)->Cast();
 			if(dv && dv->GetPortNo() == (int)msg->hwnd)
@@ -181,7 +177,7 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 		int zDelta = (short) HIWORD(msg->wParam);   // wheel rotation
 		int x = (short) LOWORD(msg->lParam);		// horizontal position of pointer
 		int y = (short) HIWORD(msg->lParam);		// vertical position of pointer
-		//dvKeyMouse->OnMouseMove(button, x, y, zDelta);
+		UpdateMousePos(x,y);
 		for(int i = 0; i < (int)NChildObject(); i++){
 			DVKeyMouse* dv = GetChildObject(i)->Cast();
 			if(dv && dv->GetPortNo() == (int)msg->hwnd)
@@ -195,7 +191,7 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 		int button = ConvertKeyState(msg->wParam);        // key flags 
 		int x = (short)LOWORD(msg->lParam);  // horizontal position of cursor 
 		int y = (short)HIWORD(msg->lParam);  // vertical position of cursor 
-		//dvKeyMouse->OnDoubleClick(button, x, y);
+		UpdateMousePos(x,y);
 		for(int i = 0; i < (int)NChildObject(); i++){
 			DVKeyMouse* dv = GetChildObject(i)->Cast();
 			if(dv && dv->GetPortNo() == (int)msg->hwnd)
@@ -209,7 +205,6 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 		int key = ConvertKeyCode((int) msg->wParam, false);
 		POINT pt;
 		GetCursorPos(&pt);
-		//dvKeyMouse->OnKey(keyState, ConvertKeyCode(key, false), pt.x, pt.y);
 		for(int i = 0; i < (int)NChildObject(); i++){
 			DVKeyMouse* dv = GetChildObject(i)->Cast();
 			if(dv && dv->GetPortNo() == (int)msg->hwnd)

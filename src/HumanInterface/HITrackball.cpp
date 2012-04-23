@@ -140,9 +140,6 @@ void HITrackball::SetOrientation(Quaternionf ori){
 	UpdateView();
 }
 
-void HITrackball::Update(float dt){
-}
-
 void HITrackball::Fit(const GRCameraDesc& cam, float radius){
 	float sz = std::min(cam.size.x, cam.size.y);
 	if(sz == 0.0f)
