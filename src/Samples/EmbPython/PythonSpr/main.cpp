@@ -91,6 +91,8 @@ public:
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
 
 		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
+
+		GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(6.5,6,20));
 	}
 
 	virtual void OnStep(){
@@ -120,8 +122,6 @@ void EPLoop(void* arg) {
 	PyRun_InteractiveLoop(stdin,"SpringheadPython Console");
 }
 
-PyObject* SprPy_PassFWSdkIf(FWSdkIf *ob);
-
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // Python <=> Springhead •Ï”Ú‘±—p
 #define ACCESS_SPR_FROM_PY(cls, name, obj)							\
@@ -148,20 +148,17 @@ void EPLoopInit(void* arg) {
 	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator0,	app->spaceNavigator0	);
 	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator1,	app->spaceNavigator1	);
 
-	ostringstream loadfile;
-	loadfile << "__mainfilename__ ='";
 	if (app->argc == 2) {
+		ostringstream loadfile;
+		loadfile << "__mainfilename__ ='";
 		loadfile << app->argv[1];
-	} else {
-		loadfile << "main.py";
+		loadfile << "'";
+		PyRun_SimpleString("import codecs");
+		PyRun_SimpleString(loadfile.str().c_str());
+		PyRun_SimpleString("__mainfile__ = codecs.open(__mainfilename__,'r','utf-8')");
+		PyRun_SimpleString("exec(compile( __mainfile__.read() , __mainfilename__, 'exec'),globals(),locals())");
+		PyRun_SimpleString("__mainfile__.close()");
 	}
-	loadfile << "'";
-
-	PyRun_SimpleString("import codecs");
-	PyRun_SimpleString(loadfile.str().c_str());
-	PyRun_SimpleString("__mainfile__ = codecs.open(__mainfilename__,'r','utf-8')");
-	PyRun_SimpleString("exec(compile( __mainfile__.read() , __mainfilename__, 'exec'),globals(),locals())");
-	PyRun_SimpleString("__mainfile__.close()");
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
