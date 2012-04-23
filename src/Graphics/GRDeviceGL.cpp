@@ -390,9 +390,9 @@ void GRDeviceGL::DrawCylinder(float radius, float height, int slice, bool solid,
 	// 上面・下面
 	if(cap){
 		PushModelMatrix();
-		MultModelMatrix(Affinef::Trn(0.0f, 0.0f, -hhalf));
+		MultModelMatrix(Affinef::Trn(0.0f, 0.0f,  hhalf));
 		DrawDisk(radius, slice, solid);
-		MultModelMatrix(Affinef::Trn(0.0f, 0.0f, height));
+		MultModelMatrix(Affinef::Trn(0.0f, 0.0f, -height));
 		MultModelMatrix(Affinef::Rot((float)Rad(180.0), 'x'));
 		DrawDisk(radius, slice, solid);
 		PopModelMatrix();
@@ -405,7 +405,7 @@ void GRDeviceGL::DrawDisk(float radius, int slice, bool solid){
 		glBegin(GL_TRIANGLE_FAN);
 		glNormal3f(0.0f, 0.0f, 1.0f);
 		glVertex3f(0.0f, 0.0f, 0.0f);
-		for(int i = 0; i <= slice; i++){
+		for(int i = slice; i >= 0; i--){
 			x = GetSin(i, slice);
 			y = GetCos(i, slice);
 			glVertex3f(radius * x, radius * y, 0.0f);
@@ -414,7 +414,7 @@ void GRDeviceGL::DrawDisk(float radius, int slice, bool solid){
 	}
 	else{
 		glBegin(GL_LINES);
-		for(int i = 0; i < slice; i++){
+		for(int i = slice; i >= 0; i--){
 			x = GetSin(i, slice);
 			y = GetCos(i, slice);
 			glVertex3f(0.0f, 0.0f, 0.0f);
@@ -562,7 +562,7 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str){
 
 /// 3次元テキストの描画（GLオンリー版でfontは指定なし）.. Vec3f pos
 void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
-	bool lighting = glIsEnabled(GL_LIGHTING);
+	bool lighting = !!glIsEnabled(GL_LIGHTING);
 	glDisable(GL_LIGHTING);
 	if(fontBase != -1){
 		glBindTexture(GL_TEXTURE_3D,0);								//直前に使用した3Dテクスチャを文字色に反映させない.
