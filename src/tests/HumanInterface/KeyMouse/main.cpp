@@ -6,23 +6,20 @@ using namespace Spr;
 
 
 int __cdecl main(){
+	HISdkIf::RegisterSdk();
 	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
 	sdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-
-	sdk->Init();
 	sdk->Print(DSTR);
 
-	DRKeyMouseWin32If* wif = sdk->FindRealDevice("KeyMouseWin32")->Cast();
-	wif->Update();
-	UTRef<HIMouse6DIf> mouse6D = sdk->CreateHumanInterface("HIMouse6D")->Cast();
-	mouse6D->Init(NULL);
+	UTRef<HITrackballIf> trackball = sdk->CreateHumanInterface("HITrackball")->Cast();
+	trackball->Init(NULL);
 	for(int i=0; i<1000; ++i){
-		if (mouse6D->GetKeyMouse()->GetKeyState('Q') & DVKeyMouseIf::PRESS) return 0;
+		if (trackball->GetKeyMouse()->GetKeyState('Q') & DVKeySt::PRESSED) return 0;
 		for(int i=0; i<200; ++i){
-			if (mouse6D->GetKeyMouse()->GetKeyState(i) & DVKeyMouseIf::PRESS){
+			if (trackball->GetKeyMouse()->GetKeyState(i) & DVKeySt::PRESSED){
 				std::cout << i << " '"<< (char)i << "' " << std::endl;
 			}
 		}
-		std::cout << "pose:" << mouse6D->GetPose() << std::endl;
+		std::cout << "pose:" << trackball->GetPose() << std::endl;
 	}
 }

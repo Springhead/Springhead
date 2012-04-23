@@ -32,10 +32,8 @@ public:
 	/// 提供する仮想デバイスの配列
 	std::vector< UTRef<HIVirtualDevice> >	dvPool;
 public:
-	///	初期化と仮想デバイスの登録
+	///	初期化と仮想デバイスの登録。SDKに登録する際に呼ばれる。
 	virtual bool Init(){ return false; }
-	///	仮想デバイスの登録
-	//virtual void Register(HISdkIf* sdk){}
 
 	/// 仮想デバイスの作成
 	virtual HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);

@@ -2,6 +2,6 @@
 
 int _cdecl main(int argc, char* argv[]){
 	bstack.Init(argc, argv);
-	bstack.Start();
+	bstack.StartMainLoop();
 	return 0;
 }

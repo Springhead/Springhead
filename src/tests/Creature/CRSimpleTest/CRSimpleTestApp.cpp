@@ -65,7 +65,7 @@ void CRSimpleTestApp::CreateScene(){
 
 
 void CRSimpleTestApp::CreateRender(int window){
-	grRender = grSdk->CreateDebugRender();
+	grRender = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 	grDevice->Init();
 	grRender->SetDevice(grDevice);
@@ -115,12 +115,14 @@ void CRSimpleTestApp::Display(){
 			grRender->PushModelMatrix();
 			grRender->MultModelMatrix(af);
 
+#if 0	//	Frameworkを持っていないので、デバッグ用レンダリングができない
 			// Draw Mesh
 			CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 			if (mesh) {
 				Vec3f* vtx_base = mesh->GetVertices();
 				for (size_t i_face=0; i_face<mesh->NFace(); i_face++) {
 					CDFaceIf* face = mesh->GetFace(i_face);
+					FW
 					grRender->DrawFaceSolid(face, vtx_base);
 				}
 			}
@@ -154,6 +156,7 @@ void CRSimpleTestApp::Display(){
 					grRender->DrawDirect(GRRenderBaseIf::QUADS, vtx, 4);
 				}
 			}
+#endif
 			grRender->PopModelMatrix();
 		}
 		grRender->PopModelMatrix();

@@ -54,8 +54,6 @@ public:
 	virtual ~DRTokin3D();
 	///	初期化
 	virtual bool Init();
-	///	登録
-	//virtual void Register(HIVirtualDevicePool& vpool);
 	///	方向行列
 	virtual void GetMatrix(Matrix3f& ori);
 	///	オイラー角の取得

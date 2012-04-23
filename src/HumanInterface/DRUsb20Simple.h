@@ -68,6 +68,7 @@ protected:
 	int		adIn[8];
 	int		pioLevel[16];
 
+
 public:
 	///	コンストラクタ	chは背面のスイッチになる予定
 	DRUsb20Simple(const DRUsb20SimpleDesc& d=DRUsb20SimpleDesc());
@@ -107,6 +108,8 @@ protected:
 	//	デバイスを見つけ、チャンネルを返す。チャンネルが指定された場合、指定したチャンネルのデバイスしか返さない。
 	//	失敗すると-1を返す。
 	int FindDevice(int ch=-1);
+	//	名前のベース部分
+	virtual const char* BaseName() const {return "Cyverse USB2.0 Simple";}
 
 	virtual unsigned	GetVidPid(){ return 0x0CEC0203; }
 	virtual void		UsbReset();

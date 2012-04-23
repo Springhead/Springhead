@@ -27,7 +27,7 @@ namespace Spr{
 
 		GRSdkIf*          grSdk;
 		GRSceneIf*        grScene;
-		GRDebugRenderIf*  grRender;
+		GRRenderIf*		  grRender;
 		GRDeviceGLIf*     grDevice;
 
 		int               stepCount;

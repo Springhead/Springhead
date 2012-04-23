@@ -41,12 +41,12 @@ public:
 	std::vector<int> neighborSolidIDs;
 	PHSolid hiSolid;
 	PHSolidIf* vcSolid;
-	HIBaseIf* humanInterface;
+	//HIBaseIf* humanInterface;
 	PHHapticPointer();
 	PHHapticPointer(const PHHapticPointer& p);
 
 	//API
-	void	SetHumanInterface(HIBaseIf* hi){ humanInterface = hi; }
+//	void	SetHumanInterface(HIBaseIf* hi){ humanInterface = hi; }
 	void	SetHapticRenderMode(HapticRenderMode m){ hapticRenderMode = m; }
 	void	EnableForce(bool b){ bForce = b; }
 	void	EnableFriction(bool b){ bFriction = b; }

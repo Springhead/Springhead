@@ -2,9 +2,9 @@
 #define BOXSTACK_H
 
 #include <Springhead.h>
-#include <Framework/SprFWAppGLUT.h>
+#include <Framework/SprFWApp.h>
 #include <Base/Combination.h>
-#include<Collision/CDDetectorImp.h>
+#include <Collision/CDDetectorImp.h>
 #include <Physics/PHSolid.h>
 
 using namespace Spr;
@@ -13,9 +13,9 @@ using namespace std;
 
 
 
-class BoxStack : public FWAppGLUT, public UTRefCount{
+class BoxStack : public FWApp{
 public:
-	FWWin* window;
+	FWWinIf* window;
 
 	double dt;
 	Vec3d gravity;
