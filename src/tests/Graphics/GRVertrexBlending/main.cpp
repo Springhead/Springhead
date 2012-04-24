@@ -36,7 +36,7 @@ using namespace Spr;
 const int MAX_BLEND_MATRIX = 2;												
 
 UTRef<GRSdkIf> grSdk;
-GRDebugRenderIf* render;
+GRRenderIf* render;
 GRDeviceGLIf* grDevice;
 
 std::vector<GRVertexElement::VFP3fB4f> vtxP3fB4f;							// data
@@ -45,7 +45,7 @@ std::vector<GRVertexElement::VFC4bP3fB4f> vtxC4bP3fB4f;
 
 unsigned int listP3fB4f, listC3fP3fB4f, listC4bP3fB4f;						// display list
 GRHandler shaderP3fB4f, shaderC3fP3fB4f, shaderC4bP3fB4f;					// shader program
-GRShaderFormat::SFBlendLocation locP3fB4f, locC3fP3fB4f, locC4bP3fB4f;		// shader location
+SFBlendLocation locP3fB4f, locC3fP3fB4f, locC4bP3fB4f;		// shader location
 
 std::vector<size_t> faces;													// data indices
 
@@ -277,7 +277,7 @@ int main(int argc, char **argv) {
 	int window = glutCreateWindow("GRVertexBlending");
 
 	grSdk = GRSdkIf::CreateSdk();
-	render = grSdk->CreateDebugRender();
+	render = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 	render->SetDevice(grDevice);
 	grDevice->Init();
@@ -298,8 +298,8 @@ int main(int argc, char **argv) {
 	render->SetVertexFormat(GRVertexElement::vfC3fP3fB4f);
 	render->SetShaderFormat(GRShaderFormat::shC3fP3fB4f);
 	
-	listC3fP3fB4f = render->CreateShaderIndexedList(shaderC3fP3fB4f, &locC3fP3fB4f, 
-												GRRenderIf::QUADS, &*faces.begin(), &*vtxC3fP3fB4f.begin(), faces.size());	
+	//listC3fP3fB4f = render->CreateShaderIndexedList(shaderC3fP3fB4f, &locC3fP3fB4f, 
+	//											GRRenderIf::QUADS, &*faces.begin(), &*vtxC3fP3fB4f.begin(), faces.size());	
 	render->EndList();
 
 
