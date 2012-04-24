@@ -30,12 +30,15 @@ using namespace Spr;
 #define WINSIZE_HEIGHT	360			// ウィンドウサイズ(height)
 #define NUM_SPHERES		100			// sphere数
 
+UTRef<FWSdkIf>	fwSdk;
+FWSceneIf*	fwScene;
+
 UTRef<GRSdkIf> grSdk;
-GRDebugRenderIf* render;
+GRRenderIf*	render;
 GRDeviceGLIf* grDevice;
 
 UTRef<PHSdkIf> phSdk;
-PHSceneIf* scene;
+PHSceneIf* phScene;
 PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soSphere; 
 
@@ -47,9 +50,10 @@ std::vector<PHSolidIf*> soSphere;
  */
 void display(){
 	render->ClearBuffer();
-	render->DrawScene(scene);
+	render->BeginScene();
+	fwScene->DrawPHScene(render);
 	render->EndScene();
-	glutSwapBuffers();
+	render->SwapBuffers();
 }
 
 /**
@@ -90,7 +94,7 @@ void keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void idle(){
-	scene->Step();
+	fwScene->Step();
 	glutPostRedisplay();
 	static int count;
 	count++;
@@ -103,10 +107,13 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	phSdk = PHSdkIf::CreateSdk();					// SDKの作成　
+	fwSdk = FWSdkIf::CreateSdk();
+	phSdk = fwSdk->GetPHSdk();
+
 	PHSceneDesc sd;
 	sd.timeStep = 0.05;
-	scene = phSdk->CreateScene(sd);				// シーンの作成
+	fwScene = fwSdk->CreateScene(sd, GRSceneDesc());
+	phScene = fwScene->GetPHScene();
 	PHSolidDesc desc;
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
@@ -114,12 +121,12 @@ int main(int argc, char* argv[]){
 	// Solidの作成
 	unsigned int sphereCnt;
 	for (sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
-		soSphere.push_back(scene->CreateSolid(desc));		// 剛体をdescに基づいて作成
+		soSphere.push_back(phScene->CreateSolid(desc));		// 剛体をdescに基づいて作成
 	}
 
 	desc.mass = 1e20f;
 	desc.inertia *= 1e20f;
-	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
+	soFloor = phScene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 	soFloor->SetGravity(false);
 
 	//	形状の作成
@@ -140,14 +147,14 @@ int main(int argc, char* argv[]){
 		soSphere[sphereCnt]->AddShape(sphere);
 		soSphere[sphereCnt]->SetFramePosition(Vec3f(0, 15+5*sphereCnt, 0));
 	}
-	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
+	phScene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(WINSIZE_WIDTH, WINSIZE_HEIGHT);
-	int window = glutCreateWindow("GRSimple");
+	int window = glutCreateWindow("GRColorSpheres");
 	grSdk = GRSdkIf::CreateSdk();
-	render = grSdk->CreateDebugRender();
+	render = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 
 	// 初期設定
