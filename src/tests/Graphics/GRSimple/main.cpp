@@ -30,16 +30,19 @@
 using namespace Spr;
 #define ESC				27
 #define EXIT_TIMER		5000
-#define WINSIZE_WIDTH	480
-#define WINSIZE_HEIGHT	360
+#define WINSIZE_WIDTH	800
+#define WINSIZE_HEIGHT	600
 #define NUM_BLOCKS		5
 
+UTRef<FWSdkIf>	fwSdk;
+FWSceneIf*	fwScene;
+
 UTRef<GRSdkIf> grSdk;
-GRDebugRenderIf* render;
+GRRenderIf* render;
 GRDeviceGLIf* grDevice;
 
 UTRef<PHSdkIf> phSdk;
-PHSceneIf* scene;
+PHSceneIf* phScene;
 PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soBlock;
 
@@ -61,10 +64,6 @@ GRMaterialDesc matLine(Vec4f(1.0, 1.0, 1.0, 1.0),
 					100.0);	
 
 
-// カメラの設定
-GRCameraDesc camera2(Vec2f(1, 0), Vec2f(0.0, 0.0), 1.0, 5000.0);
-
-
 /**
  brief     	glutDisplayFuncで指定したコールバック関数
  param		なし
@@ -73,6 +72,7 @@ GRCameraDesc camera2(Vec2f(1, 0), Vec2f(0.0, 0.0), 1.0, 5000.0);
 void display(){
 	//	バッファクリア
 	render->ClearBuffer();
+	render->BeginScene();
 
 	// 視点を再設定する
 	Affinef view;
@@ -88,7 +88,7 @@ void display(){
 	render->SetAlphaMode(render->BF_ONE, render->BF_ZERO);
 
 	render->SetMaterial(matFloor);		// マテリアル設定
-	render->DrawSolid(soFloor);
+	fwScene->DrawSolid(render, soFloor, true);
 
 	//-----------------------------------
 	//		ブロック(soBlock)
@@ -97,7 +97,7 @@ void display(){
 	render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
 	for(unsigned int blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
 		render->SetMaterial(matBlock);
-		render->DrawSolid(soBlock[blockCnt]);
+		fwScene->DrawSolid(render, soBlock[blockCnt], true);
 	}
 
 	render->SetDepthWrite(true);
@@ -125,19 +125,22 @@ void display(){
 	font1.bItalic = true;
 	font1.face   = "ARIAL";
 	std::string str = "X";
-	render->DrawFont(Vec3f(8.0, 1.0, -1.0), str, font1);	
+	render->SetFont(font1);
+	render->DrawFont(Vec3f(8.0, 1.0, -1.0), str);
 	font1.face = "ＭＳ 明朝";
 	font1.color = 0xFFFF00;
 	str = "Y";
-	render->DrawFont(Vec3f(1.0, 7.0, 0.0), str, font1);		
+	render->SetFont(font1);
+	render->DrawFont(Vec3f(1.0, 7.0, 0.0), str);
 	GRFont font2;
 	font2 = font1;
 	font2.color = 0x00FFFF;
 	str = "Z";
-	render->DrawFont(Vec3f(-1.0, 1.0, 9.0), str, font2);	
+	render->SetFont(font2);
+	render->DrawFont(Vec3f(-1.0, 1.0, 9.0), str);
 
 	render->EndScene();
-	glutSwapBuffers();
+	render->SwapBuffers();
 }
 
 /**
@@ -196,7 +199,7 @@ void keyboard(unsigned char key, int x, int y){
  return 	なし
  */
 void idle(){
-	scene->Step();
+	fwScene->Step();
 	glutPostRedisplay();
 	static int count;
 	count++;
@@ -209,22 +212,25 @@ void idle(){
  return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
-	phSdk = PHSdkIf::CreateSdk();					// SDKの作成　
+	fwSdk = FWSdkIf::CreateSdk();
+	phSdk = fwSdk->GetPHSdk();
 	PHSceneDesc sd;
 	sd.timeStep = 0.01;
-	scene = phSdk->CreateScene(sd);				// シーンの作成
+
+	fwScene = fwSdk->CreateScene(sd, GRSceneDesc());
+	phScene = fwScene->GetPHScene();
 	PHSolidDesc desc;
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
 
 	unsigned int blockCnt;
 	for (blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
-		soBlock.push_back(scene->CreateSolid(desc));		// 剛体をdescに基づいて作成
+		soBlock.push_back(phScene->CreateSolid(desc));		// 剛体をdescに基づいて作成
 	}
 
 	desc.mass = 1e20f;
 	desc.inertia *= 1e20f;
-	soFloor = scene->CreateSolid(desc);		// 剛体をdescに基づいて作成
+	soFloor = phScene->CreateSolid(desc);		// 剛体をdescに基づいて作成
 	soFloor->SetGravity(false);
 	
 	//	形状の作成
@@ -251,20 +257,20 @@ int main(int argc, char* argv[]){
 	}
 	
 	soFloor->AddShape(meshFloor);
-	soFloor->SetFramePosition(Vec3f(0,-3,0));
+	soFloor->SetFramePosition(Vec3f(0,-30,0));
 	for (blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
 		soBlock[blockCnt]->AddShape(meshBlock);
 		soBlock[blockCnt]->SetFramePosition(Vec3f(3, 15*(blockCnt+1), 3));
 	}
 
-	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
+	phScene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(WINSIZE_WIDTH, WINSIZE_HEIGHT);
 	int window = glutCreateWindow("GRSimple");
 	grSdk = GRSdkIf::CreateSdk();
-	render = grSdk->CreateDebugRender();
+	render = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 
 	// 初期設定
@@ -276,8 +282,7 @@ int main(int argc, char* argv[]){
 	glutIdleFunc(idle);
 	
 	render->SetDevice(grDevice);	
-	render->SetCamera(camera2);	
-
+	
 	setLight();
 
 	glutMainLoop();
