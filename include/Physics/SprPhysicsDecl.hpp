@@ -15,6 +15,7 @@
 	double GetShrinkRate(){	return	base::GetShrinkRate();}	\
 	void SetShrinkRateCorrection(double data){	base::SetShrinkRateCorrection(data);}	\
 	double GetShrinkRateCorrection(){	return	base::GetShrinkRateCorrection();}	\
+	void EnableContactDetection(bool enable){	base::EnableContactDetection(enable);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHGravityEngineIf(base)	\
 
