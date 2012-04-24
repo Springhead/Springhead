@@ -115,7 +115,7 @@ void display(){
 		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		if (mesh){
 			Vec3f* base = mesh->GetVertices();
-			for(size_t f=0; f<mesh->NFace();++f){
+			for(int f=0; f<mesh->NFace();++f){
 				CDFaceIf* face = mesh->GetFace(f);
 				
 				glBegin(GL_POLYGON);
@@ -146,7 +146,7 @@ void display(){
 		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		if (mesh){
 			Vec3f* base = mesh->GetVertices();
-			for(size_t f=0; f<mesh->NFace();++f){
+			for(int f=0; f<mesh->NFace();++f){
 				CDFaceIf* face = mesh->GetFace(f);
 				
 				glBegin(GL_POLYGON);
@@ -284,7 +284,7 @@ void dstrSolid(const std::string& solidName) {
 		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		if (mesh){
 			Vec3f* base = mesh->GetVertices();
-			for(size_t f=0; f<mesh->NFace();++f){
+			for(int f=0; f<mesh->NFace();++f){
 				CDFaceIf* face = mesh->GetFace(f);
 				for(int v=0; v<face->NIndex(); ++v){
 					DSTR << base[face->GetIndices()[v]];

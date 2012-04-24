@@ -90,7 +90,7 @@ int main(int argc, char* argv[]){
 		CDShapeIf* shape = solid1->GetShape(i);
 		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->NFace();++f){
+		for(int f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
 			for(int v=0; v<face->NIndex(); ++v){
 				DSTR << base[face->GetIndices()[v]];
@@ -103,7 +103,7 @@ int main(int argc, char* argv[]){
 		CDShapeIf* shape = solid2->GetShape(i);
 		CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 		Vec3f* base = mesh->GetVertices();
-		for(size_t f=0; f<mesh->NFace();++f){
+		for(int f=0; f<mesh->NFace();++f){
 			CDFaceIf* face = mesh->GetFace(f);
 			for(int v=0; v<face->NIndex(); ++v){
 				DSTR << base[face->GetIndices()[v]];
