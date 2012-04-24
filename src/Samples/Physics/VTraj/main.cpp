@@ -13,8 +13,10 @@
 \secntion secSpecVTrajSample 仕様
 アームの先端剛体の中心位置ががポインタ（球体）の位置になるよう到達運動する．
 - スペースキーでシミュレーション開始．
-- 'v'で柔らかい追従制御のON/OFFをトグルする．
-- 'b'で関節のバネダンパを固くする・柔らかくする．（初期状態では柔らかい）
+- 'v'で柔らかい追従制御．障害物で止められる程度の力だが，アーム先端が所定の高さで運動できる．
+- 'b'で固いPD制御．アーム先端は所定の高さで運動できるが，障害物を強い力で押しのけてしまう．
+- 'c'で柔らかいPD制御．障害物を押しのけるような強い力はないが，アーム先端を持ち上げる力もない．
+
 - 'i'をタイプするとポインタ位置が上に動く．
 - 'k'で、下へ
 - 'j'で、左へ
@@ -52,7 +54,7 @@ public:
 	int argc;
 	char** argv;
 
-	bool bVT, bHard;
+	bool bPM, bHard;
 	int  time;
 
 	VTrajSampleApp(){
@@ -80,7 +82,7 @@ public:
 		AddAction(MENU_SCENE, ID_STIFF, "Stiff Tracking");
 		AddHotKey(MENU_SCENE, ID_STIFF, 'b');
 
-		bVT   = false;
+		bPM   = false;
 		bHard = false;
 		time = 0;
 	}
@@ -99,6 +101,8 @@ public:
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(6.5,6,20));
 
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3d(0,0,50));
+
+		fwScene->EnableRenderGrid(false,true,false);
 	}
 
 	PHSolidIf*         soTarget;
@@ -194,11 +198,11 @@ public:
 		ikeTarget = ike1;
 
 		// Obstacle <-> Obstacle Base
-		descJoint.poseSocket = Posed(1,0,0,0, 0,-1,0);
-		descJoint.posePlug   = Posed(1,0,0,0, 0, 1,0);
+		descJoint.poseSocket = Posed(1,0,0,0, 0,-1.2,0);
+		descJoint.posePlug   = Posed(1,0,0,0, 0, 1.2,0);
 		PHHingeJointIf* jo3  = phScene->CreateJoint(so5, so6, descJoint)->Cast();
-		jo3->SetSpring(500.0);
-		jo3->SetDamper(  5.0);
+		jo3->SetSpring(200.0);
+		jo3->SetDamper( 20.0);
 
 		// ----- ----- ----- ----- -----
 
@@ -233,14 +237,14 @@ public:
 		} else {
 			for (size_t i=0; i<2; ++i) {
 				PHHingeJointIf* jo = phScene->GetJoint(i)->Cast();
-				jo->SetSpring(  1.0);
+				jo->SetSpring( 10.0);
 				jo->SetDamper(100.0);
 			}
 		}
 
 		// ----- ----- ----- ----- -----
-		if (bVT) {
-			StepVTT();
+		if (bPM) {
+			StepPliant();
 		} else {
 			phScene->GetIKEngine()->Enable(true);
 			for (size_t i=0; i<phScene->NJoints(); ++i) {
@@ -278,17 +282,17 @@ public:
 			}
 
 			if(id == ID_PLIANT){
-				bVT   = true;
+				bPM   = true;
 				bHard = false;
 			}
 
 			if(id == ID_SOFT){
-				bVT   = false;
+				bPM   = false;
 				bHard = false;
 			}
 
 			if(id == ID_STIFF){
-				bVT   = false;
+				bPM   = false;
 				bHard = true;
 			}
 		}
@@ -296,7 +300,7 @@ public:
 		SampleApp::OnAction(menu, id);
 	}
 
-	void StepVTT() {
+	void StepPliant() {
 		double offsets[2];
 		double targets[2];
 		double velocities[2];
@@ -317,11 +321,7 @@ public:
 		phScene->Step();
 		for (size_t i=0; i<2; ++i) {
 			PHHingeJointIf* jo = phScene->GetJoint(i)->Cast();
-			offsets[i] = jo->GetMotorForce();
-			double limit = 200;
-			if (offsets[i] < -limit) { offsets[i] = -limit; }
-			if (limit  < offsets[i]) { offsets[i] =  limit; }
-
+			offsets[i]    = jo->GetMotorForce();
 			targets[i]    = jo->GetTargetPosition();
 			velocities[i] = jo->GetTargetVelocity();
 		}
@@ -334,7 +334,7 @@ public:
 			PHHingeJointIf* jo = phScene->GetJoint(i)->Cast();
 			jo->SetOffsetForce(offsets[i]);
 			jo->SetSpring(springs[i]);
-			jo->SetDamper(dampers[i]);
+			jo->SetDamper(0);
 			jo->SetTargetPosition(targets[i]);
 			jo->SetTargetVelocity(velocities[i]);
 		}
