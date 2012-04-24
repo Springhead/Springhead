@@ -149,6 +149,9 @@ public:
 	virtual void	DestructState(void* m) const ;
 	virtual bool	GetState(void* s) const ;
 	virtual void	SetState(const void* s);
+
+	bool bContactDetectionEnabled; ///< ÚG”»’è‚ª—LŒø‚©D‚±‚ê‚ªfalse‚¾‚ÆÚG”»’èŽ©‘Ì‚ðs‚í‚È‚¢
+	virtual void	EnableContactDetection(bool enable) { bContactDetectionEnabled = enable; }
 };
 
 }	//	namespace Spr

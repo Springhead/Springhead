@@ -5,6 +5,20 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+/** \page pageIKSample
+ Springhead2/src/Samples/IK/main.cpp
+
+\ref pagePhysics の逆運動学（IK）機能のデモプログラム。
+
+\secntion secSpecIKSample 仕様
+アームの先端剛体の中心位置ががポインタ（球体）の位置になるよう到達運動する．
+第一・第二関節ともに可動域制限がかかっている．
+- スペースキーでシミュレーション開始．
+- 'i'をタイプするとポインタ位置が上に動く．
+- 'k'で、下へ
+- 'j'で、左へ
+- 'l'で、右へ
+*/
 
 #include "../../SampleApp.h"
 

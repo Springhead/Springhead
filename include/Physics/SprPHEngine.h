@@ -92,6 +92,9 @@ public:
 	*/
 	double GetShrinkRateCorrection();
 
+	/** @brief 接触判定エンジンの有効・無効を設定する．ここでの無効化はPHScene::SetContactModeより優先する．
+	*/
+	void EnableContactDetection(bool enable);
 };
 
 struct PHGravityEngineIf : PHEngineIf{

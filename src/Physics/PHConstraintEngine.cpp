@@ -206,6 +206,7 @@ PHConstraintEngineDesc::PHConstraintEngineDesc(){
 	bUseContactSurface = false;
 }
 PHConstraintEngine::PHConstraintEngine(){
+	bContactDetectionEnabled = true;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){
@@ -519,7 +520,7 @@ void PHConstraintEngine::StepPart1(){
 #ifdef REPORT_TIME
 	ptimer.CountUS();
 #endif
-	if(bContactEnabled){
+	if(bContactEnabled && bContactDetectionEnabled){
 		//Detect(ct, dt);
 		ContDetect(ct, dt);
 #ifdef _DEBUG
