@@ -32,29 +32,24 @@ struct PHFrameIf: public SceneObjectIf{
 struct PHSolidState{
 	Vec3d		velocity;		///<	速度			(World系)
 	Vec3d		angVelocity;	///<	角速度			(World系)
-	Vec3d		lastVelocity;	///<	前回の速度		(World系)
-	Vec3d		lastAngVelocity;///<	前回の角速度	(World系)
+//	Vec3d		lastVelocity;	///<	前回の速度		(World系)
+//	Vec3d		lastAngVelocity;///<	前回の角速度	(World系)
 	Posed		pose;			///<	位置と向き		(World系)
-	Posed		lastPose;		///<	前回の位置と向き(World系)
-	Vec3d		force;			///<	前の積分でこの剛体に加わった力(World系)
-	Vec3d		torque;			///<	前の積分でこの剛体に加わったトルク(World系)
-	Vec3d		nextForce;		///<	次の積分でこの剛体に加わる力(World系)
-	Vec3d		nextTorque;		///<	次の積分でこの剛体に加わるトルク(World系)
+//	Posed		lastPose;		///<	前回の位置と向き(World系)
 };
+
 ///	剛体のディスクリプタ
 struct PHSolidDesc: public PHSolidState{
 	double		mass;			///<	質量
 	Matrix3d	inertia;		///<	慣性テンソル	(Local系)
 	Vec3d		center;			///<	質量中心の位置	(Local系)
 	bool		dynamical;		///<	物理法則に従うか(速度は積分される)
-	bool		integrate;		///<	力，速度，位置を積分しない(値は保持される)
 
 	PHSolidDesc(){ Init(); }
 	void Init(){
 		mass = 1.0f;
 		inertia = Matrix3d::Unit();
 		dynamical = true;
-		integrate = true;
 	}
 };
 
@@ -261,16 +256,6 @@ struct PHSolidIf : public SceneObjectIf{
 	 */
 	bool		IsDynamical();
 
-	/** @brief 速度を積分し，位置を更新するかどうかを有効/無効かする
-		@param bOn trueならば剛体は速度を積分し，位置を更新する．
-		SetVelocity関数で速度を設定した場合，値は保持されますが，積分は行われません．
-	*/
-	void		SetIntegrate(bool bOn);
-
-	/** @brief 速度を積分し，位置を更新するかどうか取得する．
-		@return trueならば剛体は速度を積分し，位置を更新する．
-	*/
-	bool		IsIntegrate();
 
 	/** @brief ツリーノードを取得する
 		CreateRootNode，CreateTreeNodeによってツリーノードが割り当てられている場合，

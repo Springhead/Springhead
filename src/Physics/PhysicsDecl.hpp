@@ -739,38 +739,17 @@ public:\
 protected:\
 	Vec3d	velocity;	\
 	Vec3d	angVelocity;	\
-	Vec3d	lastVelocity;	\
-	Vec3d	lastAngVelocity;	\
 	Posed	pose;	\
-	Posed	lastPose;	\
-	Vec3d	force;	\
-	Vec3d	torque;	\
-	Vec3d	nextForce;	\
-	Vec3d	nextTorque;	\
 public:\
 	virtual void SetState(const void* ptr){ \
 		velocity = ((PHSolidState*)ptr)->velocity;	\
 		angVelocity = ((PHSolidState*)ptr)->angVelocity;	\
-		lastVelocity = ((PHSolidState*)ptr)->lastVelocity;	\
-		lastAngVelocity = ((PHSolidState*)ptr)->lastAngVelocity;	\
 		pose = ((PHSolidState*)ptr)->pose;	\
-		lastPose = ((PHSolidState*)ptr)->lastPose;	\
-		force = ((PHSolidState*)ptr)->force;	\
-		torque = ((PHSolidState*)ptr)->torque;	\
-		nextForce = ((PHSolidState*)ptr)->nextForce;	\
-		nextTorque = ((PHSolidState*)ptr)->nextTorque;	\
 	}\
 	virtual bool GetState(void* ptr) const { \
 		((PHSolidState*)ptr)->velocity = velocity;	\
 		((PHSolidState*)ptr)->angVelocity = angVelocity;	\
-		((PHSolidState*)ptr)->lastVelocity = lastVelocity;	\
-		((PHSolidState*)ptr)->lastAngVelocity = lastAngVelocity;	\
 		((PHSolidState*)ptr)->pose = pose;	\
-		((PHSolidState*)ptr)->lastPose = lastPose;	\
-		((PHSolidState*)ptr)->force = force;	\
-		((PHSolidState*)ptr)->torque = torque;	\
-		((PHSolidState*)ptr)->nextForce = nextForce;	\
-		((PHSolidState*)ptr)->nextTorque = nextTorque;	\
 		return true;	\
 	}\
 
@@ -780,7 +759,6 @@ protected:\
 	Matrix3d	inertia;	\
 	Vec3d	center;	\
 	bool	dynamical;	\
-	bool	integrate;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHSolid::SetState((PHSolidState*)(PHSolidDesc*)ptr);	\
@@ -788,7 +766,6 @@ public:\
 		inertia = ((PHSolidDesc*)ptr)->inertia;	\
 		center = ((PHSolidDesc*)ptr)->center;	\
 		dynamical = ((PHSolidDesc*)ptr)->dynamical;	\
-		integrate = ((PHSolidDesc*)ptr)->integrate;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -798,7 +775,6 @@ public:\
 		((PHSolidDesc*)ptr)->inertia = inertia;	\
 		((PHSolidDesc*)ptr)->center = center;	\
 		((PHSolidDesc*)ptr)->dynamical = dynamical;	\
-		((PHSolidDesc*)ptr)->integrate = integrate;	\
 		return true;	\
 	}\
 
