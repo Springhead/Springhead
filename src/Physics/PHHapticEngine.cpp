@@ -225,9 +225,13 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 	lastInterpolationPose = interpolationPose;
 	interpolationPose = curSolid[0]->GetPose();
 	if(bInterpolatePose){
-		interpolationPose = interpolate(t, curSolid[0]->GetLastPose(), curSolid[0]->GetPose());
+		Posed cur = curSolid[0]->GetPose();
+		double dt = ((PHScene*)curSolid[0]->GetScene())->GetTimeStep();
+		Posed last;
+		last.Pos() = cur.Pos() - (curSolid[0]->GetVelocity() * dt + curSolid[0]->GetOrientation() * curSolid[0]->dV.v());
+		last.Ori() = (cur.Ori() * Quaterniond::Rot(-curSolid[0]->v.w() * dt + -curSolid[0]->dV.w())).unit();
+		interpolationPose = interpolate(t, last, cur);
 	}
-
 	// ÚG‚µ‚½‚Æ‚µ‚Ä–€CŒvZ‚Ì‚½‚ß‚Ì‘Š‘ÎˆÊ’u‚ğŒvZ
 	PHHapticPointer* pointer = DCAST(PHHapticPointer, curSolid[1]);
 #if 1

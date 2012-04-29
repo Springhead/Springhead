@@ -50,7 +50,7 @@ public:
 	}
 };
 
-void CallBackHoge(int id, void* arg){
+void SPR_CDECL CallBackHoge(int id, void* arg){
 	std::cout << "hogehoge:" << id << std::endl;
 }
 
@@ -59,7 +59,7 @@ public:
 	UTTimer timer2;
 	int count;
 	Fuga(): count(0){}
-	static void CallBackFuga(int id, void* arg){
+	static void SPR_CDECL CallBackFuga(int id, void* arg){
 		((Fuga*)arg)->Print(id);
 	}
 	void Print(int id){

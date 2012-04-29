@@ -102,6 +102,13 @@ class PHConstraintEngine;
 struct PHSolidStatePrivate{
 	bool		bFrozen;		///<	フリーズ状態か
 	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
+	//	剛体に加えられた力
+	Vec3d		nextForce;		///<	次の積分でこの剛体に加わわる力(World系)
+	Vec3d		nextTorque;		///<	前の積分でこの剛体に加わったトルク(World系)
+	Vec3d		force;			///<	前の積分でこの剛体に加わった力(World系)
+	Vec3d		torque;			///<	前の積分でこの剛体に加わったトルク(World系)
+	//	LCP補助変数だが、加速度の取得に用いるのでStateにしなければならない。
+	SpatialVector dv;			///<	拘束力による速度変化量
 };
 
 ///	剛体
@@ -111,6 +118,7 @@ protected:
 
 	///	積分方式
 	PHIntegrationMode integrationMode;
+
 
 	/// オイラーの運動方程式
 	/// 慣性行列は対角行列を前提．
@@ -130,17 +138,14 @@ public:
 	Matrix3d	Iinv;		///< 慣性行列の逆行列
 	SpatialVector f;		///< ローカル座標での外力
 	SpatialVector v;		///< ローカル座標での現在の速度
-	//Vec3d		dv0, dw0;	///< 拘束力以外の外力による速度変化量
-	SpatialVector dv;		///< 拘束力による速度変化量
 	SpatialVector dV;		///< Correctionによる移動量，回転量
 	void UpdateCacheLCP(double dt);
-	//void SetupCorrection();
 	void UpdateVelocity(double dt);
 	void UpdatePosition(double dt);
 	bool IsArticulated();
 	//@}
 
-	bool bDraw;				///< 形状を描画するかどうか
+//	bool bDraw;				///< 形状を描画するかどうか
 		
 public:
 	std::vector< UTRef<PHFrame> > frames;
@@ -201,7 +206,6 @@ public:
 
 	Posed		GetPose() const { return pose; }
 	void		SetPose(const Posed& p) { pose = p; }
-	Posed		GetLastPose() const { return lastPose; }
 	Vec3d		GetFramePosition() const {return pose.Pos();}
 	void		SetFramePosition(const Vec3d& p){pose.Pos() = p;}
 	Vec3d		GetDeltaPosition() const ;
@@ -224,14 +228,10 @@ public:
 	///	向きの設定
 	void		SetOrientation(const Quaterniond& q){
 		pose.Ori() = q;
-		//Matrix3f m;
-		//pose.Ori().ToMatrix(m);
 	}
 
 	///	質量中心の速度の取得
 	Vec3d		GetVelocity() const {return velocity;}
-	/// 質量中心の前回の速度の取得
-	Vec3d		GetLastVelocity() const {return lastVelocity; }
 	///	質量中心の速度の設定
 	void		SetVelocity(const Vec3d& v){
 		velocity = v;
@@ -240,8 +240,6 @@ public:
 
 	///	角速度の取得
 	Vec3d		GetAngularVelocity() const {return angVelocity;}
-	/// 前回の角速度の取得
-	Vec3d		GetLastAngularVelocity() const {return lastAngVelocity; }
 	///	角速度の設定
 	void		SetAngularVelocity(const Vec3d& av){
 		angVelocity = av;
@@ -252,6 +250,12 @@ public:
 	Vec3d		GetPointVelocity(Vec3d posW) const {
 		return velocity + (angVelocity^(posW - pose*center));
 	}
+
+	///	速度と角速度をまとめて取得
+	SpatialVector GetSpatialVelocity() const { return SpatialVector(velocity,angVelocity); }
+
+	///	（最後のStep()での）剛体の加速度
+	SpatialVector GetAcceleration() const;
 
 	///	shapeの数。
 	int			NFrame();
@@ -282,17 +286,13 @@ public:
 	void		SetDynamical(bool bOn){dynamical = bOn;}
 	/// 物理法則に従っているかどうかを取得
 	bool		IsDynamical(){return dynamical;}
-	/// 速度を積分するかどうかを設定
-	void		SetIntegrate(bool bOn){integrate = bOn;}
-	/// 速度を積分するかどうかを取得
-	bool		IsIntegrate(){return integrate;}
 	/// 速度が一定以下の時，積分を行わないように設定
 	void		SetFrozen(bool bOn){bFrozen = bOn;}
 	/// 速度が一定以下で積分を行わないかどうかを取得
 	bool		IsFrozen(){return bFrozen;}
 	PHTreeNodeIf* GetTreeNode();
-	void		SetDrawing(bool bOn){bDraw = bOn; }
-	bool		IsDrawn(){ return bDraw; }
+//	void		SetDrawing(bool bOn){bDraw = bOn; }
+//	bool		IsDrawn(){ return bDraw; }
 	ACCESS_DESC_STATE_PRIVATE(PHSolid);
 
 protected:

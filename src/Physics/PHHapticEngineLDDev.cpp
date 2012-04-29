@@ -75,13 +75,8 @@ void PHHapticEngineLDDev::Step2(){
 		// ‹ß–T‚Ì„‘Ì‚Ì‚Ý
 		if(GetHapticSolid(i)->doSim == 0) continue;
 		PHSolid* solid = GetHapticSolid(i)->sceneSolid;
-		SpatialVector curvel, lastvel;
-		curvel.v() = solid->GetVelocity();
-		curvel.w() = solid->GetAngularVelocity();
-		lastvel.v() = solid->GetLastVelocity();
-		lastvel.w() = solid->GetLastAngularVelocity();
-		GetHapticSolid(i)->curb = (curvel - lastvel) / GetPhysicsTimeStep();
-		phvel = curvel;
+		GetHapticSolid(i)->curb = solid->dv / GetPhysicsTimeStep();
+		phvel = solid->GetVelocity();
 	}
 
 	engine->StartDetection();

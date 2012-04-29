@@ -15,7 +15,7 @@ void MyApp::Init(int argc, char* argv[]){
 	//TexInit();
 	// ウィンドウ
 	CreateWin();
-	GetWin(0)->SetRenderMode(false);
+//	GetWin(0)->SetRenderMode(false);
 	// タイマ
 	UTTimerIf* timer = CreateTimer();
 	timer->SetInterval(10);

@@ -135,7 +135,6 @@ PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	inertia_inv = inertia.inv();
 	treeNode = NULL;
 	bFrozen = false;
-	bDraw = true;
 	if (s){ SetScene(s); }
 }
 SceneObjectIf* PHSolid::CloneObject(){
@@ -199,6 +198,9 @@ bool PHSolid::DelChildObject(ObjectIf* obj){
 		return true;
 	}
 	return false;
+}
+SpatialVector PHSolid::GetAcceleration() const {
+	return dv / ((PHScene*)GetScene())->GetTimeStep(); 
 }
 
 Vec3d PHSolid::GetDeltaPosition() const {
@@ -272,7 +274,6 @@ void PHSolid::UpdateCachePenalty(int c){
 */
 void PHSolid::UpdateVelocity(double dt){
 	SpatialVector vold = v;
-	if(!IsIntegrate()) return;
 	if(IsDynamical() && !IsFrozen()){
 		v += dv;
 
@@ -285,8 +286,6 @@ void PHSolid::UpdateVelocity(double dt){
 		if (v.w().norm() > 100)
 			v.w() = v.w().unit() * vMax;
 
-		lastVelocity = GetVelocity();
-		lastAngVelocity = GetAngularVelocity();
 		SetVelocity       (GetOrientation() * v.v());
 		SetAngularVelocity(GetOrientation() * v.w());
 	}
@@ -299,8 +298,7 @@ void PHSolid::UpdateVelocity(double dt){
 
 }
 void PHSolid::UpdatePosition(double dt){
-	if(IsFrozen() || !IsIntegrate()) return;
-	lastPose = GetPose();
+	if(IsFrozen()) return;
 	// SetOrientation -> SetCenterPositionの順に呼ぶ必要がある．逆だとSetOrientationによって重心位置がずれてしまう tazz
 	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w() * dt + dV.w())).unit());
 	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
@@ -334,9 +332,6 @@ void PHSolid::Step(){
 	Vec3d dv, dw;				//<	速度・角速度の変化量
 	Vec3d	_angvel[4];			//<	数値積分係数
 	Vec3d	_angacc[4];
-	lastPose = pose;
-	lastVelocity = GetVelocity();
-	lastAngVelocity = GetAngularVelocity();
 	switch(GetIntegrationMode()){
 	case PHINT_EULER:
 		//平行移動量の積分

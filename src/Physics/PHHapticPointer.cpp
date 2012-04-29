@@ -18,7 +18,7 @@ PHHapticPointer::PHHapticPointer(){
 	bVibration = false;
 	rotaionalWeight = 1e5;
 	dynamical = false;
-	integrate = false;
+//	integrate = false;	TODO: 関数オーバーライドで対応
 	hapticRenderMode = CONSTRAINT;
 }
 PHHapticPointer::PHHapticPointer(const PHHapticPointer& p){
