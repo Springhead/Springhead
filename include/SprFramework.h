@@ -13,5 +13,6 @@
 #include "Framework/SprFWSdk.h"
 #include "Framework/SprFWFemMesh.h"
 #include "Framework/SprFWWin.h"
+#include "Framework/SprFWHapticPointer.h"
 
 #endif

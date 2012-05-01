@@ -11,6 +11,12 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_FWFemMeshIf(base)	\
 	PHFemMeshIf* GetPHMesh(){	return	base::GetPHMesh();}	\
 
+#define SPR_OVERRIDEMEMBERFUNCOF_FWHapticPointerIf(base)	\
+	void SetPHHapticPointer(PHHapticPointerIf* hpGlobal){	base::SetPHHapticPointer(hpGlobal);}	\
+	PHHapticPointerIf* GetPHHapticPointer(){	return	base::GetPHHapticPointer();}	\
+	void SetHumanInterface(HIBaseIf* hi){	base::SetHumanInterface(hi);}	\
+	HIBaseIf* GetHumanInterface(){	return	base::GetHumanInterface();}	\
+
 #define SPR_OVERRIDEMEMBERFUNCOF_FWObjectIf(base)	\
 	Spr::PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
 	void SetPHSolid(Spr::PHSolidIf* s){	base::SetPHSolid(s);}	\
@@ -84,6 +90,8 @@
 	Spr::FWStructureIf* GetFWStructure(){	return	base::GetFWStructure();}	\
 	Spr::FWStructureIf* GetFWStructure(int n){	return	base::GetFWStructure(n);}	\
 	size_t NFWStructure(){	return	base::NFWStructure();}	\
+	Spr::FWHapticPointerIf* CreateHapticPointer(){	return	base::CreateHapticPointer();}	\
+	void UpdateHapticPointers(){	base::UpdateHapticPointers();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSdkIf(base)	\
 	Spr::FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc){	return	base::CreateScene(phdesc, grdesc);}	\

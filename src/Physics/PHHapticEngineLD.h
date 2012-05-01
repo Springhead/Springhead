@@ -21,7 +21,8 @@ class PHHapticEngineLD : public PHHapticEngineMultiBase{
 	SPR_OBJECTDEF_NOIF(PHHapticEngineLD);
 protected:
 	PHHapticLoopLD hapticLoopLD;
-	UTRef<ObjectStatesIf> states, states2;
+
+	std::vector< SpatialVector > lastvels;
 
 public:
 	PHHapticEngineLD();

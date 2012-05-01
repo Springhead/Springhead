@@ -11,6 +11,7 @@
 #include <Framework/SprFWScene.h>
 #include <Framework/SprFWObject.h>
 #include <Framework/SprFWBone.h>
+#include <Framework/SprFWHapticPointer.h>
 #include <Foundation/Scene.h>
 #include <HumanInterface/HIBase.h>
 
@@ -44,11 +45,13 @@ public:
 	typedef std::vector< UTRef<FWBoneIf> >			FWBones;
 	typedef std::vector< UTRef<FWStructureIf> >		FWStructures;
 	typedef std::vector< UTRef<HIHaptic> >			FWHumanInterfaces;
+	typedef std::vector< UTRef<FWHapticPointerIf> > FWHapticPointers;
 	
 	FWSdk*				sdk;						///<	親SDKへの参照
 	FWObjects			fwObjects;					///<	物理とグラフィックスのオブジェクトのリンク
 	FWBones				fwBones;					///<	物理とグラフィックスのBoneのリンク
 	FWStructures		fwStructures;				///<	BoneObjectの集合体であるFWStructureへのリンク
+	FWHapticPointers	fwHapticPointers;			///<	登録されている力覚ポインタへのリンク
 	PHSceneIf*			phScene;					///<	物理シミュレーション用のシーン
 	GRSceneIf*			grScene;					///<	グラフィックス用のシーン
 
@@ -186,6 +189,10 @@ public:
 	FWStructureIf*		GetFWStructure();
 	FWStructureIf*		GetFWStructure(int n);
 	size_t				NFWStructure();
+	FWHapticPointerIf*	CreateHapticPointer();
+	FWHapticPointerIf*	GetHapticPointer(int i);
+	int					NHapticPointers();
+	void				UpdateHapticPointers();
 
 	/** Scene関数の継承
 	 */

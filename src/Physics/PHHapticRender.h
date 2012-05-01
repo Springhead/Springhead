@@ -53,7 +53,6 @@ public:
 
 	// Implementation
 	virtual void HapticRendering(PHHapticRenderInfo info);
-	virtual void DisplayHapticForce();
 	virtual PHIrs CompIntermediateRepresentation(PHHapticPointer* pointer);
 	virtual void PenaltyBasedRendering(PHHapticPointer* pointer);
 	virtual void ConstraintBasedRendering(PHHapticPointer* pointer);

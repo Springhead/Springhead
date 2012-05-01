@@ -32,6 +32,7 @@
 	void EnableHapticEngine(bool b){	base::EnableHapticEngine(b);}	\
 	void SetHapticEngineMode(Spr::PHHapticEngineDesc::HapticEngineMode mode){	base::SetHapticEngineMode(mode);}	\
 	void StepPhysicsSimulation(){	base::StepPhysicsSimulation();}	\
+	void ReleaseState(){	base::ReleaseState();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHFemMeshIf(base)	\
 
@@ -59,7 +60,6 @@
 	void EnableVibration(bool b){	base::EnableVibration(b);}	\
 	void EnableMultiPoints(bool b){	base::EnableMultiPoints(b);}	\
 	void EnableDebugControl(bool b){	base::EnableDebugControl(b);}	\
-	void EnableDirectControl(bool b){	base::EnableDirectControl(b);}	\
 	void SetReflexSpring(float s){	base::SetReflexSpring(s);}	\
 	float GetReflexSpring(){	return	base::GetReflexSpring();}	\
 	void SetReflexDamper(float d){	base::SetReflexDamper(d);}	\

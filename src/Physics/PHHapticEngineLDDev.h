@@ -1,5 +1,5 @@
-#ifndef PH_HAPTICENGINE_LD_H
-#define PH_HAPTICENGINE_LD_H
+#ifndef PH_HAPTICENGINE_LDDEV_H
+#define PH_HAPTICENGINE_LDDEV_H
 
 #include <Physics/PHHapticEngineMultiBase.h>
 
@@ -12,7 +12,7 @@ class PHHapticLoopLDDev : public PHHapticLoopImp{
 public:
 	virtual void Step();
 	virtual void HapticRendering();
-	virtual void LocalDynamics();
+	virtual void LocalDynamics6D();
 };
 
 //----------------------------------------------------------------------------
@@ -29,7 +29,7 @@ public:
 	PHHapticEngineLDDev();
 	virtual void Step1();
 	virtual void Step2();
-	virtual void PredictSimulation3D();
+	virtual void PredictSimulation6D();
 	virtual void SyncHaptic2Physic();	
 	virtual void SyncPhysic2Haptic();	
 

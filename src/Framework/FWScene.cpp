@@ -8,6 +8,7 @@
 #include <Framework/FWScene.h>
 #include <Framework/FWObject.h>
 #include <Framework/FWSdk.h>
+#include <Framework/FWHapticPointer.h>
 #include <Physics/PHScene.h>
 #include <Physics/PHSdk.h>
 #include <Physics/PHContactPoint.h>
@@ -728,7 +729,6 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 }
 
 void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
-	// アクセス違反が結構起きるのでなんとかしないといけない
 	PHHapticEngine* he = DCAST(PHHapticEngine, hapticEngine);
 	int Npointers = he->NHapticPointers();
 	if(Npointers == 0) return;
@@ -1063,4 +1063,35 @@ FWStructureIf* FWScene::GetFWStructure(int n){
 size_t FWScene::NFWStructure(){
 	return fwStructures.size();
 }
+FWHapticPointerIf* FWScene::CreateHapticPointer(){
+	UTRef< FWHapticPointer > fwHapticPointer = DBG_NEW FWHapticPointer;
+	fwHapticPointers.push_back(fwHapticPointer->Cast());
+	return fwHapticPointer->Cast();
+}
+FWHapticPointerIf*	FWScene::GetHapticPointer(int i){
+	return fwHapticPointers[i];
+}
+int FWScene::NHapticPointers(){
+	return (int)fwHapticPointers.size();
+}
+void FWScene::UpdateHapticPointers(){
+	PHHapticEngine* he = GetPHScene()->GetHapticEngine()->Cast();
+	if(he->GetHapticEngineMode() == 0){
+		// single thread
+		for(int i = 0; i < NHapticPointers(); i++){
+			FWHapticPointer* fp = GetHapticPointer(i)->Cast();
+			fp->UpdateHumanInterface(fp->GetPHHapticPointer()->Cast(), GetPHScene()->GetHapticTimeStep());
+		}
+	}else{
+		// multi thread
+		PHHapticPointers* localPointers = he->GetLocalHapticPointers();
+		if(localPointers->size() <= 0) return;
+		for(int i = 0; i < NHapticPointers(); i++){
+			FWHapticPointer* fp = GetHapticPointer(i)->Cast();
+			PHHapticPointer* plp = localPointers->at(i);
+			fp->UpdateHumanInterface(plp, GetPHScene()->GetHapticTimeStep());
+		}
+	}
+}
+
 }

@@ -132,7 +132,7 @@ public:
 
 struct PHHapticEngineDesc{
 	enum HapticEngineMode{
-		SINGLE_THREAD,
+		SINGLE_THREAD = 0,
 		MULTI_THREAD,
 		LOCAL_DYNAMICS,
 	};
@@ -141,9 +141,25 @@ struct PHHapticEngineDesc{
 struct PHHapticEngineIf : public PHHapticEngineDesc, PHEngineIf{
 public:
 	SPR_IFDEF(PHHapticEngine);
+	/** @breif HapticEngineを有効化する
+	*/
 	void EnableHapticEngine(bool b);
+
+	/** @breif HapticEngineのモードを切り替える
+		@param mode HapticEngineMode
+	*/
 	void SetHapticEngineMode(HapticEngineMode mode);
+
+	/** @brief シミュレーションをすすめる。HapticEngineを有効化した場合には
+		この関数を使ってシミュレーションをすすめる
+	*/
 	void StepPhysicsSimulation();
+
+	/** @breif シーングラフの状態(ObjectStatesIf)を開放する。
+				動的にオブジェクトを追加する時には直前に呼ぶ必要がある。
+	*/
+	void ReleaseState();
+
 };
 //@}
 }

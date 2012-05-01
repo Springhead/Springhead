@@ -9,6 +9,7 @@ void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
 	*(PHHapticRenderInfo*)this = info;
 	for(int i = 0; i < (int)pointers->size(); i++){
 		PHHapticPointer* pointer = pointers->at(i);
+		pointer->hapticForce.clear();
 		switch (pointer->hapticRenderMode){
 			case PHHapticPointerDesc::PENALTY:
 				PenaltyBasedRendering(pointer);
@@ -21,13 +22,6 @@ void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
 				break;
 		}
  		VibrationRendering(pointer);
-	}
-	DisplayHapticForce();
-}
-
-void PHHapticRender::DisplayHapticForce(){
-	for(int i = 0; i < (int)pointers->size(); i++){
-		pointers->at(i)->DisplayHapticForce();
 	}
 }
 
@@ -209,6 +203,8 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 		}
 	}
 	pointer->AddHapticForce(outForce);
+	//DSTR << pointer->GetFramePosition() << std::endl;
+	//DSTR << "render" << outForce << std::endl;
 	//CSVOUT << outForce.v().x << "," << outForce.v().y << std::endl;
 }
 
@@ -238,6 +234,53 @@ void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 }
 
 void PHHapticRender::VirtualCoupling(PHHapticPointer* pointer){
+//	const double syncCount = pdt / hdt;
+//	double t = loopCount / syncCount;
+//	if(t > 1.0) t = 1.0;
+//
+//	// ‘O‰ñ‚Æ¡‰ñ‚Ìó‘Ô‚ð•âŠÔ
+//	Posed curPose = pointer->vcSolidCopied.GetPose();
+//	//Posed lastPose = pointer->vcSolidCopied.GetLastPose();
+//	Vec3d curVel = pointer->vcSolidCopied.GetVelocity();
+//	//Vec3d lastVel = pointer->vcSolidCopied.GetLastVelocity();
+//	Vec3d curAngVel = pointer->vcSolidCopied.GetAngularVelocity();
+//	//Vec3d lastAngVel = pointer->vcSolidCopied.GetLastAngularVelocity();
+//
+//	Posed interpolationPose = interpolate(t, lastPose, curPose);
+//	Vec3d interpolationVel = interpolate(t, lastVel, curVel);
+//	Vec3d interpolationAngVel = interpolate(t, lastAngVel, curAngVel);
+//
+//	Vec3d dr = pointer->GetPose().Pos() - interpolationPose.Pos();
+//	Vec3d dv = pointer->GetVelocity() - interpolationVel;
+//	Vec3d dAngVel =  pointer->GetAngularVelocity() - interpolationAngVel;
+//
+//	SpatialTransform X[2];
+//	X[0].r = pointer->vcSolidCopied.GetCenterPosition();
+//	X[1].r = pointer->GetCenterPosition();
+//	SpatialTransform Xj[2];
+//	Xj[0].q = interpolationPose.Ori();
+//	Xj[1].q = pointer->GetOrientation();
+//
+//	SpatialTransform Xjrel =  Xj[1] * X[1] * X[0].inv() * Xj[0].inv();
+//	Quaterniond diff = Xjrel.q;
+//	Vec3d prop = diff.RotationHalf();
+//
+////	float K  = 2000 / pointer->GetPosScale();
+////	float D = 300 / pointer->GetPosScale();
+//	float K  = 1000 / pointer->GetPosScale();
+//	float D = 150 / pointer->GetPosScale();
+//	float Kori = 0.01;
+//	float Dori = 0.001;
+//
+//	SpatialVector outForce;
+//	outForce.v() = -1 * (K * dr  + D * dv);
+//	outForce.w() = -1 * (Kori * prop + Dori * dAngVel);
+//
+//	pointer->AddHapticForce(outForce / 20);
+//	pointer->vcForce += -1 * outForce / syncCount;
+//
+//	//DSTR <<  pointer->vcForce <<std::endl;
+//	//CSVOUT << outForce.v().x << "," << outForce.v().y << "," << outForce.v().x * 20 << std::endl;
 
 }
 

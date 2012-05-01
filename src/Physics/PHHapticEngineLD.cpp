@@ -57,10 +57,16 @@ PHHapticEngineLD::PHHapticEngineLD(){
 	hapticLoop = &hapticLoopLD;
 	hapticLoop->engineImp = this;
 	states = ObjectStatesIf::Create();
-	states2 = ObjectStatesIf::Create();
 }
 
 void PHHapticEngineLD::Step1(){
+	lastvels.clear();
+	for(int i = 0; i < NHapticSolids(); i++){
+		SpatialVector vel;
+		vel.v() = GetHapticSolid(i)->sceneSolid->GetVelocity();
+		vel.w() = GetHapticSolid(i)->sceneSolid->GetAngularVelocity();
+		lastvels.push_back(vel);
+	}
 }
 void PHHapticEngineLD::Step2(){
 	// 更新後の速度、前回の速度差から定数項を計算
@@ -68,7 +74,10 @@ void PHHapticEngineLD::Step2(){
 		// 近傍の剛体のみ
 		if(GetHapticSolid(i)->doSim == 0) continue;
 		PHSolid* solid = GetHapticSolid(i)->sceneSolid;
-		GetHapticSolid(i)->curb = solid->dv / GetPhysicsTimeStep();
+		SpatialVector dvel;
+		dvel.v() = solid->GetVelocity();
+		dvel.w() = solid->GetAngularVelocity();
+		GetHapticSolid(i)->curb = (dvel - lastvels[i]) / GetPhysicsTimeStep();
 	}
 
 	engine->StartDetection();
@@ -93,7 +102,6 @@ void PHHapticEngineLD::PredictSimulation3D(){
 	#endif
 	/// 予測シミュレーションのために現在の剛体の状態を保存する
 	phScene->GetConstraintEngine()->SetBSaveConstraints(true);
-	states->ReleaseState(phScene);
 	states->Clear();
 	states->SaveState(phScene);	
 #if 1
@@ -140,14 +148,16 @@ void PHHapticEngineLD::PredictSimulation3D(){
 
 			float minTestForce = 0.5;		// 最小テスト力
 
-			// 相対座標系
+			// 3方向のテスト力をつくる
+			Vec3d testForce;
 			if(solidPair->force.norm() == 0){
-				force.col(0) = minTestForce * normal;
+				testForce = minTestForce * normal;
 			}else{
-				force.col(0) = solidPair->force;
+				testForce = solidPair->force;
 				solidPair->force = Vec3d();
 			}
-			Vec3d base1 = force.col(0).unit();
+			// テスト力に対して垂直方向のベクトル2本を計算
+			Vec3d base1 = testForce.unit();
 			Vec3d base2 = Vec3d(1, 0, 0) - (Vec3d(1, 0, 0) * base1) * base1;
 			if (base2.norm() > 0.1){
 				base2.unitize();
@@ -155,9 +165,28 @@ void PHHapticEngineLD::PredictSimulation3D(){
 				base2 = Vec3d(0, 1, 0) - (Vec3d(0, 1, 0) * base1) * base1;
 				base2.unitize();
 			}
-			Vec3d base3 = base1^base2;
+			Vec3d base3 = base1 ^ base2;
+#if 1
+			// 垂直なベクトルをもとめブレンド
+			force.col(0) = testForce;
 			force.col(1) = force.col(0).norm() * (base1 + base2).unit();
 			force.col(2) = force.col(0).norm() * (base1 + base3).unit();
+#else
+			// testForceを含む3方向のベクトル(テント型に）
+			// 安定していない
+			Vec3d base12 = (base1 + base2).unit();	// base1, base2間のベクトル
+			Vec3d base23 = (-base2 - base3).unit();	// -base2, -base3間のベクトル
+			Vec3d base32 = (base3 - base2).unit();	// base3, -base2間のベクトル
+			double a = testForce.norm() / ( base12 * testForce.unit());
+			//DSTR << (a * base12) * testForce.unit() << "," << testForce.norm() <<  std::endl;
+			force.col(0) = a * base12;
+			force.col(1) = a * (base1 + base23).unit();
+			force.col(2) = a * (base1 + base32).unit();
+			//DSTR << force << std::endl;
+			//DSTR << base12 * base23 << "," << base12 * base32 << std::endl;
+			//DSTR << (base12 + base23 + base32).unit() << std::endl;
+
+#endif
 
 			/// テスト力を3方向に加える	
 			for(int m = 0; m < 3; m++){
@@ -175,10 +204,18 @@ void PHHapticEngineLD::PredictSimulation3D(){
 			}
 
 			solidPair->A = u  * force.inv();	// m/(Ns2)
-			//DSTR << "b" << std::endl;
-			//DSTR << hsolid->b << std::endl;
-			//DSTR << "A" << std::endl;
-			//DSTR << solidPair->A << std::endl;
+#if 0
+			DSTR << "i = " << i << std::endl;
+			DSTR << "j = " << j << std::endl;
+			DSTR << "f" << std::endl;
+			DSTR << force << std::endl;
+			DSTR << "u" << std::endl;
+			DSTR << u << std::endl;
+			DSTR << "b" << std::endl;
+			DSTR << hsolid->b << std::endl;
+			DSTR << "A" << std::endl;
+			DSTR << solidPair->A << std::endl;
+#endif
 		}
 	}
 #endif
