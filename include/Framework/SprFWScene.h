@@ -25,6 +25,7 @@ struct FWObjectDesc;
 struct FWObjectIf;
 struct FWBoneIf;
 struct FWStructureIf;
+struct FWHapticPointerIf;
 
 struct FWSceneDesc{
 };
@@ -230,6 +231,15 @@ public:
 	/** @brief ボーンの集合体の個数を取得する
 	 */
 	size_t NFWStructure();
+
+	/** @brief 力覚ポインタを作る
+	*/
+	FWHapticPointerIf* CreateHapticPointer();
+
+	/** @breif HumanInterfaceの状態を取得し、力覚ポインタを更新する
+	*/
+	void UpdateHapticPointers();
+
 
 };
 

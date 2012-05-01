@@ -9,7 +9,6 @@ PHHapticEngineSingleBase::PHHapticEngineSingleBase(){}
 void PHHapticEngineSingleBase::Step1(){
 	////DSTR << "step" << std::endl;
 	engine->StartDetection();
-	UpdateInterface();
 	UpdateHapticPointer();
 	PHHapticRenderInfo info;
 	info.pointers = GetHapticPointers();
@@ -33,12 +32,6 @@ void PHHapticEngineSingleBase::Step1(){
 }
 
 void PHHapticEngineSingleBase::Step2(){
-}
-
-void PHHapticEngineSingleBase::UpdateInterface(){
-	for(int i = 0; i < NHapticPointers(); i++){
-		GetHapticPointer(i)->UpdateInterface((float)GetPhysicsTimeStep());
-	}
 }
 
 void PHHapticEngineSingleBase::UpdateHapticPointer(){

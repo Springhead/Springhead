@@ -46,7 +46,6 @@ protected:
 	bool			bCalcPhys;
 
 public:
-	PHHapticLoopImp* hapticLoop;
 	PHHapticEngineMultiBase();
 	virtual void StepHapticLoop();	// hapticloop
 	virtual void Step1(){}

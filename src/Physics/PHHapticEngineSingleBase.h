@@ -14,7 +14,6 @@ public:
 	PHHapticEngineSingleBase();
 	virtual void Step1();
 	virtual void Step2();
-	virtual void UpdateInterface();
 	virtual void UpdateHapticPointer();
 
 	PHHapticRender* GetHapticRender(){

@@ -6,7 +6,6 @@ namespace Spr{;
 
 void PHHapticLoopImp::UpdateInterface(){
 	for(int i = 0; i < NHapticPointers(); i++){
-		GetHapticPointer(i)->UpdateInterface((float)GetHapticTimeStep());
 		GetHapticPointer(i)->UpdateDirect();
 	}
 }
@@ -94,6 +93,9 @@ void PHHapticEngineMultiBase::SyncHapticPointers(){
 			hpointer->hiSolid = ppointer->hiSolid;
 		}else{
 			// haptic‚©‚ç‚Ì“ü—Í‚ğphysics‚Ö
+
+			//DSTR << "sync ppointer" << ppointer->GetHapticForce() << std::endl;
+			//DSTR << "sync hpointer" << hpointer->GetHapticForce() << std::endl;
 			ppointer->hiSolid = hpointer->hiSolid;
 		}
 		ppointer->UpdateDirect();
@@ -106,6 +108,21 @@ void PHHapticEngineMultiBase::SyncHapticPointers(){
 		/* physics‘¤‚Ì•ÏX‚ğhaptic‘¤‚Ö”½‰f
 		// haptic <--------- physics
 		*/
+		if(ppointer->hapticRenderMode == ppointer->VC){
+			if(!ppointer->vcSolid) break;
+			PHSolid* vcSolid = DCAST(PHSolid, ppointer->vcSolid);
+			if(ppointer->hapticRenderMode == ppointer->VC){
+				vcSolid->SetGravity(false);
+				ppointer->vcSolidCopied = *vcSolid;
+				vcSolid->AddForce(hpointer->vcForce.v());
+				vcSolid->AddTorque(hpointer->vcForce.w());
+				ppointer->vcForce = SpatialVector();
+				hpointer->vcForce = SpatialVector();
+			}else{
+				hpointer->vcForce = SpatialVector();
+				vcSolid->SetGravity(true);
+			}
+		}
 		*hpointer = *ppointer;
 	}
 }

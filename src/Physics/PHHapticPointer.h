@@ -14,6 +14,8 @@ struct PHHapticPointerSt : public PHHapticPointerDesc{
 	Posed proxyPose;	// 摩擦計算用のプロキシ
 	Posed lastProxyPose;
 	Posed targetProxy;	// 反力計算用のプロキシ
+	SpatialVector vcForce;
+	SpatialVector hapticForce;
 };
 class PHHapticPointer : public PHHapticPointerSt, public PHSolid{
 	SPR_OBJECTDEF(PHHapticPointer);
@@ -27,33 +29,29 @@ protected:
 	double posScale;
 	Posed defaultPose;
 	double rotaionalWeight;
-	SpatialVector hapticForce;
+
 
 public:
 	bool bDebugControl;		// physicsLoopから力覚ポインタを操作するためのフラグ
-	bool bDirectControl;	// hapticLoopから力覚ポインタを操作するためのフラグ
 	bool bForce;
 	bool bFriction;
 	bool bVibration;
 	bool bMultiPoints;
-	bool bVirtualCoupling;
 	HapticRenderMode hapticRenderMode;
 	std::vector<int> neighborSolidIDs;
 	PHSolid hiSolid;
 	PHSolidIf* vcSolid;
-	//HIBaseIf* humanInterface;
+	PHSolid vcSolidCopied;
 	PHHapticPointer();
 	PHHapticPointer(const PHHapticPointer& p);
 
 	//API
-//	void	SetHumanInterface(HIBaseIf* hi){ humanInterface = hi; }
 	void	SetHapticRenderMode(HapticRenderMode m){ hapticRenderMode = m; }
 	void	EnableForce(bool b){ bForce = b; }
 	void	EnableFriction(bool b){ bFriction = b; }
 	void	EnableMultiPoints(bool b){ bMultiPoints = b; }
 	void	EnableVibration(bool b){ bVibration = b; }
 	void	EnableDebugControl(bool b){ bDebugControl = b; }
-	void	EnableDirectControl(bool b){ bDirectControl = b; }
 	void	SetReflexSpring(float s){ reflexSpring = s; }
 	float	GetReflexSpring(){ return reflexSpring; }
 	void	SetReflexDamper(float d){ reflexDamper = d; }
@@ -79,10 +77,13 @@ public:
 	int		GetPointerID(){ return pointerID; }
 	void	SetSolidID(int id){ pointerSolidID = id; }
 	int		GetSolidID(){ return pointerSolidID; }
-	void	UpdateInterface(float dt);
+	void	UpdateHumanInterface(Posed pose, SpatialVector vel);
 	void	UpdateDirect();
 	void	AddHapticForce(SpatialVector f);
-	void	DisplayHapticForce();
+	SpatialVector	GetHapticForce(){ return hapticForce; }
+
+	virtual void UpdateVelocity(double dt){}
+	virtual void UpdatePosition(double dt){}
 };
 class PHHapticPointers : public std::vector< UTRef< PHHapticPointer > >{};
 

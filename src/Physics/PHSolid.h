@@ -140,8 +140,8 @@ public:
 	SpatialVector v;		///< ローカル座標での現在の速度
 	SpatialVector dV;		///< Correctionによる移動量，回転量
 	void UpdateCacheLCP(double dt);
-	void UpdateVelocity(double dt);
-	void UpdatePosition(double dt);
+	virtual void UpdateVelocity(double dt);
+	virtual void UpdatePosition(double dt);
 	bool IsArticulated();
 	//@}
 

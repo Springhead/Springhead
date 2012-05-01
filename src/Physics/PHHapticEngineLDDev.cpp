@@ -6,7 +6,7 @@ namespace Spr{;
 void PHHapticLoopLDDev::Step(){
 	UpdateInterface();
 	HapticRendering();
-	LocalDynamics();
+	LocalDynamics6D();
 }
 void PHHapticLoopLDDev::HapticRendering(){
 	PHHapticRenderInfo info;
@@ -20,7 +20,8 @@ void PHHapticLoopLDDev::HapticRendering(){
 	GetHapticRender()->HapticRendering(info);
 }
 
-void PHHapticLoopLDDev::LocalDynamics(){
+
+void PHHapticLoopLDDev::LocalDynamics6D(){
 	double pdt = GetPhysicsTimeStep();
 	double hdt = GetHapticTimeStep();
 	for(int i = 0; i < NHapticSolids(); i++){
@@ -38,23 +39,23 @@ void PHHapticLoopLDDev::LocalDynamics(){
 			PHHapticPointer* pointer = GetHapticPointer(j);
 			PHSolidPairForHaptic* sp = GetSolidPairForHaptic(i, pointer->GetPointerID());
 			if(sp->inLocal == 0) continue;
-			vel += (sp->A * sp->force) * hdt;			// 力覚ポインタからの力による速度変化
+			SpatialVector force;
+			force.v() = sp->force;
+			force.w() = sp->torque;
+			vel += (sp->A6D * force) * hdt;			// 力覚ポインタからの力による速度変化
+			//DSTR << sp->A << std::endl;
 		}
 		vel += hsolid->b * hdt;
-		//DSTR << hsolid->bimpact << "," << hsolid->b << "," << vel << std::endl;
+		//DSTR << vel << std::endl;
+		//CSVOUT << vel.w().y << std::endl;
 		localSolid->SetVelocity(vel.v());		
 		localSolid->SetAngularVelocity(vel.w());
 		localSolid->SetOrientation(( Quaterniond::Rot(vel.w() * hdt) * localSolid->GetOrientation()).unit());
+		//localSolid->SetOrientation(( localSolid->GetOrientation() * Quaterniond::Rot(vel.w() * hdt)).unit());
 		localSolid->SetCenterPosition(localSolid->GetCenterPosition() + vel.v() * hdt);
 
  		localSolid->SetUpdated(true);
 		localSolid->Step();
-		if(i == 1){
-			//CSVOUT << localSolid->GetFramePosition().y << "," << vel.v().y << "," << hsolid->b.v().y * hdt << std::endl;
-			//CSVOUT << localSolid->GetVelocity().y << ","
-			//<< (hsolid->curb - hsolid->lastb).v().y *  pdt << ","
-			//<< hsolid->b.v().y * hdt << std::endl;
-		}
 	}
 }
 
@@ -80,11 +81,11 @@ void PHHapticEngineLDDev::Step2(){
 	}
 
 	engine->StartDetection();
-	PredictSimulation3D();
+	PredictSimulation6D();
 }
 
-/// 1対1のshapeで、1点の接触のみ対応
-void PHHapticEngineLDDev::PredictSimulation3D(){
+
+void PHHapticEngineLDDev::PredictSimulation6D(){
 	engine->bPhysicStep = false;
 	/** PHSolidForHapticのdosim > 0の物体に対してテスト力を加え，
 		すべての近傍物体について，アクセレランスを計算する */
@@ -104,7 +105,7 @@ void PHHapticEngineLDDev::PredictSimulation3D(){
 	states->ReleaseState(phScene);
 	states->Clear();
 	states->SaveState(phScene);	
-#if 1
+
 	/// テストシミュレーション実行
 	for(int i = 0; i < NHapticSolids(); i++){
 		if(GetHapticSolid(i)->doSim == 0) continue;
@@ -124,19 +125,15 @@ void PHHapticEngineLDDev::PredictSimulation3D(){
 		#endif 
 		nextvel.v() = phSolid->GetVelocity();
 		nextvel.w() = phSolid->GetAngularVelocity();
-		/// アクセレランスbの算出
 
+		/// アクセレランスbの算出
 		hsolid->lastb = hsolid->b;
 		double pdt = phScene->GetTimeStep();
 		SpatialVector preb = (nextvel - curvel)/pdt;
 		hsolid->b = preb;
-		//double dot = hsolid->curb * preb;
-		//hsolid->b = SpatialVector();
-		//hsolid->b.v() = phScene->GetGravity();
-		//hsolid->bimpact = preb;
-		//hsolid->bimpact += -hsolid->b.v();
 
-		states->LoadState(phScene);						// 現在の状態に戻す
+
+		states->LoadState(phScene);					// 現在の状態に戻す
 
 		//if(i == 1){
 		//	DSTR << "-------" << std::endl;
@@ -155,35 +152,120 @@ void PHHapticEngineLDDev::PredictSimulation3D(){
 			Vec3d cPoint = sp->shapePoseW[0] * sp->closestPoint[0];		// 力を加える点(ワールド座標)
 			Vec3d normal = -1 * sp->normal;
 
-			TMatrixRow<6, 3, double> u;			// 剛体の機械インピーダンス?
-			TMatrixRow<3, 3, double> force;		// 加える力
-			u.clear(0.0);
-			force.clear(0.0);
-
 			float minTestForce = 0.5;		// 最小テスト力
+			float minTestTorque = 0.5;
 
-			// 相対座標系
-			if(solidPair->force.norm() == 0){
-				force.col(0) = minTestForce * normal;
-			}else{
-				force.col(0) = solidPair->force;
-				solidPair->force = Vec3d();
+			// テスト力、テストトルクの作成
+			SpatialVector testForce;
+			testForce.v() = solidPair->force;
+			testForce.w() = solidPair->torque;
+			solidPair->force = Vec3d();
+			solidPair->torque = Vec3d();
+
+			/// テスト力が0の場合の処理
+			//テストトルクも必ず0になる
+			//接触していないので，1点だけに力を加えるようにする
+			if(testForce.v().norm() < 1e-5){
+				testForce.v() = minTestForce * normal;
+				Vec3d cPoint = sp->shapePoseW[0] * sp->closestPoint[0];		// 力を加える点(ワールド座標)
+				Vec3d center = phSolid->GetCenterPosition();
+				testForce.w() = (cPoint - center) % testForce.v();
+				//DSTR << testForce.w() << std::endl;
 			}
-			Vec3d base1 = force.col(0).unit();
-			Vec3d base2 = Vec3d(1, 0, 0) - (Vec3d(1, 0, 0) * base1) * base1;
-			if (base2.norm() > 0.1){
-				base2.unitize();
-			}else{
-				base2 = Vec3d(0, 1, 0) - (Vec3d(0, 1, 0) * base1) * base1;
+			///// テストトルクが0の場合の処理
+			//if(testForce.w().norm() < 1e-5){
+			//	testForce.w() = minTestTorque * Vec3d(1, 0, 0);	// とりあえず適当なベクトルを入れておく
+			//	DSTR << "test torque is Zero" << std::endl;
+			//}
+
+			SpatialVector f[6];
+#if 1
+			/// 力f[0].v()と垂直な力2本
+			f[0].v() = testForce.v();
+			Vec3d base1 = f[0].v().unit();
+			Vec3d base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
+			if(base2.norm() > 0.1)	base2.unitize();
+			else{
+				base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
 				base2.unitize();
 			}
 			Vec3d base3 = base1^base2;
-			force.col(1) = force.col(0).norm() * (base1 + base2).unit();
-			force.col(2) = force.col(0).norm() * (base1 + base3).unit();
+			f[1].v() = f[0].v().norm() * (base1 + base2).unit();
+			f[2].v() = f[0].v().norm() * (base1 + base3).unit();
 
-			/// テスト力を3方向に加える	
-			for(int m = 0; m < 3; m++){
-				phSolid->AddForce(force.col(m), cPoint);
+			/// トルクf[0].w()と垂直なトルク2本
+			f[3].w() = testForce.w();
+			base1 = f[3].w().unit();
+			base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
+			if(base2.norm() > 0.1)	base2.unitize();
+			else{
+				base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
+				base2.unitize();
+			}
+			base3 = base1^base2;
+			f[4].v() = f[5].v() = f[0].v();
+			f[4].w() = f[3].w().norm() * (base1 + base2).unit();
+			f[5].w() = f[3].w().norm() * (base1 + base3).unit();
+#else
+			/// テスト力すべてをf[0]にする
+			for(int k = 1; k < 6; k++) f[k] = f[0];
+
+			/// 力f[0].v()と垂直な力2本
+			f[0].v() = testForce.v();
+			Vec3d base1 = f[0].v().unit();
+			Vec3d base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
+			if(base2.norm() > 0.1)	base2.unitize();
+			else{
+				base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
+				base2.unitize();
+			}
+			Vec3d base3 = base1^base2;
+			f[1].v() = f[0].v().norm() * (base1 + base2);
+			f[2].v() = f[0].v().norm() * (base1 + base3);
+
+			/// トルクf[0].w()と垂直なトルク2本
+			base1 = f[0].w().unit();
+			base2 = Vec3d(1,0,0) - (Vec3d(1,0,0)*base1)*base1;
+			if(base2.norm() > 0.1)	base2.unitize();
+			else{
+				base2 = Vec3d(0,1,0) - (Vec3d(0,1,0)*base1)*base1;
+				base2.unitize();
+			}
+			base3 = base1^base2;
+			f[3].w() = f[0].w().norm() * (base1 + base2);
+			f[4].w() = f[0].w().norm() * (base1 + base3);
+
+			/// f[0]と垂直になるベクトル svbase2 = (a * f[0].v(), b*f[0].w())^{t}
+			/// a*f[0].v()*f[0].v() + b*f[0].w()*f[0].w() = 0となるa, bをみつける
+			SpatialVector svbase1 = SpatialVector();
+			svbase1.v() = f[0].v();
+			svbase1.w() = f[0].w();
+			svbase1.unitize();
+			double f_ip = f[0].v()*f[0].v();
+			double t_ip = f[0].w()*f[0].w();
+			double c = f_ip / t_ip;
+			double a = 1;
+			double b = - a * c;
+			//DSTR << c << std::endl;
+			SpatialVector svbase2 = SpatialVector();
+			svbase2.v() = a * f[0].v();
+			svbase2.w() = b * f[0].w();
+			svbase2.unitize();
+			//f[5] = f[0].w().norm() * (svbase1 + svbase2);
+			f[5] = svbase1 + svbase2;
+			f[5].v() = f[0].v().norm() * f[5].v();
+			f[5].w() = f[0].w().norm() * f[5].w();
+
+#endif
+
+			TMatrixRow<6,6,double> u = TMatrixRow<6,6,double>();		// 剛体の機械インピーダンス
+			TMatrixRow<6,6,double> F = TMatrixRow<6,6,double>();		// 加える力,トルク行列
+			for(int k = 0; k < 6; k++)	F.col(k) = f[k];				// テスト力，テストトルクを行列に詰める
+
+			/// テスト力，テストトルクを加えてテストシミュレーション実行
+			for(int k = 0; k < 6; k++){
+				phSolid->AddForce(f[k].v()); 
+				phSolid->AddTorque(f[k].w());
 				#ifdef DIVIDE_STEP
 				phScene->IntegratePart2();
 				#else
@@ -191,24 +273,34 @@ void PHHapticEngineLDDev::PredictSimulation3D(){
 				#endif
 				nextvel.v() = phSolid->GetVelocity();
 				nextvel.w() = phSolid->GetAngularVelocity();
-				u.col(m) = (nextvel - curvel) / pdt - hsolid->b;
-				//DSTR << force.col(m) << force.col(m).norm() << std::endl;
-				//DSTR << nextvel - curvel << std::endl;
-				states->LoadState(phScene);			
+				u.col(k) = (nextvel - curvel) /pdt - hsolid->b;
+				states->LoadState(phScene);
 			}
-
-			solidPair->A = u  * force.inv();	// m/(Ns2)
-			//DSTR << solidPair->A << std::endl;
-			//if(i == 1) CSVOUT << hsolid->b.v().y << std::endl;
+			//DSTR << F.det() << std::endl; 
+			//DSTR << u << std::endl; 
+			solidPair->A6D = u  * F.inv();			// モビリティAの計算
+#if 1
+			DSTR << "------------------------" << std::endl;
+			DSTR << "u" << std::endl; DSTR << u << std::endl;
+			DSTR << "b:" << std::endl;	DSTR << hsolid->b << std::endl;
+			DSTR << "F:" << std::endl;	DSTR << F << std::endl;
+			DSTR << "Minv:" << std::endl;	DSTR << solidPair->A6D << std::endl;
+#if 1
+			TMatrixRow<6, 6, double> M = TMatrixRow<6, 6, double>();
+			if(det(u) == 0)	M = F * u; 
+			else			M = F * u.inv(); 
+			DSTR << "M:" << std::endl;	DSTR << M << std::endl;
+#endif
+#endif
 		}
 	}
-#endif
 	///--------テストシミュレーション終了--------
 #ifdef DIVIDE_STEP
 	states2->LoadState(phScene);							// 元のstateに戻しシミュレーションを進める
 #endif
 	engine->bPhysicStep = true;
 }
+
 
 void PHHapticEngineLDDev::SyncHaptic2Physic(){
 #if 1

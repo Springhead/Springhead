@@ -11,40 +11,27 @@ PHHapticPointer::PHHapticPointer(){
 	localRange = 1.0; 
 	posScale = 1.0;
 	bDebugControl = false;
-	bDirectControl = false;
 	bForce = false;
 	bFriction = true;
 	bMultiPoints = true;
 	bVibration = false;
 	rotaionalWeight = 1e5;
 	dynamical = false;
-//	integrate = false;	TODO: 関数オーバーライドで対応
 	hapticRenderMode = CONSTRAINT;
 }
 PHHapticPointer::PHHapticPointer(const PHHapticPointer& p){
 	*this = p;
 }
 
-void PHHapticPointer::UpdateInterface(float dt){
+void PHHapticPointer::UpdateHumanInterface(Posed pose, SpatialVector vel){
 	if(bDebugControl) return;
 	// HumanInterfaceから状態を取得
 	double s = GetPosScale();
-//	HIHapticIf* hif = DCAST(HIHapticIf, humanInterface);
-//	hif->Update(dt);
-//	hiSolid.SetVelocity((Vec3d)hif->GetVelocity() * s);
-//	hiSolid.SetAngularVelocity((Vec3d)hif->GetAngularVelocity());
-	Posed pose;
-//	pose.Pos() = (Vec3d)hif->GetPosition() * s;
-//	pose.Ori() =    hif->GetOrientation();
+	vel.v() = vel.v() * s;
+	pose.Pos() = pose.Pos() * s;
+	hiSolid.SetVelocity(vel.v());
+	hiSolid.SetAngularVelocity(vel.w());
 	hiSolid.SetPose(GetDefaultPose() * pose);
-	
-	if(!bDirectControl) return;
-	// デバックのための擬似入力
-	Vec3d debug_vel = Vec3d(-0.1, 0.0, 0.0);
-	static Posed debug_pose = defaultPose;
-	debug_pose.Pos() = debug_pose.Pos() + debug_vel * dt;
-	hiSolid.SetVelocity(debug_vel);
-	hiSolid.SetPose(debug_pose);
 }
 
 void PHHapticPointer::UpdateDirect(){
@@ -62,15 +49,6 @@ void PHHapticPointer::UpdateDirect(){
 
 void PHHapticPointer::AddHapticForce(SpatialVector f){
 	hapticForce += f;
-}
-
-void PHHapticPointer::DisplayHapticForce(){
-//	HIHapticIf* hif = DCAST(HIHapticIf, humanInterface);
-//	if(bForce)
-//		 hif->SetForce(hapticForce.v(), hapticForce.w());
-//	else hif->SetForce(Vec3f(), Vec3f());
-	//CSVOUT << hapticForce.v().x << std::endl;
-	hapticForce.clear(0.0);
 }
 
 

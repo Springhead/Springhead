@@ -1,5 +1,6 @@
 #include <Physics/PHHapticEngine.h>
 #include <Physics/PHHapticRender.h>
+#include <Physics/PHHapticEngineMultiBase.h>
 #include <Physics/PHHapticEngineImpulse.h>
 #include <Physics/PHHapticEngineSingleBase.h>
 #include <Physics/PHHapticEngineLD.h>
@@ -422,6 +423,11 @@ PHSolidPairsForHaptic* PHHapticEngineImp::GetSolidPairsForHaptic(){
 PHHapticRender* PHHapticEngineImp::GetHapticRender(){
 	return engine->hapticRender->Cast();
 }
+PHHapticLoopImp* PHHapticEngineImp::GetHapticLoop(){
+	if(hapticLoop) return hapticLoop;
+	else return NULL;
+}
+
 void PHHapticEngineImp::StepPhysicsSimulation(){
 	engine->GetScene()->Step();
 }
@@ -708,6 +714,22 @@ void PHHapticEngine::SetContactMode(){
 	for(int i = 0; i < (int)hapticPointers.size(); i++){
 		GetScene()->SetContactMode(hapticPointers[i]->Cast(), PHSceneDesc::MODE_NONE);
 	}
+}
+
+int PHHapticEngine::GetHapticEngineMode(){
+	return (int)engineMode;
+}
+
+PHHapticPointers* PHHapticEngine::GetLocalHapticPointers(){
+	if(engineImp->hapticLoop)
+		return engineImp->GetHapticLoop()->GetHapticPointers();
+	else
+		return NULL;
+}
+
+void PHHapticEngine::ReleaseState(){
+	if(!engineImp->states) return;
+	engineImp->states->ReleaseState(GetScene());
 }
 
 } // namespace Spr

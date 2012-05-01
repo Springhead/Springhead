@@ -102,7 +102,7 @@ public:
 	
 	int inLocal;	// 0:NONE, 1:in local first, 2:in local
 	TMatrixRow<6, 3, double> A;		// LocalDynamicsで使うアクセレランス
-	TMatrixRow<6, 6, double> Minv;  // LocalDynamics6Dで使うアクセレランス
+	TMatrixRow<6, 6, double> A6D;  // LocalDynamics6Dで使うアクセレランス
 	
 	PHSolidPairForHaptic();
 	PHSolidPairForHaptic(const PHSolidPairForHaptic& s);
@@ -118,10 +118,13 @@ class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> 
 //----------------------------------------------------------------------------
 // PHHapticEngineImp
 class PHHapticRender;
+class PHHapticLoopImp;
 class PHHapticEngineImp : public SceneObject{
 	SPR_OBJECTDEF_NOIF(PHHapticEngineImp);
 public:
 	PHHapticEngine* engine;
+	PHHapticLoopImp* hapticLoop;
+	UTRef< ObjectStatesIf > states;
 	PHHapticEngineImp(){}
 	virtual void Step1(){};
 	virtual void Step2(){};
@@ -139,6 +142,7 @@ public:
 	PHSolidsForHaptic* GetHapticSolids();
 	PHSolidPairsForHaptic* GetSolidPairsForHaptic();
 	PHHapticRender* GetHapticRender();
+	PHHapticLoopImp* GetHapticLoop();
 
 	///< デバック用シミュレーション実行
 	virtual void StepPhysicsSimulation();
@@ -177,6 +181,8 @@ public:
 	int NHapticPointers(){ return (int)hapticPointers.size(); }
 	///< 力覚ポインタへのポインタを返す
 	PHHapticPointer* GetHapticPointer(int i){ return hapticPointers[i]; }
+	///< state保存のために確保した領域を開放する
+	void ReleaseState();
 
 	//-------------------------------------------------------------------
 	// PHHapticEngineの実装
@@ -201,6 +207,10 @@ public:
 	void UpdateShapePairs(PHSolid* solid);
 	///< 接触モードの変更
 	virtual void SetContactMode();
+	//< エンジンモードの取得
+	int GetHapticEngineMode();
+	///< ローカル側の力覚ポインタをとってくる
+	PHHapticPointers* GetLocalHapticPointers();
 
 	///< デバック用シミュレーション実行
 	///（PHScene::Stepの変わりに呼ぶ）
@@ -216,7 +226,6 @@ public:
 	int GetPriority() const { return SGBP_HAPTICENGINE2; }
 	virtual void Step(){ engine->Step2(); }
 };
-
 
 }	//	namespace Spr
 #endif

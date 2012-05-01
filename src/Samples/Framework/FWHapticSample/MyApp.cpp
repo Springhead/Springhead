@@ -1,10 +1,11 @@
 #include "MyApp.h"	
+#include "Physics/PHHapticEngineLD.h"
 
 using namespace Spr;
 
 // ヒューマンインタフェースの切り替え
 // 0:SPIDAR-G6, 1:XBoxController
-#define HUMAN_INTERFACE 2
+#define HUMAN_INTERFACE 0
 // 力覚エンジンの切り替え
 // 0:single, 1:impulsemulti, 2:LD
 #define ENGINETYPE 2
@@ -82,13 +83,17 @@ void MyApp::Init(int argc, char* argv[]){
 		Posed defaultPose;
 		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);
 		pointer->SetDefaultPose(defaultPose);		// 力覚ポインタ初期姿勢の設定
-		pointer->SetHumanInterface(spg);			// インタフェースの設定
 		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia());	// 慣性テンソルの設定
 		pointer->SetLocalRange(0.1);				// 局所シミュレーション範囲の設定
 		pointer->SetPosScale(50);					// 力覚ポインタの移動スケールの設定
 		pointer->SetReflexSpring(5000);				// バネ係数の設定
 		pointer->SetReflexDamper(0.1 * 0.0);		// ダンパ係数の設定
 		pointer->EnableFriction(false);				// 摩擦を有効にするかどうか
+		//pointer->EnableDebugControl(true);
+		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();
+		fwPointer->SetHumanInterface(spg);
+		fwPointer->SetPHHapticPointer(pointer);
+
 
 		PHHapticEngineIf* he = phscene->GetHapticEngine();	// 力覚エンジンをとってくる
 		he->EnableHapticEngine(true);						// 力覚エンジンの有効化
@@ -118,9 +123,10 @@ void MyApp::Init(int argc, char* argv[]){
 #if ENGINETYPE > 0
 void MyApp::TimerFunc(int id){
 	if(hapticTimerID == id){
+		GetSdk()->GetScene()->UpdateHapticPointers();
 		phscene->StepHapticLoop();
 	}else{
-		PHHapticEngineIf* he = phscene->GetHapticEngine()->Cast();
+		PHHapticEngineIf* he = phscene->GetHapticEngine();
 		he->StepPhysicsSimulation();
 		PostRedisplay();
 	}
@@ -128,6 +134,7 @@ void MyApp::TimerFunc(int id){
 #else
 void MyApp::TimerFunc(int id){
 	if(hapticTimerID == id){
+		GetSdk()->GetScene()->UpdateHapticPointers();
 		phscene->Step();
 	}else if(physicsTimerID == id){
 		PostRedisplay();
@@ -138,6 +145,7 @@ void MyApp::TimerFunc(int id){
 
 void MyApp::Keyboard(int key, int x, int y){
 	// 各スレッドの共有メモリのアクセス違反回避のために全てのタイマをとめる
+		float dr = 0.01;
 	for(int i = 0; i < NTimers(); i++)	GetTimer(i)->Stop();
 	switch(key){
 		case 'q':
@@ -240,6 +248,7 @@ void MyApp::Keyboard(int key, int x, int y){
 		case ' ':
 			{
 				// 新たに剛体を生成する
+				GetSdk()->GetScene()->GetPHScene()->GetHapticEngine()->ReleaseState();
 				CDBoxDesc bd;
 				bd.boxsize.clear(0.4f);
 				PHSolidIf* box = phscene->CreateSolid();
@@ -248,6 +257,34 @@ void MyApp::Keyboard(int key, int x, int y){
 				box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * box->GetMass());
 				box->SetFramePosition(Vec3d(-0.5, 1.0, 0.0));
 			}
+		case 356: // left
+			{
+				Vec3d pos = pointer->GetFramePosition();
+				pos.x -= dr;
+				pointer->SetFramePosition(pos);
+			}
+			break;
+		case 358: // right
+			{
+				Vec3d pos = pointer->GetFramePosition();
+				pos.x += dr;
+				pointer->SetFramePosition(pos);
+			}
+			break;		
+		case 357: // up
+			{
+				Vec3d pos = pointer->GetFramePosition();
+				pos.y += dr;
+				pointer->SetFramePosition(pos);
+			}
+			break;			
+		case 359: // down
+			{
+				Vec3d pos = pointer->GetFramePosition();
+				pos.y -= dr;
+				pointer->SetFramePosition(pos);
+			}
+			break;	
 		default:
 			break;
 	}
