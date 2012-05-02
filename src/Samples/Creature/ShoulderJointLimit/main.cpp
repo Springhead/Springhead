@@ -5,13 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/** \page pageVirtualHuman
- Springhead2/src/Samples/Creature/VirtualHuman/main.cpp
+/** \page pageShoulderJointLimit
+ Springhead2/src/Samples/Creature/ShoulderJointLimit/main.cpp
 
-\ref バーチャルヒューマンのデモプログラム
+\ref 肩関節可動域制限のデモ
 
-\secntion secSpecVirtualHuman
-バーチャルヒューマンモデルを生成するデモです．
+\secntion secSpecShoulderJointLimit
+肩関節の可動域制限をスプライン閉曲線で指定するデモです．
 */
 
 #include <vector>
@@ -26,7 +26,7 @@ using namespace std;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // アプリケーションクラス
-class VirtualHumanApp : public SampleApp{
+class ShoulderJointLimitApp : public SampleApp{
 public:
 	/// ページID
 	enum {
@@ -44,8 +44,8 @@ public:
 	int argc;
 	char** argv;
 
-	VirtualHumanApp(){
-		appName = "VirtualHuman Sample";
+	ShoulderJointLimitApp(){
+		appName = "Shoulder Joint Limit Sample";
 		numScenes   = 1;
 
 		AddAction(MENU_SCENE, ID_UP, "Pointer move Up");
@@ -60,7 +60,7 @@ public:
 		AddAction(MENU_SCENE, ID_RIGHT, "Pointer move Right");
 		AddHotKey(MENU_SCENE, ID_RIGHT, 'l');
 	}
-	~VirtualHumanApp(){}
+	~ShoulderJointLimitApp(){}
 
 	// 初期化
 	virtual void Init(int argc, char* argv[]) {
@@ -74,6 +74,7 @@ public:
 		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(3,3,5));
 		fwScene->EnableRenderAxis(true, false, false);
+		fwScene->EnableRenderLimit(true);
 	}
 
 	PHSolidIf*         soTarget;
@@ -104,6 +105,30 @@ public:
 		CRBodyIf* body = bodyGen.Generate(crCreature);
 
 		body->GetSolid(CRBallHumanBodyGenDesc::SO_WAIST)->GetPHSolid()->SetDynamical(false);
+
+		// ----- ----- ----- ----- -----
+
+		PHBallJointSplineLimitDesc descSplineLimit;
+		// descSplineLimit.poleTwist = Vec2d(Rad(-90), Rad(0));
+		descSplineLimit.limitDir  = Vec3d(0,0,-1);
+		descSplineLimit.spring    = 5.0;
+		descSplineLimit.damper    = 0.5;
+
+		PHBallJointIf* joLShoulder = body->GetJoint(7)->GetPHJoint()->Cast();
+		PHBallJointSplineLimitIf* limitL = joLShoulder->CreateLimit(descSplineLimit)->Cast();
+		limitL->AddNode(Rad(0),Rad(90),Rad(50),Rad(10),Rad(0),Rad(-90));
+		limitL->AddNode(Rad(48.0775),Rad(87.8079),Rad(50),Rad(10),Rad(0),Rad(-90));
+		limitL->AddNode(Rad(132.51),Rad(65.1153),Rad(50),Rad(10),Rad(0),Rad(-90));
+		limitL->AddNode(Rad(226.245),Rad(173.518),Rad(50),Rad(10),Rad(0),Rad(-90));
+		limitL->AddNode(Rad(232.853),Rad(55.2006),Rad(50),Rad(10),Rad(0),Rad(-90));
+		limitL->AddNode(Rad(247.286),Rad(62.1539),Rad(50),Rad(10),Rad(0),Rad(-90));
+		limitL->AddNode(Rad(291.705),Rad(147.814),Rad(50),Rad(10),Rad(0),Rad(-90));
+		limitL->AddNode(Rad(360),Rad(90),Rad(50),Rad(10),Rad(0),Rad(-90));
+
+		if (joLShoulder) {
+			joLShoulder->SetDamper(10.0);
+			joLShoulder->SetSpring( 1.0);
+		}
 	}
 
 	virtual void OnAction(int menu, int id){

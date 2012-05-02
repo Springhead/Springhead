@@ -16,6 +16,7 @@
 - 'v'で柔らかい追従制御．障害物で止められる程度の力だが，アーム先端が所定の高さで運動できる．
 - 'b'で固いPD制御．アーム先端は所定の高さで運動できるが，障害物を強い力で押しのけてしまう．
 - 'c'で柔らかいPD制御．障害物を押しのけるような強い力はないが，アーム先端を持ち上げる力もない．
+（起動時は“柔らかいPD制御”になっている．）
 
 - 'i'をタイプするとポインタ位置が上に動く．
 - 'k'で、下へ
@@ -98,8 +99,6 @@ public:
 		curScene = 0;
 
 		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
-		GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(6.5,6,20));
-
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3d(0,0,50));
 
 		fwScene->EnableRenderGrid(false,true,false);
