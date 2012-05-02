@@ -1,7 +1,7 @@
 #ifndef SPREPInterpreter_H
 #define SPREPInterpreter_H
 
-#include <EmbPython\EmbPython.h>
+#include <EmbPython/EmbPython.h>
 
 namespace Spr{
 
