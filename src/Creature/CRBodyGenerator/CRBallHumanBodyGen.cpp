@@ -48,10 +48,10 @@ CRBallHumanBodyGenDesc::CRBallHumanBodyGenDesc(){
 
 	bideltoidBreadth = wBideltoid;
 
-	headBreadth = 0.1619; // 0.5699 / 3.1415;
+	headBreadth = 0.1619;
 	headHeight  = 0.2387;
 	
-	neckLength   = 1.5796 - 1.4564; // Ž¨‚Ì‚‚³ - èò’Å‚  // 1.7219 - 1.3882 - 0.2387;
+	neckLength   = 1.5796 - 1.4564; // Ž¨‚Ì‚‚³ - èò’Å‚
 	neckDiameter = 0.3563 / 3.1415;
 
 	double occiputToNeckFront  = 0.1301;
@@ -71,7 +71,7 @@ CRBallHumanBodyGenDesc::CRBallHumanBodyGenDesc(){
 	handThickness = 0.0275;
 
 	upperLegLength   = 0.4092;
-	upperLegDiameter = 0.5289 / 3.1415; //  0.1682;
+	upperLegDiameter = 0.5289 / 3.1415;
 	interLegDistance = wBitrochanteric - upperLegDiameter;
 	legPosY = -(hIliocristal - hTrochanterion - waistBreadth/2);
 
@@ -103,7 +103,7 @@ CRBallHumanBodyGenDesc::CRBallHumanBodyGenDesc(){
 	springWaistLeg     = -1;        damperWaistLeg     = -1;
 	springKnee         = -1;        damperKnee         = -1;
 	springAnkle        = -1;        damperAnkle        = -1;
-	springEye          = 100000.0;  damperEye          =  2000.0;
+	springEye          = 100.0;  damperEye             =  5000.0;
 
 	shapeType  = CRBallHumanBodyGenDesc::HST_ROUNDCONE;
 }
@@ -491,8 +491,10 @@ void CRBallHumanBodyGen::CreateUpperArm(LREnum lr){
 
 	// Joint -- Shoulder ([p]Chest-[c]UpperArm)
 	ballDesc                    = PHBallJointDesc();
-	ballDesc.posePlug.Pos() = Vec3d(lr*(bideltoidBreadth/2.0 - upperArmDiameter/2.0), chestBreadth/2.0-upperArmDiameter/2.0, 0);
+	ballDesc.posePlug.Pos()   = Vec3d(lr*(bideltoidBreadth/2.0 - upperArmDiameter/2.0), chestBreadth/2.0-upperArmDiameter/2.0, 0);
 	ballDesc.poseSocket.Pos() = Vec3d(-lr*upperArmLength/2.0, 0, 0);
+	// ballDesc.posePlug.Ori()   = Quaterniond::Rot(Rad(90),'y');
+	// ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90),'y');
 	SetJointSpringDamper(ballDesc, springShoulder, damperShoulder, solids[SO_CHEST]->GetPHSolid()->GetMass());
 	joints[joNShoulder]       = CreateJoint(solids[soNUpperArm], solids[SO_CHEST], ballDesc);
 	CreateIKActuator(joNShoulder);

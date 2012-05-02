@@ -234,7 +234,7 @@ struct PHBallJointSplineLimitIf : public PHBallJointLimitIf{
 
 /// ボールジョイントのスプライン可動域制限のデスクリプタ
 struct PHBallJointSplineLimitDesc : public PHBallJointLimitDesc {
-	SPR_DESCDEF(PHBallJointConeLimit);
+	SPR_DESCDEF(PHBallJointSplineLimit);
 	std::vector<PHSplineLimitNode> nodes;  ///< 可動域を表現するスプライン制御点の配列
 	Vec2d poleTwist;                       ///< 極（原点）におけるTwistのリミット
 
