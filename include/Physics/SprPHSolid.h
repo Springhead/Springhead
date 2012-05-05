@@ -92,12 +92,12 @@ struct PHSolidIf : public SceneObjectIf{
 	void		SetMass(double m);
 	
 	/** @brief 質量中心を取得する
-		@return 質量中心の位置
+		@return 質量中心の位置(Local)
 	 */
 	Vec3d		GetCenterOfMass();
 	
 	/** @brief 質量中心を設定する
-		@param center 質量中心の位置
+		@param center 質量中心の位置(Local)
 	 */
 	void		SetCenterOfMass(const Vec3d& center);
 	
@@ -131,12 +131,12 @@ struct PHSolidIf : public SceneObjectIf{
 	void		SetFramePosition(const Vec3d& p);
 	
 	/** @brief 剛体の質量中心の位置を取得する
-		@return シーンに対する剛体の質量中心の位置
+		@return シーンに対する剛体の質量中心の位置(World)
 	 */
 	Vec3d		GetCenterPosition() const ;
 	
 	/** @brief 剛体の位置を設定する
-		@param p シーンに対する剛体の質量中心の位置
+		@param p シーンに対する剛体の質量中心の位置(World)
 	 */
 	void		SetCenterPosition(const Vec3d& p);
 	

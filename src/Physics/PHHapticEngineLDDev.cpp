@@ -43,7 +43,9 @@ void PHHapticLoopLDDev::LocalDynamics6D(){
 			force.v() = sp->force;
 			force.w() = sp->torque;
 			vel += (sp->A6D * force) * hdt;			// 力覚ポインタからの力による速度変化
-			//DSTR << sp->A << std::endl;
+			//CSVOUT << force[0] << "," << force[1] << "," << force[2] << "," << force[3] << "," << force[4] << "," << force[5] << "," <<std::endl;
+			//DSTR << force << std::endl;
+			//DSTR << sp->A6D << std::endl;
 		}
 		vel += hsolid->b * hdt;
 		//DSTR << vel << std::endl;
@@ -65,10 +67,16 @@ PHHapticEngineLDDev::PHHapticEngineLDDev(){
 	hapticLoop = &hapticLoopLD;
 	hapticLoop->engineImp = this;
 	states = ObjectStatesIf::Create();
-	states2 = ObjectStatesIf::Create();
 }
 
 void PHHapticEngineLDDev::Step1(){
+	lastvels.clear();
+	for(int i = 0; i < NHapticSolids(); i++){
+		SpatialVector vel;
+		vel.v() = GetHapticSolid(i)->sceneSolid->GetVelocity();
+		vel.w() = GetHapticSolid(i)->sceneSolid->GetAngularVelocity();
+		lastvels.push_back(vel);
+	}
 }
 void PHHapticEngineLDDev::Step2(){
 	// 更新後の速度、前回の速度差から定数項を計算
@@ -76,8 +84,10 @@ void PHHapticEngineLDDev::Step2(){
 		// 近傍の剛体のみ
 		if(GetHapticSolid(i)->doSim == 0) continue;
 		PHSolid* solid = GetHapticSolid(i)->sceneSolid;
-		GetHapticSolid(i)->curb = solid->dv / GetPhysicsTimeStep();
-		phvel = solid->GetVelocity();
+		SpatialVector dvel;
+		dvel.v() = solid->GetVelocity();
+		dvel.w() = solid->GetAngularVelocity();
+		GetHapticSolid(i)->curb = (dvel - lastvels[i]) / GetPhysicsTimeStep();
 	}
 
 	engine->StartDetection();
@@ -102,7 +112,6 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 	#endif
 	/// 予測シミュレーションのために現在の剛体の状態を保存する
 	phScene->GetConstraintEngine()->SetBSaveConstraints(true);
-	states->ReleaseState(phScene);
 	states->Clear();
 	states->SaveState(phScene);	
 
@@ -206,6 +215,7 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 			f[4].v() = f[5].v() = f[0].v();
 			f[4].w() = f[3].w().norm() * (base1 + base2).unit();
 			f[5].w() = f[3].w().norm() * (base1 + base3).unit();
+
 #else
 			/// テスト力すべてをf[0]にする
 			for(int k = 1; k < 6; k++) f[k] = f[0];
@@ -275,11 +285,16 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 				nextvel.w() = phSolid->GetAngularVelocity();
 				u.col(k) = (nextvel - curvel) /pdt - hsolid->b;
 				states->LoadState(phScene);
+
+				//DSTR << "force" << std::endl;
+				//DSTR << f[k] << std::endl;
+				//DSTR << "nextvel" << std::endl;
+				//DSTR << nextvel << std::endl;
 			}
 			//DSTR << F.det() << std::endl; 
 			//DSTR << u << std::endl; 
 			solidPair->A6D = u  * F.inv();			// モビリティAの計算
-#if 1
+#if 0
 			DSTR << "------------------------" << std::endl;
 			DSTR << "u" << std::endl; DSTR << u << std::endl;
 			DSTR << "b:" << std::endl;	DSTR << hsolid->b << std::endl;
