@@ -1,52 +1,15 @@
-#include "MyApp.h"	
-#include "Physics/PHHapticEngineLD.h"
+#include "FWHapticSample.h"	
 
 using namespace Spr;
 
-// ヒューマンインタフェースの切り替え
-// 0:SPIDAR-G6, 1:XBoxController
-#define HUMAN_INTERFACE 0
-// 力覚エンジンの切り替え
-// 0:single, 1:impulsemulti, 2:LD
-#define ENGINETYPE 2
-
-void MyApp::InitInterface(){
-	HISdkIf* hiSdk = GetSdk()->GetHISdk();
-
-#if HUMAN_INTERFACE == 0
-	// x86
-	DRUsb20SimpleDesc usbSimpleDesc;
-	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
-	DRUsb20Sh4Desc usb20Sh4Desc;
-	for(int i=0; i< 10; ++i){
-		usb20Sh4Desc.channel = i;
-		hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
-	}
-	// x64
-	DRCyUsb20Sh4Desc cyDesc;
-	for(int i=0; i<10; ++i){
-		cyDesc.channel = i;
-		hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
-	}
-	hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-	hiSdk->Print(DSTR);
-	hiSdk->Print(std::cout);
-
-	spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
-	spg->Calibration();
-#elif HUMAN_INTERFACE == 1
-	spg = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
-	HIXbox360ControllerIf* con = DCAST(HIXbox360ControllerIf,spg);
-#elif HUMAN_INTERFACE == 2
-	spg = hiSdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
-	spg->Init(NULL);
-#endif
+FWHapticSample::FWHapticSample(){
+	pdt = 0.02;
+	hdt = 0.001;
+	engineType = LD;
+	humanInterface = XBOX;
 }
 
-void MyApp::Init(int argc, char* argv[]){
-		FWApp::Init(argc, argv);							// アプリケーションの初期化
-		InitInterface();									// インタフェースの初期化
+void FWHapticSample::BuildScene(){
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();				// シェイプ作成のためにPHSdkへのポインタをとってくる
 		phscene = GetSdk()->GetScene()->GetPHScene();		// 剛体作成のためにPHSceneへのポインタをとってくる
 		
@@ -93,59 +56,94 @@ void MyApp::Init(int argc, char* argv[]){
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();
 		fwPointer->SetHumanInterface(spg);
 		fwPointer->SetPHHapticPointer(pointer);
+}
 
+void FWHapticSample::InitInterface(){
+	HISdkIf* hiSdk = GetSdk()->GetHISdk();
 
-		PHHapticEngineIf* he = phscene->GetHapticEngine();	// 力覚エンジンをとってくる
-		he->EnableHapticEngine(true);						// 力覚エンジンの有効化
+	if(humanInterface == SPIDAR){
+		// x86
+		DRUsb20SimpleDesc usbSimpleDesc;
+		hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
+		DRUsb20Sh4Desc usb20Sh4Desc;
+		for(int i=0; i< 10; ++i){
+			usb20Sh4Desc.channel = i;
+			hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+		}
+		// x64
+		DRCyUsb20Sh4Desc cyDesc;
+		for(int i=0; i<10; ++i){
+			cyDesc.channel = i;
+			hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+		}
+		hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
+		hiSdk->Print(DSTR);
+		hiSdk->Print(std::cout);
 
-#if ENGINETYPE == 0
+		spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+		spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+		spg->Calibration();
+	}else if(humanInterface == XBOX){
+		spg = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
+	}else if(humanInterface == FALCON){
+		spg = hiSdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
+		spg->Init(NULL);
+	}
+}
+
+void FWHapticSample::Init(int argc, char* argv[]){
+	FWApp::Init(argc, argv);							// アプリケーションの初期化
+	InitInterface();									// インタフェースの初期化
+	BuildScene();
+	PHHapticEngineIf* he = phscene->GetHapticEngine();	// 力覚エンジンをとってくる
+	he->EnableHapticEngine(true);						// 力覚エンジンの有効化
+
+	if(engineType == SINGLE){
 		// シングルスレッドモード
 		he->SetHapticEngineMode(PHHapticEngineDesc::SINGLE_THREAD);
-		phscene->SetTimeStep(0.001);
-#elif ENGINETYPE == 1
+		phscene->SetTimeStep(hdt);
+	}else if(engineType == MULTI){
 		// マルチスレッドモード
 		he->SetHapticEngineMode(PHHapticEngineDesc::MULTI_THREAD);
-		phscene->SetTimeStep(0.02);
-#elif ENGINETYPE == 2
+		phscene->SetTimeStep(pdt);
+	}else if(engineType == LD){
 		// 局所シミュレーションモード
 		he->SetHapticEngineMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
-		phscene->SetTimeStep(0.02);
-#endif
+		phscene->SetTimeStep(pdt);
+	}
 		physicsTimerID = GetTimer(0)->GetID();					// 物理スレッドのタイマIDの取得
 		GetTimer(0)->SetMode(UTTimerIf::IDLE);					// 物理スレッドのタイマをIDLEモードに設定
 		UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// 力覚スレッド用のマルチメディアタイマを作成
 		timer->SetResolution(1);		// 分解能(ms)
-		timer->SetInterval(1);			// 刻み(ms)h
+		timer->SetInterval(hdt * 1000);		// 刻み(ms)h
 		hapticTimerID = timer->GetID();	// 力覚スレッドのタイマIDの取得
 		timer->Start();		// タイマスタート
 }
 
-#if ENGINETYPE > 0
-void MyApp::TimerFunc(int id){
-	if(hapticTimerID == id){
-		GetSdk()->GetScene()->UpdateHapticPointers();
-		phscene->StepHapticLoop();
-	}else{
-		PHHapticEngineIf* he = phscene->GetHapticEngine();
-		he->StepPhysicsSimulation();
-		PostRedisplay();
+
+void FWHapticSample::TimerFunc(int id){
+	if(engineType == 0){
+		if(hapticTimerID == id){
+			GetSdk()->GetScene()->UpdateHapticPointers();
+			phscene->Step();
+		}else if(physicsTimerID == id){
+			PostRedisplay();
+		}
+	}else if(engineType > 0){
+		if(hapticTimerID == id){
+			GetSdk()->GetScene()->UpdateHapticPointers();
+			phscene->StepHapticLoop();
+		}else{
+			PHHapticEngineIf* he = phscene->GetHapticEngine();
+			he->StepPhysicsSimulation();
+			PostRedisplay();
+		}
 	}
 }
-#else
-void MyApp::TimerFunc(int id){
-	if(hapticTimerID == id){
-		GetSdk()->GetScene()->UpdateHapticPointers();
-		phscene->Step();
-	}else if(physicsTimerID == id){
-		PostRedisplay();
-	}
-}
-#endif
 
-
-void MyApp::Keyboard(int key, int x, int y){
+void FWHapticSample::Keyboard(int key, int x, int y){
 	// 各スレッドの共有メモリのアクセス違反回避のために全てのタイマをとめる
-		float dr = 0.01;
+	float dr = 0.01;
 	for(int i = 0; i < NTimers(); i++)	GetTimer(i)->Stop();
 	switch(key){
 		case 'q':

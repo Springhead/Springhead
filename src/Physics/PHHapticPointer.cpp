@@ -8,6 +8,8 @@ namespace Spr{;
 PHHapticPointer::PHHapticPointer(){
 	reflexSpring = 300;
 	reflexDamper = 0.1f;
+	reflexSpringOri = 4.0;
+	reflexDamperOri = 0.0;
 	localRange = 1.0; 
 	posScale = 1.0;
 	bDebugControl = false;

@@ -87,7 +87,7 @@ void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
 			PHSolid* localSolid = &hsolids->at(irs[i]->solidID)->localSolid;
 			PHSolidPairForHaptic* sp = sps->item(irs[i]->solidID, pointer->GetPointerID());
 			sp->force += pointForce;	// あるポインタが剛体に加える力
-			sp->torque += (irs[i]->contactPointW - localSolid->GetPose() * localSolid->GetCenterPosition()) ^ pointForce;
+			sp->torque += (irs[i]->contactPointW - localSolid->GetCenterPosition()) ^ pointForce;
 		}
 	}
 	pointer->AddHapticForce(outForce);
@@ -166,9 +166,11 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 
 		float K  = pointer->GetReflexSpring() / pointer->GetPosScale();
 		float D = pointer->GetReflexDamper() / pointer->GetPosScale();
+		float KOri = pointer->GetReflexSpringOri() * pointer->GetRotationalWeight();
+		float DOri = pointer->GetReflexDamperOri() * pointer->GetRotationalWeight();
 
 		outForce.v() = K * dr  + D * (dr - last_dr)/hdt;
-		//outForce.w() = (pointer->springOriK * dtheta + pointer->damperOriD * ((dtheta - last_dtheta)/hdt));
+		outForce.w() = (KOri * dtheta + DOri * ((dtheta - last_dtheta)/hdt));
 		pointer->last_dr = dr;
 		pointer->last_dtheta = dtheta; 
 
@@ -197,15 +199,16 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 			PHSolid* localSolid = &hsolids->at(irs[i]->solidID)->localSolid;
 			PHSolidPairForHaptic* sp = sps->item(irs[i]->solidID, pointer->GetPointerID());
 			sp->force += pointForce;	// あるポインタが剛体に加える力
-			sp->torque += (irs[i]->contactPointW - localSolid->GetPose() * localSolid->GetCenterPosition()) ^ pointForce;
+			sp->torque += (irs[i]->contactPointW - localSolid->GetCenterPosition()) ^ pointForce;
 			//DSTR << sp->force << std::endl;
-			//DSTR << sp->torque << std::endl;
+			//DSTR << irs[i]->contactPointW << " " << localSolid->GetCenterPosition() << std::endl;
+			//DSTR << irs[i]->contactPointW - localSolid->GetCenterPosition() << std::endl;
 		}
 	}
 	pointer->AddHapticForce(outForce);
 	//DSTR << pointer->GetFramePosition() << std::endl;
 	//DSTR << "render" << outForce << std::endl;
-	//CSVOUT << outForce.v().x << "," << outForce.v().y << std::endl;
+	//CSVOUT << outForce[0] << "," << outForce[1] << "," << outForce[2] << "," << outForce[3] << "," << outForce[4] << "," << outForce[5] << "," <<std::endl;
 }
 
 void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){

@@ -211,8 +211,8 @@ public:
 	Vec3d		GetDeltaPosition() const ;
 	Vec3d		GetDeltaPosition(const Vec3d& pos) const ;
 	Vec3d		GetPrevFramePosition() const { return pose.Pos()-GetDeltaPosition(); }
-	Vec3d		GetCenterPosition() const {return pose*center;} 	///< 重心位置の取得
-	void		SetCenterPosition(const Vec3d& p){					///< 重心位置の設定
+	Vec3d		GetCenterPosition() const {return pose*center;} 	///< 重心位置の取得(World)
+	void		SetCenterPosition(const Vec3d& p){					///< 重心位置の設定(World)
 		pose.Pos() = p - pose.Ori()*center;
 	}
 
