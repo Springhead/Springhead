@@ -16,17 +16,11 @@ FWMultiWinSample::FWMultiWinSample(){
 void FWMultiWinSample::Init(int argc, char* argv[]){
 	/// シミュレーションの初期化
 	CreateSdk();
-	GetSdk()->Clear();
-
-	/// 描画モードの指定，初期化
-	SetGRAdaptee(TypeGLUT);	
 	GRInit(argc, argv);
 
 	/// シーンをロード
-	GetSdk()->LoadScene("./xFiles/cookie/sceneCookie.x");
-	GetSdk()->LoadScene("./xFiles/scene1.x");
-	GetSdk()->LoadScene("./xFiles/scene2.x");
-	GetSdk()->LoadScene("./xFiles/scene3.x");
+	GetSdk()->LoadScene("./xFiles/cookie/sceneCookie.spr");
+	//GetSdk()->LoadScene("./xFiles/scene1.spr");
 
 	/// 描画ウィンドウの作成，初期化
 	FWWinDesc winDesc;
@@ -36,34 +30,25 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 	winDesc.top		= 30;
 	winDesc.fullscreen = false;
 	
-	for(int i = 0; i < 5; i++)
+	for(int i = 0; i < 2; i++)
 		CreateWin(winDesc);
 	
+	GetWin(0)->GetTrackball()->SetPosition(Vec3f(-0.0050556, 0.155619, 0.191252));
+	GetWin(1)->GetTrackball()->SetPosition(Vec3f(-0.0050556, 0.155619, 0.191252));
+
 	GetWin(0)->SetTitle("Window1: coockie (PHScene)");
 	GetWin(1)->SetTitle("Window2: coockie (GRScene)");
-	GetWin(2)->SetTitle("Window3: scene1");
-	GetWin(3)->SetTitle("Window4: scene2");
-	GetWin(4)->SetTitle("Window5: scene3");
 
 	// ウィンドウの位置決め．タイトルバーやフレーム分のマージンは自分で計算する必要がある
-	GetWin(0)->SetPosition(  10,  40);
-	GetWin(1)->SetPosition( 510,  40);
-	GetWin(2)->SetPosition(  10, 410);
-	GetWin(3)->SetPosition( 510, 410);
-	GetWin(4)->SetPosition(1010, 410);
+	GetWin(0)->SetPosition(  100,  100);
+	GetWin(1)->SetPosition( 600,  100);
 	
 	GetWin(0)->SetScene(GetSdk()->GetScene(0));
 	GetWin(1)->SetScene(GetSdk()->GetScene(0));
-	GetWin(2)->SetScene(GetSdk()->GetScene(1));
-	GetWin(3)->SetScene(GetSdk()->GetScene(2));
-	GetWin(4)->SetScene(GetSdk()->GetScene(3));
 
 	/// 描画モード設定
 	GetWin(0)->SetDebugMode(true);
 	GetWin(1)->SetDebugMode(false);
-	GetWin(2)->SetDebugMode(true);
-	GetWin(3)->SetDebugMode(true);
-	GetWin(4)->SetDebugMode(true);
 	
 	for(int i = 0; i < GetSdk()->NScene(); i++){
 		FWSceneIf* scene = GetSdk()->GetScene(i);
@@ -71,7 +56,7 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 		scene->EnableRenderAxis();
 		scene->EnableRenderForce();
 		scene->EnableRenderContact();
-		scene->EnableRenderGrid();
+		//scene->EnableRenderGrid();
 	}
 
 	/// タイマの作成
@@ -80,8 +65,11 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 
 void FWMultiWinSample::TimerFunc(int id){	
 	// 全ウィンドウに対して再描画要求
+	Vec3f p = GetCurrentWin()->GetTrackball()->GetPosition();
 	for(int i = 0; i < NWin(); i++){
+		GetWin(i)->GetScene()->Step();
 		SetCurrentWin(GetWin(i));
+		GetCurrentWin()->GetTrackball()->SetPosition(p);
 		PostRedisplay();
 	}
 }
@@ -95,7 +83,16 @@ void FWMultiWinSample::Keyboard(int key, int x, int y){
 	case 'r':
 		Reset();
 		break;
+	case ' ':{
+		FWObjectIf* fwCookie;
+		GetSdk()->GetScene()->FindObject(fwCookie, "fwCookie");
+		FWObjectIf* clone = fwCookie->CloneObject()->Cast();
+		clone->GetPHSolid()->SetFramePosition(Vec3d(0.0, 0.1, 0.0));
+			 }
+		break;
 	default:
 		break;
 	}
 }
+
+
