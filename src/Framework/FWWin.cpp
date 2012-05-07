@@ -8,7 +8,7 @@
 
 #include <Framework/SprFWApp.h>
 #include <Framework/FWWin.h>
-#include <Framework/FWGraphicsAdaptee.h>
+#include <Framework/FWGraphicsHandler.h>
 #include <Framework/FWScene.h>
 #include <Graphics/SprGRScene.h>
 #include <Graphics/SprGRRender.h>
@@ -22,32 +22,32 @@ namespace Spr{;
 // FWWinBase
 
 Vec2i FWWinBase::GetPosition(){
-	Vec2i pos = FWGraphicsAdaptee::instance->GetPosition(this);
+	Vec2i pos = FWGraphicsHandler::instance->GetPosition(this);
 	left = pos.x;
 	top  = pos.y;
 	return pos;
 }
 
 void FWWinBase::SetPosition(int l, int t){
-	FWGraphicsAdaptee::instance->SetPosition(this, l, t);
+	FWGraphicsHandler::instance->SetPosition(this, l, t);
 	left = l;
 	top  = t;
 }
 
 Vec2i FWWinBase::GetSize(){
-	Vec2i sz = FWGraphicsAdaptee::instance->GetSize(this);
+	Vec2i sz = FWGraphicsHandler::instance->GetSize(this);
 	width  = sz.x;
 	height = sz.y;
 	return sz;
 }
 
 void FWWinBase::SetSize(int w, int h){
-	FWGraphicsAdaptee::instance->SetSize(this, w, h);
+	FWGraphicsHandler::instance->SetSize(this, w, h);
 	width  = w;
 	height = h;
 }
 void FWWinBase::SetTitle(UTString t){
-	FWGraphicsAdaptee::instance->SetTitle(this, t);
+	FWGraphicsHandler::instance->SetTitle(this, t);
 	title = t;
 }
 
@@ -80,7 +80,7 @@ void FWWin::Display(){
 }
 
 FWDialogIf*	FWWin::CreateDialog(const FWDialogDesc& desc){
-	FWDialogIf* dlg = FWGraphicsAdaptee::instance->CreateDialog(this, desc)->Cast();
+	FWDialogIf* dlg = FWGraphicsHandler::instance->CreateDialog(this, desc)->Cast();
 	if(dlg){
 		AddChildObject(dlg);
 	}
@@ -88,11 +88,11 @@ FWDialogIf*	FWWin::CreateDialog(const FWDialogDesc& desc){
 }
 
 void FWWin::CalcViewport(int& l, int& t, int& w, int& h){
-	FWGraphicsAdaptee::instance->CalcViewport(l, t, w, h);
+	FWGraphicsHandler::instance->CalcViewport(l, t, w, h);
 }
 
 void FWWin::SetFullScreen(){
-	FWGraphicsAdaptee::instance->SetFullScreen(this);
+	FWGraphicsHandler::instance->SetFullScreen(this);
 	fullscreen = true;
 }
 
@@ -125,7 +125,7 @@ void FWWin::OnUpdatePose(HITrackballIf*){
 // FWDialog
 
 FWControlIf* FWDialog::CreateControl(const IfInfo* ii, const FWControlDesc& desc, FWPanelIf* parent){
-	return FWGraphicsAdaptee::instance->CreateControl(this, ii, desc, parent->Cast())->Cast();
+	return FWGraphicsHandler::instance->CreateControl(this, ii, desc, parent->Cast())->Cast();
 }
 
 FWStaticTextIf* FWDialog::CreateStaticText(UTString text, FWPanelIf* parent){
@@ -197,11 +197,11 @@ FWListBoxIf* FWDialog::CreateListBox(UTString label, FWPanelIf* parent){
 }
 
 void FWDialog::CreateColumn(bool sep, FWPanelIf* parent){
-	FWGraphicsAdaptee::instance->CreateColumn(this, sep, parent->Cast());
+	FWGraphicsHandler::instance->CreateColumn(this, sep, parent->Cast());
 }
 
 void FWDialog::CreateSeparator(FWPanelIf* parent){
-	FWGraphicsAdaptee::instance->CreateSeparator(this, parent->Cast());
+	FWGraphicsHandler::instance->CreateSeparator(this, parent->Cast());
 }
 
 
@@ -209,34 +209,34 @@ void FWDialog::CreateSeparator(FWPanelIf* parent){
 // FWControl
 
 void FWControl::SetLabel(UTString l){
-	FWGraphicsAdaptee::instance->SetLabel(this, l);
+	FWGraphicsHandler::instance->SetLabel(this, l);
 	label = l;
 }
 
 void FWControl::SetAlign(int a){
-	FWGraphicsAdaptee::instance->SetAlign(this, align);
+	FWGraphicsHandler::instance->SetAlign(this, align);
 	align = a;
 }
 
 void FWControl::SetStyle(int s){
-	FWGraphicsAdaptee::instance->SetStyle(this, s);
+	FWGraphicsHandler::instance->SetStyle(this, s);
 	style = s;
 }
 
 int	FWControl::GetInt(){
-	return FWGraphicsAdaptee::instance->GetInt(this);
+	return FWGraphicsHandler::instance->GetInt(this);
 }
 
 void FWControl::SetInt(int val){
-	FWGraphicsAdaptee::instance->SetInt(this, val);
+	FWGraphicsHandler::instance->SetInt(this, val);
 }
 
 float FWControl::GetFloat(){
-	return FWGraphicsAdaptee::instance->GetFloat(this);
+	return FWGraphicsHandler::instance->GetFloat(this);
 }
 
 void FWControl::SetFloat(float val){
-	FWGraphicsAdaptee::instance->SetFloat(this, val);
+	FWGraphicsHandler::instance->SetFloat(this, val);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -246,71 +246,71 @@ void FWControl::SetFloat(float val){
 // FWButton
 
 void FWButton::SetChecked(bool on){
-	FWGraphicsAdaptee::instance->SetChecked(this, on);
+	FWGraphicsHandler::instance->SetChecked(this, on);
 }
 
 bool FWButton::IsChecked(){
-	return FWGraphicsAdaptee::instance->IsChecked(this);
+	return FWGraphicsHandler::instance->IsChecked(this);
 }
 
 //-------------------------------------------------------------------------------------------------
 // FWTextBox
 
 void FWTextBox::SetIntRange(int rmin, int rmax){
-	return FWGraphicsAdaptee::instance->SetIntRange(this, rmin, rmax);
+	return FWGraphicsHandler::instance->SetIntRange(this, rmin, rmax);
 }
 
 void FWTextBox::SetFloatRange(float rmin, float rmax){
-	return FWGraphicsAdaptee::instance->SetFloatRange(this, rmin, rmax);
+	return FWGraphicsHandler::instance->SetFloatRange(this, rmin, rmax);
 }
 
 const char* FWTextBox::GetString(){
-	return FWGraphicsAdaptee::instance->GetString(this);
+	return FWGraphicsHandler::instance->GetString(this);
 }
 
 void FWTextBox::SetString(char* str){
-	FWGraphicsAdaptee::instance->SetString(this, str);
+	FWGraphicsHandler::instance->SetString(this, str);
 }
 
 //-------------------------------------------------------------------------------------------------
 // FWRotationControl
 
 Matrix3f FWRotationControl::GetRotation(){
-	return FWGraphicsAdaptee::instance->GetRotation(this);
+	return FWGraphicsHandler::instance->GetRotation(this);
 }
 
 void FWRotationControl::SetRotation(const Matrix3f& rot){
-	FWGraphicsAdaptee::instance->SetRotation(this, rot);
+	FWGraphicsHandler::instance->SetRotation(this, rot);
 }
 
 void FWRotationControl::SetDamping(float d){
-	FWGraphicsAdaptee::instance->SetDamping(this, d);
+	FWGraphicsHandler::instance->SetDamping(this, d);
 }
 
 void FWRotationControl::Reset(){
-	FWGraphicsAdaptee::instance->Reset(this);
+	FWGraphicsHandler::instance->Reset(this);
 }
 
 //-------------------------------------------------------------------------------------------------
 // FWTranslationControl
 
 Vec3f FWTranslationControl::GetTranslation(){
-	return FWGraphicsAdaptee::instance->GetTranslation(this);
+	return FWGraphicsHandler::instance->GetTranslation(this);
 }
 
 void FWTranslationControl::SetTranslation(Vec3f p){
-	FWGraphicsAdaptee::instance->SetTranslation(this, p);
+	FWGraphicsHandler::instance->SetTranslation(this, p);
 }
 
 void FWTranslationControl::SetSpeed(float sp){
-	FWGraphicsAdaptee::instance->SetSpeed(this, sp);
+	FWGraphicsHandler::instance->SetSpeed(this, sp);
 }
 
 //-------------------------------------------------------------------------------------------------
 // FWListBox
 
 void FWListBox::AddItem(UTString label){
-	FWGraphicsAdaptee::instance->AddItem(this, label);
+	FWGraphicsHandler::instance->AddItem(this, label);
 	items.push_back(label);
 }
 

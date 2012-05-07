@@ -14,7 +14,7 @@
 namespace Spr{;
 
 FWGLUI* FWGLUI::GetInstance(){
-	return (FWGLUI*)&*(FWGraphicsAdaptee::instance);
+	return (FWGLUI*)&*(FWGraphicsHandler::instance);
 }
 
 FWGLUI::~FWGLUI(){

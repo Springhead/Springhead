@@ -15,7 +15,7 @@
 namespace Spr{;
 
 struct FWSdkIf;
-class FWGraphicsAdaptee;
+class FWGraphicsHandler;
 
 /** @brief アプリケーションクラス
 	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
@@ -218,16 +218,16 @@ public:
 		TypeGLUI,	///< GLUI
 	};
 	/** @brief 描画の設定
-		FWGraphicsAdapteeを設定する．最初に必ず呼ぶ．
+		FWGraphicsHandlerを設定する．最初に必ず呼ぶ．
 	 */
-	void SetGRAdaptee(int type);
+	void SetGRHandler(int type);
 
-	/** @brief FWGraphicsAdapteeの初期化
-		FWGraphicsAdapteeの初期化を行う．最初に必ず呼ぶ．
+	/** @brief FWGraphicsHandlerの初期化
+		FWGraphicsHandlerの初期化を行う．最初に必ず呼ぶ．
 	 */
-	/*	SetGRAdapteeとGRInitを分離する意味がほとんど無いので，
+	/*	SetGRHandlerとGRInitを分離する意味がほとんど無いので，
 		こちらの引数でタイプを指定できるようにした．
-		GRInitに先立ってSetGRAdapteeで選択されている場合はそちらを優先する
+		GRInitに先立ってSetGRHandlerで選択されている場合はそちらを優先する
 
 		tazz
 	 */

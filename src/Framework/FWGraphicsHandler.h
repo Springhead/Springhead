@@ -1,7 +1,7 @@
-#ifndef FW_GRAPHICSADAPTEE_H
-#define FW_GRAPHICSADAPTEE_H
+#ifndef FW_GRAPHICSHANDLER_H
+#define FW_GRAPHICSHANDLER_H
 
-/** FWGraphicsAdaptee
+/** FWGraphicsHandler
 	処理系に依存したウィンドウの作成・管理機能
 	＊機能を考えるとFWWindowManagerの方が合う気がする tazz
  */
@@ -22,11 +22,11 @@ class FWTranslationControl;
 class FWListBox;
 struct GRDeviceIf;
 
-class FWGraphicsAdaptee : public Object{
+class FWGraphicsHandler : public Object{
 public:
-	SPR_OBJECTDEF_ABST_NOIF(FWGraphicsAdaptee);
+	SPR_OBJECTDEF_ABST_NOIF(FWGraphicsHandler);
 
-	static UTRef<FWGraphicsAdaptee>	instance;
+	static UTRef<FWGraphicsHandler>	instance;
 
 	GRDeviceIf*		grDevice;		///< グラフィクスデバイスへの参照
 public:

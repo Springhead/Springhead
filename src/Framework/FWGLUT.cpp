@@ -35,7 +35,7 @@ FWGLUT::~FWGLUT(){
 }
 
 FWGLUT* FWGLUT::GetInstance(){
-	return (FWGLUT*)&*(FWGraphicsAdaptee::instance);
+	return (FWGLUT*)&*(FWGraphicsHandler::instance);
 }
 
 /** コールバック関数*///////////////////////////////////////////////////////
@@ -48,7 +48,7 @@ void FWGLUT::GlutReshapeFunc(int w, int h){
 	FWWinIf* win = FWApp::GetApp()->GetCurrentWin();
 	// 埋め込みGUIコントロールがある場合を想定してビューポートの計算を行う
 	int l = 0, t = 0;
-	FWGraphicsAdaptee::instance->CalcViewport(l, t, w, h);
+	FWGraphicsHandler::instance->CalcViewport(l, t, w, h);
 	win->GetRender()->Reshape(Vec2f(l, t), Vec2f(w,h));
 	// アプリケーションにも通知（子ウィンドウのリサイズなどのため）
 	FWApp::GetApp()->Reshape(w, h);
