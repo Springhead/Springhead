@@ -9,7 +9,7 @@
 #define FWGLUT_H
 
 #include <Foundation/UTTimer.h>
-#include <Framework/FWGraphicsAdaptee.h>
+#include <Framework/FWGraphicsHandler.h>
 #include <Framework/FWWin.h>
 
 namespace Spr{;
@@ -18,9 +18,9 @@ class DRKeyMouseGLUT;
 class DRJoyStickGLUT;
 
 /**
-	FWGraphicsAdaptee‚ÌGLUT‚É‚æ‚éŽÀ‘•
+	FWGraphicsHandler‚ÌGLUT‚É‚æ‚éŽÀ‘•
  */
-class FWGLUT : public FWGraphicsAdaptee, public UTTimerProvider{
+class FWGLUT : public FWGraphicsHandler, public UTTimerProvider{
 public:
 	SPR_OBJECTDEF_NOIF(FWGLUT);
 protected:

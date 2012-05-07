@@ -18,7 +18,7 @@
 namespace Spr{;
 
 FWApp* FWApp::instance = 0;
-UTRef<FWGraphicsAdaptee> FWGraphicsAdaptee::instance = 0;
+UTRef<FWGraphicsHandler> FWGraphicsHandler::instance = 0;
 
 FWApp::FWApp(){
 	instance = this;
@@ -33,7 +33,7 @@ FWApp::~FWApp(){
 		}
 	}
 	if(hasFullScreen)
-		FWGraphicsAdaptee::instance->LeaveGameMode();
+		FWGraphicsHandler::instance->LeaveGameMode();
 }
 
 void FWApp::Init(int argc, char* argv[]){
@@ -62,10 +62,10 @@ void FWApp::TimerFunc(int id){
 }
 
 void FWApp::EnableIdleFunc(bool on){
-	FWGraphicsAdaptee::instance->EnableIdleFunc(on);
+	FWGraphicsHandler::instance->EnableIdleFunc(on);
 }
 void FWApp::StartMainLoop(){
-	FWGraphicsAdaptee::instance->StartMainLoop();
+	FWGraphicsHandler::instance->StartMainLoop();
 }
 
 
@@ -134,7 +134,7 @@ void FWApp::AssignScene(FWWinIf* win){
 }
 
 FWWinIf* FWApp::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
-	FWWinIf* win = FWGraphicsAdaptee::instance->CreateWin(desc, parent);
+	FWWinIf* win = FWGraphicsHandler::instance->CreateWin(desc, parent);
 
 	// 自身をキーボード・マウスコールバックに登録
 	win->GetKeyMouse()->AddCallback(this);
@@ -152,7 +152,7 @@ FWWinIf* FWApp::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 	AssignScene(win);
 	// レンダラ割当て
 	GRRenderIf* render = GetSdk()->GetGRSdk()->CreateRender();
-	render->SetDevice(FWGraphicsAdaptee::instance->GetGRDevice());
+	render->SetDevice(FWGraphicsHandler::instance->GetGRDevice());
 	// このコンテキストに対してGRDeviceGL::Initを呼ぶ
 	render->GetDevice()->Init();
 	win->SetRender(render);
@@ -175,45 +175,45 @@ FWWinIf* FWApp::GetWin(int pos){
 }
 
 FWWinIf* FWApp::GetCurrentWin(){
-	return GetWinFromId(FWGraphicsAdaptee::instance->GetCurrentWin());
+	return GetWinFromId(FWGraphicsHandler::instance->GetCurrentWin());
 }
 
 void FWApp::DestroyWin(FWWinIf* win){
-	FWGraphicsAdaptee::instance->DestroyWin(win);
+	FWGraphicsHandler::instance->DestroyWin(win);
 }
 
 void FWApp::SetCurrentWin(FWWinIf* win){
-	FWGraphicsAdaptee::instance->SetCurrentWin(win);
+	FWGraphicsHandler::instance->SetCurrentWin(win);
 }
 
 void FWApp::PostRedisplay(){
-	FWGraphicsAdaptee::instance->PostRedisplay();
+	FWGraphicsHandler::instance->PostRedisplay();
 }
 
 int FWApp::GetModifier(){
-	return FWGraphicsAdaptee::instance->GetModifiers();
+	return FWGraphicsHandler::instance->GetModifiers();
 }
 
 // 描画パート////////////////////////////////////////////////////////////////////
 
-void FWApp::SetGRAdaptee(int type){
+void FWApp::SetGRHandler(int type){
 	switch (type) {
 	case TypeNone:
-		FWGraphicsAdaptee::instance = 0;
+		FWGraphicsHandler::instance = 0;
 		break;
 	case TypeGLUT:
-		FWGraphicsAdaptee::instance = DBG_NEW FWGLUT();
+		FWGraphicsHandler::instance = DBG_NEW FWGLUT();
 		break;
 	case TypeGLUI:
-		FWGraphicsAdaptee::instance = DBG_NEW FWGLUI();
+		FWGraphicsHandler::instance = DBG_NEW FWGLUI();
 		break;
 	}
 }
 
 void FWApp::GRInit(int argc, char* argv[], int type){
-	if(!FWGraphicsAdaptee::instance)
-		SetGRAdaptee(type);
-	FWGraphicsAdaptee::instance->Init(argc, argv);
+	if(!FWGraphicsHandler::instance)
+		SetGRHandler(type);
+	FWGraphicsHandler::instance->Init(argc, argv);
 }
 
 //タイマ///////////////////////////////////////////////////////////////////////////
