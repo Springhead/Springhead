@@ -33,10 +33,16 @@ public:
 	ArmHandler(SampleApp* a):Handler(a){
 		nLinks		= 5;
 		linkSize	= 5.0;
+		// jointSpring = 2000;
+		// jointDamper = 100;
+		// handSpring	= 2000;
+		// handDamper  = 100;
+
 		jointSpring = 2000;
-		jointDamper = 100;
+		jointDamper =  100;
 		handSpring	= 2000;
-		handDamper  = 100;
+		handDamper  =  300;
+
 		useExternal	= false;
 		useABA		= false;
 
