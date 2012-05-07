@@ -111,7 +111,6 @@ struct PHSolidStatePrivate{
 	//@{
 	//	LCP関連補助変数だが、加速度の取得に用いるのでStateにしなければならない。
 	SpatialVector dv;			///<	拘束エンジンによる速度変化量（外力を含む）
-	}
 	//@}
 };
 
