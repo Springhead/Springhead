@@ -234,6 +234,7 @@ bool UTTimer::Start(){
 #if defined _WIN32
 		bStarted = true;
 		stub.UpdateResolution();
+		assert(interval != 0);	// interval == 0‚¾‚Æ“®‚©‚È‚¢
 		timerIdImpl = timeSetEvent(interval, resolution, UTTimer_MMTimerCallback , timerId, TIME_PERIODIC);
 		if (!timerIdImpl){
 			bStarted = false;
