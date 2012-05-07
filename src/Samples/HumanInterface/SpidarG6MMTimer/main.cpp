@@ -18,6 +18,7 @@
 using namespace Spr;
 
 // 各種変数
+UTRef<HISdkIf> hiSdk;
 UTRef<HISpidarGIf> spg;
 float dt = 0.001f;		// 更新周期
 double K = 5000;		// バネ係数
@@ -46,7 +47,7 @@ void SPR_CDECL CallBackLoop(int id, void* arg){
 
 void __cdecl main(){
 	// 力覚インタフェースとの接続設定
-	UTRef<HISdkIf> hiSdk = HISdkIf::CreateSdk();
+	hiSdk = HISdkIf::CreateSdk();
 	// win32
 	DRUsb20SimpleDesc usbSimpleDesc;
 	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
@@ -72,9 +73,9 @@ void __cdecl main(){
 	// マルチメディアタイマーの設定
 	UTTimerIf* timer = UTTimerIf::Create();				
 	timer->SetMode(UTTimerIf::MULTIMEDIA);		// タイマのモード設定(MULTIMEDIA or THREAD)
-	timer->SetResolution(1);					// 分解能(ms)
-	timer->SetInterval((unsigned int)dt*1000);	// 刻み(ms)
 	timer->SetCallback(CallBackLoop, NULL);		// 呼びだす関数
+	timer->SetResolution(1);					// 分解能(ms)
+	timer->SetInterval((unsigned int)(dt*1000));// 刻み(ms)
 	timer->Start();								// タイマスタート
 	
 	std::cout << "Start the application. " << std::endl;
