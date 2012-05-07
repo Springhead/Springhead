@@ -104,11 +104,15 @@ struct PHSolidStatePrivate{
 	bool		bUpdated;		///<	複数のエンジンでSolidの更新を管理するためのフラグ
 	//	剛体に加えられた力
 	Vec3d		nextForce;		///<	次の積分でこの剛体に加わわる力(World系)
-	Vec3d		nextTorque;		///<	前の積分でこの剛体に加わったトルク(World系)
+	Vec3d		nextTorque;		///<	次の積分でこの剛体に加わわるトルク(World系)
 	Vec3d		force;			///<	前の積分でこの剛体に加わった力(World系)
 	Vec3d		torque;			///<	前の積分でこの剛体に加わったトルク(World系)
-	//	LCP補助変数だが、加速度の取得に用いるのでStateにしなければならない。
-	SpatialVector dv;			///<	拘束力による速度変化量
+	///@name LCP関連補助変数
+	//@{
+	//	LCP関連補助変数だが、加速度の取得に用いるのでStateにしなければならない。
+	SpatialVector dv;			///<	拘束エンジンによる速度変化量（外力を含む）
+	}
+	//@}
 };
 
 ///	剛体
@@ -118,7 +122,6 @@ protected:
 
 	///	積分方式
 	PHIntegrationMode integrationMode;
-
 
 	/// オイラーの運動方程式
 	/// 慣性行列は対角行列を前提．
@@ -139,19 +142,22 @@ public:
 	SpatialVector f;		///< ローカル座標での外力
 	SpatialVector v;		///< ローカル座標での現在の速度
 	SpatialVector dV;		///< Correctionによる移動量，回転量
+	///	LCP関連補助変数の初期化。毎ステップLCPの前に呼ばれる。
 	void UpdateCacheLCP(double dt);
+	///	dvを速度に足し込む 
 	virtual void UpdateVelocity(double dt);
+	///	速度を位置に足し込む。UpdateVelocity()の後でUpdatePosition()ならば、シンプレクティック数値積分になる。
 	virtual void UpdatePosition(double dt);
+	///	ABAの支配下にあるかどうか
 	bool IsArticulated();
 	//@}
-
-//	bool bDraw;				///< 形状を描画するかどうか
 		
 public:
 	std::vector< UTRef<PHFrame> > frames;
 	PHBBox bbox;
 
 	SPR_OBJECTDEF(PHSolid);
+	ACCESS_DESC_STATE_PRIVATE(PHSolid);
 	PHSolid(const PHSolidDesc& desc=PHSolidDesc(), SceneIf* s=NULL);
 
 	virtual SceneObjectIf* CloneObject();
@@ -291,9 +297,6 @@ public:
 	/// 速度が一定以下で積分を行わないかどうかを取得
 	bool		IsFrozen(){return bFrozen;}
 	PHTreeNodeIf* GetTreeNode();
-//	void		SetDrawing(bool bOn){bDraw = bOn; }
-//	bool		IsDrawn(){ return bDraw; }
-	ACCESS_DESC_STATE_PRIVATE(PHSolid);
 
 protected:
 	virtual void AfterSetDesc();
