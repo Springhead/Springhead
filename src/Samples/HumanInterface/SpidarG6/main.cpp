@@ -1,16 +1,24 @@
+/*
+ *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
+/**
+	SPIDARG6の接続確認のためのプログラム
+	グリップ位置の表示と柔らかい床が提示される
+*/
+
 #include <conio.h>
 #include <Springhead.h>
 #include <HumanInterface/SprHIDRUsb.h>
 #include <iomanip>
 using namespace Spr;
 
-
 int __cdecl main(){
 	// 力覚インタフェースとの接続設定
-	//UTRef<FWSdkIf> fwSdk = FWSdkIf::CreateSdk();
-	//HISdkIf* hiSdk = fwSdk->GetHISdk();
-	//DSTR << hiSdk << std::endl;
-
 	UTRef<HISdkIf> hiSdk = HISdkIf::CreateSdk();
 
 	// win32

@@ -33,16 +33,19 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 	for(int i = 0; i < 2; i++)
 		CreateWin(winDesc);
 	
+	// カメラ位置の指定
 	GetWin(0)->GetTrackball()->SetPosition(Vec3f(-0.0050556, 0.155619, 0.191252));
 	GetWin(1)->GetTrackball()->SetPosition(Vec3f(-0.0050556, 0.155619, 0.191252));
 
-	GetWin(0)->SetTitle("Window1: coockie (PHScene)");
-	GetWin(1)->SetTitle("Window2: coockie (GRScene)");
+	// ウィンドウのタイトルの指定
+	GetWin(0)->SetTitle("Window1: PHScene");
+	GetWin(1)->SetTitle("Window2: GRScene");
 
 	// ウィンドウの位置決め．タイトルバーやフレーム分のマージンは自分で計算する必要がある
 	GetWin(0)->SetPosition(  100,  100);
 	GetWin(1)->SetPosition( 600,  100);
 	
+	// ウィンドウに描画するシーンを割り当て
 	GetWin(0)->SetScene(GetSdk()->GetScene(0));
 	GetWin(1)->SetScene(GetSdk()->GetScene(0));
 
@@ -50,11 +53,12 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 	GetWin(0)->SetDebugMode(true);
 	GetWin(1)->SetDebugMode(false);
 	
+	// 描画モードの指定
 	for(int i = 0; i < GetSdk()->NScene(); i++){
 		FWSceneIf* scene = GetSdk()->GetScene(i);
 		scene->SetRenderMode(true, false);
-		scene->EnableRenderAxis();
-		scene->EnableRenderForce();
+		//scene->EnableRenderAxis();
+		//scene->EnableRenderForce();
 		scene->EnableRenderContact();
 		//scene->EnableRenderGrid();
 	}
@@ -66,8 +70,8 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 void FWMultiWinSample::TimerFunc(int id){	
 	// 全ウィンドウに対して再描画要求
 	Vec3f p = GetCurrentWin()->GetTrackball()->GetPosition();
+	GetSdk()->GetScene()->Step();
 	for(int i = 0; i < NWin(); i++){
-		GetWin(i)->GetScene()->Step();
 		SetCurrentWin(GetWin(i));
 		GetCurrentWin()->GetTrackball()->SetPosition(p);
 		PostRedisplay();
@@ -84,10 +88,11 @@ void FWMultiWinSample::Keyboard(int key, int x, int y){
 		Reset();
 		break;
 	case ' ':{
-		FWObjectIf* fwCookie;
-		GetSdk()->GetScene()->FindObject(fwCookie, "fwCookie");
-		FWObjectIf* clone = fwCookie->CloneObject()->Cast();
-		clone->GetPHSolid()->SetFramePosition(Vec3d(0.0, 0.1, 0.0));
+			FWObjectIf* fwCookie;
+			GetSdk()->GetScene()->FindObject(fwCookie, "fwCookie");
+			if(!fwCookie) break;
+			FWObjectIf* clone = fwCookie->CloneObject()->Cast();
+			clone->GetPHSolid()->SetFramePosition(Vec3d(0.0, 0.1, 0.0));
 			 }
 		break;
 	default:

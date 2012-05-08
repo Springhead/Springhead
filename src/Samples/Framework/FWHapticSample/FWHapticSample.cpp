@@ -1,3 +1,11 @@
+/*
+ *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
 #include "FWHapticSample.h"	
 
 using namespace Spr;
@@ -44,7 +52,7 @@ void FWHapticSample::BuildScene(){
 		//pointer->AddShape(phSdk->CreateShape(bd));	// シェイプの追加
 		pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
 		Posed defaultPose;
-		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);
+		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);	
 		pointer->SetDefaultPose(defaultPose);		// 力覚ポインタ初期姿勢の設定
 		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia());	// 慣性テンソルの設定
 		pointer->SetLocalRange(0.1);				// 局所シミュレーション範囲の設定
@@ -52,10 +60,10 @@ void FWHapticSample::BuildScene(){
 		pointer->SetReflexSpring(5000);				// バネ係数の設定
 		pointer->SetReflexDamper(0.1 * 0.0);		// ダンパ係数の設定
 		pointer->EnableFriction(false);				// 摩擦を有効にするかどうか
-		//pointer->EnableDebugControl(true);
-		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();
-		fwPointer->SetHumanInterface(spg);
-		fwPointer->SetPHHapticPointer(pointer);
+		//pointer->EnableDebugControl(true);		// キーボードから力覚ポインタを動かす機能カーソルでx、y方向に移動可能
+		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
+		fwPointer->SetHumanInterface(spg);		// HumanInterfaceの設定
+		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfのsってい
 }
 
 void FWHapticSample::InitInterface(){
@@ -94,7 +102,7 @@ void FWHapticSample::InitInterface(){
 void FWHapticSample::Init(int argc, char* argv[]){
 	FWApp::Init(argc, argv);							// アプリケーションの初期化
 	InitInterface();									// インタフェースの初期化
-	BuildScene();
+	BuildScene();										// オブジェクトの作成
 	PHHapticEngineIf* he = phscene->GetHapticEngine();	// 力覚エンジンをとってくる
 	he->EnableHapticEngine(true);						// 力覚エンジンの有効化
 
@@ -114,10 +122,10 @@ void FWHapticSample::Init(int argc, char* argv[]){
 		physicsTimerID = GetTimer(0)->GetID();					// 物理スレッドのタイマIDの取得
 		GetTimer(0)->SetMode(UTTimerIf::IDLE);					// 物理スレッドのタイマをIDLEモードに設定
 		UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// 力覚スレッド用のマルチメディアタイマを作成
-		timer->SetResolution(1);		// 分解能(ms)
-		timer->SetInterval(hdt * 1000);		// 刻み(ms)h
-		hapticTimerID = timer->GetID();	// 力覚スレッドのタイマIDの取得
-		timer->Start();		// タイマスタート
+		timer->SetResolution(1);			// 分解能(ms)
+		timer->SetInterval(unsigned int(hdt * 1000));		// 刻み(ms)h
+		hapticTimerID = timer->GetID();		// 力覚スレッドのタイマIDの取得
+		timer->Start();						// タイマスタート
 }
 
 
