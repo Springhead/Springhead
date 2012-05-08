@@ -1,3 +1,20 @@
+/*
+ *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
+/*
+	UTPreciseTimerSample
+	CPUクロックを使った時間の計測
+	UTTimerのMultiMediaTimerモードを使って、1msの頻度でコールバック
+	コールバックにかかる時間をUTPreceiseTimer、UTQPTimerを使い測定する。
+	5秒たったら終了し、結果をCSV形式で出力する。
+*/
+
+
 #include <Springhead.h>
 #include <iostream>
 #include <ostream>
@@ -13,9 +30,9 @@ using namespace Spr;
 unsigned int dt = 1;	// 繰り返し間隔ms
 int mt = 5000;			// 測定時間ms
 
-UTPreciseTimer pTimer;	// μs単位で計測可能なタイマ
-UTQPTimer qTimer;		// マルチスレッド対応版
-std::vector< Vec2d > time;
+UTPreciseTimer pTimer;		// μs単位で計測可能なタイマ
+UTQPTimer qTimer;			// マルチスレッド対応版
+std::vector< Vec2d > time;	// 計測時間
 
 void CPSCounter(double intervalms, double periodms);
 void SPR_CDECL CallBack(int id, void* arg){
@@ -62,28 +79,30 @@ void CPSCounter(double intervalms, double periodms){
 }
 
 int _cdecl main(int argc, char* argv[]){
-	pTimer.Init();								/// 計測用タイマの初期化
+	pTimer.Init();								// 計測用タイマの初期化
 
-	UTTimerIf* timer1;
-	timer1 = UTTimerIf::Create();
-	timer1->SetMode(UTTimerIf::MULTIMEDIA);
-	timer1->SetResolution(1);					///	呼びだし分解能ms
-	timer1->SetInterval(dt);					/// 呼びだし頻度ms
-	timer1->SetCallback(CallBack, NULL);		/// 呼びだす関数
-	timer1->Start();							/// タイマスタート
+	UTTimerIf* timer1;							// コールバックタイマ
+	timer1 = UTTimerIf::Create();				// コールバックタイマの作成
+	timer1->SetMode(UTTimerIf::MULTIMEDIA);		// マルチメディアモードに設定
+	timer1->SetResolution(1);					//	呼びだし分解能ms
+	timer1->SetInterval(dt);					// 呼びだし頻度ms
+	timer1->SetCallback(CallBack, NULL);		// 呼びだす関数
+	timer1->Start();							// タイマスタート
 	std::cout << "Start the mearsurement." << std::endl;
 	std::cout << "Pleas wait " << mt * 0.001 << " seconds." << std::endl; 
-	Sleep(mt);								/// 5sec間計測
-	timer1->Stop();							/// タイマストップ
+	Sleep(mt);									// 5sec間計測
+	timer1->Stop();								// タイマストップ
 
 	std::cout << "Saving the data to a file." << std::endl;
-	/// 計測データをcsvで出力
+
+	// 計測データをcsvで出力
 	CSVOUT << "count" << "," << "Precise timer [s]" << "," << "QPTimer [s]" << std::endl;
 	for(int i = 0; i < time.size(); i++){
 		CSVOUT << i << "," << time[i].x << "," << time[i].y << std::endl;
 	}
-	std::cout << "Complete!" << std::endl;
 
+	// 計測完了
+	std::cout << "Complete!" << std::endl;
 	std::cout << "Press any key to exit." << std::endl;
 	while(!_kbhit()){}
 
