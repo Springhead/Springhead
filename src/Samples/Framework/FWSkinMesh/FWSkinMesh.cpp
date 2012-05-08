@@ -8,7 +8,7 @@ void MyApp::Init(int argc, char* argv[]){
 	// Sdkの作成
 	CreateSdk();
 	// グラフィクス初期化
-	SetGRAdaptee(TypeGLUT);
+	SetGRHandler(TypeGLUT);
 	GRInit(argc, argv);
 	// シーンをロード
 	GetSdk()->LoadScene(FILE_NAME);
