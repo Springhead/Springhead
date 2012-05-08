@@ -63,7 +63,7 @@ public:
 	virtual void Init(int argc, char* argv[]){
 		CreateSdk();
 		GetSdk()->CreateScene();
-		SetGRAdaptee(TypeGLUT);
+		SetGRHandler(TypeGLUT);
 		GRInit(argc, argv);
 		//CreateSdk();
 

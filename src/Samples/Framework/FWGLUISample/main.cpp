@@ -42,7 +42,7 @@ public:
 	}
 	
 	virtual void Init(int argc, char* argv[]){
-		SetGRAdaptee(TypeGLUI);
+		SetGRHandler(TypeGLUI);
 		SampleApp::Init(argc, argv);
 
 		InitGUI();
