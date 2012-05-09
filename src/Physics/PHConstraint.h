@@ -66,7 +66,11 @@ public:
 	bool bArticulated;			
 
 	/// 剛体が解析法に従う場合true	
-	bool bInactive[2];			
+	bool bInactive[2];
+
+	/// UpdateState時にUpdateCacheLCPを呼ぶのを禁止する．GetPosition()が呼ばれるたびにdvを書き換えられては困るため．
+	///   （このフラグが立つ頃にはConstraintEngineからUpdateCacheLCPが呼ばれているはずなので禁止しても問題は起きない）
+	bool bProhibitUpdateSolidCacheLCP;
 
 	// ----- 計算用変数
 

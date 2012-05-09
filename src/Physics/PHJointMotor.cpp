@@ -87,7 +87,6 @@ void PHNDJointMotor<NDOF>::CompBiasElastic() {
 
 	double dt = joint->GetScene()->GetTimeStep();
 	PTM::TVector<NDOF,double> propV = GetPropV();
-
 	for (int n=0; n<NDOF; ++n) {
 		int i = joint->movableAxes[n];
 		if (joint->axes.IsEnabled(i)) {
