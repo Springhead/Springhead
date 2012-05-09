@@ -27,6 +27,7 @@ PHConstraint::PHConstraint() {
 	bInactive[0] = true;
 	bInactive[1] = true;
 	bArticulated = false;
+	bProhibitUpdateSolidCacheLCP = false;
 
 	for(int i=0; i<6; i++){
 		fMaxDt[i] =  FLT_MAX;
@@ -49,7 +50,9 @@ void PHConstraint::InitTargetAxes() {
 
 void PHConstraint::UpdateState() {
 	// 剛体の状態を更新する（ここでやるべきかは要検討！少なくともここ以前にUpdateされてないと正しい値が出ない <!!>）
-	for (int i=0; i<2; i++) { solid[i]->UpdateCacheLCP(GetScene()->GetTimeStep()); }
+	if (!bProhibitUpdateSolidCacheLCP) {
+		for (int i=0; i<2; i++) { solid[i]->UpdateCacheLCP(GetScene()->GetTimeStep()); }
+	}
 
 	// 剛体の相対位置からヤコビアン，関節速度・位置を逆算する
 	CompJacobian();
@@ -63,6 +66,8 @@ void PHConstraint::UpdateState() {
 }
 
 void PHConstraint::SetupLCP() {
+	bProhibitUpdateSolidCacheLCP = true;
+
 	// 実現可能な拘束であるか
 	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
 	if(!bEnabled || !bFeasible) { return; }
@@ -265,7 +270,7 @@ void PHConstraint::CompResponseMatrix() {
 		if (axes.IsEnabled(i)) {
 			if(A[i] < Amin || A[i] < epsabs){
 				axes.Disable(i);
-				DSTR << this->GetName() << ": Axis " << i << " ill-conditioned! Disabled.  A= " << A[i] << endl;
+				DSTR << this->GetName() << ": Axis " << i << " ill-conditioned! Disabled.  A[" << i << "]= " << A[i] << endl;
 			} else {
 				Ainv[i] = 1.0 / (A[i] + dA[i]);
 			}

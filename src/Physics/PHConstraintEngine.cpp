@@ -561,6 +561,9 @@ void PHConstraintEngine::StepPart2(){
 	IterateCorrectionLCP();
 	//位置・速度の更新
 	UpdateSolids(!bUpdateAllState);
+
+	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
+		(*it)->bProhibitUpdateSolidCacheLCP = false;
 }
 	
 void PHConstraintEngine::Step(){
