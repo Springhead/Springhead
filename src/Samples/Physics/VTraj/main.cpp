@@ -11,7 +11,7 @@
 \ref 柔らかい軌道追従制御のデモプログラム．
 
 \secntion secSpecVTrajSample 仕様
-アームの先端剛体の中心位置ががポインタ（球体）の位置になるよう到達運動する．
+アームの先端剛体が，ポインタ（球体）とリンクの根元の間を往復する．
 - スペースキーでシミュレーション開始．
 - 'v'で柔らかい追従制御．障害物で止められる程度の力だが，アーム先端が所定の高さで運動できる．
 - 'b'で固いPD制御．アーム先端は所定の高さで運動できるが，障害物を強い力で押しのけてしまう．
@@ -106,6 +106,7 @@ public:
 
 	PHSolidIf*         soTarget;
 	PHIKEndEffectorIf* ikeTarget;
+	PHJointIf*         joX;
 
 	// シーン構築
 	virtual void BuildScene() {
@@ -185,6 +186,7 @@ public:
 		PHHingeJointIf* jo2  = phScene->CreateJoint(so1, so2, descJoint)->Cast();
 		PHIKHingeActuatorIf* ika2 = phScene->CreateIKActuator(descIKA)->Cast();
 		ika2->AddChildObject(jo2);
+		joX = jo2;
 
 		// Link2 = End Effector
 		descIKE.targetLocalPosition = Vec3d(0,2,0);
