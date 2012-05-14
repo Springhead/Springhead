@@ -46,7 +46,7 @@ void PHIKEngine::Step(){
 		actuators[i]->Enable(false);
 	}
 	for(size_t i=0; i<actuators.size(); ++i){
-		if (actuators[i]->eef->IsEnabled()) {
+		if (actuators[i]->eef && actuators[i]->eef->IsEnabled()) {
 			actuators[i]->Enable(true);
 			for(size_t j=0; j<actuators[i]->ascendant.size(); ++j){
 				actuators[i]->ascendant[j]->Enable(true);
@@ -55,7 +55,6 @@ void PHIKEngine::Step(){
 	}
 
 	for (int nStatic=0; nStatic<1; ++nStatic) {
-
 		// ヤコビアン計算の前処理
 		for(size_t i=0; i<actuators.size(); ++i){
 			actuators[i]->BeforeCalcAllJacobian();
