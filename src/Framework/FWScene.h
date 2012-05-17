@@ -177,6 +177,7 @@ public:
 	bool	IsRenderEnabled		(ObjectIf* obj);
 	int		GetSolidMaterial	(PHSolidIf* solid);
 	int		GetWireMaterial		(PHSolidIf* solid);
+	int		GetAutoMaterial		(int i);
 	
 	/** HumanInterfaceånä÷êî
 	 */

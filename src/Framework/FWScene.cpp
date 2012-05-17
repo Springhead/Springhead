@@ -314,14 +314,14 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		if(renderSolid){
 			int matSolid = GetSolidMaterial(solids[i]);
 			if(matSolid == -1)
-				matSolid = i % GRRenderIf::MATERIAL_SAMPLE_END;
+				matSolid = GetAutoMaterial(i);
 			render->SetMaterial(matSolid);
 			DrawSolid(render, solids[i], true);
 		}
 		if(renderWire){
 			int matWire  = GetWireMaterial(solids[i]);
 			if(matWire == -1)
-				matWire = i % GRRenderIf::MATERIAL_SAMPLE_END;
+				matWire = GetAutoMaterial(i);
 			render->SetMaterial(matWire);
 			render->SetLighting(false);
 			DrawSolid(render, solids[i], false);
@@ -1025,6 +1025,28 @@ int FWScene::GetWireMaterial(PHSolidIf* solid){
 	if(it != matWire.end())
 		return it->second;
 	return -1;
+}
+int FWScene::GetAutoMaterial(int i){
+	/// iがひとつ増えるたびに色系統が変わるように色を選択する
+	const int colorGroups		= 8;  // 系統の数　　　白、灰色系は避けたので８系統
+	const int colorsPerGroup	= 5;  // 系統内の色数　オレンジ系が５色しかないのであわせる
+	GRRenderIf::TMaterialSample groupTop[] = {
+		GRRenderIf::INDIANRED,
+		GRRenderIf::PINK,
+		GRRenderIf::CORAL,
+		GRRenderIf::GOLD,
+		GRRenderIf::LAVENDER,
+		GRRenderIf::GREENYELLOW,
+		GRRenderIf::AQUA,
+		GRRenderIf::CORNSILK,
+	};
+
+	int cycle  = (i % (colorGroups * colorsPerGroup));
+	int group  = cycle / colorsPerGroup;
+	int offset = cycle % colorsPerGroup;
+	int color  = groupTop[i] + offset;
+
+	return color;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // HumanInterface系
