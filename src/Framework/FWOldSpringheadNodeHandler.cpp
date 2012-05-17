@@ -24,7 +24,6 @@
 #include <Framework/FWObject.h>
 #include <Framework/FWScene.h>
 #include <Framework/FWSdk.h>
-#include <Framework/FWBone.h>
 #include <Collision/CDConvexMesh.h>
 
 #include <Framework/FWOldSpringheadNode.h>
@@ -1024,72 +1023,6 @@ public:
 };
 */
 
-class FWNodeHandlerPHBoneGenerator:public UTLoadHandlerImp<PHBoneGenerator>{
-public:
-	class BoneCreator: public UTLoadTask{
-	private:
-		std::vector<Affinef> af;
-		std::vector<Affinef> afWT;
-		std::vector<GRFrame*> grfBone;
-		FWSdkIf* fwSdk;
-		PHScene* phScene;
-		UTLoadedData* ldMesh;
-	public:
-		FWBoneCreate	 bone;
-
-		BoneCreator(UTLoadedData* lm, PHScene* p): phScene(p), ldMesh(lm){}
-
-		void Execute(UTLoadContext* fc){
-			//FrameTransformMatrixÇÃéÊìæ
-			GRMesh* mesh = NULL;
-			for(size_t i=0; !mesh && i<ldMesh->loadedObjects.size(); ++i){
-				mesh = ldMesh->loadedObjects[i]->Cast();
-			}
-			//ãåÉoÅ[ÉWÉáÉì-------------------------------------------------
-			//if (mesh){
-			//	for(int i=0 ;i<mesh->skinWeights.size(); ++i){
-			//		af.push_back(mesh->skinWeights[i].frame->GetTransform());
-			//		afWT.push_back(mesh->skinWeights[i].frame->GetWorldTransform());
-			//		grfBone.push_back(mesh->skinWeights[i].frame);
-			//		std::string name = mesh->skinWeights[i].frame->GetName();
-			//		//DSTR << name << std::endl << af[i] << std::endl;
-			//	}
-			//}
-			////FWSdkÇÃéÊìæ
-			//fwSdk = phScene->GetSdk()->GetNameManager()->Cast();
-			//
-			////PHBoneÇÃèÄîı
-			//PHSceneIf* phSceneIf =phScene->Cast();
-			//phBone.SetPHScne(phSceneIf);
-			//phBone.SetfwSdk(fwSdk);
-			//phBone.SetWorldAffine(afWT);
-			//phBone.SetAffine(af);
-			//phBone.SetGRFrameBone(grfBone);
-			//
-
-			//phBone.FWPHBoneCreate();
-			////phBone.DisplayBonePoint();
-			////phBone.DisplayPHBoneCenter();
-			//af.clear();
-			//phBone.Clear();
-			//--------------------------------------------------------------
-			
-			bone.Boot(mesh,phScene);
-		}
-	};
-
-	FWNodeHandlerPHBoneGenerator():UTLoadHandlerImp<Desc>("PHBoneGenerator"){}
-
-	void AfterCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
-		//PHSceneÇÃéÊìæ
-		PHScene* phScene = FindPHScene(fc);
-		for(size_t i=0; i<ld->linkTo.size(); ++i){
-			UTLoadedData* ldMesh = ld->linkTo[i];
-			fc->postTasks.push_back(DBG_NEW BoneCreator(ldMesh, phScene));
-		}
-	}
-};
-
 }
 
 
@@ -1121,6 +1054,5 @@ void SPR_CDECL FWRegisterOldSpringheadNode(){
 	handlers->insert(DBG_NEW FWNodeHandlerJointEngine);
 	handlers->insert(DBG_NEW FWNodeHandlerJoint);
 	//handlers->insert(DBG_NEW FWNodeHandlerImport);
-	handlers->insert(DBG_NEW FWNodeHandlerPHBoneGenerator);
 }
 }

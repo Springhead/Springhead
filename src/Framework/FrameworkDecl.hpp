@@ -1,14 +1,3 @@
-#define SPR_DECLMEMBEROF_FWBoneDesc \
-protected:\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		return true;	\
-	}\
-
 #define SPR_DECLMEMBEROF_FWFemMeshDesc \
 protected:\
 public:\
@@ -24,42 +13,22 @@ public:\
 
 #define SPR_DECLMEMBEROF_FWObjectDesc \
 protected:\
+	bool	bAbsolute;	\
+	enum Spr::FWObjectDesc::FWObjectSyncSource	syncSource;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		bAbsolute = ((FWObjectDesc*)ptr)->bAbsolute;	\
+		syncSource = ((FWObjectDesc*)ptr)->syncSource;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		((FWObjectDesc*)ptr)->bAbsolute = bAbsolute;	\
+		((FWObjectDesc*)ptr)->syncSource = syncSource;	\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_FWBoneObjectDesc \
-protected:\
-	bool	modifyShapeLength;	\
-	bool	modifyShapeWidth;	\
-	bool	modifyShapePose;	\
-	bool	modifyPlugSocketPose;	\
-	enum Spr::FWBoneObjectDesc::FWBoneObjectAdaptType	AdaptType;	\
-public:\
-	virtual void SetDesc(const void* ptr){ \
-		modifyShapeLength = ((FWBoneObjectDesc*)ptr)->modifyShapeLength;	\
-		modifyShapeWidth = ((FWBoneObjectDesc*)ptr)->modifyShapeWidth;	\
-		modifyShapePose = ((FWBoneObjectDesc*)ptr)->modifyShapePose;	\
-		modifyPlugSocketPose = ((FWBoneObjectDesc*)ptr)->modifyPlugSocketPose;	\
-		AdaptType = ((FWBoneObjectDesc*)ptr)->AdaptType;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((FWBoneObjectDesc*)ptr)->modifyShapeLength = modifyShapeLength;	\
-		((FWBoneObjectDesc*)ptr)->modifyShapeWidth = modifyShapeWidth;	\
-		((FWBoneObjectDesc*)ptr)->modifyShapePose = modifyShapePose;	\
-		((FWBoneObjectDesc*)ptr)->modifyPlugSocketPose = modifyPlugSocketPose;	\
-		((FWBoneObjectDesc*)ptr)->AdaptType = AdaptType;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_FWStructureDesc \
+#define SPR_DECLMEMBEROF_FWObjectGroupDesc \
 protected:\
 public:\
 	virtual void SetDesc(const void* ptr){ \

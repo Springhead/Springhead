@@ -16,11 +16,7 @@
 %ignore Spr::FWGraphicsAdaptee::Init;
 %ignore Spr::FWInteractSceneIf::GetIAAdaptee; //APIの不整合がありコンパイル不可なので
 %ignore Spr::FWSceneIf::GetObjects; // **が出てくるので未対応
-%ignore Spr::FWSceneIf::GetFWBones;//UTRefを使ってる。未対応
 %ignore Spr::FWSceneIf::AddHumanInterface;//HIForceDevice6DがAPIヘッダで定義されていない
-%extend Spr::FWBoneIf{
-  static const IfInfo* GetIfInfoStatic();
-}
 
 %ignore Spr::FWApp::GetTimer;
 %ignore Spr::FWApp::CreateTimer;
@@ -57,13 +53,11 @@ class UTRefCount {};
 #include "../../include/EmbPython/SprEPGraphics.h"
 #include "../../include/EmbPython/SprEPHumanInterface.h"
 #include "../../include/Framework/SprFWHapticPointer.h"
-#include "../../include/Framework/SprFWBone.h"
 #include "../../include/Framework/SprFWWin.h"
 #include "../../include/Framework/SprFWApp.h"
 #include "../../include/EmbPython/SprEPApp.h"
 %}
 //--  
-%include "../../include/Framework/SprFWBone.h"
 %include "../../include/Framework/SprFWFemMesh.h"
 %include "../../include/Framework/SprFWObject.h"
 %include "../../include/Framework/SprFWScene.h"

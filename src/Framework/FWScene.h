@@ -10,7 +10,6 @@
 
 #include <Framework/SprFWScene.h>
 #include <Framework/SprFWObject.h>
-#include <Framework/SprFWBone.h>
 #include <Framework/SprFWHapticPointer.h>
 #include <Foundation/Scene.h>
 #include <HumanInterface/HIBase.h>
@@ -42,15 +41,13 @@ public:
 	ACCESS_DESC(FWScene);
 
 	typedef std::vector< UTRef<FWObjectIf> >		FWObjects;
-	typedef std::vector< UTRef<FWBoneIf> >			FWBones;
-	typedef std::vector< UTRef<FWStructureIf> >		FWStructures;
+	typedef std::vector< UTRef<FWObjectGroupIf> >		FWObjectGroups;
 	typedef std::vector< UTRef<HIHaptic> >			FWHumanInterfaces;
 	typedef std::vector< UTRef<FWHapticPointerIf> > FWHapticPointers;
 	
 	FWSdk*				sdk;						///<	親SDKへの参照
 	FWObjects			fwObjects;					///<	物理とグラフィックスのオブジェクトのリンク
-	FWBones				fwBones;					///<	物理とグラフィックスのBoneのリンク
-	FWStructures		fwStructures;				///<	BoneObjectの集合体であるFWStructureへのリンク
+	FWObjectGroups		fwObjectGroups;				///<	BoneObjectの集合体であるFWObjectGroupへのリンク
 	FWHapticPointers	fwHapticPointers;			///<	登録されている力覚ポインタへのリンク
 	PHSceneIf*			phScene;					///<	物理シミュレーション用のシーン
 	GRSceneIf*			grScene;					///<	グラフィックス用のシーン
@@ -110,7 +107,7 @@ public:
 	int				NObject()const{ return (int)fwObjects.size(); }
 	FWObjectIf**	GetObjects(){ return (FWObjectIf**)&*fwObjects.begin(); }
 
-	void		Sync(bool ph_to_gr = true);
+	void		Sync();
 	void		Step();
 
 	/** 描画機能
@@ -183,13 +180,11 @@ public:
 	 */
 	HIForceDevice6D*	GetHumanInterface(size_t pos);
 	void				AddHumanInterface(HIForceDevice6D* d);
-	void				SetFWBones(FWBoneIf* b);
-	std::vector< UTRef<FWBoneIf> > GetFWBones();
-	void				CreateFWStructure();
-	void				AddFWStructure(FWStructureIf* o);
-	FWStructureIf*		GetFWStructure();
-	FWStructureIf*		GetFWStructure(int n);
-	size_t				NFWStructure();
+	void				CreateFWObjectGroup();
+	void				AddFWObjectGroup(FWObjectGroupIf* o);
+	FWObjectGroupIf*		GetFWObjectGroup();
+	FWObjectGroupIf*		GetFWObjectGroup(int n);
+	size_t				NFWObjectGroup();
 	FWHapticPointerIf*	CreateHapticPointer();
 	FWHapticPointerIf*	GetHapticPointer(int i);
 	int					NHapticPointers();

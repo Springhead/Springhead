@@ -1,13 +1,3 @@
-#define SPR_OVERRIDEMEMBERFUNCOF_FWBoneIf(base)	\
-	Spr::PHSolidIf* GetPHSolid(){	return	base::GetPHSolid();}	\
-	void SetPHSolid(Spr::PHSolidIf* s){	base::SetPHSolid(s);}	\
-	Spr::GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
-	void SetGRFrame(Spr::GRFrameIf* f){	base::SetGRFrame(f);}	\
-	Spr::CDRoundConeIf* GetShape(){	return	base::GetShape();}	\
-	void SetShapeRadius(double r1, double r2){	base::SetShapeRadius(r1, r2);}	\
-	Spr::PHJointIf* GetJoint(){	return	base::GetJoint();}	\
-	void SetJointKDD2(double K, double D, double D2){	base::SetJointKDD2(K, D, D2);}	\
-
 #define SPR_OVERRIDEMEMBERFUNCOF_FWFemMeshIf(base)	\
 	PHFemMeshIf* GetPHMesh(){	return	base::GetPHMesh();}	\
 
@@ -22,25 +12,22 @@
 	void SetPHSolid(Spr::PHSolidIf* s){	base::SetPHSolid(s);}	\
 	Spr::GRFrameIf* GetGRFrame(){	return	base::GetGRFrame();}	\
 	void SetGRFrame(Spr::GRFrameIf* f){	base::SetGRFrame(f);}	\
-	bool LoadMesh(const char* filename, const IfInfo* ii, Spr::GRFrameIf* frame){	return	base::LoadMesh(filename, ii, frame);}	\
-	void GenerateCDMesh(Spr::GRFrameIf* frame, const PHMaterial& mat){	base::GenerateCDMesh(frame, mat);}	\
-	void Sync(bool ph_to_gr){	base::Sync(ph_to_gr);}	\
-	double GetSolidLength(){	return	base::GetSolidLength();}	\
-	void SetSolidLength(double l){	base::SetSolidLength(l);}	\
-
-#define SPR_OVERRIDEMEMBERFUNCOF_FWBoneObjectIf(base)	\
 	Spr::PHJointIf* GetPHJoint(){	return	base::GetPHJoint();}	\
 	void SetPHJoint(Spr::PHJointIf* j){	base::SetPHJoint(j);}	\
-	Spr::GRFrameIf* GetEndFrame(){	return	base::GetEndFrame();}	\
-	void SetEndFrame(Spr::GRFrameIf* f){	base::SetEndFrame(f);}	\
-	void SetAdaptType(int t){	base::SetAdaptType(t);}	\
+	Spr::GRFrameIf* GetChildFrame(){	return	base::GetChildFrame();}	\
+	void SetChildFrame(Spr::GRFrameIf* f){	base::SetChildFrame(f);}	\
+	void SetSyncSource(Spr::FWObjectDesc::FWObjectSyncSource syncSrc){	base::SetSyncSource(syncSrc);}	\
+	Spr::FWObjectDesc::FWObjectSyncSource GetSyncSource(){	return	base::GetSyncSource();}	\
+	void EnableAbsolute(bool bAbs){	base::EnableAbsolute(bAbs);}	\
+	bool IsAbsolute(){	return	base::IsAbsolute();}	\
+	bool LoadMesh(const char* filename, const IfInfo* ii, Spr::GRFrameIf* frame){	return	base::LoadMesh(filename, ii, frame);}	\
+	void GenerateCDMesh(Spr::GRFrameIf* frame, const PHMaterial& mat){	base::GenerateCDMesh(frame, mat);}	\
+	void Sync(){	base::Sync();}	\
 
-#define SPR_OVERRIDEMEMBERFUNCOF_FWStructureIf(base)	\
-	Spr::FWBoneObjectIf* GetBone(int n){	return	base::GetBone(n);}	\
-	Spr::FWBoneObjectIf* GetBone(const char* n){	return	base::GetBone(n);}	\
-	int GetBoneSize(){	return	base::GetBoneSize();}	\
-	void SetPose(Posed p){	base::SetPose(p);}	\
-	void AddBone(Spr::FWBoneObjectIf* o){	base::AddBone(o);}	\
+#define SPR_OVERRIDEMEMBERFUNCOF_FWObjectGroupIf(base)	\
+	Spr::FWObjectIf* GetObject(int n){	return	base::GetObject(n);}	\
+	int NObjects(){	return	base::NObjects();}	\
+	Spr::FWObjectIf* FindByLabel(const char* name){	return	base::FindByLabel(name);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSceneIf(base)	\
 	Spr::PHSceneIf* GetPHScene(){	return	base::GetPHScene();}	\
@@ -50,7 +37,7 @@
 	Spr::FWObjectIf* CreateFWObject(){	return	base::CreateFWObject();}	\
 	int NObject()const{	return	base::NObject();}	\
 	Spr::FWObjectIf** GetObjects(){	return	base::GetObjects();}	\
-	void Sync(bool ph_to_gr){	base::Sync(ph_to_gr);}	\
+	void Sync(){	base::Sync();}	\
 	void Step(){	base::Step();}	\
 	void Draw(Spr::GRRenderIf* grRender, bool debug){	base::Draw(grRender, debug);}	\
 	void DrawPHScene(Spr::GRRenderIf* render){	base::DrawPHScene(render);}	\
@@ -83,13 +70,11 @@
 	void EnableRenderLimit(bool enable){	base::EnableRenderLimit(enable);}	\
 	void EnableRenderHaptic(bool enable){	base::EnableRenderHaptic(enable);}	\
 	void AddHumanInterface(Spr::HIForceDevice6D* d){	base::AddHumanInterface(d);}	\
-	void SetFWBones(Spr::FWBoneIf* b){	base::SetFWBones(b);}	\
-	std::vector< UTRef< Spr::FWBoneIf > > GetFWBones(){	return	base::GetFWBones();}	\
-	void CreateFWStructure(){	base::CreateFWStructure();}	\
-	void AddFWStructure(Spr::FWStructureIf* o){	base::AddFWStructure(o);}	\
-	Spr::FWStructureIf* GetFWStructure(){	return	base::GetFWStructure();}	\
-	Spr::FWStructureIf* GetFWStructure(int n){	return	base::GetFWStructure(n);}	\
-	size_t NFWStructure(){	return	base::NFWStructure();}	\
+	void CreateFWObjectGroup(){	base::CreateFWObjectGroup();}	\
+	void AddFWObjectGroup(Spr::FWObjectGroupIf* o){	base::AddFWObjectGroup(o);}	\
+	Spr::FWObjectGroupIf* GetFWObjectGroup(){	return	base::GetFWObjectGroup();}	\
+	Spr::FWObjectGroupIf* GetFWObjectGroup(int n){	return	base::GetFWObjectGroup(n);}	\
+	size_t NFWObjectGroup(){	return	base::NFWObjectGroup();}	\
 	Spr::FWHapticPointerIf* CreateHapticPointer(){	return	base::CreateHapticPointer();}	\
 	void UpdateHapticPointers(){	base::UpdateHapticPointers();}	\
 

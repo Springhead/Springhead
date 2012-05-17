@@ -23,8 +23,7 @@ struct GRSceneIf;
 struct GRRenderIf;
 struct FWObjectDesc;
 struct FWObjectIf;
-struct FWBoneIf;
-struct FWStructureIf;
+struct FWObjectGroupIf;
 struct FWHapticPointerIf;
 
 struct FWSceneDesc{
@@ -71,10 +70,13 @@ public:
 	FWObjectIf** GetObjects();
 
 	/** @brief オブジェクトを同期する
-		各FWObjectに対して、PHSolidの位置をGRFrameに反映させる。
+		各FWObjectに対して、それぞれ
+		・PHSolidの位置をGRFrameに反映させる
+		・GRFrameの位置をPHSolidに反映させる
+		のどちらかを行う(どちらを行うかはFWObject::syncSourceで設定する)。
 		通常はFWSceneIf::Stepによってシミュレーションが実行された後に呼ぶ。
 	 */
-	void Sync(bool ph_to_gr = true);
+	void Sync();
 
 	/** @brief シミュレーションを実行する
 	 */
@@ -205,32 +207,25 @@ public:
 	
 	void AddHumanInterface(HIForceDevice6D* d);
 
-	/// ボーンの設定
-	void SetFWBones(FWBoneIf* b);
-	
-	/** @brief 作成したFWBoneをシーンに保存する
-	 */
-	std::vector< UTRef<FWBoneIf> > GetFWBones();
-
 	/** @brief ボーンの集合体を作成する
 	 */
-	void CreateFWStructure();
+	void CreateFWObjectGroup();
 	
 	/** @brief ボーンの集合体にボーンを追加する
 	 */
-	void AddFWStructure(FWStructureIf* o);
+	void AddFWObjectGroup(FWObjectGroupIf* o);
 	
 	/** @brief 最後に作成したボーンの集合体を取得する
 	 */
-	FWStructureIf* GetFWStructure();
+	FWObjectGroupIf* GetFWObjectGroup();
 		
 	/** @brief n番目のボーンの集合体を取得する
 	 */
-	FWStructureIf* GetFWStructure(int n);
+	FWObjectGroupIf* GetFWObjectGroup(int n);
 
 	/** @brief ボーンの集合体の個数を取得する
 	 */
-	size_t NFWStructure();
+	size_t NFWObjectGroup();
 
 	/** @brief 力覚ポインタを作る
 	*/

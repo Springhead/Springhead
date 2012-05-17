@@ -174,7 +174,7 @@ void FWFemMesh::Sync(bool ph2gr){
 	//	50度刻みごとにdtexを加算せずに、gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;だけでやるのも手
 
 	//	同期処理
-	FWObject::Sync(ph2gr);
+	FWObject::Sync(); // ph2grは廃止しました。syncSource==FWObjectDesc::PHYSICS を使って下さい (mitake) <!!>
 	if (ph2gr && grMesh->IsTex3D()){
 		float* gvtx = grMesh->GetVertexBuffer();
 		if (gvtx){

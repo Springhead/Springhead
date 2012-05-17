@@ -17,72 +17,80 @@ class FWObject : public SceneObject, public FWObjectDesc {
 public:
 	SPR_OBJECTDEF(FWObject);
 	ACCESS_DESC(FWObject);
-	FWObject(const FWObjectDesc& d=FWObjectDesc()); // コンストラクタ
+	FWObject(const FWObjectDesc& d=FWObjectDesc());
 
-	//
 	UTRef< PHSolidIf > phSolid;
 	UTRef< GRFrameIf > grFrame;
-	double			   solidLength;
+	UTRef< PHJointIf > phJoint;
+	UTRef< GRFrameIf > childFrame;
 
-	//
+	Posed sockOffset;
+
+	// ----- ----- ----- ----- -----
+
+	// 複製
 	virtual SceneObjectIf* CloneObject(); 
-	virtual bool		AddChildObject(ObjectIf* o);
-	virtual ObjectIf* GetChildObject(size_t pos);
-	virtual size_t NChildObject() const;
 
+	// 子要素
+	virtual bool       AddChildObject(ObjectIf* o);
+	virtual ObjectIf*  GetChildObject(size_t pos);
+	virtual size_t     NChildObject() const;
+
+	// Getter・Setter
 	PHSolidIf*	GetPHSolid(){ return phSolid; }
 	void		SetPHSolid(PHSolidIf* s){ phSolid = s; }
+
 	GRFrameIf*	GetGRFrame(){ return grFrame; }
 	void		SetGRFrame(GRFrameIf* f){ grFrame = f; }
-	double		GetSolidLength(){ return solidLength; }
-	void		SetSolidLength(double l){ solidLength = l; }
-	bool		LoadMesh(const char* filename, const IfInfo* ii = NULL, GRFrameIf* frame = NULL);
-	void		GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
-	virtual void Sync(bool ph_to_gr);
-};
-
-class FWBoneObject : public FWObject, public FWBoneObjectDesc {
-public:
-	SPR_OBJECTDEF(FWBoneObject);
-	ACCESS_DESC(FWBoneObject);
-	FWBoneObjectDesc desc;
-	FWBoneObject(const FWBoneObjectDesc& d=FWBoneObjectDesc()); // コンストラクタ
-	//
-	UTRef< PHJointIf > phJoint;
-	UTRef< GRFrameIf > endFrame;
-	Posed sockOffset;
-	//
-	virtual bool AddChildObject(ObjectIf* o);	
-	virtual ObjectIf* GetChildObject(size_t pos);
-	virtual size_t NChildObject() const;
-	virtual void Sync(bool ph_to_gr);
-	virtual void Modify();
 
 	PHJointIf*	GetPHJoint(){ return phJoint; }
 	void		SetPHJoint(PHJointIf* j){ phJoint = j; }
-	GRFrameIf*	GetEndFrame(){ return endFrame; }
-	void		SetEndFrame(GRFrameIf* f){ endFrame = f; }
-	
-	void		 SetAdaptType(int t){AdaptType = (FWBoneObjectAdaptType)t;}
+
+	GRFrameIf*	GetChildFrame(){ return childFrame; }
+	void		SetChildFrame(GRFrameIf* f){ childFrame = f; }
+
+	// 同期オプション
+	void		SetSyncSource(FWObjectDesc::FWObjectSyncSource syncSrc) { syncSource = syncSrc; }
+	FWObjectDesc::FWObjectSyncSource GetSyncSource() { return syncSource; }
+
+	void		EnableAbsolute(bool bAbs) { bAbsolute = bAbs; }
+	bool		IsAbsolute() { return bAbsolute; }
+
+	// グラフィックス用メッシュに関するヘルパ
+	bool		LoadMesh(const char* filename, const IfInfo* ii = NULL, GRFrameIf* frame = NULL);
+	void		GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
+
+	// 同期
+	void		Sync();
+
+	// モディファイ
+	void		Modify();
 };
 
-class FWStructure: public SceneObject, public FWStructureDesc{
+
+class FWObjectGroup: public SceneObject, public FWObjectGroupDesc{
 private:
-	std::vector<FWBoneObjectIf*> fwBones;
+	std::vector<FWObjectIf*>		objects;
+	std::vector<FWObjectGroupIf*>	groups;
+
 public:
-	SPR_OBJECTDEF(FWStructure);
-	ACCESS_DESC(FWStructure);
+	SPR_OBJECTDEF(FWObjectGroup);
+	ACCESS_DESC(FWObjectGroup);
 
-	FWStructureDesc desc;
-	FWStructure(const FWStructureDesc& d=FWStructureDesc()); // コンストラクタ
+	FWObjectGroupDesc desc;
+	FWObjectGroup(const FWObjectGroupDesc& d=FWObjectGroupDesc());
 
-	FWBoneObjectIf* GetBone(int n);			//FWBoneObjectを取得する
-	FWBoneObjectIf* GetBone(const char* name);	//FWBoneObjectを名前で取得する
-	int				GetBoneSize();			//FWBoneObjectの数を取得する
-	void			SetPose(Posed p);		//FWBoneObjectの位置を設定する(fwBones[0]を基準とする)
-	void AddBone(FWBoneObjectIf* o);
+	// FWObjectを取得
+	FWObjectIf*	GetObject(int n);
+	int			NObjects();
 
-	virtual bool		AddChildObject(ObjectIf* o);
+	// FWObjectをラベルで探す
+	FWObjectIf* FindByLabel(const char* name);
+
+	// 子要素
+	virtual bool       AddChildObject(ObjectIf* o);
+	virtual ObjectIf*  GetChildObject(size_t pos);
+	virtual size_t     NChildObject() const;
 };
 
 }

@@ -194,14 +194,14 @@ FWSceneIf* SPR_CDECL CreateFWScene(const void* desc){
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-void FWScene::Sync(bool ph_to_gr){
+void FWScene::Sync(){
 	//	オブジェクト位置・姿勢の同期
 	for(FWObjects::iterator it = fwObjects.begin(); it!=fwObjects.end(); ++it){
-		DCAST(FWObject, *it)->Sync(ph_to_gr);
+		DCAST(FWObject, *it)->Sync();
 	}
 	
 	//	カメラの同期 (未実装？)
-	if(ph_to_gr && grScene){
+	if(grScene){
 		HIForceDevice6D* device = GetHumanInterface(HI_CAMERACONTROLLER);
 		GRCameraIf* camera = grScene->GetCamera();
 		if(camera && device){
@@ -1052,38 +1052,30 @@ int FWScene::GetAutoMaterial(int i){
 // HumanInterface系
 
 void FWScene::AddHumanInterface(HIForceDevice6D* d){
-//	hase	TBW
+	//	hase	TBW
 	//	humanInterfaces.push_back(d);
 }
 
-void FWScene::SetFWBones(FWBoneIf* b){
-	fwBones.push_back(b);
+void FWScene::CreateFWObjectGroup(){
+	FWObjectGroupIf *fwObjectGroup =DCAST(FWObjectGroupIf ,new FWObjectGroup);
+	fwObjectGroups.push_back(fwObjectGroup);
+}
+void FWScene::AddFWObjectGroup(FWObjectGroupIf* o){
+	return fwObjectGroups.push_back(o);
 }
 
-std::vector< UTRef<FWBoneIf> > FWScene::GetFWBones(){
-	return fwBones;
+FWObjectGroupIf* FWScene::GetFWObjectGroup(){
+	return fwObjectGroups.back();
 }
 
-void FWScene::CreateFWStructure(){
-	FWStructureIf *fwStructure =DCAST(FWStructureIf ,new FWStructure);
-	fwStructures.push_back(fwStructure);
-}
-void FWScene::AddFWStructure(FWStructureIf* o){
-	return fwStructures.push_back(o);
-}
-
-FWStructureIf* FWScene::GetFWStructure(){
-	return fwStructures.back();
-}
-
-FWStructureIf* FWScene::GetFWStructure(int n){
-	if(n < (int)fwStructures.size()){
-		return fwStructures[n];
+FWObjectGroupIf* FWScene::GetFWObjectGroup(int n){
+	if(n < (int)fwObjectGroups.size()){
+		return fwObjectGroups[n];
 	}
 	return NULL;
 }
-size_t FWScene::NFWStructure(){
-	return fwStructures.size();
+size_t FWScene::NFWObjectGroup(){
+	return fwObjectGroups.size();
 }
 FWHapticPointerIf* FWScene::CreateHapticPointer(){
 	UTRef< FWHapticPointer > fwHapticPointer = DBG_NEW FWHapticPointer;
