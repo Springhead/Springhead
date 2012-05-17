@@ -263,9 +263,6 @@ struct Joint{
 	float		fDValue;			///<	PID§Œä‚ÌD‚Ì’l
 };
 
-struct PHBoneGenerator{
-};
-
 //@}
 
 }

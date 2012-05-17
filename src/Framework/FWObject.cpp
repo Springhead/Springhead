@@ -20,14 +20,19 @@
 
 namespace Spr{;
 
-FWObject::FWObject(const FWObjectDesc& d/*=FWObjectDesc()*/)
-: phSolid(NULL), grFrame(NULL), FWObjectDesc(d){
-	solidLength=0;
+// --- --- --- --- --- --- --- --- --- ---
+// FWObject
+
+FWObject::FWObject(const FWObjectDesc& d)
+: phSolid(NULL), grFrame(NULL), phJoint(NULL), childFrame(NULL), FWObjectDesc(d){
 }
+
 SceneObjectIf* FWObject::CloneObject(){
 	FWObjectIf* origin = DCAST(FWObjectIf,this);
 	FWSceneIf* s = DCAST(FWSceneIf, GetScene());
 	FWObjectIf* clone = s->CreateFWObject();
+
+	// Boneに相当するFWObjectの複製には未対応 <!!>
 
 	if(origin->GetPHSolid())
 		clone->SetPHSolid(origin->GetPHSolid()->CloneObject()->Cast());
@@ -37,77 +42,146 @@ SceneObjectIf* FWObject::CloneObject(){
 	return clone;
 }
 
-void FWObject::Sync(bool ph_to_gr){
+void FWObject::Sync(){
 	if(!phSolid || !grFrame){
-		//DSTR << "Warning: No solid or frame for " << GetName() << ":FWObject." << std::endl;
 		return;
 	}
-		
-	// ボーン付きXファイルを使用する場合
-	if(solidLength){
-		if(ph_to_gr){
-			Affinef affSolid, affParFrame, afd, afl, AF;
-			// 剛体
-			phSolid->GetPose().ToAffine(affSolid);
-			// 親フレーム
-			affParFrame = grFrame->GetParent()->GetWorldTransform();	
 
-			afd = affParFrame.inv() * affSolid;								//階層構造下のAffin行列に変換する
-			afl.PosZ() += (float)solidLength/2.0f;				//剛体中心の位置から剛体の半長分だけずらし，ジョイント部分の位置にする
-			AF = afd * afl;
-			grFrame->SetTransform(AF);
-		}
-		else{
-			// undefined
-		}
-	}
-	// 通常時
-	else{
-		if(ph_to_gr){
+	if (phJoint==NULL || bAbsolute) {
+		if(syncSource==FWObjectDesc::PHYSICS){
+			// 剛体をフレームへ
 			Affinef aff;
 			phSolid->GetPose().ToAffine(aff);
 			grFrame->SetTransform(aff);
+
+		} else {
+			// フレームを剛体へ
+			Affinef af;
+			af = grFrame->GetTransform();
+
+			// ボーンのルートフレームだった場合。必要性が不明のため残しとくが、後ほど検証のこと (12/05/17, mitake) <!!>
+			// af = grFrame->GetWorldTransform();
+			// af.Orthonormalization();
+
+			Posed pose; pose.FromAffine(af);
+			phSolid->SetPose(pose);
 		}
-		else{
-			Posed pose;
-			pose.FromAffine(grFrame->GetTransform());
+
+	} else {
+		if(syncSource==FWObjectDesc::PHYSICS){
+			// 関節をフレームへ
+			Posed jointPosition;
+			jointPosition.Ori() = phJoint->GetRelativePoseQ() * sockOffset.Ori().Inv();
+			Posed poseSocket; phJoint->GetSocketPose(poseSocket);
+			Posed pose = poseSocket * jointPosition;
+
+			Affinef af; pose.ToAffine(af);
+			DCAST(GRFrame, grFrame)->SetTransform(af);
+
+			PHSolidIf *so1 = phJoint->GetSocketSolid(), *so2 = phJoint->GetPlugSolid();
+			if (so1 && so2) {
+				DCAST(FWSceneIf,GetScene())->GetPHScene()->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE);
+			}
+
+		} else {
+			// フレームを関節（を構成する剛体）へ
+			Affinef af = grFrame->GetWorldTransform();
+			af.Orthonormalization(); //正規直交化
+			Posed pose; pose.FromAffine(af);
+
+			//アフィン行列→クォータニオンの変換誤差が大きい場合のエラー表示
+			Affinef af2; pose.ToAffine(af2);
+			Matrix3d mat=af.Rot(), mat2=af2.Rot();
+			double epsilon = 0.1;
+			bool   bErr    = false;
+			for(int i=0;i<2;i++){
+				for(int j=0;j<2;j++){
+					if(fabs(mat[i][j]-mat2[i][j]) > epsilon){ bErr = true; }
+				}
+			}
+			if(bErr){
+				DSTR << "in FWObject[" << GetName() << "] : ";
+				DSTR << mat << " <=> " << mat2 << " has error larger than " << epsilon << std::endl;
+			}
+			
 			phSolid->SetPose(pose);
 		}
 	}
 }
 
-
 bool FWObject::AddChildObject(ObjectIf* o){
-	PHSolidIf* so = DCAST(PHSolidIf, o);
-	if(so){
-		phSolid = so;
-		return true;
+	bool bAdded = false;
+
+	if (!bAdded) {
+		GRMeshIf* obj = DCAST(GRMeshIf, o);
+		if(obj){
+			FWSceneIf* s=GetScene()->Cast();
+			GRSceneIf* gs = s->GetGRScene();
+			grFrame = gs->CreateVisual(GRFrameIf::GetIfInfoStatic(), GRFrameDesc())->Cast();
+			grFrame->SetName("newFrameForMesh");
+			grFrame->AddChildObject(obj);
+			bAdded = true;
+		}
 	}
-	GRFrameIf* fr = DCAST(GRFrameIf, o);
-	if(fr){
-		grFrame = fr;
-		return true;
+
+	if (!bAdded) {
+		PHSolidIf* obj = DCAST(PHSolidIf, o);
+		if (obj) {
+			phSolid = obj;
+			bAdded = true;
+		}
 	}
-	GRMeshIf* m = DCAST(GRMeshIf, o);
-	if(m){
-		FWSceneIf* s=GetScene()->Cast();
-		GRSceneIf* gs = s->GetGRScene();
-		grFrame = gs->CreateVisual(GRFrameIf::GetIfInfoStatic(), GRFrameDesc())->Cast();
-		grFrame->SetName("newFrameForMesh");
-		grFrame->AddChildObject(m);
-		return true;
+
+	if (!bAdded) {
+		GRFrameIf* obj = DCAST(GRFrameIf, o);
+		if (obj) {
+			if (!grFrame) {
+				grFrame = obj;
+				bAdded = true;
+			} else {
+				childFrame = obj;
+				bAdded = true;
+			}
+		}
 	}
-	return false;
+
+	if (!bAdded) {
+		PHJointIf* obj = DCAST(PHJointIf, o);
+		if (obj) {
+			phJoint = obj;
+			bAdded = true;
+		}
+	}
+
+	if (bAdded && phSolid && grFrame && phJoint && childFrame) {
+		Modify();
+	}
+
+	return bAdded;
 }
 
 ObjectIf* FWObject::GetChildObject(size_t pos){
-	if (pos==0) if (phSolid) return phSolid; else return grFrame;
-	if (pos==1) if (phSolid) return grFrame; else return NULL;
+	bool objs[] = {phSolid!=NULL, grFrame!=NULL, phJoint!=NULL, childFrame!=NULL};
+	int cnt = -1;
+	int i=0;
+	for (; i<4; ++i) {
+		if (objs[i]) { cnt++; }
+		if (cnt==pos) { break; }
+	}
+	if (i == 0) { return phSolid;  }
+	if (i == 1) { return grFrame;  }
+	if (i == 2) { return phJoint;  }
+	if (i == 3) { return childFrame; }
 	return NULL;
 }
 
 size_t FWObject::NChildObject() const {
-	return phSolid ? (grFrame ? 2 : 1) : (grFrame ? 1 : 0);
+	bool objs[] = {phSolid!=NULL, grFrame!=NULL, phJoint!=NULL, childFrame!=NULL};
+	int cnt = 0;
+	for (int i=0; i<4; ++i) {
+		if (objs[i]) { cnt++; }
+	}
+	return cnt;
 }
 
 bool FWObject::LoadMesh(const char* filename, const IfInfo* ii, GRFrameIf* frame){
@@ -161,159 +235,9 @@ void FWObject::GenerateCDMesh(GRFrameIf* frame, const PHMaterial& mat){
 
 }
 
-/// --- --- --- --- --- --- --- --- --- ---
-
-FWBoneObject::FWBoneObject(const FWBoneObjectDesc& d/*=FWBoneObjectDesc()*/)
-: desc(d), phJoint(NULL), endFrame(NULL), FWObject((const FWObjectDesc&)d)
-{
-	AdaptType = GRFRAME_TO_PHSOLID;
-}
-
-void FWBoneObject::Sync(bool ph_to_gr){
-	if(AdaptType==GRFRAME_TO_PHSOLID){
-		if (phSolid && grFrame && phJoint){
-			//PHSolidの位置にGRFrameを合わせる
-			Posed jointPosition;
-			jointPosition.Ori() = phJoint->GetRelativePoseQ() * sockOffset.Ori().Inv();
-			Posed poseSocket; phJoint->GetSocketPose(poseSocket);
-			Posed pose = poseSocket * jointPosition;
-
-			Affinef af; pose.ToAffine(af);
-			DCAST(GRFrame, grFrame)->SetTransform(af);
-
-			PHSolidIf *so1 = phJoint->GetSocketSolid(), *so2 = phJoint->GetPlugSolid();
-			if (so1 && so2) {
-				DCAST(FWSceneIf,GetScene())->GetPHScene()->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE);
-			}
-		}
-		if(phSolid && grFrame && (!phJoint)){
-			//最初のFrameに関する処理
-			Affinef af;
-			phSolid->GetPose().ToAffine(af);
-			DCAST(GRFrame, grFrame)->SetTransform(af);
-		}
-	}
-	if(AdaptType==PHSOLID_TO_GRFRAME){
-		//GRFrameの位置にPHSolidを合わせる
-		if (phSolid && grFrame && phJoint){
-			Affinef af = grFrame->GetWorldTransform();
-			af.Orthonormalization(); //正規直交化
-			//Matrix3d afr = af.Rot();
-			//if(afr.det()<1.00){
-			//	DSTR<<"行列式 : "<<afr.det()<<std::endl;
-			//	DSTR<<af<<std::endl;
-			//}
-			Posed pose; pose.FromAffine(af);
-			//アフィン行列→クォータニオンの変換誤差が大きい場合のエラー表示
-			Affinef af2; pose.ToAffine(af2);
-			Matrix3d mat,mat2;
-			mat = af.Rot();
-			mat2 = af2.Rot();
-			bool flag = false;
-			double filter =0.1;
-			for(int i=0;i<2;i++){
-				for(int j=0;j<2;j++){
-					if(fabs(mat[i][j]-mat2[i][j])>filter){
-						flag = true;
-					}
-				}
-			}
-			if(flag){
-				DSTR<<mat<<std::endl;
-				std::cout<<mat<<std::endl;
-				std::cout<<mat2<<std::endl;
-				std::cout<<"↑×"<<filter<<"以上の誤差××××"<<std::endl;
-			}
-			//
-			phSolid->SetPose(pose);
-		}
-		if(phSolid && grFrame && (!phJoint)){
-			//最初のFrameに関する処理
-			Affinef af = grFrame->GetWorldTransform();
-			af.Orthonormalization();
-			Posed pose; pose.FromAffine(af);
-			phSolid->SetPose(pose);
-		}
-	}
-}
-
-
-bool FWBoneObject::AddChildObject(ObjectIf* o){
-	bool rv = false;
-
-	if (!rv) {
-		PHSolidIf* obj = DCAST(PHSolidIf, o);
-		if (obj) {
-			phSolid = obj;
-			rv = true;
-		}
-	}
-	if (!rv) {
-		GRFrameIf* obj = DCAST(GRFrameIf, o);
-		if (obj) {
-			if (!grFrame) {
-				grFrame = obj;
-				rv = true;
-			} else {
-				endFrame = obj;
-				rv = true;
-			}
-		}
-	}
-	if (!rv) {
-		PHJointIf* obj = DCAST(PHJointIf, o);
-		if (obj) {
-			phJoint = obj;
-			rv = true;
-		}
-	}
-	/* // これ要らない気がする．何の目的で設置したか後で考え直すこと <!!>(mitake)
-	if ((phJoint==NULL&&endFrame==NULL)){
-		//最初のFrameに関する処理(Center)
-		if(phSolid && grFrame){
-			Affinef af = grFrame->GetTransform();
-			Posed absPose; absPose.FromAffine(af);
-			phSolid->SetPose(absPose);
-		}
-	}
-	*/
-	if (grFrame && endFrame && phSolid && phJoint) {
-		Modify();
-	}
-	return rv;
-}
-
-ObjectIf* FWBoneObject::GetChildObject(size_t pos){
-	bool objs[] = {phSolid!=NULL, grFrame!=NULL, phJoint!=NULL, endFrame!=NULL};
-	int cnt = -1;
-	int i=0;
-	for (; i<4; ++i) {
-		if (objs[i]) { cnt++; }
-		if (cnt==pos) { break; }
-	}
-	if (i == 0) { return phSolid;  }
-	if (i == 1) { return grFrame;  }
-	if (i == 2) { return phJoint;  }
-	if (i == 3) { return endFrame; }
-	return NULL;
-}
-
-size_t FWBoneObject::NChildObject() const {
-	bool objs[] = {phSolid!=NULL, grFrame!=NULL, phJoint!=NULL, endFrame!=NULL};
-	int cnt = 0;
-	for (int i=0; i<4; ++i) {
-		if (objs[i]) { cnt++; }
-	}
-	return cnt;
-}
-
-void FWBoneObject::Modify() {
+void FWObject::Modify() {
 	Posed poseSock, posePlug;
 	poseSock.FromAffine( grFrame->GetTransform() );
-	//DSTR<<"---------------------------------"<<std::endl;
-	//DSTR<<grFrame->GetName()<<std::endl;
-	//DSTR<<grFrame->GetTransform()<<std::endl;
-
 
 	posePlug.FromAffine( Affinef() );
 	GRFrameIf* fr = grFrame;
@@ -343,7 +267,7 @@ void FWBoneObject::Modify() {
 		hj->SetDesc(&d);
 	}
 
-	double boneLength = endFrame->GetTransform().Trn().norm();
+	double boneLength = childFrame->GetTransform().Trn().norm();
 
 	for (int i=0; i<phSolid->NShape(); ++i) {
 		CDRoundConeIf* rc = phSolid->GetShape(i)->Cast();
@@ -362,68 +286,47 @@ void FWBoneObject::Modify() {
 	}
 }
 
-/// --- --- --- --- --- --- --- --- --- ---
-//FWStructure(Boneの集合)
 
-FWStructure::FWStructure(const FWStructureDesc& d/*=FWStructureDesc()*/)
-: desc(d)
-{
+// --- --- --- --- --- --- --- --- --- ---
+// FWObjectGroup(FWObjectの集合)
+
+FWObjectGroup::FWObjectGroup(const FWObjectGroupDesc& d) : desc(d) {
 }
 
-FWBoneObjectIf* FWStructure::GetBone(int n){
-	if(n < (int)fwBones.size()){
-		return fwBones[n];
-	}
-	DSTR<<"EROOR: FWBone don't exit"<<std::endl;
+FWObjectIf*	FWObjectGroup::GetObject(int n) {
+	return( (n<objects.size()) ? objects[n] : NULL );
+}
+
+int FWObjectGroup::NObjects() {
+	return objects.size();
+}
+
+FWObjectIf* FWObjectGroup::FindByLabel(const char* name) {
+	// 未実装
 	return NULL;
 }
 
-FWBoneObjectIf* FWStructure::GetBone(const char* n){
-	std::string name = n;
-	for(int i=0; i < (int)fwBones.size(); i++){
-		std::string getName = fwBones[i]->GetName();
-		if(getName==n){
-			return fwBones[i];
-		}		
-	}
-	DSTR<<"EROOR: FWBone don't exit"<<std::endl;
+bool FWObjectGroup::AddChildObject(ObjectIf* o){
+	FWObjectIf* obj = o->Cast();
+	if (obj) { objects.push_back(obj); return true; }
+
+	FWObjectGroupIf* grp = o->Cast();
+	if (grp) { groups.push_back(grp);  return true; }
+
+	return false;
+}
+
+ObjectIf* FWObjectGroup::GetChildObject(size_t pos) {
+	if (pos < objects.size()) { return(objects[pos]); }
+
+	pos -= objects.size();
+	if (pos < groups.size()) { return(groups[pos]); }
+
 	return NULL;
 }
 
-int FWStructure::GetBoneSize(){
-	return (int)fwBones.size();
+size_t FWObjectGroup::NChildObject() const {
+	return objects.size() + groups.size();
 }
-
-void FWStructure::AddBone(FWBoneObjectIf* o){
-	fwBones.push_back(o);
-}
-
-bool FWStructure::AddChildObject(ObjectIf* o){
-	bool rv = false;
-	if (!rv) {
-		FWBoneObjectIf* obj = DCAST(FWBoneObjectIf, o);
-		if (obj) {
-			if(fwBones.size()==0){
-				DCAST(FWSceneIf,GetScene())->CreateFWStructure();
-			}
-			AddBone(obj);
-			//FWSceneのFWStructureに保存
-			DCAST(FWSceneIf,GetScene())->GetFWStructure()->AddBone(obj);
-			rv = true;
-		}
-	}
-	return rv;
-}
-
-void FWStructure::SetPose(Posed p){
-	for(int i =0; i < GetBoneSize(); i++){
-		if(!(GetBone(i)->GetPHSolid())) continue;
-		Posed pose = GetBone(i)->GetPHSolid()->GetPose();
-		GetBone(i)->GetPHSolid()->SetPose(p * pose);
-	}
-}
-
-
-
 
 }

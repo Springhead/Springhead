@@ -43,8 +43,7 @@ void SPR_CDECL FWSdkIf::RegisterSdk(){
 	FWSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWScene));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWObject));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWFemMesh));
-	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWBoneObject));
-	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWStructure));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWObjectGroup));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSdk));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHScene));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRSdk));

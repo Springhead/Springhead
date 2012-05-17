@@ -21,6 +21,18 @@ struct GRFrameIf;
 struct FWSceneIf;
 
 struct FWObjectDesc{
+	/// ボーンの同期を絶対位置で行う（親フレームからの差分でなくワールド座標系に対する変換をセットする）
+	bool bAbsolute;
+
+	enum FWObjectSyncSource {
+		PHYSICS=0,  // Physicsの状態にGraphicsが同期される
+		GRAPHICS    // Graphicsの状態にPhysicsが同期される
+	} syncSource;
+
+	FWObjectDesc() {
+		bAbsolute  = false;
+		syncSource = PHYSICS;
+	}
 };
 
 /** @brief Frameworkのオブジェクト
@@ -32,15 +44,36 @@ struct FWObjectDesc{
  */
 struct FWObjectIf : SceneObjectIf {
 	SPR_IFDEF(FWObject);
+
 	/// PHSolidを取得する
 	PHSolidIf* GetPHSolid();
 	/// PHSolidを設定する
 	void SetPHSolid(PHSolidIf* s);
+
 	/// GRFrameを取得する
 	GRFrameIf* GetGRFrame();
 	/// GRFrameを設定する
 	void SetGRFrame(GRFrameIf* f);
-	/// PHFEMMeshを取得する
+
+	/// PHJointを取得する
+	PHJointIf* GetPHJoint();
+	/// PHJointを設定する
+	void SetPHJoint(PHJointIf* j);
+
+	/// セットされた子Frameを取得する
+	GRFrameIf* GetChildFrame();
+	/// 子Frameをセットする（自Frameと子Frame間の距離がわかるのでSolidの大きさを自動設定可能になる）
+	void SetChildFrame(GRFrameIf* f);
+
+	/// PHSolid,GRFrameのいずれの位置に合わせるかを設定する
+	void SetSyncSource(FWObjectDesc::FWObjectSyncSource syncSrc);
+	/// PHSolid,GRFrameのいずれの位置に合わせるかを取得する
+	FWObjectDesc::FWObjectSyncSource GetSyncSource();
+
+	/// ボーンを絶対位置指定で同期するかを設定する
+	void EnableAbsolute(bool bAbs);
+	/// ボーンを絶対位置指定で同期するかを取得する
+	bool IsAbsolute();
 
 	/** @brief グラフィクス用メッシュをロードするヘルパ関数
 		@param filename ファイル名
@@ -60,63 +93,24 @@ struct FWObjectIf : SceneObjectIf {
 	void GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
 
 	/// PHSolidとGRFrameの同期
-	void Sync(bool ph_to_gr);
-
-	///ボーン付きXファイル専用
-	/// solidLengthを取得する
-	double GetSolidLength();
-	/// solidLengthを設定する
-	void SetSolidLength(double l);
+	void Sync();
 };
 
-struct FWBoneObjectDesc {
-	bool modifyShapeLength;		///< 剛体のShapeの長さをBoneにあわせて変更する
-	bool modifyShapeWidth;		///< 剛体のShapeの太さをスキンメッシュに合わせて変更する（未実装）
-	bool modifyShapePose;		///< 剛体に対するShapeの位置を(0,0,0)に変更する（falseにするともともとのshapePoseを維持する）
-	bool modifyPlugSocketPose;	///< 関節の取り付け位置をBoneにあわせて変更する
-
-	enum FWBoneObjectAdaptType{
-		GRFRAME_TO_PHSOLID = 0, //PHSolidの位置にGRFrameを合わせる
-		PHSOLID_TO_GRFRAME = 1	//GRFrameの位置にPHSolidを合わせる
-	}AdaptType; 
-};
-
-/** @brief ボーンモデルと剛体関節系をつなげるためのFrameworkオブジェクト
- */
-struct FWBoneObjectIf : FWObjectIf {
-	SPR_IFDEF(FWBoneObject);
-
-	/// PHJointを取得する
-	PHJointIf* GetPHJoint();
-	/// PHJointを設定する
-	void SetPHJoint(PHJointIf* j);
-
-	/// ボーンの終端点を示すGRFrameを取得する
-	GRFrameIf* GetEndFrame();
-	/// ボーンの終端点を示すGRFrameを設定する
-	void SetEndFrame(GRFrameIf* f);
-
-	/// PHSolid,GRFrameのいずれの位置に合わせるかを設定する
-	void SetAdaptType(int t);
-};
-
-struct FWStructureDesc {
+struct FWObjectGroupDesc {
 };
 /** @brief ボーンを集合体として管理するためのFrameworkオブジェクト
  */
-struct FWStructureIf : SceneObjectIf {
-	SPR_IFDEF(FWStructure);
+struct FWObjectGroupIf : SceneObjectIf {
+	SPR_IFDEF(FWObjectGroup);
 
-	/// BoneObjectをナンバーで指定して取得する
-	FWBoneObjectIf* GetBone(int n);
-	/// BoneObjectを名前で指定して取得する
-	FWBoneObjectIf* GetBone(const char* n);
-	/// BoneObjectのサイズを取得する
-	int GetBoneSize();
-	/// FWBoneObjectの位置を設定する
-	void SetPose(Posed p);	
-	/// FWBoneObjectを追加する
-	void AddBone(FWBoneObjectIf* o);
+	/// FWObjectを取得する
+	FWObjectIf* GetObject(int n);
+
+	/// FWObjectの数を返す
+	int NObjects();
+
+	// FWObjectをラベルで探す
+	FWObjectIf* FindByLabel(const char* name);
 };
 
 }
