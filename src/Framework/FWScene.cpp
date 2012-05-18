@@ -123,6 +123,13 @@ bool FWScene::AddChildObject(ObjectIf* o){
 		}
 	}
 	if (!ok) {
+		FWObjectGroupIf* obj = o->Cast();
+		if (obj) {
+			fwObjectGroups.push_back(obj);
+			ok = true;
+		}
+	}
+	if (!ok) {
 		PHScene* obj = DCAST(PHScene, o);
 		if (obj) {
 			phScene = obj->Cast();
@@ -166,7 +173,7 @@ HIForceDevice6D* FWScene::GetHumanInterface(size_t pos){
 }
 
 size_t FWScene::NChildObject() const{
-	return fwObjects.size() + (grScene?1:0) + (phScene?1:0);
+	return fwObjects.size() + fwObjectGroups.size() + (grScene?1:0) + (phScene?1:0);
 }
 
 ObjectIf* FWScene::GetChildObject(size_t pos){
@@ -174,11 +181,17 @@ ObjectIf* FWScene::GetChildObject(size_t pos){
 		if (pos == 0) return phScene;
 		pos--;
 	}
+
 	if (grScene){
 		if (pos == 0) return grScene;
 		pos--;
 	}	
+
 	if (pos < fwObjects.size()) return fwObjects[pos];
+
+	pos -= fwObjects.size();
+	if (pos < fwObjectGroups.size()) return fwObjectGroups[pos];
+
 	return NULL;
 }
 
@@ -1056,27 +1069,6 @@ void FWScene::AddHumanInterface(HIForceDevice6D* d){
 	//	humanInterfaces.push_back(d);
 }
 
-void FWScene::CreateFWObjectGroup(){
-	FWObjectGroupIf *fwObjectGroup =DCAST(FWObjectGroupIf ,new FWObjectGroup);
-	fwObjectGroups.push_back(fwObjectGroup);
-}
-void FWScene::AddFWObjectGroup(FWObjectGroupIf* o){
-	return fwObjectGroups.push_back(o);
-}
-
-FWObjectGroupIf* FWScene::GetFWObjectGroup(){
-	return fwObjectGroups.back();
-}
-
-FWObjectGroupIf* FWScene::GetFWObjectGroup(int n){
-	if(n < (int)fwObjectGroups.size()){
-		return fwObjectGroups[n];
-	}
-	return NULL;
-}
-size_t FWScene::NFWObjectGroup(){
-	return fwObjectGroups.size();
-}
 FWHapticPointerIf* FWScene::CreateHapticPointer(){
 	UTRef< FWHapticPointer > fwHapticPointer = DBG_NEW FWHapticPointer;
 	fwHapticPointers.push_back(fwHapticPointer->Cast());
@@ -1106,6 +1098,25 @@ void FWScene::UpdateHapticPointers(){
 			fp->UpdateHumanInterface(plp, GetPHScene()->GetHapticTimeStep());
 		}
 	}
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// オブジェクトグループ
+
+FWObjectGroupIf* FWScene::CreateObjectGroup(const FWObjectGroupDesc& desc){
+	FWObjectGroup* obj = DBG_NEW FWObjectGroup(desc);
+	AddChildObject(obj->Cast());
+	return obj->Cast();
+}
+
+FWObjectGroupIf* FWScene::GetObjectGroup(int n){
+	if(n < (int)fwObjectGroups.size()){
+		return fwObjectGroups[n];
+	}
+	return NULL;
+}
+size_t FWScene::NObjectGroups(){
+	return fwObjectGroups.size();
 }
 
 }

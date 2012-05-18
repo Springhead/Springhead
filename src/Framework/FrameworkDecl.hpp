@@ -30,12 +30,15 @@ public:\
 
 #define SPR_DECLMEMBEROF_FWObjectGroupDesc \
 protected:\
+	std::string	label;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		label = ((FWObjectGroupDesc*)ptr)->label;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		((FWObjectGroupDesc*)ptr)->label = label;	\
 		return true;	\
 	}\
 

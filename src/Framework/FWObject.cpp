@@ -24,7 +24,7 @@ namespace Spr{;
 // FWObject
 
 FWObject::FWObject(const FWObjectDesc& d)
-: phSolid(NULL), grFrame(NULL), phJoint(NULL), childFrame(NULL), FWObjectDesc(d){
+: phSolid(NULL), grFrame(NULL), phJoint(NULL), childFrame(NULL), phIKEndEffector(NULL), phIKActuator(NULL), FWObjectDesc(d){
 }
 
 SceneObjectIf* FWObject::CloneObject(){
@@ -155,6 +155,22 @@ bool FWObject::AddChildObject(ObjectIf* o){
 
 	if (bAdded && phSolid && grFrame && phJoint && childFrame) {
 		Modify();
+	}
+
+	if (!bAdded) {
+		PHIKEndEffectorIf* obj = DCAST(PHIKEndEffectorIf, o);
+		if (obj) {
+			phIKEndEffector = obj;
+			bAdded = true;
+		}
+	}
+
+	if (!bAdded) {
+		PHIKActuatorIf* obj = DCAST(PHIKActuatorIf, o);
+		if (obj) {
+			phIKActuator = obj;
+			bAdded = true;
+		}
 	}
 
 	return bAdded;
@@ -290,7 +306,8 @@ void FWObject::Modify() {
 // --- --- --- --- --- --- --- --- --- ---
 // FWObjectGroup(FWObjectの集合)
 
-FWObjectGroup::FWObjectGroup(const FWObjectGroupDesc& d) : desc(d) {
+FWObjectGroup::FWObjectGroup(const FWObjectGroupDesc& d) {
+	SetDesc(&d);
 }
 
 FWObjectIf*	FWObjectGroup::GetObject(int n) {
@@ -301,17 +318,31 @@ int FWObjectGroup::NObjects() {
 	return objects.size();
 }
 
-FWObjectIf* FWObjectGroup::FindByLabel(const char* name) {
-	// 未実装
+FWObjectGroupIf* FWObjectGroup::FindByLabel(UTString label) {
+	for (int i=0; i<groups.size(); ++i) {
+		if (DCAST(FWObjectGroup,groups[i])->label == label) { return groups[i]; }
+	}
+
+	/// 再帰するのでグループがツリー構造じゃないと無限ループになる。対策したほうがいいのか？ <!!>
+	for (int i=0; i<groups.size(); ++i) {
+		FWObjectGroupIf* rv = groups[i]->FindByLabel(label);
+		if (rv) { return rv; }
+	}
 	return NULL;
 }
 
 bool FWObjectGroup::AddChildObject(ObjectIf* o){
 	FWObjectIf* obj = o->Cast();
-	if (obj) { objects.push_back(obj); return true; }
+	if (obj) {
+		objects.push_back(obj);
+		return true;
+	}
 
 	FWObjectGroupIf* grp = o->Cast();
-	if (grp) { groups.push_back(grp);  return true; }
+	if (grp) {
+		groups.push_back(grp); 
+		return true;
+	}
 
 	return false;
 }

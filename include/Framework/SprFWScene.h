@@ -10,6 +10,8 @@
 
 #include <Foundation/SprScene.h>
 
+#include <Framework/SprFWObject.h>
+
 namespace Spr{;
 
 struct CDShapeIf;
@@ -21,9 +23,6 @@ struct PHHapticEngineIf;
 struct PHSceneIf;
 struct GRSceneIf;
 struct GRRenderIf;
-struct FWObjectDesc;
-struct FWObjectIf;
-struct FWObjectGroupIf;
 struct FWHapticPointerIf;
 
 struct FWSceneDesc{
@@ -207,26 +206,6 @@ public:
 	
 	void AddHumanInterface(HIForceDevice6D* d);
 
-	/** @brief ボーンの集合体を作成する
-	 */
-	void CreateFWObjectGroup();
-	
-	/** @brief ボーンの集合体にボーンを追加する
-	 */
-	void AddFWObjectGroup(FWObjectGroupIf* o);
-	
-	/** @brief 最後に作成したボーンの集合体を取得する
-	 */
-	FWObjectGroupIf* GetFWObjectGroup();
-		
-	/** @brief n番目のボーンの集合体を取得する
-	 */
-	FWObjectGroupIf* GetFWObjectGroup(int n);
-
-	/** @brief ボーンの集合体の個数を取得する
-	 */
-	size_t NFWObjectGroup();
-
 	/** @brief 力覚ポインタを作る
 	*/
 	FWHapticPointerIf* CreateHapticPointer();
@@ -235,6 +214,17 @@ public:
 	*/
 	void UpdateHapticPointers();
 
+	/** @brief オブジェクトグループを作成する
+	 */
+	FWObjectGroupIf* CreateObjectGroup(const FWObjectGroupDesc& desc = FWObjectGroupDesc());
+	
+	/** @brief n番目のオブジェクトグループを取得する
+	 */
+	FWObjectGroupIf* GetObjectGroup(int n);
+
+	/** @brief オブジェクトグループの個数を取得する
+	 */
+	size_t NObjectGroups();
 
 };
 

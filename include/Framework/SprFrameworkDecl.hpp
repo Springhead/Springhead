@@ -16,6 +16,10 @@
 	void SetPHJoint(Spr::PHJointIf* j){	base::SetPHJoint(j);}	\
 	Spr::GRFrameIf* GetChildFrame(){	return	base::GetChildFrame();}	\
 	void SetChildFrame(Spr::GRFrameIf* f){	base::SetChildFrame(f);}	\
+	Spr::PHIKEndEffectorIf* GetPHIKEndEffector(){	return	base::GetPHIKEndEffector();}	\
+	void SetPHIKEndEffector(Spr::PHIKEndEffectorIf* ef){	base::SetPHIKEndEffector(ef);}	\
+	Spr::PHIKActuatorIf* GetPHIKActuator(){	return	base::GetPHIKActuator();}	\
+	void SetPHIKActutor(Spr::PHIKActuatorIf* ia){	base::SetPHIKActutor(ia);}	\
 	void SetSyncSource(Spr::FWObjectDesc::FWObjectSyncSource syncSrc){	base::SetSyncSource(syncSrc);}	\
 	Spr::FWObjectDesc::FWObjectSyncSource GetSyncSource(){	return	base::GetSyncSource();}	\
 	void EnableAbsolute(bool bAbs){	base::EnableAbsolute(bAbs);}	\
@@ -27,7 +31,9 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_FWObjectGroupIf(base)	\
 	Spr::FWObjectIf* GetObject(int n){	return	base::GetObject(n);}	\
 	int NObjects(){	return	base::NObjects();}	\
-	Spr::FWObjectIf* FindByLabel(const char* name){	return	base::FindByLabel(name);}	\
+	const char* GetLabel()const{	return	base::GetLabel();}	\
+	void SetLabel(const char* str){	base::SetLabel(str);}	\
+	Spr::FWObjectGroupIf* FindByLabel(UTString label){	return	base::FindByLabel(label);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSceneIf(base)	\
 	Spr::PHSceneIf* GetPHScene(){	return	base::GetPHScene();}	\
@@ -70,13 +76,11 @@
 	void EnableRenderLimit(bool enable){	base::EnableRenderLimit(enable);}	\
 	void EnableRenderHaptic(bool enable){	base::EnableRenderHaptic(enable);}	\
 	void AddHumanInterface(Spr::HIForceDevice6D* d){	base::AddHumanInterface(d);}	\
-	void CreateFWObjectGroup(){	base::CreateFWObjectGroup();}	\
-	void AddFWObjectGroup(Spr::FWObjectGroupIf* o){	base::AddFWObjectGroup(o);}	\
-	Spr::FWObjectGroupIf* GetFWObjectGroup(){	return	base::GetFWObjectGroup();}	\
-	Spr::FWObjectGroupIf* GetFWObjectGroup(int n){	return	base::GetFWObjectGroup(n);}	\
-	size_t NFWObjectGroup(){	return	base::NFWObjectGroup();}	\
 	Spr::FWHapticPointerIf* CreateHapticPointer(){	return	base::CreateHapticPointer();}	\
 	void UpdateHapticPointers(){	base::UpdateHapticPointers();}	\
+	Spr::FWObjectGroupIf* CreateObjectGroup(const Spr::FWObjectGroupDesc& desc){	return	base::CreateObjectGroup(desc);}	\
+	Spr::FWObjectGroupIf* GetObjectGroup(int n){	return	base::GetObjectGroup(n);}	\
+	size_t NObjectGroups(){	return	base::NObjectGroups();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWSdkIf(base)	\
 	Spr::FWSceneIf* CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grdesc){	return	base::CreateScene(phdesc, grdesc);}	\
