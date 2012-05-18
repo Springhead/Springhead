@@ -19,6 +19,8 @@ struct PHJointIf;
 struct GRMeshIf;
 struct GRFrameIf;
 struct FWSceneIf;
+struct PHIKEndEffectorIf;
+struct PHIKActuatorIf;
 
 struct FWObjectDesc{
 	/// ボーンの同期を絶対位置で行う（親フレームからの差分でなくワールド座標系に対する変換をセットする）
@@ -65,6 +67,16 @@ struct FWObjectIf : SceneObjectIf {
 	/// 子Frameをセットする（自Frameと子Frame間の距離がわかるのでSolidの大きさを自動設定可能になる）
 	void SetChildFrame(GRFrameIf* f);
 
+	/// PHIKEndEffectorを取得する
+	PHIKEndEffectorIf* GetPHIKEndEffector();
+	/// PHIKEndEffectorを設定する
+	void SetPHIKEndEffector(PHIKEndEffectorIf* ef);
+
+	/// PHIKActuatorを取得する
+	PHIKActuatorIf* GetPHIKActuator();
+	/// PHIKActuatorを設定する
+	void SetPHIKActutor(PHIKActuatorIf* ia);
+
 	/// PHSolid,GRFrameのいずれの位置に合わせるかを設定する
 	void SetSyncSource(FWObjectDesc::FWObjectSyncSource syncSrc);
 	/// PHSolid,GRFrameのいずれの位置に合わせるかを取得する
@@ -96,8 +108,15 @@ struct FWObjectIf : SceneObjectIf {
 	void Sync();
 };
 
+
 struct FWObjectGroupDesc {
+	std::string	label;			///<	ラベル
+
+	FWObjectGroupDesc() {
+		label = "";
+	}
 };
+
 /** @brief ボーンを集合体として管理するためのFrameworkオブジェクト
  */
 struct FWObjectGroupIf : SceneObjectIf {
@@ -109,8 +128,14 @@ struct FWObjectGroupIf : SceneObjectIf {
 	/// FWObjectの数を返す
 	int NObjects();
 
-	// FWObjectをラベルで探す
-	FWObjectIf* FindByLabel(const char* name);
+	/// ラベルの取得
+	const char* GetLabel() const;
+
+	/// ラベルの設定
+	void SetLabel(const char* str);
+
+	// 指定したラベルを持った子グループをさがす
+	FWObjectGroupIf* FindByLabel(UTString label);
 };
 
 }
