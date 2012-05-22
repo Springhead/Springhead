@@ -28,7 +28,7 @@ private:
 	float attractiveness;
 
 	/// 制御に使うIK付きクリーチャ剛体
-	CRIKSolidIf *csHead;
+	FWObjectIf *fwHead;
 
 	/// 基準方向（タイマー開始時の頭の方向）
 	Quaterniond orig;
@@ -64,6 +64,14 @@ public:
 		@param vel 注視点の移動速度ベクトル
 	*/
 	virtual void LookAt(Vec3f pos, Vec3f vel, float attractiveness);
+
+	/// CREngineから継承：グループから必要なオブジェクトを取り出してくる
+	virtual void AssignObject() {
+		for (int i=0; i<groups.size(); ++i) {
+			 FWObjectGroupIf* g = groups[i]->FindByLabel(labelHeadSolid);
+			 if (g && g->NObjects() > 0) { fwHead = g->GetObject(0); }
+		}
+	}
 };
 }
 //@}
