@@ -24,7 +24,7 @@ void CRNeckController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
 
 void CRNeckController::Init(){
 	orig = Quaterniond();
-	csHead  = NULL;
+	fwHead  = NULL;
 	bEnabled = false;
 }
 void CRNeckController::Stop()
@@ -33,13 +33,9 @@ void CRNeckController::Stop()
 }
 void CRNeckController::Step(){
 	if (!bEnabled) return;
-	if (!csHead) {
-		CRBodyIf* body = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetBody(0);
-		csHead = body->FindByLabel(labelHeadSolid)->Cast();
-	}
 
-	PHSolidIf*			soHead = csHead->GetPHSolid();
-	PHIKEndEffectorIf*	efHead = csHead->GetIKEndEffector();
+	PHSolidIf*			soHead = fwHead->GetPHSolid();
+	PHIKEndEffectorIf*	efHead = fwHead->GetPHIKEndEffector();
 
 	// <!!> UpVector / FrontVectorをデスクリプタで指定可能にしたほうがいいと思う
 	Vec3d rotLook	= PTM::cross(soHead->GetPose().Ori()*Vec3d(0,1,0), (pos-(soHead->GetPose().Pos())).unit());
