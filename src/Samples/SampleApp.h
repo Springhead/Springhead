@@ -558,7 +558,9 @@ public: /** FWApp‚ÌÀ‘• **/
 		// windowDesc.width = 1280;
 		// windowDesc.height = 720;
 		windowDesc.title = appName;
-		CreateWin(windowDesc);
+		FWWinIf* win = CreateWin(windowDesc);		
+		win->GetTrackball()->SetPosition(Vec3f(30,30,50));
+		win->GetTrackball()->SetTarget(Vec3f(0,0,0));
 		
 		/// ŒõŒ¹İ’è
 		GRRenderIf* render = GetCurrentWin()->GetRender();
