@@ -102,6 +102,12 @@ void FWGLUT::GlutSpecialKeyFunc(int ch, int x, int y){
 	FWGLUT::GetInstance()->keyMouse->OnSpecialKey(ch, x, y);
 }
 
+#ifdef USE_FREEGLUT
+void FWGLUT::GlutMouseWheelFunc(int wheel, int direction, int x, int y){
+	FWGLUT::GetInstance()->keyMouse->OnMouseWheel(wheel, direction, x, y);
+}
+#endif
+
 void FWGLUT::AtExit(){
 	FWApp::GetApp()->AtExit();
 }
@@ -220,6 +226,9 @@ void FWGLUT::RegisterCallbacks(){
 	glutPassiveMotionFunc(FWGLUT::GlutPassiveMotionFunc);
 	glutKeyboardFunc	 (FWGLUT::GlutKeyFunc);
 	glutSpecialFunc		 (FWGLUT::GlutSpecialKeyFunc);
+#ifdef USE_FREEGLUT
+	glutMouseWheelFunc   (FWGLUT::GlutMouseWheelFunc);
+#endif
 }
 
 ///	ウィンドウを破棄する

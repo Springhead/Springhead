@@ -71,6 +71,7 @@ public:
 	void OnPassiveMotion(int x, int y);
 	void OnKey			(unsigned char ch, int x, int y);
 	void OnSpecialKey	(int ch, int x, int y);
+	void OnMouseWheel   (int wheel, int direction, int x, int y);
 };
 
 }	//	namespace Spr

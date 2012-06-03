@@ -135,4 +135,13 @@ void DRKeyMouseGLUT::OnSpecialKey(int ch, int x, int y){
 	}
 }
 
+void DRKeyMouseGLUT::OnMouseWheel(int wheel, int direction, int x, int y){
+	int wid = glutGetWindow();
+	for(int i = 0; i < (int)NChildObject(); i++){
+		DVKeyMouse* dv = GetChildObject(i)->Cast();
+		if(dv && dv->GetPortNo() == wid)
+			dv->OnMouseMove(buttonState, x, y, direction);
+	}
+}
+
 }	//	namespace Spr
