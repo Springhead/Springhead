@@ -181,7 +181,7 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 		for(int i = 0; i < (int)NChildObject(); i++){
 			DVKeyMouse* dv = GetChildObject(i)->Cast();
 			if(dv && dv->GetPortNo() == (int)msg->hwnd)
-				dv->OnMouse(button, x, y, zDelta);
+				dv->OnMouseMove(button, x, y, zDelta);
 		}
 		return true;
 		}

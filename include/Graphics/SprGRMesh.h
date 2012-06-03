@@ -79,13 +79,13 @@ struct GRMeshIf: public GRVisualIf{
 ///	@brief 表示用のMesh(GRMesh)のデスクリプタ．
 struct GRMeshDesc : GRVisualDesc{
 	SPR_DESCDEF(GRMesh);
-	std::vector<Vec3f>		vertices;				///< 頂点の座標
-	std::vector<GRMeshFace>	faces;				///< 面
-	std::vector<Vec3f>		normals;					///< 頂点の法線
+	std::vector<Vec3f>		vertices;			///< 頂点の座標
+	std::vector<GRMeshFace>	faces;				///< 面. 面を構成する頂点数と頂点インデックス配列
+	std::vector<Vec3f>		normals;			///< 法線
 	std::vector<GRMeshFace>	faceNormals;		///< 面の法線
-	std::vector<Vec4f>		colors;					///< 頂点の色
-	std::vector<Vec2f>		texCoords;				///< テクスチャUV	
-	std::vector<int>		materialList;			///< マテリアルリスト
+	std::vector<Vec4f>		colors;				///< 頂点の色
+	std::vector<Vec2f>		texCoords;			///< テクスチャUV	
+	std::vector<int>		materialList;		///< マテリアルリスト
 };
 
 //@}
