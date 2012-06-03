@@ -46,7 +46,7 @@ public:
 	unsigned int	texName;
 
 	virtual void Init(int argc, char* argv[]);
-	//virtual void Display();
+	virtual void Display();
 	virtual void TimerFunc(int id);
 	virtual void Keyboard(int key, int x, int y);
 	//void TexInit();

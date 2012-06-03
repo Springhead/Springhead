@@ -5,17 +5,17 @@
 #include "Windows.h"
 
 void MyApp::Init(int argc, char* argv[]){
-	// Sdkの作成
 	CreateSdk();
-	// グラフィクス初期化
 	SetGRHandler(TypeGLUT);
 	GRInit(argc, argv);
+	
 	// シーンをロード
 	GetSdk()->LoadScene(FILE_NAME);
 	//TexInit();
 	// ウィンドウ
 	CreateWin();
-//	GetWin(0)->SetRenderMode(false);
+	GetCurrentWin()->SetDebugMode(false);
+
 	// タイマ
 	UTTimerIf* timer = CreateTimer();
 	timer->SetInterval(10);
@@ -33,8 +33,9 @@ void MyApp::TimerFunc(int id){
 	PostRedisplay();
 }
 
-/*void MyApp::Display(){
-	static int timing = 0;
+void MyApp::Display(){
+	FWApp::Display();
+	/*static int timing = 0;
 	FWWin* win = GetWin(0);
 	win->render->ClearBuffer();
 	win->render->BeginScene();
@@ -56,8 +57,8 @@ void MyApp::TimerFunc(int id){
 	GetSdk()->Draw();
 
 	win->render->EndScene();
-	glutSwapBuffers();
-}*/
+	glutSwapBuffers();*/
+}
 
 void MyApp::Keyboard(int key, int x, int y){
 //	GRCameraIf* cam;
