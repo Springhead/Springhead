@@ -20,8 +20,6 @@
 using namespace std;
 using namespace Spr;
 
-#define ESC		27
-
 class SampleApp : public FWApp{
 public:
 	/** ÉÅÉjÉÖÅ[ID
@@ -348,7 +346,7 @@ public:
 		/// Ç¢Ç¬Ç≈Ç‡óLå¯ån
 		AddMenu(MENU_ALWAYS, "");
 		AddAction(MENU_ALWAYS, ID_EXIT, "exit");
-		AddHotKey(MENU_ALWAYS, ID_EXIT, ESC, "ESC");
+		AddHotKey(MENU_ALWAYS, ID_EXIT, DVKeyCode::ESC, "ESC");
 		AddHotKey(MENU_ALWAYS, ID_EXIT, 'q');
 		AddHotKey(MENU_ALWAYS, ID_EXIT, 'Q');
 		AddAction(MENU_ALWAYS, ID_RUN,
