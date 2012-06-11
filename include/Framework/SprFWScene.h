@@ -214,18 +214,6 @@ public:
 	*/
 	void UpdateHapticPointers();
 
-	/** @brief オブジェクトグループを作成する
-	 */
-	FWObjectGroupIf* CreateObjectGroup(const FWObjectGroupDesc& desc = FWObjectGroupDesc());
-	
-	/** @brief n番目のオブジェクトグループを取得する
-	 */
-	FWObjectGroupIf* GetObjectGroup(int n);
-
-	/** @brief オブジェクトグループの個数を取得する
-	 */
-	size_t NObjectGroups();
-
 };
 
 FWSceneIf* SPR_CDECL CreateFWScene();

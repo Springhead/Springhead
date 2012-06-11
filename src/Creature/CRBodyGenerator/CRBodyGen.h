@@ -12,7 +12,7 @@
 #include <Physics/SprPHJoint.h>
 #include <Physics/SprPHSolid.h>
 #include <Creature/SprCRBody.h>
-#include <Creature/SprCRBodyPart.h>
+#include <Creature/SprCRBone.h>
 #include <Creature/SprCRCreature.h>
 #include <vector>
 
@@ -42,19 +42,19 @@ protected:
 	CRBodyIf* crBody;
 
 	/// ボディを構成する剛体
-	std::vector< UTRef<CRIKSolidIf> > solids;	
+	std::vector< UTRef<CRBoneIf> > solids;	
 	
 	/// ボディを構成する関節
-	std::vector< UTRef<CRIKJointIf> > joints;
+	std::vector< UTRef<CRBoneIf> > joints;
 
 	/** @brief 関節を作る
 	*/
-	CRIKJointIf* CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent, const PHHingeJointDesc& desc);
-	CRIKJointIf* CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent, const PHBallJointDesc& desc);
+	CRBoneIf* CreateJoint(CRBoneIf* soChild, CRBoneIf* soParent, const PHHingeJointDesc& desc);
+	CRBoneIf* CreateJoint(CRBoneIf* soChild, CRBoneIf* soParent, const PHBallJointDesc& desc);
 
 	/** @brief 剛体を作る
 	*/
-	CRIKSolidIf* CreateSolid(const PHSolidDesc& desc);
+	CRBoneIf* CreateSolid(const PHSolidDesc& desc);
 
 	/** @brief すべての剛体の初期姿勢を目標角に収束したものとして初期化する	
 	*/

@@ -123,13 +123,6 @@ bool FWScene::AddChildObject(ObjectIf* o){
 		}
 	}
 	if (!ok) {
-		FWObjectGroupIf* obj = o->Cast();
-		if (obj) {
-			fwObjectGroups.push_back(obj);
-			ok = true;
-		}
-	}
-	if (!ok) {
 		PHScene* obj = DCAST(PHScene, o);
 		if (obj) {
 			phScene = obj->Cast();
@@ -173,7 +166,7 @@ HIForceDevice6D* FWScene::GetHumanInterface(size_t pos){
 }
 
 size_t FWScene::NChildObject() const{
-	return fwObjects.size() + fwObjectGroups.size() + (grScene?1:0) + (phScene?1:0);
+	return fwObjects.size() + (grScene?1:0) + (phScene?1:0);
 }
 
 ObjectIf* FWScene::GetChildObject(size_t pos){
@@ -188,9 +181,6 @@ ObjectIf* FWScene::GetChildObject(size_t pos){
 	}	
 
 	if (pos < fwObjects.size()) return fwObjects[pos];
-
-	pos -= fwObjects.size();
-	if (pos < fwObjectGroups.size()) return fwObjectGroups[pos];
 
 	return NULL;
 }
@@ -1098,25 +1088,6 @@ void FWScene::UpdateHapticPointers(){
 			fp->UpdateHumanInterface(plp, GetPHScene()->GetHapticTimeStep());
 		}
 	}
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-// オブジェクトグループ
-
-FWObjectGroupIf* FWScene::CreateObjectGroup(const FWObjectGroupDesc& desc){
-	FWObjectGroup* obj = DBG_NEW FWObjectGroup(desc);
-	AddChildObject(obj->Cast());
-	return obj->Cast();
-}
-
-FWObjectGroupIf* FWScene::GetObjectGroup(int n){
-	if(n < (int)fwObjectGroups.size()){
-		return fwObjectGroups[n];
-	}
-	return NULL;
-}
-size_t FWScene::NObjectGroups(){
-	return fwObjectGroups.size();
 }
 
 }

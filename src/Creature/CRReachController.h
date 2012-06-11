@@ -5,8 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef CRGAZECONTROLLER_H
-#define CRGAZECONTROLLER_H
+#ifndef CRREACHCONTROLLER_H
+#define CRREACHCONTROLLER_H
 
 #include <Creature/CREngine.h>
 #include <Creature/SprCRController.h>
@@ -14,18 +14,18 @@
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief 視線運動コントローラ
+/** @brief 到達運動コントローラ
 */
-class CRGazeController : public CRController, public CRGazeControllerDesc {
+class CRReachController : public CRController, public CRReachControllerDesc {
 private:
 
 public:
-	SPR_OBJECTDEF(CRGazeController);
-	ACCESS_DESC(CRGazeController);
+	SPR_OBJECTDEF(CRReachController);
+	ACCESS_DESC(CRReachController);
 
-	CRGazeController(){}
-	CRGazeController(const CRGazeControllerDesc& desc) 
-		: CRGazeControllerDesc(desc) 
+	CRReachController(){}
+	CRReachController(const CRReachControllerDesc& desc) 
+		: CRReachControllerDesc(desc) 
 	{
 	}
 
@@ -41,10 +41,10 @@ public:
 	///  現状を返す
 	virtual int  GetStatus();
 
-	///  視対象位置をセットする
+	///  到達対象位置をセットする
 	virtual void SetTargetPosition(Vec3d pos);
 };
 }
 //@}
 
-#endif//CRGAZECONTROLLER_H
+#endif//CRREACHCONTROLLER_H

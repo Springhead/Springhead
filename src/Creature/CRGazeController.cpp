@@ -11,35 +11,18 @@ namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
 void CRGazeController::Init(){
-	// CRController::Init();
-
-	/*
-	eyeCtrl = NULL; neckCtrl = NULL;
-	for (int i=0; i<creature->NControllers(); i++) {
-		if (!eyeCtrl) {
-			eyeCtrl = DCAST(CREyeControllerIf, creature->GetController(i));
-		}
-		if (!neckCtrl) {
-			neckCtrl = DCAST(CRNeckControllerIf, creature->GetController(i));
-		}
-	}
-	*/
 }
 
 void CRGazeController::Step(){
-	// CRController::Step();
 }
 
-void CRGazeController::LookAt(Vec3f pos, Vec3f vel, float attractiveness){
-	/*
-	this->pos = pos;
-	this->vel = vel;
-	this->attractiveness = attractiveness;
+void CRGazeController::Reset(){
+}
 
-	// std::cout << "P:" << pos << " V:" << vel << " A:" << attractiveness << std::endl;
+int CRGazeController::GetStatus(){
+	return CRControllerDesc::CS_WAITING;
+}
 
-	eyeCtrl->LookAt(pos, vel);
-	neckCtrl->LookAt(pos, vel, attractiveness);
-	*/
+void CRGazeController::SetTargetPosition(Vec3d pos){
 }
 }

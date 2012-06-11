@@ -11,25 +11,4 @@ using namespace std;
 
 namespace Spr{;
 
-bool CREngine::AddChildObject(ObjectIf* o){
-	FWObjectGroupIf* grp = o->Cast();
-	if (grp) {
-		groups.push_back(grp);
-		AssignObject();
-		return true;
-	}
-	return false;
-}
-
-ObjectIf* CREngine::GetChildObject(size_t pos){
-	if (0<=pos && pos<groups.size()) {
-		return DCAST(ObjectIf,groups[pos]);
-	}
-	return NULL;
-}
-
-size_t CREngine::NChildObject() const {
-	return groups.size();
-}
-
 }

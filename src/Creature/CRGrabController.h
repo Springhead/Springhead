@@ -9,8 +9,8 @@
 #define CRGRABCONTROLLER_H
 
 #include <Creature/CREngine.h>
-#include <Creature/SprCRReachController.h>
-#include <Creature/SprCRBodyPart.h>
+#include <Creature/SprCRController.h>
+#include <Creature/SprCRBone.h>
 #include <Creature/SprCRCreature.h>
 #include <Physics/SprPHJoint.h>
 #include <Physics/SprPHSolid.h>
@@ -26,10 +26,10 @@ struct CRBodyIf;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /** @brief 把持コントローラ
 */
-class CRGrabController : public CREngine, public CRGrabControllerDesc {
+class CRGrabController : public CRController, public CRGrabControllerDesc {
 private:
 	/// この剛体をつかって掴む
-	CRSolidIf* solid;
+	CRBoneIf* solid;
 
 	/// 連結用バネ
 	PHSpringIf* grabSpring;
@@ -55,27 +55,24 @@ public:
 		solid         = NULL;
 	}
 
-	/// ChildObject．把持に使う剛体（solid : CRSolid）を追加する
-	virtual bool AddChildObject(ObjectIf* o) {
-		if (!solid) { solid = o->Cast(); if(solid){ return true; }}
-		return false;
-	}
-	virtual size_t NChildObject() const {
-		return(solid?1:0);
-	}
-	virtual ObjectIf* GetChildObject(size_t i) {
-		if (i==0 && solid) { return solid->Cast(); }
-		return NULL;
-	}
-
 	/// 初期化
 	virtual void Init() {}
 
 	/// 1ステップ
 	virtual void Step() {}
 
+	/// 状態をリセットする
+	virtual void Reset() {
+		grabSpring->Enable(false);
+		grabbingSolid = NULL;
+		grabSpring    = NULL;
+	}
+
+	/// 現状を返す
+	virtual int  GetStatus() { return CRControllerDesc::CS_WAITING; }
+
 	/// 指定した物体をつかむ．
-	void Grab(PHSolidIf* targetSolid) {
+	void SetTargetSolid(PHSolidIf* targetSolid) {
 		PHSceneIf *phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
 
 		Posed relpose = solid->GetPHSolid()->GetPose().Inv() * targetSolid->GetPose();
@@ -110,13 +107,6 @@ public:
 	/// 把持に使用する剛体を返す
 	PHSolidIf* GetSolid() {
 		return solid->GetPHSolid();
-	}
-
-	/// つかんでいる物体を放す．
-	void Release() {
-		grabSpring->Enable(false);
-		grabbingSolid = NULL;
-		grabSpring    = NULL;
 	}
 };
 }
