@@ -12,11 +12,7 @@
 
 namespace Spr{;
 
-//@{
-
-struct CRBodyPartIf;
-struct CRSolidIf;
-struct CRJointIf;
+struct CRBoneIf;
 
 /// クリーチャのボディモデルのインターフェイス
 struct CRBodyIf : SceneObjectIf{
@@ -24,27 +20,15 @@ struct CRBodyIf : SceneObjectIf{
 
 	/** @brief ラベルから構成要素を探す
 	*/
-	CRBodyPartIf* FindByLabel(UTString label);
+	CRBoneIf* FindByLabel(UTString label);
 
-	/** @brief ボディに関するステップ処理を行う
+	/** @brief 構成ボーンの数を得る
 	*/
-	void Step();
+	int NBones();
 
-	/** @brief 構成剛体の数を得る
+	/** @brief i番目の構成ボーンを得る
 	*/
-	int NSolids();
-
-	/** @brief i番目の構成剛体を得る
-	*/
-	CRSolidIf* GetSolid(int i);
-
-	/** @brief 構成関節の数を得る
-	*/
-	int NJoints();
-
-	/** @brief i番目の構成関節を得る
-	*/
-	CRJointIf* GetJoint(int i);
+	CRBoneIf* GetBone(int i);
 
 	/** @brief ボディの重心座標を得る
 	*/
@@ -65,4 +49,4 @@ struct CRBodyDesc{
 
 }
 
-#endif//SPR_CRBODY_H
+#endif//SPR_CRBODYIF_H

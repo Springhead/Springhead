@@ -67,16 +67,6 @@ struct FWObjectIf : SceneObjectIf {
 	/// 子Frameをセットする（自Frameと子Frame間の距離がわかるのでSolidの大きさを自動設定可能になる）
 	void SetChildFrame(GRFrameIf* f);
 
-	/// PHIKEndEffectorを取得する
-	PHIKEndEffectorIf* GetPHIKEndEffector();
-	/// PHIKEndEffectorを設定する
-	void SetPHIKEndEffector(PHIKEndEffectorIf* ef);
-
-	/// PHIKActuatorを取得する
-	PHIKActuatorIf* GetPHIKActuator();
-	/// PHIKActuatorを設定する
-	void SetPHIKActutor(PHIKActuatorIf* ia);
-
 	/// PHSolid,GRFrameのいずれの位置に合わせるかを設定する
 	void SetSyncSource(FWObjectDesc::FWObjectSyncSource syncSrc);
 	/// PHSolid,GRFrameのいずれの位置に合わせるかを取得する
@@ -106,36 +96,6 @@ struct FWObjectIf : SceneObjectIf {
 
 	/// PHSolidとGRFrameの同期
 	void Sync();
-};
-
-
-struct FWObjectGroupDesc {
-	std::string	label;			///<	ラベル
-
-	FWObjectGroupDesc() {
-		label = "";
-	}
-};
-
-/** @brief ボーンを集合体として管理するためのFrameworkオブジェクト
- */
-struct FWObjectGroupIf : SceneObjectIf {
-	SPR_IFDEF(FWObjectGroup);
-
-	/// FWObjectを取得する
-	FWObjectIf* GetObject(int n);
-
-	/// FWObjectの数を返す
-	int NObjects();
-
-	/// ラベルの取得
-	const char* GetLabel() const;
-
-	/// ラベルの設定
-	void SetLabel(const char* str);
-
-	// 指定したラベルを持った子グループをさがす
-	FWObjectGroupIf* FindByLabel(UTString label);
 };
 
 }

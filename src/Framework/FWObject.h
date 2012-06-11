@@ -23,8 +23,6 @@ public:
 	UTRef< GRFrameIf > grFrame;
 	UTRef< PHJointIf > phJoint;
 	UTRef< GRFrameIf > childFrame;
-	UTRef< PHIKEndEffectorIf >	phIKEndEffector;
-	UTRef< PHIKActuatorIf >		phIKActuator;
 
 	Posed sockOffset;
 
@@ -51,12 +49,6 @@ public:
 	GRFrameIf*	GetChildFrame(){ return childFrame; }
 	void		SetChildFrame(GRFrameIf* f){ childFrame = f; }
 
-	PHIKEndEffectorIf* GetPHIKEndEffector() { return phIKEndEffector; }
-	void		SetPHIKEndEffector(PHIKEndEffectorIf* ef) { phIKEndEffector = ef; }
-
-	PHIKActuatorIf* GetPHIKActuator() { return phIKActuator; }
-	void		SetPHIKActutor(PHIKActuatorIf* ia) { phIKActuator = ia; }
-
 	// 同期オプション
 	void		SetSyncSource(FWObjectDesc::FWObjectSyncSource syncSrc) { syncSource = syncSrc; }
 	FWObjectDesc::FWObjectSyncSource GetSyncSource() { return syncSource; }
@@ -73,36 +65,6 @@ public:
 
 	// モディファイ
 	void		Modify();
-};
-
-
-class FWObjectGroup: public SceneObject, public FWObjectGroupDesc{
-private:
-	std::vector<FWObjectIf*>		objects;
-	std::vector<FWObjectGroupIf*>	groups;
-
-public:
-	SPR_OBJECTDEF(FWObjectGroup);
-	ACCESS_DESC(FWObjectGroup);
-
-	FWObjectGroup(const FWObjectGroupDesc& d=FWObjectGroupDesc());
-
-	// FWObjectを取得
-	FWObjectIf*	GetObject(int n);
-	int			NObjects();
-
-	/// ラベル
-	const char* GetLabel() const   { return label.c_str(); }
-	void SetLabel(const char* str) { label = std::string(str); }
-
-
-	// 指定したラベルを持った子グループをさがす
-	FWObjectGroupIf* FindByLabel(UTString label);
-
-	// 子要素
-	virtual bool       AddChildObject(ObjectIf* o);
-	virtual ObjectIf*  GetChildObject(size_t pos);
-	virtual size_t     NChildObject() const;
 };
 
 }

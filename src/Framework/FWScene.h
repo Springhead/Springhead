@@ -41,13 +41,11 @@ public:
 	ACCESS_DESC(FWScene);
 
 	typedef std::vector< UTRef<FWObjectIf> >		FWObjects;
-	typedef std::vector< UTRef<FWObjectGroupIf> >	FWObjectGroups;
 	typedef std::vector< UTRef<HIHaptic> >			FWHumanInterfaces;
 	typedef std::vector< UTRef<FWHapticPointerIf> > FWHapticPointers;
 	
 	FWSdk*				sdk;						///<	親SDKへの参照
 	FWObjects			fwObjects;					///<	物理とグラフィックスのオブジェクトのリンク
-	FWObjectGroups		fwObjectGroups;				///<	FWObjectの集合体であるFWObjectGroupへのリンク
 	FWHapticPointers	fwHapticPointers;			///<	登録されている力覚ポインタへのリンク
 	PHSceneIf*			phScene;					///<	物理シミュレーション用のシーン
 	GRSceneIf*			grScene;					///<	グラフィックス用のシーン
@@ -184,12 +182,6 @@ public:
 	FWHapticPointerIf*	GetHapticPointer(int i);
 	int					NHapticPointers();
 	void				UpdateHapticPointers();
-
-	/** オブジェクトグループ
-	 */
-	FWObjectGroupIf*	CreateObjectGroup(const FWObjectGroupDesc& desc=FWObjectGroupDesc());
-	FWObjectGroupIf*	GetObjectGroup(int n);
-	size_t				NObjectGroups();
 
 	/** Scene関数の継承
 	 */

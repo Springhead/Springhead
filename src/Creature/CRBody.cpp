@@ -13,28 +13,19 @@ namespace Spr{
 
 //-------------------------------------------------------------------------------------------------
 
-CRBodyPartIf* CRBody::FindByLabel(UTString label) {
+CRBoneIf* CRBody::FindByLabel(UTString label) {
 	LabelMap::iterator it = labelMap.find(label);
 	if (it != labelMap.end()) {
 		return (*it).second;
 	} else {
-		for (size_t i=0; i<solids.size(); ++i) {
-			if (label == solids[i]->GetLabel()) {
-				labelMap[label] = solids[i];
-				return solids[i];
+		for (size_t i=0; i<bones.size(); ++i) {
+			if (label == bones[i]->GetLabel()) {
+				labelMap[label] = bones[i];
+				return bones[i];
 			}
 		}
 	}
 	return NULL;
-}
-
-void CRBody::Step() {
-	for (size_t i=0; i<solids.size(); ++i) {
-		solids[i]->Step();
-	}
-	for (size_t i=0; i<joints.size(); ++i) {
-		joints[i]->Step();
-	}
 }
 
 Vec3d CRBody::GetCenterOfMass(){
@@ -43,10 +34,10 @@ Vec3d CRBody::GetCenterOfMass(){
 	/// 重心を求めるときに使うi番目までのブロックの中心座標
 	Vec3d  centerPosOfBlocks = Vec3d(0.0, 0.0, 0.0);
 
-	for(int i = 0; i<NSolids(); i++){
-		if(solids[i] && solids[i]->GetPHSolid()){
-			centerPosOfBlocks = centerPosOfBlocks + solids[i]->GetPHSolid()->GetCenterPosition() * solids[i]->GetPHSolid()->GetMass();
-			totalWeight = totalWeight + solids[i]->GetPHSolid()->GetMass();
+	for(int i = 0; i<NBones(); i++){
+		if(bones[i] && bones[i]->GetPHSolid()){
+			centerPosOfBlocks = centerPosOfBlocks + bones[i]->GetPHSolid()->GetCenterPosition() * bones[i]->GetPHSolid()->GetMass();
+			totalWeight = totalWeight + bones[i]->GetPHSolid()->GetMass();
 		}
 	}
 
@@ -57,9 +48,9 @@ double CRBody::GetSumOfMass(){
 	/// 重心を求める時に使うi番目までの重心の小計
 	double totalWeight = 0;
 
-	for(int i = 0; i<NSolids(); i++){
-		if(solids[i])
-			totalWeight = totalWeight + solids[i]->GetPHSolid()->GetMass(); 
+	for(int i = 0; i<NBones(); i++){
+		if(bones[i])
+			totalWeight = totalWeight + bones[i]->GetPHSolid()->GetMass(); 
 	}
 
 	return totalWeight;
@@ -75,36 +66,14 @@ Matrix3d CRBody::CalcBoxInertia(Vec3d boxsize, double mass){
 					0.0,  0.0,  i_zz);
 }
 
-ObjectIf* CRBody::GetChildObject(size_t i) {
-	if (i < solids.size()) {
-		return solids[i];
-	} else if (i < solids.size() + joints.size()) {
-		return joints[i - solids.size()];
-	} else {
-		return NULL;
-	}
-}
-
 bool CRBody::AddChildObject(ObjectIf* o){
-	CRSolidIf* s = DCAST(CRSolidIf, o);
-	if (s){
-		if (std::find(solids.begin(), solids.end(), s) == solids.end()){
-			solids.push_back(s);
-			DCAST(SceneObject, s)->SetScene(DCAST(CRBodyIf,this)->GetScene());
-			if (std::string(s->GetLabel()) != "") {
-				labelMap[std::string(s->GetLabel())] = s;
-			}
-			return true;
-		}
-	}
-
-	CRJointIf* j = DCAST(CRJointIf, o);
-	if (j){
-		if (std::find(joints.begin(), joints.end(), j) == joints.end()){
-			joints.push_back(j);
-			DCAST(SceneObject, j)->SetScene(DCAST(CRBodyIf,this)->GetScene());
-			if (std::string(j->GetLabel()) != "") {
-				labelMap[std::string(j->GetLabel())] = j;
+	CRBoneIf* b = DCAST(CRBoneIf, o);
+	if (b){
+		if (std::find(bones.begin(), bones.end(), b) == bones.end()){
+			bones.push_back(b);
+			DCAST(SceneObject, b)->SetScene(DCAST(CRBodyIf,this)->GetScene());
+			if (std::string(b->GetLabel()) != "") {
+				labelMap[std::string(b->GetLabel())] = b;
 			}
 			return true;
 		}
@@ -114,31 +83,13 @@ bool CRBody::AddChildObject(ObjectIf* o){
 }
 
 bool CRBody::DelChildObject(ObjectIf* o){
-	CRBodyPartIf* b = o->Cast();
+	CRBoneIf* b = o->Cast();
 	if (b) {
 		for (LabelMap::iterator it = labelMap.begin(); it!=labelMap.end(); ++it) {
 			if (it->second == b) {
 				labelMap.erase(it);
 				break;
 			}
-		}
-	}
-
-	CRSolidIf* s = DCAST(CRSolidIf, o);
-	if (s){
-		CRSolids::iterator it = std::find(solids.begin(), solids.end(), s);
-		if(it != solids.end()){
-			solids.erase(it);
-			return true;
-		}
-	}
-
-	CRJointIf* j = DCAST(CRJointIf, o);
-	if (j){
-		CRJoints::iterator it = std::find(joints.begin(), joints.end(), j);
-		if(it != joints.end()){
-			joints.erase(it);
-			return true;
 		}
 	}
 

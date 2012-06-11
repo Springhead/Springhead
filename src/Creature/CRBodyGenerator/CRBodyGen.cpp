@@ -18,7 +18,7 @@ namespace Spr{
 CRBodyGen::CRBodyGen(const CRBodyGenDesc& desc):CRBodyGenDesc(desc){
 }
 
-CRIKJointIf* CRBodyGen::CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent, const PHHingeJointDesc& desc){
+CRBoneIf* CRBodyGen::CreateJoint(CRBoneIf* soChild, CRBoneIf* soParent, const PHHingeJointDesc& desc){
 	PHSceneIf* phScene = crCreature->GetPHScene();
 
 	PHHingeJointDesc d = desc;
@@ -30,8 +30,8 @@ CRIKJointIf* CRBodyGen::CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent,
 	PHIKActuatorIf*	phIKAct = phScene->CreateIKActuator(descIKAct);
 	phIKAct->AddChildObject(phJoint);
 
-	CRIKJointDesc descIKJoint;
-	CRIKJointIf* crJoint = crBody->CreateObject(CRIKJointIf::GetIfInfoStatic(), &descIKJoint)->Cast();
+	CRBoneDesc descIKJoint;
+	CRBoneIf* crJoint = crBody->CreateObject(CRBoneIf::GetIfInfoStatic(), &descIKJoint)->Cast();
 
 	crJoint->AddChildObject(phJoint);
 	crJoint->AddChildObject(phIKAct);
@@ -41,7 +41,7 @@ CRIKJointIf* CRBodyGen::CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent,
 	return crJoint;
 }
 
-CRIKJointIf* CRBodyGen::CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent, const PHBallJointDesc& desc){
+CRBoneIf* CRBodyGen::CreateJoint(CRBoneIf* soChild, CRBoneIf* soParent, const PHBallJointDesc& desc){
 	PHSceneIf* phScene = crCreature->GetPHScene();
 
 	PHBallJointDesc d = desc;
@@ -53,8 +53,8 @@ CRIKJointIf* CRBodyGen::CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent,
 	PHIKActuatorIf*	phIKAct = phScene->CreateIKActuator(descIKAct);
 	phIKAct->AddChildObject(phJoint);
 
-	CRIKJointDesc descIKJoint;
-	CRIKJointIf* crJoint = crBody->CreateObject(CRIKJointIf::GetIfInfoStatic(), &descIKJoint)->Cast();
+	CRBoneDesc descIKJoint;
+	CRBoneIf* crJoint = crBody->CreateObject(CRBoneIf::GetIfInfoStatic(), &descIKJoint)->Cast();
 
 	crJoint->AddChildObject(phJoint);
 	crJoint->AddChildObject(phIKAct);
@@ -64,7 +64,7 @@ CRIKJointIf* CRBodyGen::CreateJoint(CRIKSolidIf* soChild, CRIKSolidIf* soParent,
 	return crJoint;
 }
 
-CRIKSolidIf* CRBodyGen::CreateSolid(const PHSolidDesc& desc) {
+CRBoneIf* CRBodyGen::CreateSolid(const PHSolidDesc& desc) {
 	PHSceneIf* phScene = crCreature->GetPHScene();
 
 	PHSolidIf* phSolid = phScene->CreateSolid(desc);
@@ -75,8 +75,8 @@ CRIKSolidIf* CRBodyGen::CreateSolid(const PHSolidDesc& desc) {
 	PHIKEndEffectorIf* phIKEE = phScene->CreateIKEndEffector(descIKEE);
 	phIKEE->AddChildObject(phSolid);
 
-	CRIKSolidDesc descIKSolid;
-	CRIKSolidIf* crSolid = crBody->CreateObject(CRIKSolidIf::GetIfInfoStatic(), &descIKSolid)->Cast();
+	CRBoneDesc descIKSolid;
+	CRBoneIf* crSolid = crBody->CreateObject(CRBoneIf::GetIfInfoStatic(), &descIKSolid)->Cast();
 
 	crSolid->AddChildObject(phSolid);
 	crSolid->AddChildObject(phIKEE);

@@ -10,7 +10,7 @@
 
 #include <Foundation/Object.h>
 #include <Creature/SprCRBody.h>
-#include <Creature/SprCRBodyPart.h>
+#include <Creature/SprCRBone.h>
 
 #include <map>
 
@@ -22,16 +22,12 @@ namespace Spr{;
 */
 class CRBody : public SceneObject, public CRBodyDesc {
 protected:
-	/// ボディを構成する剛体
-	typedef std::vector< UTRef<CRSolidIf> > CRSolids;
-	CRSolids solids;	
+	/// ボディを構成するボーン
+	typedef std::vector< UTRef<CRBoneIf> > CRBones;
+	CRBones bones;	
 	
-	/// ボディを構成する関節
-	typedef std::vector< UTRef<CRJointIf> > CRJoints;
-	CRJoints joints;
-
 	/// ラベルから構成要素へのマップ
-	typedef std::map<UTString, CRBodyPartIf*> LabelMap;
+	typedef std::map<UTString, CRBoneIf*> LabelMap;
 	LabelMap labelMap;
 
 public:
@@ -46,35 +42,17 @@ public:
 
 	/** @brief ラベルから構成要素を探す
 	*/
-	virtual CRBodyPartIf* FindByLabel(UTString label);
+	virtual CRBoneIf* FindByLabel(UTString label);
 
-	/** @brief ボディに関するステップ処理を行う
+	/** @brief ボーンの数を得る
 	*/
-	virtual void Step();
+	virtual int	NBones() { return bones.size(); }
 
-	/** @brief 剛体の数を得る
+	/** @brief i番目のボーンを得る
 	*/
-	virtual int	NSolids() { return solids.size(); }
-
-	/** @brief i番目の剛体を得る
-	*/
-	virtual CRSolidIf* GetSolid(int i) {
-		if (0<=i && i<(int)solids.size()) {
-			return solids[i];
-		} else {
-			return NULL;
-		}
-	}
-
-	/** @brief 関節の数を得る
-	*/
-	virtual int NJoints() { return joints.size(); }
-
-	/** @brief i番目の関節を得る
-	*/
-	virtual CRJointIf* GetJoint(int i) {
-		if (0<=i && i<(int)joints.size()) {
-			return joints[i];
+	virtual CRBoneIf* GetBone(int i) {
+		if (0<=i && i<(int)bones.size()) {
+			return bones[i];
 		} else {
 			return NULL;
 		}
@@ -90,8 +68,8 @@ public:
 
 	/** @brief 子要素の扱い
 	*/
-	virtual size_t NChildObject() const { return solids.size()+joints.size(); }
-	virtual ObjectIf* GetChildObject(size_t i);
+	virtual size_t NChildObject() const { return bones.size(); }
+	virtual ObjectIf* GetChildObject(size_t i) { return GetBone(i); }
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);
 

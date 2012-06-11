@@ -14,7 +14,6 @@ namespace Spr{;
 
 //@{
 
-struct GRRenderIf;
 struct CRCreatureIf;
 
 ///	クリーチャ・エンジンの基本クラス
@@ -25,21 +24,21 @@ struct CREngineIf : public SceneObjectIf{
 	 */
 	int GetPriority() const;
 
+	/** @brief 初期化する
+	 */
+	void Init();
+
 	/** @brief 処理を１ステップ分実行する
 	 */
 	void Step();
 
 	/** @breif 有効・無効を切り替える
 	*/
-	void SetEnable(bool enable);
+	void Enable(bool enable);
 
 	/** @brief 有効・無効かを返す
 	*/
 	bool IsEnabled();
-
-	/** @brief デバッグ情報を描画する
-	*/
-	void Render(GRRenderIf* render);
 };
 
 struct CREngineDesc{
@@ -48,17 +47,12 @@ struct CREngineDesc{
 	/// クリーチャのモジュールの分類と優先順位
 	///	100の倍数は分類を表し、以下の位はその中での実行順序を規定する
 	enum CREnginePriority {
-		// 初期化モジュール
-		CREP_INITIALIZER		= 100,
-			CREP_INTERNALSCENE_INITIALIZER,
 		// 感覚系
-		CREP_SENSOR				= 200,
+		CREP_SENSOR			= 100,
 		// 行動決定
-		CREP_ACTIONDECISION		= 300,
+		CREP_DECISION		= 200,
 		// 運動制御
-		CREP_CONTROLLER_PLAN	= 400,
-		CREP_CONTROLLER			= 425,
-		CREP_CONTROLLER_ACT		= 450,
+		CREP_CONTROLLER		= 300,
 	};
 
 	CREngineDesc(){

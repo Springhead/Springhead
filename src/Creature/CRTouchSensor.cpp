@@ -7,7 +7,7 @@
  */
 #include <Creature/CRTouchSensor.h>
 #include <Creature/SprCRBody.h>
-#include <Creature/SprCRBodyPart.h>
+#include <Creature/SprCRBone.h>
 #include <Creature/SprCRCreature.h>
 #include <Physics/SprPHScene.h>
 
@@ -33,9 +33,9 @@ void CRTouchSensor::Step() {
 		for (int j=i+1; j<phScene->NSolids(); ++j) {
 			// 自分の体を構成する剛体 と それ以外の剛体 のペアのみに限定
 			bool iIsMe = false, jIsMe = false;
-			for (int n=0; n<body->NSolids(); ++n) {
-				if (body->GetSolid(n) && body->GetSolid(n)->GetPHSolid() == phScene->GetSolids()[i]) { iIsMe = true; }
-				if (body->GetSolid(n) && body->GetSolid(n)->GetPHSolid() == phScene->GetSolids()[j]) { jIsMe = true; }
+			for (int n=0; n<body->NBones(); ++n) {
+				if (body->GetBone(n) && body->GetBone(n)->GetPHSolid() == phScene->GetSolids()[i]) { iIsMe = true; }
+				if (body->GetBone(n) && body->GetBone(n)->GetPHSolid() == phScene->GetSolids()[j]) { jIsMe = true; }
 				if (iIsMe && jIsMe) { break; }
 			}
 			if ((iIsMe && jIsMe) || (!iIsMe && !jIsMe)) { continue; }

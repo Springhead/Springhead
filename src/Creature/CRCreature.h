@@ -24,10 +24,6 @@ protected:
 	typedef std::vector< UTRef<CREngineIf> > CREngines;
 	CREngines engines;
 
-	///	シーン
-	typedef std::vector< UTRef<CRSceneIf> > CRScenes;
-	CRScenes scenes;
-
 	///	ボディ
 	typedef std::vector< UTRef<CRBodyIf> > CRBodies;
 	CRBodies bodies;
@@ -74,25 +70,13 @@ public:
 	*/
 	virtual int NEngines() { return (int)engines.size(); }
 
-	/** @brief CRSceneを作成する
-	*/
-	virtual CRSceneIf* CreateScene(const IfInfo* ii, const CRSceneDesc& desc);
-	
-	/** @brief CRSceneを取得する
-	*/
-	virtual CRSceneIf* GetScene(int i) { return scenes[i]; }
-
-	/** @brief CRSceneの数を取得する
-	*/
-	virtual int NScenes() { return (int)scenes.size(); }
-
 	/** @brief 関連するPHSceneを取得する
 	*/
 	PHSceneIf* GetPHScene() { return phScene; }
 
 	/** @brief 子要素の扱い
 	*/
-	virtual size_t NChildObject() const { return bodies.size()+engines.size()+scenes.size(); }
+	virtual size_t NChildObject() const { return bodies.size()+engines.size(); }
 	virtual ObjectIf* GetChildObject(size_t i);
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);

@@ -8,7 +8,6 @@
 #include <Creature/CRCreature.h>
 #include <Creature/CREngine.h>
 #include <Creature/CRBody.h>
-#include <Creature/CRScene.h>
 #include <Physics/SprPHScene.h>
 
 namespace Spr{;
@@ -16,9 +15,11 @@ namespace Spr{;
 // -------------------------------------------------------------------------
 
 void CRCreature::Step() {
+	/* <!!>
 	for (size_t i=0; i<bodies.size();  ++i) {
 		bodies[i]->Step();
 	}
+	*/
 	for (size_t i=0; i<engines.size(); ++i) {
 		if (engines[i]->IsEnabled()) {
 			engines[i]->Step();
@@ -38,19 +39,11 @@ CREngineIf* CRCreature::CreateEngine(const IfInfo* ii, const CREngineDesc& desc)
 	return crEngine;
 }
 
-CRSceneIf* CRCreature::CreateScene(const IfInfo* ii, const CRSceneDesc& desc) {
-	CRSceneIf* crScene = CreateObject(ii, &desc)->Cast();
-	AddChildObject(crScene);
-	return crScene;
-}
-
 ObjectIf* CRCreature::GetChildObject(size_t i) {
 	if (i < bodies.size()) {
 		return bodies[i];
 	} else if (i < bodies.size() + engines.size()) {
 		return engines[i - bodies.size()];
-	} else if (i < bodies.size() + engines.size() + scenes.size()) {
-		return scenes[i - bodies.size() - engines.size()];
 	} else {
 		return NULL;
 	}
@@ -74,15 +67,6 @@ bool CRCreature::AddChildObject(ObjectIf* o){
 			UTContentsLess< UTRef<CREngine> > less;
 			std::sort(engines.begin(), engines.end(), less);
 			DCAST(SceneObject, e)->SetScene(this->Cast());
-			return true;
-		}
-	}
-
-	CRSceneIf* s = DCAST(CRSceneIf, o);
-	if (s){
-		if (std::find(scenes.begin(), scenes.end(), s) == scenes.end()){
-			scenes.push_back(s);
-			DCAST(SceneObject, s)->SetScene(this->Cast());
 			return true;
 		}
 	}
@@ -115,14 +99,6 @@ bool CRCreature::DelChildObject(ObjectIf* o){
 		}
 	}
 
-	CRSceneIf* s = DCAST(CRSceneIf, o);
-	if (s){
-		CRScenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
-		if(it != scenes.end()){
-			scenes.erase(it);
-			return true;
-		}
-	}
 	return false;
 }
 

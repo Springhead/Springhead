@@ -18,8 +18,6 @@ struct CRBodyIf;
 struct CRBodyDesc;
 struct CREngineIf;
 struct CREngineDesc;
-struct CRSceneIf;
-struct CRSceneDesc;
 
 // ------------------------------------------------------------------------------
 /// Œ^î•ñ“o˜^
@@ -64,21 +62,6 @@ struct CRCreatureIf : SceneIf{
 	/** @brief CREngine‚Ì”‚ğæ“¾‚·‚é
 	*/
 	int NEngines();
-
-	/** @brief CRScene‚ğì¬‚·‚é
-	*/
-	CRSceneIf* CreateScene(const IfInfo* ii, const CRSceneDesc& desc);
-	template <class T> CRSceneIf* CreateScene(const T& desc){
-		return CreateScene(T::GetIfInfo(), desc);
-	}
-	
-	/** @brief CRScene‚ğæ“¾‚·‚é
-	*/
-	CRSceneIf* GetScene(int i);
-
-	/** @brief CRScene‚Ì”‚ğæ“¾‚·‚é
-	*/
-	int NScenes();
 
 	/** @brief ŠÖ˜A‚·‚éPHScene‚ğæ“¾‚·‚é
 	*/
