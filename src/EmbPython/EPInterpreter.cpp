@@ -29,12 +29,12 @@ void EPInterpreter::Destroy()
 
 EPInterpreter::EPInterpreter()
 {
-	this->State = UNSTARTED;
+	state = UNSTARTED;
 }
 
 EPInterpreter::~EPInterpreter()
 {
-	this->State = STOP;
+	if (state == RUN) Stop();
 }
 
 // プログラム終了時にEPInterpreter::instanceをdeleteしてくれるひと
@@ -94,17 +94,27 @@ void EPInterpreter::Initialize()
 
 void EPInterpreter::Run(void* arg)
 {
-	if( this->State == UNSTARTED || this->State == STOP)
+	if( this->state == UNSTARTED || this->state == STOPED)
 	{
 		_beginthread(EPLoopLauncher, 0 , arg);
-		this->State = RUN;
+		this->state = RUN;
 	}
+}
+void EPInterpreter::Finalize()
+{
+	if (state == RUN){
+		fclose(stdin);	//	Pythonのインタラクティブループ(EPLoop)が、入力できなくなって、帰ってくるように、stdinを閉じてしまう。
+		Stop();
+	}
+	Py_Finalize();	//	なぜか帰ってこない
 }
 
 void EPInterpreter::Stop()
 {
-	if( this->State != UNSTARTED)
-		this->State = STOP;
+	if(state == RUN){
+		state = STOP_REQUEST;
+		while (state != STOPED) Sleep(100);
+	}
 }
 
 bool EPInterpreter::BindInt(int i)
@@ -115,8 +125,9 @@ bool EPInterpreter::BindInt(int i)
 void EPInterpreter::EPLoopLauncher(void* arg)
 {
 	EPInterpreter::instance->EPLoopInit(arg);
-	while(EPInterpreter::instance->State == RUN)
+	while(EPInterpreter::instance->state == RUN)
 	{
 		EPInterpreter::instance->EPLoop(arg);
 	}
+	EPInterpreter::instance->state = STOPED;
 }

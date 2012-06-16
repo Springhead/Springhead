@@ -10,15 +10,17 @@ class EPInterpreter{
 public:
 	enum EPState{
 		RUN,
-		STOP,
+		STOP_REQUEST,
+		STOPED,
 		UNSTARTED,
 	};
 	static EPInterpreter* Create();
 	static void           Destroy();
-	EPState State;
+	volatile EPState state;
 	EPInterpreter();
 	~EPInterpreter();
 	virtual void Initialize();
+	virtual void Finalize();
 	virtual void Run(void*);
 	virtual void Stop();
 	virtual bool BindInt(int);
