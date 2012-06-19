@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,15 +8,15 @@
 /**
  Springhead2/src/tests/Graphics/GRColorSpheres/main.cpp
 
-yŠT—vz
-  ƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[ƒNƒ‰ƒX‚Ì DrawScene API‚ğg‚¢AƒV[ƒ“‚ğˆêŠ‡‚ÅƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚éB
-  DrawScene API ‚Åİ’è‚³‚ê‚Ä‚¢‚éƒ}ƒeƒŠƒAƒ‹ƒ}ƒeƒŠƒAƒ‹ƒTƒ“ƒvƒ‹‚ğ—p‚¢‚ÄAƒJƒ‰ƒtƒ‹‚Èƒ{ƒbƒNƒX‚ğƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚éB@
+ã€æ¦‚è¦ã€‘
+  ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã‚¯ãƒ©ã‚¹ã® DrawScene APIã‚’ä½¿ã„ã€ã‚·ãƒ¼ãƒ³ã‚’ä¸€æ‹¬ã§ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹ã€‚
+  DrawScene API ã§è¨­å®šã•ã‚Œã¦ã„ã‚‹ãƒãƒ†ãƒªã‚¢ãƒ«ãƒãƒ†ãƒªã‚¢ãƒ«ã‚µãƒ³ãƒ—ãƒ«ã‚’ç”¨ã„ã¦ã€ã‚«ãƒ©ãƒ•ãƒ«ãªãƒœãƒƒã‚¯ã‚¹ã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹ã€‚ã€€
   
-yI—¹Šî€z
-  E5000ƒXƒeƒbƒvŒã‚É‹­§I—¹B 
+ã€çµ‚äº†åŸºæº–ã€‘
+  ãƒ»5000ã‚¹ãƒ†ãƒƒãƒ—å¾Œã«å¼·åˆ¶çµ‚äº†ã€‚ 
 
  */
-#include <Springhead.h>		//	Springhead‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+#include <Springhead.h>		//	Springheadã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 #include <ctime>
 #include <string>
 #include <GL/glut.h>
@@ -25,10 +25,10 @@
 #endif
 using namespace Spr;
 #define ESC				27			// ESC key
-#define EXIT_TIMER		7000		// ÀsƒXƒeƒbƒv”
-#define WINSIZE_WIDTH	480			// ƒEƒBƒ“ƒhƒEƒTƒCƒY(width)
-#define WINSIZE_HEIGHT	360			// ƒEƒBƒ“ƒhƒEƒTƒCƒY(height)
-#define NUM_SPHERES		100			// sphere”
+#define EXIT_TIMER		7000		// å®Ÿè¡Œã‚¹ãƒ†ãƒƒãƒ—æ•°
+#define WINSIZE_WIDTH	480			// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º(width)
+#define WINSIZE_HEIGHT	360			// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚º(height)
+#define NUM_SPHERES		100			// sphereæ•°
 
 UTRef<FWSdkIf>	fwSdk;
 FWSceneIf*	fwScene;
@@ -44,9 +44,9 @@ std::vector<PHSolidIf*> soSphere;
 
 
 /**
- brief     	glutDisplayFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param		‚È‚µ
- return 	‚È‚µ
+ brief     	glutDisplayFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param		ãªã—
+ return 	ãªã—
  */
 void display(){
 	render->ClearBuffer();
@@ -57,9 +57,9 @@ void display(){
 }
 
 /**
- brief		ŒõŒ¹‚Ìİ’è
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief		å…‰æºã®è¨­å®š
+ param	 	ãªã—
+ return 	ãªã—
  */
 void setLight() {
 	GRLightDesc light0, light1;
@@ -69,29 +69,29 @@ void setLight() {
 	render->PushLight(light1);
 }
 /**
- brief		glutReshapeFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param		<in/--> w@@•
- param		<in/--> h@@‚‚³
- return		 ‚È‚µ
+ brief		glutReshapeFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param		<in/--> wã€€ã€€å¹…
+ param		<in/--> hã€€ã€€é«˜ã•
+ return		 ãªã—
  */
 void reshape(int w, int h){
-	// Viewport‚ÆË‰es—ñ‚ğİ’è
+	// Viewportã¨å°„å½±è¡Œåˆ—ã‚’è¨­å®š
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 /**
- brief 		glutKeyboardFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ” 
- param		<in/--> key@@ ASCIIƒR[ƒh
- param 		<in/--> x@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- param 		<in/--> y@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- return 	‚È‚µ
+ brief 		glutKeyboardFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•° 
+ param		<in/--> keyã€€ã€€ ASCIIã‚³ãƒ¼ãƒ‰
+ param 		<in/--> xã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ param 		<in/--> yã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ return 	ãªã—
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }	
 /**
- brief  	glutIdleFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief  	glutIdleFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void idle(){
 	fwScene->Step();
@@ -101,10 +101,10 @@ void idle(){
 	if (++count > EXIT_TIMER) exit(0);
 }
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char* argv[]){
 	fwSdk = FWSdkIf::CreateSdk();
@@ -118,18 +118,18 @@ int main(int argc, char* argv[]){
 	desc.mass = 2.0;
 	desc.inertia *= 2.0;
 
-	// Solid‚Ìì¬
+	// Solidã®ä½œæˆ
 	unsigned int sphereCnt;
 	for (sphereCnt=0; sphereCnt<NUM_SPHERES; ++sphereCnt){
-		soSphere.push_back(phScene->CreateSolid(desc));		// „‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
+		soSphere.push_back(phScene->CreateSolid(desc));		// å‰›ä½“ã‚’descã«åŸºã¥ã„ã¦ä½œæˆ
 	}
 
 	desc.mass = 1e20f;
 	desc.inertia *= 1e20f;
-	soFloor = phScene->CreateSolid(desc);		// „‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
+	soFloor = phScene->CreateSolid(desc);		// å‰›ä½“ã‚’descã«åŸºã¥ã„ã¦ä½œæˆ
 	soFloor->SetGravity(false);
 
-	//	Œ`ó‚Ìì¬
+	//	å½¢çŠ¶ã®ä½œæˆ
 	CDBoxIf* floor=NULL;
 	CDSphereIf* sphere=NULL;
 	{
@@ -147,7 +147,7 @@ int main(int argc, char* argv[]){
 		soSphere[sphereCnt]->AddShape(sphere);
 		soSphere[sphereCnt]->SetFramePosition(Vec3f(0, 15+5*sphereCnt, 0));
 	}
-	phScene->SetGravity(Vec3f(0,-9.8f, 0));	// d—Í‚ğİ’è
+	phScene->SetGravity(Vec3f(0,-9.8f, 0));	// é‡åŠ›ã‚’è¨­å®š
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -157,7 +157,7 @@ int main(int argc, char* argv[]){
 	render = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 
-	// ‰Šúİ’è
+	// åˆæœŸè¨­å®š
 	grDevice->Init();
 
 	glutDisplayFunc(display);
@@ -165,9 +165,9 @@ int main(int argc, char* argv[]){
 	glutKeyboardFunc(keyboard);
 	glutIdleFunc(idle);
 	
-	render->SetDevice(grDevice);	// ƒfƒoƒCƒX‚Ìİ’è
+	render->SetDevice(grDevice);	// ãƒ‡ãƒã‚¤ã‚¹ã®è¨­å®š
 
-	// ‹“_‚ğİ’è‚·‚é
+	// è¦–ç‚¹ã‚’è¨­å®šã™ã‚‹
 	Affinef view;
 	view.Pos() = Vec3f(0.0, 15.0, 15.0);								// eye
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 

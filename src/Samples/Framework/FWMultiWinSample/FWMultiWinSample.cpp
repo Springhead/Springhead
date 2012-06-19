@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,15 +14,15 @@ FWMultiWinSample::FWMultiWinSample(){
 }
 
 void FWMultiWinSample::Init(int argc, char* argv[]){
-	/// ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ì‰Šú‰»
+	/// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆæœŸåŒ–
 	CreateSdk();
 	GRInit(argc, argv);
 
-	/// ƒV[ƒ“‚ğƒ[ƒh
+	/// ã‚·ãƒ¼ãƒ³ã‚’ãƒ­ãƒ¼ãƒ‰
 	GetSdk()->LoadScene("./xFiles/cookie/sceneCookie.spr");
 	//GetSdk()->LoadScene("./xFiles/scene1.spr");
 
-	/// •`‰æƒEƒBƒ“ƒhƒE‚Ìì¬C‰Šú‰»
+	/// æç”»ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä½œæˆï¼ŒåˆæœŸåŒ–
 	FWWinDesc winDesc;
 	winDesc.width	= 480;
 	winDesc.height	= 320;
@@ -33,27 +33,27 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 	for(int i = 0; i < 2; i++)
 		CreateWin(winDesc);
 	
-	// ƒJƒƒ‰ˆÊ’u‚Ìw’è
+	// ã‚«ãƒ¡ãƒ©ä½ç½®ã®æŒ‡å®š
 	GetWin(0)->GetTrackball()->SetPosition(Vec3f(-0.0050556, 0.155619, 0.191252));
 	GetWin(1)->GetTrackball()->SetPosition(Vec3f(-0.0050556, 0.155619, 0.191252));
 
-	// ƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹‚Ìw’è
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«ã®æŒ‡å®š
 	GetWin(0)->SetTitle("Window1: PHScene");
 	GetWin(1)->SetTitle("Window2: GRScene");
 
-	// ƒEƒBƒ“ƒhƒE‚ÌˆÊ’uŒˆ‚ßDƒ^ƒCƒgƒ‹ƒo[‚âƒtƒŒ[ƒ€•ª‚Ìƒ}[ƒWƒ“‚Í©•ª‚ÅŒvZ‚·‚é•K—v‚ª‚ ‚é
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä½ç½®æ±ºã‚ï¼ã‚¿ã‚¤ãƒˆãƒ«ãƒãƒ¼ã‚„ãƒ•ãƒ¬ãƒ¼ãƒ åˆ†ã®ãƒãƒ¼ã‚¸ãƒ³ã¯è‡ªåˆ†ã§è¨ˆç®—ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
 	GetWin(0)->SetPosition(  100,  100);
 	GetWin(1)->SetPosition( 600,  100);
 	
-	// ƒEƒBƒ“ƒhƒE‚É•`‰æ‚·‚éƒV[ƒ“‚ğŠ„‚è“–‚Ä
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«æç”»ã™ã‚‹ã‚·ãƒ¼ãƒ³ã‚’å‰²ã‚Šå½“ã¦
 	GetWin(0)->SetScene(GetSdk()->GetScene(0));
 	GetWin(1)->SetScene(GetSdk()->GetScene(0));
 
-	/// •`‰æƒ‚[ƒhİ’è
+	/// æç”»ãƒ¢ãƒ¼ãƒ‰è¨­å®š
 	GetWin(0)->SetDebugMode(true);
 	GetWin(1)->SetDebugMode(false);
 	
-	// •`‰æƒ‚[ƒh‚Ìw’è
+	// æç”»ãƒ¢ãƒ¼ãƒ‰ã®æŒ‡å®š
 	for(int i = 0; i < GetSdk()->NScene(); i++){
 		FWSceneIf* scene = GetSdk()->GetScene(i);
 		scene->SetRenderMode(true, false);
@@ -63,12 +63,12 @@ void FWMultiWinSample::Init(int argc, char* argv[]){
 		//scene->EnableRenderGrid();
 	}
 
-	/// ƒ^ƒCƒ}‚Ìì¬
+	/// ã‚¿ã‚¤ãƒã®ä½œæˆ
 	CreateTimer();
 }
 
 void FWMultiWinSample::TimerFunc(int id){	
-	// ‘SƒEƒBƒ“ƒhƒE‚É‘Î‚µ‚ÄÄ•`‰æ—v‹
+	// å…¨ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«å¯¾ã—ã¦å†æç”»è¦æ±‚
 	Vec3f p = GetCurrentWin()->GetTrackball()->GetPosition();
 	GetSdk()->GetScene()->Step();
 	for(int i = 0; i < NWin(); i++){

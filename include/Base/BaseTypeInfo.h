@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -9,12 +9,12 @@
 #define BASETYPEINFO_H
 #include "BaseUtility.h"
 /**	@file BaseTypeInfo.h
-	ÀsŒ^î•ñƒeƒ“ƒvƒŒ[ƒgƒ‰ƒCƒuƒ‰ƒŠ.
-	ƒRƒ“ƒpƒCƒ‰‚Ìrtti‚ğg‚í‚¸ƒ}ƒNƒ‚Æƒeƒ“ƒvƒŒ[ƒg‚ÅÀ‘•‚µ‚Ä‚ ‚éD
+	å®Ÿè¡Œæ™‚å‹æƒ…å ±ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆãƒ©ã‚¤ãƒ–ãƒ©ãƒª.
+	ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã®rttiã‚’ä½¿ã‚ãšãƒã‚¯ãƒ­ã¨ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã§å®Ÿè£…ã—ã¦ã‚ã‚‹ï¼
 */
 namespace Spr{;
 
-///	ÀsŒ^î•ñ
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±
 class UTTypeInfo: public UTRefCount{
 public:
 	const char* className;
@@ -28,7 +28,7 @@ public:
 	virtual ~UTTypeInfo() {};
 };
 
-///	ÀsŒ^î•ñƒNƒ‰ƒX‚ÌÀ‘•
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚¯ãƒ©ã‚¹ã®å®Ÿè£…
 template <class T>
 class UTTypeInfoImp: public UTTypeInfo{
 public:
@@ -37,7 +37,7 @@ public:
 	virtual const char* ClassName() const { return className; }
 };
 
-///	ÀsŒ^î•ñƒNƒ‰ƒX‚ÌÀ‘•D’ŠÛƒNƒ‰ƒX”Å
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚¯ãƒ©ã‚¹ã®å®Ÿè£…ï¼æŠ½è±¡ã‚¯ãƒ©ã‚¹ç‰ˆ
 template <class T>
 class UTTypeInfoImpAbst: public UTTypeInfo{
 public:
@@ -46,7 +46,7 @@ public:
 	virtual const char* ClassName() const { return className; }
 };
 
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ÌŠî–{ƒNƒ‰ƒX
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
 class UTTypeInfoObjectBase{
 public:
 	virtual const UTTypeInfo* GetTypeInfo() const =0;
@@ -55,8 +55,8 @@ protected:
 };
 
 //----------------------------------------------------------------------
-//	ƒNƒ‰ƒX‚ÌéŒ¾(ƒwƒbƒ_)‚É‘‚­•”•ª
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌéŒ¾•”
+//	ã‚¯ãƒ©ã‚¹ã®å®£è¨€(ãƒ˜ãƒƒãƒ€)ã«æ›¸ãéƒ¨åˆ†
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®£è¨€éƒ¨
 #define DEF_UTTYPEINFODEF(cls)							\
 public:													\
 	virtual const UTTypeInfo* GetTypeInfo() const {		\
@@ -65,7 +65,7 @@ public:													\
 	static const UTTypeInfo* GetTypeInfoStatic();		\
 	virtual void* /*cls::*/GetBaseAddress(const UTTypeInfo* to) const;	\
 
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌéŒ¾•”D’ŠÛƒNƒ‰ƒX”Å
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®£è¨€éƒ¨ï¼æŠ½è±¡ã‚¯ãƒ©ã‚¹ç‰ˆ
 #define DEF_UTTYPEINFOABSTDEF(cls)						\
 public:													\
 	virtual const UTTypeInfo* GetTypeInfo() const {		\
@@ -75,7 +75,7 @@ public:													\
 	virtual void* /*cls::*/GetBaseAddress(const UTTypeInfo* to) const;	\
 
 
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌÀ‘•D
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®Ÿè£…ï¼
 #define DEF_UTTYPEINFO(cls)									\
 	const UTTypeInfo* cls::GetTypeInfoStatic(){				\
 		static const UTTypeInfo* base[] = {NULL};			\
@@ -87,7 +87,7 @@ public:													\
 		return NULL;										\
 	}														\
 
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌÀ‘•D1‚Â‚ÌƒNƒ‰ƒXŒp³‚ğ‚·‚éê‡
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®Ÿè£…ï¼1ã¤ã®ã‚¯ãƒ©ã‚¹ç¶™æ‰¿ã‚’ã™ã‚‹å ´åˆ
 #define DEF_UTTYPEINFO1(cls, base1)										\
 	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
 		static const UTTypeInfo* base[] = {base1::GetTypeInfoStatic(),NULL};	\
@@ -99,7 +99,7 @@ public:													\
 		return base1::GetBaseAddress(to);								\
 	}																	\
 
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌÀ‘•D2‚Â‚ÌƒNƒ‰ƒXŒp³‚ğ‚·‚éê‡
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®Ÿè£…ï¼2ã¤ã®ã‚¯ãƒ©ã‚¹ç¶™æ‰¿ã‚’ã™ã‚‹å ´åˆ
 #define DEF_UTTYPEINFO2(cls, base1, base2)								\
 	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
 		static const UTTypeInfo* base[] = {								\
@@ -114,7 +114,7 @@ public:													\
 		return rv;														\
 	}																	\
 
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌÀ‘•D3‚Â‚ÌƒNƒ‰ƒXŒp³‚ğ‚·‚éê‡
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®Ÿè£…ï¼3ã¤ã®ã‚¯ãƒ©ã‚¹ç¶™æ‰¿ã‚’ã™ã‚‹å ´åˆ
 #define DEF_UTTYPEINFO3(cls, base1, base2, base3)						\
 	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
 		static const UTTypeInfo* base[] = {								\
@@ -132,7 +132,7 @@ public:													\
 	}																	\
 
 
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌÀ‘•D’ŠÛƒNƒ‰ƒX”Å
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®Ÿè£…ï¼æŠ½è±¡ã‚¯ãƒ©ã‚¹ç‰ˆ
 #define DEF_UTTYPEINFOABST(cls)											\
 	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
 		static const UTTypeInfo* base[] = { NULL };						\
@@ -144,7 +144,7 @@ public:													\
 		return NULL;													\
 	}																	\
 
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌÀ‘•D’ŠÛƒNƒ‰ƒX”ÅD1‚Â‚ÌƒNƒ‰ƒX‚ğŒp³‚·‚éê‡
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®Ÿè£…ï¼æŠ½è±¡ã‚¯ãƒ©ã‚¹ç‰ˆï¼1ã¤ã®ã‚¯ãƒ©ã‚¹ã‚’ç¶™æ‰¿ã™ã‚‹å ´åˆ
 #define DEF_UTTYPEINFOABST1(cls, base1)									\
 	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
 		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), NULL };	\
@@ -157,7 +157,7 @@ public:													\
 		return rv;														\
 	}																	\
 
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌÀ‘•D’ŠÛƒNƒ‰ƒX”ÅD2‚Â‚ÌƒNƒ‰ƒX‚ğŒp³‚·‚éê‡
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®Ÿè£…ï¼æŠ½è±¡ã‚¯ãƒ©ã‚¹ç‰ˆï¼2ã¤ã®ã‚¯ãƒ©ã‚¹ã‚’ç¶™æ‰¿ã™ã‚‹å ´åˆ
 #define DEF_UTTYPEINFOABST2(cls, base1, base2)							\
 	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
 		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), \
@@ -172,7 +172,7 @@ public:													\
 		return rv;														\
 	}																	\
 
-///	ÀsŒ^î•ñ‚ğ‚ÂƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌÀ‘•D’ŠÛƒNƒ‰ƒX”ÅD2‚Â‚ÌƒNƒ‰ƒX‚ğŒp³‚·‚éê‡
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤ã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®Ÿè£…ï¼æŠ½è±¡ã‚¯ãƒ©ã‚¹ç‰ˆï¼2ã¤ã®ã‚¯ãƒ©ã‚¹ã‚’ç¶™æ‰¿ã™ã‚‹å ´åˆ
 #define DEF_UTTYPEINFOABST3(cls, base1, base2, base3)					\
 	const UTTypeInfo* cls::GetTypeInfoStatic(){							\
 		static const UTTypeInfo* base[] = { base1::GetTypeInfoStatic(), \
@@ -191,28 +191,28 @@ public:													\
 #define GETCLASSNAME(p)		(p->GetTypeInfo()->className)
 #define GETCLASSNAMES(T)	(T::GetTypeInfoStatic()->className)
 
-///	ƒ_ƒCƒiƒ~ƒbƒNƒLƒƒƒXƒg
+///	ãƒ€ã‚¤ãƒŠãƒŸãƒƒã‚¯ã‚­ãƒ£ã‚¹ãƒˆ
 #define DCAST(T, p)	UTDcastImp<T>(p)
 template <class T, class P> T* UTDcastImp(P p){
 	if (p && p->GetTypeInfo()->Inherit(T::GetTypeInfoStatic())) return (T*)&*(p);
 	return NULL;
 }
 
-///	ƒLƒƒƒXƒg‚É¸”s‚·‚é‚Æassert‚·‚éƒ_ƒCƒiƒ~ƒbƒNƒLƒƒƒXƒg
+///	ã‚­ãƒ£ã‚¹ãƒˆã«å¤±æ•—ã™ã‚‹ã¨assertã™ã‚‹ãƒ€ã‚¤ãƒŠãƒŸãƒƒã‚¯ã‚­ãƒ£ã‚¹ãƒˆ
 #define ACAST(T, p)	UTAcastImp<T>(p)
 template <class T, class P> T* UTAcastImp(P p){
 	if (p && p->GetTypeInfo()->Inherit(T::GetTypeInfoStatic())) return (T*)&*(p);
 	UTAcastError((p)->GetTypeInfo()->className);
 	return NULL;
 }
-///	ƒ_ƒCƒiƒ~ƒbƒNƒLƒƒƒXƒgDŒ^–¼‚Éƒ|ƒCƒ“ƒ^Œ^‚ğg‚¤ƒo[ƒWƒ‡ƒ“
+///	ãƒ€ã‚¤ãƒŠãƒŸãƒƒã‚¯ã‚­ãƒ£ã‚¹ãƒˆï¼å‹åã«ãƒã‚¤ãƒ³ã‚¿å‹ã‚’ä½¿ã†ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 #define DCASTP(TP, p)	UTDcastpImp<TP>(p)
 template <class TP, class P> TP UTDcastpImp(P p){
 	TP tp=NULL;
 	if (p && p->GetTypeInfo()->Inherit(tp->GetTypeInfoStatic())) return (TP)&*(p);
 	return NULL;
 }
-///	ƒLƒƒƒXƒg‚É¸”s‚·‚é‚Æassert‚·‚éƒ_ƒCƒiƒ~ƒbƒNƒLƒƒƒXƒgDŒ^–¼‚Éƒ|ƒCƒ“ƒ^Œ^‚ğg‚¤ƒo[ƒWƒ‡ƒ“
+///	ã‚­ãƒ£ã‚¹ãƒˆã«å¤±æ•—ã™ã‚‹ã¨assertã™ã‚‹ãƒ€ã‚¤ãƒŠãƒŸãƒƒã‚¯ã‚­ãƒ£ã‚¹ãƒˆï¼å‹åã«ãƒã‚¤ãƒ³ã‚¿å‹ã‚’ä½¿ã†ãƒãƒ¼ã‚¸ãƒ§ãƒ³
 #define ACASTP(TP, p)	UTAcastpImp<TP>(p)
 template <class TP, class P> TP UTAcastpImp(P p){
 	TP tp=NULL;
@@ -220,7 +220,7 @@ template <class TP, class P> TP UTAcastpImp(P p){
 	UTAcastError((p)->GetTypeInfo()->className);
 	return NULL;
 }
-///	ƒLƒƒƒXƒg‚É¸”s‚µ‚½ê‡‚ÌassertŠÖ”
+///	ã‚­ãƒ£ã‚¹ãƒˆã«å¤±æ•—ã—ãŸå ´åˆã®asserté–¢æ•°
 char* UTAcastError(const char* );
 
 }

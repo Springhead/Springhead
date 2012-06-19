@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -23,47 +23,47 @@ struct FIFileCOLLADAIf;
 struct FIFileBinaryIf;
 struct ImportIf;
 
-///	�t�@�C�����o��SDK
+///	ファイル入出力SDK
 struct FISdkIf : public SdkIf{
 	SPR_IFDEF(FISdk);
 
-	/// X�t�@�C���I�u�W�F�N�g�̍쐬
+	/// Xファイルオブジェクトの作成
 	FIFileXIf*			CreateFileX();
-	/// Spr�t�@�C���I�u�W�F�N�g�̍쐬
+	/// Sprファイルオブジェクトの作成
 	FIFileSprIf*		CreateFileSpr();
-	/// VRML�t�@�C���I�u�W�F�N�g�̍쐬
+	/// VRMLファイルオブジェクトの作成
 	FIFileVRMLIf*		CreateFileVRML();
-	/// COLLADA�t�@�C���I�u�W�F�N�g�̍쐬
+	/// COLLADAファイルオブジェクトの作成
 	FIFileCOLLADAIf*	CreateFileCOLLADA();
-	/// �o�C�i���t�@�C���I�u�W�F�N�g�̍쐬
+	/// バイナリファイルオブジェクトの作成
 	FIFileBinaryIf*		CreateFileBinary();
 
-	/** @brief IfInfo�ɑΉ�����t�@�C���I�u�W�F�N�g���쐬
+	/** @brief IfInfoに対応するファイルオブジェクトを作成
 		@param ii IfInfo
-		���m��IfInfo�̏ꍇ��NULL��Ԃ��D
+		未知のIfInfoの場合はNULLを返す．
 	 */
 	FIFileIf*			CreateFile(const IfInfo* ii);
 
-	/** @brief �g���q����t�@�C���I�u�W�F�N�g���쐬
-		@param ext	�g���q���܂ރt�@�C���p�X
-		�g���q�ƃt�@�C���^�C�v�̑Ή��͈ȉ��̒ʂ�:
+	/** @brief 拡張子からファイルオブジェクトを作成
+		@param ext	拡張子を含むファイルパス
+		拡張子とファイルタイプの対応は以下の通り:
 		.x		<=> Direct X
 		.wrl	<=> VRML
 		.dae	<=> Collada
 		.dat	<=> Binary
 		
-		���m�̊g���q�̏ꍇ��NULL��Ԃ��D
+		未知の拡張子の場合はNULLを返す．
 	 */
 	FIFileIf*		CreateFileFromExt(UTString filename);
 
-	/// ���[�g�C���|�[�g�̍쐬
+	/// ルートインポートの作成
 	ImportIf*		CreateImport();
-	/// �C���|�[�g�̍쐬
+	/// インポートの作成
 	ImportIf*		CreateImport(ImportIf* parent, UTString path, ObjectIf* owner, const ObjectIfs& children);
 
-	/// �t�@�C���I�u�W�F�N�g�̍폜
+	/// ファイルオブジェクトの削除
 	bool DelChildObject(ObjectIf* o);
-	/// �S�t�@�C���I�u�W�F�N�g�̍폜
+	/// 全ファイルオブジェクトの削除
 	void Clear();
 
 	static  FISdkIf* SPR_CDECL CreateSdk();

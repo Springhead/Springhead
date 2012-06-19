@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprHIS.h
- *	@brief —ÍŠoƒCƒ“ƒ^[ƒtƒF[ƒX‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹ŒQ
+ *	@brief åŠ›è¦šã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ãƒ¼ã‚¹ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ç¾¤
 */
 #ifndef SPR_HUMANINTERFACE_H
 #define SPR_HUMANINTERFACE_H

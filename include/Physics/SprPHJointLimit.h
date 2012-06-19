@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprPHJointLimit.h
- *	@brief ŠÖß‰Â“®ˆæ§ŒÀ
+ *	@brief é–¢ç¯€å¯å‹•åŸŸåˆ¶é™
 */
 #ifndef SPR_PHJOINTLIMITIf_H
 #define SPR_PHJOINTLIMITIf_H
@@ -19,112 +19,112 @@ namespace Spr{;
 /** \addtogroup gpJoint */
 //@{
 
-/// 1©—R“xŠÖß‰Â“®ˆæS‘©‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// 1è‡ªç”±åº¦é–¢ç¯€å¯å‹•åŸŸæ‹˜æŸã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PH1DJointLimitIf : public SceneObjectIf{
 	SPR_IFDEF(PH1DJointLimit);
 
-	/** @brief ‰Â“®”ÍˆÍ‚ğİ’è‚·‚é
-		@param range ‰Â“®”ÍˆÍ
+	/** @brief å¯å‹•ç¯„å›²ã‚’è¨­å®šã™ã‚‹
+		@param range å¯å‹•ç¯„å›²
 	 */
 	void SetRange(Vec2d range);
 	
-	/** @brief ‰Â“®”ÍˆÍ‚ğæ“¾‚·‚é
-		@return ‰Â“®”ÍˆÍ
+	/** @brief å¯å‹•ç¯„å›²ã‚’å–å¾—ã™ã‚‹
+		@return å¯å‹•ç¯„å›²
 	 */
 	void GetRange(Vec2d& range);
 
-	/** @brief ‰Â“®ˆæ§ŒÀ‚Ì‚½‚ß‚ÌƒoƒlŒW”‚ğİ’è‚·‚é
-		@param spring ƒoƒlŒW”
+	/** @brief å¯å‹•åŸŸåˆ¶é™ã®ãŸã‚ã®ãƒãƒä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param spring ãƒãƒä¿‚æ•°
 	 */
 	void SetSpring(double spring);
 
-	/** @brief ‰Â“®ˆæ§ŒÀ‚Ì‚½‚ß‚ÌƒoƒlŒW”‚ğæ“¾‚·‚é
-		@return ƒoƒlŒW”
+	/** @brief å¯å‹•åŸŸåˆ¶é™ã®ãŸã‚ã®ãƒãƒä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒãƒä¿‚æ•°
 	 */
 	double GetSpring();
 
-	/** @brief ‰Â“®ˆæ§ŒÀ‚Ì‚½‚ß‚Ìƒ_ƒ“ƒpŒW”‚ğİ’è‚·‚é
-		@param damper ƒ_ƒ“ƒpŒW”
+	/** @brief å¯å‹•åŸŸåˆ¶é™ã®ãŸã‚ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param damper ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	void SetDamper(double damper);
 
-	/** @brief ‰Â“®ˆæ§ŒÀ‚Ì‚½‚ß‚Ìƒ_ƒ“ƒpŒW”‚ğæ“¾‚·‚é
-		@return ƒ_ƒ“ƒpŒW”
+	/** @brief å¯å‹•åŸŸåˆ¶é™ã®ãŸã‚ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	double GetDamper();
 
-	/** @brief ‰Â“®ˆæ‚É‚©‚©‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é
-		@return ‚©‚©‚Á‚Ä‚¢‚ê‚Îtrue
+	/** @brief å¯å‹•åŸŸã«ã‹ã‹ã£ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹
+		@return ã‹ã‹ã£ã¦ã„ã‚Œã°true
 	*/
 	bool IsOnLimit();
 };
 
-///	1©—R“xŠÖß‚Ì‰Â“®ˆæS‘©
+///	1è‡ªç”±åº¦é–¢ç¯€ã®å¯å‹•åŸŸæ‹˜æŸ
 struct PH1DJointLimitDesc{
-	double	spring;		///< ‰Â“®”ÍˆÍƒoƒl
-	double	damper;		///< ‰Â“®”ÍˆÍƒ_ƒ“ƒp
-	Vec2d	range;		///< ‰Â“®”ÍˆÍ. range[0]:lower < range[1]:upper ‚Ì‚Æ‚«‚É—LŒø
+	double	spring;		///< å¯å‹•ç¯„å›²ãƒãƒ
+	double	damper;		///< å¯å‹•ç¯„å›²ãƒ€ãƒ³ãƒ‘
+	Vec2d	range;		///< å¯å‹•ç¯„å›². range[0]:lower < range[1]:upper ã®ã¨ãã«æœ‰åŠ¹
 
 	PH1DJointLimitDesc() {
 		spring = 10000.0;
 		damper =   100.0;
-		range  = Vec2d(1, -1); /// ƒfƒtƒHƒ‹ƒg‚Å‚ÍS‘©–³Œø
+		range  = Vec2d(1, -1); /// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã¯æ‹˜æŸç„¡åŠ¹
 	}
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‰Â“®ˆæ§ŒÀ‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆå¯å‹•åŸŸåˆ¶é™ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHBallJointLimitIf : public SceneObjectIf {
 	SPR_IFDEF(PHBallJointLimit);
 
-	/** @brief ‰Â“®ˆæ§ŒÀ‚Ì‚½‚ß‚ÌƒoƒlŒW”‚ğİ’è‚·‚é
-		@param spring ƒoƒlŒW”
+	/** @brief å¯å‹•åŸŸåˆ¶é™ã®ãŸã‚ã®ãƒãƒä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param spring ãƒãƒä¿‚æ•°
 	 */
 	void SetSpring(double rSpring);
 
-	/** @brief ‰Â“®ˆæ§ŒÀ‚Ì‚½‚ß‚ÌƒoƒlŒW”‚ğæ“¾‚·‚é
-		@return ƒoƒlŒW”
+	/** @brief å¯å‹•åŸŸåˆ¶é™ã®ãŸã‚ã®ãƒãƒä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒãƒä¿‚æ•°
 	 */
 	double GetSpring();
 
-	/** @brief ‰Â“®ˆæ§ŒÀ‚Ì‚½‚ß‚Ìƒ_ƒ“ƒpŒW”‚ğİ’è‚·‚é
-		@param damper ƒ_ƒ“ƒpŒW”
+	/** @brief å¯å‹•åŸŸåˆ¶é™ã®ãŸã‚ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param damper ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	void SetDamper(double rDamper);
 
-	/** @brief ‰Â“®ˆæ§ŒÀ‚Ì‚½‚ß‚Ìƒ_ƒ“ƒpŒW”‚ğæ“¾‚·‚é
-		@return ƒ_ƒ“ƒpŒW”
+	/** @brief å¯å‹•åŸŸåˆ¶é™ã®ãŸã‚ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	double GetDamper();
 
-	/** @brief ‰Â“®ˆæ‚ÌŠî€•ûŒü‚ğİ’è‚·‚é
-		@param limDir ‰Â“®ˆæ‚ÌŠî€•ûŒü
+	/** @brief å¯å‹•åŸŸã®åŸºæº–æ–¹å‘ã‚’è¨­å®šã™ã‚‹
+		@param limDir å¯å‹•åŸŸã®åŸºæº–æ–¹å‘
 	 */
 	void SetLimitDir(Vec3d limDir);
 
-	/** @brief ‰Â“®ˆæ‚ÌŠî€•ûŒü‚ğæ“¾‚·‚é
-		@return ‰Â“®ˆæŠî€•ûŒü
+	/** @brief å¯å‹•åŸŸã®åŸºæº–æ–¹å‘ã‚’å–å¾—ã™ã‚‹
+		@return å¯å‹•åŸŸåŸºæº–æ–¹å‘
 	 */
 	Vec3d GetLimitDir();
 
-	/** @brief ‰Â“®ˆæ‚É‚©‚©‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é
-		@return ‚©‚©‚Á‚Ä‚¢‚ê‚Îtrue
+	/** @brief å¯å‹•åŸŸã«ã‹ã‹ã£ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹
+		@return ã‹ã‹ã£ã¦ã„ã‚Œã°true
 	*/
 	bool IsOnLimit();
 };
 	
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚Ì‰Â“®ˆæ§ŒÀ‚ÌƒXƒe[ƒg
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®å¯å‹•åŸŸåˆ¶é™ã®ã‚¹ãƒ†ãƒ¼ãƒˆ
 struct PHBallJointLimitState {
-	Vec3d f;   ///< S‘©—Í‚Ì—ÍÏ
+	Vec3d f;   ///< æ‹˜æŸåŠ›ã®åŠ›ç©
 };
 
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚Ì‰Â“®ˆæ§ŒÀ‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®å¯å‹•åŸŸåˆ¶é™ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHBallJointLimitDesc : public PHBallJointLimitState {
 	SPR_DESCDEF(PHBallJointLimit);
-	double	spring;			///< ‰Â“®”ÍˆÍƒoƒl
-	double	damper;			///< ‰Â“®”ÍˆÍƒ_ƒ“ƒp
-	Vec3d   limitDir;		///< ‰Â“®ˆæ‚ÌŠî€•ûŒüi‰~‰Â“®ˆæ‚È‚ç’†SüC‚È‚Çj
+	double	spring;			///< å¯å‹•ç¯„å›²ãƒãƒ
+	double	damper;			///< å¯å‹•ç¯„å›²ãƒ€ãƒ³ãƒ‘
+	Vec3d   limitDir;		///< å¯å‹•åŸŸã®åŸºæº–æ–¹å‘ï¼ˆå††éŒå¯å‹•åŸŸãªã‚‰ä¸­å¿ƒç·šï¼Œãªã©ï¼‰
 
 	PHBallJointLimitDesc() {
 		spring    = 10000.0;
@@ -135,41 +135,41 @@ struct PHBallJointLimitDesc : public PHBallJointLimitState {
 
 // -----  -----  -----  -----  -----
 
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚Ì‰~‰Â“®ˆæ§ŒÀ‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®å††éŒå¯å‹•åŸŸåˆ¶é™ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHBallJointConeLimitIf : public PHBallJointLimitIf{
 	SPR_IFDEF(PHBallJointConeLimit);
 
-	/** @brief ƒXƒCƒ“ƒOŠp‚Ì‰Â“®”ÍˆÍ‚ğİ’è‚·‚é
-		@param lower Å¬ƒXƒCƒ“ƒOŠp“x
-		@param upper Å‘åƒXƒCƒ“ƒOŠp“x
+	/** @brief ã‚¹ã‚¤ãƒ³ã‚°è§’ã®å¯å‹•ç¯„å›²ã‚’è¨­å®šã™ã‚‹
+		@param lower æœ€å°ã‚¹ã‚¤ãƒ³ã‚°è§’åº¦
+		@param upper æœ€å¤§ã‚¹ã‚¤ãƒ³ã‚°è§’åº¦
 	 */
 	void SetSwingRange(Vec2d range);
 
-	/** @brief ƒXƒCƒ“ƒOŠp‚Ì‰Â“®”ÍˆÍ‚ğæ“¾‚·‚é
-		@param lower Å‘åƒXƒCƒ“ƒOŠp“x
-		@param upper Å‘åƒXƒCƒ“ƒOŠp“x
+	/** @brief ã‚¹ã‚¤ãƒ³ã‚°è§’ã®å¯å‹•ç¯„å›²ã‚’å–å¾—ã™ã‚‹
+		@param lower æœ€å¤§ã‚¹ã‚¤ãƒ³ã‚°è§’åº¦
+		@param upper æœ€å¤§ã‚¹ã‚¤ãƒ³ã‚°è§’åº¦
 	 */
 	void GetSwingRange(Vec2d& range);
 
-	/** @brief ƒcƒCƒXƒgŠp‚Ì‰Â“®”ÍˆÍ‚ğİ’è‚·‚é
-		@param lower Å¬ƒcƒCƒXƒgŠp“x
-		@param upper Å‘åƒcƒCƒXƒgŠp“x
+	/** @brief ãƒ„ã‚¤ã‚¹ãƒˆè§’ã®å¯å‹•ç¯„å›²ã‚’è¨­å®šã™ã‚‹
+		@param lower æœ€å°ãƒ„ã‚¤ã‚¹ãƒˆè§’åº¦
+		@param upper æœ€å¤§ãƒ„ã‚¤ã‚¹ãƒˆè§’åº¦
 	 */
 	void SetTwistRange(Vec2d range);
 
-	/** @brief ƒcƒCƒXƒgŠp‚Ì‰Â“®”ÍˆÍ‚ğæ“¾‚·‚é
-		@param lower Å‘åƒcƒCƒXƒgŠp“x
-		@param upper Å‘åƒcƒCƒXƒgŠp“x
+	/** @brief ãƒ„ã‚¤ã‚¹ãƒˆè§’ã®å¯å‹•ç¯„å›²ã‚’å–å¾—ã™ã‚‹
+		@param lower æœ€å¤§ãƒ„ã‚¤ã‚¹ãƒˆè§’åº¦
+		@param upper æœ€å¤§ãƒ„ã‚¤ã‚¹ãƒˆè§’åº¦
 	 */
 	void GetTwistRange(Vec2d& range);
 };
 
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚Ì‰~‰Â“®ˆæ§ŒÀ‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®å††éŒå¯å‹•åŸŸåˆ¶é™ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHBallJointConeLimitDesc : public PHBallJointLimitDesc {
 	SPR_DESCDEF(PHBallJointConeLimit);
-	Vec2d	limitSwing;		///< swingŠp‚Ì‰Â“®ˆæi[0] or .lower, [1] or .upperj
-	Vec2d	limitSwingDir;	///< swing•ûˆÊŠp‚Ì‰Â“®ˆæi[0] or .lower, [1] or .upperj <!!> ‚¢‚³‚³‚©•sˆÀ’è
-	Vec2d	limitTwist;		///< twistŠp‚Ì‰Â“®ˆæi[0] or .lower, [1] or .upperj
+	Vec2d	limitSwing;		///< swingè§’ã®å¯å‹•åŸŸï¼ˆ[0] or .lower, [1] or .upperï¼‰
+	Vec2d	limitSwingDir;	///< swingæ–¹ä½è§’ã®å¯å‹•åŸŸï¼ˆ[0] or .lower, [1] or .upperï¼‰ <!!> ã„ã•ã•ã‹ä¸å®‰å®š
+	Vec2d	limitTwist;		///< twistè§’ã®å¯å‹•åŸŸï¼ˆ[0] or .lower, [1] or .upperï¼‰
 
 	PHBallJointConeLimitDesc() {
 		limitSwing    = Vec2d(-FLT_MAX, FLT_MAX);
@@ -180,8 +180,8 @@ struct PHBallJointConeLimitDesc : public PHBallJointLimitDesc {
 
 // -----  -----  -----  -----  -----
 
-/// ƒXƒvƒ‰ƒCƒ“§Œä“_
-/// ƒXƒvƒ‰ƒCƒ“•Â‹Èü‚Ì§Œä“_
+/// ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³åˆ¶å¾¡ç‚¹
+/// ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³é–‰æ›²ç·šã®åˆ¶å¾¡ç‚¹
 struct PHSplineLimitNode {
 	double swing;
 	double swingDir;
@@ -202,41 +202,41 @@ struct PHSplineLimitNode {
 	}
 };
 
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚ÌƒXƒvƒ‰ƒCƒ“‰Â“®ˆæ§ŒÀ‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³å¯å‹•åŸŸåˆ¶é™ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHBallJointSplineLimitIf : public PHBallJointLimitIf{
 	SPR_IFDEF(PHBallJointSplineLimit);
 
-	/** @brief §Œä“_‚ğ’Ç‰Á‚·‚é
-		@param node ’Ç‰Á‚·‚é§Œä“_
+	/** @brief åˆ¶å¾¡ç‚¹ã‚’è¿½åŠ ã™ã‚‹
+		@param node è¿½åŠ ã™ã‚‹åˆ¶å¾¡ç‚¹
 	 */
 	void AddNode(PHSplineLimitNode node);
 	void AddNode(double S, double SD, double dS, double dSD, double tMin, double tMax);
 
-	/** @brief §Œä“_‚ğ‘}“ü‚·‚é
-		@param node ’Ç‰Á‚·‚é§Œä“_
-		@param pos  ‘}“üˆÊ’u
+	/** @brief åˆ¶å¾¡ç‚¹ã‚’æŒ¿å…¥ã™ã‚‹
+		@param node è¿½åŠ ã™ã‚‹åˆ¶å¾¡ç‚¹
+		@param pos  æŒ¿å…¥ä½ç½®
 	 */
 	void AddNode(PHSplineLimitNode node, int pos);
 	void AddNode(double S, double SD, double dS, double dSD, double tMin, double tMax, int pos);
 
-	/** @brief ‹É‚É‚¨‚¯‚éƒcƒCƒXƒgŠp‚Ì‰Â“®”ÍˆÍ‚ğİ’è‚·‚é
-		@param lower Å¬ƒcƒCƒXƒgŠp“x
-		@param upper Å‘åƒcƒCƒXƒgŠp“x
+	/** @brief æ¥µã«ãŠã‘ã‚‹ãƒ„ã‚¤ã‚¹ãƒˆè§’ã®å¯å‹•ç¯„å›²ã‚’è¨­å®šã™ã‚‹
+		@param lower æœ€å°ãƒ„ã‚¤ã‚¹ãƒˆè§’åº¦
+		@param upper æœ€å¤§ãƒ„ã‚¤ã‚¹ãƒˆè§’åº¦
 	 */
 	void SetPoleTwistRange(Vec2d range);
 
-	/** @brief ‹É‚É‚¨‚¯‚éƒcƒCƒXƒgŠp‚Ì‰Â“®”ÍˆÍ‚ğæ“¾‚·‚é
-		@param lower Å‘åƒcƒCƒXƒgŠp“x
-		@param upper Å‘åƒcƒCƒXƒgŠp“x
+	/** @brief æ¥µã«ãŠã‘ã‚‹ãƒ„ã‚¤ã‚¹ãƒˆè§’ã®å¯å‹•ç¯„å›²ã‚’å–å¾—ã™ã‚‹
+		@param lower æœ€å¤§ãƒ„ã‚¤ã‚¹ãƒˆè§’åº¦
+		@param upper æœ€å¤§ãƒ„ã‚¤ã‚¹ãƒˆè§’åº¦
 	 */
 	void GetPoleTwistRange(Vec2d& range);
 };
 
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚ÌƒXƒvƒ‰ƒCƒ“‰Â“®ˆæ§ŒÀ‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³å¯å‹•åŸŸåˆ¶é™ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHBallJointSplineLimitDesc : public PHBallJointLimitDesc {
 	SPR_DESCDEF(PHBallJointSplineLimit);
-	std::vector<PHSplineLimitNode> nodes;  ///< ‰Â“®ˆæ‚ğ•\Œ»‚·‚éƒXƒvƒ‰ƒCƒ“§Œä“_‚Ì”z—ñ
-	Vec2d poleTwist;                       ///< ‹ÉiŒ´“_j‚É‚¨‚¯‚éTwist‚ÌƒŠƒ~ƒbƒg
+	std::vector<PHSplineLimitNode> nodes;  ///< å¯å‹•åŸŸã‚’è¡¨ç¾ã™ã‚‹ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³åˆ¶å¾¡ç‚¹ã®é…åˆ—
+	Vec2d poleTwist;                       ///< æ¥µï¼ˆåŸç‚¹ï¼‰ã«ãŠã‘ã‚‹Twistã®ãƒªãƒŸãƒƒãƒˆ
 
 	PHBallJointSplineLimitDesc() {
 		poleTwist = Vec2d(-FLT_MAX, FLT_MAX);

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -98,7 +98,7 @@ bool GRSdk::AddChildObject(ObjectIf* o){
 		Scenes::iterator it = std::find(scenes.begin(), scenes.end(), s);
 		if (it == scenes.end()){
 			scenes.push_back(s);
-			// ƒfƒtƒHƒ‹ƒgƒl[ƒ€
+			// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒãƒ¼ãƒ 
 			if(strcmp(s->GetName(), "") == 0){
 				char name[256];
 				sprintf(name, "scene%d", NScene()-1);

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -42,7 +42,7 @@ struct MSG{
 
 static UTString idTypeId;
 enum IdType{ IT_NODE, IT_FIELD, IT_UNKNOWN} idType;
-///	Id‚ªAŒ^–¼‚È‚Ì‚©A\‘¢‘Ì‚Ìƒƒ“ƒo–¼‚È‚Ì‚©
+///	IdãŒã€å‹åãªã®ã‹ã€æ§‹é€ ä½“ã®ãƒ¡ãƒ³ãƒåãªã®ã‹
 static void SetIdType(const char* b, const char* e){
 	idTypeId.assign(b,e);
 	PDEBUG( DSTR << "SetIdType(" << idTypeId << ":" ; )
@@ -65,17 +65,17 @@ static bool IsIdField(){
 }
 
 
-///	ƒm[ƒh‚Ìn‚Ü‚èDŒ^‚ğŒ©‚Â‚¯‚ÄƒZƒbƒg
+///	ãƒãƒ¼ãƒ‰ã®å§‹ã¾ã‚Šï¼å‹ã‚’è¦‹ã¤ã‘ã¦ã‚»ãƒƒãƒˆ
 static void NodeStart(const char* b, const char* e){
 	PDEBUG( DSTR << "NodeStart " << idTypeId << std::endl );
 	fileContext->NodeStart(idTypeId);
 }
-///	ƒm[ƒh‚Ì–¼‘O‚Ìİ’è
+///	ãƒãƒ¼ãƒ‰ã®åå‰ã®è¨­å®š
 static void NameSet(const char* b, const char* e){
 	UTString n(b,e);
 	fileContext->datas.back()->SetName(UTString(b,e));
 }
-///	ƒm[ƒh‚Ìn‚Ü‚èDŒ^‚ğŒ©‚Â‚¯‚ÄƒZƒbƒg
+///	ãƒãƒ¼ãƒ‰ã®å§‹ã¾ã‚Šï¼å‹ã‚’è¦‹ã¤ã‘ã¦ã‚»ãƒƒãƒˆ
 static void NodeStartFromId(const char c){
 	PDEBUG( DSTR << "NodeStartFromId " << idTypeId << std::endl );
 	assert(idType == IT_FIELD);
@@ -87,13 +87,13 @@ static void NodeStartFromId(const char c){
 	fileContext->datas.back()->SetName(idTypeId);
 }
 
-///	ƒm[ƒh‚ÌI‚í‚è
+///	ãƒãƒ¼ãƒ‰ã®çµ‚ã‚ã‚Š
 static void NodeEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().type->GetTypeName() << std::endl);
 	fileContext->NodeEnd();
 }
 
-///	ƒuƒƒbƒNŒ^‚ÌƒXƒLƒbƒv
+///	ãƒ–ãƒ­ãƒƒã‚¯å‹ã®ã‚¹ã‚­ãƒƒãƒ—
 static void NodeSkip(const char* b, const char* e){
 	fileContext->datas.Top()->str = UTString(b,e);
 }
@@ -101,16 +101,16 @@ static void NodeSkip(const char* b, const char* e){
 static size_t letStartDepth;
 static void LetStart(const char* b, const char* e){
 	fileContext->FindField(idTypeId);
-	letStartDepth = fileContext->fieldIts.size()+1;	//	“¯ŠK‘w‚ÅNext‚µ‚Ä‚Í‚¢‚¯‚È‚¢‚Ì‚ÅA+1B
+	letStartDepth = fileContext->fieldIts.size()+1;	//	åŒéšå±¤ã§Nextã—ã¦ã¯ã„ã‘ãªã„ã®ã§ã€+1ã€‚
 }
 static void LetEnd(const char* b, const char* e){
 	letStartDepth = 0;
 	while (fileContext->fieldIts.size() > fileContext->nodeStartDepthes.Top()) 
 		fileContext->CompositEnd();
 }
-/**	ƒuƒƒbƒN“Ç‚İo‚µ’†CƒtƒB[ƒ‹ƒh‚ğ“Ç‚Ş‘O‚ÉŒÄ‚Î‚ê‚éD
-	TypeDesc‚ğŒ©‚ÄŸ‚É“Ç‚İo‚·‚×‚«ƒtƒB[ƒ‹ƒh‚ğƒZƒbƒg‚·‚éD
-	“Ç‚İo‚·‚×‚«ƒtƒB[ƒ‹ƒh‚ª‚ ‚éŠÔ true ‚ğ•Ô‚·D	*/
+/**	ãƒ–ãƒ­ãƒƒã‚¯èª­ã¿å‡ºã—ä¸­ï¼Œãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’èª­ã‚€å‰ã«å‘¼ã°ã‚Œã‚‹ï¼
+	TypeDescã‚’è¦‹ã¦æ¬¡ã«èª­ã¿å‡ºã™ã¹ããƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ï¼
+	èª­ã¿å‡ºã™ã¹ããƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒã‚ã‚‹é–“ true ã‚’è¿”ã™ï¼	*/
 static bool NextField(){
 	if (letStartDepth > fileContext->fieldIts.size()){
 		PDEBUG( DSTR << "NextField:failed. letStartDepth=" << letStartDepth << "." << std::endl);
@@ -133,7 +133,7 @@ static bool NextField(){
 static bool IsFieldValid(){
 	return fileContext->fieldIts.IsValid();
 }
-///	”z—ñ‚ÌƒJƒEƒ“ƒgD‚Ü‚¾“Ç‚İo‚·‚×‚«ƒf[ƒ^‚ªc‚Á‚Ä‚¢‚ê‚Î true ‚ğ•Ô‚·D
+///	é…åˆ—ã®ã‚«ã‚¦ãƒ³ãƒˆï¼ã¾ã èª­ã¿å‡ºã™ã¹ããƒ‡ãƒ¼ã‚¿ãŒæ®‹ã£ã¦ã„ã‚Œã° true ã‚’è¿”ã™ï¼
 static bool ArrayCount(){
 	return fileContext->fieldIts.IncArrayPos();
 }
@@ -193,10 +193,10 @@ static void StrSet(const char* b, const char* e){
 	strValue.assign(b+1,e-1);
 }
 
-///	ObjectDesc‚É“Ç‚İo‚µ‚½’l‚ğ‘‚«‚Ş
+///	ObjectDescã«èª­ã¿å‡ºã—ãŸå€¤ã‚’æ›¸ãè¾¼ã‚€
 static void SetVal(const char* b, const char* e){
 	UTTypeDescFieldIt& curField = fileContext->fieldIts.back();
-	//	debug o—Í
+	//	debug å‡ºåŠ›
 #ifdef TRACE_PARSE
 	if (curField.fieldType!=UTTypeDescFieldIt::F_NONE){
 		if (curField.fieldType==UTTypeDescFieldIt::F_BLOCK){
@@ -214,7 +214,7 @@ static void SetVal(const char* b, const char* e){
 	}
 	DSTR << std::endl;
 #endif
-	//	‚±‚±‚Ü‚Å
+	//	ã“ã“ã¾ã§
 	
 	if (fileContext->fieldIts.IsBool()){
 		fileContext->WriteBool(boolValue);
@@ -229,14 +229,14 @@ static void StopArray(const char c){
 	curField.arrayPos=UTTypeDesc::BIGVALUE;
 }
 
-///	QÆ‚ğ’Ç‰Á‚·‚éD
+///	å‚ç…§ã‚’è¿½åŠ ã™ã‚‹ï¼
 static void RefSet(const char* b, const char* e){
 	std::string ref(b,e);
 	fileContext->AddDataLink(ref, b);
 }
 
 static UTTypeDesc* tdesc;
-//	XFile‚Ìtemplate‚Ì“Ç‚İo‚µ‚ÌŠÖ”
+//	XFileã®templateã®èª­ã¿å‡ºã—ã®é–¢æ•°
 static void TempStart(const char* b, const char* e){
 	tdesc = DBG_NEW UTTypeDesc(std::string(b,e));
 }
@@ -262,7 +262,7 @@ static void TempEnd(char c){
 	fileContext->typeDbs.Top()->RegisterDesc(tdesc);
 }
 
-///	XXX expected. ‚ÌƒGƒ‰[ƒƒbƒZ[ƒW‚ğo‚·ƒp[ƒT
+///	XXX expected. ã®ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‡ºã™ãƒ‘ãƒ¼ã‚µ
 class ExpectParser {
 	std::string msg; 
 public:
@@ -292,8 +292,8 @@ FIFileSpr::FIFileSpr(const FIFileSprDesc& desc):depthFromField(-1){
 void FIFileSpr::Init(){
 	using namespace std;
 	using namespace boost::spirit::classic;
-	//	ƒp[ƒT‚Ì’è‹`
-	//	–{•¶—pƒp[ƒT
+	//	ãƒ‘ãƒ¼ã‚µã®å®šç¾©
+	//	æœ¬æ–‡ç”¨ãƒ‘ãƒ¼ã‚µ
 	start		=	*node;
 	node		=	id[&SetIdType] >> if_p(&IsIdNode)[ 
 						eps_p[&NodeStart] >> !id[&NameSet] >> (ch_p('{') >> block | ExpP("'{'"))
@@ -301,13 +301,13 @@ void FIFileSpr::Init(){
 	block		=	*data >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
 	data		=	ch_p('*') >> id[&RefSet] |
 					id[&SetIdType] >> 
-					if_p(&IsIdNode)[	//	Œ^–¼‚Ìê‡‚Íqƒm[ƒh
+					if_p(&IsIdNode)[	//	å‹åã®å ´åˆã¯å­ãƒãƒ¼ãƒ‰
 						eps_p[&NodeStart] >> !id[&NameSet] >> (ch_p('{') >> block | ExpP("'{'")) 
 					].else_p[
-						if_p(&IsIdField)[	//	ƒtƒB[ƒ‹ƒh–¼‚È‚ç‘ã“ü
+						if_p(&IsIdField)[	//	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰åãªã‚‰ä»£å…¥
 							ch_p('=') >> (
-								ch_p('{')[&NodeStartFromId] >> block	//	ƒuƒƒbƒNŒ`®‚É‚·‚é‚©
-								| eps_p[&LetStart] >> right [&LetEnd]	//	’l‚ğ•À‚×‚Ä‘‚­‚©
+								ch_p('{')[&NodeStartFromId] >> block	//	ãƒ–ãƒ­ãƒƒã‚¯å½¢å¼ã«ã™ã‚‹ã‹
+								| eps_p[&LetStart] >> right [&LetEnd]	//	å€¤ã‚’ä¸¦ã¹ã¦æ›¸ãã‹
 							)
 						].else_p [ ExpP("field or type name") ]
 					];
@@ -336,7 +336,7 @@ void FIFileSpr::Init(){
 						~ch_p('"') ) >> ch_p('"') 
 					][&StrSet];
 
-	//	ƒXƒLƒbƒvƒp[ƒT(ƒXƒy[ƒX‚ÆƒRƒƒ“ƒg‚ğ“Ç‚İo‚·ƒp[ƒT)‚Ì’è‹`
+	//	ã‚¹ã‚­ãƒƒãƒ—ãƒ‘ãƒ¼ã‚µ(ã‚¹ãƒšãƒ¼ã‚¹ã¨ã‚³ãƒ¡ãƒ³ãƒˆã‚’èª­ã¿å‡ºã™ãƒ‘ãƒ¼ã‚µ)ã®å®šç¾©
 	cmt		=	space_p
 				|	"/*" >> *(~ch_p('*') | '*'>>~ch_p('/')) >> !ch_p('*') >> '/'
 				|	"//" >> *~ch_p('\n') >> '\n'
@@ -381,7 +381,7 @@ void FIFileSpr::LoadImp(FILoadContext* fc){
 }
 
 //----------------------------------------------------
-//	ƒZ[ƒu‚Ìƒnƒ“ƒhƒ‰
+//	ã‚»ãƒ¼ãƒ–æ™‚ã®ãƒãƒ³ãƒ‰ãƒ©
 #define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)
 void FIFileSpr::OnSaveFileStart(FISaveContext* sc){
@@ -415,7 +415,7 @@ void FIFileSpr::OnSaveNodeEnd(FISaveContext* sc){
 bool FIFileSpr::OnSaveFieldStart(FISaveContext* sc, int nElements){
 	UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);
 	if (depthFromField==-1 && sc->fieldIts.Top().field->name.length()){
-		//	‰Šú’l‚Æ·‚ª‚ ‚é‚©Šm”F
+		//	åˆæœŸå€¤ã¨å·®ãŒã‚ã‚‹ã‹ç¢ºèª
 		bool bNoChange = true;
 		void* data = sc->datas.Top()->data;
 		int dataLen=-1, defaultDataLen=-1;
@@ -465,11 +465,11 @@ void FIFileSpr::OnSaveBool(FISaveContext* sc, bool val){
 void FIFileSpr::OnSaveInt(FISaveContext* sc, int val){
 	sc->Stream() << val;
 }
-///	real’l‚Ì•Û‘¶
+///	realå€¤ã®ä¿å­˜
 void FIFileSpr::OnSaveReal(FISaveContext* sc, double val){
 	sc->Stream() << val;
 }
-///	string’l‚Ì•Û‘¶
+///	stringå€¤ã®ä¿å­˜
 void FIFileSpr::OnSaveString(FISaveContext* sc, UTString val){
 	sc->Stream() << '"' << val << '"';
 }

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -21,7 +21,7 @@ namespace Spr{;
 # define PDEBUG(x)
 #endif
 
-/* ƒf[ƒ^\‘¢
+/* ãƒ‡ãƒ¼ã‚¿æ§‹é€ 
  
  *node
 
@@ -67,7 +67,7 @@ void FIFileBinary::LoadBlock(){
 		UTTypeDescFieldIt& fieldIt = fileContext->fieldIts.back();
 		UTTypeDesc::Field* field = &*(fieldIt.field);
 
-		// ‰Â•Ï’·ƒtƒB[ƒ‹ƒh‚Ìê‡C’·‚³‚ð“Ç‚Ýž‚ÝƒZƒbƒg
+		// å¯å¤‰é•·ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å ´åˆï¼Œé•·ã•ã‚’èª­ã¿è¾¼ã¿ã‚»ãƒƒãƒˆ
 		if(field->varType == UTTypeDesc::Field::VECTOR){
 			fieldIt.arrayLength = *(size_t*)ptr;
 			ptr += sizeof(size_t);
@@ -99,10 +99,10 @@ void FIFileBinary::LoadBlock(){
 	}
 }
 
-/* –ß‚è’l:
-	 1 : ƒm[ƒh‚Ìƒ[ƒhŠ®—¹
-	 0 : eƒm[ƒh‚Ì•Â‚¶ƒ^ƒOŒŸ’m
-	-1 : ƒGƒ‰[
+/* æˆ»ã‚Šå€¤:
+	 1 : ãƒŽãƒ¼ãƒ‰ã®ãƒ­ãƒ¼ãƒ‰å®Œäº†
+	 0 : è¦ªãƒŽãƒ¼ãƒ‰ã®é–‰ã˜ã‚¿ã‚°æ¤œçŸ¥
+	-1 : ã‚¨ãƒ©ãƒ¼
  */
 int FIFileBinary::LoadNode(){
 	char id = *ptr++;
@@ -143,12 +143,12 @@ int FIFileBinary::LoadNode(){
 	int ret;
 	while(true){
 		ret = LoadNode();
-		// ‚±‚Ìƒm[ƒh‚Ì•Â‚¶ƒ^ƒO‚ðŒŸ’m
+		// ã“ã®ãƒŽãƒ¼ãƒ‰ã®é–‰ã˜ã‚¿ã‚°ã‚’æ¤œçŸ¥
 		if(ret == 0){
 			ret = 1;
 			break;
 		}
-		// ƒGƒ‰[
+		// ã‚¨ãƒ©ãƒ¼
 		if(ret == -1){
 			ret = -1;
 			break;
@@ -167,7 +167,7 @@ void FIFileBinary::LoadImp(FILoadContext* fc){
 }
 
 //----------------------------------------------------
-//	ƒZ[ƒuŽž‚Ìƒnƒ“ƒhƒ‰
+//	ã‚»ãƒ¼ãƒ–æ™‚ã®ãƒãƒ³ãƒ‰ãƒ©
 
 void FIFileBinary::OnSaveFileStart(FISaveContext* sc){
 	sc->RegisterGroupToDb("Foundation Physics Graphics FileIO Framework Creature OldSpringhead");
@@ -200,7 +200,7 @@ void FIFileBinary::OnSaveDataEnd(FISaveContext* sc){
 bool FIFileBinary::OnSaveFieldStart(FISaveContext* sc, int nElements){
 	UTTypeDesc::Composit::iterator field = sc->fieldIts.back().field;
 	if(field->varType == UTTypeDesc::Field::VECTOR){
-		// ‰Â•Ï’·ƒtƒB[ƒ‹ƒh‚Ìê‡C‚»‚Ì’·‚³‚ðo—Í
+		// å¯å¤‰é•·ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å ´åˆï¼Œãã®é•·ã•ã‚’å‡ºåŠ›
 		size_t len = nElements;
 		sc->Stream().write((const char*)&len, sizeof(size_t));
 	}
@@ -212,7 +212,7 @@ void FIFileBinary::OnSaveFieldEnd(FISaveContext* sc, int nElements){
 void FIFileBinary::OnSaveElementEnd(FISaveContext* sc, int nElements, bool last){
 
 }
-// flush‚µ‚È‚¢‚ÆƒSƒ~ƒf[ƒ^‚ªo—Í‚³‚ê‚é‚±‚Æ‚ª‚ ‚éiŒ´ˆö•s–¾j
+// flushã—ãªã„ã¨ã‚´ãƒŸãƒ‡ãƒ¼ã‚¿ãŒå‡ºåŠ›ã•ã‚Œã‚‹ã“ã¨ãŒã‚ã‚‹ï¼ˆåŽŸå› ä¸æ˜Žï¼‰
 void FIFileBinary::OnSaveBool(FISaveContext* sc, bool val){
 	sc->Stream().write((const char*)&val, sizeof(bool));
 	sc->Stream().flush();

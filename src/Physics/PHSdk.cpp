@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -39,7 +39,7 @@ void SPR_CDECL PHRegisterTypeDescs();
 void SPR_CDECL PHRegisterLoadHandlers();
 void SPR_CDECL CDRegisterTypeDescs();
 
-///	PHSdk‚ğƒtƒ@ƒCƒ‹ƒ[ƒ_[‚È‚Ç‚É“o˜^Bˆê“x‚¾‚¯ŒÄ‚×‚Î‚æ‚¢
+///	PHSdkã‚’ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ãƒ¼ãªã©ã«ç™»éŒ²ã€‚ä¸€åº¦ã ã‘å‘¼ã¹ã°ã‚ˆã„
 void PHSdkIf::RegisterSdk(){
 	static bool bFirst = true;
 	if (!bFirst) return;
@@ -185,7 +185,7 @@ bool PHSdk::AddChildObject(ObjectIf* o){
 			no->SetName(name);
 		}
 	}
-	// ‚»‚Ì‘¼‚ÌƒIƒuƒWƒFƒNƒg
+	// ãã®ä»–ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	if (std::find(objects.begin(), objects.end(), (Object*)(o->Cast())) == objects.end()){
 		objects.push_back(o->Cast());
 		ok = true;

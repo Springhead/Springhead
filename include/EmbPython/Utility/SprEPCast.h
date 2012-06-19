@@ -1,4 +1,4 @@
-#ifndef SPREPCAST_H
+﻿#ifndef SPREPCAST_H
 #define SPREPCAST_H
 #include <Springhead.h>
 #include <Python/Python.h>
@@ -45,7 +45,7 @@ public:
 #define CONVERT_WCHARSTR_TO_CHARSTR(wcp) ConvertStr(wcp).GetBuffer()
 #define CONVERT_WCHARSTR_TO_STRING(wcp) ConvertStr(wcp).GetString()
 
-//runtime downcast�p
+//runtime downcast用
 typedef void (*EPCastfunc)(EPObject* obj);
 typedef std::map<const IfInfo*,EPCastfunc> EPCastfuncMap;
 extern EPCastfuncMap EPObject_CastMap;

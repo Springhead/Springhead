@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,10 +8,10 @@
 /** \page pageVirtualHuman
  Springhead2/src/Samples/Creature/VirtualHuman/main.cpp
 
-\ref ƒo[ƒ`ƒƒƒ‹ƒqƒ…[ƒ}ƒ“‚Ìƒfƒ‚ƒvƒƒOƒ‰ƒ€
+\ref ãƒãƒ¼ãƒãƒ£ãƒ«ãƒ’ãƒ¥ãƒ¼ãƒãƒ³ã®ãƒ‡ãƒ¢ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 
 \secntion secSpecVirtualHuman
-ƒo[ƒ`ƒƒƒ‹ƒqƒ…[ƒ}ƒ“ƒ‚ƒfƒ‹‚ğ¶¬‚·‚éƒfƒ‚‚Å‚·D
+ãƒãƒ¼ãƒãƒ£ãƒ«ãƒ’ãƒ¥ãƒ¼ãƒãƒ³ãƒ¢ãƒ‡ãƒ«ã‚’ç”Ÿæˆã™ã‚‹ãƒ‡ãƒ¢ã§ã™ï¼
 */
 
 #include <vector>
@@ -25,14 +25,14 @@ using namespace Spr;
 using namespace std;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒNƒ‰ƒX
+// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹
 class VirtualHumanApp : public SampleApp{
 public:
-	/// ƒy[ƒWID
+	/// ãƒšãƒ¼ã‚¸ID
 	enum {
 		MENU_MAIN = MENU_SCENE,
 	};
-	/// ƒAƒNƒVƒ‡ƒ“ID
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ID
 	enum {
 		ID_RESET,
 		ID_UP,
@@ -62,7 +62,7 @@ public:
 	}
 	~VirtualHumanApp(){}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	virtual void Init(int argc, char* argv[]) {
 		this->argc = argc;
 		this->argv = argv;
@@ -78,7 +78,7 @@ public:
 
 	PHSolidIf*         soTarget;
 
-	// ƒV[ƒ“\’z
+	// ã‚·ãƒ¼ãƒ³æ§‹ç¯‰
 	virtual void BuildScene() {
 		PHSdkIf* phSdk = phScene->GetSdk();
 
@@ -135,10 +135,10 @@ public:
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char *argv[]) {
 	app.Init(argc, argv);

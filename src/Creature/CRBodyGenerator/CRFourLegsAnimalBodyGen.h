@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,7 +13,7 @@
 //@{
 namespace Spr{;
 
-/// 4‘«“®•¨ƒ‚ƒfƒ‹‚ÌƒfƒXƒNƒŠƒvƒ^
+/// 4è¶³å‹•ç‰©ãƒ¢ãƒ‡ãƒ«ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRFourLegsAnimalBodyGenDesc : CRBodyGenDesc {
 
 	enum CRAnimalSolids{
@@ -38,9 +38,9 @@ struct CRFourLegsAnimalBodyGenDesc : CRBodyGenDesc {
 
 		//////////////////////////////////////////////////////////////////
 		//																//
-		// < ƒ{ƒfƒB‚Ì’è‹`‚Ì‡”Ô >										//
-		// PHBallJointËPHHingeJoint‚É‚µ‚Ä‚¢‚é‚Æˆâ“`q‚ğ‘g‚ñ‚¾‚É		//
-		// ‚¤‚Ü‚­ˆê“_Œğ³‚µ‚È‚­‚È‚Á‚Ä‚µ‚Ü‚¤‚Ì‚Å¬‡‚Å’è‹`‚µ‚Ä‚¢‚é		//
+		// < ãƒœãƒ‡ã‚£ã®å®šç¾©ã®é †ç•ª >										//
+		// PHBallJointâ‡’PHHingeJointã«ã—ã¦ã„ã‚‹ã¨éºä¼å­ã‚’çµ„ã‚“ã æ™‚ã«		//
+		// ã†ã¾ãä¸€ç‚¹äº¤å‰ã—ãªããªã£ã¦ã—ã¾ã†ã®ã§æ··åˆã§å®šç¾©ã—ã¦ã„ã‚‹		//
 		//																//
 		//////////////////////////////////////////////////////////////////
 
@@ -70,7 +70,7 @@ struct CRFourLegsAnimalBodyGenDesc : CRBodyGenDesc {
 	int joNBallJoints;
 	int joNHingeJoints;
 
-	/// ƒTƒCƒY‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^
+	/// ã‚µã‚¤ã‚ºã«é–¢ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	double waistBreadth,	       waistHeight,			  waistThickness;
 	double chestBreadth,	       chestHeight,			  chestThickness;
 	double tailBreadth,		       tailHeight,		      tailThickness;
@@ -85,30 +85,30 @@ struct CRFourLegsAnimalBodyGenDesc : CRBodyGenDesc {
 	double rearCannonBoneBreadth,  rearCannonBoneHeight,  rearCannonBoneThickness;
 	double rearToeBreadth,		   rearToeHeight,		  rearToeThickness;
 
-	/// ŠeBallJoint‚Ìƒoƒlƒ_ƒ“ƒp
-	double springWaistChest,   damperWaistChest;	//˜-‹¹
-	double springWaistTail,	   damperWaistTail;		//˜-”ö
-	double springTail,		   damperTail;			//”ö
-	double springChestNeck,	   damperChestNeck;     //‹¹-ñ
-	double springNeckHead,	   damperNeckHead;		//ñ-“ª
-	double springShoulder,	   damperShoulder;		//Œ¨
-	double springFrontAnkle,   damperFrontAnkle;	//‚©‚©‚Æi‘O‘«j
-	double springHip,		   damperHip;			//K
-	double springRearAnkle,    damperRearAnkle;		//‚©‚©‚ÆiŒã‘«j
+	/// å„BallJointã®ãƒãƒãƒ€ãƒ³ãƒ‘
+	double springWaistChest,   damperWaistChest;	//è…°-èƒ¸
+	double springWaistTail,	   damperWaistTail;		//è…°-å°¾
+	double springTail,		   damperTail;			//å°¾
+	double springChestNeck,	   damperChestNeck;     //èƒ¸-é¦–
+	double springNeckHead,	   damperNeckHead;		//é¦–-é ­
+	double springShoulder,	   damperShoulder;		//è‚©
+	double springFrontAnkle,   damperFrontAnkle;	//ã‹ã‹ã¨ï¼ˆå‰è¶³ï¼‰
+	double springHip,		   damperHip;			//å°»
+	double springRearAnkle,    damperRearAnkle;		//ã‹ã‹ã¨ï¼ˆå¾Œè¶³ï¼‰
 	
-	// ŠeHingeJoint‚Ìƒoƒlƒ_ƒ“ƒp
-	double springElbow,		   damperElbow;			//•Ii‘O‘«j
-	double springFrontKnee,	   damperFrontKnee;		//•Gi‘O‘«j
-	double springStifle,	   damperStifle;		//•IHiŒã‘«j
-	double springRearKnee,	   damperRearKnee;		//•GiŒã‘«j
+	// å„HingeJointã®ãƒãƒãƒ€ãƒ³ãƒ‘
+	double springElbow,		   damperElbow;			//è‚˜ï¼ˆå‰è¶³ï¼‰
+	double springFrontKnee,	   damperFrontKnee;		//è†ï¼ˆå‰è¶³ï¼‰
+	double springStifle,	   damperStifle;		//è‚˜ï¼Ÿï¼ˆå¾Œè¶³ï¼‰
+	double springRearKnee,	   damperRearKnee;		//è†ï¼ˆå¾Œè¶³ï¼‰
 	
-	/// HingeJoint‰Â“®ˆæ§ŒÀ
+	/// HingeJointå¯å‹•åŸŸåˆ¶é™
 	Vec2d  rangeElbow;
 	Vec2d  rangeFrontKnee;
 	Vec2d  rangeStifle;
 	Vec2d  rangeRearKnee;
 	
-	// BallJoint§Œä–Ú•W
+	// BallJointåˆ¶å¾¡ç›®æ¨™
 	Quaterniond goalWaistChest;
 	Quaterniond goalWaistTail;
 	Quaterniond goalTail;
@@ -119,13 +119,13 @@ struct CRFourLegsAnimalBodyGenDesc : CRBodyGenDesc {
 	Quaterniond goalHip;
 	Quaterniond goalRearAnkle;
 
-	// HingeJoint§Œä–Ú•W
+	// HingeJointåˆ¶å¾¡ç›®æ¨™
 	double originElbow;
 	double originFrontKnee;
 	double originStifle;
 	double originRearKnee;
 
-	// BallJoint‰Â“®ˆæ§ŒÀ‚Ì’†S
+	// BallJointå¯å‹•åŸŸåˆ¶é™ã®ä¸­å¿ƒ
 	Vec3d limitDirWaistChest;
 	Vec3d limitDirWaistTail;
 	Vec3d limitDirTail;
@@ -136,7 +136,7 @@ struct CRFourLegsAnimalBodyGenDesc : CRBodyGenDesc {
 	Vec3d limitDirHip;
 	Vec3d limitDirRearAnkle;
 
-	/// BallJoint‚Ìswing‰Â“®ˆæ:
+	/// BallJointã®swingå¯å‹•åŸŸ:
 	Vec2d limitSwingWaistChest;
 	Vec2d limitSwingWaistTail;
 	Vec2d limitSwingTail;
@@ -147,7 +147,7 @@ struct CRFourLegsAnimalBodyGenDesc : CRBodyGenDesc {
 	Vec2d limitSwingHip;
 	Vec2d limitSwingRearAnkle;
 
-	/// BallJoint‚Ìtwist‰Â“®ˆæ
+	/// BallJointã®twistå¯å‹•åŸŸ
 	Vec2d limitTwistWaistChest;
 	Vec2d limitTwistWaistTail;
 	Vec2d limitTwistTail;
@@ -158,7 +158,7 @@ struct CRFourLegsAnimalBodyGenDesc : CRBodyGenDesc {
 	Vec2d limitTwistHip;
 	Vec2d limitTwistRearAnkle;
 
-	// ŠÖß‚Ìo‚¹‚é—Í‚ÌÅ‘å’l
+	// é–¢ç¯€ã®å‡ºã›ã‚‹åŠ›ã®æœ€å¤§å€¤
 	double fMaxWaistChest;
 	double fMaxChestNeck;
 	double fMaxNeckHead;
@@ -182,20 +182,20 @@ struct CRFourLegsAnimalBodyGenDesc : CRBodyGenDesc {
 	double fMaxRightRearKnee;
 	double fMaxRightRearAnkle;
 
-	// •¨‘Ì‚Ì–€CŒW”
+	// ç‰©ä½“ã®æ‘©æ“¦ä¿‚æ•°
 	float materialMu;
 
-	/// — ƒIƒvƒVƒ‡ƒ“
+	/// è£ã‚ªãƒ—ã‚·ãƒ§ãƒ³
 	bool noLegs;
 	bool noHead;
 
-	/// ƒ_ƒCƒiƒ~ƒJƒ‹‚ğ“ü‚ê‚é‚©‚Ç‚¤‚©
+	/// ãƒ€ã‚¤ãƒŠãƒŸã‚«ãƒ«ã‚’å…¥ã‚Œã‚‹ã‹ã©ã†ã‹
 	bool dynamicalMode;
-	/// ‘S‘Ì‚Ì‘Ìd
+	/// å…¨ä½“ã®ä½“é‡
 	double totalMass;
-	/// fMax‚ğ“ü‚ê‚é‚©‚Ç‚¤‚©
+	/// fMaxã‚’å…¥ã‚Œã‚‹ã‹ã©ã†ã‹
 	bool flagFMax;
-	/// ‰Ò“­ˆæ§ŒÀ‚ğ“ü‚ê‚é‚©‚Ç‚¤‚©
+	/// ç¨¼åƒåŸŸåˆ¶é™ã‚’å…¥ã‚Œã‚‹ã‹ã©ã†ã‹
 	bool flagRange;
 
 	CRFourLegsAnimalBodyGenDesc(bool enableRange = false, bool enableFMax = false);
@@ -205,39 +205,39 @@ struct CRFourLegsAnimalBodyGenDesc : CRBodyGenDesc {
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRFourLegsAnimalBodyGen
-// ƒ{[ƒ‹‚âƒqƒ“ƒW‚ÌƒWƒ‡ƒCƒ“ƒg‚ğ—p‚¢‚½šM“û—Şƒ‚ƒfƒ‹EƒNƒ‰ƒX‚ÌÀ‘•
+// ãƒœãƒ¼ãƒ«ã‚„ãƒ’ãƒ³ã‚¸ã®ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ç”¨ã„ãŸå“ºä¹³é¡ãƒ¢ãƒ‡ãƒ«ãƒ»ã‚¯ãƒ©ã‚¹ã®å®Ÿè£…
 class CRFourLegsAnimalBodyGen : public CRBodyGen, public CRFourLegsAnimalBodyGenDesc {
 private:
 	
-	std::vector<PHSolidIf*> upperBody;		//< ã‘Ì‚ğ\¬‚·‚é„‘Ì‚Ì“o˜^æ‚Ì”z—ñ
+	std::vector<PHSolidIf*> upperBody;		//< ä¸Šä½“ã‚’æ§‹æˆã™ã‚‹å‰›ä½“ã®ç™»éŒ²å…ˆã®é…åˆ—
 	
-	void InitBody();						//< ‘ÌŠ²•”‚Ìì¬Œv‰æ‚ğ—§‚Ä‚é
-	void CreateWaist();						//< ˜‚ğì¬‚·‚é
-	void CreateChest();						//< ‹¹‚ğì¬‚·‚é
-	void CreateTail();						//< ”ö‚ğì¬‚·‚é
+	void InitBody();						//< ä½“å¹¹éƒ¨ã®ä½œæˆè¨ˆç”»ã‚’ç«‹ã¦ã‚‹
+	void CreateWaist();						//< è…°ã‚’ä½œæˆã™ã‚‹
+	void CreateChest();						//< èƒ¸ã‚’ä½œæˆã™ã‚‹
+	void CreateTail();						//< å°¾ã‚’ä½œæˆã™ã‚‹
 
-	void InitHead();						//< “ª•”‚Ìì¬Œv‰æ‚ğ—§‚Ä‚é
-	void CreateNeck();						//< ñ‚ğì¬‚·‚é
-	void CreateHead();						//< “ª‚Ìì¬‚ğ‚·‚é
+	void InitHead();						//< é ­éƒ¨ã®ä½œæˆè¨ˆç”»ã‚’ç«‹ã¦ã‚‹
+	void CreateNeck();						//< é¦–ã‚’ä½œæˆã™ã‚‹
+	void CreateHead();						//< é ­ã®ä½œæˆã‚’ã™ã‚‹
 
-	void InitFrontLegs();					//< ‘O‹r•”‚Ìì¬Œv‰æ‚ğ—§‚Ä‚é
-	void CreateBreastBone(LREnum lr);		//< ã˜rœ‚ğì¬‚·‚é
-	void CreateRadius(LREnum lr);			//< ‘O˜rœ‚ğì¬‚·‚é
-	void CreateFrontCannonBone(LREnum lr);	//< ’†èœ‚ğì¬‚·‚é
-	void CreateFrontToeBones(LREnum lr);	//< wœ‚ğì¬‚·‚é
+	void InitFrontLegs();					//< å‰è„šéƒ¨ã®ä½œæˆè¨ˆç”»ã‚’ç«‹ã¦ã‚‹
+	void CreateBreastBone(LREnum lr);		//< ä¸Šè…•éª¨ã‚’ä½œæˆã™ã‚‹
+	void CreateRadius(LREnum lr);			//< å‰è…•éª¨ã‚’ä½œæˆã™ã‚‹
+	void CreateFrontCannonBone(LREnum lr);	//< ä¸­æ‰‹éª¨ã‚’ä½œæˆã™ã‚‹
+	void CreateFrontToeBones(LREnum lr);	//< æŒ‡éª¨ã‚’ä½œæˆã™ã‚‹
 
-	void InitRearLegs();					//< Œã‹r•”‚Ìì¬Œv‰æ‚ğ—§‚Ä‚é
-	void CreateFemur(LREnum lr);			//< ‘å‘Úœ‚ğì¬‚·‚é
-	void CreateTibia(LREnum lr);			//< ãøœ‚ğì¬‚·‚é
-	void CreateRearCannonBone(LREnum lr);	//< ’†‘«œ‚ğì¬‚·‚é
-	void CreateRearToeBones(LREnum lr);		//< æäœ‚ğì¬‚·‚é
+	void InitRearLegs();					//< å¾Œè„šéƒ¨ã®ä½œæˆè¨ˆç”»ã‚’ç«‹ã¦ã‚‹
+	void CreateFemur(LREnum lr);			//< å¤§è…¿éª¨ã‚’ä½œæˆã™ã‚‹
+	void CreateTibia(LREnum lr);			//< è„›éª¨ã‚’ä½œæˆã™ã‚‹
+	void CreateRearCannonBone(LREnum lr);	//< ä¸­è¶³éª¨ã‚’ä½œæˆã™ã‚‹
+	void CreateRearToeBones(LREnum lr);		//< è¶¾éª¨ã‚’ä½œæˆã™ã‚‹
 	
-	void InitEyes();						//< Š´ŠoŠí‚Ìì¬Œv‰æ‚ğ—§‚Ä‚éi–¢À‘•j
-	void CreateEye(LREnum lr);				//< –Ú‚ğì¬‚·‚éi–¢À‘•j
+	void InitEyes();						//< æ„Ÿè¦šå™¨ã®ä½œæˆè¨ˆç”»ã‚’ç«‹ã¦ã‚‹ï¼ˆæœªå®Ÿè£…ï¼‰
+	void CreateEye(LREnum lr);				//< ç›®ã‚’ä½œæˆã™ã‚‹ï¼ˆæœªå®Ÿè£…ï¼‰
 
-	void InitContact();						//< ƒ{ƒfƒB‘S‚Ä‚Ì„‘Ì“¯m‚ÌÚG‚ğØ‚é
-	// void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);	//< ƒ{ƒfƒB‚Ì§Œäƒ‚[ƒh‚ğİ’è‚·‚éD
-	void SetUpperBody();					//< ƒ{ƒfƒB‚Ìã‘Ì‚ğ\¬‚·‚é„‘Ì‚ğ“o˜^‚·‚é
+	void InitContact();						//< ãƒœãƒ‡ã‚£å…¨ã¦ã®å‰›ä½“åŒå£«ã®æ¥è§¦ã‚’åˆ‡ã‚‹
+	// void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);	//< ãƒœãƒ‡ã‚£ã®åˆ¶å¾¡ãƒ¢ãƒ¼ãƒ‰ã‚’è¨­å®šã™ã‚‹ï¼
+	void SetUpperBody();					//< ãƒœãƒ‡ã‚£ã®ä¸Šä½“ã‚’æ§‹æˆã™ã‚‹å‰›ä½“ã‚’ç™»éŒ²ã™ã‚‹
 	
 public:
 
@@ -262,15 +262,15 @@ public:
 		Init();
 	}
 
-	// ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
-	virtual Vec3d	GetUpperCenterOfMass();		//< ã‘Ì‚Ì„‘Ì‚ÌdS‚ğ“¾‚é
-	virtual int		NBallJoints();				//< ƒ{ƒfƒB‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚éƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚Ì”‚ğ•Ô‚·
-	virtual int		NHingeJoints();				//< ƒ{ƒfƒB‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚éƒqƒ“ƒWƒWƒ‡ƒCƒ“ƒg‚Ì”‚ğ•Ô‚·
-	virtual double	VSolid(int i);				//< i”Ô–Ú‚Ì„‘Ì‚Ì‘ÌÏ‚ğ•Ô‚·
-	virtual double	VSolids();					//< „‘Ì‚Ì‘ÌÏ‘˜a‚ğ•Ô‚·
-	virtual double	GetTotalMass();				//< ‘¿—Ê‚ğ•Ô‚·
-	virtual void	SetTotalMass(double value);	//< ‘¿—Ê‚ğİ’è‚·‚é
-	virtual double  GetLegLength(int i);		//< ‹r‚Ì’·‚³‚ğ•Ô‚·[0]:‰E‘OC[1]:¶‘O, [2]:‰EŒã, [3]:¶Œã
+	// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
+	virtual Vec3d	GetUpperCenterOfMass();		//< ä¸Šä½“ã®å‰›ä½“ã®é‡å¿ƒã‚’å¾—ã‚‹
+	virtual int		NBallJoints();				//< ãƒœãƒ‡ã‚£ã«å«ã¾ã‚Œã¦ã„ã‚‹ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®æ•°ã‚’è¿”ã™
+	virtual int		NHingeJoints();				//< ãƒœãƒ‡ã‚£ã«å«ã¾ã‚Œã¦ã„ã‚‹ãƒ’ãƒ³ã‚¸ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®æ•°ã‚’è¿”ã™
+	virtual double	VSolid(int i);				//< iç•ªç›®ã®å‰›ä½“ã®ä½“ç©ã‚’è¿”ã™
+	virtual double	VSolids();					//< å‰›ä½“ã®ä½“ç©ç·å’Œã‚’è¿”ã™
+	virtual double	GetTotalMass();				//< ç·è³ªé‡ã‚’è¿”ã™
+	virtual void	SetTotalMass(double value);	//< ç·è³ªé‡ã‚’è¨­å®šã™ã‚‹
+	virtual double  GetLegLength(int i);		//< è„šã®é•·ã•ã‚’è¿”ã™[0]:å³å‰ï¼Œ[1]:å·¦å‰, [2]:å³å¾Œ, [3]:å·¦å¾Œ
 };
 
 }

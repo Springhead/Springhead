@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,7 +14,7 @@ namespace Spr{;
 /** Precise timer using CPU clock
     Modified from PreciseTimer.h written by Kajimoto in Tachi Lab. at Univ. of Tokyo. */
 
-// ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‚Å‚ÌŒv‘ª‚Ìê‡‚ÍCUTQPTimer‚ğg‚¤
+// ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ã§ã®è¨ˆæ¸¬ã®å ´åˆã¯ï¼ŒUTQPTimerã‚’ä½¿ã†
 
 union UTLargeInteger{
 	struct {
@@ -28,20 +28,20 @@ class UTPreciseTimer{
 private:
 	static unsigned long freq;
 	UTLargeInteger cycles2;
-	unsigned long stopWatch;		///<Œv‘ªŠÔus’PˆÊ
+	unsigned long stopWatch;		///<è¨ˆæ¸¬æ™‚é–“uså˜ä½
 	bool startFlag;
 public:
 	UTPreciseTimer();
-	void Init(int period = 100);	///< ƒJƒEƒ“ƒ^‚Ì‰Šú‰»
-	void WaitUS(int time);			///< us’PˆÊ‚Å‘Ò‚Â
-	int CountUS();					///< ‘O‰ñ‚©‚ç‚ÌŒo‰ßŠÔ‚ğus’PˆÊ‚ÅŒv‘ª
-	void CountAndWaitUS(int time);	///< ‘O‰ñ‚©‚ç‚ÌŒo‰ßŠÔ‚ğus’PˆÊ‚ÅŒv‘ª‚µC‘S‘Ì‚Æ‚µ‚Äus’PˆÊ‚Å‘Ò‚Âiˆê’èƒ‹[ƒv¶¬—pj
+	void Init(int period = 100);	///< ã‚«ã‚¦ãƒ³ã‚¿ã®åˆæœŸåŒ–
+	void WaitUS(int time);			///< uså˜ä½ã§å¾…ã¤
+	int CountUS();					///< å‰å›ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’uså˜ä½ã§è¨ˆæ¸¬
+	void CountAndWaitUS(int time);	///< å‰å›ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’uså˜ä½ã§è¨ˆæ¸¬ã—ï¼Œå…¨ä½“ã¨ã—ã¦uså˜ä½ã§å¾…ã¤ï¼ˆä¸€å®šãƒ«ãƒ¼ãƒ—ç”Ÿæˆç”¨ï¼‰
 	
-	/// ƒXƒgƒbƒvƒEƒHƒbƒ`‹@”\.
-	unsigned long Start();	///< Œv‘ªŠJnCŠJnŠÔistopWatch‚Ì’lj‚ğus’PˆÊ‚Å•Ô‚·
-	unsigned long Stop();	///< Œv‘ª’â~CŒo‰ßŠÔistopWatch‚Ì’lj‚ğus’PˆÊ‚Å•Ô‚·
-	unsigned long Clear();	///< ƒNƒŠƒACstopWatch‚ğ0‚É‚·‚é
-	static unsigned long CPUFrequency(){	///< CPU‚Ìü”g”‚ğ•Ô‚·
+	/// ã‚¹ãƒˆãƒƒãƒ—ã‚¦ã‚©ãƒƒãƒæ©Ÿèƒ½.
+	unsigned long Start();	///< è¨ˆæ¸¬é–‹å§‹ï¼Œé–‹å§‹æ™‚é–“ï¼ˆstopWatchã®å€¤ï¼‰ã‚’uså˜ä½ã§è¿”ã™
+	unsigned long Stop();	///< è¨ˆæ¸¬åœæ­¢ï¼ŒçµŒéæ™‚é–“ï¼ˆstopWatchã®å€¤ï¼‰ã‚’uså˜ä½ã§è¿”ã™
+	unsigned long Clear();	///< ã‚¯ãƒªã‚¢ï¼ŒstopWatchã‚’0ã«ã™ã‚‹
+	static unsigned long CPUFrequency(){	///< CPUã®å‘¨æ³¢æ•°ã‚’è¿”ã™
 		return freq;
 	}
 };

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -10,10 +10,10 @@
 
 #include <assert.h>
 
-/**	@file Combination.h ‘g‚İ‡‚í‚¹”z—ñ‚Ì’è‹`*/
+/**	@file Combination.h çµ„ã¿åˆã‚ã›é…åˆ—ã®å®šç¾©*/
 namespace Spr {;
 
-/**	‘g‚İ‡‚í‚¹”z—ñi“ü‚ê‘Ö‚¦•s‰ÂC4ŠpŒ`‚É‚È‚éj*/
+/**	çµ„ã¿åˆã‚ã›é…åˆ—ï¼ˆå…¥ã‚Œæ›¿ãˆä¸å¯ï¼Œ4è§’å½¢ã«ãªã‚‹ï¼‰*/
 template <class T>
 class UTCombination:public std::vector<T>{
 	int height_;
@@ -22,17 +22,17 @@ public:
 	typedef std::vector<T> base_type;
 	UTCombination(){ height_ = 0; width_ = 0; }
 	
-	///	ƒTƒCƒY‚Ì•ÏX
-	/// [0, min(height(), hnew))sC[0, min(width(), wnew)—ñ‚Ì—v‘f‚Í•Û‘¶‚³‚ê‚é
-	/// V‚µ‚­‚Å‚«‚é—v‘f‚É‚ÍT()‚ª‘ã“ü‚³‚ê‚é
+	///	ã‚µã‚¤ã‚ºã®å¤‰æ›´
+	/// [0, min(height(), hnew))è¡Œï¼Œ[0, min(width(), wnew)åˆ—ã®è¦ç´ ã¯ä¿å­˜ã•ã‚Œã‚‹
+	/// æ–°ã—ãã§ãã‚‹è¦ç´ ã«ã¯T()ãŒä»£å…¥ã•ã‚Œã‚‹
 	void resize(int hnew, int wnew){
-		if (hnew * wnew > height_ * width_){	//	‘å‚«‚­‚È‚é‚È‚çCæ‚ÉƒŠƒTƒCƒY
+		if (hnew * wnew > height_ * width_){	//	å¤§ãããªã‚‹ãªã‚‰ï¼Œå…ˆã«ãƒªã‚µã‚¤ã‚º
 			base_type::resize(hnew * wnew);
 		}
 		typename base_type::iterator b = this->begin();
 		int hmin = std::min(hnew, height_);
 		int r, c;
-		if (wnew > width_){	//	•‚ª‘‚¦‚éê‡CŒã‚ë‚©‚çˆÚ“®
+		if (wnew > width_){	//	å¹…ãŒå¢—ãˆã‚‹å ´åˆï¼Œå¾Œã‚ã‹ã‚‰ç§»å‹•
 			for(r = hmin-1; r >= 0; --r){
 				for(c = wnew-1; c >= width_; --c)
 					b[wnew * r + c] = T();
@@ -40,19 +40,19 @@ public:
 					b[wnew * r + c] = b[width_ * r + c];
 			}
 		}
-		else if (wnew < width_){	//	•‚ªŒ¸‚éê‡C‘O‚©‚çˆÚ“®
+		else if (wnew < width_){	//	å¹…ãŒæ¸›ã‚‹å ´åˆï¼Œå‰ã‹ã‚‰ç§»å‹•
 			for(r = 1; r < hmin; ++r){
 				for(c = 0; c < wnew; ++c)
 					b[wnew * r + c] = b[width_ * r + c];
 			}
 		}
-		if (hnew * wnew < height_ * width_)	// ¬‚³‚­‚È‚é‚È‚çÅŒã‚ÉƒŠƒTƒCƒY
+		if (hnew * wnew < height_ * width_)	// å°ã•ããªã‚‹ãªã‚‰æœ€å¾Œã«ãƒªã‚µã‚¤ã‚º
 			base_type::resize(hnew * wnew);
 
 		height_ = hnew;
 		width_ = wnew;
 	}
-	/// r”Ô–Ú‚Ìs‚ğíœ‚µC[r+1, height())”Ô–Ú‚Ìs‚ğ1‚Âã‚É‹l‚ß‚é
+	/// rç•ªç›®ã®è¡Œã‚’å‰Šé™¤ã—ï¼Œ[r+1, height())ç•ªç›®ã®è¡Œã‚’1ã¤ä¸Šã«è©°ã‚ã‚‹
 	void erase_row(int row){
 		assert(0 <= row && row < height_);
 		if(row != height_ - 1){
@@ -64,7 +64,7 @@ public:
 		height_--;
 		base_type::resize(height_ * width_);
 	}
-	/// c”Ô–Ú‚Ì—ñ‚ğíœ‚µC[c+1, width())”Ô–Ú‚Ì—ñ‚ğ1‚Â¶‚É‹l‚ß‚é
+	/// cç•ªç›®ã®åˆ—ã‚’å‰Šé™¤ã—ï¼Œ[c+1, width())ç•ªç›®ã®åˆ—ã‚’1ã¤å·¦ã«è©°ã‚ã‚‹
 	void erase_col(int col){
 		assert(0 <= col && col < width_);
 		if(col != width_ - 1){

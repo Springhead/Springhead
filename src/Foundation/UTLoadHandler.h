@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,26 +15,26 @@
 
 namespace Spr{;
 class UTLoadContext;
-/**	©“®ƒ[ƒ_EƒZ[ƒo‚Å‘Î‰‚Å‚«‚È‚¢ƒm[ƒh‚Ìƒ[ƒhEƒZ[ƒu‚ğ‚·‚éƒNƒ‰ƒXD
+/**	è‡ªå‹•ãƒ­ãƒ¼ãƒ€ãƒ»ã‚»ãƒ¼ãƒã§å¯¾å¿œã§ããªã„ãƒãƒ¼ãƒ‰ã®ãƒ­ãƒ¼ãƒ‰ãƒ»ã‚»ãƒ¼ãƒ–ã‚’ã™ã‚‹ã‚¯ãƒ©ã‚¹ï¼
 */
 class UTLoadHandler:public UTRefCount{
 public:
 	UTString type;
 	
-	/// DOMƒm[ƒh‚Ìƒ[ƒhŠJn‚ÉŒÄ‚Î‚ê‚é
+	/// DOMãƒãƒ¼ãƒ‰ã®ãƒ­ãƒ¼ãƒ‰é–‹å§‹æ™‚ã«å‘¼ã°ã‚Œã‚‹
 	virtual void BeforeLoadData(UTLoadedData* d, UTLoadContext* fc){}
-	/// DOMƒm[ƒh‚Ìƒ[ƒhI—¹‚ÉŒÄ‚Î‚ê‚é
+	/// DOMãƒãƒ¼ãƒ‰ã®ãƒ­ãƒ¼ãƒ‰çµ‚äº†æ™‚ã«å‘¼ã°ã‚Œã‚‹
 	virtual void AfterLoadData(UTLoadedData* d, UTLoadContext* fc){}
 
-	/// CreateObject‚Ì’¼‘O‚ÉŒÄ‚Î‚ê‚é
+	/// CreateObjectã®ç›´å‰ã«å‘¼ã°ã‚Œã‚‹
 	virtual void BeforeCreateObject(UTLoadedData* d, UTLoadContext* fc){}
-	/// CreateObject‚Ì’¼Œã‚ÉŒÄ‚Î‚ê‚é
+	/// CreateObjectã®ç›´å¾Œã«å‘¼ã°ã‚Œã‚‹
 	virtual void AfterCreateObject(UTLoadedData* d, UTLoadContext* fc){}
-	/** qƒIƒuƒWƒFƒNƒg‚Ìì¬Œã‚ÉŒÄ‚Î‚ê‚é
-		obj‚Íì¬‚³‚ê‚½qƒIƒuƒWƒFƒNƒg
+	/** å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆå¾Œã«å‘¼ã°ã‚Œã‚‹
+		objã¯ä½œæˆã•ã‚ŒãŸå­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	 */
 	virtual void AfterCreateChild(UTLoadedData* d, ObjectIf* child, UTLoadContext* fc){}
-	/// qƒIƒuƒWƒFƒNƒg‚ª‘S‚Ä‚Ìì¬‚³‚ê‚½Œã‚ÉŒÄ‚Î‚ê‚é
+	/// å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒå…¨ã¦ã®ä½œæˆã•ã‚ŒãŸå¾Œã«å‘¼ã°ã‚Œã‚‹
 	virtual void AfterCreateChildren(UTLoadedData* d, UTLoadContext* fc){}
 	
 	virtual void Save(UTLoadContext* fc){};
@@ -46,7 +46,7 @@ public:
 
 	virtual ~UTLoadHandler(){}
 };
-///	UTLoadHandler‚ÌÀ‘•ƒeƒ“ƒvƒŒ[ƒg
+///	UTLoadHandlerã®å®Ÿè£…ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
 template <class T>
 class UTLoadHandlerImp: public UTLoadHandler{
 public:
@@ -94,7 +94,7 @@ public:
 	virtual void AfterLoadData(T& t, UTLoadedData* ld, UTLoadContext* ctx){}
 };
 
-///	Œ^î•ñ(UTTypeDescDb)Cƒnƒ“ƒhƒ‰(UTLoadHandlerDb) ‚ğØ‚è‘Ö‚¦‚éƒnƒ“ƒhƒ‰
+///	å‹æƒ…å ±(UTTypeDescDb)ï¼Œãƒãƒ³ãƒ‰ãƒ©(UTLoadHandlerDb) ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ãƒãƒ³ãƒ‰ãƒ©
 template <class T>
 class UTLoadHandlerSetDb: public UTLoadHandlerImp<T>{
 public:

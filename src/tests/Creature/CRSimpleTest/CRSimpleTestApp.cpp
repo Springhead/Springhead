@@ -1,4 +1,4 @@
-#include "CRSimpleTestApp.h"
+ï»¿#include "CRSimpleTestApp.h"
 #include <GL/glut.h>
 #include <Foundation/Object.h>
 
@@ -16,14 +16,14 @@ CRSimpleTestApp::CRSimpleTestApp(int window, string filename)
 
 
 void CRSimpleTestApp::Register(){
-	// TypeDesc‚Ì“o˜^
+	// TypeDescã®ç™»éŒ²
 	PHRegisterTypeDescs();
 	CDRegisterTypeDescs();
 	GRRegisterTypeDescs();
 	FIRegisterTypeDescs();
 	CRRegisterTypeDescs();
 
-	// Factory‚Ì“o˜^
+	// Factoryã®ç™»éŒ²
 	PHSdkIf::RegisterSdk();
 	GRSdkIf::RegisterSdk();
 
@@ -115,7 +115,7 @@ void CRSimpleTestApp::Display(){
 			grRender->PushModelMatrix();
 			grRender->MultModelMatrix(af);
 
-#if 0	//	Framework‚ğ‚Á‚Ä‚¢‚È‚¢‚Ì‚ÅAƒfƒoƒbƒO—pƒŒƒ“ƒ_ƒŠƒ“ƒO‚ª‚Å‚«‚È‚¢
+#if 0	//	Frameworkã‚’æŒã£ã¦ã„ãªã„ã®ã§ã€ãƒ‡ãƒãƒƒã‚°ç”¨ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãŒã§ããªã„
 			// Draw Mesh
 			CDConvexMeshIf* mesh = DCAST(CDConvexMeshIf, shape);
 			if (mesh) {

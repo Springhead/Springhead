@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,7 +12,7 @@
 #include <Base/TQuaternion.h>
 #include <vector>
 
-//#define HULL_DEBUG	//	ƒfƒoƒbƒOo—Í
+//#define HULL_DEBUG	//	ãƒ‡ãƒãƒƒã‚°å‡ºåŠ›
 #ifdef HULL_DEBUG
  #define HULL_DEBUG_EVAL(x) x
 #else
@@ -21,38 +21,38 @@
 
 namespace Spr{;
 
-///	QuickHull‚Åì‚ç‚ê‚é–Ê
+///	QuickHullã§ä½œã‚‰ã‚Œã‚‹é¢
 template <class TVtx>
 class CDQHLine{
 public:
-	Vec2d normal;			///<	–Ê‚Ì–@ü
-	double dist;			///<	–Ê‚ÌŒ´“_‚©‚ç‚Ì‹——£
+	Vec2d normal;			///<	é¢ã®æ³•ç·š
+	double dist;			///<	é¢ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢
 	
-	TVtx* vtx[2];			///<	–Ê‚ğ\¬‚·‚é’¸“_
-	CDQHLine* neighbor[2];	///<	—×‚Ì–Ê vtx[0] ‚Ì—×‚ª neighbor[0]
-	bool deleted;			///<	íœ‚³‚ê‚½–Ê‚Ítrue
-	void Clear();			///<	ƒƒ‚ƒŠƒNƒŠƒADg‚¤‘O‚ÉŒÄ‚ÔD
-	void Reverse();			///<	•Ó‚Ì— •\‚ğ‚Ğ‚Á‚­‚è•Ô‚·D
-	bool Visible(TVtx* p);	///<	’¸“_ v ‚©‚ç•\‘¤‚ªŒ©‚¦‚é‚©‚Ç‚¤‚©
-	///	v‚Ì’¸“_”Ô†‚ğ•Ô‚·(0..1‚ğ•Ô‚·)DŒ©‚Â‚©‚ç‚È‚¯‚ê‚Î3‚ğ•Ô‚·D
+	TVtx* vtx[2];			///<	é¢ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹
+	CDQHLine* neighbor[2];	///<	éš£ã®é¢ vtx[0] ã®éš£ãŒ neighbor[0]
+	bool deleted;			///<	å‰Šé™¤ã•ã‚ŒãŸé¢ã¯true
+	void Clear();			///<	ãƒ¡ãƒ¢ãƒªã‚¯ãƒªã‚¢ï¼ä½¿ã†å‰ã«å‘¼ã¶ï¼
+	void Reverse();			///<	è¾ºã®è£è¡¨ã‚’ã²ã£ãã‚Šè¿”ã™ï¼
+	bool Visible(TVtx* p);	///<	é ‚ç‚¹ v ã‹ã‚‰è¡¨å´ãŒè¦‹ãˆã‚‹ã‹ã©ã†ã‹
+	///	vã®é ‚ç‚¹ç•ªå·ã‚’è¿”ã™(0..1ã‚’è¿”ã™)ï¼è¦‹ã¤ã‹ã‚‰ãªã‘ã‚Œã°3ã‚’è¿”ã™ï¼
 	int GetVtxID(TVtx* v);
-	void CalcNormal();		///<	–@üƒxƒNƒgƒ‹‚Æ‹——£‚ğŒvZ‚·‚éD
-	///	“_‚Æ‚Ì‹——£‚ğŒvZ‚·‚éD¸“x‚ğl—¶‚µ‚Äˆê”Ô‹ß‚¢“_‚ÅŒvZ‚·‚éD
+	void CalcNormal();		///<	æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã¨è·é›¢ã‚’è¨ˆç®—ã™ã‚‹ï¼
+	///	ç‚¹ã¨ã®è·é›¢ã‚’è¨ˆç®—ã™ã‚‹ï¼ç²¾åº¦ã‚’è€ƒæ…®ã—ã¦ä¸€ç•ªè¿‘ã„ç‚¹ã§è¨ˆç®—ã™ã‚‹ï¼
 	double CalcDist(TVtx* v);
-	///	ƒfƒoƒbƒO—p•\¦
+	///	ãƒ‡ãƒãƒƒã‚°ç”¨è¡¨ç¤º
 	void Print(std::ostream& os) const;
 };
 
-///	–Ê‚Ìƒoƒbƒtƒ@
+///	é¢ã®ãƒãƒƒãƒ•ã‚¡
 template <class TVtx>
 class CDQHLines{
 public:
 	double epsilon;
 	double infinite;
 
-	TVtx** vtxBeginInput;	///<	c‚Á‚Ä‚¢‚é’¸“_‚Ìæ“ª
-	TVtx** vtxEndInput;		///<	c‚Á‚Ä‚¢‚é’¸“_‚ÌÅŒã‚ÌŸ
-	///	’¸“_‚ÌVector
+	TVtx** vtxBeginInput;	///<	æ®‹ã£ã¦ã„ã‚‹é ‚ç‚¹ã®å…ˆé ­
+	TVtx** vtxEndInput;		///<	æ®‹ã£ã¦ã„ã‚‹é ‚ç‚¹ã®æœ€å¾Œã®æ¬¡
+	///	é ‚ç‚¹ã®Vector
 	class TVtxs: public std::vector<TVtx*>{
 	public:
 		void Print(std::ostream& os) const{
@@ -63,53 +63,53 @@ public:
  	};
 	typedef CDQHLine<TVtx> CDQHLine;
 
-	CDQHLine* buffer;	///<	ƒoƒbƒtƒ@‚Ö‚Ìƒ|ƒCƒ“ƒ^ new ‚·‚éD
-	int len;			///<	ƒoƒbƒtƒ@‚Ì’·‚³
-	CDQHLine* begin;	///<	Å‰‚Ì•Ó
-	CDQHLine* end;		///<	ÅŒã‚Ì•Ó‚ÌŸ
-	TVtx** vtxBegin;	///<	c‚Á‚Ä‚¢‚é’¸“_‚Ìæ“ª
-	TVtx** vtxEnd;		///<	c‚Á‚Ä‚¢‚é’¸“_‚ÌÅŒã‚ÌŸ
-	int nLines;			///<	•Ó‚Ì”
-	unsigned size();	///<	g—pÏ‚İƒoƒbƒtƒ@‚ÌƒTƒCƒY
+	CDQHLine* buffer;	///<	ãƒãƒƒãƒ•ã‚¡ã¸ã®ãƒã‚¤ãƒ³ã‚¿ new ã™ã‚‹ï¼
+	int len;			///<	ãƒãƒƒãƒ•ã‚¡ã®é•·ã•
+	CDQHLine* begin;	///<	æœ€åˆã®è¾º
+	CDQHLine* end;		///<	æœ€å¾Œã®è¾ºã®æ¬¡
+	TVtx** vtxBegin;	///<	æ®‹ã£ã¦ã„ã‚‹é ‚ç‚¹ã®å…ˆé ­
+	TVtx** vtxEnd;		///<	æ®‹ã£ã¦ã„ã‚‹é ‚ç‚¹ã®æœ€å¾Œã®æ¬¡
+	int nLines;			///<	è¾ºã®æ•°
+	unsigned size();	///<	ä½¿ç”¨æ¸ˆã¿ãƒãƒƒãƒ•ã‚¡ã®ã‚µã‚¤ã‚º
 	CDQHLines(int l);
 	void Clear();
 	~CDQHLines();
-	/**	b‚©‚çe‚Ü‚Å‚Ì’¸“_‚©‚ç“Ê•ï‚ğì‚éDg—p‚µ‚½’¸“_‚Íb‚©‚çvtxBeginC
-		g—p‚µ‚È‚©‚Á‚½’¸“_‚ÍCvtxBegin‚©‚çe‚ÉˆÚ“®‚·‚éD	
-		begin‚©‚çend‚Í’¸“_‚ğ3‚ÂŠÜ‚Ş–Ê‚É‚È‚éD‚»‚ê‚ç‚Ì–Ê‚¤‚¿“Ê•ï‚Ég‚í‚ê‚½–Ê
-		‚Í CDQHLine::deleted ‚ª false ‚É‚È‚Á‚Ä‚¢‚éD	*/
+	/**	bã‹ã‚‰eã¾ã§ã®é ‚ç‚¹ã‹ã‚‰å‡¸åŒ…ã‚’ä½œã‚‹ï¼ä½¿ç”¨ã—ãŸé ‚ç‚¹ã¯bã‹ã‚‰vtxBeginï¼Œ
+		ä½¿ç”¨ã—ãªã‹ã£ãŸé ‚ç‚¹ã¯ï¼ŒvtxBeginã‹ã‚‰eã«ç§»å‹•ã™ã‚‹ï¼	
+		beginã‹ã‚‰endã¯é ‚ç‚¹ã‚’3ã¤å«ã‚€é¢ã«ãªã‚‹ï¼ãã‚Œã‚‰ã®é¢ã†ã¡å‡¸åŒ…ã«ä½¿ã‚ã‚ŒãŸé¢
+		ã¯ CDQHLine::deleted ãŒ false ã«ãªã£ã¦ã„ã‚‹ï¼	*/
 	void CreateConvexHull(TVtx** b, TVtx** e);
 	void Print(std::ostream& os) const;
 
 private:
-	/**	Å‰‚Ì“Ê‘½–Ê‘Ì2–{‚Ì•Ó(•\— )‚ğì‚éD
-		‚Å‚«‚é‚¾‚¯‘å‚«‚¢•Ó‚ğì‚é‚ÆŒø—¦‚ª—Ç‚¢D	*/
+	/**	æœ€åˆã®å‡¸å¤šé¢ä½“ï¼2æœ¬ã®è¾º(è¡¨è£)ã‚’ä½œã‚‹ï¼
+		ã§ãã‚‹ã ã‘å¤§ãã„è¾ºã‚’ä½œã‚‹ã¨åŠ¹ç‡ãŒè‰¯ã„ï¼	*/
 	bool CreateFirstConvex();
-	/**	•Ócur‚ÆC‚»‚Ì–Ê‚©‚çˆê”Ô‰“‚¢’¸“_ top ‚ğó‚¯æ‚èC
-		cur‚Æ‚»‚ÌüˆÍ‚Ì•Ó‚ğíœ‚µC“Ê•ï‚Étop‚ğŠÜ‚ß‚éD
-		end[-1], end[-2]‚ªV‚½‚Éì‚ç‚ê‚½•Ó‚É‚È‚éD	*/
+	/**	è¾ºcurã¨ï¼Œãã®é¢ã‹ã‚‰ä¸€ç•ªé ã„é ‚ç‚¹ top ã‚’å—ã‘å–ã‚Šï¼Œ
+		curã¨ãã®å‘¨å›²ã®è¾ºã‚’å‰Šé™¤ã—ï¼Œå‡¸åŒ…ã«topã‚’å«ã‚ã‚‹ï¼
+		end[-1], end[-2]ãŒæ–°ãŸã«ä½œã‚‰ã‚ŒãŸè¾ºã«ãªã‚‹ï¼	*/
 	void CreateCone(CDQHLine* cur, TVtx* top);
-	/**	ˆê”Ô‰“‚­‚Ì’¸“_‚ğŒ©‚Â‚¯‚éDŒ©‚Â‚¯‚½‚ç‚»‚ê‚ğ’¸“_ƒŠƒXƒg‚©‚ç‚Í‚¸‚·	*/
+	/**	ä¸€ç•ªé ãã®é ‚ç‚¹ã‚’è¦‹ã¤ã‘ã‚‹ï¼è¦‹ã¤ã‘ãŸã‚‰ãã‚Œã‚’é ‚ç‚¹ãƒªã‚¹ãƒˆã‹ã‚‰ã¯ãšã™	*/
 	bool FindFarthest(CDQHLine* plane);
-	/*	ŠO‘¤ “à‘¤ ‚Ì‡‚É•À‚×‚éD
-		ŠO‘¤‚ÌI‚í‚è“à‘¤‚Ìn‚Ü‚è‚ª inner	*/
+	/*	å¤–å´ å†…å´ ã®é †ã«ä¸¦ã¹ã‚‹ï¼
+		å¤–å´ã®çµ‚ã‚ã‚Šï¼å†…å´ã®å§‹ã¾ã‚ŠãŒ inner	*/
 	TVtx** DivideByPlaneR(CDQHLine* plane, TVtx** start, TVtx** end);
 	TVtx** DivideByPlane(CDQHLine* plane, TVtx** start, TVtx** end);
-	/**	ˆê‚Â‚Ì–Ê‚É‘Î‚·‚éˆ—‚ğs‚¤Dˆê”Ô‰“‚­‚Ì’¸“_‚ğŒ©‚Â‚¯C
-		’n•½ü‚ğ’²‚×CƒR[ƒ“‚ğì‚èC“à•”‚Ì’¸“_‚ğ‚Í‚¸‚·D*/
+	/**	ä¸€ã¤ã®é¢ã«å¯¾ã™ã‚‹å‡¦ç†ã‚’è¡Œã†ï¼ä¸€ç•ªé ãã®é ‚ç‚¹ã‚’è¦‹ã¤ã‘ï¼Œ
+		åœ°å¹³ç·šã‚’èª¿ã¹ï¼Œã‚³ãƒ¼ãƒ³ã‚’ä½œã‚Šï¼Œå†…éƒ¨ã®é ‚ç‚¹ã‚’ã¯ãšã™ï¼*/
 	void TreatPlane(CDQHLine* cur);
 };
 
-///	’¸“_ƒNƒ‰ƒX‚Ì—á
+///	é ‚ç‚¹ã‚¯ãƒ©ã‚¹ã®ä¾‹
 class CDQHVtx2DSample{
 public:
-	///@name QuickHull‚ªg—p‚·‚éƒƒ“ƒoD•K{D
+	///@name QuickHullãŒä½¿ç”¨ã™ã‚‹ãƒ¡ãƒ³ãƒï¼å¿…é ˆï¼
 	//@{
-	///  ’¸“_‚ÌˆÊ’u
+	///  é ‚ç‚¹ã®ä½ç½®
 	Vec2f GetPos() const { return pos; }
 	//@}
 public:
-	Vec2f pos;		///<	ˆÊ’u
+	Vec2f pos;		///<	ä½ç½®
 	int id_;
 	void Print(std::ostream& os) const;
 };

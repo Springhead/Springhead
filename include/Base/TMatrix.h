@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,151 +7,151 @@
  */
 #ifndef PTMATRIX_TMATRIX_H
 #define PTMATRIX_TMATRIX_H
-/**	\defgroup gpLinearAlgebra ƒxƒNƒgƒ‹Es—ñEÀ•W•ÏŠ·	*/
+/**	\defgroup gpLinearAlgebra ãƒ™ã‚¯ãƒˆãƒ«ãƒ»è¡Œåˆ—ãƒ»åº§æ¨™å¤‰æ›	*/
 //@{
 
-/**	\defgroup gpPTM ƒ|[ƒ^ƒuƒ‹ ƒeƒ“ƒvƒŒ[ƒg s—ñƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ
+/**	\defgroup gpPTM ãƒãƒ¼ã‚¿ãƒ–ãƒ« ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ è¡Œåˆ—ã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒª
 
-@author ’·’Jì »ˆê
-@date 2001”N6Œ10“ú,2003”N10Œ20“ú,2008”N2ŒXV
+@author é•·è°·å· æ™¶ä¸€
+@date 2001å¹´6æœˆ10æ—¥,2003å¹´10æœˆ20æ—¥,2008å¹´2æœˆæ›´æ–°
 
-@section introM ‚Í‚¶‚ß‚É
-‚±‚ÌƒhƒLƒ…ƒƒ“ƒg‚Íƒ|[ƒ^ƒuƒ‹ƒeƒ“ƒvƒŒ[ƒgs—ñƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒhƒLƒ…ƒƒ“ƒg‚Å‚·Dƒ|[ƒ^ƒuƒ‹ ƒeƒ“ƒvƒŒ[ƒg s—ñƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ‚ÍCƒeƒ“ƒvƒŒ[ƒg‚É‚æ‚éM~Ns—ñ‚ÌƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ‚Å‚·D
+@section introM ã¯ã˜ã‚ã«
+ã“ã®ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã¯ãƒãƒ¼ã‚¿ãƒ–ãƒ«ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆè¡Œåˆ—ã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã§ã™ï¼ãƒãƒ¼ã‚¿ãƒ–ãƒ« ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ è¡Œåˆ—ã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¯ï¼Œãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã«ã‚ˆã‚‹MÃ—Nè¡Œåˆ—ã®ã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã§ã™ï¼
 
-@section specM ‚±‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚Ì“Á’¥
+@section specM ã“ã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ç‰¹å¾´
 
-@subsection memM •¡”‚Ìƒƒ‚ƒŠƒ‚ƒfƒ‹‚ÌƒTƒ|[ƒg.
-- TVector,TMatrix: ƒxƒNƒgƒ‹, s—ñ‚ÌƒTƒCƒY‚ğƒeƒ“ƒvƒŒ[ƒg‚Å‚Âƒo[ƒWƒ‡ƒ“.
-	Às‚É‚ÍƒTƒCƒY‚Ì•ÏX‚ª‚Å‚«‚È‚¢. ”z—ñ‚ğƒLƒƒƒXƒg‚µ‚Ä’¼Ús—ñ‚Æ‚µ‚Äg‚Á‚½‚è‚Å‚«‚é.
-- VVector,VMatrix: ƒxƒNƒgƒ‹Cs—ñ‚ÌƒTƒCƒY‚ğ•Ï”‚Å‚Âƒo[ƒWƒ‡ƒ“‚ª‚ ‚é.
-	Às‚ÉƒTƒCƒY‚Ì•ÏX‚ª‚Å‚«‚é.
-- EVector,EMatrix: ƒf[ƒ^‚ğ©•ª‚Å‚½‚¸C“n‚³‚ê‚½ƒƒ‚ƒŠ‚ğs—ñ‚¾‚Æv‚Á‚ÄŠÇ—‚·‚é.
+@subsection memM è¤‡æ•°ã®ãƒ¡ãƒ¢ãƒªãƒ¢ãƒ‡ãƒ«ã®ã‚µãƒãƒ¼ãƒˆ.
+- TVector,TMatrix: ãƒ™ã‚¯ãƒˆãƒ«, è¡Œåˆ—ã®ã‚µã‚¤ã‚ºã‚’ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã§æŒã¤ãƒãƒ¼ã‚¸ãƒ§ãƒ³.
+	å®Ÿè¡Œæ™‚ã«ã¯ã‚µã‚¤ã‚ºã®å¤‰æ›´ãŒã§ããªã„. é…åˆ—ã‚’ã‚­ãƒ£ã‚¹ãƒˆã—ã¦ç›´æ¥è¡Œåˆ—ã¨ã—ã¦ä½¿ã£ãŸã‚Šã§ãã‚‹.
+- VVector,VMatrix: ãƒ™ã‚¯ãƒˆãƒ«ï¼Œè¡Œåˆ—ã®ã‚µã‚¤ã‚ºã‚’å¤‰æ•°ã§æŒã¤ãƒãƒ¼ã‚¸ãƒ§ãƒ³ãŒã‚ã‚‹.
+	å®Ÿè¡Œæ™‚ã«ã‚µã‚¤ã‚ºã®å¤‰æ›´ãŒã§ãã‚‹.
+- EVector,EMatrix: ãƒ‡ãƒ¼ã‚¿ã‚’è‡ªåˆ†ã§æŒãŸãšï¼Œæ¸¡ã•ã‚ŒãŸãƒ¡ãƒ¢ãƒªã‚’è¡Œåˆ—ã ã¨æ€ã£ã¦ç®¡ç†ã™ã‚‹.
 
-@subsection tmpM “Á’¥
-ƒeƒ“ƒvƒŒ[ƒg”Å(TVector, TMatrix)‚ÍCƒeƒ“ƒvƒŒ[ƒg‚ÅƒRƒ“ƒpƒCƒ‹‚És—ñ‚ÌƒTƒCƒY‚ğŒˆ’è‚µ‚Ä‚¨‚èC
-s—ñ‚ÌƒTƒCƒY‚âƒ|ƒCƒ“ƒ^‚È‚Ç‚ğ•Û‚·‚é‚½‚ß‚ÌŠÇ——Ìˆæ‚ğ‚¿‚Ü‚¹‚ñD‚»‚Ì‚½‚ßC
+@subsection tmpM ç‰¹å¾´
+ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆ(TVector, TMatrix)ã¯ï¼Œãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã§ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«è¡Œåˆ—ã®ã‚µã‚¤ã‚ºã‚’æ±ºå®šã—ã¦ãŠã‚Šï¼Œ
+è¡Œåˆ—ã®ã‚µã‚¤ã‚ºã‚„ãƒã‚¤ãƒ³ã‚¿ãªã©ã‚’ä¿æŒã™ã‚‹ãŸã‚ã®ç®¡ç†é ˜åŸŸã‚’æŒã¡ã¾ã›ã‚“ï¼ãã®ãŸã‚ï¼Œ
 <ul>
- <li> ”z—ñ‚ğƒLƒƒƒXƒg‚µ‚Äs—ñ‚¾‚Æv‚Á‚Äg‚¤‚±‚ÆD
- <li> s—ñ‚ÌŠ|‚¯Z‚È‚Ç‚Ås—ñ‚ÌƒTƒCƒY‚ª‡‚í‚È‚¢ê‡CƒRƒ“ƒpƒCƒ‹‚ÉƒRƒ“ƒpƒCƒ‰‚ªƒGƒ‰[‚ğo‚·‚±‚ÆD
+ <li> é…åˆ—ã‚’ã‚­ãƒ£ã‚¹ãƒˆã—ã¦è¡Œåˆ—ã ã¨æ€ã£ã¦ä½¿ã†ã“ã¨ï¼
+ <li> è¡Œåˆ—ã®æ›ã‘ç®—ãªã©ã§è¡Œåˆ—ã®ã‚µã‚¤ã‚ºãŒåˆã‚ãªã„å ´åˆï¼Œã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ãŒã‚¨ãƒ©ãƒ¼ã‚’å‡ºã™ã“ã¨ï¼
 </ul>
-‚±‚Æ‚ª‚Å‚«‚Ü‚·D
-‚Ü‚½C—lX‚È•À‚Ñ•û‚ÌƒxƒNƒgƒ‹Es—ñ‚ğƒTƒ|[ƒg‚µ‚Ä‚¢‚é‚Ì‚ÅC
+ã“ã¨ãŒã§ãã¾ã™ï¼
+ã¾ãŸï¼Œæ§˜ã€…ãªä¸¦ã³æ–¹ã®ãƒ™ã‚¯ãƒˆãƒ«ãƒ»è¡Œåˆ—ã‚’ã‚µãƒãƒ¼ãƒˆã—ã¦ã„ã‚‹ã®ã§ï¼Œ
 <ul>
- <li> s—ñ‚Ìˆê•”(•”•ªs—ñCƒxƒNƒgƒ‹CsƒxƒNƒgƒ‹C—ñƒxƒNƒgƒ‹)‚È‚Ç‚ğ’¼ÚQÆ‚·‚é‚±‚Æ‚ª‚Å‚«‚é(‘ã“ü‚à‰Â”\)D
- <li> ƒRƒXƒg0‚Ås—ñ‚Ì“]’u‚ªæ‚ê‚éD
+ <li> è¡Œåˆ—ã®ä¸€éƒ¨(éƒ¨åˆ†è¡Œåˆ—ï¼Œãƒ™ã‚¯ãƒˆãƒ«ï¼Œè¡Œãƒ™ã‚¯ãƒˆãƒ«ï¼Œåˆ—ãƒ™ã‚¯ãƒˆãƒ«)ãªã©ã‚’ç›´æ¥å‚ç…§ã™ã‚‹ã“ã¨ãŒã§ãã‚‹(ä»£å…¥ã‚‚å¯èƒ½)ï¼
+ <li> ã‚³ã‚¹ãƒˆ0ã§è¡Œåˆ—ã®è»¢ç½®ãŒå–ã‚Œã‚‹ï¼
 </ul>
-‚Æ‚¢‚Á‚½“Á’¥‚ª‚ ‚è‚Ü‚·D
+ã¨ã„ã£ãŸç‰¹å¾´ãŒã‚ã‚Šã¾ã™ï¼
 
-‚Ü‚½CƒfƒoƒbƒK‚ÅŒ©‚½‚Æ‚«‚Éƒf[ƒ^‚ªŒ©‚â‚·‚¢‚æ‚¤C
-ˆê”Ô”h¶‘¤‚ÌƒNƒ‰ƒX‚ªƒƒ“ƒo•Ï”‚Æ‚µ‚Äƒf[ƒ^‚ğ‚Â‚æ‚¤‚É‚È‚Á‚Ä‚¢‚Ü‚·D
-2ŸŒ³C3ŸŒ³C4ŸŒ³‚ÌƒxƒNƒgƒ‹‚Å‚ÍCx, y, z, w ‚â r, g, b ‚È‚Ç‚Ì
-ƒƒ“ƒo•Ï”–¼‚Åƒf[ƒ^‚ÉƒAƒNƒZƒX‚·‚é‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+ã¾ãŸï¼Œãƒ‡ãƒãƒƒã‚¬ã§è¦‹ãŸã¨ãã«ãƒ‡ãƒ¼ã‚¿ãŒè¦‹ã‚„ã™ã„ã‚ˆã†ï¼Œ
+ä¸€ç•ªæ´¾ç”Ÿå´ã®ã‚¯ãƒ©ã‚¹ãŒãƒ¡ãƒ³ãƒå¤‰æ•°ã¨ã—ã¦ãƒ‡ãƒ¼ã‚¿ã‚’æŒã¤ã‚ˆã†ã«ãªã£ã¦ã„ã¾ã™ï¼
+2æ¬¡å…ƒï¼Œ3æ¬¡å…ƒï¼Œ4æ¬¡å…ƒã®ãƒ™ã‚¯ãƒˆãƒ«ã§ã¯ï¼Œx, y, z, w ã‚„ r, g, b ãªã©ã®
+ãƒ¡ãƒ³ãƒå¤‰æ•°åã§ãƒ‡ãƒ¼ã‚¿ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã“ã¨ãŒã§ãã¾ã™ï¼
 
-@subsection portM ˆÚA«
-ˆê‰C
+@subsection portM ç§»æ¤æ€§
+ä¸€å¿œï¼Œ
 <ul>
-	<li> CL (MS Visual C++ 7.1 ˆÈ~)
-	<li> gcc(GNU c compiler 3.0 ˆÈ~)
+	<li> CL (MS Visual C++ 7.1 ä»¥é™)
+	<li> gcc(GNU c compiler 3.0 ä»¥é™)
 </ul>
-‚ğƒTƒ|[ƒg‚µ‚½‚¢‚Æl‚¦‚Ä‚¢‚Ü‚·DˆÈ‘O‚Í‚µ‚Ä‚¢‚½‚Ì‚Å‚·‚ªCVisual C++ 6.0‚ÌƒTƒ|[ƒg‚Í‚â‚ß‚Ü‚µ‚½D
+ã‚’ã‚µãƒãƒ¼ãƒˆã—ãŸã„ã¨è€ƒãˆã¦ã„ã¾ã™ï¼ä»¥å‰ã¯ã—ã¦ã„ãŸã®ã§ã™ãŒï¼ŒVisual C++ 6.0ã®ã‚µãƒãƒ¼ãƒˆã¯ã‚„ã‚ã¾ã—ãŸï¼
 
-@subsection why V‚½‚ÉƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ‚ğì¬‚µ‚½——R
-‚·‚Å‚É‘½‚­‚Ìs—ñƒ‰ƒCƒuƒ‰ƒŠ‚ª‚ ‚è‚È‚ª‚çCV‚½‚Éì¬‚µ‚½——R‚ÍC
-- TNTCMTL ‚Ìs—ñ‚ÍŠÇ——Ìˆæ‚ğƒƒ‚ƒŠ‚É‚Â‚½‚ßC”z—ñ‚ğƒLƒƒƒXƒg‚µ‚Äs—ñ‚Æ‚µ‚Äg—p‚·‚é‚±‚Æ‚ª‚Å‚«‚È‚¢D
-- “–‚ÌVC6‚Å‚ÍCBlitz++ ‚Íg‚¦‚È‚©‚Á‚½D¡‚È‚çBlitz++‚ª—Ç‚¢‚Ì‚©‚àD‚¿‚å‚Á‚Æ‘å‚«‚¢‚¯‚ÇD
-- “–‚ÍC•”•ªs—ñC•”•ªƒxƒNƒgƒ‹‚Ö‚ÌQÆ‚ğ•Ô‚·s—ñƒ‰ƒCƒuƒ‰ƒŠ‚ÍŒ©‚Â‚©‚ç‚È‚©‚Á‚½D
+@subsection why æ–°ãŸã«ã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ä½œæˆã—ãŸç†ç”±
+ã™ã§ã«å¤šãã®è¡Œåˆ—ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãŒã‚ã‚ŠãªãŒã‚‰ï¼Œæ–°ãŸã«ä½œæˆã—ãŸç†ç”±ã¯ï¼Œ
+- TNTï¼ŒMTL ã®è¡Œåˆ—ã¯ç®¡ç†é ˜åŸŸã‚’ãƒ¡ãƒ¢ãƒªã«æŒã¤ãŸã‚ï¼Œé…åˆ—ã‚’ã‚­ãƒ£ã‚¹ãƒˆã—ã¦è¡Œåˆ—ã¨ã—ã¦ä½¿ç”¨ã™ã‚‹ã“ã¨ãŒã§ããªã„ï¼
+- å½“æ™‚ã®VC6ã§ã¯ï¼ŒBlitz++ ã¯ä½¿ãˆãªã‹ã£ãŸï¼ä»Šãªã‚‰Blitz++ãŒè‰¯ã„ã®ã‹ã‚‚ï¼ã¡ã‚‡ã£ã¨å¤§ãã„ã‘ã©ï¼
+- å½“æ™‚ã¯ï¼Œéƒ¨åˆ†è¡Œåˆ—ï¼Œéƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã¸ã®å‚ç…§ã‚’è¿”ã™è¡Œåˆ—ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¯è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸï¼
 .
-‚©‚ç‚Å‚·D
+ã‹ã‚‰ã§ã™ï¼
 	
-@section ptm_usage g‚¢•û
-ƒ|[ƒ^ƒuƒ‹ ƒeƒ“ƒvƒŒ[ƒg s—ñƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ‚ÍCƒwƒbƒ_ƒtƒ@ƒCƒ‹‚¾‚¯‚©‚ç‚È‚é
-ƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ‚È‚Ì‚Å, TMatrix.h, TMatrixUtility.h, TVector.h
-‚ğ“¯‚¶ƒtƒHƒ‹ƒ_‚É“ü‚ê‚Ä‚¨‚«C.cppƒtƒ@ƒCƒ‹‚©‚çƒwƒbƒ_‚ğƒCƒ“ƒNƒ‹[ƒh‚·‚é‚¾‚¯‚Å
-g—p‚Å‚«‚Ü‚·D
-@subsection sampleM ƒTƒ“ƒvƒ‹
-ŠÈ’P‚ÈƒTƒ“ƒvƒ‹‚Å‚·D“K“–‚Èƒtƒ@ƒCƒ‹–¼(‚½‚Æ‚¦‚Î sample.cpp) ‚Å•Û‘¶‚µ‚ÄƒRƒ“ƒpƒCƒ‹‚µ‚Ä‚­‚¾‚³‚¢D
-gcc ‚Ìê‡ g++ ‚ğg‚Á‚Ä‚­‚¾‚³‚¢D
+@section ptm_usage ä½¿ã„æ–¹
+ãƒãƒ¼ã‚¿ãƒ–ãƒ« ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ è¡Œåˆ—ã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¯ï¼Œãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã ã‘ã‹ã‚‰ãªã‚‹
+ã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãªã®ã§, TMatrix.h, TMatrixUtility.h, TVector.h
+ã‚’åŒã˜ãƒ•ã‚©ãƒ«ãƒ€ã«å…¥ã‚Œã¦ãŠãï¼Œ.cppãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ˜ãƒƒãƒ€ã‚’ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã™ã‚‹ã ã‘ã§
+ä½¿ç”¨ã§ãã¾ã™ï¼
+@subsection sampleM ã‚µãƒ³ãƒ—ãƒ«
+ç°¡å˜ãªã‚µãƒ³ãƒ—ãƒ«ã§ã™ï¼é©å½“ãªãƒ•ã‚¡ã‚¤ãƒ«å(ãŸã¨ãˆã° sample.cpp) ã§ä¿å­˜ã—ã¦ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã—ã¦ãã ã•ã„ï¼
+gcc ã®å ´åˆ g++ ã‚’ä½¿ã£ã¦ãã ã•ã„ï¼
 @verbatim
-#include "TMatrix.h"    //  s—ñƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒCƒ“ƒNƒ‹[ƒh‚·‚éD
+#include "TMatrix.h"    //  è¡Œåˆ—ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã™ã‚‹ï¼
 #include <iostream>
-using namespace PTM;    //  s—ñƒNƒ‰ƒX‚ÍPTM–¼‘O‹óŠÔ‚Ì’†‚ÅéŒ¾‚³‚ê‚Ä‚¢‚éD
+using namespace PTM;    //  è¡Œåˆ—ã‚¯ãƒ©ã‚¹ã¯PTMåå‰ç©ºé–“ã®ä¸­ã§å®£è¨€ã•ã‚Œã¦ã„ã‚‹ï¼
 int main(){
-    TMatrixRow<2,2,float> mat;              // 2s2—ñ‚Ìs‚ª‹l‚Á‚½s—ñ‚ğéŒ¾
-                                            // TMatrixCol‚¾‚Æ—ñ‚ª‹l‚Á‚½s—ñ‚É‚È‚é
-    mat[0][0] = 1;  mat[0][1] = 2;          // 0s0—ñ = 1;  0s1—ñ = 2;
-    mat[1][0] = 3;  mat[1][1] = 4;          // 1s0—ñ = 3;  1s1—ñ = 4;
-    TVector<2,float> vec;                   // 2ŸŒ³‚ÌƒxƒNƒgƒ‹‚ğéŒ¾
+    TMatrixRow<2,2,float> mat;              // 2è¡Œ2åˆ—ã®è¡ŒãŒè©°ã£ãŸè¡Œåˆ—ã‚’å®£è¨€
+                                            // TMatrixColã ã¨åˆ—ãŒè©°ã£ãŸè¡Œåˆ—ã«ãªã‚‹
+    mat[0][0] = 1;  mat[0][1] = 2;          // 0è¡Œ0åˆ— = 1;  0è¡Œ1åˆ— = 2;
+    mat[1][0] = 3;  mat[1][1] = 4;          // 1è¡Œ0åˆ— = 3;  1è¡Œ1åˆ— = 4;
+    TVector<2,float> vec;                   // 2æ¬¡å…ƒã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å®£è¨€
     vec[0] = 1; vec[1] = 0;
     std::cout << mat;
     std::cout << vec << std::endl;
-    std::cout << mat * vec << std::endl;    // Š|‚¯Z
-    std::cout << mat + mat << std::endl;    // ‘«‚µZ
-    std::cout << mat - mat << std::endl;    // ˆø‚«Z
-    std::cout << mat.trans() << std::endl;  // “]’u
-    std::cout << mat.inv() << std::endl;    // ‹ts—ñ
+    std::cout << mat * vec << std::endl;    // æ›ã‘ç®—
+    std::cout << mat + mat << std::endl;    // è¶³ã—ç®—
+    std::cout << mat - mat << std::endl;    // å¼•ãç®—
+    std::cout << mat.trans() << std::endl;  // è»¢ç½®
+    std::cout << mat.inv() << std::endl;    // é€†è¡Œåˆ—
     return 0;
 }
 @endverbatim
-	@subsection vecfunc ƒxƒNƒgƒ‹‚Ì‰‰Z
-	Ÿ‚Ì‰‰Z‚ª‚Å‚«‚Ü‚·D
+	@subsection vecfunc ãƒ™ã‚¯ãƒˆãƒ«ã®æ¼”ç®—
+	æ¬¡ã®æ¼”ç®—ãŒã§ãã¾ã™ï¼
 	<ul>
-	<li> +:˜a, -:·, *:“àÏ/’è””{, /:’è”•ª‚Ì1
-	<li> ==:”äŠr, =:‘ã“ü
-	<li> <<:o—Í, >>:“ü—Í
-	<li> % ^ :ŠOÏ(2E3ŸŒ³‚Ì‚İ)
+	<li> +:å’Œ, -:å·®, *:å†…ç©/å®šæ•°å€, /:å®šæ•°åˆ†ã®1
+	<li> ==:æ¯”è¼ƒ, =:ä»£å…¥
+	<li> <<:å‡ºåŠ›, >>:å…¥åŠ›
+	<li> % ^ :å¤–ç©(2ãƒ»3æ¬¡å…ƒã®ã¿)
 	</ul>
-	Ÿ‚Ìƒƒ“ƒoŠÖ”‚ğ‚¿‚Ü‚·D
+	æ¬¡ã®ãƒ¡ãƒ³ãƒé–¢æ•°ã‚’æŒã¡ã¾ã™ï¼
 	<ul>
-	<li> unit(): Œü‚«‚ª“™‚µ‚¢’PˆÊƒxƒNƒgƒ‹‚ğ•Ô‚·D
-	<li> norm(): ƒxƒNƒgƒ‹‚Ì‘å‚«‚³(ƒmƒ‹ƒ€)‚ğ•Ô‚·D
-	<li> sub_vector(): •”•ªƒxƒNƒgƒ‹‚Ö‚ÌQÆ‚ğ•Ô‚·D
+	<li> unit(): å‘ããŒç­‰ã—ã„å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™ï¼
+	<li> norm(): ãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•(ãƒãƒ«ãƒ )ã‚’è¿”ã™ï¼
+	<li> sub_vector(): éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã¸ã®å‚ç…§ã‚’è¿”ã™ï¼
 	</ul>
-	•Ï””Å‚ÍƒTƒCƒY‚Ì•ÏX‚ª‚Å‚«‚Ü‚·D
+	å¤‰æ•°ç‰ˆã¯ã‚µã‚¤ã‚ºã®å¤‰æ›´ãŒã§ãã¾ã™ï¼
 	<ul>
-	<li> resize(int h, int w):	ƒTƒCƒY‚Ì•ÏX
-	<li> height():	‚‚³s—ñ‚Ìs”
-	<li> width():	•s—ñ‚Ì—ñ”
+	<li> resize(int h, int w):	ã‚µã‚¤ã‚ºã®å¤‰æ›´
+	<li> height():	é«˜ã•ï¼è¡Œåˆ—ã®è¡Œæ•°
+	<li> width():	å¹…ï¼è¡Œåˆ—ã®åˆ—æ•°
 	</ul>
-	@subsection matfunc s—ñ‚Ì‘€ì
+	@subsection matfunc è¡Œåˆ—ã®æ“ä½œ
 
-	Ÿ‚Ì‰‰Z‚ª‚Å‚«‚Ü‚·D
+	æ¬¡ã®æ¼”ç®—ãŒã§ãã¾ã™ï¼
 	<ul>
-		<li> +:˜a, -:·, *:Ï/’è””{, /:’è”•ª‚Ì1
-		<li> ==:”äŠr, =:‘ã“ü
-		<li> <<:o—Í, >>:“ü—Í
+		<li> +:å’Œ, -:å·®, *:ç©/å®šæ•°å€, /:å®šæ•°åˆ†ã®1
+		<li> ==:æ¯”è¼ƒ, =:ä»£å…¥
+		<li> <<:å‡ºåŠ›, >>:å…¥åŠ›
 	</ul>
-	Ÿ‚Ìƒƒ“ƒoŠÖ”‚ğ‚¿‚Ü‚·D
+	æ¬¡ã®ãƒ¡ãƒ³ãƒé–¢æ•°ã‚’æŒã¡ã¾ã™ï¼
 	<ul>
-		<li> det(): s—ñ®‚ğ•Ô‚·D
-		<li> inv(): ‹ts—ñ‚ğ•Ô‚·D
-		<li> gauss(): ƒKƒEƒX‚ÌÁ‹–@‚Å•û’ö®‚ğ‰ğ‚­D
-		<li> sub_matrix(): •”•ªs—ñ‚Ö‚ÌQÆ‚ğ•Ô‚·D
-		<li> row(): sƒxƒNƒgƒ‹‚Ö‚ÌQÆ‚ğ•Ô‚·D
-		<li> col(): —ñƒxƒNƒgƒ‹‚Ö‚ÌQÆ‚ğ•Ô‚·D
+		<li> det(): è¡Œåˆ—å¼ã‚’è¿”ã™ï¼
+		<li> inv(): é€†è¡Œåˆ—ã‚’è¿”ã™ï¼
+		<li> gauss(): ã‚¬ã‚¦ã‚¹ã®æ¶ˆå»æ³•ã§æ–¹ç¨‹å¼ã‚’è§£ãï¼
+		<li> sub_matrix(): éƒ¨åˆ†è¡Œåˆ—ã¸ã®å‚ç…§ã‚’è¿”ã™ï¼
+		<li> row(): è¡Œãƒ™ã‚¯ãƒˆãƒ«ã¸ã®å‚ç…§ã‚’è¿”ã™ï¼
+		<li> col(): åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã¸ã®å‚ç…§ã‚’è¿”ã™ï¼
 	</ul>
-		sub_matrix()‚ârow()‚É‚Í’l‚ğ‘ã“ü‚·‚é‚±‚Æ‚à‚Å‚«‚Ü‚·D
+		sub_matrix()ã‚„row()ã«ã¯å€¤ã‚’ä»£å…¥ã™ã‚‹ã“ã¨ã‚‚ã§ãã¾ã™ï¼
 		@verbatim
 	TMatrixRow<3,3,float> mat; TVector<3, float> vec;
 	mat.row() = vec;@endverbatim
-	@section pub Ä”z•z‚ÌğŒ
-	Ä”z•z‚·‚éê‡‚ÍCŒ´’˜ìÒ‚Ì–¼E˜A—æ‚ğ‰ü•ÏEíœ‚µ‚È‚¢‚Å‚­‚¾‚³‚¢D
-	•Â½“I‚È‰ïĞ‚Åƒ\ƒtƒgƒEƒGƒA‚ğ‘‚­l‚É‚à©—R‚Ég—p‚Å‚«‚é‚æ‚¤‚É‚µ‚½‚¢
-	‚Ì‚ÅCGPLELGPL‚É‚µ‚Ü‚¹‚ñ‚Å‚µ‚½D
-	‚à‚¿‚ë‚ñGPLELGPL‚É‰ü•Ï‚µ‚ÄÄ”z•z‚µ‚Ä‚­‚¾‚³‚Á‚Ä‚àŒ‹\‚Å‚·D
-	@section support ƒTƒ|[ƒg
-	ƒoƒOC•s‹ï‡CˆÓ–¡•s–¾‚ÈƒRƒ“ƒpƒCƒ‹ƒGƒ‰[‚È‚Ç‚ğŒ©‚Â‚¯‚½ê‡‚ÍC
-	’·’Jì »ˆê (hasevr ‚ ‚Á‚Æ gmail.com) ‚Ü‚Å‚²˜A—‚­‚¾‚³‚¢D
-	‚Å‚«‚éŒÀ‚èƒTƒ|[ƒg‚µC‚æ‚è—Ç‚¢ƒ‰ƒCƒuƒ‰ƒŠ‚É‚µ‚Ä‚¢‚­‚Â‚à‚è‚Å‚·D<br>
-	“Á‚É‚±‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚Íƒeƒ“ƒvƒŒ[ƒgƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ‚È‚Ì‚ÅCg—p‚ÉC
-	“à•”‚Ì“®ì‚ª•ª‚ç‚È‚¢‚ÆˆÓ–¡‚Ì‚í‚©‚ç‚È‚¢ƒRƒ“ƒpƒCƒ‹ƒGƒ‰[‚Éo‰ï‚¤‚±‚Æ‚à
-	‚ ‚é‚Æv‚¢‚Ü‚·D‚»‚Ì‚æ‚¤‚È–â‘è‚É‚Í‘Î‰‚·‚é‚Â‚à‚è‚Å‚·‚Ì‚ÅC‚Ü‚¸‚Í‚²˜A—‚­‚¾‚³‚¢D
-	@section thanksM Ó«
-	LU•ª‰ğC‹ts—ñCƒKƒEƒXÁ‹–@‚È‚Ç‚Ìs—ñŒvZƒAƒ‹ƒSƒŠƒYƒ€‚ÍC<br>
-    uw‚bŒ¾Œê‚É‚æ‚éÅVƒAƒ‹ƒSƒŠƒYƒ€–“Tx‘Sƒ\[ƒXƒR[ƒhv<br>
+	@section pub å†é…å¸ƒã®æ¡ä»¶
+	å†é…å¸ƒã™ã‚‹å ´åˆã¯ï¼ŒåŸè‘—ä½œè€…ã®ç½²åãƒ»é€£çµ¡å…ˆã‚’æ”¹å¤‰ãƒ»å‰Šé™¤ã—ãªã„ã§ãã ã•ã„ï¼
+	é–‰é–çš„ãªä¼šç¤¾ã§ã‚½ãƒ•ãƒˆã‚¦ã‚¨ã‚¢ã‚’æ›¸ãäººã«ã‚‚è‡ªç”±ã«ä½¿ç”¨ã§ãã‚‹ã‚ˆã†ã«ã—ãŸã„
+	ã®ã§ï¼ŒGPLãƒ»LGPLã«ã—ã¾ã›ã‚“ã§ã—ãŸï¼
+	ã‚‚ã¡ã‚ã‚“GPLãƒ»LGPLã«æ”¹å¤‰ã—ã¦å†é…å¸ƒã—ã¦ãã ã•ã£ã¦ã‚‚çµæ§‹ã§ã™ï¼
+	@section support ã‚µãƒãƒ¼ãƒˆ
+	ãƒã‚°ï¼Œä¸å…·åˆï¼Œæ„å‘³ä¸æ˜ãªã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã‚¨ãƒ©ãƒ¼ãªã©ã‚’è¦‹ã¤ã‘ãŸå ´åˆã¯ï¼Œ
+	é•·è°·å· æ™¶ä¸€ (hasevr ã‚ã£ã¨ gmail.com) ã¾ã§ã”é€£çµ¡ãã ã•ã„ï¼
+	ã§ãã‚‹é™ã‚Šã‚µãƒãƒ¼ãƒˆã—ï¼Œã‚ˆã‚Šè‰¯ã„ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã«ã—ã¦ã„ãã¤ã‚‚ã‚Šã§ã™ï¼<br>
+	ç‰¹ã«ã“ã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¯ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãªã®ã§ï¼Œä½¿ç”¨æ™‚ã«ï¼Œ
+	å†…éƒ¨ã®å‹•ä½œãŒåˆ†ã‚‰ãªã„ã¨æ„å‘³ã®ã‚ã‹ã‚‰ãªã„ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã‚¨ãƒ©ãƒ¼ã«å‡ºä¼šã†ã“ã¨ã‚‚
+	ã‚ã‚‹ã¨æ€ã„ã¾ã™ï¼ãã®ã‚ˆã†ãªå•é¡Œã«ã¯å¯¾å¿œã™ã‚‹ã¤ã‚‚ã‚Šã§ã™ã®ã§ï¼Œã¾ãšã¯ã”é€£çµ¡ãã ã•ã„ï¼
+	@section thanksM è¬è¾
+	LUåˆ†è§£ï¼Œé€†è¡Œåˆ—ï¼Œã‚¬ã‚¦ã‚¹æ¶ˆå»æ³•ãªã©ã®è¡Œåˆ—è¨ˆç®—ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã¯ï¼Œ<br>
+    ã€Œã€ï¼£è¨€èªã«ã‚ˆã‚‹æœ€æ–°ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ äº‹å…¸ã€å…¨ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã€<br>
     ftp://ftp.matsusaka-u.ac.jp/pub/algorithms<br>
-	‰œ‘º °•F Haruhiko Okumura<br>
-	‚ğ‰ü•Ï‚µ‚Ä—¬—p‚³‚¹‚Ä‚¢‚½‚¾‚«‚Ü‚µ‚½D
-	©—R‚ÉƒR[ƒh‚ğg‚¦‚é‚æ‚¤ŒöŠJ‚µ‚Ä‚­‚¾‚³‚Á‚Ä‚ ‚è‚ª‚Æ‚¤‚²‚´‚¢‚Ü‚·D
+	å¥¥æ‘ æ™´å½¦ Haruhiko Okumura<br>
+	ã‚’æ”¹å¤‰ã—ã¦æµç”¨ã•ã›ã¦ã„ãŸã ãã¾ã—ãŸï¼
+	è‡ªç”±ã«ã‚³ãƒ¼ãƒ‰ã‚’ä½¿ãˆã‚‹ã‚ˆã†å…¬é–‹ã—ã¦ãã ã•ã£ã¦ã‚ã‚ŠãŒã¨ã†ã”ã–ã„ã¾ã™ï¼
 	
 */
 //@{
@@ -159,21 +159,21 @@ int main(){
 //-----------------------------------------------------------------------------
 
 /**	@file TMatrix.h
-	ƒeƒ“ƒvƒŒ[ƒg‚É‚æ‚éN~Ms—ñŒ^‚Ì’è‹`.
-	—v‘f‚ÌŒ^‚ÆƒTƒCƒY‚ğƒeƒ“ƒvƒŒ[ƒg‚Ìˆø”‚É‚·‚é‚±‚Æ‚ÅC
-	ŠÇ—î•ñ‚ğƒƒ‚ƒŠ‚É‚½‚¸‚ÉCˆê”Ê‚Ìs—ñ‚ğˆµ‚¤D
-	”z—ñ‚ğƒLƒƒƒXƒg‚µ‚Äs—ñ‚É‚·‚é‚±‚Æ‚à‚Å‚«‚éD
-	•”•ªs—ñ‚âs‚â—ñ‚ğs—ñ‚âƒxƒNƒgƒ‹‚Æ‚µ‚Äæ‚èo‚·‚±‚Æ‚à‚Å‚«‚éD
-	sparse matrix ‚É‚Í‘Î‰‚µ‚Ä‚¢‚È‚¢D										*/
+	ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã«ã‚ˆã‚‹NÃ—Mè¡Œåˆ—å‹ã®å®šç¾©.
+	è¦ç´ ã®å‹ã¨ã‚µã‚¤ã‚ºã‚’ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®å¼•æ•°ã«ã™ã‚‹ã“ã¨ã§ï¼Œ
+	ç®¡ç†æƒ…å ±ã‚’ãƒ¡ãƒ¢ãƒªã«æŒãŸãšã«ï¼Œä¸€èˆ¬ã®è¡Œåˆ—ã‚’æ‰±ã†ï¼
+	é…åˆ—ã‚’ã‚­ãƒ£ã‚¹ãƒˆã—ã¦è¡Œåˆ—ã«ã™ã‚‹ã“ã¨ã‚‚ã§ãã‚‹ï¼
+	éƒ¨åˆ†è¡Œåˆ—ã‚„è¡Œã‚„åˆ—ã‚’è¡Œåˆ—ã‚„ãƒ™ã‚¯ãƒˆãƒ«ã¨ã—ã¦å–ã‚Šå‡ºã™ã“ã¨ã‚‚ã§ãã‚‹ï¼
+	sparse matrix ã«ã¯å¯¾å¿œã—ã¦ã„ãªã„ï¼										*/
 //------------------------------------------------------------------------------
 
 #include "TVector.h"
 
-///	Portable Template Matrixƒ‰ƒCƒuƒ‰ƒŠ‚Ì–¼‘O‹óŠÔ
+///	Portable Template Matrixãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®åå‰ç©ºé–“
 namespace PTM{;
 
-/**	•”•ªs—ñŒ^ì¬‚Ì‚½‚ß‚Ìƒ†[ƒeƒBƒŠƒeƒB[ƒNƒ‰ƒX.
-	TSubMatrixDim<top, left, height, width> ‚ÆŸŒ³‚ğw’è‚Å‚«‚éB*/
+/**	éƒ¨åˆ†è¡Œåˆ—å‹ä½œæˆã®ãŸã‚ã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ãƒ¼ã‚¯ãƒ©ã‚¹.
+	TSubMatrixDim<top, left, height, width> ã¨æ¬¡å…ƒã‚’æŒ‡å®šã§ãã‚‹ã€‚*/
 template <size_t T, size_t L, size_t H, size_t W>
 class TSubMatrixDim{
 public:
@@ -182,8 +182,8 @@ public:
 	static const size_t HEIGHT = H;
 	static const size_t WIDTH = W;
 };
-/**	•”•ªs—ñŒ^ì¬‚Ì‚½‚ß‚Ìƒ†[ƒeƒBƒŠƒeƒB[ƒNƒ‰ƒX.
-	TMatDim<height, width> ‚ÆŸŒ³‚ğw’è‚Å‚«‚éB	*/
+/**	éƒ¨åˆ†è¡Œåˆ—å‹ä½œæˆã®ãŸã‚ã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ãƒ¼ã‚¯ãƒ©ã‚¹.
+	TMatDim<height, width> ã¨æ¬¡å…ƒã‚’æŒ‡å®šã§ãã‚‹ã€‚	*/
 template <size_t H, size_t W>
 class TMatDim{
 public:
@@ -195,7 +195,7 @@ template <size_t H, size_t W, class OD> class TSubMatrixRow;
 template <class T, class Z=T, class U=Z> class ESubMatrixRow;
 template <size_t H, size_t W, class OD> class TSubMatrixCol;
 template <class T, class Z=T, class U=Z> class ESubMatrixCol;
-///	sƒxƒNƒgƒ‹‚ÌŠî–{Œ^	ƒTƒCƒYFƒeƒ“ƒvƒŒ[ƒg
+///	è¡Œãƒ™ã‚¯ãƒˆãƒ«ã®åŸºæœ¬å‹	ã‚µã‚¤ã‚ºï¼šãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
 template <class desc>
 class TMakeSubMatrixRow{
 public:
@@ -203,9 +203,9 @@ public:
 	typedef TYPENAME desc::exp_type exp_type;
 	exp_type& exp(){ return *(exp_type*)this;}
 	const exp_type& exp() const { return *(exp_type*)this;}
-	///	@name •”•ªs—ñ
+	///	@name éƒ¨åˆ†è¡Œåˆ—
 	//@{
-	///	•”•ªs—ñiƒeƒ“ƒvƒŒ[ƒg”Åj
+	///	éƒ¨åˆ†è¡Œåˆ—ï¼ˆãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆï¼‰
 	template <class SUB>
 		TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(SUB){
 		return (TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(SUB::TOP, SUB::LEFT);
@@ -214,7 +214,7 @@ public:
 		const TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(SUB) const {
 		return (TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(SUB::TOP, SUB::LEFT);
 	}
-	///	•”•ªs—ñiƒTƒCƒY‚¾‚¯ƒeƒ“ƒvƒŒ[ƒg”Åj
+	///	éƒ¨åˆ†è¡Œåˆ—ï¼ˆã‚µã‚¤ã‚ºã ã‘ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆï¼‰
 	template <class SUB>
 		TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(size_t t, size_t l, SUB){
 		return (TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(t,l);
@@ -223,13 +223,13 @@ public:
 		const TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(size_t t, size_t l, SUB) const {
 		return (TSubMatrixRow<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(t,l);
 	}
-	///	•”•ªs—ñi•Ï””Åj
+	///	éƒ¨åˆ†è¡Œåˆ—ï¼ˆå¤‰æ•°ç‰ˆï¼‰
 	ESubMatrixRow<element_type> vsub_matrix(int t, int l, int h, int w){
 		return ESubMatrixRow<element_type>(h, w, exp().stride(), &exp().item(t,l));
 	}
 	//@}
 };
-///	—ñƒxƒNƒgƒ‹‚ÌŠî–{Œ^	ƒTƒCƒYFƒeƒ“ƒvƒŒ[ƒg
+///	åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®åŸºæœ¬å‹	ã‚µã‚¤ã‚ºï¼šãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
 template <class desc>
 class TMakeSubMatrixCol{
 public:
@@ -237,9 +237,9 @@ public:
 	typedef TYPENAME desc::exp_type exp_type;
 	exp_type& exp(){ return *(exp_type*)this;}
 	const exp_type& exp() const { return *(exp_type*)this;}
-	///	@name •”•ªs—ñ
+	///	@name éƒ¨åˆ†è¡Œåˆ—
 	//@{
-	///	•”•ªs—ñiƒeƒ“ƒvƒŒ[ƒg”Åj
+	///	éƒ¨åˆ†è¡Œåˆ—ï¼ˆãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆï¼‰
 	template <class SUB>
 		TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(SUB){
 		return (TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(SUB::TOP, SUB::LEFT);
@@ -248,7 +248,7 @@ public:
 		const TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(SUB) const {
 		return (TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(SUB::TOP, SUB::LEFT);
 	}
-	///	•”•ªs—ñiƒTƒCƒY‚¾‚¯ƒeƒ“ƒvƒŒ[ƒg”Åj
+	///	éƒ¨åˆ†è¡Œåˆ—ï¼ˆã‚µã‚¤ã‚ºã ã‘ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆï¼‰
 	template <class SUB>
 		TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(size_t t, size_t l, SUB){
 		return (TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(t,l);
@@ -257,13 +257,13 @@ public:
 		const TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>& sub_matrix(size_t t, size_t l, SUB) const {
 		return (TSubMatrixCol<SUB::HEIGHT, SUB::WIDTH, desc>&)exp().item(t,l);
 	}
-	///	•”•ªs—ñi•Ï””Åj
+	///	éƒ¨åˆ†è¡Œåˆ—ï¼ˆå¤‰æ•°ç‰ˆï¼‰
 	ESubMatrixCol<element_type> vsub_matrix(int t, int l, int h, int w){
 		return ESubMatrixCol<element_type>(h, w, exp().stride(), &exp().item(t,l));
 	}
 	//@}
 };
-///	sƒxƒNƒgƒ‹‚ÌŠî–{Œ^	ƒTƒCƒYF•Ï”
+///	è¡Œãƒ™ã‚¯ãƒˆãƒ«ã®åŸºæœ¬å‹	ã‚µã‚¤ã‚ºï¼šå¤‰æ•°
 template <class desc>
 class EMakeSubMatrixRow{
 public:
@@ -271,15 +271,15 @@ public:
 	typedef TYPENAME desc::exp_type exp_type;
 	exp_type& exp(){ return *(exp_type*)this;}
 	const exp_type& exp() const { return *(exp_type*)this;}
-	///	@name •”•ªs—ñ
+	///	@name éƒ¨åˆ†è¡Œåˆ—
 	//@{
-	///	•”•ªs—ñi•Ï””Åj
+	///	éƒ¨åˆ†è¡Œåˆ—ï¼ˆå¤‰æ•°ç‰ˆï¼‰
 	ESubMatrixRow<element_type> vsub_matrix(int t, int l, int h, int w){
 		return ESubMatrixRow<element_type>(h, w, exp().stride(), &exp().item(t,l));
 	}
 	//@}
 };
-///	—ñƒxƒNƒgƒ‹‚ÌŠî–{Œ^	ƒTƒCƒYF•Ï”
+///	åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®åŸºæœ¬å‹	ã‚µã‚¤ã‚ºï¼šå¤‰æ•°
 template <class desc>
 class EMakeSubMatrixCol{
 public:
@@ -287,9 +287,9 @@ public:
 	typedef TYPENAME desc::exp_type exp_type;
 	exp_type& exp(){ return *(exp_type*)this;}
 	const exp_type& exp() const { return *(exp_type*)this;}
-	///	@name •”•ªs—ñ
+	///	@name éƒ¨åˆ†è¡Œåˆ—
 	//@{
-	///	•”•ªs—ñi•Ï””Åj
+	///	éƒ¨åˆ†è¡Œåˆ—ï¼ˆå¤‰æ•°ç‰ˆï¼‰
 	ESubMatrixCol<element_type> vsub_matrix(int t, int l, int h, int w){
 		return ESubMatrixCol<element_type>(h, w, exp().stride(), &exp().item(t,l));
 	}
@@ -298,15 +298,15 @@ public:
 
 
 //----------------------------------------------------------------------------
-///	@name s—ñ‰‰Z‚ÌÀ‘•
+///	@name è¡Œåˆ—æ¼”ç®—ã®å®Ÿè£…
 //@{
 template <class DESC> class MatrixImp;
 template <size_t H, size_t W, class D> class TMatrixBaseBase;
 template <size_t H, size_t W, class D> class TMatrixBase;
 template <class DESC> class EMatrixBase;
 
-/**	‘ã“ü(*this = b).
-	@param b “¯‚¶ƒTƒCƒY‚Ìs—ñ.	*/
+/**	ä»£å…¥(*this = b).
+	@param b åŒã˜ã‚µã‚¤ã‚ºã®è¡Œåˆ—.	*/
 template <class AD, class BD>
 void assign(MatrixImp<AD>& a, const MatrixImp<BD>& b) {
 	a.resize(b.height(), b.width());
@@ -315,15 +315,15 @@ void assign(MatrixImp<AD>& a, const MatrixImp<BD>& b) {
 		for(size_t j=0; j<a.width(); ++j)
 			a.item(i,j) = (TYPENAME AD::element_type)b.item(i,j);
 }
-/**	‘ã“ü(*this = b).
-	@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+/**	ä»£å…¥(*this = b).
+	@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 template <class AD>
 void assign(MatrixImp<AD>& a, const TYPENAME AD::element_type* b) {
 	for(size_t i=0; i<a.height(); ++i)
 		for(size_t j=0; j<a.width(); ++j)
 			a.item(i,j) = b[i*a.width()+j];
 }
-///	”äŠr
+///	æ¯”è¼ƒ
 template <class AD, class BD>
 bool equal(const MatrixImp<AD>& a, const MatrixImp<BD>& b){
 	if (!a.size_check(b)) return false;
@@ -332,7 +332,7 @@ bool equal(const MatrixImp<AD>& a, const MatrixImp<BD>& b){
 			if (a.item(i,j) != b.item(i,j)) return false;
 	return true;
 }
-///	‰ÁZ
+///	åŠ ç®—
 template <class AD, class BD>
 void add(MatrixImp<AD>& a, const MatrixImp<BD>& b){
 	a.size_assert(b);
@@ -340,7 +340,7 @@ void add(MatrixImp<AD>& a, const MatrixImp<BD>& b){
 		for(size_t j=0; j<a.width(); ++j)
 			a.item(i,j) += b.item(i,j);
 }
-///	Œ¸Z
+///	æ¸›ç®—
 template <class AD, class BD>
 void sub(MatrixImp<AD>& a, const MatrixImp<BD>& b){
 	a.size_assert(b);
@@ -348,14 +348,14 @@ void sub(MatrixImp<AD>& a, const MatrixImp<BD>& b){
 		for(size_t j=0; j<a.width(); ++j)
 			a.item(i,j) -= b.item(i,j);
 }
-///	s—ñ‚ÆƒXƒJƒ‰[‚ÌŠ|‚¯Z
+///	è¡Œåˆ—ã¨ã‚¹ã‚«ãƒ©ãƒ¼ã®æ›ã‘ç®—
 template <class AD>
 void multi(MatrixImp<AD>& a, TYPENAME AD::element_type b){
 	for(size_t i=0; i<a.height(); ++i)
 		for(size_t j=0; j<a.width(); ++j)
 			a.item(i,j) *= b;
 }
-///	s—ñ‚ÆƒxƒNƒgƒ‹‚ÌŠ|‚¯Z
+///	è¡Œåˆ—ã¨ãƒ™ã‚¯ãƒˆãƒ«ã®æ›ã‘ç®—
 template <class RD, class AD, class BD>
 void multi(VectorImp<RD>& r, const MatrixImp<AD>& a, const VectorImp<BD>& b){
 	r.resize(a.height());
@@ -363,14 +363,14 @@ void multi(VectorImp<RD>& r, const MatrixImp<AD>& a, const VectorImp<BD>& b){
 		r.item(n) = a.row(n) * b;
 	}
 }
-///	s—ñ‚ÆƒxƒNƒgƒ‹‚ÌŠ|‚¯Z	:	3x3
+///	è¡Œåˆ—ã¨ãƒ™ã‚¯ãƒˆãƒ«ã®æ›ã‘ç®—	:	3x3
 template <class RD, class AD, class BD>
 void multi(TVectorBase<3, RD>& r, const TMatrixBase<3,3,AD>& a, const TVectorBase<3, BD>& b){
 	r(0) = a.row(0) * b;
 	r(1) = a.row(1) * b;
 	r(2) = a.row(2) * b;
 }
-///	s—ñ‚ÌŠ|‚¯Z
+///	è¡Œåˆ—ã®æ›ã‘ç®—
 template <class RD, class AD, class BD>
 void multi(MatrixImp<RD>& r, const MatrixImp<AD>& a, const MatrixImp<BD>& b){
 	typedef TYPENAME RD::zero zero;
@@ -385,7 +385,7 @@ void multi(MatrixImp<RD>& r, const MatrixImp<AD>& a, const MatrixImp<BD>& b){
 		}
 	}
 }
-///	s—ñ‚ÌŠ|‚¯Z	ƒTƒCƒYF3x3
+///	è¡Œåˆ—ã®æ›ã‘ç®—	ã‚µã‚¤ã‚ºï¼š3x3
 #ifndef __BORLANDC__
 template <class RD, class AD, class BD>
 void multi(TMatrixBase<3, 3, RD>& r, const TMatrixBase<3, 3, AD>& a, const TMatrixBase<3, 3, BD>& b){
@@ -397,7 +397,7 @@ void multi(TMatrixBase<3, 3, RD>& r, const TMatrixBase<3, 3, AD>& a, const TMatr
 #undef CALC
 }
 #endif
-///	s—ñ‚ÌŠ|‚¯Z	ƒTƒCƒYF4x4
+///	è¡Œåˆ—ã®æ›ã‘ç®—	ã‚µã‚¤ã‚ºï¼š4x4
 template <class RD, class AD, class BD>
 void multi(TMatrixBase<4, 4, RD>& r, const TMatrixBase<4, 4, AD>& a, const TMatrixBase<4, 4, BD>& b){
         typedef TYPENAME RD::element_type ET;
@@ -409,7 +409,7 @@ void multi(TMatrixBase<4, 4, RD>& r, const TMatrixBase<4, 4, AD>& a, const TMatr
 #undef CALC
 }
 
-///	s—ñ®	ƒTƒCƒYF•Ï” ”ñ”j‰ó
+///	è¡Œåˆ—å¼	ã‚µã‚¤ã‚ºï¼šå¤‰æ•° éç ´å£Š
 template <class AD>
 TYPENAME AD::element_type det(const MatrixImp<AD>& a){
 	TYPENAME AD::ret_type tmp(a);
@@ -419,7 +419,7 @@ TYPENAME AD::element_type det(const MatrixImp<AD>& a){
 	w.resize(a.height());
 	return lu(tmp, ip, w);
 }
-///	s—ñ®	ƒTƒCƒYFƒeƒ“ƒvƒŒ[ƒg ”ñ”j‰ó
+///	è¡Œåˆ—å¼	ã‚µã‚¤ã‚ºï¼šãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ éç ´å£Š
 template <size_t H, size_t W, class AD>
 TYPENAME AD::element_type det(const TMatrixBaseBase<H,W,AD>& a){
 	TYPENAME AD::ret_type tmp(a);
@@ -428,20 +428,20 @@ TYPENAME AD::element_type det(const TMatrixBaseBase<H,W,AD>& a){
 	return lu(tmp, ip, w);
 }
 #ifndef __BORLANDC__
-///	s—ñ®	ƒTƒCƒYF2x2
+///	è¡Œåˆ—å¼	ã‚µã‚¤ã‚ºï¼š2x2
 template <class AD>
 TYPENAME AD::element_type det(const TMatrixBase<2,2,AD>& a){
 	return a.item(0,0) * a.item(1,1) - a.item(0,1) * a.item(1,0);
 }
 #endif
-///	s—ñ®	ƒTƒCƒYF3x3
+///	è¡Œåˆ—å¼	ã‚µã‚¤ã‚ºï¼š3x3
 template <class AD>
 TYPENAME AD::element_type det(const TMatrixBase<3,3,AD>& a){
 	return 
 		( a.item(0,0) * a.item(1,1) * a.item(2,2)  +  a.item(1,0) * a.item(2,1) * a.item(0,2)  +  a.item(2,0) * a.item(0,1) * a.item(1,2) ) -
 		( a.item(2,0) * a.item(1,1) * a.item(0,2)  +  a.item(0,0) * a.item(2,1) * a.item(1,2)  +  a.item(1,0) * a.item(0,1) * a.item(2,2) );
 }
-///	LU•ª‰ğ‚ğs‚¤Ba ‚ğ‘‚«Š·‚¦‚éBs—ñ®‚ğ•Ô‚·B
+///	LUåˆ†è§£ã‚’è¡Œã†ã€‚a ã‚’æ›¸ãæ›ãˆã‚‹ã€‚è¡Œåˆ—å¼ã‚’è¿”ã™ã€‚
 template <class AD>
 TYPENAME AD::element_type lu(MatrixImp<AD>& a, int* ip, TYPENAME AD::element_type* weight){
 #define ABS_LU_MATRIX(a)	((a)>0 ? (a) : -(a))
@@ -450,33 +450,33 @@ TYPENAME AD::element_type lu(MatrixImp<AD>& a, int* ip, TYPENAME AD::element_typ
 	int n = (int)a.height();
 	TYPENAME AD::element_type t, u, det_;
 	
-	det_ = 0;                   // s—ñ®
-	for (k = 0; k < n; k++) {  // Šes‚É‚Â‚¢‚Ä
-		ip[k] = k;             // sŒğŠ·î•ñ‚Ì‰Šú’l
-		u = 0;                 // ‚»‚Ìs‚Ìâ‘Î’lÅ‘å‚Ì—v‘f‚ğ‹‚ß‚é
+	det_ = 0;                   // è¡Œåˆ—å¼
+	for (k = 0; k < n; k++) {  // å„è¡Œã«ã¤ã„ã¦
+		ip[k] = k;             // è¡Œäº¤æ›æƒ…å ±ã®åˆæœŸå€¤
+		u = 0;                 // ãã®è¡Œã®çµ¶å¯¾å€¤æœ€å¤§ã®è¦ç´ ã‚’æ±‚ã‚ã‚‹
 		for (j = 0; j < n; j++) {
 			t = ABS_LU_MATRIX(a.item(k,j));
             if (t > u) u = t;
 		}
-		if (u == 0) goto PTM_EXIT; // 0 ‚È‚çs—ñ‚ÍLU•ª‰ğ‚Å‚«‚È‚¢
-		weight[k] = 1 / u;     // Å‘åâ‘Î’l‚Ì‹t”
+		if (u == 0) goto PTM_EXIT; // 0 ãªã‚‰è¡Œåˆ—ã¯LUåˆ†è§£ã§ããªã„
+		weight[k] = 1 / u;     // æœ€å¤§çµ¶å¯¾å€¤ã®é€†æ•°
 	}
-	det_ = 1;                   // s—ñ®‚Ì‰Šú’l
-	for (k = 0; k < n; k++) {  // Šes‚É‚Â‚¢‚Ä
+	det_ = 1;                   // è¡Œåˆ—å¼ã®åˆæœŸå€¤
+	for (k = 0; k < n; k++) {  // å„è¡Œã«ã¤ã„ã¦
 		u = -1;
-		for (i = k; i < n; i++) {  // ‚æ‚è‰º‚ÌŠes‚É‚Â‚¢‚Ä
-			ii = ip[i];            // d‚İ~â‘Î’l ‚ªÅ‘å‚Ìs‚ğŒ©‚Â‚¯‚é
+		for (i = k; i < n; i++) {  // ã‚ˆã‚Šä¸‹ã®å„è¡Œã«ã¤ã„ã¦
+			ii = ip[i];            // é‡ã¿Ã—çµ¶å¯¾å€¤ ãŒæœ€å¤§ã®è¡Œã‚’è¦‹ã¤ã‘ã‚‹
 			t = ABS_LU_MATRIX(a.item(ii, k)) * weight[ii];
 			if (t > u) {  u = t;  j = i;  }
 		}
 		ik = ip[j];
 		if (j != k) {
-			ip[j] = ip[k];  ip[k] = ik;  // s”Ô†‚ğŒğŠ·
-			det_ = -det_;  // s‚ğŒğŠ·‚·‚ê‚Îs—ñ®‚Ì•„†‚ª•Ï‚í‚é
+			ip[j] = ip[k];  ip[k] = ik;  // è¡Œç•ªå·ã‚’äº¤æ›
+			det_ = -det_;  // è¡Œã‚’äº¤æ›ã™ã‚Œã°è¡Œåˆ—å¼ã®ç¬¦å·ãŒå¤‰ã‚ã‚‹
 		}
-		u = a.item(ik, k);  det_ *= u;  // ‘ÎŠp¬•ª
-		if (u == 0) goto PTM_EXIT;    // 0 ‚È‚çs—ñ‚ÍLU•ª‰ğ‚Å‚«‚È‚¢
-		for (i = k + 1; i < n; i++) {  // GaussÁ‹–@
+		u = a.item(ik, k);  det_ *= u;  // å¯¾è§’æˆåˆ†
+		if (u == 0) goto PTM_EXIT;    // 0 ãªã‚‰è¡Œåˆ—ã¯LUåˆ†è§£ã§ããªã„
+		for (i = k + 1; i < n; i++) {  // Gaussæ¶ˆå»æ³•
 			ii = ip[i];
 			t = (a.item(ii, k) /= u);
 			for (j = k + 1; j < n; j++)
@@ -484,26 +484,26 @@ TYPENAME AD::element_type lu(MatrixImp<AD>& a, int* ip, TYPENAME AD::element_typ
 		}
 	}
 	PTM_EXIT:
-	return det_;           // –ß‚è’l‚Ís—ñ®
+	return det_;           // æˆ»ã‚Šå€¤ã¯è¡Œåˆ—å¼
 }
-//	a x + b = 0 ‚Ì1Ÿ•û’ö®‚ğ‰ğ‚­DLU•ª‰ğÏ‚İ‚Ì•K—v‚ ‚èD
+//	a x + b = 0 ã®1æ¬¡æ–¹ç¨‹å¼ã‚’è§£ãï¼LUåˆ†è§£æ¸ˆã¿ã®å¿…è¦ã‚ã‚Šï¼
 template <class AD, class XD, class BD>
 void solve(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){
 	int i, j, ii;
 	TYPENAME XD::element_type t;
 	const int n = (int)a.height();
-	for (i = 0; i < n; i++) {       // GaussÁ‹–@‚Ìc‚è
+	for (i = 0; i < n; i++) {       // Gaussæ¶ˆå»æ³•ã®æ®‹ã‚Š
 		ii = ip[i];  t = b[ii];
 		for (j = 0; j < i; j++) t -= a.item(ii, j) * x[j];
 		x[i] = t;
 	}
-	for (i = n - 1; i >= 0; i--) {  // Œã‘Ş‘ã“ü
+	for (i = n - 1; i >= 0; i--) {  // å¾Œé€€ä»£å…¥
 		t = x[i];  ii = ip[i];
 		for (j = i + 1; j < n; j++) t -= a.item(ii, j) * x[j];
 		x[i] = t / a.item(ii, i);
 	}
 }
-///	ƒRƒŒƒXƒL[–@Da,s‚ğ‘‚«Š·‚¦‚éD
+///	ã‚³ãƒ¬ã‚¹ã‚­ãƒ¼æ³•ï¼a,sã‚’æ›¸ãæ›ãˆã‚‹ï¼
 template <class AD, class BD>
 void cholesky(MatrixImp<AD>& a, VectorImp<BD>& s){
 	int i,j,k;
@@ -539,22 +539,22 @@ void cholesky(MatrixImp<AD>& a, VectorImp<BD>& s){
 		s.item(i) /= a.item(i,i);
 	}
 }
-///	ƒKƒEƒX‚ÌÁ‹–@Cì‹Æ—Ìˆæ(sŒğŠ·‚Ì‹L˜^)‚Æ‚µ‚ÄC int ip[height()];  ‚ª•K—vDs—ña‚ğ”j‰óD
+///	ã‚¬ã‚¦ã‚¹ã®æ¶ˆå»æ³•ï¼Œä½œæ¥­é ˜åŸŸ(è¡Œäº¤æ›ã®è¨˜éŒ²)ã¨ã—ã¦ï¼Œ int ip[height()];  ãŒå¿…è¦ï¼è¡Œåˆ—aã‚’ç ´å£Šï¼
 template <class AD, class XD, class BD>
 TYPENAME AD::element_type gauss(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){
-	TYPENAME AD::element_type det_;		// s—ñ®
+	TYPENAME AD::element_type det_;		// è¡Œåˆ—å¼
 	TYPENAME AD::col_vector_type::ret_type w;
 	w.resize(a.height());
-	det_ = lu(a, ip, w);				// LU•ª‰ğ
-	if (det_ != 0) solve(a, x, b, ip);	// LU•ª‰ğ‚ÌŒ‹‰Ê‚ğg‚Á‚Ä˜A—§•û’ö®‚ğ‰ğ‚­
-	return det_;						// –ß‚è’l‚Ís—ñ®
+	det_ = lu(a, ip, w);				// LUåˆ†è§£
+	if (det_ != 0) solve(a, x, b, ip);	// LUåˆ†è§£ã®çµæœã‚’ä½¿ã£ã¦é€£ç«‹æ–¹ç¨‹å¼ã‚’è§£ã
+	return det_;						// æˆ»ã‚Šå€¤ã¯è¡Œåˆ—å¼
 }
 
-/**	‹ts—ñ‚ğ‹‚ß‚éD
-	@param a		Œ³‚Ìs—ñA”j‰ó(LU•ª‰ğ)‚³‚ê‚é
-	@param b		‹ts—ñ
-	@param ip		ì‹Æ—Ìˆæ(sŒğŠ·‚Ì‹L˜^)
-	@param weight	ì‹Æ—Ìˆæ(s‚Ìd‚İ•t‚¯)
+/**	é€†è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹ï¼
+	@param a		å…ƒã®è¡Œåˆ—ã€ç ´å£Š(LUåˆ†è§£)ã•ã‚Œã‚‹
+	@param b		é€†è¡Œåˆ—
+	@param ip		ä½œæ¥­é ˜åŸŸ(è¡Œäº¤æ›ã®è¨˜éŒ²)
+	@param weight	ä½œæ¥­é ˜åŸŸ(è¡Œã®é‡ã¿ä»˜ã‘)
 */
 template <class RD, class AD>
 TYPENAME AD::element_type inv(MatrixImp<RD>& r, MatrixImp<AD>& a, int* ip, TYPENAME AD::element_type* weight) {
@@ -584,7 +584,7 @@ TYPENAME AD::element_type inv(MatrixImp<RD>& r, MatrixImp<AD>& a, int* ip, TYPEN
 	return det;
 }
 
-///	 ‹ts—ñ‚ğ•Ô‚·D”ñ”j‰óD
+///	 é€†è¡Œåˆ—ã‚’è¿”ã™ï¼éç ´å£Šï¼
 template <class AD>
 TYPENAME AD::ret_type inv(const MatrixImp<AD>& a){
 	typedef TYPENAME AD::ret_type ret_type;
@@ -596,7 +596,7 @@ TYPENAME AD::ret_type inv(const MatrixImp<AD>& a){
 	inv(r, tmp, (int*)ip, (TYPENAME AD::element_type*)w);
 	return r;
 }
-///	 ‹ts—ñ‚ğ•Ô‚·D	ƒTƒCƒYFƒeƒ“ƒvƒŒ[ƒg a”ñ”j‰ó
+///	 é€†è¡Œåˆ—ã‚’è¿”ã™ï¼	ã‚µã‚¤ã‚ºï¼šãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ aéç ´å£Š
 template <class AD, size_t H, size_t W>
 TYPENAME AD::ret_type inv(const TMatrixBaseBase<H,W,AD>& a){
 	TYPENAME AD::ret_type r, tmp(a);
@@ -606,7 +606,7 @@ TYPENAME AD::ret_type inv(const TMatrixBaseBase<H,W,AD>& a){
 	return r;
 }
 #ifndef __BORLANDC__
-///	‹ts—ñ‚ğ•Ô‚·
+///	é€†è¡Œåˆ—ã‚’è¿”ã™
 template <class AD>
 TYPENAME AD::ret_type inv(const TMatrixBase<2, 2, AD>& a){
 	TYPENAME AD::element_type d = a.det();
@@ -618,7 +618,7 @@ TYPENAME AD::ret_type inv(const TMatrixBase<2, 2, AD>& a){
 	return rv;
 }
 #endif
-///	‹ts—ñ
+///	é€†è¡Œåˆ—
 template <class AD>
 TYPENAME AD::ret_type inv(const TMatrixBase<3, 3, AD>& a){
 #define DET2_INV_TMATRIXBASE(a,b,c,d)	(a*d - b*c)
@@ -639,10 +639,10 @@ TYPENAME AD::ret_type inv(const TMatrixBase<3, 3, AD>& a){
 #undef DET2_INV_TMATRIXBASE
 }
 //----------------------------------------------------------------------------
-/**	s—ñ‚ÌƒCƒ“ƒ^ƒtƒF[ƒX Ds—ñƒNƒ‰ƒX‚ÌŠî–{ƒNƒ‰ƒX‚Æ‚È‚èCs—ñ‚Ö‚ÌƒAƒNƒZƒX‚ğ’ñ‹Ÿ‚·‚éD
-	s—ñ‚ÌÀ‘Ì‚ÍCTMatrix / VMatrix / EMatrix ‚ª‚ ‚èC
-	ƒeƒ“ƒvƒŒ[ƒg”ÅC•Ï””ÅC•Ï””ÅŠO•”ƒoƒbƒtƒ@‚Æ‚È‚Á‚Ä‚¢‚éD
-	s—ñ‚Ì“Y‚¦š‚ÆƒTƒCƒY‚ÌˆÓ–¡‚ÍˆÈ‰º‚Ì’Ê‚èD
+/**	è¡Œåˆ—ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ ï¼è¡Œåˆ—ã‚¯ãƒ©ã‚¹ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ã¨ãªã‚Šï¼Œè¡Œåˆ—ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹ã‚’æä¾›ã™ã‚‹ï¼
+	è¡Œåˆ—ã®å®Ÿä½“ã¯ï¼ŒTMatrix / VMatrix / EMatrix ãŒã‚ã‚Šï¼Œ
+	ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆï¼Œå¤‰æ•°ç‰ˆï¼Œå¤‰æ•°ç‰ˆå¤–éƒ¨ãƒãƒƒãƒ•ã‚¡ã¨ãªã£ã¦ã„ã‚‹ï¼
+	è¡Œåˆ—ã®æ·»ãˆå­—ã¨ã‚µã‚¤ã‚ºã®æ„å‘³ã¯ä»¥ä¸‹ã®é€šã‚Šï¼
 	@verbatim
     (0,0) (0,1)....................(0,m)...  ^
     (1,0) (1,1)                        :...  | 
@@ -651,10 +651,10 @@ TYPENAME AD::ret_type inv(const TMatrixBase<3, 3, AD>& a){
     (n,0) (n,1)....................(n,m)...  V
     <---------  width()  -------------->
     <---------  stride()  ---------------->@endverbatim
-	ƒƒ‚ƒŠ‚ÌƒCƒ[ƒW‚Æ‚µ‚Ä‚ÍC•¡”‚Ìs‚Å\¬‚³‚ê‚és—ñ(???Row)‚Æ
-	•¡”‚Ì—ñ‚Å\¬‚³‚ê‚és—ñ(???Col)‚ª‚ ‚éD
+	ãƒ¡ãƒ¢ãƒªã®ã‚¤ãƒ¡ãƒ¼ã‚¸ã¨ã—ã¦ã¯ï¼Œè¤‡æ•°ã®è¡Œã§æ§‹æˆã•ã‚Œã‚‹è¡Œåˆ—(???Row)ã¨
+	è¤‡æ•°ã®åˆ—ã§æ§‹æˆã•ã‚Œã‚‹è¡Œåˆ—(???Col)ãŒã‚ã‚‹ï¼
 */
-///	s—ñŒvZ‚ÌÀ‘•
+///	è¡Œåˆ—è¨ˆç®—ã®å®Ÿè£…
 template <class DESC>
 class MatrixImp: public DESC::make_sub_matrix{
 public:
@@ -670,44 +670,44 @@ public:
 	typedef TYPENAME desc::const_trans_ref		const_trans_ref;
 	typedef TYPENAME desc::zero					zero;
 	typedef TYPENAME desc::unit					unit;
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	MatrixImp(){}
 
-	///@name s—ñ‚ÌQÆ
+	///@name è¡Œåˆ—ã®å‚ç…§
 	//@{
-	///	À‘Ì‚Ìæ“¾
+	///	å®Ÿä½“ã®å–å¾—
 	exp_type& exp(){ return *(exp_type*)this; }
 	const exp_type& exp() const { return *(const exp_type*)this; }
-	///	n”Ô–Ú‚Ì—v‘f‚ğ•Ô‚·(Šî”‚Í0).
+	///	nç•ªç›®ã®è¦ç´ ã‚’è¿”ã™(åŸºæ•°ã¯0).
 	element_type& item(size_t n, size_t m){ return exp().item_impl(n,m); }
 	const element_type& item(size_t n, size_t m) const { return exp().item_impl(n,m); }
-	///	sƒxƒNƒgƒ‹
+	///	è¡Œãƒ™ã‚¯ãƒˆãƒ«
 	row_vector_ref row(size_t n){ return exp().row_impl(n) ;}
 	const_row_vector_ref row(size_t n) const { return exp().row_impl(n) ;}
 	template <class I>
 	row_vector_ref operator [] (I n){ return exp().row_impl(n) ;}
 	template <class I>
 	const_row_vector_ref operator [] (I n) const { return exp().row_impl(n) ;}
-	///	—ñƒxƒNƒgƒ‹
+	///	åˆ—ãƒ™ã‚¯ãƒˆãƒ«
 	col_vector_ref col(size_t m){ return exp().col_impl(m) ;}
 	const_col_vector_ref col(size_t m) const { return exp().col_impl(m) ;}
-	///	“]’us—ñ
+	///	è»¢ç½®è¡Œåˆ—
 	trans_ref trans() { return exp().trans_impl(); }
 	const_trans_ref trans() const { return exp().trans_impl(); }
-	///	element_type* ‚Ö•ÏŠ·
+	///	element_type* ã¸å¤‰æ›
 	operator element_type*(){ return &item(0,0); }
 	operator const element_type*() const { return &item(0,0); }
 	
-	///	s”‚Ìæ“¾
+	///	è¡Œæ•°ã®å–å¾—
 	size_t height() const { return exp().height_impl(); }
-	///	—ñ”‚Ìæ“¾
+	///	åˆ—æ•°ã®å–å¾—
 	size_t width() const { return exp().width_impl(); }
-	///	ƒTƒCƒY‚Ìİ’è
+	///	ã‚µã‚¤ã‚ºã®è¨­å®š
 	void resize(size_t h, size_t w){ exp().resize_impl(h,w); }
-	///	stride ‚Ìæ“¾
+	///	stride ã®å–å¾—
 	size_t stride() const { return exp().stride_impl(); }
-	/**	ƒxƒNƒgƒ‹‚Ì—v‘f‚ğ‘S‚Äv‚É‚·‚é.
-		@param v —v‘fŒ^‚Ì’l.	*/
+	/**	ãƒ™ã‚¯ãƒˆãƒ«ã®è¦ç´ ã‚’å…¨ã¦vã«ã™ã‚‹.
+		@param v è¦ç´ å‹ã®å€¤.	*/
 	void clear(const element_type v=zero(0)){
 		for(size_t i=0; i<height(); ++i)
 			for(size_t j=0; j<width(); ++j)
@@ -715,7 +715,7 @@ public:
 	}
 	//@}
 
-	///	@name ƒ`ƒFƒbƒN
+	///	@name ãƒã‚§ãƒƒã‚¯
 	//@{
 	template <class B> void size_assert(const MatrixImp<B>& b) const {
 		assert(height() == b.height() && width() == b.width());
@@ -725,38 +725,38 @@ public:
 	}
 	//@}
 
-	///	@name ‰‰Z
+	///	@name æ¼”ç®—
 	//@{
-	/**	‘ã“ü(*this = b)	@param b “¯‚¶ƒTƒCƒY‚Ìs—ñ.	*/
+	/**	ä»£å…¥(*this = b)	@param b åŒã˜ã‚µã‚¤ã‚ºã®è¡Œåˆ—.	*/
 	template <class BD> void assign(const MatrixImp<BD>& b) { PTM::assign(exp(), b); }
-	/**	‘ã“ü(*this = b).@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+	/**	ä»£å…¥(*this = b).@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 	void assign(const element_type* b) { PTM::assign(exp(), b); }
-	///	”äŠr
+	///	æ¯”è¼ƒ
 	template <class BD> bool equal(const MatrixImp<BD>& b) const { return PTM::equal(exp(), b); }
-	///	‰ÁZ
+	///	åŠ ç®—
 	template <class BD> void add(const MatrixImp<BD>& b){ PTM::add(exp(), b); }
-	///	Œ¸Z
+	///	æ¸›ç®—
 	template <class BD> void sub(const MatrixImp<BD>& b){ PTM::sub(exp(), b); }
-	///	ƒXƒJƒ‰[‚ÌŠ|‚¯Z
+	///	ã‚¹ã‚«ãƒ©ãƒ¼ã®æ›ã‘ç®—
 	void multi(element_type b){ PTM::multi(exp(), b); }
-	///	LU•ª‰ğ‚ğs‚¤Bthis‚ğ‘‚«Š·‚¦‚éBs—ñ®‚ğ•Ô‚·B
+	///	LUåˆ†è§£ã‚’è¡Œã†ã€‚thisã‚’æ›¸ãæ›ãˆã‚‹ã€‚è¡Œåˆ—å¼ã‚’è¿”ã™ã€‚
 	element_type lu(int* ip, element_type* weight){ return PTM::lu(exp(), ip, weight); }
-	//	(*this) x + b = 0 ‚Ì1Ÿ•û’ö®‚ğ‰ğ‚­Dthis ‚ÍLU•ª‰ğÏ‚İ‚Ìs—ñ‚Å‚È‚¢‚Æ‚¾‚ßD
+	//	(*this) x + b = 0 ã®1æ¬¡æ–¹ç¨‹å¼ã‚’è§£ãï¼this ã¯LUåˆ†è§£æ¸ˆã¿ã®è¡Œåˆ—ã§ãªã„ã¨ã ã‚ï¼
 	template <class XD, class BD> void solve(VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){ PTM::solve(exp(), x, b, ip); }
-	///	ƒRƒŒƒXƒL[–@
+	///	ã‚³ãƒ¬ã‚¹ã‚­ãƒ¼æ³•
 	template <class VBASE> void cholesky(VectorImp<VBASE>& s){ PTM::cholesky(exp(), s); }
-	///	ƒKƒEƒX‚ÌÁ‹–@Cì‹Æ—Ìˆæ(sŒğŠ·‚Ì‹L˜^)‚Æ‚µ‚ÄC int ip[height()];  ‚ª•K—vDs—ñ‚ğ”j‰ó(lu•ª‰ğ‚µ‚ÄQ‚É‚È‚é)
+	///	ã‚¬ã‚¦ã‚¹ã®æ¶ˆå»æ³•ï¼Œä½œæ¥­é ˜åŸŸ(è¡Œäº¤æ›ã®è¨˜éŒ²)ã¨ã—ã¦ï¼Œ int ip[height()];  ãŒå¿…è¦ï¼è¡Œåˆ—ã‚’ç ´å£Š(luåˆ†è§£ã—ã¦Qã«ãªã‚‹)
 	template <class XD, class BD> element_type gauss(VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){ return PTM::gauss(exp(), x, b, ip); }
-	///	‹ts—ñ‚ğ‹‚ß‚éB
+	///	é€†è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹ã€‚
 	template <class B> element_type inv(MatrixImp<B>& a_inv, int* ip, element_type* weight) { return PTM::inv(a_inv, exp(), ip, weight); }
-	///	‹ts—ñ‚ğ‹‚ß‚éB
+	///	é€†è¡Œåˆ—ã‚’æ±‚ã‚ã‚‹ã€‚
 	ret_type inv() const { return PTM::inv(exp()); }
-	///	s—ñ®
+	///	è¡Œåˆ—å¼
 	element_type det() const { return PTM::det(exp()); }
 	//@}
-	///@name	ƒXƒgƒŠ[ƒ€“üo—Í
+	///@name	ã‚¹ãƒˆãƒªãƒ¼ãƒ å…¥å‡ºåŠ›
 	//@{
-	///	o—Í
+	///	å‡ºåŠ›
 	void print(std::ostream& os, char* sep="( )") const {
 //		os << "sz:" << height() << "," << width() << std::endl;
 		int w = (int)os.width();
@@ -782,7 +782,7 @@ public:
 		}
 		os.width(w);
 	}
-	///	“ü—Í
+	///	å…¥åŠ›
 	void input(std::istream& is){
 		char ch;
 		is >> ch;
@@ -791,15 +791,15 @@ public:
 	}
 	//@}
 protected:
-	///	ƒoƒbƒtƒ@‚Ì‰Šú‰»D
+	///	ãƒãƒƒãƒ•ã‚¡ã®åˆæœŸåŒ–ï¼
 	void init_buffer(){}
-	///	ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ªŒÄ‚ÔD
+	///	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãŒå‘¼ã¶ï¼
 	void set_default(){}
 };
 
-/**	MatrixImpŒ^”h¶ƒNƒ‰ƒX‚É•K—v‚Èƒƒ“ƒo‚Ì’è‹`.
-	”h¶ƒNƒ‰ƒX‚ğì‚é‚½‚Ñ‚ÉC‚±‚Ìƒ}ƒNƒ‚ğg‚Á‚Äƒƒ“ƒo‚ğì‚é.
-	@param	THIS	V‚½‚ÉéŒ¾‚·‚é”h¶ƒNƒ‰ƒX‚ÌŒ^–¼.
+/**	MatrixImpå‹æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã«å¿…è¦ãªãƒ¡ãƒ³ãƒã®å®šç¾©.
+	æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã‚’ä½œã‚‹ãŸã³ã«ï¼Œã“ã®ãƒã‚¯ãƒ­ã‚’ä½¿ã£ã¦ãƒ¡ãƒ³ãƒã‚’ä½œã‚‹.
+	@param	THIS	æ–°ãŸã«å®£è¨€ã™ã‚‹æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã®å‹å.
 	@see	MatrixImp	*/
 
 #define DEF_MATRIXD_BASIC_MEMBER(THIS)										\
@@ -815,7 +815,7 @@ protected:
 	typedef TYPENAME desc::unit					unit;						\
 	typedef TYPENAME desc::trans_ref			trans_ref;					\
 	typedef TYPENAME desc::const_trans_ref		const_trans_ref;			\
-	/*  s—ñ b ‚ğ‘ã“ü	*/													\
+	/*  è¡Œåˆ— b ã‚’ä»£å…¥	*/													\
 	template <class B>														\
 	THIS& operator =(const PTM::MatrixImp<B>& b){							\
 		this->assign(b); return *this;										\
@@ -823,25 +823,25 @@ protected:
 	THIS& operator =(const THIS& b){										\
 		this->assign(b); return *this;										\
 	}																		\
-	/**	+=‰‰Zq(*this = *this + b).										\
-		@param	b	ŸŒ³‚ª“™‚µ‚¢s—ñ	*/									\
+	/**	+=æ¼”ç®—å­(*this = *this + b).										\
+		@param	b	æ¬¡å…ƒãŒç­‰ã—ã„è¡Œåˆ—	*/									\
 	template <class B>														\
 	this_type& operator +=(const PTM::MatrixImp<B>& b){						\
 		this->add(b); return *this;											\
 	}																		\
-	/**	-=‰‰Zq(*this = *this - b). @param	b	ŸŒ³‚ª“™‚µ‚¢s—ñ	*/		\
+	/**	-=æ¼”ç®—å­(*this = *this - b). @param	b	æ¬¡å…ƒãŒç­‰ã—ã„è¡Œåˆ—	*/		\
 	template <class B>														\
 	this_type& operator -=(const PTM::MatrixImp<B>& b){						\
 		this->sub(b); return *this;											\
 	}																		\
-	/**	- ‰‰Zq (return -*this).	*/										\
+	/**	- æ¼”ç®—å­ (return -*this).	*/										\
 	ret_type operator- () { ret_type r(*this); r*=-1; return r; }			\
-	/**	*=‰‰Zq(*this = b * *this). @param	b	—v‘fŒ^	*/					\
+	/**	*=æ¼”ç®—å­(*this = b * *this). @param	b	è¦ç´ å‹	*/					\
 	this_type operator*= (element_type b){									\
 		this->multi(b);														\
 		return *this;														\
 	}																		\
-	/**	/=‰‰Zq(*this = *this / b). @param	b	—v‘fŒ^	*/					\
+	/**	/=æ¼”ç®—å­(*this = *this / b). @param	b	è¦ç´ å‹	*/					\
 	this_type operator/= (element_type b){									\
 		this->div(b);														\
 		return *this;														\
@@ -849,53 +849,53 @@ protected:
 
 #define DEF_MATRIX_BASIC_MEMBER(THIS)										\
 	DEF_MATRIXD_BASIC_MEMBER(THIS)											\
-	/*	ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^	*/										\
+	/*	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿	*/										\
 	THIS(){ this->init_buffer(); this->set_default();} 			\
-	/*  s—ñ b ‚É‚æ‚é‰Šú‰»		*/											\
+	/*  è¡Œåˆ— b ã«ã‚ˆã‚‹åˆæœŸåŒ–		*/											\
 	template <class B>														\
 	THIS(const PTM::MatrixImp<B>& b){ this->init_buffer(); this->assign(b);}	\
 
 //----------------------------------------------------------------------------
-//	ŸŒ³‚ğƒeƒ“ƒvƒŒ[ƒg‚Å‚ÂƒxƒNƒgƒ‹	T???Matrix
+//	æ¬¡å…ƒã‚’ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã§æŒã¤ãƒ™ã‚¯ãƒˆãƒ«	T???Matrix
 //
-///	ŸŒ³‚ğƒeƒ“ƒvƒŒ[ƒg‚Å‚ÂƒxƒNƒgƒ‹‚ÌŠî–{Œ^
+///	æ¬¡å…ƒã‚’ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã§æŒã¤ãƒ™ã‚¯ãƒˆãƒ«ã®åŸºæœ¬å‹
 template<size_t H, size_t W, class D>
 class TMatrixBaseBase: public MatrixImp<D> {
 protected:
-	///	ƒoƒbƒtƒ@‚Ì‰Šú‰»‚Í•s—p
+	///	ãƒãƒƒãƒ•ã‚¡ã®åˆæœŸåŒ–ã¯ä¸ç”¨
 	void init_buffer(){};
-	///	Œp³ê—p
+	///	ç¶™æ‰¿å°‚ç”¨
 	TMatrixBaseBase(){} 
 public:
-	static const size_t HEIGHT = H;			///<	s”
-	static const size_t WIDTH = W;			///<	—ñ”
-	static const size_t STRIDE = D::STRIDE;	///<	—ñ(s)‚ÌŠÔŠu
+	static const size_t HEIGHT = H;			///<	è¡Œæ•°
+	static const size_t WIDTH = W;			///<	åˆ—æ•°
+	static const size_t STRIDE = D::STRIDE;	///<	åˆ—(è¡Œ)ã®é–“éš”
 	typedef D desc;
 	typedef MatrixImp<desc> base_type;
 	DEF_MATRIXD_BASIC_MEMBER(TMatrixBaseBase);
 
-	///	s”
+	///	è¡Œæ•°
 	size_t height_impl() const { return H; }
-	///	—ñ”
+	///	åˆ—æ•°
 	size_t width_impl() const { return W; }
 	size_t stride_impl() const { return D::STRIDE; }
 	void resize_impl(size_t h, size_t w) { assert(h==this->height() && w==this->width()); }
-	///	sƒxƒNƒgƒ‹
+	///	è¡Œãƒ™ã‚¯ãƒˆãƒ«
 	row_vector_ref row_impl(size_t n){ return (row_vector_ref)this->item(n,0); }
 	const_row_vector_ref row_impl(size_t n) const { return (row_vector_ref)this->item(n,0); }
-	///	—ñƒxƒNƒgƒ‹
+	///	åˆ—ãƒ™ã‚¯ãƒˆãƒ«
 	col_vector_ref col_impl(size_t m){ return (col_vector_ref)this->item(0,m); }
 	const_col_vector_ref col_impl(size_t m) const { return (col_vector_ref)this->item(0,m); }
-	///	“]’u
+	///	è»¢ç½®
 	trans_ref trans_impl() { return (trans_ref)this->item(0,0); }
 	const_trans_ref trans_impl() const { return (const_trans_ref)this->item(0,0); }
 };
 template<size_t H, size_t W, class D>
 class TMatrixBase: public TMatrixBaseBase<H,W,D> {
 public:
-	static const size_t HEIGHT = H;			///<	s”
-	static const size_t WIDTH = W;			///<	—ñ”
-	static const size_t STRIDE = D::STRIDE;	///<	—ñ(s)‚ÌŠÔŠu
+	static const size_t HEIGHT = H;			///<	è¡Œæ•°
+	static const size_t WIDTH = W;			///<	åˆ—æ•°
+	static const size_t STRIDE = D::STRIDE;	///<	åˆ—(è¡Œ)ã®é–“éš”
 	typedef D desc;
 	typedef TMatrixBaseBase<H,W,D> base_type;
 	DEF_MATRIXD_BASIC_MEMBER(TMatrixBase);
@@ -904,39 +904,39 @@ public:
 template <class EXP, class TRANS, size_t H, size_t W, size_t STR, class T, class Z=T, class U=Z>
 class TMatrixDescBase{
 public:
-	static const size_t STRIDE = STR;				///<	s—ñƒoƒbƒtƒ@‚Ì•
-	typedef EXP						exp_type;				///<	À‘Ì
-	typedef exp_type				ret_type;				///<	•Ô‚è’lŒ^
-	typedef T						element_type;			///<	—v‘f‚ÌŒ^
-	typedef Z						zero;					///<	zero(0)‚ª 0 ‚ğ•Ô‚·Œ^
-	typedef U						unit;					///<	unit(1)‚ª 1 ‚ğ•Ô‚·Œ^
-	typedef TRANS					trans_type;				///<	“]’ns—ñ‚ÌŒ^
-	typedef trans_type&				trans_ref;				///<	“]’ns—ñ‚ÌQÆŒ^
-	typedef const trans_type&		const_trans_ref;		///<	“]’ns—ñ‚ÌQÆŒ^
+	static const size_t STRIDE = STR;				///<	è¡Œåˆ—ãƒãƒƒãƒ•ã‚¡ã®å¹…
+	typedef EXP						exp_type;				///<	å®Ÿä½“
+	typedef exp_type				ret_type;				///<	è¿”ã‚Šå€¤å‹
+	typedef T						element_type;			///<	è¦ç´ ã®å‹
+	typedef Z						zero;					///<	zero(0)ãŒ 0 ã‚’è¿”ã™å‹
+	typedef U						unit;					///<	unit(1)ãŒ 1 ã‚’è¿”ã™å‹
+	typedef TRANS					trans_type;				///<	è»¢åœ°è¡Œåˆ—ã®å‹
+	typedef trans_type&				trans_ref;				///<	è»¢åœ°è¡Œåˆ—ã®å‚ç…§å‹
+	typedef const trans_type&		const_trans_ref;		///<	è»¢åœ°è¡Œåˆ—ã®å‚ç…§å‹
 };
 template <class EXP, class TRANS, size_t H, size_t W, size_t STR, class T, class Z=T, class U=Z>
 class TMatrixDescRow: public TMatrixDescBase<EXP,TRANS,H,W,STR,T,Z,U>{
 public:
 	typedef TMakeSubMatrixRow< TMatrixDescRow<EXP,TRANS,H,W,STR,T,Z,U> > make_sub_matrix;
-	typedef TVector<W,T>			row_vector_type;		///<	sƒxƒNƒgƒ‹Œ^
-	typedef row_vector_type&		row_vector_ref;			///<	sƒxƒNƒgƒ‹‚ÌQÆ
-	typedef const row_vector_type&	const_row_vector_ref;	///<	sƒxƒNƒgƒ‹‚ÌQÆ
+	typedef TVector<W,T>			row_vector_type;		///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«å‹
+	typedef row_vector_type&		row_vector_ref;			///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef const row_vector_type&	const_row_vector_ref;	///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
 	typedef TVectorSlice<H,STR,TVector<H*STR,T> >
-									col_vector_type;		///<	—ñƒxƒNƒgƒ‹Œ^
-	typedef col_vector_type&		col_vector_ref;			///<	—ñƒxƒNƒgƒ‹‚ÌQÆ
-	typedef const col_vector_type&	const_col_vector_ref;	///<	—ñƒxƒNƒgƒ‹‚ÌQÆ
+									col_vector_type;		///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«å‹
+	typedef col_vector_type&		col_vector_ref;			///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef const col_vector_type&	const_col_vector_ref;	///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
 };
 template <class EXP, class TRANS, size_t H, size_t W, size_t STR, class T, class Z=T, class U=Z>
 class TMatrixDescCol: public TMatrixDescBase<EXP,TRANS,H,W,STR,T,Z,U>{
 public:
 	typedef TMakeSubMatrixCol< TMatrixDescCol<EXP,TRANS,H,W,STR,T,Z,U> > make_sub_matrix;
 	typedef TVectorSlice<W,STR,TVector<W*STR,T> >
-									row_vector_type;		///<	sƒxƒNƒgƒ‹Œ^
-	typedef row_vector_type&		row_vector_ref;			///<	sƒxƒNƒgƒ‹‚ÌQÆ
-	typedef const row_vector_type&	const_row_vector_ref;	///<	sƒxƒNƒgƒ‹‚ÌQÆ
-	typedef TVector<H,T>			col_vector_type;		///<	—ñƒxƒNƒgƒ‹Œ^
-	typedef col_vector_type&		col_vector_ref;			///<	—ñƒxƒNƒgƒ‹‚ÌQÆ
-	typedef const col_vector_type&	const_col_vector_ref;	///<	—ñƒxƒNƒgƒ‹‚ÌQÆ
+									row_vector_type;		///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«å‹
+	typedef row_vector_type&		row_vector_ref;			///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef const row_vector_type&	const_row_vector_ref;	///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef TVector<H,T>			col_vector_type;		///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«å‹
+	typedef col_vector_type&		col_vector_ref;			///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef const col_vector_type&	const_col_vector_ref;	///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
 };
 template <class EXP, class TRANS, size_t H, size_t W, class OD>
 class TSubMatrixDescRow: public TMatrixDescRow<EXP, TRANS, H, W, OD::STRIDE, TYPENAME OD::element_type, TYPENAME OD::zero, TYPENAME OD::unit>{
@@ -950,80 +950,80 @@ public:
 };
 
 template <size_t H, size_t W, class T, class Z=T, class U=Z> class TMatrixCol;
-/**	s—ñŒ^. TMatrixRow<3,3, float> m; ‚Ì‚æ‚¤‚Ég‚¤
-	@param	H	s”D
-	@param	W	—ñ”D
-	@param	T	—v‘f‚ÌŒ^.	*/
+/**	è¡Œåˆ—å‹. TMatrixRow<3,3, float> m; ã®ã‚ˆã†ã«ä½¿ã†
+	@param	H	è¡Œæ•°ï¼
+	@param	W	åˆ—æ•°ï¼
+	@param	T	è¦ç´ ã®å‹.	*/
 template <size_t H, size_t W, class T, class Z=T, class U=Z>
 class TMatrixRow:public TMatrixBase<H, W, TMatrixDescRow<TMatrixRow<H,W,T,Z,U>, TMatrixCol<W,H,T,Z,U>, H, W, W, T, Z, U> >{
 public:
-	///	Œ^î•ñ
+	///	å‹æƒ…å ±
 	typedef TMatrixDescRow<TMatrixRow<H,W,T,Z,U>, TMatrixCol<W,H,T,Z,U>, H, W, W, T, Z, U> desc;
-	typedef TMatrixBase<H,W,desc> base_type;		///<	Šî–{ƒNƒ‰ƒXŒ^
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`. @see ::DEF_MATRIX_BASIC_MEMBER
+	typedef TMatrixBase<H,W,desc> base_type;		///<	åŸºæœ¬ã‚¯ãƒ©ã‚¹å‹
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TMatrixRow);
 
 public:
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i, size_t j){ return data[i][j]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[i][j]; }
 private:
-	element_type data[H][W];										///<	ƒf[ƒ^
+	element_type data[H][W];										///<	ãƒ‡ãƒ¼ã‚¿
 };
 
-/**	—ñs—ñŒ^. TMatrixCol<3,3, float> m; ‚Ì‚æ‚¤‚Ég‚¤
-	@param	H	s”D
-	@param	W	—ñ”D
-	@param	T	—v‘f‚ÌŒ^.	*/
+/**	åˆ—è¡Œåˆ—å‹. TMatrixCol<3,3, float> m; ã®ã‚ˆã†ã«ä½¿ã†
+	@param	H	è¡Œæ•°ï¼
+	@param	W	åˆ—æ•°ï¼
+	@param	T	è¦ç´ ã®å‹.	*/
 template <size_t H, size_t W, class T, class Z, class U>
 class TMatrixCol:public TMatrixBase<H, W, TMatrixDescCol<TMatrixCol<H,W,T,Z,U>, TMatrixRow<W,H,T,Z,U>, H,W,H,T,Z,U> >{
 public:
-	///	Œ^î•ñ
+	///	å‹æƒ…å ±
 	typedef TMatrixDescCol<TMatrixCol<H,W,T,Z,U>, TMatrixRow<H,W,T,Z,U>, H, W, H, T, Z, U> desc;
-	typedef TMatrixBase<H,W,desc> base_type;		///<	Šî–{ƒNƒ‰ƒXŒ^
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`. @see ::DEF_MATRIX_BASIC_MEMBER
+	typedef TMatrixBase<H,W,desc> base_type;		///<	åŸºæœ¬ã‚¯ãƒ©ã‚¹å‹
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TMatrixCol);
 
 public:
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i, size_t j){ return data[j][i]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[j][i]; }
 private:
-	element_type data[W][H];				///<	ƒf[ƒ^
+	element_type data[W][H];				///<	ãƒ‡ãƒ¼ã‚¿
 };
 
 template <size_t H, size_t W, class OD> class TSubMatrixCol;
 
-///	•”•ªs—ñ(ƒeƒ“ƒvƒŒ[ƒg”Å)
+///	éƒ¨åˆ†è¡Œåˆ—(ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆ)
 template <size_t H, size_t W, class OD>
 class TSubMatrixRow:public TMatrixBase<H,W,TSubMatrixDescRow<TSubMatrixRow<H,W,OD>,TSubMatrixCol<W,H,OD>, H,W,OD> >{
 public:
 	typedef TSubMatrixDescRow<TSubMatrixRow<H,W,OD>,TSubMatrixCol<W,H,OD>, H,W,OD> desc;
 	typedef TMatrixBase<H,W,desc> base_type;
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`. @see ::DEF_MATRIX_BASIC_MEMBER
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TSubMatrixRow);
     static const size_t HEIGHT = base_type::HEIGHT;
     static const size_t WIDTH = base_type::WIDTH;
 
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i, size_t j){ return data[i][j]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[i][j]; }
 protected:
 	element_type data[HEIGHT][base_type::STRIDE];
 };
 
-///	•”•ªs—ñ(ƒeƒ“ƒvƒŒ[ƒg”Å)
+///	éƒ¨åˆ†è¡Œåˆ—(ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆ)
 template <size_t H, size_t W, class OD>
 class TSubMatrixCol:public TMatrixBase<H,W,TSubMatrixDescCol<TSubMatrixCol<H,W,OD>,TSubMatrixRow<W,H,OD>, H,W,OD> >{
 public:
 	typedef TSubMatrixDescCol<TSubMatrixCol<H,W,OD>,TSubMatrixRow<W,H,OD>, H,W,OD> desc;
 	typedef TMatrixBase<H,W,desc> base_type;
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`. @see ::DEF_MATRIX_BASIC_MEMBER
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TSubMatrixCol);
     static const size_t HEIGHT = base_type::HEIGHT;
     static const size_t WIDTH = base_type::WIDTH;
 
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i, size_t j){ return data[j][i]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[j][i]; }
 protected:
@@ -1031,7 +1031,7 @@ protected:
 };
 
 //-----------------------------------------------------------------------------
-//	ƒTƒCƒY‚ğ•Ï”‚Å‚ÂƒxƒNƒgƒ‹
+//	ã‚µã‚¤ã‚ºã‚’å¤‰æ•°ã§æŒã¤ãƒ™ã‚¯ãƒˆãƒ«
 //
 
 template <class T> class EMatrixRow;
@@ -1040,66 +1040,66 @@ template <class T> class EMatrixCol;
 template <class T> class VMatrixCol;
 template <class EXP, class TRANS, class T, class Z=T, class U=Z> class EMatrixDescBase{
 public:
-	typedef EXP							exp_type;				///<	À‘Ì
-	typedef T							element_type;			///<	—v‘f‚ÌŒ^
-	typedef Z							zero;					///<	zero(0)‚ª 0 ‚ğ•Ô‚·Œ^
-	typedef U							unit;					///<	unit(1)‚ª 1 ‚ğ•Ô‚·Œ^
-	typedef	TRANS						trans_type;				///<	“]’ns—ñ
-	typedef trans_type					trans_ref;				///<	“]’ns—ñ‚ÌQÆŒ^
-	typedef trans_type					const_trans_ref;		///<	“]’ns—ñ‚ÌQÆŒ^
+	typedef EXP							exp_type;				///<	å®Ÿä½“
+	typedef T							element_type;			///<	è¦ç´ ã®å‹
+	typedef Z							zero;					///<	zero(0)ãŒ 0 ã‚’è¿”ã™å‹
+	typedef U							unit;					///<	unit(1)ãŒ 1 ã‚’è¿”ã™å‹
+	typedef	TRANS						trans_type;				///<	è»¢åœ°è¡Œåˆ—
+	typedef trans_type					trans_ref;				///<	è»¢åœ°è¡Œåˆ—ã®å‚ç…§å‹
+	typedef trans_type					const_trans_ref;		///<	è»¢åœ°è¡Œåˆ—ã®å‚ç…§å‹
 };
 template <class EXP, class TRANS, class T, class Z=T, class U=Z>
 class EMatrixDescRow: public EMatrixDescBase<EXP, TRANS, T, Z, U>{
 public:
-	typedef VMatrixRow<T>							ret_type;				///<	•Ô‚è’lŒ^
-	typedef EVector<T>								row_vector_type;		///<	sƒxƒNƒgƒ‹Œ^
-	typedef row_vector_type							row_vector_ref;			///<	—ñƒxƒNƒgƒ‹‚ÌQÆ
-	typedef TYPENAME row_vector_type::const_type	const_row_vector_ref;	///<	sƒxƒNƒgƒ‹‚ÌQÆ
-	typedef EVectorSlice<T>							col_vector_type;		///<	—ñƒxƒNƒgƒ‹Œ^
-	typedef col_vector_type							col_vector_ref;			///<	sƒxƒNƒgƒ‹‚ÌQÆ
-	typedef TYPENAME col_vector_type::const_type	const_col_vector_ref;	///<	—ñƒxƒNƒgƒ‹‚ÌQÆ
+	typedef VMatrixRow<T>							ret_type;				///<	è¿”ã‚Šå€¤å‹
+	typedef EVector<T>								row_vector_type;		///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«å‹
+	typedef row_vector_type							row_vector_ref;			///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef TYPENAME row_vector_type::const_type	const_row_vector_ref;	///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef EVectorSlice<T>							col_vector_type;		///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«å‹
+	typedef col_vector_type							col_vector_ref;			///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef TYPENAME col_vector_type::const_type	const_col_vector_ref;	///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
 	typedef EMakeSubMatrixRow< EMatrixDescRow<EXP, TRANS, T, Z, U> > make_sub_matrix;
 };
 template <class EXP, class TRANS, class T, class Z=T, class U=Z>
 class EMatrixDescCol: public EMatrixDescBase<EXP, TRANS, T, Z, U>{
 public:
-	typedef VMatrixCol<T>							ret_type;				///<	•Ô‚è’lŒ^
-	typedef EVectorSlice<T>							row_vector_type;		///<	sƒxƒNƒgƒ‹Œ^
-	typedef row_vector_type							row_vector_ref;			///<	—ñƒxƒNƒgƒ‹‚ÌQÆ
-	typedef TYPENAME row_vector_type::const_type	const_row_vector_ref;	///<	sƒxƒNƒgƒ‹‚ÌQÆ
-	typedef EVector<T>								col_vector_type;		///<	—ñƒxƒNƒgƒ‹Œ^
-	typedef col_vector_type							col_vector_ref;			///<	sƒxƒNƒgƒ‹‚ÌQÆ
-	typedef TYPENAME col_vector_type::const_type	const_col_vector_ref;	///<	—ñƒxƒNƒgƒ‹‚ÌQÆ
+	typedef VMatrixCol<T>							ret_type;				///<	è¿”ã‚Šå€¤å‹
+	typedef EVectorSlice<T>							row_vector_type;		///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«å‹
+	typedef row_vector_type							row_vector_ref;			///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef TYPENAME row_vector_type::const_type	const_row_vector_ref;	///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef EVector<T>								col_vector_type;		///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«å‹
+	typedef col_vector_type							col_vector_ref;			///<	è¡Œãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
+	typedef TYPENAME col_vector_type::const_type	const_col_vector_ref;	///<	åˆ—ãƒ™ã‚¯ãƒˆãƒ«ã®å‚ç…§
 	typedef EMakeSubMatrixCol< EMatrixDescCol<EXP, TRANS, T, Z, U> > make_sub_matrix;
 };
 
-///	ƒTƒCƒY‚ğ•Ï”‚Å‚à‚Âs—ñ‚ÌŠî–{Œ^
+///	ã‚µã‚¤ã‚ºã‚’å¤‰æ•°ã§ã‚‚ã¤è¡Œåˆ—ã®åŸºæœ¬å‹
 template <class D>
 class EMatrixBase:public MatrixImp<D>{
 public:
-	///	Œ^î•ñ
+	///	å‹æƒ…å ±
 	typedef D desc;
-	typedef MatrixImp<desc> base_type;		///<	Šî–{ƒNƒ‰ƒXŒ^
+	typedef MatrixImp<desc> base_type;		///<	åŸºæœ¬ã‚¯ãƒ©ã‚¹å‹
 	DEF_MATRIXD_BASIC_MEMBER(EMatrixBase);
 
 	size_t height_impl() const { return height_; }
 	size_t width_impl() const { return width_; }
 		
-	///	sƒxƒNƒgƒ‹
+	///	è¡Œãƒ™ã‚¯ãƒˆãƒ«
 	row_vector_ref row_impl(size_t n){
 		return row_vector_ref(this->width(), 1, &this->item(n,0)); 
 	}
 	const_row_vector_ref row_impl(size_t n) const {
 		return const_row_vector_ref(this->width(), 1, &this->item(n,0));
 	}
-	///	—ñƒxƒNƒgƒ‹
+	///	åˆ—ãƒ™ã‚¯ãƒˆãƒ«
 	col_vector_ref col_impl(size_t m){
 		return col_vector_ref(this->height(), this->stride(), &this->item(0,m));
 	}
 	const_col_vector_ref col_impl(size_t m) const {
 		return const_col_vector_ref(this->height(), this->stride(), &this->item(0,m));
 	}
-	///	“]’u
+	///	è»¢ç½®
 	trans_ref trans_impl(){
 		return trans_ref(this->width(), this->height(), this->stride(), &this->item(0,0));
 	}
@@ -1112,13 +1112,13 @@ public:
 protected:
 	size_t height_;
 	size_t width_;
-	element_type* data;						///<	ƒf[ƒ^
+	element_type* data;						///<	ãƒ‡ãƒ¼ã‚¿
 	void init_buffer(){height_=0; width_=0; data=0; }
 	EMatrixBase(size_t h, size_t w, const element_type* d):height_(h), width_(w), data((element_type*)d){}
 	EMatrixBase():height_(0), width_(0), data(0){}
 };
 
-///	ƒTƒCƒY‚ğ•Ï”‚Å‚à‚Âs—ñ‚ÌŠî–{Œ^
+///	ã‚µã‚¤ã‚ºã‚’å¤‰æ•°ã§ã‚‚ã¤è¡Œåˆ—ã®åŸºæœ¬å‹
 template <class D>
 class EMatrixBaseRow:public EMatrixBase<D>{
 protected:
@@ -1129,19 +1129,19 @@ public:
 	typedef EMatrixBase<D> base_type;
 	DEF_MATRIXD_BASIC_MEMBER(EMatrixBaseRow)
 	EMatrixBaseRow(size_t h, size_t w, const element_type* d):EMatrixBase<D>(h,w,d){}
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i, size_t j){ return this->data[i*this->stride()+j]; }
 	const element_type& item_impl(size_t i, size_t j) const { return this->data[i*this->stride()+j]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return this->width_; }
-	///	sƒxƒNƒgƒ‹
+	///	è¡Œãƒ™ã‚¯ãƒˆãƒ«
 	row_vector_ref row_impl(size_t n){
 		return row_vector_ref(this->width(), 1, &this->item(n,0));
 	}
 	const_row_vector_ref row_impl(size_t n) const {
 		return const_row_vector_ref(this->width(), 1, &this->item(n,0));
 	}
-	///	—ñƒxƒNƒgƒ‹
+	///	åˆ—ãƒ™ã‚¯ãƒˆãƒ«
 	col_vector_ref col_impl(size_t m){
 		return col_vector_ref(this->height(), this->stride(), &this->item(0,m));
 	}
@@ -1150,7 +1150,7 @@ public:
 	}
 };
 
-///	ƒTƒCƒY‚ğ•Ï”‚Å‚à‚Âs—ñ‚ÌŠî–{Œ^
+///	ã‚µã‚¤ã‚ºã‚’å¤‰æ•°ã§ã‚‚ã¤è¡Œåˆ—ã®åŸºæœ¬å‹
 template <class D>
 class EMatrixBaseCol:public EMatrixBase<D>{
 protected:
@@ -1161,19 +1161,19 @@ public:
 	typedef EMatrixBase<D> base_type;
 	DEF_MATRIXD_BASIC_MEMBER(EMatrixBaseCol)
 	EMatrixBaseCol(size_t h, size_t w, const element_type* d):EMatrixBase<D>(h,w,d){}
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i, size_t j){ return this->data[j*this->stride()+i]; }
 	const element_type& item_impl(size_t i, size_t j) const { return this->data[j*this->stride()+i]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return this->height_; }
-	///	sƒxƒNƒgƒ‹
+	///	è¡Œãƒ™ã‚¯ãƒˆãƒ«
 	row_vector_ref row_impl(size_t n){
 		return row_vector_ref(this->width(), this->stride(), &this->item(n,0));
 	}
 	const_row_vector_ref row_impl(size_t n) const {
 		return const_row_vector_ref(this->width(), this->stride(), &this->item(n,0));
 	}
-	///	—ñƒxƒNƒgƒ‹
+	///	åˆ—ãƒ™ã‚¯ãƒˆãƒ«
 	col_vector_ref col_impl(size_t m){
 		return col_vector_ref(this->height(), 1, &this->item(0,m));
 	}
@@ -1182,29 +1182,29 @@ public:
 	}
 };
 
-/**	s—ñŒ^. EMatrixRow<float> m(3,3,buf); ‚Ì‚æ‚¤‚Ég‚¤
-	@param	T	—v‘f‚ÌŒ^.	*/
+/**	è¡Œåˆ—å‹. EMatrixRow<float> m(3,3,buf); ã®ã‚ˆã†ã«ä½¿ã†
+	@param	T	è¦ç´ ã®å‹.	*/
 template <class T>
 class EMatrixRow:public EMatrixBaseRow< EMatrixDescRow<EMatrixRow<T>, EMatrixCol<T>, T> >{
 public:
-	///	Œ^î•ñ
+	///	å‹æƒ…å ±
 	typedef EMatrixDescRow<EMatrixRow<T>, EMatrixCol<T>, T> desc;
-	typedef EMatrixBaseRow<desc> base_type;		///<	Šî–{ƒNƒ‰ƒXŒ^
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`. @see ::DEF_MATRIX_BASIC_MEMBER
+	typedef EMatrixBaseRow<desc> base_type;		///<	åŸºæœ¬ã‚¯ãƒ©ã‚¹å‹
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(EMatrixRow);
 	EMatrixRow(const EMatrixRow& m):base_type(m.height_, m.width_,m.data){}
 	EMatrixRow(size_t h, size_t w, size_t str, const element_type* d):base_type(h,w,d){ assert(str == w); }
 };
 
-/**	s—ñŒ^. VMatrixRow<float> m(3,3); ‚Ì‚æ‚¤‚Ég‚¤
-	@param	T	—v‘f‚ÌŒ^.	*/
+/**	è¡Œåˆ—å‹. VMatrixRow<float> m(3,3); ã®ã‚ˆã†ã«ä½¿ã†
+	@param	T	è¦ç´ ã®å‹.	*/
 template <class T>
 class VMatrixRow:public EMatrixBaseRow< EMatrixDescRow<VMatrixRow<T>, EMatrixCol<T>, T> >{
 public:
-	///	Œ^î•ñ
+	///	å‹æƒ…å ±
 	typedef EMatrixDescRow<VMatrixRow<T>, EMatrixCol<T>, T> desc;
-	typedef EMatrixBaseRow<desc> base_type;		///<	Šî–{ƒNƒ‰ƒXŒ^
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`. @see ::DEF_MATRIX_BASIC_MEMBER
+	typedef EMatrixBaseRow<desc> base_type;		///<	åŸºæœ¬ã‚¯ãƒ©ã‚¹å‹
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(VMatrixRow);
 	VMatrixRow(const VMatrixRow& m){ this->init_buffer(); this->assign(m); }
 	~VMatrixRow(){ delete [] this->data; }
@@ -1214,37 +1214,37 @@ public:
 			delete [] this->data;
 			this->data = new T[h*w];
 		}
-		// ‚±‚ê‚Í¡‚Ü‚Åã‚Ìif•¶‚Ì’†‚É‚ ‚Á‚½‚ªA
-		// ‚±‚ê‚Å‚Ís—ñ‚ğ¬‚³‚­Resize‚·‚é–‚ª‚Å‚«‚È‚¢Bimitake, 09/01/22j
+		// ã“ã‚Œã¯ä»Šã¾ã§ä¸Šã®ifæ–‡ã®ä¸­ã«ã‚ã£ãŸãŒã€
+		// ã“ã‚Œã§ã¯è¡Œåˆ—ã‚’å°ã•ãResizeã™ã‚‹äº‹ãŒã§ããªã„ã€‚ï¼ˆmitake, 09/01/22ï¼‰
 		this->height_ = h;
 		this->width_ = w;
 	}
 };
 
-/**	s—ñŒ^. EMatrixCol<float> m(3,3,buf); ‚Ì‚æ‚¤‚Ég‚¤
-	@param	T	—v‘f‚ÌŒ^.	*/
+/**	è¡Œåˆ—å‹. EMatrixCol<float> m(3,3,buf); ã®ã‚ˆã†ã«ä½¿ã†
+	@param	T	è¦ç´ ã®å‹.	*/
 template <class T>
 class EMatrixCol:public EMatrixBaseCol< EMatrixDescCol<EMatrixCol<T>, EMatrixRow<T>, T> >{
 public:
-	///	Œ^î•ñ
+	///	å‹æƒ…å ±
 	typedef EMatrixDescCol<EMatrixCol<T>, EMatrixRow<T>, T> desc;
-	typedef EMatrixBaseCol<desc> base_type;		///<	Šî–{ƒNƒ‰ƒXŒ^
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`. @see ::DEF_MATRIX_BASIC_MEMBER
+	typedef EMatrixBaseCol<desc> base_type;		///<	åŸºæœ¬ã‚¯ãƒ©ã‚¹å‹
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(EMatrixCol);
 	EMatrixCol(const EMatrixCol& m):base_type(m.height_, m.width_, m.data){}
 	EMatrixCol(size_t h, size_t w, size_t str, const element_type* d):base_type(h,w,d){ assert(str == h); }
 };
 
-/**	s—ñŒ^. VMatrixCol<float> m(3,3); ‚Ì‚æ‚¤‚Ég‚¤
-	resizeŒã‚É‰Šú‰»‚³‚ê‚Ä‚¢‚È‚¢‚Ì‚Åg‚¤‚Æ‚«‚É‚Í’ˆÓ‚·‚é
-	@param	T	—v‘f‚ÌŒ^.	*/
+/**	è¡Œåˆ—å‹. VMatrixCol<float> m(3,3); ã®ã‚ˆã†ã«ä½¿ã†
+	resizeå¾Œã«åˆæœŸåŒ–ã•ã‚Œã¦ã„ãªã„ã®ã§ä½¿ã†ã¨ãã«ã¯æ³¨æ„ã™ã‚‹
+	@param	T	è¦ç´ ã®å‹.	*/
 template <class T>
 class VMatrixCol:public EMatrixBaseCol< EMatrixDescCol<VMatrixCol<T>, EMatrixRow<T>, T> >{
 public:
-	///	Œ^î•ñ
+	///	å‹æƒ…å ±
 	typedef EMatrixDescCol<VMatrixCol<T>, EMatrixRow<T>, T> desc;
-	typedef EMatrixBaseCol<desc> base_type;		///<	Šî–{ƒNƒ‰ƒXŒ^
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`. @see ::DEF_MATRIX_BASIC_MEMBER
+	typedef EMatrixBaseCol<desc> base_type;		///<	åŸºæœ¬ã‚¯ãƒ©ã‚¹å‹
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(VMatrixCol);
 	VMatrixCol(const VMatrixCol& m){ this->init_buffer(); this->assign(m); }
 	~VMatrixCol(){ delete [] this->data; }
@@ -1260,13 +1260,13 @@ public:
 };
 
 template <class T, class Z, class U> class ESubMatrixCol;
-///	•”•ªs—ñ(•Ï””Å)
+///	éƒ¨åˆ†è¡Œåˆ—(å¤‰æ•°ç‰ˆ)
 template <class T, class Z, class U>
 class ESubMatrixRow:public EMatrixBaseRow< EMatrixDescRow<ESubMatrixRow<T>, ESubMatrixCol<T>, T,Z,U> >{
 public:
 	typedef EMatrixDescRow<ESubMatrixRow<T>, ESubMatrixCol<T>, T,Z,U> desc;
 	typedef EMatrixBaseRow<desc> base_type;
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`. @see ::DEF_MATRIX_BASIC_MEMBER
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(ESubMatrixRow);
 	///
 	ESubMatrixRow(size_t h, size_t w, size_t str, const element_type* d):base_type(h, w, d), stride_(str){}
@@ -1279,13 +1279,13 @@ protected:
 	void init_buffer() { this->height_=0; this->width_=0; this->stride_=0; this->data=0; }
 };
 
-///	•”•ªs—ñ(•Ï””Å)
+///	éƒ¨åˆ†è¡Œåˆ—(å¤‰æ•°ç‰ˆ)
 template <class T, class Z, class U>
 class ESubMatrixCol:public EMatrixBaseCol< EMatrixDescCol<ESubMatrixCol<T>, ESubMatrixRow<T>, T,Z,U> >{
 public:
 	typedef EMatrixDescCol<ESubMatrixCol<T>, ESubMatrixRow<T>, T,Z,U> desc;
 	typedef EMatrixBaseCol<desc> base_type;
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`. @see ::DEF_MATRIX_BASIC_MEMBER
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©. @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(ESubMatrixCol);
 	///
 	ESubMatrixCol(size_t h, size_t w, size_t str, const element_type* d):base_type(h,w,d), stride_(str){}
@@ -1300,33 +1300,33 @@ protected:
 
 
 //----------------------------------------------------------------------------
-///	@name s—ñ‚Ì‰‰Zq
+///	@name è¡Œåˆ—ã®æ¼”ç®—å­
 //@{
-///	s—ñ‚Ì”äŠr
+///	è¡Œåˆ—ã®æ¯”è¼ƒ
 template <class AD, class BD>
 bool operator == (const MatrixImp<AD>& a, const MatrixImp<BD>& b){
 	return a.equal(b);
 }
-///	s—ñ‚Ì”äŠr
+///	è¡Œåˆ—ã®æ¯”è¼ƒ
 template <class AD, class BD>
 bool operator != (const MatrixImp<AD>& a, const MatrixImp<BD>& b){
 	return !a.equal(b);
 }
-///	s—ñ‚Ì˜a
+///	è¡Œåˆ—ã®å’Œ
 template <class AD, class BD>
 TYPENAME AD::ret_type operator + (const MatrixImp<AD>& a, const MatrixImp<BD>& b){
 	TYPENAME AD::ret_type r(a);
 	r.add(b);
 	return r;
 }
-///	s—ñ‚Ì·
+///	è¡Œåˆ—ã®å·®
 template <class AD, class BD>
 TYPENAME AD::ret_type operator - (const MatrixImp<AD>& a, const MatrixImp<BD>& b){
 	TYPENAME AD::ret_type r(a);
 	r.sub(b);
 	return r;
 }
-///	s—ñ‚ÌŠ|‚¯Z	ƒTƒCƒYFƒeƒ“ƒvƒŒ[ƒg
+///	è¡Œåˆ—ã®æ›ã‘ç®—	ã‚µã‚¤ã‚ºï¼šãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
 template <size_t AH, size_t AW, class AD, size_t BW, class BD>
 TMatrixCol<AH, BW, TYPENAME AD::element_type> operator * (
 	const TMatrixBase<AH, AW, AD>& a,
@@ -1335,7 +1335,7 @@ TMatrixCol<AH, BW, TYPENAME AD::element_type> operator * (
 	multi(r, a, b);
 	return r;
 }
-///	s—ñ‚ÌŠ|‚¯Z	ƒTƒCƒYF•Ï”
+///	è¡Œåˆ—ã®æ›ã‘ç®—	ã‚µã‚¤ã‚ºï¼šå¤‰æ•°
 template <class AD, class BD>
 VMatrixCol<TYPENAME AD::element_type> operator * (const MatrixImp<AD>& a, const MatrixImp<BD>& b){
 	VMatrixCol<TYPENAME AD::element_type> r;
@@ -1343,43 +1343,43 @@ VMatrixCol<TYPENAME AD::element_type> operator * (const MatrixImp<AD>& a, const 
 	return r;
 }
 
-//	ƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯Z
-///	ƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯Z	ƒTƒCƒYFƒeƒ“ƒvƒŒ[ƒg
+//	ãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®æ›ã‘ç®—
+///	ãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®æ›ã‘ç®—	ã‚µã‚¤ã‚ºï¼šãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
 template <size_t AH, size_t AW, class AD, class BD>
 TVector<AH, TYPENAME AD::element_type> operator * (const TMatrixBase<AH, AW, AD>& a, const VectorImp<BD>& b){
 	TVector<AH, TYPENAME AD::element_type> r;
 	multi(r, a, b);
 	return r;
 }
-///	ƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯Z	ƒTƒCƒYF•Ï”
+///	ãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®æ›ã‘ç®—	ã‚µã‚¤ã‚ºï¼šå¤‰æ•°
 template <class AD, class BD>
 VVector<TYPENAME BD::element_type> operator * (const MatrixImp<AD>& a, const VectorImp<BD>& b){
 	VVector<TYPENAME BD::element_type> r;
 	multi(r, a, b);
 	return r;
 }
-///	ƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯Z	ƒTƒCƒYFƒeƒ“ƒvƒŒ[ƒg
+///	ãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®æ›ã‘ç®—	ã‚µã‚¤ã‚ºï¼šãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
 template <class AD, size_t BH, size_t BW, class BD>
 TVector<BW, TYPENAME AD::element_type> operator * (const VectorImp<AD>& a, const TMatrixBase<BH, BW, BD>& b){
 	TVector<BW, TYPENAME AD::element_type> r;
 	multi(r, b.trans(), a);
 	return r;
 }
-///	ƒxƒNƒgƒ‹‚Æs—ñ‚ÌŠ|‚¯Z	ƒTƒCƒYF•Ï”
+///	ãƒ™ã‚¯ãƒˆãƒ«ã¨è¡Œåˆ—ã®æ›ã‘ç®—	ã‚µã‚¤ã‚ºï¼šå¤‰æ•°
 template <class AD, class BD>
 VVector<TYPENAME AD::element_type> operator * (const VectorImp<AD>& a, const MatrixImp<BD>& b){
 	VVector<TYPENAME AD::element_type> r;
 	multi(r, b.trans(), a);
 	return r;
 }
-///	s—ñ‚Ì’è””{
+///	è¡Œåˆ—ã®å®šæ•°å€
 template <class D>
 TYPENAME D::ret_type operator * (const MatrixImp<D>& a, TYPENAME D::element_type b){
 	TYPENAME D::ret_type r(a);
 	r.multi(b);
 	return r;
 }
-///	s—ñ‚Ì’è””{
+///	è¡Œåˆ—ã®å®šæ•°å€
 template <class D>
 TYPENAME D::ret_type operator * (TYPENAME D::element_type a, const MatrixImp<D>& b){
 	TYPENAME D::ret_type r(b);
@@ -1387,13 +1387,13 @@ TYPENAME D::ret_type operator * (TYPENAME D::element_type a, const MatrixImp<D>&
 	return r;
 }
 
-///	•\¦
+///	è¡¨ç¤º
 template <class D>
 std::ostream& operator << (std::ostream& os, const MatrixImp<D>& m){
 	m.print(os);
 	return os;
 }
-///	“ü—Í
+///	å…¥åŠ›
 template <class D>
 std::istream& operator >> (std::istream& is, MatrixImp<D>& m){
 	m.input(is);

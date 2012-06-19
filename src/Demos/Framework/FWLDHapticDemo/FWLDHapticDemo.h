@@ -1,4 +1,4 @@
-#ifndef FWLDHAPTIC_DEMO_H
+ï»¿#ifndef FWLDHAPTIC_DEMO_H
 #define FWLDHAPTIC_DEMO_H
 
 #include <Springhead.h>
@@ -9,23 +9,23 @@ using namespace Spr;
 class FWLDHapticDemo : public FWApp{
 public:
 	FWLDHapticDemo();									
-	virtual void Init(int argc, char* argv[]);			///< ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì‰Šú‰»
-	virtual void InitCameraView();						///< ƒJƒƒ‰s—ñ‚Ì‰Šú‰»
-	virtual void InitHumanInterface();					///< HapticInterface‚Ì‰Šú‰»
+	virtual void Init(int argc, char* argv[]);			///< ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆæœŸåŒ–
+	virtual void InitCameraView();						///< ã‚«ãƒ¡ãƒ©è¡Œåˆ—ã®åˆæœŸåŒ–
+	virtual void InitHumanInterface();					///< HapticInterfaceã®åˆæœŸåŒ–
 	virtual void Reset();
-	virtual void IdleFunc();							///< Physic‚ÌƒR[ƒ‹ƒoƒbƒN
-	virtual void TimerFunc(int id);						///< hapticloop‚ÌƒR[ƒ‹ƒoƒbƒN
-	virtual void Display();								///< •`‰æŠÖ”	
-	virtual void BuildScene();							///< „‘Ì‚Ìì¬
-	virtual void Keyboard(int key, int x, int y);		///< ƒL[ƒ{[ƒhŠÖ”
+	virtual void IdleFunc();							///< Physicã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
+	virtual void TimerFunc(int id);						///< hapticloopã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
+	virtual void Display();								///< æç”»é–¢æ•°	
+	virtual void BuildScene();							///< å‰›ä½“ã®ä½œæˆ
+	virtual void Keyboard(int key, int x, int y);		///< ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰é–¢æ•°
 
 
-	/// ƒIƒvƒVƒ‡ƒ“
-	bool bStep;									///< ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ði‚ß‚é‚©‚Ç‚¤‚©
-	bool bOneStep;								///< ƒXƒeƒbƒvŽÀs
-	bool bDrawInfo;								///< ƒfƒoƒbƒN•\Ž¦‚·‚é‚©‚Ç‚¤‚©									
-	void DisplayContactPlane();					///< ÚG–Ê‚Ì•`‰æ
-	void DisplayLineToNearestPoint();			///< ƒ|ƒCƒ“ƒ^‚Ì‹ß–T“_‚©‚ç„‘Ì‚Ì‹ß–T“_‚Ö‚Ìü
+	/// ã‚ªãƒ—ã‚·ãƒ§ãƒ³
+	bool bStep;									///< ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é€²ã‚ã‚‹ã‹ã©ã†ã‹
+	bool bOneStep;								///< ã‚¹ãƒ†ãƒƒãƒ—å®Ÿè¡Œ
+	bool bDrawInfo;								///< ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºã™ã‚‹ã‹ã©ã†ã‹									
+	void DisplayContactPlane();					///< æŽ¥è§¦é¢ã®æç”»
+	void DisplayLineToNearestPoint();			///< ãƒã‚¤ãƒ³ã‚¿ã®è¿‘å‚ç‚¹ã‹ã‚‰å‰›ä½“ã®è¿‘å‚ç‚¹ã¸ã®ç·š
 }; 
 
 #endif

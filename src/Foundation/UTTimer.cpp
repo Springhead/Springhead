@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,46 +15,46 @@
 namespace Spr {;
 
 //----------------------------------------------------------------------------------------------------------
-//	UTTimerStub		UTTimer‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğ•Û‚·‚éƒVƒ“ƒOƒ‹ƒgƒ“
+//	UTTimerStub		UTTimerã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä¿æŒã™ã‚‹ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³
 //
 class UTTimerStub{
-	///< ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}‚Ì•ª‰ğ”\
-	unsigned int resolution;		///< Œ»İ‚Ìİ’è’l
-	unsigned int resolutionMin;		///< ƒVƒXƒeƒ€‚ªƒTƒ|[ƒg‚·‚éÅ¬’l
-	unsigned int resolutionMax;		///< ƒVƒXƒeƒ€‚ªƒTƒ|[ƒg‚·‚éÅ‘å’l
+	///< ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒã®åˆ†è§£èƒ½
+	unsigned int resolution;		///< ç¾åœ¨ã®è¨­å®šå€¤
+	unsigned int resolutionMin;		///< ã‚·ã‚¹ãƒ†ãƒ ãŒã‚µãƒãƒ¼ãƒˆã™ã‚‹æœ€å°å€¤
+	unsigned int resolutionMax;		///< ã‚·ã‚¹ãƒ†ãƒ ãŒã‚µãƒãƒ¼ãƒˆã™ã‚‹æœ€å¤§å€¤
 public:
 	typedef std::vector<UTTimerProvider*> Providers;
 	typedef std::vector< UTRef<UTTimer> > Timers;
 
-	Providers	providers;		///< ƒvƒƒoƒCƒ_‚Ì”z—ñ
-	Timers		timers;			///< ƒ^ƒCƒ}‚Ì”z—ñ
+	Providers	providers;		///< ãƒ—ãƒ­ãƒã‚¤ãƒ€ã®é…åˆ—
+	Timers		timers;			///< ã‚¿ã‚¤ãƒã®é…åˆ—
 
 	UTTimerStub(): resolution(0), resolutionMin(0), resolutionMax(0){}
 	~UTTimerStub(){
 		for(unsigned i=0; i<timers.size(); ++i) timers[i]->Stop();
 	}
 public:
-	/// —Bˆê‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğæ“¾
+	/// å”¯ä¸€ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å–å¾—
 	static UTTimerStub& UTTimerStub::Get(){
 		static UTTimerStub obj;
 		return obj;
 	}
-	/// ƒ^ƒCƒ}‚Ì“o˜^
+	/// ã‚¿ã‚¤ãƒã®ç™»éŒ²
 	void AddTimer(UTTimer* timer){
 		timer->timerId = (unsigned int)timers.size();
 		timers.push_back(timer);
 	}
-	/// ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}‚ÌÅ¬•ª‰ğ”\
+	/// ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒã®æœ€å°åˆ†è§£èƒ½
 	unsigned int ResolutionMin(){
 		if (!resolutionMin) GetCaps();
 		return resolutionMin;
 	}
-	/// ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}‚ÌÅ‘å•ª‰ğ”\
+	/// ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒã®æœ€å¤§åˆ†è§£èƒ½
 	unsigned int ResolutionMax(){
 		if (!resolutionMax) GetCaps();
 		return resolutionMax;
 	}
-	/** @brief •ª‰ğ”\‚ÌÄİ’è
+	/** @brief åˆ†è§£èƒ½ã®å†è¨­å®š
 	 */
 	void UpdateResolution(){
 #if defined(_WIN32)
@@ -70,7 +70,7 @@ public:
 		if (resOld) timeEndPeriod(resOld);
 		if (resolution) timeBeginPeriod(resolution);
 #else
-# error UTMMTimerStub: Not yet implemented.	//	–¢À‘•
+# error UTMMTimerStub: Not yet implemented.	//	æœªå®Ÿè£…
 #endif
 	}
 
@@ -84,7 +84,7 @@ protected:
 		resolutionMin = tc.wPeriodMin;
 		resolutionMax = tc.wPeriodMax;
 #else
-# error UTMMTimerStub: Not yet implemented.	//	–¢À‘•
+# error UTMMTimerStub: Not yet implemented.	//	æœªå®Ÿè£…
 #endif
 	}
 };
@@ -107,7 +107,7 @@ void UTTimerProvider::Register(){
 
 void UTTimerProvider::Unregister(){
 	UTTimerStub& stub = UTTimerStub::Get();
-	// ‚±‚ÌƒvƒƒoƒCƒ_‚ğ—˜—p‚µ‚Ä‚¢‚éƒ^ƒCƒ}‚ğ’â~‚·‚é
+	// ã“ã®ãƒ—ãƒ­ãƒã‚¤ãƒ€ã‚’åˆ©ç”¨ã—ã¦ã„ã‚‹ã‚¿ã‚¤ãƒã‚’åœæ­¢ã™ã‚‹
 	for(unsigned i=0; i<stub.timers.size(); ++i){
 		UTTimer* t = stub.timers[i];
 		if (t->IsStarted() && t->GetMode() == UTTimerIf::FRAMEWORK && t->provider == this){
@@ -146,7 +146,7 @@ UTTimer::UTTimer(){
 	timerIdImpl = 0;
 	provider	= 0;
 
-	// ©g‚ğStub‚É“o˜^
+	// è‡ªèº«ã‚’Stubã«ç™»éŒ²
 	UTTimerStub::Get().AddTimer(this);
 	
 }
@@ -154,8 +154,8 @@ UTTimer::UTTimer(){
 UTTimer::~UTTimer(){
 	Stop();
 	UTTimerStub::Timers& timers = UTTimerStub::Get().timers;
-	//	‚±‚±‚ÅAddRef‚µ‚Ä‚¨‚©‚È‚¢‚ÆA timers.erase()‚µ‚½uŠÔ‚É~UTTimer()‚ÉÄ“ü‚µ‚Ä‚µ‚Ü‚¤B
-	//	new‚µ‚Ä‚¢‚È‚¢UTTimer‚Ìê‡AÅ‰‚©‚ç0‚È‚Ì‚Å2‚É‚µ‚Ä‚¨‚©‚È‚¢‚ÆÄ“ü‚µ‚Ä‚µ‚Ü‚¤B
+	//	ã“ã“ã§AddRefã—ã¦ãŠã‹ãªã„ã¨ã€ timers.erase()ã—ãŸç¬é–“ã«~UTTimer()ã«å†å…¥ã—ã¦ã—ã¾ã†ã€‚
+	//	newã—ã¦ã„ãªã„UTTimerã®å ´åˆã€æœ€åˆã‹ã‚‰0ãªã®ã§2ã«ã—ã¦ãŠã‹ãªã„ã¨å†å…¥ã—ã¦ã—ã¾ã†ã€‚
 	AddRef(); AddRef();	
 	for(unsigned int i=0; i<timers.size(); ++i){
 		if (timers[i] == this){
@@ -163,8 +163,8 @@ UTTimer::~UTTimer(){
 			break;
 		}
 	}
-	//	‚Ç‚¤‚¹‚·‚®Á‚¦‚é‚Ì‚ÅˆÓ–¡‚È‚¢‚¯‚ÇA‚±‚ÌŒã‚Ìˆ—‚Å¢‚é‚æ‚¤‚É«—ˆ‚È‚é‚©‚à‚µ‚ê‚È‚¢‚Ì‚Åˆê‰DelRef()ŒÄ‚ñ‚Ç‚­B
-	//	‚à‚Æ‚à‚Æ0‚Ìê‡‚ÍA2‰ñDelRef()‚ğŒÄ‚Ô‚Æ-1‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚Ì‚Å RefCount()‚ğƒ`ƒFƒbƒN‚·‚éB
+	//	ã©ã†ã›ã™ãæ¶ˆãˆã‚‹ã®ã§æ„å‘³ãªã„ã‘ã©ã€ã“ã®å¾Œã®å‡¦ç†ã§å›°ã‚‹ã‚ˆã†ã«å°†æ¥ãªã‚‹ã‹ã‚‚ã—ã‚Œãªã„ã®ã§ä¸€å¿œDelRef()å‘¼ã‚“ã©ãã€‚
+	//	ã‚‚ã¨ã‚‚ã¨0ã®å ´åˆã¯ã€2å›DelRef()ã‚’å‘¼ã¶ã¨-1ã«ãªã£ã¦ã—ã¾ã†ã®ã§ RefCount()ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚
 	DelRef(); 
 	if (RefCount()>0) DelRef(); 
 }
@@ -220,8 +220,8 @@ unsigned long SPR_STDCALL UTTimer_ThreadCallback(void* arg){
 	timer->bStopThread = false;
 	return 0;
 }
-#else	//	WindowsˆÈŠO‚Ìƒvƒ‰ƒbƒgƒtƒH[ƒ€‚Å‚ÌÀ‘•
-# error UTTimer: Not yet implemented.		//	–¢À‘•
+#else	//	Windowsä»¥å¤–ã®ãƒ—ãƒ©ãƒƒãƒˆãƒ•ã‚©ãƒ¼ãƒ ã§ã®å®Ÿè£…
+# error UTTimer: Not yet implemented.		//	æœªå®Ÿè£…
 #endif
 
 
@@ -234,7 +234,7 @@ bool UTTimer::Start(){
 #if defined _WIN32
 		bStarted = true;
 		stub.UpdateResolution();
-		assert(interval != 0);	// interval == 0‚¾‚Æ“®‚©‚È‚¢
+		assert(interval != 0);	// interval == 0ã ã¨å‹•ã‹ãªã„
 		timerIdImpl = timeSetEvent(interval, resolution, UTTimer_MMTimerCallback , timerId, TIME_PERIODIC);
 		if (!timerIdImpl){
 			bStarted = false;
@@ -278,7 +278,7 @@ bool UTTimer::Stop(){
 	if (mode == UTTimerIf::MULTIMEDIA){
 #ifdef _WIN32
 		timeKillEvent(timerIdImpl);
-		// Às’†‚ÌƒR[ƒ‹ƒoƒbƒN‚ÌI—¹‚ğ‘Ò‚Â
+		// å®Ÿè¡Œä¸­ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã®çµ‚äº†ã‚’å¾…ã¤
 		for(int i=0; bRunning && i<100; i++)
 			Sleep(10); 
 		if (bRunning)
@@ -290,8 +290,8 @@ bool UTTimer::Stop(){
 	}
 	else if (mode == UTTimerIf::THREAD){
 #ifdef _WIN32
-		bStopThread = true;									//	ƒXƒŒƒbƒh‚Ì’â~‚ğw¦
-		for(int t=0; t<100 && bStopThread; t++) Sleep(20);	//	’â~‚·‚é‚Ü‚Å‘Ò‚Á‚Ä‚İ‚é
+		bStopThread = true;									//	ã‚¹ãƒ¬ãƒƒãƒ‰ã®åœæ­¢ã‚’æŒ‡ç¤º
+		for(int t=0; t<100 && bStopThread; t++) Sleep(20);	//	åœæ­¢ã™ã‚‹ã¾ã§å¾…ã£ã¦ã¿ã‚‹
 		if (bStopThread)
 			DSTR << "UTTimer THREAD mode: Can not stop the timer thread. There may be a dead lock problem." << std::endl;
 		CloseHandle(*(HANDLE*)&timerIdImpl);

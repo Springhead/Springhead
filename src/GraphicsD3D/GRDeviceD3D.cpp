@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,8 +16,8 @@ namespace Spr {;
 
 
 //----------------------------------------------------------------------------
-//	GRVertexElementŠÖ˜A
-// ’¸“_éŒ¾‚É•ÏŠ·
+//	GRVertexElementé–¢é€£
+// é ‚ç‚¹å®£è¨€ã«å¤‰æ›
 inline void CreateDeclFromVertexFormat(const GRVertexElement* e, LPDIRECT3DDEVICE9 d3ddevice, LPDIRECT3DVERTEXDECLARATION9* pDecl, size_t* pStride)
 {
 	D3DVERTEXELEMENT9 decl[MAXD3DDECLLENGTH+1];
@@ -34,7 +34,7 @@ inline void CreateDeclFromVertexFormat(const GRVertexElement* e, LPDIRECT3DDEVIC
 	assert( SUCCEEDED(d3ddevice->CreateVertexDeclaration(decl, pDecl)) );
 	*pStride = D3DXGetDeclVertexSize(decl, 0);
 }
-// ’¸“_”z—ñ‚ğFVF‚Ì‡”Ô‚É‚ ‚í‚¹‚Â‚ÂƒRƒs[
+// é ‚ç‚¹é…åˆ—ã‚’FVFã®é †ç•ªã«ã‚ã‚ã›ã¤ã¤ã‚³ãƒ”ãƒ¼
 static void VFP3f_toFVF(void* p, void* vtx, int count)
 {
 	memcpy(p, vtx, sizeof(float)*3*count);
@@ -73,17 +73,17 @@ static void VFT2fN3fP3f_toFVF(void* p, void* vtx, int count)
 //----------------------------------------------------------------------------
 //	GRDeviceD3D
 IF_SPR_OBJECTIMP(GRDeviceD3D, GRDevice);
-/// D3DƒfƒoƒCƒXBGRDeviceD3D::GetD3DDevice()‚Åæ“¾B
+/// D3Dãƒ‡ãƒã‚¤ã‚¹ã€‚GRDeviceD3D::GetD3DDevice()ã§å–å¾—ã€‚
 IDirect3DDevice9* GRDeviceD3D::s_d3ddevice;
-/// ‰Šúİ’è
+/// åˆæœŸè¨­å®š
 void GRDeviceD3D::Init(){
 	assert( GetActiveWindow()!=NULL );
 
-	// Direct3D‚Ìì¬
+	// Direct3Dã®ä½œæˆ
 	direct3D = Direct3DCreate9(D3D_SDK_VERSION);
 	assert( direct3D!=NULL );
 	
-	// ƒvƒŒƒ[ƒ“ƒe[ƒVƒ‡ƒ“ƒpƒ‰ƒ[ƒ^‚Ì‰Šú‰»
+	// ãƒ—ãƒ¬ã‚¼ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®åˆæœŸåŒ–
 	{
 		D3DDISPLAYMODE displayMode;
 		RECT           clientRect;
@@ -107,7 +107,7 @@ void GRDeviceD3D::Init(){
 		SetMultiSampleType();
 	}
 
-	// ƒfƒoƒCƒX‚Ìì¬
+	// ãƒ‡ãƒã‚¤ã‚¹ã®ä½œæˆ
 	D3DCAPS9 capsHAL;  direct3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &capsHAL);
 	D3DCAPS9 capsREF;  direct3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_REF, &capsREF);
 	if((confirmDeviceFunc && !confirmDeviceFunc(&capsHAL, D3DCREATE_HARDWARE_VERTEXPROCESSING)) || FAILED( direct3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, pp.hDeviceWindow, D3DCREATE_HARDWARE_VERTEXPROCESSING, &pp, &d3ddevice) )){
@@ -126,13 +126,13 @@ void GRDeviceD3D::Init(){
 	d3ddevice->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
 
 	nLights = 0;
-	displayLists.push_back(DisplayList());		// ƒ_ƒ~[(0”Ô‚Í–³Œø‚ÈƒCƒ“ƒfƒbƒNƒX)
+	displayLists.push_back(DisplayList());		// ãƒ€ãƒŸãƒ¼(0ç•ªã¯ç„¡åŠ¹ãªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹)
 	textures.push_back(NULL);					// textures[0] = NULL
 
 	deviceLost = false;
 	shouldResetWindowRect = false;
 }
-/// ƒAƒ“ƒ`ƒGƒCƒŠƒAƒX‚ğg—p‚·‚é‚½‚ß‚Ìİ’è
+/// ã‚¢ãƒ³ãƒã‚¨ã‚¤ãƒªã‚¢ã‚¹ã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã®è¨­å®š
 void GRDeviceD3D::SetMultiSampleType(){
 	if(!pp.Windowed){
 		for(int n=D3DMULTISAMPLE_16_SAMPLES; n>=D3DMULTISAMPLE_2_SAMPLES; --n){
@@ -144,14 +144,14 @@ void GRDeviceD3D::SetMultiSampleType(){
 	}
 	pp.MultiSampleType = D3DMULTISAMPLE_NONE;
 }
-/// ƒfƒoƒCƒX‚ªƒƒXƒg‚µ‚½‚çŒÄ‚Ô
+/// ãƒ‡ãƒã‚¤ã‚¹ãŒãƒ­ã‚¹ãƒˆã—ãŸã‚‰å‘¼ã¶
 void GRDeviceD3D::LostDevice(){
 	if(deviceLost) return;
 
 	deviceLost = true;
 	for(size_t i=0; i<lostDeviceListeners.size(); ++i) { lostDeviceListeners[i](); }
 }
-/// ƒfƒoƒCƒX‚ğƒŠƒZƒbƒg‚·‚é
+/// ãƒ‡ãƒã‚¤ã‚¹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 void GRDeviceD3D::ResetDevice(){
 	if(!deviceLost) return;
 
@@ -193,7 +193,7 @@ void GRDeviceD3D::ResetDevice(){
 	
 	for(size_t i=0; i<resetDeviceListeners.size(); ++i) { resetDeviceListeners[i](); }
 }
-///	Viewportİ’è
+///	Viewportè¨­å®š
 void GRDeviceD3D::SetViewport(Vec2f pos, Vec2f sz){
 	D3DVIEWPORT9 viewport = { (DWORD)pos.x, (DWORD)pos.y, (DWORD)sz.x, (DWORD)sz.y, 0, 1 };
 	d3ddevice->SetViewport(&viewport);
@@ -202,7 +202,7 @@ void GRDeviceD3D::SetViewport(Vec2f pos, Vec2f sz){
 	pp.BackBufferHeight = (UINT)sz.y;
 	LostDevice();
 }
-/// ƒoƒbƒtƒ@ƒNƒŠƒA
+/// ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 void GRDeviceD3D::ClearBuffer(){
 	while(deviceLost){
 		ResetDevice();
@@ -211,7 +211,7 @@ void GRDeviceD3D::ClearBuffer(){
 	}
 	d3ddevice->Clear(0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0,0,0), 1.0f, 0);
 }
-/// ƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌŠJn‘O‚ÉŒÄ‚ÔŠÖ”
+/// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®é–‹å§‹å‰ã«å‘¼ã¶é–¢æ•°
 void GRDeviceD3D::BeginScene(){
 	while(deviceLost){
 		ResetDevice();
@@ -220,7 +220,7 @@ void GRDeviceD3D::BeginScene(){
 	}
 	d3ddevice->BeginScene();
 }
-/// ƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌI—¹Œã‚ÉŒÄ‚ÔŠÖ”
+/// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®çµ‚äº†å¾Œã«å‘¼ã¶é–¢æ•°
 void GRDeviceD3D::EndScene(){
 	assert(!deviceLost);
 	d3ddevice->EndScene();
@@ -228,62 +228,62 @@ void GRDeviceD3D::EndScene(){
 		LostDevice();
 	}
 }
-///	ƒJƒŒƒ“ƒg‚Ì‹“_s—ñ‚ğafv‚Å’u‚«Š·‚¦‚é
+///	ã‚«ãƒ¬ãƒ³ãƒˆã®è¦–ç‚¹è¡Œåˆ—ã‚’afvã§ç½®ãæ›ãˆã‚‹
 void GRDeviceD3D::SetViewMatrix(const Affinef& afv){   
 	d3ddevice->SetTransform(D3DTS_VIEW, (const D3DMATRIX*)&afv);
 }
-/// ƒJƒŒƒ“ƒg‚Ì“Š‰es—ñ‚ğafp‚Å’u‚«Š·‚¦‚é
+/// ã‚«ãƒ¬ãƒ³ãƒˆã®æŠ•å½±è¡Œåˆ—ã‚’afpã§ç½®ãæ›ãˆã‚‹
 void GRDeviceD3D::SetProjectionMatrix(const Affinef& afp){  
 	d3ddevice->SetTransform(D3DTS_PROJECTION, (const D3DMATRIX*)&afp);
 }
-/// ƒJƒŒƒ“ƒg‚Ì“Š‰es—ñ‚ğæ“¾‚·‚é
+/// ã‚«ãƒ¬ãƒ³ãƒˆã®æŠ•å½±è¡Œåˆ—ã‚’å–å¾—ã™ã‚‹
 void GRDeviceD3D::GetProjectionMatrix(const Affinef& afp){  
 	d3ddevice->GetTransform(D3DTS_PROJECTION, (D3DMATRIX*)&afp);
 }	
-/// ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚ğafw‚Å’u‚«Š·‚¦‚é
+/// ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’afwã§ç½®ãæ›ãˆã‚‹
 void GRDeviceD3D::SetModelMatrix(const Affinef& afw){
 	d3ddevice->SetTransform(D3DTS_WORLD, (const D3DMATRIX*)&afw);
 }
-/// ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚É‘Î‚µ‚Äafw‚ğŠ|‚¯‚é
+/// ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã«å¯¾ã—ã¦afwã‚’æ›ã‘ã‚‹
 void GRDeviceD3D::MultModelMatrix(const Affinef& afw){	
 	Affinef current;
 	d3ddevice->GetTransform(D3DTS_WORLD, (D3DMATRIX*)&current);
 	SetModelMatrix(current * afw);
 }
-/// ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚ğƒ‚ƒfƒ‹s—ñƒXƒ^ƒbƒN‚Ö•Û‘¶‚·‚é
+/// ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚¹ã‚¿ãƒƒã‚¯ã¸ä¿å­˜ã™ã‚‹
 void GRDeviceD3D::PushModelMatrix(){
 	Affinef current;
 	d3ddevice->GetTransform(D3DTS_WORLD, (D3DMATRIX*)&current);
 	modelMatrixStack.push(current);
 }
-/// ƒ‚ƒfƒ‹s—ñƒXƒ^ƒbƒN‚©‚çæ‚èo‚µAƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚Æ‚·‚é
+/// ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚¹ã‚¿ãƒƒã‚¯ã‹ã‚‰å–ã‚Šå‡ºã—ã€ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã¨ã™ã‚‹
 void GRDeviceD3D::PopModelMatrix(){
 	SetModelMatrix(modelMatrixStack.top());
 	modelMatrixStack.pop();
 }
-/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚Ì‘S—v‘f‚ğíœ‚·‚é
+/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã®å…¨è¦ç´ ã‚’å‰Šé™¤ã™ã‚‹
 void GRDeviceD3D::ClearBlendMatrix(){
 	DSTR << "GRDeviceD3D::ClearBlendMatrix() is not implemented." << std::endl;
 }	
-/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚ğİ’è‚·‚é
+/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã‚’è¨­å®šã™ã‚‹
 bool GRDeviceD3D::SetBlendMatrix(const Affinef& afb){
 	DSTR << "GRDeviceD3D::SetBlendMatrix() is not implemented." << std::endl;
 	return GRDevice::SetBlendMatrix(afb);
 }
-/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚ğİ’è‚·‚é
+/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã‚’è¨­å®šã™ã‚‹
 bool GRDeviceD3D::SetBlendMatrix(const Affinef& afb, unsigned int id){
 	DSTR << "GRDeviceD3D::SetBlendMatrix() is not implemented." << std::endl;
 	return GRDevice::SetBlendMatrix(afb, id);
 }		
-/// ’¸“_ƒtƒH[ƒ}ƒbƒg‚Ìw’è
+/// é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®æŒ‡å®š
 void GRDeviceD3D::SetVertexFormat(const GRVertexElement* e){	
 	currentVertexFormat = e;
 }
-/// ’¸“_À•W‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+/// é ‚ç‚¹åº§æ¨™ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 void GRDeviceD3D::SetVertexShader(void* s){
 	assert(0);	//	To Be Implemented
 }
-/// ’¸“_À•W‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+/// é ‚ç‚¹åº§æ¨™ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 void GRDeviceD3D::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	assert( ty!=GRRenderBaseIf::QUADS );
 
@@ -339,12 +339,12 @@ void GRDeviceD3D::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_
 	//d3ddevice->DrawPrimitive(dl.primType, 0, dl.primCount);
 	d3ddevice->DrawPrimitiveUP(dl.primType, dl.primCount, &vertices[0], dl.stride);
 }
-/// ’¸“_À•W‚ÆƒCƒ“ƒfƒbƒNƒX‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+/// é ‚ç‚¹åº§æ¨™ã¨ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 void GRDeviceD3D::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	DSTR << "GRDeviceD3D::DrawIndexed() is not implemented." << std::endl;
 }
 
-///	ƒCƒ“ƒfƒbƒNƒXŒ`®‚É‚æ‚é DiplayList ‚Ìì¬iƒ}ƒeƒŠƒAƒ‹AƒeƒNƒXƒ`ƒƒ‚Ìİ’è‚às‚¤j	
+///	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹å½¢å¼ã«ã‚ˆã‚‹ DiplayList ã®ä½œæˆï¼ˆãƒãƒ†ãƒªã‚¢ãƒ«ã€ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¨­å®šã‚‚è¡Œã†ï¼‰	
 /*
 int GRDeviceD3D::CreateIndexedList(GRMaterialIf* mat,  
 								  GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
@@ -406,7 +406,7 @@ int GRDeviceD3D::CreateIndexedList(GRMaterialIf* mat,
 	return displayLists.size()-1;
 }
 */
-///	DisplayList‚Ì•\¦	
+///	DisplayListã®è¡¨ç¤º	
 void GRDeviceD3D::DrawList(int list){
 	if(list==0) return;
 
@@ -424,27 +424,27 @@ void GRDeviceD3D::DrawList(int list){
 		d3ddevice->DrawPrimitive(displayLists[list].primType, 0, displayLists[list].primCount);
 	}
 }
-///	DisplayList‚Ì‰ğ•ú	
+///	DisplayListã®è§£æ”¾	
 void GRDeviceD3D::ReleaseList(int list){
 	displayLists[list] = DisplayList();
 }
-/// 3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æiGLƒIƒ“ƒŠ[”Å‚Åfont‚Íw’è‚È‚µj .. Vec2f pos
+/// 3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»ï¼ˆGLã‚ªãƒ³ãƒªãƒ¼ç‰ˆã§fontã¯æŒ‡å®šãªã—ï¼‰ .. Vec2f pos
 void GRDeviceD3D::DrawFont(Vec2f pos, const std::string str){
 	DSTR << "GRDeviceD3D::DrawFont() is not implemented." << std::endl;
 }
-/// 3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æiGLƒIƒ“ƒŠ[”Å‚Åfont‚Íw’è‚È‚µj.. Vec3f pos
+/// 3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»ï¼ˆGLã‚ªãƒ³ãƒªãƒ¼ç‰ˆã§fontã¯æŒ‡å®šãªã—ï¼‰.. Vec3f pos
 void GRDeviceD3D::DrawFont(Vec3f pos, const std::string str){
 	DSTR << "GRDeviceD3D::DrawFont() is not implemented." << std::endl;
 }
-/// 3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æ ... Vec2f pos
+/// 3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”» ... Vec2f pos
 void GRDeviceD3D::DrawFont(Vec2f pos, const std::string str, const GRFont& font){
 	DSTR << "GRDeviceD3D::DrawFont() is not implemented." << std::endl;
 }
-/// 3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æ  ... Vec3f pos
+/// 3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»  ... Vec3f pos
 void GRDeviceD3D::DrawFont(Vec3f pos, const std::string str, const GRFont& font){
 	DSTR << "GRDeviceD3D::DrawFont() is not implemented." << std::endl;
 }
-/// •`‰æ‚ÌŞ¿‚Ìİ’è
+/// æç”»ã®æè³ªã®è¨­å®š
 void GRDeviceD3D::SetMaterial(const GRMaterialDesc& mat){
 	D3DMATERIAL9 matd3d;
 	matd3d.Diffuse  = *(D3DCOLORVALUE*)&mat.diffuse;
@@ -454,11 +454,11 @@ void GRDeviceD3D::SetMaterial(const GRMaterialDesc& mat){
 	matd3d.Power    = mat.power;
 	d3ddevice->SetMaterial(&matd3d);
 }
-/// •`‰æ‚·‚é“_Eü‚Ì‘¾‚³‚Ìİ’è
+/// æç”»ã™ã‚‹ç‚¹ãƒ»ç·šã®å¤ªã•ã®è¨­å®š
 void GRDeviceD3D::SetLineWidth(float w){
 	DSTR << "GRDeviceD3D::SetLineWidth() is not implemented." << std::endl;
 }
-/// ŒõŒ¹ƒXƒ^ƒbƒN‚ğPush
+/// å…‰æºã‚¹ã‚¿ãƒƒã‚¯ã‚’Push
 void GRDeviceD3D::PushLight(const GRLightDesc& light){
 	D3DLIGHT9 d3dlight = {};
 	d3dlight.Type			= (light.position.w==0) ? D3DLIGHT_DIRECTIONAL : (light.spotCutoff==180) ? D3DLIGHT_POINT : D3DLIGHT_SPOT;
@@ -479,31 +479,31 @@ void GRDeviceD3D::PushLight(const GRLightDesc& light){
 	d3ddevice->SetLight(nLights, &d3dlight);
 	d3ddevice->LightEnable(nLights++, TRUE);
 }
-/// ŒõŒ¹ƒXƒ^ƒbƒN‚ğPop
+/// å…‰æºã‚¹ã‚¿ãƒƒã‚¯ã‚’Pop
 void GRDeviceD3D::PopLight(){
 	d3ddevice->LightEnable(--nLights, FALSE);
 }
-/// ƒfƒvƒXƒoƒbƒtƒ@‚Ö‚Ì‘‚«‚İ‚ğ‹–‰Â/‹Ö~‚·‚é
+/// ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡ã¸ã®æ›¸ãè¾¼ã¿ã‚’è¨±å¯/ç¦æ­¢ã™ã‚‹
 void GRDeviceD3D::SetDepthWrite(bool b){
 	DSTR << "GRDeviceD3D::SetDepthWrite() is not implemented." << std::endl;
 }
-/// ƒfƒvƒXƒeƒXƒg‚ğ—LŒø/–³Œø‚É‚·‚é
+/// ãƒ‡ãƒ—ã‚¹ãƒ†ã‚¹ãƒˆã‚’æœ‰åŠ¹/ç„¡åŠ¹ã«ã™ã‚‹
 void GRDeviceD3D::SetDepthTest(bool b){
 	DSTR << "GRDeviceD3D::SetDepthTest() is not implemented." << std::endl;
 }
-/// ƒfƒvƒXƒoƒbƒtƒ@–@‚É—p‚¢‚é”»’èğŒ‚ğw’è‚·‚é
+/// ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡æ³•ã«ç”¨ã„ã‚‹åˆ¤å®šæ¡ä»¶ã‚’æŒ‡å®šã™ã‚‹
 void GRDeviceD3D::SetDepthFunc(GRRenderBaseIf::TDepthFunc f){
 	DSTR << "GRDeviceD3D::SetDepthFunc() is not implemented." << std::endl;
 }
-/// ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚ğ—LŒø/–³Œø‚É‚·‚é
+/// ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’æœ‰åŠ¹/ç„¡åŠ¹ã«ã™ã‚‹
 void GRDeviceD3D::SetAlphaTest(bool b){
 	DSTR << "GRDeviceD3D::SetAlphaTest() is not implemented." << std::endl;
 }
-/// ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚Ìƒ‚[ƒhİ’è(SRC‚Ì¬‡ŒW”, DEST¬‡ŒW”)
+/// ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã®ãƒ¢ãƒ¼ãƒ‰è¨­å®š(SRCã®æ··åˆä¿‚æ•°, DESTæ··åˆä¿‚æ•°)
 void GRDeviceD3D::SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){
 	DSTR << "GRDeviceD3D::SetAlphaMode() is not implemented." << std::endl;
 }
-/// ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒhi–ß‚è’lFƒeƒNƒXƒ`ƒƒIDj	
+/// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰ï¼ˆæˆ»ã‚Šå€¤ï¼šãƒ†ã‚¯ã‚¹ãƒãƒ£IDï¼‰	
 unsigned int GRDeviceD3D::LoadTexture(const std::string filename){
 	if(filename.empty()) return 0;
 	textures.push_back(NULL);
@@ -514,34 +514,34 @@ unsigned int GRDeviceD3D::LoadTexture(const std::string filename){
 	}
 	return textures.size()-1;
 }
-/// ƒVƒF[ƒ_‚Ì‰Šú‰»	
+/// ã‚·ã‚§ãƒ¼ãƒ€ã®åˆæœŸåŒ–	
 void GRDeviceD3D::InitShader(){
 	DSTR << "GRDeviceD3D::InitShader() is not implemented." << std::endl;
 }	
-/// ƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg‚Ìİ’è
+/// ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®è¨­å®š
 void GRDeviceD3D::SetShaderFormat(GRShaderFormat::ShaderType type){
 	DSTR << "GRDeviceD3D::SetShaderFormat() is not implemented." << std::endl;
 }	
-/// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚Ìì¬	
+/// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ	
 bool GRDeviceD3D::CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){
 	DSTR << "GRDeviceD3D::CreateShader() is not implemented." << std::endl;
 	return GRDevice::CreateShader(vShaderFile, fShaderFile, shader);
 }		
-/// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚Ìì¬AGRDeviceD3D::shader‚Ö‚Ì“o˜^i‚ ‚ç‚©‚¶‚ßShaderFile–¼‚ğ“o˜^‚µ‚Ä‚¨‚­•K—v‚ª‚ ‚éj	
+/// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆã€GRDeviceD3D::shaderã¸ã®ç™»éŒ²ï¼ˆã‚ã‚‰ã‹ã˜ã‚ShaderFileåã‚’ç™»éŒ²ã—ã¦ãŠãå¿…è¦ãŒã‚ã‚‹ï¼‰	
 GRHandler GRDeviceD3D::CreateShader(){
 	DSTR << "GRDeviceD3D::CreateShader() is not implemented." << std::endl;
 	return GRDevice::CreateShader();
 }	
-/// ƒVƒF[ƒ_‚Ìƒ\[ƒXƒvƒƒOƒ‰ƒ€‚ğƒƒ‚ƒŠ‚É“Ç‚İ‚İAƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚ÆŠÖ˜A•t‚¯‚é	
+/// ã‚·ã‚§ãƒ¼ãƒ€ã®ã‚½ãƒ¼ã‚¹ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã¿ã€ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨é–¢é€£ä»˜ã‘ã‚‹	
 bool GRDeviceD3D::ReadShaderSource(GRHandler shader, std::string file){
 	DSTR << "GRDeviceD3D::ReadShaderSource() is not implemented." << std::endl;
 	return GRDevice::ReadShaderSource(shader, file);
 }			
-/// ƒƒP[ƒVƒ‡ƒ“î•ñ‚Ìæ“¾iSetShaderFormat()‚ÅƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg‚ğİ’è‚µ‚Ä‚¨‚­•K—v‚ ‚èj
+/// ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ã®å–å¾—ï¼ˆSetShaderFormat()ã§ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’è¨­å®šã—ã¦ãŠãå¿…è¦ã‚ã‚Šï¼‰
 void GRDeviceD3D::GetShaderLocation(GRHandler shader, void* location){
 	DSTR << "GRDeviceD3D::GetShaderLocation() is not implemented." << std::endl;
 }	
-/// ƒEƒCƒ“ƒhƒEƒ‚[ƒh<->ƒtƒ‹ƒXƒNƒŠ[ƒ“ Ø‚è‘Ö‚¦
+/// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰<->ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ åˆ‡ã‚Šæ›¿ãˆ
 void GRDeviceD3D::ToggleFullScreen(){
 	if(pp.Windowed){
 		d3ddevice->GetViewport(&viewportStore);

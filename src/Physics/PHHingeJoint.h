@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,7 +14,7 @@
 
 namespace Spr{;
 
-///	ƒqƒ“ƒWŠÖß‚É‘Î‰‚·‚éƒcƒŠ[ƒm[ƒh
+///	ãƒ’ãƒ³ã‚¸é–¢ç¯€ã«å¯¾å¿œã™ã‚‹ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰
 class PHHingeJointNode : public PHTreeNode1D {
 public:
 	SPR_OBJECTDEF(PHHingeJointNode);
@@ -27,25 +27,25 @@ public:
 	PHHingeJointNode(const PHHingeJointNodeDesc& desc = PHHingeJointNodeDesc()){}
 };
 
-///	ƒqƒ“ƒWŠÖß
+///	ãƒ’ãƒ³ã‚¸é–¢ç¯€
 class PHHingeJoint : public PH1DJoint {
 public:
 	SPR_OBJECTDEF(PHHingeJoint);
 	SPR_DECLMEMBEROF_PHHingeJointDesc;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHHingeJoint(const PHHingeJointDesc& desc = PHHingeJointDesc());
 
-	/// ABA‚Å‘Î‰‚·‚éPHTreeNode‚Ì”h¶ƒNƒ‰ƒX‚ğ¶¬‚µ‚Ä•Ô‚·
+	/// ABAã§å¯¾å¿œã™ã‚‹PHTreeNodeã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã—ã¦è¿”ã™
 	virtual PHTreeNode* CreateTreeNode(){ return DBG_NEW PHHingeJointNode(); }
 
-	// ----- PHConstraint‚Ì”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- PHConstraintã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
 	virtual void UpdateJointState();
 	virtual void CompBias();
 	virtual void CompError();
 
-	// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+	// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 
 	virtual double GetDeviation();
 

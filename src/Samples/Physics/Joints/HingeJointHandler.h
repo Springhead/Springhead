@@ -1,6 +1,6 @@
-#include "Handler.h"
+ï»¿#include "Handler.h"
 
-/// PHHingeJoint‚Ìƒfƒ‚
+/// PHHingeJointã®ãƒ‡ãƒ¢
 class HingeJointHandler : public Handler{
 public:
 	double curAngle;
@@ -55,12 +55,12 @@ public:
 		else if(key == 'i')
 			curAngle -= 10.0;
 
-		// ƒoƒlŒ´“_i–Ú•WŠp“xj‚ğXV
+		// ãƒãƒåŸç‚¹ï¼ˆç›®æ¨™è§’åº¦ï¼‰ã‚’æ›´æ–°
 		PHHingeJointIf* hiJoint = DCAST(PHHingeJointIf, jntLink[0]);
 		hiJoint->SetTargetPosition(Rad(curAngle));
 		
 		/*
-		// ƒfƒXƒNƒŠƒvƒ^‚Åİ’è‚·‚é‚±‚Æ‚à‰Â”\:
+		// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã§è¨­å®šã™ã‚‹ã“ã¨ã‚‚å¯èƒ½:
 		PHHingeJointDesc hingeDesc;
 		GetDesc(&hingeDesc);
 		hingeDesc.origin = Rad(curAngle);

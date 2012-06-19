@@ -1,4 +1,4 @@
-#ifndef SPR_UTPATH_H
+﻿#ifndef SPR_UTPATH_H
 #define SPR_UTPATH_H
 #if _MSC_VER >= 1000
 #pragma once
@@ -12,45 +12,45 @@ class SPR_DLL UTPath{
 protected:
 	UTString path;
 public:
-	///	�J�����g�f�B���N�g�����擾����
+	///	カレントディレクトリを取得する
 	static UTString SPR_CDECL GetCwd();
-	///	�J�����g�f�B���N�g����ݒ肷��
+	///	カレントディレクトリを設定する
 	static bool SPR_CDECL SetCwd(UTString cwd);
-	/// �f�B���N�g�����쐬����
+	/// ディレクトリを作成する
 	static void SPR_CDECL CreateDir(UTString dirname);
 
-	///	�t�@�C���p�X�̎擾
+	///	ファイルパスの取得
 	UTString Path() const { return path; }
 	operator UTString() const { return Path(); }
-	///	�t�@�C���p�X�̐ݒ�
+	///	ファイルパスの設定
 	void Path(UTString p);
-	///	�t�@�C���p�X�̃h���C�u��
+	///	ファイルパスのドライブ名
 	UTString Drive();
-	///	�t�@�C���p�X�̃h���C�u��
+	///	ファイルパスのドライブ名
 	UTString Dir();
-	///	�t�@�C���p�X�̃t�@�C������
+	///	ファイルパスのファイル名部
 	UTString File();
-	///	�t�@�C���p�X�̃t�@�C�����̊g���q��������������Ԃ��D
+	///	ファイルパスのファイル名の拡張子を除いた部分を返す．
 	UTString Main();
-	///	�t�@�C���p�X�̊g���q��Ԃ��D
+	///	ファイルパスの拡張子を返す．
 	UTString Ext();
 
-	/**	@brief �t���p�X���擾����D
-		���X��΃p�X�̏ꍇ�͂��̂܂ܕԂ��D
-		���΃p�X�̏ꍇ�̓J�����g�f�B���N�g����t�����ăt���p�X�ɂ���D
+	/**	@brief フルパスを取得する．
+		元々絶対パスの場合はそのまま返す．
+		相対パスの場合はカレントディレクトリを付加してフルパスにする．
 	 */
 	UTString FullPath();
 
-	/** @brief ���΃p�X���擾����D
-		���X���΃p�X�̏ꍇ�͂��̂܂ܕԂ��D
-		��΃p�X�̏ꍇ�̓J�����g�f�B���N�g���Ƃ̋��ʕ����������đ��΃p�X�ɂ���D
+	/** @brief 相対パスを取得する．
+		元々相対パスの場合はそのまま返す．
+		絶対パスの場合はカレントディレクトリとの共通部分を除いて相対パスにする．
 	 */
 	UTString RelPath();
 
-	///	�f�B���N�g�����t���p�X�ŕԂ�
+	///	ディレクトリをフルパスで返す
 	UTString FullDir();
 
-	///	�t�@�C���������ϐ� PATH ���猟�����āC�t�@�C���p�X��ݒ�D
+	///	ファイル名を環境変数 PATH から検索して，ファイルパスを設定．
 	bool Search(UTString file);
 
 	UTPath(){}

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -227,7 +227,7 @@ void GRAnimationMesh::SetBlend(const std::vector<GRAnimationMeshBlendData>& data
 	if(!rootFrame || !controller) return;
 	
 	if(controller->GetMaxNumTracks() < data.size()){
-		DSTR << "ƒAƒjƒ[ƒVƒ‡ƒ“ƒgƒ‰ƒbƒN‚ª‘«‚è‚È‚¢" << std::endl;
+		DSTR << "ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãƒˆãƒ©ãƒƒã‚¯ãŒè¶³ã‚Šãªã„" << std::endl;
 		exit(1);
 	}
 
@@ -262,7 +262,7 @@ Posed GRAnimationMesh::GetBoneKeyframePose(const std::string& name){
 	Posed result;
 	assert(D3DXFrameFind(rootFrame, name.c_str()));
 	result.FromAffine( *(Affinef*)& ((Frame*)D3DXFrameFind(rootFrame, name.c_str()))->TransformationMatrix );
-	PoseInvertZAxis(result);	// DirectXÀ•WŒn‚©‚çSpringheadÀ•WŒn‚É•ÏŠ·
+	PoseInvertZAxis(result);	// DirectXåº§æ¨™ç³»ã‹ã‚‰Springheadåº§æ¨™ç³»ã«å¤‰æ›
 	return result;
 }
 
@@ -275,7 +275,7 @@ void GRAnimationMesh::OverrideBoneOrientation(const std::string& name, const Qua
 	frame->overridePose     = Posed::Unit(orientation);
 	frame->overrideWeight   = weight;
 	frame->overridePosition = false;
-	PoseInvertZAxis(frame->overridePose);	// SpringheadÀ•WŒn‚©‚çDirectXÀ•WŒn‚É•ÏŠ·
+	PoseInvertZAxis(frame->overridePose);	// Springheadåº§æ¨™ç³»ã‹ã‚‰DirectXåº§æ¨™ç³»ã«å¤‰æ›
 }
 
 void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pose, double weight, bool posRelative){
@@ -288,7 +288,7 @@ void GRAnimationMesh::OverrideBonePose(const std::string& name, const Posed& pos
 	frame->overrideWeight   = weight;
 	frame->overridePosition = true;
 	frame->posRelative      = posRelative;
-	PoseInvertZAxis(frame->overridePose);	// SpringheadÀ•WŒn‚©‚çDirectXÀ•WŒn‚É•ÏŠ·
+	PoseInvertZAxis(frame->overridePose);	// Springheadåº§æ¨™ç³»ã‹ã‚‰DirectXåº§æ¨™ç³»ã«å¤‰æ›
 }
 
 void GRAnimationMesh::SetAllBonesOverrideWeight(double weight){
@@ -351,7 +351,7 @@ void GRAnimationMesh::Render(GRRenderIf* r){
 
 	d3ddevice->GetTransform(D3DTS_WORLD, &world);
 	
-	// ‚y²‚ğ”½“]‚·‚é‚Ì‚ÅƒJƒŠƒ“ƒO‚à‹t‚É‚·‚é
+	// ï¼ºè»¸ã‚’åè»¢ã™ã‚‹ã®ã§ã‚«ãƒªãƒ³ã‚°ã‚‚é€†ã«ã™ã‚‹
 	d3ddevice->GetRenderState(D3DRS_CULLMODE, (DWORD*)&cull);
 	d3ddevice->SetRenderState(D3DRS_CULLMODE, (cull==D3DCULL_NONE) ? D3DCULL_NONE : (cull==D3DCULL_CW) ? D3DCULL_CCW : D3DCULL_CW);
 
@@ -359,13 +359,13 @@ void GRAnimationMesh::Render(GRRenderIf* r){
 
 	if(!directRenderMode){
 		if(effect) UpdateFrame(rootFrame, *D3DXMatrixIdentity(&D3DXMATRIX()));
-		else       UpdateFrame(rootFrame, (*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));	// Šeƒ{[ƒ“‚ÌÀ•W•ÏŠ·iDirectXÀ•WŒnj -> ‚yÀ•W”½“] -> ƒ[ƒ‹ƒh•ÏŠ·iSpringheadÀ•WŒnj
+		else       UpdateFrame(rootFrame, (*D3DXMatrixScaling(&D3DXMATRIX(),1,1,-1) * world));	// å„ãƒœãƒ¼ãƒ³ã®åº§æ¨™å¤‰æ›ï¼ˆDirectXåº§æ¨™ç³»ï¼‰ -> ï¼ºåº§æ¨™åè»¢ -> ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ï¼ˆSpringheadåº§æ¨™ç³»ï¼‰
 	}
 
 	DrawFrame(rootFrame);
 
 	d3ddevice->SetTransform(D3DTS_WORLD, &world);
-	d3ddevice->SetRenderState(D3DRS_CULLMODE, cull);	// ƒJƒŠƒ“ƒO‚ğŒ³‚É–ß‚·
+	d3ddevice->SetRenderState(D3DRS_CULLMODE, cull);	// ã‚«ãƒªãƒ³ã‚°ã‚’å…ƒã«æˆ»ã™
 }
 
 void GRAnimationMesh::Rendered(GRRenderIf* r){

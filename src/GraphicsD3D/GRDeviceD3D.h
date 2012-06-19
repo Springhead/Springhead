@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file GRDeviceD3D.h
- *	@brief Direct3D‚É‚æ‚éƒOƒ‰ƒtƒBƒbƒNƒX•`‰æ‚ÌÀ‘•@@
+ *	@brief Direct3Dã«ã‚ˆã‚‹ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹æç”»ã®å®Ÿè£…ã€€ã€€
  */
 #ifndef GRDEVICED3D_H
 #define GRDEVICED3D_H
@@ -18,35 +18,35 @@
 
 namespace Spr{;
 
-/**	Direct3D‚É‚æ‚éƒOƒ‰ƒtƒBƒbƒNƒX•`‰æ‚ÌÀ‘•	*/
+/**	Direct3Dã«ã‚ˆã‚‹ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹æç”»ã®å®Ÿè£…	*/
 class GRDeviceD3D: public GRDevice, public GRDeviceD3DIfInit{
 	SPR_OBJECTDEF(GRDeviceD3D, GRDevice);
 protected:
 	CComPtr<IDirect3D9>			direct3D;				///< Direct3D
-	CComPtr<IDirect3DDevice9>	d3ddevice;				///< Direct3DƒfƒoƒCƒX
-	D3DPRESENT_PARAMETERS		pp;						///< ƒvƒŒƒ[ƒ“ƒe[ƒVƒ‡ƒ“ƒpƒ‰ƒ[ƒ^
-	std::stack<Affinef>			modelMatrixStack;		///< ƒ‚ƒfƒ‹s—ñƒXƒ^ƒbƒN
-	int							nLights;				///< ŒõŒ¹‚Ì”
-	const GRVertexElement*		currentVertexFormat;	///< ’¸“_ƒtƒH[ƒ}ƒbƒg
-	std::vector<CComPtr<IDirect3DTexture9> >	textures;			///< ƒeƒNƒXƒ`ƒƒ
+	CComPtr<IDirect3DDevice9>	d3ddevice;				///< Direct3Dãƒ‡ãƒã‚¤ã‚¹
+	D3DPRESENT_PARAMETERS		pp;						///< ãƒ—ãƒ¬ã‚¼ãƒ³ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+	std::stack<Affinef>			modelMatrixStack;		///< ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚¹ã‚¿ãƒƒã‚¯
+	int							nLights;				///< å…‰æºã®æ•°
+	const GRVertexElement*		currentVertexFormat;	///< é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+	std::vector<CComPtr<IDirect3DTexture9> >	textures;			///< ãƒ†ã‚¯ã‚¹ãƒãƒ£
 
 	struct DisplayList{
-		DWORD									fvf;		///< ’¸“_ƒtƒH[ƒ}ƒbƒg
-		CComPtr<IDirect3DVertexDeclaration9>	decl;		///< ’¸“_ƒtƒH[ƒ}ƒbƒg
-		size_t									stride;		///< ’¸“_ƒTƒCƒY
-		CComPtr<IDirect3DVertexBuffer9>			vtxBuf;		///< ’¸“_ƒoƒbƒtƒ@
-		int										vtxCount;	///< ’¸“_”
-		CComPtr<IDirect3DIndexBuffer9>			idxBuf;		///< ƒCƒ“ƒfƒbƒNƒXƒoƒbƒtƒ@
-		D3DPRIMITIVETYPE						primType;	///< ƒvƒŠƒ~ƒeƒBƒuƒ^ƒCƒv
-		int										primCount;	///< ƒvƒŠƒ~ƒeƒBƒu”
-		GRMaterialIf*							mat;		///< ƒ}ƒeƒŠƒAƒ‹
-		int										texid;		///< ƒeƒNƒXƒ`ƒƒID
+		DWORD									fvf;		///< é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+		CComPtr<IDirect3DVertexDeclaration9>	decl;		///< é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+		size_t									stride;		///< é ‚ç‚¹ã‚µã‚¤ã‚º
+		CComPtr<IDirect3DVertexBuffer9>			vtxBuf;		///< é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
+		int										vtxCount;	///< é ‚ç‚¹æ•°
+		CComPtr<IDirect3DIndexBuffer9>			idxBuf;		///< ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒãƒƒãƒ•ã‚¡
+		D3DPRIMITIVETYPE						primType;	///< ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚¿ã‚¤ãƒ—
+		int										primCount;	///< ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–æ•°
+		GRMaterialIf*							mat;		///< ãƒãƒ†ãƒªã‚¢ãƒ«
+		int										texid;		///< ãƒ†ã‚¯ã‚¹ãƒãƒ£ID
 	};
-	std::vector<DisplayList> displayLists;				///< ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg
+	std::vector<DisplayList> displayLists;				///< ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆ
 
 	GRDeviceD3DConfirmDeviceFunc confirmDeviceFunc;
 
-	bool deviceLost;		///< ƒfƒoƒCƒX‚ÍƒƒXƒg‚µ‚Ä‚¢‚é‚©H
+	bool deviceLost;		///< ãƒ‡ãƒã‚¤ã‚¹ã¯ãƒ­ã‚¹ãƒˆã—ã¦ã„ã‚‹ã‹ï¼Ÿ
 	std::vector<GRDeviceD3DListenerFunc> lostDeviceListeners;
 	std::vector<GRDeviceD3DListenerFunc> resetDeviceListeners;
 
@@ -57,112 +57,112 @@ protected:
 	static IDirect3DDevice9* s_d3ddevice;
 
 public:
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	GRDeviceD3D() : confirmDeviceFunc(NULL) {}
-	/// ‰Šúİ’è
+	/// åˆæœŸè¨­å®š
 	virtual void Init();
-	///	Viewportİ’è
+	///	Viewportè¨­å®š
 	virtual void SetViewport(Vec2f pos, Vec2f sz);
-	///	ƒoƒbƒtƒ@ƒNƒŠƒA
+	///	ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 	virtual void ClearBuffer();
-	///	ƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌŠJn‘O‚ÉŒÄ‚ÔŠÖ”
+	///	ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®é–‹å§‹å‰ã«å‘¼ã¶é–¢æ•°
 	virtual void BeginScene();
-	///	ƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌI—¹Œã‚ÉŒÄ‚ÔŠÖ”
+	///	ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®çµ‚äº†å¾Œã«å‘¼ã¶é–¢æ•°
 	virtual void EndScene();
-	///	ƒJƒŒƒ“ƒg‚Ì‹“_s—ñ‚ğafv‚Å’u‚«Š·‚¦‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®è¦–ç‚¹è¡Œåˆ—ã‚’afvã§ç½®ãæ›ãˆã‚‹
 	virtual void SetViewMatrix(const Affinef& afv);
-	///	ƒJƒŒƒ“ƒg‚Ì“Š‰es—ñ‚ğæ“¾‚·‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®æŠ•å½±è¡Œåˆ—ã‚’å–å¾—ã™ã‚‹
 	virtual void SetProjectionMatrix(const Affinef& afp);
-	///	ƒJƒŒƒ“ƒg‚Ì“Š‰es—ñ‚ğafp‚Å’u‚«Š·‚¦‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®æŠ•å½±è¡Œåˆ—ã‚’afpã§ç½®ãæ›ãˆã‚‹
 	virtual void GetProjectionMatrix(const Affinef& afp);
-	///	ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚ğafw‚Å’u‚«Š·‚¦‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’afwã§ç½®ãæ›ãˆã‚‹
 	virtual void SetModelMatrix(const Affinef& afw);
-	///	ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚É‘Î‚µ‚Äafw‚ğŠ|‚¯‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã«å¯¾ã—ã¦afwã‚’æ›ã‘ã‚‹
 	virtual void MultModelMatrix(const Affinef& afw);
-	///	ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚ğƒ‚ƒfƒ‹s—ñƒXƒ^ƒbƒN‚Ö•Û‘¶‚·‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚¹ã‚¿ãƒƒã‚¯ã¸ä¿å­˜ã™ã‚‹
 	virtual void PushModelMatrix();
-	///	ƒ‚ƒfƒ‹s—ñƒXƒ^ƒbƒN‚©‚çæ‚èo‚µAƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚Æ‚·‚é
+	///	ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚¹ã‚¿ãƒƒã‚¯ã‹ã‚‰å–ã‚Šå‡ºã—ã€ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã¨ã™ã‚‹
 	virtual void PopModelMatrix();
-	/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚Ì‘S—v‘f‚ğíœ‚·‚é
+	/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã®å…¨è¦ç´ ã‚’å‰Šé™¤ã™ã‚‹
 	virtual void ClearBlendMatrix();
-	/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚ğİ’è‚·‚é
+	/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã‚’è¨­å®šã™ã‚‹
 	virtual bool SetBlendMatrix(const Affinef& afb);
-	/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚ğİ’è‚·‚é
+	/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã‚’è¨­å®šã™ã‚‹
 	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id);
-	///	’¸“_ƒtƒH[ƒ}ƒbƒg‚Ìw’è
+	///	é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®æŒ‡å®š
 	virtual void SetVertexFormat(const GRVertexElement* e);
-	///	’¸“_ƒVƒF[ƒ_[‚Ìw’è
+	///	é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®æŒ‡å®š
 	virtual void SetVertexShader(void* s);
-	///	’¸“_À•W‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+	///	é ‚ç‚¹åº§æ¨™ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
-	///	’¸“_À•W‚ÆƒCƒ“ƒfƒbƒNƒX‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+	///	é ‚ç‚¹åº§æ¨™ã¨ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
-	///	DisplayList‚Ì•\¦
+	///	DisplayListã®è¡¨ç¤º
 	virtual void DrawList(int i);
-	///	DisplayList‚Ì‰ğ•ú
+	///	DisplayListã®è§£æ”¾
 	virtual void ReleaseList(int i);
-	/// 3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æiGLƒIƒ“ƒŠ[”Å‚Åfont‚Íw’è‚È‚µj
+	/// 3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»ï¼ˆGLã‚ªãƒ³ãƒªãƒ¼ç‰ˆã§fontã¯æŒ‡å®šãªã—ï¼‰
 	virtual void DrawFont(Vec2f pos, const std::string str);
-	/// 3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æiGLƒIƒ“ƒŠ[”Å‚Åfont‚Íw’è‚È‚µj
+	/// 3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»ï¼ˆGLã‚ªãƒ³ãƒªãƒ¼ç‰ˆã§fontã¯æŒ‡å®šãªã—ï¼‰
 	virtual void DrawFont(Vec3f pos, const std::string str);
-	///	3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æ
+	///	3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»
 	virtual void DrawFont(Vec2f pos, const std::string str, const GRFont& font);
-	///	3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æ
+	///	3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»
 	virtual void DrawFont(Vec3f pos, const std::string str, const GRFont& font);
-	///	•`‰æ‚ÌŞ¿‚Ìİ’è
+	///	æç”»ã®æè³ªã®è¨­å®š
 	virtual void SetMaterial(const GRMaterialDesc& mat);
 	virtual void SetMaterial(const GRMaterialIf*& mat){ GRDevice::SetMaterial(mat); }
-	///	•`‰æ‚·‚é“_Eü‚Ì‘¾‚³‚Ìİ’è
+	///	æç”»ã™ã‚‹ç‚¹ãƒ»ç·šã®å¤ªã•ã®è¨­å®š
 	virtual void SetLineWidth(float w);
-	///	ŒõŒ¹ƒXƒ^ƒbƒN‚ğPush
+	///	å…‰æºã‚¹ã‚¿ãƒƒã‚¯ã‚’Push
 	virtual void PushLight(const GRLightDesc& light);
 	virtual void PushLight(const GRLightIf* light){ GRDevice::PushLight(light); }
-	///	ŒõŒ¹ƒXƒ^ƒbƒN‚ğPop
+	///	å…‰æºã‚¹ã‚¿ãƒƒã‚¯ã‚’Pop
 	virtual void PopLight();
-	///	ƒfƒvƒXƒoƒbƒtƒ@‚Ö‚Ì‘‚«‚İ‚ğ‹–‰Â/‹Ö~‚·‚é
+	///	ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡ã¸ã®æ›¸ãè¾¼ã¿ã‚’è¨±å¯/ç¦æ­¢ã™ã‚‹
 	virtual void SetDepthWrite(bool b);
-	///	ƒfƒvƒXƒeƒXƒg‚ğ—LŒø/–³Œø‚É‚·‚é
+	///	ãƒ‡ãƒ—ã‚¹ãƒ†ã‚¹ãƒˆã‚’æœ‰åŠ¹/ç„¡åŠ¹ã«ã™ã‚‹
 	virtual void SetDepthTest(bool b);
-	///	ƒfƒvƒXƒoƒbƒtƒ@–@‚É—p‚¢‚é”»’èğŒ‚ğw’è‚·‚é
+	///	ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡æ³•ã«ç”¨ã„ã‚‹åˆ¤å®šæ¡ä»¶ã‚’æŒ‡å®šã™ã‚‹
 	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f);
-	/// ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚ğ—LŒø/–³Œø‚É‚·‚é
+	/// ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’æœ‰åŠ¹/ç„¡åŠ¹ã«ã™ã‚‹
 	virtual void SetAlphaTest(bool b);
-	///	ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚Ìƒ‚[ƒhİ’è(SRC‚Ì¬‡ŒW”, DEST¬‡ŒW”)
+	///	ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã®ãƒ¢ãƒ¼ãƒ‰è¨­å®š(SRCã®æ··åˆä¿‚æ•°, DESTæ··åˆä¿‚æ•°)
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest);
-	/// ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒhi–ß‚è’lFƒeƒNƒXƒ`ƒƒIDj
+	/// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰ï¼ˆæˆ»ã‚Šå€¤ï¼šãƒ†ã‚¯ã‚¹ãƒãƒ£IDï¼‰
 	virtual unsigned int LoadTexture(const std::string filename);
-	/// ƒVƒF[ƒ_‚Ì‰Šú‰»
+	/// ã‚·ã‚§ãƒ¼ãƒ€ã®åˆæœŸåŒ–
 	virtual void InitShader();
-	/// ƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg‚Ìİ’è
+	/// ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®è¨­å®š
 	virtual void SetShaderFormat(GRShaderFormat::ShaderType type);	
-	/// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚Ìì¬
+	/// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
 	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader);
-	/// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚Ìì¬AGRDeviceGL::shader‚Ö‚Ì“o˜^i‚ ‚ç‚©‚¶‚ßShaderFile–¼‚ğ“o˜^‚µ‚Ä‚¨‚­•K—v‚ª‚ ‚éj
+	/// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆã€GRDeviceGL::shaderã¸ã®ç™»éŒ²ï¼ˆã‚ã‚‰ã‹ã˜ã‚ShaderFileåã‚’ç™»éŒ²ã—ã¦ãŠãå¿…è¦ãŒã‚ã‚‹ï¼‰
 	virtual GRHandler CreateShader();
-	/// ƒVƒF[ƒ_‚Ìƒ\[ƒXƒvƒƒOƒ‰ƒ€‚ğƒƒ‚ƒŠ‚É“Ç‚İ‚İAƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚ÆŠÖ˜A•t‚¯‚é
+	/// ã‚·ã‚§ãƒ¼ãƒ€ã®ã‚½ãƒ¼ã‚¹ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã¿ã€ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨é–¢é€£ä»˜ã‘ã‚‹
 	virtual bool ReadShaderSource(GRHandler shader, std::string file);	
-	/// ƒƒP[ƒVƒ‡ƒ“î•ñ‚Ìæ“¾iSetShaderFormat()‚ÅƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg‚ğİ’è‚µ‚Ä‚¨‚­•K—v‚ ‚èj
+	/// ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ã®å–å¾—ï¼ˆSetShaderFormat()ã§ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’è¨­å®šã—ã¦ãŠãå¿…è¦ã‚ã‚Šï¼‰
 	virtual void GetShaderLocation(GRHandler shader, void* location);		
-	/// ƒfƒoƒCƒX‘I’è—p‚ÌƒR[ƒ‹ƒoƒbƒNŠÖ”‚ğ“o˜^
+	/// ãƒ‡ãƒã‚¤ã‚¹é¸å®šç”¨ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã‚’ç™»éŒ²
 	virtual void SetConfirmDeviceFunc(GRDeviceD3DConfirmDeviceFunc func) { confirmDeviceFunc = func; }
-	/// ƒfƒoƒCƒX‚ªƒƒXƒg‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚éƒR[ƒ‹ƒoƒbƒNŠÖ”‚ğ“o˜^
+	/// ãƒ‡ãƒã‚¤ã‚¹ãŒãƒ­ã‚¹ãƒˆã—ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã‚’ç™»éŒ²
 	virtual void AddLostDeviceListener(GRDeviceD3DListenerFunc func)  { lostDeviceListeners.push_back(func); }
-	/// ƒfƒoƒCƒX‚ªƒŠƒZƒbƒg‚³‚ê‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚éƒR[ƒ‹ƒoƒbƒNŠÖ”‚ğ“o˜^
+	/// ãƒ‡ãƒã‚¤ã‚¹ãŒãƒªã‚»ãƒƒãƒˆã•ã‚ŒãŸã¨ãã«å‘¼ã°ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã‚’ç™»éŒ²
 	virtual void AddResetDeviceListener(GRDeviceD3DListenerFunc func) { resetDeviceListeners.push_back(func); }
-	/// ƒEƒCƒ“ƒhƒEƒ‚[ƒh<->ƒtƒ‹ƒXƒNƒŠ[ƒ“ Ø‚è‘Ö‚¦
+	/// ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰<->ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ åˆ‡ã‚Šæ›¿ãˆ
 	virtual void ToggleFullScreen();
-	/// ƒtƒ‹ƒXƒNƒŠ[ƒ“ƒ‚[ƒh‚©H
+	/// ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒ¢ãƒ¼ãƒ‰ã‹ï¼Ÿ
 	virtual bool IsFullScreen() { return !pp.Windowed; }
 
-	/// D3DƒfƒoƒCƒX‚ğæ“¾‚·‚é
+	/// D3Dãƒ‡ãƒã‚¤ã‚¹ã‚’å–å¾—ã™ã‚‹
 	static IDirect3DDevice9* GetD3DDevice() { return s_d3ddevice; }
 
 protected:
-	/// ƒAƒ“ƒ`ƒGƒCƒŠƒAƒX‚ğg—p‚·‚é‚½‚ß‚Ìİ’è
+	/// ã‚¢ãƒ³ãƒã‚¨ã‚¤ãƒªã‚¢ã‚¹ã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã®è¨­å®š
 	void SetMultiSampleType();
-	/// ƒfƒoƒCƒX‚ªƒƒXƒg‚µ‚½‚çŒÄ‚Ô
+	/// ãƒ‡ãƒã‚¤ã‚¹ãŒãƒ­ã‚¹ãƒˆã—ãŸã‚‰å‘¼ã¶
 	void LostDevice();
-	/// ƒfƒoƒCƒX‚ğƒŠƒZƒbƒg‚·‚é
+	/// ãƒ‡ãƒã‚¤ã‚¹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	void ResetDevice();
 };
 

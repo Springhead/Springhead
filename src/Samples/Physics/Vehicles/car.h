@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,7 +8,7 @@
 #ifndef ROBOT1_H
 #define ROBOT1_H
 
-#include <Springhead.h>		//	Springhead‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+#include <Springhead.h>		//	Springheadã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 
 using namespace Spr;
 

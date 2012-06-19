@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,23 +15,23 @@
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief ‹ŠoƒZƒ“ƒT
+/** @brief è¦–è¦šã‚»ãƒ³ã‚µ
 */
 class CRVisualSensor : public CREngine, public CRVisualSensorDesc {
 private:
-	/// —˜—p‚·‚é„‘Ì
+	/// åˆ©ç”¨ã™ã‚‹å‰›ä½“
 	PHSolidIf *soLEye, *soREye;
 
-	/// ‘‚«‚İæ‚Ì“à•”ƒV[ƒ“
+	/// æ›¸ãè¾¼ã¿å…ˆã®å†…éƒ¨ã‚·ãƒ¼ãƒ³
 	// CRSceneIf* internalScene;
 
-	/// ©ŒÈ‚Ì„‘Ì‚ÌƒZƒbƒgi©ŒÈ‚É‘®‚·‚é„‘Ì‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é‚Ì‚Ég‚¤j
+	/// è‡ªå·±ã®å‰›ä½“ã®ã‚»ãƒƒãƒˆï¼ˆè‡ªå·±ã«å±ã™ã‚‹å‰›ä½“ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹ã®ã«ä½¿ã†ï¼‰
 	std::set<PHSolidIf*> selfSolids;
 
-	/// ‹–ì“àŠO”»’è‚ÌŠî”Õ‚Æ‚È‚éŠÖ”
+	/// è¦–é‡å†…å¤–åˆ¤å®šã®åŸºç›¤ã¨ãªã‚‹é–¢æ•°
 	bool  IsInside(Vec3f pos, double rangeIn, double rangeOut, double rangeVert);
 
-	/// •ûŒüƒxƒNƒgƒ‹‚ğ…•½E‚’¼Šp“x‚É•ÏŠ·
+	/// æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ°´å¹³ãƒ»å‚ç›´è§’åº¦ã«å¤‰æ›
 	Vec2d Vec3ToAngle(Vec3d v);
 
 public:
@@ -44,35 +44,35 @@ public:
 	{
 	}
 
-	/** @brief Às‡˜‚ğŒˆ‚ß‚éƒvƒ‰ƒCƒIƒŠƒeƒB’lD¬‚³‚¢‚Ù‚Ç‘‚¢
+	/** @brief å®Ÿè¡Œé †åºã‚’æ±ºã‚ã‚‹ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£å€¤ï¼å°ã•ã„ã»ã©æ—©ã„
 	*/
 	virtual int GetPriority() const { return CREngineDesc::CREP_SENSOR; }
 
-	/** @brief ‰Šú‰»ˆ—
+	/** @brief åˆæœŸåŒ–å‡¦ç†
 	*/
 	virtual void Init();
 
-	/** @brief ‚PƒXƒeƒbƒv•ª‚Ìˆ—
+	/** @brief ï¼‘ã‚¹ãƒ†ãƒƒãƒ—åˆ†ã®å‡¦ç†
 	*/
 	virtual void Step();
 
-	/** @brief ‹–ì“àŠO”»’è‚ğs‚¤
+	/** @brief è¦–é‡å†…å¤–åˆ¤å®šã‚’è¡Œã†
 	*/
 	virtual bool IsVisible(PHSolidIf* solid);
 
-	/** @brief ’†S‹–ì“àŠO”»’è‚ğs‚¤
+	/** @brief ä¸­å¿ƒè¦–é‡å†…å¤–åˆ¤å®šã‚’è¡Œã†
 	*/
 	virtual bool IsInCenter(PHSolidIf* solid);
 
-	/** @brief ‹–ì“àŠO”»’è‚ğs‚¤
+	/** @brief è¦–é‡å†…å¤–åˆ¤å®šã‚’è¡Œã†
 	*/
 	virtual bool IsVisible(Vec3f pos);
 
-	/** @brief ’†S‹–ì“àŠO”»’è‚ğs‚¤
+	/** @brief ä¸­å¿ƒè¦–é‡å†…å¤–åˆ¤å®šã‚’è¡Œã†
 	*/
 	virtual bool IsInCenter(Vec3f pos);
 
-	/** @brief ©•ª©g‚Ì„‘Ì‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
+	/** @brief è‡ªåˆ†è‡ªèº«ã®å‰›ä½“ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹
 	*/
 	virtual bool IsSelfSolid(PHSolidIf* solid);
 };

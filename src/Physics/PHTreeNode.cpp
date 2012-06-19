@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -152,10 +152,10 @@ void PHTreeNode::CompArticulatedInertia(){
 
 	CompCoriolisAccel();
 	
-	//qƒm[ƒh‚ÉIa‚ğŒvZ‚³‚¹‚éD
-	//qƒm[ƒh’B‚Íeƒm[ƒhi‚Â‚Ü‚è‚±‚Ìƒm[ƒhj‚É©•ª‚ÌIa‚ğÏ‚İã‚°‚é
-	//–ƒMƒA‚Ì•À—ñ˜A“®‚É‚¨‚¢‚ÄƒMƒAƒgƒŒƒCƒ“‚Ìæ“ªƒm[ƒhiÅ‚àbeginŠñ‚è‚É‚¢‚éj‚ğÅŒã‚ÉŒÄ‚Ô•K—v‚ª‚ ‚é‚½‚ß
-	//  reverse_iterator‚ğ—p‚¢‚é
+	//å­ãƒãƒ¼ãƒ‰ã«Iaã‚’è¨ˆç®—ã•ã›ã‚‹ï¼
+	//å­ãƒãƒ¼ãƒ‰é”ã¯è¦ªãƒãƒ¼ãƒ‰ï¼ˆã¤ã¾ã‚Šã“ã®ãƒãƒ¼ãƒ‰ï¼‰ã«è‡ªåˆ†ã®Iaã‚’ç©ã¿ä¸Šã’ã‚‹
+	//ï¼Šã‚®ã‚¢ã®ä¸¦åˆ—é€£å‹•ã«ãŠã„ã¦ã‚®ã‚¢ãƒˆãƒ¬ã‚¤ãƒ³ã®å…ˆé ­ãƒãƒ¼ãƒ‰ï¼ˆæœ€ã‚‚beginå¯„ã‚Šã«ã„ã‚‹ï¼‰ã‚’æœ€å¾Œã«å‘¼ã¶å¿…è¦ãŒã‚ã‚‹ãŸã‚
+	//  reverse_iteratorã‚’ç”¨ã„ã‚‹
 	for(container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++)
 		(*it)->InitArticulatedInertia();
 	for(container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++)
@@ -163,12 +163,12 @@ void PHTreeNode::CompArticulatedInertia(){
 
 	Ic = I * c;
 
-	//eƒm[ƒh‚ÉIa‚ğÏ‚Ş
+	//è¦ªãƒãƒ¼ãƒ‰ã«Iaã‚’ç©ã‚€
 	AccumulateInertia();
 }
 
 void PHTreeNode::InitArticulatedBiasForce(){
-	// PHSolidInfo‚Ìdv‚ª—‚½‚æ‚¤‚È®‚È‚Ì‚Å‹¤—L‰»‚µ‚½‚Ù‚¤‚ª‚¢‚¢
+	// PHSolidInfoã®dvãŒä¼¼ãŸã‚ˆã†ãªå¼ãªã®ã§å…±æœ‰åŒ–ã—ãŸã»ã†ãŒã„ã„
 	PHSolid* s = GetSolid();
 	if(s->IsDynamical()){
 		Z.v() = -1.0 * s->f.v();
@@ -179,8 +179,8 @@ void PHTreeNode::InitArticulatedBiasForce(){
 }
 
 void PHTreeNode::CompArticulatedBiasForce(){
-	//qƒm[ƒh‚ÉZa‚ğŒvZ‚³‚¹‚éD
-	//qƒm[ƒh’B‚Íeƒm[ƒhi‚Â‚Ü‚è‚±‚Ìƒm[ƒhj‚É©•ª‚ÌZa‚ğÏ‚İã‚°‚é
+	//å­ãƒãƒ¼ãƒ‰ã«Zaã‚’è¨ˆç®—ã•ã›ã‚‹ï¼
+	//å­ãƒãƒ¼ãƒ‰é”ã¯è¦ªãƒãƒ¼ãƒ‰ï¼ˆã¤ã¾ã‚Šã“ã®ãƒãƒ¼ãƒ‰ï¼‰ã«è‡ªåˆ†ã®Zaã‚’ç©ã¿ä¸Šã’ã‚‹
 	for(container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++)
 		(*it)->InitArticulatedBiasForce();
 	for(container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++)
@@ -188,7 +188,7 @@ void PHTreeNode::CompArticulatedBiasForce(){
 
 	ZplusIc = Z + Ic;
 
-	//eƒm[ƒh‚ÉIa‚ğÏ‚Ş
+	//è¦ªãƒãƒ¼ãƒ‰ã«Iaã‚’ç©ã‚€
 	AccumulateBiasForce();
 	
 }
@@ -241,7 +241,7 @@ void PHTreeNode::UpdatePosition(double dt){
 	SpatialTransform Xp(sp->GetCenterPosition(), sp->GetOrientation());
 	SpatialTransform Xc = Xcp * Xp;
 	Xc.q.unitize();
-	// SetOrientation -> SetCenterPosition‚Ì‡‚ÉŒÄ‚Ô•K—v‚ª‚ ‚éD‹t‚¾‚ÆSetOrientation‚É‚æ‚Á‚ÄdSˆÊ’u‚ª‚¸‚ê‚Ä‚µ‚Ü‚¤ tazz
+	// SetOrientation -> SetCenterPositionã®é †ã«å‘¼ã¶å¿…è¦ãŒã‚ã‚‹ï¼é€†ã ã¨SetOrientationã«ã‚ˆã£ã¦é‡å¿ƒä½ç½®ãŒãšã‚Œã¦ã—ã¾ã† tazz
 	s->SetOrientation(Xc.q);
 	s->SetCenterPosition(Xc.r);
 	s->SetUpdated(true);
@@ -288,20 +288,20 @@ void PHRootNode::SetupCorrectionABA(){
 }
 
 void PHRootNode::CompArticulatedInertia(){
-	//qƒm[ƒh‚ÉIa‚ğŒvZ‚³‚¹‚éD
-	//qƒm[ƒh’B‚Íeƒm[ƒhi‚Â‚Ü‚è‚±‚Ìƒm[ƒhj‚É©•ª‚ÌIa‚ğÏ‚İã‚°‚é
+	//å­ãƒãƒ¼ãƒ‰ã«Iaã‚’è¨ˆç®—ã•ã›ã‚‹ï¼
+	//å­ãƒãƒ¼ãƒ‰é”ã¯è¦ªãƒãƒ¼ãƒ‰ï¼ˆã¤ã¾ã‚Šã“ã®ãƒãƒ¼ãƒ‰ï¼‰ã«è‡ªåˆ†ã®Iaã‚’ç©ã¿ä¸Šã’ã‚‹
 	for(container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++)
 		(*it)->InitArticulatedInertia();
 	for(container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++)
 		(*it)->CompArticulatedInertia();
 
-	//‹ts—ñ‚ğŒvZ
+	//é€†è¡Œåˆ—ã‚’è¨ˆç®—
 	(Matrix6d&)Iinv = I.inv();
 }
 
 void PHRootNode::CompArticulatedBiasForce(){
-	//qƒm[ƒh‚ÉZa‚ğŒvZ‚³‚¹‚éD
-	//qƒm[ƒh’B‚Íeƒm[ƒhi‚Â‚Ü‚è‚±‚Ìƒm[ƒhj‚É©•ª‚ÌZa‚ğÏ‚İã‚°‚é
+	//å­ãƒãƒ¼ãƒ‰ã«Zaã‚’è¨ˆç®—ã•ã›ã‚‹ï¼
+	//å­ãƒãƒ¼ãƒ‰é”ã¯è¦ªãƒãƒ¼ãƒ‰ï¼ˆã¤ã¾ã‚Šã“ã®ãƒãƒ¼ãƒ‰ï¼‰ã«è‡ªåˆ†ã®Zaã‚’ç©ã¿ä¸Šã’ã‚‹
 	for(container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++)
 		(*it)->InitArticulatedBiasForce();
 	for(container_t::reverse_iterator it = Children().rbegin(); it != Children().rend(); it++)
@@ -368,8 +368,8 @@ PHTreeNodeND<NDOF>::PHTreeNodeND(){
 
 template<int NDOF>
 void PHTreeNodeND<NDOF>::AddGear(PHGear* gear, PHTreeNodeND<NDOF>* child){
-	//child‚ªqƒm[ƒh‚Ìê‡‚ÆCŒZ’íƒm[ƒhie‚ª“¯‚¶j‚Ìê‡‚ª‚ ‚é
-	//‚±‚Ìƒm[ƒh‚ªX‚Éã‚Ìƒm[ƒh‚Æ˜A“®‚µ‚Ä‚¢‚È‚¢ê‡‚Í‚±‚Ìƒm[ƒh‚ªƒgƒbƒv‚É‚È‚é
+	//childãŒå­ãƒãƒ¼ãƒ‰ã®å ´åˆã¨ï¼Œå…„å¼Ÿãƒãƒ¼ãƒ‰ï¼ˆè¦ªãŒåŒã˜ï¼‰ã®å ´åˆãŒã‚ã‚‹
+	//ã“ã®ãƒãƒ¼ãƒ‰ãŒæ›´ã«ä¸Šã®ãƒãƒ¼ãƒ‰ã¨é€£å‹•ã—ã¦ã„ãªã„å ´åˆã¯ã“ã®ãƒãƒ¼ãƒ‰ãŒãƒˆãƒƒãƒ—ã«ãªã‚‹
 	if(!gearNode)
 		gearNode = this;
 	child->gearNode = gearNode;
@@ -410,7 +410,7 @@ void PHTreeNodeND<NDOF>::InitArticulatedInertia(){
 template<int NDOF>
 void PHTreeNodeND<NDOF>::CompCoriolisAccel(){
 	PHTreeNode::CompCoriolisAccel();
-	//’¼—ñƒMƒA˜A“®‚µ‚Ä‚¢‚éê‡‚Íã’i‚ÌƒRƒŠƒIƒŠ€‚ğ‘«‚·
+	//ç›´åˆ—ã‚®ã‚¢é€£å‹•ã—ã¦ã„ã‚‹å ´åˆã¯ä¸Šæ®µã®ã‚³ãƒªã‚ªãƒªé …ã‚’è¶³ã™
 	if(gearNode && gearNode != this && GetParent() != gearNode->GetParent())
 		c += Xcp * GetParent()->c;
 }
@@ -465,7 +465,7 @@ void PHTreeNodeND<NDOF>::AccumulateBiasForce(){
 template<int NDOF>
 void PHTreeNodeND<NDOF>::CompSpatialTransform(){
 	PHTreeNode::CompSpatialTransform();
-	// ’¼—ñƒMƒA˜A“®‚Ìê‡
+	// ç›´åˆ—ã‚®ã‚¢é€£å‹•ã®å ´åˆ
 	if(gearNode && gearNode != this && GetParent() != gearNode->GetParent())
 		 Xcg = Xcp * parentND->Xcg;
 	else Xcg = Xcp;
@@ -473,18 +473,18 @@ void PHTreeNodeND<NDOF>::CompSpatialTransform(){
 
 template<int NDOF>
 void PHTreeNodeND<NDOF>::CompJointJacobian(){
-	// ”h¶ƒNƒ‰ƒX‚ªŒvZ‚µ‚½ƒ„ƒRƒrƒAƒ“‚ÉÀ•W•ÏŠ·‚ğ‚©‚¯‚é
+	// æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ãŒè¨ˆç®—ã—ãŸãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ã«åº§æ¨™å¤‰æ›ã‚’ã‹ã‘ã‚‹
 	for(int i = 0; i < NDOF; i++)
 		(SpatialVector&)J.col(i) = Xcj * (const SpatialVector&)J.col(i);
 
-	// ƒMƒA˜A“®‚µ‚Ä‚¢‚éê‡‚Í(ã’iƒm[ƒh‚Ìƒ„ƒRƒrƒAƒ“{ƒMƒA”ä*©•ª‚Ìƒ„ƒRƒrƒAƒ“)
+	// ã‚®ã‚¢é€£å‹•ã—ã¦ã„ã‚‹å ´åˆã¯(ä¸Šæ®µãƒãƒ¼ãƒ‰ã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ï¼‹ã‚®ã‚¢æ¯”*è‡ªåˆ†ã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³)
 	if(gearNode && gearNode != this){
-		// ’¼—ñƒMƒA˜A“®
+		// ç›´åˆ—ã‚®ã‚¢é€£å‹•
 		if(GetParent() != gearNode->GetParent()){
 			for(int i = 0; i < NDOF; i++)
 				J.col(i) = Xcp * (const SpatialVector&)parentND->J.col(i) + gear->GetRatio() * J.col(i);
 		}
-		// •À—ñƒMƒA˜A“®
+		// ä¸¦åˆ—ã‚®ã‚¢é€£å‹•
 		else J = gear->GetRatio() * J;
 	}
 }
@@ -529,7 +529,7 @@ void PHTreeNodeND<NDOF>::CompAccelDiff(bool bUpdate, bool bImpulse){
 		(Vec6d&)da = Xcp * GetParent()->da + J * daccel;
 	}
 
-	dZ.clear(); // Ÿ‰ñ‚ÌŒÄ‚Ño‚µ‚Ì‚½‚ß‚É‚±‚±‚ÅƒNƒŠƒA
+	dZ.clear(); // æ¬¡å›ã®å‘¼ã³å‡ºã—ã®ãŸã‚ã«ã“ã“ã§ã‚¯ãƒªã‚¢
 	dtau.clear();
 	JtrdZ.clear();
 	
@@ -619,7 +619,7 @@ void PHTreeNodeND<NDOF>::CompResponseMatrix(){
 
 /*template<int NDOF>
 void PHTreeNodeND<NDOF>::ModifyJacobian(){
-	//ŠÖß‘¬“x‚Ì¬•ª–ˆ‚ÉS‘©‚·‚éê‡‚Í’PˆÊs—ñ
+	//é–¢ç¯€é€Ÿåº¦ã®æˆåˆ†æ¯ã«æ‹˜æŸã™ã‚‹å ´åˆã¯å˜ä½è¡Œåˆ—
 	init_unitize(Jq);
 }
 
@@ -627,7 +627,7 @@ template<int NDOF>
 void PHTreeNodeND<NDOF>::SetupLCP(){
 	if(!bEnabled)
 		return;
-	// ƒMƒA˜A“®‚µ‚Ä‚¢‚éê‡Cƒoƒlƒ_ƒ“ƒp‚ÌŒø‰Ê‚ÍƒMƒAƒgƒŒƒCƒ“æ“ªƒm[ƒh‚ÉW–ñ‚³‚¹‚é
+	// ã‚®ã‚¢é€£å‹•ã—ã¦ã„ã‚‹å ´åˆï¼Œãƒãƒãƒ€ãƒ³ãƒ‘ã®åŠ¹æœã¯ã‚®ã‚¢ãƒˆãƒ¬ã‚¤ãƒ³å…ˆé ­ãƒãƒ¼ãƒ‰ã«é›†ç´„ã•ã›ã‚‹
 	if(gearNode && gearNode != this)
 		return;
 
@@ -635,28 +635,28 @@ void PHTreeNodeND<NDOF>::SetupLCP(){
 	bool con, constrAtAll = false;
 	for(int i = 0; i < NDOF; i++){
 		con = j->constr[j->movableAxes[i]];
-		if(con && constr[i])			// Œp‘±‚µ‚ÄS‘©‚³‚ê‚éê‡
+		if(con && constr[i])			// ç¶™ç¶šã—ã¦æ‹˜æŸã•ã‚Œã‚‹å ´åˆ
 			 f[i] *= engine->shrinkRate;
-		else f[i] = 0.0;					// V‹K‚ÉS‘©‚³‚ê‚é or S‘©‚³‚ê‚È‚¢
+		else f[i] = 0.0;					// æ–°è¦ã«æ‹˜æŸã•ã‚Œã‚‹ or æ‹˜æŸã•ã‚Œãªã„
 		constr[i] = con;
 		constrAtAll |= con;
 	}
 	ModifyJacobian();
 	if(constrAtAll){
-		// LCP‚ÌbƒxƒNƒgƒ‹
+		// LCPã®bãƒ™ã‚¯ãƒˆãƒ«
 		b = Jq * GetJoint()->velocity;
 		dA.clear();
 		db.clear();
-		CompBias();	// –Ú•W‘¬Cƒoƒlƒ_ƒ“ƒp‚É‚æ‚é•â³€‚ğŒvZ
+		CompBias();	// ç›®æ¨™é€Ÿï¼Œãƒãƒãƒ€ãƒ³ãƒ‘ã«ã‚ˆã‚‹è£œæ­£é …ã‚’è¨ˆç®—
 		b += db;
 		
-		// LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚ğŒvZ
+		// LCPã®Aè¡Œåˆ—ã®å¯¾è§’æˆåˆ†ã‚’è¨ˆç®—
 		CompResponseMatrix();
 		//DSTR << "A: " << A << endl;
 		for(int i = 0; i < NDOF; i++)
 			Ainv[i] = 1.0 / (A[i] + dA[i]);
 
-		// S‘©—Í‰Šú’l‚É‚æ‚é‘¬“x•Ï‰»—Ê‚ğŒvZ
+		// æ‹˜æŸåŠ›åˆæœŸå€¤ã«ã‚ˆã‚‹é€Ÿåº¦å¤‰åŒ–é‡ã‚’è¨ˆç®—
 		CompResponse(f, true);
 	}
 	PHTreeNode::SetupLCP();
@@ -698,32 +698,32 @@ void PHTreeNode1D::CompBias(){
 	}
 
 	if(j->onLower || j->onUpper){
-		// –¢‘Î‰
+		// æœªå¯¾å¿œ
 		//return;
 	}
 
 	double D = j->damper, K = j->spring, targetPosition = j->targetPosition;
 	PH1DJoint* jchild;
-	// ƒMƒAƒgƒŒƒCƒ“‚Ìæ“ª‚Ìê‡C˜A“®‚µ‚Ä‚¢‚éŠÖß‚Ìƒoƒlƒ_ƒ“ƒpŒW”‚ğ‘«‚µ‡‚í‚¹‚é
+	// ã‚®ã‚¢ãƒˆãƒ¬ã‚¤ãƒ³ã®å…ˆé ­ã®å ´åˆï¼Œé€£å‹•ã—ã¦ã„ã‚‹é–¢ç¯€ã®ãƒãƒãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¶³ã—åˆã‚ã›ã‚‹
 	if(gearNode){
 		double Di, Ki, ratio;
 		targetPosition = K * j->targetPosition;
 		for(int i = 0; i < (int)gearChildren.size(); i++){
 			jchild = DCAST(PH1DJoint, gearChildren[i]->GetJoint());
-			if(!jchild)continue;	// ©—R“x‚ÌˆÙ‚È‚éŠÖß‚Æ‚Ì˜A“®F‹N‚±‚è“¾‚È‚¢‚Í‚¸
+			if(!jchild)continue;	// è‡ªç”±åº¦ã®ç•°ãªã‚‹é–¢ç¯€ã¨ã®é€£å‹•ï¼šèµ·ã“ã‚Šå¾—ãªã„ã¯ãš
 			ratio = gearChildren[i]->gear->GetRatio();
 			Di = ratio * ratio * jchild->damper;
 			Ki = ratio * ratio * jchild->spring;
-			D += Di;	// ƒoƒlƒ_ƒ“ƒpŒW”‚ÍƒMƒA”ä‚Ì©æ”{
+			D += Di;	// ãƒãƒãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã¯ã‚®ã‚¢æ¯”ã®è‡ªä¹—å€
 			K += Ki;
-			targetPosition += Ki * jchild->targetPosition;		// ƒoƒlŒ´“_‚ÍŒW”‚É‚æ‚édS
+			targetPosition += Ki * jchild->targetPosition;		// ãƒãƒåŸç‚¹ã¯ä¿‚æ•°ã«ã‚ˆã‚‹é‡å¿ƒ
 		}
 		if(K > 0.0)
 			targetPosition /= K;
 	}
 	if(K != 0.0 || D != 0.0){
 		diff = j->GetPosition() - targetPosition;
-		// ‚½‚Ü‚É•sˆÀ’è«‚É‚æ‚è–³ŒÀ‘å‚É’£‚è•t‚­‚±‚Æ‚ª‚ ‚èA‰º‚Ìwhile‚Å–³ŒÀƒ‹[ƒv‚µ‚Ä‚µ‚Ü‚¤
+		// ãŸã¾ã«ä¸å®‰å®šæ€§ã«ã‚ˆã‚Šç„¡é™å¤§ã«å¼µã‚Šä»˜ãã“ã¨ãŒã‚ã‚Šã€ä¸‹ã®whileã§ç„¡é™ãƒ«ãƒ¼ãƒ—ã—ã¦ã—ã¾ã†
 		if(abs(diff) > 1.0e3)
 			diff = 0.0;
 		//while(diff >  M_PI) diff -= 2 * M_PI;

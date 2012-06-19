@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,15 +18,15 @@
 namespace Spr{;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief ƒ{ƒfƒB
+/** @brief ãƒœãƒ‡ã‚£
 */
 class CRBody : public SceneObject, public CRBodyDesc {
 protected:
-	/// ƒ{ƒfƒB‚ğ\¬‚·‚éƒ{[ƒ“
+	/// ãƒœãƒ‡ã‚£ã‚’æ§‹æˆã™ã‚‹ãƒœãƒ¼ãƒ³
 	typedef std::vector< UTRef<CRBoneIf> > CRBones;
 	CRBones bones;	
 	
-	/// ƒ‰ƒxƒ‹‚©‚ç\¬—v‘f‚Ö‚Ìƒ}ƒbƒv
+	/// ãƒ©ãƒ™ãƒ«ã‹ã‚‰æ§‹æˆè¦ç´ ã¸ã®ãƒãƒƒãƒ—
 	typedef std::map<UTString, CRBoneIf*> LabelMap;
 	LabelMap labelMap;
 
@@ -40,15 +40,15 @@ public:
 	{
 	}
 
-	/** @brief ƒ‰ƒxƒ‹‚©‚ç\¬—v‘f‚ğ’T‚·
+	/** @brief ãƒ©ãƒ™ãƒ«ã‹ã‚‰æ§‹æˆè¦ç´ ã‚’æ¢ã™
 	*/
 	virtual CRBoneIf* FindByLabel(UTString label);
 
-	/** @brief ƒ{[ƒ“‚Ì”‚ğ“¾‚é
+	/** @brief ãƒœãƒ¼ãƒ³ã®æ•°ã‚’å¾—ã‚‹
 	*/
 	virtual int	NBones() { return bones.size(); }
 
-	/** @brief i”Ô–Ú‚Ìƒ{[ƒ“‚ğ“¾‚é
+	/** @brief iç•ªç›®ã®ãƒœãƒ¼ãƒ³ã‚’å¾—ã‚‹
 	*/
 	virtual CRBoneIf* GetBone(int i) {
 		if (0<=i && i<(int)bones.size()) {
@@ -58,15 +58,15 @@ public:
 		}
 	}
 
-	/** @brief ƒ{ƒfƒB‚ÌdSÀ•W‚ğ“¾‚é
+	/** @brief ãƒœãƒ‡ã‚£ã®é‡å¿ƒåº§æ¨™ã‚’å¾—ã‚‹
 	*/
 	virtual Vec3d GetCenterOfMass();
 	
-	/** @brief ƒ{ƒfƒB‚Ì¿—Ê‚ğ“¾‚é
+	/** @brief ãƒœãƒ‡ã‚£ã®è³ªé‡ã‚’å¾—ã‚‹
 	*/
 	virtual double GetSumOfMass();
 
-	/** @brief q—v‘f‚Ìˆµ‚¢
+	/** @brief å­è¦ç´ ã®æ‰±ã„
 	*/
 	virtual size_t NChildObject() const { return bones.size(); }
 	virtual ObjectIf* GetChildObject(size_t i) { return GetBone(i); }

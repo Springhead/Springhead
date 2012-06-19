@@ -1,4 +1,4 @@
-#include <HumanInterface/HISpaceNavigator.h>
+ï»¿#include <HumanInterface/HISpaceNavigator.h>
 
 #ifdef _WIN32
  #include <windows.h>
@@ -21,7 +21,7 @@ bool HISpaceNavigator::Init(const void* desc) {
 	if (hWnd) {
 		UINT numDevices;
 
-		// Ú‘±‚³‚ê‚Ä‚¢‚éSpaceNavigator‚ğŠm”F‚µ‚ÄƒfƒoƒCƒXƒnƒ“ƒhƒ‹‚ğT‚¦‚Ä‚¨‚­
+		// æ¥ç¶šã•ã‚Œã¦ã„ã‚‹SpaceNavigatorã‚’ç¢ºèªã—ã¦ãƒ‡ãƒã‚¤ã‚¹ãƒãƒ³ãƒ‰ãƒ«ã‚’æ§ãˆã¦ãŠã
 		GetRawInputDeviceList(NULL, &numDevices, sizeof(RAWINPUTDEVICELIST));
 		RAWINPUTDEVICELIST* deviceList = new RAWINPUTDEVICELIST[numDevices];
 		if (GetRawInputDeviceList(deviceList, &numDevices, sizeof(RAWINPUTDEVICELIST)) != numDevices) { }
@@ -34,7 +34,7 @@ bool HISpaceNavigator::Init(const void* desc) {
 				if (! (info.hid.dwVendorId == VENDOR_ID))                                            { continue; }
 				if (! (PID_BEGIN <= info.hid.dwProductId && info.hid.dwProductId <= PID_END))        { continue; }
 
-				// Space Navigator‚ğ‚İ‚Â‚¯‚½
+				// Space Navigatorã‚’ã¿ã¤ã‘ãŸ
 				bool bAlreadyUsed = false;
 				for (int i=0; i<(int)deviceHandles.size(); ++i) {
 					if (deviceHandles[i] == deviceList[i].hDevice) { bAlreadyUsed = true; }
@@ -48,7 +48,7 @@ bool HISpaceNavigator::Init(const void* desc) {
 		}
 		delete deviceList;
 
-		// Raw Input‚ğó‚¯•t‚¯‚é‚æ‚¤“o˜^
+		// Raw Inputã‚’å—ã‘ä»˜ã‘ã‚‹ã‚ˆã†ç™»éŒ²
 		RAWINPUTDEVICE sRawInputDevices[] = { {0x01, 0x08, 0x00, 0x00} };
 		numDevices  = sizeof(sRawInputDevices) / sizeof(sRawInputDevices[0]);
 		UINT cbSize = sizeof(sRawInputDevices[0]);

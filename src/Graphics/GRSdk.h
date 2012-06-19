@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file GRSdk.h
- *	@brief ƒOƒ‰ƒtƒBƒbƒNƒXSDK
+ *	@brief ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹SDK
  */
 #ifndef GRSDK_H
 #define GRSDK_H
@@ -31,7 +31,7 @@ public:
 
 
 /**	@class	GRSdk
-    @brief	ƒOƒ‰ƒtƒBƒbƒNƒXSDK@ */
+    @brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹SDKã€€ */
 class SPR_DLL GRSdk:public Sdk, public GRSdkDesc{
 protected:
 	typedef std::vector< UTRef<Object> > Objects;

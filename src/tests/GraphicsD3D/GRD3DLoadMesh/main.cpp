@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,15 +8,15 @@
 /**
  Springhead2/src/tests/GraphicsD3D/GRD3DLoadMeshmain.cpp
 
-yŠT—vz
-  ƒtƒ@ƒCƒ‹“üo—ÍSDK‚ÅAXƒtƒ@ƒCƒ‹‚ÌÚ×‚ğ‰ğÍ‚³‚¹‚éB
-  i’¸“_ˆÊ’uA’¸“_ƒCƒ“ƒfƒbƒNƒXA–@üAƒ}ƒeƒŠƒAƒ‹AƒeƒNƒXƒ`ƒƒj
+ã€æ¦‚è¦ã€‘
+  ãƒ•ã‚¡ã‚¤ãƒ«å…¥å‡ºåŠ›SDKã§ã€Xãƒ•ã‚¡ã‚¤ãƒ«ã®è©³ç´°ã‚’è§£æã•ã›ã‚‹ã€‚
+  ï¼ˆé ‚ç‚¹ä½ç½®ã€é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã€æ³•ç·šã€ãƒãƒ†ãƒªã‚¢ãƒ«ã€ãƒ†ã‚¯ã‚¹ãƒãƒ£ï¼‰
 
-yI—¹Šî€z
-  EƒvƒƒOƒ‰ƒ€‚ª³íI—¹‚µ‚½‚ç0‚ğ•Ô‚·B  
+ã€çµ‚äº†åŸºæº–ã€‘
+  ãƒ»ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãŒæ­£å¸¸çµ‚äº†ã—ãŸã‚‰0ã‚’è¿”ã™ã€‚  
 
-yNotez
-  –{ƒtƒ@ƒCƒ‹‚Ì26s–Ú" #define TEST_CASE " ‚ÅAƒ[ƒh‚·‚éXƒtƒ@ƒCƒ‹‚Ì“ü—ÍØ‚è‘Ö‚¦‚ª‰Â”\B
+ã€Noteã€‘
+  æœ¬ãƒ•ã‚¡ã‚¤ãƒ«ã®26è¡Œç›®" #define TEST_CASE " ã§ã€ãƒ­ãƒ¼ãƒ‰ã™ã‚‹Xãƒ•ã‚¡ã‚¤ãƒ«ã®å…¥åŠ›åˆ‡ã‚Šæ›¿ãˆãŒå¯èƒ½ã€‚
 
 */
 #include <Springhead.h>
@@ -28,11 +28,11 @@
 #include <mmsystem.h>
 #define	ESC				27				// Esc key
 
-#define TEST_CASE		4				// ƒeƒXƒgƒP[ƒX
+#define TEST_CASE		4				// ãƒ†ã‚¹ãƒˆã‚±ãƒ¼ã‚¹
 
 #if defined(TEST_CASE) && (TEST_CASE == 0)
-#define EXIT_TIMER	20000				// ‹­§I—¹‚³‚¹‚éƒXƒeƒbƒv”
-#define TEST_FILEX	"box.x"				// ƒ[ƒh‚·‚éXƒtƒ@ƒCƒ‹
+#define EXIT_TIMER	20000				// å¼·åˆ¶çµ‚äº†ã•ã›ã‚‹ã‚¹ãƒ†ãƒƒãƒ—æ•°
+#define TEST_FILEX	"box.x"				// ãƒ­ãƒ¼ãƒ‰ã™ã‚‹Xãƒ•ã‚¡ã‚¤ãƒ«
 
 #elif defined(TEST_CASE) && (TEST_CASE == 1)
 #define EXIT_TIMER	20000				
@@ -45,12 +45,12 @@
 #elif defined(TEST_CASE) && (TEST_CASE == 3)
 #define EXIT_TIMER	20000				
 #define TEST_FILEX	"kobito.x"			
-#define TEST_MOTION	"walk"				// Ä¶‚·‚éƒ‚[ƒVƒ‡ƒ“
+#define TEST_MOTION	"walk"				// å†ç”Ÿã™ã‚‹ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³
 
 #elif defined(TEST_CASE) && (TEST_CASE == 4)
 #define EXIT_TIMER	20000				
 #define TEST_FILEX	"n175Anim.x"			
-#define TEST_MOTION	"RunUpGround"				// Ä¶‚·‚éƒ‚[ƒVƒ‡ƒ“
+#define TEST_MOTION	"RunUpGround"				// å†ç”Ÿã™ã‚‹ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³
 
 #endif
 
@@ -71,14 +71,14 @@ using namespace Spr;
 
 
 /**
- brief     	WM_PAINTƒnƒ“ƒhƒ‰
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief     	WM_PAINTãƒãƒ³ãƒ‰ãƒ©
+ param	 	ãªã—
+ return 	ãªã—
  */
 void display(){
 	if(!render) return;
 
-	//	ƒoƒbƒtƒ@ƒNƒŠƒA
+	//	ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 	render->ClearBuffer();
 	render->BeginScene();
 	scene->Render(render);
@@ -91,9 +91,9 @@ void display(){
 }
 
 /**
- brief		ŒõŒ¹‚Ìİ’è
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief		å…‰æºã®è¨­å®š
+ param	 	ãªã—
+ return 	ãªã—
  */
 void setLight() {
 	GRLightDesc light0;
@@ -126,19 +126,19 @@ void setLight() {
 }
 
 /**
- brief  	WM_SIZEƒnƒ“ƒhƒ‰
- param	 	<in/--> w@@•
- param  	<in/--> h@@‚‚³
- return 	‚È‚µ
+ brief  	WM_SIZEãƒãƒ³ãƒ‰ãƒ©
+ param	 	<in/--> wã€€ã€€å¹…
+ param  	<in/--> hã€€ã€€é«˜ã•
+ return 	ãªã—
  */
 void reshape(int w, int h){
 	if(render) render->Reshape(Vec2f(), Vec2f(w,h));
 }
 
 /**
- brief  	ƒAƒCƒhƒ‹ŠÖ”
- param	 	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
- return 	‚È‚µ
+ brief  	ã‚¢ã‚¤ãƒ‰ãƒ«é–¢æ•°
+ param	 	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
+ return 	ãªã—
  */
 void idle(HWND hWnd){
 //	if(scene && *scene) (*(scene))->Step();
@@ -181,7 +181,7 @@ void idle(HWND hWnd){
 }
 
 /**
- brief  	ƒEƒCƒ“ƒhƒEƒvƒƒV[ƒWƒƒ
+ brief  	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£
  */
 LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -215,9 +215,9 @@ LRESULT CALLBACK mainWindowProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPara
 }
 
 /**
- brief  	ƒEƒCƒ“ƒhƒEì¬ŠÖ”
- param	 	ƒCƒ“ƒXƒ^ƒ“ƒXƒnƒ“ƒhƒ‹
- return 	ƒEƒCƒ“ƒhƒEƒnƒ“ƒhƒ‹
+ brief  	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ä½œæˆé–¢æ•°
+ param	 	ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãƒãƒ³ãƒ‰ãƒ«
+ return 	ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒãƒ³ãƒ‰ãƒ«
  */
 HWND createMainWindow(HINSTANCE hInstance)
 {
@@ -257,10 +257,10 @@ HWND createMainWindow(HINSTANCE hInstance)
 }
 
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();	
@@ -273,8 +273,8 @@ int main(int argc, char* argv[]){
 	aniMesh = grSdkD3D->CreateAnimationMesh(aniDesc);
 	scene->AddChildObject(aniMesh);
 #else
-	//	‚·‚×‚Ä‚ÌSDK‚ÆDirectX‚Ìƒ[ƒ_‚Ì“o˜^
-	//	‘Sƒ‰ƒCƒuƒ‰ƒŠ‚ğƒŠƒ“ƒN‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚­‚È‚éD
+	//	ã™ã¹ã¦ã®SDKã¨DirectXã®ãƒ­ãƒ¼ãƒ€ã®ç™»éŒ²
+	//	å…¨ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ãƒªãƒ³ã‚¯ã—ãªã‘ã‚Œã°ãªã‚‰ãªããªã‚‹ï¼
 	FWSdkIf::RegisterSdk();
 
 	fiSdk = FISdkIf::CreateSdk();
@@ -291,7 +291,7 @@ int main(int argc, char* argv[]){
 	objs.Push(grSdk);
 	fileX->Save(objs, "out.x");
 	
-	fiSdk->Clear();	//	ƒtƒ@ƒCƒ‹ƒ[ƒ_‚Ìƒƒ‚ƒŠ‚ğ‰ğ•úD
+	fiSdk->Clear();	//	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã®ãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾ï¼
 	objs.clear();
 	grSdk->Print(DSTR);
 #endif
@@ -320,7 +320,7 @@ int main(int argc, char* argv[]){
 		render->Reshape(Vec2f(), Vec2f(r.right, r.bottom));
 	}
 
-	// ‹“_İ’è
+	// è¦–ç‚¹è¨­å®š
 #if defined(TEST_CASE) && (TEST_CASE == 4) 
 	Affinef view;
 	if(aniMesh){
@@ -345,7 +345,7 @@ int main(int argc, char* argv[]){
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
-	// ŒõŒ¹‚Ìİ’è
+	// å…‰æºã®è¨­å®š
 	setLight();
 
 	if(aniMesh) aniMesh->SetMotion(TEST_MOTION);

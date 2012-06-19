@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -31,34 +31,34 @@ protected:
 
 	/// 
 	bool	IsBoxInside(const Vec3f& bbmin, const Vec3f& bbmax);
-	/// Šô‰½î•ñ‚Ì–³Œø‰»
+	/// å¹¾ä½•æƒ…å ±ã®ç„¡åŠ¹åŒ–
 	void	Invalidate(){valid = false;}
-	/// Šô‰½‰ğÍ
+	/// å¹¾ä½•è§£æ
 	void	Analyze();
 	void	AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float eps);
 public:
 	SPR_OBJECTDEF_ABST(CDConvex);
 
-	/// •ÎS‚É‚æ‚Á‚Ä¶‚¶‚éƒCƒi[ƒVƒƒ
+	/// åå¿ƒã«ã‚ˆã£ã¦ç”Ÿã˜ã‚‹ã‚¤ãƒŠãƒ¼ã‚·ãƒ£
 	static void OffsetInertia(const Vec3f& c, Matrix3f& I);
 
-	/**	ƒTƒ|[ƒgƒ|ƒCƒ“ƒg(•ûŒüƒxƒNƒgƒ‹v‚Æ‚Ì“àÏ‚ªÅ‘å‚Ì“_)‚ğw‚ÉŠi”[‚·‚éB
-		–ß‚è’l‚É‚ÍA’¸“_”Ô†‚ª‚ ‚ê‚Î•Ô‚·B–³‚¯‚ê‚Î-1B’¸“_”Ô†‚ÍƒƒbƒVƒ…‚Ì’¸“_‚Ìê‡
-		‚Ì‚Ù‚©ARoundCone‚È‚Ç‚Ì‹…‚Ì’†S‚Ì”Ô†‚Ì‚±‚Æ‚à‚ ‚é	*/
+	/**	ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆ(æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«vã¨ã®å†…ç©ãŒæœ€å¤§ã®ç‚¹)ã‚’wã«æ ¼ç´ã™ã‚‹ã€‚
+		æˆ»ã‚Šå€¤ã«ã¯ã€é ‚ç‚¹ç•ªå·ãŒã‚ã‚Œã°è¿”ã™ã€‚ç„¡ã‘ã‚Œã°-1ã€‚é ‚ç‚¹ç•ªå·ã¯ãƒ¡ãƒƒã‚·ãƒ¥ã®é ‚ç‚¹ã®å ´åˆ
+		ã®ã»ã‹ã€RoundConeãªã©ã®çƒã®ä¸­å¿ƒã®ç•ªå·ã®ã“ã¨ã‚‚ã‚ã‚‹	*/
 	virtual int Support(Vec3f&w, const Vec3f& v) const =0;
-	///	Ø‚èŒû‚ğ‹‚ß‚éDÚG‰ğÍ‚Ég‚¤D
+	///	åˆ‡ã‚Šå£ã‚’æ±‚ã‚ã‚‹ï¼æ¥è§¦è§£æã«ä½¿ã†ï¼
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW) =0;
-	///	’¸“_vtx ‚Ì‚Æ‚È‚è‚Ì’¸“_‚ğ—ñ‹“‚·‚éB
+	///	é ‚ç‚¹vtx ã®ã¨ãªã‚Šã®é ‚ç‚¹ã‚’åˆ—æŒ™ã™ã‚‹ã€‚
 	virtual std::vector<int>& FindNeighbors(int vtx);
-	///	’¸“_ƒoƒbƒtƒ@‚ğ•Ô‚·B
+	///	é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’è¿”ã™ã€‚
 	virtual Vec3f* GetBase(){return NULL;}
 	
-	///	ƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX‚ğ‹‚ß‚éD
+	///	ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ã‚’æ±‚ã‚ã‚‹ï¼
 	virtual void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose);
-	/// •\–Êã‚Ì“_p‚É‚¨‚¯‚é‹È—¦”¼Œa‚ğ‹‚ß‚é
-	virtual double CurvatureRadius(Vec3d p){ return 1e+10; } /// •½–Ê‚Æ‚µ‚½ê‡‚Ì’lBŒ»“_‚Å‚ÍRoundCone‚É‚Â‚¢‚Ä‚Ì‚İÀ‘•‚³‚ê‚Ä‚¢‚é(09/02/08, mitake)
-	///< •\–Êã‚Ì“_p‚É‚¨‚¯‚é–@ü
-	virtual Vec3d Normal(Vec3d p){ return Vec3d(); } /// Œ»“_‚Å‚ÍRoundCone‚É‚Â‚¢‚Ä‚Ì‚İÀ‘•‚³‚ê‚Ä‚¢‚é(09/02/14, mitake)
+	/// è¡¨é¢ä¸Šã®ç‚¹pã«ãŠã‘ã‚‹æ›²ç‡åŠå¾„ã‚’æ±‚ã‚ã‚‹
+	virtual double CurvatureRadius(Vec3d p){ return 1e+10; } /// å¹³é¢ã¨ã—ãŸå ´åˆã®å€¤ã€‚ç¾æ™‚ç‚¹ã§ã¯RoundConeã«ã¤ã„ã¦ã®ã¿å®Ÿè£…ã•ã‚Œã¦ã„ã‚‹(09/02/08, mitake)
+	///< è¡¨é¢ä¸Šã®ç‚¹pã«ãŠã‘ã‚‹æ³•ç·š
+	virtual Vec3d Normal(Vec3d p){ return Vec3d(); } /// ç¾æ™‚ç‚¹ã§ã¯RoundConeã«ã¤ã„ã¦ã®ã¿å®Ÿè£…ã•ã‚Œã¦ã„ã‚‹(09/02/14, mitake)
 
 	virtual float CalcVolume(){
 		if(!valid)Analyze();

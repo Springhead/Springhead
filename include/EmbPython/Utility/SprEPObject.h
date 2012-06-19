@@ -1,4 +1,4 @@
-#ifndef SPREPOBJECT_H
+ï»¿#ifndef SPREPOBJECT_H
 #define SPREPOBJECT_H
 
 #include <Python/Python.h>
@@ -19,7 +19,7 @@ enum MemoryManager{
 #define EPObject_Check(ob) PyObject_TypeCheck(ob,&EPObjectType)
 #define EPObject_Ptr(ob) (((EPObject*)ob)->ptr)
 #define EPObject_Cast(ob,dest) ((dest*)((EPObject*)ob)->ptr)
-///////////////////////////////////ƒIƒuƒWƒFƒNƒg‚ÌéŒ¾////////////
+///////////////////////////////////ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å®£è¨€////////////
 typedef struct
 {
 	PyObject_HEAD
@@ -28,16 +28,16 @@ typedef struct
 	
 } EPObject;
 
-/////////////////////////////////////ƒƒ\ƒbƒh“o˜^—p
-///void‚Ìƒƒ\ƒbƒh‚Ì’è‹`
+/////////////////////////////////////ãƒ¡ã‚½ãƒƒãƒ‰ç™»éŒ²ç”¨
+///voidã®ãƒ¡ã‚½ãƒƒãƒ‰ã®å®šç¾©
 
 PyObject* __PYDECL EPObject_new(PyTypeObject *type,PyObject *args, PyObject *kwds);
 PyObject* newEPObject();
 PyObject* newEPObject(const void*);
 
-//////////////////////////////////////ƒIƒuƒWƒFƒNƒg‚Ìƒ^ƒCƒvéŒ¾
+//////////////////////////////////////ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¿ã‚¤ãƒ—å®£è¨€
 extern PyTypeObject EPObjectType;
-//////////////////////////////////////ƒIƒuƒWƒFƒNƒgiƒ‚ƒWƒ…[ƒ‹‚Ìj‰Šú‰»ŠÖ”
+//////////////////////////////////////ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼ˆãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ï¼‰åˆæœŸåŒ–é–¢æ•°
 void initEPObject(PyObject* dict =NULL) ;
 
 #endif

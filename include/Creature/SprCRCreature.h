@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -20,55 +20,55 @@ struct CREngineIf;
 struct CREngineDesc;
 
 // ------------------------------------------------------------------------------
-/// Œ^î•ñ“o˜^
+/// å‹æƒ…å ±ç™»éŒ²
 
 void SPR_CDECL CRRegisterTypeDescs();
 
 // ------------------------------------------------------------------------------
-/// ƒNƒŠ[ƒ`ƒƒ‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ã‚¯ãƒªãƒ¼ãƒãƒ£ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct CRCreatureIf : SceneIf{
 	SPR_IFDEF(CRCreature);
 
-	/** @brief Š´Šo¨î•ñˆ—¨‰^“® ‚Ì‚PƒXƒeƒbƒv‚ğÀs‚·‚é
+	/** @brief æ„Ÿè¦šâ†’æƒ…å ±å‡¦ç†â†’é‹å‹• ã®ï¼‘ã‚¹ãƒ†ãƒƒãƒ—ã‚’å®Ÿè¡Œã™ã‚‹
 	*/
 	void Step();
 
-	/** @brief ƒ{ƒfƒB‚ğ‚Â‚­‚é
+	/** @brief ãƒœãƒ‡ã‚£ã‚’ã¤ãã‚‹
 	*/
 	CRBodyIf* CreateBody(const IfInfo* ii, const CRBodyDesc& desc);
 	template <class T> CRBodyIf* CreateBody(const T& desc){
 		return CreateBody(T::GetIfInfo(), desc);
 	}
 
-	/** @brief ƒ{ƒfƒB‚ğæ“¾‚·‚é
+	/** @brief ãƒœãƒ‡ã‚£ã‚’å–å¾—ã™ã‚‹
 	*/
 	CRBodyIf* GetBody(int i);
 
-	/** @brief ƒ{ƒfƒB‚Ì”‚ğæ“¾‚·‚é
+	/** @brief ãƒœãƒ‡ã‚£ã®æ•°ã‚’å–å¾—ã™ã‚‹
 	*/
 	int NBodies();
 
-	/** @brief CREngine‚ğì¬‚·‚é
+	/** @brief CREngineã‚’ä½œæˆã™ã‚‹
 	*/
 	CREngineIf* CreateEngine(const IfInfo* ii, const CREngineDesc& desc);
 	template <class T> CREngineIf* CreateEngine(const T& desc){
 		return CreateEngine(T::GetIfInfo(), desc);
 	}
 
-	/** @brief CREngine‚ğæ“¾‚·‚é
+	/** @brief CREngineã‚’å–å¾—ã™ã‚‹
 	*/
 	CREngineIf* GetEngine(int i);
 
-	/** @brief CREngine‚Ì”‚ğæ“¾‚·‚é
+	/** @brief CREngineã®æ•°ã‚’å–å¾—ã™ã‚‹
 	*/
 	int NEngines();
 
-	/** @brief ŠÖ˜A‚·‚éPHScene‚ğæ“¾‚·‚é
+	/** @brief é–¢é€£ã™ã‚‹PHSceneã‚’å–å¾—ã™ã‚‹
 	*/
 	PHSceneIf* GetPHScene();
 };
 
-/// ƒNƒŠ[ƒ`ƒƒ‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ã‚¯ãƒªãƒ¼ãƒãƒ£ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRCreatureDesc{
 	SPR_DESCDEF(CRCreature);
 

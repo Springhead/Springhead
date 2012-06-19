@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -20,7 +20,7 @@ public:
 	SPR_OBJECTDEF(GRSkinWeight);
 	ACCESS_DESC(GRSkinWeight);
 
-	/// qƒIƒuƒWƒFƒNƒg
+	/// å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	GRFrame* frame;
 
 	virtual bool AddChildObject(ObjectIf* o);
@@ -31,31 +31,31 @@ public:
 };
 
 /**	@class	GRMesh
-    @brief	ƒOƒ‰ƒtƒBƒbƒNƒXƒV[ƒ“ƒOƒ‰ƒt‚Å‚ÌÀ•WŒn‚ğ•\‚·D */
+    @brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã§ã®åº§æ¨™ç³»ã‚’è¡¨ã™ï¼ */
 class GRMesh: public GRVisual, public GRMeshDesc{
 protected:
-	UTRef<GRRenderIf> render;			///< ƒŒƒ“ƒ_ƒ‰[
-	unsigned int list;					///< ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ì¯•Êq
+	UTRef<GRRenderIf> render;			///< ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼
+	unsigned int list;					///< ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®è­˜åˆ¥å­
 
-	///	’¸“_ƒtƒH[ƒ}ƒbƒg‚É‡‚Á‚½’¸“_ƒoƒbƒtƒ@
+	///	é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã«åˆã£ãŸé ‚ç‚¹ãƒãƒƒãƒ•ã‚¡
 	std::vector<float>	vtxs;
 	std::vector<float>	blendedVtxs;
 	const GRVertexElement* vtxFormat;
-	int stride;			///< 1’¸“_‚ÌƒoƒCƒg”
-	int positionOffset;	///< ’¸“_À•W‚Ü‚Å‚ÌƒIƒtƒZƒbƒg
-	int normalOffset;	///< –@ü‚Ü‚Å‚ÌƒIƒtƒZƒbƒg
-	int texOffset;		///< ƒeƒNƒXƒ`ƒƒÀ•W‚Ü‚Å‚ÌƒIƒtƒZƒbƒg
+	int stride;			///< 1é ‚ç‚¹ã®ãƒã‚¤ãƒˆæ•°
+	int positionOffset;	///< é ‚ç‚¹åº§æ¨™ã¾ã§ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+	int normalOffset;	///< æ³•ç·šã¾ã§ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+	int texOffset;		///< ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã¾ã§ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 
 	Vec3f& Pos(std::vector<float>& v, int i){ return (Vec3f&)v[stride*i + positionOffset]; }
 	Vec3f& Normal(std::vector<float>& v, int i){ return (Vec3f&)v[stride*i + normalOffset]; }
-	/// ’¸“_ƒoƒbƒtƒ@‚Ìì¬
+	/// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®ä½œæˆ
 	void MakeBuffer();
-	/// ’¸“_ƒoƒbƒtƒ@‚Ì•`‰æ
+	/// é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®æç”»
 	void DrawBuffer(void* vtx);
 
-	/// 3ŠpŒ`•ªŠ„
+	/// 3è§’å½¢åˆ†å‰²
 	void DecomposeFaces();
-	/// –@ü©“®¶¬
+	/// æ³•ç·šè‡ªå‹•ç”Ÿæˆ
 	void GenerateNormals();
 
 	virtual void AfterSetDesc();
@@ -63,42 +63,42 @@ public:
 	SPR_OBJECTDEF(GRMesh);
 	ACCESS_DESC(GRMesh);
 
-	bool tex3d;												///< 3ŸŒ³ƒeƒNƒXƒ`ƒƒ‚Ìê‡ true
+	bool tex3d;												///< 3æ¬¡å…ƒãƒ†ã‚¯ã‚¹ãƒãƒ£ã®å ´åˆ true
 
-	/// qƒIƒuƒWƒFƒNƒg
-	std::vector< UTRef<GRMaterial> >	material;			///< ƒ}ƒeƒŠƒAƒ‹
-	std::vector< UTRef<GRSkinWeight> >	skinWeights;		///< ƒXƒLƒ“Mesh‚Ìê‡‚ÌskinWeights
+	/// å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
+	std::vector< UTRef<GRMaterial> >	material;			///< ãƒãƒ†ãƒªã‚¢ãƒ«
+	std::vector< UTRef<GRSkinWeight> >	skinWeights;		///< ã‚¹ã‚­ãƒ³Meshã®å ´åˆã®skinWeights
 
 	/**
-	   faces‚ÆAOŠpŒ`•ªŠ„‚·‚é‘O‚ÌXƒtƒ@ƒCƒ‹‚Åw’è‚³‚ê‚½–Ê‚Æ‚ÌŠÖ˜A•t‚¯ \n
-	  iXƒtƒ@ƒCƒ‹‚©‚çƒ[ƒh‚³‚ê‚½–Ê‚ÍA‚·‚×‚ÄOŠpŒ`•ªŠ„‚³‚ê‚Ä‚¢‚é‚½‚ßA
-	   ‚Ç‚Ì–Ê‚ª‚Ç‚Ìƒ}ƒeƒŠƒAƒ‹‚ğ“K—p‚·‚é‚Ì‚©”»’f‚·‚é‚½‚ß‚Ì‚à‚Ìj
+	   facesã¨ã€ä¸‰è§’å½¢åˆ†å‰²ã™ã‚‹å‰ã®Xãƒ•ã‚¡ã‚¤ãƒ«ã§æŒ‡å®šã•ã‚ŒãŸé¢ã¨ã®é–¢é€£ä»˜ã‘ \n
+	  ï¼ˆXãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸé¢ã¯ã€ã™ã¹ã¦ä¸‰è§’å½¢åˆ†å‰²ã•ã‚Œã¦ã„ã‚‹ãŸã‚ã€
+	   ã©ã®é¢ãŒã©ã®ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’é©ç”¨ã™ã‚‹ã®ã‹åˆ¤æ–­ã™ã‚‹ãŸã‚ã®ã‚‚ã®ï¼‰
 	 */
-	std::vector<size_t>	triFaces;		///< OŠpŒ`•ªŠ„Œã‚Ì–Ê‚Ì’¸“_ƒCƒ“ƒfƒbƒNƒX
-	std::vector<size_t>	triML;			///< OŠpŒ`•ªŠ„Œã‚Ìƒ}ƒeƒŠƒAƒ‹ƒCƒ“ƒfƒbƒNƒX
-	//std::vector<int>	orgFaces;		///< OŠpŒ`•ªŠ„‘O‚Ì–Ê‚É’¸“_ƒCƒ“ƒfƒbƒNƒX
-	//std::vector<int>	orgFaceIds;		///< OŠpŒ`‚É‘Î‰‚·‚é•ªŠ„‘O‚Ì–Ê‚Ì”Ô†
+	std::vector<size_t>	triFaces;		///< ä¸‰è§’å½¢åˆ†å‰²å¾Œã®é¢ã®é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	std::vector<size_t>	triML;			///< ä¸‰è§’å½¢åˆ†å‰²å¾Œã®ãƒãƒ†ãƒªã‚¢ãƒ«ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	//std::vector<int>	orgFaces;		///< ä¸‰è§’å½¢åˆ†å‰²å‰ã®é¢ã«é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+	//std::vector<int>	orgFaceIds;		///< ä¸‰è§’å½¢ã«å¯¾å¿œã™ã‚‹åˆ†å‰²å‰ã®é¢ã®ç•ªå·
 
 public:
-	/// ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚ğì¬‚·‚éD
+	/// ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ä½œæˆã™ã‚‹ï¼
 	void CreateList(GRRenderIf* r);
 
-	//	’¸“_ƒoƒbƒtƒ@i‚Ö‚Ì“]‘—Œ³ƒoƒbƒtƒ@j
-	float* GetVertexBuffer(){								///< ’¸“_ƒoƒbƒtƒ@i‚Ö‚Ì“]‘—Œ³ƒoƒbƒtƒ@j‚ğ•Ô‚·
+	//	é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ï¼ˆã¸ã®è»¢é€å…ƒãƒãƒƒãƒ•ã‚¡ï¼‰
+	float* GetVertexBuffer(){								///< é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ï¼ˆã¸ã®è»¢é€å…ƒãƒãƒƒãƒ•ã‚¡ï¼‰ã‚’è¿”ã™
 		if (vtxs.size()) return &vtxs[0];
 		else return NULL;
 	}
-	int GetNVertex(){ return vtxs.size()/stride; }			///< ’¸“_”
-	const GRVertexElement* GetVertexFormat(){				///< ’¸“_ƒtƒH[ƒ}ƒbƒg‚ğ•Ô‚·B
+	int GetNVertex(){ return vtxs.size()/stride; }			///< é ‚ç‚¹æ•°
+	const GRVertexElement* GetVertexFormat(){				///< é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’è¿”ã™ã€‚
 		return vtxFormat;
 	}
-	int GetStride(){ return stride; }						///< 1’¸“_‚Ìƒf[ƒ^‚ªfloat‰½ŒÂ•ª‚©
-	int GetNormalOffset(){ return normalOffset; }			///< –@ü‚ÌƒIƒtƒZƒbƒg(float‰½ŒÂ•ª)
-	int GetPositionOffset(){ return positionOffset; }		///< ˆÊ’u‚ÌƒIƒtƒZƒbƒg(float‰½ŒÂ•ª)
-	int GetTexOffset(){ return texOffset; }					///< ƒeƒNƒXƒ`ƒƒÀ•W‚ÌƒIƒtƒZƒbƒg(float‰½ŒÂ•ª)
+	int GetStride(){ return stride; }						///< 1é ‚ç‚¹ã®ãƒ‡ãƒ¼ã‚¿ãŒfloatä½•å€‹åˆ†ã‹
+	int GetNormalOffset(){ return normalOffset; }			///< æ³•ç·šã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ(floatä½•å€‹åˆ†)
+	int GetPositionOffset(){ return positionOffset; }		///< ä½ç½®ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ(floatä½•å€‹åˆ†)
+	int GetTexOffset(){ return texOffset; }					///< ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆ(floatä½•å€‹åˆ†)
 
 	void	EnableTex3D(bool on = true){ tex3d = on; }
-	bool	IsTex3D(){ return tex3d; }						///< 3ŸŒ³ƒeƒNƒXƒ`ƒƒ‚È‚ç true
+	bool	IsTex3D(){ return tex3d; }						///< 3æ¬¡å…ƒãƒ†ã‚¯ã‚¹ãƒãƒ£ãªã‚‰ true
 
 	GRMesh(const GRMeshDesc& desc=GRMeshDesc());
 	~GRMesh();
@@ -122,9 +122,9 @@ public:
 	GRSkinWeightIf* CreateSkinWeight(const GRSkinWeightDesc& desc);
 	
 	virtual bool AddChildObject(ObjectIf* o);
-	///	qƒIƒuƒWƒFƒNƒg‚Ì”
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ•°
 	virtual size_t NChildObject() const ;
-	///	qƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
 	virtual ObjectIf* GetChildObject(size_t pos) ;
 	///
 	void Print(std::ostream& os) const ;

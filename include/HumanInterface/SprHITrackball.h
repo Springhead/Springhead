@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,13 +13,13 @@
 
 namespace Spr {;
 
-/** @brief �g���b�N�{�[���C���^�t�F�[�X
-	�}�E�X����ɂ�蒍���_����̌����Ƌ����𑀍삷�邱�Ƃ��ł���D
-	��ɃJ�����̑���ɗ��p���邪�C�I�u�W�F�N�g�̑���ɂ����p�ł��邩���m��Ȃ��D
-	�g���b�N�{�[���ƃ^�[���e�[�u����2���[�h������C�}�E�X�ړ��ʂ���J������]�ւ̃}�b�s���O���@���قȂ�D
-	�g���b�N�{�[���ł̓}�E�X��x,y�ړ��ʂ����ꂼ�ꉡ��]�C�c��]�i�X�N���[���Ɋւ��āj�Ƀ}�b�s���O����D
-	�^�[���e�[�u���ł̓��[���h���W�n�̌o�x�C�ܓx�̕ω��ʂɃ}�b�s���O����D
-	�Y�[������ђ����_�ړ��Ɋւ��Ă͋��ʁD
+/** @brief トラックボールインタフェース
+	マウス操作により注視点からの向きと距離を操作することができる．
+	主にカメラの操作に利用するが，オブジェクトの操作にも利用できるかも知れない．
+	トラックボールとターンテーブルの2モードがあり，マウス移動量からカメラ回転へのマッピング方法が異なる．
+	トラックボールではマウスのx,y移動量をそれぞれ横回転，縦回転（スクリーンに関して）にマッピングする．
+	ターンテーブルではワールド座標系の経度，緯度の変化量にマッピングする．
+	ズームおよび注視点移動に関しては共通．
 
 	motion			default button state	function
 	--------------------------------------------------------
@@ -36,27 +36,27 @@ namespace Spr {;
 struct HITrackballIf;
 
 struct HITrackballDesc{
-	bool	trackball;	///< true�Ȃ�g���b�N�{�[���Cfalse�Ȃ�^�[���e�[�u��
-	Vec3f	target;		///< �����_
+	bool	trackball;	///< trueならトラックボール，falseならターンテーブル
+	Vec3f	target;		///< 注視点
 
-	float	longitude;	///< �o�x[rad]
-	float	latitude;	///< �ܓx[rad]
-	Vec2f	lonRange;	///< �o�x�͈�
-	Vec2f	latRange;	///< �ܓx�͈�
+	float	longitude;	///< 経度[rad]
+	float	latitude;	///< 緯度[rad]
+	Vec2f	lonRange;	///< 経度範囲
+	Vec2f	latRange;	///< 緯度範囲
 	
-	float	distance;	///< ����
-	Vec2f	distRange;	///< �����͈�
+	float	distance;	///< 距離
+	Vec2f	distRange;	///< 距離範囲
 	
-	float	rotGain;	///< ��]�Q�C�� [rad/px]
-	float	zoomGain;	///< �Y�[���Q�C��	 [ln/px]
-	float	trnGain;	///< ���s�ړ��Q�C��
+	float	rotGain;	///< 回転ゲイン [rad/px]
+	float	zoomGain;	///< ズームゲイン	 [ln/px]
+	float	trnGain;	///< 平行移動ゲイン
 
 	int		rotMask;
 	int		zoomMask;
 	int		trnMask;
 
 	HITrackballDesc(){
-		trackball	= false;		///< �f�t�H���g�Ń^�[���e�[�u��
+		trackball	= false;		///< デフォルトでターンテーブル
 		target		= Vec3f();
 
 		longitude	= Radf(0.0f);
@@ -75,11 +75,11 @@ struct HITrackballDesc{
 	}
 };
 
-/**	�g���b�N�{�[���̃R�[���o�b�N�N���X
+/**	トラックボールのコールバッククラス
  **/
 struct HITrackballCallback{
-	/** @brief �����̍X�V
-		@param trackball	�Ăяo�����̃g���b�N�{�[��
+	/** @brief 向きの更新
+		@param trackball	呼び出し元のトラックボール
 	 */
 	virtual void OnUpdatePose(HITrackballIf* trackball){}
 };
@@ -89,69 +89,69 @@ struct GRCameraDesc;
 struct HITrackballIf : HIPoseIf{
 	SPR_VIFDEF(HITrackball);
 
-	/// ���[�h
+	/// モード
 	void	SetMode(bool mode);
 	bool	GetMode();
-	/// �����_
+	/// 注視点
 	void	SetTarget(Vec3f t);
 	Vec3f	GetTarget();
-	/// �o�x�E�ܓx�p
+	/// 経度・緯度角
 	void	SetAngle(float lon, float lat);
 	void	GetAngle(float& lon, float& lat);
-	/// �����_����̋���
+	/// 注視点からの距離
 	void	SetDistance(float dist);
 	float	GetDistance();
-	/// �o�x�͈�
+	/// 経度範囲
 	void	SetLongitudeRange(float rmin, float rmax);
 	void	GetLongitudeRange(float& rmin, float& rmax);
-	/// �ܓx�͈�
+	/// 緯度範囲
 	void	SetLatitudeRange(float rmin, float rmax);
 	void	GetLatitudeRange(float& rmin, float& rmax);
-	/// �����͈�
+	/// 距離範囲
 	void	SetDistanceRange(float rmin, float rmax);
 	void	GetDistanceRange(float& rmin, float& rmax);
-	/// ��]����Q�C��
+	/// 回転操作ゲイン
 	void	SetRotGain(float g);
 	float	GetRotGain();
-	/// �Y�[������Q�C��
+	/// ズーム操作ゲイン
 	void	SetZoomGain(float g);
 	float	GetZoomGain();
-	/// �����_�ړ��Q�C��
+	/// 注視点移動ゲイン
 	void	SetTrnGain(float g);
 	float	GetTrnGain();
 
-	/// �J�����p�����[�^�ƃI�u�W�F�N�g�̃T�C�Y���狗����ݒ�
+	/// カメラパラメータとオブジェクトのサイズから距離を設定
 	void	Fit(const GRCameraDesc& cam, float radius);
 
-	/// �w�肳�ꂽ���_�ʒu����o�x�C�ܓx�C�������t�Z
+	/// 指定された視点位置から経度，緯度，距離を逆算
 	void	SetPosition(Vec3f pos);
 
-	/// �w�肳�ꂽ�J�����p������o�x�C�ܓx�C�����_���t�Z
+	/// 指定されたカメラ姿勢から経度，緯度，注視点を逆算
 	void	SetOrientation(Quaternionf ori);
 
-	/// �}�E�X�ɂ�鑀��̃I��/�I�t
+	/// マウスによる操作のオン/オフ
 	void	Enable(bool on = true);
 
-	/** @brief	��]����̃{�^���A�T�C���̕ύX
-		@param	mask	DVButtonMask�l�̑g�ݍ��킹
-		mask��0���w�肷��Ƒ��삪�����������
+	/** @brief	回転操作のボタンアサインの変更
+		@param	mask	DVButtonMask値の組み合わせ
+		maskに0を指定すると操作が無効化される
 	 */
 	void SetRotMask(int mask);
-	/** @brief	�Y�[������̃{�^���A�T�C���̕ύX
+	/** @brief	ズーム操作のボタンアサインの変更
 	 */
 	void SetZoomMask(int mask);
-	/** @brief	�p������̃{�^���A�T�C���̕ύX
+	/** @brief	パン操作のボタンアサインの変更
 	 */
 	void SetTrnMask(int mask);
-	/** @brief	���Z�b�g����̃{�^���A�T�C���̕ύX
+	/** @brief	リセット操作のボタンアサインの変更
 	 */
 	//void SetResetMask(int mask, bool single_or_double);
 
-	/// �g���b�N�{�[���Ɋ֘A�t�����Ă���}�E�X���擾����
+	/// トラックボールに関連付けられているマウスを取得する
 	DVKeyMouseIf*	GetKeyMouse();
-	/// �g���b�N�{�[���Ƀ}�E�X���֘A�t����
+	/// トラックボールにマウスを関連付ける
 	void			SetKeyMouse(DVKeyMouseIf* dv);
-	/// �R�[���o�b�N��o�^����
+	/// コールバックを登録する
 	void			SetCallback(HITrackballCallback* callback);
 };
 

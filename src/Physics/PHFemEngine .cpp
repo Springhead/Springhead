@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -30,7 +30,7 @@ void PHFemEngine::Clear(){
 
 bool PHFemEngine::AddChildObject(ObjectIf* o){
 	// --- --- --- --- --- --- ---
-	// ƒAƒNƒ`ƒ…ƒG[ƒ^‚Ìê‡
+	// ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã®å ´åˆ
 	PHFemMesh* mesh = o->Cast();
 	if(mesh){
 		meshes.push_back(mesh);

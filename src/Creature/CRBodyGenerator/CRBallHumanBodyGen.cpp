@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,27 +17,27 @@
 
 namespace Spr{
 
-//�R���X�g���N�^
+//コンストラクタ
 CRBallHumanBodyGenDesc::CRBallHumanBodyGenDesc(){
-	bodyMass = 1.0f;  /// �f�t�H���g������Ȃ̂͂ǂ����ς���(mitake)
+	bodyMass = 1.0f;  /// デフォルトがこれなのはどうも変だが(mitake)
 
-	// �����Ɋւ���f�[�^
-	double hBody			= 1.7219; // �ő�g��
-	double hCervicale		= 1.4564; // ��ō�
-	double hSubsternale		= 1.2253; // ����������
-	double hWaist			= 1.0281; // ���͍�
-	double hIliocristal		= 1.0142; // �����ō�
-	double hOmphalion		= 1.0036; // �`��
-	double hTrochanterion	= 0.8757; // �]�q��
-	double hTibiale			= 0.4420; // �����㉏��
-	double hCalf			= 0.3150; // ���ڍő�͍�
+	// 高さに関するデータ
+	double hBody			= 1.7219; // 最大身長
+	double hCervicale		= 1.4564; // 頸椎高
+	double hSubsternale		= 1.2253; // 胸骨下縁高
+	double hWaist			= 1.0281; // 胴囲高
+	double hIliocristal		= 1.0142; // 腸骨稜高
+	double hOmphalion		= 1.0036; // 臍高
+	double hTrochanterion	= 0.8757; // 転子高
+	double hTibiale			= 0.4420; // 脛骨上縁高
+	double hCalf			= 0.3150; // 下腿最大囲高
 
-	// ���Ɋւ���f�[�^
-	double wBideltoid		= 0.4562; // ����
-	double wChest			= 0.2887; // �������a
-	double wWaist			= 0.2611; // �������a
-	double wBicristal		= 0.2722; // �����ŕ�
-	double wBitrochanteric	= 0.3067; // ��]�q�ԕ�
+	// 幅に関するデータ
+	double wBideltoid		= 0.4562; // 肩幅
+	double wChest			= 0.2887; // 胸部横径
+	double wWaist			= 0.2611; // 胴部横径
+	double wBicristal		= 0.2722; // 腸骨稜幅
+	double wBitrochanteric	= 0.3067; // 大転子間幅
 
 	waistBreadth    = wBicristal;
 	waistLength     = hOmphalion - (hIliocristal - (waistBreadth/2));
@@ -51,7 +51,7 @@ CRBallHumanBodyGenDesc::CRBallHumanBodyGenDesc(){
 	headBreadth = 0.1619;
 	headHeight  = 0.2387;
 	
-	neckLength   = 1.5796 - 1.4564; // ���̍��� - ��ō�
+	neckLength   = 1.5796 - 1.4564; // 耳の高さ - 頸椎高
 	neckDiameter = 0.3563 / 3.1415;
 
 	double occiputToNeckFront  = 0.1301;
@@ -155,7 +155,7 @@ void CRBallHumanBodyGen::CreateWaist(){
 	if (shapeType == CRBallHumanBodyGenDesc::HST_ROUNDCONE) {
 		CDRoundConeDesc    rcDesc;
 
-		// ���`��
+		// 腰～腹
 		rcDesc.radius[0]   = waistBreadth/2;
 		rcDesc.radius[1]   = abdomenBreadth/2;
 		rcDesc.length      = waistLength;
@@ -165,7 +165,7 @@ void CRBallHumanBodyGen::CreateWaist(){
 		solids[SO_WAIST]->GetPHSolid()->SetShapePose(sn,pose2*pose1);
 		sn++;
 
-		// ���`��
+		// 腰～足
 		double cX = interLegDistance/2;
 		double cY = -legPosY;
 		double theta = atan(cX/cY);
@@ -174,12 +174,12 @@ void CRBallHumanBodyGen::CreateWaist(){
 		rcDesc.length      = sqrt(cX*cX + cY*cY);
 		pose1=Posed(); pose1.Pos() = Vec3d(0,0,-rcDesc.length/2);
 		pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
-		/// -- ����
+		/// -- 左足
 		pose3=Posed(); pose3.Ori() = Quaterniond::Rot(-theta,'z');
 		solids[SO_WAIST]->GetPHSolid()->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_WAIST]->GetPHSolid()->SetShapePose(sn,pose3*pose2*pose1);
 		sn++;
-		/// -- �E��
+		/// -- 右足
 		pose3=Posed(); pose3.Ori() = Quaterniond::Rot(theta,'z');
 		solids[SO_WAIST]->GetPHSolid()->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_WAIST]->GetPHSolid()->SetShapePose(sn,pose3*pose2*pose1);
@@ -261,7 +261,7 @@ void CRBallHumanBodyGen::CreateChest(){
 	if (shapeType == CRBallHumanBodyGenDesc::HST_ROUNDCONE) {
 		CDRoundConeDesc    rcDesc;
 
-		// ���S�`��t��
+		// 中心～首付根
 		rcDesc.radius[0] = chestBreadth/2;
 		rcDesc.radius[1] = neckDiameter/2;
 		rcDesc.length    = chestBreadth/2;
@@ -271,7 +271,7 @@ void CRBallHumanBodyGen::CreateChest(){
 		solids[SO_CHEST]->GetPHSolid()->SetShapePose(sn,pose2*pose1);
 		sn++;
 
-		// ���S�`��
+		// 中心～腹
 		rcDesc.radius[0] = abdomenBreadth/2;
 		rcDesc.radius[1] = chestBreadth/2;
 		rcDesc.length    = chestLength;
@@ -281,7 +281,7 @@ void CRBallHumanBodyGen::CreateChest(){
 		solids[SO_CHEST]->GetPHSolid()->SetShapePose(sn,pose2*pose1);
 		sn++;
 
-		// ���S�`��
+		// 中心～肩
 		double sX = bideltoidBreadth/2 - upperArmDiameter/2;
 		double sY = chestBreadth/2 - upperArmDiameter/2;
 		double theta = atan(sX/sY);
@@ -290,12 +290,12 @@ void CRBallHumanBodyGen::CreateChest(){
 		rcDesc.length    = sqrt(sX*sX + sY*sY);
 		pose1=Posed(); pose1.Pos() = Vec3d(0,0,rcDesc.length/2);
 		pose2=Posed(); pose2.Ori() = Quaterniond::Rot(Rad(-90),'x');
-		/// -- ����
+		/// -- 左肩
 		pose3=Posed(); pose3.Ori() = Quaterniond::Rot(theta,'z');
 		solids[SO_CHEST]->GetPHSolid()->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_CHEST]->GetPHSolid()->SetShapePose(sn,pose3*pose2*pose1);
 		sn++;
-		// -- �E��
+		// -- 右肩
 		pose3=Posed(); pose3.Ori() = Quaterniond::Rot(-theta,'z');
 		solids[SO_CHEST]->GetPHSolid()->AddShape(phSdk->CreateShape(rcDesc));
 		solids[SO_CHEST]->GetPHSolid()->SetShapePose(sn,pose3*pose2*pose1);
@@ -844,11 +844,11 @@ void CRBallHumanBodyGen::InitContact(){
 	PHSceneIf*	phScene	= crCreature->GetPHScene();
 	PHSdkIf*	phSdk	= phScene->GetSdk();
 
-	// �����͋߂����đ��̑�������ł͏Փ˂��Ă��܂����߁D
-	// �O�̂��ߍ��͎c���Ă��邪���̃R�[�h������Εs�v�ȋC������D(mitake)
+	// 両足は近すぎて足の太さ次第では衝突してしまうため．
+	// 念のため今は残してあるが下のコードがあれば不要な気がする．(mitake)
 	// phScene->SetContactMode(solids[SO_LEFT_UPPER_LEG], solids[SO_RIGHT_UPPER_LEG], PHSceneDesc::MODE_NONE);
 
-	// �����ɑ����鍄�̓��m�̐ڐG��Off�i�܂����Ȃ����邩���H�Œ���̐ڐG�͎c�������i07/09/25, mitake�j�j
+	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
 	/**/
 	for (unsigned int i=0; i<solids.size(); ++i) {
 		for (unsigned int j=0; j<solids.size(); ++j) {
@@ -875,7 +875,7 @@ void CRBallHumanBodyGen::InitContact(){
 	phScene->SetContactMode(solids[SO_CHEST],   solids[SO_RIGHT_LOWER_ARM], PHSceneDesc::MODE_LCP);
 	*/
 
-	// �����ȊO�ɂ��ł�Body������΂���Body�ɑ����鍄�̂Ƃ�Contact���؂�
+	// 自分以外にすでにBodyが居ればそのBodyに属する剛体とのContactも切る
 	/*/
 	for (int i=0; i<creature->NBodies(); ++i) {
 		CRBodyIf* body = creature->GetBody(i);

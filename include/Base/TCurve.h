@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,19 +16,19 @@ namespace Spr{;
 
 struct Interpolate{
 	enum{
-		Constant,		//< ’è”•âŠÔ				‹æŠÔn“_‚Ì’l‚ğ‹æŠÔ’†‚Å•ÛD”÷•ª’l‚Í0
-		LinearDiff,		//< üŒ`•âŠÔ(”÷•ª)		‹æŠÔn“_‚ÆI“_‚ÌˆÊ’u‚ğüŒ`‚É•âŠÔ
-		LinearInt,		//< üŒ`•âŠÔ(Ï•ª)		‹æŠÔn“_‚ÌˆÊ’u‚Æ‘¬“x‚ÅüŒ`‚É•âŠÔ
-		Quadratic,		//< 2Ÿ•âŠÔ				‹æŠÔn“_‚Ì’l‚ğ”÷•ª’lC‹æŠÔI“_‚Ì’l‚ğ‚à‚Æ‚ÉŒW”‚ğŒˆ’è
-		Cubic,			//< 3Ÿ•âŠÔ				‹æŠÔn“_‚ÆI“_‚Ì’l‚Æ”÷•ª’l‚ğ‚à‚Æ‚ÉŒW”‚ğŒˆ’è
-		SlerpDiff,		//< ‹…–ÊüŒ`•âŠÔ(”÷•ª)	‹æŠÔn“_‚ÆI“_‚ÌŒü‚«‚ğüŒ`•âŠÔ
-		SlerpInt,		//< ‹…–ÊüŒ`•âŠÔ(Ï•ª)	‹æŠÔn“_‚ÌŒü‚«‚ÆŠp‘¬“x‚ÅüŒ`•âŠÔ
-		Squad,			//< ‹…–Ê3Ÿ•âŠÔ
+		Constant,		//< å®šæ•°è£œé–“				åŒºé–“å§‹ç‚¹ã®å€¤ã‚’åŒºé–“ä¸­ã§ä¿æŒï¼å¾®åˆ†å€¤ã¯0
+		LinearDiff,		//< ç·šå½¢è£œé–“(å¾®åˆ†)		åŒºé–“å§‹ç‚¹ã¨çµ‚ç‚¹ã®ä½ç½®ã‚’ç·šå½¢ã«è£œé–“
+		LinearInt,		//< ç·šå½¢è£œé–“(ç©åˆ†)		åŒºé–“å§‹ç‚¹ã®ä½ç½®ã¨é€Ÿåº¦ã§ç·šå½¢ã«è£œé–“
+		Quadratic,		//< 2æ¬¡è£œé–“				åŒºé–“å§‹ç‚¹ã®å€¤ã‚’å¾®åˆ†å€¤ï¼ŒåŒºé–“çµ‚ç‚¹ã®å€¤ã‚’ã‚‚ã¨ã«ä¿‚æ•°ã‚’æ±ºå®š
+		Cubic,			//< 3æ¬¡è£œé–“				åŒºé–“å§‹ç‚¹ã¨çµ‚ç‚¹ã®å€¤ã¨å¾®åˆ†å€¤ã‚’ã‚‚ã¨ã«ä¿‚æ•°ã‚’æ±ºå®š
+		SlerpDiff,		//< çƒé¢ç·šå½¢è£œé–“(å¾®åˆ†)	åŒºé–“å§‹ç‚¹ã¨çµ‚ç‚¹ã®å‘ãã‚’ç·šå½¢è£œé–“
+		SlerpInt,		//< çƒé¢ç·šå½¢è£œé–“(ç©åˆ†)	åŒºé–“å§‹ç‚¹ã®å‘ãã¨è§’é€Ÿåº¦ã§ç·šå½¢è£œé–“
+		Squad,			//< çƒé¢3æ¬¡è£œé–“
 	};
 };
 
 /**
-	•âŠÔŠÖ”
+	è£œé–“é–¢æ•°
  **/
 template<class P, class V, class T>
 inline P InterpolatePos(T t, T t0, P p0, V v0, T t1, P p1, V v1, int type){
@@ -123,26 +123,26 @@ inline P InterpolateOri(T t, T t0, P p0, V v0, T t1, P p1, V v1, int type){
 	if(h < eps)
 		return p0;
 		
-	// Šp‘¬“x‚Ìƒmƒ‹ƒ€‚Ì²‚ğ‹‚ßC²‚Ü‚í‚è‚É(ƒmƒ‹ƒ€*Œo‰ßŠÔ)‰ñ“]‚·‚é
+	// è§’é€Ÿåº¦ã®ãƒãƒ«ãƒ ã®è»¸ã‚’æ±‚ã‚ï¼Œè»¸ã¾ã‚ã‚Šã«(ãƒãƒ«ãƒ *çµŒéæ™‚é–“)å›è»¢ã™ã‚‹
 	if(type == Interpolate::SlerpInt){
 		V w = v0;
 		T wnorm = w.norm();
 		if(wnorm < eps)
 			return p0;
 		V axis = w/wnorm;
-		return P::Rot(wnorm * (t - t0), axis) * p0;	//< Šp‘¬“x‚ªƒOƒ[ƒoƒ‹À•W‚È‚Ì‚Å¶‚©‚ç‚©‚¯‚é‚Ì‚É’ˆÓ
+		return P::Rot(wnorm * (t - t0), axis) * p0;	//< è§’é€Ÿåº¦ãŒã‚°ãƒ­ãƒ¼ãƒãƒ«åº§æ¨™ãªã®ã§å·¦ã‹ã‚‰ã‹ã‘ã‚‹ã®ã«æ³¨æ„
 	}
 
 	T s = (t - t0)/h;
-	// ‘Š‘Îquaternion‚ğ‹‚ßC‚»‚Ì²‚Ü‚í‚è‚É’è‘¬‰ñ“]
+	// ç›¸å¯¾quaternionã‚’æ±‚ã‚ï¼Œãã®è»¸ã¾ã‚ã‚Šã«å®šé€Ÿå›è»¢
 	if(type == Interpolate::SlerpDiff){
 		P qrel = p0.Conjugated() * p1;
 		V axis = qrel.Axis();
 		T angle = qrel.Theta();
-		return p0 * P::Rot(s * angle, axis);			//< ‚±‚¿‚ç‚Í‰E‚©‚ç‚©‚¯‚é
+		return p0 * P::Rot(s * angle, axis);			//< ã“ã¡ã‚‰ã¯å³ã‹ã‚‰ã‹ã‘ã‚‹
 	}
 		
-	// SQUAD‚Í–¢À‘•
+	// SQUADã¯æœªå®Ÿè£…
 
 	return P();
 }
@@ -161,14 +161,14 @@ inline V InterpolateAngvel(T t, T t0, P p0, V v0, T t1, P p1, V v1, int type){
 		return V();
 
 	if(type == Interpolate::SlerpDiff){
-		// ‘Š‘Îquaternion‚©‚çŠp‘¬“x‚ğ‹‚ß‚é
+		// ç›¸å¯¾quaternionã‹ã‚‰è§’é€Ÿåº¦ã‚’æ±‚ã‚ã‚‹
 		P qrel = p0.Conjugated() * p1;
 		V w = (qrel.Theta() / h) * qrel.Axis();
-		// ƒOƒ[ƒoƒ‹À•W‚É•ÏŠ·
+		// ã‚°ãƒ­ãƒ¼ãƒãƒ«åº§æ¨™ã«å¤‰æ›
 		return p0 * w;
 	}
 
-	// SQUAD‚Í–¢À‘•
+	// SQUADã¯æœªå®Ÿè£…
 		
 	return V();
 }
@@ -182,12 +182,12 @@ inline V InterpolateAngacc(T t, T t0, P p0, V v0, T t1, P p1, V v1, int type){
 	if(type == Interpolate::SlerpDiff)
 		return V();
 	
-	// SQUAD‚Í–¢À‘•	
+	// SQUADã¯æœªå®Ÿè£…	
 	return V();
 }
 
 /**
-	‹ÈüƒNƒ‰ƒX
+	æ›²ç·šã‚¯ãƒ©ã‚¹
  **/
 
 template<class P, class V, class T>
@@ -209,7 +209,7 @@ protected:
 
 	int	type;
 
-	// “_‚Ì”z—ñDí‚Ét‚Ì¸‡‚É•À‚ÔD
+	// ç‚¹ã®é…åˆ—ï¼å¸¸ã«tã®æ˜‡é †ã«ä¸¦ã¶ï¼
 	std::vector<Point>	points;
 
 	struct CompByTime{
@@ -230,7 +230,7 @@ protected:
 		CheckID(int _id):id(_id){}
 	};
 
-	// t‡‚Éƒ\[ƒg
+	// té †ã«ã‚½ãƒ¼ãƒˆ
 	void SortPoints(){
 		std::sort(points.begin(), points.end(), CompByTime());
 	}
@@ -239,10 +239,10 @@ public:
 	void SetType(int t){ type = t; }
 	int  GetType()const{ return type; }
 	
-	/** @brief “_‚ğ’Ç‰Á‚·‚é
-		@param	t	
-		@return	ID	’Ç‰Á‚³‚ê‚½“_‚ÌID
-		“_‚Ì‡˜‚Í“_‚Ì’Ç‰ÁEíœ‚â‚Ì•ÏX‚É‚æ‚è•Ï‰»‚·‚é‚ªCID‚Í•s•ÏD
+	/** @brief ç‚¹ã‚’è¿½åŠ ã™ã‚‹
+		@param	t	æ™‚åˆ»
+		@return	ID	è¿½åŠ ã•ã‚ŒãŸç‚¹ã®ID
+		ç‚¹ã®é †åºã¯ç‚¹ã®è¿½åŠ ãƒ»å‰Šé™¤ã‚„æ™‚åˆ»ã®å¤‰æ›´ã«ã‚ˆã‚Šå¤‰åŒ–ã™ã‚‹ãŒï¼ŒIDã¯ä¸å¤‰ï¼
 	 **/
 	int AddPoint(real_t t){
 		int id;
@@ -254,7 +254,7 @@ public:
 		return id;
 	}
 
-	/// ID‚©‚çƒCƒ“ƒfƒbƒNƒX‚ğæ“¾
+	/// IDã‹ã‚‰ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’å–å¾—
 	int	IndexFromID(int id){
 		vector<Point>::iterator it = find_if(points.begin(), points.end(), CheckID(id));
 		if(it == points.end())
@@ -311,7 +311,7 @@ public:
 };
 
 /**
-	R^nã‚Ì‹Èü
+	R^nä¸Šã®æ›²ç·š
  **/
 template<class V, class T>
 class TCurveEuclid : public TCurve<V, V, T>{
@@ -346,8 +346,8 @@ public:
 };
 
 /**
-	Quaternion‚Ì•âŠÔ
-	- Šp‘¬“x‚ÍƒOƒ[ƒoƒ‹À•W‚Åw’è‚·‚é
+	Quaternionã®è£œé–“
+	- è§’é€Ÿåº¦ã¯ã‚°ãƒ­ãƒ¼ãƒãƒ«åº§æ¨™ã§æŒ‡å®šã™ã‚‹
  **/
 template<class T>
 class TCurveQuat : public TCurve<TQuaternion<T>, TVec3<T>, T>{

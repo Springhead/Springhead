@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -24,22 +24,22 @@ bool DRContecIsaCounter::Init(){
 
 	if (address == 0) return true;
 	WBGetPortIO();
-	//	ƒ{[ƒh‚ª‘¶İ‚·‚é‚±‚Æ‚ğŠm”F
-	_outp(address, 0x15);		//	Š„‚è‚İƒ}ƒXƒN
+	//	ãƒœãƒ¼ãƒ‰ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã‚’ç¢ºèª
+	_outp(address, 0x15);		//	å‰²ã‚Šè¾¼ã¿ãƒã‚¹ã‚¯
 	int data = _inp(address+0x1);
-	if (data == 0xFF)			//	Š„‚è‚İƒ}ƒXƒN‚Í0xFF‚Å‚Í‚È‚¢‚Í‚¸
+	if (data == 0xFF)			//	å‰²ã‚Šè¾¼ã¿ãƒã‚¹ã‚¯ã¯0xFFã§ã¯ãªã„ã¯ãš
 		{
 		DPF("Could not find Contec ISA counter borad at 0x%x.\n", address);
 		return false;
 		}
 	DPF("Contec ISA counter borad was found at 0x%x.\n", address);
-	//	ƒJƒEƒ“ƒ^ƒ{[ƒh‚Ì‰Šú‰»
-	//	operation command ‚Í‰ğà‘P.3-4QÆ
+	//	ã‚«ã‚¦ãƒ³ã‚¿ãƒœãƒ¼ãƒ‰ã®åˆæœŸåŒ–
+	//	operation command ã¯è§£èª¬æ›¸P.3-4å‚ç…§
 	for(int channel=0; channel<4; channel++){
 		_outp(address    , channel*5+1);			//	mode set
 		_outp(address+0x1, 0x86);
 		_outp(address    , channel*5+2);			//	z-pulse invalidity
-		_outp(address+0x1, 0x2);					//	z-pulse ‚ğ—p‚¢‚È‚¢
+		_outp(address+0x1, 0x2);					//	z-pulse ã‚’ç”¨ã„ãªã„
 		_outp(address    , 0x16);				//	sense reset
 		_outp(address+0x1, 0xff);
 	}
@@ -62,7 +62,7 @@ void DRContecIsaCounter::Count(int ch, long n){
 	middle = (unsigned char)(n >> 8);
 	low    = (unsigned char)n;
 
-	_outp(address    , ch*5 );	//	ÀÛ‚É’l‚ğ‘ã“ü‚·‚é•”•ª
+	_outp(address    , ch*5 );	//	å®Ÿéš›ã«å€¤ã‚’ä»£å…¥ã™ã‚‹éƒ¨åˆ†
 	_outp(address+0x1, low);
 	_outp(address+0x1, middle);
 	_outp(address+0x1, high);

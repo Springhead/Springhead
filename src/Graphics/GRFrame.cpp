@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -37,8 +37,8 @@ void GRFrame::Render(GRRenderIf* r){
 	r->PushModelMatrix();
 	r->MultModelMatrix(transform);
 	
-	/// light -> material -> mesh -> ‚»‚Ì‘¼visual -> qframe@‚Ì‡‚ÉRender‚ğŒÄ‚Ô
-	/// Rendered‚Í‚»‚Ì‹t‡‚ÅŒÄ‚Ô
+	/// light -> material -> mesh -> ãã®ä»–visual -> å­frameã€€ã®é †ã«Renderã‚’å‘¼ã¶
+	/// Renderedã¯ãã®é€†é †ã§å‘¼ã¶
 	for(vector<GRLight*>::iterator it = lights.begin(); it != lights.end(); it++)
 		(*it)->Render(r);
 	for(vector<GRMaterial*>::iterator it = materials.begin(); it != materials.end(); it++)
@@ -74,7 +74,7 @@ void GRFrame::Rendered(GRRenderIf* r){
 }
 void GRFrame::SetParent(GRFrameIf* fr){
 	if((GRFrameIf*)(parent->Cast()) == fr) return;
-	UTRef<GRFrame> tmp = this->Cast();	// delete‘Îô
+	UTRef<GRFrame> tmp = this->Cast();	// deleteå¯¾ç­–
 	if (fr){
 		fr->AddChildObject(this->Cast());
 	}
@@ -89,8 +89,8 @@ bool GRFrame::AddChildObject(ObjectIf* o){
 		GRLight*	light	= DCAST(GRLight, v);
 		GRMesh*		mesh	= DCAST(GRMesh, v);
 		if (frame && frame->parent != this){
-			//	‚±‚±‚ÅŒ³‚Ì‚¿å‚©‚çíœ‚·‚é‚Ì‚Í‚â‚è‚·‚¬‚Å‚ÍH	by tazaki ?
-			//	 -> ‚¢‚âAFrame ‚Í parent‚ª‚Ğ‚Æ‚Â‚È‚Ì‚ÅA•¡”‚ÌƒtƒŒ[ƒ€‚Ìq‚É‚È‚é‚Ì‚Í‚¾‚ß‚Å‚·B by hase
+			//	ã“ã“ã§å…ƒã®æŒã¡ä¸»ã‹ã‚‰å‰Šé™¤ã™ã‚‹ã®ã¯ã‚„ã‚Šã™ãã§ã¯ï¼Ÿ	by tazaki ?
+			//	 -> ã„ã‚„ã€Frame ã¯ parentãŒã²ã¨ã¤ãªã®ã§ã€è¤‡æ•°ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®å­ã«ãªã‚‹ã®ã¯ã ã‚ã§ã™ã€‚ by hase
 			if (frame->parent) frame->parent->DelChildObject(frame->Cast());
 			frame->parent = this;
 			frames.push_back(frame);
@@ -103,7 +103,7 @@ bool GRFrame::AddChildObject(ObjectIf* o){
 			meshes.push_back(mesh);
 		else miscs.push_back(v);
 
-		// ƒfƒtƒHƒ‹ƒgƒl[ƒ€İ’è
+		// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒãƒ¼ãƒ è¨­å®š
 		if(strcmp(v->GetName(), "") == 0){
 			char name[256]="";
 			if(frame)
@@ -126,7 +126,7 @@ bool GRFrame::DelChildObject(ObjectIf* o){
 	GRVisualIfs::iterator it = find(children.begin(), children.end(), o);
 	if(it != children.end()){
 
-		// í—Ş•Ê‚ÌQÆ‚ğíœ
+		// ç¨®é¡åˆ¥ã®å‚ç…§ã‚’å‰Šé™¤
 		GRVisual*	v		= o->Cast();
 		GRFrame*	frame	= DCAST(GRFrame, v);
 		GRMaterial* mat		= DCAST(GRMaterial, v);
@@ -143,7 +143,7 @@ bool GRFrame::DelChildObject(ObjectIf* o){
 			meshes.erase(find(meshes.begin(), meshes.end(), mesh));
 		else miscs.erase(find(miscs.begin(), miscs.end(), v));
 	
-		// ÅŒã‚ÉƒIƒuƒWƒFƒNƒg‚ğíœ
+		// æœ€å¾Œã«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å‰Šé™¤
 		children.erase(it);
 
 		return true;
@@ -172,15 +172,15 @@ void GRFrame::AddRBFKeyFrame(PTM::VVector<float> pos){
 	Affinef aff = GetTransform();
 	// std::cout << "Aff : " << aff << std::endl;
 
-	// ƒL[ƒtƒŒ[ƒ€À•W‚ğ’Ç‰Á
+	// ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ åº§æ¨™ã‚’è¿½åŠ 
 	kfPositions.push_back(pos);
 
-	// ŸŒ³‚Ìæ“¾
+	// æ¬¡å…ƒã®å–å¾—
 	int nKeys	= kfPositions.size();
 	int nKeyDim	= pos.size();
 	int nMatDim	= nKeys + 1 + nKeyDim;
 
-	// –Ú•W’lƒxƒNƒgƒ‹‚ÌŸŒ³E’lİ’è‚ÆŒW”ƒxƒNƒgƒ‹‚ÌŸŒ³İ’è
+	// ç›®æ¨™å€¤ãƒ™ã‚¯ãƒˆãƒ«ã®æ¬¡å…ƒãƒ»å€¤è¨­å®šã¨ä¿‚æ•°ãƒ™ã‚¯ãƒˆãƒ«ã®æ¬¡å…ƒè¨­å®š
 	for (int i=0; i<4; ++i) {
 		for (int j=0; j<4; ++j) {
 			PTM::VVector<float> p; p.resize(kfAffines[i][j].size()); p = kfAffines[i][j];
@@ -196,38 +196,38 @@ void GRFrame::AddRBFKeyFrame(PTM::VVector<float> pos){
 		}
 	}
 
-	// ŒvZ—ps—ñ‚Ì—pˆÓ
+	// è¨ˆç®—ç”¨è¡Œåˆ—ã®ç”¨æ„
 	PTM::VMatrixCol<float> A;	A.resize(nMatDim, nMatDim);
-	/// ¶ã
+	/// å·¦ä¸Š
 	for (int i=0; i<nKeys; ++i) {
 		for (int j=i; j<nKeys; ++j) {
 			A[i][j] = A[j][i] = (kfPositions[i] - kfPositions[j]).norm();
 		}
 	}
-	/// ‰Eã’†E¶‰º’†
+	/// å³ä¸Šä¸­ãƒ»å·¦ä¸‹ä¸­
 	for (int i=nKeys; i<nKeys+1; ++i) {
 		for (int j=0; j<nKeys; ++j) {
 			A[i][j] = A[j][i] = 1;
 		}
 	}
-	/// ‰EãE¶‰º
+	/// å³ä¸Šãƒ»å·¦ä¸‹
 	for (int i=nKeys+1; i<nMatDim; ++i) {
 		for (int j=0; j<nKeys; ++j) {
 			int m = i - (nKeys+1);
 			A[i][j] = A[j][i] = kfPositions[j][m];
 		}
 	}
-	/// ‰E‰º
+	/// å³ä¸‹
 	for (int i=nKeys; i<nMatDim; ++i) {
 		for (int j=nKeys; j<nMatDim; ++j) {
 			A[i][j] = 0;
 		}
 	}
 
-	// ‹ts—ñŒvZ
+	// é€†è¡Œåˆ—è¨ˆç®—
 	A = A.inv();
 
-	// ŒW”ƒxƒNƒgƒ‹‚ÌŒvZ
+	// ä¿‚æ•°ãƒ™ã‚¯ãƒˆãƒ«ã®è¨ˆç®—
 	for (int i=0; i<4; ++i) {
 		for (int j=0; j<4; ++j) {
 			kfCoeffs[i][j] = A * kfAffines[i][j];
@@ -239,7 +239,7 @@ void GRFrame::AddRBFKeyFrame(PTM::VVector<float> pos){
 		}
 	}
 
-	// q—v‘f‚ÉÄ‹A
+	// å­è¦ç´ ã«å†å¸°
 	for (unsigned i=0; i<children.size(); ++i) {
 		GRFrame* fr = children[i]->Cast();
 		if (fr) {
@@ -251,28 +251,28 @@ void GRFrame::AddRBFKeyFrame(PTM::VVector<float> pos){
 void GRFrame::BlendRBF(PTM::VVector<float> pos){
 	Affinef aff;
 
-	// ŸŒ³‚Ìæ“¾
+	// æ¬¡å…ƒã®å–å¾—
 	int nKeys	= kfPositions.size();
 	int nKeyDim	= pos.size();
 	int nMatDim	= nKeys + 1 + nKeyDim;
 
-	// ŒvZ—pƒxƒNƒgƒ‹‚Ì—pˆÓ
+	// è¨ˆç®—ç”¨ãƒ™ã‚¯ãƒˆãƒ«ã®ç”¨æ„
 	PTM::VVector<float> input; input.resize(nMatDim);
-	/// ¶
+	/// å·¦
 	for (int i=0; i<nKeys; ++i) {
 		input[i] = (kfPositions[i] - pos).norm();
 	}
-	/// ’†
+	/// ä¸­
 	for (int i=nKeys; i<nKeys+1; ++i) {
 		input[i] = 1;
 	}
-	/// ‰E
+	/// å³
 	for (int i=nKeys+1; i<nMatDim; ++i) {
 		int m = i - (nKeys+1);
 		input[i] = pos[m];
 	}
 
-	// ƒuƒŒƒ“ƒh’l‚ÌŒvZ
+	// ãƒ–ãƒ¬ãƒ³ãƒ‰å€¤ã®è¨ˆç®—
 	// std::cout << "inp : " << input << std::endl;
 	for (int i=0; i<4; ++i) {
 		for (int j=0; j<4; ++j) {
@@ -281,7 +281,7 @@ void GRFrame::BlendRBF(PTM::VVector<float> pos){
 		}
 	}
 
-	// ³‹K’¼Œğ‰»
+	// æ­£è¦ç›´äº¤åŒ–
 	aff.Ex() /= aff.Ex().norm();
 	aff.Ey() /= aff.Ey().norm();
 	aff.Ez() /= aff.Ez().norm();
@@ -304,12 +304,12 @@ void GRFrame::BlendRBF(PTM::VVector<float> pos){
 		}
 	}
 
-	// •ÏŠ·s—ñ‚ÌƒZƒbƒg
+	// å¤‰æ›è¡Œåˆ—ã®ã‚»ãƒƒãƒˆ
 	SetTransform(aff);
 	// std::cout << this->GetName() << std::endl;
 	// std::cout << "Aff : " << aff << std::endl;
 
-	// q—v‘f‚ÉÄ‹A
+	// å­è¦ç´ ã«å†å¸°
 	for (unsigned  i=0; i<children.size(); ++i) {
 		GRFrame* fr = children[i]->Cast();
 		if (fr) {
@@ -355,19 +355,19 @@ void GRAnimation::BlendPose(float time, float weight){
 	BlendPose(time, weight, false);
 }
 void GRAnimation::BlendPose(float time, float weight, bool add){
-	//	ƒ^[ƒQƒbƒg‚É•ÏŠ·‚ğ‰Á‚¦‚é
+	//	ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«å¤‰æ›ã‚’åŠ ãˆã‚‹
 	Affinef transform;
 	for(std::vector<GRAnimationKey>::iterator it = keys.begin(); it != keys.end(); ++it){
 		GRAnimationKey& anim = *it;
-		//	‚ÅƒL[‚ğŒŸõ
+		//	æ™‚åˆ»ã§ã‚­ãƒ¼ã‚’æ¤œç´¢
 		for(unsigned i=0; i < anim.keys.size(); ++i){
 			float blended[16];
-			if (anim.keys[i].time > time){	//	Œ©‚Â‚©‚Á‚½‚Ì‚ÅƒuƒŒƒ“ƒh‚µ‚½•ÏŠ·‚ğŒvZ
-				if (i==0){	//	i=0‚¾‚¯‚ğƒZƒbƒg
+			if (anim.keys[i].time > time){	//	è¦‹ã¤ã‹ã£ãŸã®ã§ãƒ–ãƒ¬ãƒ³ãƒ‰ã—ãŸå¤‰æ›ã‚’è¨ˆç®—
+				if (i==0){	//	i=0ã ã‘ã‚’ã‚»ãƒƒãƒˆ
 					for(unsigned v=0; v<anim.keys[i].values.size(); ++v){
 						blended[v] = anim.keys[i].values[v];
 					}
-				}else{		//	i-1‚Æi‚ğƒuƒŒƒ“ƒh
+				}else{		//	i-1ã¨iã‚’ãƒ–ãƒ¬ãƒ³ãƒ‰
 					float k = (anim.keys[i].time - time) / 
 							(anim.keys[i].time - anim.keys[i-1].time);
 					for(unsigned v=0; v<anim.keys[i].values.size(); ++v){
@@ -375,7 +375,7 @@ void GRAnimation::BlendPose(float time, float weight, bool add){
 							+ k * anim.keys[i-1].values[v];
 					}						
 				}
-				//	Œ©‚Â‚©‚Á‚½•ÏŠ·‚ğtransform‚É“K—p
+				//	è¦‹ã¤ã‹ã£ãŸå¤‰æ›ã‚’transformã«é©ç”¨
 				switch(anim.keyType){
 					case GRAnimationDesc::ROTATION:{
 						Affinef mat;
@@ -403,21 +403,21 @@ void GRAnimation::BlendPose(float time, float weight, bool add){
 			}
 		}
 	}
-	//	transform ‚ğƒ^[ƒQƒbƒg‚É“K—p
-	transform.Orthonormalization(); //³‹K’¼Œğ‰»
+	//	transform ã‚’ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã«é©ç”¨
+	transform.Orthonormalization(); //æ­£è¦ç›´äº¤åŒ–
 	for(Targets::iterator it = targets.begin(); it!= targets.end(); ++it){
 		UTString name = it->target->GetName();
 		it->target->SetTransform(transform);
 	}
 }
 void GRAnimation::ResetPose(){
-	//	transform ‚ğ‰Šú’l‚É–ß‚·
+	//	transform ã‚’åˆæœŸå€¤ã«æˆ»ã™
 	for(Targets::iterator it = targets.begin(); it!= targets.end(); ++it){
 		it->target->SetTransform(it->initalTransform);
 	}
 }
 void GRAnimation::LoadInitialPose(){
-	//	ƒtƒŒ[ƒ€‚Ì•ÏŠ·‚É‰Šú’l‚ğİ’è‚·‚é
+	//	ãƒ•ãƒ¬ãƒ¼ãƒ ã®å¤‰æ›ã«åˆæœŸå€¤ã‚’è¨­å®šã™ã‚‹
 	for(Targets::iterator it = targets.begin(); it!= targets.end(); ++it){
 		it->initalTransform = it->target->GetTransform();
 	}
@@ -446,47 +446,47 @@ int GRAnimation::NAnimationKey(){
 }
 
 void GRAnimation::SetCurrentPose(float t){
-	//“¯ˆê‚Ì‚ÌKey‚ª‚ ‚éê‡íœ
+	//åŒä¸€ã®æ™‚åˆ»ã®KeyãŒã‚ã‚‹å ´åˆå‰Šé™¤
 	DeletePose(t);
-	//GRAnimationKey‚ª‘¶İ‚·‚éê‡Key‚ğì¬
+	//GRAnimationKeyãŒå­˜åœ¨ã™ã‚‹å ´åˆKeyã‚’ä½œæˆ
 	if(keys.size()>0){
-		//ROTATION‚Ìw’è
+		//ROTATIONã®æŒ‡å®š
 			GRKey rotationKey;
 			rotationKey.time = t;
 			Affinef af = targets[0].target->GetTransform();
 			af.Orthonormalization();
 			Quaterniond q; q.FromMatrix(af.Rot());
 			q.w *=-1;
-			//ƒNƒH[ƒ^ƒjƒIƒ“‚É‘ã“ü
+			//ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã«ä»£å…¥
 			for(int i=0; i<4; i++){
 				rotationKey.values.push_back(q[i]);
 			}
 			keys[0].keys.push_back(rotationKey);
-		//SCALE‚Ìw’è
+		//SCALEã®æŒ‡å®š
 			GRKey scaleKey;
 			scaleKey.time = t;
-			//3•Ï”‚ÌƒxƒNƒgƒ‹‚ğ‘ã“ü
-			scaleKey.values =keys[1].keys[0].values; //0”Ô–Ú‚ÌKey‚ğƒRƒs[
+			//3å¤‰æ•°ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä»£å…¥
+			scaleKey.values =keys[1].keys[0].values; //0ç•ªç›®ã®Keyã‚’ã‚³ãƒ”ãƒ¼
 			keys[1].keys.push_back(scaleKey);
-		//POSITION‚Ìw’è(Root‚Æ‚È‚éKey‚Ì‚İˆÊ’u‚ª•Ï‚í‚é)
+		//POSITIONã®æŒ‡å®š(Rootã¨ãªã‚‹Keyã®ã¿ä½ç½®ãŒå¤‰ã‚ã‚‹)
 			GRKey positionKey;
 			positionKey.time = t;
 			if(!(targets[0].target->GetParent()->GetParent()->GetParent()->GetParent())){
-				//Root‚Ìê‡
+				//Rootã®å ´åˆ
 				Vec3d trn = targets[0].target->GetTransform().Trn();
 				for(int i=0; i<3; i++){
 					positionKey.values.push_back(trn[i]);
 				}
 			}else{
-				//3•Ï”‚ÌƒxƒNƒgƒ‹‚ğ‘ã“ü
-				positionKey.values =keys[2].keys[0].values; //0”Ô–Ú‚ÌKey‚ğƒRƒs[
+				//3å¤‰æ•°ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä»£å…¥
+				positionKey.values =keys[2].keys[0].values; //0ç•ªç›®ã®Keyã‚’ã‚³ãƒ”ãƒ¼
 			}
 			keys[2].keys.push_back(positionKey);
 	}
 	SortGRKey();
 }
 void GRAnimation::DeletePose(float t){
-	//GRAnimationKey‚ª‘¶İ‚·‚éê‡Key‚ğì¬
+	//GRAnimationKeyãŒå­˜åœ¨ã™ã‚‹å ´åˆKeyã‚’ä½œæˆ
 	if(keys.size()>0){
 		for(int i=0; i<3 ; i++){
 			std::vector<GRKey>::iterator it;
@@ -504,13 +504,13 @@ void GRAnimation::DeletePose(float t){
 	SortGRKey();
 	}
 }
-//GRKey‚Ìƒ\[ƒg—pŠÖ”
+//GRKeyã®ã‚½ãƒ¼ãƒˆç”¨é–¢æ•°
 bool cmp(GRKey a, GRKey b){
 	return a.time < b.time;
 }
 
 void GRAnimation::SortGRKey(){
-	//keys[0].keys,keys[1].keys,keys[2].keys‚ğŠÔ‚Åƒ\[ƒg
+	//keys[0].keys,keys[1].keys,keys[2].keysã‚’æ™‚é–“ã§ã‚½ãƒ¼ãƒˆ
 	for(unsigned i=0; i<keys.size(); i++){
 		std::sort( keys[i].keys.begin(), keys[i].keys.end() ,cmp) ;
 	}
@@ -520,7 +520,7 @@ float GRAnimation::GetLastKeyTime(){
 	SortGRKey();
 	float lastKeyTime;
 	if(keys[0].keys.size()>0){
-		//ƒ\[ƒgŒã‚ÌÅŒã‚ÌŠÔ‚ğæ“¾
+		//ã‚½ãƒ¼ãƒˆå¾Œã®æœ€å¾Œã®æ™‚é–“ã‚’å–å¾—
 		lastKeyTime =keys[0].keys.back().time;
 	}
 	return lastKeyTime;
@@ -593,7 +593,7 @@ void GRAnimationSet::DeleteAnimationPose(float t){
 }
 
 void GRAnimationSet::UpdateLastKeyTime(){
-	//lastKeyTime‚Í‘S‚Ä‚ÌGRAnimation‚ÌLastKeyTime‚ª“¯ˆê‚Å‚ ‚é‚Æ‰¼’è‚µ‚Äæ“¾
+	//lastKeyTimeã¯å…¨ã¦ã®GRAnimationã®LastKeyTimeãŒåŒä¸€ã§ã‚ã‚‹ã¨ä»®å®šã—ã¦å–å¾—
 	lastKeyTime = animations[0]->GetLastKeyTime();
 }
 float GRAnimationSet::GetLastKeyTime(){

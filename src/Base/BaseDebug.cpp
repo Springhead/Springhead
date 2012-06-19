@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -133,7 +133,7 @@ std::ostream& DebugPrintf::Stream(){
 }
 #endif
 
-//ƒfƒoƒbƒO—p CSVo—ÍƒXƒgƒŠ[ƒ€----------------------------------------------------------------
+//ãƒ‡ãƒãƒƒã‚°ç”¨ CSVå‡ºåŠ›ã‚¹ãƒˆãƒªãƒ¼ãƒ ----------------------------------------------------------------
 
 static bool CSVFileOpenFlag;
 DebugCSV* DebugCSV::instance;
@@ -159,7 +159,7 @@ std::ostream& DebugCSV::Stream(){
 	DebugCSV_dpfStr.clear();
 
 	if(CSVFileOpenFlag == false){
-		std::string name = FileNameSearch(); //V‹K‚Ìƒtƒ@ƒCƒ‹–¼‚ğw’è
+		std::string name = FileNameSearch(); //æ–°è¦ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æŒ‡å®š
 		fout.open(name.c_str());
 		CSVFileOpenFlag = true;
 	}
@@ -182,7 +182,7 @@ std::string DebugCSV::FileNameSearch(){
 		ifs.close();
 		return filenames.str();
 	}
-	filenames.str(""); // ƒoƒbƒtƒ@‚ğƒNƒŠƒA‚·‚éB
+	filenames.str(""); // ãƒãƒƒãƒ•ã‚¡ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹ã€‚
 	ifs.close();
 	}
 	

@@ -1,24 +1,24 @@
-/** 
-\mainpage Springhead ���t�@�����X�}�j���A��
-���̃}�j���A���́CSpringhead �̃��t�@�����X�}�j���A���ł��B
-Springhead�̎g������m�肽���ꍇ�́A�܂����[�U�Y�}�j���A�� (Springhead Users Manual) ���Q�Ƃ��Ă��������B
+﻿/** 
+\mainpage Springhead リファレンスマニュアル
+このマニュアルは，Springhead のリファレンスマニュアルです。
+Springheadの使い方を知りたい場合は、まずユーザズマニュアル (Springhead Users Manual) を参照してください。
 <br>
-���t�@�����X�}�j���A���ł́CAPI��API���Ăяo�����߂Ɏg���\���̂�萔�̏ڍׂ�������܂��D
-SDK�������Ŏg�p���Ă���N���X��֐��̐����͊܂܂�Ă��܂���D
+リファレンスマニュアルでは，APIやAPIを呼び出すために使う構造体や定数の詳細を説明します．
+SDKが内部で使用しているクラスや関数の説明は含まれていません．
 
-�N���X�K�w�}�������Doxygen�������������܂��̂ŁC��������Q�Ƃ��Ă��������D
-�����ł͋@�\�ʂ�API����������܂��D
+クラス階層図や索引はDoxygenが自動生成しますので，そちらを参照してください．
+ここでは機能別にAPIを解説をします．
 
-\section sec_refBase ��{�N���X
-SDK���g�����߂̊�{�I�ȃN���X�E�\���̂ł��D
+\section sec_refBase 基本クラス
+SDKを使うための基本的なクラス・構造体です．
  - \ref gpLinearAlgebra
  - \ref gpBaseUtility
 
-\section sec_refPhysics �����G���W��
+\section sec_refPhysics 物理エンジン
  - \ref gpPhysics
  - \ref gpShape
  - \ref gpJoint
 
-\section sec_refGraphics �O���t�B�b�N�X
+\section sec_refGraphics グラフィックス
  - \ref gpGraphics
 */

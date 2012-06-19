@@ -1,11 +1,11 @@
-#include "Framework/FWHapticPointer.h"
+ï»¿#include "Framework/FWHapticPointer.h"
 #include "Physics/PHHapticPointer.h"
 
 namespace Spr{;
 
 void FWHapticPointer::UpdateHumanInterface(PHHapticPointer* hpLocal, float dt){
 	HIHapticIf* hif = DCAST(HIHapticIf, humanInterface);
-	// —Í‚Ìo—Í
+	// åŠ›ã®å‡ºåŠ›
 	hapticForce  = hpLocal->GetHapticForce();
 	if(hpLocal->bForce){
 		hif->SetForce(hapticForce.v(), hapticForce.w());
@@ -13,14 +13,14 @@ void FWHapticPointer::UpdateHumanInterface(PHHapticPointer* hpLocal, float dt){
 		hif->SetForce(Vec3f(), Vec3f());
 	}
 
-	// ƒCƒ“ƒ^ƒtƒF[ƒX‚Ìó‘ÔXV
+	// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®çŠ¶æ…‹æ›´æ–°
 	hif->Update(dt);
 	SpatialVector vel;
 	vel.v() = (Vec3d)hif->GetVelocity();
 	vel.w() = (Vec3d)hif->GetAngularVelocity();
 	Posed pose = hif->GetPose();
 
-	//// ƒfƒoƒbƒN‚Ì‚½‚ß‚Ì‹[Ž—“ü—Í
+	//// ãƒ‡ãƒãƒƒã‚¯ã®ãŸã‚ã®æ“¬ä¼¼å…¥åŠ›
 	//Vec3d debug_vel = Vec3d(-0.1, 0.0, 0.0);
 	//static Posed debug_pose = hapticPointer->GetDefaultPose();
 	//debug_pose.Pos() = debug_pose.Pos() + debug_vel * dt;

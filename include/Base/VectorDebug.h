@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -32,7 +32,7 @@ namespace Spr{;
 
 const double fpCheckExpsilon = 1e-6;
 
-//	•‚“®¬”“_‚ÆVector‚Ì’è‹`ˆæƒ`ƒFƒbƒN
+//	æµ®å‹•å°æ•°ç‚¹ã¨Vectorã®å®šç¾©åŸŸãƒã‚§ãƒƒã‚¯
 inline void FpCheckPrint(const char* f, const char* exp, const char* file, int line){
 	DSTR << f << ": '" << exp << "' at " << file << "(" << line << ")" << std::endl;
 }

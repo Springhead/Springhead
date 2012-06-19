@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -22,13 +22,13 @@ ImportHandler::ImportHandler(){
 void ImportHandler::AfterLoadData(UTLoadedData* ld, UTLoadContext* lc){
 	FILoadContext* fc = (FILoadContext*)lc;
 	
-	// �C���|�[�g����t�@�C���̃p�X���擾
+	// インポートするファイルのパスを取得
 	ImportDesc* imDesc = (ImportDesc*)ld->data;
 	UTPath path(imDesc->path);
 
-	// �ꎞ�I��LoadContext���DOM�����[�h
+	// 一時的なLoadContext上にDOMをロード
 	FIFile* file = fc->sdk->CreateFileFromExt(path.Ext())->Cast();
-	//	���݃��[�h���Ă���t�@�C������̑��΃p�X�ɂ��Ȃ���΂Ȃ�Ȃ��B
+	//	現在ロードしているファイルからの相対パスにしなければならない。
 	if (path.Path().length() < 2 || (path.Path()[0] != '\\' && path.Path()[1] != ':')){
 		UTPath curFile;
 		curFile.Path(fc->fileMaps.back()->name);
@@ -45,7 +45,7 @@ void ImportHandler::AfterLoadData(UTLoadedData* ld, UTLoadContext* lc){
 void ImportHandler::AfterCreateObject(UTLoadedData* ld, UTLoadContext* lc){
 	FILoadContext* fc = (FILoadContext*)lc;
 	
-	// Import���쐬�C�p�X��ݒ�C�e�I�u�W�F�N�g��o�^
+	// Importを作成，パスを設定，親オブジェクトを登録
 	ImportDesc* imDesc = (ImportDesc*)ld->data;
 	Import* childImp = DBG_NEW Import;
 	childImp->path = imDesc->path;
@@ -59,7 +59,7 @@ void ImportHandler::AfterCreateObject(UTLoadedData* ld, UTLoadContext* lc){
 void ImportHandler::AfterCreateChild(UTLoadedData* ld, ObjectIf* child, UTLoadContext* lc){
 	FILoadContext* fc = (FILoadContext*)lc;
 	
-	// Import�̎q�I�u�W�F�N�g��o�^
+	// Importの子オブジェクトを登録
 	fc->importStack.Top()->childObjs.push_back(child);
 
 }

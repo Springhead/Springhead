@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file GRDeviceGL.h
- *	@brief OpenGL‚É‚æ‚éƒOƒ‰ƒtƒBƒbƒNƒX•`‰æ‚ÌÀ‘•@@
+ *	@brief OpenGLã«ã‚ˆã‚‹ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹æç”»ã®å®Ÿè£…ã€€ã€€
  */
 #ifndef GRDEVICEGL_H
 #define GRDEVICEGL_H
@@ -19,60 +19,60 @@
 namespace Spr{;
 
 /**	@class	GRDeviceGL
-    @brief	OpenGL‚É‚æ‚éƒOƒ‰ƒtƒBƒbƒNƒX•`‰æ‚ÌÀ‘•@ */
+    @brief	OpenGLã«ã‚ˆã‚‹ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹æç”»ã®å®Ÿè£…ã€€ */
 class GRDeviceGL: public GRDevice{
 	SPR_OBJECTDEF(GRDeviceGL);
 protected:
-	int		nLights;					///< ŒõŒ¹‚Ì”
-	int		vertexFormatGl;				///< glInterleavedArrays‚Åg‚¤CGL‚Ì’¸“_ƒtƒH[ƒ}ƒbƒgID
-	size_t	vertexSize;					///< ’¸“_‚ÌƒTƒCƒY
-	bool	vertexColor;				///< ’¸“_‚ªF‚ğ‚Â‚©‚Ç‚¤‚©
-	GRMaterialDesc currentMaterial;		///< Œ»İ‚Ìƒ}ƒeƒŠƒAƒ‹
+	int		nLights;					///< å…‰æºã®æ•°
+	int		vertexFormatGl;				///< glInterleavedArraysã§ä½¿ã†ï¼ŒGLã®é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆID
+	size_t	vertexSize;					///< é ‚ç‚¹ã®ã‚µã‚¤ã‚º
+	bool	vertexColor;				///< é ‚ç‚¹ãŒè‰²ã‚’æŒã¤ã‹ã©ã†ã‹
+	GRMaterialDesc currentMaterial;		///< ç¾åœ¨ã®ãƒãƒ†ãƒªã‚¢ãƒ«
 
-	bool	pointSmooth;				///< DrawPoint‚ÉƒAƒ“ƒ`ƒGƒCƒŠƒAƒX‚©‚¯‚é‚©
-	bool	lineSmooth;					///< DrawLine‚ÉƒAƒ“ƒ`ƒGƒCƒŠƒAƒX‚©‚¯‚é‚©
+	bool	pointSmooth;				///< DrawPointã«ã‚¢ãƒ³ãƒã‚¨ã‚¤ãƒªã‚¢ã‚¹ã‹ã‘ã‚‹ã‹
+	bool	lineSmooth;					///< DrawLineã«ã‚¢ãƒ³ãƒã‚¨ã‚¤ãƒªã‚¢ã‚¹ã‹ã‘ã‚‹ã‹
 	
 	/**
-	 *	@name	ƒ}ƒgƒŠƒbƒNƒX•Ï”
-	 *@@ GL‚Å‚ÍModel‚ğ•Ï‚¦‚¸‚ÉView‚¾‚¯‚ğ•Ï‚¦‚é‚Æ‚¢‚¤‚±‚Æ‚ª‚Å‚«‚È‚¢B \n
-	 *@@ ‹“_‚ğ“®‚©‚·‚É‚ÍAƒ†[ƒU‚ªModel‚ğŠo‚¦‚Ä‚¨‚­•K—v‚ª‚ ‚éB	\n
-	 *@@ iDirect3D‚Ìê‡‚ÍAModel‚ğ‘‚«Š·‚¦‚¸‚ÉView‚¾‚¯‘‚«Š·‚¦A‹“_‚ğ“®‚©‚·‚±‚Æ‚ª‚Å‚«‚éj
+	 *	@name	ãƒãƒˆãƒªãƒƒã‚¯ã‚¹å¤‰æ•°
+	 *ã€€ã€€ GLã§ã¯Modelã‚’å¤‰ãˆãšã«Viewã ã‘ã‚’å¤‰ãˆã‚‹ã¨ã„ã†ã“ã¨ãŒã§ããªã„ã€‚ \n
+	 *ã€€ã€€ è¦–ç‚¹ã‚’å‹•ã‹ã™ã«ã¯ã€ãƒ¦ãƒ¼ã‚¶ãŒModelã‚’è¦šãˆã¦ãŠãå¿…è¦ãŒã‚ã‚‹ã€‚	\n
+	 *ã€€ã€€ ï¼ˆDirect3Dã®å ´åˆã¯ã€Modelã‚’æ›¸ãæ›ãˆãšã«Viewã ã‘æ›¸ãæ›ãˆã€è¦–ç‚¹ã‚’å‹•ã‹ã™ã“ã¨ãŒã§ãã‚‹ï¼‰
 	 *	@{ 
 	 */
-	Affinef								viewMatrix;				///< ƒJƒŒƒ“ƒg‹“_s—ñ
-	Affinef								modelMatrix;			///< ƒJƒŒƒ“ƒgƒ‚ƒfƒ‹s—ñ 
-	std::stack<Affinef>                	modelMatrixStack;		///< ƒ‚ƒfƒ‹s—ñƒXƒ^ƒbƒN
-	std::vector<Affinef>				blendMatrix;			///< ƒuƒŒƒ“ƒh•ÏŠ·s—ñ
+	Affinef								viewMatrix;				///< ã‚«ãƒ¬ãƒ³ãƒˆè¦–ç‚¹è¡Œåˆ—
+	Affinef								modelMatrix;			///< ã‚«ãƒ¬ãƒ³ãƒˆãƒ¢ãƒ‡ãƒ«è¡Œåˆ— 
+	std::stack<Affinef>                	modelMatrixStack;		///< ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚¹ã‚¿ãƒƒã‚¯
+	std::vector<Affinef>				blendMatrix;			///< ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—
 	/** @} */
 
 	/**
-	 *	@name	ƒeƒNƒXƒ`ƒƒƒ}ƒl[ƒWƒƒ
-	 *@@ ƒ[ƒh‚³‚ê‚½ƒeƒNƒXƒ`ƒƒ‚ÌID‚ğŠo‚¦‚Ä‚¨‚­map
+	 *	@name	ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒãƒãƒ¼ã‚¸ãƒ£
+	 *ã€€ã€€ ãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸãƒ†ã‚¯ã‚¹ãƒãƒ£ã®IDã‚’è¦šãˆã¦ãŠãmap
 	 *
 	 */
 	typedef std::map<std::string, unsigned int, UTStringLess> GRTexnameMap;
 	GRTexnameMap texnameMap;
 
 	/**
-	 *	@name	ƒtƒHƒ“ƒg•Ï”
-	 *@@ V‹K‚Éw’è‚³‚ê‚½ƒtƒHƒ“ƒg‚ÍfontList‚ÉŠi”[‚³‚ê‚éB
+	 *	@name	ãƒ•ã‚©ãƒ³ãƒˆå¤‰æ•°
+	 *ã€€ã€€ æ–°è¦ã«æŒ‡å®šã•ã‚ŒãŸãƒ•ã‚©ãƒ³ãƒˆã¯fontListã«æ ¼ç´ã•ã‚Œã‚‹ã€‚
 	 *	@{
 	 */
-	std::map<unsigned int, GRFont> fontList;		///< ƒtƒHƒ“ƒgƒŠƒXƒg<DisplayList‚Ìindex, font>    
-	unsigned int	fontBase;						///< ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ìindex number‚ÌŠî’ê” 
-	GRFont			font;							///< ƒtƒHƒ“ƒgî•ñ
+	std::map<unsigned int, GRFont> fontList;		///< ãƒ•ã‚©ãƒ³ãƒˆãƒªã‚¹ãƒˆ<DisplayListã®index, font>    
+	unsigned int	fontBase;						///< ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®index numberã®åŸºåº•æ•° 
+	GRFont			font;							///< ãƒ•ã‚©ãƒ³ãƒˆæƒ…å ±
 	/** @} */	
 
 	/**
-	 *	@name	ƒVƒF[ƒ_•Ï”
+	 *	@name	ã‚·ã‚§ãƒ¼ãƒ€å¤‰æ•°
 	 *	@{
 	 */
-	std::string vertexShaderFile;						///< VertexShader ƒtƒ@ƒCƒ‹–¼
-	std::string fragmentShaderFile;						///< FragmentShader ƒtƒ@ƒCƒ‹–¼
-	GRShaderFormat::ShaderType shaderType;				///< ƒVƒF[ƒ_‚ÌƒƒP[ƒVƒ‡ƒ“ƒ^ƒCƒv
+	std::string vertexShaderFile;						///< VertexShader ãƒ•ã‚¡ã‚¤ãƒ«å
+	std::string fragmentShaderFile;						///< FragmentShader ãƒ•ã‚¡ã‚¤ãƒ«å
+	GRShaderFormat::ShaderType shaderType;				///< ã‚·ã‚§ãƒ¼ãƒ€ã®ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¿ã‚¤ãƒ—
 	/** @} */	
 
-	/** sin, cos‚ÌƒLƒƒƒbƒVƒ…
+	/** sin, cosã®ã‚­ãƒ£ãƒƒã‚·ãƒ¥
 	 */
 	struct tri_array{
 		std::vector<float>	_sin;
@@ -106,7 +106,7 @@ protected:
 	}
 	
 public:
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	GRDeviceGL(){}
 	
 	virtual void Init();
@@ -114,17 +114,17 @@ public:
 	virtual void ClearBuffer();
 	virtual void BeginScene();
 	virtual void EndScene();
-	///	ƒoƒbƒtƒ@‚ğ•\¦‚·‚é‚½‚ß‚ÌŒÄ‚ÔŠÖ”
+	///	ãƒãƒƒãƒ•ã‚¡ã‚’è¡¨ç¤ºã™ã‚‹ãŸã‚ã®å‘¼ã¶é–¢æ•°
 	virtual void SwapBuffers();
-	///	ƒJƒŒƒ“ƒg‚Ì‹“_s—ñ‚ğafv‚Å’u‚«Š·‚¦‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®è¦–ç‚¹è¡Œåˆ—ã‚’afvã§ç½®ãæ›ãˆã‚‹
 	virtual void SetViewMatrix(const Affinef& afv);
 	virtual void GetViewMatrix(Affinef& afv);
-	///	ƒJƒŒƒ“ƒg‚Ì“Š‰es—ñ‚ğæ“¾‚·‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®æŠ•å½±è¡Œåˆ—ã‚’å–å¾—ã™ã‚‹
 	virtual void SetProjectionMatrix(const Affinef& afp);
 	virtual void GetProjectionMatrix(Affinef& afp);
 	virtual void SetModelMatrix(const Affinef& afw);
 	virtual void GetModelMatrix(Affinef& afw);
-	///	ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚É‘Î‚µ‚Äafw‚ğŠ|‚¯‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã«å¯¾ã—ã¦afwã‚’æ›ã‘ã‚‹
 	virtual void MultModelMatrix(const Affinef& afw);
 	virtual void PushModelMatrix();
 	virtual void PopModelMatrix();

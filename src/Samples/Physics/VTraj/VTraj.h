@@ -1,4 +1,4 @@
-#ifndef IK_H
+ï»¿#ifndef IK_H
 #define IK_H
 
 #include <vector>
@@ -30,7 +30,7 @@ public:
 		Quaterniond    goal;
 	};
 
-	//ƒfƒoƒbƒN•\¦‚Ég‚¤•Ï”
+	//ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºã«ä½¿ã†å¤‰æ•°
 	bool bGravity;
 	bool bDebug;
 	bool bStep;

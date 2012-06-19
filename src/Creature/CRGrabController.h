@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -24,21 +24,21 @@ struct PHSpringIf;
 struct CRBodyIf;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief ”cƒRƒ“ƒgƒ[ƒ‰
+/** @brief æŠŠæŒã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 */
 class CRGrabController : public CRController, public CRGrabControllerDesc {
 private:
-	/// ‚±‚Ì„‘Ì‚ğ‚Â‚©‚Á‚Ä’Í‚Ş
+	/// ã“ã®å‰›ä½“ã‚’ã¤ã‹ã£ã¦æ´ã‚€
 	CRBoneIf* solid;
 
-	/// ˜AŒ‹—pƒoƒl
+	/// é€£çµç”¨ãƒãƒ
 	PHSpringIf* grabSpring;
 
-	/// ”c’†‚Ì„‘Ì
+	/// æŠŠæŒä¸­ã®å‰›ä½“
 	PHSolidIf* grabbingSolid;
 
-	/// ”c‚ğs‚¤‚½‚ß‚Ìì¬ÏSpring‚Ìƒ}ƒbƒv
-	//// ”c‘ÎÛ‚Ì„‘Ì¨˜AŒ‹—p‚Î‚Ë
+	/// æŠŠæŒã‚’è¡Œã†ãŸã‚ã®ä½œæˆæ¸ˆSpringã®ãƒãƒƒãƒ—
+	//// æŠŠæŒå¯¾è±¡ã®å‰›ä½“â†’é€£çµç”¨ã°ã­
 	typedef std::map< PHSolidIf*, PHSpringIf* > GrabSpringMap;
 	GrabSpringMap grabSpringMap;
 
@@ -55,23 +55,23 @@ public:
 		solid         = NULL;
 	}
 
-	/// ‰Šú‰»
+	/// åˆæœŸåŒ–
 	virtual void Init() {}
 
-	/// 1ƒXƒeƒbƒv
+	/// 1ã‚¹ãƒ†ãƒƒãƒ—
 	virtual void Step() {}
 
-	/// ó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+	/// çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	virtual void Reset() {
 		grabSpring->Enable(false);
 		grabbingSolid = NULL;
 		grabSpring    = NULL;
 	}
 
-	/// Œ»ó‚ğ•Ô‚·
+	/// ç¾çŠ¶ã‚’è¿”ã™
 	virtual int  GetStatus() { return CRControllerDesc::CS_WAITING; }
 
-	/// w’è‚µ‚½•¨‘Ì‚ğ‚Â‚©‚ŞD
+	/// æŒ‡å®šã—ãŸç‰©ä½“ã‚’ã¤ã‹ã‚€ï¼
 	void SetTargetSolid(PHSolidIf* targetSolid) {
 		PHSceneIf *phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
 
@@ -99,12 +99,12 @@ public:
 		grabbingSolid = targetSolid;
 	}
 
-	/// ‚Â‚©‚ñ‚Å‚¢‚é•¨‘Ì‚ğ•Ô‚·D‚Â‚©‚ñ‚Å‚¢‚È‚¯‚ê‚ÎNULL
+	/// ã¤ã‹ã‚“ã§ã„ã‚‹ç‰©ä½“ã‚’è¿”ã™ï¼ã¤ã‹ã‚“ã§ã„ãªã‘ã‚Œã°NULL
 	PHSolidIf* GetGrabbingSolid() {
 		return grabbingSolid;
 	}
 
-	/// ”c‚Ég—p‚·‚é„‘Ì‚ğ•Ô‚·
+	/// æŠŠæŒã«ä½¿ç”¨ã™ã‚‹å‰›ä½“ã‚’è¿”ã™
 	PHSolidIf* GetSolid() {
 		return solid->GetPHSolid();
 	}

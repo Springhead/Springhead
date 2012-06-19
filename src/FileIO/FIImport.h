@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,8 +14,8 @@
 
 namespace Spr{;
 
-/// Import‚Ìƒnƒ“ƒhƒ‰
-//  ƒnƒ“ƒhƒ‰‚Ì“o˜^‚ÍFISdk‚ªs‚¤
+/// Importã®ãƒãƒ³ãƒ‰ãƒ©
+//  ãƒãƒ³ãƒ‰ãƒ©ã®ç™»éŒ²ã¯FISdkãŒè¡Œã†
 class ImportHandler : public UTLoadHandler{
 public:	
 	virtual void AfterLoadData(UTLoadedData* ld, UTLoadContext* lc);
@@ -25,12 +25,12 @@ public:
 	ImportHandler();
 };
 
-/// ƒCƒ“ƒ|[ƒgŠÖŒW‚ğ•Û‚·‚éDB
+/// ã‚¤ãƒ³ãƒãƒ¼ãƒˆé–¢ä¿‚ã‚’ä¿æŒã™ã‚‹DB
 class Import : public Object, public UTTreeNode<Import>{
 public:
 	SPR_OBJECTDEF(Import);
 
-	/// DOMƒm[ƒh‚ÆƒIƒuƒWƒFƒNƒg‚Ì‘Î
+	/// DOMãƒãƒ¼ãƒ‰ã¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å¯¾
 	/*struct ObjectDataPair{
 		UTLoadedData*	data;
 		ObjectIf*		obj;
@@ -39,11 +39,11 @@ public:
 	};
 	typedef std::vector<ObjectDataPair>	ObjectDataPairs;*/
 
-	//ObjectDataPair		ownerObj;		///< ƒCƒ“ƒ|[ƒg‚·‚éƒIƒuƒWƒFƒNƒg‚Ìe
-	//ObjectDataPairs		childObjs;		///< ƒCƒ“ƒ|[ƒg‚·‚éƒIƒuƒWƒFƒNƒg
+	//ObjectDataPair		ownerObj;		///< ã‚¤ãƒ³ãƒãƒ¼ãƒˆã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¦ª
+	//ObjectDataPairs		childObjs;		///< ã‚¤ãƒ³ãƒãƒ¼ãƒˆã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	ObjectIf*			ownerObj;
 	ObjectIfs			childObjs;
-	UTPath				path;			///< ƒCƒ“ƒ|[ƒg‚·‚éƒtƒ@ƒCƒ‹‚ÌƒpƒXi‘Š‘Îj
+	UTPath				path;			///< ã‚¤ãƒ³ãƒãƒ¼ãƒˆã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ï¼ˆç›¸å¯¾ï¼‰
 	bool				loadOnly;
 
 	virtual void Clear();
@@ -51,10 +51,10 @@ public:
 	
 	void SetLoadOnly(bool on = true){ loadOnly = on; }
 
-	// qƒCƒ“ƒ|[ƒgƒGƒ“ƒgƒŠ‚Ì’†‚©‚çƒI[ƒi[ƒIƒuƒWƒFƒNƒg‚ªobj‚Å‚ ‚é‚à‚Ì‚ğ—ñ‹“
+	// å­ã‚¤ãƒ³ãƒãƒ¼ãƒˆã‚¨ãƒ³ãƒˆãƒªã®ä¸­ã‹ã‚‰ã‚ªãƒ¼ãƒŠãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒobjã§ã‚ã‚‹ã‚‚ã®ã‚’åˆ—æŒ™
 	void EnumByOwner(std::vector<Import*>& imports, ObjectIf* obj);
 
-	// qƒCƒ“ƒ|[ƒgƒGƒ“ƒgƒŠ‚Ì’†‚©‚çDOMƒm[ƒh‚ªdata‚Å‚ ‚éObjectDataPair‚ğ—ñ‹“
+	// å­ã‚¤ãƒ³ãƒãƒ¼ãƒˆã‚¨ãƒ³ãƒˆãƒªã®ä¸­ã‹ã‚‰DOMãƒãƒ¼ãƒ‰ãŒdataã§ã‚ã‚‹ObjectDataPairã‚’åˆ—æŒ™
 	//void EnumByData(ObjectIfs& objs, UTLoadedData* data);
 
 	Import(const ImportDesc& desc = ImportDesc()){ loadOnly = false; }

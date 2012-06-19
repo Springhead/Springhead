@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,22 +19,22 @@
 
 namespace Spr {;
 
-/** GLUT”ÅƒL[ƒ{[ƒhEƒ}ƒEƒX‚ÌÀ‘•
+/** GLUTç‰ˆã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ»ãƒã‚¦ã‚¹ã®å®Ÿè£…
 
-	ƒCƒxƒ“ƒgˆ—‚Ì—¬‚êF
-	Estatic‚ÌƒR[ƒ‹ƒoƒbƒN‚ğglut‚É“o˜^‚·‚é
-	EstaticƒR[ƒ‹ƒoƒbƒN‚©‚çÀƒfƒoƒCƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒXiƒVƒ“ƒOƒ‹ƒgƒ“j‚ÌƒR[ƒ‹ƒoƒbƒN‚ğŒÄ‚Ô
-	EÀƒ}ƒEƒX‚ÌƒR[ƒ‹ƒoƒbƒN‚©‚çCƒ|[ƒg”Ô†‚ÆƒJƒŒƒ“ƒgƒEƒBƒ“ƒhƒEID‚ªˆê’v‚·‚é‰¼‘zƒfƒoƒCƒX‚ğ’T‚µC
-	@‚»‚ÌƒR[ƒ‹ƒoƒbƒN‚ğŒÄ‚Ô
+	ã‚¤ãƒ™ãƒ³ãƒˆå‡¦ç†ã®æµã‚Œï¼š
+	ãƒ»staticã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’glutã«ç™»éŒ²ã™ã‚‹
+	ãƒ»staticã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‹ã‚‰å®Ÿãƒ‡ãƒã‚¤ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ï¼ˆã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ï¼‰ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’å‘¼ã¶
+	ãƒ»å®Ÿãƒã‚¦ã‚¹ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‹ã‚‰ï¼Œãƒãƒ¼ãƒˆç•ªå·ã¨ã‚«ãƒ¬ãƒ³ãƒˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦IDãŒä¸€è‡´ã™ã‚‹ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã‚’æ¢ã—ï¼Œ
+	ã€€ãã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’å‘¼ã¶
 
  */
 class DRKeyMouseGLUT: public HIRealDevice{
 public:
 	SPR_OBJECTDEF(DRKeyMouseGLUT);
-	///	‰¼‘zƒfƒoƒCƒX(KeyMouse)
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹(KeyMouse)
 	class DV: public DVKeyMouse{
 	public:
-		// ƒ}ƒEƒXˆÊ’u‚ğ‹L‰¯‚·‚éƒŠƒ“ƒOƒoƒbƒtƒ@
+		// ãƒã‚¦ã‚¹ä½ç½®ã‚’è¨˜æ†¶ã™ã‚‹ãƒªãƒ³ã‚°ãƒãƒƒãƒ•ã‚¡
 		std::deque<Vec2i>	mousePoints;
 	public:
 
@@ -48,21 +48,21 @@ public:
 		virtual void GetMousePosition(int& x, int& y, int& time, int count=0);
 	};
 
-	// ƒ}ƒEƒXƒ{ƒ^ƒ“‚Ìó‘Ô
+	// ãƒã‚¦ã‚¹ãƒœã‚¿ãƒ³ã®çŠ¶æ…‹
 	int	buttonState;
 
 public:
 	DRKeyMouseGLUT(const DRKeyMouseGLUTDesc& desc = DRKeyMouseGLUTDesc());
 	
-	///	HIRealDevice‚Ì‰¼‘zŠÖ”
+	///	HIRealDeviceã®ä»®æƒ³é–¢æ•°
 	virtual bool Init();
 	//virtual void Register(HISdkIf* intf);
 	virtual HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);
 
-	/// DRWinDeviceBase‚Ì‰¼‘zŠÖ”
+	/// DRWinDeviceBaseã®ä»®æƒ³é–¢æ•°
 	//virtual void RegisterCallback();
 
-	/// GLUTƒL[ƒR[ƒh‚©‚çSpringhead‹¤’ÊƒL[ƒR[ƒh‚Ö‚Ì•ÏŠ·
+	/// GLUTã‚­ãƒ¼ã‚³ãƒ¼ãƒ‰ã‹ã‚‰Springheadå…±é€šã‚­ãƒ¼ã‚³ãƒ¼ãƒ‰ã¸ã®å¤‰æ›
 	int	ConvertKeyCode(int key, bool spr_to_glut, bool special);
 
 	///

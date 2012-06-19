@@ -1,4 +1,4 @@
-#ifndef PH_HAPTICENGINE_SINGLEBASE_H
+ï»¿#ifndef PH_HAPTICENGINE_SINGLEBASE_H
 #define PH_HAPTICENGINE_SINGLEBASE_H
 
 #include <Physics/PHHapticEngine.h>
@@ -20,7 +20,7 @@ public:
 		return engine->hapticRender;
 	}
 
-	//ƒfƒoƒbƒN—pƒR[ƒh
+	//ãƒ‡ãƒãƒƒã‚¯ç”¨ã‚³ãƒ¼ãƒ‰
 	virtual void StepSimulation();
 };
 

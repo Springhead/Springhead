@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,31 +18,31 @@ namespace Spr {;
 class GRCamera;
 class GRAnimationController;
 
-/**	ƒV[ƒ“ƒOƒ‰ƒt‚Ìƒgƒbƒvƒm[ƒhDŒõŒ¹E‹“_‚ğ‚ÂD
-	ƒŒƒ“ƒ_ƒ‰‚ÆƒV[ƒ“ƒOƒ‰ƒt‚ÌŠÖŒW‚ª[‚¢‚½‚ßC
-	ƒŒƒ“ƒ_ƒ‰‚ªˆá‚¤‚ÆƒV[ƒ“ƒOƒ‰ƒt‚Í‚»‚Ì‚Ü‚Üg—p‚Å‚«‚È‚¢D
-	ƒV[ƒ“ƒOƒ‰ƒt‚ÍC‚½‚Æ‚¦‚ÎƒŒƒ“ƒ_ƒ‰‚ªOpenGL‚È‚çCdisplayList
-	‚ğ‚Á‚Ä‚¢‚é‚µCD3D‚È‚ç‚Î ID3DXMesh‚ğ‚Á‚Ä‚¢‚éD
+/**	ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã®ãƒˆãƒƒãƒ—ãƒãƒ¼ãƒ‰ï¼å…‰æºãƒ»è¦–ç‚¹ã‚’æŒã¤ï¼
+	ãƒ¬ãƒ³ãƒ€ãƒ©ã¨ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã®é–¢ä¿‚ãŒæ·±ã„ãŸã‚ï¼Œ
+	ãƒ¬ãƒ³ãƒ€ãƒ©ãŒé•ã†ã¨ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã¯ãã®ã¾ã¾ä½¿ç”¨ã§ããªã„ï¼
+	ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã¯ï¼ŒãŸã¨ãˆã°ãƒ¬ãƒ³ãƒ€ãƒ©ãŒOpenGLãªã‚‰ï¼ŒdisplayList
+	ã‚’æŒã£ã¦ã„ã‚‹ã—ï¼ŒD3Dãªã‚‰ã° ID3DXMeshã‚’æŒã£ã¦ã„ã‚‹ï¼
 */
 class SPR_DLL GRScene:public Scene, public GRSceneDesc{
 	SPR_OBJECTDEF(GRScene);
 protected:
-	///	ƒ‹[ƒgƒm[ƒh
+	///	ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰
 	UTRef<GRFrame> world;
-	///	ƒJƒƒ‰
+	///	ã‚«ãƒ¡ãƒ©
 	UTRef<GRCamera> camera;
-	///	ƒAƒjƒ[ƒVƒ‡ƒ“ƒRƒ“ƒgƒ[ƒ‰
+	///	ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 	UTRef<GRAnimationController> animationController;
 public:
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	GRScene(const GRSceneDesc& desc=GRSceneDesc());
 	void Init();
-	///	ƒfƒXƒgƒ‰ƒNƒ^
+	///	ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~GRScene(){}
 
 	GRSdkIf* GetSdk();
 
-	///	ƒV[ƒ“‚ğ‹ó‚É‚·‚éD
+	///	ã‚·ãƒ¼ãƒ³ã‚’ç©ºã«ã™ã‚‹ï¼
 	void Clear();
 
 	virtual GRVisualIf* CreateVisual(const IfInfo* info, const GRVisualDesc& desc, GRFrameIf* parent = NULL);

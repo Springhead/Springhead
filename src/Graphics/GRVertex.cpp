@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -94,8 +94,8 @@ GRVertexElement GRVertexElement::BlendNf(size_t o, size_t n){
 	return rv;
 }
 /*
- *  ‰Šú‰»ˆ—
- *	ƒIƒtƒZƒbƒg’l‚ğˆø”‚Å—^‚¦A’¸“_ƒoƒbƒtƒ@‚ÌŠeƒƒ“ƒo‚É‘Î‚·‚éƒIƒtƒZƒbƒg’lAƒf[ƒ^Œ^‚È‚Ç‚ğİ’è‚·‚é
+ *  åˆæœŸåŒ–å‡¦ç†
+ *	ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤ã‚’å¼•æ•°ã§ä¸ãˆã€é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®å„ãƒ¡ãƒ³ãƒã«å¯¾ã™ã‚‹ã‚ªãƒ•ã‚»ãƒƒãƒˆå€¤ã€ãƒ‡ãƒ¼ã‚¿å‹ãªã©ã‚’è¨­å®šã™ã‚‹
  */
 const GRVertexElement GRVertexElement::vfP2f[] = {
 	GRVertexElement::Position2f(0),

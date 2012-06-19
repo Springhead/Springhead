@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,16 +7,16 @@
  */
 
 /**
-yŠT—vz
-Import‚ÌƒCƒ“ƒ|[ƒg‹@”\‚ÌƒeƒXƒgD
-EƒV[ƒ“‚ğè“®\’z
-EƒCƒ“ƒ|[ƒgŠÖŒW‚ğ–„‚ß‚İƒZ[ƒu
-EƒZ[ƒu‚µ‚½ƒf[ƒ^‚ğƒ[ƒh
+ã€æ¦‚è¦ã€‘
+Importã®ã‚¤ãƒ³ãƒãƒ¼ãƒˆæ©Ÿèƒ½ã®ãƒ†ã‚¹ãƒˆï¼
+ãƒ»ã‚·ãƒ¼ãƒ³ã‚’æ‰‹å‹•æ§‹ç¯‰
+ãƒ»ã‚¤ãƒ³ãƒãƒ¼ãƒˆé–¢ä¿‚ã‚’åŸ‹ã‚è¾¼ã¿ã‚»ãƒ¼ãƒ–
+ãƒ»ã‚»ãƒ¼ãƒ–ã—ãŸãƒ‡ãƒ¼ã‚¿ã‚’ãƒ­ãƒ¼ãƒ‰
 
-yI—¹Šî€z
-ˆê˜A‚Ìè‘±‚«‚ÌŠ®—¹
+ã€çµ‚äº†åŸºæº–ã€‘
+ä¸€é€£ã®æ‰‹ç¶šãã®å®Œäº†
 
-yNotez
+ã€Noteã€‘
 
 */
 
@@ -30,10 +30,10 @@ UTRef<GRSdkIf> grSdk;
 UTRef<PHSdkIf> phSdk;
 UTRef<FISdkIf> fiSdk;
 
-/// ƒCƒ“ƒ|[ƒgî•ñ
+/// ã‚¤ãƒ³ãƒãƒ¼ãƒˆæƒ…å ±
 ImportIf*		import;
 
-/// è“®\’z
+/// æ‰‹å‹•æ§‹ç¯‰
 void Build(){
 	DSTR << "building scene" << endl;
 
@@ -43,7 +43,7 @@ void Build(){
 
 	solid1->AddShape(phSdk->CreateShape(CDSphereDesc()));
 
-	/// ƒCƒ“ƒ|[ƒgî•ñ‚Ì–„‚ß‚İ
+	/// ã‚¤ãƒ³ãƒãƒ¼ãƒˆæƒ…å ±ã®åŸ‹ã‚è¾¼ã¿
 	ObjectIfs objs;
 	objs.Push(solid0);
 	ImportIf* import1 = fiSdk->CreateImport(import, "solids/solid0.x", phScene, objs);
@@ -85,22 +85,22 @@ int main(int argc, char* argv[]){
 	fiSdk = FISdkIf::CreateSdk();
 	import = fiSdk->CreateImport();
 
-	/// ƒV[ƒ“‚ğè“®\’z
+	/// ã‚·ãƒ¼ãƒ³ã‚’æ‰‹å‹•æ§‹ç¯‰
 	Build();
 	phSdk->Print(DSTR);
 
-	/// ƒZ[ƒu
+	/// ã‚»ãƒ¼ãƒ–
 	Save("test.x");
 
-	/// ƒNƒŠƒA
+	/// ã‚¯ãƒªã‚¢
 	phSdk->Clear();
 	phSdk->Print(DSTR);
 
-	/// ƒ[ƒh
+	/// ãƒ­ãƒ¼ãƒ‰
 	Load("test.x");
 	phSdk->Print(DSTR);
 
-	/// ‚à‚¤ˆê“xƒZ[ƒu
+	/// ã‚‚ã†ä¸€åº¦ã‚»ãƒ¼ãƒ–
 	Save("afterload/test.x");
 
 	return 0;

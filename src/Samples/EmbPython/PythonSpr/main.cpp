@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -20,27 +20,27 @@ using namespace Spr;
 using namespace std;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh—p
+// ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ç”¨
 #ifdef _WIN32
-/// std::max‚È‚Ç‚ğg‚¤‚Ì‚É•K—v(windows.h‚Æ‹£‡‚·‚é‚©‚ç)
+/// std::maxãªã©ã‚’ä½¿ã†ã®ã«å¿…è¦(windows.hã¨ç«¶åˆã™ã‚‹ã‹ã‚‰)
 #define NOMINMAX 
 #include <windows.h>
 #endif
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// WndProc‘‚«Š·‚¦—p
+// WndProcæ›¸ãæ›ãˆç”¨
 LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 WNDPROC OldWndProc;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒNƒ‰ƒX
+// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹
 class PythonSprApp : public SampleApp{
 public:
-	/// ƒy[ƒWID
+	/// ãƒšãƒ¼ã‚¸ID
 	enum {
 		MENU_MAIN = MENU_SCENE,
 	};
-	/// ƒAƒNƒVƒ‡ƒ“ID
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ID
 	enum {
 		ID_TOGGLE_RENDER_BACKSCENE,
 		ID_CALIB_SPIDAR,
@@ -60,7 +60,7 @@ public:
 	}
 	~PythonSprApp(){}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	virtual void Init(int argc, char* argv[]) {
 		this->argc = argc;
 		this->argv = argv;
@@ -86,7 +86,7 @@ public:
 		spaceNavigator1->Init(&descSN);
 		spaceNavigator1->SetPose(Posef(Vec3f(0,0,-5.0), Quaternionf()));
 
-		// ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ‚ğ’u‚«Š·‚¦
+		// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã‚’ç½®ãæ›ãˆ
 		OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
 
@@ -102,7 +102,7 @@ public:
 		fwScene->Step();
 	}
 
-	// •`‰æŠÖ”D•`‰æ—v‹‚ª—ˆ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+	// æç”»é–¢æ•°ï¼æç”»è¦æ±‚ãŒæ¥ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹
 	virtual void OnDraw(GRRenderIf* render) {
 		UTAutoLock critical(EPCriticalSection);
 		SampleApp::OnDraw(render);
@@ -116,14 +116,14 @@ public:
 } app;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒ‹[ƒv‚Ì’†g(‰½‰ñ‚àŒÄ‚Î‚ê‚é
+// ãƒ«ãƒ¼ãƒ—ã®ä¸­èº«(ä½•å›ã‚‚å‘¼ã°ã‚Œã‚‹
 void EPLoop(void* arg) {
-	//ƒCƒ“ƒ^ƒ‰ƒNƒeƒBƒuƒ‚[ƒh‚Å‹N“®
+	//ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒ†ã‚£ãƒ–ãƒ¢ãƒ¼ãƒ‰ã§èµ·å‹•
 	PyRun_InteractiveLoop(stdin,"SpringheadPython Console");
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// Python <=> Springhead •Ï”Ú‘±—p
+// Python <=> Springhead å¤‰æ•°æ¥ç¶šç”¨
 #define ACCESS_SPR_FROM_PY(cls, name, obj)							\
 	{																\
 		PyObject* pyObj = (PyObject*)newEP##cls((obj));				\
@@ -132,14 +132,14 @@ void EPLoop(void* arg) {
 	}																\
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒ‹[ƒvÀs’¼‘O‚É‚P“x‚¾‚¯ŒÄ‚Î‚ê‚é
+// ãƒ«ãƒ¼ãƒ—å®Ÿè¡Œç›´å‰ã«ï¼‘åº¦ã ã‘å‘¼ã°ã‚Œã‚‹
 void EPLoopInit(void* arg) {
 	PythonSprApp* app = (PythonSprApp*)arg;
 
-	////Python‚Åƒ‚ƒWƒ…[ƒ‹‚Ìg—péŒ¾
+	////Pythonã§ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ä½¿ç”¨å®£è¨€
 	PyRun_SimpleString("import Spr");
 		
-	// c‚Ìpyobject‚ğpython‚Å“Ç‚ß‚é‚æ‚¤‚É‚·‚é
+	// cã®pyobjectã‚’pythonã§èª­ã‚ã‚‹ã‚ˆã†ã«ã™ã‚‹
 	PyObject *m = PyImport_AddModule("__main__");
 	PyObject *dict = PyModule_GetDict(m);
 
@@ -162,7 +162,7 @@ void EPLoopInit(void* arg) {
 }
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ’u‚«Š·‚¦—pWndProc
+// ç½®ãæ›ãˆç”¨WndProc
 LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 	MSG m;
 	m.hwnd		= hWnd;
@@ -181,10 +181,10 @@ LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char *argv[]) {
 	app.Init(argc, argv);

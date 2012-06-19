@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -165,14 +165,14 @@ public:
 		targetL->SetDynamical(false);
 		targetL->SetFramePosition(targetPosL);
 		
-		//	ƒoƒl
+		//	ãƒãƒ
 		spd.damper = Vec3f(1,1,1) * 1000;
 		spd.spring = Vec3f(1,1,1) * 3000;
 		spd.posePlug.Pos() = Vec3d(0, -0.09, 0);
 		phScene->CreateJoint(targetR, loArmR, spd);
 		phScene->CreateJoint(targetL, loArmL, spd);
 
-		// d—Í‚ðÝ’è
+		// é‡åŠ›ã‚’è¨­å®š
 		phScene->SetGravity(Vec3f(0, -9.8, 0));
 
 		//
@@ -190,7 +190,7 @@ public:
 		fwScene->SetSolidMaterial(GRRenderIf::RED, targetR);
 		fwScene->EnableRenderAxis(false, false, false);
 
-		//	ÚG‚ðØ‚é
+		//	æŽ¥è§¦ã‚’åˆ‡ã‚‹
 		//scene->SetContactMode(&soTarget[0], PHSceneDesc::MODE_NONE);
 		//scene->SetContactMode(&soTarget[1], PHSceneDesc::MODE_NONE);
 	}

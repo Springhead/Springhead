@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -23,13 +23,13 @@ namespace Spr{;
 extern Spr::UTPreciseTimer ptimerForCd;
 #endif
 
-/// „‘Ì‚Ì‘g‚Ìó‘Ô
+/// å‰›ä½“ã®çµ„ã®çŠ¶æ…‹
 struct PHSolidPairSt{
 	bool bEnabled;
 	PHSolidPairSt():bEnabled(false){}
 };
 
-/// „‘Ì‚Ì‘g
+/// å‰›ä½“ã®çµ„
 template<class TShapePair, class TEngine>
 class PHSolidPair : public PHSolidPairSt{
 public:
@@ -57,22 +57,22 @@ public:
 		bEnabled = true;
 	}
 
-	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt){}	///< Œğ·‚ªŒŸ’m‚³‚ê‚½‚Æ‚«‚Ìˆ—
-	virtual void OnContDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt){}	///< Œğ·‚ªŒŸ’m‚³‚ê‚½‚Æ‚«‚Ìˆ—
-	//	ÚG”»’è
+	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt){}	///< äº¤å·®ãŒæ¤œçŸ¥ã•ã‚ŒãŸã¨ãã®å‡¦ç†
+	virtual void OnContDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt){}	///< äº¤å·®ãŒæ¤œçŸ¥ã•ã‚ŒãŸã¨ãã®å‡¦ç†
+	//	æ¥è§¦åˆ¤å®š
 	bool Detect(TEngine* engine, unsigned int ct, double dt){
 		if(!bEnabled)return false;
 
-		// ‚¢‚¸‚ê‚©‚ÌSolid‚ÉŒ`ó‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚È‚¢ê‡‚ÍÚG‚È‚µ
+		// ã„ãšã‚Œã‹ã®Solidã«å½¢çŠ¶ãŒå‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãªã„å ´åˆã¯æ¥è§¦ãªã—
 		if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
 
-		// ‘S‚Ä‚Ìshape pair‚É‚Â‚¢‚ÄŒğ·‚ğ’²‚×‚é
+		// å…¨ã¦ã®shape pairã«ã¤ã„ã¦äº¤å·®ã‚’èª¿ã¹ã‚‹
 		bool found = false;
 		TShapePair* sp;
 		for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
 			sp = shapePairs.item(i, j);
 			//sp.UpdateShapePose(solid[0]->solid->GetPose(), solid[1]->solid->GetPose());
-			//‚±‚Ìshape pair‚ÌŒğ·”»’è/–@ü‚ÆÚG‚ÌˆÊ’u‚ğ‹‚ß‚éD
+			//ã“ã®shape pairã®äº¤å·®åˆ¤å®š/æ³•ç·šã¨æ¥è§¦ã®ä½ç½®ã‚’æ±‚ã‚ã‚‹ï¼
 			if(sp->Detect(
 				ct,
 				solid[0]->GetPose() * solid[0]->GetShapePose(i), solid[1]->GetPose() * solid[1]->GetShapePose(j)))
@@ -84,12 +84,12 @@ public:
 		return found;
 	}
 
-	//	˜A‘±iˆÚ“®‚ğl—¶‚µ‚½jÚG”»’è
+	//	é€£ç¶šï¼ˆç§»å‹•ã‚’è€ƒæ…®ã—ãŸï¼‰æ¥è§¦åˆ¤å®š
 	bool ContDetect(TEngine* engine, unsigned int ct, double dt){
 		if(!bEnabled)return false;
-		// ‚¢‚¸‚ê‚©‚ÌSolid‚ÉŒ`ó‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚È‚¢ê‡‚ÍÚG‚È‚µ
+		// ã„ãšã‚Œã‹ã®Solidã«å½¢çŠ¶ãŒå‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãªã„å ´åˆã¯æ¥è§¦ãªã—
 		if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
-		// —¼•û‚Æ‚àƒtƒŠ[ƒYó‘Ô‚Ìê‡‚ÍÚG‚È‚µ
+		// ä¸¡æ–¹ã¨ã‚‚ãƒ•ãƒªãƒ¼ã‚ºçŠ¶æ…‹ã®å ´åˆã¯æ¥è§¦ãªã—
 		if(solid[0]->IsFrozen() && solid[1]->IsFrozen())
 			return false;
 		
@@ -112,28 +112,28 @@ public:
 				}
 			}
 		}
-		//	‚PƒXƒeƒbƒv‘O‚Ì•ÀiˆÚ“®—Ê~ƒ¿”{‚¾‚¯–ß‚·B
-		//	‚Q”{‚­‚ç‚¢–ß‚µ‚½•û‚ªA—£‚ê‚éŠm—¦‚ª‚‚¢‚µA‚»‚Ì‚­‚ç‚¢‚È‚ç–ß‚Á‚Ä‚à‚¨‚©‚µ‚È‚±‚Æ‚É‚Í‚È‚ç‚È‚¢‚Ì‚ÅB
+		//	ï¼‘ã‚¹ãƒ†ãƒƒãƒ—å‰ã®ä¸¦é€²ç§»å‹•é‡Ã—Î±å€ã ã‘æˆ»ã™ã€‚
+		//	ï¼’å€ãã‚‰ã„æˆ»ã—ãŸæ–¹ãŒã€é›¢ã‚Œã‚‹ç¢ºç‡ãŒé«˜ã„ã—ã€ãã®ãã‚‰ã„ãªã‚‰æˆ»ã£ã¦ã‚‚ãŠã‹ã—ãªã“ã¨ã«ã¯ãªã‚‰ãªã„ã®ã§ã€‚
 		double alpha = 2;
 		Vec3d vt[2] = {solid[0]->GetVelocity() * dt * alpha, solid[1]->GetVelocity() * dt * alpha};
 		Vec3d wt[2] = {solid[0]->GetAngularVelocity() * dt * alpha, solid[1]->GetAngularVelocity() * dt * alpha};
 		Vec3d delta[2] = {vt[0] - (wt[0]^solid[0]->GetCenterOfMass()), vt[1] - (wt[1] ^  solid[1]->GetCenterOfMass())};
 
-		// ‘S‚Ä‚Ìshape pair‚É‚Â‚¢‚ÄŒğ·‚ğ’²‚×‚é
+		// å…¨ã¦ã®shape pairã«ã¤ã„ã¦äº¤å·®ã‚’èª¿ã¹ã‚‹
 		bool found = false;
 		TShapePair* sp;
 		for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
 			sp = shapePairs.item(i, j);
-			//‚±‚Ìshape pair‚ÌŒğ·”»’è/–@ü‚ÆÚG‚ÌˆÊ’u‚ğ‹‚ß‚éD
+			//ã“ã®shape pairã®äº¤å·®åˆ¤å®š/æ³•ç·šã¨æ¥è§¦ã®ä½ç½®ã‚’æ±‚ã‚ã‚‹ï¼
 			if(sp->ContDetect(ct, shapePose[0][i], shapePose[1][j], 
-				//	„‘Ì‚Å‚Í‚È‚­AŒ`ó‚ÌˆÚ“®—Ê‚È‚Ì‚ÅAŒ`ó‚Ì’†SˆÊ’u‚ÅˆÚ“®—Ê‚ğ•â³‚·‚éB
+				//	å‰›ä½“ã§ã¯ãªãã€å½¢çŠ¶ã®ç§»å‹•é‡ãªã®ã§ã€å½¢çŠ¶ã®ä¸­å¿ƒä½ç½®ã§ç§»å‹•é‡ã‚’è£œæ­£ã™ã‚‹ã€‚
 				delta[0] + (wt[0]^shapeCenter[0][i]),  delta[1] + (wt[1]^shapeCenter[1][j]), dt)){
 				assert(0.9 < sp->normal.norm() && sp->normal.norm() < 1.1);
 				found = true;
 				OnContDetect(sp, engine, ct, dt);
 			}
 		}
-		// ƒtƒŠ[ƒY‚Ì‰ğœ
+		// ãƒ•ãƒªãƒ¼ã‚ºã®è§£é™¤
 		if(found){
 			if(solid[0]->IsDynamical() && !solid[1]->IsFrozen()){
 				solid[0]->SetFrozen(false);
@@ -151,14 +151,14 @@ public:
 	void GetSt(PHSolidPairSt& s){
 		s = *this;
 	}
-	///w’è‚µ‚½solid‚ğ•Ô‚·
+	///æŒ‡å®šã—ãŸsolidã‚’è¿”ã™
 	PHSolidIf* GetSolid(int i){return solid[i]->Cast();}
 };
 
-///	PHContactDetector‚Ìó‘Ô
+///	PHContactDetectorã®çŠ¶æ…‹
 struct PHContactDetectorSt{
-	size_t nSolidPair;	///<	SolidPair‚Ì”
-	size_t nShapePair;	///<	ShapePair‚Ì”
+	size_t nSolidPair;	///<	SolidPairã®æ•°
+	size_t nShapePair;	///<	ShapePairã®æ•°
 	PHSolidPairSt* SolidStates(){
 		char* ptr = ((char*)this) + sizeof(*this);
 		return (PHSolidPairSt*)ptr;
@@ -174,11 +174,11 @@ struct PHContactDetectorSt{
 	PHContactDetectorSt(int n=0, int m=0):nSolidPair(n), nShapePair(m){}
 };
 
-// AABB‚Åƒ\[ƒg‚·‚é‚½‚ß‚Ì\‘¢‘Ì
+// AABBã§ã‚½ãƒ¼ãƒˆã™ã‚‹ãŸã‚ã®æ§‹é€ ä½“
 struct Edge{
-	float edge;				///<	’[‚ÌˆÊ’u(ƒOƒ[ƒoƒ‹Œn)
-	int	index;				///<	Œ³‚Ì solid‚ÌˆÊ’u
-	bool bMin;				///<	‰’[‚È‚çtrue
+	float edge;				///<	ç«¯ã®ä½ç½®(ã‚°ãƒ­ãƒ¼ãƒãƒ«ç³»)
+	int	index;				///<	å…ƒã® solidã®ä½ç½®
+	bool bMin;				///<	åˆç«¯ãªã‚‰true
 	bool operator < (const Edge& s) const { return edge < s.edge; }
 };
 typedef std::vector<Edge> Edges;
@@ -195,10 +195,10 @@ public:
 	typedef TEngine engine_type;
 	typedef UTCombination< UTRef<TSolidPair> > PHSolidPairs;
 
-	bool						bContactEnabled;///< ÚG‚ª—LŒø‰»‚³‚ê‚½„‘Ì‚Ì‘g‚ª1‚Â‚Å‚à‘¶İ‚·‚ê‚Îtrue
-	PHSolids					solids;			///< „‘Ì‚Ì”z—ñ
-	PHSolidPairs				solidPairs;		///< „‘Ì‚Ì‘g‚Ì”z—ñ
-	std::vector<PHSolidIf*>		inactiveSolids; ///< ‰ğÍ–@‚ğ“K—p‚µ‚È‚¢„‘Ì‚ÌW‡
+	bool						bContactEnabled;///< æ¥è§¦ãŒæœ‰åŠ¹åŒ–ã•ã‚ŒãŸå‰›ä½“ã®çµ„ãŒ1ã¤ã§ã‚‚å­˜åœ¨ã™ã‚Œã°true
+	PHSolids					solids;			///< å‰›ä½“ã®é…åˆ—
+	PHSolidPairs				solidPairs;		///< å‰›ä½“ã®çµ„ã®é…åˆ—
+	std::vector<PHSolidIf*>		inactiveSolids; ///< è§£ææ³•ã‚’é©ç”¨ã—ãªã„å‰›ä½“ã®é›†åˆ
 
 	PHContactDetector(){
 	}
@@ -208,12 +208,12 @@ public:
 		solids.clear();
 	}
 	
-	///< ‰ğÍ–@‚ğ“K—p‚µ‚È‚¢„‘Ì‚Ì’Ç‰Á
+	///< è§£ææ³•ã‚’é©ç”¨ã—ãªã„å‰›ä½“ã®è¿½åŠ 
 	virtual void AddInactiveSolid(PHSolidIf* solid){
 		inactiveSolids.push_back(solid);
 	}
 
-	///< ‰ğÍ–@‚ğ“K—p‚µ‚È‚¢„‘Ì‚ÌŒŸõ
+	///< è§£ææ³•ã‚’é©ç”¨ã—ãªã„å‰›ä½“ã®æ¤œç´¢
 	virtual bool IsInactiveSolid(PHSolidIf* solid){
 		for(std::vector<PHSolidIf*>::iterator it = inactiveSolids.begin(); it != inactiveSolids.end(); it++){
 			if((*it) == solid)return true;
@@ -221,7 +221,7 @@ public:
 		return false;
 	}
 
-	///< „‘Ì‚Ì’Ç‰Á
+	///< å‰›ä½“ã®è¿½åŠ 
 	virtual bool AddChildObject(ObjectIf* o){
 		PHSolid* s = DCAST(PHSolid, o);
 		if(s && std::find(solids.begin(), solids.end(), s) == solids.end()){
@@ -240,7 +240,7 @@ public:
 		return false;
 	}
 
-	///< „‘Ì‚Ìíœ
+	///< å‰›ä½“ã®å‰Šé™¤
 	virtual bool DelChildObject(ObjectIf* o){
 		PHSolid* s = DCAST(PHSolid, o);
 	 	if(!s)return false;
@@ -282,7 +282,7 @@ public:
 		es->nShapePair = (size_t)NShapePairs();
 		PHSolidPairSt* solidStates = es->SolidStates();
 		CDShapePairSt* shapeStates = es->ShapeStates();
-		//	solidPairs.item(i,j)@‚Ì i<j•”•ª‚ğg‚Á‚Ä‚¢‚é‚Ì‚Å‚»‚±‚¾‚¯•Û‘¶
+		//	solidPairs.item(i,j)ã€€ã® i<jéƒ¨åˆ†ã‚’ä½¿ã£ã¦ã„ã‚‹ã®ã§ãã“ã ã‘ä¿å­˜
 		int solidPos=0;
 		int shapePos=0;
 		TSolidPair* sp;
@@ -307,7 +307,7 @@ public:
 		assert(es->nShapePair == (size_t)NShapePairs());
 		PHSolidPairSt* solidStates = es->SolidStates();
 		CDShapePairSt* shapeStates = es->ShapeStates();
-		//	solidPairs.item(i,j)@‚Ì i<j•”•ª‚ğg‚Á‚Ä‚¢‚é‚Ì‚Å‚»‚±‚¾‚¯•Û‘¶
+		//	solidPairs.item(i,j)ã€€ã® i<jéƒ¨åˆ†ã‚’ä½¿ã£ã¦ã„ã‚‹ã®ã§ãã“ã ã‘ä¿å­˜
 		int solidPos=0;
 		int shapePos=0;
 		TSolidPair* sp;
@@ -325,7 +325,7 @@ public:
 			}
 		}
 	}
-	///< Solid‚ÉShape‚ª’Ç‰Á‚³‚ê‚½‚Æ‚«‚ÉSolid‚©‚çŒÄ‚Î‚ê‚é
+	///< Solidã«ShapeãŒè¿½åŠ ã•ã‚ŒãŸã¨ãã«Solidã‹ã‚‰å‘¼ã°ã‚Œã‚‹
 	void UpdateShapePairs(PHSolid* solid){
 		PHSolids::iterator it = std::find(solids.begin(), solids.end(), solid);
 		if(it == solids.end())
@@ -359,7 +359,7 @@ public:
 			}
 		}
 	}
-	///< Solid‚ÉShape‚ªíœ‚³‚ê‚½‚Æ‚«‚ÉSolid‚©‚çŒÄ‚Î‚ê‚é
+	///< Solidã«ShapeãŒå‰Šé™¤ã•ã‚ŒãŸã¨ãã«Solidã‹ã‚‰å‘¼ã°ã‚Œã‚‹
 	void DelShapePairs(PHSolid* solid, int delPos){
 		PHSolids::iterator it = std::find(solids.begin(), solids.end(), solid);
 		if(it == solids.end())
@@ -372,29 +372,29 @@ public:
 			sp = solidPairs.item(i, isolid);
 			slhs = sp->solid[0];
 			srhs = solid;
-			//	Á‚¦‚½Shape‚É‘Î‰‚·‚és‚ğ‹l‚ß‚é
+			//	æ¶ˆãˆãŸShapeã«å¯¾å¿œã™ã‚‹è¡Œã‚’è©°ã‚ã‚‹
 			for(j = 0; j < slhs->NShape(); j++){
 				for(int k=delPos+1; k<srhs->NShape(); ++k)
 					sp->shapePairs.item(j, k-1) = sp->shapePairs.item(j, k);
 			}
-			//	ƒTƒCƒY‚ÌXV
+			//	ã‚µã‚¤ã‚ºã®æ›´æ–°
 			sp->shapePairs.resize(solid->NShape(), srhs->NShape());
 		}
 		for(i = isolid+1; i < (int)solids.size(); i++){
 			sp = solidPairs.item(isolid, i);
 			slhs = solid;
 			srhs = sp->solid[1];
-			//	Á‚¦‚½Shape‚É‘Î‰‚·‚és‚ğ‹l‚ß‚é
+			//	æ¶ˆãˆãŸShapeã«å¯¾å¿œã™ã‚‹è¡Œã‚’è©°ã‚ã‚‹
 			for(j = 0; j < srhs->NShape(); j++){
 				for(int k=delPos+1; k<srhs->NShape(); ++k)
 					sp->shapePairs.item(k-1, j) = sp->shapePairs.item(k, j);
 			}
-			//	ƒTƒCƒY‚ÌXV
+			//	ã‚µã‚¤ã‚ºã®æ›´æ–°
 			sp->shapePairs.resize(solid->NShape(), srhs->NShape());
 		}
 	}
 
-	/// bEnabledƒtƒ‰ƒO‚ªtrue‚ÈSolidPair‚ª‘¶İ‚·‚é‚©
+	/// bEnabledãƒ•ãƒ©ã‚°ãŒtrueãªSolidPairãŒå­˜åœ¨ã™ã‚‹ã‹
 	bool ActiveSolidPairExists(){
 		bool yes = false;
 		int n = (int)solids.size();
@@ -452,22 +452,22 @@ public:
 		bContactEnabled = bEnable;
 	}
 
-	///< ‘S‘Ì‚ÌŒğ·‚ÌŒŸ’m
+	///< å…¨ä½“ã®äº¤å·®ã®æ¤œçŸ¥
 	bool Detect(unsigned int ct, double dt){
-		/* ˆÈ‰º‚Ì—¬‚ê‚ÅŒğ·‚ğ‹‚ß‚é
-			1. Solid‚ÌBBoxƒŒƒxƒ‹‚Å‚ÌŒğ·”»’è(z²ƒ\[ƒg)DŒğ·‚Ì‚¨‚»‚ê‚Ì–³‚¢‘g‚ğœŠO
-			2. ŠeSolid‚Ì‘g‚É‚Â‚¢‚Ä
-				2a. Shape‚ÌBBoxƒŒƒxƒ‹‚Å‚ÌŒğ·”»’è (–¢À‘•)
-				2b. ŠeShape‚Ì‘g‚É‚Â‚¢‚ÄGJK‚ÅŒğ·Œ`ó‚ğ“¾‚é
-				2c. Œğ·Œ`ó‚©‚ç–@ü‚ğ‹‚ßA–@ü‚ÉŠÖ‚µ‚ÄŒ`ó‚ğË‰e‚µC‚»‚Ì’¸“_‚ğÚG“_‚Æ‚·‚é
-				2d. “¾‚ç‚ê‚½ÚG“_î•ñ‚ğPHContactPoints‚É‹l‚ß‚Ä‚¢‚­
+		/* ä»¥ä¸‹ã®æµã‚Œã§äº¤å·®ã‚’æ±‚ã‚ã‚‹
+			1. Solidã®BBoxãƒ¬ãƒ™ãƒ«ã§ã®äº¤å·®åˆ¤å®š(zè»¸ã‚½ãƒ¼ãƒˆ)ï¼äº¤å·®ã®ãŠãã‚Œã®ç„¡ã„çµ„ã‚’é™¤å¤–
+			2. å„Solidã®çµ„ã«ã¤ã„ã¦
+				2a. Shapeã®BBoxãƒ¬ãƒ™ãƒ«ã§ã®äº¤å·®åˆ¤å®š (æœªå®Ÿè£…)
+				2b. å„Shapeã®çµ„ã«ã¤ã„ã¦GJKã§äº¤å·®å½¢çŠ¶ã‚’å¾—ã‚‹
+				2c. äº¤å·®å½¢çŠ¶ã‹ã‚‰æ³•ç·šã‚’æ±‚ã‚ã€æ³•ç·šã«é–¢ã—ã¦å½¢çŠ¶ã‚’å°„å½±ã—ï¼Œãã®é ‚ç‚¹ã‚’æ¥è§¦ç‚¹ã¨ã™ã‚‹
+				2d. å¾—ã‚‰ã‚ŒãŸæ¥è§¦ç‚¹æƒ…å ±ã‚’PHContactPointsã«è©°ã‚ã¦ã„ã
 		*/		
 #ifdef REPORT_TIME
 		ptimerForCd.CountUS();
 #endif
 		int N = solids.size();
 
-		//1. BBoxƒŒƒxƒ‹‚ÌÕ“Ë”»’è
+		//1. BBoxãƒ¬ãƒ™ãƒ«ã®è¡çªåˆ¤å®š
 		Vec3f dir(0,0,1);
 		Edges edges;
 		edges.resize(2 * N);
@@ -485,20 +485,20 @@ public:
 #ifdef REPORT_TIME
 		DSTR << "  sort:" << ptimerForCd.CountUS();
 #endif
-		//’[‚©‚çŒ©‚Ä‚¢‚Á‚ÄCÚG‚Ì‰Â”\«‚ª‚ ‚éƒm[ƒh‚Ì”»’è‚ğ‚·‚éD
+		//ç«¯ã‹ã‚‰è¦‹ã¦ã„ã£ã¦ï¼Œæ¥è§¦ã®å¯èƒ½æ€§ãŒã‚ã‚‹ãƒãƒ¼ãƒ‰ã®åˆ¤å®šã‚’ã™ã‚‹ï¼
 		typedef std::set<int> SolidSet;
-		SolidSet cur;							//	Œ»İ‚ÌSolid‚ÌƒZƒbƒg
+		SolidSet cur;							//	ç¾åœ¨ã®Solidã®ã‚»ãƒƒãƒˆ
 		bool found = false;
 #ifdef _DEBUG
 		nMaxOverlapObject = 0;
 #endif
 		for(typename Edges::iterator it = edges.begin(); it != edges.end(); ++it){
-			if (it->bMin){						//	‰’[‚¾‚Á‚½‚çCƒŠƒXƒg“à‚Ì•¨‘Ì‚Æ”»’è
+			if (it->bMin){						//	åˆç«¯ã ã£ãŸã‚‰ï¼Œãƒªã‚¹ãƒˆå†…ã®ç‰©ä½“ã¨åˆ¤å®š
 				for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
 					int f1 = it->index;
 					int f2 = *itf;
 					if (f1 > f2) std::swap(f1, f2);
-					//2. Solid‚ÆSolid‚ÌÕ“Ë”»’è
+					//2. Solidã¨Solidã®è¡çªåˆ¤å®š
 #ifdef REPORT_TIME
 					ptimerForCd.Stop();
 #endif
@@ -512,7 +512,7 @@ public:
 				if (nMaxOverlapObject < (int)cur.size()) nMaxOverlapObject = cur.size();
 #endif
 			}else{
-				cur.erase(it->index);			//	I’[‚È‚Ì‚ÅíœD
+				cur.erase(it->index);			//	çµ‚ç«¯ãªã®ã§å‰Šé™¤ï¼
 			}
 		}
 #ifdef REPORT_TIME
@@ -521,22 +521,22 @@ public:
 		return found;
 	}
 
-	///< ‘S‘Ì‚ÌŒğ·‚ÌŒŸ’mC˜A‘±ÚGŒŸ’m(Continuous Collision Detect)”Å
+	///< å…¨ä½“ã®äº¤å·®ã®æ¤œçŸ¥ï¼Œé€£ç¶šæ¥è§¦æ¤œçŸ¥(Continuous Collision Detect)ç‰ˆ
 	bool ContDetect(unsigned int ct, double dt){
-		/* ˆÈ‰º‚Ì—¬‚ê‚ÅŒğ·‚ğ‹‚ß‚é
-			1. Solid‚ÌBBoxƒŒƒxƒ‹‚Å‚ÌŒğ·”»’è(z²ƒ\[ƒg)DŒğ·‚Ì‚¨‚»‚ê‚Ì–³‚¢‘g‚ğœŠO
-			2. ŠeSolid‚Ì‘g‚É‚Â‚¢‚Ä
-				2a. Shape‚ÌBBoxƒŒƒxƒ‹‚Å‚ÌŒğ·”»’è (–¢À‘•)
-				2b. ŠeShape‚Ì‘g‚É‚Â‚¢‚ÄGJK‚ÅŒğ·Œ`ó‚ğ“¾‚é
-				2c. Œğ·Œ`ó‚©‚ç–@ü‚ğ‹‚ßA–@ü‚ÉŠÖ‚µ‚ÄŒ`ó‚ğË‰e‚µC‚»‚Ì’¸“_‚ğÚG“_‚Æ‚·‚é
-				2d. “¾‚ç‚ê‚½ÚG“_î•ñ‚ğPHContactPoints‚É‹l‚ß‚Ä‚¢‚­
+		/* ä»¥ä¸‹ã®æµã‚Œã§äº¤å·®ã‚’æ±‚ã‚ã‚‹
+			1. Solidã®BBoxãƒ¬ãƒ™ãƒ«ã§ã®äº¤å·®åˆ¤å®š(zè»¸ã‚½ãƒ¼ãƒˆ)ï¼äº¤å·®ã®ãŠãã‚Œã®ç„¡ã„çµ„ã‚’é™¤å¤–
+			2. å„Solidã®çµ„ã«ã¤ã„ã¦
+				2a. Shapeã®BBoxãƒ¬ãƒ™ãƒ«ã§ã®äº¤å·®åˆ¤å®š (æœªå®Ÿè£…)
+				2b. å„Shapeã®çµ„ã«ã¤ã„ã¦GJKã§äº¤å·®å½¢çŠ¶ã‚’å¾—ã‚‹
+				2c. äº¤å·®å½¢çŠ¶ã‹ã‚‰æ³•ç·šã‚’æ±‚ã‚ã€æ³•ç·šã«é–¢ã—ã¦å½¢çŠ¶ã‚’å°„å½±ã—ï¼Œãã®é ‚ç‚¹ã‚’æ¥è§¦ç‚¹ã¨ã™ã‚‹
+				2d. å¾—ã‚‰ã‚ŒãŸæ¥è§¦ç‚¹æƒ…å ±ã‚’PHContactPointsã«è©°ã‚ã¦ã„ã
 		*/		
 #ifdef REPORT_TIME
 		ptimerForCd.CountUS();
 #endif
 		int N = solids.size();
 
-		//1. BBoxƒŒƒxƒ‹‚ÌÕ“Ë”»’è
+		//1. BBoxãƒ¬ãƒ™ãƒ«ã®è¡çªåˆ¤å®š
 		Vec3f dir(0,0,1);
 		Edges edges;
 		edges.resize(2 * N);
@@ -561,36 +561,36 @@ public:
 #ifdef REPORT_TIME
 		DSTR << "  sort:" << ptimerForCd.CountUS();
 #endif
-		//’[‚©‚çŒ©‚Ä‚¢‚Á‚ÄCÚG‚Ì‰Â”\«‚ª‚ ‚éƒm[ƒh‚Ì”»’è‚ğ‚·‚éD
+		//ç«¯ã‹ã‚‰è¦‹ã¦ã„ã£ã¦ï¼Œæ¥è§¦ã®å¯èƒ½æ€§ãŒã‚ã‚‹ãƒãƒ¼ãƒ‰ã®åˆ¤å®šã‚’ã™ã‚‹ï¼
 		typedef std::set<int> SolidSet;
-		SolidSet cur;							//	Œ»İ‚ÌSolid‚ÌƒZƒbƒg
+		SolidSet cur;							//	ç¾åœ¨ã®Solidã®ã‚»ãƒƒãƒˆ
 		bool found = false;
 #ifdef _DEBUG
 		nMaxOverlapObject = 0;
 #endif
 		for(typename Edges::iterator it = edges.begin(); it != edges.end(); ++it){
-			if (it->bMin){						//	‰’[‚¾‚Á‚½‚çCƒŠƒXƒg“à‚Ì•¨‘Ì‚Æ”»’è
+			if (it->bMin){						//	åˆç«¯ã ã£ãŸã‚‰ï¼Œãƒªã‚¹ãƒˆå†…ã®ç‰©ä½“ã¨åˆ¤å®š
 				for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
 					int f1 = it->index;
 					int f2 = *itf;
 					if (f1 > f2) std::swap(f1, f2);
-					//2. Solid‚ÆSolid‚ÌÕ“Ë”»’è
+					//2. Solidã¨Solidã®è¡çªåˆ¤å®š
 #ifdef REPORT_TIME
 					ptimerForCd.Stop();
 #endif
-					// ‘S‚Ä‚Ì„‘Ì‚Ì‘g‚İ‡‚í‚¹‚É‚Â‚¢‚ÄÚGŒŸ’m‚ğs‚¤
+					// å…¨ã¦ã®å‰›ä½“ã®çµ„ã¿åˆã‚ã›ã«ã¤ã„ã¦æ¥è§¦æ¤œçŸ¥ã‚’è¡Œã†
 					found |= solidPairs.item(f1, f2)->ContDetect((TEngine*)this, ct, dt); 
 #ifdef REPORT_TIME
 					ptimerForCd.Start();
 #endif
 				}
-				// ‰‚ß‚Íitf‚ª–³‚¢‚©‚ç‚±‚±‚©‚çn‚Ü‚é
+				// åˆã‚ã¯itfãŒç„¡ã„ã‹ã‚‰ã“ã“ã‹ã‚‰å§‹ã¾ã‚‹
 				cur.insert(it->index);
 #ifdef _DEBUG
 				if (nMaxOverlapObject < (int)cur.size()) nMaxOverlapObject = cur.size();
 #endif
 			}else{
-				cur.erase(it->index);			//	I’[‚È‚Ì‚ÅíœD
+				cur.erase(it->index);			//	çµ‚ç«¯ãªã®ã§å‰Šé™¤ï¼
 			}
 		}
 #ifdef REPORT_TIME

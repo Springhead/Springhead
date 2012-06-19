@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,7 +15,7 @@
 
 namespace Spr{;
 
-//ü”g”‚ğ“Ç‚İo‚·
+//å‘¨æ³¢æ•°ã‚’èª­ã¿å‡ºã™
 UTQPTimer::UTQPTimer(): stopWatch(0), startFlag(false)
 {
 	LARGE_INTEGER f;
@@ -26,7 +26,7 @@ UTQPTimer::UTQPTimer(): stopWatch(0), startFlag(false)
 int UTQPTimer::Freq(){
 	return (int)freq.quadPart;
 } 
-//ƒÊ•b’PˆÊ‚Å‘Ò‚Â
+//Î¼ç§’å˜ä½ã§å¾…ã¤
 void UTQPTimer::WaitUS(int time)
 {
 	LARGE_INTEGER time1,time2;
@@ -38,7 +38,7 @@ void UTQPTimer::WaitUS(int time)
 	}while(time1.QuadPart < time2.QuadPart);
 }
 
-//‘O‰ñŒÄ‚Ño‚³‚ê‚Ä‚©‚ç‚ÌŠÔ‚ğƒÊ•b’PˆÊ‚ÅŒv‘ª
+//å‰å›å‘¼ã³å‡ºã•ã‚Œã¦ã‹ã‚‰ã®æ™‚é–“ã‚’Î¼ç§’å˜ä½ã§è¨ˆæ¸¬
 int  UTQPTimer::CountUS()
 {	
 	LARGE_INTEGER now;
@@ -51,7 +51,7 @@ int  UTQPTimer::CountUS()
 	return retval;
 }
 
-//w’èƒ‹[ƒvŠÔ‚ğì¬
+//æŒ‡å®šãƒ«ãƒ¼ãƒ—æ™‚é–“ã‚’ä½œæˆ
 void UTQPTimer::CountAndWaitUS(int time)
 {
 	int elapsedtime;

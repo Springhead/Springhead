@@ -1,11 +1,11 @@
-#include <SciLab/SprSciLab.h>
+ï»¿#include <SciLab/SprSciLab.h>
 #include <Base/Affine.h>
 using namespace Spr;
 
 int main(){
 	if (!ScilabStart()) std::cout << "Error : ScilabStart \n";
 
-	//	s—ñ‚Ì“Ç‚Ý‘‚«
+	//	è¡Œåˆ—ã®èª­ã¿æ›¸ã
 	Matrix2f A;
 	A.Ex() = Vec2f(1,2);
 	A.Ey() = Vec2f(3,4);
@@ -40,7 +40,7 @@ int main(){
 	std::cout << y;
 	ScilabJob("clear;");
 
-	//	ƒOƒ‰ƒt•`‰æ
+	//	ã‚°ãƒ©ãƒ•æç”»
 	ScilabJob("t = 0:0.01:2*3.141592653;");
 	ScilabJob("x = sin(t);");
 	ScilabJob("y = cos(t);");

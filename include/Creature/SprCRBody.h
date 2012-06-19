@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,32 +14,32 @@ namespace Spr{;
 
 struct CRBoneIf;
 
-/// ƒNƒŠ[ƒ`ƒƒ‚Ìƒ{ƒfƒBƒ‚ƒfƒ‹‚ÌƒCƒ“ƒ^[ƒtƒFƒCƒX
+/// ã‚¯ãƒªãƒ¼ãƒãƒ£ã®ãƒœãƒ‡ã‚£ãƒ¢ãƒ‡ãƒ«ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹
 struct CRBodyIf : SceneObjectIf{
 	SPR_IFDEF(CRBody);
 
-	/** @brief ƒ‰ƒxƒ‹‚©‚ç\¬—v‘f‚ğ’T‚·
+	/** @brief ãƒ©ãƒ™ãƒ«ã‹ã‚‰æ§‹æˆè¦ç´ ã‚’æ¢ã™
 	*/
 	CRBoneIf* FindByLabel(UTString label);
 
-	/** @brief \¬ƒ{[ƒ“‚Ì”‚ğ“¾‚é
+	/** @brief æ§‹æˆãƒœãƒ¼ãƒ³ã®æ•°ã‚’å¾—ã‚‹
 	*/
 	int NBones();
 
-	/** @brief i”Ô–Ú‚Ì\¬ƒ{[ƒ“‚ğ“¾‚é
+	/** @brief iç•ªç›®ã®æ§‹æˆãƒœãƒ¼ãƒ³ã‚’å¾—ã‚‹
 	*/
 	CRBoneIf* GetBone(int i);
 
-	/** @brief ƒ{ƒfƒB‚ÌdSÀ•W‚ğ“¾‚é
+	/** @brief ãƒœãƒ‡ã‚£ã®é‡å¿ƒåº§æ¨™ã‚’å¾—ã‚‹
 	*/
 	Vec3d GetCenterOfMass();
 
-	/** @brief ƒ{ƒfƒB‚Ì‘¿—Ê‚ğ“¾‚é
+	/** @brief ãƒœãƒ‡ã‚£ã®ç·è³ªé‡ã‚’å¾—ã‚‹
 	*/
 	double GetSumOfMass();
 };
 
-/// ƒNƒŠ[ƒ`ƒƒ‚Ìƒ{ƒfƒBƒ‚ƒfƒ‹‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ã‚¯ãƒªãƒ¼ãƒãƒ£ã®ãƒœãƒ‡ã‚£ãƒ¢ãƒ‡ãƒ«ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRBodyDesc{
 	SPR_DESCDEF(CRBody);
 

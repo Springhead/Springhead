@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -31,7 +31,7 @@ float CDRoundCone::CalcVolume(){
 			(float)M_PI * (radius[0]*radius[0] + radius[0]*radius[1] + radius[1]*radius[1]) * length / 3.0f;
 }
 	
-// ƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚ğ‹‚ß‚é
+// ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã‚’æ±‚ã‚ã‚‹
 int CDRoundCone::Support(Vec3f&w, const Vec3f& v) const{
 	float normal_Z = (radius[0] - radius[1]) / length;
 	float n = v.norm();
@@ -44,16 +44,16 @@ int CDRoundCone::Support(Vec3f&w, const Vec3f& v) const{
 
 	if (-1 < normal_Z && normal_Z < 1) {
 		if (normal_Z < dir.Z()) {
-			// v‚Ì•û‚ªZ²‘O•û ¨ radius[1]‚ğg—p
+			// vã®æ–¹ãŒZè»¸å‰æ–¹ â†’ radius[1]ã‚’ä½¿ç”¨
 			w = dir*radius[1] + Vec3f(0,0, length/2.0);
 			return 1;
 		} else {
-			// v‚Ì•û‚ªZ²Œã•û ¨ radius[0]‚ğg—p
+			// vã®æ–¹ãŒZè»¸å¾Œæ–¹ â†’ radius[0]ã‚’ä½¿ç”¨
 			w = dir*radius[0] + Vec3f(0,0,-length/2.0);
 			return 0;
 		}
 	} else {
-		// ‚Ç‚¿‚ç‚©‚Ì‹…‚É•ïŠÜ‚³‚ê‚Ä‚¢‚é
+		// ã©ã¡ã‚‰ã‹ã®çƒã«åŒ…å«ã•ã‚Œã¦ã„ã‚‹
 		if (radius[0] < radius[1]) {
 			w = dir*radius[1] + Vec3f(0,0, length/2.0);
 		} else {
@@ -63,18 +63,18 @@ int CDRoundCone::Support(Vec3f&w, const Vec3f& v) const{
 	}
 }
 
-// Ø‚èŒû‚ğ‹‚ß‚é. ÚG‰ğÍ‚ğs‚¤.
+// åˆ‡ã‚Šå£ã‚’æ±‚ã‚ã‚‹. æ¥è§¦è§£æã‚’è¡Œã†.
 bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
-	//	Ø‚èŒû(ring.local)Œn‚Å‚Ì ƒJƒvƒZƒ‹‚ÌŒü‚«
+	//	åˆ‡ã‚Šå£(ring.local)ç³»ã§ã® ã‚«ãƒ—ã‚»ãƒ«ã®å‘ã
 	Vec3f dir = ring.localInv.Ori() * toW.Ori() * Vec3f(0,0,1);
 	Vec3f center = ring.localInv * toW.Pos();
 	float sign = center.X() > 0.0f ? 1.0f : -1.0f;
 
-	//	sinA : (r1-r0)/length ‚É‚È‚éB
-	//	sinB : Cutring–Ê‚Æ‰~“›–Ê‚Ìü‚Æ‚Ì‚È‚·Šp‚ª B
-	//	sinA+B = dir.X() ‚É‚È‚éB
+	//	sinA : (r1-r0)/length ã«ãªã‚‹ã€‚
+	//	sinB : Cutringé¢ã¨å††ç­’é¢ã®ç·šã¨ã®ãªã™è§’ãŒ B
+	//	sinA+B = dir.X() ã«ãªã‚‹ã€‚
 	float sinA = (radius[1]-radius[0]) / length;
-	if (-1 > (-sinA) || (-sinA) > 1) { return false; } // ‹…‘Ì‚É‚È‚Á‚Ä‚¢‚é
+	if (-1 > (-sinA) || (-sinA) > 1) { return false; } // çƒä½“ã«ãªã£ã¦ã„ã‚‹
 	float sinB = dir.X()*sign * sqrt(1-sinA*sinA)  -  sqrt(1-dir.X()*dir.X()) * sinA;
 
 	float r = radius[0];
@@ -85,22 +85,22 @@ bool CDRoundCone::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		r = radius[1];
 	}
 	center = center - (length/2) * dir;
-	if (sinB < 0.3f) { // ‘¤–Ê‚ªÚG–Ê‚É‚Ù‚Ú•½s‚Èê‡
-		float shrink = sqrt(1-dir.X()*dir.X());	//	ŒX‚¢‚Ä‚¢‚é‚½‚ß‚É‹——£‚ªk‚ŞŠ„‡
+	if (sinB < 0.3f) { // å´é¢ãŒæ¥è§¦é¢ã«ã»ã¼å¹³è¡Œãªå ´åˆ
+		float shrink = sqrt(1-dir.X()*dir.X());	//	å‚¾ã„ã¦ã„ã‚‹ãŸã‚ã«è·é›¢ãŒç¸®ã‚€å‰²åˆ
 		float start = -0.0f*length*shrink;
 		float end = 1.0f*length*shrink;
 
-		if (sinB > 1e-4){	//	Š®‘S‚É•½s‚Å‚È‚¢ê‡
+		if (sinB > 1e-4){	//	å®Œå…¨ã«å¹³è¡Œã§ãªã„å ´åˆ
 			float depth = r/shrink - sign*center.X();
 			float cosB = sqrt(1-sinB*sinB);
-			float is = depth / sinB * cosB;	//	ÚG–Ê‚Æ’†Sü‚ğ”¼Œa‚¸‚ç‚µ‚½ü‚Æ‚ÌŒğ“_
+			float is = depth / sinB * cosB;	//	æ¥è§¦é¢ã¨ä¸­å¿ƒç·šã‚’åŠå¾„ãšã‚‰ã—ãŸç·šã¨ã®äº¤ç‚¹
 			if (is < end) end = is;
 			if (end+length/20 < start){//0.001 < start){
 				DSTR << "CDRoundCone::FindCutRing() may have a problem" << std::endl;
 			}
 			if (end <= start) return false;
 		}
-		//	ring‚Éü•ª‚ğ’Ç‰Á
+		//	ringã«ç·šåˆ†ã‚’è¿½åŠ 
 		float lenInv = 1/sqrt(dir.Y()*dir.Y() + dir.Z()*dir.Z());
 		ring.lines.push_back(CDCutLine(Vec2f(-dir.Y(), -dir.Z())*lenInv, -start));
 		ring.lines.push_back(CDCutLine(Vec2f(dir.Y(), dir.Z())*lenInv, end));
@@ -115,14 +115,14 @@ Vec3d CDRoundCone::Normal(Vec3d p){
 	Vec2d	r = radius;
 	double	l = length;
 
-	// RoundCone‚Ì‘¤–Ê‚ÌŠp“xi‘¤–Ê‚ªZ²‚É‚’¼‚È‚Æ‚«0‹A•½s(‚Â‚Ü‚èƒJƒvƒZƒ‹Œ^)‚Ì‚Æ‚«90‹j
+	// RoundConeã®å´é¢ã®è§’åº¦ï¼ˆå´é¢ãŒZè»¸ã«å‚ç›´ãªã¨ã0Â°ã€å¹³è¡Œ(ã¤ã¾ã‚Šã‚«ãƒ—ã‚»ãƒ«å‹)ã®ã¨ã90Â°ï¼‰
 	double theta = acos((r[1]-r[0])/l);
 
 	if ( (p[2] > (r[0]*cos(theta) + l/2.0)) || (p[2] < (r[1]*cos(theta) - l/2.0)) ) {
-		// ÚG“_‚ª‚Ç‚¿‚ç‚©‚Ì‹…‘Ì‚É‚ ‚éê‡F
+		// æ¥è§¦ç‚¹ãŒã©ã¡ã‚‰ã‹ã®çƒä½“ã«ã‚ã‚‹å ´åˆï¼š
 		return p.unit();
 	} else {
-		// ÚG“_‚ª‹…‘Ì‚Æ‹…‘Ì‚ÌŠÔ‚É‚ ‚éê‡F
+		// æ¥è§¦ç‚¹ãŒçƒä½“ã¨çƒä½“ã®é–“ã«ã‚ã‚‹å ´åˆï¼š
 		Vec3d pNormal = p;
 		pNormal[2] = 0; pNormal = pNormal.unit() * sin(theta);
 		pNormal[2] = cos(theta);
@@ -131,20 +131,20 @@ Vec3d CDRoundCone::Normal(Vec3d p){
 }
 
 double CDRoundCone::CurvatureRadius(Vec3d p){
-	/// ‰º‹L‚ÌŒvZ‚ÍŒ»“_‚ÅƒoƒO‚à‚¿B
-	/// RoundCone‚Ì—¼’[‚Ì”¼Œa‚ª“¯‚¶‚Å‚ ‚é‚Æ‚«‚ÉIND‚É‚È‚é
-	/// ‚¢‚¸‚êC³‚·‚é‚±‚ÆI ('09/02/17, mitake)
+	/// ä¸‹è¨˜ã®è¨ˆç®—ã¯ç¾æ™‚ç‚¹ã§ãƒã‚°ã‚‚ã¡ã€‚
+	/// RoundConeã®ä¸¡ç«¯ã®åŠå¾„ãŒåŒã˜ã§ã‚ã‚‹ã¨ãã«INDã«ãªã‚‹
+	/// ã„ãšã‚Œä¿®æ­£ã™ã‚‹ã“ã¨ï¼ ('09/02/17, mitake)
 
 	Vec2d	r = radius;
 	double	l = length;
 
-	// RoundCone‚Ì‘¤–Ê‚ÌŠp“xi‘¤–Ê‚ªZ²‚É‚’¼‚È‚Æ‚«0‹A•½s(‚Â‚Ü‚èƒJƒvƒZƒ‹Œ^)‚Ì‚Æ‚«90‹j
+	// RoundConeã®å´é¢ã®è§’åº¦ï¼ˆå´é¢ãŒZè»¸ã«å‚ç›´ãªã¨ã0Â°ã€å¹³è¡Œ(ã¤ã¾ã‚Šã‚«ãƒ—ã‚»ãƒ«å‹)ã®ã¨ã90Â°ï¼‰
 	double theta = acos((r[1]-r[0])/l);
-	// ÚG“_‚ÌZÀ•W
+	// æ¥è§¦ç‚¹ã®Zåº§æ¨™
 	double Zc = p[2];
 
 	/*
-	ÚG“_‚ª‚Ç‚¿‚ç‚©‚Ì‹…‘Ì‚É‚ ‚éê‡F
+	æ¥è§¦ç‚¹ãŒã©ã¡ã‚‰ã‹ã®çƒä½“ã«ã‚ã‚‹å ´åˆï¼š
 	*/
 	if (Zc > (r[0]*cos(theta) + l/2.0)) {
 		return r[0];
@@ -153,37 +153,37 @@ double CDRoundCone::CurvatureRadius(Vec3d p){
 	}
 
 	/*
-	ÚG“_‚ª‹…‘Ì‚Æ‹…‘Ì‚ÌŠÔ‚É‚ ‚éê‡F
-	ÚG“_‚ğ’Ê‚èAÚG“_‚ÌˆÊ’u‚Å‘¤–Ê‚Æ’¼Œğ‚·‚é’f–Ê‚É‚¨‚¯‚éRoundCone‚ÌØ’f‚ğl‚¦‚éB
-	‚»‚Ì’f–Ê‚Í‘È‰~‚Æ‚È‚èA‚»‚Ì‘È‰~‚ÌÅ¬‹È—¦”¼Œai’·²‚Ì’[‚É‚¨‚¯‚é‹È—¦”¼Œaj‚ª‹‚ß‚é‚à‚Ì‚Æ‚È‚éB
+	æ¥è§¦ç‚¹ãŒçƒä½“ã¨çƒä½“ã®é–“ã«ã‚ã‚‹å ´åˆï¼š
+	æ¥è§¦ç‚¹ã‚’é€šã‚Šã€æ¥è§¦ç‚¹ã®ä½ç½®ã§å´é¢ã¨ç›´äº¤ã™ã‚‹æ–­é¢ã«ãŠã‘ã‚‹RoundConeã®åˆ‡æ–­ã‚’è€ƒãˆã‚‹ã€‚
+	ãã®æ–­é¢ã¯æ¥•å††ã¨ãªã‚Šã€ãã®æ¥•å††ã®æœ€å°æ›²ç‡åŠå¾„ï¼ˆé•·è»¸ã®ç«¯ã«ãŠã‘ã‚‹æ›²ç‡åŠå¾„ï¼‰ãŒæ±‚ã‚ã‚‹ã‚‚ã®ã¨ãªã‚‹ã€‚
 	*/
 
-	/// -- RoundCone‚ğ‰„’·‚µ‚½‰~‚Ì’¸“_‚ÌZÀ•W
+	/// -- RoundConeã‚’å»¶é•·ã—ãŸå††éŒã®é ‚ç‚¹ã®Zåº§æ¨™
 	double Z0 = l/2*(r[1]+r[0])/(r[1]-r[0]);
 
-	/// -- Z-RÀ•WŒn‚ÅŒ©‚½‚Æ‚«‚Ì‘¤–Ê‚ÌŒX‚«
+	/// -- Z-Råº§æ¨™ç³»ã§è¦‹ãŸã¨ãã®å´é¢ã®å‚¾ã
 	double M1 = tan(Rad(90) - theta);
-	/// -- Z-RÀ•WŒn‚ÅŒ©‚½‚Æ‚«‚Ì’f–Ê‚ÌŒX‚«
+	/// -- Z-Råº§æ¨™ç³»ã§è¦‹ãŸã¨ãã®æ–­é¢ã®å‚¾ã
 	double M2 = tan(theta);
 
-	/// -- Ø’f–Ê‚ÌŒü‚±‚¤‘¤‚Ì“_
+	/// -- åˆ‡æ–­é¢ã®å‘ã“ã†å´ã®ç‚¹
 	double Za = (M1*Z0-M2*Zc)/(M1-M2);
 	Vec2d pA = Vec2d(Za, -M1*Za + M1*Z0);
-	/// -- Ø’f–Ê‚Ì‚±‚Á‚¿‘¤‚Ì“_
+	/// -- åˆ‡æ–­é¢ã®ã“ã£ã¡å´ã®ç‚¹
 	double Zb = (M1*Z0+M2*Zc)/(M1+M2);
 	Vec2d pB = Vec2d(Zb,  M1*Zb - M1*Z0);
-	/// -- RoundCone‚ğ‰„’·‚µ‚½‰~‚Ì’¸“_
+	/// -- RoundConeã‚’å»¶é•·ã—ãŸå††éŒã®é ‚ç‚¹
 	Vec2d p0 = Vec2d(Z0, 0);
 
-	/// -- Ø’f‘È‰~‚Ì‘å‚«‚³‚ğl‚¦‚é‚½‚ß‚ÌOŠpŒ`‚ÌO•Ó
+	/// -- åˆ‡æ–­æ¥•å††ã®å¤§ãã•ã‚’è€ƒãˆã‚‹ãŸã‚ã®ä¸‰è§’å½¢ã®ä¸‰è¾º
 	double Ta = (pB - p0).norm(), Tb = (pA - p0).norm(), Tc = (pA - pB).norm();
-	/// -- Ø’f‘È‰~‚Ì’·²”¼Œa
+	/// -- åˆ‡æ–­æ¥•å††ã®é•·è»¸åŠå¾„
 	double eL = Tc/2;
-	/// -- Ø’f‘È‰~‚Ì’†S‚©‚çÅ“_‚Ü‚Å‚Ì‹——£i’·²”¼Œa‚©‚çTa,Tb,Tc‚©‚ç‚È‚éOŠpŒ`‚Ì“àÚ‰~”¼Œa‚ğˆø‚¢‚½‚à‚Ì‚É‚È‚éj
+	/// -- åˆ‡æ–­æ¥•å††ã®ä¸­å¿ƒã‹ã‚‰ç„¦ç‚¹ã¾ã§ã®è·é›¢ï¼ˆé•·è»¸åŠå¾„ã‹ã‚‰Ta,Tb,Tcã‹ã‚‰ãªã‚‹ä¸‰è§’å½¢ã®å†…æ¥å††åŠå¾„ã‚’å¼•ã„ãŸã‚‚ã®ã«ãªã‚‹ï¼‰
 	double f = eL - (Ta*Tc)/(Ta+Tb+Tc);
-	/// -- Ø’f‘È‰~‚Ì’Z²”¼Œa
+	/// -- åˆ‡æ–­æ¥•å††ã®çŸ­è»¸åŠå¾„
 	double eS = sqrt(eL*eL - f*f);
-	/// -- Ø’f‘È‰~‚ÌÅ¬‹È—¦”¼Œa
+	/// -- åˆ‡æ–­æ¥•å††ã®æœ€å°æ›²ç‡åŠå¾„
 	double Rmin = eS*eS / eL;
 
 	return Rmin;
@@ -191,11 +191,11 @@ double CDRoundCone::CurvatureRadius(Vec3d p){
 
 Matrix3f CDRoundCone::CalcMomentOfInertia(){
 	Matrix3f ans;
-	//‰~‘ä‚Ì•”•ª‚Í‰~’Œ‹ß—
+	//å††éŒå°ã®éƒ¨åˆ†ã¯å††æŸ±è¿‘ä¼¼
 	// http://www12.plala.or.jp/ksp/mechanics/inertiaTable1/
 	// http://www.dynamictouch.matrix.jp/tensormodel.php
 
-	float r = (radius[0] + radius[1]) * 0.5f;	 //‰~’Œ‚Ì”¼Œa
+	float r = (radius[0] + radius[1]) * 0.5f;	 //å††æŸ±ã®åŠå¾„
 	
 	ans[0][0] = ((r * r)/4.0f + (length*length)/12.0f + 83.0f/320.0f * ( radius[0] * radius[0] +  radius[1] * radius[1]))+ length * length / 2.0f; 
 	ans[0][1] = 0.0f;
@@ -233,52 +233,52 @@ int CDRoundCone::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* res
 	const float eps = 1.0e-10f;
 	Vec3f p;
 	int num = 0;
-	Vec3f sCenter[2];	//‹…‚Ì’†SˆÊ’u
+	Vec3f sCenter[2];	//çƒã®ä¸­å¿ƒä½ç½®
 	sCenter[0] = Vec3f(0.0f,0.0f,length);
 	sCenter[1] = Vec3f(0.0f,0.0f,-length);
 
-	//‹…•”•ª‚Ì”»’è
+	//çƒéƒ¨åˆ†ã®åˆ¤å®š
 	for(int i=0; i<2; i++){
-		const Vec3f n = sCenter[i] - origin;		 //–Ê‚Ì–@ü = ƒJƒƒ‰‚Æ‹…‚ÌŒ´“_‚ğŒ‹‚ÔƒxƒNƒgƒ‹
-		float tmp = n * dir;						 //–Ê‚Ì–@ü‚Æƒ|ƒCƒ“ƒ^‚ÌƒxƒNƒgƒ‹‚Æ‚Ì“àÏ
-		if(abs(tmp) < eps)							 //“àÏ‚ª¬‚³‚¢ê‡‚Í”»’è‚µ‚È‚¢
+		const Vec3f n = sCenter[i] - origin;		 //é¢ã®æ³•ç·š = ã‚«ãƒ¡ãƒ©ã¨çƒã®åŸç‚¹ã‚’çµã¶ãƒ™ã‚¯ãƒˆãƒ«
+		float tmp = n * dir;						 //é¢ã®æ³•ç·šã¨ãƒã‚¤ãƒ³ã‚¿ã®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã®å†…ç©
+		if(abs(tmp) < eps)							 //å†…ç©ãŒå°ã•ã„å ´åˆã¯åˆ¤å®šã—ãªã„
 			continue;
-		float s = ((sCenter[i] - origin) * n) / tmp; //ƒJƒƒ‰‚Æ–Ê‚Ì‹——£ 
+		float s = ((sCenter[i] - origin) * n) / tmp; //ã‚«ãƒ¡ãƒ©ã¨é¢ã®è·é›¢ 
 		if(s < 0.0)
 			continue;
-		p = origin + dir * s;						 //’¼ü‚Æ–Ê‚ÌŒğ“_p = ƒJƒƒ‰À•WŒn‚ÌŒ´“_+ƒJƒƒ‰À•WŒn‚©‚ç–Ê‚Ö‚ÌƒxƒNƒgƒ‹*‹——£ (ShapeÀ•WŒn)
-		Vec3f po = p-sCenter[i];					 //‹…‚Ì’†S‚ğŒ´“_‚Æ‚µ‚½‚ÌŒğ“_‚ÌˆÊ’u
-		// ‰~‚Ì“à•”‚É‚ ‚é‚©
+		p = origin + dir * s;						 //ç›´ç·šã¨é¢ã®äº¤ç‚¹p = ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã®åŸç‚¹+ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã‹ã‚‰é¢ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«*è·é›¢ (Shapeåº§æ¨™ç³»)
+		Vec3f po = p-sCenter[i];					 //çƒã®ä¸­å¿ƒã‚’åŸç‚¹ã¨ã—ãŸæ™‚ã®äº¤ç‚¹ã®ä½ç½®
+		// å††ã®å†…éƒ¨ã«ã‚ã‚‹ã‹
 		if(po.norm()<GetRadius()[i]){
 			result[num] = p;
 			offset[num] = s;
 			num++;
 		}
 	}
-	//‰~’Œ•”•ª‚Ì”»’è
-	const Vec3f n =  origin;						 //ƒJƒƒ‰•ûŒü‚Ö‚Ì‚’¼‚È’f–Ê‚Ì–@ü = ƒJƒƒ‰‚Æshape‚ÌŒ´“_‚ğŒ‹‚ÔƒxƒNƒgƒ‹
-	float tmp = n * dir;							 //–Ê‚Ì–@ü‚Æƒ|ƒCƒ“ƒ^‚ÌƒxƒNƒgƒ‹‚Æ‚Ì“àÏ
+	//å††æŸ±éƒ¨åˆ†ã®åˆ¤å®š
+	const Vec3f n =  origin;						 //ã‚«ãƒ¡ãƒ©æ–¹å‘ã¸ã®å‚ç›´ãªæ–­é¢ã®æ³•ç·š = ã‚«ãƒ¡ãƒ©ã¨shapeã®åŸç‚¹ã‚’çµã¶ãƒ™ã‚¯ãƒˆãƒ«
+	float tmp = n * dir;							 //é¢ã®æ³•ç·šã¨ãƒã‚¤ãƒ³ã‚¿ã®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã®å†…ç©
 
 	for(int i=0; i<1; i++){
-		if(abs(tmp) < eps)							 //“àÏ‚ª¬‚³‚¢ê‡‚Í”»’è‚µ‚È‚¢
+		if(abs(tmp) < eps)							 //å†…ç©ãŒå°ã•ã„å ´åˆã¯åˆ¤å®šã—ãªã„
 			continue;
-		float s = ((- origin) * n) / tmp;			 //ƒJƒƒ‰‚Æ–Ê‚Ì‹——£ 
+		float s = ((- origin) * n) / tmp;			 //ã‚«ãƒ¡ãƒ©ã¨é¢ã®è·é›¢ 
 		if(s < 0.0)
 			continue;
-		p = origin + dir * s;						 //’¼ü‚Æ–Ê‚ÌŒğ“_p = ƒJƒƒ‰À•WŒn‚ÌŒ´“_+ƒJƒƒ‰À•WŒn‚©‚ç–Ê‚Ö‚ÌƒxƒNƒgƒ‹*‹——£ (ShapeÀ•WŒn)
+		p = origin + dir * s;						 //ç›´ç·šã¨é¢ã®äº¤ç‚¹p = ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã®åŸç‚¹+ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã‹ã‚‰é¢ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«*è·é›¢ (Shapeåº§æ¨™ç³»)
 		
-		Vec2f pr = Vec2f(p.x,p.y);					 //xy•½–Ê‚Ìp
+		Vec2f pr = Vec2f(p.x,p.y);					 //xyå¹³é¢ã®p
 		Vec2f r = GetRadius();
 		if(r[0]<r[1]) r[0] = r[1]; 
-		// ‰~’Œ‚Ì“à•”‚É‚ ‚é‚©
+		// å††æŸ±ã®å†…éƒ¨ã«ã‚ã‚‹ã‹
 		if(pr.norm()<r[0] && abs(p.z)<=GetLength()*0.5){
 			result[num] = p;
 			offset[num] = s;
 			num++;
 		}
-		/*’ˆÓ
-		Œ»İ‚Í‰~’Œ‚Å”»’è‚ğs‚Á‚Ä‚¢‚é‚ªA–{—ˆ‚Í‰~‚Ì“à•”‚É‚ ‚é‚©”»’è‚·‚é•K—v‚ª‚ ‚éB
-		C³‚ª•K—v
+		/*æ³¨æ„
+		ç¾åœ¨ã¯å††æŸ±ã§åˆ¤å®šã‚’è¡Œã£ã¦ã„ã‚‹ãŒã€æœ¬æ¥ã¯å††éŒã®å†…éƒ¨ã«ã‚ã‚‹ã‹åˆ¤å®šã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
+		ä¿®æ­£ãŒå¿…è¦
 		*/
 	}
 	return num;

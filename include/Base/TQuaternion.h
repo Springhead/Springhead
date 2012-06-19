@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,19 +17,19 @@ namespace Spr{;
 /**	\addtogroup gpLinearAlgebra	*/
 //@{
 /**	@file TQuaternion.h
-	ƒNƒH[ƒ^ƒjƒIƒ“ƒNƒ‰ƒX‚Ì’è‹`
+	ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã‚¯ãƒ©ã‚¹ã®å®šç¾©
  */
 
-/**	Quaternion/4Œ³”D3x3s—ñ‚Ì‘ã‚í‚è‚É‰ñ“]‚ğ•\‚·‚½‚ß‚Ég‚¦‚éD
-	4•Ï”‚ÅÏ‚ŞD•âŠÔ‚â”÷•ªEÏ•ª‚ª‚â‚è‚â‚·‚¢D<br>
-	TVec3‚Æ‚ÌŠ|‚¯Z‚ÍC‰ñ“]•ÏŠ·‚ÅƒI[ƒo[ƒ[ƒh‚³‚ê‚Ä‚¢‚éD
+/**	Quaternion/4å…ƒæ•°ï¼3x3è¡Œåˆ—ã®ä»£ã‚ã‚Šã«å›è»¢ã‚’è¡¨ã™ãŸã‚ã«ä½¿ãˆã‚‹ï¼
+	4å¤‰æ•°ã§æ¸ˆã‚€ï¼è£œé–“ã‚„å¾®åˆ†ãƒ»ç©åˆ†ãŒã‚„ã‚Šã‚„ã™ã„ï¼<br>
+	TVec3ã¨ã®æ›ã‘ç®—ã¯ï¼Œå›è»¢å¤‰æ›ã§ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã•ã‚Œã¦ã„ã‚‹ï¼
 */
 template<class ET>
 class TQuaternion:public PTM::TVectorBase<4, TVecDesc<TQuaternion<ET>, ET> >{
 public:
 	typedef TVecDesc<TQuaternion<ET>, ET> desc;
 	typedef PTM::TVectorBase<4, desc> base_type;
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.	@see ::DEF_TVECTOR_BASIC_MEMBER
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.	@see ::DEF_TVECTOR_BASIC_MEMBER
 	DEF_TVECTOR_BASIC_MEMBER(TQuaternion);
 	union{
 		ET data[4];
@@ -37,40 +37,40 @@ public:
 			ET w,x,y,z;
 		};
 	};
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	ET& item_impl(size_t i){ return data[i]; }
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const ET& item_impl(size_t i) const { return data[i]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return 1; }
 
-	///	3ŸŒ³‚Ì•”•ªƒxƒNƒgƒ‹
+	///	3æ¬¡å…ƒã®éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 	typedef PTM::TSubVector<3, desc> vector_type;
-	///@name •Ï”ƒAƒNƒZƒX
+	///@name å¤‰æ•°ã‚¢ã‚¯ã‚»ã‚¹
 	//@{
-	///	w¬•ª
+	///	wæˆåˆ†
 	const element_type& W() const { return w; }
-	///	x¬•ª
+	///	xæˆåˆ†
 	const element_type& X() const { return x; }
-	///	y¬•ª
+	///	yæˆåˆ†
 	const element_type& Y() const { return y; }
-	///	z¬•ª
+	///	zæˆåˆ†
 	const element_type& Z() const { return z; }
 	///
 	const vector_type& V() const {return this->sub_vector(1,vector_type());}
 
-	///	z¬•ª
+	///	zæˆåˆ†
 	element_type& W(){ return w; }
-	///	x¬•ª
+	///	xæˆåˆ†
 	element_type& X(){ return x; }
-	///	y¬•ª
+	///	yæˆåˆ†
 	element_type& Y(){ return y; }
-	///	z¬•ª
+	///	zæˆåˆ†
 	element_type& Z(){ return z; }
 	/// 
 	vector_type& V() {return this->sub_vector(1,vector_type());}
 
-	/// ‰ñ“]ƒxƒNƒgƒ‹D0..PI‚Ì”ÍˆÍ‚Å‰ñ“]ƒxƒNƒgƒ‹‚ğ•Ô‚·D
+	/// å›è»¢ãƒ™ã‚¯ãƒˆãƒ«ï¼0..PIã®ç¯„å›²ã§å›è»¢ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™ï¼
 	TVec3<ET> RotationHalf() {
 		TQuaternion<ET> tmp;
 		if (W() < 0) tmp = -*this;
@@ -86,9 +86,9 @@ public:
 		r *= theta;
 		return r;
 	}
-	///	‰ñ“]ƒxƒNƒgƒ‹2D 0..2PI‚Ì”ÍˆÍ‚Å‰ñ“]ƒxƒNƒgƒ‹‚ğ•Ô‚·D	angle ‚©‚çŠÖ”–¼•ÏX
+	///	å›è»¢ãƒ™ã‚¯ãƒˆãƒ«2ï¼ 0..2PIã®ç¯„å›²ã§å›è»¢ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™ï¼	angle ã‹ã‚‰é–¢æ•°åå¤‰æ›´
 	TVec3<ET> Rotation(){
-		//	W() = cos(theta/2) ‚È‚Ì‚Å
+		//	W() = cos(theta/2) ãªã®ã§
 		TVec3<ET> r;
 		if (W() < -1) W() = -1;
 		if (W() > 1) W() = 1;
@@ -102,7 +102,7 @@ public:
 		return r;
 	}
 
-	/// ‰ñ“]²
+	/// å›è»¢è»¸
 	TVec3<ET> Axis()const{
 		TVec3<ET> r;
 		r = sub_vector(1, vector_type());
@@ -111,16 +111,16 @@ public:
 			r = r/len;
 		}
 		else{	
-			// r‚Ìƒmƒ‹ƒ€‚ª0‚Æ‚¢‚¤‚±‚Æ‚Í‰ñ“]Šp“x‚ª0‚Æ‚¢‚¤‚±‚Æ‚È‚Ì‚Å‰ñ“]²‚Í”CˆÓD
-			// 0ƒxƒNƒgƒ‹‚ğ•Ô‚·‚í‚¯‚É‚Í‚¢‚©‚È‚¢‚Ì‚Å[1 0 0]‚ğ•Ô‚·
+			// rã®ãƒãƒ«ãƒ ãŒ0ã¨ã„ã†ã“ã¨ã¯å›è»¢è§’åº¦ãŒ0ã¨ã„ã†ã“ã¨ãªã®ã§å›è»¢è»¸ã¯ä»»æ„ï¼
+			// 0ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™ã‚ã‘ã«ã¯ã„ã‹ãªã„ã®ã§[1 0 0]ã‚’è¿”ã™
 			return TVec3<ET>(1, 0, 0);
 		}
 		return r;
 	}
 
-	/// ‰ñ“]Šp“x (angle‚ÉŠÖ”–¼‚ğ•ÏX‚·‚é—\’è)
+	/// å›è»¢è§’åº¦ (angleã«é–¢æ•°åã‚’å¤‰æ›´ã™ã‚‹äºˆå®š)
 	ET Theta()const{
-		/// ”’lŒë·‚ÅW‚ª1.0‚ğã‰ñ‚é‚ÆƒGƒ‰[‚·‚éê‡‚ª‚ ‚é
+		/// æ•°å€¤èª¤å·®ã§WãŒ1.0ã‚’ä¸Šå›ã‚‹ã¨ã‚¨ãƒ©ãƒ¼ã™ã‚‹å ´åˆãŒã‚ã‚‹
 		double w = W();
 		w = std::min(w,  1.0);
 		w = std::max(w, -1.0);
@@ -128,9 +128,9 @@ public:
 	}
 	//@}
 
-	///@name ‰Šú‰»E\’z
+	///@name åˆæœŸåŒ–ãƒ»æ§‹ç¯‰
 	//@{
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	TQuaternion(element_type wi, element_type xi, element_type yi, element_type zi){ W() = wi; X() = xi; Y() = yi; Z() = zi;}
 	template <class B>
 	void InitDirect(element_type a, const PTM::TVectorBase<3, B> v){
@@ -157,14 +157,14 @@ public:
 	}
 
 	//@}
-	///‹¤–ğ
+	///å…±å½¹
 	void Conjugate() { V() = -V(); }
 	///	
 	TQuaternion Conjugated() const { TQuaternion rv(*this); rv.Conjugate(); return rv;}
-	///‹t
+	///é€†
 	TQuaternion Inv() const { return Conjugated() / this->square(); }
 
-	///‰ñ“]s—ñ•ÏŠ·
+	///å›è»¢è¡Œåˆ—å¤‰æ›
 	template<class AM> void FromMatrix(const AM& m)
 	{
 		ET tr = m[0][0] + m[1][1] + m[2][2] + 1;
@@ -208,11 +208,11 @@ public:
 		mat[1][2] = AMET( 2.0 * (Y()*Z() - X()*W()) );
 		mat[2][2] = AMET( 1.0 - 2.0 * (X()*X() + Y()*Y()) );
 	}
-	///	ƒIƒCƒ‰[Šp(Y²(heading), Z²(attitude), X²(bank)‚Ì‡‚ÌƒIƒCƒ‰[Šp)‚Ö•ÏŠ·
-	/*	ƒIƒCƒ‰[Šp‚ÍŠÖß‚Ì‡”Ô‚É‚æ‚Á‚Ä‚¢‚ë‚¢‚ë‚È’è‹`‚ª‚ ‚éB
-		‚±‚±‚Å‚ÍAY²¨Z²¨X²‚Ì‡‚ğl‚¦‚Ä‚¢‚éB
-		heading, attitude, bank‚ÌŒÄ‚Ñ–¼‚ÍAÔ‚ª‰E‚ğŒü‚¢‚Ä‚¢‚éê‡‚ğl‚¦‚é‚ÆA
-		”[“¾‚¢‚­‚Æv‚¢‚Ü‚·B
+	///	ã‚ªã‚¤ãƒ©ãƒ¼è§’(Yè»¸(heading), Zè»¸(attitude), Xè»¸(bank)ã®é †ã®ã‚ªã‚¤ãƒ©ãƒ¼è§’)ã¸å¤‰æ›
+	/*	ã‚ªã‚¤ãƒ©ãƒ¼è§’ã¯é–¢ç¯€ã®é †ç•ªã«ã‚ˆã£ã¦ã„ã‚ã„ã‚ãªå®šç¾©ãŒã‚ã‚‹ã€‚
+		ã“ã“ã§ã¯ã€Yè»¸â†’Zè»¸â†’Xè»¸ã®é †ã‚’è€ƒãˆã¦ã„ã‚‹ã€‚
+		heading, attitude, bankã®å‘¼ã³åã¯ã€è»ŠãŒå³ã‚’å‘ã„ã¦ã„ã‚‹å ´åˆã‚’è€ƒãˆã‚‹ã¨ã€
+		ç´å¾—ã„ãã¨æ€ã„ã¾ã™ã€‚
 	*/
 	template <class VET> void ToEuler(TVec3<VET>& v)const{
 		ET poleCheck = X()*Y() + Z()*W();
@@ -231,7 +231,7 @@ public:
 			bank = atan2(2*X()*W()-2*Y()*Z() , 1 - 2*X()*X() - 2*Z()*Z());
 		}
 	}
-	///	ƒIƒCƒ‰[Šp(Y²(heading), Z²(attitude), X²(bank)‚Ì‡‚ÌƒIƒCƒ‰[Šp)‚©‚ç•ÏŠ·
+	///	ã‚ªã‚¤ãƒ©ãƒ¼è§’(Yè»¸(heading), Zè»¸(attitude), Xè»¸(bank)ã®é †ã®ã‚ªã‚¤ãƒ©ãƒ¼è§’)ã‹ã‚‰å¤‰æ›
 	template <class VET> void FromEuler(const TVec3<VET>& v){
 		VET heading = v[0];
 		VET attitude = v[1];
@@ -249,7 +249,7 @@ public:
 		Y() = s1*c2*c3 + c1*s2*s3;
 		Z() = c1*s2*c3 - s1*c2*s3;
 	}
-	///lhs‚ğ‰ñ“]‚µ‚Ärhs‚Éˆê’v‚³‚¹‚éƒNƒEƒH[ƒ^ƒjƒIƒ“
+	///lhsã‚’å›è»¢ã—ã¦rhsã«ä¸€è‡´ã•ã›ã‚‹ã‚¯ã‚¦ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³
 	void RotationArc(const TVec3<ET>& lhs, const TVec3<ET>& rhs){
 		TVec3<ET> v0, v1, c;
 		ET d, s;
@@ -258,7 +258,7 @@ public:
 		c = PTM::cross(v0, v1);
 		d = PTM::dot(v0, v1);
 		if(d==-1){
-			// lhs‚Ærhs‚ª³”½‘Î‚ÌŒü‚«‚Ì‚Æ‚«‚Éƒ[ƒŠ„‚è‚ğ‹N‚±‚µ‚Ä‚¢‚½‚Ì‚Åikko‚ªŸè‚É‘‚«‰Á‚¦‚½ (07/08/27)
+			// lhsã¨rhsãŒæ­£åå¯¾ã®å‘ãã®ã¨ãã«ã‚¼ãƒ­å‰²ã‚Šã‚’èµ·ã“ã—ã¦ã„ãŸã®ã§ikkoãŒå‹æ‰‹ã«æ›¸ãåŠ ãˆãŸ (07/08/27)
 			W() = 0;
 			V() = PTM::cross(v0, (v0==TVec3<ET>(1,0,0) ? TVec3<ET>(0,1,0) : TVec3<ET>(1,0,0))).unit();
 		}
@@ -269,7 +269,7 @@ public:
 		}
 	}
 
-	///ƒIƒCƒ‰[Šp‚Åw’è (FromEuler‚Æ‚Ü‚Á‚½‚­“¯‚¶)
+	///ã‚ªã‚¤ãƒ©ãƒ¼è§’ã§æŒ‡å®š (FromEulerã¨ã¾ã£ãŸãåŒã˜)
 	void Euler(ET heading, ET attitude, ET bank) {
 		ET c1 = cos(heading / 2);
 		ET s1 = sin(heading / 2);
@@ -284,35 +284,35 @@ public:
 		Z() = c1*s2*c3 - s1*c2*s3;
 	}
 
-	/** @brief Šp‘¬“x‚©‚çquaternion‚ÌŠÔ”÷•ª‚ğŒvZ
-		@param w Šp‘¬“x
+	/** @brief è§’é€Ÿåº¦ã‹ã‚‰quaternionã®æ™‚é–“å¾®åˆ†ã‚’è¨ˆç®—
+		@param w è§’é€Ÿåº¦
 
-		‚±‚Ìquaternion‚ÆŠp‘¬“xw‚©‚çCquaternion‚ÌŠÔ”÷•ª‚ğŒvZ‚·‚éD
-		‚½‚¾‚µw‚Í‰ñ“]Œ³iƒ[ƒ‹ƒhjÀ•WŒn‚©‚çŒ©‚½‰ñ“]æiƒ[ƒJƒ‹jÀ•WŒn‚ÌŠp‘¬“x‚ğ
-		‰ñ“]Œ³À•WŒn‚Å•\‚í‚µ‚½‚à‚ÌD
+		ã“ã®quaternionã¨è§’é€Ÿåº¦wã‹ã‚‰ï¼Œquaternionã®æ™‚é–“å¾®åˆ†ã‚’è¨ˆç®—ã™ã‚‹ï¼
+		ãŸã ã—wã¯å›è»¢å…ƒï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰ï¼‰åº§æ¨™ç³»ã‹ã‚‰è¦‹ãŸå›è»¢å…ˆï¼ˆãƒ­ãƒ¼ã‚«ãƒ«ï¼‰åº§æ¨™ç³»ã®è§’é€Ÿåº¦ã‚’
+		å›è»¢å…ƒåº§æ¨™ç³»ã§è¡¨ã‚ã—ãŸã‚‚ã®ï¼
 	 */
 	TQuaternion<ET> Derivative(const TVec3<ET>& w)const{
 		return 0.5 * TQuaternion<ET>(0.0, w.X(), w.Y(), w.Z()) * *this;
 	}
 
-	/** @brief ƒNƒEƒH[ƒ^ƒjƒIƒ“‚ÌŠÔ”÷•ª‚©‚çŠp‘¬“x‚ğŒvZ
-		@param qd quaternion‚ÌŠÔ”÷•ª
-		@return Šp‘¬“x
+	/** @brief ã‚¯ã‚¦ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®æ™‚é–“å¾®åˆ†ã‹ã‚‰è§’é€Ÿåº¦ã‚’è¨ˆç®—
+		@param qd quaternionã®æ™‚é–“å¾®åˆ†
+		@return è§’é€Ÿåº¦
 
-		‚±‚Ìquaternion‚Æ‚»‚ÌŠÔ”÷•ªqd‚©‚çŠp‘¬“xw‚ğŒvZ‚·‚éD
-		‚½‚¾‚µw‚Í‰ñ“]Œ³iƒ[ƒ‹ƒhjÀ•WŒn‚©‚çŒ©‚½‰ñ“]æiƒ[ƒJƒ‹jÀ•WŒn‚ÌŠp‘¬“x‚ğ
-		‰ñ“]Œ³À•WŒn‚Å•\‚í‚µ‚½‚à‚ÌD
+		ã“ã®quaternionã¨ãã®æ™‚é–“å¾®åˆ†qdã‹ã‚‰è§’é€Ÿåº¦wã‚’è¨ˆç®—ã™ã‚‹ï¼
+		ãŸã ã—wã¯å›è»¢å…ƒï¼ˆãƒ¯ãƒ¼ãƒ«ãƒ‰ï¼‰åº§æ¨™ç³»ã‹ã‚‰è¦‹ãŸå›è»¢å…ˆï¼ˆãƒ­ãƒ¼ã‚«ãƒ«ï¼‰åº§æ¨™ç³»ã®è§’é€Ÿåº¦ã‚’
+		å›è»¢å…ƒåº§æ¨™ç³»ã§è¡¨ã‚ã—ãŸã‚‚ã®ï¼
 	 */
 	TVec3<ET> AngularVelocity(const TQuaternion<ET>& qd)const{
 		return 2.0 * (qd * Conjugated()).V();
 	}
 
 protected:
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	void set_default(){ W() = 1; X() = 0; Y() = 0; Z() = 0;}
 };
 
-///	TQuaternion “¯m‚ÌŠ|‚¯ZD‰ñ“]•ÏŠ·‚Æ‚µ‚Ä‚ÍC‡¬‚É‚È‚éD
+///	TQuaternion åŒå£«ã®æ›ã‘ç®—ï¼å›è»¢å¤‰æ›ã¨ã—ã¦ã¯ï¼Œåˆæˆã«ãªã‚‹ï¼
 template <class A, class B>
 TQuaternion<A> operator*(const TQuaternion<A>& q1, const TQuaternion<B>& q2){
     TQuaternion<A> rv;
@@ -323,45 +323,45 @@ TQuaternion<A> operator*(const TQuaternion<A>& q1, const TQuaternion<B>& q2){
 	return rv;
 }
 
-///	TQuaternion‚ÅƒxƒNƒgƒ‹‚ğ‰ñ“]D Quaternion * vector * Quaternion^{*} ‚Æ“¯‚¶D
+///	TQuaternionã§ãƒ™ã‚¯ãƒˆãƒ«ã‚’å›è»¢ï¼ Quaternion * vector * Quaternion^{*} ã¨åŒã˜ï¼
 template <class ET, class BD>
 inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TVectorBase<3, BD>& v){
-	// «‘æ1¬•ª‚Í0‚Å‚Í‚È‚¢‚©HH@tazz
+	// â†“ç¬¬1æˆåˆ†ã¯0ã§ã¯ãªã„ã‹ï¼Ÿï¼Ÿã€€tazz
 	//TQuaternion<ET> qv(1, ET(v[0]), ET(v[1]), ET(v[2]));
 	//TYPENAME BD::ret_type r = (q * qv * q.Conjugated()).sub_vector(PTM::TSubVectorDim<1,3>());
-	// «‚Í‘æ1¬•ª‚ğ0‚Æ‚µ‚Ä“WŠJ‚µ‚½ƒR[ƒh
+	// â†“ã¯ç¬¬1æˆåˆ†ã‚’0ã¨ã—ã¦å±•é–‹ã—ãŸã‚³ãƒ¼ãƒ‰
 	TYPENAME BD::ret_type tmp = q.V() % v;
 	TYPENAME BD::ret_type r = (BD::element_type)(q.W()*q.W())*v + (BD::element_type)(2*q.W())*tmp + (BD::element_type)(q.V()*v)*q.V() + q.V()%tmp;
 	return r;
 }
 
-///	TQuaternion‚Ås—ñ‚ğ‰ñ“]D TQuaternion * (ex,ey,ez) * TQuaternion.conjugated() ‚Æ“¯‚¶D
+///	TQuaternionã§è¡Œåˆ—ã‚’å›è»¢ï¼ TQuaternion * (ex,ey,ez) * TQuaternion.conjugated() ã¨åŒã˜ï¼
 template <class ET, class BD>
 inline TYPENAME BD::ret_type operator*(const TQuaternion<ET>& q, const PTM::TMatrixBase<3, 3, BD>& m){
 	TYPENAME BD::ret_type r;
 	for(int i=0; i<3; ++i){
-		// ã‚Æ“¯‚¶‚­0‚Æv‚í‚ê‚é
+		// ä¸Šã¨åŒã˜ã0ã¨æ€ã‚ã‚Œã‚‹
 		TQuaternion<ET> qv(0, ET(m.col(i)[0]), ET(m.col(i)[1]), ET(m.col(i)[2]));
 		r.col(i) = (q * qv * q.Conjugated()).sub_vector(PTM::TSubVectorDim<1,3>());
 	}
 	return r;
 }
 
-///	TQuaternion ‚Ì“àÏD
+///	TQuaternion ã®å†…ç©ï¼
 template <class T1, class T2>
 inline T1 dot(const TQuaternion<T1>& q1, const TQuaternion<T2>& q2) {
 	return q1.X() * q2.X() + q1.Y() * q2.Y() + q1.Z() * q2.Z() + q1.W() * q2.W();
 }
 
-/// ‰ñ“]‘€ì‚ğ‚¹‚¸C•’Ê‚ÉQuaternion‚ÆƒxƒNƒgƒ‹‚ÌÏ‚ğ‹‚ß‚é
+/// å›è»¢æ“ä½œã‚’ã›ãšï¼Œæ™®é€šã«Quaternionã¨ãƒ™ã‚¯ãƒˆãƒ«ã®ç©ã‚’æ±‚ã‚ã‚‹
 template<class ET, class BD>
 inline TQuaternion<ET> mult(const TQuaternion<ET>& q, const PTM::TVectorBase<3, BD>& v){
-	// •’Ê‚ÌŒvZ‚Í‰ñ“]‘€ì‚Æ‚Íˆá‚¤‚Ì‚ÅCƒxƒNƒgƒ‹‚ğƒNƒH[ƒ^ƒjƒIƒ“‚É’¼‚·‚Éw¬•ª‚ğ0‚É‚µ‚È‚¢‚Æ‰‰Z‚ª‚¨‚©‚µ‚­‚È‚é
+	// æ™®é€šã®è¨ˆç®—ã¯å›è»¢æ“ä½œã¨ã¯é•ã†ã®ã§ï¼Œãƒ™ã‚¯ãƒˆãƒ«ã‚’ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã«ç›´ã™æ™‚ã«wæˆåˆ†ã‚’0ã«ã—ãªã„ã¨æ¼”ç®—ãŒãŠã‹ã—ããªã‚‹
 	TQuaternion<ET> qv(0, ET(v[0]), ET(v[1]), ET (v[2]));
 	return q*qv;
 }
 
-/// ‰ñ“]‘€ì‚ğ‚¹‚¸C•’Ê‚ÉƒxƒNƒgƒ‹‚ÆQuaternion‚ÌÏ‚ğ‹‚ß‚é
+/// å›è»¢æ“ä½œã‚’ã›ãšï¼Œæ™®é€šã«ãƒ™ã‚¯ãƒˆãƒ«ã¨Quaternionã®ç©ã‚’æ±‚ã‚ã‚‹
 template<class BD, class ET>
 inline TQuaternion<ET> mult(const PTM::TVectorBase<3, BD>& v, const TQuaternion<ET>& q){
 	TQuaternion<ET> qv(0, ET(v[0]), ET(v[1]), ET (v[2]));
@@ -376,7 +376,7 @@ TQuaternion<T1> interpolate(T1 t, const TQuaternion<T1>& q1, const TQuaternion<T
 
     dot = q1.X() * q2.X() + q1.Y() * q2.Y() + q1.Z() * q2.Z() + q1.W() * q2.W();
     
-    // dot < 0.0f‚ÌA”½“]‚·‚é
+    // dot < 0.0fã®æ™‚ã€åè»¢ã™ã‚‹
     if (dot < 0.0f){
         dot = -dot;
         q3 = TQuaternion<T1>(-q2.W(), -q2.X(), -q2.Y(), -q2.Z());
@@ -404,39 +404,39 @@ TQuaternion<T1> interpolate(T1 t, const TQuaternion<T1>& q1, const TQuaternion<T
 	return ret;
 }
 
-///	float”ÅTQuaternion.
+///	floatç‰ˆTQuaternion.
 typedef TQuaternion<float> Quaternionf;
-///	double”ÅTQuaternion.
+///	doubleç‰ˆTQuaternion.
 typedef TQuaternion<double> Quaterniond;
 
 
-/**	p¨DˆÊ’u‚ÆŒü‚«‚ğ•\‚·ƒNƒ‰ƒXD
-	TQuaternion ‚Æ TVec3 ‚ÅŒü‚«‚ÆˆÊ’u‚ğ•\‚·D
-	TAffine‚Ì‘ã‚í‚è‚Ég‚¦‚éD
+/**	å§¿å‹¢ï¼ä½ç½®ã¨å‘ãã‚’è¡¨ã™ã‚¯ãƒ©ã‚¹ï¼
+	TQuaternion ã¨ TVec3 ã§å‘ãã¨ä½ç½®ã‚’è¡¨ã™ï¼
+	TAffineã®ä»£ã‚ã‚Šã«ä½¿ãˆã‚‹ï¼
 */
 template<class ET>
 class TPose:public PTM::TVectorBase<7, TVecDesc<TPose<ET>, ET> >{
 public:
 	typedef TVecDesc<TPose<ET>, ET> desc;
 	typedef PTM::TVectorBase<4, desc> base_type;
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.	@see ::DEF_TVECTOR_BASIC_MEMBER
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.	@see ::DEF_TVECTOR_BASIC_MEMBER
 	DEF_TVECTOR_BASIC_MEMBER(TPose);
 	union{
 		ET data[7];
 		struct{
-			ET w,x,y,z;		//< ‰ñ“]
-			ET px, py, pz;	//< ˆÊ’u
+			ET w,x,y,z;		//< å›è»¢
+			ET px, py, pz;	//< ä½ç½®
 		};
 	};
 
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	ET& item_impl(size_t i){ return data[i]; }
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const ET& item_impl(size_t i) const { return data[i]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return 1; }
 
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	TVec3<ET>& Pos() { return *(TVec3<ET>*)(data+4); }
 	const TVec3<ET>& Pos() const { return *(TVec3<ET>*)(data+4); }
 	TQuaternion<ET>& Ori() { return *(TQuaternion<ET>*)(void*)(data); }
@@ -456,7 +456,7 @@ public:
 	ET& Pz(){return pz;}
 	const ET& Pz() const{return pz;}
 
-	/**@name	—v‘f‚Ö‚ÌƒAƒNƒZƒX	*/
+	/**@name	è¦ç´ ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹	*/
 	//@{
 	/// 
 	ET& PosX() {return px;}
@@ -487,12 +487,12 @@ public:
 		return rv;
 	}
 
-	/**@name	‰Šú‰»‚Æ\’z	*/
+	/**@name	åˆæœŸåŒ–ã¨æ§‹ç¯‰	*/
 	TPose(const TVec3<ET>& p, const TQuaternion<ET>& q = TQuaternion<ET>()){
 		Pos() = p;
 		Ori() = q;
 	}
-	///	’PˆÊs—ñ
+	///	å˜ä½è¡Œåˆ—
 	static TPose<ET> Unit(){
 		TPose<ET> y;
 		//PTM::init_unitize(y);
@@ -501,7 +501,7 @@ public:
 		return y;
 	}
 
-	///	•½sˆÚ“®
+	///	å¹³è¡Œç§»å‹•
 	static TPose<ET> Trn(element_type px, element_type py, element_type pz){
 		return Trn(TVec3<ET>(px, py, pz));
 	}
@@ -512,7 +512,7 @@ public:
 		return y;
 	}
 
-	/// ‰ñ“]
+	/// å›è»¢
 	static TPose<ET> Rot(ET wi, ET xi, ET yi, ET zi){ 
 		TPose<ET> y;
 		y.Pos() = TVec3<ET>();
@@ -544,21 +544,21 @@ public:
 		return y;
 	}
 
-	/// Affine•ÏŠ·‚Ìs—ñ‚©‚ç“Ç‚İo‚µ‚Ü‚·D
+	/// Affineå¤‰æ›ã®è¡Œåˆ—ã‹ã‚‰èª­ã¿å‡ºã—ã¾ã™ï¼
 	template <class AT>
 	void FromAffine(const TAffine<AT>& f){
-		/// Affines—ñ‚ÌˆÊ’uƒxƒNƒgƒ‹‚Épose‚ÌˆÊ’u‚ğƒRƒs[‚·‚é
+		/// Affineè¡Œåˆ—ã®ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ã«poseã®ä½ç½®ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
 		Pos() = f.Trn();
-		/// Ori‚©‚ç‚Å‚«‚és—ñ‚ğAffines—ñ‚Ì‘Î‰‚·‚éêŠ‚Éã‘‚«
+		/// Oriã‹ã‚‰ã§ãã‚‹è¡Œåˆ—ã‚’Affineè¡Œåˆ—ã®å¯¾å¿œã™ã‚‹å ´æ‰€ã«ä¸Šæ›¸ã
 		Ori().FromMatrix(f.Rot());
 	}
 
-	/// Affine•ÏŠ·‚Ìs—ñ‚É•ÏŠ·‚µ•Ô‚·
+	/// Affineå¤‰æ›ã®è¡Œåˆ—ã«å¤‰æ›ã—è¿”ã™
 	template <class B>
 	void ToAffine(TAffine<B>& af) const {
-		/// Affines—ñ‚ÌˆÊ’uƒxƒNƒgƒ‹‚Épose‚ÌˆÊ’u‚ğƒRƒs[‚·‚é
+		/// Affineè¡Œåˆ—ã®ä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ã«poseã®ä½ç½®ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹
 		af.Trn() = Pos();
-		/// Ori‚©‚ç‚Å‚«‚és—ñ‚ğAffines—ñ‚Ì‘Î‰‚·‚éêŠ‚Éã‘‚«
+		/// Oriã‹ã‚‰ã§ãã‚‹è¡Œåˆ—ã‚’Affineè¡Œåˆ—ã®å¯¾å¿œã™ã‚‹å ´æ‰€ã«ä¸Šæ›¸ã
 		Ori().ToMatrix(af.Rot());
 	}
 
@@ -568,9 +568,9 @@ public:
 		return rv;
 	}
 
-	///@name ‰Šú‰»E\’z
+	///@name åˆæœŸåŒ–ãƒ»æ§‹ç¯‰
 	//@{
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	template <class TW,class TX, class TY, class TZ,class TPX, class TPY, class TPZ> TPose (TW wi,TX xi, TY yi, TZ zi,TPX pxi, TPY pyi, TPZ pzi){
 		W() = element_type(wi);
 		X() = element_type(xi);
@@ -586,7 +586,7 @@ public:
 	//@}
 
 protected:
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	void set_default(){ 
 		W() = 1; X() = 0; Y() = 0; Z() = 0;
 		Pos().clear();
@@ -605,7 +605,7 @@ TPose<EA> operator * (const TPose<EA>& a, const TPose<EB>& b){
 	return rv;
 }
 
-/// Pose‚Ì•âŠÔ
+/// Poseã®è£œé–“
 template <class EA, class EB>
 TPose<EA> interpolate(EA t, const TPose<EA>& p0, const TPose<EB>& p1){
 	TQuaternion<EA> quat = interpolate(t, p0.Ori(), p1.Ori());
@@ -616,23 +616,23 @@ TPose<EA> interpolate(EA t, const TPose<EA>& p0, const TPose<EB>& p1){
 	return pose;
 }
 
-///	float”ÅTPose.
+///	floatç‰ˆTPose.
 typedef TPose<float> Posef;
-///	double”ÅTPose.
+///	doubleç‰ˆTPose.
 typedef TPose<double> Posed;
 
 //@}
 
 //----------------------------------------------------------------------------
 // SwingTwist
-/** ‰ñ“]‚ÌƒXƒCƒ“ƒOEƒcƒCƒXƒgŠp•\Œ» */
+/** å›è»¢ã®ã‚¹ã‚¤ãƒ³ã‚°ãƒ»ãƒ„ã‚¤ã‚¹ãƒˆè§’è¡¨ç¾ */
 struct SwingTwist : public Vec3d{
 	double& SwingDir(){return item(0);}
 	double& Swing(){return item(1);}
 	double& Twist(){return item(2);}
 	
 	void ToQuaternion(Quaterniond& q){
-		// tazz‚³‚ñ‚Ìƒƒ‚‚Ì(11)®A²[cos(psi), sin(psi), 0]^T‚Ü‚í‚è‚Étheta‚¾‚¯‰ñ“]‚µ‚½ŒãZ²‚Ü‚í‚è‚Éphi‰ñ“]‚·‚équaternion
+		// tazzã•ã‚“ã®ãƒ¡ãƒ¢ã®(11)å¼ã€è»¸[cos(psi), sin(psi), 0]^Tã¾ã‚ã‚Šã«thetaã ã‘å›è»¢ã—ãŸå¾ŒZè»¸ã¾ã‚ã‚Šã«phiå›è»¢ã™ã‚‹quaternion
 		double psi = SwingDir(), the = Swing(), phi = Twist();
 		double cos_the = cos(the / 2), sin_the = sin(the / 2);
 		double cos_phi = cos(phi / 2), sin_phi = sin(phi / 2);
@@ -644,16 +644,16 @@ struct SwingTwist : public Vec3d{
 	}
 	
 	void FromQuaternion(const Quaterniond& q){
-		// tazz‚³‚ñ‚Ìƒƒ‚‚Ì(12)®Aitem[0]:psi, item[1]:theta, item[2]:phi
+		// tazzã•ã‚“ã®ãƒ¡ãƒ¢ã®(12)å¼ã€item[0]:psi, item[1]:theta, item[2]:phi
 		item(0) = atan2(q.w * q.y + q.x * q.z, q.w * q.x - q.y * q.z);
 		item(1) = 2 * atan2(sqrt(q.x * q.x + q.y * q.y), sqrt(q.w * q.w + q.z * q.z));
 		item(2) = 2 * atan2(q.z, q.w);
 	}
 	
 	void Jacobian(Matrix3d& J){
-		// tazz‚³‚ñ‚Ìƒƒ‚‚Ì(13)®Ast=[psi, theta, phi]^T‚ÌŠÔ”÷•ª‚©‚çŠp‘¬“xƒÖ‚ğ—^‚¦‚éƒ„ƒRƒrƒAƒ“J (ƒÖ = J * (d/dt)st)
+		// tazzã•ã‚“ã®ãƒ¡ãƒ¢ã®(13)å¼ã€st=[psi, theta, phi]^Tã®æ™‚é–“å¾®åˆ†ã‹ã‚‰è§’é€Ÿåº¦Ï‰ã‚’ä¸ãˆã‚‹ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³J (Ï‰ = J * (d/dt)st)
 		double psi = SwingDir();
-		double the = std::max(Rad(1.0), Swing());	// ƒXƒCƒ“ƒOŠp0‚Åƒ‰ƒ“ƒN—‚¿‚·‚é‚Ì‚Å–³—‚â‚è‰ñ”ğ
+		double the = std::max(Rad(1.0), Swing());	// ã‚¹ã‚¤ãƒ³ã‚°è§’0ã§ãƒ©ãƒ³ã‚¯è½ã¡ã™ã‚‹ã®ã§ç„¡ç†ã‚„ã‚Šå›é¿
 		double cos_psi = cos(psi), sin_psi = sin(psi);
 		double cos_the = cos(the), sin_the = sin(the);
 		J[0][0] = -sin_the * sin_psi;
@@ -668,8 +668,8 @@ struct SwingTwist : public Vec3d{
 	}
 	
 	void JacobianInverse(Matrix3d& J, const Quaterniond& q){
-		// tazz‚³‚ñ‚Ìƒƒ‚‚Ì(14)®AŠp‘¬“xƒÖ‚©‚çst=[psi, theta, phi]^T‚ÌŠÔ”÷•ª‚ğ‹‚ß‚éƒ„ƒRƒrƒAƒ“JInv ((d/dt)st = JInv * ƒÖ)
-		const double eps = 1.0e-2;									// (14)®‚Ì•ª•ê‚ª0‚É‚È‚é‚±‚Æ‚ğ–h‚®‚½‚ß‚ÌepsB¬‚³‚­‚µ‰ß‚¬‚é‚Æi1.0e-12‚Æ‚©‚·‚é‚Æj0•t‹ß‚Å‰¡‚É‚µ‚½‚Æ‚«‚É•¨‘Ì‚ªŠO‚ê‚Ä‚µ‚Ü‚¤
+		// tazzã•ã‚“ã®ãƒ¡ãƒ¢ã®(14)å¼ã€è§’é€Ÿåº¦Ï‰ã‹ã‚‰st=[psi, theta, phi]^Tã®æ™‚é–“å¾®åˆ†ã‚’æ±‚ã‚ã‚‹ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³JInv ((d/dt)st = JInv * Ï‰)
+		const double eps = 1.0e-2;									// (14)å¼ã®åˆ†æ¯ãŒ0ã«ãªã‚‹ã“ã¨ã‚’é˜²ããŸã‚ã®epsã€‚å°ã•ãã—éãã‚‹ã¨ï¼ˆ1.0e-12ã¨ã‹ã™ã‚‹ã¨ï¼‰0ä»˜è¿‘ã§æ¨ªã«ã—ãŸã¨ãã«ç‰©ä½“ãŒå¤–ã‚Œã¦ã—ã¾ã†
 		double w2z2 = std::max(eps, q.w * q.w + q.z * q.z);
 		double w2z2inv = 1.0 / w2z2;
 		double x2y2 = std::max(eps, 1.0 - w2z2);

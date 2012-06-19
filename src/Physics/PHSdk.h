@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -27,13 +27,13 @@ class SPR_DLL PHSdk:public Sdk{
 protected:
 	//	scene
 	typedef std::vector< UTRef<PHSceneIf> > Scenes;
-	///	ƒV[ƒ“
+	///	ã‚·ãƒ¼ãƒ³
 	Scenes scenes;
 	//	shape
 	typedef std::vector< UTRef<CDShapeIf> > Shapes;
-	///	Œ`ó
+	///	å½¢çŠ¶
 	Shapes shapes;
-	///	‘¼‚ÌƒIƒuƒWƒFƒNƒg‚½‚¿
+	///	ä»–ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŸã¡
 	ObjectRefs objects;
 public:
 

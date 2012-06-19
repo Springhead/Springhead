@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprHISpaceNavigator.h
- *	@brief 3Dconnexion SpaceNavigator 6©—R“x“ü—ÍƒfƒoƒCƒX
+ *	@brief 3Dconnexion SpaceNavigator 6è‡ªç”±åº¦å…¥åŠ›ãƒ‡ãƒã‚¤ã‚¹
 */
 
 #ifndef SPR_HI_SPACENAVIGATOR_H
@@ -20,20 +20,20 @@ namespace Spr{;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
-/**	@brief SpaceNavigator‚ÌƒCƒ“ƒ^ƒtƒF[ƒX */
+/**	@brief SpaceNavigatorã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ */
 struct HISpaceNavigatorIf: public HIPoseIf{
 	SPR_VIFDEF(HISpaceNavigator);
 
-	///	Œ»İ‚Ìp¨‚ğİ’è
+	///	ç¾åœ¨ã®å§¿å‹¢ã‚’è¨­å®š
 	bool SetPose(Posef pose);
 
-	///	ŒÀŠE‚Ü‚Å‰Ÿ‚µ‚ñ‚¾‚ÌˆÚ“®‘¬“x‚ğİ’è‚·‚é
+	///	é™ç•Œã¾ã§æŠ¼ã—è¾¼ã‚“ã æ™‚ã®ç§»å‹•é€Ÿåº¦ã‚’è¨­å®šã™ã‚‹
 	void SetMaxVelocity(float mV);
 
-	///	ŒÀŠE‚Ü‚Å‚Ğ‚Ë‚Á‚½‚Ì‰ñ“]‘¬“x‚ğİ’è‚·‚é
+	///	é™ç•Œã¾ã§ã²ã­ã£ãŸæ™‚ã®å›è»¢é€Ÿåº¦ã‚’è¨­å®šã™ã‚‹
 	void SetMaxAngularVelocity(float mAV);
 
-	/// RAW Input WindowsƒƒbƒZ[ƒW‚ğ‰ğß‚·‚é
+	/// RAW Input Windowsãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è§£é‡ˆã™ã‚‹
 	bool PreviewMessage(void *m);
 };
 struct HISpaceNavigatorDesc{

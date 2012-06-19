@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,20 +7,20 @@
  */
 #ifndef SBASE_H
 #define SBASE_H
-/**	@page Base Baseƒ‰ƒCƒuƒ‰ƒŠ
-	<a href = "../../html/index.html" target=_top> Springhead </a> ‚Ì’†‚ÅC
-	“Á‚ÉŠî–{“I‚Èƒ†[ƒeƒBƒŠƒeƒB‚ğ‚Â•”•ª‚ğW‚ßC
-	Baseƒ‰ƒCƒuƒ‰ƒŠ‚Æ‚µ‚Ü‚µ‚½DBaseƒ‰ƒCƒuƒ‰ƒŠ‚ÍC
-	- ”ŠwEƒxƒNƒgƒ‹Es—ñƒ‰ƒCƒuƒ‰ƒŠ
-		- @ref pgPTM n~ms—ñEnŸŒ³ƒxƒNƒgƒ‹ (PTM::TMatrix, PTM::TVector)
-		- @ref pgAffine ƒAƒtƒBƒ“s—ñE2/3ŸŒ³ƒxƒNƒgƒ‹ (Spr::TVec2, Spr::TVec3, Spr::TAffine)
-	- RTTI‚ğg‚í‚È‚¢ÀsŒ^î•ñ (BaseTypeInfo.h)
-	- ƒfƒoƒbƒOx‰‡‹@”\ (BaseDebug.h)
-	- ƒRƒ“ƒpƒCƒ‰‘Î‰ƒ}ƒNƒ (Env.h)
-	- @ref gpBaseUtility ‚»‚Ì‘¼‚Ìƒ†[ƒeƒBƒŠƒeƒB[ (BaseUtility.h)
+/**	@page Base Baseãƒ©ã‚¤ãƒ–ãƒ©ãƒª
+	<a href = "../../html/index.html" target=_top> Springhead </a> ã®ä¸­ã§ï¼Œ
+	ç‰¹ã«åŸºæœ¬çš„ãªãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ã‚’æŒã¤éƒ¨åˆ†ã‚’é›†ã‚ï¼Œ
+	Baseãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¨ã—ã¾ã—ãŸï¼Baseãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¯ï¼Œ
+	- æ•°å­¦ãƒ»ãƒ™ã‚¯ãƒˆãƒ«ãƒ»è¡Œåˆ—ãƒ©ã‚¤ãƒ–ãƒ©ãƒª
+		- @ref pgPTM nÃ—mè¡Œåˆ—ãƒ»næ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ« (PTM::TMatrix, PTM::TVector)
+		- @ref pgAffine ã‚¢ãƒ•ã‚£ãƒ³è¡Œåˆ—ãƒ»2/3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ« (Spr::TVec2, Spr::TVec3, Spr::TAffine)
+	- RTTIã‚’ä½¿ã‚ãªã„å®Ÿè¡Œæ™‚å‹æƒ…å ± (BaseTypeInfo.h)
+	- ãƒ‡ãƒãƒƒã‚°æ”¯æ´æ©Ÿèƒ½ (BaseDebug.h)
+	- ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©å¯¾å¿œãƒã‚¯ãƒ­ (Env.h)
+	- @ref gpBaseUtility ãã®ä»–ã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ãƒ¼ (BaseUtility.h)
 		- @ref gpUTRef
 
-‚©‚ç\¬‚³‚ê‚Ü‚·D
+ã‹ã‚‰æ§‹æˆã•ã‚Œã¾ã™ï¼
 */
 
 namespace Spr{}

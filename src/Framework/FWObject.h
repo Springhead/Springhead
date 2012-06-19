@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -28,15 +28,15 @@ public:
 
 	// ----- ----- ----- ----- -----
 
-	// •¡»
+	// è¤‡è£½
 	virtual SceneObjectIf* CloneObject(); 
 
-	// q—v‘f
+	// å­è¦ç´ 
 	virtual bool       AddChildObject(ObjectIf* o);
 	virtual ObjectIf*  GetChildObject(size_t pos);
 	virtual size_t     NChildObject() const;
 
-	// GetterESetter
+	// Getterãƒ»Setter
 	PHSolidIf*	GetPHSolid(){ return phSolid; }
 	void		SetPHSolid(PHSolidIf* s){ phSolid = s; }
 
@@ -49,21 +49,21 @@ public:
 	GRFrameIf*	GetChildFrame(){ return childFrame; }
 	void		SetChildFrame(GRFrameIf* f){ childFrame = f; }
 
-	// “¯ŠúƒIƒvƒVƒ‡ƒ“
+	// åŒæœŸã‚ªãƒ—ã‚·ãƒ§ãƒ³
 	void		SetSyncSource(FWObjectDesc::FWObjectSyncSource syncSrc) { syncSource = syncSrc; }
 	FWObjectDesc::FWObjectSyncSource GetSyncSource() { return syncSource; }
 
 	void		EnableAbsolute(bool bAbs) { bAbsolute = bAbs; }
 	bool		IsAbsolute() { return bAbsolute; }
 
-	// ƒOƒ‰ƒtƒBƒbƒNƒX—pƒƒbƒVƒ…‚ÉŠÖ‚·‚éƒwƒ‹ƒp
+	// ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ç”¨ãƒ¡ãƒƒã‚·ãƒ¥ã«é–¢ã™ã‚‹ãƒ˜ãƒ«ãƒ‘
 	bool		LoadMesh(const char* filename, const IfInfo* ii = NULL, GRFrameIf* frame = NULL);
 	void		GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
 
-	// “¯Šú
+	// åŒæœŸ
 	void		Sync();
 
-	// ƒ‚ƒfƒBƒtƒ@ƒC
+	// ãƒ¢ãƒ‡ã‚£ãƒ•ã‚¡ã‚¤
 	void		Modify();
 };
 

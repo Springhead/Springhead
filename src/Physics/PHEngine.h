@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,16 +14,16 @@
 
 namespace Spr {;
 
-///	ƒV[ƒ“‚ÌU•‘‚¢iƒrƒwƒCƒrƒAj‚ğŠÇ—‚·‚éƒGƒ“ƒWƒ“
-/// ƒrƒwƒCƒrƒA‚Ì•ª—Ş‚Æ—Dæ‡ˆÊ
-///	100‚Ì”{”‚Í•ª—Ş‚ğ•\‚µAˆÈ‰º‚ÌˆÊ‚Í‚»‚Ì’†‚Å‚ÌÀs‡˜‚ğ‹K’è‚·‚é
+///	ã‚·ãƒ¼ãƒ³ã®æŒ¯èˆã„ï¼ˆãƒ“ãƒ˜ã‚¤ãƒ“ã‚¢ï¼‰ã‚’ç®¡ç†ã™ã‚‹ã‚¨ãƒ³ã‚¸ãƒ³
+/// ãƒ“ãƒ˜ã‚¤ãƒ“ã‚¢ã®åˆ†é¡ã¨å„ªå…ˆé †ä½
+///	100ã®å€æ•°ã¯åˆ†é¡ã‚’è¡¨ã—ã€ä»¥ä¸‹ã®ä½ã¯ãã®ä¸­ã§ã®å®Ÿè¡Œé †åºã‚’è¦å®šã™ã‚‹
 enum PHBehaviorPriority{
-	//‰Šú‰»ƒ‚ƒWƒ…[ƒ‹
+	//åˆæœŸåŒ–ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
 	SGBP_INITIALIZER			= 100,
 		SGBP_HAPTICENGINE1,
 		SGBP_SOLIDINITIALIZER,
 		//SGBP_CLEARFORCE,
-	//—Í¶¬ƒ‚ƒWƒ…[ƒ‹
+	//åŠ›ç”Ÿæˆãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«
 	SGBP_FORCEGENERATOR			= 200,
 		SGBP_GRAVITYENGINE,
 		SGBP_COLLISIONENGINE,
@@ -31,7 +31,7 @@ enum PHBehaviorPriority{
 		SGBP_CREATURE,
 		SGBP_INVERSEKINEMATICS,
 		//SGBP_WATERCONTACTENGINE,
-	//Ï•ª‚Ì‘ÎÛ
+	//ç©åˆ†ã®å¯¾è±¡
 	SGBP_DYNAMICALSYSTEM		= 300,
 		SGBP_JOINTENGINE,
 		SGBP_CONSTRAINTENGINE,
@@ -41,7 +41,7 @@ enum PHBehaviorPriority{
 	SGBP_MOTION					= 400,
 		//SGBP_CHANGEOBJECT,
 		//SGBP_CONSTRAINT,
-	//‘¼‚ÌƒGƒ“ƒWƒ“‚ÌƒŠƒXƒi
+	//ä»–ã®ã‚¨ãƒ³ã‚¸ãƒ³ã®ãƒªã‚¹ãƒŠ
 	SGBP_LISTENER				= 500,
 		//SGBP_CONTACTENGINE,
 		//SGBP_STICKENGINE,
@@ -49,13 +49,13 @@ enum PHBehaviorPriority{
 };
 
 class PHScene;
-///	“®ìƒGƒ“ƒWƒ“‚ÌŠî–{ƒNƒ‰ƒXD
+///	å‹•ä½œã‚¨ãƒ³ã‚¸ãƒ³ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ï¼
 class PHEngine:public SceneObject{
 	SPR_OBJECTDEF(PHEngine);
 public:
-	///	Às‡˜‚ğŒˆ‚ß‚éƒvƒ‰ƒCƒIƒŠƒeƒB’lD¬‚³‚¢‚Ù‚Ç‘‚¢
+	///	å®Ÿè¡Œé †åºã‚’æ±ºã‚ã‚‹ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£å€¤ï¼å°ã•ã„ã»ã©æ—©ã„
 	virtual int GetPriority() const { return SGBP_FORCEGENERATOR; }
-	///	ŠÔ‚ğ dt i‚ß‚é
+	///	æ™‚é–“ã‚’ dt é€²ã‚ã‚‹
 	virtual void Step(){}
 	///
 	virtual PHSceneIf* GetScene(){ return SceneObject::GetScene()->Cast(); }
@@ -64,7 +64,7 @@ inline bool operator < (const PHEngine& e1, const PHEngine& e2){
 	return e1.GetPriority() < e2.GetPriority();
 }
 
-///	PHEngine‚Ì”z—ñ
+///	PHEngineã®é…åˆ—
 class PHEngines: private std::vector< UTRef<PHEngine> >{
 public:
 	iterator initializer;
@@ -92,24 +92,24 @@ public:
 	size_t size() const { return base::size(); }
 	UTRef<PHEngine>& operator [] (int id){ return base::begin()[id]; }
 	const UTRef<PHEngine>& operator [] (int id) const { return base::begin()[id]; }
-	///@name ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ği‚ß‚éƒƒ\ƒbƒh
+	///@name ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é€²ã‚ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
 	//@{	
-	///	—Í‚ÌƒNƒŠƒAD
+	///	åŠ›ã®ã‚¯ãƒªã‚¢ï¼
 	virtual void ClearForce();
-	///	—Í‚ğ¶¬(ŒvZ)‚·‚é
+	///	åŠ›ã‚’ç”Ÿæˆ(è¨ˆç®—)ã™ã‚‹
 	virtual void GenerateForce();
-	///	ODE(Ï•ªˆ—)D—Í¨‘¬“xC‘¬“x¨ˆÊ’u ‚ÌŒvZ‚ğs‚¤D
+	///	ODE(ç©åˆ†å‡¦ç†)ï¼åŠ›â†’é€Ÿåº¦ï¼Œé€Ÿåº¦â†’ä½ç½® ã®è¨ˆç®—ã‚’è¡Œã†ï¼
 	virtual void Integrate();
 	//@}
 	void Add(PHEngine* e);
 	bool Del(PHEngine* e);
 	void Sort();
-	///	ƒV[ƒ“‚ğƒNƒŠƒA‚·‚é‚Æ‚«‚Ìˆ—
+	///	ã‚·ãƒ¼ãƒ³ã‚’ã‚¯ãƒªã‚¢ã™ã‚‹ã¨ãã®å‡¦ç†
 	virtual void Clear();
-	///	w’è‚µ‚½Œ^‚ğŒp³‚µ‚½ƒGƒ“ƒWƒ“‚ğŒ©‚Â‚¯‚é (Å‰‚ÉŒ©‚Â‚©‚Á‚½‚à‚Ì‚ğ•Ô‚·)
+	///	æŒ‡å®šã—ãŸå‹ã‚’ç¶™æ‰¿ã—ãŸã‚¨ãƒ³ã‚¸ãƒ³ã‚’è¦‹ã¤ã‘ã‚‹ (æœ€åˆã«è¦‹ã¤ã‹ã£ãŸã‚‚ã®ã‚’è¿”ã™)
 	PHEngine* FindInherit(const UTTypeInfo& tinfo, UTString name) const;
 	PHEngine* FindInherit(const UTTypeInfo& tinfo) const;
-	///	w’è‚µ‚½Œ^‚©‚»‚Ì”h¶ƒNƒ‰ƒX‚ÌƒGƒ“ƒWƒ“‚ğŒ©‚Â‚¯‚é (Å‰‚ÉŒ©‚Â‚©‚Á‚½‚à‚Ì‚ğ•Ô‚·)
+	///	æŒ‡å®šã—ãŸå‹ã‹ãã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã®ã‚¨ãƒ³ã‚¸ãƒ³ã‚’è¦‹ã¤ã‘ã‚‹ (æœ€åˆã«è¦‹ã¤ã‹ã£ãŸã‚‚ã®ã‚’è¿”ã™)
 	template <class T> bool Find(T*& t) const{
 		t = (T*)FindInherit(*T::GetTypeInfoStatic());
 		return t != NULL;
@@ -118,7 +118,7 @@ public:
 		t = UTRef<T>((T*)FindInherit(*T::GetTypeInfoStatic()));
 		return t != NULL;
 	}
-	///	w’è‚µ‚½Œ^‚©‚»‚Ì”h¶ƒNƒ‰ƒX‚ÌƒGƒ“ƒWƒ“‚Å–¼‘O‚ªˆê’v‚·‚é‚à‚Ì‚ğŒ©‚Â‚¯‚é (Å‰‚ÉŒ©‚Â‚©‚Á‚½‚à‚Ì‚ğ•Ô‚·)
+	///	æŒ‡å®šã—ãŸå‹ã‹ãã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã®ã‚¨ãƒ³ã‚¸ãƒ³ã§åå‰ãŒä¸€è‡´ã™ã‚‹ã‚‚ã®ã‚’è¦‹ã¤ã‘ã‚‹ (æœ€åˆã«è¦‹ã¤ã‹ã£ãŸã‚‚ã®ã‚’è¿”ã™)
 	template <class T> bool Find(T*& t, UTString name) const{
 		t = (T*)FindInherit(*T::GetTypeInfoStatic(), name);
 		return t != NULL;

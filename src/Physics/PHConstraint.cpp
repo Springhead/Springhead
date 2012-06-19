@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2010, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,7 +16,7 @@ namespace Spr{;
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHConstraint
 
-// �R���X�g���N�^
+// コンストラクタ
 PHConstraint::PHConstraint() {
 	solid[0] = solid[1] = NULL;
 
@@ -36,7 +36,7 @@ PHConstraint::PHConstraint() {
 }
 
 void PHConstraint::InitTargetAxes() {
-	// movableAxes�̎c���targetAxes�����D
+	// movableAxesの残りでtargetAxesを作る．
 	nTargetAxes = 0;
 	for (int i=0; i<6; ++i) {
 		bool bMovable = false;
@@ -46,68 +46,68 @@ void PHConstraint::InitTargetAxes() {
 	}
 }
 
-// ----- �G���W������Ăяo�����֐�
+// ----- エンジンから呼び出される関数
 
 void PHConstraint::UpdateState() {
-	// ���̂̏�Ԃ��X�V����i�����ł��ׂ����͗v�����I���Ȃ��Ƃ������ȑO��Update����ĂȂ��Ɛ������l���o�Ȃ� <!!>�j
+	// 剛体の状態を更新する（ここでやるべきかは要検討！少なくともここ以前にUpdateされてないと正しい値が出ない <!!>）
 	if (!bProhibitUpdateSolidCacheLCP) {
 		for (int i=0; i<2; i++) { solid[i]->UpdateCacheLCP(GetScene()->GetTimeStep()); }
 	}
 
-	// ���̂̑��Έʒu���烄�R�r�A���C�֐ߑ��x�E�ʒu���t�Z����
+	// 剛体の相対位置からヤコビアン，関節速度・位置を逆算する
 	CompJacobian();
 
-	// �e���̂̒��S���猩�����x�ƁC�q���̂̒��S���猩�����x��
-	// Socket���W�n���猩�����x�ɗ��������āC���Α��x�����D
+	// 親剛体の中心から見た速度と，子剛体の中心から見た速度を
+	// Socket座標系から見た速度に両方直して，相対速度を取る．
 	vjrel = Js[1] * solid[1]->v - Js[0] * solid[0]->v;
 
-	// �֐ߍ��W�̈ʒu�E���x���X�V����
+	// 関節座標の位置・速度を更新する
 	UpdateJointState();
 }
 
 void PHConstraint::SetupLCP() {
 	bProhibitUpdateSolidCacheLCP = true;
 
-	// �����\�ȍS���ł��邩
+	// 実現可能な拘束であるか
 	bFeasible = solid[0]->IsDynamical() || solid[1]->IsDynamical();
 	if(!bEnabled || !bFeasible) { return; }
 	
-	// �S�����t���O�̃N���A <<��������axes.CreateList()�܂�axes[n]�͎g���Ȃ��DEnable/Disable/IsEnabled�̂�>>
+	// 拘束軸フラグのクリア <<ここからaxes.CreateList()までaxes[n]は使えない．Enable/Disable/IsEnabledのみ>>
 	axes.Clear();
 
-	// Projection�p�̍ő�E�ŏ��l�����Z�b�g����
+	// Projection用の最大・最小値をリセットする
 	for (int i=0; i<6; i++) { fMinDt[i] = -FLT_MAX; fMaxDt[i] =  FLT_MAX; }
 
-	// �S�����鎩�R�x�̌���
+	// 拘束する自由度の決定
 	SetupAxisIndex();
 
-	// LCP�̍��W�̎���������Ȋ֐߂̓��R�r�A���ɍ��W�ϊ���������
+	// LCPの座標の取り方が特殊な関節はヤコビアンに座標変換をかける
 	ModifyJacobian();
 
-	// LCP�̌W��A, b�̕␳�ldA, db���v�Z
+	// LCPの係数A, bの補正値dA, dbを計算
 	dA.clear();
 	db.clear();
 	CompBias();
 
-	// LCP��A�s��̑Ίp�������v�Z
+	// LCPのA行列の対角成分を計算
 	CompResponseMatrix();
 
-	// LCP��b�x�N�g�� == �_������w[t]���v�Z
-	b = J[0] * solid[0]->v + J[1] * solid[1]->v;  //vjrel�ł͂Ȃ� �l�ɂ���Ă͕ς���čS�����Ȃ��Ȃ�
+	// LCPのbベクトル == 論文中のw[t]を計算
+	b = J[0] * solid[0]->v + J[1] * solid[1]->v;  //vjrelではない 値によっては変わって拘束しなくなる
 
-	// �����܂łŌ��肳�ꂽ�S�����t���O���g���Ď��ԍ����X�g���쐬�@<<���������axes[n]���g�p�\>>
+	// ここまでで決定された拘束軸フラグを使って軸番号リストを作成　<<ここからはaxes[n]を使用可能>>
 	axes.CreateList();
 
-	// �S���͂̏����l���X�V
-	//   �S���͂͑O��̒l���k���������̂������l�Ƃ���D
-	//   �O��̒l���̂܂܂������l�ɂ���ƁC�S���͂�����ɑ��傷��Ƃ������ۂ�������D
-	//   ����́CLCP��L����i���ۂɂ�10����x�j�̔����őł��؂邽�߂��Ǝv����D
-	//   0�x�N�g���������l�ɗp���Ă��ǂ����C���̏ꍇ��r�I�����̔����񐔂�v����D
+	// 拘束力の初期値を更新
+	//   拘束力は前回の値を縮小したものを初期値とする．
+	//   前回の値そのままを初期値にすると，拘束力が次第に増大するという現象が生じる．
+	//   これは，LCPを有限回（実際には10回程度）の反復で打ち切るためだと思われる．
+	//   0ベクトルを初期値に用いても良いが，この場合比較的多くの反復回数を要する．
 	for (int n=0; n<axes.size(); ++n) {
 		f[axes[n]] *= axes.IsContinued(axes[n]) ? engine->shrinkRate : 0;
 	}
 
-	// �S���͏����l�ɂ�鑬�x�ω��ʂ��v�Z
+	// 拘束力初期値による速度変化量を計算
 	SpatialVector fs;
 	for (int i=0; i<2; ++i) {
 		if (!solid[i]->IsDynamical() || !IsInactive(i)) { continue; }
@@ -150,12 +150,12 @@ void PHConstraint::SetupCorrectionLCP() {
 	B.clear();
 	CompError();
 	
-	// velocity update�ɂ��e�������Z
+	// velocity updateによる影響を加算
 	B += (J[0] * (solid[0]->v + solid[0]->dv)
 			+ J[1] * (solid[1]->v + solid[1]->dv)) * GetScene()->GetTimeStep();
 	B *= engine->posCorrectionRate;
 		
-	// �S���͏����l�ɂ��ʒu�ω��ʂ��v�Z
+	// 拘束力初期値による位置変化量を計算
 	SpatialVector Fs;
 	for(int i = 0; i < 2; i++){
 		if (!solid[i]->IsDynamical() || !IsInactive(i)) { continue; }
@@ -191,11 +191,11 @@ void PHConstraint::IterateCorrectionLCP() {
 	}
 }
 
-// ----- ���̃N���X�Ŏ�������@�\
+// ----- このクラスで実装する機能
 
 void PHConstraint::CompJacobian() {
-	// �S������2�̍��̂̊e���x���瑊�Α��x�ւ̃��R�r�A�����v�Z
-	// Xj[i] : ���̂̎��ʒ��S����\�P�b�g/�v���O�ւ̕ϊ�
+	// 拘束する2つの剛体の各速度から相対速度へのヤコビアンを計算
+	// Xj[i] : 剛体の質量中心からソケット/プラグへの変換
 
 	Xj[0].r    = poseSocket.Pos() - solid[0]->center;
 	Xj[0].q    = poseSocket.Ori();
@@ -211,14 +211,14 @@ void PHConstraint::CompJacobian() {
 	Js[0] = Xj[0];
 	Js[1] = Xjrel.inv() * Xj[1];
 	J[0] = Js[0];
-	J[0] *= -1.0;	//����p
+	J[0] *= -1.0;	//反作用
 	J[1] = Js[1];
 }
 
 void PHConstraint::CompResponseMatrix() {
-	// A�̑Ίp�������v�Z����DA = J * M^-1 * J^T
-	// A�s��͍S���͂��瑬�x�ω��ւ̉e���̋�����\���s��Ȃ̂ŁC
-	// ���̑Ίp�����͂���S���͐������玩�����g�̍S�����x�����ւ̉e���̋�����\��
+	// Aの対角成分を計算する．A = J * M^-1 * J^T
+	// A行列は拘束力から速度変化への影響の強さを表す行列なので，
+	// その対角成分はある拘束力成分から自分自身の拘束速度成分への影響の強さを表す
 
 	A.clear();
 	PHRootNode* root[2] = {
@@ -235,7 +235,7 @@ void PHConstraint::CompResponseMatrix() {
 					(Vec6d&)df = J[i].row(j);
 					solid[i]->treeNode->CompResponse(df, false, false);
 					A[j] += J[i].row(j) * solid[i]->treeNode->da;
-					//�����Е��̍��̂�����̃c���[�ɑ�����ꍇ�͂��̉e���������Z
+					//もう片方の剛体も同一のツリーに属する場合はその影響項も加算
 					if(solid[!i]->IsArticulated() && root[i] == root[!i]) {
 						A[j] += J[!i].row(j) * solid[!i]->treeNode->da;
 					}
@@ -248,7 +248,7 @@ void PHConstraint::CompResponseMatrix() {
 				T[i].wv() = J[i].wv() * solid[i]->minv;
 				T[i].ww() = J[i].ww() * solid[i]->Iinv;
 
-				// A == �_������J * M^-1 * J^T, Gauss Seidel�@��D
+				// A == 論文中のJ * M^-1 * J^T, Gauss Seidel法のD
 				for(int j=0; j<6; ++j) {
 					A[j] += J[i].row(j) * T[i].row(j);
 				}
@@ -256,9 +256,9 @@ void PHConstraint::CompResponseMatrix() {
 		}
 	}
 
-	// �ő�̑Ίp�v�f�Ƃ̔䂪eps�����������Ίp�v�f������ꍇ�C
-	// ���l�I�s���萫�̌����ƂȂ�̂ł��̐����͍S���Ώۂ��珜�O����
-	// ��eps��傫���Ƃ�ƁC�K�v�ȍS���܂Ŗ���������Ă��܂��̂ŁA�����͐T�d�ɁB
+	// 最大の対角要素との比がepsよりも小さい対角要素がある場合，
+	// 数値的不安定性の原因となるのでその成分は拘束対象から除外する
+	// ＊epsを大きくとると，必要な拘束まで無効化されてしまうので、調整は慎重に。
 	const double eps = 1.0e-6, epsabs = 1.0e-10;
 	double Amax=0.0, Amin;
 	for(int i=0; i<6; ++i) {
@@ -291,7 +291,7 @@ void PHConstraint::CompResponse(double df, int i) {
 	}
 }
 
-// ----- �{���͔h���N���X�Ŏ�������@�\�́C�f�t�H���g����
+// ----- 本来は派生クラスで実装する機能の，デフォルト動作
 
 void PHConstraint::SetupAxisIndex() {
 	if (!bArticulated) {
@@ -301,12 +301,12 @@ void PHConstraint::SetupAxisIndex() {
 	}
 }
 
-/// �S���͂̎ˉe
+/// 拘束力の射影
 void PHConstraint::Projection(double& f_, int i) {
 	f_ = min(max(fMinDt[i], f_), fMaxDt[i]);
 }
 
-// ----- �C���^�t�F�[�X�̎���
+// ----- インタフェースの実装
 
 void PHConstraint::GetRelativeVelocity(Vec3d &v, Vec3d &w) {
 	for (int i=0; i<2; i++) {

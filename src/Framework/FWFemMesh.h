@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,45 +17,45 @@ namespace Spr{;
 
 class GRMesh;
 
-/**	Frameworkã‚Å‚ÌFEMƒƒbƒVƒ…B
-	–ˆƒXƒeƒbƒvAPHFemMesh‚ÌFEMƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“Œ‹‰Ê‚ğGRMesh‚É”½‰f‚³‚¹‚éB
-	‰Šú‰»‚É‚ÍAGRMesh‚©‚çPHFemMesh‚ğ¶¬‚µA‚³‚ç‚ÉPHFemMesh‚©‚çGRMesh‚ğ¶¬‚µAgrMesh‚ÆgrFrame‚Ì‰º‚ÌGRMesh‚Æ’u‚«Š·‚¦‚éB*/
+/**	Frameworkä¸Šã§ã®FEMãƒ¡ãƒƒã‚·ãƒ¥ã€‚
+	æ¯ã‚¹ãƒ†ãƒƒãƒ—ã€PHFemMeshã®FEMã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³çµæœã‚’GRMeshã«åæ˜ ã•ã›ã‚‹ã€‚
+	åˆæœŸåŒ–æ™‚ã«ã¯ã€GRMeshã‹ã‚‰PHFemMeshã‚’ç”Ÿæˆã—ã€ã•ã‚‰ã«PHFemMeshã‹ã‚‰GRMeshã‚’ç”Ÿæˆã—ã€grMeshã¨grFrameã®ä¸‹ã®GRMeshã¨ç½®ãæ›ãˆã‚‹ã€‚*/
 class FWFemMesh: public FWObject{
 	SPR_OBJECTDEF(FWFemMesh);		
-	SPR_DECLMEMBEROF_FWFemMeshDesc;	//	FWFemMeshDesc‚Ìƒƒ“ƒo‚ÆGetDesc(), GetDescSize()‚ÌÀ‘•
+	SPR_DECLMEMBEROF_FWFemMeshDesc;	//	FWFemMeshDescã®ãƒ¡ãƒ³ãƒã¨GetDesc(), GetDescSize()ã®å®Ÿè£…
 //protected:
 	GRMesh* grMesh;
 	UTRef<PHFemMesh> phMesh;
-	std::vector<int> vertexIdMap;	//	grMesh‚©‚çphMesh‚Ö‚Ì’¸“_‚Ì‘Î‰•\
+	std::vector<int> vertexIdMap;	//	grMeshã‹ã‚‰phMeshã¸ã®é ‚ç‚¹ã®å¯¾å¿œè¡¨
 public:
-	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());		//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	///	ƒ[ƒhŒã‚ÉŒÄ‚Î‚ê‚éBgrMesh‚©‚çphMesh‚ğ¶¬‚µAgrMesh‚àphMesh‚É‡‚í‚¹‚½‚à‚Ì‚É’u‚«Š·‚¦‚é
+	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());		//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	///	ãƒ­ãƒ¼ãƒ‰å¾Œã«å‘¼ã°ã‚Œã‚‹ã€‚grMeshã‹ã‚‰phMeshã‚’ç”Ÿæˆã—ã€grMeshã‚‚phMeshã«åˆã‚ã›ãŸã‚‚ã®ã«ç½®ãæ›ãˆã‚‹
 	void Loaded(UTLoadContext* );
-	///	ƒOƒ‰ƒtƒBƒNƒX•\¦‘O‚Ì“¯Šúˆ—
+	///	ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹è¡¨ç¤ºå‰ã®åŒæœŸå‡¦ç†
 	void Sync(bool ph2gr);
-	///	qƒIƒuƒWƒFƒNƒg‚Ì”
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ•°
 	virtual size_t NChildObject() const;
-	///	qƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
 	virtual ObjectIf* GetChildObject(size_t pos);
-	///	qƒIƒuƒWƒFƒNƒg‚Ì’Ç‰Á
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¿½åŠ 
 	virtual bool AddChildObject(ObjectIf* o);
-	/// phMesh‚ğæ“¾
+	/// phMeshã‚’å–å¾—
 	PHFemMeshIf* GetPHMesh(){return phMesh->Cast();	};
 
 //protected:
-	//	TetGen‚ğ—p‚¢‚ÄAGRMesh‚ğl–Ê‘ÌƒƒbƒVƒ…‰»‚µAphMesh‚ÉŠi”[‚·‚éB
+	//	TetGenã‚’ç”¨ã„ã¦ã€GRMeshã‚’å››é¢ä½“ãƒ¡ãƒƒã‚·ãƒ¥åŒ–ã—ã€phMeshã«æ ¼ç´ã™ã‚‹ã€‚
 	virtual bool CreatePHFromGR();
-	//	phMesh‚©‚çGRMesh‚ğ¶¬‚·‚éBƒ}ƒeƒŠƒAƒ‹‚È‚Ç‚ÍgrMesh‚©‚çE‚¤B
+	//	phMeshã‹ã‚‰GRMeshã‚’ç”Ÿæˆã™ã‚‹ã€‚ãƒãƒ†ãƒªã‚¢ãƒ«ãªã©ã¯grMeshã‹ã‚‰æ‹¾ã†ã€‚
 	void CreateGRFromPH();
 
-	//	ƒƒbƒVƒ…‚Ìface•Ó‚ğ•`‰æ
+	//	ãƒ¡ãƒƒã‚·ãƒ¥ã®faceè¾ºã‚’æç”»
 	void DrawVtxLine(float length, float x, float y, float z);
 	void DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1);
 	void DrawEdge(Vec3d vtx0, Vec3d vtx1);
 	//void DrawEdge(unsigned id0, unsigned id1);
-	//	ƒƒbƒVƒ…‚Ìface•Ó‚ğ•`‰æ
+	//	ãƒ¡ãƒƒã‚·ãƒ¥ã®faceè¾ºã‚’æç”»
 	void DrawFaceEdge();
-	//	IH‰Á”M—Ìˆæ‚Ì‹«ŠEü‚ğˆø‚­
+	//	IHåŠ ç†±é ˜åŸŸã®å¢ƒç•Œç·šã‚’å¼•ã
 	void DrawIHBorderXZPlane();
 	void DrawIHBorder(double xs, double xe);
 };

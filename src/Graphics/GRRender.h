@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file GRRender.h
- *	@brief ƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[‚ÌŠî–{ƒNƒ‰ƒX@@
+ *	@brief ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ã€€ã€€
  */
 #ifndef GRRENDER_H
 #define GRRENDER_H
@@ -40,10 +40,10 @@ public:
 	virtual void Rendered(GRRenderIf* render);
 };
 
-/**	@brief	ƒOƒ‰ƒtƒBƒbƒNƒX‚ÌŞ¿ */
+/**	@brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã®æè³ª */
 class GRMaterial :public GRVisual, public GRMaterialDesc{
 public:
-	UTString texnameAbs;			//	ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹‚Ìâ‘ÎƒpƒX‚ª“ü‚Á‚Ä‚¢‚é‚±‚Æ‚ª‚ ‚éB“ü‚Á‚Ä‚È‚¢ê‡‚ÍAtexname‚ªg‚í‚ê‚é
+	UTString texnameAbs;			//	ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«ã®çµ¶å¯¾ãƒ‘ã‚¹ãŒå…¥ã£ã¦ã„ã‚‹ã“ã¨ãŒã‚ã‚‹ã€‚å…¥ã£ã¦ãªã„å ´åˆã¯ã€texnameãŒä½¿ã‚ã‚Œã‚‹
 	SPR_OBJECTDEF(GRMaterial);
 	ACCESS_DESC(GRMaterial);
 	GRMaterial(const GRMaterialDesc& desc=GRMaterialDesc()):GRMaterialDesc(desc){}
@@ -61,9 +61,9 @@ public:
 	GRMaterial(Vec4f c){
 		ambient = diffuse = specular = emissive = c;		
 	}
-	/**	W()—v‘f‚ÍAƒAƒ‹ƒtƒ@’l(0.0`1.0‚Å“§–¾“x‚ğ•\‚·). 1.0‚ª•s“§–¾‚ğ•\‚·.
-		material‚ÌW()—v‘f‚ğ”»’è‚µ‚ÄA•s“§–¾•¨‘Ì‚©A“§–¾•¨‘Ì‚©‚ğ”»’è‚·‚é. 
-		“§–¾‚ÈƒIƒuƒWƒFƒNƒg‚ğ•`‚­‚Æ‚«A‰“‚­‚Ì‚à‚Ì‚©‚ç‡”Ô‚É•`‰æ‚µ‚È‚¢‚ÆAˆÓ}‚É”½‚µ‚½Œ‹‰Ê‚Æ‚È‚é. */
+	/**	W()è¦ç´ ã¯ã€ã‚¢ãƒ«ãƒ•ã‚¡å€¤(0.0ï½1.0ã§é€æ˜åº¦ã‚’è¡¨ã™). 1.0ãŒä¸é€æ˜ã‚’è¡¨ã™.
+		materialã®W()è¦ç´ ã‚’åˆ¤å®šã—ã¦ã€ä¸é€æ˜ç‰©ä½“ã‹ã€é€æ˜ç‰©ä½“ã‹ã‚’åˆ¤å®šã™ã‚‹. 
+		é€æ˜ãªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æãã¨ãã€é ãã®ã‚‚ã®ã‹ã‚‰é †ç•ªã«æç”»ã—ãªã„ã¨ã€æ„å›³ã«åã—ãŸçµæœã¨ãªã‚‹. */
 	bool IsOpaque() const {		
 		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
 	}
@@ -71,28 +71,28 @@ public:
 };
 
 /**	@class	GRRenderBase
-    @brief	ƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[/ƒfƒoƒCƒX‚ÌŠî–{ƒNƒ‰ƒX@ */
+    @brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼/ãƒ‡ãƒã‚¤ã‚¹ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ã€€ */
 class GRRenderBase: public Object{
 public:
 	SPR_OBJECTDEF_ABST(GRRenderBase);
 	
 	virtual void SetViewport(Vec2f pos, Vec2f sz){}
 	virtual void ClearBuffer(){}
-	///	ƒoƒbƒtƒ@‚Ì“ü‚ê‘Ö‚¦i•\¦j
+	///	ãƒãƒƒãƒ•ã‚¡ã®å…¥ã‚Œæ›¿ãˆï¼ˆè¡¨ç¤ºï¼‰
 	virtual void SwapBuffers(){}
-	/// ”wŒiF‚Ìæ“¾
+	/// èƒŒæ™¯è‰²ã®å–å¾—
 	virtual void GetClearColor(Vec4f& color){}
 	virtual void SetClearColor(const Vec4f& color){}
 	virtual void BeginScene(){}
 	virtual void EndScene(){}
 	virtual void SetViewMatrix(const Affinef& afv){}
 	virtual void GetViewMatrix(Affinef& afv){}
-	///	ƒJƒŒƒ“ƒg‚Ì“Š‰es—ñ‚ğafp‚Å’u‚«Š·‚¦‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®æŠ•å½±è¡Œåˆ—ã‚’afpã§ç½®ãæ›ãˆã‚‹
 	virtual void SetProjectionMatrix(const Affinef& afp){}
 	virtual void GetProjectionMatrix(Affinef& afp){}
 	virtual void SetModelMatrix(const Affinef& afw){}
 	virtual void GetModelMatrix(Affinef& afw){}
-	///	ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚É‘Î‚µ‚Äafw‚ğŠ|‚¯‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã«å¯¾ã—ã¦afwã‚’æ›ã‘ã‚‹
 	virtual void MultModelMatrix(const Affinef& afw){}
 	virtual void PushModelMatrix(){}
 	virtual void PopModelMatrix(){}
@@ -151,18 +151,18 @@ public:
 };
 
 /**	@class	GRRender
-    @brief	ƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[‚ÌŠî–{ƒNƒ‰ƒXiƒfƒoƒCƒX‚ÌØ‚è•ª‚¯j@ */
+    @brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ï¼ˆãƒ‡ãƒã‚¤ã‚¹ã®åˆ‡ã‚Šåˆ†ã‘ï¼‰ã€€ */
 class GRRender: public GRRenderBase{
 	SPR_OBJECTDEF(GRRender);
 protected:
-	UTRef<GRDeviceIf> device;		///<	ƒfƒoƒCƒX
-	GRCameraDesc camera;			///<	ƒJƒƒ‰
-	Vec2f viewportPos;				///<	ƒrƒ…[ƒ|[ƒg‚Ì¶ã
-	Vec2f viewportSize;				///<	ƒrƒ…[ƒ|[ƒg‚ÌƒTƒCƒY
-	Affinef	affViewTmp, affModelTmp, affProjTmp;	///< ‘Ş”ğ—pƒAƒtƒBƒ“s—ñ
-	bool	screenCoord;			///<	‰æ–ÊÀ•Wƒ‚[ƒh‚©
+	UTRef<GRDeviceIf> device;		///<	ãƒ‡ãƒã‚¤ã‚¹
+	GRCameraDesc camera;			///<	ã‚«ãƒ¡ãƒ©
+	Vec2f viewportPos;				///<	ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®å·¦ä¸Š
+	Vec2f viewportSize;				///<	ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®ã‚µã‚¤ã‚º
+	Affinef	affViewTmp, affModelTmp, affProjTmp;	///< é€€é¿ç”¨ã‚¢ãƒ•ã‚£ãƒ³è¡Œåˆ—
+	bool	screenCoord;			///<	ç”»é¢åº§æ¨™ãƒ¢ãƒ¼ãƒ‰ã‹
 
-	std::vector<GRMaterialDesc> matSample;		/// ƒŒƒ“ƒ_ƒ‰[‚Å—pˆÓ‚µ‚Ä‚ ‚éŞ¿(24í—Ş)
+	std::vector<GRMaterialDesc> matSample;		/// ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã§ç”¨æ„ã—ã¦ã‚ã‚‹æè³ª(24ç¨®é¡)
 	
 public:
 #define REDIRECTIMP_GRRENDERBASE(ptr)																		\
@@ -252,36 +252,36 @@ public:
 	
 	REDIRECTIMP_GRRENDERBASE(device->)
 
-	///	ƒfƒoƒCƒX‚Ìİ’è
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®è¨­å®š
 	virtual void SetDevice(GRDeviceIf* dev){ device = dev; }
-	///	ƒfƒoƒCƒX‚Ìæ“¾
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®å–å¾—
 	virtual GRDeviceIf* GetDevice(){ return device; }
 	
-	///	ƒfƒoƒbƒO•\¦
+	///	ãƒ‡ãƒãƒƒã‚°è¡¨ç¤º
 	virtual void Print(std::ostream& os) const;
 	
-	///	ƒJƒƒ‰‚Ìİ’è
+	///	ã‚«ãƒ¡ãƒ©ã®è¨­å®š
 	void SetCamera(const GRCameraDesc& c);
 	const GRCameraDesc& GetCamera(){ return camera; }
 	
-	///	ƒXƒNƒŠ[ƒ“ƒTƒCƒY‚ÆƒvƒƒWƒFƒNƒVƒ‡ƒ“s—ñ‚Ìİ’è
+	///	ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚µã‚¤ã‚ºã¨ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ã‚·ãƒ§ãƒ³è¡Œåˆ—ã®è¨­å®š
 	virtual void Reshape(Vec2f pos, Vec2f sz);
 
-	/// —\–ñƒ}ƒeƒŠƒAƒ‹‚Ìİ’è
+	/// äºˆç´„ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®š
 	virtual void SetMaterial(int matname);
 	
-	/// Viewport‚ÌŠî“_À•W‚Ìæ“¾
+	/// Viewportã®åŸºç‚¹åº§æ¨™ã®å–å¾—
 	Vec2f GetViewportPos(){ return viewportPos; }
-	/// Viewport‚ÌƒTƒCƒY‚Ìæ“¾
+	/// Viewportã®ã‚µã‚¤ã‚ºã®å–å¾—
 	Vec2f GetViewportSize(){ return viewportSize; }
 	///
 	Vec2f GetPixelSize();
-	/// ƒXƒNƒŠ[ƒ“EƒJƒƒ‰À•W•ÏŠ·
+	/// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒ»ã‚«ãƒ¡ãƒ©åº§æ¨™å¤‰æ›
 	Vec3f ScreenToCamera(int x, int y, float depth, bool LorR = false);
 
-	/// ƒXƒNƒŠ[ƒ“À•WŒn‚ÖØ‚è‘Ö‚¦‚é
+	/// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ç³»ã¸åˆ‡ã‚Šæ›¿ãˆã‚‹
 	void EnterScreenCoordinate();
-	/// ƒXƒNƒŠ[ƒ“À•WŒn‚©‚ç–ß‚é
+	/// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ç³»ã‹ã‚‰æˆ»ã‚‹
 	void LeaveScreenCoordinate();
 	
 	GRRender();
@@ -289,10 +289,10 @@ public:
 };
 
 /**	@class	GRDevice
-    @brief	ƒOƒ‰ƒtƒBƒbƒNƒX•`‰æ‚ÌÀ‘•@ */
+    @brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹æç”»ã®å®Ÿè£…ã€€ */
 class GRDevice: public GRRenderBase{
 protected:
-	Vec4f	clearColor;		///< ”wŒiF
+	Vec4f	clearColor;		///< èƒŒæ™¯è‰²
 public:
 	SPR_OBJECTDEF_ABST(GRDevice);
 	virtual void Init(){}

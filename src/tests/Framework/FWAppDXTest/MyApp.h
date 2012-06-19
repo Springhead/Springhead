@@ -1,4 +1,4 @@
-#ifndef MYAPP_H
+ï»¿#ifndef MYAPP_H
 #define MYAPP_H
 #include <windows.h>
 #include <d3d9.h>
@@ -6,25 +6,25 @@
 class MyApp{
 	
 private:
-	HWND				hWnd;			// window‚Ö‚Ìƒnƒ“ƒhƒ‹
+	HWND				hWnd;			// windowã¸ã®ãƒãƒ³ãƒ‰ãƒ«
 	MSG					msg;
-	LPCSTR				winClassName;	// winClass‚Ì¯•Êq
-	LPCTSTR				windowName;		// •\¦‚³‚ê‚éWindow‚Ì–¼‘O
+	LPCSTR				winClassName;	// winClassã®è­˜åˆ¥å­
+	LPCTSTR				windowName;		// è¡¨ç¤ºã•ã‚Œã‚‹Windowã®åå‰
 	LPDIRECT3D9         pD3D;			// Used to create the D3DDevice
 	LPDIRECT3DDEVICE9   pD3DDevice;		// Our rendering device
-	WNDCLASSEX			winClass;		// FXŠÖ”‚ğ“o˜^‚·‚é\‘¢‘Ì
-	int					top;			// ƒEƒBƒ“ƒhƒE‚Ìƒ‚ƒjƒ^ã’[‚©‚ç‚ÌˆÊ’u
-	int					left;			// ƒEƒBƒ“ƒhƒE‚Ìƒ‚ƒjƒ^¶’[‚©‚ç‚ÌˆÊ’u
-	int					width;			// ƒEƒBƒ“ƒhƒE‚Ì•
-	int					height;			// ƒEƒBƒ“ƒhƒE‚Ì‚‚³
+	WNDCLASSEX			winClass;		// è‰²ã€…é–¢æ•°ã‚’ç™»éŒ²ã™ã‚‹æ§‹é€ ä½“
+	int					top;			// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒ¢ãƒ‹ã‚¿ä¸Šç«¯ã‹ã‚‰ã®ä½ç½®
+	int					left;			// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒ¢ãƒ‹ã‚¿å·¦ç«¯ã‹ã‚‰ã®ä½ç½®
+	int					width;			// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®å¹…
+	int					height;			// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®é«˜ã•
 	static MyApp*		instance;
 public:
 
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	MyApp();
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~MyApp();
-	//‚±‚ÌƒNƒ‰ƒX‚ÌŠÖ”
+	//ã“ã®ã‚¯ãƒ©ã‚¹ã®é–¢æ•°
 	bool					Init(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine, INT nCmdShow);
 	HRESULT					InitD3D(const HWND hWnd);
 	VOID					Render();

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -24,7 +24,7 @@ struct PHIKActuatorIf;
 struct PHIKEndEffectorIf;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief ƒ{ƒfƒB\’zƒNƒ‰ƒX‚Ìƒx[ƒX
+/** @brief ãƒœãƒ‡ã‚£æ§‹ç¯‰ã‚¯ãƒ©ã‚¹ã®ãƒ™ãƒ¼ã‚¹
 */
 struct CRBodyGenDesc{
 	CRBodyGenDesc(){
@@ -35,92 +35,92 @@ class CRBodyGen : public CRBodyGenDesc {
 protected:
 	enum LREnum{LEFTPART=-1, RIGHTPART=+1};
 
-	// ‘ÎÛCreature
+	// å¯¾è±¡Creature
 	CRCreatureIf* crCreature;
 
-	// ì¬‚³‚ê‚éBody
+	// ä½œæˆã•ã‚Œã‚‹Body
 	CRBodyIf* crBody;
 
-	/// ƒ{ƒfƒB‚ğ\¬‚·‚é„‘Ì
+	/// ãƒœãƒ‡ã‚£ã‚’æ§‹æˆã™ã‚‹å‰›ä½“
 	std::vector< UTRef<CRBoneIf> > solids;	
 	
-	/// ƒ{ƒfƒB‚ğ\¬‚·‚éŠÖß
+	/// ãƒœãƒ‡ã‚£ã‚’æ§‹æˆã™ã‚‹é–¢ç¯€
 	std::vector< UTRef<CRBoneIf> > joints;
 
-	/** @brief ŠÖß‚ğì‚é
+	/** @brief é–¢ç¯€ã‚’ä½œã‚‹
 	*/
 	CRBoneIf* CreateJoint(CRBoneIf* soChild, CRBoneIf* soParent, const PHHingeJointDesc& desc);
 	CRBoneIf* CreateJoint(CRBoneIf* soChild, CRBoneIf* soParent, const PHBallJointDesc& desc);
 
-	/** @brief „‘Ì‚ğì‚é
+	/** @brief å‰›ä½“ã‚’ä½œã‚‹
 	*/
 	CRBoneIf* CreateSolid(const PHSolidDesc& desc);
 
-	/** @brief ‚·‚×‚Ä‚Ì„‘Ì‚Ì‰Šúp¨‚ğ–Ú•WŠp‚Éû‘©‚µ‚½‚à‚Ì‚Æ‚µ‚Ä‰Šú‰»‚·‚é	
+	/** @brief ã™ã¹ã¦ã®å‰›ä½“ã®åˆæœŸå§¿å‹¢ã‚’ç›®æ¨™è§’ã«åæŸã—ãŸã‚‚ã®ã¨ã—ã¦åˆæœŸåŒ–ã™ã‚‹	
 	*/
 	void SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint);
 
 public:
 	CRBodyGen(const CRBodyGenDesc& desc = CRBodyGenDesc());
 
-	/** @brief ƒ{ƒfƒB‚ğ¶¬‚·‚é
+	/** @brief ãƒœãƒ‡ã‚£ã‚’ç”Ÿæˆã™ã‚‹
 	*/
 	virtual CRBodyIf* Generate(CRCreatureIf* crCreature);
 
 
-	// ‚±‚ê‚ç‚ÌŠÖ”‚ÍCRBody‚ÉˆÚ“®—\’èimitakej
+	// ã“ã‚Œã‚‰ã®é–¢æ•°ã¯CRBodyã«ç§»å‹•äºˆå®šï¼ˆmitakeï¼‰
 	#if 0
-	/** @brief CDBox‚ÌInertia‚ğŒvZ‚·‚éiŠµ«ƒeƒ“ƒ\ƒ‹‚Ì‘ÎŠp—v‘f‚É‚Í’l‚ª“ü‚Á‚ÄCŠµ«æÏ‚Í0j
+	/** @brief CDBoxã®Inertiaã‚’è¨ˆç®—ã™ã‚‹ï¼ˆæ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã®å¯¾è§’è¦ç´ ã«ã¯å€¤ãŒå…¥ã£ã¦ï¼Œæ…£æ€§ä¹—ç©ã¯0ï¼‰
 		@param CDBoxDesc::boxsize, PHSolidDesc::mass
-		@return Šµ«ƒeƒ“ƒ\ƒ‹
+		@return æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«
 	*/
 	Matrix3d CalcBoxInertia(Vec3d boxsize, double mass);
 
 	/**
-		@brief child‚Ìƒ|ƒeƒ“ƒVƒƒƒ‹ƒGƒlƒ‹ƒM[‚ğŒvZ‚·‚é
+		@brief childã®ãƒãƒ†ãƒ³ã‚·ãƒ£ãƒ«ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’è¨ˆç®—ã™ã‚‹
 	*/
 	double CalcPotential(Posed parentPos, PHSolidIf* parentSolid, PHJointIf* childJoint);
 
-	/** @brief ƒ{ƒfƒB‚ÌdSÀ•W‚ğ“¾‚é
+	/** @brief ãƒœãƒ‡ã‚£ã®é‡å¿ƒåº§æ¨™ã‚’å¾—ã‚‹
 	*/
 	virtual Vec3d GetCenterOfMass();
 	
-	/** @brief ƒ{ƒfƒB‚Ì¿—Ê‚ğ“¾‚é
+	/** @brief ãƒœãƒ‡ã‚£ã®è³ªé‡ã‚’å¾—ã‚‹
 	*/
 	virtual double GetSumOfMass();
 
 	/**
-		@brief –Ú•WŠpE–Ú•WŠp‘¬“x‚Éû‘©‚µ‚½ê‡‚Ì—ÍŠw“IƒGƒlƒ‹ƒM[‚ğ•Ô‚·
+		@brief ç›®æ¨™è§’ãƒ»ç›®æ¨™è§’é€Ÿåº¦ã«åæŸã—ãŸå ´åˆã®åŠ›å­¦çš„ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’è¿”ã™
 	*/
 	virtual double GetTargetMechanicalEnergy(PHSolidIf* rootSolid);
 
 	/**
-		@brief –Ú•WŠpE–Ú•WŠp‘¬“x‚Éû‘©‚µ‚½ê‡‚Ì‰^“®ƒGƒlƒ‹ƒM[‚ğ•Ô‚·
+		@brief ç›®æ¨™è§’ãƒ»ç›®æ¨™è§’é€Ÿåº¦ã«åæŸã—ãŸå ´åˆã®é‹å‹•ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’è¿”ã™
 	*/
 	virtual double GetTargetKineticEnergy();
 
 	/**
-		@brief –Ú•WŠpE–Ú•WŠp‘¬“x‚Éû‘©‚µ‚½ê‡‚ÌˆÊ’uƒGƒlƒ‹ƒM[‚ğ•Ô‚·
+		@brief ç›®æ¨™è§’ãƒ»ç›®æ¨™è§’é€Ÿåº¦ã«åæŸã—ãŸå ´åˆã®ä½ç½®ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’è¿”ã™
 	*/
 	virtual double GetTargetPotentialEnergy(PHSolidIf* rootSolid);
 
 	/**
-		@breif Še„‘Ì‚Ì–Ú•Wó‘Ô‚Éû‘©‚µ‚½ê‡‚ÌˆÊ’uƒGƒlƒ‹ƒM[‚ğ•Ô‚·
+		@breif å„å‰›ä½“ã®ç›®æ¨™çŠ¶æ…‹ã«åæŸã—ãŸå ´åˆã®ä½ç½®ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’è¿”ã™
 	*/
 	 virtual double CalcTargetPotential(Posed parentPos, PHSolidIf* parentSolid, PHJointIf* childJoint);
 
 	/**
-		@brief Œ»İ‚Ì—ÍŠw“IƒGƒlƒ‹ƒM[‚ğ•Ô‚·
+		@brief ç¾åœ¨ã®åŠ›å­¦çš„ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’è¿”ã™
 	*/
 	virtual double GetMechanicalEnergy();
 
 	/**
-		@brief Œ»İ‚Ì‰^“®ƒGƒlƒ‹ƒM[‚ğ•Ô‚·
+		@brief ç¾åœ¨ã®é‹å‹•ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’è¿”ã™
 	*/
 	virtual double GetKineticEnergy();
 
 	/**
-		@brief Œ»İ‚ÌˆÊ’uƒGƒlƒ‹ƒM[‚ğ•Ô‚·
+		@brief ç¾åœ¨ã®ä½ç½®ã‚¨ãƒãƒ«ã‚®ãƒ¼ã‚’è¿”ã™
 	*/
 	virtual double GetPotentialEnergy();
 	#endif

@@ -1,4 +1,4 @@
-#include "Handler.h"
+ï»¿#include "Handler.h"
 
 class LinkHandler : public Handler{
 public:
@@ -88,7 +88,7 @@ public:
 		jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
 		jntLink[3] = phScene->CreateJoint(soBox[1], soBox[2], jd);
 
-		// ˆÈ‰º‚ð—LŒø‰»‚·‚é‚ÆABA‚ª‹@”\‚µA•ÂƒŠƒ“ƒN‚ð\¬‚·‚é‚½‚ß‚Ì1ŠÖß‚Ì‚ÝLCP‚Å‰ð‚©‚ê‚é
+		// ä»¥ä¸‹ã‚’æœ‰åŠ¹åŒ–ã™ã‚‹ã¨ABAãŒæ©Ÿèƒ½ã—ã€é–‰ãƒªãƒ³ã‚¯ã‚’æ§‹æˆã™ã‚‹ãŸã‚ã®1é–¢ç¯€ã®ã¿LCPã§è§£ã‹ã‚Œã‚‹
 		nodeTree.push_back(phScene->CreateRootNode(soFloor, PHRootNodeDesc()));
 		nodeTree.push_back(phScene->CreateTreeNode(nodeTree[0], soBox[0], PHTreeNodeDesc()));
 		nodeTree.push_back(phScene->CreateTreeNode(nodeTree[1], soBox[2], PHTreeNodeDesc()));
@@ -97,7 +97,7 @@ public:
 		phScene->SetContactMode(&soBox[0], 3, PHSceneDesc::MODE_NONE);
 		//phScene->SetContactMode(PHSceneDesc::MODE_NONE);
 		
-		//	Å‰‚ÍABA‚ð–³Œø‰»	
+		//	æœ€åˆã¯ABAã‚’ç„¡åŠ¹åŒ–	
 		app->OnAction(SampleApp::MENU_CONFIG, SampleApp::ID_TOGGLE_ABA);
 	}
 
@@ -142,8 +142,8 @@ public:
 		}
 
 		if(id == ID_CREATE_PATH){
-			//ƒ`ƒFƒrƒVƒFƒtƒŠƒ“ƒNˆêŽü•ª‚Ì‹OÕ‚ð‹L‰¯‚³‚¹‚ÄƒpƒXƒWƒ‡ƒCƒ“ƒg‚ðì¬
-			//	2010.12.12 ƒRƒƒ“ƒg‚ðŠO‚µ‚Ä‚Ý‚½‚Æ‚±‚ë—Ž‚¿‚éB–¢Š®H	by hase
+			//ãƒã‚§ãƒ“ã‚·ã‚§ãƒ•ãƒªãƒ³ã‚¯ä¸€å‘¨åˆ†ã®è»Œè·¡ã‚’è¨˜æ†¶ã•ã›ã¦ãƒ‘ã‚¹ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ä½œæˆ
+			//	2010.12.12 ã‚³ãƒ¡ãƒ³ãƒˆã‚’å¤–ã—ã¦ã¿ãŸã¨ã“ã‚è½ã¡ã‚‹ã€‚æœªå®Œï¼Ÿ	by hase
 			PHPathDesc descPath;
 			descPath.bLoop = true;
 			PHPathIf* trajectory = phScene->CreatePath(descPath);

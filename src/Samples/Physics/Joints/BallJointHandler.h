@@ -1,6 +1,6 @@
-#include "Handler.h"
+ï»¿#include "Handler.h"
 
-/// PHBallJoint‚Ìƒfƒ‚
+/// PHBallJointã®ãƒ‡ãƒ¢
 class BallJointHandler : public Handler{
 public:
 	virtual void Build(){

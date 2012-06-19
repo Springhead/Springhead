@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -22,18 +22,18 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 //	PHSolidPair
 
-//‘ÌÏ‚ğg‚í‚È‚¢ÚG”»’è
+//ä½“ç©ã‚’ä½¿ã‚ãªã„æ¥è§¦åˆ¤å®š
 
 //----------------------------------------------------------------------------
 // PHContactTableState
 
 }
 
-/*			analyzer.FindIntersection(&sp, shape);	//Œğ·Œ`ó‚ÌŒvZ
-			analyzer.CalcNormal(&sp);				//Œğ·‚Ì–@ü‚Æ’†S‚ğ“¾‚é
+/*			analyzer.FindIntersection(&sp, shape);	//äº¤å·®å½¢çŠ¶ã®è¨ˆç®—
+			analyzer.CalcNormal(&sp);				//äº¤å·®ã®æ³•ç·šã¨ä¸­å¿ƒã‚’å¾—ã‚‹
 
-			//ÚG“_‚Ìì¬F
-			//Œğ·Œ`ó‚ğ\¬‚·‚é’¸“_‚Íanalyzer.planes.begin‚©‚çend‚Ü‚Å‚Ì“àdeleted==false‚Ì‚à‚Ì
+			//æ¥è§¦ç‚¹ã®ä½œæˆï¼š
+			//äº¤å·®å½¢çŠ¶ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹ã¯analyzer.planes.beginã‹ã‚‰endã¾ã§ã®å†…deleted==falseã®ã‚‚ã®
 			typedef CDQHPlanes<CDContactAnalysisFace>::CDQHPlane Plane;
 			static std::vector<ContactVertex> isVtxs;
 			isVtxs.clear();
@@ -46,7 +46,7 @@ namespace Spr{;
 			ContactVertex::ex.unitize();
 			ContactVertex::ey = sp.normal ^ ContactVertex::ex;
 
-			//	‚·‚×‚Ä‚ÌÚG“_‚ğŠÜ‚ŞÅ¬‚Ì“Ê‘½ŠpŒ`
+			//	ã™ã¹ã¦ã®æ¥è§¦ç‚¹ã‚’å«ã‚€æœ€å°ã®å‡¸å¤šè§’å½¢
 			static CDQHLines<ContactVertex> supportConvex(1000);
 			supportConvex.Clear();
 			supportConvex.epsilon = 0.01f;

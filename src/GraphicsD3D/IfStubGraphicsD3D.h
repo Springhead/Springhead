@@ -1,4 +1,4 @@
-#ifndef IFSTUBGRAPHICSD3D_H
+﻿#ifndef IFSTUBGRAPHICSD3D_H
 #define IFSTUBGRAPHICSD3D_H
 
 #include <SprGraphics.h>

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -24,7 +24,7 @@ PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
 }
 void PHScene::Init(){
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Åİ’è‚µ‚½’l‚ğã‘‚«‚µ‚Ä‚µ‚Ü‚¤‚½‚ßAƒRƒƒ“ƒgƒAƒEƒg‚µ‚Ü‚µ‚½
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§è¨­å®šã—ãŸå€¤ã‚’ä¸Šæ›¸ãã—ã¦ã—ã¾ã†ãŸã‚ã€ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã—ã¾ã—ãŸ
 	//PHSceneDesc::Init();
 
 	engines.scene = this;
@@ -65,7 +65,7 @@ void PHScene::AfterSetDesc(){
 	timeStepInv = 1.0/timeStep;	
 }
 void PHScene::BeforeGetDesc() const{
-	// Engine‚ÌAPI‚ğ‰î‚µ‚Ä•ÏX‚³‚ê‚é‰Â”\«‚à‚ ‚é‚Ì‚Å
+	// Engineã®APIã‚’ä»‹ã—ã¦å¤‰æ›´ã•ã‚Œã‚‹å¯èƒ½æ€§ã‚‚ã‚ã‚‹ã®ã§
 	(Vec3d&)gravity = gravityEngine->accel;
 	(int&)numIteration = constraintEngine->numIter;
 }
@@ -359,7 +359,7 @@ bool PHScene::AddChildObject(ObjectIf* o){
 			constraintEngine->AddChildObject(o) &&
 			hapticEngine->AddChildObject(o))
 		{
-            SetContactMode(solid->Cast(), PHSceneDesc::MODE_LCP);	//ƒfƒtƒHƒ‹ƒg‚ÅLCP
+            SetContactMode(solid->Cast(), PHSceneDesc::MODE_LCP);	//ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§LCP
 			solid->scene = this;
 			solid->engine = constraintEngine;
 			ok = true;
@@ -393,11 +393,11 @@ bool PHScene::AddChildObject(ObjectIf* o){
 	if (fem && femEngine->AddChildObject(o))
 		ok = true;
 
-	// MergeScene‚È‚Ç‚Å‘¼‚ÌScene‚©‚çˆÚ“®‚µ‚Ä‚­‚éê‡‚à‚ ‚é‚Ì‚ÅŠ—LŒ ‚ğXV‚·‚é
+	// MergeSceneãªã©ã§ä»–ã®Sceneã‹ã‚‰ç§»å‹•ã—ã¦ãã‚‹å ´åˆã‚‚ã‚ã‚‹ã®ã§æ‰€æœ‰æ¨©ã‚’æ›´æ–°ã™ã‚‹
 	if(ok){
 		SceneObject* so = DCAST(SceneObject, o);
 		so->SetScene(Cast());
-		// –¼‘O‚ª•t‚¢‚Ä‚¢‚È‚¢ê‡‚ÉƒfƒtƒHƒ‹ƒg–¼‚ğ—^‚¦‚é
+		// åå‰ãŒä»˜ã„ã¦ã„ãªã„å ´åˆã«ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆåã‚’ä¸ãˆã‚‹
 		if(strcmp(so->GetName(), "") == 0){
 			char name[256];
 			if(solid)
@@ -534,7 +534,7 @@ void PHScene::SetState(const void* s){
 	*(PHSceneState*)this = *(const PHSceneState*)p;
 	p += sizeof(PHSceneState);
 	if (constraintEngine){
-		constraintEngine->SetState(p);  // ‚È‚ºƒRƒƒ“ƒgƒAƒEƒg‚³‚ê‚Ä‚¢‚½‚Ì‚©HH(2012/1/28, mitake) <!!>
+		constraintEngine->SetState(p);  // ãªãœã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã•ã‚Œã¦ã„ãŸã®ã‹ï¼Ÿï¼Ÿ(2012/1/28, mitake) <!!>
 	}
 }
 
@@ -545,9 +545,9 @@ void PHScene::GetStateR(char*& s){
 	assert(rv || sz==0);
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
-		// child‚Æ‚µ‚ÄSolid‚¾‚¯‚ğŒÄ‚Ô¨‚È‚ºH
-		/*¨Constraint‚ğƒZ[ƒu‚µ‚½‚¢‚Í
-		PHConstrainEngine::SetBSaveConstraints‚ğtrue‚É
+		// childã¨ã—ã¦Solidã ã‘ã‚’å‘¼ã¶â†’ãªãœï¼Ÿ
+		/*â†’Constraintã‚’ã‚»ãƒ¼ãƒ–ã—ãŸã„æ™‚ã¯
+		PHConstrainEngine::SetBSaveConstraintsã‚’trueã«
 		*/
 		if(DCAST(PHSolidIf, GetChildObject(i))){
 			((PHSolid*)GetChildObject(i))->GetStateR(s);
@@ -559,9 +559,9 @@ void PHScene::SetStateR(const char*& s){
 	s += GetStateSize();
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
-		// child‚Æ‚µ‚ÄSolid‚¾‚¯‚ğŒÄ‚Ô
-		/*¨Constraint‚ğƒZ[ƒu‚µ‚½‚¢‚Í
-		PHConstrainEngine::SetBSaveConstraints‚ğtrue‚É
+		// childã¨ã—ã¦Solidã ã‘ã‚’å‘¼ã¶
+		/*â†’Constraintã‚’ã‚»ãƒ¼ãƒ–ã—ãŸã„æ™‚ã¯
+		PHConstrainEngine::SetBSaveConstraintsã‚’trueã«
 		*/
 		if(DCAST(PHSolidIf, GetChildObject(i))){
 			((PHSolid*)GetChildObject(i))->SetStateR(s);

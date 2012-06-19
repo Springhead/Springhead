@@ -1,4 +1,4 @@
-/*
+Ôªø/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,7 +17,7 @@ namespace Spr{;
 //@{
 
 /**
-	CyverseÇÃUSBÉfÉoÉCÉX
+	Cyverse„ÅÆUSB„Éá„Éê„Ç§„Çπ
  **/
 
 ///	
@@ -27,7 +27,7 @@ struct DRUsb20SimpleIf : public HIRealDeviceIf{
 struct DRUsb20SimpleDesc{
 	SPR_DESCDEF(DRUsb20Simple);
 
-	int channel;		///< égópÉ`ÉÉÉìÉlÉãÅD-1Ç»ÇÁîCà”
+	int channel;		///< ‰ΩøÁî®„ÉÅ„É£„É≥„Éç„É´Ôºé-1„Å™„Çâ‰ªªÊÑè
 
 	DRUsb20SimpleDesc(): channel(10){}
 };

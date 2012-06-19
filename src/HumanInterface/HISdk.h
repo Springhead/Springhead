@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -32,8 +32,8 @@ typedef	std::vector< UTRef<HIRealDeviceIf> >	DRPool;
 typedef std::vector< UTRef<HIBaseIf> >			HIPool;
 
 protected:
-	DRPool					drPool;		///< ŽÀƒfƒoƒCƒX‚Ìƒv[ƒ‹
-	HIPool					hiPool;		///< ƒqƒ…[ƒ}ƒ“ƒCƒ“ƒ^ƒtƒF[ƒX‚Ìƒv[ƒ‹
+	DRPool					drPool;		///< å®Ÿãƒ‡ãƒã‚¤ã‚¹ã®ãƒ—ãƒ¼ãƒ«
+	HIPool					hiPool;		///< ãƒ’ãƒ¥ãƒ¼ãƒžãƒ³ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®ãƒ—ãƒ¼ãƒ«
 
 public:
 	SPR_OBJECTDEF(HISdk);
@@ -44,7 +44,7 @@ public:
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual void Clear();
 
-	/// ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌŽÀ‘•
+	/// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 	HIVirtualDeviceIf* RentVirtualDevice(const IfInfo* ii, const char* name=NULL, int portNum = -1);
 	HIVirtualDeviceIf* RentVirtualDevice(const char* type, const char* name=NULL, int portNum = -1);
 	bool ReturnVirtualDevice(HIVirtualDeviceIf* dev);

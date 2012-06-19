@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -37,13 +37,13 @@ void PHShapePairForPenalty::Clear(){
 
 void PHSolidPairForPenalty::Setup(unsigned int ct, double dt){
 	if(!bEnabled)return;
-	//	“®—ÍŠwŒvZ‚Ì€”õ
+	//	å‹•åŠ›å­¦è¨ˆç®—ã®æº–å‚™
 	reflexForce = reflexTorque = frictionForce = frictionTorque = Vec3f();
 	area = 0;
 
 	cocog = ave(solid[0]->GetCenterPosition(), solid[1]->GetCenterPosition());
 
-	//	Š·Z¿—Ê‚ÌŒvZ
+	//	æ›ç®—è³ªé‡ã®è¨ˆç®—
 	convertedMass=1.0f;
 	if (solid[0]->GetMass() < 1e10f && solid[1]->GetMass() < 1e10f){
 		float m0 = (float)solid[0]->GetMass();
@@ -59,10 +59,10 @@ void PHSolidPairForPenalty::Setup(unsigned int ct, double dt){
 void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine* engine, unsigned ct, double dt){
 	//contacts.push_back(sp);
 	static CDContactAnalysis analyzer;
-	analyzer.FindIntersection(sp);	//	ÚGŒ`ó‚Ì‰ğÍ
-	analyzer.CalcNormal(sp);		//	–@üƒxƒNƒgƒ‹‚ÌŒvZ
+	analyzer.FindIntersection(sp);	//	æ¥è§¦å½¢çŠ¶ã®è§£æ
+	analyzer.CalcNormal(sp);		//	æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã®è¨ˆç®—
 
-	//	ÚG—ÍŒvZ‚Ì€”õ
+	//	æ¥è§¦åŠ›è¨ˆç®—ã®æº–å‚™
 	float rs[2], rd[2], fs[2], fd[2], sf[2], df[2];
 	for(int i=0; i<2; ++i){
 		rs[i] = sp->shape[i]->GetMaterial().reflexSpring;
@@ -74,39 +74,39 @@ void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine*
 	}
 
 #if 0
-	//	2010.07.30 ƒoƒlEƒ_ƒ“ƒp‚ğ”¼•ª‚É‚µ‚Ü‚µ‚½B
+	//	2010.07.30 ãƒãƒãƒ»ãƒ€ãƒ³ãƒ‘ã‚’åŠåˆ†ã«ã—ã¾ã—ãŸã€‚
 	reflexSpring    = ave(rs[0], rs[1]) * convertedMass / (float)(4*dt*dt);
 	reflexDamper    = ave(rd[0], rd[1]) * convertedMass / (float)(2*dt);
 	frictionSpring  = ave(fs[0], fs[1]) * convertedMass / (float)(4*dt*dt);
 	frictionDamper  = ave(fd[0], fd[1]) * convertedMass / (float)(2*dt);
 #else	
 	// 2011.12.12 susa
-	// http://springhead.info/control.pdf ‚Ì‹Lq‚¾‚Æ‰º‹L‚Ì‚æ‚¤‚É‚È‚é
-	// ‚Ü‚½Cave(rs[0], rs[1])=0.2Cave(rd[0], rd[1])=0.6
+	// http://springhead.info/control.pdf ã®è¨˜è¿°ã ã¨ä¸‹è¨˜ã®ã‚ˆã†ã«ãªã‚‹
+	// ã¾ãŸï¼Œave(rs[0], rs[1])=0.2ï¼Œave(rd[0], rd[1])=0.6
 	// reflexSpring = 2000, reflexDamper = 3, convertedMass = 5.0e-3
-	// ‚Æ‚È‚é‚æ‚¤‚Éİ’è‚·‚é‚ÆC‚»‚ê‚Á‚Û‚¢‹““®‚ª“¾‚ç‚ê‚éD
+	// ã¨ãªã‚‹ã‚ˆã†ã«è¨­å®šã™ã‚‹ã¨ï¼Œãã‚Œã£ã½ã„æŒ™å‹•ãŒå¾—ã‚‰ã‚Œã‚‹ï¼
 	reflexSpring    = 2 * ave(rs[0], rs[1]) * convertedMass / (float)(dt*dt);
 	reflexDamper    = ave(rd[0], rd[1]) * convertedMass / (float)dt;	
 	frictionSpring  = 2 * ave(fs[0], fs[1]) * convertedMass / (float)(dt*dt);
 	frictionDamper  = ave(fd[0], fd[1]) * convertedMass / (float)dt;
 	//DSTR << reflexSpring << reflexDamper << std::endl;
 #endif
-	// if‚É‘Î‚µ‚Ä‚Ìˆ—‚ª‘‚©‚ê‚Ä‚¢‚È‚¢D‚±‚Ì‚Ü‚Ü‚¾‚ÆstaticFriction‚ªİ’è‚³‚ê‚È‚¢
+	// ifã«å¯¾ã—ã¦ã®å‡¦ç†ãŒæ›¸ã‹ã‚Œã¦ã„ãªã„ï¼ã“ã®ã¾ã¾ã ã¨staticFrictionãŒè¨­å®šã•ã‚Œãªã„
 	//if (reflexSpring > convertedMass / (float)(2*dt*dt)) 
 
 
 	staticFriction  = ave(sf[0], sf[1]);
 	dynamicFriction = ave(df[0], df[1]);
 	
-	//	ÚG—ÍŒvZ	Õ“Ë‚Ì–ÊÏCR—Í‚ğ‹‚ß‚é
+	//	æ¥è§¦åŠ›è¨ˆç®—	è¡çªã®é¢ç©ï¼ŒæŠ—åŠ›ã‚’æ±‚ã‚ã‚‹
 	CalcReflexForce(sp, &analyzer);
 	area += sp->area;
 }
 
 void PHSolidPairForPenalty::GenerateForce(){
 	if(!bEnabled)return;
-	//	ÚG”»’èI—¹Œã‚Ìˆ—
-	//	R—Í‚Æ‚»‚Ìì—p“_‚ğ‹‚ßC–€C‚ğŒvZ‚µCR—Í‚Æ–€C—Í‚ğ•¨‘Ì‚É‰Á‚¦‚éD
+	//	æ¥è§¦åˆ¤å®šçµ‚äº†å¾Œã®å‡¦ç†
+	//	æŠ—åŠ›ã¨ãã®ä½œç”¨ç‚¹ã‚’æ±‚ã‚ï¼Œæ‘©æ“¦ã‚’è¨ˆç®—ã—ï¼ŒæŠ—åŠ›ã¨æ‘©æ“¦åŠ›ã‚’ç‰©ä½“ã«åŠ ãˆã‚‹ï¼
 	int i, j;
 	PHShapePairForPenalty* cp;
 	for(i = 0; i < shapePairs.height(); i++)for(j = 0; j < shapePairs.width(); j++){
@@ -114,7 +114,7 @@ void PHSolidPairForPenalty::GenerateForce(){
 		if(cp->state == CDShapePair::NONE) continue;
 		if (!area) continue;
 
-		//	Ï•ª‚µ‚½ƒyƒiƒ‹ƒeƒB‚Æ‘¬“x‚ğ–ÊÏ‚ÅŠ„‚é
+		//	ç©åˆ†ã—ãŸãƒšãƒŠãƒ«ãƒ†ã‚£ã¨é€Ÿåº¦ã‚’é¢ç©ã§å‰²ã‚‹
 		cp->reflexSpringForce /= area;
 		cp->reflexDamperForce /= area;
 		cp->reflexSpringTorque /= area;
@@ -129,9 +129,9 @@ void PHSolidPairForPenalty::GenerateForce(){
 				DSTR << "Error: forces: " << cp->reflexSpringForce << cp->frictionForce << cp->frictionTorque << std::endl;
 			}
 		)
-		//	–€C—Í‚ğŒvZ‚·‚é
+		//	æ‘©æ“¦åŠ›ã‚’è¨ˆç®—ã™ã‚‹
 		CalcFriction(cp);
-		//	—Í‚ğ‰Á‚¦‚éD
+		//	åŠ›ã‚’åŠ ãˆã‚‹ï¼
 		Vec3f refF = cp->reflexSpringForce + cp->reflexDamperForce;
 		Vec3f refT = cp->reflexSpringTorque + cp->reflexDamperTorque
 			+ ((cp->commonPoint - cocog)^refF);
@@ -142,9 +142,9 @@ void PHSolidPairForPenalty::GenerateForce(){
 		frictionTorque += cp->frictionTorque
 			+ (((cp->reflexForcePoint+cp->commonPoint) - cocog) ^ cp->frictionForce);
 
-		//	—Í‚ğ§ŒÀ‚·‚éD
+		//	åŠ›ã‚’åˆ¶é™ã™ã‚‹ï¼
 		//	LimitForces();
-		// —Í‚ğ‰Á‚¦‚éD
+		// åŠ›ã‚’åŠ ãˆã‚‹ï¼
 		solid[0]->AddForce(reflexForce + frictionForce, cocog);
 		solid[0]->AddTorque(reflexTorque + frictionTorque);
 		solid[1]->AddForce(-(reflexForce + frictionForce), cocog);
@@ -152,8 +152,8 @@ void PHSolidPairForPenalty::GenerateForce(){
 	}
 }
 
-//	“ÊŒ`ó‘Î‚É”­¶‚·‚é”½—Í‚ÌŒvZ‚ÆÅ‘å–€C—Í‚ÌŒvZ
-//	‚·‚×‚Ä commonPoint ‚ğŒ´“_‚Æ‚µ‚½À•WŒn‚ÅŒvZ‚·‚éD
+//	å‡¸å½¢çŠ¶å¯¾ã«ç™ºç”Ÿã™ã‚‹ååŠ›ã®è¨ˆç®—ã¨æœ€å¤§æ‘©æ“¦åŠ›ã®è¨ˆç®—
+//	ã™ã¹ã¦ commonPoint ã‚’åŸç‚¹ã¨ã—ãŸåº§æ¨™ç³»ã§è¨ˆç®—ã™ã‚‹ï¼
 void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContactAnalysis* analyzer){
 	//DSTR << "---------------------------------------------------------" << std::endl;
 	cp->Clear();
@@ -162,9 +162,9 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 		(CDConvexMesh*)cp->shape[0],
 		(CDConvexMesh*)cp->shape[1]
 	};*/
-	if (bUseContactVolume){	//	’Êí true
+	if (bUseContactVolume){	//	é€šå¸¸ true
 		//for(CDContactAnalysis::Vtxs::iterator it = analyzer->vtxs.begin(); it != analyzer->planes.vtxBegin; ++it){
-		for (CDContactAnalysisFace** it = &*analyzer->vtxs.begin(); it != analyzer->planes.vtxBegin; ++it){	// ‚±‚ê‚Å‚¢‚¢‚ÌH
+		for (CDContactAnalysisFace** it = &*analyzer->vtxs.begin(); it != analyzer->planes.vtxBegin; ++it){	// ã“ã‚Œã§ã„ã„ã®ï¼Ÿ
 			CDContactAnalysisFace& qhVtx = **it;
 			if (qhVtx.NCommonVtx() < 3) continue;
 			Vec3f p0 = qhVtx.CommonVtx(0);
@@ -180,7 +180,7 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 				p2 = qhVtx.CommonVtx(i);
 				v2 = solid[1]->velocity + (solid[1]->angVelocity^(p2-cog[1]))
 				   - solid[0]->velocity - (solid[0]->angVelocity^(p2-cog[0]));
-				//	‘o‘Î•ÏŠ·‚ÌŒ´“_GJK‚ÅŒ©‚Â‚¯‚½‹¤’Ê“_‚ğŒ´“_‚Æ‚µ‚ÄAOŠpŒ`‚Ì‚R’¸“_‚ğ“n‚·
+				//	åŒå¯¾å¤‰æ›ã®åŸç‚¹ï¼GJKã§è¦‹ã¤ã‘ãŸå…±é€šç‚¹ã‚’åŸç‚¹ã¨ã—ã¦ã€ä¸‰è§’å½¢ã®ï¼“é ‚ç‚¹ã‚’æ¸¡ã™
 				CalcTriangleReflexForce(cp, p0, p1, p2, v0, v1, v2, qhVtx.id==1);
 #if 0				//	hase
 				if (cp->reflexSpringForce.norm() > 10000 || !finite(cp->reflexSpringForce.norm()) ){
@@ -190,12 +190,12 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 #endif
 			}
 		}
-		/*	ap: ì—p“_‚Æ‚·‚é‚Æ
+		/*	ap: ä½œç”¨ç‚¹ã¨ã™ã‚‹ã¨
 			torque = ap ^ force,
-			ap * force = 0 ‚Æ‚·‚é‚Æ ap Û torque,  force Û torque, ap Û force 
-			‚Æ‚È‚èC3‚Â‚ÌƒxƒNƒgƒ‹‚Í’¼s‚·‚éD
-			‚»‚Ì‚½‚ßC
-			|torque| = |ap|*|force| ‚Æ‚È‚éD
+			ap * force = 0 ã¨ã™ã‚‹ã¨ ap âŠ¥ torque,  force âŠ¥ torque, ap âŠ¥ force 
+			ã¨ãªã‚Šï¼Œ3ã¤ã®ãƒ™ã‚¯ãƒˆãƒ«ã¯ç›´è¡Œã™ã‚‹ï¼
+			ãã®ãŸã‚ï¼Œ
+			|torque| = |ap|*|force| ã¨ãªã‚‹ï¼
 
 			ap = ((force^torque) / (|force|*|torque|)) * (|torque|/|force|)
 			= (force^torque) / force^2
@@ -252,40 +252,40 @@ void PHSolidPairForPenalty::CalcReflexForce(PHShapePairForPenalty* cp, CDContact
 #endif
 }
 
-//	‚±‚ÌOŠpŒ`‚ª•¨‘Ì0‚É—^‚¦‚é—Í‚ğ‹‚ß‚éB
+//	ã“ã®ä¸‰è§’å½¢ãŒç‰©ä½“0ã«ä¸ãˆã‚‹åŠ›ã‚’æ±‚ã‚ã‚‹ã€‚
 void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, Vec3f p0, Vec3f p1, Vec3f p2, Vec3f v0, Vec3f v1, Vec3f v2, bool bFront){
-	//	p0..p2 OŠpŒ`‚Ì‚R’¸“_BŒ´“_‚ÍGJK‚Ì‹¤’Ê“_‘o‘Î•ÏŠ·‚ÌŒ´“_
-	//	v0..v2 ‚R’¸“_‚Å‚Ì•¨‘Ì0`1‚ğŒ©‚½‚Æ‚«‚Ì‘Š‘Î‘¬“x  iâ‘Î‘¬“x‚Å‚Í‚¾‚ß@¨@‘Š‘Î‘¬“x‚ÌŒü‚«‚É“®–€C—Í‚ª¶‚¶‚é‚Ì‚Å–€C‚Å¢‚éj
-	//	bFront	•¨‘Ì1‚Ì–Ê‚È‚ç true
+	//	p0..p2 ä¸‰è§’å½¢ã®ï¼“é ‚ç‚¹ã€‚åŸç‚¹ã¯GJKã®å…±é€šç‚¹ï¼åŒå¯¾å¤‰æ›ã®åŸç‚¹
+	//	v0..v2 ï¼“é ‚ç‚¹ã§ã®ç‰©ä½“0ï½1ã‚’è¦‹ãŸã¨ãã®ç›¸å¯¾é€Ÿåº¦  ï¼ˆçµ¶å¯¾é€Ÿåº¦ã§ã¯ã ã‚ã€€â†’ã€€ç›¸å¯¾é€Ÿåº¦ã®å‘ãã«å‹•æ‘©æ“¦åŠ›ãŒç”Ÿã˜ã‚‹ã®ã§æ‘©æ“¦ã§å›°ã‚‹ï¼‰
+	//	bFront	ç‰©ä½“1ã®é¢ãªã‚‰ true
 	//---------------------------------------------------------------
-	//	‚Î‚Ëƒ‚ƒfƒ‹‚ÌŒvZFŠe’¸“_‚ÌN“ü[‚³‚ÌŒvZ
-	float depth0 = p0 * cp->normal;	//	normal ‚Í•¨‘Ì0‚©‚ç1‚ÌŒü‚«B•¨‘Ì0‚ª–@üŒü‚«‚É‚¸‚ê‚é‚Æ‚æ‚èN“ü‚µ‚Ä”½—Í‚ª‘‚¦‚éB
- 	float depth1 = p1 * cp->normal;	//	•¨‘Ì1‚ª–@üŒü‚«‚É‚¸‚ê‚é‚Æ”½—Í‚ªŒ¸‚é‚ªAa_b_normal‚Ì•„†‚à•‰‚É‚È‚é‚Ì‚Å•„†‚ª‡‚¤B
+	//	ã°ã­ãƒ¢ãƒ‡ãƒ«ã®è¨ˆç®—ï¼šå„é ‚ç‚¹ã®ä¾µå…¥æ·±ã•ã®è¨ˆç®—
+	float depth0 = p0 * cp->normal;	//	normal ã¯ç‰©ä½“0ã‹ã‚‰1ã®å‘ãã€‚ç‰©ä½“0ãŒæ³•ç·šå‘ãã«ãšã‚Œã‚‹ã¨ã‚ˆã‚Šä¾µå…¥ã—ã¦ååŠ›ãŒå¢—ãˆã‚‹ã€‚
+ 	float depth1 = p1 * cp->normal;	//	ç‰©ä½“1ãŒæ³•ç·šå‘ãã«ãšã‚Œã‚‹ã¨ååŠ›ãŒæ¸›ã‚‹ãŒã€a_b_normalã®ç¬¦å·ã‚‚è² ã«ãªã‚‹ã®ã§ç¬¦å·ãŒåˆã†ã€‚
  	float depth2 = p2 * cp->normal;
 	p0 -= depth0 * cp->normal;
 	p1 -= depth1 * cp->normal;
 	p2 -= depth2 * cp->normal;
-	//	ƒ_ƒ“ƒpƒ‚ƒfƒ‹‚ÌŒvZFŠe’¸“_‚Ì‘¬“x‚Ì–@ü•ûŒü¬•ª‚ğ‹‚ß‚é
-	//	•¨‘Ì0‚ª–@üŒü‚«‚É‘¬“x‚ğ‚Â‚Æ”½—Í‚ª‘‚¦‚éB
+	//	ãƒ€ãƒ³ãƒ‘ãƒ¢ãƒ‡ãƒ«ã®è¨ˆç®—ï¼šå„é ‚ç‚¹ã®é€Ÿåº¦ã®æ³•ç·šæ–¹å‘æˆåˆ†ã‚’æ±‚ã‚ã‚‹
+	//	ç‰©ä½“0ãŒæ³•ç·šå‘ãã«é€Ÿåº¦ã‚’æŒã¤ã¨ååŠ›ãŒå¢—ãˆã‚‹ã€‚
 	float vel0_normal = v0 * cp->normal;
 	float vel1_normal = v1 * cp->normal;
 	float vel2_normal = v2 * cp->normal;
 
-	//	R—Í‚ğŒvZ
+	//	æŠ—åŠ›ã‚’è¨ˆç®—
 	float refSp0 = reflexSpring * depth0;
 	float refSp1 = reflexSpring * depth1;
 	float refSp2 = reflexSpring * depth2;
 	
-	float refDa0 = reflexDamper * vel0_normal * 0.5;	//	— •\‚Å2‰ñ”‚¦‚Ä‚µ‚Ü‚¤‚Ì‚ÅA”¼•ª‚É‚µ‚Ä‚¨‚­
+	float refDa0 = reflexDamper * vel0_normal * 0.5;	//	è£è¡¨ã§2å›æ•°ãˆã¦ã—ã¾ã†ã®ã§ã€åŠåˆ†ã«ã—ã¦ãŠã
 	float refDa1 = reflexDamper * vel1_normal * 0.5;
 	float refDa2 = reflexDamper * vel2_normal * 0.5;
 
 	//---------------------------------------------------------------
-	//	OŠpŒ`‚É‚Â‚¢‚ÄÏ•ª
+	//	ä¸‰è§’å½¢ã«ã¤ã„ã¦ç©åˆ†
 	Vec3f a = p1 - p0;
 	Vec3f b = p2 - p0;
-	Vec3f a_b = a^b;						//	•¨‘Ì1‚¾‚Æ— ‚ğŒü‚­B
-	float a_b_normal = a_b * cp->normal;	//	•¨‘Ì1‚¾‚Æ•‰B
+	Vec3f a_b = a^b;						//	ç‰©ä½“1ã ã¨è£ã‚’å‘ãã€‚
+	float a_b_normal = a_b * cp->normal;	//	ç‰©ä½“1ã ã¨è² ã€‚
 	Vec3f triRefSp = (1.0f/6.0f) * (refSp0 + refSp1 + refSp2) * a_b;
 	Vec3f triRefMomSp = (
 				((1.0f/12.0f)*refSp0 + (1.0f/24.0f)*refSp1 + (1.0f/24.0f)*refSp2) * p0
@@ -300,32 +300,32 @@ void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, V
 			+	((1.0f/24.0f)*refDa0 + (1.0f/12.0f)*refDa1 + (1.0f/24.0f)*refDa2) * p1
 			+	((1.0f/24.0f)*refDa0 + (1.0f/24.0f)*refDa1 + (1.0f/12.0f)*refDa2) * p2
 		  ) ^ abs_a_b;
-	//	triXXX ‚Í— •\‚ÉŠÖŒW‚È‚­ + ‚É‚È‚é
+	//	triXXX ã¯è£è¡¨ã«é–¢ä¿‚ãªã + ã«ãªã‚‹
 #ifdef _DEBUG
 	if (refSp0 > 10000 || refSp1 > 10000 || refSp2 > 10000 || !finite(triRefSp.norm()) ){
 		DSTR << "Error: The reflection spring force is too large: " 
 			<< refSp0 << " " << refSp1 << " " << refSp2 << " " << triRefSp << std::endl;
 	}
 #endif
-	// ”’l‰‰Z”ÍˆÍƒGƒ‰[‚Ìƒ`ƒFƒbƒN
-	//  —^‚¦‚ç‚ê‚½”{¸“x‚Ì•‚“®¬”“_’l‚ª—LŒÀ‚Å‚ ‚é‚©‚Ç‚¤‚©
+	// æ•°å€¤æ¼”ç®—ç¯„å›²ã‚¨ãƒ©ãƒ¼ã®ãƒã‚§ãƒƒã‚¯
+	//  ä¸ãˆã‚‰ã‚ŒãŸå€ç²¾åº¦ã®æµ®å‹•å°æ•°ç‚¹å€¤ãŒæœ‰é™ã§ã‚ã‚‹ã‹ã©ã†ã‹
 	assert(finite(triRefMomSp.norm()));	
 
-	//	3ŠpŒ`‚Ì–ÊÏ‚ÌŒvZ
-	float triArea = sign_a_b_normal * a_b_normal / 4;		//	— •\‚Å‚Q‰ñ”‚¦‚é‚©‚ç4‚ÅŠ„‚é
+	//	3è§’å½¢ã®é¢ç©ã®è¨ˆç®—
+	float triArea = sign_a_b_normal * a_b_normal / 4;		//	è£è¡¨ã§ï¼’å›æ•°ãˆã‚‹ã‹ã‚‰4ã§å‰²ã‚‹
 
 	//---------------------------------------------------------------
-	//	“®–€C—Í‚ğ‹‚ß‚é
-	//	“®–€C‚ÍA‘Š‘Î‘¬“x‚Ì•ûŒü*R—ÍB— •\‹¤‚É”‚¦‚éBR—Í‚ª— ‚Ì•ªA•\‚Ì•ª‚¾‚¯‚É‚È‚Á‚Ä‚¢‚é‚Ì‚ÅA‚Qd‚É”‚¦‚éS”z‚Í‚È‚¢B
+	//	å‹•æ‘©æ“¦åŠ›ã‚’æ±‚ã‚ã‚‹
+	//	å‹•æ‘©æ“¦ã¯ã€ç›¸å¯¾é€Ÿåº¦ã®æ–¹å‘*æŠ—åŠ›ã€‚è£è¡¨å…±ã«æ•°ãˆã‚‹ã€‚æŠ—åŠ›ãŒè£ã®åˆ†ã€è¡¨ã®åˆ†ã ã‘ã«ãªã£ã¦ã„ã‚‹ã®ã§ã€ï¼’é‡ã«æ•°ãˆã‚‹å¿ƒé…ã¯ãªã„ã€‚
 	Vec3f velTan0 = v0 - vel0_normal * cp->normal;
 	Vec3f velTan1 = v1 - vel1_normal * cp->normal;
 	Vec3f velTan2 = v2 - vel2_normal * cp->normal;
 	Vec3f fric0, fric1, fric2;
-	//	–€C‚ÌŒvZ
+	//	æ‘©æ“¦ã®è¨ˆç®—
 	if (velTan0.square() > 1e-8) fric0 = velTan0.unit() * (refSp0+sign_a_b_normal*refDa0);
 	if (velTan1.square() > 1e-8) fric1 = velTan1.unit() * (refSp1+sign_a_b_normal*refDa1);
 	if (velTan2.square() > 1e-8) fric2 = velTan2.unit() * (refSp2+sign_a_b_normal*refDa2);
-	//	•„†‚É‚Â‚¢‚ÄF— –Ê‚¾‚ÆArefSpr?+refDa? ‚ª - ‚É‚È‚é‚ª a_b_normal‚à-‚É‚È‚é‚Ì‚Å‘Å‚¿Á‚·B
+	//	ç¬¦å·ã«ã¤ã„ã¦ï¼šè£é¢ã ã¨ã€refSpr?+refDa? ãŒ - ã«ãªã‚‹ãŒ a_b_normalã‚‚-ã«ãªã‚‹ã®ã§æ‰“ã¡æ¶ˆã™ã€‚
 
 	Vec3f triFric = (1.0f/6.0f) * (fric0 + fric1 + fric2) * a_b_normal;	
 	Vec3f triFricMom = (
@@ -336,7 +336,7 @@ void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, V
 	assert(finite(triFric.norm()));
 	assert(finite(triFricMom.norm()));
 	//---------------------------------------------------------------
-	//	Œ‹‰Ê‚ğ‰Á‚¦‚é
+	//	çµæœã‚’åŠ ãˆã‚‹
 	cp->area += triArea;
 	cp->reflexSpringForce += triRefSp;
 	cp->reflexSpringTorque += triRefMomSp;
@@ -350,13 +350,13 @@ void PHSolidPairForPenalty::CalcTriangleReflexForce(PHShapePairForPenalty* cp, V
 	cp->dynaFricMom += triFricMom;
 }
 
-//	“ÊŒ`ó‘Î‚É”­¶‚·‚é–€C—Í‚ÌŒvZ
-//	—Í‚Ìì—p“_‚ğŒ´“_‚Æ‚µ‚½À•WŒn‚ÅŒvZ‚·‚éD
+//	å‡¸å½¢çŠ¶å¯¾ã«ç™ºç”Ÿã™ã‚‹æ‘©æ“¦åŠ›ã®è¨ˆç®—
+//	åŠ›ã®ä½œç”¨ç‚¹ã‚’åŸç‚¹ã¨ã—ãŸåº§æ¨™ç³»ã§è¨ˆç®—ã™ã‚‹ï¼
 void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
-	//	‰‚ß‚Ä‚ÌÚG‚Ì
-	Vec3f reflexForcePoint = cp->reflexForcePoint + cp->commonPoint;	//	—Í‚Ìì—p“_(â‘ÎŒn)
+	//	åˆã‚ã¦ã®æ¥è§¦ã®æ™‚
+	Vec3f reflexForcePoint = cp->reflexForcePoint + cp->commonPoint;	//	åŠ›ã®ä½œç”¨ç‚¹(çµ¶å¯¾ç³»)
 	if (cp->state == PHShapePairForPenalty::NEW){
-		//	ƒoƒlƒ‚ƒfƒ‹‚Ìn“_‚ğİ’è‚·‚éD
+		//	ãƒãƒãƒ¢ãƒ‡ãƒ«ã®å§‹ç‚¹ã‚’è¨­å®šã™ã‚‹ï¼
 		cp->transFrictionBase[0] = solid[0]->pose.Inv() * reflexForcePoint;
 		cp->transFrictionBase[1] = solid[1]->pose.Inv() * reflexForcePoint;
 		cp->rotSpring = 0;
@@ -366,23 +366,23 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 		return;
 	}
 
-	//	ÚG‚ªŒp‘±‚µ‚Ä‚¢‚éê‡D
+	//	æ¥è§¦ãŒç¶™ç¶šã—ã¦ã„ã‚‹å ´åˆï¼
 	
-	//	•Àiƒoƒl‚ÌŒvZ
-	//	ƒOƒ[ƒoƒ‹Œn‚É•ÏŠ·
+	//	ä¸¦é€²ãƒãƒã®è¨ˆç®—
+	//	ã‚°ãƒ­ãƒ¼ãƒãƒ«ç³»ã«å¤‰æ›
 	cp->transFrictionBase[0] = solid[0]->pose * cp->transFrictionBase[0];
 	cp->transFrictionBase[1] = solid[1]->pose * cp->transFrictionBase[1];
-	//	•½–Êã‚É—‚Æ‚·
+	//	å¹³é¢ä¸Šã«è½ã¨ã™
 	cp->transFrictionBase[0] -= (cp->transFrictionBase[0]-cp->center) * cp->normal * cp->normal;
 	cp->transFrictionBase[1] -= (cp->transFrictionBase[1]-cp->center) * cp->normal * cp->normal;
-	//	·‚ªƒoƒl‚Ì—Í
+	//	å·®ãŒãƒãƒã®åŠ›
 	Vec3f transSpring = cp->transFrictionBase[1] - cp->transFrictionBase[0];
 	float transSpringNorm = transSpring.norm();
 	float frictionSpringForce = frictionSpring * transSpringNorm;
 	Vec3f frictionForceDicption;
 	if (transSpringNorm>1e-10f) frictionForceDicption = transSpring / transSpringNorm;
 
-	//	‰ñ“]ƒoƒl‚ÌŒvZ
+	//	å›è»¢ãƒãƒã®è¨ˆç®—
 	Quaternionf delta[2] = { solid[0]->pose.Ori()*lastOri[0].Inv(), solid[1]->pose.Ori()*lastOri[1].Inv() };
 	cp->rotSpring += delta[1].Rotation()*cp->normal - delta[0].Rotation()*cp->normal;
 	float frictionSpringTorque = frictionSpring*cp->rotSpring;
@@ -390,13 +390,13 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 	lastOri[1] = solid[1]->pose.Ori();
 
 
-	//	–€CŒW”‚Ì§–ñ‚ğ‰Á‚¦‚é
+	//	æ‘©æ“¦ä¿‚æ•°ã®åˆ¶ç´„ã‚’åŠ ãˆã‚‹
 	float fricCoeff = (cp->frictionState == PHShapePairForPenalty::STATIC) ? staticFriction : dynamicFriction;
 	float maxFric = fricCoeff * cp->dynaFric.norm();
-	//hase	–€C‚ÌƒeƒXƒg’†
+	//hase	æ‘©æ“¦ã®ãƒ†ã‚¹ãƒˆä¸­
 //	float reflexForce = (cp->reflexSpringForce+cp->reflexDamperForce).norm();
 //	if (maxFric < fricCoeff * reflexForce) maxFric = fricCoeff * reflexForce;
-	//	‚±‚±‚Ü‚Å
+	//	ã“ã“ã¾ã§
 		
 		
 	float maxRotFric = fricCoeff * (cp->dynaFricMom - (cp->reflexForcePoint^cp->dynaFric)).norm();
@@ -416,7 +416,7 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 	cp->frictionTorque = frictionSpringTorque * cp->normal;
 
 	if (cp->frictionState == PHShapePairForPenalty::STATIC){
-		///	ƒ_ƒ“ƒp‚É‚æ‚éÃ~–€C—Í‚ÌŒvZ
+		///	ãƒ€ãƒ³ãƒ‘ã«ã‚ˆã‚‹é™æ­¢æ‘©æ“¦åŠ›ã®è¨ˆç®—
 		Vec3f frictionVel = 
 			(solid[1]->angVelocity ^ (reflexForcePoint-solid[1]->GetCenterPosition())) + solid[1]->velocity
 			- ((solid[0]->angVelocity ^ (reflexForcePoint-solid[0]->GetCenterPosition())) + solid[0]->velocity);
@@ -448,9 +448,9 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 	}
 #endif
 
-	//	ƒ[ƒJƒ‹Œn‚É•ÏŠ·‚µ‚Ä•Û‘¶
-	if (frictionSpring < 1e-12f){	//	–€C‚Ì‚Î‚ËŒW”‚ª0‚¾‚ÆAL‚Ñ‚ªŒvZ‚Å‚«‚È‚­‚È‚éB
-		frictionSpring = 1e-12f;		//	ŒW”0‚Ìê‡L‚Ñ‚Í–³‹‚Å‚«‚é‚Ì‚ÅAL‚Ñ‚ğ¬‚³‚È’l‚É‚µ‚Ä‚¨‚­B
+	//	ãƒ­ãƒ¼ã‚«ãƒ«ç³»ã«å¤‰æ›ã—ã¦ä¿å­˜
+	if (frictionSpring < 1e-12f){	//	æ‘©æ“¦ã®ã°ã­ä¿‚æ•°ãŒ0ã ã¨ã€ä¼¸ã³ãŒè¨ˆç®—ã§ããªããªã‚‹ã€‚
+		frictionSpring = 1e-12f;		//	ä¿‚æ•°0ã®å ´åˆä¼¸ã³ã¯ç„¡è¦–ã§ãã‚‹ã®ã§ã€ä¼¸ã³ã‚’å°ã•ãªå€¤ã«ã—ã¦ãŠãã€‚
 	}
 	cp->transFrictionBase[0] = solid[0]->pose.Inv() * (reflexForcePoint - 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption);
 	cp->transFrictionBase[1] = solid[1]->pose.Inv() * (reflexForcePoint + 0.5f*frictionSpringForce/frictionSpring*frictionForceDicption);

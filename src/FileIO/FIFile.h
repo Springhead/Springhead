@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -20,12 +20,12 @@ class FISaveContext;
 class FISdk;
 class Import;
 
-/**	ƒtƒ@ƒCƒ‹ƒ[ƒ_[EƒZ[ƒo[
+/**	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ãƒ¼ãƒ»ã‚»ãƒ¼ãƒãƒ¼
 */
 class FIFile : public Object{
 public:
 	FIFile();	
-	bool		DSTRFlag;		//ƒfƒoƒbƒOî•ñ‚ğDSTR‚Å•\¦‚·‚é‚©‚Ç‚¤‚©
+	bool		DSTRFlag;		//ãƒ‡ãƒãƒƒã‚°æƒ…å ±ã‚’DSTRã§è¡¨ç¤ºã™ã‚‹ã‹ã©ã†ã‹
 	FISdk*		sdk;
 	Import*		import;
 	
@@ -41,70 +41,70 @@ public:
 	ImportIf*	GetImport();
 
 	void SetDSTR(bool f){ DSTRFlag = f; }
-	/**	ƒm[ƒh‚Ìƒ[ƒhD
-		TODO: Vd—l‚É‚ ‚í‚¹‚é
+	/**	ãƒãƒ¼ãƒ‰ã®ãƒ­ãƒ¼ãƒ‰ï¼
+		TODO: æ–°ä»•æ§˜ã«ã‚ã‚ã›ã‚‹
 
-		ƒ[ƒh‚µ‚½Desc‚©‚çƒIƒuƒWƒFƒNƒg‚ğì¬‚·‚éD
-		ƒIƒuƒWƒFƒNƒg‚Ìì¬‚ÍCeƒIƒuƒWƒFƒNƒg‚ÌCreateObject()Ce‚Ìe‚ÌCreateObject()‚Æ
-		æ‘c‚ÌCreateObject()‚ğ‡‚ÉŒÄ‚ñ‚ÅCì¬‚Å‚«‚½‚Æ‚±‚ë‚Å~‚ß‚éD
-		‚Ç‚ÌƒIƒuƒWƒFƒNƒg‚àì¬‚Å‚«‚È‚¢ê‡‚ÍCSdkIf::CreateSdk()‚ğŒÄ‚Ño‚·D
+		ãƒ­ãƒ¼ãƒ‰ã—ãŸDescã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã™ã‚‹ï¼
+		ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆã¯ï¼Œè¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®CreateObject()ï¼Œè¦ªã®è¦ªã®CreateObject()ã¨
+		å…ˆç¥–ã®CreateObject()ã‚’é †ã«å‘¼ã‚“ã§ï¼Œä½œæˆã§ããŸã¨ã“ã‚ã§æ­¢ã‚ã‚‹ï¼
+		ã©ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚‚ä½œæˆã§ããªã„å ´åˆã¯ï¼ŒSdkIf::CreateSdk()ã‚’å‘¼ã³å‡ºã™ï¼
 	void LoadNode();
 
-	///	ƒm[ƒh‚Ìƒ[ƒh‚ÌI—¹
+	///	ãƒãƒ¼ãƒ‰ã®ãƒ­ãƒ¼ãƒ‰ã®çµ‚äº†
 	void LoadEndNode(FILoadContext* fc);
 	*/
-	///	ƒ[ƒh‚ÌÀ‘•
+	///	ãƒ­ãƒ¼ãƒ‰ã®å®Ÿè£…
 	virtual void LoadImp(FILoadContext* fc)=0;
 	
 protected:	
 
 
-	///	ƒm[ƒh‚ÌƒZ[ƒu
+	///	ãƒãƒ¼ãƒ‰ã®ã‚»ãƒ¼ãƒ–
 	void SaveNode(FISaveContext* sc, ObjectIf* obj);
-	///	ƒuƒƒbƒN‚ÌƒZ[ƒu
+	///	ãƒ–ãƒ­ãƒƒã‚¯ã®ã‚»ãƒ¼ãƒ–
 	void SaveBlock(FISaveContext* sc);
 
-	/// ƒoƒCƒiƒŠƒtƒH[ƒ}ƒbƒg‚©
+	/// ãƒã‚¤ãƒŠãƒªãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‹
 	virtual bool IsBinary(){ return false; }
 
-	//@name •Û‘¶ˆ—‚Ìƒnƒ“ƒhƒ‰[
+	//@name ä¿å­˜å‡¦ç†ã®ãƒãƒ³ãƒ‰ãƒ©ãƒ¼
 	//@{
-	///	ƒtƒ@ƒCƒ‹ŠJn‚Ìˆ—
+	///	ãƒ•ã‚¡ã‚¤ãƒ«é–‹å§‹æ™‚ã®å‡¦ç†
 	virtual void OnSaveFileStart(FISaveContext* sc){}
-	///	ƒtƒ@ƒCƒ‹I—¹‚Ìˆ—
+	///	ãƒ•ã‚¡ã‚¤ãƒ«çµ‚äº†æ™‚ã®å‡¦ç†
 	virtual void OnSaveFileEnd(FISaveContext* sc){}
-	///	ƒm[ƒhŠJn‚Ìˆ—
+	///	ãƒãƒ¼ãƒ‰é–‹å§‹æ™‚ã®å‡¦ç†
 	virtual void OnSaveNodeStart(FISaveContext* sc){}
-	///	ƒm[ƒhI—¹‚Ìˆ—
+	///	ãƒãƒ¼ãƒ‰çµ‚äº†æ™‚ã®å‡¦ç†
 	virtual void OnSaveNodeEnd(FISaveContext* sc){}
-	///	ƒf[ƒ^ŠJn‚Ìˆ—
+	///	ãƒ‡ãƒ¼ã‚¿é–‹å§‹æ™‚ã®å‡¦ç†
 	virtual void OnSaveDataStart(FISaveContext* sc){}
-	///	ƒf[ƒ^I—¹‚Ìˆ—
+	///	ãƒ‡ãƒ¼ã‚¿çµ‚äº†æ™‚ã®å‡¦ç†
 	virtual void OnSaveDataEnd(FISaveContext* sc){}
-	///	qƒIƒuƒWƒFƒNƒg‚Ì•Û‘¶ŠJn‚Ìˆ—
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä¿å­˜é–‹å§‹æ™‚ã®å‡¦ç†
 	virtual void OnSaveChildStart(FISaveContext* sc){}
-	///	qƒIƒuƒWƒFƒNƒg‚Ì•Û‘¶I—¹‚Ìˆ—
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä¿å­˜çµ‚äº†æ™‚ã®å‡¦ç†
 	virtual void OnSaveChildEnd(FISaveContext* sc){}
 
-	///	ƒuƒƒbƒNŠJn‚Ìˆ—
+	///	ãƒ–ãƒ­ãƒƒã‚¯é–‹å§‹æ™‚ã®å‡¦ç†
 	virtual void OnSaveBlockStart(FISaveContext* sc){}
-	///	ƒuƒƒbƒNI—¹‚Ìˆ—
+	///	ãƒ–ãƒ­ãƒƒã‚¯çµ‚äº†æ™‚ã®å‡¦ç†
 	virtual void OnSaveBlockEnd(FISaveContext* sc){}
-	///	ƒtƒB[ƒ‹ƒhŠJn‚Ìˆ—	false‚ğ•Ô‚µ‚½ê‡AƒtƒB[ƒ‹ƒh‚ÍƒZ[ƒu‚³‚ê‚¸AOnSaveFieldEnd()‚àŒÄ‚Î‚ê‚È‚¢B
+	///	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰é–‹å§‹æ™‚ã®å‡¦ç†	falseã‚’è¿”ã—ãŸå ´åˆã€ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯ã‚»ãƒ¼ãƒ–ã•ã‚Œãšã€OnSaveFieldEnd()ã‚‚å‘¼ã°ã‚Œãªã„ã€‚
 	virtual bool OnSaveFieldStart(FISaveContext* sc, int nElements){ return true; }
-	///	ƒtƒB[ƒ‹ƒhI—¹‚Ìˆ—
+	///	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰çµ‚äº†æ™‚ã®å‡¦ç†
 	virtual void OnSaveFieldEnd(FISaveContext* sc, int nElements){}
-	///	—v‘fŠJn‚Ìˆ—
+	///	è¦ç´ é–‹å§‹æ™‚ã®å‡¦ç†
 	virtual void OnSaveElementStart(FISaveContext* sc, int pos, bool last){}
-	///	—v‘fI—¹‚Ìˆ—
+	///	è¦ç´ çµ‚äº†æ™‚ã®å‡¦ç†
 	virtual void OnSaveElementEnd(FISaveContext* sc, int pos, bool last){}
-	///	bool’l‚Ì•Û‘¶
+	///	boolå€¤ã®ä¿å­˜
 	virtual void OnSaveBool(FISaveContext* sc, bool val){}
-	///	int’l‚Ì•Û‘¶
+	///	intå€¤ã®ä¿å­˜
 	virtual void OnSaveInt(FISaveContext* sc, int val){}
-	///	real’l‚Ì•Û‘¶
+	///	realå€¤ã®ä¿å­˜
 	virtual void OnSaveReal(FISaveContext* sc, double val){}
-	///	string’l‚Ì•Û‘¶
+	///	stringå€¤ã®ä¿å­˜
 	virtual void OnSaveString(FISaveContext* sc, UTString val){}
 	virtual void OnSaveRef(FISaveContext* sc){}
 	//@}

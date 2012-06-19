@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,200 +13,200 @@
 
 namespace Spr{;
 
-///	”M“`“±FEMŒvZƒNƒ‰ƒX
+///	ç†±ä¼å°FEMè¨ˆç®—ã‚¯ãƒ©ã‚¹
 class PHFemMeshThermo: public PHFemMesh{
 	SPR_OBJECTDEF(PHFemMeshThermo);
 	SPR_DECLMEMBEROF_PHFemMeshThermoDesc;
 protected:
-	//PHFemMeshThermo“à‚Ì‚İ‚Å—p‚¢‚éŒvZ
+	//PHFemMeshThermoå†…ã®ã¿ã§ç”¨ã„ã‚‹è¨ˆç®—
 
-	//%%%%%%%%		s—ñ‚ÌéŒ¾E’è‹`		%%%%%%%%//	
-	//s—ñ‚Ì¶¬@¬•¶š‚Í—v‘f„«s—ñA‘å•¶š‚Í‘S‘Ì„«s—ñ
-	//ß“_‰·“xƒxƒNƒgƒ‹‚Ì	‰·“x‚Ì	TVec:—v‘ficjƒxƒNƒgƒ‹(4x1)	TVecall:‘S‘ÌicjƒxƒNƒgƒ‹(nx1)
-	//”M“`“±ƒ}ƒgƒŠƒNƒX‚Ì	k:k1~k3‚Ì‰ÁZ‚µ‚½‚à‚Ì,	k1:‘ÌÏ•ª€,	–ÊÏ•ª‚Ì	k2:”M“`’B‹«ŠEğŒ,	k3:”MçtË‹«ŠEğŒ	Ï•ª
-	//”M—e—Êƒ}ƒgƒŠƒNƒX‚Ì	c:‘ÌÏ•ª€
-	//”M—¬‘©ƒxƒNƒgƒ‹‚Ì		f:f1~f4‚Ì‰ÁZ‚µ‚½‚à‚Ì,	‘ÌÏ•ª‚Ì	f1:“à•””­”M‚É‚æ‚é€,	–ÊÏ•ª‚Ì	f2:”M—¬‘©‹«ŠEğŒ,	f3:”M“`’B‹«ŠEğŒ,	f4:”MçtË‹«ŠEğŒ
-	//‘ÌÏ•ª‚Ìê‡:—v‘f1‚Â‚É‚Â‚«1‚Â‚Ìs—ñA–ÊÏ•ª‚Ìê‡:—v‘f“à‚ÌŠe–Ê‚²‚Æ‚É1‚Â‚ÅŒv4‚Â‚Ìs—ñ‚È‚Ì‚Å”z—ñ‚É“ü‚ê‚é
-	//k‚âf‚ÉŠÖ‚µ‚Ä‚ÍA–Ê‚²‚Æ‚ÉŒvZ‚µ‚½ŒW”s—ñ‚ğŠi”[‚·‚é”z—ñMat(k/f)array‚ğ’è‹`
-	//	Col:—ñ’PˆÊ‚Ìs—ñ	Row:s’PˆÊ‚Ìs—ñ	hogeVector:ƒxƒNƒgƒ‹
+	//%%%%%%%%		è¡Œåˆ—ã®å®£è¨€ãƒ»å®šç¾©		%%%%%%%%//	
+	//è¡Œåˆ—ã®ç”Ÿæˆã€€å°æ–‡å­—ã¯è¦ç´ å‰›æ€§è¡Œåˆ—ã€å¤§æ–‡å­—ã¯å…¨ä½“å‰›æ€§è¡Œåˆ—
+	//ç¯€ç‚¹æ¸©åº¦ãƒ™ã‚¯ãƒˆãƒ«ã®	æ¸©åº¦ã®	TVec:è¦ç´ ï¼ˆç¸¦ï¼‰ãƒ™ã‚¯ãƒˆãƒ«(4x1)	TVecall:å…¨ä½“ï¼ˆç¸¦ï¼‰ãƒ™ã‚¯ãƒˆãƒ«(nx1)
+	//ç†±ä¼å°ãƒãƒˆãƒªã‚¯ã‚¹ã®	k:k1~k3ã®åŠ ç®—ã—ãŸã‚‚ã®,	k1:ä½“ç©åˆ†é …,	é¢ç©åˆ†ã®	k2:ç†±ä¼é”å¢ƒç•Œæ¡ä»¶,	k3:ç†±è¼»å°„å¢ƒç•Œæ¡ä»¶	ç©åˆ†
+	//ç†±å®¹é‡ãƒãƒˆãƒªã‚¯ã‚¹ã®	c:ä½“ç©åˆ†é …
+	//ç†±æµæŸãƒ™ã‚¯ãƒˆãƒ«ã®		f:f1~f4ã®åŠ ç®—ã—ãŸã‚‚ã®,	ä½“ç©åˆ†ã®	f1:å†…éƒ¨ç™ºç†±ã«ã‚ˆã‚‹é …,	é¢ç©åˆ†ã®	f2:ç†±æµæŸå¢ƒç•Œæ¡ä»¶,	f3:ç†±ä¼é”å¢ƒç•Œæ¡ä»¶,	f4:ç†±è¼»å°„å¢ƒç•Œæ¡ä»¶
+	//ä½“ç©åˆ†ã®å ´åˆ:è¦ç´ 1ã¤ã«ã¤ã1ã¤ã®è¡Œåˆ—ã€é¢ç©åˆ†ã®å ´åˆ:è¦ç´ å†…ã®å„é¢ã”ã¨ã«1ã¤ã§è¨ˆ4ã¤ã®è¡Œåˆ—ãªã®ã§é…åˆ—ã«å…¥ã‚Œã‚‹
+	//kã‚„fã«é–¢ã—ã¦ã¯ã€é¢ã”ã¨ã«è¨ˆç®—ã—ãŸä¿‚æ•°è¡Œåˆ—ã‚’æ ¼ç´ã™ã‚‹é…åˆ—Mat(k/f)arrayã‚’å®šç¾©
+	//	Col:åˆ—å˜ä½ã®è¡Œåˆ—	Row:è¡Œå˜ä½ã®è¡Œåˆ—	hogeVector:ãƒ™ã‚¯ãƒˆãƒ«
 
-	//ß“_‰·“xƒxƒNƒgƒ‹
-	PTM::TVector<4,double> TVec;				///>	—v‘f‚Ìß“_‰·“xƒxƒNƒgƒ‹		//_		//•s—v?
-	PTM::VVector<double> TVecAll;				///>	‘S‘Ì‚Ìß“_‰·“xƒxƒNƒgƒ‹
+	//ç¯€ç‚¹æ¸©åº¦ãƒ™ã‚¯ãƒˆãƒ«
+	PTM::TVector<4,double> TVec;				///>	è¦ç´ ã®ç¯€ç‚¹æ¸©åº¦ãƒ™ã‚¯ãƒˆãƒ«		//_		//ä¸è¦?
+	PTM::VVector<double> TVecAll;				///>	å…¨ä½“ã®ç¯€ç‚¹æ¸©åº¦ãƒ™ã‚¯ãƒˆãƒ«
 
-	//—v‘f‚ÌŒW”s—ñ
-//	PTM::TMatrixRow<4,4,double> matk1;			//CreateMatk1k() / k1b				///	struct Tet‚ÖˆÚA
+	//è¦ç´ ã®ä¿‚æ•°è¡Œåˆ—
+//	PTM::TMatrixRow<4,4,double> matk1;			//CreateMatk1k() / k1b				///	struct Tetã¸ç§»æ¤
 //	PTM::TMatrixRow<4,4,double> matk2;			//CreateMatk2()						///	
-	//int Matk2array[4];						//matk2‚ª“ü‚Á‚½”z—ñ		//CreateMatk2array()
-	//Km‚Ì3‚Â‚Ì4~4s—ñ‚Ì“ü‚ê•¨@Matk1‚ğì‚é‚Ü‚Å‚ÌŠÔ‚Ìˆê“I‚Èƒf[ƒ^’uê
+	//int Matk2array[4];						//matk2ãŒå…¥ã£ãŸé…åˆ—		//CreateMatk2array()
+	//Kmã®3ã¤ã®4Ã—4è¡Œåˆ—ã®å…¥ã‚Œç‰©ã€€Matk1ã‚’ä½œã‚‹ã¾ã§ã®é–“ã®ä¸€æ™‚çš„ãªãƒ‡ãƒ¼ã‚¿ç½®å ´
 	PTM::TMatrixRow<4,4,double> matk1array[4];
-	//k21,k22,k23,k24‚Ì4~4s—ñ‚Ì“ü‚ê•¨@Matk‚ğì‚é‚Ü‚Å‚ÌŠÔ‚Ìˆê“I‚Èƒf[ƒ^’uê
+	//k21,k22,k23,k24ã®4Ã—4è¡Œåˆ—ã®å…¥ã‚Œç‰©ã€€Matkã‚’ä½œã‚‹ã¾ã§ã®é–“ã®ä¸€æ™‚çš„ãªãƒ‡ãƒ¼ã‚¿ç½®å ´
 	PTM::TMatrixRow<4,4,double> matk2array[4];
-	//k21,k22,k23,k24‚Ì4~4s—ñ‚Ì“ü‚ê•¨@Matk‚ğì‚é‚Ü‚Å‚ÌŠÔ‚Ìˆê“I‚Èƒf[ƒ^’uê
+	//k21,k22,k23,k24ã®4Ã—4è¡Œåˆ—ã®å…¥ã‚Œç‰©ã€€Matkã‚’ä½œã‚‹ã¾ã§ã®é–“ã®ä¸€æ™‚çš„ãªãƒ‡ãƒ¼ã‚¿ç½®å ´
 	PTM::TMatrixRow<4,4,double> matk3array[4];
 
-	//Matk=Matk1+Matk2+Matk3	matk1~3‚ğ‡¬‚µ‚½—v‘f„«s—ñ	CreateMatkLocal()
+	//Matk=Matk1+Matk2+Matk3	matk1~3ã‚’åˆæˆã—ãŸè¦ç´ å‰›æ€§è¡Œåˆ—	CreateMatkLocal()
 	PTM::TMatrixRow<4,4,double> matk;			
 	PTM::TMatrixRow<4,4,double> matc;			//
-//	PTM::TMatrixCol<4,1,double> Vecf3;			//f3:ŠO‘¤‚Ì–Ê‚É–Ê‚µ‚Ä‚¢‚é–Ê‚Ì‚İŒvZ‚·‚é@—v’ˆÓ
-//	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34‚Ì4~1ƒxƒNƒgƒ‹‚Ì“ü‚ê•¨		Matk‚ğì‚é‚Ü‚Å‚ÌŠÔ‚Ìˆê“I‚Èƒf[ƒ^’uê
-//	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4‚ğ‡Z‚µ‚½cƒxƒNƒgƒ‹
+//	PTM::TMatrixCol<4,1,double> Vecf3;			//f3:å¤–å´ã®é¢ã«é¢ã—ã¦ã„ã‚‹é¢ã®ã¿è¨ˆç®—ã™ã‚‹ã€€è¦æ³¨æ„
+//	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34ã®4Ã—1ãƒ™ã‚¯ãƒˆãƒ«ã®å…¥ã‚Œç‰©		Matkã‚’ä½œã‚‹ã¾ã§ã®é–“ã®ä¸€æ™‚çš„ãªãƒ‡ãƒ¼ã‚¿ç½®å ´
+//	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4ã‚’åˆç®—ã—ãŸç¸¦ãƒ™ã‚¯ãƒˆãƒ«
 	
-	//f3:ŠO‘¤‚Ì–Ê‚É–Ê‚µ‚Ä‚¢‚é–Ê‚Ì‚İŒvZ‚·‚é@—v’ˆÓ
+	//f3:å¤–å´ã®é¢ã«é¢ã—ã¦ã„ã‚‹é¢ã®ã¿è¨ˆç®—ã™ã‚‹ã€€è¦æ³¨æ„
 	PTM::TVector<4,double> vecf3;
-	//f31,f32,f33,f34‚Ì4~1ƒxƒNƒgƒ‹‚Ì“ü‚ê•¨		Matk‚ğì‚é‚Ü‚Å‚ÌŠÔ‚Ìˆê“I‚Èƒf[ƒ^’uê
+	//f31,f32,f33,f34ã®4Ã—1ãƒ™ã‚¯ãƒˆãƒ«ã®å…¥ã‚Œç‰©		Matkã‚’ä½œã‚‹ã¾ã§ã®é–“ã®ä¸€æ™‚çš„ãªãƒ‡ãƒ¼ã‚¿ç½®å ´
 	PTM::TVector<4,double> vecf3array[4];
-	//f1~f4‚ğ‡Z‚µ‚½cƒxƒNƒgƒ‹
+	//f1~f4ã‚’åˆç®—ã—ãŸç¸¦ãƒ™ã‚¯ãƒˆãƒ«
 	PTM::TVector<4,double> vecf;			
 	PTM::TVector<4,double> vecf2;
 	PTM::TVector<4,double> vecf2array[4];
 //	PTM::VVector<double> Vechoge;
-	//	•Ï”‚Í¬•¶š@ŠÖ”‚Í‘å•¶š
+	//	å¤‰æ•°ã¯å°æ–‡å­—ã€€é–¢æ•°ã¯å¤§æ–‡å­—
 
-	//s—ñk‚ÌŒvZ—p‚ÌŒW”s—ñ
+	//è¡Œåˆ—kã®è¨ˆç®—ç”¨ã®ä¿‚æ•°è¡Œåˆ—
 	PTM::TMatrixRow<3,3,double> mata;
 	PTM::TMatrixRow<3,3,double> matb;
 	PTM::TMatrixRow<3,3,double> matcc;
 	PTM::TMatrixRow<3,3,double> matd;
 
 
-	// ‘S‘Ì‚ÌŒW”s—ñ	//SciLab‚Åg—p
-	// ..[K]‚Ì‘S‘Ì„«s—ñ		//CreateMatKall()
+	// å…¨ä½“ã®ä¿‚æ•°è¡Œåˆ—	//SciLabã§ä½¿ç”¨
+	// ..[K]ã®å…¨ä½“å‰›æ€§è¡Œåˆ—		//CreateMatKall()
 	PTM::VMatrixRow<double> matKAll;
 	// ..[C]
 	PTM::VMatrixRow<double> matCAll;
 
-	// ‘S‘Ì‚Ì„«s—ñ‚Ì‘ã‚í‚è
-	// ..‘S‘Ì„«s—ñK‚Ì‘ÎŠp¬•ª‚É‚È‚é‚Í‚¸‚Ì’l‚ğ‚»‚Ì‚Ü‚Ü‘ã“ü		À‘•’†‚Å‚Ì‰Šú‰»‚Ìd•û	DMatKAll.resize(1,vertices.size());
+	// å…¨ä½“ã®å‰›æ€§è¡Œåˆ—ã®ä»£ã‚ã‚Š
+	// ..å…¨ä½“å‰›æ€§è¡Œåˆ—Kã®å¯¾è§’æˆåˆ†ã«ãªã‚‹ã¯ãšã®å€¤ã‚’ãã®ã¾ã¾ä»£å…¥		å®Ÿè£…ä¸­ã§ã®åˆæœŸåŒ–ã®ä»•æ–¹	DMatKAll.resize(1,vertices.size());
 	PTM::VMatrixRow<double> dMatKAll;
-	// ..‘S‘Ì„«s—ñC‚Ì‘ÎŠp¬•ª
+	// ..å…¨ä½“å‰›æ€§è¡Œåˆ—Cã®å¯¾è§’æˆåˆ†
 	PTM::VMatrixRow<double> dMatCAll;
-	// ..‘S‘Ì„«s—ñK‚ÆC‚Ì‘ÎŠp¬•ª‚Ì’è””{˜a‚Ì‹t”‚ğ‚Æ‚Á‚½‚à‚Ì	ƒKƒEƒXƒUƒCƒfƒ‹‚ÌŒvZ‚É—˜—p‚·‚é
+	// ..å…¨ä½“å‰›æ€§è¡Œåˆ—Kã¨Cã®å¯¾è§’æˆåˆ†ã®å®šæ•°å€å’Œã®é€†æ•°ã‚’ã¨ã£ãŸã‚‚ã®	ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®è¨ˆç®—ã«åˆ©ç”¨ã™ã‚‹
 	PTM::VMatrixRow<double> _dMatAll;
-	// ..ƒKƒEƒXƒUƒCƒfƒ‹‚ÌŒvZ‚É—p‚¢‚é’è”s—ñb‚ÌcƒxƒNƒgƒ‹	Row‚Å‚ ‚é•K—v‚Í‚ ‚é‚Ì‚©HËCol‚É‚µ‚½
+	// ..ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®è¨ˆç®—ã«ç”¨ã„ã‚‹å®šæ•°è¡Œåˆ—bã®ç¸¦ãƒ™ã‚¯ãƒˆãƒ«	Rowã§ã‚ã‚‹å¿…è¦ã¯ã‚ã‚‹ã®ã‹ï¼Ÿâ‡’Colã«ã—ãŸ
 	PTM::VMatrixCol<double> bVecAll;
-	//double *constb;								//ƒKƒEƒXƒUƒCƒfƒ‹‚ÌŒW”b‚ğ“ü‚ê‚é”z—ñ‚Ìƒ|ƒCƒ“ƒ^	Œã‚Åæ‚èŠ·‚¦‚é
+	//double *constb;								//ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã®ä¿‚æ•°bã‚’å…¥ã‚Œã‚‹é…åˆ—ã®ãƒã‚¤ãƒ³ã‚¿	å¾Œã§ä¹—ã‚Šæ›ãˆã‚‹
 
-	// •\¦—p	//ƒfƒoƒbƒO
-	Vec2d IHLineVtxX;		//	IH‰Á”M‚Ì‹«ŠEü‚ğˆø‚­	x²‚ÌÅ¬’nAÅ‘å’l‚ªŠi”[
+	// è¡¨ç¤ºç”¨	//ãƒ‡ãƒãƒƒã‚°
+	Vec2d IHLineVtxX;		//	IHåŠ ç†±ã®å¢ƒç•Œç·šã‚’å¼•ã	xè»¸ã®æœ€å°åœ°ã€æœ€å¤§å€¤ãŒæ ¼ç´
 
-	//%%%		ŠÖ”‚ÌéŒ¾		%%%%%%%%//
-	//%%%%%%		”M“`“±ŒvZ–{‘Ì		%%%//
-	//	”M“`’B‹«ŠEğŒ‚Ì‚Í‚·‚×‚Ä‚Ìˆø”‚ğ–‚½‚·•K—v‚ª‚ ‚éB
-	//	‰·“xŒÅ’è‹«ŠEğŒ‚ğ—p‚¢‚½‚¢‚Æ‚«‚É‚ÍA”M“`’B—¦iÅŒã‚Ìˆø”j‚ğ“ü—Í‚µ‚È‚¢B‚Ü‚½A–ˆStepÀs‚É“Á’èß“_‚Ì‰·“x‚ğˆê’è‰·“x‚É•Û‚Â‚æ‚¤‚É‚·‚éB
+	//%%%		é–¢æ•°ã®å®£è¨€		%%%%%%%%//
+	//%%%%%%		ç†±ä¼å°è¨ˆç®—æœ¬ä½“		%%%//
+	//	ç†±ä¼é”å¢ƒç•Œæ¡ä»¶ã®æ™‚ã¯ã™ã¹ã¦ã®å¼•æ•°ã‚’æº€ãŸã™å¿…è¦ãŒã‚ã‚‹ã€‚
+	//	æ¸©åº¦å›ºå®šå¢ƒç•Œæ¡ä»¶ã‚’ç”¨ã„ãŸã„ã¨ãã«ã¯ã€ç†±ä¼é”ç‡ï¼ˆæœ€å¾Œã®å¼•æ•°ï¼‰ã‚’å…¥åŠ›ã—ãªã„ã€‚ã¾ãŸã€æ¯Stepå®Ÿè¡Œæ™‚ã«ç‰¹å®šç¯€ç‚¹ã®æ¸©åº¦ã‚’ä¸€å®šæ¸©åº¦ã«ä¿ã¤ã‚ˆã†ã«ã™ã‚‹ã€‚
 	void SetInitThermoConductionParam(
-		double thConduct,		// thConduct:”M“`“±—¦
-		double roh,				// roh:–§“x
-		double specificHeat,	// specificHeat:”ä”M J/ (KEkg):1960
-		double heatTrans		// heatTrans:”M“`’B—¦ W/(m^2EK)
+		double thConduct,		// thConduct:ç†±ä¼å°ç‡
+		double roh,				// roh:å¯†åº¦
+		double specificHeat,	// specificHeat:æ¯”ç†± J/ (Kãƒ»kg):1960
+		double heatTrans		// heatTrans:ç†±ä¼é”ç‡ W/(m^2ãƒ»K)
 		);
 
-	void SetThermalEmissivityToVtx(unsigned id,double thermalEmissivity);			///	”M•úË—¦‚ğß“_ id ‚Éİ’è‚·‚éŠÖ”
-	void SetThermalEmissivityToVerticesAll(double thermalEmissivity);					///	”M•úË—¦‚ğ‘Sß“_‚Éİ’è
+	void SetThermalEmissivityToVtx(unsigned id,double thermalEmissivity);			///	ç†±æ”¾å°„ç‡ã‚’ç¯€ç‚¹ id ã«è¨­å®šã™ã‚‹é–¢æ•°
+	void SetThermalEmissivityToVerticesAll(double thermalEmissivity);					///	ç†±æ”¾å°„ç‡ã‚’å…¨ç¯€ç‚¹ã«è¨­å®š
 
-	void SetHeatTransRatioToAllVertex();	//SetInit ‚Åİ’è‚µ‚Ä‚¢‚é”M“`’BŒW”‚ğAß“_(FemVertex)‚Ì\‘¢‘Ì‚Ìƒƒ“ƒo•Ï”‚É‘ã“ü
+	void SetHeatTransRatioToAllVertex();	//SetInit ã§è¨­å®šã—ã¦ã„ã‚‹ç†±ä¼é”ä¿‚æ•°ã‚’ã€ç¯€ç‚¹(FemVertex)ã®æ§‹é€ ä½“ã®ãƒ¡ãƒ³ãƒå¤‰æ•°ã«ä»£å…¥
 
-	void InitCreateMatC();			///	s—ñì¬‚Å—p‚¢‚é“ü‚ê•¨‚È‚Ç‚Ì‰Šú‰»
-	void InitCreateVecf();			///	Vecf‚Ìì¬‘O‚ÉÀs‚·‚é‰Šú‰»ˆ—
-	void InitCreateMatk();			///	Matk‚Ìì¬‘O‚ÉÀs‚·‚é‰Šú‰»ˆ—
+	void InitCreateMatC();			///	è¡Œåˆ—ä½œæˆã§ç”¨ã„ã‚‹å…¥ã‚Œç‰©ãªã©ã®åˆæœŸåŒ–
+	void InitCreateVecf();			///	Vecfã®ä½œæˆå‰ã«å®Ÿè¡Œã™ã‚‹åˆæœŸåŒ–å‡¦ç†
+	void InitCreateMatk();			///	Matkã®ä½œæˆå‰ã«å®Ÿè¡Œã™ã‚‹åˆæœŸåŒ–å‡¦ç†
 
-	///	”M“`’B—¦‚ª•Ï‰»‚µ‚½‚È‚Ç‚ÌÄŒvZ—p‚Ì‰Šú‰»ŠÖ”
+	///	ç†±ä¼é”ç‡ãŒå¤‰åŒ–ã—ãŸæ™‚ãªã©ã®å†è¨ˆç®—ç”¨ã®åˆæœŸåŒ–é–¢æ•°
 	void InitCreateVecf_();				
 	void InitCreateMatk_();
 
-	//	[K]:”M“`“±ƒ}ƒgƒŠƒNƒX‚ğì‚éŠÖ”ŒQ
-	//	..kimura®‚ğQl‚É‚µ‚Ä(˜f‚¢‚È‚ª‚ç)“±o‚µ‚½ŒvZ–@			//>	k1kt‚É‰üÌ‚·‚é
+	//	[K]:ç†±ä¼å°ãƒãƒˆãƒªã‚¯ã‚¹ã‚’ä½œã‚‹é–¢æ•°ç¾¤
+	//	..kimuraå¼ã‚’å‚è€ƒã«ã—ã¦(æƒ‘ã„ãªãŒã‚‰)å°å‡ºã—ãŸè¨ˆç®—æ³•			//>	k1ktã«æ”¹ç§°ã™ã‚‹
 	void CreateMatk1k(unsigned id);
-	//	..yagawa1983‚ÌŒvZ–@‚Ì3ŸŒ³Šg’£‚µ‚½ŒvZ–@ b:book ‚ÌˆÓ–¡	//>	k1bt‚É‰üÌ‚·‚é
+	//	..yagawa1983ã®è¨ˆç®—æ³•ã®3æ¬¡å…ƒæ‹¡å¼µã—ãŸè¨ˆç®—æ³• b:book ã®æ„å‘³	//>	k1btã«æ”¹ç§°ã™ã‚‹
 	void CreateMatk1b(unsigned id);
-	//	..l–Ê‘Ì‚²‚Æ‚Éì‚é‚Ì‚ÅAl–Ê‘Ì‚ğˆø”‚Éæ‚é “àŠO‚·‚×‚Ä‚Ìl–Ê‘Ì‚É‚Â‚¢‚Äs‚¤
+	//	..å››é¢ä½“ã”ã¨ã«ä½œã‚‹ã®ã§ã€å››é¢ä½“ã‚’å¼•æ•°ã«å–ã‚‹ å†…å¤–ã™ã¹ã¦ã®å››é¢ä½“ã«ã¤ã„ã¦è¡Œã†
 	void CreateMatk2(unsigned id,Tet tets);
-	//void CreateMatk2f(Face faces);		// l–Ê‘Ì‚²‚Æ‚Éì‚é®‚É‚È‚Á‚Ä‚¢‚é‚ªAŠOŠk‚ÌOŠpŒ`face–ˆ‚Éì‚é@faces‚Ìf
-	//	..l–Ê‘Ì‚²‚Æ‚Éì‚é@tets‚Ìt
+	//void CreateMatk2f(Face faces);		// å››é¢ä½“ã”ã¨ã«ä½œã‚‹å¼ã«ãªã£ã¦ã„ã‚‹ãŒã€å¤–æ®»ã®ä¸‰è§’å½¢faceæ¯ã«ä½œã‚‹ã€€facesã®f
+	//	..å››é¢ä½“ã”ã¨ã«ä½œã‚‹ã€€tetsã®t
 	void CreateMatk2t(unsigned id);
-	//	..l–Ê‘Ì(tets)‚Ìt –ˆ‚É¶¬
+	//	..å››é¢ä½“(tets)ã®t æ¯ã«ç”Ÿæˆ
 	void CreateMatk3t(unsigned id);
 
 	void CreateMatk2array();
 	void CreateMatkLocal(unsigned i);
-//	void CreateDumMatkLocal();					//	‘S—v‘f‚ª0‚Ìƒ_ƒ~[k
+//	void CreateDumMatkLocal();					//	å…¨è¦ç´ ãŒ0ã®ãƒ€ãƒŸãƒ¼k
 	void CreateMatKall();
-	//	[C]:”M—e—Êƒ}ƒgƒŠƒNƒX‚ğì‚éŠÖ”
-	void CreateMatcLocal(unsigned id);			//	matC1,C2,C3EEE–ˆ‚É•ªŠ„‚·‚×‚«H
-	void CreateMatc(unsigned id);				// c‚Ì—v‘f„«s—ñ‚ğì‚éŠÖ”
-	//	{F}:”M—¬‘©ƒxƒNƒgƒ‹‚ğì‚éŠÖ”
-	void CreateVecfLocal(unsigned id);				//	l–Ê‘ÌƒƒbƒVƒ…‚ÌID‚ğˆø”‚É
-	void CreateVecf3(unsigned id);					//	”M“`’B—¦‚Í‘Š‰Á•½‹ÏAüˆÍ—¬‘Ì‰·“x‚ÍŠeX‚ğŒ`óŠÖ”‚ÉH
-	void CreateVecf3_(unsigned id);					//	”M“`’B—¦‚àAüˆÍ—¬‘Ì‰·“x‚à‘Š‰Á•½‹Ï
-	void CreateVecf2(unsigned id);					//	l–Ê‘Ì‚ÌID‚ğˆø”‚É
-	void CreateVecf2surface(unsigned id);			//> l–Ê‘ÌID‚ÉŠÜ‚Ü‚ê‚éface‚Ì“àA•\–Ê‚Ìface‚É‚Â‚¢‚Ä‚¾‚¯ŒvZ
+	//	[C]:ç†±å®¹é‡ãƒãƒˆãƒªã‚¯ã‚¹ã‚’ä½œã‚‹é–¢æ•°
+	void CreateMatcLocal(unsigned id);			//	matC1,C2,C3ãƒ»ãƒ»ãƒ»æ¯ã«åˆ†å‰²ã™ã¹ãï¼Ÿ
+	void CreateMatc(unsigned id);				// cã®è¦ç´ å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹é–¢æ•°
+	//	{F}:ç†±æµæŸãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œã‚‹é–¢æ•°
+	void CreateVecfLocal(unsigned id);				//	å››é¢ä½“ãƒ¡ãƒƒã‚·ãƒ¥ã®IDã‚’å¼•æ•°ã«
+	void CreateVecf3(unsigned id);					//	ç†±ä¼é”ç‡ã¯ç›¸åŠ å¹³å‡ã€å‘¨å›²æµä½“æ¸©åº¦ã¯å„ã€…ã‚’å½¢çŠ¶é–¢æ•°ã«ï¼Ÿ
+	void CreateVecf3_(unsigned id);					//	ç†±ä¼é”ç‡ã‚‚ã€å‘¨å›²æµä½“æ¸©åº¦ã‚‚ç›¸åŠ å¹³å‡
+	void CreateVecf2(unsigned id);					//	å››é¢ä½“ã®IDã‚’å¼•æ•°ã«
+	void CreateVecf2surface(unsigned id);			//> å››é¢ä½“IDã«å«ã¾ã‚Œã‚‹faceã®å†…ã€è¡¨é¢ã®faceã«ã¤ã„ã¦ã ã‘è¨ˆç®—
 
-	//	{T}:ß“_‰·“xƒxƒNƒgƒ‹‚ğì‚éŠÖ”
-	void CreateTempMatrix();					//ß“_‚Ì‰·“x‚ª“ü‚Á‚½ß“_”z—ñ‚©‚çA‘S‘ÌcƒxƒNƒgƒ‹‚ğì‚éB	‚±‚Ìcs—ñ‚Ìß“_‚Ì•À‚Ñ‡‚ÍAi”Ô–Ú‚Ìß“_ID‚ªi‚È‚Ì‚©‚È
-	void CreateLocalMatrixAndSet();				//K,C,F‚·‚×‚Ä‚Ìs—ñEƒxƒNƒgƒ‹‚É‚Â‚¢‚Ä—v‘f„«s—ñ‚ğì‚Á‚ÄAƒGƒbƒW‚É“ü‚ê‚é	–”‚Í	‘S‘Ì„«s—ñ‚ğì‚éŠÖ”
+	//	{T}:ç¯€ç‚¹æ¸©åº¦ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œã‚‹é–¢æ•°
+	void CreateTempMatrix();					//ç¯€ç‚¹ã®æ¸©åº¦ãŒå…¥ã£ãŸç¯€ç‚¹é…åˆ—ã‹ã‚‰ã€å…¨ä½“ç¸¦ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œã‚‹ã€‚	ã“ã®ç¸¦è¡Œåˆ—ã®ç¯€ç‚¹ã®ä¸¦ã³é †ã¯ã€iç•ªç›®ã®ç¯€ç‚¹IDãŒiãªã®ã‹ãª
+	void CreateLocalMatrixAndSet();				//K,C,Fã™ã¹ã¦ã®è¡Œåˆ—ãƒ»ãƒ™ã‚¯ãƒˆãƒ«ã«ã¤ã„ã¦è¦ç´ å‰›æ€§è¡Œåˆ—ã‚’ä½œã£ã¦ã€ã‚¨ãƒƒã‚¸ã«å…¥ã‚Œã‚‹	åˆã¯	å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹é–¢æ•°
 	
-	//	‰Šú‰»
-	void InitTcAll();							//	Tc‚Ì‰·“x‚ğ‰Šú‰»
+	//	åˆæœŸåŒ–
+	void InitTcAll();							//	Tcã®æ¸©åº¦ã‚’åˆæœŸåŒ–
 
-	//	‰½—p‚É—p‚¢‚éH	s—ñì¬‚ÌŠÖ”‚ğ‚Ü‚Æ‚ß‚é‚¾‚¯H
+	//	ä½•ç”¨ã«ç”¨ã„ã‚‹ï¼Ÿ	è¡Œåˆ—ä½œæˆã®é–¢æ•°ã‚’ã¾ã¨ã‚ã‚‹ã ã‘ï¼Ÿ
 	void CreateMatrix();					
 
-	//%%%		k,c,f‹¤’Ê‚Å—p‚¢‚éŒvZŠÖ”		%%%//
-	// ƒGƒbƒW‚â’¸“_‚Ék,c,f‚Ì—v‘f„«s—ñ‚ÌŒW”‚ğİ’è	‚·‚×‚Ä‚Ìl–Ê‘Ì‚É‚Â‚¢‚Ä—v‘f„«s—ñ‚ğ‹‚ßAk,c,f‚É’l‚ğ“ü‚ê‚é‚ÆAŸ‚Ì—v‘f‚É‚Â‚¢‚Äˆ—‚ğÀs
+	//%%%		k,c,få…±é€šã§ç”¨ã„ã‚‹è¨ˆç®—é–¢æ•°		%%%//
+	// ã‚¨ãƒƒã‚¸ã‚„é ‚ç‚¹ã«k,c,fã®è¦ç´ å‰›æ€§è¡Œåˆ—ã®ä¿‚æ•°ã‚’è¨­å®š	ã™ã¹ã¦ã®å››é¢ä½“ã«ã¤ã„ã¦è¦ç´ å‰›æ€§è¡Œåˆ—ã‚’æ±‚ã‚ã€k,c,fã«å€¤ã‚’å…¥ã‚Œã‚‹ã¨ã€æ¬¡ã®è¦ç´ ã«ã¤ã„ã¦å‡¦ç†ã‚’å®Ÿè¡Œ
 	void SetkcfParam(Tet tets);
-	// ’¸“_ID@‚R“_‚©‚ç¬‚éOŠpŒ`‚Ì‹Ï@(l–Ê‘Ì‚ÌOŠpŒ`–ÊÏ•ª“™‚Å—˜—p)
+	// é ‚ç‚¹IDã€€ï¼“ç‚¹ã‹ã‚‰æˆã‚‹ä¸‰è§’å½¢ã®æ±‚ç©ã€€(å››é¢ä½“ã®ä¸‰è§’å½¢é¢ç©åˆ†ç­‰ã§åˆ©ç”¨)
 	double CalcTriangleArea(int id0, int id2, int id3);		
-	double CalcTetrahedraVolume(Tet tets);			// l–Ê‘Ì‚ÌID‚ğ“ü‚ê‚é‚ÆA‚»‚Ì‘ÌÏ‚ğŒvZ‚µ‚Ä‚­‚ê‚éŠÖ”
-	//void PrepareStep();							// Step()‚Å•K—v‚È•Ï”‚ğŒvZ‚·‚éŠÖ”
+	double CalcTetrahedraVolume(Tet tets);			// å››é¢ä½“ã®IDã‚’å…¥ã‚Œã‚‹ã¨ã€ãã®ä½“ç©ã‚’è¨ˆç®—ã—ã¦ãã‚Œã‚‹é–¢æ•°
+	//void PrepareStep();							// Step()ã§å¿…è¦ãªå¤‰æ•°ã‚’è¨ˆç®—ã™ã‚‹é–¢æ•°
 	//double CalcbVec(int vtxid,
 	
-	//	iƒNƒ‰ƒ“ƒNƒjƒRƒ‹ƒ\ƒ“–@‚ğ—p‚¢‚½jƒKƒEƒXƒUƒCƒfƒ‹–@‚Å”M“`“±‚ğŒvZ
+	//	ï¼ˆã‚¯ãƒ©ãƒ³ã‚¯ãƒ‹ã‚³ãƒ«ã‚½ãƒ³æ³•ã‚’ç”¨ã„ãŸï¼‰ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«æ³•ã§ç†±ä¼å°ã‚’è¨ˆç®—
 	void CalcHeatTransUsingGaussSeidel(
-		unsigned NofCyc,	// NofCyc:ŒJ‚è•Ô‚µŒvZ‰ñ”
-		double dt			// dt:ƒXƒeƒbƒvŠÔ
+		unsigned NofCyc,	// NofCyc:ç¹°ã‚Šè¿”ã—è¨ˆç®—å›æ•°
+		double dt			// dt:ã‚¹ãƒ†ãƒƒãƒ—æ™‚é–“
 		);
-	// i‘OiEƒNƒ‰ƒ“ƒNƒjƒRƒ‹ƒ\ƒ“EŒã‘ŞÏ•ª‚É‘Î‰)ƒKƒEƒXƒUƒCƒfƒ‹–@‚Å”M“`“±‚ğŒvZ 
+	// ï¼ˆå‰é€²ãƒ»ã‚¯ãƒ©ãƒ³ã‚¯ãƒ‹ã‚³ãƒ«ã‚½ãƒ³ãƒ»å¾Œé€€ç©åˆ†ã«å¯¾å¿œ)ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«æ³•ã§ç†±ä¼å°ã‚’è¨ˆç®— 
 	void CalcHeatTransUsingGaussSeidel(
-		unsigned NofCyc,		// NofCyc:ŒJ‚è•Ô‚µŒvZ‰ñ”
-		double dt,				// dt:ƒXƒeƒbƒvŠÔ
-		double eps				// eps:Ï•ª‚Ìí—Ş 0.0:‘OiÏ•ª,0.5:ƒNƒ‰ƒ“ƒNƒjƒRƒ‹ƒ\ƒ“·•ª®,1.0:Œã‘ŞÏ•ªE‰A‰ğ–@
+		unsigned NofCyc,		// NofCyc:ç¹°ã‚Šè¿”ã—è¨ˆç®—å›æ•°
+		double dt,				// dt:ã‚¹ãƒ†ãƒƒãƒ—æ™‚é–“
+		double eps				// eps:ç©åˆ†ã®ç¨®é¡ 0.0:å‰é€²ç©åˆ†,0.5:ã‚¯ãƒ©ãƒ³ã‚¯ãƒ‹ã‚³ãƒ«ã‚½ãƒ³å·®åˆ†å¼,1.0:å¾Œé€€ç©åˆ†ãƒ»é™°è§£æ³•
 		);		
 
-	void SetTempAllToTVecAll(unsigned size);		//	TVecAll‚É‘Sß“_‚Ì‰·“x‚ğİ’è‚·‚éŠÖ”
-	void SetTempToTVecAll(unsigned vtxid);			//	TVecAll‚É“Á’è‚Ìß“_‚Ì‰·“x‚ğİ’è‚·‚éŠÖ”
-	void UpdateVertexTemp(unsigned vtxid);			//	ŒvZŒ‹‰Ê‚Æ‚µ‚Ä‚Ì‰·“x‚ğTVecAll‚©‚çß“_‚ÉXV‚·‚é
-	void UpdateVertexTempAll(unsigned size);		//	ŒvZŒ‹‰Ê‚Æ‚µ‚Ä‚Ì‰·“x‚ğTVecAll‚©‚ç‘Sß“_‚ÉXV‚·‚é
+	void SetTempAllToTVecAll(unsigned size);		//	TVecAllã«å…¨ç¯€ç‚¹ã®æ¸©åº¦ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+	void SetTempToTVecAll(unsigned vtxid);			//	TVecAllã«ç‰¹å®šã®ç¯€ç‚¹ã®æ¸©åº¦ã‚’è¨­å®šã™ã‚‹é–¢æ•°
+	void UpdateVertexTemp(unsigned vtxid);			//	è¨ˆç®—çµæœã¨ã—ã¦ã®æ¸©åº¦ã‚’TVecAllã‹ã‚‰ç¯€ç‚¹ã«æ›´æ–°ã™ã‚‹
+	void UpdateVertexTempAll(unsigned size);		//	è¨ˆç®—çµæœã¨ã—ã¦ã®æ¸©åº¦ã‚’TVecAllã‹ã‚‰å…¨ç¯€ç‚¹ã«æ›´æ–°ã™ã‚‹
 
 	//	SciLab
-	void ScilabTest();								//	Scilab‚ğg‚Á‚Ä‚İ‚éŠÖ”
+	void ScilabTest();								//	Scilabã‚’ä½¿ã£ã¦ã¿ã‚‹é–¢æ•°
 
-	//		‘S‘Ì„«s—ñ‚ğì‚é		//	SciLab	‚Å—p‚¢‚é
-	void CreateMatKAll();						//	K‚Ì‘S‘Ì„«s—ñ
-	void CreateMatCAll();						//	C‚Ì‘S‘Ì„«s
+	//		å…¨ä½“å‰›æ€§è¡Œåˆ—ã‚’ä½œã‚‹		//	SciLab	ã§ç”¨ã„ã‚‹
+	void CreateMatKAll();						//	Kã®å…¨ä½“å‰›æ€§è¡Œåˆ—
+	void CreateMatCAll();						//	Cã®å…¨ä½“å‰›æ€§è¡Œ
 
-	void TexChange(unsigned id,double tz);		//		GR‚ÖˆÚA@‚â‚è•û‚ğæ¶‚É•·‚­
-	void SetTexZ(unsigned id,double tz);		//	ƒeƒNƒXƒ`ƒƒÀ•W‚ğ•ÏX
+	void TexChange(unsigned id,double tz);		//		GRã¸ç§»æ¤ã€€ã‚„ã‚Šæ–¹ã‚’å…ˆç”Ÿã«èã
+	void SetTexZ(unsigned id,double tz);		//	ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’å¤‰æ›´
 
-	void HeatTransFromPanToFoodShell();									//	“`“±“`”MFHŞ‚ÌŠOŠk‚Ìƒtƒ‰ƒCƒpƒ“‚â“S”Â‚É‹ß‚¢ß“_‚©‚ç”M‚ª“`‚í‚é		//	HŞA’²—Ší‹ï‚ğˆø”‚É
+	void HeatTransFromPanToFoodShell();									//	ä¼å°ä¼ç†±ï¼šé£Ÿæã®å¤–æ®»ã®ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã‚„é‰„æ¿ã«è¿‘ã„ç¯€ç‚¹ã‹ã‚‰ç†±ãŒä¼ã‚ã‚‹		//	é£Ÿæã€èª¿ç†å™¨å…·ã‚’å¼•æ•°ã«
 	
-	//	•úË“`”M‚ğ—LŒø‚É‚µ‚½‚¢HŞ‚ÌFWFemMeshH‚ÌIfA‰Á”MŠí‹ï‚ÌFWFemMesh‚ÌIf,”MçtË‚ÌZ“§[‚³‚ğ‘ã“ü
-	//	..•úË“`”MFHŞ‚ÌŠOŠk‚©‚ç”ƒ~ƒŠˆÈ“à‚Ìß“_‚É‘Î‚µ‚ÄA‰Á”MŠí‹ï‚©‚ç”M‚ª“`‚í‚é
+	//	æ”¾å°„ä¼ç†±ã‚’æœ‰åŠ¹ã«ã—ãŸã„é£Ÿæã®FWFemMeshï¼Ÿã®Ifã€åŠ ç†±å™¨å…·ã®FWFemMeshã®If,ç†±è¼»å°„ã®æµ¸é€æ·±ã•ã‚’ä»£å…¥
+	//	..æ”¾å°„ä¼ç†±ï¼šé£Ÿæã®å¤–æ®»ã‹ã‚‰æ•°ãƒŸãƒªä»¥å†…ã®ç¯€ç‚¹ã«å¯¾ã—ã¦ã€åŠ ç†±å™¨å…·ã‹ã‚‰ç†±ãŒä¼ã‚ã‚‹
 	void HeatRadientToFood(char foodID,char panID,double fluxdepth);
 												//
-	PTM::TMatrixRow<4,4,double> Create44Mat21();	//‹¤’Ê‚Å—p‚¢‚éA4~4‚Ì2‚Æ1‚Å‚Å‚«‚½s—ñ‚ğ•Ô‚·ŠÖ”
-	//‚ ‚é‚¢‚ÍAˆø”‚ğ“ü‚ê‚é‚ÆAˆø”‚ğ•Ï‚¦‚Ä‚­‚ê‚éŠÖ”
-	PTM::TMatrixCol<4,1,double> Create41Vec1();		//‹¤’Ê‚Å—p‚¢‚éA4~1‚Ì1‚Å‚Å‚«‚½s—ñ(ƒxƒNƒgƒ‹)‚ğ•Ô‚·ŠÖ”
+	PTM::TMatrixRow<4,4,double> Create44Mat21();	//å…±é€šã§ç”¨ã„ã‚‹ã€4Ã—4ã®2ã¨1ã§ã§ããŸè¡Œåˆ—ã‚’è¿”ã™é–¢æ•°
+	//ã‚ã‚‹ã„ã¯ã€å¼•æ•°ã‚’å…¥ã‚Œã‚‹ã¨ã€å¼•æ•°ã‚’å¤‰ãˆã¦ãã‚Œã‚‹é–¢æ•°
+	PTM::TMatrixCol<4,1,double> Create41Vec1();		//å…±é€šã§ç”¨ã„ã‚‹ã€4Ã—1ã®1ã§ã§ããŸè¡Œåˆ—(ãƒ™ã‚¯ãƒˆãƒ«)ã‚’è¿”ã™é–¢æ•°
 
-	//%%%%%%%%		ƒoƒCƒiƒŠƒXƒCƒbƒ`‚ÌéŒ¾		%%%%%%%%//
-	///	PHFemMesh‚É‘®‚·‚é\‘¢‘ÌAƒNƒ‰ƒX‚Å’è‹`‚³‚ê‚Ä‚¢‚é“¯—l‚Ìbool‚ªXV‚³‚ê‚½‚çA‚±‚¿‚ç‚àXV‚·‚é
-	///	ğŒ—˜—pŒã‚É‚Ífalse‚É–ß‚·B‰Šú’l‚Ítrue	for	‰Šú‰»
-	bool deformed;					///	Œ`ó‚ª•Ï‚í‚Á‚½‚©‚Ç‚¤‚©		///	\‘¢‘Ì‚É‚Á‚Ä‚¢‚Ä‚Ù‚µ‚¢
-	bool alphaUpdated;				///	”M“`’B—¦‚ªXVAmatk2,Vecf3“™‚ªXV‚³‚ê‚½‚©
+	//%%%%%%%%		ãƒã‚¤ãƒŠãƒªã‚¹ã‚¤ãƒƒãƒã®å®£è¨€		%%%%%%%%//
+	///	PHFemMeshã«å±ã™ã‚‹æ§‹é€ ä½“ã€ã‚¯ãƒ©ã‚¹ã§å®šç¾©ã•ã‚Œã¦ã„ã‚‹åŒæ§˜ã®boolãŒæ›´æ–°ã•ã‚ŒãŸã‚‰ã€ã“ã¡ã‚‰ã‚‚æ›´æ–°ã™ã‚‹
+	///	æ¡ä»¶åˆ©ç”¨å¾Œã«ã¯falseã«æˆ»ã™ã€‚åˆæœŸå€¤ã¯true	for	åˆæœŸåŒ–
+	bool deformed;					///	å½¢çŠ¶ãŒå¤‰ã‚ã£ãŸã‹ã©ã†ã‹		///	æ§‹é€ ä½“ã«æŒã£ã¦ã„ã¦ã»ã—ã„
+	bool alphaUpdated;				///	ç†±ä¼é”ç‡ãŒæ›´æ–°ã€matk2,Vecf3ç­‰ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 	
 	std::ofstream templog;
 
 
-	//%%%	ƒAƒvƒŠƒP[ƒVƒ‡ƒ“	%%%//
+	//%%%	ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³	%%%//
 
 	PHSolidIf* phFloor;
 	PHSolidIf* phFood;
@@ -216,22 +216,22 @@ protected:
 
 
 public:
-	//	PHFemMEsh.h“à‚ÌƒNƒ‰ƒX‚©‚ç”M“`“±“Á—L‚Ìƒpƒ‰ƒ[ƒ^‚ğŒp³‚µ‚Äg‚¤
+	//	PHFemMEsh.hå†…ã®ã‚¯ãƒ©ã‚¹ã‹ã‚‰ç†±ä¼å°ç‰¹æœ‰ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ç¶™æ‰¿ã—ã¦ä½¿ã†
 
-	//	Œp³—á@ˆÈ‰º‚Ì‚æ‚¤‚ÉŒp³‚µ‚ÄA”M“`“±“Á—L‚Ìƒpƒ‰ƒ[ƒ^‚ğ—p‚¢‚é
+	//	ç¶™æ‰¿ä¾‹ã€€ä»¥ä¸‹ã®ã‚ˆã†ã«ç¶™æ‰¿ã—ã¦ã€ç†±ä¼å°ç‰¹æœ‰ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ç”¨ã„ã‚‹
 	//class thFemVertex :public FemVertex{
 	//	double heatflux2;
 	//};
 	//std::vector<thFemVertex> thvertices;
-	//	ã‹LŒp³‚Å‹ß“ú’†‚ÉA”MŒvZƒpƒ‰ƒ[ƒ^‚ğŒp³‚·‚éBU“®FEM‰ğÍ‚Å‚àAãˆÊƒNƒ‰ƒXE\‘¢‘Ì‚ªg‚¦‚é‚æ‚¤‚É€”õ‚µ‚Ä‚¨‚­
+	//	ä¸Šè¨˜ç¶™æ‰¿ã§è¿‘æ—¥ä¸­ã«ã€ç†±è¨ˆç®—ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’ç¶™æ‰¿ã™ã‚‹ã€‚æŒ¯å‹•FEMè§£æã§ã‚‚ã€ä¸Šä½ã‚¯ãƒ©ã‚¹ãƒ»æ§‹é€ ä½“ãŒä½¿ãˆã‚‹ã‚ˆã†ã«æº–å‚™ã—ã¦ãŠã
 
 	/////	FemMeshThermo
 	//struct FemMeshThermo{		
-	//	bool alphaUpdated;			///	ƒƒbƒVƒ…“à‚Ìˆê‚Â‚Å‚àAß“_‚Ì”M“`’B—¦‚ªXV‚³‚ê‚½‚©‚Ç‚¤‚©¨K2,F3‚É‰e‹¿
-	//	bool hUpdated;				///	”MçtË—¦‚ªXV‚³‚ê‚½‚©
+	//	bool alphaUpdated;			///	ãƒ¡ãƒƒã‚·ãƒ¥å†…ã®ä¸€ã¤ã§ã‚‚ã€ç¯€ç‚¹ã®ç†±ä¼é”ç‡ãŒæ›´æ–°ã•ã‚ŒãŸã‹ã©ã†ã‹â†’K2,F3ã«å½±éŸ¿
+	//	bool hUpdated;				///	ç†±è¼»å°„ç‡ãŒæ›´æ–°ã•ã‚ŒãŸã‹
 	//};
 
-	//	’¸“_
+	//	é ‚ç‚¹
 	struct StateVar{
 		double temperature;
 	};
@@ -241,122 +241,122 @@ public:
 	std::vector<Coeff> edgeCoeffs;
 	
 	PHFemMeshThermo(const PHFemMeshThermoDesc& desc=PHFemMeshThermoDesc(), SceneIf* s=NULL);
-	void AfterSetDesc();		//	“`”Ms—ñ‚ÌŒvZ‚È‚Ç
-	/// ”M“`“±ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÅƒGƒ“ƒWƒ“‚ª—p‚¢‚éƒXƒeƒbƒv‚ğƒI[ƒo[ƒ‰ƒCƒh		
+	void AfterSetDesc();		//	ä¼ç†±è¡Œåˆ—ã®è¨ˆç®—ãªã©
+	/// ç†±ä¼å°ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã§ã‚¨ãƒ³ã‚¸ãƒ³ãŒç”¨ã„ã‚‹ã‚¹ãƒ†ãƒƒãƒ—ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰		
 	void Step(double dt);
-	//iß“_‰·“x‚Ìs—ñ‚ğì¬‚·‚é‘O‚Éj’¸“_‚Ì‰·“x‚ğİ’è‚·‚éi’PˆÊÛj
+	//ï¼ˆç¯€ç‚¹æ¸©åº¦ã®è¡Œåˆ—ã‚’ä½œæˆã™ã‚‹å‰ã«ï¼‰é ‚ç‚¹ã®æ¸©åº¦ã‚’è¨­å®šã™ã‚‹ï¼ˆå˜ä½æ‘‚æ°â„ƒï¼‰
 	void SetVerticesTempAll(double temp);
-	// ß“_i‚Ì‰·“x‚ğtemp“x‚Éİ’è‚µA‚»‚ê‚ğTVEcAll‚É”½‰f
+	// ç¯€ç‚¹iã®æ¸©åº¦ã‚’tempåº¦ã«è¨­å®šã—ã€ãã‚Œã‚’TVEcAllã«åæ˜ 
 	void SetVertexTemp(unsigned i,double temp);
-	//	Ú“_i‚ÌüˆÍ‚Ìß“_‰·“x‚ğtemp“x‚Éİ’è
+	//	æ¥ç‚¹iã®å‘¨å›²ã®ç¯€ç‚¹æ¸©åº¦ã‚’tempåº¦ã«è¨­å®š
 	void SetLocalFluidTemp(unsigned i,double temp);
-	///	’¸“_‚Ì”M“`’B—¦‚ğXV‚µAs—ñ‚ğì‚è’¼‚·
+	///	é ‚ç‚¹ã®ç†±ä¼é”ç‡ã‚’æ›´æ–°ã—ã€è¡Œåˆ—ã‚’ä½œã‚Šç›´ã™
 	void UpdateheatTransRatio(unsigned id,double heatTransRatio);
 
-	// If ‚Æ‚µ‚Ä‚ÌÀ‘•
+	// If ã¨ã—ã¦ã®å®Ÿè£…
 	void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt);
 
-	//%%%%%%%%		”M“`“±‹«ŠEğŒ‚Ìİ’èŠÖ”‚ÌéŒ¾		%%%%%%%%//
-	void SetThermalBoundaryCondition();				//	”M“`“±‹«ŠEğŒ‚Ìİ’è
+	//%%%%%%%%		ç†±ä¼å°å¢ƒç•Œæ¡ä»¶ã®è¨­å®šé–¢æ•°ã®å®£è¨€		%%%%%%%%//
+	void SetThermalBoundaryCondition();				//	ç†±ä¼å°å¢ƒç•Œæ¡ä»¶ã®è¨­å®š
 
-	//%%%%%%	g‚¢•û		%%%%%//
-	//	‰·“x‹«ŠEğŒ@‚ğİ’èŠÖ”ŒQ
-	//	..‰·“xŒÅ’è‹«ŠEğŒ:S_1		w’èß“_‚Ì‰·“x‚ğ•Ï‚¦‚é
+	//%%%%%%	ä½¿ã„æ–¹		%%%%%//
+	//	æ¸©åº¦å¢ƒç•Œæ¡ä»¶ã€€ã‚’è¨­å®šé–¢æ•°ç¾¤
+	//	..æ¸©åº¦å›ºå®šå¢ƒç•Œæ¡ä»¶:S_1		æŒ‡å®šç¯€ç‚¹ã®æ¸©åº¦ã‚’å¤‰ãˆã‚‹
 	void UsingFixedTempBoundaryCondition(unsigned id,double temp);
-	//	..”M“`’B‹«ŠEğŒ:S_3		w’èß“_‚ÌüˆÍ—¬‘Ì‰·“x‚ğ•Ï‚¦‚é
+	//	..ç†±ä¼é”å¢ƒç•Œæ¡ä»¶:S_3		æŒ‡å®šç¯€ç‚¹ã®å‘¨å›²æµä½“æ¸©åº¦ã‚’å¤‰ãˆã‚‹
 	void UsingHeatTransferBoundaryCondition(unsigned id,double temp);
-	//	”M“`’B—¦‚àİ’è‰Â”\‚ÈŠÖ”	//>	–¼‘O‚ğ•Ï‚¦‚é‚×‚«@—v‰ü‘P
+	//	ç†±ä¼é”ç‡ã‚‚è¨­å®šå¯èƒ½ãªé–¢æ•°	//>	åå‰ã‚’å¤‰ãˆã‚‹ã¹ãã€€è¦æ”¹å–„
 	void UsingHeatTransferBoundaryCondition(unsigned id,double temp,double heatTransratio);
 	
-	//	ˆÈ‰ºAl‚¦“r’†
-	//	‰üÌˆÄ
+	//	ä»¥ä¸‹ã€è€ƒãˆé€”ä¸­
+	//	æ”¹ç§°æ¡ˆ
 	//SetVtxtoFixedBC
 	//SetVtxtoTranferBC
 	//SetVtxHTRtoTranferBC
-	//	‰·“x‚ğ‰Á‚¦‚½‚¢ß“_‚âß“_ü‚è‚Ì—¬‘Ì‚ÍA‚»‚Ìß“_‚Ìx,y,zÀ•W‚©‚ç“Á’è‚·‚ê‚Î‚¢‚¢H	‰·“x‹«ŠEğŒTc‚Ìİ’è‚È‚Ç
+	//	æ¸©åº¦ã‚’åŠ ãˆãŸã„ç¯€ç‚¹ã‚„ç¯€ç‚¹å‘¨ã‚Šã®æµä½“ã¯ã€ãã®ç¯€ç‚¹ã®x,y,zåº§æ¨™ã‹ã‚‰ç‰¹å®šã™ã‚Œã°ã„ã„ï¼Ÿ	æ¸©åº¦å¢ƒç•Œæ¡ä»¶Tcã®è¨­å®šãªã©
 
-	///	–}—á->wiki
+	///	å‡¡ä¾‹->wiki
 	//BC=BoundaryCondition
 	//HTR=HeatTransferRatio
 
 	int GetSurfaceVertex(int id){return surfaceVertices[id];};
 	int NSurfaceVertices(){return surfaceVertices.size();};
-	//	üˆÍ—¬‘Ì‰·“x‚ğXV	”M“`’B—¦‚Í•Ï‚¦‚È‚¢
+	//	å‘¨å›²æµä½“æ¸©åº¦ã‚’æ›´æ–°	ç†±ä¼é”ç‡ã¯å¤‰ãˆãªã„
 	void SetVertexTc(int id,double temp){
-		// ...PHFemMeshThermo::SetLocalFluidTemp()‚ÅüˆÍ—¬‘Ì‰·“x‚Ìİ’èACreateVecfLocal()‚ÌXV
+		// ...PHFemMeshThermo::SetLocalFluidTemp()ã§å‘¨å›²æµä½“æ¸©åº¦ã®è¨­å®šã€CreateVecfLocal()ã®æ›´æ–°
 		UsingHeatTransferBoundaryCondition(id,temp);
 	};
-	///	üˆÍ—¬‘Ì‰·“x‚ğXV		”M“`’B—¦‚ğ•ÏX‚Å‚«‚éIf
+	///	å‘¨å›²æµä½“æ¸©åº¦ã‚’æ›´æ–°		ç†±ä¼é”ç‡ã‚’å¤‰æ›´ã§ãã‚‹If
 	void SetVertexTc(int id,double temp,double heatTransRatio){
-		//	..”M“`’B‹«ŠEğŒ‚ğİ’èF”M“`’B—¦‚ğŠÜ‚Şs—ñ‚ª‘ÎÛ
+		//	..ç†±ä¼é”å¢ƒç•Œæ¡ä»¶ã‚’è¨­å®šï¼šç†±ä¼é”ç‡ã‚’å«ã‚€è¡Œåˆ—ãŒå¯¾è±¡
 		UsingHeatTransferBoundaryCondition(id,temp,heatTransRatio);	
 	};
-	// ß“_‚Ì”M—¬‘©‚ğİ’è‚·‚é
+	// ç¯€ç‚¹ã®ç†±æµæŸã‚’è¨­å®šã™ã‚‹
 	void SetVertexHeatFlux(int id,double heatFlux);
-	// ‘Sß“_‚Ì”M—¬‘©‚ğİ’è‚·‚é
+	// å…¨ç¯€ç‚¹ã®ç†±æµæŸã‚’è¨­å®šã™ã‚‹
 	void SetVtxHeatFluxAll(double heatFlux);
 
 	Vec3d GetPose(unsigned id){ return vertices[id].pos; };
 	Vec3d GetSufVtxPose(unsigned id){return vertices[surfaceVertices[id]].pos; };
 
-	//%%%	StepƒJƒEƒ“ƒg‚Ì‚½‚ß‚Ì•Ï”AŠÖ”’è‹`		%%%//
-	unsigned long StepCount;			//	Step”ƒJƒEƒ“ƒgƒAƒbƒv‚Ì‰ÁZŒW”	
-	unsigned long StepCount_;			//	Step”ƒJƒEƒ“ƒgƒAƒbƒv‚Ì‰ÁZŒW”	StepCount‚ª‰½T–Ú‚©‚ğ•\‚·ƒJƒEƒ“ƒg 
-	//	StepCount”ƒJƒEƒ“ƒgƒAƒbƒv
+	//%%%	Stepã‚«ã‚¦ãƒ³ãƒˆã®ãŸã‚ã®å¤‰æ•°ã€é–¢æ•°å®šç¾©		%%%//
+	unsigned long StepCount;			//	Stepæ•°ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ã®åŠ ç®—ä¿‚æ•°	
+	unsigned long StepCount_;			//	Stepæ•°ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—ã®åŠ ç®—ä¿‚æ•°	StepCountãŒä½•é€±ç›®ã‹ã‚’è¡¨ã™ã‚«ã‚¦ãƒ³ãƒˆ 
+	//	StepCountæ•°ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—
 	unsigned long GetStepCount(){return StepCount;};
-	//	StepCount‚Ìü‰ñƒJƒEƒ“ƒgƒAƒbƒv
+	//	StepCountã®å‘¨å›ã‚«ã‚¦ãƒ³ãƒˆã‚¢ãƒƒãƒ—
 	unsigned long GetStepCountCyc(){return StepCount_;};
 
 
-	//	ƒKƒEƒXƒUƒCƒfƒ‹ŒvZ‚Å—p‚¢‚éŠÖ”ŒQ
-	//	..{F}‚Ì ‘S‘Ì „«ƒxƒNƒgƒ‹
+	//	ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«è¨ˆç®—ã§ç”¨ã„ã‚‹é–¢æ•°ç¾¤
+	//	..{F}ã® å…¨ä½“ å‰›æ€§ãƒ™ã‚¯ãƒˆãƒ«
 	PTM::VMatrixCol<double> vecFAll;			
 
-	///	ƒƒbƒVƒ…•\–Êß“_‚ÌŒ´“_‚©‚ç‚Ì‹——£‚ğŒvZ‚µ‚ÄAstruct FemVertex ‚Ì disFromOrigin ‚ÉŠi”[
+	///	ãƒ¡ãƒƒã‚·ãƒ¥è¡¨é¢ç¯€ç‚¹ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢ã‚’è¨ˆç®—ã—ã¦ã€struct FemVertex ã® disFromOrigin ã«æ ¼ç´
 	void CalcVtxDisFromOrigin();
 
-	//	IH‚É‚æl–Ê‘Ì‚Ìface–Ê‚Ì”M—¬‘©‰Á”M‚Ì‚½‚ß‚Ìs—ñ¬•ªŒvZŠÖ”
-	void CalcIHdqdt(double r,double R,double dqdtAll);				//	IHƒq[ƒ^[‚Ìİ’è
-	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);		//	­‚µ‚Å‚à‰~ŠÂ—Ìˆæ‚É‚©‚©‚Á‚Ä‚¢‚½‚çA‚»‚Ìface‚Ì–ÊÏ‘S•”‚ÉIH‰Á”M‚ğ‚³‚¹‚é
-	void CalcIHdqdtband(double xS,double xE,double dqdtAll);		//	‘Ñó‚É‰Á”MAx²‚ÅØ‚é
-	void CalcIHdqdtband_(double xS,double xE,double dqdtAll);		//	‘Ñó‚É‰Á”MAx²‚ÅØ‚é mayIHheated‚ğg‚í‚È‚¢
-	void CalcIHdqdt2(double r,double R,double dqdtAll);				//	IHƒq[ƒ^[‚Ìİ’è
-	void CalcIHdqdt3(double r,double R,double dqdtAll);				//	IHƒq[ƒ^[‚Ìİ’è	1’¸“_‚Å‚à—Ìˆæ“à‚É“ü‚Á‚Ä‚¢‚é‚Æ‚«‚É‚ÍA‚»‚ê‚ğIHŒvZ‚Ì—Ìˆæ‚É‰ÁZ‚·‚é
-	void CalcIHdqdt4(double radius,double Radius,double dqdtAll);	//	IHƒq[ƒ^[‚Ìİ’è	2‚æ‚è‚àA‘Î‰‚Å‚«‚éOŠpŒ`‚Ìê‡‚ª•L‚¢B‚µ‚©‚µAOŠpŒ`‚Ì‘å‚«‚³‚ÌŠ„‚ÉA‰Á”M‰~”¼Œa‚ª¬‚³‚¢ê‡‚ÍAl—¶‚µ‚È‚¢B
-	//	face’¸“_‚ÌIH‰Á”M‚Ìs—ñ¬•ª‚ğŒvZ	”¼Œa10cm’ö“x‚Ì‰~ŒÊ‚ÆA‰~ŠÂ•”cm•‚ğ‚Ü‚½‚®’ö“x‚ÌOŠpŒ`ƒTƒCƒY‚ğ‘z’è
+	//	IHã«ã‚ˆå››é¢ä½“ã®faceé¢ã®ç†±æµæŸåŠ ç†±ã®ãŸã‚ã®è¡Œåˆ—æˆåˆ†è¨ˆç®—é–¢æ•°
+	void CalcIHdqdt(double r,double R,double dqdtAll);				//	IHãƒ’ãƒ¼ã‚¿ãƒ¼ã®è¨­å®š
+	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);		//	å°‘ã—ã§ã‚‚å††ç’°é ˜åŸŸã«ã‹ã‹ã£ã¦ã„ãŸã‚‰ã€ãã®faceã®é¢ç©å…¨éƒ¨ã«IHåŠ ç†±ã‚’ã•ã›ã‚‹
+	void CalcIHdqdtband(double xS,double xE,double dqdtAll);		//	å¸¯çŠ¶ã«åŠ ç†±ã€xè»¸ã§åˆ‡ã‚‹
+	void CalcIHdqdtband_(double xS,double xE,double dqdtAll);		//	å¸¯çŠ¶ã«åŠ ç†±ã€xè»¸ã§åˆ‡ã‚‹ mayIHheatedã‚’ä½¿ã‚ãªã„
+	void CalcIHdqdt2(double r,double R,double dqdtAll);				//	IHãƒ’ãƒ¼ã‚¿ãƒ¼ã®è¨­å®š
+	void CalcIHdqdt3(double r,double R,double dqdtAll);				//	IHãƒ’ãƒ¼ã‚¿ãƒ¼ã®è¨­å®š	1é ‚ç‚¹ã§ã‚‚é ˜åŸŸå†…ã«å…¥ã£ã¦ã„ã‚‹ã¨ãã«ã¯ã€ãã‚Œã‚’IHè¨ˆç®—ã®é ˜åŸŸã«åŠ ç®—ã™ã‚‹
+	void CalcIHdqdt4(double radius,double Radius,double dqdtAll);	//	IHãƒ’ãƒ¼ã‚¿ãƒ¼ã®è¨­å®š	2ã‚ˆã‚Šã‚‚ã€å¯¾å¿œã§ãã‚‹ä¸‰è§’å½¢ã®å ´åˆãŒå¹…åºƒã„ã€‚ã—ã‹ã—ã€ä¸‰è§’å½¢ã®å¤§ãã•ã®å‰²ã«ã€åŠ ç†±å††åŠå¾„ãŒå°ã•ã„å ´åˆã¯ã€è€ƒæ…®ã—ãªã„ã€‚
+	//	faceé ‚ç‚¹ã®IHåŠ ç†±æ™‚ã®è¡Œåˆ—æˆåˆ†ã‚’è¨ˆç®—	åŠå¾„10cmç¨‹åº¦ã®å††å¼§ã¨ã€å††ç’°å¹…æ•°cmå¹…ã‚’ã¾ãŸãç¨‹åº¦ã®ä¸‰è§’å½¢ã‚µã‚¤ã‚ºã‚’æƒ³å®š
 	void CalcIHarea(double radius,double Radius,double dqdtAll);
-	//	DSTR ‚ÉŒğ“_ŒvZŒ‹‰Ê‚ğ•\¦‚·‚é
+	//	DSTR ã«äº¤ç‚¹è¨ˆç®—çµæœã‚’è¡¨ç¤ºã™ã‚‹
 	void ShowIntersectionVtxDSTR(unsigned faceID,unsigned faceVtxNum,double radius);
-	//	¢•ªŠ„‘O‚Ìvector‚©‚çOŠpŒ`•ªŠ„–ÊÏ˜a‚ğ‹Ï
+	//	â–³åˆ†å‰²å‰ã®vectorã‹ã‚‰ä¸‰è§’å½¢åˆ†å‰²é¢ç©å’Œã‚’æ±‚ç©
 	double CalcDivTriArea(std::vector<double> trivec);
 
-	// face’¸“_‚ğ•¨‘ÌŒ´“_‚©‚ç‹ß‚¢‡‚É•À‚×‚©‚¦AfaceƒNƒ‰ƒX•Ï”:ascendVtx[0~2]‚É‹ß‚¢‡‚Ì’¸“_ID‚ğŠi”[;ascendVtx[0]‚ªŒ´“_ÅŠñ‚è	
+	// faceé ‚ç‚¹ã‚’ç‰©ä½“åŸç‚¹ã‹ã‚‰è¿‘ã„é †ã«ä¸¦ã¹ã‹ãˆã€faceã‚¯ãƒ©ã‚¹å¤‰æ•°:ascendVtx[0~2]ã«è¿‘ã„é †ã®é ‚ç‚¹IDã‚’æ ¼ç´;ascendVtx[0]ãŒåŸç‚¹æœ€å¯„ã‚Š	
 	void ArrangeFacevtxdisAscendingOrder(int faceID);
 
-	// 1“_‚ÆŒğ‚í‚é‚±‚Æ‚ğ‘z’è:id0.id1‚ğŒ‹‚ñ‚¾ü•ª‚ÆA”¼Œar‚Ü‚½‚ÍR‚Ì‰~‚ªŒğ‚í‚éŒğ“_‚ğ‹‚ß‚éB(‚“C‚™)À•W‚ğ•Ô‚·
+	// 1ç‚¹ã¨äº¤ã‚ã‚‹ã“ã¨ã‚’æƒ³å®š:id0.id1ã‚’çµã‚“ã ç·šåˆ†ã¨ã€åŠå¾„rã¾ãŸã¯Rã®å††ãŒäº¤ã‚ã‚‹äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹ã€‚(ï½“ï¼Œï½™)åº§æ¨™ã‚’è¿”ã™
 	Vec2d CalcIntersectionPoint(unsigned id0,unsigned id1,double r,double R);
-	// ”¼Œar,R‚Ì‰~ŒÊ‚Æ2“_‚Åì‚éü•ª‚ÌŒğ“_‚ğ‹‚ß‚é
-	//	...rAR‚Ì2‰~ŒÊ‚ÆŒğ‚í‚é2Œğ“_
+	// åŠå¾„r,Rã®å††å¼§ã¨2ç‚¹ã§ä½œã‚‹ç·šåˆ†ã®äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
+	//	...rã€Rã®2å††å¼§ã¨äº¤ã‚ã‚‹2äº¤ç‚¹
 	std::vector<Vec2d> CalcIntersectionPoint2(unsigned id0,unsigned id1,double r,double R);
-	// ”¼Œar‚Ì‰~ŒÊ‚Æü•ª‚ÌŒğ“_À•W‚ğ‚P‚ÂŒvZ
+	// åŠå¾„rã®å††å¼§ã¨ç·šåˆ†ã®äº¤ç‚¹åº§æ¨™ã‚’ï¼‘ã¤è¨ˆç®—
 	Vec2d CalcIntersectionOfCircleAndLine(
-		unsigned id0,	//	ü•ª‚Ì—¼’[“_‚Ì’¸“_”Ô†i0 ~ vertices.size()j
+		unsigned id0,	//	ç·šåˆ†ã®ä¸¡ç«¯ç‚¹ã®é ‚ç‚¹ç•ªå·ï¼ˆ0 ~ vertices.size()ï¼‰
 		unsigned id1,
-		double radius	//	”¼Œa
+		double radius	//	åŠå¾„
 		);
-	//Vec4d CalcIntersectionPoint4(unsigned id0,unsigned id1,double r,double R);		/// 4“_‚ÆŒğ‚í‚é‚±‚Æ‚ğ‘z’è:			“¯ã
-	///	ƒƒbƒVƒ…ŒÅ—L‚Ìƒpƒ‰ƒ[ƒ^‚Ìİ’è
-	void SetRohSpheat(double roh,double Cp);	// ‘fŞŒÅ—L‚Ì–§“xA”ä”M‚Ìİ’è
+	//Vec4d CalcIntersectionPoint4(unsigned id0,unsigned id1,double r,double R);		/// 4ç‚¹ã¨äº¤ã‚ã‚‹ã“ã¨ã‚’æƒ³å®š:			åŒä¸Š
+	///	ãƒ¡ãƒƒã‚·ãƒ¥å›ºæœ‰ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®è¨­å®š
+	void SetRohSpheat(double roh,double Cp);	// ç´ æå›ºæœ‰ã®å¯†åº¦ã€æ¯”ç†±ã®è¨­å®š
 
-	/// dt‚ğ’è””{‚·‚é
+	/// dtã‚’å®šæ•°å€ã™ã‚‹
 	unsigned Ndt;
 	double dNdt;
 
 
-	//ƒGƒbƒW‚Ì•`‰æ
+	//ã‚¨ãƒƒã‚¸ã®æç”»
 	void DrawEdge(unsigned id0, unsigned id1);
 
-	//	x²‚Æ‚’¼‚ÈIH‰Á”M‚Ì‘Ñ—Ìˆæ‚Éü‚ğˆø‚­‚½‚ß‚É•K—v
+	//	xè»¸ã¨å‚ç›´ãªIHåŠ ç†±ã®å¸¯é ˜åŸŸã«ç·šã‚’å¼•ããŸã‚ã«å¿…è¦
 	void SetIHbandDrawVtx(double xS, double xE);
 	Vec2d GetIHbandDrawVtx();
 

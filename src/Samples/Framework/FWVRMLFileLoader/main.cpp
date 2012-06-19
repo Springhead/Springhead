@@ -1,11 +1,11 @@
-#include "FWVrmlFileLoader.h"
+ï»¿#include "FWVrmlFileLoader.h"
 /**
-	ƒVƒ“ƒvƒ‹‚ÈXfileƒ[ƒ_[
-	ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÍglutIdleFunc‚Åi‚ß‚é
-	q, ESC	: ƒAƒvƒŠƒP[ƒVƒ‡ƒ“I—¹
-	r		: ƒtƒ@ƒCƒ‹‚ÌƒŠƒ[ƒh
-	w		: ƒJƒƒ‰s—ñ‚Ì‰Šú‰»
-	d		: ƒfƒoƒbƒN•\Ž¦Ø‚è‘Ö‚¦
+	ã‚·ãƒ³ãƒ—ãƒ«ãªXfileãƒ­ãƒ¼ãƒ€ãƒ¼
+	ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã¯glutIdleFuncã§é€²ã‚ã‚‹
+	q, ESC	: ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†
+	r		: ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒªãƒ­ãƒ¼ãƒ‰
+	w		: ã‚«ãƒ¡ãƒ©è¡Œåˆ—ã®åˆæœŸåŒ–
+	d		: ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆ
 */
 
 FWVrmlfileLoader app;

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2009, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,37 +17,37 @@ namespace Spr{;
 struct CRCreatureIf;
 struct CRCreatureDesc;
 
-/// ƒNƒŠ[ƒ`ƒƒSdk‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ã‚¯ãƒªãƒ¼ãƒãƒ£Sdkã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct CRSdkIf : SdkIf {
 	SPR_IFDEF(CRSdk);
 
-	/** @brief SDKƒIƒuƒWƒFƒNƒg‚ğì¬‚·‚é
+	/** @brief SDKã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã™ã‚‹
 	 */
 	static CRSdkIf* SPR_CDECL CreateSdk();
 
-	/** @brief ƒNƒŠ[ƒ`ƒƒ‚ğˆê‘Ìì¬‚·‚é
+	/** @brief ã‚¯ãƒªãƒ¼ãƒãƒ£ã‚’ä¸€ä½“ä½œæˆã™ã‚‹
 	 */
 	CRCreatureIf* CreateCreature(const IfInfo* ii, const CRCreatureDesc& desc);
 	template <class T> CRCreatureIf* CreateCreature(const T& desc){
 		return CreateCreature(T::GetIfInfo(), desc);
 	}
 
-	/** @brief ƒNƒŠ[ƒ`ƒƒ‚ÌŒÂ”il”Hj‚ğæ“¾‚·‚é
+	/** @brief ã‚¯ãƒªãƒ¼ãƒãƒ£ã®å€‹æ•°ï¼ˆäººæ•°ï¼Ÿï¼‰ã‚’å–å¾—ã™ã‚‹
 	 */
 	int NCreatures() const;
 
-	/** @brief ƒNƒŠ[ƒ`ƒƒˆê‘Ì‚ğæ“¾‚·‚é
+	/** @brief ã‚¯ãƒªãƒ¼ãƒãƒ£ä¸€ä½“ã‚’å–å¾—ã™ã‚‹
 	 */
 	CRCreatureIf* GetCreature(int index);
 
-	/** @brief ‘SƒNƒŠ[ƒ`ƒƒ‚É‚Â‚¢‚Ä‚PƒXƒeƒbƒvˆ—‚ğÀs‚·‚é
+	/** @brief å…¨ã‚¯ãƒªãƒ¼ãƒãƒ£ã«ã¤ã„ã¦ï¼‘ã‚¹ãƒ†ãƒƒãƒ—å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹
 	 */
 	void Step();
 
 	static void SPR_CDECL RegisterSdk();
 };
 
-/// ƒNƒŠ[ƒ`ƒƒSdk‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ã‚¯ãƒªãƒ¼ãƒãƒ£Sdkã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRSdkDesc {
 	SPR_DESCDEF(CRSdk);
 

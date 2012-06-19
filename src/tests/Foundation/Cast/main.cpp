@@ -1,4 +1,4 @@
-/*
+Ôªø/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#include <Springhead.h>		//	SpringheadÇÃÉCÉìÉ^ÉtÉFÅ[ÉX
+#include <Springhead.h>		//	Springhead„ÅÆ„Ç§„É≥„Çø„Éï„Çß„Éº„Çπ
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
 

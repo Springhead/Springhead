@@ -1,4 +1,4 @@
-#include <conio.h>
+ï»¿#include <conio.h>
 #include <Springhead.h>
 #include <HumanInterface/SprHIDRUsb.h>
 #include <iomanip>
@@ -6,10 +6,10 @@
 using namespace Spr;
 
 int __cdecl main(){
-	// HumanInterface SDK‚ğì¬
+	// HumanInterface SDKã‚’ä½œæˆ
 	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
 
-	// Spidar§Œä—pƒn[ƒhƒEƒFƒA‚Ì‰Šú‰»
+	// Spidaråˆ¶å¾¡ç”¨ãƒãƒ¼ãƒ‰ã‚¦ã‚§ã‚¢ã®åˆæœŸåŒ–
 	DRUsb20SimpleDesc usbSimpleDesc;
 	sdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 	DRUsb20Sh4Desc usb20Sh4Desc;
@@ -21,7 +21,7 @@ int __cdecl main(){
 
 	sdk->Print(DSTR);
 
-	// SpidarƒCƒ“ƒ^ƒtƒF[ƒXì¬
+	// Spidarã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ä½œæˆ
 	UTRef<HISpidar4If> spg = sdk->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
 	spg->Init(&HISpidar4Desc("SpidarG6X3R"));
 

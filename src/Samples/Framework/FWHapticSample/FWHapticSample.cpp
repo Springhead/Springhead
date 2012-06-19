@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,14 +18,14 @@ FWHapticSample::FWHapticSample(){
 }
 
 void FWHapticSample::BuildScene(){
-		PHSdkIf* phSdk = GetSdk()->GetPHSdk();				// ƒVƒFƒCƒvì¬‚Ì‚½‚ß‚ÉPHSdk‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ‚Æ‚Á‚Ä‚­‚é
-		phscene = GetSdk()->GetScene()->GetPHScene();		// „‘Ìì¬‚Ì‚½‚ß‚ÉPHScene‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ‚Æ‚Á‚Ä‚­‚é
+		PHSdkIf* phSdk = GetSdk()->GetPHSdk();				// ã‚·ã‚§ã‚¤ãƒ—ä½œæˆã®ãŸã‚ã«PHSdkã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’ã¨ã£ã¦ãã‚‹
+		phscene = GetSdk()->GetScene()->GetPHScene();		// å‰›ä½“ä½œæˆã®ãŸã‚ã«PHSceneã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’ã¨ã£ã¦ãã‚‹
 		
-		Vec3d pos = Vec3d(0, 0, 1.21825);					// ƒJƒƒ‰‰ŠúˆÊ’u
-		GetCurrentWin()->GetTrackball()->SetPosition(pos);	// ƒJƒƒ‰‰ŠúˆÊ’u‚Ìİ’è
-		GetSdk()->SetDebugMode(true);						// ƒfƒoƒbƒN•\¦‚Ì—LŒø‰»
+		Vec3d pos = Vec3d(0, 0, 1.21825);					// ã‚«ãƒ¡ãƒ©åˆæœŸä½ç½®
+		GetCurrentWin()->GetTrackball()->SetPosition(pos);	// ã‚«ãƒ¡ãƒ©åˆæœŸä½ç½®ã®è¨­å®š
+		GetSdk()->SetDebugMode(true);						// ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºã®æœ‰åŠ¹åŒ–
 			
-		// °‚ğì¬
+		// åºŠã‚’ä½œæˆ
 		CDBoxDesc bd;
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
 		bd.material.mu = 0.5;
@@ -35,7 +35,7 @@ void FWHapticSample::BuildScene(){
 		floor->SetFramePosition(Vec3d(0, -1.0, 0.0));
 		floor->SetDynamical(false);
 	
-		// ” ‚ğì¬
+		// ç®±ã‚’ä½œæˆ
 		PHSolidIf* soBox = phscene->CreateSolid();
 		soBox->SetMass(0.3f);
 		bd.boxsize.clear(0.4f);
@@ -43,27 +43,27 @@ void FWHapticSample::BuildScene(){
 		soBox->SetInertia(soBox->GetShape(0)->CalcMomentOfInertia() * soBox->GetMass());
 		soBox->SetFramePosition(Vec3d(-0.5 , -0.35, 0.0));
 
-		// —ÍŠoƒ|ƒCƒ“ƒ^‚Ìì¬
-		pointer = phscene->CreateHapticPointer();	// —ÍŠoƒ|ƒCƒ“ƒ^‚Ìì¬
+		// åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã®ä½œæˆ
+		pointer = phscene->CreateHapticPointer();	// åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã®ä½œæˆ
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
 		cd.material.mu = 0.4;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		//pointer->AddShape(phSdk->CreateShape(bd));	// ƒVƒFƒCƒv‚Ì’Ç‰Á
-		pointer->AddShape(phSdk->CreateShape(cd));	// ƒVƒFƒCƒv‚Ì’Ç‰Á
+		//pointer->AddShape(phSdk->CreateShape(bd));	// ã‚·ã‚§ã‚¤ãƒ—ã®è¿½åŠ 
+		pointer->AddShape(phSdk->CreateShape(cd));	// ã‚·ã‚§ã‚¤ãƒ—ã®è¿½åŠ 
 		Posed defaultPose;
 		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);	
-		pointer->SetDefaultPose(defaultPose);		// —ÍŠoƒ|ƒCƒ“ƒ^‰Šúp¨‚Ìİ’è
-		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia());	// Šµ«ƒeƒ“ƒ\ƒ‹‚Ìİ’è
-		pointer->SetLocalRange(0.1);				// ‹ÇŠƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“”ÍˆÍ‚Ìİ’è
-		pointer->SetPosScale(50);					// —ÍŠoƒ|ƒCƒ“ƒ^‚ÌˆÚ“®ƒXƒP[ƒ‹‚Ìİ’è
-		pointer->SetReflexSpring(5000);				// ƒoƒlŒW”‚Ìİ’è
-		pointer->SetReflexDamper(0.1 * 0.0);		// ƒ_ƒ“ƒpŒW”‚Ìİ’è
-		pointer->EnableFriction(false);				// –€C‚ğ—LŒø‚É‚·‚é‚©‚Ç‚¤‚©
-		//pointer->EnableDebugControl(true);		// ƒL[ƒ{[ƒh‚©‚ç—ÍŠoƒ|ƒCƒ“ƒ^‚ğ“®‚©‚·‹@”\ƒJ[ƒ\ƒ‹‚ÅxAy•ûŒü‚ÉˆÚ“®‰Â”\
-		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterface‚ÆÚ‘±‚·‚é‚½‚ß‚ÌƒIƒuƒWƒFƒNƒg‚ğì¬
-		fwPointer->SetHumanInterface(spg);		// HumanInterface‚Ìİ’è
-		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIf‚Ìs‚Á‚Ä‚¢
+		pointer->SetDefaultPose(defaultPose);		// åŠ›è¦šãƒã‚¤ãƒ³ã‚¿åˆæœŸå§¿å‹¢ã®è¨­å®š
+		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia());	// æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã®è¨­å®š
+		pointer->SetLocalRange(0.1);				// å±€æ‰€ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ç¯„å›²ã®è¨­å®š
+		pointer->SetPosScale(50);					// åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã®ç§»å‹•ã‚¹ã‚±ãƒ¼ãƒ«ã®è¨­å®š
+		pointer->SetReflexSpring(5000);				// ãƒãƒä¿‚æ•°ã®è¨­å®š
+		pointer->SetReflexDamper(0.1 * 0.0);		// ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã®è¨­å®š
+		pointer->EnableFriction(false);				// æ‘©æ“¦ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ã©ã†ã‹
+		//pointer->EnableDebugControl(true);		// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã‹ã‚‰åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã‚’å‹•ã‹ã™æ©Ÿèƒ½ã‚«ãƒ¼ã‚½ãƒ«ã§xã€yæ–¹å‘ã«ç§»å‹•å¯èƒ½
+		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceã¨æ¥ç¶šã™ã‚‹ãŸã‚ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
+		fwPointer->SetHumanInterface(spg);		// HumanInterfaceã®è¨­å®š
+		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfã®sã£ã¦ã„
 }
 
 void FWHapticSample::InitInterface(){
@@ -100,32 +100,32 @@ void FWHapticSample::InitInterface(){
 }
 
 void FWHapticSample::Init(int argc, char* argv[]){
-	FWApp::Init(argc, argv);							// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì‰Šú‰»
-	InitInterface();									// ƒCƒ“ƒ^ƒtƒF[ƒX‚Ì‰Šú‰»
-	BuildScene();										// ƒIƒuƒWƒFƒNƒg‚Ìì¬
-	PHHapticEngineIf* he = phscene->GetHapticEngine();	// —ÍŠoƒGƒ“ƒWƒ“‚ğ‚Æ‚Á‚Ä‚­‚é
-	he->EnableHapticEngine(true);						// —ÍŠoƒGƒ“ƒWƒ“‚Ì—LŒø‰»
+	FWApp::Init(argc, argv);							// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆæœŸåŒ–
+	InitInterface();									// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®åˆæœŸåŒ–
+	BuildScene();										// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
+	PHHapticEngineIf* he = phscene->GetHapticEngine();	// åŠ›è¦šã‚¨ãƒ³ã‚¸ãƒ³ã‚’ã¨ã£ã¦ãã‚‹
+	he->EnableHapticEngine(true);						// åŠ›è¦šã‚¨ãƒ³ã‚¸ãƒ³ã®æœ‰åŠ¹åŒ–
 
 	if(engineType == SINGLE){
-		// ƒVƒ“ƒOƒ‹ƒXƒŒƒbƒhƒ‚[ƒh
+		// ã‚·ãƒ³ã‚°ãƒ«ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ¢ãƒ¼ãƒ‰
 		he->SetHapticEngineMode(PHHapticEngineDesc::SINGLE_THREAD);
 		phscene->SetTimeStep(hdt);
 	}else if(engineType == MULTI){
-		// ƒ}ƒ‹ƒ`ƒXƒŒƒbƒhƒ‚[ƒh
+		// ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ãƒ¢ãƒ¼ãƒ‰
 		he->SetHapticEngineMode(PHHapticEngineDesc::MULTI_THREAD);
 		phscene->SetTimeStep(pdt);
 	}else if(engineType == LD){
-		// ‹ÇŠƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“ƒ‚[ƒh
+		// å±€æ‰€ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ãƒ¢ãƒ¼ãƒ‰
 		he->SetHapticEngineMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
 		phscene->SetTimeStep(pdt);
 	}
-		physicsTimerID = GetTimer(0)->GetID();					// •¨—ƒXƒŒƒbƒh‚Ìƒ^ƒCƒ}ID‚Ìæ“¾
-		GetTimer(0)->SetMode(UTTimerIf::IDLE);					// •¨—ƒXƒŒƒbƒh‚Ìƒ^ƒCƒ}‚ğIDLEƒ‚[ƒh‚Éİ’è
-		UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// —ÍŠoƒXƒŒƒbƒh—p‚Ìƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}‚ğì¬
-		timer->SetResolution(1);			// •ª‰ğ”\(ms)
-		timer->SetInterval(unsigned int(hdt * 1000));		// ‚İ(ms)h
-		hapticTimerID = timer->GetID();		// —ÍŠoƒXƒŒƒbƒh‚Ìƒ^ƒCƒ}ID‚Ìæ“¾
-		timer->Start();						// ƒ^ƒCƒ}ƒXƒ^[ƒg
+		physicsTimerID = GetTimer(0)->GetID();					// ç‰©ç†ã‚¹ãƒ¬ãƒƒãƒ‰ã®ã‚¿ã‚¤ãƒIDã®å–å¾—
+		GetTimer(0)->SetMode(UTTimerIf::IDLE);					// ç‰©ç†ã‚¹ãƒ¬ãƒƒãƒ‰ã®ã‚¿ã‚¤ãƒã‚’IDLEãƒ¢ãƒ¼ãƒ‰ã«è¨­å®š
+		UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// åŠ›è¦šã‚¹ãƒ¬ãƒƒãƒ‰ç”¨ã®ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒã‚’ä½œæˆ
+		timer->SetResolution(1);			// åˆ†è§£èƒ½(ms)
+		timer->SetInterval(unsigned int(hdt * 1000));		// åˆ»ã¿(ms)h
+		hapticTimerID = timer->GetID();		// åŠ›è¦šã‚¹ãƒ¬ãƒƒãƒ‰ã®ã‚¿ã‚¤ãƒIDã®å–å¾—
+		timer->Start();						// ã‚¿ã‚¤ãƒã‚¹ã‚¿ãƒ¼ãƒˆ
 }
 
 
@@ -150,31 +150,31 @@ void FWHapticSample::TimerFunc(int id){
 }
 
 void FWHapticSample::Keyboard(int key, int x, int y){
-	// ŠeƒXƒŒƒbƒh‚Ì‹¤—Lƒƒ‚ƒŠ‚ÌƒAƒNƒZƒXˆá”½‰ñ”ğ‚Ì‚½‚ß‚É‘S‚Ä‚Ìƒ^ƒCƒ}‚ğ‚Æ‚ß‚é
+	// å„ã‚¹ãƒ¬ãƒƒãƒ‰ã®å…±æœ‰ãƒ¡ãƒ¢ãƒªã®ã‚¢ã‚¯ã‚»ã‚¹é•åå›é¿ã®ãŸã‚ã«å…¨ã¦ã®ã‚¿ã‚¤ãƒã‚’ã¨ã‚ã‚‹
 	float dr = 0.01;
 	for(int i = 0; i < NTimers(); i++)	GetTimer(i)->Stop();
 	switch(key){
 		case 'q':
-			// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌI—¹
+			// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çµ‚äº†
 			exit(0);
 			break;
 		case '1':
 			{
-				// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ‚[ƒh‚ğPenalty‚É
+				// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãƒ¢ãƒ¼ãƒ‰ã‚’Penaltyã«
 				DSTR << "Penalty mode" << std::endl;
 				pointer->SetHapticRenderMode(PHHapticPointerDesc::PENALTY);
 				break;
 			}
 		case '2':
 			{
-				// ƒŒƒ“ƒ_ƒŠƒ“ƒOƒ‚[ƒh‚ğConstraint‚É
+				// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãƒ¢ãƒ¼ãƒ‰ã‚’Constraintã«
 				DSTR << "Constraint mode" << std::endl;
 				pointer->SetHapticRenderMode(PHHapticPointerDesc::CONSTRAINT);
 				break;
 			}
 		case 'c':
 			{
-				// ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“
+				// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³
 				spg->Calibration();
 				DSTR << "CameraPosition" << std::endl;
 				DSTR << GetCurrentWin()->GetTrackball()->GetPosition() << std::endl;
@@ -182,7 +182,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			break;
 		case 'f':
 			{
-				// —ÍŠo’ñ¦‚ÌON/OFF
+				// åŠ›è¦šæç¤ºã®ON/OFF
 				if(pointer){
 					static bool bForce = false;
 					if(!bForce){
@@ -199,7 +199,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			break;
 		case 'v':
 			{
-				// U“®’ñ¦‚ÌON/OFF
+				// æŒ¯å‹•æç¤ºã®ON/OFF
 				if(pointer){
 					static bool bVibration = false;
 					if(!bVibration){
@@ -216,7 +216,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			break;
 		case 'd':
 			{
-				// ƒfƒoƒbƒN•\¦‚ÌON/OFF
+				// ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºã®ON/OFF
 				static bool bDebug = false;
 				if(!bDebug){
 					bDebug = true;
@@ -231,7 +231,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			break;
 		case'a':
 			{
-				// ƒoƒlŒW”‚ğ100‘‚â‚·
+				// ãƒãƒä¿‚æ•°ã‚’100å¢—ã‚„ã™
 				if(pointer){
 					float spring = pointer->GetReflexSpring();
 					spring += 100.0;
@@ -242,7 +242,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			break;
 		case'z':
 			{
-				// ƒoƒlŒW”‚ğ100Œ¸‚ç‚·
+				// ãƒãƒä¿‚æ•°ã‚’100æ¸›ã‚‰ã™
 				if(pointer){
 					float spring = pointer->GetReflexSpring();
 					spring -= 100.0;
@@ -253,7 +253,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			break;
 		case ' ':
 			{
-				// V‚½‚É„‘Ì‚ğ¶¬‚·‚é
+				// æ–°ãŸã«å‰›ä½“ã‚’ç”Ÿæˆã™ã‚‹
 				GetSdk()->GetScene()->GetPHScene()->GetHapticEngine()->ReleaseState();
 				CDBoxDesc bd;
 				bd.boxsize.clear(0.4f);
@@ -294,6 +294,6 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 		default:
 			break;
 	}
-	// ‘S‚Ä‚Ìƒ^ƒCƒ}‚ğn“®
+	// å…¨ã¦ã®ã‚¿ã‚¤ãƒã‚’å§‹å‹•
 	for(int i = 0; i < NTimers(); i++)	GetTimer(i)->Start();
 }

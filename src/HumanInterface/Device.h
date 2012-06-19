@@ -1,38 +1,38 @@
-//#ifndef Spr_DEVICE_H
+﻿//#ifndef Spr_DEVICE_H
 //#define Spr_DEVICE_H
-/**	@page Device Device ���C�u����
-@section aim �ړI
-	���̃p�b�P�[�W�́C�f�o�C�X�h���C�o�𒊏ۉ����邽�߂̂��̂ł��D
-�A�v���P�[�V��������f�o�C�X�h���C�o�𒼐ڌĂяo���ƁC�f�o�C�X��ύX�����Ƃ��ɁC
-�A�v���P�[�V�������C�����Ȃ���΂Ȃ�Ȃ��Ȃ�܂��D
-�����ŁC�Ⴆ��D/A�R���o�[�^�Ȃ�ǂ�D/A�R���o�[�^�ł������悤�ɌĂяo����悤��
-���ۉ�����D/A�R���o�[�^�f�o�C�X(�o�[�`�����f�o�C�X)���l���C�A�v���P�[�V������
-�o�[�`�����f�o�C�X���g�p����悤�ɂ��܂��D�o�[�`�����f�o�C�X�͎��ۂ̃f�o�C�X
-(���A���f�o�C�X)���Ăяo���悤�Ɏ������Ă���܂��D
+/**	@page Device Device ライブラリ
+@section aim 目的
+	このパッケージは，デバイスドライバを抽象化するためのものです．
+アプリケーションからデバイスドライバを直接呼び出すと，デバイスを変更したときに，
+アプリケーションを修正しなければならなくなります．
+そこで，例えばD/AコンバータならどのD/Aコンバータでも同じように呼び出せるように
+抽象化したD/Aコンバータデバイス(バーチャルデバイス)を考え，アプリケーションは
+バーチャルデバイスを使用するようにします．バーチャルデバイスは実際のデバイス
+(リアルデバイス)を呼び出すように実装してあります．
 
-@section usage �g����
-�ȒP�ȃT���v���������܂��D
+@section usage 使い方
+簡単なサンプルを示します．
 @verbatim
-	DVDeviceManager devMan;				//	�f�o�C�X�Ǘ��N���X�D
-	devMan.RPool().Register(new DRAdapio(9));	//	���A���f�o�C�X�̓o�^
-	devMan.Init();						//	�f�o�C�X�̏������C������
-										//	�o�[�`�����f�o�C�X�����������D
-	std::cout << devMan;				//	��Ԃ̕\��
+	DVDeviceManager devMan;				//	デバイス管理クラス．
+	devMan.RPool().Register(new DRAdapio(9));	//	リアルデバイスの登録
+	devMan.Init();						//	デバイスの初期化，ここで
+										//	バーチャルデバイスが生成される．
+	std::cout << devMan;				//	状態の表示
 	
-	//	�f�o�C�X�Ǘ��N���X����A/D���؂�Ă���
+	//	デバイス管理クラスからA/Dを借りてくる
 	DVAdBase* ad;
 	devMan.VPool().Rent(ad);
 	std::cout << ad->Voltage();
 @endverbatim
-�܂��f�o�C�X�}�l�[�W�����쐬���C���f�o�C�X��o�^���C���������܂��D
-����ƃo�[�`�����f�o�C�X�����������̂ŁC�A�v���P�[�V�����́C
-�g�������o�[�`�����f�o�C�X���f�o�C�X�}�l�[�W������؂�Ă��܂��D
+まずデバイスマネージャを作成し，実デバイスを登録し，初期化します．
+するとバーチャルデバイスが生成されるので，アプリケーションは，
+使いたいバーチャルデバイスをデバイスマネージャから借りてきます．
 
-����̃f�o�C�X�̓���̋@�\���g�������ꍇ�C
-��p�̃f�o�C�X�}�l�[�W���I�u�W�F�N�g���쐬���āC�f�o�C�X��o�^�C���������āC
-�o�[�`�����f�o�C�X���擾���Ă��������D
+特定のデバイスの特定の機能を使いたい場合，
+専用のデバイスマネージャオブジェクトを作成して，デバイスを登録，初期化して，
+バーチャルデバイスを取得してください．
 
-�f�o�C�X�}�l�[�W���I�u�W�F�N�g�͕����쐬���Ă���肠��܂���D
+デバイスマネージャオブジェクトは複数作成しても問題ありません．
 */
 /*
 #include <sstream>
@@ -70,7 +70,7 @@
 
 #ifdef _WIN32
 
-#include<winsock2.h>	//	windows.h �̑O�ɂ��Ȃ��ƁA winsock1.h��include�����
+#include<winsock2.h>	//	windows.h の前にやらないと、 winsock1.hがincludeされる
 #ifndef _WIN32_WINNT
  #define _WIN32_WINNT 0x0400
 #endif

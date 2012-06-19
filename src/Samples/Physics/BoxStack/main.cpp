@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -6,19 +6,19 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
-\page pageBoxStack ƒL[“ü—Í‚Å” ‚ğ¶¬‚µ‚ÄÏ‚İã‚°‚éƒTƒ“ƒvƒ‹
+\page pageBoxStack ã‚­ãƒ¼å…¥åŠ›ã§ç®±ã‚’ç”Ÿæˆã—ã¦ç©ã¿ä¸Šã’ã‚‹ã‚µãƒ³ãƒ—ãƒ«
 Springhead2/src/Samples/BoxStack
 
-\section secQuitBoxStack I—¹Šî€
-- Esc‚©'q'‚Å‹­§I—¹B
-- ' ', 'm', 'd', 'c', 'v', 'z', 'x'‚Å” ‚ª—‚¿‚Ä‚­‚é
+\section secQuitBoxStack çµ‚äº†åŸºæº–
+- Escã‹'q'ã§å¼·åˆ¶çµ‚äº†ã€‚
+- ' ', 'm', 'd', 'c', 'v', 'z', 'x'ã§ç®±ãŒè½ã¡ã¦ãã‚‹
 	
-\section secFlowBoxStack ˆ—‚Ì—¬‚ê
-- ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚É•K—v‚Èî•ñ(„‘Ì‚ÌŒ`óE¿—ÊEŠµ«ƒeƒ“ƒ\ƒ‹‚È‚Ç)‚ğİ’è‚·‚éB
-  „‘Ì‚ÌŒ`ó‚ÍOpenGL‚Åw’è‚·‚é‚Ì‚Å‚Í‚È‚­ASolid©‘Ì‚Å‚½‚¹‚éB
-- ÚGƒGƒ“ƒWƒ“‚ğS‘©ƒGƒ“ƒWƒ“‚Éİ’è‚·‚éB
-- —^‚¦‚ç‚ê‚½ğŒ‚É‚æ‚è‡™t(=0.1)•bŒã‚ÌˆÊ’u‚Ì•Ï‰»‚ğÏ•ª‚µAOpenGL‚ÅƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚·‚éB  
-- ƒ†[ƒU‚ÌƒL[“ü—Í‚É‘Î‚µSolid‚ğ”­¶‚³‚¹‚éB
+\section secFlowBoxStack å‡¦ç†ã®æµã‚Œ
+- ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã«å¿…è¦ãªæƒ…å ±(å‰›ä½“ã®å½¢çŠ¶ãƒ»è³ªé‡ãƒ»æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ãªã©)ã‚’è¨­å®šã™ã‚‹ã€‚
+  å‰›ä½“ã®å½¢çŠ¶ã¯OpenGLã§æŒ‡å®šã™ã‚‹ã®ã§ã¯ãªãã€Solidè‡ªä½“ã§æŒãŸã›ã‚‹ã€‚
+- æ¥è§¦ã‚¨ãƒ³ã‚¸ãƒ³ã‚’æ‹˜æŸã‚¨ãƒ³ã‚¸ãƒ³ã«è¨­å®šã™ã‚‹ã€‚
+- ä¸ãˆã‚‰ã‚ŒãŸæ¡ä»¶ã«ã‚ˆã‚ŠâŠ¿t(=0.1)ç§’å¾Œã®ä½ç½®ã®å¤‰åŒ–ã‚’ç©åˆ†ã—ã€OpenGLã§ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ã€‚  
+- ãƒ¦ãƒ¼ã‚¶ã®ã‚­ãƒ¼å…¥åŠ›ã«å¯¾ã—Solidã‚’ç™ºç”Ÿã•ã›ã‚‹ã€‚
 */
 
 #include "../../SampleApp.h"
@@ -40,11 +40,11 @@ void fps(){
 
 class MyApp : public SampleApp{
 public:
-	/// ƒy[ƒWID
+	/// ãƒšãƒ¼ã‚¸ID
 	enum {
 		MENU_MAIN = MENU_SCENE,
 	};
-	/// ƒAƒNƒVƒ‡ƒ“ID
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ID
 	enum {
 		ID_BOX,
 		ID_CAPSULE,
@@ -89,11 +89,11 @@ public:
 		soFloor = CreateFloor();
 	}
 
-	// ƒ^ƒCƒ}ƒR[ƒ‹ƒoƒbƒNŠÖ”Dƒ^ƒCƒ}üŠú‚ÅŒÄ‚Î‚ê‚é
+	// ã‚¿ã‚¤ãƒã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ï¼ã‚¿ã‚¤ãƒå‘¨æœŸã§å‘¼ã°ã‚Œã‚‹
 	virtual void OnStep() {
 		SampleApp::OnStep();
 
-		// °‚ğ—h‚ç‚·
+		// åºŠã‚’æºã‚‰ã™
 		if (soFloor){
 			double time = phScene->GetCount() * phScene->GetTimeStep();
 			double omega = 2.0 * M_PI;
@@ -102,7 +102,7 @@ public:
 		}
 	}
 
-	// •`‰æŠÖ”D•`‰æ—v‹‚ª—ˆ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+	// æç”»é–¢æ•°ï¼æç”»è¦æ±‚ãŒæ¥ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹
 	virtual void OnDraw(GRRenderIf* render) {
 		SampleApp::OnDraw(render);
 
@@ -140,7 +140,7 @@ public:
 				Drop(SHAPE_BLOCK, GRRenderIf::CYAN, v, w, p, q);
 				message = "composite block dropped.";
 			}
-			/* •s‹ï‡‚ ‚è‚É‚Â‚«–³Œø‰»
+			/* ä¸å…·åˆã‚ã‚Šã«ã¤ãç„¡åŠ¹åŒ–
 			if(id == ID_TOWER){
 				const double tower_radius = 10;
 				const int tower_height = 5;
@@ -176,10 +176,10 @@ public:
 MyApp app;
 
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char *argv[]) {
 	app.Init(argc, argv);

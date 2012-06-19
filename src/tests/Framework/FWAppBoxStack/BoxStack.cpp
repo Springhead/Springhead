@@ -1,4 +1,4 @@
-#include "BoxStack.h"
+ï»¿#include "BoxStack.h"
 //#include <vector>
 #include <iostream>
 #include <sstream>
@@ -23,11 +23,11 @@ BoxStack::BoxStack(){
 void BoxStack::Init(int argc, char* argv[]){
 	FWApp::Init(argc, argv);
 
-	GetSdk()->Clear();															// SDK‚Ìì¬
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Scene‚Ìì¬
+	GetSdk()->Clear();															// SDKã®ä½œæˆ
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Sceneã®ä½œæˆ
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 
-	DesignObject();																// „‘Ì‚ğì¬
+	DesignObject();																// å‰›ä½“ã‚’ä½œæˆ
 
 	phscene->SetGravity(gravity);				
 	phscene->SetTimeStep(dt);
@@ -42,11 +42,11 @@ void BoxStack::Init(int argc, char* argv[]){
 }
 
 void BoxStack::Reset(){
-	GetSdk()->Clear();															// SDK‚Ìì¬
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Scene‚Ìì¬
+	GetSdk()->Clear();															// SDKã®ä½œæˆ
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Sceneã®ä½œæˆ
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 
-	DesignObject();																// „‘Ì‚ğì¬
+	DesignObject();																// å‰›ä½“ã‚’ä½œæˆ
 
 	phscene->SetGravity(gravity);				
 	phscene->SetTimeStep(dt);
@@ -75,15 +75,15 @@ void BoxStack::InitCameraView(){
 }
 
 void BoxStack::DesignObject(){
-	// soFloor—p‚Ìdesc
+	// soFloorç”¨ã®desc
 	desc.mass = 1e20f;
 	desc.inertia *= 1e30f;
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
-	soFloor = phscene->CreateSolid(desc);		// „‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
+	soFloor = phscene->CreateSolid(desc);		// å‰›ä½“ã‚’descã«åŸºã¥ã„ã¦ä½œæˆ
 	soFloor->SetDynamical(false);
 	soFloor->SetGravity(false);
 	
-	// soBox—p‚Ìdesc
+	// soBoxç”¨ã®desc
 	desc.mass = 0.05;
 	desc.inertia = 0.033 * Matrix3d::Unit();
 	{
@@ -103,7 +103,7 @@ void BoxStack::DesignObject(){
 	}
 
 	{
-		// meshConvex(soBox)‚ÌƒƒbƒVƒ…Œ`ó
+		// meshConvex(soBox)ã®ãƒ¡ãƒƒã‚·ãƒ¥å½¢çŠ¶
 		CDConvexMeshInterpolateDesc md;
 		md.vertices.push_back(Vec3d(-1,-1,-1));
 		md.vertices.push_back(Vec3d(-1,-1, 1));	
@@ -116,7 +116,7 @@ void BoxStack::DesignObject(){
 		meshConvex = DCAST(CDConvexMeshIf, GetSdk()->GetPHSdk()->CreateShape(md));
 		meshConvex->SetName("meshConvex");
 
-		// meshFloor(soFloor)‚ÌƒƒbƒVƒ…Œ`ó
+		// meshFloor(soFloor)ã®ãƒ¡ãƒƒã‚·ãƒ¥å½¢çŠ¶
 		for(unsigned i=0; i<md.vertices.size(); ++i){
 			md.vertices[i].x *= 30;
 			md.vertices[i].z *= 20;
@@ -145,17 +145,17 @@ void BoxStack::Step(){
 }
 
 void BoxStack::Display(){
-	// •`‰æ‚Ìİ’è
+	// æç”»ã®è¨­å®š
 	GetSdk()->SetDebugMode(true);
 	GRDebugRenderIf* render = window->render->Cast();
 
-	// •`‰æƒ‚[ƒh‚Ìİ’è
+	// æç”»ãƒ¢ãƒ¼ãƒ‰ã®è¨­å®š
 	render->SetRenderMode(true, false);
 //	render->EnableRenderAxis(bDebug);
 	render->EnableRenderForce(bDebug);
 	render->EnableRenderContact(bDebug);
 
-	// ƒJƒƒ‰À•W‚Ìw’è
+	// ã‚«ãƒ¡ãƒ©åº§æ¨™ã®æŒ‡å®š
 	GRCameraIf* cam = window->scene->GetGRScene()->GetCamera();
 	if (cam && cam->GetFrame()){
 		cam->GetFrame()->SetTransform(cameraInfo.view);
@@ -163,7 +163,7 @@ void BoxStack::Display(){
 		window->render->SetViewMatrix(cameraInfo.view.inv());
 	}
 
-	// •`‰æ‚ÌÀs
+	// æç”»ã®å®Ÿè¡Œ
 	if(!GetCurrentWin()) return;
 	GRRenderIf*curRender =  GetCurrentWin()->GetRender();
 	FWSceneIf* curScene = GetCurrentWin()->GetScene();
@@ -177,14 +177,14 @@ void BoxStack::Display(){
 
 	if (curScene) curScene->Draw(curRender, GetSdk()->GetDebugMode());
 
-	//	ŒõŒ¹‚Ì’Ç‰Á
+	//	å…‰æºã®è¿½åŠ 
 	GRLightDesc ld;
 	ld.diffuse = Vec4f(1,1,1,1) * 0.8f;
 	ld.specular = Vec4f(1,1,1,1) * 0.8f;
 	ld.ambient = Vec4f(1,1,1,1) * 0.4f;
 	ld.position = Vec4f(1,1,1,0);
 	render->PushLight(ld);
-	render->PopLight();	//	ŒõŒ¹‚Ìíœ
+	render->PopLight();	//	å…‰æºã®å‰Šé™¤
 
 	curRender->EndScene();
 	glutSwapBuffers();

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -23,7 +23,7 @@ HITrackball::HITrackball(const HITrackballDesc& desc):HITrackballDesc(desc){
 	callback = 0;
 	enabled = true;
 	ready = false;
-	//	ƒRƒ“ƒXƒgƒ‰ƒNƒVƒ‡ƒ“Œã‚ÉASetScene‚©SetNameManager‚³‚ê‚é‚Ì‚ÅA‚±‚±‚Å‚ÍGetSdk()‚Íg‚¦‚È‚¢B
+	//	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚·ãƒ§ãƒ³å¾Œã«ã€SetSceneã‹SetNameManagerã•ã‚Œã‚‹ã®ã§ã€ã“ã“ã§ã¯GetSdk()ã¯ä½¿ãˆãªã„ã€‚
 }
 
 bool HITrackball::Init(const void* desc){

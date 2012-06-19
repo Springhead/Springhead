@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,13 +8,13 @@
 /**
  Springhead2/src/tests/FileIO/FICollada/main.cpp
 
-yŠT—vz
-  ‘½•ª–¢Š®¬B
-  ƒtƒ@ƒCƒ‹“üo—ÍSDK‚ÅAdaeƒtƒ@ƒCƒ‹‚ğƒ[ƒhB•\¦‚·‚éB
-  ‘½•ª–¢Š®¬B
+ã€æ¦‚è¦ã€‘
+  å¤šåˆ†æœªå®Œæˆã€‚
+  ãƒ•ã‚¡ã‚¤ãƒ«å…¥å‡ºåŠ›SDKã§ã€daeãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã€‚è¡¨ç¤ºã™ã‚‹ã€‚
+  å¤šåˆ†æœªå®Œæˆã€‚
 
-yI—¹Šî€z
-  EƒvƒƒOƒ‰ƒ€‚ª³íI—¹‚µ‚½‚ç0‚ğ•Ô‚·B  
+ã€çµ‚äº†åŸºæº–ã€‘
+  ãƒ»ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãŒæ­£å¸¸çµ‚äº†ã—ãŸã‚‰0ã‚’è¿”ã™ã€‚  
 
 
 */
@@ -36,12 +36,12 @@ using namespace Spr;
 
 
 /**
- brief     	glutDisplayFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief     	glutDisplayFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void display(){
-	//	ƒoƒbƒtƒ@ƒNƒŠƒA
+	//	ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 	render->ClearBuffer();
 	scene->Render(render);
 	if (!scene){
@@ -53,9 +53,9 @@ void display(){
 }
 
 /**
- brief		ŒõŒ¹‚Ìİ’è
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief		å…‰æºã®è¨­å®š
+ param	 	ãªã—
+ return 	ãªã—
  */
 void setLight() {
 	GRLightDesc light0;
@@ -88,21 +88,21 @@ void setLight() {
 }
 
 /**
- brief  	glutReshapeFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	<in/--> w@@•
- param  	<in/--> h@@‚‚³
- return 	‚È‚µ
+ brief  	glutReshapeFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	<in/--> wã€€ã€€å¹…
+ param  	<in/--> hã€€ã€€é«˜ã•
+ return 	ãªã—
  */
 void reshape(int w, int h){
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 
 /**
- brief 		glutKeyboardFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ” 
- param		<in/--> key@@ ASCIIƒR[ƒh
- param 		<in/--> x@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- param 		<in/--> y@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- return 	‚È‚µ
+ brief 		glutKeyboardFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•° 
+ param		<in/--> keyã€€ã€€ ASCIIã‚³ãƒ¼ãƒ‰
+ param 		<in/--> xã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ param 		<in/--> yã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ return 	ãªã—
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
@@ -111,9 +111,9 @@ void keyboard(unsigned char key, int x, int y){
 }
 
 /**
- brief  	glutIdleFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief  	glutIdleFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void idle(){
 //	if(scene && *scene) (*(scene))->Step();
@@ -127,10 +127,10 @@ void idle(){
 }
 
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char* argv[]){
 //	FISdkIf::RegisterSdk();
@@ -150,10 +150,10 @@ int main(int argc, char* argv[]){
 	objs.Push(grSdk);
 	fileCOLLADA->Save(objs, "out.dae");
 	
-	fiSdk->Clear();	//	ƒtƒ@ƒCƒ‹ƒ[ƒ_‚Ìƒƒ‚ƒŠ‚ğ‰ğ•úD
+	fiSdk->Clear();	//	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã®ãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾ï¼
 	objs.clear();
 	grSdk->Print(DSTR);
-	//scene = grSdk->GetScene(0);		// Scene‚Ìæ“¾
+	//scene = grSdk->GetScene(0);		// Sceneã®å–å¾—
 	
 	grSdk->Print(DSTR);
 
@@ -169,14 +169,14 @@ int main(int argc, char* argv[]){
 	grDevice->Init();
 	render->SetDevice(grDevice);
 
-	// ‹“_İ’è
+	// è¦–ç‚¹è¨­å®š
 	Affinef view;
 	view.Pos() = Vec3f(0.0, 3.0,-80.0);									// eye
 		view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
-	// ŒõŒ¹‚Ìİ’è
+	// å…‰æºã®è¨­å®š
 	setLight();
 
 	glutDisplayFunc(display);

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,9 +19,9 @@ class ObjectNamesLess{
 public:
 	bool operator () (const NamedObject* o1, const NamedObject* o2) const;
 };
-/**	–¼‘O‚ÆƒV[ƒ“ƒOƒ‰ƒt‚ÌƒIƒuƒWƒFƒNƒg‚Ì‘Î‰•\
-	–¼‘O‚ğƒL[‚É‚µ‚½ƒZƒbƒg‚ğ—pˆÓ‚µC–¼‘O‚ÌˆêˆÓ«‚Ì•ÛØ‚ÆƒIƒuƒWƒFƒNƒg‚Ì
-	ŒŸõ‚ğÀŒ»‚·‚éD	*/
+/**	åå‰ã¨ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å¯¾å¿œè¡¨
+	åå‰ã‚’ã‚­ãƒ¼ã«ã—ãŸã‚»ãƒƒãƒˆã‚’ç”¨æ„ã—ï¼Œåå‰ã®ä¸€æ„æ€§ã®ä¿è¨¼ã¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®
+	æ¤œç´¢ã‚’å®Ÿç¾ã™ã‚‹ï¼	*/
 class ObjectNames:public std::set<NamedObject*, ObjectNamesLess >{
 public:
 	typedef std::map<UTString, UTString> TNameMap;
@@ -35,7 +35,7 @@ public:
 	static ObjectKey key;
 	void Print(std::ostream& os) const;
 
-	///	–¼‘O‚©‚çƒIƒuƒWƒFƒNƒg‚ğæ“¾
+	///	åå‰ã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—
 	typedef std::pair<iterator, iterator> range_type;
 	NamedObject* Find(UTString name, UTString cn="") const {
 		key.name = name;
@@ -46,19 +46,19 @@ public:
 		if (obj->GetTypeInfo()->Inherit(cn.c_str())) return obj;
 		return NULL;
 	}
-	/**	ƒIƒuƒWƒFƒNƒg‚Ì’Ç‰ÁC
-		–¼‘O‚Ì‚È‚¢ƒIƒuƒWƒFƒNƒg‚Í’Ç‰Á‚Å‚«‚È‚¢D‚±‚Ìê‡ false ‚ğ•Ô‚·D
-		’Ç‰Á‚É¬Œ÷‚·‚é‚Æ trueD ‚·‚Å‚É“o˜^‚³‚ê‚Ä‚¢‚½ê‡‚Í false ‚ğ•Ô‚·D
-		–¼‘O‚ª‚Ô‚Â‚©‚éê‡‚ÍC’Ç‰Á‚·‚éƒIƒuƒWƒFƒNƒg‚Ì–¼‘O‚ª•ÏX‚³‚ê‚éD	*/
+	/**	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¿½åŠ ï¼Œ
+		åå‰ã®ãªã„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯è¿½åŠ ã§ããªã„ï¼ã“ã®å ´åˆ false ã‚’è¿”ã™ï¼
+		è¿½åŠ ã«æˆåŠŸã™ã‚‹ã¨ trueï¼ ã™ã§ã«ç™»éŒ²ã•ã‚Œã¦ã„ãŸå ´åˆã¯ false ã‚’è¿”ã™ï¼
+		åå‰ãŒã¶ã¤ã‹ã‚‹å ´åˆã¯ï¼Œè¿½åŠ ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åå‰ãŒå¤‰æ›´ã•ã‚Œã‚‹ï¼	*/
 	bool Add(NamedObject* obj);
-	///	ƒIƒuƒWƒFƒNƒg‚Ìíœ
+	///	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
 	bool Del(NamedObject* key){
 		iterator it = find(key);
 		if (it==end()) return false;
 		erase(it);
 		return true;
 	}
-	///	ƒIƒuƒWƒFƒNƒg‚Ìíœ
+	///	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
 	bool Del(UTString name){
 		NamedObject key;
 		key.name = name;
@@ -69,7 +69,7 @@ public:
 		erase(it);
 		return true;
 	}
-	///	‚·‚×‚Äíœ
+	///	ã™ã¹ã¦å‰Šé™¤
 	void Clear();
 };
 inline std::ostream& operator << (std::ostream& os, const ObjectNames& ns){
@@ -80,14 +80,14 @@ class SPR_DLL NameManager:public NamedObject{
 public:
 	SPR_OBJECTDEF(NameManager);
 protected:
-	/*	–¼‘O‚ÆƒIƒuƒWƒFƒNƒg‚Ì‘Î‰•\  */
+	/*	åå‰ã¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å¯¾å¿œè¡¨  */
 	ObjectNames names;
 	
-	///@name	–¼‘O‹óŠÔ‚ğ\¬‚·‚é‚½‚ß‚ÌƒcƒŠ[
+	///@name	åå‰ç©ºé–“ã‚’æ§‹æˆã™ã‚‹ãŸã‚ã®ãƒ„ãƒªãƒ¼
 	//@{
 	///
 	typedef std::vector<NameManager*> NameManagers;
-	///	q‚Ì–¼‘O‹óŠÔ
+	///	å­ã®åå‰ç©ºé–“
 	NameManagers childManagers;
 	//@}
 
@@ -97,7 +97,7 @@ public:
 	virtual void SetNameManager(NameManager* s);
 	void AddChildManager(NameManager* c);
 	void DelChildManager(NameManager* c);
-	///	Œ^‚Æ–¼‘O‚©‚çƒIƒuƒWƒFƒNƒg‚ğæ“¾
+	///	å‹ã¨åå‰ã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å–å¾—
 	template <class T> void FindObject(UTRef<T>& t, UTString name){
 		T* p;
 		FindObject(p, name);
@@ -116,25 +116,25 @@ public:
 
 	void Clear();
 
-	///	ƒfƒoƒbƒO—p
+	///	ãƒ‡ãƒãƒƒã‚°ç”¨
 	void Print(std::ostream& os) const;
 	friend class NamedObject;
 
-	//	•’Ê‚ÍŒÄ‚Ño‚³‚È‚¢C–¼‘OŒŸõ‚Ì“à•”ŠÖ”D
+	//	æ™®é€šã¯å‘¼ã³å‡ºã•ãªã„ï¼Œåå‰æ¤œç´¢ã®å†…éƒ¨é–¢æ•°ï¼
 	NamedObjectIf* FindObjectExact(UTString name, UTString cls="");
 	NamedObjectIf* FindObjectFromDescendant(UTString name, UTString cls="");
 	NamedObjectIf* FindObjectFromAncestor(UTString name, UTString cls="");	
 };
 
-/**	ƒV[ƒ“‚ÌŠî–{ƒNƒ‰ƒX	*/
+/**	ã‚·ãƒ¼ãƒ³ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹	*/
 class SPR_DLL Scene:public NameManager{
 	SPR_OBJECTDEF(Scene);
 public:
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 };
 
 class SPR_DLL Sdk:public NameManager{
-	UTRef<TypeInfoManager> typeInfoManager;	//	typeInfo/IfInfo‚ªsdk‚ªÁ‚¦‚é‘O‚ÉÁ‚¦‚é‚±‚Æ‚ğ”ğ‚¯‚éB
+	UTRef<TypeInfoManager> typeInfoManager;	//	typeInfo/IfInfoãŒsdkãŒæ¶ˆãˆã‚‹å‰ã«æ¶ˆãˆã‚‹ã“ã¨ã‚’é¿ã‘ã‚‹ã€‚
 protected:
 	friend struct SdkIf;
 	static std::vector< UTRef<FactoryBase> > sdkFactories;

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,22 +18,22 @@ namespace Spr{;
 
 class CDShape;
 
-///	ƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX‚ÌÀ‘•
+///	ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ã®å®Ÿè£…
 class PHBBox{
-	Vec3f bboxCenter;	///<	BBox‚Ì’†S(ƒ[ƒJƒ‹Œn)
-	Vec3f bboxExtent;	///<	BBox‚Ì‘å‚«‚³(ƒ[ƒJƒ‹Œn)
+	Vec3f bboxCenter;	///<	BBoxã®ä¸­å¿ƒ(ãƒ­ãƒ¼ã‚«ãƒ«ç³»)
+	Vec3f bboxExtent;	///<	BBoxã®å¤§ãã•(ãƒ­ãƒ¼ã‚«ãƒ«ç³»)
 public:
-	///	ƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX‚Ìİ’è
+	///	ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ã®è¨­å®š
 	void SetBBoxCenterExtent(Vec3f c, Vec3f e){
 		bboxCenter = c;
 		bboxExtent = e;
 	}
-	///	ƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX‚Ìİ’è
+	///	ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ã®è¨­å®š
 	void SetBBoxMinMax(Vec3f bmin, Vec3f bmax){
 		bboxCenter = (bmin+bmax)*0.5f;
 		bboxExtent = (bmax-bmin)*0.5f;
 	}
-	///	ƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX‚Ì’Ç‰Á
+	///	ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ã®è¿½åŠ 
 	void AddBBox(Vec3f bmin, Vec3f bmax){
 		Vec3f bboxMin = GetBBoxMin();
 		Vec3f bboxMax = GetBBoxMax();
@@ -41,33 +41,33 @@ public:
 		bboxMax.element_max(bmax);
 		SetBBoxMinMax(bboxMin, bboxMax);
 	}
-	///	’†S
+	///	ä¸­å¿ƒ
 	Vec3f GetBBoxCenter(){ return bboxCenter; }
-	///	‘å‚«‚³
+	///	å¤§ãã•
 	Vec3f GetBBoxExtent(){ return bboxExtent; }
-	///	¬‚³‚¢’[“_
+	///	å°ã•ã„ç«¯ç‚¹
 	Vec3f GetBBoxMin(){ return bboxCenter-bboxExtent; }
-	///	‘å‚«‚¢’[“_
+	///	å¤§ãã„ç«¯ç‚¹
 	Vec3f GetBBoxMax(){ return bboxCenter+bboxExtent; }
 
-	///	—^‚¦‚ç‚ê‚½ƒxƒNƒgƒ‹‚Æ‚Ì“àÏ‚ªÅ‘å‚ÆÅ¬‚Ì“_
+	///	ä¸ãˆã‚‰ã‚ŒãŸãƒ™ã‚¯ãƒˆãƒ«ã¨ã®å†…ç©ãŒæœ€å¤§ã¨æœ€å°ã®ç‚¹
 	void GetSupport(const Vec3f& dir, float& minS, float& maxS);
 	
-	///	Solid‚ÌPose‚ğ‘ã“ü‚·‚é‚±‚Æ‚ÅCworldÀ•WŒn‚ÌÅ¬’l,Å‘å’l‚ğæ“¾
-	/// (’ˆÓjƒoƒEƒ“ƒfƒBƒ“ƒOƒ{ƒbƒNƒX‚æ‚è‚à‘å‚«‚Èƒ{ƒbƒNƒX‚Å”»’è‚³‚ê‚Ä‚µ‚Ü‚¤D
+	///	Solidã®Poseã‚’ä»£å…¥ã™ã‚‹ã“ã¨ã§ï¼Œworldåº§æ¨™ç³»ã®æœ€å°å€¤,æœ€å¤§å€¤ã‚’å–å¾—
+	/// (æ³¨æ„ï¼‰ãƒã‚¦ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ãƒœãƒƒã‚¯ã‚¹ã‚ˆã‚Šã‚‚å¤§ããªãƒœãƒƒã‚¯ã‚¹ã§åˆ¤å®šã•ã‚Œã¦ã—ã¾ã†ï¼
 	//
 	void GetBBoxWorldMinMax(Posed& pos , Vec3d& min, Vec3d& max);
 };
 
 
 enum PHIntegrationMode{
-		PHINT_NONE,				///	Ï•ª‚µ‚È‚¢
+		PHINT_NONE,				///	ç©åˆ†ã—ãªã„
 		PHINT_ARISTOTELIAN,		///	f = mv
-		PHINT_EULER,			///	ƒIƒCƒ‰[–@
-		PHINT_SIMPLETIC,		/// ƒVƒ“ƒvƒŒƒNƒeƒBƒbƒN–@
+		PHINT_EULER,			///	ã‚ªã‚¤ãƒ©ãƒ¼æ³•
+		PHINT_SIMPLETIC,		/// ã‚·ãƒ³ãƒ—ãƒ¬ã‚¯ãƒ†ã‚£ãƒƒã‚¯æ³•
 		PHINT_ANALYTIC,			
-		PHINT_RUNGEKUTTA2,		///	‚QŸƒ‹ƒ“ƒQƒNƒbƒ^–@
-		PHINT_RUNGEKUTTA4		///	‚SŸƒ‹ƒ“ƒQƒNƒbƒ^–@
+		PHINT_RUNGEKUTTA2,		///	ï¼’æ¬¡ãƒ«ãƒ³ã‚²ã‚¯ãƒƒã‚¿æ³•
+		PHINT_RUNGEKUTTA4		///	ï¼”æ¬¡ãƒ«ãƒ³ã‚²ã‚¯ãƒƒã‚¿æ³•
 };
 
 class PHSolid;
@@ -100,30 +100,30 @@ class PHScene;
 class PHConstraintEngine;
 
 struct PHSolidStatePrivate{
-	bool		bFrozen;		///<	ƒtƒŠ[ƒYó‘Ô‚©
-	bool		bUpdated;		///<	•¡”‚ÌƒGƒ“ƒWƒ“‚ÅSolid‚ÌXV‚ğŠÇ—‚·‚é‚½‚ß‚Ìƒtƒ‰ƒO
-	//	„‘Ì‚É‰Á‚¦‚ç‚ê‚½—Í
-	Vec3d		nextForce;		///<	Ÿ‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚í‚é—Í(WorldŒn)
-	Vec3d		nextTorque;		///<	Ÿ‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚í‚éƒgƒ‹ƒN(WorldŒn)
-	Vec3d		force;			///<	‘O‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚Á‚½—Í(WorldŒn)
-	Vec3d		torque;			///<	‘O‚ÌÏ•ª‚Å‚±‚Ì„‘Ì‚É‰Á‚í‚Á‚½ƒgƒ‹ƒN(WorldŒn)
-	///@name LCPŠÖ˜A•â••Ï”
+	bool		bFrozen;		///<	ãƒ•ãƒªãƒ¼ã‚ºçŠ¶æ…‹ã‹
+	bool		bUpdated;		///<	è¤‡æ•°ã®ã‚¨ãƒ³ã‚¸ãƒ³ã§Solidã®æ›´æ–°ã‚’ç®¡ç†ã™ã‚‹ãŸã‚ã®ãƒ•ãƒ©ã‚°
+	//	å‰›ä½“ã«åŠ ãˆã‚‰ã‚ŒãŸåŠ›
+	Vec3d		nextForce;		///<	æ¬¡ã®ç©åˆ†ã§ã“ã®å‰›ä½“ã«åŠ ã‚ã‚ã‚‹åŠ›(Worldç³»)
+	Vec3d		nextTorque;		///<	æ¬¡ã®ç©åˆ†ã§ã“ã®å‰›ä½“ã«åŠ ã‚ã‚ã‚‹ãƒˆãƒ«ã‚¯(Worldç³»)
+	Vec3d		force;			///<	å‰ã®ç©åˆ†ã§ã“ã®å‰›ä½“ã«åŠ ã‚ã£ãŸåŠ›(Worldç³»)
+	Vec3d		torque;			///<	å‰ã®ç©åˆ†ã§ã“ã®å‰›ä½“ã«åŠ ã‚ã£ãŸãƒˆãƒ«ã‚¯(Worldç³»)
+	///@name LCPé–¢é€£è£œåŠ©å¤‰æ•°
 	//@{
-	//	LCPŠÖ˜A•â••Ï”‚¾‚ªA‰Á‘¬“x‚Ìæ“¾‚É—p‚¢‚é‚Ì‚ÅState‚É‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
-	SpatialVector dv;			///<	S‘©ƒGƒ“ƒWƒ“‚É‚æ‚é‘¬“x•Ï‰»—ÊiŠO—Í‚ğŠÜ‚Şj
+	//	LCPé–¢é€£è£œåŠ©å¤‰æ•°ã ãŒã€åŠ é€Ÿåº¦ã®å–å¾—ã«ç”¨ã„ã‚‹ã®ã§Stateã«ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
+	SpatialVector dv;			///<	æ‹˜æŸã‚¨ãƒ³ã‚¸ãƒ³ã«ã‚ˆã‚‹é€Ÿåº¦å¤‰åŒ–é‡ï¼ˆå¤–åŠ›ã‚’å«ã‚€ï¼‰
 	//@}
 };
 
-///	„‘Ì
+///	å‰›ä½“
 class PHSolid : public SceneObject, public PHSolidDesc, public PHSolidStatePrivate{
 protected:
-	Matrix3d	inertia_inv;	///<	Šµ«ƒeƒ“ƒ\ƒ‹‚Ì‹t”(LocalŒnEƒLƒƒƒbƒVƒ…)
+	Matrix3d	inertia_inv;	///<	æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã®é€†æ•°(Localç³»ãƒ»ã‚­ãƒ£ãƒƒã‚·ãƒ¥)
 
-	///	Ï•ª•û®
+	///	ç©åˆ†æ–¹å¼
 	PHIntegrationMode integrationMode;
 
-	/// ƒIƒCƒ‰[‚Ì‰^“®•û’ö®
-	/// Šµ«s—ñ‚Í‘ÎŠps—ñ‚ğ‘O’ñD
+	/// ã‚ªã‚¤ãƒ©ãƒ¼ã®é‹å‹•æ–¹ç¨‹å¼
+	/// æ…£æ€§è¡Œåˆ—ã¯å¯¾è§’è¡Œåˆ—ã‚’å‰æï¼
 	Vec3d	Euler(const Matrix3d& I, const Vec3d& t, const Vec3d& w){
 		return Vec3d(
 			(t[0] - (I[2][2] - I[1][1]) * w.Y() * w.Z()) / I[0][0],
@@ -131,23 +131,23 @@ protected:
 			(t[2] - (I[1][1] - I[0][0]) * w.X() * w.Y()) / I[2][2]);
 	}
 public:
-	///@name LCPŠÖ˜A•â••Ï”
+	///@name LCPé–¢é€£è£œåŠ©å¤‰æ•°
 	//@{
 	PHScene*	scene;
 	PHConstraintEngine* engine;
-	PHTreeNode*	treeNode;	///< ŠÖßŒn‚ğ\¬‚µ‚Ä‚¢‚éê‡‚Ì‘Î‰‚·‚éƒm[ƒh
-	double		minv;		///< ¿—Ê‚Ì‹t”
-	Matrix3d	Iinv;		///< Šµ«s—ñ‚Ì‹ts—ñ
-	SpatialVector f;		///< ƒ[ƒJƒ‹À•W‚Å‚ÌŠO—Í
-	SpatialVector v;		///< ƒ[ƒJƒ‹À•W‚Å‚ÌŒ»İ‚Ì‘¬“x
-	SpatialVector dV;		///< Correction‚É‚æ‚éˆÚ“®—ÊC‰ñ“]—Ê
-	///	LCPŠÖ˜A•â••Ï”‚Ì‰Šú‰»B–ˆƒXƒeƒbƒvLCP‚Ì‘O‚ÉŒÄ‚Î‚ê‚éB
+	PHTreeNode*	treeNode;	///< é–¢ç¯€ç³»ã‚’æ§‹æˆã—ã¦ã„ã‚‹å ´åˆã®å¯¾å¿œã™ã‚‹ãƒãƒ¼ãƒ‰
+	double		minv;		///< è³ªé‡ã®é€†æ•°
+	Matrix3d	Iinv;		///< æ…£æ€§è¡Œåˆ—ã®é€†è¡Œåˆ—
+	SpatialVector f;		///< ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã§ã®å¤–åŠ›
+	SpatialVector v;		///< ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã§ã®ç¾åœ¨ã®é€Ÿåº¦
+	SpatialVector dV;		///< Correctionã«ã‚ˆã‚‹ç§»å‹•é‡ï¼Œå›è»¢é‡
+	///	LCPé–¢é€£è£œåŠ©å¤‰æ•°ã®åˆæœŸåŒ–ã€‚æ¯ã‚¹ãƒ†ãƒƒãƒ—LCPã®å‰ã«å‘¼ã°ã‚Œã‚‹ã€‚
 	void UpdateCacheLCP(double dt);
-	///	dv‚ğ‘¬“x‚É‘«‚µ‚Ş 
+	///	dvã‚’é€Ÿåº¦ã«è¶³ã—è¾¼ã‚€ 
 	virtual void UpdateVelocity(double dt);
-	///	‘¬“x‚ğˆÊ’u‚É‘«‚µ‚ŞBUpdateVelocity()‚ÌŒã‚ÅUpdatePosition()‚È‚ç‚ÎAƒVƒ“ƒvƒŒƒNƒeƒBƒbƒN”’lÏ•ª‚É‚È‚éB
+	///	é€Ÿåº¦ã‚’ä½ç½®ã«è¶³ã—è¾¼ã‚€ã€‚UpdateVelocity()ã®å¾Œã§UpdatePosition()ãªã‚‰ã°ã€ã‚·ãƒ³ãƒ—ãƒ¬ã‚¯ãƒ†ã‚£ãƒƒã‚¯æ•°å€¤ç©åˆ†ã«ãªã‚‹ã€‚
 	virtual void UpdatePosition(double dt);
-	///	ABA‚Ìx”z‰º‚É‚ ‚é‚©‚Ç‚¤‚©
+	///	ABAã®æ”¯é…ä¸‹ã«ã‚ã‚‹ã‹ã©ã†ã‹
 	bool IsArticulated();
 	//@}
 		
@@ -176,37 +176,37 @@ public:
 	
 	void		SetUpdated(bool set){bUpdated = set;}	///< 
 	bool		IsUpdated(){return bUpdated;}			///< 
-	void		Step();									///< ‚ği‚ß‚éD
+	void		Step();									///< æ™‚åˆ»ã‚’é€²ã‚ã‚‹ï¼
 	
-	void		AddForce(Vec3d f);						///< —Í‚ğ¿—Ê’†S‚É‰Á‚¦‚é
-	void		AddTorque(Vec3d t);						///< ƒgƒ‹ƒN‚ğ‰Á‚¦‚é
-	void		AddForce(Vec3d f, Vec3d r);				///< —Í‚ğ ˆÊ’ur(WorldŒn) ‚É‰Á‚¦‚é
-	/// S‘©—ÍˆÈŠO‚Ì„‘Ì‚É‰Á‚í‚Á‚½ŠO—ÍBS‘©—Í‚ÍPHConstraint‚©‚çæ“¾‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
+	void		AddForce(Vec3d f);						///< åŠ›ã‚’è³ªé‡ä¸­å¿ƒã«åŠ ãˆã‚‹
+	void		AddTorque(Vec3d t);						///< ãƒˆãƒ«ã‚¯ã‚’åŠ ãˆã‚‹
+	void		AddForce(Vec3d f, Vec3d r);				///< åŠ›ã‚’ ä½ç½®r(Worldç³») ã«åŠ ãˆã‚‹
+	/// æ‹˜æŸåŠ›ä»¥å¤–ã®å‰›ä½“ã«åŠ ã‚ã£ãŸå¤–åŠ›ã€‚æ‹˜æŸåŠ›ã¯PHConstraintã‹ã‚‰å–å¾—ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
 	Vec3d		GetForce() const {return force;}
-	/// S‘©—ÍˆÈŠO‚Ì„‘Ì‚É‰Á‚í‚Á‚½ŠO—Í‚É‚æ‚éƒgƒ‹ƒNBS‘©ƒgƒ‹ƒN‚ÍPHConstraint‚©‚çæ“¾‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
+	/// æ‹˜æŸåŠ›ä»¥å¤–ã®å‰›ä½“ã«åŠ ã‚ã£ãŸå¤–åŠ›ã«ã‚ˆã‚‹ãƒˆãƒ«ã‚¯ã€‚æ‹˜æŸãƒˆãƒ«ã‚¯ã¯PHConstraintã‹ã‚‰å–å¾—ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
 	Vec3d		GetTorque() const {return torque;}
 
-	double		GetMass(){return mass;}					///< ¿—Ê
-	double		GetMassInv(){return 1.0 / mass;}		///< ¿—Ê‚Ì‹t”
-	void		SetMass(double m){mass = m;}			///< ¿—Ê‚Ìİ’è
-	void		SetMassInv(double minv){mass = 1.0 / minv;}	///< ¿—Ê‚Ì‹t”‚Ìİ’è
-	Vec3d		GetCenterOfMass(){return center;}		///< ƒ[ƒJƒ‹ƒtƒŒ[ƒ€‚©‚çŒ©‚½C„‘Ì‚Ì¿—Ê’†SˆÊ’u‚Ìİ’è
-	void		SetCenterOfMass(const Vec3d& c){center = c;}	///< ƒ[ƒJƒ‹ƒtƒŒ[ƒ€‚©‚çŒ©‚½C„‘Ì‚Ì¿—Ê’†SˆÊ’u‚Ìæ“¾
-	Matrix3d	GetInertia(){return inertia;}			///< Šµ«ƒeƒ“ƒ\ƒ‹
-	Matrix3d	GetInertiaInv(){return inertia_inv;}	///< Šµ«ƒeƒ“ƒ\ƒ‹‚Ì‹t”
-	void		SetInertia(const Matrix3d& I){			///< Šµ«ƒeƒ“ƒ\ƒ‹‚Ìİ’è
+	double		GetMass(){return mass;}					///< è³ªé‡
+	double		GetMassInv(){return 1.0 / mass;}		///< è³ªé‡ã®é€†æ•°
+	void		SetMass(double m){mass = m;}			///< è³ªé‡ã®è¨­å®š
+	void		SetMassInv(double minv){mass = 1.0 / minv;}	///< è³ªé‡ã®é€†æ•°ã®è¨­å®š
+	Vec3d		GetCenterOfMass(){return center;}		///< ãƒ­ãƒ¼ã‚«ãƒ«ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰è¦‹ãŸï¼Œå‰›ä½“ã®è³ªé‡ä¸­å¿ƒä½ç½®ã®è¨­å®š
+	void		SetCenterOfMass(const Vec3d& c){center = c;}	///< ãƒ­ãƒ¼ã‚«ãƒ«ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰è¦‹ãŸï¼Œå‰›ä½“ã®è³ªé‡ä¸­å¿ƒä½ç½®ã®å–å¾—
+	Matrix3d	GetInertia(){return inertia;}			///< æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«
+	Matrix3d	GetInertiaInv(){return inertia_inv;}	///< æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã®é€†æ•°
+	void		SetInertia(const Matrix3d& I){			///< æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã®è¨­å®š
 		inertia = I;
 		inertia_inv = I.inv();
 	}
-	void		SetInertiaInv(const Matrix3d& Iinv){	///< Šµ«ƒeƒ“ƒ\ƒ‹‚ğ‹t”‚Åİ’è
+	void		SetInertiaInv(const Matrix3d& Iinv){	///< æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã‚’é€†æ•°ã§è¨­å®š
 		inertia_inv = Iinv;
 		inertia = Iinv.inv();
 	}
 	void		CompInertia();
 
-	///	Ï•ª•û®‚Ìæ“¾
+	///	ç©åˆ†æ–¹å¼ã®å–å¾—
 	PHIntegrationMode GetIntegrationMode(){ return integrationMode; }
-	///	Ï•ª•û®‚Ìİ’è
+	///	ç©åˆ†æ–¹å¼ã®è¨­å®š
 	void SetIntegrationMode(PHIntegrationMode m){ integrationMode=m; }
 
 	Posed		GetPose() const { return pose; }
@@ -216,84 +216,84 @@ public:
 	Vec3d		GetDeltaPosition() const ;
 	Vec3d		GetDeltaPosition(const Vec3d& pos) const ;
 	Vec3d		GetPrevFramePosition() const { return pose.Pos()-GetDeltaPosition(); }
-	Vec3d		GetCenterPosition() const {return pose*center;} 	///< dSˆÊ’u‚Ìæ“¾(World)
-	void		SetCenterPosition(const Vec3d& p){					///< dSˆÊ’u‚Ìİ’è(World)
+	Vec3d		GetCenterPosition() const {return pose*center;} 	///< é‡å¿ƒä½ç½®ã®å–å¾—(World)
+	void		SetCenterPosition(const Vec3d& p){					///< é‡å¿ƒä½ç½®ã®è¨­å®š(World)
 		pose.Pos() = p - pose.Ori()*center;
 	}
 
-	///	Œü‚«‚Ìæ“¾
+	///	å‘ãã®å–å¾—
 	Matrix3d	GetRotation() const { Matrix3d rv; pose.Ori().ToMatrix(rv); return rv; }
-	///	Œü‚«‚Ìİ’è
+	///	å‘ãã®è¨­å®š
 	void		SetRotation(const Matrix3d& r){
 		pose.Ori().FromMatrix(r);
 	}
 
-	///	Œü‚«‚Ìæ“¾
+	///	å‘ãã®å–å¾—
 	Quaterniond GetOrientation() const {return pose.Ori();}
-	///	Œü‚«‚Ìİ’è
+	///	å‘ãã®è¨­å®š
 	void		SetOrientation(const Quaterniond& q){
 		pose.Ori() = q;
 	}
 
-	///	¿—Ê’†S‚Ì‘¬“x‚Ìæ“¾
+	///	è³ªé‡ä¸­å¿ƒã®é€Ÿåº¦ã®å–å¾—
 	Vec3d		GetVelocity() const {return velocity;}
-	///	¿—Ê’†S‚Ì‘¬“x‚Ìİ’è
+	///	è³ªé‡ä¸­å¿ƒã®é€Ÿåº¦ã®è¨­å®š
 	void		SetVelocity(const Vec3d& v){
 		velocity = v;
 		SetFrozen(false);
 	}
 
-	///	Šp‘¬“x‚Ìæ“¾
+	///	è§’é€Ÿåº¦ã®å–å¾—
 	Vec3d		GetAngularVelocity() const {return angVelocity;}
-	///	Šp‘¬“x‚Ìİ’è
+	///	è§’é€Ÿåº¦ã®è¨­å®š
 	void		SetAngularVelocity(const Vec3d& av){
 		angVelocity = av;
 		SetFrozen(false);
 	}
 
-	///	”CˆÓ‚ÌˆÊ’u‚Å‚Ì‘¬“x‚Ìæ“¾
+	///	ä»»æ„ã®ä½ç½®ã§ã®é€Ÿåº¦ã®å–å¾—
 	Vec3d		GetPointVelocity(Vec3d posW) const {
 		return velocity + (angVelocity^(posW - pose*center));
 	}
 
-	///	‘¬“x‚ÆŠp‘¬“x‚ğ‚Ü‚Æ‚ß‚Äæ“¾
+	///	é€Ÿåº¦ã¨è§’é€Ÿåº¦ã‚’ã¾ã¨ã‚ã¦å–å¾—
 	SpatialVector GetSpatialVelocity() const { return SpatialVector(velocity,angVelocity); }
 
-	///	iÅŒã‚ÌStep()‚Å‚Ìj„‘Ì‚Ì‰Á‘¬“x
+	///	ï¼ˆæœ€å¾Œã®Step()ã§ã®ï¼‰å‰›ä½“ã®åŠ é€Ÿåº¦
 	SpatialVector GetAcceleration() const;
 
-	///	shape‚Ì”B
+	///	shapeã®æ•°ã€‚
 	int			NFrame();
-	///	shape‚ğAˆÊ’uw’è‚İ‚Å’Ç‰Á‚·‚éD
+	///	shapeã‚’ã€ä½ç½®æŒ‡å®šè¾¼ã¿ã§è¿½åŠ ã™ã‚‹ï¼
 	void		AddFrame(PHFrameIf* frame);	
 	///	
 	void		DelFrame(int i);
-	///	frame‚Åæ“¾
+	///	frameã§å–å¾—
 	PHFrameIf*	GetFrame(int i);
 
-	///	‚±‚Ì„‘Ì‚ª‚Â Spr::CDShape ‚Ì”
+	///	ã“ã®å‰›ä½“ãŒæŒã¤ Spr::CDShape ã®æ•°
 	int			NShape();
-	///	‚±‚Ì„‘Ì‚ª‚Â i”Ô–Ú‚Ì SPR::CDShape ‚Ìæ“¾
+	///	ã“ã®å‰›ä½“ãŒæŒã¤ iç•ªç›®ã® SPR::CDShape ã®å–å¾—
 	CDShapeIf*	GetShape(int i);
-	///	shape ‚ğ ‚±‚Ì„‘Ì‚ª‚ÂSpr::CDShape‚ÌƒŠƒXƒg ‚ÌÅŒã‚É’Ç‰Á‚·‚éD
+	///	shape ã‚’ ã“ã®å‰›ä½“ãŒæŒã¤Spr::CDShapeã®ãƒªã‚¹ãƒˆ ã®æœ€å¾Œã«è¿½åŠ ã™ã‚‹ï¼
 	void		AddShape(CDShapeIf* shape);
-	///	‚±‚Ì„‘Ì‚ª‚Âshape‚ğ‘S‚Äíœ
+	///	ã“ã®å‰›ä½“ãŒæŒã¤shapeã‚’å…¨ã¦å‰Šé™¤
 	void		DelShape(CDShapeIf* shape);
-	///	‚±‚Ì„‘Ì‚ª‚Â i”Ô–Ú‚Ì SPR::CDShape ‚Ì‚±‚Ì„‘Ì‚©‚çŒ©‚½p¨‚ğæ“¾
+	///	ã“ã®å‰›ä½“ãŒæŒã¤ iç•ªç›®ã® SPR::CDShape ã®ã“ã®å‰›ä½“ã‹ã‚‰è¦‹ãŸå§¿å‹¢ã‚’å–å¾—
 	Posed		GetShapePose(int i);
-	///	‚±‚Ì„‘Ì‚ª‚Â i”Ô–Ú‚Ì SPR::CDShape ‚Ì‚±‚Ì„‘Ì‚©‚çŒ©‚½p¨‚ğİ’è
+	///	ã“ã®å‰›ä½“ãŒæŒã¤ iç•ªç›®ã® SPR::CDShape ã®ã“ã®å‰›ä½“ã‹ã‚‰è¦‹ãŸå§¿å‹¢ã‚’è¨­å®š
 	void		ClearShape();
-	/// ‚±‚Ì„‘Ì‚ª‚ÂSPR::CDShape ‚ğíœ
+	/// ã“ã®å‰›ä½“ãŒæŒã¤SPR::CDShape ã‚’å‰Šé™¤
 	void		SetShapePose(int i, const Posed& pose);
-	/// d—Í‚ğ‰Á‚¦‚é‚©‚Ç‚¤‚©İ’è
+	/// é‡åŠ›ã‚’åŠ ãˆã‚‹ã‹ã©ã†ã‹è¨­å®š
 	void		SetGravity(bool bOn);
-	/// •¨—–@‘¥‚É]‚¤‚©‚Ç‚¤‚©İ’è
+	/// ç‰©ç†æ³•å‰‡ã«å¾“ã†ã‹ã©ã†ã‹è¨­å®š
 	void		SetDynamical(bool bOn){dynamical = bOn;}
-	/// •¨—–@‘¥‚É]‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğæ“¾
+	/// ç‰©ç†æ³•å‰‡ã«å¾“ã£ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’å–å¾—
 	bool		IsDynamical(){return dynamical;}
-	/// ‘¬“x‚ªˆê’èˆÈ‰º‚ÌCÏ•ª‚ğs‚í‚È‚¢‚æ‚¤‚Éİ’è
+	/// é€Ÿåº¦ãŒä¸€å®šä»¥ä¸‹ã®æ™‚ï¼Œç©åˆ†ã‚’è¡Œã‚ãªã„ã‚ˆã†ã«è¨­å®š
 	void		SetFrozen(bool bOn){bFrozen = bOn;}
-	/// ‘¬“x‚ªˆê’èˆÈ‰º‚ÅÏ•ª‚ğs‚í‚È‚¢‚©‚Ç‚¤‚©‚ğæ“¾
+	/// é€Ÿåº¦ãŒä¸€å®šä»¥ä¸‹ã§ç©åˆ†ã‚’è¡Œã‚ãªã„ã‹ã©ã†ã‹ã‚’å–å¾—
 	bool		IsFrozen(){return bFrozen;}
 	PHTreeNodeIf* GetTreeNode();
 
@@ -321,7 +321,7 @@ public:
 };
 class PHSolids : public std::vector< UTRef<PHSolid> >{
 public:
-	/* ˆÈ‰ºíœŒó•â
+	/* ä»¥ä¸‹å‰Šé™¤å€™è£œ
 	UTRef<PHSolid> Erase(const PHSolid* s){
 		iterator it = std::find(begin(), end(), s);
 		if (it == end()) return NULL;
@@ -339,30 +339,30 @@ public:
 	}*/
 };
 
-/**	Solid‚ğ•Û‚·‚éƒNƒ‰ƒXDSolid‚ÌXV‚às‚¤D	*/
+/**	Solidã‚’ä¿æŒã™ã‚‹ã‚¯ãƒ©ã‚¹ï¼Solidã®æ›´æ–°ã‚‚è¡Œã†ï¼	*/
 class PHSolidContainer:public PHEngine{
 	SPR_OBJECTDEF_NOIF(PHSolidContainer);
 public:
 	PHSolidIfs solids;
 	///
 	int GetPriority() const {return SGBP_SOLIDCONTAINER;}
-	/// solid‚ÌƒŠƒZƒbƒg
+	/// solidã®ãƒªã‚»ãƒƒãƒˆ
 	void Reset();
-	///	‘¬“x¨ˆÊ’uA‰Á‘¬“x¨‘¬“x‚ÌÏ•ª
+	///	é€Ÿåº¦â†’ä½ç½®ã€åŠ é€Ÿåº¦â†’é€Ÿåº¦ã®ç©åˆ†
 	virtual void Step();
 	
 	virtual void Clear(){ solids.clear(); }
 	bool AddChildObject(ObjectIf* o);
 	bool DelChildObject(ObjectIf* o);
-	///	Š—L‚µ‚Ä‚¢‚ésolid‚Ì”
+	///	æ‰€æœ‰ã—ã¦ã„ã‚‹solidã®æ•°
 	virtual size_t NChildObject() const { return solids.size(); }
-	///	Š—L‚µ‚Ä‚¢‚ésolid
+	///	æ‰€æœ‰ã—ã¦ã„ã‚‹solid
 	virtual ObjectIf* GetChildObject(size_t i){ return solids[i]; }
 
 	PHSolidContainer();
 };
 
-/** SolidContainer‚ÌReset‚ğŒÄ‚Ô‚½‚ß‚¾‚¯‚ÌƒGƒ“ƒWƒ“ */
+/** SolidContainerã®Resetã‚’å‘¼ã¶ãŸã‚ã ã‘ã®ã‚¨ãƒ³ã‚¸ãƒ³ */
 class PHSolidInitializer : public PHEngine{
 	SPR_OBJECTDEF_NOIF(PHSolidInitializer);
 public:
@@ -370,7 +370,7 @@ public:
 	
 	///
 	int GetPriority() const {return SGBP_SOLIDINITIALIZER;}
-	///	updatedƒtƒ‰ƒO‚ğƒŠƒZƒbƒg‚·‚é
+	///	updatedãƒ•ãƒ©ã‚°ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	virtual void Step();
 };
 

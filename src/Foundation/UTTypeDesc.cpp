@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -265,7 +265,7 @@ UTTypeDescFieldIt::UTTypeDescFieldIt(UTTypeDesc* d){
 	if (type){
 		field = type->GetComposit().end();
 		if (type->IsPrimitive()){
-			//	‘g‚İ—§‚ÄŒ^‚Å‚È‚¢ê‡
+			//	çµ„ã¿ç«‹ã¦å‹ã§ãªã„å ´åˆ
 			DSTR << "Not a composit type" << std::endl;
 			arrayPos = -1;
 			arrayLength = 1;
@@ -279,7 +279,7 @@ UTTypeDescFieldIt::UTTypeDescFieldIt(UTTypeDesc* d){
 }
 bool UTTypeDescFieldIt::NextField(void* base){
 	if (!type || !type->GetComposit().size()) return false;
-	//	Ÿ‚ÌƒtƒB[ƒ‹ƒh‚Öi‚Ş
+	//	æ¬¡ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¸é€²ã‚€
 	if (field == type->GetComposit().end()){
 		field = type->GetComposit().begin();
 	}else{
@@ -294,7 +294,7 @@ bool UTTypeDescFieldIt::NextField(void* base){
 }
 bool UTTypeDescFieldIt::PrevField(void* base){
 	if (!type || !type->GetComposit().size()) return false;
-	//	‘O‚ÌƒtƒB[ƒ‹ƒh‚Ö–ß‚é
+	//	å‰ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¸æˆ»ã‚‹
 	if (field == type->GetComposit().begin()){
 		field = type->GetComposit().end();
 		fieldType = F_NONE;
@@ -316,12 +316,12 @@ static bool HaveFieldR(UTTypeDesc* type, UTString& name){
 	}
 	return false;
 }
-bool UTTypeDescFieldIt::HaveField(UTString name){			///<	w’è‚Ì–¼‘O‚ÌƒtƒB[ƒ‹ƒh‚ğ‚Á‚Ä‚¢‚é‚È‚çtrueBŒp³Œ³‚ÌƒtƒB[ƒ‹ƒh‚àŒŸõ‚·‚éB
+bool UTTypeDescFieldIt::HaveField(UTString name){			///<	æŒ‡å®šã®åå‰ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’æŒã£ã¦ã„ã‚‹ãªã‚‰trueã€‚ç¶™æ‰¿å…ƒã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚‚æ¤œç´¢ã™ã‚‹ã€‚
 	return HaveFieldR(type, name);
 }
 
 void UTTypeDescFieldIt::SetFieldInfo(void* base){
-	//	ƒtƒB[ƒ‹ƒh‚Ì”z—ñ—v‘f”‚ğİ’è
+	//	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®é…åˆ—è¦ç´ æ•°ã‚’è¨­å®š
 	if (field->varType==UTTypeDesc::Field::SINGLE){
 		arrayLength = 1;
 	}else if(field->varType==UTTypeDesc::Field::VECTOR || field->varType==UTTypeDesc::Field::ARRAY){
@@ -335,9 +335,9 @@ void UTTypeDescFieldIt::SetFieldInfo(void* base){
 			}
 		}
 	}
-	//	”z—ñƒJƒEƒ“ƒg‚ğ‰Šú‰»
+	//	é…åˆ—ã‚«ã‚¦ãƒ³ãƒˆã‚’åˆæœŸåŒ–
 	arrayPos = -1;
-	//	ƒtƒB[ƒ‹ƒh‚ÌŒ^‚ğİ’è
+	//	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å‹ã‚’è¨­å®š
 	if (!field->type){
 		DSTR << type->GetTypeName() << " has NULL field type" << std::endl;
 		type->Print(DSTR);

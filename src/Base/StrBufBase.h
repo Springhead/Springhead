@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,7 +13,7 @@
 #include <Base/Env.h>
 #include <cstdio>
 #include <iostream>
-/**	@file StrBufBase.h iostream ‚ğ”h¶‚·‚é‚Æ‚«‚Ég‚¤ƒNƒ‰ƒX‚Ì’è‹` */
+/**	@file StrBufBase.h iostream ã‚’æ´¾ç”Ÿã™ã‚‹ã¨ãã«ä½¿ã†ã‚¯ãƒ©ã‚¹ã®å®šç¾© */
 #ifdef __BORLANDC__
  #define BCC_CDECL __cdecl
 #else
@@ -56,10 +56,10 @@ class SPR_DLL UTStreambufBase:public std::streambuf
 	virtual int BCC_CDECL sync();
 	virtual pos_type BCC_CDECL seekoff(off_type off, std::ios_base::seekdir way,
 		std::ios_base::openmode which = std::ios_base::in | std::ios_base::out);
-	//	V‚µ‚¢ƒXƒgƒŠ[ƒ€‚ğ”h¶‚³‚¹‚é‚É‚ÍAˆÈ‰º‚Ì‚R‚Â‚ÌŠÖ”‚ğƒI[ƒo[ƒ[ƒh‚µ‚Ä‚­‚¾‚³‚¢B
-	virtual unsigned int read(void* buf, unsigned int bufLen)=0;	//	bufLen ˆÈ“à‚Ì•¶š”“ü—Í‚µ buf ‚ÉŠi”[‚·‚éB“ü—Í•¶š”‚ğ•Ô‚·B
-	virtual unsigned int write(void* buf, unsigned int bufLen)=0;	//	buf ‚ÉŠi”[‚³‚ê‚½ bufLen •¶š‚Ìƒf[ƒ^‚ğo—Í‚µAo—Í‚µ‚½•¶š”‚ğ•Ô‚·B
-	virtual int in_avail_stream(){return 0;}		//	“ü—Í‰Â”\‚È•¶š”‚ğ•Ô‚·B
+	//	æ–°ã—ã„ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚’æ´¾ç”Ÿã•ã›ã‚‹ã«ã¯ã€ä»¥ä¸‹ã®ï¼“ã¤ã®é–¢æ•°ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã—ã¦ãã ã•ã„ã€‚
+	virtual unsigned int read(void* buf, unsigned int bufLen)=0;	//	bufLen ä»¥å†…ã®æ–‡å­—æ•°å…¥åŠ›ã— buf ã«æ ¼ç´ã™ã‚‹ã€‚å…¥åŠ›æ–‡å­—æ•°ã‚’è¿”ã™ã€‚
+	virtual unsigned int write(void* buf, unsigned int bufLen)=0;	//	buf ã«æ ¼ç´ã•ã‚ŒãŸ bufLen æ–‡å­—ã®ãƒ‡ãƒ¼ã‚¿ã‚’å‡ºåŠ›ã—ã€å‡ºåŠ›ã—ãŸæ–‡å­—æ•°ã‚’è¿”ã™ã€‚
+	virtual int in_avail_stream(){return 0;}		//	å…¥åŠ›å¯èƒ½ãªæ–‡å­—æ•°ã‚’è¿”ã™ã€‚
 	};
 
 }	//	namespace Spr

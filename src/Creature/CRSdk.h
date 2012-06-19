@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -26,7 +26,7 @@ public:
 
 class SPR_DLL CRSdk : public Sdk {
 protected:
-	///	ƒNƒŠ[ƒ`ƒƒ
+	///	ã‚¯ãƒªãƒ¼ãƒãƒ£
 	typedef std::vector< UTRef<CRCreatureIf> > CRCreatures;
 	CRCreatures creatures;
 
@@ -35,31 +35,31 @@ public:
 	CRSdk();
 	~CRSdk();
 
-	/** @brief ƒNƒŠ[ƒ`ƒƒ‚ğˆê‘Ìì¬‚·‚é
+	/** @brief ã‚¯ãƒªãƒ¼ãƒãƒ£ã‚’ä¸€ä½“ä½œæˆã™ã‚‹
 	 */
 	virtual CRCreatureIf* CreateCreature(const IfInfo* ii, const CRCreatureDesc& desc);
 
-	/** @brief ƒNƒŠ[ƒ`ƒƒ‚ÌŒÂ”il”Hj‚ğæ“¾‚·‚é
+	/** @brief ã‚¯ãƒªãƒ¼ãƒãƒ£ã®å€‹æ•°ï¼ˆäººæ•°ï¼Ÿï¼‰ã‚’å–å¾—ã™ã‚‹
 	 */
 	virtual int NCreatures() const {
 		return (int)creatures.size();
 	}
 
-	/** @brief ƒNƒŠ[ƒ`ƒƒˆê‘Ì‚ğæ“¾‚·‚é
+	/** @brief ã‚¯ãƒªãƒ¼ãƒãƒ£ä¸€ä½“ã‚’å–å¾—ã™ã‚‹
 	 */
 	virtual CRCreatureIf* GetCreature(int index) {
 		return creatures[index];
 	}
 
-	/** @brief ‘SƒNƒŠ[ƒ`ƒƒ‚É‚Â‚¢‚Ä‚PƒXƒeƒbƒvˆ—‚ğÀs‚·‚é
+	/** @brief å…¨ã‚¯ãƒªãƒ¼ãƒãƒ£ã«ã¤ã„ã¦ï¼‘ã‚¹ãƒ†ãƒƒãƒ—å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹
 	 */
 	virtual void Step();
 
-	/** @brief ˆê“x‘S‚Ä‚ğƒNƒŠƒA‚µ‚ÄSDK‚ğì‚è’¼‚·
+	/** @brief ä¸€åº¦å…¨ã¦ã‚’ã‚¯ãƒªã‚¢ã—ã¦SDKã‚’ä½œã‚Šç›´ã™
 	 */
 	virtual void Clear();
 
-	/** @brief q—v‘f‚Ìˆµ‚¢
+	/** @brief å­è¦ç´ ã®æ‰±ã„
 	 */
 	virtual size_t NChildObject() const { return NCreatures(); }
 	virtual ObjectIf* GetChildObject(size_t i){ return GetCreature((int)i)->Cast(); }

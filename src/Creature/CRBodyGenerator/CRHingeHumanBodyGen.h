@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,7 +14,7 @@
 namespace Spr{;
 
 
-/// ƒqƒ“ƒWƒWƒ‡ƒCƒ“ƒgl‘Ìƒ‚ƒfƒ‹‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒ’ãƒ³ã‚¸ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆäººä½“ãƒ¢ãƒ‡ãƒ«ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRHingeHumanBodyGenDesc : CRBodyGenDesc {
 
 	enum CRHumanSolids{
@@ -32,7 +32,7 @@ struct CRHingeHumanBodyGenDesc : CRBodyGenDesc {
 		SO_LEFT_UPPER_LEG, SO_LEFT_LOWER_LEG, SO_LEFT_FOOT,
 		SO_LEFT_EYE,
 
-		// ŠÖß‚Ì’†Œp‚¬—p‚ÌŒ`ó‚ğ—L‚µ‚È‚¢„‘Ì
+		// é–¢ç¯€ã®ä¸­ç¶™ãç”¨ã®å½¢çŠ¶ã‚’æœ‰ã—ãªã„å‰›ä½“
 		SO_CHEST_NECK_XZ, SO_CHEST_NECK_ZY,
 		SO_NECK_HEAD_XZ,
 
@@ -48,7 +48,7 @@ struct CRHingeHumanBodyGenDesc : CRBodyGenDesc {
 		SO_LEFT_ANKLE_YX, SO_LEFT_ANKLE_XZ,
 		SO_LEFT_EYE_YX,
 
-		// „‘Ì‚Ì”
+		// å‰›ä½“ã®æ•°
 		SO_NSOLIDS
 	};
 
@@ -80,14 +80,14 @@ struct CRHingeHumanBodyGenDesc : CRBodyGenDesc {
 
 		JO_LEFT_EYE_Y, JO_LEFT_EYE_X,
 
-		// ŠÖß‚Ì”
+		// é–¢ç¯€ã®æ•°
 		JO_NJOINTS
 	};
 
-	/// ‘Ìd
+	/// ä½“é‡
 	double bodyMass;
 
-	/// ƒTƒCƒY‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^
+	/// ã‚µã‚¤ã‚ºã«é–¢ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	double waistHeight, waistBreadth, waistThickness;
 	double abdomenHeight, abdomenBreadth, abdomenThickness;
 	double chestHeight, chestBreadth, chestThickness;
@@ -102,10 +102,10 @@ struct CRHingeHumanBodyGenDesc : CRBodyGenDesc {
 	double vertexToEyeHeight, occiputToEyeDistance;
 	double eyeDiameter, interpupillaryBreadth;
 
-	/// ŠÖßƒoƒlƒ_ƒ“ƒpŒW”
+	/// é–¢ç¯€ãƒãƒãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	double spring, damper;
 
-	/// ŠeŠÖß‚Ìƒoƒlƒ_ƒ“ƒp
+	/// å„é–¢ç¯€ã®ãƒãƒãƒ€ãƒ³ãƒ‘
 	double springWaistAbdomen, damperWaistAbdomen;
 	double springAbdomenChest, damperAbdomenChest;
 	double springChestNeckX,   damperChestNeckX;
@@ -130,13 +130,13 @@ struct CRHingeHumanBodyGenDesc : CRBodyGenDesc {
 	double springEyeY,         damperEyeY;
 	double springEyeX,         damperEyeX;
 
-	/// ŠÖßæ‚è•t‚¯Šp“xEˆÊ’u
+	/// é–¢ç¯€å–ã‚Šä»˜ã‘è§’åº¦ãƒ»ä½ç½®
 	Vec3d       posRightUpperArm;
 	Quaterniond oriRightUpperArm;
 	Quaterniond oriRightLowerArm;
 	Quaterniond oriRightHand;
 
-	/// ‰Â“®ˆæ§ŒÀ
+	/// å¯å‹•åŸŸåˆ¶é™
 	Vec2d rangeWaistAbdomen;
 	Vec2d rangeAbdomenChest;
 	Vec2d rangeChestNeckX;
@@ -161,7 +161,7 @@ struct CRHingeHumanBodyGenDesc : CRBodyGenDesc {
 	Vec2d rangeRightEyeY;
 	Vec2d rangeEyeX;
 
-	/// — ƒIƒvƒVƒ‡ƒ“
+	/// è£ã‚ªãƒ—ã‚·ãƒ§ãƒ³
 	bool noLegs;
 
 	CRHingeHumanBodyGenDesc();
@@ -170,7 +170,7 @@ struct CRHingeHumanBodyGenDesc : CRBodyGenDesc {
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRHingeHumanBodyGen
-// ƒqƒ“ƒWƒWƒ‡ƒCƒ“ƒg‚ğ—p‚¢‚½l‘Ìƒ‚ƒfƒ‹EƒNƒ‰ƒX‚ÌÀ‘•
+// ãƒ’ãƒ³ã‚¸ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ç”¨ã„ãŸäººä½“ãƒ¢ãƒ‡ãƒ«ãƒ»ã‚¯ãƒ©ã‚¹ã®å®Ÿè£…
 class CRHingeHumanBodyGen : public CRBodyGen, public CRHingeHumanBodyGenDesc {
 private:
 	void InitBody();
@@ -218,20 +218,20 @@ public:
 		InitContact();
 	}
 
-	/** @brief ‰Šú‰»‚ğÀs‚·‚é
+	/** @brief åˆæœŸåŒ–ã‚’å®Ÿè¡Œã™ã‚‹
 	*/
 	virtual void Init();
 
-	/** @brief ã”¼g‚ÌŠÖß‚ÌŒ˜‚³‚ğ•Ï‚¦‚é
-		@param stifness Œ˜‚³FƒfƒtƒHƒ‹ƒg‚ÌŒ˜‚³‚É‘Î‚·‚é”{”‚Åw’è
+	/** @brief ä¸ŠåŠèº«ã®é–¢ç¯€ã®å …ã•ã‚’å¤‰ãˆã‚‹
+		@param stifness å …ã•ï¼šãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®å …ã•ã«å¯¾ã™ã‚‹å€æ•°ã§æŒ‡å®š
 	*/
 	virtual void SetUpperBodyStiffness(float stiffness);
 
-	/** @brief ã”¼g‚Ìƒ|[ƒY‚ğ•Û‚·‚é
+	/** @brief ä¸ŠåŠèº«ã®ãƒãƒ¼ã‚ºã‚’ä¿æŒã™ã‚‹
 	*/
 	virtual void KeepUpperBodyPose();
 
-	/** @brief ã”¼g‚Ìƒ|[ƒY‚ğ‰ŠúˆÊ’u‚É–ß‚·
+	/** @brief ä¸ŠåŠèº«ã®ãƒãƒ¼ã‚ºã‚’åˆæœŸä½ç½®ã«æˆ»ã™
 	*/
 	virtual void ResetUpperBodyPose();
 

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -9,7 +9,7 @@
 #define SAMPLE_APP_H
 
 /**
-	ƒTƒ“ƒvƒ‹ƒvƒƒOƒ‰ƒ€‹¤—pƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒNƒ‰ƒX
+	ã‚µãƒ³ãƒ—ãƒ«ãƒ—ãƒ­ã‚°ãƒ©ãƒ å…±ç”¨ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹
  **/
 
 #include <Springhead.h>
@@ -22,29 +22,29 @@ using namespace Spr;
 
 class SampleApp : public FWApp{
 public:
-	/** ƒƒjƒ…[ID
-		MENU_ALWAYS‚Í‚¢‚Â‚Å‚à•\¦‚³‚ê‚é
-		ƒV[ƒ“‚É‘Î‰‚·‚éƒƒjƒ…[‚Í1`99‚ÌID‚ğg—p(ƒV[ƒ“‚Í99ŒÂ‚Ü‚Å)
-		100ˆÈ~‚ğ‹¤—Lƒƒjƒ…[‚ªg—p
+	/** ãƒ¡ãƒ‹ãƒ¥ãƒ¼ID
+		MENU_ALWAYSã¯ã„ã¤ã§ã‚‚è¡¨ç¤ºã•ã‚Œã‚‹
+		ã‚·ãƒ¼ãƒ³ã«å¯¾å¿œã™ã‚‹ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã¯1ï½99ã®IDã‚’ä½¿ç”¨(ã‚·ãƒ¼ãƒ³ã¯99å€‹ã¾ã§)
+		100ä»¥é™ã‚’å…±æœ‰ãƒ¡ãƒ‹ãƒ¥ãƒ¼ãŒä½¿ç”¨
 	 */
 	enum MenuID{
-		MENU_ALWAYS		= 0,			///< ‚¢‚Â‚Å‚à—LŒø‚Èƒƒjƒ…[
-		MENU_SCENE		= 1,			///< ƒV[ƒ“ƒƒjƒ…[
-		MENU_COMMON		= 100,			///< ‹¤—Lƒƒjƒ…[
-		MENU_CONFIG		= MENU_COMMON,	///< ƒpƒ‰ƒ[ƒ^İ’èŒn
-		MENU_DRAW,						///< •`‰æİ’èŒn
-		MENU_STATE,						///< ƒXƒe[ƒg•Û‘¶Œn
-		MENU_EDITOR,					///< FWEditor‚ğ•\¦
+		MENU_ALWAYS		= 0,			///< ã„ã¤ã§ã‚‚æœ‰åŠ¹ãªãƒ¡ãƒ‹ãƒ¥ãƒ¼
+		MENU_SCENE		= 1,			///< ã‚·ãƒ¼ãƒ³ãƒ¡ãƒ‹ãƒ¥ãƒ¼
+		MENU_COMMON		= 100,			///< å…±æœ‰ãƒ¡ãƒ‹ãƒ¥ãƒ¼
+		MENU_CONFIG		= MENU_COMMON,	///< ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®šç³»
+		MENU_DRAW,						///< æç”»è¨­å®šç³»
+		MENU_STATE,						///< ã‚¹ãƒ†ãƒ¼ãƒˆä¿å­˜ç³»
+		MENU_EDITOR,					///< FWEditorã‚’è¡¨ç¤º
 		MENU_COMMON_LAST,
 	};
-	/// ƒAƒNƒVƒ‡ƒ“ID
-	/// í‚É‚Â‚©‚¦‚éƒAƒNƒVƒ‡ƒ“
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ID
+	/// å¸¸ã«ã¤ã‹ãˆã‚‹ã‚¢ã‚¯ã‚·ãƒ§ãƒ³
 	enum ActionAlways{
-		ID_EXIT,					///< I—¹
-		ID_RUN,						///< ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌŠJn‚Æ’â~
-		ID_STEP,					///< ƒXƒeƒbƒvÀs
+		ID_EXIT,					///< çµ‚äº†
+		ID_RUN,						///< ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®é–‹å§‹ã¨åœæ­¢
+		ID_STEP,					///< ã‚¹ãƒ†ãƒƒãƒ—å®Ÿè¡Œ
 	};
-	/// ƒXƒe[ƒg‚Ì•Û‘¶‚Æ•œ‹Ai–¢ŒŸØj
+	/// ã‚¹ãƒ†ãƒ¼ãƒˆã®ä¿å­˜ã¨å¾©å¸°ï¼ˆæœªæ¤œè¨¼ï¼‰
 	enum ActionState{
 		ID_LOAD_STATE,
 		ID_SAVE_STATE,
@@ -53,27 +53,27 @@ public:
 		ID_WRITE_STATE,
 		ID_DUMP,
 	};
-	/// •¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ìİ’è
+	/// ç‰©ç†ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®è¨­å®š
 	enum ActionConfig{
-		ID_SWITCH_LCP_PENALTY,		///< LCP‚Æƒyƒiƒ‹ƒeƒB–@‚ğØ‚è‘Ö‚¦‚é
-		ID_TOGGLE_GRAVITY,			///< d—Í‚Ì—LŒø‰»‚Æ–³Œø‰»
-		ID_TOGGLE_JOINT,			///< ŠÖß‚Ì—LŒø‰»‚Æ–³Œø‰»
-		ID_TOGGLE_ABA,				///< ABA‚Ì—LŒø‰»‚Æ–³Œø‰»
-		ID_INC_TIMESTEP,			///< ƒ^ƒCƒ€ƒXƒeƒbƒv‚ğ‘‚â‚·
-		ID_DEC_TIMESTEP,			///< ƒ^ƒCƒ€ƒXƒeƒbƒv‚ğŒ¸‚ç‚·
-		ID_INC_TIMER,				///< ƒ^ƒCƒ}üŠú‚ğ‘‚â‚·
-		ID_DEC_TIMER,				///< ƒ^ƒCƒ}üŠú‚ğŒ¸‚ç‚·
+		ID_SWITCH_LCP_PENALTY,		///< LCPã¨ãƒšãƒŠãƒ«ãƒ†ã‚£æ³•ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
+		ID_TOGGLE_GRAVITY,			///< é‡åŠ›ã®æœ‰åŠ¹åŒ–ã¨ç„¡åŠ¹åŒ–
+		ID_TOGGLE_JOINT,			///< é–¢ç¯€ã®æœ‰åŠ¹åŒ–ã¨ç„¡åŠ¹åŒ–
+		ID_TOGGLE_ABA,				///< ABAã®æœ‰åŠ¹åŒ–ã¨ç„¡åŠ¹åŒ–
+		ID_INC_TIMESTEP,			///< ã‚¿ã‚¤ãƒ ã‚¹ãƒ†ãƒƒãƒ—ã‚’å¢—ã‚„ã™
+		ID_DEC_TIMESTEP,			///< ã‚¿ã‚¤ãƒ ã‚¹ãƒ†ãƒƒãƒ—ã‚’æ¸›ã‚‰ã™
+		ID_INC_TIMER,				///< ã‚¿ã‚¤ãƒå‘¨æœŸã‚’å¢—ã‚„ã™
+		ID_DEC_TIMER,				///< ã‚¿ã‚¤ãƒå‘¨æœŸã‚’æ¸›ã‚‰ã™
 	};
-	/// •`‰æ‚Ìİ’è
+	/// æç”»ã®è¨­å®š
 	enum ActionDraw{
-		ID_DRAW_SOLID,				///< ƒ\ƒŠƒbƒh
-		ID_DRAW_WIREFRAME,			///< ƒƒCƒ„ƒtƒŒ[ƒ€
-		ID_DRAW_AXIS,				///< À•W²
-		ID_DRAW_FORCE,				///< —Í
-		ID_DRAW_CONTACT,			///< ÚG’f–Ê
+		ID_DRAW_SOLID,				///< ã‚½ãƒªãƒƒãƒ‰
+		ID_DRAW_WIREFRAME,			///< ãƒ¯ã‚¤ãƒ¤ãƒ•ãƒ¬ãƒ¼ãƒ 
+		ID_DRAW_AXIS,				///< åº§æ¨™è»¸
+		ID_DRAW_FORCE,				///< åŠ›
+		ID_DRAW_CONTACT,			///< æ¥è§¦æ–­é¢
 	};
 
-	/// Œ`óID
+	/// å½¢çŠ¶ID
 	enum ShapeID{
 		SHAPE_BOX,
 		SHAPE_CAPSULE,
@@ -83,18 +83,18 @@ public:
 		SHAPE_BLOCK,
 	};
 	
-	/// ƒAƒNƒVƒ‡ƒ“î•ñ
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³æƒ…å ±
 	struct Action{
-		int			id;							///< ƒAƒNƒVƒ‡ƒ“ID
-		bool		toggle;						///< On/Offƒ^ƒCƒv‚ÌƒAƒNƒVƒ‡ƒ“
-		bool		enabled;					///< On‚©Off
-		vector< pair<int, UTString> > keys;		///< ƒL[‚Æ‘ã‘ÖƒeƒLƒXƒg
-		UTString	desc[2];					///< à–¾(0: On‚É‚·‚é‚Æ‚«, 1: Off‚É‚·‚é‚Æ‚«)
-		UTString	message[2];					///< ƒAƒNƒVƒ‡ƒ“ŒãƒƒbƒZ[ƒW(0: On‚É‚µ‚½‚Æ‚«C1: Off‚É‚µ‚½‚Æ‚«j
+		int			id;							///< ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ID
+		bool		toggle;						///< On/Offã‚¿ã‚¤ãƒ—ã®ã‚¢ã‚¯ã‚·ãƒ§ãƒ³
+		bool		enabled;					///< Onã‹Off
+		vector< pair<int, UTString> > keys;		///< ã‚­ãƒ¼ã¨ä»£æ›¿ãƒ†ã‚­ã‚¹ãƒˆ
+		UTString	desc[2];					///< èª¬æ˜(0: Onã«ã™ã‚‹ã¨ã, 1: Offã«ã™ã‚‹ã¨ã)
+		UTString	message[2];					///< ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å¾Œãƒ¡ãƒƒã‚»ãƒ¼ã‚¸(0: Onã«ã—ãŸã¨ãï¼Œ1: Offã«ã—ãŸã¨ãï¼‰
 	};
 	struct Menu : map<int, Action>{
-		UTString	brief;						///< ƒƒjƒ…[‚Ìà–¾
-		/// ƒL[‚É‘Î‰‚·‚éƒAƒNƒVƒ‡ƒ“ID‚ğ•Ô‚·
+		UTString	brief;						///< ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®èª¬æ˜
+		/// ã‚­ãƒ¼ã«å¯¾å¿œã™ã‚‹ã‚¢ã‚¯ã‚·ãƒ§ãƒ³IDã‚’è¿”ã™
 		int Query(int key){
 			for(iterator it = begin(); it != end(); it++){
 				Action& a = it->second;
@@ -108,35 +108,35 @@ public:
 	};
 	typedef map<int, Menu>	Menus;
 	Menus					menus;
-	int						curMenu;		///< •\¦’†‚Ì‹¤—Lƒƒjƒ…[
+	int						curMenu;		///< è¡¨ç¤ºä¸­ã®å…±æœ‰ãƒ¡ãƒ‹ãƒ¥ãƒ¼
 	stringstream			ss;
-	UTString				message;		///< ˆêsƒƒbƒZ[ƒW
+	UTString				message;		///< ä¸€è¡Œãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 	
-	FWEditorOverlay			editor;			///< “à•”î•ñ‚Ì•\¦/•ÒW‹@”\
-	FWSceneIf*				fwScene;		///< ƒAƒNƒeƒBƒu‚ÈƒV[ƒ“
+	FWEditorOverlay			editor;			///< å†…éƒ¨æƒ…å ±ã®è¡¨ç¤º/ç·¨é›†æ©Ÿèƒ½
+	FWSceneIf*				fwScene;		///< ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªã‚·ãƒ¼ãƒ³
 	PHSceneIf*				phScene;
-	UTRef<ObjectStatesIf>	states;			///< ó‘Ô•Û‘¶—p
-	UTTimerIf*				timer;			///< ƒ^ƒCƒ}
+	UTRef<ObjectStatesIf>	states;			///< çŠ¶æ…‹ä¿å­˜ç”¨
+	UTTimerIf*				timer;			///< ã‚¿ã‚¤ãƒ
 
-	/// °—p‚ÌŒ`ó
+	/// åºŠç”¨ã®å½¢çŠ¶
 	CDBoxIf*				shapeFloor;
 	CDBoxIf*				shapeWall;
-	/// ì‚è‚¨‚«Œ`ó
+	/// ä½œã‚ŠãŠãå½¢çŠ¶
 	CDBoxIf*				shapeBox;
 	CDSphereIf*				shapeSphere;
 	CDCapsuleIf*			shapeCapsule;
 	CDRoundConeIf*			shapeRoundCone;
 	
-	/// ó‘Ô
-	bool					showHelp;		///< ƒwƒ‹ƒv•\¦
-	int						curScene;		///< ƒAƒNƒeƒBƒu‚ÈƒV[ƒ“‚Ì”Ô†
-	Vec3d					tmpGravity;		///< d—Í–³Œø‰»‚Ì‘Ş”ğ•Ï”
+	/// çŠ¶æ…‹
+	bool					showHelp;		///< ãƒ˜ãƒ«ãƒ—è¡¨ç¤º
+	int						curScene;		///< ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ãªã‚·ãƒ¼ãƒ³ã®ç•ªå·
+	Vec3d					tmpGravity;		///< é‡åŠ›ç„¡åŠ¹åŒ–æ™‚ã®é€€é¿å¤‰æ•°
 	
-	/// ‘®«: ”h¶ƒNƒ‰ƒX‚ªƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Åİ’è‚·‚é
-	UTString				appName;		///< ƒTƒ“ƒvƒ‹–¼. ”h¶ƒNƒ‰ƒX‚ªƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Åİ’è‚·‚é
-	int						numScenes;		///< ƒV[ƒ“‚Ì”
+	/// å±æ€§: æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ãŒã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§è¨­å®šã™ã‚‹
+	UTString				appName;		///< ã‚µãƒ³ãƒ—ãƒ«å. æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ãŒã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§è¨­å®šã™ã‚‹
+	int						numScenes;		///< ã‚·ãƒ¼ãƒ³ã®æ•°
 	
-	/// ƒwƒ‹ƒv‚Ì•`‰æ‘®«
+	/// ãƒ˜ãƒ«ãƒ—ã®æç”»å±æ€§
 	float ymargin;
 	float xmargin;
 	float yline;
@@ -144,11 +144,11 @@ public:
 	float xbrief;
 
 public:
-	/// ƒƒjƒ…[‚Ì“o˜^
+	/// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ç™»éŒ²
 	void AddMenu(int menu, UTString brief){
 		menus[menu].brief = brief;
 	}
-	/// ƒAƒNƒVƒ‡ƒ“‚Ì“o˜^
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã®ç™»éŒ²
 	void AddAction(int menu, int id, UTString desc, UTString msg = "", UTString descd = "", UTString msgd = ""){
 		Action& act = menus[menu][id];
 		act.id		= id;
@@ -158,17 +158,17 @@ public:
 		act.message[0] = msg;
 		act.message[1] = (msgd == "" ? msg : msgd);
 	}
-	/// ƒAƒNƒVƒ‡ƒ“‚ÆƒL[‚Ì‘Î‰
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã¨ã‚­ãƒ¼ã®å¯¾å¿œ
 	void AddHotKey(int menu, int id, int key, UTString alt = ""){
 		menus[menu][id].keys.push_back(make_pair(key, alt));
 	}
-	/// On/Off‚Ì”½“]
+	/// On/Offã®åè»¢
 	bool ToggleAction(int menu, int id){
 		Action& act = menus[menu][id];
 		return act.enabled = !act.enabled;
 	}
 
-	/// °‚Ìì¬
+	/// åºŠã®ä½œæˆ
 	PHSolidIf* CreateFloor(){
 		PHSolidIf* soFloor = phScene->CreateSolid();
 		soFloor->SetDynamical(false);
@@ -193,7 +193,7 @@ public:
 		if(id < 0 || numScenes <= id)
 			return;
 		curScene = id;
-		// id”Ô–Ú‚ÌƒV[ƒ“‚ğ‘I‘ğ
+		// idç•ªç›®ã®ã‚·ãƒ¼ãƒ³ã‚’é¸æŠ
 		fwScene = GetSdk()->GetScene(id);
 		phScene = fwScene->GetPHScene();
 		GetCurrentWin()->SetScene(fwScene);
@@ -201,19 +201,19 @@ public:
 		//cameraInfo.Fit(GetSdk()->GetRender()->GetCamera(), activeHandler->GetSceneRadius());
 	}
 	
-	/** @brief	FX‚ÈŒ`‚Ì•¨‘Ì‚ğì¬
-		@param	shape	Œ`
+	/** @brief	è‰²ã€…ãªå½¢ã®ç‰©ä½“ã‚’ä½œæˆ
+		@param	shape	å½¢
 	 */
 	void Drop(int shape, int mat, Vec3d v, Vec3d w, Vec3d p, Quaterniond q){
-		// ƒXƒe[ƒg‚ğ‰ğ•ú
+		// ã‚¹ãƒ†ãƒ¼ãƒˆã‚’è§£æ”¾
 		states->ReleaseState(phScene);
 	
-		// „‘Ì‚ğì¬
+		// å‰›ä½“ã‚’ä½œæˆ
 		PHSolidIf* solid = phScene->CreateSolid();
-		// ƒ}ƒeƒŠƒAƒ‹‚ğİ’è
+		// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’è¨­å®š
 		fwScene->SetSolidMaterial(mat, solid);
 			
-		// Œ`ó‚ÌŠ„“–‚Ä
+		// å½¢çŠ¶ã®å‰²å½“ã¦
 		if(shape == SHAPE_BOX)
 			solid->AddShape(shapeBox);
 		if(shape == SHAPE_CAPSULE)
@@ -257,7 +257,7 @@ public:
 
 	}
 
-	/// ƒƒjƒ…[‚Ì•\¦
+	/// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®è¡¨ç¤º
 	void DrawMenu(GRRenderIf* render, int id, Vec2f& offset){
 		Vec2f pos;
 
@@ -268,7 +268,7 @@ public:
 
 		for(Menu::iterator it = menu.begin(); it != menu.end(); it++){
 			Action& a = it->second;
-			// ƒzƒbƒgƒL[
+			// ãƒ›ãƒƒãƒˆã‚­ãƒ¼
 			ss.str("");
 			for(int i = 0; i < (int)a.keys.size(); i++){
 				if(a.keys[i].second.empty())
@@ -278,7 +278,7 @@ public:
 			}
 			render->DrawFont(pos + offset, ss.str());
 
-			// à–¾
+			// èª¬æ˜
 			pos.x = xbrief;
 			render->DrawFont(pos + offset, (a.enabled ? a.desc[1] : a.desc[0]));
 
@@ -287,34 +287,34 @@ public:
 		}
 		offset += pos;
 	}
-	/// •t‰Áî•ñ‚Ì•\¦
+	/// ä»˜åŠ æƒ…å ±ã®è¡¨ç¤º
 	void DrawHelp(GRRenderIf* render){
 		render->SetLighting(false);
 		render->SetDepthTest(false);
 		render->EnterScreenCoordinate();
 		Vec2f pos(xmargin, ymargin);
 
-		// ƒwƒ‹ƒv‚É‚Â‚¢‚Ä
+		// ãƒ˜ãƒ«ãƒ—ã«ã¤ã„ã¦
 		if(showHelp)
 			 render->DrawFont(pos, "hit \'h\' to hide help");
 		else render->DrawFont(pos, "hit \'h\' to show help");
 		pos.y += yline;
-		// ƒV[ƒ“î•ñ
+		// ã‚·ãƒ¼ãƒ³æƒ…å ±
 		ss.str("");
 		ss << "# of scenes : " << GetSdk()->NScene() << " hit [0-9] to switch scene";
 		render->DrawFont(pos, ss.str());
 		pos.y += yline;
 		
 		if(showHelp){
-			// ‚¢‚Â‚Å‚à•\¦Œnƒƒjƒ…[
+			// ã„ã¤ã§ã‚‚è¡¨ç¤ºç³»ãƒ¡ãƒ‹ãƒ¥ãƒ¼
 			DrawMenu(render, MENU_ALWAYS, pos);
 			pos.y += yline;
 
-			// ƒV[ƒ“ƒƒjƒ…[
+			// ã‚·ãƒ¼ãƒ³ãƒ¡ãƒ‹ãƒ¥ãƒ¼
 			DrawMenu(render, MENU_SCENE + curScene, pos);
 			pos.y += yline;
 
-			// ‹¤—Lƒƒjƒ…[
+			// å…±æœ‰ãƒ¡ãƒ‹ãƒ¥ãƒ¼
 			DrawMenu(render, curMenu, pos);
 			pos.y += yline;
 
@@ -322,7 +322,7 @@ public:
 			pos.y += yline;
 		}
 
-		// ƒƒbƒZ[ƒW
+		// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 		render->DrawFont(pos, message);
 
 		render->LeaveScreenCoordinate();
@@ -343,7 +343,7 @@ public:
 		xkeys		= 0;
 		xbrief		= 100;
 
-		/// ‚¢‚Â‚Å‚à—LŒøŒn
+		/// ã„ã¤ã§ã‚‚æœ‰åŠ¹ç³»
 		AddMenu(MENU_ALWAYS, "");
 		AddAction(MENU_ALWAYS, ID_EXIT, "exit");
 		AddHotKey(MENU_ALWAYS, ID_EXIT, DVKeyCode::ESC, "ESC");
@@ -356,8 +356,8 @@ public:
 		AddAction(MENU_ALWAYS, ID_STEP, "step", "one step proceeded.");
 		AddHotKey(MENU_ALWAYS, ID_STEP, ';');
 
-		/// ‹¤—LƒRƒ}ƒ“ƒh‚ÍƒV[ƒ“ƒRƒ}ƒ“ƒh‚Æ‚ÌÕ“Ë‰ñ”ğ‚Ì‚½‚ß‚É‘å•¶š‚ğŠ„‚è“–‚Ä‚é
-		/// ƒXƒe[ƒg‚Ì•Û‘¶‚â•œ‹A
+		/// å…±æœ‰ã‚³ãƒãƒ³ãƒ‰ã¯ã‚·ãƒ¼ãƒ³ã‚³ãƒãƒ³ãƒ‰ã¨ã®è¡çªå›é¿ã®ãŸã‚ã«å¤§æ–‡å­—ã‚’å‰²ã‚Šå½“ã¦ã‚‹
+		/// ã‚¹ãƒ†ãƒ¼ãƒˆã®ä¿å­˜ã‚„å¾©å¸°
 		AddMenu(MENU_STATE, "< save and load states >");
 		AddAction(MENU_STATE, ID_LOAD_STATE, "load state", "state loaded.");
 		AddHotKey(MENU_STATE, ID_LOAD_STATE, 'L');
@@ -371,7 +371,7 @@ public:
 		AddHotKey(MENU_STATE, ID_WRITE_STATE, 'W');
 		AddAction(MENU_STATE, ID_DUMP, "dump", "object data dumped to dump.bin.");
 		AddHotKey(MENU_STATE, ID_DUMP, 'D');
-		/// ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“İ’è
+		/// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³è¨­å®š
 		AddMenu(MENU_CONFIG, "< simulation settings >");
 		AddAction(MENU_CONFIG, ID_SWITCH_LCP_PENALTY,
 			"switch to penalty", "switched to penalty method",
@@ -397,7 +397,7 @@ public:
 		AddHotKey(MENU_CONFIG, ID_INC_TIMER, 'F');
 		AddAction(MENU_CONFIG, ID_DEC_TIMER, "decrease timer interval");
 		AddHotKey(MENU_CONFIG, ID_DEC_TIMER, 'S');
-		/// •`‰æİ’èŒn
+		/// æç”»è¨­å®šç³»
 		AddMenu(MENU_DRAW, "< drawing setting >");
 		AddAction(MENU_DRAW, ID_DRAW_WIREFRAME,
 			"enable wireframe", "wireframe enabled.",
@@ -422,24 +422,24 @@ public:
 	}
 	~SampleApp(){}
 
-public: /** ”h¶ƒNƒ‰ƒX‚ªÀ‘•‚·‚éŠÖ” **/
+public: /** æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ãŒå®Ÿè£…ã™ã‚‹é–¢æ•° **/
 
-	/// ƒV[ƒ“\’z‚ğs‚¤D
+	/// ã‚·ãƒ¼ãƒ³æ§‹ç¯‰ã‚’è¡Œã†ï¼
 	virtual void BuildScene(){}
 
-	/// 1ƒXƒeƒbƒv‚ÌƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“
+	/// 1ã‚¹ãƒ†ãƒƒãƒ—ã®ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³
 	virtual void OnStep(){
 		fwScene->Step();
 	}
 
-	/// •`‰æ
+	/// æç”»
 	virtual void OnDraw(GRRenderIf* render){
 		fwScene->DrawPHScene(render);
 	}
 
-	/// ƒAƒNƒVƒ‡ƒ“ˆ—
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å‡¦ç†
 	virtual void OnAction(int menu, int id){
-		/// ‚¢‚Â‚Å‚à—LŒøƒAƒNƒVƒ‡ƒ“
+		/// ã„ã¤ã§ã‚‚æœ‰åŠ¹ã‚¢ã‚¯ã‚·ãƒ§ãƒ³
 		if(menu == MENU_ALWAYS){
 			if(id == ID_EXIT)
 				exit(0);
@@ -537,14 +537,14 @@ public: /** ”h¶ƒNƒ‰ƒX‚ªÀ‘•‚·‚éŠÖ” **/
 				fwScene->EnableRenderContact(ToggleAction(menu, id));
 			}
 		}
-		// ‚±‚Ì“_‚ÅƒƒbƒZ[ƒW‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎƒfƒtƒHƒ‹ƒgƒƒbƒZ[ƒW
+		// ã“ã®æ™‚ç‚¹ã§ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒè¨­å®šã•ã‚Œã¦ã„ãªã‘ã‚Œã°ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
 		if(message == ""){
 			Action& act = menus[menu][id];
 			message = act.message[!act.enabled];
 		}
 	}
 
-public: /** FWApp‚ÌÀ‘• **/
+public: /** FWAppã®å®Ÿè£… **/
 
 	virtual void Init(int argc, char* argv[]){
 		CreateSdk();
@@ -560,7 +560,7 @@ public: /** FWApp‚ÌÀ‘• **/
 		win->GetTrackball()->SetPosition(Vec3f(30,30,50));
 		win->GetTrackball()->SetTarget(Vec3f(0,0,0));
 		
-		/// ŒõŒ¹İ’è
+		/// å…‰æºè¨­å®š
 		GRRenderIf* render = GetCurrentWin()->GetRender();
 		GRLightDesc ld;
 		ld.diffuse  = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -569,14 +569,14 @@ public: /** FWApp‚ÌÀ‘• **/
 		ld.position = Vec4f(25.0f, 50.0f, 20.0f, 1.0f);
 		render->PushLight(ld);
 
-		/// °—p‚ÌŒ`ó
+		/// åºŠç”¨ã®å½¢çŠ¶
 		CDBoxDesc bd;
 		bd.boxsize = Vec3d(60.0, 2.0, 40.0);
 		shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
 		bd.boxsize.y *= 6.0;
 		shapeWall = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
 
-		// Œ`ó‚Ìì¬
+		// å½¢çŠ¶ã®ä½œæˆ
 		bd.boxsize = Vec3f(2,2,2);
 		shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
 		
@@ -593,51 +593,51 @@ public: /** FWApp‚ÌÀ‘• **/
 		rcd.length = 3;
 		shapeRoundCone= GetSdk()->GetPHSdk()->CreateShape(rcd)->Cast();
 		
-		/// ƒV[ƒ“‚Ìì¬
+		/// ã‚·ãƒ¼ãƒ³ã®ä½œæˆ
 		for(int i = 0; i < numScenes; i++){
 			fwScene = GetSdk()->CreateScene();
-			/// •`‰æİ’è
+			/// æç”»è¨­å®š
 			//fwScene->SetSolidMaterial(GRRenderIf::WHITE);
 			fwScene->SetWireMaterial(GRRenderIf::WHITE);
-			fwScene->SetRenderMode(true, true);				///< ƒ\ƒŠƒbƒh•`‰æCƒƒCƒ„ƒtƒŒ[ƒ€•`‰æ
-			fwScene->EnableRenderAxis(true, true, true);		///< À•W²
-			fwScene->SetAxisStyle(FWSceneIf::AXIS_ARROWS);	///< À•W²‚ÌƒXƒ^ƒCƒ‹
-			fwScene->EnableRenderForce(false, true);			///< —Í
-			fwScene->EnableRenderContact(true);				///< ÚG’f–Ê
+			fwScene->SetRenderMode(true, true);				///< ã‚½ãƒªãƒƒãƒ‰æç”»ï¼Œãƒ¯ã‚¤ãƒ¤ãƒ•ãƒ¬ãƒ¼ãƒ æç”»
+			fwScene->EnableRenderAxis(true, true, true);		///< åº§æ¨™è»¸
+			fwScene->SetAxisStyle(FWSceneIf::AXIS_ARROWS);	///< åº§æ¨™è»¸ã®ã‚¹ã‚¿ã‚¤ãƒ«
+			fwScene->EnableRenderForce(false, true);			///< åŠ›
+			fwScene->EnableRenderContact(true);				///< æ¥è§¦æ–­é¢
 
 			phScene = fwScene->GetPHScene();
-			phScene->SetGravity(Vec3f(0.0f, -9.8f, 0.0f));	// d—Í‚ğİ’è
+			phScene->SetGravity(Vec3f(0.0f, -9.8f, 0.0f));	// é‡åŠ›ã‚’è¨­å®š
 			phScene->SetTimeStep(0.05);
 			phScene->SetNumIteration(15);
 			//phScene->SetNumIteration(10, 1);	// correction iteration
 			//phScene->SetNumIteration(10, 2);	// contact iteration
 		
 			phScene->SetStateMode(true);
-			//scene->GetConstraintEngine()->SetUseContactSurface(true); //–ÊÚG‚Å‚Ì—ÍŒvZ‚ğ—LŒø‰»
+			//scene->GetConstraintEngine()->SetUseContactSurface(true); //é¢æ¥è§¦ã§ã®åŠ›è¨ˆç®—ã‚’æœ‰åŠ¹åŒ–
 
-			// ƒV[ƒ“\’z
+			// ã‚·ãƒ¼ãƒ³æ§‹ç¯‰
 			curScene = i;
 			BuildScene();
 		}
 		states = ObjectStatesIf::Create();
 		SwitchScene(0);
 		
-		// ƒ^ƒCƒ}
+		// ã‚¿ã‚¤ãƒ
 		timer = CreateTimer(UTTimerIf::FRAMEWORK);
 		timer->SetInterval(10);
 	}
 
-	// ƒ^ƒCƒ}ƒR[ƒ‹ƒoƒbƒNŠÖ”Dƒ^ƒCƒ}üŠú‚ÅŒÄ‚Î‚ê‚é
+	// ã‚¿ã‚¤ãƒã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ï¼ã‚¿ã‚¤ãƒå‘¨æœŸã§å‘¼ã°ã‚Œã‚‹
 	virtual void TimerFunc(int id) {
-		/// ‚Ìƒ`ƒFƒbƒN‚Æ‰æ–Ê‚ÌXV‚ğs‚¤
+		/// æ™‚åˆ»ã®ãƒã‚§ãƒƒã‚¯ã¨ç”»é¢ã®æ›´æ–°ã‚’è¡Œã†
 		if (menus[MENU_ALWAYS][ID_RUN].enabled){
 			OnStep();
 		}
-		// Ä•`‰æ—v‹
+		// å†æç”»è¦æ±‚
 		PostRedisplay();
 	}
 
-	// •`‰æŠÖ”D•`‰æ—v‹‚ª—ˆ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+	// æç”»é–¢æ•°ï¼æç”»è¦æ±‚ãŒæ¥ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹
 	virtual void Display() {
 		FWWinIf* win = GetCurrentWin();
 		GRRenderIf *render = win->GetRender();
@@ -657,35 +657,35 @@ public: /** FWApp‚ÌÀ‘• **/
 	}
 
 	virtual void Keyboard(int key, int x, int y) {
-		// 'h' : ƒwƒ‹ƒv‚Ì•\¦Ø‚è‘Ö‚¦
+		// 'h' : ãƒ˜ãƒ«ãƒ—ã®è¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆ
 		if(key == 'h' || key == 'H'){
 			showHelp = !showHelp;
 			return;
 		}
-		// TAB : ƒƒjƒ…[Ø‚è‘Ö‚¦
+		// TAB : ãƒ¡ãƒ‹ãƒ¥ãƒ¼åˆ‡ã‚Šæ›¿ãˆ
 		if(showHelp && key == '\t'){
 			if(++curMenu == MENU_COMMON_LAST)
 				curMenu = MENU_COMMON;
 		}
 
-		// ”šƒL[@->@ƒV[ƒ“Ø‚è‘Ö‚¦
+		// æ•°å­—ã‚­ãƒ¼ã€€->ã€€ã‚·ãƒ¼ãƒ³åˆ‡ã‚Šæ›¿ãˆ
 		if(key <= 0xff && isdigit(key)){
 			SwitchScene(key - '0');
 			return;
 		}
 
-		// ƒL[‚É‘Î‰‚·‚éƒAƒNƒVƒ‡ƒ“‚ğÀs
+		// ã‚­ãƒ¼ã«å¯¾å¿œã™ã‚‹ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œ
 		int id;
 		message = "";
-		// í•\¦ƒƒjƒ…[
+		// å¸¸æ™‚è¡¨ç¤ºãƒ¡ãƒ‹ãƒ¥ãƒ¼
 		id = menus[MENU_ALWAYS].Query(key);
 		if(id != -1)
 			OnAction(MENU_ALWAYS, id);
-		// ƒV[ƒ“ƒƒjƒ…[
+		// ã‚·ãƒ¼ãƒ³ãƒ¡ãƒ‹ãƒ¥ãƒ¼
 		id = menus[MENU_SCENE + curScene].Query(key);
 		if(id != -1)
 			OnAction(MENU_SCENE + curScene, id);
-		// ‹¤—Lƒƒjƒ…[
+		// å…±æœ‰ãƒ¡ãƒ‹ãƒ¥ãƒ¼
 		if(curMenu == MENU_EDITOR){
 			editor.Key(key);
 			editor.SetObject(phScene);

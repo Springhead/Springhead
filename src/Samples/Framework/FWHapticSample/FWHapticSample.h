@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -22,24 +22,24 @@ public:
 		FALCON,
 	} humanInterface;
 	enum EngineType{
-		SINGLE = 0,				// ƒVƒ“ƒOƒ‹‚·‚ê‚Á‚Ç
-		MULTI,					// ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh
-		LD,						// ƒ}ƒ‹ƒ`+‹ÇŠƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“
+		SINGLE = 0,				// ã‚·ãƒ³ã‚°ãƒ«ã™ã‚Œã£ã©
+		MULTI,					// ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰
+		LD,						// ãƒãƒ«ãƒ+å±€æ‰€ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³
 	} engineType;
-	PHSceneIf* phscene;			// PHScene‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	PHHapticPointerIf* pointer; // —ÍŠoƒ|ƒCƒ“ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	float pdt;					// •¨—ƒXƒŒƒbƒh‚Ì‚İ
-	float hdt;					// —ÍŠoƒXƒŒƒbƒh‚Ì‚İ
-	int physicsTimerID;			// •¨—ƒXƒŒƒbƒh‚Ìƒ^ƒCƒ}
-	int hapticTimerID;			// —ÍŠoƒXƒŒƒbƒh‚Ìƒ^ƒCƒ}
-	UTRef<HIBaseIf> spg;		// —ÍŠoƒCƒ“ƒ^ƒtƒF[ƒX‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	PHSceneIf* phscene;			// PHSceneã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	PHHapticPointerIf* pointer; // åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	float pdt;					// ç‰©ç†ã‚¹ãƒ¬ãƒƒãƒ‰ã®åˆ»ã¿
+	float hdt;					// åŠ›è¦šã‚¹ãƒ¬ãƒƒãƒ‰ã®åˆ»ã¿
+	int physicsTimerID;			// ç‰©ç†ã‚¹ãƒ¬ãƒƒãƒ‰ã®ã‚¿ã‚¤ãƒ
+	int hapticTimerID;			// åŠ›è¦šã‚¹ãƒ¬ãƒƒãƒ‰ã®ã‚¿ã‚¤ãƒ
+	UTRef<HIBaseIf> spg;		// åŠ›è¦šã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 
 	FWHapticSample();
-	void InitInterface();						// —ÍŠoƒCƒ“ƒ^ƒtƒF[ƒX‚Ì‰Šú‰»
-	void Init(int argc = 0, char* argv[] = 0);	// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì‰Šú‰»
-	virtual void BuildScene();						// ƒIƒuƒWƒFƒNƒg‚Ìì¬
-	virtual void Keyboard(int key, int x, int y);	// ƒL[ƒ{[ƒhŠÖ”
-	void TimerFunc(int id);							// Šeƒ^ƒCƒ}‚ªŒÄ‚ÔƒR[ƒ‹ƒoƒbƒNŠÖ”
+	void InitInterface();						// åŠ›è¦šã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®åˆæœŸåŒ–
+	void Init(int argc = 0, char* argv[] = 0);	// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆæœŸåŒ–
+	virtual void BuildScene();						// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
+	virtual void Keyboard(int key, int x, int y);	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰é–¢æ•°
+	void TimerFunc(int id);							// å„ã‚¿ã‚¤ãƒãŒå‘¼ã¶ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 };
 
 

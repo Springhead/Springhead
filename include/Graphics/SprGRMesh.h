@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprGRMesh.h
- *	@brief ƒƒbƒVƒ…
+ *	@brief ãƒ¡ãƒƒã‚·ãƒ¥
 */
 
 /**	\addtogroup	gpGraphics	*/
@@ -36,56 +36,56 @@ struct GRSkinWeightDesc{
 	std::vector<float> weights;
 };
 
-/**	@brief	ƒOƒ‰ƒtƒBƒbƒNƒX‚Åg‚¤•\¦—p‚ÌMesh */
+/**	@brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã§ä½¿ã†è¡¨ç¤ºç”¨ã®Mesh */
 struct GRMeshIf: public GRVisualIf{
 	SPR_IFDEF(GRMesh);
 
-	/// ’¸“_‚ÌŒÂ”
+	/// é ‚ç‚¹ã®å€‹æ•°
 	int		NVertex();
-	/// –Ê‚ÌŒÂ”(3ŠpŒ`•ªŠ„Œã)
+	/// é¢ã®å€‹æ•°(3è§’å½¢åˆ†å‰²å¾Œ)
 	int		NTriangle();
-	/// –Ê‚ÌŒÂ”(3ŠpŒ`•ªŠ„‘O)
+	/// é¢ã®å€‹æ•°(3è§’å½¢åˆ†å‰²å‰)
 	int		NFace();
 	
-	/// ’¸“_”z—ñ
+	/// é ‚ç‚¹é…åˆ—
 	Vec3f*	GetVertices();
-	/// –@ü”z—ñ
+	/// æ³•ç·šé…åˆ—
 	Vec3f*	GetNormals();
-	/// ’¸“_F”z—ñ
+	/// é ‚ç‚¹è‰²é…åˆ—
 	Vec4f*	GetColors();
-	/// ƒeƒNƒXƒ`ƒƒÀ•W”z—ñ
+	/// ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™é…åˆ—
 	Vec2f*	GetTexCoords();
-	/// ’¸“_ƒCƒ“ƒfƒbƒNƒX”z—ñ
+	/// é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—
 	GRMeshFace*	GetFaces();
-	/// –Ê–@ü
+	/// é¢æ³•ç·š
 	GRMeshFace* GetFaceNormals();
-	/// ƒ}ƒeƒŠƒAƒ‹ƒCƒ“ƒfƒbƒNƒX”z—ñ
+	/// ãƒãƒ†ãƒªã‚¢ãƒ«ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—
 	int*	GetMaterialIndices();
 
-	/** @brief ‰Eè/¶èÀ•WŒn‚ÌØ‚èŠ·‚¦
-		’¸“_À•W‚ÌZ¬•ª‚Ì•„†‚ğ”½“]‚·‚éD
+	/** @brief å³æ‰‹/å·¦æ‰‹åº§æ¨™ç³»ã®åˆ‡ã‚Šæ›ãˆ
+		é ‚ç‚¹åº§æ¨™ã®Zæˆåˆ†ã®ç¬¦å·ã‚’åè»¢ã™ã‚‹ï¼
 	 */
 	void SwitchCoordinate();
 
-	/// 3DƒeƒNƒXƒ`ƒƒ‚ÌOn/Off
+	/// 3Dãƒ†ã‚¯ã‚¹ãƒãƒ£ã®On/Off
 	void EnableTex3D(bool on = true);
 	bool IsTex3D();
 
-	/// ƒXƒLƒ“ƒEƒFƒCƒg‚Ìì¬
+	/// ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆã®ä½œæˆ
 	GRSkinWeightIf* CreateSkinWeight(const GRSkinWeightDesc& desc);
 
 };
 
-///	@brief •\¦—p‚ÌMesh(GRMesh)‚ÌƒfƒXƒNƒŠƒvƒ^D
+///	@brief è¡¨ç¤ºç”¨ã®Mesh(GRMesh)ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ï¼
 struct GRMeshDesc : GRVisualDesc{
 	SPR_DESCDEF(GRMesh);
-	std::vector<Vec3f>		vertices;			///< ’¸“_‚ÌÀ•W
-	std::vector<GRMeshFace>	faces;				///< –Ê. –Ê‚ğ\¬‚·‚é’¸“_”‚Æ’¸“_ƒCƒ“ƒfƒbƒNƒX”z—ñ
-	std::vector<Vec3f>		normals;			///< –@ü
-	std::vector<GRMeshFace>	faceNormals;		///< –Ê‚Ì–@ü
-	std::vector<Vec4f>		colors;				///< ’¸“_‚ÌF
-	std::vector<Vec2f>		texCoords;			///< ƒeƒNƒXƒ`ƒƒUV	
-	std::vector<int>		materialList;		///< ƒ}ƒeƒŠƒAƒ‹ƒŠƒXƒg
+	std::vector<Vec3f>		vertices;			///< é ‚ç‚¹ã®åº§æ¨™
+	std::vector<GRMeshFace>	faces;				///< é¢. é¢ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹æ•°ã¨é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—
+	std::vector<Vec3f>		normals;			///< æ³•ç·š
+	std::vector<GRMeshFace>	faceNormals;		///< é¢ã®æ³•ç·š
+	std::vector<Vec4f>		colors;				///< é ‚ç‚¹ã®è‰²
+	std::vector<Vec2f>		texCoords;			///< ãƒ†ã‚¯ã‚¹ãƒãƒ£UV	
+	std::vector<int>		materialList;		///< ãƒãƒ†ãƒªã‚¢ãƒ«ãƒªã‚¹ãƒˆ
 };
 
 //@}

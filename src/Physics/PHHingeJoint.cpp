@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2010, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -44,19 +44,19 @@ void PHHingeJointNode::CompRelativePosition(){
 PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc) {
 	SetDesc(&desc);
 	
-	// ‰Â“®²ES‘©²‚Ìİ’è
+	// å¯å‹•è»¸ãƒ»æ‹˜æŸè»¸ã®è¨­å®š
 	nMovableAxes   = 1;
 	movableAxes[0] = 5;
 	InitTargetAxes();
 }
 
-// ----- ƒGƒ“ƒWƒ“‚©‚çŒÄ‚Ño‚³‚ê‚éŠÖ”
+// ----- ã‚¨ãƒ³ã‚¸ãƒ³ã‹ã‚‰å‘¼ã³å‡ºã•ã‚Œã‚‹é–¢æ•°
 
 void PHHingeJoint::UpdateJointState(){
-	//²•ûŒü‚ÌS‘©‚Í‡’v‚µ‚Ä‚¢‚é‚à‚Ì‚Æ‰¼’è‚µ‚ÄŠp“x‚ğŒ©‚é
+	//è»¸æ–¹å‘ã®æ‹˜æŸã¯åˆè‡´ã—ã¦ã„ã‚‹ã‚‚ã®ã¨ä»®å®šã—ã¦è§’åº¦ã‚’è¦‹ã‚‹
 	position[0] = Xjrel.q.Theta();
 
-	// -ƒÎ`ƒÎ‚Ì”ÍˆÍ‚Éû‚ß‚é
+	// -Ï€ï½Ï€ã®ç¯„å›²ã«åã‚ã‚‹
 	position[0] = ( (position[0] / (2*M_PI)) - floor(position[0] / (2*M_PI)) ) * (2*M_PI);
 	if (position[0] > M_PI) { position[0] -= 2 * M_PI; }
 
@@ -64,25 +64,25 @@ void PHHingeJoint::UpdateJointState(){
 	velocity[0] = vjrel.w().z;
 }
 
-// ----- PHConstraint‚Ì”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚³‚ê‚é‹@”\
+// ----- PHConstraintã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã•ã‚Œã‚‹æ©Ÿèƒ½
 
 void PHHingeJoint::CompBias(){
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	
-	// S‘©Œë·•â³‚Ì‚½‚ß‚ÌƒoƒCƒAƒX
-	if (engine->numIterCorrection==0){ // Correction‚ğ‘¬“xLCP‚Ås‚¤ê‡
-		//	Ÿ‚ÌƒXƒeƒbƒv‚Å‚ÌˆÊ’u‚ÌŒë·‚Ì—\‘ª’l‚ª0‚É‚È‚é‚æ‚¤‚È‘¬“x‚ğİ’è
+	// æ‹˜æŸèª¤å·®è£œæ­£ã®ãŸã‚ã®ãƒã‚¤ã‚¢ã‚¹
+	if (engine->numIterCorrection==0){ // Correctionã‚’é€Ÿåº¦LCPã§è¡Œã†å ´åˆ
+		//	æ¬¡ã®ã‚¹ãƒ†ãƒƒãƒ—ã§ã®ä½ç½®ã®èª¤å·®ã®äºˆæ¸¬å€¤ãŒ0ã«ãªã‚‹ã‚ˆã†ãªé€Ÿåº¦ã‚’è¨­å®š
 		//	dv * dt = x + v*dt
 		db.v() = Xjrel.r * dtinv + vjrel.v();
 
-		//	Šp“x‚ÌŒë·‚ğ0‚É‚·‚é‚æ‚¤‚È‰ñ“]Šp“x‚ğ‹‚ß‚éB
+		//	è§’åº¦ã®èª¤å·®ã‚’0ã«ã™ã‚‹ã‚ˆã†ãªå›è»¢è§’åº¦ã‚’æ±‚ã‚ã‚‹ã€‚
 		Quaterniond qarc;
-		qarc.RotationArc(Xjrel.q * Vec3d(0,0,1), Vec3d(0,0,1)); // ²‚ğˆê’v‚³‚¹‚é‚æ‚¤‚È‰ñ“]
+		qarc.RotationArc(Xjrel.q * Vec3d(0,0,1), Vec3d(0,0,1)); // è»¸ã‚’ä¸€è‡´ã•ã›ã‚‹ã‚ˆã†ãªå›è»¢
 		db.w() = -(qarc.Theta() * dtinv) * qarc.Axis() + vjrel.w();
 		db *= engine->velCorrectionRate;
 	}
 
-	// eƒNƒ‰ƒX‚ÌCompBiasDmotor,limit‚ÌCompBias‚ªŒÄ‚Î‚ê‚é‚Ì‚ÅÅŒã‚ÉŒÄ‚Ô
+	// è¦ªã‚¯ãƒ©ã‚¹ã®CompBiasï¼motor,limitã®CompBiasãŒå‘¼ã°ã‚Œã‚‹ã®ã§æœ€å¾Œã«å‘¼ã¶
 	PH1DJoint::CompBias();
 }
 
@@ -90,11 +90,11 @@ void PHHingeJoint::CompError(){
 	B.v() = Xjrel.r;
 
 	Quaterniond qarc;
-	qarc.RotationArc(Xjrel.q * Vec3d(0,0,1), Vec3d(0,0,1)); // ²‚ğˆê’v‚³‚¹‚é‚æ‚¤‚È‰ñ“]
+	qarc.RotationArc(Xjrel.q * Vec3d(0,0,1), Vec3d(0,0,1)); // è»¸ã‚’ä¸€è‡´ã•ã›ã‚‹ã‚ˆã†ãªå›è»¢
 	B.w() = -qarc.Theta() * qarc.Axis();
 }
 
-// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 
 double PHHingeJoint::GetDeviation(){
 	double diff = PH1DJoint::GetDeviation();

@@ -1,8 +1,8 @@
-#include "Handler.h"
+ï»¿#include "Handler.h"
 
 /*
-	PathJoint‚Ìƒfƒ‚‚¾‚ªAŒë·•â³‚ªãè‚­s‚Á‚Ä‚¢‚È‚¢‚æ‚¤‚ÉŒ©‚¦‚éB
-	°‚É‚Ô‚Â‚©‚é‚Æ”­U‚µ‚Ä‚µ‚Ü‚¤B	2010.12.12 by hase	*/
+	PathJointã®ãƒ‡ãƒ¢ã ãŒã€èª¤å·®è£œæ­£ãŒä¸Šæ‰‹ãè¡Œã£ã¦ã„ãªã„ã‚ˆã†ã«è¦‹ãˆã‚‹ã€‚
+	åºŠã«ã¶ã¤ã‹ã‚‹ã¨ç™ºæ•£ã—ã¦ã—ã¾ã†ã€‚	2010.12.12 by hase	*/
 class PathHandler : public Handler{
 public:
 	virtual void Build(){

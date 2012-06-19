@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,7 +11,7 @@
 #include <Collision/CDQuickHull3DImp.h>
 #include <Collision/CDConvex.h>
 
-#include <Physics/PHSpatial.h>	//	PHSpacial.h‚ğBase‚©Foundation‚ÉˆÚ“®‚·‚é‚±‚Æ‚ğŠó–]
+#include <Physics/PHSpatial.h>	//	PHSpacial.hã‚’Baseã‹Foundationã«ç§»å‹•ã™ã‚‹ã“ã¨ã‚’å¸Œæœ›
 
 namespace Spr {;
 
@@ -22,111 +22,111 @@ class CDFace;
 class CDConvex;
 struct PHSdkIf;
 
-/// Shape‚Ì‘g‚Ìó‘Ô
+/// Shapeã®çµ„ã®çŠ¶æ…‹
 struct CDShapePairSt{
-	Vec3d normal;				///<	Õ“Ë‚Ì–@ü(0‚©‚ç1‚Ö) (Global)
-	double depth;				///<	Õ“Ë‚Ì[‚³FÅ‹ß–T“_‚ğ‹‚ß‚é‚½‚ß‚ÉC2•¨‘Ì‚ğ“®‚©‚·‹——£D
-	unsigned lastContactCount;	///<	ÅŒã‚ÉÚG‚µ‚½
+	Vec3d normal;				///<	è¡çªã®æ³•ç·š(0ã‹ã‚‰1ã¸) (Global)
+	double depth;				///<	è¡çªã®æ·±ã•ï¼šæœ€è¿‘å‚ç‚¹ã‚’æ±‚ã‚ã‚‹ãŸã‚ã«ï¼Œ2ç‰©ä½“ã‚’å‹•ã‹ã™è·é›¢ï¼
+	unsigned lastContactCount;	///<	æœ€å¾Œã«æ¥è§¦ã—ãŸæ™‚åˆ»
 	CDShapePairSt():depth(0), lastContactCount((unsigned)-2){}
 };
 class CDShapePair: public CDShapePairSt, public Object{
 	SPR_OBJECTDEF(CDShapePair);
 public:
-	enum State{		//	ÚG‚ª‚ ‚Á‚½ê‡‚¾‚¯’l‚ª—LŒø‚Èƒtƒ‰ƒOBÚG‚Ì—L–³‚Í lastContactCount‚Æscene.count‚ğ”äŠr‚µ‚È‚¢‚Æ•ª‚©‚ç‚È‚¢B
-		NONE,		//	ÚG‚µ‚Ä‚¢‚È‚¢‚É‚àŠÖ‚í‚ç‚¸A—ñ‹“‚³‚ê‚½B
-		NEW,		//	‘O‰ñÚG‚È‚µ‚Å¡‰ñÚG
-		CONTINUE,	//	‘O‰ñ‚àÚG
+	enum State{		//	æ¥è§¦ãŒã‚ã£ãŸå ´åˆã ã‘å€¤ãŒæœ‰åŠ¹ãªãƒ•ãƒ©ã‚°ã€‚æ¥è§¦ã®æœ‰ç„¡ã¯ lastContactCountã¨scene.countã‚’æ¯”è¼ƒã—ãªã„ã¨åˆ†ã‹ã‚‰ãªã„ã€‚
+		NONE,		//	æ¥è§¦ã—ã¦ã„ãªã„ã«ã‚‚é–¢ã‚ã‚‰ãšã€åˆ—æŒ™ã•ã‚ŒãŸã€‚
+		NEW,		//	å‰å›æ¥è§¦ãªã—ã§ä»Šå›æ¥è§¦
+		CONTINUE,	//	å‰å›ã‚‚æ¥è§¦
 	} state;
 
-	CDConvex* shape[2];			// ”»’è‘ÎÛ‚ÌŒ`ó
-	Posed shapePoseW[2];		// WorldŒn‚Å‚ÌŒ`ó‚Ìp¨‚ÌƒLƒƒƒbƒVƒ…
+	CDConvex* shape[2];			// åˆ¤å®šå¯¾è±¡ã®å½¢çŠ¶
+	Posed shapePoseW[2];		// Worldç³»ã§ã®å½¢çŠ¶ã®å§¿å‹¢ã®ã‚­ãƒ£ãƒƒã‚·ãƒ¥
 
-	//	ÚG”»’èŒ‹‰Ê
-	Vec3d	closestPoint[2];		///< Å‹ß–T“_iƒ[ƒJƒ‹À•WŒnj
-	Vec3d	commonPoint;			///< Œğ·•”•ª‚Ì“à“_iWorldÀ•WŒnj
-	Vec3d	center;					///< 2‚Â‚ÌÅN“ü“_‚Ì’†ŠÔ‚Ì“_
-	Vec3d   iNormal;				///< Ï•ª‚É‚æ‚é–@ü
+	//	æ¥è§¦åˆ¤å®šçµæœ
+	Vec3d	closestPoint[2];		///< æœ€è¿‘å‚ç‚¹ï¼ˆãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ï¼‰
+	Vec3d	commonPoint;			///< äº¤å·®éƒ¨åˆ†ã®å†…ç‚¹ï¼ˆWorldåº§æ¨™ç³»ï¼‰
+	Vec3d	center;					///< 2ã¤ã®æœ€ä¾µå…¥ç‚¹ã®ä¸­é–“ã®ç‚¹
+	Vec3d   iNormal;				///< ç©åˆ†ã«ã‚ˆã‚‹æ³•ç·š
 
 public:
 	CDShapePair():state(NONE){}
 	void SetState(const CDShapePairSt& s){
 		(CDShapePairSt&)*this = s;
 	}
-	///	ÚG”»’èDÚG‚ªŒ©‚Â‚©‚Á‚½ê‡‚ÉÚGó‘Ô‚ğXV
+	///	æ¥è§¦åˆ¤å®šï¼æ¥è§¦ãŒè¦‹ã¤ã‹ã£ãŸå ´åˆã«æ¥è§¦çŠ¶æ…‹ã‚’æ›´æ–°
 	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
-	//	ÚG”»’è‚Ég‚¤A–@üŒvZB
+	//	æ¥è§¦åˆ¤å®šæ™‚ã«ä½¿ã†ã€æ³•ç·šè¨ˆç®—ã€‚
 	void CalcNormal();
 
-	/**	˜A‘±ÚG”»’èD“¯‚É–@ü/’†S‚È‚Ç‚àŒvZD
-		- ct	ƒXƒeƒbƒvƒJƒEƒ“ƒg
-		- pose0	Shape0‚Ìp¨
-		- pose1 Shape1‚Ìp¨
-		- delta0 Shape0‚Ì•ÀiˆÚ“®—Ê
-		- delta1 Shape1‚Ì•ÀiˆÚ“®—Ê		*/
+	/**	é€£ç¶šæ¥è§¦åˆ¤å®šï¼åŒæ™‚ã«æ³•ç·š/ä¸­å¿ƒãªã©ã‚‚è¨ˆç®—ï¼
+		- ct	ã‚¹ãƒ†ãƒƒãƒ—ã‚«ã‚¦ãƒ³ãƒˆ
+		- pose0	Shape0ã®å§¿å‹¢
+		- pose1 Shape1ã®å§¿å‹¢
+		- delta0 Shape0ã®ä¸¦é€²ç§»å‹•é‡
+		- delta1 Shape1ã®ä¸¦é€²ç§»å‹•é‡		*/
 	bool ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1, Vec3d& delta0, Vec3d& delta1, double dt);
 
-	/// Œ`ó‚ğæ“¾‚·‚é
+	/// å½¢çŠ¶ã‚’å–å¾—ã™ã‚‹
 	CDShapeIf* GetShape(int i){ return shape[i]->Cast(); }
-	/// closestpoint‚ğƒ[ƒ‹ƒhÀ•WŒn‚Åæ“¾‚·‚é
+	/// closestpointã‚’ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§å–å¾—ã™ã‚‹
 	Vec3d GetClosestPointOnWorld(int i){ return shapePoseW[i] * closestPoint[i]; }
 };
 
-///	BBox“¯m‚ÌŒğ·”»’èDŒğ·‚µ‚Ä‚¢‚ê‚Î trueD
+///	BBoxåŒå£«ã®äº¤å·®åˆ¤å®šï¼äº¤å·®ã—ã¦ã„ã‚Œã° trueï¼
 bool FASTCALL BBoxIntersection(Posed postureA, Vec3f centerA, Vec3f extentA,
 					  Posed postureB, Vec3f centerB, Vec3f extentB);
 
-///	GJK‚Å‹¤—L“_‚ğŒ©‚Â‚¯‚é
+///	GJKã§å…±æœ‰ç‚¹ã‚’è¦‹ã¤ã‘ã‚‹
 bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 					 const Posed& a2w, const Posed& b2w,
 					 Vec3d& v, Vec3d& pa, Vec3d& pb);
 
-/**	GJK‚Å‹¤—L“_‚ğŒ©‚Â‚¯‚éD˜A‘±”Å
-	start‚©‚çend‚ÌŠÔ‚ÉÚG“_‚ª‚ ‚é‚©’²‚×‚éB
-	@return 0:‚Ü‚Á‚½‚­ÚG‚È‚µB-2:start‚æ‚è‘O‚ÉÚG‚ ‚èB-1: end‚æ‚èæ‚ÉÚG‚ ‚èB
-	1: ÚG‚ ‚èB
-	@param a     “ÊŒ`ó a
-	@param b     “ÊŒ`ó b
-	@param a2w   WorldŒn‚©‚çŒ©‚½“ÊŒ`óa‚ÌÀ•WŒn
-	@param b2w   WorldŒn‚©‚çŒ©‚½“ÊŒ`ób‚ÌÀ•WŒn
-	@param dir   ‚Q•¨‘Ì‚Ì‘Š‘Î‘¬“x‚Ì•ûŒüƒxƒNƒgƒ‹BWorldŒnB’PˆÊƒxƒNƒgƒ‹‚Å‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
-	@param start ‹æŠÔ‚Ìn“_Fa2w.pos + dir*start ‚É a‚ª‚ ‚èA b2w‚Ì“_‚Éb‚ª‚ ‚éó‘Ô‚©‚çA
-	@param end   ‹æŠÔ‚ÌI“_Fa2w.pos + dir*end ‚É a‚ª‚ ‚èAb2w‚Ì“_‚Éb‚ª‚ ‚éó‘Ô‚Ü‚Å‚ğ”»’èB
-	@param normal ÚG‚Ì–@üio—Íj
-	@param pa	•¨‘Ì a ã‚ÌÚG“_B•¨‘ÌaŒnBio—Íj
-	@param pb	•¨‘Ì b ã‚ÌÚG“_B•¨‘ÌbŒnBio—Íj
-	@param dist Õ“ËˆÊ’uFa2w.pos + dir*dist ‚É a‚ª‚ ‚èA b2w.pos ‚Éb‚ª‚ ‚é‚Æ‚«‚ÉÕ“Ë‚ª‹N‚±‚Á‚½B
+/**	GJKã§å…±æœ‰ç‚¹ã‚’è¦‹ã¤ã‘ã‚‹ï¼é€£ç¶šç‰ˆ
+	startã‹ã‚‰endã®é–“ã«æ¥è§¦ç‚¹ãŒã‚ã‚‹ã‹èª¿ã¹ã‚‹ã€‚
+	@return 0:ã¾ã£ãŸãæ¥è§¦ãªã—ã€‚-2:startã‚ˆã‚Šå‰ã«æ¥è§¦ã‚ã‚Šã€‚-1: endã‚ˆã‚Šå…ˆã«æ¥è§¦ã‚ã‚Šã€‚
+	1: æ¥è§¦ã‚ã‚Šã€‚
+	@param a     å‡¸å½¢çŠ¶ a
+	@param b     å‡¸å½¢çŠ¶ b
+	@param a2w   Worldç³»ã‹ã‚‰è¦‹ãŸå‡¸å½¢çŠ¶aã®åº§æ¨™ç³»
+	@param b2w   Worldç³»ã‹ã‚‰è¦‹ãŸå‡¸å½¢çŠ¶bã®åº§æ¨™ç³»
+	@param dir   ï¼’ç‰©ä½“ã®ç›¸å¯¾é€Ÿåº¦ã®æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã€‚Worldç³»ã€‚å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã§ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
+	@param start åŒºé–“ã®å§‹ç‚¹ï¼ša2w.pos + dir*start ã« aãŒã‚ã‚Šã€ b2wã®ç‚¹ã«bãŒã‚ã‚‹çŠ¶æ…‹ã‹ã‚‰ã€
+	@param end   åŒºé–“ã®çµ‚ç‚¹ï¼ša2w.pos + dir*end ã« aãŒã‚ã‚Šã€b2wã®ç‚¹ã«bãŒã‚ã‚‹çŠ¶æ…‹ã¾ã§ã‚’åˆ¤å®šã€‚
+	@param normal æ¥è§¦ã®æ³•ç·šï¼ˆå‡ºåŠ›ï¼‰
+	@param pa	ç‰©ä½“ a ä¸Šã®æ¥è§¦ç‚¹ã€‚ç‰©ä½“aç³»ã€‚ï¼ˆå‡ºåŠ›ï¼‰
+	@param pb	ç‰©ä½“ b ä¸Šã®æ¥è§¦ç‚¹ã€‚ç‰©ä½“bç³»ã€‚ï¼ˆå‡ºåŠ›ï¼‰
+	@param dist è¡çªä½ç½®ï¼ša2w.pos + dir*dist ã« aãŒã‚ã‚Šã€ b2w.pos ã«bãŒã‚ã‚‹ã¨ãã«è¡çªãŒèµ·ã“ã£ãŸã€‚
 */
 int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end, 
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
 
-///	ƒfƒoƒbƒO—p‚Ìƒc[ƒ‹Bƒtƒ@ƒCƒ‹‚Éˆø”‚ğ•Û‘¶‚·‚éB
+///	ãƒ‡ãƒãƒƒã‚°ç”¨ã®ãƒ„ãƒ¼ãƒ«ã€‚ãƒ•ã‚¡ã‚¤ãƒ«ã«å¼•æ•°ã‚’ä¿å­˜ã™ã‚‹ã€‚
 void FASTCALL ContFindCommonPointSaveParam(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end, 
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist);
-///	ƒfƒoƒbƒO—p‚Ìƒc[ƒ‹B
+///	ãƒ‡ãƒãƒƒã‚°ç”¨ã®ãƒ„ãƒ¼ãƒ«ã€‚
 void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk);
 
 namespace GJK{
-	extern Vec3f p[4];			///<	A‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg(ƒ[ƒJƒ‹Œn)
-	extern Vec3f q[4];			///<	B‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg(ƒ[ƒJƒ‹Œn)
-	extern int p_id[4];			///<	A‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚Ì’¸“_”Ô†i‹…‚È‚Ç’¸“_‚ª‚È‚¢ê‡‚Í -1j
-	extern int q_id[4];			///<	B‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚Ì’¸“_”Ô†i‹…‚È‚Ç’¸“_‚ª‚È‚¢ê‡‚Í -1j
-	extern Vec3d w[4];			///<	ContFindCommonPoint‚Åg—p‚·‚é‘¬“xŒü‚«À•WŒn‚Å‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg
-	extern Vec3d v[4];			///<	ContFindCommonPoint‚Åg—p‚·‚év
-	extern int nSupport;		///<	‰½“_‚Ìsupport‚©‚çÅ‹ß–T“_‚ğŒvZ‚µ‚½‚©‚ğ•\‚·B(ContFindCommonPointê—p)
-	extern Vec3d dec;			///<	“à•ª‚ÌŠ„‡
-	extern int ids[4];			///<	4‚Â‚Ì p, q, p_id, q_id, w, v ‚Ì‚¤‚¿‚Ç‚ê‚ğg‚¤‚©
+	extern Vec3f p[4];			///<	Aã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆ(ãƒ­ãƒ¼ã‚«ãƒ«ç³»)
+	extern Vec3f q[4];			///<	Bã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆ(ãƒ­ãƒ¼ã‚«ãƒ«ç³»)
+	extern int p_id[4];			///<	Aã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã®é ‚ç‚¹ç•ªå·ï¼ˆçƒãªã©é ‚ç‚¹ãŒãªã„å ´åˆã¯ -1ï¼‰
+	extern int q_id[4];			///<	Bã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã®é ‚ç‚¹ç•ªå·ï¼ˆçƒãªã©é ‚ç‚¹ãŒãªã„å ´åˆã¯ -1ï¼‰
+	extern Vec3d w[4];			///<	ContFindCommonPointã§ä½¿ç”¨ã™ã‚‹é€Ÿåº¦å‘ãåº§æ¨™ç³»ã§ã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆ
+	extern Vec3d v[4];			///<	ContFindCommonPointã§ä½¿ç”¨ã™ã‚‹v
+	extern int nSupport;		///<	ä½•ç‚¹ã®supportã‹ã‚‰æœ€è¿‘å‚ç‚¹ã‚’è¨ˆç®—ã—ãŸã‹ã‚’è¡¨ã™ã€‚(ContFindCommonPointå°‚ç”¨)
+	extern Vec3d dec;			///<	å†…åˆ†ã®å‰²åˆ
+	extern int ids[4];			///<	4ã¤ã® p, q, p_id, q_id, w, v ã®ã†ã¡ã©ã‚Œã‚’ä½¿ã†ã‹
 		//	pa = dec[0]*p[ids[0]] + dec[1]*p[ids[1]] + dec[2]*p[ids[2]];
 		//	pb = dec[0]*q[ids[0]] + dec[1]*q[ids[1]] + dec[2]*q[ids[2]];
-		//	‚ÅÅ‹ß–T“_ilocalŒnj‚ª‹‚Ü‚é
-		//	—á‚¦‚ÎAnSupport‚ª3‚ÌAA‚Ì’¸“_”Ô†‚ÍAp_id[ids[0]], p_id[ids[1]], p_id[ids[2]] ‚Ì3‚Â
-	extern Vec3d p_q[4];		///<	ƒ~ƒ“ƒRƒXƒL[˜aã‚Å‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg(ƒ[ƒ‹ƒhŒn) Cont‚Å‚È‚¢FindXX‚Åg—p
+		//	ã§æœ€è¿‘å‚ç‚¹ï¼ˆlocalç³»ï¼‰ãŒæ±‚ã¾ã‚‹
+		//	ä¾‹ãˆã°ã€nSupportãŒ3ã®æ™‚ã€Aã®é ‚ç‚¹ç•ªå·ã¯ã€p_id[ids[0]], p_id[ids[1]], p_id[ids[2]] ã®3ã¤
+	extern Vec3d p_q[4];		///<	ãƒŸãƒ³ã‚³ã‚¹ã‚­ãƒ¼å’Œä¸Šã§ã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆ(ãƒ¯ãƒ¼ãƒ«ãƒ‰ç³») Contã§ãªã„FindXXã§ä½¿ç”¨
 }	//	namespace GJK
 
 
 #if 1
-/// GJK‚ÅÅ‹ß–T“_‘Î‚ğŒ©‚Â‚¯‚é
+/// GJKã§æœ€è¿‘å‚ç‚¹å¯¾ã‚’è¦‹ã¤ã‘ã‚‹
 double FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 					   const Posed& a2w, const Posed& b2w,
 					   Vec3d& v, Vec3d& pa, Vec3d& pb);
@@ -135,40 +135,40 @@ double FASTCALL FindClosestPoints(const CDConvex* a, const CDConvex* b,
 class CDFace;
 
 
-///	ContactAnalysis‚ªg—p‚·‚é“Ê‘½–Ê‘Ì‚Ì–Ê‚ğ•\‚·D
+///	ContactAnalysisãŒä½¿ç”¨ã™ã‚‹å‡¸å¤šé¢ä½“ã®é¢ã‚’è¡¨ã™ï¼
 class CDContactAnalysisFace{
 public:
 	class DualPlanes: public std::vector<CDQHPlane<CDContactAnalysisFace>*>{};
 
-	CDFace* face;	///<	–Ê‚ğ‘o‘Î•ÏŠ·‚µ‚½’¸“_‚ÅQuickHull‚ğ‚·‚é‚Ì‚ÅCCDFace‚ªVtxs.
-	int id;			///<	‚Ç‚¿‚ç‚ÌSolid‚Ì–Ê‚¾‚©•\‚·IDD
+	CDFace* face;	///<	é¢ã‚’åŒå¯¾å¤‰æ›ã—ãŸé ‚ç‚¹ã§QuickHullã‚’ã™ã‚‹ã®ã§ï¼ŒCDFaceãŒVtxs.
+	int id;			///<	ã©ã¡ã‚‰ã®Solidã®é¢ã ã‹è¡¨ã™IDï¼
 
-	//@group CDContactAnalysis ‚ªŒğ·•”•ª‚ÌŒ`ó‚ğ‹‚ß‚éÛ‚Ég‚¤ì‹Æ—Ìˆæ
+	//@group CDContactAnalysis ãŒäº¤å·®éƒ¨åˆ†ã®å½¢çŠ¶ã‚’æ±‚ã‚ã‚‹éš›ã«ä½¿ã†ä½œæ¥­é ˜åŸŸ
 	//@{
-	Vec3f normal;	///<	–Ê‚Ì–@üƒxƒNƒgƒ‹
-	float dist;		///<	Œ´“_‚©‚ç‚Ì‹——£
-	/**	QuickHullƒAƒ‹ƒSƒŠƒYƒ€—pƒ[ƒNƒGƒŠƒAD
-		ˆê”Ô‰“‚¢’¸“_‚©‚çŒ©‚¦‚é–Ê‚ğíœ‚µ‚½‚ ‚Æc‚Á‚½Œ`ó‚ÌƒGƒbƒW•”•ª
-		‚ğˆêüÚ‘±‚µ‚Ä‚¨‚­‚½‚ß‚Ìƒ|ƒCƒ“ƒ^D
-		’¸“_¨–Ê‚ÌÚ‘±D	–Ê¨’¸“_‚Í’¸“_‚Ì•À‚Ñ‡‚©‚ç•ª‚©‚éD	*/
+	Vec3f normal;	///<	é¢ã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+	float dist;		///<	åŸç‚¹ã‹ã‚‰ã®è·é›¢
+	/**	QuickHullã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ç”¨ãƒ¯ãƒ¼ã‚¯ã‚¨ãƒªã‚¢ï¼
+		ä¸€ç•ªé ã„é ‚ç‚¹ã‹ã‚‰è¦‹ãˆã‚‹é¢ã‚’å‰Šé™¤ã—ãŸã‚ã¨æ®‹ã£ãŸå½¢çŠ¶ã®ã‚¨ãƒƒã‚¸éƒ¨åˆ†
+		ã‚’ä¸€å‘¨æ¥ç¶šã—ã¦ãŠããŸã‚ã®ãƒã‚¤ãƒ³ã‚¿ï¼
+		é ‚ç‚¹â†’é¢ã®æ¥ç¶šï¼	é¢â†’é ‚ç‚¹ã¯é ‚ç‚¹ã®ä¸¦ã³é †ã‹ã‚‰åˆ†ã‹ã‚‹ï¼	*/
 	CDQHPlane<CDContactAnalysisFace>* horizon;
 	//@}
 	
-	///	QuickHull‚É‚Æ‚Á‚Ä‚Ì’¸“_D‚±‚Ì–Ê‚ğ‘o‘Î•ÏŠ·‚µ‚Ä‚Å‚«‚é’¸“_
+	///	QuickHullã«ã¨ã£ã¦ã®é ‚ç‚¹ï¼ã“ã®é¢ã‚’åŒå¯¾å¤‰æ›ã—ã¦ã§ãã‚‹é ‚ç‚¹
 	Vec3f GetPos() const { return normal / dist; }
-	/**	‘o‘Î•ÏŠ·‚ğs‚¤Dbase‚É“n‚·’¸“_ƒoƒbƒtƒ@‚ÍC‘o‘Î•ÏŠ·‚ª‰Â”\‚È‚æ‚¤‚É
-		‘o‘Î•ÏŠ·‚Ì’†S‚ªŒ´“_‚Æ‚È‚é‚æ‚¤‚ÈÀ•WŒn‚Å‚È‚¯‚ê‚Î‚È‚ç‚È‚¢D	*/
+	/**	åŒå¯¾å¤‰æ›ã‚’è¡Œã†ï¼baseã«æ¸¡ã™é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã¯ï¼ŒåŒå¯¾å¤‰æ›ãŒå¯èƒ½ãªã‚ˆã†ã«
+		åŒå¯¾å¤‰æ›ã®ä¸­å¿ƒãŒåŸç‚¹ã¨ãªã‚‹ã‚ˆã†ãªåº§æ¨™ç³»ã§ãªã‘ã‚Œã°ãªã‚‰ãªã„ï¼	*/
 	bool CalcDualVtx(Vec3f* base);
 
-	/**	‚±‚Ì–Ê‚ğ‘o‘Î•ÏŠ·‚µ‚Ä‚Å‚«‚é’¸“_‚ğŠÜ‚Ş–ÊD
-		‚Â‚Ü‚èCŒğ·•”•ª‚ÌŒ`ó‚ğ\¬‚·‚é’¸“_‚Ì‚¤‚¿C
-		‚±‚Ì–Ê‚É‚ ‚é‚à‚Ì	*/
+	/**	ã“ã®é¢ã‚’åŒå¯¾å¤‰æ›ã—ã¦ã§ãã‚‹é ‚ç‚¹ã‚’å«ã‚€é¢ï¼
+		ã¤ã¾ã‚Šï¼Œäº¤å·®éƒ¨åˆ†ã®å½¢çŠ¶ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹ã®ã†ã¡ï¼Œ
+		ã“ã®é¢ã«ã‚ã‚‹ã‚‚ã®	*/
 	DualPlanes dualPlanes;
-	///	Œğ·•”•ª‚ÌŒ`ó‚ğ\¬‚·‚é’¸“_‚Ì‚¤‚¿‚±‚Ì–Ê‚É‚ ‚é‚à‚Ì‚Ì”.
+	///	äº¤å·®éƒ¨åˆ†ã®å½¢çŠ¶ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹ã®ã†ã¡ã“ã®é¢ã«ã‚ã‚‹ã‚‚ã®ã®æ•°.
 	size_t NCommonVtx(){ return dualPlanes.size(); }
-	///	Œğ·•”•ª‚ÌŒ`ó‚ğ\¬‚·‚é’¸“_‚Ì‚¤‚¿‚±‚Ì–Ê‚É‚ ‚é‚à‚Ì.
+	///	äº¤å·®éƒ¨åˆ†ã®å½¢çŠ¶ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹ã®ã†ã¡ã“ã®é¢ã«ã‚ã‚‹ã‚‚ã®.
 	Vec3f CommonVtx(int i);
-	///	ƒfƒoƒbƒO—p•\¦
+	///	ãƒ‡ãƒãƒƒã‚°ç”¨è¡¨ç¤º
 	void Print(std::ostream& os) const;
 };
 inline std::ostream& operator << (std::ostream& os, const CDContactAnalysisFace& f){
@@ -176,47 +176,47 @@ inline std::ostream& operator << (std::ostream& os, const CDContactAnalysisFace&
 	return os;
 }
 
-/**	Œğ·•”•ª‚Ì‰ğÍ‚ğ‚·‚éƒNƒ‰ƒXD(Œğ·•”•ª‚ÌŒ`ó‚ğ‹‚ß‚é/‰‰ñ‚Ì–@ü‚ğÏ•ª‚Å‹‚ß‚é)	*/
+/**	äº¤å·®éƒ¨åˆ†ã®è§£æã‚’ã™ã‚‹ã‚¯ãƒ©ã‚¹ï¼(äº¤å·®éƒ¨åˆ†ã®å½¢çŠ¶ã‚’æ±‚ã‚ã‚‹/åˆå›ã®æ³•ç·šã‚’ç©åˆ†ã§æ±‚ã‚ã‚‹)	*/
 class CDContactAnalysis{
 public:
-	/// \defgroup quickHull QuickHull‚Ì‚½‚ß‚Ì’¸“_‚Æ•½–Ê
+	/// \defgroup quickHull QuickHullã®ãŸã‚ã®é ‚ç‚¹ã¨å¹³é¢
 	//@{
 	
 	typedef std::vector<CDContactAnalysisFace*> Vtxs;	
-	static Vtxs vtxs;					///<	QuickHull‚Ì’¸“_
+	static Vtxs vtxs;					///<	QuickHullã®é ‚ç‚¹
 	typedef std::vector<CDContactAnalysisFace> VtxBuffer;	
 	static VtxBuffer vtxBuffer;
 
-	static CDQHPlanes<CDContactAnalysisFace> planes;	///<	–Ê
-	bool isValid;						///<	Œğ·•”•ª‚Ìƒ|ƒŠƒSƒ“‚Í—LŒøH
+	static CDQHPlanes<CDContactAnalysisFace> planes;	///<	é¢
+	bool isValid;						///<	äº¤å·®éƒ¨åˆ†ã®ãƒãƒªã‚´ãƒ³ã¯æœ‰åŠ¹ï¼Ÿ
 	//@}
 
-	//Vec3d correctionCommonPoint;		///<	•â³CommonPoint(WorldÀ•WŒn) CDContactAnalysis::CorrectCommonPoint()‚ÅXV‚³‚ê‚é
-	//std::vector<Vec3f> tvtxs[2];		///<	‘ÎÛ‚Ì2‚Â‚Ì“Ê‘½–Ê‘Ì‚ÌCommonPointŒn‚Å‚Ì’¸“_‚ÌÀ•W
-	///** ‹¤’Ê•”•ª‚ÉŠÜ‚Ü‚ê‚é‹¤—L“_‚ğ‹‚ß‚é.
-	//	•Ô‚è’l‚Í‹¤—L“_.
-	//	cp ‚Ì shapePoseW ‚É shape[0], shape[1]‚Ì’¸“_‚ğWorldŒn‚É•ÏŠ·‚·‚é•ÏŠ·s—ñ‚ª“ü‚Á‚Ä‚¢‚È‚¯‚ê‚Î‚È‚ç‚È‚¢.
-	//	‚Ü‚½AGJK‚Å‹‚ß‚½common point‚ğ“ü‚ê‚Ä‚¨‚­‚Æû‘©‚ª‘‚­‚È‚é‚©‚àB
+	//Vec3d correctionCommonPoint;		///<	è£œæ­£CommonPoint(Worldåº§æ¨™ç³») CDContactAnalysis::CorrectCommonPoint()ã§æ›´æ–°ã•ã‚Œã‚‹
+	//std::vector<Vec3f> tvtxs[2];		///<	å¯¾è±¡ã®2ã¤ã®å‡¸å¤šé¢ä½“ã®CommonPointç³»ã§ã®é ‚ç‚¹ã®åº§æ¨™
+	///** å…±é€šéƒ¨åˆ†ã«å«ã¾ã‚Œã‚‹å…±æœ‰ç‚¹ã‚’æ±‚ã‚ã‚‹.
+	//	è¿”ã‚Šå€¤ã¯å…±æœ‰ç‚¹.
+	//	cp ã® shapePoseW ã« shape[0], shape[1]ã®é ‚ç‚¹ã‚’Worldç³»ã«å¤‰æ›ã™ã‚‹å¤‰æ›è¡Œåˆ—ãŒå…¥ã£ã¦ã„ãªã‘ã‚Œã°ãªã‚‰ãªã„.
+	//	ã¾ãŸã€GJKã§æ±‚ã‚ãŸcommon pointã‚’å…¥ã‚Œã¦ãŠãã¨åæŸãŒæ—©ããªã‚‹ã‹ã‚‚ã€‚
 	//**/
 	//void CalcDistance(const CDFaces::iterator it, const Vec3f* base, const Vec3d common, Vec3f &normal, float &dist);
-	///** ‹¤’Ê•”•ª‚Ì‹¤—L“_‚ğ‹‚ß‚éB
-	//	–ß‚è’l‚Í‹¤—L“_‚ª‚ ‚é‚Ætrue, ‚È‚¢‚Æfalse‚ğ•Ô‚·
-	//	‚ ‚éê‡‚ÍcorrectionCommonPoint‚ªXV‚³‚ê‚éB
+	///** å…±é€šéƒ¨åˆ†ã®å…±æœ‰ç‚¹ã‚’æ±‚ã‚ã‚‹ã€‚
+	//	æˆ»ã‚Šå€¤ã¯å…±æœ‰ç‚¹ãŒã‚ã‚‹ã¨true, ãªã„ã¨falseã‚’è¿”ã™
+	//	ã‚ã‚‹å ´åˆã¯correctionCommonPointãŒæ›´æ–°ã•ã‚Œã‚‹ã€‚
 	//*/
 	//bool CorrectCommonPoint(CDShapePair* cp);
-	/**	‹¤’Ê•”•ª‚ÌŒ`ó‚ğ‹‚ß‚éD
-		Œ‹‰Ê‚ÍC‹¤’Ê•”•ª‚ğ\¬‚·‚é–Ê‚ğ vtxs.begin() ‚©‚ç•Ô‚è’l‚Ü‚Å‚ÉC
-		‹¤’Ê•”•ª‚ğ\¬‚·‚é’¸“_‚ğC planes.begin ‚©‚ç planes.end ‚Ì‚¤‚¿‚Ì
-		deleted==false ‚Ì‚à‚Ì‚É“ü‚ê‚Ä•Ô‚·D
-		cp ‚Ì shapePoseW ‚É shape[0], shape[1]‚Ì’¸“_‚ğWorldŒn‚É•ÏŠ·‚·‚é
-		•ÏŠ·s—ñ‚ª“ü‚Á‚Ä‚¢‚È‚¯‚ê‚Î‚È‚ç‚È‚¢D	*/
+	/**	å…±é€šéƒ¨åˆ†ã®å½¢çŠ¶ã‚’æ±‚ã‚ã‚‹ï¼
+		çµæœã¯ï¼Œå…±é€šéƒ¨åˆ†ã‚’æ§‹æˆã™ã‚‹é¢ã‚’ vtxs.begin() ã‹ã‚‰è¿”ã‚Šå€¤ã¾ã§ã«ï¼Œ
+		å…±é€šéƒ¨åˆ†ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹ã‚’ï¼Œ planes.begin ã‹ã‚‰ planes.end ã®ã†ã¡ã®
+		deleted==false ã®ã‚‚ã®ã«å…¥ã‚Œã¦è¿”ã™ï¼
+		cp ã® shapePoseW ã« shape[0], shape[1]ã®é ‚ç‚¹ã‚’Worldç³»ã«å¤‰æ›ã™ã‚‹
+		å¤‰æ›è¡Œåˆ—ãŒå…¥ã£ã¦ã„ãªã‘ã‚Œã°ãªã‚‰ãªã„ï¼	*/
 	CDContactAnalysisFace** FindIntersection(CDShapePair* cp);
-	/**	Œğ·•”•ª‚ÌŒ`ó‚Ì–@ü‚ğÏ•ª‚µ‚ÄCÕ“Ë‚Ì–@ü‚ğ‹‚ß‚éD
-		•¨‘ÌA‚ÆB‚ÌÕ“Ë‚Ì–@ü‚ÍCŒğ·•”•ª‚Ì–Ê‚Ì‚¤‚¿CA‚Ì–Ê‚Ì–@ü‚ÌÏ•ª
-		‚©‚çB‚Ì–Ê‚Ì–@ü‚ÌÏ•ª‚ğˆø‚¢‚½‚à‚Ì‚É‚È‚éD	*/
+	/**	äº¤å·®éƒ¨åˆ†ã®å½¢çŠ¶ã®æ³•ç·šã‚’ç©åˆ†ã—ã¦ï¼Œè¡çªã®æ³•ç·šã‚’æ±‚ã‚ã‚‹ï¼
+		ç‰©ä½“Aã¨Bã®è¡çªã®æ³•ç·šã¯ï¼Œäº¤å·®éƒ¨åˆ†ã®é¢ã®ã†ã¡ï¼ŒAã®é¢ã®æ³•ç·šã®ç©åˆ†
+		ã‹ã‚‰Bã®é¢ã®æ³•ç·šã®ç©åˆ†ã‚’å¼•ã„ãŸã‚‚ã®ã«ãªã‚‹ï¼	*/
 	void IntegrateNormal(CDShapePair* cp);
-	/**	–@ü‚ÌŒvZD‘O‰ñ‚Ì–@ü‚ÌŒü‚«‚É•¨‘Ì‚ğ“®‚©‚µC
-		•¨‘Ì‚ğ—£‚µ‚ÄÅ‹ß–T“_‚ğ‹‚ß‚éD	*/
+	/**	æ³•ç·šã®è¨ˆç®—ï¼å‰å›ã®æ³•ç·šã®å‘ãã«ç‰©ä½“ã‚’å‹•ã‹ã—ï¼Œ
+		ç‰©ä½“ã‚’é›¢ã—ã¦æœ€è¿‘å‚ç‚¹ã‚’æ±‚ã‚ã‚‹ï¼	*/
 	void CalcNormal(CDShapePair* cp);
 };
 

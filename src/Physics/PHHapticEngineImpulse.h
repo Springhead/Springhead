@@ -1,4 +1,4 @@
-#ifndef PHHAPTICENGINE_IMPULSE_H
+﻿#ifndef PHHAPTICENGINE_IMPULSE_H
 #define PHHAPTICENGINE_IMPULSE_H
 
 #include <Physics/PHHapticEngineMultiBase.h>

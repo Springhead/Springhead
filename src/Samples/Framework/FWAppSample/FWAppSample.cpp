@@ -1,4 +1,4 @@
-#include "FWAppSample.h"
+ï»¿#include "FWAppSample.h"
 #include "SampleModel.h"
 
 #define ESC 27
@@ -8,20 +8,20 @@ FWAppSample::FWAppSample(){
 }
 
 void FWAppSample::Init(int argc, char* argv[]){
-	CreateSdk();											// Sdk‚Ìì¬
-	GetSdk()->CreateScene();								// Scene‚Ìì¬
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);	// ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ì‚ÝŽžŠÔ‚ðÝ’è
+	CreateSdk();											// Sdkã®ä½œæˆ
+	GetSdk()->CreateScene();								// Sceneã®ä½œæˆ
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.05);	// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆ»ã¿æ™‚é–“ã‚’è¨­å®š
 
-	SetGRAdaptee(TypeGLUT);									// CG‚ðOpenGL(GLUT)‚Å•`‰æŽw’è
-	GRInit(argc, argv);										// GLUT‚Ì‰Šú‰»
+	SetGRAdaptee(TypeGLUT);									// CGã‚’OpenGL(GLUT)ã§æç”»æŒ‡å®š
+	GRInit(argc, argv);										// GLUTã®åˆæœŸåŒ–
 
-	FWWinDesc windowDesc;					// GL‚ÌƒEƒBƒ“ƒhƒEƒfƒBƒXƒNƒŠƒvƒ^
-	windowDesc.title = "Springhead2";		// ƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹
-	CreateWin(windowDesc);					// ƒEƒBƒ“ƒhƒE‚Ìì¬‚ÆƒV[ƒ“‚ÌŠ„‚è“–‚Ä
-	InitCameraView();						// ƒJƒƒ‰ƒrƒ…[‚Ì‰Šú‰»
+	FWWinDesc windowDesc;					// GLã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+	windowDesc.title = "Springhead2";		// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«
+	CreateWin(windowDesc);					// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä½œæˆã¨ã‚·ãƒ¼ãƒ³ã®å‰²ã‚Šå½“ã¦
+	InitCameraView();						// ã‚«ãƒ¡ãƒ©ãƒ“ãƒ¥ãƒ¼ã®åˆæœŸåŒ–
 
-	CreateObjects();		// „‘Ì‚ðì¬
-	CreateTimer();			// ƒ^ƒCƒ}[‚Ì¶¬
+	CreateObjects();		// å‰›ä½“ã‚’ä½œæˆ
+	CreateTimer();			// ã‚¿ã‚¤ãƒžãƒ¼ã®ç”Ÿæˆ
 }
 
 void FWAppSample::TimerFunc(int id){	
@@ -30,7 +30,7 @@ void FWAppSample::TimerFunc(int id){
 }
 
 void FWAppSample::InitCameraView(){
-	//	AffinefŒ^‚ªŽ‚ÂAƒXƒgƒŠ[ƒ€‚©‚çs—ñ‚ð“Ç‚Ýo‚·‹@”\‚ð—˜—p‚µ‚ÄŽ‹“_s—ñ‚ð‰Šú‰»
+	//	Affinefåž‹ãŒæŒã¤ã€ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰è¡Œåˆ—ã‚’èª­ã¿å‡ºã™æ©Ÿèƒ½ã‚’åˆ©ç”¨ã—ã¦è¦–ç‚¹è¡Œåˆ—ã‚’åˆæœŸåŒ–
 	std::istringstream issView(
 		"((0.9996 0.0107463 -0.0261432 -0.389004)"
 		"(-6.55577e-010 0.924909 0.380188 5.65711)"
@@ -45,45 +45,45 @@ void FWAppSample::CreateObjects(){
 	PHSolidDesc desc;
 	CDBoxDesc bd;
 
-	// °(•¨—–@‘¥‚É]‚í‚È‚¢C‰^“®‚ª•Ï‰»‚µ‚È‚¢)
+	// åºŠ(ç‰©ç†æ³•å‰‡ã«å¾“ã‚ãªã„ï¼Œé‹å‹•ãŒå¤‰åŒ–ã—ãªã„)
 	{
-		// „‘Ì(soFloor)‚Ìì¬
+		// å‰›ä½“(soFloor)ã®ä½œæˆ
 		desc.mass = 1e20f;
 		desc.inertia *= 1e30f;
-		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// „‘Ì‚ðdesc‚ÉŠî‚Ã‚¢‚Äì¬
+		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// å‰›ä½“ã‚’descã«åŸºã¥ã„ã¦ä½œæˆ
 		soFloor->SetDynamical(false);
 		soFloor->SetGravity(false);
-		// Œ`ó(shapeFloor)‚Ìì¬
+		// å½¢çŠ¶(shapeFloor)ã®ä½œæˆ
 		bd.boxsize = Vec3f(50, 10, 50);
 		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
-		// „‘Ì‚ÉŒ`ó‚ð•t‰Á‚·‚é
+		// å‰›ä½“ã«å½¢çŠ¶ã‚’ä»˜åŠ ã™ã‚‹
 		soFloor->AddShape(shapeFloor);
 		soFloor->SetFramePosition(Vec3d(0, -5, 0));
 	}
 
-	// ” (•¨—–@‘¥‚É]‚¤C‰^“®‚ª•Ï‰»)
+	// ç®±(ç‰©ç†æ³•å‰‡ã«å¾“ã†ï¼Œé‹å‹•ãŒå¤‰åŒ–)
 	{
-		// „‘Ì(soBox)‚Ìì¬
+		// å‰›ä½“(soBox)ã®ä½œæˆ
 		desc.mass = 0.5;
 		desc.inertia *= 0.033;
 		PHSolidIf* soBox = phscene->CreateSolid(desc);
-		// Œ`ó(shapeBox)‚Ìì¬
+		// å½¢çŠ¶(shapeBox)ã®ä½œæˆ
 		bd.boxsize = Vec3f(2,2,2);
 		CDShapeIf* shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd);
-		// „‘Ì‚ÉŒ`ó‚ð•t‰Á
+		// å‰›ä½“ã«å½¢çŠ¶ã‚’ä»˜åŠ 
 		soBox->AddShape(shapeBox);
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}
 }
 
 void FWAppSample::Display(){
-	// ŠeŽíAî•ñ‚ð•\Ž¦‚·‚é‚©‚Ç‚¤‚©
+	// å„ç¨®ã€æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹ã‹ã©ã†ã‹
 	FWSceneIf* fwScene = GetSdk()->GetScene();
-	fwScene->EnableRenderAxis(bDrawInfo);		// À•WŽ²‚Ì•\Ž¦
-	fwScene->EnableRenderForce(bDrawInfo);		// S‘©—Í‚Ì•\Ž¦
-	fwScene->EnableRenderContact(bDrawInfo);	// ÚGó‘Ô‚Ì•\Ž¦
+	fwScene->EnableRenderAxis(bDrawInfo);		// åº§æ¨™è»¸ã®è¡¨ç¤º
+	fwScene->EnableRenderForce(bDrawInfo);		// æ‹˜æŸåŠ›ã®è¡¨ç¤º
+	fwScene->EnableRenderContact(bDrawInfo);	// æŽ¥è§¦çŠ¶æ…‹ã®è¡¨ç¤º
 
-	// ƒV[ƒ“‚Ì•`‰æ
+	// ã‚·ãƒ¼ãƒ³ã®æç”»
 	GetSdk()->SetDebugMode(true);
 	GetSdk()->GetRender()->SetViewMatrix(GetCurrentWin()->GetTrackball()->GetAffine().inv());
 	GetSdk()->Draw();

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -47,7 +47,7 @@ void PHPath::Rollover(double& s){
 	double upper = back().s;
 	assert(lower < upper);
 	double range = upper - lower;
-	// ‹ê“÷‚Ìô
+	// è‹¦è‚‰ã®ç­–
 	if(abs(s) > 1.0e3)
 		s = 0.0;
 	while(s >= upper)s -= range;
@@ -79,8 +79,8 @@ void PHPath::AddPoint(double s, const Posed& pose){
 	bReady = false;
 }
 
-//6x6s—ñJ‚Ìˆê”Ô‰º‚ÌsƒxƒNƒgƒ‹‚Í—^‚¦‚ç‚ê‚Ä‚¢‚é‚Æ‚µ‚ÄC
-//gram-schmidt‚Ì’¼Œð‰»‚ÅŽc‚é5–{‚ÌsƒxƒNƒgƒ‹‚ðÝ’è‚·‚é
+//6x6è¡Œåˆ—Jã®ä¸€ç•ªä¸‹ã®è¡Œãƒ™ã‚¯ãƒˆãƒ«ã¯ä¸Žãˆã‚‰ã‚Œã¦ã„ã‚‹ã¨ã—ã¦ï¼Œ
+//gram-schmidtã®ç›´äº¤åŒ–ã§æ®‹ã‚‹5æœ¬ã®è¡Œãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨­å®šã™ã‚‹
 void Orthogonalize(Matrix6d& J){
 	int i, j, k;
 	for(i = 4; i >= 0; i--){
@@ -100,13 +100,13 @@ void Orthogonalize(Matrix6d& J){
 }
 
 void PHPath::CompJacobian(){
-	double delta = (back().s - front().s) / 1000.0;		//”’l”÷•ª‚Ì—£ŽU‰»•D‚¢‚¢‚©‚°‚ñD
+	double delta = (back().s - front().s) / 1000.0;		//æ•°å€¤å¾®åˆ†ã®é›¢æ•£åŒ–å¹…ï¼Žã„ã„ã‹ã’ã‚“ï¼Ž
 	double div = 1.0 / delta;
 	Posed p, p0, p1, pd;
 	Vec3d v, w;
 	Quaterniond qd;
 	for(iterator it = begin(); it != end(); it++){
-		//ˆê”Ê‰»À•Wq‚É‚Â‚¢‚Ä•Î”÷•ª‚µ‚Ä‘Š‘Î‘¬“x‚ðo‚·
+		//ä¸€èˆ¬åŒ–åº§æ¨™qã«ã¤ã„ã¦åå¾®åˆ†ã—ã¦ç›¸å¯¾é€Ÿåº¦ã‚’å‡ºã™
 		if(it == begin())
 			p0 = it->pose;
 		else GetPose(it->s - delta, p0);
@@ -114,14 +114,14 @@ void PHPath::CompJacobian(){
 		if(itnext == end())
 			p1 = it->pose;
 		else GetPose(it->s + delta, p1);
-		// 0deg (q = [1 0 0 0])‚Æ360deg (q = [-1 0 0 0])‚Í‰ñ“]‚Æ‚µ‚Ä‚Í“¯‚¶‚¾‚ª”’l“I‚É—£‚ê‚Ä‚¢‚é
+		// 0deg (q = [1 0 0 0])ã¨360deg (q = [-1 0 0 0])ã¯å›žè»¢ã¨ã—ã¦ã¯åŒã˜ã ãŒæ•°å€¤çš„ã«é›¢ã‚Œã¦ã„ã‚‹
 		if(abs(p0.Ori().w - p1.Ori().w) > 1.99)
 			p0.Ori() = -1.0 * p0.Ori();
-		// ·•ª‚ð‚Æ‚é
+		// å·®åˆ†ã‚’ã¨ã‚‹
 		if(it == begin() || itnext == end())
 			 pd = (p1 - p0) * div;
 		else pd = (p1 - p0) * div * 0.5;
-		//ˆê”Ê‰»‘¬“xqd‚É1‚ð—^‚¦‚½‚Æ‚«‚Ì‘Š‘Î‘¬“x‚ÆŠp‘¬“x
+		//ä¸€èˆ¬åŒ–é€Ÿåº¦qdã«1ã‚’ä¸ŽãˆãŸã¨ãã®ç›¸å¯¾é€Ÿåº¦ã¨è§’é€Ÿåº¦
 		v = pd.Pos();
 		qd = pd.Ori();
 		w = (it->pose.Ori()).AngularVelocity(qd);		//1/2 * w * q = qd		=> 2 * qd * q~ = w
@@ -219,13 +219,13 @@ void PHPathJointNode::UpdateJointPosition(double dt){
 PHPathJoint::PHPathJoint(const PHPathJointDesc& desc){
 	SetDesc(&desc);
 	
-	// ‰Â“®Ž²ES‘©Ž²‚ÌÝ’è
+	// å¯å‹•è»¸ãƒ»æ‹˜æŸè»¸ã®è¨­å®š
 	nMovableAxes   = 1;
 	movableAxes[0] = 5;
 	InitTargetAxes();
 }
 
-// ----- ƒGƒ“ƒWƒ“‚©‚çŒÄ‚Ño‚³‚ê‚éŠÖ”
+// ----- ã‚¨ãƒ³ã‚¸ãƒ³ã‹ã‚‰å‘¼ã³å‡ºã•ã‚Œã‚‹é–¢æ•°
 
 void PHPathJoint::UpdateJointState(){
 	Matrix6d J;
@@ -237,7 +237,7 @@ void PHPathJoint::UpdateJointState(){
 	path->Rollover(position[0]);
 }
 
-// ----- PHConstraint‚Ì”h¶ƒNƒ‰ƒX‚ÅŽÀ‘•‚³‚ê‚é‹@”\
+// ----- PHConstraintã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã•ã‚Œã‚‹æ©Ÿèƒ½
 
 void PHPathJoint::ModifyJacobian(){
 	Matrix6d Jq;
@@ -258,19 +258,19 @@ void PHPathJoint::CompBias(){
 	db.w().z = 0.0;
 	db *= engine->velCorrectionRate;
 
-	// eƒNƒ‰ƒX‚ÌCompBiasDmotor,limit‚ÌCompBias‚ªŒÄ‚Î‚ê‚é‚Ì‚ÅÅŒã‚ÉŒÄ‚Ô
+	// è¦ªã‚¯ãƒ©ã‚¹ã®CompBiasï¼Žmotor,limitã®CompBiasãŒå‘¼ã°ã‚Œã‚‹ã®ã§æœ€å¾Œã«å‘¼ã¶
 	PH1DJoint::CompBias();
 }
 
-// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌŽÀ‘•
+// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 
 bool PHPathJoint::AddChildObject(ObjectIf* o){
 	PHPath* p = DCAST(PHPath, o);
 	if(p){
 		path = p;
-		//‰Â“®”ÍˆÍ‚ÍƒŠƒZƒbƒg‚³‚ê‚é
-		// ŽüŠúƒpƒX‚È‚ç‚Î‰Â“®”ÍˆÍ–³‚µ
-		// ”ñŽüŠúƒpƒX‚È‚ç‚Î‰’[‚ÆI’[‚ð‰Â“®”ÍˆÍ‚Æ‚·‚é
+		//å¯å‹•ç¯„å›²ã¯ãƒªã‚»ãƒƒãƒˆã•ã‚Œã‚‹
+		// å‘¨æœŸãƒ‘ã‚¹ãªã‚‰ã°å¯å‹•ç¯„å›²ç„¡ã—
+		// éžå‘¨æœŸãƒ‘ã‚¹ãªã‚‰ã°åˆç«¯ã¨çµ‚ç«¯ã‚’å¯å‹•ç¯„å›²ã¨ã™ã‚‹
 		if (path->IsLoop()) {
 			if (limit) { limit->SetRange(Vec2d(0,0)); }
 		} else {

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,7 +17,7 @@
 namespace Spr{;
 
 template <class TVtx>
-void CDQHLine<TVtx>::Clear(){			///<	ƒƒ‚ƒŠƒNƒŠƒADg‚¤‘O‚ÉŒÄ‚ÔD
+void CDQHLine<TVtx>::Clear(){			///<	ãƒ¡ãƒ¢ãƒªã‚¯ãƒªã‚¢ï¼ä½¿ã†å‰ã«å‘¼ã¶ï¼
 	deleted = false;
 }
 template <class TVtx>
@@ -89,10 +89,10 @@ template <class TVtx>
 CDQHLines<TVtx>::~CDQHLines(){
 	delete [] buffer;
 }
-/**	b‚©‚çe‚Ü‚Å‚Ì’¸“_‚©‚ç“Ê•ï‚ğì‚éDg—p‚µ‚½’¸“_‚Íb‚©‚çvtxBeginC
-g—p‚µ‚È‚©‚Á‚½’¸“_‚ÍCvtxBegin‚©‚çe‚ÉˆÚ“®‚·‚éD	
-begin‚©‚çend‚Í’¸“_‚ğ3‚ÂŠÜ‚Ş–Ê‚É‚È‚éD‚»‚ê‚ç‚Ì–Ê‚¤‚¿“Ê•ï‚Ég‚í‚ê‚½–Ê
-‚Í CDQHLine::deleted ‚ª false ‚É‚È‚Á‚Ä‚¢‚éD	*/
+/**	bã‹ã‚‰eã¾ã§ã®é ‚ç‚¹ã‹ã‚‰å‡¸åŒ…ã‚’ä½œã‚‹ï¼ä½¿ç”¨ã—ãŸé ‚ç‚¹ã¯bã‹ã‚‰vtxBeginï¼Œ
+ä½¿ç”¨ã—ãªã‹ã£ãŸé ‚ç‚¹ã¯ï¼ŒvtxBeginã‹ã‚‰eã«ç§»å‹•ã™ã‚‹ï¼	
+beginã‹ã‚‰endã¯é ‚ç‚¹ã‚’3ã¤å«ã‚€é¢ã«ãªã‚‹ï¼ãã‚Œã‚‰ã®é¢ã†ã¡å‡¸åŒ…ã«ä½¿ã‚ã‚ŒãŸé¢
+ã¯ CDQHLine::deleted ãŒ false ã«ãªã£ã¦ã„ã‚‹ï¼	*/
 template <class TVtx>
 void CDQHLines<TVtx>::CreateConvexHull(TVtx** b, TVtx** e){
 	if (e-b < 2){
@@ -109,7 +109,7 @@ void CDQHLines<TVtx>::CreateConvexHull(TVtx** b, TVtx** e){
 	vtxEndInput = e;
 	vtxBegin = b;
 	vtxEnd = e;
-	//	Å‰‚Ì–Ê‚ğì‚é
+	//	æœ€åˆã®é¢ã‚’ä½œã‚‹
 	if (CreateFirstConvex()){
 		HULL_DEBUG_EVAL(
 			DSTR << "First:" << begin->vtx[0]->GetPos() << begin->vtx[1]->GetPos() << std::endl;
@@ -146,7 +146,7 @@ bool CDQHLines<TVtx>::CreateFirstConvex(){
 	TVtx** it, **minVtx, **maxVtx;	
 	minVal = maxVal = (*vtxBegin)->GetPos().X();
 	minVtx = maxVtx = vtxBegin;
-	//	x‚ÌÅ‘å‚ÆÅ¬‚ğŒ©‚Â‚¯‚é
+	//	xã®æœ€å¤§ã¨æœ€å°ã‚’è¦‹ã¤ã‘ã‚‹
 	for(it = vtxBegin+1; it != vtxEnd; ++it){
 		double x = (*it)->GetPos().X();
 		if (x < minVal){
@@ -158,8 +158,8 @@ bool CDQHLines<TVtx>::CreateFirstConvex(){
 			maxVtx = it;
 		}
 	}
-	if (maxVal - minVal < epsilon){	//	‚à‚µ x‚ÌÅ‘åEÅ¬‚ª“™‚µ‚©‚Á‚½‚ç
-		//	y‚ÌÅ‘åÅ¬‚ğŒ©‚Â‚¯‚é
+	if (maxVal - minVal < epsilon){	//	ã‚‚ã— xã®æœ€å¤§ãƒ»æœ€å°ãŒç­‰ã—ã‹ã£ãŸã‚‰
+		//	yã®æœ€å¤§æœ€å°ã‚’è¦‹ã¤ã‘ã‚‹
 		for(it = vtxBegin+1; it != vtxEnd; ++it){
 			double x = (*it)->GetPos().Y();
 			if (x < minVal){
@@ -172,26 +172,26 @@ bool CDQHLines<TVtx>::CreateFirstConvex(){
 			}
 		}
 	}
-	if (maxVal - minVal < epsilon){	//	‚Ç‚¿‚ç‚à“™‚µ‚¢1“_‚µ‚©‚È‚¢
+	if (maxVal - minVal < epsilon){	//	ã©ã¡ã‚‰ã‚‚ç­‰ã—ã„ï¼1ç‚¹ã—ã‹ãªã„
 		return false;
 	}
 
-	//	Å‘å‚ğÅ‰CÅ¬‚ğÅ‰‚©‚ç2”Ô–Ú‚É’u‚­
-	std::swap(*maxVtx, vtxBegin[0]);		//	æ“ª‚ÆÅ‘å‚ğ“ü‚ê‘Ö‚¦
-	if (minVtx == vtxBegin){				//	æ“ª‚ªÅ¬‚¾‚Á‚½‚ç
-		std::swap(*maxVtx, vtxBegin[1]);	//	Å‘å‚¾‚Á‚½êŠ=æ“ª‚ª“ü‚Á‚Ä‚¢‚éêŠ‚ªÅ¬
+	//	æœ€å¤§ã‚’æœ€åˆï¼Œæœ€å°ã‚’æœ€åˆã‹ã‚‰2ç•ªç›®ã«ç½®ã
+	std::swap(*maxVtx, vtxBegin[0]);		//	å…ˆé ­ã¨æœ€å¤§ã‚’å…¥ã‚Œæ›¿ãˆ
+	if (minVtx == vtxBegin){				//	å…ˆé ­ãŒæœ€å°ã ã£ãŸã‚‰
+		std::swap(*maxVtx, vtxBegin[1]);	//	æœ€å¤§ã ã£ãŸå ´æ‰€=å…ˆé ­ãŒå…¥ã£ã¦ã„ã‚‹å ´æ‰€ãŒæœ€å°
 	}else{
-		std::swap(*minVtx, vtxBegin[1]);	//	Å¬‚ğæ“ª‚©‚ç2”Ô–Ú‚Æ“ü‚ê‘Ö‚¦
+		std::swap(*minVtx, vtxBegin[1]);	//	æœ€å°ã‚’å…ˆé ­ã‹ã‚‰2ç•ªç›®ã¨å…¥ã‚Œæ›¿ãˆ
 	}
 
-	//	Å‰‚Ì•Ó‚ğì‚é
+	//	æœ€åˆã®è¾ºã‚’ä½œã‚‹
 	lines.end->Clear();
 	lines.end->vtx[0] = vtxBegin[1];
 	lines.end->vtx[1] = vtxBegin[0];
 	lines.end->CalcNormal();
 	lines.end++;
 	
-	//	— •\‚ğì‚Á‚ÄÅ‰‚Ì“Ê‘½–Ê‘Ì‚É‚·‚éD
+	//	è£è¡¨ã‚’ä½œã£ã¦æœ€åˆã®å‡¸å¤šé¢ä½“ã«ã™ã‚‹ï¼
 	*lines.end = *lines.begin;
 	lines.end->Reverse();
 	lines.begin->neighbor[0] = lines.end;
@@ -199,20 +199,20 @@ bool CDQHLines<TVtx>::CreateFirstConvex(){
 	lines.end->neighbor[0] = lines.begin;
 	lines.end->neighbor[1] = lines.begin;
 	lines.end++;
-	//	g—p‚µ‚½’¸“_‚ğ’¸“_ƒŠƒXƒg‚©‚ç‚Í‚¸‚·D
+	//	ä½¿ç”¨ã—ãŸé ‚ç‚¹ã‚’é ‚ç‚¹ãƒªã‚¹ãƒˆã‹ã‚‰ã¯ãšã™ï¼
 	vtxBegin += 2;
 	nLines = 2;
 	return true;
 }
 
-/**	•Ócur‚ÆC‚»‚Ì–Ê‚©‚çˆê”Ô‰“‚¢’¸“_ top ‚ğó‚¯æ‚èC
-	cur‚Æ‚»‚ÌüˆÍ‚Ì•Ó‚ğíœ‚µC“Ê•ï‚Étop‚ğŠÜ‚ß‚éD
-	end[-1], end[-2]‚ªV‚½‚Éì‚ç‚ê‚½•Ó‚É‚È‚éD	*/
+/**	è¾ºcurã¨ï¼Œãã®é¢ã‹ã‚‰ä¸€ç•ªé ã„é ‚ç‚¹ top ã‚’å—ã‘å–ã‚Šï¼Œ
+	curã¨ãã®å‘¨å›²ã®è¾ºã‚’å‰Šé™¤ã—ï¼Œå‡¸åŒ…ã«topã‚’å«ã‚ã‚‹ï¼
+	end[-1], end[-2]ãŒæ–°ãŸã«ä½œã‚‰ã‚ŒãŸè¾ºã«ãªã‚‹ï¼	*/
 template <class TVtx>
 void CDQHLines<TVtx>::CreateCone(CDQHLine* cur, TVtx* top){
-	cur->deleted = true;							//	cur‚Ííœ
+	cur->deleted = true;							//	curã¯å‰Šé™¤
 	nLines --;
-	//	—×‚Ì•Ó‚ğŒ©‚Ä‚¢‚Á‚ÄC’¸“_‚©‚ç‚İ‚¦‚é•Ó‚Ííœ‚·‚éD
+	//	éš£ã®è¾ºã‚’è¦‹ã¦ã„ã£ã¦ï¼Œé ‚ç‚¹ã‹ã‚‰ã¿ãˆã‚‹è¾ºã¯å‰Šé™¤ã™ã‚‹ï¼
 	CDQHLine* horizon[2];
 	for(int i=0; i<2; ++i){
 		horizon[i] = cur->neighbor[i];
@@ -222,8 +222,8 @@ void CDQHLines<TVtx>::CreateCone(CDQHLine* cur, TVtx* top){
 			horizon[i] = horizon[i]->neighbor[i];
 		}
 	}
-	//	íœ‚³‚ê‚È‚©‚Á‚½•Ó‚Æ’¸“_‚ÌŠÔ‚É•Ó‚ğì‚éD
-	//	horizon[0]‘¤‚Ì•Ó
+	//	å‰Šé™¤ã•ã‚Œãªã‹ã£ãŸè¾ºã¨é ‚ç‚¹ã®é–“ã«è¾ºã‚’ä½œã‚‹ï¼
+	//	horizon[0]å´ã®è¾º
 	end->Clear();
 	horizon[0]->neighbor[1] = end;
 	end->vtx[0] = horizon[0]->vtx[1];
@@ -233,7 +233,7 @@ void CDQHLines<TVtx>::CreateCone(CDQHLine* cur, TVtx* top){
 	end->CalcNormal();
 	end++;
 	nLines ++;
-	//	horizon[1]‘¤‚Ì•Ó
+	//	horizon[1]å´ã®è¾º
 	end->Clear();
 	horizon[1]->neighbor[0] = end;
 	end->vtx[0] = top;
@@ -244,7 +244,7 @@ void CDQHLines<TVtx>::CreateCone(CDQHLine* cur, TVtx* top){
 	end++;
 	nLines ++;
 }	
-/**	ˆê”Ô‰“‚­‚Ì’¸“_‚ğŒ©‚Â‚¯‚éDŒ©‚Â‚¯‚½‚ç‚»‚ê‚ğ’¸“_ƒŠƒXƒg‚©‚ç‚Í‚¸‚·	*/
+/**	ä¸€ç•ªé ãã®é ‚ç‚¹ã‚’è¦‹ã¤ã‘ã‚‹ï¼è¦‹ã¤ã‘ãŸã‚‰ãã‚Œã‚’é ‚ç‚¹ãƒªã‚¹ãƒˆã‹ã‚‰ã¯ãšã™	*/
 template <class TVtx>
 bool CDQHLines<TVtx>::FindFarthest(CDQHLine* line){
 #if 0	
@@ -312,14 +312,14 @@ bool CDQHLines<TVtx>::FindFarthest(CDQHLine* line){
 	return false;
 	
 }
-/*	ŠO‘¤ “à‘¤ ‚Ì‡‚É•À‚×‚éD
-ŠO‘¤‚ÌI‚í‚è“à‘¤‚Ìn‚Ü‚è‚ª inner	*/
+/*	å¤–å´ å†…å´ ã®é †ã«ä¸¦ã¹ã‚‹ï¼
+å¤–å´ã®çµ‚ã‚ã‚Šï¼å†…å´ã®å§‹ã¾ã‚ŠãŒ inner	*/
 template <class TVtx>
 TVtx** CDQHLines<TVtx>::DivideByPlaneR(CDQHLine* plane, TVtx** start, TVtx** end){
 	double INNER_DISTANCE = epsilon * plane->dist;
 	while(start != end){
 		double d = -plane->CalcDist(*start);
-		if (d <= INNER_DISTANCE){	//	“à‘¤‚Ìê‡‚ÍŒã‚ë‚ÉˆÚ“®
+		if (d <= INNER_DISTANCE){	//	å†…å´ã®å ´åˆã¯å¾Œã‚ã«ç§»å‹•
 			-- end;
 			std::swap(*end, *start);
 		}else{
@@ -333,7 +333,7 @@ TVtx** CDQHLines<TVtx>::DivideByPlane(CDQHLine* plane, TVtx** start, TVtx** end)
 	double INNER_DISTANCE = epsilon * plane->dist;
 	while(start != end){
 		double d = plane->CalcDist(*start);
-		if (d <= INNER_DISTANCE){	//	“à‘¤‚Ìê‡‚ÍŒã‚ë‚ÉˆÚ“®
+		if (d <= INNER_DISTANCE){	//	å†…å´ã®å ´åˆã¯å¾Œã‚ã«ç§»å‹•
 			-- end;
 			std::swap(*end, *start);
 		}else{
@@ -342,11 +342,11 @@ TVtx** CDQHLines<TVtx>::DivideByPlane(CDQHLine* plane, TVtx** start, TVtx** end)
 	}
 	return start;
 }
-/**	ˆê‚Â‚Ì–Ê‚É‘Î‚·‚éˆ—‚ğs‚¤Dˆê”Ô‰“‚­‚Ì’¸“_‚ğŒ©‚Â‚¯C
-’n•½ü‚ğ’²‚×CƒR[ƒ“‚ğì‚èC“à•”‚Ì’¸“_‚ğ‚Í‚¸‚·D*/
+/**	ä¸€ã¤ã®é¢ã«å¯¾ã™ã‚‹å‡¦ç†ã‚’è¡Œã†ï¼ä¸€ç•ªé ãã®é ‚ç‚¹ã‚’è¦‹ã¤ã‘ï¼Œ
+åœ°å¹³ç·šã‚’èª¿ã¹ï¼Œã‚³ãƒ¼ãƒ³ã‚’ä½œã‚Šï¼Œå†…éƒ¨ã®é ‚ç‚¹ã‚’ã¯ãšã™ï¼*/
 template <class TVtx>
 void CDQHLines<TVtx>::TreatPlane(CDQHLine* cur){
-	//	ˆê”Ô‰“‚­‚Ì’¸“_‚Ì’Tõ
+	//	ä¸€ç•ªé ãã®é ‚ç‚¹ã®æ¢ç´¢
 	if (!FindFarthest(cur)) return;
 	HULL_DEBUG_EVAL(
 		DSTR << "Farthest:" << vtxBegin[-1]->GetPos();
@@ -355,7 +355,7 @@ void CDQHLines<TVtx>::TreatPlane(CDQHLine* cur){
 			DSTR << "faceDist:" << cur->dist << std::endl;
 		}
 	)
-	//	V‚µ‚¢’¸“_‚Å“Ê•ï‚ğì‚éD
+	//	æ–°ã—ã„é ‚ç‚¹ã§å‡¸åŒ…ã‚’ä½œã‚‹ï¼
 	CreateCone(cur, vtxBegin[-1]);
 	HULL_DEBUG_EVAL(
 		if (!hor){
@@ -363,7 +363,7 @@ void CDQHLines<TVtx>::TreatPlane(CDQHLine* cur){
 			assert(hor);
 		}
 	)
-	//	’–Ú‚µ‚½•Ó(cur)‚ÆV‚½‚È•Ó(end-2,end-1)‚É‚æ‚Á‚Ä•Â‚¶‚ß‚ç‚ê‚é’¸“_‚ğvtxEnd‚ÌŒã‚ë‚ÉˆÚ“®
+	//	æ³¨ç›®ã—ãŸè¾º(cur)ã¨æ–°ãŸãªè¾º(end-2,end-1)ã«ã‚ˆã£ã¦é–‰ã˜è¾¼ã‚ã‚‰ã‚Œã‚‹é ‚ç‚¹ã‚’vtxEndã®å¾Œã‚ã«ç§»å‹•
 	TVtx** inner = DivideByPlaneR(cur, vtxBegin, vtxEnd);
 	for(CDQHLine* it=end-2; it!=end; ++it){
 		HULL_DEBUG_EVAL(

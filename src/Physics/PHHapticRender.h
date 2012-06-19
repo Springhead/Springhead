@@ -1,4 +1,4 @@
-#ifndef PH_HAPTICRENDERBASE_H
+ï»¿#ifndef PH_HAPTICRENDERBASE_H
 #define PH_HAPTICRENDERBASE_H
 
 #include <Physics/PHHapticPointer.h>
@@ -12,21 +12,21 @@ class PHSolidPairsForHaptic;
 class PHShapePairForHaptic;
 
 struct PHIntermediateRepresentation :public UTRefCount{
-	int solidID;				///< „‘Ì‚ÌID(PHSolidsForHapitc‚ÆPHSolidPairForHaptic)‚ÆN“ü‚µ‚Ä‚¢‚é‚©
-	PHSolidPairForHaptic* solidPair;	///< PHSolidPairForHaptic‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	double depth;				///< N“ü—Ê
-	Vec3d normal;				///< –Ê–@ü
-	Vec3d r;					///< —ÍŠoƒ|ƒCƒ“ƒ^‚ÌdS‚©‚ç‚ÌÚG“_‚Ü‚Å‚ÌƒxƒNƒgƒ‹
-	Vec3d pointerPointW;		///< —ÍŠoƒ|ƒ“ƒ^‚ÌN“ü“_(world)
-	Vec3d contactPointW;		///< ’†ŠÔ•\Œ»–Ê‚Évertex‚ğ“Š‰e‚µ‚½ˆÊ’u(world)
-	Vec3d pointerPointVel;		///< —ÍŠoƒ|ƒCƒ“ƒ^‘¤‚ÌÚG“_‚Ì‘¬“x(world)
-	Vec3d contactPointVel;		///< „‘Ì‘¤‚ÌÚG“_‚Ì‘¬“x(world)
-	Posed interpolation_pose;	///< Œ`ó‚Ì•âŠÔp¨
-	double f;					///< N“ü‰ğœŒvZ‚ÅÚG“_‚ª•ÀiˆÚ“®‚Éì—p‚·‚é‘å‚«‚³
-	float springK;					///< ƒoƒlŒW”
-	float damperD;					///< ƒ_ƒ“ƒpŒW”
-	float mu;					///< “®–€CŒW”
-	float mu0;					///< Å‘åÃ~–€CŒW”(Å‘åÃ~–€C‚Í–¢À‘•)
+	int solidID;				///< å‰›ä½“ã®ID(PHSolidsForHapitcã¨PHSolidPairForHaptic)ã¨ä¾µå…¥ã—ã¦ã„ã‚‹ã‹
+	PHSolidPairForHaptic* solidPair;	///< PHSolidPairForHapticã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	double depth;				///< ä¾µå…¥é‡
+	Vec3d normal;				///< é¢æ³•ç·š
+	Vec3d r;					///< åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã®é‡å¿ƒã‹ã‚‰ã®æ¥è§¦ç‚¹ã¾ã§ã®ãƒ™ã‚¯ãƒˆãƒ«
+	Vec3d pointerPointW;		///< åŠ›è¦šãƒãƒ³ã‚¿ã®ä¾µå…¥ç‚¹(world)
+	Vec3d contactPointW;		///< ä¸­é–“è¡¨ç¾é¢ã«vertexã‚’æŠ•å½±ã—ãŸä½ç½®(world)
+	Vec3d pointerPointVel;		///< åŠ›è¦šãƒã‚¤ãƒ³ã‚¿å´ã®æ¥è§¦ç‚¹ã®é€Ÿåº¦(world)
+	Vec3d contactPointVel;		///< å‰›ä½“å´ã®æ¥è§¦ç‚¹ã®é€Ÿåº¦(world)
+	Posed interpolation_pose;	///< å½¢çŠ¶ã®è£œé–“å§¿å‹¢
+	double f;					///< ä¾µå…¥è§£é™¤è¨ˆç®—ã§æ¥è§¦ç‚¹ãŒä¸¦é€²ç§»å‹•ã«ä½œç”¨ã™ã‚‹å¤§ãã•
+	float springK;					///< ãƒãƒä¿‚æ•°
+	float damperD;					///< ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
+	float mu;					///< å‹•æ‘©æ“¦ä¿‚æ•°
+	float mu0;					///< æœ€å¤§é™æ­¢æ‘©æ“¦ä¿‚æ•°(æœ€å¤§é™æ­¢æ‘©æ“¦ã¯æœªå®Ÿè£…)
 	PHIntermediateRepresentation(){
 		solidID = -1;
 		f = 0.0;
@@ -59,13 +59,13 @@ public:
 	virtual void VibrationRendering(PHHapticPointer* pointer);
 	virtual void VirtualCoupling(PHHapticPointer* pointer);
 
-	// ƒKƒEƒXƒUƒCƒfƒ‹–@‚ğg‚¢Ax+b>0‚ğ‰ğ‚­
+	// ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«æ³•ã‚’ä½¿ã„Ax+b>0ã‚’è§£ã
 	template <class AD, class XD, class BD>
 	void GaussSeidel(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b){
-		int nIter = 15;					// ”½•œ‰ñ”‚ÌãŒÀ
+		int nIter = 15;					// åå¾©å›æ•°ã®ä¸Šé™
 		double error = 0.0;
-		double errorRange = 10e-8;		// ‹–—eŒë·
-		int n = (int)a.height();		// ˜A—§•û’ö®‚Ì”(s—ña‚Ìs”)
+		double errorRange = 10e-8;		// è¨±å®¹èª¤å·®
+		int n = (int)a.height();		// é€£ç«‹æ–¹ç¨‹å¼ã®æ•°(è¡Œåˆ—aã®è¡Œæ•°)
 		std::vector< double > lastx;
 		for(int i = 0; i < n; i++){
 			lastx.push_back(x[i]);
@@ -82,12 +82,12 @@ public:
 				for(int j = i+1; j < n; j++){
 					term2 += a[i][j] * lastx[j];
 				}
-				// x‚ÌXV(ŒJ‚è•Ô‚µŒvZ‚Ì®‚ğg—p)
+				// xã®æ›´æ–°(ç¹°ã‚Šè¿”ã—è¨ˆç®—ã®å¼ã‚’ä½¿ç”¨)
 				x[i] =  (-b[i] - term1 - term2) / a[i][i];
 				if(x[i] < 0) x[i] = 0.0;
 			}
 
-			// (lastx - x)‚Ì2æ‚Ì‘˜a‚ÆŒë·”ÍˆÍ‚ğ”äŠr
+			// (lastx - x)ã®2ä¹—ã®ç·å’Œã¨èª¤å·®ç¯„å›²ã‚’æ¯”è¼ƒ
 			error = 0.0;
 			for(int i = 0; i < n; i++){
 				error += pow(x[i] - lastx[i], 2);
@@ -99,10 +99,10 @@ public:
 				return;
 			}
 
-			// ŒJ‚è•Ô‚µŒvZ‚Ì‚½‚ß‚ÉXVŒã‚Ìx‚ğlastx‚É•Û‘¶
+			// ç¹°ã‚Šè¿”ã—è¨ˆç®—ã®ãŸã‚ã«æ›´æ–°å¾Œã®xã‚’lastxã«ä¿å­˜
 			for(int i = 0; i < n; i++) lastx[i] = x[i];
 		}
-		//nIter‚ÅŒvZ‚ªI‚í‚ç‚È‚©‚Á‚½‚Ì‚Å‘Å‚¿Ø‚è
+		//nIterã§è¨ˆç®—ãŒçµ‚ã‚ã‚‰ãªã‹ã£ãŸã®ã§æ‰“ã¡åˆ‡ã‚Š
 		//static int iterError = 0;
 		//iterError += 1;
 		//DSTR << iterError << "Could not converge in iteration steps. Error = " << error << std::endl;

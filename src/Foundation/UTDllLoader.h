@@ -1,20 +1,20 @@
-#ifndef UTDLLLOADER_H
+ï»¿#ifndef UTDLLLOADER_H
 #define UTDLLLOADER_H
 #include <Base/BaseUtility.h>
 
 namespace Spr {;
-/**	DLL‚ğƒ[ƒh‚·‚éƒNƒ‰ƒXDˆÈ‰º‚Ì‚æ‚¤‚É‚·‚é‚ÆC’Êí‚Ìƒ‰ƒCƒuƒ‰ƒŠ‚Æ“¯—l‚É
-	DLL‚ğ“®“I‚Éƒ[ƒh‚µ‚Äg—p‚Å‚«‚éD
+/**	DLLã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã‚¯ãƒ©ã‚¹ï¼ä»¥ä¸‹ã®ã‚ˆã†ã«ã™ã‚‹ã¨ï¼Œé€šå¸¸ã®ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¨åŒæ§˜ã«
+	DLLã‚’å‹•çš„ã«ãƒ­ãƒ¼ãƒ‰ã—ã¦ä½¿ç”¨ã§ãã‚‹ï¼
 
-g‚¢•ûF
-static UTDllLoader dllLoader("filename.dll");	//	ƒOƒ[ƒoƒ‹•Ï”‚Åƒ[ƒ_[‚ğì‚éD
+ä½¿ã„æ–¹ï¼š
+static UTDllLoader dllLoader("filename.dll");	//	ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã§ãƒ­ãƒ¼ãƒ€ãƒ¼ã‚’ä½œã‚‹ï¼
 
-//	int DllFunc(int arg)  ‚Ìê‡
-#define DLLFUNC_STR		"funcname"				//	dll‚Ì’†‚Å‚ÌŠÖ”‚Ì–¼‘O
-#define DLLFUNC_RTYPE	int						//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	DllFunc					//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(int arg)				//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(arg)					//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+//	int DllFunc(int arg)  ã®å ´åˆ
+#define DLLFUNC_STR		"funcname"				//	dllã®ä¸­ã§ã®é–¢æ•°ã®åå‰
+#define DLLFUNC_RTYPE	int						//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	DllFunc					//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(int arg)				//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(arg)					//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include "UTDllLoaderImp.h"
 */
 class SPR_DLL UTDllLoader:public UTRefCount{
@@ -29,7 +29,7 @@ public:
 	}
 	~UTDllLoader(){ Cleanup(); }
 	bool Load(const char* dllName=NULL, const char* addPath=NULL);
-	/// DLL‚ª‚ÂAw’è‚³‚ê‚½ŠÖ”‚ÌƒAƒhƒŒƒX‚ğæ“¾‚·‚éD
+	/// DLLãŒæŒã¤ã€æŒ‡å®šã•ã‚ŒãŸé–¢æ•°ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—ã™ã‚‹ï¼
 	void* GetProc(const char* name);
 protected:
 	void Init();

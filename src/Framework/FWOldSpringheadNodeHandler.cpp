@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -31,7 +31,7 @@
 namespace SprOldSpringhead{
 using namespace Spr;
 
-// FWScene‚ÌŒŸõD
+// FWSceneã®æ¤œç´¢ï¼
 static FWScene* FindFWScene(UTLoadContext* fc){
 	FWScene* fs = NULL;
 	for(int i=(int)fc->objects.size()-1; i>=0; --i){
@@ -41,7 +41,7 @@ static FWScene* FindFWScene(UTLoadContext* fc){
 	return fs;
 }
 
-// PHScene‚ÌŒŸõD
+// PHSceneã®æ¤œç´¢ï¼
 static PHScene* FindPHScene(UTLoadContext* fc){
 	PHScene* ps = NULL;
 	for(int i=(int)fc->objects.size()-1; i>=0; --i){
@@ -54,7 +54,7 @@ static PHScene* FindPHScene(UTLoadContext* fc){
 	return ps;
 }
 
-// GRScene‚ÌŒŸõD
+// GRSceneã®æ¤œç´¢ï¼
 static GRScene* FindGRScene(UTLoadContext* fc){
 	GRScene* gs = NULL;
 	for(int i=(int)fc->objects.size()-1; i>=0; --i){
@@ -67,13 +67,13 @@ static GRScene* FindGRScene(UTLoadContext* fc){
 	return gs;
 }
 
-// Xƒtƒ@ƒCƒ‹Œ`®‚Ìƒo[ƒWƒ‡ƒ“î•ñD
+// Xãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±ï¼
 class FWNodeHandlerXHeader: public UTLoadHandlerImp<Header>{
 public:
 	FWNodeHandlerXHeader():UTLoadHandlerImp<Desc>("Header"){}
 };
 
-// Springhead1‚ÌƒtƒŒ[ƒ€D
+// Springhead1ã®ãƒ•ãƒ¬ãƒ¼ãƒ ï¼
 class FWNodeHandlerXFrame: public UTLoadHandlerImp<Frame>{
 public:	
 	FWNodeHandlerXFrame():UTLoadHandlerImp<Desc>("Frame"){}	
@@ -91,17 +91,17 @@ public:
 	}
 };
 
-// Springhead1‚ÌSimulatorƒ^ƒXƒND
+// Springhead1ã®Simulatorã‚¿ã‚¹ã‚¯ï¼
 class FWSimulatorTask: public UTLoadTask{
 public:
 	SPR_OBJECTDEF_NOIF(FWSimulatorTask);
-	double timeStep;	// Ï•ªƒXƒeƒbƒv
-	double decay;		// „‘Ì‚Ì‘¬“x‚ÌŒ¸Š—¦
+	double timeStep;	// ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—
+	double decay;		// å‰›ä½“ã®é€Ÿåº¦ã®æ¸›è¡°ç‡
 	void Execute(UTLoadContext* fc){}
 };
 SPR_OBJECTIMP1(FWSimulatorTask, UTLoadTask);
 
-// Springhead1‚ÌSimulatorD
+// Springhead1ã®Simulatorï¼
 class FWNodeHandlerSimulator: public UTLoadHandlerImp<Simulator>{
 public:	
 	FWNodeHandlerSimulator():UTLoadHandlerImp<Desc>("Simulator"){}
@@ -110,16 +110,16 @@ public:
 		simtask->timeStep = d.timeStep;
 		simtask->decay    = d.decay;		
 		PHScene* phScene = FindPHScene(fc);		
-		if (phScene){		// phScene‚ğŒŸõ‚Å‚«‚½ê‡‚ÍAtimeStep‚ğİ’è. 
+		if (phScene){		// phSceneã‚’æ¤œç´¢ã§ããŸå ´åˆã¯ã€timeStepã‚’è¨­å®š. 
 			fc->mapObj.insert(UTPairObject(simtask->Cast(), phScene->Cast()));
 			phScene->SetTimeStep(d.timeStep);
-		}else{				// Sceneƒ[ƒh‚ÉAmap‚ğŒŸõ‚µAtimeStep‚ğİ’è 			
+		}else{				// Sceneãƒ­ãƒ¼ãƒ‰æ™‚ã«ã€mapã‚’æ¤œç´¢ã—ã€timeStepã‚’è¨­å®š 			
 			fc->mapObj.insert(UTPairObject(simtask->Cast(), (ObjectIf*)NULL));
 		}
 	}
 };
 
-// DirectX‚ÌFrameTransformMatrixDƒtƒŒ[ƒ€‚Ì•ÏŠ·s—ñ‚ğ•\‚·DGRFrame::transform‚É‘Î‰D
+// DirectXã®FrameTransformMatrixï¼ãƒ•ãƒ¬ãƒ¼ãƒ ã®å¤‰æ›è¡Œåˆ—ã‚’è¡¨ã™ï¼GRFrame::transformã«å¯¾å¿œï¼
 class FWNodeHandlerXFrameTransformMatrix: public UTLoadHandlerImp<FrameTransformMatrix>{
 public:	
 	FWNodeHandlerXFrameTransformMatrix():UTLoadHandlerImp<Desc>("FrameTransformMatrix"){}
@@ -127,7 +127,7 @@ public:
 		GRFrame* fr = DCAST(GRFrame, fc->objects.Top());
 		if (fr){
 			fr->transform = d.matrix;
-			//	¶èŒn¨‰EèŒn‚Ö‚Ì•ÏŠ·
+			//	å·¦æ‰‹ç³»â†’å³æ‰‹ç³»ã¸ã®å¤‰æ›
 			fr->transform.ExZ() *= -1;
 			fr->transform.EyZ() *= -1;
 			fr->transform.EzX() *= -1;
@@ -139,7 +139,7 @@ public:
 	}
 };
 
-// Springehead1‚ÌŒõŒ¹DGRLight‚É‘Î‰D
+// Springehead1ã®å…‰æºï¼GRLightã«å¯¾å¿œï¼
 class FWNodeHandlerXLight8: public UTLoadHandlerImp<Light8>{
 public:
 	class Adapter: public UTLoadTask{
@@ -164,10 +164,10 @@ public:
 		grld.attenuation1 = l8.attenuation1;
 		grld.attenuation2 = l8.attenuation2;
 		grld.diffuse = l8.diffuse;
-		if (l8.type == Light8::XLIGHT_DIRECTIONAL){		// •½sŒõŒ¹
+		if (l8.type == Light8::XLIGHT_DIRECTIONAL){		// å¹³è¡Œå…‰æº
 			grld.position.sub_vector(PTM::TSubVectorDim<0,3>()) = l8.direction;
 			grld.position.W() = 0;
-		}else{											// “_ŒõŒ¹EƒXƒ|ƒbƒgƒ‰ƒCƒgŒø‰Ê
+		}else{											// ç‚¹å…‰æºãƒ»ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆåŠ¹æœ
 			grld.position.sub_vector(PTM::TSubVectorDim<0,3>()) = l8.position;
 			grld.position.W() = 1;
 		}
@@ -176,7 +176,7 @@ public:
 		grld.spotFalloff = l8.falloff;
 		grld.spotInner = l8.spotInner;
 		grld.spotCutoff = l8.spotCutoff;
-		//	¶èŒn¨‰EèŒn‚Ì•ÏŠ·
+		//	å·¦æ‰‹ç³»â†’å³æ‰‹ç³»ã®å¤‰æ›
 		grld.position.Z() *= -1;
 		grld.spotDirection.Z() *= -1;
 		fc->objects.Push(fc->CreateObject(GRLightIf::GetIfInfoStatic(), &grld, ld->GetName()));
@@ -191,16 +191,16 @@ public:
 	}
 };
 
-// DirectX‚ÌƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼ƒ^ƒXƒND
+// DirectXã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«åã‚¿ã‚¹ã‚¯ï¼
 class FWXTextureTask: public UTLoadTask{
 public:
 	SPR_OBJECTDEF_NOIF(FWXTextureTask);
-	UTString filename;					// ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼
+	UTString filename;					// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«å
 	void Execute(UTLoadContext* fc){}
 };
 SPR_OBJECTIMP1(FWXTextureTask, UTLoadTask);
 
-// DirectX‚ÌƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼iMaterial‚Ì“à•”ƒ^ƒO)D
+// DirectXã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆMaterialã®å†…éƒ¨ã‚¿ã‚°)ï¼
 class FWNodeHandlerXTextureFilename: public UTLoadHandlerImp<TextureFilename>{
 public:
 	std::map<void*, UTString> paths;
@@ -208,7 +208,7 @@ public:
 	virtual void AfterLoadData(Desc& d, UTLoadedData* ld, UTLoadContext* ctx){
 		if (d.filename.length()<=2 || (d.filename.at(0) != '/' && d.filename.at(0) != '\\'
 			&& d.filename.at(1) != ':')){	
-			//	‘Š‘ÎƒpƒXw’è‚Ìê‡AXƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ğ‘O‚É•t‚¯‰Á‚¦‚é
+			//	ç›¸å¯¾ãƒ‘ã‚¹æŒ‡å®šã®å ´åˆã€Xãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’å‰ã«ä»˜ã‘åŠ ãˆã‚‹
 			UTString path = ctx->fileMaps.back()->name;
 			UTString::size_type pos = path.find_last_of('/');
 			if (pos == UTString::npos) pos = path.find_last_of('\\');
@@ -236,7 +236,7 @@ public:
 	}
 };
 
-// DirectX‚Ìƒ}ƒeƒŠƒAƒ‹DGRMaterial‚É‘Î‰D
+// DirectXã®ãƒãƒ†ãƒªã‚¢ãƒ«ï¼GRMaterialã«å¯¾å¿œï¼
 class FWNodeHandlerXMaterial: public UTLoadHandlerImp<Material>{
 public:
 	FWNodeHandlerXMaterial():UTLoadHandlerImp<Desc>("Material"){}
@@ -256,7 +256,7 @@ public:
 	}
 };
 
-// DirectX‚ÌMeshDGRMesh‚É‘Î‰D
+// DirectXã®Meshï¼GRMeshã«å¯¾å¿œï¼
 class FWNodeHandlerXMesh: public UTLoadHandlerImp<Mesh>{
 public:
 	FWNodeHandlerXMesh():UTLoadHandlerImp<Desc>("Mesh"){}
@@ -264,7 +264,7 @@ public:
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		GRMeshDesc desc;
 
-		// ’¸“_”z—ñC–Ê”z—ñ‚ğƒRƒs[
+		// é ‚ç‚¹é…åˆ—ï¼Œé¢é…åˆ—ã‚’ã‚³ãƒ”ãƒ¼
 		desc.vertices = d.vertices;
 		desc.faces.resize(d.nFaces);
 		for(int i = 0; i < d.nFaces; i++){
@@ -278,7 +278,7 @@ public:
 				desc.faces[i].indices[j] = d.faces[i].faceVertexIndices[j];
 		}
 
-		// –@üî•ñ
+		// æ³•ç·šæƒ…å ±
 		UTLoadedData* normalData = ld->FindDescendant("MeshNormals");
 		if(normalData){
 			MeshNormals* meshNormals = (MeshNormals*)normalData->data;
@@ -296,28 +296,28 @@ public:
 			}
 		}
 
-		//	ƒeƒNƒXƒ`ƒƒÀ•W
+		//	ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™
 		UTLoadedData* coordsData = ld->FindDescendant("MeshTextureCoords");
 		if (coordsData){
 			MeshTextureCoords* uv = (MeshTextureCoords* )coordsData->data;
 			desc.texCoords = uv->textureCoords;
 		}
 
-		//	ƒ}ƒeƒŠƒAƒ‹ƒŠƒXƒg
+		//	ãƒãƒ†ãƒªã‚¢ãƒ«ãƒªã‚¹ãƒˆ
 		UTLoadedData* mlData = ld->FindDescendant("MeshMaterialList");
 		if (mlData){
 			MeshMaterialList* ml = (MeshMaterialList*) mlData->data;
 			desc.materialList.insert(desc.materialList.end(), ml->faceIndexes.begin(), ml->faceIndexes.end());
 		}
 
-		//	ƒXƒLƒ“ƒƒbƒVƒ…‚Ìƒwƒbƒ_
+		//	ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥ã®ãƒ˜ãƒƒãƒ€
 		UTLoadedData* skinHeader = ld->FindDescendant("XSkinMeshHeader");
 		if (skinHeader){
 			XSkinMeshHeader* sd = (XSkinMeshHeader*) skinHeader->data;
-			//	“Á‚É‰½‚à‚µ‚È‚¢H	
+			//	ç‰¹ã«ä½•ã‚‚ã—ãªã„ï¼Ÿ	
 		}
 
-		// ƒƒbƒVƒ…‚ğì¬
+		// ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ä½œæˆ
 		fc->objects.Push(fc->CreateObject(GRMeshIf::GetIfInfoStatic(), &desc, ld->GetName()));	
 		ld->loadedObjects.push_back(fc->objects.Top());
 		GRMesh* mesh = DCAST(GRMesh, fc->objects.Top());
@@ -326,7 +326,7 @@ public:
 			return;
 		}
 
-		//	ƒXƒLƒ“ƒƒbƒVƒ…‚Ìd‚İ‚Ã‚¯
+		//	ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥ã®é‡ã¿ã¥ã‘
 		for(unsigned i = 0; i < ld->children.size(); ++i){
 			if (ld->children[i]->type->GetTypeName().compare("SkinWeights") == 0){
 				SkinWeights* sw = (SkinWeights*) ld->children[i]->data;
@@ -342,16 +342,16 @@ public:
 
 				GRSkinWeightIf* skinWeight = mesh->CreateSkinWeight(skinDesc);
 				
-				// ƒXƒLƒ“ƒƒbƒVƒ…‚ÉŠÖ˜A•t‚¯‚ç‚ê‚½ƒtƒŒ[ƒ€–¼‚ğƒŠƒ“ƒNƒ^ƒXƒN‚É“o˜^
+				// ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥ã«é–¢é€£ä»˜ã‘ã‚‰ã‚ŒãŸãƒ•ãƒ¬ãƒ¼ãƒ åã‚’ãƒªãƒ³ã‚¯ã‚¿ã‚¹ã‚¯ã«ç™»éŒ²
 				fc->links.push_back( DBG_NEW UTLinkTask(skinWeight->Cast(), sw->transformNodeName, mesh->GetNameManager()) );
 			}
 		}
 
-		// Mesh‚Ì–¼‘O‚ÉA tex3d ‚ªŠÜ‚Ü‚ê‚éê‡AƒeƒNƒXƒ`ƒƒ‚ğ2D‚Å‚È‚­4D‚É‚·‚éB
+		// Meshã®åå‰ã«ã€ tex3d ãŒå«ã¾ã‚Œã‚‹å ´åˆã€ãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’2Dã§ãªã4Dã«ã™ã‚‹ã€‚
 		if (ld->GetName().find("tex3d") != UTString::npos)
 			mesh->EnableTex3D();
 
-		// ¶èŒn¨‰EèŒn•ÏŠ·
+		// å·¦æ‰‹ç³»â†’å³æ‰‹ç³»å¤‰æ›
 		mesh->SwitchCoordinate();
 		
 	}
@@ -368,7 +368,7 @@ inline void SetPHMaterial(PHMaterial& mat, const PhysicalMaterial& oldMat){
 	mat.mu = oldMat.d;
 	mat.mu0 = oldMat.s;
 }
-// DirectX‚ÌMeshDPHSolid‚Ìq‘·‚Ìê‡CCDConvexMesh‚ğƒ[ƒhD
+// DirectXã®Meshï¼PHSolidã®å­å­«ã®å ´åˆï¼ŒCDConvexMeshã‚’ãƒ­ãƒ¼ãƒ‰ï¼
 class FWNodeHandlerSolidXMesh: public UTLoadHandlerImp<PHSolidDesc>{
 public:
 	FWNodeHandlerSolidXMesh():UTLoadHandlerImp<Desc>("PHSolidDesc"){}
@@ -379,24 +379,24 @@ public:
 
 		for(unsigned i=0; i<meshes.size(); ++i){
 			UTLoadedData* meshDataNode = meshes[i][0];
-			//	CDConvexMesh‚ª¶¬Ï‚İ‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+			//	CDConvexMeshãŒç”Ÿæˆæ¸ˆã¿ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
 			CDConvexMesh* cm = NULL;
 			for(unsigned i=0; i<meshDataNode->loadedObjects.size(); ++i){
 				cm = meshDataNode->loadedObjects[i]->Cast();
 				if (cm) break;
 			}
 			if (!cm){
-				//	–¢¶¬‚Ìê‡‚¾‚¯CConvexMesh‚ğì‚é
+				//	æœªç”Ÿæˆã®å ´åˆã ã‘ï¼ŒConvexMeshã‚’ä½œã‚‹
 
 				Mesh& mesh = *(Mesh*)meshDataNode->data;
 				CDConvexMeshDesc cmd;
 				for(unsigned j=0; j< mesh.vertices.size(); ++j){
 					Vec3f v = mesh.vertices[j];
-					v.z *= -1;	//	¶èŒn¨‰EèŒn
+					v.z *= -1;	//	å·¦æ‰‹ç³»â†’å³æ‰‹ç³»
 					cmd.vertices.push_back(v);
 				}
 				UTLoadedData* ldMat = meshes[i][0]->FindDescendant("PhysicalMaterial");
-				if (ldMat){	//	•¨—ƒ}ƒeƒŠƒAƒ‹‚Ìƒ[ƒh
+				if (ldMat){	//	ç‰©ç†ãƒãƒ†ãƒªã‚¢ãƒ«ã®ãƒ­ãƒ¼ãƒ‰
 					SetPHMaterial(cmd.material, *(PhysicalMaterial*)ldMat->data);
 				}
 				Affinef afShape;
@@ -415,7 +415,7 @@ public:
 				for (unsigned j=0; j<cmd.vertices.size(); ++j){
 					cmd.vertices[j] = afShape * cmd.vertices[j];
 				}
-				fc->objects.Push(NULL);	//	ì¬‚µ‚½Mesh‚ğAddChildObject‚³‚ê‚é‚Æ2d“o˜^‚É‚È‚é‚Ì‚ÅC“o˜^‚Å‚«‚È‚¢‚æ‚¤‚ÉNULL‚ğPush()
+				fc->objects.Push(NULL);	//	ä½œæˆã—ãŸMeshã‚’AddChildObjectã•ã‚Œã‚‹ã¨2é‡ç™»éŒ²ã«ãªã‚‹ã®ã§ï¼Œç™»éŒ²ã§ããªã„ã‚ˆã†ã«NULLã‚’Push()
 				ObjectIf* obj = fc->CreateObject(CDConvexMeshIf::GetIfInfoStatic(), &cmd, meshes[i][0]->GetName())->Cast();
 				fc->objects.Pop();
 				meshDataNode->loadedObjects.push_back(obj);
@@ -425,7 +425,7 @@ public:
 };
 
 
-// DirectX‚ÌAnimationSetD
+// DirectXã®AnimationSetï¼
 class FWNodeHandlerXAnimationSet: public UTLoadHandlerImp<AnimationSet>{
 public:
 	FWNodeHandlerXAnimationSet():UTLoadHandlerImp<Desc>("AnimationSet"){}
@@ -440,7 +440,7 @@ public:
 	}
 };
 
-// DirectX‚ÌAnimationD
+// DirectXã®Animationï¼
 class FWNodeHandlerXAnimation: public UTLoadHandlerImp<Animation>{
 	class LoadInitalPose: public UTLoadTask{
 		GRAnimation* anim;
@@ -466,7 +466,7 @@ public:
 };
 
 
-// DirectX‚ÌAnimationKeyD
+// DirectXã®AnimationKeyï¼
 class FWNodeHandlerXAnimationKey: public UTLoadHandlerImp<AnimationKey>{
 public:
 	FWNodeHandlerXAnimationKey():UTLoadHandlerImp<Desc>("AnimationKey"){}
@@ -509,7 +509,7 @@ public:
 	}
 };
 
-// Spirnghead1‚ÌSphere
+// Spirnghead1ã®Sphere
 class FWNodeHandlerSolidSphere: public UTLoadHandlerImp<PHSolidDesc>{
 public:
 	FWNodeHandlerSolidSphere():UTLoadHandlerImp<Desc>("PHSolidDesc"){}
@@ -523,7 +523,7 @@ public:
 			CDSphereDesc csd;
 			csd.radius = sphere.radius;
 			UTLoadedData* ldMat = spheres[i][0]->FindDescendant("PhysicalMaterial");
-			if (ldMat){	//	•¨—ƒ}ƒeƒŠƒAƒ‹‚Ìƒ[ƒh
+			if (ldMat){	//	ç‰©ç†ãƒãƒ†ãƒªã‚¢ãƒ«ã®ãƒ­ãƒ¼ãƒ‰
 				SetPHMaterial(csd.material, *(PhysicalMaterial*)ldMat->data);
 			}
 			Affinef afShape;
@@ -572,7 +572,7 @@ public:
 	}
 };	
 
-// Springhead1‚ÌContactInactive‚Ìƒ^ƒXƒND
+// Springhead1ã®ContactInactiveã®ã‚¿ã‚¹ã‚¯ï¼
 class FWContactInactiveTask: public UTLoadTask{
 public:
 	SPR_OBJECTDEF_NOIF(FWContactInactiveTask);
@@ -582,7 +582,7 @@ public:
 };
 SPR_OBJECTIMP1(FWContactInactiveTask, UTLoadTask);
 
-// Springhead1‚ÌContactInactive.
+// Springhead1ã®ContactInactive.
 class FWNodeHandlerContactInactive: public UTLoadHandlerImp<ContactInactive>{
 public:
 	FWNodeHandlerContactInactive():UTLoadHandlerImp<Desc>("ContactInactive"){}
@@ -595,26 +595,26 @@ public:
 	}
 };
 
-// ŒÃ‚¢•¨—ƒ}ƒeƒŠƒAƒ‹Dƒ[ƒh‚Ì‹L˜^—pD
+// å¤ã„ç‰©ç†ãƒãƒ†ãƒªã‚¢ãƒ«ï¼ãƒ­ãƒ¼ãƒ‰æ™‚ã®è¨˜éŒ²ç”¨ï¼
 class FWPHMaterialTask: public UTLoadTask{
 public:
 	SPR_OBJECTDEF_NOIF(FWPHMaterialTask);
 	FWPHMaterialTask(): mu(0.2f), mu0(0.2f), e(0.2f){}
-	float mu;		///<	“®–€C–€CŒW”
-	float mu0;		///<	Ã~–€CŒW”
-	float e;		///<	’µ‚Ë•Ô‚èŒW”	
+	float mu;		///<	å‹•æ‘©æ“¦æ‘©æ“¦ä¿‚æ•°
+	float mu0;		///<	é™æ­¢æ‘©æ“¦ä¿‚æ•°
+	float e;		///<	è·³ã­è¿”ã‚Šä¿‚æ•°	
 	void Execute(UTLoadContext* fc){}
 };
 SPR_OBJECTIMP1(FWPHMaterialTask, UTLoadTask);
 
-// ŒÃ‚¢•¨—ƒ}ƒeƒŠƒAƒ‹D
+// å¤ã„ç‰©ç†ãƒãƒ†ãƒªã‚¢ãƒ«ï¼
 class FWNodeHandlerPhysicalMaterial: public UTLoadHandlerImp<PhysicalMaterial>{
 public:	
 	FWNodeHandlerPhysicalMaterial():UTLoadHandlerImp<Desc>("PhysicalMaterial"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
 		UTRef<FWPHMaterialTask> phmtask = DBG_NEW FWPHMaterialTask;
-		phmtask->mu = d.d;		// Å‘åÃ~–€CŒW”
-		phmtask->mu0 = d.s;		// “®–€CŒW”		
+		phmtask->mu = d.d;		// æœ€å¤§é™æ­¢æ‘©æ“¦ä¿‚æ•°
+		phmtask->mu0 = d.s;		// å‹•æ‘©æ“¦ä¿‚æ•°		
 		if (fc->datas.Top()->GetName().length()){
 			GRScene* gs = FindGRScene(fc);
 			phmtask->SetNameManager(gs->Cast());
@@ -628,15 +628,15 @@ public:
 };
 
 
-// Springhead1‚ÌContactEngineD
+// Springhead1ã®ContactEngineï¼
 class FWNodeHandlerContactEngine: public UTLoadHandlerImp<ContactEngine>{
 public:	
 	class Adapter: public UTLoadTask{
 	public:
 		PHSceneIf* phScene;
-		std::vector< UTRef<PHSolidIf> > solids;	// ContactEngineƒm[ƒh‚É’Ç‰Á‚³‚ê‚Ä‚¢‚­‡‚Åsolids‚É“o˜^D
-												// ContactInactiveƒm[ƒh‚Ìƒ[ƒh‚Å—˜—pD
-		std::vector< UTRef<FWContactInactiveTask> > inactiveTask;	// ContactEngineƒ^ƒXƒN
+		std::vector< UTRef<PHSolidIf> > solids;	// ContactEngineãƒãƒ¼ãƒ‰ã«è¿½åŠ ã•ã‚Œã¦ã„ãé †ã§solidsã«ç™»éŒ²ï¼
+												// ContactInactiveãƒãƒ¼ãƒ‰ã®ãƒ­ãƒ¼ãƒ‰ã§åˆ©ç”¨ï¼
+		std::vector< UTRef<FWContactInactiveTask> > inactiveTask;	// ContactEngineã‚¿ã‚¹ã‚¯
 		UTLoadContext* fc;
 		Adapter():phScene(NULL){}
 		void AddFrameToSolid(PHSolid* solid, GRFrame* fr, Affinef af){
@@ -646,14 +646,14 @@ public:
 				GRFrame* f = DCAST(GRFrame, v);
 				if (f) AddFrameToSolid(solid, f, af);
 
-				//	Mesh‚Ìê‡CCDConvexMesh‚ğ’Ç‰Á
+				//	Meshã®å ´åˆï¼ŒCDConvexMeshã‚’è¿½åŠ 
 				GRMesh* m = DCAST(GRMesh, v);
 				if (m){
 					CDConvexMeshDesc mdesc;
 					for(unsigned i=0; i < m->vertices.size(); ++i)
 						mdesc.vertices.push_back(m->vertices[i]);
 
-					// “®–€C–€CŒW”muAÃ~–€CŒW”mu0 
+					// å‹•æ‘©æ“¦æ‘©æ“¦ä¿‚æ•°muã€é™æ­¢æ‘©æ“¦ä¿‚æ•°mu0 
 					UTMapObject::iterator itr = fc->mapObj.find(m->Cast());
 					if (itr != fc->mapObj.end()){
 						FWPHMaterialTask* maptask = DCAST(FWPHMaterialTask, itr->second);	
@@ -666,13 +666,13 @@ public:
 					solid->SetShapePose(solid->NShape()-1, pose);
 				}
 
-				//	Sphere‚Ìê‡CCDSphere‚ğ’Ç‰Á
+				//	Sphereã®å ´åˆï¼ŒCDSphereã‚’è¿½åŠ 
 				GRSphere* s = DCAST(GRSphere, v);
 				if (s){
 					CDSphereDesc sdesc;
 					sdesc.radius = s->radius;
 
-					// “®–€C–€CŒW”muAÃ~–€CŒW”mu0 
+					// å‹•æ‘©æ“¦æ‘©æ“¦ä¿‚æ•°muã€é™æ­¢æ‘©æ“¦ä¿‚æ•°mu0 
 					UTMapObject::iterator itr = fc->mapObj.find(s->Cast());
 					if (itr != fc->mapObj.end()){
 							FWPHMaterialTask* maptask = DCAST(FWPHMaterialTask, itr->second);
@@ -688,7 +688,7 @@ public:
 		}
 		virtual bool AddChildObject(ObjectIf* o){
 			GRFrame* fr = DCAST(GRFrame, o);
-			if (fr){	//	Solid‚É•ÏŠ·‚µ‚Ä’Ç‰Á
+			if (fr){	//	Solidã«å¤‰æ›ã—ã¦è¿½åŠ 
 				PHSolidDesc sd;
 				PHSolid* solid = DCAST(PHSolid, phScene->CreateSolid(PHSolidDesc()));
 				UTString name("so");
@@ -718,7 +718,7 @@ public:
 			for(unsigned i=0; i<solids.size(); ++i){
 				phScene->SetContactMode(solids[i], PHSceneDesc::MODE_LCP);
 			}
-			// ContactInactiveƒm[ƒh
+			// ContactInactiveãƒãƒ¼ãƒ‰
 			int iindex=0, jindex=0;
 			for (unsigned int t=0; t<inactiveTask.size(); ++t){		
 				for (unsigned int i=0; i<inactiveTask[t]->solidIndexes.size(); ++i){
@@ -749,7 +749,7 @@ public:
 };
 
 
-// Springhead1‚ÌSolidD
+// Springhead1ã®Solidï¼
 class FWNodeHandlerSolid: public UTLoadHandlerImp<Solid>{
 public:
 	class Adapter: public FWNodeHandlerContactEngine::Adapter{
@@ -760,7 +760,7 @@ public:
 		Adapter():solid(NULL), frame(NULL), fwScene(NULL){}
 		virtual bool AddChildObject(ObjectIf* o){
 			frame = DCAST(GRFrame, o);
-			if (frame){	//	frˆÈ‰º‚Ì‘SMesh‚ğSolid‚É’Ç‰Á
+			if (frame){	//	frä»¥ä¸‹ã®å…¨Meshã‚’Solidã«è¿½åŠ 
 				AddFrameToSolid(solid, frame, frame->GetTransform().inv());
 				return true;
 			}
@@ -807,7 +807,7 @@ public:
 	}
 };
 
-// Springhead1‚ÌCameraD
+// Springhead1ã®Cameraï¼
 class FWNodeHandlerCamera: public UTLoadHandlerImp<Camera>{
 public:	
 	FWNodeHandlerCamera():UTLoadHandlerImp<Desc>("Camera"){}
@@ -836,7 +836,7 @@ public:
 	}
 };
 
-// Springhead1‚ÌGravityEngineD
+// Springhead1ã®GravityEngineï¼
 class FWNodeHandlerGravityEngine: public UTLoadHandlerImp<GravityEngine>{
 public:	
 	FWNodeHandlerGravityEngine():UTLoadHandlerImp<Desc>("GravityEngine"){}
@@ -847,17 +847,17 @@ public:
 		linkPos = (int)fc->links.size();
 	}
 	void AfterCreateChildren(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
-		//	GravityEngine‚ÌqƒIƒuƒWƒFƒNƒg‚Í‚Æ‚è‚ ‚¦‚¸–³‹B–{“–‚ÍGravity‚ÌOn/Off‚Ég‚¤B
+		//	GravityEngineã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ã¨ã‚Šã‚ãˆãšç„¡è¦–ã€‚æœ¬å½“ã¯Gravityã®On/Offã«ä½¿ã†ã€‚
 		fc->links.resize(linkPos);
 	}
 };
 
-// Springhead1‚ÌSceneD
+// Springhead1ã®Sceneï¼
 class FWNodeHandlerScene: public UTLoadHandlerImp<Scene>{
 public:	
 	FWNodeHandlerScene():UTLoadHandlerImp<Desc>("Scene"){}
 	void BeforeCreateObject(Desc& d, UTLoadedData* ld, UTLoadContext* fc){
-		//	Framework‚ğì‚éD
+		//	Frameworkã‚’ä½œã‚‹ï¼
 		FWSceneDesc fwsd;
 		fc->objects.Push(fc->CreateObject(FWSceneIf::GetIfInfoStatic(), &fwsd, ld->GetName()));
 		ld->loadedObjects.push_back(fc->objects.Top());
@@ -867,19 +867,19 @@ public:
 			sdk = fc->objects[i]->Cast();
 			if (sdk) break;
 		}
-		assert(sdk);	//<	FWSdk‚ğƒXƒ^ƒbƒN‚ÉÏ‚ñ‚Å‚¨‚­•K—v‚ ‚èD
+		assert(sdk);	//<	FWSdkã‚’ã‚¹ã‚¿ãƒƒã‚¯ã«ç©ã‚“ã§ãŠãå¿…è¦ã‚ã‚Šï¼
 
-		//	GRScene‚ğì‚éD
+		//	GRSceneã‚’ä½œã‚‹ï¼
 		GRSceneIf* grScene = sdk->GetGRSdk()->CreateScene(GRSceneDesc());
-		//	PHScene‚ğì‚éD
+		//	PHSceneã‚’ä½œã‚‹ï¼
 		PHSceneDesc psd;
 		PHSceneIf* phScene = sdk->GetPHSdk()->CreateScene(psd);
 
-		//	Framework‚ÉƒV[ƒ“‚ğ“o˜^D
+		//	Frameworkã«ã‚·ãƒ¼ãƒ³ã‚’ç™»éŒ²ï¼
 		fws->AddChildObject(phScene);
 		fws->AddChildObject(grScene);
 
-		// timeStep‚ğİ’èD
+		// timeStepã‚’è¨­å®šï¼
 		UTMapObject::iterator itr;
 		for (itr=fc->mapObj.begin(); itr!=fc->mapObj.end(); ++itr){
 			FWSimulatorTask* simtask = DCAST(FWSimulatorTask, itr->first);
@@ -894,7 +894,7 @@ public:
 	}
 };
 
-// Springhead1‚ÌSolidContainerD
+// Springhead1ã®SolidContainerï¼
 class FWNodeHandlerSolidContainer: public UTLoadHandlerImp<SolidContainer>{
 public:	
 	FWNodeHandlerSolidContainer():UTLoadHandlerImp<Desc>("SolidContainer"){}
@@ -904,7 +904,7 @@ public:
 	}
 };
 
-// Springhead1‚ÌJointEngineD
+// Springhead1ã®JointEngineï¼
 class FWNodeHandlerJointEngine: public UTLoadHandlerImp<JointEngine>{
 public:	
 	class JointCreator: public UTLoadTask{
@@ -963,7 +963,7 @@ public:
 	}
 };
 
-// Springhead1‚ÌJointD
+// Springhead1ã®Jointï¼
 class FWNodeHandlerJoint: public UTLoadHandlerImp<Joint>{
 public:	
 	typedef FWNodeHandlerJointEngine::JointCreator JointCreator;
@@ -994,7 +994,7 @@ public:
 };
 
 /*
-// Springhead1‚ÌImportD
+// Springhead1ã®Importï¼
 class FWNodeHandlerImport: public UTLoadHandlerImp<Import>{
 public:	
 	FWNodeHandlerImport():UTLoadHandlerImp<Desc>("Import"){}
@@ -1026,7 +1026,7 @@ public:
 }
 
 
-// ƒnƒ“ƒhƒ‰’è‹`
+// ãƒãƒ³ãƒ‰ãƒ©å®šç¾©
 namespace Spr{
 using namespace SprOldSpringhead;
 void SPR_CDECL FWRegisterOldSpringheadNode(){

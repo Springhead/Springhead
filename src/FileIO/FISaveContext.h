@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,36 +18,36 @@ class FISdk;
 
 class FISaveContext: public UTFileContext{
 public:
-	///	ƒZ[ƒu‚·‚éƒtƒ@ƒCƒ‹‚Ì–¼‘O
+	///	ã‚»ãƒ¼ãƒ–ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®åå‰
 	UTString fileName;
-	///	UTTypeDesc‚ÌƒtƒB[ƒ‹ƒh‚Ö‚ÌƒCƒ^ƒŒ[ƒ^‚ÌƒXƒ^ƒbƒN
+	///	UTTypeDescã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¸ã®ã‚¤ã‚¿ãƒ¬ãƒ¼ã‚¿ã®ã‚¹ã‚¿ãƒƒã‚¯
 	UTTypeDescFieldIts fieldIts;
-	///	ƒZ[ƒu‚·‚éƒfƒBƒXƒNƒŠƒvƒ^‚ÌƒXƒ^ƒbƒNDƒlƒXƒg‚µ‚½‘g‚İ—§‚ÄŒ^‚É”õ‚¦‚ÄƒXƒ^ƒbƒN‚É‚È‚Á‚Ä‚¢‚éD
+	///	ã‚»ãƒ¼ãƒ–ã™ã‚‹ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®ã‚¹ã‚¿ãƒƒã‚¯ï¼ãƒã‚¹ãƒˆã—ãŸçµ„ã¿ç«‹ã¦å‹ã«å‚™ãˆã¦ã‚¹ã‚¿ãƒƒã‚¯ã«ãªã£ã¦ã„ã‚‹ï¼
 	UTStack< UTRef<UTLoadedData> > datas;
 	///
 	std::set<ObjectIf*> savedObjects;
-	/// ƒCƒ“ƒ|[ƒgƒXƒ^ƒbƒN
+	/// ã‚¤ãƒ³ãƒãƒ¼ãƒˆã‚¹ã‚¿ãƒƒã‚¯
 	UTStack<Import*>	importStack;
-	/// SDK‚Ö‚ÌQÆ
+	/// SDKã¸ã®å‚ç…§
 	FISdk*				sdk;
 	
 	FISaveContext();
-	///	ƒZ[ƒu—p‚Éƒtƒ@ƒCƒ‹‚ğŠJ‚­
+	///	ã‚»ãƒ¼ãƒ–ç”¨ã«ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‹ã
 	//bool Open(const char* fn, bool binary);
-	/// ƒtƒ@ƒCƒ‹‚ğ•Â‚¶‚é
+	/// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’é–‰ã˜ã‚‹
 	//void Close();
 
 	virtual void PushFileMap(const UTString fn, bool binary);
 	virtual void PopFileMap();
 	std::ostream&	Stream();
 
-	///	ƒƒbƒZ[ƒW‚Ìo—Í
+	///	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡ºåŠ›
 	void Message(const char* msg);
-	///	ƒGƒ‰[ƒƒbƒZ[ƒW‚Ìo—Í
+	///	ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡ºåŠ›
 	void ErrorMessage(const char* msg);
 
-	/**	ƒZ[ƒu‚·‚éƒm[ƒh‚ÌƒOƒ‹[ƒv‚ğ“o˜^BƒOƒ‹[ƒv–¼‚ğƒXƒy[ƒX‚Å‹æØ‚Á‚Äw’èB
-		—áFResisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
+	/**	ã‚»ãƒ¼ãƒ–ã™ã‚‹ãƒãƒ¼ãƒ‰ã®ã‚°ãƒ«ãƒ¼ãƒ—ã‚’ç™»éŒ²ã€‚ã‚°ãƒ«ãƒ¼ãƒ—åã‚’ã‚¹ãƒšãƒ¼ã‚¹ã§åŒºåˆ‡ã£ã¦æŒ‡å®šã€‚
+		ä¾‹ï¼šResisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
 	*/
 	void RegisterGroupToDb(const char* gp);
 

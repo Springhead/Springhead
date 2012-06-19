@@ -1,12 +1,12 @@
-#include <Springhead.h>
+ï»¿#include <Springhead.h>
 //
 #include <stdlib.h>
-//#include "TMatrix.h"//s—ñƒ‰ƒCƒuƒ‰ƒŠ‚ğƒCƒ“ƒNƒ‹[ƒh‚·‚éB
+//#include "TMatrix.h"//è¡Œåˆ—ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã™ã‚‹ã€‚
 #include <iostream>
 //
 #include <GL/glut.h>
 
-using namespace PTM;//  s—ñƒNƒ‰ƒX‚ÍPTM–¼‘O‹óŠÔ‚Ì’†‚ÅéŒ¾‚³‚ê‚Ä‚¢‚éB
+using namespace PTM;//  è¡Œåˆ—ã‚¯ãƒ©ã‚¹ã¯PTMåå‰ç©ºé–“ã®ä¸­ã§å®£è¨€ã•ã‚Œã¦ã„ã‚‹ã€‚
 
 using namespace Spr;
 UTRef< GRDebugRenderIf > grRender   = NULL;
@@ -14,21 +14,21 @@ UTRef< PHSceneIf >       phScene    = NULL;
 UTRef< PHSolidIf >		 solid[5]	= {0,0,0,0,0};
 UTRef< PHJoint1DIf > joint[2];
 
-// ƒJƒƒ‰ˆÊ’u
+// ã‚«ãƒ¡ãƒ©ä½ç½®
 double CameraZoom = 30.0;
 double CameraRotX =  0.0;
 double CameraRotY =  4.6;
-//ŠÖß‚ÌŠp“x
+//é–¢ç¯€ã®è§’åº¦
 double q1 = 90;
 double q2 = 10;
-//ƒNƒŠƒbƒN‚µ‚½ˆÊ’u
-double point[2][2];				// À•W‚ğ‹L‰¯‚·‚é”z—ñ 
-int w=800;//ƒEƒBƒ“ƒhƒE‚ÌƒTƒCƒY
+//ã‚¯ãƒªãƒƒã‚¯ã—ãŸä½ç½®
+double point[2][2];				// åº§æ¨™ã‚’è¨˜æ†¶ã™ã‚‹é…åˆ— 
+int w=800;//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚µã‚¤ã‚º
 int h=600;
 
 
 void Display() {
-	// ‹“_‚Ìİ’è
+	// è¦–ç‚¹ã®è¨­å®š
 	Affinef view;
 	double yoffset = 0.0;
 	view.Pos() = CameraZoom * Vec3f( cos(CameraRotX) * cos(CameraRotY),
@@ -48,44 +48,44 @@ void Display() {
 void Timer(int id){
 	double x,y,fai;
 	glutTimerFunc(20, Timer,0);
-	//ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌƒXƒeƒbƒv
+	//ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¹ãƒ†ãƒƒãƒ—
 	phScene->ClearForce();
-	//§Œä‹@\
-	//’†SˆÊ’uA400,300// 400,255
+	//åˆ¶å¾¡æ©Ÿæ§‹
+	//ä¸­å¿ƒä½ç½®ã€400,300// 400,255
 	//point[1][0] = CameraZoom*(8*cos(Rad(-q1))+7*cos(Rad(-q2)))+400;
 	//point[1][1] = -CameraZoom*(8*sin(Rad(-q1))+7*sin(Rad(-q2)))-255;
 	//std::cout << point[0][0];
 //
-	point[1][0] = 8*cos(Rad(q1))+7*cos(Rad(q1+q2));//Œ»İ‚ÌˆÊ’u
+	point[1][0] = 8*cos(Rad(q1))+7*cos(Rad(q1+q2));//ç¾åœ¨ã®ä½ç½®
 	point[1][1] = 8*sin(Rad(q1))+7*sin(Rad(q1+q2));
 	
 	fai= acos(point[0][0]/sqrt(point[0][0]*point[0][0]+point[0][1]*point[0][1]));
 	TVector<2,double> dX;
 
-	x = (point[0][0]-point[1][0])/200;//Œ»İ’l‚Æ–Ú•W’l‚Ì·
+	x = (point[0][0]-point[1][0])/200;//ç¾åœ¨å€¤ã¨ç›®æ¨™å€¤ã®å·®
 	y = (point[0][1]-point[1][1])/200;
 
 	point[0][0] = point[1][0];
 	point[0][1] = point[1][1];
 
 	TVector<2,double> dQ; 
-	TMatrixRow<2,2,double> jacobien;//2~2‚Ìs—ñ‚ğéŒ¾
+	TMatrixRow<2,2,double> jacobien;//2Ã—2ã®è¡Œåˆ—ã‚’å®£è¨€
 
 
 	for(int count=0;count<200;count++){
-		point[1][0] = 8*cos(Rad(q1))+7*cos(Rad(q1+q2));//Œ»İ‚ÌˆÊ’u‚ÌŒvZ
+		point[1][0] = 8*cos(Rad(q1))+7*cos(Rad(q1+q2));//ç¾åœ¨ã®ä½ç½®ã®è¨ˆç®—
 		point[1][1] = 8*sin(Rad(q1))+7*sin(Rad(q1+q2));
 
 		point[0][0] += x;
 	    point[0][1] += y;
 
-		dX[0] = point[0][0]-point[1][0];//Œ»İ’l‚Æ–Ú•W’l‚Ì·
+		dX[0] = point[0][0]-point[1][0];//ç¾åœ¨å€¤ã¨ç›®æ¨™å€¤ã®å·®
 		dX[1] = point[0][1]-point[1][1];
 
 		jacobien[0][0] = -8*sin(Rad(q1))-7*sin(Rad(q1+q2)); jacobien[0][1] = -7*sin(Rad(q1+q2));
 		jacobien[1][0] = 8*cos(Rad(q1))+7*cos(Rad(q1+q2));  jacobien[1][1] = 7*cos(Rad(q1+q2));
 
-		dQ = jacobien.inv()*dX; //‹t‰^“®Šwƒ‚ƒfƒ‹‚É‚æ‚èAŠp“x‚Ì•Ï‰»‚ğ‹‚ß‚é
+		dQ = jacobien.inv()*dX; //é€†é‹å‹•å­¦ãƒ¢ãƒ‡ãƒ«ã«ã‚ˆã‚Šã€è§’åº¦ã®å¤‰åŒ–ã‚’æ±‚ã‚ã‚‹
 		//std::cout << jacobien;
 		if(dQ[0]<-0&&-90<q1){ q1 = q1-1;}
 		else if(dQ[0]>0&&q1<270){ q1 = q1+1;}
@@ -98,7 +98,7 @@ void Timer(int id){
 	printf("%f,%f\n",q1,q2);
 	joint[0]->SetSpringOrigin(Rad(90.0-q1));
 	joint[1]->SetSpringOrigin(Rad(-q2));
-	// ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌƒXƒeƒbƒv‚Ì‘±‚«
+	// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¹ãƒ†ãƒƒãƒ—ã®ç¶šã
 	phScene->GenerateForce();
 	phScene->Integrate();
 	glutPostRedisplay();
@@ -137,7 +137,7 @@ void Keyboard(unsigned char key, int x, int y)
 			break;
 		case 'q':
 		case 'Q':
-		case '\033':  //\033‚ÍESC‚ÌASCII ƒR[ƒh
+		case '\033':  //\033ã¯ESCã®ASCII ã‚³ãƒ¼ãƒ‰
 		exit(0);
 		default:
 		break;
@@ -148,12 +148,12 @@ void mouse(int button, int state, int x, int y){
 	switch (button) {
 		case GLUT_LEFT_BUTTON:
 			printf("Left");
-			//ƒNƒŠƒbƒN‚ğ‰Ÿ‚·‚Æ‚«
+			//ã‚¯ãƒªãƒƒã‚¯ã‚’æŠ¼ã™ã¨ã
 			if(state==GLUT_DOWN){
 				point[0][0] = (x-w/2)/30.0;
 				point[0][1] = (h/2-y)/30.0;
 				printf("%f,%f\n",point[0][0],point[0][1]);
-			//ƒNƒŠƒbƒN‚ª—£‚ê‚é‚Æ‚«
+			//ã‚¯ãƒªãƒƒã‚¯ãŒé›¢ã‚Œã‚‹ã¨ã
 			}
 			else{
 				point[0][0] = (x-w/2)/20.0;
@@ -192,20 +192,20 @@ int main(int argc,char* argv[]){
 	point[0][1] = 8*sin(Rad(q1))+7*sin(Rad(q1+q2));//195;//
 	//printf("%f,%f\n",point[0][0],point[0][1]);
 
-	//SDK‚Ì¶¬
+	//SDKã®ç”Ÿæˆ
 	UTRef< PHSdkIf > phSdk = PHSdkIf::CreateSdk();
 	UTRef< GRSdkIf > grSdk = GRSdkIf::CreateSdk();
 	
-	//ƒV[ƒ“ƒOƒ‰ƒt‚Ì¶¬
+	//ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã®ç”Ÿæˆ
 	PHSceneDesc dScene;
-	dScene.timeStep = 0.05;		//Ï•ªŠÔ•
-	dScene.numIteration = 20;	//ŒJ‚è•Ô‚µŒvZ‰ñ”
+	dScene.timeStep = 0.05;		//ç©åˆ†æ™‚é–“å¹…
+	dScene.numIteration = 20;	//ç¹°ã‚Šè¿”ã—è¨ˆç®—å›æ•°
 	phScene = phSdk->CreateScene(dScene);
 
-	//ƒfƒXƒNƒŠƒvƒ^‚ğ—p‚¢‚Ä„‘ÌƒIƒuƒWƒFƒNƒg‚ğ¶¬
+	//ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’ç”¨ã„ã¦å‰›ä½“ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 	PHSolidDesc sDesc;
 	PHSolidDesc dSolid0;
-	//„‘Ì‚ğ‹ó’†‚ÉŒÅ’è‚·‚é
+	//å‰›ä½“ã‚’ç©ºä¸­ã«å›ºå®šã™ã‚‹
 	dSolid0.dynamical = false;
 
 	//UTRef< PHSolidIf > solid[3];
@@ -214,18 +214,18 @@ int main(int argc,char* argv[]){
 	solid[2] = phScene->CreateSolid(sDesc);
 	solid[3] = phScene->CreateSolid(sDesc);
 
-	//ƒfƒXƒNƒŠƒvƒ^‚ğ—p‚¢‚Ä” Œ`óƒIƒuƒWƒFƒNƒg‚ğ¶¬
+	//ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’ç”¨ã„ã¦ç®±å½¢çŠ¶ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆ
 	CDBoxDesc bDesc;
 	CDBoxDesc sBase;
 	CDSphereDesc sPoint;
-	bDesc.boxsize = Vec3f(1.0f,6.0f,1.0f);		//Vec3f(cC‰¡C‚‚³)‚ğ‘‚«Š·‚¦‚Ä‚¢‚é
+	bDesc.boxsize = Vec3f(1.0f,6.0f,1.0f);		//Vec3f(ç¸¦ï¼Œæ¨ªï¼Œé«˜ã•)ã‚’æ›¸ãæ›ãˆã¦ã„ã‚‹
 	sBase.boxsize = Vec3f(1.0f,1.0f,1.0f);
 	sPoint.radius = 0.5;
 
 	UTRef< CDShapeIf > shapeBox = phSdk->CreateShape(bDesc);
 	UTRef< CDShapeIf > BaseBox  = phSdk->CreateShape(sBase);
 	UTRef< CDShapeIf > shapePoint  = phSdk->CreateShape(sPoint);
-	//„‘ÌƒIƒuƒWƒFƒNƒg‚É” ƒIƒuƒWƒFƒNƒg‚ğŠ„‚è“–‚Ä‚é
+	//å‰›ä½“ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ç®±ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’å‰²ã‚Šå½“ã¦ã‚‹
 	solid[0]->AddShape(BaseBox);
 	solid[1]->AddShape(shapeBox);
 	solid[2]->AddShape(shapeBox);
@@ -236,7 +236,7 @@ int main(int argc,char* argv[]){
 	solid[3]->SetGravity(false);
 	solid[3]->SetCenterPosition(Vec3d(-point[0][0],point[0][1]+1.5,0.0));
 	//solid[3]->SetPose(Vec3f(point[0][0],point[0][1],0.0));
-	//ƒfƒXƒNƒŠƒvƒ^‚Æ2‚Â‚Ì„‘Ì‚ğ—p‚¢‚ÄŠÖß‚ğ¶¬
+	//ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã¨2ã¤ã®å‰›ä½“ã‚’ç”¨ã„ã¦é–¢ç¯€ã‚’ç”Ÿæˆ
 	PHHingeJointDesc hDesc;
 	hDesc.poseSocket.Pos() = Vec3d(0.0f, 2.0f, 0.0f);
 	//hDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90.0f),'x');
@@ -246,7 +246,7 @@ int main(int argc,char* argv[]){
 	hDesc.damper		   = 100;
 	joint[0] = (PHJoint1DIf*) phScene->CreateJoint(solid[0], solid[1], hDesc);
 
-	//ƒfƒXƒNƒŠƒvƒ^‚Æ2‚Â‚Ì„‘Ì‚ğ—p‚¢‚ÄŠÖß‚ğ¶¬
+	//ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã¨2ã¤ã®å‰›ä½“ã‚’ç”¨ã„ã¦é–¢ç¯€ã‚’ç”Ÿæˆ
 	hDesc.poseSocket.Pos() = Vec3d(0.0f, 4.0f, 0.0f);
 	//hDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(-90.0f),'x');
 	hDesc.posePlug.Pos()   = Vec3d(0.0f, -4.0f, 0.0f);
@@ -255,7 +255,7 @@ int main(int argc,char* argv[]){
 	hDesc.damper		   = 100;
 	joint[1] = (PHJoint1DIf*) phScene->CreateJoint(solid[1], solid[2], hDesc);
 
-	//GLŠÖŒW
+	//GLé–¢ä¿‚
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	glutInitWindowSize(w,h);
@@ -270,9 +270,9 @@ int main(int argc,char* argv[]){
 	glutTimerFunc(20,Timer,0);
 	glutMouseFunc(mouse);
 
-	grRender->SetDevice(grDevice);//Springhead2‚Ì•`‰æ‹@”\‚ÉOpenGL‚Ìg—p“o˜^‚ğ‚·‚éB
+	grRender->SetDevice(grDevice);//Springhead2ã®æç”»æ©Ÿèƒ½ã«OpenGLã®ä½¿ç”¨ç™»éŒ²ã‚’ã™ã‚‹ã€‚
 
-	// Æ–¾‚Ìİ’è
+	// ç…§æ˜ã®è¨­å®š
 	GRLightDesc light0, light1;
 	light0.position = Vec4f(10.0, 20.0, 20.0, 1.0);
 	light1.position = Vec4f(-10.0, 10.0, 10.0, 1.0);

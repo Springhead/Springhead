@@ -1,4 +1,4 @@
-#include "..\..\..\include\EmbPython\Utility\SprEPObject.h"
+ï»¿#include "..\..\..\include\EmbPython\Utility\SprEPObject.h"
 #include "..\..\..\include\EmbPython\Utility\SprEPCast.h"
 #include "..\..\..\include\EmbPython\SprEPFoundation.h"
 #include "..\..\..\include\EmbPython\SprEPUtility.h"
@@ -35,8 +35,8 @@ static PyObject* __PYDECL EPObject_cast(PyObject* self, PyObject* to)
 
 
 
-/////////////////////////////////////ƒƒ\ƒbƒh“o˜^—p
-///void‚Ìƒƒ\ƒbƒh‚Ì’è‹`
+/////////////////////////////////////ãƒ¡ã‚½ãƒƒãƒ‰ç™»éŒ²ç”¨
+///voidã®ãƒ¡ã‚½ãƒƒãƒ‰ã®å®šç¾©
 static PyMethodDef EPObject_methods[] =
 {
 	{"dir",(PyCFunction)EPObject_dir,METH_NOARGS|METH_CLASS,"EPObject::dir"},
@@ -58,22 +58,22 @@ static PyObject* __PYDECL EPObject_new(PyTypeObject *type,PyObject *args, PyObje
 	self = ( EPObject*) type->tp_alloc(type,0);
 	if ( self != NULL)
 	{
-		//“Á‚É‚â‚é‚±‚Æ‚È‚µ
+		//ç‰¹ã«ã‚„ã‚‹ã“ã¨ãªã—
 	}
 	return (PyObject *)self;
 }
 ////////////////////////////////////////////dealloc
 static void __PYDECL EPObject_dealloc(EPObject* self)
 {
-	//Python‚Å‚¢‚ç‚È‚­‚Ä‚àSpringhead‚Åg‚Á‚Ä‚é‚©‚à‚µ‚ê‚È‚¢
+	//Pythonã§ã„ã‚‰ãªãã¦ã‚‚Springheadã§ä½¿ã£ã¦ã‚‹ã‹ã‚‚ã—ã‚Œãªã„
 	//delete(self->ptr);
 	self->ob_base.ob_type->tp_free((PyObject*)self);
 }
 
-//”äŠr‰‰ZqƒI[ƒo[ƒ[ƒh
+//æ¯”è¼ƒæ¼”ç®—å­ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 static PyObject* __PYDECL EPObject_richcmp(PyObject *obj1, PyObject *obj2, int op)
 {
-	//EPObject‚Í == ‚Å”äŠr‚µ‚½‚Æ‚«A“¯‚¶Springhead‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ö‚Ìƒ|ƒCƒ“ƒ^‚Ìê‡‚ÍTrue,‚»‚êˆÈŠO‚ÍFalse‚ğ•Ô‚·
+	//EPObjectã¯ == ã§æ¯”è¼ƒã—ãŸã¨ãã€åŒã˜Springheadã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã®å ´åˆã¯True,ãã‚Œä»¥å¤–ã¯Falseã‚’è¿”ã™
     PyObject *result;
 	int c;
 
@@ -95,10 +95,10 @@ static PyObject* __PYDECL EPObject_richcmp(PyObject *obj1, PyObject *obj2, int o
     return result;
 }
 
-//«‘‚ÌƒL[‚É‚·‚é‚½‚ß‚É•K—v
+//è¾æ›¸ã®ã‚­ãƒ¼ã«ã™ã‚‹ãŸã‚ã«å¿…è¦
 static long __PYDECL EPObject_hash(PyObject *obj)
 {
-	//EPObject‚Ìptr‚ğƒnƒbƒVƒ…’l‚Æ‚µ‚Äg‚¤ 
+	//EPObjectã®ptrã‚’ãƒãƒƒã‚·ãƒ¥å€¤ã¨ã—ã¦ä½¿ã† 
 	if ( EPObject_Ptr(obj) == 0 ) {
 		PyErr_SetString( PyErr_Spr_NullReference , "Null Reference in EPObject.__hash__");
 		return -1;
@@ -152,7 +152,7 @@ PyTypeObject EPObjectType =
 
 void initEPObject(PyObject *rootModule)
 {
-	//PythonƒNƒ‰ƒX‚Ìì¬
+	//Pythonã‚¯ãƒ©ã‚¹ã®ä½œæˆ
 	if ( PyType_Ready( &EPObjectType ) < 0 ) return ;
 
 	string package;

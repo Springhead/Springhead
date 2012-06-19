@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file GRSdkD3D.h
- *	@brief DirectX‚ÌƒOƒ‰ƒtƒBƒbƒNƒXSDK
+ *	@brief DirectXã®ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹SDK
  */
 #ifndef GRSDKD3D_H
 #define GRSDKD3D_H
@@ -18,7 +18,7 @@
 namespace Spr {;
 
 /**	@class	GRSdkD3D
-    @brief	DirectX‚ÌƒOƒ‰ƒtƒBƒbƒNƒXSDK@ */
+    @brief	DirectXã®ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹SDKã€€ */
 class SPR_DLL GRSdkD3D:public Sdk, public GRSdkD3DIfInit, public GRSdkD3DDesc{
 protected:
 	typedef std::vector< UTRef<Object> > Objects;

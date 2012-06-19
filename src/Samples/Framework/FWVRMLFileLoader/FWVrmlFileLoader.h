@@ -1,21 +1,21 @@
-#ifndef FWVRMLFILE_LOADER_H							// ƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ğì‚é‚Ì‚¨‚Ü‚¶‚È‚¢
-#define FWVRMLFILE_LOADER_H							// “¯ã
+ï»¿#ifndef FWVRMLFILE_LOADER_H							// ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œã‚‹æ™‚ã®ãŠã¾ã˜ãªã„
+#define FWVRMLFILE_LOADER_H							// åŒä¸Š
 
-#include <Springhead.h>								// Springhead‚ÌIfŒ^‚ğg‚¤‚½‚ß‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹
-#include <Framework/SprFWApp.h>						// FrameworkƒNƒ‰ƒX‚ªéŒ¾‚³‚ê‚Ä‚¢‚éƒwƒbƒ_ƒtƒ@ƒCƒ‹
+#include <Springhead.h>								// Springheadã®Ifå‹ã‚’ä½¿ã†ãŸã‚ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«
+#include <Framework/SprFWApp.h>						// Frameworkã‚¯ãƒ©ã‚¹ãŒå®£è¨€ã•ã‚Œã¦ã„ã‚‹ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«
 
-using namespace Spr;								// Springhead‚Ì–¼‘O‹óŠÔ
+using namespace Spr;								// Springheadã®åå‰ç©ºé–“
 
 class FWVrmlfileLoader : public FWApp{
 public:
 	std::string fileName;
-	bool bDebug;									///< ƒfƒoƒbƒNƒ‚[ƒh‚ÌØ‚è‘Ö‚¦
-	FWVrmlfileLoader();								///< ƒRƒ“ƒXƒgƒ‰ƒNƒ^i‚±‚ÌƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ª¶¬‚³‚ê‚½‚ÉŒÄ‚Î‚ê‚éŠÖ”j
-	virtual void Init(int argc, char* argv[]);		///< GLUT‚Ì‰Šú‰»
-	virtual void Keyboard(int key, int x, int y);	///< ƒL[ƒ{[ƒhŠÖ”
+	bool bDebug;									///< ãƒ‡ãƒãƒƒã‚¯ãƒ¢ãƒ¼ãƒ‰ã®åˆ‡ã‚Šæ›¿ãˆ
+	FWVrmlfileLoader();								///< ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆã“ã®ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒç”Ÿæˆã•ã‚ŒãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹é–¢æ•°ï¼‰
+	virtual void Init(int argc, char* argv[]);		///< GLUTã®åˆæœŸåŒ–
+	virtual void Keyboard(int key, int x, int y);	///< ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰é–¢æ•°
 
 	void Reset();
-	void Step();									///< ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğ1ƒXƒeƒbƒvi‚ß‚é
+	void Step();									///< ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’1ã‚¹ãƒ†ãƒƒãƒ—é€²ã‚ã‚‹
 }; 
 
 #endif

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -29,9 +29,9 @@ CRBoneIf* CRBody::FindByLabel(UTString label) {
 }
 
 Vec3d CRBody::GetCenterOfMass(){
-	/// dS‚ğ‹‚ß‚é‚Ég‚¤i”Ô–Ú‚Ü‚Å‚ÌdS‚Ì¬Œv
+	/// é‡å¿ƒã‚’æ±‚ã‚ã‚‹æ™‚ã«ä½¿ã†iç•ªç›®ã¾ã§ã®é‡å¿ƒã®å°è¨ˆ
 	double totalWeight = 0;
-	/// dS‚ğ‹‚ß‚é‚Æ‚«‚Ég‚¤i”Ô–Ú‚Ü‚Å‚ÌƒuƒƒbƒN‚Ì’†SÀ•W
+	/// é‡å¿ƒã‚’æ±‚ã‚ã‚‹ã¨ãã«ä½¿ã†iç•ªç›®ã¾ã§ã®ãƒ–ãƒ­ãƒƒã‚¯ã®ä¸­å¿ƒåº§æ¨™
 	Vec3d  centerPosOfBlocks = Vec3d(0.0, 0.0, 0.0);
 
 	for(int i = 0; i<NBones(); i++){
@@ -45,7 +45,7 @@ Vec3d CRBody::GetCenterOfMass(){
 }
 
 double CRBody::GetSumOfMass(){
-	/// dS‚ğ‹‚ß‚é‚Ég‚¤i”Ô–Ú‚Ü‚Å‚ÌdS‚Ì¬Œv
+	/// é‡å¿ƒã‚’æ±‚ã‚ã‚‹æ™‚ã«ä½¿ã†iç•ªç›®ã¾ã§ã®é‡å¿ƒã®å°è¨ˆ
 	double totalWeight = 0;
 
 	for(int i = 0; i<NBones(); i++){

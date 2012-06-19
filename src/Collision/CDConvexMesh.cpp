@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -56,7 +56,7 @@ bool CDConvexMesh::GetDesc(void *ptr) const {
 
 bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 	Posed toL	= toW.Inv();
-	//	’¸“_‚ª‚Ç‚Á‚¿‘¤‚É‚ ‚é‚©’²‚×‚éD
+	//	é ‚ç‚¹ãŒã©ã£ã¡å´ã«ã‚ã‚‹ã‹èª¿ã¹ã‚‹ï¼
 	Vec3d planePosL = toL * ring.local.Pos();
 	Vec3d planeNormalL = toL.Ori() * ring.local.Ori() * Vec3d(1,0,0);
 	std::vector<int> sign;
@@ -69,44 +69,44 @@ bool CDConvexMesh::FindCutRing(CDCutRing& ring, const Posed& toW){
 		else sign[i] = 0;
 	}
 	bool rv = false;
-	//	‚Ü‚½‚ª‚Á‚Ä‚¢‚é–Ê‚Ìê‡CŒğü‚ğ‹‚ß‚é
+	//	ã¾ãŸãŒã£ã¦ã„ã‚‹é¢ã®å ´åˆï¼Œäº¤ç·šã‚’æ±‚ã‚ã‚‹
 	for(unsigned i=0; i<faces.size(); ++i){
-		if (sign[faces[i].vtxs[0]] == sign[faces[i].vtxs[1]] && //	‘S•”“¯‚¶‘¤‚Ì‚Æ‚«‚ÍC
-			sign[faces[i].vtxs[0]] == sign[faces[i].vtxs[2]]) continue;	//	ƒpƒX
-		//	ÚG–Ê(plane,–Ê1)‚Æ‘½–Ê‘Ì‚Ì–Ê(face,–Ê2)‚ÌŒğü‚ğ‹‚ß‚é
-		/*	’¼ü‚ğ‚Æ‚¨‚é1“_‚ğŒ©‚Â‚¯‚é‚Ì‚Í
-						|–Ê2
+		if (sign[faces[i].vtxs[0]] == sign[faces[i].vtxs[1]] && //	å…¨éƒ¨åŒã˜å´ã®ã¨ãã¯ï¼Œ
+			sign[faces[i].vtxs[0]] == sign[faces[i].vtxs[2]]) continue;	//	ãƒ‘ã‚¹
+		//	æ¥è§¦é¢(plane,é¢1)ã¨å¤šé¢ä½“ã®é¢(face,é¢2)ã®äº¤ç·šã‚’æ±‚ã‚ã‚‹
+		/*	ç›´ç·šã‚’ã¨ãŠã‚‹1ç‚¹ã‚’è¦‹ã¤ã‘ã‚‹ã®ã¯
+						|é¢2
 						|n2
 						|d2
 				   O	|
-			-------+----+----–Ê1 n1,d1=0
+			-------+----+----é¢1 n1,d1=0
 						|P
 			P = a*n1 + b*n2;
 				a = (d1 - d2*(n1*n2)) / (1-(n1*n2)^2)
 				b = (d2 - d1*(n1*n2)) / (1-(n1*n2)^2)
-			‚ª–Ê1(plane)‚Æ–Ê2(face)‚ªì‚é’¼ü‚ğ’Ê‚é1“_
+			ãŒé¢1(plane)ã¨é¢2(face)ãŒä½œã‚‹ç›´ç·šã‚’é€šã‚‹1ç‚¹
 			O:		planePosL
-			n1,d1	plane‚Ì–@ü(planeNormalL)CO‚©‚ç‚Ì‹——£=0
-			n2,d2	face‚Ì–@ü(faceNormal)CO‚©‚ç‚Ì‹——£			
+			n1,d1	planeã®æ³•ç·š(planeNormalL)ï¼ŒOã‹ã‚‰ã®è·é›¢=0
+			n2,d2	faceã®æ³•ç·š(faceNormal)ï¼ŒOã‹ã‚‰ã®è·é›¢			
 		*/
 		Vec3d faceNormal = ((base[faces[i].vtxs[1]] - base[faces[i].vtxs[0]]) ^ (base[faces[i].vtxs[2]] - base[faces[i].vtxs[0]])).unit();
 		double faceDist = faceNormal * (base[faces[i].vtxs[0]] - planePosL);
 		Vec3d lineDirection = (planeNormalL ^ faceNormal).unit();
 		double ip = planeNormalL * faceNormal;
-		if ((ip < 1.0-epsilon2) && (ip > -1.0+epsilon2)){	//	•½s‚È–Ê‚Í–³‹
+		if ((ip < 1.0-epsilon2) && (ip > -1.0+epsilon2)){	//	å¹³è¡Œãªé¢ã¯ç„¡è¦–
 			double a = -faceDist*ip / (1.0-(ip*ip));
 			double b = faceDist / (1.0-(ip*ip));
 			Vec3d lineOff = a*planeNormalL + b*faceNormal;
 			Vec3d lineNormal = planeNormalL ^ lineDirection;
 			double lineDist = lineNormal * lineOff;
 			if (finite(lineDist)) {	
-				//	local -> world -> ring2ŸŒ³Œn‚É•ÏŠ·
+				//	local -> world -> ring2æ¬¡å…ƒç³»ã«å¤‰æ›
 				Posed to2D = ring.localInv * toW;
 				Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
 				assert(finite(lineNormal2D.x));
 				assert(finite(lineNormal2D.y));
 
-				//	ü‚Í“à‘¤‚ğŒü‚©‚¹‚½‚¢‚Ì‚ÅC normal, dist ‚ğ”½“]‚µ‚Ä ring.lines ‚É’Ç‰Á
+				//	ç·šã¯å†…å´ã‚’å‘ã‹ã›ãŸã„ã®ã§ï¼Œ normal, dist ã‚’åè»¢ã—ã¦ ring.lines ã«è¿½åŠ 
 				ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
 				rv = true;
 			}
@@ -131,7 +131,7 @@ void CDConvexMesh::CalcFace(){
 	faces.clear();
 	neighbor.clear();
 	
-	//	base‚Ì“_‚©‚ç“Ê‘½–Ê‘Ì‚ğì‚éD
+	//	baseã®ç‚¹ã‹ã‚‰å‡¸å¤šé¢ä½“ã‚’ä½œã‚‹ï¼
 	std::vector<CDQhullVtx> vtxs;
 	std::vector<CDQhullVtx*> pvtxs;
 	vtxs.resize(base.size());
@@ -155,12 +155,12 @@ void CDConvexMesh::CalcFace(){
 			usedVtxs.insert(plane->vtx[i]->VtxID());
 		}
 	}
-	//	“Ê‘½–Ê‘Ì‚Ég‚í‚ê‚½’¸“_‚¾‚¯‚ğ—ñ‹“
+	//	å‡¸å¤šé¢ä½“ã«ä½¿ã‚ã‚ŒãŸé ‚ç‚¹ã ã‘ã‚’åˆ—æŒ™
 	CDVertexIDs vtxIds;
 	for(std::set<int>::iterator it = usedVtxs.begin(); it != usedVtxs.end(); ++it){
 		vtxIds.push_back(*it);
 	}
-	//	base‚©‚ç•s—v‚È’¸“_‚ğíœ
+	//	baseã‹ã‚‰ä¸è¦ãªé ‚ç‚¹ã‚’å‰Šé™¤
 	int pos = base.size()-1;
 	int i = vtxIds.size()-1;
 	while(true){
@@ -172,10 +172,10 @@ void CDConvexMesh::CalcFace(){
 		--i;
 		--pos;
 	}
-	// •½‹ÏÀ•W‚ÌŒvZ
+	// å¹³å‡åº§æ¨™ã®è¨ˆç®—
 	CalcAverage();
 
-	//	–Ê‚Ì’¸“_ID‚ğU‚è‚È‚¨‚· / –@ü‚ğŒvZ
+	//	é¢ã®é ‚ç‚¹IDã‚’æŒ¯ã‚ŠãªãŠã™ / æ³•ç·šã‚’è¨ˆç®—
 	for(CDFaces::iterator it = faces.begin(); it != faces.end(); ++it){
 		for(int i=0; i<3; ++i){
 			it->vtxs[i] = vtxIds.FindPos(it->vtxs[i]);
@@ -185,18 +185,18 @@ void CDConvexMesh::CalcFace(){
 		if(it->normal * (base[it->vtxs[0]] - average) < 0.0f)
 			it->normal *= -1.0f;
 	}
-	//	—×‚Ì’¸“_ƒŠƒXƒg‚ğì‚éD(GJK‚ÌSupport‚Ég—p)
+	//	éš£ã®é ‚ç‚¹ãƒªã‚¹ãƒˆã‚’ä½œã‚‹ï¼(GJKã®Supportã«ä½¿ç”¨)
 	neighbor.resize(vtxIds.size());
 	for(CDFaces::iterator it = faces.begin(); it != faces.end(); ++it){
-		//	Še•Ó‚Í2‚Â‚Ì–Ê‚É‹tŒü‚«‚Ég‚í‚ê‚é‚Ì‚ÅC‘S•”‚Ì–Ê‚ğ„‰ñ‚·‚é‚ÆC
-		//	‚¿‚å‚¤‚Ç—×‚Ì’¸“_ƒŠƒXƒg‚ªŠ®¬‚·‚éD
+		//	å„è¾ºã¯2ã¤ã®é¢ã«é€†å‘ãã«ä½¿ã‚ã‚Œã‚‹ã®ã§ï¼Œå…¨éƒ¨ã®é¢ã‚’å·¡å›ã™ã‚‹ã¨ï¼Œ
+		//	ã¡ã‚‡ã†ã©éš£ã®é ‚ç‚¹ãƒªã‚¹ãƒˆãŒå®Œæˆã™ã‚‹ï¼
 		for(int i=0; i<3; ++i){
 			int pos = it->vtxs[i];
 			int next = it->vtxs[(i+1)%3];
 			neighbor[pos].push_back(next);
 		}
 	}
-	//	“Ê‘½–Ê‘Ì‚Ì–Ê‚Ì‚¤‚¿C”¼•½–Ê•\Œ»‚É•K—v‚È–Ê‚¾‚¯‚ğ‘O”¼‚ÉW‚ß‚éD
+	//	å‡¸å¤šé¢ä½“ã®é¢ã®ã†ã¡ï¼ŒåŠå¹³é¢è¡¨ç¾ã«å¿…è¦ãªé¢ã ã‘ã‚’å‰åŠã«é›†ã‚ã‚‹ï¼
 	MergeFace();
 	//CalcCenter();
 }
@@ -256,7 +256,7 @@ int CDConvexMesh::Support(Vec3f& w, const Vec3f& v) const {
 				++i;
 			}else{
 				d = base[curNeighbor[i]]*v;
-				if (count > 1000){	//hase	‚±‚Ìˆ—‚ğ‚È‚­‚·‚ÆCVC7.1‚Å‚ÍCÅ“K‰»‚ª‚¨‚©‚µ‚­‚È‚Á‚ÄC–³ŒÀƒ‹[ƒv‚É‚È‚éD‚È‚¼D
+				if (count > 1000){	//hase	ã“ã®å‡¦ç†ã‚’ãªãã™ã¨ï¼ŒVC7.1ã§ã¯ï¼Œæœ€é©åŒ–ãŒãŠã‹ã—ããªã£ã¦ï¼Œç„¡é™ãƒ«ãƒ¼ãƒ—ã«ãªã‚‹ï¼ãªãï¼
 					DSTR << "d:" << d << " h:" << h;
 					DSTR << " CN:" << curNeighbor[i] << " i:" <<i << " n:" << n << std::endl;
 				}
@@ -290,7 +290,7 @@ int CDConvexMesh::NVertex(){
 }
 
 int CDConvexMesh::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){
-	// ‘S‚Ä‚Ì–Ê‚Æ‚ÌŒğ·‚ğ’²‚×‚éˆÀˆÕ‚ÈÀ‘•
+	// å…¨ã¦ã®é¢ã¨ã®äº¤å·®ã‚’èª¿ã¹ã‚‹å®‰æ˜“ãªå®Ÿè£…
 	const float eps = 1.0e-10f;
 	Matrix2f A;
 	Vec2f b, x;
@@ -303,12 +303,12 @@ int CDConvexMesh::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* re
 		float tmp = n * dir;
 		if(abs(tmp) < eps)
 			continue;
-		// ’¼ü‚Æ–Ê‚ÌŒğ“_p
+		// ç›´ç·šã¨é¢ã®äº¤ç‚¹p
 		float s = ((base[f.vtxs[0]] - origin) * n) / tmp;
 		if(s < 0.0)
 			continue;
 		p = origin + dir * s;
-		// 3ŠpŒ`‚Ì“à•”‚É‚ ‚é‚©
+		// 3è§’å½¢ã®å†…éƒ¨ã«ã‚ã‚‹ã‹
 		u1 = base[f.vtxs[1]] - base[f.vtxs[0]];
 		u2 = base[f.vtxs[2]] - base[f.vtxs[0]];
 		A[0][0] = u1.square();
@@ -319,13 +319,13 @@ int CDConvexMesh::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* re
 		diff = p - base[f.vtxs[0]];
 		b[0] = diff * u1;
 		b[1] = diff * u2;
-		x = A.inv() * b;	// 2ŸŒ³‚¾‚µ‚¢‚¢‚©
+		x = A.inv() * b;	// 2æ¬¡å…ƒã ã—ã„ã„ã‹
 		if(0.0 <= x[0] && x[0] <= 1.0 && 0.0 <= x[1] && x[1] <= 1.0 && x[0] + x[1] <= 1.0){
 			result[num] = p;
 			offset[num] = s;
 			num++;
 		}
-		if(num == 2)		// —‹üã‚Í3‚ÂˆÈã‚Í‚ ‚è“¾‚È‚¢‚ª”O‚Ì‚½‚ß
+		if(num == 2)		// ç†å±ˆä¸Šã¯3ã¤ä»¥ä¸Šã¯ã‚ã‚Šå¾—ãªã„ãŒå¿µã®ãŸã‚
 			break;
 	}
 	return num;

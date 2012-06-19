@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,14 +14,14 @@
 namespace Spr{;
 
 // ------------------------------------------------------------------------------
-/// ƒfƒoƒbƒO—p‚Ìƒwƒróƒ‚ƒfƒ‹‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒ‡ãƒãƒƒã‚°ç”¨ã®ãƒ˜ãƒ“çŠ¶ãƒ¢ãƒ‡ãƒ«ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRDebugLinkBodyGenDesc : CRBodyGenDesc {
 	
 	/* 
-		MODE_SPHEERE ‘S‚Ä‹…
-		MODE_CAPSULE ‘S‚ÄƒJƒvƒZƒ‹
-		MODE_BOX	 ‘S‚Äƒ{ƒbƒNƒX
-		MODE_MIX	 ‹…‚Æƒ{ƒbƒNƒX‚ªŒğŒİ
+		MODE_SPHEERE å…¨ã¦çƒ
+		MODE_CAPSULE å…¨ã¦ã‚«ãƒ—ã‚»ãƒ«
+		MODE_BOX	 å…¨ã¦ãƒœãƒƒã‚¯ã‚¹
+		MODE_MIX	 çƒã¨ãƒœãƒƒã‚¯ã‚¹ãŒäº¤äº’
 	*/
 	enum CDShapeMode{
 		MODE_SPHERE=0, MODE_CAPSULE, MODE_BOX, MODE_MIX,
@@ -36,34 +36,34 @@ struct CRDebugLinkBodyGenDesc : CRBodyGenDesc {
 	unsigned int joNHingeJoints;
 	unsigned int joNJoints;
 
-	/// ƒTƒCƒY‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^(radius, length)
+	/// ã‚µã‚¤ã‚ºã«é–¢ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿(radius, length)
 	double radius, length;
 
-	/// ƒŠƒ“ƒNˆê‚Â‚Ìd‚³
+	/// ãƒªãƒ³ã‚¯ä¸€ã¤ã®é‡ã•
 	double mass;
 
-	/// ŠeBallJoint‚Ìƒoƒlƒ_ƒ“ƒp
+	/// å„BallJointã®ãƒãƒãƒ€ãƒ³ãƒ‘
 	double spring, damper;
 
-	/// HingeJoint‰Â“®ˆæ§ŒÀ
+	/// HingeJointå¯å‹•åŸŸåˆ¶é™
 	Vec2d  range;
 	
-	// BallJoint§Œä–Ú•W
+	// BallJointåˆ¶å¾¡ç›®æ¨™
 	Quaterniond SetTargetPosition;
 
-	/// BallJoint‚Ìswing‰Â“®ˆæ:
+	/// BallJointã®swingå¯å‹•åŸŸ:
 	Vec2d limitSwing;
 
-	/// BallJoint‚Ìtwist‰Â“®ˆæ
+	/// BallJointã®twistå¯å‹•åŸŸ
 	Vec2d limitTwist;
 
-	// ŠÖß‚Ìo‚¹‚é—Í‚ÌÅ‘å’l
+	// é–¢ç¯€ã®å‡ºã›ã‚‹åŠ›ã®æœ€å¤§å€¤
 	double fMax;
 
-	/// Ã~–€C
+	/// é™æ­¢æ‘©æ“¦
 	double mu0;
 
-	/// “®–€C
+	/// å‹•æ‘©æ“¦
 	double mu;
 
 

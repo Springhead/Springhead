@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -41,7 +41,7 @@ Vec3f CDConvexMeshInterpolate::Support(const Vec3f& v) const {
 				++i;
 			}else{
 				d = base[curNeighbor[i]]*v;
-				if (count > 1000){	//hase	���̏������Ȃ����ƁCVC7.1�ł́C�œK�������������Ȃ��āC�������[�v�ɂȂ�D�Ȃ��D
+				if (count > 1000){	//hase	この処理をなくすと，VC7.1では，最適化がおかしくなって，無限ループになる．なぞ．
 					DSTR << "d:" << d << " h:" << h;
 					DSTR << " CN:" << curNeighbor[i] << " i:" <<i << " n:" << n << std::endl;
 				}

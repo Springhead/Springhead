@@ -1,4 +1,4 @@
-// FWAppGLtest.cpp : ƒRƒ“ƒ\[ƒ‹ ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒGƒ“ƒgƒŠ ƒ|ƒCƒ“ƒg‚ð’è‹`‚µ‚Ü‚·B
+ï»¿// FWAppGLtest.cpp : ã‚³ãƒ³ã‚½ãƒ¼ãƒ« ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¨ãƒ³ãƒˆãƒª ãƒã‚¤ãƒ³ãƒˆã‚’å®šç¾©ã—ã¾ã™ã€‚
 //
 
 #include <windows.h>
@@ -72,9 +72,9 @@ MyApp app;
 int SPR_CDECL main(int argc, char* argv[]){
 	app.Init(argc, argv);
 
-	app.GetSdk()->Clear();	//	SDK‘S‘Ì‚ð‰Šú‰»
+	app.GetSdk()->Clear();	//	SDKå…¨ä½“ã‚’åˆæœŸåŒ–
 
-	//	ƒV[ƒ“‚Ì\’z
+	//	ã‚·ãƒ¼ãƒ³ã®æ§‹ç¯‰
 	app.GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
 	PHSceneIf* phscene = app.GetSdk()->GetScene()->GetPHScene();
 	PHSolidIf* floor = phscene->CreateSolid(PHSolidDesc());
@@ -82,10 +82,10 @@ int SPR_CDECL main(int argc, char* argv[]){
 	CDBoxDesc boxdesc;
 	boxdesc.boxsize = Vec3d(0.1, 0.1, 0.1);
 	floor->AddShape(app.GetSdk()->GetPHSdk()->CreateShape(boxdesc));
-	//	ƒEƒBƒ“ƒhƒE1‚ðì¬
+	//	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦1ã‚’ä½œæˆ
 	FWAppGLUTDesc wd;
 	wd.left = 0; wd.top = 0; wd.width = 500; wd.title = "original scene";
-	FWWin* w0 = app.CreateWin(wd);	//	ì¬‚Æ“¯Žž‚ÉCƒV[ƒ“0 ‚ªƒEƒBƒ“ƒhƒE0 ‚ÉŠ„‚è“–‚Ä‚ç‚ê‚éD
+	FWWin* w0 = app.CreateWin(wd);	//	ä½œæˆã¨åŒæ™‚ã«ï¼Œã‚·ãƒ¼ãƒ³0 ãŒã‚¦ã‚£ãƒ³ãƒ‰ã‚¦0 ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã‚‹ï¼Ž
 	app.Start();
 	return 0;
 }

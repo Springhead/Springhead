@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,13 +12,13 @@
 #include <HumanInterface/HIDevice.h>
 
 /**
-	NEC/TOKIN‚Ì3Dƒ‚[ƒVƒ‡ƒ“ƒZƒ“ƒT‚ğg—p‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX
-	g—p‚·‚é‚É‚ÍƒRƒ“ƒpƒCƒ‰‚ªŒ©‚Â‚¯‚ç‚ê‚éêŠ‚É
+	NEC/TOKINã®3Dãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚»ãƒ³ã‚µã‚’ä½¿ç”¨ã™ã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹
+	ä½¿ç”¨ã™ã‚‹ã«ã¯ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ãŒè¦‹ã¤ã‘ã‚‰ã‚Œã‚‹å ´æ‰€ã«
 		Tkinput.h, Tkinputdef.h, Tuadapio.h, TKINPUT_I.C
-	‚ğ‚¨‚«C
+	ã‚’ãŠãï¼Œ
 		#define SPR_USE_TOKIN3D
-	‚Æƒ}ƒNƒ’è‹`‚µ‚ÄSpringhead‚ğƒrƒ‹ƒh‚·‚éD
-	ã‹Lƒtƒ@ƒCƒ‹‚Í’˜ìŒ ‚Ì“s‡ãSpringhead‚É‚ÍŠÜ‚Ü‚ê‚È‚¢D
+	ã¨ãƒã‚¯ãƒ­å®šç¾©ã—ã¦Springheadã‚’ãƒ“ãƒ«ãƒ‰ã™ã‚‹ï¼
+	ä¸Šè¨˜ãƒ•ã‚¡ã‚¤ãƒ«ã¯è‘—ä½œæ¨©ã®éƒ½åˆä¸ŠSpringheadã«ã¯å«ã¾ã‚Œãªã„ï¼
  */
 
 // #define SPR_USE_TOKIN3D
@@ -28,7 +28,7 @@ class SPR_DLL DRTokin3D: public HIRealDevice{
 public:
 	SPR_OBJECTDEF_NOIF(DRTokin3D);
 
-	///	‰¼‘zƒfƒoƒCƒX
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹
 	class DVOri: public DVOrientation{
 	public:
 		DVOri(DRTokin3D* r):DVOrientation(r){}
@@ -52,13 +52,13 @@ public:
 	DRTokin3D();
 	///
 	virtual ~DRTokin3D();
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	virtual bool Init();
-	///	•ûŒüs—ñ
+	///	æ–¹å‘è¡Œåˆ—
 	virtual void GetMatrix(Matrix3f& ori);
-	///	ƒIƒCƒ‰[Šp‚Ìæ“¾
+	///	ã‚ªã‚¤ãƒ©ãƒ¼è§’ã®å–å¾—
 	virtual Vec3f GetEuler();
-	///	ƒ|[ƒg
+	///	ãƒãƒ¼ãƒˆ
 	virtual int GetPort(int ch);
 };
 

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,12 +8,12 @@
 
 #include "FWFileLoaderSample.h"
 /**
-	ƒVƒ“ƒvƒ‹‚ÈSprfileƒ[ƒ_[
-	ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÍglutIdleFunc‚Åi‚ß‚é
-	q, ESC	: ƒAƒvƒŠƒP[ƒVƒ‡ƒ“I—¹
-	r		: ƒtƒ@ƒCƒ‹‚ÌƒŠƒ[ƒh
-	w		: ƒJƒƒ‰s—ñ‚Ì‰Šú‰»
-	d		: ƒfƒoƒbƒN•\¦Ø‚è‘Ö‚¦
+	ã‚·ãƒ³ãƒ—ãƒ«ãªSprfileãƒ­ãƒ¼ãƒ€ãƒ¼
+	ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã¯glutIdleFuncã§é€²ã‚ã‚‹
+	q, ESC	: ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†
+	r		: ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒªãƒ­ãƒ¼ãƒ‰
+	w		: ã‚«ãƒ¡ãƒ©è¡Œåˆ—ã®åˆæœŸåŒ–
+	d		: ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºåˆ‡ã‚Šæ›¿ãˆ
 */
 
 FWFileLoaderSample app;

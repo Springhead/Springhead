@@ -1,4 +1,4 @@
-#ifndef SPREPUTILITY_H
+﻿#ifndef SPREPUTILITY_H
 #define SPREPUTILITY_H
 
 #if _DEBUG
@@ -7,7 +7,7 @@
 #define __EPDECL __fastcall
 #endif
 
-#include "Utility/SprUTCriticalSection.h"//CriticalSection�p
+#include "Utility/SprUTCriticalSection.h"//CriticalSection用
 #include <Python/Python.h>
 
 #define EP_MODULE_NAME "Spr"

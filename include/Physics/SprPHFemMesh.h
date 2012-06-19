@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprPHFemMesh.h
- *	@brief FEMƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ì‚½‚ß‚Ìl–Ê‘ÌƒƒbƒVƒ…
+ *	@brief FEMã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®ãŸã‚ã®å››é¢ä½“ãƒ¡ãƒƒã‚·ãƒ¥
 */
 #ifndef SPR_PHFemMeshIf_H
 #define SPR_PHFemMeshIf_H
@@ -18,10 +18,10 @@
 //@{
 namespace Spr{;
 
-///	FemMesh‚ÌƒXƒe[ƒg
+///	FemMeshã®ã‚¹ãƒ†ãƒ¼ãƒˆ
 struct PHFemMeshState{
 };
-///	FemMesh‚ÌƒfƒBƒXƒNƒŠƒvƒ^
+///	FemMeshã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHFemMeshDesc: public PHFemMeshState{
 	std::vector<Vec3d> vertices;
 	std::vector<int> tets;
@@ -30,7 +30,7 @@ struct PHFemMeshDesc: public PHFemMeshState{
 	void Init();
 };
 
-///	FEM—p‚Ìl–Ê‘ÌƒƒbƒVƒ…
+///	FEMç”¨ã®å››é¢ä½“ãƒ¡ãƒƒã‚·ãƒ¥
 struct PHFemMeshIf : public SceneObjectIf{
 	SPR_IFDEF(PHFemMesh);
 	//int GetSurfaceVertex(int id);
@@ -42,17 +42,17 @@ struct PHFemMeshIf : public SceneObjectIf{
 	
 };
 
-///	FemMeshThermo‚ÌƒfƒBƒXƒNƒŠƒvƒ^
+///	FemMeshThermoã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHFemMeshThermoDesc: public PHFemMeshDesc{
-	double rho;						//	–§“x
-	double thConduct;				//”M“`“±—¦
-	double heatTrans;				//”M“`’B—¦			//class ß“_‚É‚ÍAheatTransRatio‚ª‘¶İ‚·‚é
-	double specificHeat;			//”ä”M
+	double rho;						//	å¯†åº¦
+	double thConduct;				//ç†±ä¼å°ç‡
+	double heatTrans;				//ç†±ä¼é”ç‡			//class ç¯€ç‚¹ã«ã¯ã€heatTransRatioãŒå­˜åœ¨ã™ã‚‹
+	double specificHeat;			//æ¯”ç†±
 	PHFemMeshThermoDesc();
 	void Init();
 };
 
-///	‰·“x‚ÌFEM—p‚ÌƒƒbƒVƒ…
+///	æ¸©åº¦ã®FEMç”¨ã®ãƒ¡ãƒƒã‚·ãƒ¥
 struct PHFemMeshThermoIf : public PHFemMeshIf{
 	SPR_IFDEF(PHFemMeshThermo);
 	int GetSurfaceVertex(int id);
@@ -61,11 +61,11 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void SetVertexTc(int id,double temp,double heatTrans);
 	Vec3d GetPose(int id);
 	Vec3d GetSufVtxPose(unsigned id);
-	unsigned long GetStepCount();		///	ƒJƒEƒ“ƒg‚P
-	unsigned long GetStepCountCyc();		///	ƒJƒEƒ“ƒg‚P‚ª‰½T–Ú‚©	ŒvZ®:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
+	unsigned long GetStepCount();		///	ã‚«ã‚¦ãƒ³ãƒˆï¼‘
+	unsigned long GetStepCountCyc();		///	ã‚«ã‚¦ãƒ³ãƒˆï¼‘ãŒä½•é€±ç›®ã‹	è¨ˆç®—å¼:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
 	void SetVertexTemp(unsigned id,double temp);
 	void SetvecFAll(unsigned id,double dqdt);
-	void SetRohSpheat(double roh,double Cp);		//‘fŞŒÅ—L‚Ì•¨«
+	void SetRohSpheat(double roh,double Cp);		//ç´ æå›ºæœ‰ã®ç‰©æ€§
 	unsigned GetNFace();
 	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
 	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);

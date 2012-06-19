@@ -1,4 +1,4 @@
-// VrmlParser.cpp : ƒRƒ“ƒ\[ƒ‹ ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒGƒ“ƒgƒŠ ƒ|ƒCƒ“ƒg‚ğ’è‹`‚µ‚Ü‚·B
+ï»¿// VrmlParser.cpp : ã‚³ãƒ³ã‚½ãƒ¼ãƒ« ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¨ãƒ³ãƒˆãƒª ãƒã‚¤ãƒ³ãƒˆã‚’å®šç¾©ã—ã¾ã™ã€‚
 //
 
 #include <FileIO/FIFileVRML.h>
@@ -39,7 +39,7 @@ static void OnBeginProto(const char* first, const char* last){
 	DSTR << "endProto" << std::endl;
 	TProtoInfo info= protoInfoStack.Top();
 	protoInfoStack.Pop();
-	//V‚µ‚­’è‹`‚³‚ê‚½ƒm[ƒh‚Ìƒp[ƒT‚ğì‚é
+	//æ–°ã—ãå®šç¾©ã•ã‚ŒãŸãƒãƒ¼ãƒ‰ã®ãƒ‘ãƒ¼ã‚µã‚’ä½œã‚‹
 	FIPhraseParser elmParser;
 	elmParser=
 		fileVRML->routeStatement |
@@ -138,7 +138,7 @@ void FIFileVRML::Init(){
 			>> id[&OnBeginProto]
 			>> ch_p('[') >> interfaceDeclarations >> ch_p(']')
 			>> ch_p('{') >> !protoBody >> ch_p('}'))[&OnEndProto];
-		//Šù’è‚Ìƒm[ƒh‚ğPROTO‚Å’è‹`‚·‚é‚½‚ßA–{•¨‚ÌVRML‚Ì’è‹`‚Æˆá‚Á‚ÄAprotoBody‚ÌÈ—ª‚ğ‹–‚µ‚Ä‚¢‚éB
+		//æ—¢å®šã®ãƒãƒ¼ãƒ‰ã‚’PROTOã§å®šç¾©ã™ã‚‹ãŸã‚ã€æœ¬ç‰©ã®VRMLã®å®šç¾©ã¨é•ã£ã¦ã€protoBodyã®çœç•¥ã‚’è¨±ã—ã¦ã„ã‚‹ã€‚
 	protoBody=
 		protoStatements >> nodeStatement >> statements;
 	interfaceDeclarations=
@@ -169,7 +169,7 @@ void FIFileVRML::Init(){
 		str_p("eventOut") >> fieldType >> id >> str_p("IS") >> id |
 		str_p("field") >> fieldType >> id >> str_p("IS") >> id |
 		restrictedInterfaceDeclaration |
-		nodeBodyElement;//‚±‚±‚Åg‚í‚ê‚é‚Ì‚Í‚Ç‚±‚ÌfieldIdH
+		nodeBodyElement;//ã“ã“ã§ä½¿ã‚ã‚Œã‚‹ã®ã¯ã©ã“ã®fieldIdï¼Ÿ
 	nodeBodyElement=
 		routeStatement |
 		protoStatement |
@@ -258,7 +258,7 @@ void FIFileVRML::Init(){
 	valueParsers["SFVec2f"]= sfvec2fValue;
 	valueParsers["SFVec3f"]= sfvec3fValue;
 
-	//	decParser (:= fieldType fieldId fieldValue)‚Ì’è‹`
+	//	decParser (:= fieldType fieldId fieldValue)ã®å®šç¾©
 	for (std::map<std::string, FIPhraseParser>::iterator it= valueParsers.begin(); 
 			it!=valueParsers.end(); ++it){
 		strs.push_back(it->first);

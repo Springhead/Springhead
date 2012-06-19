@@ -1,4 +1,4 @@
-#include "FWLDHapticDemo.h"
+Ôªø#include "FWLDHapticDemo.h"
 #include "DemoModel.h"
 #include <iostream>
 #include <sstream>
@@ -15,38 +15,38 @@ FWLDHapticDemo::FWLDHapticDemo(){
 }
 
 void FWLDHapticDemo::Init(int argc, char* argv[]){
-	/// ï`âÊÉÇÅ[ÉhÇÃê›íË
-	SetGRAdaptee(TypeGLUT);									// GLUTÉÇÅ[ÉhÇ…ê›íË
-	GRInit(argc, argv);						// SdkÇÃçÏê¨
+	/// ÊèèÁîª„É¢„Éº„Éâ„ÅÆË®≠ÂÆö
+	SetGRAdaptee(TypeGLUT);									// GLUT„É¢„Éº„Éâ„Å´Ë®≠ÂÆö
+	GRInit(argc, argv);						// Sdk„ÅÆ‰ΩúÊàê
 
-		/// SdkÇÃèâä˙âªÅCÉVÅ[ÉìÇÃçÏê¨
+		/// Sdk„ÅÆÂàùÊúüÂåñÔºå„Ç∑„Éº„É≥„ÅÆ‰ΩúÊàê
 	CreateSdk();
-	GetSdk()->Clear();										// SDKÇÃèâä˙âª
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// SceneÇÃçÏê¨
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// çèÇ›ÇÃê›íË
+	GetSdk()->Clear();										// SDK„ÅÆÂàùÊúüÂåñ
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Scene„ÅÆ‰ΩúÊàê
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// Âàª„Åø„ÅÆË®≠ÂÆö
 
-	/// ï`âÊWindowÇÃçÏê¨ÅCèâä˙âª
-	FWWinDesc windowDesc;									// GLÇÃÉEÉBÉìÉhÉEÉfÉBÉXÉNÉäÉvÉ^
-	windowDesc.title = "Springhead2 FWLDHapticDemo";		// ÉEÉBÉìÉhÉEÇÃÉ^ÉCÉgÉã
-	CreateWin(windowDesc);									// ÉEÉBÉìÉhÉEÇÃçÏê¨
-	InitWindow();											// ÉEÉBÉìÉhÉEÇÃèâä˙âª
-	InitCameraView();										// ÉJÉÅÉâÉrÉÖÅ[ÇÃèâä˙âª
+	/// ÊèèÁîªWindow„ÅÆ‰ΩúÊàêÔºåÂàùÊúüÂåñ
+	FWWinDesc windowDesc;									// GL„ÅÆ„Ç¶„Ç£„É≥„Éâ„Ç¶„Éá„Ç£„Çπ„ÇØ„É™„Éó„Çø
+	windowDesc.title = "Springhead2 FWLDHapticDemo";		// „Ç¶„Ç£„É≥„Éâ„Ç¶„ÅÆ„Çø„Ç§„Éà„É´
+	CreateWin(windowDesc);									// „Ç¶„Ç£„É≥„Éâ„Ç¶„ÅÆ‰ΩúÊàê
+	InitWindow();											// „Ç¶„Ç£„É≥„Éâ„Ç¶„ÅÆÂàùÊúüÂåñ
+	InitCameraView();										// „Ç´„É°„É©„Éì„É•„Éº„ÅÆÂàùÊúüÂåñ
 
-	/// HumanInterfaceÇÃèâä˙âª
+	/// HumanInterface„ÅÆÂàùÊúüÂåñ
 	InitHumanInterface();
 
-	/// InteractSceneÇÃçÏê¨
+	/// InteractScene„ÅÆ‰ΩúÊàê
 	FWInteractSceneDesc desc;
-	desc.fwScene = GetSdk()->GetScene();					// fwSceneÇ…ëŒÇ∑ÇÈinteractsceneÇçÏÇÈ
-	desc.iaMode = FWInteractMode::LOCAL_DYNAMICS;								// humaninterfaceÇÃÉåÉìÉ_ÉäÉìÉOÉÇÅ[ÉhÇÃê›íË
+	desc.fwScene = GetSdk()->GetScene();					// fwScene„Å´ÂØæ„Åô„Çãinteractscene„Çí‰Ωú„Çã
+	desc.iaMode = FWInteractMode::LOCAL_DYNAMICS;								// humaninterface„ÅÆ„É¨„É≥„ÉÄ„É™„É≥„Ç∞„É¢„Éº„Éâ„ÅÆË®≠ÂÆö
 	desc.hMode =  FWHapticMode::PROXY;
-	desc.hdt = 0.001;										// É}ÉãÉ`ÉåÅ[ÉgÇÃèÍçáÇÃçXêV[s]
-	CreateIAScene(desc);									// interactSceneÇÃçÏê¨
+	desc.hdt = 0.001;										// „Éû„É´„ÉÅ„É¨„Éº„Éà„ÅÆÂ†¥Âêà„ÅÆÊõ¥Êñ∞[s]
+	CreateIAScene(desc);									// interactScene„ÅÆ‰ΩúÊàê
 
-	/// ï®óùÉVÉ~ÉÖÉåÅ[ÉVÉáÉìÇ∑ÇÈçÑëÃÇçÏê¨
+	/// Áâ©ÁêÜ„Ç∑„Éü„É•„É¨„Éº„Ç∑„Éß„É≥„Åô„ÇãÂâõ‰Ωì„Çí‰ΩúÊàê
 	BuildScene();
 
-	/// É^ÉCÉ}ÇÃçÏê¨ÅCê›íË
+	/// „Çø„Ç§„Éû„ÅÆ‰ΩúÊàêÔºåË®≠ÂÆö
 	int timerId = CreateTimer(FWTimer::MM);
 	SetInterval(timerId , 1);
 	SetResolution(timerId , 1);
@@ -64,7 +64,7 @@ void FWLDHapticDemo::InitCameraView(){
 }
 
 void FWLDHapticDemo::InitHumanInterface(){
-	/// HISdkÇÃçÏê¨
+	/// HISdk„ÅÆ‰ΩúÊàê
 	CreateHISdk();
 
 	DRUsb20SimpleDesc usbSimpleDesc;
@@ -78,7 +78,7 @@ void FWLDHapticDemo::InitHumanInterface(){
 	GetHISdk()->Init();
 	GetHISdk()->Print(DSTR);
 #if SPIDARG6
-	/// SPIDARG6Ç2ë‰égÇ§èÍçá
+	/// SPIDARG6„Çí2Âè∞‰Ωø„ÅÜÂ†¥Âêà
 	UTRef<HISpidarGIf> spg[2];
 	for(size_t i = 0; i < 2; i++){
 		spg[i] = GetHISdk()->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
@@ -87,7 +87,7 @@ void FWLDHapticDemo::InitHumanInterface(){
 		AddHI(spg[i]);
 	}
 	#else
-	/// SPIDAR4DÇégÇ§èÍçá
+	/// SPIDAR4D„Çí‰Ωø„ÅÜÂ†¥Âêà
 	UTRef<HISpidar4If> spg[2];
 	for(size_t i = 0; i < 2; i++){
 		spg[i] = GetHISdk()->CreateHumanInterface(HISpidar4If::GetIfInfoStatic())->Cast();
@@ -103,13 +103,13 @@ void FWLDHapticDemo::Reset(){
 	GetSdk()->Clear();
 	Clear();
 	ClearIAScenes();
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// SceneÇÃçÏê¨
-	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// çèÇ›ÇÃê›íË
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Scene„ÅÆ‰ΩúÊàê
+	GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.02);	// Âàª„Åø„ÅÆË®≠ÂÆö
 	FWInteractSceneDesc desc;
-	desc.fwScene = GetSdk()->GetScene();					// fwSceneÇ…ëŒÇ∑ÇÈinteractsceneÇçÏÇÈ
-	desc.iaMode = LOCAL_DYNAMICS;								// humaninterfaceÇÃÉåÉìÉ_ÉäÉìÉOÉÇÅ[ÉhÇÃê›íË
-	desc.hdt = 0.001;										// É}ÉãÉ`ÉåÅ[ÉgÇÃèÍçáÇÃçXêV[s]
-	CreateIAScene(desc);									// interactSceneÇÃçÏê¨
+	desc.fwScene = GetSdk()->GetScene();					// fwScene„Å´ÂØæ„Åô„Çãinteractscene„Çí‰Ωú„Çã
+	desc.iaMode = LOCAL_DYNAMICS;								// humaninterface„ÅÆ„É¨„É≥„ÉÄ„É™„É≥„Ç∞„É¢„Éº„Éâ„ÅÆË®≠ÂÆö
+	desc.hdt = 0.001;										// „Éû„É´„ÉÅ„É¨„Éº„Éà„ÅÆÂ†¥Âêà„ÅÆÊõ¥Êñ∞[s]
+	CreateIAScene(desc);									// interactScene„ÅÆ‰ΩúÊàê
 	BuildScene();
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 	InitCameraView();
@@ -117,7 +117,7 @@ void FWLDHapticDemo::Reset(){
 }
 
 void FWLDHapticDemo::IdleFunc(){
-	/// ÉVÉ~ÉÖÉåÅ[ÉVÉáÉìÇêiÇﬂÇÈ(interactsceneÇ™Ç†ÇÈèÍçáÇÕÇªÇ¡ÇøÇåƒÇ‘)
+	/// „Ç∑„Éü„É•„É¨„Éº„Ç∑„Éß„É≥„ÇíÈÄ≤„ÇÅ„Çã(interactscene„Åå„ÅÇ„ÇãÂ†¥Âêà„ÅØ„Åù„Å£„Å°„ÇíÂëº„Å∂)
 	if(bStep) FWLDHapticDemo::instance->GetIAScene()->Step();
 	else if(bOneStep){
 		FWLDHapticDemo::instance->GetIAScene()->Step();
@@ -127,13 +127,13 @@ void FWLDHapticDemo::IdleFunc(){
 }
 
 void FWLDHapticDemo::TimerFunc(int id){	
-	/// HapticLoopÇÉRÅ[ÉãÉoÉbÉNÇ∑ÇÈ
+	/// HapticLoop„Çí„Ç≥„Éº„É´„Éê„ÉÉ„ÇØ„Åô„Çã
 	((FWLDHapticDemo*)instance)->GetIAScene()->CallBackHapticLoop();
 	//PostRedisplay();
 }
 
 void FWLDHapticDemo::Display(){
-	/// ï`âÊÉÇÅ[ÉhÇÃê›íË
+	/// ÊèèÁîª„É¢„Éº„Éâ„ÅÆË®≠ÂÆö
 	GetSdk()->SetDebugMode(true);
 	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
 	render->SetRenderMode(true, false);
@@ -141,7 +141,7 @@ void FWLDHapticDemo::Display(){
 	render->EnableRenderForce(bDrawInfo);
 	render->EnableRenderContact(bDrawInfo);
 
-	/// ÉJÉÅÉâç¿ïWÇÃéwíË
+	/// „Ç´„É°„É©Â∫ßÊ®ô„ÅÆÊåáÂÆö
 	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
 	if (cam && cam->GetFrame()){
 		cam->GetFrame()->SetTransform(cameraInfo.view);
@@ -149,7 +149,7 @@ void FWLDHapticDemo::Display(){
 		GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
 	}
 
-	/// ï`âÊÇÃé¿çs
+	/// ÊèèÁîª„ÅÆÂÆüË°å
 	if(!GetCurrentWin()) return;
 	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
 	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
@@ -166,34 +166,34 @@ void FWLDHapticDemo::BuildScene(){
 	PHSolidDesc desc;
 	CDBoxDesc bd;
 
-	/// è∞(ï®óùñ@ë•Ç…è]ÇÌÇ»Ç¢ÅCâ^ìÆÇ™ïœâªÇµÇ»Ç¢)
+	/// Â∫ä(Áâ©ÁêÜÊ≥ïÂâá„Å´Âæì„Çè„Å™„ÅÑÔºåÈÅãÂãï„ÅåÂ§âÂåñ„Åó„Å™„ÅÑ)
 	{
-		/// çÑëÃ(soFloor)ÇÃçÏê¨
+		/// Ââõ‰Ωì(soFloor)„ÅÆ‰ΩúÊàê
 		//desc.mass = 1e20f;
 		//desc.inertia *= 1e30f;
-		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// çÑëÃÇdescÇ…äÓÇ√Ç¢ÇƒçÏê¨
+		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// Ââõ‰Ωì„Çídesc„Å´Âü∫„Å•„ÅÑ„Å¶‰ΩúÊàê
 		soFloor->SetDynamical(false);
 		soFloor->SetGravity(false);
-		/// å`èÛ(shapeFloor)ÇÃçÏê¨
+		/// ÂΩ¢Áä∂(shapeFloor)„ÅÆ‰ΩúÊàê
 		bd.boxsize = Vec3f(50, 10, 50);
 		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
 		shapeFloor->SetDynamicFriction(0.7);
 		shapeFloor->SetStaticFriction(0.7);
-		/// çÑëÃÇ…å`èÛÇïtâ¡Ç∑ÇÈ
+		/// Ââõ‰Ωì„Å´ÂΩ¢Áä∂„Çí‰ªòÂä†„Åô„Çã
 		soFloor->AddShape(shapeFloor);
 		soFloor->SetFramePosition(Vec3d(0, -7, 0));
 	}
 
-	/// É|ÉCÉìÉ^
+	/// „Éù„Ç§„É≥„Çø
 	for(int i= 0; i < 1; i++){
 		PHSolidIf* soPointer = phscene->CreateSolid(desc);
 		soPointer->SetDynamical(false);
 		GetSdk()->GetScene()->GetPHScene()->SetContactMode(soPointer, PHSceneDesc::MODE_NONE);
-#if 1	/// ãÖå^É|ÉCÉìÉ^
+#if 1	/// ÁêÉÂûã„Éù„Ç§„É≥„Çø
 		CDSphereDesc sd;
 		sd.radius = 0.5;//1.0;
 		CDShapeIf* shapePointer = GetSdk()->GetPHSdk()->CreateShape(sd);
-#else	/// î†å^É|ÉCÉìÉ^
+#else	/// ÁÆ±Âûã„Éù„Ç§„É≥„Çø
 		CDBoxDesc bd;
 		bd.boxsize = Vec3d(1.0, 1.0, 1.0);
 		CDShapeIf* shapePointer = GetSdk()->GetPHSdk()->CreateShape(bd);
@@ -201,22 +201,22 @@ void FWLDHapticDemo::BuildScene(){
 		soPointer->AddShape(shapePointer);
 		soPointer->GetShape(0)->SetStaticFriction(1.0);
 		soPointer->GetShape(0)->SetDynamicFriction(1.0);
-		FWInteractPointerDesc idesc;			// interactpointerÇÃÉfÉBÉXÉNÉäÉvÉ^
-		idesc.pointerSolid = soPointer;			// soPointerÇê›íË
-		idesc.humanInterface = GetHI(i);		// humaninterfaceÇê›íË
+		FWInteractPointerDesc idesc;			// interactpointer„ÅÆ„Éá„Ç£„Çπ„ÇØ„É™„Éó„Çø
+		idesc.pointerSolid = soPointer;			// soPointer„ÇíË®≠ÂÆö
+		idesc.humanInterface = GetHI(i);		// humaninterface„ÇíË®≠ÂÆö
 
 #if	SPIDARG6
-		idesc.posScale = 300;//300;					// soPointerÇÃâ¬ìÆàÊÇÃê›íË(Å`î{)
-		idesc.localRange = 1.0;//1.0;					// LocalDynamicsÇégÇ§èÍçáÇÃãﬂñTîÕàÕ
+		idesc.posScale = 300;//300;					// soPointer„ÅÆÂèØÂãïÂüü„ÅÆË®≠ÂÆö(ÔΩûÂÄç)
+		idesc.localRange = 1.0;//1.0;					// LocalDynamics„Çí‰Ωø„ÅÜÂ†¥Âêà„ÅÆËøëÂÇçÁØÑÂõ≤
 #else
-		idesc.posScale = 80;					// soPointerÇÃâ¬ìÆàÊÇÃê›íË(Å`î{)
-		idesc.localRange = 1.0;					// LocalDynamicsÇégÇ§èÍçáÇÃãﬂñTîÕàÕ
+		idesc.posScale = 80;					// soPointer„ÅÆÂèØÂãïÂüü„ÅÆË®≠ÂÆö(ÔΩûÂÄç)
+		idesc.localRange = 1.0;					// LocalDynamics„Çí‰Ωø„ÅÜÂ†¥Âêà„ÅÆËøëÂÇçÁØÑÂõ≤
 #endif
-		idesc.springK = 8 * idesc.posScale;					// haptic renderingÇÃÉoÉlåWêî
-		idesc.damperD = 0.01 * idesc.posScale;					// haptic renderingÇÃÉ_ÉìÉpåWêî
-		if(i==0) idesc.defaultPosition =Posed(1,0,0,0,2,5,0);	// èâä˙à íuÇÃê›íË
+		idesc.springK = 8 * idesc.posScale;					// haptic rendering„ÅÆ„Éê„Éç‰øÇÊï∞
+		idesc.damperD = 0.01 * idesc.posScale;					// haptic rendering„ÅÆ„ÉÄ„É≥„Éë‰øÇÊï∞
+		if(i==0) idesc.defaultPosition =Posed(1,0,0,0,2,5,0);	// ÂàùÊúü‰ΩçÁΩÆ„ÅÆË®≠ÂÆö
 		if(i==1) idesc.defaultPosition =Posed(1,0,0,0,0,0,0);
-		GetIAScene()->CreateIAPointer(idesc);	// interactpointerÇÃçÏê¨
+		GetIAScene()->CreateIAPointer(idesc);	// interactpointer„ÅÆ‰ΩúÊàê
 	}
 }
 
@@ -250,12 +250,12 @@ void FWLDHapticDemo::DisplayContactPlane(){
 			render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
 			cPoint += offset/2;
 			glBegin(GL_QUADS);
-				/// ê⁄êGñ íÍñ 	
+				/// Êé•Ëß¶Èù¢Â∫ïÈù¢	
 				glVertex3d(cPoint[0] + v1[0] + v2[0], cPoint[1] + v1[1] + v2[1], cPoint[2] + v1[2] + v2[2]);
 				glVertex3d(cPoint[0] - v1[0] + v2[0], cPoint[1] - v1[1] + v2[1], cPoint[2] - v1[2] + v2[2]);
 				glVertex3d(cPoint[0] - v1[0] - v2[0], cPoint[1] - v1[1] - v2[1], cPoint[2] - v1[2] - v2[2]);
 				glVertex3d(cPoint[0] + v1[0] - v2[0], cPoint[1] + v1[1] - v2[1], cPoint[2] + v1[2] - v2[2]);
-				/// ë§ñ 1
+				/// ÂÅ¥Èù¢1
 				glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
 								cPoint[1] + v1[1] + v2[1] + offset[1], 
 								cPoint[2] + v1[2] + v2[2] + offset[2]);
@@ -268,7 +268,7 @@ void FWLDHapticDemo::DisplayContactPlane(){
 				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
 								cPoint[1] - v1[1] + v2[1] + offset[1], 
 								cPoint[2] - v1[2] + v2[2] + offset[2]);
-				/// ë§ñ 2
+				/// ÂÅ¥Èù¢2
 				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
 								cPoint[1] - v1[1] + v2[1] + offset[1], 
 								cPoint[2] - v1[2] + v2[2] + offset[2]);
@@ -281,7 +281,7 @@ void FWLDHapticDemo::DisplayContactPlane(){
 				glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
 								cPoint[1] - v1[1] - v2[1] + offset[1], 
 								cPoint[2] - v1[2] - v2[2] + offset[2]);
-				/// ë§ñ 3
+				/// ÂÅ¥Èù¢3
 				glVertex3d(cPoint[0] - v1[0] - v2[0] + offset[0], 
 								cPoint[1] - v1[1] - v2[1] + offset[1], 
 								cPoint[2] - v1[2] - v2[2] + offset[2]);
@@ -294,7 +294,7 @@ void FWLDHapticDemo::DisplayContactPlane(){
 				glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
 								cPoint[1] + v1[1] - v2[1] + offset[1], 
 								cPoint[2] + v1[2] - v2[2] + offset[2]);
-				/// ë§ñ 4
+				/// ÂÅ¥Èù¢4
 				glVertex3d(cPoint[0] + v1[0] - v2[0] + offset[0], 
 								cPoint[1] + v1[1] - v2[1] + offset[1], 
 								cPoint[2] + v1[2] - v2[2] + offset[2]);
@@ -307,7 +307,7 @@ void FWLDHapticDemo::DisplayContactPlane(){
 				glVertex3d(cPoint[0] + v1[0] + v2[0] + offset[0], 
 								cPoint[1] + v1[1] + v2[1] + offset[1], 
 								cPoint[2] + v1[2] + v2[2] + offset[2]);
-				/// ê⁄êGñ è„ñ 
+				/// Êé•Ëß¶Èù¢‰∏äÈù¢
 				glVertex3d(cPoint[0] - v1[0] + v2[0] + offset[0], 
 								cPoint[1] - v1[1] + v2[1] + offset[1], 
 								cPoint[2] - v1[2] + v2[2] + offset[2]);

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -60,7 +60,7 @@ bool DRKeyMouseGLUT::Init(){
 HIVirtualDeviceIf* DRKeyMouseGLUT::Rent(const IfInfo* ii, const char* n, int portNo){
 	HIVirtualDeviceIf* dv = HIRealDevice::Rent(ii, n, portNo);
 
-	// Šù‘¶‚Ì‰¼‘zƒfƒoƒCƒX‚ª‚È‚¯‚ê‚Îì¬
+	// æ—¢å­˜ã®ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ãŒãªã‘ã‚Œã°ä½œæˆ
 	if(!dv && DVKeyMouseIf::GetIfInfoStatic()->Inherit(ii)){
 		DVKeyMouse* km = DBG_NEW DV(this, portNo);
 		AddChildObject(km->Cast());
@@ -89,7 +89,7 @@ void DRKeyMouseGLUT::OnMouse(int button, int state, int x, int y){
 	if(mod & GLUT_ACTIVE_ALT)
 		buttonState |= DVButtonMask::ALT;
 
-	// ƒJƒŒƒ“ƒgƒEƒBƒ“ƒhƒE‚É‘Î‰‚·‚é‰¼‘zƒfƒoƒCƒX‚ÌƒR[ƒ‹ƒoƒbƒN‚ğŒÄ‚Ô
+	// ã‚«ãƒ¬ãƒ³ãƒˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«å¯¾å¿œã™ã‚‹ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’å‘¼ã¶
 	int wid = glutGetWindow();
 	for(int i = 0; i < (int)NChildObject(); i++){
 		DVKeyMouse* dv = GetChildObject(i)->Cast();

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,14 +8,14 @@
 /**
  Springhead2/src/tests/Physics/PHConstraintTest.cpp
 
-yŠT—vz
-  EÚGƒ‚[ƒh‚É LCP–@ ‚ğ‘I‘ğ‚µ‚ÄAƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚·‚éB
+ã€æ¦‚è¦ã€‘
+  ãƒ»æ¥è§¦ãƒ¢ãƒ¼ãƒ‰ã« LCPæ³• ã‚’é¸æŠã—ã¦ã€ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ã€‚
   
-yI—¹Šî€z
-@E¶¬‚µ‚½ƒuƒƒbƒN‚·‚×‚Ä‚ªA”ƒXƒeƒbƒvŠÔA°‚Ìã‚ÉÃ~‚µ‚½‚ç³íI—¹B@
+ã€çµ‚äº†åŸºæº–ã€‘
+ã€€ãƒ»ç”Ÿæˆã—ãŸãƒ–ãƒ­ãƒƒã‚¯ã™ã¹ã¦ãŒã€æ•°ã‚¹ãƒ†ãƒƒãƒ—é–“ã€åºŠã®ä¸Šã«é™æ­¢ã—ãŸã‚‰æ­£å¸¸çµ‚äº†ã€‚ã€€
    
  */
-#include <Springhead.h>		//	Springhead‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+#include <Springhead.h>		//	Springheadã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 #include <string>
 #include <GL/glut.h>
 #ifdef USE_HDRSTOP
@@ -24,9 +24,9 @@
 using namespace Spr;
 
 #define ESC					27		// ESC key
-#define STAY_COUNTER		10		// Ã~”»’èƒJƒEƒ“ƒg
-#define TOTAL_IDLE_COUNTER	1000	// Ã~‚µ‚È‚¢ê‡‚É—˜—p	
-#define NUM_BLOCK			6//6	// ¶¬‚·‚éƒ{ƒbƒNƒX”
+#define STAY_COUNTER		10		// é™æ­¢åˆ¤å®šã‚«ã‚¦ãƒ³ãƒˆ
+#define TOTAL_IDLE_COUNTER	1000	// é™æ­¢ã—ãªã„å ´åˆã«åˆ©ç”¨	
+#define NUM_BLOCK			6//6	// ç”Ÿæˆã™ã‚‹ãƒœãƒƒã‚¯ã‚¹æ•°
 
 const float boxStride = 2+0.1;
 float boxpos[][3] = {
@@ -46,26 +46,26 @@ PHSolidIf* soFloor, *soBlock[NUM_BLOCK];
 static Vec3d prepos[NUM_BLOCK];				// previous position
 static Vec3d curpos[NUM_BLOCK];				// current position
 
-// ŒõŒ¹‚Ìİ’è 
+// å…‰æºã®è¨­å®š 
 static GLfloat light_position[] = { 15.0, 30.0, 20.0, 1.0 };
 static GLfloat light_ambient[]  = { 0.0, 0.0, 0.0, 1.0 };
 static GLfloat light_diffuse[]  = { 1.0, 1.0, 1.0, 1.0 }; 
 static GLfloat light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
-// Ş¿‚Ìİ’è
+// æè³ªã®è¨­å®š
 static GLfloat mat_red[]        = { 1.0, 0.0, 0.0, 1.0 };
 static GLfloat mat_blue[]       = { 0.0, 0.0, 1.0, 1.0 };
 static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 1.0 };
 static GLfloat mat_shininess[]  = { 120.0 };
 
-static int elapse = 100;	//timerüŠú[ms]
-static double dt = 0.05;	//Ï•ªƒXƒeƒbƒv[s]
+static int elapse = 100;	//timerå‘¨æœŸ[ms]
+static double dt = 0.05;	//ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—[s]
 
 /**
- brief     ‘½–Ê‘Ì‚Ì–Ê(OŠpŒ`)‚Ì–@ü‚ğ‹‚ß‚é
- param	   <in/out> normal@@  –@ü
- param     <in/-->   base@@@ mesh‚Ì’¸“_
- param     <in/-->   face@@@ ‘½–Ê‘Ì‚Ì–Ê
- return     ‚È‚µ
+ brief     å¤šé¢ä½“ã®é¢(ä¸‰è§’å½¢)ã®æ³•ç·šã‚’æ±‚ã‚ã‚‹
+ param	   <in/out> normalã€€ã€€  æ³•ç·š
+ param     <in/-->   baseã€€ã€€ã€€ meshã®é ‚ç‚¹
+ param     <in/-->   faceã€€ã€€ã€€ å¤šé¢ä½“ã®é¢
+ return     ãªã—
  */
 void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 	Vec3f edge0, edge1;
@@ -76,9 +76,9 @@ void genFaceNormal(Vec3f& normal, Vec3f* base, CDFaceIf* face){
 }
 
 /**
- brief     	glutDisplayFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param		‚È‚µ
- return 	‚È‚µ
+ brief     	glutDisplayFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param		ãªã—
+ return 	ãªã—
  */
 void SPR_CDECL display(){
 	glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -88,7 +88,7 @@ void SPR_CDECL display(){
 
 	Affined ad;
 	
-	// ‰º‚ÌÔ‚¢„‘Ì(soFloor)
+	// ä¸‹ã®èµ¤ã„å‰›ä½“(soFloor)
 	glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_red);
 	glPushMatrix();
 	Posed pose = soFloor->GetPose();
@@ -116,7 +116,7 @@ void SPR_CDECL display(){
 
 	
 	for(int n = 0; n < NUM_BLOCK; n++){
-		// ã‚ÌÂ‚¢„‘Ì(soBlock)
+		// ä¸Šã®é’ã„å‰›ä½“(soBlock)
 		glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, mat_blue);
 		glPushMatrix();
 		pose = soBlock[n]->GetPose();
@@ -144,9 +144,9 @@ void SPR_CDECL display(){
 }
 
 /**
- brief		ŒõŒ¹‚Ìİ’è
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief		å…‰æºã®è¨­å®š
+ param	 	ãªã—
+ return 	ãªã—
  */
 void setLight() {
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
@@ -158,9 +158,9 @@ void setLight() {
 }
 
 /**
- brief     	‰Šú‰»ˆ—
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief     	åˆæœŸåŒ–å‡¦ç†
+ param	 	ãªã—
+ return 	ãªã—
  */
 void initialize(){
 	glClearColor(0.0, 0.0, 0.0, 1.0);
@@ -177,10 +177,10 @@ void initialize(){
 }
 
 /**
- brief		glutReshapeFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param		<in/--> w@@•
- param		<in/--> h@@‚‚³
- return		 ‚È‚µ
+ brief		glutReshapeFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param		<in/--> wã€€ã€€å¹…
+ param		<in/--> hã€€ã€€é«˜ã•
+ return		 ãªã—
  */
 void SPR_CDECL reshape(int w, int h){
 	glViewport(0, 0, w, h);
@@ -191,25 +191,25 @@ void SPR_CDECL reshape(int w, int h){
 }
 
 /**
- brief 		glutKeyboardFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ” 
- param		<in/--> key@@ ASCIIƒR[ƒh
- param 		<in/--> x@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- param 		<in/--> y@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- return 	‚È‚µ
+ brief 		glutKeyboardFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•° 
+ param		<in/--> keyã€€ã€€ ASCIIã‚³ãƒ¼ãƒ‰
+ param 		<in/--> xã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ param 		<in/--> yã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ return 	ãªã—
  */
 void SPR_CDECL keyboard(unsigned char key, int x, int y){
 	if (key == ESC) exit(0);
 }	
 
 /**
- brief  	glutIdleFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief  	glutIdleFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void SPR_CDECL idle(){
 #if 1
-	static int stepCnt = 0;						// Ã~‚µ‚½ƒXƒeƒbƒvƒJƒEƒ“ƒg
-	static int totalStep = 0;					// ‘SÀsƒXƒeƒbƒv”iI—¹”»’è‚Åg—pj
+	static int stepCnt = 0;						// é™æ­¢ã—ãŸã‚¹ãƒ†ãƒƒãƒ—ã‚«ã‚¦ãƒ³ãƒˆ
+	static int totalStep = 0;					// å…¨å®Ÿè¡Œã‚¹ãƒ†ãƒƒãƒ—æ•°ï¼ˆçµ‚äº†åˆ¤å®šã§ä½¿ç”¨ï¼‰
 	
 	int iCnt = 0;
 	for (iCnt = 0; iCnt < NUM_BLOCK; iCnt++){
@@ -222,7 +222,7 @@ void SPR_CDECL idle(){
 	iCnt = 0;
 	bool flag = true;
 	int boxIndex = 0;
-	// prepos‚Æcurpos‚ªˆê’v‚µ‚È‚¢box‚ª‚ ‚é‚©
+	// preposã¨curposãŒä¸€è‡´ã—ãªã„boxãŒã‚ã‚‹ã‹
 	while(iCnt < NUM_BLOCK){
 		if (!approx(prepos[iCnt], curpos[iCnt])) {	
 			flag = false;
@@ -231,7 +231,7 @@ void SPR_CDECL idle(){
 		}
 		iCnt++;
 	}
-	// Ã~ƒXƒeƒbƒv”‚ÌƒJƒEƒ“ƒg
+	// é™æ­¢ã‚¹ãƒ†ãƒƒãƒ—æ•°ã®ã‚«ã‚¦ãƒ³ãƒˆ
 	if (flag == true){
 		stepCnt++;
 		std::cout << "true" << std::endl;
@@ -239,7 +239,7 @@ void SPR_CDECL idle(){
 		std::cout << boxIndex << "               false    " << prepos[boxIndex]-curpos[boxIndex] <<  std::endl;
 		stepCnt = 0;
 	}
-	// I—¹”»’è
+	// çµ‚äº†åˆ¤å®š
 	if (stepCnt > STAY_COUNTER){
 		DSTR << "\nPHConstraintTest success." << std::endl;
 		exit(EXIT_SUCCESS);
@@ -260,9 +260,9 @@ void SPR_CDECL idle(){
 }
 
 /**
- brief  	glutTimerFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	<in/--> id@@ ƒ^ƒCƒ}[‚Ì‹æ•Ê‚ğ‚·‚é‚½‚ß‚Ìî•ñ
- return 	‚È‚µ
+ brief  	glutTimerFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	<in/--> idã€€ã€€ ã‚¿ã‚¤ãƒãƒ¼ã®åŒºåˆ¥ã‚’ã™ã‚‹ãŸã‚ã®æƒ…å ±
+ return 	ãªã—
  */
 void SPR_CDECL timer(int id){
 	int n = (int)((double)(elapse) / 1000.0 / dt);
@@ -272,33 +272,33 @@ void SPR_CDECL timer(int id){
 }
 
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 
 int SPR_CDECL main(int argc, char* argv[]){
-	sdk = PHSdkIf::CreateSdk();							// SDK‚Ìì¬@
+	sdk = PHSdkIf::CreateSdk();							// SDKã®ä½œæˆã€€
 	PHSceneDesc dscene;
 	dscene.numIteration = 100;
 	dscene.timeStep = dt;
-	scene = sdk->CreateScene(dscene);				// ƒV[ƒ“‚Ìì¬
-	scene->SetContactMode(PHSceneDesc::MODE_LCP);	// ÚGƒ‚[ƒh‚É LCP–@‚Å‘I‘ğ
+	scene = sdk->CreateScene(dscene);				// ã‚·ãƒ¼ãƒ³ã®ä½œæˆ
+	scene->SetContactMode(PHSceneDesc::MODE_LCP);	// æ¥è§¦ãƒ¢ãƒ¼ãƒ‰ã« LCPæ³•ã§é¸æŠ
 
 	PHSolidDesc dsolid;
 	dsolid.mass = 2.0;
 	dsolid.inertia *= 2.0;
 	for(int i = 0; i < NUM_BLOCK; i++)
-		soBlock[i] = scene->CreateSolid(dsolid);	// „‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
+		soBlock[i] = scene->CreateSolid(dsolid);	// å‰›ä½“ã‚’descã«åŸºã¥ã„ã¦ä½œæˆ
 	
 	dsolid.mass = 1e20f;
 	dsolid.inertia *= 1e20f;
-	soFloor = scene->CreateSolid(dsolid);			// „‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
+	soFloor = scene->CreateSolid(dsolid);			// å‰›ä½“ã‚’descã«åŸºã¥ã„ã¦ä½œæˆ
 	soFloor->SetGravity(false);
 	soFloor->SetDynamical(false);
 	
-	//	Œ`ó‚Ìì¬
+	//	å½¢çŠ¶ã®ä½œæˆ
 	CDConvexMeshIf* meshFloor=NULL;
 	CDConvexMeshIf* meshBlock=NULL;
 	{
@@ -313,7 +313,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 		md.vertices.push_back(Vec3f( 1, 1, 1));
 		meshBlock = DCAST(CDConvexMeshIf, sdk->CreateShape(md));
 
-		// soFloor(meshFloor)‚É‘Î‚µ‚ÄƒXƒP[ƒŠƒ“ƒO
+		// soFloor(meshFloor)ã«å¯¾ã—ã¦ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 		for(unsigned i=0; i<md.vertices.size(); ++i){
 			md.vertices[i].x *= 20;		
 			md.vertices[i].z *= 10;
@@ -330,7 +330,7 @@ int SPR_CDECL main(int argc, char* argv[]){
 		soBlock[i]->SetFramePosition(*(Vec3f*)&boxpos[i]);
 //	soBlock[NUM_BLOCK-1]->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
 
-	scene->SetGravity(Vec3f(0,-9.8f, 0));	// d—Í‚ğİ’è
+	scene->SetGravity(Vec3f(0,-9.8f, 0));	// é‡åŠ›ã‚’è¨­å®š
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprGRAnimationMesh.h
- *	@brief ƒLƒƒƒ‰ƒNƒ^ƒAƒjƒ[ƒVƒ‡ƒ“—pƒƒbƒVƒ…
+ *	@brief ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ãƒ¡ãƒƒã‚·ãƒ¥
 */
 
 #ifndef SPR_GRAnimationMesh_H
@@ -20,12 +20,12 @@
 
 namespace Spr{;
 
-///	@brief GRAnimationMesh‚ÌƒfƒXƒNƒŠƒvƒ^D
+///	@brief GRAnimationMeshã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ï¼
 struct GRAnimationMeshDesc /*: GRVisualDesc*/{
-	std::string filename;		///< “Ç‚İ‚Şƒtƒ@ƒCƒ‹–¼(.x)
+	std::string filename;		///< èª­ã¿è¾¼ã‚€ãƒ•ã‚¡ã‚¤ãƒ«å(.x)
 };
 
-///	@brief SetBlend()‚Åg‚¤B
+///	@brief SetBlend()ã§ä½¿ã†ã€‚
 struct GRAnimationMeshBlendData{
 	std::string	name;
 	double		time;
@@ -34,59 +34,59 @@ struct GRAnimationMeshBlendData{
 
 typedef void (SPR_CDECL *GRAnimationMeshDrawSubsetListenerFunc)(DWORD attribId, void* ptr);
 
-/**	@brief	ƒOƒ‰ƒtƒBƒbƒNƒX‚Åg‚¤ƒLƒƒƒ‰ƒNƒ^ƒAƒjƒ[ƒVƒ‡ƒ“•\¦—p‚ÌMesh */
+/**	@brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã§ä½¿ã†ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³è¡¨ç¤ºç”¨ã®Mesh */
 struct GRAnimationMeshIf: public GRVisualIf{
 	SPR_IFDEF(GRAnimationMesh);
-	virtual void SetMotion(const std::string& name)=0;		///< ƒ‚[ƒVƒ‡ƒ“‚ğ‘I‘ğ
-	virtual void SetTime(double time)=0;					///< ƒ‚[ƒVƒ‡ƒ“‚Ì‚ğİ’è(’PˆÊ‚Í•b)
+	virtual void SetMotion(const std::string& name)=0;		///< ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é¸æŠ
+	virtual void SetTime(double time)=0;					///< ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ã®æ™‚åˆ»ã‚’è¨­å®š(å˜ä½ã¯ç§’)
 	virtual void SetBlend(const std::vector<GRAnimationMeshBlendData>& data)=0;
 
-	/** @brief ƒL[ƒtƒŒ[ƒ€‚É‚æ‚éƒ{[ƒ“‚ÌŠp“x‚ğæ“¾
-		@param name   ƒ{[ƒ“‚Ì–¼‘O
+	/** @brief ã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã«ã‚ˆã‚‹ãƒœãƒ¼ãƒ³ã®è§’åº¦ã‚’å–å¾—
+		@param name   ãƒœãƒ¼ãƒ³ã®åå‰
 	*/
 	virtual Posed GetBoneKeyframePose(const std::string& name)=0;
 	
-	/** @brief ƒ{[ƒ“‚ÌŠp“x‚ği•¨—ƒ‚ƒfƒ‹‚ÌŠÖß‚ÌŠp“x‚È‚Ç‚Åjã‘‚«‚·‚é
-		@param name        ƒ{[ƒ“‚Ì–¼‘O
-		@param orientation ã‘‚«‚·‚éŠp“x
-		@param weight      ã‘‚«—¦i0`1, 0FƒL[ƒtƒŒ[ƒ€‚É100%]‚¤, 1Forientation‚É100%]‚¤j
+	/** @brief ãƒœãƒ¼ãƒ³ã®è§’åº¦ã‚’ï¼ˆç‰©ç†ãƒ¢ãƒ‡ãƒ«ã®é–¢ç¯€ã®è§’åº¦ãªã©ã§ï¼‰ä¸Šæ›¸ãã™ã‚‹
+		@param name        ãƒœãƒ¼ãƒ³ã®åå‰
+		@param orientation ä¸Šæ›¸ãã™ã‚‹è§’åº¦
+		@param weight      ä¸Šæ›¸ãç‡ï¼ˆ0ï½1, 0ï¼šã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã«100%å¾“ã†, 1ï¼šorientationã«100%å¾“ã†ï¼‰
 	*/
 	virtual void OverrideBoneOrientation(const std::string& name, const Quaterniond& orientation, double weight)=0;
 	
-	/** @brief ƒ{[ƒ“‚ÌŠp“x‚Æeƒ{[ƒ“‚©‚ç‚Ì‘Š‘ÎˆÊ’uiƒ‹[ƒgƒ{[ƒ“‚Ìê‡‚Í©g‚Ìâ‘ÎˆÊ’uj‚ğã‘‚«‚·‚é
-		@param name   ƒ{[ƒ“‚Ì–¼‘O
-		@param pose   ã‘‚«‚·‚éˆÊ’uŠp“x
-		@param weight ã‘‚«—¦i0`1, 0FƒL[ƒtƒŒ[ƒ€‚É100%]‚¤, 1Fpose‚É100%]‚¤j
+	/** @brief ãƒœãƒ¼ãƒ³ã®è§’åº¦ã¨è¦ªãƒœãƒ¼ãƒ³ã‹ã‚‰ã®ç›¸å¯¾ä½ç½®ï¼ˆãƒ«ãƒ¼ãƒˆãƒœãƒ¼ãƒ³ã®å ´åˆã¯è‡ªèº«ã®çµ¶å¯¾ä½ç½®ï¼‰ã‚’ä¸Šæ›¸ãã™ã‚‹
+		@param name   ãƒœãƒ¼ãƒ³ã®åå‰
+		@param pose   ä¸Šæ›¸ãã™ã‚‹ä½ç½®è§’åº¦
+		@param weight ä¸Šæ›¸ãç‡ï¼ˆ0ï½1, 0ï¼šã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã«100%å¾“ã†, 1ï¼šposeã«100%å¾“ã†ï¼‰
 	*/
 	virtual void OverrideBonePose(const std::string& name, const Posed& pose, double weight, bool posRelative=false)=0;
 	
-	/** @brief ‘S‚Ä‚Ìƒ{[ƒ“‚Ìã‘‚«—¦‚ğˆê’è’l‚É‚·‚é
-		@param weight ã‘‚«—¦i0`1, 0FƒL[ƒtƒŒ[ƒ€‚É100%]‚¤, 1Fpose‚É100%]‚¤j
+	/** @brief å…¨ã¦ã®ãƒœãƒ¼ãƒ³ã®ä¸Šæ›¸ãç‡ã‚’ä¸€å®šå€¤ã«ã™ã‚‹
+		@param weight ä¸Šæ›¸ãç‡ï¼ˆ0ï½1, 0ï¼šã‚­ãƒ¼ãƒ•ãƒ¬ãƒ¼ãƒ ã«100%å¾“ã†, 1ï¼šposeã«100%å¾“ã†ï¼‰
 	*/
 	virtual void SetAllBonesOverrideWeight(double weight)=0;
 	
-	/** @brief DrawSubset‚ÌÀs‚ÉƒR[ƒ‹ƒoƒbƒN‚³‚ê‚éŠÖ”‚ğ“o˜^
-		@param beforeFunc DrawSubset‚ªÀs‚³‚ê‚é’¼‘O‚ÉƒR[ƒ‹ƒoƒbƒN‚³‚ê‚éŠÖ”
-		@param afterFunc  DrawSubset‚ªÀs‚³‚ê‚½’¼Œã‚ÉƒR[ƒ‹ƒoƒbƒN‚³‚ê‚éŠÖ”
-		@param ptr        ƒR[ƒ‹ƒoƒbƒNŠÖ”‚Éˆø”‚Æ‚µ‚Ä“n‚³‚ê‚é
+	/** @brief DrawSubsetã®å®Ÿè¡Œæ™‚ã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã•ã‚Œã‚‹é–¢æ•°ã‚’ç™»éŒ²
+		@param beforeFunc DrawSubsetãŒå®Ÿè¡Œã•ã‚Œã‚‹ç›´å‰ã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã•ã‚Œã‚‹é–¢æ•°
+		@param afterFunc  DrawSubsetãŒå®Ÿè¡Œã•ã‚ŒãŸç›´å¾Œã«ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã•ã‚Œã‚‹é–¢æ•°
+		@param ptr        ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã«å¼•æ•°ã¨ã—ã¦æ¸¡ã•ã‚Œã‚‹
 	*/
 	virtual void AddDrawSubsetListener(GRAnimationMeshDrawSubsetListenerFunc beforeFunc, GRAnimationMeshDrawSubsetListenerFunc afterFunc, void* ptr=NULL)=0;
 
-	/** @brief •`‰æ‚Ég—p‚·‚éƒGƒtƒFƒNƒg‚ğİ’è
-		@param effect            •`‰æ‚Ég—p‚·‚éƒGƒtƒFƒNƒg
-		@param matrixPaletteSize ƒ{[ƒ“‚Ìƒ[ƒ‹ƒh•ÏŠ·‚ğŠi”[‚·‚é”z—ñ‚ÌƒTƒCƒY
-		ƒGƒtƒFƒNƒg‚ğg‚¤ê‡‚ÍRender()ŒÄ‚Ño‚µ‚ğID3DXEffect::BeginPass()‚ÆEndPass()‚Å‹²‚Ş
-		ƒGƒtƒFƒNƒg“à‚É—pˆÓ‚·‚éƒpƒ‰ƒ[ƒ^‚ÍˆÈ‰º‚Ì‚Æ‚¨‚èiŒ^AƒZƒ}ƒ“ƒeƒBƒNƒXj
-			float4x4						WORLD						// ƒ[ƒ‹ƒhs—ñ
-			int								MAXVERTEXINFL				// ˆê‚Â‚Ì’¸“_‚É‰e‹¿‚·‚éƒ{[ƒ“‚ÌÅ‘å”iƒXƒLƒjƒ“ƒO‚µ‚È‚¢ƒƒbƒVƒ…‚Å‚Í‚Oj
-			float4x3[matrixPaletteSize]		BONEMATRIXARRAY				// ƒ{[ƒ“‚Ì•ÏŠ·s—ñ‚Ì”z—ñiƒfƒ…ƒAƒ‹ƒNƒH[ƒ^ƒjƒIƒ“‚ğg‚¤‚È‚ç•s—vj
-			float4[matrixPaletteSize]		BONEQUATERNIONARRAYREAL		// ƒ{[ƒ“‚Ìƒfƒ…ƒAƒ‹ƒNƒH[ƒ^ƒjƒIƒ“‚Ìreal-part‚Ì”z—ñis—ñ‚ğg‚¤‚È‚ç•s—vj
-			float4[matrixPaletteSize]		BONEQUATERNIONARRAYDUAL		// ƒ{[ƒ“‚Ìƒfƒ…ƒAƒ‹ƒNƒH[ƒ^ƒjƒIƒ“‚Ìdual-part‚Ì”z—ñis—ñ‚ğg‚¤‚È‚ç•s—vj
-			float4							DIFFUSECOLOR				// ƒ}ƒeƒŠƒAƒ‹‚ÌƒfƒBƒtƒ…[ƒYF
-			float4							EMISSIVECOLOR				// ƒ}ƒeƒŠƒAƒ‹‚ÌƒGƒ~ƒbƒVƒuF
-			texture							TEXTURE						// ƒeƒNƒXƒ`ƒƒ
-			bool							ISTEXTURED					// ƒeƒNƒXƒ`ƒƒ‚ªg‚í‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©
-		ƒXƒLƒjƒ“ƒO‚µ‚È‚¢ƒƒbƒVƒ…‚Å‚ÍBONE***‚Íg‚í‚ê‚È‚¢
+	/** @brief æç”»ã«ä½¿ç”¨ã™ã‚‹ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’è¨­å®š
+		@param effect            æç”»ã«ä½¿ç”¨ã™ã‚‹ã‚¨ãƒ•ã‚§ã‚¯ãƒˆ
+		@param matrixPaletteSize ãƒœãƒ¼ãƒ³ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰å¤‰æ›ã‚’æ ¼ç´ã™ã‚‹é…åˆ—ã®ã‚µã‚¤ã‚º
+		ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’ä½¿ã†å ´åˆã¯Render()å‘¼ã³å‡ºã—ã‚’ID3DXEffect::BeginPass()ã¨EndPass()ã§æŒŸã‚€
+		ã‚¨ãƒ•ã‚§ã‚¯ãƒˆå†…ã«ç”¨æ„ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯ä»¥ä¸‹ã®ã¨ãŠã‚Šï¼ˆå‹ã€ã‚»ãƒãƒ³ãƒ†ã‚£ã‚¯ã‚¹ï¼‰
+			float4x4						WORLD						// ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—
+			int								MAXVERTEXINFL				// ä¸€ã¤ã®é ‚ç‚¹ã«å½±éŸ¿ã™ã‚‹ãƒœãƒ¼ãƒ³ã®æœ€å¤§æ•°ï¼ˆã‚¹ã‚­ãƒ‹ãƒ³ã‚°ã—ãªã„ãƒ¡ãƒƒã‚·ãƒ¥ã§ã¯ï¼ï¼‰
+			float4x3[matrixPaletteSize]		BONEMATRIXARRAY				// ãƒœãƒ¼ãƒ³ã®å¤‰æ›è¡Œåˆ—ã®é…åˆ—ï¼ˆãƒ‡ãƒ¥ã‚¢ãƒ«ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã‚’ä½¿ã†ãªã‚‰ä¸è¦ï¼‰
+			float4[matrixPaletteSize]		BONEQUATERNIONARRAYREAL		// ãƒœãƒ¼ãƒ³ã®ãƒ‡ãƒ¥ã‚¢ãƒ«ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®real-partã®é…åˆ—ï¼ˆè¡Œåˆ—ã‚’ä½¿ã†ãªã‚‰ä¸è¦ï¼‰
+			float4[matrixPaletteSize]		BONEQUATERNIONARRAYDUAL		// ãƒœãƒ¼ãƒ³ã®ãƒ‡ãƒ¥ã‚¢ãƒ«ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®dual-partã®é…åˆ—ï¼ˆè¡Œåˆ—ã‚’ä½¿ã†ãªã‚‰ä¸è¦ï¼‰
+			float4							DIFFUSECOLOR				// ãƒãƒ†ãƒªã‚¢ãƒ«ã®ãƒ‡ã‚£ãƒ•ãƒ¥ãƒ¼ã‚ºè‰²
+			float4							EMISSIVECOLOR				// ãƒãƒ†ãƒªã‚¢ãƒ«ã®ã‚¨ãƒŸãƒƒã‚·ãƒ–è‰²
+			texture							TEXTURE						// ãƒ†ã‚¯ã‚¹ãƒãƒ£
+			bool							ISTEXTURED					// ãƒ†ã‚¯ã‚¹ãƒãƒ£ãŒä½¿ã‚ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹
+		ã‚¹ã‚­ãƒ‹ãƒ³ã‚°ã—ãªã„ãƒ¡ãƒƒã‚·ãƒ¥ã§ã¯BONE***ã¯ä½¿ã‚ã‚Œãªã„
 	*/
 	virtual void SetEffect(LPD3DXEFFECT effect, int matrixPaletteSize)=0;
 };

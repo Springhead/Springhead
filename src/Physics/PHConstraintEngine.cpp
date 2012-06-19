@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,7 +19,7 @@ using namespace std;
 namespace Spr{;
 
 void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
-	//	Œğ·‚·‚é2‚Â‚Ì“ÊŒ`ó‚ğÚG–Ê‚ÅØ‚Á‚½‚ÌØ‚èŒû‚ÌŒ`‚ğ‹‚ß‚é
+	//	äº¤å·®ã™ã‚‹2ã¤ã®å‡¸å½¢çŠ¶ã‚’æ¥è§¦é¢ã§åˆ‡ã£ãŸæ™‚ã®åˆ‡ã‚Šå£ã®å½¢ã‚’æ±‚ã‚ã‚‹
 	//int start = engine->points.size();
 	sp->EnumVertex(engine, ct, solid[0], solid[1]);
 	//int end = engine->points.size();
@@ -40,24 +40,24 @@ void PHSolidPairForLCP::OnContDetect(PHShapePairForLCP* sp, PHConstraintEngine* 
 */		
 }
 
-// ÚG‰ğÍDÚG•”•ª‚ÌØ‚èŒû‚ğ‹‚ß‚ÄCØ‚èŒû‚ğ\¬‚·‚é“Ê‘½ŠpŒ`‚Ì’¸“_‚ğengine‚ÉS‘©‚Æ‚µ‚Ä’Ç‰Á‚·‚éD	
+// æ¥è§¦è§£æï¼æ¥è§¦éƒ¨åˆ†ã®åˆ‡ã‚Šå£ã‚’æ±‚ã‚ã¦ï¼Œåˆ‡ã‚Šå£ã‚’æ§‹æˆã™ã‚‹å‡¸å¤šè§’å½¢ã®é ‚ç‚¹ã‚’engineã«æ‹˜æŸã¨ã—ã¦è¿½åŠ ã™ã‚‹ï¼	
 void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1){
-	//	center ‚Æ normal‚ªì‚é–Ê‚ÆŒğ·‚·‚é–Ê‚ğ‹‚ß‚È‚¢‚Æ‚¢‚¯‚È‚¢D
-	//	–Ê‚Ì’¸“_‚ª•Ê‚Ì‘¤‚É‚ ‚é–Ê‚¾‚¯‚ª‘ÎÛD
-	//	quick hull ‚Í n log r ‚¾‚©‚çCüŒ`ŠÔ‚Åo—ˆ‚é‚±‚Æ‚Í‚â‚Á‚Ä‚¨‚­‚×‚«D
+	//	center ã¨ normalãŒä½œã‚‹é¢ã¨äº¤å·®ã™ã‚‹é¢ã‚’æ±‚ã‚ãªã„ã¨ã„ã‘ãªã„ï¼
+	//	é¢ã®é ‚ç‚¹ãŒåˆ¥ã®å´ã«ã‚ã‚‹é¢ã ã‘ãŒå¯¾è±¡ï¼
+	//	quick hull ã¯ n log r ã ã‹ã‚‰ï¼Œç·šå½¢æ™‚é–“ã§å‡ºæ¥ã‚‹ã“ã¨ã¯ã‚„ã£ã¦ãŠãã¹ãï¼
 
-	//	Še3ŠpŒ`‚É‚Â‚¢‚ÄC’¸“_‚ª‚Ç‚¿‚ç‘¤‚É‚ ‚é‚©”»’è‚µC—¼‘¤‚É‚ ‚é‚à‚Ì‚ğ‘ÎÛ‚Æ‚·‚éD
-	//	Œğü‚ğC–@ü{”’l‚ÌŒ`‚Å•\Œ»‚·‚éD
-	//	‚±‚Ìˆ—‚Í“ÊŒ`ó‚ª‚Á‚Ä‚¢‚Ä—Ç‚¢D
-	//	”Œğü‚Ì•\Œ»Œ`®‚Æ‚µ‚ÄC2Ÿ‹Èü‚à‹–‚·D‚»‚Ìê‡C’¼ü‚Í•Ô‚³‚È‚¢
-	//	”2Ÿ‹Èü‚ÍMullar•Preparata‚É‚Í“ü‚ê‚È‚¢‚Å•Ê‚É‚µ‚Ä‚¨‚­D
+	//	å„3è§’å½¢ã«ã¤ã„ã¦ï¼Œé ‚ç‚¹ãŒã©ã¡ã‚‰å´ã«ã‚ã‚‹ã‹åˆ¤å®šã—ï¼Œä¸¡å´ã«ã‚ã‚‹ã‚‚ã®ã‚’å¯¾è±¡ã¨ã™ã‚‹ï¼
+	//	äº¤ç·šã‚’ï¼Œæ³•ç·šï¼‹æ•°å€¤ã®å½¢ã§è¡¨ç¾ã™ã‚‹ï¼
+	//	ã“ã®å‡¦ç†ã¯å‡¸å½¢çŠ¶ãŒæŒã£ã¦ã„ã¦è‰¯ã„ï¼
+	//	ï¼ƒäº¤ç·šã®è¡¨ç¾å½¢å¼ã¨ã—ã¦ï¼Œ2æ¬¡æ›²ç·šã‚‚è¨±ã™ï¼ãã®å ´åˆï¼Œç›´ç·šã¯è¿”ã•ãªã„
+	//	ï¼ƒ2æ¬¡æ›²ç·šã¯Mullarï¼†Preparataã«ã¯å…¥ã‚Œãªã„ã§åˆ¥ã«ã—ã¦ãŠãï¼
 
-	//	‘Š‘Î‘¬“x‚ğ‚İ‚Ä2D‚ÌÀ•WŒn‚ğŒˆ‚ß‚éB
+	//	ç›¸å¯¾é€Ÿåº¦ã‚’ã¿ã¦2Dã®åº§æ¨™ç³»ã‚’æ±ºã‚ã‚‹ã€‚
 	FPCK_FINITE(solid0->pose);
 	FPCK_FINITE(solid1->pose);
 	Vec3d v0 = solid0->GetPointVelocity(center);
 	Vec3d v1 = solid1->GetPointVelocity(center);
-	Matrix3d local;	//	contact coodinate system ÚG‚ÌÀ•WŒn
+	Matrix3d local;	//	contact coodinate system æ¥è§¦ã®åº§æ¨™ç³»
 	local.Ex() = normal;
  	local.Ey() = v1-v0;
 	local.Ey() -= local.Ey() * normal * normal;
@@ -85,20 +85,20 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 		assert(0);
 	}
 
-	//	–Ê‚Æ–Ê‚ªG‚ê‚éê‡‚ª‚ ‚é‚Ì‚ÅAÚG‚ª“Ê‘½ŠpŒ`‚â“ÊŒ`ó‚É‚È‚é‚±‚Æ‚ª‚ ‚éB
-	//	Ø‚èŒû‚ğ‹‚ß‚éB‚Ü‚¸A‚»‚ê‚¼‚ê‚ÌŒ`ó‚ÌØ‚èŒû‚ğ—ñ‹“
-	CDCutRing cutRing(commonPoint, local);	//	commonPoint‚È‚ç‚ÎA‚»‚ê‚ğŠÜ‚Ş–Ê‚ÅØ‚ê‚ÎA•K‚¸Ø‚èŒû‚Ì’†‚É‚È‚éB
+	//	é¢ã¨é¢ãŒè§¦ã‚Œã‚‹å ´åˆãŒã‚ã‚‹ã®ã§ã€æ¥è§¦ãŒå‡¸å¤šè§’å½¢ã‚„å‡¸å½¢çŠ¶ã«ãªã‚‹ã“ã¨ãŒã‚ã‚‹ã€‚
+	//	åˆ‡ã‚Šå£ã‚’æ±‚ã‚ã‚‹ã€‚ã¾ãšã€ãã‚Œãã‚Œã®å½¢çŠ¶ã®åˆ‡ã‚Šå£ã‚’åˆ—æŒ™
+	CDCutRing cutRing(commonPoint, local);	//	commonPointãªã‚‰ã°ã€ãã‚Œã‚’å«ã‚€é¢ã§åˆ‡ã‚Œã°ã€å¿…ãšåˆ‡ã‚Šå£ã®ä¸­ã«ãªã‚‹ã€‚
 	int nPoint = engine->points.size();
-	//	—¼•û‚ÉØ‚èŒû‚ª‚ ‚éê‡D(‹…‚È‚Ç‚È‚¢‚à‚Ì‚à‚ ‚é)
+	//	ä¸¡æ–¹ã«åˆ‡ã‚Šå£ãŒã‚ã‚‹å ´åˆï¼(çƒãªã©ãªã„ã‚‚ã®ã‚‚ã‚ã‚‹)
 	bool found = shape[0]->FindCutRing(cutRing, shapePoseW[0]);
 	int nLine0 = cutRing.lines.size();
 	if (found) found = shape[1]->FindCutRing(cutRing, shapePoseW[1]);
 	int nLine1 = cutRing.lines.size() - nLine0;
 	if (found){
-		//	2‚Â‚ÌØ‚èŒû‚ÌƒAƒ“ƒh‚ğ‚Æ‚Á‚ÄA2•¨‘Ì‚ÌÚG–Ê‚ÌŒ`ó‚ğ‹‚ß‚éB
+		//	2ã¤ã®åˆ‡ã‚Šå£ã®ã‚¢ãƒ³ãƒ‰ã‚’ã¨ã£ã¦ã€2ç‰©ä½“ã®æ¥è§¦é¢ã®å½¢çŠ¶ã‚’æ±‚ã‚ã‚‹ã€‚
 		cutRing.MakeRing();		
 		section.clear();
-		std::vector<Vec3d>	local_section;	//ÚGÀ•WŒn‚Å‚ÌÚG–Ê‚Ì’¸“_(–ÊÚG—p)
+		std::vector<Vec3d>	local_section;	//æ¥è§¦åº§æ¨™ç³»ã§ã®æ¥è§¦é¢ã®é ‚ç‚¹(é¢æ¥è§¦ç”¨)
 		local_section.clear();		
 		if (cutRing.vtxs.begin != cutRing.vtxs.end && !(cutRing.vtxs.end-1)->deleted){
 			CDQHLine<CDCutLine>* vtx = cutRing.vtxs.end-1;
@@ -153,7 +153,7 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			} while (vtx!=cutRing.vtxs.end-1);
 
 			if(engine->bUseContactSurface == true){
-				Vec3d pos(0.0, 0.0, 0.0);//S‘©“_‚ÍÚGÀ•WŒn‚ÌŒ´“_‚Æ‚·‚é
+				Vec3d pos(0.0, 0.0, 0.0);//æ‹˜æŸç‚¹ã¯æ¥è§¦åº§æ¨™ç³»ã®åŸç‚¹ã¨ã™ã‚‹
 				pos = cutRing.local * pos;
 				PHContactSurface *point = DBG_NEW PHContactSurface(local, this, pos, solid0, solid1, local_section);
 				point->SetScene(engine->GetScene());
@@ -165,8 +165,8 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 			}
 		}
 	}
-	if (nPoint == (int)engine->points.size()){	//	‚Ğ‚Æ‚Â‚à’Ç‰Á‚µ‚Ä‚¢‚È‚¢Ø‚èŒû‚ª‚È‚©‚Á‚½ or ‚ ‚Á‚Ä‚àConvexHull‚ªì‚ê‚È‚©‚Á‚½D
-		//	‚«‚Á‚Æ1“_‚ÅÚG‚µ‚Ä‚¢‚éD
+	if (nPoint == (int)engine->points.size()){	//	ã²ã¨ã¤ã‚‚è¿½åŠ ã—ã¦ã„ãªã„ï¼åˆ‡ã‚Šå£ãŒãªã‹ã£ãŸ or ã‚ã£ã¦ã‚‚ConvexHullãŒä½œã‚Œãªã‹ã£ãŸï¼
+		//	ãã£ã¨1ç‚¹ã§æ¥è§¦ã—ã¦ã„ã‚‹ï¼
 		PHContactPoint *point = DBG_NEW PHContactPoint(local, this, center, solid0, solid1);
 		point->SetScene(engine->GetScene());
 		point->engine = engine;
@@ -181,9 +181,9 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 }
 
 void PHSolidPairForLCP::OnDetect(PHShapePairForLCP* sp, PHConstraintEngine* engine, unsigned ct, double dt){
-	//	–@ü‚ğ‹‚ß‚é
+	//	æ³•ç·šã‚’æ±‚ã‚ã‚‹
 	sp->CalcNormal();
-	//	Œğ·‚·‚é2‚Â‚Ì“ÊŒ`ó‚ğÚG–Ê‚ÅØ‚Á‚½‚ÌØ‚èŒû‚ÌŒ`‚ğ‹‚ß‚é
+	//	äº¤å·®ã™ã‚‹2ã¤ã®å‡¸å½¢çŠ¶ã‚’æ¥è§¦é¢ã§åˆ‡ã£ãŸæ™‚ã®åˆ‡ã‚Šå£ã®å½¢ã‚’æ±‚ã‚ã‚‹
 	sp->EnumVertex(engine, ct, solid[0], solid[1]);
 }			
 
@@ -257,11 +257,11 @@ PHRootNode* PHConstraintEngine::CreateRootNode(const PHRootNodeDesc& desc, PHSol
 PHTreeNode* PHConstraintEngine::CreateTreeNode(const PHTreeNodeDesc& desc, PHTreeNode* parent, PHSolid* solid){
 	PHTreeNode* node;
 	
-	//Šù‘¶‚ÌƒcƒŠ[‚ÉŠÜ‚Ü‚ê‚Ä‚¢‚È‚¢‚©ƒ`ƒFƒbƒN
+	//æ—¢å­˜ã®ãƒ„ãƒªãƒ¼ã«å«ã¾ã‚Œã¦ã„ãªã„ã‹ãƒã‚§ãƒƒã‚¯
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 		if((*it)->FindBySolid(solid))
 			return NULL;
-	//parent‚ªŠù‘¶‚ÌƒcƒŠ[‚Ìƒm[ƒh‚©ƒ`ƒFƒbƒNi”O‚Ì‚½‚ßj
+	//parentãŒæ—¢å­˜ã®ãƒ„ãƒªãƒ¼ã®ãƒãƒ¼ãƒ‰ã‹ãƒã‚§ãƒƒã‚¯ï¼ˆå¿µã®ãŸã‚ï¼‰
 	bool found = false;
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
 		if((*it)->Includes(parent)){
@@ -271,10 +271,10 @@ PHTreeNode* PHConstraintEngine::CreateTreeNode(const PHTreeNodeDesc& desc, PHTre
 	}
 	if(!found)return NULL;
 
-	//parent‚É‘Î‰‚·‚é„‘Ì‚Æsolid‚Åw’è‚³‚ê‚½„‘Ì‚Æ‚ğ‚Â‚È‚®S‘©‚ğæ“¾
+	//parentã«å¯¾å¿œã™ã‚‹å‰›ä½“ã¨solidã§æŒ‡å®šã•ã‚ŒãŸå‰›ä½“ã¨ã‚’ã¤ãªãæ‹˜æŸã‚’å–å¾—
 	PHJoint* joint = DCAST(PHJoint, joints.FindBySolidPair(parent->GetSolid(), solid));
 	if(!joint)return NULL;
-	//S‘©‚Ìí—Ş‚É‘Î‰‚·‚éƒm[ƒh‚ğì¬
+	//æ‹˜æŸã®ç¨®é¡ã«å¯¾å¿œã™ã‚‹ãƒãƒ¼ãƒ‰ã‚’ä½œæˆ
 	node = joint->CreateTreeNode();
 	node->AddChildObject(joint->Cast());
 	parent->AddChildObject(node->Cast());
@@ -306,7 +306,7 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 		con->engine = this;
 		joints.push_back(con);
 
-		/* “Á’è‚ÌŠÖßí—Ş‚Ì‚İ“Á•Êˆµ‚¢‚·‚é‚Ì‚Í–â‘è‚Å‚·@tazz
+		/* ç‰¹å®šã®é–¢ç¯€ç¨®é¡ã®ã¿ç‰¹åˆ¥æ‰±ã„ã™ã‚‹ã®ã¯å•é¡Œã§ã™ã€€tazz
 		PH3ElementBallJoint* threeBallJoint = DCAST(PH3ElementBallJoint, o);
 		if(threeBallJoint){
 			threeBallJoints.push_back(threeBallJoint);
@@ -361,7 +361,7 @@ void PHConstraintEngine::UpdateGearNode(){
 
 bool PHConstraintEngine::DelChildObject(ObjectIf* o){
 	
-	// –‘ŠŒİˆË‘¶‚·‚éƒIƒuƒWƒFƒNƒg‚Ìíœ‚ª•K—v‚¾‚ª–¢À‘•
+	// ï¼Šç›¸äº’ä¾å­˜ã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤ãŒå¿…è¦ã ãŒæœªå®Ÿè£…
 	if(Detector::DelChildObject(o))
 		return true;
 	
@@ -407,22 +407,22 @@ bool PHConstraintEngine::DelChildObject(ObjectIf* o){
 }
 
 void PHConstraintEngine::SetupLCP(){
-	/* ‘ŠŒİ‚ÉˆË‘¶ŠÖŒW‚ª‚ ‚é‚Ì‚ÅŒÄ‚Ño‚µ‡”Ô‚É‚Í’ˆÓ‚·‚é */
+	/* ç›¸äº’ã«ä¾å­˜é–¢ä¿‚ãŒã‚ã‚‹ã®ã§å‘¼ã³å‡ºã—é †ç•ªã«ã¯æ³¨æ„ã™ã‚‹ */
 	
-	//ƒcƒŠ[\‘¢‚Ì‘Oˆ—(ABAŠÖŒW)
+	//ãƒ„ãƒªãƒ¼æ§‹é€ ã®å‰å‡¦ç†(ABAé–¢ä¿‚)
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 		(*it)->SetupABA();
 
-	//ÚGS‘©‚Ì‘Oˆ—
+	//æ¥è§¦æ‹˜æŸã®å‰å‡¦ç†
 	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
 		(*it)->SetupLCP();
-	//ŠÖßS‘©‚Ì‘Oˆ—
+	//é–¢ç¯€æ‹˜æŸã®å‰å‡¦ç†
 	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
 		(*it)->SetupLCP();
-	//ƒMƒAS‘©‚Ì‘Oˆ—
+	//ã‚®ã‚¢æ‹˜æŸã®å‰å‡¦ç†
 	for(PHGears::iterator it = gears.begin(); it != gears.end(); it++)
 		(*it)->SetupLCP();
-	//ƒcƒŠ[\‘¢‚Ì‘Oˆ—
+	//ãƒ„ãƒªãƒ¼æ§‹é€ ã®å‰å‡¦ç†
 	//for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 	//	(*it)->SetupLCP();
 
@@ -473,7 +473,7 @@ void PHConstraintEngine::IterateCorrectionLCP(){
 void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 	double dt = GetScene()->GetTimeStep();
 
-	// ƒcƒŠ[‚É‘®‚³‚È‚¢„‘Ì‚ÌXV
+	// ãƒ„ãƒªãƒ¼ã«å±ã•ãªã„å‰›ä½“ã®æ›´æ–°
 	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
 		if(!(*is)->IsArticulated() && !(*is)->IsUpdated()){
 			(*is)->UpdateVelocity(dt);
@@ -483,7 +483,7 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 		}
 	}
 
-	// ƒcƒŠ[‚É‘®‚·‚é„‘Ì‚ÌXV
+	// ãƒ„ãƒªãƒ¼ã«å±ã™ã‚‹å‰›ä½“ã®æ›´æ–°
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++){
 		(*it)->UpdateVelocity(dt);
 		if(!bVelOnly)
@@ -491,7 +491,7 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 	}
 }
 
-// ‚Ù‚Æ‚ñ‚Ç“¯‚¶ˆ—‚Ì‚½‚ßƒtƒ‰ƒOˆ—‚É‚µ‚Ü‚µ‚½Dalias‚µ‚Ä‚Ü‚·‚ªobsolete‚Æ‚µ‚Ü‚· tazz
+// ã»ã¨ã‚“ã©åŒã˜å‡¦ç†ã®ãŸã‚ãƒ•ãƒ©ã‚°å‡¦ç†ã«ã—ã¾ã—ãŸï¼aliasã—ã¦ã¾ã™ãŒobsoleteã¨ã—ã¾ã™ tazz
 //void PHConstraintEngine::UpdateOnlyVelocity(){
 //	UpdateSolids(true);
 //}
@@ -510,12 +510,12 @@ void PHConstraintEngine::StepPart1(){
 	unsigned int ct = GetScene()->GetCount();
 	double dt = GetScene()->GetTimeStep();
 
-	// •K—v‚È‚ç‚ÎƒMƒAƒm[ƒh‚ÌXV
+	// å¿…è¦ãªã‚‰ã°ã‚®ã‚¢ãƒãƒ¼ãƒ‰ã®æ›´æ–°
 	if(!bGearNodeReady){
 		UpdateGearNode();
 		bGearNodeReady = true;
 	}
-	//Œğ·‚ğŒŸ’m
+	//äº¤å·®ã‚’æ¤œçŸ¥
 	points.clear();
 #ifdef REPORT_TIME
 	ptimer.CountUS();
@@ -538,9 +538,9 @@ void PHConstraintEngine::StepPart1(){
 void PHConstraintEngine::StepPart2(){
 	double dt = GetScene()->GetTimeStep();
 
-	//‘O‰ñ‚ÌStepˆÈ~‚É•Ê‚Ì—vˆö‚É‚æ‚Á‚Ä„‘Ì‚ÌˆÊ’uE‘¬“x‚ª•Ï‰»‚µ‚½ê‡
-	//ƒ„ƒRƒrƒAƒ““™‚ÌÄŒvZ
-	//Še„‘Ì‚Ì‘Oˆ—
+	//å‰å›ã®Stepä»¥é™ã«åˆ¥ã®è¦å› ã«ã‚ˆã£ã¦å‰›ä½“ã®ä½ç½®ãƒ»é€Ÿåº¦ãŒå¤‰åŒ–ã—ãŸå ´åˆ
+	//ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ç­‰ã®å†è¨ˆç®—
+	//å„å‰›ä½“ã®å‰å‡¦ç†
 	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
 		(*it)->UpdateCacheLCP(dt);
 	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
@@ -559,7 +559,7 @@ void PHConstraintEngine::StepPart2(){
 #endif
 	SetupCorrectionLCP();
 	IterateCorrectionLCP();
-	//ˆÊ’uE‘¬“x‚ÌXV
+	//ä½ç½®ãƒ»é€Ÿåº¦ã®æ›´æ–°
 	UpdateSolids(!bUpdateAllState);
 
 	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
@@ -567,8 +567,8 @@ void PHConstraintEngine::StepPart2(){
 }
 	
 void PHConstraintEngine::Step(){
-	StepPart1();	// ÚG”»’è
-	StepPart2();	// S‘©—ÍŒvZCÏ•ª
+	StepPart1();	// æ¥è§¦åˆ¤å®š
+	StepPart2();	// æ‹˜æŸåŠ›è¨ˆç®—ï¼Œç©åˆ†
 }
 
 PHConstraintsIf* PHConstraintEngine::GetContactPoints(){
@@ -576,7 +576,7 @@ PHConstraintsIf* PHConstraintEngine::GetContactPoints(){
 }
 
 
-//	stateŠÖŒW‚ÌÀ‘•
+//	stateé–¢ä¿‚ã®å®Ÿè£…
 size_t PHConstraintEngine::GetStateSize() const{
 	return Detector::GetStateSize() + 
 		(bSaveConstraints ? sizeof(PHConstraintsSt) : 0);

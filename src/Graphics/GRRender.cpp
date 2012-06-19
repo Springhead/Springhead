@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -236,7 +236,7 @@ void GRRender::SetCamera(const GRCameraDesc& c){
 	}
 }
 Vec2f GRRender::GetPixelSize(){
-	// ƒsƒNƒZƒ‹ƒTƒCƒY = ƒXƒNƒŠ[ƒ“ƒTƒCƒY / ƒrƒ…[ƒ|[ƒgƒTƒCƒY
+	// ãƒ”ã‚¯ã‚»ãƒ«ã‚µã‚¤ã‚º = ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚µã‚¤ã‚º / ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã‚µã‚¤ã‚º
 	Vec2f px(camera.size.x / viewportSize.x, camera.size.y / viewportSize.y);
 	if(px.x == 0.0f)
 		px.x = px.y;
@@ -245,12 +245,12 @@ Vec2f GRRender::GetPixelSize(){
 	return px;
 }	
 Vec3f GRRender::ScreenToCamera(int x, int y, float depth, bool LorR){
-	//ƒAƒXƒyƒNƒg”ä
+	//ã‚¢ã‚¹ãƒšã‚¯ãƒˆæ¯”
 	double r = (viewportSize.x / viewportSize.y);
 
-	//ƒXƒNƒŠ[ƒ“ƒTƒCƒY
+	//ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã‚µã‚¤ã‚º
 	Vec2f camSize = camera.size;
-	if(camSize.x ==0) camSize.x = camSize.y * r ;	//•Ğ•û‚ğ0‚Éİ’è‚µ‚Ä‚ ‚éê‡C“à•”‚Å©“®“I‚É”ä—¦‚ªŒvZ‚³‚ê‚Ä‚¢‚é‚Ì‚ÅCÄ“xŒvZ‚µ‘ã“ü‚·‚é
+	if(camSize.x ==0) camSize.x = camSize.y * r ;	//ç‰‡æ–¹ã‚’0ã«è¨­å®šã—ã¦ã‚ã‚‹å ´åˆï¼Œå†…éƒ¨ã§è‡ªå‹•çš„ã«æ¯”ç‡ãŒè¨ˆç®—ã•ã‚Œã¦ã„ã‚‹ã®ã§ï¼Œå†åº¦è¨ˆç®—ã—ä»£å…¥ã™ã‚‹
 	if(camSize.y ==0) camSize.y = camSize.x / r ;
 
 	Vec3f pos(

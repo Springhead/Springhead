@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,63 +11,63 @@
 
 namespace Spr{;
 
-/**	\defgroup	gpShape	�`��E�ڐG����N���X	*/	
+/**	\defgroup	gpShape	形状・接触判定クラス	*/	
 //@{
 /**	@file SprCDShape.h
-	���̂̌`��
+	剛体の形状
  */	
 
 /*	memo
-	shape�ɊK�w�\�����������邩�ǂ����D
-	Novodex ODE�Ƃ� �K�w�\���͎����Ă��Ȃ��D
-	�K�w�𓮂����Ƃ��ɂ́C�d�S�� �������[�����g�����������Ȃ���΂Ȃ�Ȃ��̂ŁC
-	����ȂɎg��Ȃ��Ƃ������f���Ǝv���D
-	���Ȃ��Ƃ��C�V�~�����[�V�������ɊK�w�œ������͍̂���Ǝv���D
+	shapeに階層構造を持たせるかどうか．
+	Novodex ODEとも 階層構造は持っていない．
+	階層を動かすときには，重心や 慣性モーメントも書き換えなければならないので，
+	そんなに使わないという判断だと思う．
+	少なくとも，シミュレーション中に階層で動かすのは困ると思う．
 
-	�Ȃ̂ŁC�K�w�͎����Ȃ��Ƃ������j�ō��D
+	なので，階層は持たないという方針で作る．
 
-	Solid �͕����� Shape �������Ƃ��ł���D
-	Shape �͊K�w�\���͎����Ȃ��D
+	Solid は複数の Shape を持つことができる．
+	Shape は階層構造は持たない．
 
-	�K�w�\���͕������C�u�����Ƃ͕ʂɁC�V�[���O���t���C�u����������
+	階層構造は物理ライブラリとは別に，シーングラフライブラリが持つ
 */
 
 struct PHMaterial;
 
-///	�`��̊�{�N���X
+///	形状の基本クラス
 struct CDShapeIf : public NamedObjectIf{
 	SPR_IFDEF(CDShape);
-	/// �Î~���C�W���̐ݒ�
+	/// 静止摩擦係数の設定
 	void	SetStaticFriction(float mu0);
-	/// �Î~���C�W���̎擾
+	/// 静止摩擦係数の取得
 	float	GetStaticFriction();
-	/// �����C�W���̐ݒ�
+	/// 動摩擦係数の設定
 	void	SetDynamicFriction(float mu);
-	/// �����C�W���̎擾
+	/// 動摩擦係数の取得
 	float	GetDynamicFriction();
-	/// ���˕Ԃ�W���̐ݒ�
+	/// 跳ね返り係数の設定
 	void	SetElasticity(float e);
-	/// ���˕Ԃ�W���̎擾
+	/// 跳ね返り係数の取得
 	float	GetElasticity();
-	/// ���x�̐ݒ�
+	/// 密度の設定
 	void	SetDensity(float d);
-	/// ���x�̎擾
+	/// 密度の取得
 	float	GetDensity();
-	/// ���˕Ԃ�o�l�W���̐ݒ�
+	/// 跳ね返りバネ係数の設定
 	void	SetReflexSpring(float K);
-	/// ���˕Ԃ�o�l�W���̎擾
+	/// 跳ね返りバネ係数の取得
 	float	GetReflexSpring();
-	/// ���˕Ԃ�_���p�W���̐ݒ�
+	/// 跳ね返りダンパ係数の設定
 	void	SetReflexDamper(float D);
-	/// ���˕Ԃ�_���p�W���̎擾
+	/// 跳ね返りダンパ係数の取得
 	float	GetReflexDamper();
-	/// ���C�o�l�W���̐ݒ�
+	/// 摩擦バネ係数の設定
 	void	SetFrictionSpring(float K);
-	/// ���C�o�l�W���̎擾
+	/// 摩擦バネ係数の取得
 	float	GetFrictionSpring();
-	/// ���C�_���p�W���̐ݒ�
+	/// 摩擦ダンパ係数の設定
 	void	SetFrictionDamper(float D);
-	/// ���C�_���p�W���̎擾
+	/// 摩擦ダンパ係数の取得
 	float	GetFrictionDamper();
 
 	void SetVibration(float vibA, float vibB, float vibW);
@@ -82,35 +82,35 @@ struct CDShapeIf : public NamedObjectIf{
 	void SetVibContact(bool vibContact);
 	bool GetVibContact();
 
-	/// �������܂Ƃ߂Ď擾
+	/// 物性をまとめて取得
 	const PHMaterial&	GetMaterial();
-	/// �������܂Ƃ߂Đݒ�
+	/// 物性をまとめて設定
 	void				SetMaterial(const PHMaterial& mat);
 
-	/// �􉽌v�Z
-	float	CalcVolume();			///< �̐ς��v�Z
-	Vec3f	CalcCenterOfMass();		///< ���ʒ��S
-	Matrix3f CalcMomentOfInertia();	///< ���ʓ�����̎��ʒ��S�Ɋւ��銵���s��imass���|���Ďg���j
+	/// 幾何計算
+	float	CalcVolume();			///< 体積を計算
+	Vec3f	CalcCenterOfMass();		///< 質量中心
+	Matrix3f CalcMomentOfInertia();	///< 質量当たりの質量中心に関する慣性行列（massを掛けて使う）
 
 
 };
 
-///	�`��y�A�̊�{�N���X
+///	形状ペアの基本クラス
 struct CDShapePairIf : public ObjectIf{
 	SPR_IFDEF(CDShapePair);
 
-	/// �`����擾����
+	/// 形状を取得する
 	CDShapeIf* GetShape(int i);
 };
 
-///	�ʌ`��̊�{�N���X
+///	凸形状の基本クラス
 struct CDConvexIf : public CDShapeIf{
 	SPR_IFDEF(CDConvex);
-	double CurvatureRadius(Vec3d p); ///< �\�ʏ�̓_p�ɂ�����ȗ����a
-	Vec3d Normal(Vec3d p); ///< �\�ʏ�̓_p�ɂ�����@��
+	double CurvatureRadius(Vec3d p); ///< 表面上の点pにおける曲率半径
+	Vec3d Normal(Vec3d p); ///< 表面上の点pにおける法線
 };
 
-/**	��	*/
+/**	面	*/
 struct CDFaceIf: public ObjectIf{
 	SPR_IFDEF(CDFace);
 	int NIndex();
@@ -123,38 +123,38 @@ struct CDQuadFaceIf: public ObjectIf{
 };
 
 
-///	�����V�~�����[�V�����Ɋ֌W����ގ�
+///	物理シミュレーションに関係する材質
 struct PHMaterial{
 	PHMaterial();
-	//	���ʁE�����e���\���̌v�Z�p
-	float density;			///< ���x
-	//	�N�[�������C
-	float mu;				///< �����C���C�W��
-	float mu0;				///< �Î~���C�W��	
-	//	LCP(PHConstarintEngine)�ɂ��S���͌v�Z�p
-	float e;				///< ���˕Ԃ�W��
-	//	�y�i���e�B�@(PHPenaltyEngine)�̂��߂̃o�l�E�_���p�W��
+	//	質量・慣性テンソルの計算用
+	float density;			///< 密度
+	//	クーロン摩擦
+	float mu;				///< 動摩擦摩擦係数
+	float mu0;				///< 静止摩擦係数	
+	//	LCP(PHConstarintEngine)による拘束力計算用
+	float e;				///< 跳ね返り係数
+	//	ペナルティ法(PHPenaltyEngine)のためのバネ・ダンパ係数
 	float reflexSpring;
 	float reflexDamper;
 	float frictionSpring;
 	float frictionDamper;
 	
-	//	�ŗL�U���񎦂̂��߂̌W��
-	float vibA;				///< �U���W��
-	float vibB;				///< �����W��
-	float vibW;				///< ���g��
-	float vibT;				///< �ڐG����
+	//	固有振動提示のための係数
+	float vibA;				///< 振幅係数
+	float vibB;				///< 減衰係数
+	float vibW;				///< 周波数
+	float vibT;				///< 接触時間
 	bool vibContact;		///< 
 };
 
-///	�`��̃f�B�X�N���v�^(��{�N���X)
+///	形状のディスクリプタ(基本クラス)
 struct CDShapeDesc{
 	SPR_DESCDEF(CDShape);
-	PHMaterial material;	///<	�ގ�
+	PHMaterial material;	///<	材質
 };
 
 
-/**	�ʌ`��̃��b�V��*/
+/**	凸形状のメッシュ*/
 struct CDConvexMeshIf: public CDConvexIf{
 	SPR_IFDEF(CDConvexMesh);
 	CDFaceIf* GetFace(int i);
@@ -162,40 +162,40 @@ struct CDConvexMeshIf: public CDConvexIf{
 	Vec3f* GetVertices();
 	int NVertex();
 };
-/**	�ʌ`��̃��b�V���̃f�B�X�N���v�^	*/	
+/**	凸形状のメッシュのディスクリプタ	*/	
 struct CDConvexMeshDesc: public CDShapeDesc{
 	SPR_DESCDEF(CDConvexMesh);
 	CDConvexMeshDesc():CDShapeDesc(){}
-	std::vector<Vec3f> vertices;	///<	���_�̍��W
+	std::vector<Vec3f> vertices;	///<	頂点の座標
 };
 
-/**	�ʌ`��̃��b�V�� SupportPoint�̕⊮��*/
+/**	凸形状のメッシュ SupportPointの補完つき*/
 struct CDConvexMeshInterpolateIf: public CDConvexMeshIf{
 	SPR_IFDEF(CDConvexMeshInterpolate);
 };
-/**	�ʌ`��̃��b�V���̃f�B�X�N���v�^	*/	
+/**	凸形状のメッシュのディスクリプタ	*/	
 struct CDConvexMeshInterpolateDesc: public CDConvexMeshDesc{
 	SPR_DESCDEF(CDConvexMeshInterpolate);
 	CDConvexMeshInterpolateDesc():CDConvexMeshDesc(){}
 };
 
 
-/** ���́@*/
+/** 球体　*/
 struct CDSphereIf: public CDConvexIf{
 	SPR_IFDEF(CDSphere);
 	float	GetRadius();
 	void	SetRadius(float r);
 };	
-/** ���̂̃f�B�X�N���v�^�@*/
+/** 球体のディスクリプタ　*/
 struct CDSphereDesc: public CDShapeDesc{
 	SPR_DESCDEF(CDSphere);
 	CDSphereDesc():CDShapeDesc(){
 		radius = 1.0f;
 	}
-	float radius;					// ���̂̔��a
+	float radius;					// 球体の半径
 };	
 
-/** �J�v�Z���@*/
+/** カプセル　*/
 struct CDCapsuleIf: public CDConvexIf{
 	SPR_IFDEF(CDCapsule);
 	float	GetRadius();
@@ -203,38 +203,38 @@ struct CDCapsuleIf: public CDConvexIf{
 	float	GetLength();
 	void	SetLength(float l);
 };	
-/** �J�v�Z���̃f�B�X�N���v�^�@*/
+/** カプセルのディスクリプタ　*/
 struct CDCapsuleDesc: public CDShapeDesc{
 	SPR_DESCDEF(CDCapsule);
 	CDCapsuleDesc():CDShapeDesc(){
 		radius = 1.0f;
 		length = 1.0f;
 	}
-	float radius;					///< �J�v�Z���̋��̔��a
-	float length;					///< �J�v�Z���̒��� Z������������
+	float radius;					///< カプセルの球の半径
+	float length;					///< カプセルの長さ Z軸向きが長い
 };	
 
-/** �J�v�Z���̗��[�̃T�C�Y���Ⴄ��@*/
+/** カプセルの両端のサイズが違うやつ　*/
 struct CDRoundConeIf: public CDConvexIf{
 	SPR_IFDEF(CDRoundCone);
 	Vec2f GetRadius();
 	float GetLength();
 	void  SetRadius(Vec2f r);
 	void  SetLength(float l);
-	void  SetWidth(Vec2f r) ;		///< ������ς��Ȃ��ŁC���������ύX����
+	void  SetWidth(Vec2f r) ;		///< 長さを変えないで，太さだけ変更する
 };	
-/** CDRoundConeIf�̃f�B�X�N���v�^�@*/
+/** CDRoundConeIfのディスクリプタ　*/
 struct CDRoundConeDesc: public CDShapeDesc{
 	SPR_DESCDEF(CDRoundCone);
 	CDRoundConeDesc():CDShapeDesc(){
 		radius = Vec2f(1.2f, 0.8f);
 		length = 1.0f;
 	}
-	Vec2f radius;					///< �J�v�Z���̋��̔��a�DZ-�� radius[0], Z+�� radius[1]�D
-	float length;					///< 2�̋��̒��S�ԋ����D
+	Vec2f radius;					///< カプセルの球の半径．Z-が radius[0], Z+が radius[1]．
+	float length;					///< 2つの球の中心間距離．
 };	
 	
-/** ������ */
+/** 直方体 */
 struct CDBoxIf: public CDConvexIf{
 	SPR_IFDEF(CDBox);
 	Vec3f GetBoxSize();
@@ -242,7 +242,7 @@ struct CDBoxIf: public CDConvexIf{
 	CDFaceIf* GetFace(int i);
 	Vec3f SetBoxSize(Vec3f boxsize);
 };
-/** �����̂̃f�B�X�N���v�^ */
+/** 直方体のディスクリプタ */
 struct CDBoxDesc: public CDShapeDesc{
 	SPR_DESCDEF(CDBox);
 	CDBoxDesc():CDShapeDesc(){
@@ -250,7 +250,7 @@ struct CDBoxDesc: public CDShapeDesc{
 	}
 	CDBoxDesc(Vec3d bs):CDShapeDesc(),boxsize(bs){
 	}
-	Vec3f boxsize;					// �����̂̃T�C�Y�i�e�ӂ̒����j
+	Vec3f boxsize;					// 直方体のサイズ（各辺の長さ）
 };	
 
 

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,12 +7,12 @@
  */
 
 /*
-	xboxƒRƒ“ƒgƒ[ƒ‰‚Ì“®ìŠm”F‚ÌƒTƒ“ƒvƒ‹
-	3ŸŒ³ˆÊ’uiPosed)‚ğo—Í‚·‚éB
-	LT:y²‰º
-	RT:y²ã
+	xboxã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã®å‹•ä½œç¢ºèªã®ã‚µãƒ³ãƒ—ãƒ«
+	3æ¬¡å…ƒä½ç½®ï¼ˆPosed)ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
+	LT:yè»¸ä¸‹
+	RT:yè»¸ä¸Š
 	thumbL:x, z
-	thumbR:x, z²‰ñ‚è‚Ì‰ñ“]
+	thumbR:x, zè»¸å›ã‚Šã®å›è»¢
 */
 
 #include <conio.h>

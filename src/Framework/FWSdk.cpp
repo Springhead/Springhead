@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -101,13 +101,13 @@ FWSceneIf* FWSdk::CreateScene(const PHSceneDesc& phdesc, const GRSceneDesc& grde
 
 FIFileIf* FWSdk::CreateFile(UTString ext, const IfInfo* ii){
 	FIFileIf* file;
-	// IfInfo�w��̏ꍇ
+	// IfInfo指定の場合
 	if(ii)
 		file = GetFISdk()->CreateFile(ii);
-	// �g���q����
+	// 拡張子判定
 	else file = GetFISdk()->CreateFileFromExt(ext);
 
-	// ����s�\��X�Ƃ݂Ȃ�
+	// 判定不能はXとみなす
 	if(!file){
 		DSTR << "unknown file type. regarded as X file." << std::endl;
 		file = GetFISdk()->CreateFileX();
@@ -117,22 +117,22 @@ FIFileIf* FWSdk::CreateFile(UTString ext, const IfInfo* ii){
 
 bool FWSdk::LoadScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectIfs* objs){
 
-	//filename���[�ɉ��s�R�[�h( = 0x0a)���܂܂�Ă���ƃ��[�h����Ȃ��̂ŁC����΍ŏ��ɍ폜����
+	//filename末端に改行コード( = 0x0a)が含まれているとロードされないので，あれば最初に削除する
 	if(filename.at(filename.length()-1) == 0x0a){
 		filename.erase(filename.length()-1);
 	}
-	//	�f�t�H���g�̐�c�I�u�W�F�N�g����ݒ�
-	//	������CreateObject���Ă΂�ăV�[���O���t�������B
+	//	デフォルトの先祖オブジェクトをを設定
+	//	これらのCreateObjectが呼ばれてシーングラフが作られる。
 	ObjectIfs defObjs;
 	if(!objs){
 		defObjs.Push(GetGRSdk());	//	GRSdk
 		defObjs.Push(GetPHSdk());	//	PHSdk
-		//	FWSdk	FWScene �� FWSdk�̎q�ɂȂ�̂ŁAFWSdk���Ō��Push����K�v������B
+		//	FWSdk	FWScene は FWSdkの子になるので、FWSdkを最後にPushする必要がある。
 		defObjs.Push(Cast());
 		objs = &defObjs;
 	}
 
-	int first = NScene();	//	���[�h�����FWScene�̈ʒu���o���Ă���
+	int first = NScene();	//	ロードされるFWSceneの位置を覚えておく
 
 	UTPath path;
 	path.Path(filename);	
@@ -140,13 +140,13 @@ bool FWSdk::LoadScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectI
 	FIFileIf* file = CreateFile(path.Ext(), ii);
 	if (ex) file->SetImport(ex);
 	//file->SetDSTR(DSTRFlag);
-	//	�t�@�C���̃��[�h
+	//	ファイルのロード
 	if(!file->Load(*objs, filename.data()) ) {
 		DSTR << "Error: Cannot load file " << filename.c_str() << std::endl;
 		//exit(EXIT_FAILURE);
 		return false;
 	}
-	//	���[�h�����V�[�����擾
+	//	ロードしたシーンを取得
 	//if(DSTRFlag) DSTR << "Loaded " << NScene() - first << " FWScene." << std::endl;
 	//if(DSTRFlag) DSTR << "LoadFile Complete." << std::endl;
 	//for(int i=first; i<NScene(); ++i){
@@ -157,7 +157,7 @@ bool FWSdk::LoadScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectI
 }
 
 bool FWSdk::SaveScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectIfs* objs){
-	// �ۑ�
+	// 保存
 	ObjectIfs defObjs;
 	if(!objs){
 		for(unsigned int i=0; i<scenes.size(); ++i)
@@ -195,14 +195,14 @@ void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 	it1 = find(scenes.begin(), scenes.end(), scene1);
 	if(it0 == scenes.end() || it1 == scenes.end())
 		return;
-	// PHScene�̃}�[�W
+	// PHSceneのマージ
 	if(scene0->GetPHScene()){
 		if(scene1->GetPHScene())
 			GetPHSdk()->MergeScene(scene0->GetPHScene(), scene1->GetPHScene());
 	}
 	else if(scene1->GetPHScene())
 		scene0->SetPHScene(scene1->GetPHScene());
-	// GRScene�̃}�[�W
+	// GRSceneのマージ
 	if(scene0->GetGRScene()){
 		if(scene1->GetGRScene())
 			GetGRSdk()->MergeScene(scene0->GetGRScene(), scene1->GetGRScene());
@@ -210,7 +210,7 @@ void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 	else if(scene1->GetGRScene())
 		scene0->SetGRScene(scene1->GetGRScene());
 
-	// FWObject�̃}�[�W
+	// FWObjectのマージ
 	for(int i = 0; i < scene1->NObject(); i++){
 		scene0->AddChildObject(scene1->GetObjects()[i]);
 	}
@@ -227,7 +227,7 @@ void FWSdk::MergeScene(FWSceneIf* scene0, FWSceneIf* scene1){
 	dev->Init();
 	render->SetDevice(dev);
 
-	//	���̎��_�B���̂��Ƃ��܂��V�[�����ݒ肳���΁A�V�[���̃J�����ɏ㏑�������B
+	//	仮の視点。このあとうまくシーンが設定されれば、シーンのカメラに上書きされる。
 	Affinef view;
 	view.Pos() = Vec3f(0.0, 3.0, 3.0);
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));
@@ -295,7 +295,7 @@ ObjectIf* FWSdk::GetChildObject(size_t i){
 }
 
 void FWSdk::Clear(){
-	// ��x�S�Ă��N���A����SDK����蒼��
+	// 一度全てをクリアしてSDKを作り直す
 	Sdk::Clear();
 	phSdk = NULL;
 	grSdk = NULL;
@@ -303,8 +303,8 @@ void FWSdk::Clear(){
 	hiSdk = NULL;
 	scenes.clear();
 	//curScene = NULL;
-	// �����_���̓V�[���I�u�W�F�N�g�ł͂Ȃ��̂ł����ł͍폜���Ȃ��D
-	// ClearRender API��ǉ����邩�͗v����
+	// レンダラはシーンオブジェクトではないのでここでは削除しない．
+	// ClearRender APIを追加するかは要検討
 	//renders.clear();
 	//curRender = NULL;
 	CreateSdks();

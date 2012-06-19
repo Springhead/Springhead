@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprGraphics.h
- *	@brief ƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹ŒQ
+ *	@brief ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ç¾¤
 */
 #ifndef SPR_GRAPHICS_H
 #define SPR_GRAPHICS_H

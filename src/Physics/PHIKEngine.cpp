@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -22,17 +22,17 @@ void PHIKEngine::Step(){
 	if(!bEnabled) return;
 	if(actuators.empty() || endeffectors.empty()) return;
 
-	// ŒvZ—p•Ï”€”õ‚Ì‘Oˆ—
+	// è¨ˆç®—ç”¨å¤‰æ•°æº–å‚™ã®å‰å‡¦ç†
 	for(size_t i=0; i<actuators.size(); ++i){
 		actuators[i]->BeforeSetupMatrix();
 	}
 
-	// ŒvZ—p•Ï”‚Ì€”õ
+	// è¨ˆç®—ç”¨å¤‰æ•°ã®æº–å‚™
 	for(size_t i=0; i<actuators.size(); ++i){
 		actuators[i]->SetupMatrix();
 	}
 
-	// •Ï‰»ƒtƒ‰ƒO‚ÌƒNƒŠƒA
+	// å¤‰åŒ–ãƒ•ãƒ©ã‚°ã®ã‚¯ãƒªã‚¢
 	for(size_t i=0; i<actuators.size(); ++i){
 		actuators[i]->bActuatorAdded	= false;
 		actuators[i]->bNDOFChanged		= false;
@@ -41,7 +41,7 @@ void PHIKEngine::Step(){
 		endeffectors[i]->bNDOFChanged	= false;
 	}
 
-	// ƒGƒ“ƒhƒGƒtƒFƒNƒ^‚Ì—LŒøE–³Œø‚ÉŠî‚Ã‚¢‚ÄƒAƒNƒ`ƒ…ƒG[ƒ^‚Ì—LŒøE–³Œø‚ğØ‘Ö‚¦
+	// ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã«åŸºã¥ã„ã¦ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡æ›¿ãˆ
 	for(size_t i=0; i<actuators.size(); ++i){
 		actuators[i]->Enable(false);
 	}
@@ -55,22 +55,22 @@ void PHIKEngine::Step(){
 	}
 
 	for (int nStatic=0; nStatic<1; ++nStatic) {
-		// ƒ„ƒRƒrƒAƒ“ŒvZ‚Ì‘Oˆ—
+		// ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³è¨ˆç®—ã®å‰å‡¦ç†
 		for(size_t i=0; i<actuators.size(); ++i){
 			actuators[i]->BeforeCalcAllJacobian();
 		}
 
-		// ƒ„ƒRƒrƒAƒ“‚ÌŒvZ
+		// ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ã®è¨ˆç®—
 		for(size_t i=0; i<actuators.size(); ++i){
 			actuators[i]->CalcAllJacobian();
 		}
 
-		// ŒvZ‚Ì€”õiƒ¿EƒÀEƒÁ‚Ì–‘OŒvZj
+		// è¨ˆç®—ã®æº–å‚™ï¼ˆÎ±ãƒ»Î²ãƒ»Î³ã®äº‹å‰è¨ˆç®—ï¼‰
 		for(size_t i=0; i<actuators.size(); ++i){
 			actuators[i]->PrepareSolve();
 		}
 
-		// ŒJ‚è•Ô‚µŒvZ‚ÌÀs
+		// ç¹°ã‚Šè¿”ã—è¨ˆç®—ã®å®Ÿè¡Œ
 		int iter = ((numIter > 0) ? numIter : 200);
 		for(int n=0; n<iter; n++){
 			double dErr = 0;
@@ -82,7 +82,7 @@ void PHIKEngine::Step(){
 			if ((((int)numIter) < 0) && (sqrt(dErr) < 1e-8)) { break; }
 		}
 
-		// ŠÖß‚Ì“®ì
+		// é–¢ç¯€ã®å‹•ä½œ
 		for(size_t i=0; i<actuators.size(); ++i){
 			actuators[i]->Move();
 		}
@@ -127,7 +127,7 @@ PHIKEndEffector* PHIKEngine::CreateIKEndEffector(const PHIKEndEffectorDesc& desc
 
 bool PHIKEngine::AddChildObject(ObjectIf* o){
 	// --- --- --- --- --- --- ---
-	// ƒAƒNƒ`ƒ…ƒG[ƒ^‚Ìê‡
+	// ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã®å ´åˆ
 	PHIKBallActuator* bj = o->Cast();
 	if(bj){
 		actuators.push_back(bj);
@@ -143,7 +143,7 @@ bool PHIKEngine::AddChildObject(ObjectIf* o){
 	}
 
 	// --- --- --- --- --- --- ---
-	// §Œä“_‚Ìê‡
+	// åˆ¶å¾¡ç‚¹ã®å ´åˆ
 	PHIKEndEffector* ef = o->Cast();
 	if(ef){
 		endeffectors.push_back(ef);

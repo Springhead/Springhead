@@ -1,4 +1,4 @@
-#ifndef BOXSTACK_H
+ï»¿#ifndef BOXSTACK_H
 #define BOXSTACK_H
 
 #include <Springhead.h>
@@ -21,7 +21,7 @@ public:
 	Vec3d gravity;
 	double nIter;
 	bool bGravity;
-	// „‘Ì‚Ég‚¤•Ï”
+	// å‰›ä½“ã«ä½¿ã†å¤‰æ•°
 	PHSolidDesc desc;
 	PHSolidIf* soFloor;
 	PHSolidIf* soPointer;
@@ -31,7 +31,7 @@ public:
 	CDBoxIf* meshBox;
 	CDSphereIf* meshSphere;
 	CDCapsuleIf* meshCapsule;
-	//ƒfƒoƒbƒN•\¦‚Ég‚¤•Ï”
+	//ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºã«ä½¿ã†å¤‰æ•°
 	bool bDebug;
 	bool bStep;
 	bool bOneStep;

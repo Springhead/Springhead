@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -29,7 +29,7 @@ static UTStack<FIFileCOLLADA*> fileCOLLADAs;
 static FILoadContext* fileContext;
 static FIFileCOLLADA* fileCOLLADA;
 
-///	ƒeƒ“ƒvƒŒ[ƒg‚ÌTypeDesc‚ª‚ ‚é‚©‚Ç‚¤‚©D
+///	ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®TypeDescãŒã‚ã‚‹ã‹ã©ã†ã‹ï¼
 static bool TypeAvail(){
 	return fileContext->fieldIts.size() && fileContext->fieldIts.back().type;
 //	return fileContext->datas.size() && fileContext->datas.Top()->type;
@@ -38,31 +38,31 @@ static bool TypeAvail(){
 UTString tagName;
 UTLoadedData::Attributes attrs;
 UTStack<char> tagStack;
-///	XML—v‘f(ƒ^ƒO)‚Ìn‚Ü‚è
+///	XMLè¦ç´ (ã‚¿ã‚°)ã®å§‹ã¾ã‚Š
 static void TagStart(const char* b, const char* e){
 	attrs.clear();
 	tagName = UTString(b,e);
 	if (fileContext->fieldIts.size() 
 		&& fileContext->fieldIts.Top().type
 		&& fileContext->fieldIts.Top().HaveField(tagName)){	
-		//	‘g‚İ—§‚ÄŒ^‚Ìƒ[ƒh’†‚ÅCƒƒ“ƒo‚ªŒ©‚Â‚©‚Á‚½ê‡
+		//	çµ„ã¿ç«‹ã¦å‹ã®ãƒ­ãƒ¼ãƒ‰ä¸­ã§ï¼Œãƒ¡ãƒ³ãƒãŒè¦‹ã¤ã‹ã£ãŸå ´åˆ
 		tagStack.Push(false);
 	}else{
-		//	Œ©‚Â‚©‚ç‚È‚¢ê‡Cqƒm[ƒh‚Æ‚µ‚Äƒ[ƒh
+		//	è¦‹ã¤ã‹ã‚‰ãªã„å ´åˆï¼Œå­ãƒãƒ¼ãƒ‰ã¨ã—ã¦ãƒ­ãƒ¼ãƒ‰
 		fileContext->NodeStart(tagName);
 		tagStack.Push(true);
 	}
 	PDEBUG( DSTR << "TagStart " << tagName << std::endl );
 }
 
-///	ƒm[ƒh“Ç‚İo‚µ‚ÌŒãˆ—
+///	ãƒãƒ¼ãƒ‰èª­ã¿å‡ºã—ã®å¾Œå‡¦ç†
 static void TagEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "TagEnd " << std::endl);
 	if(tagStack.Top()) fileContext->NodeEnd();
 	tagStack.Pop();
 }
 
-///	ƒm[ƒh‚Ìƒf[ƒ^‚ğƒXƒLƒbƒv
+///	ãƒãƒ¼ãƒ‰ã®ãƒ‡ãƒ¼ã‚¿ã‚’ã‚¹ã‚­ãƒƒãƒ—
 static void SkipData(const char* b, const char* e){
 	fileContext->datas.Top()->str = UTString(b,e);
 }
@@ -78,21 +78,21 @@ static void SetProperty(const char* b, const char* e){
 	attrs[propKey] = propValue;
 }
 
-///	ƒuƒƒbƒNŒ^‚Ì“Ç‚İo‚µ€”õ
+///	ãƒ–ãƒ­ãƒƒã‚¯å‹ã®èª­ã¿å‡ºã—æº–å‚™
 static void BlockStart(const char* b, const char* e){
 	PDEBUG(DSTR << "blockStart" << std::endl);
 	fileContext->CompositStart();
 }
 
-///	ƒuƒƒbƒNŒ^‚ÌI—¹
+///	ãƒ–ãƒ­ãƒƒã‚¯å‹ã®çµ‚äº†
 static void BlockEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "blockEnd" << std::endl);
 	fileContext->CompositEnd();
 }
 
-/**	ƒuƒƒbƒN“Ç‚İo‚µ’†CƒtƒB[ƒ‹ƒh‚ğ“Ç‚Ş‘O‚ÉŒÄ‚Î‚ê‚éD
-	TypeDesc‚ğŒ©‚ÄŸ‚É“Ç‚İo‚·‚×‚«ƒtƒB[ƒ‹ƒh‚ğƒZƒbƒg‚·‚éD
-	“Ç‚İo‚·‚×‚«ƒtƒB[ƒ‹ƒh‚ª‚ ‚éŠÔ true ‚ğ•Ô‚·D	*/
+/**	ãƒ–ãƒ­ãƒƒã‚¯èª­ã¿å‡ºã—ä¸­ï¼Œãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’èª­ã‚€å‰ã«å‘¼ã°ã‚Œã‚‹ï¼
+	TypeDescã‚’è¦‹ã¦æ¬¡ã«èª­ã¿å‡ºã™ã¹ããƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ï¼
+	èª­ã¿å‡ºã™ã¹ããƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒã‚ã‚‹é–“ true ã‚’è¿”ã™ï¼	*/
 static bool NextField(){
 	char* base = (char*)fileContext->datas.Top()->data;
 	bool rv = fileContext->fieldIts.NextField(base);
@@ -107,7 +107,7 @@ static bool NextField(){
 	)
 	return rv;
 }
-///	”z—ñ‚ÌƒJƒEƒ“ƒgD‚Ü‚¾“Ç‚İo‚·‚×‚«ƒf[ƒ^‚ªc‚Á‚Ä‚¢‚ê‚Î true ‚ğ•Ô‚·D
+///	é…åˆ—ã®ã‚«ã‚¦ãƒ³ãƒˆï¼ã¾ã èª­ã¿å‡ºã™ã¹ããƒ‡ãƒ¼ã‚¿ãŒæ®‹ã£ã¦ã„ã‚Œã° true ã‚’è¿”ã™ï¼
 static bool ArrayCount(){
 	bool rv = fileContext->fieldIts.IncArrayPos();
 //	DSTR << "ArrayCount=" << (rv ? "true" : "false") << std::endl;
@@ -153,12 +153,12 @@ static void StrSet(const char* b, const char* e){
 	strValue.assign(b+1,e-1);
 }
 
-///	ObjectDesc‚É“Ç‚İo‚µ‚½’l‚ğ‘‚«‚Ş
+///	ObjectDescã«èª­ã¿å‡ºã—ãŸå€¤ã‚’æ›¸ãè¾¼ã‚€
 static void SetVal(const char* b, const char* e){
 	char ch = *b;
 
 	UTTypeDescFieldIt& curField = fileContext->fieldIts.back();
-	//	debug o—Í
+	//	debug å‡ºåŠ›
 #ifdef TRACE_PARSE
 	if (curField.fieldType!=UTTypeDescFieldIt::F_NONE){
 		if (curField.fieldType==UTTypeDescFieldIt::F_BLOCK){
@@ -176,7 +176,7 @@ static void SetVal(const char* b, const char* e){
 		if (ch == ';') DSTR << std::endl;
 	}
 #endif
-	//	‚±‚±‚Ü‚Å
+	//	ã“ã“ã¾ã§
 	
 	if (fileContext->fieldIts.IsBool()){
 		fileContext->WriteBool(boolValue);
@@ -194,7 +194,7 @@ static void StopArray(const char* b, const char* e){
 	curField.arrayPos=UTTypeDesc::BIGVALUE;
 }
 
-///	QÆŒ^‚ğ‘‚«‚ŞD(–¢Š®¬)
+///	å‚ç…§å‹ã‚’æ›¸ãè¾¼ã‚€ï¼(æœªå®Œæˆ)
 static void RefSet(const char* b, const char* e){
 	//DSTR << "ref(" << std::string(b,e) << ") not yet implemented." << std::endl;
 	std::string ref(b,e);
@@ -234,7 +234,7 @@ FIFileCOLLADA::FIFileCOLLADA(const FIFileCOLLADADesc& desc){
 
 /*
 ---------------------------------------------------------------------------------
-COLLADA‚Ìƒm[ƒh‚Ì—áF
+COLLADAã®ãƒãƒ¼ãƒ‰ã®ä¾‹ï¼š
 <physics_material	id="pmat2_0-PhysicsMaterial"	name="pmat2_0-PhysicsMaterial">
 	<technique_common>
 		<dynamic_friction>0</dynamic_friction>
@@ -243,7 +243,7 @@ COLLADA‚Ìƒm[ƒh‚Ì—áF
 	</technique_common>
 </physics_material>
 ---------------------------------------------------------------------------------
-‘Î‰‚³‚¹‚½‚¢\‘¢‘ÌF
+å¯¾å¿œã•ã›ãŸã„æ§‹é€ ä½“ï¼š
 struct physics_materialCommon{
 	float dynamic_friction;
 	float restitution;
@@ -263,8 +263,8 @@ void FIFileCOLLADA::Init(){
 	using namespace std;
 	using namespace boost::spirit::classic;
 	using namespace Spr;
-	//	ƒp[ƒT‚Ì’è‹`
-	//	–{•¶—pƒp[ƒT
+	//	ãƒ‘ãƒ¼ã‚µã®å®šç¾©
+	//	æœ¬æ–‡ç”¨ãƒ‘ãƒ¼ã‚µ
 	start	= head >> body;
 	head	= str_p("<?") >> "xml" >> "version" >> "=" >> "\"1.0\"" 
 				>> "encoding" >> "=" >> "\"utf-8\"" >> "?>";
@@ -296,18 +296,18 @@ void FIFileCOLLADA::Init(){
 	str		= lexeme_d[ ch_p('"') >> *( (ch_p('\\')>>anychar_p) | 
 						~ch_p('"') ) >> ch_p('"') ][&StrSet];
 
-	// xml ‚Ì–¼‘O
+	// xml ã®åå‰
 	id			= lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-') ];
 	string		= lexeme_d[ ch_p('"') >> *~ch_p('"') >> '"' ];
 
-	//	ƒXƒLƒbƒvƒp[ƒT(ƒXƒy[ƒX‚ÆƒRƒƒ“ƒg‚ğ“Ç‚İo‚·ƒp[ƒT)‚Ì’è‹`
+	//	ã‚¹ã‚­ãƒƒãƒ—ãƒ‘ãƒ¼ã‚µ(ã‚¹ãƒšãƒ¼ã‚¹ã¨ã‚³ãƒ¡ãƒ³ãƒˆã‚’èª­ã¿å‡ºã™ãƒ‘ãƒ¼ã‚µ)ã®å®šç¾©
 	cmt		=	space_p
 		|	"<!--" >> *(~ch_p('-') | '-' >> ~ch_p('-') | "--" >> ~ch_p('>')) >> "-->";
 }
 
 
 //------------------------------------------------------------------------------
-/*	Œ^ƒZƒbƒg‚ÌØ‚è‘Ö‚¦‚ÌƒTƒ“ƒvƒ‹‚É‚È‚é—\’è‚¾‚Á‚½‚¯‚ÇC•s—v‚©‚à
+/*	å‹ã‚»ãƒƒãƒˆã®åˆ‡ã‚Šæ›¿ãˆã®ã‚µãƒ³ãƒ—ãƒ«ã«ãªã‚‹äºˆå®šã ã£ãŸã‘ã©ï¼Œä¸è¦ã‹ã‚‚
 class FINHC_library_physics_models: public UTLoadHandlerSetDb<library_physics_models>{
 public:
 	FINHC_library_physics_models():UTLoadHandlerSetDb<Desc>("library_physics_models"){
@@ -392,11 +392,11 @@ void FIFileCOLLADA::OnSaveBool(FISaveContext* sc, bool val){
 void FIFileCOLLADA::OnSaveInt(FISaveContext* sc, int val){
 	sc->Stream() << val;
 }
-///	real’l‚Ì•Û‘¶
+///	realå€¤ã®ä¿å­˜
 void FIFileCOLLADA::OnSaveReal(FISaveContext* sc, double val){
 	sc->Stream() << val;
 }
-///	string’l‚Ì•Û‘¶
+///	stringå€¤ã®ä¿å­˜
 void FIFileCOLLADA::OnSaveString(FISaveContext* sc, UTString val){
 	sc->Stream() << '"' << val << '"' << std::endl;
 }

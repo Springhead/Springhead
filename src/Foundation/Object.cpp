@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,7 +15,7 @@ namespace Spr {;
 struct MemCheck{
 	MemCheck(){
 		#if defined _DEBUG && _MSC_VER			
-		// ƒƒ‚ƒŠƒŠ[ƒNƒ`ƒFƒbƒJ
+		// ãƒ¡ãƒ¢ãƒªãƒªãƒ¼ã‚¯ãƒã‚§ãƒƒã‚«
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		#endif
 	}

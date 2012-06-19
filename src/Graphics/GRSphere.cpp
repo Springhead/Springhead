@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,10 +15,10 @@ GRSphere::GRSphere(const GRSphereDesc& desc):GRSphereDesc(desc){
 	material = NULL;
 }
 GRSphere::~GRSphere(){
-	// ‚±‚ê‚ªƒvƒƒOƒ‰ƒ€I—¹Žž‚ÉŒÄ‚Î‚ê‚éŽž‚É‚Írender‚ªÁ–Å‚µ‚Ä‚¢‚é‚Ì‚Å‚±‚±‚Å—Ž‚¿‚éB
-	// ‚Ç‚¤‚µ‚½‚à‚Ì‚©B
+	// ã“ã‚ŒãŒãƒ—ãƒ­ã‚°ãƒ©ãƒ çµ‚äº†æ™‚ã«å‘¼ã°ã‚Œã‚‹æ™‚ã«ã¯renderãŒæ¶ˆæ»…ã—ã¦ã„ã‚‹ã®ã§ã“ã“ã§è½ã¡ã‚‹ã€‚
+	// ã©ã†ã—ãŸã‚‚ã®ã‹ã€‚
 	// (mitake, 09/08/23)
-	if (list) render->ReleaseList(list);		// ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ì”jŠü
+	if (list) render->ReleaseList(list);		// ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®ç ´æ£„
 }
 void GRSphere::CreateList(GRRenderIf* r){
 	if (list) render->ReleaseList(list);

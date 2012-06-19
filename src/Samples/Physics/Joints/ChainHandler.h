@@ -1,4 +1,4 @@
-#include "Handler.h"
+ï»¿#include "Handler.h"
 
 class ChainHandler : public Handler{
 public:
@@ -21,15 +21,15 @@ public:
 	vector<PHSolidIf*>		links;
 	vector<PHJointIf*>		joints;
 
-	Vec3d				rootPos;			///< ½‚ÌŒÅ’è“_
-	Vec3d				iniPos;				///< ” ‚ªÅ‰‚É’u‚©‚ê‚éêŠ
+	Vec3d				rootPos;			///< éŽ–ã®å›ºå®šç‚¹
+	Vec3d				iniPos;				///< ç®±ãŒæœ€åˆã«ç½®ã‹ã‚Œã‚‹å ´æ‰€
 
 	int					posLevel;
 	int					rangeLevel;
 	int					springLevel;
 	int					damperLevel;
 
-	double				spring, damper;		///< ƒoƒlŒW”Cƒ_ƒ“ƒpŒW”
+	double				spring, damper;		///< ãƒãƒä¿‚æ•°ï¼Œãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 
 public:
 	ChainHandler(SampleApp* a):Handler(a){
@@ -42,7 +42,7 @@ public:
 		damperLevel = 0;
 
 		app->AddAction(MENU_CHAIN, ID_HINGE, "create hinge");
-		app->AddHotKey(MENU_CHAIN, ID_HINGE, 'j');	///< h‚¾‚Æhelp‚Æd•¡‚·‚é
+		app->AddHotKey(MENU_CHAIN, ID_HINGE, 'j');	///< hã ã¨helpã¨é‡è¤‡ã™ã‚‹
 		app->AddAction(MENU_CHAIN, ID_SLIDER, "create slider");
 		app->AddHotKey(MENU_CHAIN, ID_SLIDER, 's');
 		app->AddAction(MENU_CHAIN, ID_BALL, "create ball");
@@ -135,8 +135,8 @@ public:
 		}
 		if(id == ID_BALL){
 			PHBallJointDesc jdesc;
-			//jdesc.limit[1].upper =  0.2;	// Å‘åƒXƒCƒ“ƒOŠp
-			//jdesc.limit[2].lower= -0.2;	// ƒcƒCƒXƒgŠp”ÍˆÍ
+			//jdesc.limit[1].upper =  0.2;	// æœ€å¤§ã‚¹ã‚¤ãƒ³ã‚°è§’
+			//jdesc.limit[2].lower= -0.2;	// ãƒ„ã‚¤ã‚¹ãƒˆè§’ç¯„å›²
 			//jdesc.limit[2].upper =  0.2;
 			jdesc.poseSocket.Pos() = Vec3d(-1.01, -1.01, -1.01);
 			jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
@@ -182,7 +182,7 @@ public:
 			UpdateJoint(joints.back());
 		}
 		if(id == ID_GEAR){
-				// ˆÈ‰º‚ÍƒMƒA‚Ìì¬ƒR[ƒh
+				// ä»¥ä¸‹ã¯ã‚®ã‚¢ã®ä½œæˆã‚³ãƒ¼ãƒ‰
 			/*if(jntLink.size() >= 2){
 				size_t m = jntLink.size();
 				PHGearDesc gdesc;

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -95,11 +95,11 @@ CRBodyIf* CRBodyGen::Generate(CRCreatureIf* crCreature){
 	return NULL;
 }
 
-// ‚±‚ê—v‚é‚Ì‚©H
+// ã“ã‚Œè¦ã‚‹ã®ã‹ï¼Ÿ
 void CRBodyGen::SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint){
 	/*
 	PHSolidIf*	nextParent		= childJoint->GetPlugSolid();
-	Posed sp, pp; //< socket, plug‚Ìpose
+	Posed sp, pp; //< socket, plugã®pose
 	childJoint->GetSocketPose(sp);
 	childJoint->GetPlugPose(pp);
 	Quaterniond target;
@@ -123,12 +123,12 @@ void CRBodyGen::SetInitPosition(PHSolidIf* parentSolid, PHJointIf* childJoint){
 }
 
 
-// ‚±‚ê‚ç‚ÌŠÖ”‚ÍCRBody‚ÉˆÚ“®—\’èimitakej
+// ã“ã‚Œã‚‰ã®é–¢æ•°ã¯CRBodyã«ç§»å‹•äºˆå®šï¼ˆmitakeï¼‰
 #if 0
 Vec3d CRBodyGen::GetCenterOfMass(){
-	/// dS‚ğ‹‚ß‚é‚Ég‚¤i”Ô–Ú‚Ü‚Å‚ÌdS‚Ì¬Œv
+	/// é‡å¿ƒã‚’æ±‚ã‚ã‚‹æ™‚ã«ä½¿ã†iç•ªç›®ã¾ã§ã®é‡å¿ƒã®å°è¨ˆ
 	double totalWeight = 0;
-	/// dS‚ğ‹‚ß‚é‚Æ‚«‚Ég‚¤i”Ô–Ú‚Ü‚Å‚ÌƒuƒƒbƒN‚Ì’†SÀ•W
+	/// é‡å¿ƒã‚’æ±‚ã‚ã‚‹ã¨ãã«ä½¿ã†iç•ªç›®ã¾ã§ã®ãƒ–ãƒ­ãƒƒã‚¯ã®ä¸­å¿ƒåº§æ¨™
 	Vec3d  centerPosOfBlocks = Vec3d(0.0, 0.0, 0.0);
 
 	for(int i = 0; i<NSolids(); i++){
@@ -142,7 +142,7 @@ Vec3d CRBodyGen::GetCenterOfMass(){
 }
 
 double CRBodyGen::GetSumOfMass(){
-	/// dS‚ğ‹‚ß‚é‚Ég‚¤i”Ô–Ú‚Ü‚Å‚ÌdS‚Ì¬Œv
+	/// é‡å¿ƒã‚’æ±‚ã‚ã‚‹æ™‚ã«ä½¿ã†iç•ªç›®ã¾ã§ã®é‡å¿ƒã®å°è¨ˆ
 	double totalWeight = 0;
 
 	for(int i = 0; i<NSolids(); i++){
@@ -195,7 +195,7 @@ double CRBodyGen::GetTargetPotentialEnergy(PHSolidIf* rootSolid){
 		ans += rootSolid->GetMass() * phScene->GetGravity().Y() * rootSolid->GetPose().PosY();
 		for(size_t i = 0; i < joints.size(); i++){
 			if(rootSolid == joints[i]->GetSocketSolid()){
-				// Solid‚Ìpose‚ğ‘‚«Š·‚¦‚Ä‚Í‚¢‚¯‚È‚¢‚½‚ßCˆø”‚ª3‚Â
+				// Solidã®poseã‚’æ›¸ãæ›ãˆã¦ã¯ã„ã‘ãªã„ãŸã‚ï¼Œå¼•æ•°ãŒ3ã¤
 				ans += CalcTargetPotential(rootSolid->GetPose(), rootSolid, joints[i]);
 			}
 		}
@@ -208,7 +208,7 @@ double CRBodyGen::CalcTargetPotential(Posed parentPos, PHSolidIf* parentSolid, P
 	double ans = DBL_MAX;
 	
 	PHSolidIf*	nextParent = childJoint->GetPlugSolid();
-	Posed sp, pp; //< socket, plug‚Ìpose
+	Posed sp, pp; //< socket, plugã®pose
 	childJoint->GetSocketPose(sp);
 	childJoint->GetPlugPose(pp);
 	PHHingeJointIf* hj = DCAST(PHHingeJointIf, childJoint);

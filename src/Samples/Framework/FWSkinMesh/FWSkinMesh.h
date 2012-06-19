@@ -1,4 +1,4 @@
-// FWAppGLtest.cpp : ƒRƒ“ƒ\[ƒ‹ ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒGƒ“ƒgƒŠ ƒ|ƒCƒ“ƒg‚ð’è‹`‚µ‚Ü‚·B
+ï»¿// FWAppGLtest.cpp : ã‚³ãƒ³ã‚½ãƒ¼ãƒ« ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¨ãƒ³ãƒˆãƒª ãƒã‚¤ãƒ³ãƒˆã‚’å®šç¾©ã—ã¾ã™ã€‚
 //
 #ifndef FWAPPGLTEST_H
 #define FWAPPGLTEST_H
@@ -10,7 +10,7 @@ using namespace Spr;
 
 #define TEST_CASE 4
 
-//lŠÔƒ‚ƒfƒ‹‚Ìƒ[ƒh
+//äººé–“ãƒ¢ãƒ‡ãƒ«ã®ãƒ­ãƒ¼ãƒ‰
 #if defined(TEST_CASE) && (TEST_CASE == 0)
 #define FILE_NAME "test2.x"
 #define ANIMATION_SET_NAME "Walk"

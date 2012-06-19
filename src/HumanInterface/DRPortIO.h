@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,10 +12,10 @@
 namespace Spr {
 class SPR_DLL DRLoadWindowsDriver;
 
-/**	WindowsNT,2000 ‚ÅI/Oƒ|[ƒg’¼ÚƒAƒNƒZƒX‚ğ‚·‚é‚½‚ß‚ÉŒÄ‚ÔŠÖ”.
-	‚±‚ê‚ğŒÄ‚ñ‚Å‚¨‚¯‚ÎA_inp, _outp ‚ğs‚Á‚Ä‚à•ÛŒìˆá”½‚ª‚¨‚«‚È‚­‚È‚éB
-	giveio.sys ‚ğ exe‚Æ“¯‚¶ƒtƒHƒ‹ƒ_‚©AWindows‚ÌƒtƒHƒ‹ƒ_‚©AƒpƒX‚Ì’Ê‚Á‚½
-	ƒtƒHƒ‹ƒ_‚É“ü‚ê‚Ä‚¨‚­‚±‚Æ‚ª•K—vB
+/**	WindowsNT,2000 ã§I/Oãƒãƒ¼ãƒˆç›´æ¥ã‚¢ã‚¯ã‚»ã‚¹ã‚’ã™ã‚‹ãŸã‚ã«å‘¼ã¶é–¢æ•°.
+	ã“ã‚Œã‚’å‘¼ã‚“ã§ãŠã‘ã°ã€_inp, _outp ã‚’è¡Œã£ã¦ã‚‚ä¿è­·é•åãŒãŠããªããªã‚‹ã€‚
+	giveio.sys ã‚’ exeã¨åŒã˜ãƒ•ã‚©ãƒ«ãƒ€ã‹ã€Windowsã®ãƒ•ã‚©ãƒ«ãƒ€ã‹ã€ãƒ‘ã‚¹ã®é€šã£ãŸ
+	ãƒ•ã‚©ãƒ«ãƒ€ã«å…¥ã‚Œã¦ãŠãã“ã¨ãŒå¿…è¦ã€‚
 */
 void WBGetPortIO();
 }	//	namespace Spr;

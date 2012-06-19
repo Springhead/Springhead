@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,7 +15,7 @@
 namespace Spr{;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒgl‘Ìƒ‚ƒfƒ‹‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆäººä½“ãƒ¢ãƒ‡ãƒ«ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRBallHumanBodyGenDesc : CRBodyGenDesc {
 	enum CRHumanSolids{
 		// Center
@@ -32,7 +32,7 @@ struct CRBallHumanBodyGenDesc : CRBodyGenDesc {
 		SO_LEFT_UPPER_LEG, SO_LEFT_LOWER_LEG, SO_LEFT_FOOT,
 		SO_LEFT_EYE,
 
-		// „‘Ì‚Ì”
+		// å‰›ä½“ã®æ•°
 		SO_NSOLIDS
 	};
 
@@ -51,17 +51,17 @@ struct CRBallHumanBodyGenDesc : CRBodyGenDesc {
 		JO_LEFT_WAIST_LEG, JO_LEFT_KNEE, JO_LEFT_ANKLE,
 		JO_LEFT_EYE,
 
-		// ŠÖß‚Ì”
+		// é–¢ç¯€ã®æ•°
 		JO_NJOINTS
 	};
 	
-	///Joint‚Ì”
+	///Jointã®æ•°
 	int joNBallJoints;
 	int joNHingeJoints;
-	/// ‘Ìd
+	/// ä½“é‡
 	double bodyMass;
 
-	/// ƒTƒCƒY‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^
+	/// ã‚µã‚¤ã‚ºã«é–¢ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	double waistLength, waistBreadth;
 	double abdomenLength, abdomenBreadth;
 	double chestLength, chestBreadth, bideltoidBreadth;
@@ -77,7 +77,7 @@ struct CRBallHumanBodyGenDesc : CRBodyGenDesc {
 	double vertexToEyeHeight, occiputToEyeDistance;
 	double eyeDiameter, interpupillaryBreadth;
 
-	/// ŠeŠÖß‚Ìƒoƒlƒ_ƒ“ƒp
+	/// å„é–¢ç¯€ã®ãƒãƒãƒ€ãƒ³ãƒ‘
 	double springWaistAbdomen, damperWaistAbdomen;
 	double springAbdomenChest, damperAbdomenChest;
 	double springChestNeck,    damperChestNeck;
@@ -90,9 +90,9 @@ struct CRBallHumanBodyGenDesc : CRBodyGenDesc {
 	double springAnkle,        damperAnkle;
 	double springEye,          damperEye;
 
-	// ‰Â“®ˆæ§ŒÀ‚È‚Çi–¢À‘•j
+	// å¯å‹•åŸŸåˆ¶é™ãªã©ï¼ˆæœªå®Ÿè£…ï¼‰
 
-	// Œ`ó‚ÉŠÖ‚·‚éİ’è
+	// å½¢çŠ¶ã«é–¢ã™ã‚‹è¨­å®š
 	enum CRHumanShapeType {
 		HST_ROUNDCONE=0,
 		HST_BOX,
@@ -103,7 +103,7 @@ struct CRBallHumanBodyGenDesc : CRBodyGenDesc {
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRBallHumanBodyGen
-// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚ğ—p‚¢‚½l‘Ìƒ‚ƒfƒ‹EƒNƒ‰ƒX‚ÌÀ‘•
+// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ç”¨ã„ãŸäººä½“ãƒ¢ãƒ‡ãƒ«ãƒ»ã‚¯ãƒ©ã‚¹ã®å®Ÿè£…
 class CRBallHumanBodyGen : public CRBodyGen, public CRBallHumanBodyGenDesc {
 private:
 	void GenerateBody();
@@ -148,7 +148,7 @@ public:
 		joints.resize(CRBallHumanBodyGenDesc::JO_NJOINTS);
 	}
 
-	/** @brief ‰Šú‰»‚ğÀs‚·‚é
+	/** @brief åˆæœŸåŒ–ã‚’å®Ÿè¡Œã™ã‚‹
 	*/
 	virtual CRBodyIf* Generate(CRCreatureIf* crCreature);
 };

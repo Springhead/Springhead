@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -22,7 +22,7 @@ FWGLUI::~FWGLUI(){
 
 void FWGLUI::EnableIdleFunc(bool on){
 	idleFuncFlag = on;
-	// GLUI‚É“n‚·
+	// GLUIã«æ¸¡ã™
 	GLUI_Master.set_glutIdleFunc(on ? FWGLUT::GlutIdleFunc : NULL);
 }
 
@@ -35,7 +35,7 @@ void FWGLUI::RegisterCallbacks(){
 	glutMotionFunc		 (FWGLUT::GlutMotionFunc);
 	glutPassiveMotionFunc(FWGLUT::GlutPassiveMotionFunc);
 
-	// ˆÈ‰º4‚Â‚ÍGLUI‚ªæ‚Áæ‚é•K—v‚ª‚ ‚é
+	// ä»¥ä¸‹4ã¤ã¯GLUIãŒä¹—ã£å–ã‚‹å¿…è¦ãŒã‚ã‚‹
 	GLUI_Master.set_glutReshapeFunc	(FWGLUT::GlutReshapeFunc);
 	GLUI_Master.set_glutMouseFunc	(FWGLUT::GlutMouseFunc);
 	GLUI_Master.set_glutKeyboardFunc(FWGLUT::GlutKeyFunc);
@@ -146,7 +146,7 @@ FWControl* FWGLUI::CreateControl(FWDialog* owner, const IfInfo* ii, const FWCont
 		FWTextBox* text = DBG_NEW FWTextBox();
 		text->handle = handle;
 
-		// ’lˆæ‚Ìİ’è
+		// å€¤åŸŸã®è¨­å®š
 		if(desc.style == FWTextBoxDesc::INT)
 			SetIntRange(text, textDesc.intMin, textDesc.intMax);
 		if(desc.style == FWTextBoxDesc::FLOAT)

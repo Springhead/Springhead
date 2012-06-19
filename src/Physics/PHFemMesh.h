@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2011, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,41 +16,41 @@ namespace Spr{;
 
 
 
-/**	�L���v�f�@�V�~�����[�V�����̂��߂̃��b�V��(4�ʑ̃��b�V��)
+/**	有限要素法シミュレーションのためのメッシュ(4面体メッシュ)
 
-	�L���v�f�@�ł́A�ӂ��A���_�E�l�ʑ̂���Q�Ƃł��邱�Ƃ��K�v�ɂȂ�B
-	�L���v�f�@�ł́A�v�f�i���l�ʑ́j�̑̐ς�ʐς̐ϕ�����A�e�m�[�h�̕����ʂ����߂�B
-	�e�m�[�h(���_)�͕����̎l�ʑ̂ŋ��L����Ă���̂ŁA���_�Ⓒ�_�ƒ��_(����)�́A
-	�����l�ʑ̂̌W���������������̂������ƂɂȂ�B
+	有限要素法では、辺が、頂点・四面体から参照できることが必要になる。
+	有限要素法では、要素（＝四面体）の体積や面積の積分から、各ノードの物理量を求める。
+	各ノード(頂点)は複数の四面体で共有されているので、頂点や頂点と頂点(＝辺)は、
+	複数四面体の係数を合成したものを持つことになる。
 
-	�ׂ荇�����_�ƒ��_(=��)�̊ԂɌW��������B
-	   		    i�� j��
+	隣り合う頂点と頂点(=辺)の間に係数がある。
+	   		    i列 j列
 	+------------------+	        
 	|		     x     |
-	|                  |   �W���s��A�͍��̂悤�ɂȂ�B �v�f�@ii, jj�i�Ίp�����j �� ij, ji�i��Ίp�����j �ɒl������(i,j�͒��_�Aij�͕�)					//(ii,jj)�����_�Aij��ji...etc�͕�
-i�s	|         x  d  o  | 
+	|                  |   係数行列Aは左のようになる。 要素　ii, jj（対角成分） や ij, ji（非対角成分） に値が入る(i,jは頂点、ijは辺)					//(ii,jj)が頂点、ijやji...etcは辺
+i行	|         x  d  o  | 
 	|                  |
-j�s	| 		     o  d  |�@
+j行	| 		     o  d  |　
 	|                  |
 	+------------------+
 	
 			  
 	Ax + b = 0,  (D-F)x + b = 0 , x = D^{-1} F x -  D^{-1} b, x = D^{-1} F x - b'
 	x_i =   (F_i * x)/D_ii - b_i/D_ii ... (1)
-	i->j, j->i �œ����W��(F_ij, F_ji)���K�v�����A�v�Z�͏ォ��s���̂ŁA��������W���������Ȃ��ƂȂ�Ȃ��B
+	i->j, j->i で同じ係数(F_ij, F_ji)が必要だが、計算は上から行うので、両方から係数が見えないとならない。
 	
-	1. �S�l�ʑ̂ɂ��ČW�������߁A�ӂɌW�����L�^���Ă���
-    2. �K�E�X�U�C�f���̌v�Z���ォ��P�s���A��(1)�̌v�Z������B
-	�@ ���̎��AF_ij=�ӂ̌W�� ���K�v�Ȃ̂ŁA���_i�����ix���Q�Ƃ������Ȃ�B
+	1. 全四面体について係数を求め、辺に係数を記録していく
+    2. ガウスザイデルの計算＝上から１行ずつ、式(1)の計算をする。
+	　 この時、F_ij=辺の係数 が必要なので、頂点iから辺ixが参照したくなる。
 	
-	�ӂ̌W��F_ij���v�Z���邽�߂ɂ́A��ij���܂ގl�ʑ̂̌W���̘a�����߂�K�v������B
-	�W���̌v�Z�͎l�ʑ̒P�ʂōs���̂ŁA�l�ʑ̂���ӂւ̎Q�Ƃ��K�v�B
+	辺の係数F_ijを計算するためには、辺ijを含む四面体の係数の和を求める必要がある。
+	係数の計算は四面体単位で行うので、四面体から辺への参照も必要。
 	
-	���Ӎ\���� Edge ���K�v
+	∴辺構造体 Edge が必要
 **/
 class PHFemMesh: public SceneObject{
 public:
-	//	���_
+	//	頂点
 	class FemVertex{
 	public:
 		Vec3d pos;
@@ -58,97 +58,97 @@ public:
 		std::vector<int> edges;
 		std::vector<int> faces;
 		FemVertex();
-		double temp;		//	���x
-		double k;			//	�S�̍����s��K�̗v�f�@�v�Z�ɗ��p
-		double c;			//	����
-		double Tc;			//	�ߓ_���̗͂��̉��x
-		double heatTransRatio;		//	���̐ߓ_�ł̔M�`�B��
-		bool vtxDeformed;		//	�l�ʑ̂̕ό`�ł��̐ߓ_�����[�J�����W��ňړ��������ǂ���
-		double thermalEmissivity;	///	�M���˗��@�ߓ_�ł�
-		double disFromOrigin;		//>	x-z���ʂł̃��[�J�����W�̌��_����̋���
-		double heatFluxValue;		//>	�M�����l
+		double temp;		//	温度
+		double k;			//	全体剛性行列Kの要素　計算に利用
+		double c;			//	同上
+		double Tc;			//	節点周囲の流体温度
+		double heatTransRatio;		//	その節点での熱伝達率
+		bool vtxDeformed;		//	四面体の変形でこの節点がローカル座標基準で移動したかどうか
+		double thermalEmissivity;	///	熱放射率　節点での
+		double disFromOrigin;		//>	x-z平面でのローカル座標の原点からの距離
+		double heatFluxValue;		//>	熱流束値
 	};
-	//	�l�ʑ�
+	//	四面体
 	class Tet{
 	public:
-		int vertices[4];	//	���_ID																																	  
-		int faces[4];		//	�\�ʂS��
-		int edges[6];		//	�Ή�����ӂ�ID�B0:��01, 1:��12, 2:��20, 3:��03, 4:��13, 5:��23
+		int vertices[4];	//	頂点ID																																	  
+		int faces[4];		//	表面４つ
+		int edges[6];		//	対応する辺のID。0:辺01, 1:辺12, 2:辺20, 3:辺03, 4:辺13, 5:辺23
 		int& edge(int i, int j);
-		double volume;		//	�ϕ��v�Z�ŗp���邽�߂̑̐�
-		//matk1,matk2 -> matk[3] �ɓ����\��
+		double volume;		//	積分計算で用いるための体積
+		//matk1,matk2 -> matk[3] に統合予定
 		PTM::TMatrixRow<4,4,double> matk[3];	//>	
 		//PTM::TMatrixRow<4,4,double> matk1;
 		//PTM::TMatrixRow<4,4,double> matk2;
 		PTM::TVector<4,double> vecf[4];			//>	
 	};
-	//	�l�ʑ̖̂ʁB
+	//	四面体の面。
 	class Face{
-		///	��r���邽�߂́A�\�[�g�ς݂̒��_id�BUpdate()�ōX�V�B
+		///	比較するための、ソート済みの頂点id。Update()で更新。
 		int sorted[3];
 	public:
-		///	���_ID�B���ԂŖʂ̕\����\���B
+		///	頂点ID。順番で面の表裏を表す。
 		int vertices[3];
 		void Update();
-		///	���_ID�Ŕ�r
+		///	頂点IDで比較
 		bool operator < (const Face& f2);
-		///	���_ID�Ŕ�r
+		///	頂点IDで比較
 		bool operator == (const Face& f2);
-		//�s��v�Z�ɗp���邽�߂̖ʐ�
-		double area;				///	�l�ʑ̂̊e�ʂ̖ʐ�
-		double iharea;				//	IH���M����face���̖ʐ�
-		double ihareaRatio;			//	sigma(iharea):���b�V���̑����M�ʐ� �ɐ�߂銄��
-		double ihdqdt;				//  face���󂯎��IH�R�C������̔M������ = IHdqdtAll * ihareaRatio; 	
-		//>	�M�v�Z���L�̃p�����[�^�@�p�����Ďg��
-		///	���_����߂�����vertices[3]����בւ������_ID
-		int ascendVtx[3];			///	���MStep�Ŏg���H�g��Ȃ��H
-		double heatTransRatio;		///	���̖ʂɂ�����M�`�B��		///	�\���ߓ_�̔M�`�B���̑������ς�		///	���ׂĂ̊֐��ŁA���̒l���X�V�ł��Ă��Ȃ��̂ŁA�M�p�ł��Ȃ��B
-		bool alphaUpdated;			///	�����钸�_�̔M�`�B�����X�V���ꂽ�ۂ�true��	
-		bool deformed;				///	�����钸�_�̈ړ��ɂ��A�ό`���ꂽ�Ƃ�
-		double thermalEmissivity;	///	�M���˗�
-		double heatflux;			///	�M�����l�@�\������R�ߓ_�̑������ςŌv�Z?
-		double fluxarea;			//>	 �M�����̌v�Z�ɗp����Aface�̃G���A
-		bool mayIHheated;				//	IH�ŉ��M����\���̂���ʁ@�i�K�I�ɍi��
-		std::vector<Vec2d>	ihvtx;//[12];	//	vector�ɂ��Ȃ��Ă��A���͍ő�A�ȉ����炢�Bvector���Ɨ̈���g��������̂�.
-		//Vec2d ihvtx[12];			//	IH���M�̈���ɓ���_��(x,z)���W (x,z)
-		//unsigned ninnerVtx;			//	IH���M�̈���ɓ���_��(x,z)���W�̐�
-		std::vector<Vec3d> shapefunc;//[12];		//	IH���M�̈���ɓ���_�̌`��֐�(f1,f2,f3)
+		//行列計算に用いるための面積
+		double area;				///	四面体の各面の面積
+		double iharea;				//	IH加熱するface内の面積
+		double ihareaRatio;			//	sigma(iharea):メッシュの総加熱面積 に占める割合
+		double ihdqdt;				//  faceが受け取るIHコイルからの熱流束量 = IHdqdtAll * ihareaRatio; 	
+		//>	熱計算特有のパラメータ　継承して使う
+		///	原点から近い順にvertices[3]を並べ替えた頂点ID
+		int ascendVtx[3];			///	毎熱Stepで使う？使わない？
+		double heatTransRatio;		///	その面における熱伝達率		///	構成節点の熱伝達率の相加平均す		///	すべての関数で、この値を更新できていないので、信用できない。
+		bool alphaUpdated;			///	属する頂点の熱伝達率が更新された際にtrueに	
+		bool deformed;				///	属する頂点の移動により、変形されたとき
+		double thermalEmissivity;	///	熱放射率
+		double heatflux;			///	熱流束値　構成する３節点の相加平均で計算?
+		double fluxarea;			//>	 熱流束の計算に用いる、faceのエリア
+		bool mayIHheated;				//	IHで加熱する可能性のある面　段階的に絞る
+		std::vector<Vec2d>	ihvtx;//[12];	//	vectorにしなくても、数は最大、以下くらい。vectorだと領域を使いすぎるので.
+		//Vec2d ihvtx[12];			//	IH加熱領域内に入る点の(x,z)座標 (x,z)
+		//unsigned ninnerVtx;			//	IH加熱領域内に入る点の(x,z)座標の数
+		std::vector<Vec3d> shapefunc;//[12];		//	IH加熱領域内に入る点の形状関数(f1,f2,f3)
 	};
-	//	��
+	//	辺
 	struct Edge{
 		Edge(int v1=-1, int v2=-1);
 		int vertices[2];
-		///	���_ID�Ŕ�r
+		///	頂点IDで比較
 		bool operator < (const Edge& e2);
-		///	���_ID�Ŕ�r
+		///	頂点IDで比較
 		bool operator == (const Edge& e2);
-		double k;		//�S�̍����s��K�̗v�f
+		double k;		//全体剛性行列Kの要素
 		double c;		//
-		double b;		//�K�E�X�U�C�f���v�Z�ŗp����萔b
+		double b;		//ガウスザイデル計算で用いる定数b
 	};
-	///	��{���(�������Ƀf�X�N���v�^����^��������)
+	///	基本情報(生成時にデスクリプタから与えられる情報)
 	//@{
-	///	���_
+	///	頂点
 	std::vector<FemVertex> vertices;
-	///	�l�ʑ�
+	///	四面体
 	std::vector<Tet> tets;
 	//@}
 	
-	/// @name �ǉ����	��{��񂩂�SetDesc()���v�Z���ċ��߂�B
+	/// @name 追加情報	基本情報からSetDesc()が計算して求める。
 	//@{
-	///	���̕\�ʂ̒��_��ID
+	///	物体表面の頂点のID
 	std::vector<int> surfaceVertices;
-	///	��
+	///	面
 	std::vector<Face> faces;
-	///	�ʂ̂������̕\�ʂ̂��̂��Afaces[0]..faces[nSurfaceFace-1]	�ȍ~�͓����̖�:faces[nSurfaceFace]..faces[faces.size()]
+	///	面のうち物体表面のものが、faces[0]..faces[nSurfaceFace-1]	以降は内側の面:faces[nSurfaceFace]..faces[faces.size()]
 	unsigned nSurfaceFace;
-	///	��
+	///	辺
 	std::vector<Edge> edges;
-	///	�ӂ̂������̕\�ʂ̂��̂��Aedges[0]..edges[nSurfaceEdge-1]
+	///	辺のうち物体表面のものが、edges[0]..edges[nSurfaceEdge-1]
 	unsigned nSurfaceEdge;
 	//@}
 
-	/// @name �l�ʑ̂̌v�Z	�Ώۂɂ�炸�ɕK�v�ɂȂ�`��֐���XX���v�Z����֐�
+	/// @name 四面体の計算	対象によらずに必要になる形状関数のXXを計算する関数
 	//@{
 	void UpdateJacobian();
 	//@}
@@ -158,24 +158,24 @@ public:
 
 
 	PHFemMesh(const PHFemMeshDesc& desc=PHFemMeshDesc(), SceneIf* s=NULL);
-	///	�f�X�N���v�^�̃T�C�Y
+	///	デスクリプタのサイズ
 	virtual size_t GetDescSize() const { return sizeof(PHFemMeshDesc); };
-	///	�f�X�N���v�^�̓ǂݏo��(�R�s�[��)
+	///	デスクリプタの読み出し(コピー版)
 	virtual bool GetDesc(void* desc) const ;
-	///�f�X�N���v�^�̐ݒ�B�����ŁA���_���W�Ǝl�ʑ̂�4���_��ID�̏�񂩂�A�ʂ�ӂɂ��Ă̏����v�Z���Ă����B
+	///デスクリプタの設定。ここで、頂点座標と四面体の4頂点のIDの情報から、面や辺についての情報を計算しておく。
 	virtual void SetDesc(const void* desc);
-	///	������dt�i�߂鏈���BPHFemEngine���Ăяo���B
+	///	時刻をdt進める処理。PHFemEngineが呼び出す。
 	virtual void Step(double dt);
 	//std::vector<Spr::PHFemMesh::Edge> GetEdge();
-	//	face�̐���Ԃ�
+	//	faceの数を返す
 	unsigned GetNFace();
-	//	Face�ӂ̗��[�_�̍��W��Ԃ�
+	//	Face辺の両端点の座標を返す
 	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
-	//	Face�ӂ̗��[�_�̍��W��Ԃ�
+	//	Face辺の両端点の座標を返す
 	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
-	//	���_�̍��W��Ԃ�
+	//	頂点の座標を返す
 	//Vec3d GetVtx(unsigned id);
-	//	IH���E�̈��X���W�����߂�
+	//	IH境界領域のX座標を求める
 	//Vec2d GetIHBorderX();
 	
 

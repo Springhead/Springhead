@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,7 +17,7 @@ struct PHConstraintsIf;
 /** \addtogroup gpPhysics */
 //@{
 
-///	ƒGƒ“ƒWƒ“‚ÌŠî–{ƒNƒ‰ƒX
+///	ã‚¨ãƒ³ã‚¸ãƒ³ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
 struct PHEngineIf : public SceneObjectIf{
 public:
 	SPR_IFDEF(PHEngine);
@@ -27,72 +27,72 @@ struct PHConstraintEngineIf : PHEngineIf{
 public:
 	SPR_IFDEF(PHConstraintEngine);
 
-	/** @brief ÚG“_‚ÌW‡‚ğ•Ô‚·
+	/** @brief æ¥è§¦ç‚¹ã®é›†åˆã‚’è¿”ã™
 	*/
 	PHConstraintsIf* GetContactPoints();
 
-	/** @brief velCorrectionRate‚ğ‘‚«Š·‚¦‚é
-		@param value ‘‚«Š·‚¦Œã‚Ì’l
+	/** @brief velCorrectionRateã‚’æ›¸ãæ›ãˆã‚‹
+		@param value æ›¸ãæ›ãˆå¾Œã®å€¤
 	*/
 	void SetVelCorrectionRate(double value);
 
-	/** @brief velCorrectionRate‚ğæ“¾‚·‚é
-		@return value velCorrectionRate‚Ì’l
+	/** @brief velCorrectionRateã‚’å–å¾—ã™ã‚‹
+		@return value velCorrectionRateã®å€¤
 	*/
 	double GetVelCorrectionRate();
 
-	/** @brief posCorrectionRate‚ğ‘‚«Š·‚¦‚é
-		@param value ‘‚«Š·‚¦Œã‚Ì’l
+	/** @brief posCorrectionRateã‚’æ›¸ãæ›ãˆã‚‹
+		@param value æ›¸ãæ›ãˆå¾Œã®å€¤
 	*/
 	void SetPosCorrectionRate(double value);
 
-	/** @brief posCorrectionRate‚ğæ“¾‚·‚é
-		@return value posCorrectionRate‚Ì’l
+	/** @brief posCorrectionRateã‚’å–å¾—ã™ã‚‹
+		@return value posCorrectionRateã®å€¤
 	*/
 	double GetPosCorrectionRate();
 
-	/** @brief contactCorrectionRate‚ğ‘‚«Š·‚¦‚é
-		@param value ‘‚«Š·‚¦Œã‚Ì’l
+	/** @brief contactCorrectionRateã‚’æ›¸ãæ›ãˆã‚‹
+		@param value æ›¸ãæ›ãˆå¾Œã®å€¤
 	*/
 	void SetContactCorrectionRate(double value);
 
-	/** @brief contactCorrectionRate‚ğæ“¾‚·‚é
-		@return value contactCorrectionRate‚Ì’l
+	/** @brief contactCorrectionRateã‚’å–å¾—ã™ã‚‹
+		@return value contactCorrectionRateã®å€¤
 	*/
 	double GetContactCorrectionRate();
 
-	/** @brief bSaveConstraints‚ğ‘‚«Š·‚¦‚é
-		@return value SaveState, LoadState‚ÉC constraints ‚ğŠÜ‚ß‚é‚©‚Ç‚¤‚©D–{—ˆ•s—v‚¾‚ªCf, F‚ª•Ï‰»‚·‚éD
+	/** @brief bSaveConstraintsã‚’æ›¸ãæ›ãˆã‚‹
+		@return value SaveState, LoadStateã«ï¼Œ constraints ã‚’å«ã‚ã‚‹ã‹ã©ã†ã‹ï¼æœ¬æ¥ä¸è¦ã ãŒï¼Œf, FãŒå¤‰åŒ–ã™ã‚‹ï¼
 	*/
 	void	SetBSaveConstraints(bool value);
 
-	/** @brief „‘Ì‚Ì‘¬“x‚¾‚¯XV‚·‚éƒtƒ‰ƒO‚ğİ’è‚·‚é
+	/** @brief å‰›ä½“ã®é€Ÿåº¦ã ã‘æ›´æ–°ã™ã‚‹ãƒ•ãƒ©ã‚°ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetUpdateAllSolidState(bool flag);
 
-	/** @brief –ÊÚG‚ğg‚¤ƒtƒ‰ƒO‚ğİ’è‚·‚é
+	/** @brief é¢æ¥è§¦ã‚’ä½¿ã†ãƒ•ãƒ©ã‚°ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetUseContactSurface(bool flag);
 
-	/** @brief shrinkRate‚Ì’l‚ğİ’è‚·‚é
+	/** @brief shrinkRateã®å€¤ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetShrinkRate(double data);
 	
-	/** @brief shrinkRate‚ğæ“¾‚·‚é
-		@return value shrinkCorrectionRate‚Ì’l
+	/** @brief shrinkRateã‚’å–å¾—ã™ã‚‹
+		@return value shrinkCorrectionRateã®å€¤
 	*/
 	double GetShrinkRate();
 
-	/** @brief shrinkRateCorrection‚Ì’l‚ğİ’è‚·‚é
+	/** @brief shrinkRateCorrectionã®å€¤ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetShrinkRateCorrection(double data);
 
-	/** @brief shrinkRateCorrection‚ğæ“¾‚·‚é
-		@return value shrinkRateCorrection‚Ì’l
+	/** @brief shrinkRateCorrectionã‚’å–å¾—ã™ã‚‹
+		@return value shrinkRateCorrectionã®å€¤
 	*/
 	double GetShrinkRateCorrection();
 
-	/** @brief ÚG”»’èƒGƒ“ƒWƒ“‚Ì—LŒøE–³Œø‚ğİ’è‚·‚éD‚±‚±‚Å‚Ì–³Œø‰»‚ÍPHScene::SetContactMode‚æ‚è—Dæ‚·‚éD
+	/** @brief æ¥è§¦åˆ¤å®šã‚¨ãƒ³ã‚¸ãƒ³ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’è¨­å®šã™ã‚‹ï¼ã“ã“ã§ã®ç„¡åŠ¹åŒ–ã¯PHScene::SetContactModeã‚ˆã‚Šå„ªå…ˆã™ã‚‹ï¼
 	*/
 	void EnableContactDetection(bool enable);
 };
@@ -110,15 +110,15 @@ public:
 
 struct PHIKEngineIf : PHEngineIf{
 public:
-	/** @brief —LŒø‚©–³Œø‚©‚ğæ“¾‚·‚é
+	/** @brief æœ‰åŠ¹ã‹ç„¡åŠ¹ã‹ã‚’å–å¾—ã™ã‚‹
 	*/
 	bool IsEnabled();
 
-	/** @brief —LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @brief æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	*/
 	void Enable(bool bEnabled);
 
-	/** @brief ŒJ‚è•Ô‚µ‰ñ”‚ğƒZƒbƒg‚·‚é
+	/** @brief ç¹°ã‚Šè¿”ã—å›æ•°ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	*/
 	void SetNumIter(int numIter);
 
@@ -141,22 +141,22 @@ struct PHHapticEngineDesc{
 struct PHHapticEngineIf : public PHHapticEngineDesc, PHEngineIf{
 public:
 	SPR_IFDEF(PHHapticEngine);
-	/** @breif HapticEngine‚ğ—LŒø‰»‚·‚é
+	/** @breif HapticEngineã‚’æœ‰åŠ¹åŒ–ã™ã‚‹
 	*/
 	void EnableHapticEngine(bool b);
 
-	/** @breif HapticEngine‚Ìƒ‚[ƒh‚ğØ‚è‘Ö‚¦‚é
+	/** @breif HapticEngineã®ãƒ¢ãƒ¼ãƒ‰ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 		@param mode HapticEngineMode
 	*/
 	void SetHapticEngineMode(HapticEngineMode mode);
 
-	/** @brief ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğ‚·‚·‚ß‚éBHapticEngine‚ğ—LŒø‰»‚µ‚½ê‡‚É‚Í
-		‚±‚ÌŠÖ”‚ğg‚Á‚ÄƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğ‚·‚·‚ß‚é
+	/** @brief ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ã™ã™ã‚ã‚‹ã€‚HapticEngineã‚’æœ‰åŠ¹åŒ–ã—ãŸå ´åˆã«ã¯
+		ã“ã®é–¢æ•°ã‚’ä½¿ã£ã¦ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ã™ã™ã‚ã‚‹
 	*/
 	void StepPhysicsSimulation();
 
-	/** @breif ƒV[ƒ“ƒOƒ‰ƒt‚Ìó‘Ô(ObjectStatesIf)‚ğŠJ•ú‚·‚éB
-				“®“I‚ÉƒIƒuƒWƒFƒNƒg‚ğ’Ç‰Á‚·‚é‚É‚Í’¼‘O‚ÉŒÄ‚Ô•K—v‚ª‚ ‚éB
+	/** @breif ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã®çŠ¶æ…‹(ObjectStatesIf)ã‚’é–‹æ”¾ã™ã‚‹ã€‚
+				å‹•çš„ã«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¿½åŠ ã™ã‚‹æ™‚ã«ã¯ç›´å‰ã«å‘¼ã¶å¿…è¦ãŒã‚ã‚‹ã€‚
 	*/
 	void ReleaseState();
 

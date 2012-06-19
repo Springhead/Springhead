@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -30,100 +30,100 @@ typedef int HDLError;
 #define HDAL_NOT_CALIBRATED    0x04
 
 extern "C"{
-//	DLLƒXƒ^ƒu‚ÌÀ‘•
+//	DLLã‚¹ã‚¿ãƒ–ã®å®Ÿè£…
 
 UTDllLoader* HINovintFalcon::sDllLoader;
 #define dllLoader (*HINovintFalcon::sDllLoader)
 
 //	__declspec(dllexport) HDLDeviceHandle HDLAPIENTRY hdlInitNamedDevice(const char* deviceName, const char* configPath = 0);
-#define DLLFUNC_RTYPE	HDLDeviceHandle						//	•Ô‚èŒ^
-#define DLLFUNC_CTYPE	HDLAPIENTRY							//	ŒÄ‚Ño‚µŒ^
-#define DLLFUNC_NAME	hdlInitNamedDevice					//	ŠÖ”–¼
-#define DLLFUNC_STR		"_hdlInitNamedDevice@8"				//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(const char* deviceName, const char* configPath)	//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(deviceName, configPath)			//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_RTYPE	HDLDeviceHandle						//	è¿”ã‚Šå‹
+#define DLLFUNC_CTYPE	HDLAPIENTRY							//	å‘¼ã³å‡ºã—å‹
+#define DLLFUNC_NAME	hdlInitNamedDevice					//	é–¢æ•°å
+#define DLLFUNC_STR		"_hdlInitNamedDevice@8"				//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(const char* deviceName, const char* configPath)	//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(deviceName, configPath)			//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) int HDLAPIENTRY hdlGetState();
-#define DLLFUNC_RTYPE	int									//	•Ô‚èŒ^
-#define DLLFUNC_CTYPE	HDLAPIENTRY							//	ŒÄ‚Ño‚µŒ^
-#define DLLFUNC_NAME	hdlGetState							//	ŠÖ”–¼
-#define DLLFUNC_STR		"_hdlGetState@0"					//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	()									//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	()									//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_RTYPE	int									//	è¿”ã‚Šå‹
+#define DLLFUNC_CTYPE	HDLAPIENTRY							//	å‘¼ã³å‡ºã—å‹
+#define DLLFUNC_NAME	hdlGetState							//	é–¢æ•°å
+#define DLLFUNC_STR		"_hdlGetState@0"					//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	()									//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	()									//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void hdlUninitDevice(HDLDeviceHandle hHandle);
-#define DLLFUNC_RTYPE	void								//	•Ô‚èŒ^
-#define DLLFUNC_CTYPE	HDLAPIENTRY							//	ŒÄ‚Ño‚µŒ^
-#define DLLFUNC_NAME	hdlUninitDevice						//	ŠÖ”–¼
-#define DLLFUNC_STR		"_hdlUninitDevice@4"				//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(HDLDeviceHandle hHandle)			//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(hHandle)							//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_RTYPE	void								//	è¿”ã‚Šå‹
+#define DLLFUNC_CTYPE	HDLAPIENTRY							//	å‘¼ã³å‡ºã—å‹
+#define DLLFUNC_NAME	hdlUninitDevice						//	é–¢æ•°å
+#define DLLFUNC_STR		"_hdlUninitDevice@4"				//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(HDLDeviceHandle hHandle)			//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(hHandle)							//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void hdlSetToolForce(double force[3]);
-#define DLLFUNC_RTYPE	void								//	•Ô‚èŒ^
-#define DLLFUNC_CTYPE	HDLAPIENTRY							//	ŒÄ‚Ño‚µŒ^
-#define DLLFUNC_NAME	hdlSetToolForce						//	ŠÖ”–¼
-#define DLLFUNC_STR		"_hdlSetToolForce@4"				//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(double force[3])					//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(force)								//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_RTYPE	void								//	è¿”ã‚Šå‹
+#define DLLFUNC_CTYPE	HDLAPIENTRY							//	å‘¼ã³å‡ºã—å‹
+#define DLLFUNC_NAME	hdlSetToolForce						//	é–¢æ•°å
+#define DLLFUNC_STR		"_hdlSetToolForce@4"				//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(double force[3])					//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(force)								//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void hdlToolPosition(double force[3]);
-#define DLLFUNC_RTYPE	void								//	•Ô‚èŒ^
-#define DLLFUNC_CTYPE	HDLAPIENTRY							//	ŒÄ‚Ño‚µŒ^
-#define DLLFUNC_NAME	hdlToolPosition						//	ŠÖ”–¼
-#define DLLFUNC_STR		"_hdlToolPosition@4"				//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(double pos[3])						//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(pos)								//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_RTYPE	void								//	è¿”ã‚Šå‹
+#define DLLFUNC_CTYPE	HDLAPIENTRY							//	å‘¼ã³å‡ºã—å‹
+#define DLLFUNC_NAME	hdlToolPosition						//	é–¢æ•°å
+#define DLLFUNC_STR		"_hdlToolPosition@4"				//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(double pos[3])						//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(pos)								//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void hdlToolButtons(int* pButtons);
-#define DLLFUNC_RTYPE	void								//	•Ô‚èŒ^
-#define DLLFUNC_CTYPE	HDLAPIENTRY							//	ŒÄ‚Ño‚µŒ^
-#define DLLFUNC_NAME	hdlToolButtons						//	ŠÖ”–¼
-#define DLLFUNC_STR		"_hdlToolButtons@4"					//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(int * pButtons)					//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(pButtons)							//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_RTYPE	void								//	è¿”ã‚Šå‹
+#define DLLFUNC_CTYPE	HDLAPIENTRY							//	å‘¼ã³å‡ºã—å‹
+#define DLLFUNC_NAME	hdlToolButtons						//	é–¢æ•°å
+#define DLLFUNC_STR		"_hdlToolButtons@4"					//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(int * pButtons)					//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(pButtons)							//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 }
 
 //	__declspec(dllexport) HDLError HDLAPIENTRY hdlGetError();
-#define DLLFUNC_RTYPE	HDLError							//	•Ô‚èŒ^
-#define DLLFUNC_CTYPE	HDLAPIENTRY							//	ŒÄ‚Ño‚µŒ^
-#define DLLFUNC_NAME	hdlGetError							//	ŠÖ”–¼
-#define DLLFUNC_STR		"_hdlGetError@0"					//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	()									//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	()									//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_RTYPE	HDLError							//	è¿”ã‚Šå‹
+#define DLLFUNC_CTYPE	HDLAPIENTRY							//	å‘¼ã³å‡ºã—å‹
+#define DLLFUNC_NAME	hdlGetError							//	é–¢æ•°å
+#define DLLFUNC_STR		"_hdlGetError@0"					//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	()									//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	()									//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void HDLAPIENTRY hdlStart();
-#define DLLFUNC_RTYPE	void								//	•Ô‚èŒ^
-#define DLLFUNC_CTYPE	HDLAPIENTRY							//	ŒÄ‚Ño‚µŒ^
-#define DLLFUNC_NAME	hdlStart							//	ŠÖ”–¼
-#define DLLFUNC_STR		"_hdlStart@0"						//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	()									//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	()									//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_RTYPE	void								//	è¿”ã‚Šå‹
+#define DLLFUNC_CTYPE	HDLAPIENTRY							//	å‘¼ã³å‡ºã—å‹
+#define DLLFUNC_NAME	hdlStart							//	é–¢æ•°å
+#define DLLFUNC_STR		"_hdlStart@0"						//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	()									//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	()									//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void HDLAPIENTRY hdlStop();
-#define DLLFUNC_RTYPE	void								//	•Ô‚èŒ^
-#define DLLFUNC_CTYPE	HDLAPIENTRY							//	ŒÄ‚Ño‚µŒ^
-#define DLLFUNC_NAME	hdlStop								//	ŠÖ”–¼
-#define DLLFUNC_STR		"hdlStop"							//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	()									//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	()									//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_RTYPE	void								//	è¿”ã‚Šå‹
+#define DLLFUNC_CTYPE	HDLAPIENTRY							//	å‘¼ã³å‡ºã—å‹
+#define DLLFUNC_NAME	hdlStop								//	é–¢æ•°å
+#define DLLFUNC_STR		"hdlStop"							//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	()									//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	()									//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 //	__declspec(dllexport) void hdlMakeCurrent(HDLDeviceHandle hHandle);
-#define DLLFUNC_RTYPE	void								//	•Ô‚èŒ^
-#define DLLFUNC_CTYPE	HDLAPIENTRY							//	ŒÄ‚Ño‚µŒ^
-#define DLLFUNC_NAME	hdlMakeCurrent						//	ŠÖ”–¼
-#define DLLFUNC_STR		"_hdlMakeCurrent@4"					//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(HDLDeviceHandle hHandle)			//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(hHandle)							//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_RTYPE	void								//	è¿”ã‚Šå‹
+#define DLLFUNC_CTYPE	HDLAPIENTRY							//	å‘¼ã³å‡ºã—å‹
+#define DLLFUNC_NAME	hdlMakeCurrent						//	é–¢æ•°å
+#define DLLFUNC_STR		"_hdlMakeCurrent@4"					//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(HDLDeviceHandle hHandle)			//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(hHandle)							//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 #undef dllLoader
@@ -174,7 +174,7 @@ void calibrateFalcon(){
 	else DSTR << "Calibration failed!! make sure your Falcon is in order." << std::endl;
 }
 bool HINovintFalcon::Init(const void* desc){
-	if (!sDllLoader)  sDllLoader = DBG_NEW UTDllLoader("hdl.dll");	//	ƒOƒ[ƒoƒ‹•Ï”‚Åƒ[ƒ_[‚ğì‚éD
+	if (!sDllLoader)  sDllLoader = DBG_NEW UTDllLoader("hdl.dll");	//	ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã§ãƒ­ãƒ¼ãƒ€ãƒ¼ã‚’ä½œã‚‹ï¼
 	dll = sDllLoader;
 	dll->Load();
 	deviceHandle = hdlInitNamedDevice(NULL, NULL);

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -23,12 +23,12 @@ struct PHIKEndEffectorIf;
 struct PHIKActuatorIf;
 
 struct FWObjectDesc{
-	/// �{�[���̓������Έʒu�ōs���i�e�t���[������̍����łȂ����[���h���W�n�ɑ΂���ϊ����Z�b�g����j
+	/// ボーンの同期を絶対位置で行う（親フレームからの差分でなくワールド座標系に対する変換をセットする）
 	bool bAbsolute;
 
 	enum FWObjectSyncSource {
-		PHYSICS=0,  // Physics�̏�Ԃ�Graphics�����������
-		GRAPHICS    // Graphics�̏�Ԃ�Physics�����������
+		PHYSICS=0,  // Physicsの状態にGraphicsが同期される
+		GRAPHICS    // Graphicsの状態にPhysicsが同期される
 	} syncSource;
 
 	FWObjectDesc() {
@@ -37,64 +37,64 @@ struct FWObjectDesc{
 	}
 };
 
-/** @brief Framework�̃I�u�W�F�N�g
-	���́iPhysics���W���[����PHSolid�j�ƃV�[���O���t�̃t���[���iGraphics���W���[����GRFrame�j��
-	�֘A�t����I�u�W�F�N�g�D
-	����ɂ���ăV�~�����[�V�����ɂ�鍄�̂̈ʒu�̕ω����V�[���O���t�Ɏ����I�ɔ��f�����D
-	Framework�𗘗p����ꍇ��PHSceneIf::CreateSolid��GRSceneIf::CreateFrame�̑����
-	FWSceneIf::CreateObject���g�p����D
+/** @brief Frameworkのオブジェクト
+	剛体（PhysicsモジュールのPHSolid）とシーングラフのフレーム（GraphicsモジュールのGRFrame）を
+	関連付けるオブジェクト．
+	これによってシミュレーションによる剛体の位置の変化がシーングラフに自動的に反映される．
+	Frameworkを利用する場合はPHSceneIf::CreateSolidやGRSceneIf::CreateFrameの代わりに
+	FWSceneIf::CreateObjectを使用する．
  */
 struct FWObjectIf : SceneObjectIf {
 	SPR_IFDEF(FWObject);
 
-	/// PHSolid���擾����
+	/// PHSolidを取得する
 	PHSolidIf* GetPHSolid();
-	/// PHSolid��ݒ肷��
+	/// PHSolidを設定する
 	void SetPHSolid(PHSolidIf* s);
 
-	/// GRFrame���擾����
+	/// GRFrameを取得する
 	GRFrameIf* GetGRFrame();
-	/// GRFrame��ݒ肷��
+	/// GRFrameを設定する
 	void SetGRFrame(GRFrameIf* f);
 
-	/// PHJoint���擾����
+	/// PHJointを取得する
 	PHJointIf* GetPHJoint();
-	/// PHJoint��ݒ肷��
+	/// PHJointを設定する
 	void SetPHJoint(PHJointIf* j);
 
-	/// �Z�b�g���ꂽ�qFrame���擾����
+	/// セットされた子Frameを取得する
 	GRFrameIf* GetChildFrame();
-	/// �qFrame���Z�b�g����i��Frame�ƎqFrame�Ԃ̋������킩��̂�Solid�̑傫���������ݒ�\�ɂȂ�j
+	/// 子Frameをセットする（自Frameと子Frame間の距離がわかるのでSolidの大きさを自動設定可能になる）
 	void SetChildFrame(GRFrameIf* f);
 
-	/// PHSolid,GRFrame�̂�����̈ʒu�ɍ��킹�邩��ݒ肷��
+	/// PHSolid,GRFrameのいずれの位置に合わせるかを設定する
 	void SetSyncSource(FWObjectDesc::FWObjectSyncSource syncSrc);
-	/// PHSolid,GRFrame�̂�����̈ʒu�ɍ��킹�邩���擾����
+	/// PHSolid,GRFrameのいずれの位置に合わせるかを取得する
 	FWObjectDesc::FWObjectSyncSource GetSyncSource();
 
-	/// �{�[�����Έʒu�w��œ������邩��ݒ肷��
+	/// ボーンを絶対位置指定で同期するかを設定する
 	void EnableAbsolute(bool bAbs);
-	/// �{�[�����Έʒu�w��œ������邩���擾����
+	/// ボーンを絶対位置指定で同期するかを取得する
 	bool IsAbsolute();
 
-	/** @brief �O���t�B�N�X�p���b�V�������[�h����w���p�֐�
-		@param filename �t�@�C����
-		@param ii		�t�@�C���^�C�v���w�肷��ꍇ��IfInfo
-		@param frame	���b�V����ۗL����t���[���DNULL���w�肷��ƃ��[�g�t���[�����ۗL����
-		@return ���[�h�ɐ���������true��Ԃ��D���s������false��Ԃ��D
+	/** @brief グラフィクス用メッシュをロードするヘルパ関数
+		@param filename ファイル名
+		@param ii		ファイルタイプを指定する場合のIfInfo
+		@param frame	メッシュを保有するフレーム．NULLを指定するとルートフレームが保有する
+		@return ロードに成功したらtrueを返す．失敗したらfalseを返す．
 
-		���b�V�������[�h���C����FWObject��GRFrame�̉��ɉ�����
+		メッシュをロードし，このFWObjectのGRFrameの下に加える
 	 */
 	bool LoadMesh(const char* filename, const IfInfo* ii = NULL, GRFrameIf* frame = NULL);
 
-	/** @brief �O���t�B�N�X�p���b�V������Փ˔���p���b�V����������������
-		@param frame	�ϊ��Ώۂ̃��b�V����ۗL����GRFrame�DNULL���w�肷��ƃ��[�g�t���[�����ΏۂƂȂ�
-		@param mat		�����l
-		�I�u�W�F�N�g���ێ�����O���t�B�N�X���b�V���̓ʕ�Ƃ��ďՓ˔��胁�b�V���𐶐�����
+	/** @brief グラフィクス用メッシュから衝突判定用メッシュを自動生成する
+		@param frame	変換対象のメッシュを保有するGRFrame．NULLを指定するとルートフレームが対象となる
+		@param mat		物性値
+		オブジェクトが保持するグラフィクスメッシュの凸包として衝突判定メッシュを生成する
 	 */
 	void GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
 
-	/// PHSolid��GRFrame�̓���
+	/// PHSolidとGRFrameの同期
 	void Sync();
 };
 

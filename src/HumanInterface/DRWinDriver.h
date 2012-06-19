@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,7 +17,7 @@
 
 namespace Spr {
 
-///	Windows‚ÌƒfƒoƒCƒXƒhƒ‰ƒCƒo‚ğŠJ‚­ƒNƒ‰ƒX
+///	Windowsã®ãƒ‡ãƒã‚¤ã‚¹ãƒ‰ãƒ©ã‚¤ãƒã‚’é–‹ãã‚¯ãƒ©ã‚¹
 class SPR_DLL DRLoadWindowsDriver{
 protected:
 	UTPath path;
@@ -30,32 +30,32 @@ public:
 	///
 	~DRLoadWindowsDriver();
 
-	///	ƒfƒoƒCƒXƒhƒ‰ƒCƒo‚ÌƒpƒX–¼
+	///	ãƒ‡ãƒã‚¤ã‚¹ãƒ‰ãƒ©ã‚¤ãƒã®ãƒ‘ã‚¹å
 	const char* Path(){ return path.Path().c_str(); }
-	///	ƒfƒoƒCƒXƒhƒ‰ƒCƒo‚ÌƒpƒX–¼‚Ìİ’è
+	///	ãƒ‡ãƒã‚¤ã‚¹ãƒ‰ãƒ©ã‚¤ãƒã®ãƒ‘ã‚¹åã®è¨­å®š
 	void Path(const char* p);
-	///	ƒfƒoƒCƒXƒhƒ‰ƒCƒo–¼
+	///	ãƒ‡ãƒã‚¤ã‚¹ãƒ‰ãƒ©ã‚¤ãƒå
 	const char* Name(){ return drvName.c_str(); }
-	///	ƒtƒ@ƒCƒ‹–¼‚ÅƒfƒoƒCƒXƒhƒ‰ƒCƒo‚ÌƒpƒX–¼‚ğİ’è
+	///	ãƒ•ã‚¡ã‚¤ãƒ«åã§ãƒ‡ãƒã‚¤ã‚¹ãƒ‰ãƒ©ã‚¤ãƒã®ãƒ‘ã‚¹åã‚’è¨­å®š
 	void File(const char* f);
-	///	ƒfƒoƒCƒXƒhƒ‰ƒCƒo‚ÌƒCƒ“ƒXƒg[ƒ‹
+	///	ãƒ‡ãƒã‚¤ã‚¹ãƒ‰ãƒ©ã‚¤ãƒã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«
 	void Install();
-	///	ƒT[ƒrƒX‚ÌŠJn
+	///	ã‚µãƒ¼ãƒ“ã‚¹ã®é–‹å§‹
 	void Start();
-	///	ƒT[ƒrƒX‚Ì’â~
+	///	ã‚µãƒ¼ãƒ“ã‚¹ã®åœæ­¢
 	void Stop();
-	///	ƒfƒoƒCƒXƒhƒ‰ƒCƒo‚Ìíœ
+	///	ãƒ‡ãƒã‚¤ã‚¹ãƒ‰ãƒ©ã‚¤ãƒã®å‰Šé™¤
 	void Remove();
-	///	ŠJ‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	///	é–‹ã„ã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool IsOpen();
-	///	ŠJn‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
+	///	é–‹å§‹ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool IsStart();
 protected:
-	///	Windows ‚Ì local service driver ‚ÉÚ‘±‚·‚éB
+	///	Windows ã® local service driver ã«æ¥ç¶šã™ã‚‹ã€‚
 	void Init();
-	///	Windows ‚Ì local service driver ‚Æ‚ÌÚ‘±‚ğ‰ğœ‚·‚éB
+	///	Windows ã® local service driver ã¨ã®æ¥ç¶šã‚’è§£é™¤ã™ã‚‹ã€‚
 	void Cleanup();
-	///	service ‚ğŠJ‚­B
+	///	service ã‚’é–‹ãã€‚
 	void Open();
 };
 

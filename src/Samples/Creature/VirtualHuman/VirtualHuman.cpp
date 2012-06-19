@@ -1,4 +1,4 @@
-#include "VirtualHuman.h"
+ï»¿#include "VirtualHuman.h"
 
 #include <iostream>
 #include <sstream>
@@ -72,29 +72,29 @@ void VirtualHuman::Reset(int sceneNum){
 }*/
 
 bool VirtualHuman::LoadScene(UTString filename){
-	//filename––’[‚É‰üsƒR[ƒh( = 0x0a)‚ªŠÜ‚Ü‚ê‚Ä‚¢‚é‚Æƒ[ƒh‚³‚ê‚È‚¢‚Ì‚ÅC‚ ‚ê‚ÎÅ‰‚Éíœ‚·‚é
+	//filenameæœ«ç«¯ã«æ”¹è¡Œã‚³ãƒ¼ãƒ‰( = 0x0a)ãŒå«ã¾ã‚Œã¦ã„ã‚‹ã¨ãƒ­ãƒ¼ãƒ‰ã•ã‚Œãªã„ã®ã§ï¼Œã‚ã‚Œã°æœ€åˆã«å‰Šé™¤ã™ã‚‹
 	if(filename.at(filename.length()-1) == 0x0a){
 		filename.erase(filename.length()-1);
 	}
-	//	ƒfƒtƒHƒ‹ƒg‚Ìæ‘cƒIƒuƒWƒFƒNƒg‚ğ‚ğİ’è
-	//	‚±‚ê‚ç‚ÌCreateObject‚ªŒÄ‚Î‚ê‚ÄƒV[ƒ“ƒOƒ‰ƒt‚ªì‚ç‚ê‚éB
+	//	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®å…ˆç¥–ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚’è¨­å®š
+	//	ã“ã‚Œã‚‰ã®CreateObjectãŒå‘¼ã°ã‚Œã¦ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ãŒä½œã‚‰ã‚Œã‚‹ã€‚
 	ObjectIfs objs;
 	objs.Push(GetSdk()->GetGRSdk());	//	GRSdk
 	objs.Push(GetSdk()->GetPHSdk());	//	PHSdk
 	objs.Push(crSdk);					//	CRSdk
-	//	FWSdk	FWScene ‚Í FWSdk‚Ìq‚É‚È‚é‚Ì‚ÅAFWSdk‚ğÅŒã‚ÉPush‚·‚é•K—v‚ª‚ ‚éB
+	//	FWSdk	FWScene ã¯ FWSdkã®å­ã«ãªã‚‹ã®ã§ã€FWSdkã‚’æœ€å¾Œã«Pushã™ã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
 	objs.Push(GetSdk()->Cast());
-	int first = GetSdk()->NScene();	//	ƒ[ƒh‚³‚ê‚éFWScene‚ÌˆÊ’u‚ğŠo‚¦‚Ä‚¨‚­
+	int first = GetSdk()->NScene();	//	ãƒ­ãƒ¼ãƒ‰ã•ã‚Œã‚‹FWSceneã®ä½ç½®ã‚’è¦šãˆã¦ãŠã
 
-	//	ƒtƒ@ƒCƒ‹ƒ[ƒ_[‚Ìì¬
+	//	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ãƒ¼ã®ä½œæˆ
 	UTRef<FIFileXIf> fiFileX = GetSdk()->GetFISdk()->CreateFileX();
-	//	ƒtƒ@ƒCƒ‹‚Ìƒ[ƒh
+	//	ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒ¼ãƒ‰
 	if (! fiFileX->Load(objs, filename.data()) ) {
 		DSTR << "Error: Cannot load file " << filename.c_str() << std::endl;
 		//exit(EXIT_FAILURE);
 		return false;
 	}
-	//	ƒ[ƒh‚µ‚½ƒV[ƒ“‚ğæ“¾
+	//	ãƒ­ãƒ¼ãƒ‰ã—ãŸã‚·ãƒ¼ãƒ³ã‚’å–å¾—
 	DSTR << "Loaded " << GetSdk()->NScene() - first << " scenes." << std::endl;
 	DSTR << "LoadFile Complete." << std::endl;
 	for(int i=first; i<GetSdk()->NScene(); ++i){
@@ -106,7 +106,7 @@ bool VirtualHuman::LoadScene(UTString filename){
 void VirtualHuman::BuildScene(int sceneNum){
 	crSdk = CRSdkIf::CreateSdk();
 
-	// ƒtƒ@ƒCƒ‹‚©‚çƒ[ƒh
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰
 	UTString filename = "mikuScene.x";
 	LoadScene(filename);
 
@@ -139,7 +139,7 @@ void VirtualHuman::BuildScene(int sceneNum){
 	*/
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	// ƒ†[ƒU‚Ìw
+	// ãƒ¦ãƒ¼ã‚¶ã®æŒ‡
 	PHSolidDesc descSolid;
 	CDSphereDesc descSphere;
 	descSolid.dynamical = false;
@@ -149,11 +149,11 @@ void VirtualHuman::BuildScene(int sceneNum){
 	soCursor->AddShape(phSdk->CreateShape(descSphere));
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	// ƒ{ƒfƒB‚Æ“’B‰^“®ƒRƒ“ƒgƒ[ƒ‰
+	// ãƒœãƒ‡ã‚£ã¨åˆ°é”é‹å‹•ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 	if (false) {
 		crSdk->FindObject(creature, "creature1");
 		if (creature) {
-			// ƒ{ƒfƒB
+			// ãƒœãƒ‡ã‚£
 			CRBallHumanBodyGenDesc bodyGenDesc;
 			bodyGen = DBG_NEW CRBallHumanBodyGen(bodyGenDesc);
 			phScene->AddChildObject(bodyGen);
@@ -241,8 +241,8 @@ void VirtualHuman::BuildScene(int sceneNum){
 				body->AddChildObject(cjo);
 			}
 
-			// “’B‰^“®ƒRƒ“ƒgƒ[ƒ‰
-			// xFile‚©‚ç‚Ìƒ[ƒh‚É‘Î‰‚·‚éÀŒ±‚Æ‚µ‚Ä‚ ‚¦‚ÄcsoLeftHand‚ğ’¼Ú‘ã“ü‚¹‚¸‚Ébody‚©‚çæ“¾‚µ‚Ä‚¢‚é
+			// åˆ°é”é‹å‹•ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
+			// xFileã‹ã‚‰ã®ãƒ­ãƒ¼ãƒ‰ã«å¯¾å¿œã™ã‚‹å®Ÿé¨“ã¨ã—ã¦ã‚ãˆã¦csoLeftHandã‚’ç›´æ¥ä»£å…¥ã›ãšã«bodyã‹ã‚‰å–å¾—ã—ã¦ã„ã‚‹
 			creature->FindObject(reachLH, "reachLH");
 			creature->FindObject(reachRH, "reachRH");
 			for (size_t i=0; i<body->NChildObject(); ++i) {
@@ -260,8 +260,8 @@ void VirtualHuman::BuildScene(int sceneNum){
 	}
 
 	{
-		// “’B‰^“®ƒRƒ“ƒgƒ[ƒ‰
-		// xFile‚©‚ç‚Ìƒ[ƒh‚É‘Î‰‚·‚éÀŒ±‚Æ‚µ‚Ä‚ ‚¦‚ÄcsoLeftHand‚ğ’¼Ú‘ã“ü‚¹‚¸‚Ébody‚©‚çæ“¾‚µ‚Ä‚¢‚é
+		// åˆ°é”é‹å‹•ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
+		// xFileã‹ã‚‰ã®ãƒ­ãƒ¼ãƒ‰ã«å¯¾å¿œã™ã‚‹å®Ÿé¨“ã¨ã—ã¦ã‚ãˆã¦csoLeftHandã‚’ç›´æ¥ä»£å…¥ã›ãšã«bodyã‹ã‚‰å–å¾—ã—ã¦ã„ã‚‹
 		crSdk->FindObject(creature, "creature1");
 		creature->FindObject(body, "creature1Body");
 		creature->FindObject(reachLH, "reachLH");
@@ -281,11 +281,11 @@ void VirtualHuman::BuildScene(int sceneNum){
 
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	// Scene‚Ìİ’è
-	/// IK‚Ìİ’è
+	// Sceneã®è¨­å®š
+	/// IKã®è¨­å®š
 	phScene->GetIKEngine()->SetNumIter(10);
 	phScene->GetIKEngine()->Enable(bIK);
-	/// ‚»‚Ì‘¼‚Ìİ’è
+	/// ãã®ä»–ã®è¨­å®š
 	// phScene->SetGravity(gravity);
 	// phScene->SetTimeStep(0.01);
 	phScene->SetNumIteration(15);
@@ -345,17 +345,17 @@ void VirtualHuman::OneStep(){
 }
 
 void VirtualHuman::Display(){
-	// •`‰æ‚Ìİ’è
+	// æç”»ã®è¨­å®š
 	GetSdk()->SetDebugMode(!bGraphic);
 	GRDebugRenderIf* render = window->render->Cast();
 
-	// •`‰æƒ‚[ƒh‚Ìİ’è
+	// æç”»ãƒ¢ãƒ¼ãƒ‰ã®è¨­å®š
 	render->SetRenderMode(true, false);
 	render->EnableRenderAxis(bDebug);
 	render->EnableRenderForce(bDebug);
 	render->EnableRenderContact(bDebug);
 
-	// ƒJƒƒ‰À•W‚Ìw’è
+	// ã‚«ãƒ¡ãƒ©åº§æ¨™ã®æŒ‡å®š
 	GRCameraIf* cam = window->scene->GetGRScene()->GetCamera();
 	if (cam && cam->GetFrame()){
 		cam->GetFrame()->SetTransform(cameraInfo.view);
@@ -363,7 +363,7 @@ void VirtualHuman::Display(){
 		window->render->SetViewMatrix(cameraInfo.view.inv());
 	}
 
-	// •`‰æ‚ÌÀs
+	// æç”»ã®å®Ÿè¡Œ
 	if(!GetCurrentWin()) return;
 	GRRenderIf*curRender =  GetCurrentWin()->GetRender();
 	FWSceneIf* curScene = GetCurrentWin()->GetScene();
@@ -378,7 +378,7 @@ void VirtualHuman::Display(){
 	if (curScene) curScene->Draw(curRender, GetSdk()->GetDebugMode());
 	// if (curScene) curScene->Draw(curRender, bGraphic);
 
-	//	ŒõŒ¹‚Ì’Ç‰Á
+	//	å…‰æºã®è¿½åŠ 
 	GRLightDesc ld;
 	ld.diffuse = Vec4f(1,1,1,1) * 0.8f;
 	ld.specular = Vec4f(1,1,1,1) * 0.8f;
@@ -477,7 +477,7 @@ void VirtualHuman::Keyboard(int key, int x, int y){
 
 			// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 			// 
-			// “Æ©‚ÌƒL[ƒtƒ@ƒ“ƒNƒVƒ‡ƒ“‚Í‚±‚±‚Å’è‹`‚µ‚Ü‚·D
+			// ç‹¬è‡ªã®ã‚­ãƒ¼ãƒ•ã‚¡ãƒ³ã‚¯ã‚·ãƒ§ãƒ³ã¯ã“ã“ã§å®šç¾©ã—ã¾ã™ï¼
 			// 
 			// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 
@@ -560,7 +560,7 @@ void VirtualHuman::MouseMove(int x, int y){
 }
 
 void VirtualHuman::CalcWritheness() {
-	// ¶è‚ÌWritheness
+	// å·¦æ‰‹ã®Writheness
 	PHSolidIf* soChest = bodyGen->GetSolid(CRBallHumanBodyGenDesc::SO_CHEST);
 	PHBallJointDesc dBC; bodyGen->GetJoint(CRBallHumanBodyGenDesc::JO_CHEST_NECK)->GetDesc(&dBC);
 	Vec3d chestPos = soChest->GetPose() * dBC.poseSocket.Pos();
@@ -596,7 +596,7 @@ void VirtualHuman::CalcWritheness() {
 
 	std::cout << wrL;
 
-	// ¶è‚Ì“’B–Ú•W’n“_‚ÌWritheness
+	// å·¦æ‰‹ã®åˆ°é”ç›®æ¨™åœ°ç‚¹ã®Writheness
 	g1 = soCursor->GetPose().Pos();
 	Vec3d rg1 = g1 - waistPos;
 	Vec3d pg1 = rg1 - PTM::dot(trE,rg1)*trE; if (pg1.norm()!=0) { pg1 = pg1.unit(); }
@@ -610,7 +610,7 @@ void VirtualHuman::CalcWritheness() {
 
 	std::cout << std::endl;
 
-	// ¶è‚ÌŒo—R’n“_
+	// å·¦æ‰‹ã®çµŒç”±åœ°ç‚¹
 	if (((wrL > 0.2 && wrLG < -0.2) || (wrL < -0.2 && wrLG > 0.2))) {
 		via1L = soWaist->GetPose() * Vec3d(-0.25,0.2,0);
 	} else {

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -59,11 +59,11 @@ enum GRVertexElementUssage{
     GRVEU_SAMPLE = 13
 };
 
-/**	’¸“_ƒtƒH[ƒ}ƒbƒgDDirectX9‚Ì D3DVERTEXELEMENT ‚ğQÆD
-	GRRender->SetVertexFormat()‚É”z—ñ‚ğ“n‚·D
-	GRRender‚ÍC”z—ñ‚ğŒ©‚ÄC“K“–‚ÈƒVƒF[ƒ_[‚ğİ’è‚·‚éD
-	ƒVƒF[ƒ_[‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚ÍCNULLƒVƒF[ƒ_[‚ğİ’è‚·‚é•`‰æ‚³‚ê‚È‚¢D
-	DrawDirect/DrawIndexed ‚ÍƒVƒF[ƒ_[‚ğg‚Á‚Ä•`‰æ‚·‚éD
+/**	é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆï¼DirectX9ã® D3DVERTEXELEMENT ã‚’å‚ç…§ï¼
+	GRRender->SetVertexFormat()ã«é…åˆ—ã‚’æ¸¡ã™ï¼
+	GRRenderã¯ï¼Œé…åˆ—ã‚’è¦‹ã¦ï¼Œé©å½“ãªã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’è¨­å®šã™ã‚‹ï¼
+	ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ãŒè¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã¯ï¼ŒNULLã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’è¨­å®šã™ã‚‹ï¼æç”»ã•ã‚Œãªã„ï¼
+	DrawDirect/DrawIndexed ã¯ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ä½¿ã£ã¦æç”»ã™ã‚‹ï¼
 */
 struct GRVertexElement {
     short stream;
@@ -93,7 +93,7 @@ struct GRVertexElement {
 	static GRVertexElement MatrixIndices4f(size_t o){ return BlendNf(o,4); }
 	static GRVertexElement NumBones4f(size_t o){ return BlendNf(o,4); }
 
-	///	@name “TŒ^“I‚È’¸“_ƒtƒH[ƒ}ƒbƒgDƒVƒF[ƒ_[‚ğw’è‚¹‚¸ƒŒƒ“ƒ_ƒŠƒ“ƒO‚Å‚«‚éD
+	///	@name å…¸å‹çš„ãªé ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆï¼ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’æŒ‡å®šã›ãšãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã§ãã‚‹ï¼
 	//@{
 	static const GRVertexElement vfP2f[];
 	static const GRVertexElement vfP3f[];
@@ -109,7 +109,7 @@ struct GRVertexElement {
 	static const GRVertexElement* typicalFormats[];
 	//@}
 	
-	/// @name ƒuƒŒƒ“ƒh•t‚«’¸“_ƒtƒH[ƒ}ƒbƒgDVertexBlendingƒVƒF[ƒ_[‘Î‰D
+	/// @name ãƒ–ãƒ¬ãƒ³ãƒ‰ä»˜ãé ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆï¼VertexBlendingã‚·ã‚§ãƒ¼ãƒ€ãƒ¼å¯¾å¿œï¼
 	//@{	
 	static const GRVertexElement vfP3fB4f[];				
 	static const GRVertexElement vfC4bP3fB4f[];			
@@ -123,7 +123,7 @@ struct GRVertexElement {
 	static const GRVertexElement* typicalBlendFormats[];	
 	//@}
 	
-	/// @name “TŒ^“I‚È’¸“_ƒtƒH[ƒ}ƒbƒg‚É‘Î‚·‚éƒf[ƒ^\‘¢
+	/// @name å…¸å‹çš„ãªé ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã«å¯¾ã™ã‚‹ãƒ‡ãƒ¼ã‚¿æ§‹é€ 
 	//@{
 	struct VFP2f{
 		Vec2f p;
@@ -247,16 +247,16 @@ struct GRVertexElement {
 };
 bool CompareVertexFormat(const GRVertexElement* e1, const GRVertexElement* e2);
 
-/**	ƒCƒ“ƒ^[ƒŠ[ƒu‚³‚ê‚Ä‚¢‚È‚¢’¸“_ƒoƒbƒtƒ@‚Ìw’è
+/**	ã‚¤ãƒ³ã‚¿ãƒ¼ãƒªãƒ¼ãƒ–ã•ã‚Œã¦ã„ãªã„é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã®æŒ‡å®š
 <pre>
 	Vec3f pos[20]; Vec3f normal[20]; unsigned color[20];
 </pre>
-‚Ì‚æ‚¤‚Èƒoƒbƒtƒ@‚ğw’è‚·‚é‚Æ‚«‚Ég‚¤D
-”z—ñ‚Ğ‚Æ‚Â‚É1‚Â‚ÌGRVertexArray‚ª‘Î‰‚·‚éD
+ã®ã‚ˆã†ãªãƒãƒƒãƒ•ã‚¡ã‚’æŒ‡å®šã™ã‚‹ã¨ãã«ä½¿ã†ï¼
+é…åˆ—ã²ã¨ã¤ã«1ã¤ã®GRVertexArrayãŒå¯¾å¿œã™ã‚‹ï¼
 */
 struct GRVertexArray {
-	GRVertexElement format;	///<	ƒtƒH[ƒ}ƒbƒg
-	void* buffer;			///<	”z—ñ‚ÌƒAƒhƒŒƒX
+	GRVertexElement format;	///<	ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
+	void* buffer;			///<	é…åˆ—ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
 };
 	
 }

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -23,14 +23,14 @@ bool DRContecIsaDa::Init(){
 	WBGetPortIO();
 
 	if (address == 0) return false;
-	_outp(address+0x2,0x01);					//	range set mode ‚É‚·‚é
+	_outp(address+0x2,0x01);					//	range set mode ã«ã™ã‚‹
 	_outp(address+0x0,0x00);					//	channel 0 to 3
-	_outp(address+0x1,0x00);					//	range data set 0`10[V]
+	_outp(address+0x1,0x00);					//	range data set 0ï½10[V]
 	int in = _inp(address+0x1);
 	if (in == 0xFF) return false;
 	_outp(address+0x0,0x04);					//	channel 4 to 7
-	_outp(address+0x1,0x00);					//	range data set 0`10[V]
-	_outp(address+0x2,0x00);					//	’Êíƒ‚[ƒh
+	_outp(address+0x1,0x00);					//	range data set 0ï½10[V]
+	_outp(address+0x2,0x00);					//	é€šå¸¸ãƒ¢ãƒ¼ãƒ‰
 	
 	for(int i=0; i<8; i++){
 		AddChildObject((new Da(this, i))->Cast());
@@ -50,9 +50,9 @@ void DRContecIsaDa::Voltage(int ch, float volt){
 	Digit(ch, value);
 }
 void DRContecIsaDa::Digit(int ch, int value){
-	//	Å‘å’lÅ¬’l‚Ì”ÍˆÍ‚ğ’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é
+	//	æœ€å¤§å€¤æœ€å°å€¤ã®ç¯„å›²ã‚’è¶…ãˆãªã„ã‚ˆã†ã«ã™ã‚‹
 	if (0xFFF < value) value = 0xFFF;
-	//	o—Í
+	//	å‡ºåŠ›
 	_outp(address+0x0,(unsigned char)(ch + ((value << 4) & 0x0f0) ));
 														//	OUTPUT DATA (LOW)
 	_outp(address+0x1,(unsigned char)(value >> 4));		//	            (HIGH)

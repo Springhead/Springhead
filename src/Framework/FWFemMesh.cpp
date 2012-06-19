@@ -1,4 +1,4 @@
-#include "Framework.h"
+ï»¿#include "Framework.h"
 #include <Framework/SprFWFemMesh.h>
 #include <Graphics/GRFrame.h>
 #include <Graphics/GRMesh.h>
@@ -37,7 +37,7 @@ void FWFemMesh::DrawIHBorder(double xs, double xe){
 	//Vec2d VtxX = phMesh->;
 
 	//xs:0.095,xe=0.1
-	//	’l‚ğ’¼‘Å‚¿
+	//	å€¤ã‚’ç›´æ‰“ã¡
 	Vec3d xS = Vec3d(xs, 0.0, 0.0);
 	Vec3d xE = Vec3d(xe, 0.0, 0.0);
 	Vec3d wS = this->GetGRFrame()->GetWorldTransform() * xS;
@@ -68,7 +68,7 @@ void FWFemMesh::DrawIHBorderXZPlane(){
 
 }
 void FWFemMesh::DrawFaceEdge(){
-	//	g—p—á
+	//	ä½¿ç”¨ä¾‹
 	//	phMesh->GetFaceEdgeVtx(0,1);
 	for(unsigned i =0; i < phMesh->GetNFace();i++){
 		for(unsigned j =0;j < 3;j++){
@@ -84,7 +84,7 @@ void FWFemMesh::DrawFaceEdge(){
 			posz = wpos.z;
 			glVertex3d(wpos.x,wpos.y,wpos.z);
 			glEnd();
-			//glFlush();	//‚½‚¾‚¿‚ÉÀs
+			//glFlush();	//ãŸã ã¡ã«å®Ÿè¡Œ
 		}
 	}
 
@@ -100,8 +100,8 @@ void FWFemMesh::DrawFaceEdge(){
 void FWFemMesh::DrawEdge(Vec3d vtx0, Vec3d vtx1){
 	Vec3d pos0 = vtx0;
 	Vec3d pos1 = vtx1;
-	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * pos0; //* ƒ[ƒJƒ‹À•W‚ğ ¢ŠEÀ•W‚Ö‚Ì•ÏŠ·‚µ‚Ä‘ã“ü
-	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * pos1; //* ƒ[ƒJƒ‹À•W‚ğ ¢ŠEÀ•W‚Ö‚Ì•ÏŠ·‚µ‚Ä‘ã“ü
+	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * pos0; //* ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã‚’ ä¸–ç•Œåº§æ¨™ã¸ã®å¤‰æ›ã—ã¦ä»£å…¥
+	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * pos1; //* ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã‚’ ä¸–ç•Œåº§æ¨™ã¸ã®å¤‰æ›ã—ã¦ä»£å…¥
 	glColor3d(1.0,0.0,0.0);
 	glBegin(GL_LINES);
 		glVertex3f(wpos0[0],wpos0[1],wpos0[2]);
@@ -113,8 +113,8 @@ void FWFemMesh::DrawEdge(Vec3d vtx0, Vec3d vtx1){
 void FWFemMesh::DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1){
 	Vec3d pos0 = Vec3f(x0,y0,z0);
 	Vec3d pos1 = Vec3f(x1,y1,z1);
-	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * pos0; //* ƒ[ƒJƒ‹À•W‚ğ ¢ŠEÀ•W‚Ö‚Ì•ÏŠ·‚µ‚Ä‘ã“ü
-	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * pos1; //* ƒ[ƒJƒ‹À•W‚ğ ¢ŠEÀ•W‚Ö‚Ì•ÏŠ·‚µ‚Ä‘ã“ü
+	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * pos0; //* ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã‚’ ä¸–ç•Œåº§æ¨™ã¸ã®å¤‰æ›ã—ã¦ä»£å…¥
+	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * pos1; //* ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã‚’ ä¸–ç•Œåº§æ¨™ã¸ã®å¤‰æ›ã—ã¦ä»£å…¥
 	glColor3d(1.0,0.0,0.0);
 	glBegin(GL_LINES);
 		glVertex3f(wpos0[0],wpos0[1],wpos0[2]);
@@ -125,7 +125,7 @@ void FWFemMesh::DrawEdge(float x0, float y0, float z0, float x1, float y1, float
 
 void FWFemMesh::DrawVtxLine(float length, float x, float y, float z){
 	Vec3d pos = Vec3f(x,y,z);
-	Vec3d wpos = this->GetGRFrame()->GetWorldTransform() * pos; //* ƒ[ƒJƒ‹À•W‚ğ ¢ŠEÀ•W‚Ö‚Ì•ÏŠ·‚µ‚Ä‘ã“ü
+	Vec3d wpos = this->GetGRFrame()->GetWorldTransform() * pos; //* ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã‚’ ä¸–ç•Œåº§æ¨™ã¸ã®å¤‰æ›ã—ã¦ä»£å…¥
 	glColor3d(1.0,0.0,0.0);
 	glBegin(GL_LINES);
 		glVertex3f(wpos.x,wpos.y,wpos.z);
@@ -137,44 +137,44 @@ void FWFemMesh::DrawVtxLine(float length, float x, float y, float z){
 
 
 void FWFemMesh::Sync(bool ph2gr){	
-	//	ƒeƒXƒg—p
+	//	ãƒ†ã‚¹ãƒˆç”¨
 	//static double value, delta;
 	//if (value <= 0) delta = 0.01;
 	//if (value >= 1) delta = -0.01;
 	//value += delta;
 
-	//	ƒfƒoƒbƒO—p
-	// face•Ó‚ğ•`‰æ
+	//	ãƒ‡ãƒãƒƒã‚°ç”¨
+	// faceè¾ºã‚’æç”»
 	DrawFaceEdge();
-	//	XZ•½–Ê‚ğ•`‰æ
+	//	XZå¹³é¢ã‚’æç”»
 	DrawIHBorderXZPlane();
-	//	IH‰Á”M—Ìˆæ‚Ì‹«ŠEü‚ğˆø‚­
+	//	IHåŠ ç†±é ˜åŸŸã®å¢ƒç•Œç·šã‚’å¼•ã
 	DrawIHBorder(0.095,0.1);
 
 
-	///	ƒeƒNƒXƒ`ƒƒ‚Æ‰·“xA…•ª—Ê‚Æ‚Ì‘Î‰•\‚ÍASamples/Physics/FEMThermo/ƒeƒNƒXƒ`ƒƒ‚ÌF‚Æ‰·“x‚Ì‘Î‰.xls	‚ğQÆ‚Ì‚±‚Æ
+	///	ãƒ†ã‚¯ã‚¹ãƒãƒ£ã¨æ¸©åº¦ã€æ°´åˆ†é‡ã¨ã®å¯¾å¿œè¡¨ã¯ã€Samples/Physics/FEMThermo/ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è‰²ã¨æ¸©åº¦ã®å¯¾å¿œ.xls	ã‚’å‚ç…§ã®ã“ã¨
 	//negitest
-	//Å‚°ƒeƒNƒXƒ`ƒƒ‚Ì–‡”
+	//ç„¦ã’ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°
 	unsigned kogetex	= 5;
-	//ƒT[ƒ‚ƒeƒNƒXƒ`ƒƒ‚Ì–‡”
+	//ã‚µãƒ¼ãƒ¢ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°
 	unsigned thtex		= 6;
-	//…•ªƒeƒNƒXƒ`ƒƒ‚Ì–‡”
+	//æ°´åˆ†ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æšæ•°
 	unsigned watex		= 2;
 	
-	double dtex =(double) 1.0 / ( kogetex + thtex + watex);		//	ƒeƒNƒXƒ`ƒƒ‰œsÀ•W‚Ì‘wŠÔŠu
-	double texstart = dtex /2.0;								//	ƒeƒNƒXƒ`ƒƒÀ•W‚Ì‰Šú’l = Å‚°ƒeƒNƒXƒ`ƒƒ‚ÌƒXƒ^[ƒgÀ•W
-	double wastart = texstart + kogetex * dtex ;				//	…•ª—Ê•\¦ƒeƒNƒXƒ`ƒƒ‚ÌƒXƒ^[ƒgÀ•W
-	double thstart = texstart + kogetex * dtex + 1.0 * dtex ;	//	ƒT[ƒ‚‚ÌƒeƒNƒXƒ`ƒƒ‚ÌƒXƒ^[ƒgÀ•W …•ªƒeƒNƒXƒ`ƒƒ‚Ì2–‡–Ú‚©‚çƒXƒ^[ƒg
+	double dtex =(double) 1.0 / ( kogetex + thtex + watex);		//	ãƒ†ã‚¯ã‚¹ãƒãƒ£å¥¥è¡Œåº§æ¨™ã®å±¤é–“éš”
+	double texstart = dtex /2.0;								//	ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã®åˆæœŸå€¤ = ç„¦ã’ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¹ã‚¿ãƒ¼ãƒˆåº§æ¨™
+	double wastart = texstart + kogetex * dtex ;				//	æ°´åˆ†é‡è¡¨ç¤ºãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¹ã‚¿ãƒ¼ãƒˆåº§æ¨™
+	double thstart = texstart + kogetex * dtex + 1.0 * dtex ;	//	ã‚µãƒ¼ãƒ¢ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ã‚¹ã‚¿ãƒ¼ãƒˆåº§æ¨™ æ°´åˆ†ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®2æšç›®ã‹ã‚‰ã‚¹ã‚¿ãƒ¼ãƒˆ
 	
 
-	//	50“x‚İ:ƒeƒNƒXƒ`ƒƒ‚Ì[‚³ŒvZ(0~50)	( vertices.temp - 50.0 ) * dtex / 50.0
-	//	50“x‚İ:ƒeƒNƒXƒ`ƒƒ‚Ì[‚³ŒvZ(50~100)	( vertices.temp - 100.0 ) * dtex / 50.0
-	//	50“x‚İ:ƒeƒNƒXƒ`ƒƒ‚Ì[‚³ŒvZ(100~150)	( vertices.temp - 150.0 ) * dtex / 50.0
-	//	‚±‚ê‚ğ–‚½‚·‚æ‚¤‚ÉA50,100,150“x‚È‚Ç‚ğ•Ï”‚É‚µ‚Ä‚à‚æ‚¢B‚ªA‘¼‚É—¬—p‚µ‚È‚¢‚µAˆê–Ú‚Å‚í‚©‚è‚â‚·‚¢‚Ì‚ÅA‚±‚Ì‚Ü‚Ü‚Å‚¢‚¢‚©‚àB
-	//	50“x‚İ‚²‚Æ‚Édtex‚ğ‰ÁZ‚¹‚¸‚ÉAgvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;‚¾‚¯‚Å‚â‚é‚Ì‚àè
+	//	50åº¦åˆ»ã¿:ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ·±ã•è¨ˆç®—(0~50)	( vertices.temp - 50.0 ) * dtex / 50.0
+	//	50åº¦åˆ»ã¿:ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ·±ã•è¨ˆç®—(50~100)	( vertices.temp - 100.0 ) * dtex / 50.0
+	//	50åº¦åˆ»ã¿:ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®æ·±ã•è¨ˆç®—(100~150)	( vertices.temp - 150.0 ) * dtex / 50.0
+	//	ã“ã‚Œã‚’æº€ãŸã™ã‚ˆã†ã«ã€50,100,150åº¦ãªã©ã‚’å¤‰æ•°ã«ã—ã¦ã‚‚ã‚ˆã„ã€‚ãŒã€ä»–ã«æµç”¨ã—ãªã„ã—ã€ä¸€ç›®ã§ã‚ã‹ã‚Šã‚„ã™ã„ã®ã§ã€ã“ã®ã¾ã¾ã§ã„ã„ã‹ã‚‚ã€‚
+	//	50åº¦åˆ»ã¿ã”ã¨ã«dtexã‚’åŠ ç®—ã›ãšã«ã€gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;ã ã‘ã§ã‚„ã‚‹ã®ã‚‚æ‰‹
 
-	//	“¯Šúˆ—
-	FWObject::Sync(); // ph2gr‚Í”p~‚µ‚Ü‚µ‚½BsyncSource==FWObjectDesc::PHYSICS ‚ğg‚Á‚Ä‰º‚³‚¢ (mitake) <!!>
+	//	åŒæœŸå‡¦ç†
+	FWObject::Sync(); // ph2grã¯å»ƒæ­¢ã—ã¾ã—ãŸã€‚syncSource==FWObjectDesc::PHYSICS ã‚’ä½¿ã£ã¦ä¸‹ã•ã„ (mitake) <!!>
 	if (ph2gr && grMesh->IsTex3D()){
 		float* gvtx = grMesh->GetVertexBuffer();
 		if (gvtx){
@@ -182,33 +182,33 @@ void FWFemMesh::Sync(bool ph2gr){
 			int stride = grMesh->GetStride();
 			for(unsigned gv=0; gv<vertexIdMap.size(); ++gv){
 				int pv = vertexIdMap[gv];
-				//	PH‚©‚ç‰½‚ç‚©‚Ì•¨——Ê‚ğæ‚Á‚Ä‚­‚é
-						//ph‚©‚çß“_‚Ì‰·“x‚ğæ‚Á‚Ä‚­‚é
-				//PHFemMeshThermo‚ÌŠeß“_‚Ì‰·“x‚ğæ‚Á‚Ä‚­‚éB
-				//‰·“x‚Ì’l‚É‰‚¶‚ÄAª‚ÌŒW”‚ğ—p‚¢‚ÄAƒeƒNƒXƒ`ƒƒÀ•W‚ğŒvZ‚·‚é
-				//	value = phMesh‚Ì”h¶ƒNƒ‰ƒX->thermo[pv];
-				//	GR‚ÌƒeƒNƒXƒ`ƒƒÀ•W‚Æ‚µ‚Äİ’è‚·‚éB	s t r q ‚Ì r‚ğİ’è
-				//gvtx[stride*gv + tex + 2] = value + gvtx[stride*gv];	//	gvtx[stride*gv]‚ÅêŠ‚É‚æ‚Á‚Äˆá‚¤[“x‚ğE‚Á‚Ä‚­‚é‚±‚Æ‚É
+				//	PHã‹ã‚‰ä½•ã‚‰ã‹ã®ç‰©ç†é‡ã‚’å–ã£ã¦ãã‚‹
+						//phã‹ã‚‰ç¯€ç‚¹ã®æ¸©åº¦ã‚’å–ã£ã¦ãã‚‹
+				//PHFemMeshThermoã®å„ç¯€ç‚¹ã®æ¸©åº¦ã‚’å–ã£ã¦ãã‚‹ã€‚
+				//æ¸©åº¦ã®å€¤ã«å¿œã˜ã¦ã€â†‘ã®ä¿‚æ•°ã‚’ç”¨ã„ã¦ã€ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’è¨ˆç®—ã™ã‚‹
+				//	value = phMeshã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹->thermo[pv];
+				//	GRã®ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã¨ã—ã¦è¨­å®šã™ã‚‹ã€‚	s t r q ã® rã‚’è¨­å®š
+				//gvtx[stride*gv + tex + 2] = value + gvtx[stride*gv];	//	gvtx[stride*gv]ã§å ´æ‰€ã«ã‚ˆã£ã¦é•ã†æ·±åº¦ã‚’æ‹¾ã£ã¦ãã‚‹ã“ã¨ã«
 				//gvtx[stride*gv + tex + 2] = 0.1 + value;
 				////gvtx[stride*gv + tex + 2] = thstart;
 //				gvtx[stride*gv + tex + 2] = thstart;
 
-				//	‚Ç‚ÌƒeƒNƒXƒ`ƒƒ‚É‚·‚é‚©‚ÌğŒ•ªŠò‚ğì‚é
-				//	’¼‘O‚ÌƒeƒNƒXƒ`ƒƒÀ•W‚ğ•Û‘¶‚µ‚Ä‚¨‚­B‚È‚¯‚ê‚ÎA‰Šú’l‚ğİ’è
-				//	ƒeƒNƒXƒ`ƒƒ‚Ì•\¦ƒ‚[ƒh‚ğØ‚è‘Ö‚¦‚éSW‚ğƒL[ƒ{[ƒh‚©‚çØ‚è‘Ö‚¦ËSampleApp.h‚ÌAddHotkeyAAddActionü‚è‚ğ‚¢‚¶‚é
+				//	ã©ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ã«ã™ã‚‹ã‹ã®æ¡ä»¶åˆ†å²ã‚’ä½œã‚‹
+				//	ç›´å‰ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’ä¿å­˜ã—ã¦ãŠãã€‚ãªã‘ã‚Œã°ã€åˆæœŸå€¤ã‚’è¨­å®š
+				//	ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®è¡¨ç¤ºãƒ¢ãƒ¼ãƒ‰ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹SWã‚’ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã‹ã‚‰åˆ‡ã‚Šæ›¿ãˆâ‡’SampleApp.hã®AddHotkeyã€AddActionå‘¨ã‚Šã‚’ã„ã˜ã‚‹
 				
-				//	CADThermo‚ÌŠY“–•”•ª‚Ìƒ\[ƒX
+				//	CADThermoã®è©²å½“éƒ¨åˆ†ã®ã‚½ãƒ¼ã‚¹
 				//if(tvtxs[j].temp <= tvtxs[j].temp5){		//tvtxs[j].wmass > wmass * ratio1
 				//	texz	= texbegin;
-				//	double texznew =diff * grad + texz;//À¿,ƒeƒNƒXƒ`ƒƒÀ•W‚Ì‰Šú’l
-				//	////‘O‚ÌƒeƒNƒXƒ`ƒƒ‚šÀ•W‚æ‚è‚à¡‰ñ‚ÌŒvZ’l‚ª[‚©‚Á‚½‚çA‚±‚ÌŒvZŒ‹‰Ê‚ğ”½‰f‚³‚¹‚é
-				//	if(tvtxs[j].tex1memo <= texznew){			//‰‚ß‚Í‚±‚ÌğŒ‚ª‚È‚­‚Ä‚à‚¢‚¢‚¯‚ê‚ÇAˆê“x‰·“x‚ªã‚ª‚Á‚ÄA—â‚ß‚Ä‚©‚ç‚Í•K—v‚É‚È‚é
-				//		tvtxs[j].SetTexZ(tratio * dl + texz);	//ƒeƒNƒXƒ`ƒƒ‚ÌZÀ•W‚ğŒˆ’è‚·‚éB//•\¦ƒeƒNƒXƒ`ƒƒ‚Í‚»‚ÌüŒ`˜a‚ğ•\¦‚³‚¹‚é‚Ì‚ÅAZÀ•W‚àüŒ`˜a‚Å•\¦‚·‚é‚Ì‚ÅAüŒ`˜a‚ÌŒvZ‚ğg—p
-				//		tvtxs[j].tex1memo = tratio * dl + texz;	//tex1memo‚ğXV‚·‚é
+				//	double texznew =diff * grad + texz;//å®Ÿè³ª,ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã®åˆæœŸå€¤
+				//	////å‰ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ï½šåº§æ¨™ã‚ˆã‚Šã‚‚ä»Šå›ã®è¨ˆç®—å€¤ãŒæ·±ã‹ã£ãŸã‚‰ã€ã“ã®è¨ˆç®—çµæœã‚’åæ˜ ã•ã›ã‚‹
+				//	if(tvtxs[j].tex1memo <= texznew){			//åˆã‚ã¯ã“ã®æ¡ä»¶ãŒãªãã¦ã‚‚ã„ã„ã‘ã‚Œã©ã€ä¸€åº¦æ¸©åº¦ãŒä¸ŠãŒã£ã¦ã€å†·ã‚ã¦ã‹ã‚‰ã¯å¿…è¦ã«ãªã‚‹
+				//		tvtxs[j].SetTexZ(tratio * dl + texz);	//ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®Zåº§æ¨™ã‚’æ±ºå®šã™ã‚‹ã€‚//è¡¨ç¤ºãƒ†ã‚¯ã‚¹ãƒãƒ£ã¯ãã®ç·šå½¢å’Œã‚’è¡¨ç¤ºã•ã›ã‚‹ã®ã§ã€Zåº§æ¨™ã‚‚ç·šå½¢å’Œã§è¡¨ç¤ºã™ã‚‹ã®ã§ã€ç·šå½¢å’Œã®è¨ˆç®—ã‚’ä½¿ç”¨
+				//		tvtxs[j].tex1memo = tratio * dl + texz;	//tex1memoã‚’æ›´æ–°ã™ã‚‹
 				//	}
 				//}
 
-				//ƒT[ƒ‚‚ª”ñƒeƒNƒXƒ`ƒƒ‰»‚³‚ê‚½ê‡AƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒh‚Í•s—v‚É‚È‚é‚Ì‚ÅAˆÈ‰º‚ÌƒR[ƒh‚ğ•ÏX
+				//ã‚µãƒ¼ãƒ¢ãŒéãƒ†ã‚¯ã‚¹ãƒãƒ£åŒ–ã•ã‚ŒãŸå ´åˆã€ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰ã¯ä¸è¦ã«ãªã‚‹ã®ã§ã€ä»¥ä¸‹ã®ã‚³ãƒ¼ãƒ‰ã‚’å¤‰æ›´
 				double temp = phMesh->vertices[pv].temp;
 				// -50.0~0.0:aqua to blue
 				if(temp <= -50.0){
@@ -242,7 +242,7 @@ void FWFemMesh::Sync(bool ph2gr){
 				///	250~:only purple
 				else if(250.0 < temp){
 					gvtx[stride*gv + tex + 2] = dtex * 6.0 + thstart;
-					//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	‚Ü‚¾‚ç‚É‚È‚Á‚¿‚á‚¤
+					//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	ã¾ã ã‚‰ã«ãªã£ã¡ã‚ƒã†
 				}
 			}
 		}	
@@ -293,27 +293,27 @@ void FWFemMesh::Loaded(UTLoadContext*){
 	}
 }
 bool FWFemMesh::CreatePHFromGR(){
-	//	ŒÄ‚Ño‚³‚ê‚½“_‚Å grMesh ‚ÉƒOƒ‰ƒtƒBƒNƒX‚ÌƒƒbƒVƒ…‚ª“ü‚Á‚Ä‚¢‚é
-	//	grMesh‚ğ•ÏŠ·‚µ‚ÄAphMesh‚ğ‚Â‚­‚éB
+	//	å‘¼ã³å‡ºã•ã‚ŒãŸæ™‚ç‚¹ã§ grMesh ã«ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹ã®ãƒ¡ãƒƒã‚·ãƒ¥ãŒå…¥ã£ã¦ã„ã‚‹
+	//	grMeshã‚’å¤‰æ›ã—ã¦ã€phMeshã‚’ã¤ãã‚‹ã€‚
 
-	//	ˆÈ‰º‚ÅAgrMesh‚©‚çtetgen‚ğŒÄ‚Ño‚µ‚Ä•ÏŠ·‚µ‚ÄApmd‚É’l‚ğ“ü‚ê‚Ä‚¢‚¯‚Î—Ç‚¢B
+	//	ä»¥ä¸‹ã§ã€grMeshã‹ã‚‰tetgenã‚’å‘¼ã³å‡ºã—ã¦å¤‰æ›ã—ã¦ã€pmdã«å€¤ã‚’å…¥ã‚Œã¦ã„ã‘ã°è‰¯ã„ã€‚
 	PHFemMeshThermoDesc pmd;
 	
-	//TetGen‚Ål–Ê‘ÌƒƒbƒVƒ…‰»
+	//TetGenã§å››é¢ä½“ãƒ¡ãƒƒã‚·ãƒ¥åŒ–
 	Vec3d* vtxsOut=NULL;
 	int* tetsOut=NULL;
 	int nVtxsOut=0, nTetsOut=0;
 	std::vector<Vec3d> vtxsIn;
 	for(unsigned i=0; i<grMesh->vertices.size(); ++i) vtxsIn.push_back(grMesh->vertices[i]);
-	// swithes q+(”¼Œa/Å’Z•Ó) (e.g. = q1.0~2.0) a Å‘å‚Ì‘ÌÏ 
+	// swithes q+(åŠå¾„/æœ€çŸ­è¾º) (e.g. = q1.0~2.0) a æœ€å¤§ã®ä½“ç© 
 	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, grMesh->vertices.size(), &vtxsIn[0], grMesh->faces.size(), &grMesh->faces[0], "pq2.1a0.002");//a0.3 //a0.003 
 	
-	//	PHMesh—p‚ÌƒfƒBƒXƒNƒŠƒvƒ^pmd‚É’l‚ğ“ü‚ê‚Ä‚¢‚­
+	//	PHMeshç”¨ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿pmdã«å€¤ã‚’å…¥ã‚Œã¦ã„ã
 	for(int i=0; i < nVtxsOut; i++){
 		pmd.vertices.push_back(vtxsOut[i]);
 	} 
 	pmd.tets.assign(tetsOut, tetsOut + nTetsOut*4);
-	//	PHMesh‚Ì¶¬
+	//	PHMeshã®ç”Ÿæˆ
 	phMesh = DBG_NEW PHFemMeshThermo(pmd);
 	if (GetPHSolid() && GetPHSolid()->GetScene())
 		GetPHSolid()->GetScene()->AddChildObject(phMesh->Cast());
@@ -330,17 +330,17 @@ struct FaceMap{
 };
 
 void FWFemMesh::CreateGRFromPH(){
-	//	’¸“_‚Ì‘Î‰•\‚ğ—pˆÓ
+	//	é ‚ç‚¹ã®å¯¾å¿œè¡¨ã‚’ç”¨æ„
 	std::vector<int> vtxMap;
 	vtxMap.resize(phMesh->vertices.size(), -1);
 	for(unsigned i=0; i<phMesh->surfaceVertices.size(); ++i){
 		vtxMap[phMesh->surfaceVertices[i]] = i;
 	}
-	GRMeshDesc gmd;	//	V‚µ‚¢GRMesh‚ÌƒfƒXƒNƒŠƒvƒ^
-	//	•\–Ê‚Ì’¸“_‚ğİ’è
+	GRMeshDesc gmd;	//	æ–°ã—ã„GRMeshã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+	//	è¡¨é¢ã®é ‚ç‚¹ã‚’è¨­å®š
 	for(unsigned i=0; i< phMesh->surfaceVertices.size(); ++i) 
 		gmd.vertices.push_back(phMesh->vertices[ phMesh->surfaceVertices[i] ].pos);
-	//	•\–Ê‚ÌOŠpŒ`‚ğİ’è
+	//	è¡¨é¢ã®ä¸‰è§’å½¢ã‚’è¨­å®š
 	for(unsigned i=0; i< phMesh->nSurfaceFace; ++i) {
 		GRMeshFace f;
 		f.nVertices = 3;
@@ -349,8 +349,8 @@ void FWFemMesh::CreateGRFromPH(){
 		}
 		gmd.faces.push_back(f);
 	}
-	//	phMesh‚ÌOŠpŒ`‚ÆgrMesh‚ÌOŠpŒ`‚Ì‘Î‰•\‚ğ‚Â‚­‚é	d‚È‚Á‚Ä‚¢‚é–ÊÏ‚ªÅ‘å‚Ì‚à‚Ì‚ª‘Î‰‚·‚é–Ê
-	//	‚Ü‚¸A–@ü‚ª‹ß‚¢‚à‚Ì‚ğ’T‚µA–Ê1‚Æ–Ê2ã‚Ì’¸“_‚Ì‹——£‚ª‹ß‚¢‚à‚Ì‚ÉŒÀ‚èAd‚È‚Á‚Ä‚¢‚é–ÊÏ‚ğ‹‚ß‚éB
+	//	phMeshã®ä¸‰è§’å½¢ã¨grMeshã®ä¸‰è§’å½¢ã®å¯¾å¿œè¡¨ã‚’ã¤ãã‚‹	é‡ãªã£ã¦ã„ã‚‹é¢ç©ãŒæœ€å¤§ã®ã‚‚ã®ãŒå¯¾å¿œã™ã‚‹é¢
+	//	ã¾ãšã€æ³•ç·šãŒè¿‘ã„ã‚‚ã®ã‚’æ¢ã—ã€é¢1ã¨é¢2ä¸Šã®é ‚ç‚¹ã®è·é›¢ãŒè¿‘ã„ã‚‚ã®ã«é™ã‚Šã€é‡ãªã£ã¦ã„ã‚‹é¢ç©ã‚’æ±‚ã‚ã‚‹ã€‚
 	std::vector<Vec3f> pnormals(gmd.faces.size());
 	for(unsigned pf=0; pf<gmd.faces.size(); ++pf){
 		assert(gmd.faces[pf].nVertices == 3);
@@ -372,19 +372,19 @@ void FWFemMesh::CreateGRFromPH(){
 	}
 	std::vector< FaceMap > pFaceMap(pnormals.size());
 	for(unsigned pf=0; pf<pnormals.size(); ++pf){
-		//	•¨—‚Ì•½–Ê(pf)‚Æ“¯ˆê•½–Ê‚ÉÚ‚Á‚Ä‚¢‚éƒOƒ‰ƒtƒBƒNƒX‚Ì•½–Ê‚ğ—ñ‹“
+		//	ç‰©ç†ã®å¹³é¢(pf)ã¨åŒä¸€å¹³é¢ã«è¼‰ã£ã¦ã„ã‚‹ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹ã®å¹³é¢ã‚’åˆ—æŒ™
 		std::vector<int> gfCands;
 		for(unsigned gf=0; gf<gnormals.size(); ++gf){
-			if (pnormals[pf] * gnormals[gf] > 0.999){	//	–@ü‚ª‰“‚¢‚Ì‚Í‚¾‚ß
+			if (pnormals[pf] * gnormals[gf] > 0.999){	//	æ³•ç·šãŒé ã„ã®ã¯ã ã‚
 				int pv;
 				for(pv=0; pv<3; ++pv){
 					double d = gnormals[gf] * (gmd.vertices[gmd.faces[pf].indices[pv]] - grMesh->vertices[grMesh->faces[gf].indices[0]]);
-					if (d*d > 1e-8) break;	//	‹——£‚ª—£‚ê‚·‚¬‚Ä‚¢‚é‚Ì‚Í‚¾‚ß
+					if (d*d > 1e-8) break;	//	è·é›¢ãŒé›¢ã‚Œã™ãã¦ã„ã‚‹ã®ã¯ã ã‚
 				}
 				if (pv==3) gfCands.push_back(gf);
 			}
 		}
-		//	pf‚ÌŠe’¸“_‚É‘Î‰‚·‚égf‚ğŒ©‚Â‚¯‚é
+		//	pfã®å„é ‚ç‚¹ã«å¯¾å¿œã™ã‚‹gfã‚’è¦‹ã¤ã‘ã‚‹
 		std::vector<int> gfForPv[3];
 		for(unsigned pv=0; pv<3; ++pv){
 			for(unsigned i=0; i<gfCands.size(); ++i){
@@ -399,7 +399,7 @@ void FWFemMesh::CreateGRFromPH(){
 				}
 			}
 		}
-		//	‚R•¨—’¸“_‚ªA‚P‚Â‚ÌƒOƒ‰ƒtƒBƒNƒXOŠpŒ`‚ğ‹¤—L‚·‚éê‡A‹¤—L‚·‚é‚à‚Ì‚ğ—Dæ
+		//	ï¼“ç‰©ç†é ‚ç‚¹ãŒã€ï¼‘ã¤ã®ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹ä¸‰è§’å½¢ã‚’å…±æœ‰ã™ã‚‹å ´åˆã€å…±æœ‰ã™ã‚‹ã‚‚ã®ã‚’å„ªå…ˆ
 		std::vector< std::pair<int, int> > votes;
 		for(int i=0; i<3; ++i){
 			for(unsigned j=0; j<gfForPv[i].size(); ++j){
@@ -440,21 +440,21 @@ void FWFemMesh::CreateGRFromPH(){
 	DSTR << std::endl;
 #endif
 
-	//	‘Î‰•\‚É‰‚¶‚Äƒ}ƒeƒŠƒAƒ‹ƒŠƒXƒg‚ğİ’èB
+	//	å¯¾å¿œè¡¨ã«å¿œã˜ã¦ãƒãƒ†ãƒªã‚¢ãƒ«ãƒªã‚¹ãƒˆã‚’è¨­å®šã€‚
 	gmd.materialList.resize(grMesh->materialList.size() ? pFaceMap.size() : 0);
 	for(unsigned pf=0; pf<gmd.materialList.size(); ++pf){
 		gmd.materialList[pf] = grMesh->materialList[pFaceMap[pf].face];
 	}
-	//	V‚µ‚­ì‚éGRMesh‚Ì’¸“_‚©‚çphMesh‚Ì’¸“_‚Ö‚Ì‘Î‰•\
+	//	æ–°ã—ãä½œã‚‹GRMeshã®é ‚ç‚¹ã‹ã‚‰phMeshã®é ‚ç‚¹ã¸ã®å¯¾å¿œè¡¨
 	vertexIdMap.resize(gmd.vertices.size(), -1);
-	//	‘Î‰•\‚É‰‚¶‚ÄA’¸“_‚ÌƒeƒNƒXƒ`ƒƒÀ•W‚ğì¬
-	//		ph‚Ì‚P“_‚ªgr‚Ì’¸“_•¡”‚É‘Î‰‚·‚éê‡‚ª‚ ‚éB
-	//		‚»‚Ìê‡‚Í’¸“_‚ÌƒRƒs[‚ğì‚é•K—v‚ª‚ ‚éB
+	//	å¯¾å¿œè¡¨ã«å¿œã˜ã¦ã€é ‚ç‚¹ã®ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’ä½œæˆ
+	//		phã®ï¼‘ç‚¹ãŒgrã®é ‚ç‚¹è¤‡æ•°ã«å¯¾å¿œã™ã‚‹å ´åˆãŒã‚ã‚‹ã€‚
+	//		ãã®å ´åˆã¯é ‚ç‚¹ã®ã‚³ãƒ”ãƒ¼ã‚’ä½œã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
 	std::vector<bool> vtxUsed(gmd.vertices.size(), false);
 	for(unsigned pf=0; pf<pFaceMap.size(); ++pf){		
 		for(unsigned i=0; i<3; ++i){
 			int pv = gmd.faces[pf].indices[i];
-			//	ƒeƒNƒXƒ`ƒƒÀ•W‚ğŒvZ
+			//	ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ã‚’è¨ˆç®—
 			Vec2f texCoord;
 			Vec3f normal;
 			GRMeshFace& gFace = grMesh->faces[pFaceMap[pf][i]];
@@ -474,7 +474,7 @@ void FWFemMesh::CreateGRFromPH(){
 				vtxs.gauss(weight, gmd.vertices[pv], tmp);
 				for(unsigned j=0; j<3; ++j){
 					if (weight[j] <= -0.001){
-						DSTR << "ƒOƒ‰ƒtƒBƒNƒX‚Ì3’¸“_‚ÌŠO‘¤‚É•¨—‚Ì’¸“_‚ª‚ ‚è‚Ü‚·B" << std::endl; 
+						DSTR << "ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹ã®3é ‚ç‚¹ã®å¤–å´ã«ç‰©ç†ã®é ‚ç‚¹ãŒã‚ã‚Šã¾ã™ã€‚" << std::endl; 
 						for(unsigned k=0; k<3; ++k){
 							for(unsigned ax=0; ax<3; ++ax){
 								DSTR << grMesh->vertices[gFace.indices[k]][ax];
@@ -489,8 +489,8 @@ void FWFemMesh::CreateGRFromPH(){
 					texCoord += weight[j] * grMesh->texCoords[gFace.indices[j]];
 					if(gNormal) normal += weight[j] * grMesh->normals[gNormal->indices[j]];
 				}
-			}else{	//	4’¸“_
-				//	‚Ç‚Ì‚R’¸“_‚Å‹ß—‚·‚é‚Æˆê”Ô—Ç‚¢‚©‚ğ’²‚×A‚»‚Ì‚R’¸“_‚ğ•âŠÔ
+			}else{	//	4é ‚ç‚¹
+				//	ã©ã®ï¼“é ‚ç‚¹ã§è¿‘ä¼¼ã™ã‚‹ã¨ä¸€ç•ªè‰¯ã„ã‹ã‚’èª¿ã¹ã€ãã®ï¼“é ‚ç‚¹ã‚’è£œé–“
 				Vec3f weight[4];
 				Matrix3f vtxs[4];
 				double wMin[4];
@@ -511,11 +511,11 @@ void FWFemMesh::CreateGRFromPH(){
 				}
 				for(int j=0; j<3; ++j){
 					if (weight[maxId][j] <= -0.001){
-						DSTR << "ƒOƒ‰ƒtƒBƒNƒX‚Ì3’¸“_\t"; 
+						DSTR << "ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹ã®3é ‚ç‚¹\t"; 
 						for(unsigned k=0; k<3; ++k){
 							DSTR << grMesh->vertices[gFace.indices[k]] << "\t";
 						}
-						DSTR << "‚ÌŠO‘¤‚É•¨—‚Ì’¸“_:\t" << gmd.vertices[pv] << "‚ª‚ ‚è‚Ü‚·" << std::endl;
+						DSTR << "ã®å¤–å´ã«ç‰©ç†ã®é ‚ç‚¹:\t" << gmd.vertices[pv] << "ãŒã‚ã‚Šã¾ã™" << std::endl;
 					}
 					texCoord += weight[maxId][j] * grMesh->texCoords[gFace.indices[j<maxId?j:j+1]];
 					if(gNormal){
@@ -525,18 +525,18 @@ void FWFemMesh::CreateGRFromPH(){
 			}
 			gmd.texCoords.resize(gmd.vertices.size());
 			if (grMesh->normals.size()) gmd.normals.resize(gmd.vertices.size());
-			//	d•¡’¸“_‚Ìê‡‚ÍƒRƒs[‚ğì‚è‚È‚ª‚ç‘ã“ü
+			//	é‡è¤‡é ‚ç‚¹ã®å ´åˆã¯ã‚³ãƒ”ãƒ¼ã‚’ä½œã‚ŠãªãŒã‚‰ä»£å…¥
 			if (vtxUsed[pv]){
 				if (gmd.texCoords[pv] != texCoord || 
 					(grMesh->normals.size() && gmd.normals[pv] != normal)){	
-					//	’¸“_‚ÌƒRƒs[‚Ìì¬
+					//	é ‚ç‚¹ã®ã‚³ãƒ”ãƒ¼ã®ä½œæˆ
 					gmd.vertices.push_back(gmd.vertices[pv]);
 					gmd.texCoords.push_back(texCoord);
 					if (gmd.normals.size()) gmd.normals.push_back(normal);
 					gmd.faces[pf].indices[i] = gmd.vertices.size()-1;
 					vertexIdMap.push_back(phMesh->surfaceVertices[pv]);
 				}
-			}else{	//	‚»‚¤‚Å‚È‚¯‚ê‚ÎA’¼Ú‘ã“ü
+			}else{	//	ãã†ã§ãªã‘ã‚Œã°ã€ç›´æ¥ä»£å…¥
 				gmd.texCoords[pv] = texCoord;
 				if (gmd.normals.size()) gmd.normals[pv] = normal; 
 				vertexIdMap[pv] = phMesh->surfaceVertices[pv];
@@ -544,13 +544,13 @@ void FWFemMesh::CreateGRFromPH(){
 			}
 		}
 	}
-	//	GRMesh‚ğì¬
+	//	GRMeshã‚’ä½œæˆ
 	GRMesh* rv = grMesh->GetNameManager()->CreateObject(GRMeshIf::GetIfInfoStatic(), &gmd)->Cast();
-	//	ƒ}ƒeƒŠƒAƒ‹‚Ì’Ç‰Á
+	//	ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¿½åŠ 
 	for (unsigned i=0; i<grMesh->NChildObject(); ++i){
 		rv->AddChildObject(grMesh->GetChildObject(i));
 	}
-	//	ƒeƒNƒXƒ`ƒƒƒ‚[ƒh‚ğƒRƒs[
+	//	ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ¢ãƒ¼ãƒ‰ã‚’ã‚³ãƒ”ãƒ¼
 	rv->tex3d = grMesh->tex3d;
 	grMesh = rv;
 }

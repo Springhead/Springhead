@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -6,16 +6,16 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
-\page pagePyCreature Python‚ÅCRCreature‚Ì‹@”\‚ğg—p‚·‚éƒTƒ“ƒvƒ‹
+\page pagePyCreature Pythonã§CRCreatureã®æ©Ÿèƒ½ã‚’ä½¿ç”¨ã™ã‚‹ã‚µãƒ³ãƒ—ãƒ«
 Springhead2/src/Samples/PyCreature
 
-\section secQuitPyCreature I—¹Šî€
-- Esc‚©'q'‚Å‹­§I—¹B
-- ' ', 'm', 'd', 'c', 'v', 'z', 'x'‚Å” ‚ª—‚¿‚Ä‚­‚é
+\section secQuitPyCreature çµ‚äº†åŸºæº–
+- Escã‹'q'ã§å¼·åˆ¶çµ‚äº†ã€‚
+- ' ', 'm', 'd', 'c', 'v', 'z', 'x'ã§ç®±ãŒè½ã¡ã¦ãã‚‹
 	
-\section secFlowPyCreature ˆ—‚Ì—¬‚ê
-- CRBodyGenerator‚Åƒ{ƒfƒB‚ğì¬ACRBodyController‚É‚æ‚Á‚Äƒ{ƒfƒB‚ğ‹ì“®‚·‚éB
-- CRBodyController‚É‚ÍpythonƒRƒ“ƒ\[ƒ‹‚©‚ç•Ï”‚Æ‚µ‚ÄƒAƒNƒZƒX‰Â”\Bƒƒ\ƒbƒh‚ğŒÄ‚Ô‚±‚Æ‚Åpython‚©‚çCreature‚Ì‹@”\‚ğg—p‚Å‚«‚éB
+\section secFlowPyCreature å‡¦ç†ã®æµã‚Œ
+- CRBodyGeneratorã§ãƒœãƒ‡ã‚£ã‚’ä½œæˆã€CRBodyControllerã«ã‚ˆã£ã¦ãƒœãƒ‡ã‚£ã‚’é§†å‹•ã™ã‚‹ã€‚
+- CRBodyControllerã«ã¯pythonã‚³ãƒ³ã‚½ãƒ¼ãƒ«ã‹ã‚‰å¤‰æ•°ã¨ã—ã¦ã‚¢ã‚¯ã‚»ã‚¹å¯èƒ½ã€‚ãƒ¡ã‚½ãƒƒãƒ‰ã‚’å‘¼ã¶ã“ã¨ã§pythonã‹ã‚‰Creatureã®æ©Ÿèƒ½ã‚’ä½¿ç”¨ã§ãã‚‹ã€‚
 */
 
 
@@ -32,9 +32,9 @@ using namespace Spr;
 using namespace std;
 
 
-//ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh—p
+//ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ç”¨
 #ifdef _WIN32
-//std::max‚È‚Ç‚ğg‚¤‚Ì‚É•K—v(windows.h‚Æ‹£‡‚·‚é‚©‚ç)
+//std::maxãªã©ã‚’ä½¿ã†ã®ã«å¿…è¦(windows.hã¨ç«¶åˆã™ã‚‹ã‹ã‚‰)
 #define NOMINMAX 
 #include <windows.h>
 #endif
@@ -55,11 +55,11 @@ WNDPROC OldWndProc;
 
 class MyApp : public SampleApp{
 public:
-	/// ƒy[ƒWID
+	/// ãƒšãƒ¼ã‚¸ID
 	enum {
 		MENU_MAIN = MENU_SCENE,
 	};
-	/// ƒAƒNƒVƒ‡ƒ“ID
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ID
 	enum {
 		ID_BOX,
 		ID_CAPSULE,
@@ -145,11 +145,11 @@ public:
 		spcNav->Init(&descSN);
 		spcNav->SetPose(Posef(Vec3f(0,0,0.5), Quaternionf()));
 
-		// ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ‚ğ’u‚«Š·‚¦
+		// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã‚’ç½®ãæ›ãˆ
 		OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
 
-		// ƒƒjƒ…[‚ÌƒfƒtƒHƒ‹ƒg‚ğØ‚è‘Ö‚¦
+		// ãƒ¡ãƒ‹ãƒ¥ãƒ¼ã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚’åˆ‡ã‚Šæ›¿ãˆ
 		menus[MENU_DRAW][ID_DRAW_AXIS].enabled = false;
 		fwScene->EnableRenderAxis(false, false, false);
 
@@ -163,7 +163,7 @@ public:
 		menus[MENU_DRAW][ID_DRAW_SOLID].enabled = true;
 		fwScene->SetRenderMode(menus[MENU_DRAW][ID_DRAW_SOLID].enabled, menus[MENU_DRAW][ID_DRAW_WIREFRAME].enabled);
 
-		// ƒJƒƒ‰‚Ì‰ŠúˆÊ’u‚ğİ’è
+		// ã‚«ãƒ¡ãƒ©ã®åˆæœŸä½ç½®ã‚’è¨­å®š
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3d(2,0,0));
 	}
 
@@ -174,7 +174,7 @@ public:
 		crSdk = CRSdkIf::CreateSdk();
 
 		// --- --- --- --- ---
-		// ŠÂ¢ŠEƒV[ƒ“
+		// ç’°ä¸–ç•Œã‚·ãƒ¼ãƒ³
 		PHSceneDesc descScene; phScene->GetDesc(&descScene);
 		fwUmvelt = fwSdk->CreateScene(descScene);
 		umvelt   = fwUmvelt->GetPHScene();
@@ -188,19 +188,19 @@ public:
 		}*/
 
 		// --- --- --- --- ---
-		// ƒNƒŠ[ƒ`ƒƒ‚Ìì¬
+		// ã‚¯ãƒªãƒ¼ãƒãƒ£ã®ä½œæˆ
 		CRCreatureDesc descCreature;
 		crCreature = crSdk->CreateCreature(descCreature);
 		crCreature->AddChildObject(phScene);
 
-		// Body‚Ìì¬
+		// Bodyã®ä½œæˆ
 		CRBallHumanBodyGenDesc descBody;
 		bodyGen = DBG_NEW CRBallHumanBodyGen(descBody);
 		crBody = bodyGen->Generate(crCreature);
 		DCAST(CRIKSolidIf, crBody->FindByLabel("waist"))->GetPHSolid()->SetDynamical(false);		
 
 		// --- --- --- --- ---
-		// ƒ|ƒCƒ“ƒ^„‘Ì
+		// ãƒã‚¤ãƒ³ã‚¿å‰›ä½“
 		PHSolidDesc descSolid;
 		descSolid.dynamical = false;
 		soPointer = phScene->CreateSolid(descSolid);
@@ -210,8 +210,8 @@ public:
 		soPointer->AddShape(phSdk->CreateShape(descBox));
 
 		// --- --- --- --- ---
-		// Scene‚Ìİ’è
-		/// IK‚Ìİ’è
+		// Sceneã®è¨­å®š
+		/// IKã®è¨­å®š
 		phScene->GetIKEngine()->SetNumIter(15);
 		phScene->GetIKEngine()->Enable(bIK);
 		
@@ -221,7 +221,7 @@ public:
 		phScene->SetNumIteration(15);
 	}
 
-	// ƒ^ƒCƒ}ƒR[ƒ‹ƒoƒbƒNŠÖ”Dƒ^ƒCƒ}üŠú‚ÅŒÄ‚Î‚ê‚é
+	// ã‚¿ã‚¤ãƒã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ï¼ã‚¿ã‚¤ãƒå‘¨æœŸã§å‘¼ã°ã‚Œã‚‹
 	virtual void OnStep() {
 		UTAutoLock critical(EPCriticalSection);
 
@@ -232,7 +232,7 @@ public:
 		crSdk->Step();
 		phScene->Integrate();
 
-		// °‚ğ—h‚ç‚·
+		// åºŠã‚’æºã‚‰ã™
 		if (soFloor){
 			double time = phScene->GetCount() * phScene->GetTimeStep();
 			double omega = 2.0 * M_PI;
@@ -241,7 +241,7 @@ public:
 		}
 	}
 
-	// •`‰æŠÖ”D•`‰æ—v‹‚ª—ˆ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+	// æç”»é–¢æ•°ï¼æç”»è¦æ±‚ãŒæ¥ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹
 	virtual void OnDraw(GRRenderIf* render) {
 		UTAutoLock critical(EPCriticalSection);
 		GRCameraDesc cd;
@@ -335,10 +335,10 @@ public:
 
 
 /////////////////////////////////////////////////////////////////////////////////
-//ƒ‹[ƒv‚Ì’†g(‰½‰ñ‚àŒÄ‚Î‚ê‚é
+//ãƒ«ãƒ¼ãƒ—ã®ä¸­èº«(ä½•å›ã‚‚å‘¼ã°ã‚Œã‚‹
 void EPLoop(void* arg)
 {
-	//ƒCƒ“ƒ^ƒ‰ƒNƒeƒBƒuƒ‚[ƒh‚Å‹N“®
+	//ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒ†ã‚£ãƒ–ãƒ¢ãƒ¼ãƒ‰ã§èµ·å‹•
 	PyRun_InteractiveLoop(stdin,"SpringheadPython Console");
 	//while(true)
 	//{
@@ -349,12 +349,12 @@ void EPLoop(void* arg)
 PyObject* SprPy_PassFWSdkIf(FWSdkIf *ob);
 
 
-//ƒ‹[ƒvÀs’¼‘O‚É‚P“x‚¾‚¯ŒÄ‚Î‚ê‚é
+//ãƒ«ãƒ¼ãƒ—å®Ÿè¡Œç›´å‰ã«ï¼‘åº¦ã ã‘å‘¼ã°ã‚Œã‚‹
 void EPLoopInit(void* arg)
 	{
 		MyApp* app = (MyApp*)arg;
 		//
-		////Python‚Åƒ‚ƒWƒ…[ƒ‹‚Ìg—péŒ¾
+		////Pythonã§ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ä½¿ç”¨å®£è¨€
 		PyRun_SimpleString("import Utility\n");
 		PyRun_SimpleString("from Utility import *\n");
 
@@ -388,11 +388,11 @@ void EPLoopInit(void* arg)
 		PHSolidDesc desc;
 		CDConvexMeshIf* mesh;
 
-		// soBox—p‚Ìdesc
+		// soBoxç”¨ã®desc
 		desc.mass = 2.0;
 		desc.inertia = 2.0 * Matrix3d::Unit();
 
-		//	Œ`ó‚Ìì¬
+		//	å½¢çŠ¶ã®ä½œæˆ
 		{
 			CDConvexMeshDesc md;
 			md.vertices.push_back(Vec3f(-1,-1,-1));
@@ -407,11 +407,11 @@ void EPLoopInit(void* arg)
 			mesh->SetName("meshConvex");
 		}
 			
-		//////c‚Ìpyobject‚ğpython‚Å“Ç‚ß‚é‚æ‚¤‚É‚·‚é
+		//////cã®pyobjectã‚’pythonã§èª­ã‚ã‚‹ã‚ˆã†ã«ã™ã‚‹
 		PyObject *m = PyImport_AddModule("__main__");
 		PyObject *dict = PyModule_GetDict(m);
 	
-		//Python‚ÌŒ^‚É•ÏŠ·
+		//Pythonã®å‹ã«å¤‰æ›
 //		PyObject* py_fwSdk = (PyObject*)newEPFWSdkIf(app->GetSdk());
 //		Py_INCREF(py_fwsdk);
 //		PyDict_SetItemString(dict,"fwsdk",py_fwsdk);
@@ -457,7 +457,7 @@ void EPLoopInit(void* arg)
 		Py_INCREF(py_umvelt);
 		PyDict_SetItemString(dict,"umvelt",py_umvelt);
 
-		//// creature‚Ìƒ‹[ƒv‚ğ•ÊƒXƒŒƒbƒh‚ÅŠJn
+		//// creatureã®ãƒ«ãƒ¼ãƒ—ã‚’åˆ¥ã‚¹ãƒ¬ãƒƒãƒ‰ã§é–‹å§‹
 		ifstream file("creature.py");
 		string data("");
 		string buff;
@@ -468,7 +468,7 @@ void EPLoopInit(void* arg)
 
 		PyRun_SimpleString(data.c_str());
 
-		////ƒtƒ@ƒCƒ‹‚Ì“Ç‚İæ‚è
+		////ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿å–ã‚Š
 		file = ifstream("boxstack.py");
 		data = "";
 
@@ -498,10 +498,10 @@ LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
 }
 
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char *argv[]) {
 	app.Init(argc, argv);

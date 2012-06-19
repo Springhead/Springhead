@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,8 +12,8 @@
 //@{
 namespace Spr{;
 
-/// Import�m�[�h
-//  UTImportHandler������
+/// Importノード
+//  UTImportHandlerが扱う
 /*struct Import{
 	std::string		path;	
 };*/
@@ -23,33 +23,33 @@ struct ImportDesc{
 };
 
 /**
-	�t�@�C���Ԃ̃C���|�[�g�֌W���Ǘ�����N���X�D
-	�c���[�\�������D
+	ファイル間のインポート関係を管理するクラス．
+	ツリー構造を持つ．
  */
 struct ImportIf : ObjectIf{
 	SPR_IFDEF(Import);
 
-	/**	@brief ���[�h��p���[�h��On/Off����
+	/**	@brief ロード専用モードをOn/Offする
 		@param on
-		���[�h��p���[�h�̏ꍇ�C�ۑ����Ɏq�I�u�W�F�N�g��ʃt�@�C���֕ۑ������C
-		�{�̃t�@�C����Import�m�[�h�̂ݏ������ށD
-		Import�Ώۂ��O���A�v���ō쐬���ꂽ���b�V���f�[�^�Ȃǂ̂Ƃ��Ɏg�p����D
+		ロード専用モードの場合，保存時に子オブジェクトを別ファイルへ保存せず，
+		本体ファイルにImportノードのみ書き込む．
+		Import対象が外部アプリで作成されたメッシュデータなどのときに使用する．
 	 */
 	void SetLoadOnly(bool on = true);
 	/*
-	/// �C���|�[�g�Ώۂ̃I�u�W�F�N�g��ǉ�
+	/// インポート対象のオブジェクトを追加
 	void AddObject(ObjectIf* obj);
 
-	/// �C���|�[�g�Ώۂ̃I�u�W�F�N�g���擾
+	/// インポート対象のオブジェクトを取得
 	//ObjectIf* GetTarget();
 
-	/// �C���|�[�g/�G�N�X�|�[�g���鑊�΃p�X��ݒ�
+	/// インポート/エクスポートする相対パスを設定
 	void SetPath(UTString path);
 	
-	/// �C���|�[�g/�G�N�X�|�[�g���鑊�΃p�X���擾
+	/// インポート/エクスポートする相対パスを取得
 	UTString GetPath();
 
-	/// �q�C���|�[�g�G���g�����쐬
+	/// 子インポートエントリを作成
 	FIImportIf* CreateImport();
 	*/
 };

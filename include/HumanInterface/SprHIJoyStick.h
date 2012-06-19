@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -21,42 +21,42 @@ struct DVJoyStickMask{
 	};
 };
 
-/** ‰¼‘zƒWƒ‡ƒCƒXƒeƒBƒbƒN
-	Eg—p•û–@‚Í‰¼‘zƒ}ƒEƒX‚Æ“¯—l
+/** ä»®æƒ³ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯
+	ãƒ»ä½¿ç”¨æ–¹æ³•ã¯ä»®æƒ³ãƒã‚¦ã‚¹ã¨åŒæ§˜
  */
 struct DVJoyStickCallback{
-	/** @brief ƒ}ƒEƒX‚ª“®‚¢‚½‚Æ‚«‚Ìˆ—
-		@param buttonMask ‰Ÿ‚³‚ê‚Ä‚¢‚éƒ{ƒ^ƒ“‚Ìó‘Ô
-		@param x		ƒWƒ‡ƒCƒXƒeƒBƒbƒNxÀ•Wi¶‰Ej
-		@param y		ƒWƒ‡ƒCƒXƒeƒBƒbƒNyÀ•Wi‘OŒãj
-		@param z		ƒWƒ‡ƒCƒXƒeƒBƒbƒN‚Ğ‚Ë‚èorã‰º
+	/** @brief ãƒã‚¦ã‚¹ãŒå‹•ã„ãŸã¨ãã®å‡¦ç†
+		@param buttonMask æŠ¼ã•ã‚Œã¦ã„ã‚‹ãƒœã‚¿ãƒ³ã®çŠ¶æ…‹
+		@param x		ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯xåº§æ¨™ï¼ˆå·¦å³ï¼‰
+		@param y		ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯yåº§æ¨™ï¼ˆå‰å¾Œï¼‰
+		@param z		ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã²ã­ã‚Šorä¸Šä¸‹
 		
-		zdelta‚Íƒ}ƒEƒXƒzƒC[ƒ‹‚É‘Î‰‚·‚éƒfƒoƒCƒX‚ğg—p‚·‚éê‡‚Ì‚İ—LŒøD
+		zdeltaã¯ãƒã‚¦ã‚¹ãƒ›ã‚¤ãƒ¼ãƒ«ã«å¯¾å¿œã™ã‚‹ãƒ‡ãƒã‚¤ã‚¹ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆã®ã¿æœ‰åŠ¹ï¼
 	*/
 	virtual bool OnUpdate(int buttonMask, int x, int y, int z){ return false; }
 };
 
 
 /**
-	ƒWƒ‡ƒCƒXƒeƒBƒbƒN‰¼‘zƒfƒoƒCƒX
+	ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹
  **/
 struct DVJoyStickIf: public HIVirtualDeviceIf{
 	SPR_IFDEF(DVJoyStick);
 	
-	///	ƒnƒ“ƒhƒ‰‚Ì’Ç‰Á
+	///	ãƒãƒ³ãƒ‰ãƒ©ã®è¿½åŠ 
 	void AddCallback(DVJoyStickCallback* cb);
-	/// ƒnƒ“ƒhƒ‰‚Ìíœ
+	/// ãƒãƒ³ãƒ‰ãƒ©ã®å‰Šé™¤
 	void RemoveCallback(DVJoyStickCallback* cb);
 
-	// ƒ|[ƒŠƒ“ƒOüŠú‚Ìİ’è
+	// ãƒãƒ¼ãƒªãƒ³ã‚°å‘¨æœŸã®è¨­å®š
 	void SetPollInterval(int ms);
-	// ƒ|[ƒŠƒ“ƒOüŠú‚Ìæ“¾
+	// ãƒãƒ¼ãƒªãƒ³ã‚°å‘¨æœŸã®å–å¾—
 	int  GetPollInterval();
 
 };
 
 /**
-	GLUTƒWƒ‡ƒCƒXƒeƒBƒbƒN
+	GLUTã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯
  **/
 struct DRJoyStickGLUTIf: public HIRealDeviceIf{
 	SPR_IFDEF(DRJoyStickGLUT);

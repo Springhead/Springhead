@@ -1,4 +1,4 @@
-#include "..\..\..\include\EmbPython\Utility\SprEPCast.h"
+Ôªø#include "..\..\..\include\EmbPython\Utility\SprEPCast.h"
 using namespace std;
 #include <locale>
 #include "EmbPython/SprEPBase.h"
@@ -62,7 +62,7 @@ PyObject_as3(Affine,2,f)
 //	if( obj->ob_type == &EPMatrix3fType )
 //		return (Matrix3d)*EPObject_Cast(obj,Matrix3f);
 //	
-//	DSTR << "PyObject_asMatrix3dÇ…Ç®Ç¢ÇƒÉLÉÉÉXÉgÇ™ê≥èÌÇ…çsÇÌÇÍÇ‹ÇπÇÒÇ≈ÇµÇΩ";
+//	DSTR << "PyObject_asMatrix3d„Å´„Åä„ÅÑ„Å¶„Ç≠„É£„Çπ„Éà„ÅåÊ≠£Â∏∏„Å´Ë°å„Çè„Çå„Åæ„Åõ„Çì„Åß„Åó„Åü";
 //	assert(0);
 //	return Matrix3d();
 //}
@@ -90,13 +90,13 @@ PyObject_as2(Pose,f)
 //	PyObject* tmp = ((*((PyTupleObject*)obj)).ob_item[0]);
 //	bool b = PyUnicode_Check(tmp);
 //
-//	//ÉèÉCÉhï∂éöóÒ(WCHAR*)ÇÉ}ÉãÉ`ÉoÉCÉgï∂éöóÒ(char*)Ç…ïœä∑
+//	//„ÉØ„Ç§„ÉâÊñáÂ≠óÂàó(WCHAR*)„Çí„Éû„É´„ÉÅ„Éê„Ç§„ÉàÊñáÂ≠óÂàó(char*)„Å´Â§âÊèõ
 //	//errno_t wcstombs_s(
-//	//   size_t *pReturnValue,	//ïœä∑Ç≥ÇÍÇΩï∂éöêî
-//	//   char *mbstr,		//ïœä∑åãâ ÇÃÉ}ÉãÉ`ÉoÉCÉgï∂éöóÒópÇÃÉoÉbÉtÉ@ÇÃÉAÉhÉåÉX(ïœä∑êÊ)
-//	//   size_t sizeInBytes,	//mbstr ÉoÉbÉtÉ@ÇÃÉTÉCÉY 
-//	//   const wchar_t *wcstr,	//ïœä∑Ç≥ÇÍÇÈÉèÉCÉhï∂éöóÒÇÃÉAÉhÉåÉX(ïœä∑å≥)
-//	//   size_t count 		//wcstr Ç…äiî[Ç∑ÇÈÉèÉCÉhï∂éöÇÃç≈ëÂêî
+//	//   size_t *pReturnValue,	//Â§âÊèõ„Åï„Çå„ÅüÊñáÂ≠óÊï∞
+//	//   char *mbstr,		//Â§âÊèõÁµêÊûú„ÅÆ„Éû„É´„ÉÅ„Éê„Ç§„ÉàÊñáÂ≠óÂàóÁî®„ÅÆ„Éê„ÉÉ„Éï„Ç°„ÅÆ„Ç¢„Éâ„É¨„Çπ(Â§âÊèõÂÖà)
+//	//   size_t sizeInBytes,	//mbstr „Éê„ÉÉ„Éï„Ç°„ÅÆ„Çµ„Ç§„Ç∫ 
+//	//   const wchar_t *wcstr,	//Â§âÊèõ„Åï„Çå„Çã„ÉØ„Ç§„ÉâÊñáÂ≠óÂàó„ÅÆ„Ç¢„Éâ„É¨„Çπ(Â§âÊèõÂÖÉ)
+//	//   size_t count 		//wcstr „Å´Ê†ºÁ¥ç„Åô„Çã„ÉØ„Ç§„ÉâÊñáÂ≠ó„ÅÆÊúÄÂ§ßÊï∞
 //	//);
 //	char buff[256];
 //	wcstombs(buff,((const wchar_t *)((PyUnicodeObject *)(tmp))->str),sizeof(buff));
@@ -119,7 +119,7 @@ ConvertStr::ConvertStr( PyObject *obj )
 
 		setlocale( LC_CTYPE, "japanese" );
 		int ret = wcstombs(buff,(const wchar_t*)PyUnicode_AS_DATA(obj),size*2);
-		if (ret == -1) assert(0);//ïœä∑ÉGÉâÅ[ 
+		if (ret == -1) assert(0);//Â§âÊèõ„Ç®„É©„Éº 
 		buff[ret] = '\0';
 		
 	}

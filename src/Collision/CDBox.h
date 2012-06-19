@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,34 +14,34 @@
 
 namespace Spr{;
 
-/**	—§•û‘Ì‚Ì–Ê(lŠpŒ`)‚ğ•\‚·ƒNƒ‰ƒXDCDBox‚ªŠ—LD
-	CDContactAnalysis ‚Åg‚í‚ê‚éD
+/**	ç«‹æ–¹ä½“ã®é¢(å››è§’å½¢)ã‚’è¡¨ã™ã‚¯ãƒ©ã‚¹ï¼CDBoxãŒæ‰€æœ‰ï¼
+	CDContactAnalysis ã§ä½¿ã‚ã‚Œã‚‹ï¼
 */
 class CDQuadFace: public Object{
 public:
 	SPR_OBJECTDEF(CDQuadFace);
-	int vtxs[4];	///< –Ê‚Ì’¸“_ID
-	Vec3f normal;	///< –Ê‚Ì–@ü
+	int vtxs[4];	///< é¢ã®é ‚ç‚¹ID
+	Vec3f normal;	///< é¢ã®æ³•ç·š
 
-	/// CDQuadFace‚Ì–Ê‚ÌƒCƒ“ƒfƒbƒNƒX”
+	/// CDQuadFaceã®é¢ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æ•°
 	virtual int NIndex(){ return 4; }
-	/// CDQuadFaceƒCƒ“ƒfƒbƒNƒX”z—ñ‚ğæ“¾
+	/// CDQuadFaceã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—ã‚’å–å¾—
 	virtual int* GetIndices(){ return vtxs; }
 };
 
 class CDQuadFaces:public std::vector<CDQuadFace>{
 };
 
-/// ’¼•û‘Ì
+/// ç›´æ–¹ä½“
 class CDBox: public CDConvex{
 public:
 	mutable int curPos;
 	SPR_OBJECTDEF(CDBox);
 	SPR_DECLMEMBEROF_CDBoxDesc;
 
-	std::vector<Vec3f> base;				///< ’¸“_‚ÌÀ•W(ƒ[ƒJƒ‹À•WŒn)
-	static CDQuadFaces qfaces;				///< –ÊilŠpŒ`:quadrangular facej
-	static std::vector<int> neighbor[8];	///< ’¸“_‚Ì—×‚Ì“_
+	std::vector<Vec3f> base;				///< é ‚ç‚¹ã®åº§æ¨™(ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»)
+	static CDQuadFaces qfaces;				///< é¢ï¼ˆå››è§’å½¢:quadrangular faceï¼‰
+	static std::vector<int> neighbor[8];	///< é ‚ç‚¹ã®éš£ã®ç‚¹
 	
 	CDBox();
 	CDBox(const CDBoxDesc& desc);
@@ -50,26 +50,26 @@ public:
 	virtual float CalcVolume();
 	virtual Matrix3f CalcMomentOfInertia();
 	
-	///	ƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚ğ‹‚ß‚éD
+	///	ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã‚’æ±‚ã‚ã‚‹ï¼
 	int Support(Vec3f& w, const Vec3f& v) const ;
-	///	Ø‚èŒû‚ğ‹‚ß‚éDÚG‰ğÍ‚Ég‚¤D
-	/// ‚½‚¾‚µA‹…‘Ì‚ÉŠÖ‚µ‚Ä‚ÍAØ‚èŒû‚Í‹‚ß‚È‚¢BÚG‰ğÍ‚É‚ÍÅ‹ß–T‚Ì‚P“_‚³‚¦‚ ‚ê‚Î‚¢‚¢B
-	/// ‹…‘Ì‚ÉŠÖ‚µ‚ÄFindCutRing()‚ªŒÄ‚Ño‚³‚ê‚½ê‡‚É‚ÍAassertion‚ª”­¶‚·‚éB
+	///	åˆ‡ã‚Šå£ã‚’æ±‚ã‚ã‚‹ï¼æ¥è§¦è§£æã«ä½¿ã†ï¼
+	/// ãŸã ã—ã€çƒä½“ã«é–¢ã—ã¦ã¯ã€åˆ‡ã‚Šå£ã¯æ±‚ã‚ãªã„ã€‚æ¥è§¦è§£ææ™‚ã«ã¯æœ€è¿‘å‚ã®ï¼‘ç‚¹ã•ãˆã‚ã‚Œã°ã„ã„ã€‚
+	/// çƒä½“ã«é–¢ã—ã¦FindCutRing()ãŒå‘¼ã³å‡ºã•ã‚ŒãŸå ´åˆã«ã¯ã€assertionãŒç™ºç”Ÿã™ã‚‹ã€‚
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
-	///	w’è‚Ì’¸“_ vtx ‚Ì—×‚Ì’¸“_”Ô†‚ğ•Ô‚·
+	///	æŒ‡å®šã®é ‚ç‚¹ vtx ã®éš£ã®é ‚ç‚¹ç•ªå·ã‚’è¿”ã™
 	virtual std::vector<int>& FindNeighbors(int vtx);
-	///	’¸“_ƒoƒbƒtƒ@‚ğ•Ô‚·B
+	///	é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’è¿”ã™ã€‚
 	virtual Vec3f* GetBase(){return &*base.begin();}	
 	
-	/// ’¼•û‘Ì‚ÌƒTƒCƒY‚ğæ“¾
+	/// ç›´æ–¹ä½“ã®ã‚µã‚¤ã‚ºã‚’å–å¾—
 	Vec3f GetBoxSize();
 	Vec3f* GetVertices();
 	CDFaceIf* GetFace(int i);
 
-	/// ’¼•û‘Ì‚ÌƒTƒCƒY‚ğİ’è
+	/// ç›´æ–¹ä½“ã®ã‚µã‚¤ã‚ºã‚’è¨­å®š
 	Vec3f SetBoxSize(Vec3f boxSize);
 
-	/// “à•”î•ñ‚ÌÄŒvZ
+	/// å†…éƒ¨æƒ…å ±ã®å†è¨ˆç®—
 	void Recalc();
 
 	virtual int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);

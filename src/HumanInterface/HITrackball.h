@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -68,15 +68,15 @@ public:
 	void	Enable(bool on){ enabled = on; }
 	bool	IsEnabled(){ return enabled; }
 	
-	// HIBase�̊֐�
+	// HIBaseの関数
 	virtual bool Init(const void* desc);
 
 
-	// HIPose�̊֐�
+	// HIPoseの関数
 	virtual Vec3f		GetPosition(){ return pos; }
 	virtual Quaternionf GetOrientation(){ return ori; }
 
-	/// DVKeyMouseCallback�̊֐�
+	/// DVKeyMouseCallbackの関数
 	virtual bool OnMouseMove(int state, int x, int y, int zdelta);
 
 	HITrackball(const HITrackballDesc& desc = HITrackballDesc());

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,8 +14,8 @@ const double epsilon2 = epsilon*epsilon;
 
 //----------------------------------------------------------------------------
 //	CDBox
-CDQuadFaces CDBox::qfaces;		// –ÊilŠpŒ`:quadrangular facej
-std::vector<int> CDBox::neighbor[8];	// ’¸“_‚Ì—×‚Ì“_
+CDQuadFaces CDBox::qfaces;		// é¢ï¼ˆå››è§’å½¢:quadrangular faceï¼‰
+std::vector<int> CDBox::neighbor[8];	// é ‚ç‚¹ã®éš£ã®ç‚¹
 
 CDBox::CDBox() {
 }
@@ -41,7 +41,7 @@ Matrix3f CDBox::CalcMomentOfInertia(){
 }
 
 void CDBox::Recalc(){
-	// ƒ[ƒJƒ‹À•WŒn‚ÅAbox‚ÌˆÊ’u‚ğİ’è
+	// ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã§ã€boxã®ä½ç½®ã‚’è¨­å®š
 	Vec3f halfsize = Vec3f(boxsize.x/2.0, boxsize.y/2.0, boxsize.z/2.0);
 	base.clear();
 	base.push_back(Vec3f( halfsize.x,  halfsize.y, -halfsize.z));
@@ -72,10 +72,10 @@ void CDBox::Recalc(){
 		neighbor[7][0] = 4; neighbor[7][1] = 6; neighbor[7][2] = 3;
 
 		qfaces.clear();
-		for (int nface=0; nface<6; ++nface){	// —§•û‘Ì‚Í6–Ê
+		for (int nface=0; nface<6; ++nface){	// ç«‹æ–¹ä½“ã¯6é¢
 			qfaces.push_back(CDQuadFace());
 		}
-		// box‚ÌŠe–Ê‚Ì–@ü‚ğİ’èAbox‚ÌŠe–Ê‚Ì’¸“_‚ÌƒCƒ“ƒfƒbƒNƒX‚ğİ’è
+		// boxã®å„é¢ã®æ³•ç·šã‚’è¨­å®šã€boxã®å„é¢ã®é ‚ç‚¹ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’è¨­å®š
 		qfaces[0].normal  = Vec3f(1.0, 0.0, 0.0);
 		qfaces[0].vtxs[0] = 0;		
 		qfaces[0].vtxs[1] = 1;
@@ -110,11 +110,11 @@ void CDBox::Recalc(){
 	curPos = 0;
 }
 
-// ƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚ğ‹‚ß‚é
+// ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã‚’æ±‚ã‚ã‚‹
 int CDBox::Support(Vec3f& w, const Vec3f& v) const {
-	// —^‚¦‚ç‚ê‚½•ûŒüp‚Éˆê”Ô‰“‚¢“_i“àÏÅ‘å‚Ì“_‚ğƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚Æ‚·‚éj
+	// ä¸ãˆã‚‰ã‚ŒãŸæ–¹å‘pã«ä¸€ç•ªé ã„ç‚¹ï¼ˆå†…ç©æœ€å¤§ã®ç‚¹ã‚’ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã¨ã™ã‚‹ï¼‰
 	float d1=0.0, d2=0.0;
-	for (unsigned int i=0; i<8; ++i){		// 8’¸“_
+	for (unsigned int i=0; i<8; ++i){		// 8é ‚ç‚¹
 		d1 = base[i] * v;
 		if (d1 > d2) { 
 			d2 = d1;
@@ -128,13 +128,13 @@ std::vector<int>& CDBox::FindNeighbors(int vtx){
 	return neighbor[vtx];
 }
 
-// Ø‚èŒû‚ğ‹‚ß‚é. ÚG‰ğÍ‚ğs‚¤.
+// åˆ‡ã‚Šå£ã‚’æ±‚ã‚ã‚‹. æ¥è§¦è§£æã‚’è¡Œã†.
 bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
-	const int qfaces_size = 6;	// qfaces.size()=6–Ê 
+	const int qfaces_size = 6;	// qfaces.size()=6é¢ 
 	const int base_size = 8;
 
 	Posed toL	  = toW.Inv();
-	// ’¸“_‚ª‚Ç‚Á‚¿‘¤‚É‚ ‚é‚©’²‚×‚é
+	// é ‚ç‚¹ãŒã©ã£ã¡å´ã«ã‚ã‚‹ã‹èª¿ã¹ã‚‹
 	Vec3d planePosL = toL * ring.local.Pos();
 	Vec3d planeNormalL = toL.Ori() * ring.local.Ori() * Vec3d(1, 0, 0);
 	int sign[base_size];
@@ -146,54 +146,54 @@ bool CDBox::FindCutRing(CDCutRing& ring, const Posed& toW) {
 		else sign[i] = 0;
 	}
 	bool rv = false;
-	//	‚Ü‚½‚ª‚Á‚Ä‚¢‚é–Ê‚Ìê‡CŒğü‚ğ‹‚ß‚é
-	for(int i=0; i<qfaces_size; ++i){		// face.size()=6–Ê
-		//@‘S’¸“_‚ªplane‚É‘Î‚µ‚Ä“¯‚¶•ûŒü‚É‚ ‚éê‡‚ÍƒpƒX
+	//	ã¾ãŸãŒã£ã¦ã„ã‚‹é¢ã®å ´åˆï¼Œäº¤ç·šã‚’æ±‚ã‚ã‚‹
+	for(int i=0; i<qfaces_size; ++i){		// face.size()=6é¢
+		//ã€€å…¨é ‚ç‚¹ãŒplaneã«å¯¾ã—ã¦åŒã˜æ–¹å‘ã«ã‚ã‚‹å ´åˆã¯ãƒ‘ã‚¹
 		if (sign[qfaces[i].vtxs[0]] == sign[qfaces[i].vtxs[1]] &&
 			sign[qfaces[i].vtxs[0]] == sign[qfaces[i].vtxs[2]] &&
 			sign[qfaces[i].vtxs[0]] == sign[qfaces[i].vtxs[3]]) continue;
 		
-		//	ÚG–Ê(plane,–Ê1)‚Æbox‚Ì–Ê(qface,–Ê2)‚ÌŒğü‚ğ‹‚ß‚é
-		/*	’¼ü‚ğ‚Æ‚¨‚é1“_‚ğŒ©‚Â‚¯‚é‚Ì‚Í
-						|–Ê2
+		//	æ¥è§¦é¢(plane,é¢1)ã¨boxã®é¢(qface,é¢2)ã®äº¤ç·šã‚’æ±‚ã‚ã‚‹
+		/*	ç›´ç·šã‚’ã¨ãŠã‚‹1ç‚¹ã‚’è¦‹ã¤ã‘ã‚‹ã®ã¯
+						|é¢2
 						|n2
 						|d2
 				   O	|
-			-------+----+----–Ê1 n1,d1=0
+			-------+----+----é¢1 n1,d1=0
 						|P
 			P = a*n1 + b*n2;
 				a = (d1 - d2*(n1*n2)) / (1-(n1*n2)^2)
 				b = (d2 - d1*(n1*n2)) / (1-(n1*n2)^2)
-			‚ª–Ê1(plane)‚Æ–Ê2(qface)‚ªì‚é’¼ü‚ğ’Ê‚é1“_
+			ãŒé¢1(plane)ã¨é¢2(qface)ãŒä½œã‚‹ç›´ç·šã‚’é€šã‚‹1ç‚¹
 			O:		planePosL
-			n1,d1	plane‚Ì–@ü(planeNormalL)CO‚©‚ç‚Ì‹——£=0
-			n2,d2	qface‚Ì–@ü(qfaceNormal)CO‚©‚ç‚Ì‹——£			
+			n1,d1	planeã®æ³•ç·š(planeNormalL)ï¼ŒOã‹ã‚‰ã®è·é›¢=0
+			n2,d2	qfaceã®æ³•ç·š(qfaceNormal)ï¼ŒOã‹ã‚‰ã®è·é›¢			
 		*/
 		Vec3d qfaceNormal = qfaces[i].normal;
 		double qfaceDist = qfaceNormal * (base[qfaces[i].vtxs[0]] - planePosL);
 		Vec3d lineDirection = (planeNormalL ^ qfaceNormal).unit();
 		double ip = planeNormalL * qfaceNormal;
 		double l_ipip = 1-(ip*ip);
-		if (l_ipip < epsilon2) continue;	//	•½s‚È–Ê‚Í–³‹
+		if (l_ipip < epsilon2) continue;	//	å¹³è¡Œãªé¢ã¯ç„¡è¦–
 		double a = -qfaceDist*ip / (1-(ip*ip));
 		double b = qfaceDist / (1-(ip*ip));
 		Vec3d lineOff = a*planeNormalL + b*qfaceNormal;
 		Vec3d lineNormal = planeNormalL ^ lineDirection;
 		double lineDist = lineNormal * lineOff;
 		if (finite(lineDist)) {	
-			// local -> world -> ring2ŸŒ³Œn‚É•ÏŠ·
+			// local -> world -> ring2æ¬¡å…ƒç³»ã«å¤‰æ›
 			Posed to2D = ring.localInv * toW;
 			Vec2d lineNormal2D = (to2D.Ori() * lineNormal).sub_vector(1, Vec2d());
-			//	ü‚Í“à‘¤‚ğŒü‚©‚¹‚½‚¢‚Ì‚ÅC normal, dist ‚ğ”½“]‚µ‚Ä ring.lines ‚É’Ç‰Á
+			//	ç·šã¯å†…å´ã‚’å‘ã‹ã›ãŸã„ã®ã§ï¼Œ normal, dist ã‚’åè»¢ã—ã¦ ring.lines ã«è¿½åŠ 
 			ring.lines.push_back(CDCutLine(-lineNormal2D, -lineDist));
 			rv = true;
 		} 
 	}
-	//bool Õ“Ë‚Ì—L–³
+	//bool è¡çªã®æœ‰ç„¡
 	return rv;
 }
 
-// ’¼•û‘Ì‚ÌƒTƒCƒY‚ğæ“¾
+// ç›´æ–¹ä½“ã®ã‚µã‚¤ã‚ºã‚’å–å¾—
 Vec3f CDBox::GetBoxSize() {
 	return boxsize;
 }
@@ -206,7 +206,7 @@ CDFaceIf* CDBox::GetFace(int i){
 	return qfaces.at(i).Cast();
 }
 
-// ’¼•û‘Ì‚ÌƒTƒCƒY‚ğİ’è
+// ç›´æ–¹ä½“ã®ã‚µã‚¤ã‚ºã‚’è¨­å®š
 Vec3f CDBox::SetBoxSize(Vec3f boxSize){
 	boxsize = boxSize;
 	Recalc();
@@ -220,24 +220,24 @@ int CDBox::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, f
 
 	for(size_t i = 0; i < qfaces.size(); i++){
 		const CDQuadFace& f = qfaces[i];
-		const Vec3f& n = f.normal;	//–Ê‚Ì–@ü
-		float tmp = n * dir;		//–Ê‚Ì–@ü‚Æƒ|ƒCƒ“ƒ^‚ÌƒxƒNƒgƒ‹‚Æ‚Ì“àÏ
-		if(abs(tmp) < eps)	//“àÏ‚ª¬‚³‚¢ê‡‚Í”»’è‚µ‚È‚¢
+		const Vec3f& n = f.normal;	//é¢ã®æ³•ç·š
+		float tmp = n * dir;		//é¢ã®æ³•ç·šã¨ãƒã‚¤ãƒ³ã‚¿ã®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã®å†…ç©
+		if(abs(tmp) < eps)	//å†…ç©ãŒå°ã•ã„å ´åˆã¯åˆ¤å®šã—ãªã„
 			continue;
 
-		float s = ((base[f.vtxs[0]] - origin) * n) / tmp; //ƒJƒƒ‰‚Æ–Ê‚Ì‹——£ 
+		float s = ((base[f.vtxs[0]] - origin) * n) / tmp; //ã‚«ãƒ¡ãƒ©ã¨é¢ã®è·é›¢ 
 		if(s < 0.0)
 			continue;
-		p = origin + dir * s;	//’¼ü‚Æ–Ê‚ÌŒğ“_p = ƒJƒƒ‰À•WŒn‚ÌŒ´“_+ƒJƒƒ‰À•WŒn‚©‚ç–Ê‚Ö‚ÌƒxƒNƒgƒ‹*‹——£ (ShapeÀ•WŒn)
+		p = origin + dir * s;	//ç›´ç·šã¨é¢ã®äº¤ç‚¹p = ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã®åŸç‚¹+ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã‹ã‚‰é¢ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«*è·é›¢ (Shapeåº§æ¨™ç³»)
 
-		// 4ŠpŒ`‚Ì“à•”‚É‚ ‚é‚©
-		Vec3d b =GetBoxSize()*0.5; //CDBox‚Ìx,y,z²‚É‘Î‚·‚éÅ‘å’l
+		// 4è§’å½¢ã®å†…éƒ¨ã«ã‚ã‚‹ã‹
+		Vec3d b =GetBoxSize()*0.5; //CDBoxã®x,y,zè»¸ã«å¯¾ã™ã‚‹æœ€å¤§å€¤
 		if(-b.x<=p.x && p.x <=b.x && -b.y<=p.y && p.y <=b.y && -b.z<=p.z && p.z <=b.z ){
 			result[num] = p;
 			offset[num] = s;
 			num++;
 		}
-		if(num == 2)		// —‹üã‚Í3‚ÂˆÈã‚Í‚ ‚è“¾‚È‚¢‚ª”O‚Ì‚½‚ß
+		if(num == 2)		// ç†å±ˆä¸Šã¯3ã¤ä»¥ä¸Šã¯ã‚ã‚Šå¾—ãªã„ãŒå¿µã®ãŸã‚
 			break;
 	}
 	return num;

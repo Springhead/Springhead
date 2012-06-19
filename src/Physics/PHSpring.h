@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,14 +18,14 @@ namespace Spr{;
 class PHSpring : public PHJoint{
 	friend class PHSpringMotor;
 
-	/// ŠÖßƒRƒ“ƒgƒ[ƒ‰DPHSpring‚Í6Ž©—R“xŠÖßiS‘©‚µ‚È‚¢j‚Å‚ ‚èCŽÀŽ¿“I‚ÈƒRƒ“ƒgƒ[ƒ‹‚ÍMotor‚ª’S“–D
+	/// é–¢ç¯€ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ï¼ŽPHSpringã¯6è‡ªç”±åº¦é–¢ç¯€ï¼ˆï¼æ‹˜æŸã—ãªã„ï¼‰ã§ã‚ã‚Šï¼Œå®Ÿè³ªçš„ãªã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã¯MotorãŒæ‹…å½“ï¼Ž
 	PHSpringMotor  motor;
 
 public:
 	SPR_OBJECTDEF(PHSpring);
 	SPR_DECLMEMBEROF_PHSpringDesc;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHSpring(const PHSpringDesc& desc = PHSpringDesc()) {
 		motor.joint = this;
 
@@ -36,21 +36,21 @@ public:
 		InitTargetAxes();
 	}
 
-	// ----- PHConstraint‚Ì”h¶ƒNƒ‰ƒX‚ÅŽÀ‘•‚·‚é‹@”\
+	// ----- PHConstraintã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
-	/// ‚Ç‚ÌŽ©—R“x‚ð‘¬“xS‘©‚·‚é‚©‚ðÝ’è
+	/// ã©ã®è‡ªç”±åº¦ã‚’é€Ÿåº¦æ‹˜æŸã™ã‚‹ã‹ã‚’è¨­å®š
 	virtual void SetupAxisIndex() {
 		PHJoint::SetupAxisIndex();
 		motor.SetupAxisIndex();
 	}
 
-	/// LCP‚Ì•â³’l‚ÌŒvŽZDŒë·C³—p
+	/// LCPã®è£œæ­£å€¤ã®è¨ˆç®—ï¼Žèª¤å·®ä¿®æ­£ç”¨
 	virtual void CompBias() {
 		PHJoint::CompBias();
 		motor.CompBias();
 	}
 
-	// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌŽÀ‘•
+	// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 
 	virtual void SetSpring(const Vec3d& spring) { this->spring = spring; }
 	virtual Vec3d GetSpring() { return spring; }

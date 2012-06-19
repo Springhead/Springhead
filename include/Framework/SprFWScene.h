@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -40,177 +40,177 @@ struct FWSceneIf : SceneIf {
 
 public:
 		
-	/// Physicsƒ‚ƒWƒ…[ƒ‹‚ÌƒV[ƒ“‚ğæ“¾‚·‚é
+	/// Physicsãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ã‚·ãƒ¼ãƒ³ã‚’å–å¾—ã™ã‚‹
 	PHSceneIf*	GetPHScene();
 
-	/** @brief Physicsƒ‚ƒWƒ…[ƒ‹‚ÌƒV[ƒ“‚ğİ’è‚·‚é
-		FWScene‚Ìì¬‚Æ“¯‚É©“®“I‚Éì¬‚³‚ê‚é‚Ì‚ÅA’Êí‚ÍŒÄ‚Ño‚·•K—v‚Í–³‚¢D
+	/** @brief Physicsãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ã‚·ãƒ¼ãƒ³ã‚’è¨­å®šã™ã‚‹
+		FWSceneã®ä½œæˆã¨åŒæ™‚ã«è‡ªå‹•çš„ã«ä½œæˆã•ã‚Œã‚‹ã®ã§ã€é€šå¸¸ã¯å‘¼ã³å‡ºã™å¿…è¦ã¯ç„¡ã„ï¼
 	 */	
 	void		SetPHScene(PHSceneIf* s);
 
-	/// Graphicsƒ‚ƒWƒ…[ƒ‹‚ÌƒV[ƒ“‚ğæ“¾‚·‚é
+	/// Graphicsãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ã‚·ãƒ¼ãƒ³ã‚’å–å¾—ã™ã‚‹
 	GRSceneIf*	GetGRScene();
 	
-	/** @brief Graphicsƒ‚ƒWƒ…[ƒ‹‚ÌƒV[ƒ“‚ğæ“¾Eİ’è‚·‚é
-		FWScene‚Ìì¬‚Æ“¯‚É©“®“I‚Éì¬‚³‚ê‚é‚Ì‚ÅA’Êí‚ÍŒÄ‚Ño‚·•K—v‚Í–³‚¢D
+	/** @brief Graphicsãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®ã‚·ãƒ¼ãƒ³ã‚’å–å¾—ãƒ»è¨­å®šã™ã‚‹
+		FWSceneã®ä½œæˆã¨åŒæ™‚ã«è‡ªå‹•çš„ã«ä½œæˆã•ã‚Œã‚‹ã®ã§ã€é€šå¸¸ã¯å‘¼ã³å‡ºã™å¿…è¦ã¯ç„¡ã„ï¼
 	 */
 	void		SetGRScene(GRSceneIf* s);
 
-	/** @brief ‹ó‚ÌFrameworkƒIƒuƒWƒFƒNƒg‚ğì¬‚·‚é
-		ì¬‚³‚ê‚½“_‚ÅPHSolid‚ÆGRFrame‚ÍŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚È‚¢‚Ì‚ÅC
-		SetPHSolid, SetGRFrame‚ÅŠ„‚è“–‚Ä‚é•K—v‚ª‚ ‚éD
+	/** @brief ç©ºã®Frameworkã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆã™ã‚‹
+		ä½œæˆã•ã‚ŒãŸæ™‚ç‚¹ã§PHSolidã¨GRFrameã¯å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãªã„ã®ã§ï¼Œ
+		SetPHSolid, SetGRFrameã§å‰²ã‚Šå½“ã¦ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼
 	 */
 	FWObjectIf*	CreateFWObject();
 
-	/// ƒIƒuƒWƒFƒNƒg‚Ì”‚ğæ“¾‚·‚é
+	/// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ•°ã‚’å–å¾—ã™ã‚‹
 	int NObject()const;
 
-	/// ƒIƒuƒWƒFƒNƒg‚Ì”z—ñ‚ğæ“¾‚·‚é
+	/// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®é…åˆ—ã‚’å–å¾—ã™ã‚‹
 	FWObjectIf** GetObjects();
 
-	/** @brief ƒIƒuƒWƒFƒNƒg‚ğ“¯Šú‚·‚é
-		ŠeFWObject‚É‘Î‚µ‚ÄA‚»‚ê‚¼‚ê
-		EPHSolid‚ÌˆÊ’u‚ğGRFrame‚É”½‰f‚³‚¹‚é
-		EGRFrame‚ÌˆÊ’u‚ğPHSolid‚É”½‰f‚³‚¹‚é
-		‚Ì‚Ç‚¿‚ç‚©‚ğs‚¤(‚Ç‚¿‚ç‚ğs‚¤‚©‚ÍFWObject::syncSource‚Åİ’è‚·‚é)B
-		’Êí‚ÍFWSceneIf::Step‚É‚æ‚Á‚ÄƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ªÀs‚³‚ê‚½Œã‚ÉŒÄ‚ÔB
+	/** @brief ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’åŒæœŸã™ã‚‹
+		å„FWObjectã«å¯¾ã—ã¦ã€ãã‚Œãã‚Œ
+		ãƒ»PHSolidã®ä½ç½®ã‚’GRFrameã«åæ˜ ã•ã›ã‚‹
+		ãƒ»GRFrameã®ä½ç½®ã‚’PHSolidã«åæ˜ ã•ã›ã‚‹
+		ã®ã©ã¡ã‚‰ã‹ã‚’è¡Œã†(ã©ã¡ã‚‰ã‚’è¡Œã†ã‹ã¯FWObject::syncSourceã§è¨­å®šã™ã‚‹)ã€‚
+		é€šå¸¸ã¯FWSceneIf::Stepã«ã‚ˆã£ã¦ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ãŒå®Ÿè¡Œã•ã‚ŒãŸå¾Œã«å‘¼ã¶ã€‚
 	 */
 	void Sync();
 
-	/** @brief ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğÀs‚·‚é
+	/** @brief ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å®Ÿè¡Œã™ã‚‹
 	 */
 	void Step();
 
-	/** @brief •`‰æ‚·‚é
-		@param grRender	ƒŒƒ“ƒ_ƒ‰
-		@param debug	ƒfƒoƒbƒO•`‰æ‚©
+	/** @brief æç”»ã™ã‚‹
+		@param grRender	ãƒ¬ãƒ³ãƒ€ãƒ©
+		@param debug	ãƒ‡ãƒãƒƒã‚°æç”»ã‹
 
 	 */
 	void Draw(GRRenderIf* grRender, bool debug);
 
-	/** @brief	PhysicsƒV[ƒ“‚ğƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚é
-		@param	render	ƒŒƒ“ƒ_ƒ‰
-		@param  scene	ƒV[ƒ“
-		ƒV[ƒ“‚ÉŠÜ‚Ü‚ê‚éƒIƒuƒWƒFƒNƒgi„‘ÌCS‘©CÚGCIK‚È‚Çj‚ğ‚·‚×‚Ä•`‰æ‚·‚éD
+	/** @brief	Physicsã‚·ãƒ¼ãƒ³ã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹
+		@param	render	ãƒ¬ãƒ³ãƒ€ãƒ©
+		@param  scene	ã‚·ãƒ¼ãƒ³
+		ã‚·ãƒ¼ãƒ³ã«å«ã¾ã‚Œã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼ˆå‰›ä½“ï¼Œæ‹˜æŸï¼Œæ¥è§¦ï¼ŒIKãªã©ï¼‰ã‚’ã™ã¹ã¦æç”»ã™ã‚‹ï¼
 	 */
 	void DrawPHScene(GRRenderIf* render);
 
-	/** @brief „‘Ì‚ğƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚é
-	    @param	render			ƒŒƒ“ƒ_ƒ‰
-		@param	solid			„‘Ì
+	/** @brief å‰›ä½“ã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹
+	    @param	render			ãƒ¬ãƒ³ãƒ€ãƒ©
+		@param	solid			å‰›ä½“
 		@param	solid_or_wire
-		w’è‚µ‚½„‘Ì‚Ìî•ñiÀ•W²CÕ“Ë”»’èŒ`óC—ÍCƒ‚[ƒƒ“ƒgj‚ğ•`‰æ‚·‚é
+		æŒ‡å®šã—ãŸå‰›ä½“ã®æƒ…å ±ï¼ˆåº§æ¨™è»¸ï¼Œè¡çªåˆ¤å®šå½¢çŠ¶ï¼ŒåŠ›ï¼Œãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆï¼‰ã‚’æç”»ã™ã‚‹
 	 */
 	void DrawSolid(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire);
 
-	/** @brief Õ“Ë”»’è—pŒ`ó‚ğ•`‰æ‚·‚é
-		@param	render	ƒŒƒ“ƒ_ƒ‰
-		@param	shape	Œ`ó
-		@param	solid	true‚È‚çƒ\ƒŠƒbƒh•`‰æCfalse‚È‚çƒƒCƒ„ƒtƒŒ[ƒ€•`‰æ
-		shape‚Ìí—Ş‚ğ”»•Ê‚µ‚ÄŒ`ó‚ğ•`‰æ‚·‚éD
+	/** @brief è¡çªåˆ¤å®šç”¨å½¢çŠ¶ã‚’æç”»ã™ã‚‹
+		@param	render	ãƒ¬ãƒ³ãƒ€ãƒ©
+		@param	shape	å½¢çŠ¶
+		@param	solid	trueãªã‚‰ã‚½ãƒªãƒƒãƒ‰æç”»ï¼Œfalseãªã‚‰ãƒ¯ã‚¤ãƒ¤ãƒ•ãƒ¬ãƒ¼ãƒ æç”»
+		shapeã®ç¨®é¡ã‚’åˆ¤åˆ¥ã—ã¦å½¢çŠ¶ã‚’æç”»ã™ã‚‹ï¼
 	 */
 	void DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid);
 
-	/** @brief S‘©‚ğ•`‰æ‚·‚é
-		@param	render	ƒŒƒ“ƒ_ƒ‰
-		@param	con		S‘©
-		w’è‚µ‚½S‘©‚Ìî•ñiƒ\ƒPƒbƒg‚Æƒvƒ‰ƒO‚ÌÀ•W²CS‘©—ÍCƒ‚[ƒƒ“ƒgj‚ğ•`‰æ‚·‚é
+	/** @brief æ‹˜æŸã‚’æç”»ã™ã‚‹
+		@param	render	ãƒ¬ãƒ³ãƒ€ãƒ©
+		@param	con		æ‹˜æŸ
+		æŒ‡å®šã—ãŸæ‹˜æŸã®æƒ…å ±ï¼ˆã‚½ã‚±ãƒƒãƒˆã¨ãƒ—ãƒ©ã‚°ã®åº§æ¨™è»¸ï¼Œæ‹˜æŸåŠ›ï¼Œãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆï¼‰ã‚’æç”»ã™ã‚‹
 	 */
 	void DrawConstraint(GRRenderIf* render, PHConstraintIf* con);
 
-	/**	@brief ÚG‚ğ•`‰æ‚·‚é
-		@param	render	ƒŒƒ“ƒ_ƒ‰
-		@param	con		ÚG
-		w’è‚µ‚½ÚG‚ÌÚG’f–Ê‚ğ•`‰æ‚·‚é
+	/**	@brief æ¥è§¦ã‚’æç”»ã™ã‚‹
+		@param	render	ãƒ¬ãƒ³ãƒ€ãƒ©
+		@param	con		æ¥è§¦
+		æŒ‡å®šã—ãŸæ¥è§¦ã®æ¥è§¦æ–­é¢ã‚’æç”»ã™ã‚‹
 	 */
 	void DrawContact(GRRenderIf* render, PHContactPointIf* con);
 
-	/**	@brief	IKî•ñ‚ğ•`‰æ‚·‚é
-		@param	render		ƒŒƒ“ƒ_ƒ‰
-		@param	ikEngine	IKƒGƒ“ƒWƒ“
+	/**	@brief	IKæƒ…å ±ã‚’æç”»ã™ã‚‹
+		@param	render		ãƒ¬ãƒ³ãƒ€ãƒ©
+		@param	ikEngine	IKã‚¨ãƒ³ã‚¸ãƒ³
 	 */
 	void DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine);
 
-	/** @brief ŠÖß‰Â“®ˆæ‚ğ•`‰æ‚·‚é
-		@param	render	ƒŒƒ“ƒ_ƒ‰
-		@param	con		ŠÖß
+	/** @brief é–¢ç¯€å¯å‹•åŸŸã‚’æç”»ã™ã‚‹
+		@param	render	ãƒ¬ãƒ³ãƒ€ãƒ©
+		@param	con		é–¢ç¯€
 	 */
 	void DrawLimit(GRRenderIf* render, PHConstraintIf* con);
 
-	/**	@brief	Hapticî•ñ‚ğ•`‰æ‚·‚é
-		@param	render			ƒŒƒ“ƒ_ƒ‰
-		@param	hapticEngine	HapticƒGƒ“ƒWƒ“
+	/**	@brief	Hapticæƒ…å ±ã‚’æç”»ã™ã‚‹
+		@param	render			ãƒ¬ãƒ³ãƒ€ãƒ©
+		@param	hapticEngine	Hapticã‚¨ãƒ³ã‚¸ãƒ³
 	 */
 	void DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine);
 
-	/**	@brief •`‰æƒ‚[ƒh‚Ìİ’è
-		@param ph_or_gr	PHScene‚ğ•`‰æ‚·‚é‚©GRScene‚ğ•`‰æ‚·‚é‚©
-		@param solid	ƒ\ƒŠƒbƒh•`‰æ‚ÌƒIƒ“/ƒIƒt
-		@param wire		ƒƒCƒ„ƒtƒŒ[ƒ€•`‰æ‚ÌƒIƒ“/ƒIƒt
-		solid‚Æwire‚ÍPHSceen‚ğ•`‰æ‚·‚é‚Æ‚«‚Ì‚İ—LŒøD
+	/**	@brief æç”»ãƒ¢ãƒ¼ãƒ‰ã®è¨­å®š
+		@param ph_or_gr	PHSceneã‚’æç”»ã™ã‚‹ã‹GRSceneã‚’æç”»ã™ã‚‹ã‹
+		@param solid	ã‚½ãƒªãƒƒãƒ‰æç”»ã®ã‚ªãƒ³/ã‚ªãƒ•
+		@param wire		ãƒ¯ã‚¤ãƒ¤ãƒ•ãƒ¬ãƒ¼ãƒ æç”»ã®ã‚ªãƒ³/ã‚ªãƒ•
+		solidã¨wireã¯PHSceenã‚’æç”»ã™ã‚‹ã¨ãã®ã¿æœ‰åŠ¹ï¼
 	 */
 	void SetRenderMode(bool solid = true, bool wire = false);
 
-	/** @brief	ƒIƒuƒWƒFƒNƒg’PˆÊ‚Ì•`‰æ‚ÌƒIƒ“/ƒIƒt
+	/** @brief	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå˜ä½ã®æç”»ã®ã‚ªãƒ³/ã‚ªãƒ•
 	 */
 	void EnableRender(ObjectIf* obj, bool enable = true);
 	
-	/** @brief •`‰æƒ}ƒeƒŠƒAƒ‹‚Ìİ’è
-		@param	mat			ƒ}ƒeƒŠƒAƒ‹
-		@param	solid		İ’è‘ÎÛ‚Ì„‘Ì
-		ƒfƒoƒbƒO•`‰æ‚É‚¨‚¯‚éƒ}ƒeƒŠƒAƒ‹‚ğİ’è‚·‚éD
-		mat‚É‚ÍGRRenderIf::TMaterialSample‚Ì’l‚ªw’è‚Å‚«‚éD
-		solid‚ÉNULL‚ğw’è‚·‚é‚Æ‘S‚Ä‚Ì„‘Ì‚ª‘ÎÛ‚Æ‚È‚éD
+	/** @brief æç”»ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®š
+		@param	mat			ãƒãƒ†ãƒªã‚¢ãƒ«
+		@param	solid		è¨­å®šå¯¾è±¡ã®å‰›ä½“
+		ãƒ‡ãƒãƒƒã‚°æç”»ã«ãŠã‘ã‚‹ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’è¨­å®šã™ã‚‹ï¼
+		matã«ã¯GRRenderIf::TMaterialSampleã®å€¤ãŒæŒ‡å®šã§ãã‚‹ï¼
+		solidã«NULLã‚’æŒ‡å®šã™ã‚‹ã¨å…¨ã¦ã®å‰›ä½“ãŒå¯¾è±¡ã¨ãªã‚‹ï¼
 	 */
 	void SetSolidMaterial(int mat, PHSolidIf* solid = 0);
 	void SetWireMaterial (int mat, PHSolidIf* solid = 0);
 
-	/// À•W²‚Ì•`‰æØ‚è‘Ö‚¦
+	/// åº§æ¨™è»¸ã®æç”»åˆ‡ã‚Šæ›¿ãˆ
 	void EnableRenderAxis(bool world = true, bool solid = true, bool con = true);
-	/// À•W²‚Ì•`‰æƒIƒvƒVƒ‡ƒ“
+	/// åº§æ¨™è»¸ã®æç”»ã‚ªãƒ—ã‚·ãƒ§ãƒ³
 	void SetAxisMaterial(int matX, int matY, int matZ);
 	void SetAxisScale(float scaleWorld, float scaleSolid, float scaleCon);
 	void SetAxisStyle(int style);
 
-	/// —Í‚Ì•`‰æØ‚è‘Ö‚¦
+	/// åŠ›ã®æç”»åˆ‡ã‚Šæ›¿ãˆ
 	void EnableRenderForce(bool solid = true, bool constraint = true);
-	/// —Í‚Ì•`‰æƒIƒvƒVƒ‡ƒ“
+	/// åŠ›ã®æç”»ã‚ªãƒ—ã‚·ãƒ§ãƒ³
 	void SetForceMaterial(int matForce, int matMoment);
 	void SetForceScale(float scaleForce, float scaleMoment);
 
-	/**  @brief ÚG–Ê‚Ì•`‰æ */
+	/**  @brief æ¥è§¦é¢ã®æç”» */
 	void EnableRenderContact(bool enable = true);
 	void SetContactMaterial(int mat);
 
-	/**  @brief ƒOƒŠƒbƒh‚Ì•`‰æ */
+	/**  @brief ã‚°ãƒªãƒƒãƒ‰ã®æç”» */
 	void EnableRenderGrid(bool x = true, bool y = true, bool z = true);
-	/** @brief	ƒOƒŠƒbƒh‚Ìİ’è
-		@param	axis	İ’è‚·‚é²‚ğ'x', 'y', 'z'‚Åw’è
-		@param	offset	ƒIƒtƒZƒbƒg
-		@param	size	ƒOƒŠƒbƒh‚Ì•
-		@param	slice	•ªŠ„”
+	/** @brief	ã‚°ãƒªãƒƒãƒ‰ã®è¨­å®š
+		@param	axis	è¨­å®šã™ã‚‹è»¸ã‚’'x', 'y', 'z'ã§æŒ‡å®š
+		@param	offset	ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+		@param	size	ã‚°ãƒªãƒƒãƒ‰ã®å¹…
+		@param	slice	åˆ†å‰²æ•°
 	 */
 	void SetGridOption(char axis, float offset, float size, int slice);
 	void SetGridMaterial(int matX, int matY, int matZ);
 
-	/**  @brief IK‚ÌŒvZŒ‹‰Ê‚Ì•`‰æ */
+	/**  @brief IKã®è¨ˆç®—çµæœã®æç”» */
 	void EnableRenderIK(bool enable = true);
 	void SetIKMaterial(int mat);
 	void SetIKScale(float scale);
 
-	/**  @brief ŠÖß‰Â“®ˆæ‚Ì•`‰æ */
+	/**  @brief é–¢ç¯€å¯å‹•åŸŸã®æç”» */
 	void EnableRenderLimit(bool enable = true);
 
-	/** @brief Haptic‚ÌŒvZŒ‹‰Ê‚Ì•`‰æ */
+	/** @brief Hapticã®è¨ˆç®—çµæœã®æç”» */
 	void EnableRenderHaptic(bool enable = true);
 	
 	void AddHumanInterface(HIForceDevice6D* d);
 
-	/** @brief —ÍŠoƒ|ƒCƒ“ƒ^‚ğì‚é
+	/** @brief åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã‚’ä½œã‚‹
 	*/
 	FWHapticPointerIf* CreateHapticPointer();
 
-	/** @breif HumanInterface‚Ìó‘Ô‚ğæ“¾‚µA—ÍŠoƒ|ƒCƒ“ƒ^‚ğXV‚·‚é
+	/** @breif HumanInterfaceã®çŠ¶æ…‹ã‚’å–å¾—ã—ã€åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã‚’æ›´æ–°ã™ã‚‹
 	*/
 	void UpdateHapticPointers();
 

@@ -1,12 +1,12 @@
-#ifndef CR_SIMPLE_TEST_APP
+ï»¿#ifndef CR_SIMPLE_TEST_APP
 #define CR_SIMPLE_TEST_APP
 
 #include "stdafx.h"
 #include <Springhead.h>
-#include <SprCreature.h>  // ‚ ‚é’ö“x‚Å‚«‚½‚çSpringhead.h‚É‘g‚İ‚Ş
+#include <SprCreature.h>  // ã‚ã‚‹ç¨‹åº¦ã§ããŸã‚‰Springhead.hã«çµ„ã¿è¾¼ã‚€
 
 namespace Spr{
-	// ƒ‰ƒCƒuƒ‰ƒŠ’†‚Ìg—p‚·‚éŠÖ”
+	// ãƒ©ã‚¤ãƒ–ãƒ©ãƒªä¸­ã®ä½¿ç”¨ã™ã‚‹é–¢æ•°
 	void CRRegisterFactories();
 	void PHRegisterTypeDescs();
 	void CDRegisterTypeDescs();
@@ -14,7 +14,7 @@ namespace Spr{
 	void FIRegisterTypeDescs();
 	void CRRegisterTypeDescs();
 
-	// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒNƒ‰ƒX
+	// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹
 	class CRSimpleTestApp {
 	public:
 		FISdkIf*          fiSdk;

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,9 +7,9 @@
  */
 
 /**
-	- ƒ}ƒ‹ƒ`ƒEƒBƒ“ƒhƒE‚Ìƒfƒ‚
-	 - 1‚Â‚ÌƒV[ƒ“‚ğ2‚Â‚ÌƒEƒBƒ“ƒhƒE‚Å•\¦‚·‚éD
-	 - 1‚Â‚ÍƒfƒoƒbƒO•`‰æC‚à‚¤1‚Â‚Í”ñƒfƒoƒbƒO•`‰æ
+	- ãƒãƒ«ãƒã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒ‡ãƒ¢
+	 - 1ã¤ã®ã‚·ãƒ¼ãƒ³ã‚’2ã¤ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã§è¡¨ç¤ºã™ã‚‹ï¼
+	 - 1ã¤ã¯ãƒ‡ãƒãƒƒã‚°æç”»ï¼Œã‚‚ã†1ã¤ã¯éãƒ‡ãƒãƒƒã‚°æç”»
  **/
 
 #include "FWMultiWinSample.h"

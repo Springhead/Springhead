@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprGRSphere.h
- *	@brief ‹…
+ *	@brief çƒ
 */
 
 /**	\addtogroup	gpGraphics	*/
@@ -20,11 +20,11 @@
 
 namespace Spr{;
 
-///	@brief •\¦—p‚ÌSphere(GRSphere)‚ÌƒfƒXƒNƒŠƒvƒ^D
+///	@brief è¡¨ç¤ºç”¨ã®Sphere(GRSphere)ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ï¼
 struct GRSphereDesc{
-	float radius;			///< ”¼Œa
-	int   slices;			///< Œoü•ûŒü‚Ì•ªŠ„”
-	int   stacks;			///< ˆÜü•ûŒü‚Ì•ªŠ„”	
+	float radius;			///< åŠå¾„
+	int   slices;			///< çµŒç·šæ–¹å‘ã®åˆ†å‰²æ•°
+	int   stacks;			///< ç·¯ç·šæ–¹å‘ã®åˆ†å‰²æ•°	
 	GRSphereDesc(){
 		radius = 1.0;
 		slices = 16;
@@ -33,7 +33,7 @@ struct GRSphereDesc{
 };
 
 
-///	@brief	ƒOƒ‰ƒtƒBƒbƒNƒX‚Åg‚¤•\¦—p‚ÌSphere
+///	@brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã§ä½¿ã†è¡¨ç¤ºç”¨ã®Sphere
 struct GRSphereIf: public GRVisualIf{
 	SPR_IFDEF(GRSphere);
 };

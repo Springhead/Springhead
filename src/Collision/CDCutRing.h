@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,7 +12,7 @@
 
 namespace Spr{;
 
-///	ÚG‰ğÍ‚Ég‚¤ƒNƒ‰ƒXDÚG•”•ª‚ÌØ‚èŒû‚Ìü•ª‚ğ•\‚·D
+///	æ¥è§¦è§£æã«ä½¿ã†ã‚¯ãƒ©ã‚¹ï¼æ¥è§¦éƒ¨åˆ†ã®åˆ‡ã‚Šå£ã®ç·šåˆ†ã‚’è¡¨ã™ï¼
 class CDCutLine{
 public:
 	Vec2d normal;
@@ -32,15 +32,15 @@ public:
 	}
 	friend class CDCutRing;
 };
-///	ÚG‰ğÍ‚Ég‚¤ƒNƒ‰ƒXDÚG•”•ª‚ÌØ‚èŒû
+///	æ¥è§¦è§£æã«ä½¿ã†ã‚¯ãƒ©ã‚¹ï¼æ¥è§¦éƒ¨åˆ†ã®åˆ‡ã‚Šå£
 class CDCutRing{
 public:
-	///	Ø‚èŒû‚Ì’†‚Ì1“_‚ÆCØ‚èŒû–Ê‚ÌÀ•WŒnDex ‚ª–@ü
+	///	åˆ‡ã‚Šå£ã®ä¸­ã®1ç‚¹ã¨ï¼Œåˆ‡ã‚Šå£é¢ã®åº§æ¨™ç³»ï¼ex ãŒæ³•ç·š
 	Posed local, localInv;
-	///	Ø‚èŒû‚ğ\¬‚·‚é’¼ü
+	///	åˆ‡ã‚Šå£ã‚’æ§‹æˆã™ã‚‹ç›´ç·š
 	std::vector<CDCutLine> lines;
-	///	‘o‘Î•ÏŠ· ¨ QuickHull ‚Åˆê”Ô“à‘¤‚Ì“Ê‘½ŠpŒ`‚Ì’¸“_‚ğ‹‚ß‚éD
-	static CDQHLines<CDCutLine> vtxs;	//	ˆê”Ô“à‘¤‚Ì“Ê‘½ŠpŒ`‚Ì’¸“_
+	///	åŒå¯¾å¤‰æ› â†’ QuickHull ã§ä¸€ç•ªå†…å´ã®å‡¸å¤šè§’å½¢ã®é ‚ç‚¹ã‚’æ±‚ã‚ã‚‹ï¼
+	static CDQHLines<CDCutLine> vtxs;	//	ä¸€ç•ªå†…å´ã®å‡¸å¤šè§’å½¢ã®é ‚ç‚¹
 
 	CDCutRing(Vec3d c, Matrix3d l){
 		local.Ori().FromMatrix(l);

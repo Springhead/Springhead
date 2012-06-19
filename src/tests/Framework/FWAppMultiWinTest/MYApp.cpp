@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,7 +17,7 @@
 using namespace std;
 
 //=======================================================================================================
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^EƒfƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ãƒ»ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 MYApp::MYApp(){
 	instance	= this;
 	dt			= 0.05;
@@ -36,7 +36,7 @@ MYApp::MYApp(){
 }
 
 //=======================================================================================================
-// ƒNƒ‰ƒX“à‚ÌŠÖ”’è‹`
+// ã‚¯ãƒ©ã‚¹å†…ã®é–¢æ•°å®šç¾©
 void MYApp::NumOfClassMembers(std::ostream& out){
 	out << "Show the sizes of te MYApp's vector members" << std::endl;
 	out << "numWindow		: " << numWindow		<< std::endl;
@@ -47,7 +47,7 @@ void MYApp::NumOfClassMembers(std::ostream& out){
 }
 
 //=======================================================================================================
-// ãˆÊŠK‘w‚ÅéŒ¾‚³‚ê‚½ŠÖ”‚ÌƒI[ƒo[ƒ[ƒh
+// ä¸Šä½éšå±¤ã§å®£è¨€ã•ã‚ŒãŸé–¢æ•°ã®ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰
 
 void MYApp::Init(int argc, char* argv[]){
 	
@@ -106,7 +106,7 @@ void MYApp::Keyboard(int key, int x, int y){
 void MYApp::Display(){
 		FWWin* wr = GetCurrentWin();
 
-// Mesh ‚ª‚ ‚éê‡‚Í#if _DEBUG‚Å‚­‚­‚é (from here)
+// Mesh ãŒã‚ã‚‹å ´åˆã¯#if _DEBUGã§ããã‚‹ (from here)
 		GetSdk()->SetDebugMode(true);
 		GRDebugRenderIf* r = wr->render->Cast();
 		r->SetRenderMode(true, true);

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,13 +13,13 @@
 namespace Spr {
 
 /**
-	Cyverse‚ÌUSB‚W²ƒ‚[ƒ^ƒhƒ‰ƒCƒoH8”Å‚Ìƒhƒ‰ƒCƒo.
+	Cyverseã®USBï¼˜è»¸ãƒ¢ãƒ¼ã‚¿ãƒ‰ãƒ©ã‚¤ãƒH8ç‰ˆã®ãƒ‰ãƒ©ã‚¤ãƒ.
  **/
 class SPR_DLL DRUsbH8Simple: public HIRealDevice{
 public:
 	SPR_OBJECTDEF_NOIF(DRUsbH8Simple);
 
-	///	‰¼‘zƒfƒoƒCƒX
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹
 	class Da: public DVDa{
 	public:
 		Da(DRUsbH8Simple* r, int c):DVDa(r, c){}
@@ -33,9 +33,9 @@ public:
 		Counter(DRUsbH8Simple* r, int c):DVCounter(r, c){}
 		DRUsbH8Simple* GetRealDevice() { return realDevice->Cast(); }
 
-		///	ƒJƒEƒ“ƒ^’l‚Ìİ’è
+		///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®è¨­å®š
 		virtual void Count(long c){ GetRealDevice()->Count(portNo, c); }
-		///	ƒJƒEƒ“ƒ^’l‚Ì“Ç‚İo‚µ
+		///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®èª­ã¿å‡ºã—
 		virtual long Count(){ return GetRealDevice()->Count(portNo); }
 	};
 
@@ -50,20 +50,20 @@ protected:
 public:
 	DRUsbH8Simple(int ch=0);
 
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	virtual bool Init();
-	///	‰¼‘zƒfƒoƒCƒX‚Ì“o˜^
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²
 	//virtual void Register(HIVirtualDevicePool& vpool);
 
-	///	“dˆ³o—Í
+	///	é›»åœ§å‡ºåŠ›
 	void Voltage(int ch, float v);
-	///	“dˆ³o—Í(”’l)
+	///	é›»åœ§å‡ºåŠ›(æ•°å€¤)
 	void Digit(int ch, int v);
-	///	ƒJƒEƒ“ƒ^’l‚Ìİ’è
+	///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®è¨­å®š
 	void Count(int ch, long c);
-	///	ƒJƒEƒ“ƒ^’l‚Ì“Ç‚İo‚µ
+	///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®èª­ã¿å‡ºã—
 	long Count(int ch);
-	///	ó‘Ô‚ÌXV
+	///	çŠ¶æ…‹ã®æ›´æ–°
 	virtual void Update();
 };
 

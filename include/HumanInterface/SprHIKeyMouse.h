@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,13 +12,13 @@
 
 namespace Spr {;
 
-/** ‰¼‘zƒL[ƒ{[ƒhEƒ}ƒEƒX
-	EƒL[Eƒ}ƒEƒXƒCƒxƒ“ƒg‚ğˆ—‚·‚éƒNƒ‰ƒX‚ÍDVKeyMouseCallback‚ğŒp³‚µƒCƒxƒ“ƒgƒnƒ“ƒhƒ‰‚ğÀ‘•‚·‚é
-	E‚»‚Ìã‚ÅDVKeyMouseBaseIf::AddCallback‚Å©g‚ğ“o˜^‚·‚é
-	Eƒnƒ“ƒhƒ‰‚Í•¡”“o˜^‰Â”\D
+/** ä»®æƒ³ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ»ãƒã‚¦ã‚¹
+	ãƒ»ã‚­ãƒ¼ãƒ»ãƒã‚¦ã‚¹ã‚¤ãƒ™ãƒ³ãƒˆã‚’å‡¦ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã¯DVKeyMouseCallbackã‚’ç¶™æ‰¿ã—ã‚¤ãƒ™ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ©ã‚’å®Ÿè£…ã™ã‚‹
+	ãƒ»ãã®ä¸Šã§DVKeyMouseBaseIf::AddCallbackã§è‡ªèº«ã‚’ç™»éŒ²ã™ã‚‹
+	ãƒ»ãƒãƒ³ãƒ‰ãƒ©ã¯è¤‡æ•°ç™»éŒ²å¯èƒ½ï¼
  */
 
-/// ‰Ÿ‚³‚ê‚Ä‚¢‚éƒL[Cƒ{ƒ^ƒ“‚Ìó‘Ô‚ğ¦‚·ƒtƒ‰ƒO
+/// æŠ¼ã•ã‚Œã¦ã„ã‚‹ã‚­ãƒ¼ï¼Œãƒœã‚¿ãƒ³ã®çŠ¶æ…‹ã‚’ç¤ºã™ãƒ•ãƒ©ã‚°
 struct DVButtonMask{
 	enum{
 		LBUTTON		= 0x01,
@@ -37,11 +37,11 @@ struct DVButtonSt{
 };
 struct DVKeySt{
 	enum{
-		PRESSED		= 0x01,		///< ‰Ÿ‚³‚ê‚Ä‚¢‚é
-		TOGGLE_ON	= 0x02,		///< ƒgƒOƒ‹‚³‚ê‚Ä‚¢‚é(caps lock‚È‚Ç)
+		PRESSED		= 0x01,		///< æŠ¼ã•ã‚Œã¦ã„ã‚‹
+		TOGGLE_ON	= 0x02,		///< ãƒˆã‚°ãƒ«ã•ã‚Œã¦ã„ã‚‹(caps lockãªã©)
 	};
 };
-/** asciiˆÈŠO‚Ì“ÁêƒL[ƒR[ƒhD’l‚ÍGLUT‚Ì“ÁêƒL[ƒR[ƒh‚É256‚ğ‰ÁZ‚µ‚½‚à‚ÌD
+/** asciiä»¥å¤–ã®ç‰¹æ®Šã‚­ãƒ¼ã‚³ãƒ¼ãƒ‰ï¼å€¤ã¯GLUTã®ç‰¹æ®Šã‚­ãƒ¼ã‚³ãƒ¼ãƒ‰ã«256ã‚’åŠ ç®—ã—ãŸã‚‚ã®ï¼
  **/
 struct DVKeyCode{
 	enum{
@@ -77,72 +77,72 @@ struct DVKeyCode{
 };
 
 struct DVKeyMouseCallback{
-	/** @brief ƒ}ƒEƒXƒNƒŠƒbƒN‚Ìˆ—
-		@param button	DVButtonMask—ñ‹“q‚Ì‘g‚İ‡‚í‚¹
-		@param state	DVButtonSt—ñ‹“q‚Ì’l
-		@param x		ƒJ[ƒ\ƒ‹‚ÌxÀ•W
-		@param y		ƒJ[ƒ\ƒ‹‚ÌyÀ•W
+	/** @brief ãƒã‚¦ã‚¹ã‚¯ãƒªãƒƒã‚¯æ™‚ã®å‡¦ç†
+		@param button	DVButtonMaskåˆ—æŒ™å­ã®çµ„ã¿åˆã‚ã›
+		@param state	DVButtonStåˆ—æŒ™å­ã®å€¤
+		@param x		ã‚«ãƒ¼ã‚½ãƒ«ã®xåº§æ¨™
+		@param y		ã‚«ãƒ¼ã‚½ãƒ«ã®yåº§æ¨™
 	 */
 	virtual bool OnMouse(int button, int state, int x, int y){ return false; }
-	/** @brief ƒ_ƒuƒ‹ƒNƒŠƒbƒN‚Ìˆ—
-		@param button	ButtonMask—ñ‹“q‚Ì‘g‚İ‡‚í‚¹
-		@param x		ƒJ[ƒ\ƒ‹‚ÌxÀ•W
-		@param y		ƒJ[ƒ\ƒ‹‚ÌyÀ•W
+	/** @brief ãƒ€ãƒ–ãƒ«ã‚¯ãƒªãƒƒã‚¯æ™‚ã®å‡¦ç†
+		@param button	ButtonMaskåˆ—æŒ™å­ã®çµ„ã¿åˆã‚ã›
+		@param x		ã‚«ãƒ¼ã‚½ãƒ«ã®xåº§æ¨™
+		@param y		ã‚«ãƒ¼ã‚½ãƒ«ã®yåº§æ¨™
 	 */
 	virtual bool OnDoubleClick(int button, int x, int y){ return false; }
-	/** @brief ƒ}ƒEƒX‚ª“®‚¢‚½‚Æ‚«‚Ìˆ—
-		@param button	ButtonMask—ñ‹“q‚Ì‘g‚İ‡‚í‚¹
-		@param x		ƒJ[ƒ\ƒ‹‚ÌxÀ•W
-		@param y		ƒJ[ƒ\ƒ‹‚ÌyÀ•W
-		@param zdelta	ƒ}ƒEƒXƒzƒC[ƒ‹‚Ì•Ï‰»—Ê
+	/** @brief ãƒã‚¦ã‚¹ãŒå‹•ã„ãŸã¨ãã®å‡¦ç†
+		@param button	ButtonMaskåˆ—æŒ™å­ã®çµ„ã¿åˆã‚ã›
+		@param x		ã‚«ãƒ¼ã‚½ãƒ«ã®xåº§æ¨™
+		@param y		ã‚«ãƒ¼ã‚½ãƒ«ã®yåº§æ¨™
+		@param zdelta	ãƒã‚¦ã‚¹ãƒ›ã‚¤ãƒ¼ãƒ«ã®å¤‰åŒ–é‡
 		
-		zdelta‚Íƒ}ƒEƒXƒzƒC[ƒ‹‚É‘Î‰‚·‚éƒfƒoƒCƒX‚ğg—p‚·‚éê‡‚Ì‚İ—LŒøD
+		zdeltaã¯ãƒã‚¦ã‚¹ãƒ›ã‚¤ãƒ¼ãƒ«ã«å¯¾å¿œã™ã‚‹ãƒ‡ãƒã‚¤ã‚¹ã‚’ä½¿ç”¨ã™ã‚‹å ´åˆã®ã¿æœ‰åŠ¹ï¼
 	*/
 	virtual bool OnMouseMove(int button, int x, int y, int zdelta){ return false; }
-	/** @brief ƒL[“ü—Íˆ—
-		@param state	DVKeySt—ñ‹“q‚Ì’l
-		@param key		asciiƒR[ƒh‚©DVKeyCode—ñ‹“q‚Ì’l
-		@param x		ƒJ[ƒ\ƒ‹‚ÌxÀ•W
-		@param y		ƒJ[ƒ\ƒ‹‚ÌyÀ•W
+	/** @brief ã‚­ãƒ¼å…¥åŠ›å‡¦ç†
+		@param state	DVKeyStåˆ—æŒ™å­ã®å€¤
+		@param key		asciiã‚³ãƒ¼ãƒ‰ã‹DVKeyCodeåˆ—æŒ™å­ã®å€¤
+		@param x		ã‚«ãƒ¼ã‚½ãƒ«ã®xåº§æ¨™
+		@param y		ã‚«ãƒ¼ã‚½ãƒ«ã®yåº§æ¨™
 	 */
 	virtual bool OnKey(int state, int key, int x, int y){ return false; }
 };
 
 /**
-	ƒL[ƒ{[ƒhEƒ}ƒEƒX‰¼‘zƒfƒoƒCƒX
+	ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ»ãƒã‚¦ã‚¹ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹
  **/
 struct DVKeyMouseIf: public HIVirtualDeviceIf{
 	SPR_IFDEF(DVKeyMouse);
 	
-	///	ƒnƒ“ƒhƒ‰‚Ì’Ç‰Á
+	///	ãƒãƒ³ãƒ‰ãƒ©ã®è¿½åŠ 
 	void AddCallback(DVKeyMouseCallback* cb);
-	/// ƒnƒ“ƒhƒ‰‚Ìíœ
+	/// ãƒãƒ³ãƒ‰ãƒ©ã®å‰Šé™¤
 	void RemoveCallback(DVKeyMouseCallback* cb);
 
-	/**	@brief ƒ}ƒEƒXƒ{ƒ^ƒ“EƒL[ƒ{[ƒhó‘Ôæ“¾
-		@param	key		DVKeyCode‚Ì’l
-		@return			DVKeySt‚Ì’l
-		win32ƒ}ƒEƒXŒÀ’èD
+	/**	@brief ãƒã‚¦ã‚¹ãƒœã‚¿ãƒ³ãƒ»ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰çŠ¶æ…‹å–å¾—
+		@param	key		DVKeyCodeã®å€¤
+		@return			DVKeyStã®å€¤
+		win32ãƒã‚¦ã‚¹é™å®šï¼
 	 */
 	int GetKeyState(int key);
 
-	/**	@brief Œ»İ‚¨‚æ‚Ñ‰ß‹‚Ìƒ}ƒEƒXˆÊ’u‚ğæ“¾
-		@param x		xÀ•W
-		@param y		yÀ•W
-		@param time		ƒ^ƒCƒ€ƒXƒ^ƒ“ƒv
-		@param count	‚¢‚­‚Â‘O‚Ìî•ñ‚ğæ“¾‚·‚é‚©
-		count‚Í[0,63]‚Ì”ÍˆÍ‚ª—LŒøD0‚È‚ç‚ÎÅVC1ˆÈã‚Í‰ß‹‚Ì—š—ğ‚ğæ“¾‚·‚éD
-		Win32‚ÆGLUT‚Å‹““®‚ªˆÙ‚È‚é‚Ì‚Å’ˆÓDGLUT‚Å‚Ítime’l‚Í–³ŒøD
+	/**	@brief ç¾åœ¨ãŠã‚ˆã³éå»ã®ãƒã‚¦ã‚¹ä½ç½®ã‚’å–å¾—
+		@param x		xåº§æ¨™
+		@param y		yåº§æ¨™
+		@param time		ã‚¿ã‚¤ãƒ ã‚¹ã‚¿ãƒ³ãƒ—
+		@param count	ã„ãã¤å‰ã®æƒ…å ±ã‚’å–å¾—ã™ã‚‹ã‹
+		countã¯[0,63]ã®ç¯„å›²ãŒæœ‰åŠ¹ï¼0ãªã‚‰ã°æœ€æ–°ï¼Œ1ä»¥ä¸Šã¯éå»ã®å±¥æ­´ã‚’å–å¾—ã™ã‚‹ï¼
+		Win32ã¨GLUTã§æŒ™å‹•ãŒç•°ãªã‚‹ã®ã§æ³¨æ„ï¼GLUTã§ã¯timeå€¤ã¯ç„¡åŠ¹ï¼
 	 */
 	void GetMousePosition(int& x, int& y, int& time, int count=0);
 };
 
 /**
-	Win32ƒ}ƒEƒX
+	Win32ãƒã‚¦ã‚¹
  **/
 struct DRKeyMouseWin32If: public HIRealDeviceIf{
 	SPR_IFDEF(DRKeyMouseWin32);
-	//	WindowsƒƒbƒZ[ƒW‚ğ“n‚µAƒ}ƒEƒX‚ÆƒL[ƒ{[ƒh‚ÌƒCƒxƒ“ƒg‚Ìˆ—‚ğ‚³‚¹‚éB
+	//	Windowsãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’æ¸¡ã—ã€ãƒã‚¦ã‚¹ã¨ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ã®ã‚¤ãƒ™ãƒ³ãƒˆã®å‡¦ç†ã‚’ã•ã›ã‚‹ã€‚
 	bool PreviewMessage(void* m);
 };
 struct DRKeyMouseWin32Desc{
@@ -150,7 +150,7 @@ struct DRKeyMouseWin32Desc{
 };
 
 /**
-	GLUTƒ}ƒEƒX
+	GLUTãƒã‚¦ã‚¹
  **/
 struct DRKeyMouseGLUTIf: public HIRealDeviceIf{
 	SPR_IFDEF(DRKeyMouseGLUT);

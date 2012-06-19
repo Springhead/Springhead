@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprHIBase.h
- *	@brief �q���[�}���C���^�t�F�[�X�̊�{�N���X
+ *	@brief ヒューマンインタフェースの基本クラス
 */
 
 
@@ -21,42 +21,42 @@ namespace Spr{;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
-/**	@brief	�q���[�}���C���^�t�F�[�X�̊�{�N���X
+/**	@brief	ヒューマンインタフェースの基本クラス
  **/
 struct HIBaseIf : NamedObjectIf{
 	SPR_IFDEF(HIBase);
-	///	�L�����u���[�V�����̑O�ɍs������
+	///	キャリブレーションの前に行う処理
 	bool BeforeCalibration();
-	///	�L�����u���[�V��������
+	///	キャリブレーション処理
 	bool Calibration();
-	///	�L�����u���[�V�����̂��Ƃɍs������
+	///	キャリブレーションのあとに行う処理
 	bool AfterCalibration();
-	///	�q���[�}���C���^�t�F�[�X�̈ˑ��֌W��ǉ�����
+	///	ヒューマンインタフェースの依存関係を追加する
 	void AddDeviceDependency(HIRealDeviceIf* rd);
-	///	�q���[�}���C���^�t�F�[�X�̈ˑ��֌W���N���A����
+	///	ヒューマンインタフェースの依存関係をクリアする
 	void ClearDeviceDependency();
-	///	�q���[�}���C���^�t�F�[�X�̏�Ԃ��X�V����D
+	///	ヒューマンインタフェースの状態を更新する．
 	void Update(float dt);
-	///	�q���[�}���C���^�t�F�[�X���g�p�\�Ȃ�� true�D
+	///	ヒューマンインタフェースが使用可能ならば true．
 	bool IsGood();
-	/**	�q���[�}���C���^�t�F�[�X�̏������D
-		�K�v�ȃf�o�C�X��sdk����؂�Ă��āC�q���[�}���C���^�t�F�[�X���\������	*/
+	/**	ヒューマンインタフェースの初期化．
+		必要なデバイスをsdkから借りてきて，ヒューマンインタフェースを構成する	*/
 	bool Init(const void* desc);
 };
 
-/**	@brief	�ʒu���̓C���^�t�F�[�X	*/
+/**	@brief	位置入力インタフェース	*/
 /*struct HIPositionIf : HIBaseIf{
 	SPR_VIFDEF(HIPosition);
 	Vec3f GetPosition();
 };*/
 
-/**	@brief	�p�x���̓C���^�t�F�[�X	*/
+/**	@brief	角度入力インタフェース	*/
 /*struct HIOrientationIf : HIBaseIf{
 	SPR_VIFDEF(HIOrientation);
 	Quaternionf GetOrientation();
 };*/
 
-/**	@brief	�p��(=�ʒu�{�p�x)���̓C���^�t�F�[�X	*/
+/**	@brief	姿勢(=位置＋角度)入力インタフェース	*/
 struct HIPoseIf : HIBaseIf{
 	SPR_VIFDEF(HIPose);
 	//SPR_OVERRIDEMEMBERFUNCOF(HIBaseIf, HIPositionIf);
@@ -69,15 +69,15 @@ struct HIPoseIf : HIBaseIf{
 	Vec3f			GetAngularVelocity();
 };
 
-/** @brief	6���R�x�͊o�C���^�t�F�[�X�̊�{�N���X
+/** @brief	6自由度力覚インタフェースの基本クラス
  **/
 struct HIHapticIf : HIPoseIf{
 	SPR_VIFDEF(HIHaptic);
-	///	�f�o�C�X�̎��ۂ̒񎦃g���N��Ԃ�
+	///	デバイスの実際の提示トルクを返す
 	Vec3f GetTorque();
-	///	�f�o�C�X�̎��ۂ̒񎦗͂�Ԃ�
+	///	デバイスの実際の提示力を返す
 	Vec3f GetForce();
-	///	�f�o�C�X�̖ڕW�o�͂ƃg���N�o�͂�ݒ肷��
+	///	デバイスの目標出力とトルク出力を設定する
 	void SetForce(const Vec3f& f, const Vec3f& t = Vec3f());
 };
 

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,18 +15,18 @@ namespace Spr{;
 
 class GRMaterial;
 /**	@class	GRSphere
-    @brief	ƒOƒ‰ƒtƒBƒbƒNƒXƒV[ƒ“ƒOƒ‰ƒt‚Å‚Ì‹…ƒIƒuƒWƒFƒNƒg‚ğ•\‚·D */
+    @brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã§ã®çƒã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¡¨ã™ï¼ */
 class GRSphere: public GRVisual, public GRSphereDesc{
-	unsigned int list;				///< ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ì¯•Êq
+	unsigned int list;				///< ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®è­˜åˆ¥å­
 	GRRenderIf* render;
 	
-	/// ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚ğì¬D
+	/// ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ä½œæˆï¼
 	void CreateList(GRRenderIf* r);
 public:
 	SPR_OBJECTDEF(GRSphere);
 	ACCESS_DESC(GRSphere);
 	
-	UTRef<GRMaterial> material;		///< ƒ}ƒeƒŠƒAƒ‹
+	UTRef<GRMaterial> material;		///< ãƒãƒ†ãƒªã‚¢ãƒ«
 	
 	GRSphere(const GRSphereDesc& desc=GRSphereDesc());
 	~GRSphere();

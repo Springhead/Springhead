@@ -1,13 +1,13 @@
-/**
-\page pageFWAppSample �t���[�����[�NSDK���g������ԊȒP�ȃT���v��
+﻿/**
+\page pageFWAppSample フレームワークSDKを使った一番簡単なサンプル
  Springhead2/src/Samples/FWAppSample
 
-- �v���O�����̋@�\
- - ���̏�ɔ����ڂ��Ă��邾���̃V�[���B
- - �`��� \ref pagePhysics �̃f�o�b�O�\���̂݁B
-- �\�[�X�ɂ���
- - �V�[���̍\�z�́AC++�����API���Ăяo���čs���B
- - \ref pageFramework �� \ref pagePhysics �݂̂��g�p
+- プログラムの機能
+ - 床の上に箱が載っているだけのシーン。
+ - 描画は \ref pagePhysics のデバッグ表示のみ。
+- ソースについて
+ - シーンの構築は、C++言語でAPIを呼び出して行う。
+ - \ref pageFramework と \ref pagePhysics のみを使用
 */
 
 #include <Springhead.h>
@@ -24,14 +24,14 @@ public:
 		PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 		CDBoxDesc bd;
 		
-		// �����쐬
+		// 床を作成
 		PHSolidIf* floor = phscene->CreateSolid();
 		floor->SetDynamical(false);
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
 		floor->AddShape(phSdk->CreateShape(bd));
 		floor->SetFramePosition(Vec3d(0, -1.0, -1.0));
 	
-		// �����쐬
+		// 箱を作成
 		PHSolidIf* box = phscene->CreateSolid();
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		box->AddShape(phSdk->CreateShape(bd));

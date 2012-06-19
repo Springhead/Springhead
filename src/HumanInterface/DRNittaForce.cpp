@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -35,28 +35,28 @@ DRNittaForce::DRNittaForce(int n){
 DRNittaForce::~DRNittaForce(){
 }
 
-//	—ÍƒZƒ“ƒT‚Ìƒhƒ‰ƒCƒoDLL jr3.dll ‚ğƒ[ƒh‚·‚éD
+//	åŠ›ã‚»ãƒ³ã‚µã®ãƒ‰ãƒ©ã‚¤ãƒDLL jr3.dll ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ï¼
 
-static UTDllLoader dllLoader("jr3.dll");	//	ƒOƒ[ƒoƒ‹•Ï”‚Åƒ[ƒ_[‚ğì‚éD
+static UTDllLoader dllLoader("jr3.dll");	//	ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã§ãƒ­ãƒ¼ãƒ€ãƒ¼ã‚’ä½œã‚‹ï¼
 
-//	int DllFunc(int arg)  ‚Ìê‡
+//	int DllFunc(int arg)  ã®å ´åˆ
 //	DWORD DllExport JR3read(short boardNumber, short address, short* data) ;
-#define DLLFUNC_RTYPE	unsigned	//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	JR3read		//	ŠÖ”–¼
+#define DLLFUNC_RTYPE	unsigned	//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	JR3read		//	é–¢æ•°å
 #define DLLFUNC_STR		"JR3read"
 #define DLLFUNC_ARGDEF		(short boardNumber, short address, short* data)	
-									//	ŠÖ”éŒ¾‚Ìˆø”
+									//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
 #define DLLFUNC_ARGCALL	(boardNumber, address, data)
-									//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+									//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 //	DWORD DllExport JR3write(short boardNumber, short address, short data) ;
-#define DLLFUNC_RTYPE	unsigned	//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	JR3write	//	ŠÖ”–¼
+#define DLLFUNC_RTYPE	unsigned	//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	JR3write	//	é–¢æ•°å
 #define DLLFUNC_STR		"JR3write"
 #define DLLFUNC_ARGDEF		(short boardNumber, short address, short data)	
-									//	ŠÖ”éŒ¾‚Ìˆø”
+									//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
 #define DLLFUNC_ARGCALL	(boardNumber, address, data)
-									//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+									//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 void DRNittaForce::ReadReg(unsigned short a, unsigned short* d){
@@ -82,7 +82,7 @@ bool DRNittaForce::Init(){
 	else sprintf(str, "Nitta 6DOF force sensor #%d", boardNumber);
 	SetName(str);
 
-	if (baseAdr != -1){	//	’¼ÚƒAƒNƒZƒX‚Ìê‡‚ÍGiveIO.sys‚ğg‚Á‚Äƒ|[ƒg‚Ö‚ÌƒAƒNƒZƒX‹–‰Â‚ğ‚à‚ç‚¤
+	if (baseAdr != -1){	//	ç›´æ¥ã‚¢ã‚¯ã‚»ã‚¹ã®å ´åˆã¯GiveIO.sysã‚’ä½¿ã£ã¦ãƒãƒ¼ãƒˆã¸ã®ã‚¢ã‚¯ã‚»ã‚¹è¨±å¯ã‚’ã‚‚ã‚‰ã†
 		WBGetPortIO();
 	}
 	ReadReg(software_ver_no_addr, &software_ver_no);

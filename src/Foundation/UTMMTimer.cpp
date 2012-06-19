@@ -1,4 +1,4 @@
-#include "Foundation.h"
+﻿#include "Foundation.h"
 #pragma hdrstop
 #include "UTMMTimer.h"
 #include <windows.h>

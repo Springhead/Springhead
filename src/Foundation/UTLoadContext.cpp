@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -268,17 +268,17 @@ void UTLoadTasks::Execute(UTLoadContext* ctx){
 
 //---------------------------------------------------------------------------
 //	UTDataLinkTask
-///	ƒm[ƒh‚Ö‚ÌQÆ‚ğ‹L˜^‚µ‚Ä‚¨‚­ƒNƒ‰ƒXD‘S•”ƒ[ƒh‚Å‚«‚Ä‚©‚çƒŠƒ“ƒN‚·‚éD
+///	ãƒãƒ¼ãƒ‰ã¸ã®å‚ç…§ã‚’è¨˜éŒ²ã—ã¦ãŠãã‚¯ãƒ©ã‚¹ï¼å…¨éƒ¨ãƒ­ãƒ¼ãƒ‰ã§ãã¦ã‹ã‚‰ãƒªãƒ³ã‚¯ã™ã‚‹ï¼
 class UTDataLinkTask: public UTLoadTask{
 public:
-	//@name	ƒf[ƒ^ƒtƒ@ƒCƒ‹‚Ì‚Ç‚±‚Ìƒf[ƒ^‚©
+	//@name	ãƒ‡ãƒ¼ã‚¿ãƒ•ã‚¡ã‚¤ãƒ«ã®ã©ã“ã®ãƒ‡ãƒ¼ã‚¿ã‹
 	//@{
-	UTRef<UTFileMap> info;	///<	ƒtƒ@ƒCƒ‹
-	const char* pos;		///<	ˆÊ’u
+	UTRef<UTFileMap> info;	///<	ãƒ•ã‚¡ã‚¤ãƒ«
+	const char* pos;		///<	ä½ç½®
 	//@}
 
-	UTLoadedData* linkFrom;	///<	ƒŠƒ“ƒNŒ³ƒf[ƒ^
-	std::string linkTo;		///<	ƒŠƒ“ƒNæƒf[ƒ^‚Ì–¼‘O
+	UTLoadedData* linkFrom;	///<	ãƒªãƒ³ã‚¯å…ƒãƒ‡ãƒ¼ã‚¿
+	std::string linkTo;		///<	ãƒªãƒ³ã‚¯å…ˆãƒ‡ãƒ¼ã‚¿ã®åå‰
 
 	UTDataLinkTask(UTLoadedData* from, std::string to, UTFileMap* info, const char* p);
 	void Execute(UTLoadContext* ctx);
@@ -358,29 +358,29 @@ bool UTNameManagerForData::AddData(UTLoadedData* data){
 	return false;
 }
 UTLoadedData* UTNameManagerForData::FindData(UTString name, UTString cls){
-	//	©•ª‚Æq‘·‚ğ’T‚·B
+	//	è‡ªåˆ†ã¨å­å­«ã‚’æ¢ã™ã€‚
 	UTLoadedData* rv = FindDataFromDescendant(name, cls);
 	if (rv) return rv;
-	//	æ‘c‚ğ’T‚·D
+	//	å…ˆç¥–ã‚’æ¢ã™ï¼
 	rv = FindDataFromAncestor(name, cls);
 	if (rv) return rv;
 
-	//	‚»‚ê‚Å‚à‚È‚¢‚È‚ç‚ÎAnamespace‚ğí‚Á‚ÄA‚à‚¤ˆê“xŒŸõ
+	//	ãã‚Œã§ã‚‚ãªã„ãªã‚‰ã°ã€namespaceã‚’å‰Šã£ã¦ã€ã‚‚ã†ä¸€åº¦æ¤œç´¢
 	int pos = name.find('/');
-	if (pos != (int)UTString::npos){	//	 –¼‘O‹óŠÔ‚Ìw’è‚ª‚ ‚éê‡
+	if (pos != (int)UTString::npos){	//	 åå‰ç©ºé–“ã®æŒ‡å®šãŒã‚ã‚‹å ´åˆ
 		UTString n = name.substr(pos+1);
 		rv = FindData(n, cls);
 	}
 	return rv;
 }
-//	æ‘c‚ğ’T‚·
+//	å…ˆç¥–ã‚’æ¢ã™
 UTLoadedData* UTNameManagerForData::FindDataFromAncestor(UTString name, UTString cls){
-	//	‚È‚¯‚ê‚Î‘cæ‚ğ’T‚·B
+	//	ãªã‘ã‚Œã°ç¥–å…ˆã‚’æ¢ã™ã€‚
 	UTNameManagerForData* nm = parent;
 	while(nm){
-		UTLoadedData* rv = nm->SearchSet(name, cls);	//	‚Ü‚¸e‚ğ’T‚µA
+		UTLoadedData* rv = nm->SearchSet(name, cls);	//	ã¾ãšè¦ªã‚’æ¢ã—ã€
 		if (rv) return rv;
-		//	ŒZ’í‚ğ’T‚µA
+		//	å…„å¼Ÿã‚’æ¢ã—ã€
 		for(UTNameManagerForData::NameManagers::iterator it = nm->childManagers.begin(); 
 			it!=nm->childManagers.end(); ++it){
 			if (*it != this){
@@ -388,19 +388,19 @@ UTLoadedData* UTNameManagerForData::FindDataFromAncestor(UTString name, UTString
 				if (rv) return rv;
 			}
 		}
-		//	‚È‚¯‚ê‚ÎAe‚Ìe‚ğ’T‚·B
+		//	ãªã‘ã‚Œã°ã€è¦ªã®è¦ªã‚’æ¢ã™ã€‚
 		nm = nm->parent;
 	}
 	return NULL;
 }
 
-//	©•ª‚Æq‘·‚ğ’T‚·
+//	è‡ªåˆ†ã¨å­å­«ã‚’æ¢ã™
 UTLoadedData* UTNameManagerForData::FindDataFromDescendant(UTString name, UTString cls){
 //	DSTR << "UTNameManagerForData(" << GetName() << ")::FindDescendant search " << name << std::endl;
-	//	‚Ò‚Á‚½‚è‚Ì‚à‚Ì‚ğ’T‚·
+	//	ã´ã£ãŸã‚Šã®ã‚‚ã®ã‚’æ¢ã™
 	UTLoadedData* rv = FindDataExact(name, cls);
 	if (rv) return rv;
-	//	‚È‚¯‚ê‚ÎCq‘·‚É‚Â‚¢‚Ä’T‚·
+	//	ãªã‘ã‚Œã°ï¼Œå­å­«ã«ã¤ã„ã¦æ¢ã™
 	for(UTNameManagerForData::NameManagers::iterator it = childManagers.begin();
 		it != childManagers.end(); ++it){
 		rv = (*it)->FindDataFromDescendant(name, cls);
@@ -408,14 +408,14 @@ UTLoadedData* UTNameManagerForData::FindDataFromDescendant(UTString name, UTStri
 	}
 	return rv;
 }
-//	ƒl[ƒ€ƒXƒy[ƒX‚İ‚Å–¼‘O‚ğŒŸõ‚·‚éBŒŸõêŠ‚É‚Â‚¢‚Ä‚ÍÄ‹A‚È‚µB
+//	ãƒãƒ¼ãƒ ã‚¹ãƒšãƒ¼ã‚¹è¾¼ã¿ã§åå‰ã‚’æ¤œç´¢ã™ã‚‹ã€‚æ¤œç´¢å ´æ‰€ã«ã¤ã„ã¦ã¯å†å¸°ãªã—ã€‚
 UTLoadedData* UTNameManagerForData::FindDataExact(UTString name, UTString cls){
 	UTLoadedData* rv = NULL;
 	int pos = name.find('/');
-	if (pos != (int)UTString::npos){	//	 –¼‘O‹óŠÔ‚Ìw’è‚ª‚ ‚éê‡
+	if (pos != (int)UTString::npos){	//	 åå‰ç©ºé–“ã®æŒ‡å®šãŒã‚ã‚‹å ´åˆ
 		UTString n = name.substr(pos+1);
 		UTString ns = name.substr(0, pos);
-		//	‚Ò‚Á‚½‚è‚Ì‚à‚Ì‚ğ’T‚·D
+		//	ã´ã£ãŸã‚Šã®ã‚‚ã®ã‚’æ¢ã™ï¼
 		for(UTNameManagerForData::NameManagers::iterator it = childManagers.begin();
 			it != childManagers.end(); ++it){
 			if (ns.compare((*it)->data->GetName()) == 0){
@@ -423,8 +423,8 @@ UTLoadedData* UTNameManagerForData::FindDataExact(UTString name, UTString cls){
 				if (rv) return rv;
 			}
 		}
-	}else{	//	–¼‘O‹óŠÔ‚ª–³‚¢ê‡
-		//	‚Ò‚Á‚½‚è‚Ì‚à‚Ì‚ğ’T‚·
+	}else{	//	åå‰ç©ºé–“ãŒç„¡ã„å ´åˆ
+		//	ã´ã£ãŸã‚Šã®ã‚‚ã®ã‚’æ¢ã™
 		rv = SearchSet(name, cls);
 	}
 	return rv;
@@ -481,38 +481,38 @@ void UTLoadContext::WriteString(std::string v){
 	}
 }
 void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){
-	//	ƒm[ƒh‚ÌŒ^î•ñ‚ğŒŸõ
+	//	ãƒãƒ¼ãƒ‰ã®å‹æƒ…å ±ã‚’æ¤œç´¢
 	UTTypeDesc* type = typeDbs.Top()->Find(tn);
 	if (!type) type = typeDbs.Top()->Find(tn + "Desc");	
 
-	//	Œ^î•ñ‚ğƒ[ƒh—pƒCƒ^ƒŒ[ƒ^‚ÉƒZƒbƒg
+	//	å‹æƒ…å ±ã‚’ãƒ­ãƒ¼ãƒ‰ç”¨ã‚¤ã‚¿ãƒ¬ãƒ¼ã‚¿ã«ã‚»ãƒƒãƒˆ
 	fieldIts.PushType(type);
 
-	//	type‚É‚ ‚Á‚½Desc‚Ìƒm[ƒh(DOMƒm[ƒh)‚ğ—pˆÓ
+	//	typeã«ã‚ã£ãŸDescã®ãƒãƒ¼ãƒ‰(DOMãƒãƒ¼ãƒ‰)ã‚’ç”¨æ„
 	UTLoadedData* data = DBG_NEW UTLoadedData(this, type);
-	data->SetAttribute("type", type ? type->GetTypeName() : tn);	//	DOMƒm[ƒh‚ÉŒ^î•ñ‚ğİ’è
+	data->SetAttribute("type", type ? type->GetTypeName() : tn);	//	DOMãƒãƒ¼ãƒ‰ã«å‹æƒ…å ±ã‚’è¨­å®š
 	if (attrs){
 		for(UTLoadedData::Attributes::iterator it = attrs->begin(); it!=attrs->end(); ++it){
 			data->SetAttribute(it->first, it->second);
 		}
 	}
-	//	DOMƒcƒŠ[‚É’Ç‰Á
+	//	DOMãƒ„ãƒªãƒ¼ã«è¿½åŠ 
 	if (datas.size()){
-		datas.Top()->AddChild(data);	//	qƒm[ƒh‚Æ‚µ‚Ä’Ç‰Á
+		datas.Top()->AddChild(data);	//	å­ãƒãƒ¼ãƒ‰ã¨ã—ã¦è¿½åŠ 
 	}else{
-		loadedDatas.push_back(data);	//	Topƒm[ƒh‚Æ‚µ‚Ä‹L˜^
+		loadedDatas.push_back(data);	//	Topãƒãƒ¼ãƒ‰ã¨ã—ã¦è¨˜éŒ²
 		rootNameManagerForData->AddChild(data);
 	}
-	data->SetupNameManager();			//	–¼‘OŠÇ—ƒcƒŠ[‚É’Ç‰Á
+	data->SetupNameManager();			//	åå‰ç®¡ç†ãƒ„ãƒªãƒ¼ã«è¿½åŠ 
 
-	//	qƒm[ƒh‚Ìƒ[ƒh—p‚ÉCDOMƒm[ƒh‚ğƒXƒ^ƒbƒN‚ÉÏ‚ŞD
+	//	å­ãƒãƒ¼ãƒ‰ã®ãƒ­ãƒ¼ãƒ‰ç”¨ã«ï¼ŒDOMãƒãƒ¼ãƒ‰ã‚’ã‚¹ã‚¿ãƒƒã‚¯ã«ç©ã‚€ï¼
 	datas.Push(data);
 
-	//	ƒm[ƒh‚Ìƒ[ƒhŠJn‚ÌƒXƒ^ƒbƒN‚Ì[‚³‚ğ‹L˜^
+	//	ãƒãƒ¼ãƒ‰ã®ãƒ­ãƒ¼ãƒ‰é–‹å§‹æ™‚ã®ã‚¹ã‚¿ãƒƒã‚¯ã®æ·±ã•ã‚’è¨˜éŒ²
 	nodeStartDepthes.Push(fieldIts.size());
 
 
-	//	DOMƒ[ƒh‘Oƒnƒ“ƒhƒ‰‚ÌŒÄ‚Ño‚µ
+	//	DOMãƒ­ãƒ¼ãƒ‰å‰ãƒãƒ³ãƒ‰ãƒ©ã®å‘¼ã³å‡ºã—
 	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
 	key->type = datas.Top()->GetAttribute("type");
 	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
@@ -522,7 +522,7 @@ void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){
 	}
 }
 void UTLoadContext::NodeEnd(){
-	//	ƒf[ƒ^ƒ[ƒhŒãƒnƒ“ƒhƒ‰‚ÌŒÄ‚Ño‚µ
+	//	ãƒ‡ãƒ¼ã‚¿ãƒ­ãƒ¼ãƒ‰å¾Œãƒãƒ³ãƒ‰ãƒ©ã®å‘¼ã³å‡ºã—
 	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
 	key->type = datas.Top()->GetAttribute("type");
 	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range
@@ -531,7 +531,7 @@ void UTLoadContext::NodeEnd(){
 		(*it)->AfterLoadData(datas.Top(), this);
 	}
 
-	//	ƒXƒ^ƒbƒN‚Ì•Ğ•t‚¯
+	//	ã‚¹ã‚¿ãƒƒã‚¯ã®ç‰‡ä»˜ã‘
 	while(nodeStartDepthes.Top() > fieldIts.size()){
 		datas.Pop();
 		fieldIts.Pop();
@@ -543,7 +543,7 @@ void UTLoadContext::NodeEnd(){
 void UTLoadContext::CompositStart(){
 	assert(fieldIts.size() && !fieldIts.Top().field->type->IsPrimitive());
 	char* base = (char*)datas.Top()->data;
-	// ƒtƒB[ƒ‹ƒh‚ÌƒAƒhƒŒƒX‚ğæ“¾F•K—v‚É‰‚¶‚Ävector‚ğŠg’£
+	// ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—ï¼šå¿…è¦ã«å¿œã˜ã¦vectorã‚’æ‹¡å¼µ
 	void* ptr = fieldIts.Top().field->GetAddressEx(base, fieldIts.ArrayPos());
 	datas.Push(DBG_NEW UTLoadedData(this, NULL, ptr));
 	fieldIts.PushType(fieldIts.Top().field->type);
@@ -555,7 +555,7 @@ void UTLoadContext::CompositEnd(){
 static bool FindFieldR(UTLoadContext* lc, UTString name){
 	UTTypeDesc::Composit::iterator f;
 	for(f = lc->fieldIts.Top().type->GetComposit().begin(); f != lc->fieldIts.Top().type->GetComposit().end(); ++f){
-		if (f->name.length() == 0){	//Œp³‚µ‚Ä‚¢‚éê‡AŒp³Œ³‚àŒŸõ
+		if (f->name.length() == 0){	//ç¶™æ‰¿ã—ã¦ã„ã‚‹å ´åˆã€ç¶™æ‰¿å…ƒã‚‚æ¤œç´¢
 			lc->fieldIts.Top().field = f;
 			lc->CompositStart();
 			if (FindFieldR(lc, name)) return true;
@@ -572,7 +572,7 @@ static bool FindFieldR(UTLoadContext* lc, UTString name){
 }
 bool UTLoadContext::FindField(UTString name){
 	if (!fieldIts.Top().type || !fieldIts.Top().type->GetComposit().size()) return false;
-	//	ƒtƒB[ƒ‹ƒh‚ğ’T‚·
+	//	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’æ¢ã™
 	if (!FindFieldR(this, name)) return false;
 	fieldIts.Top().SetFieldInfo((char*)datas.Top()->data);
 	return true;
@@ -640,7 +640,7 @@ void UTLoadContext::CreateScene(){
 ObjectIf* UTLoadContext::CreateSceneRecursive(){
 	UTLoadedData* ld = datas.Top();
 
-	//	ƒnƒ“ƒhƒ‰[‚Ìˆ—
+	//	ãƒãƒ³ãƒ‰ãƒ©ãƒ¼ã®å‡¦ç†
 	static UTRef<UTLoadHandler> key = DBG_NEW UTLoadHandler;
 	key->type = ld->GetAttribute("type");
 	std::pair<UTLoadHandlerDb::iterator, UTLoadHandlerDb::iterator> range 
@@ -650,42 +650,42 @@ ObjectIf* UTLoadContext::CreateSceneRecursive(){
 		(*it)->BeforeCreateObject(ld, this);
 	}
 
-	//	æ‘cƒIƒuƒWƒFƒNƒg‚Éì‚Á‚Ä‚à‚ç‚¤
+	//	å…ˆç¥–ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«ä½œã£ã¦ã‚‚ã‚‰ã†
 	ObjectIf* obj = NULL;
 	const IfInfo* info = NULL;
 	if (ld->type) info = ld->type->GetIfInfo();
 	if (info){
-		obj = CreateObject(info, ld->data, ld->GetName());	//	ì¬‚µ‚ÄC
+		obj = CreateObject(info, ld->data, ld->GetName());	//	ä½œæˆã—ã¦ï¼Œ
 		if (obj){
 			ld->loadedObjects.Push(obj);
-			objects.Push(obj);								//	ƒXƒ^ƒbƒN‚ÉÏ‚Ş
+			objects.Push(obj);								//	ã‚¹ã‚¿ãƒƒã‚¯ã«ç©ã‚€
 		}
 	}
 	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
 		(*it)->AfterCreateObject(ld, this);
 	}
 
-	//	qƒm[ƒh‚Ìì¬
+	//	å­ãƒãƒ¼ãƒ‰ã®ä½œæˆ
 	for(UTLoadedDataRefs::iterator it = ld->children.begin(); it!= ld->children.end(); ++it){
 		datas.Push(*it);
-		ObjectIf* childObj = CreateSceneRecursive();	//	q‘·ƒf[ƒ^‚É‘Î‰‚·‚éƒIƒuƒWƒFƒNƒg‚Ìì¬
+		ObjectIf* childObj = CreateSceneRecursive();	//	å­å­«ãƒ‡ãƒ¼ã‚¿ã«å¯¾å¿œã™ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
 		datas.Pop();
 
-		//	ƒnƒ“ƒhƒ‰‚Ìˆ—
+		//	ãƒãƒ³ãƒ‰ãƒ©ã®å‡¦ç†
 		for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it)
 			(*it)->AfterCreateChild(ld, childObj, this);
 	}
-	//	ƒnƒ“ƒhƒ‰‚Ìˆ—
+	//	ãƒãƒ³ãƒ‰ãƒ©ã®å‡¦ç†
 	for(UTLoadHandlerDb::iterator it = range.first; it != range.second; ++it){
 		(*it)->AfterCreateChildren(ld, this);
 	}
 	
-	//	I—¹ˆ—
+	//	çµ‚äº†å‡¦ç†
 	if(obj){
-		objects.Pop();		//	ƒXƒ^ƒbƒN‚ğPop
+		objects.Pop();		//	ã‚¹ã‚¿ãƒƒã‚¯ã‚’Pop
 	}
 
-	// ƒV[ƒ“‚ÌƒgƒbƒvƒIƒuƒWƒFƒNƒg‚ğ•Ô‚·
+	// ã‚·ãƒ¼ãƒ³ã®ãƒˆãƒƒãƒ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’è¿”ã™
 	return obj;
 }
 
@@ -747,11 +747,11 @@ ObjectIf* UTLoadContext::CreateObject(const IfInfo* info,  const void* data, UTS
 		if (*it) obj = (*it)->CreateObject(info, data);
 		if (obj) break;
 	}
-	//	æ‘c‚ªì‚ê‚È‚¢ê‡CSdk‚Ìì¬‚ğ‚µ‚Ä‚İ‚éD
+	//	å…ˆç¥–ãŒä½œã‚Œãªã„å ´åˆï¼ŒSdkã®ä½œæˆã‚’ã—ã¦ã¿ã‚‹ï¼
 	if (!obj) obj = SdkIf::CreateSdk(info, data);
 
 	if (obj){
-		//	ƒIƒuƒWƒFƒNƒg‚É–¼‘O‚ğİ’è
+		//	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«åå‰ã‚’è¨­å®š
 		NamedObjectIf* n = DCAST(NamedObjectIf, obj);
 		if (name.length()){
 			if (n){
@@ -774,7 +774,7 @@ ObjectIf* UTLoadContext::CreateObject(const IfInfo* info,  const void* data, UTS
 		err.append("'. Ancestor objects don't know how to make it.");
 		ErrorMessage(NULL, NULL, err.c_str());
 	}
-	//	eƒIƒuƒWƒFƒNƒg‚É’Ç‰Á
+	//	è¦ªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«è¿½åŠ 
 	if (objects.size() && objects.Top()){
 		objects.Top()->AddChildObject(obj);
 	}

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,9 +8,9 @@
 #ifndef FISPIRIT_H
 #define FISPIRIT_H
 #ifndef SWIG
-/**	@File	boost::spirit ‚ğg‚¤‚Æ‚«‚ÉC
-	ƒp[ƒT‚ÌÀ‘•ƒtƒ@ƒCƒ‹(.cpp)‚¾‚¯‚ÅƒCƒ“ƒNƒ‹[ƒh‚µ‚Äg‚¤ƒwƒbƒ_D
-	FIPhraseParser ‚Æ FISkipParser‚ğ’è‹`‚·‚éD
+/**	@File	boost::spirit ã‚’ä½¿ã†ã¨ãã«ï¼Œ
+	ãƒ‘ãƒ¼ã‚µã®å®Ÿè£…ãƒ•ã‚¡ã‚¤ãƒ«(.cpp)ã ã‘ã§ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã—ã¦ä½¿ã†ãƒ˜ãƒƒãƒ€ï¼
+	FIPhraseParser ã¨ FISkipParserã‚’å®šç¾©ã™ã‚‹ï¼
 */
 
 
@@ -51,21 +51,21 @@
 
 namespace Spr{;
 
-///	FISpirit‚Åg—p‚·‚é“ü—Í•¶š—ñ‚ÌƒCƒ^ƒŒ[ƒ^‚ÌŒ^
+///	FISpiritã§ä½¿ç”¨ã™ã‚‹å…¥åŠ›æ–‡å­—åˆ—ã®ã‚¤ã‚¿ãƒ¬ãƒ¼ã‚¿ã®å‹
 typedef const char* FIIteratorT;
 
 
 
 //----------------------------------------------------------------------------
-//	ƒAƒNƒVƒ‡ƒ“‚É‚æ‚éCƒp[ƒXƒcƒŠ[‚ğì‚ç‚È‚¢ƒp[ƒT
+//	ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ã«ã‚ˆã‚‹ï¼Œãƒ‘ãƒ¼ã‚¹ãƒ„ãƒªãƒ¼ã‚’ä½œã‚‰ãªã„ãƒ‘ãƒ¼ã‚µ
 
-///	ƒXƒLƒƒƒi‚ğŒÅ’è‚·‚é‚½‚ß‚ÌƒXƒLƒbƒv—pƒp[ƒTD‘¼‚Ìƒp[ƒT‚ğ‘ã“ü‚Å‚«‚é
+///	ã‚¹ã‚­ãƒ£ãƒŠã‚’å›ºå®šã™ã‚‹ãŸã‚ã®ã‚¹ã‚­ãƒƒãƒ—ç”¨ãƒ‘ãƒ¼ã‚µï¼ä»–ã®ãƒ‘ãƒ¼ã‚µã‚’ä»£å…¥ã§ãã‚‹
 struct FISkipParser: boost::spirit::classic::parser<FISkipParser>{
 	typedef FISkipParser          self_t;
 	typedef FISkipParser const&   embed_t;
 	typedef boost::spirit::classic::skip_parser_iteration_policy<FISkipParser> iter_policy_t;
 	typedef boost::spirit::classic::scanner_policies<iter_policy_t> scanner_policies_t;
-	///	–{•¶(Phrase)‚Ì‚½‚ß‚ÌƒXƒLƒƒƒiŒ^
+	///	æœ¬æ–‡(Phrase)ã®ãŸã‚ã®ã‚¹ã‚­ãƒ£ãƒŠå‹
 	typedef boost::spirit::classic::scanner<FIIteratorT, scanner_policies_t> PhraseScannerT;
 
 	typedef boost::spirit::classic::scanner_policies<
@@ -73,34 +73,34 @@ struct FISkipParser: boost::spirit::classic::parser<FISkipParser>{
 		PhraseScannerT::match_policy_t,
 		PhraseScannerT::action_policy_t
     > policies_t;
-	///	ƒXƒy[ƒX“Ç‚İ”ò‚Î‚µ(Skipper)‚Ì‚½‚ß‚ÌƒXƒLƒƒƒiŒ^
+	///	ã‚¹ãƒšãƒ¼ã‚¹èª­ã¿é£›ã°ã—(Skipper)ã®ãŸã‚ã®ã‚¹ã‚­ãƒ£ãƒŠå‹
     typedef boost::spirit::classic::scanner<PhraseScannerT::iterator_t, policies_t> SkipperScannerT;
 
-	//	SkipperScannerT‚Åƒp[ƒT‚ğ’è‹`‚µ‚Ä‚¢‚­D
+	//	SkipperScannerTã§ãƒ‘ãƒ¼ã‚µã‚’å®šç¾©ã—ã¦ã„ãï¼
 	typedef boost::spirit::classic::match_result<SkipperScannerT, boost::spirit::classic::parser_context<>::context_linker_t::attr_t>::type Result;
     FISkipParser(){}
     FISkipParser(const FISkipParser& wp): ptr_(wp.ptr_? wp.ptr_->clone() : NULL){}
-    ///	Scanner‚ªƒeƒ“ƒvƒŒ[ƒg‚Ìƒp[ƒT‚ğó‚¯æ‚Á‚ÄCƒRƒ“ƒNƒŠ[ƒg‚Èƒp[ƒT‚É•ÏŠ·‚µ‚Ä•Û‘¶D
+    ///	ScannerãŒãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®ãƒ‘ãƒ¼ã‚µã‚’å—ã‘å–ã£ã¦ï¼Œã‚³ãƒ³ã‚¯ãƒªãƒ¼ãƒˆãªãƒ‘ãƒ¼ã‚µã«å¤‰æ›ã—ã¦ä¿å­˜ï¼
 	template <class T>
     FISkipParser(const T& p){
 		ptr_.reset(DBG_NEW boost::spirit::classic::impl::concrete_parser<T, SkipperScannerT, Result>(p));
 	}
-    ///	Scanner‚ªƒeƒ“ƒvƒŒ[ƒg‚Ìƒp[ƒT‚ğó‚¯æ‚Á‚ÄCƒRƒ“ƒNƒŠ[ƒg‚Èƒp[ƒT‚É•ÏŠ·‚µ‚Ä•Û‘¶D
+    ///	ScannerãŒãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®ãƒ‘ãƒ¼ã‚µã‚’å—ã‘å–ã£ã¦ï¼Œã‚³ãƒ³ã‚¯ãƒªãƒ¼ãƒˆãªãƒ‘ãƒ¼ã‚µã«å¤‰æ›ã—ã¦ä¿å­˜ï¼
 	template <class T>
     FISkipParser& operator=(const T& p){
 	    ptr_.reset(DBG_NEW boost::spirit::classic::impl::concrete_parser<T, SkipperScannerT, Result>(p));
 		return *this;
 	}
-    ///	ƒXƒLƒbƒv‚Ì‚½‚ß‚Ìƒp[ƒX
+    ///	ã‚¹ã‚­ãƒƒãƒ—ã®ãŸã‚ã®ãƒ‘ãƒ¼ã‚¹
     Result parse(const SkipperScannerT& scan)const{
 		if (ptr_) return ptr_->do_parse_virtual(scan);
 		else return scan.no_match();
 	}
-	///	ƒRƒ“ƒNƒŠ[ƒg‚Èƒp[ƒT
+	///	ã‚³ãƒ³ã‚¯ãƒªãƒ¼ãƒˆãªãƒ‘ãƒ¼ã‚µ
 	boost::scoped_ptr<boost::spirit::classic::impl::abstract_parser<SkipperScannerT, Result> > ptr_;
 };
 
-///	ƒXƒLƒƒƒi‚ğŒÅ’è‚·‚é‚½‚ß‚Ì–{•¶—pƒp[ƒTD‘¼‚Ìƒp[ƒT‚ğ‘ã“ü‚Å‚«‚é
+///	ã‚¹ã‚­ãƒ£ãƒŠã‚’å›ºå®šã™ã‚‹ãŸã‚ã®æœ¬æ–‡ç”¨ãƒ‘ãƒ¼ã‚µï¼ä»–ã®ãƒ‘ãƒ¼ã‚µã‚’ä»£å…¥ã§ãã‚‹
 struct FIPhraseParser: public boost::spirit::classic::rule<FISkipParser::PhraseScannerT>{
 	typedef boost::spirit::classic::rule<FISkipParser::PhraseScannerT> base_type;
 	FIPhraseParser(){}
@@ -122,7 +122,7 @@ struct FIPhraseParser: public boost::spirit::classic::rule<FISkipParser::PhraseS
 
 
 //----------------------------------------------------------------------------
-//	ƒp[ƒXƒcƒŠ[‚Ì‚½‚ß‚ÌƒNƒ‰ƒX
+//	ãƒ‘ãƒ¼ã‚¹ãƒ„ãƒªãƒ¼ã®ãŸã‚ã®ã‚¯ãƒ©ã‚¹
 
 template <typename ValueT = boost::spirit::classic::nil_t>
 class FIPTNodeValData {
@@ -329,7 +329,7 @@ struct FIPTMatchPolicy{
 	}
 };
 
-///	ƒXƒLƒƒƒi‚ğŒÅ’è‚·‚é‚½‚ß‚ÌƒcƒŠ[—pƒXƒLƒbƒvƒp[ƒTD‘¼‚Ìƒp[ƒT‚ğ‘ã“ü‚Å‚«‚é
+///	ã‚¹ã‚­ãƒ£ãƒŠã‚’å›ºå®šã™ã‚‹ãŸã‚ã®ãƒ„ãƒªãƒ¼ç”¨ã‚¹ã‚­ãƒƒãƒ—ãƒ‘ãƒ¼ã‚µï¼ä»–ã®ãƒ‘ãƒ¼ã‚µã‚’ä»£å…¥ã§ãã‚‹
 struct FIPTSkipParser: boost::spirit::classic::parser< FIPTSkipParser >{
 	typedef FIPTSkipParser          self_t;
 	typedef FIPTSkipParser const&   embed_t;
@@ -338,7 +338,7 @@ struct FIPTSkipParser: boost::spirit::classic::parser< FIPTSkipParser >{
 	typedef boost::spirit::classic::scanner_policies<
 		iter_policy_t, FIPTMatchPolicy
 	> scanner_policies_t;
-	///	–{•¶(Phrase)‚Ì‚½‚ß‚ÌƒXƒLƒƒƒiŒ^
+	///	æœ¬æ–‡(Phrase)ã®ãŸã‚ã®ã‚¹ã‚­ãƒ£ãƒŠå‹
     typedef boost::spirit::classic::scanner<FIIteratorT, scanner_policies_t> PhraseScannerT;
 
 	typedef boost::spirit::classic::scanner_policies<
@@ -346,39 +346,39 @@ struct FIPTSkipParser: boost::spirit::classic::parser< FIPTSkipParser >{
 		PhraseScannerT::match_policy_t,
 		PhraseScannerT::action_policy_t
     > policies_t;
-	///	ƒXƒy[ƒX“Ç‚İ”ò‚Î‚µ(Skipper)‚Ì‚½‚ß‚ÌƒXƒLƒƒƒiŒ^
+	///	ã‚¹ãƒšãƒ¼ã‚¹èª­ã¿é£›ã°ã—(Skipper)ã®ãŸã‚ã®ã‚¹ã‚­ãƒ£ãƒŠå‹
     typedef boost::spirit::classic::scanner<FIIteratorT, policies_t> SkipperScannerT;
 
-	//	SkipperScannerT‚Åƒp[ƒT‚ğ’è‹`‚µ‚Ä‚¢‚­D
+	//	SkipperScannerTã§ãƒ‘ãƒ¼ã‚µã‚’å®šç¾©ã—ã¦ã„ãï¼
 	typedef boost::spirit::classic::match_result<SkipperScannerT, boost::spirit::classic::parser_context<>::context_linker_t::attr_t>::type Result;
     FIPTSkipParser(){}
     FIPTSkipParser(const FIPTSkipParser& wp): ptr_(wp.ptr_? wp.ptr_->clone() : NULL){}
-    ///	Scanner‚ªƒeƒ“ƒvƒŒ[ƒg‚Ìƒp[ƒT‚ğó‚¯æ‚Á‚ÄCƒRƒ“ƒNƒŠ[ƒg‚Èƒp[ƒT‚É•ÏŠ·‚µ‚Ä•Û‘¶D
+    ///	ScannerãŒãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®ãƒ‘ãƒ¼ã‚µã‚’å—ã‘å–ã£ã¦ï¼Œã‚³ãƒ³ã‚¯ãƒªãƒ¼ãƒˆãªãƒ‘ãƒ¼ã‚µã«å¤‰æ›ã—ã¦ä¿å­˜ï¼
 	template <class T>
     FIPTSkipParser(const T& p){
 		ptr_.reset(DBG_NEW boost::spirit::classic::impl::concrete_parser<T, SkipperScannerT, Result>(p));
 	}
-    ///	Scanner‚ªƒeƒ“ƒvƒŒ[ƒg‚Ìƒp[ƒT‚ğó‚¯æ‚Á‚ÄCƒRƒ“ƒNƒŠ[ƒg‚Èƒp[ƒT‚É•ÏŠ·‚µ‚Ä•Û‘¶D
+    ///	ScannerãŒãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®ãƒ‘ãƒ¼ã‚µã‚’å—ã‘å–ã£ã¦ï¼Œã‚³ãƒ³ã‚¯ãƒªãƒ¼ãƒˆãªãƒ‘ãƒ¼ã‚µã«å¤‰æ›ã—ã¦ä¿å­˜ï¼
 	template <class T>
     FIPTSkipParser& operator=(const T& p){
 	    ptr_.reset(DBG_NEW boost::spirit::classic::impl::concrete_parser<T, SkipperScannerT, Result>(p));
 		return *this;
     }
-    ///	ƒXƒLƒbƒv‚Ì‚½‚ß‚Ìƒp[ƒX
+    ///	ã‚¹ã‚­ãƒƒãƒ—ã®ãŸã‚ã®ãƒ‘ãƒ¼ã‚¹
 	Result parse(const SkipperScannerT& scan)const{
 		if (ptr_) return ptr_->do_parse_virtual(scan);
 		else return scan.no_match();
 	}
-	///	ƒRƒ“ƒNƒŠ[ƒg‚Èƒp[ƒT
+	///	ã‚³ãƒ³ã‚¯ãƒªãƒ¼ãƒˆãªãƒ‘ãƒ¼ã‚µ
 	boost::scoped_ptr<boost::spirit::classic::impl::abstract_parser<SkipperScannerT, Result> > ptr_;
 };
 
-///	ƒcƒŠ[—p–{•¶ƒp[ƒTD‘¼‚Ìƒp[ƒT‚ğ‘ã“ü‚Å‚«‚é
+///	ãƒ„ãƒªãƒ¼ç”¨æœ¬æ–‡ãƒ‘ãƒ¼ã‚µï¼ä»–ã®ãƒ‘ãƒ¼ã‚µã‚’ä»£å…¥ã§ãã‚‹
 struct FIPTPhraseParser: public boost::spirit::classic::parser< FIPTPhraseParser >{
 	typedef FIPTPhraseParser          self_t;
 	typedef FIPTPhraseParser const&   embed_t;
 
-	///	–{•¶(Phrase)‚Ì‚½‚ß‚ÌƒXƒLƒƒƒiŒ^
+	///	æœ¬æ–‡(Phrase)ã®ãŸã‚ã®ã‚¹ã‚­ãƒ£ãƒŠå‹
 	typedef FIPTSkipParser::PhraseScannerT PhraseScannerT;
 	typedef boost::spirit::classic::match_result<PhraseScannerT, boost::spirit::classic::parser_context<>::context_linker_t::attr_t>::type Result;
 
@@ -389,14 +389,14 @@ struct FIPTPhraseParser: public boost::spirit::classic::parser< FIPTPhraseParser
 	    ptr_.reset(DBG_NEW boost::spirit::classic::impl::concrete_parser<ParserT, PhraseScannerT, Result>(p));
 		return *this;
 	}
-    ///	ƒp[ƒX
+    ///	ãƒ‘ãƒ¼ã‚¹
 	Result parse(const PhraseScannerT& scan)const{
 		Result r;
 		if (ptr_) r=ptr_->do_parse_virtual(scan);
 		else r=scan.no_match();
 		return r;
 	}
-	///	ƒRƒ“ƒNƒŠ[ƒg‚Èƒp[ƒT
+	///	ã‚³ãƒ³ã‚¯ãƒªãƒ¼ãƒˆãªãƒ‘ãƒ¼ã‚µ
 	boost::scoped_ptr<boost::spirit::classic::impl::abstract_parser<PhraseScannerT, Result> > ptr_;
 };
 
@@ -407,7 +407,7 @@ struct FIPTPhraseParserWithID: public boost::spirit::classic::parser< FIPTPhrase
 	typedef FIPTPhraseParserWithID<TagT>          self_t;
 	typedef FIPTPhraseParserWithID<TagT> const&   embed_t;
 
-	///	–{•¶(Phrase)‚Ì‚½‚ß‚ÌƒXƒLƒƒƒiŒ^
+	///	æœ¬æ–‡(Phrase)ã®ãŸã‚ã®ã‚¹ã‚­ãƒ£ãƒŠå‹
 	typedef FIPTSkipParser::PhraseScannerT PhraseScannerT;
 	typedef boost::spirit::classic::match_result<PhraseScannerT, boost::spirit::classic::parser_context<>::context_linker_t::attr_t>::type Result;
 
@@ -444,7 +444,7 @@ struct FIPTPhraseParserWithID: public boost::spirit::classic::parser< FIPTPhrase
 */
 		return r;
 	}
-	///	ƒRƒ“ƒNƒŠ[ƒg‚Èƒp[ƒT
+	///	ã‚³ãƒ³ã‚¯ãƒªãƒ¼ãƒˆãªãƒ‘ãƒ¼ã‚µ
 	boost::scoped_ptr<boost::spirit::classic::impl::abstract_parser<PhraseScannerT, Result> > ptr_;
 };
 

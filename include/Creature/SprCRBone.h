@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,54 +17,54 @@ struct PHJointIf;
 struct PHIKActuatorIf;
 struct PHIKEndEffectorIf;
 
-/// ƒNƒŠ[ƒ`ƒƒ‚Ìƒ{[ƒ“i„‘Ìˆê‚Â{eƒ{[ƒ“‚Ö‚ÌŠÖßˆê‚Âj
+/// ã‚¯ãƒªãƒ¼ãƒãƒ£ã®ãƒœãƒ¼ãƒ³ï¼ˆå‰›ä½“ä¸€ã¤ï¼‹è¦ªãƒœãƒ¼ãƒ³ã¸ã®é–¢ç¯€ä¸€ã¤ï¼‰
 struct CRBoneIf : SceneObjectIf {
 	SPR_IFDEF(CRBone);
 
-	/** @brief ƒ‰ƒxƒ‹i–ğŠ„‚ğ¦‚·•¶š—ñFHand‚È‚Çj‚Ìæ“¾
+	/** @brief ãƒ©ãƒ™ãƒ«ï¼ˆå½¹å‰²ã‚’ç¤ºã™æ–‡å­—åˆ—ï¼šHandãªã©ï¼‰ã®å–å¾—
 	 */
 	const char* GetLabel() const;
 
-	/** @brief ƒ‰ƒxƒ‹i–ğŠ„‚ğ¦‚·•¶š—ñFHand‚È‚Çj‚Ìİ’è
+	/** @brief ãƒ©ãƒ™ãƒ«ï¼ˆå½¹å‰²ã‚’ç¤ºã™æ–‡å­—åˆ—ï¼šHandãªã©ï¼‰ã®è¨­å®š
 	 */
 	void SetLabel(const char* str);
 
-	/** @brief PHSolid‚ğæ“¾
+	/** @brief PHSolidã‚’å–å¾—
 	 */
 	PHSolidIf* GetPHSolid();
 
-	/** @brief PHSolid‚ğİ’è
+	/** @brief PHSolidã‚’è¨­å®š
 	 */
 	void SetPHSolid(PHSolidIf* so);
 
-	/** @brief IKƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ğæ“¾
+	/** @brief IKã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã‚’å–å¾—
 	 */
 	PHIKEndEffectorIf* GetIKEndEffector();
 
-	/** @brief IKƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ğİ’è
+	/** @brief IKã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã‚’è¨­å®š
 	 */
 	void SetIKEndEffector(PHIKEndEffectorIf* ikEE);
 
-	/** @brief PHJoint‚ğæ“¾
+	/** @brief PHJointã‚’å–å¾—
 	 */
 	PHJointIf* GetPHJoint();
 
-	/** @brief PHJoint‚ğİ’è
+	/** @brief PHJointã‚’è¨­å®š
 	 */
 	void SetPHJoint(PHJointIf* jo);
 
-	/** @brief IKƒAƒNƒ`ƒ…ƒG[ƒ^‚ğæ“¾
+	/** @brief IKã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã‚’å–å¾—
 	 */
 	PHIKActuatorIf* GetIKActuator();
 
-	/** @brief IKƒAƒNƒ`ƒ…ƒG[ƒ^‚ğİ’è
+	/** @brief IKã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã‚’è¨­å®š
 	 */
 	void SetIKActuator(PHIKActuatorIf* ikAct);
 };
 
 struct CRBoneDesc {
 	SPR_DESCDEF(CRBone);
-	std::string	label;			///<	ƒ‰ƒxƒ‹i–ğŠ„‚ğ¦‚·•¶š—ñFHand‚È‚Çj
+	std::string	label;			///<	ãƒ©ãƒ™ãƒ«ï¼ˆå½¹å‰²ã‚’ç¤ºã™æ–‡å­—åˆ—ï¼šHandãªã©ï¼‰
 };
 
 }

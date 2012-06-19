@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,32 +15,32 @@
 
 namespace Spr {
 
-/**	\defgroup gpBaseUtility ƒ†[ƒeƒBƒŠƒeƒBƒNƒ‰ƒX	*/
+/**	\defgroup gpBaseUtility ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ã‚¯ãƒ©ã‚¹	*/
 //@{
 
-/**	@file	BaseUtility.h	‚»‚Ì‘¼‚Ìƒ†[ƒeƒBƒŠƒeƒB[ƒNƒ‰ƒXEŠÖ”D*/
+/**	@file	BaseUtility.h	ãã®ä»–ã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ãƒ¼ã‚¯ãƒ©ã‚¹ãƒ»é–¢æ•°ï¼*/
 
-///	•¶š—ñDstr::string‚Ì•Ê–¼
+///	æ–‡å­—åˆ—ï¼str::stringã®åˆ¥å
 typedef std::string UTString;
 inline bool operator < (const UTString& u1, const UTString& u2){
 	return u1.compare(u2) < 0;
 }
-/**	•¶š—ñ(UTString)‚ğ”äŠr‚·‚éŠÖ”ƒIƒuƒWƒFƒNƒgŒ^D
-	set<UTString, UTStringLess> ‚È‚Ç‚ğì‚é‚½‚ß‚Ég‚¦‚éD	*/
+/**	æ–‡å­—åˆ—(UTString)ã‚’æ¯”è¼ƒã™ã‚‹é–¢æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå‹ï¼
+	set<UTString, UTStringLess> ãªã©ã‚’ä½œã‚‹ãŸã‚ã«ä½¿ãˆã‚‹ï¼	*/
 struct UTStringLess{
 	bool operator ()(const UTString& t1, const UTString& t2) const{
 		return t1.compare(t2) < 0;
 	}
 };
 
-///	ƒ|ƒCƒ“ƒ^‚Ì’†g‚ª“™‚µ‚¢‚©’²‚×‚éŠÖ”ƒIƒuƒWƒFƒNƒgŒ^D
+///	ãƒã‚¤ãƒ³ã‚¿ã®ä¸­èº«ãŒç­‰ã—ã„ã‹èª¿ã¹ã‚‹é–¢æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå‹ï¼
 template <class T>
 bool UTContentsEqual(const T& t1, const T& t2){
 	return *t1 == *t2;
 }
 
-/**	ƒ|ƒCƒ“ƒ^‚Ì’†g‚ğ”äŠr‚·‚éŠÖ”ƒIƒuƒWƒFƒNƒgŒ^D
-	set< int*, UTContentsLess<int> > ‚È‚Ç‚Ég‚¦‚éD*/
+/**	ãƒã‚¤ãƒ³ã‚¿ã®ä¸­èº«ã‚’æ¯”è¼ƒã™ã‚‹é–¢æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå‹ï¼
+	set< int*, UTContentsLess<int> > ãªã©ã«ä½¿ãˆã‚‹ï¼*/
 template <class T>
 struct UTContentsLess{
 	bool operator ()(const T& t1, const T& t2) const{
@@ -48,8 +48,8 @@ struct UTContentsLess{
 	}
 };
 
-/**	ƒNƒ‰ƒX‚Ìƒƒ“ƒo‚ğ”äŠr‚·‚éŠÖ”ƒIƒuƒWƒFƒNƒgŒ^D
-	set<C, UTMemberLess<C, C::member> > ‚È‚Ç‚Ég‚¦‚éD*/
+/**	ã‚¯ãƒ©ã‚¹ã®ãƒ¡ãƒ³ãƒã‚’æ¯”è¼ƒã™ã‚‹é–¢æ•°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆå‹ï¼
+	set<C, UTMemberLess<C, C::member> > ãªã©ã«ä½¿ãˆã‚‹ï¼*/
 template <class T, class M, M T::* m>
 struct UTMemberLess{
 	bool operator ()(const T& t1, const T& t2) const{
@@ -57,7 +57,7 @@ struct UTMemberLess{
 	}
 };
 
-///	ostream‚Éw’è‚Ì”‚ÌƒXƒy[ƒX‚ğo—Í‚·‚éƒXƒgƒŠ[ƒ€ƒIƒyƒŒ[ƒ^(std::endl ‚È‚Ç‚Ì’‡ŠÔ)
+///	ostreamã«æŒ‡å®šã®æ•°ã®ã‚¹ãƒšãƒ¼ã‚¹ã‚’å‡ºåŠ›ã™ã‚‹ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚ªãƒšãƒ¬ãƒ¼ã‚¿(std::endl ãªã©ã®ä»²é–“)
 class UTPadding{
 public:
 	int len;
@@ -65,33 +65,33 @@ public:
 };
 std::ostream& operator << (std::ostream& os, UTPadding p);
 
-///	istream‚©‚çC‹ó”’•¶š(ƒXƒy[ƒX ƒ^ƒu ‰üs(CR LF) )‚ğ“Ç‚İo‚·ƒXƒgƒŠ[ƒ€ƒIƒyƒŒ[ƒ^
+///	istreamã‹ã‚‰ï¼Œç©ºç™½æ–‡å­—(ã‚¹ãƒšãƒ¼ã‚¹ ã‚¿ãƒ– æ”¹è¡Œ(CR LF) )ã‚’èª­ã¿å‡ºã™ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚ªãƒšãƒ¬ãƒ¼ã‚¿
 struct UTEatWhite{
 	UTEatWhite(){}
 };
 std::istream& operator >> (std::istream& is, const UTEatWhite& e);
 
 
-/**	\defgroup gpUTRef QÆƒJƒEƒ“ƒ^/QÆƒ|ƒCƒ“ƒ^ƒNƒ‰ƒX 
-QÆƒJƒEƒ“ƒ^‚ÍC•¡”‚Ìƒ|ƒCƒ“ƒ^‚Å‹¤—L‚³‚ê‚½ƒIƒuƒWƒFƒNƒg‚Ìƒƒ‚ƒŠ‚ÌŠJ•ú‚ğ
-QÆ‚·‚éƒ|ƒCƒ“ƒ^‚ª–³‚­‚È‚Á‚½‚É©“®“I‚És‚¤d‘g‚İD
-‚±‚ê‚ğg‚¤‚Æ delete ‚ğ‘‚­•K—v‚ª‚È‚­‚È‚éD
-ƒ|ƒCƒ“ƒ^
+/**	\defgroup gpUTRef å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿/å‚ç…§ãƒã‚¤ãƒ³ã‚¿ã‚¯ãƒ©ã‚¹ 
+å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ã¯ï¼Œè¤‡æ•°ã®ãƒã‚¤ãƒ³ã‚¿ã§å…±æœ‰ã•ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ¡ãƒ¢ãƒªã®é–‹æ”¾ã‚’
+å‚ç…§ã™ã‚‹ãƒã‚¤ãƒ³ã‚¿ãŒç„¡ããªã£ãŸæ™‚ã«è‡ªå‹•çš„ã«è¡Œã†ä»•çµ„ã¿ï¼
+ã“ã‚Œã‚’ä½¿ã†ã¨ delete ã‚’æ›¸ãå¿…è¦ãŒãªããªã‚‹ï¼
+ãƒã‚¤ãƒ³ã‚¿
 @verbatim
 	T* p = new T;
 @endverbatim
-‚Ì‘ã‚í‚è‚ÉC
+ã®ä»£ã‚ã‚Šã«ï¼Œ
 @verbatim
 	UTRef<T> p = new T;
 	UTRef<T> p2 = p;
 @endverbatim
-‚Æ‚·‚é‚ÆCp‚Æp2‚Ì—¼•û‚ªÁ‚¦‚½‚Æ‚«‚ÉC p/p2 ‚ªw‚·ƒIƒuƒWƒFƒNƒg‚àdelete‚³‚ê‚éD
+ã¨ã™ã‚‹ã¨ï¼Œpã¨p2ã®ä¸¡æ–¹ãŒæ¶ˆãˆãŸã¨ãã«ï¼Œ p/p2 ãŒæŒ‡ã™ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚‚deleteã•ã‚Œã‚‹ï¼
 
 */
 //@{
 
-/**	QÆƒJƒEƒ“ƒ^DUTRef<T>‚Åw‚³‚ê‚éƒNƒ‰ƒXT‚ÍC
-	‚±‚ê‚ğ1‚Â‚¾‚¯Œp³‚·‚é•K—v‚ª‚ ‚éD	*/
+/**	å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ï¼UTRef<T>ã§æŒ‡ã•ã‚Œã‚‹ã‚¯ãƒ©ã‚¹Tã¯ï¼Œ
+	ã“ã‚Œã‚’1ã¤ã ã‘ç¶™æ‰¿ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼	*/
 class SPR_DLL UTRefCount{
 	mutable int refCount;
 public:
@@ -118,8 +118,8 @@ public:
 	int RefCount() const { return refCount; }
 };
 
-/**	QÆƒJƒEƒ“ƒ^—p‚Ìƒ|ƒCƒ“ƒ^D©“®“I‚ÉQÆƒJƒEƒ“ƒ^‚ğ‘Œ¸C
-	ƒJƒEƒ“ƒ^‚ª0‚É‚È‚Á‚½‚çCƒIƒuƒWƒFƒNƒg‚ğdelete‚·‚éD
+/**	å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ç”¨ã®ãƒã‚¤ãƒ³ã‚¿ï¼è‡ªå‹•çš„ã«å‚ç…§ã‚«ã‚¦ãƒ³ã‚¿ã‚’å¢—æ¸›ï¼Œ
+	ã‚«ã‚¦ãƒ³ã‚¿ãŒ0ã«ãªã£ãŸã‚‰ï¼Œã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’deleteã™ã‚‹ï¼
 */
 template <class T>
 class UTRef{
@@ -162,7 +162,7 @@ public:
 	bool operator <(const UTRef& r) const { return Obj() < r.Obj(); }
 };
 
-/// UTRef‚Ì”z—ñD
+/// UTRefã®é…åˆ—ï¼
 template<class T, class CO = std::vector< UTRef<T> > >
 class UTRefArray : public CO{
 public:
@@ -184,16 +184,16 @@ public:
 	}
 };
 
-/**	ˆê”ÊƒIƒuƒWƒFƒNƒg—pC©“®delete ƒ|ƒCƒ“ƒ^
-	ƒ|ƒCƒ“ƒ^‚ªÁ‚¦‚é‚Æ‚«‚ÉƒIƒuƒWƒFƒNƒg‚ğdelete‚ğ‚·‚éD
-	ƒJƒEƒ“ƒ^‚Í‚Â‚¢‚Ä‚È‚¢‚Ì‚ÅC•¡”‚Ì UTDeleteRef ‚ÅƒIƒuƒWƒFƒNƒg‚ğ
-	w‚·‚±‚Æ‚Í‚Å‚«‚È‚¢D*/
+/**	ä¸€èˆ¬ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”¨ï¼Œè‡ªå‹•delete ãƒã‚¤ãƒ³ã‚¿
+	ãƒã‚¤ãƒ³ã‚¿ãŒæ¶ˆãˆã‚‹ã¨ãã«ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’deleteã‚’ã™ã‚‹ï¼
+	ã‚«ã‚¦ãƒ³ã‚¿ã¯ã¤ã„ã¦ãªã„ã®ã§ï¼Œè¤‡æ•°ã® UTDeleteRef ã§ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’
+	æŒ‡ã™ã“ã¨ã¯ã§ããªã„ï¼*/
 template <class T>
 class UTDeleteRef{
 	T* obj;
 	T*& Obj() const {return (T*&) obj;}
 	UTDeleteRef(const UTDeleteRef<T>& r){
-		assert(0);	//	ƒRƒs[‚µ‚¿‚á‚¾‚ßD
+		assert(0);	//	ã‚³ãƒ”ãƒ¼ã—ã¡ã‚ƒã ã‚ï¼
 	}
 public:
 	UTDeleteRef(T* t = NULL){
@@ -211,20 +211,20 @@ public:
 //@}
 
 
-/**	ƒVƒ“ƒOƒ‹ƒgƒ“ƒNƒ‰ƒXD
-	ƒvƒƒOƒ‰ƒ€“à‚ÉCƒIƒuƒWƒFƒNƒg‚ğ1‚Â‚¾‚¯ì‚è‚½‚­C
-	‚¢‚Â‚Å‚àg‚¢‚½‚¢ê‡‚É—˜—p‚·‚é‚à‚ÌD*/
+/**	ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¯ãƒ©ã‚¹ï¼
+	ãƒ—ãƒ­ã‚°ãƒ©ãƒ å†…ã«ï¼Œã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’1ã¤ã ã‘ä½œã‚ŠãŸãï¼Œ
+	ã„ã¤ã§ã‚‚ä½¿ã„ãŸã„å ´åˆã«åˆ©ç”¨ã™ã‚‹ã‚‚ã®ï¼*/
 template <class T>
 T& Singleton(){
 	static T t;
 	return t;
 }
 
-/**	\defgroup gpExCont ƒRƒ“ƒeƒi‚ÌŠg’£
-	stl‚ÌƒRƒ“ƒeƒiƒNƒ‰ƒX‚ğŠg’£‚µ‚½ƒNƒ‰ƒX—ŞD
-	ƒXƒ^ƒbƒNCƒcƒŠ[C	*/
+/**	\defgroup gpExCont ã‚³ãƒ³ãƒ†ãƒŠã®æ‹¡å¼µ
+	stlã®ã‚³ãƒ³ãƒ†ãƒŠã‚¯ãƒ©ã‚¹ã‚’æ‹¡å¼µã—ãŸã‚¯ãƒ©ã‚¹é¡ï¼
+	ã‚¹ã‚¿ãƒƒã‚¯ï¼Œãƒ„ãƒªãƒ¼ï¼Œ	*/
 //@{
-///	ƒXƒ^ƒbƒN‚Â‚« vector 
+///	ã‚¹ã‚¿ãƒƒã‚¯ã¤ã vector 
 template <class T, class CO=std::vector<T> >
 class UTStack: public CO{
 public:
@@ -240,7 +240,7 @@ public:
 	}
 };
 
-///	ƒcƒŠ[‚Ìƒm[ƒh(eq—¼•ûŒüQÆ)
+///	ãƒ„ãƒªãƒ¼ã®ãƒãƒ¼ãƒ‰(è¦ªå­ä¸¡æ–¹å‘å‚ç…§)
 template <class T, class CO=std::vector< UTRef<T> > >
 class UTTreeNode{
 private:
@@ -258,31 +258,31 @@ public:
 			 children.pop_back();
 		}
 	}
-	///@name ƒcƒŠ[‚Ì‘€ì
+	///@name ãƒ„ãƒªãƒ¼ã®æ“ä½œ
 	//@{
-	///	eƒm[ƒh‚ğæ“¾‚·‚éD
+	///	è¦ªãƒãƒ¼ãƒ‰ã‚’å–å¾—ã™ã‚‹ï¼
 	T* GetParent(){ return parent; }
 	const T* GetParent() const { return parent; }
-	///	eƒm[ƒh‚ğİ’è‚·‚éD
+	///	è¦ªãƒãƒ¼ãƒ‰ã‚’è¨­å®šã™ã‚‹ï¼
 	void SetParent(T* n){
-		if (parent == n) return;						//	•ÏX‚ª‚È‚¯‚ê‚Î‰½‚à‚µ‚È‚¢D
-		//	“r’†‚ÅRefCount‚ª0‚É‚È‚Á‚ÄÁ‚¦‚È‚¢‚æ‚¤‚ÉCæ‚ÉV‚µ‚¢ƒm[ƒh‚Ìq‚É‚·‚éD
+		if (parent == n) return;						//	å¤‰æ›´ãŒãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„ï¼
+		//	é€”ä¸­ã§RefCountãŒ0ã«ãªã£ã¦æ¶ˆãˆãªã„ã‚ˆã†ã«ï¼Œå…ˆã«æ–°ã—ã„ãƒãƒ¼ãƒ‰ã®å­ã«ã™ã‚‹ï¼
 		if (n) n->children.push_back((T*)this);
-		if (parent) {									//	ŒÃ‚¢eƒm[ƒh‚ÌqƒŠƒXƒg‚©‚çíœ
+		if (parent) {									//	å¤ã„è¦ªãƒãƒ¼ãƒ‰ã®å­ãƒªã‚¹ãƒˆã‹ã‚‰å‰Šé™¤
 			TYPENAME CO::iterator it = std::find(parent->children.begin(), parent->children.end(), UTRef<T>((T*)this));
 			if (it != parent->children.end()) parent->children.erase(it);
 		}
-		parent = n;										//	parent ‚ğV‚µ‚¢ƒm[ƒh‚ÉØ‚è‘Ö‚¦‚éD
+		parent = n;										//	parent ã‚’æ–°ã—ã„ãƒãƒ¼ãƒ‰ã«åˆ‡ã‚Šæ›¿ãˆã‚‹ï¼
 	}
-	///	qƒm[ƒhD
+	///	å­ãƒãƒ¼ãƒ‰ï¼
 	CO& Children(){ return children; }
-	///	qƒm[ƒhD
+	///	å­ãƒãƒ¼ãƒ‰ï¼
 	const CO& Children() const { return children; }
-	///	qƒm[ƒh‚ğ’Ç‰Á‚·‚é
+	///	å­ãƒãƒ¼ãƒ‰ã‚’è¿½åŠ ã™ã‚‹
 	void AddChild(UTRef<T> c){ c->SetParent((T*)this); }
-	///	qƒm[ƒh‚ğíœ‚·‚é
+	///	å­ãƒãƒ¼ãƒ‰ã‚’å‰Šé™¤ã™ã‚‹
 	void DelChild(UTRef<T> c){ if(c->GetParent() == this) c->SetParent(NULL); }
-	///	qƒm[ƒh‚ğ‚·‚×‚Äíœ‚·‚éD
+	///	å­ãƒãƒ¼ãƒ‰ã‚’ã™ã¹ã¦å‰Šé™¤ã™ã‚‹ï¼
 	void ClearChildren(){
 		while(children.size()){
 			 children.back()->parent = NULL;
@@ -330,9 +330,9 @@ public:
 //@}
 	
 /** 	assert_cast
-		SPR_DEBUG’è‹`‚Ídynamic_castA‚»‚êˆÈŠO‚Å‚Ístatic_cast‚Æ‚µ‚Ä“­‚­B
-		dynamic_cast‚É¸”s‚·‚é‚Æstd::bad_cast—áŠO‚ğ”­¶‚·‚éB
-		RTTI‚ğg‚¤C++‚Ìdynamic_cast‚ğg—p‚·‚éDDCAST‚Ì—Ş‚Íg‚í‚È‚¢	*/
+		SPR_DEBUGå®šç¾©æ™‚ã¯dynamic_castã€ãã‚Œä»¥å¤–ã§ã¯static_castã¨ã—ã¦åƒãã€‚
+		dynamic_castã«å¤±æ•—ã™ã‚‹ã¨std::bad_castä¾‹å¤–ã‚’ç™ºç”Ÿã™ã‚‹ã€‚
+		RTTIã‚’ä½¿ã†C++ã®dynamic_castã‚’ä½¿ç”¨ã™ã‚‹ï¼DCASTã®é¡ã¯ä½¿ã‚ãªã„	*/
 template <class T, class U>
 inline T assert_cast(U u){
 #ifdef SPR_DEBUG

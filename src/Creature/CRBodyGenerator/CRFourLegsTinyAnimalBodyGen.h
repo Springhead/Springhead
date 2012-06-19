@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,56 +13,56 @@
 //@{
 namespace Spr{;
 
-/// “·‘Ì‚Æ‘«‚Ì‚İ‚ÌšM“û—Şƒ‚ƒfƒ‹‚ÌƒfƒBƒXƒNƒŠƒvƒ^
+/// èƒ´ä½“ã¨è¶³ã®ã¿ã®å“ºä¹³é¡ãƒ¢ãƒ‡ãƒ«ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRFourLegsTinyAnimalBodyGenDesc : CRBodyGenDesc{
 
-	// ‚Ç‚Ìí—Ş‚ÌŠÖß‚Å‹r‚ğ\¬‚·‚é‚©
+	// ã©ã®ç¨®é¡ã®é–¢ç¯€ã§è„šã‚’æ§‹æˆã™ã‚‹ã‹
 	enum CRTinyJointsMode{
 		HINGE_MODE = 0,
 		BALL_MODE,
 	} jointType;
 
-	// ‹r‚Ìƒ|ƒŠƒSƒ“‚Ìƒ^ƒCƒv
+	// è„šã®ãƒãƒªã‚´ãƒ³ã®ã‚¿ã‚¤ãƒ—
 	enum ShapeMode{
 		MODE_ROUNDCONE = 0,
 		MODE_BOX, MODE_CAPSULE, MODE_SPHERE,
 	} shapeMode;
 
-	/// ‘ÌŠ²‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^
+	/// ä½“å¹¹ã«é–¢ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	double bodyHeight, bodyBreadth, bodyThickness;
 
-	Vec2d upperSizes;	//< ‹r‚ÌRoundCone‚ÌƒTƒCƒYie‘¤Cq‘¤j
-	Vec2d lowerSizes;	//< ‘«‚ÌRoundCone‚ÌƒTƒCƒYie‘¤Cq‘¤j
-	float upperLength;	//< ‹r‚ÌRoundCone‚ğ\¬‚·‚é2‹…ŠÔ‚Ì‹——£
-	float lowerLength;	//< ‘«‚ÌRoundCone‚ğ\¬‚·‚é2‹…ŠÔ‚Ì‹——£
+	Vec2d upperSizes;	//< è„šã®RoundConeã®ã‚µã‚¤ã‚ºï¼ˆè¦ªå´ï¼Œå­å´ï¼‰
+	Vec2d lowerSizes;	//< è¶³ã®RoundConeã®ã‚µã‚¤ã‚ºï¼ˆè¦ªå´ï¼Œå­å´ï¼‰
+	float upperLength;	//< è„šã®RoundConeã‚’æ§‹æˆã™ã‚‹2çƒé–“ã®è·é›¢
+	float lowerLength;	//< è¶³ã®RoundConeã‚’æ§‹æˆã™ã‚‹2çƒé–“ã®è·é›¢
 
-	// ¿—Ê‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^
-	double massFF;		//< ‘O‘«‚Ì¿—Ê
-	double massFL;		//< ‘O‹r‚Ì¿—Ê
-	double massRF;		//< Œã‘«‚Ì¿—Ê
-	double massRL;		//< Œã‹r‚Ì¿—Ê
-	double massBody;	//< ‘ÌŠ²‚Ì¿—Ê
+	// è³ªé‡ã«é–¢ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+	double massFF;		//< å‰è¶³ã®è³ªé‡
+	double massFL;		//< å‰è„šã®è³ªé‡
+	double massRF;		//< å¾Œè¶³ã®è³ªé‡
+	double massRL;		//< å¾Œè„šã®è³ªé‡
+	double massBody;	//< ä½“å¹¹ã®è³ªé‡
 
-	/// ŠeŠÖß‚Ìƒoƒlƒ_ƒ“ƒp
+	/// å„é–¢ç¯€ã®ãƒãƒãƒ€ãƒ³ãƒ‘
 	double springFront, damperFront;
 	double springRear,  damperRear;
 
-	/// ‰Â“®ˆæ§ŒÀiBallJoint‚Ìê‡j
+	/// å¯å‹•åŸŸåˆ¶é™ï¼ˆBallJointã®å ´åˆï¼‰
 	Vec2d rangeFrontSwing;
 	Vec2d rangeFrontTwist;
 	Vec2d rangeRearSwing;
 	Vec2d rangeRearTwist;
 	
-	/// ‰Â“®ˆæ§ŒÀiHingeJoint‚Ìê‡j
+	/// å¯å‹•åŸŸåˆ¶é™ï¼ˆHingeJointã®å ´åˆï¼‰
 	Vec2d rangeUpperFront;
 	Vec2d rangeLowerFront;
 	Vec2d rangeUpperRear;
 	Vec2d rangeLowerRear;
 
-	bool rfLeg; //< ‰E‘O‘«‚ğì¬‚·‚é‚©
-	bool lfLeg; //< ¶‘O‘«‚ğì¬‚·‚é‚©
-	bool rrLeg; //< ‰EŒã‘«‚ğì¬‚·‚é‚©
-	bool lrLeg; //< ¶Œã‘«‚ğì¬‚·‚é‚©
+	bool rfLeg; //< å³å‰è¶³ã‚’ä½œæˆã™ã‚‹ã‹
+	bool lfLeg; //< å·¦å‰è¶³ã‚’ä½œæˆã™ã‚‹ã‹
+	bool rrLeg; //< å³å¾Œè¶³ã‚’ä½œæˆã™ã‚‹ã‹
+	bool lrLeg; //< å·¦å¾Œè¶³ã‚’ä½œæˆã™ã‚‹ã‹
 
 	CRFourLegsTinyAnimalBodyGenDesc();
 };
@@ -70,7 +70,7 @@ struct CRFourLegsTinyAnimalBodyGenDesc : CRBodyGenDesc{
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRFourLegsTinyAnimalBodyGen
-// ƒqƒ“ƒWƒWƒ‡ƒCƒ“ƒg‚ğ—p‚¢‚½šM“û—Şƒ‚ƒfƒ‹EƒNƒ‰ƒX‚ÌÀ‘•i–¢À‘•F’†g‚ÍTrunkFootHumanBodyj
+// ãƒ’ãƒ³ã‚¸ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ç”¨ã„ãŸå“ºä¹³é¡ãƒ¢ãƒ‡ãƒ«ãƒ»ã‚¯ãƒ©ã‚¹ã®å®Ÿè£…ï¼ˆæœªå®Ÿè£…ï¼šä¸­èº«ã¯TrunkFootHumanBodyï¼‰
 class CRFourLegsTinyAnimalBodyGen : public CRBodyGen, public CRFourLegsTinyAnimalBodyGenDesc {
 private:
 	PHSolidIf* CreateBody();
@@ -84,7 +84,7 @@ private:
 	void InitLegs(PHSolidIf* sBody);
 
 	void InitContact();
-	// void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);	//< ƒ{ƒfƒB‚Ì§Œäƒ‚[ƒh‚ğİ’è‚·‚éD
+	// void InitControlMode(PHJointDesc::PHControlMode m = PHJointDesc::MODE_POSITION);	//< ãƒœãƒ‡ã‚£ã®åˆ¶å¾¡ãƒ¢ãƒ¼ãƒ‰ã‚’è¨­å®šã™ã‚‹ï¼
 
 
 public:
@@ -101,7 +101,7 @@ public:
 		Init();
 	}
 
-	/** @brief ‰Šú‰»‚ğÀs‚·‚é
+	/** @brief åˆæœŸåŒ–ã‚’å®Ÿè¡Œã™ã‚‹
 	*/
 	virtual void Init();
 	virtual Vec2d GetSwingLimit(){return rangeFrontSwing;}

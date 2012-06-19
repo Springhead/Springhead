@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,7 +19,7 @@ class PHConstraintEngine;
 class PH1DJoint;
 
 /**
-	ƒMƒAF‚P©—R“xŠÖß‚ğ˜A“®‚³‚¹‚éS‘©
+	ã‚®ã‚¢ï¼šï¼‘è‡ªç”±åº¦é–¢ç¯€ã‚’é€£å‹•ã•ã›ã‚‹æ‹˜æŸ
  */
 class PHGear : public SceneObject{
 public:
@@ -28,7 +28,7 @@ public:
 
 	PHScene*			scene;
 	PHConstraintEngine* engine;
-	PH1DJoint*		joint[2];		///< ˜A“®‚³‚¹‚éŠÖß
+	PH1DJoint*		joint[2];		///< é€£å‹•ã•ã›ã‚‹é–¢ç¯€
 	bool			bArticulated;
 	double			A, Ainv, b;
 	double			f;

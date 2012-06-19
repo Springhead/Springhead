@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,7 +13,7 @@
 
 namespace Spr{;
 	
-/// ƒJƒvƒZƒ‹
+/// ã‚«ãƒ—ã‚»ãƒ«
 class CDCapsule: public CDConvex{
 public:
 	SPR_OBJECTDEF(CDCapsule);
@@ -24,11 +24,11 @@ public:
 	virtual bool IsInside(const Vec3f& p);
 	virtual float CalcVolume();
 	
-	///	ƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚ğ‹‚ß‚éD
+	///	ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã‚’æ±‚ã‚ã‚‹ï¼
 	virtual int Support(Vec3f& w, const Vec3f& v) const;
-	///	Ø‚èŒû‚ğ‹‚ß‚éDÚG‰ğÍ‚Ég‚¤D
-	/// ‚½‚¾‚µA‹…‘Ì‚ÉŠÖ‚µ‚Ä‚ÍAØ‚èŒû‚Í‹‚ß‚È‚¢BÚG‰ğÍ‚É‚ÍÅ‹ß–T‚Ì‚P“_‚³‚¦‚ ‚ê‚Î‚¢‚¢B
-	/// ‹…‘Ì‚ÉŠÖ‚µ‚ÄFindCutRing()‚ªŒÄ‚Ño‚³‚ê‚½ê‡‚É‚ÍAassertion‚ª”­¶‚·‚éB
+	///	åˆ‡ã‚Šå£ã‚’æ±‚ã‚ã‚‹ï¼æ¥è§¦è§£æã«ä½¿ã†ï¼
+	/// ãŸã ã—ã€çƒä½“ã«é–¢ã—ã¦ã¯ã€åˆ‡ã‚Šå£ã¯æ±‚ã‚ãªã„ã€‚æ¥è§¦è§£ææ™‚ã«ã¯æœ€è¿‘å‚ã®ï¼‘ç‚¹ã•ãˆã‚ã‚Œã°ã„ã„ã€‚
+	/// çƒä½“ã«é–¢ã—ã¦FindCutRing()ãŒå‘¼ã³å‡ºã•ã‚ŒãŸå ´åˆã«ã¯ã€assertionãŒç™ºç”Ÿã™ã‚‹ã€‚
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 	
 	virtual Matrix3f CalcMomentOfInertia();

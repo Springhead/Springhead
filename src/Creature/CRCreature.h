@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,19 +16,19 @@
 namespace Spr{;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief ƒNƒŠ[ƒ`ƒƒ‚ÌÀ‘•
+/** @brief ã‚¯ãƒªãƒ¼ãƒãƒ£ã®å®Ÿè£…
 */
 class CRCreature : public Scene, public CRCreatureDesc {
 protected:
-	///	ƒGƒ“ƒWƒ“
+	///	ã‚¨ãƒ³ã‚¸ãƒ³
 	typedef std::vector< UTRef<CREngineIf> > CREngines;
 	CREngines engines;
 
-	///	ƒ{ƒfƒB
+	///	ãƒœãƒ‡ã‚£
 	typedef std::vector< UTRef<CRBodyIf> > CRBodies;
 	CRBodies bodies;
 
-	/// ŠÖ˜A‚·‚éPHScene
+	/// é–¢é€£ã™ã‚‹PHScene
 	PHSceneIf* phScene;
 
 public:
@@ -42,39 +42,39 @@ public:
 		CRRegisterTypeDescs();
 	}
 
-	/** @brief Š´Šo¨î•ñˆ—¨‰^“® ‚Ì‚PƒXƒeƒbƒv‚ğÀs‚·‚é
+	/** @brief æ„Ÿè¦šâ†’æƒ…å ±å‡¦ç†â†’é‹å‹• ã®ï¼‘ã‚¹ãƒ†ãƒƒãƒ—ã‚’å®Ÿè¡Œã™ã‚‹
 	*/
 	virtual void Step();
 
-	/** @brief ƒ{ƒfƒB‚ğ‚Â‚­‚é
+	/** @brief ãƒœãƒ‡ã‚£ã‚’ã¤ãã‚‹
 	*/
 	virtual CRBodyIf* CreateBody(const IfInfo* ii, const CRBodyDesc& desc);
 
-	/** @brief ƒ{ƒfƒB‚ğæ“¾‚·‚é
+	/** @brief ãƒœãƒ‡ã‚£ã‚’å–å¾—ã™ã‚‹
 	*/
 	virtual CRBodyIf* GetBody(int i) { return bodies[i]; }
 
-	/** @brief ƒ{ƒfƒB‚Ì”‚ğæ“¾‚·‚é
+	/** @brief ãƒœãƒ‡ã‚£ã®æ•°ã‚’å–å¾—ã™ã‚‹
 	*/
 	virtual int NBodies() { return (int)bodies.size(); }
 
-	/** @brief CREngine‚ğì¬‚·‚é
+	/** @brief CREngineã‚’ä½œæˆã™ã‚‹
 	*/
 	virtual CREngineIf* CreateEngine(const IfInfo* ii, const CREngineDesc& desc);
 
-	/** @brief CREngine‚ğæ“¾‚·‚é
+	/** @brief CREngineã‚’å–å¾—ã™ã‚‹
 	*/
 	virtual CREngineIf* GetEngine(int i) { return engines[i]; }
 
-	/** @brief CREngine‚Ì”‚ğæ“¾‚·‚é
+	/** @brief CREngineã®æ•°ã‚’å–å¾—ã™ã‚‹
 	*/
 	virtual int NEngines() { return (int)engines.size(); }
 
-	/** @brief ŠÖ˜A‚·‚éPHScene‚ğæ“¾‚·‚é
+	/** @brief é–¢é€£ã™ã‚‹PHSceneã‚’å–å¾—ã™ã‚‹
 	*/
 	PHSceneIf* GetPHScene() { return phScene; }
 
-	/** @brief q—v‘f‚Ìˆµ‚¢
+	/** @brief å­è¦ç´ ã®æ‰±ã„
 	*/
 	virtual size_t NChildObject() const { return bodies.size()+engines.size(); }
 	virtual ObjectIf* GetChildObject(size_t i);

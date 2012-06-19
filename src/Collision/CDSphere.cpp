@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -21,7 +21,7 @@ CDSphere::CDSphere(const CDSphereDesc& d){
 	
 }
 
-// ƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚ğ‹‚ß‚é
+// ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã‚’æ±‚ã‚ã‚‹
 int CDSphere::Support(Vec3f&w, const Vec3f& v) const{
 	float n = v.norm();
 	if(n < 1.0e-10f){
@@ -32,7 +32,7 @@ int CDSphere::Support(Vec3f&w, const Vec3f& v) const{
 	return -1;
 }
 
-// Ø‚èŒû‚ğ‹‚ß‚é. ÚG‰ğÍ‚ğs‚¤.
+// åˆ‡ã‚Šå£ã‚’æ±‚ã‚ã‚‹. æ¥è§¦è§£æã‚’è¡Œã†.
 bool CDSphere::FindCutRing(CDCutRing& r, const Posed& toW) {
 	return false;
 }
@@ -52,20 +52,20 @@ int CDSphere::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result
 	Vec3f p;
 	int num = 0;
 
-	const Vec3f n = origin;	//–Ê‚Ì–@ü = ƒJƒƒ‰‚Æshape‚ÌŒ´“_‚ğŒ‹‚ÔƒxƒNƒgƒ‹
-	float tmp = n * dir;	//–Ê‚Ì–@ü‚Æƒ|ƒCƒ“ƒ^‚ÌƒxƒNƒgƒ‹‚Æ‚Ì“àÏ
-	if(abs(tmp) < eps)	//“àÏ‚ª¬‚³‚¢ê‡‚Í”»’è‚µ‚È‚¢
+	const Vec3f n = origin;	//é¢ã®æ³•ç·š = ã‚«ãƒ¡ãƒ©ã¨shapeã®åŸç‚¹ã‚’çµã¶ãƒ™ã‚¯ãƒˆãƒ«
+	float tmp = n * dir;	//é¢ã®æ³•ç·šã¨ãƒã‚¤ãƒ³ã‚¿ã®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã®å†…ç©
+	if(abs(tmp) < eps)	//å†…ç©ãŒå°ã•ã„å ´åˆã¯åˆ¤å®šã—ãªã„
 		return num;
 
-	float s = ((Vec3f(0.0,0.0,0.0) - origin) * n) / tmp; //ƒJƒƒ‰‚Æ–Ê‚Ì‹——£ 
+	float s = ((Vec3f(0.0,0.0,0.0) - origin) * n) / tmp; //ã‚«ãƒ¡ãƒ©ã¨é¢ã®è·é›¢ 
 	if(s < 0.0)
 		return num;
-	p = origin + dir * s;	//’¼ü‚Æ–Ê‚ÌŒğ“_p = ƒJƒƒ‰À•WŒn‚ÌŒ´“_+ƒJƒƒ‰À•WŒn‚©‚ç–Ê‚Ö‚ÌƒxƒNƒgƒ‹*‹——£ (ShapeÀ•WŒn)
+	p = origin + dir * s;	//ç›´ç·šã¨é¢ã®äº¤ç‚¹p = ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã®åŸç‚¹+ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã‹ã‚‰é¢ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«*è·é›¢ (Shapeåº§æ¨™ç³»)
 
-	// ‰~‚Ì“à•”‚É‚ ‚é‚©
+	// å††ã®å†…éƒ¨ã«ã‚ã‚‹ã‹
 	if(p.norm()<GetRadius()){
 		//result[num] = p;
-		result[num] = Vec3f(0.0,0.0,0.0); //Sphere‚Í’†SˆÊ’u‚ÉƒWƒ‡ƒCƒ“ƒg‚ğÚ‘±‚µ‚½•û‚ªg‚¢‚â‚·‚»‚¤
+		result[num] = Vec3f(0.0,0.0,0.0); //Sphereã¯ä¸­å¿ƒä½ç½®ã«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’æ¥ç¶šã—ãŸæ–¹ãŒä½¿ã„ã‚„ã™ãã†
 		offset[num] = s;
 		num++;
 	}

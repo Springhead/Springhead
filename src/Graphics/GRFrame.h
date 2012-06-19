@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -36,7 +36,7 @@ class GRMesh;
 class GRFrame;
 
 /**	@class	GRFrame
-    @brief	ƒOƒ‰ƒtƒBƒbƒNƒXƒV[ƒ“ƒOƒ‰ƒt‚ÌƒcƒŠ[‚Ìƒm[ƒh À•WŒn‚ğ•\‚· */
+    @brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã®ãƒ„ãƒªãƒ¼ã®ãƒãƒ¼ãƒ‰ åº§æ¨™ç³»ã‚’è¡¨ã™ */
 class GRFrame: public GRVisual, public GRFrameDesc{
 public:
 	SPR_OBJECTDEF(GRFrame);
@@ -45,7 +45,7 @@ public:
 	typedef std::vector< UTRef<GRVisualIf> > GRVisualIfs;
 	GRVisualIfs children;
 
-	/// ƒŒƒ“ƒ_ƒŠƒ“ƒO‡˜‚ªƒNƒŠƒeƒBƒJƒ‹‚È‚à‚Ì‚ğŒÂ•Ê•Û
+	/// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°é †åºãŒã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãªã‚‚ã®ã‚’å€‹åˆ¥ä¿æŒ
 	std::vector<GRLight*>		lights;
 	std::vector<GRMaterial*>	materials;
 	std::vector<GRMesh*>		meshes;
@@ -82,7 +82,7 @@ public:
 };
 
 /**	@class	GRDummyFrame
-    @brief	•\¦‚µ‚È‚¢ƒRƒ“ƒeƒiDVisual‚ğ‚µ‚Ü‚Á‚Ä‚¨‚¢‚ÄCŒã‚ÅƒvƒƒOƒ‰ƒ€‚©‚çg‚¤‚½‚ß‚Ég‚¤@*/
+    @brief	è¡¨ç¤ºã—ãªã„ã‚³ãƒ³ãƒ†ãƒŠï¼Visualã‚’ã—ã¾ã£ã¦ãŠã„ã¦ï¼Œå¾Œã§ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‹ã‚‰ä½¿ã†ãŸã‚ã«ä½¿ã†ã€€*/
 class GRDummyFrame: public GRVisual, public GRDummyFrameDesc{
 public:
 	SPR_OBJECTDEF(GRDummyFrame);
@@ -108,7 +108,7 @@ public:
 		Affinef initalTransform;
 	};
 	typedef std::vector<Target> Targets;
-	///	•ÏŠ·‘ÎÛƒtƒŒ[ƒ€
+	///	å¤‰æ›å¯¾è±¡ãƒ•ãƒ¬ãƒ¼ãƒ 
 	Targets targets;
 	///	
 	virtual void BlendPose(float time, float weight);
@@ -124,13 +124,13 @@ public:
 	virtual GRAnimationKey GetAnimationKey(int n);
 	///	
 	virtual int NAnimationKey();
-	/// Œ»İ‚ÌGRFrame‚©‚çGRKey‚ğì¬‚·‚é t‚Í‚ğw’è
+	/// ç¾åœ¨ã®GRFrameã‹ã‚‰GRKeyã‚’ä½œæˆã™ã‚‹ tã¯æ™‚åˆ»ã‚’æŒ‡å®š
 	void SetCurrentPose(float t);
-	/// GRKey‚ğ‡‚Éƒ\[ƒg‚·‚é
+	/// GRKeyã‚’æ™‚åˆ»é †ã«ã‚½ãƒ¼ãƒˆã™ã‚‹
 	void SortGRKey();
-	/// t‚ÌGRKey‚ğíœ‚·‚é
+	/// æ™‚åˆ»tã®GRKeyã‚’å‰Šé™¤ã™ã‚‹
 	void DeletePose(float t);
-	/// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÅIŠÔ‚ğæ“¾‚·‚é
+	/// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æœ€çµ‚æ™‚é–“ã‚’å–å¾—ã™ã‚‹
 	float GetLastKeyTime();
 };
 
@@ -143,30 +143,30 @@ class GRAnimationSet: public SceneObject{
 public:
 	SPR_OBJECTDEF(GRAnimationSet);
 	GRAnimationSet(const GRAnimationSetDesc& d = GRAnimationSetDesc()){}
-	///	qƒIƒuƒWƒFƒNƒg(animations)‚ğ•Ô‚·
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ(animations)ã‚’è¿”ã™
 	ObjectIf* GetChildObject(size_t p);
-	///	GRAnimation‚Ì’Ç‰Á
+	///	GRAnimationã®è¿½åŠ 
 	virtual bool AddChildObject(ObjectIf* o);
-	///	GRAnimation‚Ìíœ
+	///	GRAnimationã®å‰Šé™¤
 	virtual bool DelChildObject(ObjectIf* o);
-	///	GRAnimation‚Ì”
+	///	GRAnimationã®æ•°
 	size_t NChildObject() const;
 
-	///	w’è‚Ì‚Ì•ÏŠ·‚Éd‚İ‚ğ‚©‚¯‚ÄAƒ{[ƒ“‚ğ‚ ‚ç‚í‚·ƒ^[ƒQƒbƒg‚ÌƒtƒŒ[ƒ€‚É“K—p‚·‚éB
+	///	æŒ‡å®šã®æ™‚åˆ»ã®å¤‰æ›ã«é‡ã¿ã‚’ã‹ã‘ã¦ã€ãƒœãƒ¼ãƒ³ã‚’ã‚ã‚‰ã‚ã™ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒ•ãƒ¬ãƒ¼ãƒ ã«é©ç”¨ã™ã‚‹ã€‚
 	virtual void BlendPose(float time, float weight);
-	///	w’è‚Ì‚Ì•ÏŠ·‚Éd‚İ‚ğ‚©‚¯‚ÄAƒ{[ƒ“‚ğ‚ ‚ç‚í‚·ƒ^[ƒQƒbƒg‚ÌƒtƒŒ[ƒ€‚É“K—p‚·‚éB
+	///	æŒ‡å®šã®æ™‚åˆ»ã®å¤‰æ›ã«é‡ã¿ã‚’ã‹ã‘ã¦ã€ãƒœãƒ¼ãƒ³ã‚’ã‚ã‚‰ã‚ã™ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒ•ãƒ¬ãƒ¼ãƒ ã«é©ç”¨ã™ã‚‹ã€‚
 	virtual void BlendPose(float time, float weight, bool add);
-	///	ƒ{[ƒ“‚ğ‚ ‚ç‚í‚·ƒ^[ƒQƒbƒg‚ÌƒtƒŒ[ƒ€‚Ìs—ñ‚ğ‰Šú’l‚É–ß‚·D
+	///	ãƒœãƒ¼ãƒ³ã‚’ã‚ã‚‰ã‚ã™ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®è¡Œåˆ—ã‚’åˆæœŸå€¤ã«æˆ»ã™ï¼
 	virtual void ResetPose();
 	///
 	virtual void LoadInitialPose();
-	/// Œ»İ‚ÌGRFrame‚©‚çƒ|[ƒY‚ğì¬‚·‚é t‚Í‚ğw’è
+	/// ç¾åœ¨ã®GRFrameã‹ã‚‰ãƒãƒ¼ã‚ºã‚’ä½œæˆã™ã‚‹ tã¯æ™‚åˆ»ã‚’æŒ‡å®š
 	void SetCurrentAnimationPose(float t);
-	/// t‚ÌGRKey‚ğíœ‚·‚é
+	/// æ™‚åˆ»tã®GRKeyã‚’å‰Šé™¤ã™ã‚‹
 	void DeleteAnimationPose(float t);
-	/// GRKey‚©‚çƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÅIŠÔ‚ğİ’è‚·‚é
+	/// GRKeyã‹ã‚‰ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æœ€çµ‚æ™‚é–“ã‚’è¨­å®šã™ã‚‹
 	void UpdateLastKeyTime();
-	/// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÅIŠÔ‚ğæ“¾‚·‚é
+	/// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®æœ€çµ‚æ™‚é–“ã‚’å–å¾—ã™ã‚‹
 	float GetLastKeyTime();
 };
 
@@ -177,24 +177,24 @@ public:
 	float buffer[16];
 	SPR_OBJECTDEF(GRAnimationController);
 	GRAnimationController(const GRAnimationControllerDesc& d = GRAnimationControllerDesc()){}
-	///	w’è‚Ì‚Ì•ÏŠ·‚Éd‚İ‚ğ‚©‚¯‚ÄAƒ{[ƒ“‚ğ‚ ‚ç‚í‚·ƒ^[ƒQƒbƒg‚ÌƒtƒŒ[ƒ€‚É“K—p‚·‚éB
+	///	æŒ‡å®šã®æ™‚åˆ»ã®å¤‰æ›ã«é‡ã¿ã‚’ã‹ã‘ã¦ã€ãƒœãƒ¼ãƒ³ã‚’ã‚ã‚‰ã‚ã™ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒ•ãƒ¬ãƒ¼ãƒ ã«é©ç”¨ã™ã‚‹ã€‚
 	virtual void BlendPose(UTString name, float time, float weight);
-	///	w’è‚Ì‚Ì•ÏŠ·‚Éd‚İ‚ğ‚©‚¯‚ÄAƒ{[ƒ“‚ğ‚ ‚ç‚í‚·ƒ^[ƒQƒbƒg‚ÌƒtƒŒ[ƒ€‚É“K—p‚·‚éB
+	///	æŒ‡å®šã®æ™‚åˆ»ã®å¤‰æ›ã«é‡ã¿ã‚’ã‹ã‘ã¦ã€ãƒœãƒ¼ãƒ³ã‚’ã‚ã‚‰ã‚ã™ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã®ãƒ•ãƒ¬ãƒ¼ãƒ ã«é©ç”¨ã™ã‚‹ã€‚
 	virtual void BlendPose(UTString name, float time, float weight, bool add);
-	///	ƒtƒŒ[ƒ€‚Ì•ÏŠ·s—ñ‚ğ‰Šú’l‚É–ß‚·D
+	///	ãƒ•ãƒ¬ãƒ¼ãƒ ã®å¤‰æ›è¡Œåˆ—ã‚’åˆæœŸå€¤ã«æˆ»ã™ï¼
 	virtual void ResetPose();
-	///	ƒtƒŒ[ƒ€‚Ì•ÏŠ·s—ñ‚ğ‰Šú’l‚É–ß‚·D
+	///	ãƒ•ãƒ¬ãƒ¼ãƒ ã®å¤‰æ›è¡Œåˆ—ã‚’åˆæœŸå€¤ã«æˆ»ã™ï¼
 	virtual void LoadInitialPose();
 
-	///	GRAnimation‚Ì’Ç‰Á
+	///	GRAnimationã®è¿½åŠ 
 	virtual bool AddChildObject(ObjectIf* o);
-	///	GRAnimation‚Ìíœ
+	///	GRAnimationã®å‰Šé™¤
 	virtual bool DelChildObject(ObjectIf* o);
-	///	GRAnimation‚Ì”
+	///	GRAnimationã®æ•°
 	virtual size_t NChildObject() const;
-	///	GRAnimation‚Ìæ“¾
+	///	GRAnimationã®å–å¾—
 	ObjectIf* GetChildObject(size_t p);
-	///	GRAnimationSet‚Ìæ“¾
+	///	GRAnimationSetã®å–å¾—
 	GRAnimationSetIf* GetAnimationSet(size_t p);
 };
 

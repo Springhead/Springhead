@@ -1,5 +1,5 @@
-/**
-\page pageGraphicsImp ƒOƒ‰ƒtƒBƒbƒNƒXSDK‚ÌÀ‘•
+ï»¿/**
+\page pageGraphicsImp ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹SDKã®å®Ÿè£…
 
 
 

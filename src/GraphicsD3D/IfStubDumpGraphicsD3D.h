@@ -1,4 +1,4 @@
-//	Do not edit. MakeTypeDesc.bat will update this file.
+﻿//	Do not edit. MakeTypeDesc.bat will update this file.
 namespace Spr{; 
 
 template <class IF, class MIF, class OBJ> struct GRVisualIfStubTemplate;

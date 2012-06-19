@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,7 +12,7 @@
 
 namespace Spr{;
 
-///	“Ê‘½–Ê‘Ì
+///	å‡¸å¤šé¢ä½“
 class CDConvexMeshInterpolate : public CDConvexMesh{
 public:
 	SPR_OBJECTDEF(CDConvexMeshInterpolate);
@@ -21,7 +21,7 @@ public:
 	CDConvexMeshInterpolate();
 	CDConvexMeshInterpolate(const CDConvexMeshInterpolateDesc& desc);
 	
-	///	ƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚ğ‹‚ß‚éD
+	///	ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã‚’æ±‚ã‚ã‚‹ï¼
 	virtual Vec3f Support(const Vec3f& p) const;
 };
 

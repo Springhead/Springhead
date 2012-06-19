@@ -1,11 +1,11 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  * 
- *@SwingDir‚Ì§ŒÀ‚Í“ü‚Á‚Ä‚¢‚Ü‚¹‚ñB•K—v‚Èl‚ªŠæ’£‚Á‚ÄÀ‘•‚µ‚Ä‚­‚¾‚³‚¢(by toki 2007.12.05)
+ *ã€€SwingDirã®åˆ¶é™ã¯å…¥ã£ã¦ã„ã¾ã›ã‚“ã€‚å¿…è¦ãªäººãŒé ‘å¼µã£ã¦å®Ÿè£…ã—ã¦ãã ã•ã„(by toki 2007.12.05)
  *
  */
 #include <Physics/PHBallJoint.h>
@@ -30,7 +30,7 @@ void PHBallJointNode::CompJointJacobian(){
 }
 
 void PHBallJointNode::CompJointCoriolisAccel(){
-	cj.clear();		//ŠÖßÀ•W‚ğquaternion‚É‚Æ‚éê‡ƒRƒŠƒIƒŠ€‚Í0
+	cj.clear();		//é–¢ç¯€åº§æ¨™ã‚’quaternionã«ã¨ã‚‹å ´åˆã‚³ãƒªã‚ªãƒªé …ã¯0
 }
 
 void PHBallJointNode::UpdateJointPosition(double dt){
@@ -76,7 +76,7 @@ void PHBallJoint::IterateLCP(){
 }
 
 void PHBallJoint::CompBias(){
-	//	•ÀiŒë·‚Ì‰ğÁ‚Ì‚½‚ßA‘¬“x‚ÉŒë·/dt‚ğ‰ÁZ, Xjrel.r: ƒ\ƒPƒbƒg‚É‘Î‚·‚éƒvƒ‰ƒO‚ÌˆÊ’u‚ÌƒYƒŒ
+	//	ä¸¦é€²èª¤å·®ã®è§£æ¶ˆã®ãŸã‚ã€é€Ÿåº¦ã«èª¤å·®/dtã‚’åŠ ç®—, Xjrel.r: ã‚½ã‚±ãƒƒãƒˆã«å¯¾ã™ã‚‹ãƒ—ãƒ©ã‚°ã®ä½ç½®ã®ã‚ºãƒ¬
 	db.v_range(0,3) = Xjrel.r * GetScene()->GetTimeStepInv();
 	db.v_range(0,3) *= engine->velCorrectionRate;
 
@@ -84,15 +84,15 @@ void PHBallJoint::CompBias(){
 }
 
 void PHBallJoint::UpdateJointState(){
-	// position‚ÌXVFBallJoint‚Ì position ‚ÍSwingTwistÀ•WŒn‚ÌŠp“x’l‚Æ‚·‚é
+	// positionã®æ›´æ–°ï¼šBallJointã® position ã¯SwingTwiståº§æ¨™ç³»ã®è§’åº¦å€¤ã¨ã™ã‚‹
 
-	// SwingŠp‚ÌŒvZ
+	// Swingè§’ã®è¨ˆç®—
 	Vec3d  lD = Vec3d(); if(limit){ lD = limit->GetLimitDir(); }
 	Vec3d  ez = Xjrel.q * Vec3d(0.0, 0.0, 1.0);
 	double  c = dot(lD, ez); c = max(-1.0, min(c, 1.0));
 	position[0] = acos(c);
 
-	// Swing•ûˆÊŠp‚ÌŒvZ
+	// Swingæ–¹ä½è§’ã®è¨ˆç®—
 	if (ez.x == 0) {
 		position[1] = (ez.y >= 0) ? M_PI/2.0 : 3*M_PI/2.0;
 	} else {
@@ -104,7 +104,7 @@ void PHBallJoint::UpdateJointState(){
 		}
 	}
 
-	// TwistŠp‚ÌŒvZ
+	// Twistè§’ã®è¨ˆç®—
 	Quaterniond qSwing;
 	Vec3d  halfEz = 0.5*(Vec3d(0,0,1) + ez);
 	double l = halfEz.norm();
@@ -117,7 +117,7 @@ void PHBallJoint::UpdateJointState(){
 	}
 	Quaterniond qTwist = qSwing * Xjrel.q;
 	position[2] = qTwist.Theta();
-	if (qTwist.z < 0) { position[2] *= -1; } ///< Twist‰ñ“]²‚ª”½‘Î‚ğŒü‚­‚±‚Æ‚ª‚ ‚é‚Ì‚Å‚»‚Ì‘Îô
+	if (qTwist.z < 0) { position[2] *= -1; } ///< Twistå›è»¢è»¸ãŒåå¯¾ã‚’å‘ãã“ã¨ãŒã‚ã‚‹ã®ã§ãã®å¯¾ç­–
 	if (position[2] < -M_PI) { position[2] += 2*M_PI; }
 	if (position[2] >  M_PI) { position[2] -= 2*M_PI; }
 }

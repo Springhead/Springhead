@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -9,7 +9,7 @@
 #define SPR_BASE_ENV_H
 
 /**	@file Env.h
-	ƒRƒ“ƒpƒCƒ‰ŠÔ‚ÌŒİŠ·«‚ğæ‚é‚½‚ß‚Ìƒ}ƒNƒ’è‹`.	*/
+	ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©é–“ã®äº’æ›æ€§ã‚’å–ã‚‹ãŸã‚ã®ãƒã‚¯ãƒ­å®šç¾©.	*/
 #define TYPENAME typename
 
 #if defined __BORLANDC__
@@ -18,10 +18,10 @@
 #endif
 
 
-/**	DLL‚ÌƒGƒNƒXƒ|[ƒg‚Ìw’è
-	DLL‚ÉƒGƒNƒXƒ|[ƒg‚·‚é‚½‚ß‚É‚ÍC
-	class SPR_DLL DLLCLASS C{}; ‚Ì‚æ‚¤‚ÉCƒNƒ‰ƒXéŒ¾‚Ì‘O‚É DLLCLASS ‚ğ‚Â‚¯‚éD
-	DLL‚ğì‚é‚Æ‚«‚ÍCEXPORT_DLL ‚ğƒ}ƒNƒ’è‹`‚µ‚Ä‚¨‚­D*/
+/**	DLLã®ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã®æŒ‡å®š
+	DLLã«ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã™ã‚‹ãŸã‚ã«ã¯ï¼Œ
+	class SPR_DLL DLLCLASS C{}; ã®ã‚ˆã†ã«ï¼Œã‚¯ãƒ©ã‚¹å®£è¨€ã®å‰ã« DLLCLASS ã‚’ã¤ã‘ã‚‹ï¼
+	DLLã‚’ä½œã‚‹ã¨ãã¯ï¼ŒEXPORT_DLL ã‚’ãƒã‚¯ãƒ­å®šç¾©ã—ã¦ãŠãï¼*/
 
 #ifdef _MSC_VER
  #ifdef EXPORT_DLL
@@ -37,7 +37,7 @@
 #endif
 
 /**	__cdecl
-	Microsoft compiler ‚Ü‚½‚Í Borland C++ compiler ‚Ìê‡‚ÍA__cdecl‚ğw’è
+	Microsoft compiler ã¾ãŸã¯ Borland C++ compiler ã®å ´åˆã¯ã€__cdeclã‚’æŒ‡å®š
  */
 #if defined _MSC_VER || defined __BORLANDC__
  #define SPR_CDECL		__cdecl
@@ -50,15 +50,15 @@
 #endif
 
 /**	hdrstop
-	@Microsoft compilerABorland C++ compilerA Intel C++ compiler ‚È‚Ç‚Ìê‡‚ÍA 
-	@ƒvƒŠƒRƒ“ƒpƒCƒ‹ƒwƒbƒ_[§Œä‚ğs‚¤B
+	ã€€Microsoft compilerã€Borland C++ compilerã€ Intel C++ compiler ãªã©ã®å ´åˆã¯ã€ 
+	ã€€ãƒ—ãƒªã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ãƒ˜ãƒƒãƒ€ãƒ¼åˆ¶å¾¡ã‚’è¡Œã†ã€‚
  */
 #ifndef __GNUC__
 # define USE_HDRSTOP
 #endif
 
-/** ”’l‰‰Z”ÍˆÍƒGƒ‰[‚Ìƒ`ƒFƒbƒN
-    VC‚ª’ñ‹Ÿ‚·‚éŠÖ”‚Å‚Íˆê•”ŠÖ”–¼‚ªˆÙ‚È‚éB
+/** æ•°å€¤æ¼”ç®—ç¯„å›²ã‚¨ãƒ©ãƒ¼ã®ãƒã‚§ãƒƒã‚¯
+    VCãŒæä¾›ã™ã‚‹é–¢æ•°ã§ã¯ä¸€éƒ¨é–¢æ•°åãŒç•°ãªã‚‹ã€‚
  */
 #ifdef _MSC_VER
 # include <float.h>
@@ -91,14 +91,14 @@
  #endif
 #endif
 
-//	x64‘Î‰
+//	x64å¯¾å¿œ
 #ifdef _WIN64
 typedef unsigned __int64 ulong_ptr;
 #else
 typedef unsigned long ulong_ptr;
 #endif
 
-//	SWIG—p
+//	SWIGç”¨
 #ifdef SWIGSPR
 namespace PTM{
 }

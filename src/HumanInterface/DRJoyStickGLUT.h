@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -37,9 +37,9 @@ public:
 public:
 	DRJoyStickGLUT();
 	
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	virtual bool Init();
-	///	‰¼‘zƒfƒoƒCƒX‚Ì“o˜^
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²
 	virtual HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);
 
 	void OnUpdate(unsigned int buttonMask, int x, int y, int z);

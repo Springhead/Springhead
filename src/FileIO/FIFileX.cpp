@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -24,48 +24,48 @@ static UTStack<FIFileX*> fileXs;
 static FILoadContext* fileContext;
 static FIFileX* fileX;
 
-///	ƒeƒ“ƒvƒŒ[ƒg‚ÌTypeDesc‚ª‚ ‚é‚©‚Ç‚¤‚©D
+///	ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®TypeDescãŒã‚ã‚‹ã‹ã©ã†ã‹ï¼
 static bool TypeAvail(){
 	return fileContext->fieldIts.size() && fileContext->fieldIts.back().type;
 }
 
-///	ƒm[ƒh‚Ìn‚Ü‚èDŒ^‚ğŒ©‚Â‚¯‚ÄƒZƒbƒg
+///	ãƒãƒ¼ãƒ‰ã®å§‹ã¾ã‚Šï¼å‹ã‚’è¦‹ã¤ã‘ã¦ã‚»ãƒƒãƒˆ
 static void NodeStart(const char* b, const char* e){
 	UTString tn(b,e);
 	PDEBUG( DSTR << "NodeStart " << tn << std::endl );
 	fileContext->NodeStart(tn);
 }
-///	ƒm[ƒh‚Ì–¼‘O‚Ìİ’è
+///	ãƒãƒ¼ãƒ‰ã®åå‰ã®è¨­å®š
 static void NameSet(const char* b, const char* e){
 	UTString n(b,e);
 	fileContext->datas.back()->SetName(UTString(b,e));
 }
 
-///	ƒm[ƒh‚ÌI‚í‚è
+///	ãƒãƒ¼ãƒ‰ã®çµ‚ã‚ã‚Š
 static void NodeEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().type->GetTypeName() << std::endl);
 	fileContext->NodeEnd();
 }
 
-///	ƒuƒƒbƒNŒ^‚Ì“Ç‚İo‚µ€”õ
+///	ãƒ–ãƒ­ãƒƒã‚¯å‹ã®èª­ã¿å‡ºã—æº–å‚™
 static void BlockStart(const char* b, const char* e){
 	PDEBUG(DSTR << "blockStart" << std::endl);
 	fileContext->CompositStart();
 }
 
-///	ƒuƒƒbƒNŒ^‚ÌI—¹
+///	ãƒ–ãƒ­ãƒƒã‚¯å‹ã®çµ‚äº†
 static void BlockEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "blockEnd" << std::endl);
 	fileContext->CompositEnd();
 }
-///	ƒuƒƒbƒNŒ^‚ÌƒXƒLƒbƒv
+///	ãƒ–ãƒ­ãƒƒã‚¯å‹ã®ã‚¹ã‚­ãƒƒãƒ—
 static void NodeSkip(const char* b, const char* e){
 	fileContext->datas.Top()->str = UTString(b,e);
 }
 
-/**	ƒuƒƒbƒN“Ç‚İo‚µ’†CƒtƒB[ƒ‹ƒh‚ğ“Ç‚Ş‘O‚ÉŒÄ‚Î‚ê‚éD
-	TypeDesc‚ğŒ©‚ÄŸ‚É“Ç‚İo‚·‚×‚«ƒtƒB[ƒ‹ƒh‚ğƒZƒbƒg‚·‚éD
-	“Ç‚İo‚·‚×‚«ƒtƒB[ƒ‹ƒh‚ª‚ ‚éŠÔ true ‚ğ•Ô‚·D	*/
+/**	ãƒ–ãƒ­ãƒƒã‚¯èª­ã¿å‡ºã—ä¸­ï¼Œãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’èª­ã‚€å‰ã«å‘¼ã°ã‚Œã‚‹ï¼
+	TypeDescã‚’è¦‹ã¦æ¬¡ã«èª­ã¿å‡ºã™ã¹ããƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ï¼
+	èª­ã¿å‡ºã™ã¹ããƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒã‚ã‚‹é–“ true ã‚’è¿”ã™ï¼	*/
 static bool NextField(){
 	char* base = (char*)fileContext->datas.Top()->data;
 	bool rv = fileContext->fieldIts.NextField(base);
@@ -80,7 +80,7 @@ static bool NextField(){
 	)
 	return rv;
 }
-///	”z—ñ‚ÌƒJƒEƒ“ƒgD‚Ü‚¾“Ç‚İo‚·‚×‚«ƒf[ƒ^‚ªc‚Á‚Ä‚¢‚ê‚Î true ‚ğ•Ô‚·D
+///	é…åˆ—ã®ã‚«ã‚¦ãƒ³ãƒˆï¼ã¾ã èª­ã¿å‡ºã™ã¹ããƒ‡ãƒ¼ã‚¿ãŒæ®‹ã£ã¦ã„ã‚Œã° true ã‚’è¿”ã™ï¼
 static bool ArrayCount(){
 	return fileContext->fieldIts.IncArrayPos();
 }
@@ -124,12 +124,12 @@ static void StrSet(const char* b, const char* e){
 	strValue.assign(b+1,e-1);
 }
 
-///	ObjectDesc‚É“Ç‚İo‚µ‚½’l‚ğ‘‚«‚Ş
+///	ObjectDescã«èª­ã¿å‡ºã—ãŸå€¤ã‚’æ›¸ãè¾¼ã‚€
 static void SetVal(const char* b, const char* e){
 	char ch = *b;
 
 	UTTypeDescFieldIt& curField = fileContext->fieldIts.back();
-	//	debug o—Í
+	//	debug å‡ºåŠ›
 #ifdef TRACE_PARSE
 	if (curField.fieldType!=UTTypeDescFieldIt::F_NONE){
 		if (curField.fieldType==UTTypeDescFieldIt::F_BLOCK){
@@ -147,7 +147,7 @@ static void SetVal(const char* b, const char* e){
 		if (ch == ';') DSTR << std::endl;
 	}
 #endif
-	//	‚±‚±‚Ü‚Å
+	//	ã“ã“ã¾ã§
 	
 	if (fileContext->fieldIts.IsBool()){
 		fileContext->WriteBool(boolValue);
@@ -168,7 +168,7 @@ static void StopArrayStr(const char* b, const char* e){
 	StopArray(' ');
 }
 
-///	QÆŒ^‚ğ‘‚«‚ŞD(–¢Š®¬)
+///	å‚ç…§å‹ã‚’æ›¸ãè¾¼ã‚€ï¼(æœªå®Œæˆ)
 static void RefSet(const char* b, const char* e){
 	//DSTR << "ref(" << std::string(b,e) << ") not yet implemented." << std::endl;
 	std::string ref(b,e);
@@ -176,7 +176,7 @@ static void RefSet(const char* b, const char* e){
 }
 
 static UTTypeDesc* tdesc;
-//	XFile‚Ìtemplate‚Ì“Ç‚İo‚µ‚ÌŠÖ”
+//	XFileã®templateã®èª­ã¿å‡ºã—ã®é–¢æ•°
 static void TempStart(const char* b, const char* e){
 	tdesc = DBG_NEW UTTypeDesc(std::string(b,e));
 }
@@ -202,7 +202,7 @@ static void TempEnd(char c){
 	fileContext->typeDbs.Top()->RegisterDesc(tdesc);
 }
 
-///	XXX expected. ‚ÌƒGƒ‰[ƒƒbƒZ[ƒW‚ğo‚·ƒp[ƒT
+///	XXX expected. ã®ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‡ºã™ãƒ‘ãƒ¼ã‚µ
 class ExpectParser {
 	std::string msg; 
 public:
@@ -231,8 +231,8 @@ void FIFileX::Init(){
 	using namespace std;
 	using namespace boost::spirit::classic;
 	using namespace Spr;
-	//	ƒp[ƒT‚Ì’è‹`
-	//	–{•¶—pƒp[ƒT
+	//	ãƒ‘ãƒ¼ã‚µã®å®šç¾©
+	//	æœ¬æ–‡ç”¨ãƒ‘ãƒ¼ã‚µ
 	start		= (str_p("xof 0302txt 0064") | str_p("xof 0303txt 0032") | 
 					str_p("xof 0303txt 0064") | ExpP("'xof 0303txt 0032'")) 
 					>> *(temp | data | ExpP("template or data"));
@@ -251,7 +251,7 @@ void FIFileX::Init(){
 
 	data		= id[&NodeStart] >> !id[&NameSet] >> (ch_p('{') | ExpP("'{'")) >>
 				  if_p(&TypeAvail)[ block >> !ch_p(';') >> *(data|ref) ].
-				  else_p[ (!dataSkip)[&NodeSkip] ]	//<	’m‚ç‚È‚¢Œ^–¼‚Ìê‡ƒXƒLƒbƒv
+				  else_p[ (!dataSkip)[&NodeSkip] ]	//<	çŸ¥ã‚‰ãªã„å‹åã®å ´åˆã‚¹ã‚­ãƒƒãƒ—
 				  >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
 	dataSkip	= *(~ch_p('{') & ~ch_p('}')) | blockSkip;
 	blockSkip	= ch_p('{') >> *(blockSkip|~ch_p('}')) >> ch_p('}');
@@ -275,7 +275,7 @@ void FIFileX::Init(){
 					ch_p('"') >> *( (ch_p('\\')>>anychar_p) | 
 						~ch_p('"') ) >> ch_p('"') ][&StrSet];
 
-	//	ƒXƒLƒbƒvƒp[ƒT(ƒXƒy[ƒX‚ÆƒRƒƒ“ƒg‚ğ“Ç‚İo‚·ƒp[ƒT)‚Ì’è‹`
+	//	ã‚¹ã‚­ãƒƒãƒ—ãƒ‘ãƒ¼ã‚µ(ã‚¹ãƒšãƒ¼ã‚¹ã¨ã‚³ãƒ¡ãƒ³ãƒˆã‚’èª­ã¿å‡ºã™ãƒ‘ãƒ¼ã‚µ)ã®å®šç¾©
 	cmt		=	space_p
 				|	"/*" >> *(~ch_p('*') | '*'>>~ch_p('/')) >> !ch_p('*') >> '/'
 				|	"//" >> *~ch_p('\n') >> '\n'
@@ -320,7 +320,7 @@ void FIFileX::LoadImp(FILoadContext* fc){
 }
 
 //----------------------------------------------------
-//	ƒZ[ƒu‚Ìƒnƒ“ƒhƒ‰
+//	ã‚»ãƒ¼ãƒ–æ™‚ã®ãƒãƒ³ãƒ‰ãƒ©
 #define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)
 void FIFileX::OnSaveFileStart(FISaveContext* sc){
@@ -372,11 +372,11 @@ void FIFileX::OnSaveBool(FISaveContext* sc, bool val){
 void FIFileX::OnSaveInt(FISaveContext* sc, int val){
 	sc->Stream() << val;
 }
-///	real’l‚Ì•Û‘¶
+///	realå€¤ã®ä¿å­˜
 void FIFileX::OnSaveReal(FISaveContext* sc, double val){
 	sc->Stream() << val;
 }
-///	string’l‚Ì•Û‘¶
+///	stringå€¤ã®ä¿å­˜
 void FIFileX::OnSaveString(FISaveContext* sc, UTString val){
 	sc->Stream() << '"' << val << '"' << std::endl;
 }

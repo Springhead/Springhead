@@ -1,4 +1,4 @@
-#ifndef FWSPRTETGEN_H
+﻿#ifndef FWSPRTETGEN_H
 #define FWSPRTETGEN_H
 #ifndef SWIG
 

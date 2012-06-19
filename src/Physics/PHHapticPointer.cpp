@@ -1,4 +1,4 @@
-#include <Physics/PHHapticPointer.h>
+ï»¿#include <Physics/PHHapticPointer.h>
 #include <Physics/PHHapticEngine.h>
 
 namespace Spr{;
@@ -27,7 +27,7 @@ PHHapticPointer::PHHapticPointer(const PHHapticPointer& p){
 
 void PHHapticPointer::UpdateHumanInterface(Posed pose, SpatialVector vel){
 	if(bDebugControl) return;
-	// HumanInterface‚©‚çó‘Ô‚ğæ“¾
+	// HumanInterfaceã‹ã‚‰çŠ¶æ…‹ã‚’å–å¾—
 	double s = GetPosScale();
 	vel.v() = vel.v() * s;
 	pose.Pos() = pose.Pos() * s;
@@ -37,13 +37,13 @@ void PHHapticPointer::UpdateHumanInterface(Posed pose, SpatialVector vel){
 }
 
 void PHHapticPointer::UpdateDirect(){
-	// ƒ|ƒCƒ“ƒ^‚Ìó‘ÔXV
+	// ãƒã‚¤ãƒ³ã‚¿ã®çŠ¶æ…‹æ›´æ–°
 	SetVelocity(hiSolid.GetVelocity());
 	SetAngularVelocity(hiSolid.GetAngularVelocity());
 	SetFramePosition(hiSolid.GetFramePosition());
 	SetOrientation(hiSolid.GetOrientation());
 	
-	// ƒvƒƒLƒV‚Ìó‘Ô‚Ì•Û‘¶‚ÆXV
+	// ãƒ—ãƒ­ã‚­ã‚·ã®çŠ¶æ…‹ã®ä¿å­˜ã¨æ›´æ–°
 	lastProxyPose = proxyPose;
 	proxyPose = GetPose();
 	targetProxy = GetPose();
