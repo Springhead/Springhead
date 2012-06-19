@@ -1,9 +1,9 @@
-#ifndef FW_GRAPHICSHANDLER_H
+ï»¿#ifndef FW_GRAPHICSHANDLER_H
 #define FW_GRAPHICSHANDLER_H
 
 /** FWGraphicsHandler
-	ˆ—Œn‚ÉˆË‘¶‚µ‚½ƒEƒBƒ“ƒhƒE‚Ìì¬EŠÇ—‹@”\
-	–‹@”\‚ğl‚¦‚é‚ÆFWWindowManager‚Ì•û‚ª‡‚¤‹C‚ª‚·‚é tazz
+	å‡¦ç†ç³»ã«ä¾å­˜ã—ãŸã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä½œæˆãƒ»ç®¡ç†æ©Ÿèƒ½
+	ï¼Šæ©Ÿèƒ½ã‚’è€ƒãˆã‚‹ã¨FWWindowManagerã®æ–¹ãŒåˆã†æ°—ãŒã™ã‚‹ tazz
  */
 
 #include <Foundation/Object.h>
@@ -28,41 +28,41 @@ public:
 
 	static UTRef<FWGraphicsHandler>	instance;
 
-	GRDeviceIf*		grDevice;		///< ƒOƒ‰ƒtƒBƒNƒXƒfƒoƒCƒX‚Ö‚ÌQÆ
+	GRDeviceIf*		grDevice;		///< ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹ãƒ‡ãƒã‚¤ã‚¹ã¸ã®å‚ç…§
 public:
-	///	‰Šú‰»‚ğs‚¤BÅ‰‚É‚±‚ê‚ğŒÄ‚Ô•K—v‚ª‚ ‚éB
+	///	åˆæœŸåŒ–ã‚’è¡Œã†ã€‚æœ€åˆã«ã“ã‚Œã‚’å‘¼ã¶å¿…è¦ãŒã‚ã‚‹ã€‚
 	virtual void Init(int argc = 0, char** argv = NULL){}	
-	/// ƒƒCƒ“ƒ‹[ƒv‚ğŠJn
+	/// ãƒ¡ã‚¤ãƒ³ãƒ«ãƒ¼ãƒ—ã‚’é–‹å§‹
 	virtual void StartMainLoop()=0;
-	/// Idle callback‚Ì—LŒø‰»/–³Œø‰»
+	/// Idle callbackã®æœ‰åŠ¹åŒ–/ç„¡åŠ¹åŒ–
 	virtual void EnableIdleFunc(bool on = true)=0;
-	/// ƒtƒ‹ƒXƒNƒŠ[ƒ“ƒ‚[ƒh‚Ö‚ÌØ‚è‘Ö‚¦DAPI–¼‚Íb’è“I‚ÉGLUT‚É€‹’
+	/// ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒ¢ãƒ¼ãƒ‰ã¸ã®åˆ‡ã‚Šæ›¿ãˆï¼APIåã¯æš«å®šçš„ã«GLUTã«æº–æ‹ 
 	virtual void EnterGameMode()=0;
 	virtual void LeaveGameMode()=0;
 
-	/** ƒEƒBƒ“ƒhƒE */
-	///	ƒEƒBƒ“ƒhƒE‚ğì¬‚µAƒEƒBƒ“ƒhƒE ID‚ğ•Ô‚·
+	/** ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ */
+	///	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ä½œæˆã—ã€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ IDã‚’è¿”ã™
 	virtual FWWinIf* CreateWin(const FWWinDesc& d, FWWinIf* parent){ return NULL; }
-	///	ƒEƒBƒ“ƒhƒE‚ğ”jŠü‚·‚é
+	///	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ç ´æ£„ã™ã‚‹
 	virtual void DestroyWin(FWWinIf* w){}
-	///	ƒJƒŒƒ“ƒgƒEƒBƒ“ƒhƒE‚ğİ’è‚·‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¨­å®šã™ã‚‹
 	virtual void SetCurrentWin(FWWinIf* w){}
-	///	ƒJƒŒƒ“ƒgƒEƒBƒ“ƒhƒE‚ğ•Ô‚·B
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¿”ã™ã€‚
 	virtual int GetCurrentWin(){ return 0; }
-	/// ƒJƒŒƒ“ƒgƒEƒBƒ“ƒhƒE‚Ìƒm[ƒ}ƒ‹ƒvƒŒ[ƒ“‚ğCÄ•`‰æ‚Ì•K—v‚É‰‚¶‚Äƒ}[ƒN‚·‚é
+	/// ã‚«ãƒ¬ãƒ³ãƒˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ¼ãƒãƒ«ãƒ—ãƒ¬ãƒ¼ãƒ³ã‚’ï¼Œå†æç”»ã®å¿…è¦ã«å¿œã˜ã¦ãƒãƒ¼ã‚¯ã™ã‚‹
 	virtual void PostRedisplay(){}
-	/// Shift,Ctrl,Alt‚ÌƒXƒe[ƒg‚ğ•Ô‚·
+	/// Shift,Ctrl,Altã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’è¿”ã™
 	virtual int GetModifiers(){ return NULL; }
-	/// Ä•`‰æ‚Ìƒrƒ…[ƒ|[ƒgŒvZ
+	/// å†æç”»æ™‚ã®ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆè¨ˆç®—
 	virtual void CalcViewport(int& l, int& t, int& w, int& h){}
 
-	/// ƒ_ƒCƒAƒƒOì¬
+	/// ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ä½œæˆ
 	virtual FWDialog*	CreateDialog(FWWin* owner, const FWDialogDesc& desc){ return 0; }
-	/// GUIƒAƒCƒeƒ€ì¬
+	/// GUIã‚¢ã‚¤ãƒ†ãƒ ä½œæˆ
 	virtual FWControl*	CreateControl(FWDialog* owner, const IfInfo* ii, const FWControlDesc& desc, FWPanel* parent){ return 0; }
 	virtual void	CreateColumn	 (FWDialog* owner, bool sep, FWPanel* panel){}
 	virtual void	CreateSeparator	 (FWDialog* owner, FWPanel* panel){}
-	/// ‘®«‘€ì
+	/// å±æ€§æ“ä½œ
 	virtual Vec2i	GetPosition		(FWWinBase* win){ return Vec2i(); }
 	virtual void	SetPosition		(FWWinBase* win, int left, int top){}
 	virtual Vec2i	GetSize			(FWWinBase* win){ return Vec2i(); }
@@ -91,7 +91,7 @@ public:
 	virtual void	SetSpeed		(FWTranslationControl* trnCtrl, float sp){}
 	virtual void	AddItem			(FWListBox*	listBox, UTString label){}
 	
-	/// ƒOƒ‰ƒtƒBƒNƒXƒfƒoƒCƒX‚Ìæ“¾
+	/// ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹ãƒ‡ãƒã‚¤ã‚¹ã®å–å¾—
 	GRDeviceIf* GetGRDevice(){ return grDevice; }
 
 };

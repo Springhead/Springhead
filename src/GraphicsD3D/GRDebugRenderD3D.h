@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file GRDebugRenderD3D.h
- *	@brief DirectX‚ÌƒfƒoƒbƒOî•ñƒŒƒ“ƒ_ƒ‰[i„‘ÌA–Êj@@
+ *	@brief DirectXã®ãƒ‡ãƒãƒƒã‚°æƒ…å ±ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ï¼ˆå‰›ä½“ã€é¢ï¼‰ã€€ã€€
 */
 #ifndef GRDEBUGRENDERD3D_H
 #define GRDEBUGRENDERD3D_H
@@ -17,15 +17,15 @@
 namespace Spr{;
 
 /**	@class	GRDebugRenderD3D
-    @brief	DirectX‚ÌƒfƒoƒbƒOî•ñƒŒƒ“ƒ_ƒ‰[‚ÌÀ‘•@ */
+    @brief	DirectXã®ãƒ‡ãƒãƒƒã‚°æƒ…å ±ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®å®Ÿè£…ã€€ */
 class GRDebugRenderD3D:public GRDebugRender, public GRDebugRenderD3DIfInit{
 	SPR_OBJECTDEF(GRDebugRenderD3D, GRDebugRender);
 public:
-	/**  ƒV[ƒ““à‚Ì‘S‚Ä‚ÌƒIƒuƒWƒFƒNƒg‚ğƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚é
-	     @param  scene		ƒV[ƒ“  */
+	/**  ã‚·ãƒ¼ãƒ³å†…ã®å…¨ã¦ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹
+	     @param  scene		ã‚·ãƒ¼ãƒ³  */
 	void DrawScene(PHSceneIf* scene);
-	/**  „‘Ì‚ğƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚é
-	     @param	so@@@	„‘Ì  */
+	/**  å‰›ä½“ã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹
+	     @param	soã€€ã€€ã€€	å‰›ä½“  */
 	void DrawSolid(PHSolidIf* so);
 };
 

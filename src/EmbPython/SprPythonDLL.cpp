@@ -1,4 +1,4 @@
-#define _NOT_USE_PYTHON_SPR_LIB
+﻿#define _NOT_USE_PYTHON_SPR_LIB
 
 #include "Python.h"
 

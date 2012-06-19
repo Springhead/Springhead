@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,38 +19,38 @@ public:
 	/// ZMP
 	Vec3d	fpoint;
 
-	/// Œğ·’f–Ê‚Ì’¸“_iÚGÀ•WŒn‚Å‚Ì’ljDƒgƒ‹ƒN‚Ì§ŒÀ‚Ì‚½‚ß‚É•Û
+	/// äº¤å·®æ–­é¢ã®é ‚ç‚¹ï¼ˆæ¥è§¦åº§æ¨™ç³»ã§ã®å€¤ï¼‰ï¼ãƒˆãƒ«ã‚¯ã®åˆ¶é™ã®ãŸã‚ã«ä¿æŒ
 	std::vector<Vec3d>	section;
 
-	///‘O‰ñAÅ‹ß“_‚ª‚ ‚Á‚½•Ó‚Ì’¸“_‚ğ•\‚·section”Ô†
+	///å‰å›ã€æœ€è¿‘ç‚¹ãŒã‚ã£ãŸè¾ºã®é ‚ç‚¹ã‚’è¡¨ã™sectionç•ªå·
 	int lastL,lastR;
 	
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHContactSurface(){}
 	PHContactSurface(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1, std::vector<Vec3d> sec);
 	PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1, std::vector<Vec3d> sec);
 
-	// ----- PHConstraint‚Ì‹@”\‚ğƒI[ƒo[ƒ‰ƒCƒh
+	// ----- PHConstraintã®æ©Ÿèƒ½ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰
 	
 	virtual void IterateLCP();
 
-	// ----- PHConstraint‚Ì”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- PHConstraintã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
 	virtual void CompBias();
 	virtual void Projection(double& f_, int k);
 
-	// ----- ‚±‚ÌƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- ã“ã®ã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
-	void	ProjectionTorque(SpatialVector& fnew);	///< ƒgƒ‹ƒN—pProjection
-	double	CalcSignedArea(Vec3d p, Vec3d q, Vec3d r);	///< OŠpŒ`pqr‚Ì•„†•t‚«–ÊÏZo
-	bool	CheckInside(int& L, int& R);		///< ì—p“_‚ª–Ê“à‚É‚ ‚é‚©”»’è
-	void	SearchClosestPoint(int L, int R);	///< ì—p“_‚Ì–Ê“à‚ÌÅ‹ß“_‚ğŒ©‚Â‚¯‚é
+	void	ProjectionTorque(SpatialVector& fnew);	///< ãƒˆãƒ«ã‚¯ç”¨Projection
+	double	CalcSignedArea(Vec3d p, Vec3d q, Vec3d r);	///< ä¸‰è§’å½¢pqrã®ç¬¦å·ä»˜ãé¢ç©ç®—å‡º
+	bool	CheckInside(int& L, int& R);		///< ä½œç”¨ç‚¹ãŒé¢å†…ã«ã‚ã‚‹ã‹åˆ¤å®š
+	void	SearchClosestPoint(int L, int R);	///< ä½œç”¨ç‚¹ã®é¢å†…ã®æœ€è¿‘ç‚¹ã‚’è¦‹ã¤ã‘ã‚‹
 	
-	// ‰ñ“]–€C—p
-	void	IntegrateArea();//ÚG–Ê‚ğÏ•ª
-	double	rotateFriction;//‰ñ“]–€C‚É–€CŒW”‚Æ‚’¼R—Í‚ğ‚©‚¯‚é‘O‚Ì’l‚ª“ü‚é
-	int		segmentationNum;//–Ê‚Ì•ªŠ„”
-	double  interval;//ÚG–Ê‚ğ‹æØ‚é‚İ•
+	// å›è»¢æ‘©æ“¦ç”¨
+	void	IntegrateArea();//æ¥è§¦é¢ã‚’ç©åˆ†
+	double	rotateFriction;//å›è»¢æ‘©æ“¦ã«æ‘©æ“¦ä¿‚æ•°ã¨å‚ç›´æŠ—åŠ›ã‚’ã‹ã‘ã‚‹å‰ã®å€¤ãŒå…¥ã‚‹
+	int		segmentationNum;//é¢ã®åˆ†å‰²æ•°
+	double  interval;//æ¥è§¦é¢ã‚’åŒºåˆ‡ã‚‹åˆ»ã¿å¹…
 };
 
 }

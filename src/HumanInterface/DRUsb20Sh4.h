@@ -1,11 +1,11 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-// DRUsb20Sh4.h: DRUsb20Sh4 ƒNƒ‰ƒX‚ÌƒCƒ“ƒ^[ƒtƒFƒCƒX
+// DRUsb20Sh4.h: DRUsb20Sh4 ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -17,7 +17,7 @@
 namespace Spr {;
 
 /**
-	USB2.0 SH ƒAƒ“ƒv ‚Ìƒhƒ‰ƒCƒo
+	USB2.0 SH ã‚¢ãƒ³ãƒ— ã®ãƒ‰ãƒ©ã‚¤ãƒ
  **/
 class SPR_DLL DRUsb20Sh4 : public DRUsb20Simple{
 protected:
@@ -26,7 +26,7 @@ public:
 	SPR_OBJECTDEF(DRUsb20Sh4);
 	SPR_DECLMEMBEROF_DRUsb20Sh4Desc;
 
-	///	‰¼‘zƒfƒoƒCƒX(A/DƒRƒ“ƒo[ƒ^)
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹(A/Dã‚³ãƒ³ãƒãƒ¼ã‚¿)
 	class Ad: public DVAd{
 	public:
 		Ad(DRUsb20Sh4* r, int c):DVAd(r, c){}
@@ -36,7 +36,7 @@ public:
 		virtual int Digit(){ return GetRealDevice()->AdDigit(portNo); }
 	};
 
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^	ch‚Í”w–Ê‚ÌƒXƒCƒbƒ`‚É‚È‚é—\’è
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿	chã¯èƒŒé¢ã®ã‚¹ã‚¤ãƒƒãƒã«ãªã‚‹äºˆå®š
 	DRUsb20Sh4(const DRUsb20Sh4Desc& d = DRUsb20Sh4Desc());
 	
 	virtual bool Init();
@@ -44,21 +44,21 @@ public:
 	float	AdVoltage(int ch){ return adIn[ch] * adVoltPerDigit; }
 	int		AdDigit(int ch){ return adIn[ch]; }
 	
-	///	ó‘Ô‚ÌXV
+	///	çŠ¶æ…‹ã®æ›´æ–°
 	virtual void Update();
-	/// ƒŠƒZƒbƒg
+	/// ãƒªã‚»ãƒƒãƒˆ
 	virtual void Reset();
 
 
 protected:
-	//	–¼‘O‚Ìƒx[ƒX•”•ª
+	//	åå‰ã®ãƒ™ãƒ¼ã‚¹éƒ¨åˆ†
 	virtual const char* BaseName() const {return "Cyverse USB2.0 Sh4";}
 
 	virtual unsigned	GetVidPid(){ return 0x0CEC0205; }
 	virtual void UsbUpdate();
-	///	512byte‚Ì‘—M
+	///	512byteã®é€ä¿¡
 	virtual void UsbSend(unsigned char* outBuffer);
-	///	512byte‚ÌóM
+	///	512byteã®å—ä¿¡
 	virtual void UsbRecv(unsigned char* inBuffer);
 };
 

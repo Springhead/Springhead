@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,7 +8,7 @@
 
 /**
  *	@file SprGRSdk.h
- *	@brief ƒOƒ‰ƒtƒBƒbƒNƒXSDK‚ÌŠî–{ƒNƒ‰ƒX
+ *	@brief ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹SDKã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
  */
 #ifndef SPR_GRSDK_H
 #define SPR_GRSDK_H
@@ -17,32 +17,32 @@
 
 namespace Spr{;
 
-/**	\defgroup gpGraphics	ƒOƒ‰ƒtƒBƒbƒNƒXSDK	*/
+/**	\defgroup gpGraphics	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹SDK	*/
 //@{
 struct GRDeviceGLIf;
 struct GRRenderIf;
 
-///	@brief GRSdkDesc GRSDK‚Ìİ’èDDirectX‚ğg‚¤‚©OpenGL‚ğg‚¤‚©‚Ì‘I‘ğ‚È‚Ç‚ª‚±‚±‚É“ü‚é—\’èD
+///	@brief GRSdkDesc GRSDKã®è¨­å®šï¼DirectXã‚’ä½¿ã†ã‹OpenGLã‚’ä½¿ã†ã‹ã®é¸æŠãªã©ãŒã“ã“ã«å…¥ã‚‹äºˆå®šï¼
 struct GRSdkDesc{
 };
 
-/**	@brief	ƒOƒ‰ƒtƒBƒbƒNƒXSDK‚ÌŠî–{ƒNƒ‰ƒX@ */
+/**	@brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹SDKã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ã€€ */
 struct GRSdkIf: public SdkIf{
 	SPR_IFDEF(GRSdk);
-	/// ƒŒƒ“ƒ_ƒ‰‚Ìì¬
+	/// ãƒ¬ãƒ³ãƒ€ãƒ©ã®ä½œæˆ
 	GRRenderIf* CreateRender();
-	/// ƒfƒoƒCƒX‚Ìì¬
+	/// ãƒ‡ãƒã‚¤ã‚¹ã®ä½œæˆ
 	GRDeviceGLIf* CreateDeviceGL();
-	/// ƒV[ƒ“‚Ìì¬
+	/// ã‚·ãƒ¼ãƒ³ã®ä½œæˆ
 	GRSceneIf* CreateScene(const GRSceneDesc& desc = GRSceneDesc());
-	/// ƒV[ƒ“‚ğæ“¾
+	/// ã‚·ãƒ¼ãƒ³ã‚’å–å¾—
 	GRSceneIf* GetScene(size_t i);
-	/// ƒV[ƒ“‚Ì”
+	/// ã‚·ãƒ¼ãƒ³ã®æ•°
 	size_t NScene();
-	/// ƒV[ƒ“‚ğ“‡‚·‚é
+	/// ã‚·ãƒ¼ãƒ³ã‚’çµ±åˆã™ã‚‹
 	void MergeScene(GRSceneIf* scene0, GRSceneIf* scene1);
 
-	/// SDK‚Ìì¬‚Æ“o˜^
+	/// SDKã®ä½œæˆã¨ç™»éŒ²
 	static GRSdkIf* SPR_CDECL CreateSdk();
 	static void SPR_CDECL RegisterSdk();
 };

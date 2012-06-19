@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprGraphicsD3D.h
- *	@brief DirectX‚ÌƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹ŒQ
+ *	@brief DirectXã®ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ç¾¤
 */
 #ifndef SPR_GRAPHICSD3D_H
 #define SPR_GRAPHICSD3D_H

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,7 +11,7 @@
 
 /**
  *	@file SprPHIK.h
- *	@brief ‹t‰^“®Šw(IK)ŒvZ
+ *	@brief é€†é‹å‹•å­¦(IK)è¨ˆç®—
 */
 #ifndef SPR_PHIKIf_H
 #define SPR_PHIKIf_H
@@ -24,193 +24,193 @@ struct PHSolidIf;
 struct PHHingeJointIf;
 struct PHBallJointIf;
 
-/** \defgroup gpIK ‹t‰^“®Šw(IK)ŒvZ*/
+/** \defgroup gpIK é€†é‹å‹•å­¦(IK)è¨ˆç®—*/
 //@{
 
 // ------------------------------------------------------------------------------
-/// IK‚ÌƒGƒ“ƒhƒGƒtƒFƒNƒ^i“’B–Ú•W‚ÉŒü‚¯‚Ä“®‚©‚³‚ê‚é‚à‚Ìj
+/// IKã®ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ï¼ˆåˆ°é”ç›®æ¨™ã«å‘ã‘ã¦å‹•ã‹ã•ã‚Œã‚‹ã‚‚ã®ï¼‰
 struct PHIKEndEffectorIf : SceneObjectIf{
 	SPR_IFDEF(PHIKEndEffector);
 
-	/** @brief “®ì‘ÎÛ‚Ì„‘Ì‚ğİ’è‚·‚éi‚PƒGƒ“ƒhƒGƒtƒFƒNƒ^‚É‚Â‚«‚P„‘Ì‚ª•K‚¸‘Î‰‚·‚éj
+	/** @brief å‹•ä½œå¯¾è±¡ã®å‰›ä½“ã‚’è¨­å®šã™ã‚‹ï¼ˆï¼‘ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã«ã¤ãï¼‘å‰›ä½“ãŒå¿…ãšå¯¾å¿œã™ã‚‹ï¼‰
 	*/
 	void SetSolid(PHSolidIf* solid);
 
-	/** @brief “®ì‘ÎÛ‚Æ‚µ‚Äİ’è‚³‚ê‚½„‘Ì‚ğæ“¾‚·‚é
+	/** @brief å‹•ä½œå¯¾è±¡ã¨ã—ã¦è¨­å®šã•ã‚ŒãŸå‰›ä½“ã‚’å–å¾—ã™ã‚‹
 	*/
 	PHSolidIf* GetSolid();
 
 	// --- --- --- --- ---
 
-	/** @brief —LŒøE–³Œø‚ğİ’è‚·‚é
+	/** @brief æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’è¨­å®šã™ã‚‹
 	*/
 	void Enable(bool enable);
 
-	/** @brief —LŒøE–³Œø‚ğæ“¾‚·‚é
+	/** @brief æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’å–å¾—ã™ã‚‹
 	*/
 	bool IsEnabled();
 
 	// --- --- --- --- ---
 
-	/** @brief ˆÊ’u‚Ì§Œä‚Ì—LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @brief ä½ç½®ã®åˆ¶å¾¡ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	*/
 	void EnablePositionControl(bool enable);
 
-	/** @brief ˆÊ’u§Œä‚Ìƒvƒ‰ƒCƒIƒŠƒeƒB‚ğİ’è‚·‚é
+	/** @brief ä½ç½®åˆ¶å¾¡ã®ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetPositionPriority(double priority);
 
-	/** @brief ˆÊ’u‚Ì–Ú•W’l‚ğİ’è‚·‚é
+	/** @brief ä½ç½®ã®ç›®æ¨™å€¤ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetPosition(Vec3d position);
 
-	/** @brief „‘Ì‚É‚¨‚¢‚Ä“’B‚³‚¹‚½‚¢ˆÊ’u‚Ì„‘Ìƒ[ƒJƒ‹À•W‚ğİ’è‚·‚é
+	/** @brief å‰›ä½“ã«ãŠã„ã¦åˆ°é”ã•ã›ãŸã„ä½ç½®ã®å‰›ä½“ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetLocalPosition(Vec3d localPosition);
 
-	/** @brief İ’è‚³‚ê‚½ˆÊ’u‚Ì–Ú•W’l‚ğæ“¾‚·‚é
+	/** @brief è¨­å®šã•ã‚ŒãŸä½ç½®ã®ç›®æ¨™å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetPosition();
 
-	/** @brief ƒGƒ“ƒhƒGƒtƒFƒNƒ^‚É‚¨‚¯‚é“’B‚³‚¹‚½‚¢ˆÊ’u‚Ìİ’è‚³‚ê‚½–Ú•W’l‚ğæ“¾‚·‚é
+	/** @brief ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã«ãŠã‘ã‚‹åˆ°é”ã•ã›ãŸã„ä½ç½®ã®è¨­å®šã•ã‚ŒãŸç›®æ¨™å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetLocalPosition();
 
 	// --- --- --- --- ---
 
-	/** @brief p¨‚Ì§Œä‚Ì—LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @brief å§¿å‹¢ã®åˆ¶å¾¡ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	*/
 	void EnableOrientationControl(bool enable);
 
-	/** @brief p¨§Œä‚Ìƒvƒ‰ƒCƒIƒŠƒeƒB‚ğİ’è‚·‚é
+	/** @brief å§¿å‹¢åˆ¶å¾¡ã®ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetOrientationPriority(double priority);
 
-	/** @brief p¨‚Ì–Ú•W’l‚ğİ’è‚·‚é
+	/** @brief å§¿å‹¢ã®ç›®æ¨™å€¤ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetOrientation(Quaterniond orientation);
 
-	/** @brief İ’è‚³‚ê‚½p¨‚Ì–Ú•W’l‚ğæ“¾‚·‚é
+	/** @brief è¨­å®šã•ã‚ŒãŸå§¿å‹¢ã®ç›®æ¨™å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	Quaterniond GetTargetOrientation();
 
 	// --- --- --- --- ---
 
-	/** @brief —Í‚Ì§Œä‚Ì—LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @brief åŠ›ã®åˆ¶å¾¡ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	*/
 	void EnableForceControl(bool enable);
 
-	/** @brief —Í‚Ì–Ú•W’l‚ğİ’è‚·‚é
+	/** @brief åŠ›ã®ç›®æ¨™å€¤ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetForce(Vec3d force, Vec3d workingPoint = Vec3d());
 
-	/** @brief İ’è‚³‚ê‚½—Í‚Ì–Ú•W’l‚ğæ“¾‚·‚é
+	/** @brief è¨­å®šã•ã‚ŒãŸåŠ›ã®ç›®æ¨™å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetForce();
 
-	/** @brief İ’è‚³‚ê‚½—Í‚Ìì—p“_‚ğæ“¾‚·‚é
+	/** @brief è¨­å®šã•ã‚ŒãŸåŠ›ã®ä½œç”¨ç‚¹ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetForceWorkingPoint();
 
 	// --- --- --- --- ---
 
-	/** @brief ƒgƒ‹ƒN‚Ì§Œä‚Ì—LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @brief ãƒˆãƒ«ã‚¯ã®åˆ¶å¾¡ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	*/
 	void EnableTorqueControl(bool enable);
 
-	/** @brief ƒgƒ‹ƒN‚Ì–Ú•W’l‚ğİ’è‚·‚é
+	/** @brief ãƒˆãƒ«ã‚¯ã®ç›®æ¨™å€¤ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetTorque(Vec3d torque);
 
-	/** @brief İ’è‚³‚ê‚½ƒgƒ‹ƒN‚Ì–Ú•W’l‚ğæ“¾‚·‚é
+	/** @brief è¨­å®šã•ã‚ŒãŸãƒˆãƒ«ã‚¯ã®ç›®æ¨™å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetTorque();
 
 };
 
-/// IKƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ÌƒfƒXƒNƒŠƒvƒ^
+/// IKã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHIKEndEffectorDesc {
 	SPR_DESCDEF(PHIKEndEffector);
 
-	bool   bEnabled;				///< ƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ğì“®‚³‚¹‚é‚©‚Ç‚¤‚©
+	bool   bEnabled;				///< ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã‚’ä½œå‹•ã•ã›ã‚‹ã‹ã©ã†ã‹
 
-	bool   bPosition;				///< ˆÊ’u§Œä‚ğ—LŒø‚É‚·‚é‚©‚Ç‚¤‚©
-	bool   bOrientation;			///< p¨§Œä‚ğ—LŒø‚É‚·‚é‚©‚Ç‚¤‚©
-	bool   bForce;					///< —Í§Œä‚ğ—LŒø‚É‚·‚é‚©‚Ç‚¤‚©
-	bool   bTorque;					///< ƒgƒ‹ƒN§Œä‚ğ—LŒø‚É‚·‚é‚©‚Ç‚¤‚©
+	bool   bPosition;				///< ä½ç½®åˆ¶å¾¡ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ã©ã†ã‹
+	bool   bOrientation;			///< å§¿å‹¢åˆ¶å¾¡ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ã©ã†ã‹
+	bool   bForce;					///< åŠ›åˆ¶å¾¡ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ã©ã†ã‹
+	bool   bTorque;					///< ãƒˆãƒ«ã‚¯åˆ¶å¾¡ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ã©ã†ã‹
 
-	double positionPriority;		///< ˆÊ’u§Œä‚Ì’B¬—Dæ“xi1`0A‘å‚«‚¢‚Ù‚Ç—Dæ“x‚ª‚‚¢j
-	double orientationPriority;		///< p¨§Œä‚Ì’B¬—Dæ“xi1`0A‘å‚«‚¢‚Ù‚Ç—Dæ“x‚ª‚‚¢j
-	double forcePriority;			///< —Í§Œä‚Ì’B¬—Dæ“xi1`0A‘å‚«‚¢‚Ù‚Ç—Dæ“x‚ª‚‚¢j
-	double torquePriority;			///< ƒgƒ‹ƒN§Œä‚Ì’B¬—Dæ“xi1`0A‘å‚«‚¢‚Ù‚Ç—Dæ“x‚ª‚‚¢j
+	double positionPriority;		///< ä½ç½®åˆ¶å¾¡ã®é”æˆå„ªå…ˆåº¦ï¼ˆ1ï½0ã€å¤§ãã„ã»ã©å„ªå…ˆåº¦ãŒé«˜ã„ï¼‰
+	double orientationPriority;		///< å§¿å‹¢åˆ¶å¾¡ã®é”æˆå„ªå…ˆåº¦ï¼ˆ1ï½0ã€å¤§ãã„ã»ã©å„ªå…ˆåº¦ãŒé«˜ã„ï¼‰
+	double forcePriority;			///< åŠ›åˆ¶å¾¡ã®é”æˆå„ªå…ˆåº¦ï¼ˆ1ï½0ã€å¤§ãã„ã»ã©å„ªå…ˆåº¦ãŒé«˜ã„ï¼‰
+	double torquePriority;			///< ãƒˆãƒ«ã‚¯åˆ¶å¾¡ã®é”æˆå„ªå…ˆåº¦ï¼ˆ1ï½0ã€å¤§ãã„ã»ã©å„ªå…ˆåº¦ãŒé«˜ã„ï¼‰
 
-	Vec3d		targetPosition;				///< “’B–Ú•WˆÊ’u
-	Vec3d		targetLocalPosition;		///< ƒGƒ“ƒhƒGƒtƒFƒNƒ^‚É‚¨‚¯‚é“’B‚³‚¹‚½‚¢•”ˆÊ‚ÌˆÊ’u
-	Quaterniond	targetOrientation;			///< “’B–Ú•Wp¨
-	Vec3d		targetForce;				///< —Í‚Ì–Ú•W’l
-	Vec3d		targetForceWorkingPoint;	///< o‚µ‚½‚¢—Í‚Ìì—p“_
-	Vec3d		targetTorque;				///< ƒgƒ‹ƒN‚Ì–Ú•W’l
+	Vec3d		targetPosition;				///< åˆ°é”ç›®æ¨™ä½ç½®
+	Vec3d		targetLocalPosition;		///< ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã«ãŠã‘ã‚‹åˆ°é”ã•ã›ãŸã„éƒ¨ä½ã®ä½ç½®
+	Quaterniond	targetOrientation;			///< åˆ°é”ç›®æ¨™å§¿å‹¢
+	Vec3d		targetForce;				///< åŠ›ã®ç›®æ¨™å€¤
+	Vec3d		targetForceWorkingPoint;	///< å‡ºã—ãŸã„åŠ›ã®ä½œç”¨ç‚¹
+	Vec3d		targetTorque;				///< ãƒˆãƒ«ã‚¯ã®ç›®æ¨™å€¤
 
 	PHIKEndEffectorDesc();
 };
 
 // ------------------------------------------------------------------------------
-/// IK—p‚ÌƒAƒNƒ`ƒ…ƒG[ƒ^i–Ú•W‚Ì’B¬‚Ì‚½‚ß‚É—p‚¢‚é‚±‚Æ‚Ì‚Å‚«‚éì“®•”•ii‚¨‚à‚ÉŠÖß‚É•tjj
+/// IKç”¨ã®ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ï¼ˆç›®æ¨™ã®é”æˆã®ãŸã‚ã«ç”¨ã„ã‚‹ã“ã¨ã®ã§ãã‚‹ä½œå‹•éƒ¨å“ï¼ˆãŠã‚‚ã«é–¢ç¯€ã«ä»˜éšï¼‰ï¼‰
 struct PHIKActuatorIf : SceneObjectIf{
 	SPR_IFDEF(PHIKActuator);
 
-	/** @brief IK‚ÌŒvZ€”õ‚ğ‚·‚é
+	/** @brief IKã®è¨ˆç®—æº–å‚™ã‚’ã™ã‚‹
 	*/
 	void PrepareSolve();
 
-	/** @brief IK‚ÌŒvZŒJ•Ô‚µ‚Ì‚PƒXƒeƒbƒv‚ğÀs‚·‚é
+	/** @brief IKã®è¨ˆç®—ç¹°è¿”ã—ã®ï¼‘ã‚¹ãƒ†ãƒƒãƒ—ã‚’å®Ÿè¡Œã™ã‚‹
 	*/
 	void ProceedSolve();
 
-	/** @brief ‹[—‹t‰ğ‚ğ‰ğ‚¢‚½‚Ü‚Ü‚Ì"¶‚Ì"ŒvZŒ‹‰Ê‚ğæ“¾‚·‚é
+	/** @brief æ“¬ä¼¼é€†è§£ã‚’è§£ã„ãŸã¾ã¾ã®"ç”Ÿã®"è¨ˆç®—çµæœã‚’å–å¾—ã™ã‚‹
 	*/
 	PTM::VVector<double> GetRawSolution();
 
 	// --- --- --- --- ---
 
-	/** @brief ŒvZŒ‹‰Ê‚É]‚Á‚Ä§Œä‘ÎÛ‚ğ“®‚©‚·
+	/** @brief è¨ˆç®—çµæœã«å¾“ã£ã¦åˆ¶å¾¡å¯¾è±¡ã‚’å‹•ã‹ã™
 	*/
 	void Move();
 
 	// --- --- --- --- ---
 
-	/** @brief “®‚©‚µ‚É‚­‚³‚ğİ’è‚·‚é
+	/** @brief å‹•ã‹ã—ã«ãã•ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetBias(float bias);
 
-	/** @brief “®‚©‚µ‚É‚­‚³‚ğæ“¾‚·‚é
+	/** @brief å‹•ã‹ã—ã«ãã•ã‚’å–å¾—ã™ã‚‹
 	*/
 	float GetBias();
 
-	/** @brief ‘¬“x§Œä‚Ì”ä—áŒW”‚ğİ’è‚·‚é
+	/** @brief é€Ÿåº¦åˆ¶å¾¡ã®æ¯”ä¾‹ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetVelocityGain(double velocityGain);
 
-	/** @brief ‘¬“x§Œä‚Ì”ä—áŒW”‚ğæ“¾‚·‚é
+	/** @brief é€Ÿåº¦åˆ¶å¾¡ã®æ¯”ä¾‹ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
 	*/
 	double GetVelocityGain();
 
-	/** @brief —LŒøE–³Œø‚ğİ’è‚·‚é
+	/** @brief æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’è¨­å®šã™ã‚‹
 	*/
 	void Enable(bool enable);
 
-	/** @brief —LŒøE–³Œø‚ğæ“¾‚·‚é
+	/** @brief æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’å–å¾—ã™ã‚‹
 	*/
 	bool IsEnabled();
 };
 
-/// IKƒAƒNƒ`ƒ…ƒG[ƒ^‚ÌƒfƒBƒXƒNƒŠƒvƒ^
+/// IKã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHIKActuatorDesc{
 	SPR_DESCDEF(PHIKActuator);
 
-	bool bEnabled;        ///< —LŒø‚©‚Ç‚¤‚©
-	float	bias;	      ///< “®‚©‚µ‚É‚­‚³‚ÌŒW”
-	double  velocityGain; ///< ‘¬“x§Œä‚Ì”ä—áŒW”
+	bool bEnabled;        ///< æœ‰åŠ¹ã‹ã©ã†ã‹
+	float	bias;	      ///< å‹•ã‹ã—ã«ãã•ã®ä¿‚æ•°
+	double  velocityGain; ///< é€Ÿåº¦åˆ¶å¾¡ã®æ¯”ä¾‹ä¿‚æ•°
 
 	PHIKActuatorDesc() {
 		bEnabled     = true;
@@ -219,38 +219,38 @@ struct PHIKActuatorDesc{
 	}
 };
 
-/// ‚R²ƒAƒNƒ`ƒ…ƒG[ƒ^iPHBallJoint‚ğ‹ì“®‚·‚éj
+/// ï¼“è»¸ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ï¼ˆPHBallJointã‚’é§†å‹•ã™ã‚‹ï¼‰
 struct PHIKBallActuatorIf : PHIKActuatorIf{
 	SPR_IFDEF(PHIKBallActuator);
 
-	/** @brief “®ì‘ÎÛ‚ÌŠÖß‚ğİ’è‚·‚éi‚PƒAƒNƒ`ƒ…ƒG[ƒ^‚É‚Â‚«‚PŠÖß‚ª•K‚¸‘Î‰‚·‚éj
+	/** @brief å‹•ä½œå¯¾è±¡ã®é–¢ç¯€ã‚’è¨­å®šã™ã‚‹ï¼ˆï¼‘ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã«ã¤ãï¼‘é–¢ç¯€ãŒå¿…ãšå¯¾å¿œã™ã‚‹ï¼‰
 	*/
 	void SetJoint(PHBallJointIf* joint);
 
-	/** @brief “®ì‘ÎÛ‚Æ‚µ‚Äİ’è‚³‚ê‚½ŠÖß‚ğæ“¾‚·‚é
+	/** @brief å‹•ä½œå¯¾è±¡ã¨ã—ã¦è¨­å®šã•ã‚ŒãŸé–¢ç¯€ã‚’å–å¾—ã™ã‚‹
 	*/
 	PHBallJointIf* GetJoint();
 };
 
-/// ‚R²ƒAƒNƒ`ƒ…ƒG[ƒ^‚ÌƒfƒBƒXƒNƒŠƒvƒ^
+/// ï¼“è»¸ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHIKBallActuatorDesc : PHIKActuatorDesc{
 	SPR_DESCDEF(PHIKBallActuator);
 };
 
-/// ‚P²ƒAƒNƒ`ƒ…ƒG[ƒ^iPHHingeJoint‚ğ‹ì“®‚·‚éj
+/// ï¼‘è»¸ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ï¼ˆPHHingeJointã‚’é§†å‹•ã™ã‚‹ï¼‰
 struct PHIKHingeActuatorIf : PHIKActuatorIf{
 	SPR_IFDEF(PHIKHingeActuator);
 
-	/** @brief “®ì‘ÎÛ‚ÌŠÖß‚ğİ’è‚·‚éi‚PƒAƒNƒ`ƒ…ƒG[ƒ^‚É‚Â‚«‚PŠÖß‚ª•K‚¸‘Î‰‚·‚éj
+	/** @brief å‹•ä½œå¯¾è±¡ã®é–¢ç¯€ã‚’è¨­å®šã™ã‚‹ï¼ˆï¼‘ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã«ã¤ãï¼‘é–¢ç¯€ãŒå¿…ãšå¯¾å¿œã™ã‚‹ï¼‰
 	*/
 	void SetJoint(PHHingeJointIf* joint);
 
-	/** @brief “®ì‘ÎÛ‚Æ‚µ‚Äİ’è‚³‚ê‚½ŠÖß‚ğæ“¾‚·‚é
+	/** @brief å‹•ä½œå¯¾è±¡ã¨ã—ã¦è¨­å®šã•ã‚ŒãŸé–¢ç¯€ã‚’å–å¾—ã™ã‚‹
 	*/
 	PHHingeJointIf* GetJoint();
 };
 
-/// ‚P²ƒAƒNƒ`ƒ…ƒG[ƒ^‚ÌƒfƒBƒXƒNƒŠƒvƒ^
+/// ï¼‘è»¸ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHIKHingeActuatorDesc : PHIKActuatorDesc{
 	SPR_DESCDEF(PHIKHingeActuator);
 };

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -25,38 +25,38 @@ namespace Spr{;
 
 //---------------------------------------------------------------------------
 //	FILoadFileMap
-//	ƒtƒ@ƒCƒ‹ ƒ}ƒbƒsƒ“ƒO
-//  Šù‘¶‚Ìƒtƒ@ƒCƒ‹‚ÌƒAƒNƒZƒX‘¬“xŒüã‚ğs‚¤‚½‚ß‚ÉAÀÛ‚Ìƒtƒ@ƒCƒ‹‚ğƒƒ‚ƒŠã‚Éƒ}ƒbƒsƒ“ƒO‚·‚é
+//	ãƒ•ã‚¡ã‚¤ãƒ« ãƒãƒƒãƒ”ãƒ³ã‚°
+//  æ—¢å­˜ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚¢ã‚¯ã‚»ã‚¹é€Ÿåº¦å‘ä¸Šã‚’è¡Œã†ãŸã‚ã«ã€å®Ÿéš›ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ¡ãƒ¢ãƒªä¸Šã«ãƒãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹
 
 class FILoadFileMap : public UTFileMap{
 	FILoadFileMap::~FILoadFileMap(){
 		if (start) Unmap();
 	}
 #ifdef _WIN32
-		HANDLE hFile, hFileMap;		///<	ƒtƒ@ƒCƒ‹ƒnƒ“ƒhƒ‹Aƒtƒ@ƒCƒ‹ƒ}ƒbƒsƒ“ƒOƒIƒuƒWƒFƒNƒg
+		HANDLE hFile, hFileMap;		///<	ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒ³ãƒ‰ãƒ«ã€ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒƒãƒ”ãƒ³ã‚°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 #else 
 		//FILE *hFile;
 		//char *buffer;
-		int fd;					///<	ƒtƒ@ƒCƒ‹ƒfƒBƒXƒNƒŠƒvƒ^
-		struct stat filestat;	///<	ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ğ“¾‚é‚Ì‚Ég‚¤
+		int fd;					///<	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+		struct stat filestat;	///<	ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã‚’å¾—ã‚‹ã®ã«ä½¿ã†
 		void *sourceptr;
 #endif
 public:
-	///	ƒtƒ@ƒCƒ‹‚Ìƒ}ƒbƒv
+	///	ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒãƒƒãƒ—
 	virtual bool Map(const UTString fn, bool binary){
 		name = fn;
 	#ifdef _WIN32
-		// ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
 		hFile = CreateFile(fn.c_str(), GENERIC_READ, 0, NULL, OPEN_EXISTING, 0, 0);	
 		if (hFile == INVALID_HANDLE_VALUE){
 			DSTR << "Cannot open input file: " << fn.c_str() << std::endl;
 			return false;	
 		}		
-		// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚Ìæ“¾
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã®å–å¾—
 		DWORD len = GetFileSize(hFile,NULL);	
-		// ƒtƒ@ƒCƒ‹ƒ}ƒbƒsƒ“ƒOƒIƒuƒWƒFƒNƒgì¬
+		// ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒƒãƒ”ãƒ³ã‚°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä½œæˆ
 		hFileMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
-		// ƒtƒ@ƒCƒ‹fn‚ğ“Ç‚İ‘®«‚Åƒ}ƒbƒv‚µA‚»‚Ìæ“ªƒAƒhƒŒƒX‚ğæ“¾
+		// ãƒ•ã‚¡ã‚¤ãƒ«fnã‚’èª­ã¿å±æ€§ã§ãƒãƒƒãƒ—ã—ã€ãã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’å–å¾—
 		start = (const char*)MapViewOfFile(hFileMap, FILE_MAP_READ, 0, 0, 0);
 		end = start + len;
 		return true;	
@@ -80,7 +80,7 @@ public:
 			return false;	
 		}		
 		if( fstat( fd, &filestat ) == 0 ) {
-			// “Ç‚İ‚İê—p‚Åƒtƒ@ƒCƒ‹ƒ}ƒbƒsƒ“ƒO
+			// èª­ã¿è¾¼ã¿å°‚ç”¨ã§ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒƒãƒ”ãƒ³ã‚°
 			sourceptr = mmap( NULL, filestat.st_size, PROT_READ, MAP_SHARED, fd, 0 );
 			if( sourceptr != MAP_FAILED ) {
 				start = (char*)sourceptr;
@@ -91,14 +91,14 @@ public:
 		return false;
 	#endif
 	}
-	/// ƒtƒ@ƒCƒ‹ ƒAƒ“ƒ}ƒbƒsƒ“ƒO
+	/// ãƒ•ã‚¡ã‚¤ãƒ« ã‚¢ãƒ³ãƒãƒƒãƒ”ãƒ³ã‚°
 	virtual void Unmap(){
 		if(!IsGood())
 			return;
 	#ifdef _WIN32
-		UnmapViewOfFile(start);		// ƒ}ƒbƒv‚µ‚½ƒtƒ@ƒCƒ‹‚ğƒAƒ“ƒ}ƒbƒv
-		CloseHandle(hFileMap);		// ƒtƒ@ƒCƒ‹ƒ}ƒbƒsƒ“ƒOƒIƒuƒWƒFƒNƒg‚ğƒNƒ[ƒY
-		CloseHandle(hFile);			// ƒtƒ@ƒCƒ‹‚Ìƒnƒ“ƒhƒ‹‚ğƒNƒ[ƒY
+		UnmapViewOfFile(start);		// ãƒãƒƒãƒ—ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚¢ãƒ³ãƒãƒƒãƒ—
+		CloseHandle(hFileMap);		// ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒƒãƒ”ãƒ³ã‚°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚¯ãƒ­ãƒ¼ã‚º
+		CloseHandle(hFile);			// ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒãƒ³ãƒ‰ãƒ«ã‚’ã‚¯ãƒ­ãƒ¼ã‚º
 	#else
 		//fclose(hFile);
 		//delete[] buffer;

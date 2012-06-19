@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -53,7 +53,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 		leg[i].soGuide[1] = phScene->CreateSolid(sd);
 		leg[i].soGuide[1]->AddShape(boxGuide);
 
-		// ƒNƒ‰ƒ“ƒN
+		// ã‚¯ãƒ©ãƒ³ã‚¯
 		PHHingeJointDesc jd;
 		jd.poseSocket = poseLeg[i];
 		jd.posePlug.Pos() = Vec3d(0.0, 0.0, 0.0);
@@ -82,7 +82,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 			//phScene->CreateTreeNode(node, leg[i].soFoot[j]);
 		}
 	
-		// •ÂƒŠƒ“ƒN‚Ì\¬
+		// é–‰ãƒªãƒ³ã‚¯ã®æ§‹æˆ
 		for(int j = 0; j < 2; j++){
 			jd.poseSocket = Posed();
 			jd.poseSocket.Pos() = Vec3d(0.0, (j == 0 ? 0.1 : -0.1), (j == 0 ? 0.06: -0.06));
@@ -91,7 +91,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 		}
 	}
 
-	// ‹r‚ÌƒŠƒ“ƒN“¯m‚ÍÚGŒvZ‚µ‚È‚¢
+	// è„šã®ãƒªãƒ³ã‚¯åŒå£«ã¯æ¥è§¦è¨ˆç®—ã—ãªã„
 	vector<PHSolidIf*> group;
 	group.push_back(soBody);
 	for(int i = 0; i < 4; i++){
@@ -103,12 +103,12 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 	}
 	phScene->SetContactMode(&group[0], group.size(), PHSceneDesc::MODE_NONE);
 
-	//	—‚¿’…‚­‚Ü‚Å‘Ò‚Â
+	//	è½ã¡ç€ãã¾ã§å¾…ã¤
 	double dt = phScene->GetTimeStep();
 	double T = 5.0;
 	for(double t = 0.0; t < T; t+=dt) phScene->Step();
 
-	// ƒoƒl‰ğœ
+	// ãƒãƒè§£é™¤
 	for(int i=0; i<4; ++i){
 		leg[i].jntGuideBody[0]->SetSpring(0.0);
 		leg[i].jntGuideBody[1]->SetSpring(0.0);

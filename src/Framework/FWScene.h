@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -23,7 +23,7 @@ struct GRSceneIf;
 
 class FWSdk;
 
-///	FWScene‚Ìƒtƒ@ƒNƒgƒŠ
+///	FWSceneã®ãƒ•ã‚¡ã‚¯ãƒˆãƒª
 class FWSceneFactory : public FactoryBase {
 public:
 	const IfInfo* GetIfInfo() const {
@@ -34,7 +34,7 @@ public:
 	}
 };
 
-///	Graphics‚ÆPhysics‚ÌScene‚ğ‚Ü‚Æ‚ß‚½ƒV[ƒ“ƒOƒ‰ƒt‘S‘Ì
+///	Graphicsã¨Physicsã®Sceneã‚’ã¾ã¨ã‚ãŸã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•å…¨ä½“
 class FWScene : public Scene, public FWSceneDesc {
 public:
 	SPR_OBJECTDEF(FWScene);
@@ -44,13 +44,13 @@ public:
 	typedef std::vector< UTRef<HIHaptic> >			FWHumanInterfaces;
 	typedef std::vector< UTRef<FWHapticPointerIf> > FWHapticPointers;
 	
-	FWSdk*				sdk;						///<	eSDK‚Ö‚ÌQÆ
-	FWObjects			fwObjects;					///<	•¨—‚ÆƒOƒ‰ƒtƒBƒbƒNƒX‚ÌƒIƒuƒWƒFƒNƒg‚ÌƒŠƒ“ƒN
-	FWHapticPointers	fwHapticPointers;			///<	“o˜^‚³‚ê‚Ä‚¢‚é—ÍŠoƒ|ƒCƒ“ƒ^‚Ö‚ÌƒŠƒ“ƒN
-	PHSceneIf*			phScene;					///<	•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“—p‚ÌƒV[ƒ“
-	GRSceneIf*			grScene;					///<	ƒOƒ‰ƒtƒBƒbƒNƒX—p‚ÌƒV[ƒ“
+	FWSdk*				sdk;						///<	è¦ªSDKã¸ã®å‚ç…§
+	FWObjects			fwObjects;					///<	ç‰©ç†ã¨ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒªãƒ³ã‚¯
+	FWHapticPointers	fwHapticPointers;			///<	ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã¸ã®ãƒªãƒ³ã‚¯
+	PHSceneIf*			phScene;					///<	ç‰©ç†ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ã®ã‚·ãƒ¼ãƒ³
+	GRSceneIf*			grScene;					///<	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ç”¨ã®ã‚·ãƒ¼ãƒ³
 
-	/// •`‰æ§Œäƒtƒ‰ƒO
+	/// æç”»åˆ¶å¾¡ãƒ•ãƒ©ã‚°
 	std::map<ObjectIf*, bool>	renderObject;
 	bool		renderPHScene;
 	bool		renderSolid, renderWire;
@@ -62,26 +62,26 @@ public:
 	bool		renderIK;
 	bool		renderHaptic;
 
-	/// •`‰æƒXƒP[ƒ‹
+	/// æç”»ã‚¹ã‚±ãƒ¼ãƒ«
 	float		scaleAxisWorld, scaleAxisSolid, scaleAxisConst;
 	float		scaleForce, scaleMoment;
 	float		scaleIK;
-	/// •`‰æƒ}ƒeƒŠƒAƒ‹
+	/// æç”»ãƒãƒ†ãƒªã‚¢ãƒ«
 	std::map<PHSolidIf*, int>	matSolid, matWire;
 	Vec3i		matAxis;
 	int			matForce, matMoment;
 	int			matContact;
 	Vec3i		matGrid;
 	int			matIK;
-	/// À•W²İ’è
+	/// åº§æ¨™è»¸è¨­å®š
 	int			axisStyle;
-	/// ƒOƒŠƒbƒhİ’è
+	/// ã‚°ãƒªãƒƒãƒ‰è¨­å®š
 	Vec3f		gridOffset;
 	Vec3f		gridSize;
 	Vec3i		gridSlice;
 
 	//	hase TBW
-	//	FWHumanInterfaces humanInterfaces;			///<	ƒ†[ƒUƒCƒ“ƒ^ƒtƒF[ƒXD[0]‚ªƒJƒƒ‰DHIForceDevice6D‚ÌƒNƒ‰ƒX–¼‚Í•ÏX‚·‚é—\’èD
+	//	FWHumanInterfaces humanInterfaces;			///<	ãƒ¦ãƒ¼ã‚¶ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ï¼[0]ãŒã‚«ãƒ¡ãƒ©ï¼HIForceDevice6Dã®ã‚¯ãƒ©ã‚¹åã¯å¤‰æ›´ã™ã‚‹äºˆå®šï¼
 	enum HumanInterfacePurposeId{
 		HI_CAMERACONTROLLER,
 		HI_OBJECTMANIPULATOR0,
@@ -92,10 +92,10 @@ public:
 
 public:
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	FWScene(const FWSceneDesc& d=FWSceneDesc());
 	
-	/** Šî–{‹@”\
+	/** åŸºæœ¬æ©Ÿèƒ½
 	 */
 	PHSceneIf*		GetPHScene(){ return phScene; }
 	void			SetPHScene(PHSceneIf* s){ phScene = s; }
@@ -108,7 +108,7 @@ public:
 	void		Sync();
 	void		Step();
 
-	/** •`‰æ‹@”\
+	/** æç”»æ©Ÿèƒ½
 	 */
 	void	Draw			(GRRenderIf* render, bool ph_or_gr);
 	void	DrawPHScene		(GRRenderIf* render);
@@ -120,7 +120,7 @@ public:
 	void	DrawLimit		(GRRenderIf* render, PHConstraintIf* con);
 	void	DrawHaptic		(GRRenderIf* render, PHHapticEngineIf* hapticEngine);
 	
-	/// •`‰æ§Œä
+	/// æç”»åˆ¶å¾¡
 	void	SetRenderMode		(bool solid, bool wire);
 	void	EnableRender		(ObjectIf* obj, bool enable);
 	void	SetSolidMaterial	(int mat, PHSolidIf* solid);
@@ -155,7 +155,7 @@ public:
 	//void	SetWireMaterial		(int item, int mat, ObjectIf* obj = 0);
 	//void	SetRenderScale		(int item, float scale, ObjectIf* obj = 0);
 	//void	SetGridOption		(char axis, float offset, float size, int slice);
-	/// ‹Œ•`‰æ§ŒäAPI
+	/// æ—§æç”»åˆ¶å¾¡API
 	//void	EnableRenderWorldAxis	(bool enable, float scale);
 	//void	EnableRenderAxis		(bool enable, float scale);
 	//void	EnableRenderForce		(bool enable, float scale);
@@ -163,7 +163,7 @@ public:
 	//void	EnableRenderGrid		(bool enable, float y, float span);
 	//void	EnableRenderIK			(bool enable, float scale);
 
-	/// “à•”—p
+	/// å†…éƒ¨ç”¨
 	void	DrawCoordinateAxis	(GRRenderIf* render, float scale, bool solid_or_wire);
 	void	DrawMesh			(GRRenderIf* render, CDConvexMeshIf* mesh, bool solid_or_wire);
 	void	DrawFaceSolid		(GRRenderIf* render, CDFaceIf* face, Vec3f * base);
@@ -174,7 +174,7 @@ public:
 	int		GetWireMaterial		(PHSolidIf* solid);
 	int		GetAutoMaterial		(int i);
 	
-	/** HumanInterfaceŒnŠÖ”
+	/** HumanInterfaceç³»é–¢æ•°
 	 */
 	HIForceDevice6D*	GetHumanInterface(size_t pos);
 	void				AddHumanInterface(HIForceDevice6D* d);
@@ -183,7 +183,7 @@ public:
 	int					NHapticPointers();
 	void				UpdateHapticPointers();
 
-	/** SceneŠÖ”‚ÌŒp³
+	/** Sceneé–¢æ•°ã®ç¶™æ‰¿
 	 */
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
 	virtual bool AddChildObject(ObjectIf* o);

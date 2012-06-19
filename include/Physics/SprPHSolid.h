@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprPHSolid.h
- *	@brief „‘Ì
+ *	@brief å‰›ä½“
 */
 #ifndef SPR_PHSolidIf_H
 #define SPR_PHSolidIf_H
@@ -18,7 +18,7 @@
 //@{
 namespace Spr{;
 
-///	Œ`‚ÆˆÊ’u‚ğw’è‚·‚é‚½‚ß‚ÌÕ“Ë”»’è—pƒtƒŒ[ƒ€
+///	å½¢ã¨ä½ç½®ã‚’æŒ‡å®šã™ã‚‹ãŸã‚ã®è¡çªåˆ¤å®šç”¨ãƒ•ãƒ¬ãƒ¼ãƒ 
 struct PHFrameDesc{
 	Posed pose;
 };
@@ -28,22 +28,22 @@ struct PHFrameIf: public SceneObjectIf{
 	void SetPose(Posed p);
 };
 
-///	„‘Ì‚ÌƒXƒe[ƒg
+///	å‰›ä½“ã®ã‚¹ãƒ†ãƒ¼ãƒˆ
 struct PHSolidState{
-	Vec3d		velocity;		///<	‘¬“x			(WorldŒn)
-	Vec3d		angVelocity;	///<	Šp‘¬“x			(WorldŒn)
-//	Vec3d		lastVelocity;	///<	‘O‰ñ‚Ì‘¬“x		(WorldŒn)
-//	Vec3d		lastAngVelocity;///<	‘O‰ñ‚ÌŠp‘¬“x	(WorldŒn)
-	Posed		pose;			///<	ˆÊ’u‚ÆŒü‚«		(WorldŒn)
-//	Posed		lastPose;		///<	‘O‰ñ‚ÌˆÊ’u‚ÆŒü‚«(WorldŒn)
+	Vec3d		velocity;		///<	é€Ÿåº¦			(Worldç³»)
+	Vec3d		angVelocity;	///<	è§’é€Ÿåº¦			(Worldç³»)
+//	Vec3d		lastVelocity;	///<	å‰å›ã®é€Ÿåº¦		(Worldç³»)
+//	Vec3d		lastAngVelocity;///<	å‰å›ã®è§’é€Ÿåº¦	(Worldç³»)
+	Posed		pose;			///<	ä½ç½®ã¨å‘ã		(Worldç³»)
+//	Posed		lastPose;		///<	å‰å›ã®ä½ç½®ã¨å‘ã(Worldç³»)
 };
 
-///	„‘Ì‚ÌƒfƒBƒXƒNƒŠƒvƒ^
+///	å‰›ä½“ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHSolidDesc: public PHSolidState{
-	double		mass;			///<	¿—Ê
-	Matrix3d	inertia;		///<	Šµ«ƒeƒ“ƒ\ƒ‹	(LocalŒn)
-	Vec3d		center;			///<	¿—Ê’†S‚ÌˆÊ’u	(LocalŒn)
-	bool		dynamical;		///<	•¨—–@‘¥‚É]‚¤‚©(‘¬“x‚ÍÏ•ª‚³‚ê‚é)
+	double		mass;			///<	è³ªé‡
+	Matrix3d	inertia;		///<	æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«	(Localç³»)
+	Vec3d		center;			///<	è³ªé‡ä¸­å¿ƒã®ä½ç½®	(Localç³»)
+	bool		dynamical;		///<	ç‰©ç†æ³•å‰‡ã«å¾“ã†ã‹(é€Ÿåº¦ã¯ç©åˆ†ã•ã‚Œã‚‹)
 
 	PHSolidDesc(){ Init(); }
 	void Init(){
@@ -56,220 +56,220 @@ struct PHSolidDesc: public PHSolidState{
 struct CDShapeIf; 
 struct PHTreeNodeIf;
 
-///	„‘Ì‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+///	å‰›ä½“ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHSolidIf : public SceneObjectIf{
 	SPR_IFDEF(PHSolid);
 
-	/** @brief —Í‚ğ¿—Ê’†S‚É‰Á‚¦‚é
-		@param f —Í
+	/** @brief åŠ›ã‚’è³ªé‡ä¸­å¿ƒã«åŠ ãˆã‚‹
+		@param f åŠ›
 	 */
 	void AddForce(Vec3d f);
 	
-	/** @brief ƒgƒ‹ƒN‚ğ‰Á‚¦‚é
-		@param t ƒgƒ‹ƒN
+	/** @brief ãƒˆãƒ«ã‚¯ã‚’åŠ ãˆã‚‹
+		@param t ãƒˆãƒ«ã‚¯
 	 */
 	void AddTorque(Vec3d t);
 	
-	/**	@brief —Í‚ğw’è‚µ‚½ì—p“_‚É‰Á‚¦‚é
-		@param f —Í
-		@param r ƒV[ƒ“À•WŒn‚Å•\‚í‚µ‚½ì—p“_‚ÌˆÊ’u
+	/**	@brief åŠ›ã‚’æŒ‡å®šã—ãŸä½œç”¨ç‚¹ã«åŠ ãˆã‚‹
+		@param f åŠ›
+		@param r ã‚·ãƒ¼ãƒ³åº§æ¨™ç³»ã§è¡¨ã‚ã—ãŸä½œç”¨ç‚¹ã®ä½ç½®
 	 */
 	void AddForce(Vec3d f, Vec3d r);
 
-	/**	@brief ¿—Ê‚ğæ“¾‚·‚é
-		@return ¿—Ê
+	/**	@brief è³ªé‡ã‚’å–å¾—ã™ã‚‹
+		@return è³ªé‡
 	 */
 	double		GetMass();
 	
-	/** @brief ¿—Ê‚Ì‹t”‚ğæ“¾‚·‚é
-		@return ¿—Ê‚Ì‹t”
+	/** @brief è³ªé‡ã®é€†æ•°ã‚’å–å¾—ã™ã‚‹
+		@return è³ªé‡ã®é€†æ•°
 	 */
 	double		GetMassInv();
 	
-	/** @brief ¿—Ê‚ğİ’è‚·‚é
-		@param m ¿—Ê
+	/** @brief è³ªé‡ã‚’è¨­å®šã™ã‚‹
+		@param m è³ªé‡
 	 */
 	void		SetMass(double m);
 	
-	/** @brief ¿—Ê’†S‚ğæ“¾‚·‚é
-		@return ¿—Ê’†S‚ÌˆÊ’u(Local)
+	/** @brief è³ªé‡ä¸­å¿ƒã‚’å–å¾—ã™ã‚‹
+		@return è³ªé‡ä¸­å¿ƒã®ä½ç½®(Local)
 	 */
 	Vec3d		GetCenterOfMass();
 	
-	/** @brief ¿—Ê’†S‚ğİ’è‚·‚é
-		@param center ¿—Ê’†S‚ÌˆÊ’u(Local)
+	/** @brief è³ªé‡ä¸­å¿ƒã‚’è¨­å®šã™ã‚‹
+		@param center è³ªé‡ä¸­å¿ƒã®ä½ç½®(Local)
 	 */
 	void		SetCenterOfMass(const Vec3d& center);
 	
-	/** @brief Šµ«ƒeƒ“ƒ\ƒ‹‚ğæ“¾‚·‚é
-		@return Šµ«ƒeƒ“ƒ\ƒ‹
+	/** @brief æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã‚’å–å¾—ã™ã‚‹
+		@return æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«
 	 */
 	Matrix3d	GetInertia();
 	
-	/** @brief Šµ«ƒeƒ“ƒ\ƒ‹‚Ì‹t”‚ğæ“¾‚·‚é
-		@return Šµ«ƒeƒ“ƒ\ƒ‹‚Ì‹t”
+	/** @brief æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã®é€†æ•°ã‚’å–å¾—ã™ã‚‹
+		@return æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã®é€†æ•°
 	 */
 	Matrix3d	GetInertiaInv();
 	
-	/** @brief Šµ«ƒeƒ“ƒ\ƒ‹‚ğİ’è‚·‚é
-		@param I Šµ«ƒeƒ“ƒ\ƒ‹
+	/** @brief æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã‚’è¨­å®šã™ã‚‹
+		@param I æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«
 	 */
 	void		SetInertia(const Matrix3d& I);
 
-	/** @brief Œ`ó‚Æ–§“x‚©‚çdSC¿—ÊCŠµ«ƒeƒ“ƒ\ƒ‹‚ğ©“®“I‚Éİ’è‚·‚é
+	/** @brief å½¢çŠ¶ã¨å¯†åº¦ã‹ã‚‰é‡å¿ƒï¼Œè³ªé‡ï¼Œæ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ã‚’è‡ªå‹•çš„ã«è¨­å®šã™ã‚‹
 	 */
 	void		CompInertia();
 	
-	/** @brief „‘Ì‚ÌˆÊ’u‚ğæ“¾‚·‚é
-		@return ƒV[ƒ“‚É‘Î‚·‚é„‘ÌƒtƒŒ[ƒ€Œ´“_‚ÌˆÊ’u
+	/** @brief å‰›ä½“ã®ä½ç½®ã‚’å–å¾—ã™ã‚‹
+		@return ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ãƒ•ãƒ¬ãƒ¼ãƒ åŸç‚¹ã®ä½ç½®
 	 */
 	Vec3d		GetFramePosition() const;
 	
-	/** @brief „‘Ì‚ÌˆÊ’u‚ğİ’è‚·‚é
-		@param p ƒV[ƒ“‚É‘Î‚·‚é„‘ÌƒtƒŒ[ƒ€Œ´“_‚ÌˆÊ’u
+	/** @brief å‰›ä½“ã®ä½ç½®ã‚’è¨­å®šã™ã‚‹
+		@param p ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ãƒ•ãƒ¬ãƒ¼ãƒ åŸç‚¹ã®ä½ç½®
 	 */
 	void		SetFramePosition(const Vec3d& p);
 	
-	/** @brief „‘Ì‚Ì¿—Ê’†S‚ÌˆÊ’u‚ğæ“¾‚·‚é
-		@return ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚Ì¿—Ê’†S‚ÌˆÊ’u(World)
+	/** @brief å‰›ä½“ã®è³ªé‡ä¸­å¿ƒã®ä½ç½®ã‚’å–å¾—ã™ã‚‹
+		@return ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ã®è³ªé‡ä¸­å¿ƒã®ä½ç½®(World)
 	 */
 	Vec3d		GetCenterPosition() const ;
 	
-	/** @brief „‘Ì‚ÌˆÊ’u‚ğİ’è‚·‚é
-		@param p ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚Ì¿—Ê’†S‚ÌˆÊ’u(World)
+	/** @brief å‰›ä½“ã®ä½ç½®ã‚’è¨­å®šã™ã‚‹
+		@param p ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ã®è³ªé‡ä¸­å¿ƒã®ä½ç½®(World)
 	 */
 	void		SetCenterPosition(const Vec3d& p);
 	
-	/** @brief „‘Ì‚Ì‘O‚ÌƒXƒeƒbƒv‚©‚ç‚Ì•ÀiˆÚ“®—Ê‚ğ•Ô‚·
-		@return ‘O‚ÌƒXƒeƒbƒv‚©‚ç‚Ì•ÀiˆÚ“®—Ê
+	/** @brief å‰›ä½“ã®å‰ã®ã‚¹ãƒ†ãƒƒãƒ—ã‹ã‚‰ã®ä¸¦é€²ç§»å‹•é‡ã‚’è¿”ã™
+		@return å‰ã®ã‚¹ãƒ†ãƒƒãƒ—ã‹ã‚‰ã®ä¸¦é€²ç§»å‹•é‡
 	 */
 	Vec3d GetDeltaPosition(const Vec3d& p) const;
 
-	/** @brief „‘Ì‚Ì‘O‚ÌƒXƒeƒbƒv‚©‚ç‚Ì•ÀiˆÚ“®—Ê‚ğ•Ô‚·D
-		@param pos dS‚©‚ç‚Ì‘Š‘ÎˆÊ’uD‚±‚ÌˆÊ’u‚Ì•ÀiˆÚ“®—Ê‚ğ•Ô‚·D
-		@return ‘O‚ÌƒXƒeƒbƒv‚©‚ç‚Ì•ÀiˆÚ“®—Ê
+	/** @brief å‰›ä½“ã®å‰ã®ã‚¹ãƒ†ãƒƒãƒ—ã‹ã‚‰ã®ä¸¦é€²ç§»å‹•é‡ã‚’è¿”ã™ï¼
+		@param pos é‡å¿ƒã‹ã‚‰ã®ç›¸å¯¾ä½ç½®ï¼ã“ã®ä½ç½®ã®ä¸¦é€²ç§»å‹•é‡ã‚’è¿”ã™ï¼
+		@return å‰ã®ã‚¹ãƒ†ãƒƒãƒ—ã‹ã‚‰ã®ä¸¦é€²ç§»å‹•é‡
 	*/
 	Vec3d GetDeltaPosition() const;
 
-	/** @brief „‘Ì‚ÌŒü‚«‚ğæ“¾‚·‚é
-		@return ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚ÌŒü‚«
+	/** @brief å‰›ä½“ã®å‘ãã‚’å–å¾—ã™ã‚‹
+		@return ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ã®å‘ã
 	 */
 	Quaterniond GetOrientation() const;
 	
-	/** @brief „‘Ì‚ÌŒü‚«‚ğİ’è‚·‚é
-		@param q ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚ÌŒü‚«
+	/** @brief å‰›ä½“ã®å‘ãã‚’è¨­å®šã™ã‚‹
+		@param q ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ã®å‘ã
 	 */
 	void		SetOrientation(const Quaterniond& q);
 
-	/** @brief „‘Ì‚ÌˆÊ’u‚ÆŒü‚«‚ğæ“¾‚·‚é
-		@return ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚ÌˆÊ’u‚ÆŒü‚«
+	/** @brief å‰›ä½“ã®ä½ç½®ã¨å‘ãã‚’å–å¾—ã™ã‚‹
+		@return ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ã®ä½ç½®ã¨å‘ã
 	 */
 	Posed		GetPose() const;
 	
-	/** @brief „‘Ì‚ÌˆÊ’u‚ÆŒü‚«‚ğİ’è‚·‚é
-		@param p ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚ÌˆÊ’u‚ÆŒü‚«
+	/** @brief å‰›ä½“ã®ä½ç½®ã¨å‘ãã‚’è¨­å®šã™ã‚‹
+		@param p ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ã®ä½ç½®ã¨å‘ã
 	 */
 	void		SetPose(const Posed& p);
 
-	/** @brief „‘Ì‚Ì‘¬“x‚ğæ“¾‚·‚é
-		@return ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚Ì¿—Ê’†S‚Ì‘¬“x
+	/** @brief å‰›ä½“ã®é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹
+		@return ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ã®è³ªé‡ä¸­å¿ƒã®é€Ÿåº¦
 	 */
 	Vec3d		GetVelocity() const ;
 
-	/** @brief „‘Ì‚Ì‘¬“x‚ğİ’è‚·‚é
-		@param v ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚Ì¿—Ê’†S‚Ì‘¬“x
+	/** @brief å‰›ä½“ã®é€Ÿåº¦ã‚’è¨­å®šã™ã‚‹
+		@param v ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ã®è³ªé‡ä¸­å¿ƒã®é€Ÿåº¦
 	 */
 	void		SetVelocity(const Vec3d& v);
 
-	/** @brief „‘Ì‚ÌŠp‘¬“x‚ğæ“¾‚·‚é
-		@return ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚ÌŠp‘¬“x
+	/** @brief å‰›ä½“ã®è§’é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹
+		@return ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ã®è§’é€Ÿåº¦
 	 */
 	Vec3d		GetAngularVelocity() const;
 	
-    /** @brief „‘Ì‚ÌŠp‘¬“x‚ğİ’è‚·‚é
-		@param av ƒV[ƒ“‚É‘Î‚·‚é„‘Ì‚ÌŠp‘¬“x
+    /** @brief å‰›ä½“ã®è§’é€Ÿåº¦ã‚’è¨­å®šã™ã‚‹
+		@param av ã‚·ãƒ¼ãƒ³ã«å¯¾ã™ã‚‹å‰›ä½“ã®è§’é€Ÿåº¦
 	 */
 	void		SetAngularVelocity(const Vec3d& av);
 
-	/** @brief ÅŒã‚ÌƒXƒeƒbƒv‚ÅAS‘©—ÍˆÈŠO‚É„‘Ì‚É‰Á‚í‚Á‚½ŠO—Í‚ğæ“¾‚·‚éB
-		S‘©—Í‚Í PHConstraint ‚Æ‚»‚Ì”h¶ƒNƒ‰ƒX‚©‚çæ“¾‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
-		@return „‘Ì‚É‰Á‚¦‚ç‚ê‚½—Í(WorldŒn)
+	/** @brief æœ€å¾Œã®ã‚¹ãƒ†ãƒƒãƒ—ã§ã€æ‹˜æŸåŠ›ä»¥å¤–ã«å‰›ä½“ã«åŠ ã‚ã£ãŸå¤–åŠ›ã‚’å–å¾—ã™ã‚‹ã€‚
+		æ‹˜æŸåŠ›ã¯ PHConstraint ã¨ãã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã‹ã‚‰å–å¾—ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
+		@return å‰›ä½“ã«åŠ ãˆã‚‰ã‚ŒãŸåŠ›(Worldç³»)
 	*/
 	Vec3d GetForce() const;
 
-	/** @brief ÅŒã‚ÌƒXƒeƒbƒv‚ÅAS‘©—ÍˆÈŠO‚É„‘Ì‚É‰Á‚í‚Á‚½ŠO—Íƒgƒ‹ƒN‚ğæ“¾‚·‚éB
-		S‘©—Í‚Í PHConstraint ‚Æ‚»‚Ì”h¶ƒNƒ‰ƒX‚©‚çæ“¾‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢B
-		@return „‘Ì‚É‰Á‚¦‚ç‚ê‚½ƒgƒ‹ƒN(WorldŒnA„‘Ì‚ÌdSü‚è)
+	/** @brief æœ€å¾Œã®ã‚¹ãƒ†ãƒƒãƒ—ã§ã€æ‹˜æŸåŠ›ä»¥å¤–ã«å‰›ä½“ã«åŠ ã‚ã£ãŸå¤–åŠ›ãƒˆãƒ«ã‚¯ã‚’å–å¾—ã™ã‚‹ã€‚
+		æ‹˜æŸåŠ›ã¯ PHConstraint ã¨ãã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã‹ã‚‰å–å¾—ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„ã€‚
+		@return å‰›ä½“ã«åŠ ãˆã‚‰ã‚ŒãŸãƒˆãƒ«ã‚¯(Worldç³»ã€å‰›ä½“ã®é‡å¿ƒå‘¨ã‚Š)
 	*/
 	Vec3d GetTorque() const;
 
-	/** @brief „‘Ì‚ÉŒ`ó‚ğ“o˜^‚·‚é
-		@param shape Œ`ó‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	/** @brief å‰›ä½“ã«å½¢çŠ¶ã‚’ç™»éŒ²ã™ã‚‹
+		@param shape å½¢çŠ¶ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	void		AddShape(CDShapeIf* shape);
 
-	/** @brief “o˜^‚³‚ê‚Ä‚¢‚éŒ`ó‚ÌŒÂ”‚ğæ“¾‚·‚é
-		@return Œ`ó‚ÌŒÂ”
+	/** @brief ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹å½¢çŠ¶ã®å€‹æ•°ã‚’å–å¾—ã™ã‚‹
+		@return å½¢çŠ¶ã®å€‹æ•°
 	 */
 	int			NShape();
 
-	/**	@brief “o˜^‚³‚ê‚Ä‚¢‚éŒ`ó‚ğæ“¾‚·‚é
-		@param index Œ`ó‚ÌƒCƒ“ƒfƒbƒNƒX
-		@return Œ`ó‚Ö‚Ìƒ|ƒCƒ“ƒ^
-		Å‰‚É“o˜^‚³‚ê‚½Œ`ó‚ÌƒCƒ“ƒfƒbƒNƒX‚Í0C‚»‚ÌŸ‚É“o˜^‚³‚ê‚½Œ`ó‚ÌƒCƒ“ƒfƒbƒNƒX‚Í1C
-		ˆÈ‰º“¯—lD
+	/**	@brief ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹å½¢çŠ¶ã‚’å–å¾—ã™ã‚‹
+		@param index å½¢çŠ¶ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		@return å½¢çŠ¶ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+		æœ€åˆã«ç™»éŒ²ã•ã‚ŒãŸå½¢çŠ¶ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¯0ï¼Œãã®æ¬¡ã«ç™»éŒ²ã•ã‚ŒãŸå½¢çŠ¶ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¯1ï¼Œ
+		ä»¥ä¸‹åŒæ§˜ï¼
 	 */
 	CDShapeIf*	GetShape(int index);
 
-	/** @brief Œ`ó‚ÌˆÊ’u‚ÆŒü‚«‚ğæ“¾‚·‚é
-		@param index ‘ÎÛ‚Æ‚·‚éŒ`ó‚ÌƒCƒ“ƒfƒbƒNƒX
-		@return „‘Ì‚É‘Î‚·‚éŒ`ó‚ÌˆÊ’u‚ÆŒü‚«
-		ƒCƒ“ƒfƒbƒNƒX‚É‚Â‚¢‚Ä‚ÍGetShape‚ğQÆD
+	/** @brief å½¢çŠ¶ã®ä½ç½®ã¨å‘ãã‚’å–å¾—ã™ã‚‹
+		@param index å¯¾è±¡ã¨ã™ã‚‹å½¢çŠ¶ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		@return å‰›ä½“ã«å¯¾ã™ã‚‹å½¢çŠ¶ã®ä½ç½®ã¨å‘ã
+		ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã«ã¤ã„ã¦ã¯GetShapeã‚’å‚ç…§ï¼
 	 */
 	Posed		GetShapePose(int index);
 
-	/** @brief Œ`ó‚ÌˆÊ’u‚ÆŒü‚«‚ğİ’è‚·‚é
-		@param index ‘ÎÛ‚Æ‚·‚éŒ`ó‚ÌƒCƒ“ƒfƒbƒNƒX
-		@param pose „‘Ì‚É‘Î‚·‚éŒ`ó‚ÌˆÊ’u‚ÆŒü‚«
-		ƒCƒ“ƒfƒbƒNƒX‚É‚Â‚¢‚Ä‚ÍGetShape‚ğQÆD
+	/** @brief å½¢çŠ¶ã®ä½ç½®ã¨å‘ãã‚’è¨­å®šã™ã‚‹
+		@param index å¯¾è±¡ã¨ã™ã‚‹å½¢çŠ¶ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		@param pose å‰›ä½“ã«å¯¾ã™ã‚‹å½¢çŠ¶ã®ä½ç½®ã¨å‘ã
+		ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã«ã¤ã„ã¦ã¯GetShapeã‚’å‚ç…§ï¼
 	 */
 	void		SetShapePose(int index, const Posed& pose);
 
-	/** @brief Œ`ó‚ğClear‚·‚é
+	/** @brief å½¢çŠ¶ã‚’Clearã™ã‚‹
 	 */
 	void		ClearShape();
 	
-	/** @brief d—Í‚ğ—LŒø/–³Œø‰»‚·‚é
-		@param bOn true‚È‚ç‚Î„‘Ì‚Éd—Í‚ª‰Á‚í‚éDfalse‚È‚ç‚Î‰Á‚í‚ç‚È‚¢D
+	/** @brief é‡åŠ›ã‚’æœ‰åŠ¹/ç„¡åŠ¹åŒ–ã™ã‚‹
+		@param bOn trueãªã‚‰ã°å‰›ä½“ã«é‡åŠ›ãŒåŠ ã‚ã‚‹ï¼falseãªã‚‰ã°åŠ ã‚ã‚‰ãªã„ï¼
 	 */
 	void		SetGravity(bool bOn);
 
-	/** @brief •¨—–@‘¥‚É]‚¤‚©‚Ç‚¤‚©‚ğ—LŒø/–³Œø‰»‚·‚é
-		@param bOn true‚È‚ç‚Î„‘Ì‚Í•¨—–@‘¥‚É‚µ‚½‚ª‚Á‚Ä‰^“®‚·‚éD
-		•¨—–@‘¥‚É]‚í‚È‚¢„‘Ì‚àCSetPoseCSetVelocity‚È‚Ç‚ÌŠÖ”‚É‚æ‚éˆÊ’u‚â‘¬“x‚ÌXV‚Í
-		‰Â”\‚Å‚·D
+	/** @brief ç‰©ç†æ³•å‰‡ã«å¾“ã†ã‹ã©ã†ã‹ã‚’æœ‰åŠ¹/ç„¡åŠ¹åŒ–ã™ã‚‹
+		@param bOn trueãªã‚‰ã°å‰›ä½“ã¯ç‰©ç†æ³•å‰‡ã«ã—ãŸãŒã£ã¦é‹å‹•ã™ã‚‹ï¼
+		ç‰©ç†æ³•å‰‡ã«å¾“ã‚ãªã„å‰›ä½“ã‚‚ï¼ŒSetPoseï¼ŒSetVelocityãªã©ã®é–¢æ•°ã«ã‚ˆã‚‹ä½ç½®ã‚„é€Ÿåº¦ã®æ›´æ–°ã¯
+		å¯èƒ½ã§ã™ï¼
 	 */
 	void		SetDynamical(bool bOn);
 
-	/** @brief •¨—–@‘¥‚É]‚¤‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é
-		@return true‚È‚ç‚Î„‘Ì‚Í•¨—–@‘¥‚É‚µ‚½‚ª‚Á‚Ä‰^“®‚·‚éD
+	/** @brief ç‰©ç†æ³•å‰‡ã«å¾“ã†ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹
+		@return trueãªã‚‰ã°å‰›ä½“ã¯ç‰©ç†æ³•å‰‡ã«ã—ãŸãŒã£ã¦é‹å‹•ã™ã‚‹ï¼
 	 */
 	bool		IsDynamical();
 
 
-	/** @brief ƒcƒŠ[ƒm[ƒh‚ğæ“¾‚·‚é
-		CreateRootNodeCCreateTreeNode‚É‚æ‚Á‚ÄƒcƒŠ[ƒm[ƒh‚ªŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚éê‡C
-		‚»‚Ìƒm[ƒh‚ğ•Ô‚·D‚»‚êˆÈŠO‚Ìê‡‚ÍNULL‚ğ•Ô‚·D
+	/** @brief ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰ã‚’å–å¾—ã™ã‚‹
+		CreateRootNodeï¼ŒCreateTreeNodeã«ã‚ˆã£ã¦ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰ãŒå‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ã‚‹å ´åˆï¼Œ
+		ãã®ãƒãƒ¼ãƒ‰ã‚’è¿”ã™ï¼ãã‚Œä»¥å¤–ã®å ´åˆã¯NULLã‚’è¿”ã™ï¼
 	 */
 	PHTreeNodeIf* GetTreeNode();
 
-	/** @brief „‘Ì‚ÌŒ`ó‚ğ•`‰æ‚·‚é‚©‚Ç‚¤‚©‚ğw’è‚·‚é
-		@param bOn true: Œ`ó‚ğ•`‰æ bOn false: Œ`ó‚ğ•`‰æ‚µ‚È‚¢
+	/** @brief å‰›ä½“ã®å½¢çŠ¶ã‚’æç”»ã™ã‚‹ã‹ã©ã†ã‹ã‚’æŒ‡å®šã™ã‚‹
+		@param bOn true: å½¢çŠ¶ã‚’æç”» bOn false: å½¢çŠ¶ã‚’æç”»ã—ãªã„
 	*/
 	//void		SetDrawing(bool bOn);
 
-	/** @brief „‘Ì‚ÌŒ`ó‚ğ•`‰æ‚·‚é‚©‚Ç‚¤‚©‚ğæ“¾
-		@return true‚Å•`‰æAfalse‚Å•`‰æ‚µ‚È‚¢
+	/** @brief å‰›ä½“ã®å½¢çŠ¶ã‚’æç”»ã™ã‚‹ã‹ã©ã†ã‹ã‚’å–å¾—
+		@return trueã§æç”»ã€falseã§æç”»ã—ãªã„
 	*/
 	//bool		IsDrawn();
 };
@@ -277,28 +277,28 @@ struct PHSolidIf : public SceneObjectIf{
 struct PHShapePairForLCPIf : public ObjectIf{
 	SPR_IFDEF(PHShapePairForLCP);
 
-	/** @brief section‚Ì”‚ğæ“¾‚·‚é
+	/** @brief sectionã®æ•°ã‚’å–å¾—ã™ã‚‹
 	*/
 	int NSectionVertexes();
 
-	/** @brief i”Ô–Ú‚ÌŒğ·’f–Ê‚Ì’¸“_À•W‚ğæ“¾‚·‚é
-		@param i:’¸“_À•W‚Ì”Ô†D
+	/** @brief iç•ªç›®ã®äº¤å·®æ–­é¢ã®é ‚ç‚¹åº§æ¨™ã‚’å–å¾—ã™ã‚‹
+		@param i:é ‚ç‚¹åº§æ¨™ã®ç•ªå·ï¼
 	*/
 	Vec3d GetSectionVertex(int i);
 
-	/** @brief Œğ·’f–Ê‚Ì–ÊÏ‚ğæ“¾‚·‚é
+	/** @brief äº¤å·®æ–­é¢ã®é¢ç©ã‚’å–å¾—ã™ã‚‹
 	*/
 	double GetContactDimension();
 
-	/** @brief Œğ·’f–Ê‚Ì’PˆÊ–@üƒxƒNƒgƒ‹‚ğæ“¾‚·‚é
+	/** @brief äº¤å·®æ–­é¢ã®å˜ä½æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetNormalVector();
 
-	/** @brief Å‹ßÚ“_‚ÌƒyƒA‚ğæ“¾‚·‚é
+	/** @brief æœ€è¿‘æ¥ç‚¹ã®ãƒšã‚¢ã‚’å–å¾—ã™ã‚‹
 	*/
 	void GetClosestPoints(Vec3d& pa, Vec3d& pb);
 
-	/// Œ`ó‚ğæ“¾‚·‚é
+	/// å½¢çŠ¶ã‚’å–å¾—ã™ã‚‹
 	CDShapeIf* GetShape(int i);
 };
 
@@ -307,31 +307,31 @@ struct PHSolidPairForLCPIf : public ObjectIf{
 	
 	PHSolidIf* GetSolid(int i);
 
-	/** @brief „‘Ì“¯m‚ÌÚGó‘Ô‚ğæ“¾‚·‚é
-		@param i,j:Shape‚Ì”Ô†D
-		‚½‚¾‚µFindBySolidPair‚ÆƒZƒbƒg‚Åg‚¤‚±‚Æ.
+	/** @brief å‰›ä½“åŒå£«ã®æ¥è§¦çŠ¶æ…‹ã‚’å–å¾—ã™ã‚‹
+		@param i,j:Shapeã®ç•ªå·ï¼
+		ãŸã ã—FindBySolidPairã¨ã‚»ãƒƒãƒˆã§ä½¿ã†ã“ã¨.
 	*/
 	int	GetContactState(int i, int j);
 
-	/** @brief „‘Ì“¯m‚ÌÚGÀ•Wi“à“_j‚ğæ“¾‚·‚é
-		@param i,j:Shape‚Ì”Ô†D
-		‚½‚¾‚µFindBySolidPair‚ÆƒZƒbƒg‚Åg‚¤‚±‚Æ.
+	/** @brief å‰›ä½“åŒå£«ã®æ¥è§¦åº§æ¨™ï¼ˆå†…ç‚¹ï¼‰ã‚’å–å¾—ã™ã‚‹
+		@param i,j:Shapeã®ç•ªå·ï¼
+		ãŸã ã—FindBySolidPairã¨ã‚»ãƒƒãƒˆã§ä½¿ã†ã“ã¨.
 	*/
 	Vec3d GetCommonPoint(int i, int j);
 
-	/** @brief ÅŒã‚ÉÚG‚µ‚½‚Æ‚«‚ÌƒJƒEƒ“ƒg‚ğæ“¾‚·‚é
-		@param i,j:Shape‚Ì”Ô†D
-		‚½‚¾‚µscene.count‚Æ”äŠr‚·‚éÛ‚Éˆê’è‚ÌƒYƒŒ‚ª‚ ‚é‚Ì‚Å’ˆÓ.
+	/** @brief æœ€å¾Œã«æ¥è§¦ã—ãŸã¨ãã®ã‚«ã‚¦ãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹
+		@param i,j:Shapeã®ç•ªå·ï¼
+		ãŸã ã—scene.countã¨æ¯”è¼ƒã™ã‚‹éš›ã«ä¸€å®šã®ã‚ºãƒ¬ãŒã‚ã‚‹ã®ã§æ³¨æ„.
 	*/
 	unsigned GetLastContactCount(int i, int j);
 
-	/** @brief ÚG‚µ‚½‚Æ‚«‚Ì‚ß‚è‚İ—Ê‚ğæ“¾‚·‚é
-		@param i,j:Shape‚Ì”Ô†D
+	/** @brief æ¥è§¦ã—ãŸã¨ãã®ã‚ã‚Šè¾¼ã¿é‡ã‚’å–å¾—ã™ã‚‹
+		@param i,j:Shapeã®ç•ªå·ï¼
 	*/
 	double GetContactDepth(int i, int j);
 
-	/** @brief ÚG‚µ‚½‚Æ‚«‚ÌŒ`óƒyƒA‚ğæ“¾‚·‚é
-		@param i,j:Shape‚Ì”Ô†D
+	/** @brief æ¥è§¦ã—ãŸã¨ãã®å½¢çŠ¶ãƒšã‚¢ã‚’å–å¾—ã™ã‚‹
+		@param i,j:Shapeã®ç•ªå·ï¼
 	*/
 	PHShapePairForLCPIf* GetShapePair(int i, int j);
 };

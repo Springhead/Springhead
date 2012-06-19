@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,24 +17,24 @@ namespace Spr{;
 struct FWSdkIf;
 class FWGraphicsHandler;
 
-/** @brief �A�v���P�[�V�����N���X
-	Springhead�̃N���X�͊�{�I�Ɍp�������Ɏg�p����悤�ɐ݌v����Ă��邪�C
-	FWApp����т��̔h���N���X�͗�O�ł���C���[�U��FWApp���邢�͂��̔h���N���X���p�����C
-	���z�֐����I�[�o���C�h���邱�Ƃɂ���ēƎ��@�\����������D
+/** @brief アプリケーションクラス
+	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
+	FWAppおよびその派生クラスは例外であり，ユーザはFWAppあるいはその派生クラスを継承し，
+	仮想関数をオーバライドすることによって独自機能を実装する．
  */
 class FWApp : public UTRefCount, public DVKeyMouseCallback{
 protected:
-	static FWApp*				instance;	///< �B���FWApp�C���X�^���X
+	static FWApp*				instance;	///< 唯一のFWAppインスタンス
 	UTRef<FWSdkIf>				fwSdk;		///< Framework SDK	
 	
-	// �E�B���h�E
+	// ウィンドウ
 	typedef std::vector< UTRef<FWWinIf> > Wins;
 	Wins		wins;
 	
-	/** @brief �E�B���h�E�ɃV�[����^����
-		@param win �V�[�������蓖�Ă�E�B���h�E
-		win�ɁC�����̃E�B���h�E�����蓖�Ă��Ă��Ȃ��V�[�������蓖�Ă�D
-		�Y������V�[����������Ȃ��ꍇ�C���邢��win�Ɋ��ɃV�[�������蓖�Ă��Ă���ꍇ�͉������Ȃ��D
+	/** @brief ウィンドウにシーンを与える
+		@param win シーンを割り当てるウィンドウ
+		winに，既存のウィンドウが割り当てられていないシーンを割り当てる．
+		該当するシーンが見つからない場合，あるいはwinに既にシーンが割り当てられている場合は何もしない．
 	*/
 	void	AssignScene(FWWinIf* win);
 
@@ -42,91 +42,91 @@ public:
 	FWApp();
 	virtual ~FWApp();
 
-// �h���N���X�Œ�`����K�v�����鉼�z�֐� -----------------------------
+// 派生クラスで定義する必要がある仮想関数 -----------------------------
 
-	/** @brief ������
-		FWApp�I�u�W�F�N�g�̏��������s���D�ŏ��ɕK���ĂԁD
+	/** @brief 初期化
+		FWAppオブジェクトの初期化を行う．最初に必ず呼ぶ．
 	 */
 	virtual void Init(int argc = 0, char* argv[] = NULL);
 
-	/** @brief �V�[���̕`��
-		�V�[�����\�������Ƃ��ɌĂ΂��D
-		�`�揈�����J�X�^�}�C�Y�������ꍇ�ɃI�[�o���C�h����D
-		�f�t�H���g�ł�FWSdk::Draw���Ă΂��D
+	/** @brief シーンの描画
+		シーンが表示されるときに呼ばれる．
+		描画処理をカスタマイズしたい場合にオーバライドする．
+		デフォルトではFWSdk::Drawが呼ばれる．
 	 */
 	virtual void Display();
 
-	/** @brief IdleFunc�̌Ăяo����L����/����������
-		glut�̏ꍇ�CglutIdleFunc�ɑΉ�����D
+	/** @brief IdleFuncの呼び出しを有効化/無効化する
+		glutの場合，glutIdleFuncに対応する．
 
-		����ʐ����������A�����Ƃ��킹�邽�߂�EnableIdleFunc��ǉ����܂����B
-		DisableIdleFunc���c���Ă��܂���obsolete�Ƃ������Ǝv���܂��B
+		＊一般性を持たせ、かつ他とあわせるためにEnableIdleFuncを追加しました。
+		DisableIdleFuncも残していますがobsoleteとしたいと思います。
 	 */
 	void DisableIdleFunc(){ EnableIdleFunc(false); }
 	void EnableIdleFunc(bool on = true);
 	
-	/** @brief ���C�����[�v�̎��s
-		glut�̏ꍇ�CglutmainLoop�̎��s
+	/** @brief メインループの実行
+		glutの場合，glutmainLoopの実行
 	 */
 	void StartMainLoop();
 
-// �h���N���X�Œ�`���邱�Ƃ̂ł��鉼�z�֐� -----------------------------
-	/** @brief ���[�U�֐�
-		���C�����[�v���s���Ƀ��[�U�����������������ꍇ�C�����ɋL�q����D
-		�����V�~�����[�V�����̃X�e�b�v�̑O�ɌĂ΂��D
+// 派生クラスで定義することのできる仮想関数 -----------------------------
+	/** @brief ユーザ関数
+		メインループ実行中にユーザが処理を加えたい場合，ここに記述する．
+		物理シミュレーションのステップの前に呼ばれる．
 	 */
 	virtual void UserFunc(){}
 
-	/** @brief �A�C�h������
-		�C�x���g�������Ȃ��ꍇ�Ƀo�b�N�O���E���h�������s���D
+	/** @brief アイドル処理
+		イベントが何もない場合にバックグラウンド処理を行う．
 	 */
 	virtual void IdleFunc(){}
 
-	/** @brief �^�C�}�[����
-		�J��Ԃ����s���s���D
-		�f�t�H���g�ł�id = 0�ŃR�[���o�b�N
+	/** @brief タイマー処理
+		繰り返し実行を行う．
+		デフォルトではid = 0でコールバック
 	 */
 	virtual void TimerFunc(int id);
 
-	/** @brief �`��̈�̃T�C�Y�ύX
-		@param w �`��̈�̉���
-		@param h �`��̈�̏c��
-		���[�U�ɂ���ăE�B���h�E�T�C�Y���ύX���ꂽ�Ƃ��ȂǂɌĂ΂��D
+	/** @brief 描画領域のサイズ変更
+		@param w 描画領域の横幅
+		@param h 描画領域の縦幅
+		ユーザによってウィンドウサイズが変更されたときなどに呼ばれる．
 	 */
 	virtual void Reshape(int w, int h);
 
-	/** @brief �L�[�{�[�h�C�x���g�̃n���h��
-		@param key �L�[�R�[�h
-		@param x �J�[�\�������W
-		@param y �J�[�\�������W
-		����L�[�̃L�[�R�[�h�͎g�p����O���t�B�N�X���C�u�����Ɉˑ�����D
+	/** @brief キーボードイベントのハンドラ
+		@param key キーコード
+		@param x カーソルｘ座標
+		@param y カーソルｙ座標
+		特殊キーのキーコードは使用するグラフィクスライブラリに依存する．
 		
-		��GLUT�̏ꍇ�CglutKeyboardFunc�R�[���o�b�N��glutSpecialFunc�R�[���o�b�N��
-		�L�[�R�[�h���d�����Ă���D������glutSpecialFunc�R�[���o�b�N�ɓn���ꂽ�L�[�R�[�h�ɂ�
-		256�����Z�����Keyboard�ɓn�����D
+		＊GLUTの場合，glutKeyboardFuncコールバックとglutSpecialFuncコールバックで
+		キーコードが重複している．そこでglutSpecialFuncコールバックに渡されたキーコードには
+		256が加算されてKeyboardに渡される．
 	 */
 	virtual void Keyboard(int key, int x, int y){}
 
-	/** @brief �}�E�X�C�x���g�̃n���h��
+	/** @brief マウスイベントのハンドラ
 	 */
 	virtual void MouseButton(int button, int state, int x, int y);
 
-	/** @brief �}�E�X�C�x���g�̃n���h��
-		�f�t�H���g�ł͍��h���b�O�Ŏ��_�ύX�C�E�h���b�O�ŃY�[���C��/�A�E�g
+	/** @brief マウスイベントのハンドラ
+		デフォルトでは左ドラッグで視点変更，右ドラッグでズームイン/アウト
 	 */
 	virtual void MouseMove(int x, int y);
 
-	/** @brief �W���C�X�e�B�b�N�̃n���h��
+	/** @brief ジョイスティックのハンドラ
 	*/
 	virtual void Joystick(unsigned int buttonMask, int x, int y, int z){}
 
-	/** @brief �I�������n���h��
+	/** @brief 終了処理ハンドラ
 	 */
 	virtual void AtExit(){}
 
-	/** DVKeyMouseHandler�̉��z�֐�
-		�f�t�H���g�ł�FWApp�̏]���̃C�x���g�n���h�����Ăт����̂݁D
-		������𒼐ڃI�[�o���C�h���Ă��悢�D
+	/** DVKeyMouseHandlerの仮想関数
+		デフォルトではFWAppの従来のイベントハンドラを呼びだすのみ．
+		こちらを直接オーバライドしてもよい．
 	 **/
 	virtual bool OnMouse(int button, int state, int x, int y){
 		MouseButton(button, state, x, y);
@@ -144,120 +144,120 @@ public:
 		return true;
 	}
 
-	/** @brief GUI�n�C�x���g�n���h��
-		@param ctrl	�X�V���������R���g���[��
-		�X�V�C�x���g�̔��������͈ȉ��̂Ƃ���F
-		FWButtonIf:				�{�^���������ꂽ
-		FWTextBoxIf:			�e�L�X�g���ύX���ꂽ
-		FWRotationControlIf:	��]����
-		FWTranslationControlIf:	���s�ړ�����
+	/** @brief GUI系イベントハンドラ
+		@param ctrl	更新が生じたコントロール
+		更新イベントの発生条件は以下のとおり：
+		FWButtonIf:				ボタンが押された
+		FWTextBoxIf:			テキストが変更された
+		FWRotationControlIf:	回転した
+		FWTranslationControlIf:	平行移動した
 	 **/
 	virtual void OnControlUpdate(FWControlIf* ctrl){}
 
-	//�@FWApp�̃C���^�t�F�[�X -----------------------------------------
+	//　FWAppのインタフェース -----------------------------------------
 
-	/** @brief FWApp�C���X�^���X���擾���� */
+	/** @brief FWAppインスタンスを取得する */
 	static FWApp* GetApp(){ return instance; }
 
-	/** @brief SDK���擾����
+	/** @brief SDKを取得する
 	*/
 	FWSdkIf*	GetSdk(){ return fwSdk; }
 
-	/** @brief SDK���쐬����
+	/** @brief SDKを作成する
 	 */
 	void		CreateSdk();
 
-	/** @brief �E�B���h�E�ɑΉ�����R���e�L�X�g�����
-		@param desc		�f�B�X�N���v�^
-		@param parent	�e�E�B���h�E
-		�E�B���h�E���쐬����D�Ή����郌���_���͐V�����쐬����C
-		�����̃E�B���h�E�����蓖�Ă��Ă��Ȃ��V�[�����֘A�Â�����D
-		parent���w�肳�ꂽ�ꍇ��parent��e�E�B���h�E�Ƃ���q�E�B���h�E���쐬����
+	/** @brief ウィンドウに対応するコンテキストを作る
+		@param desc		ディスクリプタ
+		@param parent	親ウィンドウ
+		ウィンドウを作成する．対応するレンダラは新しく作成され，
+		既存のウィンドウが割り当てられていないシーンが関連づけられる．
+		parentが指定された場合はparentを親ウィンドウとする子ウィンドウを作成する
 	 */
 	FWWinIf*	CreateWin(const FWWinDesc& desc = FWWinDesc(), FWWinIf* parent = 0);
-	/** @brief �E�B���h�E�̐� */
+	/** @brief ウィンドウの数 */
 	int			NWin(){ return (int)wins.size(); }
 	
-	/**	@brief �E�B���h�E��ID����T��
-		@param wid �E�B���h�EID
-		glut�̏ꍇ�Cwid��glutGetWindow���Ԃ����ʎq�D
+	/**	@brief ウィンドウをIDから探す
+		@param wid ウィンドウID
+		glutの場合，widはglutGetWindowが返す識別子．
 	*/
 	FWWinIf*	GetWinFromId(int wid);
 
-	/** @brief �E�B���h�E���擾����
-		@param index ���Ԗڂ̃E�B���h�E���擾���邩
-		index�Ŏw�肳�ꂽ�E�B���h�E���擾����D
-		DestroyWin���ĂԂƃC���f�b�N�X�͕ω�����̂Œ��ӂ��K�v�D
+	/** @brief ウィンドウを取得する
+		@param index 何番目のウィンドウを取得するか
+		indexで指定されたウィンドウを取得する．
+		DestroyWinを呼ぶとインデックスは変化するので注意が必要．
 	 */
 	FWWinIf*	GetWin(int index);
 
-	/** @brief ���݂̃E�B���h�E���擾����
+	/** @brief 現在のウィンドウを取得する
 	*/
 	FWWinIf*	GetCurrentWin();
 
-	/** @brief �E�B���h�E���폜����
+	/** @brief ウィンドウを削除する
 	 */
 	void DestroyWin(FWWinIf* win);
 
-	/** @brief ���݂̃E�B���h�E��ݒ肷��
+	/** @brief 現在のウィンドウを設定する
 	 */
 	void SetCurrentWin(FWWinIf* win);
 
-	/** @brief �J�����g�E�B���h�E�̃m�[�}���v���[�����C�ĕ`��̕K�v�ɉ����ă}�[�N����
+	/** @brief カレントウィンドウのノーマルプレーンを，再描画の必要に応じてマークする
 	 */
 	void PostRedisplay();
 
-	/** @brief Ctrl, Shift, Alt�̏�Ԃ�Ԃ�
-		�X�̔h���N���X�Ŏ��������
+	/** @brief Ctrl, Shift, Altの状態を返す
+		個々の派生クラスで実装される
 	 */
 	int	GetModifier();
 	
 	enum{
-		TypeNone,	///< �A�_�v�^����
+		TypeNone,	///< アダプタ無し
 		TypeGLUT,	///< GLUT
 		TypeGLUI,	///< GLUI
 	};
-	/** @brief �`��̐ݒ�
-		FWGraphicsHandler��ݒ肷��D�ŏ��ɕK���ĂԁD
+	/** @brief 描画の設定
+		FWGraphicsHandlerを設定する．最初に必ず呼ぶ．
 	 */
 	void SetGRHandler(int type);
 
-	/** @brief FWGraphicsHandler�̏�����
-		FWGraphicsHandler�̏��������s���D�ŏ��ɕK���ĂԁD
+	/** @brief FWGraphicsHandlerの初期化
+		FWGraphicsHandlerの初期化を行う．最初に必ず呼ぶ．
 	 */
-	/*	SetGRHandler��GRInit�𕪗�����Ӗ����قƂ�ǖ����̂ŁC
-		������̈����Ń^�C�v���w��ł���悤�ɂ����D
-		GRInit�ɐ旧����SetGRHandler�őI������Ă���ꍇ�͂������D�悷��
+	/*	SetGRHandlerとGRInitを分離する意味がほとんど無いので，
+		こちらの引数でタイプを指定できるようにした．
+		GRInitに先立ってSetGRHandlerで選択されている場合はそちらを優先する
 
 		tazz
 	 */
 	void GRInit(int argc = 0, char* argv[] = NULL, int type = TypeGLUT);
 
 public:
-	// �^�C�}�[
+	// タイマー
 	typedef std::vector< UTRef<UTTimerIf> > Timers;
 	Timers timers;
 
-	/** @brief �^�C�}�[���쐬����
-		@param	mode	�^�C�}�̎��
-		@return			�^�C�}�I�u�W�F�N�g
+	/** @brief タイマーを作成する
+		@param	mode	タイマの種類
+		@return			タイマオブジェクト
 	 */
 	UTTimerIf* CreateTimer(UTTimerIf::Mode mode = UTTimerIf::FRAMEWORK);
 
-	/** @breif �^�C�}�[���擾����
-		@param �^�C�}�[�ԍ�
-		@return �^�C�}�[�I�u�W�F�N�g
+	/** @breif タイマーを取得する
+		@param タイマー番号
+		@return タイマーオブジェクト
 	*/
 	UTTimerIf* GetTimer(int i);
 	int	NTimers(){ return (int)timers.size(); }
 
 public:
-	/**  �폜���API  **/
-	/// �E�B���h�E��1�����쐬
+	/**  削除候補API  **/
+	/// ウィンドウを1つだけ作成
 	void	InitWindow(){ if(!NWin()) CreateWin(); }
-	/// ������Ԃɂ���
+	/// 初期状態にする
 	void	Clear(){}
-	/// ���Z�b�g����
+	/// リセットする
 	void	Reset(){}
 
 };

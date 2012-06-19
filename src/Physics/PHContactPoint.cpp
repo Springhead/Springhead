@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -22,9 +22,9 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 
 	Vec3d rjabs[2];
 	for(int i = 0; i < 2; i++){
-		rjabs[i] = pos - solid[i]->GetCenterPosition();	//„‘Ì‚Ì’†S‚©‚çÚG“_‚Ü‚Å‚ÌƒxƒNƒgƒ‹
+		rjabs[i] = pos - solid[i]->GetCenterPosition();	//å‰›ä½“ã®ä¸­å¿ƒã‹ã‚‰æ¥è§¦ç‚¹ã¾ã§ã®ãƒ™ã‚¯ãƒˆãƒ«
 	}
-	// local: ÚG“_‚ÌŠÖßƒtƒŒ[ƒ€ ‚ÍCx²‚ğ–@ü, y,z²‚ğÚü‚Æ‚·‚é
+	// local: æ¥è§¦ç‚¹ã®é–¢ç¯€ãƒ•ãƒ¬ãƒ¼ãƒ  ã¯ï¼Œxè»¸ã‚’æ³•ç·š, y,zè»¸ã‚’æ¥ç·šã¨ã™ã‚‹
 	Quaterniond qlocal;
 	qlocal.FromMatrix(local);
 	for(int i = 0; i < 2; i++){
@@ -46,14 +46,14 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 
 	Vec3d rjabs[2], vjabs[2];
 	for(int i = 0; i < 2; i++){
-		rjabs[i] = pos - solid[i]->GetCenterPosition();	//„‘Ì‚Ì’†S‚©‚çÚG“_‚Ü‚Å‚ÌƒxƒNƒgƒ‹
-		vjabs[i] = solid[i]->GetVelocity() + solid[i]->GetAngularVelocity() % rjabs[i];	//ÚG“_‚Å‚Ì‘¬“x
+		rjabs[i] = pos - solid[i]->GetCenterPosition();	//å‰›ä½“ã®ä¸­å¿ƒã‹ã‚‰æ¥è§¦ç‚¹ã¾ã§ã®ãƒ™ã‚¯ãƒˆãƒ«
+		vjabs[i] = solid[i]->GetVelocity() + solid[i]->GetAngularVelocity() % rjabs[i];	//æ¥è§¦ç‚¹ã§ã®é€Ÿåº¦
 	}
-	//ÚüƒxƒNƒgƒ‹t[0], t[1] (t[0]‚Í‘Š‘Î‘¬“xƒxƒNƒgƒ‹‚É•½s‚É‚È‚é‚æ‚¤‚É‚·‚é)
+	//æ¥ç·šãƒ™ã‚¯ãƒˆãƒ«t[0], t[1] (t[0]ã¯ç›¸å¯¾é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«ã«å¹³è¡Œã«ãªã‚‹ã‚ˆã†ã«ã™ã‚‹)
 	Vec3d n, t[2], vjrel, vjrelproj;
 	n = shapePair->normal;
 	vjrel = vjabs[1] - vjabs[0];
-	vjrelproj = vjrel - (n * vjrel) * n;		//‘Š‘Î‘¬“xƒxƒNƒgƒ‹‚ğ–@ü‚É’¼Œğ‚·‚é•½–Ê‚ÉË‰e‚µ‚½ƒxƒNƒgƒ‹
+	vjrelproj = vjrel - (n * vjrel) * n;		//ç›¸å¯¾é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ³•ç·šã«ç›´äº¤ã™ã‚‹å¹³é¢ã«å°„å½±ã—ãŸãƒ™ã‚¯ãƒˆãƒ«
 	double vjrelproj_norm = vjrelproj.norm();
 	if(vjrelproj_norm < 1.0e-10){
 		t[0] = n % Vec3d(1.0, 0.0, 0.0);	
@@ -66,7 +66,7 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 	}
 	t[1] = n % t[0];
 	Matrix3d Rjabs;
-	// ÚG“_‚ÌŠÖßƒtƒŒ[ƒ€‚Íx², y²‚ğÚüCz²‚ğ–@ü‚Æ‚·‚é
+	// æ¥è§¦ç‚¹ã®é–¢ç¯€ãƒ•ãƒ¬ãƒ¼ãƒ ã¯xè»¸, yè»¸ã‚’æ¥ç·šï¼Œzè»¸ã‚’æ³•ç·šã¨ã™ã‚‹
 	Rjabs.col(0) = n;
 	Rjabs.col(1) = t[0];
 	Rjabs.col(2) = t[1];
@@ -85,24 +85,24 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 }
 
 void PHContactPoint::CompBias(){
-	//	correction‚ğˆÊ’uLCP‚Å•Ê‚És‚¤ê‡‚ÍA‘¬“x‚ğ•ÏX‚µ‚Ä‚ÌˆÊ’u•â³‚Í‚µ‚È‚¢B
+	//	correctionã‚’ä½ç½®LCPã§åˆ¥ã«è¡Œã†å ´åˆã¯ã€é€Ÿåº¦ã‚’å¤‰æ›´ã—ã¦ã®ä½ç½®è£œæ­£ã¯ã—ãªã„ã€‚
 	if (engine->numIterContactCorrection) return;
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	double overlap = 0.002;
 
 #if 1
-	//	ÚG—p‚Ì correctionRate
+	//	æ¥è§¦ç”¨ã® correctionRate
 	double contactCorrectionRate = 0;
 
 	double e;
-	//	‘¬“x‚ª¬‚³‚¢ê‡‚ÍA’µ‚Ë•Ô‚è‚È‚µB
+	//	é€Ÿåº¦ãŒå°ã•ã„å ´åˆã¯ã€è·³ã­è¿”ã‚Šãªã—ã€‚
 	if (vjrel[0]*GetScene()->GetTimeStep() > -0.1){
 		e = 0;
 		contactCorrectionRate = engine->contactCorrectionRate;
 	}else{
-		//	’µ‚Ë•Ô‚èŒW”: 2•¨‘Ì‚Ì•½‹Ï’l‚ğg‚¤
+		//	è·³ã­è¿”ã‚Šä¿‚æ•°: 2ç‰©ä½“ã®å¹³å‡å€¤ã‚’ä½¿ã†
 		e = 0.5 * (shapePair->shape[0]->GetMaterial().e + shapePair->shape[1]->GetMaterial().e);
-		//	’µ‚Ë•Ô‚é‚Æ‚«‚Í•â³‚È‚µ
+		//	è·³ã­è¿”ã‚‹ã¨ãã¯è£œæ­£ãªã—
 		contactCorrectionRate = 0;
 	}
 
@@ -112,16 +112,16 @@ void PHContactPoint::CompBias(){
 
 #if 0
 //	db.v.x = 0.1*engine->correctionRate * (-shapePair->depth * dtinv + vjrel.v.x);
-	/*	hase	–{“–‚Í 1e-3‚Íˆø‚«‚·‚¬
-		depth •ª‚¾‚¯Correction‚ğ“ü‚ê‚é‚ÆÚG‚ª•s˜A‘±‚É‚È‚é‚Ì‚ÅCdepth-epsilon‚Å—Ç‚¢‚ªC
-		epsilon‚ª‘å‚«‚·‚¬‚éD
+	/*	hase	æœ¬å½“ã¯ 1e-3ã¯å¼•ãã™ã
+		depth åˆ†ã ã‘Correctionã‚’å…¥ã‚Œã‚‹ã¨æ¥è§¦ãŒä¸é€£ç¶šã«ãªã‚‹ã®ã§ï¼Œdepth-epsilonã§è‰¯ã„ãŒï¼Œ
+		epsilonãŒå¤§ãã™ãã‚‹ï¼
 
-		‚±‚ê‚ÍCÚG–Ê‚ªlŠpŒ`‚ÅÚG“_‚ª4“_‚ ‚éê‡‚È‚ÇC
-		4“_ŠÔ‚Ì—Í‚Ì•ªU‚ª‚Ü‚ê‚É•s‹Ïˆê‚É‚È‚è‰ñ“]‚ªn‚Ü‚èC
-		ÚG–Ê‚ª‰E‚æ‚è‚Ìó‘Ô‚Æ¶‚æ‚è‚Ìó‘Ô‚ÌŠÔ‚Å×‚©‚­”­U‚·‚é‚±‚Æ‚ª‚ ‚é‚½‚ßD
-		Œ»ó‚ÍC‚»‚Ìê‡‚É‚àÚG–Ê‚ÌŒ`‚ª•Ï‚í‚ç‚È‚¢‚æ‚¤‚É‚·‚é‚±‚Æ‚ÅCˆÀ’è‰»‚µ‚Ä‚¢‚éD
+		ã“ã‚Œã¯ï¼Œæ¥è§¦é¢ãŒå››è§’å½¢ã§æ¥è§¦ç‚¹ãŒ4ç‚¹ã‚ã‚‹å ´åˆãªã©ï¼Œ
+		4ç‚¹é–“ã®åŠ›ã®åˆ†æ•£ãŒã¾ã‚Œã«ä¸å‡ä¸€ã«ãªã‚Šå›è»¢ãŒå§‹ã¾ã‚Šï¼Œ
+		æ¥è§¦é¢ãŒå³ã‚ˆã‚Šã®çŠ¶æ…‹ã¨å·¦ã‚ˆã‚Šã®çŠ¶æ…‹ã®é–“ã§ç´°ã‹ãç™ºæŒ¯ã™ã‚‹ã“ã¨ãŒã‚ã‚‹ãŸã‚ï¼
+		ç¾çŠ¶ã¯ï¼Œãã®å ´åˆã«ã‚‚æ¥è§¦é¢ã®å½¢ãŒå¤‰ã‚ã‚‰ãªã„ã‚ˆã†ã«ã™ã‚‹ã“ã¨ã§ï¼Œå®‰å®šåŒ–ã—ã¦ã„ã‚‹ï¼
 
-		2„‘ÌŠÔ‚ÌÚG‚ğ‚Ğ‚Æ‚Â‚Ì§–ñ‚Æ‚µ‚Ä‚ ‚ç‚í‚¹‚é‚æ‚¤‚É‚È‚ê‚Î‰ğŒˆ‚·‚é‚Æv‚¤D	
+		2å‰›ä½“é–“ã®æ¥è§¦ã‚’ã²ã¨ã¤ã®åˆ¶ç´„ã¨ã—ã¦ã‚ã‚‰ã‚ã›ã‚‹ã‚ˆã†ã«ãªã‚Œã°è§£æ±ºã™ã‚‹ã¨æ€ã†ï¼	
 	*/
 	double err = (shapePair->depth - 1e-3)*dtinv - 0.2*vjrel.v().x;
 	if (err < 0) err = 0;
@@ -143,12 +143,12 @@ void PHContactPoint::CompBias(){
 
 void PHContactPoint::Projection(double& f_, int i) {
 	static double flim;
-	if(i == 0){	//‚’¼R—Í >= 0‚Ì§–ñ
+	if(i == 0){	//å‚ç›´æŠ—åŠ› >= 0ã®åˆ¶ç´„
 		f_ = max(0.0, f_);
-		//	Å‘åÃ~–€C
+		//	æœ€å¤§é™æ­¢æ‘©æ“¦
 		flim = 0.5 * (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0) * f_;	}
 	else{
-		//	“®–€C‚ğ‚µ‚ÉÀ‘•‚µ‚Ä‚İ‚éB
+		//	å‹•æ‘©æ“¦ã‚’è©¦ã—ã«å®Ÿè£…ã—ã¦ã¿ã‚‹ã€‚
 		double fu;
 		if (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0 == 0){
 			fu = 0;
@@ -157,18 +157,18 @@ void PHContactPoint::Projection(double& f_, int i) {
 				/ (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0)
 				* flim;	
 		}
-		if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	Ã~–€C
+		if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	é™æ­¢æ‘©æ“¦
 			if (f_ > flim) f_ = fu;
 			else if (f_ < -flim) f_ = -fu;
-		}else{					//	“®–€C
+		}else{					//	å‹•æ‘©æ“¦
 			if (f_ > fu) f_ = fu;
 			else if (f_ < -fu) f_ = -fu;		
 		}
 #if 0
-		//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ
-		//	E–€C—Í‚ÌŠe¬•ª‚ªÅ‘åÃ~–€C‚æ‚è‚à¬‚³‚­‚Ä‚à‡—Í‚Í’´‚¦‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å–{“–‚Í‚¨‚©‚µ‚¢B
-		//	EÃ~–€C‚Æ“®–€C‚ª“¯‚¶’l‚Å‚È‚¢‚Æˆµ‚¦‚È‚¢B
-		//–€CŒW”‚Í—¼Ò‚ÌÃ~–€CŒW”‚Ì•½‹Ï‚Æ‚·‚é
+		//|æ‘©æ“¦åŠ›| <= æœ€å¤§é™æ­¢æ‘©æ“¦ã®åˆ¶ç´„
+		//	ãƒ»æ‘©æ“¦åŠ›ã®å„æˆåˆ†ãŒæœ€å¤§é™æ­¢æ‘©æ“¦ã‚ˆã‚Šã‚‚å°ã•ãã¦ã‚‚åˆåŠ›ã¯è¶…ãˆã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã®ã§æœ¬å½“ã¯ãŠã‹ã—ã„ã€‚
+		//	ãƒ»é™æ­¢æ‘©æ“¦ã¨å‹•æ‘©æ“¦ãŒåŒã˜å€¤ã§ãªã„ã¨æ‰±ãˆãªã„ã€‚
+		//æ‘©æ“¦ä¿‚æ•°ã¯ä¸¡è€…ã®é™æ­¢æ‘©æ“¦ä¿‚æ•°ã®å¹³å‡ã¨ã™ã‚‹
 		f_ = min(max(-flim, f_), flim);
 #endif
 		assert(f_ < 10000);
@@ -177,16 +177,16 @@ void PHContactPoint::Projection(double& f_, int i) {
 
 void PHContactPoint::CompError(){
 	const double eps = 0.001;
-	//Õ“Ë”»’èƒAƒ‹ƒSƒŠƒYƒ€‚Ì“s‡ãACorrection‚É‚æ‚Á‚ÄŠ®‘S‚É„‘Ì‚ª—£‚ê‚Ä‚µ‚Ü‚¤‚Ì‚Í¢‚é‚Ì‚Å
-	//Œë·‚ğeps‚¾‚¯¬‚³‚­Œ©‚¹‚é
+	//è¡çªåˆ¤å®šã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã®éƒ½åˆä¸Šã€Correctionã«ã‚ˆã£ã¦å®Œå…¨ã«å‰›ä½“ãŒé›¢ã‚Œã¦ã—ã¾ã†ã®ã¯å›°ã‚‹ã®ã§
+	//èª¤å·®ã‚’epsã ã‘å°ã•ãè¦‹ã›ã‚‹
 	B.v().x = min(0.0, -shapePair->depth + eps);
 
-	// Œë·‚ğ‘S•”‰ğÁ‚·‚é‚ÆU“®‚·‚é‚Ì‚ÅA­‚È‚ß‚É
+	// èª¤å·®ã‚’å…¨éƒ¨è§£æ¶ˆã™ã‚‹ã¨æŒ¯å‹•ã™ã‚‹ã®ã§ã€å°‘ãªã‚ã«
 	B.v().x *= engine->posCorrectionRate;
 }
 
 void PHContactPoint::ProjectionCorrection(double& F, int k){
-	if(k == 0){	//‚’¼R—Í >= 0‚Ì§–ñ
+	if(k == 0){	//å‚ç›´æŠ—åŠ› >= 0ã®åˆ¶ç´„
 		F = max(0.0, F);
 	}
 	else if(k == 1 || k == 2)

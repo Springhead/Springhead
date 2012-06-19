@@ -1,23 +1,23 @@
-#ifndef FWAPPSAMPLE_H								// ƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ğì‚é‚Ì‚¨‚Ü‚¶‚È‚¢
-#define FWAPPSAMPLE_H								// “¯ã
+ï»¿#ifndef FWAPPSAMPLE_H								// ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œã‚‹æ™‚ã®ãŠã¾ã˜ãªã„
+#define FWAPPSAMPLE_H								// åŒä¸Š
 
-#include <Springhead.h>								// Springhead‚ÌIfŒ^‚ğg‚¤‚½‚ß‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹
+#include <Springhead.h>								// Springheadã®Ifå‹ã‚’ä½¿ã†ãŸã‚ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«
 #include "../../SampleApp.h"
 
 class FWMyApptest : public SampleApp{
 public:
-	/// ƒy[ƒWID
+	/// ãƒšãƒ¼ã‚¸ID
 	enum {
 		MENU_MAIN = MENU_SCENE,
 	};
-	/// ƒAƒNƒVƒ‡ƒ“ID
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ID
 	enum {
 		ID_BOX,
 	};
 
 public:	
 	//FWMyApptest();
-	//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	FWMyApptest(){
 		appName = "FEMThermo";
 
@@ -25,20 +25,20 @@ public:
 		AddHotKey(MENU_MAIN, ID_BOX, 'd');
 
 	}
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~FWMyApptest(){}
 
 	virtual void BuildScene(){
 		UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-		GetSdk()->LoadScene("scene.spr", import);			// ƒtƒ@ƒCƒ‹‚Ìƒ[ƒh
+		GetSdk()->LoadScene("scene.spr", import);			// ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒ¼ãƒ‰
 	}
 
-	//1ƒXƒeƒbƒv‚ÌƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“	// ƒ^ƒCƒ}ƒR[ƒ‹ƒoƒbƒNŠÖ”Dƒ^ƒCƒ}üŠú‚ÅŒÄ‚Î‚ê‚é
+	//1ã‚¹ãƒ†ãƒƒãƒ—ã®ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³	// ã‚¿ã‚¤ãƒã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ï¼ã‚¿ã‚¤ãƒå‘¨æœŸã§å‘¼ã°ã‚Œã‚‹
 	virtual void OnStep() {
 		SampleApp::OnStep();
 	}
 
-	// •`‰æŠÖ”D•`‰æ—v‹‚ª—ˆ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+	// æç”»é–¢æ•°ï¼æç”»è¦æ±‚ãŒæ¥ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹
 	virtual void OnDraw(GRRenderIf* render) {
 		SampleApp::OnDraw(render);
 
@@ -47,7 +47,7 @@ public:
 		render->DrawFont(Vec2f(-21, 23), sstr.str());
 	}
 
-	//ƒAƒNƒVƒ‡ƒ“ˆ—
+	//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å‡¦ç†
 	virtual void OnAction(int menu, int id){
 		if(menu == MENU_MAIN){
 			Vec3d v, w(0.0, 0.0, 0.2), p(0.5, 20.0, 0.0);

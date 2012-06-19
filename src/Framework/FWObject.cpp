@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -32,7 +32,7 @@ SceneObjectIf* FWObject::CloneObject(){
 	FWSceneIf* s = DCAST(FWSceneIf, GetScene());
 	FWObjectIf* clone = s->CreateFWObject();
 
-	// Bone‚É‘Š“–‚·‚éFWObject‚Ì•¡»‚É‚Í–¢‘Î‰ <!!>
+	// Boneã«ç›¸å½“ã™ã‚‹FWObjectã®è¤‡è£½ã«ã¯æœªå¯¾å¿œ <!!>
 
 	if(origin->GetPHSolid())
 		clone->SetPHSolid(origin->GetPHSolid()->CloneObject()->Cast());
@@ -49,17 +49,17 @@ void FWObject::Sync(){
 
 	if (phJoint==NULL || bAbsolute) {
 		if(syncSource==FWObjectDesc::PHYSICS){
-			// „‘Ì‚ğƒtƒŒ[ƒ€‚Ö
+			// å‰›ä½“ã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ã¸
 			Affinef aff;
 			phSolid->GetPose().ToAffine(aff);
 			grFrame->SetTransform(aff);
 
 		} else {
-			// ƒtƒŒ[ƒ€‚ğ„‘Ì‚Ö
+			// ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’å‰›ä½“ã¸
 			Affinef af;
 			af = grFrame->GetTransform();
 
-			// ƒ{[ƒ“‚Ìƒ‹[ƒgƒtƒŒ[ƒ€‚¾‚Á‚½ê‡B•K—v«‚ª•s–¾‚Ì‚½‚ßc‚µ‚Æ‚­‚ªAŒã‚Ù‚ÇŒŸØ‚Ì‚±‚Æ (12/05/17, mitake) <!!>
+			// ãƒœãƒ¼ãƒ³ã®ãƒ«ãƒ¼ãƒˆãƒ•ãƒ¬ãƒ¼ãƒ ã ã£ãŸå ´åˆã€‚å¿…è¦æ€§ãŒä¸æ˜ã®ãŸã‚æ®‹ã—ã¨ããŒã€å¾Œã»ã©æ¤œè¨¼ã®ã“ã¨ (12/05/17, mitake) <!!>
 			// af = grFrame->GetWorldTransform();
 			// af.Orthonormalization();
 
@@ -69,7 +69,7 @@ void FWObject::Sync(){
 
 	} else {
 		if(syncSource==FWObjectDesc::PHYSICS){
-			// ŠÖß‚ğƒtƒŒ[ƒ€‚Ö
+			// é–¢ç¯€ã‚’ãƒ•ãƒ¬ãƒ¼ãƒ ã¸
 			Posed jointPosition;
 			jointPosition.Ori() = phJoint->GetRelativePoseQ() * sockOffset.Ori().Inv();
 			Posed poseSocket; phJoint->GetSocketPose(poseSocket);
@@ -84,12 +84,12 @@ void FWObject::Sync(){
 			}
 
 		} else {
-			// ƒtƒŒ[ƒ€‚ğŠÖßi‚ğ\¬‚·‚é„‘Ìj‚Ö
+			// ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’é–¢ç¯€ï¼ˆã‚’æ§‹æˆã™ã‚‹å‰›ä½“ï¼‰ã¸
 			Affinef af = grFrame->GetWorldTransform();
-			af.Orthonormalization(); //³‹K’¼Œğ‰»
+			af.Orthonormalization(); //æ­£è¦ç›´äº¤åŒ–
 			Posed pose; pose.FromAffine(af);
 
-			//ƒAƒtƒBƒ“s—ñ¨ƒNƒH[ƒ^ƒjƒIƒ“‚Ì•ÏŠ·Œë·‚ª‘å‚«‚¢ê‡‚ÌƒGƒ‰[•\¦
+			//ã‚¢ãƒ•ã‚£ãƒ³è¡Œåˆ—â†’ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®å¤‰æ›èª¤å·®ãŒå¤§ãã„å ´åˆã®ã‚¨ãƒ©ãƒ¼è¡¨ç¤º
 			Affinef af2; pose.ToAffine(af2);
 			Matrix3d mat=af.Rot(), mat2=af2.Rot();
 			double epsilon = 0.1;
@@ -189,8 +189,8 @@ bool FWObject::LoadMesh(const char* filename, const IfInfo* ii, GRFrameIf* frame
 	FISdkIf* fiSdk = scene->sdk->GetFISdk();
 
 	ObjectIfs objs;
-	objs.Push(scene->GetGRScene());					///< GRScene‚ªì¬‚µC
-	objs.Push(frame ? frame : GetGRFrame());		///< GRFrame‚ª‚Â
+	objs.Push(scene->GetGRScene());					///< GRSceneãŒä½œæˆã—ï¼Œ
+	objs.Push(frame ? frame : GetGRFrame());		///< GRFrameãŒæŒã¤
 
 	FIFileIf* file = (ii ? fiSdk->CreateFile(ii) : fiSdk->CreateFileFromExt(filename));
 	if(!file)
@@ -200,14 +200,14 @@ bool FWObject::LoadMesh(const char* filename, const IfInfo* ii, GRFrameIf* frame
 }
 
 void FWObject::GenerateCDMesh(GRFrameIf* frame, const PHMaterial& mat){
-	// ƒtƒŒ[ƒ€‚ğƒXƒLƒƒƒ“
+	// ãƒ•ãƒ¬ãƒ¼ãƒ ã‚’ã‚¹ã‚­ãƒ£ãƒ³
 	for(int i = 0; i < frame->NChildren(); i++){
 		GRMeshIf* mesh	 = DCAST(GRMeshIf,  frame->GetChildren()[i]);
 		GRFrameIf* child = DCAST(GRFrameIf, frame->GetChildren()[i]);
 		
-		// qƒƒbƒVƒ…
+		// å­ãƒ¡ãƒƒã‚·ãƒ¥
 		if(mesh){
-			// descƒŒƒxƒ‹‚Å’¸“_À•W‚ğƒRƒs[
+			// descãƒ¬ãƒ™ãƒ«ã§é ‚ç‚¹åº§æ¨™ã‚’ã‚³ãƒ”ãƒ¼
 			GRMeshDesc		 grdesc;
 			CDConvexMeshDesc cddesc;
 
@@ -215,11 +215,11 @@ void FWObject::GenerateCDMesh(GRFrameIf* frame, const PHMaterial& mat){
 			for(int i = 0; i < (int)grdesc.vertices.size(); i++)
 				cddesc.vertices.push_back(grdesc.vertices[i]);
 
-			// CDConvexMesh‚ğì¬
+			// CDConvexMeshã‚’ä½œæˆ
 			FWScene* scene = DCAST(FWScene, GetScene());
 			CDShapeIf* shape = DCAST(CDConvexMeshIf, scene->sdk->GetPHSdk()->CreateShape(cddesc));
 
-			// ƒƒbƒVƒ…‚ğ•Û—L‚·‚éƒtƒŒ[ƒ€‚Ìpose‚ğ”½‰f
+			// ãƒ¡ãƒƒã‚·ãƒ¥ã‚’ä¿æœ‰ã™ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ ã®poseã‚’åæ˜ 
 			Posed pose;
 			pose.FromAffine(frame->GetWorldTransform());
 
@@ -228,7 +228,7 @@ void FWObject::GenerateCDMesh(GRFrameIf* frame, const PHMaterial& mat){
 			solid->SetShapePose(solid->NShape()-1, pose);
 		}
 
-		// qƒtƒŒ[ƒ€‚É‘Î‚µ‚ÄÄ‹AŒÄ‚Ño‚µ
+		// å­ãƒ•ãƒ¬ãƒ¼ãƒ ã«å¯¾ã—ã¦å†å¸°å‘¼ã³å‡ºã—
 		if(child)
 			GenerateCDMesh(child, mat);
 	}

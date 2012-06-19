@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,31 +15,31 @@
 
 namespace Spr{;
 
-/*	2�̍��̊Ԃ̑��Έʒu�E�p����Ԃ��֐�
+/*	2つの剛体間の相対位置・姿勢を返す関数
 		[p; q] = f(s)
-	������Ƃ���D������p�͑��Έʒu, q�͑���quaternion�Cs�͈�ʉ����W��\�킷�X�J���[�D
-	��������
-		[p'; q'] = (df/ds)(s)s'�D
-	quaternion�̎��Ԕ�������p���x�𓾂�s���E(q)�Ƃ����
+	があるとする．ここでpは相対位置, qは相対quaternion，sは一般化座標を表わすスカラー．
+	微分して
+		[p'; q'] = (df/ds)(s)s'．
+	quaternionの時間微分から角速度を得る行列をE(q)とすると
 		[v; w] = [I O; O E(q(s))](df/ds)(s)s' =: J(s)s'
-	��̎����s��s'�����܂�Α��Α��x[v; w]�����܂�D
-	������S�������̌`�ɕς���D6�����x�N�g��J(s)�͑��Α��x�̌�����\�킵�Ă���̂ŁC
-	����ɒ�������x�N�g�����s�x�N�g���Ɏ��s���J~(s)�Ƃ���ƁC�S��������
+	上の式よりsとs'が決まれば相対速度[v; w]が決まる．
+	これを拘束条件の形に変える．6次元ベクトルJ(s)は相対速度の向きを表わしているので，
+	これに直交するベクトルを行ベクトルに持つ行列をJ~(s)とすると，拘束条件は
 		J~(s)[v; w] = 0
 
-	Correction�́C
-	velocity update��̑��Έʒu�ɍł��߂��O��im(f)��̓_���擾�C���̓_�ɍ��킹��D
-	�{���̍S��������[p; q] in im(f)��������`�Ȃ̂ň����Ȃ��D
+	Correctionは，
+	velocity update後の相対位置に最も近い軌道im(f)上の点を取得，その点に合わせる．
+	本当の拘束条件は[p; q] in im(f)だが非線形なので扱えない．
  */
 
 struct PHPathPointWithJacobian : public PHPathPoint {
 	Matrix6d	J;
 };
 
-/// �֐߂̋O���̃L�[�t���[���������C�⊮���ĕԂ����胄�R�r�A�����v�Z�����肷��N���X
+/// 関節の軌道のキーフレームを持ち，補完して返したりヤコビアンを計算したりするクラス
 class PHPath : public SceneObject, public std::vector<PHPathPointWithJacobian> {
 	bool bReady;
-	bool bLoop;	//[-pi, pi]�̖�����]�֐�
+	bool bLoop;	//[-pi, pi]の無限回転関節
 	iterator Find(double &s);
 public:
 	SPR_OBJECTDEF_ABST(PHPath);
@@ -59,7 +59,7 @@ public:
 
 class PHPathJoint;
 
-/// �p�X�֐߂ɑΉ�����c���[�m�[�h
+/// パス関節に対応するツリーノード
 class PHPathJointNode : public PHTreeNode1D {
 public:
 	SPR_OBJECTDEF(PHPathJointNode);
@@ -75,7 +75,7 @@ public:
 	PHPathJointNode(const PHPathJointNodeDesc& desc = PHPathJointNodeDesc()){}
 };
 
-/// �p�X�֐�
+/// パス関節
 class PHPathJoint : public PH1DJoint {
 public:
 	SPR_OBJECTDEF(PHPathJoint);
@@ -83,19 +83,19 @@ public:
 
 	UTRef<PHPath> path;
 
-	/// �R���X�g���N�^
+	/// コンストラクタ
 	PHPathJoint(const PHPathJointDesc& desc = PHPathJointDesc());
 
-	/// ABA�őΉ�����PHTreeNode�̔h���N���X�𐶐����ĕԂ�
+	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
 	virtual PHTreeNode* CreateTreeNode(){ return DBG_NEW PHPathJointNode(); }
 
-	// ----- PHConstraint�̔h���N���X�Ŏ�������@�\
+	// ----- PHConstraintの派生クラスで実装する機能
 
 	virtual void UpdateJointState();
 	virtual void ModifyJacobian();
 	virtual void CompBias();
 
-	// ----- �C���^�t�F�[�X�̎���
+	// ----- インタフェースの実装
 
 	virtual void SetPosition(double pos){position[0] = pos;}
 	virtual bool AddChildObject(ObjectIf* o);

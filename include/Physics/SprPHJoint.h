@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprPHJoint.h
- *	@brief ÚG‚âŠÖß‚È‚Ç
+ *	@brief æ¥è§¦ã‚„é–¢ç¯€ãªã©
 */
 #ifndef SPR_PHJOINTIf_H
 #define SPR_PHJOINTIf_H
@@ -23,164 +23,164 @@ struct PHSolidIf;
 //@{
 
 struct PHConstraintEngineDesc{
-	int		numIter;					///< ‘¬“xXVLCP‚Ì”½•œ‰ñ”
-	int		numIterCorrection;			///< Œë·C³LCP‚Ì”½•œ‰ñ”
-	int		numIterContactCorrection;	///< ÚG“_‚ÌŒë·C³LCP‚Ì”½•œ‰ñ”
-	double	velCorrectionRate;			///< ‘¬“x‚ÌLCP‚ÅŠÖßS‘©‚ÌŒë·‚ğC³‚·‚éê‡‚ÌŒë·C³”ä—¦
-	double	posCorrectionRate;			///< ˆÊ’u‚ÌLCP‚ÅCŠÖßS‘©‚ÌŒë·‚ğC³‚·‚éê‡‚ÌŒë·C³”ä—¦
-	double  contactCorrectionRate;		///< ÚG‚ÌN“ü‰ğÁ‚Ì‚½‚ß‚ÌC‘¬“x‚ÌLCP‚Å‚Ì•â³”ä—¦D
-	double	shrinkRate;					///< LCP‰Šú’l‚ğ‘O‰ñ‚Ì‰ğ‚É‘Î‚µ‚Äk¬‚³‚¹‚é”ä—¦
+	int		numIter;					///< é€Ÿåº¦æ›´æ–°LCPã®åå¾©å›æ•°
+	int		numIterCorrection;			///< èª¤å·®ä¿®æ­£LCPã®åå¾©å›æ•°
+	int		numIterContactCorrection;	///< æ¥è§¦ç‚¹ã®èª¤å·®ä¿®æ­£LCPã®åå¾©å›æ•°
+	double	velCorrectionRate;			///< é€Ÿåº¦ã®LCPã§é–¢ç¯€æ‹˜æŸã®èª¤å·®ã‚’ä¿®æ­£ã™ã‚‹å ´åˆã®èª¤å·®ä¿®æ­£æ¯”ç‡
+	double	posCorrectionRate;			///< ä½ç½®ã®LCPã§ï¼Œé–¢ç¯€æ‹˜æŸã®èª¤å·®ã‚’ä¿®æ­£ã™ã‚‹å ´åˆã®èª¤å·®ä¿®æ­£æ¯”ç‡
+	double  contactCorrectionRate;		///< æ¥è§¦ã®ä¾µå…¥è§£æ¶ˆã®ãŸã‚ã®ï¼Œé€Ÿåº¦ã®LCPã§ã®è£œæ­£æ¯”ç‡ï¼
+	double	shrinkRate;					///< LCPåˆæœŸå€¤ã‚’å‰å›ã®è§£ã«å¯¾ã—ã¦ç¸®å°ã•ã›ã‚‹æ¯”ç‡
 	double	shrinkRateCorrection;
-	double	freezeThreshold;			///< „‘Ì‚ªƒtƒŠ[ƒY‚·‚éè‡’l
-	double	accelSOR;					///< SOR–@‚Ì‰Á‘¬ŒW”
-	bool	bGearNodeReady;				///< ƒMƒAƒm[ƒh‚ª‚¤‚Ü‚­\¬‚³‚ê‚Ä‚¢‚é‚©‚Ìƒtƒ‰ƒODƒm[ƒh‚âƒMƒA‚ğ’Ç‰ÁEíœ‚·‚é‚½‚Ñ‚Éfalse‚É‚È‚é
-	bool	bSaveConstraints;			///< SaveState, LoadState‚ÉC constraints ‚ğŠÜ‚ß‚é‚©‚Ç‚¤‚©D–{—ˆ•s—v‚¾‚ªCf, F‚ª•Ï‰»‚·‚éD
-	bool	bUpdateAllState;			///< „‘Ì‚Ì‘¬“xCˆÊ’u‚Ì‘S‚Ä‚Ìó‘Ô‚ğXV‚·‚éD
-	bool	bUseContactSurface;			///< –ÊÚG‚ğg‚¤
+	double	freezeThreshold;			///< å‰›ä½“ãŒãƒ•ãƒªãƒ¼ã‚ºã™ã‚‹é–¾å€¤
+	double	accelSOR;					///< SORæ³•ã®åŠ é€Ÿä¿‚æ•°
+	bool	bGearNodeReady;				///< ã‚®ã‚¢ãƒãƒ¼ãƒ‰ãŒã†ã¾ãæ§‹æˆã•ã‚Œã¦ã„ã‚‹ã‹ã®ãƒ•ãƒ©ã‚°ï¼ãƒãƒ¼ãƒ‰ã‚„ã‚®ã‚¢ã‚’è¿½åŠ ãƒ»å‰Šé™¤ã™ã‚‹ãŸã³ã«falseã«ãªã‚‹
+	bool	bSaveConstraints;			///< SaveState, LoadStateã«ï¼Œ constraints ã‚’å«ã‚ã‚‹ã‹ã©ã†ã‹ï¼æœ¬æ¥ä¸è¦ã ãŒï¼Œf, FãŒå¤‰åŒ–ã™ã‚‹ï¼
+	bool	bUpdateAllState;			///< å‰›ä½“ã®é€Ÿåº¦ï¼Œä½ç½®ã®å…¨ã¦ã®çŠ¶æ…‹ã‚’æ›´æ–°ã™ã‚‹ï¼
+	bool	bUseContactSurface;			///< é¢æ¥è§¦ã‚’ä½¿ã†
 	PHConstraintEngineDesc();
 };
 
-/** \defgroup gpJoint ƒWƒ‡ƒCƒ“ƒg*/
+/** \defgroup gpJoint ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆ*/
 //@{
 
-/// S‘©‚ÌƒfƒXƒNƒŠƒvƒ^
+/// æ‹˜æŸã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHConstraintDesc{
-	bool bEnabled;      ///< —LŒø/–³Œøƒtƒ‰ƒO
-	Posed poseSocket;   ///< „‘Ì‚©‚çŒ©‚½ŠÖß‚ÌˆÊ’u‚ÆŒX‚«
+	bool bEnabled;      ///< æœ‰åŠ¹/ç„¡åŠ¹ãƒ•ãƒ©ã‚°
+	Posed poseSocket;   ///< å‰›ä½“ã‹ã‚‰è¦‹ãŸé–¢ç¯€ã®ä½ç½®ã¨å‚¾ã
 	Posed posePlug;
 
 	PHConstraintDesc():bEnabled(true){}
 };
 
 struct PHSceneIf;
-/// S‘©‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// æ‹˜æŸã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHConstraintIf : public SceneObjectIf{
 	SPR_IFDEF(PHConstraint);
 
-	/** @brief ƒ\ƒPƒbƒg‘¤‚Ì„‘Ì‚ğæ“¾‚·‚é
+	/** @brief ã‚½ã‚±ãƒƒãƒˆå´ã®å‰›ä½“ã‚’å–å¾—ã™ã‚‹
 	 */
 	PHSolidIf* GetSocketSolid();
 
-	/** @brief ƒvƒ‰ƒO‘¤‚Ì„‘Ì‚ğæ“¾‚·‚é
+	/** @brief ãƒ—ãƒ©ã‚°å´ã®å‰›ä½“ã‚’å–å¾—ã™ã‚‹
 	 */
 	PHSolidIf* GetPlugSolid();
 
-	/** @brief Š‘®‚·‚éƒV[ƒ“‚Ìæ“¾	 */
+	/** @brief æ‰€å±ã™ã‚‹ã‚·ãƒ¼ãƒ³ã®å–å¾—	 */
 	PHSceneIf* GetScene() const;
 
-	/** @brief S‘©‚ğ—LŒø/–³Œø‰»‚·‚é
-		@param bEnable true‚È‚ç‚Î—LŒø‰»Cfalse‚È‚ç‚Î–³Œø‰»‚·‚é
+	/** @brief æ‹˜æŸã‚’æœ‰åŠ¹/ç„¡åŠ¹åŒ–ã™ã‚‹
+		@param bEnable trueãªã‚‰ã°æœ‰åŠ¹åŒ–ï¼Œfalseãªã‚‰ã°ç„¡åŠ¹åŒ–ã™ã‚‹
 	 */
 	void Enable(bool bEnable = true);
 
-	/** @brief —LŒø‚©–³Œø‚©‚ğæ“¾‚·‚é
-		@return —LŒø‚È‚ç‚Îtrue, –³Œø‚È‚ç‚Îfalse
+	/** @brief æœ‰åŠ¹ã‹ç„¡åŠ¹ã‹ã‚’å–å¾—ã™ã‚‹
+		@return æœ‰åŠ¹ãªã‚‰ã°true, ç„¡åŠ¹ãªã‚‰ã°false
 	 */
 	bool IsEnabled();
 
-	/** @brief ƒ\ƒPƒbƒg‚ÌˆÊ’uEŒü‚«‚ğæ“¾Eİ’è‚·‚é
+	/** @brief ã‚½ã‚±ãƒƒãƒˆã®ä½ç½®ãƒ»å‘ãã‚’å–å¾—ãƒ»è¨­å®šã™ã‚‹
 	 */
 	void GetSocketPose(Posed& pose);
 	void SetSocketPose(const Posed& pose);
 
-	/** @brief ƒvƒ‰ƒO‚ÌˆÊ’uEŒü‚«‚ğæ“¾Eİ’è‚·‚é
+	/** @brief ãƒ—ãƒ©ã‚°ã®ä½ç½®ãƒ»å‘ãã‚’å–å¾—ãƒ»è¨­å®šã™ã‚‹
 	 */
 	void GetPlugPose(Posed& pose);
 	void SetPlugPose(const Posed& pose);
 	
-	/** @brief S‘©‚·‚é„‘ÌŠÔ‚Ì‘Š‘ÎˆÊ’uEp¨‚ğæ“¾
-		@param p ƒ\ƒPƒbƒg‚É‘Î‚·‚éƒvƒ‰ƒO‚ÌˆÊ’u‚ÆŒü‚«
+	/** @brief æ‹˜æŸã™ã‚‹å‰›ä½“é–“ã®ç›¸å¯¾ä½ç½®ãƒ»å§¿å‹¢ã‚’å–å¾—
+		@param p ã‚½ã‚±ãƒƒãƒˆã«å¯¾ã™ã‚‹ãƒ—ãƒ©ã‚°ã®ä½ç½®ã¨å‘ã
 	 */
 	void GetRelativePose(Posed& p);
 	
-	/** @brief S‘©‚·‚é„‘ÌŠÔ‚Ì‘Š‘ÎˆÊ’u‚ğæ“¾
+	/** @brief æ‹˜æŸã™ã‚‹å‰›ä½“é–“ã®ç›¸å¯¾ä½ç½®ã‚’å–å¾—
 	*/
 	Vec3d GetRelativePoseR();
 
-	/** @brief S‘©‚·‚é„‘ÌŠÔ‚Ì‘Š‘Îp¨‚ğæ“¾
+	/** @brief æ‹˜æŸã™ã‚‹å‰›ä½“é–“ã®ç›¸å¯¾å§¿å‹¢ã‚’å–å¾—
 	*/
 	Quaterniond GetRelativePoseQ();
 	
-	/** @biref S‘©‚·‚é„‘ÌŠÔ‚Ìƒ[ƒ‹ƒhÀ•WŒn‚ÅŒ©‚½Œü‚«‚ğæ“¾
+	/** @biref æ‹˜æŸã™ã‚‹å‰›ä½“é–“ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã§è¦‹ãŸå‘ãã‚’å–å¾—
 	*/
 	Quaternionf GetAbsolutePoseQ();
 	
-	/** @brief S‘©‚·‚é„‘ÌŠÔ‚Ì‘Š‘Î‘¬“x
-		@param v ƒ\ƒPƒbƒg‚É‘Î‚·‚éƒvƒ‰ƒO‚Ì‘¬“x
-		@param w ƒ\ƒPƒbƒg‚É‘Î‚·‚éƒvƒ‰ƒO‚ÌŠp‘¬“x
+	/** @brief æ‹˜æŸã™ã‚‹å‰›ä½“é–“ã®ç›¸å¯¾é€Ÿåº¦
+		@param v ã‚½ã‚±ãƒƒãƒˆã«å¯¾ã™ã‚‹ãƒ—ãƒ©ã‚°ã®é€Ÿåº¦
+		@param w ã‚½ã‚±ãƒƒãƒˆã«å¯¾ã™ã‚‹ãƒ—ãƒ©ã‚°ã®è§’é€Ÿåº¦
 	 */
 	void GetRelativeVelocity(Vec3d& v, Vec3d& w);
 
-	/** @brief S‘©—Í‚ğæ“¾
-		@param f •Ài—Í		: PHConstraint::f.v()
-		@param t ƒ‚[ƒƒ“ƒg : PHConstraint::f.w()
-		S‘©—Í‚ÆS‘©ƒgƒ‹ƒN‚ğƒ\ƒPƒbƒg‚Ìƒ[ƒJƒ‹À•WŒn‚Å•Ô‚·
+	/** @brief æ‹˜æŸåŠ›ã‚’å–å¾—
+		@param f ä¸¦é€²åŠ›		: PHConstraint::f.v()
+		@param t ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆ : PHConstraint::f.w()
+		æ‹˜æŸåŠ›ã¨æ‹˜æŸãƒˆãƒ«ã‚¯ã‚’ã‚½ã‚±ãƒƒãƒˆã®ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã§è¿”ã™
 	 */
 	void GetConstraintForce(Vec3d& f, Vec3d& t);
 
 	// <!!>
-	/** @brief S‘©—Í‚ğæ“¾
+	/** @brief æ‹˜æŸåŠ›ã‚’å–å¾—
 	 */
 	Vec3d GetForce();
 
-	/** @brief S‘©ƒgƒ‹ƒN‚ğæ“¾
+	/** @brief æ‹˜æŸãƒˆãƒ«ã‚¯ã‚’å–å¾—
 	 */
 	Vec3d GetTorque();
 };
 
-/// S‘©‚ÌW‡‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// æ‹˜æŸã®é›†åˆã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHConstraintsIf : public SceneObjectIf{
 	SPR_IFDEF(PHConstraints);
 
-	/** @brief w’è‚³‚ê‚½„‘Ì‚Ì‘g‚Éì—p‚µ‚Ä‚¢‚éS‘©‚ğ•Ô‚·
-		@param lhs „‘Ì‚»‚Ì‚P
-		@param rhs „‘Ì‚»‚Ì‚Q
-		@return „‘ÌŠÔ‚Éì—p‚µ‚Ä‚¢‚éS‘©
+	/** @brief æŒ‡å®šã•ã‚ŒãŸå‰›ä½“ã®çµ„ã«ä½œç”¨ã—ã¦ã„ã‚‹æ‹˜æŸã‚’è¿”ã™
+		@param lhs å‰›ä½“ãã®ï¼‘
+		@param rhs å‰›ä½“ãã®ï¼’
+		@return å‰›ä½“é–“ã«ä½œç”¨ã—ã¦ã„ã‚‹æ‹˜æŸ
 	*/
 	PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs);
 
-	/** @brief w’è‚³‚ê‚½„‘Ì‚Ì‘g‚Éì—p‚µ‚Ä‚¢‚é‘‡“I‚È—Í‚ğ•Ô‚·
-		@param lhs „‘Ì‚»‚Ì‚P
-		@param rhs „‘Ì‚»‚Ì‚Q
-		@return „‘ÌŠÔ‚Éì—p‚µ‚Ä‚¢‚é‘‡“I‚È—Í
+	/** @brief æŒ‡å®šã•ã‚ŒãŸå‰›ä½“ã®çµ„ã«ä½œç”¨ã—ã¦ã„ã‚‹ç·åˆçš„ãªåŠ›ã‚’è¿”ã™
+		@param lhs å‰›ä½“ãã®ï¼‘
+		@param rhs å‰›ä½“ãã®ï¼’
+		@return å‰›ä½“é–“ã«ä½œç”¨ã—ã¦ã„ã‚‹ç·åˆçš„ãªåŠ›
 	*/
 	Vec3d GetTotalForce(PHSolidIf* lhs, PHSolidIf* rhs);
 };
 
 // -----  -----  -----  -----  -----
 
-/// ÚG“_S‘©‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// æ¥è§¦ç‚¹æ‹˜æŸã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHContactPointIf : public PHConstraintIf{
 	SPR_IFDEF(PHContactPoint);
 };
 
 // -----  -----  -----  -----  -----
 
-/// ŠÖß‚ÌƒfƒXƒNƒŠƒvƒ^
+/// é–¢ç¯€ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHJointDesc : public PHConstraintDesc {
-	double	fMax;			///< ŠÖß‚Ìo‚·‚±‚Æ‚ª‚Å‚«‚éÅ‘å‚Ì—Í
+	double	fMax;			///< é–¢ç¯€ã®å‡ºã™ã“ã¨ãŒã§ãã‚‹æœ€å¤§ã®åŠ›
 	PHJointDesc() {
 		fMax = FLT_MAX;
 	}
 };
 
-/// ŠÖß‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// é–¢ç¯€ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHJointIf : public PHConstraintIf{
 	SPR_IFDEF(PHJoint);
 
-	/** @brief ŠÖß‚Ìo‚·‚±‚Æ‚ª‚Å‚«‚éÅ‘åS‘©—Í(N)‚Ìâ‘Î’l‚ğİ’è‚·‚é
-		@param max ‚ ‚éŠÖß‚ÌÅ‘åS‘©—Í(0`DBL_MAX)
+	/** @brief é–¢ç¯€ã®å‡ºã™ã“ã¨ãŒã§ãã‚‹æœ€å¤§æ‹˜æŸåŠ›(N)ã®çµ¶å¯¾å€¤ã‚’è¨­å®šã™ã‚‹
+		@param max ã‚ã‚‹é–¢ç¯€ã®æœ€å¤§æ‹˜æŸåŠ›(0ï½DBL_MAX)
 	*/
 	void SetMaxForce(double max);
 
-	/** @brief ŠÖß‚Ìo‚·‚±‚Æ‚ª‚Å‚«‚éÅ‘åS‘©—Í(N)‚Ìâ‘Î’l‚ğæ“¾‚·‚é
+	/** @brief é–¢ç¯€ã®å‡ºã™ã“ã¨ãŒã§ãã‚‹æœ€å¤§æ‹˜æŸåŠ›(N)ã®çµ¶å¯¾å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	double GetMaxForce();
 };
 
 // -----  -----  -----  -----  -----
 
-/// 1²ŠÖß‚ÌƒfƒXƒNƒŠƒvƒ^
+/// 1è»¸é–¢ç¯€ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PH1DJointDesc : public PHJointDesc {
 	double spring;
 	double damper;
@@ -206,150 +206,150 @@ struct PH1DJointDesc : public PHJointDesc {
 
 // struct PH1DJointLimitIf;
 // struct PH1DJointLimitDesc;
-/// 1²ŠÖß‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// 1è»¸é–¢ç¯€ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PH1DJointIf : public PHJointIf{
 	SPR_IFDEF(PH1DJoint);
 
-	/** @brief ‰Â“®ˆæ§ŒÀ‚ğì¬‚·‚é
+	/** @brief å¯å‹•åŸŸåˆ¶é™ã‚’ä½œæˆã™ã‚‹
 	 */
 	PH1DJointLimitIf* CreateLimit(const PH1DJointLimitDesc& desc = PH1DJointLimitDesc());
 
-	/** @brief ŠÖß•ÏˆÊ‚ğæ“¾‚·‚é
-		@return ŠÖß•ÏˆÊ
+	/** @brief é–¢ç¯€å¤‰ä½ã‚’å–å¾—ã™ã‚‹
+		@return é–¢ç¯€å¤‰ä½
 	 */
 	double	GetPosition();
 
-	/** @brief ŠÖß‘¬“x‚ğæ“¾‚·‚é
-		@return ŠÖß‘¬“x
+	/** @brief é–¢ç¯€é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹
+		@return é–¢ç¯€é€Ÿåº¦
 	 */
 	double	GetVelocity();
 
-	/** @brief ŠÖß‰Â“®ˆæS‘©‚ğæ“¾‚·‚é
-		@return ŠÖß‰Â“®ˆæS‘©
+	/** @brief é–¢ç¯€å¯å‹•åŸŸæ‹˜æŸã‚’å–å¾—ã™ã‚‹
+		@return é–¢ç¯€å¯å‹•åŸŸæ‹˜æŸ
 	 */
 	PH1DJointLimitIf* GetLimit();
 
-	/** @brief ƒoƒlŒW”‚ğİ’è‚·‚é
-		@param spring ƒoƒlŒW”
+	/** @brief ãƒãƒä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param spring ãƒãƒä¿‚æ•°
 	 */
 	void SetSpring(double spring);
 
-	/** @brief ƒoƒlŒW”‚ğæ“¾‚·‚é
-		@return ƒoƒlŒW”
+	/** @brief ãƒãƒä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒãƒä¿‚æ•°
 	 */
 	double GetSpring();
 
-	/** @brief ƒ_ƒ“ƒpŒW”‚ğİ’è‚·‚é
-		@param damper ƒ_ƒ“ƒpŒW”
+	/** @brief ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param damper ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	void	SetDamper(double damper);
 
-	/** @brief ƒ_ƒ“ƒpŒW”‚ğæ“¾‚·‚é
-		@return ƒ_ƒ“ƒpŒW”
+	/** @brief ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	double	GetDamper();
 
-	/** @brief “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ğæ“¾‚·‚é
-		@return “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”
+	/** @brief äºŒå€‹ç›®ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return äºŒå€‹ç›®ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	double  GetSecondDamper();
 
-	/** @brief “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ğİ’è‚·‚é
-		@param input “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”
+	/** @brief äºŒå€‹ç›®ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param input äºŒå€‹ç›®ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	void	SetSecondDamper(double input);
 
-	/** @brief ƒoƒl‚Ì§Œä–Ú•W‚ğİ’è‚·‚é
-		@param targetPosition ƒoƒl‚Ì§Œä–Ú•W
+	/** @brief ãƒãƒã®åˆ¶å¾¡ç›®æ¨™ã‚’è¨­å®šã™ã‚‹
+		@param targetPosition ãƒãƒã®åˆ¶å¾¡ç›®æ¨™
 
-		ƒoƒlŒ´“_‚Æ‚Íƒoƒl‚Ì—Í‚ª0‚Æ‚È‚éŠÖß•ÏˆÊ‚Ì‚±‚ÆD
+		ãƒãƒåŸç‚¹ã¨ã¯ãƒãƒã®åŠ›ãŒ0ã¨ãªã‚‹é–¢ç¯€å¤‰ä½ã®ã“ã¨ï¼
 	 */
 	void	SetTargetPosition(double targetPosition);
 
-	/** @brief ƒoƒl‚ÌŒ´“_‚ğæ“¾‚·‚é
-		@return ƒoƒlŒ´“_
+	/** @brief ãƒãƒã®åŸç‚¹ã‚’å–å¾—ã™ã‚‹
+		@return ãƒãƒåŸç‚¹
 	 */
 	double	GetTargetPosition();
 
-	/** @brief –Ú•W‘¬“x‚ğİ’è‚·‚é
-		@param vel –Ú•W‘¬“x
+	/** @brief ç›®æ¨™é€Ÿåº¦ã‚’è¨­å®šã™ã‚‹
+		@param vel ç›®æ¨™é€Ÿåº¦
 	 */
 	void	SetTargetVelocity(double v);
 
-	/** @brief –Ú•W‘¬“x‚ğæ“¾‚·‚é
-		@return –Ú•W‘¬“x
+	/** @brief ç›®æ¨™é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹
+		@return ç›®æ¨™é€Ÿåº¦
 	 */
 	double GetTargetVelocity();
 
-	/** @brief ’è”€‚ğ‘ã“ü‚·‚é
-		@param ‘ã“ü‚·‚é’l
+	/** @brief å®šæ•°é …ã‚’ä»£å…¥ã™ã‚‹
+		@param ä»£å…¥ã™ã‚‹å€¤
 	*/
 	void SetOffsetForce(double dat);
 
-	/** @brief •â³—Í‚ğ“¾‚é
-		@return •â³’l
+	/** @brief è£œæ­£åŠ›ã‚’å¾—ã‚‹
+		@return è£œæ­£å€¤
 	*/
 	double GetOffsetForce();
 
-	/** @brief ~•š‰—Í‚ğİ’è‚·‚é
-		@return ~•š‰—Í
+	/** @brief é™ä¼å¿œåŠ›ã‚’è¨­å®šã™ã‚‹
+		@return é™ä¼å¿œåŠ›
 	 */
 	double GetYieldStress();
 
-	/** @brief ~•š‰—Í‚ğæ“¾‚·‚é
-		@param input ~•š‰—Í
+	/** @brief é™ä¼å¿œåŠ›ã‚’å–å¾—ã™ã‚‹
+		@param input é™ä¼å¿œåŠ›
 	 */
     void SetYieldStress(const double yS);
 
-	/** @brief ~•š‰—ÍˆÈ‰º‚Ìê‡‚Éƒ_ƒ“ƒp‚ğd‚­‚·‚é”{—¦‚ğİ’è‚·‚é
-		@return d‚­‚·‚é”{—¦
+	/** @brief é™ä¼å¿œåŠ›ä»¥ä¸‹ã®å ´åˆã«ãƒ€ãƒ³ãƒ‘ã‚’ç¡¬ãã™ã‚‹å€ç‡ã‚’è¨­å®šã™ã‚‹
+		@return ç¡¬ãã™ã‚‹å€ç‡
 	 */
 	double GetHardnessRate();
 
-	/** @brief ~•š‰—ÍˆÈ‰º‚Ìê‡‚Éƒ_ƒ“ƒp‚ğd‚­‚·‚é”{—¦‚ğæ“¾‚·‚é
-		@param input d‚­‚·‚é”{—¦
+	/** @brief é™ä¼å¿œåŠ›ä»¥ä¸‹ã®å ´åˆã«ãƒ€ãƒ³ãƒ‘ã‚’ç¡¬ãã™ã‚‹å€ç‡ã‚’å–å¾—ã™ã‚‹
+		@param input ç¡¬ãã™ã‚‹å€ç‡
 	 */
 	void SetHardnessRate(const double hR);
 
-	/** @brief ’f–Ê“ñŸƒ‚[ƒƒ“ƒg‚ğİ’è‚·‚é
-		@param secondMoment ’f–Ê“ñŸƒ‚[ƒƒ“ƒg
+	/** @brief æ–­é¢äºŒæ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆã‚’è¨­å®šã™ã‚‹
+		@param secondMoment æ–­é¢äºŒæ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆ
 	 */
 	void SetSecondMoment(const double& sM);
 
-	/** @brief ’f–Ê“ñŸƒ‚[ƒƒ“ƒg‚ğæ“¾‚·‚é
-		@return ’f–Ê“ñŸƒ‚[ƒƒ“ƒg
+	/** @brief æ–­é¢äºŒæ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹
+		@return æ–­é¢äºŒæ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆ
 	 */
 	double GetSecondMoment();
 
-	/** @brief Motor‚Ìo—Í‚µ‚½—Í‚ğ•Ô‚·
-		@return —Í
+	/** @brief Motorã®å‡ºåŠ›ã—ãŸåŠ›ã‚’è¿”ã™
+		@return åŠ›
 	*/
 	double GetMotorForce();
 };
 
-/// ƒqƒ“ƒW‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ãƒ’ãƒ³ã‚¸ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHHingeJointIf : public PH1DJointIf{
 	SPR_IFDEF(PHHingeJoint);
 };
 
-/// ƒqƒ“ƒW‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒ’ãƒ³ã‚¸ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHHingeJointDesc : public PH1DJointDesc{
 	SPR_DESCDEF(PHHingeJoint);
 	PHHingeJointDesc(){}
 };
 
-/// ƒXƒ‰ƒCƒ_‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ã‚¹ãƒ©ã‚¤ãƒ€ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHSliderJointIf : public PH1DJointIf{
 	SPR_IFDEF(PHSliderJoint);
 };
 
-/// ƒXƒ‰ƒCƒ_‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ã‚¹ãƒ©ã‚¤ãƒ€ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHSliderJointDesc : public PH1DJointDesc{
 	SPR_DESCDEF(PHSliderJoint);
-	// ˆÈ‰º‚ÌƒIƒvƒVƒ‡ƒ“‚ÍCŒ»ó‚Å‚ÍABA‚ğ—LŒø‚É‚·‚é‚Æ‚¤‚Ü‚­‹@”\‚µ‚È‚¢‚Ì‚Å’ˆÓD<!!>
-	bool bConstraintY;      ///< •ÀiY²‚ğS‘©‚·‚é‚© ƒfƒtƒHƒ‹ƒgtrue
-	bool bConstraintRollX;  ///< ‰ñ“]X²‚ğS‘©‚·‚é‚© ƒfƒtƒHƒ‹ƒgtrue
-	bool bConstraintRollZ;  ///< ‰ñ“]Z²‚ğS‘©‚·‚é‚© ƒfƒtƒHƒ‹ƒgtrue
+	// ä»¥ä¸‹ã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã¯ï¼Œç¾çŠ¶ã§ã¯ABAã‚’æœ‰åŠ¹ã«ã™ã‚‹ã¨ã†ã¾ãæ©Ÿèƒ½ã—ãªã„ã®ã§æ³¨æ„ï¼<!!>
+	bool bConstraintY;      ///< ä¸¦é€²Yè»¸ã‚’æ‹˜æŸã™ã‚‹ã‹ ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆtrue
+	bool bConstraintRollX;  ///< å›è»¢Xè»¸ã‚’æ‹˜æŸã™ã‚‹ã‹ ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆtrue
+	bool bConstraintRollZ;  ///< å›è»¢Zè»¸ã‚’æ‹˜æŸã™ã‚‹ã‹ ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆtrue
 
 	PHSliderJointDesc() {
 		bConstraintY		= true;
@@ -360,50 +360,50 @@ struct PHSliderJointDesc : public PH1DJointDesc{
 
 // -----  -----  -----  -----  -----
 
-/// ƒpƒXã‚Ì1‚Â‚Ì“_
+/// ãƒ‘ã‚¹ä¸Šã®1ã¤ã®ç‚¹
 struct PHPathPoint{
-	double	s;			///< ƒXƒJƒ‰[ƒpƒ‰ƒ[ƒ^
-	Posed	pose;		///< ˆÊ’u‚ÆŒX‚«
+	double	s;			///< ã‚¹ã‚«ãƒ©ãƒ¼ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+	Posed	pose;		///< ä½ç½®ã¨å‚¾ã
 	PHPathPoint(){}
 	PHPathPoint(double _s, Posed _pose):s(_s), pose(_pose){}
 };
 
-/// ƒpƒX‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒ‘ã‚¹ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHPathDesc{
-	std::vector<PHPathPoint> points;	///< ƒpƒXã‚Ì“_—ñ
-	bool bLoop;							///< true‚È‚ç‚Îƒ‹[ƒvƒpƒXCfalse‚È‚ç‚ÎƒI[ƒvƒ“ƒpƒXDƒfƒtƒHƒ‹ƒg‚ÍfalseD
+	std::vector<PHPathPoint> points;	///< ãƒ‘ã‚¹ä¸Šã®ç‚¹åˆ—
+	bool bLoop;							///< trueãªã‚‰ã°ãƒ«ãƒ¼ãƒ—ãƒ‘ã‚¹ï¼Œfalseãªã‚‰ã°ã‚ªãƒ¼ãƒ—ãƒ³ãƒ‘ã‚¹ï¼ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯falseï¼
 	PHPathDesc():bLoop(false){}
 };
 
-/// ƒpƒX‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ãƒ‘ã‚¹ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHPathIf : public SceneObjectIf{
 	SPR_IFDEF(PHPath);
-	/** @brief ƒpƒX‚É“_‚ğ’Ç‰Á‚·‚é
-		@param s ŠÖßÀ•W
-		@param pose ƒ\ƒPƒbƒg‚É‘Î‚·‚éƒvƒ‰ƒO‚Ìp¨
-		ƒpƒX‚É§Œä“_‚ğ’Ç‰Á‚·‚éD
-		‚·‚È‚í‚¿CŠÖßÀ•W‚ªs‚Å‚ ‚é‚Æ‚«‚Ìƒ\ƒPƒbƒg-ƒvƒ‰ƒOŠÔ‚Ìp¨‚ğpose‚Éİ’è‚·‚éD
+	/** @brief ãƒ‘ã‚¹ã«ç‚¹ã‚’è¿½åŠ ã™ã‚‹
+		@param s é–¢ç¯€åº§æ¨™
+		@param pose ã‚½ã‚±ãƒƒãƒˆã«å¯¾ã™ã‚‹ãƒ—ãƒ©ã‚°ã®å§¿å‹¢
+		ãƒ‘ã‚¹ã«åˆ¶å¾¡ç‚¹ã‚’è¿½åŠ ã™ã‚‹ï¼
+		ã™ãªã‚ã¡ï¼Œé–¢ç¯€åº§æ¨™ãŒsã§ã‚ã‚‹ã¨ãã®ã‚½ã‚±ãƒƒãƒˆ-ãƒ—ãƒ©ã‚°é–“ã®å§¿å‹¢ã‚’poseã«è¨­å®šã™ã‚‹ï¼
 	 */
 	void AddPoint(double s, const Posed& pose);
 
-	/** @brief ƒ‹[ƒvƒpƒX‚©ƒI[ƒvƒ“ƒpƒX‚©‚ğİ’è‚·‚é
-		@param bOnOff true‚È‚ç‚Îƒ‹[ƒvƒpƒXCfalse‚È‚ç‚ÎƒI[ƒvƒ“ƒpƒX
-		ƒ‹[ƒvƒpƒX‚Ìê‡CŠÖßÀ•W‚ªÅ¬‚Ì§Œä“_‚ÆÅ‘å‚Ì§Œä“_‚ğƒV[ƒ€ƒŒƒX‚É‚Â‚È‚®D
-		ƒI[ƒvƒ“ƒpƒX‚Ìê‡CŠÖßÀ•W‚ªÅ¬CÅ‘å‚Ì§Œä“_‚ª‚»‚ê‚¼‚ê‰Â“®”ÍˆÍ‚Ì‰ºŒÀCãŒÀ‚Æ‚È‚éD
+	/** @brief ãƒ«ãƒ¼ãƒ—ãƒ‘ã‚¹ã‹ã‚ªãƒ¼ãƒ—ãƒ³ãƒ‘ã‚¹ã‹ã‚’è¨­å®šã™ã‚‹
+		@param bOnOff trueãªã‚‰ã°ãƒ«ãƒ¼ãƒ—ãƒ‘ã‚¹ï¼Œfalseãªã‚‰ã°ã‚ªãƒ¼ãƒ—ãƒ³ãƒ‘ã‚¹
+		ãƒ«ãƒ¼ãƒ—ãƒ‘ã‚¹ã®å ´åˆï¼Œé–¢ç¯€åº§æ¨™ãŒæœ€å°ã®åˆ¶å¾¡ç‚¹ã¨æœ€å¤§ã®åˆ¶å¾¡ç‚¹ã‚’ã‚·ãƒ¼ãƒ ãƒ¬ã‚¹ã«ã¤ãªãï¼
+		ã‚ªãƒ¼ãƒ—ãƒ³ãƒ‘ã‚¹ã®å ´åˆï¼Œé–¢ç¯€åº§æ¨™ãŒæœ€å°ï¼Œæœ€å¤§ã®åˆ¶å¾¡ç‚¹ãŒãã‚Œãã‚Œå¯å‹•ç¯„å›²ã®ä¸‹é™ï¼Œä¸Šé™ã¨ãªã‚‹ï¼
 	 */
 	void SetLoop(bool bOnOff = true);
-	/** @brief ƒ‹[ƒvƒpƒX‚©ƒI[ƒvƒ“ƒpƒX‚©‚ğæ“¾‚·‚é
-		@return true‚È‚ç‚Îƒ‹[ƒvƒpƒXCfalse‚È‚ç‚ÎƒI[ƒvƒ“ƒpƒX
+	/** @brief ãƒ«ãƒ¼ãƒ—ãƒ‘ã‚¹ã‹ã‚ªãƒ¼ãƒ—ãƒ³ãƒ‘ã‚¹ã‹ã‚’å–å¾—ã™ã‚‹
+		@return trueãªã‚‰ã°ãƒ«ãƒ¼ãƒ—ãƒ‘ã‚¹ï¼Œfalseãªã‚‰ã°ã‚ªãƒ¼ãƒ—ãƒ³ãƒ‘ã‚¹
 	 */
 	bool IsLoop();
 };
 
-/// ƒpƒXƒWƒ‡ƒCƒ“ƒg‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ãƒ‘ã‚¹ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHPathJointIf : public PH1DJointIf{
 	SPR_IFDEF(PHPathJoint);
 	void SetPosition(double q);
 };
-/// ƒpƒXƒWƒ‡ƒCƒ“ƒg‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒ‘ã‚¹ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHPathJointDesc : public PH1DJointDesc{
 	SPR_DESCDEF(PHPathJoint);
 	PHPathJointDesc(){}
@@ -414,128 +414,128 @@ struct PHPathJointDesc : public PH1DJointDesc{
 // struct PHBallJointLimitIf;
 // struct PHBallJointLimitDesc;
 struct PHBallJointMotorIf;
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHBallJointIf : public PHJointIf{
 	SPR_IFDEF(PHBallJoint);
 
-	/** @brief ‰Â“®ˆæ§ŒÀ‚ğì¬‚·‚é
+	/** @brief å¯å‹•åŸŸåˆ¶é™ã‚’ä½œæˆã™ã‚‹
 	 */
 	PHBallJointLimitIf* CreateLimit(const IfInfo* ii, const PHBallJointLimitDesc& desc = PHBallJointLimitDesc());
 	template <class T> PHBallJointLimitIf* CreateLimit(const T& desc){
 		return CreateLimit(T::GetIfInfo(), desc);
 	}
 
-	/** @brief ŠÖß•ÏˆÊ‚ğæ“¾‚·‚é
-		@return ƒXƒCƒ“ƒO•ûˆÊŠpCƒXƒCƒ“ƒOŠpCƒcƒCƒXƒgŠp‚©‚ç‚È‚éƒxƒNƒgƒ‹
+	/** @brief é–¢ç¯€å¤‰ä½ã‚’å–å¾—ã™ã‚‹
+		@return ã‚¹ã‚¤ãƒ³ã‚°æ–¹ä½è§’ï¼Œã‚¹ã‚¤ãƒ³ã‚°è§’ï¼Œãƒ„ã‚¤ã‚¹ãƒˆè§’ã‹ã‚‰ãªã‚‹ãƒ™ã‚¯ãƒˆãƒ«
 	 */
 	Vec3d GetAngle();
 
-	/**  @brief ŠÖß•ÏˆÊ‚ğæ“¾‚·‚é
-		 @return Xjrel.q(e„‘Ì‚©‚çŒ©‚½q„‘Ì‚Ì‘Š‘Î•ÏˆÊ‚ğQuaternion‚Å•\Œ»‚µ‚½‚à‚Ì)
+	/**  @brief é–¢ç¯€å¤‰ä½ã‚’å–å¾—ã™ã‚‹
+		 @return Xjrel.q(è¦ªå‰›ä½“ã‹ã‚‰è¦‹ãŸå­å‰›ä½“ã®ç›¸å¯¾å¤‰ä½ã‚’Quaternionã§è¡¨ç¾ã—ãŸã‚‚ã®)
 	*/
 	Quaterniond GetPosition();
 
-	/** @brief ŠÖß‘¬“x‚ğæ“¾‚·‚é
-		@return ƒXƒCƒ“ƒO•ûˆÊŠpCƒXƒCƒ“ƒOŠpCƒcƒCƒXƒgŠp‚ÌŠÔ•Ï‰»—¦‚©‚ç‚È‚éƒxƒNƒgƒ‹
+	/** @brief é–¢ç¯€é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹
+		@return ã‚¹ã‚¤ãƒ³ã‚°æ–¹ä½è§’ï¼Œã‚¹ã‚¤ãƒ³ã‚°è§’ï¼Œãƒ„ã‚¤ã‚¹ãƒˆè§’ã®æ™‚é–“å¤‰åŒ–ç‡ã‹ã‚‰ãªã‚‹ãƒ™ã‚¯ãƒˆãƒ«
 	 */
 	Vec3d GetVelocity();
 
-	/** @brief ŠÖß‰Â“®ˆæS‘©‚ğæ“¾‚·‚é
-		@return ŠÖß‰Â“®ˆæS‘©
+	/** @brief é–¢ç¯€å¯å‹•åŸŸæ‹˜æŸã‚’å–å¾—ã™ã‚‹
+		@return é–¢ç¯€å¯å‹•åŸŸæ‹˜æŸ
 	 */
 	PHBallJointLimitIf* GetLimit();
 
-	/** @brief ƒoƒlŒW”‚ğİ’è‚·‚é
-		@param spring ƒoƒlŒW”
+	/** @brief ãƒãƒä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param spring ãƒãƒä¿‚æ•°
 	 */
 	void	SetSpring(double spring);
 
-	/** @brief ƒoƒlŒW”‚ğæ“¾‚·‚é
-		@return ƒoƒlŒW”
+	/** @brief ãƒãƒä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒãƒä¿‚æ•°
 	 */
 	double	GetSpring();
 
-	/** @brief ƒ_ƒ“ƒpŒW”‚ğİ’è‚·‚é
-		@param damper ƒ_ƒ“ƒpŒW”
+	/** @brief ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param damper ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	void	SetDamper(double damper);
 
-	/** @brief ƒ_ƒ“ƒpŒW”‚ğæ“¾‚·‚é
-		@return ƒ_ƒ“ƒpŒW”
+	/** @brief ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	double	GetDamper();
 
-	/** @brief “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ğæ“¾‚·‚é
-		@return “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”
+	/** @brief äºŒå€‹ç›®ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return äºŒå€‹ç›®ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	Vec3d  GetSecondDamper();
 
-	/** @brief “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”‚ğİ’è‚·‚é
-		@param input “ñŒÂ–Ú‚Ìƒ_ƒ“ƒpŒW”
+	/** @brief äºŒå€‹ç›®ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param input äºŒå€‹ç›®ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	void	SetSecondDamper(Vec3d damper2);
 
-	/** @brief §Œä‚Ì–Ú•WŒü‚«‚ğİ’è‚·‚é
+	/** @brief åˆ¶å¾¡ã®ç›®æ¨™å‘ãã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetPosition(Quaterniond p);
 	
-	/** @brief §Œä‚Ì–Ú•WŒü‚«‚ğæ“¾‚·‚é
+	/** @brief åˆ¶å¾¡ã®ç›®æ¨™å‘ãã‚’å–å¾—ã™ã‚‹
 	*/
 	Quaterniond GetTargetPosition();
 
-	/** @brief ‘¬“x§Œä‚Ì–Ú•W‘¬“x‚ğİ’è‚·‚é
+	/** @brief é€Ÿåº¦åˆ¶å¾¡ã®ç›®æ¨™é€Ÿåº¦ã‚’è¨­å®šã™ã‚‹
 	*/
 	void  SetTargetVelocity(Vec3d q);
 
-	/** @brief ‘¬“x§Œä‚Ì–Ú•W‘¬“x‚ğæ“¾‚·‚é
+	/** @brief é€Ÿåº¦åˆ¶å¾¡ã®ç›®æ¨™é€Ÿåº¦ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetVelocity();
 
-	/** @brief —Í‚ÌƒIƒtƒZƒbƒg‚ğİ’è‚·‚é	
+	/** @brief åŠ›ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’è¨­å®šã™ã‚‹	
 	*/
 	void SetOffsetForce(Vec3d ofst);
 
-	/**	@brief —Í‚ÌƒIƒtƒZƒbƒg‚ğæ“¾‚·‚é
+	/**	@brief åŠ›ã®ã‚ªãƒ•ã‚»ãƒƒãƒˆã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetOffsetForce();
 
-	/** @brief ~•š‰—Í‚ğæ“¾‚·‚é
-		@param input ~•š‰—Í
+	/** @brief é™ä¼å¿œåŠ›ã‚’å–å¾—ã™ã‚‹
+		@param input é™ä¼å¿œåŠ›
 	 */
     void SetYieldStress(const double yS);
 
-	/** @brief ~•š‰—Í‚ğİ’è‚·‚é
-		@return ~•š‰—Í
+	/** @brief é™ä¼å¿œåŠ›ã‚’è¨­å®šã™ã‚‹
+		@return é™ä¼å¿œåŠ›
 	 */
 	double GetYieldStress();
 
-	/** @brief ~•š‰—ÍˆÈ‰º‚Ìê‡‚Éƒ_ƒ“ƒp‚ğd‚­‚·‚é”{—¦‚ğæ“¾‚·‚é
-		@param input d‚­‚·‚é”{—¦
+	/** @brief é™ä¼å¿œåŠ›ä»¥ä¸‹ã®å ´åˆã«ãƒ€ãƒ³ãƒ‘ã‚’ç¡¬ãã™ã‚‹å€ç‡ã‚’å–å¾—ã™ã‚‹
+		@param input ç¡¬ãã™ã‚‹å€ç‡
 	 */
 	void SetHardnessRate(const double hR);
 	
-	/** @brief ~•š‰—ÍˆÈ‰º‚Ìê‡‚Éƒ_ƒ“ƒp‚ğd‚­‚·‚é”{—¦‚ğİ’è‚·‚é
-		@return d‚­‚·‚é”{—¦
+	/** @brief é™ä¼å¿œåŠ›ä»¥ä¸‹ã®å ´åˆã«ãƒ€ãƒ³ãƒ‘ã‚’ç¡¬ãã™ã‚‹å€ç‡ã‚’è¨­å®šã™ã‚‹
+		@return ç¡¬ãã™ã‚‹å€ç‡
 	 */
 	double GetHardnessRate();
 
-	/** @brief ’f–Ê2Ÿƒ‚[ƒƒ“ƒg‚ğİ’è‚·‚é
-		@param input ’f–Ê2Ÿƒ‚[ƒƒ“ƒgVec3d(x,y,z)
+	/** @brief æ–­é¢2æ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆã‚’è¨­å®šã™ã‚‹
+		@param input æ–­é¢2æ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆVec3d(x,y,z)
 	 */
 	void	SetSecondMoment(const Vec3d m);
 
-	/** @brief ’f–Ê2Ÿƒ‚[ƒƒ“ƒg‚ğİ’è‚·‚é
-		@return ’f–Ê2Ÿƒ‚[ƒƒ“ƒgVec3d(x,y,z)
+	/** @brief æ–­é¢2æ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆã‚’è¨­å®šã™ã‚‹
+		@return æ–­é¢2æ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆVec3d(x,y,z)
 	 */
 	Vec3d	GetSecondMoment();	
 
-	/** @brief Motor‚Ìo—Í‚µ‚½—Í‚ğ•Ô‚·
-		@return —Í
+	/** @brief Motorã®å‡ºåŠ›ã—ãŸåŠ›ã‚’è¿”ã™
+		@return åŠ›
 	*/
 	Vec3d GetMotorForce();
 };
 
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHBallJointDesc : public PHJointDesc {
 	SPR_DESCDEF(PHBallJoint);
 	double spring;
@@ -563,102 +563,102 @@ struct PHBallJointDesc : public PHJointDesc {
 // -----  -----  -----  -----  -----
 
 struct PHSpringMotorIf;
-/// ƒoƒlƒ_ƒ“ƒp‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ãƒãƒãƒ€ãƒ³ãƒ‘ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHSpringIf : public PHJointIf{
 	SPR_IFDEF(PHSpring);
 
-	/** @brief ƒoƒlŒW”‚ğİ’è‚·‚é
-		@param spring ƒoƒlŒW”
+	/** @brief ãƒãƒä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param spring ãƒãƒä¿‚æ•°
 	 */
 	void SetSpring(const Vec3d& spring);
 
-	/** @brief ƒoƒlŒW”‚ğæ“¾‚·‚é
-		@return ƒoƒlŒW”
+	/** @brief ãƒãƒä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒãƒä¿‚æ•°
 	 */
 	Vec3d GetSpring();
 
-	/** @brief ƒ_ƒ“ƒpŒW”‚ğİ’è‚·‚é
-		@param damper ƒ_ƒ“ƒpŒW”
+	/** @brief ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param damper ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	void SetDamper(const Vec3d& damper);
 
-	/** @brief ƒ_ƒ“ƒpŒW”‚ğæ“¾‚·‚é
-		@return ƒ_ƒ“ƒpŒW”
+	/** @brief ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	Vec3d GetDamper();
 
-	/** @brief •Ài‚Ì‘æ“ñƒ_ƒ“ƒpŒW”‚ğİ’è‚·‚é
-		@param secondDamper •Ài‚Ì‘æ“ñƒ_ƒ“ƒpŒW”
+	/** @brief ä¸¦é€²ã®ç¬¬äºŒãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param secondDamper ä¸¦é€²ã®ç¬¬äºŒãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	void SetSecondDamper(const Vec3d& secondDamper);
 
-	/** @brief •Ài‚Ì‘æ“ñƒ_ƒ“ƒpŒW”‚ğæ“¾‚·‚é
-		@return •Ài‚Ì‘æ“ñƒ_ƒ“ƒpŒW”
+	/** @brief ä¸¦é€²ã®ç¬¬äºŒãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ä¸¦é€²ã®ç¬¬äºŒãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	Vec3d GetSecondDamper();
 
-	/** @brief ƒoƒlŒW”‚ğİ’è‚·‚é
-		@param spring ƒoƒlŒW”
+	/** @brief ãƒãƒä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param spring ãƒãƒä¿‚æ•°
 	 */
 	void SetSpringOri(const double spring);
 
-	/** @brief ƒoƒlŒW”‚ğæ“¾‚·‚é
-		@return ƒoƒlŒW”
+	/** @brief ãƒãƒä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒãƒä¿‚æ•°
 	 */
 	double GetSpringOri();
 
-	/** @brief ƒ_ƒ“ƒpŒW”‚ğİ’è‚·‚é
-		@param damper ƒ_ƒ“ƒpŒW”
+	/** @brief ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param damper ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	void SetDamperOri(const double damper);
 
-	/** @brief ƒ_ƒ“ƒpŒW”‚ğæ“¾‚·‚é
-		@return ƒ_ƒ“ƒpŒW”
+	/** @brief ãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	double GetDamperOri();
 
-	/** @brief ‰ñ“]‚Ì‘æ“ñƒ_ƒ“ƒpŒW”‚ğİ’è‚·‚é
-		@param secondDamperOri ‰ñ“]‚Ì‘æ“ñƒ_ƒ“ƒpŒW”
+	/** @brief å›è»¢ã®ç¬¬äºŒãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’è¨­å®šã™ã‚‹
+		@param secondDamperOri å›è»¢ã®ç¬¬äºŒãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	void SetSecondDamperOri(const double& secondDamperOri);
 
-	/** @brief ‰ñ“]‚Ì‘æ“ñƒ_ƒ“ƒpŒW”‚ğæ“¾‚·‚é
-		@return ‰ñ“]‚Ì‘æ“ñƒ_ƒ“ƒpŒW”
+	/** @brief å›è»¢ã®ç¬¬äºŒãƒ€ãƒ³ãƒ‘ä¿‚æ•°ã‚’å–å¾—ã™ã‚‹
+		@return å›è»¢ã®ç¬¬äºŒãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	 */
 	double GetSecondDamperOri();
 
-	/** @brief ~•š‰—Í‚ğİ’è‚·‚é
-		@param yieldStress ~•š‰—Í
+	/** @brief é™ä¼å¿œåŠ›ã‚’è¨­å®šã™ã‚‹
+		@param yieldStress é™ä¼å¿œåŠ›
 	 */
 	void SetYieldStress(const double& yieldStress);
 
-	/** @brief ~•š‰—Í‚ğæ“¾‚·‚é
-		@return ~•š‰—Í
+	/** @brief é™ä¼å¿œåŠ›ã‚’å–å¾—ã™ã‚‹
+		@return é™ä¼å¿œåŠ›
 	 */
 	double GetYieldStress();
 
-	/** @brief ~•š‰—ÍˆÈ‰º‚Ìê‡‚Éƒ_ƒ“ƒp‚ğd‚­‚·‚é”{—¦‚ğİ’è‚·‚é
-		@return d‚­‚·‚é”{—¦
+	/** @brief é™ä¼å¿œåŠ›ä»¥ä¸‹ã®å ´åˆã«ãƒ€ãƒ³ãƒ‘ã‚’ç¡¬ãã™ã‚‹å€ç‡ã‚’è¨­å®šã™ã‚‹
+		@return ç¡¬ãã™ã‚‹å€ç‡
 	 */
 	void SetHardnessRate(const double& hardnessRate);
 
-	/** @brief ~•š‰—ÍˆÈ‰º‚Ìê‡‚Éƒ_ƒ“ƒp‚ğd‚­‚·‚é”{—¦‚ğæ“¾‚·‚é
-		@param input d‚­‚·‚é”{—¦
+	/** @brief é™ä¼å¿œåŠ›ä»¥ä¸‹ã®å ´åˆã«ãƒ€ãƒ³ãƒ‘ã‚’ç¡¬ãã™ã‚‹å€ç‡ã‚’å–å¾—ã™ã‚‹
+		@param input ç¡¬ãã™ã‚‹å€ç‡
 	 */
 	double GetHardnessRate();
 
-	/** @brief ’f–Ê“ñŸƒ‚[ƒƒ“ƒg‚ğİ’è‚·‚é
-		@param secondMoment ’f–Ê“ñŸƒ‚[ƒƒ“ƒg
+	/** @brief æ–­é¢äºŒæ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆã‚’è¨­å®šã™ã‚‹
+		@param secondMoment æ–­é¢äºŒæ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆ
 	 */
 	void SetSecondMoment(const Vec3d& secondMoment);
 
-	/** @brief ’f–Ê“ñŸƒ‚[ƒƒ“ƒg‚ğæ“¾‚·‚é
-		@return ’f–Ê“ñŸƒ‚[ƒƒ“ƒg
+	/** @brief æ–­é¢äºŒæ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆã‚’å–å¾—ã™ã‚‹
+		@return æ–­é¢äºŒæ¬¡ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆ
 	 */
 	Vec3d GetSecondMoment();
 };
 
-/// ƒoƒlƒ_ƒ“ƒp‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒãƒãƒ€ãƒ³ãƒ‘ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHSpringDesc : public PHJointDesc {
 	SPR_DESCDEF(PHSpring);
 	Vec3d  spring;
@@ -685,7 +685,7 @@ struct PHSpringDesc : public PHJointDesc {
 
 // -----  -----  -----  -----  -----
 
-/// ƒcƒŠ[ƒm[ƒh‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHTreeNodeDesc{
 	bool bEnabled;
 	PHTreeNodeDesc(){
@@ -706,32 +706,32 @@ struct PHPathJointNodeDesc : public PHTreeNode1DDesc{
 struct PHBallJointNodeDesc : public PHTreeNodeDesc{
 };
 
-/// ƒcƒŠ[ƒm[ƒh‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHTreeNodeIf : public SceneObjectIf{
 	SPR_IFDEF(PHTreeNode);
 
-	/** @brief —LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @brief æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	 */
 	void Enable(bool bEnable = true);
 
-	/** @brief —LŒøE–³Œø‚ğ•Ô‚·
+	/** @brief æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’è¿”ã™
 	 */
 	bool IsEnabled();
 
-	/** @brief qƒm[ƒh‚Ì”‚ğæ“¾‚·‚é
+	/** @brief å­ãƒãƒ¼ãƒ‰ã®æ•°ã‚’å–å¾—ã™ã‚‹
 	 */
 	int NChildren();
 
-	/** @brief qƒm[ƒh‚ğæ“¾‚·‚é
+	/** @brief å­ãƒãƒ¼ãƒ‰ã‚’å–å¾—ã™ã‚‹
 	 */
 	PHTreeNodeIf* GetChild(int i);
 
 };
-/// ƒ‹[ƒgƒm[ƒh‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHRootNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHRootNode);
 };
-/// ‚P²ŠÖßƒm[ƒh‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ï¼‘è»¸é–¢ç¯€ãƒãƒ¼ãƒ‰ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHTreeNode1DIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHTreeNode1D);
 };
@@ -750,15 +750,15 @@ struct PHBallJointNodeIf : public PHTreeNodeIf{
 
 // -----  -----  -----  -----  -----
 
-/// ƒMƒA‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ã‚®ã‚¢ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHGearDesc{
-	double ratio;		///< ƒMƒA”ä
+	double ratio;		///< ã‚®ã‚¢æ¯”
 	PHGearDesc(){
 		ratio = 1.0;
 	}
 };
 
-/// ƒMƒA‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+/// ã‚®ã‚¢ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct PHGearIf : public SceneObjectIf{
 	SPR_IFDEF(PHGear);
 };

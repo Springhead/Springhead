@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,7 +14,7 @@
 //@{
 
 /**	@file TMatrixUtility.h
-	s—ñ‰Šú‰»ƒ†[ƒeƒBƒŠƒeƒB[D*/
+	è¡Œåˆ—åˆæœŸåŒ–ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ãƒ¼ï¼*/
 
 namespace PTM {
 
@@ -31,7 +31,7 @@ inline void getAxisMap2D(int& x, int& y, int axis){
 		break;
 	}
 }
-///	x/y²‚ğw’è‚µ‚Ä2~2s—ñ‚ğ‰ñ“]s—ñ‚É‰Šú‰»
+///	x/yè»¸ã‚’æŒ‡å®šã—ã¦2Ã—2è¡Œåˆ—ã‚’å›è»¢è¡Œåˆ—ã«åˆæœŸåŒ–
 template <class MD, class AD>
 void init_rot(TMatrixBase<2, 2, MD>& m,
 				const TVectorBase<2, AD>& a,
@@ -43,7 +43,7 @@ void init_rot(TMatrixBase<2, 2, MD>& m,
 	m.col(y)[1] =  m.col(x)[0];
 }
 
-///	2~2s—ñ‚ğ‰ñ“]s—ñ‚É‰Šú‰»
+///	2Ã—2è¡Œåˆ—ã‚’å›è»¢è¡Œåˆ—ã«åˆæœŸåŒ–
 template <class D>
 void init_rot(TMatrixBase<2, 2, D>& m, TYPENAME D::element_type th){
 	TYPENAME D::element_type c = cos(th);
@@ -68,7 +68,7 @@ inline void getAxisMap3D(int& x, int& y, int& z, int axis){
 		break;
 	}
 }
-///	axis², axis++²‚ğw’è‚µ‚Ä3~3s—ñ‚ğ‰ñ“]s—ñ‚É‰Šú‰»
+///	axisè»¸, axis++è»¸ã‚’æŒ‡å®šã—ã¦3Ã—3è¡Œåˆ—ã‚’å›è»¢è¡Œåˆ—ã«åˆæœŸåŒ–
 template <class MD, class AD, class BD>
 void init_rot(TMatrixBase<3, 3, MD>& m,
 				const TVectorBase<3, AD>& a,
@@ -80,7 +80,7 @@ void init_rot(TMatrixBase<3, 3, MD>& m,
 	m.col(y) = (b - (b*m.col(x))*m.col(x)).unit();
 	m.col(z) = m.col(x) % m.col(y);
 }
-///	3~3s—ñ‚ğx/y/z²‚Ü‚í‚è‰ñ“]s—ñ‚É‰Šú‰»
+///	3Ã—3è¡Œåˆ—ã‚’x/y/zè»¸ã¾ã‚ã‚Šå›è»¢è¡Œåˆ—ã«åˆæœŸåŒ–
 template <class MD>
 void init_rot(TMatrixBase<3, 3, MD>& m, TYPENAME MD::element_type th, char axis){
 	int x,y,z;
@@ -91,7 +91,7 @@ void init_rot(TMatrixBase<3, 3, MD>& m, TYPENAME MD::element_type th, char axis)
 	m.item(y,x) = 0; m.item(y, y) = c; m.item(y, z) = -s;
 	m.item(z,x) = 0; m.item(z, y) = s; m.item(z, z) = c;
 }
-/**	3~3s—ñ‚ğ”CˆÓ²‚Ü‚í‚è‰ñ“]s—ñ‚É‰Šú‰»
+/**	3Ã—3è¡Œåˆ—ã‚’ä»»æ„è»¸ã¾ã‚ã‚Šå›è»¢è¡Œåˆ—ã«åˆæœŸåŒ–
 		+																	   +
 		|u^2+(1-u^2)cos(th)      uv(1-cos(th))-wsin(th)  wu(1-cos(th))+vsin(th)|
 	R =	|uv(1-cos(th))+wsin(th)  v^2+(1-v^2)cos(th)      vw(1-cos(th))-usin(th)|
@@ -115,7 +115,7 @@ void init_rot(TMatrixBase<3, 3, MD>& m, TYPENAME MD::element_type th,
 	m.item(2,2) = w*w + (1-w*w)*c;
 }
 
-/**	3~3s—ñ‚ğƒNƒH[ƒ^ƒjƒIƒ“‚©‚ç”CˆÓ²‚Ü‚í‚è‰ñ“]s—ñ‚É‰Šú‰»	*/
+/**	3Ã—3è¡Œåˆ—ã‚’ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã‹ã‚‰ä»»æ„è»¸ã¾ã‚ã‚Šå›è»¢è¡Œåˆ—ã«åˆæœŸåŒ–	*/
 template <class MD, class QD>
 void init_rot(TMatrixBase<3, 3, MD>& m, const TVectorBase<4, QD>& q){
 	typedef TMatrixBase<3, 3, MD> MAT;
@@ -135,7 +135,7 @@ void init_rot(TMatrixBase<3, 3, MD>& m, const TVectorBase<4, QD>& q){
 	m.item(2,0) = xz - wy;			m.item(2,1) = yz + wx;			m.item(2,2) = 1 - (xx + yy);
 }
 
-///	2~2s—ñ‚ğ’PˆÊs—ñ‚É‰Šú‰»
+///	2Ã—2è¡Œåˆ—ã‚’å˜ä½è¡Œåˆ—ã«åˆæœŸåŒ–
 template <class D>
 void init_unitize(TMatrixBase<2,2,D>& m){
  	typedef TYPENAME D::zero zero;
@@ -145,7 +145,7 @@ void init_unitize(TMatrixBase<2,2,D>& m){
 	m.item(0,0)=u;	m.item(0,1)=z;
 	m.item(1,0)=z;	m.item(1,1)=u;
 }
-///	3~3s—ñ‚ğ’PˆÊs—ñ‚É‰Šú‰»
+///	3Ã—3è¡Œåˆ—ã‚’å˜ä½è¡Œåˆ—ã«åˆæœŸåŒ–
 template <class D>
 void init_unitize(TMatrixBase<3,3,D>& m){
 	typedef TYPENAME D::zero zero;
@@ -156,7 +156,7 @@ void init_unitize(TMatrixBase<3,3,D>& m){
 	m.item(1,0)=z;	m.item(1,1)=u;	m.item(1,2)=z;
 	m.item(2,0)=z;	m.item(2,1)=z;	m.item(2,2)=u;
 }
-///	4~4s—ñ‚ğ’PˆÊs—ñ‚É‰Šú‰»
+///	4Ã—4è¡Œåˆ—ã‚’å˜ä½è¡Œåˆ—ã«åˆæœŸåŒ–
 template <class D>
 void init_unitize(TMatrixBase<4,4,D>& m){
  	typedef TYPENAME D::zero zero;
@@ -171,7 +171,7 @@ void init_unitize(TMatrixBase<4,4,D>& m){
 	m.item(2,0)=z;	m.item(2,1)=z;	m.item(2,2)=u;	m.item(2,3)=z;
 	m.item(3,0)=z;	m.item(3,1)=z;	m.item(3,2)=z;	m.item(3,3)=u;
 }
-///	N~Ns—ñ‚ğ’PˆÊs—ñ‚É‰Šú‰»
+///	NÃ—Nè¡Œåˆ—ã‚’å˜ä½è¡Œåˆ—ã«åˆæœŸåŒ–
 template <class M>
 void init_unitize(MatrixImp<M>& m){
 	assert(m.width() == m.height());
@@ -180,7 +180,7 @@ void init_unitize(MatrixImp<M>& m){
 	m.clear(z);
 	for(size_t i=0; i<m.width(); i++) m.item(i,i) = 1;
 }
-///	3~3s—ñ‚ğƒxƒNƒgƒ‹‚ÌŠOÏŒvZ‚É‚È‚é‚æ‚¤‚É‰Šú‰»(m*b == v^b).
+///	3Ã—3è¡Œåˆ—ã‚’ãƒ™ã‚¯ãƒˆãƒ«ã®å¤–ç©è¨ˆç®—ã«ãªã‚‹ã‚ˆã†ã«åˆæœŸåŒ–(m*b == v^b).
 template <class MD, class D>
 void init_cross(TMatrixBase<3, 3, MD>& m, const TVectorBase<3, D>& v){
 	m.item(0,0) = 0;		m.item(0,1) = -v[2];	m.item(0,2) =  v[1];
@@ -188,7 +188,7 @@ void init_cross(TMatrixBase<3, 3, MD>& m, const TVectorBase<3, D>& v){
 	m.item(2,0) = -v[1];	m.item(2,1) =  v[0];	m.item(2,2) = 0;
 }
 
-///	4~4s—ñ‚ğ‚ ‚é“_‚ğ’‹‚·‚é‹“_s—ñ‚É‰Šú‰»‚·‚éD
+///	4Ã—4è¡Œåˆ—ã‚’ã‚ã‚‹ç‚¹ã‚’æ³¨è¦–ã™ã‚‹è¦–ç‚¹è¡Œåˆ—ã«åˆæœŸåŒ–ã™ã‚‹ï¼
 /* obsolete
 template <class D, class BP>
 void init_look_at(TMatrixBase<4, 4, D>& a, const TVectorBase<3, BP>& posi){
@@ -253,7 +253,7 @@ void init_look_at(TMatrixBase<4,4,D>& a, const TVectorBase<3, BP>& pos, const TV
 	a.col(1).sub_vector(TSubVectorDim<0,3>()) *= sy;
 	a.col(2).sub_vector(TSubVectorDim<0,3>()) *= sz;
 }
-///	4~4s—ñ‚ğ‚ ‚é“_‚ğ’‹‚·‚é‹“_s—ñ‚É‰Šú‰»‚·‚éD
+///	4Ã—4è¡Œåˆ—ã‚’ã‚ã‚‹ç‚¹ã‚’æ³¨è¦–ã™ã‚‹è¦–ç‚¹è¡Œåˆ—ã«åˆæœŸåŒ–ã™ã‚‹ï¼
 /* obsolete
 template <class D, class BP>
 void init_look_at_gl(TMatrixBase<4,4,D>& a, const TVectorBase<3, BP>& posi){
@@ -328,7 +328,7 @@ void init_ortho_gl(TMatrixBase<4,4,D>& a, const TVectorBase<2,SD>& vpSize){
 }
 
 
-/**	4sƒxƒNƒgƒ‹‚ğ‰ñ“]‚ğ‚ ‚ç‚í‚·ƒNƒH[ƒ^ƒjƒIƒ“‚Æ‚µ‚Ä‰Šú‰»	*/
+/**	4è¡Œãƒ™ã‚¯ãƒˆãƒ«ã‚’å›è»¢ã‚’ã‚ã‚‰ã‚ã™ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã¨ã—ã¦åˆæœŸåŒ–	*/
 template <class QD, class T, class AD>
 void init_quaternion(TVectorBase<4, QD>& q, T angle, const TVectorBase<3,AD>& axis){
 	TYPENAME QD::element_type d = axis.norm();
@@ -338,7 +338,7 @@ void init_quaternion(TVectorBase<4, QD>& q, T angle, const TVectorBase<3,AD>& ax
 	q.sub_vector(TSubVectorDim<1,3>()) = s * axis;
 }
 
-/**	4sƒxƒNƒgƒ‹‚ğ‰ñ“]‚ğ‚ ‚ç‚í‚·ƒNƒH[ƒ^ƒjƒIƒ“‚Æ‚µ‚Ä‰Šú‰»	*/
+/**	4è¡Œãƒ™ã‚¯ãƒˆãƒ«ã‚’å›è»¢ã‚’ã‚ã‚‰ã‚ã™ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã¨ã—ã¦åˆæœŸåŒ–	*/
 template <class QD, class AD>
 void init_quaternion(TVectorBase<4, QD>& q, const TVectorBase<3,AD>& rot){
 	typedef TYPENAME QD::element_type ET;
@@ -354,7 +354,7 @@ void init_quaternion(TVectorBase<4, QD>& q, const TVectorBase<3,AD>& rot){
 	}
 }
 
-/**	4sƒxƒNƒgƒ‹‚ğ‰ñ“]‚ğ‚ ‚ç‚í‚·ƒNƒH[ƒ^ƒjƒIƒ“‚Æ‚µ‚Ä‰Šú‰»	*/
+/**	4è¡Œãƒ™ã‚¯ãƒˆãƒ«ã‚’å›è»¢ã‚’ã‚ã‚‰ã‚ã™ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã¨ã—ã¦åˆæœŸåŒ–	*/
 template <class QD, class T>
 void init_quaternion(TVectorBase<4, QD>& q, T angle, char axis){
 	q[0] = (TYPENAME QD::element_type) cos(angle / 2);
@@ -365,7 +365,7 @@ void init_quaternion(TVectorBase<4, QD>& q, T angle, char axis){
 	q[z+1] = 0;
 }
 
-/**	4sƒxƒNƒgƒ‹‚ğ‰ñ“]‚ğ‚ ‚ç‚í‚·ƒNƒH[ƒ^ƒjƒIƒ“‚Æ‚µ‚Ä‰Šú‰»	*/
+/**	4è¡Œãƒ™ã‚¯ãƒˆãƒ«ã‚’å›è»¢ã‚’ã‚ã‚‰ã‚ã™ã‚¯ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã¨ã—ã¦åˆæœŸåŒ–	*/
 template <class QD, class MD>
 void init_quaternion(TVectorBase<4, QD>& qt, const TMatrixBase<3, 3, MD>& m){
 	typedef TYPENAME QD::element_type QET;

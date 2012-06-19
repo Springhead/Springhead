@@ -1,4 +1,4 @@
-#include "FWLDHapticDemo.h"
+﻿#include "FWLDHapticDemo.h"
 
 FWLDHapticDemo app;
 

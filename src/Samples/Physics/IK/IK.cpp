@@ -1,4 +1,4 @@
-#include "IK.h"
+ï»¿#include "IK.h"
 
 #include <iostream>
 #include <sstream>
@@ -37,21 +37,21 @@ void IK::TimerFunc(int id){
 
 void IK::Init(int argc, char* argv[]){
 	SetGRAdaptee(TypeGLUT);
-	GetGRAdaptee()->Init(argc, argv);						// Sdk‚Ìì¬
+	GetGRAdaptee()->Init(argc, argv);						// Sdkã®ä½œæˆ
 	CreateSdk();
-	GetSdk()->Clear();										// SDK‚Ì‰Šú‰»
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Scene‚Ìì¬
+	GetSdk()->Clear();										// SDKã®åˆæœŸåŒ–
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());	// Sceneã®ä½œæˆ
 
 	// GetSdk()->GetScene()->GetPHScene()->SetTimeStep(0.01);
 
-	FWWinDesc windowDesc;									// GL‚ÌƒEƒBƒ“ƒhƒEƒfƒBƒXƒNƒŠƒvƒ^
-	windowDesc.title = "Inverse Kinematics Sample";			// ƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹
-	CreateWin(windowDesc);									// ƒEƒBƒ“ƒhƒE‚Ìì¬
+	FWWinDesc windowDesc;									// GLã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+	windowDesc.title = "Inverse Kinematics Sample";			// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«
+	CreateWin(windowDesc);									// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä½œæˆ
 	InitWindow();
-	InitCameraView();										// ƒJƒƒ‰ƒrƒ…[‚Ì‰Šú‰»
+	InitCameraView();										// ã‚«ãƒ¡ãƒ©ãƒ“ãƒ¥ãƒ¼ã®åˆæœŸåŒ–
 
 	BuildScene(0);
-	int timerId = CreateTimer(FWTimer::GLUT);				// ƒ^ƒCƒ}[‚Ì¶¬
+	int timerId = CreateTimer(FWTimer::GLUT);				// ã‚¿ã‚¤ãƒãƒ¼ã®ç”Ÿæˆ
 }
 
 
@@ -84,7 +84,7 @@ void IK::BuildScene(int sceneNum){
 	soPosCtl1 = NULL;
 	soPosCtl2 = NULL;
 
-	// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚Q‚Â‚Ì’¼üóƒŠƒ“ƒN
+	// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆï¼’ã¤ã®ç›´ç·šçŠ¶ãƒªãƒ³ã‚¯
 	if (sceneNum == 0) {
 		PHSolidDesc			descSolid;
 		CDBoxDesc			descBox;
@@ -92,64 +92,64 @@ void IK::BuildScene(int sceneNum){
 		PHIKBallJointDesc	descIKBall;
 		PHIKPosCtlDesc		descIKPos;
 
-		/// -- ƒ‹[ƒg„‘Ì
-		///// „‘Ì
+		/// -- ãƒ«ãƒ¼ãƒˆå‰›ä½“
+		///// å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		PHSolidIf* so1 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		so1->AddShape(phSdk->CreateShape(descBox));
 
-		/// -- ˆê‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- ä¸€ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so2 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so2->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.1f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring =   1.0f;
 		descBallJoint.damper =   2.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 1000.0f;
 		descIKBall.damper =   20.0f;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
 		ikNode1->AddChildObject(jo1->Cast());
 
-		/// -- “ñ‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- äºŒã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so3 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so3->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring =   1.0f;
 		descBallJoint.damper =   2.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 1000.0f;
 		descIKBall.damper =   20.0f;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
 		ikNode2->AddChildObject(jo2->Cast());
 
-		/// -- IK§Œä“_
-		///// §Œä“_‚Ìì¬
+		/// -- IKåˆ¶å¾¡ç‚¹
+		///// åˆ¶å¾¡ç‚¹ã®ä½œæˆ
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
 		ikPosCtl1->AddChildObject(so3->Cast());
-		///// ƒm[ƒh‚Ö‚Ì“o˜^
+		///// ãƒãƒ¼ãƒ‰ã¸ã®ç™»éŒ²
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
-		///// §Œä“_‚ğw‚µ¦‚·„‘Ì
+		///// åˆ¶å¾¡ç‚¹ã‚’æŒ‡ã—ç¤ºã™å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		soPosCtl1 = phScene->CreateSolid(descSolid);
@@ -157,7 +157,7 @@ void IK::BuildScene(int sceneNum){
 		soPosCtl1->AddShape(phSdk->CreateShape(descBox));
 	}
 
-	// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚T‚Â‚Ì’¼üóƒŠƒ“ƒN
+	// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆï¼•ã¤ã®ç›´ç·šçŠ¶ãƒªãƒ³ã‚¯
 	if (sceneNum == 1) {
 		PHSolidDesc			descSolid;
 		CDBoxDesc			descBox;
@@ -165,127 +165,127 @@ void IK::BuildScene(int sceneNum){
 		PHIKBallJointDesc	descIKBall;
 		PHIKPosCtlDesc		descIKPos;
 
-		/// -- ƒ‹[ƒg„‘Ì
-		///// „‘Ì
+		/// -- ãƒ«ãƒ¼ãƒˆå‰›ä½“
+		///// å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		PHSolidIf* so1 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		so1->AddShape(phSdk->CreateShape(descBox));
 
-		/// -- ˆê‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- ä¸€ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so2 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so2->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.1f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
 		ikNode1->AddChildObject(jo1->Cast());
 
-		/// -- “ñ‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- äºŒã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so3 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so3->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
 		ikNode2->AddChildObject(jo2->Cast());
 
-		/// -- O‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- ä¸‰ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so4 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so4->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo3 = phScene->CreateJoint(so3, so4, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode3 = phScene->CreateIKNode(descIKBall);
 		ikNode3->AddChildObject(jo3->Cast());
 
-		/// -- l‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- å››ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so5 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so5->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo4 = phScene->CreateJoint(so4, so5, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode4 = phScene->CreateIKNode(descIKBall);
 		ikNode4->AddChildObject(jo4->Cast());
 
-		/// -- ŒÜ‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- äº”ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so6 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so6->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo5 = phScene->CreateJoint(so5, so6, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode5 = phScene->CreateIKNode(descIKBall);
 		ikNode5->AddChildObject(jo5->Cast());
 
-		/// -- IK§Œä“_
-		///// §Œä“_‚Ìì¬
+		/// -- IKåˆ¶å¾¡ç‚¹
+		///// åˆ¶å¾¡ç‚¹ã®ä½œæˆ
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
 		ikPosCtl1->AddChildObject(so6->Cast());
-		///// ƒm[ƒh‚Ö‚Ì“o˜^
+		///// ãƒãƒ¼ãƒ‰ã¸ã®ç™»éŒ²
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
 		ikNode3->AddControlPoint(ikPosCtl1);
 		ikNode4->AddControlPoint(ikPosCtl1);
 		ikNode5->AddControlPoint(ikPosCtl1);
-		///// §Œä“_‚ğw‚µ¦‚·„‘Ì
+		///// åˆ¶å¾¡ç‚¹ã‚’æŒ‡ã—ç¤ºã™å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		soPosCtl1 = phScene->CreateSolid(descSolid);
@@ -293,7 +293,7 @@ void IK::BuildScene(int sceneNum){
 		soPosCtl1->AddShape(phSdk->CreateShape(descBox));
 	}
 
-	// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚T‚Â‚Ì’¼üóƒŠƒ“ƒNi—Dæ“x•t‚«E•œŒ³ƒoƒlƒ_ƒ“ƒp‹­‚ßj
+	// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆï¼•ã¤ã®ç›´ç·šçŠ¶ãƒªãƒ³ã‚¯ï¼ˆå„ªå…ˆåº¦ä»˜ããƒ»å¾©å…ƒãƒãƒãƒ€ãƒ³ãƒ‘å¼·ã‚ï¼‰
 	if (sceneNum == 2) {
 		PHSolidDesc			descSolid;
 		CDBoxDesc			descBox;
@@ -301,132 +301,132 @@ void IK::BuildScene(int sceneNum){
 		PHIKBallJointDesc	descIKBall;
 		PHIKPosCtlDesc		descIKPos;
 
-		/// -- ƒ‹[ƒg„‘Ì
-		///// „‘Ì
+		/// -- ãƒ«ãƒ¼ãƒˆå‰›ä½“
+		///// å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		PHSolidIf* so1 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		so1->AddShape(phSdk->CreateShape(descBox));
 
-		/// -- ˆê‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- ä¸€ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so2 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so2->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.1f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   200.0f;
 		descIKBall.bias = 1.8;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
 		ikNode1->AddChildObject(jo1->Cast());
 
-		/// -- “ñ‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- äºŒã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so3 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so3->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 90000.0f;
 		descIKBall.damper =   200.0f;
 		descIKBall.bias = 1.6;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
 		ikNode2->AddChildObject(jo2->Cast());
 
-		/// -- O‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- ä¸‰ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so4 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so4->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo3 = phScene->CreateJoint(so3, so4, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 80000.0f;
 		descIKBall.damper =   200.0f;
 		descIKBall.bias = 1.4;
 		PHIKNodeIf* ikNode3 = phScene->CreateIKNode(descIKBall);
 		ikNode3->AddChildObject(jo3->Cast());
 
-		/// -- l‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- å››ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so5 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so5->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo4 = phScene->CreateJoint(so4, so5, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 70000.0f;
 		descIKBall.damper =   200.0f;
 		descIKBall.bias = 1.2;
 		PHIKNodeIf* ikNode4 = phScene->CreateIKNode(descIKBall);
 		ikNode4->AddChildObject(jo4->Cast());
 
-		/// -- ŒÜ‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- äº”ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so6 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so6->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo5 = phScene->CreateJoint(so5, so6, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 60000.0f;
 		descIKBall.damper =   200.0f;
 		descIKBall.bias = 1.0;
 		PHIKNodeIf* ikNode5 = phScene->CreateIKNode(descIKBall);
 		ikNode5->AddChildObject(jo5->Cast());
 
-		/// -- IK§Œä“_
-		///// §Œä“_‚Ìì¬
+		/// -- IKåˆ¶å¾¡ç‚¹
+		///// åˆ¶å¾¡ç‚¹ã®ä½œæˆ
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
 		ikPosCtl1->AddChildObject(so6->Cast());
-		///// ƒm[ƒh‚Ö‚Ì“o˜^
+		///// ãƒãƒ¼ãƒ‰ã¸ã®ç™»éŒ²
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
 		ikNode3->AddControlPoint(ikPosCtl1);
 		ikNode4->AddControlPoint(ikPosCtl1);
 		ikNode5->AddControlPoint(ikPosCtl1);
-		///// §Œä“_‚ğw‚µ¦‚·„‘Ì
+		///// åˆ¶å¾¡ç‚¹ã‚’æŒ‡ã—ç¤ºã™å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		soPosCtl1 = phScene->CreateSolid(descSolid);
@@ -434,7 +434,7 @@ void IK::BuildScene(int sceneNum){
 		soPosCtl1->AddShape(phSdk->CreateShape(descBox));
 	}
 
-	// ƒVƒ“ƒvƒ‹‚È‚Q•ªŠòƒŠƒ“ƒN
+	// ã‚·ãƒ³ãƒ—ãƒ«ãªï¼’åˆ†å²ãƒªãƒ³ã‚¯
 	if (sceneNum == 3) {
 		PHSolidDesc			descSolid;
 		CDBoxDesc			descBox;
@@ -442,98 +442,98 @@ void IK::BuildScene(int sceneNum){
 		PHIKBallJointDesc	descIKBall;
 		PHIKPosCtlDesc		descIKPos;
 
-		/// -- ƒ‹[ƒg„‘Ì
-		///// „‘Ì
+		/// -- ãƒ«ãƒ¼ãƒˆå‰›ä½“
+		///// å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		PHSolidIf* so1 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		so1->AddShape(phSdk->CreateShape(descBox));
 
-		/// -- ˆê‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- ä¸€ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so2 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so2->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.1f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		//descBallJoint.spring =   1.0f;
 		//descBallJoint.damper =   2.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 1000.0f;
 		descIKBall.damper = 1520.0f;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
 		ikNode1->AddChildObject(jo1->Cast());
 
-		/// -- “ñ‚Â–Ú‚ÌƒŠƒ“ƒNi‚`j
-		///// „‘Ì
+		/// -- äºŒã¤ç›®ã®ãƒªãƒ³ã‚¯ï¼ˆï¼¡ï¼‰
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so3 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so3->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		//descBallJoint.spring =   1.0f;
 		//descBallJoint.damper =   2.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 1000.0f;
 		descIKBall.damper = 1520.0f;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
 		ikNode2->AddChildObject(jo2->Cast());
 
-		/// -- “ñ‚Â–Ú‚ÌƒŠƒ“ƒNi‚aj
-		///// „‘Ì
+		/// -- äºŒã¤ç›®ã®ãƒªãƒ³ã‚¯ï¼ˆï¼¢ï¼‰
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so4 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so4->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		//descBallJoint.spring =   1.0f;
 		//descBallJoint.damper =   2.0f;
 		PHJointIf* jo3 = phScene->CreateJoint(so2, so4, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 1000.0f;
 		descIKBall.damper = 1520.0f;
 		PHIKNodeIf* ikNode3 = phScene->CreateIKNode(descIKBall);
 		ikNode3->AddChildObject(jo3->Cast());
 
-		/// -- IK§Œä“_
-		///// §Œä“_‚P‚Ìì¬
+		/// -- IKåˆ¶å¾¡ç‚¹
+		///// åˆ¶å¾¡ç‚¹ï¼‘ã®ä½œæˆ
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
 		ikPosCtl1->AddChildObject(so3->Cast());
-		///// ƒm[ƒh‚Ö‚Ì“o˜^
+		///// ãƒãƒ¼ãƒ‰ã¸ã®ç™»éŒ²
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
-		///// §Œä“_‚ğw‚µ¦‚·„‘Ì
+		///// åˆ¶å¾¡ç‚¹ã‚’æŒ‡ã—ç¤ºã™å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		soPosCtl1 = phScene->CreateSolid(descSolid);
 		descBox.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		soPosCtl1->AddShape(phSdk->CreateShape(descBox));
 
-		///// §Œä“_‚Q‚Ìì¬
+		///// åˆ¶å¾¡ç‚¹ï¼’ã®ä½œæˆ
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl2 = phScene->CreateIKControlPoint(descIKPos)->Cast();
 		ikPosCtl2->AddChildObject(so4->Cast());
-		///// ƒm[ƒh‚Ö‚Ì“o˜^
+		///// ãƒãƒ¼ãƒ‰ã¸ã®ç™»éŒ²
 		ikNode1->AddControlPoint(ikPosCtl2);
 		ikNode3->AddControlPoint(ikPosCtl2);
-		///// §Œä“_‚ğw‚µ¦‚·„‘Ì
+		///// åˆ¶å¾¡ç‚¹ã‚’æŒ‡ã—ç¤ºã™å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		soPosCtl2 = phScene->CreateSolid(descSolid);
@@ -541,7 +541,7 @@ void IK::BuildScene(int sceneNum){
 		soPosCtl2->AddShape(phSdk->CreateShape(descBox));
 	}
 
-	// ­‚µ’·‚ß‚Ì‚Q•ªŠòƒŠƒ“ƒN
+	// å°‘ã—é•·ã‚ã®ï¼’åˆ†å²ãƒªãƒ³ã‚¯
 	if (sceneNum == 4) {
 		PHSolidDesc			descSolid;
 		CDBoxDesc			descBox;
@@ -549,127 +549,127 @@ void IK::BuildScene(int sceneNum){
 		PHIKBallJointDesc	descIKBall;
 		PHIKPosCtlDesc		descIKPos;
 
-		/// -- ƒ‹[ƒg„‘Ì
-		///// „‘Ì
+		/// -- ãƒ«ãƒ¼ãƒˆå‰›ä½“
+		///// å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		PHSolidIf* so1 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		so1->AddShape(phSdk->CreateShape(descBox));
 
-		/// -- ˆê‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- ä¸€ã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so2 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so2->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.1f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo1 = phScene->CreateJoint(so1, so2, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode1 = phScene->CreateIKNode(descIKBall);
 		ikNode1->AddChildObject(jo1->Cast());
 
-		/// -- “ñ‚Â–Ú‚ÌƒŠƒ“ƒN
-		///// „‘Ì
+		/// -- äºŒã¤ç›®ã®ãƒªãƒ³ã‚¯
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so3 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so3->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo2 = phScene->CreateJoint(so2, so3, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode2 = phScene->CreateIKNode(descIKBall);
 		ikNode2->AddChildObject(jo2->Cast());
 
-		/// -- O‚Â–Ú‚ÌƒŠƒ“ƒNi‚`j
-		///// „‘Ì
+		/// -- ä¸‰ã¤ç›®ã®ãƒªãƒ³ã‚¯ï¼ˆï¼¡ï¼‰
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so4 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so4->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo3 = phScene->CreateJoint(so3, so4, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode3 = phScene->CreateIKNode(descIKBall);
 		ikNode3->AddChildObject(jo3->Cast());
 
-		/// -- l‚Â–Ú‚ÌƒŠƒ“ƒNi‚`j
-		///// „‘Ì
+		/// -- å››ã¤ç›®ã®ãƒªãƒ³ã‚¯ï¼ˆï¼¡ï¼‰
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so5 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so5->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo4 = phScene->CreateJoint(so4, so5, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode4 = phScene->CreateIKNode(descIKBall);
 		ikNode4->AddChildObject(jo4->Cast());
 
-		/// -- ŒÜ‚Â–Ú‚ÌƒŠƒ“ƒNi‚`j
-		///// „‘Ì
+		/// -- äº”ã¤ç›®ã®ãƒªãƒ³ã‚¯ï¼ˆï¼¡ï¼‰
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so6 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so6->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo5 = phScene->CreateJoint(so5, so6, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode5 = phScene->CreateIKNode(descIKBall);
 		ikNode5->AddChildObject(jo5->Cast());
 
-		/// -- IK§Œä“_
-		///// §Œä“_‚Ìì¬
+		/// -- IKåˆ¶å¾¡ç‚¹
+		///// åˆ¶å¾¡ç‚¹ã®ä½œæˆ
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl1 = phScene->CreateIKControlPoint(descIKPos)->Cast();
 		ikPosCtl1->AddChildObject(so6->Cast());
-		///// ƒm[ƒh‚Ö‚Ì“o˜^
+		///// ãƒãƒ¼ãƒ‰ã¸ã®ç™»éŒ²
 		ikNode1->AddControlPoint(ikPosCtl1);
 		ikNode2->AddControlPoint(ikPosCtl1);
 		ikNode3->AddControlPoint(ikPosCtl1);
 		ikNode4->AddControlPoint(ikPosCtl1);
 		ikNode5->AddControlPoint(ikPosCtl1);
-		///// §Œä“_‚ğw‚µ¦‚·„‘Ì
+		///// åˆ¶å¾¡ç‚¹ã‚’æŒ‡ã—ç¤ºã™å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		soPosCtl1 = phScene->CreateSolid(descSolid);
@@ -677,78 +677,78 @@ void IK::BuildScene(int sceneNum){
 		soPosCtl1->AddShape(phSdk->CreateShape(descBox));
 
 
-		/// -- O‚Â–Ú‚ÌƒŠƒ“ƒNi‚aj
-		///// „‘Ì
+		/// -- ä¸‰ã¤ç›®ã®ãƒªãƒ³ã‚¯ï¼ˆï¼¢ï¼‰
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so7 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so7->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo6 = phScene->CreateJoint(so3, so7, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode6 = phScene->CreateIKNode(descIKBall);
 		ikNode6->AddChildObject(jo6->Cast());
 
-		/// -- l‚Â–Ú‚ÌƒŠƒ“ƒNi‚aj
-		///// „‘Ì
+		/// -- å››ã¤ç›®ã®ãƒªãƒ³ã‚¯ï¼ˆï¼¢ï¼‰
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so8 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so8->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo7 = phScene->CreateJoint(so7, so8, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode7 = phScene->CreateIKNode(descIKBall);
 		ikNode7->AddChildObject(jo7->Cast());
 
-		/// -- ŒÜ‚Â–Ú‚ÌƒŠƒ“ƒNi‚aj
-		///// „‘Ì
+		/// -- äº”ã¤ç›®ã®ãƒªãƒ³ã‚¯ï¼ˆï¼¢ï¼‰
+		///// å‰›ä½“
 		descSolid.dynamical = true;
 		descSolid.mass = 1.0;
 		PHSolidIf* so9 = phScene->CreateSolid(descSolid);
-		///// Œ`ó
+		///// å½¢çŠ¶
 		descBox.boxsize = Vec3f(0.2f, 1.0f, 0.2f);
 		so9->AddShape(phSdk->CreateShape(descBox));
-		///// ŠÖß
+		///// é–¢ç¯€
 		descBallJoint.poseSocket.Pos() = Vec3f(0.0f, +0.5f, 0.0f);
 		descBallJoint.posePlug.Pos() = Vec3f(0.0f, -0.5f, 0.0f);
 		descBallJoint.spring = 1000.0f;
 		descBallJoint.damper =   20.0f;
 		PHJointIf* jo8 = phScene->CreateJoint(so8, so9, descBallJoint);
-		///// IKƒm[ƒh
+		///// IKãƒãƒ¼ãƒ‰
 		descIKBall.spring = 100000.0f;
 		descIKBall.damper =   2000.0f;
 		PHIKNodeIf* ikNode8 = phScene->CreateIKNode(descIKBall);
 		ikNode8->AddChildObject(jo8->Cast());
 
-		/// -- IK§Œä“_
-		///// §Œä“_‚Ìì¬
+		/// -- IKåˆ¶å¾¡ç‚¹
+		///// åˆ¶å¾¡ç‚¹ã®ä½œæˆ
 		descIKPos.pos = Vec3d(0.0, 0.5, 0.0);
 		ikPosCtl2 = phScene->CreateIKControlPoint(descIKPos)->Cast();
 		ikPosCtl2->AddChildObject(so9->Cast());
-		///// ƒm[ƒh‚Ö‚Ì“o˜^
+		///// ãƒãƒ¼ãƒ‰ã¸ã®ç™»éŒ²
 		ikNode1->AddControlPoint(ikPosCtl2);
 		ikNode2->AddControlPoint(ikPosCtl2);
 		ikNode6->AddControlPoint(ikPosCtl2);
 		ikNode7->AddControlPoint(ikPosCtl2);
 		ikNode8->AddControlPoint(ikPosCtl2);
-		///// §Œä“_‚ğw‚µ¦‚·„‘Ì
+		///// åˆ¶å¾¡ç‚¹ã‚’æŒ‡ã—ç¤ºã™å‰›ä½“
 		descSolid.dynamical = false;
 		descSolid.mass = 1.0;
 		soPosCtl2 = phScene->CreateSolid(descSolid);
@@ -756,11 +756,11 @@ void IK::BuildScene(int sceneNum){
 		soPosCtl2->AddShape(phSdk->CreateShape(descBox));
 	}
 
-	// Scene‚Ìİ’è
-	/// IK‚Ìİ’è
+	// Sceneã®è¨­å®š
+	/// IKã®è¨­å®š
 	phScene->GetIKEngine()->SetNumIter(50);
 	phScene->GetIKEngine()->Enable(bIK);
-	/// ‚»‚Ì‘¼‚Ìİ’è
+	/// ãã®ä»–ã®è¨­å®š
 	phScene->SetContactMode(PHSceneDesc::MODE_NONE);
 	phScene->SetGravity(gravity);
 	phScene->SetTimeStep(0.01);
@@ -790,7 +790,7 @@ void IK::OneStep(){
 }
 
 void IK::Display(){
-	// •`‰æƒ‚[ƒh‚Ìİ’è
+	// æç”»ãƒ¢ãƒ¼ãƒ‰ã®è¨­å®š
 	GetSdk()->SetDebugMode(true);
 	GRDebugRenderIf* render = GetCurrentWin()->render->Cast();
 	render->SetRenderMode(true, false);
@@ -798,7 +798,7 @@ void IK::Display(){
 	render->EnableRenderForce(bDebug);
 	render->EnableRenderContact(bDebug);
 
-	// ƒJƒƒ‰À•W‚Ìw’è
+	// ã‚«ãƒ¡ãƒ©åº§æ¨™ã®æŒ‡å®š
 	GRCameraIf* cam = GetCurrentWin()->scene->GetGRScene()->GetCamera();
 	if (cam && cam->GetFrame()){
 		cam->GetFrame()->SetTransform(cameraInfo.view);
@@ -806,7 +806,7 @@ void IK::Display(){
 		GetCurrentWin()->render->SetViewMatrix(cameraInfo.view.inv());
 	}
 
-	// •`‰æ‚ÌÀs
+	// æç”»ã®å®Ÿè¡Œ
 	if(!GetCurrentWin()) return;
 	GetSdk()->SwitchScene(GetCurrentWin()->GetScene());
 	GetSdk()->SwitchRender(GetCurrentWin()->GetRender());
@@ -1005,7 +1005,7 @@ void IK::Keyboard(int key, int x, int y){
 
 			// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 			// 
-			// “Æ©‚ÌƒL[ƒtƒ@ƒ“ƒNƒVƒ‡ƒ“‚Í‚±‚±‚Å’è‹`‚µ‚Ü‚·D
+			// ç‹¬è‡ªã®ã‚­ãƒ¼ãƒ•ã‚¡ãƒ³ã‚¯ã‚·ãƒ§ãƒ³ã¯ã“ã“ã§å®šç¾©ã—ã¾ã™ï¼
 			// 
 			// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 

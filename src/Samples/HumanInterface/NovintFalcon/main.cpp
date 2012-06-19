@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -6,8 +6,8 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
-	—ÍŠoƒCƒ“ƒ^ƒtƒF[ƒXFalcon‚ÌÚ‘±Šm”F—pƒvƒƒOƒ‰ƒ€
-	ˆÊ’u‚Æ—ÍŠo‚ğ’ñ¦‚·‚é
+	åŠ›è¦šã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹Falconã®æ¥ç¶šç¢ºèªç”¨ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+	ä½ç½®ã¨åŠ›è¦šã‚’æç¤ºã™ã‚‹
 */
 
 #include <conio.h>

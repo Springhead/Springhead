@@ -1,4 +1,4 @@
-#include "Handler.h"
+ï»¿#include "Handler.h"
 
 class ArmHandler : public Handler{
 public:
@@ -20,14 +20,14 @@ public:
 	PHSolidIf*					ball;
 	PHSpringIf*					spring;
 
-	int							nLinks;			///< ƒŠƒ“ƒN‚Ì”
-	double						linkSize;		///< ƒŠƒ“ƒN‚Ì’·‚³
-	double						jointSpring;	///< ŠÖß‚ÌƒoƒlŒW”
-	double						jointDamper;	///< ŠÖß‚Ìƒ_ƒ“ƒpŒW”
-	double						handSpring;		///< èæ‚ÌƒoƒlŒW”
-	double						handDamper;		///< èæ‚Ìƒ_ƒ“ƒpŒW”
-	bool						useExternal;	///< ŠO•”ƒRƒ“ƒgƒ[ƒ‰‚Åèæ§Œä‚ğs‚¤‚©‚Ç‚¤‚©
-	bool						useABA;			///< ABA‚ğg‚¤‚©‚Ç‚¤‚©
+	int							nLinks;			///< ãƒªãƒ³ã‚¯ã®æ•°
+	double						linkSize;		///< ãƒªãƒ³ã‚¯ã®é•·ã•
+	double						jointSpring;	///< é–¢ç¯€ã®ãƒãƒä¿‚æ•°
+	double						jointDamper;	///< é–¢ç¯€ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
+	double						handSpring;		///< æ‰‹å…ˆã®ãƒãƒä¿‚æ•°
+	double						handDamper;		///< æ‰‹å…ˆã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
+	bool						useExternal;	///< å¤–éƒ¨ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã§æ‰‹å…ˆåˆ¶å¾¡ã‚’è¡Œã†ã‹ã©ã†ã‹
+	bool						useABA;			///< ABAã‚’ä½¿ã†ã‹ã©ã†ã‹
 
 public:
 	ArmHandler(SampleApp* a):Handler(a){
@@ -63,7 +63,7 @@ public:
 		PHSdkIf* phSdk = GetPHSdk();
 		PHSceneIf* phScene = GetPHScene();
 		
-		// Œ`óì¬
+		// å½¢çŠ¶ä½œæˆ
 		CDBoxDesc bd;
 		bd.boxsize = Vec3d(2.0, 6.0, 2.0);
 		shapeBox = phSdk->CreateShape(bd);
@@ -72,14 +72,14 @@ public:
 		descSphere.radius = 1.0;
 		shapeSphere = phSdk->CreateShape(descSphere);
 		
-		// ƒƒ{ƒbƒgƒA[ƒ€‚ğ\¬‚·‚é„‘Ì
+		// ãƒ­ãƒœãƒƒãƒˆã‚¢ãƒ¼ãƒ ã‚’æ§‹æˆã™ã‚‹å‰›ä½“
 		links.resize(nLinks);
 		for(int i = 0; i < nLinks; i++){
 			links[i] = phScene->CreateSolid();
 			links[i]->AddShape(shapeBox);
 		}
 		
-		// ƒŠƒ“ƒN‚ğŠÖß‚Å‚Â‚È‚®
+		// ãƒªãƒ³ã‚¯ã‚’é–¢ç¯€ã§ã¤ãªã
 		joints.resize(nLinks);
 		PHHingeJointDesc descHinge;
 		descHinge.poseSocket.Pos()	= Vec3d(0.0,  0.5 * linkSize, 0.0);
@@ -97,13 +97,13 @@ public:
 				node = phScene->CreateTreeNode(node, links[0], PHTreeNodeDesc());
 		}
 
-		// ƒ{[ƒ‹i–Ú•W•¨‘Ì)
+		// ãƒœãƒ¼ãƒ«ï¼ˆç›®æ¨™ç‰©ä½“)
 		ball = phScene->CreateSolid();
 		ball->AddShape(shapeSphere);
 		ball->SetFramePosition(Vec3d(10.0, 5.0, 1.0));
 		ball->SetDynamical(false);		
 	
-		// èæ‚Æƒ{[ƒ‹‚ğ‚Â‚È‚®ƒoƒl
+		// æ‰‹å…ˆã¨ãƒœãƒ¼ãƒ«ã‚’ã¤ãªããƒãƒ
 		if(!useExternal){
 			PHSpringDesc descSpring;
 			descSpring.spring = handSpring * Vec3d(1,1,1);
@@ -112,7 +112,7 @@ public:
 		}
 		links.front()->SetDynamical(false);
 
-		phScene->SetContactMode(PHSceneDesc::MODE_NONE);		// ÚG‚ğØ‚é
+		phScene->SetContactMode(PHSceneDesc::MODE_NONE);		// æ¥è§¦ã‚’åˆ‡ã‚‹
 	}
 
 	virtual void OnAction(int id){
@@ -133,11 +133,11 @@ public:
 	}
 
 	virtual void OnTimer(){
-		// èæƒRƒ“ƒgƒ[ƒ‰iPD§Œäj
+		// æ‰‹å…ˆã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ï¼ˆPDåˆ¶å¾¡ï¼‰
 		if(useExternal){
-			// ‘Š‘Î‘¬“x
+			// ç›¸å¯¾é€Ÿåº¦
 			Vec3d dVel = Vec3d() - links.back()->GetVelocity();
-			// ˆÊ’u•Î·
+			// ä½ç½®åå·®
 			Vec3d dPos = ball->GetPose().Pos() - links.back()->GetPose().Pos();
 			Vec3d force = handSpring*dPos + handDamper*dVel;
 			links.back()->AddForce(force, soBox[4]->GetPose()*Vec3d(0,3,0));

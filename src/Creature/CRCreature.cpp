@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -63,7 +63,7 @@ bool CRCreature::AddChildObject(ObjectIf* o){
 	if (e){
 		if (std::find(engines.begin(), engines.end(), e) == engines.end()){
 			engines.push_back(e);
-			// ƒGƒ“ƒWƒ“‚ğƒvƒ‰ƒCƒIƒŠƒeƒB‚É]‚Á‚Äƒ\[ƒg
+			// ã‚¨ãƒ³ã‚¸ãƒ³ã‚’ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£ã«å¾“ã£ã¦ã‚½ãƒ¼ãƒˆ
 			UTContentsLess< UTRef<CREngine> > less;
 			std::sort(engines.begin(), engines.end(), less);
 			DCAST(SceneObject, e)->SetScene(this->Cast());

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,39 +12,39 @@
 
 namespace Spr {
 
-///	Contec‚ÌISA D/AƒJ[ƒh—p‚Ìƒhƒ‰ƒCƒo.
+///	Contecã®ISA D/Aã‚«ãƒ¼ãƒ‰ç”¨ã®ãƒ‰ãƒ©ã‚¤ãƒ.
 class SPR_DLL DRContecIsaCounter: public HIRealDevice{
 public:
 	SPR_OBJECTDEF_NOIF(DRContecIsaCounter);
 
-	///	‰¼‘zƒfƒoƒCƒX
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹
 	class DV: public DVCounter{
 	public:
 		DV(DRContecIsaCounter* r, int c):DVCounter(r, c){}
 		DRContecIsaCounter* GetRealDevice() { return realDevice->Cast(); }
 
-		///	ƒJƒEƒ“ƒ^’l‚Ìİ’è
+		///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®è¨­å®š
 		virtual void Count(long c){ GetRealDevice()->Count(portNo, c); }
-		///	ƒJƒEƒ“ƒ^’l‚Ì“Ç‚İo‚µ
+		///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®èª­ã¿å‡ºã—
 		virtual long Count(){ return GetRealDevice()->Count(portNo); }
 	};
 protected:
-	///	ƒJƒEƒ“ƒ^ƒ{[ƒh‚ÌIOƒAƒhƒŒƒX
+	///	ã‚«ã‚¦ãƒ³ã‚¿ãƒœãƒ¼ãƒ‰ã®IOã‚¢ãƒ‰ãƒ¬ã‚¹
 	int address;
 
 public:
-	/**	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		@param address		ƒJƒEƒ“ƒ^ƒ{[ƒh‚ÌI/OƒAƒhƒŒƒX
+	/**	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		@param address		ã‚«ã‚¦ãƒ³ã‚¿ãƒœãƒ¼ãƒ‰ã®I/Oã‚¢ãƒ‰ãƒ¬ã‚¹
 	*/
 	DRContecIsaCounter(int address = 0);
 
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	virtual bool Init();
-	///	‰¼‘zƒfƒoƒCƒX‚Ì“o˜^
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²
 	//virtual void Register(HIVirtualDevicePool& vpool);
-	///	ƒJƒEƒ“ƒ^’l‚Ìİ’è
+	///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®è¨­å®š
 	void Count(int ch, long c);
-	///	ƒJƒEƒ“ƒ^’l‚Ì“Ç‚İo‚µ
+	///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®èª­ã¿å‡ºã—
 	long Count(int ch);
 };
 }	//	namespace Spr

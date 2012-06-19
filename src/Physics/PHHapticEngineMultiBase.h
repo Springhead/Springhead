@@ -1,4 +1,4 @@
-#ifndef PH_HAPTICENGINE_MULTIBASE_H
+ï»¿#ifndef PH_HAPTICENGINE_MULTIBASE_H
 #define PH_HAPTICENGINE_MULTIBASE_H
 
 #include <Physics/PHHapticEngine.h>
@@ -51,12 +51,12 @@ public:
 	virtual void Step1(){}
 	virtual void Step2(){}
 	virtual void SyncThreads();
-	virtual void SyncHapticPointers(); // hapticƒXƒŒƒbƒh‘¤‚Ìhapticpointer‚Ìó‘Ô‚ğphysics‚Ö“¯Šú
+	virtual void SyncHapticPointers(); // hapticã‚¹ãƒ¬ãƒƒãƒ‰å´ã®hapticpointerã®çŠ¶æ…‹ã‚’physicsã¸åŒæœŸ
 	virtual void SyncArrays();
-	virtual void SyncHaptic2Physic(){}	// hapticƒXƒŒƒbƒh‚©‚çphysicsƒXƒŒƒbƒh‚Ö‚Ì“¯Šú
-	virtual void SyncPhysic2Haptic(){}	// physicsƒXƒŒƒbƒh‚©‚çhapticƒXƒŒƒbƒh‚Ö‚Ì“¯Šú
+	virtual void SyncHaptic2Physic(){}	// hapticã‚¹ãƒ¬ãƒƒãƒ‰ã‹ã‚‰physicsã‚¹ãƒ¬ãƒƒãƒ‰ã¸ã®åŒæœŸ
+	virtual void SyncPhysic2Haptic(){}	// physicsã‚¹ãƒ¬ãƒƒãƒ‰ã‹ã‚‰hapticã‚¹ãƒ¬ãƒƒãƒ‰ã¸ã®åŒæœŸ
 
-	//ƒfƒoƒbƒN—pƒR[ƒh
+	//ãƒ‡ãƒãƒƒã‚¯ç”¨ã‚³ãƒ¼ãƒ‰
 	virtual void StepPhysicsSimulation();
 };
 

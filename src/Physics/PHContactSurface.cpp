@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,7 +8,7 @@
 #include <Physics/PHContactSurface.h>
 #include <Physics/PHConstraintEngine.h>
 
-#define USE_ROTATEFRICTION 1//‰ñ“]–€C‚Ì§ŒÀ‚ğs‚¤‚©‚Ç‚¤‚©
+#define USE_ROTATEFRICTION 1//å›è»¢æ‘©æ“¦ã®åˆ¶é™ã‚’è¡Œã†ã‹ã©ã†ã‹
 
 using namespace PTM;
 using namespace std;
@@ -24,7 +24,7 @@ PHContactSurface::PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp,
 	section = sec;
 	lastL = lastR = 0;
 
-	//‰ñ“]–€C—p
+	//å›è»¢æ‘©æ“¦ç”¨
 #if USE_ROTATEFRICTION
 	rotateFriction = 0.0;
 	segmentationNum = 0;
@@ -34,9 +34,9 @@ PHContactSurface::PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp,
 
 	Vec3d rjabs[2];
 	for(int i = 0; i < 2; i++){
-		rjabs[i] = pos - solid[i]->GetCenterPosition();	//„‘Ì‚Ì’†S‚©‚çÚG“_‚Ü‚Å‚ÌƒxƒNƒgƒ‹
+		rjabs[i] = pos - solid[i]->GetCenterPosition();	//å‰›ä½“ã®ä¸­å¿ƒã‹ã‚‰æ¥è§¦ç‚¹ã¾ã§ã®ãƒ™ã‚¯ãƒˆãƒ«
 	}
-	// local: ÚG“_‚ÌŠÖßƒtƒŒ[ƒ€ ‚ÍCx²‚ğ–@ü, y,z²‚ğÚü‚Æ‚·‚é
+	// local: æ¥è§¦ç‚¹ã®é–¢ç¯€ãƒ•ãƒ¬ãƒ¼ãƒ  ã¯ï¼Œxè»¸ã‚’æ³•ç·š, y,zè»¸ã‚’æ¥ç·šã¨ã™ã‚‹
 	Quaterniond qlocal;
 	qlocal.FromMatrix(local);
 	for(int i = 0; i < 2; i++){
@@ -55,7 +55,7 @@ PHContactSurface::PHContactSurface(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, 
 	section = sec;
 	lastL = lastR = 0;
 
-	//‰ñ“]–€C—p
+	//å›è»¢æ‘©æ“¦ç”¨
 	rotateFriction = 0.0;
 	segmentationNum = 0;
 	interval = 0.5;
@@ -63,14 +63,14 @@ PHContactSurface::PHContactSurface(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, 
 
 	Vec3d rjabs[2], vjabs[2];
 	for(int i = 0; i < 2; i++){
-		rjabs[i] = pos - solid[i]->GetCenterPosition();	//„‘Ì‚Ì’†S‚©‚çÚG“_‚Ü‚Å‚ÌƒxƒNƒgƒ‹
-		vjabs[i] = solid[i]->GetVelocity() + solid[i]->GetAngularVelocity() % rjabs[i];	//ÚG“_‚Å‚Ì‘¬“x
+		rjabs[i] = pos - solid[i]->GetCenterPosition();	//å‰›ä½“ã®ä¸­å¿ƒã‹ã‚‰æ¥è§¦ç‚¹ã¾ã§ã®ãƒ™ã‚¯ãƒˆãƒ«
+		vjabs[i] = solid[i]->GetVelocity() + solid[i]->GetAngularVelocity() % rjabs[i];	//æ¥è§¦ç‚¹ã§ã®é€Ÿåº¦
 	}
-	//ÚüƒxƒNƒgƒ‹t[0], t[1] (t[0]‚Í‘Š‘Î‘¬“xƒxƒNƒgƒ‹‚É•½s‚É‚È‚é‚æ‚¤‚É‚·‚é)
+	//æ¥ç·šãƒ™ã‚¯ãƒˆãƒ«t[0], t[1] (t[0]ã¯ç›¸å¯¾é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«ã«å¹³è¡Œã«ãªã‚‹ã‚ˆã†ã«ã™ã‚‹)
 	Vec3d n, t[2], vjrel, vjrelproj;
 	n = shapePair->normal;
 	vjrel = vjabs[1] - vjabs[0];
-	vjrelproj = vjrel - (n * vjrel) * n;		//‘Š‘Î‘¬“xƒxƒNƒgƒ‹‚ğ–@ü‚É’¼Œğ‚·‚é•½–Ê‚ÉË‰e‚µ‚½ƒxƒNƒgƒ‹
+	vjrelproj = vjrel - (n * vjrel) * n;		//ç›¸å¯¾é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ³•ç·šã«ç›´äº¤ã™ã‚‹å¹³é¢ã«å°„å½±ã—ãŸãƒ™ã‚¯ãƒˆãƒ«
 	double vjrelproj_norm = vjrelproj.norm();
 	if(vjrelproj_norm < 1.0e-10){
 		t[0] = n % Vec3d(1.0, 0.0, 0.0);	
@@ -83,7 +83,7 @@ PHContactSurface::PHContactSurface(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, 
 	}
 	t[1] = n % t[0];
 	Matrix3d Rjabs;
-	// ÚG“_‚ÌŠÖßƒtƒŒ[ƒ€‚Íx², y²‚ğÚüCz²‚ğ–@ü‚Æ‚·‚é
+	// æ¥è§¦ç‚¹ã®é–¢ç¯€ãƒ•ãƒ¬ãƒ¼ãƒ ã¯xè»¸, yè»¸ã‚’æ¥ç·šï¼Œzè»¸ã‚’æ³•ç·šã¨ã™ã‚‹
 	Rjabs.col(0) = n;
 	Rjabs.col(1) = t[0];
 	Rjabs.col(2) = t[1];
@@ -103,7 +103,7 @@ void PHContactSurface::IterateLCP() {
 	
 	SpatialVector fnew, df;
 
-	// -- —Í
+	// -- åŠ›
 	for (int i=0; i<3; ++i) {
 		// Gauss-Seidel Iteration
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i]*f[i] + b[i] + db[i] 
@@ -118,7 +118,7 @@ void PHContactSurface::IterateLCP() {
 		f[i] = fnew[i];
 	}
 
-	// -- ƒgƒ‹ƒN
+	// -- ãƒˆãƒ«ã‚¯
 	// Gauss-Seidel Iteration
 	for (int i=3; i<6; ++i) {
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i]*f[i] + b[i] + db[i] 
@@ -137,24 +137,24 @@ void PHContactSurface::IterateLCP() {
 }
 
 void PHContactSurface::CompBias(){
-	//	correction‚ğˆÊ’uLCP‚Å•Ê‚És‚¤ê‡‚ÍA‘¬“x‚ğ•ÏX‚µ‚Ä‚ÌˆÊ’u•â³‚Í‚µ‚È‚¢B
+	//	correctionã‚’ä½ç½®LCPã§åˆ¥ã«è¡Œã†å ´åˆã¯ã€é€Ÿåº¦ã‚’å¤‰æ›´ã—ã¦ã®ä½ç½®è£œæ­£ã¯ã—ãªã„ã€‚
 	if (engine->numIterContactCorrection) return;
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	double overlap = 0.002;
 
 #if 1
-	//	ÚG—p‚Ì correctionRate
+	//	æ¥è§¦ç”¨ã® correctionRate
 	double contactCorrectionRate = 0;
 
 	double e;
-	//	‘¬“x‚ª¬‚³‚¢ê‡‚ÍA’µ‚Ë•Ô‚è‚È‚µB
+	//	é€Ÿåº¦ãŒå°ã•ã„å ´åˆã¯ã€è·³ã­è¿”ã‚Šãªã—ã€‚
 	if (vjrel[0]*GetScene()->GetTimeStep() > -0.1){
 		e = 0;
 		contactCorrectionRate = engine->contactCorrectionRate;
 	}else{
-		//	’µ‚Ë•Ô‚èŒW”: 2•¨‘Ì‚Ì•½‹Ï’l‚ğg‚¤
+		//	è·³ã­è¿”ã‚Šä¿‚æ•°: 2ç‰©ä½“ã®å¹³å‡å€¤ã‚’ä½¿ã†
 		e = 0.5 * (shapePair->shape[0]->GetMaterial().e + shapePair->shape[1]->GetMaterial().e);
-		//	’µ‚Ë•Ô‚é‚Æ‚«‚Í•â³‚È‚µ
+		//	è·³ã­è¿”ã‚‹ã¨ãã¯è£œæ­£ãªã—
 		contactCorrectionRate = 0;
 	}
 
@@ -164,16 +164,16 @@ void PHContactSurface::CompBias(){
 
 #if 0
 //	db.v.x = 0.1*engine->correctionRate * (-shapePair->depth * dtinv + vjrel.v.x);
-	/*	hase	–{“–‚Í 1e-3‚Íˆø‚«‚·‚¬
-		depth •ª‚¾‚¯Correction‚ğ“ü‚ê‚é‚ÆÚG‚ª•s˜A‘±‚É‚È‚é‚Ì‚ÅCdepth-epsilon‚Å—Ç‚¢‚ªC
-		epsilon‚ª‘å‚«‚·‚¬‚éD
+	/*	hase	æœ¬å½“ã¯ 1e-3ã¯å¼•ãã™ã
+		depth åˆ†ã ã‘Correctionã‚’å…¥ã‚Œã‚‹ã¨æ¥è§¦ãŒä¸é€£ç¶šã«ãªã‚‹ã®ã§ï¼Œdepth-epsilonã§è‰¯ã„ãŒï¼Œ
+		epsilonãŒå¤§ãã™ãã‚‹ï¼
 
-		‚±‚ê‚ÍCÚG–Ê‚ªlŠpŒ`‚ÅÚG“_‚ª4“_‚ ‚éê‡‚È‚ÇC
-		4“_ŠÔ‚Ì—Í‚Ì•ªU‚ª‚Ü‚ê‚É•s‹Ïˆê‚É‚È‚è‰ñ“]‚ªn‚Ü‚èC
-		ÚG–Ê‚ª‰E‚æ‚è‚Ìó‘Ô‚Æ¶‚æ‚è‚Ìó‘Ô‚ÌŠÔ‚Å×‚©‚­”­U‚·‚é‚±‚Æ‚ª‚ ‚é‚½‚ßD
-		Œ»ó‚ÍC‚»‚Ìê‡‚É‚àÚG–Ê‚ÌŒ`‚ª•Ï‚í‚ç‚È‚¢‚æ‚¤‚É‚·‚é‚±‚Æ‚ÅCˆÀ’è‰»‚µ‚Ä‚¢‚éD
+		ã“ã‚Œã¯ï¼Œæ¥è§¦é¢ãŒå››è§’å½¢ã§æ¥è§¦ç‚¹ãŒ4ç‚¹ã‚ã‚‹å ´åˆãªã©ï¼Œ
+		4ç‚¹é–“ã®åŠ›ã®åˆ†æ•£ãŒã¾ã‚Œã«ä¸å‡ä¸€ã«ãªã‚Šå›è»¢ãŒå§‹ã¾ã‚Šï¼Œ
+		æ¥è§¦é¢ãŒå³ã‚ˆã‚Šã®çŠ¶æ…‹ã¨å·¦ã‚ˆã‚Šã®çŠ¶æ…‹ã®é–“ã§ç´°ã‹ãç™ºæŒ¯ã™ã‚‹ã“ã¨ãŒã‚ã‚‹ãŸã‚ï¼
+		ç¾çŠ¶ã¯ï¼Œãã®å ´åˆã«ã‚‚æ¥è§¦é¢ã®å½¢ãŒå¤‰ã‚ã‚‰ãªã„ã‚ˆã†ã«ã™ã‚‹ã“ã¨ã§ï¼Œå®‰å®šåŒ–ã—ã¦ã„ã‚‹ï¼
 
-		2„‘ÌŠÔ‚ÌÚG‚ğ‚Ğ‚Æ‚Â‚Ì§–ñ‚Æ‚µ‚Ä‚ ‚ç‚í‚¹‚é‚æ‚¤‚É‚È‚ê‚Î‰ğŒˆ‚·‚é‚Æv‚¤D	
+		2å‰›ä½“é–“ã®æ¥è§¦ã‚’ã²ã¨ã¤ã®åˆ¶ç´„ã¨ã—ã¦ã‚ã‚‰ã‚ã›ã‚‹ã‚ˆã†ã«ãªã‚Œã°è§£æ±ºã™ã‚‹ã¨æ€ã†ï¼	
 	*/
 	double err = (shapePair->depth - 1e-3)*dtinv - 0.2*vjrel.v().x;
 	if (err < 0) err = 0;
@@ -195,12 +195,12 @@ void PHContactSurface::CompBias(){
 
 void PHContactSurface::Projection(double& f_, int k){
 	static double flim;
-	if(k == 0){	//‚’¼R—Í >= 0‚Ì§–ñ
+	if(k == 0){	//å‚ç›´æŠ—åŠ› >= 0ã®åˆ¶ç´„
 		f_ = max(0.0, f_);
-		//	Å‘åÃ~–€C
+		//	æœ€å¤§é™æ­¢æ‘©æ“¦
 		flim = 0.5 * (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0) * f_;	}
 	else if(k == 1 || k == 2){
-		//	“®–€C‚ğ‚µ‚ÉÀ‘•‚µ‚Ä‚İ‚éB
+		//	å‹•æ‘©æ“¦ã‚’è©¦ã—ã«å®Ÿè£…ã—ã¦ã¿ã‚‹ã€‚
 		double fu;
 		if (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0 == 0){
 			fu = 0;
@@ -209,18 +209,18 @@ void PHContactSurface::Projection(double& f_, int k){
 				/ (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0)
 				* flim;	
 		}
-		if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	Ã~–€C
+		if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	é™æ­¢æ‘©æ“¦
 			if (f_ > flim) f_ = fu;
 			else if (f_ < -flim) f_ = -fu;
-		}else{					//	“®–€C
+		}else{					//	å‹•æ‘©æ“¦
 			if (f_ > fu) f_ = fu;
 			else if (f_ < -fu) f_ = -fu;		
 		}
 #if 0
-		//|–€C—Í| <= Å‘åÃ~–€C‚Ì§–ñ
-		//	E–€C—Í‚ÌŠe¬•ª‚ªÅ‘åÃ~–€C‚æ‚è‚à¬‚³‚­‚Ä‚à‡—Í‚Í’´‚¦‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å–{“–‚Í‚¨‚©‚µ‚¢B
-		//	EÃ~–€C‚Æ“®–€C‚ª“¯‚¶’l‚Å‚È‚¢‚Æˆµ‚¦‚È‚¢B
-		//–€CŒW”‚Í—¼Ò‚ÌÃ~–€CŒW”‚Ì•½‹Ï‚Æ‚·‚é
+		//|æ‘©æ“¦åŠ›| <= æœ€å¤§é™æ­¢æ‘©æ“¦ã®åˆ¶ç´„
+		//	ãƒ»æ‘©æ“¦åŠ›ã®å„æˆåˆ†ãŒæœ€å¤§é™æ­¢æ‘©æ“¦ã‚ˆã‚Šã‚‚å°ã•ãã¦ã‚‚åˆåŠ›ã¯è¶…ãˆã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã®ã§æœ¬å½“ã¯ãŠã‹ã—ã„ã€‚
+		//	ãƒ»é™æ­¢æ‘©æ“¦ã¨å‹•æ‘©æ“¦ãŒåŒã˜å€¤ã§ãªã„ã¨æ‰±ãˆãªã„ã€‚
+		//æ‘©æ“¦ä¿‚æ•°ã¯ä¸¡è€…ã®é™æ­¢æ‘©æ“¦ä¿‚æ•°ã®å¹³å‡ã¨ã™ã‚‹
 		f_ = min(max(-flim, f_), flim);
 #endif
 		assert(f_ < 10000);
@@ -230,30 +230,30 @@ void PHContactSurface::Projection(double& f_, int k){
 /**
 << void ProjectionTorque(SpatialVector fnew) >>
 ====================================================================================
-  brief		IterateLCP‚ÅŒÄ‚Î‚ê‚éƒgƒ‹ƒN‚Ì§ŒÀ‚ğs‚¤ŠÖ”
-  param		SpatialVector fnew §ŒÀ‚·‚é‘O‚Ì—Í‚Æƒgƒ‹ƒNi—Í‚Í§ŒÀÏ‚İj
-  return	‚È‚µ
+  brief		IterateLCPã§å‘¼ã°ã‚Œã‚‹ãƒˆãƒ«ã‚¯ã®åˆ¶é™ã‚’è¡Œã†é–¢æ•°
+  param		SpatialVector fnew åˆ¶é™ã™ã‚‹å‰ã®åŠ›ã¨ãƒˆãƒ«ã‚¯ï¼ˆåŠ›ã¯åˆ¶é™æ¸ˆã¿ï¼‰
+  return	ãªã—
 ====================================================================================
-yŠî–{‚Ì—¬‚êz
-	1. —Í‚Ì‘å‚«‚³‚ª‚O‚Ìê‡‚Íƒgƒ‹ƒN‚ğ‚O‚Æ‚µ‚ÄI‚í‚è
-	2. ‚O‚Å‚È‚¢‚Æ‚«A‚Ü‚¸‰ñ“]–€C‚Æ‚È‚éƒgƒ‹ƒN‚ğ§ŒÀ‚·‚éD
-	3DZMP‚ğ‹‚ß‚é
-		3-1.—Í‚Æ’¼Œğ‚·‚éƒgƒ‹ƒN‚ğ‹‚ß‚é
-		3-2.ZMP~—Í=ƒgƒ‹ƒN‚ÌŠÖŒW‚Æ,ZMP‚ÍÚG•½–Êã‚É‚ ‚èx²‚ÌÀ•W=0‚Å‚ ‚é‚±‚Æ‚©‚ç‹‚Ü‚é
-	4. ì—p“_‚ªÚG–Ê“à‚©–ÊŠO‚©’²‚×A–Ê“à‚È‚çI‚í‚è
-	5. –ÊŠO‚É‚ ‚é‚Æ‚«Aˆê”Ô‹ß‚¢“_‚ğV‚µ‚¢ì—p“_‚Æ‚·‚é
-	6. ƒgƒ‹ƒN‚ğ‹‚ß’¼‚µ‚ÄAfnew‚É‘ã“ü
+ã€åŸºæœ¬ã®æµã‚Œã€‘
+	1. åŠ›ã®å¤§ãã•ãŒï¼ã®å ´åˆã¯ãƒˆãƒ«ã‚¯ã‚’ï¼ã¨ã—ã¦çµ‚ã‚ã‚Š
+	2. ï¼ã§ãªã„ã¨ãã€ã¾ãšå›è»¢æ‘©æ“¦ã¨ãªã‚‹ãƒˆãƒ«ã‚¯ã‚’åˆ¶é™ã™ã‚‹ï¼
+	3ï¼ZMPã‚’æ±‚ã‚ã‚‹
+		3-1.åŠ›ã¨ç›´äº¤ã™ã‚‹ãƒˆãƒ«ã‚¯ã‚’æ±‚ã‚ã‚‹
+		3-2.ZMPÃ—åŠ›=ãƒˆãƒ«ã‚¯ã®é–¢ä¿‚ã¨,ZMPã¯æ¥è§¦å¹³é¢ä¸Šã«ã‚ã‚Šxè»¸ã®åº§æ¨™=0ã§ã‚ã‚‹ã“ã¨ã‹ã‚‰æ±‚ã¾ã‚‹
+	4. ä½œç”¨ç‚¹ãŒæ¥è§¦é¢å†…ã‹é¢å¤–ã‹èª¿ã¹ã€é¢å†…ãªã‚‰çµ‚ã‚ã‚Š
+	5. é¢å¤–ã«ã‚ã‚‹ã¨ãã€ä¸€ç•ªè¿‘ã„ç‚¹ã‚’æ–°ã—ã„ä½œç”¨ç‚¹ã¨ã™ã‚‹
+	6. ãƒˆãƒ«ã‚¯ã‚’æ±‚ã‚ç›´ã—ã¦ã€fnewã«ä»£å…¥
 */
 void PHContactSurface::ProjectionTorque(SpatialVector& fnew){
 	Vec3d F(f[0], f[1], f[2]);
 	Vec3d N(fnew[3], fnew[4], fnew[5]);
 	
-	if(F.norm() != 0.0){	//—Í‚Ì‘å‚«‚³‚ª0‚Å‚È‚¢‚È‚ç§ŒÀ‚·‚éB
-		//‚Ü‚¸‰ñ“]–€C‚Ì§ŒÀ
+	if(F.norm() != 0.0){	//åŠ›ã®å¤§ãã•ãŒ0ã§ãªã„ãªã‚‰åˆ¶é™ã™ã‚‹ã€‚
+		//ã¾ãšå›è»¢æ‘©æ“¦ã®åˆ¶é™
 #if	USE_ROTATEFRICTION
-		//‰ñ“]–€C‚ÌÀ‘•
-		//rotateFriction‚É–€CŒW”‚ÆA‚’¼R—Í‚ğsegmentationNum‚ÅŠ„‚Á‚½‚à‚Ì‚ğ‚©‚¯‚é
-		double rotateFrictionLimit;//Å‘åÃ~‰ñ“]–€C
+		//å›è»¢æ‘©æ“¦ã®å®Ÿè£…
+		//rotateFrictionã«æ‘©æ“¦ä¿‚æ•°ã¨ã€å‚ç›´æŠ—åŠ›ã‚’segmentationNumã§å‰²ã£ãŸã‚‚ã®ã‚’ã‹ã‘ã‚‹
+		double rotateFrictionLimit;//æœ€å¤§é™æ­¢å›è»¢æ‘©æ“¦
 		rotateFrictionLimit = rotateFriction * 0.5 * (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0);
 		if(segmentationNum != 0){
 			rotateFrictionLimit *= f[0]/segmentationNum;
@@ -262,7 +262,7 @@ void PHContactSurface::ProjectionTorque(SpatialVector& fnew){
 			//cout << "segmentation = 0" << endl;
 			rotateFrictionLimit *= f[0];
 		}
-		double activeRotateFriction;//‰ñ“]“®–€C
+		double activeRotateFriction;//å›è»¢å‹•æ‘©æ“¦
 		if (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0 == 0){
 			activeRotateFriction = 0;
 		}else{
@@ -270,24 +270,24 @@ void PHContactSurface::ProjectionTorque(SpatialVector& fnew){
 			/ (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0)
 			* rotateFrictionLimit;	
 		}
-		//ÚG–Ê‚Ì‚’¼•ûŒü‚ÌŠp‘¬“x‚ª”­¶‚µ‚Ä‚È‚¢‚È‚çÃ~–€CA‚µ‚Ä‚¢‚ê‚Î“®–€C
-		if (-0.01 < vjrel[3] && vjrel[3] < 0.01){	//	Ã~–€C
+		//æ¥è§¦é¢ã®å‚ç›´æ–¹å‘ã®è§’é€Ÿåº¦ãŒç™ºç”Ÿã—ã¦ãªã„ãªã‚‰é™æ­¢æ‘©æ“¦ã€ã—ã¦ã„ã‚Œã°å‹•æ‘©æ“¦
+		if (-0.01 < vjrel[3] && vjrel[3] < 0.01){	//	é™æ­¢æ‘©æ“¦
 			if (fnew[3] > rotateFrictionLimit) fnew[3] = activeRotateFriction;
 			else if (fnew[3] < -rotateFrictionLimit) fnew[3] = -activeRotateFriction;
-		}else{					//	“®–€C
+		}else{					//	å‹•æ‘©æ“¦
 			if (fnew[3] > activeRotateFriction) fnew[3] = activeRotateFriction;
 			else if (fnew[3] < -activeRotateFriction) fnew[3] = -activeRotateFriction;		
 		}
 #endif
 		N.x = fnew[3];
 		
-		//‰ñ“]–€CˆÈŠO‚Ìƒgƒ‹ƒN‚Ì§ŒÀ
-		//ZMP‚ğ‹‚ß‚é		
+		//å›è»¢æ‘©æ“¦ä»¥å¤–ã®ãƒˆãƒ«ã‚¯ã®åˆ¶é™
+		//ZMPã‚’æ±‚ã‚ã‚‹		
 
-		//N‚ÍF‚Æ’¼Œğ‚µ‚Ä‚¢‚é‚Æ‚ÍŒÀ‚ç‚È‚¢
-		//N‚ÌF‚É’¼Œğ‚µ‚Ä‚¢‚é¬•ª‚ÅZMP‚ğ‹‚ß‚Ä§ŒÀ‚·‚é
-		Vec3d N_orthogonalF;//N‚ÌF‚É’¼Œğ‚µ‚Ä‚¢‚é¬•ªƒxƒNƒgƒ‹
-		Vec3d N_parallelF;//N‚ÌF¬•ªƒxƒNƒgƒ‹
+		//Nã¯Fã¨ç›´äº¤ã—ã¦ã„ã‚‹ã¨ã¯é™ã‚‰ãªã„
+		//Nã®Fã«ç›´äº¤ã—ã¦ã„ã‚‹æˆåˆ†ã§ZMPã‚’æ±‚ã‚ã¦åˆ¶é™ã™ã‚‹
+		Vec3d N_orthogonalF;//Nã®Fã«ç›´äº¤ã—ã¦ã„ã‚‹æˆåˆ†ãƒ™ã‚¯ãƒˆãƒ«
+		Vec3d N_parallelF;//Nã®Fæˆåˆ†ãƒ™ã‚¯ãƒˆãƒ«
 
 		N_parallelF = N*F.unit()*F.unit();
 		N_orthogonalF = N - N_parallelF;
@@ -296,51 +296,51 @@ void PHContactSurface::ProjectionTorque(SpatialVector& fnew){
 		fpoint.y = -N_orthogonalF.z / F.x;
 		fpoint.z = N_orthogonalF.y / F.x;
 
-		//–Ê“à‚©–ÊŠO‚©
-		int L, R;	//–Ê‚Ì‚Ç‚Ì—Ìˆæ‚Éì—p“_‚ª‚ ‚é‚©•Û‚·‚é‚½‚ß‚Ì•Ï” L –ÊŠO‚©‚çŒ©‚Ä•Ó‚Ì¶‘¤‚Ì’¸“_@R ‰E‘¤‚Ì’¸“_
+		//é¢å†…ã‹é¢å¤–ã‹
+		int L, R;	//é¢ã®ã©ã®é ˜åŸŸã«ä½œç”¨ç‚¹ãŒã‚ã‚‹ã‹ä¿æŒã™ã‚‹ãŸã‚ã®å¤‰æ•° L é¢å¤–ã‹ã‚‰è¦‹ã¦è¾ºã®å·¦å´ã®é ‚ç‚¹ã€€R å³å´ã®é ‚ç‚¹
 		if(!CheckInside(L, R)){
-			//–ÊŠO‚È‚çZMP‚ğ–Ê“à‚É’¼‚·
-			//‚ü‚É‰º‚ë‚¹‚é‚©‚Ç‚¤‚©‚Ì”»’è
+			//é¢å¤–ãªã‚‰ZMPã‚’é¢å†…ã«ç›´ã™
+			//å‚ç·šã«ä¸‹ã‚ã›ã‚‹ã‹ã©ã†ã‹ã®åˆ¤å®š
 			if(lastL != lastR){
-				//ŒJ‚è•Ô‚µŒvZ‚Ì2‰ñ–Ú‚©‚ç‚Í‘O‰ñAÅ‹ß“_‚ª‚ ‚Á‚½—Ìˆæ‚©‚ç’Tõ‚ğ‚·‚éB
-				//lastL,lastR‚Í‘O‰ñAÅ‹ß“_‚ª‚ ‚Á‚½—Ìˆæ‚ğ¦‚µ‚Ä‚¢‚éB
+				//ç¹°ã‚Šè¿”ã—è¨ˆç®—ã®2å›ç›®ã‹ã‚‰ã¯å‰å›ã€æœ€è¿‘ç‚¹ãŒã‚ã£ãŸé ˜åŸŸã‹ã‚‰æ¢ç´¢ã‚’ã™ã‚‹ã€‚
+				//lastL,lastRã¯å‰å›ã€æœ€è¿‘ç‚¹ãŒã‚ã£ãŸé ˜åŸŸã‚’ç¤ºã—ã¦ã„ã‚‹ã€‚
 				L = lastL;
 				R = lastR;
 			}
 			if(dot(section[L]-section[R],fpoint-section[R])>=0 && dot(section[R]-section[L],fpoint-section[L])>=0 && CalcSignedArea(section[L],section[R],fpoint) < 0){
-				//‚ü‚ğ‰º‚ë‚¹‚éê‡
-				//ZMP‚É‚ü‚Ì’·‚³~•Ó‚Ì–@ü’PˆÊƒxƒNƒgƒ‹‚ğ‘«‚µ‚ÄŒğ“_‚ğ‹‚ß‚é
-				//•Ó‚Ì–@ü’PˆÊƒxƒNƒgƒ‹iÚG–Ê“à‚Ö‚Ìj‚ğ‹‚ß‚é
-				//•ÓRL‚ÌƒxƒNƒgƒ‹‚Í(0,section[L].y - section[R].y, section[L].z - section[R].z)
-				//‚±‚ê‚É’¼Œğ‚·‚éƒxƒNƒgƒ‹‚Í2í—Ş‚ ‚Á‚Ä‚»‚Ì‚¤‚¿ÚG–Ê“à‚Ö‚ÌƒxƒNƒgƒ‹‚ª«
+				//å‚ç·šã‚’ä¸‹ã‚ã›ã‚‹å ´åˆ
+				//ZMPã«å‚ç·šã®é•·ã•Ã—è¾ºã®æ³•ç·šå˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¶³ã—ã¦äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
+				//è¾ºã®æ³•ç·šå˜ä½ãƒ™ã‚¯ãƒˆãƒ«ï¼ˆæ¥è§¦é¢å†…ã¸ã®ï¼‰ã‚’æ±‚ã‚ã‚‹
+				//è¾ºRLã®ãƒ™ã‚¯ãƒˆãƒ«ã¯(0,section[L].y - section[R].y, section[L].z - section[R].z)
+				//ã“ã‚Œã«ç›´äº¤ã™ã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã¯2ç¨®é¡ã‚ã£ã¦ãã®ã†ã¡æ¥è§¦é¢å†…ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«ãŒâ†“
 				Vec3d side_normal;
 				side_normal.x = 0;
 				side_normal.y = section[L].z - section[R].z;
 				side_normal.z = -(section[L].y - section[R].y);
 				side_normal.unitize();
 
-				//‚ü‚Ì’·‚³‚ğ‹‚ß‚é
+				//å‚ç·šã®é•·ã•ã‚’æ±‚ã‚ã‚‹
 				double dist_of_normal;
 				Vec3d tempVec = (section[L]-section[R]) ^ (fpoint-section[R]);
 				Vec3d tempVec2(section[L]-section[R]);
 				dist_of_normal = tempVec.norm() / tempVec2.norm();
 
-				//V‚µ‚¢ì—p“_‚ğ‹‚ß‚é
-				//ì—p“_‚É‚ü‚Ì’·‚³”{‚µ‚½•Ó‚Ì–@üƒxƒNƒgƒ‹(“àŒü‚«)‚ğ‘«‚·
+				//æ–°ã—ã„ä½œç”¨ç‚¹ã‚’æ±‚ã‚ã‚‹
+				//ä½œç”¨ç‚¹ã«å‚ç·šã®é•·ã•å€ã—ãŸè¾ºã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«(å†…å‘ã)ã‚’è¶³ã™
 				fpoint = fpoint + (dist_of_normal * side_normal);
 			}
 			else{
-				//‰º‚ë‚¹‚È‚¯‚ê‚ÎAÅ‹ß“_‚ğ’Tõ‚µÅ‹ß“_‚ğì—p“_‚Æ‚·‚é
+				//ä¸‹ã‚ã›ãªã‘ã‚Œã°ã€æœ€è¿‘ç‚¹ã‚’æ¢ç´¢ã—æœ€è¿‘ç‚¹ã‚’ä½œç”¨ç‚¹ã¨ã™ã‚‹
 				SearchClosestPoint(L, R);
 			}
-			//V‚µ‚¢ZMP‚©‚ç§ŒÀ‚³‚ê‚½ƒgƒ‹ƒN‚ğ‹‚ß‚é
+			//æ–°ã—ã„ZMPã‹ã‚‰åˆ¶é™ã•ã‚ŒãŸãƒˆãƒ«ã‚¯ã‚’æ±‚ã‚ã‚‹
 			N_orthogonalF = cross(fpoint, F);
 			N = N_orthogonalF;
 			fnew[4] = N[1];
 			fnew[5] = N[2];
 		}
 	}
-	else{		//—Í‚Ì‘å‚«‚³‚ª0‚È‚çƒgƒ‹ƒN0‚É‚·‚éB
+	else{		//åŠ›ã®å¤§ãã•ãŒ0ãªã‚‰ãƒˆãƒ«ã‚¯0ã«ã™ã‚‹ã€‚
 		fnew[3] = fnew[4] = fnew[5] = 0.0;
 	}
 }
@@ -348,24 +348,24 @@ void PHContactSurface::ProjectionTorque(SpatialVector& fnew){
 /**
 << void IntegrateArea() >>
 ====================================================================================
-  brief		‰ñ“]–€C‚ğ‹‚ß‚éˆ×‚ÉÚG–Ê‚ÌÏ•ª‚ğs‚¤ŠÖ”
+  brief		å›è»¢æ‘©æ“¦ã‚’æ±‚ã‚ã‚‹ç‚ºã«æ¥è§¦é¢ã®ç©åˆ†ã‚’è¡Œã†é–¢æ•°
 ====================================================================================
 */
 void PHContactSurface::IntegrateArea()
 {
-	std::vector<Spr::Vec3d> Factor; //ÚG–Ê‚Ì•Ó‚ğ•\‚·’¼ü‚Ì•û’ö®‚ÌŒW”@ay+bz=c‚Ìa,b,c‚ª(x,y,z)‚É‘Î‰
-	std::vector<Spr::Vec2d> RangeY; //’¼ü‚ÌyÀ•W‚Ì”ÍˆÍ(¬,‘å)‚ª(x,y)‚É‘Î‰
-	std::vector<Spr::Vec2d> RangeZ; //’¼ü‚ÌzÀ•W‚Ì”ÍˆÍ(¬,‘å)‚ª(x,y)‚É‘Î‰
-	double y_min,y_max;//Ï•ª”ÍˆÍ
-	double z_min,z_max;//Ï•ª”ÍˆÍ(Šey‚É‘Î‚µ‚Äİ’è‚·‚é)
+	std::vector<Spr::Vec3d> Factor; //æ¥è§¦é¢ã®è¾ºã‚’è¡¨ã™ç›´ç·šã®æ–¹ç¨‹å¼ã®ä¿‚æ•°ã€€ay+bz=cã®a,b,cãŒ(x,y,z)ã«å¯¾å¿œ
+	std::vector<Spr::Vec2d> RangeY; //ç›´ç·šã®yåº§æ¨™ã®ç¯„å›²(å°,å¤§)ãŒ(x,y)ã«å¯¾å¿œ
+	std::vector<Spr::Vec2d> RangeZ; //ç›´ç·šã®zåº§æ¨™ã®ç¯„å›²(å°,å¤§)ãŒ(x,y)ã«å¯¾å¿œ
+	double y_min,y_max;//ç©åˆ†ç¯„å›²
+	double z_min,z_max;//ç©åˆ†ç¯„å›²(å„yã«å¯¾ã—ã¦è¨­å®šã™ã‚‹)
 
 	Factor.resize(section.size());
 	RangeY.resize(section.size());
 	RangeZ.resize(section.size());
 	for(unsigned int i=0; i<section.size();i++){
-		//ŒW”a,b,’è”c‚Ìİ’è
-		//ŒW”a:Factor[i].x,ŒW”b:Factor[i].y,’è”c:Factor[i].z
-		//section‚Ìy,z‚©‚çİ’è.2“_‚ğ’Ê‚é’¼ü‚Ì•û’ö®‚©‚ç
+		//ä¿‚æ•°a,b,å®šæ•°cã®è¨­å®š
+		//ä¿‚æ•°a:Factor[i].x,ä¿‚æ•°b:Factor[i].y,å®šæ•°c:Factor[i].z
+		//sectionã®y,zã‹ã‚‰è¨­å®š.2ç‚¹ã‚’é€šã‚‹ç›´ç·šã®æ–¹ç¨‹å¼ã‹ã‚‰
 		int s0 = i;
 		int s1 = i+1;
 		if(s1 == section.size()){
@@ -376,9 +376,9 @@ void PHContactSurface::IntegrateArea()
 		Factor[i].y = (section[s0].y-section[s1].y);
 		Factor[i].z = (section[s0].y*section[s1].z - section[s1].y*section[s0].z);
 		
-		//yÀ•W‚Ì”ÍˆÍ‚ğİ’è
-		//Range.x ¬‚³‚¢‘¤@Range.y ‘å‚«‚¢‘¤
-		//section‚Ìy‚©‚çİ’è
+		//yåº§æ¨™ã®ç¯„å›²ã‚’è¨­å®š
+		//Range.x å°ã•ã„å´ã€€Range.y å¤§ãã„å´
+		//sectionã®yã‹ã‚‰è¨­å®š
 		if(section[s0].y<=section[s1].y){
 			RangeY[i].x = section[s0].y;
 			RangeY[i].y = section[s1].y;
@@ -387,7 +387,7 @@ void PHContactSurface::IntegrateArea()
 			RangeY[i].x = section[s1].y;
 			RangeY[i].y = section[s0].y;
 		}
-		//yÀ•W‚Ì‘S‘Ì‚Ì”ÍˆÍ (y_min,y_max)‚ğİ’è
+		//yåº§æ¨™ã®å…¨ä½“ã®ç¯„å›² (y_min,y_max)ã‚’è¨­å®š
 		if(i==0){
 			y_min = RangeY[i].x;
 			y_max = RangeY[i].y;
@@ -401,7 +401,7 @@ void PHContactSurface::IntegrateArea()
 			}
 		}
 
-		//zÀ•W‚Ì”ÍˆÍ‚ğİ’è
+		//zåº§æ¨™ã®ç¯„å›²ã‚’è¨­å®š
 		if(section[s0].z<=section[s1].z){
 			RangeZ[i].x = section[s0].z;
 			RangeZ[i].y = section[s1].z;
@@ -412,31 +412,31 @@ void PHContactSurface::IntegrateArea()
 		}
 	}
 
-	//ContactSurface‚ª‚ ‚éŒ´“_‚©‚ç‚Ì‹——£‚ğÏ•ª
-	double Y,Z;//Ï•ª‚·‚éYÀ•W,ZÀ•W
+	//ContactSurfaceãŒã‚ã‚‹åŸç‚¹ã‹ã‚‰ã®è·é›¢ã‚’ç©åˆ†
+	double Y,Z;//ç©åˆ†ã™ã‚‹Yåº§æ¨™,Zåº§æ¨™
 	Y=y_min;
 	for(int i=0; Y<=y_max; i++){
-		//YÀ•W‚ğŒˆ’è
+		//Yåº§æ¨™ã‚’æ±ºå®š
 		Y = y_min + interval*i;
 		if(Y > y_max){
 			Y = y_max;
 		}
 		
-		std::vector<int> eq;//Y‚ª”ÍˆÍ‚É‚ ‚é’¼ü”Ô†‚ğ‚Â
-		//‚Ç‚Ì®‚ªY‚Ì”ÍˆÍ‚É‚ ‚é‚©
+		std::vector<int> eq;//YãŒç¯„å›²ã«ã‚ã‚‹ç›´ç·šç•ªå·ã‚’æŒã¤
+		//ã©ã®å¼ãŒYã®ç¯„å›²ã«ã‚ã‚‹ã‹
 		for(unsigned int j=0; j<RangeY.size(); j++){
 			if((Y>=RangeY[j].x && Y<=RangeY[j].y)){
 				eq.push_back(j);
 			}
 		}
 
-		//”ÍˆÍ“à‚ÉY‚ª‚ ‚é•Ó‚Ì®‚©‚çZ‚Ì”ÍˆÍ(z_min,z_max)‚ğ‹‚ß‚éD
+		//ç¯„å›²å†…ã«YãŒã‚ã‚‹è¾ºã®å¼ã‹ã‚‰Zã®ç¯„å›²(z_min,z_max)ã‚’æ±‚ã‚ã‚‹ï¼
 		//ay+bz=c z=c/b-(a/b)y
 		double temp_z;
 		for(unsigned int j=0; j<eq.size(); j++){
 			if(fabs(Factor[eq[j]].y) < 1e-10){
-				//y‚ÌŒW”‚ª0‚Ì•Ó‚Ìê‡
-				//‚»‚Ì•Ó‚ÌzÀ•W‚ª‚»‚Ì‚Ü‚Ü”ÍˆÍ‚Æ‚È‚é
+				//yã®ä¿‚æ•°ãŒ0ã®è¾ºã®å ´åˆ
+				//ãã®è¾ºã®zåº§æ¨™ãŒãã®ã¾ã¾ç¯„å›²ã¨ãªã‚‹
 				z_min = RangeZ[eq[j]].x;
 				z_max = RangeZ[eq[j]].y;
 				break;
@@ -457,7 +457,7 @@ void PHContactSurface::IntegrateArea()
 		}
 		
 		Z = z_min;
-		//Z‚Ì”ÍˆÍ‚ÅÏ•ª‚ğs‚¤D
+		//Zã®ç¯„å›²ã§ç©åˆ†ã‚’è¡Œã†ï¼
 		for(int j=0; Z<=z_max;j++){
 			Z = z_min + interval*j;
 			if(Z > z_max){
@@ -478,9 +478,9 @@ void PHContactSurface::IntegrateArea()
 /**
 << double CalcSignedArea(Vec3d p, Vec3d q, Vec3d r) >>
 ====================================================================================
-  brief		OŠpŒ`‚Ì•„†•t‚«–ÊÏ‚ÌŒvZ‚ğs‚¤ŠÖ”
-  param		Vec3d	p,q,r	’¸“_
-  return	•„†•t‚«–ÊÏ
+  brief		ä¸‰è§’å½¢ã®ç¬¦å·ä»˜ãé¢ç©ã®è¨ˆç®—ã‚’è¡Œã†é–¢æ•°
+  param		Vec3d	p,q,r	é ‚ç‚¹
+  return	ç¬¦å·ä»˜ãé¢ç©
 ====================================================================================
 */
 double PHContactSurface::CalcSignedArea(Vec3d p, Vec3d q, Vec3d r){
@@ -490,17 +490,17 @@ double PHContactSurface::CalcSignedArea(Vec3d p, Vec3d q, Vec3d r){
 /**
 << bool CheckInside(void) >> 
 ====================================================================================
-  brief		ZMPfpoint‚ªÚG–Ê“à‚É‚ ‚é‚©
-  param		int& L	ì—p“_‚ª‚ ‚é—Ìˆæ‚Ì’¸“_‚ğ‹L˜^
-			int& R@ì—p“_‚ª‚ ‚é—Ìˆæ‚Ì’¸“_‚ğ‹L˜^
-  return	–Ê“àFtrue	–ÊŠOFfalse
+  brief		ZMPfpointãŒæ¥è§¦é¢å†…ã«ã‚ã‚‹ã‹
+  param		int& L	ä½œç”¨ç‚¹ãŒã‚ã‚‹é ˜åŸŸã®é ‚ç‚¹ã‚’è¨˜éŒ²
+			int& Rã€€ä½œç”¨ç‚¹ãŒã‚ã‚‹é ˜åŸŸã®é ‚ç‚¹ã‚’è¨˜éŒ²
+  return	é¢å†…ï¼štrue	é¢å¤–ï¼šfalse
 ====================================================================================
-¦ÚG–Ê“à‚Ì“_‚ÍŒ´“_‚Æ‚µ‚Ä‚¢‚éD
+â€»æ¥è§¦é¢å†…ã®ç‚¹ã¯åŸç‚¹ã¨ã—ã¦ã„ã‚‹ï¼
 */
 bool PHContactSurface::CheckInside(int& L, int& R){
-	int l,m,r;	//m ’Tõ”ÍˆÍ‚Ì’†“_
+	int l,m,r;	//m æ¢ç´¢ç¯„å›²ã®ä¸­ç‚¹
 	l = 0;
-	r = section.size();	//’Tõ”ÍˆÍ‚Ì‰Šú‰»
+	r = section.size();	//æ¢ç´¢ç¯„å›²ã®åˆæœŸåŒ–
 	while(r-l>1){
 		m = (l+r)/2;
 		if(CalcSignedArea(section[l], Vec3d(0.0,0.0,0.0), section[m]) <= 0.0){/* if angle(l, g, m)<=180) */
@@ -520,54 +520,54 @@ bool PHContactSurface::CheckInside(int& L, int& R){
 			}
 		}
 	}
-	if(r == section.size()){	//section[section.size()] ‚Í section[0]‚È‚Ì‚Å
+	if(r == section.size()){	//section[section.size()] ã¯ section[0]ãªã®ã§
 		r = 0;
 	}
 	if(CalcSignedArea(section[l], section[r], fpoint) >= 0.0){
-		return true;	//–Ê“à
+		return true;	//é¢å†…
 	}
 	else{ 
 		L = l;
 		R = r;
-		return false;	//–ÊŠO
+		return false;	//é¢å¤–
 	}
 }
 
 /**
 << void PHContactSurface::SearchClosestPoint >>
 ====================================================================================
-  brief		ì—p“_‚ÌÅ‹ß“_‚ğŒ©‚Â‚¯‚Äì—p“_‚Æ‚·‚é
-  param		int L  ì—p“_‚ª‚ ‚é—Ìˆæ‚Ì’¸“_i–ÊŠO‚©‚çŒ©‚Ä¶‘¤j
-			int R  ì—p“_‚ª‚ ‚é—Ìˆæ‚Ì’¸“_i–ÊŠO‚©‚çŒ©‚Ä‰E‘¤j
-  return	‚È‚µ
+  brief		ä½œç”¨ç‚¹ã®æœ€è¿‘ç‚¹ã‚’è¦‹ã¤ã‘ã¦ä½œç”¨ç‚¹ã¨ã™ã‚‹
+  param		int L  ä½œç”¨ç‚¹ãŒã‚ã‚‹é ˜åŸŸã®é ‚ç‚¹ï¼ˆé¢å¤–ã‹ã‚‰è¦‹ã¦å·¦å´ï¼‰
+			int R  ä½œç”¨ç‚¹ãŒã‚ã‚‹é ˜åŸŸã®é ‚ç‚¹ï¼ˆé¢å¤–ã‹ã‚‰è¦‹ã¦å³å´ï¼‰
+  return	ãªã—
 ====================================================================================
-  yŠî–{‚Ì—¬‚êz
-  ì—p“_‚ª‚ ‚é—Ìˆæ‚Ì•Ó‚Éì—p“_‚©‚ç‚ü‚ª‰º‚ë‚¹‚È‚©‚Á‚½ê‡‚É“­‚­
-  1.ì—p“_‚ª‚ ‚é—Ìˆæ‚Ì•Ó‚Ì’¸“_‚Æì—p“_‚Æ‚Ì‹——£‚ğ‹L˜^
-  ì—p“_‚ª‚ ‚é—Ìˆæ‚Ì—×Ú‚·‚é—Ìˆæ‚ğ Œv‰ñ‚è‚Æ”½Œv‰ñ‚è‚Ì‚Q‚Â‚Ì‡‚Å’Tõ‚µn‚ß‚éB
-  ì—p“_‚ª‚ ‚é—Ìˆæ‚Ì•Ó‚Ì’¸“_‚ÅAì—p“_‚Æ‚Ì‹——£‚ª—£‚ê‚Ä‚¢‚é‘¤‚Í’Tõ‚ğ‚µ‚È‚¢B
-  2.—×Ú‚·‚é—Ìˆæ‚Ì•Ó‚É‚ü‚ª‰º‚ë‚¹‚é‚©‚ğŠm”F‚·‚é¨‰º‚ë‚¹‚½‚çA‚±‚Ì‡˜‚Å‚Ì’Tõ‚ğI‚¦‚éB
-  3.‰º‚ë‚¹‚È‚©‚Á‚½ê‡A•Ó‚Ì’¸“_‚Æì—p“_‚Æ‚Ì‹——£‚ÆA‹L˜^‚µ‚Ä‚ ‚é‹——£‚ğ”ä‚×‚éB
-  4-1.‚æ‚è’Z‚©‚Á‚½ê‡A‹——£‚ğ‹L˜^‚µ‚³‚ç‚Éæ‚Ì—Ìˆæ‚Å2‚©‚çŒJ‚è•Ô‚·B
-  4-2.‚æ‚è’·‚©‚Á‚½ê‡A’Tõ‚ğI—¹‚µA’Z‚¢’¸“_‚ğì—p“_‚ÌŒó•â‚Æ‚µA‚±‚Ì‡˜‚Å‚Ì’Tõ‚ğI‚¦‚éB
+  ã€åŸºæœ¬ã®æµã‚Œã€‘
+  ä½œç”¨ç‚¹ãŒã‚ã‚‹é ˜åŸŸã®è¾ºã«ä½œç”¨ç‚¹ã‹ã‚‰å‚ç·šãŒä¸‹ã‚ã›ãªã‹ã£ãŸå ´åˆã«åƒã
+  1.ä½œç”¨ç‚¹ãŒã‚ã‚‹é ˜åŸŸã®è¾ºã®é ‚ç‚¹ã¨ä½œç”¨ç‚¹ã¨ã®è·é›¢ã‚’è¨˜éŒ²
+  ä½œç”¨ç‚¹ãŒã‚ã‚‹é ˜åŸŸã®éš£æ¥ã™ã‚‹é ˜åŸŸã‚’ æ™‚è¨ˆå›ã‚Šã¨åæ™‚è¨ˆå›ã‚Šã®ï¼’ã¤ã®é †ã§æ¢ç´¢ã—å§‹ã‚ã‚‹ã€‚
+  ä½œç”¨ç‚¹ãŒã‚ã‚‹é ˜åŸŸã®è¾ºã®é ‚ç‚¹ã§ã€ä½œç”¨ç‚¹ã¨ã®è·é›¢ãŒé›¢ã‚Œã¦ã„ã‚‹å´ã¯æ¢ç´¢ã‚’ã—ãªã„ã€‚
+  2.éš£æ¥ã™ã‚‹é ˜åŸŸã®è¾ºã«å‚ç·šãŒä¸‹ã‚ã›ã‚‹ã‹ã‚’ç¢ºèªã™ã‚‹â†’ä¸‹ã‚ã›ãŸã‚‰ã€ã“ã®é †åºã§ã®æ¢ç´¢ã‚’çµ‚ãˆã‚‹ã€‚
+  3.ä¸‹ã‚ã›ãªã‹ã£ãŸå ´åˆã€è¾ºã®é ‚ç‚¹ã¨ä½œç”¨ç‚¹ã¨ã®è·é›¢ã¨ã€è¨˜éŒ²ã—ã¦ã‚ã‚‹è·é›¢ã‚’æ¯”ã¹ã‚‹ã€‚
+  4-1.ã‚ˆã‚ŠçŸ­ã‹ã£ãŸå ´åˆã€è·é›¢ã‚’è¨˜éŒ²ã—ã•ã‚‰ã«å…ˆã®é ˜åŸŸã§2ã‹ã‚‰ç¹°ã‚Šè¿”ã™ã€‚
+  4-2.ã‚ˆã‚Šé•·ã‹ã£ãŸå ´åˆã€æ¢ç´¢ã‚’çµ‚äº†ã—ã€çŸ­ã„é ‚ç‚¹ã‚’ä½œç”¨ç‚¹ã®å€™è£œã¨ã—ã€ã“ã®é †åºã§ã®æ¢ç´¢ã‚’çµ‚ãˆã‚‹ã€‚
   
-  —¼•û‚Ì‡˜‚Å’Tõ‚ğI‚¦‚½‚ç
-  5.—Ìˆæ‚ğŒv‰ñ‚è‚Æ”½Œv‰ñ‚è‚É’Tõ‚µI‚¦‚½‚±‚Æ‚É‚È‚é‚Ì‚ÅAì—p“_‚ÌŒó•â‚ğ”ä‚×A‚æ‚è’Z‚¢‘¤‚ğì—p“_‚Æ‚·‚éB
+  ä¸¡æ–¹ã®é †åºã§æ¢ç´¢ã‚’çµ‚ãˆãŸã‚‰
+  5.é ˜åŸŸã‚’æ™‚è¨ˆå›ã‚Šã¨åæ™‚è¨ˆå›ã‚Šã«æ¢ç´¢ã—çµ‚ãˆãŸã“ã¨ã«ãªã‚‹ã®ã§ã€ä½œç”¨ç‚¹ã®å€™è£œã‚’æ¯”ã¹ã€ã‚ˆã‚ŠçŸ­ã„å´ã‚’ä½œç”¨ç‚¹ã¨ã™ã‚‹ã€‚
 */
 void PHContactSurface::SearchClosestPoint(int L, int R){
 	
-	Vec3d L_fp(fpoint-section[L]);  //’¸“_‚©‚çì—p“_‚Ö‚ÌƒxƒNƒgƒ‹
+	Vec3d L_fp(fpoint-section[L]);  //é ‚ç‚¹ã‹ã‚‰ä½œç”¨ç‚¹ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«
 	Vec3d R_fp(fpoint-section[R]);
-	double L_distance = L_fp.norm(); //’¸“_‚©‚çì—p“_‚Ü‚Å‚Ì‹——£
+	double L_distance = L_fp.norm(); //é ‚ç‚¹ã‹ã‚‰ä½œç”¨ç‚¹ã¾ã§ã®è·é›¢
 	double R_distance = R_fp.norm(); 
 	
-	Vec3d ClosestPointL=section[L];	//Œv‰ñ‚è‚Ì’Tõ‚Å‚ÌÅ‹ß“_‚ÌƒxƒNƒgƒ‹
-	Vec3d ClosestPointR=section[R];	//”½Œv‰ñ‚è‚Ì’Tõ‚Å‚ÌÅ‹ß“_‚ÌƒxƒNƒgƒ‹
+	Vec3d ClosestPointL=section[L];	//æ™‚è¨ˆå›ã‚Šã®æ¢ç´¢ã§ã®æœ€è¿‘ç‚¹ã®ãƒ™ã‚¯ãƒˆãƒ«
+	Vec3d ClosestPointR=section[R];	//åæ™‚è¨ˆå›ã‚Šã®æ¢ç´¢ã§ã®æœ€è¿‘ç‚¹ã®ãƒ™ã‚¯ãƒˆãƒ«
 	
 	int l,r;
 	
-	for(unsigned int i=0; i<section.size(); i++,L--){	//Œv‰ñ‚è‚Ì’Tõ 
-		//Å‰‚ÉL‚Ì’¸“_‚ªR‚Ì’¸“_‚æ‚èì—p“_‚©‚ç—£‚ê‚Ä‚¢‚é‚©’²‚×A—£‚ê‚Ä‚¢‚ê‚ÎI‚í‚è‚É‚·‚é
+	for(unsigned int i=0; i<section.size(); i++,L--){	//æ™‚è¨ˆå›ã‚Šã®æ¢ç´¢ 
+		//æœ€åˆã«Lã®é ‚ç‚¹ãŒRã®é ‚ç‚¹ã‚ˆã‚Šä½œç”¨ç‚¹ã‹ã‚‰é›¢ã‚Œã¦ã„ã‚‹ã‹èª¿ã¹ã€é›¢ã‚Œã¦ã„ã‚Œã°çµ‚ã‚ã‚Šã«ã™ã‚‹
 		if(i==0 && L_distance > R_distance){
 			break;
 		}
@@ -583,35 +583,35 @@ void PHContactSurface::SearchClosestPoint(int L, int R){
 			r = L;
 		}		
 		if(dot(section[l]-section[r],fpoint-section[r])>=0 && dot(section[r]-section[l],fpoint-section[l])>=0 && CalcSignedArea(section[l], section[r], fpoint) < 0){
-			//–Ê“à‚ğ’Ê‚ç‚È‚¢‚ü‚ª‰º‚ë‚¹‚éê‡			
+			//é¢å†…ã‚’é€šã‚‰ãªã„å‚ç·šãŒä¸‹ã‚ã›ã‚‹å ´åˆ			
 			
-			//•Ó’¼Œğ‚µÚG–Ê“à‚ğŒü‚­’PˆÊƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+			//è¾ºç›´äº¤ã—æ¥è§¦é¢å†…ã‚’å‘ãå˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
 			Vec3d side_normal;
 			side_normal.x = 0;
 			side_normal.y = section[l].z - section[r].z;
 			side_normal.z = -(section[l].y - section[r].y);
 			side_normal.unitize();
 
-			//‚ü‚Ì’·‚³‚ğ‹‚ß‚é
+			//å‚ç·šã®é•·ã•ã‚’æ±‚ã‚ã‚‹
 			double dist_of_normal;
 			Vec3d tempVec  = (section[l]-section[r]) ^ (fpoint-section[r]);
 			Vec3d tempVec2 = section[l]-section[r];
 			dist_of_normal = tempVec.norm() / tempVec2.norm();
 
-			//V‚µ‚¢ZMP‚ğ‹‚ß‚é
-			//ZMP‚É‚ü‚Ì’·‚³”{‚µ‚½•Ó‚Ì–@üƒxƒNƒgƒ‹(“àŒü‚«)‚ğ‘«‚·
+			//æ–°ã—ã„ZMPã‚’æ±‚ã‚ã‚‹
+			//ZMPã«å‚ç·šã®é•·ã•å€ã—ãŸè¾ºã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«(å†…å‘ã)ã‚’è¶³ã™
 			ClosestPointL = fpoint + (dist_of_normal * side_normal);
 			break;
 		}
 		else{
 			L_fp = fpoint-section[l];
 			if(L_distance > L_fp.norm()){
-				//’Z‚­‚È‚Á‚½ê‡
+				//çŸ­ããªã£ãŸå ´åˆ
 				L_distance = L_fp.norm();
 				ClosestPointL = section[l];
 			}
 			else{
-				//’·‚­‚È‚Á‚½ê‡
+				//é•·ããªã£ãŸå ´åˆ
 				if(i != 0){
 					L++;
 					if(L == section.size()){
@@ -623,8 +623,8 @@ void PHContactSurface::SearchClosestPoint(int L, int R){
 		}
 	}
 
-	for(unsigned int i=0; i<section.size(); i++,R++){	//”½Œv‰ñ‚è‚Ì’Tõ
-		//Å‰‚ÉR‚Ì’¸“_‚ªL‚Ì’¸“_‚æ‚èì—p“_‚©‚ç—£‚ê‚Ä‚¢‚é‚©’²‚×A—£‚ê‚Ä‚¢‚ê‚ÎI‚í‚è‚É‚·‚é
+	for(unsigned int i=0; i<section.size(); i++,R++){	//åæ™‚è¨ˆå›ã‚Šã®æ¢ç´¢
+		//æœ€åˆã«Rã®é ‚ç‚¹ãŒLã®é ‚ç‚¹ã‚ˆã‚Šä½œç”¨ç‚¹ã‹ã‚‰é›¢ã‚Œã¦ã„ã‚‹ã‹èª¿ã¹ã€é›¢ã‚Œã¦ã„ã‚Œã°çµ‚ã‚ã‚Šã«ã™ã‚‹
 		if(i==0 && R_distance > L_distance){
 			break;
 		}
@@ -640,35 +640,35 @@ void PHContactSurface::SearchClosestPoint(int L, int R){
 			r = R+1;
 		}		
 		if(dot(section[l]-section[r],fpoint-section[r])>=0 && dot(section[r]-section[l],fpoint-section[l])>=0 && CalcSignedArea(section[l], section[r], fpoint) < 0){
-			//–Ê“à‚ğ’Ê‚ç‚È‚¢‚ü‚ª‰º‚ë‚¹‚éê‡
+			//é¢å†…ã‚’é€šã‚‰ãªã„å‚ç·šãŒä¸‹ã‚ã›ã‚‹å ´åˆ
 
-			//•Ó‚É’¼Œğ‚µÚG–Ê“à‚ğŒü‚­’PˆÊƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+			//è¾ºã«ç›´äº¤ã—æ¥è§¦é¢å†…ã‚’å‘ãå˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹
 			Vec3d side_normal;
 			side_normal.x = 0;
 			side_normal.y = section[l].z - section[r].z;
 			side_normal.z = -(section[l].y - section[r].y);
 			side_normal.unitize();
 
-			//‚ü‚Ì’·‚³‚ğ‹‚ß‚é
+			//å‚ç·šã®é•·ã•ã‚’æ±‚ã‚ã‚‹
 			double dist_of_normal;
 			Vec3d tempVec  = (section[l]-section[r]) ^ (fpoint-section[r]);
 			Vec3d tempVec2 = section[l]-section[r];
 			dist_of_normal = tempVec.norm() / tempVec2.norm();
 
-			//V‚µ‚¢ZMP‚ğ‹‚ß‚é
-			//ZMP‚É‚ü‚Ì’·‚³”{‚µ‚½•Ó‚Ì–@üƒxƒNƒgƒ‹(“àŒü‚«)‚ğ‘«‚·
+			//æ–°ã—ã„ZMPã‚’æ±‚ã‚ã‚‹
+			//ZMPã«å‚ç·šã®é•·ã•å€ã—ãŸè¾ºã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«(å†…å‘ã)ã‚’è¶³ã™
 			ClosestPointR = fpoint + (dist_of_normal * side_normal);
 			break;
 		}
 		else{
 			R_fp = fpoint-section[r];
 			if(R_distance > R_fp.norm()){
-				//’Z‚­‚È‚Á‚½ê‡
+				//çŸ­ããªã£ãŸå ´åˆ
 				R_distance = R_fp.norm();
 				ClosestPointR = section[r];
 			}
 			else{
-				//’·‚­‚È‚Á‚½ê‡
+				//é•·ããªã£ãŸå ´åˆ
 				if(i != 0){
 					R--;
 					if(R < 0){

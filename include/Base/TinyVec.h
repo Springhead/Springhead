@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -10,26 +10,26 @@
 
 #include <Base/TVector.h>
 
-#ifndef PTM_PACK	//	’P‘Ì‚Åg—p‚·‚éê‡‚ÍCnamespace ‚É“ü‚ê‚È‚¢
+#ifndef PTM_PACK	//	å˜ä½“ã§ä½¿ç”¨ã™ã‚‹å ´åˆã¯ï¼Œnamespace ã«å…¥ã‚Œãªã„
 namespace Spr{;
 #endif
 
 /**	\addtogroup gpLinearAlgebra	*/
 //@{
 /**	@file TinyVec.h
-	2,3,4ŸŒ³‚ÌƒxƒNƒgƒ‹‚Ì’è‹`
+	2,3,4æ¬¡å…ƒã®ãƒ™ã‚¯ãƒˆãƒ«ã®å®šç¾©
  */
 
 //-----------------------------------------------------------------------------
 //		TVec2
 template <class EXP, class T> class TVecDesc: public PTM::TVectorDesc<1, EXP, EXP, T>{};
-/**	2ŸŒ³ƒxƒNƒgƒ‹ƒNƒ‰ƒX	*/
+/**	2æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«ã‚¯ãƒ©ã‚¹	*/
 template<class T>
 class TVec2:public PTM::TVectorBase<2, TVecDesc<TVec2<T>, T> >{
 public:
 	typedef TVecDesc<TVec2<T>, T> desc;
 	typedef PTM::TVectorBase<2, desc> base_type;
-	///	Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹` @see ::DEF_TVECTOR_BASIC_MEMBER
+	///	åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾© @see ::DEF_TVECTOR_BASIC_MEMBER
 	DEF_TVECTOR_BASIC_MEMBER(TVec2);
 
 	union{
@@ -41,46 +41,46 @@ public:
 			T lower,upper;
 		};
 	};
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	T& item_impl(size_t i){ return data[i]; }
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const T& item_impl(size_t i) const { return data[i]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return 1; }
-	///@name \’zE‰Šú‰»
+	///@name æ§‹ç¯‰ãƒ»åˆæœŸåŒ–
 	//@{
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	template <class TX, class TY>
 		TVec2(TX xi, TY yi){ X() = element_type(xi); Y() = element_type(yi); }
 	//@}
 
-	///@name ‰Šú‰»ŠÖ”
+	///@name åˆæœŸåŒ–é–¢æ•°
 	//@{
-	/// —ëƒxƒNƒgƒ‹
+	/// é›¶ãƒ™ã‚¯ãƒˆãƒ«
 	static TVec2<T> Zero(){TVec2<T> v; v.clear(); return v;}
 	//@}
 
-	///@name •Ï”ƒAƒNƒZƒX
+	///@name å¤‰æ•°ã‚¢ã‚¯ã‚»ã‚¹
 	//@{
-	///	ƒxƒNƒgƒ‹‚Ìx¬•ª
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®xæˆåˆ†
 	const element_type& X() const { return this->item(0); }
-	///	ƒxƒNƒgƒ‹‚Ìy¬•ª
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®yæˆåˆ†
 	const element_type& Y() const { return this->item(1); }
-	///	ƒxƒNƒgƒ‹‚Ìx¬•ª
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®xæˆåˆ†
 	element_type& X() { return this->item(0); }
-	///	ƒxƒNƒgƒ‹‚Ìy¬•ª
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®yæˆåˆ†
 	element_type& Y() { return this->item(1); }
-	///	ƒxƒNƒgƒ‹‚Ìx¬•ª
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®xæˆåˆ†
 	const element_type& U() const { return this->item(0); }
-	///	ƒxƒNƒgƒ‹‚Ìy¬•ª
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®yæˆåˆ†
 	const element_type& V() const { return this->item(1); }
-	///	ƒxƒNƒgƒ‹‚Ìx¬•ª
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®xæˆåˆ†
 	element_type& U() { return this->item(0); }
-	///	ƒxƒNƒgƒ‹‚Ìy¬•ª
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®yæˆåˆ†
 	element_type& V() { return this->item(1); }
-	///	”ÍˆÍ‚Æ‚µ‚Ä‚İ‚½ê‡‚ÌŠJn’liƒxƒNƒgƒ‹‚Ìx¬•ªj
+	///	ç¯„å›²ã¨ã—ã¦ã¿ãŸå ´åˆã®é–‹å§‹å€¤ï¼ˆãƒ™ã‚¯ãƒˆãƒ«ã®xæˆåˆ†ï¼‰
 	element_type& Lower() { return this->item(0); }
-	///	”ÍˆÍ‚Æ‚µ‚Ä‚İ‚½ê‡‚ÌI—¹’liƒxƒNƒgƒ‹‚Ìy¬•ªj
+	///	ç¯„å›²ã¨ã—ã¦ã¿ãŸå ´åˆã®çµ‚äº†å€¤ï¼ˆãƒ™ã‚¯ãƒˆãƒ«ã®yæˆåˆ†ï¼‰
 	element_type& Upper() { return this->item(1); }
 	//@}
 protected:
@@ -89,13 +89,13 @@ protected:
 
 //-----------------------------------------------------------------------------
 //		TVec3
-///	3ŸŒ³ƒxƒNƒgƒ‹ƒNƒ‰ƒX.
+///	3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«ã‚¯ãƒ©ã‚¹.
 template<class T>
 class TVec3:public PTM::TVectorBase<3, TVecDesc<TVec3<T>, T> >{
 public:
 	typedef TVecDesc<TVec3<T>, T> desc;
 	typedef PTM::TVectorBase<3, desc> base_type;
-	/**	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.
+	/**	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.
 		@see ::DEF_TVECTOR_BASIC_MEMBER	*/
 	DEF_TVECTOR_BASIC_MEMBER(TVec3);
 	union{
@@ -104,32 +104,32 @@ public:
 			T x,y,z;
 		};
 	};
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	T& item_impl(size_t i){ return data[i]; }
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const T& item_impl(size_t i) const { return data[i]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return 1; }
 
-	///@name ‰Šú‰»ŠÖ”
+	///@name åˆæœŸåŒ–é–¢æ•°
 	//@{
-	/// —ëƒxƒNƒgƒ‹
+	/// é›¶ãƒ™ã‚¯ãƒˆãƒ«
 	static TVec3<T> Zero(){TVec3<T> v; v.clear(); return v;}
 	//@}
 	
-	///@name •Ï”ƒAƒNƒZƒX
+	///@name å¤‰æ•°ã‚¢ã‚¯ã‚»ã‚¹
 	//@{
-	///	x¬•ª
+	///	xæˆåˆ†
 	const element_type& X() const { return this->item(0); }
-	///	y¬•ª
+	///	yæˆåˆ†
 	const element_type& Y() const { return this->item(1); }
-	///	z¬•ª
+	///	zæˆåˆ†
 	const element_type& Z() const { return this->item(2); }
-	///	x¬•ª
+	///	xæˆåˆ†
 	element_type& X(){ return this->item(0); }
-	///	y¬•ª
+	///	yæˆåˆ†
 	element_type& Y(){ return this->item(1); }
-	///	z¬•ª
+	///	zæˆåˆ†
 	element_type& Z(){ return this->item(2); }
 
 	const element_type& R() const { return this->item(0); }
@@ -140,14 +140,14 @@ public:
 	element_type& B(){ return this->item(2); }
 	//@}
 	
-	///@name ‰Šú‰»E\’z
+	///@name åˆæœŸåŒ–ãƒ»æ§‹ç¯‰
 	//@{
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	template <class TX, class TY, class TZ> TVec3 (TX xi, TY yi, TZ zi){ X() = element_type(xi); Y() = element_type(yi); Z() = element_type(zi); }
 	//@}
-	/**	“àÏ(return *this * b).
-		@param	b	“¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.
-		@return		“àÏ‚Ì’l(—v‘fŒ^)	*/
+	/**	å†…ç©(return *this * b).
+		@param	b	åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.
+		@return		å†…ç©ã®å€¤(è¦ç´ å‹)	*/
 	template <class D>
 	element_type dot(const PTM::VectorImp<D>& b) const {
 		assert(b.size() == this->size());
@@ -159,13 +159,13 @@ protected:
 
 //-----------------------------------------------------------------------------
 //		TVec4
-///	4ŸŒ³ƒxƒNƒgƒ‹ƒNƒ‰ƒX.
+///	4æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«ã‚¯ãƒ©ã‚¹.
 template<class T>
 class TVec4:public PTM::TVectorBase<4, TVecDesc<TVec4<T>, T> >{
 public:
 	typedef TVecDesc<TVec4<T>, T> desc;
 	typedef PTM::TVectorBase<4, desc> base_type;
-	/**	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.
+	/**	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.
 		@see ::DEF_TVECTOR_BASIC_MEMBER	*/
 	DEF_TVECTOR_BASIC_MEMBER(TVec4);
 	union{
@@ -174,36 +174,36 @@ public:
 			T x,y,z,w;
 		};
 	};
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	T& item_impl(size_t i){ return data[i]; }
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const T& item_impl(size_t i) const { return data[i]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return 1; }
 
-	///@name ‰Šú‰»ŠÖ”
+	///@name åˆæœŸåŒ–é–¢æ•°
 	//@{
-	/// —ëƒxƒNƒgƒ‹
+	/// é›¶ãƒ™ã‚¯ãƒˆãƒ«
 	static TVec4<T> Zero(){TVec4<T> v; v.clear(); return v;}
 	//@}
 
-	///@name •Ï”ƒAƒNƒZƒX
+	///@name å¤‰æ•°ã‚¢ã‚¯ã‚»ã‚¹
 	//@{
-	///	x¬•ª
+	///	xæˆåˆ†
 	const element_type& X() const { return x; }
-	///	y¬•ª
+	///	yæˆåˆ†
 	const element_type& Y() const { return y; }
-	///	z¬•ª
+	///	zæˆåˆ†
 	const element_type& Z() const { return z; }
-	///	w¬•ª
+	///	wæˆåˆ†
 	const element_type& W() const { return w; }
-	///	x¬•ª
+	///	xæˆåˆ†
 	element_type& X(){ return x; }
-	///	y¬•ª
+	///	yæˆåˆ†
 	element_type& Y(){ return y; }
-	///	z¬•ª
+	///	zæˆåˆ†
 	element_type& Z(){ return z; }
-	///	w¬•ª
+	///	wæˆåˆ†
 	element_type& W(){ return w; }
 
 	const element_type& R() const { return x; }
@@ -216,36 +216,36 @@ public:
 	element_type& A(){ return w; }
 	//@}
 	
-	///@name ‰Šú‰»E\’z
+	///@name åˆæœŸåŒ–ãƒ»æ§‹ç¯‰
 	//@{
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	template <class TX, class TY, class TZ, class TW>
 	TVec4 (TX xi, TY yi, TZ zi, TW wi){ X() = element_type(xi); Y() = element_type(yi); Z() = element_type(zi); W() = element_type(wi);}
 	//@}
 protected:
 	void set_default(){this->clear();}
 };
-/// int”Å2ŸŒ³ƒxƒNƒgƒ‹
+/// intç‰ˆ2æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«
 typedef TVec2<int> Vec2i;
-///	float”Å2ŸŒ³ƒxƒNƒgƒ‹
+///	floatç‰ˆ2æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«
 typedef TVec2<float> Vec2f;
-///	double”Å2ŸŒ³ƒxƒNƒgƒ‹
+///	doubleç‰ˆ2æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«
 typedef TVec2<double> Vec2d;
-/// int”Å3ŸŒ³ƒxƒNƒgƒ‹
+/// intç‰ˆ3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«
 typedef TVec3<int>	Vec3i;
-///	float”Å3ŸŒ³ƒxƒNƒgƒ‹
+///	floatç‰ˆ3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«
 typedef TVec3<float> Vec3f;
-///	double”Å3ŸŒ³ƒxƒNƒgƒ‹
+///	doubleç‰ˆ3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«
 typedef TVec3<double> Vec3d;
-/// int”Å4ŸŒ³ƒxƒNƒgƒ‹
+/// intç‰ˆ4æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«
 typedef TVec4<int> Vec4i;
-///	float”Å4ŸŒ³ƒxƒNƒgƒ‹
+///	floatç‰ˆ4æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«
 typedef TVec4<float> Vec4f;
-///	double”Å4ŸŒ³ƒxƒNƒgƒ‹
+///	doubleç‰ˆ4æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«
 typedef TVec4<double> Vec4d;
 //@}
 
-#ifndef PTM_PACK	//	’P‘Ì‚Åg—p‚·‚éê‡‚ÍCnamespace ‚É“ü‚ê‚È‚¢
+#ifndef PTM_PACK	//	å˜ä½“ã§ä½¿ç”¨ã™ã‚‹å ´åˆã¯ï¼Œnamespace ã«å…¥ã‚Œãªã„
 }
 #endif
 

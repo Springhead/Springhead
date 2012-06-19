@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,11 +14,11 @@
 namespace Spr{;
 
 void CRTouchSensor::Step() {
-	// ‚¢‚¸‚êAddChildObject‚Åw’è‚·‚é‚æ‚¤‚É‚·‚×‚« (mitake, 09/07/19)
+	// ã„ãšã‚ŒAddChildObjectã§æŒ‡å®šã™ã‚‹ã‚ˆã†ã«ã™ã¹ã (mitake, 09/07/19)
 	CRBodyIf* body = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetBody(0);
 	PHSceneIf* phScene = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetPHScene();
 
-	// ÚGƒŠƒXƒg‚Ì\’z‚ğŠJn‚·‚é
+	// æ¥è§¦ãƒªã‚¹ãƒˆã®æ§‹ç¯‰ã‚’é–‹å§‹ã™ã‚‹
 	contactList.clear();
 
 	int sceneCnt = phScene->GetCount();
@@ -28,10 +28,10 @@ void CRTouchSensor::Step() {
 
 	Vec3d totalForce;
 
-	// PHScene’†‚Ì‚·‚×‚Ä‚Ì„‘Ì‚É‚Â‚¢‚Äƒ`ƒFƒbƒN
+	// PHSceneä¸­ã®ã™ã¹ã¦ã®å‰›ä½“ã«ã¤ã„ã¦ãƒã‚§ãƒƒã‚¯
 	for (int i=0; i<phScene->NSolids(); ++i) {
 		for (int j=i+1; j<phScene->NSolids(); ++j) {
-			// ©•ª‚Ì‘Ì‚ğ\¬‚·‚é„‘Ì ‚Æ ‚»‚êˆÈŠO‚Ì„‘Ì ‚ÌƒyƒA‚Ì‚İ‚ÉŒÀ’è
+			// è‡ªåˆ†ã®ä½“ã‚’æ§‹æˆã™ã‚‹å‰›ä½“ ã¨ ãã‚Œä»¥å¤–ã®å‰›ä½“ ã®ãƒšã‚¢ã®ã¿ã«é™å®š
 			bool iIsMe = false, jIsMe = false;
 			for (int n=0; n<body->NBones(); ++n) {
 				if (body->GetBone(n) && body->GetBone(n)->GetPHSolid() == phScene->GetSolids()[i]) { iIsMe = true; }
@@ -60,10 +60,10 @@ void CRTouchSensor::Step() {
 			for (int s=0; s<so1->NShape(); ++s) {
 				for (int t=0; t<so2->NShape(); ++t) {
 
-					// ‚±‚Ì•û–@‚¾‚Æ“¯‚¶„‘Ì‚ÌˆÙ‚È‚éShape‚É‚Â‚¢‚Ä‚ÌÚG‚Í
-					// ˆÙ‚È‚éContact‚Æ‚È‚éB
-					// ‚»‚ê‚ğ„‘Ì‚²‚Æ‚É‚Ü‚Æ‚ß‚é‚É‚Í”ç•†Š´Šo‚Ì‰ÁZ‚É‚Â‚¢‚Ä‚Ì’mŒ©‚ª•K—vB
-					// ‚Æ‚è‚ ‚¦‚¸‚ ‚Æ‚Ü‚í‚µ (mitake, 09/02/07)
+					// ã“ã®æ–¹æ³•ã ã¨åŒã˜å‰›ä½“ã®ç•°ãªã‚‹Shapeã«ã¤ã„ã¦ã®æ¥è§¦ã¯
+					// ç•°ãªã‚‹Contactã¨ãªã‚‹ã€‚
+					// ãã‚Œã‚’å‰›ä½“ã”ã¨ã«ã¾ã¨ã‚ã‚‹ã«ã¯çš®è†šæ„Ÿè¦šã®åŠ ç®—ã«ã¤ã„ã¦ã®çŸ¥è¦‹ãŒå¿…è¦ã€‚
+					// ã¨ã‚Šã‚ãˆãšã‚ã¨ã¾ã‚ã— (mitake, 09/02/07)
 
 					shapePair = solidPair->GetShapePair(s, t);
 
@@ -92,7 +92,7 @@ void CRTouchSensor::Step() {
 							contact.dimension	= shapePair->GetContactDimension();
 							contact.pressure	= fabs(force.dot(contact.normal));
 						} else {
-							// ÚG–Ê‚Ì‹È—¦”¼Œa
+							// æ¥è§¦é¢ã®æ›²ç‡åŠå¾„
 							CDConvexIf* sh1 = shapePair->GetShape(0)->Cast();
 							int i1=0; for (; i1<so1->NShape(); ++i1) { if (so1->GetShape(i1)==sh1) break; }
 							Posed q1 = so1->GetShapePose(i1).Inv() * so1->GetPose().Inv();
@@ -103,10 +103,10 @@ void CRTouchSensor::Step() {
 							Posed q2 = so2->GetShapePose(i2).Inv() * so2->GetPose().Inv();
 							double r2 = sh2->CurvatureRadius(q2 * contact.pos);
 
-							// Hertz‚ÌÚGŒö®
-							double E = 4.2e+5;	/// -- ”ç•†‚ÌYoung—¦   ‚±‚Ì•Ó‚ÉÀ‚Ì’l‚ğg‚¤‚Ì‚Í‚¢‚ë‚¢‚ë–³ˆÓ–¡‚©‚àB
-							double v = 0.49;	/// -- ”ç•†‚ÌPoisson”ä
-							double P = force.norm();  /// -- ‰Ÿ‚µ‚İ—Í
+							// Hertzã®æ¥è§¦å…¬å¼
+							double E = 4.2e+5;	/// -- çš®è†šã®Youngç‡   ã“ã®è¾ºã«å®Ÿã®å€¤ã‚’ä½¿ã†ã®ã¯ã„ã‚ã„ã‚ç„¡æ„å‘³ã‹ã‚‚ã€‚
+							double v = 0.49;	/// -- çš®è†šã®Poissonæ¯”
+							double P = force.norm();  /// -- æŠ¼ã—è¾¼ã¿åŠ›
 							double a = pow((3.0/4.0)*P*( 2*(1-v*v)/E )/(1/r1 + 1/r2), 1/3.0);
 							double pMax = 3*P/(2*3.1415926*a*a);
 

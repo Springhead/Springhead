@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,12 +17,12 @@ namespace Spr{;
 
 class FISaveFileMap : public UTFileMap{
 public:
-	///	ƒZ[ƒuƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹ƒXƒgƒŠ[ƒ€
+	///	ã‚»ãƒ¼ãƒ–ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚¹ãƒˆãƒªãƒ¼ãƒ 
 	std::ofstream file;
 	
 	virtual bool Map(const UTString fn, bool binary){
 		ios_base::openmode mode = ios_base::out;
-		// ƒoƒCƒiƒŠƒtƒH[ƒ}ƒbƒg‚Ìê‡binaryƒtƒ‰ƒO‚ª•K—v
+		// ãƒã‚¤ãƒŠãƒªãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®å ´åˆbinaryãƒ•ãƒ©ã‚°ãŒå¿…è¦
 		if(binary)
 			mode |= ios_base::binary;
 		

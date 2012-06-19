@@ -1,62 +1,62 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/** \page pageJoints �֐ߋ@�\�̃f��
+/** \page pageJoints 関節機能のデモ
  Springhead2/src/Samples/Joints/main.cpp
 
-\ref pagePhysics �̊֐ߋ@�\�̃f���v���O�����B
+\ref pagePhysics の関節機能のデモプログラム。
 
-\section secTestPatternJoints �e�X�g�p�^�[��
-- �V�[��0�F��
-- �V�[��1�F�`�F�r�V�F�t�����N
-- �V�[��2�F�V���A�������N
+\section secTestPatternJoints テストパターン
+- シーン0：鎖
+- シーン1：チェビシェフリンク
+- シーン2：シリアルリンク
 
-\section secSpecJoints �d�l
-- ���ʂ̑���F
- - �V�[���ԍ�0, 1, ...���^�C�v����ƑΉ�����V�[���ɐ؂�ւ��i�f�t�H���g�F�V�[��0)
-  - 'x'���^�C�v����Ɗ֐߂̗L��/�������؂�ւ��
-  - 'z'�ŁA�E��������{�b�N�X���΂��A�Փ˂�����		
-  - 'Z'�ŁA��O��������{�b�N�X���΂��A�Փ˂�����
-  - 'C'�ŁA�E��������J�v�Z�����΂��A�Փ˂�����
-  - 'S'�ŁA�E�������狅���΂��A�Փ˂�����
-  - 'P'�ŁA�V�~�����[�V�������~�߂�
-- �V�[��0�F ��
-  - '0'�ŁA�q���W�V�[���̐ݒ���s���i�V�[���؊����j
-  - ' '���邢��'b'�Ńq���W�p��box�𐶐�
-		�@' '�̏ꍇ�͓����A���S���Y����ABA�ƂȂ�
-- �V�[��1�F
-  - '1'�ŁA�`�F�r�V�F�t�����N�𐶐�����i�V�[���؊����j
-  - 'a'�ŁA���[�^�[�g���N��1.0�ɐݒ肷��
-  - 's'�ŁA���[�^�[�g���N��0.0�ɐݒ肷��
-  - 'd'�ŁA���[�^�[�g���N��-1.0�ɐݒ肷��
-  - 'f'�ŁA�ڕW���x��90.0�ɐݒ肷��
-  - 'g'�ŁA�ڕW���x��0.0�ɐݒ肷��
-  - 'h'�ŁA�ڕW���x��-90.0�ɐݒ肷��
-  - 'j'�ŁA�o�l���_(�o�l�̗͂�0�ƂȂ�֐ߕψ�)��1.0�ɐݒ肷��
-  - 'k'�ŁA�o�l���_(�o�l�̗͂�0�ƂȂ�֐ߕψ�)��0.0�ɐݒ肷��
-  - 'l'�ŁA�o�l���_(�o�l�̗͂�0�ƂȂ�֐ߕψ�)��-1.0�ɐݒ肷��
-- �V�[��4�F
-  - '4'�ŁA�p�X�W���C���g�V�[���̐ݒ���s���i�V�[���؊����j
-  - 'a'�ŁA�d�͕������A(0.0, -9.8, 0.0)�ɐݒ肷��
-  - 'd'�ŁA�d�͕������A(0.0,  9.8, 0.0)�ɐݒ肷��
+\section secSpecJoints 仕様
+- 共通の操作：
+ - シーン番号0, 1, ...をタイプすると対応するシーンに切り替わる（デフォルト：シーン0)
+  - 'x'をタイプすると関節の有効/無効が切り替わる
+  - 'z'で、右方向からボックスを飛ばし、衝突させる		
+  - 'Z'で、手前方向からボックスを飛ばし、衝突させる
+  - 'C'で、右方向からカプセルを飛ばし、衝突させる
+  - 'S'で、右方向から球を飛ばし、衝突させる
+  - 'P'で、シミュレーションを止める
+- シーン0： 鎖
+  - '0'で、ヒンジシーンの設定を行う（シーン切換え）
+  - ' 'あるいは'b'でヒンジ用のboxを生成
+		　' 'の場合は内部アルゴリズムはABAとなる
+- シーン1：
+  - '1'で、チェビシェフリンクを生成する（シーン切換え）
+  - 'a'で、モータートルクを1.0に設定する
+  - 's'で、モータートルクを0.0に設定する
+  - 'd'で、モータートルクを-1.0に設定する
+  - 'f'で、目標速度を90.0に設定する
+  - 'g'で、目標速度を0.0に設定する
+  - 'h'で、目標速度を-90.0に設定する
+  - 'j'で、バネ原点(バネの力が0となる関節変位)を1.0に設定する
+  - 'k'で、バネ原点(バネの力が0となる関節変位)を0.0に設定する
+  - 'l'で、バネ原点(バネの力が0となる関節変位)を-1.0に設定する
+- シーン4：
+  - '4'で、パスジョイントシーンの設定を行う（シーン切換え）
+  - 'a'で、重力方向を、(0.0, -9.8, 0.0)に設定する
+  - 'd'で、重力方向を、(0.0,  9.8, 0.0)に設定する
   - 
-- �V�[��5�F
-  - '5'�ŁA�o�l�E�_���p�V�[���̐ݒ���s���i�V�[���؊����j
-  - 'a'�ŁA���̂̃t���[�����_���A�ʒu(-20.0, 30.0, 0.0)�ɐݒ肷��
-  - 's'�ŁA���̂̃t���[�����_���A�ʒu(-10.0, 20.0, 0.0)�ɐݒ肷��
-  - 'd'�ŁA���̂̃t���[�����_���A�ʒu( -5.0, 10.0, 0.0)�ɐݒ肷��
-  - 'f'�ŁA���̂̃t���[�����_���A�ʒu(  0.0, 10.0, 0.0)�ɐݒ肷��
-  - 'g'�ŁA���̂̃t���[�����_���A�ʒu(  5.0, 10.0, 0.0)�ɐݒ肷��
-  - 'h'�ŁA���̂̃t���[�����_���A�ʒu( 10.0, 20.0, 0.0)�ɐݒ肷��
-  - 'j'�ŁA���̂̃t���[�����_���A�ʒu( 20.0, 30.0, 0.0)�ɐݒ肷��
-  - '.'�ŁA�R�[���o�b�N�֐��̌Ăяo�����Ԃ�1/2�{����
-  - ','�ŁA�R�[���o�b�N�֐��̌Ăяo�����Ԃ�2�{����
-  - 'n'�ŁA�o�l���_��+0.01����
-  - 'm'�ŁA�o�l���_��-0.01����
+- シーン5：
+  - '5'で、バネ・ダンパシーンの設定を行う（シーン切換え）
+  - 'a'で、剛体のフレーム原点を、位置(-20.0, 30.0, 0.0)に設定する
+  - 's'で、剛体のフレーム原点を、位置(-10.0, 20.0, 0.0)に設定する
+  - 'd'で、剛体のフレーム原点を、位置( -5.0, 10.0, 0.0)に設定する
+  - 'f'で、剛体のフレーム原点を、位置(  0.0, 10.0, 0.0)に設定する
+  - 'g'で、剛体のフレーム原点を、位置(  5.0, 10.0, 0.0)に設定する
+  - 'h'で、剛体のフレーム原点を、位置( 10.0, 20.0, 0.0)に設定する
+  - 'j'で、剛体のフレーム原点を、位置( 20.0, 30.0, 0.0)に設定する
+  - '.'で、コールバック関数の呼び出し時間を1/2倍する
+  - ','で、コールバック関数の呼び出し時間を2倍する
+  - 'n'で、バネ原点を+0.01する
+  - 'm'で、バネ原点を-0.01する
 */
 
 //#include <ctime>
@@ -87,7 +87,7 @@ public:
 	MyApp(){
 		appName		= "Joints";
 		
-		// �n���h���o�^
+		// ハンドラ登録
 		handlers.push_back(DBG_NEW ChainHandler(this));
 		handlers.push_back(DBG_NEW LinkHandler(this));
 		handlers.push_back(DBG_NEW ArmHandler(this));
@@ -118,10 +118,10 @@ public:
 } app;
 
 /**
- brief		���C���֐�
- param		<in/--> argc�@�@�R�}���h���C�����͂̌�
- param		<in/--> argv�@�@�R�}���h���C������
- return		0 (����I��)
+ brief		メイン関数
+ param		<in/--> argc　　コマンドライン入力の個数
+ param		<in/--> argv　　コマンドライン入力
+ return		0 (正常終了)
  */
 int main(int argc, char* argv[]){
 	app.Init(argc, argv);

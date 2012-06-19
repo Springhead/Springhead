@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprGRScene.h
- *	@brief ƒV[ƒ“ƒOƒ‰ƒt
+ *	@brief ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•
 */
 
 /**	\addtogroup	gpGraphics	*/
@@ -22,35 +22,35 @@
 
 namespace Spr{;
 
-///	@brief GRScene ‚ÌDescD’†g–³‚µD
+///	@brief GRScene ã®Descï¼ä¸­èº«ç„¡ã—ï¼
 struct GRSceneDesc{
 };
 
 struct GRSdkIf;
-/**	@brief	ƒOƒ‰ƒtƒBƒbƒNƒXƒV[ƒ“ƒOƒ‰ƒt */
+/**	@brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ• */
 struct GRSceneIf: public SceneIf{
 	SPR_IFDEF(GRScene);
 
-	///	ƒV[ƒ“‚ÌƒŒƒ“ƒ_ƒŠƒ“ƒO
+	///	ã‚·ãƒ¼ãƒ³ã®ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°
 	void Render(GRRenderIf* r);
 
-	///	ƒ[ƒ‹ƒhƒtƒŒ[ƒ€‚Ìæ“¾
+	///	ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®å–å¾—
 	GRFrameIf* GetWorld();
 
-	///	ƒJƒƒ‰‚Ìæ“¾
+	///	ã‚«ãƒ¡ãƒ©ã®å–å¾—
 	GRCameraIf* GetCamera();
 
-	/// ƒJƒƒ‰‚Ìì¬Eİ’è
+	/// ã‚«ãƒ¡ãƒ©ã®ä½œæˆãƒ»è¨­å®š
 	void SetCamera(const GRCameraDesc& desc = GRCameraDesc());
 
-	///	ƒAƒjƒ[ƒVƒ‡ƒ“ƒRƒ“ƒgƒ[ƒ‰‚Ìæ“¾
+	///	ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã®å–å¾—
 	GRAnimationControllerIf* GetAnimationController();
 	
-	/** @brief ƒrƒWƒ…ƒAƒ‹‚Ìì¬
-		@param desc ƒrƒWƒ…ƒAƒ‹‚ÌƒfƒXƒNƒŠƒvƒ^
-		@param parent eƒtƒŒ[ƒ€
-		ƒtƒŒ[ƒ€AƒƒbƒVƒ…Aƒ}ƒeƒŠƒAƒ‹A‚ ‚é‚¢‚Íƒ‰ƒCƒg‚ğì¬‚µ‚ÄeƒtƒŒ[ƒ€parent‚Ì‰º‚É’Ç‰Á‚·‚éB
-		parent‚ªNULL‚Ìê‡‚Íƒ[ƒ‹ƒhƒtƒŒ[ƒ€‚ªe‚Æ‚È‚éB
+	/** @brief ãƒ“ã‚¸ãƒ¥ã‚¢ãƒ«ã®ä½œæˆ
+		@param desc ãƒ“ã‚¸ãƒ¥ã‚¢ãƒ«ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+		@param parent è¦ªãƒ•ãƒ¬ãƒ¼ãƒ 
+		ãƒ•ãƒ¬ãƒ¼ãƒ ã€ãƒ¡ãƒƒã‚·ãƒ¥ã€ãƒãƒ†ãƒªã‚¢ãƒ«ã€ã‚ã‚‹ã„ã¯ãƒ©ã‚¤ãƒˆã‚’ä½œæˆã—ã¦è¦ªãƒ•ãƒ¬ãƒ¼ãƒ parentã®ä¸‹ã«è¿½åŠ ã™ã‚‹ã€‚
+		parentãŒNULLã®å ´åˆã¯ãƒ¯ãƒ¼ãƒ«ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ ãŒè¦ªã¨ãªã‚‹ã€‚
 	 */
 	GRVisualIf*  CreateVisual(const IfInfo* info, const GRVisualDesc& desc, GRFrameIf* parent = NULL);
 	template <class T> GRVisualIf* CreateVisual(const T& desc, GRFrameIf* parent = NULL){
@@ -58,8 +58,8 @@ struct GRSceneIf: public SceneIf{
 	}
 	
 
-	/** @brief ‚±‚ÌScene‚ğ‚à‚ÂSDK‚ğ•Ô‚·
-		@return SDK‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+	/** @brief ã“ã®Sceneã‚’ã‚‚ã¤SDKã‚’è¿”ã™
+		@return SDKã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 	*/	
 	GRSdkIf* GetSdk();
 };

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,7 +16,7 @@
 
 namespace Spr{
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 CRFourLegsAnimalBodyGenDesc::CRFourLegsAnimalBodyGenDesc(bool enableRange, bool enableFMax){
 
 	jointOrder = SOCKET_PARENT;
@@ -111,7 +111,7 @@ CRFourLegsAnimalBodyGenDesc::CRFourLegsAnimalBodyGenDesc(bool enableRange, bool 
 	limitTwistRearAnkle.lower	= Rad(-1);
 	limitTwistRearAnkle.upper	= Rad(1);
 	//-----------------------------------------------------------------------------------
-	// Range of hinge joints (Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø)
+	// Range of hinge joints (Vec2d(lower, upper)  lower>upperã®ã¨ãå¯å‹•åŸŸåˆ¶é™ç„¡åŠ¹)
 	rangeElbow		  = Vec2d(Rad(	 0), Rad(+180));
 	rangeFrontKnee	  = Vec2d(Rad(-180), Rad(	0));
 	rangeStifle		  = Vec2d(Rad(-180), Rad(	0));
@@ -184,7 +184,7 @@ void CRFourLegsAnimalBodyGen::CreateWaist(){
 
 	//solids[SO_WAIST]->SetOrientation(Quaterniond::Rot(Rad(-90), 'x'));
 
-	//d—ÍØ‚é‚©
+	//é‡åŠ›åˆ‡ã‚‹ã‹
 	solids[SO_WAIST]->SetDynamical(dynamicalMode);
 
 }
@@ -223,8 +223,8 @@ void CRFourLegsAnimalBodyGen::CreateChest(){
 	}
 
 	//----------------------------------------------------------------------------
-	// PHScene::CreateJoint([p], [c], desc)‚Åg‚¤B
-	// <memo>: [â–ÅAPI]CRBody::CreateJoint([c], [p], desc)‚ÆéŒ¾‚ª‹t‚È‚Ì‚Å’ˆÓI
+	// PHScene::CreateJoint([p], [c], desc)ã§ä½¿ã†ã€‚
+	// <memo>: [çµ¶æ»…API]CRBody::CreateJoint([c], [p], desc)ã¨å®£è¨€ãŒé€†ãªã®ã§æ³¨æ„ï¼
 	//----------------------------------------------------------------------------
 	joints[JO_WAIST_CHEST]    = phScene->CreateJoint(solids[SO_WAIST], solids[SO_CHEST], ballDesc);		
 	joints[JO_WAIST_CHEST]->SetName("joWaistChest");
@@ -496,8 +496,8 @@ void CRFourLegsAnimalBodyGen::CreateBreastBone(LREnum lr){
 	}
 
 	//----------------------------------------------------------------------------
-	// phScene->CreateJoint([p], [c], desc)‚Åg‚¤B
-	// <memo>: [â–ÅAPI]CRBody::CreateJoint([c], [p], desc)‚ÆéŒ¾‚ª‹t‚È‚Ì‚Å’ˆÓI
+	// phScene->CreateJoint([p], [c], desc)ã§ä½¿ã†ã€‚
+	// <memo>: [çµ¶æ»…API]CRBody::CreateJoint([c], [p], desc)ã¨å®£è¨€ãŒé€†ãªã®ã§æ³¨æ„ï¼
 	//----------------------------------------------------------------------------
 	joints[joShoulder] = phScene->CreateJoint(solids[SO_CHEST], solids[soBreastbone], ballDesc);
 	if(lr == LEFTPART)
@@ -648,7 +648,7 @@ void CRFourLegsAnimalBodyGen::CreateFrontToeBones(LREnum lr){
 		soCannonBone = SO_RIGHT_FRONT_CANNON_BONE;
 		joAnkle		 = JO_RIGHT_FRONT_ANKLE;
 	}
-	//@[p]frontCannonBone - [c]frontToe
+	//ã€€[p]frontCannonBone - [c]frontToe
 	solidDesc.mass = totalMass * VSolid(soToe) / VSolids();
 	solids[soToe] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
@@ -704,7 +704,7 @@ void CRFourLegsAnimalBodyGen::InitRearLegs(){
 		CreateRearToeBones(RIGHTPART);
 	}
 	
-	// —¼‘«‚Í‹ß‚·‚¬‚Ä‘«‚Ì‘¾‚³Ÿ‘æ‚Å‚ÍÕ“Ë‚µ‚Ä‚µ‚Ü‚¤‚½‚ßD
+	// ä¸¡è¶³ã¯è¿‘ã™ãã¦è¶³ã®å¤ªã•æ¬¡ç¬¬ã§ã¯è¡çªã—ã¦ã—ã¾ã†ãŸã‚ï¼
 	phScene->SetContactMode(solids[SO_LEFT_FEMUR], solids[SO_RIGHT_FEMUR], PHSceneDesc::MODE_NONE);
 
 }
@@ -905,7 +905,7 @@ void CRFourLegsAnimalBodyGen::CreateRearToeBones(LREnum lr){
 		joAnkle		 = JO_RIGHT_REAR_ANKLE;
 	}
 
-	//@[p]rearCannonBone - [c]rearToe
+	//ã€€[p]rearCannonBone - [c]rearToe
 	solidDesc.mass = totalMass * VSolid(soToe) / VSolids();
 	solids[soToe] = phScene->CreateSolid(solidDesc);
 	if(lr == LEFTPART)
@@ -965,7 +965,7 @@ void CRFourLegsAnimalBodyGen::CreateEye(LREnum lr){
 // --- --- ---
 void CRFourLegsAnimalBodyGen::InitContact(){
 	
-	// ©•ª‚É‘®‚·‚é„‘Ì“¯m‚ÌÚG‚ğOffi‚Ü‚¾­‚È‚·‚¬‚é‚©‚àHÅ’áŒÀ‚ÌÚG‚Íc‚µ‚½‚¢i07/09/25, mitakejj
+	// è‡ªåˆ†ã«å±ã™ã‚‹å‰›ä½“åŒå£«ã®æ¥è§¦ã‚’Offï¼ˆã¾ã å°‘ãªã™ãã‚‹ã‹ã‚‚ï¼Ÿæœ€ä½é™ã®æ¥è§¦ã¯æ®‹ã—ãŸã„ï¼ˆ07/09/25, mitakeï¼‰ï¼‰
 	for (unsigned int i=0; i<solids.size(); ++i) {
 		for (unsigned int j=0; j<solids.size(); ++j) {
 			if (i!=j) {
@@ -975,7 +975,7 @@ void CRFourLegsAnimalBodyGen::InitContact(){
 	}
 
 	/*
-	// ©•ªˆÈŠO‚É‚·‚Å‚ÉBody‚ª‹‚ê‚Î‚»‚ÌBody‚É‘®‚·‚é„‘Ì‚Æ‚ÌContact‚àØ‚é
+	// è‡ªåˆ†ä»¥å¤–ã«ã™ã§ã«BodyãŒå±…ã‚Œã°ãã®Bodyã«å±ã™ã‚‹å‰›ä½“ã¨ã®Contactã‚‚åˆ‡ã‚‹
 	for (int i=0; i<creature->NBodies(); ++i) {
 		CRBodyIf* body = creature->GetBody(i);
 		if (DCAST(CRFourLegsAnimalBodyGenIf,body)!=(this->Cast())) {
@@ -1008,9 +1008,9 @@ Vec3d CRFourLegsAnimalBodyGen::GetUpperCenterOfMass(){
 	
 	SetUpperBody();
 
-	/// ƒ{ƒfƒBã‘Ì‚Ìd—Ê¬Œv
+	/// ãƒœãƒ‡ã‚£ä¸Šä½“ã®é‡é‡å°è¨ˆ
 	double totalWeightOfUpperPart = 0;
-	/// ƒ{ƒfƒBã‘Ì‚Ì’†SÀ•W
+	/// ãƒœãƒ‡ã‚£ä¸Šä½“ã®ä¸­å¿ƒåº§æ¨™
 	Vec3d  centerPosOfUpperBlocks = Vec3d(0.0, 0.0, 0.0);
 
 	for(int i = 0; i<(int)upperBody.size(); i++){
@@ -1069,8 +1069,8 @@ double CRFourLegsAnimalBodyGen::VSolid(int i){
 	else if(i == SO_RIGHT_REAR_CANNON_BONE)	 return rearCannonBoneBreadth  * rearCannonBoneHeight  * rearCannonBoneThickness;
 	else if(i == SO_RIGHT_REAR_TOE)			 return rearToeBreadth		   * rearToeHeight		   * rearToeThickness;
 	else {
-		DSTR << "yerrorz: Invalid value i." << std::endl;
-		std::cout << "yerrorz: Invalid value i." << std::endl;
+		DSTR << "ã€errorã€‘: Invalid value i." << std::endl;
+		std::cout << "ã€errorã€‘: Invalid value i." << std::endl;
 		return -1;
 	}
 }
@@ -1080,8 +1080,8 @@ double CRFourLegsAnimalBodyGen::VSolids(){
 	for(int i = 0; i < NSolids(); i++){
 		if (VSolid(i) != -1) vSum += VSolid(i);
 		else {
-			DSTR << "yerrorz: Invalid value i = " << i << std::endl;
-			std::cout << "yerrorz: Invalid value i = " << i << std::endl;
+			DSTR << "ã€errorã€‘: Invalid value i = " << i << std::endl;
+			std::cout << "ã€errorã€‘: Invalid value i = " << i << std::endl;
 			return -1;
 		}
 	}

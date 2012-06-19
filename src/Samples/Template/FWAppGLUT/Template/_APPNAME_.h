@@ -1,4 +1,4 @@
-#ifndef #{APPLICATIONNAME}_H
+ï»¿#ifndef #{APPLICATIONNAME}_H
 #define #{APPLICATIONNAME}_H
 
 #include <Springhead.h>
@@ -17,9 +17,9 @@ public:
 	double nIter;
 	bool bGravity;
 
-	// „‘Ì‚Ég‚¤•Ï”
+	// å‰›ä½“ã«ä½¿ã†å¤‰æ•°
 
-	//ƒfƒoƒbƒN•\¦‚Ég‚¤•Ï”
+	//ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºã«ä½¿ã†å¤‰æ•°
 	bool bDebug;
 	bool bStep;
 	bool bOneStep;

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprHISdk.h
- *	@brief ƒqƒ…[ƒ}ƒ“ƒCƒ“ƒ^ƒtƒF[ƒXSDK
+ *	@brief ãƒ’ãƒ¥ãƒ¼ãƒãƒ³ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹SDK
 */
 #ifndef SPR_HISdkIF_H
 #define SPR_HISdkIF_H
@@ -17,64 +17,64 @@
 
 namespace Spr{;
 
-/** \addtogroup gpHumanInterface ƒqƒ…[ƒ}ƒ“ƒCƒ“ƒ^ƒtƒF[ƒXSDK */
+/** \addtogroup gpHumanInterface ãƒ’ãƒ¥ãƒ¼ãƒãƒ³ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹SDK */
 //@{
 
-//	©“®ƒ[ƒh‚Ì‚½‚ß‚Ì’†g‚È‚µ‚ÌƒfƒXƒNƒŠƒvƒ^
+//	è‡ªå‹•ãƒ­ãƒ¼ãƒ‰ã®ãŸã‚ã®ä¸­èº«ãªã—ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct HISdkDesc{
 };
 
-///	•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK
+///	ç‰©ç†ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³SDK
 struct HISdkIf: public NameManagerIf{
 	SPR_IFDEF(HISdk);
 
-	/** @brief	‰¼‘zƒfƒoƒCƒX‚ğØ‚è‚Ä‚­‚é	Rent virtual device from device pool
-		@param	type	‰¼‘zƒfƒoƒCƒX‚Ìí—Ş
-		@param	name	ÀƒfƒoƒCƒX‚Ì–¼‘O
-		@param	portNum	ÀƒfƒoƒCƒX“à‚Ì‰½ŒÂ–Ú‚Ì‰¼‘zƒfƒoƒCƒX‚ğg—p‚·‚é‚©w’è
+	/** @brief	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã‚’å€Ÿã‚Šã¦ãã‚‹	Rent virtual device from device pool
+		@param	type	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
+		@param	name	å®Ÿãƒ‡ãƒã‚¤ã‚¹ã®åå‰
+		@param	portNum	å®Ÿãƒ‡ãƒã‚¤ã‚¹å†…ã®ä½•å€‹ç›®ã®ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã‚’ä½¿ç”¨ã™ã‚‹ã‹æŒ‡å®š
 
-		‰¼‘zƒfƒoƒCƒX‚Ìí—ŞCÀƒfƒoƒCƒX–¼‚ª‡’v‚·‚éƒfƒoƒCƒX‚ğ’T‚·B
-		ƒfƒoƒCƒX‚ªŒ©‚Â‚©‚èA–¢g—p‚Ìê‡‚ÍAg—pó‘Ô‚É‚µ‚Ä•Ô‚·B
-		ƒfƒoƒCƒX‚ªŒ©‚Â‚©‚ç‚È‚¢‚©Ag—p’†‚Ìê‡‚ÍNULL‚ğ•Ô‚·B
-		name‚ªNULL‚Ìê‡ÀƒfƒoƒCƒX–¼‚Í”CˆÓB
-		portNum‚ª-1‚Ì‚ÍÅ‰‚Ì‹ó‚¢‚Ä‚¢‚éƒfƒoƒCƒXB	*/
+		ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡ï¼Œå®Ÿãƒ‡ãƒã‚¤ã‚¹åãŒåˆè‡´ã™ã‚‹ãƒ‡ãƒã‚¤ã‚¹ã‚’æ¢ã™ã€‚
+		ãƒ‡ãƒã‚¤ã‚¹ãŒè¦‹ã¤ã‹ã‚Šã€æœªä½¿ç”¨ã®å ´åˆã¯ã€ä½¿ç”¨çŠ¶æ…‹ã«ã—ã¦è¿”ã™ã€‚
+		ãƒ‡ãƒã‚¤ã‚¹ãŒè¦‹ã¤ã‹ã‚‰ãªã„ã‹ã€ä½¿ç”¨ä¸­ã®å ´åˆã¯NULLã‚’è¿”ã™ã€‚
+		nameãŒNULLã®å ´åˆå®Ÿãƒ‡ãƒã‚¤ã‚¹åã¯ä»»æ„ã€‚
+		portNumãŒ-1ã®æ™‚ã¯æœ€åˆã®ç©ºã„ã¦ã„ã‚‹ãƒ‡ãƒã‚¤ã‚¹ã€‚	*/
 	HIVirtualDeviceIf* RentVirtualDevice(const IfInfo* ii, const char* rname=NULL, int portNum = -1);
 	HIVirtualDeviceIf* RentVirtualDevice(const char* itype, const char* rname=NULL, int portNum = -1);
 	
-	/** @brief	‰¼‘zƒfƒoƒCƒX‚ğ•Ô‹p‚·‚é	Return virtual device to device pool
-		ƒfƒoƒCƒX‚ğ–¢g—pó‘Ô‚É‚·‚é
+	/** @brief	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã‚’è¿”å´ã™ã‚‹	Return virtual device to device pool
+		ãƒ‡ãƒã‚¤ã‚¹ã‚’æœªä½¿ç”¨çŠ¶æ…‹ã«ã™ã‚‹
 	 */
 	bool ReturnVirtualDevice(HIVirtualDeviceIf* dev);
 	
-	/**	@brief ÀƒfƒoƒCƒX‚ğ“o˜^	Create and register real device.
-		@param IfInfo	ì¬‚·‚éƒfƒoƒCƒX‚ÌIfInfo
-		@param desc		ì¬‚·‚éƒfƒoƒCƒX‚ÌƒfƒBƒXƒNƒŠƒvƒ^
+	/**	@brief å®Ÿãƒ‡ãƒã‚¤ã‚¹ã‚’ç™»éŒ²	Create and register real device.
+		@param IfInfo	ä½œæˆã™ã‚‹ãƒ‡ãƒã‚¤ã‚¹ã®IfInfo
+		@param desc		ä½œæˆã™ã‚‹ãƒ‡ãƒã‚¤ã‚¹ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 	 */
 	HIRealDeviceIf* AddRealDevice(const IfInfo* keyInfo, const void* desc=NULL);
-	/** @brief ÀƒL[ƒ{[ƒhEƒ}ƒEƒX‚ğ“o˜^
+	/** @brief å®Ÿã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ»ãƒã‚¦ã‚¹ã‚’ç™»éŒ²
 		@param IfInfo	
-		@param win		ŠÖ˜A‚Ã‚¯‚éƒEƒBƒ“ƒhƒE
+		@param win		é–¢é€£ã¥ã‘ã‚‹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
 		@param desc
 	 */
 
-	/**	@brief ÀƒfƒoƒCƒX‚ğæ“¾	Get real device.
+	/**	@brief å®Ÿãƒ‡ãƒã‚¤ã‚¹ã‚’å–å¾—	Get real device.
 	 */
 	HIRealDeviceIf* FindRealDevice(const char* name);
 	HIRealDeviceIf*	FindRealDevice(const IfInfo* ii);
 
-	/**	@brief	ƒqƒ…[ƒ}ƒ“ƒCƒ“ƒ^ƒtƒF[ƒX‚Ìì¬
-		@param	info	ì¬‚·‚éHI‚ÌŒ^î•ñ
+	/**	@brief	ãƒ’ãƒ¥ãƒ¼ãƒãƒ³ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®ä½œæˆ
+		@param	info	ä½œæˆã™ã‚‹HIã®å‹æƒ…å ±
 	 **/
 	HIBaseIf* CreateHumanInterface(const IfInfo* info);
-	/**	@brief	ƒqƒ…[ƒ}ƒ“ƒCƒ“ƒ^ƒtƒF[ƒX‚Ìì¬
-		@param	name	ì¬‚·‚éHI‚ÌŒ^–¼
+	/**	@brief	ãƒ’ãƒ¥ãƒ¼ãƒãƒ³ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®ä½œæˆ
+		@param	name	ä½œæˆã™ã‚‹HIã®å‹å
 	 **/
 	HIBaseIf* CreateHumanInterface(const char* name);
 
-	//	SDK¶¬A“o˜^ŠÖ”
-	///	HISdk‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬
+	//	SDKç”Ÿæˆã€ç™»éŒ²é–¢æ•°
+	///	HISdkã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆ
 	static HISdkIf* SPR_CDECL CreateSdk();
-	///	HISdk‚ğƒtƒ@ƒCƒ‹ƒ[ƒ_[‚È‚Ç‚É“o˜^
+	///	HISdkã‚’ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ãƒ¼ãªã©ã«ç™»éŒ²
 	static void SPR_CDECL RegisterSdk();
 };
 

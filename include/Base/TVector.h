@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,18 +19,18 @@
 //@{
 
 /**	@file
-	C++ ‚Ì template ‹@”\‚ğ¶‚©‚µ‚½ƒxƒNƒgƒ‹ƒ‰ƒCƒuƒ‰ƒŠD
-	ƒƒ‚ƒŠ‚ÆŠÇ—î•ñ(ƒxƒNƒgƒ‹‚ÌƒTƒCƒY‚È‚Ç)‚Ì‚¿•û‚Å3í‚ ‚éB
-	- TVector : ŠÇ—î•ñ‚ğƒeƒ“ƒvƒŒ[ƒg‚Ìˆø”‚É‚·‚é‚±‚Æ‚ÅC
-			—]•ª‚Èƒƒ‚ƒŠ‚ğˆêØg‚í‚¸‚Éˆê”Ê‚ÌƒxƒNƒgƒ‹‚ğˆµ‚¤‚±‚Æ‚ª‚Å‚«‚éƒxƒNƒgƒ‹‚ÌŒ^D
-			”z—ñ‚ğƒLƒƒƒXƒg‚µ‚ÄƒxƒNƒgƒ‹‚É‚·‚é‚±‚Æ‚à‚Å‚«‚éD
-	- VVector : ŠÇ—î•ñ‚ğƒƒ‚ƒŠ‚É‚¿CƒTƒCƒY‚Ì•ÏX‚ª‚Å‚«‚éƒxƒNƒgƒ‹‚ÌŒ^D
-	- EVector : ŠÇ—î•ñ‚¾‚¯‚ğ‚¿Cƒf[ƒ^‚ÍŠO•”‚Ì”z—ñ‚È‚Ç‚ğg‚¤ƒxƒNƒgƒ‹‚ÌŒ^D
-	Œİ‚¢‚É“àÏ‚È‚Ç‚Ì‰‰Z‚ğs‚¤‚±‚Æ‚ª‚Å‚«‚éD‚Ü‚½CTMatrix, VMatrix, EMatrix Œ^‚Ìs—ñ
-	‚Æ‚Ì‰‰Z‚à‚Å‚«‚éD	*/
+	C++ ã® template æ©Ÿèƒ½ã‚’ç”Ÿã‹ã—ãŸãƒ™ã‚¯ãƒˆãƒ«ãƒ©ã‚¤ãƒ–ãƒ©ãƒªï¼
+	ãƒ¡ãƒ¢ãƒªã¨ç®¡ç†æƒ…å ±(ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚µã‚¤ã‚ºãªã©)ã®æŒã¡æ–¹ã§3ç¨®ã‚ã‚‹ã€‚
+	- TVector : ç®¡ç†æƒ…å ±ã‚’ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®å¼•æ•°ã«ã™ã‚‹ã“ã¨ã§ï¼Œ
+			ä½™åˆ†ãªãƒ¡ãƒ¢ãƒªã‚’ä¸€åˆ‡ä½¿ã‚ãšã«ä¸€èˆ¬ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ‰±ã†ã“ã¨ãŒã§ãã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã®å‹ï¼
+			é…åˆ—ã‚’ã‚­ãƒ£ã‚¹ãƒˆã—ã¦ãƒ™ã‚¯ãƒˆãƒ«ã«ã™ã‚‹ã“ã¨ã‚‚ã§ãã‚‹ï¼
+	- VVector : ç®¡ç†æƒ…å ±ã‚’ãƒ¡ãƒ¢ãƒªã«æŒã¡ï¼Œã‚µã‚¤ã‚ºã®å¤‰æ›´ãŒã§ãã‚‹ãƒ™ã‚¯ãƒˆãƒ«ã®å‹ï¼
+	- EVector : ç®¡ç†æƒ…å ±ã ã‘ã‚’æŒã¡ï¼Œãƒ‡ãƒ¼ã‚¿ã¯å¤–éƒ¨ã®é…åˆ—ãªã©ã‚’ä½¿ã†ãƒ™ã‚¯ãƒˆãƒ«ã®å‹ï¼
+	äº’ã„ã«å†…ç©ãªã©ã®æ¼”ç®—ã‚’è¡Œã†ã“ã¨ãŒã§ãã‚‹ï¼ã¾ãŸï¼ŒTMatrix, VMatrix, EMatrix å‹ã®è¡Œåˆ—
+	ã¨ã®æ¼”ç®—ã‚‚ã§ãã‚‹ï¼	*/
 
 //-----------------------------------------------------------------------------
-#ifndef TYPENAME	//<	ŒİŠ·«Šm•Û‚Ì‚½‚ß‚Ìƒ}ƒNƒDtypename ‚ğ‚Â‚¯‚é‚Æ“®‚©‚È‚¢ƒRƒ“ƒpƒCƒ‰‚à‚ ‚éD
+#ifndef TYPENAME	//<	äº’æ›æ€§ç¢ºä¿ã®ãŸã‚ã®ãƒã‚¯ãƒ­ï¼typename ã‚’ã¤ã‘ã‚‹ã¨å‹•ã‹ãªã„ã‚³ãƒ³ãƒ‘ã‚¤ãƒ©ã‚‚ã‚ã‚‹ï¼
 # define TYPENAME typename
 #endif
 
@@ -52,10 +52,10 @@ namespace PTM {;
 template <class EXP, class RET, class E, class Z=E>
 class VectorDesc{
 public:
-	typedef EXP		exp_type;			///<	À‘Ì
-	typedef RET		ret_type;			///<	•Ô‚è’l‚ÌŒ^
-	typedef E		element_type;		///<	—v‘f‚ÌŒ^
-	typedef Z		zero;				///<	zero(0) ‚ª —v‘f‚ÌŒ^‚Ì0‚ğ•Ô‚·Œ^
+	typedef EXP		exp_type;			///<	å®Ÿä½“
+	typedef RET		ret_type;			///<	è¿”ã‚Šå€¤ã®å‹
+	typedef E		element_type;		///<	è¦ç´ ã®å‹
+	typedef Z		zero;				///<	zero(0) ãŒ è¦ç´ ã®å‹ã®0ã‚’è¿”ã™å‹
 };
 template <size_t STR, class EXP, class RET, class E, class Z=E>
 class TVectorDesc:public VectorDesc<EXP, RET, E, Z>{
@@ -63,32 +63,32 @@ public:
 	static const size_t STRIDE = STR;	///<	stride
 };
 
-///@name ‰‰Z.
+///@name æ¼”ç®—.
 //@{
 template <class D> class VectorImp;
 template <size_t N, class D> class TVectorBase;
-/**	ƒxƒNƒgƒ‹‚Ì—v‘f‚ğ‘S‚Äv‚É‚·‚é.
-	@param v —v‘fŒ^‚Ì’l.	*/
+/**	ãƒ™ã‚¯ãƒˆãƒ«ã®è¦ç´ ã‚’å…¨ã¦vã«ã™ã‚‹.
+	@param v è¦ç´ å‹ã®å€¤.	*/
 template <class D>
 void clear(VectorImp<D>& a, const TYPENAME D::element_type v= D::zero(0)){
 	for(size_t i=0; i<a.size(); ++i) a.item(i) = v;
 }
-/**	‘ã“ü(a = b).
-	@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+/**	ä»£å…¥(a = b).
+	@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 template <class AD, class BD>
 void assign(VectorImp<AD>& a, const VectorImp<BD>& b) {
 	a.resize(b.size());
 	assert(a.size() == b.size());
 	for(size_t i=0; i<a.size(); ++i) a.item(i) = b.item(i);
 }
-///	‘ã“ü(a = b) 2—v‘fê—p
+///	ä»£å…¥(a = b) 2è¦ç´ å°‚ç”¨
 template <class AD, class BD>
 void assign(TVectorBase<2, AD>& a, const TVectorBase<2, BD>& b) {
 	assert(a.size() == b.size());
 	a.item(0) = (TYPENAME AD::element_type)b.item(0);
 	a.item(1) = (TYPENAME AD::element_type)b.item(1);
 }
-///	‘ã“ü(a = b) 3—v‘fê—p
+///	ä»£å…¥(a = b) 3è¦ç´ å°‚ç”¨
 template <class AD, class BD>
 void assign(TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b) {
 	assert(a.size() == b.size());
@@ -96,7 +96,7 @@ void assign(TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b) {
 	a.item(1) = (TYPENAME AD::element_type)b.item(1);
 	a.item(2) = (TYPENAME AD::element_type)b.item(2);
 }
-///	‘ã“ü(a = b) 4—v‘fê—p
+///	ä»£å…¥(a = b) 4è¦ç´ å°‚ç”¨
 template <class AD, class BD>
 void assign(TVectorBase<4, AD>& a, const TVectorBase<4, BD>& b) {
 	assert(a.size() == b.size());
@@ -105,52 +105,52 @@ void assign(TVectorBase<4, AD>& a, const TVectorBase<4, BD>& b) {
 	a.item(2) = (TYPENAME AD::element_type)b.item(2);
 	a.item(3) = (TYPENAME AD::element_type)b.item(3);
 }
-/**	‘ã“ü(a = b).
-	@param a ƒxƒNƒgƒ‹.
-	@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.
+/**	ä»£å…¥(a = b).
+	@param a ãƒ™ã‚¯ãƒˆãƒ«.
+	@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.
 	*/
 template <class AD>
 void assign(VectorImp<AD>& a, const TYPENAME AD::element_type* b) {
 	for(size_t i=0; i<a.size(); ++i) a.item(i) = b[i];
 }
 
-/**	‰ÁZ(a += b).
-	@param a ƒxƒNƒgƒ‹.
-	@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+/**	åŠ ç®—(a += b).
+	@param a ãƒ™ã‚¯ãƒˆãƒ«.
+	@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 template <class AD, class BD>
 void add(VectorImp<AD>& a, const VectorImp<BD>& b){
 	assert(b.size() ==a. size());
 	for(size_t i=0; i<a.size(); ++i) a.item(i) += (TYPENAME AD::element_type) b.item(i);
 }
-/**	Œ¸Z(a -= b).
-	@param a ƒxƒNƒgƒ‹.
-	@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+/**	æ¸›ç®—(a -= b).
+	@param a ãƒ™ã‚¯ãƒˆãƒ«.
+	@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 template <class AD, class BD>
 void sub(VectorImp<AD>& a, const VectorImp<BD>& b){
 	assert(b.size() == a.size());
 	for(size_t i=0; i<a.size(); ++i) a.item(i) -= (TYPENAME AD::element_type) b.item(i);
 }
-/**	’è””{(*this *= b).
-	@param b —v‘fŒ^.				*/
+/**	å®šæ•°å€(*this *= b).
+	@param b è¦ç´ å‹.				*/
 template <class AD>
 void multi(VectorImp<AD>& a, const TYPENAME AD::element_type& b){
 	for(size_t i=0; i<a.size(); ++i) a.item(i) *= b;
 }
-/**	’è””{(*this *= b).
-	@param b —v‘fŒ^.				*/
+/**	å®šæ•°å€(*this *= b).
+	@param b è¦ç´ å‹.				*/
 template <class AD, class BD>
 void multi_each(VectorImp<AD>& a, const VectorImp<BD>& b){
 	for(size_t i=0; i<a.size(); ++i) a.item(i) *= b.item(i);
 }
-/**	’è”•ª‚Ì‚P(*this /= b).
-	@param b —v‘fŒ^.				*/
+/**	å®šæ•°åˆ†ã®ï¼‘(*this /= b).
+	@param b è¦ç´ å‹.				*/
 template <class AD>
 void div(VectorImp<AD>& a, const TYPENAME AD::element_type& b){
 	for(size_t i=0; i<a.size(); ++i) a.item(i) /= b;
 }
-/**	“àÏ(return *this * b).
-	@param	b	“¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.
-	@return		“àÏ‚Ì’l(—v‘fŒ^)	*/
+/**	å†…ç©(return *this * b).
+	@param	b	åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.
+	@return		å†…ç©ã®å€¤(è¦ç´ å‹)	*/
 template <class AD, class BD>
 inline TYPENAME AD::element_type dot(const VectorImp<AD>& a, const VectorImp<BD>& b){
 	assert(b.size() == a.size());
@@ -164,9 +164,9 @@ inline TYPENAME AD::element_type dot(const TVectorBase<3, AD>& a, const TVectorB
         typedef TYPENAME AD::element_type ET;
 	return ET(a.item(0)*b.item(0) + a.item(1)*b.item(1) + a.item(2)*b.item(2));
 }
-/**	”äŠr(return *this == b).
-	@param	b	“¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.
-	@return		bool’l.	*/
+/**	æ¯”è¼ƒ(return *this == b).
+	@param	b	åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.
+	@return		boolå€¤.	*/
 template <class AD, class BD>
 bool equal(const VectorImp<AD>& a, const VectorImp<BD>& b){
 	if (b.size() != a.size()) return false;
@@ -176,8 +176,8 @@ bool equal(const VectorImp<AD>& a, const VectorImp<BD>& b){
 	return true;
 }
 
-/**	—v‘f‚²‚Æ‚ÌÅ¬’l(min(*this, b)).
-	@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+/**	è¦ç´ ã”ã¨ã®æœ€å°å€¤(min(*this, b)).
+	@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 template <class AD, class BD>
 void element_min_impl(VectorImp<AD>& a, const VectorImp<BD>& b){
 	assert(b.size() == a.size());
@@ -189,8 +189,8 @@ TYPENAME AD::ret_type element_min(const VectorImp<AD>& a, const VectorImp<BD>& b
 	element_min_impl(r, b);
 	return r;
 }
-/**	—v‘f‚²‚Æ‚ÌÅ‘å’l(max(*this, b)).
-	@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+/**	è¦ç´ ã”ã¨ã®æœ€å¤§å€¤(max(*this, b)).
+	@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 template <class AD, class BD>
 void element_max_impl(VectorImp<AD>& a, const VectorImp<BD>& b){
 	assert(b.size() == a.size());
@@ -202,7 +202,7 @@ TYPENAME AD::ret_type element_max(const VectorImp<AD>& a, const VectorImp<BD>& b
 	element_max_impl(r, b);
 	return r;
 }
-///	ƒNƒŠƒbƒsƒ“ƒO‚·‚é(b‚Æe‚ğ’¸“_‚Æ‚·‚é‹éŒ`“à‚Éû‚Ü‚é‚æ‚¤‚É‚·‚é).
+///	ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹(bã¨eã‚’é ‚ç‚¹ã¨ã™ã‚‹çŸ©å½¢å†…ã«åã¾ã‚‹ã‚ˆã†ã«ã™ã‚‹).
 template <class AD, class BD, class ED>
 void clip(const VectorImp<AD>& a, const VectorImp<BD>& b, const VectorImp<ED>& e){
 	for(size_t i=0; i<a.size(); ++i){
@@ -219,7 +219,7 @@ template<class D> class EVectorSlice;
 
 template<class D> class ConstEVectorSlice;
 
-///	ƒxƒNƒgƒ‹‚Ì‰‰Z‚È‚Ç‚ÌÀ‘•
+///	ãƒ™ã‚¯ãƒˆãƒ«ã®æ¼”ç®—ãªã©ã®å®Ÿè£…
 template <class D>
 class VectorImp{
 public:
@@ -228,66 +228,66 @@ public:
 	typedef TYPENAME desc::ret_type ret_type;
 	typedef TYPENAME desc::element_type element_type;
 	typedef TYPENAME desc::zero zero;
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	VectorImp(){}
 
-	///@name Šî–{‘€ì.
+	///@name åŸºæœ¬æ“ä½œ.
 	//@{
-	///	À‘Ì‚Ìæ“¾
+	///	å®Ÿä½“ã®å–å¾—
 	inline exp_type& exp(){ return *(exp_type*)this; }
 	inline const exp_type& exp() const { return *(const exp_type*)this; }
-	///	n”Ô–Ú‚Ì—v‘f‚ğ•Ô‚·(Šî”‚Í0).
+	///	nç•ªç›®ã®è¦ç´ ã‚’è¿”ã™(åŸºæ•°ã¯0).
 	inline element_type& item(size_t n){ return exp().item_impl(n); }
 	inline const element_type& item(size_t n) const { return exp().item_impl(n); }
-	///	ƒTƒCƒY‚Ìæ“¾
+	///	ã‚µã‚¤ã‚ºã®å–å¾—
 	inline size_t size() const { return exp().size_impl(); }
-	///	ƒTƒCƒY‚Ìİ’è
+	///	ã‚µã‚¤ã‚ºã®è¨­å®š
 	inline void resize(size_t sz){ exp().resize_impl(sz); }
-	///	ƒXƒgƒ‰ƒCƒh‚Ìæ“¾
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰ã®å–å¾—
 	inline size_t stride() const { return exp().stride_impl(); }
 	//@}
 	
-	///@name •”•ªƒxƒNƒgƒ‹
+	///@name éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«
 	//@{
-	/**	ƒXƒ‰ƒCƒX‚ğ•Ô‚·Dƒeƒ“ƒvƒŒ[ƒg”Å
-		‚±‚ÌƒxƒNƒgƒ‹‚ÌSZ::OFFSET—v‘f‚©‚ç SZ::OFFSET + SZ::SIZE—v‘f‚Ü‚Å‚Ì
-		•”•ªƒxƒNƒgƒ‹‚Ö‚ÌQÆ‚ğ•Ô‚·D
-		@param	SZ::OFFSET	•”•ªƒxƒNƒgƒ‹‚ÌÅ‰‚Ì—v‘f‚ÌˆÊ’u.
-		@param	SZ::SIZE	•”•ªƒxƒNƒgƒ‹‚ÌƒTƒCƒY.
-		@return	SZ ‚Åw’è‚³‚ê‚½ƒxƒNƒgƒ‹‚Ö‚ÌQÆ‚ğ•Ô‚·.	*/
+	/**	ã‚¹ãƒ©ã‚¤ã‚¹ã‚’è¿”ã™ï¼ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆ
+		ã“ã®ãƒ™ã‚¯ãƒˆãƒ«ã®SZ::OFFSETè¦ç´ ã‹ã‚‰ SZ::OFFSET + SZ::SIZEè¦ç´ ã¾ã§ã®
+		éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã¸ã®å‚ç…§ã‚’è¿”ã™ï¼
+		@param	SZ::OFFSET	éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã®æœ€åˆã®è¦ç´ ã®ä½ç½®.
+		@param	SZ::SIZE	éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚µã‚¤ã‚º.
+		@return	SZ ã§æŒ‡å®šã•ã‚ŒãŸãƒ™ã‚¯ãƒˆãƒ«ã¸ã®å‚ç…§ã‚’è¿”ã™.	*/
 	template <class SZ> TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&
 	t_slice(SZ){ return (TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&)item(SZ::OFFSET); }
 	template <class SZ>	const TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&
 	t_slice(SZ) const { return (TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&)item(SZ::OFFSET); }
-	///	•”•ªƒxƒNƒgƒ‹‚ğ•Ô‚·Dƒeƒ“ƒvƒŒ[ƒg”Å
+	///	éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™ï¼ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆ
 	template <class SZ> TSubVector<SZ::SIZE, desc>&
 	sub_vector(SZ){ return (TSubVector<SZ::SIZE, desc>&)item(SZ::OFFSET); }
 	template <class SZ>	const TSubVector<SZ::SIZE, desc>&
 	sub_vector(SZ) const { return (TSubVector<SZ::SIZE, desc>&)item(SZ::OFFSET); }
-	/**	ƒXƒ‰ƒCƒX‚ğ•Ô‚·DƒTƒCƒY‚¾‚¯ƒeƒ“ƒvƒŒ[ƒg”Å
-		‚±‚ÌƒxƒNƒgƒ‹‚Ì off —v‘f‚©‚ç off + SZ::SIZE—v‘f‚Ü‚Å‚Ì
-		•”•ªƒxƒNƒgƒ‹‚Ö‚ÌQÆ‚ğ•Ô‚·D
-		@param	SZ::OFFSET	•”•ªƒxƒNƒgƒ‹‚ÌÅ‰‚Ì—v‘f‚ÌˆÊ’u.
-		@param	SZ::SIZE	•”•ªƒxƒNƒgƒ‹‚ÌƒTƒCƒY.
-		@return	SZ ‚Åw’è‚³‚ê‚½ƒxƒNƒgƒ‹‚Ö‚ÌQÆ‚ğ•Ô‚·.	*/
+	/**	ã‚¹ãƒ©ã‚¤ã‚¹ã‚’è¿”ã™ï¼ã‚µã‚¤ã‚ºã ã‘ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆ
+		ã“ã®ãƒ™ã‚¯ãƒˆãƒ«ã® off è¦ç´ ã‹ã‚‰ off + SZ::SIZEè¦ç´ ã¾ã§ã®
+		éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã¸ã®å‚ç…§ã‚’è¿”ã™ï¼
+		@param	SZ::OFFSET	éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã®æœ€åˆã®è¦ç´ ã®ä½ç½®.
+		@param	SZ::SIZE	éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚µã‚¤ã‚º.
+		@return	SZ ã§æŒ‡å®šã•ã‚ŒãŸãƒ™ã‚¯ãƒˆãƒ«ã¸ã®å‚ç…§ã‚’è¿”ã™.	*/
 	template <class SZ> TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&
 	t_slice(size_t off, SZ){ return (TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&)item(off); }
 	template <class SZ>	const TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&
 	t_slice(size_t off, SZ) const { return (TVectorSlice<SZ::SIZE, SZ::STRIDE, desc>&)item(off); }
-	///	•”•ªƒxƒNƒgƒ‹‚ğ•Ô‚·DƒTƒCƒY‚¾‚¯ƒeƒ“ƒvƒŒ[ƒg”Å
+	///	éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™ï¼ã‚µã‚¤ã‚ºã ã‘ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆç‰ˆ
 	template <class SZ> TSubVector<SZ::SIZE, desc>&
 	sub_vector(size_t off, SZ){ return (TSubVector<SZ::SIZE, desc>&)item(off); }
 	template <class SZ>	const TSubVector<SZ::SIZE, desc>&
 	sub_vector(size_t off, SZ) const { return (TSubVector<SZ::SIZE, desc>&)item(off); }
 	
-	///	•”•ªƒxƒNƒgƒ‹‚ğ•Ô‚·D•Ï””Å
+	///	éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™ï¼å¤‰æ•°ç‰ˆ
 	EVectorSlice<element_type> v_range(size_t off, size_t sz){
 		return EVectorSlice<element_type>(sz, stride(), &item(off));
 	}
 	ConstEVectorSlice<element_type> v_range(size_t off, size_t sz) const {
 		return ConstEVectorSlice<element_type>(sz, stride(), &item(off));
 	}
-	///	ƒxƒNƒgƒ‹‚ÌƒXƒ‰ƒCƒX‚ğ•Ô‚·D
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚¹ãƒ©ã‚¤ã‚¹ã‚’è¿”ã™ï¼
 	EVectorSlice<element_type> v_slice(size_t off, size_t sz, size_t str){
 		return EVectorSlice<element_type>(sz, stride()*str, &item(off));
 	}
@@ -296,66 +296,66 @@ public:
 	}
 	//@}
 	
-	///@name ‰‰Z.
+	///@name æ¼”ç®—.
 	//@{
-	/**	ƒxƒNƒgƒ‹‚Ì—v‘f‚ğ‘S‚Äv‚É‚·‚é.
-		@param v —v‘fŒ^‚Ì’l.	*/
+	/**	ãƒ™ã‚¯ãƒˆãƒ«ã®è¦ç´ ã‚’å…¨ã¦vã«ã™ã‚‹.
+		@param v è¦ç´ å‹ã®å€¤.	*/
 	void clear(const element_type v=zero(0)){ PTM::clear(exp(), v);	}
-	/**	‘ã“ü(*this = b).
-		@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+	/**	ä»£å…¥(*this = b).
+		@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 	template <class B>
 		void assign(const VectorImp<B>& b) { PTM::assign(exp(), b.exp()); }
-	/**	‘ã“ü(*this = b).
-		@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+	/**	ä»£å…¥(*this = b).
+		@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 	void assign(const element_type* b) { PTM::assign(exp(), b); }
-	/**	‰ÁZ(*this += b).
-		@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+	/**	åŠ ç®—(*this += b).
+		@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 	template <class B>
 		void add(const VectorImp<B>& b){ PTM::add(exp(), b.exp()); }
-	/**	Œ¸Z(*this -= b).
-		@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+	/**	æ¸›ç®—(*this -= b).
+		@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 	template <class B>
 		void sub(const VectorImp<B>& b){ PTM::sub(exp(), b.exp()); }
-	/**	’è””{(*this *= b).
-		@param b —v‘fŒ^.				*/
+	/**	å®šæ•°å€(*this *= b).
+		@param b è¦ç´ å‹.				*/
 	void multi(const element_type& b){ PTM::multi(exp(), b); }
-	/**	’è”•ª‚Ì‚P(*this /= b).
-		@param b —v‘fŒ^.				*/
+	/**	å®šæ•°åˆ†ã®ï¼‘(*this /= b).
+		@param b è¦ç´ å‹.				*/
 	void div(const element_type& b){ PTM::div(exp(), b); }
-	/**	“àÏ(return *this * b).
-		@param	b	“¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.
-		@return		“àÏ‚Ì’l(—v‘fŒ^)	*/
+	/**	å†…ç©(return *this * b).
+		@param	b	åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.
+		@return		å†…ç©ã®å€¤(è¦ç´ å‹)	*/
 	template <class B>
 		inline element_type dot(const VectorImp<B>& b) const { return PTM::dot(exp(), b.exp()); }
-	/**	”äŠr(return *this == b).
-		@param	b	“¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.
-		@return		bool’l.	*/
+	/**	æ¯”è¼ƒ(return *this == b).
+		@param	b	åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.
+		@return		boolå€¤.	*/
 	template <class B>
 		bool equal(const VectorImp<B>& b) const { return PTM::equal(exp(), b.exp()); }
 
-	/**	—v‘f‚²‚Æ‚ÌÅ¬’l(min(*this, b)).
-		@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+	/**	è¦ç´ ã”ã¨ã®æœ€å°å€¤(min(*this, b)).
+		@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 	template <class B>
 		void element_min(const VectorImp<B>& b){ element_min_impl(exp(), b.exp()); }
-	/**	—v‘f‚²‚Æ‚ÌÅ‘å’l(max(*this, b)).
-		@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹.	*/
+	/**	è¦ç´ ã”ã¨ã®æœ€å¤§å€¤(max(*this, b)).
+		@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«.	*/
 	template <class B>
 		void element_max(const VectorImp<B>& b){ element_max_impl(exp(), b.exp()); }
-	///	ƒxƒNƒgƒ‹‚Ìƒmƒ‹ƒ€(‘å‚«‚³)‚Ì2æ‚ğ•Ô‚·.
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒãƒ«ãƒ (å¤§ãã•)ã®2ä¹—ã‚’è¿”ã™.
 	element_type square() const { return PTM::dot(exp(),exp()); }
-	///	ƒxƒNƒgƒ‹‚Ìƒmƒ‹ƒ€(‘å‚«‚³)‚ğ•Ô‚·.
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒãƒ«ãƒ (å¤§ãã•)ã‚’è¿”ã™.
 	element_type norm() const { return element_type( sqrt((double)square()) ); }
-	///	’PˆÊƒxƒNƒgƒ‹‚É‚·‚éD
+	///	å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã«ã™ã‚‹ï¼
 	void unitize(){ div(norm()); }
-	///	ƒNƒŠƒbƒsƒ“ƒO‚·‚é(b‚Æe‚ğ’¸“_‚Æ‚·‚é‹éŒ`“à‚Éû‚Ü‚é‚æ‚¤‚É‚·‚é).
+	///	ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹(bã¨eã‚’é ‚ç‚¹ã¨ã™ã‚‹çŸ©å½¢å†…ã«åã¾ã‚‹ã‚ˆã†ã«ã™ã‚‹).
 	template <class BD, class ED>
 		void clip(const VectorImp<BD>& b, const VectorImp<ED>& e){ clip(exp(), b.exp(), e.exp()); }
 	//@}
 
-	///@name “üo—Í
+	///@name å…¥å‡ºåŠ›
 	//@{
-	/**	•\¦.
-		@param os o—ÍæƒXƒgƒŠ[ƒ€	*/
+	/**	è¡¨ç¤º.
+		@param os å‡ºåŠ›å…ˆã‚¹ãƒˆãƒªãƒ¼ãƒ 	*/
 	void print(std::ostream& os, char* sep="( )") const {
 		if (sep[0]) os << sep[0];
 		if (size()){ os.width(6); os << item(0); }
@@ -365,8 +365,8 @@ public:
 		}
 		if (sep[2]) os << sep[2];
 	}
-	/**	•\¦.
-		@param is “ü—ÍŒ³ƒXƒgƒŠ[ƒ€	*/
+	/**	è¡¨ç¤º.
+		@param is å…¥åŠ›å…ƒã‚¹ãƒˆãƒªãƒ¼ãƒ 	*/
 	template <class T>
 	void input(T& is) {
 		is >> std::ws;
@@ -397,50 +397,50 @@ public:
 	}
 	//@}
 
-	///@name ‰‰Zq
+	///@name æ¼”ç®—å­
 	//@{
-	///	[] ‰‰Zq(Šî”‚Í0).
+	///	[] æ¼”ç®—å­(åŸºæ•°ã¯0).
 	template <class I> element_type& operator[] (I n) { return item(n); }
-	///	[] ‰‰Zq(Šî”‚Í0) (const ”Å).
+	///	[] æ¼”ç®—å­(åŸºæ•°ã¯0) (const ç‰ˆ).
 	template <class I> const element_type& operator[] (I n) const { return item(n); }
-	///	element_type * ‚Ö‚Ì•ÏŠ·
+	///	element_type * ã¸ã®å¤‰æ›
 	operator element_type* (){ return &item(0); }
 	operator const element_type* () const { return &item(0); }
-	/**	ƒxƒNƒgƒ‹‚ÌƒXƒJƒ‰[”{(return this * b).
-		@param	b	—v‘fŒ^
-		@return	this‚Æ“¯‚¶ƒxƒNƒgƒ‹Œ^	*/
+	/**	ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚¹ã‚«ãƒ©ãƒ¼å€(return this * b).
+		@param	b	è¦ç´ å‹
+		@return	thisã¨åŒã˜ãƒ™ã‚¯ãƒˆãƒ«å‹	*/
 	ret_type operator * (element_type b) const { ret_type rv(*this); rv.multi(b); return rv; }
-	/**	ƒxƒNƒgƒ‹‚ÌƒXƒJƒ‰[•ª‚Ì‚P(return this / b).
-		@param	b	—v‘fŒ^
-		@return	this‚Æ“¯‚¶ƒxƒNƒgƒ‹Œ^	*/
+	/**	ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚¹ã‚«ãƒ©ãƒ¼åˆ†ã®ï¼‘(return this / b).
+		@param	b	è¦ç´ å‹
+		@return	thisã¨åŒã˜ãƒ™ã‚¯ãƒˆãƒ«å‹	*/
 	ret_type operator / (element_type b) const { ret_type rv(*this); rv.div(b); return rv; }
-	/**	+= ‰‰Zq(*this = *this + b).
-		@param b ƒTƒCƒY‚ª“™‚µ‚¢ƒxƒNƒgƒ‹Œ^.	*/
+	/**	+= æ¼”ç®—å­(*this = *this + b).
+		@param b ã‚µã‚¤ã‚ºãŒç­‰ã—ã„ãƒ™ã‚¯ãƒˆãƒ«å‹.	*/
 	template <class BD>
 	ret_type operator+= (const VectorImp<BD>& b) { add(b); return *this; }
-	/**	-= ‰‰Zq(*this = *this - b)
-		@param b ƒTƒCƒY‚ª“™‚µ‚¢ƒxƒNƒgƒ‹Œ^.	*/
+	/**	-= æ¼”ç®—å­(*this = *this - b)
+		@param b ã‚µã‚¤ã‚ºãŒç­‰ã—ã„ãƒ™ã‚¯ãƒˆãƒ«å‹.	*/
 	template <class BD>
 	ret_type operator-= (const VectorImp<BD>& b) { sub(b); return *this; }
-	/**	*= ‰‰Zq (*this = *this * b)
-		@param b —v‘fŒ^.	*/
+	/**	*= æ¼”ç®—å­ (*this = *this * b)
+		@param b è¦ç´ å‹.	*/
 	template <class T> ret_type operator*= (T b) { multi(element_type(b)); return *this; }
-	/**	/= ‰‰Zq (*this = 1/b * *this).
-		@param b —v‘fŒ^.	*/
+	/**	/= æ¼”ç®—å­ (*this = 1/b * *this).
+		@param b è¦ç´ å‹.	*/
 	template <class T> ret_type operator/= (T b) { div(element_type(b)); return *this; }
-	/**	- ‰‰Zq (return -*this).	*/
+	/**	- æ¼”ç®—å­ (return -*this).	*/
 	ret_type operator- () const { ret_type r(*this); r*=element_type(-1); return r; }
-	///	’PˆÊƒxƒNƒgƒ‹‚ğ•Ô‚·D
+	///	å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™ï¼
 	ret_type unit() const { ret_type r(*this); r.unitize(); return r; }
 	//@}
 protected:
-	///	ƒoƒbƒtƒ@‚Ì‰Šú‰»D‰½‚à‚µ‚È‚¢D
+	///	ãƒãƒƒãƒ•ã‚¡ã®åˆæœŸåŒ–ï¼ä½•ã‚‚ã—ãªã„ï¼
 	void init_buffer(){}
-	///	ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	void set_default(){}
 };
 
-///	ŸŒ³‚ğƒeƒ“ƒvƒŒ[ƒg‚Å‚ÂƒxƒNƒgƒ‹‚ÌŠî–{Œ^
+///	æ¬¡å…ƒã‚’ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã§æŒã¤ãƒ™ã‚¯ãƒˆãƒ«ã®åŸºæœ¬å‹
 template<size_t N, class D>
 class TVectorBase: public VectorImp<D> {
 protected:
@@ -452,36 +452,36 @@ public:
 };
 
 
-/**	ƒxƒNƒgƒ‹Œ^”h¶ƒNƒ‰ƒX‚É•K—v‚Èƒƒ“ƒo‚Ì’è‹`.
-	”h¶ƒNƒ‰ƒX‚ğì‚é‚½‚Ñ‚ÉC‚±‚Ìƒ}ƒNƒ‚ğg‚Á‚Äƒƒ“ƒo‚ğì‚é.
-	ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^C “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹‚É‚æ‚é
-	‰Šú‰»E‘ã“ü‚È‚Ç‚ª’è‹`‚³‚ê‚éD
-	@param	THIS	V‚½‚ÉéŒ¾‚·‚é”h¶ƒNƒ‰ƒX‚ÌŒ^–¼.
+/**	ãƒ™ã‚¯ãƒˆãƒ«å‹æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã«å¿…è¦ãªãƒ¡ãƒ³ãƒã®å®šç¾©.
+	æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã‚’ä½œã‚‹ãŸã³ã«ï¼Œã“ã®ãƒã‚¯ãƒ­ã‚’ä½¿ã£ã¦ãƒ¡ãƒ³ãƒã‚’ä½œã‚‹.
+	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼Œ åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«ã«ã‚ˆã‚‹
+	åˆæœŸåŒ–ãƒ»ä»£å…¥ãªã©ãŒå®šç¾©ã•ã‚Œã‚‹ï¼
+	@param	THIS	æ–°ãŸã«å®£è¨€ã™ã‚‹æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã®å‹å.
 	@see	TVector	*/
 #define DEF_VECTOR_BASIC_MEMBER(THIS)										\
-	typedef THIS this_type;			/*  ‚±‚ÌƒNƒ‰ƒX‚ÌŒ^‚ğ’è‹`‚µ‚Ä‚¨‚­. */	\
+	typedef THIS this_type;			/*  ã“ã®ã‚¯ãƒ©ã‚¹ã®å‹ã‚’å®šç¾©ã—ã¦ãŠã. */	\
 	typedef TYPENAME desc::element_type element_type;						\
 	typedef TYPENAME desc::ret_type ret_type;								\
-	/*	ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^	*/											\
+	/*	ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿	*/											\
 	THIS& operator =(const THIS& b){										\
 		this->exp().assign(b); return *this;											\
 	}																		\
-	/*  ƒxƒNƒgƒ‹ b ‚ğ‘ã“ü	*/												\
+	/*  ãƒ™ã‚¯ãƒˆãƒ« b ã‚’ä»£å…¥	*/												\
 	template <class D>														\
 	THIS& operator =(const PTM::VectorImp<D>& b){							\
 		this->exp().assign(b); return *this;										\
 	}																		\
-	/*  ƒxƒNƒgƒ‹ b ‚ğ‰ÁZ	*/												\
+	/*  ãƒ™ã‚¯ãƒˆãƒ« b ã‚’åŠ ç®—	*/												\
 	template <class D>														\
 	THIS& operator +=(const PTM::VectorImp<D>& b){							\
 		this->exp().add(b); return *this;											\
 	}																		\
-	/*  ƒxƒNƒgƒ‹ b ‚ğŒ¸Z	*/												\
+	/*  ãƒ™ã‚¯ãƒˆãƒ« b ã‚’æ¸›ç®—	*/												\
 	template <class D>														\
 	THIS& operator -=(const PTM::VectorImp<D>& b){							\
 		this->exp().sub(b); return *this;											\
 	}																		\
-	/*  —v‘f”‚ª“™‚µ‚¢”z—ñ p ‚Ì‘ã“ü	*/										\
+	/*  è¦ç´ æ•°ãŒç­‰ã—ã„é…åˆ— p ã®ä»£å…¥	*/										\
 	THIS& operator =(const element_type* p){								\
 		this->exp().assign(p);											\
 		return *this;														\
@@ -489,20 +489,20 @@ public:
 
 #define DEF_TVECTOR_BASIC_MEMBER(THIS)										\
 	DEF_VECTOR_BASIC_MEMBER(THIS)											\
-	/*  ƒxƒNƒgƒ‹ b ‚É‚æ‚é‰Šú‰»		*/										\
+	/*  ãƒ™ã‚¯ãƒˆãƒ« b ã«ã‚ˆã‚‹åˆæœŸåŒ–		*/										\
 	template <class D>														\
 	THIS(const PTM::VectorImp<D>& b){										\
 		this->init_buffer(); this->assign(b);}								\
-	/*  —v‘f”‚ª“™‚µ‚¢”z—ñ p ‚É‚æ‚é‰Šú‰»	*/								\
+	/*  è¦ç´ æ•°ãŒç­‰ã—ã„é…åˆ— p ã«ã‚ˆã‚‹åˆæœŸåŒ–	*/								\
 	THIS(const element_type* p){											\
 		this->assign(p);															\
 	}																		\
-	/*	ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^	*/										\
+	/*	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿	*/										\
 	THIS(){ this->init_buffer(); this->set_default(); }			\
 
 //----------------------------------------------------------------------------
-/**	•”•ªƒxƒNƒgƒ‹Œ^ì¬‚Ì‚½‚ß‚Ìƒ†[ƒeƒBƒŠƒeƒB[ƒNƒ‰ƒX.
-	TVecDim<ŸŒ³”> ‚Å•”•ªƒxƒNƒgƒ‹Œ^‚ğæ“¾‚Å‚«‚éB	*/
+/**	éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«å‹ä½œæˆã®ãŸã‚ã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ãƒ¼ã‚¯ãƒ©ã‚¹.
+	TVecDim<æ¬¡å…ƒæ•°> ã§éƒ¨åˆ†ãƒ™ã‚¯ãƒˆãƒ«å‹ã‚’å–å¾—ã§ãã‚‹ã€‚	*/
 template <const size_t SOFF, const size_t SDIM>
 class TSubVectorDim{
 public:
@@ -511,28 +511,28 @@ public:
 	static const size_t STRIDE=1;
 };
 //----------------------------------------------------------------------------
-/**	ƒxƒNƒgƒ‹Œ^. TVector<3, float> v; ‚Ì‚æ‚¤‚Ég‚¤
-	@param	N	—v‘f”.
-	@param	T	—v‘f‚ÌŒ^.
-	@see		TVectorŒ^‚Ì‰‰Zq
+/**	ãƒ™ã‚¯ãƒˆãƒ«å‹. TVector<3, float> v; ã®ã‚ˆã†ã«ä½¿ã†
+	@param	N	è¦ç´ æ•°.
+	@param	T	è¦ç´ ã®å‹.
+	@see		TVectorå‹ã®æ¼”ç®—å­
 */
 template <size_t N, class T>
 class TVector:public TVectorBase<N, TVectorDesc<1, TVector<N,T>, TVector<N,T>, T> >{
 public:
 	static const size_t STRIDE=1;
-	typedef TVectorDesc<1, TVector<N,T>, TVector<N,T>, T> desc;	///<	Œ^î•ñ
-	typedef TVectorBase<N, desc> base_type;						///<	Šî–{ƒNƒ‰ƒXŒ^
-	/**	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.
+	typedef TVectorDesc<1, TVector<N,T>, TVector<N,T>, T> desc;	///<	å‹æƒ…å ±
+	typedef TVectorBase<N, desc> base_type;						///<	åŸºæœ¬ã‚¯ãƒ©ã‚¹å‹
+	/**	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.
 		@see ::DEF_TVECTOR_BASIC_MEMBER	*/
 	DEF_TVECTOR_BASIC_MEMBER(TVector);
 private:
-	element_type data[N];										///<	ƒf[ƒ^
+	element_type data[N];										///<	ãƒ‡ãƒ¼ã‚¿
 public:	
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	T& item_impl(size_t i){ return data[i]; }
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const T& item_impl(size_t i) const { return data[i]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return 1; }
 };
 
@@ -546,12 +546,12 @@ public:
 	typedef void const_array_type;
 	typedef TVectorDesc< STR*OD::STRIDE, TVectorSlice<SZ, STR, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> desc;
 	typedef TVectorBase<SZ, desc> base_type;
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`  @see ::DEF_VECTOR_BASIC_MEMBER
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©  @see ::DEF_VECTOR_BASIC_MEMBER
 	DEF_VECTOR_BASIC_MEMBER(TVectorSlice);
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i){ return data[i][0]; }
 	const element_type& item_impl(size_t i) const { return data[i][0]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return STRIDE; }
 protected:
 	element_type data[SIZE][STRIDE];
@@ -568,12 +568,12 @@ public:
 	typedef void const_array_type;
 	typedef TVectorDesc< OD::STRIDE, TSubVector<SZ, OD>, TVector<SZ, TYPENAME OD::element_type>, TYPENAME OD::element_type, TYPENAME OD::zero> desc;
 	typedef TVectorBase<SZ, desc> base_type;
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`  @see ::DEF_VECTOR_BASIC_MEMBER
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©  @see ::DEF_VECTOR_BASIC_MEMBER
 	DEF_VECTOR_BASIC_MEMBER(TSubVector);
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i){ return data[i][0]; }
 	const element_type& item_impl(size_t i) const { return data[i][0]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return STRIDE; }
 protected:
 	element_type data[SIZE][STRIDE];
@@ -581,33 +581,33 @@ protected:
 
 //----------------------------------------------------------------------------
 
-/**	ƒxƒNƒgƒ‹Œ^. VVector<float> v; ‚Ì‚æ‚¤‚Ég‚¤
-	@param	T	—v‘f‚ÌŒ^.
-	@see		TVectorŒ^‚Ì‰‰Zq
+/**	ãƒ™ã‚¯ãƒˆãƒ«å‹. VVector<float> v; ã®ã‚ˆã†ã«ä½¿ã†
+	@param	T	è¦ç´ ã®å‹.
+	@see		TVectorå‹ã®æ¼”ç®—å­
 */
 template <class T>
 class VVector:public VectorImp<TVectorDesc<1, VVector<T>,VVector<T>,T> >{
 public:
 	typedef TVectorDesc<1,VVector<T>,VVector<T>,T> desc;
 	typedef VectorImp<desc> base_type;
-	/**	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.
+	/**	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.
 		@see ::DEF_VECTOR_BASIC_MEMBER	*/
 	DEF_VECTOR_BASIC_MEMBER(VVector);
-	///	Šî–{Œ^‚Ì’è‹`
+	///	åŸºæœ¬å‹ã®å®šç¾©
 	typedef element_type* array_type;
 	typedef const element_type* const_array_type;
 private:
-	///	ƒƒ‚ƒŠ‚ÌÀ‘Ì
+	///	ãƒ¡ãƒ¢ãƒªã®å®Ÿä½“
 	array_type data;
 	///
 	size_t size_;
 public:
-	///	ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	VVector(){
 		init_buffer();
 		this->set_default();
 	}
-	///	ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	VVector(const VVector& s){
 		init_buffer();
 		resize(s.size_);
@@ -622,9 +622,9 @@ public:
 	~VVector(){
     	delete [] data;
     }
-	///	ƒxƒNƒgƒ‹‚ÌƒTƒCƒY.
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚µã‚¤ã‚º.
 	size_t size_impl() const { return size_; }
-	///	ƒxƒNƒgƒ‹‚ÌƒTƒCƒY‚Ìİ’è
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚µã‚¤ã‚ºã®è¨­å®š
 	void resize_impl(size_t s){
 		if (s > size_){
 			delete data;
@@ -632,31 +632,31 @@ public:
 		}
 		size_ = s;
 	}
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return 1; }
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	T& item_impl(size_t i){ return data[i]; }
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const T& item_impl(size_t i) const { return data[i]; }
 protected:
 	void init_buffer(){data=0; size_=0;}
 };
 
-/**	ƒxƒNƒgƒ‹Œ^. EVector<float> v; ‚Ì‚æ‚¤‚Ég‚¤
-	@param	T	—v‘f‚ÌŒ^.
-	@see		VectorŒ^‚Ì‰‰Zq
+/**	ãƒ™ã‚¯ãƒˆãƒ«å‹. EVector<float> v; ã®ã‚ˆã†ã«ä½¿ã†
+	@param	T	è¦ç´ ã®å‹.
+	@see		Vectorå‹ã®æ¼”ç®—å­
 */
 template <class T>
 class ConstEVector:public VectorImp< TVectorDesc<1, ConstEVector<T>, VVector<T>,T,T> >{
 public:
 	typedef TVectorDesc<1, ConstEVector<T>,VVector<T>,T,T> desc;
 	typedef VectorImp<desc> base_type;
-	/**	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.
+	/**	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.
 		@see ::DEF_VECTOR_BASIC_MEMBER	*/
 	DEF_VECTOR_BASIC_MEMBER(ConstEVector);
 	typedef const element_type* array_type;
 private:
-	///	ƒƒ‚ƒŠ‚ÌÀ‘Ì
+	///	ãƒ¡ãƒ¢ãƒªã®å®Ÿä½“
 	array_type data;
 	///
 	size_t size_;
@@ -665,15 +665,15 @@ public:
 	ConstEVector(array_type v, size_t sz):data(v), size_(sz){}
 	//
 	ConstEVector(size_t sz, size_t str, array_type v):data(v), size_(sz){ assert(str==1);}
-	///	ƒxƒNƒgƒ‹‚ÌƒTƒCƒY.
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚µã‚¤ã‚º.
 	size_t size_impl() const { return size_; }
-	///	ƒxƒNƒgƒ‹‚ÌƒTƒCƒY‚Ìİ’è
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚µã‚¤ã‚ºã®è¨­å®š
 	void resize_impl(size_t s){
 		assert(size_ == s);
 	}
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const T& item_impl(size_t i) const { return data[i]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return 1; }
 };
 template <class T>
@@ -682,12 +682,12 @@ public:
 	typedef ConstEVector<T> const_type;
 	typedef TVectorDesc<1, EVector<T>,VVector<T>,T,T> desc;
 	typedef VectorImp<desc> base_type;
-	/**	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.
+	/**	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.
 		@see ::DEF_VECTOR_BASIC_MEMBER	*/
 	DEF_VECTOR_BASIC_MEMBER(EVector);
 	typedef element_type* array_type;
 private:
-	///	ƒƒ‚ƒŠ‚ÌÀ‘Ì
+	///	ãƒ¡ãƒ¢ãƒªã®å®Ÿä½“
 	array_type data;
 	///
 	size_t size_;
@@ -695,16 +695,16 @@ public:
 	///
 	EVector(size_t sz, array_type v):data(v), size_(sz){}
 	EVector(size_t sz, size_t str, array_type v):data(v), size_(sz){ assert(str==1); }
-	///	ƒxƒNƒgƒ‹‚ÌƒTƒCƒY.
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚µã‚¤ã‚º.
 	size_t size_impl() const { return size_; }
-	///	ƒxƒNƒgƒ‹‚ÌƒTƒCƒY‚Ìİ’è
+	///	ãƒ™ã‚¯ãƒˆãƒ«ã®ã‚µã‚¤ã‚ºã®è¨­å®š
 	void resize_impl(size_t s){
 		assert(size_ == s);
 	}
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const T& item_impl(size_t i) const { return data[i]; }
 	T& item_impl(size_t i) { return data[i]; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return 1; }
 };
 template<class T>
@@ -714,27 +714,27 @@ public:
 	typedef void const_array_type;
 	typedef VectorDesc<EVectorSlice<T>, VVector<T>, T> desc;
 	typedef VectorImp<desc> base_type;
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.	@see ::DEF_VECTOR_BASIC_MEMBER
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.	@see ::DEF_VECTOR_BASIC_MEMBER
 	DEF_VECTOR_BASIC_MEMBER(ConstEVectorSlice);
 	///
 	ConstEVectorSlice(size_t sz, size_t str, const T* d):data(d), size_(sz), stride_(str){}
 	///
 	ConstEVectorSlice(const ConstEVectorSlice& v):data(v.data), size_(v.size_), stride_(v.stride_){}
-	///	—v‘f‚ÌƒAƒNƒZƒX
-	element_type& item_impl(size_t i){ return (element_type&)data[index(i)]; } ///< constŠO‚µD‚à‚Á‚Æelegant‚È•û–@‚ª‚ ‚é‚Æv‚¤‚ªc tazz
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
+	element_type& item_impl(size_t i){ return (element_type&)data[index(i)]; } ///< constå¤–ã—ï¼ã‚‚ã£ã¨elegantãªæ–¹æ³•ãŒã‚ã‚‹ã¨æ€ã†ãŒâ€¦ tazz
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const element_type& item_impl(size_t i) const { return data[index(i)]; }
-	///	ƒTƒCƒY
+	///	ã‚µã‚¤ã‚º
 	size_t size_impl() const { return size_; }
-	///	ƒTƒCƒY‚Ìİ’è
+	///	ã‚µã‚¤ã‚ºã®è¨­å®š
 	void resize_impl(size_t sz) { size_ = sz; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return stride_; }
 protected:
 	const element_type* data;
 	size_t size_;
 	size_t stride_;
-	///	Œ³‚Ìs—ñ‚Ö‚ÌƒAƒNƒZƒX
+	///	å…ƒã®è¡Œåˆ—ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹
 	size_t index(size_t i) const { return i*stride_; }
 };
 template<class T>
@@ -745,47 +745,47 @@ public:
 	typedef void const_array_type;
 	typedef VectorDesc<EVectorSlice<T>, VVector<T>, T> desc;
 	typedef VectorImp<desc> base_type;
-	///	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.	@see ::DEF_VECTOR_BASIC_MEMBER
+	///	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.	@see ::DEF_VECTOR_BASIC_MEMBER
 	DEF_VECTOR_BASIC_MEMBER(EVectorSlice);
 	///
 	EVectorSlice(size_t sz, size_t str, T* d):data(d), size_(sz), stride_(str){}
 	///
 	EVectorSlice(const EVectorSlice& v):data(v.data), size_(v.size_), stride_(v.stride_){}
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i){ return data[index(i)]; }
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	const element_type& item_impl(size_t i) const { return data[index(i)]; }
-	///	ƒTƒCƒY
+	///	ã‚µã‚¤ã‚º
 	size_t size_impl() const { return size_; }
-	///	ƒTƒCƒY‚Ìİ’è
+	///	ã‚µã‚¤ã‚ºã®è¨­å®š
 	void resize_impl(size_t sz) { size_ = sz; }
-	///	ƒXƒgƒ‰ƒCƒh
+	///	ã‚¹ãƒˆãƒ©ã‚¤ãƒ‰
 	size_t stride_impl() const { return stride_; }
 protected:
 	element_type* data;
 	size_t size_;
 	size_t stride_;
-	///	Œ³‚Ìs—ñ‚Ö‚ÌƒAƒNƒZƒX
+	///	å…ƒã®è¡Œåˆ—ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹
 	size_t index(size_t i) const { return i*stride_; }
 };
 
 //----------------------------------------------------------------------------
-//	ƒOƒ[ƒoƒ‹ŠÖ”E‰‰Zq
+//	ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°ãƒ»æ¼”ç®—å­
 
-/**	ƒxƒNƒgƒ‹‚Ì˜a(return a + b).
-	@param	a	ƒxƒNƒgƒ‹Œ^
-	@param	b	a‚Æ“¯‚¶ŸŒ³”‚ÌƒxƒNƒgƒ‹Œ^
-	@return		a‚Æ“¯‚¶ŸŒ³”‚ÌTVectorŒ^	*/
+/**	ãƒ™ã‚¯ãƒˆãƒ«ã®å’Œ(return a + b).
+	@param	a	ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@param	b	aã¨åŒã˜æ¬¡å…ƒæ•°ã®ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@return		aã¨åŒã˜æ¬¡å…ƒæ•°ã®TVectorå‹	*/
 template <class AD, class BD>
 TYPENAME AD::ret_type operator + (const VectorImp<AD>& a, const VectorImp<BD>& b) {
 	TYPENAME AD::ret_type rv(a);
 	rv.add(b);
 	return rv;
 }
-/**	ƒxƒNƒgƒ‹‚Ì·(return a - b).
-	@param	a	ƒxƒNƒgƒ‹Œ^
-	@param	b	a‚Æ“¯‚¶ŸŒ³”‚ÌƒxƒNƒgƒ‹Œ^
-	@return		a‚Æ“¯‚¶ŸŒ³”‚ÌƒxƒNƒgƒ‹Œ^	*/
+/**	ãƒ™ã‚¯ãƒˆãƒ«ã®å·®(return a - b).
+	@param	a	ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@param	b	aã¨åŒã˜æ¬¡å…ƒæ•°ã®ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@return		aã¨åŒã˜æ¬¡å…ƒæ•°ã®ãƒ™ã‚¯ãƒˆãƒ«å‹	*/
 template <class AD, class BD>
 TYPENAME AD::ret_type operator - (const VectorImp<AD>& a, const VectorImp<BD>& b) {
 	TYPENAME AD::ret_type rv(a);
@@ -793,10 +793,10 @@ TYPENAME AD::ret_type operator - (const VectorImp<AD>& a, const VectorImp<BD>& b
 	return rv;
 }
 
-/**	ƒXƒJƒ‰[‚ÆƒxƒNƒgƒ‹‚ÌÏ(return a * b).
-	@param	a	ƒxƒNƒgƒ‹Œ^
-	@param	b	—v‘fŒ^
-	@return		ƒxƒNƒgƒ‹Œ^	*/
+/**	ã‚¹ã‚«ãƒ©ãƒ¼ã¨ãƒ™ã‚¯ãƒˆãƒ«ã®ç©(return a * b).
+	@param	a	ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@param	b	è¦ç´ å‹
+	@return		ãƒ™ã‚¯ãƒˆãƒ«å‹	*/
 template <class BD>
 TYPENAME BD::ret_type operator * (const TYPENAME BD::element_type& a, const VectorImp<BD>& b) {
 	TYPENAME BD::ret_type r(b);
@@ -804,10 +804,10 @@ TYPENAME BD::ret_type operator * (const TYPENAME BD::element_type& a, const Vect
 	return r;
 }
 
-/**	ƒXƒJƒ‰[‚ÆƒxƒNƒgƒ‹‚ÌÏ(return a * b).ƒxƒNƒgƒ‹‚ÆƒXƒJƒ‰[‚Í‰ÂŠ·‚È‚½‚ßD
-	@param	a	—v‘fŒ^
-	@param	b	ƒxƒNƒgƒ‹Œ^
-	@return		ƒxƒNƒgƒ‹Œ^	*/
+/**	ã‚¹ã‚«ãƒ©ãƒ¼ã¨ãƒ™ã‚¯ãƒˆãƒ«ã®ç©(return a * b).ãƒ™ã‚¯ãƒˆãƒ«ã¨ã‚¹ã‚«ãƒ©ãƒ¼ã¯å¯æ›ãªãŸã‚ï¼
+	@param	a	è¦ç´ å‹
+	@param	b	ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@return		ãƒ™ã‚¯ãƒˆãƒ«å‹	*/
 template <class BD>
 TYPENAME BD::ret_type operator * (const VectorImp<BD>& a, const TYPENAME BD::element_type& b) {
 	TYPENAME BD::ret_type r(a);
@@ -815,44 +815,44 @@ TYPENAME BD::ret_type operator * (const VectorImp<BD>& a, const TYPENAME BD::ele
 	return r;
 }
 
-/**	ƒxƒNƒgƒ‹‚Ì“àÏ(return a * b).
-	@param	a	ƒxƒNƒgƒ‹Œ^
-	@param	b	a‚Æ“¯‚¶ŸŒ³”‚ÌƒxƒNƒgƒ‹Œ^
-	@return		—v‘fŒ^	*/
+/**	ãƒ™ã‚¯ãƒˆãƒ«ã®å†…ç©(return a * b).
+	@param	a	ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@param	b	aã¨åŒã˜æ¬¡å…ƒæ•°ã®ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@return		è¦ç´ å‹	*/
 template <class AD, class BD>
 inline typename AD::element_type operator * (const VectorImp<AD>& a, const VectorImp<BD>& b) {
 	return a.dot(b);
 }
 
-/**	”äŠr(return a == b).
-	@param	a	ƒxƒNƒgƒ‹Œ^
-	@param	b	—v‘fŒ^a‚Æ“¯‚¶ŸŒ³”‚ÌƒxƒNƒgƒ‹Œ^
+/**	æ¯”è¼ƒ(return a == b).
+	@param	a	ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@param	b	è¦ç´ å‹aã¨åŒã˜æ¬¡å…ƒæ•°ã®ãƒ™ã‚¯ãƒˆãƒ«å‹
 	@return		bool	*/
 template <class AD, class BD>
 bool operator == (const VectorImp<AD>& a, const VectorImp<BD>& b) { return a.equal(b); }
-/**	”äŠr(return a != b).
-	@param	a	ƒxƒNƒgƒ‹Œ^
-	@param	b	—v‘fŒ^a‚Æ“¯‚¶ŸŒ³”‚ÌƒxƒNƒgƒ‹Œ^
+/**	æ¯”è¼ƒ(return a != b).
+	@param	a	ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@param	b	è¦ç´ å‹aã¨åŒã˜æ¬¡å…ƒæ•°ã®ãƒ™ã‚¯ãƒˆãƒ«å‹
 	@return		bool	*/
 template <class AD, class BD>
 bool operator != (const VectorImp<AD>& a, const VectorImp<BD>& b) { return !a.equal(b); }
 
-///	ƒXƒgƒŠ[ƒ€‚É‘®•t‚Åo—Í‚·‚é.
+///	ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«æ›¸å¼ä»˜ã§å‡ºåŠ›ã™ã‚‹.
 template <class BD>
 std::ostream& operator << (std::ostream& os, const VectorImp<BD>& v){
 	v.print(os);
 	return os;
 }
-///	ƒXƒgƒŠ[ƒ€‚©‚ç‘®•t‚Å“ü—Í‚·‚é.
+///	ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‹ã‚‰æ›¸å¼ä»˜ã§å…¥åŠ›ã™ã‚‹.
 template <class BD>
 std::istream& operator >> (std::istream& is, VectorImp<BD>& v){
 	v.input(is);
 	return is;
 }
-/**	2ŸŒ³ƒxƒNƒgƒ‹‚ÌŠOÏ(return a x b).
-	@param	a	2ŸŒ³ƒxƒNƒgƒ‹Œ^
-	@param	b	2ŸŒ³ƒxƒNƒgƒ‹Œ^
-	@return		—v‘fŒ^	*/
+/**	2æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«ã®å¤–ç©(return a x b).
+	@param	a	2æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«å‹
+	@param	b	2æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«å‹
+	@return		è¦ç´ å‹	*/
 template <class	AD, class BD>
 typename AD::element_type cross (const TVectorBase<2, AD>& a, const TVectorBase<2, BD>& b) {
 	return a[0] * b[1] - a[1] * b[0];
@@ -866,10 +866,10 @@ typename AD::element_type operator ^ (const TVectorBase<2, AD>& a, const TVector
 	return cross(a, b);
 }
 
-/**	3ŸŒ³ƒxƒNƒgƒ‹‚ÌŠOÏ(return a x b).
-	@param	a	3ŸŒ³ƒxƒNƒgƒ‹Œ^
-	@param	b	3ŸŒ³ƒxƒNƒgƒ‹Œ^
-	@return		3ŸŒ³ƒxƒNƒgƒ‹Œ^	*/
+/**	3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«ã®å¤–ç©(return a x b).
+	@param	a	3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«å‹
+	@param	b	3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«å‹
+	@return		3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«å‹	*/
 template <class	AD, class BD>
 TYPENAME AD::ret_type cross (const TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b) {
 	TYPENAME AD::ret_type r;
@@ -888,10 +888,10 @@ template <class	AD, class BD>
 TYPENAME AD::ret_type operator ^ (const TVectorBase<3, AD>& a, const TVectorBase<3, BD>& b) {
 	return cross(a, b);
 }
-/**	•âŠÔ
-	@param t •âŠÔ—Ê0-1
-	@param a ƒxƒNƒgƒ‹
-	@param b “¯‚¶ƒTƒCƒY‚ÌƒxƒNƒgƒ‹
+/**	è£œé–“
+	@param t è£œé–“é‡0-1
+	@param a ãƒ™ã‚¯ãƒˆãƒ«
+	@param b åŒã˜ã‚µã‚¤ã‚ºã®ãƒ™ã‚¯ãƒˆãƒ«
 */
 template <class AD, class BD>
 TYPENAME AD::ret_type interpolate(TYPENAME AD::element_type& t,const VectorImp<AD>& a, const VectorImp<BD>& b){

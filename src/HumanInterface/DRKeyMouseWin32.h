@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,33 +16,33 @@ namespace Spr {;
 class DRKeyMouseWin32: public HIRealDevice{
 public:
 	SPR_OBJECTDEF(DRKeyMouseWin32);
-	///	‰¼‘zƒfƒoƒCƒX(KeyMouse)
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹(KeyMouse)
 	class DV: public DVKeyMouse{
 	public:
 		DV(DRKeyMouseWin32* dr, int ch):DVKeyMouse(dr, ch){}
 		DRKeyMouseWin32* GetRealDevice(){ return realDevice->Cast(); }
 
-		///	ƒ}ƒEƒXƒ{ƒ^ƒ“EƒL[ƒ{[ƒhó‘Ôæ“¾
+		///	ãƒã‚¦ã‚¹ãƒœã‚¿ãƒ³ãƒ»ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰çŠ¶æ…‹å–å¾—
 		virtual int GetKeyState(int key){ return GetRealDevice()->GetKeyState(key); }
-		///	ƒ}ƒEƒXˆÊ’uæ“¾ŠÖ”	0‚ªÅVC1ˆÈã‚Í‰ß‹‚Ì—š—ğ‚ğæ“¾
+		///	ãƒã‚¦ã‚¹ä½ç½®å–å¾—é–¢æ•°	0ãŒæœ€æ–°ï¼Œ1ä»¥ä¸Šã¯éå»ã®å±¥æ­´ã‚’å–å¾—
 		virtual void GetMousePosition(int& x, int& y, int& time, int count=0){
 			return GetRealDevice()->GetMousePosition(x, y, time, count);
 		}
 	};
 public:
 	DRKeyMouseWin32(const DRKeyMouseWin32Desc& desc = DRKeyMouseWin32Desc());
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	virtual bool Init();
-	///	‰¼‘zƒfƒoƒCƒX‚Ì“o˜^
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²
 	virtual HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);
 
-	/// windows‰¼‘zƒL[ƒR[ƒh‚©‚çSpringhead‹¤’ÊƒL[ƒR[ƒh‚Ö‚Ì•ÏŠ·
+	/// windowsä»®æƒ³ã‚­ãƒ¼ã‚³ãƒ¼ãƒ‰ã‹ã‚‰Springheadå…±é€šã‚­ãƒ¼ã‚³ãƒ¼ãƒ‰ã¸ã®å¤‰æ›
 	int	ConvertKeyCode(int key, bool spr_to_win32);
 	
 	int		GetKeyState(int key);
 	void	GetMousePosition(int& x, int& y, int& time, int count);
 
-	///	Win32ƒƒbƒZ[ƒW‚ğŒ©‚ÄCƒ}ƒEƒXƒ{ƒ^ƒ“‚ÌƒCƒxƒ“ƒgˆ—‚ğ‚·‚éD
+	///	Win32ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¦‹ã¦ï¼Œãƒã‚¦ã‚¹ãƒœã‚¿ãƒ³ã®ã‚¤ãƒ™ãƒ³ãƒˆå‡¦ç†ã‚’ã™ã‚‹ï¼
 	bool PreviewMessage(void* m);
 	void UpdateMousePos(int x, int y);
 	

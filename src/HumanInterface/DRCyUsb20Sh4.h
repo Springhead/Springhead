@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,7 +13,7 @@
 namespace Spr {;
 
 /**
-	USB2.0 SH ƒAƒ“ƒv ‚Ìƒhƒ‰ƒCƒo
+	USB2.0 SH ã‚¢ãƒ³ãƒ— ã®ãƒ‰ãƒ©ã‚¤ãƒ
  **/
 class SPR_DLL DRCyUsb20Sh4 : public DRUsb20Sh4{
 public:
@@ -23,7 +23,7 @@ public:
 	~DRCyUsb20Sh4();
 	
 protected:
-	//	–¼‘O‚Ìƒx[ƒX•”•ª
+	//	åå‰ã®ãƒ™ãƒ¼ã‚¹éƒ¨åˆ†
 	virtual const char* BaseName() const {return "Cyverse USB2.0 Sh4 on CyUSB";}
 	///	
 	virtual void*		UsbOpen(int id);

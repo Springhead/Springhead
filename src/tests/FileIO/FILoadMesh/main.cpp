@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,15 +8,15 @@
 /**
  Springhead2/src/tests/FileIO/FILoadMesh/main.cpp
 
-yŠT—vz
-  ƒtƒ@ƒCƒ‹“üo—ÍSDK‚ÅAXƒtƒ@ƒCƒ‹‚ÌÚ×‚ğ‰ğÍ‚³‚¹‚éB
-  i’¸“_ˆÊ’uA’¸“_ƒCƒ“ƒfƒbƒNƒXA–@üAƒ}ƒeƒŠƒAƒ‹AƒeƒNƒXƒ`ƒƒj
+ã€æ¦‚è¦ã€‘
+  ãƒ•ã‚¡ã‚¤ãƒ«å…¥å‡ºåŠ›SDKã§ã€Xãƒ•ã‚¡ã‚¤ãƒ«ã®è©³ç´°ã‚’è§£æã•ã›ã‚‹ã€‚
+  ï¼ˆé ‚ç‚¹ä½ç½®ã€é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã€æ³•ç·šã€ãƒãƒ†ãƒªã‚¢ãƒ«ã€ãƒ†ã‚¯ã‚¹ãƒãƒ£ï¼‰
 
-yI—¹Šî€z
-  EƒvƒƒOƒ‰ƒ€‚ª³íI—¹‚µ‚½‚ç0‚ğ•Ô‚·B  
+ã€çµ‚äº†åŸºæº–ã€‘
+  ãƒ»ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãŒæ­£å¸¸çµ‚äº†ã—ãŸã‚‰0ã‚’è¿”ã™ã€‚  
 
-yNotez
-  –{ƒtƒ@ƒCƒ‹‚Ì26s–Ú" #define TEST_CASE " ‚ÅAƒ[ƒh‚·‚éXƒtƒ@ƒCƒ‹‚Ì“ü—ÍØ‚è‘Ö‚¦‚ª‰Â”\B
+ã€Noteã€‘
+  æœ¬ãƒ•ã‚¡ã‚¤ãƒ«ã®26è¡Œç›®" #define TEST_CASE " ã§ã€ãƒ­ãƒ¼ãƒ‰ã™ã‚‹Xãƒ•ã‚¡ã‚¤ãƒ«ã®å…¥åŠ›åˆ‡ã‚Šæ›¿ãˆãŒå¯èƒ½ã€‚
 
 */
 #include <Springhead.h>
@@ -26,12 +26,12 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
-#define TEST_CASE		1				// ƒeƒXƒgƒP[ƒX
+#define TEST_CASE		1				// ãƒ†ã‚¹ãƒˆã‚±ãƒ¼ã‚¹
 
 
 #if defined(TEST_CASE) && (TEST_CASE == 0)
-#define EXIT_TIMER	20000				// ‹­§I—¹‚³‚¹‚éƒXƒeƒbƒv”
-#define TEST_FILEX	"box.x"				// ƒ[ƒh‚·‚éXƒtƒ@ƒCƒ‹
+#define EXIT_TIMER	20000				// å¼·åˆ¶çµ‚äº†ã•ã›ã‚‹ã‚¹ãƒ†ãƒƒãƒ—æ•°
+#define TEST_FILEX	"box.x"				// ãƒ­ãƒ¼ãƒ‰ã™ã‚‹Xãƒ•ã‚¡ã‚¤ãƒ«
 
 #elif defined(TEST_CASE) && (TEST_CASE == 1)
 #define EXIT_TIMER	20000				
@@ -56,9 +56,9 @@ using namespace Spr;
 
 
 /**
- brief     	glutDisplayFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief     	glutDisplayFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void display(){
 	static int count;
@@ -70,7 +70,7 @@ void display(){
 		}
 	}
 
-	//	ƒoƒbƒtƒ@ƒNƒŠƒA
+	//	ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 	render->ClearBuffer();
 	scene->Render(render);
 	if (!scene){
@@ -82,9 +82,9 @@ void display(){
 }
 
 /**
- brief		ŒõŒ¹‚Ìİ’è
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief		å…‰æºã®è¨­å®š
+ param	 	ãªã—
+ return 	ãªã—
  */
 void setLight() {
 	GRLightDesc light0;
@@ -117,21 +117,21 @@ void setLight() {
 }
 
 /**
- brief  	glutReshapeFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	<in/--> w@@•
- param  	<in/--> h@@‚‚³
- return 	‚È‚µ
+ brief  	glutReshapeFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	<in/--> wã€€ã€€å¹…
+ param  	<in/--> hã€€ã€€é«˜ã•
+ return 	ãªã—
  */
 void reshape(int w, int h){
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 
 /**
- brief 		glutKeyboardFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ” 
- param		<in/--> key@@ ASCIIƒR[ƒh
- param 		<in/--> x@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- param 		<in/--> y@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- return 	‚È‚µ
+ brief 		glutKeyboardFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•° 
+ param		<in/--> keyã€€ã€€ ASCIIã‚³ãƒ¼ãƒ‰
+ param 		<in/--> xã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ param 		<in/--> yã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ return 	ãªã—
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
@@ -140,9 +140,9 @@ void keyboard(unsigned char key, int x, int y){
 }
 
 /**
- brief  	glutIdleFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief  	glutIdleFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void idle(){
 //	if(scene && *scene) (*(scene))->Step();
@@ -156,14 +156,14 @@ void idle(){
 }
 
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char* argv[]){
-	//	‚·‚×‚Ä‚ÌSDK‚ÆDirectX‚Ìƒ[ƒ_‚Ì“o˜^
-	//	‘Sƒ‰ƒCƒuƒ‰ƒŠ‚ğƒŠƒ“ƒN‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚­‚È‚éD
+	//	ã™ã¹ã¦ã®SDKã¨DirectXã®ãƒ­ãƒ¼ãƒ€ã®ç™»éŒ²
+	//	å…¨ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã‚’ãƒªãƒ³ã‚¯ã—ãªã‘ã‚Œã°ãªã‚‰ãªããªã‚‹ï¼
 	FWSdkIf::RegisterSdk();
 
 	fiSdk = FISdkIf::CreateSdk();
@@ -184,7 +184,7 @@ int main(int argc, char* argv[]){
 	objs.Push(grSdk);
 	fileX->Save(objs, "out.x");
 	
-	fiSdk->Clear();	//	ƒtƒ@ƒCƒ‹ƒ[ƒ_‚Ìƒƒ‚ƒŠ‚ğ‰ğ•úD
+	fiSdk->Clear();	//	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã®ãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾ï¼
 	objs.clear();
 	grSdk->Print(DSTR);
 
@@ -201,14 +201,14 @@ int main(int argc, char* argv[]){
 	grDevice->Init();
 	render->SetDevice(grDevice);
 
-	// ‹“_İ’è
+	// è¦–ç‚¹è¨­å®š
 	Affinef view;
 	view.Pos() = Vec3f(0.0, 3.0,-80.0);									// eye
 		view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
 	view = view.inv();	
 	render->SetViewMatrix(view);
 
-	// ŒõŒ¹‚Ìİ’è
+	// å…‰æºã®è¨­å®š
 	setLight();
 
 	glutDisplayFunc(display);

@@ -1,4 +1,4 @@
-/*
+Ôªø/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,20 +18,20 @@ class DRKeyMouseGLUT;
 class DRJoyStickGLUT;
 
 /**
-	FWGraphicsHandlerÇÃGLUTÇ…ÇÊÇÈé¿ëï
+	FWGraphicsHandler„ÅÆGLUT„Å´„Çà„ÇãÂÆüË£Ö
  */
 class FWGLUT : public FWGraphicsHandler, public UTTimerProvider{
 public:
 	SPR_OBJECTDEF_NOIF(FWGLUT);
 protected:
-	bool	idleFuncFlag;	///< IdleFuncÇÃåƒÇ—èoÇµÇ…ä÷Ç∑ÇÈFlag	
+	bool	idleFuncFlag;	///< IdleFunc„ÅÆÂëº„Å≥Âá∫„Åó„Å´Èñ¢„Åô„ÇãFlag	
 	
 	DRKeyMouseGLUT*	keyMouse;
 	DRJoyStickGLUT*	joyStick;
 
 	static FWGLUT*	GetInstance();
 
-	/** ÉRÅ[ÉãÉoÉbÉNä÷êî*/
+	/** „Ç≥„Éº„É´„Éê„ÉÉ„ÇØÈñ¢Êï∞*/
 	static void SPR_CDECL GlutDisplayFunc();
 	static void SPR_CDECL GlutReshapeFunc(int w, int h);
 	static void SPR_CDECL GlutTimerFunc(int id);
@@ -48,10 +48,10 @@ protected:
 
 	virtual void RegisterCallbacks();
 public:	
-	///	GLUTÇÃèâä˙âªÇçsÇ§ÅBç≈èâÇ…Ç±ÇÍÇåƒÇ‘ïKóvÇ™Ç†ÇÈÅB
+	///	GLUT„ÅÆÂàùÊúüÂåñ„ÇíË°å„ÅÜ„ÄÇÊúÄÂàù„Å´„Åì„Çå„ÇíÂëº„Å∂ÂøÖË¶Å„Åå„ÅÇ„Çã„ÄÇ
 	virtual void Init(int argc, char** argv);
 
-	/// UTTimerProviderÇÃé¿ëï
+	/// UTTimerProvider„ÅÆÂÆüË£Ö
 	virtual bool StartTimer(UTTimer* timer);
 	virtual bool StopTimer(UTTimer* timer);
 	
@@ -60,20 +60,20 @@ public:
 	virtual void EnterGameMode();
 	virtual void LeaveGameMode();
 
-	/** ÉEÉBÉìÉhÉE */
-	///	ÉEÉBÉìÉhÉEÇçÏê¨ÇµÅAÉEÉBÉìÉhÉE IDÇï‘Ç∑
+	/** „Ç¶„Ç£„É≥„Éâ„Ç¶ */
+	///	„Ç¶„Ç£„É≥„Éâ„Ç¶„Çí‰ΩúÊàê„Åó„ÄÅ„Ç¶„Ç£„É≥„Éâ„Ç¶ ID„ÇíËøî„Åô
 	virtual FWWinIf* CreateWin(const FWWinDesc& d, FWWinIf* parent);
-	///	ÉEÉBÉìÉhÉEÇîjä¸Ç∑ÇÈ
+	///	„Ç¶„Ç£„É≥„Éâ„Ç¶„ÇíÁ†¥Ê£Ñ„Åô„Çã
 	virtual void DestroyWin(FWWinIf* w);
-	///	ÉJÉåÉìÉgÉEÉBÉìÉhÉEÇê›íËÇ∑ÇÈ
+	///	„Ç´„É¨„É≥„Éà„Ç¶„Ç£„É≥„Éâ„Ç¶„ÇíË®≠ÂÆö„Åô„Çã
 	virtual void SetCurrentWin(FWWinIf* w);
-	///	ÉJÉåÉìÉgÉEÉBÉìÉhÉEÇï‘Ç∑ÅB
+	///	„Ç´„É¨„É≥„Éà„Ç¶„Ç£„É≥„Éâ„Ç¶„ÇíËøî„Åô„ÄÇ
 	virtual int GetCurrentWin();	
-	///ÉJÉåÉìÉgÉEÉBÉìÉhÉEÇÃÉmÅ[É}ÉãÉvÉåÅ[ÉìÇÅCçƒï`âÊÇÃïKóvÇ…âûÇ∂ÇƒÉ}Å[ÉNÇ∑ÇÈ
+	///„Ç´„É¨„É≥„Éà„Ç¶„Ç£„É≥„Éâ„Ç¶„ÅÆ„Éé„Éº„Éû„É´„Éó„É¨„Éº„É≥„ÇíÔºåÂÜçÊèèÁîª„ÅÆÂøÖË¶Å„Å´Âøú„Åò„Å¶„Éû„Éº„ÇØ„Åô„Çã
 	virtual void PostRedisplay();
-	/// Shift,Ctrl,AltÇÃÉXÉeÅ[ÉgÇï‘Ç∑
+	/// Shift,Ctrl,Alt„ÅÆ„Çπ„ÉÜ„Éº„Éà„ÇíËøî„Åô
 	virtual int GetModifiers();
-	/// ÉEÉBÉìÉhÉEëÆê´ëÄçÏ
+	/// „Ç¶„Ç£„É≥„Éâ„Ç¶Â±ûÊÄßÊìç‰Ωú
 	virtual Vec2i	GetPosition		(FWWinBase* win);
 	virtual void	SetPosition		(FWWinBase* win, int left, int top);
 	virtual Vec2i	GetSize			(FWWinBase* win);

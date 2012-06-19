@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -55,13 +55,13 @@ GRMesh::~GRMesh(){
 }
 
 void GRMesh::DecomposeFaces(){
-	// –Ê‚Ì3ŠpŒ`•ªŠ„
+	// é¢ã®3è§’å½¢åˆ†å‰²
 	//orgFaceIds.clear();
 	//orgFaces.clear();
 	triFaces.clear();
 	triML.clear();
 	for(int i = 0; i < (int)faces.size(); ++i){
-		// 3ŠpŒ`‚©4ŠpŒ`‚Ì‚İ‘z’è
+		// 3è§’å½¢ã‹4è§’å½¢ã®ã¿æƒ³å®š
 		if(!(faces[i].nVertices == 3 || faces[i].nVertices == 4)){
 			DSTR << "number of vertices in a mesh must be 3 or 4." << endl;
 			continue;
@@ -78,27 +78,27 @@ void GRMesh::DecomposeFaces(){
 
 		if (faces[i].nVertices == 4){
 			//orgFaceIds.push_back(i);
-			// triFaces‚É‚ÍA–Ê‚ªlŠpŒ`‚È‚çOŠpŒ`‚É•ªŠ„‚µ‚½ƒCƒ“ƒfƒbƒNƒX‚ğpush
+			// triFacesã«ã¯ã€é¢ãŒå››è§’å½¢ãªã‚‰ä¸‰è§’å½¢ã«åˆ†å‰²ã—ãŸã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’push
 			triFaces.push_back( faces[i].indices[2] );
 			triFaces.push_back( faces[i].indices[0] );
 			triFaces.push_back( faces[i].indices[3] );
 			if(!materialList.empty())
 				triML.push_back(materialList[i]);
 
-			// orgFaces ‚É‚ÍA4’¸“_–Ú‚ÌƒCƒ“ƒfƒbƒNƒX‚ğpush
+			// orgFaces ã«ã¯ã€4é ‚ç‚¹ç›®ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’push
 			//orgFaces.push_back( faces[i].indices[3] );
 		}
 	}
 }
 
-/** –@üî•ñ‚Ì©“®¶¬
-	–Ê‚Ì–@ü‚Ì•½‹Ï‚ğ’¸“_‚Ì–@ü‚Æ‚·‚é
+/** æ³•ç·šæƒ…å ±ã®è‡ªå‹•ç”Ÿæˆ
+	é¢ã®æ³•ç·šã®å¹³å‡ã‚’é ‚ç‚¹ã®æ³•ç·šã¨ã™ã‚‹
  */
 void GRMesh::GenerateNormals(){
 	normals.resize(vertices.size());
 	fill(normals.begin(), normals.end(), Vec3f());
 
-	// ’¸“_‚ğ‹¤—L‚·‚é–Ê‚Ì”
+	// é ‚ç‚¹ã‚’å…±æœ‰ã™ã‚‹é¢ã®æ•°
 	std::vector<int> nFace(vertices.size(), 0);
 	
 	for(unsigned i = 0; i < triFaces.size(); i += 3){
@@ -160,7 +160,7 @@ void GRMesh::MakeBuffer(){
 		vtxs.resize(stride * nVtxs);
 		GRVertexElement::VFT4fC4fN3fP4f* v = (GRVertexElement::VFT4fC4fN3fP4f*)&vtxs[0];
 		
-		/// ’¸“_À•W
+		/// é ‚ç‚¹åº§æ¨™
 		for (int i = 0; i < (int)vertices.size(); ++i){
 			v[i].p.x = vertices[i].x;
 			v[i].p.y = vertices[i].y;
@@ -168,7 +168,7 @@ void GRMesh::MakeBuffer(){
 			v[i].p.w = 1;
 		}
 
-		/// –@ü
+		/// æ³•ç·š
 		if(faceNormals.size())
 			for(int i = 0; i < (int)faces.size(); ++i)
 				for(int j = 0; j < (int)faces[i].nVertices; j++)
@@ -177,11 +177,11 @@ void GRMesh::MakeBuffer(){
 			for(int i = 0; i < (int)normals.size(); ++i)
 				v[i].n = normals[i];
 
-		/// ’¸“_F
+		/// é ‚ç‚¹è‰²
 		for(int i = 0; i < (int)colors.size(); ++i)
 			v[i].c = colors[i];
 
-		/// ƒeƒNƒXƒ`ƒƒÀ•W
+		/// ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™
 		for (int i = 0; i < (int)texCoords.size(); ++i){
 			v[i].t.x = texCoords[i].x;
 			v[i].t.y = texCoords[i].y;
@@ -377,17 +377,17 @@ void GRMesh::MakeBuffer(){
 	}
 }
 
-/// “¯‚¶ƒ}ƒeƒŠƒAƒ‹ƒCƒ“ƒfƒbƒNƒX‚ª‘±‚­ê‡‚ÍA‚»‚ê–ˆ‚É‚P‚Â‚ÌƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Æ‚µ‚ÄA“o˜^‚·‚éD
+/// åŒã˜ãƒãƒ†ãƒªã‚¢ãƒ«ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãŒç¶šãå ´åˆã¯ã€ãã‚Œæ¯ã«ï¼‘ã¤ã®ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã¨ã—ã¦ã€ç™»éŒ²ã™ã‚‹ï¼
 void GRMesh::DrawBuffer(void* vtx){
 	if(faces.empty())
 		return;
 
-	// Mesh ‚É material ‚Ìw’è‚ª‚È‚¢ê‡
-	// ƒ}ƒeƒŠƒAƒ‹ƒŠƒXƒg‚Í‚ ‚é‚ªƒ}ƒeƒŠƒAƒ‹‚ª–³‚¢ƒ‚ƒfƒ‹ƒf[ƒ^‚àl—¶
+	// Mesh ã« material ã®æŒ‡å®šãŒãªã„å ´åˆ
+	// ãƒãƒ†ãƒªã‚¢ãƒ«ãƒªã‚¹ãƒˆã¯ã‚ã‚‹ãŒãƒãƒ†ãƒªã‚¢ãƒ«ãŒç„¡ã„ãƒ¢ãƒ‡ãƒ«ãƒ‡ãƒ¼ã‚¿ã‚‚è€ƒæ…®
 	if (materialList.empty() || material.empty()){	
 		render->DrawIndexed(GRRenderIf::TRIANGLES, &triFaces[0], vtx, triFaces.size());
 	}
-	// Xƒtƒ@ƒCƒ‹‚©‚ç‚Ì materialList w’è‚ª‚ ‚éê‡Amaterial‚²‚Æ‚É•`‰æ
+	// Xãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ã® materialList æŒ‡å®šãŒã‚ã‚‹å ´åˆã€materialã”ã¨ã«æç”»
 	else{
 		int from = 0, to = 0;
 		for(; to <= NTriangle(); ++to){
@@ -423,7 +423,7 @@ void GRMesh::Render(GRRenderIf* r){
 		}
 	}
 
-	if (skinWeights.size()){	//	SkinMesh‚Í–ˆ‰ñ•`‰æ‚·‚é•K—v‚ª‚ ‚é
+	if (skinWeights.size()){	//	SkinMeshã¯æ¯å›æç”»ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
 		// if (r!=render || !list) CreateList(r);
 		if (vtxs.empty())
 			MakeBuffer();
@@ -450,7 +450,7 @@ void GRMesh::Render(GRRenderIf* r){
 		render->SetVertexFormat(vtxFormat);
 		DrawBuffer(&blendedVtxs[0]);
 	}
-	else if (tex3d){	//	3d texture‚à strq ‚ğ‚¢‚¶‚è‚½‚¢‚Ì‚ÅA–ˆ‰ñ•`‰æ
+	else if (tex3d){	//	3d textureã‚‚ strq ã‚’ã„ã˜ã‚ŠãŸã„ã®ã§ã€æ¯å›æç”»
 		if (r!=render) render = r;
 		if (render){
 			if (vtxs.empty()) MakeBuffer();

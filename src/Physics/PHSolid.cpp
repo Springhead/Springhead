@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -92,7 +92,7 @@ bool PHFrame::AddChildObject(ObjectIf * o){
 		} 
 		if (solid){
 			solid->CalcBBox();
-			//ÚGƒGƒ“ƒWƒ“‚ÌshapePairs‚ğXV‚·‚é
+			//æ¥è§¦ã‚¨ãƒ³ã‚¸ãƒ³ã®shapePairsã‚’æ›´æ–°ã™ã‚‹
 			PHScene* scene = DCAST(PHScene,solid->GetScene());
 			scene->penaltyEngine->UpdateShapePairs(solid);
 			scene->constraintEngine->UpdateShapePairs(solid);
@@ -247,7 +247,7 @@ void PHSolid::UpdateCacheLCP(double dt){
 	v.v() = qc * GetVelocity();
 	v.w() = qc * GetAngularVelocity();
 
-	// ƒcƒŠ[‚É‘®‚·‚éê‡‚ÍPHRootNode::SetupDynamics‚Ådv‚ªŒvZ‚³‚ê‚é
+	// ãƒ„ãƒªãƒ¼ã«å±ã™ã‚‹å ´åˆã¯PHRootNode::SetupDynamicsã§dvãŒè¨ˆç®—ã•ã‚Œã‚‹
 	if(IsArticulated())return;
 	
 	if(IsDynamical() && !IsFrozen()){
@@ -277,11 +277,11 @@ void PHSolid::UpdateVelocity(double dt){
 	if(IsDynamical() && !IsFrozen()){
 		v += dv;
 
-		// ‹ó‹C’ïRŒW”‚ğ‚©‚¯‚é
+		// ç©ºæ°—æŠµæŠ—ä¿‚æ•°ã‚’ã‹ã‘ã‚‹
 		PHSceneIf* scene = GetScene()->Cast();
 		v *= scene->GetAirResistanceRate();
 
-		// Šp‘¬“x‚Ì§ŒÀ@i—vAPI‰»j
+		// è§’é€Ÿåº¦ã®åˆ¶é™ã€€ï¼ˆè¦APIåŒ–ï¼‰
 		double vMax = 100;
 		if (v.w().norm() > 100)
 			v.w() = v.w().unit() * vMax;
@@ -289,7 +289,7 @@ void PHSolid::UpdateVelocity(double dt){
 		SetVelocity       (GetOrientation() * v.v());
 		SetAngularVelocity(GetOrientation() * v.w());
 	}
-	// ƒtƒŠ[ƒY”»’èD‘¬“x‚ªˆê’èˆÈ‰º‚É‚È‚é‚ÆCÏ•ª‚È‚Ç‚Ìˆ—‚ğ‚â‚ß‚éD
+	// ãƒ•ãƒªãƒ¼ã‚ºåˆ¤å®šï¼é€Ÿåº¦ãŒä¸€å®šä»¥ä¸‹ã«ãªã‚‹ã¨ï¼Œç©åˆ†ãªã©ã®å‡¦ç†ã‚’ã‚„ã‚ã‚‹ï¼
 	if(!IsFrozen()){
 		if(vold.square() < engine->freezeThreshold && v.square() < engine->freezeThreshold){
 			SetFrozen(true);
@@ -299,7 +299,7 @@ void PHSolid::UpdateVelocity(double dt){
 }
 void PHSolid::UpdatePosition(double dt){
 	if(IsFrozen()) return;
-	// SetOrientation -> SetCenterPosition‚Ì‡‚ÉŒÄ‚Ô•K—v‚ª‚ ‚éD‹t‚¾‚ÆSetOrientation‚É‚æ‚Á‚ÄdSˆÊ’u‚ª‚¸‚ê‚Ä‚µ‚Ü‚¤ tazz
+	// SetOrientation -> SetCenterPositionã®é †ã«å‘¼ã¶å¿…è¦ãŒã‚ã‚‹ï¼é€†ã ã¨SetOrientationã«ã‚ˆã£ã¦é‡å¿ƒä½ç½®ãŒãšã‚Œã¦ã—ã¾ã† tazz
 	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w() * dt + dV.w())).unit());
 	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
 	//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
@@ -312,7 +312,7 @@ void PHSolid::Step(){
 	nextForce.clear();
 	nextTorque.clear();
 
-	//Šù‚É‘¼‚ÌƒGƒ“ƒWƒ“‚É‚æ‚Á‚ÄXV‚ª¬‚³‚ê‚½ê‡‚ÍÏ•ª‚ğs‚í‚È‚¢
+	//æ—¢ã«ä»–ã®ã‚¨ãƒ³ã‚¸ãƒ³ã«ã‚ˆã£ã¦æ›´æ–°ãŒæˆã•ã‚ŒãŸå ´åˆã¯ç©åˆ†ã‚’è¡Œã‚ãªã„
 	if(IsUpdated()) return;
 
 	PHScene* s = DCAST(PHScene, GetScene());
@@ -328,80 +328,80 @@ void PHSolid::Step(){
 	//k3 = f(y + k2 * h / 2);
 	//k4 = f(y + k3);
 	//y += (k1 + 2 * k2 + 2 * k3 + k4) * h / 6;
-	//	Ï•ªŒvZ
-	Vec3d dv, dw;				//<	‘¬“xEŠp‘¬“x‚Ì•Ï‰»—Ê
-	Vec3d	_angvel[4];			//<	”’lÏ•ªŒW”
+	//	ç©åˆ†è¨ˆç®—
+	Vec3d dv, dw;				//<	é€Ÿåº¦ãƒ»è§’é€Ÿåº¦ã®å¤‰åŒ–é‡
+	Vec3d	_angvel[4];			//<	æ•°å€¤ç©åˆ†ä¿‚æ•°
 	Vec3d	_angacc[4];
 	switch(GetIntegrationMode()){
 	case PHINT_EULER:
-		//•½sˆÚ“®—Ê‚ÌÏ•ª
+		//å¹³è¡Œç§»å‹•é‡ã®ç©åˆ†
 		SetCenterPosition(GetCenterPosition() + velocity * dt);
 		velocity += force * (dt / mass);
-		//Šp‘¬“x‚©‚çƒNƒEƒH[ƒ^ƒjƒIƒ“‚ÌŠÔ”÷•ª‚ğ‹‚ßAÏ•ªA³‹K‰»
+		//è§’é€Ÿåº¦ã‹ã‚‰ã‚¯ã‚¦ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã®æ™‚é–“å¾®åˆ†ã‚’æ±‚ã‚ã€ç©åˆ†ã€æ­£è¦åŒ–
 		pose.Ori() += pose.Ori().Derivative(angVelocity) * dt;
 		pose.Ori().unitize();
-		torque		= pose.Ori().Conjugated() * torque;			//ƒgƒ‹ƒN‚ÆŠp‘¬“x‚ğƒ[ƒJƒ‹À•W‚Ö
+		torque		= pose.Ori().Conjugated() * torque;			//ãƒˆãƒ«ã‚¯ã¨è§’é€Ÿåº¦ã‚’ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã¸
 		angVelocity = pose.Ori().Conjugated() * angVelocity;
-		angVelocity += Euler(inertia, torque, angVelocity) * dt;	//ƒIƒCƒ‰[‚Ì‰^“®•û’ö®
-		torque = pose.Ori() * torque;						//ƒgƒ‹ƒN‚ÆŠp‘¬“x‚ğƒ[ƒ‹ƒh‚Ö
+		angVelocity += Euler(inertia, torque, angVelocity) * dt;	//ã‚ªã‚¤ãƒ©ãƒ¼ã®é‹å‹•æ–¹ç¨‹å¼
+		torque = pose.Ori() * torque;						//ãƒˆãƒ«ã‚¯ã¨è§’é€Ÿåº¦ã‚’ãƒ¯ãƒ¼ãƒ«ãƒ‰ã¸
 		angVelocity = pose.Ori() * angVelocity;
 		break;
 	case PHINT_ARISTOTELIAN:{
 		SetCenterPosition(GetCenterPosition() + velocity * dt);
-		velocity = force / mass;		//‘¬“x‚Í—Í‚É”ä—á‚·‚é
-		Vec3d tq = pose.Ori().Conjugated() * torque;	//ƒgƒ‹ƒN‚ğƒ[ƒJƒ‹‚Ö
-		angVelocity = pose.Ori() * (inertia_inv * tq);	//Šp‘¬“x‚Íƒgƒ‹ƒN‚É”ä—á‚·‚é
-		//ƒNƒEƒH[ƒ^ƒjƒIƒ“‚ğÏ•ªA³‹K‰»
+		velocity = force / mass;		//é€Ÿåº¦ã¯åŠ›ã«æ¯”ä¾‹ã™ã‚‹
+		Vec3d tq = pose.Ori().Conjugated() * torque;	//ãƒˆãƒ«ã‚¯ã‚’ãƒ­ãƒ¼ã‚«ãƒ«ã¸
+		angVelocity = pose.Ori() * (inertia_inv * tq);	//è§’é€Ÿåº¦ã¯ãƒˆãƒ«ã‚¯ã«æ¯”ä¾‹ã™ã‚‹
+		//ã‚¯ã‚¦ã‚©ãƒ¼ã‚¿ãƒ‹ã‚ªãƒ³ã‚’ç©åˆ†ã€æ­£è¦åŒ–
 		pose.Ori() += pose.Ori().Derivative(angVelocity) * dt;
 		pose.Ori().unitize();
 		}break;
 	case PHINT_SIMPLETIC:{
 		//	x(dt) = x(0) + dt*v(0)/m
 		//	v(dt) = v(0) + dt*f(dt)
-		//‰ñ“]—Ê‚ÌÏ•ª
-		torque		= pose.Ori().Conjugated() * torque;				//	ƒgƒ‹ƒN‚ÆŠp‘¬“x‚ğƒ[ƒJƒ‹À•W‚Ö
+		//å›è»¢é‡ã®ç©åˆ†
+		torque		= pose.Ori().Conjugated() * torque;				//	ãƒˆãƒ«ã‚¯ã¨è§’é€Ÿåº¦ã‚’ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã¸
 		angVelocity = pose.Ori().Conjugated() * angVelocity;
 
-		dw = Euler(inertia, torque, angVelocity) * dt;			//Šp‘¬“x•Ï‰»—Ê
-		angVelocity += dw;										//Šp‘¬“x‚ÌÏ•ª
+		dw = Euler(inertia, torque, angVelocity) * dt;			//è§’é€Ÿåº¦å¤‰åŒ–é‡
+		angVelocity += dw;										//è§’é€Ÿåº¦ã®ç©åˆ†
 		Quaterniond dq = Quaterniond::Rot(angVelocity * dt);
 		Vec3d dp = pose.Ori() * (dq*(-center) - (-center));
 		pose.Ori() = pose.Ori() * dq;
 		pose.Ori().unitize();
-		torque = pose.Ori() * torque;									//ƒgƒ‹ƒN‚ÆŠp‘¬“x‚ğƒ[ƒ‹ƒh‚Ö
+		torque = pose.Ori() * torque;									//ãƒˆãƒ«ã‚¯ã¨è§’é€Ÿåº¦ã‚’ãƒ¯ãƒ¼ãƒ«ãƒ‰ã¸
 		angVelocity = pose.Ori() * angVelocity;
-		//•½sˆÚ“®—Ê‚ÌÏ•ª
-		velocity += force * (dt / mass);								//	‘¬“x‚ÌÏ•ª
-		SetCenterPosition(GetCenterPosition() + velocity * dt + dp);	//	ˆÊ’u‚ÌÏ•ª
+		//å¹³è¡Œç§»å‹•é‡ã®ç©åˆ†
+		velocity += force * (dt / mass);								//	é€Ÿåº¦ã®ç©åˆ†
+		SetCenterPosition(GetCenterPosition() + velocity * dt + dp);	//	ä½ç½®ã®ç©åˆ†
 		}break;
 	case PHINT_ANALYTIC:{
-		//‰ñ“]—Ê‚ÌÏ•ª
-		//‰ñ“]‚Í‰ğÍ“I‚ÉÏ•ª‚Å‚«‚È‚¢‚Ì‚ÅAŒ`®“I‚Éª‚ÌŒö®‚ğ‰ñ“]‚Ìê‡‚É“–‚Ä‚Í‚ß‚é
-		torque		= pose.Ori().Conjugated() * torque;					//ƒgƒ‹ƒN‚ÆŠp‘¬“x‚ğƒ[ƒJƒ‹À•W‚Ö
+		//å›è»¢é‡ã®ç©åˆ†
+		//å›è»¢ã¯è§£æçš„ã«ç©åˆ†ã§ããªã„ã®ã§ã€å½¢å¼çš„ã«â†‘ã®å…¬å¼ã‚’å›è»¢ã®å ´åˆã«å½“ã¦ã¯ã‚ã‚‹
+		torque		= pose.Ori().Conjugated() * torque;					//ãƒˆãƒ«ã‚¯ã¨è§’é€Ÿåº¦ã‚’ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã¸
 		angVelocity = pose.Ori().Conjugated() * angVelocity;
-		dw = Euler(inertia, torque, angVelocity) * dt;			//Šp‘¬“x•Ï‰»—Ê
+		dw = Euler(inertia, torque, angVelocity) * dt;			//è§’é€Ÿåº¦å¤‰åŒ–é‡
 
 		Quaterniond dq = Quaterniond::Rot((angVelocity+0.5*dw) * dt);
 		Vec3d dp = pose.Ori() * (dq*(-center) - (-center));
 		pose.Ori() = pose.Ori() * dq;
 		pose.Ori().unitize();
 
-		angVelocity += dw;										//Šp‘¬“x‚ÌÏ•ª
-		torque = pose.Ori() * torque;									//ƒgƒ‹ƒN‚ÆŠp‘¬“x‚ğƒ[ƒ‹ƒh‚Ö
+		angVelocity += dw;										//è§’é€Ÿåº¦ã®ç©åˆ†
+		torque = pose.Ori() * torque;									//ãƒˆãƒ«ã‚¯ã¨è§’é€Ÿåº¦ã‚’ãƒ¯ãƒ¼ãƒ«ãƒ‰ã¸
 		angVelocity = pose.Ori() * angVelocity;
-		//•½sˆÚ“®—Ê‚ÌÏ•ªi‰ğÍ‰ğ‚Éˆê’vj
-		dv = force * (dt / mass);									//‘¬“x•Ï‰»—Ê
-		SetCenterPosition(GetCenterPosition() + (velocity+0.5*dv) * dt + dp);	//	ˆÊ’u‚ÌÏ•ª
-		velocity += dv;												//‘¬“x‚ÌÏ•ª
+		//å¹³è¡Œç§»å‹•é‡ã®ç©åˆ†ï¼ˆè§£æè§£ã«ä¸€è‡´ï¼‰
+		dv = force * (dt / mass);									//é€Ÿåº¦å¤‰åŒ–é‡
+		SetCenterPosition(GetCenterPosition() + (velocity+0.5*dv) * dt + dp);	//	ä½ç½®ã®ç©åˆ†
+		velocity += dv;												//é€Ÿåº¦ã®ç©åˆ†
 		}break;
 	case PHINT_RUNGEKUTTA2:
-		//•½sˆÚ“®—Ê‚ÌÏ•ª(‚Ü‚¶‚ß‚Éƒ‹ƒ“ƒQƒNƒbƒ^Œö®‚É]‚Á‚Ä‚àŒ‹‰Ê‚Í“¯‚¶‰ğÍ‰ğ)
+		//å¹³è¡Œç§»å‹•é‡ã®ç©åˆ†(ã¾ã˜ã‚ã«ãƒ«ãƒ³ã‚²ã‚¯ãƒƒã‚¿å…¬å¼ã«å¾“ã£ã¦ã‚‚çµæœã¯åŒã˜ï¼è§£æè§£)
 		dv = force * (dt / mass);
 		SetCenterPosition(GetCenterPosition() + (velocity + 0.5 * dv) * dt);
 		velocity += dv;
-		//‰ñ“]—Ê‚ÌŒvZ
-		//‰ñ“]‚Í‰ğÍ“I‚ÉÏ•ª‚Å‚«‚È‚¢‚Ì‚ÅAƒ‹ƒ“ƒQƒNƒbƒ^Œö®‚ğg‚¤
-		torque		= pose.Ori().Conjugated() * torque;					//ƒgƒ‹ƒN‚ÆŠp‘¬“x‚ğƒ[ƒJƒ‹À•W‚Ö
+		//å›è»¢é‡ã®è¨ˆç®—
+		//å›è»¢ã¯è§£æçš„ã«ç©åˆ†ã§ããªã„ã®ã§ã€ãƒ«ãƒ³ã‚²ã‚¯ãƒƒã‚¿å…¬å¼ã‚’ä½¿ã†
+		torque		= pose.Ori().Conjugated() * torque;					//ãƒˆãƒ«ã‚¯ã¨è§’é€Ÿåº¦ã‚’ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã¸
 		angVelocity = pose.Ori().Conjugated() * angVelocity;
 		_angvel[0]	= angVelocity;
 		_angacc[0]	= Euler(inertia, torque, _angvel[0]);
@@ -413,11 +413,11 @@ void PHSolid::Step(){
 		torque = pose.Ori() * torque;
 		break;
 	case PHINT_RUNGEKUTTA4:
-		//•½sˆÚ“®—Ê‚ÌÏ•ª(‚Ü‚¶‚ß‚Éƒ‹ƒ“ƒQƒNƒbƒ^Œö®‚É]‚Á‚Ä‚àŒ‹‰Ê‚Í“¯‚¶‰ğÍ‰ğ)
+		//å¹³è¡Œç§»å‹•é‡ã®ç©åˆ†(ã¾ã˜ã‚ã«ãƒ«ãƒ³ã‚²ã‚¯ãƒƒã‚¿å…¬å¼ã«å¾“ã£ã¦ã‚‚çµæœã¯åŒã˜ï¼è§£æè§£)
 		dv = force * (dt / mass);
 		SetCenterPosition(GetCenterPosition() + (velocity + 0.5 * dv) * dt);
 		velocity += dv;
-		//‰ñ“]—Ê‚ÌŒvZ
+		//å›è»¢é‡ã®è¨ˆç®—
 		_angvel[0]	= angVelocity;
 		_angacc[0]	= Euler(inertia, torque, _angvel[0]);
 		_angvel[1]	= _angvel[0] + _angacc[0] * (dt / 2.0);
@@ -465,7 +465,7 @@ void PHSolid::AddFrame(PHFrameIf* fi){
 	frames.back()->solid = this;
 	if (frames.back()->shape){
 		CalcBBox();
-		//ÚGƒGƒ“ƒWƒ“‚ÌshapePairs‚ğXV‚·‚é
+		//æ¥è§¦ã‚¨ãƒ³ã‚¸ãƒ³ã®shapePairsã‚’æ›´æ–°ã™ã‚‹
 		PHScene* scene = DCAST(PHScene,GetScene());
 		scene->penaltyEngine->UpdateShapePairs(this);
 		scene->constraintEngine->UpdateShapePairs(this);
@@ -475,7 +475,7 @@ void PHSolid::AddFrame(PHFrameIf* fi){
 void PHSolid::DelFrame(int i){
 	frames.erase(frames.begin()+i);
 	CalcBBox();
-	//ÚGƒGƒ“ƒWƒ“‚ÌshapePairs‚ğXV‚·‚é
+	//æ¥è§¦ã‚¨ãƒ³ã‚¸ãƒ³ã®shapePairsã‚’æ›´æ–°ã™ã‚‹
 	PHScene* scene = DCAST(PHScene, GetScene());
 	scene->penaltyEngine->DelShapePairs(this, i);
 	scene->constraintEngine->DelShapePairs(this, i);	
@@ -485,7 +485,7 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	frames.push_back(DBG_NEW PHFrame());
 	frames.back()->shape = sh;
 	CalcBBox();
-	//ÚGƒGƒ“ƒWƒ“‚ÌshapePairs‚ğXV‚·‚é
+	//æ¥è§¦ã‚¨ãƒ³ã‚¸ãƒ³ã®shapePairsã‚’æ›´æ–°ã™ã‚‹
 	PHScene* scene = DCAST(PHScene,GetScene());
 	scene->penaltyEngine->UpdateShapePairs(this);
 	scene->constraintEngine->UpdateShapePairs(this);

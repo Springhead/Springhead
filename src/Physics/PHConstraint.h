@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2010, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,23 +18,23 @@ namespace Spr{;
 
 class PHTreeNode;
 
-/// S‘©‚ÌƒXƒe[ƒg
+/// æ‹˜æŸã®ã‚¹ãƒ†ãƒ¼ãƒˆ
 struct PHConstraintState {
-	/// S‘©—Í‚Ì—ÍÏ
+	/// æ‹˜æŸåŠ›ã®åŠ›ç©
 	SpatialVector f;
 
-	/// S‘©Œë·‚ğˆÊ’u‚ÌLCP‚Å•â³‚·‚éê‡‚Ì•â³—Ê*¿—Ê
+	/// æ‹˜æŸèª¤å·®ã‚’ä½ç½®ã®LCPã§è£œæ­£ã™ã‚‹å ´åˆã®è£œæ­£é‡*è³ªé‡
 	SpatialVector F;
 
-	// ----- PHJoint‚ÉŠÖ˜A‚·‚é•Ï”
+	// ----- PHJointã«é–¢é€£ã™ã‚‹å¤‰æ•°
 
-	/// ‚Î‚Ë•”‚Ì‹——£iO—v‘fƒ‚ƒfƒ‹—pj
+	/// ã°ã­éƒ¨ã®è·é›¢ï¼ˆä¸‰è¦ç´ ãƒ¢ãƒ‡ãƒ«ç”¨ï¼‰
 	SpatialVector xs;
 
-	/// S‘©—Í‚Éƒ[ƒpƒX‚ğ‚©‚¯‚½‚à‚Ì
+	/// æ‹˜æŸåŠ›ã«ãƒ­ãƒ¼ãƒ‘ã‚¹ã‚’ã‹ã‘ãŸã‚‚ã®
 	SpatialVector fAvg;
 
-	/// ~•š‚µ‚½‚©‚Ç‚¤‚©
+	/// é™ä¼ã—ãŸã‹ã©ã†ã‹
 	bool   bYielded;
 
 	PHConstraintState() {
@@ -44,147 +44,147 @@ struct PHConstraintState {
 	}
 };
 
-/// S‘©
+/// æ‹˜æŸ
 class PHConstraint : public SceneObject, public PHConstraintDesc, public PHConstraintState {
 public:
 
 	SPR_OBJECTDEF_ABST(PHConstraint);
 	ACCESS_DESC_STATE(PHConstraint);
 
-	/// S‘©‚ğŠÇ—‚·‚éƒGƒ“ƒWƒ“
+	/// æ‹˜æŸã‚’ç®¡ç†ã™ã‚‹ã‚¨ãƒ³ã‚¸ãƒ³
 	PHConstraintEngine* engine;
 
-	/// S‘©‚·‚é„‘Ì
+	/// æ‹˜æŸã™ã‚‹å‰›ä½“
 	PHSolid* solid[2];
 
-	// ----- ƒtƒ‰ƒO
+	// ----- ãƒ•ãƒ©ã‚°
 
-	/// —¼•û‚Ì„‘Ì‚ªundynamical‚Èê‡true
+	/// ä¸¡æ–¹ã®å‰›ä½“ãŒundynamicalãªå ´åˆtrue
 	bool bFeasible;				
 
-	/// ŠÖßŒn‚ğ\¬‚µ‚Ä‚¢‚éê‡true
+	/// é–¢ç¯€ç³»ã‚’æ§‹æˆã—ã¦ã„ã‚‹å ´åˆtrue
 	bool bArticulated;			
 
-	/// „‘Ì‚ª‰ğÍ–@‚É]‚¤ê‡true	
+	/// å‰›ä½“ãŒè§£ææ³•ã«å¾“ã†å ´åˆtrue	
 	bool bInactive[2];
 
-	/// UpdateState‚ÉUpdateCacheLCP‚ğŒÄ‚Ô‚Ì‚ğ‹Ö~‚·‚éDGetPosition()‚ªŒÄ‚Î‚ê‚é‚½‚Ñ‚Édv‚ğ‘‚«Š·‚¦‚ç‚ê‚Ä‚Í¢‚é‚½‚ßD
-	///   i‚±‚Ìƒtƒ‰ƒO‚ª—§‚Â ‚É‚ÍConstraintEngine‚©‚çUpdateCacheLCP‚ªŒÄ‚Î‚ê‚Ä‚¢‚é‚Í‚¸‚È‚Ì‚Å‹Ö~‚µ‚Ä‚à–â‘è‚Í‹N‚«‚È‚¢j
+	/// UpdateStateæ™‚ã«UpdateCacheLCPã‚’å‘¼ã¶ã®ã‚’ç¦æ­¢ã™ã‚‹ï¼GetPosition()ãŒå‘¼ã°ã‚Œã‚‹ãŸã³ã«dvã‚’æ›¸ãæ›ãˆã‚‰ã‚Œã¦ã¯å›°ã‚‹ãŸã‚ï¼
+	///   ï¼ˆã“ã®ãƒ•ãƒ©ã‚°ãŒç«‹ã¤é ƒã«ã¯ConstraintEngineã‹ã‚‰UpdateCacheLCPãŒå‘¼ã°ã‚Œã¦ã„ã‚‹ã¯ãšãªã®ã§ç¦æ­¢ã—ã¦ã‚‚å•é¡Œã¯èµ·ããªã„ï¼‰
 	bool bProhibitUpdateSolidCacheLCP;
 
-	// ----- ŒvZ—p•Ï”
+	// ----- è¨ˆç®—ç”¨å¤‰æ•°
 
-	/// ƒ[ƒ‹ƒhÀ•WŒn‚Ì’†S‚É‘Î‚·‚ée(q)„‘Ì‚ÌˆÊ’u‚ÆŒü‚«   #* „‘Ì‚©‚ç–ˆ‰ñæ‚Á‚Ä‚­‚é’l
+	/// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ç³»ã®ä¸­å¿ƒã«å¯¾ã™ã‚‹è¦ª(å­)å‰›ä½“ã®ä½ç½®ã¨å‘ã   #* å‰›ä½“ã‹ã‚‰æ¯å›å–ã£ã¦ãã‚‹å€¤
 	SpatialTransform X[2];
 
-	/// „‘Ì‚Ì¿—Ê’†S‚É‘Î‚·‚éƒ\ƒPƒbƒgCƒvƒ‰ƒO‚ÌˆÊ’u‚ÆŒü‚«   #* ŠÖß‚ğì‚é‚Æ‚«‚Éİ’è‚·‚é’l
+	/// å‰›ä½“ã®è³ªé‡ä¸­å¿ƒã«å¯¾ã™ã‚‹ã‚½ã‚±ãƒƒãƒˆï¼Œãƒ—ãƒ©ã‚°ã®ä½ç½®ã¨å‘ã   #* é–¢ç¯€ã‚’ä½œã‚‹ã¨ãã«è¨­å®šã™ã‚‹å€¤
 	SpatialTransform Xj[2];
 
-	/// ƒ\ƒPƒbƒg‚É‘Î‚·‚éƒvƒ‰ƒO‚ÌˆÊ’u‚ÆŒü‚«                   #* X‚©‚çŒvZ
+	/// ã‚½ã‚±ãƒƒãƒˆã«å¯¾ã™ã‚‹ãƒ—ãƒ©ã‚°ã®ä½ç½®ã¨å‘ã                   #* Xã‹ã‚‰è¨ˆç®—
 	SpatialTransform Xjrel;
 
-	/// ƒ\ƒPƒbƒg‚É‘Î‚·‚éƒvƒ‰ƒO‚Ì‘Š‘Î‘¬“x,Šp‘¬“x              #* „‘Ì‚©‚çŒvZ
+	/// ã‚½ã‚±ãƒƒãƒˆã«å¯¾ã™ã‚‹ãƒ—ãƒ©ã‚°ã®ç›¸å¯¾é€Ÿåº¦,è§’é€Ÿåº¦              #* å‰›ä½“ã‹ã‚‰è¨ˆç®—
 	SpatialVector vjrel;			
 	
-	/// S‘©ƒ„ƒRƒrƒAƒ“ Pose(Vec+Quaternion)Œ`®              #* Xj Xjrel‚©‚çŒvZ
-	///   [0]Fe„‘Ì’†S‚©‚çSocketÀ•WŒn‚Ö•ÏŠ·‚·‚éƒ„ƒRƒrƒAƒ“
-	///   [1]Fq„‘Ì’†S‚©‚çSocketÀ•WŒn‚Ö•ÏŠ·‚·‚é‚Ìƒ„ƒRƒrƒAƒ“
+	/// æ‹˜æŸãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ Pose(Vec+Quaternion)å½¢å¼              #* Xj Xjrelã‹ã‚‰è¨ˆç®—
+	///   [0]ï¼šè¦ªå‰›ä½“ä¸­å¿ƒã‹ã‚‰Socketåº§æ¨™ç³»ã¸å¤‰æ›ã™ã‚‹ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³
+	///   [1]ï¼šå­å‰›ä½“ä¸­å¿ƒã‹ã‚‰Socketåº§æ¨™ç³»ã¸å¤‰æ›ã™ã‚‹ã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³
 	SpatialTransform Js[2];
 	
-	/// S‘©ƒ„ƒRƒrƒAƒ“ s—ñŒ`®                              #[n_c x 6] Js‚©‚çŒvZBs—ñŒ^‚ª•K—v
-	///   [0]Fe„‘Ì‚Ì¿—Ê’†S‚©‚çSocketÀ•WŒn‚Ö‚Ìƒ„ƒRƒrƒAƒ“
-	///   [1]Fq„‘Ì‚Ì¿—Ê’†S‚©‚çPlugÀ•WŒnŒo—R‚ÅSocketÀ•WŒn‚Ö‚Ìƒ„ƒRƒrƒAƒ“
+	/// æ‹˜æŸãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ è¡Œåˆ—å½¢å¼                              #[n_c x 6] Jsã‹ã‚‰è¨ˆç®—ã€‚è¡Œåˆ—å‹ãŒå¿…è¦
+	///   [0]ï¼šè¦ªå‰›ä½“ã®è³ªé‡ä¸­å¿ƒã‹ã‚‰Socketåº§æ¨™ç³»ã¸ã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³
+	///   [1]ï¼šå­å‰›ä½“ã®è³ªé‡ä¸­å¿ƒã‹ã‚‰Plugåº§æ¨™ç³»çµŒç”±ã§Socketåº§æ¨™ç³»ã¸ã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³
 	SpatialMatrix J[2];
 
-	/// T = M.inv() * J^t ƒKƒEƒXƒUƒCƒfƒ‹‚Åg—p               #[6 x n_c] S‘©‚Ì‚ ‚és‚¾‚¯‚Å—Ç‚¢
+	/// T = M.inv() * J^t ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã§ä½¿ç”¨               #[6 x n_c] æ‹˜æŸã®ã‚ã‚‹è¡Œã ã‘ã§è‰¯ã„
 	SpatialMatrix T[2];
 	
-	/// LCP‚ÌbƒxƒNƒgƒ‹‚Æ‚»‚Ì•â³—Ê                           #[n_c]     S‘©‚Ì‚ ‚és‚¾‚¯‚Å—Ç‚¢
+	/// LCPã®bãƒ™ã‚¯ãƒˆãƒ«ã¨ãã®è£œæ­£é‡                           #[n_c]     æ‹˜æŸã®ã‚ã‚‹è¡Œã ã‘ã§è‰¯ã„
 	SpatialVector b, db, B;
 	
-	/// LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚Æ‚»‚Ì•â³—ÊC‹t”               #[n_c]
+	/// LCPã®Aè¡Œåˆ—ã®å¯¾è§’æˆåˆ†ã¨ãã®è£œæ­£é‡ï¼Œé€†æ•°               #[n_c]
 	SpatialVector A, dA, Ainv;	
 
-	/// Projection—p‚ÌŠe²‚ÌMin/Max
+	/// Projectionç”¨ã®å„è»¸ã®Min/Max
 	double fMaxDt[6], fMinDt[6];
 
-	// ----- S‘©²ŠÇ—
+	// ----- æ‹˜æŸè»¸ç®¡ç†
 
-	/// S‘©²ŠÇ—ƒNƒ‰ƒX
+	/// æ‹˜æŸè»¸ç®¡ç†ã‚¯ãƒ©ã‚¹
 	AxisIndex<6> axes;
 
-	/// S‘©‚Ì‘ÎÛ‚Æ‚È‚è‚¤‚é²”Ô†ƒŠƒXƒg
+	/// æ‹˜æŸã®å¯¾è±¡ã¨ãªã‚Šã†ã‚‹è»¸ç•ªå·ãƒªã‚¹ãƒˆ
 	int targetAxes[6];
 
-	/// targetAxes‚Ì—v‘f”
+	/// targetAxesã®è¦ç´ æ•°
 	int nTargetAxes;
 
-	/// ‰Â“®i–{—ˆS‘©‚µ‚È‚¢j²”Ô†ƒŠƒXƒg
+	/// å¯å‹•ï¼ˆï¼æœ¬æ¥æ‹˜æŸã—ãªã„ï¼‰è»¸ç•ªå·ãƒªã‚¹ãƒˆ
 	int movableAxes[6];
 
-	/// movableAxes‚Ì—v‘f”
+	/// movableAxesã®è¦ç´ æ•°
 	int nMovableAxes;
 
 	// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHConstraint();
 
-	/// S‘©‘ÎÛ²”Ô†ƒŠƒXƒg‚Ì\’zDƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÅmovableAxes‚ğŒˆ‚ß‚½Œã‚ÉŒÄ‚Ô
+	/// æ‹˜æŸå¯¾è±¡è»¸ç•ªå·ãƒªã‚¹ãƒˆã®æ§‹ç¯‰ï¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã§movableAxesã‚’æ±ºã‚ãŸå¾Œã«å‘¼ã¶
 	void InitTargetAxes();
 
-	// ----- ƒGƒ“ƒWƒ“‚©‚çŒÄ‚Ño‚³‚ê‚éŠÖ”
+	// ----- ã‚¨ãƒ³ã‚¸ãƒ³ã‹ã‚‰å‘¼ã³å‡ºã•ã‚Œã‚‹é–¢æ•°
 
-	/// ó‘Ô‚ÌXV
+	/// çŠ¶æ…‹ã®æ›´æ–°
 	void UpdateState();
 
-	/// LCP‚ğ‰ğ‚­‘O’iŠK‚ÌŒvZ
+	/// LCPã‚’è§£ãå‰æ®µéšã®è¨ˆç®—
 	virtual void SetupLCP();
 
-	/// LCP‚ÌŒJ‚è•Ô‚µŒvZ
+	/// LCPã®ç¹°ã‚Šè¿”ã—è¨ˆç®—
 	virtual	void IterateLCP();
 
-	/// ˆÊ’uLCP‚ğ‰ğ‚­‘O’iŠK‚ÌŒvZ
+	/// ä½ç½®LCPã‚’è§£ãå‰æ®µéšã®è¨ˆç®—
 	virtual void SetupCorrectionLCP();
 
-	/// ˆÊ’uLCP‚ÌŒJ‚è•Ô‚µŒvZ
+	/// ä½ç½®LCPã®ç¹°ã‚Šè¿”ã—è¨ˆç®—
 	virtual void IterateCorrectionLCP();
 
-	// ----- ‚±‚ÌƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- ã“ã®ã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
-	/// S‘©‚·‚é2‚Â‚Ì„‘Ì‚ÌŠe‘¬“x‚©‚ç‘Š‘Î‘¬“x‚Ö‚Ìƒ„ƒRƒrƒAƒ“‚ğŒvZ
+	/// æ‹˜æŸã™ã‚‹2ã¤ã®å‰›ä½“ã®å„é€Ÿåº¦ã‹ã‚‰ç›¸å¯¾é€Ÿåº¦ã¸ã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ã‚’è¨ˆç®—
 	virtual void CompJacobian();
 
-	/// A‚Ì‘ÎŠp¬•ª‚ğŒvZ‚·‚éDA = J * M^-1 * J^T
+	/// Aã®å¯¾è§’æˆåˆ†ã‚’è¨ˆç®—ã™ã‚‹ï¼A = J * M^-1 * J^T
 	void CompResponseMatrix();
 
-	/// S‘©—Í•Ï‰»—Ê(df)‚É‘Î‚·‚é‰Á‘¬“x•Ï‰»—Ê(dv‚Ì·•ª)‚ğŒvZ‚µ‚Ä”½‰f
+	/// æ‹˜æŸåŠ›å¤‰åŒ–é‡(df)ã«å¯¾ã™ã‚‹åŠ é€Ÿåº¦å¤‰åŒ–é‡(dvã®å·®åˆ†)ã‚’è¨ˆç®—ã—ã¦åæ˜ 
 	void CompResponse(double df, int j);
 
-	// ----- ”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
-	/// ŠÖßÀ•W‚ÌˆÊ’uE‘¬“x‚ğXV‚·‚é
+	/// é–¢ç¯€åº§æ¨™ã®ä½ç½®ãƒ»é€Ÿåº¦ã‚’æ›´æ–°ã™ã‚‹
 	virtual void	UpdateJointState(){}
 
-	/// ‚Ç‚Ì©—R“x‚ğ‘¬“xS‘©‚·‚é‚©‚ğİ’è
+	/// ã©ã®è‡ªç”±åº¦ã‚’é€Ÿåº¦æ‹˜æŸã™ã‚‹ã‹ã‚’è¨­å®š
 	virtual void	SetupAxisIndex();
 
-	/// “Æ©À•WŒn‚ğg‚¤ê‡‚Ìƒ„ƒRƒrƒAƒ“‚ÌC³
+	/// ç‹¬è‡ªåº§æ¨™ç³»ã‚’ä½¿ã†å ´åˆã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ã®ä¿®æ­£
 	virtual void	ModifyJacobian(){}							
 
-	/// LCP‚Ì•â³’l‚ÌŒvZDŒë·C³—p
+	/// LCPã®è£œæ­£å€¤ã®è¨ˆç®—ï¼èª¤å·®ä¿®æ­£ç”¨
 	virtual void	CompBias(){}
 
-	/// S‘©—Í‚ÌË‰e
+	/// æ‹˜æŸåŠ›ã®å°„å½±
 	virtual void	Projection(double& f_, int i);
 
-	/// Correction—p‚ÌS‘©Œë·‚ğİ’è‚·‚é
+	/// Correctionç”¨ã®æ‹˜æŸèª¤å·®ã‚’è¨­å®šã™ã‚‹
 	virtual void	CompError(){}
 
-	/// Correction—p‚ÌË‰e
+	/// Correctionç”¨ã®å°„å½±
 	virtual void	ProjectionCorrection(double& F, int k){}
 
-	// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+	// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 
 	virtual PHSceneIf*	 GetScene() const { return DCAST(PHSceneIf, SceneObject::GetScene()); }
 	virtual PHSolidIf*	 GetSocketSolid() { return solid[0]->Cast(); }
@@ -204,7 +204,7 @@ public:
 	virtual void		 GetRelativePose(Posed& p){ UpdateState(); p.Pos()=Xjrel.r; p.Ori()=Xjrel.q; }
 	virtual Vec3d		 GetRelativePoseR(){ UpdateState(); return Xjrel.r; }
 	virtual Quaterniond	 GetRelativePoseQ(){ UpdateState(); return Xjrel.q; }
-	virtual Quaterniond  GetAbsolutePoseQ(){ UpdateState(); return Xjrel.q * X[0].q; } // Socket‚ğ‚Â‚¯‚éˆÊ’u‚à‹C‚É‚·‚é‚×‚«‚©H
+	virtual Quaterniond  GetAbsolutePoseQ(){ UpdateState(); return Xjrel.q * X[0].q; } // Socketã‚’ã¤ã‘ã‚‹ä½ç½®ã‚‚æ°—ã«ã™ã‚‹ã¹ãã‹ï¼Ÿ
 
 	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w);
 	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t);
@@ -221,13 +221,13 @@ protected:
 
 };
 
-/// S‘©ƒRƒ“ƒeƒi
+/// æ‹˜æŸã‚³ãƒ³ãƒ†ãƒŠ
 class PHConstraints : public std::vector< UTRef<PHConstraint> >, public SceneObject {
 public:
 
 	SPR_OBJECTDEF(PHConstraints);
 
-	/// w’è‚³‚ê‚½„‘Ì‚Ì‘g‚Éì—p‚µ‚Ä‚¢‚éS‘©‚ğ•Ô‚·iIf”Åj
+	/// æŒ‡å®šã•ã‚ŒãŸå‰›ä½“ã®çµ„ã«ä½œç”¨ã—ã¦ã„ã‚‹æ‹˜æŸã‚’è¿”ã™ï¼ˆIfç‰ˆï¼‰
 	virtual PHConstraintIf* FindBySolidPair(PHSolidIf* lhs, PHSolidIf* rhs){
 		for(iterator it = begin(); it != end(); it++) {
 			if((*it)->solid[0] == DCAST(PHSolid, lhs) && (*it)->solid[1] == DCAST(PHSolid, rhs)) {
@@ -240,7 +240,7 @@ public:
 		return NULL;
 	}
 	
-	/// w’è‚³‚ê‚½„‘Ì‚Ì‘g‚Éì—p‚µ‚Ä‚¢‚éS‘©‚ğ•Ô‚·
+	/// æŒ‡å®šã•ã‚ŒãŸå‰›ä½“ã®çµ„ã«ä½œç”¨ã—ã¦ã„ã‚‹æ‹˜æŸã‚’è¿”ã™
 	PHConstraint* FindBySolidPair(PHSolid* lhs, PHSolid* rhs){
 		for(iterator it = begin(); it != end(); it++) {
 			if((*it)->solid[0] == lhs && (*it)->solid[1] == rhs) {
@@ -251,7 +251,7 @@ public:
 		return NULL;
 	}
 
-	/// w’è‚³‚ê‚½„‘Ì‚Ì‘g‚Éì—p‚µ‚Ä‚¢‚é‘‡“I‚È—Í‚ğ•Ô‚·
+	/// æŒ‡å®šã•ã‚ŒãŸå‰›ä½“ã®çµ„ã«ä½œç”¨ã—ã¦ã„ã‚‹ç·åˆçš„ãªåŠ›ã‚’è¿”ã™
 	Vec3d GetTotalForce(PHSolidIf* lhs, PHSolidIf* rhs){
 		Vec3d total = Vec3f();
 		for(iterator it = begin(); it != end(); it++){

@@ -1,23 +1,23 @@
-#ifndef FWAPPSAMPLE_H								// ƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ğì‚é‚Ì‚¨‚Ü‚¶‚È‚¢
-#define FWAPPSAMPLE_H								// “¯ã
+ï»¿#ifndef FWAPPSAMPLE_H								// ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œã‚‹æ™‚ã®ãŠã¾ã˜ãªã„
+#define FWAPPSAMPLE_H								// åŒä¸Š
 
-#include <Springhead.h>								// Springhead‚ÌIfŒ^‚ğg‚¤‚½‚ß‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹
-#include <Framework/SprFWApp.h>						// FrameworkƒNƒ‰ƒX‚ªéŒ¾‚³‚ê‚Ä‚¢‚éƒwƒbƒ_ƒtƒ@ƒCƒ‹
+#include <Springhead.h>								// Springheadã®Ifå‹ã‚’ä½¿ã†ãŸã‚ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«
+#include <Framework/SprFWApp.h>						// Frameworkã‚¯ãƒ©ã‚¹ãŒå®£è¨€ã•ã‚Œã¦ã„ã‚‹ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«
 
-using namespace Spr;								// Springhead‚Ì–¼‘O‹óŠÔ
+using namespace Spr;								// Springheadã®åå‰ç©ºé–“
 
 class FWAppSample : public FWApp{
 public:
-	FWAppSample();									// ƒRƒ“ƒXƒgƒ‰ƒNƒ^i‚±‚ÌƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ª¶¬‚³‚ê‚½‚ÉŒÄ‚Î‚ê‚éŠÖ”j
-	virtual void Init(int argc, char* argv[]);		// GLUT‚Ì‰Šú‰»
+	FWAppSample();									// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆã“ã®ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒç”Ÿæˆã•ã‚ŒãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹é–¢æ•°ï¼‰
+	virtual void Init(int argc, char* argv[]);		// GLUTã®åˆæœŸåŒ–
 	virtual void TimerFunc(int id);
-	virtual void Display();							// •`‰æ
-	virtual void Keyboard(int key, int x, int y);	// ƒL[ƒ{[ƒhŠÖ”
+	virtual void Display();							// æç”»
+	virtual void Keyboard(int key, int x, int y);	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰é–¢æ•°
 	
-	void InitCameraView();							// ƒJƒƒ‰À•W		
-	void CreateObjects();							// •¨‘Ì‚ğì¬
-	void Reset();									// ƒV[ƒ“‚ÌƒŠƒZƒbƒg
-	bool bDrawInfo;									// ÚG—Í‚È‚Ç‚ğ•\¦‚·‚é‚©
+	void InitCameraView();							// ã‚«ãƒ¡ãƒ©åº§æ¨™		
+	void CreateObjects();							// ç‰©ä½“ã‚’ä½œæˆ
+	void Reset();									// ã‚·ãƒ¼ãƒ³ã®ãƒªã‚»ãƒƒãƒˆ
+	bool bDrawInfo;									// æ¥è§¦åŠ›ãªã©ã‚’è¡¨ç¤ºã™ã‚‹ã‹
 }; 
 
 #endif

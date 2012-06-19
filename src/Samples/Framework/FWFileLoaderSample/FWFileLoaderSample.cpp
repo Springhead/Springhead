@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,30 +13,30 @@
 
 FWFileLoaderSample::FWFileLoaderSample(){
 #ifdef USE_SPRFILE
-	fileName = "./files/sceneSample.spr";	// sprƒtƒ@ƒCƒ‹
+	fileName = "./files/sceneSample.spr";	// sprãƒ•ã‚¡ã‚¤ãƒ«
 #else
-	fileName = "./files/sceneSample.x";		// xƒtƒ@ƒCƒ‹
+	fileName = "./files/sceneSample.x";		// xãƒ•ã‚¡ã‚¤ãƒ«
 #endif
 }
 
 void FWFileLoaderSample::Init(int argc, char* argv[]){
-	CreateSdk();			// SDK‚Ìì¬
+	CreateSdk();			// SDKã®ä½œæˆ
 	UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-	GetSdk()->LoadScene(fileName, import);			// ƒtƒ@ƒCƒ‹‚Ìƒ[ƒh
-	GetSdk()->SaveScene("save.spr", import);		// ƒtƒ@ƒCƒ‹‚ÌƒZ[ƒuƒeƒXƒg
-	GRInit(argc, argv);		// ƒEƒBƒ“ƒhƒEƒ}ƒlƒWƒƒ‰Šú‰»
-	CreateWin();			// ƒEƒBƒ“ƒhƒE‚ğì¬
-	CreateTimer();			// ƒ^ƒCƒ}‚ğì¬
+	GetSdk()->LoadScene(fileName, import);			// ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒ¼ãƒ‰
+	GetSdk()->SaveScene("save.spr", import);		// ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚»ãƒ¼ãƒ–ãƒ†ã‚¹ãƒˆ
+	GRInit(argc, argv);		// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒãƒã‚¸ãƒ£åˆæœŸåŒ–
+	CreateWin();			// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ä½œæˆ
+	CreateTimer();			// ã‚¿ã‚¤ãƒã‚’ä½œæˆ
 
-	InitCameraView();		// ƒJƒƒ‰ƒrƒ…[‚Ì‰Šú‰»
-	GetSdk()->SetDebugMode(false);						// ƒfƒoƒbƒNƒ‚[ƒh‚Ì–³Œø‰»
-	GetSdk()->GetScene()->EnableRenderAxis(true);		// À•W²‚Ì•\¦
-	GetSdk()->GetScene()->EnableRenderContact(true);	// ÚG—Ìˆæ‚Ì•\¦
+	InitCameraView();		// ã‚«ãƒ¡ãƒ©ãƒ“ãƒ¥ãƒ¼ã®åˆæœŸåŒ–
+	GetSdk()->SetDebugMode(false);						// ãƒ‡ãƒãƒƒã‚¯ãƒ¢ãƒ¼ãƒ‰ã®ç„¡åŠ¹åŒ–
+	GetSdk()->GetScene()->EnableRenderAxis(true);		// åº§æ¨™è»¸ã®è¡¨ç¤º
+	GetSdk()->GetScene()->EnableRenderContact(true);	// æ¥è§¦é ˜åŸŸã®è¡¨ç¤º
 }
 
 void FWFileLoaderSample::InitCameraView(){
-	Vec3d pos = Vec3d(-0.978414, 11.5185, 24.4473);		// ƒJƒƒ‰‰ŠúˆÊ’u
-	GetCurrentWin()->GetTrackball()->SetPosition(pos);	// ƒJƒƒ‰‰ŠúˆÊ’u‚Ìİ’è
+	Vec3d pos = Vec3d(-0.978414, 11.5185, 24.4473);		// ã‚«ãƒ¡ãƒ©åˆæœŸä½ç½®
+	GetCurrentWin()->GetTrackball()->SetPosition(pos);	// ã‚«ãƒ¡ãƒ©åˆæœŸä½ç½®ã®è¨­å®š
 }
 
 void FWFileLoaderSample::Reset(){
@@ -50,20 +50,20 @@ void FWFileLoaderSample::Keyboard(int key, int x, int y){
 	switch (key) {
 		case ESC:
 		case 'q':
-			// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌI—¹
+			// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®çµ‚äº†
 			exit(0);
 			break;
 		case 'r':
-			// ƒtƒ@ƒCƒ‹‚ÌÄ“Ç‚İ‚İ
+			// ãƒ•ã‚¡ã‚¤ãƒ«ã®å†èª­ã¿è¾¼ã¿
 			Reset();
 			break;
 		case 'w':
-			// ƒJƒƒ‰ˆÊ’u‚Ì‰Šú‰»
+			// ã‚«ãƒ¡ãƒ©ä½ç½®ã®åˆæœŸåŒ–
 			InitCameraView();	
 			break;
 		case 'd':				
 			{
-				// ƒfƒoƒbƒN•\¦
+				// ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤º
 				static bool bDebug = GetSdk()->GetDebugMode();
 				if(bDebug)	bDebug = false;
 				else		bDebug = true;

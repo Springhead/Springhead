@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -22,30 +22,30 @@ class PHConstraintEngine;
 class PH1DJoint;
 class PHBallJoint;
 
-///	1©—R“xŠÖß‚Ì‰Â“®ˆæS‘©
+///	1è‡ªç”±åº¦é–¢ç¯€ã®å¯å‹•åŸŸæ‹˜æŸ
 class PH1DJointLimit : public SceneObject {
 public:
 	SPR_OBJECTDEF(PH1DJointLimit);
 	SPR_DECLMEMBEROF_PH1DJointLimitDesc;
 
-	/// ‰Â“®ˆæS‘©‚Ì‘ÎÛ‚Æ‚È‚éŠÖß
+	/// å¯å‹•åŸŸæ‹˜æŸã®å¯¾è±¡ã¨ãªã‚‹é–¢ç¯€
 	PH1DJoint* joint;
 
-	/// ‰Â“®”ÍˆÍŠO‚Éo‚Ä‚¢‚é‚©
+	/// å¯å‹•ç¯„å›²å¤–ã«å‡ºã¦ã„ã‚‹ã‹
 	bool bOnLimit;
 
-	/// ‰Â“®”ÍˆÍŠO‚Éo‚Ä‚¢‚é—Ê
+	/// å¯å‹•ç¯„å›²å¤–ã«å‡ºã¦ã„ã‚‹é‡
 	double diff;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PH1DJointLimit(const PH1DJointLimitDesc& desc = PH1DJointLimitDesc()) { SetDesc(&desc); }
 	
-	// ----- Limit‚Ì‹@”\
+	// ----- Limitã®æ©Ÿèƒ½
 
 	virtual void SetupAxisIndex();
 	virtual void CompBias();
 
-	// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+	// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 	void    SetRange(Vec2d  range)    { this->range = range; }
 	void    GetRange(Vec2d &range)    { range = this->range; }
 	void    SetSpring(double spring)  { this->spring = spring; }
@@ -57,70 +57,70 @@ public:
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
-///	‹…ŠÖß‚Ì‰Â“®ˆæS‘©iƒx[ƒXƒNƒ‰ƒXj
+///	çƒé–¢ç¯€ã®å¯å‹•åŸŸæ‹˜æŸï¼ˆãƒ™ãƒ¼ã‚¹ã‚¯ãƒ©ã‚¹ï¼‰
 class PHBallJointLimit : public SceneObject {
 public:
 	SPR_OBJECTDEF(PHBallJointLimit);
 	SPR_DECLMEMBEROF_PHBallJointLimitState;
 	SPR_DECLMEMBEROF_PHBallJointLimitDesc;
 
-	/// ‰Â“®ˆæS‘©‚Ì‘ÎÛ‚Æ‚È‚éŠÖß
+	/// å¯å‹•åŸŸæ‹˜æŸã®å¯¾è±¡ã¨ãªã‚‹é–¢ç¯€
 	PHBallJoint* joint;
 
-	/// ‰Â“®”ÍˆÍŠO‚Éo‚Ä‚¢‚é—Ê
+	/// å¯å‹•ç¯„å›²å¤–ã«å‡ºã¦ã„ã‚‹é‡
 	Vec3d diff;
 
-	// ----- Joint–{‘Ì‚ÆˆÙ‚È‚éÀ•WŒn‚ğg‚¤‚½‚ß‚Ì“Æ©‚ÌJacobian‚ÆLCPŒvZ•Ï”
+	// ----- Jointæœ¬ä½“ã¨ç•°ãªã‚‹åº§æ¨™ç³»ã‚’ä½¿ã†ãŸã‚ã®ç‹¬è‡ªã®Jacobianã¨LCPè¨ˆç®—å¤‰æ•°
 
-	/// S‘©ƒ„ƒRƒrƒAƒ“
+	/// æ‹˜æŸãƒ¤ã‚³ãƒ“ã‚¢ãƒ³
 	Matrix3d J[2];
 
-	/// T = M.inv() * J^t ƒKƒEƒXƒUƒCƒfƒ‹‚Åg—p
+	/// T = M.inv() * J^t ã‚¬ã‚¦ã‚¹ã‚¶ã‚¤ãƒ‡ãƒ«ã§ä½¿ç”¨
 	Matrix3d T[2];
 	
-	/// LCP‚ÌbƒxƒNƒgƒ‹‚Æ‚»‚Ì•â³—Ê
+	/// LCPã®bãƒ™ã‚¯ãƒˆãƒ«ã¨ãã®è£œæ­£é‡
 	Vec3d b, db, B;
 	
-	/// LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚Æ‚»‚Ì•â³—ÊC‹t”
+	/// LCPã®Aè¡Œåˆ—ã®å¯¾è§’æˆåˆ†ã¨ãã®è£œæ­£é‡ï¼Œé€†æ•°
 	Vec3d A, dA, Ainv;	
 
-	/// Projection—p‚ÌŠe²‚ÌMin/Max
+	/// Projectionç”¨ã®å„è»¸ã®Min/Max
 	double fMaxDt[3], fMinDt[3];
 
-	/// S‘©²ŠÇ—ƒNƒ‰ƒX
+	/// æ‹˜æŸè»¸ç®¡ç†ã‚¯ãƒ©ã‚¹
 	AxisIndex<3> axes;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHBallJointLimit();
 	
-	// ----- PHBallJoint‚©‚çŒÄ‚Ño‚³‚ê‚é‹@”\
+	// ----- PHBallJointã‹ã‚‰å‘¼ã³å‡ºã•ã‚Œã‚‹æ©Ÿèƒ½
 
-	/// LCP‚ğ‰ğ‚­‘O’iŠK‚ÌŒvZ
+	/// LCPã‚’è§£ãå‰æ®µéšã®è¨ˆç®—
 	void SetupLCP();
 
-	/// LCP‚ÌŒJ‚è•Ô‚µŒvZ
+	/// LCPã®ç¹°ã‚Šè¿”ã—è¨ˆç®—
 	void IterateLCP();
 
-	// ----- ‚±‚ÌƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- ã“ã®ã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
-	/// A‚Ì‘ÎŠp¬•ª‚ğŒvZ‚·‚éDA = J * M^-1 * J^T
+	/// Aã®å¯¾è§’æˆåˆ†ã‚’è¨ˆç®—ã™ã‚‹ï¼A = J * M^-1 * J^T
 	void CompResponseMatrix();
 
-	/// LCP‚Ì•â³’l‚ÌŒvZDŒë·C³—p
+	/// LCPã®è£œæ­£å€¤ã®è¨ˆç®—ï¼èª¤å·®ä¿®æ­£ç”¨
 	void CompBias();
 
-	/// S‘©—Í•Ï‰»—Ê(df)‚É‘Î‚·‚é‰Á‘¬“x•Ï‰»—Ê(dv‚Ì·•ª)‚ğŒvZ‚µ‚Ä”½‰f
+	/// æ‹˜æŸåŠ›å¤‰åŒ–é‡(df)ã«å¯¾ã™ã‚‹åŠ é€Ÿåº¦å¤‰åŒ–é‡(dvã®å·®åˆ†)ã‚’è¨ˆç®—ã—ã¦åæ˜ 
 	void CompResponse(double df, int i);
 
-	// ----- ”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
-	/// S‘©À•WŒn‚ÌJabocian‚ğŒvZ
+	/// æ‹˜æŸåº§æ¨™ç³»ã®Jabocianã‚’è¨ˆç®—
 	virtual void CompJacobian(){}
 
-	/// ‰Â“®ˆæ§ŒÀ‚É‚©‚©‚Á‚Ä‚¢‚é‚©Šm”F‚µ‚Ç‚Ì©—R“x‚ğ‘¬“xS‘©‚·‚é‚©‚ğİ’è
+	/// å¯å‹•åŸŸåˆ¶é™ã«ã‹ã‹ã£ã¦ã„ã‚‹ã‹ç¢ºèªã—ã©ã®è‡ªç”±åº¦ã‚’é€Ÿåº¦æ‹˜æŸã™ã‚‹ã‹ã‚’è¨­å®š
 	virtual void SetupAxisIndex(){}
 
-	// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+	// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 	void    SetSpring(double spring)  { this->spring = spring; }
 	double  GetSpring()               { return spring; }
 	void    SetDamper(double damper)  { this->damper = damper; }
@@ -133,27 +133,27 @@ public:
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
-///	‹…ŠÖß‚Ì‰~Œ`‰Â“®ˆæS‘©
+///	çƒé–¢ç¯€ã®å††å½¢å¯å‹•åŸŸæ‹˜æŸ
 class PHBallJointConeLimit : public PHBallJointLimit{
 public:
 	SPR_OBJECTDEF(PHBallJointConeLimit);
 	SPR_DECLMEMBEROF_PHBallJointConeLimitDesc;
 
-	/// ‰Â“®”ÍˆÍŠO‚Éo‚Ä‚¢‚é‚©
+	/// å¯å‹•ç¯„å›²å¤–ã«å‡ºã¦ã„ã‚‹ã‹
 	bool bOnLimit;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHBallJointConeLimit(const PHBallJointConeLimitDesc& desc = PHBallJointConeLimitDesc()) {SetDesc(&desc);}
 	
-	// ----- PHBallJointLimit‚Ì”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- PHBallJointLimitã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
-	/// S‘©À•WŒn‚ÌJabocian‚ğŒvZ
+	/// æ‹˜æŸåº§æ¨™ç³»ã®Jabocianã‚’è¨ˆç®—
 	virtual void CompJacobian();
 
-	/// ‰Â“®ˆæ§ŒÀ‚É‚©‚©‚Á‚Ä‚¢‚é‚©Šm”F‚µ‚Ç‚Ì©—R“x‚ğ‘¬“xS‘©‚·‚é‚©‚ğİ’è
+	/// å¯å‹•åŸŸåˆ¶é™ã«ã‹ã‹ã£ã¦ã„ã‚‹ã‹ç¢ºèªã—ã©ã®è‡ªç”±åº¦ã‚’é€Ÿåº¦æ‹˜æŸã™ã‚‹ã‹ã‚’è¨­å®š
 	virtual void SetupAxisIndex();
 
-	// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+	// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 	virtual bool IsOnLimit() { return bOnLimit; }
 	void SetSwingRange(Vec2d range) { limitSwing = range; }
 	void GetSwingRange(Vec2d& range){ range = limitSwing; }
@@ -164,78 +164,78 @@ public:
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
 
-/// ƒXƒvƒ‰ƒCƒ“•Â‹Èüã‚Ì“_i§Œä“_‚Å‚Í‚È‚­j
+/// ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³é–‰æ›²ç·šä¸Šã®ç‚¹ï¼ˆåˆ¶å¾¡ç‚¹ã§ã¯ãªãï¼‰
 class ClosedSplineCurve;
 struct SplinePoint {
-	/// e
+	/// è¦ª
 	ClosedSplineCurve* spline;
 
-	/// “_‚ÌÀ•Wi‹ÉÀ•W : Swing, SwingDirj
+	/// ç‚¹ã®åº§æ¨™ï¼ˆæ¥µåº§æ¨™ : Swing, SwingDirï¼‰
 	Vec2d pos;
 
-	/// •Ó”Ô†
+	/// è¾ºç•ªå·
 	int edge;
 
-	/// ƒpƒ‰ƒ[ƒ^t
+	/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿t
 	double t;
 
-	/// ’l‚ÌXVDt‚ª0ˆÈ‰º‚â1ˆÈã‚¾‚Á‚½‚ç—×‚Ì•Óã‚Ì“_‚ÉˆÚ‚é
+	/// å€¤ã®æ›´æ–°ï¼tãŒ0ä»¥ä¸‹ã‚„1ä»¥ä¸Šã ã£ãŸã‚‰éš£ã®è¾ºä¸Šã®ç‚¹ã«ç§»ã‚‹
 	void Update();
 
-	/// pos‚©‚çi‚ât‚ğ‹tZ‚·‚é
+	/// posã‹ã‚‰iã‚„tã‚’é€†ç®—ã™ã‚‹
 	void ReverseUpdate();
 
-	/// Úü‚ğx²‚Æ‚µ‚ÄÀ•WŒn‚ğì‚é
+	/// æ¥ç·šã‚’xè»¸ã¨ã—ã¦åº§æ¨™ç³»ã‚’ä½œã‚‹
 	Matrix3d CompJacobian();
 };
 
-/// ƒXƒvƒ‰ƒCƒ“•Â‹Èü
+/// ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³é–‰æ›²ç·š
 class ClosedSplineCurve {
 public:
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	ClosedSplineCurve(std::vector<PHSplineLimitNode>* nds) { nodes = nds; }
 
-	/// §Œä“_‚Ì”z—ñi‚Ö‚Ìƒ|ƒCƒ“ƒ^DÀ‘Ì‚ÍLimit‚ÌDesc‚ª‚Á‚Ä‚¢‚éj
+	/// åˆ¶å¾¡ç‚¹ã®é…åˆ—ï¼ˆã¸ã®ãƒã‚¤ãƒ³ã‚¿ï¼å®Ÿä½“ã¯Limitã®DescãŒæŒã£ã¦ã„ã‚‹ï¼‰
 	std::vector<PHSplineLimitNode>* nodes;
 	
-	/// •Ó‚Ì”
-	int NEdges() { return nodes->size()-1; /* n“_‚ÆI“_‚ª”í‚é‚Ì‚Å */ }
+	/// è¾ºã®æ•°
+	int NEdges() { return nodes->size()-1; /* å§‹ç‚¹ã¨çµ‚ç‚¹ãŒè¢«ã‚‹ã®ã§ */ }
 
-	/// i”Ô–Ú‚Ì•Ó‚ÌSwingƒXƒvƒ‰ƒCƒ“ŒW”‚ğ•Ô‚·
+	/// iç•ªç›®ã®è¾ºã®Swingã‚¹ãƒ—ãƒ©ã‚¤ãƒ³ä¿‚æ•°ã‚’è¿”ã™
 	Vec4d GetEdgeSwingCoeff(int i);
 
-	/// i”Ô–Ú‚Ì•Ó‚ÌSwingDirƒXƒvƒ‰ƒCƒ“ŒW”‚ğ•Ô‚·
+	/// iç•ªç›®ã®è¾ºã®SwingDirã‚¹ãƒ—ãƒ©ã‚¤ãƒ³ä¿‚æ•°ã‚’è¿”ã™
 	Vec4d GetEdgeSwingDirCoeff(int i);
 
-	/// ’¸“_‚ğ’Ç‰Á(pos‚ªw’è‚³‚ê‚½ê‡‚Í‘}“ü)‚·‚é
+	/// é ‚ç‚¹ã‚’è¿½åŠ (posãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆã¯æŒ¿å…¥)ã™ã‚‹
 	void AddNode(PHSplineLimitNode node, int pos=-1);
 
-	/// i”Ô–Ú‚Ì•Ó‚Ìƒpƒ‰ƒ[ƒ^t‚É‚¨‚¯‚é“_‚Ì‹ÉÀ•W‚ğ•Ô‚·
+	/// iç•ªç›®ã®è¾ºã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿tã«ãŠã‘ã‚‹ç‚¹ã®æ¥µåº§æ¨™ã‚’è¿”ã™
 	SplinePoint GetPointOnEdge(int i, double t);
 };
 
-///	‹…ŠÖß‚ÌƒXƒvƒ‰ƒCƒ“•Â‹Èü‰Â“®ˆæS‘©
+///	çƒé–¢ç¯€ã®ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³é–‰æ›²ç·šå¯å‹•åŸŸæ‹˜æŸ
 class PHBallJointSplineLimit : public PHBallJointLimit{
 public:
 	SPR_OBJECTDEF(PHBallJointSplineLimit);
 	SPR_DECLMEMBEROF_PHBallJointSplineLimitDesc;
 
-	/// ‰Â“®ˆæ‹Èü
+	/// å¯å‹•åŸŸæ›²ç·š
 	ClosedSplineCurve limitCurve;
 
-	/// ‰Â“®”ÍˆÍŠO‚Éo‚Ä‚¢‚é‚©
+	/// å¯å‹•ç¯„å›²å¤–ã«å‡ºã¦ã„ã‚‹ã‹
 	bool bOnSwing, bOnTwist;
 	
-	/// ÅŒã‚É‰Â“®ˆæ“à‚É‹‚½‚Æ‚«‚ÌˆÊ’uiin Swing/SwingDir/Twistj
+	/// æœ€å¾Œã«å¯å‹•åŸŸå†…ã«å±…ãŸã¨ãã®ä½ç½®ï¼ˆin Swing/SwingDir/Twistï¼‰
 	Vec3d lastPos;
 
-	/// Œ»İ‚ÌŠÖßƒ|ƒWƒVƒ‡ƒ“iin Swing/SwingDir/Twistj
+	/// ç¾åœ¨ã®é–¢ç¯€ãƒã‚¸ã‚·ãƒ§ãƒ³ï¼ˆin Swing/SwingDir/Twistï¼‰
 	Vec3d currPos;
 
-	/// Å‹ß–T“_
+	/// æœ€è¿‘å‚ç‚¹
 	SplinePoint neighbor;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHBallJointSplineLimit(const PHBallJointSplineLimitDesc& desc = PHBallJointSplineLimitDesc()) : limitCurve(&nodes) {
 		SetDesc(&desc);
 
@@ -245,26 +245,26 @@ public:
 		lastPos = Vec3d(0,0,0);
 	}
 
-	// ----- PHBallJointLimit‚Ì”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- PHBallJointLimitã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
-	/// S‘©À•WŒn‚ÌJabocian‚ğŒvZ
+	/// æ‹˜æŸåº§æ¨™ç³»ã®Jabocianã‚’è¨ˆç®—
 	virtual void CompJacobian();
 
-	/// ‚Ç‚Ì©—R“x‚ğ‘¬“xS‘©‚·‚é‚©‚ğİ’è
+	/// ã©ã®è‡ªç”±åº¦ã‚’é€Ÿåº¦æ‹˜æŸã™ã‚‹ã‹ã‚’è¨­å®š
 	virtual void SetupAxisIndex();
 
-	// ----- ‚±‚ÌƒNƒ‰ƒX‚Ì‹@”\
+	// ----- ã“ã®ã‚¯ãƒ©ã‚¹ã®æ©Ÿèƒ½
 
-	/// Swing-SwingDir‚Ì‰Â“®ˆæƒ`ƒFƒbƒNibOnSwingi‚Æneighborj‚ğŒˆ’è‚·‚éj
+	/// Swing-SwingDirã®å¯å‹•åŸŸãƒã‚§ãƒƒã‚¯ï¼ˆbOnSwingï¼ˆã¨neighborï¼‰ã‚’æ±ºå®šã™ã‚‹ï¼‰
 	void CheckSwingLimit();
 
-	/// Twist‚Ì‰Â“®ˆæƒ`ƒFƒbƒNibOnTwist‚ğŒˆ’è‚·‚éj
+	/// Twistã®å¯å‹•åŸŸãƒã‚§ãƒƒã‚¯ï¼ˆbOnTwistã‚’æ±ºå®šã™ã‚‹ï¼‰
 	void CheckTwistLimit();
 
-	/// Œğ“_ƒ`ƒFƒbƒN
+	/// äº¤ç‚¹ãƒã‚§ãƒƒã‚¯
 	int CheckIntersection(Vec2d base, Vec2d curr, double& minDist);
 
-	// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+	// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 	virtual bool IsOnLimit() { return(bOnSwing || bOnTwist); }
 	void AddNode(PHSplineLimitNode node)          { limitCurve.AddNode(node, -1);  }
 	void AddNode(PHSplineLimitNode node, int pos) { limitCurve.AddNode(node, pos); }
@@ -278,12 +278,12 @@ public:
 	void GetPoleTwistRange(Vec2d& range){ range = poleTwist; }
 };
 
-// ----- ƒ†[ƒeƒBƒŠƒeƒB
+// ----- ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£
 
-/// ‚RŸ•û’ö®‚ğ‰ğ‚­ŠÖ”
+/// ï¼“æ¬¡æ–¹ç¨‹å¼ã‚’è§£ãé–¢æ•°
 Vec3d SolveCubicFunction(Vec4d eq3);
 
-/// Swing-SwingDir‹ÉÀ•W‚ğƒ†[ƒNƒŠƒbƒhÀ•W‚É’¼‚·ŠÖ”
+/// Swing-SwingDiræ¥µåº§æ¨™ã‚’ãƒ¦ãƒ¼ã‚¯ãƒªãƒƒãƒ‰åº§æ¨™ã«ç›´ã™é–¢æ•°
 Vec3d FromPolar(Vec2d pos);
 
 }

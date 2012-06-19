@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,22 +15,22 @@
 
 namespace Spr{;
 
-///	ƒtƒ@ƒCƒ‹ƒ}ƒbƒv(¡‚Ì‚Æ‚±‚ëƒtƒ@ƒCƒ‹‚Ìƒ[ƒhê—p)
+///	ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒƒãƒ—(ä»Šã®ã¨ã“ã‚ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒ¼ãƒ‰å°‚ç”¨)
 class UTFileMap: public UTRefCount{
 public:
-	std::string name;	///<		ƒtƒ@ƒCƒ‹–¼
-	const char* start;	///<		ƒƒ‚ƒŠƒ}ƒbƒv‚³‚ê‚½ƒtƒ@ƒCƒ‹‚Ìæ“ª
-	const char* end;	///<		ƒƒ‚ƒŠƒ}ƒbƒv‚³‚ê‚½ƒtƒ@ƒCƒ‹‚ÌI’[
-	const char* curr;	///<		Œ»İ‚ÌˆÊ’u
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	std::string name;	///<		ãƒ•ã‚¡ã‚¤ãƒ«å
+	const char* start;	///<		ãƒ¡ãƒ¢ãƒªãƒãƒƒãƒ—ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã®å…ˆé ­
+	const char* end;	///<		ãƒ¡ãƒ¢ãƒªãƒãƒƒãƒ—ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ«ã®çµ‚ç«¯
+	const char* curr;	///<		ç¾åœ¨ã®ä½ç½®
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	UTFileMap():start(NULL), end(NULL), curr(NULL){}
-	///	ƒfƒXƒgƒ‰ƒNƒ^
+	///	ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	virtual ~UTFileMap(){}
-	/// ƒtƒ@ƒCƒ‹ ƒ}ƒbƒsƒ“ƒO		
+	/// ãƒ•ã‚¡ã‚¤ãƒ« ãƒãƒƒãƒ”ãƒ³ã‚°		
 	virtual bool Map(const UTString fn, bool binary)=0;
-	/// ƒtƒ@ƒCƒ‹ ƒAƒ“ƒ}ƒbƒsƒ“ƒO
+	/// ãƒ•ã‚¡ã‚¤ãƒ« ã‚¢ãƒ³ãƒãƒƒãƒ”ãƒ³ã‚°
 	virtual void Unmap()=0;
-	///	ƒ[ƒh‚Å‚«‚éó‘Ô‚È‚çtrue
+	///	ãƒ­ãƒ¼ãƒ‰ã§ãã‚‹çŠ¶æ…‹ãªã‚‰true
 	virtual bool IsGood()=0;
 };
 
@@ -42,39 +42,39 @@ class UTLoadedDatas: public std::vector< UTLoadedData* >{
 class UTLoadedDataRefs: public std::vector< UTRef<UTLoadedData> > {
 };
 class UTNameManagerForData;
-/**	ƒtƒ@ƒCƒ‹ƒ[ƒh‚ÌÛ‚ÉDOMƒm[ƒh‚Ì‚æ‚¤‚È–ğŠ„‚ğ‚·‚éƒm[ƒh
-	ƒtƒ@ƒCƒ‹‚©‚çObjectDesc‚ğ“Ç‚İo‚µ‚½‚èCƒtƒ@ƒCƒ‹‚É‘‚«‚ñ‚¾‚è‚·‚é‚½‚ß‚Ìƒf[ƒ^D
-	ObjectDesc ‚Ö‚Ìƒ|ƒCƒ“ƒ^(data) ‚Æ Œ^î•ñ (type) ‚ğ‚ÂD
-	ƒƒ‚ƒŠ‚ÌŠÇ—‚às‚¤D	*/
+/**	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ‰ã®éš›ã«DOMãƒãƒ¼ãƒ‰ã®ã‚ˆã†ãªå½¹å‰²ã‚’ã™ã‚‹ãƒãƒ¼ãƒ‰
+	ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ObjectDescã‚’èª­ã¿å‡ºã—ãŸã‚Šï¼Œãƒ•ã‚¡ã‚¤ãƒ«ã«æ›¸ãè¾¼ã‚“ã ã‚Šã™ã‚‹ãŸã‚ã®ãƒ‡ãƒ¼ã‚¿ï¼
+	ObjectDesc ã¸ã®ãƒã‚¤ãƒ³ã‚¿(data) ã¨ å‹æƒ…å ± (type) ã‚’æŒã¤ï¼
+	ãƒ¡ãƒ¢ãƒªã®ç®¡ç†ã‚‚è¡Œã†ï¼	*/
 class UTLoadedData: public UTRefCount{
 public:
 	typedef std::map<UTString, UTString> Attributes;
 protected:
-	 Attributes attributes;			///<	‘®«
+	 Attributes attributes;			///<	å±æ€§
 
 public:
-	UTRef<UTFileMap> fileInfo;		///<	ƒtƒ@ƒCƒ‹î•ñ
-	const char* filePos;			///<	ƒtƒ@ƒCƒ‹“à‚Å‚ÌˆÊ’u
-	UTLoadedData* parent;			///<	eƒm[ƒh
-	UTLoadedDataRefs children;		///<	qƒm[ƒh
-	UTLoadedDatas linkFrom;			///<	QÆŒ³ƒm[ƒh
-	UTLoadedDatas linkTo;			///<	QÆæƒm[ƒh
-	UTTypeDesc* type;				///<	Œ^
-	void* data;						///<	ƒ[ƒh‚µ‚½ƒfƒBƒXƒNƒŠƒvƒ^
-	UTString str;					///<	ƒ[ƒh“à—e‚Ì•¶š—ñDŒ^î•ñ‚ª‚È‚¢ê‡‚Ég‚¤D
-	bool haveData;					///<	data‚ğŠ—L‚·‚é‚©‚Ç‚¤‚©
+	UTRef<UTFileMap> fileInfo;		///<	ãƒ•ã‚¡ã‚¤ãƒ«æƒ…å ±
+	const char* filePos;			///<	ãƒ•ã‚¡ã‚¤ãƒ«å†…ã§ã®ä½ç½®
+	UTLoadedData* parent;			///<	è¦ªãƒãƒ¼ãƒ‰
+	UTLoadedDataRefs children;		///<	å­ãƒãƒ¼ãƒ‰
+	UTLoadedDatas linkFrom;			///<	å‚ç…§å…ƒãƒãƒ¼ãƒ‰
+	UTLoadedDatas linkTo;			///<	å‚ç…§å…ˆãƒãƒ¼ãƒ‰
+	UTTypeDesc* type;				///<	å‹
+	void* data;						///<	ãƒ­ãƒ¼ãƒ‰ã—ãŸãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+	UTString str;					///<	ãƒ­ãƒ¼ãƒ‰å†…å®¹ã®æ–‡å­—åˆ—ï¼å‹æƒ…å ±ãŒãªã„å ´åˆã«ä½¿ã†ï¼
+	bool haveData;					///<	dataã‚’æ‰€æœ‰ã™ã‚‹ã‹ã©ã†ã‹
 
-	///	type‚ªNameManager‚Ì”h¶ƒNƒ‰ƒX‚Ìê‡‚¾‚¯CData—pNameManger‚ğ‚Â
+	///	typeãŒNameManagerã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã®å ´åˆã ã‘ï¼ŒDataç”¨NameMangerã‚’æŒã¤
 	UTRef<UTNameManagerForData> nameMan;	
-	UTLoadedData* man;				///<	‚±‚Ìƒf[ƒ^‚Ì–¼‘O‚ğŠÇ—‚·‚éNameManger‚ğ‚Âƒf[ƒ^
+	UTLoadedData* man;				///<	ã“ã®ãƒ‡ãƒ¼ã‚¿ã®åå‰ã‚’ç®¡ç†ã™ã‚‹NameMangerã‚’æŒã¤ãƒ‡ãƒ¼ã‚¿
 	
-	///	‚±‚Ìƒf[ƒ^‚©‚çì‚ç‚ê‚½ƒIƒuƒWƒFƒNƒg‚½‚¿
+	///	ã“ã®ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ä½œã‚‰ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŸã¡
 	ObjectIfs loadedObjects;
 
 	UTLoadedData(UTLoadContext* fc, UTTypeDesc* t, void* data=NULL);
 	~UTLoadedData();
-	void AddLink(UTLoadedData* to);	///<	QÆ‚Ì’Ç‰Á
-	void AddChild(UTLoadedData* c);	///<	qƒm[ƒh‚Ìƒf[ƒ^‚Ì’Ç‰Á
+	void AddLink(UTLoadedData* to);	///<	å‚ç…§ã®è¿½åŠ 
+	void AddChild(UTLoadedData* c);	///<	å­ãƒãƒ¼ãƒ‰ã®ãƒ‡ãƒ¼ã‚¿ã®è¿½åŠ 
 	void SetupNameManager();
 	void SetType(UTTypeDesc* t);
 	void SetName(UTString n);
@@ -95,21 +95,21 @@ public:
 	void Print(std::ostream& os);
 };
 
-///	UTLoadedData —p‚Ì–¼‘OŠÇ—
+///	UTLoadedData ç”¨ã®åå‰ç®¡ç†
 class UTNameManagerForData: public UTRefCount{
 public:
 
 	typedef std::set<UTLoadedData*, UTContentsLess<UTLoadedData*> > DataSet;
 	typedef std::map<UTString, UTString> NameMap;
-	///@name	–¼‘O‹óŠÔ‚ğ\¬‚·‚é‚½‚ß‚ÌƒcƒŠ[
+	///@name	åå‰ç©ºé–“ã‚’æ§‹æˆã™ã‚‹ãŸã‚ã®ãƒ„ãƒªãƒ¼
 	//@{
 	///
 	typedef std::vector<UTNameManagerForData*> NameManagers;
-	///	‚¿å‚Ìƒf[ƒ^
+	///	æŒã¡ä¸»ã®ãƒ‡ãƒ¼ã‚¿
 	UTLoadedData* data;
-	///	q–¼‘O‹óŠÔ
+	///	å­åå‰ç©ºé–“
 	NameManagers childManagers;
-	///	e–¼‘O‹óŠÔ
+	///	è¦ªåå‰ç©ºé–“
 	UTNameManagerForData* parent;
 	//@}
 
@@ -120,13 +120,13 @@ protected:
 public:
 	UTNameManagerForData();
 
-	///	UTLoadedData‚ğ–¼‘O•\‚É’Ç‰Á
+	///	UTLoadedDataã‚’åå‰è¡¨ã«è¿½åŠ 
 	bool AddData(UTLoadedData* data);
 
-	/**	–¼‘O‚Ì•ÏŠ·i–¼‘O‚ª‚Ô‚Â‚©‚Á‚½ê‡Cƒm[ƒh‚Ì–¼‘O‚ğ•ÏŠ·‚·‚é‚ªC
-		‚±‚ÌŠÖ”‚ÍCŒ³‚Ì–¼‘O¨•ÏŠ·Œã‚Ì–¼‘O‚Ì•ÏŠ·‚ğ‚·‚éD	
-		@param n Œ³‚Ì–¼‘O
-		@return •ÏŠ·Œã‚Ì–¼‘O
+	/**	åå‰ã®å¤‰æ›ï¼ˆåå‰ãŒã¶ã¤ã‹ã£ãŸå ´åˆï¼Œãƒãƒ¼ãƒ‰ã®åå‰ã‚’å¤‰æ›ã™ã‚‹ãŒï¼Œ
+		ã“ã®é–¢æ•°ã¯ï¼Œå…ƒã®åå‰â†’å¤‰æ›å¾Œã®åå‰ã®å¤‰æ›ã‚’ã™ã‚‹ï¼	
+		@param n å…ƒã®åå‰
+		@return å¤‰æ›å¾Œã®åå‰
 	*/
 	UTString MapName(UTString n);
 
@@ -138,7 +138,7 @@ protected:
 };
 
 class UTLoadContext;
-///	ƒ[ƒhŒã‚Éˆ—‚ğ‚³‚¹‚é‚½‚ß‚ÉAƒ[ƒh‚É¶¬‚³‚êAƒ[ƒhŒã‚ÉÀs‚³‚ê‚éD
+///	ãƒ­ãƒ¼ãƒ‰å¾Œã«å‡¦ç†ã‚’ã•ã›ã‚‹ãŸã‚ã«ã€ãƒ­ãƒ¼ãƒ‰æ™‚ã«ç”Ÿæˆã•ã‚Œã€ãƒ­ãƒ¼ãƒ‰å¾Œã«å®Ÿè¡Œã•ã‚Œã‚‹ï¼
 class UTLoadTask:public NamedObject{
 public:
 	SPR_OBJECTDEF_NOIF(UTLoadTask);
@@ -146,7 +146,7 @@ public:
 	virtual void Execute(UTLoadContext* ctx){};
 };
 
-///	ƒ[ƒhŒã‚ÉƒŠƒ“ƒN‚·‚é‚½‚ß‚Ìƒ^ƒXƒND•’Ê‚Íg‚í‚È‚¢D
+///	ãƒ­ãƒ¼ãƒ‰å¾Œã«ãƒªãƒ³ã‚¯ã™ã‚‹ãŸã‚ã®ã‚¿ã‚¹ã‚¯ï¼æ™®é€šã¯ä½¿ã‚ãªã„ï¼
 class UTLinkTask:public UTLoadTask{
 public:
 	ObjectIf* linkFrom;
@@ -156,7 +156,7 @@ public:
 	virtual ~UTLinkTask(){}
 };
 
-///	ƒ[ƒhŒã‚Ìˆ—‚ğs‚¤‚½‚ß‚Ìƒ^ƒXƒNƒŠƒXƒg
+///	ãƒ­ãƒ¼ãƒ‰å¾Œã®å‡¦ç†ã‚’è¡Œã†ãŸã‚ã®ã‚¿ã‚¹ã‚¯ãƒªã‚¹ãƒˆ
 class UTLoadTasks:public std::vector< UTRef<UTLoadTask> >{
 public:
 	void Execute(UTLoadContext* ctx);
@@ -168,91 +168,91 @@ typedef std::map<UTRef<ObjectIf>, UTRef<ObjectIf> >  UTMapObject;
 
 class UTLoadHandlerDb;
 
-/**	ƒtƒ@ƒCƒ‹ƒ[ƒh/ƒZ[ƒu‚Ég—p‚·‚éƒRƒ“ƒeƒLƒXƒg‚ÌŠî–{ƒNƒ‰ƒX	*/
+/**	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ‰/ã‚»ãƒ¼ãƒ–æ™‚ã«ä½¿ç”¨ã™ã‚‹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®åŸºæœ¬ã‚¯ãƒ©ã‚¹	*/
 class UTFileContext{
 public:
 	UTFileContext();
-	///	ƒ[ƒh/ƒZ[ƒu’†‚Ìƒtƒ@ƒCƒ‹‚Ì–¼‘O‚Æ’†gDƒtƒ@ƒCƒ‹include‚É”õ‚¦‚Ästack‚É‚È‚Á‚Ä‚¢‚éD
+	///	ãƒ­ãƒ¼ãƒ‰/ã‚»ãƒ¼ãƒ–ä¸­ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®åå‰ã¨ä¸­èº«ï¼ãƒ•ã‚¡ã‚¤ãƒ«includeã«å‚™ãˆã¦stackã«ãªã£ã¦ã„ã‚‹ï¼
 	UTStack< UTRef<UTFileMap> > fileMaps;
-	///	ƒGƒ‰[ƒƒbƒZ[ƒWo—Í—p‚ÌƒXƒgƒŠ[ƒ€ cout ‚Æ‚© DSTR ‚ğw’è‚·‚éD
+	///	ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡ºåŠ›ç”¨ã®ã‚¹ãƒˆãƒªãƒ¼ãƒ  cout ã¨ã‹ DSTR ã‚’æŒ‡å®šã™ã‚‹ï¼
 	std::ostream* errorStream;
-	///	typeDb ‚ÌƒXƒ^ƒbƒN
+	///	typeDb ã®ã‚¹ã‚¿ãƒƒã‚¯
 	UTStack< UTRef<UTTypeDescDb> > typeDbs;
-	///	handlerDb‚ÌƒXƒ^ƒbƒN
+	///	handlerDbã®ã‚¹ã‚¿ãƒƒã‚¯
 	UTStack< UTRef<UTLoadHandlerDb> > handlerDbs;
-	/**	Œ»İƒ[ƒh’† or ƒZ[ƒu’†‚ÌƒIƒuƒWƒFƒNƒgD
-		ƒlƒXƒg‚µ‚½ƒIƒuƒWƒFƒNƒg‚É”õ‚¦‚ÄƒXƒ^ƒbƒN‚É‚È‚Á‚Ä‚¢‚éD*/
+	/**	ç¾åœ¨ãƒ­ãƒ¼ãƒ‰ä¸­ or ã‚»ãƒ¼ãƒ–ä¸­ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼
+		ãƒã‚¹ãƒˆã—ãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã«å‚™ãˆã¦ã‚¹ã‚¿ãƒƒã‚¯ã«ãªã£ã¦ã„ã‚‹ï¼*/
 	ObjectIfs objects;
 
-	///	ƒ[ƒh‚Å‚«‚éó‘Ô‚È‚çtrue
+	///	ãƒ­ãƒ¼ãƒ‰ã§ãã‚‹çŠ¶æ…‹ãªã‚‰true
 	bool IsGood();
 	
-	///	ƒtƒ@ƒCƒ‹ƒ}ƒbƒv‚ğì¬‚µ‚ÄƒXƒ^ƒbƒN(fileMaps)‚ÉÏ‚Ş
+	///	ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒƒãƒ—ã‚’ä½œæˆã—ã¦ã‚¹ã‚¿ãƒƒã‚¯(fileMaps)ã«ç©ã‚€
 	virtual void PushFileMap(const UTString fn, bool binary)=0;
 	virtual void PopFileMap()=0;
 };
 
-/**	ƒtƒ@ƒCƒ‹ƒ[ƒh‚Ég—p‚·‚éƒRƒ“ƒeƒLƒXƒg
-	ƒtƒ@ƒCƒ‹‚ğƒ[ƒh‚·‚éÛ‚ÍCƒf[ƒ^‚ğƒm[ƒh‚²‚Æ‚Éƒ[ƒh‚µ‚ÄC
-	ƒIƒuƒWƒFƒNƒg‚ğì‚é‚½‚ß‚ÌƒfƒBƒXƒNƒŠƒvƒ^\‘¢‘Ì(PHSolidDesc‚È‚Ç)‚ğ
-	‚Ü‚¸ƒ[ƒh‚·‚éD
-	‚»‚Ì‚ ‚ÆCƒIƒuƒWƒFƒNƒg‚ğ¶¬‚·‚éD	*/
+/**	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ‰æ™‚ã«ä½¿ç”¨ã™ã‚‹ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆ
+	ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹éš›ã¯ï¼Œãƒ‡ãƒ¼ã‚¿ã‚’ãƒãƒ¼ãƒ‰ã”ã¨ã«ãƒ­ãƒ¼ãƒ‰ã—ã¦ï¼Œ
+	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚‹ãŸã‚ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿æ§‹é€ ä½“(PHSolidDescãªã©)ã‚’
+	ã¾ãšãƒ­ãƒ¼ãƒ‰ã™ã‚‹ï¼
+	ãã®ã‚ã¨ï¼Œã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ç”Ÿæˆã™ã‚‹ï¼	*/
 class UTLoadContext: public UTFileContext{
 protected:
 	UTStack< UTRef<ObjectIf> > lostAndFound;
 public:	
 	//--------------------------------------------------------------------------
-	//	•Ï”
+	//	å¤‰æ•°
 
-	///	ƒXƒ^ƒbƒN‚ÉÅ‰‚É‹l‚Ü‚ê‚½ƒIƒuƒWƒFƒNƒgƒtƒ@ƒCƒ‹‚Ìˆê”ÔŠO‘¤ƒ‹[ƒg‚ÌƒIƒuƒWƒFƒNƒg‚Ì‹L˜^D
+	///	ã‚¹ã‚¿ãƒƒã‚¯ã«æœ€åˆã«è©°ã¾ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼ãƒ•ã‚¡ã‚¤ãƒ«ã®ä¸€ç•ªå¤–å´ï¼ãƒ«ãƒ¼ãƒˆã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¨˜éŒ²ï¼
 	ObjectIfs rootObjects;
-	///	ƒ[ƒh‚µ‚½ƒfƒBƒXƒNƒŠƒvƒ^‚ÌƒXƒ^ƒbƒNDƒlƒXƒg‚µ‚½‘g‚İ—§‚ÄŒ^‚É”õ‚¦‚ÄƒXƒ^ƒbƒN‚É‚È‚Á‚Ä‚¢‚éD
+	///	ãƒ­ãƒ¼ãƒ‰ã—ãŸãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®ã‚¹ã‚¿ãƒƒã‚¯ï¼ãƒã‚¹ãƒˆã—ãŸçµ„ã¿ç«‹ã¦å‹ã«å‚™ãˆã¦ã‚¹ã‚¿ãƒƒã‚¯ã«ãªã£ã¦ã„ã‚‹ï¼
 	UTStack< UTRef<UTLoadedData> > datas;
 	struct LoadedDatas:public std::vector< UTRef<UTLoadedData> >{
 		void Print(std::ostream& os);
 	};
-	///	ƒ[ƒh‚µ‚½ƒfƒBƒXƒNƒŠƒvƒ^‚Ì‹L˜^D
+	///	ãƒ­ãƒ¼ãƒ‰ã—ãŸãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®è¨˜éŒ²ï¼
 	LoadedDatas loadedDatas;
-	///	ƒ[ƒh’†‚ÌFITypedesc‚ÌƒtƒB[ƒ‹ƒh‚ÌˆÊ’uD‘g‚İ—§‚ÄŒ^‚ÌƒtƒB[ƒ‹ƒh‚É”õ‚¦‚ÄƒXƒ^ƒbƒN‚É‚È‚Á‚Ä‚¢‚éD
+	///	ãƒ­ãƒ¼ãƒ‰ä¸­ã®FITypedescã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ä½ç½®ï¼çµ„ã¿ç«‹ã¦å‹ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã«å‚™ãˆã¦ã‚¹ã‚¿ãƒƒã‚¯ã«ãªã£ã¦ã„ã‚‹ï¼
 	UTTypeDescFieldIts fieldIts;
-	///	ƒm[ƒhƒXƒ^[ƒg‚ÌfieldIts.size()
+	///	ãƒãƒ¼ãƒ‰ã‚¹ã‚¿ãƒ¼ãƒˆæ™‚ã®fieldIts.size()
 	UTStack<size_t> nodeStartDepthes;
 
-	///	ƒtƒ‰ƒO‚ÌƒXƒ^ƒbƒN
+	///	ãƒ•ãƒ©ã‚°ã®ã‚¹ã‚¿ãƒƒã‚¯
 	UTStack<char> flags;
 
-	///	ƒf[ƒ^‚ÌƒŠƒ“ƒN‚ğŒã‚Å‚·‚é‚½‚ß‚Ì‹L˜^D
+	///	ãƒ‡ãƒ¼ã‚¿ã®ãƒªãƒ³ã‚¯ã‚’å¾Œã§ã™ã‚‹ãŸã‚ã®è¨˜éŒ²ï¼
 	UTLoadTasks dataLinks;
-	///	ƒŠƒtƒ@ƒŒƒ“ƒX‚ğŒã‚ÅƒŠƒ“ƒN‚·‚é‚½‚ß‚Ì‹L˜^D
+	///	ãƒªãƒ•ã‚¡ãƒ¬ãƒ³ã‚¹ã‚’å¾Œã§ãƒªãƒ³ã‚¯ã™ã‚‹ãŸã‚ã®è¨˜éŒ²ï¼
 	UTLoadTasks links;
-	///	ƒ[ƒh‚ÆƒŠƒ“ƒN‚ªI‚í‚Á‚Ä‚©‚çˆ—‚·‚éƒ^ƒXƒN
+	///	ãƒ­ãƒ¼ãƒ‰ã¨ãƒªãƒ³ã‚¯ãŒçµ‚ã‚ã£ã¦ã‹ã‚‰å‡¦ç†ã™ã‚‹ã‚¿ã‚¹ã‚¯
 	UTLoadTasks postTasks;
-	// ƒ}ƒbƒvƒIƒuƒWƒFƒNƒgDƒm[ƒhŠÔ‚ÅŠÖŒW«‚ğ‚½‚¹‚½‚¢ê‡‚Ég—pD
+	// ãƒãƒƒãƒ—ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆï¼ãƒãƒ¼ãƒ‰é–“ã§é–¢ä¿‚æ€§ã‚’æŒãŸã›ãŸã„å ´åˆã«ä½¿ç”¨ï¼
 	UTMapObject mapObj;	
-	//	ƒf[ƒ^—p‚Ìƒ‹[ƒgNameManager‚Ì‚½‚ß‚ÌƒIƒuƒWƒFƒNƒg
+	//	ãƒ‡ãƒ¼ã‚¿ç”¨ã®ãƒ«ãƒ¼ãƒˆNameManagerã®ãŸã‚ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
 	UTRef<UTLoadedData> rootNameManagerForData;
-	//	DSTR‚Éî•ñ‚ğ•\¦‚·‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO
+	//	DSTRã«æƒ…å ±ã‚’è¡¨ç¤ºã™ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°
 	bool DSTRFlag;
 
 	//---------------------------------------------------------------------------
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	UTLoadContext();
 	virtual ~UTLoadContext(){}
-	//@name ƒ[ƒ_Cƒnƒ“ƒhƒ‰‚ğ‘‚­‚½‚ß‚Ìƒ†[ƒeƒBƒŠƒeƒB
+	//@name ãƒ­ãƒ¼ãƒ€ï¼Œãƒãƒ³ãƒ‰ãƒ©ã‚’æ›¸ããŸã‚ã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£
 	//@{
-	///	ƒGƒ‰[ƒƒbƒZ[ƒW‚Ìo—ÍDpos‚ğƒtƒ@ƒCƒ‹–¼‚Æs”Ô†‚É•ÏŠ·‚·‚éD
+	///	ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡ºåŠ›ï¼posã‚’ãƒ•ã‚¡ã‚¤ãƒ«åã¨è¡Œç•ªå·ã«å¤‰æ›ã™ã‚‹ï¼
 	void ErrorMessage(UTFileMap* info, const char* pos, const char* msg);
-	///	ƒƒbƒZ[ƒW‚Ìì¬Dpos‚ğƒtƒ@ƒCƒ‹–¼‚Æs”Ô†‚É•ÏŠ·‚·‚éD
+	///	ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®ä½œæˆï¼posã‚’ãƒ•ã‚¡ã‚¤ãƒ«åã¨è¡Œç•ªå·ã«å¤‰æ›ã™ã‚‹ï¼
 	void Message(UTFileMap* info, const char* pos, const char* msg);
-	///	type‚ğˆ—‚·‚é€”õ‚ğ‚·‚é(type‚ğƒZƒbƒg‚µCXXDesc‚ğ—pˆÓ‚·‚é)
+	///	typeã‚’å‡¦ç†ã™ã‚‹æº–å‚™ã‚’ã™ã‚‹(typeã‚’ã‚»ãƒƒãƒˆã—ï¼ŒXXDescã‚’ç”¨æ„ã™ã‚‹)
 	void NodeStart(UTString tn, UTLoadedData::Attributes* attrs=NULL);
 	////
 	void NodeEnd();
-	///	‘g—§Œ^‚É“ü‚é(fieldIts‚Ædatas‚ÉŒ»İ‚ÌƒtƒB[ƒ‹ƒh‚ÌŒ^‚ğPush‚·‚éj
+	///	çµ„ç«‹å‹ã«å…¥ã‚‹(fieldItsã¨datasã«ç¾åœ¨ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å‹ã‚’Pushã™ã‚‹ï¼‰
 	void CompositStart();
-	///	‘g—§Œ^‚©‚ç”²‚é(fieldIts‚Ædatas‚ğPop‚·‚éj
+	///	çµ„ç«‹å‹ã‹ã‚‰æŠœã‚‹(fieldItsã¨datasã‚’Popã™ã‚‹ï¼‰
 	void CompositEnd();
-	///	Œ»İƒ[ƒh’†‚Ìƒm[ƒh‚©‚çw’è‚ÌƒtƒB[ƒ‹ƒh‚ğ‚³‚ª‚·B
+	///	ç¾åœ¨ãƒ­ãƒ¼ãƒ‰ä¸­ã®ãƒãƒ¼ãƒ‰ã‹ã‚‰æŒ‡å®šã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’ã•ãŒã™ã€‚
 	bool UTLoadContext::FindField(UTString name);
 	///
 	void WriteString(std::string v);
@@ -263,9 +263,9 @@ public:
 	///
 	void AddDataLink(std::string ref, const char* pos);	
 	//@}
-	//@name ƒf[ƒ^‚©‚çƒIƒuƒWƒFƒNƒg‚ğì‚é‚Æ‚«‚Ìƒ†[ƒeƒBƒŠƒeƒB
+	//@name ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚‹ã¨ãã®ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£
 	//@{
-	///	ƒf[ƒ^‚©‚çƒIƒuƒWƒFƒNƒg‚ğì¬
+	///	ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œæˆ
 	ObjectIf* CreateObject(const IfInfo* info,  const void* data, UTString name="");
 
 	//@}
@@ -276,8 +276,8 @@ public:
 	void LinkNode();
 	///
 	void PostTask();
-	/**	ƒ[ƒh‚·‚éƒm[ƒh‚ÌƒOƒ‹[ƒv‚ğ“o˜^BƒOƒ‹[ƒv–¼‚ğƒXƒy[ƒX‚Å‹æØ‚Á‚Äw’èB
-		—áFResisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
+	/**	ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ãƒãƒ¼ãƒ‰ã®ã‚°ãƒ«ãƒ¼ãƒ—ã‚’ç™»éŒ²ã€‚ã‚°ãƒ«ãƒ¼ãƒ—åã‚’ã‚¹ãƒšãƒ¼ã‚¹ã§åŒºåˆ‡ã£ã¦æŒ‡å®šã€‚
+		ä¾‹ï¼šResisterGroupToDb("Foundation Physics Graphics Framework OldSpringhead");
 	*/
 	void RegisterGroupToDb(const char* gp);
 

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprGRBlendMesh.h
- *	@brief ƒXƒLƒ“ƒƒbƒVƒ…‚È‚Ç‚Åƒx[ƒX‚Æ‚È‚é’¸“_ƒuƒŒƒ“ƒfƒBƒ“ƒO—pƒƒbƒVƒ…
+ *	@brief ã‚¹ã‚­ãƒ³ãƒ¡ãƒƒã‚·ãƒ¥ãªã©ã§ãƒ™ãƒ¼ã‚¹ã¨ãªã‚‹é ‚ç‚¹ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ç”¨ãƒ¡ãƒƒã‚·ãƒ¥
 */
 
 /**	\addtogroup	gpGraphics	*/
@@ -21,26 +21,26 @@
 namespace Spr{;
 
 /**	
-	@brief •\¦—p‚ÌBlendMesh(GRBlendMesh)‚ÌƒfƒXƒNƒŠƒvƒ^D
+	@brief è¡¨ç¤ºç”¨ã®BlendMesh(GRBlendMesh)ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ï¼
 	
-@@ ‚P’¸“_‚É“K—p‚Å‚«‚éƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚ÍA4ŒÂ‚Ü‚ÅD
-@@ ‚»‚Ì‚½‚ßAblendsAmatrixIndices ‚ÍAVec4fŒ^‚Æ‚µ‚Ä‚ ‚éD
-@@ ‚½‚¾‚µAƒCƒ“ƒfƒbƒNƒX•t‚«ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚Å‚ ‚é‚½‚ßA‚ ‚ç‚©‚¶‚ß“o˜^‚Å‚«‚éƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚É§ŒÀ‚Í‚È‚µD
+ã€€ã€€ ï¼‘é ‚ç‚¹ã«é©ç”¨ã§ãã‚‹ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã¯ã€4å€‹ã¾ã§ï¼
+ã€€ã€€ ãã®ãŸã‚ã€blendsã€matrixIndices ã¯ã€Vec4få‹ã¨ã—ã¦ã‚ã‚‹ï¼
+ã€€ã€€ ãŸã ã—ã€ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ä»˜ããƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã§ã‚ã‚‹ãŸã‚ã€ã‚ã‚‰ã‹ã˜ã‚ç™»éŒ²ã§ãã‚‹ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã«åˆ¶é™ã¯ãªã—ï¼
 	
  */
 struct GRBlendMeshDesc{	
-	std::vector<Vec3f> 	positions;			///< ’¸“_‚ÌÀ•W
-	std::vector<Vec3f> 	normals;			///< ’¸“_‚Ì–@ü
-	std::vector<Vec4f> 	colors;				///< ’¸“_‚ÌF
-	std::vector<Vec2f> 	texCoords;			///< ƒeƒNƒXƒ`ƒƒUV
-	std::vector<size_t> faces;				///< –Ê‚ğ\¬‚·‚é’¸“_ƒCƒ“ƒfƒbƒNƒXilŠpŒ`‚ÍOŠpŒ`‚É•ªŠ„j
-	std::vector<Vec4f>  blends;				///< Še’¸“_‚Ìd‚İi1FN = ’¸“_Fblendj
-    std::vector<Vec4f>  matrixIndices;		///< •ÏŠ·s—ñƒCƒ“ƒfƒbƒNƒXi1:N = ’¸“_Fmatrixj
-	std::vector<Vec4f>  numMatrix;			///< Še’¸“_‚É‘Î‚·‚éƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚Ì”
+	std::vector<Vec3f> 	positions;			///< é ‚ç‚¹ã®åº§æ¨™
+	std::vector<Vec3f> 	normals;			///< é ‚ç‚¹ã®æ³•ç·š
+	std::vector<Vec4f> 	colors;				///< é ‚ç‚¹ã®è‰²
+	std::vector<Vec2f> 	texCoords;			///< ãƒ†ã‚¯ã‚¹ãƒãƒ£UV
+	std::vector<size_t> faces;				///< é¢ã‚’æ§‹æˆã™ã‚‹é ‚ç‚¹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ï¼ˆå››è§’å½¢ã¯ä¸‰è§’å½¢ã«åˆ†å‰²ï¼‰
+	std::vector<Vec4f>  blends;				///< å„é ‚ç‚¹ã®é‡ã¿ï¼ˆ1ï¼šN = é ‚ç‚¹ï¼šblendï¼‰
+    std::vector<Vec4f>  matrixIndices;		///< å¤‰æ›è¡Œåˆ—ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ï¼ˆ1:N = é ‚ç‚¹ï¼šmatrixï¼‰
+	std::vector<Vec4f>  numMatrix;			///< å„é ‚ç‚¹ã«å¯¾ã™ã‚‹ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã®æ•°
 };
 
 
-/**	@brief	ƒOƒ‰ƒtƒBƒbƒNƒX‚Åg‚¤•\¦—p‚ÌBlendMesh */
+/**	@brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã§ä½¿ã†è¡¨ç¤ºç”¨ã®BlendMesh */
 struct GRBlendMeshIf: public GRVisualIf{
 	SPR_IFDEF(GRBlendMesh);
 };

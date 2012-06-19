@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,33 +19,33 @@ using namespace std;
 class MYApp : public FWAppGLUT, public UTRefCount{
 	
 private:
-	double					dt;				//< Ï•ª•
-	double					nIter;			//< LCP”½•œ‰ñ”
+	double					dt;				//< ç©åˆ†å¹…
+	double					nIter;			//< LCPåå¾©å›žæ•°
 	bool					bTimer;
 
-	int								numWindow;		//< ì‚éƒEƒBƒ“ƒhƒE‚Ì”
-	vector< UTRef< FWWin > > 		windows;		//< ì‚Á‚½ƒEƒBƒ“ƒhƒE
-	vector< UTRef< FWSceneIf > >	fwScenes;		//< Physics‚ÌƒV[ƒ“ƒOƒ‰ƒt
-	vector< string >				winNames;		//< Window‚Ì–¼‘O
-	vector< string >				fileNames;		//< “Ç‚Ýž‚Þƒtƒ@ƒCƒ‹‚Ì–¼‘O
+	int								numWindow;		//< ä½œã‚‹ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®æ•°
+	vector< UTRef< FWWin > > 		windows;		//< ä½œã£ãŸã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
+	vector< UTRef< FWSceneIf > >	fwScenes;		//< Physicsã®ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•
+	vector< string >				winNames;		//< Windowã®åå‰
+	vector< string >				fileNames;		//< èª­ã¿è¾¼ã‚€ãƒ•ã‚¡ã‚¤ãƒ«ã®åå‰
 
-	vector< Affinef	>				views;			//< ƒJƒƒ‰ˆÊ’u‚Ì‰ñ“]EƒY[ƒ€‚ðs‚¤Žž‚Ìs—ñ—p‚Ì•Ï”
+	vector< Affinef	>				views;			//< ã‚«ãƒ¡ãƒ©ä½ç½®ã®å›žè»¢ãƒ»ã‚ºãƒ¼ãƒ ã‚’è¡Œã†æ™‚ã®è¡Œåˆ—ç”¨ã®å¤‰æ•°
 
 public:
 	
-	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	MYApp();
 
-	// ‚±‚ÌƒNƒ‰ƒX“à‚ÅV‚µ‚­éŒ¾‚·‚éŠÖ”
+	// ã“ã®ã‚¯ãƒ©ã‚¹å†…ã§æ–°ã—ãå®£è¨€ã™ã‚‹é–¢æ•°
 	void NumOfClassMembers(std::ostream& out);
 
-	// ƒCƒ“ƒ^ƒtƒF[ƒXŠÖ”
+	// ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹é–¢æ•°
 	double	GetTimeStep()					{return dt;}
 	void	SetTimeStep(double data)		{dt = data;}
 	double	GetNumIteration()				{return nIter;}
 	void	SetNumIteration(double data)	{nIter = data;}
 	
-	// Šî’ê‚ÌƒNƒ‰ƒX‚ÅéŒ¾‚³‚ê‚½ŠÖ”‚Ì‚¤‚¿ƒI[ƒo[ƒ[ƒh‚·‚éŠÖ”
+	// åŸºåº•ã®ã‚¯ãƒ©ã‚¹ã§å®£è¨€ã•ã‚ŒãŸé–¢æ•°ã®ã†ã¡ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ã™ã‚‹é–¢æ•°
 	void Init(int argc, char* argv[]);
 	void Keyboard(int key, int x, int y);
 	void Display();

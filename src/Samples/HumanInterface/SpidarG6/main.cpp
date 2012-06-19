@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,8 +7,8 @@
  */
 
 /**
-	SPIDARG6‚ÌÚ‘±Šm”F‚Ì‚½‚ß‚ÌƒvƒƒOƒ‰ƒ€
-	ƒOƒŠƒbƒvˆÊ’u‚Ì•\¦‚Æ_‚ç‚©‚¢°‚ª’ñ¦‚³‚ê‚é
+	SPIDARG6ã®æ¥ç¶šç¢ºèªã®ãŸã‚ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+	ã‚°ãƒªãƒƒãƒ—ä½ç½®ã®è¡¨ç¤ºã¨æŸ”ã‚‰ã‹ã„åºŠãŒæç¤ºã•ã‚Œã‚‹
 */
 
 #include <conio.h>
@@ -18,7 +18,7 @@
 using namespace Spr;
 
 int __cdecl main(){
-	// —ÍŠoƒCƒ“ƒ^ƒtƒF[ƒX‚Æ‚ÌÚ‘±İ’è
+	// åŠ›è¦šã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã¨ã®æ¥ç¶šè¨­å®š
 	UTRef<HISdkIf> hiSdk = HISdkIf::CreateSdk();
 
 	// win32

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,28 +7,28 @@
  */
 /**
  *	@file SprCreature.h
- *	@brief ƒNƒŠ[ƒ`ƒƒ‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹ŒQ
+ *	@brief ã‚¯ãƒªãƒ¼ãƒãƒ£ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ç¾¤
 */
 #ifndef SPR_CREATURE_H
 #define SPR_CREATURE_H
 
-// ƒNƒŠ[ƒ`ƒƒ‚ÌSdk
+// ã‚¯ãƒªãƒ¼ãƒãƒ£ã®Sdk
 #include "Creature/SprCRSdk.h"
 
-// ƒNƒŠ[ƒ`ƒƒi‚P‘Ìj
+// ã‚¯ãƒªãƒ¼ãƒãƒ£ï¼ˆï¼‘ä½“ï¼‰
 #include "Creature/SprCRCreature.h"
 
-// ƒ{ƒfƒB : ƒNƒŠ[ƒ`ƒƒ‚Ìg‘Ì
+// ãƒœãƒ‡ã‚£ : ã‚¯ãƒªãƒ¼ãƒãƒ£ã®èº«ä½“
 #include "Creature/SprCRBody.h"
 #include "Creature/SprCRBone.h"
 
-// CREngine : ƒNƒŠ[ƒ`ƒƒ‚ğ“®‚©‚·ƒAƒ‹ƒSƒŠƒYƒ€ŒQiŠ´ŠoE‰^“®Es“®Œˆ’è‚È‚Çj‚ÌŠî–{ƒNƒ‰ƒX
+// CREngine : ã‚¯ãƒªãƒ¼ãƒãƒ£ã‚’å‹•ã‹ã™ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ç¾¤ï¼ˆæ„Ÿè¦šãƒ»é‹å‹•ãƒ»è¡Œå‹•æ±ºå®šãªã©ï¼‰ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
 #include "Creature/SprCREngine.h"
 
-// ƒRƒ“ƒgƒ[ƒ‰
+// ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 #include "Creature/SprCRController.h"
 
-// ƒZƒ“ƒT@i‚Pƒtƒ@ƒCƒ‹‚É“‡—\’èj <!!>
+// ã‚»ãƒ³ã‚µã€€ï¼ˆï¼‘ãƒ•ã‚¡ã‚¤ãƒ«ã«çµ±åˆäºˆå®šï¼‰ <!!>
 #include "Creature/SprCRTouchSensor.h"
 #include "Creature/SprCRVisualSensor.h"
 

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,7 +17,7 @@
 
 namespace Spr{
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 CRTrunkFootHumanBodyGenDesc::CRTrunkFootHumanBodyGenDesc(){
 
 	jointOrder = PLUG_PARENT;
@@ -40,7 +40,7 @@ CRTrunkFootHumanBodyGenDesc::CRTrunkFootHumanBodyGenDesc(){
 	springWaistChest   = 100.0;  damperWaistChest   =  50.0;
 	springChestHead    = 100.0;  damperChestHead    =  50.0;
 
-	// Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø
+	// Vec2d(lower, upper)  lower>upperã®ã¨ãå¯å‹•åŸŸåˆ¶é™ç„¡åŠ¹
 	rangeWaistChest   = Vec2d(Rad(0.0) , Rad(0.01));
 	rangeChestHead    = Vec2d(Rad(0.0) , Rad(0.01));
 }
@@ -88,7 +88,7 @@ void CRTrunkFootHumanBodyGen::CreateChest(){
 	boxDesc.boxsize  = Vec3f(chestBreadth, chestHeight, chestThickness);
 	solids[SO_CHEST]->AddShape(phSdk->CreateShape(boxDesc));
 
-	//˜•”ˆÊ‚Æã”¼g‚ÌŠÔ‚ÌŠÖß
+	//è…°éƒ¨ä½ã¨ä¸ŠåŠèº«ã®é–“ã®é–¢ç¯€
 	{
 		PHHingeJointDesc hingeDesc;
 		// hingeDesc.posePlug.Pos() = Vec3d(0,0,0);
@@ -148,7 +148,7 @@ void CRTrunkFootHumanBodyGen::CreateHead(){
 	// sphereDesc.radius = 0.2387/2.0;
 	solids[SO_HEAD]->AddShape(phSdk->CreateShape(sphereDesc));
 
-	//ã”¼g‚Æ“ª•”‚ÌŠÔ‚ÌŠÖß
+	//ä¸ŠåŠèº«ã¨é ­éƒ¨ã®é–“ã®é–¢ç¯€
 	hingeDesc                  = PHHingeJointDesc();
     // hingeDesc.posePlug.Pos()   = Vec3d(0.0, 0.0, 0.0);
     hingeDesc.posePlug.Pos()   = Vec3d(0.0, chestHeight/2.0 + neckLength/2.0, 0.0);
@@ -213,7 +213,7 @@ void CRTrunkFootHumanBodyGen::CreateFoot(LREnum lr){
 
 // --- --- ---
 void CRTrunkFootHumanBodyGen::InitContact(){
-	// ©•ª‚É‘®‚·‚é„‘Ì“¯m‚ÌÚG‚ğOffi‚Ü‚¾­‚È‚·‚¬‚é‚©‚àHÅ’áŒÀ‚ÌÚG‚Íc‚µ‚½‚¢i07/09/25, mitakejj
+	// è‡ªåˆ†ã«å±ã™ã‚‹å‰›ä½“åŒå£«ã®æ¥è§¦ã‚’Offï¼ˆã¾ã å°‘ãªã™ãã‚‹ã‹ã‚‚ï¼Ÿæœ€ä½é™ã®æ¥è§¦ã¯æ®‹ã—ãŸã„ï¼ˆ07/09/25, mitakeï¼‰ï¼‰
 	for (unsigned int i=0; i<solids.size(); ++i) {
 		for (unsigned int j=0; j<solids.size(); ++j) {
 			if (i!=j) {
@@ -223,7 +223,7 @@ void CRTrunkFootHumanBodyGen::InitContact(){
 	}
 
 	/*
-	// ©•ªˆÈŠO‚É‚·‚Å‚ÉBody‚ª‹‚ê‚Î‚»‚ÌBody‚É‘®‚·‚é„‘Ì‚Æ‚ÌContact‚àØ‚é
+	// è‡ªåˆ†ä»¥å¤–ã«ã™ã§ã«BodyãŒå±…ã‚Œã°ãã®Bodyã«å±ã™ã‚‹å‰›ä½“ã¨ã®Contactã‚‚åˆ‡ã‚‹
 	for (int i=0; i<creature->NBodies(); ++i) {
 		CRBodyIf* body = creature->GetBody(i);
 		if (DCAST(CRTrunkFootHumanBodyGenIf,body)!=(this->Cast())) {

@@ -5,7 +5,27 @@ set MODULE=FWOldSpringhead
 set MAKEFILE=%MODULE%Stub.mak.txt
 rem makefileÇÃçÏê¨Ç∆MakeÇÃé¿çs
 set PATHORG=%PATH%;
-set PATH=..\..\bin
+
+
+rem Create SJIS World
+set PATH=..\..\bin;
+if not exist ..\..\swigtemp mkdir ..\..\swigtemp
+if not exist ..\..\swigtemp\src mkdir ..\..\swigtemp\src
+if not exist ..\..\swigtemp\include mkdir ..\..\swigtemp\include
+if not exist ..\..\swigtemp\src\Foundation mkdir ..\..\swigtemp\src\Foundation
+if not exist ..\..\swigtemp\include\Base mkdir ..\..\swigtemp\include\Base
+if not exist ..\..\swigtemp\src\Framework mkdir ..\..\swigtemp\src\Framework
+if not exist ..\..\swigtemp\include\Framework mkdir ..\..\swigtemp\include\Framework
+
+nkf -s < ..\..\include\Springhead.h > ..\..\swigtemp\include\Springhead.h
+nkf -s < ..\..\include\base\Env.h > ..\..\swigtemp\include\base\Env.h
+nkf -s < ..\..\include\Base\BaseDebug.h > ..\..\swigtemp\include\Base\BaseDebug.h
+nkf -s < ..\..\src\Foundation\UTTypeDesc.h > ..\..\swigtemp\src\Foundation\UTTypeDesc.h
+nkf -s < ..\..\src\Framework\FWOldSpringheadNodeHandler.h > ..\..\swigtemp\src\Framework\FWOldSpringheadNodeHandler.h
+
+
+cd ..\..\swigtemp\src\Foundation
+set PATH=..\..\..\bin;..\..\..\bin\swig
 set SRCIMP=..\Framework\FWOldSpringheadNodeHandler.h
 
 echo src files:%SRCIMP%

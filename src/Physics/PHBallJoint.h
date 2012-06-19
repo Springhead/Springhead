@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,13 +18,13 @@ namespace Spr{;
 class PHBallJoint;
 enum PHDeformationType;
 
-///	ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚É‘Î‰‚·‚éƒcƒŠ[ƒm[ƒh
+///	ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã«å¯¾å¿œã™ã‚‹ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰
 class PHBallJointNode : public PHTreeNodeND<3>{
 public:
 	SPR_OBJECTDEF1(PHBallJointNode, PHTreeNode);
 	SPR_DECLMEMBEROF_PHBallJointNodeDesc;
 
-	/// ƒXƒCƒ“ƒOEƒcƒCƒXƒgŠp‚ÌŠÔ•Ï‰»—¦‚©‚çŠp‘¬“x‚Ö‚Ìƒ„ƒRƒrƒAƒ“
+	/// ã‚¹ã‚¤ãƒ³ã‚°ãƒ»ãƒ„ã‚¤ã‚¹ãƒˆè§’ã®æ™‚é–“å¤‰åŒ–ç‡ã‹ã‚‰è§’é€Ÿåº¦ã¸ã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³
 	Matrix3d	Jst;
 
 	PHBallJoint*		GetJoint(){return PHTreeNodeND<3>::GetJoint()->Cast();}
@@ -36,7 +36,7 @@ public:
 	PHBallJointNode(const PHBallJointNodeDesc& desc = PHBallJointNodeDesc()){}	
 };
 
-/// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg
+/// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆ
 class PHBallJoint : public PHNDJoint<3>{
 protected:
 	friend class PHBallJointConeLimit;
@@ -48,30 +48,30 @@ public:
 	SPR_OBJECTDEF1(PHBallJoint, PHJoint);
 	SPR_DECLMEMBEROF_PHBallJointDesc;
 
-	PHBallJointLimit*	limit;		///< ‰Â“®”ÍˆÍS‘©
-	PHBallJointMotor	motor;		///< ŠÖßƒRƒ“ƒgƒ[ƒ‰
+	PHBallJointLimit*	limit;		///< å¯å‹•ç¯„å›²æ‹˜æŸ
+	PHBallJointMotor	motor;		///< é–¢ç¯€ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHBallJoint(const PHBallJointDesc& desc = PHBallJointDesc());
 
-	/// ABA‚Å‘Î‰‚·‚éPHTreeNode‚Ì”h¶ƒNƒ‰ƒX‚ğ¶¬‚µ‚Ä•Ô‚·
+	/// ABAã§å¯¾å¿œã™ã‚‹PHTreeNodeã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã—ã¦è¿”ã™
 	virtual PHTreeNode*		CreateTreeNode(){ return DBG_NEW PHBallJointNode(); }
 
-	// ----- PHConstraint‚Ì‹@”\‚ğƒI[ƒo[ƒ‰ƒCƒh
+	// ----- PHConstraintã®æ©Ÿèƒ½ã‚’ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰
 
 	virtual void	SetupLCP();
 	virtual	void	IterateLCP();
 
-	// ----- PHConstraint‚Ì”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- PHConstraintã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
 	virtual void	UpdateJointState();
 	virtual void	SetupAxisIndex() { PHJoint::SetupAxisIndex(); motor.SetupAxisIndex(); }
 	virtual void	CompBias();
 	virtual void	CompError();
 
-	// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+	// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 	
-	/// ChildObjectD‰Â“®ˆæ‚ğ’Ç‰Á‚Å‚«‚é
+	/// ChildObjectï¼å¯å‹•åŸŸã‚’è¿½åŠ ã§ãã‚‹
 	virtual bool AddChildObject(ObjectIf* o) {
 		if (!limit) { limit = o->Cast(); if(limit){ limit->joint=this;return true; }}
 		return PHConstraint::AddChildObject(o);

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -33,13 +33,13 @@ protected:
 	UTRef<FISdkIf>	fiSdk;
 	UTRef<HISdkIf>	hiSdk;
 
-	///	ƒV[ƒ“
+	///	ã‚·ãƒ¼ãƒ³
 	typedef std::vector< UTRef<FWSceneIf> > FWScenes;
 	FWScenes scenes;
-	/// ƒAƒNƒeƒBƒuƒV[ƒ“
+	/// ã‚¢ã‚¯ãƒ†ã‚£ãƒ–ã‚·ãƒ¼ãƒ³
 	//FWSceneIf*		curScene;
 	
-	/// ƒŒƒ“ƒ_ƒ‰
+	/// ãƒ¬ãƒ³ãƒ€ãƒ©
 	typedef std::vector< UTRef<GRRenderIf> > Renders;
 	Renders renders;
 	//GRRenderIf*		curRender;
@@ -56,13 +56,13 @@ public:
 	FWSdk();
 	~FWSdk();
 
-	/// SDKŠÖŒW
+	/// SDKé–¢ä¿‚
 	PHSdkIf* GetPHSdk(){ return phSdk; }
 	GRSdkIf* GetGRSdk(){ return grSdk; }
 	FISdkIf* GetFISdk(){ return fiSdk; }
 	HISdkIf* GetHISdk(){ return hiSdk; }
 
-	/// ƒV[ƒ“ŠÖŒW
+	/// ã‚·ãƒ¼ãƒ³é–¢ä¿‚
 	FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
 	bool LoadScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
 	bool SaveScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
@@ -71,7 +71,7 @@ public:
 	FWSceneIf* GetScene(int i = -1);
 	void MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
 		
-	/// ƒŒƒ“ƒ_ƒ‰ŠÖŒW
+	/// ãƒ¬ãƒ³ãƒ€ãƒ©é–¢ä¿‚
 	//GRRenderIf*	CreateRender();
 	//int NRender() const{return (int)renders.size();}
 	//void SwitchRender(GRRenderIf* render){ curRender = render; }
@@ -83,7 +83,7 @@ public:
 	GRRenderIf* GetRender();
 	//void SetDSTR(bool f){ DSTRFlag = f; }
 	
-	// Object‚Ì‰¼‘zŠÖ”‚ÌÀ‘•
+	// Objectã®ä»®æƒ³é–¢æ•°ã®å®Ÿè£…
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t i);
 	virtual bool AddChildObject(ObjectIf* o);

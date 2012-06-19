@@ -1,4 +1,4 @@
-#ifndef PRIMITIVE_MESHSHAPE_H
+﻿#ifndef PRIMITIVE_MESHSHAPE_H
 #define PRIMITIVE_MESHSHAPE_H
 
 #include <Springhead.h>

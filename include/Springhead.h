@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file Springhead.h
- *	@brief Springhead‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹ŒQ
+ *	@brief Springheadã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ç¾¤
 */
 #ifndef SPRINGHEAD_H
 #define SPRINGHEAD_H

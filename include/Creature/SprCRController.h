@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,21 +17,21 @@ struct PHSolidIf;
 
 //@{
 
-///	ƒNƒŠ[ƒ`ƒƒEƒRƒ“ƒgƒ[ƒ‰‚ÌŠî–{ƒNƒ‰ƒX
+///	ã‚¯ãƒªãƒ¼ãƒãƒ£ãƒ»ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
 struct CRControllerIf : public CREngineIf{
 	SPR_IFDEF(CRController);
 
-	///	ó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+	///	çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	void Reset();
 
-	/// Œ»ó‚ğ•Ô‚·
+	/// ç¾çŠ¶ã‚’è¿”ã™
 	int GetStatus();
 };
 
 struct CRControllerDesc{
 	SPR_DESCDEF(CRController);
 
-	/// ƒRƒ“ƒgƒ[ƒ‰‚ÌŒ»ó‚ğ•\‚·Enum
+	/// ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã®ç¾çŠ¶ã‚’è¡¨ã™Enum
 	enum CRControllerStatus {
 		CS_WAITING = 0,
 		CS_WORKING,
@@ -43,58 +43,58 @@ struct CRControllerDesc{
 	}
 };
 
-///	‹üƒRƒ“ƒgƒ[ƒ‰
+///	è¦–ç·šã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 struct CRGazeControllerIf : public CRControllerIf{
 	SPR_IFDEF(CRGazeController);
 
-	///  ‹‘ÎÛˆÊ’u‚ğƒZƒbƒg‚·‚é
+	///  è¦–å¯¾è±¡ä½ç½®ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	void SetTargetPosition(Vec3d pos);
 };
 
 struct CRGazeControllerDesc{
 	SPR_DESCDEF(CRGazeController);
 
-	/// ƒ‰ƒxƒ‹ <!!>
+	/// ãƒ©ãƒ™ãƒ« <!!>
 
 	CRGazeControllerDesc(){
 	}
 };
 
-///	“’B‰^“®ƒRƒ“ƒgƒ[ƒ‰
+///	åˆ°é”é‹å‹•ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 struct CRReachControllerIf : public CRControllerIf{
 	SPR_IFDEF(CRReachController);
 
-	///  “’B‘ÎÛˆÊ’u‚ğƒZƒbƒg‚·‚é
+	///  åˆ°é”å¯¾è±¡ä½ç½®ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	void SetTargetPosition(Vec3d pos);
 };
 
 struct CRReachControllerDesc{
 	SPR_DESCDEF(CRReachController);
 
-	/// ƒ‰ƒxƒ‹ <!!>
+	/// ãƒ©ãƒ™ãƒ« <!!>
 
 	CRReachControllerDesc(){
 	}
 };
 
-///	”cƒRƒ“ƒgƒ[ƒ‰
+///	æŠŠæŒã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 struct CRGrabControllerIf : public CRControllerIf{
 	SPR_IFDEF(CRGrabController);
 
-	///  ”c‘ÎÛ„‘Ì‚ğƒZƒbƒg‚·‚é
+	///  æŠŠæŒå¯¾è±¡å‰›ä½“ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	void SetTargetSolid(PHSolidIf* targetSolid);
 
-	/// ‚Â‚©‚ñ‚Å‚¢‚é•¨‘Ì‚ğ•Ô‚·D‚Â‚©‚ñ‚Å‚¢‚È‚¯‚ê‚ÎNULL
+	/// ã¤ã‹ã‚“ã§ã„ã‚‹ç‰©ä½“ã‚’è¿”ã™ï¼ã¤ã‹ã‚“ã§ã„ãªã‘ã‚Œã°NULL
 	PHSolidIf* GetGrabbingSolid();
 
-	/// ”c‚Ég—p‚·‚é„‘Ì‚ğ•Ô‚·
+	/// æŠŠæŒã«ä½¿ç”¨ã™ã‚‹å‰›ä½“ã‚’è¿”ã™
 	PHSolidIf* GetSolid();
 };
 
 struct CRGrabControllerDesc{
 	SPR_DESCDEF(CRGrabController);
 
-	/// ƒ‰ƒxƒ‹ <!!>
+	/// ãƒ©ãƒ™ãƒ« <!!>
 
 	CRGrabControllerDesc(){
 	}

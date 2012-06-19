@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -32,106 +32,106 @@ struct FWSdkDesc{};
 struct FWSdkIf : SdkIf {
 	SPR_IFDEF(FWSdk);
 
-	/** @brief SDK�I�u�W�F�N�g���쐬����
+	/** @brief SDKオブジェクトを作成する
 	 */
 	static FWSdkIf* SPR_CDECL CreateSdk();
 
-	/** @brief ��̃V�[�����쐬����
-		��̃V�[�����쐬���A�V�[�����X�g�ɒǉ�����D
-		�쐬���ꂽ�V�[���̓A�N�e�B�u�ƂȂ�D
+	/** @brief 空のシーンを作成する
+		空のシーンを作成し、シーンリストに追加する．
+		作成されたシーンはアクティブとなる．
 	 */
 	FWSceneIf* CreateScene(const PHSceneDesc& phdesc = PHSceneDesc(), const GRSceneDesc& grdesc = GRSceneDesc());
 
-	/** @brief �V�[�����t�@�C�����烍�[�h����
-		@param filename �t�@�C����
-		@param ii		�t�@�C���̎�ނ�����IfInfo
-		@param objs		�e�I�u�W�F�N�g�̔z��
-		�w�肳�ꂽ�t�@�C������V�[�������[�h���A�V�[�����X�g�ɒǉ�����D
-		���[�h��́C���[�h���ꂽ�V�[�����A�N�e�B�u�ƂȂ�D
-		�t�@�C�����ɕ����̃V�[�����܂܂�Ă����ꍇ�́C�Ō�Ƀ��[�h���ꂽ�V�[�����A�N�e�B�u�ƂȂ�D
+	/** @brief シーンをファイルからロードする
+		@param filename ファイル名
+		@param ii		ファイルの種類を示すIfInfo
+		@param objs		親オブジェクトの配列
+		指定されたファイルからシーンをロードし、シーンリストに追加する．
+		ロード後は，ロードされたシーンがアクティブとなる．
+		ファイル中に複数のシーンが含まれていた場合は，最後にロードされたシーンがアクティブとなる．
 
-		ii��NULL�̏ꍇ�͊g���q����t�@�C���^�C�v�����肳���D
-		�t�@�C���^�C�v�𖾎��������ꍇ��ii�ɑΉ�����IfInfo���w�肷��(FIFileXIf::GetIfInfoStatic()�Ȃ�)
+		iiがNULLの場合は拡張子からファイルタイプが判定される．
+		ファイルタイプを明示したい場合はiiに対応するIfInfoを指定する(FIFileXIf::GetIfInfoStatic()など)
 		
-		�e�I�u�W�F�N�g���w�肵�����ꍇ�́Cobjs�ɐݒ肷��D
-		objs��NULL�̏ꍇ�C�V�[����FWSdk�̎q�I�u�W�F�N�g�Ƃ��ă��[�h�����D
+		親オブジェクトを指定したい場合は，objsに設定する．
+		objsがNULLの場合，シーンはFWSdkの子オブジェクトとしてロードされる．
 
-		�����ŃC���|�[�g�����t�@�C���̃^�C�v�͕K���g���q��蔻�肳���D
+		内部でインポートされるファイルのタイプは必ず拡張子より判定される．
 	 */
 	bool LoadScene(UTString filename, ImportIf* ex=NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
 
-	/** @brief �V�[�����t�@�C���փZ�[�u����
-		@param filename �t�@�C����
-		@param ex		�G�N�X�|�[�g���
-		@param ii		�t�@�C���̎�ނ�����IfInfo
-		@param objs		�ۑ�����I�u�W�F�N�g�̔z��
-		�t�@�C���̎�ނ̎w��ɂ��Ă�LoadScene���Q�ƁD
+	/** @brief シーンをファイルへセーブする
+		@param filename ファイル名
+		@param ex		エクスポート情報
+		@param ii		ファイルの種類を示すIfInfo
+		@param objs		保存するオブジェクトの配列
+		ファイルの種類の指定についてはLoadSceneを参照．
 
-		�ۑ�����I�u�W�F�N�g���w�肵�����ꍇ�́C������objs�ɐݒ肷��D
-		objs��NULL�̏ꍇ�͑S�Ă�FWScene���ۑ������D
+		保存するオブジェクトを指定したい場合は，それらをobjsに設定する．
+		objsがNULLの場合は全てのFWSceneが保存される．
 
-		�����I�ɕʃt�@�C���ɕۑ��������ꍇ�̓G�N�X�|�[�g����ex�Ɏw�肷��D
-		ex��NULL�̏ꍇ�͑S�Ă�1�̃t�@�C���ɕۑ������D
+		部分的に別ファイルに保存したい場合はエクスポート情報をexに指定する．
+		exがNULLの場合は全てが1つのファイルに保存される．
 	 */
 	bool SaveScene(UTString filename, ImportIf* ex = NULL, const IfInfo* ii = NULL, ObjectIfs* objs = NULL);
 
-	/// �V�[���̌����擾����
+	/// シーンの個数を取得する
 	int NScene() const;
 
-	/** @brief �V�[����؂�ւ���
+	/** @brief シーンを切り替える
 		@param scene
-		�V�[��scene���A�N�e�B�u�ɂ���
+		シーンsceneをアクティブにする
 	 */
 	//void	SwitchScene(FWSceneIf* scene);
 
-	/** @brief �V�[�����擾����
-		@param index �擾����V�[���̃C���f�b�N�X
+	/** @brief シーンを取得する
+		@param index 取得するシーンのインデックス
 	 */
 	FWSceneIf* GetScene(int index = -1);
 
-	/** @brief �V�[����������
-		scene1�Ɋ܂܂��S�Ă̗v�f��scene0�Ɉړ����Cscene1���폜����D
+	/** @brief シーンを混ぜる
+		scene1に含まれる全ての要素をscene0に移動し，scene1を削除する．
 	 */
 	void	MergeScene(FWSceneIf* scene0, FWSceneIf* scene1);
 
-	/** @brief �����_�����쐬����
-		�����_�����쐬���C�����_�����X�g�ɒǉ�����D
+	/** @brief レンダラを作成する
+		レンダラを作成し，レンダラリストに追加する．
 		
-		��������Device��GL��D3D�����w��ł���悤�ɂ���ׂ�
+		＊引数でDeviceをGLかD3Dかを指定できるようにするべき
 	 */
 	//GRRenderIf*	CreateRender();
 
-	/** @brief �����_���̌����擾���� */
+	/** @brief レンダラの個数を取得する */
 	//int NRender() const;
 	
-	/** @brief �����_�����A�N�e�B�u�ɂ��� */
+	/** @brief レンダラをアクティブにする */
 	//void SwitchRender(GRRenderIf* render);
 	
-	/// Physics SDK(PHSdk)�I�u�W�F�N�g���擾����
+	/// Physics SDK(PHSdk)オブジェクトを取得する
 	PHSdkIf* GetPHSdk();
 
-	/// Graphics SDK(GRSdk)�I�u�W�F�N�g���擾����
+	/// Graphics SDK(GRSdk)オブジェクトを取得する
 	GRSdkIf* GetGRSdk();
 
-	/// FileIO SDK(FISdk)�I�u�W�F�N�g���擾����
+	/// FileIO SDK(FISdk)オブジェクトを取得する
 	FISdkIf* GetFISdk();
 
-	/// HumanInterface SDK(HISdk)�I�u�W�F�N�g���擾����
+	/// HumanInterface SDK(HISdk)オブジェクトを取得する
 	HISdkIf* GetHISdk();
 
-	/// �ȉ��͌݊����ێ��̂��߂Ɏc���Ă��邪�C�J�����g�E�B���h�E�փ��_�C���N�g����̂�
-	/** @brief �f�o�b�O�`�惂�[�h�̎擾 */
+	/// 以下は互換性維持のために残してあるが，カレントウィンドウへリダイレクトするのみ
+	/** @brief デバッグ描画モードの取得 */
 	bool GetDebugMode();
-	/** @brief �f�o�b�O�`�惂�[�h�̐ݒ� */
+	/** @brief デバッグ描画モードの設定 */
 	void SetDebugMode(bool debug = true);
-	/** @brief �V�~�����[�V�����̎��s */
+	/** @brief シミュレーションの実行 */
 	void Step();
-	/** @brief �`������s */
+	/** @brief 描画を実行 */
 	void Draw();
-	/** @brief �����_�����擾���� */
+	/** @brief レンダラを取得する */
 	GRRenderIf* GetRender();
 	
-	/** @brief DSTR�o�͂̃f�o�b�O���̕\���̉ۂ�ݒ�
+	/** @brief DSTR出力のデバッグ情報の表示の可否を設定
 	 */
 	//void SetDSTR(bool f);
 

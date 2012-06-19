@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -126,74 +126,74 @@ void NameManager::Print(std::ostream& os) const {
 	os.width(w);
 }
 
-//	–¼‘O‚ğÄ‹A“I‚ÉŒŸõBnamespace ‚ğl—¶
+//	åå‰ã‚’å†å¸°çš„ã«æ¤œç´¢ã€‚namespace ã‚’è€ƒæ…®
 NamedObjectIf* NameManager::FindObject(UTString name, UTString cls){
 //	DSTR << "NameManager(" << GetName() << ")::FindObject search " << name << std::endl;
 	
-	//	©•ª‚Æq‘·‚ğ’T‚·B
+	//	è‡ªåˆ†ã¨å­å­«ã‚’æ¢ã™ã€‚
 	NamedObjectIf* rv = FindObjectFromDescendant(name, cls);
 	if (rv) return rv;
-	//	æ‘c‚ğ’T‚·D
+	//	å…ˆç¥–ã‚’æ¢ã™ï¼
 	rv = FindObjectFromAncestor(name, cls);
 	if (rv) return rv;
 
-	//	‚»‚ê‚Å‚à‚È‚¢‚È‚ç‚ÎAnamespace‚ğí‚Á‚ÄA‚à‚¤ˆê“xŒŸõ
+	//	ãã‚Œã§ã‚‚ãªã„ãªã‚‰ã°ã€namespaceã‚’å‰Šã£ã¦ã€ã‚‚ã†ä¸€åº¦æ¤œç´¢
 	int pos = name.find('/');
-	if (pos != (int)UTString::npos){	//	 –¼‘O‹óŠÔ‚Ìw’è‚ª‚ ‚éê‡
+	if (pos != (int)UTString::npos){	//	 åå‰ç©ºé–“ã®æŒ‡å®šãŒã‚ã‚‹å ´åˆ
 		UTString n = name.substr(pos+1);
 		rv = FindObject(n, cls);
 	}
 	return rv;
 }
-//	æ‘c‚ğ’T‚·
+//	å…ˆç¥–ã‚’æ¢ã™
 NamedObjectIf* NameManager::FindObjectFromAncestor(UTString name, UTString cls){
-	//	‚È‚¯‚ê‚Î‘cæ‚ğ’T‚·B
+	//	ãªã‘ã‚Œã°ç¥–å…ˆã‚’æ¢ã™ã€‚
 	NameManager* nm = nameManager;
 	while(nm){
-		NamedObjectIf* rv = nm->names.Find(name, cls)->Cast();	//	‚Ü‚¸e‚ğ’T‚µA
+		NamedObjectIf* rv = nm->names.Find(name, cls)->Cast();	//	ã¾ãšè¦ªã‚’æ¢ã—ã€
 		if (rv) return rv;
-		//	ŒZ’í‚ğ’T‚µA
+		//	å…„å¼Ÿã‚’æ¢ã—ã€
 		for(NameManagers::iterator it = nm->childManagers.begin(); it!=nm->childManagers.end(); ++it){
 			if (*it != this){
 				rv = (*it)->FindObjectFromDescendant(name, cls);
 				if (rv) return rv;
 			}
 		}
-		//	‚È‚¯‚ê‚ÎAe‚Ìe‚ğ’T‚·B
+		//	ãªã‘ã‚Œã°ã€è¦ªã®è¦ªã‚’æ¢ã™ã€‚
 		nm = nm->nameManager;
 	}
 	return NULL;
 }
 
-//	©•ª‚Æq‘·‚ğ’T‚·
+//	è‡ªåˆ†ã¨å­å­«ã‚’æ¢ã™
 NamedObjectIf* NameManager::FindObjectFromDescendant(UTString name, UTString cls){
 //	DSTR << "NameManager(" << GetName() << ")::FindDescendant search " << name << std::endl;
-	//	‚Ò‚Á‚½‚è‚Ì‚à‚Ì‚ğ’T‚·
+	//	ã´ã£ãŸã‚Šã®ã‚‚ã®ã‚’æ¢ã™
 	NamedObjectIf* rv = FindObjectExact(name, cls);
 	if (rv) return rv;
-	//	‚È‚¯‚ê‚ÎCq‘·‚É‚Â‚¢‚Ä’T‚·
+	//	ãªã‘ã‚Œã°ï¼Œå­å­«ã«ã¤ã„ã¦æ¢ã™
 	for(NameManagers::iterator it = childManagers.begin(); it != childManagers.end(); ++it){
 		rv = (*it)->FindObjectFromDescendant(name, cls);
 		if (rv) return rv;
 	}
 	return rv;
 }
-//	ƒl[ƒ€ƒXƒy[ƒX‚İ‚Å–¼‘O‚ğŒŸõ‚·‚éBŒŸõêŠ‚É‚Â‚¢‚Ä‚ÍÄ‹A‚È‚µB
+//	ãƒãƒ¼ãƒ ã‚¹ãƒšãƒ¼ã‚¹è¾¼ã¿ã§åå‰ã‚’æ¤œç´¢ã™ã‚‹ã€‚æ¤œç´¢å ´æ‰€ã«ã¤ã„ã¦ã¯å†å¸°ãªã—ã€‚
 NamedObjectIf* NameManager::FindObjectExact(UTString name, UTString cls){
 	NamedObjectIf* rv = NULL;
 	int pos = name.find('/');
-	if (pos != (int)UTString::npos){	//	 –¼‘O‹óŠÔ‚Ìw’è‚ª‚ ‚éê‡
+	if (pos != (int)UTString::npos){	//	 åå‰ç©ºé–“ã®æŒ‡å®šãŒã‚ã‚‹å ´åˆ
 		UTString n = name.substr(pos+1);
 		UTString ns = name.substr(0, pos);
-		//	‚Ò‚Á‚½‚è‚Ì‚à‚Ì‚ğ’T‚·D
+		//	ã´ã£ãŸã‚Šã®ã‚‚ã®ã‚’æ¢ã™ï¼
 		for(NameManagers::iterator it = childManagers.begin(); it != childManagers.end(); ++it){
 			if (ns.compare((*it)->GetName()) == 0){
 				rv = (*it)->FindObjectExact(n, cls);
 				if (rv) return rv;
 			}
 		}
-	}else{	//	–¼‘O‹óŠÔ‚ª–³‚¢ê‡
-		//	‚Ò‚Á‚½‚è‚Ì‚à‚Ì‚ğ’T‚·
+	}else{	//	åå‰ç©ºé–“ãŒç„¡ã„å ´åˆ
+		//	ã´ã£ãŸã‚Šã®ã‚‚ã®ã‚’æ¢ã™
 		rv = names.Find(name, cls)->Cast();
 	}
 	return rv;

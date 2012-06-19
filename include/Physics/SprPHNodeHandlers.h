@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,9 +12,9 @@
 namespace Spr {;
 /** \addtogroup gpPhysics 	*/
 //@{
-///	‚¨Œİ‚¢‚ÉÕ“Ë‚µ‚È‚¢„‘Ì‚ğİ’è
+///	ãŠäº’ã„ã«è¡çªã—ãªã„å‰›ä½“ã‚’è¨­å®š
 struct PHInactiveSolids{
-	std::vector<std::string> solids;	//	Õ“Ë‚µ‚È‚¢„‘Ì‚ÌƒŠƒXƒg
+	std::vector<std::string> solids;	//	è¡çªã—ãªã„å‰›ä½“ã®ãƒªã‚¹ãƒˆ
 };
 
 //@}

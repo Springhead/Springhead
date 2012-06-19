@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,7 +14,7 @@
 
 namespace Spr{;
 
-///	ƒcƒŠ[ƒm[ƒh‚ÌŠî–{ƒNƒ‰ƒX
+///	ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
 class PHRootNode;
 class PHTreeNode : public SceneObject, public UTTreeNode<PHTreeNode>, public PHTreeNodeDesc{
 public:
@@ -29,11 +29,11 @@ public:
 	int  NChildren(){ return (int)Children().size(); }
 	PHTreeNodeIf* GetChild(int i){ return Children()[i]->Cast(); }
 	
-	bool		Includes(PHTreeNode* node);		///< ©•ªˆÈ‰º‚Éƒm[ƒhnode‚ª‚ ‚é‚©
-	PHTreeNode*	FindBySolid(PHSolid* solid);	///< ©•ªˆÈ‰º‚ÌƒcƒŠ[‚Åsolid‚ğQÆ‚µ‚Ä‚¢‚éƒm[ƒh‚ğ’T‚·
-	PHTreeNode* FindByJoint(PHJoint* joint);	///< ©•ªˆÈ‰º‚ÌƒcƒŠ[‚Åjoint‚ğQÆ‚µ‚Ä‚¢‚éƒm[ƒh‚ğ’T‚·
+	bool		Includes(PHTreeNode* node);		///< è‡ªåˆ†ä»¥ä¸‹ã«ãƒãƒ¼ãƒ‰nodeãŒã‚ã‚‹ã‹
+	PHTreeNode*	FindBySolid(PHSolid* solid);	///< è‡ªåˆ†ä»¥ä¸‹ã®ãƒ„ãƒªãƒ¼ã§solidã‚’å‚ç…§ã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã‚’æ¢ã™
+	PHTreeNode* FindByJoint(PHJoint* joint);	///< è‡ªåˆ†ä»¥ä¸‹ã®ãƒ„ãƒªãƒ¼ã§jointã‚’å‚ç…§ã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã‚’æ¢ã™
 	void		RemoveGearNode();
-	void		Prepare(PHScene* scene, PHConstraintEngine* engine);	///< Ä‹A“I‚Éscene‚Æengine‚ğƒZƒbƒg‚·‚é
+	void		Prepare(PHScene* scene, PHConstraintEngine* engine);	///< å†å¸°çš„ã«sceneã¨engineã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 
 	PHTreeNode();
 
@@ -42,44 +42,44 @@ public:
 	virtual void ResetGearNode();
 	virtual void CompAccel()=0;
 	virtual void CompAccelDiff(bool bUpdate, bool bImpulse)=0;
-	/// ‚±‚Ìƒm[ƒh‚É‰Á‚í‚éS‘©—Í‚Ì•Ï‰»—Ê‚©‚ç‘¼‚Ìƒm[ƒh‚Ì‘¬“x•Ï‰»—Ê‚Ö‚Ì‰e‹¿‚ğŒvZDLCP‚Åg—p
+	/// ã“ã®ãƒãƒ¼ãƒ‰ã«åŠ ã‚ã‚‹æ‹˜æŸåŠ›ã®å¤‰åŒ–é‡ã‹ã‚‰ä»–ã®ãƒãƒ¼ãƒ‰ã®é€Ÿåº¦å¤‰åŒ–é‡ã¸ã®å½±éŸ¿ã‚’è¨ˆç®—ï¼LCPã§ä½¿ç”¨
 	virtual void CompResponse(const SpatialVector& df, bool bUpdate, bool bImpulse);
 	virtual void CompBiasForceDiff(bool bUpdate, bool bImpulse)=0;
 	//virtual void SetupLCP();
 	//virtual void IterateLCP();
 	virtual void InitArticulatedInertia();
 			void InitArticulatedBiasForce();
-	virtual void CompArticulatedInertia();			///< Articulated Inertia‚ÌŒvZ
-	virtual void CompArticulatedBiasForce();		///< Articulated Bias Force‚ÌŒvZ
-	virtual	void CompSpatialTransform();			///< ƒm[ƒhŠÔ‚ÌÀ•W•ÏŠ·‚ÌŒvZ
+	virtual void CompArticulatedInertia();			///< Articulated Inertiaã®è¨ˆç®—
+	virtual void CompArticulatedBiasForce();		///< Articulated Bias Forceã®è¨ˆç®—
+	virtual	void CompSpatialTransform();			///< ãƒãƒ¼ãƒ‰é–“ã®åº§æ¨™å¤‰æ›ã®è¨ˆç®—
 	virtual void CompCoriolisAccel();
-	virtual void CompJointJacobian(){}				///< ŠÖßƒ„ƒRƒrƒAƒ“‚ğŒvZ
-	virtual void CompJointCoriolisAccel(){}			///< ƒRƒŠƒIƒŠ‚Ì‰Á‘¬“x‚ğŒvZ	
-	virtual void AccumulateInertia(){}				///< Ia‚ğeƒm[ƒh‚ÌIa‚ÉÏ‚İã‚°‚é
-	virtual void AccumulateBiasForce(){}			///< Za‚ğeƒm[ƒh‚ÌZa‚ÉÏ‚İã‚°‚é
+	virtual void CompJointJacobian(){}				///< é–¢ç¯€ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ã‚’è¨ˆç®—
+	virtual void CompJointCoriolisAccel(){}			///< ã‚³ãƒªã‚ªãƒªã®åŠ é€Ÿåº¦ã‚’è¨ˆç®—	
+	virtual void AccumulateInertia(){}				///< Iaã‚’è¦ªãƒãƒ¼ãƒ‰ã®Iaã«ç©ã¿ä¸Šã’ã‚‹
+	virtual void AccumulateBiasForce(){}			///< Zaã‚’è¦ªãƒãƒ¼ãƒ‰ã®Zaã«ç©ã¿ä¸Šã’ã‚‹
 			void ResetCorrectionVarsRecursive();
-	virtual void ResetCorrectionVars();				///< Correction‚Ì•Ï”‚Ì‰Šú‰»
-	virtual void UpdateVelocity(double dt);			///< „‘Ì‚Ì‘¬“x‚ÌXV
-	virtual void UpdatePosition(double dt);			///< „‘Ì‚ÌˆÊ’u‚ÌXV
-	virtual void UpdateJointVelocity(double dt){}	///< ŠÖß‘¬“x‚ÌXV
-	virtual void UpdateJointPosition(double dt){}	///< ŠÖßˆÊ’u‚ÌXV
-	virtual void CompRelativeVelocity(){}			///< ŠÖß‘¬“x‚©‚ç„‘ÌŠÔ‘Š‘Î‘¬“x‚ğŒvZ
-	virtual void CompRelativePosition(){}			///< ŠÖßˆÊ’u‚©‚ç„‘ÌŠÔ‘Š‘ÎˆÊ’u‚ğŒvZ
+	virtual void ResetCorrectionVars();				///< Correctionã®å¤‰æ•°ã®åˆæœŸåŒ–
+	virtual void UpdateVelocity(double dt);			///< å‰›ä½“ã®é€Ÿåº¦ã®æ›´æ–°
+	virtual void UpdatePosition(double dt);			///< å‰›ä½“ã®ä½ç½®ã®æ›´æ–°
+	virtual void UpdateJointVelocity(double dt){}	///< é–¢ç¯€é€Ÿåº¦ã®æ›´æ–°
+	virtual void UpdateJointPosition(double dt){}	///< é–¢ç¯€ä½ç½®ã®æ›´æ–°
+	virtual void CompRelativeVelocity(){}			///< é–¢ç¯€é€Ÿåº¦ã‹ã‚‰å‰›ä½“é–“ç›¸å¯¾é€Ÿåº¦ã‚’è¨ˆç®—
+	virtual void CompRelativePosition(){}			///< é–¢ç¯€ä½ç½®ã‹ã‚‰å‰›ä½“é–“ç›¸å¯¾ä½ç½®ã‚’è¨ˆç®—
 	
-	//int			id;						///< IDDƒ‹[ƒgƒm[ƒh‚ª0‚Ådepth-first‚ÅŠ„‚è“–‚Ä‚ç‚ê‚éD
-	PHJoint*	joint;						///< eƒm[ƒh‚Æ‚±‚Ìƒm[ƒh‚Æ‚ğ‚Â‚È‚®S‘©
-	//bool		opposite;					///< ƒcƒŠ[ƒm[ƒh‚ÌeqŠÖŒW‚ÆS‘©‚ÌeqŠÖŒWiƒ\ƒPƒbƒg‚ª‚Â‚¢‚Ä‚é‚Ì‚ªej‚ª‹t‚È‚çtrue
+	//int			id;						///< IDï¼ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ãŒ0ã§depth-firstã§å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã‚‹ï¼
+	PHJoint*	joint;						///< è¦ªãƒãƒ¼ãƒ‰ã¨ã“ã®ãƒãƒ¼ãƒ‰ã¨ã‚’ã¤ãªãæ‹˜æŸ
+	//bool		opposite;					///< ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰ã®è¦ªå­é–¢ä¿‚ã¨æ‹˜æŸã®è¦ªå­é–¢ä¿‚ï¼ˆã‚½ã‚±ãƒƒãƒˆãŒã¤ã„ã¦ã‚‹ã®ãŒè¦ªï¼‰ãŒé€†ãªã‚‰true
 
 	SpatialMatrix			I;				///< Articulated Inertia
 	SpatialVector			Z;				///< Articulated Bias Force
-	SpatialVector			dZ;				///< S‘©—Í‚Ì•Ï‰»‚É‚æ‚éZ‚Ì•Ï‰»—Ê
-	SpatialVector			c;				///< ƒRƒŠƒIƒŠ‰Á‘¬“x
-	SpatialVector			cj;				///< ŠÖß‘¬“x‚É‚æ‚éƒRƒŠƒIƒŠ‰Á‘¬“x
+	SpatialVector			dZ;				///< æ‹˜æŸåŠ›ã®å¤‰åŒ–ã«ã‚ˆã‚‹Zã®å¤‰åŒ–é‡
+	SpatialVector			c;				///< ã‚³ãƒªã‚ªãƒªåŠ é€Ÿåº¦
+	SpatialVector			cj;				///< é–¢ç¯€é€Ÿåº¦ã«ã‚ˆã‚‹ã‚³ãƒªã‚ªãƒªåŠ é€Ÿåº¦
 
 	SpatialTransform		Xcp, Xcj;
 	SpatialMatrix			XIX, XtrIJ_JIJinv_Jtr, XtrIJ_JIJinv_JtrIX;
-	SpatialVector			a, da;			///< ‰Á‘¬“x‚Æ‚»‚Ì•Ï‰»—Ê
-	//SpatialVector			v, dv;			///< ‘¬“x‚Æ‚»‚Ì•Ï‰»—Ê
+	SpatialVector			a, da;			///< åŠ é€Ÿåº¦ã¨ãã®å¤‰åŒ–é‡
+	//SpatialVector			v, dv;			///< é€Ÿåº¦ã¨ãã®å¤‰åŒ–é‡
 	SpatialVector			ap, Ic, ZplusIc, XtrZplusIc;
 
 	PHScene*	scene;
@@ -109,7 +109,7 @@ public:
 	virtual void UpdateVelocity(double dt);
 	virtual void UpdatePosition(double dt);
 	
-	PHSolid*	solid;		///< ƒ‹[ƒgƒm[ƒh‚Ì„‘Ì
+	PHSolid*	solid;		///< ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã®å‰›ä½“
 
 	PHRootNode(const PHRootNodeDesc& desc = PHRootNodeDesc()){
 		solid = NULL;
@@ -119,7 +119,7 @@ protected:
 };
 
 class PHGear;
-///	N©—R“x‚ÌŠÖß‚ÌŠî–{ƒNƒ‰ƒX
+///	Nè‡ªç”±åº¦ã®é–¢ç¯€ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
 template<int NDOF>
 class PHTreeNodeND : public PHTreeNode{
 public:
@@ -129,7 +129,7 @@ public:
 	
 	PHNDJoint<NDOF>* GetJoint(){return (PHNDJoint<NDOF>*)DCAST(PHJoint , joint);}
 
-	/// ABAŠÖŒW‚ÌŠÖ”
+	/// ABAé–¢ä¿‚ã®é–¢æ•°
 	virtual void ResetGearNode();
 	virtual void CompCoriolisAccel();
 	virtual void CompSpatialTransform();
@@ -144,7 +144,7 @@ public:
 	virtual void UpdateJointVelocity(double dt);
 	virtual void UpdateJointPosition(double dt);
 
-	/// LCPŠÖŒW‚ÌŠÖ”
+	/// LCPé–¢ä¿‚ã®é–¢æ•°
 	virtual void CompResponse(const VecNd& tau, bool bUpdate);
 	//		void CompResponseMatrix();
 	//virtual void ModifyJacobian();
@@ -154,21 +154,21 @@ public:
 	//virtual void Projection(double& f, int k)=0;
 
 	void AddGear(PHGear* gear, PHTreeNodeND<NDOF>* child);
-	PHGear*			gear;				///< ƒMƒA‚Ö‚ÌQÆD‚±‚ÌƒMƒA‚ğ‰î‚µ‚Äeƒm[ƒh‚Æ˜A“®‚·‚é
-	PHTreeNodeND<NDOF>*	gearNode;			///< ƒMƒAƒm[ƒh‚Ö‚ÌQÆDNULL:˜A“®‚È‚µ, this:ƒMƒAƒgƒŒƒCƒ“Åã’i
-	std::vector<PHTreeNodeND<NDOF>*> gearChildren;	///< ©g‚ªgearNode‚Ìê‡C˜A“®‚µ‚Ä‚¢‚éƒm[ƒh‚Ì”z—ñ
+	PHGear*			gear;				///< ã‚®ã‚¢ã¸ã®å‚ç…§ï¼ã“ã®ã‚®ã‚¢ã‚’ä»‹ã—ã¦è¦ªãƒãƒ¼ãƒ‰ã¨é€£å‹•ã™ã‚‹
+	PHTreeNodeND<NDOF>*	gearNode;			///< ã‚®ã‚¢ãƒãƒ¼ãƒ‰ã¸ã®å‚ç…§ï¼NULL:é€£å‹•ãªã—, this:ã‚®ã‚¢ãƒˆãƒ¬ã‚¤ãƒ³æœ€ä¸Šæ®µ
+	std::vector<PHTreeNodeND<NDOF>*> gearChildren;	///< è‡ªèº«ãŒgearNodeã®å ´åˆï¼Œé€£å‹•ã—ã¦ã„ã‚‹ãƒãƒ¼ãƒ‰ã®é…åˆ—
 	PHTreeNodeND<NDOF>*	parentND;
 	
 	PHTreeNodeND();
 //protected:
-//	bool			constr[NDOF];			///< ABA‚Æ‚µ‚ÄŠe©—R“x‚ğS‘©‚·‚é‚©
-	Matrix6Nd		J;						///< ŠÖßÀ•W‚©‚ç‘Š‘Î‘¬“x‚Ö‚Ìƒ„ƒRƒrƒAƒ“
+//	bool			constr[NDOF];			///< ABAã¨ã—ã¦å„è‡ªç”±åº¦ã‚’æ‹˜æŸã™ã‚‹ã‹
+	Matrix6Nd		J;						///< é–¢ç¯€åº§æ¨™ã‹ã‚‰ç›¸å¯¾é€Ÿåº¦ã¸ã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³
 	Matrix6Nd		IJ, XtrIJ, J_JIJinv, IJ_JIJinv, XtrIJ_JIJinv;
 	MatrixNd		JIJ, JIJinv;
 	VecNd	JtrZplusIc;
-	VecNd	accel, daccel, dtau, vel;	///< ŠÖß‰Á‘¬“xi‚Æ•Ï‰»—ÊjCŠÖßƒgƒ‹ƒN‚Ì•Ï‰»—ÊCŠÖß‘¬“x
+	VecNd	accel, daccel, dtau, vel;	///< é–¢ç¯€åŠ é€Ÿåº¦ï¼ˆã¨å¤‰åŒ–é‡ï¼‰ï¼Œé–¢ç¯€ãƒˆãƒ«ã‚¯ã®å¤‰åŒ–é‡ï¼Œé–¢ç¯€é€Ÿåº¦
 
-	SpatialTransform	Xcg;			///< ƒMƒAƒgƒŒƒCƒ“‚Ìeƒm[ƒh‚Æ‚ÌŠÔ‚ÌÀ•W•ÏŠ·
+	SpatialTransform	Xcg;			///< ã‚®ã‚¢ãƒˆãƒ¬ã‚¤ãƒ³ã®è¦ªãƒãƒ¼ãƒ‰ã¨ã®é–“ã®åº§æ¨™å¤‰æ›
 	SpatialMatrix	sumXIX;
 	SpatialVector	sumXtrZplusIc, sumXtrdZ;
 	Matrix6Nd		sumXtrIJ, sumXtrIJ_sumJIJinv;
@@ -176,11 +176,11 @@ public:
 	VecNd			sumJtrZplusIc, sumJtrdZ, sumtorque, JtrdZ;
 	
 
-	//VecNd A, Ainv, dA, b, db, f;	///< ŠÖßÀ•WLCP‚Ì‚½‚ß‚Ì•Ï”
-	//MatrixNd Jq;					///< ŠÖßÀ•WLCP‚É‚¨‚¯‚éŠÖß‘¬“x‚©‚çS‘©•Ï”‚Ö‚Ìƒ„ƒRƒrƒAƒ“
+	//VecNd A, Ainv, dA, b, db, f;	///< é–¢ç¯€åº§æ¨™LCPã®ãŸã‚ã®å¤‰æ•°
+	//MatrixNd Jq;					///< é–¢ç¯€åº§æ¨™LCPã«ãŠã‘ã‚‹é–¢ç¯€é€Ÿåº¦ã‹ã‚‰æ‹˜æŸå¤‰æ•°ã¸ã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³
 };
 
-///	1©—R“x‚ÌŠÖß
+///	1è‡ªç”±åº¦ã®é–¢ç¯€
 class PHTreeNode1D : public PHTreeNodeND<1>{
 public:
 	SPR_OBJECTDEF_ABST1(PHTreeNode1D, PHTreeNode);

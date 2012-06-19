@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,7 +11,7 @@
 
 /**
  *	@file SprPHScene.h
- *	@brief ƒV[ƒ“
+ *	@brief ã‚·ãƒ¼ãƒ³
 */
 #ifndef SPR_PHSCENEIF_H
 #define SPR_PHSCENEIF_H
@@ -33,7 +33,7 @@ struct PHConstraintEngineIf;
 struct PHGravityEngineIf;
 struct PHPenaltyEngineIf;
 
-/// Ray cast‚ÌŒ‹‰Ê•Û‘¶—p
+/// Ray castã®çµæœä¿å­˜ç”¨
 struct PHRaycastHit{
 	PHSolidIf* solid;
 	CDShapeIf* shape;
@@ -67,12 +67,12 @@ public:
 //struct PHJointDesc: public PHConstraintDesc{
 //};
 
-/// •¨—ƒGƒ“ƒWƒ“‚ÌƒV[ƒ“‚Ìó‘Ô
+/// ç‰©ç†ã‚¨ãƒ³ã‚¸ãƒ³ã®ã‚·ãƒ¼ãƒ³ã®çŠ¶æ…‹
 struct PHSceneState{
-	/// Ï•ªƒXƒeƒbƒv[s]
+	/// ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—[s]
 	double timeStep;
 	double haptictimeStep;
-	/// Ï•ª‚µ‚½‰ñ”
+	/// ç©åˆ†ã—ãŸå›æ•°
 	unsigned count;
 	PHSceneState(){Init();}
 	void Init(){
@@ -81,22 +81,22 @@ struct PHSceneState{
 		count = 0;
 	}
 };
-/// •¨—ƒGƒ“ƒWƒ“‚ÌƒV[ƒ“‚ÌƒfƒXƒNƒŠƒvƒ^
+/// ç‰©ç†ã‚¨ãƒ³ã‚¸ãƒ³ã®ã‚·ãƒ¼ãƒ³ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHSceneDesc: public PHSceneState{
-	///	ÚG‚Ìƒ‚[ƒh
+	///	æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰
 	enum ContactMode{
-		MODE_NONE,		///< –³‹‚·‚é
-		MODE_PENALTY,	///< ƒyƒiƒ‹ƒeƒB–@‚Å‰ğ‚­
-		MODE_LCP		///< LCP‚Å‰ğ‚­
+		MODE_NONE,		///< ç„¡è¦–ã™ã‚‹
+		MODE_PENALTY,	///< ãƒšãƒŠãƒ«ãƒ†ã‚£æ³•ã§è§£ã
+		MODE_LCP		///< LCPã§è§£ã
 	};
 	
-	/** İ’èƒpƒ‰ƒ[ƒ^D
-		ŠeEngine‚ÌAPI‚ğ‰î‚µ‚Ä‘Sƒpƒ‰ƒ[ƒ^‚ªæ“¾Eİ’è‰Â”\‚¾‚ªCˆÈ‰º‚Ìƒpƒ‰ƒ[ƒ^‚Í
-		•p”É‚É—p‚¢‚é‚Ì‚ÅPHSceneIf‚©‚ç‚àƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚É‚µ‚Ä‚ ‚éDi—vŒŸ“¢j
+	/** è¨­å®šãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ï¼
+		å„Engineã®APIã‚’ä»‹ã—ã¦å…¨ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãŒå–å¾—ãƒ»è¨­å®šå¯èƒ½ã ãŒï¼Œä»¥ä¸‹ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯
+		é »ç¹ã«ç”¨ã„ã‚‹ã®ã§PHSceneIfã‹ã‚‰ã‚‚ã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã‚ˆã†ã«ã—ã¦ã‚ã‚‹ï¼ï¼ˆè¦æ¤œè¨ï¼‰
 	 */
-	Vec3d	gravity;			///< d—Í‰Á‘¬“xƒxƒNƒgƒ‹
-	double	airResistanceRate;	///< –ˆƒXƒeƒbƒv„‘Ì‚Ì‘¬“x‚ÉŠ|‚¯‚ç‚ê‚é”{—¦
-	int		numIteration;		///< LCP‚Ì”½•œ‰ñ”
+	Vec3d	gravity;			///< é‡åŠ›åŠ é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«
+	double	airResistanceRate;	///< æ¯ã‚¹ãƒ†ãƒƒãƒ—å‰›ä½“ã®é€Ÿåº¦ã«æ›ã‘ã‚‰ã‚Œã‚‹å€ç‡
+	int		numIteration;		///< LCPã®åå¾©å›æ•°
 
 	PHSceneDesc(){Init();}
 	void Init(){
@@ -107,285 +107,285 @@ struct PHSceneDesc: public PHSceneState{
 	}
 };
 
-///	ƒV[ƒ“
+///	ã‚·ãƒ¼ãƒ³
 struct PHSceneIf : public SceneIf{
 public:
 	SPR_IFDEF(PHScene);
 
-	/** @brief ‚±‚ÌScene‚ğ‚à‚ÂSDK‚ğ•Ô‚·
-		@return SDK‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+	/** @brief ã“ã®Sceneã‚’ã‚‚ã¤SDKã‚’è¿”ã™
+		@return SDKã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 	 */
 	PHSdkIf* GetSdk();
 
-	/** @brief Solid‚ğì¬‚·‚é
-		@param desc ì¬‚·‚éSolid‚ÌƒfƒBƒXƒNƒŠƒvƒ^
-		@return Solid‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+	/** @brief Solidã‚’ä½œæˆã™ã‚‹
+		@param desc ä½œæˆã™ã‚‹Solidã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+		@return Solidã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 	*/
 	PHSolidIf* CreateSolid(const PHSolidDesc& desc = PHSolidDesc());
 	
-	/** @brief Solid‚Ì”‚ğæ“¾‚·‚é
-		@return Solid‚Ì”
+	/** @brief Solidã®æ•°ã‚’å–å¾—ã™ã‚‹
+		@return Solidã®æ•°
 	 */
 	int NSolids()const;
 
-	/** @brief Solid‚ğæ“¾‚·‚é
-		@return Solid‚ÌƒCƒ“ƒ^ƒtƒF[ƒX‚Ì”z—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	/** @brief Solidã‚’å–å¾—ã™ã‚‹
+		@return Solidã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®é…åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	 */
 	PHSolidIf** GetSolids();
 
-	/** @brief SolidPair‚Ì”‚ğæ“¾‚·‚é
-		@return SolidPair‚Ì”
+	/** @brief SolidPairã®æ•°ã‚’å–å¾—ã™ã‚‹
+		@return SolidPairã®æ•°
 	*/
 	int NSolidPairs()const;
 
-	/** @brief SolidPair‚ğæ“¾‚·‚é
+	/** @brief SolidPairã‚’å–å¾—ã™ã‚‹
 		@return 
 	*/
 	PHSolidPairForLCPIf* GetSolidPair(int i, int j);
 
-	/** @brief SolidPair‚ğæ“¾‚·‚é
-		@param lhs ‘g‚İ‚Ì•Ğ•û‚Ì„‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
-		@param rhs ‘g‚İ‚Ì‚à‚¤•Ğ•û‚Ì„‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
-		@param bSwap ƒXƒƒbƒv‚³‚ê‚½ê‡‚Ísoiid[0] = lhs, solid[1] = rhs‚Æ‚È‚é
-		@return „‘Ì‚ÌƒyƒA
+	/** @brief SolidPairã‚’å–å¾—ã™ã‚‹
+		@param lhs çµ„ã¿ã®ç‰‡æ–¹ã®å‰›ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+		@param rhs çµ„ã¿ã®ã‚‚ã†ç‰‡æ–¹ã®å‰›ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+		@param bSwap ã‚¹ãƒ¯ãƒƒãƒ—ã•ã‚ŒãŸå ´åˆã¯soiid[0] = lhs, solid[1] = rhsã¨ãªã‚‹
+		@return å‰›ä½“ã®ãƒšã‚¢
 	*/
 	PHSolidPairForLCPIf* GetSolidPair(PHSolidIf* lhs, PHSolidIf* rhs, bool& bSwap);
 
 
-	/** @brief w’è‚µ‚½„‘Ì“¯m‚ÌÚG‚Ìƒ‚[ƒh‚ğİ’è‚·‚é
-		@param lhs ‘g‚Ì•Ğ•û‚Ì„‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
-		@param rhs ‘g‚Ì‚à‚¤•Ğ•û‚Ì„‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^
-		@param mode ÚG‚Ìƒ‚[ƒh
+	/** @brief æŒ‡å®šã—ãŸå‰›ä½“åŒå£«ã®æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰ã‚’è¨­å®šã™ã‚‹
+		@param lhs çµ„ã®ç‰‡æ–¹ã®å‰›ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+		@param rhs çµ„ã®ã‚‚ã†ç‰‡æ–¹ã®å‰›ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+		@param mode æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰
 
-		„‘Ìlhs‚Æ„‘Ìrhs‚Æ‚ÌÚG‚Ìƒ‚[ƒh‚ğmode‚Éİ’è‚·‚éD
+		å‰›ä½“lhsã¨å‰›ä½“rhsã¨ã®æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰ã‚’modeã«è¨­å®šã™ã‚‹ï¼
 	  */
 	void SetContactMode(PHSolidIf* lhs,	PHSolidIf* rhs, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 
-	/** @brief w’è‚µ‚½W‡‚ÉŠÜ‚Ü‚ê‚é‘S‚Ä‚Ì„‘Ì“¯m‚ÌÚG‚Ìƒ‚[ƒh‚ğİ’è‚·‚é
-		@param group „‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^”z—ñ‚Ìæ“ªƒAƒhƒŒƒX
-		@param size ƒ|ƒCƒ“ƒ^”z—ñ‚Ì’·‚³
-		@param mode ÚG‚Ìƒ‚[ƒh
+	/** @brief æŒ‡å®šã—ãŸé›†åˆã«å«ã¾ã‚Œã‚‹å…¨ã¦ã®å‰›ä½“åŒå£«ã®æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰ã‚’è¨­å®šã™ã‚‹
+		@param group å‰›ä½“ã¸ã®ãƒã‚¤ãƒ³ã‚¿é…åˆ—ã®å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹
+		@param size ãƒã‚¤ãƒ³ã‚¿é…åˆ—ã®é•·ã•
+		@param mode æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰
 
-		group[0]‚©‚çgroup[size-1]‚Ü‚Å‚Ì‘S‚Ä‚Ì„‘Ì‚Ì‘g‚ÌÚG‚Ìƒ‚[ƒh‚ğmode‚Éİ’è‚·‚éD
+		group[0]ã‹ã‚‰group[size-1]ã¾ã§ã®å…¨ã¦ã®å‰›ä½“ã®çµ„ã®æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰ã‚’modeã«è¨­å®šã™ã‚‹ï¼
 	 */
 	void SetContactMode(PHSolidIf** group, size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 
-	/** @brief w’è‚µ‚½„‘Ì‚Æ‘¼‚Ì„‘Ì‚Æ‚Ì‘S‚Ä‚ÌÚG‚Ìƒ‚[ƒh‚ğİ’è‚·‚é
-		@param mode ÚG‚Ìƒ‚[ƒh
+	/** @brief æŒ‡å®šã—ãŸå‰›ä½“ã¨ä»–ã®å‰›ä½“ã¨ã®å…¨ã¦ã®æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰ã‚’è¨­å®šã™ã‚‹
+		@param mode æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰
 	 */
 	void SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 
-	/** @brief ƒV[ƒ“‚ª•Û—L‚·‚é‘S‚Ä‚Ì„‘Ì“¯m‚ÌÚG‚Ìƒ‚[ƒh‚ğİ’è‚·‚é
-		@param mode ÚG‚Ìƒ‚[ƒh
+	/** @brief ã‚·ãƒ¼ãƒ³ãŒä¿æœ‰ã™ã‚‹å…¨ã¦ã®å‰›ä½“åŒå£«ã®æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰ã‚’è¨­å®šã™ã‚‹
+		@param mode æ¥è§¦ã®ãƒ¢ãƒ¼ãƒ‰
 	 */
 	void SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 
-	/** @brief ŠÖß‚ğì¬‚·‚é
-		@param lhs ŠÖß‚ğæ‚è•t‚¯‚é„‘Ì
-		@param rhs ŠÖß‚ğæ‚è•t‚¯‚é„‘Ì
-		@param desc ŠÖß‚ÌƒfƒBƒXƒNƒŠƒvƒ^
-		@return ŠÖß‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
-		„‘Ìlhs‚Æ„‘Ìrhs‚ğ˜AŒ‹‚·‚éŠÖß‚ğì¬‚·‚éD
-		desc‚É‚Íì¬‚µ‚½‚¢ŠÖß‚Ìí—Ş‚É‘Î‰‚·‚éƒfƒBƒXƒNƒŠƒvƒ^iPHJointDesc‚©‚ç”h¶‚·‚éj‚ğ“n‚·D
-		lhs‚Éƒ\ƒPƒbƒg‚ªCrhs‚Éƒvƒ‰ƒO‚ªæ‚è•t‚¯‚ç‚ê‚éD
+	/** @brief é–¢ç¯€ã‚’ä½œæˆã™ã‚‹
+		@param lhs é–¢ç¯€ã‚’å–ã‚Šä»˜ã‘ã‚‹å‰›ä½“
+		@param rhs é–¢ç¯€ã‚’å–ã‚Šä»˜ã‘ã‚‹å‰›ä½“
+		@param desc é–¢ç¯€ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+		@return é–¢ç¯€ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
+		å‰›ä½“lhsã¨å‰›ä½“rhsã‚’é€£çµã™ã‚‹é–¢ç¯€ã‚’ä½œæˆã™ã‚‹ï¼
+		descã«ã¯ä½œæˆã—ãŸã„é–¢ç¯€ã®ç¨®é¡ã«å¯¾å¿œã™ã‚‹ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ï¼ˆPHJointDescã‹ã‚‰æ´¾ç”Ÿã™ã‚‹ï¼‰ã‚’æ¸¡ã™ï¼
+		lhsã«ã‚½ã‚±ãƒƒãƒˆãŒï¼Œrhsã«ãƒ—ãƒ©ã‚°ãŒå–ã‚Šä»˜ã‘ã‚‰ã‚Œã‚‹ï¼
 	 */
 	PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc);
 	template <class T> PHJointIf* CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const T& desc){
 		return CreateJoint(lhs, rhs, T::GetIfInfo(), desc);
 	}
 	
-	/** @brief ŠÖß‚Ì”‚ğæ“¾‚·‚é
+	/** @brief é–¢ç¯€ã®æ•°ã‚’å–å¾—ã™ã‚‹
 	 */
 	int NJoints()const;
 
-	/** @brief ŠÖß‚ğæ“¾‚·‚é
+	/** @brief é–¢ç¯€ã‚’å–å¾—ã™ã‚‹
 	 */
 	PHJointIf* GetJoint(int i);
 
-	/** @brief ÚGS‘©‚Ì”‚ğæ“¾‚·‚é
+	/** @brief æ¥è§¦æ‹˜æŸã®æ•°ã‚’å–å¾—ã™ã‚‹
 	 */
 	int NContacts()const;
 
-	/** @brief ÚGS‘©‚ğæ“¾‚·‚é
+	/** @brief æ¥è§¦æ‹˜æŸã‚’å–å¾—ã™ã‚‹
 	 */
 	PHContactPointIf* GetContact(int i);
 
-	/** @brief FEM Mesh‚Ì”‚ğæ“¾‚·‚é
+	/** @brief FEM Meshã®æ•°ã‚’å–å¾—ã™ã‚‹
 	 */
 	int NFemMeshes()const;
 
-	/** @brief FEM Mesh‚ğæ“¾‚·‚é
+	/** @brief FEM Meshã‚’å–å¾—ã™ã‚‹
 	 */
 	PHFemMeshIf* GetFemMesh(int i);
 
-	/** @brief ƒ‹[ƒgƒm[ƒh‚ğì¬‚·‚é
-		@param root ƒ‹[ƒgƒm[ƒh‚Æ‚È‚é„‘Ì
-		@return ƒ‹[ƒgƒm[ƒh‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
-		ŠÖßƒcƒŠ[‚Ìª‚Æ‚È‚éƒm[ƒh‚ğì¬‚·‚éD
+	/** @brief ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã‚’ä½œæˆã™ã‚‹
+		@param root ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã¨ãªã‚‹å‰›ä½“
+		@return ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
+		é–¢ç¯€ãƒ„ãƒªãƒ¼ã®æ ¹ã¨ãªã‚‹ãƒãƒ¼ãƒ‰ã‚’ä½œæˆã™ã‚‹ï¼
 	 */
 	PHRootNodeIf* CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc = PHRootNodeDesc());
 
-	/** @brief ƒ‹[ƒgƒm[ƒh‚Ì”
+	/** @brief ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã®æ•°
 	 */
 	int NRootNodes()const;
 
-	/** @brief ƒ‹[ƒgƒm[ƒh‚ğæ“¾‚·‚é
+	/** @brief ãƒ«ãƒ¼ãƒˆãƒãƒ¼ãƒ‰ã‚’å–å¾—ã™ã‚‹
 	 */
 	PHRootNodeIf* GetRootNode(int i);
 
-	/** @brief ƒcƒŠ[ƒm[ƒh‚ğì¬‚·‚é
-		@param parent eƒm[ƒh‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
-		@param child qƒm[ƒh‚Æ‚È‚é„‘Ì
-		@return ƒcƒŠ[ƒm[ƒh‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
-		„‘Ìchild‚ğQÆ‚·‚éƒcƒŠ[ƒm[ƒh‚ğì¬‚µCŠù‘¶‚Ìƒm[ƒhparent‚Ìqƒm[ƒh‚Æ‚µ‚Ä’Ç‰Á‚·‚éD
-		parent‚ªw‚·„‘Ì‚Æchild‚ğ‚Â‚È‚®ŠÖß‚ÍCreateTreeNode‚ÌŒÄ‚Ño‚µ‚æ‚è‚à‘O‚É
-		CreateJoint‚É‚æ‚Á‚Äì¬‚³‚ê‚Ä‚¢‚È‚¯‚ê‚Î‚È‚ç‚È‚¢D
-		‚³‚ç‚ÉCparent‚ªƒ\ƒPƒbƒg‘¤Cchild‚ªƒvƒ‰ƒO‘¤‚Å‚ ‚é•K—v‚ª‚ ‚éD
+	/** @brief ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰ã‚’ä½œæˆã™ã‚‹
+		@param parent è¦ªãƒãƒ¼ãƒ‰ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
+		@param child å­ãƒãƒ¼ãƒ‰ã¨ãªã‚‹å‰›ä½“
+		@return ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
+		å‰›ä½“childã‚’å‚ç…§ã™ã‚‹ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰ã‚’ä½œæˆã—ï¼Œæ—¢å­˜ã®ãƒãƒ¼ãƒ‰parentã®å­ãƒãƒ¼ãƒ‰ã¨ã—ã¦è¿½åŠ ã™ã‚‹ï¼
+		parentãŒæŒ‡ã™å‰›ä½“ã¨childã‚’ã¤ãªãé–¢ç¯€ã¯CreateTreeNodeã®å‘¼ã³å‡ºã—ã‚ˆã‚Šã‚‚å‰ã«
+		CreateJointã«ã‚ˆã£ã¦ä½œæˆã•ã‚Œã¦ã„ãªã‘ã‚Œã°ãªã‚‰ãªã„ï¼
+		ã•ã‚‰ã«ï¼ŒparentãŒã‚½ã‚±ãƒƒãƒˆå´ï¼ŒchildãŒãƒ—ãƒ©ã‚°å´ã§ã‚ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼
 	 */
 	PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc());
 
-	/** @brief ƒMƒA‚ğì¬‚·‚é
-		@param lhs ƒMƒA‚Å˜A“®‚³‚¹‚éŠÖß
-		@param rhs ƒMƒA‚Å˜A“®‚³‚¹‚éŠÖß
-		@param desc ƒMƒA‚ÌƒfƒBƒXƒNƒŠƒvƒ^
-		@return ƒMƒA‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
-		1©—R“xŠÖßlhs‚Ærhs‚ğ˜A“®‚³‚¹‚éƒMƒA‚ğì¬‚·‚éD
-		˜A“®‚³‚ê‚½ŠÖß‚ÍC
+	/** @brief ã‚®ã‚¢ã‚’ä½œæˆã™ã‚‹
+		@param lhs ã‚®ã‚¢ã§é€£å‹•ã•ã›ã‚‹é–¢ç¯€
+		@param rhs ã‚®ã‚¢ã§é€£å‹•ã•ã›ã‚‹é–¢ç¯€
+		@param desc ã‚®ã‚¢ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+		@return ã‚®ã‚¢ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
+		1è‡ªç”±åº¦é–¢ç¯€lhsã¨rhsã‚’é€£å‹•ã•ã›ã‚‹ã‚®ã‚¢ã‚’ä½œæˆã™ã‚‹ï¼
+		é€£å‹•ã•ã‚ŒãŸé–¢ç¯€ã¯ï¼Œ
 		rhs->GetPosition() = desc.ratio * lhs->GetPosition()
-		‚ğ–‚½‚·‚æ‚¤‚ÉS‘©‚³‚ê‚éD
+		ã‚’æº€ãŸã™ã‚ˆã†ã«æ‹˜æŸã•ã‚Œã‚‹ï¼
 	 */
 	PHGearIf* CreateGear(PH1DJointIf* lhs, PH1DJointIf* rhs, const PHGearDesc& desc = PHGearDesc());
 	
-	/** @brief ƒMƒA‚Ì”
+	/** @brief ã‚®ã‚¢ã®æ•°
 	 */
 	int NGears()const;
 
-	/** @brief ƒMƒA‚ğæ“¾‚·‚é
+	/** @brief ã‚®ã‚¢ã‚’å–å¾—ã™ã‚‹
 	 */
 	PHGearIf* GetGear(int i);
 
-	/** @brief ƒpƒX‚ğì¬‚·‚é
-		@param desc ƒpƒX‚ÌƒfƒBƒXƒNƒŠƒvƒ^
-		ƒpƒX‚ğì¬‚·‚éD
-		ƒpƒX‚ÍPHPathJoint‚Ì‹O“¹‚ğ•\Œ»‚·‚é‚½‚ß‚É—p‚¢‚éD
+	/** @brief ãƒ‘ã‚¹ã‚’ä½œæˆã™ã‚‹
+		@param desc ãƒ‘ã‚¹ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+		ãƒ‘ã‚¹ã‚’ä½œæˆã™ã‚‹ï¼
+		ãƒ‘ã‚¹ã¯PHPathJointã®è»Œé“ã‚’è¡¨ç¾ã™ã‚‹ãŸã‚ã«ç”¨ã„ã‚‹ï¼
 	 */
 	PHPathIf* CreatePath(const PHPathDesc& desc = PHPathDesc());
 
-	/** @brief ƒpƒX‚Ì”
+	/** @brief ãƒ‘ã‚¹ã®æ•°
 	*/
 	int NPaths();
 
-	/** @brief ƒpƒX‚ğæ“¾‚·‚é
+	/** @brief ãƒ‘ã‚¹ã‚’å–å¾—ã™ã‚‹
 	*/
 	PHPathIf* GetPath(int i);
 
-	/** @brief raycast‚ÌŒõü‚ğì¬‚·‚é
+	/** @brief raycastã®å…‰ç·šã‚’ä½œæˆã™ã‚‹
 	 */
 	PHRayIf* CreateRay(const PHRayDesc& desc = PHRayDesc());
 
-	/** @brief Œõü‚Ì”
+	/** @brief å…‰ç·šã®æ•°
 	 */
 	int NRays();
 
-	/** @brief Œõü‚ğæ“¾‚·‚é
+	/** @brief å…‰ç·šã‚’å–å¾—ã™ã‚‹
 	 */
 	PHRayIf* GetRay(int i);
 
-	/** @brief IK‚Ìƒm[ƒhiIK‚É—p‚¢‚é‚±‚Æ‚Ì‚Å‚«‚é‰Â“®•¨(=ŠÖß‚È‚Ç)j‚ğì¬‚·‚éD
+	/** @brief IKã®ãƒãƒ¼ãƒ‰ï¼ˆIKã«ç”¨ã„ã‚‹ã“ã¨ã®ã§ãã‚‹å¯å‹•ç‰©(=é–¢ç¯€ãªã©)ï¼‰ã‚’ä½œæˆã™ã‚‹ï¼
 	 */
 	PHIKActuatorIf* CreateIKActuator(const IfInfo* ii, const PHIKActuatorDesc& desc = PHIKActuatorDesc());
 	template <class T> PHIKActuatorIf* CreateIKActuator(const T& desc){
 		return CreateIKActuator(T::GetIfInfo(), desc);
 	}
 
-	/** @brief IKƒAƒNƒ`ƒ…ƒG[ƒ^‚Ì”
+	/** @brief IKã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã®æ•°
 	 */
 	int NIKActuators();
 
-	/** @brief IKƒAƒNƒ`ƒ…ƒG[ƒ^‚ğæ“¾‚·‚é
+	/** @brief IKã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
 	 */
 	PHIKActuatorIf* GetIKActuator(int i);
 
-	/** @brief IK‚ÌƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ğì¬‚·‚éD
+	/** @brief IKã®ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã‚’ä½œæˆã™ã‚‹ï¼
 	 */
 	PHIKEndEffectorIf*	 CreateIKEndEffector(const PHIKEndEffectorDesc& desc = PHIKEndEffectorDesc());
 
-	/** @brief IKƒGƒ“ƒhƒGƒtƒFƒNƒ^‚Ì”
+	/** @brief IKã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã®æ•°
 	 */
 	int NIKEndEffectors();
 
-	/** @brief IKƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ğæ“¾‚·‚é
+	/** @brief IKã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã‚’å–å¾—ã™ã‚‹
 	 */
 	PHIKEndEffectorIf* GetIKEndEffector(int i);
 
-	/** @brief Ï•ªƒXƒeƒbƒv‚ğæ“¾‚·‚é
-		@return Ï•ªƒXƒeƒbƒv
+	/** @brief ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—ã‚’å–å¾—ã™ã‚‹
+		@return ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—
 	 */
 	double GetTimeStep()const;
 
-	/** @brief Ï•ªƒXƒeƒbƒv‚Ì‹t”‚ğæ“¾‚·‚é
-		@return Ï•ªƒXƒeƒbƒv‚Ì‹t”
+	/** @brief ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—ã®é€†æ•°ã‚’å–å¾—ã™ã‚‹
+		@return ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—ã®é€†æ•°
 	 */
 	double GetTimeStepInv()const;
 
-	/** @brief Ï•ªƒXƒeƒbƒv‚ğİ’è‚·‚é
-		@param dt Ï•ªƒXƒeƒbƒv
+	/** @brief ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¨­å®šã™ã‚‹
+		@param dt ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—
 	 */
 	void SetTimeStep(double dt);
 
-	/** @brief Ï•ªƒXƒeƒbƒv‚ğæ“¾‚·‚é
-		@return Ï•ªƒXƒeƒbƒv
+	/** @brief ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—ã‚’å–å¾—ã™ã‚‹
+		@return ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—
 	 */
 	double GetHapticTimeStep()const;
 
-	/** @brief Ï•ªƒXƒeƒbƒv‚ğİ’è‚·‚é
-		@param dt Ï•ªƒXƒeƒbƒv
+	/** @brief ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¨­å®šã™ã‚‹
+		@param dt ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—
 	 */
 	void SetHapticTimeStep(double dt);
 
-	/** @brief ƒJƒEƒ“ƒg”‚ğæ“¾‚·‚é
-		@return ƒJƒEƒ“ƒg”
-		ƒV[ƒ“‚ªì¬‚³‚ê‚Ä‚©‚çŒ»İ‚Ü‚Å‚ÉStep()‚ğÀs‚µ‚½‰ñ”‚ğ•Ô‚·D
+	/** @brief ã‚«ã‚¦ãƒ³ãƒˆæ•°ã‚’å–å¾—ã™ã‚‹
+		@return ã‚«ã‚¦ãƒ³ãƒˆæ•°
+		ã‚·ãƒ¼ãƒ³ãŒä½œæˆã•ã‚Œã¦ã‹ã‚‰ç¾åœ¨ã¾ã§ã«Step()ã‚’å®Ÿè¡Œã—ãŸå›æ•°ã‚’è¿”ã™ï¼
 	 */
 	unsigned GetCount()const;
 
-	/** @brief ƒJƒEƒ“ƒg”‚ğİ’è‚·‚é
-		@param count ƒJƒEƒ“ƒg”
+	/** @brief ã‚«ã‚¦ãƒ³ãƒˆæ•°ã‚’è¨­å®šã™ã‚‹
+		@param count ã‚«ã‚¦ãƒ³ãƒˆæ•°
 	 */
 	void SetCount(unsigned count);
 
-	/** @brief d—Í‚ğİ’è‚·‚é
-		@param accel d—Í‰Á‘¬“xƒxƒNƒgƒ‹
+	/** @brief é‡åŠ›ã‚’è¨­å®šã™ã‚‹
+		@param accel é‡åŠ›åŠ é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«
 	 */
-	//‚±‚±‚É‚½‚¹‚é‚×‚«‚©—vŒŸ“¢‚¾‚ªCNovodex‚Í‚±‚± 
+	//ã“ã“ã«æŒãŸã›ã‚‹ã¹ãã‹è¦æ¤œè¨ã ãŒï¼ŒNovodexã¯ã“ã“ 
 	void SetGravity(const Vec3d& accel);
 	
-	/** @brief d—Í‚ğæ“¾‚·‚é
-		@return d—Í‰Á‘¬“xƒxƒNƒgƒ‹
+	/** @brief é‡åŠ›ã‚’å–å¾—ã™ã‚‹
+		@return é‡åŠ›åŠ é€Ÿåº¦ãƒ™ã‚¯ãƒˆãƒ«
 	 */
 	Vec3d GetGravity();
 
-	/** @brief ‰ñ“]‚É‘Î‚·‚é‹ó‹C’ïR‚ÌŠ„‡‚ğİ’è‚·‚é
-		@param rate ‰ñ“]‚É‘Î‚·‚é‹ó‹C’ïR‚ÌŠ„‡ •W€‚Í1.0 ”ä—¦‚ğ‰º‚°‚é‚ÆƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ªˆÀ’è‚·‚é(PHSolid::UpdateVelocity()“à‚ÅŒÄ‚Î‚ê‚éj
+	/** @brief å›è»¢ã«å¯¾ã™ã‚‹ç©ºæ°—æŠµæŠ—ã®å‰²åˆã‚’è¨­å®šã™ã‚‹
+		@param rate å›è»¢ã«å¯¾ã™ã‚‹ç©ºæ°—æŠµæŠ—ã®å‰²åˆ æ¨™æº–ã¯1.0 æ¯”ç‡ã‚’ä¸‹ã’ã‚‹ã¨ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ãŒå®‰å®šã™ã‚‹(PHSolid::UpdateVelocity()å†…ã§å‘¼ã°ã‚Œã‚‹ï¼‰
 	 */
 	void SetAirResistanceRate(double rate);
 	
-	/** @brief ‰ñ“]‚É‘Î‚·‚é‹ó‹C’ïR‚ÌŠ„‡‚ğæ“¾‚·‚é
-		@return ‰ñ“]‚É‘Î‚·‚é‹ó‹C’ïR‚ÌŠ„‡@•W€‚Í1.0 ”ä—¦‚ğ‰º‚°‚é‚ÆƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ªˆÀ’è‚·‚é(PHSolid::UpdateVelocity()“à‚ÅŒÄ‚Î‚ê‚éj
+	/** @brief å›è»¢ã«å¯¾ã™ã‚‹ç©ºæ°—æŠµæŠ—ã®å‰²åˆã‚’å–å¾—ã™ã‚‹
+		@return å›è»¢ã«å¯¾ã™ã‚‹ç©ºæ°—æŠµæŠ—ã®å‰²åˆã€€æ¨™æº–ã¯1.0 æ¯”ç‡ã‚’ä¸‹ã’ã‚‹ã¨ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ãŒå®‰å®šã™ã‚‹(PHSolid::UpdateVelocity()å†…ã§å‘¼ã°ã‚Œã‚‹ï¼‰
 	 */
 	double GetAirResistanceRate();
 
-	///	@brief LCPƒ\ƒ‹ƒo‚ÌŒvZ‰ñ”‚Ìæ“¾DMODE_LCP‚Ìê‡‚ÌS‘©—Í‚ÌŒJ‚è•Ô‚µ‹ß—ŒvZ‚Ì‰ñ”D
+	///	@brief LCPã‚½ãƒ«ãƒã®è¨ˆç®—å›æ•°ã®å–å¾—ï¼MODE_LCPã®å ´åˆã®æ‹˜æŸåŠ›ã®ç¹°ã‚Šè¿”ã—è¿‘ä¼¼è¨ˆç®—ã®å›æ•°ï¼
 	int GetNumIteration();
-	///	@brief LCPƒ\ƒ‹ƒo‚ÌŒvZ‰ñ”‚Ìİ’èD
+	///	@brief LCPã‚½ãƒ«ãƒã®è¨ˆç®—å›æ•°ã®è¨­å®šï¼
 	void SetNumIteration(int n);
 
-	/** @brief ó‘Ô‚Ì•Û‘¶ (ObjectStates ‚Ì•Û‘¶j‚ÉC
-		Constraints ‚ª‚ÂS‘©—Í‚ğŠÜ‚ß‚é‚©‚Ç‚¤‚©İ’è‚·‚éD
+	/** @brief çŠ¶æ…‹ã®ä¿å­˜ (ObjectStates ã®ä¿å­˜ï¼‰ã«ï¼Œ
+		Constraints ãŒæŒã¤æ‹˜æŸåŠ›ã‚’å«ã‚ã‚‹ã‹ã©ã†ã‹è¨­å®šã™ã‚‹ï¼
 	*/
 	void SetStateMode(bool bConstraints);
 
-	/** @brief ƒV[ƒ“‚Ì‚ği‚ß‚é
+	/** @brief ã‚·ãƒ¼ãƒ³ã®æ™‚åˆ»ã‚’é€²ã‚ã‚‹
 	 */
 	void Step();
 	
@@ -395,50 +395,50 @@ public:
 	void IntegratePart1();
 	void IntegratePart2();
 
-	/** @brief ƒV[ƒ“‚ğ‹ó‚É‚·‚é
+	/** @brief ã‚·ãƒ¼ãƒ³ã‚’ç©ºã«ã™ã‚‹
 	 */
 	void Clear();
 
-	/// ƒGƒ“ƒWƒ“ƒAƒNƒZƒX—pAPI	(ŒöŠJ‚Ì¥”ñ‚É‚Â‚¢‚Ä‚Í—vŒŸ“¢)
+	/// ã‚¨ãƒ³ã‚¸ãƒ³ã‚¢ã‚¯ã‚»ã‚¹ç”¨API	(å…¬é–‹ã®æ˜¯éã«ã¤ã„ã¦ã¯è¦æ¤œè¨)
 
 	int NEngines();
-	/** @brief i”Ô–Ú‚ÌƒGƒ“ƒWƒ“‚ğæ“¾‚·‚é
-		@param i ƒGƒ“ƒWƒ“”Ô†‚ÌƒCƒ“ƒfƒbƒNƒX
-		@return ‘I‘ğ‚µ‚½ƒGƒ“ƒWƒ“‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	/** @brief iç•ªç›®ã®ã‚¨ãƒ³ã‚¸ãƒ³ã‚’å–å¾—ã™ã‚‹
+		@param i ã‚¨ãƒ³ã‚¸ãƒ³ç•ªå·ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		@return é¸æŠã—ãŸã‚¨ãƒ³ã‚¸ãƒ³ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	*/
 	PHEngineIf* GetEngine(int i);
 
-	/** @brief ConstraintEngine‚ğæ“¾‚·‚é
-		@return PHConstraintEngine‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	/** @brief ConstraintEngineã‚’å–å¾—ã™ã‚‹
+		@return PHConstraintEngineã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	*/
 	PHConstraintEngineIf* GetConstraintEngine();
 
-	/** @brief GravityEnigne‚ğæ“¾‚·‚é
-		@return GravityEngine‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	/** @brief GravityEnigneã‚’å–å¾—ã™ã‚‹
+		@return GravityEngineã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	*/
 	PHGravityEngineIf*	GetGravityEngine();
 
-	/** @brief PenaltyEngine‚ğæ“¾‚·‚é
-		@return PenaltyEngine‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	/** @brief PenaltyEngineã‚’å–å¾—ã™ã‚‹
+		@return PenaltyEngineã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	*/
 	PHPenaltyEngineIf*  GetPenaltyEngine();
 
-	/** @brief IKEngine‚ğæ“¾‚·‚é
-		@return IKEngine‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	/** @brief IKEngineã‚’å–å¾—ã™ã‚‹
+		@return IKEngineã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	*/
 	PHIKEngineIf*  GetIKEngine();
 
-	/** @brief HapticEngine‚ğæ“¾‚·‚é
-		@return HapticEngine‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	/** @brief HapticEngineã‚’å–å¾—ã™ã‚‹
+		@return HapticEngineã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	*/
 	PHHapticEngineIf* GetHapticEngine();
 
-	/** @breif HapticPointer‚ğì¬‚·‚é
-		@retrun HapticPointer‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	/** @breif HapticPointerã‚’ä½œæˆã™ã‚‹
+		@retrun HapticPointerã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	*/
 	PHHapticPointerIf* CreateHapticPointer();
 	
-	/** @breif HapticLoop‚ğXV‚·‚é
+	/** @breif HapticLoopã‚’æ›´æ–°ã™ã‚‹
 	*/
 	void StepHapticLoop();
 };

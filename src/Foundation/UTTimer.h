@@ -1,4 +1,4 @@
-#ifndef UTTimer_H
+﻿#ifndef UTTimer_H
 #define UTTimer_H
 #if _MSC_VER >= 1000
 #pragma once
@@ -13,31 +13,31 @@ namespace Spr {
 class UTTimerProvider;
 
 
-/**	�����^�C�}�[
-	�E�i�댯��������Ȃ����j1ms ���x�̐��x�����}���`���f�B�A�^�C�}�[
-	�E�X���b�h���g�p�����[���^�C�}�[
-	�EGLUT�Ȃǂ̃t���[�����[�N�Ɉˑ��������b�Z�[�W�p�b�V���O�^�̃^�C�}�[
-	�E�A�C�h������
-	�Ȃǂ𓝍������^�C�}�[	*/
+/**	統合タイマー
+	・（危険かもしれないが）1ms 程度の精度を持つマルチメディアタイマー
+	・スレッドを使用した擬似タイマー
+	・GLUTなどのフレームワークに依存したメッセージパッシング型のタイマー
+	・アイドル処理
+	などを統合したタイマー	*/
 
 class SPR_DLL UTTimer : public Object{
 public:
 	SPR_OBJECTDEF(UTTimer);
 
 protected:
-	unsigned					interval;			///<	�^�C�}�[�Ăяo���Ԋu(ms)
-	unsigned					resolution;			///<	�^�C�}�[�Ăяo���̉𑜓x(ms)
-	UTTimerIf::TimerFunc		func;				///<	���Ԃ����邽�тɌĂ΂��R�[���o�b�N�֐��D
-	void*						arg;				///<	�R�[���o�b�N�֐��ɓn������
-	volatile UTTimerIf::Mode	mode;				///<	�^�C�}�[�̓��샂�[�h
-	volatile bool				bStarted;			///<	�^�C�}�[��ON�i����I�ɃR�[���o�b�N���Ăяo����ԁj�Ȃ� true
-	volatile bool				bRunning;			///<	�R�[���o�b�N�Ăяo�����Ȃ�� true
+	unsigned					interval;			///<	タイマー呼び出し間隔(ms)
+	unsigned					resolution;			///<	タイマー呼び出しの解像度(ms)
+	UTTimerIf::TimerFunc		func;				///<	時間が来るたびに呼ばれるコールバック関数．
+	void*						arg;				///<	コールバック関数に渡す引数
+	volatile UTTimerIf::Mode	mode;				///<	タイマーの動作モード
+	volatile bool				bStarted;			///<	タイマーがON（定期的にコールバックを呼び出す状態）なら true
+	volatile bool				bRunning;			///<	コールバック呼び出し中ならば true
 
 public:
-	unsigned					timerId;			///<	UTTimer�̒ʂ��ԍ�
-	unsigned					timerIdImpl;		///<	���[�h�ʂɎg����^�C�}ID�D�ʂ��ԍ��ł͂Ȃ�
-	UTTimerProvider*			provider;			///<	�t���[�����[�N�^�C�}�[�������Ă���Ƃ��A�^�C�}�[��񋟂��Ă���t���[�����[�N���o���Ă������߂̃|�C���^
-	volatile bool				bStopThread;		///<	�X���b�h���[�h�̃X���b�h�ɒ�~���w�����邽�߂̃t���O
+	unsigned					timerId;			///<	UTTimerの通し番号
+	unsigned					timerIdImpl;		///<	モード別に使われるタイマID．通し番号ではない
+	UTTimerProvider*			provider;			///<	フレームワークタイマーが動いているとき、タイマーを提供しているフレームワークを覚えておくためのポインタ
+	volatile bool				bStopThread;		///<	スレッドモードのスレッドに停止を指示するためのフラグ
 
 public:
 	UTTimer();
@@ -69,21 +69,21 @@ protected:
 	friend void SPR_STDCALL UTTimer_MMTimerCallback(unsigned int uID, unsigned int, ulong_ptr dwUser, ulong_ptr, ulong_ptr);
 };
 
-///	�t���[�����[�N�ɂ��^�C�}�[�����̂��߂̃R�[���o�b�N�N���X
+///	フレームワークによるタイマー処理のためのコールバッククラス
 class SPR_DLL UTTimerProvider{
 public:
 	UTTimerProvider();
 	virtual ~UTTimerProvider();
-	///	�t���[�����[�N��UTTimer�ɓo�^
+	///	フレームワークをUTTimerに登録
 	void Register();
-	///	�t���[�����[�N��UTTiemr����o�^����
+	///	フレームワークをUTTiemrから登録解除
 	void Unregister();
 	
-	///	�^�C�}�[�̐ݒ�
+	///	タイマーの設定
 	virtual bool StartTimer(UTTimer* timer)=0;
-	///	�^�C�}�[�̍폜
+	///	タイマーの削除
 	virtual bool StopTimer(UTTimer* timer)=0;
-	///	Idle�����̌Ăяo�����Bmode == IDLE�̃^�C�}�[�̃R�[���o�b�N����ʂ�Ăяo���B
+	///	Idle処理の呼び出し口。mode == IDLEのタイマーのコールバックを一通り呼び出す。
 	static void CallIdle();
 };
 

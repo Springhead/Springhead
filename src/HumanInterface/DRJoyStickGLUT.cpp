@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -27,7 +27,7 @@ bool DRJoyStickGLUT::Init(){
 HIVirtualDeviceIf* DRJoyStickGLUT::Rent(const IfInfo* ii, const char* n, int portNo){
 	HIVirtualDeviceIf* dv = HIRealDevice::Rent(ii, n, portNo);
 
-	// Šù‘¶‚Ì‰¼‘zƒfƒoƒCƒX‚ª‚È‚¯‚ê‚Îì¬
+	// æ—¢å­˜ã®ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ãŒãªã‘ã‚Œã°ä½œæˆ
 	if(!dv){
 		DVJoyStick* js = DBG_NEW DV(this, portNo);
 		AddChildObject(js->Cast());

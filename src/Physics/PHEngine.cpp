@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -57,18 +57,18 @@ void PHEngines::GenerateForce(){
 }
 
 void PHEngines::Integrate(){
-//	for(iterator it = dynamicalSystem; it != motion && it!=end2(); ++it)	–{“–‚Ímotion‚Ü‚Å‚É‚·‚×‚«‚¾‚¯‚ÇC
+//	for(iterator it = dynamicalSystem; it != motion && it!=end2(); ++it)	æœ¬å½“ã¯motionã¾ã§ã«ã™ã¹ãã ã‘ã©ï¼Œ
 	for(iterator it = dynamicalSystem; it!=end2(); ++it)
 		UTRef<PHEngine>(*it)->Step();
 }
 
 
 void PHEngines::Sort(){
-	//ƒGƒ“ƒWƒ“‚ğƒvƒ‰ƒCƒIƒŠƒeƒB‚É]‚Á‚Äƒ\[ƒg
+	//ã‚¨ãƒ³ã‚¸ãƒ³ã‚’ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£ã«å¾“ã£ã¦ã‚½ãƒ¼ãƒˆ
 	UTContentsLess< UTRef<PHEngine> > less;
 	std::sort(begin2(), end2(), less);
 
-	//ŠeƒJƒeƒSƒŠ‚Ìæ“ª‚Ö‚ÌƒCƒeƒŒ[ƒ^‚ğ‹L‰¯
+	//å„ã‚«ãƒ†ã‚´ãƒªã®å…ˆé ­ã¸ã®ã‚¤ãƒ†ãƒ¬ãƒ¼ã‚¿ã‚’è¨˜æ†¶
 	initializer = forceGenerator = dynamicalSystem = motion = listener = end2();
 	for(iterator it = begin2(); it != end2(); ++it){
 		if(initializer == end2() && (*it)->GetPriority() >= SGBP_INITIALIZER)

@@ -1,4 +1,4 @@
-#include <Physics/PHHapticEngineSingleBase.h>
+ï»¿#include <Physics/PHHapticEngineSingleBase.h>
 
 namespace Spr{;
 
@@ -19,7 +19,7 @@ void PHHapticEngineSingleBase::Step1(){
 	info.loopCount = 1.0;
 	info.bInterpolatePose = false;
 	GetHapticRender()->HapticRendering(info);
-	//ƒŒƒ“ƒ_ƒŠƒ“ƒO‚µ‚½—Í‚ğƒV[ƒ“‚É”½‰f
+	//ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã—ãŸåŠ›ã‚’ã‚·ãƒ¼ãƒ³ã«åæ˜ 
 	for(int i = 0; i < (int)NHapticSolids(); i++){
 		PHSolidForHaptic* hsolid = GetHapticSolid(i);
 		if(hsolid->bPointer) continue;
@@ -44,11 +44,11 @@ void PHHapticEngineSingleBase::UpdateHapticPointer(){
 }
 
 
-// ƒfƒoƒbƒN—pƒR[ƒh
-// ‹Œ”ÅAPHScene::Step()‚ª“à‘ ‚³‚ê‚Ä‚¢‚é‚Ì‚Å
-// ‚±‚±‚ÅŒÄ‚Ô‚í‚¯‚É‚Í‚¢‚©‚È‚¢
+// ãƒ‡ãƒãƒƒã‚¯ç”¨ã‚³ãƒ¼ãƒ‰
+// æ—§ç‰ˆã€PHScene::Step()ãŒå†…è”µã•ã‚Œã¦ã„ã‚‹ã®ã§
+// ã“ã“ã§å‘¼ã¶ã‚ã‘ã«ã¯ã„ã‹ãªã„
 void PHHapticEngineSingleBase::StepSimulation(){
-	/// ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌÀs
+	/// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®å®Ÿè¡Œ
 	engine->GetScene()->Step();
 }
 

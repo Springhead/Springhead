@@ -1,4 +1,4 @@
-#include <Physics/PHHapticRender.h>
+﻿#include <Physics/PHHapticRender.h>
 #include <Physics/PHHapticEngine.h>
 
 namespace Spr{;
@@ -45,20 +45,20 @@ PHIrs PHHapticRender::CompIntermediateRepresentation(PHHapticPointer* pointer){
 	return irs;
 }
 
-// �͊o�����_�����O
-// �i�Ƃ肠�����~�����j
-// �ʌ`�󂪎g����PenaltyBasedRendering(multiple point intermediate representation)
-// �ʌ`�󂪎g����constratint based rendering
-// �ʌ`�󂪎g����virtual coupling
-// �i�]�͂�����΁j
-// ���^�|�C���^�݂̂��g����Proxy3DoF(�r�c���񂪍�����z�j
-// proxy�Ɏ��ʂ�^���Astick-slip friction���񎦂ł���proxy simulation
+// 力覚レンダリング
+// （とりあえず欲しい）
+// 凸形状が使えるPenaltyBasedRendering(multiple point intermediate representation)
+// 凸形状が使えるconstratint based rendering
+// 凸形状が使えるvirtual coupling
+// （余力があれば）
+// 球型ポインタのみが使えるProxy3DoF(池田くんが作った奴）
+// proxyに質量を与え、stick-slip frictionが提示できるproxy simulation
 
 
-// �e�ڐG���_�̐N���ʂɃo�l�W���������č��v�������̂��o��
-// �o�l�W���������ƕs����ɂȂ�̂Œ�߂Ɂi1000N/m)���x�ɗ}����K�v����
+// 各接触頂点の侵入量にバネ係数をかけて合計したものを出力
+// バネ係数が高いと不安定になるので低めに（1000N/m)程度に抑える必要あり
 void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
-	// ���C�͒ǉ��ł��Ȃ��̂ŁA�����I��false
+	// 摩擦は追加できないので、強制的にfalse
 	const bool bFric = pointer->bFriction;
 	if(pointer->bFriction){
 		pointer->EnableFriction(false);
@@ -86,7 +86,7 @@ void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
 			hsolids->at(irs[i]->solidID)->AddForce(pointForce, irs[i]->contactPointW);
 			PHSolid* localSolid = &hsolids->at(irs[i]->solidID)->localSolid;
 			PHSolidPairForHaptic* sp = sps->item(irs[i]->solidID, pointer->GetPointerID());
-			sp->force += pointForce;	// ����|�C���^�����̂ɉ������
+			sp->force += pointForce;	// あるポインタが剛体に加える力
 			sp->torque += (irs[i]->contactPointW - localSolid->GetCenterPosition()) ^ pointForce;
 		}
 	}
@@ -95,13 +95,13 @@ void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
 }
 
 void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
-	// ���ԕ\�������߂�B���C��Ԃ��X�V
+	// 中間表現を求める。摩擦状態を更新
 	PHIrs irs = CompIntermediateRepresentation(pointer);
 		
 	SpatialVector outForce = SpatialVector();
 	int Nirs = irs.size();
 	if(Nirs > 0){
-		// �v���L�V�p���v�Z�̂��߂̘A���s����
+		// プロキシ姿勢計算のための連立不等式
 		VMatrixRow< double > c;
 		c.resize(Nirs, Nirs);
 		c.clear(0.0);
@@ -117,9 +117,9 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 				Vec3d rj = irs[j]->r;
 				Vec3d nj = irs[j]->normal;
 
-				// ���i�S��
+				// 並進拘束
 				double trans = ni * nj * massInv;
-				// ��]�S��
+				// 回転拘束
 				double rotate = (ri % ni) *	rotationMatInv * (rj % nj);
 				c[i][j] = trans + rotate;
 			}
@@ -129,23 +129,23 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 		f.resize(Nirs);
 		f.clear(0.0);
 
-		// �A���s����������
-		// ���i1�_�ڐG�j�Ŗ��C����̏ꍇ���ƐN�������ɉ�]��
-		// �܂܂��B���͐��������A�v���L�V�̍X�V�����܂������Ȃ��Ȃ�̂ŁA
-		// ��]�̏d�ݍs����Ȃ�ׂ��傫������K�v������B
-		// ��]�̏d�ݍs���傫������ƃv���L�V�̉�]�ړ����Ȃ��Ȃ邽�߁A��]���C���łȂ��Ȃ�
+		// 連立不等式を解く
+		// 球（1点接触）で摩擦ありの場合だと侵入解除に回転が
+		// 含まれる。解は正しいが、プロキシの更新がうまくいかなくなるので、
+		// 回転の重み行列をなるべく大きくする必要がある。
+		// 回転の重み行列を大きくするとプロキシの回転移動がなくなるため、回転摩擦がでなくなる
 		GaussSeidel(c, f, -d);
 
-		// �|�C���^�ړ��ʂ����߂�
+		// ポインタ移動量を求める
 		Vec3d dr = Vec3d();
 		Vec3d dtheta = Vec3d();
 		Vec3d allDepth = Vec3d();
 		for(int i = 0; i < Nirs; i++){
 			f[i] = std::max(f[i], 0.0);
-			// ���i��
+			// 並進量
 			Vec3d tmpdr = f[i] * irs[i]->normal * massInv;
 			dr += tmpdr;
-			// ��]��
+			// 回転量
 			Vec3d tmpdtheta = f[i] * rotationMatInv * (irs[i]->r % irs[i]->normal);
 			dtheta += tmpdtheta;
 				
@@ -153,14 +153,14 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 		}
 
 
-		// �v���L�V�ʒu�p���X�V�i�ڕW�ʒu�p��������ԁj
+		// プロキシ位置姿勢更新（目標位置姿勢解除状態）
 		pointer->targetProxy.Ori() = ( Quaterniond::Rot(dtheta) * pointer->GetOrientation() ).unit();
 		pointer->targetProxy.Pos() = pointer->GetFramePosition() + dr;
 
-		// ���Έʒu�v�Z�p�̃v���L�V�ʒu�p��
+		// 相対位置計算用のプロキシ位置姿勢
 		pointer->proxyPose.Pos() = pointer->targetProxy.Pos();
 		
-		/// �͊o�C���^�t�F�[�X�ɏo�͂���͂̌v�Z
+		/// 力覚インタフェースに出力する力の計算
 		Vec3d last_dr = pointer->last_dr;
 		Vec3d last_dtheta = pointer->last_dtheta;
 
@@ -174,9 +174,9 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 		pointer->last_dr = dr;
 		pointer->last_dtheta = dtheta; 
 
-		// ���̂ɉ�����͂��v�Z
-		// �����_�����O�����͂���e�ڐG�_�ɓ����͂��t�Z
-		// ���܂������ĂȂ��\��������
+		// 剛体に加える力を計算
+		// レンダリングした力から各接触点に働く力を逆算
+		// うまくいってない可能性がある
 		Vec3d ratio;
 		double epsilon = 1e-10;
 		for(int i = 0; i < 3; i++){
@@ -187,7 +187,7 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 		//DSTR << "ratio" << ratio << std::endl;
 		//DSTR << "NIrs" << Nirs << std::endl;
 		for(int i = 0; i < Nirs; i++){
-			Vec3d pointForce = Vec3d();	// �e�ڐG�_�ɓ�����
+			Vec3d pointForce = Vec3d();	// 各接触点に働く力
 			Vec3d dir = irs[i]->normal * irs[i]->depth;
 			for(int j = 0; j < 3; j++){
 				pointForce[j] = ratio[j] * dir[j];// *  hri.hdt / hri.pdt;
@@ -195,10 +195,10 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 			//DSTR << "pos" << irs[i]->contactPointW << std::endl;
 			//DSTR << "depth" << irs[i]->depth << std::endl;
 			//DSTR << "pointForce" << pointForce << std::endl;
-			hsolids->at(irs[i]->solidID)->AddForce(pointForce, irs[i]->contactPointW);	// �e�|�C���^�����̂ɉ������S�Ă̗�
+			hsolids->at(irs[i]->solidID)->AddForce(pointForce, irs[i]->contactPointW);	// 各ポインタが剛体に加えた全ての力
 			PHSolid* localSolid = &hsolids->at(irs[i]->solidID)->localSolid;
 			PHSolidPairForHaptic* sp = sps->item(irs[i]->solidID, pointer->GetPointerID());
-			sp->force += pointForce;	// ����|�C���^�����̂ɉ������
+			sp->force += pointForce;	// あるポインタが剛体に加える力
 			sp->torque += (irs[i]->contactPointW - localSolid->GetCenterPosition()) ^ pointForce;
 			//DSTR << sp->force << std::endl;
 			//DSTR << irs[i]->contactPointW << " " << localSolid->GetCenterPosition() << std::endl;
@@ -229,8 +229,8 @@ void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 		double vibT = sp->contactCount * hdt;
 
 		SpatialVector vibForce;
-		// �@�������Ɏˉe����K�v������H
-		vibForce.v() = vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//�U���v�Z
+		// 法線方向に射影する必要がある？
+		vibForce.v() = vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
 		pointer->AddHapticForce(vibForce);
 		//CSVOUT << vibForce.v().x << "," << vibForce.v().y << "," << vibForce.v().z << std::endl;
 	}
@@ -241,7 +241,7 @@ void PHHapticRender::VirtualCoupling(PHHapticPointer* pointer){
 //	double t = loopCount / syncCount;
 //	if(t > 1.0) t = 1.0;
 //
-//	// �O��ƍ���̏�Ԃ���
+//	// 前回と今回の状態を補間
 //	Posed curPose = pointer->vcSolidCopied.GetPose();
 //	//Posed lastPose = pointer->vcSolidCopied.GetLastPose();
 //	Vec3d curVel = pointer->vcSolidCopied.GetVelocity();

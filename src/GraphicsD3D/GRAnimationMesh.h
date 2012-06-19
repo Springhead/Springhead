@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,7 +17,7 @@
 namespace Spr{;
 
 /**	@class	GRAnimationMesh
-    @brief	ƒLƒƒƒ‰ƒNƒ^ƒAƒjƒ[ƒVƒ‡ƒ“—pƒƒbƒVƒ… */
+    @brief	ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ç”¨ãƒ¡ãƒƒã‚·ãƒ¥ */
 class GRAnimationMesh: public GRVisual, public GRAnimationMeshIfInit, public GRAnimationMeshDesc{
 	SPR_OBJECTDEF(GRAnimationMesh, GRVisual);
 protected:

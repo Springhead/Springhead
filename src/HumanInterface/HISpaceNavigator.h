@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,7 +15,7 @@
 
 namespace Spr{;
 
-// 3DConnexion SpaceNavigator. 6©—R“x“ü—ÍƒfƒoƒCƒX
+// 3DConnexion SpaceNavigator. 6è‡ªç”±åº¦å…¥åŠ›ãƒ‡ãƒã‚¤ã‚¹
 class HISpaceNavigator: public HISpaceNavigatorDesc, public HIPose{
 public:
 	SPR_OBJECTDEF(HISpaceNavigator);
@@ -56,7 +56,7 @@ private:
 	static const int PID_BEGIN = 0xc625;
 	static const int PID_END   = 0xc629;
 
-	static const int INPUT_ABS_MAX = 350; // SpaceNavigator‚Ìæ‚è“¾‚éâ‘Î’l‚ÌÅ‘å’l
+	static const int INPUT_ABS_MAX = 350; // SpaceNavigatorã®å–ã‚Šå¾—ã‚‹çµ¶å¯¾å€¤ã®æœ€å¤§å€¤
 
 	void *hDevice;
 	Posef currPose;

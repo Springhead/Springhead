@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,7 +14,7 @@
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief ‹ü‰^“®ƒRƒ“ƒgƒ[ƒ‰
+/** @brief è¦–ç·šé‹å‹•ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 */
 class CRGazeController : public CRController, public CRGazeControllerDesc {
 private:
@@ -29,19 +29,19 @@ public:
 	{
 	}
 
-	/// ‰Šú‰»‚ğÀs‚·‚é
+	/// åˆæœŸåŒ–ã‚’å®Ÿè¡Œã™ã‚‹
 	virtual void Init();
 
-	/// §Œäˆ—‚ğÀs‚·‚é
+	/// åˆ¶å¾¡å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹
 	virtual void Step();
 
-	///  ó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+	///  çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	virtual void Reset();
 
-	///  Œ»ó‚ğ•Ô‚·
+	///  ç¾çŠ¶ã‚’è¿”ã™
 	virtual int  GetStatus();
 
-	///  ‹‘ÎÛˆÊ’u‚ğƒZƒbƒg‚·‚é
+	///  è¦–å¯¾è±¡ä½ç½®ã‚’ã‚»ãƒƒãƒˆã™ã‚‹
 	virtual void SetTargetPosition(Vec3d pos);
 };
 }

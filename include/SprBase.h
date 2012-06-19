@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprBase.h
- *	@brief s—ñƒxƒNƒgƒ‹‚È‚Ç‚ÌŠî–{Œ^‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹ŒQ
+ *	@brief è¡Œåˆ—ãƒ™ã‚¯ãƒˆãƒ«ãªã©ã®åŸºæœ¬å‹ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ç¾¤
 */
 #ifndef SPR_SPRBASE_H
 #define SPR_SPRBASE_H

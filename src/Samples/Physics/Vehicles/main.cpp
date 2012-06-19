@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,9 +8,9 @@
 /**
  Springhead2/src/Samples/Vehicles/main.cpp
 
-yŠT—vzSpringhead2‚Ì‘‡“I‚Èƒfƒ‚‘æ‚P’iD8‘«ƒƒ{ƒbƒg‚Ì•às
+ã€æ¦‚è¦ã€‘Springhead2ã®ç·åˆçš„ãªãƒ‡ãƒ¢ç¬¬ï¼‘æ®µï¼Ž8è¶³ãƒ­ãƒœãƒƒãƒˆã®æ­©è¡Œ
  
-yŽd—lz
+ã€ä»•æ§˜ã€‘
 
 */
 
@@ -47,11 +47,11 @@ public:
 	virtual void BuildScene(){
 		Posed pose;
 		pose.Pos() = Vec3d(3.0, 2.0, 0.0);
-		robot.Build(pose, phScene, GetSdk()->GetPHSdk());			//	ƒƒ{ƒbƒg
+		robot.Build(pose, phScene, GetSdk()->GetPHSdk());			//	ãƒ­ãƒœãƒƒãƒˆ
 		pose.Pos() = Vec3d(0.0, 1.0, 1.0);
 
-		CreateFloor();								//	°
-		CDBoxDesc box;								//	ŽO‚Âd‚È‚Á‚Ä‚¢‚é” 
+		CreateFloor();								//	åºŠ
+		CDBoxDesc box;								//	ä¸‰ã¤é‡ãªã£ã¦ã„ã‚‹ç®±
 		box.boxsize = Vec3f(1.0, 1.0, 2.0);
 		CDBoxIf* boxBody = phScene->GetSdk()->CreateShape(box)->Cast();
 		PHSolidDesc sd;
@@ -66,7 +66,7 @@ public:
 			pose.PosX()-=0.05;
 		}
 
-		phScene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	d—Í‚ðÝ’è
+		phScene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	é‡åŠ›ã‚’è¨­å®š
 
 		fwScene->EnableRenderAxis(false, false, false);
 

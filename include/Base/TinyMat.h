@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,26 +12,26 @@
 #include <Base/TMatrix.h>
 #include <Base/BaseDebug.h>
 
-#ifndef PTM_PACK	//	’P‘Ì‚Åg—p‚·‚éê‡‚ÍCnamespace ‚É“ü‚ê‚È‚¢
+#ifndef PTM_PACK	//	å˜ä½“ã§ä½¿ç”¨ã™ã‚‹å ´åˆã¯ï¼Œnamespace ã«å…¥ã‚Œãªã„
 namespace Spr{;
 #endif
 
 /**	\addtogroup gpLinearAlgebra	*/
 //@{
 /**	@file TinyMat.h
-	2x2, 3x3s—ñ‚Ì’è‹`
+	2x2, 3x3è¡Œåˆ—ã®å®šç¾©
  */
 
 //-----------------------------------------------------------------------------
 //		TMatrix2
-/**	2x2s—ñƒNƒ‰ƒX.	*/
+/**	2x2è¡Œåˆ—ã‚¯ãƒ©ã‚¹.	*/
 template <class T>
 class TMatrix2:public PTM::TMatrixBase<2,2,
 	PTM::TMatrixDescCol< TMatrix2<T>, PTM::TMatrixRow<2,2,T>, 2,2,2,T> >{
 public:
 	typedef PTM::TMatrixDescCol< TMatrix2<T>, PTM::TMatrixRow<2,2,T>, 2,2,2,T> desc;
 	typedef PTM::TMatrixBase<2,2,desc> base_type;
-	///	Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹` @see ::DEF_MATRIX_BASIC_MEMBER
+	///	åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾© @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TMatrix2);
 	union{
 		element_type data[2][2];
@@ -39,11 +39,11 @@ public:
 			element_type xx, xy, yx, yy;
 		};
 	};
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i, size_t j){ return data[j][i]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[j][i]; }
 
-	/**@name	Šî’êƒxƒNƒgƒ‹‚Ö‚ÌƒAƒNƒZƒX	*/
+	/**@name	åŸºåº•ãƒ™ã‚¯ãƒˆãƒ«ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹	*/
 	//@{
 	/// 
 	TVec2<element_type>& Ex(){ return *(TVec2<element_type>*)&this->col(0); }
@@ -56,11 +56,11 @@ public:
 	const TVec2<element_type>& Ey() const{ return *(TVec2<element_type>*)&this->col(1); }
 	//@}
 	
-	///@name ‰Šú‰»‚Æ\’z
+	///@name åˆæœŸåŒ–ã¨æ§‹ç¯‰
 	//@{
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	void set_default(){*this = Unit();}
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^(’¼Úw’è)
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿(ç›´æ¥æŒ‡å®š)
 	TMatrix2(const TVec2<T>& exi, const TVec2<T>& eyi){
 		Ex().X() = exi.X();
 		Ex().Y() = exi.Y();
@@ -73,20 +73,20 @@ public:
 		Ey().X() = m12;
 		Ey().Y() = m22;
 	}
-	///—ës—ñ
+	///é›¶è¡Œåˆ—
 	static TMatrix2<T> Zero(){return TMatrix2<T>(0, 0, 0, 0);}
-	///’PˆÊs—ñ
+	///å˜ä½è¡Œåˆ—
 	static TMatrix2<T> Unit(){return TMatrix2<T>(1, 0, 0, 1);}
-	///‘ÎŠps—ñ
+	///å¯¾è§’è¡Œåˆ—
 	static TMatrix2<T> Diag(element_type x, element_type y){return TMatrix2<T>(x, 0, 0, y);}
-	///‰ñ“]s—ñ
-	///‰ñ“]Šp‚ğw’è
+	///å›è»¢è¡Œåˆ—
+	///å›è»¢è§’ã‚’æŒ‡å®š
 	static TMatrix2<T> Rot(element_type rad){
         TMatrix2<T> m;
 		PTM::init_rot(m, rad);
 		return m;
 	}
-	///x/y²‚ÌŒü‚«‚ğw’è
+	///x/yè»¸ã®å‘ãã‚’æŒ‡å®š
 	template<typename BUFA>
 	static TMatrix2<T> Rot(const PTM::TVectorBase<2, BUFA>& a, char axis){
 		TMatrix2<T> m;
@@ -95,7 +95,7 @@ public:
 	}
 	//@}
 
-	/**@name —v‘f‚Ö‚ÌƒAƒNƒZƒX */
+	/**@name è¦ç´ ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹ */
 	//@{
 	/// 
 	const element_type& ExX() const {return this->EX().X();}
@@ -111,9 +111,9 @@ public:
 	element_type& EyY() {return this->Ey().Y();}
 	//@}
 
-	///@name ‰‰Z
+	///@name æ¼”ç®—
 	//@{
-	/// ‰ñ“]s—ñ‚Ì‰ñ“]Šp‚ğ•Ô‚·
+	/// å›è»¢è¡Œåˆ—ã®å›è»¢è§’ã‚’è¿”ã™
 	element_type angle() const{
 		return atan2(this->Ex().Y(), this->Ex().X());
 	}
@@ -123,14 +123,14 @@ public:
 //-----------------------------------------------------------------------------
 //	TMatrix3
 
-///	3x3s—ñƒNƒ‰ƒX.
+///	3x3è¡Œåˆ—ã‚¯ãƒ©ã‚¹.
 template <class T>
 class TMatrix3:public PTM::TMatrixBase<3,3,
 	PTM::TMatrixDescCol< TMatrix3<T>, PTM::TMatrixRow<3,3,T>, 3,3,3,T> >{
 public:
 	typedef PTM::TMatrixDescCol< TMatrix3<T>, PTM::TMatrixRow<3,3,T>, 3,3,3,T> desc;
 	typedef PTM::TMatrixBase<3,3,desc> base_type;
-	///	Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹` @see ::DEF_MATRIX_BASIC_MEMBER
+	///	åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾© @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TMatrix3);
 	union{
 		element_type data[3][3];
@@ -140,11 +140,11 @@ public:
 			element_type zx, zy, zz;
 		};
 	};
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i, size_t j){ return data[j][i]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[j][i]; }
 
-	/**@name	Šî’êƒxƒNƒgƒ‹‚Ö‚ÌƒAƒNƒZƒX	*/
+	/**@name	åŸºåº•ãƒ™ã‚¯ãƒˆãƒ«ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹	*/
 	//@{
 	/// 
 	TVec3<element_type>& Ex(){ return *(TVec3<element_type>*) &this->item(0,0); }
@@ -159,7 +159,7 @@ public:
 	///
 	const TVec3<element_type>& Ez() const { return *(TVec3<element_type>*) &this->item(0,2); }
 	//@}
-	/**@name —v‘f‚Ö‚ÌƒAƒNƒZƒX */
+	/**@name è¦ç´ ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹ */
 	//@{
 	/// 
 	const element_type& ExX() const {return Ex().X();}
@@ -191,16 +191,16 @@ public:
 	//@}
 	
 	//---------------------------------
-	/**@name	‰Šú‰»‚Æ\’z	*/
+	/**@name	åˆæœŸåŒ–ã¨æ§‹ç¯‰	*/
 	//@{
-	///ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	void set_default(){*this = Unit();}
-	///ƒRƒ“ƒXƒgƒ‰ƒNƒ^iŠî’êƒxƒNƒgƒ‹‚ğw’èj
+	///ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆåŸºåº•ãƒ™ã‚¯ãƒˆãƒ«ã‚’æŒ‡å®šï¼‰
 	template <class BX, class BY, class BZ>
 	TMatrix3(const PTM::TVectorBase<3, BX>& exi, const PTM::TVectorBase<3, BY>&eyi, const PTM::TVectorBase<3, BZ>&ezi){
 		Ex() = exi; Ey() = eyi; Ez() = ezi;
 	}
-	///ƒRƒ“ƒXƒgƒ‰ƒNƒ^i¬•ª‚ğw’èj
+	///ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆæˆåˆ†ã‚’æŒ‡å®šï¼‰
 	TMatrix3(T m11, T m12, T m13, T m21, T m22, T m23, T m31, T m32, T m33)
 	{
 		Ex().X() = m11; Ey().X() = m12; Ez().X() = m13;
@@ -208,29 +208,29 @@ public:
 		Ex().Z() = m31; Ey().Z() = m32; Ez().Z() = m33;
 	}
 
-	///—ës—ñ
+	///é›¶è¡Œåˆ—
 	static TMatrix3<T> Zero(){TMatrix3<T> m; m.clear(); return m;}
-	///’PˆÊs—ñ
+	///å˜ä½è¡Œåˆ—
 	static TMatrix3<T> Unit(){return TMatrix3<T>(1, 0, 0, 0, 1, 0, 0, 0, 1);}
-	///‘ÎŠps—ñ
+	///å¯¾è§’è¡Œåˆ—
 	static TMatrix3<T> Diag(element_type x, element_type y, element_type z){
 		return TMatrix3<T>(x, 0, 0, 0, y, 0, 0, 0, z);
 	}
-	///‰ñ“]s—ñ
-	///•ûŒüƒxƒNƒgƒ‹‚Åw’è
+	///å›è»¢è¡Œåˆ—
+	///æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã§æŒ‡å®š
 	template <class BA, class BB>
 	static TMatrix3<T> Rot(const PTM::TVectorBase<3,BA>& a, const PTM::TVectorBase<3,BB>&b, char axis = 'x') {
 		TMatrix3<T> m;
 		PTM::init_rot(m, a, b, axis);
 		return m;
 	}
-	///‰ñ“]²‚Åw’è
+	///å›è»¢è»¸ã§æŒ‡å®š
 	static TMatrix3<T> Rot(element_type th, char axis){
 		TMatrix3<T> m;
 		PTM::init_rot(m, th, axis);
 		return m;
 	}
-	/**	”CˆÓ²‚Ü‚í‚è‰ñ“]
+	/**	ä»»æ„è»¸ã¾ã‚ã‚Šå›è»¢
 		+																	   +
 		|u^2+(1-u^2)cos(th)      uv(1-cos(th))-wsin(th)  wu(1-cos(th))+vsin(th)|
 	R =	|uv(1-cos(th))+wsin(th)  v^2+(1-v^2)cos(th)      vw(1-cos(th))-usin(th)|
@@ -243,7 +243,7 @@ public:
 		PTM::init_rot(m, th, axis.unit());
 		return m;
 	}
-	///	Qutaternion‚Åw’è
+	///	Qutaternionã§æŒ‡å®š
 	template <class B>
 	static TMatrix3<T> Rot(const PTM::TVectorBase<4, B>& q){
 		TMatrix3<T> m;
@@ -251,7 +251,7 @@ public:
 		return m;
 	}
 	
-	///ŠOÏ‚Æ“™‰¿‚Ès—ñ
+	///å¤–ç©ã¨ç­‰ä¾¡ãªè¡Œåˆ—
 	template <class B>
 	static TMatrix3<T> Cross(const PTM::TVectorBase<3, B>& v){
 		TMatrix3<T> m;
@@ -262,13 +262,13 @@ public:
 	//@}
 };
 
-///	float”Å2~2s—ñD
+///	floatç‰ˆ2Ã—2è¡Œåˆ—ï¼
 typedef TMatrix2<float> Matrix2f;
-///	double”Å2~2s—ñD
+///	doubleç‰ˆ2Ã—2è¡Œåˆ—ï¼
 typedef TMatrix2<double> Matrix2d;
-///	float”Å3~3s—ñD
+///	floatç‰ˆ3Ã—3è¡Œåˆ—ï¼
 typedef TMatrix3<float> Matrix3f;
-///	double”Å3~3s—ñD
+///	doubleç‰ˆ3Ã—3è¡Œåˆ—ï¼
 typedef TMatrix3<double> Matrix3d;
 
 
@@ -293,7 +293,7 @@ bool IsUnitary(TMatrix3<T> r){
 }
 //@}
 
-#ifndef PTM_PACK	//	’P‘Ì‚Åg—p‚·‚éê‡‚ÍCnamespace ‚É“ü‚ê‚È‚¢
+#ifndef PTM_PACK	//	å˜ä½“ã§ä½¿ç”¨ã™ã‚‹å ´åˆã¯ï¼Œnamespace ã«å…¥ã‚Œãªã„
 }
 #endif
 

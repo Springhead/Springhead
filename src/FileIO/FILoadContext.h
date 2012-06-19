@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,8 +19,8 @@ class Import;
 ///	FILoadContext
 class FILoadContext: public UTLoadContext{
 public:
-	UTStack<Import*>		importStack;	///< ƒCƒ“ƒ|[ƒgƒXƒ^ƒbƒN
-	FISdk*					sdk;			///< FISdk‚Ö‚ÌŽQÆiƒCƒ“ƒ|[ƒgŽž‚ÌFIFileƒIƒuƒWƒFƒNƒgì¬—pj
+	UTStack<Import*>		importStack;	///< ã‚¤ãƒ³ãƒãƒ¼ãƒˆã‚¹ã‚¿ãƒƒã‚¯
+	FISdk*					sdk;			///< FISdkã¸ã®å‚ç…§ï¼ˆã‚¤ãƒ³ãƒãƒ¼ãƒˆæ™‚ã®FIFileã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä½œæˆç”¨ï¼‰
 
 	virtual void PushFileMap(const UTString fn, bool binary);
 	virtual void PopFileMap();

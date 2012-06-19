@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,12 +11,12 @@
 #endif
 
 /*
-//	ƒ‚[ƒ^‚Ìæ‚è•t‚¯ˆÊ’u
-//	ƒ‚[ƒ^‚ª’¼•û‘Ì‚Éæ‚è•t‚¯‚ç‚ê‚Ä‚¢‚éê‡
-#define PX	0.265f	//	x•ûŒü‚Ì•Ó‚Ì’·‚³/2
-#define PY	0.265f	//	y•ûŒü‚Ì•Ó‚Ì’·‚³/2
-#define PZ	0.265f	//	z•ûŒü‚Ì•Ó‚Ì’·‚³/2
-Vec3f HISpidar4::motorPosDef[][4] =	//	ƒ‚[ƒ^‚Ìæ‚è•t‚¯ˆÊ’u(’†S‚ğŒ´“_‚Æ‚·‚é)
+//	ãƒ¢ãƒ¼ã‚¿ã®å–ã‚Šä»˜ã‘ä½ç½®
+//	ãƒ¢ãƒ¼ã‚¿ãŒç›´æ–¹ä½“ã«å–ã‚Šä»˜ã‘ã‚‰ã‚Œã¦ã„ã‚‹å ´åˆ
+#define PX	0.265f	//	xæ–¹å‘ã®è¾ºã®é•·ã•/2
+#define PY	0.265f	//	yæ–¹å‘ã®è¾ºã®é•·ã•/2
+#define PZ	0.265f	//	zæ–¹å‘ã®è¾ºã®é•·ã•/2
+Vec3f HISpidar4::motorPosDef[][4] =	//	ãƒ¢ãƒ¼ã‚¿ã®å–ã‚Šä»˜ã‘ä½ç½®(ä¸­å¿ƒã‚’åŸç‚¹ã¨ã™ã‚‹)
 	{
 		{Vec3f(-PX, PY, PZ),	Vec3f( PX, PY,-PZ), Vec3f(-PX,-PY,-PZ), Vec3f( PX,-PY, PZ)},
 		{Vec3f( PX, PY, PZ),	Vec3f(-PX, PY,-PZ), Vec3f( PX,-PY,-PZ), Vec3f(-PX,-PY, PZ)}
@@ -75,7 +75,7 @@ void HISpidar4Desc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn,
 		motors[i].jointPos = knotPos[i];
 		motors[i].lengthPerPulse = lpp;
 		motors[i].voltPerNewton = vpn;		//	volt per newton
-		motors[i].currentPerVolt = 1;		//	’ïR’l‚Ì‹t”
+		motors[i].currentPerVolt = 1;		//	æŠµæŠ—å€¤ã®é€†æ•°
 		motors[i].minForce = minF;
 		motors[i].maxForce = maxF;
 	}
@@ -91,30 +91,30 @@ void HISpidar4Desc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn,
 void HISpidar4Desc::InitSpidarG(char* type){
 	if (stricmp(type, "SpidarG6X3L")==0 || stricmp(type, "SpidarG6X3R")==0){
 		bool bLeft = stricmp(type, "SpidarG6X3L")==0;
-		//	ƒ‚[ƒ^‚Ìæ‚è•t‚¯ˆÊ’u. ƒ‚[ƒ^‚ª’¼•û‘Ì‚Éæ‚è•t‚¯‚ç‚ê‚Ä‚¢‚éê‡‚ÍC
-		const float PX = 0.12f/2;		//	x•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		const float PY = 0.14f/2;		//	y•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		const float PZ = 0.12f/2;		//	z•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		//	…‚ÌƒOƒŠƒbƒv‚Ö‚Ìæ‚è•t‚¯ˆÊ’uDƒOƒŠƒbƒv‚Íƒsƒ“ƒ|ƒ“‹Ê‚ğÌ—p‚µ‚Ä‚¢‚Ü‚·D
-		const float GX = 0.02f/2;		//	x•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		const float GY = 0.02f/2;		//	y•ûŒü‚Ì•Ó‚Ì’·‚³/2
+		//	ãƒ¢ãƒ¼ã‚¿ã®å–ã‚Šä»˜ã‘ä½ç½®. ãƒ¢ãƒ¼ã‚¿ãŒç›´æ–¹ä½“ã«å–ã‚Šä»˜ã‘ã‚‰ã‚Œã¦ã„ã‚‹å ´åˆã¯ï¼Œ
+		const float PX = 0.12f/2;		//	xæ–¹å‘ã®è¾ºã®é•·ã•/2
+		const float PY = 0.14f/2;		//	yæ–¹å‘ã®è¾ºã®é•·ã•/2
+		const float PZ = 0.12f/2;		//	zæ–¹å‘ã®è¾ºã®é•·ã•/2
+		//	ç³¸ã®ã‚°ãƒªãƒƒãƒ—ã¸ã®å–ã‚Šä»˜ã‘ä½ç½®ï¼ã‚°ãƒªãƒƒãƒ—ã¯ãƒ”ãƒ³ãƒãƒ³ç‰ã‚’æ¡ç”¨ã—ã¦ã„ã¾ã™ï¼
+		const float GX = 0.02f/2;		//	xæ–¹å‘ã®è¾ºã®é•·ã•/2
+		const float GY = 0.02f/2;		//	yæ–¹å‘ã®è¾ºã®é•·ã•/2
 		Matrix3f rotR = Matrix3f::Rot((float)Rad(-90), 'y');
 		Matrix3f rotL = Matrix3f::Rot((float)Rad(0), 'y');
 		Matrix3f rotZ = Matrix3f::Rot((float)Rad(-45), 'z');
-		Matrix3f tMat = Matrix3f(); tMat.xx*=-1; tMat.yy*=-1; //¶èŒn‚ğ‰EèŒn‚É•ÏŠ·
+		Matrix3f tMat = Matrix3f(); tMat.xx*=-1; tMat.yy*=-1; //å·¦æ‰‹ç³»ã‚’å³æ‰‹ç³»ã«å¤‰æ›
 
-		Vec3f motorPos[2][4][2] = {		//	ƒ‚[ƒ^‚Ìæ‚è•t‚¯ˆÊ’u(’†S‚ğŒ´“_‚Æ‚·‚éDirectXÀ•WŒni‰E‚ªX,ã‚ªY,‰œ‚ªZj)
+		Vec3f motorPos[2][4][2] = {		//	ãƒ¢ãƒ¼ã‚¿ã®å–ã‚Šä»˜ã‘ä½ç½®(ä¸­å¿ƒã‚’åŸç‚¹ã¨ã™ã‚‹DirectXåº§æ¨™ç³»ï¼ˆå³ãŒX,ä¸ŠãŒY,å¥¥ãŒZï¼‰)
 			{
-				{rotR*Vec3f(-PX,-PY, PZ), rotR*rotZ*Vec3f(0.0f, -GY, 0.0f)},//1‰º¶
-				{rotR*Vec3f( PX,-PY,-PZ), rotR*rotZ*Vec3f( GX, 0.0f, 0.0f)},//3‰º‰E
-				{rotR*Vec3f( PX, PY, PZ), rotR*rotZ*Vec3f(0.0f,  GY, 0.0f)},//6ã‰œ
-				{rotR*Vec3f(-PX, PY,-PZ), rotR*rotZ*Vec3f(-GX, 0.0f, 0.0f)}//8ã‘O
+				{rotR*Vec3f(-PX,-PY, PZ), rotR*rotZ*Vec3f(0.0f, -GY, 0.0f)},//1ä¸‹å·¦
+				{rotR*Vec3f( PX,-PY,-PZ), rotR*rotZ*Vec3f( GX, 0.0f, 0.0f)},//3ä¸‹å³
+				{rotR*Vec3f( PX, PY, PZ), rotR*rotZ*Vec3f(0.0f,  GY, 0.0f)},//6ä¸Šå¥¥
+				{rotR*Vec3f(-PX, PY,-PZ), rotR*rotZ*Vec3f(-GX, 0.0f, 0.0f)}//8ä¸Šå‰
 			},
 			{
-				{tMat*rotL*Vec3f( PX, PY, PZ), tMat*rotL*rotZ*Vec3f( GX, 0.0f, 0.0f)},//2‰º‰œ
-				{tMat*rotL*Vec3f(-PX, PY,-PZ), tMat*rotL*rotZ*Vec3f(0.0f, -GY, 0.0f)},//4‰º‘O
-				{tMat*rotL*Vec3f( PX,-PY,-PZ), tMat*rotL*rotZ*Vec3f(-GX, 0.0f, 0.0f)},//5ã¶
-				{tMat*rotL*Vec3f(-PX,-PY, PZ), tMat*rotL*rotZ*Vec3f(0.0f,  GY, 0.0f)},//7ã‰E
+				{tMat*rotL*Vec3f( PX, PY, PZ), tMat*rotL*rotZ*Vec3f( GX, 0.0f, 0.0f)},//2ä¸‹å¥¥
+				{tMat*rotL*Vec3f(-PX, PY,-PZ), tMat*rotL*rotZ*Vec3f(0.0f, -GY, 0.0f)},//4ä¸‹å‰
+				{tMat*rotL*Vec3f( PX,-PY,-PZ), tMat*rotL*rotZ*Vec3f(-GX, 0.0f, 0.0f)},//5ä¸Šå·¦
+				{tMat*rotL*Vec3f(-PX,-PY, PZ), tMat*rotL*rotZ*Vec3f(0.0f,  GY, 0.0f)},//7ä¸Šå³
 
 			}
 		};
@@ -147,30 +147,30 @@ void HISpidar4Desc::InitSpidarG(char* type){
 void HISpidar4Desc::InitSpidarBig(char* type){
 	if (stricmp(type, "SpidarL")==0 || stricmp(type, "SpidarR")==0){
 		bool bLeft = stricmp(type, "SpidarL")==0;
-		//	ƒ‚[ƒ^‚Ìæ‚è•t‚¯ˆÊ’u. ƒ‚[ƒ^‚ª’¼•û‘Ì‚Éæ‚è•t‚¯‚ç‚ê‚Ä‚¢‚éê‡‚ÍC
-		const float PX = 0.625f/2;		//	x•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		const float PY = 0.54f/2;		//	y•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		const float PZ = 0.55f/2;		//	z•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		//	…‚ÌƒOƒŠƒbƒv‚Ö‚Ìæ‚è•t‚¯ˆÊ’uDƒOƒŠƒbƒv‚Íƒsƒ“ƒ|ƒ“‹Ê‚ğÌ—p‚µ‚Ä‚¢‚Ü‚·D
-		const float GX = 0.02f/2;		//	x•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		const float GY = 0.02f/2;		//	y•ûŒü‚Ì•Ó‚Ì’·‚³/2
+		//	ãƒ¢ãƒ¼ã‚¿ã®å–ã‚Šä»˜ã‘ä½ç½®. ãƒ¢ãƒ¼ã‚¿ãŒç›´æ–¹ä½“ã«å–ã‚Šä»˜ã‘ã‚‰ã‚Œã¦ã„ã‚‹å ´åˆã¯ï¼Œ
+		const float PX = 0.625f/2;		//	xæ–¹å‘ã®è¾ºã®é•·ã•/2
+		const float PY = 0.54f/2;		//	yæ–¹å‘ã®è¾ºã®é•·ã•/2
+		const float PZ = 0.55f/2;		//	zæ–¹å‘ã®è¾ºã®é•·ã•/2
+		//	ç³¸ã®ã‚°ãƒªãƒƒãƒ—ã¸ã®å–ã‚Šä»˜ã‘ä½ç½®ï¼ã‚°ãƒªãƒƒãƒ—ã¯ãƒ”ãƒ³ãƒãƒ³ç‰ã‚’æ¡ç”¨ã—ã¦ã„ã¾ã™ï¼
+		const float GX = 0.02f/2;		//	xæ–¹å‘ã®è¾ºã®é•·ã•/2
+		const float GY = 0.02f/2;		//	yæ–¹å‘ã®è¾ºã®é•·ã•/2
 
 		Matrix3f rotZ = Matrix3f::Rot((float)Rad(45), 'z');
-		Matrix3f tMatR = Matrix3f(); tMatR.zz*=-1; //À•W’²®
-		Matrix3f tMatL = Matrix3f(); tMatL.xx*=-1; //À•W’²®
+		Matrix3f tMatR = Matrix3f(); tMatR.zz*=-1; //åº§æ¨™èª¿æ•´
+		Matrix3f tMatL = Matrix3f(); tMatL.xx*=-1; //åº§æ¨™èª¿æ•´
 
-		Vec3f motorPos[2][4][2] = {		//	ƒ‚[ƒ^‚Ìæ‚è•t‚¯ˆÊ’u(’†S‚ğŒ´“_‚Æ‚·‚éDirectXÀ•WŒni‰E‚ªX,ã‚ªY,‰œ‚ªZj)
+		Vec3f motorPos[2][4][2] = {		//	ãƒ¢ãƒ¼ã‚¿ã®å–ã‚Šä»˜ã‘ä½ç½®(ä¸­å¿ƒã‚’åŸç‚¹ã¨ã™ã‚‹DirectXåº§æ¨™ç³»ï¼ˆå³ãŒX,ä¸ŠãŒY,å¥¥ãŒZï¼‰)
 			{
-				{tMatR*Vec3f( PX,  PY,-PZ), rotZ*tMatR*Vec3f(0.0f,  GY, 0.0f)},//0ã‰E‘O
-				{tMatR*Vec3f(-PX,  PY, PZ), rotZ*tMatR*Vec3f(-GX,  0.0f, 0.0f)},//1ã¶‰œ
-				{tMatR*Vec3f( PX, -PY, PZ), rotZ*tMatR*Vec3f( GX, 0.0f, 0.0f)},//2‰º‰E‰œ
-				{tMatR*Vec3f(-PX, -PY,-PZ), rotZ*tMatR*Vec3f(0.0f, -GY, 0.0f)},//3‰º¶‘O
+				{tMatR*Vec3f( PX,  PY,-PZ), rotZ*tMatR*Vec3f(0.0f,  GY, 0.0f)},//0ä¸Šå³å‰
+				{tMatR*Vec3f(-PX,  PY, PZ), rotZ*tMatR*Vec3f(-GX,  0.0f, 0.0f)},//1ä¸Šå·¦å¥¥
+				{tMatR*Vec3f( PX, -PY, PZ), rotZ*tMatR*Vec3f( GX, 0.0f, 0.0f)},//2ä¸‹å³å¥¥
+				{tMatR*Vec3f(-PX, -PY,-PZ), rotZ*tMatR*Vec3f(0.0f, -GY, 0.0f)},//3ä¸‹å·¦å‰
 			},
 			{
-				{tMatL*Vec3f( PX, PY, PZ),  rotZ*tMatL*Vec3f( -GX, 0.0f, 0.0f)},//4ã¶‘O
-				{tMatL*Vec3f(-PX, PY,-PZ),  rotZ*tMatL*Vec3f( 0.0f, GY, 0.0f)},//5ã‰E‰œ
-				{tMatL*Vec3f( PX,-PY,-PZ),  rotZ*tMatL*Vec3f( 0.0f, -GY, 0.0f)},//6‰º‰E‘O
-				{tMatL*Vec3f(-PX,-PY, PZ),  rotZ*tMatL*Vec3f( GX, 0.0f, 0.0f)},//7‰º¶‰œ
+				{tMatL*Vec3f( PX, PY, PZ),  rotZ*tMatL*Vec3f( -GX, 0.0f, 0.0f)},//4ä¸Šå·¦å‰
+				{tMatL*Vec3f(-PX, PY,-PZ),  rotZ*tMatL*Vec3f( 0.0f, GY, 0.0f)},//5ä¸Šå³å¥¥
+				{tMatL*Vec3f( PX,-PY,-PZ),  rotZ*tMatL*Vec3f( 0.0f, -GY, 0.0f)},//6ä¸‹å³å‰
+				{tMatL*Vec3f(-PX,-PY, PZ),  rotZ*tMatL*Vec3f( GX, 0.0f, 0.0f)},//7ä¸‹å·¦å¥¥
 			}
 		};
 
@@ -210,7 +210,7 @@ bool HISpidar4::Init(const void* pDesc){
 
 	const HISpidar4Desc& desc = *(const HISpidar4Desc*)pDesc;
 	
-	// HISpidarCalc3Dof‚Ì‰Šú‰»
+	// HISpidarCalc3Dofã®åˆæœŸåŒ–
 	nRepeat = 2;		
 	sigma	= 0.001f;		//sigma=sigma*sigma
 	VVector<float> minForce, maxForce;
@@ -231,13 +231,13 @@ bool HISpidar4::Init(const void* pDesc){
 }
 
 bool HISpidar4::Calibration(){
-	//	ƒ|ƒCƒ“ƒ^‚ğŒ´“_(’†S)‚É’u‚¢‚ÄAƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“‚ğs‚¤
+	//	ãƒã‚¤ãƒ³ã‚¿ã‚’åŸç‚¹(ä¸­å¿ƒ)ã«ç½®ã„ã¦ã€ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¡Œã†
 	for(unsigned i=0; i<motors.size(); i++)
 		motors[i].SetLength( (motors[i].pos - motors[i].jointPos).norm() );
 
 	lengthDiffAve.clear();
 
-	// p¨‚ğXV
+	// å§¿å‹¢ã‚’æ›´æ–°
 	for(size_t i=0; i<motors.size(); ++i)
 		HISpidarCalc3Dof::Update();	
 
@@ -279,7 +279,7 @@ HISpidar4D::HISpidar4D(const HISpidar4DDesc& desc){
 }
 
 bool HISpidar4D::Calibration(){
-	//	ƒ|ƒCƒ“ƒ^‚ğŒ´“_(’†S)‚É’u‚¢‚ÄAƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“‚ğs‚¤
+	//	ãƒã‚¤ãƒ³ã‚¿ã‚’åŸç‚¹(ä¸­å¿ƒ)ã«ç½®ã„ã¦ã€ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¡Œã†
 	// calibration sets the center of the reference frame at the current
 	// position of the spidar (motor[i].pos.norm())
 	Update(0.001f);
@@ -309,18 +309,18 @@ Vec3f HISpidar4D::GetForce(){
 }
 
 void HISpidar4D::SetForce(const Vec3f& v3force){
-	/*	2ŸŒv‰æ–@‚É‚æ‚é’£—ÍŒvZ	*/
-	//	…‚Ì•ûŒüƒxƒNƒgƒ‹‚ğ‹‚ß‚éB
+	/*	2æ¬¡è¨ˆç”»æ³•ã«ã‚ˆã‚‹å¼µåŠ›è¨ˆç®—	*/
+	//	ç³¸ã®æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’æ±‚ã‚ã‚‹ã€‚
 	for (int i = 0; i < 4; i++){
-		phi[i] = (motors[i].pos - pos).unit();		//	’£—Í‚Ì’PˆÊƒxƒNƒgƒ‹		tension direction
+		phi[i] = (motors[i].pos - pos).unit();		//	å¼µåŠ›ã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«		tension direction
 	}
 
-	/*	–Ú“IŠÖ”
-			|f-ƒÓt|^2 + cont*|t-t'|^2 + eff*t^2
-		= (ƒÓ^2+eff+cont)*t^2 + (-2*ƒÓ*f -2*cont*t')*t + f^2+cont*t'^2
-		‚ğÅ¬‚É‚·‚é’£—Ít‚ğ‹‚ß‚éD	*/
+	/*	ç›®çš„é–¢æ•°
+			|f-Ï†t|^2 + cont*|t-t'|^2 + eff*t^2
+		= (Ï†^2+eff+cont)*t^2 + (-2*Ï†*f -2*cont*t')*t + f^2+cont*t'^2
+		ã‚’æœ€å°ã«ã™ã‚‹å¼µåŠ›tã‚’æ±‚ã‚ã‚‹ï¼	*/
 	TQuadProgram<float, 4> qp;
-	//	–Ú“IŠÖ”‚Ì‚QŸŒW”s—ñ
+	//	ç›®çš„é–¢æ•°ã®ï¼’æ¬¡ä¿‚æ•°è¡Œåˆ—
 	for(int i = 0; i < 4; i++)
 		qp.matQ[i][i] = phi[i]*phi[i] + eff + cont;
 	qp.matQ[0][1] = qp.matQ[1][0] = phi[0]*phi[1];
@@ -330,16 +330,16 @@ void HISpidar4D::SetForce(const Vec3f& v3force){
 	qp.matQ[1][3] = qp.matQ[3][1] = phi[1]*phi[3];
 	qp.matQ[2][3] = qp.matQ[3][2] = phi[2]*phi[3];
 
-	//	–Ú“IŠÖ”‚Ì‚PŸŒW”ƒxƒNƒgƒ‹
+	//	ç›®çš„é–¢æ•°ã®ï¼‘æ¬¡ä¿‚æ•°ãƒ™ã‚¯ãƒˆãƒ«
 	for(int i = 0; i < 4; i++)
 		qp.vecC[i] = phi[i]*v3force + cont*tension[i];
-	//	Å¬’£—ÍEÅ‘å’£—Í‚Ìİ’è
+	//	æœ€å°å¼µåŠ›ãƒ»æœ€å¤§å¼µåŠ›ã®è¨­å®š
 	Vec4f minF, maxF;
 	minF.clear(1); maxF.clear(20);
 	qp.Init(minF, maxF);
 	qp.Solve();
 	for(int i=0;i<4;i++) {
-		tension[i]=qp.vecX[i];							//’£—Íx[]
+		tension[i]=qp.vecX[i];							//å¼µåŠ›ï¼x[]
 	}
 }
 
@@ -373,7 +373,7 @@ void HISpidarGDesc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn,
 		motors[i].jointPos = knotPos[i];
 		motors[i].lengthPerPulse = lpp;
 		motors[i].voltPerNewton = vpn;		//	volt per newton
-		motors[i].currentPerVolt = 1;		//	’ïR’l‚Ì‹t”
+		motors[i].currentPerVolt = 1;		//	æŠµæŠ—å€¤ã®é€†æ•°
 		motors[i].minForce = minF;
 		motors[i].maxForce = maxF;
 	}
@@ -389,17 +389,17 @@ void HISpidarGDesc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn,
 void HISpidarGDesc::Init(char* type){
 	if (stricmp(type, "SpidarG6X3L")==0 || stricmp(type, "SpidarG6X3R")==0){
 		bool bLeft = stricmp(type, "SpidarG6X3L")==0;
-		//	ƒ‚[ƒ^‚Ìæ‚è•t‚¯ˆÊ’u. ƒ‚[ƒ^‚ª’¼•û‘Ì‚Éæ‚è•t‚¯‚ç‚ê‚Ä‚¢‚éê‡‚ÍC
-		const float PX = 0.12f/2;		//	x•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		const float PY = 0.152f/2;//0.14f/2;		//	y•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		const float PZ = 0.12f/2;		//	z•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		//	…‚ÌƒOƒŠƒbƒv‚Ö‚Ìæ‚è•t‚¯ˆÊ’uDƒOƒŠƒbƒv‚Íƒsƒ“ƒ|ƒ“‹Ê‚ğÌ—p‚µ‚Ä‚¢‚Ü‚·D
-		const float GX = 0.045f/2;		//	x•ûŒü‚Ì•Ó‚Ì’·‚³/2
-		const float GY = 0.045f/2;		//	y•ûŒü‚Ì•Ó‚Ì’·‚³/2
+		//	ãƒ¢ãƒ¼ã‚¿ã®å–ã‚Šä»˜ã‘ä½ç½®. ãƒ¢ãƒ¼ã‚¿ãŒç›´æ–¹ä½“ã«å–ã‚Šä»˜ã‘ã‚‰ã‚Œã¦ã„ã‚‹å ´åˆã¯ï¼Œ
+		const float PX = 0.12f/2;		//	xæ–¹å‘ã®è¾ºã®é•·ã•/2
+		const float PY = 0.152f/2;//0.14f/2;		//	yæ–¹å‘ã®è¾ºã®é•·ã•/2
+		const float PZ = 0.12f/2;		//	zæ–¹å‘ã®è¾ºã®é•·ã•/2
+		//	ç³¸ã®ã‚°ãƒªãƒƒãƒ—ã¸ã®å–ã‚Šä»˜ã‘ä½ç½®ï¼ã‚°ãƒªãƒƒãƒ—ã¯ãƒ”ãƒ³ãƒãƒ³ç‰ã‚’æ¡ç”¨ã—ã¦ã„ã¾ã™ï¼
+		const float GX = 0.045f/2;		//	xæ–¹å‘ã®è¾ºã®é•·ã•/2
+		const float GY = 0.045f/2;		//	yæ–¹å‘ã®è¾ºã®é•·ã•/2
 		Matrix3f rotR = Matrix3f::Rot((float)Rad(-45), 'y');
 		Matrix3f rotL = Matrix3f::Rot((float)Rad(-45), 'y');
 
-		Vec3f motorPos[2][8][2] = {		//	ƒ‚[ƒ^‚Ìæ‚è•t‚¯ˆÊ’u(’†S‚ğŒ´“_‚Æ‚·‚éDirectXÀ•WŒni‰E‚ªX,ã‚ªY,‰œ‚ªZj)
+		Vec3f motorPos[2][8][2] = {		//	ãƒ¢ãƒ¼ã‚¿ã®å–ã‚Šä»˜ã‘ä½ç½®(ä¸­å¿ƒã‚’åŸç‚¹ã¨ã™ã‚‹DirectXåº§æ¨™ç³»ï¼ˆå³ãŒX,ä¸ŠãŒY,å¥¥ãŒZï¼‰)
 			{
 				{rotR*Vec3f(-PX,-PY, PZ), rotR*Vec3f( -GX, 0.0f, 0.0f)},
 				{rotR*Vec3f( PX,-PY, PZ), rotR*Vec3f(  GX, 0.0f, 0.0f)},
@@ -465,7 +465,7 @@ bool HISpidarG::Init(const void* pDesc){
 	HISdkIf* sdk = GetSdk();
 	const HISpidarGDesc& desc = *(const HISpidarGDesc*)pDesc;
 
-	// HISpidarCalc6Dof‚Ì‰Šú‰»
+	// HISpidarCalc6Dofã®åˆæœŸåŒ–
 	nRepeat = 2;
 	sigma = 0.001f; //sigma=sigma*sigma
 	VVector<float> minForce, maxForce;
@@ -477,7 +477,7 @@ bool HISpidarG::Init(const void* pDesc){
 	}
 	HISpidarCalc6Dof::Init(6, minForce, maxForce);
 
-	// ƒ{ƒ^ƒ“ƒfƒoƒCƒX‚Ì‰Šú‰»
+	// ãƒœã‚¿ãƒ³ãƒ‡ãƒã‚¤ã‚¹ã®åˆæœŸåŒ–
 	buttons.resize(8);
 	size_t i;
 	for(i=0; i<buttons.size(); ++i){
@@ -498,13 +498,13 @@ bool HISpidarG::Init(const void* pDesc){
 
 bool HISpidarG::Calibration(){
 	if (!bGood) return false;
-	//	ƒ|ƒCƒ“ƒ^‚ğŒ´“_(’†S)‚É’u‚¢‚ÄAƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“‚ğs‚¤
+	//	ãƒã‚¤ãƒ³ã‚¿ã‚’åŸç‚¹(ä¸­å¿ƒ)ã«ç½®ã„ã¦ã€ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¡Œã†
 	for(unsigned i = 0; i < motors.size(); i++)
 		motors[i].SetLength( (motors[i].pos - motors[i].jointPos).norm() );
 	lengthDiffAve.clear();
 	pos = Vec3f();
 	ori = Quaterniond();
-	HISpidarCalc6Dof::Update();	//	p¨‚ğXV
+	HISpidarCalc6Dof::Update();	//	å§¿å‹¢ã‚’æ›´æ–°
 	return true;
 }
 

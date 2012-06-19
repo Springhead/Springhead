@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,63 +19,63 @@ public:
 	int FindPos(int id) const;
 };
 
-/**	“Ê‘½–Ê‘Ì‚Ì–Ê‚ğ•\‚·ƒNƒ‰ƒXDCDConvexMesh ‚ªŠ—LD
-	CDContactAnalysis ‚Åg‚í‚ê‚éD
+/**	å‡¸å¤šé¢ä½“ã®é¢ã‚’è¡¨ã™ã‚¯ãƒ©ã‚¹ï¼CDConvexMesh ãŒæ‰€æœ‰ï¼
+	CDContactAnalysis ã§ä½¿ã‚ã‚Œã‚‹ï¼
 */
 class CDFace:public Object{
 public:
 	SPR_OBJECTDEF(CDFace);
-	int vtxs[3];	///< –Ê‚Ì’¸“_ID
+	int vtxs[3];	///< é¢ã®é ‚ç‚¹ID
 	Vec3f	normal;
 
-	/// CDFace‚Ì–Ê‚ÌƒCƒ“ƒfƒbƒNƒX”
+	/// CDFaceã®é¢ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æ•°
 	virtual int NIndex(){ return 3; }
-	/// CDFace‚ÌƒCƒ“ƒfƒbƒNƒX”z—ñ‚ğæ“¾
+	/// CDFaceã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é…åˆ—ã‚’å–å¾—
 	virtual int* GetIndices(){ return vtxs; }
 };
 
 class CDFaces:public std::vector<CDFace>{
 };
 
-///	“Ê‘½–Ê‘Ì
+///	å‡¸å¤šé¢ä½“
 class CDConvexMesh : public CDConvex{
 protected:
-	/// ‘S’¸“_‚Ì•½‹Ï
+	/// å…¨é ‚ç‚¹ã®å¹³å‡
 	Vec3f average;
 public:
 	SPR_OBJECTDEF(CDConvexMesh);
-	//	Desc‚Ìƒƒ“ƒoASPR_DECLMEMBEROF_CDConvexMeshDesc ‚Íg‚í‚È‚¢B‘ã‚í‚è‚ÉGetDesc, SetDesc, GetDescSize‚ğg‚¤
+	//	Descã®ãƒ¡ãƒ³ãƒã€SPR_DECLMEMBEROF_CDConvexMeshDesc ã¯ä½¿ã‚ãªã„ã€‚ä»£ã‚ã‚Šã«GetDesc, SetDesc, GetDescSizeã‚’ä½¿ã†
 
-	///	’TõŠJn’¸“_”Ô†
+	///	æ¢ç´¢é–‹å§‹é ‚ç‚¹ç•ªå·
 	mutable int curPos;
-	///	’¸“_‚ÌÀ•W(ƒ[ƒJƒ‹À•WŒn)
+	///	é ‚ç‚¹ã®åº§æ¨™(ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»)
 	std::vector<Vec3f> base;
 
-	///	’¸“_‚Ì—×‚Ì’¸“_‚ÌˆÊ’u‚ª“ü‚Á‚½”z—ñ
+	///	é ‚ç‚¹ã®éš£ã®é ‚ç‚¹ã®ä½ç½®ãŒå…¥ã£ãŸé…åˆ—
 	std::vector< std::vector<int> > neighbor;
-	///	–Ê(3ŠpŒ` 0..nPlanes-1 ‚ª“Æ—§‚È–ÊC‚»‚êˆÈ~‚ÍMargeFace‚Åíœ‚³‚ê‚é“¯ˆê•½–Êã‚Ì–Ê)
+	///	é¢(3è§’å½¢ 0..nPlanes-1 ãŒç‹¬ç«‹ãªé¢ï¼Œãã‚Œä»¥é™ã¯MargeFaceã§å‰Šé™¤ã•ã‚Œã‚‹åŒä¸€å¹³é¢ä¸Šã®é¢)
 	CDFaces faces;
-	///	–Ê(3ŠpŒ`‚Ì‚¤‚¿CMergeFace()‚Åc‚Á‚½”)
+	///	é¢(3è§’å½¢ã®ã†ã¡ï¼ŒMergeFace()ã§æ®‹ã£ãŸæ•°)
 	int nPlanes;
 
 public:
 	CDConvexMesh();
 	CDConvexMesh(const CDConvexMeshDesc& desc);
 
-	///	’¸“_‚©‚ç–Ê‚âÚ‘±î•ñ‚ğ¶¬‚·‚éD
+	///	é ‚ç‚¹ã‹ã‚‰é¢ã‚„æ¥ç¶šæƒ…å ±ã‚’ç”Ÿæˆã™ã‚‹ï¼
 	void CalcFace();
 
 	///
 	virtual bool IsInside(const Vec3f& p);
 	
-	///	ƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚ğ‹‚ß‚éD
+	///	ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã‚’æ±‚ã‚ã‚‹ï¼
 	int Support(Vec3f& w, const Vec3f& v) const;
 	
-	///	Ø‚èŒû‚ğ‹‚ß‚éDÚG‰ğÍ‚Ég‚¤D
+	///	åˆ‡ã‚Šå£ã‚’æ±‚ã‚ã‚‹ï¼æ¥è§¦è§£æã«ä½¿ã†ï¼
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
-	///	w’è‚Ì’¸“_ vtx ‚Ì—×‚Ì’¸“_”Ô†‚ğ•Ô‚·
+	///	æŒ‡å®šã®é ‚ç‚¹ vtx ã®éš£ã®é ‚ç‚¹ç•ªå·ã‚’è¿”ã™
 	virtual std::vector<int>& FindNeighbors(int vtx);
-	///	’¸“_ƒoƒbƒtƒ@‚ğ•Ô‚·B
+	///	é ‚ç‚¹ãƒãƒƒãƒ•ã‚¡ã‚’è¿”ã™ã€‚
 	virtual Vec3f* GetBase(){return &*base.begin();}	
 
 	CDFaceIf* GetFace(int i);
@@ -83,7 +83,7 @@ public:
 	Vec3f* GetVertices();
 	int NVertex();
 
-	///	ƒfƒXƒNƒŠƒvƒ^CDConvexMeshDesc‚Ì“Ç‚İ‘‚«	
+	///	ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿CDConvexMeshDescã®èª­ã¿æ›¸ã	
 	virtual bool GetDesc(void *desc) const;
 	virtual void SetDesc(const void* desc);
 	virtual size_t GetDescSize() const { return sizeof(CDConvexMeshDesc); }
@@ -92,12 +92,12 @@ public:
 	virtual void Print(std::ostream& os) const;
 
 protected:
-	///	“¯ˆê•½–Êã‚ÅÚ‘±‚³‚ê‚Ä‚¢‚é3ŠpŒ`‚ğƒ}[ƒW‚·‚é
+	///	åŒä¸€å¹³é¢ä¸Šã§æ¥ç¶šã•ã‚Œã¦ã„ã‚‹3è§’å½¢ã‚’ãƒãƒ¼ã‚¸ã™ã‚‹
 	void MergeFace();
-	/// –Ê‚Ì–@ü‚ğŒvZ(Inside—p)
+	/// é¢ã®æ³•ç·šã‚’è¨ˆç®—(Insideç”¨)
 	void CalcFaceNormals();
 
-	///	•½‹ÏÀ•W‚ğŒvZ‚·‚éB
+	///	å¹³å‡åº§æ¨™ã‚’è¨ˆç®—ã™ã‚‹ã€‚
 	void CalcAverage();
 
 };

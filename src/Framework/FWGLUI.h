@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,17 +11,17 @@
 #include <Framework/FWGLUT.h>
 #include <GL/glui.h>
 
-/** @brief GLUI��p����A�v���P�[�V�����N���X
-		   ��{�I��FWAppGLUI�������̃A�v���P�[�V�����̃N���X�Ɍp�������C
-		   DesignGUI��K���I�[�o�[���C�h���Ďg�p����.
-		   CreateGUI��FWAppGLUIDesc�̏������GLUI*�^�̕ϐ����擾����D
-		   GLUI*�^�̕ϐ�����c���[���UI�̃p�[�c�ƃR�[���o�b�N���`����iDesignGUI�̎����j
-		   glutTimerFunc��GLUI_Master.set_glutTimerFunc�ɂ��Ȃ��ƌł܂�D
-		   ���Ƃ�glutMainLoop();
-		   GLUI*��NULL����glut�Ɠ��������ɂȂ�̂�DesignGUI���Ă΂Ȃ��̂Ȃ�CreateGUI���ĂԕK�v�������D
-		   �K�v�ɉ�����DesignGUI����h������R�[���o�b�N�֐����A�v���P�[�V�����N���X�ɍ쐬����K�v������D
-		   �����̃A�v���P�[�V�����N���X�ɍ쐬����R�[���o�b�N�́C�Ăяo���K��ɒ��ӂ��č쐬���邱�ƁD
-		   (�N���X���̊֐���`�͕K��__thiscall�ɂȂ�)   
+/** @brief GLUIを用いるアプリケーションクラス
+		   基本的にFWAppGLUIを自分のアプリケーションのクラスに継承させ，
+		   DesignGUIを必ずオーバーライドして使用する.
+		   CreateGUIでFWAppGLUIDescの情報を基にGLUI*型の変数を取得する．
+		   GLUI*型の変数からツリー状にUIのパーツとコールバックを定義する（DesignGUIの実装）
+		   glutTimerFuncをGLUI_Master.set_glutTimerFuncにしないと固まる．
+		   あとはglutMainLoop();
+		   GLUI*がNULLだとglutと同じ動きになるのでDesignGUIを呼ばないのならCreateGUIを呼ぶ必要も無い．
+		   必要に応じてDesignGUIから派生するコールバック関数をアプリケーションクラスに作成する必要がある．
+		   自分のアプリケーションクラスに作成するコールバックは，呼び出し規約に注意して作成すること．
+		   (クラス内の関数定義は必ず__thiscallになる)   
 	*/
 
 namespace Spr{;
@@ -30,14 +30,14 @@ class FWGLUI : public FWGLUT{
 public:
 	SPR_OBJECTDEF_NOIF(FWGLUI);
 protected:
-	// �R�[���o�b�N�������s���R���g���[���̔z��
-	// �{�^���C�e�L�X�g�{�b�N�X
+	// コールバック処理を行うコントロールの配列
+	// ボタン，テキストボックス
 	std::vector<FWControl*>	ctrls;
 
-	/// �C���X�^���X�擾
+	/// インスタンス取得
 	static FWGLUI* GetInstance();
 
-	/** �R�[���o�b�N�֐�*/
+	/** コールバック関数*/
 	static void SPR_CDECL GLUIUpdateFunc(int id);
 	
 	virtual void RegisterCallbacks();

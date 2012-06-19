@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -6,11 +6,11 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /**
-\page pageFEMThermo FEM‚É‚æ‚é‰·“xƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌƒTƒ“ƒvƒ‹
+\page pageFEMThermo FEMã«ã‚ˆã‚‹æ¸©åº¦ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚µãƒ³ãƒ—ãƒ«
 Springhead2/src/Samples/FEMThermo
 
-\section secQuitBoxStack I—¹Šî€
-- Esc‚©'q'‚Å‹­§I—¹B
+\section secQuitBoxStack çµ‚äº†åŸºæº–
+- Escã‹'q'ã§å¼·åˆ¶çµ‚äº†ã€‚
 	
 */
 //
@@ -32,11 +32,11 @@ using namespace std;
 
 class MyApp : public SampleApp{
 public:
-	/// ƒy[ƒWID
+	/// ãƒšãƒ¼ã‚¸ID
 	enum {
 		MENU_MAIN = MENU_SCENE,
 	};
-	/// ƒAƒNƒVƒ‡ƒ“ID
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ID
 	enum {
 		ID_BOX,
 		ID_SWITCHRENDER,
@@ -75,7 +75,7 @@ public:
 		InitWindow();
 
 
-		// Œ`ó‚Ìì¬
+		// å½¢çŠ¶ã®ä½œæˆ
 		CDBoxDesc bd;
 		bd.boxsize = Vec3f(2,2,2);
 		shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd)->Cast();
@@ -93,25 +93,25 @@ public:
 		rcd.length = 3;
 		shapeRoundCone= GetSdk()->GetPHSdk()->CreateShape(rcd)->Cast();
 		
-		//	ƒtƒ@ƒCƒ‹‚Ìƒ[ƒh
+		//	ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒ¼ãƒ‰
 		UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
-		GetSdk()->LoadScene("sceneTHTest5.spr", import);			// ƒtƒ@ƒCƒ‹‚Ìƒ[ƒh			// scene.spr:negi‚ğƒ[ƒh, scene2.spr:ƒfƒoƒbƒO—p‚Ì’¼•û‘Ì, scene3.spr:ŒŠ‚ ‚«cheese‚ğƒ[ƒh, sceneTHtest.spr:ƒtƒ‰ƒCƒpƒ“‚È‚ÇƒCƒ“ƒ|[ƒg‚ÌƒeƒXƒg
+		GetSdk()->LoadScene("sceneTHTest5.spr", import);			// ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒ¼ãƒ‰			// scene.spr:negiã‚’ãƒ­ãƒ¼ãƒ‰, scene2.spr:ãƒ‡ãƒãƒƒã‚°ç”¨ã®ç›´æ–¹ä½“, scene3.spr:ç©´ã‚ãcheeseã‚’ãƒ­ãƒ¼ãƒ‰, sceneTHtest.spr:ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ãªã©ã‚¤ãƒ³ãƒãƒ¼ãƒˆã®ãƒ†ã‚¹ãƒˆ
 		numScenes = GetSdk()->NScene();
 		if (numScenes) SwitchScene(GetSdk()->NScene()-1);
 
-		//	FEMMesh‚ğ•Û‘¶‚µ‚Ä‚İ‚é
+		//	FEMMeshã‚’ä¿å­˜ã—ã¦ã¿ã‚‹
 		FWFemMesh* fm[2] = {GetSdk()->GetScene()->FindObject("fwNegi")->Cast(), GetSdk()->GetScene()->FindObject("fwPan")->Cast()};
 		//FWFemMeshIf* fm[1] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
 		//FWFemMeshIf* fm[1] = GetSdk()->GetScene()->FindObject("fwPan")->Cast();
 		
-		PHFemMeshThermoDesc d;		//	“ü‚ê•¨‚ğì‚é
-		fm[1]->GetPHMesh()->GetDesc(&d);			//	ƒAƒhƒŒƒX‚ğ“n‚·
+		PHFemMeshThermoDesc d;		//	å…¥ã‚Œç‰©ã‚’ä½œã‚‹
+		fm[1]->GetPHMesh()->GetDesc(&d);			//	ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’æ¸¡ã™
 		for(unsigned i=0; i < d.vertices.size(); i++){
 			d.vertices[i].y = 0.5 *d.vertices[i].y;
 		}
 		fm[1]->GetPHMesh()->SetDesc(&d);
 		
-		//	PHMesh‚©‚çGRMesh‚ğì‚éB
+		//	PHMeshã‹ã‚‰GRMeshã‚’ä½œã‚‹ã€‚
 		fm[1]->grFrame->DelChildObject(fm[1]->grMesh->Cast());
 		fm[1]->CreateGRFromPH();
 		fm[1]->grFrame->AddChildObject(fm[1]->grMesh->Cast());
@@ -130,7 +130,7 @@ public:
 		}
 		spr->Save(objs, "femmesh.spr");
 
-		//> Œ³‚ÌƒR[ƒh
+		//> å…ƒã®ã‚³ãƒ¼ãƒ‰
 		//FWFemMeshIf* fm[1] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
 		//FWFemMeshIf* fm = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
 		//if (fm && fm->GetPHMesh()){
@@ -142,31 +142,31 @@ public:
 
 //		fm[1]->GetPHSolid()->GetPose()
 
-		/// •`‰æİ’è
+		/// æç”»è¨­å®š
 		if (fwScene){
 			fwScene->SetWireMaterial(GRRenderIf::WHITE);
-			fwScene->SetRenderMode(true, true);				///< ƒ\ƒŠƒbƒh•`‰æCƒƒCƒ„ƒtƒŒ[ƒ€•`‰æ
-			fwScene->EnableRenderAxis(false, true, true);		///< À•W²
-			fwScene->SetAxisStyle(FWSceneIf::AXIS_LINES);	///< À•W²‚ÌƒXƒ^ƒCƒ‹
-			fwScene->EnableRenderForce(false, true);			///< —Í
-			fwScene->EnableRenderContact(true);				///< ÚG’f–Ê
+			fwScene->SetRenderMode(true, true);				///< ã‚½ãƒªãƒƒãƒ‰æç”»ï¼Œãƒ¯ã‚¤ãƒ¤ãƒ•ãƒ¬ãƒ¼ãƒ æç”»
+			fwScene->EnableRenderAxis(false, true, true);		///< åº§æ¨™è»¸
+			fwScene->SetAxisStyle(FWSceneIf::AXIS_LINES);	///< åº§æ¨™è»¸ã®ã‚¹ã‚¿ã‚¤ãƒ«
+			fwScene->EnableRenderForce(false, true);			///< åŠ›
+			fwScene->EnableRenderContact(true);				///< æ¥è§¦æ–­é¢
 			phScene = fwScene->GetPHScene();
 		}
 
-		//	ƒZ[ƒu—p‚ÌƒXƒe[ƒg‚Ì—pˆÓ
+		//	ã‚»ãƒ¼ãƒ–ç”¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆã®ç”¨æ„
 		states = ObjectStatesIf::Create();		
-		// ƒ^ƒCƒ}
+		// ã‚¿ã‚¤ãƒ
 		timer = CreateTimer(UTTimerIf::FRAMEWORK);
 		timer->SetInterval(10);
 
-		//> Œ´“_À•W‚ÌŠi”[	
+		//> åŸç‚¹åº§æ¨™ã®æ ¼ç´	
 		//FWObjectIf* pan_		=	DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("Pan"));
 		//Affinef afPan_ = pan_->GetGRFrame()->GetWorldTransform();
 		//Affinef afPan_ = pan_->GetGRFrame()->GetWorldTransform();
-		///	Œ´“_À•ú„ƒ[ƒJƒ‹À•WŒn‚Ì(0,0,0)‚Ì‚Í‚¸
+		///	åŸç‚¹åº§æ”¾ï¼ï¼ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ç³»ã®(0,0,0)ã®ã¯ãš
 	}
 
-	// •`‰æŠÖ”D•`‰æ—v‹‚ª—ˆ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é
+	// æç”»é–¢æ•°ï¼æç”»è¦æ±‚ãŒæ¥ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹
 	virtual void OnDraw(GRRenderIf* render) {
 		if (debugRender){
 			fwScene->DrawPHScene(render);
@@ -180,7 +180,7 @@ public:
 		render->DrawFont(Vec2f(-21, 23), sstr.str());
 	}
 
-	//ƒAƒNƒVƒ‡ƒ“ˆ—
+	//ã‚¢ã‚¯ã‚·ãƒ§ãƒ³å‡¦ç†
 	virtual void OnAction(int menu, int id){
 		if(menu == MENU_MAIN){
 			Vec3d v, w(0.0, 0.0, 0.2), p(0.5, 20.0, 0.0);
@@ -201,23 +201,23 @@ public:
 		}
 		SampleApp::OnAction(menu, id);
 	}
-	//ƒXƒeƒbƒvÀs
+	//ã‚¹ãƒ†ãƒƒãƒ—å®Ÿè¡Œ
 	virtual void OnStep() {
 		SampleApp::OnStep();
 		PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 		//if(phscene)		cout << phscene << endl;
-//		SceneObjectIf* phSceneObject;			//>	–¢g—p
-//		PHFemMeshIf* phFemMesh;					//>	–¢g—p
+//		SceneObjectIf* phSceneObject;			//>	æœªä½¿ç”¨
+//		PHFemMeshIf* phFemMesh;					//>	æœªä½¿ç”¨
 		size_t Nobject = GetSdk()->GetPHSdk()->GetObjectIf()->NChildObject();
-		//‚È‚ñ‚©‚µ‚çƒAƒhƒŒƒX‚ªæ‚ê‚Ä‚¢‚é‚Ì‚Í•ª‚©‚Á‚½
+		//ãªã‚“ã‹ã—ã‚‰ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒå–ã‚Œã¦ã„ã‚‹ã®ã¯åˆ†ã‹ã£ãŸ
 		//for(int i=0; i< Nobject ;i++){
 		//	ObjectIf* object = GetSdk()->GetPHSdk()->GetChildObject(i);
 		//	cout << "Object" << i << " : " << object << endl;
 		//}
 		//NamedObjectIf* nobject = GetSdk()->FindObject("negi");
-		//phFemMesh‚ğì‚Á‚ÄAphFemMesh‚Ìˆ—‚ğ‚ğÀs‚³‚¹‚Ä‚İ‚½‚¢B
+		//phFemMeshã‚’ä½œã£ã¦ã€phFemMeshã®å‡¦ç†ã‚’ã‚’å®Ÿè¡Œã•ã›ã¦ã¿ãŸã„ã€‚
 		//
-		//”MƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“ƒXƒeƒbƒv
+		//ç†±ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚¹ãƒ†ãƒƒãƒ—
 		HeatConductionStep();
 		
 	}
@@ -233,7 +233,7 @@ public:
 	};
 	struct CondVtx{
 		int vid;
-		Vec3d pos;	//	x,y‚ÍÚG–Êã‚Å‚ÌˆÊ’uAz‚ÍÚG–Ê‚©‚ç‚Ì‹——£
+		Vec3d pos;	//	x,yã¯æ¥è§¦é¢ä¸Šã§ã®ä½ç½®ã€zã¯æ¥è§¦é¢ã‹ã‚‰ã®è·é›¢
 		double area;
 		double assign;
 		CondVtx():vid(-1), area(0), assign(0){}
@@ -276,7 +276,7 @@ public:
 		}
 	}
 
-	//	cur‚Ì—×‚ÅAused‚ÉŠÜ‚Ü‚ê‚È‚¢’¸“_‚ğ—ñ‹“
+	//	curã®éš£ã§ã€usedã«å«ã¾ã‚Œãªã„é ‚ç‚¹ã‚’åˆ—æŒ™
 	void FindNext(std::vector<int>& next, const std::vector<int>& cur, const std::vector<int>& used, CondVtxs& condVtxs){
 		for(unsigned i=0; i<cur.size(); ++i){
 			for(unsigned e=0; e < condVtxs.pmesh->vertices[condVtxs[cur[i]].vid].edges.size(); ++e){
@@ -293,7 +293,7 @@ public:
 			}
 		}
 	}
-	//	condVtxs‚Ì‚È‚©‚©‚çAfroms‚Ì—×‚ÌŠ„‚è“–‚Ä‚É‹ó‚«‚ª‚ ‚é’¸“_‚ğ—ñ‹“‚µApos‚É‹ß‚¢‡‚Éƒ\[ƒg‚µ‚Ä•Ô‚·B
+	//	condVtxsã®ãªã‹ã‹ã‚‰ã€fromsã®éš£ã®å‰²ã‚Šå½“ã¦ã«ç©ºããŒã‚ã‚‹é ‚ç‚¹ã‚’åˆ—æŒ™ã—ã€posã«è¿‘ã„é †ã«ã‚½ãƒ¼ãƒˆã—ã¦è¿”ã™ã€‚
 	struct Dist2Less{
 		Vec3d pos;
 		CondVtxs& condVtxs;
@@ -344,7 +344,7 @@ public:
 		found = cid;
 		return sqrt(minDist2);
 	}
-	//	condVtxs ‚Ì’†‚©‚çApos ‚É‹ß‚¢3“_‚ğ from ‚ğ‹N“_‚É’Tõ‚µ‚Ä ids‚É•Ô‚·Bpos‚ğ•âŠÔ‚·‚éd‚İ‚ğwegihts‚É•Ô‚·B
+	//	condVtxs ã®ä¸­ã‹ã‚‰ã€pos ã«è¿‘ã„3ç‚¹ã‚’ from ã‚’èµ·ç‚¹ã«æ¢ç´¢ã—ã¦ idsã«è¿”ã™ã€‚posã‚’è£œé–“ã™ã‚‹é‡ã¿ã‚’wegihtsã«è¿”ã™ã€‚
 	void FindNearest3(int *ids, double* weights, const Vec3d& pos, CondVtxs& condVtxs, int from){
 		int minId = from;
 		double minDist2;
@@ -366,7 +366,7 @@ public:
 				}
 			}
 		}while(cid != minId);
-		//	—×‚Ì’¸“_‚Å‹ß‚¢‚à‚Ì‚ğ‚Q‚ÂŒ©‚Â‚¯‚é
+		//	éš£ã®é ‚ç‚¹ã§è¿‘ã„ã‚‚ã®ã‚’ï¼’ã¤è¦‹ã¤ã‘ã‚‹
 		double min1Dist2 = DBL_MAX;
 		double min2Dist2 = DBL_MAX;
 		int min1Id = -1;
@@ -409,68 +409,68 @@ public:
 	}
 	void HeatConductionStep(){
 #if 1
-		//	2•¨‘Ì‚ğæ‚èo‚·
+		//	2ç‰©ä½“ã‚’å–ã‚Šå‡ºã™
 		FWFemMesh* fmesh[2];
 		fmesh[0] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
 		fmesh[1] = GetSdk()->GetScene()->FindObject("fwPan")->Cast();
 		if (!(fmesh[0] && fmesh[1])){
-			DSTR << "‘ÎÛ‚ÌFWFemMesh‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ" << std::endl;
+			DSTR << "å¯¾è±¡ã®FWFemMeshãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“" << std::endl;
 			return;
 		}
 		PHSolid* solids[2];
 		solids[0] = fmesh[0]->GetPHSolid()->Cast();
 		solids[1] = fmesh[1]->GetPHSolid()->Cast();
-		//	FEMMesh‚ÍÚG”»’è‚ª‚È‚­CDConvexMesh‚É‚ ‚éBCDConvexMesh‚ÌˆÊ’u‚ğæ‚Á‚Ä‚­‚é
+		//	FEMMeshã¯æ¥è§¦åˆ¤å®šãŒãªãCDConvexMeshã«ã‚ã‚‹ã€‚CDConvexMeshã®ä½ç½®ã‚’å–ã£ã¦ãã‚‹
 		if (solids[0]->NShape() != 1 || solids[0]->NShape() !=1){
-			DSTR << "•¡”Œ`ó‚É‚Í–¢‘Î‰" << std::endl;
+			DSTR << "è¤‡æ•°å½¢çŠ¶ã«ã¯æœªå¯¾å¿œ" << std::endl;
 			return;
 		}
 		PHScene* scene = solids[0]->GetScene()->Cast();
-		//	ÚGƒyƒA‚ğŒ©‚Â‚¯‚ÄA–¢”»’è‚È‚ç”»’è‚·‚éB
+		//	æ¥è§¦ãƒšã‚¢ã‚’è¦‹ã¤ã‘ã¦ã€æœªåˆ¤å®šãªã‚‰åˆ¤å®šã™ã‚‹ã€‚
 		bool bSwap;
 		PHSolidPairForLCP* pair = scene->GetSolidPair(solids[0]->Cast(), solids[1]->Cast(), bSwap)->Cast();
 		PHShapePairForLCP* sp = pair->GetShapePair(0,0)->Cast();
 		if (sp->state == CDShapePair::NONE){
-			//	–¢ÚG‚È‚Ì‚ÅAGJK‚ğŒÄ‚Ô
+			//	æœªæ¥è§¦ãªã®ã§ã€GJKã‚’å‘¼ã¶
 			sp->shapePoseW[0] = solids[0]->GetPose() * solids[0]->GetShapePose(0);
 			sp->shapePoseW[1] = solids[1]->GetPose() * solids[1]->GetShapePose(0);
 			if (bSwap) std::swap(sp->shapePoseW[0], sp->shapePoseW[1]);	
 			Vec3d sep;
 			double dist = FindClosestPoints(sp->shape[0], sp->shape[1], sp->shapePoseW[0], sp->shapePoseW[1], sep, sp->closestPoint[0], sp->closestPoint[1]);
 			if (dist < 1e-10){
-				//	‚©‚È‚è‹ß‚¢‚Ì‚ÅA–@ü‚ª‰ö‚µ‚¢‚Ì‚ÅAŒx‚ğ‚¾‚µ‚Ä‚¨‚­B
-				DSTR << "‚Q•¨‘Ì‚ª”ñí‚É‹ß‚¢‚ªAÚG‚µ‚Í‚µ‚Ä‚¢‚È‚¢”÷–­‚Èó‘Ô"  << std::endl;
+				//	ã‹ãªã‚Šè¿‘ã„ã®ã§ã€æ³•ç·šãŒæ€ªã—ã„ã®ã§ã€è­¦å‘Šã‚’ã ã—ã¦ãŠãã€‚
+				DSTR << "ï¼’ç‰©ä½“ãŒéå¸¸ã«è¿‘ã„ãŒã€æ¥è§¦ã—ã¯ã—ã¦ã„ãªã„å¾®å¦™ãªçŠ¶æ…‹"  << std::endl;
 			}
 			sp->depth = -dist;
 			sp->normal = sp->shapePoseW[1]*sp->closestPoint[1] - sp->shapePoseW[0]*sp->closestPoint[0];
 			sp->normal.unitize();
 		}
 
-		//	‹——£:dist
+		//	è·é›¢:dist
 
-		//	‹——£‚ª‹ß‚¯‚ê‚Î“`”M‚Ìˆ—
-		/*	”M“`’B—¦ ƒ¿ [W/(m^2 K)] ‚ğ—p‚¢‚é‚ÆA‹«ŠEã‚Å q = ƒ¿(T-Tc) (T:Ú“_‰·“x Tc:üˆÍ‚Ì—¬‘Ì“™‚Ì‰·“x)
-			‚Q•¨‘Ì‚ÌÚG‚¾‚ÆAT1-ƒ¿1->Tc-ƒ¿2->T2 ‚Æ‚È‚é‚Æl‚¦‚ç‚ê‚éB
-			q = ƒ¿1(T1-Tc) = ƒ¿2(Tc-T2) ‚æ‚è (ƒ¿1+ƒ¿2)Tc = ƒ¿1T1 + ƒ¿2T2
-			Tc = (ƒ¿1T1 + ƒ¿2T2)/(ƒ¿1+ƒ¿2)
-			q = ƒ¿1(T1-(ƒ¿1T1 + ƒ¿2T2)/(ƒ¿1+ƒ¿2)) = ƒ¿1T1 - ƒ¿1(ƒ¿1T1 + ƒ¿2T2)/(ƒ¿1+ƒ¿2)
-				= (ƒ¿1ƒ¿2T1 - ƒ¿1ƒ¿2T2)/(ƒ¿1+ƒ¿2) = ƒ¿'(T1-T2)  ƒ¿' = ƒ¿1ƒ¿2/(ƒ¿1+ƒ¿2)	*/
-		/*	q‚ÆQ‚É‚Â‚¢‚Ä‚Ìl@
-			q‚Í’PˆÊ–ÊÏ‚ ‚½‚è‚È‚Ì‚ÅA’¸“_ŠÔ‚Ì”M‚ÌˆÚ“®—ÊQ‚É’¼‚·‚É‚ÍA’¸“_‚ª‘ã•\‚·‚é–ÊÏ‚ğŠ|‚¯‚é•K—v‚ª‚ ‚éB
-			–{—ˆ‚ÍAOŠpŒ`‚Ìd‚È‚è‚ÆŒ`óŠÖ”‚©‚ç‹‚ß‚é‚×‚«‚à‚ÌB
-			‚µ‚©‚µAd‚È‚è‹ï‡‚Í–ˆƒXƒeƒbƒv•Ï‚í‚é‚Ì‚ÅA‚±‚ÌŒvZ‚Í‘å•ÏBŠÈ—ª‰»‚ğl‚¦‚éB
-			’¸“_‚Í’¸“_‚ğŠÜ‚ŞOŠpŒ`‚É¨—Í‚ğ‚ÂBOŠpŒ`‚Ìd‚È‚è‚æ‚èA’¸“_‚Ì‹——£‚ÌˆÓ–¡‚ª‘å‚«‚¢B
-			‹——£‚ª‹ß‚¢‚à‚Ì‚ğŠ„‚è“–‚Ä‚Ä‚¢‚­‚ªAŒã‚Å”ò‚Ñ’n‚ªo‚Ä‚Í‚¢‚¯‚È‚¢B
-			‚»‚±‚ÅA‚P“_‚©‚ç‰‚ß‚Ä™X‚ÉŠ„‚è“–‚Ä—Ìˆæ‚ğ‘å‚«‚­‚µ‚Äs‚­B‚±‚ê‚Å‚¸‚ê‚Í‹N‚«‚Ä‚à”ò‚Ñ’n‚Í‚Å‚È‚¢B
+		//	è·é›¢ãŒè¿‘ã‘ã‚Œã°ä¼ç†±ã®å‡¦ç†
+		/*	ç†±ä¼é”ç‡ Î± [W/(m^2 K)] ã‚’ç”¨ã„ã‚‹ã¨ã€å¢ƒç•Œä¸Šã§ q = Î±(T-Tc) (T:æ¥ç‚¹æ¸©åº¦ Tc:å‘¨å›²ã®æµä½“ç­‰ã®æ¸©åº¦)
+			ï¼’ç‰©ä½“ã®æ¥è§¦ã ã¨ã€T1-Î±1->Tc-Î±2->T2 ã¨ãªã‚‹ã¨è€ƒãˆã‚‰ã‚Œã‚‹ã€‚
+			q = Î±1(T1-Tc) = Î±2(Tc-T2) ã‚ˆã‚Š (Î±1+Î±2)Tc = Î±1T1 + Î±2T2
+			Tc = (Î±1T1 + Î±2T2)/(Î±1+Î±2)
+			q = Î±1(T1-(Î±1T1 + Î±2T2)/(Î±1+Î±2)) = Î±1T1 - Î±1(Î±1T1 + Î±2T2)/(Î±1+Î±2)
+				= (Î±1Î±2T1 - Î±1Î±2T2)/(Î±1+Î±2) = Î±'(T1-T2)  Î±' = Î±1Î±2/(Î±1+Î±2)	*/
+		/*	qã¨Qã«ã¤ã„ã¦ã®è€ƒå¯Ÿ
+			qã¯å˜ä½é¢ç©ã‚ãŸã‚Šãªã®ã§ã€é ‚ç‚¹é–“ã®ç†±ã®ç§»å‹•é‡Qã«ç›´ã™ã«ã¯ã€é ‚ç‚¹ãŒä»£è¡¨ã™ã‚‹é¢ç©ã‚’æ›ã‘ã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
+			æœ¬æ¥ã¯ã€ä¸‰è§’å½¢ã®é‡ãªã‚Šã¨å½¢çŠ¶é–¢æ•°ã‹ã‚‰æ±‚ã‚ã‚‹ã¹ãã‚‚ã®ã€‚
+			ã—ã‹ã—ã€é‡ãªã‚Šå…·åˆã¯æ¯ã‚¹ãƒ†ãƒƒãƒ—å¤‰ã‚ã‚‹ã®ã§ã€ã“ã®è¨ˆç®—ã¯å¤§å¤‰ã€‚ç°¡ç•¥åŒ–ã‚’è€ƒãˆã‚‹ã€‚
+			é ‚ç‚¹ã¯é ‚ç‚¹ã‚’å«ã‚€ä¸‰è§’å½¢ã«å‹¢åŠ›ã‚’æŒã¤ã€‚ä¸‰è§’å½¢ã®é‡ãªã‚Šã‚ˆã‚Šã€é ‚ç‚¹ã®è·é›¢ã®æ„å‘³ãŒå¤§ãã„ã€‚
+			è·é›¢ãŒè¿‘ã„ã‚‚ã®ã‚’å‰²ã‚Šå½“ã¦ã¦ã„ããŒã€å¾Œã§é£›ã³åœ°ãŒå‡ºã¦ã¯ã„ã‘ãªã„ã€‚
+			ãã“ã§ã€ï¼‘ç‚¹ã‹ã‚‰åˆã‚ã¦å¾ã€…ã«å‰²ã‚Šå½“ã¦é ˜åŸŸã‚’å¤§ããã—ã¦è¡Œãã€‚ã“ã‚Œã§ãšã‚Œã¯èµ·ãã¦ã‚‚é£›ã³åœ°ã¯ã§ãªã„ã€‚
 				
-			’¸“_‚Ì–ÊÏ‚ÍA’¸“_‚ğŠÜ‚ŞOŠpŒ`’B‚Ì–ÊÏ‚Ì˜a‚Ì1/3B				
+			é ‚ç‚¹ã®é¢ç©ã¯ã€é ‚ç‚¹ã‚’å«ã‚€ä¸‰è§’å½¢é”ã®é¢ç©ã®å’Œã®1/3ã€‚				
 		*/
-		const double isoLen = 0.005;	//	‚±‚êˆÈã—£‚ê‚é‚Æ“`“±‚µ‚È‚¢‹——£
+		const double isoLen = 0.005;	//	ã“ã‚Œä»¥ä¸Šé›¢ã‚Œã‚‹ã¨ä¼å°ã—ãªã„è·é›¢
 		if (sp->depth > -isoLen){
 			CondVtxs condVtxs[2];
 			condVtxs[0].pmesh = fmesh[bSwap? 1:0]->GetPHMesh()->Cast();
 			condVtxs[1].pmesh = fmesh[bSwap? 0:1]->GetPHMesh()->Cast();
-			//	‹——£‚ª‹ß‚¢’¸“_‚ğ—ñ‹“B‚Â‚¢‚Å‚É–@ü‚É‚’¼‚È•½–Êã‚Å‚ÌÀ•W‚ğ‹‚ß‚Ä‚¨‚­B
+			//	è·é›¢ãŒè¿‘ã„é ‚ç‚¹ã‚’åˆ—æŒ™ã€‚ã¤ã„ã§ã«æ³•ç·šã«å‚ç›´ãªå¹³é¢ä¸Šã§ã®åº§æ¨™ã‚’æ±‚ã‚ã¦ãŠãã€‚
 			Matrix3d coords;
 			if (std::abs(sp->normal.x) < std::abs(sp->normal.y)) coords = Matrix3d::Rot(sp->normal, Vec3d(1,0,0), 'z');
 			else coords = Matrix3d::Rot(sp->normal, Vec3d(0,1,0), 'z');
@@ -485,13 +485,13 @@ public:
 						CondVtx c;
 						c.vid = condVtxs[i].pmesh->surfaceVertices[v];
 						c.pos = coords_inv * (sp->shapePoseW[i] * condVtxs[i].pmesh->vertices[c.vid].pos);
-						c.pos.z = vd + (sp->depth/2);	//	’†–Ê‚©‚ç‚Ì‹——£‚É‚µ‚Ä‚¨‚­B
+						c.pos.z = vd + (sp->depth/2);	//	ä¸­é¢ã‹ã‚‰ã®è·é›¢ã«ã—ã¦ãŠãã€‚
 						condVtxs[i].push_back(c);
 					}
 				}
 			}
-			//	–@ü‚É‚’¼‚È•½–Êã‚Åƒ\[ƒg‚µ‚ÄABBox‚ªd‚È‚ç‚È‚¢•”•ª‚ÍÌ‚Ä‚éB
-			//	–{—ˆ‚ÍACDConvex::FindCutRing()‚ğg‚Á‚Ä—Ç‚¢Š´‚¶‚É‚â‚è‚½‚¢‚Æ‚±‚ëB“Ê•ª‰ğ‚ª‚Å‚«‚½‚ç‚â‚è‚½‚¢B
+			//	æ³•ç·šã«å‚ç›´ãªå¹³é¢ä¸Šã§ã‚½ãƒ¼ãƒˆã—ã¦ã€BBoxãŒé‡ãªã‚‰ãªã„éƒ¨åˆ†ã¯æ¨ã¦ã‚‹ã€‚
+			//	æœ¬æ¥ã¯ã€CDConvex::FindCutRing()ã‚’ä½¿ã£ã¦è‰¯ã„æ„Ÿã˜ã«ã‚„ã‚ŠãŸã„ã¨ã“ã‚ã€‚å‡¸åˆ†è§£ãŒã§ããŸã‚‰ã‚„ã‚ŠãŸã„ã€‚
 			Vec2d bboxMin, bboxMax;
 			for(int axis = 0; axis<2; ++axis){
 				for(int i=0; i<2; ++i){
@@ -516,29 +516,29 @@ public:
 					condVtxs[i].erase(it, condVtxs[i].end());
 				}
 			}
-			//	‘Î‰‚·‚é’¸“_‚Ì‚È‚¢’¸“_‚ğíœ‚·‚éB
-			//		‚Ü‚¸vertices‚©‚çcondVtx‚Ö‚Ì‘Î‰•\‚ğì‚é
+			//	å¯¾å¿œã™ã‚‹é ‚ç‚¹ã®ãªã„é ‚ç‚¹ã‚’å‰Šé™¤ã™ã‚‹ã€‚
+			//		ã¾ãšverticesã‹ã‚‰condVtxã¸ã®å¯¾å¿œè¡¨ã‚’ä½œã‚‹
 			for(int i=0; i<2; ++i){
 				condVtxs[i].vtx2Cond.resize(condVtxs[i].pmesh->vertices.size(), -1);
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
 					condVtxs[i].vtx2Cond[condVtxs[i][j].vid] = j;
 				}
 			}
-			//	‘Î‰‚·‚é’¸“_‚ªŒ©‚Â‚©‚ç‚È‚¢’¸“_‚ğAíœ‚Ì‚½‚ß‚Éƒ}[ƒNB
+			//	å¯¾å¿œã™ã‚‹é ‚ç‚¹ãŒè¦‹ã¤ã‹ã‚‰ãªã„é ‚ç‚¹ã‚’ã€å‰Šé™¤ã®ãŸã‚ã«ãƒãƒ¼ã‚¯ã€‚
 			std::vector<int> eraseVtxs[2];
 			for(int i=0; i<2; ++i){
 				int from = 0;
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
 					int found = from;
 					double dist = FindNearest(condVtxs[i][j].pos, condVtxs[1-i], found);
-					if (dist > isoLen){	//	•½–Ê‹——£‚ªisoLenˆÈã‚Ì’¸“_‚Ííœ
+					if (dist > isoLen){	//	å¹³é¢è·é›¢ãŒisoLenä»¥ä¸Šã®é ‚ç‚¹ã¯å‰Šé™¤
 						eraseVtxs[i].push_back(i);
 					}else{
 						from = found;
 					}
 				}
 			}
-			//	ƒ}[ƒN‚µ‚½’¸“_‚ğíœ
+			//	ãƒãƒ¼ã‚¯ã—ãŸé ‚ç‚¹ã‚’å‰Šé™¤
 			for(int i=0; i<2; ++i){
 				for(int j=eraseVtxs[i].size()-1; j>0; --j){
 					condVtxs[i].erase(condVtxs[i].begin() + eraseVtxs[i][j]);
@@ -548,7 +548,7 @@ public:
 					return;
 				}
 			}
-			//	vertices‚©‚çcondVtx‚Ö‚Ì‘Î‰•\‚ğì‚é
+			//	verticesã‹ã‚‰condVtxã¸ã®å¯¾å¿œè¡¨ã‚’ä½œã‚‹
 			for(int i=0; i<2; ++i){
 				condVtxs[i].vtx2Cond.clear();
 				condVtxs[i].vtx2Cond.resize(condVtxs[i].pmesh->vertices.size(), -1);
@@ -556,7 +556,7 @@ public:
 					condVtxs[i].vtx2Cond[condVtxs[i][j].vid] = j;
 				}
 			}
-			//	’¸“_‚Ì’S“–‚·‚é–ÊÏ‚ğŒvZ‚·‚é
+			//	é ‚ç‚¹ã®æ‹…å½“ã™ã‚‹é¢ç©ã‚’è¨ˆç®—ã™ã‚‹
 			for(int i=0; i<2; ++i){
 				for(unsigned j=0; j<condVtxs[i].size(); ++j){
 					condVtxs[i][j].area = 0;
@@ -574,7 +574,7 @@ public:
 					}
 				}
 			}
-			//	bbox‚Ì’†S‹ß‚­‚Ì’¸“_‚ğŒ©‚Â‚¯‚é
+			//	bboxã®ä¸­å¿ƒè¿‘ãã®é ‚ç‚¹ã‚’è¦‹ã¤ã‘ã‚‹
 			double xCenter = 0.5*(bboxMin.x + bboxMax.x);
 			int centerVtx[2] = {-1, -1};
 			for(int i=0; i<2; ++i){
@@ -601,7 +601,7 @@ public:
 				}
 				assert(centerVtx[i]>=0);
 			}
-			//	centerVtx[i]‚Æˆê”Ô‹ß‚¢’¸“_‚ğ’T‚·
+			//	centerVtx[i]ã¨ä¸€ç•ªè¿‘ã„é ‚ç‚¹ã‚’æ¢ã™
 			int closestVtx[2];
 			double minDist2[2];
 			for(int i=0; i<2; ++i){
@@ -627,17 +627,17 @@ public:
 				} while(minId != cid);
 				closestVtx[i] = cid;
 			}
-			//	‚æ‚è‹ß‚¢‚Ù‚¤‚ğ closestVtx[2] ‚É“ü‚ê‚éB
+			//	ã‚ˆã‚Šè¿‘ã„ã»ã†ã‚’ closestVtx[2] ã«å…¥ã‚Œã‚‹ã€‚
 			if (minDist2[0] < minDist2[1]) closestVtx[1] = centerVtx[1];
 			else closestVtx[0] = centerVtx[0];
-			//	‚±‚±‚©‚ç‘Î‰‚ğL‚°‚Ä‚¢‚­
+			//	ã“ã“ã‹ã‚‰å¯¾å¿œã‚’åºƒã’ã¦ã„ã
 			std::vector<int> cur[2];
 			cur[0].push_back(closestVtx[0]);
 			cur[1].push_back(closestVtx[1]);
-			//	Š„‚è“–‚ÄÏ‚İ‚Ì’¸“_‚Í‚±‚¿‚ç‚ÉˆÚ‚·
+			//	å‰²ã‚Šå½“ã¦æ¸ˆã¿ã®é ‚ç‚¹ã¯ã“ã¡ã‚‰ã«ç§»ã™
 			std::vector<int> used[2];
 			while(cur[0].size() || cur[1].size()){
-				//	cur‚É‚Â‚¢‚Ä”M—¬‘©‚ÌŒW”i”M“`’B—¦j‚ğ‹‚ßA‘Î‰‚·‚é’¸“_‚ğŒ©‚Â‚¯‚é
+				//	curã«ã¤ã„ã¦ç†±æµæŸã®ä¿‚æ•°ï¼ˆç†±ä¼é”ç‡ï¼‰ã‚’æ±‚ã‚ã€å¯¾å¿œã™ã‚‹é ‚ç‚¹ã‚’è¦‹ã¤ã‘ã‚‹
 				for(int i=0; i<2; ++i){
 					for(unsigned j=0; j<cur[i].size();++j){
 						double a = condVtxs[i][cur[i][j]].area - condVtxs[i][cur[i][j]].assign;
@@ -661,7 +661,7 @@ public:
 										AddCompanion(condVtxs[1-i], ids[k], condVtxs[i], cur[i][j], delta);
 										rest -= delta;
 									}
-									//	‚¢‚Á‚Ï‚¢‚È‚Ì‚ÅAweight‚ğ0‚É‚µ‚Ä‚¨‚­
+									//	ã„ã£ã±ã„ãªã®ã§ã€weightã‚’0ã«ã—ã¦ãŠã
 									weights[k] = 0;
 								}
 							}
@@ -671,12 +671,12 @@ public:
 							a = rest;
 						}
 filled:;
-						//	‚R“_‚Å‚Í‹zû‚µ‚«‚ê‚È‚©‚Á‚½‚Ì‚ÅA‚»‚Î‚Ì’¸“_‚ğ‚Ç‚ñ‚Ç‚ñ’T‚µ‚ÄŠ„‚è“–‚Ä‚Ä‚¢‚­
+						//	ï¼“ç‚¹ã§ã¯å¸åã—ãã‚Œãªã‹ã£ãŸã®ã§ã€ãã°ã®é ‚ç‚¹ã‚’ã©ã‚“ã©ã‚“æ¢ã—ã¦å‰²ã‚Šå½“ã¦ã¦ã„ã
 						while (rest > 0){
 							std::vector<int> nears;
 							if (ids[2] == -1) ids.resize(2);
 							if (ids[1] == -1) ids.resize(1);
-							FindNearests(nears, condVtxs[i][cur[i][j]].pos, condVtxs[1-i], ids);	//	—×‚Ì’¸“_‚ğ‹ß‚¢‡‚É•Ô‚·B
+							FindNearests(nears, condVtxs[i][cur[i][j]].pos, condVtxs[1-i], ids);	//	éš£ã®é ‚ç‚¹ã‚’è¿‘ã„é †ã«è¿”ã™ã€‚
 							if (nears.size() == 0) break;
 							for(unsigned k=0; rest > 0 && k<nears.size(); ++k){
 								if (condVtxs[1-i][nears[k]].area - condVtxs[1-i][nears[k]].assign > rest){
@@ -706,7 +706,7 @@ filled:;
 			}
 
 
-			//	ˆÊ’u‚ÌŠm”F
+			//	ä½ç½®ã®ç¢ºèª
 /*			for(unsigned i=0; i<2; ++i){
 				DSTR << "mesh" << i << " " << condVtxs[i].size() << "/" 
 					<< condVtxs[i].pmesh->vertices.size() << "vtxs" << std::endl;
@@ -731,9 +731,9 @@ filled:;
 			}
 */
 
-			/// 2•¨‘Ì‚ÌŠÔ‚Å”M“`’B‹«ŠEğŒ—˜—p‚É‚æ‚é”M“`’BŒvZ‚ğs‚¤
+			/// 2ç‰©ä½“ã®é–“ã§ç†±ä¼é”å¢ƒç•Œæ¡ä»¶åˆ©ç”¨ã«ã‚ˆã‚‹ç†±ä¼é”è¨ˆç®—ã‚’è¡Œã†
 			for(unsigned i =0;i < condVtxs[0].size(); i++){
-				//	‘Î‰‚·‚éß“_(companions[j])‚Ì‰·“x‚ğg‚Á‚Ä”M“`’B‚ÌŒvZ‚ğs‚¤
+				//	å¯¾å¿œã™ã‚‹ç¯€ç‚¹(companions[j])ã®æ¸©åº¦ã‚’ä½¿ã£ã¦ç†±ä¼é”ã®è¨ˆç®—ã‚’è¡Œã†
 				for(unsigned j =0;j < condVtxs[0][i].companions.size(); j++){
 					double dqdt = 
 					condVtxs[0].pmesh->vertices[condVtxs[0][i].vid].heatTransRatio * ( condVtxs[0].pmesh->vertices[condVtxs[0][i].vid].temp 
@@ -741,35 +741,35 @@ filled:;
 					
 						dqdt *= 1e3;
 
-					// condvtx[0]‚ÌVecf ‚Édqdt ‚ğ‘«‚·
+					// condvtx[0]ã®Vecf ã«dqdt ã‚’è¶³ã™
 					condVtxs[0].pmesh->SetvecFAll(condVtxs[0][i].vid,-dqdt);
 
-					// condVtx[1]‚Ìcompanion.id”Ô–Ú‚ÌVecf‚©‚çˆø‚­
+					// condVtx[1]ã®companion.idç•ªç›®ã®Vecfã‹ã‚‰å¼•ã
 					condVtxs[1].pmesh->SetvecFAll(condVtxs[1][condVtxs[0][i].companions[j].id].vid, +dqdt);
 				}
 			}
 		}
 
-		//ˆÈ‰º‚ÌŒvZ‚ª‰½‚©‚ªAd‚¢IIIIã‰º‚ÌƒR[ƒh‚Íd‚­‚È‚¢B
-		//	ˆÈ‰º‚ÌŒvZ‚ÍAã‚ÌƒR[ƒh‚ª“®‚¢‚Ä‚¢‚é‚Ì‚©’m‚è‚½‚­‚ÄA‹}‚²‚µ‚ç‚¦‚ÌƒRƒsƒyƒR[ƒh‚È‚Ì‚ÅA‚«‚¿‚ñ‚Æ‚µ‚½À‘•‚ğ‘‚¢‚ÄA”M“`’B‚ğ‚·
-		//	ˆÈ‰ºA“¯S‰~‚Æ‚È‚éŠÂ‹«‚ğì‚é
+		//ä»¥ä¸‹ã®è¨ˆç®—ãŒä½•ã‹ãŒã€é‡ã„ï¼ï¼ï¼ï¼ä¸Šä¸‹ã®ã‚³ãƒ¼ãƒ‰ã¯é‡ããªã„ã€‚
+		//	ä»¥ä¸‹ã®è¨ˆç®—ã¯ã€ä¸Šã®ã‚³ãƒ¼ãƒ‰ãŒå‹•ã„ã¦ã„ã‚‹ã®ã‹çŸ¥ã‚ŠãŸãã¦ã€æ€¥ã”ã—ã‚‰ãˆã®ã‚³ãƒ”ãƒšã‚³ãƒ¼ãƒ‰ãªã®ã§ã€ãã¡ã‚“ã¨ã—ãŸå®Ÿè£…ã‚’æ›¸ã„ã¦ã€ç†±ä¼é”ã‚’è©¦ã™
+		//	ä»¥ä¸‹ã€åŒå¿ƒå††ã¨ãªã‚‹ç’°å¢ƒã‚’ä½œã‚‹
 
-		//>	“¯S‰~‚Ì•”•ª‚ÍA”M—¬‘©‹«ŠEğŒ‚ğ‰Á‚¦‚é
+		//>	åŒå¿ƒå††ã®éƒ¨åˆ†ã¯ã€ç†±æµæŸå¢ƒç•Œæ¡ä»¶ã‚’åŠ ãˆã‚‹
 		
-		//	Pan‚Ìphmesh‚ğæ‚Á‚Ä‚­‚é
+		//	Panã®phmeshã‚’å–ã£ã¦ãã‚‹
 
-		//@SUrfaceMEsh‚Ìface‚É‚Â‚¢‚ÄAface‚Ìß“_‚ªA
+		//ã€€SUrfaceMEshã®faceã«ã¤ã„ã¦ã€faceã®ç¯€ç‚¹ãŒã€
 
 
-		//	distFromOrigin‚ªŠù’è‚Ì”ÍˆÍ“à‚É‚ ‚éA
-		//	”M—¬‘©‚ğ‰Á‚¦‚é
+		//	distFromOriginãŒæ—¢å®šã®ç¯„å›²å†…ã«ã‚ã‚‹æ™‚ã€
+		//	ç†±æµæŸã‚’åŠ ãˆã‚‹
 
 		//	
 
 
-		//	–§“xA”ä”M‚ğ‘fŞ‚²‚Æ‚Éİ’è
-		//	”M—¬‘©‚ğ‰Á‚¦‚é”ÍˆÍ‚ğİ’èH
-			//@ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Å•Ï‚¦‚é•K—v‚Í‚È‚¢H¨PHFemMeshThermo()‚Åİ’èA‚¹‚¢‚º‚¢‰Á”Mƒ‚[ƒh‚ğ‘I‚Ô‚Ì‚ªƒAƒvƒŠƒP[ƒVƒ‡ƒ“
+		//	å¯†åº¦ã€æ¯”ç†±ã‚’ç´ æã”ã¨ã«è¨­å®š
+		//	ç†±æµæŸã‚’åŠ ãˆã‚‹ç¯„å›²ã‚’è¨­å®šï¼Ÿ
+			//ã€€ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã§å¤‰ãˆã‚‹å¿…è¦ã¯ãªã„ï¼Ÿâ†’PHFemMeshThermo()ã§è¨­å®šã€ã›ã„ãœã„åŠ ç†±ãƒ¢ãƒ¼ãƒ‰ã‚’é¸ã¶ã®ãŒã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³
 
 
 		
@@ -780,19 +780,19 @@ filled:;
 		//for(unsigned int i=0; i<tmesh->NChildObject() && !pfem; ++i){
 		//	pfem = tmesh->GetChildObject(i)->Cast();
 		//	if(pfem){
-		//			‰Á”M‰·“x‚Ìã‚ª‚è•û‚ğ§ŒÀ
+		//			åŠ ç†±æ¸©åº¦ã®ä¸ŠãŒã‚Šæ–¹ã‚’åˆ¶é™
 		//		if(tempTc <= 250.0){ tempTc += tempTc * pfem->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
 		//		else{
 		//			tempTc = 250.0;
 		//		}
 		//		for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
 		//			Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
-		//			//DSTR << j << " th pfemPose.y: " << pfemPose.y << std::endl;		// -0.0016 ‚Æ 0.0016 ‚ª“ü‚Á‚Ä‚¢‚éBƒ}ƒCƒiƒX‚Ì•û‚¾‚¯‰Á”M
-		//			//	“¯S‰~ó‚É‰Á”M
-		//			//	test code ‰º‘¤‘S•”‚É‰Á”M
+		//			//DSTR << j << " th pfemPose.y: " << pfemPose.y << std::endl;		// -0.0016 ã¨ 0.0016 ãŒå…¥ã£ã¦ã„ã‚‹ã€‚ãƒã‚¤ãƒŠã‚¹ã®æ–¹ã ã‘åŠ ç†±
+		//			//	åŒå¿ƒå††çŠ¶ã«åŠ ç†±
+		//			//	test code ä¸‹å´å…¨éƒ¨ã«åŠ ç†±
 		//			if( pfemPose.y < 0.0){
-		//				//pfem->SetVertexTc(j,tempTc,25.0);			//>	‚±‚ÌŠÖ”‚ÌŒÄ‚Ño‚µ‚ªŒƒd
-		//				//‚à‚Í‚âAª‚Íg‚í‚È‚¢B”M“`’B‹«ŠEğŒ‚ÍA#ifˆÈ‰º‚ÌƒR[ƒh‚ğ—˜—p
+		//				//pfem->SetVertexTc(j,tempTc,25.0);			//>	ã“ã®é–¢æ•°ã®å‘¼ã³å‡ºã—ãŒæ¿€é‡
+		//				//ã‚‚ã¯ã‚„ã€â†‘ã¯ä½¿ã‚ãªã„ã€‚ç†±ä¼é”å¢ƒç•Œæ¡ä»¶ã¯ã€#ifä»¥ä¸‹ã®ã‚³ãƒ¼ãƒ‰ã‚’åˆ©ç”¨
 		//			}
 		//		}
 		//		pfem->SetVertexTc(0,200.0,25.0);
@@ -807,19 +807,19 @@ filled:;
 		//for(unsigned int i=0; i<tmeshN->NChildObject() && !pfemN; ++i){
 		//	pfemN = tmeshN->GetChildObject(i)->Cast();
 		//	if(pfemN){
-		//		///	‰Á”M‰·“x‚Ìã‚ª‚è•û‚ğ§ŒÀ
+		//		///	åŠ ç†±æ¸©åº¦ã®ä¸ŠãŒã‚Šæ–¹ã‚’åˆ¶é™
 		//		//if(tempTcN <= 250.0){ tempTcN += tempTcN * pfemN->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
 		//		//else{
 		//		//	tempTcN = 250.0;
 		//		//}
 		//		//for(unsigned j =0; j < pfem->NSurfaceVertices(); j++){
 		//		//	Vec3d pfemPose = pfem->GetPose(pfem->GetSurfaceVertex(j));
-		//		//	//DSTR << j << " th pfemPose.y: " << pfemPose.y << std::endl;		// -0.0016 ‚Æ 0.0016 ‚ª“ü‚Á‚Ä‚¢‚éBƒ}ƒCƒiƒX‚Ì•û‚¾‚¯‰Á”M
-		//		//	//	“¯S‰~ó‚É‰Á”M
-		//		//	//	test code ‰º‘¤‘S•”‚É‰Á”M
+		//		//	//DSTR << j << " th pfemPose.y: " << pfemPose.y << std::endl;		// -0.0016 ã¨ 0.0016 ãŒå…¥ã£ã¦ã„ã‚‹ã€‚ãƒã‚¤ãƒŠã‚¹ã®æ–¹ã ã‘åŠ ç†±
+		//		//	//	åŒå¿ƒå††çŠ¶ã«åŠ ç†±
+		//		//	//	test code ä¸‹å´å…¨éƒ¨ã«åŠ ç†±
 		//		//	if( pfemPose.y < 0.0){
-		//		//		//pfem->SetVertexTc(j,tempTc,25.0);			//>	‚±‚ÌŠÖ”‚ÌŒÄ‚Ño‚µ‚ªŒƒd
-		//		//		//‚à‚Í‚âAª‚Íg‚í‚È‚¢B”M“`’B‹«ŠEğŒ‚ÍA#ifˆÈ‰º‚ÌƒR[ƒh‚ğ—˜—p
+		//		//		//pfem->SetVertexTc(j,tempTc,25.0);			//>	ã“ã®é–¢æ•°ã®å‘¼ã³å‡ºã—ãŒæ¿€é‡
+		//		//		//ã‚‚ã¯ã‚„ã€â†‘ã¯ä½¿ã‚ãªã„ã€‚ç†±ä¼é”å¢ƒç•Œæ¡ä»¶ã¯ã€#ifä»¥ä¸‹ã®ã‚³ãƒ¼ãƒ‰ã‚’åˆ©ç”¨
 		//		//	}
 		//		//}
 		//		for(unsigned j=0;j<5;j++){
@@ -832,18 +832,18 @@ filled:;
 
 //#endif
 //#if 0
-		//	ƒtƒ‰ƒCƒpƒ“‚ğæ‚Á‚Ä‚­‚é
+		//	ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã‚’å–ã£ã¦ãã‚‹
 		FWObjectIf* pan		=	DCAST(FWObjectIf, GetSdk()->GetScene()->FindObject("fwPan"));
-		//	HŞ‚ğæ‚Á‚Ä‚­‚é
+		//	é£Ÿæã‚’å–ã£ã¦ãã‚‹
 		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
 //		FWFemMeshIf* tmesh	= GetSdk()->GetScene()->FindObject("fwCheese")->Cast();
-		//	ƒ[ƒ‹ƒhÀ•W‚É•ÏŠ·‚·‚é
+		//	ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™ã«å¤‰æ›ã™ã‚‹
 
 		//DSTR <<"pan: " << pan << std::endl;
 		//DSTR <<"tmesh: " << tmesh << std::endl;
 
 		//curScene = id;
-		//// id”Ô–Ú‚ÌƒV[ƒ“‚ğ‘I‘ğ
+		//// idç•ªç›®ã®ã‚·ãƒ¼ãƒ³ã‚’é¸æŠ
 		//fwScene = GetSdk()->GetScene(id);
 		//phScene = fwScene->GetPHScene();
 		//GetCurrentWin()->SetScene(fwScene);
@@ -852,11 +852,11 @@ filled:;
 		//tmesh->GetScene();
 		
 		if(pan && tmesh){
-			//	ƒtƒ‰ƒCƒpƒ“‚Ì¢ŠEÀ•W‚ğ“üè
+			//	ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã®ä¸–ç•Œåº§æ¨™ã‚’å…¥æ‰‹
 			Affinef afPan = pan->GetGRFrame()->GetWorldTransform();
-			//	‰Á”M•¨‘Ì‚Ì¢ŠEÀ•W‚ğ“üè
+			//	åŠ ç†±ç‰©ä½“ã®ä¸–ç•Œåº§æ¨™ã‚’å…¥æ‰‹
 			Affinef afMesh = tmesh->GetGRFrame()->GetWorldTransform();
-			//	afPan‚©‚çŒ©‚½AafMesh‚ÌÀ•WŒn‚Ö‚Ì•ÏŠ·s—ñ‚ğ“üè
+			//	afPanã‹ã‚‰è¦‹ãŸã€afMeshã®åº§æ¨™ç³»ã¸ã®å¤‰æ›è¡Œåˆ—ã‚’å…¥æ‰‹
 			Affinef afMeshToPan = afPan.inv() * afMesh;
 			//DSTR << afPan <<std::endl;
 			//DSTR << afMesh <<std::endl;
@@ -865,23 +865,23 @@ filled:;
 			PHFemMeshIf* phm = tmesh->GetPHMesh();
 //			int nOfSurfaceVtx = phm->NSurfaceVertices();
 
-			///	ƒtƒ‰ƒCƒpƒ“‚É‚Æ‚Á‚Ä‚ÌŒ´“_‚©‚ç‚Ì‹——£‚É‰‚¶‚ÄA‰Á”M‚·‚é
-			////	ÅŠOŠk‚Ìß“_‚Ìƒtƒ‰ƒCƒpƒ“‚©‚ç‚ÌÀ•W
+			///	ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã«ã¨ã£ã¦ã®åŸç‚¹ã‹ã‚‰ã®è·é›¢ã«å¿œã˜ã¦ã€åŠ ç†±ã™ã‚‹
+			////	æœ€å¤–æ®»ã®ç¯€ç‚¹ã®ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã‹ã‚‰ã®åº§æ¨™
 			double tempTc =10.0;			//negitest 10.0		///	cheese 100.0
 
 			
-			//	pfem‚Ì’è‹`
-			//	PHFemMEshTherm‚Ìß“_‚ğæ‚Á‚Ä‚«‚ÄA‰Á”M‚·‚é
+			//	pfemã®å®šç¾©
+			//	PHFemMEshThermã®ç¯€ç‚¹ã‚’å–ã£ã¦ãã¦ã€åŠ ç†±ã™ã‚‹
 			PHFemMeshThermoIf* pfem = NULL;
 
-			///	ƒƒbƒVƒ…‚ÌPosOnPanÀ•W‚ğ“ü‚ê‚ÄAÀ•W‚ª¬‚³‚¢‡‚É•À‚×‚é
+			///	ãƒ¡ãƒƒã‚·ãƒ¥ã®PosOnPanåº§æ¨™ã‚’å…¥ã‚Œã¦ã€åº§æ¨™ãŒå°ã•ã„é †ã«ä¸¦ã¹ã‚‹
 			std::list<double> posOnPany;
 
 			for(unsigned int i=0; i<tmesh->NChildObject() && !pfem; ++i){
 				pfem = tmesh->GetChildObject(i)->Cast();
-				//	pfem‚ªæ‚ê‚Ä‚¢‚é‚±‚Æ‚ğŠm”F
+				//	pfemãŒå–ã‚Œã¦ã„ã‚‹ã“ã¨ã‚’ç¢ºèª
 				if(pfem){
-					///	‰Á”M‰·“x‚Ìã‚ª‚è•û‚ğ§ŒÀ
+					///	åŠ ç†±æ¸©åº¦ã®ä¸ŠãŒã‚Šæ–¹ã‚’åˆ¶é™
 					if(tempTc <= 250.0){ tempTc += tempTc * pfem->GetStepCount() * 0.02;}		//negi test 0.02 // cheese 0.01
 					else{
 						tempTc = 250.0;
@@ -895,8 +895,8 @@ filled:;
 						//Vec3d pfemPose_ = pfem->GetSufVtxPose(pfem->GetSurfaceVertex(j));
 						//DSTR << j <<"th pfemPose_: " << pfemPose_ << std::endl;
 
-						//> ƒƒbƒVƒ…‚Ì•\–Ê‚Ìß“_vertexÀ•W‚ª‚ ‚éƒtƒ‰ƒCƒpƒ“À•WŒn‚Ì‚Æ‚ ‚é”ÍˆÍ‚É‚ ‚éA”M“`’B‹«ŠEğŒ‚Å‰Á”M‚·‚é
-						//if(posOnPan.y >= -0.03 && posOnPan.y <= -0.02 ){				///	pfemPose.y >= -0.0076 && pfemPose.y <= -0.0074 /// cube_test.x—p	//	 -0.01 <= pfemPose.y <= 0.0
+						//> ãƒ¡ãƒƒã‚·ãƒ¥ã®è¡¨é¢ã®ç¯€ç‚¹vertexåº§æ¨™ãŒã‚ã‚‹ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³åº§æ¨™ç³»ã®ã¨ã‚ã‚‹ç¯„å›²ã«ã‚ã‚‹æ™‚ã€ç†±ä¼é”å¢ƒç•Œæ¡ä»¶ã§åŠ ç†±ã™ã‚‹
+						//if(posOnPan.y >= -0.03 && posOnPan.y <= -0.02 ){				///	pfemPose.y >= -0.0076 && pfemPose.y <= -0.0074 /// cube_test.xç”¨	//	 -0.01 <= pfemPose.y <= 0.0
 						//if(posOnPan.y >= -0.03 && posOnPan.y <= -0.020 ){		///	cheese
 						if(posOnPan.y >= -0.0076 && posOnPan.y <= -0.0070 ){
 //							pfem->SetVertexTc(j,tempTc);
@@ -907,9 +907,9 @@ filled:;
 							//DSTR << "afMesh: " << afMesh <<std::endl;
 							posOnPany.push_back(posOnPan.y);
 							//DSTR << "j: "<<j<< ", posOnPan.y: " << posOnPan.y << std::endl;
-							//UsingHeatTransferBoundaryCondition		‚ğŒÄ‚Ño‚·
-							//DSTR << j << "th vertex.Tc‚É" << tempTc << "‚ğİ’è" <<std::endl;
-							//Tc‚ÌXVH
+							//UsingHeatTransferBoundaryCondition		ã‚’å‘¼ã³å‡ºã™
+							//DSTR << j << "th vertex.Tcã«" << tempTc << "ã‚’è¨­å®š" <<std::endl;
+							//Tcã®æ›´æ–°ï¼Ÿ
 						}
 					}
 				}
@@ -940,55 +940,55 @@ filled:;
 
 		//GRFrameIf* findFrame = DCAST(GRFrameIf, GetSdk()->GetScene()->GetGRScene()->FindObject(grName));
 		//PHSolidIf* findSolid = DCAST(PHSolidIf, GetSdk()->GetScene()->GetPHScene()->FindObject(phName));
-		//PHFemMeshThermoƒIƒuƒWƒFƒNƒg‚ğì‚èAmainŠÖ”‚Åg‚¦‚é‚æ‚¤‚É‚·‚éŠÖ”
+		//PHFemMeshThermoã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚Šã€mainé–¢æ•°ã§ä½¿ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹é–¢æ•°
 			//CreatePHFemMeshThermo();
-		//‘ß“_”A‘—v‘f”Aß“_À•WA—v‘f‚Ì\¬‚È‚Ç‚ğ“o˜^
-			//PHFemMeshThermo‚ÌƒIƒuƒWƒFƒNƒg‚ğì‚éÛ‚ÉAƒfƒBƒXƒNƒŠƒvƒ^‚É’l‚ğİ’è‚µ‚Äì‚é
+		//ç·ç¯€ç‚¹æ•°ã€ç·è¦ç´ æ•°ã€ç¯€ç‚¹åº§æ¨™ã€è¦ç´ ã®æ§‹æˆãªã©ã‚’ç™»éŒ²
+			//PHFemMeshThermoã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚‹éš›ã«ã€ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã«å€¤ã‚’è¨­å®šã—ã¦ä½œã‚‹
 		
-		//iŒ`ó‚ª•Ï‚í‚Á‚½‚çAƒ}ƒgƒŠƒNƒX‚âƒxƒNƒgƒ‹‚ğì‚è’¼‚·j
-		//‰·“x•Ï‰»EÅV‚ÌŠÔ‚Ì{T}cƒxƒNƒgƒ‹‚É‹LÚ‚³‚ê‚Ä‚¢‚éß“_‰·“x‚ğŠî‚É‰»Šw•Ï‰»ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğs‚¤
+		//ï¼ˆå½¢çŠ¶ãŒå¤‰ã‚ã£ãŸã‚‰ã€ãƒãƒˆãƒªã‚¯ã‚¹ã‚„ãƒ™ã‚¯ãƒˆãƒ«ã‚’ä½œã‚Šç›´ã™ï¼‰
+		//æ¸©åº¦å¤‰åŒ–ãƒ»æœ€æ–°ã®æ™‚é–“ã®{T}ç¸¦ãƒ™ã‚¯ãƒˆãƒ«ã«è¨˜è¼‰ã•ã‚Œã¦ã„ã‚‹ç¯€ç‚¹æ¸©åº¦ã‚’åŸºã«åŒ–å­¦å¤‰åŒ–ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¡Œã†
 			//SetChemicalSimulation();
-			//‰»Šw•Ï‰»ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚É•K—v‚È‰·“x‚È‚Ç‚Ìƒpƒ‰ƒ[ƒ^‚ğ“n‚·
-		//‰·“x•Ï‰»‚â‰»ŠwƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌŒ‹‰Ê‚ÍƒOƒ‰ƒtƒBƒNƒX•\¦‚ğs‚¤
+			//åŒ–å­¦å¤‰åŒ–ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã«å¿…è¦ãªæ¸©åº¦ãªã©ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’æ¸¡ã™
+		//æ¸©åº¦å¤‰åŒ–ã‚„åŒ–å­¦ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®çµæœã¯ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹è¡¨ç¤ºã‚’è¡Œã†
 			
 #endif
 	}
-	//>	‘Î—¬E•úË“`”M‚Ì‹——£‚É”ä—áE”½”ä—á‚µ‚Ä‰Á‚¦‚é”M—Ê‚ª•Ï‚í‚éŠÖ”‚ÌÀ‘•
+	//>	å¯¾æµãƒ»æ”¾å°„ä¼ç†±ã®è·é›¢ã«æ¯”ä¾‹ãƒ»åæ¯”ä¾‹ã—ã¦åŠ ãˆã‚‹ç†±é‡ãŒå¤‰ã‚ã‚‹é–¢æ•°ã®å®Ÿè£…
 	void hogehoge(){
-		///	’ê‚ÌˆÊ’u
+		///	åº•ã®ä½ç½®
 		double topOfPan=0.0;
-		///	HŞ‚ÌˆÊ’u
+		///	é£Ÿæã®ä½ç½®
 		double altitudeOfFood=0.0;
 
-		///	‘Î—¬AçtË‚É‚æ‚é”ä—áHŒW”
+		///	å¯¾æµã€è¼»å°„ã«ã‚ˆã‚‹æ¯”ä¾‹ï¼Ÿä¿‚æ•°
 		double a_0 = 0;
-			///	ˆê•Ï”‹ß—‚ª—Ç‚¢‚©A‘½•Ï”‹ß—‚ª—Ç‚¢‚©
-				/// ”ä—áŒW”Aa * x^3 +  b * x^2  + c * x^1
-		///	‚»‚ÌHŞ‚Ìx,yˆÊ’u‚ÌË‰e‚Ìƒtƒ‰ƒCƒpƒ“•\–Ê‚Ì‰·“x
+			///	ä¸€å¤‰æ•°è¿‘ä¼¼ãŒè‰¯ã„ã‹ã€å¤šå¤‰æ•°è¿‘ä¼¼ãŒè‰¯ã„ã‹
+				/// æ¯”ä¾‹ä¿‚æ•°ã€a * x^3 +  b * x^2  + c * x^1
+		///	ãã®é£Ÿæã®x,yä½ç½®ã®å°„å½±ã®ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³è¡¨é¢ã®æ¸©åº¦
 		double tempP=0.0;
-				///	H‚×•¨‚Æ“¯‚¶xyˆÊ’u(¢ŠEÀ•W)‚Ìƒtƒ‰ƒCƒpƒ“‚Ì‰·“x‚ğæ‚Á‚Ä‚­‚éH
-		 double tempconstFemhoge =	a_0 * (topOfPan - altitudeOfFood) * tempP; ///	’PˆÊ‚ÌŸŒ³[K/m]
+				///	é£Ÿã¹ç‰©ã¨åŒã˜xyä½ç½®(ä¸–ç•Œåº§æ¨™)ã®ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã®æ¸©åº¦ã‚’å–ã£ã¦ãã‚‹ï¼Ÿ
+		 double tempconstFemhoge =	a_0 * (topOfPan - altitudeOfFood) * tempP; ///	å˜ä½ã®æ¬¡å…ƒ[K/m]
 
 	}
 	void CreatePHFemMeshThermo(){
 		PHFemMeshThermoIf* phmesht;
 		PHFemMeshThermoDesc desc;
 	}
-	void SetInductionHeating(double radius,double width,double heatFlux){						//>	¥‘©¨”M—¬‘©@heatFlux
-		double inRadius = radius - width /2;		//> “à”¼Œa
-		double outRadius = radius + width /2; 		//>	ŠO”¼Œa
+	void SetInductionHeating(double radius,double width,double heatFlux){						//>	ç£æŸâ†’ç†±æµæŸã€€heatFlux
+		double inRadius = radius - width /2;		//> å†…åŠå¾„
+		double outRadius = radius + width /2; 		//>	å¤–åŠå¾„
 
-		//>@“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚ğtemp‚Å‰Á”M‚·‚é
+		//>ã€€å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã‚’tempã§åŠ ç†±ã™ã‚‹
 
 
 
 
 	}
-	void SetInductionHeating2(double radius,double width,double temp,double ){			//>	”¼Œa‚Ì“à‘¤–”‚ÍŠO‘¤‚És‚­‚É‚Â‚ê‚ÄA‰Á”M—¬‘©‚ªŒ¸Š‚·‚é
-		double inRadius = radius - width /2;		//> “à”¼Œa
-		double outRadius = radius + width /2; 		//>	ŠO”¼Œa
+	void SetInductionHeating2(double radius,double width,double temp,double ){			//>	åŠå¾„ã®å†…å´åˆã¯å¤–å´ã«è¡Œãã«ã¤ã‚Œã¦ã€åŠ ç†±æµæŸãŒæ¸›è¡°ã™ã‚‹
+		double inRadius = radius - width /2;		//> å†…åŠå¾„
+		double outRadius = radius + width /2; 		//>	å¤–åŠå¾„
 
-		//>@“à”¼Œa‚ÆŠO”¼Œa‚ÌŠÔ‚ğtemp‚Å‰Á”M‚·‚é
+		//>ã€€å†…åŠå¾„ã¨å¤–åŠå¾„ã®é–“ã‚’tempã§åŠ ç†±ã™ã‚‹
 
 
 
@@ -1017,14 +1017,14 @@ filled:;
 //			cout << "GRFrame Name : " << findFrame->GetName() 
 //				 << " GRMesh Name  : " << DCAST(NamedObjectIf, findFrame->GetChildObject(0))->GetName() << std::endl;
 //			GRMesh* origMesh = findFrame->GetChildObject(0)->Cast();
-//			GRMeshDesc& md = *(GRMeshDesc*)origMesh->GetDescAddress();		//GRMeshDescŒ^‚Ì’l(ƒ|ƒCƒ“ƒ^‚Ìw‚·’l)md‚ÉAã‚ÅƒAƒhƒŒƒX‚ğŠi”[‚µ‚½ƒ|ƒCƒ“ƒ^ mesh‚ÌGetDescAddress‚Æ‚¢‚¤ŠÖ”‚Ì•Ô‚è’l‚ğŠi”[‚·‚éB
-//			GRMesh* cm = GetSdk()->GetScene()->GetGRScene()->CreateObject(md)->Cast();	//cm:create mesh? md‚ÉŠi”[‚³‚ê‚½ƒ|ƒCƒ“ƒ^‚Ì‚³‚·ƒIƒuƒWƒFƒNƒg‚ğcreate(¶¬)‚µ‚ÄAGRMesh*Œ^‚ÉƒLƒƒƒXƒg‚·‚éB
-//			cm->tex3d = true;												//3ŸŒ³ƒeƒNƒXƒ`ƒƒ‚ğg—p‰Â‚É‚·‚éB
-//			cm->material = origMesh->material;									//cm‚Ìmaterial‚É@mesh‚ÌmaterialList‚Ì’l‚ğŠi”[‚·‚éB
-//			cm->materialList = origMesh->materialList;							//cm‚ÌmaterialList‚Émesh‚ÌmaterialList‚ğŠi”[‚·‚éB
-//			cm->faceNormals  = origMesh->faceNormals;							//cm‚Ìmesh‚Ì–Ê‚Ì–@üƒxƒNƒgƒ‹‚ÉAmesh‚Ì‚»‚ê‚ğŠi”[‚·‚éB
-//			cm->originalFaceIds = origMesh->originalFaceIds;					//mesh‚ÌoriginalFaceIds(‚RŸŒ³ƒƒbƒVƒ…‚ÌŒ³‚Ì’¸“_”Ô†)‚ğcm‚Ì‚»‚ê‚ÉŠi”[‚·‚éB
-//			cm->originalFaces  = origMesh->originalFaces;						//mesh‚ÌoriginalFaces‚ğcm‚Ì‚»‚ê‚ÉŠi”[‚·‚éB
+//			GRMeshDesc& md = *(GRMeshDesc*)origMesh->GetDescAddress();		//GRMeshDescå‹ã®å€¤(ãƒã‚¤ãƒ³ã‚¿ã®æŒ‡ã™å€¤)mdã«ã€ä¸Šã§ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’æ ¼ç´ã—ãŸãƒã‚¤ãƒ³ã‚¿ meshã®GetDescAddressã¨ã„ã†é–¢æ•°ã®è¿”ã‚Šå€¤ã‚’æ ¼ç´ã™ã‚‹ã€‚
+//			GRMesh* cm = GetSdk()->GetScene()->GetGRScene()->CreateObject(md)->Cast();	//cm:create mesh? mdã«æ ¼ç´ã•ã‚ŒãŸãƒã‚¤ãƒ³ã‚¿ã®ã•ã™ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’create(ç”Ÿæˆ)ã—ã¦ã€GRMesh*å‹ã«ã‚­ãƒ£ã‚¹ãƒˆã™ã‚‹ã€‚
+//			cm->tex3d = true;												//3æ¬¡å…ƒãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’ä½¿ç”¨å¯ã«ã™ã‚‹ã€‚
+//			cm->material = origMesh->material;									//cmã®materialã«ã€€meshã®materialListã®å€¤ã‚’æ ¼ç´ã™ã‚‹ã€‚
+//			cm->materialList = origMesh->materialList;							//cmã®materialListã«meshã®materialListã‚’æ ¼ç´ã™ã‚‹ã€‚
+//			cm->faceNormals  = origMesh->faceNormals;							//cmã®meshã®é¢ã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ã«ã€meshã®ãã‚Œã‚’æ ¼ç´ã™ã‚‹ã€‚
+//			cm->originalFaceIds = origMesh->originalFaceIds;					//meshã®originalFaceIds(ï¼“æ¬¡å…ƒãƒ¡ãƒƒã‚·ãƒ¥ã®å…ƒã®é ‚ç‚¹ç•ªå·)ã‚’cmã®ãã‚Œã«æ ¼ç´ã™ã‚‹ã€‚
+//			cm->originalFaces  = origMesh->originalFaces;						//meshã®originalFacesã‚’cmã®ãã‚Œã«æ ¼ç´ã™ã‚‹ã€‚
 //
 //			// FWObjectIf* copied = GetSdk()->GetScene()->CreateObject(sDesc, fDesc);
 //			FWObjectIf* copied = GetSdk()->GetScene()->CreateFWObject();
@@ -1039,8 +1039,8 @@ filled:;
 //			std::stringstream sout;
 //			sout << "soCopiedFood" << copiedNum++;
 //			copied->GetPHSolid()->SetName(sout.str().c_str());
-//			Posed p = pan->GetPHSolid()->GetPose();					//ƒtƒ‰ƒCƒpƒ“‚Ìã‚É“ü‚ê‚é
-//			//HŞ‚Íí‚Éƒtƒ‰ƒCƒpƒ“‚É“ü‚ê‚é
+//			Posed p = pan->GetPHSolid()->GetPose();					//ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã®ä¸Šã«å…¥ã‚Œã‚‹
+//			//é£Ÿæã¯å¸¸ã«ãƒ•ãƒ©ã‚¤ãƒ‘ãƒ³ã«å…¥ã‚Œã‚‹
 //			copied->GetPHSolid()->SetFramePosition(Vec3d((double)rand() / (double)RAND_MAX * 0.03 * cos((double)rand()) + p.px,
 //														(double)rand() / (double)RAND_MAX * 0.03 + 0.07 + p.py,
 //														(double)rand() / (double)RAND_MAX * 0.03 * sin((double)rand()) +p.pz)
@@ -1066,49 +1066,49 @@ filled:;
 //
 //				std::stringstream foodName;
 //				foodName << phName;
-//				//copythings = 1;					//—vŒŸ“¢
+//				//copythings = 1;					//è¦æ¤œè¨
 //				if (foodName.str().find("negi")!= string::npos || foodName.str().find("Negi")!= string::npos){
 //					tmesh.copyInit =true;
-//					tmesh.fwobj = copied;			//foodObjs‚ÌÅŒã‚Ì—v‘f‚ªFWObjectIf‚È‚çA‚»‚ê‚ğŠi”[
+//					tmesh.fwobj = copied;			//foodObjsã®æœ€å¾Œã®è¦ç´ ãŒFWObjectIfãªã‚‰ã€ãã‚Œã‚’æ ¼ç´
 //					tmeshnegis.push_back(tmesh);
 //					MyApp::InitNegi();
 //				}
 //				else if (foodName.str().find("carrot")!= string::npos || foodName.str().find("Carrot")!= string::npos){
 //					tmesh.copyInit =true;
-//					tmesh.fwobj = copied;			//foodObjs‚ÌÅŒã‚Ì—v‘f‚ªFWObjectIf‚È‚çA‚»‚ê‚ğŠi”[
+//					tmesh.fwobj = copied;			//foodObjsã®æœ€å¾Œã®è¦ç´ ãŒFWObjectIfãªã‚‰ã€ãã‚Œã‚’æ ¼ç´
 //					tmeshcarrots.push_back(tmesh);
 //					MyApp::InitCarrot();
 //				}
 //				else if (foodName.str().find("shrimp")!= string::npos || foodName.str().find("Shrimp")!= string::npos){
 //					tmesh.copyInit =true;
-//					tmesh.fwobj = copied;			//foodObjs‚ÌÅŒã‚Ì—v‘f‚ªFWObjectIf‚È‚çA‚»‚ê‚ğŠi”[
+//					tmesh.fwobj = copied;			//foodObjsã®æœ€å¾Œã®è¦ç´ ãŒFWObjectIfãªã‚‰ã€ãã‚Œã‚’æ ¼ç´
 //					tmeshshrimps.push_back(tmesh);
 //					MyApp::InitShrimp();
 //				}
 //				else if (foodName.str().find("asteakc")!= string::npos || foodName.str().find("Asteakc")!= string::npos){
 //					tmesh.copyInit =true;
-//					tmesh.fwobj = copied;			//foodObjs‚ÌÅŒã‚Ì—v‘f‚ªFWObjectIf‚È‚çA‚»‚ê‚ğŠi”[
-//					tmesh.swtovtx = true;			//’f–Ê‚Æ–{‘Ì‚Ì“¯‚¶ˆÊ’uÀ•W‚ğ‚Â’¸“_‚ÌƒyƒA‚ğì‚éˆ—‚Ìƒtƒ‰ƒO
+//					tmesh.fwobj = copied;			//foodObjsã®æœ€å¾Œã®è¦ç´ ãŒFWObjectIfãªã‚‰ã€ãã‚Œã‚’æ ¼ç´
+//					tmesh.swtovtx = true;			//æ–­é¢ã¨æœ¬ä½“ã®åŒã˜ä½ç½®åº§æ¨™ã‚’æŒã¤é ‚ç‚¹ã®ãƒšã‚¢ã‚’ä½œã‚‹å‡¦ç†ã®ãƒ•ãƒ©ã‚°
 //					tmeshasteaks_c.push_back(tmesh);
 //					MyApp::InitAsteak_c();
 //				}
 //				else if (foodName.str().find("asteak")!= string::npos || foodName.str().find("Asteak")!= string::npos){
 //					tmesh.copyInit =true;
-//					tmesh.fwobj = copied;			//foodObjs‚ÌÅŒã‚Ì—v‘f‚ªFWObjectIf‚È‚çA‚»‚ê‚ğŠi”[
+//					tmesh.fwobj = copied;			//foodObjsã®æœ€å¾Œã®è¦ç´ ãŒFWObjectIfãªã‚‰ã€ãã‚Œã‚’æ ¼ç´
 //					tmesh.swtovtx = true;
 //					tmeshasteaks.push_back(tmesh);
 //					MyApp::InitAsteak();
 //				}
 //				else if (foodName.str().find("nsteakc")!= string::npos || foodName.str().find("Nsteakc")!= string::npos){
 //					tmesh.copyInit =true;
-//					tmesh.fwobj = copied;			//foodObjs‚ÌÅŒã‚Ì—v‘f‚ªFWObjectIf‚È‚çA‚»‚ê‚ğŠi”[
+//					tmesh.fwobj = copied;			//foodObjsã®æœ€å¾Œã®è¦ç´ ãŒFWObjectIfãªã‚‰ã€ãã‚Œã‚’æ ¼ç´
 //					tmesh.swtovtx = true;
 //					tmeshnsteaks_c.push_back(tmesh);
 //					MyApp::InitNsteak_c();
 //				}
 //				else if (foodName.str().find("nsteak")!= string::npos || foodName.str().find("Nsteak")!= string::npos){
 //					tmesh.copyInit =true;
-//					tmesh.fwobj = copied;			//foodObjs‚ÌÅŒã‚Ì—v‘f‚ªFWObjectIf‚È‚çA‚»‚ê‚ğŠi”[
+//					tmesh.fwobj = copied;			//foodObjsã®æœ€å¾Œã®è¦ç´ ãŒFWObjectIfãªã‚‰ã€ãã‚Œã‚’æ ¼ç´
 //					tmesh.swtovtx = true;
 //					tmeshnsteaks.push_back(tmesh);
 //					MyApp::InitNsteak();
@@ -1120,7 +1120,7 @@ filled:;
 //			}
 //		}
 //	}
-//	//ƒRƒs[‚ª¸”s‚µ‚½‚Æ‚«‚ÌƒGƒ‰[•\¦
+//	//ã‚³ãƒ”ãƒ¼ãŒå¤±æ•—ã—ãŸã¨ãã®ã‚¨ãƒ©ãƒ¼è¡¨ç¤º
 //	//DSTR		<< "Failed to copy." << std::endl;
 //	//std::cout	<< "Failed to copy." << std::endl;
 //	return false;
@@ -1135,10 +1135,10 @@ filled:;
 MyApp app;
 
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char *argv[]) {
 	app.Init(argc, argv);

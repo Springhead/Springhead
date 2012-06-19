@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,26 +13,26 @@
 #include <iostream>
 #include <fstream>
 /*	hase memo
-	1. Object‚ÍObjectIf‚ğŒp³‚µ‚È‚¢D
-	2. ObjectIf‚Íƒo[ƒ`ƒƒƒ‹ŠÖ”‚ğ‚½‚È‚¢D
-	3. ObjectIf‚ÌƒAƒhƒŒƒX = Object‚ÌƒAƒhƒŒƒX
-	ŠT—vF
-	- IfƒNƒ‰ƒX‚ÍObject‚ÍIf‚ğŒp³‚µ‚È‚¢D
-	  ©“®¶¬‚³‚ê‚½ObjectIf‚ÌŠÖ”‚ÌÀ‘•‚ªObject‚ÌŠÖ”‚ğŒÄ‚Ño‚·D
+	1. Objectã¯ObjectIfã‚’ç¶™æ‰¿ã—ãªã„ï¼
+	2. ObjectIfã¯ãƒãƒ¼ãƒãƒ£ãƒ«é–¢æ•°ã‚’æŒãŸãªã„ï¼
+	3. ObjectIfã®ã‚¢ãƒ‰ãƒ¬ã‚¹ = Objectã®ã‚¢ãƒ‰ãƒ¬ã‚¹
+	æ¦‚è¦ï¼š
+	- Ifã‚¯ãƒ©ã‚¹ã¯Objectã¯Ifã‚’ç¶™æ‰¿ã—ãªã„ï¼
+	  è‡ªå‹•ç”Ÿæˆã•ã‚ŒãŸObjectIfã®é–¢æ•°ã®å®Ÿè£…ãŒObjectã®é–¢æ•°ã‚’å‘¼ã³å‡ºã™ï¼
 	
-	—Ç‚¢“_F
-		- Object‚ÌŒp³ŠÖŒW‚ª‚·‚Á‚«‚è‚·‚éD
-		- vtable_ptr‚ª1‚Â‚ÅÏ‚ŞDIf‚Ìvtable_ptr‚Í•s—vD
-		- ŒÄ‚Ño‚µ‚ÉQÆ‚·‚éVirtual‚ÍObject‚Ì•ª‚P‰ñ‚Ì‚İD
-		- If‚Ìƒ|ƒCƒ“ƒ^ƒIƒtƒZƒbƒg‚ªŒÅ’è‚È‚Ì‚ÅCStatic_Cast‚Å If<-->Object ‚Ì•ÏŠ·‚ª‚Å‚«‚éD
-		- Debugger‚Å‚àC‹­§ƒLƒƒƒXƒg‚·‚ê‚ÎŒ©‚ç‚ê‚é:(Obj*)(Object*)intf
-	ˆ«‚¢“_F
-		- If‚Íâ‘Î‚É•Ï”‚ğ‚Ä‚È‚¢D
+	è‰¯ã„ç‚¹ï¼š
+		- Objectã®ç¶™æ‰¿é–¢ä¿‚ãŒã™ã£ãã‚Šã™ã‚‹ï¼
+		- vtable_ptrãŒ1ã¤ã§æ¸ˆã‚€ï¼Ifã®vtable_ptrã¯ä¸è¦ï¼
+		- å‘¼ã³å‡ºã—æ™‚ã«å‚ç…§ã™ã‚‹Virtualã¯Objectã®åˆ†ï¼‘å›ã®ã¿ï¼
+		- Ifã®ãƒã‚¤ãƒ³ã‚¿ã‚ªãƒ•ã‚»ãƒƒãƒˆãŒå›ºå®šãªã®ã§ï¼ŒStatic_Castã§ If<-->Object ã®å¤‰æ›ãŒã§ãã‚‹ï¼
+		- Debuggerã§ã‚‚ï¼Œå¼·åˆ¶ã‚­ãƒ£ã‚¹ãƒˆã™ã‚Œã°è¦‹ã‚‰ã‚Œã‚‹:(Obj*)(Object*)intf
+	æ‚ªã„ç‚¹ï¼š
+		- Ifã¯çµ¶å¯¾ã«å¤‰æ•°ã‚’æŒã¦ãªã„ï¼
 */
 
 namespace Spr{;
 
-//	Œ^î•ñ IfInfo ‚Æ TypeInfo‚Ìƒ|ƒCƒ“ƒ^‚ğ•Û‚µ‚Ä‚¨‚¢‚ÄAÅŒã‚ÉŠJ•ú‚·‚éƒNƒ‰ƒX
+//	å‹æƒ…å ± IfInfo ã¨ TypeInfoã®ãƒã‚¤ãƒ³ã‚¿ã‚’ä¿æŒã—ã¦ãŠã„ã¦ã€æœ€å¾Œã«é–‹æ”¾ã™ã‚‹ã‚¯ãƒ©ã‚¹
 class TypeInfoManager:public UTRefCount{
 protected:
 	std::vector< UTRef< IfInfo > > ifs;
@@ -48,7 +48,7 @@ public:
 	UTTypeInfo* FindTypeInfo(const char* cn);
 };
 
-///	ˆÈ‰ºƒCƒ“ƒ^ƒtƒF[ƒX‚ÌŒ^î•ñ‚ÌÀ‘•
+///	ä»¥ä¸‹ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å‹æƒ…å ±ã®å®Ÿè£…
 //@{
 #define SPR_DESCIMP0(cls)	
 #define SPR_DESCIMP1(cls, b1)	
@@ -57,7 +57,7 @@ public:
 #define SPR_IFIMP_COMMON(cls)										\
 	const IfInfo* SPR_CDECL cls##If::GetIfInfo() const {			\
 		cls* p = DCAST(cls, (Object*)(ObjectIf*)this);				\
-		return p->GetIfInfo();	/* ”h¶‚Ìî•ñ‚ª“¾‚ç‚ê‚é‚©‚à */		\
+		return p->GetIfInfo();	/* æ´¾ç”Ÿã®æƒ…å ±ãŒå¾—ã‚‰ã‚Œã‚‹ã‹ã‚‚ */		\
 	}																\
 	template<> const UTTypeInfo* SPR_CDECL 							\
 		IfInfoImp<cls##If>::GetTypeInfo(){							\
@@ -101,23 +101,23 @@ public:
 
 //@}
 
-///	Object”h¶ƒNƒ‰ƒX‚ÌÀsŒ^î•ñ
+///	Objectæ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã®å®Ÿè¡Œæ™‚å‹æƒ…å ±
 //@{
-//	‚·‚×‚Ä‚ÌƒNƒ‰ƒX‚É‹¤’Ê
+//	ã™ã¹ã¦ã®ã‚¯ãƒ©ã‚¹ã«å…±é€š
 #define OBJECTDEF_COMMON(cls)														\
-	/*	If Object ‚Ç‚¿‚ç‚É‚à‚È‚é ©“®Œ^•ÏŠ·Œ^ XCastPtr‚ğ•Ô‚·D*/					\
+	/*	If Object ã©ã¡ã‚‰ã«ã‚‚ãªã‚‹ è‡ªå‹•å‹å¤‰æ›å‹ XCastPtrã‚’è¿”ã™ï¼*/					\
 	XCastPtr<cls>& Cast() const{													\
 		return *(XCastPtr<cls>*)(void*)this;										\
 	}																				\
-	/*	ˆÙŒ^‚ÌIf‚©‚çObject‚Ö‚Ì“®“I•ÏŠ·	*/											\
+	/*	ç•°å‹ã®Ifã‹ã‚‰Objectã¸ã®å‹•çš„å¤‰æ›	*/											\
 	static cls* GetMe(const ObjectIf* p) {											\
 		return (cls*)(((Object*)p)->GetBaseAddress(GetTypeInfoStatic()));			\
 	}																				\
-	/*	ˆÙŒ^‚ÌObject‚©‚çObject‚Ö‚Ì“®“I•ÏŠ·	*/										\
+	/*	ç•°å‹ã®Objectã‹ã‚‰Objectã¸ã®å‹•çš„å¤‰æ›	*/										\
 	static cls* GetMe(const Object* p) {											\
 		return (cls*)(p)->GetBaseAddress(GetTypeInfoStatic());						\
 	}																				\
-	/*	Object‚ğƒtƒ@ƒCƒ‹‚Éƒ_ƒ“ƒv	*/												\
+	/*	Objectã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã«ãƒ€ãƒ³ãƒ—	*/												\
 	virtual void DumpObject(std::ostream& os) const {										\
 		os.write((char*)(void*)this, sizeof(cls)); }								\
 
@@ -155,7 +155,7 @@ public:
 
 //@}
 
-///	ÀsŒ^î•ñ‚ğ‚ÂObject‚Ì”h¶ƒNƒ‰ƒX‚ª‚Â‚×‚«ƒƒ“ƒo‚ÌÀ‘•D
+///	å®Ÿè¡Œæ™‚å‹æƒ…å ±ã‚’æŒã¤Objectã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ãŒæŒã¤ã¹ããƒ¡ãƒ³ãƒã®å®Ÿè£…ï¼
 //@{
 #define SPR_OBJECTIMP0(cls)					DEF_UTTYPEINFO(cls)
 #define SPR_OBJECTIMP1(cls, base)			DEF_UTTYPEINFO1(cls, base)
@@ -165,7 +165,7 @@ public:
 //@}
 
 
-///	ƒXƒe[ƒg‚ÌƒAƒNƒZƒX—pŠÖ”‚Ì’è‹`
+///	ã‚¹ãƒ†ãƒ¼ãƒˆã®ã‚¢ã‚¯ã‚»ã‚¹ç”¨é–¢æ•°ã®å®šç¾©
 #define ACCESS_STATE_PRIVATE(cls)													\
 	virtual size_t GetStateSize() const {											\
 		return sizeof(cls##State) + sizeof(cls##StatePrivate); }					\
@@ -196,7 +196,7 @@ public:
 	virtual bool GetState(void* s) const { *(cls##StatePrivate*)s=*this; return true; }				\
 	virtual void SetState(const void* s){ *(cls##StatePrivate*)this = *(cls##StatePrivate*)s;}		\
 
-///	ƒfƒXƒNƒŠƒvƒ^‚Ìİ’èEæ“¾‚È‚ÇƒAƒNƒZƒX—pŠÖ”‚Ì’è‹`
+///	ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®è¨­å®šãƒ»å–å¾—ãªã©ã‚¢ã‚¯ã‚»ã‚¹ç”¨é–¢æ•°ã®å®šç¾©
 #define ACCESS_DESC(cls)															\
 	virtual const void* GetDescAddress() const {									\
 		((cls*)this)->BeforeGetDesc(); return (cls##Desc*)this; }					\
@@ -206,7 +206,7 @@ public:
 		*(cls##Desc*)this = *(const cls##Desc*)d; ((cls*)this)->AfterSetDesc();}	\
 	virtual size_t GetDescSize() const { return sizeof(cls##Desc); }				\
 
-///	ƒXƒe[ƒg‚ÆƒfƒXƒNƒŠƒvƒ^‚ğ‚Ü‚Æ‚ß‚Ä’è‹`
+///	ã‚¹ãƒ†ãƒ¼ãƒˆã¨ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚’ã¾ã¨ã‚ã¦å®šç¾©
 #define ACCESS_DESC_STATE(cls) ACCESS_STATE(cls) ACCESS_DESC(cls)
 #define ACCESS_DESC_STATE_PRIVATE(cls) ACCESS_STATE_PRIVATE(cls) ACCESS_DESC(cls)
 #define ACCESS_DESC_PRIVATE(cls) ACCESS_PRIVATE(cls) ACCESS_DESC(cls)
@@ -217,10 +217,10 @@ public:
 namespace Spr{;
 class UTLoadContext;
 
-/**	‘SObject‚ÌŠî–{Œ^	*/
+/**	å…¨Objectã®åŸºæœ¬å‹	*/
 class Object: public UTTypeInfoObjectBase, public UTRefCount{
 public:
-	SPR_OBJECTDEF(Object);		///<	ƒNƒ‰ƒX–¼‚Ìæ“¾‚È‚Ç‚ÌŠî–{‹@”\‚ÌÀ‘•
+	SPR_OBJECTDEF(Object);		///<	ã‚¯ãƒ©ã‚¹åã®å–å¾—ãªã©ã®åŸºæœ¬æ©Ÿèƒ½ã®å®Ÿè£…
 	ObjectIf* GetObjectIf(){
 		return (ObjectIf*) this; 
 	}
@@ -228,118 +228,118 @@ public:
 		return (ObjectIf*) this; 
 	}
 
-	///	ƒfƒoƒbƒO—p‚Ì•\¦
+	///	ãƒ‡ãƒãƒƒã‚°ç”¨ã®è¡¨ç¤º
 	virtual void Print(std::ostream& os) const;
 	virtual void PrintShort(std::ostream& os) const;
-	///	ƒIƒuƒWƒFƒNƒg‚Ìì¬
+	///	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
 	virtual ObjectIf* CreateObject(const IfInfo* info, const void* desc);
-	///	qƒIƒuƒWƒFƒNƒg‚Ì”
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ•°
 	virtual size_t NChildObject() const { return 0; }
-	///	qƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
 	virtual ObjectIf* GetChildObject(size_t pos) { return NULL; }
 	virtual const ObjectIf* GetChildObject(size_t pos) const { 
 		return ((Object*) this)->GetChildObject(pos);
 	}
-	///	qƒIƒuƒWƒFƒNƒg‚Ì’Ç‰Á
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¿½åŠ 
 	virtual bool AddChildObject(ObjectIf* o){ return false; }
-	///	qƒIƒuƒWƒFƒNƒg‚Ìíœ
+	///	å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
 	virtual bool DelChildObject(ObjectIf* o){ return false; }
-	///	‚·‚×‚Ä‚ÌqƒIƒuƒWƒFƒNƒg‚Ìíœ‚ÆƒvƒƒpƒeƒB‚ÌƒNƒŠƒA
+	///	ã™ã¹ã¦ã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤ã¨ãƒ—ãƒ­ãƒ‘ãƒ†ã‚£ã®ã‚¯ãƒªã‚¢
 	virtual void Clear(){}
-	/**	ƒtƒ@ƒCƒ‹ƒ[ƒhŒã‚Éˆê“xŒÄ‚Î‚ê‚éBƒm[ƒh‚Ìİ’è‚Ég‚¤B
-		ŒÄ‚Ño‚µ‡˜‚ÉˆË‘¶‚·‚éˆ—‚ª‚µ‚½‚¢ê‡‚ÍAUTLoadHandeler ‚Æ UTLoadTask ‚ğg‚¤‚Æ—Ç‚¢B@*/
+	/**	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ‰å¾Œã«ä¸€åº¦å‘¼ã°ã‚Œã‚‹ã€‚ãƒãƒ¼ãƒ‰ã®è¨­å®šã«ä½¿ã†ã€‚
+		å‘¼ã³å‡ºã—é †åºã«ä¾å­˜ã™ã‚‹å‡¦ç†ãŒã—ãŸã„å ´åˆã¯ã€UTLoadHandeler ã¨ UTLoadTask ã‚’ä½¿ã†ã¨è‰¯ã„ã€‚ã€€*/
 	virtual void Loaded(UTLoadContext*){ Setup(); }
-	///	ƒm[ƒh‚Ìİ’è‚ğ‚·‚é‚½‚ß‚ÌŠÖ”
+	///	ãƒãƒ¼ãƒ‰ã®è¨­å®šã‚’ã™ã‚‹ãŸã‚ã®é–¢æ•°
 	virtual void Setup(){}
 
-	///	ƒfƒXƒNƒŠƒvƒ^‚Ì“Ç‚İo‚µ(ƒRƒs[”Å)
+	///	ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®èª­ã¿å‡ºã—(ã‚³ãƒ”ãƒ¼ç‰ˆ)
 	virtual bool GetDesc(void* desc) const { return false; }
-	/// ƒfƒXƒNƒŠƒvƒ^‚Ìİ’è
+	/// ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®è¨­å®š
 	virtual void SetDesc(const void* desc) {}
-	///	ƒfƒXƒNƒŠƒvƒ^‚Ì“Ç‚İo‚µ(QÆ”Å)
+	///	ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®èª­ã¿å‡ºã—(å‚ç…§ç‰ˆ)
 	virtual const void* GetDescAddress() const { return NULL; }
-	///	ƒfƒXƒNƒŠƒvƒ^‚ÌƒTƒCƒY
+	///	ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã®ã‚µã‚¤ã‚º
 	virtual size_t GetDescSize() const { return 0; };
-	///	ó‘Ô‚Ì“Ç‚İo‚µ(ƒRƒs[”Å)
+	///	çŠ¶æ…‹ã®èª­ã¿å‡ºã—(ã‚³ãƒ”ãƒ¼ç‰ˆ)
 	virtual bool GetState(void* state) const { return false; }
-	///	ó‘Ô‚Ì“Ç‚İo‚µ(QÆ”Å)
+	///	çŠ¶æ…‹ã®èª­ã¿å‡ºã—(å‚ç…§ç‰ˆ)
 	virtual const void* GetStateAddress() const { return NULL; }
-	///	ó‘Ô‚ÌÄ‹A“I‚È“Ç‚İo‚µ
+	///	çŠ¶æ…‹ã®å†å¸°çš„ãªèª­ã¿å‡ºã—
 	virtual void GetStateR(char*& state);
-	///	ó‘Ô‚Ìİ’è
+	///	çŠ¶æ…‹ã®è¨­å®š
 	virtual void SetState(const void* state){}
-	///	ó‘Ô‚ÌÄ‹A“I‚Èİ’è
+	///	çŠ¶æ…‹ã®å†å¸°çš„ãªè¨­å®š
 	virtual void SetStateR(const char*& state);
-	/// ó‘Ô‚Ìƒtƒ@ƒCƒ‹‚Ö‚Ì‘‚«o‚µ
+	/// çŠ¶æ…‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®æ›¸ãå‡ºã—
 	virtual bool WriteStateR(std::ostream& fout);
 	virtual bool WriteState(std::string fileName);
-	/// ó‘Ô‚Ì“Ç‚İ‚İ
+	/// çŠ¶æ…‹ã®èª­ã¿è¾¼ã¿
 	virtual bool ReadStateR(std::istream& fin);
 	virtual bool ReadState(std::string fileName);
-	///	ó‘Ô‚ÌƒTƒCƒY
+	///	çŠ¶æ…‹ã®ã‚µã‚¤ã‚º
 	virtual size_t GetStateSize() const { return 0; };
-	///	ƒƒ‚ƒŠƒuƒƒbƒN‚ğó‘ÔŒ^‚É‰Šú‰»
+	///	ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã‚’çŠ¶æ…‹å‹ã«åˆæœŸåŒ–
 	virtual void ConstructState(void* m) const {}
-	///	ó‘ÔŒ^‚ğƒƒ‚ƒŠƒuƒƒbƒN‚É–ß‚·
+	///	çŠ¶æ…‹å‹ã‚’ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã«æˆ»ã™
 	virtual void DestructState(void* m) const {}
-	///	ƒƒ‚ƒŠƒfƒoƒbƒO—pB’Pƒ‚ÉƒcƒŠ[‚ÌƒIƒuƒWƒFƒNƒg‚ğƒtƒ@ƒCƒ‹‚Éƒ_ƒ“ƒv‚·‚éB
+	///	ãƒ¡ãƒ¢ãƒªãƒ‡ãƒãƒƒã‚°ç”¨ã€‚å˜ç´”ã«ãƒ„ãƒªãƒ¼ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã«ãƒ€ãƒ³ãƒ—ã™ã‚‹ã€‚
 	virtual void DumpObjectR(std::ostream& os, int level=0) const;
 
 protected:
-	/// ŠJ‚«Š‡ŒÊ
+	/// é–‹ãæ‹¬å¼§
 	virtual void PrintHeader(std::ostream& os, bool bClose) const;
-	/// qƒIƒuƒWƒFƒNƒg‚ğPrint
+	/// å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’Print
 	virtual void PrintChildren(std::ostream& os) const;
-	/// •Â‚¶Š‡ŒÊ
+	/// é–‰ã˜æ‹¬å¼§
 	virtual void PrintFooter(std::ostream& os) const;
 
-	///	GetDesc()‚Ì‘O‚ÉŒÄ‚Î‚ê‚é
+	///	GetDesc()ã®å‰ã«å‘¼ã°ã‚Œã‚‹
 	virtual void BeforeGetDesc() const {}
-	///	SetDesc()‚Ì‚ ‚Æ‚ÉŒÄ‚Î‚ê‚é
+	///	SetDesc()ã®ã‚ã¨ã«å‘¼ã°ã‚Œã‚‹
 	virtual void AfterSetDesc(){}
 
-	///	s‚ğo‚ÌState‚Æ‚µ‚Ä‰Šú‰»‚·‚éD
+	///	sã‚’oã®Stateã¨ã—ã¦åˆæœŸåŒ–ã™ã‚‹ï¼
 	static void ConstructState(ObjectIf* o, char*& s);
-	///	s‚ğo‚ÌState‚©‚çƒƒ‚ƒŠƒuƒƒbƒN‚É–ß‚·D
+	///	sã‚’oã®Stateã‹ã‚‰ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã«æˆ»ã™ï¼
 	static void DestructState(ObjectIf* o, char*& s);
 };
-///	cout‚È‚Ç‚ÌƒXƒgƒŠ[ƒ€‚ÉObject‚ğo—Í‚·‚é‰‰ZqDObject‚ÌPrint‚ğŒÄ‚Ño‚·D
+///	coutãªã©ã®ã‚¹ãƒˆãƒªãƒ¼ãƒ ã«Objectã‚’å‡ºåŠ›ã™ã‚‹æ¼”ç®—å­ï¼Objectã®Printã‚’å‘¼ã³å‡ºã™ï¼
 inline std::ostream& operator << (std::ostream& os, const Object& o){
 	o.Print(os);
 	return os;
 }
 
 class NameManager;
-/**	–¼‘O‚ğ‚ÂObjectŒ^D
-	SDK‚âScene‚ÉŠ—L‚³‚ê‚éD	*/
+/**	åå‰ã‚’æŒã¤Objectå‹ï¼
+	SDKã‚„Sceneã«æ‰€æœ‰ã•ã‚Œã‚‹ï¼	*/
 class NamedObject: public Object{
-	SPR_OBJECTDEF(NamedObject);			///<	ƒNƒ‰ƒX–¼‚Ìæ“¾‚È‚Ç‚ÌŠî–{‹@”\‚ÌÀ‘•.
+	SPR_OBJECTDEF(NamedObject);			///<	ã‚¯ãƒ©ã‚¹åã®å–å¾—ãªã©ã®åŸºæœ¬æ©Ÿèƒ½ã®å®Ÿè£….
 protected:
 	friend class ObjectNames;
-	UTString name;					///<	–¼‘O
-	NameManager* nameManager;		///<	–¼‘O‚ÌŒŸõ‚âd•¡ŠÇ—‚ğ‚·‚é‚à‚ÌDScene‚âSDK‚È‚ÇD
+	UTString name;					///<	åå‰
+	NameManager* nameManager;		///<	åå‰ã®æ¤œç´¢ã‚„é‡è¤‡ç®¡ç†ã‚’ã™ã‚‹ã‚‚ã®ï¼Sceneã‚„SDKãªã©ï¼
 public:
 	NamedObject():nameManager(NULL){}
 	NamedObject(const NamedObject& n);
 	NamedObject& operator=(const NamedObject& n);
 	~NamedObject();
-	///	–¼‘O‚Ìæ“¾
+	///	åå‰ã®å–å¾—
 	const char* GetName() const { return name.c_str(); }
-	///	–¼‘O‚Ìİ’è
+	///	åå‰ã®è¨­å®š
 	void SetName(const char* n);
-	///	NameManager‚ğİ’è
+	///	NameManagerã‚’è¨­å®š
 	void SetNameManager(NameManagerIf* s);
-	///	NameManager‚Ìæ“¾
+	///	NameManagerã®å–å¾—
 	virtual NameManagerIf* GetNameManager() const ;
 protected:
 	virtual void PrintHeader(std::ostream& os, bool bClose) const;
 };
 
 class Scene;
-/**	Scene‚ªŠ—L‚·‚éObjectŒ^D
-	Š‘®‚·‚éScene‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ‚Â	*/
+/**	SceneãŒæ‰€æœ‰ã™ã‚‹Objectå‹ï¼
+	æ‰€å±ã™ã‚‹Sceneã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’æŒã¤	*/
 class SceneObject:public NamedObject{
-	SPR_OBJECTDEF(SceneObject);		///<	ƒNƒ‰ƒX–¼‚Ìæ“¾‚È‚Ç‚ÌŠî–{‹@”\‚ÌÀ‘•
+	SPR_OBJECTDEF(SceneObject);		///<	ã‚¯ãƒ©ã‚¹åã®å–å¾—ãªã©ã®åŸºæœ¬æ©Ÿèƒ½ã®å®Ÿè£…
 public:
 	virtual void SetScene(SceneIf* s);
 	virtual SceneIf* GetScene() const;
@@ -347,10 +347,10 @@ public:
 	virtual SceneObjectIf* CloneObject();
 };
 
-///	Object‚Ö‚ÌQÆ‚Ì”z—ñ
+///	Objectã¸ã®å‚ç…§ã®é…åˆ—
 class ObjectRefs:public UTStack< UTRef<Object> >{
 public:
-	///	T‚Ì”h¶ƒNƒ‰ƒX‚ğƒXƒ^ƒbƒN‚ÌTop‘¤‚©‚ç’T‚·D
+	///	Tã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã‚’ã‚¹ã‚¿ãƒƒã‚¯ã®Topå´ã‹ã‚‰æ¢ã™ï¼
 	template <class T> bool Find(T*& t){
 		for(iterator it = end(); it != begin();){
 			--it;
@@ -364,26 +364,26 @@ public:
 	}
 };
 
-///	ƒtƒ@ƒNƒgƒŠ[‚ÌÀ‘•
+///	ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼ã®å®Ÿè£…
 template <class T, class IF, class DESC>
 class FactoryImpTemplate: public FactoryBase{
 public:
 	virtual ObjectIf* Create(const void* desc, ObjectIf* parent){
 		T* t = (desc ? DBG_NEW T(*(DESC*)desc) : DBG_NEW T());
 
-		//	ƒV[ƒ“‚Ìİ’è
+		//	ã‚·ãƒ¼ãƒ³ã®è¨­å®š
 		SceneObject* o = DCAST(SceneObject, t);
 		SceneIf* s = DCAST(SceneIf, parent);
-		if (o && !s){		//	e‚ªƒV[ƒ“‚Å‚Í–³‚¢ê‡Ce‚ğ‚Âscene‚É“o˜^
+		if (o && !s){		//	è¦ªãŒã‚·ãƒ¼ãƒ³ã§ã¯ç„¡ã„å ´åˆï¼Œè¦ªã‚’æŒã¤sceneã«ç™»éŒ²
 			SceneObject* po = DCAST(SceneObject, parent);
 			if (po) s = po->GetScene();
 		}
 		if (o && s){
 			o->SetScene(s);
-		}else{	//	ƒV[ƒ“‚Éİ’è‚Å‚«‚È‚¢ê‡C–¼‘OŠÇ—ƒIƒuƒWƒFƒNƒg‚Ìİ’è
+		}else{	//	ã‚·ãƒ¼ãƒ³ã«è¨­å®šã§ããªã„å ´åˆï¼Œåå‰ç®¡ç†ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¨­å®š
 			NamedObject* o = DCAST(NamedObject, t);
 			NameManagerIf* m = DCAST(NameManagerIf, parent);
-			if (o && !m){	//	e‚ªNameManger‚Å‚Í‚È‚¢ê‡Ce‚ÌNameManager‚É“o˜^
+			if (o && !m){	//	è¦ªãŒNameMangerã§ã¯ãªã„å ´åˆï¼Œè¦ªã®NameManagerã«ç™»éŒ²
 				NamedObject* po = DCAST(NamedObject, parent);
 				if (po) m = po->GetNameManager();
 			}
@@ -395,7 +395,7 @@ public:
 		return IF::GetIfInfoStatic();
 	}
 };
-///	ƒtƒ@ƒNƒgƒŠ[‚ÌÀ‘•(ì‚èèƒIƒuƒWƒFƒNƒg‚ªŠ—L‚·‚éê‡AÅŒã‚Éì‚èè‚ÉAddChildObject‚·‚é)
+///	ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼ã®å®Ÿè£…(ä½œã‚Šæ‰‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆãŒæ‰€æœ‰ã™ã‚‹å ´åˆã€æœ€å¾Œã«ä½œã‚Šæ‰‹ã«AddChildObjectã™ã‚‹)
 template <class T, class IF, class DESC>
 class FactoryImpTemplateOwned: public FactoryImpTemplate<T, IF, DESC>{
 public:
@@ -405,26 +405,26 @@ public:
 		return rv;
 	}
 };
-///	ƒtƒ@ƒNƒgƒŠ[‚ÌÀ‘•(ƒfƒXƒNƒŠƒvƒ^‚ª‚È‚¢ƒIƒuƒWƒFƒNƒg—p)
+///	ãƒ•ã‚¡ã‚¯ãƒˆãƒªãƒ¼ã®å®Ÿè£…(ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ãŒãªã„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç”¨)
 template <class T, class IF>
 class FactoryImpTemplateNoDesc: public FactoryBase{
 public:
 	virtual ObjectIf* Create(const void* desc, ObjectIf* parent){
 		T* t = DBG_NEW T;
 
-		//	ƒV[ƒ“‚Ìİ’è
+		//	ã‚·ãƒ¼ãƒ³ã®è¨­å®š
 		SceneObject* o = DCAST(SceneObject, t);
 		SceneIf* s = DCAST(SceneIf, parent);
-		if (o && !s){		//	e‚ªƒV[ƒ“‚Å‚Í–³‚¢ê‡Ce‚ğ‚Âscene‚É“o˜^
+		if (o && !s){		//	è¦ªãŒã‚·ãƒ¼ãƒ³ã§ã¯ç„¡ã„å ´åˆï¼Œè¦ªã‚’æŒã¤sceneã«ç™»éŒ²
 			SceneObject* po = DCAST(SceneObject, parent);
 			if (po) s = po->GetScene();
 		}
 		if (o && s){
 			o->SetScene(s);
-		}else{	//	ƒV[ƒ“‚Éİ’è‚Å‚«‚È‚¢ê‡C–¼‘OŠÇ—ƒIƒuƒWƒFƒNƒg‚Ìİ’è
+		}else{	//	ã‚·ãƒ¼ãƒ³ã«è¨­å®šã§ããªã„å ´åˆï¼Œåå‰ç®¡ç†ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®è¨­å®š
 			NamedObject* o = DCAST(NamedObject, t);
 			NameManagerIf* m = DCAST(NameManagerIf, parent);
-			if (o && !m){	//	e‚ªNameManger‚Å‚Í‚È‚¢ê‡Ce‚ÌNameManager‚É“o˜^
+			if (o && !m){	//	è¦ªãŒNameMangerã§ã¯ãªã„å ´åˆï¼Œè¦ªã®NameManagerã«ç™»éŒ²
 				NamedObject* po = DCAST(NamedObject, parent);
 				if (po) m = po->GetNameManager();
 			}
@@ -441,24 +441,24 @@ public:
 #define FactoryImpOwned(cls)	FactoryImpTemplateOwned<cls, cls##If, cls##Desc>
 #define FactoryImpNoDesc(cls)	FactoryImpTemplateNoDesc<cls, cls##If>
 
-///	ƒV[ƒ“ƒOƒ‰ƒt‚Ìó‘Ô‚ğ•Û‘¶DÄ¶‚·‚éd‘g‚İ
+///	ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã®çŠ¶æ…‹ã‚’ä¿å­˜ï¼å†ç”Ÿã™ã‚‹ä»•çµ„ã¿
 class ObjectStates:public Object{
 protected:
-	char* state;	///<	ó‘Ô(XXxxxxState)‚ğ•À‚×‚½‚à‚Ì
-	size_t size;	///<	ó‘Ô‚Ì’·‚³
+	char* state;	///<	çŠ¶æ…‹(XXxxxxState)ã‚’ä¸¦ã¹ãŸã‚‚ã®
+	size_t size;	///<	çŠ¶æ…‹ã®é•·ã•
 public:
 	SPR_OBJECTDEF(ObjectStates);
 	ObjectStates():state(NULL), size(0){}
 	~ObjectStates(){ delete state; }
-	///	o‚Æ‚»‚Ìq‘·‚ğƒZ[ƒu‚·‚é‚½‚ß‚É•K—v‚Èƒƒ‚ƒŠ‚ğŠm•Û‚·‚éD
+	///	oã¨ãã®å­å­«ã‚’ã‚»ãƒ¼ãƒ–ã™ã‚‹ãŸã‚ã«å¿…è¦ãªãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã™ã‚‹ï¼
 	void AllocateState(ObjectIf* o);
-	///	ó‘Ô‚ğƒZ[ƒu‚·‚éD
+	///	çŠ¶æ…‹ã‚’ã‚»ãƒ¼ãƒ–ã™ã‚‹ï¼
 	void SaveState(ObjectIf* o);
-	///	ó‘Ô‚ğƒ[ƒh‚·‚éD
+	///	çŠ¶æ…‹ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ï¼
 	void LoadState(ObjectIf* o);
-	///	ó‘Ô‚Ìƒƒ‚ƒŠ‚ğ‰ğ•ú‚·‚é
+	///	çŠ¶æ…‹ã®ãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾ã™ã‚‹
 	void ReleaseState(ObjectIf* o);
-	///	ó‘Ô‚ÌƒTƒCƒY‚ğ‹‚ß‚é
+	///	çŠ¶æ…‹ã®ã‚µã‚¤ã‚ºã‚’æ±‚ã‚ã‚‹
 	size_t CalcStateSize(ObjectIf* o);
 };
 

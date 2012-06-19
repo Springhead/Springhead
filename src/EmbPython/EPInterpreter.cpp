@@ -1,13 +1,13 @@
-
+ï»¿
 #include "..\..\include\EmbPython\SprEPInterpreter.h"
 
 using namespace Spr;
 
-//ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh—p
+//ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰ç”¨
 #include <process.h>
 
 #ifdef _WIN32
-#define NOMINMAX //std::max‚È‚Ç‚ğg‚¤‚Ì‚É•K—v(windows.h‚Æ‹£‡‚·‚é‚©‚ç)
+#define NOMINMAX //std::maxãªã©ã‚’ä½¿ã†ã®ã«å¿…è¦(windows.hã¨ç«¶åˆã™ã‚‹ã‹ã‚‰)
 #include <windows.h>
 #endif
 
@@ -37,7 +37,7 @@ EPInterpreter::~EPInterpreter()
 	if (state == RUN) Stop();
 }
 
-// ƒvƒƒOƒ‰ƒ€I—¹‚ÉEPInterpreter::instance‚ğdelete‚µ‚Ä‚­‚ê‚é‚Ğ‚Æ
+// ãƒ—ãƒ­ã‚°ãƒ©ãƒ çµ‚äº†æ™‚ã«EPInterpreter::instanceã‚’deleteã—ã¦ãã‚Œã‚‹ã²ã¨
 class EPInterpreterDestroyer {
 public:
 	~EPInterpreterDestroyer() {
@@ -51,8 +51,8 @@ extern "C" { __declspec(dllexport) PyObject* PyInit__SprPy(void); }
 
 void EPInterpreter::Initialize()
 {
-	//PYTHONPATH‚ğ•ÏX‚·‚é
-	//SPRPYTHONPATH‚ÉSpringheadPython‚Åg‚¤LIB‚ÌPATH‚ğ’Ç‰Á‚µ‚Ä‚¨‚­
+	//PYTHONPATHã‚’å¤‰æ›´ã™ã‚‹
+	//SPRPYTHONPATHã«SpringheadPythonã§ä½¿ã†LIBã®PATHã‚’è¿½åŠ ã—ã¦ãŠã
 	std::string newPath;
 	char buff[1024];
 	if (!GetEnvironmentVariable("SPRPYTHONPATH",buff,1024) || !strlen(buff)){
@@ -75,11 +75,11 @@ void EPInterpreter::Initialize()
 	// SetEnvironmentVariable("PYTHONHOME", newPath.c_str());
 
 
-	//ƒpƒCƒ\ƒ“‰Šú‰»
+	//ãƒ‘ã‚¤ã‚½ãƒ³åˆæœŸåŒ–
 	Py_Initialize();
 	
 
-	////ƒ‚ƒWƒ…[ƒ‹“Ç‚İ‚İ
+	////ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«èª­ã¿è¾¼ã¿
 	initUtility();
 	initBase();
 	initFoundation();
@@ -103,10 +103,10 @@ void EPInterpreter::Run(void* arg)
 void EPInterpreter::Finalize()
 {
 	if (state == RUN){
-		fclose(stdin);	//	Python‚ÌƒCƒ“ƒ^ƒ‰ƒNƒeƒBƒuƒ‹[ƒv(EPLoop)‚ªA“ü—Í‚Å‚«‚È‚­‚È‚Á‚ÄA‹A‚Á‚Ä‚­‚é‚æ‚¤‚ÉAstdin‚ğ•Â‚¶‚Ä‚µ‚Ü‚¤B
+		fclose(stdin);	//	Pythonã®ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒ†ã‚£ãƒ–ãƒ«ãƒ¼ãƒ—(EPLoop)ãŒã€å…¥åŠ›ã§ããªããªã£ã¦ã€å¸°ã£ã¦ãã‚‹ã‚ˆã†ã«ã€stdinã‚’é–‰ã˜ã¦ã—ã¾ã†ã€‚
 		Stop();
 	}
-	Py_Finalize();	//	‚È‚º‚©‹A‚Á‚Ä‚±‚È‚¢
+	Py_Finalize();	//	ãªãœã‹å¸°ã£ã¦ã“ãªã„
 }
 
 void EPInterpreter::Stop()

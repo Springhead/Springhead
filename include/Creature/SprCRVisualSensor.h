@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,22 +17,22 @@ struct PHSolidIf;
 struct CRVisualSensorIf : CREngineIf{
 	SPR_IFDEF(CRVisualSensor);
 
-	/** @brief ‹–ì“àŠO”»’è‚ğs‚¤
+	/** @brief è¦–é‡å†…å¤–åˆ¤å®šã‚’è¡Œã†
 	*/
 	bool IsVisible(PHSolidIf* solid);
 	bool IsVisible(Vec3f pos);
 
-	/** @brief ’†S‹–ì“àŠO”»’è‚ğs‚¤
+	/** @brief ä¸­å¿ƒè¦–é‡å†…å¤–åˆ¤å®šã‚’è¡Œã†
 	*/
 	bool IsInCenter(PHSolidIf* solid);
 	bool IsInCenter(Vec3f pos);
 
-	/** @brief ©•ª©g‚Ì„‘Ì‚©‚Ç‚¤‚©‚ğ”»’è‚·‚é
+	/** @brief è‡ªåˆ†è‡ªèº«ã®å‰›ä½“ã‹ã©ã†ã‹ã‚’åˆ¤å®šã™ã‚‹
 	*/
 	bool IsSelfSolid(PHSolidIf* solid);
 };
 
-/// ‹ŠoƒZƒ“ƒT‚ÌƒfƒXƒNƒŠƒvƒ^
+/// è¦–è¦šã‚»ãƒ³ã‚µã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRVisualSensorDesc : CREngineDesc{
 	SPR_DESCDEF(CRVisualSensor);
 

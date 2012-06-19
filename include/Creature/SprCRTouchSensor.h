@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -27,16 +27,16 @@ struct CRContactInfo {
 struct CRTouchSensorIf : CREngineIf{
 	SPR_IFDEF(CRTouchSensor);
 
-	/** @brief Œ»İ‚ÌÚG‚ÌŒÂ”‚ğ•Ô‚·
+	/** @brief ç¾åœ¨ã®æ¥è§¦ã®å€‹æ•°ã‚’è¿”ã™
 	*/
 	int NContacts();
 
-	/** @brief ÚGî•ñ‚ğ•Ô‚·
+	/** @brief æ¥è§¦æƒ…å ±ã‚’è¿”ã™
 	*/
 	CRContactInfo GetContact(int n);
 };
 
-/// GŠoƒZƒ“ƒT‚ÌƒfƒXƒNƒŠƒvƒ^
+/// è§¦è¦šã‚»ãƒ³ã‚µã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRTouchSensorDesc : CREngineDesc{
 	SPR_DESCDEF(CRTouchSensor);
 

@@ -1,9 +1,9 @@
-#ifndef JOINTS_HANDLER_H
+ï»¿#ifndef JOINTS_HANDLER_H
 #define JOINTS_HANDLER_H
 
 #include "../../SampleApp.h"
 
-/// ƒV[ƒ“‚Ì\’z‚ÆƒCƒ“ƒ^ƒ‰ƒNƒVƒ‡ƒ“‚ÌŠî–{ƒNƒ‰ƒX
+/// ã‚·ãƒ¼ãƒ³ã®æ§‹ç¯‰ã¨ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ã‚·ãƒ§ãƒ³ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
 class Handler : public UTRefCount{
 public:
 	enum {
@@ -12,13 +12,13 @@ public:
 		MENU_ARM,
 	};
 	
-	PHSolidDesc		sdFloor;					///< °„‘Ì‚ÌƒfƒBƒXƒNƒŠƒvƒ^
-	PHSolidDesc		sdBox;						///< ” „‘Ì‚ÌƒfƒBƒXƒNƒŠƒvƒ^
+	PHSolidDesc		sdFloor;					///< åºŠå‰›ä½“ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+	PHSolidDesc		sdBox;						///< ç®±å‰›ä½“ã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 
-	PHSolidIf*					soFloor;		///< °„‘Ì‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
-	std::vector<PHSolidIf*>		soBox;			///< ” „‘Ì‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
-	std::vector<PHJointIf*>		jntLink;		///< ŠÖß‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
-	std::vector<PHTreeNodeIf*>	nodeTree;		///< ABAiŠÖßÀ•WƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“j‚Ì‚½‚ß‚ÌƒcƒŠ[ƒm[ƒh
+	PHSolidIf*					soFloor;		///< åºŠå‰›ä½“ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
+	std::vector<PHSolidIf*>		soBox;			///< ç®±å‰›ä½“ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
+	std::vector<PHJointIf*>		jntLink;		///< é–¢ç¯€ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
+	std::vector<PHTreeNodeIf*>	nodeTree;		///< ABAï¼ˆé–¢ç¯€åº§æ¨™ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ï¼‰ã®ãŸã‚ã®ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰
 
 	SampleApp*		app;
 

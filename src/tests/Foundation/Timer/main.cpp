@@ -1,4 +1,4 @@
-#include <Springhead.h>
+ï»¿#include <Springhead.h>
 #include <Foundation/UTTimer.h>
 
 #include <iostream>
@@ -24,15 +24,15 @@ class TimerProviderGL: public UTTimerProvider{
 			arg->timer->Call();
 			glutTimerFunc(arg->timer->GetInterval(), Callback, a);
 		}else{
-			delete arg;	//	‚±‚±‚Ü‚Å arg ‚ğ delete ‚·‚é‚í‚¯‚És‚©‚È‚¢B
+			delete arg;	//	ã“ã“ã¾ã§ arg ã‚’ delete ã™ã‚‹ã‚ã‘ã«è¡Œã‹ãªã„ã€‚
 		}
 	}
 public:
 	TimerProviderGL(){
-		Register();		//	ƒ^ƒCƒ}[‚ÉƒtƒŒ[ƒ€ƒ[ƒN‚ğ“o˜^
+		Register();		//	ã‚¿ã‚¤ãƒãƒ¼ã«ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã‚’ç™»éŒ²
 	}
 	~TimerProviderGL(){
-		Unregister();	//	ƒ^ƒCƒ}[‚©‚çƒtƒŒ[ƒ€ƒ[ƒN‚ğ‰ğœ
+		Unregister();	//	ã‚¿ã‚¤ãƒãƒ¼ã‹ã‚‰ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã‚’è§£é™¤
 	}
 	bool StartTimer(UTTimer* timer){
 		args.push_back(DBG_NEW Arg(timer));
@@ -78,12 +78,12 @@ public:
 	}
 };
 
-UTTimer timer1;				/// ƒ^ƒCƒ}‚ÌéŒ¾
-UTTimer timer3;				/// ƒ^ƒCƒ}‚ÌéŒ¾
-Fuga fuga;					/// ƒNƒ‰ƒXFuga
+UTTimer timer1;				/// ã‚¿ã‚¤ãƒã®å®£è¨€
+UTTimer timer3;				/// ã‚¿ã‚¤ãƒã®å®£è¨€
+Fuga fuga;					/// ã‚¯ãƒ©ã‚¹Fuga
 
 
-TimerProviderGL providerGL;	//	ƒ^ƒCƒ}[‚ÉƒtƒŒ[ƒ€ƒ[ƒN‚ğ“o˜^ 
+TimerProviderGL providerGL;	//	ã‚¿ã‚¤ãƒãƒ¼ã«ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã‚’ç™»éŒ² 
 
 void idle(){
 	providerGL.CallIdle();
@@ -104,27 +104,27 @@ void reshape(int w, int h);
 int _cdecl main(int argc, char* argv[]){
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-								//	‚½‚Æ‚¦‚ÎAFWApp‚ÌGLUT”Å ‚É providerGL ‚Æ“¯‚¶‹@”\‚ğ‚½‚¹‚ê‚Î—Ç‚¢
+								//	ãŸã¨ãˆã°ã€FWAppã®GLUTç‰ˆ ã« providerGL ã¨åŒã˜æ©Ÿèƒ½ã‚’æŒãŸã›ã‚Œã°è‰¯ã„
 
 	timer1.SetMode(UTTimerIf::MULTIMEDIA);
-	timer1.SetResolution(20);					///	 ŒÄ‚Ñ‚¾‚µ•ª‰ğ”\
-	timer1.SetInterval(200);					/// ŒÄ‚Ñ‚¾‚µ•p“x
-	timer1.SetCallback(CallBackHoge);	/// ŒÄ‚Ñ‚¾‚·ŠÖ”
+	timer1.SetResolution(20);					///	 å‘¼ã³ã ã—åˆ†è§£èƒ½
+	timer1.SetInterval(200);					/// å‘¼ã³ã ã—é »åº¦
+	timer1.SetCallback(CallBackHoge);	/// å‘¼ã³ã ã™é–¢æ•°
 
 	fuga.timer2.SetMode(UTTimerIf::FRAMEWORK);
 	fuga.timer2.SetResolution(5);
 	fuga.timer2.SetInterval(500);
-	fuga.timer2.SetCallback(Fuga::CallBackFuga, &fuga);	/// ŒÄ‚Ñ–ß‚·ŠÖ”‚ÍÃ“I‚Å‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
+	fuga.timer2.SetCallback(Fuga::CallBackFuga, &fuga);	/// å‘¼ã³æˆ»ã™é–¢æ•°ã¯é™çš„ã§ãªã‘ã‚Œã°ãªã‚‰ãªã„
 
 	timer3.SetMode(UTTimerIf::MULTIMEDIA);
-	timer3.SetResolution(10);					///	 ŒÄ‚Ñ‚¾‚µ•ª‰ğ”\
-	timer3.SetInterval(100);					/// ŒÄ‚Ñ‚¾‚µ•p“x
-	timer3.SetCallback(CallBackPiyo);		/// ŒÄ‚Ñ‚¾‚·ŠÖ”
+	timer3.SetResolution(10);					///	 å‘¼ã³ã ã—åˆ†è§£èƒ½
+	timer3.SetInterval(100);					/// å‘¼ã³ã ã—é »åº¦
+	timer3.SetCallback(CallBackPiyo);		/// å‘¼ã³ã ã™é–¢æ•°
 
 
 	startTime = timeGetTime();
-	timer1.Start();							/// ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}ƒXƒ^[ƒg
-	timer3.Start();							/// ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}ƒXƒ^[ƒg
+	timer1.Start();							/// ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒã‚¹ã‚¿ãƒ¼ãƒˆ
+	timer3.Start();							/// ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒã‚¹ã‚¿ãƒ¼ãƒˆ
 	fuga.timer2.Start();
 	
 	glutCreateWindow("UTTimerSample");

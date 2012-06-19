@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,10 +8,10 @@
 #include <Collision/CDCutRing.h>
 
 namespace Spr{;
-CDQHLines<CDCutLine> CDCutRing::vtxs(1000);		//	ˆê”Ô“à‘¤‚Ì“Ê‘½ŠpŒ`‚Ì’¸“_
+CDQHLines<CDCutLine> CDCutRing::vtxs(1000);		//	ä¸€ç•ªå†…å´ã®å‡¸å¤šè§’å½¢ã®é ‚ç‚¹
 
 void CDCutRing::MakeRing(){
-	//	Mullar•Preparata‚ÅCŒ`‚ð‹‚ß‚é
+	//	Mullarï¼†Preparataã§ï¼Œå½¢ã‚’æ±‚ã‚ã‚‹
 	//	cutLines->CreateHull();
 	std::vector<CDCutLine*> linePtrs;
 	linePtrs.resize(lines.size());

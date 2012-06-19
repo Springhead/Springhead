@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *  @file SprDevice.h
- *  @brief ƒfƒoƒCƒX‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹ŒQ
+ *  @brief ãƒ‡ãƒã‚¤ã‚¹ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ç¾¤
 */
 
 #ifndef SPR_DEVICE_H

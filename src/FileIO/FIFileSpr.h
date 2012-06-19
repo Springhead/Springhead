@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -30,7 +30,7 @@ public:
 
 protected:
 	void Init();
-	//	•Û‘¶ˆ—‚Ìƒnƒ“ƒhƒ‰[
+	//	ä¿å­˜å‡¦ç†ã®ãƒãƒ³ãƒ‰ãƒ©ãƒ¼
 	virtual void OnSaveFileStart(FISaveContext* sc);
 	virtual void OnSaveNodeStart(FISaveContext* sc);
 	virtual void OnSaveNodeEnd(FISaveContext* sc);

@@ -1,39 +1,39 @@
-#ifndef HI_SPIDAR_H
+ï»¿#ifndef HI_SPIDAR_H
 #define HI_SPIDAR_H
 
 #include <HumanInterface/HISpidarMotor.h>
 #include <HumanInterface/HISpidarCalc.h>
 #include <vector>
 
-/**	4–{…‚ÌSPIDAR.
-	…‚Ì’·‚³‚©‚çÀ•WŒvZ‚ğs‚Á‚½‚èAo—Í‚·‚é—ÍŠo‚©‚çŠeƒ‚[ƒ^‚Ì
-	o—Í‚ğŒvZ‚µ‚½‚è‚·‚éBo—Í‚ÌŒvZ‚É2ŸŒv‰æ–@‚ğ—p‚¢‚Ä‚¢‚é‚½‚ßC
-	HIS/Fortran ‚Ì libF77.lib libI77.lib QuadPR.lib ‚ª•K—vD
+/**	4æœ¬ç³¸ã®SPIDAR.
+	ç³¸ã®é•·ã•ã‹ã‚‰åº§æ¨™è¨ˆç®—ã‚’è¡Œã£ãŸã‚Šã€å‡ºåŠ›ã™ã‚‹åŠ›è¦šã‹ã‚‰å„ãƒ¢ãƒ¼ã‚¿ã®
+	å‡ºåŠ›ã‚’è¨ˆç®—ã—ãŸã‚Šã™ã‚‹ã€‚å‡ºåŠ›ã®è¨ˆç®—ã«2æ¬¡è¨ˆç”»æ³•ã‚’ç”¨ã„ã¦ã„ã‚‹ãŸã‚ï¼Œ
+	HIS/Fortran ã® libF77.lib libI77.lib QuadPR.lib ãŒå¿…è¦ï¼
 @verbatim
-SPIDAR‚Ì’è”‚Ìİ’è—á
+SPIDARã®å®šæ•°ã®è¨­å®šä¾‹
 Init(dev, motPos, 0.5776, 2.924062107079e-5f, 0.5f, 20.0f);
 
-//	ƒ‚[ƒ^‚Ìæ‚è•t‚¯ˆÊ’u. ƒ‚[ƒ^‚ª’¼•û‘Ì‚Éæ‚è•t‚¯‚ç‚ê‚Ä‚¢‚éê‡‚ÍC
-#define PX	0.265f	//	x•ûŒü‚Ì•Ó‚Ì’·‚³/2
-#define PY	0.265f	//	y•ûŒü‚Ì•Ó‚Ì’·‚³/2
-#define PZ	0.265f	//	z•ûŒü‚Ì•Ó‚Ì’·‚³/2
-Vec3f motorPos[][4] =	//	ƒ‚[ƒ^‚Ìæ‚è•t‚¯ˆÊ’u(’†S‚ğŒ´“_‚Æ‚·‚é){
+//	ãƒ¢ãƒ¼ã‚¿ã®å–ã‚Šä»˜ã‘ä½ç½®. ãƒ¢ãƒ¼ã‚¿ãŒç›´æ–¹ä½“ã«å–ã‚Šä»˜ã‘ã‚‰ã‚Œã¦ã„ã‚‹å ´åˆã¯ï¼Œ
+#define PX	0.265f	//	xæ–¹å‘ã®è¾ºã®é•·ã•/2
+#define PY	0.265f	//	yæ–¹å‘ã®è¾ºã®é•·ã•/2
+#define PZ	0.265f	//	zæ–¹å‘ã®è¾ºã®é•·ã•/2
+Vec3f motorPos[][4] =	//	ãƒ¢ãƒ¼ã‚¿ã®å–ã‚Šä»˜ã‘ä½ç½®(ä¸­å¿ƒã‚’åŸç‚¹ã¨ã™ã‚‹){
 	{Vec3f(-PX, PY, PZ),	Vec3f( PX, PY,-PZ), Vec3f(-PX,-PY,-PZ), Vec3f( PX,-PY, PZ)},
 	{Vec3f( PX, PY, PZ),	Vec3f(-PX, PY,-PZ), Vec3f( PX,-PY,-PZ), Vec3f(-PX,-PY, PZ)}
 };
 
-//	‚Pƒjƒ…[ƒgƒ“o‚·‚½‚ß‚ÌDA‚Ìo—Í“dˆ³[V/N]
+//	ï¼‘ãƒ‹ãƒ¥ãƒ¼ãƒˆãƒ³å‡ºã™ãŸã‚ã®DAã®å‡ºåŠ›é›»åœ§[V/N]
 //	maxon:		0.008[m] / 0.0438[Nm/A] / 0.5[A/V] =  0.365296803653
-//	ç—t¸‹@:	0.008[m] / 0.0277[Nm/A] / 0.5[A/V] =  0.5776
+//	åƒè‘‰ç²¾æ©Ÿ:	0.008[m] / 0.0277[Nm/A] / 0.5[A/V] =  0.5776
 sp->VoltPerNewton(0.5776f);
 
-//	‚PƒJƒEƒ“ƒg‚Ì’·‚³ [m/plus]	À‘ª’l: 2.924062107079e-5f
+//	ï¼‘ã‚«ã‚¦ãƒ³ãƒˆã®é•·ã• [m/plus]	å®Ÿæ¸¬å€¤: 2.924062107079e-5f
 sp->LenPerPlus(2.924062107079e-5f);
 
-//	Å¬’£—Í [N]
+//	æœ€å°å¼µåŠ› [N]
 sp->MinForce(0.5f);
 
-//	Å‘å’£—Í [N]
+//	æœ€å¤§å¼µåŠ› [N]
 sp->MaxForce(20.0f);
 @endverbatim
 */
@@ -41,26 +41,26 @@ sp->MaxForce(20.0f);
 namespace Spr {;
 
 /**
-	Spidar‚ÌŠî–{ƒNƒ‰ƒX
+	Spidarã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
  **/
 class HISpidar: public HIHaptic{
 protected:
 	bool bGood;
-	std::vector<HISpidarMotor>	motors;		///<	ƒ‚[ƒ^
+	std::vector<HISpidarMotor>	motors;		///<	ãƒ¢ãƒ¼ã‚¿
 
 public:
 	SPR_OBJECTDEF_ABST(HISpidar);
 
-	///	ƒ‚[ƒ^‚ğæ“¾
+	///	ãƒ¢ãƒ¼ã‚¿ã‚’å–å¾—
 	HISpidarMotorIf* GetMotor(size_t i){ return motors[i].Cast(); }
-	///	ƒ‚[ƒ^‚Ì”
+	///	ãƒ¢ãƒ¼ã‚¿ã®æ•°
 	size_t NMotor() const { return motors.size(); }
 
-	///	Å’á’£—Í‚ğo—Í
+	///	æœ€ä½å¼µåŠ›ã‚’å‡ºåŠ›
 	void SetMinForce();
-	/// ‘S‚Ä‚Ìƒ‚[ƒ^‚É‘Î‚µ‚ÄÅ¬o—Í‚ğİ’è
+	/// å…¨ã¦ã®ãƒ¢ãƒ¼ã‚¿ã«å¯¾ã—ã¦æœ€å°å‡ºåŠ›ã‚’è¨­å®š
 	void SetLimitMinForce(float f);
-	/// ‘S‚Ä‚Ìƒ‚[ƒ^‚É‘Î‚µ‚ÄÅ‘åo—Í‚ğİ’è
+	/// å…¨ã¦ã®ãƒ¢ãƒ¼ã‚¿ã«å¯¾ã—ã¦æœ€å¤§å‡ºåŠ›ã‚’è¨­å®š
 	void SetLimitMaxForce(float f);
 	
 	virtual bool Init(const void* desc);
@@ -75,7 +75,7 @@ public:
 
 /**
 	4-wire Spidar
-	“à•”ŒvZ‚ÉHISpidarCalc3Dof‚ğg—p
+	å†…éƒ¨è¨ˆç®—ã«HISpidarCalc3Dofã‚’ä½¿ç”¨
  */
 class SPR_DLL HISpidar4: public HISpidar, public HISpidarCalc3Dof{
 public:
@@ -86,27 +86,27 @@ public:
 	Vec3f	GetPosition(){ return HISpidarCalc3Dof::GetPosition(); }
 
 protected:
-	/**	o—Í‰Â”\‚È—Í‚ğŒvZ‚µA‚»‚Ìo—Í‚Ì“¾“_‚ğŒvZ‚·‚é.
-		@param disable	g—p‚µ‚È‚¢…‚Ì”Ô†
-		@param f		o—Í‚µ‚½‚¢—Í. o—Í‰Â”\‚È—Í‚É•ÏX‚³‚ê‚é.
-		@param v3Str	4–{‚Ì…‚ÌŒü‚«
-		@return “¾“_(—Í‚Ì³Šm‚³‚Æƒ‚[ƒ^o—Í‚Ì‘å‚«‚³‚ÅŒˆ‚Ü‚éB
-				‚±‚Ì…‚ğ‘I‘ğ‚·‚é‚±‚Æ‚Ì³‚µ‚³)	*/
+	/**	å‡ºåŠ›å¯èƒ½ãªåŠ›ã‚’è¨ˆç®—ã—ã€ãã®å‡ºåŠ›ã®å¾—ç‚¹ã‚’è¨ˆç®—ã™ã‚‹.
+		@param disable	ä½¿ç”¨ã—ãªã„ç³¸ã®ç•ªå·
+		@param f		å‡ºåŠ›ã—ãŸã„åŠ›. å‡ºåŠ›å¯èƒ½ãªåŠ›ã«å¤‰æ›´ã•ã‚Œã‚‹.
+		@param v3Str	4æœ¬ã®ç³¸ã®å‘ã
+		@return å¾—ç‚¹(åŠ›ã®æ­£ç¢ºã•ã¨ãƒ¢ãƒ¼ã‚¿å‡ºåŠ›ã®å¤§ãã•ã§æ±ºã¾ã‚‹ã€‚
+				ã“ã®ç³¸ã‚’é¸æŠã™ã‚‹ã“ã¨ã®æ­£ã—ã•)	*/
 	float AvailableForce(int disable, Vec3f& f, Vec3f* v3Str);
 
 	virtual bool Init(const void* pDesc);
 	virtual bool Calibration();
 	virtual void Update(float dt);
 
-	/// HISpidarCalc3Dof‚Ì‰¼‘zŠÖ”
-	virtual void MakeWireVec();					///<	ƒƒCƒ„•ûŒüƒxƒNƒgƒ‹‚ÌŒvZ
-	virtual void UpdatePos();					///<	ƒƒCƒ„İ’uˆÊ’uÀ•W‚ÌXV
-	virtual void MeasureWire();					///<	ƒƒCƒ„’·‚ÌŒv‘ª
+	/// HISpidarCalc3Dofã®ä»®æƒ³é–¢æ•°
+	virtual void MakeWireVec();					///<	ãƒ¯ã‚¤ãƒ¤æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã®è¨ˆç®—
+	virtual void UpdatePos();					///<	ãƒ¯ã‚¤ãƒ¤è¨­ç½®ä½ç½®åº§æ¨™ã®æ›´æ–°
+	virtual void MeasureWire();					///<	ãƒ¯ã‚¤ãƒ¤é•·ã®è¨ˆæ¸¬
 };
 
 /**
 	4-wire Spidar double grip
-	“à•”ŒvZ‚Í“Æ©À‘•i’¼ÚˆÊ’uŒvZ‚ğs‚¤•û®j
+	å†…éƒ¨è¨ˆç®—ã¯ç‹¬è‡ªå®Ÿè£…ï¼ˆç›´æ¥ä½ç½®è¨ˆç®—ã‚’è¡Œã†æ–¹å¼ï¼‰
  */
 class HISpidar4D: public HISpidar4{
 public:
@@ -114,15 +114,15 @@ public:
 
 protected:
 	Vec3f pos;
-	///	ˆÊ’u‚ğŒvZ‚·‚é‚½‚ß‚Ì’è”
+	///	ä½ç½®ã‚’è¨ˆç®—ã™ã‚‹ãŸã‚ã®å®šæ•°
 	Vec3f posSqrConst;
-	///	ˆÊ’u‚ğŒvZ‚·‚é‚½‚ß‚Ìs—ñ
+	///	ä½ç½®ã‚’è¨ˆç®—ã™ã‚‹ãŸã‚ã®è¡Œåˆ—
 	Matrix3f matPos;
 	Vec3f	phi[4];
 	float	eff;
 	float	cont;
 	float	tension[4];
-	///	ˆÊ’u‚ğŒvZ‚·‚é‚½‚ß‚Ìs—ñ‚Ì‰Šú‰»
+	///	ä½ç½®ã‚’è¨ˆç®—ã™ã‚‹ãŸã‚ã®è¡Œåˆ—ã®åˆæœŸåŒ–
 	void InitMat();
 
 public:
@@ -136,27 +136,27 @@ public:
 	HISpidar4D(const HISpidar4DDesc& desc = HISpidar4DDesc());
 };
 
-/**	@JA	ƒGƒ“ƒhƒGƒtƒFƒNƒ^(ƒOƒŠƒbƒv)‚ª„‘Ì‚Å6©—R“x‚ÈSPIDARD…‚Ì–{”‚Í‰Â•ÏD
+/**	@JA	ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿(ã‚°ãƒªãƒƒãƒ—)ãŒå‰›ä½“ã§6è‡ªç”±åº¦ãªSPIDARï¼ç³¸ã®æœ¬æ•°ã¯å¯å¤‰ï¼
 	@EN	A SPIDAR with a 6DOF solid grip. The number of the strings is variable.@@*/
 class SPR_DLL HISpidarG: public HISpidar, protected HISpidarCalc6Dof{
 public:
 	SPR_OBJECTDEF(HISpidarG);
 
-	std::vector< DVPioIf* >		buttons;	///<	ƒ{ƒ^ƒ“
+	std::vector< DVPioIf* >		buttons;	///<	ãƒœã‚¿ãƒ³
 
 public:
 	HISpidarG(const HISpidarGDesc& desc = HISpidarGDesc());
 	virtual ~HISpidarG();
 
-	/// ƒ{ƒ^ƒ“‚Ìó‘Ô‚ğæ“¾
+	/// ãƒœã‚¿ãƒ³ã®çŠ¶æ…‹ã‚’å–å¾—
 	int GetButton(size_t i){
 		if(buttons[i]) return buttons[i]->Get();
 		else return 0;
 	}
-	/// ƒ{ƒ^ƒ“‚Ì”
+	/// ãƒœã‚¿ãƒ³ã®æ•°
 	size_t NButton() const { return buttons.size(); }
 
-	///	ƒfƒoƒCƒX‚Ì‰Šú‰»(g—p‘O‚ÉŒÄ‚Ô)
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®åˆæœŸåŒ–(ä½¿ç”¨å‰ã«å‘¼ã¶)
 	virtual bool Init(const void* desc);
 	virtual bool Calibration();
 	Vec3f	GetPosition(){ return HISpidarCalc6Dof::GetPosition(); }
@@ -165,16 +165,16 @@ public:
 	virtual Vec3f GetForce(){ return HISpidarCalc6Dof::GetForce(); }
 	virtual void SetForce(const Vec3f& f, const Vec3f& t = Vec3f()){ HISpidarCalc6Dof::SetForce(f, t); }		
 
-	///	d‚İ•t‚¯‚Ìİ’è
+	///	é‡ã¿ä»˜ã‘ã®è¨­å®š
 	void SetWeight(float s=0.3f, float t=1.0f, float r=6.0f){ smooth=s; lambda_t=t; lambda_r=r; }
 
-	///	ƒfƒoƒCƒX‚Ìó‘Ô‚ğXV‚·‚é.
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®çŠ¶æ…‹ã‚’æ›´æ–°ã™ã‚‹.
 	virtual void Update(float dt);
 
 protected:
-	virtual void MakeWireVec();					///<	ƒƒCƒ„•ûŒüƒxƒNƒgƒ‹‚ÌŒvZ
-	virtual void UpdatePos();					///<	ƒƒCƒ„İ’uˆÊ’uÀ•W‚ÌXV
-	virtual void MeasureWire();					///<	ƒƒCƒ„’·‚ÌŒv‘ª
+	virtual void MakeWireVec();					///<	ãƒ¯ã‚¤ãƒ¤æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã®è¨ˆç®—
+	virtual void UpdatePos();					///<	ãƒ¯ã‚¤ãƒ¤è¨­ç½®ä½ç½®åº§æ¨™ã®æ›´æ–°
+	virtual void MeasureWire();					///<	ãƒ¯ã‚¤ãƒ¤é•·ã®è¨ˆæ¸¬
 };
 
 }	//	namespace Spr

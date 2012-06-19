@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,22 +18,22 @@ namespace Spr{;
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHNDJointMotor
 
-/// S‘©²‚ğŒˆ’è‚·‚é
+/// æ‹˜æŸè»¸ã‚’æ±ºå®šã™ã‚‹
 template<int NDOF>
 void PHNDJointMotor<NDOF>::SetupAxisIndex() {
 	PHNDJointMotorParam<NDOF> p; GetParams(p);
 
-	// joint‚Ì‰Â“®©—R“x‚ğS‘©‚·‚é
+	// jointã®å¯å‹•è‡ªç”±åº¦ã‚’æ‹˜æŸã™ã‚‹
 	for (int n=0; n<joint->nMovableAxes; ++n) {
 		int i = joint->movableAxes[n];
 
 		double epsilon = 1e-10;
 		if (p.spring[n] > epsilon || p.damper[n] > epsilon) {
-			// S‘©²‚ğ—LŒø‚É‚·‚é
+			// æ‹˜æŸè»¸ã‚’æœ‰åŠ¹ã«ã™ã‚‹
 			joint->axes.Enable(i);
 		}
 
-		// Projection—p‚ÌMax / Min‚ğİ’è‚·‚é
+		// Projectionç”¨ã®Max / Minã‚’è¨­å®šã™ã‚‹
 		double dt = joint->GetScene()->GetTimeStep();
 		joint->fMaxDt[i]  =  (joint->GetMaxForce() * dt);
 		joint->fMinDt[i]  = -(joint->GetMaxForce() * dt);
@@ -42,14 +42,14 @@ void PHNDJointMotor<NDOF>::SetupAxisIndex() {
 	SetParams(p);
 }
 
-/// dA, db‚ğŒvZ‚·‚é
+/// dA, dbã‚’è¨ˆç®—ã™ã‚‹
 template<int NDOF>
 void PHNDJointMotor<NDOF>::CompBias() {
 	PHNDJointMotorParam<NDOF> p; GetParams(p);
 
 	double epsilon = 1e-10;
 	if (p.spring.norm() < epsilon && p.damper.norm() < epsilon) {
-		// ƒIƒtƒZƒbƒg—Í‚Ì‚İ—LŒø‚Ìê‡‚ÍS‘©—Í‰Šú’l‚Éİ’è‚·‚é‚¾‚¯‚Å‚æ‚¢
+		// ã‚ªãƒ•ã‚»ãƒƒãƒˆåŠ›ã®ã¿æœ‰åŠ¹ã®å ´åˆã¯æ‹˜æŸåŠ›åˆæœŸå€¤ã«è¨­å®šã™ã‚‹ã ã‘ã§ã‚ˆã„
 		for (int n=0; n<joint->nMovableAxes; ++n) {
 			PTM::TVector<NDOF,double> oF = p.offsetForce;
 			joint->f[joint->movableAxes[n]] = min(oF[n], joint->GetMaxForce());
@@ -58,15 +58,15 @@ void PHNDJointMotor<NDOF>::CompBias() {
 		VecNd sd = p.secondDamper; bool bHasSecondDamper = true;
 		for (int i=0; i<NDOF; ++i) { if (sd[i] > FLT_MAX*0.1) { bHasSecondDamper = false; } }
 		if (!bHasSecondDamper) {
-			// ‘æ“ñƒ_ƒ“ƒp‚ğ–³‹iƒoƒlƒ_ƒ“ƒpF’e«•ÏŒ`j
+			// ç¬¬äºŒãƒ€ãƒ³ãƒ‘ã‚’ç„¡è¦–ï¼ˆãƒãƒãƒ€ãƒ³ãƒ‘ï¼šå¼¾æ€§å¤‰å½¢ï¼‰
 			CompBiasElastic();
 		} else {
-			// ‘æ“ñƒ_ƒ“ƒp—LŒøiO—v‘fƒ‚ƒfƒ‹j
+			// ç¬¬äºŒãƒ€ãƒ³ãƒ‘æœ‰åŠ¹ï¼ˆä¸‰è¦ç´ ãƒ¢ãƒ‡ãƒ«ï¼‰
 			if (p.yieldStress > (FLT_MAX * 0.1)) {
-				// ~•š‰—Í–³Œøi‘Y«•ÏŒ`j
+				// é™ä¼å¿œåŠ›ç„¡åŠ¹ï¼ˆå¡‘æ€§å¤‰å½¢ï¼‰
 				CompBiasPlastic();
 			} else {
-				// ~•š‰—Í—LŒøi’e‘Y«•ÏŒ`j
+				// é™ä¼å¿œåŠ›æœ‰åŠ¹ï¼ˆå¼¾å¡‘æ€§å¤‰å½¢ï¼‰
 				CheckYielded();
 				if (p.bYielded) {
 					CompBiasPlastic();
@@ -80,7 +80,7 @@ void PHNDJointMotor<NDOF>::CompBias() {
 	SetParams(p);
 }
 
-/// ’e«•ÏŒ`—p‚ÌCompBias
+/// å¼¾æ€§å¤‰å½¢ç”¨ã®CompBias
 template<int NDOF>
 void PHNDJointMotor<NDOF>::CompBiasElastic() {
 	PHNDJointMotorParam<NDOF> p; GetParams(p);
@@ -101,7 +101,7 @@ void PHNDJointMotor<NDOF>::CompBiasElastic() {
 	SetParams(p);
 }
 
-/// ‘Y«•ÏŒ`—p‚ÌCompBias
+/// å¡‘æ€§å¤‰å½¢ç”¨ã®CompBias
 template<int NDOF>
 void PHNDJointMotor<NDOF>::CompBiasPlastic() {
 	PHNDJointMotorParam<NDOF> p; GetParams(p);
@@ -110,7 +110,7 @@ void PHNDJointMotor<NDOF>::CompBiasPlastic() {
 	for (int n=0; n<NDOF; ++n) {
 		int i = joint->movableAxes[n];
 		if (joint->axes.IsEnabled(i)) {
-			// ‚±‚Á‚¿‚¾‚¯hardnessRateŠ|‚¯‚Ä‚é‚¯‚Ç‚¢‚¢‚ÌH
+			// ã“ã£ã¡ã ã‘hardnessRateæ›ã‘ã¦ã‚‹ã‘ã©ã„ã„ã®ï¼Ÿ
 			double K   = p.spring[n] * p.hardnessRate;
 			double D   = p.damper[n] * p.hardnessRate;
 			double D2  = p.secondDamper[n] * p.hardnessRate;
@@ -123,7 +123,7 @@ void PHNDJointMotor<NDOF>::CompBiasPlastic() {
 		}
 	}
 
-	// ’e‘Y«•ÏŒ`FTargetPosition‚ğ•ÏX‚µ‚Äc—¯•ÏˆÊ‚ğc‚·
+	// å¼¾å¡‘æ€§å¤‰å½¢ï¼šTargetPositionã‚’å¤‰æ›´ã—ã¦æ®‹ç•™å¤‰ä½ã‚’æ®‹ã™
 	if (p.yieldStress < (FLT_MAX * 0.1)) {
 		if (joint->vjrel.w().norm() < 0.01) {
 			if (DCAST(PH1DJoint,joint)) {
@@ -140,7 +140,7 @@ void PHNDJointMotor<NDOF>::CompBiasPlastic() {
 	SetParams(p);
 }
 
-/// ~•š‚µ‚½‚©‚Ç‚¤‚©
+/// é™ä¼ã—ãŸã‹ã©ã†ã‹
 template<int NDOF>
 void PHNDJointMotor<NDOF>::CheckYielded() {
 	PHNDJointMotorParam<NDOF> p; GetParams(p);
@@ -155,7 +155,7 @@ void PHNDJointMotor<NDOF>::CheckYielded() {
 				Vec3d angle = newXs.w();
 				Quaterniond qForct; qForct.FromEuler(Vec3d(angle.y, angle.z, angle.x));
 				DCAST(PHBallJoint,joint)->SetTargetPosition( qForct.Inv() * joint->Xjrel.q );
-			}   // NDOF=1‚âCNDOF=6(PHSpringj‚Ìê‡‚Í–¢À‘• <!!>
+			}   // NDOF=1ã‚„ï¼ŒNDOF=6(PHSpringï¼‰ã®å ´åˆã¯æœªå®Ÿè£… <!!>
 			p.bYielded = false;
 		}
 	} else {
@@ -167,7 +167,7 @@ void PHNDJointMotor<NDOF>::CheckYielded() {
 	SetParams(p);
 }
 
-// ƒeƒ“ƒvƒŒ[ƒg‚Ì–¾¦“IÀ‘Ì‰»iPHNDJointMotor‚Ìƒƒ“ƒoŠÖ”‚ğcpp‚Å’è‹`‚Å‚«‚é‚æ‚¤‚É‚·‚é‚½‚ß‚Ì‘[’uj
+// ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã®æ˜ç¤ºçš„å®Ÿä½“åŒ–ï¼ˆPHNDJointMotorã®ãƒ¡ãƒ³ãƒé–¢æ•°ã‚’cppã§å®šç¾©ã§ãã‚‹ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã®æªç½®ï¼‰
 template class PHNDJointMotor<1>;
 template class PHNDJointMotor<3>;
 template class PHNDJointMotor<6>;
@@ -175,7 +175,7 @@ template class PHNDJointMotor<6>;
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PH1DJointMotor
 
-/// propV‚ğŒvZ‚·‚é
+/// propVã‚’è¨ˆç®—ã™ã‚‹
 PTM::TVector<1,double> PH1DJointMotor::GetPropV() {
 	PH1DJoint* j = joint->Cast();
 	PTM::TVector<1,double> propV;
@@ -183,7 +183,7 @@ PTM::TVector<1,double> PH1DJointMotor::GetPropV() {
 	return propV;
 }
 
-/// ƒpƒ‰ƒ[ƒ^‚ğæ“¾‚·‚é
+/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
 void PH1DJointMotor::GetParams(PHNDJointMotorParam<1>& p) {
 	PH1DJoint* j = joint->Cast();
 	p.fAvg[0]           = j->fAvg[0];
@@ -198,26 +198,26 @@ void PH1DJointMotor::GetParams(PHNDJointMotorParam<1>& p) {
 	p.hardnessRate      = j->hardnessRate;
 }
 
-/// ƒpƒ‰ƒ[ƒ^‚ğ”½‰f‚·‚é
+/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’åæ˜ ã™ã‚‹
 void PH1DJointMotor::SetParams(PHNDJointMotorParam<1>& p) {
 	PH1DJoint* j = joint->Cast();
 	j->fAvg[0]  = p.fAvg[0];
 	j->xs       = p.xs;
 	j->bYielded = p.bYielded;
-	// ã‹LˆÈŠO‚Ì•Ï”‚Í“Á‚É”½‰f‚·‚é•K—v‚Í‚È‚¢D
+	// ä¸Šè¨˜ä»¥å¤–ã®å¤‰æ•°ã¯ç‰¹ã«åæ˜ ã™ã‚‹å¿…è¦ã¯ãªã„ï¼
 }
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHBallJointMotor
 
-/// propV‚ğŒvZ‚·‚é
+/// propVã‚’è¨ˆç®—ã™ã‚‹
 PTM::TVector<3,double> PHBallJointMotor::GetPropV() {
 	PHBallJoint* j = joint->Cast();
 	Quaterniond pQ = j->targetPosition * joint->Xjrel.q.Inv();
 	return((PTM::TVector<3,double>)(pQ.RotationHalf()));
 }
 
-/// ƒpƒ‰ƒ[ƒ^‚ğæ“¾‚·‚é
+/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
 void PHBallJointMotor::GetParams(PHNDJointMotorParam<3>& p) {
 	PHBallJoint* j = joint->Cast();
 	p.fAvg           = j->fAvg.w();
@@ -232,19 +232,19 @@ void PHBallJointMotor::GetParams(PHNDJointMotorParam<3>& p) {
 	p.hardnessRate   = j->hardnessRate;
 }
 
-/// ƒpƒ‰ƒ[ƒ^‚ğ”½‰f‚·‚é
+/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’åæ˜ ã™ã‚‹
 void PHBallJointMotor::SetParams(PHNDJointMotorParam<3>& p) {
 	PHBallJoint* j = joint->Cast();
 	j->fAvg.w() = (Vec3d)(p.fAvg);
 	j->xs       = p.xs;
 	j->bYielded = p.bYielded;
-	// ã‹LˆÈŠO‚Ì•Ï”‚Í“Á‚É”½‰f‚·‚é•K—v‚Í‚È‚¢D
+	// ä¸Šè¨˜ä»¥å¤–ã®å¤‰æ•°ã¯ç‰¹ã«åæ˜ ã™ã‚‹å¿…è¦ã¯ãªã„ï¼
 }
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHSpringMotor
 
-/// propV‚ğŒvZ‚·‚é
+/// propVã‚’è¨ˆç®—ã™ã‚‹
 PTM::TVector<6,double> PHSpringMotor::GetPropV() {
 	SpatialVector propV;
 	propV.v() = -joint->Xjrel.r;
@@ -253,7 +253,7 @@ PTM::TVector<6,double> PHSpringMotor::GetPropV() {
 	return((PTM::TVector<6,double>)(propV));
 }
 
-/// ƒpƒ‰ƒ[ƒ^‚ğæ“¾‚·‚é
+/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
 void PHSpringMotor::GetParams(PHNDJointMotorParam<6>& p) {
 	PHSpring* j = joint->Cast();
 	p.fAvg                                    = j->fAvg;
@@ -265,18 +265,18 @@ void PHSpringMotor::GetParams(PHNDJointMotorParam<6>& p) {
 	for(int i=0;i<3;++i){ p.damper[i+3]       = j->damperOri; }
 	for(int i=0;i<3;++i){ p.secondDamper[i]   = j->secondDamper[i]; }
 	for(int i=0;i<3;++i){ p.secondDamper[i+3] = j->secondDamperOri; }
-	for(int i=0;i<6;++i){ p.targetVelocity[i] = 0.0; } // PHSpring‚É‚Í–³‚¢
-	for(int i=0;i<6;++i){ p.offsetForce[i]    = 0.0; } // PHSpring‚É‚Í–³‚¢
+	for(int i=0;i<6;++i){ p.targetVelocity[i] = 0.0; } // PHSpringã«ã¯ç„¡ã„
+	for(int i=0;i<6;++i){ p.offsetForce[i]    = 0.0; } // PHSpringã«ã¯ç„¡ã„
 	p.yieldStress    = j->yieldStress;
 	p.hardnessRate   = j->hardnessRate;
 }
 
-/// ƒpƒ‰ƒ[ƒ^‚ğ”½‰f‚·‚é
+/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’åæ˜ ã™ã‚‹
 void PHSpringMotor::SetParams(PHNDJointMotorParam<6>& p) {
 	PHSpring* j = joint->Cast();
 	for (int i=0; i<6; ++i) { j->fAvg[i]=p.fAvg[i]; }
 	j->xs       = p.xs;
 	j->bYielded = p.bYielded;
-	// ã‹LˆÈŠO‚Ì•Ï”‚Í“Á‚É”½‰f‚·‚é•K—v‚Í‚È‚¢D
+	// ä¸Šè¨˜ä»¥å¤–ã®å¤‰æ•°ã¯ç‰¹ã«åæ˜ ã™ã‚‹å¿…è¦ã¯ãªã„ï¼
 }
 }

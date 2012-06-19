@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,37 +8,37 @@
 #ifndef UTQTTIMER_H
 #define UTQTTIMER_H
 #pragma once
-#include <Foundation/UTPreciseTimer.h> //UTLargeInteger‚Ì“Ç‚İ‚İ
+#include <Foundation/UTPreciseTimer.h> //UTLargeIntegerã®èª­ã¿è¾¼ã¿
 namespace Spr{;
 
-//Š–{æ¶‚Ìƒ\[ƒXƒR[ƒh
+//æ¢¶æœ¬å…ˆç”Ÿã®ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰
 //http://kaji-lab.jp/ja/index.php?people/kaji
-//QueryPerformanceCounter‚ğg‚Á‚½—áD(windows.h“à‚ÅéŒ¾‚³‚ê‚½ŠÖ”j
-//ˆÈ‘O‚ÌRDTSC‚ğg‚Á‚½ƒo[ƒWƒ‡ƒ“‚Å¶‚¶‚Ä‚¢‚½–â‘è‚ğ
-//QueryPerformanceCounter‚ğg‚¢C
-//ƒXƒŒƒbƒh‚ğƒƒbƒN‚·‚é
-//‚±‚Æ‚É‚æ‚Á‚ÄC‚½‚Ô‚ñC‚Ù‚Ú‰ğÁD
-//‚±‚êˆÈã‚ğ‹‚ß‚é‚È‚ç¡‚Ì‚Æ‚±‚ë‚ÍƒCƒ“ƒ^ƒtƒF[ƒXƒ{[ƒh‚Ìƒ^ƒCƒ}ƒJƒEƒ“ƒ^‚ğg‚¤‚µ‚©‚È‚¢D
+//QueryPerformanceCounterã‚’ä½¿ã£ãŸä¾‹ï¼(windows.hå†…ã§å®£è¨€ã•ã‚ŒãŸé–¢æ•°ï¼‰
+//ä»¥å‰ã®RDTSCã‚’ä½¿ã£ãŸãƒãƒ¼ã‚¸ãƒ§ãƒ³ã§ç”Ÿã˜ã¦ã„ãŸå•é¡Œã‚’
+//QueryPerformanceCounterã‚’ä½¿ã„ï¼Œ
+//ã‚¹ãƒ¬ãƒƒãƒ‰ã‚’ãƒ­ãƒƒã‚¯ã™ã‚‹
+//ã“ã¨ã«ã‚ˆã£ã¦ï¼ŒãŸã¶ã‚“ï¼Œã»ã¼è§£æ¶ˆï¼
+//ã“ã‚Œä»¥ä¸Šã‚’æ±‚ã‚ã‚‹ãªã‚‰ä»Šã®ã¨ã“ã‚ã¯ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ãƒœãƒ¼ãƒ‰ã®ã‚¿ã‚¤ãƒã‚«ã‚¦ãƒ³ã‚¿ã‚’ä½¿ã†ã—ã‹ãªã„ï¼
 
 class UTQPTimer{
 private:
 	UTLargeInteger freq;
-	UTLargeInteger lasttime;//‘O‰ñ‚Ìó‘Ô‚ğ•Û‘¶‚·‚é
-	unsigned long stopWatch;		///<Œv‘ªŠÔus’PˆÊ
+	UTLargeInteger lasttime;//å‰å›ã®çŠ¶æ…‹ã‚’ä¿å­˜ã™ã‚‹
+	unsigned long stopWatch;		///<è¨ˆæ¸¬æ™‚é–“uså˜ä½
 	bool startFlag;
 
 public:
 	UTQPTimer();
-	void WaitUS(int time); //ƒÊs’PˆÊ‚Å‘Ò‚Â
-	int CountUS();//‘O‰ñ‚©‚ç‚ÌŒo‰ßŠÔ‚ğƒÊs’PˆÊ‚ÅŒv‘ª
-	void CountAndWaitUS(int time);//‘O‰ñ‚©‚ç‚ÌŒo‰ßŠÔ‚ğƒÊs’PˆÊ‚ÅŒv‘ª‚µC‘S‘Ì‚Æ‚µ‚Äus’PˆÊ‚Å‘Ò‚Âiˆê’èƒ‹[ƒv¶¬—pj
-	int Freq(); //ƒ^ƒCƒ}[‚Ìü”g”‚ğo—Í
+	void WaitUS(int time); //Î¼så˜ä½ã§å¾…ã¤
+	int CountUS();//å‰å›ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’Î¼så˜ä½ã§è¨ˆæ¸¬
+	void CountAndWaitUS(int time);//å‰å›ã‹ã‚‰ã®çµŒéæ™‚é–“ã‚’Î¼så˜ä½ã§è¨ˆæ¸¬ã—ï¼Œå…¨ä½“ã¨ã—ã¦uså˜ä½ã§å¾…ã¤ï¼ˆä¸€å®šãƒ«ãƒ¼ãƒ—ç”Ÿæˆç”¨ï¼‰
+	int Freq(); //ã‚¿ã‚¤ãƒãƒ¼ã®å‘¨æ³¢æ•°ã‚’å‡ºåŠ›
 
-	/// ƒXƒgƒbƒvƒEƒHƒbƒ`‹@”\.
-	unsigned long Start();		///< Œv‘ªŠJnCŠJnŠÔistopWatch‚Ì’lj‚ğus’PˆÊ‚Å•Ô‚·
-	unsigned long Stop();		///< Œv‘ª’â~CŒo‰ßŠÔistopWatch‚Ì’lj‚ğus’PˆÊ‚Å•Ô‚·
-	unsigned long GetTime();	///< Œ»İ‚ÌŠÔistopWatch‚Ì’lj‚ğus’PˆÊ‚Å•Ô‚·
-	unsigned long Clear();		///< ƒNƒŠƒACstopWatch‚ğ0‚É‚·‚é
+	/// ã‚¹ãƒˆãƒƒãƒ—ã‚¦ã‚©ãƒƒãƒæ©Ÿèƒ½.
+	unsigned long Start();		///< è¨ˆæ¸¬é–‹å§‹ï¼Œé–‹å§‹æ™‚é–“ï¼ˆstopWatchã®å€¤ï¼‰ã‚’uså˜ä½ã§è¿”ã™
+	unsigned long Stop();		///< è¨ˆæ¸¬åœæ­¢ï¼ŒçµŒéæ™‚é–“ï¼ˆstopWatchã®å€¤ï¼‰ã‚’uså˜ä½ã§è¿”ã™
+	unsigned long GetTime();	///< ç¾åœ¨ã®æ™‚é–“ï¼ˆstopWatchã®å€¤ï¼‰ã‚’uså˜ä½ã§è¿”ã™
+	unsigned long Clear();		///< ã‚¯ãƒªã‚¢ï¼ŒstopWatchã‚’0ã«ã™ã‚‹
 };
 
 }

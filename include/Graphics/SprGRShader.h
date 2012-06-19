@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,14 +14,14 @@ namespace Spr{;
 
 	
 /**	
-	@brief	ƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg
+	@brief	ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ
 	
-	ˆ—‚Ì—¬‚êF\n
-@@@ GRRender->SetShaderFormat() ‚ÅƒVƒF[ƒ_‚¨‚æ‚ÑƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒgw’è						\n
-@@@ GRRender->CreateShader() Œã‚ÉA															\n
-@@@ GRRender->GetShaderLocation() ‚ÅƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg‚É‘Î‚·‚éƒƒP[ƒVƒ‡ƒ“î•ñ‚ğæ“¾‚·‚éD	\n
+	å‡¦ç†ã®æµã‚Œï¼š\n
+ã€€ã€€ã€€ GRRender->SetShaderFormat() ã§ã‚·ã‚§ãƒ¼ãƒ€ãŠã‚ˆã³ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆæŒ‡å®š						\n
+ã€€ã€€ã€€ GRRender->CreateShader() å¾Œã«ã€															\n
+ã€€ã€€ã€€ GRRender->GetShaderLocation() ã§ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã«å¯¾ã™ã‚‹ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ã‚’å–å¾—ã™ã‚‹ï¼	\n
 */
-///	@name ƒƒP[ƒVƒ‡ƒ“î•ñ‚¨‚æ‚Ñ
+///	@name ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ãŠã‚ˆã³
 //@{		
 struct SFBlendLocation{
 	unsigned int uBlendMatrix;
@@ -33,7 +33,7 @@ struct SFBlendLocation{
 
 struct GRShaderFormat {
 
-	///	@name ƒVƒF[ƒ_ƒ^ƒCƒv
+	///	@name ã‚·ã‚§ãƒ¼ãƒ€ã‚¿ã‚¤ãƒ—
 	//@{	
 	enum ShaderType {
 		shP3fB4f			= 0,

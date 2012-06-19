@@ -1,4 +1,4 @@
-#ifndef IK_H
+ï»¿#ifndef IK_H
 #define IK_H
 
 #include <vector>
@@ -20,7 +20,7 @@ public:
 	PHIKPosCtlIf *ikPosCtl1, *ikPosCtl2;
 	PHSolidIf *soPosCtl1, *soPosCtl2;
 
-	//ƒfƒoƒbƒN•\¦‚Ég‚¤•Ï”
+	//ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºã«ä½¿ã†å¤‰æ•°
 	bool bGravity;
 	bool bDebug;
 	bool bStep;

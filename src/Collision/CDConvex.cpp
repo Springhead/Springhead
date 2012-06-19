@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -53,7 +53,7 @@ bool CDConvex::IsBoxInside(const Vec3f& bbmin, const Vec3f& bbmax){
 //int g_included;
 
 void CDConvex::Analyze(){
-	// ƒ{ƒNƒZƒ‹‹ß—‚ÅƒCƒi[ƒVƒƒ‚ÆdS‚ğŒvZ
+	// ãƒœã‚¯ã‚»ãƒ«è¿‘ä¼¼ã§ã‚¤ãƒŠãƒ¼ã‚·ãƒ£ã¨é‡å¿ƒã‚’è¨ˆç®—
 	Vec3f bbmin( FLT_MAX,  FLT_MAX,  FLT_MAX);
 	Vec3f bbmax(-FLT_MAX, -FLT_MAX, -FLT_MAX);
 	CalcBBox(bbmin, bbmax, Posed());
@@ -106,7 +106,7 @@ void CDConvex::AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float ep
 
 //	g_count++;
 
-	// ‘ÌÏ‚ªepsˆÈ‰º‚È‚ç‚Î‚»‚±‚ÅƒJƒbƒgƒIƒt
+	// ä½“ç©ãŒepsä»¥ä¸‹ãªã‚‰ã°ãã“ã§ã‚«ãƒƒãƒˆã‚ªãƒ•
 	if(vol <= eps){
 //		g_cutoff++;
 		return;
@@ -120,7 +120,7 @@ void CDConvex::AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float ep
 	bool intersect = FindCommonPoint(this, &box, Posed(), boxPose, v, pa, pb);
 	
 	if(intersect){
-		// bbox‚ªŠ®‘S‚ÉŠÜ‚Ü‚ê‚é‚©’²‚×‚é
+		// bboxãŒå®Œå…¨ã«å«ã¾ã‚Œã‚‹ã‹èª¿ã¹ã‚‹
 		if(IsBoxInside(bbmin, bbmax)){
 			Vec3f sz2(sz.x*sz.x, sz.y*sz.y, sz.z*sz.z);
 			Matrix3f I = vol * 1.0f/12.0f * Matrix3f::Diag(sz2.y + sz2.z, sz2.x + sz2.z, sz2.x + sz2.y);
@@ -136,7 +136,7 @@ void CDConvex::AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float ep
 //			g_included++;
 		}
 		else{
-		// Ä•ªŠ„
+		// å†åˆ†å‰²
 			Vec3f cmin, cmax;
 			for(int i = 0; i < 2; i++)for(int j = 0; j < 2; j++)for(int k = 0; k < 2; k++){
 				cmin.x = (i == 0 ? bbmin.x : c.x);
@@ -149,7 +149,7 @@ void CDConvex::AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float ep
 			}
 		}
 	}
-	// Š®‘S‚ÉŠO
+	// å®Œå…¨ã«å¤–
 	else{
 
 	}

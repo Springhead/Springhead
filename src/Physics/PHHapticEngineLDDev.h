@@ -1,4 +1,4 @@
-#ifndef PH_HAPTICENGINE_LDDEV_H
+﻿#ifndef PH_HAPTICENGINE_LDDEV_H
 #define PH_HAPTICENGINE_LDDEV_H
 
 #include <Physics/PHHapticEngineMultiBase.h>

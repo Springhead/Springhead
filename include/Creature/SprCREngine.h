@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,27 +16,27 @@ namespace Spr{;
 
 struct CRCreatureIf;
 
-///	ƒNƒŠ[ƒ`ƒƒEƒGƒ“ƒWƒ“‚ÌŠî–{ƒNƒ‰ƒX
+///	ã‚¯ãƒªãƒ¼ãƒãƒ£ãƒ»ã‚¨ãƒ³ã‚¸ãƒ³ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
 struct CREngineIf : public SceneObjectIf{
 	SPR_IFDEF(CREngine);
 
-	/** @brief Às‡˜‚ğŒˆ‚ß‚éƒvƒ‰ƒCƒIƒŠƒeƒB’lD¬‚³‚¢‚Ù‚Ç‘‚¢
+	/** @brief å®Ÿè¡Œé †åºã‚’æ±ºã‚ã‚‹ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£å€¤ï¼å°ã•ã„ã»ã©æ—©ã„
 	 */
 	int GetPriority() const;
 
-	/** @brief ‰Šú‰»‚·‚é
+	/** @brief åˆæœŸåŒ–ã™ã‚‹
 	 */
 	void Init();
 
-	/** @brief ˆ—‚ğ‚PƒXƒeƒbƒv•ªÀs‚·‚é
+	/** @brief å‡¦ç†ã‚’ï¼‘ã‚¹ãƒ†ãƒƒãƒ—åˆ†å®Ÿè¡Œã™ã‚‹
 	 */
 	void Step();
 
-	/** @breif —LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @breif æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	*/
 	void Enable(bool enable);
 
-	/** @brief —LŒøE–³Œø‚©‚ğ•Ô‚·
+	/** @brief æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‹ã‚’è¿”ã™
 	*/
 	bool IsEnabled();
 };
@@ -44,14 +44,14 @@ struct CREngineIf : public SceneObjectIf{
 struct CREngineDesc{
 	SPR_DESCDEF(CREngine);
 
-	/// ƒNƒŠ[ƒ`ƒƒ‚Ìƒ‚ƒWƒ…[ƒ‹‚Ì•ª—Ş‚Æ—Dæ‡ˆÊ
-	///	100‚Ì”{”‚Í•ª—Ş‚ğ•\‚µAˆÈ‰º‚ÌˆÊ‚Í‚»‚Ì’†‚Å‚ÌÀs‡˜‚ğ‹K’è‚·‚é
+	/// ã‚¯ãƒªãƒ¼ãƒãƒ£ã®ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®åˆ†é¡ã¨å„ªå…ˆé †ä½
+	///	100ã®å€æ•°ã¯åˆ†é¡ã‚’è¡¨ã—ã€ä»¥ä¸‹ã®ä½ã¯ãã®ä¸­ã§ã®å®Ÿè¡Œé †åºã‚’è¦å®šã™ã‚‹
 	enum CREnginePriority {
-		// Š´ŠoŒn
+		// æ„Ÿè¦šç³»
 		CREP_SENSOR			= 100,
-		// s“®Œˆ’è
+		// è¡Œå‹•æ±ºå®š
 		CREP_DECISION		= 200,
-		// ‰^“®§Œä
+		// é‹å‹•åˆ¶å¾¡
 		CREP_CONTROLLER		= 300,
 	};
 

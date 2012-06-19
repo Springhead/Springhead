@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -71,7 +71,7 @@ void FWWin::Display(){
 	if(!scene)
 		return;
 
-	// GRScene‚ÉƒJƒƒ‰ƒtƒŒ[ƒ€‚ª–³‚¢ê‡‚Íƒgƒ‰ƒbƒNƒ{[ƒ‹‚ð’¼Úƒrƒ…[•ÏŠ·‚É”½‰f‚·‚é
+	// GRSceneã«ã‚«ãƒ¡ãƒ©ãƒ•ãƒ¬ãƒ¼ãƒ ãŒç„¡ã„å ´åˆã¯ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«ã‚’ç›´æŽ¥ãƒ“ãƒ¥ãƒ¼å¤‰æ›ã«åæ˜ ã™ã‚‹
 	if(!scene->GetGRScene() || !scene->GetGRScene()->GetCamera() || !scene->GetGRScene()->GetCamera()->GetFrame()){
 		render->SetViewMatrix(trackball->GetAffine().inv());
 	}
@@ -110,7 +110,7 @@ void FWWin::OnUpdatePose(HITrackballIf*){
 	if(!scene)
 		return;
 
-	// ƒgƒ‰ƒbƒNƒ{[ƒ‹‚ÆGRScene‚ÌƒJƒƒ‰ƒtƒŒ[ƒ€‚Ì“¯Šú
+	// ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«ã¨GRSceneã®ã‚«ãƒ¡ãƒ©ãƒ•ãƒ¬ãƒ¼ãƒ ã®åŒæœŸ
 	GRCameraIf* cam = GetScene()->GetGRScene()->GetCamera();
 	if(!cam)
 		return;

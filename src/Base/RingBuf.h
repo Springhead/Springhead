@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -9,7 +9,7 @@
 #define VR_BASE_RINGBUF_H
 #include "Env.h"
 #include <vector>
-/**	@file RingBuf.h ƒŠƒ“ƒOƒoƒbƒtƒ@(FIFO‚ğÀŒ»‚·‚é‚½‚ß‚ÌŠÂóƒoƒbƒtƒ@)ƒNƒ‰ƒX‚Ì’è‹`*/
+/**	@file RingBuf.h ãƒªãƒ³ã‚°ãƒãƒƒãƒ•ã‚¡(FIFOã‚’å®Ÿç¾ã™ã‚‹ãŸã‚ã®ç’°çŠ¶ãƒãƒƒãƒ•ã‚¡)ã‚¯ãƒ©ã‚¹ã®å®šç¾©*/
 namespace Spr {
 
 

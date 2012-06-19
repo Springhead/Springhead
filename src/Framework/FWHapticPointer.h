@@ -1,4 +1,4 @@
-#ifndef FW_HAPTICPOINTER_H
+ï»¿#ifndef FW_HAPTICPOINTER_H
 #define FW_HAPTICPOINTER_H
 
 #include <Springhead.h>
@@ -20,9 +20,9 @@ public:
 	PHHapticPointerIf* GetPHHapticPointer(){ return hapticPointer; }
 	void SetHumanInterface(HIBaseIf* hi){ humanInterface = hi; }
 	HIBaseIf* GetHumanInterface(){ return humanInterface; }
-	/** @breif—ÍŠoƒCƒ“ƒ^ƒtƒF[ƒX‚©‚çó‘Ô‚ğæ“¾‚µAPHHapticPointer‚É”½‰f‚³‚¹‚é
-		@param hpLocal ƒ}ƒ‹ƒ`ƒŒ[ƒg‚Ìê‡‚Í‚‘¬XV‘¤‚ÌPHHapticPointer‚ğİ’è
-		@param dt HumanInterface‚ÌXVŠÔ
+	/** @breifåŠ›è¦šã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‹ã‚‰çŠ¶æ…‹ã‚’å–å¾—ã—ã€PHHapticPointerã«åæ˜ ã•ã›ã‚‹
+		@param hpLocal ãƒãƒ«ãƒãƒ¬ãƒ¼ãƒˆã®å ´åˆã¯é«˜é€Ÿæ›´æ–°å´ã®PHHapticPointerã‚’è¨­å®š
+		@param dt HumanInterfaceã®æ›´æ–°æ™‚é–“
 	 */
 	void UpdateHumanInterface(PHHapticPointer* hpLocal, float dt);
 	Vec3d GetHapticForce(){ return hapticForce.v(); }

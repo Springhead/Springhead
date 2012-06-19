@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,67 +8,67 @@
 #include "SampleModel.h"
 
 PHSolidIf* CreateBox(FWSdkIf* fwSdk){
-	// „‘Ì‚Ìì¬
+	// å‰›ä½“ã®ä½œæˆ
 	PHSolidDesc desc;
 	desc.mass = 0.05;
 	desc.inertia *= 0.033;
 	PHSolidIf* soBox = fwSdk->GetScene(0)->GetPHScene()->CreateSolid(desc);
-	// Œ`ó‚Ìì¬
+	// å½¢çŠ¶ã®ä½œæˆ
 	CDBoxDesc bd;
 	bd.boxsize = Vec3f(2,2,2);
 	CDShapeIf* shapeBox = fwSdk->GetPHSdk()->CreateShape(bd);
-	// „‘Ì‚ÉŒ`ó‚ð•t‰Á
+	// å‰›ä½“ã«å½¢çŠ¶ã‚’ä»˜åŠ 
 	soBox->AddShape(shapeBox);
 	soBox->SetFramePosition(Vec3d(0, 10, 0));
 	return soBox;
 }
 
 PHSolidIf* CreateSphere(FWSdkIf* fwSdk){
-	// „‘Ì‚Ìì¬
+	// å‰›ä½“ã®ä½œæˆ
 	PHSolidDesc desc;
 	desc.mass = 0.05;
 	desc.inertia *= 0.03;
 	PHSolidIf* soSphere = fwSdk->GetScene(0)->GetPHScene()->CreateSolid(desc);
-	// Œ`ó‚Ìì¬
+	// å½¢çŠ¶ã®ä½œæˆ
 	CDSphereDesc sd;
 	sd.radius = 2.0;
 	CDShapeIf* shapeSphere = fwSdk->GetPHSdk()->CreateShape(sd);
-	// „‘Ì‚ÉŒ`ó‚ð•t‰Á‚·‚é
+	// å‰›ä½“ã«å½¢çŠ¶ã‚’ä»˜åŠ ã™ã‚‹
 	soSphere->AddShape(shapeSphere);
 	soSphere->SetFramePosition(Vec3d(0, 15, 0));
 	return soSphere;
 }
 
 PHSolidIf* CreateCapsule(FWSdkIf* fwSdk){
-	// „‘Ì‚Ìì¬
+	// å‰›ä½“ã®ä½œæˆ
 	PHSolidDesc desc;
 	desc.mass = 0.05;
 	desc.inertia *= 1;
 	PHSolidIf*  soCapsule = fwSdk->GetScene(0)->GetPHScene()->CreateSolid(desc);
-	// Œ`ó‚Ìì¬
+	// å½¢çŠ¶ã®ä½œæˆ
 	CDCapsuleDesc cd;
 	cd.length = 3.0;
 	cd.radius = 1.0;
 	CDShapeIf* shapeCapsule = fwSdk->GetPHSdk()->CreateShape(cd);
-	// „‘Ì‚ÉŒ`ó‚ð•t‰Á‚·‚é
+	// å‰›ä½“ã«å½¢çŠ¶ã‚’ä»˜åŠ ã™ã‚‹
 	soCapsule->AddShape(shapeCapsule);
 	soCapsule->SetFramePosition(Vec3d(0, 15, 0));
 	return soCapsule;
 }
 
 PHSolidIf* CreateRoundCone(FWSdkIf* fwSdk){
-	// „‘Ì‚Ìì¬
+	// å‰›ä½“ã®ä½œæˆ
 	PHSolidDesc desc;
 	desc.mass = 0.05;
 	desc.inertia *= 1;
 	PHSolidIf*  soRCone = fwSdk->GetScene(0)->GetPHScene()->CreateSolid(desc);
-	// Œ`ó‚Ìì¬
+	// å½¢çŠ¶ã®ä½œæˆ
 	CDRoundConeDesc rd;
 	rd.length = 3.0;
 	rd.radius[0] = 1.5;
 	rd.radius[1] = 0.5;
 	CDShapeIf* shapeRCone = fwSdk->GetPHSdk()->CreateShape(rd);
-	// „‘Ì‚ÉŒ`ó‚ð•t‰Á‚·‚é
+	// å‰›ä½“ã«å½¢çŠ¶ã‚’ä»˜åŠ ã™ã‚‹
 	soRCone->AddShape(shapeRCone);
 	soRCone->SetFramePosition(Vec3d(0, 15, 0));
 	return soRCone;

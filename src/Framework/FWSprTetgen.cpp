@@ -1,4 +1,4 @@
-#ifndef FWSPRTETGEN_H
+ï»¿#ifndef FWSPRTETGEN_H
 #define FWSPRTETGEN_H
 #include <Base/Affine.h>
 #include <Graphics/SprGRMesh.h>
@@ -7,22 +7,22 @@
 
 namespace Spr{;
 
-static UTDllLoader dllLoader("sprTetgen.dll", ".;$(SPRINGHEAD2)\\bin\\win32");	//	ƒOƒ[ƒoƒ‹•Ï”‚Åƒ[ƒ_[‚ğì‚éD
+static UTDllLoader dllLoader("sprTetgen.dll", ".;$(SPRINGHEAD2)\\bin\\win32");	//	ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã§ãƒ­ãƒ¼ãƒ€ãƒ¼ã‚’ä½œã‚‹ï¼
 
-#define DLLFUNC_CTYPE	__cdecl						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	bool						//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	sprTetgen					//	ŠÖ”–¼
-#define DLLFUNC_STR		"sprTetgen"					//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(int& nVtxsOut, Spr::Vec3d*& vtxsOut, int& nTetsOut, int*& tetsOut, int nVtxsIn, Spr::Vec3d* vtxsIn, int nFacesIn, Spr::GRMeshFace* facesIn, char* option)		//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(nVtxsOut, vtxsOut, nTetsOut, tetsOut, nVtxsIn, vtxsIn, nFacesIn, facesIn, option)						//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	__cdecl						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	bool						//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	sprTetgen					//	é–¢æ•°å
+#define DLLFUNC_STR		"sprTetgen"					//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(int& nVtxsOut, Spr::Vec3d*& vtxsOut, int& nTetsOut, int*& tetsOut, int nVtxsIn, Spr::Vec3d* vtxsIn, int nFacesIn, Spr::GRMeshFace* facesIn, char* option)		//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(nVtxsOut, vtxsOut, nTetsOut, tetsOut, nVtxsIn, vtxsIn, nFacesIn, facesIn, option)						//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
-#define DLLFUNC_CTYPE	__cdecl						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	void						//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	sprTetgenFree				//	ŠÖ”–¼
-#define DLLFUNC_STR		"sprTetgenFree"				//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(Vec3d* vtxOut, int* tetsOut)	//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(vtxOut, tetsOut)				//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	__cdecl						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	void						//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	sprTetgenFree				//	é–¢æ•°å
+#define DLLFUNC_STR		"sprTetgenFree"				//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(Vec3d* vtxOut, int* tetsOut)	//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(vtxOut, tetsOut)				//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 

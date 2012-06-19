@@ -1,4 +1,4 @@
-#ifndef DRUSBH8SIMPLEDEF_H
+﻿#ifndef DRUSBH8SIMPLEDEF_H
 #define DRUSBH8SIMPLEDEF_H
 
 ///////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@
 #define IOCTL_SPIDAR_PUT_DATA\
             SPIDAR_MAKE_IOCTL(SPIDAR_DEVICE_TYPE, 2)
 
-    // TODO:  ���[�U��A�v���P�[�V�����Ƃ̒ʐM�ɗp������f�[�^�\���������ɋL�q���܂��B
+    // TODO:  ユーザ･アプリケーションとの通信に用いられるデータ構造をここに記述します。
 
 
 #endif

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,20 +13,20 @@ FWGLUISample::FWGLUISample(){
 }
 
 void FWGLUISample::Init(int argc, char* argv[]){
-	/// SDKì¬
+	/// SDKä½œæˆ
 	CreateSdk();
 
-	/// ƒOƒ‰ƒtƒBƒNƒX‚ðGLUI‚Å‰Šú‰»
+	/// ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹ã‚’GLUIã§åˆæœŸåŒ–
 	GRInit(argc, argv, TypeGLUI);
 
-	/// Scene‚Ìì¬
+	/// Sceneã®ä½œæˆ
 	GetSdk()->CreateScene();
 	
 	FWWinDesc windowDesc;
 	windowDesc.title = "FWGLUISample";
 	CreateWin(windowDesc);
 	
-	/// ƒ^ƒCƒ}‚ðì¬
+	/// ã‚¿ã‚¤ãƒžã‚’ä½œæˆ
 	CreateTimer();
 }
 
@@ -35,32 +35,32 @@ void FWGLUISample::CreateObjects(){
 	PHSolidDesc desc;
 	CDBoxDesc bd;
 
-	// °(•¨—–@‘¥‚É]‚í‚È‚¢C‰^“®‚ª•Ï‰»‚µ‚È‚¢)
+	// åºŠ(ç‰©ç†æ³•å‰‡ã«å¾“ã‚ãªã„ï¼Œé‹å‹•ãŒå¤‰åŒ–ã—ãªã„)
 	{
-		// „‘Ì(soFloor)‚Ìì¬
+		// å‰›ä½“(soFloor)ã®ä½œæˆ
 		desc.mass = 1e20f;
 		desc.inertia *= 1e30f;
-		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// „‘Ì‚ðdesc‚ÉŠî‚Ã‚¢‚Äì¬
+		PHSolidIf* soFloor = phscene->CreateSolid(desc);		// å‰›ä½“ã‚’descã«åŸºã¥ã„ã¦ä½œæˆ
 		soFloor->SetDynamical(false);
 		soFloor->SetGravity(false);
-		// Œ`ó(shapeFloor)‚Ìì¬
+		// å½¢çŠ¶(shapeFloor)ã®ä½œæˆ
 		bd.boxsize = Vec3f(50, 10, 50);
 		CDShapeIf* shapeFloor = GetSdk()->GetPHSdk()->CreateShape(bd);
-		// „‘Ì‚ÉŒ`ó‚ð•t‰Á‚·‚é
+		// å‰›ä½“ã«å½¢çŠ¶ã‚’ä»˜åŠ ã™ã‚‹
 		soFloor->AddShape(shapeFloor);
 		soFloor->SetFramePosition(Vec3d(0, -5, 0));
 	}
 
-	// ” (•¨—–@‘¥‚É]‚¤C‰^“®‚ª•Ï‰»)
+	// ç®±(ç‰©ç†æ³•å‰‡ã«å¾“ã†ï¼Œé‹å‹•ãŒå¤‰åŒ–)
 	{
-		// „‘Ì(soBox)‚Ìì¬
+		// å‰›ä½“(soBox)ã®ä½œæˆ
 		desc.mass = 0.5;
 		desc.inertia *= 0.033;
 		PHSolidIf* soBox = phscene->CreateSolid(desc);
-		// Œ`ó(shapeBox)‚Ìì¬
+		// å½¢çŠ¶(shapeBox)ã®ä½œæˆ
 		bd.boxsize = Vec3f(2,2,2);
 		CDShapeIf* shapeBox = GetSdk()->GetPHSdk()->CreateShape(bd);
-		// „‘Ì‚ÉŒ`ó‚ð•t‰Á
+		// å‰›ä½“ã«å½¢çŠ¶ã‚’ä»˜åŠ 
 		soBox->AddShape(shapeBox);
 		soBox->SetFramePosition(Vec3d(0, 10, 0));
 	}

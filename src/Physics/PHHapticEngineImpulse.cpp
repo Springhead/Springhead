@@ -1,11 +1,11 @@
-#include <Physics/PHHapticEngineImpulse.h>
+ï»¿#include <Physics/PHHapticEngineImpulse.h>
 
 namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHHapticLoopImpulse
 
-// 1/7‚Í‚±‚±‚©‚ç
+// 1/7ã¯ã“ã“ã‹ã‚‰
 void PHHapticLoopImpulse::Step(){
 	UpdateInterface();
 	HapticRendering();
@@ -42,23 +42,23 @@ void PHHapticEngineImpulse::Step2(){
 
 void PHHapticEngineImpulse::SyncHaptic2Physic(){
 	// physics <------ haptic
-	// PHSolidForHaptic‚Ì“¯Šú
-	// PHSolidPairForHaptic(—ÍŠoƒ|ƒCƒ“ƒ^‚Æ‹ß–T‚Ì•¨‘Ì)‚ÌŠeíî•ñ‚Ì“¯Šú
+	// PHSolidForHapticã®åŒæœŸ
+	// PHSolidPairForHaptic(åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã¨è¿‘å‚ã®ç‰©ä½“)ã®å„ç¨®æƒ…å ±ã®åŒæœŸ
 	for(int i = 0; i < hapticLoop->NHapticPointers(); i++){
 		PHHapticPointer* hpointer = hapticLoop->GetHapticPointer(i);
 		int hpointerID = hpointer->GetPointerID();
 		int nNeighbors = hpointer->neighborSolidIDs.size();
-		// ‹ß–T•¨‘Ì‚Å‚ ‚éƒyƒA‚¾‚¯“¯Šú
+		// è¿‘å‚ç‰©ä½“ã§ã‚ã‚‹ãƒšã‚¢ã ã‘åŒæœŸ
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = hpointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(solidID, hpointerID);
 			PHSolidPairForHaptic* ppair = GetSolidPairForHaptic(solidID, hpointerID);
 			PHSolidPairForHapticSt* hst = (PHSolidPairForHapticSt*)hpair;
 			PHSolidPairForHapticSt* pst = (PHSolidPairForHapticSt*)ppair;
-			*pst = *hst;	// haptic‘¤‚Å•Û‚µ‚Ä‚¨‚­‚×‚«î•ñ‚ğ“¯Šú
+			*pst = *hst;	// hapticå´ã§ä¿æŒã—ã¦ãŠãã¹ãæƒ…å ±ã‚’åŒæœŸ
 		}
 	}
-	// ƒŒƒ“ƒ_ƒŠƒ“ƒO‚µ‚½—Í‚ğƒV[ƒ“‚É”½‰f
+	// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã—ãŸåŠ›ã‚’ã‚·ãƒ¼ãƒ³ã«åæ˜ 
 	for(int i = 0; i < (int)hapticLoop->NHapticSolids(); i++){
 		PHSolidForHaptic* hsolid = hapticLoop->GetHapticSolid(i);
 		if(hsolid->bPointer) continue;
@@ -72,15 +72,15 @@ void PHHapticEngineImpulse::SyncHaptic2Physic(){
 
 void PHHapticEngineImpulse::SyncPhysic2Haptic(){
 	// haptic <------ physics
-	// PHSolidForHaptic‚Ì“¯Šú
+	// PHSolidForHapticã®åŒæœŸ
 	for(int i = 0; i < NHapticSolids(); i++){
 		PHSolidForHaptic* psolid = GetHapticSolid(i);
 		PHSolidForHaptic* hsolid = hapticLoop->GetHapticSolid(i);
-		*psolid->GetLocalSolid() = *psolid->sceneSolid;	//	impulse‚Ìê‡‚Ííscene‚ÅŠÇ—‚³‚ê‚Ä‚¢‚ésolid‚Æ“¯Šú				
-		*hsolid = PHSolidForHaptic(*psolid);			// LocalDynamics‚Ìê‡‚Ídosim‚É‚æ‚Á‚Ä“¯Šúî•ñ‚ğ‚©‚¦‚é•K—v‚ª‚ ‚é
+		*psolid->GetLocalSolid() = *psolid->sceneSolid;	//	impulseã®å ´åˆã¯å¸¸æ™‚sceneã§ç®¡ç†ã•ã‚Œã¦ã„ã‚‹solidã¨åŒæœŸ				
+		*hsolid = PHSolidForHaptic(*psolid);			// LocalDynamicsã®å ´åˆã¯dosimã«ã‚ˆã£ã¦åŒæœŸæƒ…å ±ã‚’ã‹ãˆã‚‹å¿…è¦ãŒã‚ã‚‹
 	}
-	// solidpair, shapepair‚Ì“¯Šú
-	// ‹ß–T•¨‘Ì‚Ì‚İ“¯Šú‚³‚¹‚é
+	// solidpair, shapepairã®åŒæœŸ
+	// è¿‘å‚ç‰©ä½“ã®ã¿åŒæœŸã•ã›ã‚‹
 	for(int i = 0; i < NHapticPointers(); i++){
 		PHHapticPointer* ppointer = GetHapticPointer(i);
 		const int ppointerID = ppointer->GetPointerID();

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -122,7 +122,7 @@ void GRBlendMesh::CreateList(GRRenderIf* r){
 		std::vector<GRVertexElement::VFC4bP3fB4f> vtx;
 		vtx.resize(vtxsize);
 		for (unsigned i=0; i<positions.size(); ++i){ vtx[i].p = positions[i]; }
-		for (unsigned i=0; i<colors.size(); ++i){									// VFC4fP3fB4f �ɂ���΁H
+		for (unsigned i=0; i<colors.size(); ++i){									// VFC4fP3fB4f にすれば？
 			vtx[i].c = ((unsigned char)(colors[i].x*255) << 24) |
 			 		   ((unsigned char)(colors[i].y*255) << 16) |
 					   ((unsigned char)(colors[i].z*255) << 8) |

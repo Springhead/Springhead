@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -99,17 +99,17 @@ void DRUsbH8Simple::Update(){
 	for(int i = 0; i < 64; i++) PutData[i] = 0;
 	for(int i = 0; i < 64; i++) GetData[i] = 0;
 	PutData[16] = 5;
-	//	D/Ao—Íƒf[ƒ^‚Ìì¬
+	//	D/Aå‡ºåŠ›ãƒ‡ãƒ¼ã‚¿ã®ä½œæˆ
 	for(int i = 0; i < 8; i++){
 		int value = daOut[i];
 		PutData[i*2] = value >> 8;
 		PutData[i*2+1] = value & 0xFF;
 	}
-	//	D/Ao—Í
+	//	D/Aå‡ºåŠ›
 	DeviceIoControl(hSpidar, IOCTL_SPIDAR_PUT_DATA, PutData, 64, NULL, 0, &length, NULL);
-	//	Counter“ü—Í
+	//	Counterå…¥åŠ›
 	DeviceIoControl(hSpidar, IOCTL_SPIDAR_GET_DATA, NULL, 0, GetData, 64, &length, NULL);
-	//	Counterƒf[ƒ^‚Ìæ“¾
+	//	Counterãƒ‡ãƒ¼ã‚¿ã®å–å¾—
 	for(int i = 0; i < 8; i++){
 		int value = GetData[i*4] * 256 + GetData[i*4+1] + GetData[i*4+3] * 65536;
 		if(GetData[i*4+3] & 0x80){

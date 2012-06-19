@@ -1,4 +1,4 @@
-#ifndef VRMLPARSER_H
+ï»¿#ifndef VRMLPARSER_H
 #define VRMLPARSER_H
 
 #ifdef USE_HDRSTOP
@@ -37,7 +37,7 @@ public:
 
 protected:
 	void Init();
-	//	•Û‘¶ˆ—‚Ìƒnƒ“ƒhƒ‰[
+	//	ä¿å­˜å‡¦ç†ã®ãƒãƒ³ãƒ‰ãƒ©ãƒ¼
 /*
 	virtual void OnSaveFileStart(FISaveContext* sc);
 	virtual void OnSaveNodeStart(FISaveContext* sc);

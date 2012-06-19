@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,44 +14,44 @@ namespace Spr{;
 
 class PHShapePairForPenalty : public CDShapePair{
 public:
-	///@name	R—Í‚ÌŒvZ
+	///@name	æŠ—åŠ›ã®è¨ˆç®—
 	//@{
-	float area;							///<	Œğ·•”‚Ì–ÊÏ
-	Vec3f reflexSpringForce;			///<	‚Î‚Ë‚É‚æ‚éR—Í
-	Vec3f reflexDamperForce;			///<	ƒ_ƒ“ƒp[‚É‚æ‚éR—Í
-	Vec3f reflexSpringTorque;			///<	‚Î‚Ë‚É‚æ‚éRƒgƒ‹ƒN(commonPointŒn)
-	Vec3f reflexDamperTorque;			///<	ƒ_ƒ“ƒp[‚É‚æ‚éRƒgƒ‹ƒN(commonPointŒn)
-	Vec3f reflexForcePoint;				///<	R—Í‚Ìì—p“_(commonPointŒn)
+	float area;							///<	äº¤å·®éƒ¨ã®é¢ç©
+	Vec3f reflexSpringForce;			///<	ã°ã­ã«ã‚ˆã‚‹æŠ—åŠ›
+	Vec3f reflexDamperForce;			///<	ãƒ€ãƒ³ãƒ‘ãƒ¼ã«ã‚ˆã‚‹æŠ—åŠ›
+	Vec3f reflexSpringTorque;			///<	ã°ã­ã«ã‚ˆã‚‹æŠ—ãƒˆãƒ«ã‚¯(commonPointç³»)
+	Vec3f reflexDamperTorque;			///<	ãƒ€ãƒ³ãƒ‘ãƒ¼ã«ã‚ˆã‚‹æŠ—ãƒˆãƒ«ã‚¯(commonPointç³»)
+	Vec3f reflexForcePoint;				///<	æŠ—åŠ›ã®ä½œç”¨ç‚¹(commonPointç³»)
 	//@}
 
-	///@name	–€C‚ÌŒvZ
+	///@name	æ‘©æ“¦ã®è¨ˆç®—
 	//@{
-	Vec3f transFrictionBase[2];			///<	•ÀiÃ~–€C—pƒoƒl‚Ì’[“_(ƒ[ƒJƒ‹ƒtƒŒ[ƒ€Œn)
-	float rotSpring;					///<	‰ñ“]‚Î‚Ë‚ÌL‚Ñ(ƒ‰ƒWƒAƒ“)
-	Vec3f dynaFric;						///<	“®–€C—Í
-	Vec3f dynaFricMom;					///<	“®–€C—Í‚Ìƒ‚[ƒƒ“ƒg(commonPointŒn)
-	Vec3f frictionForce;				///<	–€C—Í
-	Vec3f frictionTorque;				///<	–€Cƒgƒ‹ƒN(–€C—Í‚Ìì—p“_  (reflexForcePoint+commonPoint)Œn)
+	Vec3f transFrictionBase[2];			///<	ä¸¦é€²é™æ­¢æ‘©æ“¦ç”¨ãƒãƒã®ç«¯ç‚¹(ãƒ­ãƒ¼ã‚«ãƒ«ãƒ•ãƒ¬ãƒ¼ãƒ ç³»)
+	float rotSpring;					///<	å›è»¢ã°ã­ã®ä¼¸ã³(ãƒ©ã‚¸ã‚¢ãƒ³)
+	Vec3f dynaFric;						///<	å‹•æ‘©æ“¦åŠ›
+	Vec3f dynaFricMom;					///<	å‹•æ‘©æ“¦åŠ›ã®ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆ(commonPointç³»)
+	Vec3f frictionForce;				///<	æ‘©æ“¦åŠ›
+	Vec3f frictionTorque;				///<	æ‘©æ“¦ãƒˆãƒ«ã‚¯(æ‘©æ“¦åŠ›ã®ä½œç”¨ç‚¹ ï¼ (reflexForcePoint+commonPoint)ç³»)
 	enum FrictionState{ STATIC, DYNAMIC };
-	FrictionState frictionState;		///<	–€C‚Ìó‘Ô
+	FrictionState frictionState;		///<	æ‘©æ“¦ã®çŠ¶æ…‹
 	//@}
 
 	void Clear();
 	
-	///@name	â‘ÎÀ•WŒn‚Å‚Ì“Ç‚İo‚µ
+	///@name	çµ¶å¯¾åº§æ¨™ç³»ã§ã®èª­ã¿å‡ºã—
 	//@{
-	///	ƒoƒl‚É‚æ‚éR—Í‚Ìì—p“_
+	///	ãƒãƒã«ã‚ˆã‚‹æŠ—åŠ›ã®ä½œç”¨ç‚¹
 	Vec3f GetReflexForcePoint(){ return reflexForcePoint + commonPoint;}
-	///	ƒoƒl‚É‚æ‚éR—Í
+	///	ãƒãƒã«ã‚ˆã‚‹æŠ—åŠ›
 	Vec3f GetReflexSpringForce(){ return reflexSpringForce;}
-	///	ƒ_ƒ“ƒp‚É‚æ‚éR—Í
+	///	ãƒ€ãƒ³ãƒ‘ã«ã‚ˆã‚‹æŠ—åŠ›
 	Vec3f GetReflexDamperForce(){ return reflexDamperForce;}
-	///	R—Í
+	///	æŠ—åŠ›
 	Vec3f GetReflexForce(){ return reflexSpringForce + reflexDamperForce;}
 
-	///	–€C—Í
+	///	æ‘©æ“¦åŠ›
 	Vec3f GetFrictionForce(){ return frictionForce; }
-	///	–€Cƒgƒ‹ƒN
+	///	æ‘©æ“¦ãƒˆãƒ«ã‚¯
 	Vec3f GetFrictionTorque(){ return frictionTorque + (GetReflexForcePoint()^frictionForce); }
 	//@}
 };
@@ -63,33 +63,33 @@ public:
 	typedef base_type::shapepair_type shapepair_type;
 	typedef base_type::engine_type engine_type;
 
-	Vec3f cocog;					///<	2„‘Ì‚ÌdS‚Ì’†“_(â‘ÎŒn)
-	Vec3f reflexForce;				///<	R—Í
-	Vec3f reflexTorque;				///<	R—Í‚É‚æ‚éƒgƒ‹ƒN(cocogŒn)
-	Vec3f frictionForce;			///<	–€C—Í
-	Vec3f frictionTorque;			///<	–€C—Í‚É‚æ‚éƒgƒ‹ƒN(cocogŒn)
-	float convertedMass;			///<	„‘Ì‚Ì‘g‚ÌŠ·Z¿—Ê
-	float area;						///<	ÚG–ÊÏ
-	Quaternionf lastOri[2];			///<	‘O‰ñ‚Ì„‘Ì‚ÌŒü‚«(â‘ÎŒn)
+	Vec3f cocog;					///<	2å‰›ä½“ã®é‡å¿ƒã®ä¸­ç‚¹(çµ¶å¯¾ç³»)
+	Vec3f reflexForce;				///<	æŠ—åŠ›
+	Vec3f reflexTorque;				///<	æŠ—åŠ›ã«ã‚ˆã‚‹ãƒˆãƒ«ã‚¯(cocogç³»)
+	Vec3f frictionForce;			///<	æ‘©æ“¦åŠ›
+	Vec3f frictionTorque;			///<	æ‘©æ“¦åŠ›ã«ã‚ˆã‚‹ãƒˆãƒ«ã‚¯(cocogç³»)
+	float convertedMass;			///<	å‰›ä½“ã®çµ„ã®æ›ç®—è³ªé‡
+	float area;						///<	æ¥è§¦é¢ç©
+	Quaternionf lastOri[2];			///<	å‰å›ã®å‰›ä½“ã®å‘ã(çµ¶å¯¾ç³»)
 
-	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< Œğ·‚ªŒŸ’m‚³‚ê‚½‚Æ‚«‚Ìˆ—
+	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< äº¤å·®ãŒæ¤œçŸ¥ã•ã‚ŒãŸã¨ãã®å‡¦ç†
 
 	void Setup(unsigned int ct, double dt);
 	void GenerateForce();
 
-	///@name	â‘ÎŒn‚Å‚Ì“Ç‚İo‚µ
+	///@name	çµ¶å¯¾ç³»ã§ã®èª­ã¿å‡ºã—
 	//@{
-	///	R—Í
+	///	æŠ—åŠ›
 	Vec3f GetReflexForce(){ return reflexForce; }
-	///	R—Í‚Ìƒgƒ‹ƒN
+	///	æŠ—åŠ›ã®ãƒˆãƒ«ã‚¯
 	Vec3f GetReflexTorque(){ return reflexTorque + (cocog^reflexForce); }
-	///	–€C—Í
+	///	æ‘©æ“¦åŠ›
 	Vec3f GetFrictionForce(){ return frictionForce; }
-	///	–€C—Í‚Ìƒgƒ‹ƒN
+	///	æ‘©æ“¦åŠ›ã®ãƒˆãƒ«ã‚¯
 	Vec3f GetFrictionTorque(){ return frictionTorque + (cocog^frictionForce); }
 	//@}
 	
-	///	—Í‚ÌÅ‘å’l‚ğ§–ñ‚·‚éD
+	///	åŠ›ã®æœ€å¤§å€¤ã‚’åˆ¶ç´„ã™ã‚‹ï¼
 	void LimitForces(){
 		bool b = false;
 		b |= LimitForce(reflexForce);

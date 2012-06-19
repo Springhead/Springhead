@@ -1,4 +1,4 @@
-#ifndef SPREPInterpreter_H
+﻿#ifndef SPREPInterpreter_H
 #define SPREPInterpreter_H
 
 #include <EmbPython/EmbPython.h>

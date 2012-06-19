@@ -1,4 +1,4 @@
-#include "#{APPLICATIONNAME}.h"
+ï»¿#include "#{APPLICATIONNAME}.h"
 #include <iostream>
 #include <ctime>
 #include <string>
@@ -20,11 +20,11 @@
 void #{APPLICATIONNAME}::Init(int argc, char* argv[]){
 	FWAppGLUT::Init(argc, argv);
 
-	GetSdk()->Clear();											// SDK‚Ìì¬
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Scene‚Ìì¬
+	GetSdk()->Clear();											// SDKã®ä½œæˆ
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Sceneã®ä½œæˆ
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 
-	DesignObject();												// „‘Ì‚ğì¬
+	DesignObject();												// å‰›ä½“ã‚’ä½œæˆ
 
 	phscene->SetGravity(gravity);				
 	phscene->SetTimeStep(dt);
@@ -39,11 +39,11 @@ void #{APPLICATIONNAME}::Init(int argc, char* argv[]){
 }
 
 void #{APPLICATIONNAME}::Reset(){
-	GetSdk()->Clear();											// SDK‚Ìì¬
-	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Scene‚Ìì¬
+	GetSdk()->Clear();											// SDKã®ä½œæˆ
+	GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());		// Sceneã®ä½œæˆ
 	PHSceneIf* phscene = GetSdk()->GetScene()->GetPHScene();
 
-	DesignObject();												// „‘Ì‚ğì¬
+	DesignObject();												// å‰›ä½“ã‚’ä½œæˆ
 
 	phscene->SetGravity(gravity);				
 	phscene->SetTimeStep(dt);
@@ -74,7 +74,7 @@ void #{APPLICATIONNAME}::InitCameraView(){
 void #{APPLICATIONNAME}::DesignObject(){
 	// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 	// 
-	// ƒV[ƒ“‚Ì“à—e‚Í‚±‚±‚Åì¬‚µ‚Ü‚·D
+	// ã‚·ãƒ¼ãƒ³ã®å†…å®¹ã¯ã“ã“ã§ä½œæˆã—ã¾ã™ï¼
 	// 
 	// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 }
@@ -90,17 +90,17 @@ void #{APPLICATIONNAME}::Step(){
 }
 
 void #{APPLICATIONNAME}::Display(){
-	// •`‰æ‚Ìİ’è
+	// æç”»ã®è¨­å®š
 	GetSdk()->SetDebugMode(true);
 	GRDebugRenderIf* render = window->render->Cast();
 
-	// •`‰æƒ‚[ƒh‚Ìİ’è
+	// æç”»ãƒ¢ãƒ¼ãƒ‰ã®è¨­å®š
 	render->SetRenderMode(true, false);
 	// render->EnableRenderAxis(bDebug);
 	render->EnableRenderForce(bDebug);
 	render->EnableRenderContact(bDebug);
 
-	// ƒJƒƒ‰À•W‚Ìw’è
+	// ã‚«ãƒ¡ãƒ©åº§æ¨™ã®æŒ‡å®š
 	GRCameraIf* cam = window->scene->GetGRScene()->GetCamera();
 	if (cam && cam->GetFrame()){
 		cam->GetFrame()->SetTransform(cameraInfo.view);
@@ -108,7 +108,7 @@ void #{APPLICATIONNAME}::Display(){
 		window->render->SetViewMatrix(cameraInfo.view.inv());
 	}
 
-	// •`‰æ‚ÌÀs
+	// æç”»ã®å®Ÿè¡Œ
 	if(!GetCurrentWin()) return;
 	GRRenderIf*curRender =  GetCurrentWin()->GetRender();
 	FWSceneIf* curScene = GetCurrentWin()->GetScene();
@@ -122,14 +122,14 @@ void #{APPLICATIONNAME}::Display(){
 
 	if (curScene) curScene->Draw(curRender, GetSdk()->GetDebugMode());
 
-	//	ŒõŒ¹‚Ì’Ç‰Á
+	//	å…‰æºã®è¿½åŠ 
 	GRLightDesc ld;
 	ld.diffuse = Vec4f(1,1,1,1) * 0.8f;
 	ld.specular = Vec4f(1,1,1,1) * 0.8f;
 	ld.ambient = Vec4f(1,1,1,1) * 0.4f;
 	ld.position = Vec4f(1,1,1,0);
 	render->PushLight(ld);
-	render->PopLight();	//	ŒõŒ¹‚Ìíœ
+	render->PopLight();	//	å…‰æºã®å‰Šé™¤
 
 	curRender->EndScene();
 	glutSwapBuffers();
@@ -181,7 +181,7 @@ void #{APPLICATIONNAME}::Keyboard(int key, int x, int y){
 
 			// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 			// 
-			// “Æ©‚ÌƒL[ƒtƒ@ƒ“ƒNƒVƒ‡ƒ“‚Í‚±‚±‚Å’è‹`‚µ‚Ü‚·D
+			// ç‹¬è‡ªã®ã‚­ãƒ¼ãƒ•ã‚¡ãƒ³ã‚¯ã‚·ãƒ§ãƒ³ã¯ã“ã“ã§å®šç¾©ã—ã¾ã™ï¼
 			// 
 			// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 

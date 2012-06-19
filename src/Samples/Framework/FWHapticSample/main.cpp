@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,17 +7,17 @@
  */
 
 /*
-	—ÍŠoƒCƒ“ƒ^ƒtƒF[ƒX‚ðŽg‚¢Aƒo[ƒ`ƒƒƒ‹¢ŠE‚Æ—ÍŠoƒCƒ“ƒ^ƒ‰ƒNƒVƒ‡ƒ“‚ª‚Å‚«‚éƒTƒ“ƒvƒ‹
-	ƒL[“ü—Í
-	1:—ÍŠoƒŒƒ“ƒ_ƒŠƒ“ƒOƒ‚[ƒh‚ðƒyƒiƒ‹ƒeƒB
-	2:—ÍŠoƒŒƒ“ƒ_ƒŠƒ“ƒOƒ‚[ƒh‚ðƒvƒƒLƒV‚É
-	c:ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“
-	f:—ÍŠo’ñŽ¦‚ÌON/OFF
-	v:U“®’ñŽ¦‚ÌON/OFF
-	d:ƒfƒoƒbƒN•\Ž¦
-	a:ƒoƒlŒW”‚ð100up
-	z:ƒoƒlŒW”‚ð100down
-	space:„‘Ì‚ð¶¬‚·‚é
+	åŠ›è¦šã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã‚’ä½¿ã„ã€ãƒãƒ¼ãƒãƒ£ãƒ«ä¸–ç•Œã¨åŠ›è¦šã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ã‚·ãƒ§ãƒ³ãŒã§ãã‚‹ã‚µãƒ³ãƒ—ãƒ«
+	ã‚­ãƒ¼å…¥åŠ›
+	1:åŠ›è¦šãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãƒ¢ãƒ¼ãƒ‰ã‚’ãƒšãƒŠãƒ«ãƒ†ã‚£
+	2:åŠ›è¦šãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ãƒ¢ãƒ¼ãƒ‰ã‚’ãƒ—ãƒ­ã‚­ã‚·ã«
+	c:ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³
+	f:åŠ›è¦šæç¤ºã®ON/OFF
+	v:æŒ¯å‹•æç¤ºã®ON/OFF
+	d:ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤º
+	a:ãƒãƒä¿‚æ•°ã‚’100up
+	z:ãƒãƒä¿‚æ•°ã‚’100down
+	space:å‰›ä½“ã‚’ç”Ÿæˆã™ã‚‹
 */
 
 #include "FWHapticSample.h"

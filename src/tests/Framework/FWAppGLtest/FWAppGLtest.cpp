@@ -1,4 +1,4 @@
-// FWAppGLtest.cpp : ƒRƒ“ƒ\[ƒ‹ ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒGƒ“ƒgƒŠ ƒ|ƒCƒ“ƒg‚ð’è‹`‚µ‚Ü‚·B
+ï»¿// FWAppGLtest.cpp : ã‚³ãƒ³ã‚½ãƒ¼ãƒ« ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¨ãƒ³ãƒˆãƒª ãƒã‚¤ãƒ³ãƒˆã‚’å®šç¾©ã—ã¾ã™ã€‚
 //
 
 #include <windows.h>
@@ -94,10 +94,10 @@ int SPR_CDECL main(int argc, char* argv[]){
 	app = new MyApp;
 	app->Init(argc, argv);
 
-	app->GetSdk()->Clear();	//	SDK‘S‘Ì‚ð‰Šú‰»
+	app->GetSdk()->Clear();	//	SDKå…¨ä½“ã‚’åˆæœŸåŒ–
 
-	//	ƒV[ƒ“‚Ì\’z
-#if 0	//	ƒV[ƒ“‚Ì\’z‚ðC++Œ¾Œê‚Å‚â‚éê‡
+	//	ã‚·ãƒ¼ãƒ³ã®æ§‹ç¯‰
+#if 0	//	ã‚·ãƒ¼ãƒ³ã®æ§‹ç¯‰ã‚’C++è¨€èªžã§ã‚„ã‚‹å ´åˆ
 	app->GetSdk()->CreateScene(PHSceneDesc(), GRSceneDesc());
 	PHSceneIf* phscene = app->GetSdk()->GetScene()->GetPHScene();
 	PHSolidIf* floor = phscene->CreateSolid(PHSolidDesc());
@@ -105,22 +105,22 @@ int SPR_CDECL main(int argc, char* argv[]){
 	CDBoxDesc boxdesc;
 	boxdesc.boxsize = Vec3d(0.1, 0.1, 0.1);
 	floor->AddShape(app->GetSdk()->GetPHSdk()->CreateShape(boxdesc));
-#else	//	ƒV[ƒ“‚ðƒtƒ@ƒCƒ‹‚©‚çƒ[ƒh‚·‚é‚Î‚ ‚¢B
+#else	//	ã‚·ãƒ¼ãƒ³ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã°ã‚ã„ã€‚
 	app->GetSdk()->LoadScene("scene.x");
 #endif
-	//	ƒEƒBƒ“ƒhƒE1‚ðì¬
+	//	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦1ã‚’ä½œæˆ
 	FWAppGLUTDesc wd;
 	wd.left = 0; wd.top = 0; wd.width = 500; wd.title = "original scene";
-	FWWin* w0 = app->CreateWin(wd);	//	ì¬‚Æ“¯Žž‚ÉCƒV[ƒ“0 ‚ªƒEƒBƒ“ƒhƒE0 ‚ÉŠ„‚è“–‚Ä‚ç‚ê‚éD
+	FWWin* w0 = app->CreateWin(wd);	//	ä½œæˆã¨åŒæ™‚ã«ï¼Œã‚·ãƒ¼ãƒ³0 ãŒã‚¦ã‚£ãƒ³ãƒ‰ã‚¦0 ã«å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã‚‹ï¼Ž
 
 #if 1
-	//	ƒV[ƒ“‚ÌƒZ[ƒu
+	//	ã‚·ãƒ¼ãƒ³ã®ã‚»ãƒ¼ãƒ–
 	app->GetSdk()->SaveScene("save.x");
-	//	ƒZ[ƒu‚µ‚½ƒV[ƒ“‚Ìƒ[ƒh(2”Ô–Ú‚ÌƒV[ƒ“(ƒV[ƒ“1)‚ªƒ[ƒh‚³‚ê‚é)
+	//	ã‚»ãƒ¼ãƒ–ã—ãŸã‚·ãƒ¼ãƒ³ã®ãƒ­ãƒ¼ãƒ‰(2ç•ªç›®ã®ã‚·ãƒ¼ãƒ³(ã‚·ãƒ¼ãƒ³1)ãŒãƒ­ãƒ¼ãƒ‰ã•ã‚Œã‚‹)
 	app->GetSdk()->LoadScene("save.x");
 	app->GetSdk()->SaveScene("save2.x");
 	
-	//	ƒ[ƒh‚µ‚½ƒV[ƒ“1‚ðƒEƒBƒ“ƒhƒE1‚É•\Ž¦‚·‚é‚æ‚¤‚ÉÝ’è
+	//	ãƒ­ãƒ¼ãƒ‰ã—ãŸã‚·ãƒ¼ãƒ³1ã‚’ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦1ã«è¡¨ç¤ºã™ã‚‹ã‚ˆã†ã«è¨­å®š
 	wd.left = 512; wd.top = 0; wd.width = 500; wd.title = "saved scene";
 	FWWin* w1 = app->CreateWin(wd);
 	w1->scene = app->GetSdk()->GetScene(1);

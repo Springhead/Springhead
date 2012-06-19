@@ -1,4 +1,4 @@
-#ifndef UTCRITICALSECTION_H
+﻿#ifndef UTCRITICALSECTION_H
 #define UTCRITICALSECTION_H
 #include <Base/BaseUtility.h>
 

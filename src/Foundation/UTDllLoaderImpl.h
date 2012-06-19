@@ -1,7 +1,7 @@
-#ifdef DLLFUNC_STR
+﻿#ifdef DLLFUNC_STR
 
-/**	UTDllLoader.h ���g�p����ۂɁCDLL�֐��̃X�^�u���C���v�������g����ۂɎg�p����w�b�_�D
-	�ڍׂ́C UTDllLoader.h ���Q��
+/**	UTDllLoader.h を使用する際に，DLL関数のスタブをインプリメントする際に使用するヘッダ．
+	詳細は， UTDllLoader.h を参照
 */
 #ifndef DLLLOADER_ReportError
 #define DLLLOADER_ReportError

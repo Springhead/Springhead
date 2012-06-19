@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,7 +15,7 @@
 namespace Spr{;
 unsigned long UTPreciseTimer::freq;
 
-//¶¬‚É1•b‹x‚İCü”g”‚ğƒJƒEƒ“ƒg‚·‚é
+//ç”Ÿæˆæ™‚ã«1ç§’ä¼‘ã¿ï¼Œå‘¨æ³¢æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã™ã‚‹
 UTPreciseTimer::UTPreciseTimer(): stopWatch(0), startFlag(false){
 	cycles2.quadPart = 0;
 	if (freq == 0){
@@ -36,9 +36,9 @@ void UTPreciseTimer::Init(int preiod){
 #ifdef _M_IX86
 	_asm{
 		CPUID
-		RDTSC								;// ƒNƒƒbƒNƒJƒEƒ“ƒ^‚ğ“Ç‚Ş
-		MOV		lowPart,	EAX				;// ƒJƒEƒ“ƒ^‚ğ•Û‘¶
-		MOV		highPart,	EDX				;// ƒJƒEƒ“ƒ^‚ğ•Û‘¶
+		RDTSC								;// ã‚¯ãƒ­ãƒƒã‚¯ã‚«ã‚¦ãƒ³ã‚¿ã‚’èª­ã‚€
+		MOV		lowPart,	EAX				;// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿å­˜
+		MOV		highPart,	EDX				;// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿å­˜
 	}
     cycles.lowPart = lowPart;
     cycles.highPart = highPart;
@@ -46,7 +46,7 @@ void UTPreciseTimer::Init(int preiod){
 	QueryPerformanceCounter((LARGE_INTEGER*)&cycles);
 #endif
 	cycles2.quadPart = cycles.quadPart;
-	//	1•b‘Ò‚Â
+	//	1ç§’å¾…ã¤
 	int deltaTime;
 	while(1){;
 		deltaTime = timeGetTime() - time;
@@ -55,9 +55,9 @@ void UTPreciseTimer::Init(int preiod){
 #ifdef _M_IX86
 	_asm{
 		CPUID
-		RDTSC								;// ƒNƒƒbƒNƒJƒEƒ“ƒ^‚ğ“Ç‚Ş
-		MOV		lowPart,	EAX				;// ƒJƒEƒ“ƒ^‚ğ•Û‘¶
-		MOV		highPart,	EDX				;// ƒJƒEƒ“ƒ^‚ğ•Û‘¶
+		RDTSC								;// ã‚¯ãƒ­ãƒƒã‚¯ã‚«ã‚¦ãƒ³ã‚¿ã‚’èª­ã‚€
+		MOV		lowPart,	EAX				;// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿å­˜
+		MOV		highPart,	EDX				;// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿å­˜
 	}
     cycles.lowPart = lowPart;
     cycles.highPart = highPart;
@@ -77,9 +77,9 @@ void UTPreciseTimer::WaitUS(int time){
 #ifdef _M_IX86
 	_asm{
 		CPUID;
-		RDTSC								;// ƒNƒƒbƒNƒJƒEƒ“ƒ^‚ğ“Ç‚Ş
-		MOV     lowPart, EAX                ;// ƒJƒEƒ“ƒ^‚ğ•Û‘¶
-		MOV     highPart, EDX               ;// ƒJƒEƒ“ƒ^‚ğ•Û‘¶
+		RDTSC								;// ã‚¯ãƒ­ãƒƒã‚¯ã‚«ã‚¦ãƒ³ã‚¿ã‚’èª­ã‚€
+		MOV     lowPart, EAX                ;// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿å­˜
+		MOV     highPart, EDX               ;// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿å­˜
 	}
 	cycles.lowPart = lowPart;
 	cycles.highPart = highPart;
@@ -91,9 +91,9 @@ void UTPreciseTimer::WaitUS(int time){
 #ifdef _M_IX86
 		_asm{
 			CPUID;
-			RDTSC							;// ƒNƒƒbƒNƒJƒEƒ“ƒ^‚ğ“Ç‚Ş
-			MOV     lowPart, EAX			;// ƒJƒEƒ“ƒ^‚ğ•Û‘¶
-			MOV     highPart, EDX			;// ƒJƒEƒ“ƒ^‚ğ•Û‘¶
+			RDTSC							;// ã‚¯ãƒ­ãƒƒã‚¯ã‚«ã‚¦ãƒ³ã‚¿ã‚’èª­ã‚€
+			MOV     lowPart, EAX			;// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿å­˜
+			MOV     highPart, EDX			;// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿å­˜
 		}
         cycles.lowPart = lowPart;
         cycles.highPart = highPart;
@@ -112,9 +112,9 @@ int  UTPreciseTimer::CountUS()
 	unsigned long lowPart, highPart;
 	_asm{
 		CPUID;
-		RDTSC								;// ƒNƒƒbƒNƒJƒEƒ“ƒ^‚ğ“Ç‚Ş
-		MOV     lowPart, EAX				;// ƒJƒEƒ“ƒ^‚ğ•Û‘¶
-		MOV     highPart, EDX				;// ƒJƒEƒ“ƒ^‚ğ•Û‘¶
+		RDTSC								;// ã‚¯ãƒ­ãƒƒã‚¯ã‚«ã‚¦ãƒ³ã‚¿ã‚’èª­ã‚€
+		MOV     lowPart, EAX				;// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿å­˜
+		MOV     highPart, EDX				;// ã‚«ã‚¦ãƒ³ã‚¿ã‚’ä¿å­˜
 	}
 	cycles.lowPart = lowPart;
 	cycles.highPart = highPart;

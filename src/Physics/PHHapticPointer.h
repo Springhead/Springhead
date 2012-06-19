@@ -1,4 +1,4 @@
-#ifndef PH_HAPTICPOINTER_H
+ï»¿#ifndef PH_HAPTICPOINTER_H
 #define PH_HAPTICPOINTER_H
 
 #include <Springhead.h>
@@ -11,9 +11,9 @@ namespace Spr{;
 struct PHHapticPointerSt : public PHHapticPointerDesc{
 	Vec3d last_dr;
 	Vec3d last_dtheta;
-	Posed proxyPose;	// –€CŒvZ—p‚ÌƒvƒƒLƒV
+	Posed proxyPose;	// æ‘©æ“¦è¨ˆç®—ç”¨ã®ãƒ—ãƒ­ã‚­ã‚·
 	Posed lastProxyPose;
-	Posed targetProxy;	// ”½—ÍŒvZ—p‚ÌƒvƒƒLƒV
+	Posed targetProxy;	// ååŠ›è¨ˆç®—ç”¨ã®ãƒ—ãƒ­ã‚­ã‚·
 	SpatialVector vcForce;
 	SpatialVector hapticForce;
 };
@@ -32,7 +32,7 @@ protected:
 
 
 public:
-	bool bDebugControl;		// physicsLoop‚©‚ç—ÍŠoƒ|ƒCƒ“ƒ^‚ğ‘€ì‚·‚é‚½‚ß‚Ìƒtƒ‰ƒO
+	bool bDebugControl;		// physicsLoopã‹ã‚‰åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã‚’æ“ä½œã™ã‚‹ãŸã‚ã®ãƒ•ãƒ©ã‚°
 	bool bForce;
 	bool bFriction;
 	bool bVibration;

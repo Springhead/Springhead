@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /** @file SprObject.h
-	���s���^�������N���X�̊�{�N���X
+	実行時型情報を持つクラスの基本クラス
  */
 #ifndef SPR_OBJECT_H
 #define SPR_OBJECT_H
@@ -24,8 +24,8 @@ class Object;
 #undef DCAST
 #define DCAST(T,p) DCastImp((T*)0, p)
 
-///	�����^�ւ̃L���X�g
-///	�ÓI�ϊ����\�ȏꍇ�� If->Obj �̃L���X�g
+///	同じ型へのキャスト
+///	静的変換が可能な場合の If->Obj のキャスト
 template <class TO, class FROM> TO* DCastImp(TO* dmmy, FROM* p){
 	return p ? TO::GetMe(p) : NULL;
 }
@@ -35,7 +35,7 @@ template <class TO, class FROM> UTRef<TO> DCastImp(TO* dmmy, UTRef<FROM> p){
 
 #undef XCAST
 #define XCAST(p) CastToXCastPtr(p)
-///	�C���^�t�F�[�X�N���X�̃L���X�g
+///	インタフェースクラスのキャスト
 template <class T>
 class XCastPtr{
 public:
@@ -61,53 +61,53 @@ struct ObjectIf;
 class IfInfo;
 class UTTypeDesc;
 
-/**	Factory (�I�u�W�F�N�g�𐶐�����N���X)�̊�{�N���X
+/**	Factory (オブジェクトを生成するクラス)の基本クラス
 */
 class FactoryBase:public UTRefCount{
 public:
 	virtual ~FactoryBase(){}
-	///	�쐬����IfInfo
+	///	作成するIfInfo
 	virtual const IfInfo* GetIfInfo() const =0;
-	///	ii�̃I�u�W�F�N�g�� desc ���� parent�̎q�Ƃ��Đ�������D
+	///	iiのオブジェクトを desc から parentの子として生成する．
 	virtual ObjectIf* Create(const void* desc, ObjectIf* parent) =0;
 };
 
-/**	�C���^�t�F�[�X�̌^���N���X�̊�{�N���X�D�N���X����p���֌W�������Ă��āCDCAST()�Ȃǂ����p����D
-1�̃C���^�t�F�[�X�N���X�ɕt��1�̃C���X�^���X���ł���D	*/
+/**	インタフェースの型情報クラスの基本クラス．クラス名や継承関係を持っていて，DCAST()などが利用する．
+1つのインタフェースクラスに付き1個のインスタンスができる．	*/
 class IfInfo: public UTRefCount{
 public:
-	///	IfInfo��id �N���X���������R���D
+	///	IfInfoのid クラスを示す自然数．
 	int id;
-	///	id�̍ő�l
+	///	idの最大値
 	static int maxId;
-	///	�^�ɂ��Ă̏ڍׂȏ��
+	///	型についての詳細な情報
 	UTTypeDesc* desc;
-	///	��{�C���^�t�F�[�X���X�g
+	///	基本インタフェースリスト
 	const IfInfo** baseList;
-	///	�Ή�����I�u�W�F�N�g�̌^���
+	///	対応するオブジェクトの型情報
 	const UTTypeInfo* objInfo;
-	///	�N���X��
+	///	クラス名
 	const char* className;
 
 	typedef std::vector< UTRef<FactoryBase> > Factories;
-	///	�q�I�u�W�F�N�g�𐶐�����N���X(�t�@�N�g���[)
+	///	子オブジェクトを生成するクラス(ファクトリー)
 	Factories factories;
-	///	�R���X�g���N�^
+	///	コンストラクタ
 	IfInfo(const char* cn, const IfInfo** bl, const UTTypeInfo* o):baseList(bl), objInfo(o), className(cn){id = ++maxId;}
-	///	�f�X�g���N�^
+	///	デストラクタ
 	virtual ~IfInfo() {};
-	///	�N���X��
+	///	クラス名
 	virtual const char* ClassName() const =0;
-	///	�t�@�N�g��(�I�u�W�F�N�g�𐶐�����N���X)�̓o�^
+	///	ファクトリ(オブジェクトを生成するクラス)の登録
 	void RegisterFactory(FactoryBase* f) const ;
-	///	�w��(info)�̃I�u�W�F�N�g�����t�@�N�g��������
+	///	指定(info)のオブジェクトを作るファクトリを検索
 	FactoryBase* FindFactory(const IfInfo* info) const;
 	///
 	static IfInfo* Find(const char* cname);
-	///	info���p�����Ă��邩�ǂ����D
+	///	infoを継承しているかどうか．
 	bool Inherit(const IfInfo* info) const;
 };
-///	IfInfo�̎����D1�N���X1�C���X�^���X
+///	IfInfoの実装．1クラス1インスタンス
 template <class T>
 class IfInfoImp: public IfInfo{
 public:
@@ -117,7 +117,7 @@ public:
 	static const UTTypeInfo* SPR_CDECL GetTypeInfo();
 };
 
-///	�C���^�t�F�[�X�����ׂ������o�̐錾���D
+///	インタフェースが持つべきメンバの宣言部．
 #define SPR_IFDEF_BASE(cls)												\
 public:																	\
 	const IfInfo* SPR_CDECL GetIfInfo() const ;							\
@@ -126,10 +126,10 @@ public:																	\
 		return (void*)0;												\
 	}																	\
 	static void operator delete(void* pv) { /*	nothing	to do */ }		\
-	/*	���݃L���X�g	*/												\
+	/*	相互キャスト	*/												\
 	XCastPtr<cls##If>& Cast() const{									\
 		return *(XCastPtr<cls##If>*)(void*)this; }						\
-	/*	�L���X�g�̎���	*/												\
+	/*	キャストの実装	*/												\
 	template <typename FROM> static cls##If* GetMe(FROM* f){			\
 		if ( f && f->GetObjectIf()->GetIfInfo()->Inherit(				\
 			cls##If::GetIfInfoStatic()) )								\
@@ -139,7 +139,7 @@ public:																	\
 
 #endif // !SWIG
 
-///	�f�B�X�N���v�^�����ׂ������o�̐錾���D
+///	ディスクリプタが持つべきメンバの宣言部．
 #ifndef SWIG
 #define SPR_DESCDEF(cls)												\
 public:																	\
@@ -160,7 +160,7 @@ public:																	\
 #else
 #define SPR_DESCDEF(cls)
 #endif
-// Ruby�Ȃǂ̃|�[�g�Ŏg�p�����L���X�g
+// Rubyなどのポートで使用されるキャスト
 #define SPR_IF_HLANG_CAST(cls) static cls##If* Cast(ObjectIf* o){return DCAST(cls##If, o);}
 
 
@@ -182,24 +182,24 @@ public:																	\
 #define SPR_OVERRIDEMEMBERFUNCOF(cls, base)
 #endif
 
-///	���ׂẴC���^�t�F�[�X�N���X�̊�{�N���X
+///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
 	SPR_IFDEF(Object);
 	~ObjectIf();
 #ifndef SWIGSPR
 	ObjectIf* GetObjectIf(){ return this; }
 	const ObjectIf* GetObjectIf() const { return this; }
-	//	DelRef�̂݃I�[�o�[���C�h�D
-	//	�P��Object��DelRef���ĂԂ̂ł͂Ȃ��C delete �̐��䂪�K�v�Ȃ��߁D
+	//	DelRefのみオーバーライド．
+	//	単にObjectのDelRefを呼ぶのではなく， delete の制御が必要なため．
 	int DelRef() const ;
 #endif
 
-	///	�f�o�b�O�p�̕\���B�q�I�u�W�F�N�g���܂ށB
+	///	デバッグ用の表示。子オブジェクトを含む。
 	void Print(std::ostream& os) const;	
-	///	�f�o�b�O�p�̕\���B�q�I�u�W�F�N�g���܂܂Ȃ��B
+	///	デバッグ用の表示。子オブジェクトを含まない。
 	void PrintShort(std::ostream& os) const;	
 
-	///	@name �Q�ƃJ�E���^�֌W
+	///	@name 参照カウンタ関係
 	//@{
 	///
 	int AddRef();
@@ -208,66 +208,66 @@ struct ObjectIf{
 	//@}
 
 
-	///	@name �q�I�u�W�F�N�g
+	///	@name 子オブジェクト
 	//@{
-	///	�q�I�u�W�F�N�g�̐�
+	///	子オブジェクトの数
 	size_t NChildObject() const;
-	///	�q�I�u�W�F�N�g�̎擾
+	///	子オブジェクトの取得
 	ObjectIf* GetChildObject(size_t pos);
 	const ObjectIf* GetChildObject(size_t pos) const;
-	/**	�q�I�u�W�F�N�g�̒ǉ��D�����̃I�u�W�F�N�g�̎q�I�u�W�F�N�g�Ƃ��Ēǉ����Ă悢�D
-		�Ⴆ�΁CGRFrame�̓c���[����邪�C�S�m�[�h��GRScene�̎q�ł�����D*/
+	/**	子オブジェクトの追加．複数のオブジェクトの子オブジェクトとして追加してよい．
+		例えば，GRFrameはツリーを作るが，全ノードがGRSceneの子でもある．*/
 	bool AddChildObject(ObjectIf* o);
-	///	�q�I�u�W�F�N�g�̍폜
+	///	子オブジェクトの削除
 	bool DelChildObject(ObjectIf* o);
-	///	���ׂĂ̎q�I�u�W�F�N�g�̍폜�ƁA�v���p�e�B�̃N���A
+	///	すべての子オブジェクトの削除と、プロパティのクリア
 	void Clear();
-	///	�I�u�W�F�N�g���쐬���CAddChildObject()���ĂԁD
+	///	オブジェクトを作成し，AddChildObject()を呼ぶ．
 	ObjectIf* CreateObject(const IfInfo* info, const void* desc);
-	///	CreateObject���Ăяo�����[�e�B���e�B�֐�
+	///	CreateObjectを呼び出すユーティリティ関数
 	template <class T> ObjectIf* CreateObject(const T& desc){
 		return CreateObject(desc.GetIfInfo(), &desc);
 	}
 	//@}
 
-	///	@name �f�X�N���v�^�Ə��
+	///	@name デスクリプタと状態
 	//@{
-	/**	�f�X�N���v�^�̓ǂݏo��(�Q�Ɣ� NULL��Ԃ����Ƃ�����)�D
-		���ꂪ��������Ă��Ȃ��Ă��CObjectIf::GetDesc()�͎�������Ă��邱�Ƃ������D	*/
+	/**	デスクリプタの読み出し(参照版 NULLを返すこともある)．
+		これが実装されていなくても，ObjectIf::GetDesc()は実装されていることが多い．	*/
 	const void* GetDescAddress() const;
-	/**	�f�X�N���v�^�̓ǂݏo��(�R�s�[�� ���s����(false��Ԃ�)���Ƃ�����)�D
-		ObjectIf::GetDescAddress() ����������Ă��Ȃ��Ă��C������͎�������Ă��邱�Ƃ�����D	*/
+	/**	デスクリプタの読み出し(コピー版 失敗する(falseを返す)こともある)．
+		ObjectIf::GetDescAddress() が実装されていなくても，こちらは実装されていることがある．	*/
 	bool GetDesc(void* desc) const;
-	/** �f�X�N���v�^�̐ݒ� */
+	/** デスクリプタの設定 */
 	void SetDesc(const void* desc);
-	/**	�f�X�N���v�^�̃T�C�Y	*/
+	/**	デスクリプタのサイズ	*/
 	size_t GetDescSize() const;
-	/**	��Ԃ̓ǂݏo��(�Q�Ɣ� NULL��Ԃ����Ƃ�����)�D
-		���ꂪ��������Ă��Ȃ��Ă��CObjectIf::GetState()�͎�������Ă��邱�Ƃ�����D	*/
+	/**	状態の読み出し(参照版 NULLを返すこともある)．
+		これが実装されていなくても，ObjectIf::GetState()は実装されていることがある．	*/
 	const void* GetStateAddress() const;
-	/**	��Ԃ̓ǂݏo��(�R�s�[�� ���s����(false��Ԃ�)���Ƃ�����)�D
-		ObjectIf::GetStateAddress() ����������Ă��Ȃ��Ă��C������͎�������Ă��邱�Ƃ�����D	*/
+	/**	状態の読み出し(コピー版 失敗する(falseを返す)こともある)．
+		ObjectIf::GetStateAddress() が実装されていなくても，こちらは実装されていることがある．	*/
 	bool GetState(void* state) const;
-	/**	��Ԃ̐ݒ�	*/
+	/**	状態の設定	*/
 	void SetState(const void* state);
-	/** ��Ԃ̏����o�� */
+	/** 状態の書き出し */
 	bool WriteStateR(std::ostream& fout);
 	bool WriteState(std::string fileName);
-	/** ��Ԃ̓ǂݍ��� */
+	/** 状態の読み込み */
 	bool ReadStateR(std::istream& fin);
 	bool ReadState(std::string fileName);
-	/**	��Ԃ̃T�C�Y	*/
+	/**	状態のサイズ	*/
 	size_t GetStateSize() const;
-	/**	�������u���b�N����Ԍ^�ɏ�����	*/
+	/**	メモリブロックを状態型に初期化	*/
 	void ConstructState(void* m) const;
-	/**	��Ԍ^���������u���b�N�ɖ߂�	*/
+	/**	状態型をメモリブロックに戻す	*/
 	void DestructState(void* m) const;
 	//@}
-	///	�I�u�W�F�N�g�c���[�̃������C���[�W���_���v
+	///	オブジェクトツリーのメモリイメージをダンプ
 	void DumpObjectR(std::ostream& os, int level=0) const;
 };
 
-///	�C���^�t�F�[�X�N���X�ւ̃|�C���^�̔z��
+///	インタフェースクラスへのポインタの配列
 struct ObjectIfs
 #if !defined SWIG	
 	: public UTStack<ObjectIf*>
@@ -291,58 +291,58 @@ struct ObjectIfs
 
 struct NameManagerIf;
 
-///	���O�����I�u�W�F�N�g�̃C���^�t�F�[�X
+///	名前を持つオブジェクトのインタフェース
 struct NamedObjectIf: public ObjectIf{
 	SPR_IFDEF(NamedObject);
-	///	���O�̎擾
+	///	名前の取得
 	const char* GetName() const;
-	///	���O�̐ݒ�
+	///	名前の設定
 	void SetName(const char* n);
-	///	���O�Ǘ��I�u�W�F�N�g�̎擾
+	///	名前管理オブジェクトの取得
 	NameManagerIf* GetNameManager();
 };
 
 struct SceneIf;
-///	�V�[���O���t���\������m�[�h�̃C���^�t�F�[�X
+///	シーングラフを構成するノードのインタフェース
 struct SceneObjectIf: NamedObjectIf{
 	SPR_IFDEF(SceneObject);
-	///	����Scene�̎擾
+	///	所属Sceneの取得
 	SceneIf* GetScene();
-	/// ����������Scene�ɕ�������
+	/// 自分を所属Sceneに複製する
 	SceneObjectIf* CloneObject();
 };
 
 
-/**	�I�u�W�F�N�g�c���[�̏�Ԃ���������ɕۑ����邽�߂̃N���X�D
-	SaveState(scene) �̂悤�ɌĂяo���ƁCscene�̎q���S�̂̏�Ԃ��������ɕۑ�����D
-	�Z�[�u������CLoadState(scene) ���Ăяo���ƁCscene�̏�Ԃ�ۑ����̏�Ԃɖ߂��D
-	�Z�[�u��C�V�[���̃I�u�W�F�N�g�̐���\�����ς���Ă��܂��Ɛ��������Ƃꂸ�C
-	��������j�󂵂Ă��܂��̂Œ��ӂ��K�v�D
+/**	オブジェクトツリーの状態をメモリ上に保存するためのクラス．
+	SaveState(scene) のように呼び出すと，sceneの子孫全体の状態をメモリに保存する．
+	セーブした後，LoadState(scene) を呼び出すと，sceneの状態を保存時の状態に戻す．
+	セーブ後，シーンのオブジェクトの数や構造が変わってしまうと整合性がとれず，
+	メモリを破壊してしまうので注意が必要．
 
-	���߂� SaveState(scene) ���Ăяo���ƁC�܂������� AllocateState(scene)���Ăяo����
-	���������m�ۂ���D���Ɋm�ۂ����������ɃI�u�W�F�N�g�̏�Ԃ�ۑ�����D
+	初めて SaveState(scene) を呼び出すと，まず内部で AllocateState(scene)を呼び出して
+	メモリを確保する．次に確保したメモリにオブジェクトの状態を保存する．
 	
-	�Z�[�u�E���[�h�Ɏg���I������Ƃ��́CReleaseState(scene)���Ăяo���ă��������J������
-	�K�v������DReleaseState(scene)�́CAllocateState(scene)���ƃV�[���̍\���������łȂ���
-	���������Ƃꂸ�C��������j�󂵂Ă��܂��D
+	セーブ・ロードに使い終わったときは，ReleaseState(scene)を呼び出してメモリを開放する
+	必要がある．ReleaseState(scene)は，AllocateState(scene)時とシーンの構造が同じでないと
+	整合性がとれず，メモリを破壊してしまう．
 
-	�V�[���̍\����ύX����Ƃ��́C��xReleaseState()���Ăяo���āC�ēx�Z�[�u���Ȃ����K�v������D
+	シーンの構造を変更するときは，一度ReleaseState()を呼び出して，再度セーブしなおす必要がある．
 */
 struct ObjectStatesIf: public ObjectIf{
 	SPR_IFDEF(ObjectStates);
 
-	///	o�Ƃ��̎q�����Z�[�u���邽�߂ɕK�v�ȃ��������m�ۂ���D
+	///	oとその子孫をセーブするために必要なメモリを確保する．
 	void AllocateState(ObjectIf* o);
-	///	��Ԃ̃��������������
+	///	状態のメモリを解放する
 	void ReleaseState(ObjectIf* o);
-	///	��Ԃ̃T�C�Y�����߂�
+	///	状態のサイズを求める
 	size_t CalcStateSize(ObjectIf* o);
 
-	///	��Ԃ��Z�[�u����D
+	///	状態をセーブする．
 	void SaveState(ObjectIf* o);
-	///	��Ԃ����[�h����D
+	///	状態をロードする．
 	void LoadState(ObjectIf* o);
-	///	ObjectState�I�u�W�F�N�g���쐬����D
+	///	ObjectStateオブジェクトを作成する．
 	static ObjectStatesIf* SPR_CDECL Create();
 };
 

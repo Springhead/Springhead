@@ -1,4 +1,4 @@
-//	Do not edit. MakeTypeDesc.bat will update this file.
+﻿//	Do not edit. MakeTypeDesc.bat will update this file.
 	
 	GRAnimationMeshDesc* pGRAnimationMeshDesc = NULL;
 	desc = DBG_NEW UTTypeDesc("GRAnimationMeshDesc");

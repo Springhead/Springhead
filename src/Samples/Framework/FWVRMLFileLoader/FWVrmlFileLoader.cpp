@@ -1,4 +1,4 @@
-#include "FWVrmlFileLoader.h"
+ï»¿#include "FWVrmlFileLoader.h"
 #include <iostream>
 #include <sstream>
 
@@ -11,19 +11,19 @@ FWVrmlfileLoader::FWVrmlfileLoader(){
 }
 
 void FWVrmlfileLoader::Init(int argc, char* argv[]){
-	/// ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ì‰Šú‰»
+	/// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆæœŸåŒ–
 	CreateSdk();
-	GetSdk()->Clear();						// SDK‚Ì‰Šú‰»
-	GetSdk()->LoadScene(fileName);			// ƒtƒ@ƒCƒ‹‚Ìƒ[ƒh
+	GetSdk()->Clear();						// SDKã®åˆæœŸåŒ–
+	GetSdk()->LoadScene(fileName);			// ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒ¼ãƒ‰
 
-	/// •`‰æƒ‚[ƒh‚Ìİ’è
-	SetGRHandler(TypeGLUT);					// GLUT‚Å•`‰æ
-	GRInit(argc, argv);		// ‰Šú‰»
+	/// æç”»ãƒ¢ãƒ¼ãƒ‰ã®è¨­å®š
+	SetGRHandler(TypeGLUT);					// GLUTã§æç”»
+	GRInit(argc, argv);		// åˆæœŸåŒ–
 
-	/// ƒEƒBƒ“ƒhƒE‚Ìì¬
-	FWWinDesc windowDesc;					// GL‚ÌƒEƒBƒ“ƒhƒEƒfƒBƒXƒNƒŠƒvƒ^
-	windowDesc.title = "FWVrmlFileLoader";	// ƒEƒBƒ“ƒhƒE‚Ìƒ^ƒCƒgƒ‹
-	CreateWin(windowDesc);					// ƒEƒBƒ“ƒhƒE‚Ìì¬
+	/// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä½œæˆ
+	FWWinDesc windowDesc;					// GLã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+	windowDesc.title = "FWVrmlFileLoader";	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ã‚¿ã‚¤ãƒˆãƒ«
+	CreateWin(windowDesc);					// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ä½œæˆ
 	GetCurrentWin()->SetScene(GetSdk()->GetScene());
 	
 	CreateTimer();
@@ -43,11 +43,11 @@ void FWVrmlfileLoader::Keyboard(int key, int x, int y){
 			exit(0);
 			break;
 		case 'r':
-			Reset();			// ƒtƒ@ƒCƒ‹‚ÌÄ“Ç‚İ‚İ
+			Reset();			// ãƒ•ã‚¡ã‚¤ãƒ«ã®å†èª­ã¿è¾¼ã¿
 			break;
-		case 'w':				// ƒJƒƒ‰‰Šú‰»	
+		case 'w':				// ã‚«ãƒ¡ãƒ©åˆæœŸåŒ–	
 			break;
-		case 'd':				// ƒfƒoƒbƒN•\¦
+		case 'd':				// ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤º
 			bDebug = !bDebug;
 			break;
 		default:

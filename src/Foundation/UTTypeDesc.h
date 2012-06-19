@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,55 +16,55 @@
 #include <algorithm>
 
 /*
-	ƒtƒ@ƒCƒ‹ƒ[ƒ_‚ÍCŒ^¨ƒf[ƒ^‚ğ‚Á‚Ä‚­‚éD
-	ƒ|ƒCƒ“ƒ^‚Í‚ ‚¯‚Ä‚¨‚¢‚ÄCŒã‚ÅƒŠƒ“ƒN‚·‚éD
-	‚ ‚éƒIƒuƒWƒFƒNƒg‚Ì‚Ç‚±‚Éƒ|ƒCƒ“ƒ^‚ğ‘«‚·/ã‘‚«‚·‚é‚Ì‚©w¦‚·‚éd‘g‚İ‚ª•K—vD
+	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã¯ï¼Œå‹â†’ãƒ‡ãƒ¼ã‚¿ã‚’æŒã£ã¦ãã‚‹ï¼
+	ãƒã‚¤ãƒ³ã‚¿ã¯ã‚ã‘ã¦ãŠã„ã¦ï¼Œå¾Œã§ãƒªãƒ³ã‚¯ã™ã‚‹ï¼
+	ã‚ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã©ã“ã«ãƒã‚¤ãƒ³ã‚¿ã‚’è¶³ã™/ä¸Šæ›¸ãã™ã‚‹ã®ã‹æŒ‡ç¤ºã™ã‚‹ä»•çµ„ã¿ãŒå¿…è¦ï¼
 
 
-	”z—ñ‚ÍC‰Â•Ï’·ƒf[ƒ^Dƒƒ‚ƒŠã‚Ívector‚È‚Ç‚È‚Ì‚ÅC‚¿‚å‚Á‚Æˆá‚¤‚¯‚ÇD
-	vector ‚Ì‚Ü‚Ü‚¾‚ÆC‹­ˆø‚ÈƒLƒƒƒXƒg‚ª•K—v‚É‚È‚éD‚Ç‚¤‚·‚éH
-	ËvectorƒAƒNƒZƒXƒƒ\ƒbƒh‚ğƒ\[ƒX‚©‚ç©“®¶¬D
+	é…åˆ—ã¯ï¼Œå¯å¤‰é•·ãƒ‡ãƒ¼ã‚¿ï¼ãƒ¡ãƒ¢ãƒªä¸Šã¯vectorãªã©ãªã®ã§ï¼Œã¡ã‚‡ã£ã¨é•ã†ã‘ã©ï¼
+	vector ã®ã¾ã¾ã ã¨ï¼Œå¼·å¼•ãªã‚­ãƒ£ã‚¹ãƒˆãŒå¿…è¦ã«ãªã‚‹ï¼ã©ã†ã™ã‚‹ï¼Ÿ
+	â‡’vectorã‚¢ã‚¯ã‚»ã‚¹ãƒ¡ã‚½ãƒƒãƒ‰ã‚’ã‚½ãƒ¼ã‚¹ã‹ã‚‰è‡ªå‹•ç”Ÿæˆï¼
 
-	•¶š—ñ‚ğ”’l‚É•ÏŠ·‚·‚é‚Æ‚±‚ë‚Ü‚Å‚Íƒp[ƒT‚Ìd–D
-	double ‚ğ ”’lŒ^‚É•ÏŠ·‚·‚é‚Ì‚ÍTypeDesc‚Ìd–D
-	ƒp[ƒT‚ªˆµ‚¤Œ^‚ÍC”’lC•¶š—ñCƒ|ƒCƒ“ƒ^C‘g‚İ—§‚Ä
-	typedesc‚ªˆµ‚¤‚Ì‚ÍC”’l¨char int float double
+	æ–‡å­—åˆ—ã‚’æ•°å€¤ã«å¤‰æ›ã™ã‚‹ã¨ã“ã‚ã¾ã§ã¯ãƒ‘ãƒ¼ã‚µã®ä»•äº‹ï¼
+	double ã‚’ æ•°å€¤å‹ã«å¤‰æ›ã™ã‚‹ã®ã¯TypeDescã®ä»•äº‹ï¼
+	ãƒ‘ãƒ¼ã‚µãŒæ‰±ã†å‹ã¯ï¼Œæ•°å€¤ï¼Œæ–‡å­—åˆ—ï¼Œãƒã‚¤ãƒ³ã‚¿ï¼Œçµ„ã¿ç«‹ã¦
+	typedescãŒæ‰±ã†ã®ã¯ï¼Œæ•°å€¤â†’char int float double
 	
 	typedesc->CreateInstance();
-	typedesc->SetData("ƒƒ“ƒo–¼", ƒf[ƒ^);
+	typedesc->SetData("ãƒ¡ãƒ³ãƒå", ãƒ‡ãƒ¼ã‚¿);
 		:
 		:
-	typedesc->GetData("ƒƒ“ƒo–¼", ƒf[ƒ^);
+	typedesc->GetData("ãƒ¡ãƒ³ãƒå", ãƒ‡ãƒ¼ã‚¿);
 
 
-	ƒf[ƒ^‚ÍNode‚ÌƒcƒŠ[D
-	Node‚ÍCƒtƒB[ƒ‹ƒh‚Ì—ñ
-	ƒtƒB[ƒ‹ƒh‚ÍC”’lC•¶š—ñCƒ|ƒCƒ“ƒ^C‘g‚İ—§‚Ä
-	‘g‚İ—§‚Ä‚ÍTypeDesc‚ğ‚ÂD
+	ãƒ‡ãƒ¼ã‚¿ã¯Nodeã®ãƒ„ãƒªãƒ¼ï¼
+	Nodeã¯ï¼Œãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®åˆ—
+	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã¯ï¼Œæ•°å€¤ï¼Œæ–‡å­—åˆ—ï¼Œãƒã‚¤ãƒ³ã‚¿ï¼Œçµ„ã¿ç«‹ã¦
+	çµ„ã¿ç«‹ã¦ã¯TypeDescã‚’æŒã¤ï¼
 */
 /*
-	Field‚Æ\‘¢‘Ì‚ÌŠÖŒW‚ÌŒ©’¼‚µ¨Field = C‚ÌŒ^‚É‚µ‚½‚¢D
+	Fieldã¨æ§‹é€ ä½“ã®é–¢ä¿‚ã®è¦‹ç›´ã—â†’Field = Cã®å‹ã«ã—ãŸã„ï¼
 
-	C‚ÌŒ^‚ÍC’PƒŒ^‚Æstruct (‚Ì”z—ñ)
-	ˆ Field = ’PƒŒ^ or struct (‚Ì”z—ñ)
-		TypeDesc ‚Í’PƒŒ^‚Æstruct
+	Cã®å‹ã¯ï¼Œå˜ç´”å‹ã¨struct (ã®é…åˆ—)
+	âˆ´ Field = å˜ç´”å‹ or struct (ã®é…åˆ—)
+		TypeDesc ã¯å˜ç´”å‹ã¨struct
 */
 
 namespace Spr{;
-/**	@page UTTypeDesc ƒhƒLƒ…ƒƒ“ƒgƒIƒuƒWƒFƒNƒg‚ÆŒ^‹Lq
-	C++‚Ì\‘¢‘Ì‚©‚çƒf[ƒ^‚ğ‘‚«o‚·ê‡‚È‚ÇC\‘¢‘Ì‚âƒf[ƒ^‚É‚ÍC
-	•Ï”–¼‚â•Ï”‚ÌŒ^‚ÆŒ¾‚Á‚½î•ñ‚Í‚È‚¢D
-	‚»‚±‚ÅCŒ^‹LqŒ^ƒIƒuƒWƒFƒNƒg(UTTypeDesc)‚ğg‚Á‚Ä‹Lq‚·‚éD
-	UTTypeDesc‚ÌƒIƒuƒWƒFƒNƒg‚ğì‚é‚½‚ß‚Ìƒ\[ƒX‚Íƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ğ typedesc.exe ‚ª
-	ƒp[ƒX‚µ‚Ä©“®¶¬‚·‚éD*/
+/**	@page UTTypeDesc ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨å‹è¨˜è¿°
+	C++ã®æ§‹é€ ä½“ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã‚’æ›¸ãå‡ºã™å ´åˆãªã©ï¼Œæ§‹é€ ä½“ã‚„ãƒ‡ãƒ¼ã‚¿ã«ã¯ï¼Œ
+	å¤‰æ•°åã‚„å¤‰æ•°ã®å‹ã¨è¨€ã£ãŸæƒ…å ±ã¯ãªã„ï¼
+	ãã“ã§ï¼Œå‹è¨˜è¿°å‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ(UTTypeDesc)ã‚’ä½¿ã£ã¦è¨˜è¿°ã™ã‚‹ï¼
+	UTTypeDescã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä½œã‚‹ãŸã‚ã®ã‚½ãƒ¼ã‚¹ã¯ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ typedesc.exe ãŒ
+	ãƒ‘ãƒ¼ã‚¹ã—ã¦è‡ªå‹•ç”Ÿæˆã™ã‚‹ï¼*/
 
-///	‘ÎÛ‚ÌŒ^‚ÉƒAƒNƒZƒX‚·‚é‚½‚ß‚ÌƒNƒ‰ƒX
+///	å¯¾è±¡ã®å‹ã«ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ãŸã‚ã®ã‚¯ãƒ©ã‚¹
 class UTAccessBase:public UTRefCount{
 public:
 	virtual ~UTAccessBase(){}
-	///	ƒIƒuƒWƒFƒNƒg‚Ì\’z
+	///	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ§‹ç¯‰
 	virtual void* Create()=0;
-	///	ƒIƒuƒWƒFƒNƒg‚Ì”jŠü
+	///	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ç ´æ£„
 	virtual void Delete(void* ptr)=0;
 	///	vector<T>::push_back(); return &back();
 	virtual void* VectorPush(void* v)=0;
@@ -100,85 +100,85 @@ class UTAccess:public UTAccessBase{
 };
 
 class UTTypeDescDb;
-///	Œ^‚ğ•\‚·
+///	å‹ã‚’è¡¨ã™
 class SPR_DLL UTTypeDesc:public UTRefCount{
 public:
 	enum { BIGVALUE= 0x40000000 };
-	///	ƒŒƒR[ƒh‚ÌƒtƒB[ƒ‹ƒh‚ğ•\‚·
+	///	ãƒ¬ã‚³ãƒ¼ãƒ‰ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’è¡¨ã™
 	class SPR_DLL Field{
 	public:
 		typedef std::vector<std::pair<std::string, int> > Enums;
 		Enums enums;
-		///	ƒƒ“ƒo–¼
+		///	ãƒ¡ãƒ³ãƒå
 		std::string name;
-		///	Œ^–¼
+		///	å‹å
 		std::string typeName;
-		///	Œ^
+		///	å‹
 		UTRef<UTTypeDesc> type;
-		///	ƒIƒtƒZƒbƒg
+		///	ã‚ªãƒ•ã‚»ãƒƒãƒˆ
 		int offset;
-		///	”z—ñ‚Ì—v‘f”D
+		///	é…åˆ—ã®è¦ç´ æ•°ï¼
 		int length;
-		///	—v‘f”‚ğ•Ê‚ÌƒtƒB[ƒ‹ƒh‚©‚ç‚Æ‚éê‡‚ÌƒtƒB[ƒ‹ƒh–¼
+		///	è¦ç´ æ•°ã‚’åˆ¥ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‹ã‚‰ã¨ã‚‹å ´åˆã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å
 		std::string lengthFieldName;
-		///	vector/”z—ñ‚©‚Ç‚¤‚©
+		///	vector/é…åˆ—ã‹ã©ã†ã‹
 		enum VarType{
 			SINGLE, ARRAY, VECTOR
 		} varType;
-		///	QÆ‚©‚Ç‚¤‚©
+		///	å‚ç…§ã‹ã©ã†ã‹
 		bool isReference;
 
 		Field(): offset(-1), length(1), varType(SINGLE), isReference(false){}
 		~Field();
-		///	ƒf[ƒ^‚ÌƒTƒCƒY
+		///	ãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚º
 		size_t GetSize();
 		///
 		void Print(std::ostream& os) const;
 		///
 		void AddEnumConst(std::string name, int val);
 		void AddEnumConst(std::string name);
-		///	ƒtƒB[ƒ‹ƒh‚ÌƒAƒhƒŒƒX‚ğŒvZ
+		///	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¨ˆç®—
 		const void* /*UTTypeDesc::Field::*/GetAddress(const void* base, int pos);
 		void* /*UTTypeDesc::Field::*/GetAddress(void* base, int pos){
 			return (void*)GetAddress((const void*)base, pos); 
 		}
-		///	ƒtƒB[ƒ‹ƒh‚ÌƒAƒhƒŒƒX‚ğŒvZDvector‚ğŠg’£‚·‚éD
+		///	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¨ˆç®—ï¼vectorã‚’æ‹¡å¼µã™ã‚‹ï¼
 		void* /*UTTypeDesc::Field::*/GetAddressEx(void* base, int pos);
-		///	ƒtƒB[ƒ‹ƒh‚ªstd::vector‚Ìê‡Cvector::size() ‚ğŒÄ‚Ño‚·D
+		///	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ãŒstd::vectorã®å ´åˆï¼Œvector::size() ã‚’å‘¼ã³å‡ºã™ï¼
 		size_t VectorSize(const void * base){ 
 			return type->access->VectorSize(((char*)base)+offset); 
 		}
-		///	type‚ªbool‚Ì’PƒŒ^‚Ìê‡‚ÉCbool‚ğ“Ç‚İo‚·ŠÖ”
+		///	typeãŒboolã®å˜ç´”å‹ã®å ´åˆã«ï¼Œboolã‚’èª­ã¿å‡ºã™é–¢æ•°
 		bool ReadBool(const void* base, int pos=0){
 			return type->ReadBool(GetAddress(base, pos));
 		}
-		///	type‚ªbool‚Ì’PƒŒ^‚Ìê‡‚ÉCbool‚ğ‘‚«‚ŞŠÖ”
+		///	typeãŒboolã®å˜ç´”å‹ã®å ´åˆã«ï¼Œboolã‚’æ›¸ãè¾¼ã‚€é–¢æ•°
 		void WriteBool(void* base, bool val, int pos = 0){
 			if (base) type->WriteBool(val, GetAddressEx(base, pos));
 		}
-		///	type‚ª”’l‚Ì’PƒŒ^‚Ìê‡‚ÉC”’l‚ğ“Ç‚İo‚·ŠÖ”
+		///	typeãŒæ•°å€¤ã®å˜ç´”å‹ã®å ´åˆã«ï¼Œæ•°å€¤ã‚’èª­ã¿å‡ºã™é–¢æ•°
 		double ReadNumber(const void* base, int pos=0){
 			return type->ReadNumber(GetAddress(base, pos));
 		}
-		///	type‚ª”’l‚Ì’PƒŒ^‚Ìê‡‚ÉC”’l‚ğ‘‚«‚ŞŠÖ”
+		///	typeãŒæ•°å€¤ã®å˜ç´”å‹ã®å ´åˆã«ï¼Œæ•°å€¤ã‚’æ›¸ãè¾¼ã‚€é–¢æ•°
 		void WriteNumber(void* base, double val, int pos = 0){
 			if (base) type->WriteNumber(val, GetAddressEx(base, pos));
 		}
-		///	•¶š—ñ“Ç‚İo‚µ
+		///	æ–‡å­—åˆ—èª­ã¿å‡ºã—
 		std::string ReadString(const void* base, int pos=0){
 			return type->ReadString(GetAddress(base, pos));
 		}
-		///	•¶š—ñ‘‚«‚İ
+		///	æ–‡å­—åˆ—æ›¸ãè¾¼ã¿
 		void WriteString(void* base, const char* val, int pos=0){
 			if (base) type->WriteString(val, GetAddressEx(base, pos));
 		}
 	};
-	///	‘g‚İ—§‚ÄŒ^‚ğ‚ ‚ç‚í‚·ê‡‚Ég‚¤
+	///	çµ„ã¿ç«‹ã¦å‹ã‚’ã‚ã‚‰ã‚ã™å ´åˆã«ä½¿ã†
 	class SPR_DLL Composit: public std::vector<Field>{
 	public:
-		///	ƒf[ƒ^‚ÌƒTƒCƒY‚ğ•Ô‚·
+		///	ãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚ºã‚’è¿”ã™
 		int Size(){ return Size(""); }
-		///	ƒf[ƒ^‚ÌƒTƒCƒY‚ğ•Ô‚·
+		///	ãƒ‡ãƒ¼ã‚¿ã®ã‚µã‚¤ã‚ºã‚’è¿”ã™
 		int Size(std::string id);
 		///
 		void Link(UTTypeDescDb* db);
@@ -186,13 +186,13 @@ public:
 		void Print(std::ostream& os) const;
 	};
 
-	///	Œ^–¼
+	///	å‹å
 	std::string typeName;
-	///	ƒf[ƒ^‚Ì’·‚³
+	///	ãƒ‡ãƒ¼ã‚¿ã®é•·ã•
 	size_t size;
-	///	‘g‚İ—§‚ÄŒ^‚Ì’†g‚Ì‹LqD
+	///	çµ„ã¿ç«‹ã¦å‹ã®ä¸­èº«ã®è¨˜è¿°ï¼
 	Composit composit;
-	///	ƒvƒŠƒ~ƒeƒBƒu‚©‚Ç‚¤‚©
+	///	ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‹ã©ã†ã‹
 	bool bPrimitive;
 	///	IfInfo
 	const IfInfo* ifInfo;
@@ -201,53 +201,53 @@ public:
 
 	friend class UTTypeDescDb;
 public:
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	UTTypeDesc():size(0), bPrimitive(false), ifInfo(NULL){}
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	UTTypeDesc(std::string tn, int sz=0): typeName(tn), size(sz), bPrimitive(false), ifInfo(NULL){}
 	///	
 	virtual ~UTTypeDesc(){}
 	///
 	void Print(std::ostream& os) const;
-	///	Œ^–¼
+	///	å‹å
 	std::string GetTypeName() const { return typeName; }
-	///	Œ^–¼
+	///	å‹å
 	void SetTypeName(const char* s) { typeName = s; }
-	///	Œ^‚ÌƒTƒCƒY
+	///	å‹ã®ã‚µã‚¤ã‚º
 	size_t GetSize() { return size; }
-	///	ƒtƒB[ƒ‹ƒh‚Ì’Ç‰Á
+	///	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®è¿½åŠ 
 	Field* AddField(std::string pre, std::string ty, std::string n, std::string post);
-	///	base‚Ì’Ç‰Á
+	///	baseã®è¿½åŠ 
 	Field* AddBase(std::string tn);
 
-	///	‘g‚İ—§‚ÄŒ^‚©‚Ç‚¤‚©
+	///	çµ„ã¿ç«‹ã¦å‹ã‹ã©ã†ã‹
 	bool IsPrimitive(){ return bPrimitive; }
-	///	‘g‚İ—§‚ÄŒ^‚Ì—v‘f
+	///	çµ„ã¿ç«‹ã¦å‹ã®è¦ç´ 
 	Composit& GetComposit(){ return composit; }
-	///	ƒtƒB[ƒ‹ƒh‚ÌŒ^î•ñ‚ÌƒŠƒ“ƒN
+	///	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å‹æƒ…å ±ã®ãƒªãƒ³ã‚¯
 	void Link(UTTypeDescDb* db);
 	///
 	const IfInfo* GetIfInfo(){ return ifInfo; }
 
-	//	ƒ†[ƒeƒBƒŠƒeƒBŠÖ”
-	///	TypeDesc‚ªbool‚Ì’PƒŒ^‚Ìê‡‚ÉCbool‚ğ“Ç‚İo‚·ŠÖ”
+	//	ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£é–¢æ•°
+	///	TypeDescãŒboolã®å˜ç´”å‹ã®å ´åˆã«ï¼Œboolã‚’èª­ã¿å‡ºã™é–¢æ•°
 	virtual bool ReadBool(const void* ptr){ assert(0); return 0;}
-	///	TypeDesc‚ª”’l‚Ì’PƒŒ^‚Ìê‡‚ÉC”’l‚ğ‘‚«‚ŞŠÖ”
+	///	TypeDescãŒæ•°å€¤ã®å˜ç´”å‹ã®å ´åˆã«ï¼Œæ•°å€¤ã‚’æ›¸ãè¾¼ã‚€é–¢æ•°
 	virtual void WriteBool(bool val, void* ptr){ assert(0);}
-	///	TypeDesc‚ª”’l‚Ì’PƒŒ^‚Ìê‡‚ÉC”’l‚ğ“Ç‚İo‚·ŠÖ”
+	///	TypeDescãŒæ•°å€¤ã®å˜ç´”å‹ã®å ´åˆã«ï¼Œæ•°å€¤ã‚’èª­ã¿å‡ºã™é–¢æ•°
 	virtual double ReadNumber(const void* ptr){ assert(0); return 0;}
-	///	TypeDesc‚ª”’l‚Ì’PƒŒ^‚Ìê‡‚ÉC”’l‚ğ‘‚«‚ŞŠÖ”
+	///	TypeDescãŒæ•°å€¤ã®å˜ç´”å‹ã®å ´åˆã«ï¼Œæ•°å€¤ã‚’æ›¸ãè¾¼ã‚€é–¢æ•°
 	virtual void WriteNumber(double val, void* ptr){ assert(0);}
-	///	•¶š—ñ“Ç‚İo‚µ
+	///	æ–‡å­—åˆ—èª­ã¿å‡ºã—
 	virtual std::string ReadString(const void* ptr){ assert(0);  return 0;}
-	///	•¶š—ñ‘‚«‚İ
+	///	æ–‡å­—åˆ—æ›¸ãè¾¼ã¿
 	virtual void WriteString(const char* val, void* ptr){ assert(0); }
 
-	///	ƒIƒuƒWƒFƒNƒg‚Ì\’z
+	///	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®æ§‹ç¯‰
 	void* Create(){
 		return access ? access->Create() : NULL;
 	}
-	///	ƒIƒuƒWƒFƒNƒg‚ÌŒãn––
+	///	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å¾Œå§‹æœ«
 	void Delete(void* ptr){ 
 		if (ptr){
 			assert(access);
@@ -282,11 +282,11 @@ public:
 		bPrimitive = true;
 	}
 protected:
-	///	”’l“Ç‚İo‚µ
+	///	æ•°å€¤èª­ã¿å‡ºã—
 	virtual double ReadNumber(const void* ptr){
 		return *(const N*)ptr;
 	}
-	///	”’l‘‚«‚İ
+	///	æ•°å€¤æ›¸ãè¾¼ã¿
 	virtual void WriteNumber(double val, void* ptr){
 		*(N*)ptr = (N)val;
 	}
@@ -304,11 +304,11 @@ public:
 		bPrimitive = true;
 	}
 protected:
-	///	”’l“Ç‚İo‚µ
+	///	æ•°å€¤èª­ã¿å‡ºã—
 	virtual bool ReadBool(const void* ptr){
 		return *(const N*)ptr != 0;
 	}
-	///	”’l‘‚«‚İ
+	///	æ•°å€¤æ›¸ãè¾¼ã¿
 	virtual void WriteBool(bool val, void* ptr){
 		*(N*)ptr = (N)val;
 	}
@@ -325,38 +325,38 @@ public:
 		bPrimitive = true;
 	}
 protected:
-	///	”’l“Ç‚İo‚µ
+	///	æ•°å€¤èª­ã¿å‡ºã—
 	virtual std::string ReadString(const void* ptr){
 		return *(std::string*)ptr;
 	}
-	///	”’l‘‚«‚İ
+	///	æ•°å€¤æ›¸ãè¾¼ã¿
 	virtual void WriteString(const char* val, void* ptr){
 		*(std::string*)ptr = val;
 	}
 };
 
-///	Œ^‚Ìƒf[ƒ^ƒx[ƒX
+///	å‹ã®ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹
 class SPR_DLL UTTypeDescDb: public UTRefCount{
 	std::set<UTString, UTStringLess> addedGroups;
 public:
-	///	ƒRƒ“ƒeƒi‚ÌŒ^
+	///	ã‚³ãƒ³ãƒ†ãƒŠã®å‹
 	typedef std::set< UTRef<UTTypeDesc>, UTContentsLess< UTRef<UTTypeDesc> > > Db;
 protected:
-	std::string group;			///<	ƒOƒ‹[ƒv–¼
-	std::string prefix;			///<	–¼‘O‚Ì‚¤‚¿ƒvƒŒƒtƒBƒbƒNƒX‚Ì•”•ª
-	Db db;						///<	UTTypeDesc ‚ğ“ü‚ê‚Ä‚¨‚­ƒRƒ“ƒeƒi
+	std::string group;			///<	ã‚°ãƒ«ãƒ¼ãƒ—å
+	std::string prefix;			///<	åå‰ã®ã†ã¡ãƒ—ãƒ¬ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã®éƒ¨åˆ†
+	Db db;						///<	UTTypeDesc ã‚’å…¥ã‚Œã¦ãŠãã‚³ãƒ³ãƒ†ãƒŠ
 public:
 	UTTypeDescDb(UTString gp=""):group(gp){}
 	///	
 	~UTTypeDescDb();
-	/**	Œ^î•ñ‚ğƒf[ƒ^ƒx[ƒX‚É“o˜^D	*/
+	/**	å‹æƒ…å ±ã‚’ãƒ‡ãƒ¼ã‚¿ãƒ™ãƒ¼ã‚¹ã«ç™»éŒ²ï¼	*/
 	void RegisterDesc(UTTypeDesc* n){
 		if (prefix.length() && n->typeName.compare(0, prefix.length(), prefix) == 0){
 			n->typeName = n->typeName.substr(prefix.length());
 		}
 		db.insert(n);
 	}
-	/**	Œ^–¼‚ÌAlias‚ğ“o˜^	*/
+	/**	å‹åã®Aliasã‚’ç™»éŒ²	*/
 	void RegisterAlias(const char* src, const char* dest){
 		UTTypeDesc* srcDesc = Find(src);
 		assert(srcDesc);
@@ -364,17 +364,17 @@ public:
 		destDesc->typeName = dest;
 		RegisterDesc(destDesc);
 	}
-	/**	Œ^î•ñ‚ğƒvƒƒgƒ^ƒCƒvƒŠƒXƒg‚É“o˜^	*/
+	/**	å‹æƒ…å ±ã‚’ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—ãƒªã‚¹ãƒˆã«ç™»éŒ²	*/
 	void RegisterProto(UTTypeDesc* n);
-	/**	Œ^–¼‚ÌPrefix ‚ğİ’èD
-		Œ^–¼‚ğFind‚ÅŒŸõ‚·‚éÛ‚ÉCŒŸõƒL[‚ÉPrefix‚ğ‚Â‚¯‚½ƒL[‚Å‚àŒ^–¼‚ğŒŸõ‚·‚éD	*/
+	/**	å‹åã®Prefix ã‚’è¨­å®šï¼
+		å‹åã‚’Findã§æ¤œç´¢ã™ã‚‹éš›ã«ï¼Œæ¤œç´¢ã‚­ãƒ¼ã«Prefixã‚’ã¤ã‘ãŸã‚­ãƒ¼ã§ã‚‚å‹åã‚’æ¤œç´¢ã™ã‚‹ï¼	*/
 	void SetPrefix(std::string p);
-	/**	Œ^î•ñ‚ğ–¼‘O‚©‚çŒŸõ‚·‚éD
-		@param tn	Œ^–¼Dprefix ‚ÍÈ—ª‚µ‚Ä‚æ‚¢D	*/
+	/**	å‹æƒ…å ±ã‚’åå‰ã‹ã‚‰æ¤œç´¢ã™ã‚‹ï¼
+		@param tn	å‹åï¼prefix ã¯çœç•¥ã—ã¦ã‚ˆã„ï¼	*/
 	UTTypeDesc* Find(std::string tn);
-	///	DB“à‚ÌŒ^î•ñ‚ğƒŠƒ“ƒND
+	///	DBå†…ã®å‹æƒ…å ±ã‚’ãƒªãƒ³ã‚¯ï¼
 	void Link();
-	///	DB“à‚ÌŒ^î•ñ‚Ì•\¦
+	///	DBå†…ã®å‹æƒ…å ±ã®è¡¨ç¤º
 	void Print(std::ostream& os) const;
 	UTTypeDescDb& operator += (const UTTypeDescDb& b){
 		if (b.group.compare(group)!=0 && 
@@ -407,32 +407,32 @@ public:
 	static void SPR_CDECL Print(std::ostream& os);
 };
 
-/**	TypeDesc‚ÌƒtƒB[ƒ‹ƒh‚ÌƒCƒ^ƒŒ[ƒ^
-	ƒoƒCƒiƒŠƒtƒ@ƒCƒ‹‚âXƒtƒ@ƒCƒ‹‚©‚çC‚ ‚éŒ^‚Ìƒf[ƒ^‚ğ‡‚É“Ç‚İo‚µ‚Ä‚¢‚­ê‡C
-	“Ç‚İo‚µ’†‚Ìƒf[ƒ^‚ªUTTypeDesc‚ÌƒcƒŠ[‚Ì‚Ç‚±‚É‘Î‰‚·‚é‚©‚ğ•Û‚µ‚Ä‚¨‚­•K—v‚ª‚ ‚éD
+/**	TypeDescã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚¤ã‚¿ãƒ¬ãƒ¼ã‚¿
+	ãƒã‚¤ãƒŠãƒªãƒ•ã‚¡ã‚¤ãƒ«ã‚„Xãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ï¼Œã‚ã‚‹å‹ã®ãƒ‡ãƒ¼ã‚¿ã‚’é †ã«èª­ã¿å‡ºã—ã¦ã„ãå ´åˆï¼Œ
+	èª­ã¿å‡ºã—ä¸­ã®ãƒ‡ãƒ¼ã‚¿ãŒUTTypeDescã®ãƒ„ãƒªãƒ¼ã®ã©ã“ã«å¯¾å¿œã™ã‚‹ã‹ã‚’ä¿æŒã—ã¦ãŠãå¿…è¦ãŒã‚ã‚‹ï¼
 */
 class UTTypeDescFieldIt{
 public:
-	/**	ƒtƒB[ƒ‹ƒh‚Ìí—Ş‚ğ¦‚·ƒtƒ‰ƒOD
-		‚Ù‚Æ‚ñ‚Ç‚Ìƒtƒ@ƒCƒ‹ƒtƒH[ƒ}ƒbƒg‚ÅC®”CÀ”C•¶š—ñ‚ÅCˆÙ‚È‚éƒp[ƒT‚ª•K—v‚É‚È‚éD
-		‚»‚±‚ÅC‚»‚ê‚ç‚Å•ª—ŞD
-		‘g‚İ—§‚ÄŒ^‚ÍCUTTypeDesc‚ğQÆ‚µ‚Ä“Ç‚İo‚·‚Ì‚ÅCF_BLOCK‚ğ—pˆÓ‚µ‚½D
+	/**	ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ç¨®é¡ã‚’ç¤ºã™ãƒ•ãƒ©ã‚°ï¼
+		ã»ã¨ã‚“ã©ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã§ï¼Œæ•´æ•°ï¼Œå®Ÿæ•°ï¼Œæ–‡å­—åˆ—ã§ï¼Œç•°ãªã‚‹ãƒ‘ãƒ¼ã‚µãŒå¿…è¦ã«ãªã‚‹ï¼
+		ãã“ã§ï¼Œãã‚Œã‚‰ã§åˆ†é¡ï¼
+		çµ„ã¿ç«‹ã¦å‹ã¯ï¼ŒUTTypeDescã‚’å‚ç…§ã—ã¦èª­ã¿å‡ºã™ã®ã§ï¼ŒF_BLOCKã‚’ç”¨æ„ã—ãŸï¼
 	*/
 	enum FieldType{
 		F_NONE, F_BOOL, F_INT, F_REAL, F_STR, F_BLOCK
 	};
-	UTTypeDesc* type;						///<	“Ç‚İo‚µ’†‚ÌUTTypeDesc
-	UTTypeDesc::Composit::iterator field;	///<	‘g‚İ—§‚ÄŒ^‚Ìê‡C‚»‚Ì’†‚Ì‚Ç‚ÌƒtƒB[ƒ‹ƒh‚©
-	int arrayPos;							///<	”z—ñ‚Ìê‡C“Ç‚İo‚µ’†‚Ì“Y‚¦š
-	int arrayLength;						///<	ŒÅ’è’·‚Ìê‡‚Ì”z—ñ‚Ì’·‚³
-	FieldType fieldType;					///<	“Ç‚İo‚·ƒtƒB[ƒ‹ƒh‚ÌŒ^
+	UTTypeDesc* type;						///<	èª­ã¿å‡ºã—ä¸­ã®UTTypeDesc
+	UTTypeDesc::Composit::iterator field;	///<	çµ„ã¿ç«‹ã¦å‹ã®å ´åˆï¼Œãã®ä¸­ã®ã©ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‹
+	int arrayPos;							///<	é…åˆ—ã®å ´åˆï¼Œèª­ã¿å‡ºã—ä¸­ã®æ·»ãˆå­—
+	int arrayLength;						///<	å›ºå®šé•·ã®å ´åˆã®é…åˆ—ã®é•·ã•
+	FieldType fieldType;					///<	èª­ã¿å‡ºã™ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å‹
 
-	UTTypeDescFieldIt(UTTypeDesc* d);		///<	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	bool NextField(void* base);				///<	Ÿ‚ÌƒtƒB[ƒ‹ƒh‚Éi‚Ş
-	bool PrevField(void* base);				///<	‘O‚ÌƒtƒB[ƒ‹ƒh‚Éi‚Ş
-	bool HaveField(UTString name);			///<	w’è‚Ì–¼‘O‚ÌƒtƒB[ƒ‹ƒh‚ğ‚Á‚Ä‚¢‚é‚È‚çtrueBŒp³Œ³‚ÌƒtƒB[ƒ‹ƒh‚àŒŸõ‚·‚éB
+	UTTypeDescFieldIt(UTTypeDesc* d);		///<	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	bool NextField(void* base);				///<	æ¬¡ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã«é€²ã‚€
+	bool PrevField(void* base);				///<	å‰ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã«é€²ã‚€
+	bool HaveField(UTString name);			///<	æŒ‡å®šã®åå‰ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚’æŒã£ã¦ã„ã‚‹ãªã‚‰trueã€‚ç¶™æ‰¿å…ƒã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã‚‚æ¤œç´¢ã™ã‚‹ã€‚
 protected:
-	void SetFieldInfo(void* base);			///<	NextField‚ªg‚¤
+	void SetFieldInfo(void* base);			///<	NextFieldãŒä½¿ã†
 	FieldType GetTypeId(UTTypeDesc* t);
 	friend class UTLoadContext;
 };
@@ -442,17 +442,17 @@ public:
 	void PushType(UTTypeDesc* t){
 		Push(UTTypeDescFieldIt(t));
 	}
-	///	Ÿ‚ÌƒtƒB[ƒ‹ƒh‚Éi‚Ş
+	///	æ¬¡ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã«é€²ã‚€
 	bool NextField(void* base){
 		if(size()) return back().NextField(base);
 		return false;
 	}
-	///	”z—ñ’†‚Å‚ÌˆÊ’u
+	///	é…åˆ—ä¸­ã§ã®ä½ç½®
 	int ArrayPos(){
 		if(size()) return back().arrayPos;
 		return -1;
 	}
-	///	”z—ñ‚Ì’·‚³
+	///	é…åˆ—ã®é•·ã•
 	int ArrayLength(){
 		if(size()) return back().arrayLength;
 		return 0;
@@ -492,43 +492,43 @@ public:
 
 void SPR_CDECL UTRegisterTypeDescs();
 
-///	’PƒŒ^‚ğ“o˜^‚·‚éD
+///	å˜ç´”å‹ã‚’ç™»éŒ²ã™ã‚‹ï¼
 #define REG_FIELD(type)	RegisterDesc( DBG_NEW UTTypeDesc(#type, sizeof(type)) )
-/**	ƒhƒLƒ…ƒƒ“ƒg‚©‚çƒ[ƒh‰Â”\‚ÈƒNƒ‰ƒX‚Ì’è‹`D
-	ƒNƒ‰ƒX‚ªŠî–{ƒNƒ‰ƒX‚ğ‚Âê‡	*/
+/**	ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‹ã‚‰ãƒ­ãƒ¼ãƒ‰å¯èƒ½ãªã‚¯ãƒ©ã‚¹ã®å®šç¾©ï¼
+	ã‚¯ãƒ©ã‚¹ãŒåŸºæœ¬ã‚¯ãƒ©ã‚¹ã‚’æŒã¤å ´åˆ	*/
 #define DEF_RECORDBASE(Type, Base, Def)					\
 	struct Type: public Base Def;						\
 	static const char* classNameOf##Type = #Type;		\
 	static const char* classDefOf##Type = #Def;			\
 
-/**	ƒhƒLƒ…ƒƒ“ƒg‚©‚çƒ[ƒh‰Â”\‚ÈƒNƒ‰ƒX‚Ì’è‹`D
-	Šî–{ƒNƒ‰ƒX‚ª–³‚¢ê‡	*/
+/**	ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‹ã‚‰ãƒ­ãƒ¼ãƒ‰å¯èƒ½ãªã‚¯ãƒ©ã‚¹ã®å®šç¾©ï¼
+	åŸºæœ¬ã‚¯ãƒ©ã‚¹ãŒç„¡ã„å ´åˆ	*/
 #define DEF_RECORD(Type, Def)							\
 	struct Type Def;									\
 	static const char* classNameOf##Type = #Type;		\
 	static const char* classDefOf##Type = #Def;			\
 
-/**	DER_RECORD ‚Å’è‹`‚µ‚½Œ^‚ğ“o˜^‚·‚éD*/
+/**	DER_RECORD ã§å®šç¾©ã—ãŸå‹ã‚’ç™»éŒ²ã™ã‚‹ï¼*/
 #define REG_RECORD(Type)	\
 	Register(classNameOf##Type, classDefOf##Type)
 
-/**	DER_RECORD ‚Å’è‹`‚µ‚½Œ^‚ğƒvƒƒgƒ^ƒCƒv‚Æ‚µ‚Ä‚à“o˜^‚·‚éD*/
+/**	DER_RECORD ã§å®šç¾©ã—ãŸå‹ã‚’ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—ã¨ã—ã¦ã‚‚ç™»éŒ²ã™ã‚‹ï¼*/
 #define REG_RECORD_PROTO(Type)	\
 	Register(classNameOf##Type, classDefOf##Type, true)
 
-/**	@page TypeDesc Œ^à–¾ƒNƒ‰ƒX
-C++‚Ì\‘¢‘ÌéŒ¾‚ğ•¶š—ñ‚Æ‚µ‚Äó‚¯æ‚èCŒ^‚ğ‰ğÍ‚·‚éD
-g‚¢•ûFƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ÅC’è‹`
+/**	@page TypeDesc å‹èª¬æ˜ã‚¯ãƒ©ã‚¹
+C++ã®æ§‹é€ ä½“å®£è¨€ã‚’æ–‡å­—åˆ—ã¨ã—ã¦å—ã‘å–ã‚Šï¼Œå‹ã‚’è§£æã™ã‚‹ï¼
+ä½¿ã„æ–¹ï¼šãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã§ï¼Œå®šç¾©
 DEF_RECORD( Test, {
 	int x;
 	char y;
 }
 )
 
-‚ğ‘‚¢‚ÄCƒNƒ‰ƒX‚Ì’è‹`‚ğs‚¢C
-.cppƒtƒ@ƒCƒ‹‚Ì‰½‚©‚ÌŠÖ”‚Ì’†‚Å
+ã‚’æ›¸ã„ã¦ï¼Œã‚¯ãƒ©ã‚¹ã®å®šç¾©ã‚’è¡Œã„ï¼Œ
+.cppãƒ•ã‚¡ã‚¤ãƒ«ã®ä½•ã‹ã®é–¢æ•°ã®ä¸­ã§
 	REG_RECORD(Test);
-‚ğ‘‚¢‚Ä“o˜^‚µ‚Ü‚·D
+ã‚’æ›¸ã„ã¦ç™»éŒ²ã—ã¾ã™ï¼
 */
 
 

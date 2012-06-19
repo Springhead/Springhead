@@ -1,32 +1,32 @@
-/**
-\page pageFoundationImp ��{SDK�̎���
+﻿/**
+\page pageFoundationImp 基本SDKの実装
 
 
-\section secCreateObject �I�u�W�F�N�g�̐���
-�I�u�W�F�N�g�́C�I�u�W�F�N�g�𐶐�����API ObjectIf::CreateObject() �������Ă���C
-����ɂ���Đ����ł��܂��D
-�Ⴆ�� GRSdk �|������ GRScene �|������ GRFrame �Ɛ����ł��܂��D
-�������ꂽ�I�u�W�F�N�g�́C���������I�u�W�F�N�g�ɏ��L����邱�Ƃ������ł��D
+\section secCreateObject オブジェクトの生成
+オブジェクトは，オブジェクトを生成するAPI ObjectIf::CreateObject() を持っており，
+これによって生成できます．
+例えば GRSdk －生成→ GRScene －生成→ GRFrame と生成できます．
+生成されたオブジェクトは，生成したオブジェクトに所有されることが多いです．
 
-SDK�́A���[�g�̃I�u�W�F�N�g�ŁC�e�I�u�W�F�N�g���Ȃ����Ƃ������ł��B
-FWSdk, FISdk, �͐e�I�u�W�F�N�g�������܂���B
-PHSdk��GRSdk�́CFWScene���e�I�u�W�F�N�g�ɂȂ邱�Ƃ�����܂��B
-�����́C�ÓI�����o�[�֐� PHSdkIf::CreateSdk() GRSdkIf::CreateSdk() �ȂǂŐ����ł��܂��D
+SDKは、ルートのオブジェクトで，親オブジェクトたないことが多いです。
+FWSdk, FISdk, は親オブジェクトを持ちません。
+PHSdkやGRSdkは，FWSceneが親オブジェクトになることがあります。
+これらは，静的メンバー関数 PHSdkIf::CreateSdk() GRSdkIf::CreateSdk() などで生成できます．
 
 
-\subsection secFactory Factory�N���X
-���Ƃ��΁CPHSolid ���p���� �`�󂩂玩���Ŏ��ʂƊ������[�����g�����߂� PHAutoSolid
-��������Ƃ��āC������t�@�C�����[�_�[�Ń��[�h���āCPHScene�ɒǉ����邽�߂ɂ́C
-PHAutoSolid��PHScene::CreateObject()�������ł��Ȃ���΂Ȃ�܂���D
+\subsection secFactory Factoryクラス
+たとえば，PHSolid を継承し 形状から自動で質量と慣性モーメントを求める PHAutoSolid
+を作ったとして，これをファイルローダーでロードして，PHSceneに追加するためには，
+PHAutoSolidをPHScene::CreateObject()が生成できなければなりません．
 
-���Ƃ���C�V�����N���X�𐶐��ł���悤�ɂ���d�g�݂��t�@�N�g���ł��D
-FactoryBase�N���X��h�������ăI�u�W�F�N�g�����C
-PHSceneIf::GetIfStatic()->RegisterFactory()���g���ēo�^����ƁCPHScene::CreateObject()
-���o�^���ꂽ�t�@�N�g�����Ăяo���ăI�u�W�F�N�g�𐶐�����悤�ɂȂ�܂�
-(���ۂ́CFactoryImpTemplate ���g���ƊȒP�ł�)�D
-GRSdk.cpp �� GRRegisterFactories() �Ȃǂ��Q�Ƃ��������D
+あとから，新しいクラスを生成できるようにする仕組みがファクトリです．
+FactoryBaseクラスを派生させてオブジェクトを作り，
+PHSceneIf::GetIfStatic()->RegisterFactory()を使って登録すると，PHScene::CreateObject()
+が登録されたファクトリを呼び出してオブジェクトを生成するようになります
+(実際は，FactoryImpTemplate を使うと簡単です)．
+GRSdk.cpp の GRRegisterFactories() などを参照ください．
 
-�t�@�N�g�����Ăяo�������́CObject::CreateObject() �ɂ���̂ŁC
-CreateObject() ���I�[�o�[���C�h����Ƃ��́C������Ăяo���K�v������܂��D
+ファクトリを呼び出す実装は，Object::CreateObject() にあるので，
+CreateObject() をオーバーライドするときは，これを呼び出す必要があります．
 
 */

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,9 +17,9 @@
 
 namespace Spr {;
 
-///	ƒNƒŠ[ƒ`ƒƒ‚ÌƒGƒ“ƒWƒ“‚ÌŠî–{ƒNƒ‰ƒXD
+///	ã‚¯ãƒªãƒ¼ãƒãƒ£ã®ã‚¨ãƒ³ã‚¸ãƒ³ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ï¼
 class CREngine : public SceneObject {
-	/// —LŒø‚©E–³Œø‚©
+	/// æœ‰åŠ¹ã‹ãƒ»ç„¡åŠ¹ã‹
 	bool enabled;
 
 public:
@@ -27,19 +27,19 @@ public:
 
 	CREngine() { enabled = true; }
 
-	///	Às‡˜‚ğŒˆ‚ß‚éƒvƒ‰ƒCƒIƒŠƒeƒB’lD¬‚³‚¢‚Ù‚Ç‘‚¢
+	///	å®Ÿè¡Œé †åºã‚’æ±ºã‚ã‚‹ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£å€¤ï¼å°ã•ã„ã»ã©æ—©ã„
 	virtual int GetPriority() const { return CREngineDesc::CREP_CONTROLLER; }
 
-	///	‰Šú‰»‚·‚é
+	///	åˆæœŸåŒ–ã™ã‚‹
 	virtual void Init(){}
 
-	///	ˆ—‚ğ‚PƒXƒeƒbƒvÀs‚·‚é
+	///	å‡¦ç†ã‚’ï¼‘ã‚¹ãƒ†ãƒƒãƒ—å®Ÿè¡Œã™ã‚‹
 	virtual void Step(){}
 
-	/// —LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/// æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	virtual void Enable(bool enable) { enabled = enable; }
 
-	/// —LŒøE–³Œø‚©‚ğ•Ô‚·
+	/// æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‹ã‚’è¿”ã™
 	virtual bool IsEnabled() { return enabled; }
 };
 
@@ -47,17 +47,17 @@ inline bool operator < (const CREngine& e1, const CREngine& e2){
 	return e1.GetPriority() < e2.GetPriority();
 }
 
-///	ƒNƒŠ[ƒ`ƒƒ‚ÌƒRƒ“ƒgƒ[ƒ‰‚ÌŠî–{ƒNƒ‰ƒXD
+///	ã‚¯ãƒªãƒ¼ãƒãƒ£ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ï¼
 class CRController : public CREngine {
 public:
 	SPR_OBJECTDEF(CRController);
 
 	CRController() {}
 
-	///	ó‘Ô‚ğƒŠƒZƒbƒg‚·‚é
+	///	çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹
 	virtual void Reset(){}
 
-	///	Œ»ó‚ğ•Ô‚·
+	///	ç¾çŠ¶ã‚’è¿”ã™
 	virtual int GetStatus(){ return CRControllerDesc::CS_WAITING; }
 };
 

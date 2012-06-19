@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -37,16 +37,16 @@ FWApp::~FWApp(){
 }
 
 void FWApp::Init(int argc, char* argv[]){
-	// Å‚àŠî–{“I‚È‰Šú‰»ˆ—
-	// SDK‰Šú‰»
+	// æœ€ã‚‚åŸºæœ¬çš„ãªåˆæœŸåŒ–å‡¦ç†
+	// SDKåˆæœŸåŒ–
 	CreateSdk();
-	// ƒV[ƒ“‚ðì¬
+	// ã‚·ãƒ¼ãƒ³ã‚’ä½œæˆ
 	GetSdk()->CreateScene();
-	// ƒEƒBƒ“ƒhƒEƒ}ƒlƒWƒƒ‰Šú‰»
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒžãƒã‚¸ãƒ£åˆæœŸåŒ–
 	GRInit(argc, argv);
-	// ƒEƒBƒ“ƒhƒE‚ðì¬
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ä½œæˆ
 	CreateWin();
-	// ƒ^ƒCƒ}‚ðì¬
+	// ã‚¿ã‚¤ãƒžã‚’ä½œæˆ
 	CreateTimer();
 }
 
@@ -69,12 +69,12 @@ void FWApp::StartMainLoop(){
 }
 
 
-// ”h¶ƒNƒ‰ƒX‚Å’è‹`‚·‚é‚±‚Æ‚Ì‚Å‚«‚é‰¼‘zŠÖ”/////////////////////////////////
+// æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®šç¾©ã™ã‚‹ã“ã¨ã®ã§ãã‚‹ä»®æƒ³é–¢æ•°/////////////////////////////////
 void FWApp::Reshape(int w, int h){
 }
 
 void FWApp::MouseButton(int button, int state, int x, int y){
-	// ctrl+left ƒJ[ƒ\ƒ‹‚Å„‘Ì‚ð“®‚©‚·
+	// ctrl+left ã‚«ãƒ¼ã‚½ãƒ«ã§å‰›ä½“ã‚’å‹•ã‹ã™
 	/*if(fwSdk->GetScene() && (mouseInfo.left && mouseInfo.ctrl)){
 		dragInfo.Init(fwSdk->GetScene()->GetPHScene(), cameraInfo.view, fwSdk->GetRender());
 		dragInfo.Grab(x, y);
@@ -85,30 +85,30 @@ void FWApp::MouseButton(int button, int state, int x, int y){
 }
 
 void FWApp::MouseMove(int x, int y){
-	// Ž‹“_ˆÚ“®(‰ñ“])
+	// è¦–ç‚¹ç§»å‹•(å›žè»¢)
 	/*if(mouseInfo.left && !mouseInfo.ctrl && !mouseInfo.alt){
 		cameraInfo.Rotate(mouseInfo.pos.x - mouseInfo.lastPos.x, mouseInfo.pos.y - mouseInfo.lastPos.y,
 			GetSdk()->GetRender()->GetPixelSize());
 	}
 
-	// Ž‹“_ˆÚ“®(•½sˆÚ“®)
+	// è¦–ç‚¹ç§»å‹•(å¹³è¡Œç§»å‹•)
 	if(mouseInfo.middle || mouseInfo.left && mouseInfo.alt){
 		cameraInfo.Translate(mouseInfo.pos.x - mouseInfo.lastPos.x, mouseInfo.pos.y - mouseInfo.lastPos.y,
 			GetSdk()->GetRender()->GetPixelSize());
 	}
 	
-	// ƒY[ƒ€
+	// ã‚ºãƒ¼ãƒ 
 	if(mouseInfo.right){
 		cameraInfo.Zoom(mouseInfo.pos.y - mouseInfo.lastPos.y);
 	}
 
-	// „‘Ìƒhƒ‰ƒbƒO
+	// å‰›ä½“ãƒ‰ãƒ©ãƒƒã‚°
 	if(mouseInfo.left && mouseInfo.ctrl)
 		dragInfo.Drag(x, y);
 	*/
 }
 
-//@FWApp‚ÌƒCƒ“ƒ^ƒtƒF[ƒX ///////////////////////////////////////////////////////
+//ã€€FWAppã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ ///////////////////////////////////////////////////////
 
 void FWApp::CreateSdk(){
 	if(fwSdk)
@@ -119,7 +119,7 @@ void FWApp::CreateSdk(){
 void FWApp::AssignScene(FWWinIf* win){
 	if (win->GetScene()) return;
 	
-	// Šù‘¶‚Ì‚Ç‚ÌƒEƒBƒ“ƒhƒE‚É‚àŠ„‚è“–‚Ä‚ç‚ê‚Ä‚¢‚È‚¢ƒV[ƒ“‚ð’T‚·
+	// æ—¢å­˜ã®ã©ã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«ã‚‚å‰²ã‚Šå½“ã¦ã‚‰ã‚Œã¦ã„ãªã„ã‚·ãƒ¼ãƒ³ã‚’æŽ¢ã™
 	for(int i = GetSdk()->NScene() - 1; i >= 0; --i){
 		FWSceneIf* scene = GetSdk()->GetScene(i);
 		Wins::iterator it;
@@ -136,11 +136,11 @@ void FWApp::AssignScene(FWWinIf* win){
 FWWinIf* FWApp::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 	FWWinIf* win = FWGraphicsHandler::instance->CreateWin(desc, parent);
 
-	// Ž©g‚ðƒL[ƒ{[ƒhEƒ}ƒEƒXƒR[ƒ‹ƒoƒbƒN‚É“o˜^
+	// è‡ªèº«ã‚’ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ»ãƒžã‚¦ã‚¹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã«ç™»éŒ²
 	win->GetKeyMouse()->AddCallback(this);
 
 	HISdkIf* hiSdk = GetSdk()->GetHISdk();
-	// ƒgƒ‰ƒbƒNƒ{[ƒ‹‚Æƒhƒ‰ƒbƒK[‚ðì¬
+	// ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«ã¨ãƒ‰ãƒ©ãƒƒã‚¬ãƒ¼ã‚’ä½œæˆ
 	if(desc.useKeyMouse && desc.useTrackball)
 		win->SetTrackball(hiSdk->CreateHumanInterface(HITrackballIf::GetIfInfoStatic())->Cast());
 	//if(desc.useKeyMouse && desc.useDragger)
@@ -148,12 +148,12 @@ FWWinIf* FWApp::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 
 	wins.push_back(win);
 
-	// ƒV[ƒ“‚ÌŠ„“–‚Ä
+	// ã‚·ãƒ¼ãƒ³ã®å‰²å½“ã¦
 	AssignScene(win);
-	// ƒŒƒ“ƒ_ƒ‰Š„“–‚Ä
+	// ãƒ¬ãƒ³ãƒ€ãƒ©å‰²å½“ã¦
 	GRRenderIf* render = GetSdk()->GetGRSdk()->CreateRender();
 	render->SetDevice(FWGraphicsHandler::instance->GetGRDevice());
-	// ‚±‚ÌƒRƒ“ƒeƒLƒXƒg‚É‘Î‚µ‚ÄGRDeviceGL::Init‚ðŒÄ‚Ô
+	// ã“ã®ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã«å¯¾ã—ã¦GRDeviceGL::Initã‚’å‘¼ã¶
 	render->GetDevice()->Init();
 	win->SetRender(render);
 
@@ -194,7 +194,7 @@ int FWApp::GetModifier(){
 	return FWGraphicsHandler::instance->GetModifiers();
 }
 
-// •`‰æƒp[ƒg////////////////////////////////////////////////////////////////////
+// æç”»ãƒ‘ãƒ¼ãƒˆ////////////////////////////////////////////////////////////////////
 
 void FWApp::SetGRHandler(int type){
 	switch (type) {
@@ -216,9 +216,9 @@ void FWApp::GRInit(int argc, char* argv[], int type){
 	FWGraphicsHandler::instance->Init(argc, argv);
 }
 
-//ƒ^ƒCƒ}///////////////////////////////////////////////////////////////////////////
+//ã‚¿ã‚¤ãƒž///////////////////////////////////////////////////////////////////////////
 
-/// UTTimer‚É“o˜^‚·‚éƒR[ƒ‹ƒoƒbƒNŠÖ”
+/// UTTimerã«ç™»éŒ²ã™ã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 void SPR_CDECL FWApp_TimerCallback(int id, void* arg){
 	FWApp* app = (FWApp*)arg;
 	if(!app)
@@ -227,7 +227,7 @@ void SPR_CDECL FWApp_TimerCallback(int id, void* arg){
 }
 
 UTTimerIf*  FWApp::CreateTimer(UTTimerIf::Mode mode){
-	/// ƒCƒ“ƒXƒ^ƒ“ƒX‚ÍƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ì’†‚ÅUTTimerStub‚ÉŠi”[‚³‚ê‚é
+	/// ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã¯ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®ä¸­ã§UTTimerStubã«æ ¼ç´ã•ã‚Œã‚‹
 	UTTimerIf* timer = UTTimerIf::Create();
 	timer->SetMode(mode);
 	timer->SetCallback(FWApp_TimerCallback, this);

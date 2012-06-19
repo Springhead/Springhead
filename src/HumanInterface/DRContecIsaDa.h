@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,12 +12,12 @@
 
 namespace Spr {
 
-///	Contec‚ÌISA D/AƒJ[ƒh—p‚Ìƒhƒ‰ƒCƒo.
+///	Contecã®ISA D/Aã‚«ãƒ¼ãƒ‰ç”¨ã®ãƒ‰ãƒ©ã‚¤ãƒ.
 class SPR_DLL DRContecIsaDa: public HIRealDevice{
 public:
 	SPR_OBJECTDEF_NOIF(DRContecIsaDa);
 
-	///	‰¼‘zƒfƒoƒCƒX
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹
 	class Da: public DVDa{
 	public:
 		Da(DRContecIsaDa* r, int c):DVDa(r, c){}
@@ -27,20 +27,20 @@ public:
 		virtual void Digit(int d){ GetRealDevice()->Digit(portNo, d); }
 	};
 protected:
-	///	D/A‚ÌIOƒAƒhƒŒƒX
+	///	D/Aã®IOã‚¢ãƒ‰ãƒ¬ã‚¹
 	int address;
 public:
-	/**	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		@param address		D/A‚ÌI/OƒAƒhƒŒƒX	*/
+	/**	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		@param address		D/Aã®I/Oã‚¢ãƒ‰ãƒ¬ã‚¹	*/
 	DRContecIsaDa(int address = 0);
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	virtual bool Init();
-	///	‰¼‘zƒfƒoƒCƒX‚Ì“o˜^
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²
 	//virtual void Register(HIVirtualDevicePool& vpool);
 
-	///	“dˆ³o—Í
+	///	é›»åœ§å‡ºåŠ›
 	void Voltage(int ch, float v);
-	///	“dˆ³o—Í(”’lw’è)
+	///	é›»åœ§å‡ºåŠ›(æ•°å€¤æŒ‡å®š)
 	void Digit(int ch, int v);
 };
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprGRFrame.h
- *	@brief �V�[���O���t�̃m�[�h
+ *	@brief シーングラフのノード
 */
 
 /**	\addtogroup	gpGraphics	*/
@@ -22,161 +22,161 @@ namespace Spr{;
 
 struct GRRenderIf;
 
-/** @brief �r�W���A���̃f�B�X�N���v�^ */
+/** @brief ビジュアルのディスクリプタ */
 struct GRVisualDesc{
 };
 
-/**	@brief	�O���t�B�b�N�X�ŕ\���ɉe����^�������	*/
+/**	@brief	グラフィックスで表示に影響を与えるもの	*/
 struct GRVisualIf: public SceneObjectIf{
 	SPR_IFDEF(GRVisual);
-	///	�����_�����O�D�q�m�[�h�C��m�[�h�̃����_�����O���O�ɌĂ΂��D
+	///	レンダリング．子ノード，弟ノードのレンダリングより前に呼ばれる．
 	void Render(GRRenderIf* r);
-	///	�����_�����O�I�������D�q�m�[�h�C��m�[�h�̃����_�����O���I����Ă���Ă΂��D
+	///	レンダリング終了処理．子ノード，弟ノードのレンダリングが終わってから呼ばれる．
 	void Rendered(GRRenderIf* r);
 
-	/// �����_�����O�̗L����/������
+	/// レンダリングの有効化/無効化
 	void Enable(bool on = true);
-	/// �L��/������Ԃ̎擾
+	/// 有効/無効状態の取得
 	bool IsEnabled();
 
 };
 		
-///	DirectX �� Frame �̕ϊ���\�� FrameTransformMatrix �m�[�h��ǂނ��߂�Desc
+///	DirectX の Frame の変換を表す FrameTransformMatrix ノードを読むためのDesc
 struct GRFrameTransformMatrix{
 	Affinef transform;
 };
 
 	
-/**	@brief	�O���t�B�b�N�X�V�[���O���t�̃c���[�̃m�[�h�D���W�n�����D*/
+/**	@brief	グラフィックスシーングラフのツリーのノード．座標系を持つ．*/
 struct GRFrameIf: public GRVisualIf{
 	SPR_IFDEF(GRFrame);
 
-	/** @brief �e�t���[�����擾���� */
+	/** @brief 親フレームを取得する */
 	GRFrameIf* GetParent();
 
-	/** @brief �e�t���[����ݒ肷�� */
+	/** @brief 親フレームを設定する */
 	void SetParent(GRFrameIf* fr);
 
-	/** @brief �q�m�[�h�̐����擾 */
+	/** @brief 子ノードの数を取得 */
 	int NChildren();
 
-	/** @brief �q�m�[�h�̔z����擾 */
+	/** @brief 子ノードの配列を取得 */
 	GRVisualIf** GetChildren();
 
-	/** @brief �e�m�[�h�Ƃ̑��Εϊ����擾 */
+	/** @brief 親ノードとの相対変換を取得 */
 	Affinef GetTransform();
 
-	/** @brief ���[���h�t���[���Ƃ̑��Εϊ����擾 */
+	/** @brief ワールドフレームとの相対変換を取得 */
 	Affinef GetWorldTransform();
 
-	/** @brief �e�m�[�h�Ƃ̑��Εϊ���ݒ� */
+	/** @brief 親ノードとの相対変換を設定 */
 	void SetTransform(const Affinef& af);
 
-	/** @brief ���b�V�����폜���� */
+	/** @brief メッシュを削除する */
 	void Clear();
 
 	void Print(std::ostream& os) const ;
 };
-///	@brief GRFrame ��Desc�D���W�n���w�肷��
+///	@brief GRFrame のDesc．座標系を指定する
 struct GRFrameDesc:public GRVisualDesc{
 	SPR_DESCDEF(GRFrame);
 	Affinef transform;
 };
 
 
-/**	@brief	�O���t�B�N�X�̃V�[���O���t�̃_�~�[�m�[�h�D
-	��Ńv���O��������g�����߂ɁCVisual�����Ă������߂̃R���e�i�D
-	�`��Ȃǂ����Ȃ��̂ň��S���Ă��܂��Ă�����D	*/
+/**	@brief	グラフィクスのシーングラフのダミーノード．
+	後でプログラムから使うために，Visualを入れておくためのコンテナ．
+	描画などをしないので安心してしまっておける．	*/
 struct GRDummyFrameIf: public GRVisualIf{
 	SPR_IFDEF(GRDummyFrame);
 };
-/**	@brief GRDummyFrame ��Desc�D�_�~�[�t���[���D
-	Mesh�Ȃǂ�\���������͂Ȃ����C�Ƃ肠�������[�h�������Ă����C
-	��Ńv���O�����ŎQ�Ƃ������ꍇ�C�_�~�[�t���[���ɓ���Ă�����
-	���ʂȕ`�悪����Ȃ��D	*/
+/**	@brief GRDummyFrame のDesc．ダミーフレーム．
+	Meshなどを表示したくはないが，とりあえずロードだけしておき，
+	後でプログラムで参照したい場合，ダミーフレームに入れておけば
+	無駄な描画がされない．	*/
 struct GRDummyFrameDesc:public GRVisualDesc{
 	SPR_DESCDEF(GRDummyFrame);
 };
-///	@brief �A�j���[�V�����̃f�X�N���v�^ X��Animation�ɑΉ�
+///	@brief アニメーションのデスクリプタ XのAnimationに対応
 struct GRKey{
-	unsigned time;				//	����
-	std::vector<float> values;	//	�ϊ��̒l
+	unsigned time;				//	時刻
+	std::vector<float> values;	//	変換の値
 };
-///	�����ƕϊ��̑Ή��\ X��AnimationKey�ɑΉ�
+///	時刻と変換の対応表 XのAnimationKeyに対応
 struct GRAnimationKey{
-	int keyType;				//	�ϊ��̎��
-	std::vector<GRKey> keys;	//	�����ƕϊ��̃Z�b�g
+	int keyType;				//	変換の種類
+	std::vector<GRKey> keys;	//	時刻と変換のセット
 };
-/**	@brief	�A�j���[�V����(GRFrame�̃c���[�𓮂���)	*/
+/**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
 struct GRAnimationIf: public SceneObjectIf{
 	SPR_IFDEF(GRAnimation);
-	///	�A�j���[�V�������Ǝ����Œ�܂�{�[���̕ύX���C�d�݂����Č��݂̃{�[���̕ϊ��s��ɓK�p����D
+	///	アニメーション名と時刻で定まるボーンの変更を，重みをつけて現在のボーンの変換行列に適用する．
 	void BlendPose(float time, float weight);
-	///	�{�[���̕ϊ��s��������l�ɖ߂��D
+	///	ボーンの変換行列を初期値に戻す．
 	void ResetPose();
-	///	�t���[���̕ϊ��s��������l�ɖ߂��D
+	///	フレームの変換行列を初期値に戻す．
 	void LoadInitialPose();
-	///	AnimationKey���擾����D
+	///	AnimationKeyを取得する．
 	GRAnimationKey GetAnimationKey(int n);
-	///	AnimationKey�̐����擾����D
+	///	AnimationKeyの数を取得する．
 	int NAnimationKey();
-	/// ����t��GRKey���폜����
+	/// 時刻tのGRKeyを削除する
 	void DeletePose(float t);
 };
 
 struct GRAnimationDesc{
 	SPR_DESCDEF(GRAnimation);
 	enum KeyType { ROTATION, SCALE, POSITION, MATRIX };
-	///	������AnimationKey�łЂƂ̕ϊ���\��
+	///	複数のAnimationKeyでひとつの変換を表す
 	std::vector<GRAnimationKey> keys;	
 };
 
-/**	@brief	�A�j���[�V����(GRFrame�̃c���[�𓮂���)	*/
+/**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
 struct GRAnimationSetIf: public SceneObjectIf{
 	SPR_IFDEF(GRAnimationSet);
-	///	�w��̎����̕ϊ��ɏd�݂������āA�{�[��������킷�^�[�Q�b�g�̃t���[���ɓK�p����B
+	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
 	void BlendPose(float time, float weight);
-	///	�t���[���̕ϊ��s��������l�ɖ߂��D
+	///	フレームの変換行列を初期値に戻す．
 	void ResetPose();
-	///	�t���[���̕ϊ��s��������l�ɖ߂��D
+	///	フレームの変換行列を初期値に戻す．
 	void LoadInitialPose();
 
-	///	�q�I�u�W�F�N�g(animations)��Ԃ�
+	///	子オブジェクト(animations)を返す
 	ObjectIf* GetChildObject(size_t p);
-	/// ���݂�GRFrame����|�[�Y���쐬���� t�͎������w��
+	/// 現在のGRFrameからポーズを作成する tは時刻を指定
 	void SetCurrentAnimationPose(float t);
-	/// ����t��GRKey���폜����
+	/// 時刻tのGRKeyを削除する
 	void DeleteAnimationPose(float t);
-	/// �A�j���[�V�����̍ŏI���Ԃ��擾����
+	/// アニメーションの最終時間を取得する
 	float GetLastKeyTime();
 };
-///	@brief �A�j���[�V�����Z�b�g�̃f�X�N���v�^
+///	@brief アニメーションセットのデスクリプタ
 struct GRAnimationSetDesc{
 	SPR_DESCDEF(GRAnimationSet);
 };
 
-/**	@brief	�A�j���[�V����(GRFrame�̃c���[�𓮂���)	*/
+/**	@brief	アニメーション(GRFrameのツリーを動かす)	*/
 struct GRAnimationControllerIf: public SceneObjectIf{
 	SPR_IFDEF(GRAnimationController);
-	///	�w��̎����̕ϊ��ɏd�݂������āA�{�[��������킷�^�[�Q�b�g�̃t���[���ɓK�p����B
+	///	指定の時刻の変換に重みをかけて、ボーンをあらわすターゲットのフレームに適用する。
 	void BlendPose(UTString name, float time, float weight);
-	///	�t���[���̕ϊ��s��������l�ɖ߂��D
+	///	フレームの変換行列を初期値に戻す．
 	void ResetPose();
-	///	�t���[���̕ϊ��s��������l�ɖ߂��D
+	///	フレームの変換行列を初期値に戻す．
 	void LoadInitialPose();
 
-	///	GRAnimation�̒ǉ�
+	///	GRAnimationの追加
 	bool AddChildObject(ObjectIf* o);
-	///	GRAnimation�̍폜
+	///	GRAnimationの削除
 	bool DelChildObject(ObjectIf* o);
-	///	GRAnimation�̐�
+	///	GRAnimationの数
 	int NChildObject();
-	///	GRAnimation�̎擾
+	///	GRAnimationの取得
 	ObjectIf* GetChildObject(size_t p);
-	///	GRAnimationSet�̎擾
+	///	GRAnimationSetの取得
 	GRAnimationSetIf* GetAnimationSet(size_t p);
 };
-///	@brief �A�j���[�V�����R���g���[���̃f�X�N���v�^
+///	@brief アニメーションコントローラのデスクリプタ
 struct GRAnimationControllerDesc{
 	SPR_DESCDEF(GRAnimationController);
 };

@@ -1,4 +1,4 @@
-#ifndef HINOVINTFALCON_H
+ï»¿#ifndef HINOVINTFALCON_H
 #define HINOVINTFALCON_H
 
 #include <HumanInterface/HIBase.h>
@@ -6,7 +6,7 @@
 namespace Spr {;
 
 class UTDllLoader; 
-/**	@JA	NovintĞ‚ÌFalconB‚R©—R“x—ÍŠoƒCƒ“ƒ^ƒtƒF[ƒX
+/**	@JA	Novintç¤¾ã®Falconã€‚ï¼“è‡ªç”±åº¦åŠ›è¦šã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 	@EN	A Novint company's Falcon interface. A 3 DOF haptic interface. @@*/
 class SPR_DLL HINovintFalcon: public HIHaptic{
 public:
@@ -19,32 +19,32 @@ protected:
 	int deviceHandle;
 	UTRef<UTDllLoader> dll;
 public:
-	///	ƒfƒoƒCƒX‚Ìƒ^ƒCƒv
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ã‚¿ã‚¤ãƒ—
 	SPR_OBJECTDEF(HINovintFalcon);
 
 	HINovintFalcon(const HINovintFalconDesc& desc = HINovintFalconDesc());
 	virtual ~HINovintFalcon();
-	///	ƒfƒoƒCƒX‚Ì‰Šú‰»(g—p‘O‚ÉŒÄ‚Ô)
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®åˆæœŸåŒ–(ä½¿ç”¨å‰ã«å‘¼ã¶)
 	virtual bool Init(const void* desc);
-	///	ƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“‚Ì‘O‚És‚¤ˆ—
+	///	ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®å‰ã«è¡Œã†å‡¦ç†
 	virtual bool BeforeCalibration();
-	///	ƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“
+	///	ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³
 	virtual bool Calibration();
-	///	ˆÊ’u‚Ìæ“¾
+	///	ä½ç½®ã®å–å¾—
 	Vec3f GetPosition(){ return pos; }
 	Quaternionf GetOrientation(){ return Quaternionf(); }
 	
-	///	—Í‚Ìİ’è
+	///	åŠ›ã®è¨­å®š
 	void SetForce(const Vec3f& f, const Vec3f& t=Vec3f()){ force = f; }
-	///	ÀÛ‚Éo‚µ‚½—Í‚Ìæ“¾
+	///	å®Ÿéš›ã«å‡ºã—ãŸåŠ›ã®å–å¾—
 	Vec3f GetForce(){ return force; }
 	Vec3f GetTorque(){ return Vec3f(); }
 
-	/// ƒ{ƒ^ƒ“î•ñ‚Ìæ“¾
+	/// ãƒœã‚¿ãƒ³æƒ…å ±ã®å–å¾—
 	int GetButton(int ch);
 	int GetButtonBit();
 
-	///	ƒfƒoƒCƒX‚Ìó‘Ô‚ğXV‚·‚é.
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®çŠ¶æ…‹ã‚’æ›´æ–°ã™ã‚‹.
 	virtual void Update(float dt);
 };
 

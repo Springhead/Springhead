@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,12 +19,12 @@
 
 namespace Spr {
 
-///	ƒ^[ƒgƒ‹H‹Æ‚ÌA/DED/AEPIO—p‚Ìƒhƒ‰ƒCƒo.
+///	ã‚¿ãƒ¼ãƒˆãƒ«å·¥æ¥­ã®A/Dãƒ»D/Aãƒ»PIOç”¨ã®ãƒ‰ãƒ©ã‚¤ãƒ.
 class SPR_DLL DRAdapio: public HIRealDevice{
 public:
 	SPR_OBJECTDEF_NOIF(DRAdapio);
 
-	///	‰¼‘zƒfƒoƒCƒX
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹
 	class Da: public DVDa{
 	public:
 		Da(DRAdapio* r, int c):DVDa(r, c){}
@@ -44,25 +44,25 @@ public:
 protected:
 	int id;
 public:
-	/**	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-		@param id		ADAPIO‚ª•¡”‚ ‚éê‡C‰½”Ô–Ú‚ÌƒfƒoƒCƒX‚©‚ğw’èD*/
+	/**	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+		@param id		ADAPIOãŒè¤‡æ•°ã‚ã‚‹å ´åˆï¼Œä½•ç•ªç›®ã®ãƒ‡ãƒã‚¤ã‚¹ã‹ã‚’æŒ‡å®šï¼*/
 	DRAdapio(int id=0);
 	virtual ~DRAdapio();
 
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	virtual bool Init();
-	///	‰¼‘zƒfƒoƒCƒX‚Ì“o˜^
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²
 	//virtual void Register(HIVirtualDevicePool& vpool);
 
-	///	“dˆ³o—Í
+	///	é›»åœ§å‡ºåŠ›
 	void DAVoltage(int ch, float v);
 	void DADigit(int ch, int d);
 	
-	///	“dˆ³“ü—Í
+	///	é›»åœ§å…¥åŠ›
 	float ADVoltage(int ch);
 	int ADDigit(int ch);
 	
-	/// I—¹ˆ—
+	/// çµ‚äº†å‡¦ç†
 	void CloseDevice();
 };
 

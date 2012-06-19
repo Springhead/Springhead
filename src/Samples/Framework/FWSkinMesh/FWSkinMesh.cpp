@@ -1,4 +1,4 @@
-// FWAppGLtest.cpp : ƒRƒ“ƒ\[ƒ‹ ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚ÌƒGƒ“ƒgƒŠ ƒ|ƒCƒ“ƒg‚ð’è‹`‚µ‚Ü‚·B
+ï»¿// FWAppGLtest.cpp : ã‚³ãƒ³ã‚½ãƒ¼ãƒ« ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚¨ãƒ³ãƒˆãƒª ãƒã‚¤ãƒ³ãƒˆã‚’å®šç¾©ã—ã¾ã™ã€‚
 //
 
 #include "FWSkinMesh.h"
@@ -9,14 +9,14 @@ void MyApp::Init(int argc, char* argv[]){
 	SetGRHandler(TypeGLUT);
 	GRInit(argc, argv);
 	
-	// ƒV[ƒ“‚ðƒ[ƒh
+	// ã‚·ãƒ¼ãƒ³ã‚’ãƒ­ãƒ¼ãƒ‰
 	GetSdk()->LoadScene(FILE_NAME);
 	//TexInit();
-	// ƒEƒBƒ“ƒhƒE
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦
 	CreateWin();
 	GetCurrentWin()->SetDebugMode(false);
 
-	// ƒ^ƒCƒ}
+	// ã‚¿ã‚¤ãƒž
 	UTTimerIf* timer = CreateTimer();
 	timer->SetInterval(10);
 }

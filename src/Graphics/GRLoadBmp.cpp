@@ -1,90 +1,90 @@
-#ifndef GRBMPLOADER_H
+ï»¿#ifndef GRBMPLOADER_H
 #define GRBMPLOADER_H
 #include <Foundation/UTDllLoader.h>
 
 namespace Spr{;
 
-static UTDllLoader dllLoader("loadBmp.dll", ".;$(SPRINGHEAD2)\\bin\\win32");	//	ƒOƒ[ƒoƒ‹•Ï”‚Åƒ[ƒ_[‚ğì‚éD
+static UTDllLoader dllLoader("loadBmp.dll", ".;$(SPRINGHEAD2)\\bin\\win32");	//	ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°ã§ãƒ­ãƒ¼ãƒ€ãƒ¼ã‚’ä½œã‚‹ï¼
 
 
-#define DLLFUNC_CTYPE	SPR_CDECL						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	int							//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	LoadBmpCreate				//	ŠÖ”–¼
-#define DLLFUNC_STR		"LoadBmpCreate"				//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(const char* arg)			//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(arg)						//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	SPR_CDECL						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	int							//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	LoadBmpCreate				//	é–¢æ•°å
+#define DLLFUNC_STR		"LoadBmpCreate"				//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(const char* arg)			//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(arg)						//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
-#define DLLFUNC_CTYPE	SPR_CDECL						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	int							//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	LoadBmpGetBmp				//	ŠÖ”–¼
-#define DLLFUNC_STR		"LoadBmpGetBmp"				//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(int h, char* arg)			//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(h, arg)					//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	SPR_CDECL						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	int							//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	LoadBmpGetBmp				//	é–¢æ•°å
+#define DLLFUNC_STR		"LoadBmpGetBmp"				//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(int h, char* arg)			//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(h, arg)					//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
-#define DLLFUNC_CTYPE	SPR_CDECL						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	int							//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	LoadBmpRelease				//	ŠÖ”–¼
-#define DLLFUNC_STR		"LoadBmpRelease"			//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF	(int arg)					//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(arg)						//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	SPR_CDECL						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	int							//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	LoadBmpRelease				//	é–¢æ•°å
+#define DLLFUNC_STR		"LoadBmpRelease"			//	é–¢æ•°å
+#define DLLFUNC_ARGDEF	(int arg)					//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(arg)						//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
-#define DLLFUNC_CTYPE	SPR_CDECL						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	int							//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	LoadBmpGetWidth				//	ŠÖ”–¼
-#define DLLFUNC_STR		"LoadBmpGetWidth"			//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF		(int arg)				//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(arg)						//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	SPR_CDECL						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	int							//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	LoadBmpGetWidth				//	é–¢æ•°å
+#define DLLFUNC_STR		"LoadBmpGetWidth"			//	é–¢æ•°å
+#define DLLFUNC_ARGDEF		(int arg)				//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(arg)						//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
-#define DLLFUNC_CTYPE	SPR_CDECL						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	int							//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	LoadBmpGetHeight			//	ŠÖ”–¼
-#define DLLFUNC_STR		"LoadBmpGetHeight"			//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF		(int arg)				//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(arg)						//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	SPR_CDECL						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	int							//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	LoadBmpGetHeight			//	é–¢æ•°å
+#define DLLFUNC_STR		"LoadBmpGetHeight"			//	é–¢æ•°å
+#define DLLFUNC_ARGDEF		(int arg)				//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(arg)						//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
-#define DLLFUNC_CTYPE	SPR_CDECL						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	int							//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	LoadBmpGetBitPerPixel		//	ŠÖ”–¼
-#define DLLFUNC_STR		"LoadBmpGetBitPerPixel"		//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF		(int arg)				//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(arg)						//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	SPR_CDECL						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	int							//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	LoadBmpGetBitPerPixel		//	é–¢æ•°å
+#define DLLFUNC_STR		"LoadBmpGetBitPerPixel"		//	é–¢æ•°å
+#define DLLFUNC_ARGDEF		(int arg)				//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(arg)						//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
-#define DLLFUNC_CTYPE	SPR_CDECL						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	int							//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	LoadBmpGetBytePerPixel		//	ŠÖ”–¼
-#define DLLFUNC_STR		"LoadBmpGetBytePerPixel"	//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF		(int arg)				//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(arg)						//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	SPR_CDECL						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	int							//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	LoadBmpGetBytePerPixel		//	é–¢æ•°å
+#define DLLFUNC_STR		"LoadBmpGetBytePerPixel"	//	é–¢æ•°å
+#define DLLFUNC_ARGDEF		(int arg)				//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(arg)						//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
-#define DLLFUNC_CTYPE	SPR_CDECL						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	int							//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	LoadBmpGetSize				//	ŠÖ”–¼
-#define DLLFUNC_STR		"LoadBmpGetSize"			//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF		(int arg)				//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(arg)						//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	SPR_CDECL						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	int							//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	LoadBmpGetSize				//	é–¢æ•°å
+#define DLLFUNC_STR		"LoadBmpGetSize"			//	é–¢æ•°å
+#define DLLFUNC_ARGDEF		(int arg)				//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(arg)						//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
-#define DLLFUNC_CTYPE	SPR_CDECL						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	int							//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	LoadBmpHasAlpha				//	ŠÖ”–¼
-#define DLLFUNC_STR		"LoadBmpHasAlpha"			//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF		(int arg)				//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(arg)						//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	SPR_CDECL						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	int							//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	LoadBmpHasAlpha				//	é–¢æ•°å
+#define DLLFUNC_STR		"LoadBmpHasAlpha"			//	é–¢æ•°å
+#define DLLFUNC_ARGDEF		(int arg)				//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(arg)						//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
-#define DLLFUNC_CTYPE	SPR_CDECL						//	ŒÄ‚Ño‚µ‹K–ñ
-#define DLLFUNC_RTYPE	int							//	•Ô‚è’l‚ÌŒ^ void‚Ìê‡‚Í’è‹`‚µ‚Ä‚Í‚È‚ç‚È‚¢D
-#define DLLFUNC_NAME	LoadBmpIsGreyscale			//	ŠÖ”–¼
-#define DLLFUNC_STR		"LoadBmpIsGrayscale"			//	ŠÖ”–¼
-#define DLLFUNC_ARGDEF		(int arg)				//	ŠÖ”éŒ¾‚Ìˆø”
-#define DLLFUNC_ARGCALL	(arg)						//	ŠÖ”ŒÄ‚Ño‚µ‚Ìˆø”
+#define DLLFUNC_CTYPE	SPR_CDECL						//	å‘¼ã³å‡ºã—è¦ç´„
+#define DLLFUNC_RTYPE	int							//	è¿”ã‚Šå€¤ã®å‹ voidã®å ´åˆã¯å®šç¾©ã—ã¦ã¯ãªã‚‰ãªã„ï¼
+#define DLLFUNC_NAME	LoadBmpIsGreyscale			//	é–¢æ•°å
+#define DLLFUNC_STR		"LoadBmpIsGrayscale"			//	é–¢æ•°å
+#define DLLFUNC_ARGDEF		(int arg)				//	é–¢æ•°å®£è¨€æ™‚ã®å¼•æ•°
+#define DLLFUNC_ARGCALL	(arg)						//	é–¢æ•°å‘¼ã³å‡ºã—ã®å¼•æ•°
 #include <Foundation/UTDllLoaderImpl.h>
 
 

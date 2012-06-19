@@ -1,4 +1,4 @@
-#include <Springhead.h>
+ï»¿#include <Springhead.h>
 #include "Foundation/UTTimer.h"
 
 #include <iostream>
@@ -23,15 +23,15 @@ class TimerProviderGL: public UTTimerProvider{
 			arg->timer->Call();
 			glutTimerFunc(arg->timer->GetInterval(), Callback, a);
 		}else{
-			delete arg;	//	‚±‚±‚Ü‚Å arg ‚ğ delete ‚·‚é‚í‚¯‚És‚©‚È‚¢B
+			delete arg;	//	ã“ã“ã¾ã§ arg ã‚’ delete ã™ã‚‹ã‚ã‘ã«è¡Œã‹ãªã„ã€‚
 		}
 	}
 public:
 	TimerProviderGL(){
-		Register();		//	ƒ^ƒCƒ}[‚ÉƒtƒŒ[ƒ€ƒ[ƒN‚ğ“o˜^
+		Register();		//	ã‚¿ã‚¤ãƒãƒ¼ã«ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã‚’ç™»éŒ²
 	}
 	~TimerProviderGL(){
-		Unregister();	//	ƒ^ƒCƒ}[‚©‚çƒtƒŒ[ƒ€ƒ[ƒN‚ğ‰ğœ
+		Unregister();	//	ã‚¿ã‚¤ãƒãƒ¼ã‹ã‚‰ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã‚’è§£é™¤
 	}
 	bool StartTimer(UTTimer* timer){
 		args.push_back(new Arg(timer));
@@ -42,7 +42,7 @@ public:
 		for(Args::iterator it = args.begin(); it!= args.end(); ++it){
 			if ((*it)->timer == timer){
 				(*it)->bStop = true;
-				args.erase(it);	//	‚±‚±‚ÅA(*it)‚ğ delete ‚µ‚Ä‚µ‚Ü‚¤‚ÆAƒ^ƒCƒ}[‚ÌÅŒã‚ÌŒÄ‚Ño‚µ‚Ì‚ÉAarg ‚Ìæ‚ª–³‚¢‚Ì‚ÅÀsƒGƒ‰[‚É¬‚Á‚Ä‚µ‚Ü‚¤B
+				args.erase(it);	//	ã“ã“ã§ã€(*it)ã‚’ delete ã—ã¦ã—ã¾ã†ã¨ã€ã‚¿ã‚¤ãƒãƒ¼ã®æœ€å¾Œã®å‘¼ã³å‡ºã—ã®æ™‚ã«ã€arg ã®å…ˆãŒç„¡ã„ã®ã§å®Ÿè¡Œæ™‚ã‚¨ãƒ©ãƒ¼ã«æˆã£ã¦ã—ã¾ã†ã€‚
 				return true;
 			}
 		}
@@ -68,11 +68,11 @@ public:
 	}
 };
 
-UTTimer timer1;				/// ƒ^ƒCƒ}‚ÌéŒ¾
-Fuga fuga;									/// ƒNƒ‰ƒXFuga
+UTTimer timer1;				/// ã‚¿ã‚¤ãƒã®å®£è¨€
+Fuga fuga;									/// ã‚¯ãƒ©ã‚¹Fuga
 
 
-TimerProviderGL providerGL;	//	ƒ^ƒCƒ}[‚ÉƒtƒŒ[ƒ€ƒ[ƒN‚ğ“o˜^ 
+TimerProviderGL providerGL;	//	ã‚¿ã‚¤ãƒãƒ¼ã«ãƒ•ãƒ¬ãƒ¼ãƒ ãƒ¯ãƒ¼ã‚¯ã‚’ç™»éŒ² 
 
 void SPR_CDECL keyboard(unsigned char key, int x, int y);
 void SPR_CDECL display();
@@ -84,22 +84,22 @@ void SPR_CDECL idle(){
 int _cdecl main(int argc, char* argv[]){
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
-								//	‚½‚Æ‚¦‚ÎAFWApp‚ÌGLUT”Å ‚É providerGL ‚Æ“¯‚¶‹@”\‚ğ‚½‚¹‚ê‚Î—Ç‚¢
+								//	ãŸã¨ãˆã°ã€FWAppã®GLUTç‰ˆ ã« providerGL ã¨åŒã˜æ©Ÿèƒ½ã‚’æŒãŸã›ã‚Œã°è‰¯ã„
 
 	timer1.SetMode(UTTimerIf::MULTIMEDIA);
-	timer1.SetResolution(500);					///	 ŒÄ‚Ñ‚¾‚µ•ª‰ğ”\
-	timer1.SetInterval(100);					/// ŒÄ‚Ñ‚¾‚µ•p“x
-	timer1.SetCallback(CallBackHoge, NULL);	/// ŒÄ‚Ñ‚¾‚·ŠÖ”
+	timer1.SetResolution(500);					///	 å‘¼ã³ã ã—åˆ†è§£èƒ½
+	timer1.SetInterval(100);					/// å‘¼ã³ã ã—é »åº¦
+	timer1.SetCallback(CallBackHoge, NULL);	/// å‘¼ã³ã ã™é–¢æ•°
 
 	fuga.timer2.SetMode(UTTimerIf::IDLE);
 	fuga.timer2.SetResolution(500);
 	fuga.timer2.SetInterval(500);
-	fuga.timer2.SetCallback(Fuga::CallBackFuga, &fuga);	/// ŒÄ‚Ñ–ß‚·ŠÖ”‚ÍÃ“I‚Å‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
+	fuga.timer2.SetCallback(Fuga::CallBackFuga, &fuga);	/// å‘¼ã³æˆ»ã™é–¢æ•°ã¯é™çš„ã§ãªã‘ã‚Œã°ãªã‚‰ãªã„
 
-	timer1.Start();							/// ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}ƒXƒ^[ƒg
+	timer1.Start();							/// ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒã‚¹ã‚¿ãƒ¼ãƒˆ
 	fuga.timer2.Start();
 	
-	std::cout << "I—¹‚·‚é‚É‚Í‰½‚©ƒL[‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢" << std::endl;
+	std::cout << "çµ‚äº†ã™ã‚‹ã«ã¯ä½•ã‹ã‚­ãƒ¼ã‚’æŠ¼ã—ã¦ãã ã•ã„" << std::endl;
 
 	glutCreateWindow("UTTimerSample");
 	glutKeyboardFunc(keyboard);

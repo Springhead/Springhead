@@ -1,4 +1,4 @@
-#ifndef FW_WINDOW_H
+ï»¿#ifndef FW_WINDOW_H
 #define FW_WINDOW_H
 
 #include <Framework/SprFWWin.h>
@@ -16,8 +16,8 @@ public:
 	SPR_OBJECTDEF(FWWinBase);
 	SPR_DECLMEMBEROF_FWWinBaseDesc;
 
-	int			id;			///< ƒEƒBƒ“ƒhƒEID
-	void*		handle;		///< “à•”ƒIƒuƒWƒFƒNƒg‚Ìƒnƒ“ƒhƒ‹
+	int			id;			///< ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ID
+	void*		handle;		///< å†…éƒ¨ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒãƒ³ãƒ‰ãƒ«
 	
 	int			GetID()			{ return id; }
 	
@@ -37,35 +37,35 @@ public:
 	SPR_OBJECTDEF(FWWin);
 	SPR_DECLMEMBEROF_FWWinDesc;
 
-	GRRenderIf*			render;			///< ƒŒƒ“ƒ_ƒ‰
-	FWSceneIf*			scene;			///< ƒV[ƒ“
+	GRRenderIf*			render;			///< ãƒ¬ãƒ³ãƒ€ãƒ©
+	FWSceneIf*			scene;			///< ã‚·ãƒ¼ãƒ³
 
-	DVKeyMouseIf*		keyMouse;		///< ƒL[ƒ{[ƒhEƒ}ƒEƒX
-	DVJoyStickIf*		joyStick;		///< ƒWƒ‡ƒCƒXƒeƒBƒbƒN
-	HITrackballIf*		trackball;		///< ƒgƒ‰ƒbƒNƒ{[ƒ‹
-	//HIDraggerIf*		dragger;		///< ƒhƒ‰ƒbƒK[
+	DVKeyMouseIf*		keyMouse;		///< ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ»ãƒã‚¦ã‚¹
+	DVJoyStickIf*		joyStick;		///< ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯
+	HITrackballIf*		trackball;		///< ãƒˆãƒ©ãƒƒã‚¯ãƒœãƒ¼ãƒ«
+	//HIDraggerIf*		dragger;		///< ãƒ‰ãƒ©ãƒƒã‚¬ãƒ¼
 
 	std::vector<FWDialogIf*>	childDlg;
 
 public:
-	// ƒ_ƒCƒAƒƒO‚Ìì¬
+	// ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ã®ä½œæˆ
 	FWDialogIf*		CreateDialog(const FWDialogDesc& desc);
-	// ƒrƒ…[ƒ|[ƒgŒvZ
+	// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆè¨ˆç®—
 	void	CalcViewport(int& left, int& top, int& width, int& height);
-	// ƒtƒ‹ƒXƒNƒŠ[ƒ“
+	// ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³
 	void	SetFullScreen();
 	bool	GetFullScreen(){ return fullscreen; }
 	//
 	virtual void	SetPosition(int left, int top);
 	virtual void	SetSize(int width, int height);
 	
-	// ƒŒƒ“ƒ_ƒ‰‚ÆƒV[ƒ“‚ÌŠ„“–‚Ä‚Ææ“¾
+	// ãƒ¬ãƒ³ãƒ€ãƒ©ã¨ã‚·ãƒ¼ãƒ³ã®å‰²å½“ã¦ã¨å–å¾—
 	GRRenderIf*	GetRender(){ return render; }
 	void		SetRender(GRRenderIf* data){render = data;}
 	FWSceneIf*  GetScene(){ return scene; }
 	void		SetScene(FWSceneIf* s){ scene = s; }
 
-	// HumanInterfaceƒfƒoƒCƒX‚Ì“o˜^‚Ææ“¾
+	// HumanInterfaceãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²ã¨å–å¾—
 	DVKeyMouseIf*	GetKeyMouse(){ return keyMouse; }
 	void			SetKeyMouse(DVKeyMouseIf* dv){ keyMouse = dv; }
 	DVJoyStickIf*	GetJoyStick(){ return joyStick; }
@@ -83,17 +83,17 @@ public:
 		dragger->SetCallback(this);
 	}*/
 
-	// •`‰æƒ‚[ƒh‚Ìİ’è‚Ææ“¾
+	// æç”»ãƒ¢ãƒ¼ãƒ‰ã®è¨­å®šã¨å–å¾—
 	void	SetDebugMode(bool ph_or_gr){ debugMode = ph_or_gr; }
 	bool	GetDebugMode(){ return debugMode; }
-	// •`‰æ
+	// æç”»
 	void	Display();
 	
-	// Object‚ÌŠÖ”
+	// Objectã®é–¢æ•°
 	bool	AddChildObject(ObjectIf* o);
 	size_t	NChildObject() const;
 
-	// HITrackballCallback‚ÌŠÖ”
+	// HITrackballCallbackã®é–¢æ•°
 	virtual void OnUpdatePose(HITrackballIf*);
 
 	FWWin(){

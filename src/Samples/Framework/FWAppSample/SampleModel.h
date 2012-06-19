@@ -1,4 +1,4 @@
-#ifndef SAMPLE_MODEL_H
+﻿#ifndef SAMPLE_MODEL_H
 #define SAMPLE_MODEL_H
 
 #include <Springhead.h>

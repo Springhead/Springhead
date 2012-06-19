@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprPHSdk.h
- *	@brief •¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK
+ *	@brief ç‰©ç†ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³SDK
 */
 #ifndef SPR_PHSDKIF_H
 #define SPR_PHSDKIF_H
@@ -17,28 +17,28 @@
 
 namespace Spr{;
 
-/** \addtogroup gpPhysics •¨—ƒGƒ“ƒWƒ“SDK */
+/** \addtogroup gpPhysics ç‰©ç†ã‚¨ãƒ³ã‚¸ãƒ³SDK */
 //@{
 
-//	©“®ƒ[ƒh‚Ì‚½‚ß‚Ì’†g‚È‚µ‚ÌƒfƒXƒNƒŠƒvƒ^
+//	è‡ªå‹•ãƒ­ãƒ¼ãƒ‰ã®ãŸã‚ã®ä¸­èº«ãªã—ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct PHSdkDesc{
 };
 
-///	•¨—ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“SDK
+///	ç‰©ç†ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³SDK
 struct PHSdkIf : public SdkIf{
 	SPR_IFDEF(PHSdk);
 	//	API
-	///	Scene‚Ìì¬
+	///	Sceneã®ä½œæˆ
 	PHSceneIf* CreateScene(const PHSceneDesc& desc = PHSceneDesc());
-	///	Scene‚Ì”‚ğæ“¾
+	///	Sceneã®æ•°ã‚’å–å¾—
 	int NScene();
-	///	Scene‚Ìæ“¾
+	///	Sceneã®å–å¾—
 	PHSceneIf* GetScene(int i);
-	/// Scene‚Ìƒ}[ƒW
+	/// Sceneã®ãƒãƒ¼ã‚¸
 	void MergeScene(PHSceneIf* scene0, PHSceneIf* scene1);
-	/** @brief Shape‚ğì¬‚·‚é
-		@param desc ì¬‚·‚éShape‚ÌƒfƒBƒXƒNƒŠƒvƒ^
-		@return Shape‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+	/** @brief Shapeã‚’ä½œæˆã™ã‚‹
+		@param desc ä½œæˆã™ã‚‹Shapeã®ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿
+		@return Shapeã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 	 */
 	CDShapeIf* CreateShape(const IfInfo* ii, const CDShapeDesc& desc);
 	template <class T> CDShapeIf* CreateShape(const T& desc){
@@ -46,16 +46,16 @@ struct PHSdkIf : public SdkIf{
 	}
 	
 	
-	///	Shape‚Ì”
+	///	Shapeã®æ•°
 	int NShape();
 
-	///	Shape‚Ìæ“¾
+	///	Shapeã®å–å¾—
 	CDShapeIf* GetShape(int i);
 
-	//	SDK¶¬A“o˜^ŠÖ”
-	///	PHSdk‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ğì¬
+	//	SDKç”Ÿæˆã€ç™»éŒ²é–¢æ•°
+	///	PHSdkã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ä½œæˆ
 	static PHSdkIf* SPR_CDECL CreateSdk();
-	///	PHSdk‚ğƒtƒ@ƒCƒ‹ƒ[ƒ_[‚È‚Ç‚É“o˜^
+	///	PHSdkã‚’ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ãƒ¼ãªã©ã«ç™»éŒ²
 	static void SPR_CDECL RegisterSdk();
 };
 

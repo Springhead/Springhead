@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -20,49 +20,49 @@
 
 namespace Spr{
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 CRFourLegsTinyAnimalBodyGenDesc::CRFourLegsTinyAnimalBodyGenDesc(){
 
 	jointType	= HINGE_MODE;
 	shapeMode	= MODE_CAPSULE;//MODE_BOX;
 	
-	// ‘ÌŠ²‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^
+	// ä½“å¹¹ã«é–¢ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	bodyBreadth   = 2.5;
 	bodyHeight    = 3.8;
 	bodyThickness = 0.6;
 
-	// ‹r‚ÌRounCone‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^
+	// è„šã®RounConeã«é–¢ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	upperSizes = Vec2d(0.2, 0.4);
 	lowerSizes = Vec2d(0.2, 0.3);
 	upperLength = 1.0;
 	lowerLength = 1.4;
 
-	// ¿—Ê‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^
+	// è³ªé‡ã«é–¢ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	massFF		= 1.5;
 	massFL		= 1.5;
 	massRF		= 1.5;
 	massRL		= 1.5;
 	massBody	= 10;
 
-	// ƒoƒlEƒ_ƒ“ƒpŒW”
+	// ãƒãƒãƒ»ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
 	springFront   = 1.0;  damperFront   =  5.0;
 	springRear    = 1.0;  damperRear    =  5.0;
 
 	// IF (jointType == BALL_MODE) THEN
-	// Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø
+	// Vec2d(lower, upper)  lower>upperã®ã¨ãå¯å‹•åŸŸåˆ¶é™ç„¡åŠ¹
 	rangeFrontSwing   = Vec2d(FLT_MAX, FLT_MAX);
 	rangeFrontTwist	  = Vec2d(FLT_MAX, FLT_MAX);
 	rangeRearSwing    = Vec2d(FLT_MAX, FLT_MAX);
 	rangeRearTwist	  = Vec2d(FLT_MAX, FLT_MAX);
 
 	// ELSE IF(jointType == HINGE_MODE) THEN
-	// Vec2d(lower, upper)  lower>upper‚Ì‚Æ‚«‰Â“®ˆæ§ŒÀ–³Œø
+	// Vec2d(lower, upper)  lower>upperã®ã¨ãå¯å‹•åŸŸåˆ¶é™ç„¡åŠ¹
 	rangeUpperFront = Vec2d(FLT_MAX, FLT_MAX);
 	rangeLowerFront = Vec2d(FLT_MAX, FLT_MAX);
 	rangeUpperRear  = Vec2d(FLT_MAX, FLT_MAX);
 	rangeLowerRear  = Vec2d(FLT_MAX, FLT_MAX);
 
-	// ƒfƒtƒHƒ‹ƒg‚Ål‹rì‚é
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§å››è„šä½œã‚‹
 	rfLeg = true;
 	lfLeg = true;
 	rrLeg = true;
@@ -125,7 +125,7 @@ PHSolidIf* CRFourLegsTinyAnimalBodyGen::InitFrontLeg0(LREnum lr, PHSolidIf* sBod
 		sphDesc.radius = (float)upperSizes[1];
 		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
 	}
-	// ‘ÌŠ²‚Æ‘O‹rŠÔ‚ÌŠÖß
+	// ä½“å¹¹ã¨å‰è„šé–“ã®é–¢ç¯€
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
 		hingeDesc.poseSocket.Pos()	= Vec3d(-lr * bodyBreadth / 2.0, -bodyHeight / 2.0, 0);
@@ -191,7 +191,7 @@ void CRFourLegsTinyAnimalBodyGen::InitFrontLeg1(LREnum lr, PHSolidIf* sLeg0){
 		sphDesc.radius = (float)lowerSizes[1];
 		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
 	} 
-	// ‘O‹r-‘O‘«ŠÔ‚ÌŠÖß
+	// å‰è„š-å‰è¶³é–“ã®é–¢ç¯€
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
 		hingeDesc.poseSocket.Pos()	= Vec3d(0, 0, -upperLength/2.0);
@@ -255,7 +255,7 @@ PHSolidIf* CRFourLegsTinyAnimalBodyGen::InitRearLeg0(LREnum lr, PHSolidIf* sBody
 		sphDesc.radius = (float)upperSizes[1];
 		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
 	}
-	// ‘ÌŠ²‚ÆŒã‹rŠÔ‚ÌŠÖß
+	// ä½“å¹¹ã¨å¾Œè„šé–“ã®é–¢ç¯€
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
 		hingeDesc.poseSocket.Pos()	= Vec3d(-lr * bodyBreadth / 2.0, bodyHeight / 2.0, 0);
@@ -319,7 +319,7 @@ void CRFourLegsTinyAnimalBodyGen::InitRearLeg1(LREnum lr, PHSolidIf* sLeg0){
 		sphDesc.radius = (float)lowerSizes[1];
 		solids.back()->AddShape(phSdk->CreateShape(sphDesc));
 	}
-	//Œã‹r-Œã‘«ŠÔ‚ÌŠÖß
+	//å¾Œè„š-å¾Œè¶³é–“ã®é–¢ç¯€
 	if(jointType == HINGE_MODE){
 		PHHingeJointDesc hingeDesc;
 		hingeDesc.poseSocket.Pos()	= Vec3d(0, 0, -upperLength/2.0);
@@ -374,7 +374,7 @@ void CRFourLegsTinyAnimalBodyGen::InitLegs(PHSolidIf* sBody){
 
 // --- --- ---
 void CRFourLegsTinyAnimalBodyGen::InitContact(){
-	// ©•ª‚É‘®‚·‚é„‘Ì“¯m‚ÌÚG‚ğOffi‚Ü‚¾­‚È‚·‚¬‚é‚©‚àHÅ’áŒÀ‚ÌÚG‚Íc‚µ‚½‚¢i07/09/25, mitakejj
+	// è‡ªåˆ†ã«å±ã™ã‚‹å‰›ä½“åŒå£«ã®æ¥è§¦ã‚’Offï¼ˆã¾ã å°‘ãªã™ãã‚‹ã‹ã‚‚ï¼Ÿæœ€ä½é™ã®æ¥è§¦ã¯æ®‹ã—ãŸã„ï¼ˆ07/09/25, mitakeï¼‰ï¼‰
 	for (unsigned int i=0; i<solids.size(); ++i) {
 		for (unsigned int j=0; j<solids.size(); ++j) {
 			if (i!=j) {

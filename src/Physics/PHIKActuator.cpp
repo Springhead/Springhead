@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -24,20 +24,20 @@ bool PHIKActuator::AddChildObject(ObjectIf* o){
 
 	PHIKActuator* actuator = o->Cast();
 	if (actuator) {
-		// ©•ª‚Ìq‚É‚·‚é
+		// è‡ªåˆ†ã®å­ã«ã™ã‚‹
 		children.push_back(actuator);
 		this->bActuatorAdded = true;
 		for (int j=0; j<(int)actuator->descendant.size(); ++j) {
-			// V‚½‚Èq‚Ìq‘·‚ğĞ‰î‚µ‚Ä‚à‚ç‚¤
+			// æ–°ãŸãªå­ã®å­å­«ã‚’ç´¹ä»‹ã—ã¦ã‚‚ã‚‰ã†
 			descendant.push_back(actuator->descendant[j]);
-			// V‚½‚Èq‚Ìq‘·‚É©•ª‚ª‘cæ‚Å‚ ‚é–‚ğ‹³‚¦‚é
+			// æ–°ãŸãªå­ã®å­å­«ã«è‡ªåˆ†ãŒç¥–å…ˆã§ã‚ã‚‹äº‹ã‚’æ•™ãˆã‚‹
 			actuator->descendant[j]->ascendant.push_back(this);
 			actuator->descendant[j]->bActuatorAdded = true;
 			for (int i=0; i<(int)ascendant.size(); ++i) {
-				// ©•ª‚Ì‘cæ‚ÉV‚½‚Èq‚Ì–‚ğ“`‚¦‚é
+				// è‡ªåˆ†ã®ç¥–å…ˆã«æ–°ãŸãªå­ã®äº‹ã‚’ä¼ãˆã‚‹
 				ascendant[i]->descendant.push_back(actuator->descendant[j]);
 				ascendant[i]->bActuatorAdded = true;
-				// V‚½‚Èq‚É©•ª‚Ì‘cæ‚Ì–‚ğ“`‚¦‚é
+				// æ–°ãŸãªå­ã«è‡ªåˆ†ã®ç¥–å…ˆã®äº‹ã‚’ä¼ãˆã‚‹
 				actuator->descendant[j]->ascendant.push_back(ascendant[i]);
 			}
 		}
@@ -76,9 +76,9 @@ size_t PHIKActuator::NChildObject() const{
 void PHIKActuator::SetupMatrix(){
 	if (this->bEnabled) {
 		// --- --- --- --- ---
-		// •Ï”‚Ì‰Šú‰»
+		// å¤‰æ•°ã®åˆæœŸåŒ–
 
-		// ƒ¿AƒÀ
+		// Î±ã€Î²
 		if (this->bNDOFChanged) {
 			alpha.resize(this->ndof);
 			beta.resize(this->ndof);
@@ -86,7 +86,7 @@ void PHIKActuator::SetupMatrix(){
 		alpha.clear();
 		beta.clear();
 
-		// ƒ¡i©•ª©g‚ğ‘Šè‚Æ‚·‚éƒ¡‚àŠÜ‚Şj
+		// Î“ï¼ˆè‡ªåˆ†è‡ªèº«ã‚’ç›¸æ‰‹ã¨ã™ã‚‹Î“ã‚‚å«ã‚€ï¼‰
 		for (int nLink=0; nLink<NLinks(); ++nLink) {
 			if (this->bNDOFChanged || (Link(nLink)->bNDOFChanged && Link(nLink)->bEnabled) || this->bActuatorAdded) {
 				gamma[Link(nLink)->number].resize(this->ndof, Link(nLink)->ndof);
@@ -94,7 +94,7 @@ void PHIKActuator::SetupMatrix(){
 			gamma[Link(nLink)->number].clear();
 		}
 
-		// ‚iiƒ„ƒRƒrƒAƒ“j
+		// ï¼ªï¼ˆãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ï¼‰
 		for (int nDesc=0; nDesc<(int)descendant.size(); ++nDesc) {
 			PHIKEndEffector* childEef = descendant[nDesc]->eef; if (childEef==NULL) { continue; }
 			if (this->bNDOFChanged || (childEef->bNDOFChanged && childEef->bEnabled) || this->bActuatorAdded) {
@@ -103,7 +103,7 @@ void PHIKActuator::SetupMatrix(){
 			Mj[childEef->number].clear();
 		}
 
-		// ƒÖAƒÑ
+		// Ï‰ã€Ï„
 		if (this->bNDOFChanged) {
 			omega.resize(this->ndof);
 			omega_prev.resize(ndof);
@@ -140,11 +140,11 @@ void PHIKActuator::PrepareSolve(){
 
 			for (int k=0; k < childEef->ndof; ++k) {
 
-				// ƒ¿AƒÀ
+				// Î±ã€Î²
 				alpha[i] += ( (Mj[eef_n][k][i]/bias) * (Mj[eef_n][k][i]) );
 				beta[i]  += ( (Mj[eef_n][k][i]/bias) * (eef_v[k])  );
 
-				// ƒÁ[act_y, this] iact_y == this ‚Ìê‡‚ğŠÜ‚Şj
+				// Î³[act_y, this] ï¼ˆact_y == this ã®å ´åˆã‚’å«ã‚€ï¼‰
 				for (int nLink=0; nLink < NLinks(); ++nLink) {
 					if (!(Link(nLink)->bEnabled)) { continue; }
 					int act_n = Link(nLink)->number;
@@ -169,7 +169,7 @@ void PHIKActuator::ProceedSolve(){
 	for (int i=0; i<ndof; ++i) {
 		double delta_epsilon = 0;
 
-		// ƒÂ
+		// Î´
 		for (int nLink=0; nLink < NLinks(); ++nLink) {
 			if (Link(nLink)==this || !(Link(nLink)->IsEnabled())) { continue; }
 			int act_n = Link(nLink)->number;
@@ -180,7 +180,7 @@ void PHIKActuator::ProceedSolve(){
 			}
 		}
 
-		// ƒÃ
+		// Îµ
 		for (int k=0; k<ndof; ++k) {
 			if (k!=i) {
 				if (gamma.find(number) != gamma.end()) {
@@ -189,7 +189,7 @@ void PHIKActuator::ProceedSolve(){
 			}
 		}
 
-		// ƒÖ‚ÌXV
+		// Ï‰ã®æ›´æ–°
 		double invAlpha = 0;
 		if (alpha[i]!=0) {
 			invAlpha = (1.0 / alpha[i]);
@@ -199,7 +199,7 @@ void PHIKActuator::ProceedSolve(){
 		omega[i]  = invAlpha * (beta[i]  - delta_epsilon);
 	}
 
-	// Œãˆ—
+	// å¾Œå‡¦ç†
 	AfterProceedSolve();
 }
 
@@ -229,7 +229,7 @@ size_t PHIKBallActuator::NChildObject() const{
 }
 
 void PHIKBallActuator::BeforeSetupMatrix(){
-	// p¨§Œä‚ğ‚·‚éƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ª–³‚¯‚ê‚Î©—R“x‚ğ‚Q‚É‰º‚°‚éiç’·«‰ñ”ğ‚Ì‚½‚ßj
+	// å§¿å‹¢åˆ¶å¾¡ã‚’ã™ã‚‹ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ãŒç„¡ã‘ã‚Œã°è‡ªç”±åº¦ã‚’ï¼’ã«ä¸‹ã’ã‚‹ï¼ˆå†—é•·æ€§å›é¿ã®ãŸã‚ï¼‰
 
 	bool bFound = false;;
 	for (int i=0; i<(int)descendant.size(); ++i) {
@@ -263,15 +263,15 @@ void PHIKBallActuator::CalcAxis(){
 	for (int nDesc=0; nDesc<(int)descendant.size(); ++nDesc) {
 		PHIKEndEffector* childEef = descendant[nDesc]->eef; if (childEef==NULL) { continue; }
 		if (childEef->bEnabled && !childEef->bOrientation) {
-			// ŠÖß‚Ì‰ñ“]’†S
+			// é–¢ç¯€ã®å›è»¢ä¸­å¿ƒ
 			PHBallJoint* j = DCAST(PHBallJoint,joint);
 			PHBallJointDesc d; j->GetDesc(&d);
 			Vec3d Pj = j->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
 
-			// ƒGƒ“ƒhƒGƒtƒFƒNƒ^ˆÊ’u
+			// ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ä½ç½®
 			Vec3d Pe = childEef->solid->GetPose() * childEef->targetLocalPosition;
 
-			// ŠÖß‰ñ“]’†S<->ƒGƒ“ƒhƒGƒtƒFƒNƒ^ ²
+			// é–¢ç¯€å›è»¢ä¸­å¿ƒ<->ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ è»¸
 			Vec3d e0 = (Pe - Pj);
 			if (e0.norm() != 0){
 				e0 = e0 / e0.norm();
@@ -279,7 +279,7 @@ void PHIKBallActuator::CalcAxis(){
 				e0 = Vec3d(1,0,0);
 			}
 
-			// ‰ñ“]²‚ğ‹‚ß‚é
+			// å›è»¢è»¸ã‚’æ±‚ã‚ã‚‹
 			if (abs(PTM::dot(e0,Vec3d(1,0,0))) > Rad(10)) {
 				e[0] = Vec3d(0,1,0);
 			} else {
@@ -298,29 +298,29 @@ void PHIKBallActuator::CalcAxis(){
 void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 	int n = endeffector->number;
 
-	// ƒAƒNƒ`ƒ…ƒG[ƒ^‰ñ“] <=> ƒGƒ“ƒhƒGƒtƒFƒNƒ^ˆÊ’u
+	// ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿å›è»¢ <=> ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ä½ç½®
 	if (endeffector->bPosition){
-		// ŠÖß‚Ì‰ñ“]’†S
+		// é–¢ç¯€ã®å›è»¢ä¸­å¿ƒ
 		PHBallJoint* j = DCAST(PHBallJoint,joint);
 
 		PHBallJointDesc d; j->GetDesc(&d);
 		Vec3d Pj = j->solid[0]->GetPose() * d.poseSocket * Vec3d(0,0,0);
 
-		// ƒGƒ“ƒhƒGƒtƒFƒNƒ^ˆÊ’u
+		// ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ä½ç½®
 		Vec3d Pe = endeffector->solid->GetPose() * endeffector->targetLocalPosition;
 
-		// ŠOÏƒxƒNƒgƒ‹‚©‚çƒ„ƒRƒrƒAƒ“‚ğ‹‚ß‚é
+		// å¤–ç©ãƒ™ã‚¯ãƒˆãƒ«ã‹ã‚‰ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ã‚’æ±‚ã‚ã‚‹
 		for (int i=0; i<ndof; ++i) {
 			Vec3d v = PTM::cross(e[i],(Pe-Pj));
 			Mj[n][0][i] = v[0];  Mj[n][1][i] = v[1];  Mj[n][2][i] = v[2];
 		}
 	}
 
-	// ƒAƒNƒ`ƒ…ƒG[ƒ^‰ñ“] <=> ƒGƒ“ƒhƒGƒtƒFƒNƒ^‰ñ“]
+	// ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿å›è»¢ <=> ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿å›è»¢
 	if (endeffector->bOrientation){
 		int stride = (endeffector->bPosition ? 3 : 0);
 
-		// ’PˆÊs—ñ
+		// å˜ä½è¡Œåˆ—
 		for (int i=0; i<3; ++i) {
 			for (int j=0; j<ndof; ++j) {
 				Mj[n][i+stride][j] = ((i==j) ? 1 : 0);
@@ -332,11 +332,11 @@ void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 void PHIKBallActuator::Move(){
 	if (!bEnabled) { return; }
 
-	// ‰ñ“]²ƒxƒNƒgƒ‹‚É‚·‚é
+	// å›è»¢è»¸ãƒ™ã‚¯ãƒˆãƒ«ã«ã™ã‚‹
 	Vec3d  w = Vec3d();
 	for (int i=0; i<ndof; ++i) { w += ( omega[i]/bias) * e[i]; }
 
-	// Axis-Angle•\Œ»‚É‚·‚é
+	// Axis-Angleè¡¨ç¾ã«ã™ã‚‹
 	double  angle =  w.norm();
 	Vec3d axis = w;
 	if (angle != 0) {
@@ -345,10 +345,10 @@ void PHIKBallActuator::Move(){
 		axis = Vec3d(1,0,0);
 	}
 
-	// Quaternion‚É‚·‚é
+	// Quaternionã«ã™ã‚‹
 	Quaterniond diffQ = Quaterniond::Rot( angle,  axis);
 
-	// ŠÖßƒ[ƒJƒ‹Œn‚É’¼‚·
+	// é–¢ç¯€ãƒ­ãƒ¼ã‚«ãƒ«ç³»ã«ç›´ã™
 	Posed poseSocket; joint->GetSocketPose(poseSocket);
 	Posed poseSolid = joint->GetSocketSolid()->GetPose();
 	
@@ -390,7 +390,7 @@ void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 	int n = endeffector->number;
 	PHHingeJoint* j = DCAST(PHHingeJoint,joint);
 
-	// ƒAƒNƒ`ƒ…ƒG[ƒ^‰ñ“] <=> ƒGƒ“ƒhƒGƒtƒFƒNƒ^ˆÊ’u
+	// ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿å›è»¢ <=> ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ä½ç½®
 	if (endeffector->bPosition){
 		Vec3d Pm = j->solid[0]->GetPose() * j->Xj[0].r;
 		Vec3d Rm = j->solid[0]->GetPose().Ori() * j->Xj[0].q * Vec3d(0,0,1);
@@ -403,11 +403,11 @@ void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 		}
 	}
 
-	// ƒAƒNƒ`ƒ…ƒG[ƒ^‰ñ“] <=> ƒGƒ“ƒhƒGƒtƒFƒNƒ^‰ñ“]
+	// ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿å›è»¢ <=> ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿å›è»¢
 	if (endeffector->bOrientation){
 		int stride = (endeffector->bPosition ? 3 : 0);
 
-		// ƒqƒ“ƒW‚Ì‰ñ“]²ƒxƒNƒgƒ‹
+		// ãƒ’ãƒ³ã‚¸ã®å›è»¢è»¸ãƒ™ã‚¯ãƒˆãƒ«
 		Vec3d Rm = j->solid[0]->GetPose().Ori() * j->Xj[0].q * Vec3d(0,0,1);
 		for (int i=0; i<3; ++i) {
 			Mj[n][i+stride][0] = Rm[i];

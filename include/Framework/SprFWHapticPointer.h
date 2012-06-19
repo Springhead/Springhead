@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,27 +19,27 @@ namespace Spr{;
 struct FWHapticPointerIf : SceneObjectIf {
 	SPR_IFDEF(FWHapticPointer);
 
-	/** @brief PHHapticPointerIf‚ğİ’è‚·‚é
+	/** @brief PHHapticPointerIfã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetPHHapticPointer(PHHapticPointerIf* hpGlobal);
 
-	/** @brief PHHapticPointerIf‚ğæ“¾
+	/** @brief PHHapticPointerIfã‚’å–å¾—
 	*/	
 	PHHapticPointerIf*	GetPHHapticPointer();
 
-	/** @brief HumanInterfaceIf‚ğİ’è‚·‚é
+	/** @brief HumanInterfaceIfã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetHumanInterface(HIBaseIf* hi);
 
-	/** @brief HumanInterfaceIf‚ğİ’è‚·‚é
+	/** @brief HumanInterfaceIfã‚’è¨­å®šã™ã‚‹
 	*/
 	HIBaseIf* GetHumanInterface();
 
-	///** @brief ŒvZ’ñ¦—Í‚ğæ“¾‚·‚é
+	///** @brief è¨ˆç®—æç¤ºåŠ›ã‚’å–å¾—ã™ã‚‹
 	//*/
 	//Vec3f GetHapticForce();
 
-	///** @breif ŒvZ’ñ¦ƒgƒ‹ƒN‚ğæ“¾‚·‚é
+	///** @breif è¨ˆç®—æç¤ºãƒˆãƒ«ã‚¯ã‚’å–å¾—ã™ã‚‹
 	//*/
 	//Vec3f GetHapticTorque();
 };

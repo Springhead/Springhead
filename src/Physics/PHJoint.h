@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2010, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -21,13 +21,13 @@ public:
 	SPR_OBJECTDEF_ABST(PHJoint);
 	SPR_DECLMEMBEROF_PHJointDesc;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHJoint() {}
 
-	/// ABA‚Å‘Î‰‚·‚éPHTreeNode‚Ì”h¶ƒNƒ‰ƒX‚ğ¶¬‚µ‚Ä•Ô‚·
+	/// ABAã§å¯¾å¿œã™ã‚‹PHTreeNodeã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã—ã¦è¿”ã™
 	virtual PHTreeNode* CreateTreeNode(){ return NULL; }
 
-	// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+	// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 
 	void	SetMaxForce(double max){ fMax = fabs(max); }
 	double	GetMaxForce(){ return fMax; }
@@ -41,10 +41,10 @@ protected:
 	friend class PHTreeNodeND<NDOF>;
 
 public:
-	/// ŠÖß‚ÌˆÊ’uE‘¬“x
+	/// é–¢ç¯€ã®ä½ç½®ãƒ»é€Ÿåº¦
 	PTM::TVector<NDOF,double> position, velocity;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHNDJoint(){
 		position.clear();
 		velocity.clear();
@@ -58,45 +58,45 @@ protected:
 	friend class PH1DJointLimit;
 	friend class PH1DJointMotor;
 
-	PH1DJointLimit* limit;			///< ‰Â“®”ÍˆÍS‘©
-	PH1DJointMotor  motor;			///< ƒ‚[ƒ^
+	PH1DJointLimit* limit;			///< å¯å‹•ç¯„å›²æ‹˜æŸ
+	PH1DJointMotor  motor;			///< ãƒ¢ãƒ¼ã‚¿
 
 public:
 	SPR_OBJECTDEF_ABST1(PH1DJoint, PHJoint);
 	SPR_DECLMEMBEROF_PH1DJointDesc;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PH1DJoint() {
 		motor.joint = this;
 		limit = NULL;
 	}
 
-	// ----- PHConstraint‚Ì”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- PHConstraintã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
-	/// ‚Ç‚Ì©—R“x‚ğ‘¬“xS‘©‚·‚é‚©‚ğİ’è
+	/// ã©ã®è‡ªç”±åº¦ã‚’é€Ÿåº¦æ‹˜æŸã™ã‚‹ã‹ã‚’è¨­å®š
 	virtual void SetupAxisIndex() {
 		PHJoint::SetupAxisIndex();
 		motor.SetupAxisIndex();
 		if (limit) { limit->SetupAxisIndex(); }
 	}
 	
-	/// LCP‚Ì•â³’l‚ÌŒvZDŒë·C³—p
+	/// LCPã®è£œæ­£å€¤ã®è¨ˆç®—ï¼èª¤å·®ä¿®æ­£ç”¨
 	virtual void CompBias() {
 		PHJoint::CompBias();
 		motor.CompBias();
 		if (limit) { limit->CompBias(); }
 	}
 
-	// ----- ‚±‚ÌƒNƒ‰ƒX‚ÆC‚±‚ÌƒNƒ‰ƒX‚©‚ç”h¶‚·‚éƒNƒ‰ƒX‚Ì‹@”\
+	// ----- ã“ã®ã‚¯ãƒ©ã‚¹ã¨ï¼Œã“ã®ã‚¯ãƒ©ã‚¹ã‹ã‚‰æ´¾ç”Ÿã™ã‚‹ã‚¯ãƒ©ã‚¹ã®æ©Ÿèƒ½
 
-	/// ƒoƒl’†“_i–Ú•WŠp“xj‚©‚ç‚Ì•Î·‚ğ•Ô‚·D‰ñ“]ŠÖß‚ªƒI[ƒoƒ‰ƒCƒh‚·‚é
+	/// ãƒãƒä¸­ç‚¹ï¼ˆç›®æ¨™è§’åº¦ï¼‰ã‹ã‚‰ã®åå·®ã‚’è¿”ã™ï¼å›è»¢é–¢ç¯€ãŒã‚ªãƒ¼ãƒãƒ©ã‚¤ãƒ‰ã™ã‚‹
 	virtual double	GetDeviation(){
 		return GetPosition() - GetTargetPosition();
 	}
 
-	// ----- ƒCƒ“ƒ^ƒtƒF[ƒX‚ÌÀ‘•
+	// ----- ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã®å®Ÿè£…
 
-	/// ChildObjectD‰Â“®ˆæ‚ğ’Ç‰Á‚Å‚«‚é
+	/// ChildObjectï¼å¯å‹•åŸŸã‚’è¿½åŠ ã§ãã‚‹
 	virtual bool AddChildObject(ObjectIf* o) {
 		if (!limit) { limit = o->Cast(); if(limit){ limit->joint=this;return true; }}
 		return PHConstraint::AddChildObject(o);

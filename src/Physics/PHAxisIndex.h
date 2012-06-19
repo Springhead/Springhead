@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -10,56 +10,56 @@
 
 namespace Spr{;
 
-/// S‘©²ŠÇ—ƒNƒ‰ƒXDS‘©‚Ì—L–³‚ğ•Û‚µCS‘©²ƒŠƒXƒg‚ğì¬‚·‚é
+/// æ‹˜æŸè»¸ç®¡ç†ã‚¯ãƒ©ã‚¹ï¼æ‹˜æŸã®æœ‰ç„¡ã‚’ä¿æŒã—ï¼Œæ‹˜æŸè»¸ãƒªã‚¹ãƒˆã‚’ä½œæˆã™ã‚‹
 template<int N>
 class AxisIndex {
 
-	/// ²‚Ì—LŒøE–³Œø‚ğ•Û‚·‚éƒtƒ‰ƒO
+	/// è»¸ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’ä¿æŒã™ã‚‹ãƒ•ãƒ©ã‚°
 	bool   bCurr[N], bPrev[N];
 
-	/// —LŒø²”Ô†ƒŠƒXƒg
+	/// æœ‰åŠ¹è»¸ç•ªå·ãƒªã‚¹ãƒˆ
 	int    idx[N];
 
-	/// idx‚Ì—v‘f”
+	/// idxã®è¦ç´ æ•°
 	size_t sz;
 
 public:
 
-	/// •Ï‰»ó‘Ô‚ğ‚ ‚ç‚í‚·enum
+	/// å¤‰åŒ–çŠ¶æ…‹ã‚’ã‚ã‚‰ã‚ã™enum
 	enum Transition { IL_CONTINUE_ENABLED=0, IL_NEWLY_ENABLED, IL_DISABLED };
   
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	AxisIndex() {
 		for (int i=0; i<N; ++i) { bPrev[i] = false; }
 		Clear();
 	}
 
-	/// ²”Ô†i‚ğS‘©‚·‚é
+	/// è»¸ç•ªå·iã‚’æ‹˜æŸã™ã‚‹
 	void Enable(int i)  { bCurr[i] = true; }
 
-	/// ²”Ô†i‚ÌS‘©‚ğ‰ğœ‚·‚é
+	/// è»¸ç•ªå·iã®æ‹˜æŸã‚’è§£é™¤ã™ã‚‹
 	void Disable(int i) { bCurr[i] = false; }
 
-	/// ²”Ô†i‚ªS‘©‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğæ“¾‚·‚é
+	/// è»¸ç•ªå·iãŒæ‹˜æŸã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’å–å¾—ã™ã‚‹
 	bool IsEnabled(int i) { return bCurr[i]; }
 
-	/// S‘©²”Ô†ƒŠƒXƒg‚ÌƒTƒCƒY‚ğæ“¾‚·‚é
+	/// æ‹˜æŸè»¸ç•ªå·ãƒªã‚¹ãƒˆã®ã‚µã‚¤ã‚ºã‚’å–å¾—ã™ã‚‹
 	int  size() { return sz; }
 
-	/// S‘©²”Ô†ƒŠƒXƒg‚Ìn”Ô–Ú‚Ì²”Ô†‚ğæ“¾‚·‚é
+	/// æ‹˜æŸè»¸ç•ªå·ãƒªã‚¹ãƒˆã®nç•ªç›®ã®è»¸ç•ªå·ã‚’å–å¾—ã™ã‚‹
 	int& operator[](int n){ return idx[n]; }
 
-	/// ²”Ô†i‚ÌS‘©‚ªŒp‘±‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ•Ô‚·
+	/// è»¸ç•ªå·iã®æ‹˜æŸãŒç¶™ç¶šã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’è¿”ã™
 	bool IsContinued(int i) {
 		return(bCurr[i] && bPrev[i]);
 	}
 
-	/// S‘©ƒtƒ‰ƒO‚©‚çS‘©²”Ô†ƒŠƒXƒg‚ğì¬‚·‚é
+	/// æ‹˜æŸãƒ•ãƒ©ã‚°ã‹ã‚‰æ‹˜æŸè»¸ç•ªå·ãƒªã‚¹ãƒˆã‚’ä½œæˆã™ã‚‹
 	void CreateList() {
 		for (int i=0; i<N; ++i) { if (bCurr[i]) { idx[sz++] = i; } }
 	}
 
-	/// S‘©²”Ô†ƒŠƒXƒg‚ğƒNƒŠƒA
+	/// æ‹˜æŸè»¸ç•ªå·ãƒªã‚¹ãƒˆã‚’ã‚¯ãƒªã‚¢
 	void Clear() {
 		sz = 0;
 		for (int i=0; i<N; ++i) {

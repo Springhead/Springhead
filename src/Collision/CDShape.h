@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,8 +14,8 @@
 
 namespace Spr{;
 
-/// Œ`ó
-/// Œ`ó©‘Ì‚ÍˆÊ’uî•ñ‚ğ‚½‚È‚¢DˆÊ’uî•ñ‚ÍŒ`ó‚ğQÆ‚·‚éŠe„‘Ì‚ª‚ÂD
+/// å½¢çŠ¶
+/// å½¢çŠ¶è‡ªä½“ã¯ä½ç½®æƒ…å ±ã‚’æŒãŸãªã„ï¼ä½ç½®æƒ…å ±ã¯å½¢çŠ¶ã‚’å‚ç…§ã™ã‚‹å„å‰›ä½“ãŒæŒã¤ï¼
 class CDShape : public NamedObject{
 public:
 

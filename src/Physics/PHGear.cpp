@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -79,11 +79,11 @@ void PHGear::SetupLCP(){
 	if(bArticulated)return;
 	f *= engine->shrinkRate;
 	
-	// LCP��A�s��̑Ίp�������v�Z
+	// LCPのA行列の対角成分を計算
 	A = ratio * ratio * joint[0]->A[joint[0]->movableAxes[0]] + joint[1]->A[joint[1]->movableAxes[0]];
 	Ainv = 1.0 / A;
 
-	// �S���͏����l�ɂ�鑬�x�ω��ʂ��v�Z
+	// 拘束力初期値による速度変化量を計算
 	CompResponse(f);
 }
 

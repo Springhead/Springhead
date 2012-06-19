@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,7 +14,7 @@
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-/** @brief Š´Šoˆ—
+/** @brief æ„Ÿè¦šå‡¦ç†
 */
 class CRTouchSensor : public CREngine, public CRTouchSensorDesc {
 	std::vector<CRContactInfo> contactList;
@@ -29,19 +29,19 @@ public:
 	{
 	}
 
-	/** @brief Às‡˜‚ğŒˆ‚ß‚éƒvƒ‰ƒCƒIƒŠƒeƒB’lD¬‚³‚¢‚Ù‚Ç‘‚¢
+	/** @brief å®Ÿè¡Œé †åºã‚’æ±ºã‚ã‚‹ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£å€¤ï¼å°ã•ã„ã»ã©æ—©ã„
 	*/
 	virtual int GetPriority() const { return CREngineDesc::CREP_SENSOR; }
 
-	/** @brief Š´Šo“ü—Í‚Ìˆ—‚ğÀs‚·‚é
+	/** @brief æ„Ÿè¦šå…¥åŠ›ã®å‡¦ç†ã‚’å®Ÿè¡Œã™ã‚‹
 	*/
 	virtual void Step();
 
-	/** @brief Œ»İ‚ÌÚG‚ÌŒÂ”‚ğ•Ô‚·
+	/** @brief ç¾åœ¨ã®æ¥è§¦ã®å€‹æ•°ã‚’è¿”ã™
 	*/
 	virtual int NContacts(){ return contactList.size(); }
 
-	/** @brief ÚGî•ñ‚ğ•Ô‚·
+	/** @brief æ¥è§¦æƒ…å ±ã‚’è¿”ã™
 	*/
 	virtual CRContactInfo GetContact(int n){ return contactList[n]; }
 };

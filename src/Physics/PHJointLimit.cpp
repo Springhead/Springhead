@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -70,47 +70,47 @@ PHBallJointLimit::PHBallJointLimit(){
 	}
 }
 
-/// LCP‚ğ‰ğ‚­‘O’iŠK‚ÌŒvZ
+/// LCPã‚’è§£ãå‰æ®µéšã®è¨ˆç®—
 void PHBallJointLimit::SetupLCP() {
-	// S‘©À•WŒnƒ„ƒRƒrƒAƒ“‚ğŒvZ
+	// æ‹˜æŸåº§æ¨™ç³»ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ã‚’è¨ˆç®—
 	CompJacobian();
 
-	// S‘©²ƒtƒ‰ƒO‚ÌƒNƒŠƒA <<‚±‚±‚©‚çaxes.CreateList()‚Ü‚Åaxes[n]‚Íg‚¦‚È‚¢D>>
+	// æ‹˜æŸè»¸ãƒ•ãƒ©ã‚°ã®ã‚¯ãƒªã‚¢ <<ã“ã“ã‹ã‚‰axes.CreateList()ã¾ã§axes[n]ã¯ä½¿ãˆãªã„ï¼>>
 	axes.Clear();
 
-	// Projection—p‚ÌÅ‘åEÅ¬’l‚ğƒŠƒZƒbƒg‚·‚éi
+	// Projectionç”¨ã®æœ€å¤§ãƒ»æœ€å°å€¤ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹ï¼ˆ
 	for (int i=0; i<3; i++) { fMinDt[i] = -FLT_MAX; fMaxDt[i] =  FLT_MAX; }
 
-	// S‘©‚·‚é©—R“x‚ÌŒˆ’è
+	// æ‹˜æŸã™ã‚‹è‡ªç”±åº¦ã®æ±ºå®š
 	SetupAxisIndex();
 		
-	// LCP‚ÌŒW”A, b‚Ì•â³’ldA, db‚ğŒvZ
+	// LCPã®ä¿‚æ•°A, bã®è£œæ­£å€¤dA, dbã‚’è¨ˆç®—
 	dA.clear();
 	db.clear();
 	CompBias();
 
-	// LCP‚ÌAs—ñ‚Ì‘ÎŠp¬•ª‚ğŒvZ
+	// LCPã®Aè¡Œåˆ—ã®å¯¾è§’æˆåˆ†ã‚’è¨ˆç®—
 	CompResponseMatrix();
 		
-	// LCP‚ÌbƒxƒNƒgƒ‹ == ˜_•¶’†‚Ìw[t]‚ğŒvZ
+	// LCPã®bãƒ™ã‚¯ãƒˆãƒ« == è«–æ–‡ä¸­ã®w[t]ã‚’è¨ˆç®—
 	b = J[0] * joint->solid[0]->v.w() + J[1] * joint->solid[1]->v.w();
 
-	// ‚±‚±‚Ü‚Å‚ÅŒˆ’è‚³‚ê‚½S‘©²ƒtƒ‰ƒO‚ğg‚Á‚Ä²”Ô†ƒŠƒXƒg‚ğì¬@<<‚±‚±‚©‚ç‚Íaxes[n]‚ğg—p‰Â”\>>
+	// ã“ã“ã¾ã§ã§æ±ºå®šã•ã‚ŒãŸæ‹˜æŸè»¸ãƒ•ãƒ©ã‚°ã‚’ä½¿ã£ã¦è»¸ç•ªå·ãƒªã‚¹ãƒˆã‚’ä½œæˆã€€<<ã“ã“ã‹ã‚‰ã¯axes[n]ã‚’ä½¿ç”¨å¯èƒ½>>
 	axes.CreateList();
 
-	// S‘©—Í‚Ì‰Šú’l‚ğXV
+	// æ‹˜æŸåŠ›ã®åˆæœŸå€¤ã‚’æ›´æ–°
 	for (int n=0; n<axes.size(); ++n) {
 		f[axes[n]] *= axes.IsContinued(axes[n]) ? joint->engine->shrinkRate : 0;
 	}
 
-	// S‘©—Í‰Šú’l‚É‚æ‚é‘¬“x•Ï‰»—Ê‚ğŒvZ
+	// æ‹˜æŸåŠ›åˆæœŸå€¤ã«ã‚ˆã‚‹é€Ÿåº¦å¤‰åŒ–é‡ã‚’è¨ˆç®—
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
 		CompResponse(f[i], i);
 	}
 }
 
-/// LCP‚ÌŒJ‚è•Ô‚µŒvZ
+/// LCPã®ç¹°ã‚Šè¿”ã—è¨ˆç®—
 void PHBallJointLimit::IterateLCP() {
 	Vec3d fnew, df;
 	
@@ -131,7 +131,7 @@ void PHBallJointLimit::IterateLCP() {
 	}
 }
 
-/// A‚Ì‘ÎŠp¬•ª‚ğŒvZ‚·‚éDA = J * M^-1 * J^T
+/// Aã®å¯¾è§’æˆåˆ†ã‚’è¨ˆç®—ã™ã‚‹ï¼A = J * M^-1 * J^T
 void PHBallJointLimit::CompResponseMatrix() {
 	A.clear();
 	PHRootNode* root[2] = {
@@ -149,7 +149,7 @@ void PHBallJointLimit::CompResponseMatrix() {
 					df.w() = J[i].row(j);
 					joint->solid[i]->treeNode->CompResponse(df, false, false);
 					A[j] += J[i].row(j) * joint->solid[i]->treeNode->da.w();
-					//‚à‚¤•Ğ•û‚Ì„‘Ì‚à“¯ˆê‚ÌƒcƒŠ[‚É‘®‚·‚éê‡‚Í‚»‚Ì‰e‹¿€‚à‰ÁZ
+					//ã‚‚ã†ç‰‡æ–¹ã®å‰›ä½“ã‚‚åŒä¸€ã®ãƒ„ãƒªãƒ¼ã«å±ã™ã‚‹å ´åˆã¯ãã®å½±éŸ¿é …ã‚‚åŠ ç®—
 					if(joint->solid[!i]->IsArticulated() && root[i] == root[!i]) {
 						A[j] += J[!i].row(j) * joint->solid[!i]->treeNode->da.w();
 					}
@@ -159,7 +159,7 @@ void PHBallJointLimit::CompResponseMatrix() {
 				// T = M^-1 * J^T
 				T[i] = J[i] * joint->solid[i]->Iinv;
 
-				// A == ˜_•¶’†‚ÌJ * M^-1 * J^T, Gauss Seidel–@‚ÌD
+				// A == è«–æ–‡ä¸­ã®J * M^-1 * J^T, Gauss Seidelæ³•ã®D
 				for(int j=0; j<3; ++j) {
 					A[j] += J[i].row(j) * T[i].row(j);
 				}
@@ -167,9 +167,9 @@ void PHBallJointLimit::CompResponseMatrix() {
 		}
 	}
 
-	// Å‘å‚Ì‘ÎŠp—v‘f‚Æ‚Ì”ä‚ªeps‚æ‚è‚à¬‚³‚¢‘ÎŠp—v‘f‚ª‚ ‚éê‡C
-	// ”’l“I•sˆÀ’è«‚ÌŒ´ˆö‚Æ‚È‚é‚Ì‚Å‚»‚Ì¬•ª‚ÍS‘©‘ÎÛ‚©‚çœŠO‚·‚é
-	// –eps‚ğ‘å‚«‚­‚Æ‚é‚ÆC•K—v‚ÈS‘©‚Ü‚Å–³Œø‰»‚³‚ê‚Ä‚µ‚Ü‚¤‚Ì‚ÅA’²®‚ÍTd‚ÉB
+	// æœ€å¤§ã®å¯¾è§’è¦ç´ ã¨ã®æ¯”ãŒepsã‚ˆã‚Šã‚‚å°ã•ã„å¯¾è§’è¦ç´ ãŒã‚ã‚‹å ´åˆï¼Œ
+	// æ•°å€¤çš„ä¸å®‰å®šæ€§ã®åŸå› ã¨ãªã‚‹ã®ã§ãã®æˆåˆ†ã¯æ‹˜æŸå¯¾è±¡ã‹ã‚‰é™¤å¤–ã™ã‚‹
+	// ï¼Šepsã‚’å¤§ããã¨ã‚‹ã¨ï¼Œå¿…è¦ãªæ‹˜æŸã¾ã§ç„¡åŠ¹åŒ–ã•ã‚Œã¦ã—ã¾ã†ã®ã§ã€èª¿æ•´ã¯æ…é‡ã«ã€‚
 	const double eps = 0.000001, epsabs = 1.0e-10;
 	double Amax=0.0, Amin;
 	for(int i=0; i<6; ++i) {
@@ -217,9 +217,9 @@ void PHBallJointLimit::CompResponse(double df, int i) {
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHBallJointConeLimit
 
-/// S‘©À•WŒn‚ÌJabocian‚ğŒvZ
+/// æ‹˜æŸåº§æ¨™ç³»ã®Jabocianã‚’è¨ˆç®—
 void PHBallJointConeLimit::CompJacobian() {
-	// •W€“I‚ÈŠÖßJacobian‚ğŒÅ—L‚ÌS‘©À•WŒn‚É•ÏŠ·‚·‚és—ñ
+	// æ¨™æº–çš„ãªé–¢ç¯€Jacobianã‚’å›ºæœ‰ã®æ‹˜æŸåº§æ¨™ç³»ã«å¤‰æ›ã™ã‚‹è¡Œåˆ—
 	Matrix3d Jc, Jcinv;
 	const double eps = 1.0e-5;
 	Jc.Ez() = joint->Xjrel.q * Vec3d(0.0, 0.0, 1.0);
@@ -229,12 +229,12 @@ void PHBallJointConeLimit::CompJacobian() {
 	Jc.Ey() = cross(Jc.Ez(), Jc.Ex());
 	Jcinv   = Jc.trans();
 	
-	// ŠÖßJacobian‚ğæ“¾E•ÏŠ·‚µ‚ÄLimit‚ÌJacobian‚Æ‚·‚é
+	// é–¢ç¯€Jacobianã‚’å–å¾—ãƒ»å¤‰æ›ã—ã¦Limitã®Jacobianã¨ã™ã‚‹
 	J[0] = Jcinv * joint->J[0].ww();
 	J[1] = Jcinv * joint->J[1].ww();
 }
 
-/// ‰Â“®ˆæ§ŒÀ‚É‚©‚©‚Á‚Ä‚¢‚é‚©Šm”F‚µ‚Ç‚Ì©—R“x‚ğ‘¬“xS‘©‚·‚é‚©‚ğİ’è
+/// å¯å‹•åŸŸåˆ¶é™ã«ã‹ã‹ã£ã¦ã„ã‚‹ã‹ç¢ºèªã—ã©ã®è‡ªç”±åº¦ã‚’é€Ÿåº¦æ‹˜æŸã™ã‚‹ã‹ã‚’è¨­å®š
 void PHBallJointConeLimit::SetupAxisIndex() {
 	Vec2d limit[3] = { limitSwing, limitSwingDir, limitTwist };
 
@@ -258,13 +258,13 @@ void PHBallJointConeLimit::SetupAxisIndex() {
 // SplinePoint
 
 void SplinePoint::Update() {
-	// ”ÍˆÍƒ`ƒFƒbƒN
+	// ç¯„å›²ãƒã‚§ãƒƒã‚¯
 	while (1.0 < t) { t -= 1.0; edge++; }
 	if (edge >= spline->NEdges()) { edge = 0; }
 	while (t < 0.0) { t += 1.0; edge--; }
 	if (edge < 0) { edge = spline->NEdges()-1; }
 
-	// pos‚ÌXV
+	// posã®æ›´æ–°
 	Vec4d s = spline->GetEdgeSwingCoeff(edge);
 	Vec4d d = spline->GetEdgeSwingDirCoeff(edge);
 	pos[0] = s[0]*t*t*t + s[1]*t*t + s[2]*t + s[3];
@@ -365,11 +365,11 @@ SplinePoint ClosedSplineCurve::GetPointOnEdge(int i, double t) {
 // -----  -----  -----  -----  -----
 // PHBallJointSplineLimit
 
-/// S‘©À•WŒn‚ÌJabocian‚ğŒvZ
+/// æ‹˜æŸåº§æ¨™ç³»ã®Jabocianã‚’è¨ˆç®—
 void PHBallJointSplineLimit::CompJacobian() {
 	currPos = joint->position;
 
-	// •ÏŠ·‘O‚Ì•W€Jacobian
+	// å¤‰æ›å‰ã®æ¨™æº–Jacobian
 	Matrix3d Jc, Jcinv=Matrix3d::Unit();
 	const double eps = 1.0e-5;
 	Jc.Ez() = joint->Xjrel.q * Vec3d(0.0, 0.0, 1.0);
@@ -379,17 +379,17 @@ void PHBallJointSplineLimit::CompJacobian() {
 	Jc.Ey() = cross(Jc.Ez(), Jc.Ex());
 	Jcinv = Jc.trans();
 
-	// ‰Â“®ˆæƒ`ƒFƒbƒN
+	// å¯å‹•åŸŸãƒã‚§ãƒƒã‚¯
 	CheckSwingLimit();
 	CheckTwistLimit();
 
-	// Jacobian‚ğ•ÏŠ·‚·‚é
+	// Jacobianã‚’å¤‰æ›ã™ã‚‹
 	if (bOnSwing) { Jcinv = neighbor.CompJacobian().trans(); }
 	J[0] = Jcinv * joint->J[0].ww();
 	J[1] = Jcinv * joint->J[1].ww();
 }
 
-/// ‚Ç‚Ì©—R“x‚ğ‘¬“xS‘©‚·‚é‚©‚ğİ’è
+/// ã©ã®è‡ªç”±åº¦ã‚’é€Ÿåº¦æ‹˜æŸã™ã‚‹ã‹ã‚’è¨­å®š
 void PHBallJointSplineLimit::SetupAxisIndex() {
 	if (bOnSwing) {
 		axes.Enable(0);
@@ -400,20 +400,20 @@ void PHBallJointSplineLimit::SetupAxisIndex() {
 
 // -----  -----  -----
 
-/// Swing-SwingDir‚Ì‰Â“®ˆæƒ`ƒFƒbƒNibOnSwingi‚Æneighborj‚ğŒˆ’è‚·‚éj
+/// Swing-SwingDirã®å¯å‹•åŸŸãƒã‚§ãƒƒã‚¯ï¼ˆbOnSwingï¼ˆã¨neighborï¼‰ã‚’æ±ºå®šã™ã‚‹ï¼‰
 void PHBallJointSplineLimit::CheckSwingLimit() {
-	// Œğ“_”‚ğƒJƒEƒ“ƒg‚µ‚Ä“àŠO”»’è‚ğs‚¤
+	// äº¤ç‚¹æ•°ã‚’ã‚«ã‚¦ãƒ³ãƒˆã—ã¦å†…å¤–åˆ¤å®šã‚’è¡Œã†
 	double minDist = DBL_MAX;
 	int numIntersection = CheckIntersection(Vec2d(0, 0), Vec2d(currPos[0], currPos[1]), minDist);
 	bOnSwing = (numIntersection % 2 == 1);
 
 	if (bOnSwing) {
-		// ----- ‰Â“®ˆæŠO‚Éo‚Ä‚¢‚½ê‡ -----
-		// ‰Â“®ˆæ“à•”‚ÌÅI’n“_‚©‚çŒ»İ’n“_‚ÉŠ‚éÅ‹ß–TŒğ“_‚ğ‹‚ß‚é
+		// ----- å¯å‹•åŸŸå¤–ã«å‡ºã¦ã„ãŸå ´åˆ -----
+		// å¯å‹•åŸŸå†…éƒ¨ã®æœ€çµ‚åœ°ç‚¹ã‹ã‚‰ç¾åœ¨åœ°ç‚¹ã«è‡³ã‚‹æœ€è¿‘å‚äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
 		CheckIntersection(Vec2d(lastPos[0], lastPos[1]), Vec2d(currPos[0], currPos[1]), minDist);
 
-		// Å‹ß–TŒğ“_‚ğ‰ü—Ç‚µ‚Ä‹ß–T“_‚ğ‹‚ß‚é
-		double delta = 0.01; // t‚Ì’Tõ•
+		// æœ€è¿‘å‚äº¤ç‚¹ã‚’æ”¹è‰¯ã—ã¦è¿‘å‚ç‚¹ã‚’æ±‚ã‚ã‚‹
+		double delta = 0.01; // tã®æ¢ç´¢å¹…
 		double minNorm = 10;
 
 		Vec3d p0 = FromPolar(Vec2d(currPos[0], currPos[1]));
@@ -429,20 +429,20 @@ void PHBallJointSplineLimit::CheckSwingLimit() {
 			}
 		}
 		
-		// N“ü—Ê‚ğŒˆ‚ß‚é
+		// ä¾µå…¥é‡ã‚’æ±ºã‚ã‚‹
 		diff.x = minNorm;
-		if (diff.x > 0.5) { diff.x = 0.5; } // ’l‚ª‘å‚«‚·‚¬‚é‚Æ”­U‚·‚é‰Â”\«‚ª‚ ‚é‚½‚ß
+		if (diff.x > 0.5) { diff.x = 0.5; } // å€¤ãŒå¤§ãã™ãã‚‹ã¨ç™ºæ•£ã™ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ãŸã‚
 	} else {
-		// ----- ‰Â“®ˆæ“à‚¾‚Á‚½ê‡ -----
+		// ----- å¯å‹•åŸŸå†…ã ã£ãŸå ´åˆ -----
 		lastPos = currPos;
 	}
 }
 
-/// Twist‚Ì‰Â“®ˆæƒ`ƒFƒbƒNibOnTwist‚ğŒˆ’è‚·‚éj
+/// Twistã®å¯å‹•åŸŸãƒã‚§ãƒƒã‚¯ï¼ˆbOnTwistã‚’æ±ºå®šã™ã‚‹ï¼‰
 void PHBallJointSplineLimit::CheckTwistLimit() {
 	bOnTwist = false;
 	if (poleTwist[0] < FLT_MAX*0.1 && poleTwist[0] != poleTwist[1]) {
-		// Œ»İˆÊ’u‚Å‚ÌTwist Limit‚ğ•âŠÔ‚µ‚Ä‹‚ß‚é
+		// ç¾åœ¨ä½ç½®ã§ã®Twist Limitã‚’è£œé–“ã—ã¦æ±‚ã‚ã‚‹
 		SplinePoint ptTwist = neighbor; ptTwist.spline = &limitCurve;
 		if (bOnSwing) {
 			ptTwist.pos = neighbor.pos + Vec2d(currPos[0], currPos[1]);
@@ -466,7 +466,7 @@ void PHBallJointSplineLimit::CheckTwistLimit() {
 			limitTwist[1] = limitTwist[1]*ps[0]*ps[0] + poleTwist[1]*(1 - ps[0]*ps[0]);
 		}
 
-		// Twist‚Ì‰Â“®ˆæƒ`ƒFƒbƒN
+		// Twistã®å¯å‹•åŸŸãƒã‚§ãƒƒã‚¯
 		if (limitTwist[0] < limitTwist[1]) {
 			if (limitTwist[0] < FLT_MAX*0.1 && currPos[2] < limitTwist[0]) {
 				bOnTwist = true;
@@ -481,18 +481,18 @@ void PHBallJointSplineLimit::CheckTwistLimit() {
 	}
 }
 
-/// Œğ“_ƒ`ƒFƒbƒN
+/// äº¤ç‚¹ãƒã‚§ãƒƒã‚¯
 int PHBallJointSplineLimit::CheckIntersection(Vec2d base, Vec2d curr, double& minDist) {
 	int numIsect = 0;
 
 	if (base==curr) { return 0; }
 
-	// S‘©‹Èü‚Ì•”•ª‚²‚Æ‚ÉŒğ“_‚Ì—L–³‚ğƒ`ƒFƒbƒN‚·‚é
+	// æ‹˜æŸæ›²ç·šã®éƒ¨åˆ†ã”ã¨ã«äº¤ç‚¹ã®æœ‰ç„¡ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 	for (int i=0; i<limitCurve.NEdges(); ++i) {
 		Vec4d swg = limitCurve.GetEdgeSwingCoeff(i);
 		Vec4d swd = limitCurve.GetEdgeSwingDirCoeff(i);
 		
-		// OŸ•û’ö®‚ğ—§‚Ä‚ÄŒğ“_Œó•â‚ğ‹‚ß‚é
+		// ä¸‰æ¬¡æ–¹ç¨‹å¼ã‚’ç«‹ã¦ã¦äº¤ç‚¹å€™è£œã‚’æ±‚ã‚ã‚‹
 		Vec4d eqn;
 		if ((curr[1]-base[1]) != 0) {
 			double K = (curr[0]-base[0])/(curr[1]-base[1]);
@@ -505,15 +505,15 @@ int PHBallJointSplineLimit::CheckIntersection(Vec2d base, Vec2d curr, double& mi
 		}
 		Vec3d sol = SolveCubicFunction(eqn);
 		
-		// Œğ“_Œó•â‚©‚çÅ‹ß–TŒğ“_‚ğ‹‚ß‚é
+		// äº¤ç‚¹å€™è£œã‹ã‚‰æœ€è¿‘å‚äº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
 		for (int j=0; j<3; ++j) {
 			if (0 <= sol[j] && sol[j] <= 1) {
 				SplinePoint isect = limitCurve.GetPointOnEdge(i, sol[j]);
 
-				// Œ»İ‚ÌˆÊ’u‚æ‚èSwingŠp‚Ì¬‚³‚¢Œğ“_‚ğ”‚¦ã‚°‚é
+				// ç¾åœ¨ã®ä½ç½®ã‚ˆã‚ŠSwingè§’ã®å°ã•ã„äº¤ç‚¹ã‚’æ•°ãˆä¸Šã’ã‚‹
 				if (isect.pos[0] < curr[0]) { numIsect++; }
 					
-				// ‹——£‚Ìˆê”Ô‹ß‚¢Œğ“_‚ğ’T‚·
+				// è·é›¢ã®ä¸€ç•ªè¿‘ã„äº¤ç‚¹ã‚’æ¢ã™
 				Vec3d p0 = FromPolar(Vec2d(curr[0], curr[1]));
 				Vec3d p1 = FromPolar(isect.pos);
 				double dist = (p0-p1).norm();
@@ -531,7 +531,7 @@ int PHBallJointSplineLimit::CheckIntersection(Vec2d base, Vec2d curr, double& mi
 
 // -----  -----  -----  -----  -----
 
-/// ‚RŸ•û’ö®‚ğ‰ğ‚­ŠÖ”
+/// ï¼“æ¬¡æ–¹ç¨‹å¼ã‚’è§£ãé–¢æ•°
 Vec3d SolveCubicFunction(Vec4d eq3){
 	double z = 0;
 	bool FlagQ = true;
@@ -593,7 +593,7 @@ Vec3d SolveCubicFunction(Vec4d eq3){
 	return	Para;
 }
 
-/// Swing-SwingDir‹ÉÀ•W‚ğƒ†[ƒNƒŠƒbƒhÀ•W‚É’¼‚·ŠÖ”
+/// Swing-SwingDiræ¥µåº§æ¨™ã‚’ãƒ¦ãƒ¼ã‚¯ãƒªãƒƒãƒ‰åº§æ¨™ã«ç›´ã™é–¢æ•°
 Vec3d FromPolar(Vec2d pos) {
 	return Vec3d(sin(pos[0])*cos(pos[1]), sin(pos[0])*sin(pos[1]), cos(pos[0]));
 }

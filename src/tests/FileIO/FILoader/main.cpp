@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,23 +8,23 @@
 /**
  Springhead2/src/tests/FileIO/FILoader/main.cpp
 
-yŠT—vz
-  sprƒtƒ@ƒCƒ‹‚ğƒ[ƒh‚µAPhysicsƒGƒ“ƒWƒ“‚ÆÚ‘±‚µ‚ÄƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚·‚éB
+ã€æ¦‚è¦ã€‘
+  sprãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã—ã€Physicsã‚¨ãƒ³ã‚¸ãƒ³ã¨æ¥ç¶šã—ã¦ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ã€‚
   
-yI—¹Šî€z
-  EƒvƒƒOƒ‰ƒ€‚ª³íI—¹‚µ‚½‚ç0‚ğ•Ô‚·B  
+ã€çµ‚äº†åŸºæº–ã€‘
+  ãƒ»ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãŒæ­£å¸¸çµ‚äº†ã—ãŸã‚‰0ã‚’è¿”ã™ã€‚  
  
-yˆ—‚Ì—¬‚êz
-  Esprƒtƒ@ƒCƒ‹‚ğƒ[ƒh‚·‚éB
-  Eƒ[ƒh‚µ‚½î•ñ‚ğo—Í‚·‚éB
-  EPhysicsƒGƒ“ƒWƒ“‚ÆÚ‘±‚µAƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚³‚¹‚éB
-	ƒ[ƒh‚·‚éƒtƒ@ƒCƒ‹=test.spr  : “ÊŒ`ó(mesh)‚Æ‹…(sphere)‚Æ’¼•û‘Ì(box)‚ÌƒeƒXƒg
+ã€å‡¦ç†ã®æµã‚Œã€‘
+  ãƒ»sprãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã€‚
+  ãƒ»ãƒ­ãƒ¼ãƒ‰ã—ãŸæƒ…å ±ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
+  ãƒ»Physicsã‚¨ãƒ³ã‚¸ãƒ³ã¨æ¥ç¶šã—ã€ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã•ã›ã‚‹ã€‚
+	ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«=test.spr  : å‡¸å½¢çŠ¶(mesh)ã¨çƒ(sphere)ã¨ç›´æ–¹ä½“(box)ã®ãƒ†ã‚¹ãƒˆ
  */
 #include <Springhead.h>
 #include <GL/glut.h>
 
 #define	ESC				27				// Esc key
-#define EXIT_TIMER		12000			// ‹­§I—¹‚³‚¹‚éƒXƒeƒbƒv”
+#define EXIT_TIMER		12000			// å¼·åˆ¶çµ‚äº†ã•ã›ã‚‹ã‚¹ãƒ†ãƒƒãƒ—æ•°
 
 namespace Spr{
 	UTRef<PHSdkIf> phSdk;
@@ -44,7 +44,7 @@ using namespace Spr;
 Vec3f *vtx=NULL;
 
 
-// Ş¿‚Ìİ’è
+// æè³ªã®è¨­å®š
 GRMaterialDesc mat_red(Vec4f(0.0, 0.0, 0.0, 1.0),		// ambient
 						Vec4f(0.7, 0.0, 0.0, 1.0),		// diffuse
 						Vec4f(1.0, 1.0, 1.0, 1.0),		// specular
@@ -68,9 +68,9 @@ GRMaterialDesc mat_yellow(Vec4f(0.0, 0.0, 1.0, 1.0),
 std::vector<GRMaterialDesc> material;
 
 /**
- brief     	glutDisplayFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief     	glutDisplayFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void display(){
 	render->ClearBuffer();
@@ -85,9 +85,9 @@ void display(){
 	return;
 }
 /**
- brief     	ŒõŒ¹‚Ìİ’è
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief     	å…‰æºã®è¨­å®š
+ param	 	ãªã—
+ return 	ãªã—
  */
 void setLight() {
 	GRLightDesc light0;
@@ -108,9 +108,9 @@ void setLight() {
 	render->PushLight(light1);
 }
 /**
- brief     	Ş¿‚Ìİ’è
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief     	æè³ªã®è¨­å®š
+ param	 	ãªã—
+ return 	ãªã—
  */
 void setMaterial() {
 	material.push_back(mat_red);
@@ -120,21 +120,21 @@ void setMaterial() {
 }
 
 /**
- brief  	glutReshapeFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	<in/--> w@@•
- param  	<in/--> h@@‚‚³
- return 	‚È‚µ
+ brief  	glutReshapeFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	<in/--> wã€€ã€€å¹…
+ param  	<in/--> hã€€ã€€é«˜ã•
+ return 	ãªã—
  */
 void reshape(int w, int h){
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 
 /**
- brief 		glutKeyboardFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ” 
- param		<in/--> key@@ ASCIIƒR[ƒh
- param 		<in/--> x@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- param 		<in/--> y@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- return 	‚È‚µ
+ brief 		glutKeyboardFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•° 
+ param		<in/--> keyã€€ã€€ ASCIIã‚³ãƒ¼ãƒ‰
+ param 		<in/--> xã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ param 		<in/--> yã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ return 	ãªã—
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
@@ -154,9 +154,9 @@ void keyboard(unsigned char key, int x, int y){
 }
 
 /**
- brief  	glutIdleFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief  	glutIdleFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void idle(){
 	if(scene) {
@@ -173,13 +173,13 @@ void idle(){
 }
 
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char* argv[]){
-	{	//	glutMainLoop()‚ğŒÄ‚Ô‚Æ‹A‚Á‚Ä‚±‚È‚¢‚½‚ßAƒƒ‚ƒŠƒŠ[ƒN‚ª‹N‚«‚é‚Ì‚ÅB
+	{	//	glutMainLoop()ã‚’å‘¼ã¶ã¨å¸°ã£ã¦ã“ãªã„ãŸã‚ã€ãƒ¡ãƒ¢ãƒªãƒªãƒ¼ã‚¯ãŒèµ·ãã‚‹ã®ã§ã€‚
 		PHSdkIf::RegisterSdk();
 		GRSdkIf::RegisterSdk();
 		FWSdkIf::RegisterSdk();
@@ -188,13 +188,13 @@ int main(int argc, char* argv[]){
 		FIFileIf* file = fiSdk->CreateFileFromExt(".spr");
 		ObjectIfs objs;
 		if (argc>=2){
-			phSdk = PHSdkIf::CreateSdk();					//	PHSDK‚ğ—pˆÓ‚µ‚ÄC
+			phSdk = PHSdkIf::CreateSdk();					//	PHSDKã‚’ç”¨æ„ã—ã¦ï¼Œ
 			objs.push_back(phSdk);		
-			file->Load(objs, argv[1]);				//	ƒtƒ@ƒCƒ‹ƒ[ƒ_‚É“n‚·•û®
+			file->Load(objs, argv[1]);				//	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã«æ¸¡ã™æ–¹å¼
 		}else{
-			fwSdk = FWSdkIf::CreateSdk();					//	FWSDK‚ğ—pˆÓ‚µ‚ÄC
+			fwSdk = FWSdkIf::CreateSdk();					//	FWSDKã‚’ç”¨æ„ã—ã¦ï¼Œ
 			objs.push_back(fwSdk);		
-			if (! file->Load(objs, "test.spr") ) {	//	PHSDK‚²‚Æƒ[ƒh‚µ‚ÄC
+			if (! file->Load(objs, "test.spr") ) {	//	PHSDKã”ã¨ãƒ­ãƒ¼ãƒ‰ã—ã¦ï¼Œ
 				DSTR << "Error: Cannot open load file. " << std::endl;
 				exit(EXIT_FAILURE);
 			}
@@ -202,8 +202,8 @@ int main(int argc, char* argv[]){
 			grSdk = NULL;
 			for(unsigned  i=0; i<objs.size(); ++i){	
 				objs[i]->Print(DSTR);
-				if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);	//	PHSDK‚ğó‚¯æ‚é•û®
-				if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);	//	GRSdk‚àó‚¯æ‚é
+				if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);	//	PHSDKã‚’å—ã‘å–ã‚‹æ–¹å¼
+				if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);	//	GRSdkã‚‚å—ã‘å–ã‚‹
 			}
 		}
 		if (phSdk && phSdk->NScene()){
@@ -213,12 +213,12 @@ int main(int argc, char* argv[]){
 			if(grSdk) objs.Push(grSdk);
 			file->Save(objs, "out.spr");
 		}
-		fiSdk = NULL;	//	ƒtƒ@ƒCƒ‹ƒ[ƒ_‚Ìƒƒ‚ƒŠ‚ğ‰ğ•úD
+		fiSdk = NULL;	//	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã®ãƒ¡ãƒ¢ãƒªã‚’è§£æ”¾ï¼
 		objs.clear();
 		phSdk->Print(DSTR);
 
-		scene = phSdk->GetScene(0);		// Scene‚Ìæ“¾
-	//	shape = phSdk->GetShapes();		// Shape‚Ìæ“¾
+		scene = phSdk->GetScene(0);		// Sceneã®å–å¾—
+	//	shape = phSdk->GetShapes();		// Shapeã®å–å¾—
 		DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NShape=" << phSdk->NShape() << std::endl;
 		if (scene) scene->SetTimeStep(0.01);
 
@@ -233,15 +233,15 @@ int main(int argc, char* argv[]){
 		grDevice->Init();
 		render->SetDevice(grDevice);
 
-		// ‹“_İ’è
+		// è¦–ç‚¹è¨­å®š
 		Affinef view;
 		view.Pos() = Vec3f(0.0, 3.0, 3.0);									// eye
 			view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));		// center, up 
 		view = view.inv();	
 		render->SetViewMatrix(view);
 
-		setLight();			// ŒõŒ¹İ’è
-		setMaterial();		// Ş¿İ’è
+		setLight();			// å…‰æºè¨­å®š
+		setMaterial();		// æè³ªè¨­å®š
 
 		vtx = DBG_NEW Vec3f[4];
 		glutDisplayFunc(display);

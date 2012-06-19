@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,7 +11,7 @@ using namespace PTM;
 using namespace std;
 namespace Spr{;
 
-/// --- ‘‚­‚±‚Æ‚ª‚È‚­‚È‚Á‚½ ---
+/// --- æ›¸ãã“ã¨ãŒãªããªã£ãŸ ---
 
 }
 

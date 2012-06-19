@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,35 +13,35 @@
 //@{
 namespace Spr{;
 
-/// “·‘ÌE‘«l‘Ìƒ‚ƒfƒ‹‚ÌƒfƒXƒNƒŠƒvƒ^
+/// èƒ´ä½“ãƒ»è¶³äººä½“ãƒ¢ãƒ‡ãƒ«ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct CRTrunkFootHumanBodyGenDesc : CRBodyGenDesc {
 
 	enum CRHumanSolids{
-		// „‘Ì
+		// å‰›ä½“
 		SO_WAIST=0, SO_CHEST, SO_HEAD, SO_RIGHT_FOOT, SO_LEFT_FOOT,
-		// „‘Ì‚Ì”
+		// å‰›ä½“ã®æ•°
 		SO_NSOLIDS
 	};
 
 	enum CRHumanJoints{
-		// ŠÖß
+		// é–¢ç¯€
 		JO_WAIST_CHEST=0, JO_CHEST_HEAD,
-		// ŠÖß‚Ì”
+		// é–¢ç¯€ã®æ•°
 		JO_NJOINTS
 	};
 
-	/// ƒTƒCƒY‚ÉŠÖ‚·‚éƒpƒ‰ƒ[ƒ^
+	/// ã‚µã‚¤ã‚ºã«é–¢ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 	double waistHeight, waistBreadth, waistThickness;
 	double chestHeight, chestBreadth, chestThickness;
 	double neckLength;
 	double headDiameter;
 	double footLength, footBreadth, footThickness;
 
-	/// ŠeŠÖß‚Ìƒoƒlƒ_ƒ“ƒp
+	/// å„é–¢ç¯€ã®ãƒãƒãƒ€ãƒ³ãƒ‘
 	double springWaistChest, damperWaistChest;
 	double springChestHead,    damperChestHead;
 
-	/// ‰Â“®ˆæ§ŒÀ
+	/// å¯å‹•åŸŸåˆ¶é™
 	Vec2d rangeWaistChest;
 	Vec2d rangeChestHead;
 
@@ -51,7 +51,7 @@ struct CRTrunkFootHumanBodyGenDesc : CRBodyGenDesc {
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // CRTrunkFootHumanBodyGen
-// ƒqƒ“ƒWƒWƒ‡ƒCƒ“ƒg‚ğ—p‚¢‚½l‘Ìƒ‚ƒfƒ‹EƒNƒ‰ƒX‚ÌÀ‘•
+// ãƒ’ãƒ³ã‚¸ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã‚’ç”¨ã„ãŸäººä½“ãƒ¢ãƒ‡ãƒ«ãƒ»ã‚¯ãƒ©ã‚¹ã®å®Ÿè£…
 class CRTrunkFootHumanBodyGen : public CRBodyGen, public CRTrunkFootHumanBodyGenDesc {
 private:
 	void InitBody();
@@ -80,7 +80,7 @@ public:
 		InitContact();
 	}
 
-	/** @brief ‰Šú‰»‚ğÀs‚·‚é
+	/** @brief åˆæœŸåŒ–ã‚’å®Ÿè¡Œã™ã‚‹
 	*/
 	virtual void Init();
 

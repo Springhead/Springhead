@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -37,7 +37,7 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	fc.sdk = sdk;
 	fc.objects.insert(fc.objects.end(), objs.begin(), objs.end());
 
-	// ƒCƒ“ƒ|[ƒg‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Íì¬‚·‚é
+	// ã‚¤ãƒ³ãƒãƒ¼ãƒˆãŒè¨­å®šã•ã‚Œã¦ã„ãªã„å ´åˆã¯ä½œæˆã™ã‚‹
 	if(!import)
 		import = sdk->CreateImport()->Cast();
 	import->Clear();
@@ -48,7 +48,7 @@ bool FIFile::Load(ObjectIfs& objs, const char* fn){
 	bool ok = false;
 	if(fc.IsGood()){
 		Load(&fc);
-		// ƒ[ƒh‚µ‚½ÅãˆÊƒIƒuƒWƒFƒNƒg‚ğƒXƒ^ƒbƒN‚ÉÏ‚Şiƒ†[ƒU‚ªƒAƒNƒZƒX‚Å‚«‚é‚æ‚¤‚Éj
+		// ãƒ­ãƒ¼ãƒ‰ã—ãŸæœ€ä¸Šä½ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ã‚¹ã‚¿ãƒƒã‚¯ã«ç©ã‚€ï¼ˆãƒ¦ãƒ¼ã‚¶ãŒã‚¢ã‚¯ã‚»ã‚¹ã§ãã‚‹ã‚ˆã†ã«ï¼‰
 		objs.insert(objs.end(), fc.rootObjects.begin(), fc.rootObjects.end());
 		ok = true;
 	}
@@ -73,13 +73,13 @@ void FIFile::Load(FILoadContext* fc){
 	fc->LinkData();
 	if(DSTRFlag) fc->loadedDatas.Print(DSTR);
 
-	//	ƒf[ƒ^‚©‚çƒm[ƒh‚ğì¬
+	//	ãƒ‡ãƒ¼ã‚¿ã‹ã‚‰ãƒãƒ¼ãƒ‰ã‚’ä½œæˆ
 	fc->CreateScene();
-	//	ƒm[ƒh‚ğƒŠƒ“ƒN
+	//	ãƒãƒ¼ãƒ‰ã‚’ãƒªãƒ³ã‚¯
 	fc->LinkNode();
-	//	ƒŠƒ“ƒNŒã‚Ìˆ—
+	//	ãƒªãƒ³ã‚¯å¾Œã®å‡¦ç†
 	fc->PostTask();
-	//	ƒ[ƒhI—¹‚ğƒ[ƒh‚µ‚½ƒm[ƒh‚É“`‚¦‚é
+	//	ãƒ­ãƒ¼ãƒ‰çµ‚äº†ã‚’ãƒ­ãƒ¼ãƒ‰ã—ãŸãƒãƒ¼ãƒ‰ã«ä¼ãˆã‚‹
 	std::set<ObjectIf*> uniqueCheck;
 	for(unsigned i=0; i<fc->rootObjects.size();++i)
 		if (fc->rootObjects[i])
@@ -87,7 +87,7 @@ void FIFile::Load(FILoadContext* fc){
 }
 
 bool FIFile::Save(const ObjectIfs& objs, const char* fn){
-	// •Û‘¶æƒfƒBƒŒƒNƒgƒŠ‚ÖˆÚ“®(‚È‚¯‚ê‚Îì¬)
+	// ä¿å­˜å…ˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã¸ç§»å‹•(ãªã‘ã‚Œã°ä½œæˆ)
 	UTPath path(fn);
 	UTPath::CreateDir(path.Dir());
 	UTString oldCwd = UTPath::GetCwd();
@@ -106,7 +106,7 @@ bool FIFile::Save(const ObjectIfs& objs, const char* fn){
 	}
 	sc.PopFileMap();
 
-	// Œ³ƒfƒBƒŒƒNƒgƒŠ‚Ö•œ‹A
+	// å…ƒãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã¸å¾©å¸°
 	UTPath::SetCwd(oldCwd);
 
 	return ok;
@@ -119,8 +119,8 @@ void FIFile::Save(const ObjectIfs& objs, FISaveContext* sc){
 	OnSaveFileEnd(sc);
 }
 void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
-	// “¯ˆêƒIƒuƒWƒFƒNƒg‚Ì2“x–ÚˆÈ~‚Ì•Û‘¶‚ÍQÆˆµ‚¢‚É‚È‚é
-	// –Š—LÒ‚ªƒ[ƒh‚ÆƒZ[ƒu‚Å•Ï‚í‚é‰Â”\«‚ª‚ ‚é	tazz
+	// åŒä¸€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®2åº¦ç›®ä»¥é™ã®ä¿å­˜ã¯å‚ç…§æ‰±ã„ã«ãªã‚‹
+	// ï¼Šæ‰€æœ‰è€…ãŒãƒ­ãƒ¼ãƒ‰æ™‚ã¨ã‚»ãƒ¼ãƒ–æ™‚ã§å¤‰ã‚ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹	tazz
 	if (!sc->savedObjects.insert(obj).second){
 		sc->objects.Push(obj);
 		OnSaveRef(sc);
@@ -128,16 +128,16 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 		return;
 	}
 	
-	//	ƒZ[ƒu’†‚Ìƒm[ƒh‚ğ‹L˜^
+	//	ã‚»ãƒ¼ãƒ–ä¸­ã®ãƒãƒ¼ãƒ‰ã‚’è¨˜éŒ²
 	sc->objects.Push(obj);
 
 	UTString tn = sc->GetNodeTypeName();
 	tn.append("Desc");
 	UTTypeDesc* type = sc->typeDbs.Top()->Find(tn);
 	if(type){
-		//	ƒZ[ƒuˆÊ’u‚ğİ’è
+		//	ã‚»ãƒ¼ãƒ–ä½ç½®ã‚’è¨­å®š
 		sc->fieldIts.Push(UTTypeDescFieldIt(type));
-		//	ƒIƒuƒWƒFƒNƒg‚©‚çƒf[ƒ^‚ğæ‚èo‚·D
+		//	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã‚’å–ã‚Šå‡ºã™ï¼
 		void* data = (void*)obj->GetDescAddress();
 		if (data){
 			sc->datas.Push(DBG_NEW UTLoadedData(NULL, type, data));
@@ -148,7 +148,7 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 		}
 		OnSaveNodeStart(sc);
 		
-		//	ƒf[ƒ^‚ÌƒZ[ƒu
+		//	ãƒ‡ãƒ¼ã‚¿ã®ã‚»ãƒ¼ãƒ–
 		OnSaveDataStart(sc);
 		SaveBlock(sc);
 		OnSaveDataEnd(sc);
@@ -164,10 +164,10 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 
 	ObjectIfs exportedObjs;
 	
-	// ƒGƒNƒXƒ|[ƒg‘ÎÛ‚ÌqƒIƒuƒWƒFƒNƒg‚ğ•Êƒtƒ@ƒCƒ‹‚É•Û‘¶
+	// ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆå¯¾è±¡ã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
 	if(!sc->importStack.empty()){
 
-		// obj‚ªƒI[ƒi[ƒIƒuƒWƒFƒNƒg‚Å‚ ‚éƒGƒNƒXƒ|[ƒgƒGƒ“ƒgƒŠ‚ğ—ñ‹“
+		// objãŒã‚ªãƒ¼ãƒŠãƒ¼ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã§ã‚ã‚‹ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã‚¨ãƒ³ãƒˆãƒªã‚’åˆ—æŒ™
 		vector<Import*>	imports;
 		Import* im = sc->importStack.Top();
 		for(int i = 0; i < (int)im->Children().size(); i++){
@@ -176,12 +176,12 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 				imports.push_back(imChild);
 		}
 
-		// ƒGƒ“ƒgƒŠ‚²‚Æ‚É•Êƒtƒ@ƒCƒ‹‚É•Û‘¶
+		// ã‚¨ãƒ³ãƒˆãƒªã”ã¨ã«åˆ¥ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜
 		for(vector<Import*>::iterator it = imports.begin(); it != imports.end(); it++){
 			Import* imChild = *it;
 
 			if(!imChild->loadOnly){
-				// •Û‘¶æƒfƒBƒŒƒNƒgƒŠ‚ğì¬‚µ‚ÄˆÚ“®
+				// ä¿å­˜å…ˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ä½œæˆã—ã¦ç§»å‹•
 				UTPath path(imChild->path);
 				bool changeDir = (path.Dir().compare("") != 0);
 				UTString oldCwd;
@@ -191,7 +191,7 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 					UTPath::SetCwd(path.Dir());
 				}
 
-				// ƒGƒNƒXƒ|[ƒg‘ÎÛ‚ÌƒIƒuƒWƒFƒNƒg‚ğ•Êƒtƒ@ƒCƒ‹‚Ö•Û‘¶
+				// ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆå¯¾è±¡ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’åˆ¥ãƒ•ã‚¡ã‚¤ãƒ«ã¸ä¿å­˜
 				FIFile* file = sc->sdk->CreateFileFromExt(path.Ext())->Cast();
 				sc->PushFileMap(path.File(), IsBinary());
 				if(sc->IsGood()){
@@ -209,19 +209,19 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 					UTPath::SetCwd(oldCwd);
 			}
 
-			// •Û‘¶’†‚Ìƒtƒ@ƒCƒ‹‚É‚ÍImportƒm[ƒh‚ğ‘‚«‚Ş
+			// ä¿å­˜ä¸­ã®ãƒ•ã‚¡ã‚¤ãƒ«ã«ã¯Importãƒãƒ¼ãƒ‰ã‚’æ›¸ãè¾¼ã‚€
 			SaveNode(sc, imChild->Cast());
 		}
 	}
 
-	// ƒGƒNƒXƒ|[ƒg‘ÎÛŠO‚ÌqƒIƒuƒWƒFƒNƒg‚ğ•Û‘¶
+	// ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆå¯¾è±¡å¤–ã®å­ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ä¿å­˜
 	size_t nChild = obj->NChildObject();
 	if (nChild){
 		OnSaveChildStart(sc);
 		for(size_t i=0; i<nChild; ++i){
 			ObjectIf* child = obj->GetChildObject(i);
 			assert(child);
-			// ƒGƒNƒXƒ|[ƒgÏ‚İ‚È‚çƒXƒLƒbƒv
+			// ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆæ¸ˆã¿ãªã‚‰ã‚¹ã‚­ãƒƒãƒ—
 			if(find(exportedObjs.begin(), exportedObjs.end(), child) != exportedObjs.end())
 				continue;
 			SaveNode(sc, child);
@@ -232,16 +232,16 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 	if(type)
 		OnSaveNodeEnd(sc);
 	
-	//	‹L˜^‚ğPOP
+	//	è¨˜éŒ²ã‚’POP
 	sc->objects.Pop();
 }
 void FIFile::SaveBlock(FISaveContext* sc){
 	OnSaveBlockStart(sc);
 	void* base = sc->datas.Top()->data;
 	while(sc->fieldIts.back().NextField(base)){
-		//UTTypeDesc::Composit::iterator field = sc->fieldIts.back().field;	//	Œ»İ‚ÌƒtƒB[ƒ‹ƒhŒ^
+		//UTTypeDesc::Composit::iterator field = sc->fieldIts.back().field;	//	ç¾åœ¨ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰å‹
 		UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);
-		//	—v‘f”‚Ìæ“¾
+		//	è¦ç´ æ•°ã®å–å¾—
 		int nElements = 1;
 		if (field->varType == UTTypeDesc::Field::VECTOR){
 			nElements = field->VectorSize(base);

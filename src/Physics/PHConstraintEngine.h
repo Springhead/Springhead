@@ -1,4 +1,4 @@
-/*
+Ôªø/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -22,19 +22,19 @@ class PHRootNode;
 class PHConstraintEngine;
 class PHPath;
 
-///	å`èÛÇÃëg
+///	ÂΩ¢Áä∂„ÅÆÁµÑ
 class PHShapePairForLCP: public CDShapePair{
 public:
 	SPR_OBJECTDEF(PHShapePairForLCP);
-	std::vector<Vec3d>	section;	///< åç∑ífñ ÇÃí∏ì_ÅDå¬ÅXÇ™PHContactPointÇ∆Ç»ÇÈÅDâ¬éãâªÇÃÇΩÇﬂÇ…ï€éù
-	///	ê⁄êGâêÕÅDê⁄êGïîï™ÇÃêÿÇËå˚ÇãÅÇﬂÇƒÅCêÿÇËå˚Çç\ê¨Ç∑ÇÈì ëΩäpå`ÇÃí∏ì_ÇengineÇ…çSë©Ç∆ÇµÇƒí«â¡Ç∑ÇÈÅD
+	std::vector<Vec3d>	section;	///< ‰∫§Â∑ÆÊñ≠Èù¢„ÅÆÈ†ÇÁÇπÔºéÂÄã„ÄÖ„ÅåPHContactPoint„Å®„Å™„ÇãÔºéÂèØË¶ñÂåñ„ÅÆ„Åü„ÇÅ„Å´‰øùÊåÅ
+	///	Êé•Ëß¶Ëß£ÊûêÔºéÊé•Ëß¶ÈÉ®ÂàÜ„ÅÆÂàá„ÇäÂè£„ÇíÊ±Ç„ÇÅ„Å¶ÔºåÂàá„ÇäÂè£„ÇíÊßãÊàê„Åô„ÇãÂá∏Â§öËßíÂΩ¢„ÅÆÈ†ÇÁÇπ„Çíengine„Å´ÊãòÊùü„Å®„Åó„Å¶ËøΩÂä†„Åô„ÇãÔºé
 	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1);
-	int NSectionVertexes(){return (int)section.size();}		//(sectionÇÃêîÇï‘Ç∑Åj
-	Vec3d GetSectionVertex(int i){return section[i];}	//(iî‘ñ⁄ÇÃsectionÇï‘Ç∑Åj
+	int NSectionVertexes(){return (int)section.size();}		//(section„ÅÆÊï∞„ÇíËøî„ÅôÔºâ
+	Vec3d GetSectionVertex(int i){return section[i];}	//(iÁï™ÁõÆ„ÅÆsection„ÇíËøî„ÅôÔºâ
 
-	///	ê⁄êGñ êœÅDê⁄êGå`èÛÇÃí∏ì_ç¿ïWÇ©ÇÁñ êœÇåvéZ
+	///	Êé•Ëß¶Èù¢Á©çÔºéÊé•Ëß¶ÂΩ¢Áä∂„ÅÆÈ†ÇÁÇπÂ∫ßÊ®ô„Åã„ÇâÈù¢Á©ç„ÇíË®àÁÆó
 	double GetContactDimension(){
-		if((int)section.size() < 2)	return 0.0;	// í∏ì_Ç™2à»è„Ç»Ç¢èÍçáÇÕñ êœÇ»Çµ
+		if((int)section.size() < 2)	return 0.0;	// È†ÇÁÇπ„Åå2‰ª•‰∏ä„Å™„ÅÑÂ†¥Âêà„ÅØÈù¢Á©ç„Å™„Åó
 		Vec3d area;
 		for(unsigned int i = 0; i < section.size()-2; i++){
 			Vec3d vec1 = section[i+1] - section[0];
@@ -44,11 +44,11 @@ public:
 		return area.norm() / 2;
 	}
 
-	/// ê⁄êGñ ÇÃíPà ñ@ê¸ÉxÉNÉgÉã
+	/// Êé•Ëß¶Èù¢„ÅÆÂçò‰ΩçÊ≥ïÁ∑ö„Éô„ÇØ„Éà„É´
 	Vec3d GetNormalVector(){
 		Vec3d normal;
 		if((int)section.size() < 3){
-			// í∏ì_Ç™3à»è„Ç»Ç¢èÍçáÇÕãﬂñTì_ä‘ÇÃñ@ê¸Çï‘Ç∑
+			// È†ÇÁÇπ„Åå3‰ª•‰∏ä„Å™„ÅÑÂ†¥Âêà„ÅØËøëÂÇçÁÇπÈñì„ÅÆÊ≥ïÁ∑ö„ÇíËøî„Åô
 			normal = shapePoseW[1] * closestPoint[1] - shapePoseW[0] * closestPoint[0];
 			return normal / normal.norm();
 		}
@@ -64,7 +64,7 @@ public:
 	}
 };
 
-/// SolidÇÃëg
+/// Solid„ÅÆÁµÑ
 class PHConstraintEngine;
 
 class PHSolidPairForLCP : public PHSolidPair<PHShapePairForLCP, PHConstraintEngine>, public Object{
@@ -96,18 +96,18 @@ public:
 	PHConstraintEngine();
 	~PHConstraintEngine();
 	
-	PHJoint* CreateJoint(const IfInfo* ii, const PHJointDesc& desc, PHSolid* lhs = NULL, PHSolid* rhs = NULL);	///< ä÷êﬂÇÃí«â¡Ç∑ÇÈ
-	PHRootNode* CreateRootNode(const PHRootNodeDesc& desc, PHSolid* solid = NULL);	///< ÉcÉäÅ[ç\ë¢ÇÃÉãÅ[ÉgÉmÅ[ÉhÇçÏê¨
-	PHTreeNode* CreateTreeNode(const PHTreeNodeDesc& desc, PHTreeNode* parent = NULL, PHSolid* solid = NULL);	///< ÉcÉäÅ[ç\ë¢ÇÃíÜä‘ÉmÅ[ÉhÇçÏê¨
-	PHGear*		CreateGear(const PHGearDesc& desc, PH1DJoint* lhs = NULL, PH1DJoint* rhs = NULL);	///< ÉMÉAÇçÏê¨
+	PHJoint* CreateJoint(const IfInfo* ii, const PHJointDesc& desc, PHSolid* lhs = NULL, PHSolid* rhs = NULL);	///< Èñ¢ÁØÄ„ÅÆËøΩÂä†„Åô„Çã
+	PHRootNode* CreateRootNode(const PHRootNodeDesc& desc, PHSolid* solid = NULL);	///< „ÉÑ„É™„ÉºÊßãÈÄ†„ÅÆ„É´„Éº„Éà„Éé„Éº„Éâ„Çí‰ΩúÊàê
+	PHTreeNode* CreateTreeNode(const PHTreeNodeDesc& desc, PHTreeNode* parent = NULL, PHSolid* solid = NULL);	///< „ÉÑ„É™„ÉºÊßãÈÄ†„ÅÆ‰∏≠Èñì„Éé„Éº„Éâ„Çí‰ΩúÊàê
+	PHGear*		CreateGear(const PHGearDesc& desc, PH1DJoint* lhs = NULL, PH1DJoint* rhs = NULL);	///< „ÇÆ„Ç¢„Çí‰ΩúÊàê
 	PHPath*		CreatePath(const PHPathDesc& desc);
 	void		UpdateGearNode();
 	virtual int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
 	virtual void Step();			///< 
 	virtual void StepPart1();		///< 
 	virtual void StepPart2();		///< 
-	void UpdateSolids(bool bVelOnly);	///< åãâ ÇSolidÇ…îΩâfÇ∑ÇÈ. bVelOnly == trueÇ»ÇÁÇŒåãâ ÇÃë¨ìxÇÃÇ›ÇSolidÇ…îΩâfÇ≥ÇπÅCà íuÇÕÇªÇÃÇ‹Ç‹ÅD
-	void UpdateOnlyVelocity();			///< obsolete. UpdateSolids(true)ÇégópÇÃÇ±Ç∆
+	void UpdateSolids(bool bVelOnly);	///< ÁµêÊûú„ÇíSolid„Å´ÂèçÊò†„Åô„Çã. bVelOnly == true„Å™„Çâ„Å∞ÁµêÊûú„ÅÆÈÄüÂ∫¶„ÅÆ„Åø„ÇíSolid„Å´ÂèçÊò†„Åï„ÅõÔºå‰ΩçÁΩÆ„ÅØ„Åù„ÅÆ„Åæ„ÅæÔºé
+	void UpdateOnlyVelocity();			///< obsolete. UpdateSolids(true)„Çí‰ΩøÁî®„ÅÆ„Åì„Å®
 	void Clear();
 
 	typedef std::vector< UTRef<PHRootNode> >	PHRootNodes;
@@ -115,16 +115,16 @@ public:
 	//typedef std::vector< UTRef<PHJointLimit> >	PHJointLimits;
 	//typedef std::vector< UTRef<PHMotor> >		PHMotors;
 	
-	PHConstraints	points;			///< ê⁄êGì_ÇÃîzóÒ
-	PHConstraints	joints;			///< ä÷êﬂÇÃîzóÒ
+	PHConstraints	points;			///< Êé•Ëß¶ÁÇπ„ÅÆÈÖçÂàó
+	PHConstraints	joints;			///< Èñ¢ÁØÄ„ÅÆÈÖçÂàó
 	
-	PHRootNodes		trees;			///< Articulated Body SystemÇÃîzóÒ
-	PHGears			gears;			///< ÉMÉAÇÃîzóÒ
-	PHPaths			paths;			///< ÉpÉXÇÃîzóÒ
-	void SetupLCP();				///< ë¨ìxçXêVLCPÇÃèÄîı
-	void IterateLCP();				///< ë¨ìxçXêVLCPÇÃàÍìxÇÃîΩïú
-	void SetupCorrectionLCP();		///< åÎç∑èCê≥LCPÇÃèÄîı
-	void IterateCorrectionLCP();	///< åÎç∑èCê≥LCPÇÃàÍìxÇÃîΩïú
+	PHRootNodes		trees;			///< Articulated Body System„ÅÆÈÖçÂàó
+	PHGears			gears;			///< „ÇÆ„Ç¢„ÅÆÈÖçÂàó
+	PHPaths			paths;			///< „Éë„Çπ„ÅÆÈÖçÂàó
+	void SetupLCP();				///< ÈÄüÂ∫¶Êõ¥Êñ∞LCP„ÅÆÊ∫ñÂÇô
+	void IterateLCP();				///< ÈÄüÂ∫¶Êõ¥Êñ∞LCP„ÅÆ‰∏ÄÂ∫¶„ÅÆÂèçÂæ©
+	void SetupCorrectionLCP();		///< Ë™§Â∑Æ‰øÆÊ≠£LCP„ÅÆÊ∫ñÂÇô
+	void IterateCorrectionLCP();	///< Ë™§Â∑Æ‰øÆÊ≠£LCP„ÅÆ‰∏ÄÂ∫¶„ÅÆÂèçÂæ©
 
 	virtual PHConstraintsIf* GetContactPoints();
 	virtual void	SetVelCorrectionRate(double value){velCorrectionRate = value;}
@@ -150,7 +150,7 @@ public:
 	virtual bool	GetState(void* s) const ;
 	virtual void	SetState(const void* s);
 
-	bool bContactDetectionEnabled; ///< ê⁄êGîªíËÇ™óLå¯Ç©ÅDÇ±ÇÍÇ™falseÇæÇ∆ê⁄êGîªíËé©ëÃÇçsÇÌÇ»Ç¢
+	bool bContactDetectionEnabled; ///< Êé•Ëß¶Âà§ÂÆö„ÅåÊúâÂäπ„ÅãÔºé„Åì„Çå„Ååfalse„Å†„Å®Êé•Ëß¶Âà§ÂÆöËá™‰Ωì„ÇíË°å„Çè„Å™„ÅÑ
 	virtual void	EnableContactDetection(bool enable) { bContactDetectionEnabled = enable; }
 };
 

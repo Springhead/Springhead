@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,7 +11,7 @@
 //#define GLEW_MX
 #if defined(USE_GREW)
 #ifndef _MSC_VER
-# define GLEW_STATIC		// ’è‹`‚·‚é‚ÆAPIéŒ¾‚ÉdeclspecƒL[ƒ[ƒh‚ª•t‚©‚È‚¢
+# define GLEW_STATIC		// å®šç¾©ã™ã‚‹ã¨APIå®£è¨€ã«declspecã‚­ãƒ¼ãƒ¯ãƒ¼ãƒ‰ãŒä»˜ã‹ãªã„
 #endif
 # include <GL/glew.h>
 #endif
@@ -38,7 +38,7 @@ typedef unsigned int uint;
 namespace Spr {;
 //----------------------------------------------------------------------------
 //	GRDeviceGL
-/// ‰Šúİ’è
+/// åˆæœŸè¨­å®š
 void GRDeviceGL::Init(){
 	nLights = 0;
 	fontBase = -1;
@@ -54,18 +54,18 @@ void GRDeviceGL::Init(){
 	glEnable(GL_CULL_FACE);
 	SetVertexFormat(GRVertexElement::vfP3f);
 	
-	// ‹“_s—ñ‚Ìİ’è
+	// è¦–ç‚¹è¡Œåˆ—ã®è¨­å®š
 	viewMatrix.Pos() = Vec3f(0.0, 0.0, 1.0);	                        // eye
 	viewMatrix.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));	// center, up 
 	viewMatrix = viewMatrix.inv();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(viewMatrix);
 }
-///	Viewportİ’è
+///	Viewportè¨­å®š
 void GRDeviceGL::SetViewport(Vec2f pos, Vec2f sz){
 	glViewport((int)pos.x , (int)pos.y, (int)sz.x, (int)sz.y);
 }
-/// ƒoƒbƒtƒ@ƒNƒŠƒA
+/// ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 void GRDeviceGL::ClearBuffer(){
 	glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
 	glClearDepth(1.0); 
@@ -75,18 +75,18 @@ void GRDeviceGL::SwapBuffers(){
 	glutSwapBuffers();
 }
 
-/// ƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌŠJn‘O‚ÉŒÄ‚ÔŠÖ”
+/// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®é–‹å§‹å‰ã«å‘¼ã¶é–¢æ•°
 void GRDeviceGL::BeginScene(){		
-  /// GL‚ÅƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚éê‡A“Á‚Éˆ—‚·‚é•K—v‚È‚µ
+  /// GLã§ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹å ´åˆã€ç‰¹ã«å‡¦ç†ã™ã‚‹å¿…è¦ãªã—
 	
 }
-/// ƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌI—¹Œã‚ÉŒÄ‚ÔŠÖ”
+/// ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®çµ‚äº†å¾Œã«å‘¼ã¶é–¢æ•°
 void GRDeviceGL::EndScene(){
 	glFinish();
 }
-///	ƒJƒŒƒ“ƒg‚Ì‹“_s—ñ‚ğafv‚Å’u‚«Š·‚¦‚é
+///	ã‚«ãƒ¬ãƒ³ãƒˆã®è¦–ç‚¹è¡Œåˆ—ã‚’afvã§ç½®ãæ›ãˆã‚‹
 void GRDeviceGL::SetViewMatrix(const Affinef& afv){   
-	viewMatrix  = afv;		// ‹“_s—ñ‚Ì•Û‘¶
+	viewMatrix  = afv;		// è¦–ç‚¹è¡Œåˆ—ã®ä¿å­˜
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(viewMatrix);
 	//glLoadMatrixf(viewMatrix * modelMatrix);
@@ -94,54 +94,54 @@ void GRDeviceGL::SetViewMatrix(const Affinef& afv){
 void GRDeviceGL::GetViewMatrix(Affinef& afv){   
 	afv = viewMatrix;
 }
-/// ƒJƒŒƒ“ƒg‚Ì“Š‰es—ñ‚ğafp‚Å’u‚«Š·‚¦‚é
+/// ã‚«ãƒ¬ãƒ³ãƒˆã®æŠ•å½±è¡Œåˆ—ã‚’afpã§ç½®ãæ›ãˆã‚‹
 void GRDeviceGL::SetProjectionMatrix(const Affinef& afp){  
 	glMatrixMode(GL_PROJECTION);
 	glLoadMatrixf(afp);
 	glMatrixMode(GL_MODELVIEW);
 }
-/// ƒJƒŒƒ“ƒg‚Ì“Š‰es—ñ‚ğæ“¾‚·‚é
+/// ã‚«ãƒ¬ãƒ³ãƒˆã®æŠ•å½±è¡Œåˆ—ã‚’å–å¾—ã™ã‚‹
 void GRDeviceGL::GetProjectionMatrix(Affinef& afp){  
 	glGetFloatv(GL_PROJECTION_MATRIX, (GLfloat *)&afp);
 }	
-/// ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚ğafw‚Å’u‚«Š·‚¦‚é
+/// ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’afwã§ç½®ãæ›ãˆã‚‹
 void GRDeviceGL::SetModelMatrix(const Affinef& afw){
-	modelMatrix = afw;		// ƒ‚ƒfƒ‹s—ñ‚Ì•Û‘¶
+	modelMatrix = afw;		// ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã®ä¿å­˜
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(viewMatrix * modelMatrix);
 }
 void GRDeviceGL::GetModelMatrix(Affinef& afw){
 	afw = modelMatrix;
 }
-/// ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚É‘Î‚µ‚Äafw‚ğŠ|‚¯‚é
+/// ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã«å¯¾ã—ã¦afwã‚’æ›ã‘ã‚‹
 void GRDeviceGL::MultModelMatrix(const Affinef& afw){	
 	modelMatrix = modelMatrix * afw;		
 	glMatrixMode(GL_MODELVIEW);
 	glMultMatrixf(afw);
 }
-/// ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚ğƒ‚ƒfƒ‹s—ñƒXƒ^ƒbƒN‚Ö•Û‘¶‚·‚é
+/// ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚¹ã‚¿ãƒƒã‚¯ã¸ä¿å­˜ã™ã‚‹
 void GRDeviceGL::PushModelMatrix(){
 	modelMatrixStack.push(modelMatrix);
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 }
-/// ƒ‚ƒfƒ‹s—ñƒXƒ^ƒbƒN‚©‚çæ‚èo‚µAƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚Æ‚·‚é
+/// ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚¹ã‚¿ãƒƒã‚¯ã‹ã‚‰å–ã‚Šå‡ºã—ã€ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã¨ã™ã‚‹
 void GRDeviceGL::PopModelMatrix(){
 	modelMatrix = modelMatrixStack.top();
 	modelMatrixStack.pop();
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
 }
-/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚Ì‘S—v‘f‚ğíœ‚·‚é
+/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã®å…¨è¦ç´ ã‚’å‰Šé™¤ã™ã‚‹
 void GRDeviceGL::ClearBlendMatrix(){
 	blendMatrix.clear();
 }	
-/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚ğİ’è‚·‚é
+/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã‚’è¨­å®šã™ã‚‹
 bool GRDeviceGL::SetBlendMatrix(const Affinef& afb){
 	blendMatrix.push_back(afb);
 	return true;
 }
-/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚ğİ’è‚·‚é
+/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã‚’è¨­å®šã™ã‚‹
 bool GRDeviceGL::SetBlendMatrix(const Affinef& afb, unsigned int id){
 	if (id == 0){
 		SetBlendMatrix(afb);
@@ -153,7 +153,7 @@ bool GRDeviceGL::SetBlendMatrix(const Affinef& afb, unsigned int id){
 	}
 	return false;
 }		
-/// ’¸“_ƒtƒH[ƒ}ƒbƒg‚Ìw’è
+/// é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®æŒ‡å®š
 void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){	
 	if (e == GRVertexElement::vfP3f) {
 		vertexFormatGl = GL_V3F; 
@@ -250,11 +250,11 @@ void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 		assert(0);
 	}
 }
-/// ’¸“_À•W‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+/// é ‚ç‚¹åº§æ¨™ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 void GRDeviceGL::SetVertexShader(void* s){
 	assert(0);	//	To Be Implemented
 }
-/// ’¸“_À•W‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+/// é ‚ç‚¹åº§æ¨™ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 void GRDeviceGL::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
@@ -275,7 +275,7 @@ void GRDeviceGL::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawArrays(mode, 0, count);
 }
-/// ’¸“_À•W‚ÆƒCƒ“ƒfƒbƒNƒX‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+/// é ‚ç‚¹åº§æ¨™ã¨ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
@@ -295,8 +295,8 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	glInterleavedArrays(vertexFormatGl, stride, vtx);
 	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
 	//naga
-	//glFinish()‚ÍƒXƒLƒ“ƒEƒFƒCƒg‚Ì‚ ‚é’¸“_‚Ìê‡C“r’†‚Å‘‚«Š·‚¦‚ª‚ ‚é‚Ì‚ÅCƒf[ƒ^‘‚«Š·‚¦’†‚É•`‰æ‚³‚ê‚È‚¢‚æ‚¤‚É‚·‚éD
-	//‚µ‚©‚µC’˜‚µ‚­ˆ—‚ªd‚­‚È‚é‰Â”\«‚ª‚ ‚éD‰æ–Ê‚ª‚¿‚ç‚Â‚­‚Ì‚ğ‰ä–‚·‚é‚©Cˆ—‚ªd‚­‚È‚é‚Ì‚ğ‰ä–‚·‚é‚©’ˆÓ‚·‚é•K—v‚ª‚ ‚éD
+	//glFinish()ã¯ã‚¹ã‚­ãƒ³ã‚¦ã‚§ã‚¤ãƒˆã®ã‚ã‚‹é ‚ç‚¹ã®å ´åˆï¼Œé€”ä¸­ã§æ›¸ãæ›ãˆãŒã‚ã‚‹ã®ã§ï¼Œãƒ‡ãƒ¼ã‚¿æ›¸ãæ›ãˆä¸­ã«æç”»ã•ã‚Œãªã„ã‚ˆã†ã«ã™ã‚‹ï¼
+	//ã—ã‹ã—ï¼Œè‘—ã—ãå‡¦ç†ãŒé‡ããªã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ï¼ç”»é¢ãŒã¡ã‚‰ã¤ãã®ã‚’æˆ‘æ…¢ã™ã‚‹ã‹ï¼Œå‡¦ç†ãŒé‡ããªã‚‹ã®ã‚’æˆ‘æ…¢ã™ã‚‹ã‹æ³¨æ„ã™ã‚‹å¿…è¦ãŒã‚ã‚‹ï¼
 	glFinish();	
 }
 
@@ -338,7 +338,7 @@ void GRDeviceGL::DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lh
 	if(l == 0.0f)
 		return;
 
-	// –îˆó‚ğz²‚É‡‚í‚¹‚é‰ñ“]
+	// çŸ¢å°ã‚’zè»¸ã«åˆã‚ã›ã‚‹å›è»¢
 	Quaternionf q;
 	Affinef aff;
 	q.RotationArc(Vec3f(0.0f, 0.0f, 1.0f), d);
@@ -375,7 +375,7 @@ void GRDeviceGL::DrawCone(float radius, float height, int slice, bool solid){
 void GRDeviceGL::DrawCylinder(float radius, float height, int slice, bool solid, bool cap){
 	float hhalf = 0.5f * height;
 	
-	// ‘¤–Ê
+	// å´é¢
 	glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
 	float x,y;
 	for (int i=0; i<=slice; i++) {
@@ -387,7 +387,7 @@ void GRDeviceGL::DrawCylinder(float radius, float height, int slice, bool solid,
 	}
 	glEnd();
 
-	// ã–ÊE‰º–Ê
+	// ä¸Šé¢ãƒ»ä¸‹é¢
 	if(cap){
 		PushModelMatrix();
 		MultModelMatrix(Affinef::Trn(0.0f, 0.0f,  hhalf));
@@ -445,7 +445,7 @@ void GRDeviceGL::DrawRoundCone(float rbottom, float rtop, float height, int slic
 		float R1 =  rtop * sin(theta);
 		float Z1 =  height / 2.0f + rtop * cos(theta);
 
-		// ‘¤–Ê‚ğ•`‰æ
+		// å´é¢ã‚’æç”»
 		glBegin(solid ? GL_QUAD_STRIP : GL_LINES);
 		float x,y,st;
 		for (int i=0; i<=slice; i++) {
@@ -471,7 +471,7 @@ void GRDeviceGL::DrawRoundCone(float rbottom, float rtop, float height, int slic
 void GRDeviceGL::DrawCurve(const Curve3f& curve){
 	size_t N = curve.NPoints();
 
-	// “_‚ğ•`‰æ
+	// ç‚¹ã‚’æç”»
 	for(uint i = 0; i < N; i++)
 		DrawPoint(curve.GetPos(i));
 	
@@ -495,7 +495,7 @@ void GRDeviceGL::DrawCurve(const Curve3f& curve){
 		}
 	}
 	else{
-		// ‚»‚êˆÈŠO‚Ì‹Èü‚ÍÜ‚êü‹ß—‚Å•`‰æ
+		// ãã‚Œä»¥å¤–ã®æ›²ç·šã¯æŠ˜ã‚Œç·šè¿‘ä¼¼ã§æç”»
 		float t0 = curve.GetTime(0);
 		float t1 = curve.GetTime(N-1);
 		const float ndiv = 100.0f;
@@ -538,7 +538,7 @@ void GRDeviceGL::DrawGrid(float size, int slice, float lineWidth){
 	glEnd();
 }
 
-///	DiplayList ‚Ìì¬
+///	DiplayList ã®ä½œæˆ
 int GRDeviceGL::StartList(){
 	int list = glGenLists(1);
 	glNewList(list, GL_COMPILE);
@@ -547,37 +547,37 @@ int GRDeviceGL::StartList(){
 void GRDeviceGL::EndList(){
 	glEndList();
 }
-///	DisplayList‚Ì•\¦	
+///	DisplayListã®è¡¨ç¤º	
 void GRDeviceGL::DrawList(int list){
 	glCallList(list);
 }
-///	DisplayList‚Ì‰ğ•ú	
+///	DisplayListã®è§£æ”¾	
 void GRDeviceGL::ReleaseList(int list){
 	glDeleteLists(list, 1);
 }
-/// 3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æiGLƒIƒ“ƒŠ[”Å‚Åfont‚Íw’è‚È‚µj .. Vec2f pos
+/// 3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»ï¼ˆGLã‚ªãƒ³ãƒªãƒ¼ç‰ˆã§fontã¯æŒ‡å®šãªã—ï¼‰ .. Vec2f pos
 void GRDeviceGL::DrawFont(Vec2f pos, const std::string str){
 	DrawFont(Vec3f(pos.x, pos.y, 0.0f), str);
 }
 
-/// 3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æiGLƒIƒ“ƒŠ[”Å‚Åfont‚Íw’è‚È‚µj.. Vec3f pos
+/// 3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»ï¼ˆGLã‚ªãƒ³ãƒªãƒ¼ç‰ˆã§fontã¯æŒ‡å®šãªã—ï¼‰.. Vec3f pos
 void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 	bool lighting = !!glIsEnabled(GL_LIGHTING);
 	glDisable(GL_LIGHTING);
 	if(fontBase != -1){
-		glBindTexture(GL_TEXTURE_3D,0);								//’¼‘O‚Ég—p‚µ‚½3DƒeƒNƒXƒ`ƒƒ‚ğ•¶šF‚É”½‰f‚³‚¹‚È‚¢.
+		glBindTexture(GL_TEXTURE_3D,0);								//ç›´å‰ã«ä½¿ç”¨ã—ãŸ3Dãƒ†ã‚¯ã‚¹ãƒãƒ£ã‚’æ–‡å­—è‰²ã«åæ˜ ã•ã›ãªã„.
 		glColor3f(((font.color >> 16) & 0xFF) / 255.0,
 				  ((font.color >>  8) & 0xFF) / 255.0,
 				  ((font.color >>  0) & 0xFF) / 255.0);
 		glRasterPos3fv(pos);
 		glPushAttrib(GL_LIST_BIT);
-		glListBase(fontBase);											// 	ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚ğ“n‚·.	
-		glCallLists(str.size(), GL_UNSIGNED_BYTE, str.c_str());		// •¶š—ñ‚ğ“n‚·.
+		glListBase(fontBase);											// 	ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’æ¸¡ã™.	
+		glCallLists(str.size(), GL_UNSIGNED_BYTE, str.c_str());		// æ–‡å­—åˆ—ã‚’æ¸¡ã™.
 		glPopAttrib();
 	}
 	else{
-		glColor3f(1.0f, 1.0f, 1.0f);		// ”’ŒÀ’èib’èj
-		//glColor3f(0.0f, 0.0f, 0.0f);		// •ŒÀ’èib’èj
+		glColor3f(1.0f, 1.0f, 1.0f);		// ç™½é™å®šï¼ˆæš«å®šï¼‰
+		//glColor3f(0.0f, 0.0f, 0.0f);		// é»’é™å®šï¼ˆæš«å®šï¼‰
 		glRasterPos3fv(pos);
 		std::string::const_iterator iter;
 		for (iter = str.begin(); iter != str.end();	++iter) {
@@ -589,17 +589,17 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 }
 
 void GRDeviceGL::SetFont(const GRFont& font){
-	/// VC”Å‚Ì‚İfont‚ğƒTƒ|[ƒg‚·‚éB
+	/// VCç‰ˆã®ã¿fontã‚’ã‚µãƒãƒ¼ãƒˆã™ã‚‹ã€‚
 #ifdef _MSC_VER
 	bool	fontFound = false;
-	GLsizei	range	 = 256;					//	¶¬‚·‚éƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ì”
+	GLsizei	range	 = 256;					//	ç”Ÿæˆã™ã‚‹ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®æ•°
 
-	if (fontList.size() > 0) {		// fontList‚ª‹ó‚Å‚È‚¢ê‡‚ÍAfontList‚ÌŒŸõ‚ª•K—v
-		// ƒXƒgƒAƒTƒCƒY10ˆÈã‚Ìê‡Aæ“ª‚ğíœ	
+	if (fontList.size() > 0) {		// fontListãŒç©ºã§ãªã„å ´åˆã¯ã€fontListã®æ¤œç´¢ãŒå¿…è¦
+		// ã‚¹ãƒˆã‚¢ã‚µã‚¤ã‚º10ä»¥ä¸Šã®å ´åˆã€å…ˆé ­ã‚’å‰Šé™¤	
 		if (fontList.size() > 10) {		
 			fontList.erase(fontList.begin());	
 		}
-		// fontList‚ğŒŸõ
+		// fontListã‚’æ¤œç´¢
 		std::map<unsigned int, GRFont>::iterator itr = fontList.begin();
 		while((itr != fontList.end()) && (fontFound == false)) {
 			if (((*itr).second.height == font.height)
@@ -614,31 +614,31 @@ void GRDeviceGL::SetFont(const GRFont& font){
 			++itr;
 		}
 	}
-	if (fontFound == false ) {		// V‹K“o˜^‚Ìê‡
-		// ˆø”‚Åw’è‚³‚ê‚½“Á«‚ğ‚Â˜_—ƒtƒHƒ“ƒg‚ğì¬‚·‚é
-		HFONT		hFont;			// ƒtƒHƒ“ƒgƒnƒ“ƒhƒ‹
+	if (fontFound == false ) {		// æ–°è¦ç™»éŒ²ã®å ´åˆ
+		// å¼•æ•°ã§æŒ‡å®šã•ã‚ŒãŸç‰¹æ€§ã‚’æŒã¤è«–ç†ãƒ•ã‚©ãƒ³ãƒˆã‚’ä½œæˆã™ã‚‹
+		HFONT		hFont;			// ãƒ•ã‚©ãƒ³ãƒˆãƒãƒ³ãƒ‰ãƒ«
 		HFONT		hOldFont;	
 		fontBase = glGenLists(range);
-		// ƒtƒHƒ“ƒg‚Ìì¬
-		hFont = CreateFont(font.height,						//	ƒtƒHƒ“ƒg‚Ì‚‚³
-							font.width,						//	•½‹Ï•¶š•
-							0,								//	•¶š‘—‚è•ûŒü‚ÌX²‚ÌŠp“x
-							0,								//	Še•¶š‚ÆX²‚ÌŠp“x
-							font.weight,					//	ƒtƒHƒ“ƒg‚Ì‘¾‚³
-							font.bItalic,					//	ƒCƒ^ƒŠƒbƒN‘Ì
-							FALSE,							//	ƒAƒ“ƒ_[ƒ‰ƒCƒ“
-							FALSE,							//	‘Å‚¿Á‚µü•t
-							ANSI_CHARSET,					//	ƒtƒHƒ“ƒg•¶šƒZƒbƒg
-							OUT_DEFAULT_PRECIS,				//	o—Í¸“x
-							CLIP_DEFAULT_PRECIS,			//	ƒNƒŠƒbƒsƒ“ƒO¸“x
-							ANTIALIASED_QUALITY,			//	o—Í•i¿
-							FF_DONTCARE | DEFAULT_PITCH,	//	ƒsƒbƒ`‚Æƒtƒ@ƒ~ƒŠ(•¶šŠÔŠu‚Æ‘‘Ì)
-							font.face.c_str());				//	ƒ^ƒCƒvƒtƒFƒCƒX
+		// ãƒ•ã‚©ãƒ³ãƒˆã®ä½œæˆ
+		hFont = CreateFont(font.height,						//	ãƒ•ã‚©ãƒ³ãƒˆã®é«˜ã•
+							font.width,						//	å¹³å‡æ–‡å­—å¹…
+							0,								//	æ–‡å­—é€ã‚Šæ–¹å‘ã®Xè»¸ã®è§’åº¦
+							0,								//	å„æ–‡å­—ã¨Xè»¸ã®è§’åº¦
+							font.weight,					//	ãƒ•ã‚©ãƒ³ãƒˆã®å¤ªã•
+							font.bItalic,					//	ã‚¤ã‚¿ãƒªãƒƒã‚¯ä½“
+							FALSE,							//	ã‚¢ãƒ³ãƒ€ãƒ¼ãƒ©ã‚¤ãƒ³
+							FALSE,							//	æ‰“ã¡æ¶ˆã—ç·šä»˜
+							ANSI_CHARSET,					//	ãƒ•ã‚©ãƒ³ãƒˆæ–‡å­—ã‚»ãƒƒãƒˆ
+							OUT_DEFAULT_PRECIS,				//	å‡ºåŠ›ç²¾åº¦
+							CLIP_DEFAULT_PRECIS,			//	ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°ç²¾åº¦
+							ANTIALIASED_QUALITY,			//	å‡ºåŠ›å“è³ª
+							FF_DONTCARE | DEFAULT_PITCH,	//	ãƒ”ãƒƒãƒã¨ãƒ•ã‚¡ãƒŸãƒª(æ–‡å­—é–“éš”ã¨æ›¸ä½“)
+							font.face.c_str());				//	ã‚¿ã‚¤ãƒ—ãƒ•ã‚§ã‚¤ã‚¹
 		
 		assert(hFont);
 		HDC hDC = wglGetCurrentDC();
-		// 0‚©‚ç256‚ÌƒR[ƒh‚Ì•¶š‚ğADisplayList‚Ìbase”Ô–Ú‚©‚ç“o˜^.
-		// wglUseFontBitmaps()ŠÖ”Ag—p‚µ‚ÄA¶¬‚µ‚½ƒtƒHƒ“ƒg‚ğƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚ÉŠ„“–‚Ä‚é.
+		// 0ã‹ã‚‰256ã®ã‚³ãƒ¼ãƒ‰ã®æ–‡å­—ã‚’ã€DisplayListã®baseç•ªç›®ã‹ã‚‰ç™»éŒ².
+		// wglUseFontBitmaps()é–¢æ•°ã€ä½¿ç”¨ã—ã¦ã€ç”Ÿæˆã—ãŸãƒ•ã‚©ãƒ³ãƒˆã‚’ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã«å‰²å½“ã¦ã‚‹.
 		hOldFont = (HFONT)SelectObject(hDC, hFont);			
 		BOOL b = wglUseFontBitmaps(hDC, 0, range, fontBase);
 		if (!b){
@@ -658,7 +658,7 @@ void GRDeviceGL::SetFont(const GRFont& font){
 		}
 		SelectObject(hDC, hOldFont);
 		DeleteObject(hFont);		
-		// fontList‚Ö“o˜^
+		// fontListã¸ç™»éŒ²
 		fontList.insert(std::map<unsigned int, GRFont>::value_type(fontBase, font));	
 	}
 	this->font = font;
@@ -671,7 +671,7 @@ void GRDeviceGL::SetMaterial(const GRMaterialIf* mi){
 	if (mat->texnameAbs.length()) currentMaterial.texname = mat->texnameAbs;
 	SetMaterial(currentMaterial);
 }
-/// •`‰æ‚ÌŞ¿‚Ìİ’è
+/// æç”»ã®æè³ªã®è¨­å®š
 void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	glMaterialfv(GL_FRONT, GL_AMBIENT,   mat.ambient);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE,   mat.diffuse);
@@ -720,7 +720,7 @@ void GRDeviceGL::SetLineWidth(float w, bool smooth){
 	glLineWidth(w);
 }
 
-/// ŒõŒ¹ƒXƒ^ƒbƒN‚ğPush
+/// å…‰æºã‚¹ã‚¿ãƒƒã‚¯ã‚’Push
 void GRDeviceGL::PushLight(const GRLightDesc& light){
 	if (nLights < GL_MAX_LIGHTS) {
 		glLightfv(GL_LIGHT0+nLights, GL_AMBIENT, light.ambient);
@@ -729,9 +729,9 @@ void GRDeviceGL::PushLight(const GRLightDesc& light){
 		glLightfv(GL_LIGHT0+nLights, GL_POSITION, light.position);
 		if (light.position.W()){
 			// attenuation factor = 1/(GL_CONSTANT_ATTENUATION + GL_LINEAR_ATTENUATION * d + GL_QUADRATIC_ATTENUATION * d^2)
-			glLightf(GL_LIGHT0+nLights, GL_CONSTANT_ATTENUATION, light.attenuation0);		// 	ˆê’èŒ¸Š—¦
-			glLightf(GL_LIGHT0+nLights, GL_LINEAR_ATTENUATION, light.attenuation1);			//	üŒ`Œ¸Š—¦
-			glLightf(GL_LIGHT0+nLights, GL_QUADRATIC_ATTENUATION, light.attenuation2);		//	2ŸŒ¸Š—¦
+			glLightf(GL_LIGHT0+nLights, GL_CONSTANT_ATTENUATION, light.attenuation0);		// 	ä¸€å®šæ¸›è¡°ç‡
+			glLightf(GL_LIGHT0+nLights, GL_LINEAR_ATTENUATION, light.attenuation1);			//	ç·šå½¢æ¸›è¡°ç‡
+			glLightf(GL_LIGHT0+nLights, GL_QUADRATIC_ATTENUATION, light.attenuation2);		//	2æ¬¡æ¸›è¡°ç‡
 			glLightfv(GL_LIGHT0+nLights, GL_SPOT_DIRECTION, light.spotDirection);
 			glLightf(GL_LIGHT0+nLights, GL_SPOT_EXPONENT, light.spotFalloff);
 			glLightf(GL_LIGHT0+nLights, GL_SPOT_CUTOFF, light.spotCutoff);
@@ -740,7 +740,7 @@ void GRDeviceGL::PushLight(const GRLightDesc& light){
 	}
 	nLights ++;
 }
-/// ŒõŒ¹ƒXƒ^ƒbƒN‚ğPop
+/// å…‰æºã‚¹ã‚¿ãƒƒã‚¯ã‚’Pop
 void GRDeviceGL::PopLight(){
 	nLights--;
 	if (nLights < GL_MAX_LIGHTS) glDisable(GL_LIGHT0+nLights);
@@ -748,16 +748,16 @@ void GRDeviceGL::PopLight(){
 int GRDeviceGL::NLights(){
 	return nLights;
 }
-/// ƒfƒvƒXƒoƒbƒtƒ@‚Ö‚Ì‘‚«‚İ‚ğ‹–‰Â/‹Ö~‚·‚é
+/// ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡ã¸ã®æ›¸ãè¾¼ã¿ã‚’è¨±å¯/ç¦æ­¢ã™ã‚‹
 void GRDeviceGL::SetDepthWrite(bool b){
 	glDepthMask(b);
 }
-/// ƒfƒvƒXƒeƒXƒg‚ğ—LŒø/–³Œø‚É‚·‚é
+/// ãƒ‡ãƒ—ã‚¹ãƒ†ã‚¹ãƒˆã‚’æœ‰åŠ¹/ç„¡åŠ¹ã«ã™ã‚‹
 void GRDeviceGL::SetDepthTest(bool b){
 	if(b) glEnable(GL_DEPTH_TEST);
 	else  glDisable(GL_DEPTH_TEST);
 }
-/// ƒfƒvƒXƒoƒbƒtƒ@–@‚É—p‚¢‚é”»’èğŒ‚ğw’è‚·‚é
+/// ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡æ³•ã«ç”¨ã„ã‚‹åˆ¤å®šæ¡ä»¶ã‚’æŒ‡å®šã™ã‚‹
 void GRDeviceGL::SetDepthFunc(GRRenderBaseIf::TDepthFunc f){
 	GLenum dfunc = GL_LESS;
 	switch(f){
@@ -774,12 +774,12 @@ void GRDeviceGL::SetDepthFunc(GRRenderBaseIf::TDepthFunc f){
 	}
 	glDepthFunc(dfunc);
 }
-/// ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚ğ—LŒø/–³Œø‚É‚·‚é
+/// ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’æœ‰åŠ¹/ç„¡åŠ¹ã«ã™ã‚‹
 void GRDeviceGL::SetAlphaTest(bool b){
 	if(b) glEnable(GL_BLEND);
 	else  glDisable(GL_BLEND);
 }
-/// ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚Ìƒ‚[ƒhİ’è(SRC‚Ì¬‡ŒW”, DEST¬‡ŒW”)
+/// ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã®ãƒ¢ãƒ¼ãƒ‰è¨­å®š(SRCã®æ··åˆä¿‚æ•°, DESTæ··åˆä¿‚æ•°)
 void GRDeviceGL::SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){
 	GRRenderBaseIf::TBlendFunc  bffac[2] = { src, dest };
 	GLenum glfac[2];
@@ -847,7 +847,7 @@ void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize
 	}
 }
 
-/// ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒhi–ß‚è’lFƒeƒNƒXƒ`ƒƒIDj
+/// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰ï¼ˆæˆ»ã‚Šå€¤ï¼šãƒ†ã‚¯ã‚¹ãƒãƒ£IDï¼‰
 static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_BGR_EXT, GL_BGRA_EXT};
 //static const GLenum	pxfm[] = {GL_LUMINANCE, GL_LUMINANCE_ALPHA, GL_RGB, GL_RGBA};
 static boost::regex Tex3DRegex("^(.*_tex3d_)([0-9]+)(\\Q.\\E[^\\Q.\\E]+)$");
@@ -856,7 +856,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	if (it != texnameMap.end()) return it->second;
 	if (enableDebugMessage) { std::cout << "GRDeviceGL::LoadTexture(" << filename.c_str() << ");" << std::endl; }
 
-	// ƒtƒ@ƒCƒ‹–¼‚ª‹ó‚È‚ç return 0;
+	// ãƒ•ã‚¡ã‚¤ãƒ«åãŒç©ºãªã‚‰ return 0;
 	if (filename.empty()) return 0;
 
 	char *texbuf = NULL;
@@ -865,8 +865,8 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 
 	boost::smatch results;
 	if (boost::regex_search(filename, results, Tex3DRegex)) {
-		//	3D texture‚Ìê‡
-		//	ƒtƒ@ƒCƒ‹‚Ì”‚ğ’²‚×‚é
+		//	3D textureã®å ´åˆ
+		//	ãƒ•ã‚¡ã‚¤ãƒ«ã®æ•°ã‚’èª¿ã¹ã‚‹
 		for(tz=0; ; ++tz){
 			std::ostringstream fnStr;
 			fnStr << results.str(1)
@@ -878,7 +878,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 #warning not supported for linux
 #endif
 		}
-		//	‰æ‘œƒTƒCƒY‚ğ’²‚×‚é
+		//	ç”»åƒã‚µã‚¤ã‚ºã‚’èª¿ã¹ã‚‹
 		int pictureSize;
 		{
 			std::ostringstream fnStr;
@@ -894,7 +894,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 			texbuf = DBG_NEW char[pictureSize * tz];
 			LoadBmpRelease(h);
 		}
-		//	ƒtƒ@ƒCƒ‹‚Ìƒ[ƒh
+		//	ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ­ãƒ¼ãƒ‰
 		for(int i=0; i<tz; ++i){
 			std::ostringstream fnStr;
 			fnStr << results.str(1)
@@ -912,7 +912,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 			LoadBmpGetBmp(h, texbuf+pictureSize*i);
 			LoadBmpRelease(h);	
 		}
-		// ƒeƒNƒXƒ`ƒƒ‚Ì¶¬D
+		// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç”Ÿæˆï¼
 		glDisable(GL_TEXTURE_2D);
 		glEnable(GL_TEXTURE_3D);
 		glGenTextures(1, (GLuint *)&texId);
@@ -934,12 +934,12 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 
 		delete texbuf;
 	}else{	
-		//	2D texture‚Ìê‡
+		//	2D textureã®å ´åˆ
 		
 		bool loadFromFile = (filename.c_str()[0]!=':');
 		
 		if (loadFromFile) {
-			// paintLib ‚Åƒtƒ@ƒCƒ‹‚ğƒ[ƒhD
+			// paintLib ã§ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ï¼
 			int h = LoadBmpCreate(filename.c_str());
 			if (!h) {
 				DSTR << "GRDeviceGL::LoadTexture() fail to load \'" << filename << "\'." << std::endl;
@@ -952,7 +952,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 			LoadBmpRelease(h);
 		}
 
-		// ƒeƒNƒXƒ`ƒƒ‚Ì¶¬D
+		// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ç”Ÿæˆï¼
 		glDisable(GL_TEXTURE_3D);
 		glEnable(GL_TEXTURE_2D);
 		glGenTextures(1, (GLuint *)&texId);
@@ -990,8 +990,8 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 
 
 
-#if 0		//	’¸“_ƒVƒF[ƒ_[‚ğg‚Á‚Ä’¸“_ƒuƒŒƒ“ƒh‚ğ‚·‚é‚ÌQl—p
-/// ƒCƒ“ƒfƒbƒNƒXŒ`®‚É‚æ‚éƒVƒF[ƒ_‚ğ“K—p‚µ‚½ DisplayList ‚Ìì¬iSetVertexFormat() ‚¨‚æ‚Ñ SetShaderFormat() ‚ÌŒã‚ÉŒÄ‚Ôj
+#if 0		//	é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã‚’ä½¿ã£ã¦é ‚ç‚¹ãƒ–ãƒ¬ãƒ³ãƒ‰ã‚’ã™ã‚‹æ™‚ã®å‚è€ƒç”¨
+/// ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹å½¢å¼ã«ã‚ˆã‚‹ã‚·ã‚§ãƒ¼ãƒ€ã‚’é©ç”¨ã—ãŸ DisplayList ã®ä½œæˆï¼ˆSetVertexFormat() ãŠã‚ˆã³ SetShaderFormat() ã®å¾Œã«å‘¼ã¶ï¼‰
 int GRDeviceGL::CreateShaderIndexedList(GRHandler shader, void* location, 
 										GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
 	int list = glGenLists(1);
@@ -1010,13 +1010,13 @@ int GRDeviceGL::CreateShaderIndexedList(GRHandler shader, void* location,
 		default:				/* DO NOTHING */			break;
 	}											
 	
-	if ((shaderType == GRShaderFormat::shP3fB4f)		// ‘¼‚ÌGRShaderFormat‚Í–¢‘Î‰	
+	if ((shaderType == GRShaderFormat::shP3fB4f)		// ä»–ã®GRShaderFormatã¯æœªå¯¾å¿œ	
 			|| (shaderType == GRShaderFormat::shC4bP3fB4f)
 			|| (shaderType == GRShaderFormat::shC3fP3fB4f))			
 	{
 		glUseProgram(shader);
 
-		// ƒƒP[ƒVƒ‡ƒ“Œ^‚Ö‚ÌƒLƒƒƒXƒg
+		// ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³å‹ã¸ã®ã‚­ãƒ£ã‚¹ãƒˆ
 		GRShaderFormat::SFBlendLocation *loc = (GRShaderFormat::SFBlendLocation *)location;
 		if (loc) {
 			glUniformMatrix4fv(loc->uBlendMatrix, 4, false, (GLfloat *)&*blendMatrix.begin());
@@ -1025,7 +1025,7 @@ int GRDeviceGL::CreateShaderIndexedList(GRHandler shader, void* location,
 			glEnableVertexAttribArray(loc->aMatrixIndices); 
 			glEnableVertexAttribArray(loc->aNumMatrix); 
 			
-			// vtx‚ğ’¸“_ƒtƒH[ƒ}ƒbƒgŒ^‚ÖƒLƒƒƒXƒg
+			// vtxã‚’é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆå‹ã¸ã‚­ãƒ£ã‚¹ãƒˆ
 			if (shaderType == GRShaderFormat::shP3fB4f) {
 				GRVertexElement::VFP3fB4f* basePointer = (GRVertexElement::VFP3fB4f *)vtx;
 				glVertexAttribPointer(loc->aWeight, 4, GL_FLOAT, GL_FALSE, vertexSize, &(basePointer->b.data[0]));		
@@ -1071,7 +1071,7 @@ int GRDeviceGL::CreateShaderIndexedList(GRHandler shader, void* location,
 
 
 
-/// ƒVƒF[ƒ_‚Ì‰Šú‰»	
+/// ã‚·ã‚§ãƒ¼ãƒ€ã®åˆæœŸåŒ–	
 void GRDeviceGL::InitShader(){
 #if defined(USE_GREW)
     glewInit();
@@ -1089,7 +1089,7 @@ void GRDeviceGL::InitShader(){
 	assert(0);
 #endif	
 }	
-/// ƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg‚Ìİ’è
+/// ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®è¨­å®š
 void GRDeviceGL::SetShaderFormat(GRShaderFormat::ShaderType type){
 	shaderType = type;
 	 if (type == GRShaderFormat::shP3fB4f) {
@@ -1125,7 +1125,7 @@ void GRDeviceGL::SetShaderFormat(GRShaderFormat::ShaderType type){
 		assert(0);
 	}
 }	
-/// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚Ìì¬	
+/// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ	
 bool GRDeviceGL::CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){
 	GRHandler vertexShader;
 	GRHandler fragmentShader;
@@ -1160,7 +1160,7 @@ bool GRDeviceGL::CreateShader(std::string vShaderFile, std::string fShaderFile, 
 #endif
 	return true;
 }		
-/// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚Ìì¬AGRDeviceGL::shader‚Ö‚Ì“o˜^i‚ ‚ç‚©‚¶‚ßShaderFile–¼‚ğ“o˜^‚µ‚Ä‚¨‚­•K—v‚ª‚ ‚éj	
+/// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆã€GRDeviceGL::shaderã¸ã®ç™»éŒ²ï¼ˆã‚ã‚‰ã‹ã˜ã‚ShaderFileåã‚’ç™»éŒ²ã—ã¦ãŠãå¿…è¦ãŒã‚ã‚‹ï¼‰	
 GRHandler GRDeviceGL::CreateShader(){
 	GRHandler vertexShader;
 	GRHandler fragmentShader;
@@ -1198,7 +1198,7 @@ GRHandler GRDeviceGL::CreateShader(){
 #endif
 	return shaderProgram;
 }	
-/// ƒVƒF[ƒ_‚Ìƒ\[ƒXƒvƒƒOƒ‰ƒ€‚ğƒƒ‚ƒŠ‚É“Ç‚İ‚İAƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚ÆŠÖ˜A•t‚¯‚é	
+/// ã‚·ã‚§ãƒ¼ãƒ€ã®ã‚½ãƒ¼ã‚¹ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã¿ã€ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨é–¢é€£ä»˜ã‘ã‚‹	
 bool GRDeviceGL::ReadShaderSource(GRHandler shader, std::string file){
 	FILE *fp;
 	char *source = NULL;
@@ -1229,14 +1229,14 @@ bool GRDeviceGL::ReadShaderSource(GRHandler shader, std::string file){
 	free((void*)source);
 	return true;
 }			
-/// ƒƒP[ƒVƒ‡ƒ“î•ñ‚Ìæ“¾iSetShaderFormat()‚ÅƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg‚ğİ’è‚µ‚Ä‚¨‚­•K—v‚ ‚èj
+/// ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ã®å–å¾—ï¼ˆSetShaderFormat()ã§ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’è¨­å®šã—ã¦ãŠãå¿…è¦ã‚ã‚Šï¼‰
 void GRDeviceGL::GetShaderLocation(GRHandler shader, void* location){
 	if ((shaderType == GRShaderFormat::shP3fB4f)
 			|| (shaderType == GRShaderFormat::shC4bP3fB4f)
 			|| (shaderType == GRShaderFormat::shC3fP3fB4f))
 	{
-		// shaderType ‚ªAshP3fB4f ‚Ü‚½‚Í shC4bP3fB4f ‚Ü‚½‚Í shC3fP3fB4f ‚ÅA
-		// ƒƒP[ƒVƒ‡ƒ“î•ñ ‚É SFBlendLocation ‚ÌŒ^‚ªw’è‚³‚ê‚½ê‡
+		// shaderType ãŒã€shP3fB4f ã¾ãŸã¯ shC4bP3fB4f ã¾ãŸã¯ shC3fP3fB4f ã§ã€
+		// ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ± ã« SFBlendLocation ã®å‹ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆ
 		SFBlendLocation *loc = (SFBlendLocation *)location;
 		if (loc) {
 			loc->uBlendMatrix	= glGetUniformLocationARB(shader, "blendMatrix" );

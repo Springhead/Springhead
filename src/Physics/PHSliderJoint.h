@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,7 +14,7 @@
 
 namespace Spr{;
 
-///	ƒXƒ‰ƒCƒ_ŠÖß‚É‘Î‰‚·‚éƒcƒŠ[ƒm[ƒh
+///	ã‚¹ãƒ©ã‚¤ãƒ€é–¢ç¯€ã«å¯¾å¿œã™ã‚‹ãƒ„ãƒªãƒ¼ãƒãƒ¼ãƒ‰
 class PHSliderJointNode : public PHTreeNode1D{
 public:
 	SPR_OBJECTDEF(PHSliderJointNode);
@@ -27,19 +27,19 @@ public:
 	PHSliderJointNode(const PHSliderJointNodeDesc& desc = PHSliderJointNodeDesc()){}
 };
 
-///	ƒXƒ‰ƒCƒ_ŠÖß
+///	ã‚¹ãƒ©ã‚¤ãƒ€é–¢ç¯€
 class PHSliderJoint : public PH1DJoint{
 public:
 	SPR_OBJECTDEF(PHSliderJoint);
 	SPR_DECLMEMBEROF_PHSliderJointDesc;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHSliderJoint(const PHSliderJointDesc& desc = PHSliderJointDesc());
 
-	/// ABA‚Å‘Î‰‚·‚éPHTreeNode‚Ì”h¶ƒNƒ‰ƒX‚ğ¶¬‚µ‚Ä•Ô‚·
+	/// ABAã§å¯¾å¿œã™ã‚‹PHTreeNodeã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã—ã¦è¿”ã™
 	virtual PHTreeNode* CreateTreeNode(){ return DBG_NEW PHSliderJointNode(); }
 
-	// ----- PHConstraint‚Ì”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚·‚é‹@”\
+	// ----- PHConstraintã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
 
 	virtual void SetupAxisIndex();
 	virtual void CompBias();

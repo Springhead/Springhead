@@ -1,13 +1,13 @@
-/**
-\page pageSDKNote SDK�J�����̒��ӓ_
+﻿/**
+\page pageSDKNote SDK開発時の注意点
 
-\section secCast �L���X�g
-API�N���X�C�����N���X�́C���d�p�������邱�ƂɂȂ邽�߁C
-�|�C���^���L���X�g����Ƃ��́C�p���̊֌W�ɒ��ӂ��ăL���X�g���s��Ȃ��ƁC
-���ꂽ�ꏊ���w���Ă��܂����Ƃ�����܂��D
+\section secCast キャスト
+APIクラス，実装クラスは，多重継承をすることになるため，
+ポインタをキャストするときは，継承の関係に注意してキャストを行わないと，
+ずれた場所を指してしまうことがあります．
 
-dynamics_cast��p����Ζ�肠��܂��񂪁C
-dynamic_cast���T�|�[�g���Ȃ������n�������̂ŁC���̂悤��Cast()�����o�֐��܂��́C�}�N�� DCAST �ő�p���܂��D
+dynamics_castを用いれば問題ありませんが，
+dynamic_castをサポートしない処理系も多いので，次のようにCast()メンバ関数または，マクロ DCAST で代用します．
 <pre>
  Scene* s = new PHScene;
  PHScene* ps = s->Cast();
@@ -15,16 +15,16 @@ dynamic_cast���T�|�[�g���Ȃ������n�������̂ŁC���̂悤��Cast()�����o�֐��܂��́C
 </pre>
 
 
-\section sec_TypeInfo �^���ɂ���
- Springhead2�ł́CRTTI���T�|�[�g���Ă��Ȃ������n�ł������悤�ɁC���O�Ō^����
- �p�ӂ��Ă��܂��D
-\subsection sec_typeInfoForObject �I�u�W�F�N�g�̌^���
- Springhead�̃I�u�W�F�N�g�̃N���X�̐錾�ɂ́C
+\section sec_TypeInfo 型情報について
+ Springhead2では，RTTIをサポートしていない処理系でも動くように，自前で型情報を
+ 用意しています．
+\subsection sec_typeInfoForObject オブジェクトの型情報
+ Springheadのオブジェクトのクラスの宣言には，
 <pre>
- SPR_OBJECTDEF???(�N���X��);
+ SPR_OBJECTDEF???(クラス名);
 </pre>
-�������܂��D���̃}�N���́C�I�u�W�F�N�g����C���^�t�F�[�X�̏����擾���邽�߂̊֐�
-GetIfInfo()��GetIfInfoStatic()�̐錾�C�^�ϊ������o�֐�Cast()�C
-�I�u�W�F�N�g�̌^���ƌp���֌W�̏������� GetTypeInfo()��GetTypeInfoStatic()
-�̏��𐶐����܂��D
+を書きます．このマクロは，オブジェクトからインタフェースの情報を取得するための関数
+GetIfInfo()とGetIfInfoStatic()の宣言，型変換メンバ関数Cast()，
+オブジェクトの型情報と継承関係の情報を持つ GetTypeInfo()とGetTypeInfoStatic()
+の情報を生成します．
 */

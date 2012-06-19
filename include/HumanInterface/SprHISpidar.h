@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprHISpidar.h
- *	@brief —ÍŠo’ñ¦ƒfƒoƒCƒXSpidar
+ *	@brief åŠ›è¦šæç¤ºãƒ‡ãƒã‚¤ã‚¹Spidar
 */
 
 #ifndef SPR_HISpidar_H
@@ -23,52 +23,52 @@ namespace Spr{;
 struct HISpidarMotorIf: public HIBaseIf{
 	SPR_IFDEF(HISpidarMotor);
 
-	/// o—Í‚Ìİ’è
+	/// å‡ºåŠ›ã®è¨­å®š
 	void SetForce(float f);
-	///	ÀÛ‚Éo—Í‚µ‚½—Í‚Ìæ“¾
+	///	å®Ÿéš›ã«å‡ºåŠ›ã—ãŸåŠ›ã®å–å¾—
 	float GetForce();
-	/// Å¬o—Í‚Ìİ’è
+	/// æœ€å°å‡ºåŠ›ã®è¨­å®š
 	void SetLimitMinForce(float f);
-	/// Å¬o—Í‚Ìİ’è
+	/// æœ€å°å‡ºåŠ›ã®è¨­å®š
 	void SetLimitMaxForce(float f);
-	/// Å¬Å‘åo—Í‚Ìæ“¾
+	/// æœ€å°æœ€å¤§å‡ºåŠ›ã®å–å¾—
 	Vec2f GetLimitForce();
-	///	“d—¬’l‚Ìæ“¾
+	///	é›»æµå€¤ã®å–å¾—
 	float GetCurrent();
-	///	Œ»İ‚Ì…‚Ì’·‚³‚Ìİ’è
+	///	ç¾åœ¨ã®ç³¸ã®é•·ã•ã®è¨­å®š
 	void SetLength(float l);
-	///	Œ»İ‚Ì…‚Ì’·‚³
+	///	ç¾åœ¨ã®ç³¸ã®é•·ã•
 	float GetLength();
-	///	‘¬“x‚ÌŒv‘ª
+	///	é€Ÿåº¦ã®è¨ˆæ¸¬
 	float GetVelocity();
-	///	ƒ‚[ƒ^’è”‚ÌƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“‚Ì‚½‚ß‚ÌŒv‘ª (100‰ñ‚­‚ç‚¢‚±‚ê‚ğŒÄ‚ñ‚Å‚©‚ç)
+	///	ãƒ¢ãƒ¼ã‚¿å®šæ•°ã®ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®ãŸã‚ã®è¨ˆæ¸¬ (100å›ãã‚‰ã„ã“ã‚Œã‚’å‘¼ã‚“ã§ã‹ã‚‰)
 	void GetCalibrationData(float dt);
-	///	ƒ‚[ƒ^’è”‚ÌƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“ (‚±‚Á‚¿‚ğŒÄ‚ñ‚ÅƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“)
+	///	ãƒ¢ãƒ¼ã‚¿å®šæ•°ã®ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ (ã“ã£ã¡ã‚’å‘¼ã‚“ã§ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³)
 	void Calibrate(bool bUpdate);
-	///	“dŒ¹“dˆ³‚ÌŒv‘ª
+	///	é›»æºé›»åœ§ã®è¨ˆæ¸¬
 	void GetVdd();
-	///	 ƒGƒ“ƒR[ƒ_‚ÌƒJƒEƒ“ƒg’l‚ğ•Ô‚·
+	///	 ã‚¨ãƒ³ã‚³ãƒ¼ãƒ€ã®ã‚«ã‚¦ãƒ³ãƒˆå€¤ã‚’è¿”ã™
 	int GetCount();
 
 };
-///	@name	ƒ‚[ƒ^‚É‚Â‚¢‚Ä‚Ì’è”
+///	@name	ãƒ¢ãƒ¼ã‚¿ã«ã¤ã„ã¦ã®å®šæ•°
 struct HISpidarMotorDesc{
 	//@{
-	/// ƒ|[ƒg”Ô†
+	/// ãƒãƒ¼ãƒˆç•ªå·
 	int	ch;
-	///	Å‘åo—Í(N)
+	///	æœ€å¤§å‡ºåŠ›(N)
 	float maxForce;
-	///	Å¬o—Í(N)
+	///	æœ€å°å‡ºåŠ›(N)
 	float minForce;
-	///	D/A‚Ìo—Í“dˆ³ / ƒ‚[ƒ^‚Ìo—Í  (V/N)
+	///	D/Aã®å‡ºåŠ›é›»åœ§ / ãƒ¢ãƒ¼ã‚¿ã®å‡ºåŠ›  (V/N)
 	float voltPerNewton;
-	///	ƒ‚[ƒ^‚É—¬‚ê‚é“d—¬ / D/A‚Ìo—Í“dˆ³
+	///	ãƒ¢ãƒ¼ã‚¿ã«æµã‚Œã‚‹é›»æµ / D/Aã®å‡ºåŠ›é›»åœ§
 	float currentPerVolt;
-	///	…‚Ì’·‚³ / ƒpƒ‹ƒX”
+	///	ç³¸ã®é•·ã• / ãƒ‘ãƒ«ã‚¹æ•°
 	float lengthPerPulse;
-	///	ƒ‚[ƒ^‚ªæ‚è•t‚¯‚ç‚ê‚Ä‚¢‚éˆÊ’u(…‚ÌoŒû)‚ÌÀ•W
+	///	ãƒ¢ãƒ¼ã‚¿ãŒå–ã‚Šä»˜ã‘ã‚‰ã‚Œã¦ã„ã‚‹ä½ç½®(ç³¸ã®å‡ºå£)ã®åº§æ¨™
 	Vec3f pos;
-	///	…‚ªƒOƒŠƒbƒv‚Éæ‚è•t‚¯‚ç‚ê‚Ä‚¢‚éˆÊ’u
+	///	ç³¸ãŒã‚°ãƒªãƒƒãƒ—ã«å–ã‚Šä»˜ã‘ã‚‰ã‚Œã¦ã„ã‚‹ä½ç½®
 	Vec3f jointPos;
 
 	HISpidarMotorDesc(){
@@ -83,9 +83,9 @@ struct HISpidarMotorDesc{
 
 struct HISpidarIf : public HIHapticIf{
 	SPR_VIFDEF(HISpidar);
-	/// Å¬o—Í‚Ìİ’è
+	/// æœ€å°å‡ºåŠ›ã®è¨­å®š
 	void SetLimitMinForce(float f);
-	/// Å‘åo—Í‚Ìİ’è
+	/// æœ€å¤§å‡ºåŠ›ã®è¨­å®š
 	void SetLimitMaxForce(float f);
 };
 struct HISpidarDesc{
@@ -95,16 +95,16 @@ struct HISpidarDesc{
 	int	nButton;
 };
 
-/**	@brief	Spidar4‚ÌŠî–{ƒNƒ‰ƒX	*/
+/**	@brief	Spidar4ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹	*/
 struct HISpidar4If: public HISpidarIf{
 	SPR_VIFDEF(HISpidar4);
 
-	///	ƒ‚[ƒ^
+	///	ãƒ¢ãƒ¼ã‚¿
 	HISpidarMotorIf* GetMotor(size_t i);
-	///	ƒ‚[ƒ^‚Ì”
+	///	ãƒ¢ãƒ¼ã‚¿ã®æ•°
 	size_t NMotor() const;
 };
-///	Spidar4‚ÌƒfƒXƒNƒŠƒvƒ^
+///	Spidar4ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct HISpidar4Desc : HISpidarDesc{
 	SPR_DESCDEF(HISpidar4);
 	
@@ -120,41 +120,41 @@ struct HISpidar4Desc : HISpidarDesc{
 	HISpidar4Desc(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f){
 		Init(nMotor, motorPos, knotPos, vpn, lpp, minF, maxF);
 	}
-	///	ƒpƒ‰ƒ[ƒ^‚É‚æ‚é‰Šú‰»
+	///	ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã«ã‚ˆã‚‹åˆæœŸåŒ–
 	void Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f);
-	///	SPIDAR‚Ìƒ^ƒCƒvw’è‚É‚æ‚é‰Šú‰»
+	///	SPIDARã®ã‚¿ã‚¤ãƒ—æŒ‡å®šã«ã‚ˆã‚‹åˆæœŸåŒ–
 	void Init(char* type);
 	void InitSpidarG(char* type);
 	void InitSpidarBig(char* type);
 };
 
-/**	@brief	Spidar4‚ÌŠî–{ƒNƒ‰ƒX	*/
+/**	@brief	Spidar4ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹	*/
 struct HISpidar4DIf: public HISpidar4If{
 	SPR_VIFDEF(HISpidar4D);
 };
 struct HISpidar4DDesc: public HISpidar4Desc{
 };
 
-/**	@brief	SpidarG6‚ÌŠî–{ƒNƒ‰ƒX	*/
+/**	@brief	SpidarG6ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹	*/
 struct HISpidarGIf: public HISpidarIf{
 	SPR_VIFDEF(HISpidarG);
-	///	ƒfƒoƒCƒX‚ÌÀÛ‚Ì’ñ¦ƒgƒ‹ƒN‚ğ•Ô‚·
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®å®Ÿéš›ã®æç¤ºãƒˆãƒ«ã‚¯ã‚’è¿”ã™
 	Vec3f GetTorque();
-	///	ƒfƒoƒCƒX‚ÌÀÛ‚Ì’ñ¦—Í‚ğ•Ô‚·
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®å®Ÿéš›ã®æç¤ºåŠ›ã‚’è¿”ã™
 	Vec3f GetForce();
-	///	ƒfƒoƒCƒX‚Ì–Ú•Wo—Í‚Æƒgƒ‹ƒNo—Í‚ğİ’è‚·‚é
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç›®æ¨™å‡ºåŠ›ã¨ãƒˆãƒ«ã‚¯å‡ºåŠ›ã‚’è¨­å®šã™ã‚‹
 	void SetForce(const Vec3f& f, const Vec3f& t);
 
-	///	ƒ‚[ƒ^
+	///	ãƒ¢ãƒ¼ã‚¿
 	HISpidarMotorIf* GetMotor(size_t i);
-	///	ƒ‚[ƒ^‚Ì”
+	///	ãƒ¢ãƒ¼ã‚¿ã®æ•°
 	size_t NMotor() const;
 	/// 
 	int GetButton(size_t i);
 	///
 	size_t NButton() const;
 };
-///	SpidarG6‚ÌƒfƒXƒNƒŠƒvƒ^
+///	SpidarG6ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿
 struct HISpidarGDesc : HISpidarDesc{
 	SPR_DESCDEF(HISpidarG);
 
@@ -165,9 +165,9 @@ struct HISpidarGDesc : HISpidarDesc{
 	HISpidarGDesc(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f){
 		Init(nMotor, motorPos, knotPos, vpn, lpp, minF, maxF);
 	}
-	///	ƒpƒ‰ƒ[ƒ^‚É‚æ‚é‰Šú‰»
+	///	ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã«ã‚ˆã‚‹åˆæœŸåŒ–
 	void Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn, float lpp, float minF=0.5f, float maxF=10.0f);
-	///	SPIDAR‚Ìƒ^ƒCƒvw’è‚É‚æ‚é‰Šú‰»
+	///	SPIDARã®ã‚¿ã‚¤ãƒ—æŒ‡å®šã«ã‚ˆã‚‹åˆæœŸåŒ–
 	void Init(char* type);
 };
 

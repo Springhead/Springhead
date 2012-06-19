@@ -1,4 +1,4 @@
-#ifndef VR_HAPTIC_HDSPIDARMOTOR_H
+﻿#ifndef VR_HAPTIC_HDSPIDARMOTOR_H
 #define VR_HAPTIC_HDSPIDARMOTOR_H
 
 #include <Base/Affine.h>
@@ -13,83 +13,83 @@ public:
 	SPR_OBJECTDEF(HISpidarMotor);
 	ACCESS_DESC(HISpidarMotor);
 
-	//@{	�f�o�C�X�A�N�Z�X
-	///	�g�p����D/A.
+	//@{	デバイスアクセス
+	///	使用するD/A.
 	DVDaIf* da;
-	///	�g�p����G���R�[�_�̃J�E���^.
+	///	使用するエンコーダのカウンタ.
 	DVCounterIf* counter;
-	///	�g�p����A/D.
+	///	使用するA/D.
 	DVAdIf* ad;
 	//@}
-	///	�o�͂�����
+	///	出力した力
 	float force;
 
-	//@{	���[�^�萔(������R�E�t�N�d�́E�R�C���萔)�̃L�����u���[�V����
-	float voltageInt;	///<	���[�^�[�q�ԓd���̐ϕ�
-	float currentInt;	///<	���[�^�d���̐ϕ�
-	float timeInt;		///<	�ϕ���Ԃ̎���
-	float currentLast;	///<	�v���J�n���̃��[�^�d��
-	float lengthLast;	///<	�v���J�n���̎��̒���
-	float vdd;			///<	�d���d��
+	//@{	モータ定数(内部抵抗・逆起電力・コイル定数)のキャリブレーション
+	float voltageInt;	///<	モータ端子間電圧の積分
+	float currentInt;	///<	モータ電流の積分
+	float timeInt;		///<	積分区間の時間
+	float currentLast;	///<	計測開始時のモータ電流
+	float lengthLast;	///<	計測開始時の糸の長さ
+	float vdd;			///<	電源電圧
 	PTM::VMatrixCol<float> calibMat;
-						///<	�L�����u���[�V�����p�f�[�^
+						///<	キャリブレーション用データ
 	PTM::VVector<float> calibVec;
-						///<	�L�����u���[�V�����p�f�[�^
-	Vec4f calibResult;	///<	�L�����u���[�V�������� (R, L, E)
+						///<	キャリブレーション用データ
+	Vec4f calibResult;	///<	キャリブレーション結果 (R, L, E)
 	//@}
 public:
 	///	
 	HISpidarMotor();
 	///	
 	virtual ~HISpidarMotor(){}
-	///	�o�͂̐ݒ�
+	///	出力の設定
 	void SetForce(float f){
 		if(f < minForce) f = minForce;
 		if(f > maxForce) f = maxForce;
 		if(da) da->Voltage(f * voltPerNewton);
 		force = f;
 	}
-	///	���ۂɏo�͂����͂̎擾
+	///	実際に出力した力の取得
 	float GetForce(){
 		return force;
 	}
-	/// �ŏ��o�͂̐ݒ�
+	/// 最小出力の設定
 	void SetLimitMinForce(float f){
 		minForce = f;
 	}
-	/// �ő�o�͂̐ݒ�
+	/// 最大出力の設定
 	void SetLimitMaxForce(float f){
 		maxForce = f;
 	}
-	/// �ŏ��ő�o�͂̎擾
+	/// 最小最大出力の取得
 	Vec2f GetLimitForce(){
 		Vec2f f;
 		f.x = minForce; f.y = maxForce;
 		return f;
 	}
-	///	�d���l�̎擾
+	///	電流値の取得
 	float GetCurrent(){
 		return force * voltPerNewton * currentPerVolt;
 	}
-	///	���݂̎��̒����̐ݒ�
+	///	現在の糸の長さの設定
 	void SetLength(float l){ if(counter) counter->Count(long(l / lengthPerPulse)); }
-	///	���݂̎��̒���
+	///	現在の糸の長さ
 	float GetLength(){
 		if(counter) return counter->Count() * lengthPerPulse;
 		else return 0;
 	}
-	/// �G���R�[�_�̃J�E���^�l�̓ǂ݂���
+	/// エンコーダのカウンタ値の読みだし
 	int GetCount(){
 		if(counter) return counter->Count();
 		else return 0;
 	}
-	///	���x�̌v��
+	///	速度の計測
 	float GetVelocity();
-	///	���[�^�萔�̃L�����u���[�V�����̂��߂̌v�� (100�񂭂炢������Ă�ł���)
+	///	モータ定数のキャリブレーションのための計測 (100回くらいこれを呼んでから)
 	void GetCalibrationData(float dt);
-	///	���[�^�萔�̃L�����u���[�V���� (���������Ă�ŃL�����u���[�V����)
+	///	モータ定数のキャリブレーション (こっちを呼んでキャリブレーション)
 	void Calibrate(bool bUpdate);
-	///	�d���d���̌v��
+	///	電源電圧の計測
 	void GetVdd();
 };
 

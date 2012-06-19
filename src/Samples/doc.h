@@ -1,14 +1,14 @@
-/** 
-\page pageSamples Springhead‚ÌƒTƒ“ƒvƒ‹ƒvƒƒOƒ‰ƒ€
+ï»¿/** 
+\page pageSamples Springheadã®ã‚µãƒ³ãƒ—ãƒ«ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 \contents
 
-Springhead‚ÌƒTƒ“ƒvƒ‹‚ÍA/src/Samples/ ˆÈ‰º‚É‚ ‚è‚Ü‚·B
+Springheadã®ã‚µãƒ³ãƒ—ãƒ«ã¯ã€/src/Samples/ ä»¥ä¸‹ã«ã‚ã‚Šã¾ã™ã€‚
 
-\section secSampleForBeginner “ü–å—pƒTƒ“ƒvƒ‹
-‰‚ß‚Ä‚Ì•û‚É‚ÍA\ref pageFWAppSample : src/Samples/FwAppSample ‚ª‚¨Š©‚ß‚Å‚·B
-FWAppSample.sln ‚ğŠJ‚¢‚Äƒrƒ‹ƒh‚µ‚Ä‚­‚¾‚³‚¢B~
+\section secSampleForBeginner å…¥é–€ç”¨ã‚µãƒ³ãƒ—ãƒ«
+åˆã‚ã¦ã®æ–¹ã«ã¯ã€\ref pageFWAppSample : src/Samples/FwAppSample ãŒãŠå‹§ã‚ã§ã™ã€‚
+FWAppSample.sln ã‚’é–‹ã„ã¦ãƒ“ãƒ«ãƒ‰ã—ã¦ãã ã•ã„ã€‚~
 
-\section secSampleIntro ƒTƒ“ƒvƒ‹ƒvƒƒOƒ‰ƒ€‚ÌĞ‰î
+\section secSampleIntro ã‚µãƒ³ãƒ—ãƒ«ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®ç´¹ä»‹
 - FWAppSample: \ref pageFWAppSample
 - BoxStack: \ref pageBoxStack
 - Joints: \ref pageJoints

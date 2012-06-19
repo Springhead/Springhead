@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,11 +11,11 @@
 #include <list>
 #include <set>
 
-/**	@file KeyList.h ƒL[ƒ[ƒhŒŸõ‹@”\‚Â‚«ƒŠƒXƒg‚Ì’è‹`*/
+/**	@file KeyList.h ã‚­ãƒ¼ãƒ¯ãƒ¼ãƒ‰æ¤œç´¢æ©Ÿèƒ½ã¤ããƒªã‚¹ãƒˆã®å®šç¾©*/
 namespace Spr {;
 
-/**	set ‚Â‚«‚ÌƒŠƒXƒgDƒL[‚Å‚‘¬‚É‘€ì‚ª‚Å‚«‚é listD
-	set‚Æˆá‚Á‚ÄC‡”Ô‚ª•Û‚³‚êC‡”Ô‚ÅƒAƒNƒZƒX‚·‚é‚±‚Æ‚à‚Å‚«‚éD */
+/**	set ã¤ãã®ãƒªã‚¹ãƒˆï¼ã‚­ãƒ¼ã§é«˜é€Ÿã«æ“ä½œãŒã§ãã‚‹ listï¼
+	setã¨é•ã£ã¦ï¼Œé †ç•ªãŒä¿æŒã•ã‚Œï¼Œé †ç•ªã§ã‚¢ã‚¯ã‚»ã‚¹ã™ã‚‹ã“ã¨ã‚‚ã§ãã‚‹ï¼ */
 
 template <class T, class Pred=std DOUBLECOLON less<T> >
 class UTKeyList: std DOUBLECOLON list<T>{
@@ -88,9 +88,9 @@ public:
 private:
 	void InsToFinder(base::iterator& it){
 		std::pair<Finder::iterator, bool> rv = finder.insert(it);
-		if (!rv.second){	//	Šù‚É“¯‚¶ƒL[‚ª‘¶İ‚·‚é‚½‚ßC’Ç‰Á‚Å‚«‚È‚©‚Á‚½‚Æ‚«
-			base::erase(*rv.first);	//	ƒŠƒXƒg‚©‚çŒÃ‚¢’l‚ğíœ‚µC
-			(base::iterator&)*rv.first = it;			//	V‚µ‚¢’l‚ÉXV‚·‚éDŒ‹‰Ê‚Æ‚µ‚Älist‚Ì—v‘f”‚ª‘‚¦‚È‚¢D
+		if (!rv.second){	//	æ—¢ã«åŒã˜ã‚­ãƒ¼ãŒå­˜åœ¨ã™ã‚‹ãŸã‚ï¼Œè¿½åŠ ã§ããªã‹ã£ãŸã¨ã
+			base::erase(*rv.first);	//	ãƒªã‚¹ãƒˆã‹ã‚‰å¤ã„å€¤ã‚’å‰Šé™¤ã—ï¼Œ
+			(base::iterator&)*rv.first = it;			//	æ–°ã—ã„å€¤ã«æ›´æ–°ã™ã‚‹ï¼çµæœã¨ã—ã¦listã®è¦ç´ æ•°ãŒå¢—ãˆãªã„ï¼
 		}
 	}
 	void EraseFromFinder(base::iterator& it){

@@ -1,4 +1,4 @@
-/*
+Ôªø/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,10 +13,10 @@
 #include <iosfwd>
 #include <vector>
 
-#define HULL_EPSILON 1e-6f	///<	QuickHullÇ≈àµÇ§ç≈è¨ÇÃêîíl
-#define HULL_INFINITE 1e8f	///<	QuickHullÇ≈àµÇ§ç≈ëÂÇÃêîíl
+#define HULL_EPSILON 1e-6f	///<	QuickHull„ÅßÊâ±„ÅÜÊúÄÂ∞è„ÅÆÊï∞ÂÄ§
+#define HULL_INFINITE 1e8f	///<	QuickHull„ÅßÊâ±„ÅÜÊúÄÂ§ß„ÅÆÊï∞ÂÄ§
 
-//#define HULL_DEBUG		//	ÉfÉoÉbÉOèoóÕ
+//#define HULL_DEBUG		//	„Éá„Éê„ÉÉ„Ç∞Âá∫Âäõ
 #ifdef HULL_DEBUG
  #define HULL_DEBUG_EVAL(x) x
 #else
@@ -25,35 +25,35 @@
 
 namespace Spr{;
 
-///	QuickHullÇ≈çÏÇÁÇÍÇÈñ 
+///	QuickHull„Åß‰Ωú„Çâ„Çå„ÇãÈù¢
 template <class TVtx>
 class CDQHPlane{
 public:
-	Vec3d normal;			///<	ñ ÇÃñ@ê¸
-	double dist;			///<	ñ ÇÃå¥ì_Ç©ÇÁÇÃãóó£
+	Vec3d normal;			///<	Èù¢„ÅÆÊ≥ïÁ∑ö
+	double dist;			///<	Èù¢„ÅÆÂéüÁÇπ„Åã„Çâ„ÅÆË∑ùÈõ¢
 	
-	TVtx* vtx[3];			///<	ñ Çç\ê¨Ç∑ÇÈí∏ì_
-	CDQHPlane* neighbor[3];	///<	ó◊ÇÃñ  vtx[0]-vtx[1] ÇÃó◊Ç™ neighbor[0]
-	bool deleted;			///<	çÌèúÇ≥ÇÍÇΩñ ÇÕtrue
-	void Clear();			///<	ÉÅÉÇÉäÉNÉäÉAÅDégÇ§ëOÇ…åƒÇ‘ÅD
-	bool Visible(TVtx* p);	///<	í∏ì_ v Ç©ÇÁï\ë§Ç™å©Ç¶ÇÈÇ©Ç«Ç§Ç©
-	///	vÇÃí∏ì_î‘çÜÇï‘Ç∑(0..2Çï‘Ç∑)ÅDå©Ç¬Ç©ÇÁÇ»ÇØÇÍÇŒ3Çï‘Ç∑ÅD
+	TVtx* vtx[3];			///<	Èù¢„ÇíÊßãÊàê„Åô„ÇãÈ†ÇÁÇπ
+	CDQHPlane* neighbor[3];	///<	Èö£„ÅÆÈù¢ vtx[0]-vtx[1] „ÅÆÈö£„Åå neighbor[0]
+	bool deleted;			///<	ÂâäÈô§„Åï„Çå„ÅüÈù¢„ÅØtrue
+	void Clear();			///<	„É°„É¢„É™„ÇØ„É™„Ç¢Ôºé‰Ωø„ÅÜÂâç„Å´Âëº„Å∂Ôºé
+	bool Visible(TVtx* p);	///<	È†ÇÁÇπ v „Åã„ÇâË°®ÂÅ¥„ÅåË¶ã„Åà„Çã„Åã„Å©„ÅÜ„Åã
+	///	v„ÅÆÈ†ÇÁÇπÁï™Âè∑„ÇíËøî„Åô(0..2„ÇíËøî„Åô)ÔºéË¶ã„Å§„Åã„Çâ„Å™„Åë„Çå„Å∞3„ÇíËøî„ÅôÔºé
 	int GetVtxID(TVtx* v);
-	void CalcNormal();		///<	ñ@ê¸ÉxÉNÉgÉãÇ∆ãóó£ÇåvéZÇ∑ÇÈÅD
-	void Reverse();			///<	ï\ó†ÇÇ–Ç¡Ç≠ÇËï‘Ç∑ÅD		
-	///	ì_Ç∆ÇÃãóó£ÇåvéZÇ∑ÇÈÅDê∏ìxÇçló∂ÇµÇƒàÍî‘ãﬂÇ¢ì_Ç≈åvéZÇ∑ÇÈÅD
+	void CalcNormal();		///<	Ê≥ïÁ∑ö„Éô„ÇØ„Éà„É´„Å®Ë∑ùÈõ¢„ÇíË®àÁÆó„Åô„ÇãÔºé
+	void Reverse();			///<	Ë°®Ë£è„Çí„Å≤„Å£„Åè„ÇäËøî„ÅôÔºé		
+	///	ÁÇπ„Å®„ÅÆË∑ùÈõ¢„ÇíË®àÁÆó„Åô„ÇãÔºéÁ≤æÂ∫¶„ÇíËÄÉÊÖÆ„Åó„Å¶‰∏ÄÁï™Ëøë„ÅÑÁÇπ„ÅßË®àÁÆó„Åô„ÇãÔºé
 	double CalcDist(TVtx* v);
-	///	ÉfÉoÉbÉOópï\é¶
+	///	„Éá„Éê„ÉÉ„Ç∞Áî®Ë°®Á§∫
 	void Print(std::ostream& os) const;
 };
 
-///	ñ ÇÃÉoÉbÉtÉ@
+///	Èù¢„ÅÆ„Éê„ÉÉ„Éï„Ç°
 template <class TVtx>
 class CDQHPlanes{
 public:
-	TVtx** vtxBeginInput;	///<	écÇ¡ÇƒÇ¢ÇÈí∏ì_ÇÃêÊì™
-	TVtx** vtxEndInput;		///<	écÇ¡ÇƒÇ¢ÇÈí∏ì_ÇÃç≈å„ÇÃéü
-	///	í∏ì_ÇÃVector
+	TVtx** vtxBeginInput;	///<	ÊÆã„Å£„Å¶„ÅÑ„ÇãÈ†ÇÁÇπ„ÅÆÂÖàÈ†≠
+	TVtx** vtxEndInput;		///<	ÊÆã„Å£„Å¶„ÅÑ„ÇãÈ†ÇÁÇπ„ÅÆÊúÄÂæå„ÅÆÊ¨°
+	///	È†ÇÁÇπ„ÅÆVector
 	class TVtxs: public std::vector<TVtx*>{
 	public:
 		void Print(std::ostream& os) const{
@@ -64,69 +64,69 @@ public:
  	};
 	typedef CDQHPlane<TVtx> CDQHPlane;
 
-	CDQHPlane* buffer;		///<	ÉoÉbÉtÉ@Ç÷ÇÃÉ|ÉCÉìÉ^ new Ç∑ÇÈÅD
-	int len;			///<	ÉoÉbÉtÉ@ÇÃí∑Ç≥
-	CDQHPlane* begin;		///<	ç≈èâÇÃñ 
-	CDQHPlane* end;		///<	ç≈å„ÇÃñ ÇÃéü
-	TVtx** vtxBegin;	///<	écÇ¡ÇƒÇ¢ÇÈí∏ì_ÇÃêÊì™
-	TVtx** vtxEnd;		///<	écÇ¡ÇƒÇ¢ÇÈí∏ì_ÇÃç≈å„ÇÃéü
-	int nPlanes;		///<	ñ ÇÃêî
-	unsigned size();	///<	égópçœÇ›ÉoÉbÉtÉ@ÇÃÉTÉCÉY
+	CDQHPlane* buffer;		///<	„Éê„ÉÉ„Éï„Ç°„Å∏„ÅÆ„Éù„Ç§„É≥„Çø new „Åô„ÇãÔºé
+	int len;			///<	„Éê„ÉÉ„Éï„Ç°„ÅÆÈï∑„Åï
+	CDQHPlane* begin;		///<	ÊúÄÂàù„ÅÆÈù¢
+	CDQHPlane* end;		///<	ÊúÄÂæå„ÅÆÈù¢„ÅÆÊ¨°
+	TVtx** vtxBegin;	///<	ÊÆã„Å£„Å¶„ÅÑ„ÇãÈ†ÇÁÇπ„ÅÆÂÖàÈ†≠
+	TVtx** vtxEnd;		///<	ÊÆã„Å£„Å¶„ÅÑ„ÇãÈ†ÇÁÇπ„ÅÆÊúÄÂæå„ÅÆÊ¨°
+	int nPlanes;		///<	Èù¢„ÅÆÊï∞
+	unsigned size();	///<	‰ΩøÁî®Ê∏à„Åø„Éê„ÉÉ„Éï„Ç°„ÅÆ„Çµ„Ç§„Ç∫
 	CDQHPlanes(int l);
 	void Clear();
 	~CDQHPlanes();
-	/**	bÇ©ÇÁeÇ‹Ç≈ÇÃí∏ì_Ç©ÇÁì ïÔÇçÏÇÈÅDégópÇµÇΩí∏ì_ÇÕbÇ©ÇÁvtxBeginÅC
-		égópÇµÇ»Ç©Ç¡ÇΩí∏ì_ÇÕÅCvtxBeginÇ©ÇÁeÇ…à⁄ìÆÇ∑ÇÈÅD	
-		beginÇ©ÇÁendÇÕí∏ì_Ç3Ç¬ä‹Çﬁñ Ç…Ç»ÇÈÅDÇªÇÍÇÁÇÃñ Ç§Çøì ïÔÇ…égÇÌÇÍÇΩñ 
-		ÇÕ CDQHPlane::deleted Ç™ false Ç…Ç»Ç¡ÇƒÇ¢ÇÈÅD	*/
+	/**	b„Åã„Çâe„Åæ„Åß„ÅÆÈ†ÇÁÇπ„Åã„ÇâÂá∏ÂåÖ„Çí‰Ωú„ÇãÔºé‰ΩøÁî®„Åó„ÅüÈ†ÇÁÇπ„ÅØb„Åã„ÇâvtxBeginÔºå
+		‰ΩøÁî®„Åó„Å™„Åã„Å£„ÅüÈ†ÇÁÇπ„ÅØÔºåvtxBegin„Åã„Çâe„Å´ÁßªÂãï„Åô„ÇãÔºé	
+		begin„Åã„Çâend„ÅØÈ†ÇÁÇπ„Çí3„Å§Âê´„ÇÄÈù¢„Å´„Å™„ÇãÔºé„Åù„Çå„Çâ„ÅÆÈù¢„ÅÜ„Å°Âá∏ÂåÖ„Å´‰Ωø„Çè„Çå„ÅüÈù¢
+		„ÅØ CDQHPlane::deleted „Åå false „Å´„Å™„Å£„Å¶„ÅÑ„ÇãÔºé	*/
 	void CreateConvexHull(TVtx** b, TVtx** e);
 	void Print(std::ostream& os) const;
 
 private:
-	/**	ç≈èâÇÃì ëΩñ ëÃÅÅ2ñáÇÃéOäpå`(ï\ó†)ÇçÏÇÈÅD
-		Ç≈Ç´ÇÈÇæÇØëÂÇ´Ç¢3äpå`ÇçÏÇÈÇ∆å¯ó¶Ç™ó«Ç¢ÇÃÇ≈ÅCxç≈ëÂÅCxç≈è¨ÅC
-		2ì_Ç™çÏÇÈíºê¸Ç©ÇÁàÍî‘âìÇ¢í∏ì_Ç≈3äpå`ÇçÏÇÈÅD
-		égópÇµÇΩí∏ì_ÇÕÅCvtxBeginÇÃéËëOÇ…à⁄ìÆÇµÇƒÅCí∏ì_ÉäÉXÉgÇ©ÇÁÇÕÇ∏Ç∑ÅD
+	/**	ÊúÄÂàù„ÅÆÂá∏Â§öÈù¢‰ΩìÔºù2Êûö„ÅÆ‰∏âËßíÂΩ¢(Ë°®Ë£è)„Çí‰Ωú„ÇãÔºé
+		„Åß„Åç„Çã„Å†„ÅëÂ§ß„Åç„ÅÑ3ËßíÂΩ¢„Çí‰Ωú„Çã„Å®ÂäπÁéá„ÅåËâØ„ÅÑ„ÅÆ„ÅßÔºåxÊúÄÂ§ßÔºåxÊúÄÂ∞èÔºå
+		2ÁÇπ„Åå‰Ωú„ÇãÁõ¥Á∑ö„Åã„Çâ‰∏ÄÁï™ÈÅ†„ÅÑÈ†ÇÁÇπ„Åß3ËßíÂΩ¢„Çí‰Ωú„ÇãÔºé
+		‰ΩøÁî®„Åó„ÅüÈ†ÇÁÇπ„ÅØÔºåvtxBegin„ÅÆÊâãÂâç„Å´ÁßªÂãï„Åó„Å¶ÔºåÈ†ÇÁÇπ„É™„Çπ„Éà„Åã„Çâ„ÅØ„Åö„ÅôÔºé
 	*/
 	void CreateFirstConvex();
-	/**	horizon ÇçÏÇÈÅD cur Ç™åäÇÇ†ÇØÇÈñ ÅCvtx Ç™êVÇµÇ¢í∏ì_ÅD
-	rv Ç…horizonÇï”Ç…éùÇ¬3äpå`Ç1Ç¬ï‘Ç∑ÅD*/
+	/**	horizon „Çí‰Ωú„ÇãÔºé cur „ÅåÁ©¥„Çí„ÅÇ„Åë„ÇãÈù¢Ôºåvtx „ÅåÊñ∞„Åó„ÅÑÈ†ÇÁÇπÔºé
+	rv „Å´horizon„ÇíËæ∫„Å´ÊåÅ„Å§3ËßíÂΩ¢„Çí1„Å§Ëøî„ÅôÔºé*/
 	void FindHorizon(TVtx*& rv, CDQHPlane* cur, TVtx* vtx);
-	/**	í∏ì_Ç∆horizonÇÃä‘Ç…ÉRÅ[ÉìÇçÏÇÈÅD*/
+	/**	È†ÇÁÇπ„Å®horizon„ÅÆÈñì„Å´„Ç≥„Éº„É≥„Çí‰Ωú„ÇãÔºé*/
 	void CreateCone(TVtx* firstVtx, TVtx* top);
-	/**	àÍî‘âìÇ≠ÇÃí∏ì_Çå©Ç¬ÇØÇÈÅDå©Ç¬ÇØÇΩÇÁÇªÇÍÇí∏ì_ÉäÉXÉgÇ©ÇÁÇÕÇ∏Ç∑	*/
+	/**	‰∏ÄÁï™ÈÅ†„Åè„ÅÆÈ†ÇÁÇπ„ÇíË¶ã„Å§„Åë„ÇãÔºéË¶ã„Å§„Åë„Åü„Çâ„Åù„Çå„ÇíÈ†ÇÁÇπ„É™„Çπ„Éà„Åã„Çâ„ÅØ„Åö„Åô	*/
 	bool FindFarthest(CDQHPlane* plane);
-	/*	äOë§ ì‡ë§ ÇÃèáÇ…ï¿Ç◊ÇÈÅD
-		äOë§ÇÃèIÇÌÇËÅÅì‡ë§ÇÃénÇ‹ÇËÇ™ inner	*/
+	/*	Â§ñÂÅ¥ ÂÜÖÂÅ¥ „ÅÆÈ†Ü„Å´‰∏¶„Åπ„ÇãÔºé
+		Â§ñÂÅ¥„ÅÆÁµÇ„Çè„ÇäÔºùÂÜÖÂÅ¥„ÅÆÂßã„Åæ„Çä„Åå inner	*/
 	TVtx** DivideByPlaneR(CDQHPlane* plane, TVtx** start, TVtx** end);
 	TVtx** DivideByPlane(CDQHPlane* plane, TVtx** start, TVtx** end);
-	/**	àÍÇ¬ÇÃñ Ç…ëŒÇ∑ÇÈèàóùÇçsÇ§ÅDàÍî‘âìÇ≠ÇÃí∏ì_Çå©Ç¬ÇØÅC
-		ínïΩê¸Çí≤Ç◊ÅCÉRÅ[ÉìÇçÏÇËÅCì‡ïîÇÃí∏ì_ÇÇÕÇ∏Ç∑ÅD*/
+	/**	‰∏Ä„Å§„ÅÆÈù¢„Å´ÂØæ„Åô„ÇãÂá¶ÁêÜ„ÇíË°å„ÅÜÔºé‰∏ÄÁï™ÈÅ†„Åè„ÅÆÈ†ÇÁÇπ„ÇíË¶ã„Å§„ÅëÔºå
+		Âú∞Âπ≥Á∑ö„ÇíË™ø„ÅπÔºå„Ç≥„Éº„É≥„Çí‰Ωú„ÇäÔºåÂÜÖÈÉ®„ÅÆÈ†ÇÁÇπ„Çí„ÅØ„Åö„ÅôÔºé*/
 	void TreatPlane(CDQHPlane* cur);
 };
 
-///	í∏ì_ÉNÉâÉXÇÃó·
+///	È†ÇÁÇπ„ÇØ„É©„Çπ„ÅÆ‰æã
 class CDQHVtx3DSample{
 public:
-	///@name QuickHullÇ™égópÇ∑ÇÈÉÅÉìÉoÅDïKê{ÅD
+	///@name QuickHull„Åå‰ΩøÁî®„Åô„Çã„É°„É≥„ÉêÔºéÂøÖÈ†àÔºé
 	//@{
-	/**	QuickHullÉAÉãÉSÉäÉYÉÄópÉèÅ[ÉNÉGÉäÉAÅD
-		àÍî‘âìÇ¢í∏ì_Ç©ÇÁå©Ç¶ÇÈñ ÇçÌèúÇµÇΩÇ†Ç∆écÇ¡ÇΩå`èÛÇÃÉGÉbÉWïîï™
-		ÇàÍé¸ê⁄ë±ÇµÇƒÇ®Ç≠ÇΩÇﬂÇÃÉ|ÉCÉìÉ^ÅD
-		í∏ì_Å®ñ ÇÃê⁄ë±ÅD	ñ Å®í∏ì_ÇÕí∏ì_ÇÃï¿Ç—èáÇ©ÇÁï™Ç©ÇÈÅD	*/
+	/**	QuickHull„Ç¢„É´„Ç¥„É™„Ç∫„É†Áî®„ÉØ„Éº„ÇØ„Ç®„É™„Ç¢Ôºé
+		‰∏ÄÁï™ÈÅ†„ÅÑÈ†ÇÁÇπ„Åã„ÇâË¶ã„Åà„ÇãÈù¢„ÇíÂâäÈô§„Åó„Åü„ÅÇ„Å®ÊÆã„Å£„ÅüÂΩ¢Áä∂„ÅÆ„Ç®„ÉÉ„Ç∏ÈÉ®ÂàÜ
+		„Çí‰∏ÄÂë®Êé•Á∂ö„Åó„Å¶„Åä„Åè„Åü„ÇÅ„ÅÆ„Éù„Ç§„É≥„ÇøÔºé
+		È†ÇÁÇπ‚ÜíÈù¢„ÅÆÊé•Á∂öÔºé	Èù¢‚ÜíÈ†ÇÁÇπ„ÅØÈ†ÇÁÇπ„ÅÆ‰∏¶„Å≥È†Ü„Åã„ÇâÂàÜ„Åã„ÇãÔºé	*/
 	CDQHPlane<CDQHVtx3DSample>* horizon;
-	///  í∏ì_ÇÃà íu
+	///  È†ÇÁÇπ„ÅÆ‰ΩçÁΩÆ
 	Vec3f GetPos() const;
 	//@}
-	///	à íuÇÃê›íË
+	///	‰ΩçÁΩÆ„ÅÆË®≠ÂÆö
 	void SetPos(Vec3f p);
 public:
-	Vec3f dir;		///<	å¥ì_Ç©ÇÁÇÃå¸Ç´
-	float dist;		///<	å¥ì_Ç©ÇÁÇÃãóó£
+	Vec3f dir;		///<	ÂéüÁÇπ„Åã„Çâ„ÅÆÂêë„Åç
+	float dist;		///<	ÂéüÁÇπ„Åã„Çâ„ÅÆË∑ùÈõ¢
 public:
 	int id_;
 
-	///	ÉfÉoÉbÉOópï\é¶
+	///	„Éá„Éê„ÉÉ„Ç∞Áî®Ë°®Á§∫
 	void Print(std::ostream& os) const;
 };
 

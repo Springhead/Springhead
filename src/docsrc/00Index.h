@@ -1,18 +1,18 @@
-/** 
-\mainpage Springhead2SDKŠJ”­Òƒ}ƒjƒ…ƒAƒ‹
- ‚±‚Ìƒ}ƒjƒ…ƒAƒ‹‚ÍCSpringhead2 SDK‚ğŠJ”­‚·‚é•û‚Ş‚¯‚Ìƒ}ƒjƒ…ƒAƒ‹‚Å‚·D
- ‚±‚ÌƒhƒLƒ…ƒƒ“ƒg‚ğ“Ç‚Ş‘O‚ÉCSpringhead2 SDK‚ğ—˜—p‚·‚é•û‚Ş‚¯‚Ìƒ}ƒjƒ…ƒAƒ‹ 
+ï»¿/** 
+\mainpage Springhead2SDKé–‹ç™ºè€…ãƒãƒ‹ãƒ¥ã‚¢ãƒ«
+ ã“ã®ãƒãƒ‹ãƒ¥ã‚¢ãƒ«ã¯ï¼ŒSpringhead2 SDKã‚’é–‹ç™ºã™ã‚‹æ–¹ã‚€ã‘ã®ãƒãƒ‹ãƒ¥ã‚¢ãƒ«ã§ã™ï¼
+ ã“ã®ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã‚’èª­ã‚€å‰ã«ï¼ŒSpringhead2 SDKã‚’åˆ©ç”¨ã™ã‚‹æ–¹ã‚€ã‘ã®ãƒãƒ‹ãƒ¥ã‚¢ãƒ« 
  <ul>
- <li> \ref pageUsersGuide g‚¢•û‚Ìà–¾
- <li> \ref pageTutorial g‚¢•û‚ğŠw‚Ô‚½‚ß‚Ì—ûKƒR[ƒX
- <li> \ref pageReferenceManual API‚ÌÚ×‚Èà–¾<br>
+ <li> \ref pageUsersGuide ä½¿ã„æ–¹ã®èª¬æ˜
+ <li> \ref pageTutorial ä½¿ã„æ–¹ã‚’å­¦ã¶ãŸã‚ã®ç·´ç¿’ã‚³ãƒ¼ã‚¹
+ <li> \ref pageReferenceManual APIã®è©³ç´°ãªèª¬æ˜<br>
  </ul>
- ‚ğæ‚É‚²——‚­‚¾‚³‚¢D
- Springhead2‚ğg—p‚µ‚Ä‚¢‚ÄCAPI‚É•s‘«‚ğŠ´‚¶‚½‚èCSDK‚ÌŠg’£‚Ì•K—v‚ª‚ ‚é‚Æ
- Š´‚¶‚½ê‡CSDK‚ğŠJ”­‚·‚éê‡‚É‚ÍC‚±‚¿‚ç‚ğ‚¨“Ç‚İ‚­‚¾‚³‚¢D
+ ã‚’å…ˆã«ã”è¦§ãã ã•ã„ï¼
+ Springhead2ã‚’ä½¿ç”¨ã—ã¦ã„ã¦ï¼ŒAPIã«ä¸è¶³ã‚’æ„Ÿã˜ãŸã‚Šï¼ŒSDKã®æ‹¡å¼µã®å¿…è¦ãŒã‚ã‚‹ã¨
+ æ„Ÿã˜ãŸå ´åˆï¼ŒSDKã‚’é–‹ç™ºã™ã‚‹å ´åˆã«ã¯ï¼Œã“ã¡ã‚‰ã‚’ãŠèª­ã¿ãã ã•ã„ï¼
 <br>
 
-Springhead2SDKŠJ”­Òƒ}ƒjƒ…ƒAƒ‹‚ÍC
+Springhead2SDKé–‹ç™ºè€…ãƒãƒ‹ãƒ¥ã‚¢ãƒ«ã¯ï¼Œ
  - \subpage pageAPIClassImp
  - \subpage pageFoundationImp
  - \subpage pagePhysicsImp
@@ -20,6 +20,6 @@ Springhead2SDKŠJ”­Òƒ}ƒjƒ…ƒAƒ‹‚ÍC
  - \subpage pageFileIOImp
  - \subpage pageSDKNote
 
-‚©‚ç\¬‚³‚ê‚Ü‚·D
+ã‹ã‚‰æ§‹æˆã•ã‚Œã¾ã™ï¼
 
 */

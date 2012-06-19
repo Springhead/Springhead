@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -132,7 +132,7 @@ bool HISdk::ReturnVirtualDevice(HIVirtualDeviceIf* dev){
 HIRealDeviceIf* HISdk::AddRealDevice(const IfInfo* keyInfo, const void* desc){
 	HIRealDeviceIf* dev = DCAST(HIRealDeviceIf, CreateObject(keyInfo, desc));
 	if (dev){
-		// ƒfƒoƒCƒX‚Ì‰Šú‰»‚Æ‰¼‘zƒfƒoƒCƒX‚Ì“o˜^
+		// ãƒ‡ãƒã‚¤ã‚¹ã®åˆæœŸåŒ–ã¨ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²
 		dev->Init();
 		return dev;
 	}

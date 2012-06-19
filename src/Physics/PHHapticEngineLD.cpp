@@ -1,4 +1,4 @@
-#include <Physics/PHHapticEngineLD.h>
+ï»¿#include <Physics/PHHapticEngineLD.h>
 
 namespace Spr{;
 //----------------------------------------------------------------------------
@@ -32,13 +32,13 @@ void PHHapticLoopLD::LocalDynamics(){
 		vel.v() = localSolid->GetVelocity();
 		vel.w() = localSolid->GetAngularVelocity();
 		if(loopCount == 1){
-			vel += (hsolid->curb - hsolid->lastb) *  pdt;	// Õ“Ë‚Ì‰e‹¿‚ğ”½‰f
+			vel += (hsolid->curb - hsolid->lastb) *  pdt;	// è¡çªã®å½±éŸ¿ã‚’åæ˜ 
 		}
 		for(int j = 0; j < NHapticPointers(); j++){
 			PHHapticPointer* pointer = GetHapticPointer(j);
 			PHSolidPairForHaptic* sp = GetSolidPairForHaptic(i, pointer->GetPointerID());
 			if(sp->inLocal == 0) continue;
-			vel += (sp->A * sp->force) * hdt;			// —ÍŠoƒ|ƒCƒ“ƒ^‚©‚ç‚Ì—Í‚É‚æ‚é‘¬“x•Ï‰»
+			vel += (sp->A * sp->force) * hdt;			// åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã‹ã‚‰ã®åŠ›ã«ã‚ˆã‚‹é€Ÿåº¦å¤‰åŒ–
 		}
 		vel += hsolid->b * hdt;
 		localSolid->SetVelocity(vel.v());		
@@ -69,9 +69,9 @@ void PHHapticEngineLD::Step1(){
 	}
 }
 void PHHapticEngineLD::Step2(){
-	// XVŒã‚Ì‘¬“xA‘O‰ñ‚Ì‘¬“x·‚©‚ç’è”€‚ğŒvZ
+	// æ›´æ–°å¾Œã®é€Ÿåº¦ã€å‰å›ã®é€Ÿåº¦å·®ã‹ã‚‰å®šæ•°é …ã‚’è¨ˆç®—
 	for(int i = 0; i < NHapticSolids(); i++){
-		// ‹ß–T‚Ì„‘Ì‚Ì‚İ
+		// è¿‘å‚ã®å‰›ä½“ã®ã¿
 		if(GetHapticSolid(i)->doSim == 0) continue;
 		PHSolid* solid = GetHapticSolid(i)->sceneSolid;
 		SpatialVector dvel;
@@ -84,39 +84,39 @@ void PHHapticEngineLD::Step2(){
 	PredictSimulation3D();
 }
 
-/// 1‘Î1‚Ìshape‚ÅA1“_‚ÌÚG‚Ì‚İ‘Î‰
+/// 1å¯¾1ã®shapeã§ã€1ç‚¹ã®æ¥è§¦ã®ã¿å¯¾å¿œ
 void PHHapticEngineLD::PredictSimulation3D(){
 	engine->bPhysicStep = false;
-	/** PHSolidForHaptic‚Ìdosim > 0‚Ì•¨‘Ì‚É‘Î‚µ‚ÄƒeƒXƒg—Í‚ğ‰Á‚¦C
-		‚·‚×‚Ä‚Ì‹ß–T•¨‘Ì‚É‚Â‚¢‚ÄCƒAƒNƒZƒŒƒ‰ƒ“ƒX‚ğŒvZ‚·‚é */
+	/** PHSolidForHapticã®dosim > 0ã®ç‰©ä½“ã«å¯¾ã—ã¦ãƒ†ã‚¹ãƒˆåŠ›ã‚’åŠ ãˆï¼Œ
+		ã™ã¹ã¦ã®è¿‘å‚ç‰©ä½“ã«ã¤ã„ã¦ï¼Œã‚¢ã‚¯ã‚»ãƒ¬ãƒ©ãƒ³ã‚¹ã‚’è¨ˆç®—ã™ã‚‹ */
 	PHSceneIf* phScene = engine->GetScene();
 
 	//#define DIVIDE_STEP
 	#ifdef DIVIDE_STEP
-	/// —\‘ªƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ì‚½‚ß‚ÉŒ»İ‚Ì„‘Ì‚Ìó‘Ô‚ğ•Û‘¶‚·‚é
+	/// äºˆæ¸¬ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®ãŸã‚ã«ç¾åœ¨ã®å‰›ä½“ã®çŠ¶æ…‹ã‚’ä¿å­˜ã™ã‚‹
 	states2->SaveState(phScene);		
-	///	LCP‚Ì’¼‘O‚Ü‚ÅƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚µ‚Ä‚»‚Ìó‘Ô‚ğ•Û‘¶
+	///	LCPã®ç›´å‰ã¾ã§ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã—ã¦ãã®çŠ¶æ…‹ã‚’ä¿å­˜
 	phScene->ClearForce();
 	phScene->GenerateForce();
 	phScene->IntegratePart1();
 	#endif
-	/// —\‘ªƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Ì‚½‚ß‚ÉŒ»İ‚Ì„‘Ì‚Ìó‘Ô‚ğ•Û‘¶‚·‚é
+	/// äºˆæ¸¬ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®ãŸã‚ã«ç¾åœ¨ã®å‰›ä½“ã®çŠ¶æ…‹ã‚’ä¿å­˜ã™ã‚‹
 	phScene->GetConstraintEngine()->SetBSaveConstraints(true);
 	states->Clear();
 	states->SaveState(phScene);	
 #if 1
-	/// ƒeƒXƒgƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“Às
+	/// ãƒ†ã‚¹ãƒˆã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³å®Ÿè¡Œ
 	for(int i = 0; i < NHapticSolids(); i++){
 		if(GetHapticSolid(i)->doSim == 0) continue;
 		PHSolidForHaptic* hsolid = GetHapticSolid(i);
 		PHSolid* phSolid = hsolid->sceneSolid;
-		/// Œ»İ‚Ì‘¬“x‚ğ•Û‘¶
+		/// ç¾åœ¨ã®é€Ÿåº¦ã‚’ä¿å­˜
 		SpatialVector curvel, nextvel; 
-		curvel.v() = phSolid->GetVelocity();			// Œ»İ‚Ì‘¬“x
-		curvel.w() = phSolid->GetAngularVelocity();		// Œ»İ‚ÌŠp‘¬“x		
+		curvel.v() = phSolid->GetVelocity();			// ç¾åœ¨ã®é€Ÿåº¦
+		curvel.w() = phSolid->GetAngularVelocity();		// ç¾åœ¨ã®è§’é€Ÿåº¦		
 
-		//DSTR<<" —Í‚ğ‰Á‚¦‚È‚¢‚Å1ƒXƒeƒbƒvi‚ß‚é--------------------"<<std::endl;
-		/// ‰½‚à—Í‚ğ‰Á‚¦‚È‚¢‚ÅƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ğ1ƒXƒeƒbƒvi‚ß‚é
+		//DSTR<<" åŠ›ã‚’åŠ ãˆãªã„ã§1ã‚¹ãƒ†ãƒƒãƒ—é€²ã‚ã‚‹--------------------"<<std::endl;
+		/// ä½•ã‚‚åŠ›ã‚’åŠ ãˆãªã„ã§ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’1ã‚¹ãƒ†ãƒƒãƒ—é€²ã‚ã‚‹
 		#ifdef DIVIDE_STEP
 		phScene->IntegratePart2();
 		#else
@@ -124,31 +124,31 @@ void PHHapticEngineLD::PredictSimulation3D(){
 		#endif 
 		nextvel.v() = phSolid->GetVelocity();
 		nextvel.w() = phSolid->GetAngularVelocity();
-		/// ƒAƒNƒZƒŒƒ‰ƒ“ƒXb‚ÌZo
+		/// ã‚¢ã‚¯ã‚»ãƒ¬ãƒ©ãƒ³ã‚¹bã®ç®—å‡º
 
 		hsolid->lastb = hsolid->b;
 		double pdt = phScene->GetTimeStep();
 		hsolid->b = (nextvel - curvel)/pdt;
 
-		states->LoadState(phScene);						// Œ»İ‚Ìó‘Ô‚É–ß‚·
+		states->LoadState(phScene);						// ç¾åœ¨ã®çŠ¶æ…‹ã«æˆ»ã™
 
-		/// HapticPointer‚Ì”‚¾‚¯—Í‚ğ‰Á‚¦‚é—\‘ªƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“
+		/// HapticPointerã®æ•°ã ã‘åŠ›ã‚’åŠ ãˆã‚‹äºˆæ¸¬ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³
 		for(int j = 0; j < NHapticPointers(); j++){
 			PHHapticPointer* pointer = GetHapticPointer(j);
 			PHSolidPairForHaptic* solidPair = GetSolidPairForHaptic(i, pointer->GetPointerID());
 			if(solidPair->inLocal == 0) continue;
-			PHShapePairForHaptic* sp = solidPair->shapePairs.item(0, 0);	// 1Œ`ó‚Ì‚İ‘Î‰
-			Vec3d cPoint = sp->shapePoseW[0] * sp->closestPoint[0];		// —Í‚ğ‰Á‚¦‚é“_(ƒ[ƒ‹ƒhÀ•W)
+			PHShapePairForHaptic* sp = solidPair->shapePairs.item(0, 0);	// 1å½¢çŠ¶ã®ã¿å¯¾å¿œ
+			Vec3d cPoint = sp->shapePoseW[0] * sp->closestPoint[0];		// åŠ›ã‚’åŠ ãˆã‚‹ç‚¹(ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™)
 			Vec3d normal = -1 * sp->normal;
 
-			TMatrixRow<6, 3, double> u;			// „‘Ì‚Ì‹@ŠBƒCƒ“ƒs[ƒ_ƒ“ƒX?
-			TMatrixRow<3, 3, double> force;		// ‰Á‚¦‚é—Í
+			TMatrixRow<6, 3, double> u;			// å‰›ä½“ã®æ©Ÿæ¢°ã‚¤ãƒ³ãƒ”ãƒ¼ãƒ€ãƒ³ã‚¹?
+			TMatrixRow<3, 3, double> force;		// åŠ ãˆã‚‹åŠ›
 			u.clear(0.0);
 			force.clear(0.0);
 
-			float minTestForce = 0.5;		// Å¬ƒeƒXƒg—Í
+			float minTestForce = 0.5;		// æœ€å°ãƒ†ã‚¹ãƒˆåŠ›
 
-			// 3•ûŒü‚ÌƒeƒXƒg—Í‚ğ‚Â‚­‚é
+			// 3æ–¹å‘ã®ãƒ†ã‚¹ãƒˆåŠ›ã‚’ã¤ãã‚‹
 			Vec3d testForce;
 			if(solidPair->force.norm() == 0){
 				testForce = minTestForce * normal;
@@ -156,7 +156,7 @@ void PHHapticEngineLD::PredictSimulation3D(){
 				testForce = solidPair->force;
 				solidPair->force = Vec3d();
 			}
-			// ƒeƒXƒg—Í‚É‘Î‚µ‚Ä‚’¼•ûŒü‚ÌƒxƒNƒgƒ‹2–{‚ğŒvZ
+			// ãƒ†ã‚¹ãƒˆåŠ›ã«å¯¾ã—ã¦å‚ç›´æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«2æœ¬ã‚’è¨ˆç®—
 			Vec3d base1 = testForce.unit();
 			Vec3d base2 = Vec3d(1, 0, 0) - (Vec3d(1, 0, 0) * base1) * base1;
 			if (base2.norm() > 0.1){
@@ -167,16 +167,16 @@ void PHHapticEngineLD::PredictSimulation3D(){
 			}
 			Vec3d base3 = base1 ^ base2;
 #if 1
-			// ‚’¼‚ÈƒxƒNƒgƒ‹‚ğ‚à‚Æ‚ßƒuƒŒƒ“ƒh
+			// å‚ç›´ãªãƒ™ã‚¯ãƒˆãƒ«ã‚’ã‚‚ã¨ã‚ãƒ–ãƒ¬ãƒ³ãƒ‰
 			force.col(0) = testForce;
 			force.col(1) = force.col(0).norm() * (base1 + base2).unit();
 			force.col(2) = force.col(0).norm() * (base1 + base3).unit();
 #else
-			// testForce‚ğŠÜ‚Ş3•ûŒü‚ÌƒxƒNƒgƒ‹(ƒeƒ“ƒgŒ^‚Éj
-			// ˆÀ’è‚µ‚Ä‚¢‚È‚¢
-			Vec3d base12 = (base1 + base2).unit();	// base1, base2ŠÔ‚ÌƒxƒNƒgƒ‹
-			Vec3d base23 = (-base2 - base3).unit();	// -base2, -base3ŠÔ‚ÌƒxƒNƒgƒ‹
-			Vec3d base32 = (base3 - base2).unit();	// base3, -base2ŠÔ‚ÌƒxƒNƒgƒ‹
+			// testForceã‚’å«ã‚€3æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«(ãƒ†ãƒ³ãƒˆå‹ã«ï¼‰
+			// å®‰å®šã—ã¦ã„ãªã„
+			Vec3d base12 = (base1 + base2).unit();	// base1, base2é–“ã®ãƒ™ã‚¯ãƒˆãƒ«
+			Vec3d base23 = (-base2 - base3).unit();	// -base2, -base3é–“ã®ãƒ™ã‚¯ãƒˆãƒ«
+			Vec3d base32 = (base3 - base2).unit();	// base3, -base2é–“ã®ãƒ™ã‚¯ãƒˆãƒ«
 			double a = testForce.norm() / ( base12 * testForce.unit());
 			//DSTR << (a * base12) * testForce.unit() << "," << testForce.norm() <<  std::endl;
 			force.col(0) = a * base12;
@@ -188,7 +188,7 @@ void PHHapticEngineLD::PredictSimulation3D(){
 
 #endif
 
-			/// ƒeƒXƒg—Í‚ğ3•ûŒü‚É‰Á‚¦‚é	
+			/// ãƒ†ã‚¹ãƒˆåŠ›ã‚’3æ–¹å‘ã«åŠ ãˆã‚‹	
 			for(int m = 0; m < 3; m++){
 				phSolid->AddForce(force.col(m), cPoint);
 				#ifdef DIVIDE_STEP
@@ -219,9 +219,9 @@ void PHHapticEngineLD::PredictSimulation3D(){
 		}
 	}
 #endif
-	///--------ƒeƒXƒgƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“I—¹--------
+	///--------ãƒ†ã‚¹ãƒˆã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³çµ‚äº†--------
 #ifdef DIVIDE_STEP
-	states2->LoadState(phScene);							// Œ³‚Ìstate‚É–ß‚µƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ği‚ß‚é
+	states2->LoadState(phScene);							// å…ƒã®stateã«æˆ»ã—ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã‚’é€²ã‚ã‚‹
 #endif
 	engine->bPhysicStep = true;
 }
@@ -229,37 +229,37 @@ void PHHapticEngineLD::PredictSimulation3D(){
 void PHHapticEngineLD::SyncHaptic2Physic(){
 #if 1
 	// physics <------ haptic
-	// PHSolidForHaptic‚Ì“¯Šú
-	// PHSolidPairForHaptic(—ÍŠoƒ|ƒCƒ“ƒ^‚Æ‹ß–T‚Ì•¨‘Ì)‚ÌŠeíî•ñ‚Ì“¯Šú
+	// PHSolidForHapticã®åŒæœŸ
+	// PHSolidPairForHaptic(åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã¨è¿‘å‚ã®ç‰©ä½“)ã®å„ç¨®æƒ…å ±ã®åŒæœŸ
 	for(int i = 0; i < hapticLoop->NHapticPointers(); i++){
 		PHHapticPointer* hpointer = hapticLoop->GetHapticPointer(i);
 		int hpointerID = hpointer->GetPointerID();
 		int nNeighbors = hpointer->neighborSolidIDs.size();
-		// ‹ß–T•¨‘Ì‚Å‚ ‚éƒyƒA‚¾‚¯“¯Šú
+		// è¿‘å‚ç‰©ä½“ã§ã‚ã‚‹ãƒšã‚¢ã ã‘åŒæœŸ
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = hpointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(solidID, hpointerID);
 			PHSolidPairForHaptic* ppair = GetSolidPairForHaptic(solidID, hpointerID);
 			PHSolidPairForHapticSt* hst = (PHSolidPairForHapticSt*)hpair;
 			PHSolidPairForHapticSt* pst = (PHSolidPairForHapticSt*)ppair;
-			*pst = *hst;	// haptic‘¤‚Å•Û‚µ‚Ä‚¨‚­‚×‚«î•ñ‚ğ“¯Šú
+			*pst = *hst;	// hapticå´ã§ä¿æŒã—ã¦ãŠãã¹ãæƒ…å ±ã‚’åŒæœŸ
 		}
 	}
-	// LocalDynamicsSimulation‚ÌŒ‹‰Ê‚ğƒV[ƒ“‚É”½‰f
+	// LocalDynamicsSimulationã®çµæœã‚’ã‚·ãƒ¼ãƒ³ã«åæ˜ 
 	for(int i = 0; i < (int)hapticLoop->NHapticSolids(); i++){
 		PHSolidForHaptic* hsolid = hapticLoop->GetHapticSolid(i);
-		if(hsolid->bPointer) continue;		// ƒ|ƒCƒ“ƒ^‚Ìê‡
-		if(hsolid->doSim <= 1) continue;	// ‹ÇŠƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‘ÎÛ‚Å‚È‚¢ê‡
+		if(hsolid->bPointer) continue;		// ãƒã‚¤ãƒ³ã‚¿ã®å ´åˆ
+		if(hsolid->doSim <= 1) continue;	// å±€æ‰€ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³å¯¾è±¡ã§ãªã„å ´åˆ
 
-		//ƒAƒNƒZƒŒƒ‰ƒ“ƒX’è”€‚Å”½‰f‘¬“x‚ğì‚é
+		//ã‚¢ã‚¯ã‚»ãƒ¬ãƒ©ãƒ³ã‚¹å®šæ•°é …ã§åæ˜ é€Ÿåº¦ã‚’ä½œã‚‹
 		double pdt = GetPhysicsTimeStep();
 		PHSolid* localSolid = hsolid->GetLocalSolid();
 		PHSolidForHaptic* psolid = GetHapticSolid(i);
-		SpatialVector b = (psolid->b + (psolid->curb - psolid->lastb)) * pdt;	// ƒ‚ƒrƒŠƒeƒB’è”€
-		Vec3d v = localSolid->GetVelocity() + b.v();			// ”½‰f‘¬“x
-		Vec3d w = localSolid->GetAngularVelocity() + b.w();		// ”½‰fŠp‘¬“x
+		SpatialVector b = (psolid->b + (psolid->curb - psolid->lastb)) * pdt;	// ãƒ¢ãƒ“ãƒªãƒ†ã‚£å®šæ•°é …
+		Vec3d v = localSolid->GetVelocity() + b.v();			// åæ˜ é€Ÿåº¦
+		Vec3d w = localSolid->GetAngularVelocity() + b.w();		// åæ˜ è§’é€Ÿåº¦
 
-		// ó‘Ô‚Ì”½‰f
+		// çŠ¶æ…‹ã®åæ˜ 
 		PHSolid* sceneSolid = hsolid->sceneSolid;
 		Vec3d svel = sceneSolid->GetVelocity();
 		Vec3d spos = sceneSolid->GetFramePosition();
@@ -276,7 +276,7 @@ void PHHapticEngineLD::SyncHaptic2Physic(){
 
 void PHHapticEngineLD::SyncPhysic2Haptic(){
 	// haptic <------ physics
-	// PHSolidForHaptic‚Ì“¯Šú
+	// PHSolidForHapticã®åŒæœŸ
 	for(int i = 0; i < NHapticSolids(); i++){
 		PHSolidForHaptic* psolid = GetHapticSolid(i);
 		if(psolid->bPointer) continue;
@@ -286,8 +286,8 @@ void PHHapticEngineLD::SyncPhysic2Haptic(){
 		*hst2 = *pst2;
 		if(psolid->doSim == 1) hsolid->localSolid = psolid->localSolid;		
 	}
-	// solidpair, shapepair‚Ì“¯Šú
-	// ‹ß–T•¨‘Ì‚Ì‚İ“¯Šú‚³‚¹‚é
+	// solidpair, shapepairã®åŒæœŸ
+	// è¿‘å‚ç‰©ä½“ã®ã¿åŒæœŸã•ã›ã‚‹
 	for(int i = 0; i < NHapticPointers(); i++){
 		PHHapticPointer* ppointer = GetHapticPointer(i);
 		const int ppointerID = ppointer->GetPointerID();

@@ -1,4 +1,4 @@
-#include <HumanInterface/HIXbox360Controller.h>
+Ôªø#include <HumanInterface/HIXbox360Controller.h>
 
 namespace Spr{;
 
@@ -33,7 +33,7 @@ void HIXbox360Controller::Update(float dt){
 	UpdateState();
 	XINPUT_GAMEPAD g = state.Gamepad;
 
-	// äeéÌÉLÅ[
+	// ÂêÑÁ®Æ„Ç≠„Éº
 	for(int i = 0; i < 14; i++){
 		key[i] = false;
 	}
@@ -52,13 +52,13 @@ void HIXbox360Controller::Update(float dt){
 	if(g.wButtons & XINPUT_GAMEPAD_X)				key[12] = true;
 	if(g.wButtons & XINPUT_GAMEPAD_Y)				key[13] = true;
 
-	// ÉAÉiÉçÉOÉXÉeÉBÉbÉNÅAÉ{É^Éì
+	// „Ç¢„Éä„É≠„Ç∞„Çπ„ÉÜ„Ç£„ÉÉ„ÇØ„ÄÅ„Éú„Çø„É≥
 	thumbL = Vec2i((int)g.sThumbLX, (int)g.sThumbLY);
 	thumbR = Vec2i((int)g.sThumbRX, (int)g.sThumbRY);
 	leftTrigger = (int)g.bLeftTrigger;
 	rightTrigger = (int)g.bRightTrigger;
 
-	// ê≥ãKâª
+	// Ê≠£Ë¶èÂåñ
 	n_thumbL = (Vec2f)thumbL / DIS_SHORT;
 	n_thumbR = (Vec2f)thumbR / DIS_SHORT;
 	n_rightTrigger = (float)rightTrigger / DIS_UCHAR;

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -6,7 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 /** @file SprScene.h
-	–¼‘O‚ğ‚ÂƒIƒuƒWƒFƒNƒg
+	åå‰ã‚’æŒã¤ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
  */
 #ifndef SPR_SCENE_H
 #define SPR_SCENE_H

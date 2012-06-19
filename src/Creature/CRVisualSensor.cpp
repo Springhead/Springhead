@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,7 +12,7 @@ void CRVisualSensor::Init(){
 	/*
 	CRSensor::Init();
 
-	/// ˆË‘¶‚·‚é‘¼ƒIƒuƒWƒFƒNƒg‚Ìæ“¾
+	/// ä¾å­˜ã™ã‚‹ä»–ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®å–å¾—
 	for (int i=0; i<creature->NBodies(); ++i) {
 		CRHingeHumanBodyGenIf* body = DCAST(CRHingeHumanBodyGenIf, creature->GetBody(i));
 		if (body) {
@@ -23,7 +23,7 @@ void CRVisualSensor::Init(){
 
 	internalScene = creature->GetInternalScene();
 
-	/// InternalScene‚Ì‘g‚İ—§‚Ä
+	/// InternalSceneã®çµ„ã¿ç«‹ã¦
 	for (int i=0; i<phScene->NSolids(); i++) {
 		CRISAttractiveObjectDesc desc;
 		{
@@ -34,7 +34,7 @@ void CRVisualSensor::Init(){
 		internalScene->CreateInternalSceneObject(desc);
 	}
 
-	/// ©ŒÈ‚É‘®‚·‚é„‘Ì‚ğ‚ ‚ç‚©‚¶‚ßæ“¾
+	/// è‡ªå·±ã«å±ã™ã‚‹å‰›ä½“ã‚’ã‚ã‚‰ã‹ã˜ã‚å–å¾—
 	for (int i=0; i<creature->NBodies(); ++i) {
 		CRHingeHumanBodyGenIf* body = DCAST(CRHingeHumanBodyGenIf, creature->GetBody(i));
 		if (body) {
@@ -78,7 +78,7 @@ void CRVisualSensor::Step(){
 		if (IsVisible(solid) && !IsSelfSolid(solid)) {
 			CRISAttractiveObjectIf* ao = DCAST(CRISAttractiveObjectIf, internalScene->FindObject(solid, Vec3f(0,0,0)));
 			if (ao) {
-				// Where-HowƒXƒgƒŠ[ƒ€
+				// Where-Howã‚¹ãƒˆãƒªãƒ¼ãƒ 
 				Vec3f position    = solid->GetPose().Pos();
 				Vec3f velocity    = solid->GetVelocity();
 				Vec3f angVelocity = solid->GetAngularVelocity();
@@ -94,7 +94,7 @@ void CRVisualSensor::Step(){
 
 				ao->AddBottomupAttr((trnAmmount + divAmmount + rotAmmount) * 5);
 
-				// WhatƒXƒgƒŠ[ƒ€
+				// Whatã‚¹ãƒˆãƒªãƒ¼ãƒ 
 				//if (IsInCenter(solid)) {
 				//	ao->DecUncertainty();
 				//	if (ao->GetISObjType()) {

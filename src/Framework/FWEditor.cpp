@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -95,7 +95,7 @@ void FWEditor::SetObject(NamedObjectIf* obj, bool clearHist){
 	curElement	= -1;
 
 	if(curObj){
-		// child object‚ÌŽæ“¾
+		// child objectã®å–å¾—
 		childObjects.clear();
 		size_t nChildren = curObj->NChildObject();
 		for(size_t i = 0; i < nChildren; i++){
@@ -104,7 +104,7 @@ void FWEditor::SetObject(NamedObjectIf* obj, bool clearHist){
 				childObjects.push_back(named);
 		}
 
-		// typedesc‚ÌŽæ“¾
+		// typedescã®å–å¾—
 		const IfInfo*	ii = curObj->GetIfInfo();
 		typeDesc = ii->desc;
 		fieldInfos.clear();
@@ -196,7 +196,7 @@ void FWEditor::Decrement(bool mode){
 }
 
 void FWEditor::Update(){
-	// descriptor‚ÌŽæ“¾
+	// descriptorã®å–å¾—
 	size_t sz = curObj->GetDescSize();
 	if(sz > descData.size())
 		descData.resize(sz);
@@ -231,19 +231,19 @@ enum{
 };
 
 bool FWEditorOverlay::Key(int key){
-	// glut‚Ì“ÁŽêƒL[ƒR[ƒh‚Í0x100‘«‚³‚ê‚Ä“n‚³‚ê‚éFWApp‚ÌŽd—l
+	// glutã®ç‰¹æ®Šã‚­ãƒ¼ã‚³ãƒ¼ãƒ‰ã¯0x100è¶³ã•ã‚Œã¦æ¸¡ã•ã‚Œã‚‹FWAppã®ä»•æ§˜
 	int spKey = key - 0x100;
 
 	if(key == VK_ENTER){
 		if(curField == -1){
-			// ‘I‘ð‚³‚ê‚½child object‚ÖˆÚ“®
+			// é¸æŠžã•ã‚ŒãŸchild objectã¸ç§»å‹•
 			hist.push_back(curObj);
 			SetObject(childObjects[curChild], false);
 		}
 		return true;
 	}
 	if(key == VK_BACKSPACE){
-		// —š—ð‚ð1‚Â‘O‚Ö–ß‚é
+		// å±¥æ­´ã‚’1ã¤å‰ã¸æˆ»ã‚‹
 		if(!hist.empty()){
 			SetObject(hist.back(), false);
 			hist.pop_back();
@@ -304,7 +304,7 @@ bool FWEditorOverlay::Key(int key){
 void FWEditorOverlay::Draw(GRRenderIf* render){
 	render->EnterScreenCoordinate();
 
-	// ƒIƒuƒWƒFƒNƒg‚ÌŒ^‚Æ–¼‘O
+	// ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®åž‹ã¨åå‰
 	drawPos.x = margin.x;
 	drawPos.y = margin.y;
 	render->DrawFont(drawPos, typeDesc->GetTypeName());

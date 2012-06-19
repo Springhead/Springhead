@@ -1,11 +1,11 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-// DRUsb20Simple.h: DRUsb20Simple ƒNƒ‰ƒX‚ÌƒCƒ“ƒ^[ƒtƒFƒCƒX
+// DRUsb20Simple.h: DRUsb20Simple ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -19,14 +19,14 @@
 namespace Spr {
 
 /**
-	Cyverse‚ÌUSB2.0(LDR-SPIDAR-AMP)‚Ìƒhƒ‰ƒCƒo
+	Cyverseã®USB2.0(LDR-SPIDAR-AMP)ã®ãƒ‰ãƒ©ã‚¤ãƒ
  **/
 class SPR_DLL DRUsb20Simple : public HIRealDevice{
 public:
 	SPR_OBJECTDEF(DRUsb20Simple);
 	SPR_DECLMEMBEROF_DRUsb20SimpleDesc;
 
-	///	‰¼‘zƒfƒoƒCƒX(DA)
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹(DA)
 	class Da: public DVDa{
 	public:
 		Da(DRUsb20Simple* r, int c):DVDa(r, c){}
@@ -36,7 +36,7 @@ public:
 		virtual void Digit(int v){ GetRealDevice()->WriteDigit(portNo, v); }
 		virtual void Update(){ GetRealDevice()->Update(); }
 	};
-	///	‰¼‘zƒfƒoƒCƒX(Counter)
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹(Counter)
 	class Counter: public DVCounter{
 	public:
 		Counter(DRUsb20Simple* r, int c):DVCounter(r, c){}
@@ -46,7 +46,7 @@ public:
 		virtual long Count(){ return GetRealDevice()->ReadCount(portNo); }
 		virtual void Update(){ GetRealDevice()->Update(); }
 	};
-	///	‰¼‘zƒfƒoƒCƒX(Pio)
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹(Pio)
 	class Pio: public DVPio{
 	public:
 		Pio(DRUsb20Simple* r, int c):DVPio(r, c){}
@@ -61,7 +61,7 @@ public:
 protected:
 	void*	hSpidar;
 
-	int		sign[8]; //DAo—Í—p‚Ì•„†
+	int		sign[8]; //DAå‡ºåŠ›ç”¨ã®ç¬¦å·
 	long	count[8];
 	long	countOffset[8];
 	int		daOut[8];
@@ -70,45 +70,45 @@ protected:
 
 
 public:
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^	ch‚Í”w–Ê‚ÌƒXƒCƒbƒ`‚É‚È‚é—\’è
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿	chã¯èƒŒé¢ã®ã‚¹ã‚¤ãƒƒãƒã«ãªã‚‹äºˆå®š
 	DRUsb20Simple(const DRUsb20SimpleDesc& d=DRUsb20SimpleDesc());
 	virtual ~DRUsb20Simple();
 
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	virtual bool Init();
-	///	‰Šú‰»(ƒ`ƒƒƒ“ƒlƒ‹, PIDVID‚ğ‹C‚É‚¹‚¸‚É‰Šú‰»)
+	///	åˆæœŸåŒ–(ãƒãƒ£ãƒ³ãƒãƒ«, PIDVIDã‚’æ°—ã«ã›ãšã«åˆæœŸåŒ–)
 	//virtual bool InitAny();
-	///	‰¼‘zƒfƒoƒCƒX‚Ì“o˜^
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²
 	//void Register(HISdkIf* intf);
 	
-	///	“dˆ³o—Í
+	///	é›»åœ§å‡ºåŠ›
 	void WriteVoltage(int ch, float v);
-	///	“dˆ³o—Í(”’lw’è)
+	///	é›»åœ§å‡ºåŠ›(æ•°å€¤æŒ‡å®š)
 	void WriteDigit(int ch, int v);
-	///	ƒJƒEƒ“ƒ^’l‚Ìİ’è
+	///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®è¨­å®š
 	void WriteCount(int ch, long c);
-	///	ƒJƒEƒ“ƒ^’l‚Ì“Ç‚İo‚µ
+	///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®èª­ã¿å‡ºã—
 	long ReadCount(int ch);
-	///	ó‘Ô‚ÌXV
+	///	çŠ¶æ…‹ã®æ›´æ–°
 	virtual void Update();
 	
-	///	PIOƒ|[ƒg‚Ìİ’è
+	///	PIOãƒãƒ¼ãƒˆã®è¨­å®š
 	void WritePio(int ch, bool level);
-	///	PIOƒ|[ƒg‚Ì“Ç‚İo‚µ
+	///	PIOãƒãƒ¼ãƒˆã®èª­ã¿å‡ºã—
 	bool ReadPio(int ch);
-	///	ƒXƒCƒbƒ`iƒ|[ƒg‚ÌãˆÊ5-8ƒrƒbƒgj‚Ì“Ç‚İo‚µ
+	///	ã‚¹ã‚¤ãƒƒãƒï¼ˆãƒãƒ¼ãƒˆã®ä¸Šä½5-8ãƒ“ãƒƒãƒˆï¼‰ã®èª­ã¿å‡ºã—
 	int ReadRotarySwitch();
 
-	/// ƒŠƒZƒbƒg
+	/// ãƒªã‚»ãƒƒãƒˆ
 	virtual void Reset();
 
-	///	USB‚Ìƒtƒ@ƒCƒ‹ƒnƒ“ƒhƒ‹
+	///	USBã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒ³ãƒ‰ãƒ«
 	void* GetHandle(){ return hSpidar; };
 protected:
-	//	ƒfƒoƒCƒX‚ğŒ©‚Â‚¯Aƒ`ƒƒƒ“ƒlƒ‹‚ğ•Ô‚·Bƒ`ƒƒƒ“ƒlƒ‹‚ªw’è‚³‚ê‚½ê‡Aw’è‚µ‚½ƒ`ƒƒƒ“ƒlƒ‹‚ÌƒfƒoƒCƒX‚µ‚©•Ô‚³‚È‚¢B
-	//	¸”s‚·‚é‚Æ-1‚ğ•Ô‚·B
+	//	ãƒ‡ãƒã‚¤ã‚¹ã‚’è¦‹ã¤ã‘ã€ãƒãƒ£ãƒ³ãƒãƒ«ã‚’è¿”ã™ã€‚ãƒãƒ£ãƒ³ãƒãƒ«ãŒæŒ‡å®šã•ã‚ŒãŸå ´åˆã€æŒ‡å®šã—ãŸãƒãƒ£ãƒ³ãƒãƒ«ã®ãƒ‡ãƒã‚¤ã‚¹ã—ã‹è¿”ã•ãªã„ã€‚
+	//	å¤±æ•—ã™ã‚‹ã¨-1ã‚’è¿”ã™ã€‚
 	int FindDevice(int ch=-1);
-	//	–¼‘O‚Ìƒx[ƒX•”•ª
+	//	åå‰ã®ãƒ™ãƒ¼ã‚¹éƒ¨åˆ†
 	virtual const char* BaseName() const {return "Cyverse USB2.0 Simple";}
 
 	virtual unsigned	GetVidPid(){ return 0x0CEC0203; }

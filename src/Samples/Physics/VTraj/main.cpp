@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,20 +8,20 @@
 /** \page pageVTrajSample
  Springhead2/src/Samples/VTraj/main.cpp
 
-\ref �_�炩���O���Ǐ]����̃f���v���O�����D
+\ref 柔らかい軌道追従制御のデモプログラム．
 
-\secntion secSpecVTrajSample �d�l
-�A�[���̐�[���̂��C�|�C���^�i���́j�ƃ����N�̍����̊Ԃ���������D
-- �X�y�[�X�L�[�ŃV�~�����[�V�����J�n�D
-- 'v'�ŏ_�炩���Ǐ]����D��Q���Ŏ~�߂�����x�̗͂����C�A�[����[������̍����ŉ^���ł���D
-- 'b'�Ōł�PD����D�A�[����[�͏���̍����ŉ^���ł��邪�C��Q���������͂ŉ����̂��Ă��܂��D
-- 'c'�ŏ_�炩��PD����D��Q���������̂���悤�ȋ����͂͂Ȃ����C�A�[����[�������グ��͂��Ȃ��D
-�i�N�����́g�_�炩��PD����h�ɂȂ��Ă���D�j
+\secntion secSpecVTrajSample 仕様
+アームの先端剛体が，ポインタ（球体）とリンクの根元の間を往復する．
+- スペースキーでシミュレーション開始．
+- 'v'で柔らかい追従制御．障害物で止められる程度の力だが，アーム先端が所定の高さで運動できる．
+- 'b'で固いPD制御．アーム先端は所定の高さで運動できるが，障害物を強い力で押しのけてしまう．
+- 'c'で柔らかいPD制御．障害物を押しのけるような強い力はないが，アーム先端を持ち上げる力もない．
+（起動時は“柔らかいPD制御”になっている．）
 
-- 'i'���^�C�v����ƃ|�C���^�ʒu����ɓ����D
-- 'k'�ŁA����
-- 'j'�ŁA����
-- 'l'�ŁA�E��
+- 'i'をタイプするとポインタ位置が上に動く．
+- 'k'で、下へ
+- 'j'で、左へ
+- 'l'で、右へ
 */
 
 #include <vector>
@@ -33,14 +33,14 @@ using namespace Spr;
 using namespace std;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// �A�v���P�[�V�����N���X
+// アプリケーションクラス
 class VTrajSampleApp : public SampleApp{
 public:
-	/// �y�[�WID
+	/// ページID
 	enum {
 		MENU_MAIN = MENU_SCENE,
 	};
-	/// �A�N�V����ID
+	/// アクションID
 	enum {
 		ID_RESET,
 		ID_UP,
@@ -89,7 +89,7 @@ public:
 	}
 	~VTrajSampleApp(){}
 
-	// ������
+	// 初期化
 	virtual void Init(int argc, char* argv[]) {
 		this->argc = argc;
 		this->argv = argv;
@@ -108,7 +108,7 @@ public:
 	PHIKEndEffectorIf* ikeTarget;
 	PHJointIf*         joX;
 
-	// �V�[���\�z
+	// シーン構築
 	virtual void BuildScene() {
 		PHSdkIf* phSdk = phScene->GetSdk();
 
@@ -346,10 +346,10 @@ public:
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /**
- brief		���C���֐�
- param		<in/--> argc�@�@�R�}���h���C�����͂̌�
- param		<in/--> argv�@�@�R�}���h���C������
- return		0 (����I��)
+ brief		メイン関数
+ param		<in/--> argc　　コマンドライン入力の個数
+ param		<in/--> argv　　コマンドライン入力
+ return		0 (正常終了)
  */
 int main(int argc, char *argv[]) {
 	app.Init(argc, argv);

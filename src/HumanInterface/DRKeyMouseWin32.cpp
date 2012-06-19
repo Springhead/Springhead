@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -52,7 +52,7 @@ const int keyMapping[][2] = {
 int	DRKeyMouseWin32::ConvertKeyCode(int key, bool spr_to_win32){
 	int n = sizeof(keyMapping)/sizeof(keyMapping[0]);
 	if(spr_to_win32){
-		// ƒAƒ‹ƒtƒ@ƒxƒbƒg¬•¶š‚Í‘å•¶š‚Ö
+		// ã‚¢ãƒ«ãƒ•ã‚¡ãƒ™ãƒƒãƒˆå°æ–‡å­—ã¯å¤§æ–‡å­—ã¸
 		if('a' <= key && key <= 'z'){
 			key += 'A' - 'a';
 			return key;
@@ -66,7 +66,7 @@ int	DRKeyMouseWin32::ConvertKeyCode(int key, bool spr_to_win32){
 			if(keyMapping[i][1] == key)
 				return keyMapping[i][0];
 	}
-	// ƒfƒtƒHƒ‹ƒg‚Å‚Í•ÏŠ·‚¹‚¸‚É‚»‚Ì‚Ü‚Ü•Ô‚·
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã¯å¤‰æ›ã›ãšã«ãã®ã¾ã¾è¿”ã™
 	return key;
 }	
 
@@ -81,7 +81,7 @@ bool DRKeyMouseWin32::Init(){
 HIVirtualDeviceIf* DRKeyMouseWin32::Rent(const IfInfo* ii, const char* n, int portNo){
 	HIVirtualDeviceIf* dv = HIRealDevice::Rent(ii, n, portNo);
 
-	// Šù‘¶‚Ì‰¼‘zƒfƒoƒCƒX‚ª‚È‚¯‚ê‚Îì¬
+	// æ—¢å­˜ã®ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ãŒãªã‘ã‚Œã°ä½œæˆ
 	if(!dv){
 		DVKeyMouse* km = (DBG_NEW DV(this, portNo))->Cast();
 		AddChildObject(km->Cast());
@@ -102,7 +102,7 @@ int ConvertKeyState(unsigned fwKeys){
 	return button;
 }
 
-//	ƒL[‚Ìæ“¾
+//	ã‚­ãƒ¼ã®å–å¾—
 int DRKeyMouseWin32::GetKeyState(int key){
 	int rv = 0;
 	short got = ::GetKeyState(ConvertKeyCode(key, true));

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -73,8 +73,8 @@ PHFemMesh::FemVertex::FemVertex(){
 }
 
 void PHFemMesh::Step(double dt){
-	//”M“`“±ŒvZ‚ÌÀ‘•‚ğs‚¤H
-	//‚±‚±‚©‚çAPHFemMeshThermo‚ÌStep‚ğŒÄ‚ñ‚ÅAÀs‚³‚¹‚éB
+	//ç†±ä¼å°è¨ˆç®—ã®å®Ÿè£…ã‚’è¡Œã†ï¼Ÿ
+	//ã“ã“ã‹ã‚‰ã€PHFemMeshThermoã®Stepã‚’å‘¼ã‚“ã§ã€å®Ÿè¡Œã•ã›ã‚‹ã€‚
 	
 
 }
@@ -83,9 +83,9 @@ PHFemMesh::PHFemMesh(const PHFemMeshDesc& desc, SceneIf* s){
 	SetDesc(&desc);
 	if (s){ SetScene(s); }
 
-	//ThermalFEM‚ÌÀ‘•‚ğ’Ç‰Á‚µ‚Ä‚¢‚­
+	//ThermalFEMã®å®Ÿè£…ã‚’è¿½åŠ ã—ã¦ã„ã
 
-	//ŒvZ‚ÌŠÖ”‚É‚Â‚¢‚Ä‚ÍAƒKƒEƒXEƒUƒCƒfƒ‹‚Å@
+	//è¨ˆç®—ã®é–¢æ•°ã«ã¤ã„ã¦ã¯ã€ã‚¬ã‚¦ã‚¹ãƒ»ã‚¶ã‚¤ãƒ‡ãƒ«ã§ã€€
 		
 }
 
@@ -103,16 +103,16 @@ void PHFemMesh::SetDesc(const void* p) {
 		vertices[i].pos = d->vertices[i];
 		vertices[i].tets.clear();
 	}
-	//	Ú‘±î•ñ‚ÌXV
-	//	’¸“_‚É‘®‚·‚él–Ê‘Ì‚ğ’Ç‰Á
+	//	æ¥ç¶šæƒ…å ±ã®æ›´æ–°
+	//	é ‚ç‚¹ã«å±ã™ã‚‹å››é¢ä½“ã‚’è¿½åŠ 
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
 			vertices[tets[i].vertices[j]].tets.push_back(i);
 		}
 	}
-	//	•\–Ê‚ğ’T‚·
+	//	è¡¨é¢ã‚’æ¢ã™
 	std::vector<Face> allFaces;
-	//	— •\‚ğl‚¦‚é•K—v‚ª‚ ‚éB
+	//	è£è¡¨ã‚’è€ƒãˆã‚‹å¿…è¦ãŒã‚ã‚‹ã€‚
 	/*
 					0
 
@@ -136,16 +136,16 @@ void PHFemMesh::SetDesc(const void* p) {
 	std::vector<Face> ifaces;
 	for(unsigned i=0; i<allFaces.size(); ++i){
 		if (i+1<allFaces.size() && allFaces[i] == allFaces[i+1]){
-			ifaces.push_back(allFaces[i]);	//	’†–Ê
+			ifaces.push_back(allFaces[i]);	//	ä¸­é¢
 			i++;
 		}else{
-			faces.push_back(allFaces[i]);	//	•\–Ê
+			faces.push_back(allFaces[i]);	//	è¡¨é¢
 		}
 	}
 	nSurfaceFace = faces.size();
 	faces.insert(faces.end(), ifaces.begin(), ifaces.end());
 	surfaceVertices.clear();
-	//	•\–Ê‚Ì’¸“_‚Ì—ñ‹“
+	//	è¡¨é¢ã®é ‚ç‚¹ã®åˆ—æŒ™
 	for(unsigned i=0; i<nSurfaceFace; ++i){
 		for(unsigned j=0; j<3; ++j){
 			surfaceVertices.push_back(faces[i].vertices[j]);
@@ -155,8 +155,8 @@ void PHFemMesh::SetDesc(const void* p) {
 	std::vector<int>::iterator newEnd = std::unique(surfaceVertices.begin(), surfaceVertices.end());
 	surfaceVertices.erase(newEnd, surfaceVertices.end());
 
-	//	•Ó‚Ì—ñ‹“
-	//	‚Ü‚¸•\–Ê‚Ì•Ó
+	//	è¾ºã®åˆ—æŒ™
+	//	ã¾ãšè¡¨é¢ã®è¾º
 	edges.clear();
 	for(unsigned i=0; i<nSurfaceFace; ++i){
 		for(unsigned j=0; j<3; ++j){
@@ -167,29 +167,29 @@ void PHFemMesh::SetDesc(const void* p) {
 	std::vector<Edge>::iterator newEEnd = std::unique(edges.begin(), edges.end());
 	edges.erase(newEEnd, edges.end());
 	nSurfaceEdge = edges.size();
-	//	“à•”‚Ì•Ó‚Ì—ñ‹“
+	//	å†…éƒ¨ã®è¾ºã®åˆ—æŒ™
 	std::vector<Edge> iEdges;
 	for(unsigned i=nSurfaceFace; i<faces.size() ;++i){
 		for(unsigned j=0; j<3; ++j){
 			iEdges.push_back(Edge(faces[i].vertices[j], faces[i].vertices[(j+1)%3]));
 		}
 	}
-	//	d•¡‚ğíœ
+	//	é‡è¤‡ã‚’å‰Šé™¤
 	std::sort(iEdges.begin(), iEdges.end());
 	newEEnd = std::unique(iEdges.begin(), iEdges.end());
 	iEdges.erase(newEEnd, iEdges.end());
-	//	•\‚Ì•Ó(edges‚ÌnSurfaceEdge‚Ü‚Å)‚ÉŠÜ‚Ü‚ê‚È‚¢•¨‚ğAedges‚ÌŒã‚ë‚É’Ç‰Á
+	//	è¡¨ã®è¾º(edgesã®nSurfaceEdgeã¾ã§)ã«å«ã¾ã‚Œãªã„ç‰©ã‚’ã€edgesã®å¾Œã‚ã«è¿½åŠ 
 	edges.resize(nSurfaceEdge + iEdges.size());
 	newEEnd = std::set_difference(iEdges.begin(), iEdges.end(), edges.begin(), edges.begin()+nSurfaceEdge, edges.begin()+nSurfaceEdge);
 	edges.erase(newEEnd, edges.end());
 
-	//	’¸“_‚É•Ó‚ğ’Ç‰Á
+	//	é ‚ç‚¹ã«è¾ºã‚’è¿½åŠ 
 	for(unsigned i=0; i<edges.size(); ++i){
 		for(int j=0; j<2; ++j){
 			vertices[edges[i].vertices[j]].edges.push_back(i);
 		}
 	}
-	//	l–Ê‘Ì‚É–Ê‚ğ’Ç‰Á
+	//	å››é¢ä½“ã«é¢ã‚’è¿½åŠ 
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
 			Face f;
@@ -205,16 +205,16 @@ void PHFemMesh::SetDesc(const void* p) {
 			assert(k < faces.size());
 		}
 	}
-	//	l–Ê‘Ì‚É•Ó‚ğ’Ç‰Á
+	//	å››é¢ä½“ã«è¾ºã‚’è¿½åŠ 
 	for(unsigned i=0; i<tets.size(); ++i){
 		int count = 0;
 		for(unsigned j=0; j<4; ++j){
 			FemVertex& vtx = vertices[tets[i].vertices[j]];
-			//	l–Ê‘Ì‚Ì‚ ‚é’¸“_‚©‚ço‚Ä‚¢‚é•Ó‚Ì‚¤‚¿A‚»‚Ì’¸“_‚ªn“_(vertices[0])‚É‚È‚Á‚Ä‚¢‚é‚à‚Ì‚É‚Â‚¢‚Ä
+			//	å››é¢ä½“ã®ã‚ã‚‹é ‚ç‚¹ã‹ã‚‰å‡ºã¦ã„ã‚‹è¾ºã®ã†ã¡ã€ãã®é ‚ç‚¹ãŒå§‹ç‚¹(vertices[0])ã«ãªã£ã¦ã„ã‚‹ã‚‚ã®ã«ã¤ã„ã¦
 			for(unsigned k=0; k<vtx.edges.size(); ++k){
 				Edge& e = edges[vtx.edges[k]];
 				if (e.vertices[0] != tets[i].vertices[j]) continue;
-				//	•Ó‚ªl–Ê‘Ì‚ÉŠÜ‚Ü‚ê‚éê‡A•Ó‚ğİ’è
+				//	è¾ºãŒå››é¢ä½“ã«å«ã¾ã‚Œã‚‹å ´åˆã€è¾ºã‚’è¨­å®š
 				for(int l=0; l<4; ++l){
 					if (e.vertices[1] == tets[i].vertices[l]){
 						tets[i].edge(j, l) = vtx.edges[k];
@@ -226,7 +226,7 @@ void PHFemMesh::SetDesc(const void* p) {
 		}
 		assert(count == 6);
 	}
-	//	’¸“_‚É‘®‚·‚é–Ê‚ğ’Ç‰Á
+	//	é ‚ç‚¹ã«å±ã™ã‚‹é¢ã‚’è¿½åŠ 
 	for(unsigned i=0;i<faces.size();i++){
 		for(unsigned j=0;j<3;j++){
 			vertices[faces[i].vertices[j]].faces.push_back(i);
@@ -265,10 +265,10 @@ inline Matrix3d invDet(const Matrix3d& a){
 	return rtv;
 }
 
-//	Œã‚Å‹L˜^‚·‚×‚«•Ï”‚ğl‚¦‚é‚±‚Æ‚É‚µ‚Ä‚Æ‚è‚ ‚¦‚¸AŒvZ‚¾‚¯‚µ‚Ä‚İ‚éB
+//	å¾Œã§è¨˜éŒ²ã™ã¹ãå¤‰æ•°ã‚’è€ƒãˆã‚‹ã“ã¨ã«ã—ã¦ã¨ã‚Šã‚ãˆãšã€è¨ˆç®—ã ã‘ã—ã¦ã¿ã‚‹ã€‚
 void PHFemMesh::UpdateJacobian(){
 	for(unsigned t=0; t<tets.size(); ++t){
-		Matrix3d J;	//	Šel–Ê‘Ì‚Ì’¼ŒğÀ•WŒn(ƒÌ,ƒÅ,ƒÄ)‚©‚çl–Ê‘Ì(x,y,z)‚Ö‚Ìƒ„ƒRƒrƒAƒ“ (d(x,y,z) / d(ƒÌ,ƒÅ,ƒÄ))
+		Matrix3d J;	//	å„å››é¢ä½“ã®ç›´äº¤åº§æ¨™ç³»(Î¾,Î·,Î¶)ã‹ã‚‰å››é¢ä½“(x,y,z)ã¸ã®ãƒ¤ã‚³ãƒ“ã‚¢ãƒ³ (d(x,y,z) / d(Î¾,Î·,Î¶))
 		for(int i=1; i<3; ++i){
 			for(int j=0; j<3; ++j){
 				J[i][j] = vertices[tets[t].vertices[i+1]].pos[j] - vertices[tets[t].vertices[0]].pos[j];

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 
 /** @file SprUTTimer.h
-	�����^�C�}
+	統合タイマ
  */
 
 #ifndef SPR_UTTIMER_H
@@ -20,57 +20,57 @@ namespace Spr{;
 struct UTTimerIf : ObjectIf{
 	SPR_IFDEF(UTTimer);
 
-	///	�^�C�}�[�̃��[�h
+	///	タイマーのモード
 	enum Mode{
-		/// 1ms ���x�̐��x�����}���`���f�B�A�^�C�}�[
+		/// 1ms 程度の精度を持つマルチメディアタイマー
 		MULTIMEDIA,
-		/// �X���b�h���g�p�����[���^�C�}�[
+		/// スレッドを使用した擬似タイマー
 		THREAD,
-		/// GLUT�Ȃǂ̃t���[�����[�N�Ɉˑ��������b�Z�[�W�p�b�V���O�^�̃^�C�}�[
+		/// GLUTなどのフレームワークに依存したメッセージパッシング型のタイマー
 		FRAMEWORK,
-		/// �A�C�h������
+		/// アイドル処理
 		IDLE
 	};
 
-	///	�R�[���o�b�N�֐��̌^
+	///	コールバック関数の型
 	typedef void (SPR_CDECL *TimerFunc)(int id, void* arg);
-	///	�^�C�}�̐����擾
+	///	タイマの数を取得
 	static unsigned		SPR_CDECL NTimers();
-	/// �^�C�}���擾
+	/// タイマを取得
 	static UTTimerIf*	SPR_CDECL Get(unsigned id);
-	/// �^�C�}���쐬
+	/// タイマを作成
 	static UTTimerIf*	SPR_CDECL Create();
 
-	/// �^�C�}ID���擾
+	/// タイマIDを取得
 	unsigned GetID();
 
-	/// MULTIMEDIA���̃^�C�}�[���x�̎擾
+	/// MULTIMEDIA時のタイマー精度の取得
 	unsigned GetResolution();
-	/// MULTIMEDIA���̃^�C�}�[���x�̐ݒ�iMULTIMEDIA���T�|�[�g���Ȃ��ꍇ�A�ݒ肵���l���珑������邱�Ƃ�����B
+	/// MULTIMEDIA時のタイマー精度の設定（MULTIMEDIAがサポートしない場合、設定した値から書き換わることがある。
 	bool SetResolution(unsigned r);					
 	
-	/// �^�C�}�[�̎��ԊԊu(ms)
+	/// タイマーの時間間隔(ms)
 	unsigned GetInterval();
-	/// �^�C�}�[�̎��ԊԊu(ms)�̐ݒ�
+	/// タイマーの時間間隔(ms)の設定
 	bool SetInterval(unsigned i);
 	
-	/// �R�[���o�b�N�֐��̐ݒ�
+	/// コールバック関数の設定
 	bool SetCallback(TimerFunc f, void* arg=NULL);
-	/// �^�C�}�[�̓��샂�[�h�̎擾
+	/// タイマーの動作モードの取得
 	Mode GetMode();
-	/// �^�C�}�[�̓��샂�[�h�̐ݒ�
+	/// タイマーの動作モードの設定
 	bool SetMode(Mode m);
 
-	/// �^�C�}�[��ON�i����I�ɃR�[���o�b�N���Ăяo����ԁj�Ȃ� true
+	/// タイマーがON（定期的にコールバックを呼び出す状態）なら true
 	bool IsStarted();
-	/// �R�[���o�b�N�Ăяo�����Ȃ�� true
+	/// コールバック呼び出し中ならば true
 	bool IsRunning();
 	
-	/// �^�C�}�[����J�n
+	/// タイマー動作開始
 	bool Start();
-	/// �^�C�}�[�̒�~
+	/// タイマーの停止
 	bool Stop();
-	/// �R�[���o�b�N�֐����Ăяo��
+	/// コールバック関数を呼び出す
 	void Call();
 
 };

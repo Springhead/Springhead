@@ -1,4 +1,4 @@
-#include <Physics/PHHapticEngine.h>
+ï»¿#include <Physics/PHHapticEngine.h>
 #include <Physics/PHHapticRender.h>
 #include <Physics/PHHapticEngineMultiBase.h>
 #include <Physics/PHHapticEngineImpulse.h>
@@ -30,32 +30,32 @@ PHShapePairForHaptic::PHShapePairForHaptic(const PHShapePairForHaptic& s){
 	*this = s;
 }
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
-	// 0:„‘Ì, 1:—ÍŠoƒ|ƒCƒ“ƒ^
-	// ‘O‰ñ‚Ìó‘Ô‚ğ•Û‘¶
+	// 0:å‰›ä½“, 1:åŠ›è¦šãƒã‚¤ãƒ³ã‚¿
+	// å‰å›ã®çŠ¶æ…‹ã‚’ä¿å­˜
 	for(int i = 0; i < 2; i++){
 		lastShapePoseW[i] = shapePoseW[i];
 		lastClosestPoint[i] = closestPoint[i];	
 	}
 	lastNormal = normal;
 
-	// ¡‰ñ‚Ìó‘Ô‚ğ•Û‘¶
+	// ä»Šå›ã®çŠ¶æ…‹ã‚’ä¿å­˜
 	shapePoseW[0] = pose0;
 	shapePoseW[1] = pose1;
 
-	// Å‹ß–T“_‘Î‚ğŒ©‚Â‚¯‚é
+	// æœ€è¿‘å‚ç‚¹å¯¾ã‚’è¦‹ã¤ã‘ã‚‹
 	Vec3d sep;
 	double dist = FindClosestPoints(shape[0], shape[1], shapePoseW[0], shapePoseW[1],
 									sep, closestPoint[0], closestPoint[1]);
 	Vec3d w0 = shapePoseW[0] * closestPoint[0];
 	Vec3d w1 = shapePoseW[1] * closestPoint[1];
-	normal = (w1 - w0).unit();		// „‘Ì->—ÍŠoƒ|ƒCƒ“ƒ^‚Ö‚Ì–@üƒxƒNƒgƒ‹
-	commonPoint = (w0 + w1) * 0.5;	// ‹¤—L“_
+	normal = (w1 - w0).unit();		// å‰›ä½“->åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã¸ã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+	commonPoint = (w0 + w1) * 0.5;	// å…±æœ‰ç‚¹
 
 	if(dist > 1e-3){
-		// ÚG‚µ‚Ä‚¢‚È‚¢
+		// æ¥è§¦ã—ã¦ã„ãªã„
 		state = NONE;
 	}else{							
-		// ÚG
+		// æ¥è§¦
 		if (lastContactCount == unsigned(ct-1))	state = CONTINUE;
 		else state = NEW;
 		lastContactCount = ct;
@@ -64,7 +64,7 @@ bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& 
 }
 
 int PHShapePairForHaptic::OnDetect(unsigned ct, const Vec3d& center0){
-	Vec3d dir = -1 * lastNormal;	// —ÍŠoƒ|ƒCƒ“ƒ^‚©‚çŒ©‚½„‘Ì‚ÌˆÚ“®•ûŒü
+	Vec3d dir = -1 * lastNormal;	// åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã‹ã‚‰è¦‹ãŸå‰›ä½“ã®ç§»å‹•æ–¹å‘
 	if(dir == Vec3d()){
 		dir = commonPoint - center0;
 		DSTR << "dir = Vec3d() in PHShapePariForHaptic::OnOnDetectClosestPoints" << std::endl;
@@ -73,7 +73,7 @@ int PHShapePairForHaptic::OnDetect(unsigned ct, const Vec3d& center0){
 	int cp = ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, 
 							-DBL_MAX, 1, normal, closestPoint[0], closestPoint[1], dist);
 	
-	/// GJK‚ª¸”s‚µ‚½‚Ìˆ—
+	/// GJKãŒå¤±æ•—ã—ãŸæ™‚ã®å‡¦ç†
 	if(cp != 1){
 		static int cont = 0;
 		ContFindCommonPointSaveParam(shape[0], shape[1], shapePoseW[0], shapePoseW[1], dir, 
@@ -84,7 +84,7 @@ int PHShapePairForHaptic::OnDetect(unsigned ct, const Vec3d& center0){
 	return cp;
 }
 
-#define SELECTION 1 // ’†ŠÔ•\Œ»‚Ì–Ê‚ÉÚ‚Á‚Ä‚¢‚é“_‚ÍÚG“_‚Æ‚µ‚È‚¢
+#define SELECTION 1 // ä¸­é–“è¡¨ç¾ã®é¢ã«è¼‰ã£ã¦ã„ã‚‹ç‚¹ã¯æ¥è§¦ç‚¹ã¨ã—ãªã„
 extern bool bUseContactVolume;
 bool PHShapePairForHaptic::AnalyzeContactRegion(){
 	bUseContactVolume = true;
@@ -92,21 +92,21 @@ bool PHShapePairForHaptic::AnalyzeContactRegion(){
 	analyzer.FindIntersection(this->Cast());
 	bUseContactVolume = false;
 
-	// N“ü—Ìˆæ‚Ì’¸“_‚Ìæ“¾
+	// ä¾µå…¥é ˜åŸŸã®é ‚ç‚¹ã®å–å¾—
 	for(CDQHPlane< CDContactAnalysisFace >* it = analyzer.planes.begin; it != analyzer.planes.end; ++it){
 		if(it->deleted) continue;
-		Vec3d point = it->normal/it->dist + commonPoint;	// ‘o‘Î•ÏŠ·i–Ê‚©‚ç“_‚Öj	
+		Vec3d point = it->normal/it->dist + commonPoint;	// åŒå¯¾å¤‰æ›ï¼ˆé¢ã‹ã‚‰ç‚¹ã¸ï¼‰	
 
-		// 0:„‘Ì, 1:—ÍŠoƒ|ƒCƒ“ƒ^
+		// 0:å‰›ä½“, 1:åŠ›è¦šãƒã‚¤ãƒ³ã‚¿
 		if(SELECTION){
-			Vec3d w0 = shapePoseW[0] * closestPoint[0];	// ’†ŠÔ•\Œ»–Êã‚Ì“_i„‘Ì‚Ì‹ß–T“_j
+			Vec3d w0 = shapePoseW[0] * closestPoint[0];	// ä¸­é–“è¡¨ç¾é¢ä¸Šã®ç‚¹ï¼ˆå‰›ä½“ã®è¿‘å‚ç‚¹ï¼‰
 			double dot = (point - w0) * normal;
 			if(dot < -1e-2)	intersectionVertices.push_back(shapePoseW[1].Inv() * point);
 		}else{
 			intersectionVertices.push_back(shapePoseW[1].Inv() * point);
 		}
 	}
-	// –Ê‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½Ashape‚ªconvex or box‚Å‚Í‚È‚©‚Á‚½ê‡
+	// é¢ãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸã€shapeãŒconvex or boxã§ã¯ãªã‹ã£ãŸå ´åˆ
 	if(intersectionVertices.size() == 0){
 		intersectionVertices.push_back(closestPoint[1]);
 		return false;
@@ -116,13 +116,13 @@ bool PHShapePairForHaptic::AnalyzeContactRegion(){
 
 bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints){
 	irs.clear();
-	Vec3d sPoint = curShapePoseW[0] * closestPoint[0];	// ¡‰ñ‚Ìsolid‚Ì‹ß–T“_iWorld)
-	Vec3d pPoint = curShapePoseW[1] * closestPoint[1];	// ¡‰ñ‚Ìpointer‚Ì‹ß–T“_iWorld)
-	Vec3d last_sPoint = lastShapePoseW[0] * lastClosestPoint[0]; // ‘O‰ñ‚Ì„‘Ì‹ß–T“_iWorld)
-	Vec3d interpolation_normal = normal;		// •âŠÔ–@ü
-	Vec3d interpolation_sPoint = sPoint;		// •âŠÔ„‘Ì‹ß–T“_
+	Vec3d sPoint = curShapePoseW[0] * closestPoint[0];	// ä»Šå›ã®solidã®è¿‘å‚ç‚¹ï¼ˆWorld)
+	Vec3d pPoint = curShapePoseW[1] * closestPoint[1];	// ä»Šå›ã®pointerã®è¿‘å‚ç‚¹ï¼ˆWorld)
+	Vec3d last_sPoint = lastShapePoseW[0] * lastClosestPoint[0]; // å‰å›ã®å‰›ä½“è¿‘å‚ç‚¹ï¼ˆWorld)
+	Vec3d interpolation_normal = normal;		// è£œé–“æ³•ç·š
+	Vec3d interpolation_sPoint = sPoint;		// è£œé–“å‰›ä½“è¿‘å‚ç‚¹
 
-	// „‘Ì‚Ì–Ê‚Ì–@ü•âŠÔ@‘O‰ñ‚Ì–@ü‚ÆŒ»İ‚Ì–@ü‚ÌŠÔ‚ğ•âŠÔ
+	// å‰›ä½“ã®é¢ã®æ³•ç·šè£œé–“ã€€å‰å›ã®æ³•ç·šã¨ç¾åœ¨ã®æ³•ç·šã®é–“ã‚’è£œé–“
 	interpolation_normal = interpolate(t, lastNormal, normal);
 
 	Vec3d dir = pPoint - interpolation_sPoint;			
@@ -141,15 +141,15 @@ bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2]
 	if(bPoints){
 		for(int i = 0; i < (int)intersectionVertices.size(); i++){
 			Vec3d iv = intersectionVertices[i];
-			Vec3d wiv = curShapePoseW[1] * iv; 	// ƒ|ƒCƒ“ƒ^‚ÌN“ü“_(world)
-			dot = (wiv - interpolation_sPoint) * interpolation_normal;	// ƒfƒoƒCƒX‚ÌN“ü“_‚©‚ç’†ŠÔ–Êã‚Ì“_‚Ö‚ÌƒxƒNƒgƒ‹‚Ìƒmƒ‹ƒ€iƒfƒoƒCƒX‚ÌN“ü—Êj
+			Vec3d wiv = curShapePoseW[1] * iv; 	// ãƒã‚¤ãƒ³ã‚¿ã®ä¾µå…¥ç‚¹(world)
+			dot = (wiv - interpolation_sPoint) * interpolation_normal;	// ãƒ‡ãƒã‚¤ã‚¹ã®ä¾µå…¥ç‚¹ã‹ã‚‰ä¸­é–“é¢ä¸Šã®ç‚¹ã¸ã®ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒãƒ«ãƒ ï¼ˆãƒ‡ãƒã‚¤ã‚¹ã®ä¾µå…¥é‡ï¼‰
 			if(dot > 0.0)	continue;
 			PHIr* ir = DBG_NEW PHIr();
 			*ir = irtemp;
 			ir->normal = interpolation_normal;
 			ir->pointerPointW = wiv;
-			Vec3d ortho = dot * interpolation_normal; // „‘Ì‚Ì‹ß–T“_‚©‚çƒfƒoƒCƒXN“ü“_‚Ü‚Å‚ÌƒxƒNƒgƒ‹‚ğ–Ê–@ü‚ÖË‰e
-			ir->contactPointW = wiv - ortho;		// solid‚ÌÚG“_(world)
+			Vec3d ortho = dot * interpolation_normal; // å‰›ä½“ã®è¿‘å‚ç‚¹ã‹ã‚‰ãƒ‡ãƒã‚¤ã‚¹ä¾µå…¥ç‚¹ã¾ã§ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’é¢æ³•ç·šã¸å°„å½±
+			ir->contactPointW = wiv - ortho;		// solidã®æ¥è§¦ç‚¹(world)
 			ir->depth = ortho.norm();
 			ir->interpolation_pose = curShapePoseW[0];
 			irs.push_back(ir);
@@ -196,14 +196,14 @@ bool PHSolidPairForHaptic::Detect(engine_type* engine, unsigned int ct, double d
 void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* engine, unsigned ct, double dt){
 	sp->intersectionVertices.clear();
 	if(sp->state == sp->NEW || sp->state == sp->CONTINUE){
-		sp->OnDetect(ct, solid[1]->GetCenterPosition());	// CCDGJK‚Å‹ß–T“_‘Î‚ğÄæ“¾
-		sp->AnalyzeContactRegion();		// N“ü—Ìˆæ‚Ì’¸“_‚ğæ“¾
+		sp->OnDetect(ct, solid[1]->GetCenterPosition());	// CCDGJKã§è¿‘å‚ç‚¹å¯¾ã‚’å†å–å¾—
+		sp->AnalyzeContactRegion();		// ä¾µå…¥é ˜åŸŸã®é ‚ç‚¹ã‚’å–å¾—
 	}else{
-		// ÚG‚µ‚Ä‚¢‚È‚¢ê‡A‹ß–T“_‚ğN“ü—Ìˆæ‚Ì’¸“_‚Æ‚·‚é
+		// æ¥è§¦ã—ã¦ã„ãªã„å ´åˆã€è¿‘å‚ç‚¹ã‚’ä¾µå…¥é ˜åŸŸã®é ‚ç‚¹ã¨ã™ã‚‹
 		sp->intersectionVertices.push_back(sp->closestPoint[1]);
 	}
 
-	// ‚Í‚¶‚ß‚Ä‹ß–T‚Ìê‡
+	// ã¯ã˜ã‚ã¦è¿‘å‚ã®å ´åˆ
 	if(inLocal == 1){
 		for(int i = 0; i < 2; i++){
 			sp->lastShapePoseW[i] = sp->shapePoseW[i];
@@ -216,10 +216,10 @@ void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* en
 }
 
 PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose){
-	/* —ÍŠoˆÀ’è‰»‚Ì‚½‚ß‚Ì•âŠÔ
-	// Impulse‚Ìê‡‚Í‘Šè‚Ì„‘Ì‚ÌPose‚Ì•âŠÔ‚ª•K—vB
-	// LocalDynamics‚Ìê‡‚Í–@ü‚Ì•âŠÔ‚Ì‚İ‚Å‚æ‚¢B
-	// –@ü‚Ì•âŠÔ‚ÍPHShapePairForHaptic‚Å‚â‚éBh
+	/* åŠ›è¦šå®‰å®šåŒ–ã®ãŸã‚ã®è£œé–“
+	// Impulseã®å ´åˆã¯ç›¸æ‰‹ã®å‰›ä½“ã®Poseã®è£œé–“ãŒå¿…è¦ã€‚
+	// LocalDynamicsã®å ´åˆã¯æ³•ç·šã®è£œé–“ã®ã¿ã§ã‚ˆã„ã€‚
+	// æ³•ç·šã®è£œé–“ã¯PHShapePairForHapticã§ã‚„ã‚‹ã€‚h
 	*/
 	force.clear();
 	torque.clear();
@@ -233,10 +233,10 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 		last.Ori() = (cur.Ori() * Quaterniond::Rot(-curSolid[0]->v.w() * dt + -curSolid[0]->dV.w())).unit();
 		interpolationPose = interpolate(t, last, cur);
 	}
-	// ÚG‚µ‚½‚Æ‚µ‚Ä–€CŒvZ‚Ì‚½‚ß‚Ì‘Š‘ÎˆÊ’u‚ğŒvZ
+	// æ¥è§¦ã—ãŸã¨ã—ã¦æ‘©æ“¦è¨ˆç®—ã®ãŸã‚ã®ç›¸å¯¾ä½ç½®ã‚’è¨ˆç®—
 	PHHapticPointer* pointer = DCAST(PHHapticPointer, curSolid[1]);
 #if 1
-	// ‘Š‘Î–€C
+	// ç›¸å¯¾æ‘©æ“¦
 	if(frictionState == FREE){
 		frictionState = FIRST;
 		contactCount = 0;
@@ -248,7 +248,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 	}
 	relativePose = initialRelativePose * interpolationPose * pointer->GetPose().Inv();		
 #else
-	// â‘Î–€C
+	// çµ¶å¯¾æ‘©æ“¦
 	if(frictionState == FREE){
 		frictionState = STATIC;
 		initialRelativePose = Posed();
@@ -263,7 +263,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 	//DSTR << "ini" << initialRelativePose << std::endl;
 	//DSTR << "relativePose" << relativePose << std::endl;
 
-	// ’†ŠÔ•\Œ»‚Ìì¬
+	// ä¸­é–“è¡¨ç¾ã®ä½œæˆ
 	PHIrs irs;
 	for(int i = 0; i < curSolid[0]->NShape(); i++){
 		for(int j = 0; j < curSolid[1]->NShape(); j++){
@@ -288,7 +288,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 	}
 
 	if(irs.size() == 0){
-		// ÚG‚È‚µ
+		// æ¥è§¦ãªã—
 		frictionState = FREE;
 		initialRelativePose = Posed();
 		relativePose = Posed();
@@ -297,13 +297,13 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 }
 
 bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairForHaptic* sp){
-	// –€C
+	// æ‘©æ“¦
 	int Nirs = sp->irs.size();
 	if(Nirs == 0) return false;
 	for(int i = 0; i < Nirs; i++){
 		PHIr* ir = sp->irs[i];
-		double mu = ir->mu;	// “®–€CŒW”	
-		double l = mu * ir->depth;		// –€C‰~”¼Œa
+		double mu = ir->mu;	// å‹•æ‘©æ“¦ä¿‚æ•°	
+		double l = mu * ir->depth;		// æ‘©æ“¦å††éŒåŠå¾„
 
 		Vec3d vps = ir->pointerPointW;
 		Vec3d vq = relativePose * ir->pointerPointW;
@@ -318,11 +318,11 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 		double epsilon = 1e-5;
 		//DSTR << "---------" << std::endl;
 		if(tangent.norm() < epsilon){
-			// Ã~ó‘Ô
+			// é™æ­¢çŠ¶æ…‹
 			//DSTR << "rest" << std::endl;
 		}
 		if(epsilon < tangent.norm() && tangent.norm() <= l){
-			//Ã–€CiÃ~–€C”¼Œa“àj
+			//é™æ‘©æ“¦ï¼ˆé™æ­¢æ‘©æ“¦åŠå¾„å†…ï¼‰
 			sp->irs.push_back(DBG_NEW PHIr());
 			*sp->irs.back() = *ir;
 			sp->irs.back()->normal = tangent.unit();
@@ -330,7 +330,7 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 			//DSTR << "static friction" << std::endl;
 		}
 		if(epsilon < l && l < tangent.norm()){
-			// “®–€C
+			// å‹•æ‘©æ“¦
 			sp->irs.push_back(DBG_NEW PHIr());
 			*sp->irs.back() = *ir;
 			sp->irs.back()->normal = tangent.unit();
@@ -342,14 +342,14 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 }
 
 bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp){
-	// –€C(Å‘åÃ~–€C”Åj–¢À‘•
+	// æ‘©æ“¦(æœ€å¤§é™æ­¢æ‘©æ“¦ç‰ˆï¼‰æœªå®Ÿè£…
 
 	//int Nirs = sp->irs.size();
 	//if(Nirs == 0) return false;
 	//for(int i = 0; i < Nirs; i++){
 	//	PHIr* ir = sp->irs[i];
-	//	double mu = ir->mu;	// “®–€CŒW”				
-	//	double l = mu * ir->depth;		// –€C‰~”¼Œa
+	//	double mu = ir->mu;	// å‹•æ‘©æ“¦ä¿‚æ•°				
+	//	double l = mu * ir->depth;		// æ‘©æ“¦å††éŒåŠå¾„
 
 	//	Vec3d vps = ir->pointerPointW;
 	//	Vec3d vq = relativePose * ir->pointerPointW;
@@ -365,12 +365,12 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation2(PHShapePairFo
 	//	*fricIr = *ir;
 	//	double epsilon = 1e-5;
 	//	if(tangent.norm() < epsilon){
-	//		// Ã~ó‘Ô
+	//		// é™æ­¢çŠ¶æ…‹
 	//		delete fricIr;
 	//		//DSTR << "rest" << std::endl;
 	//	}
 	//	if(epsilon < tangent.norm() && tangent.norm() <= l){
-	//		//Ã–€CiÃ~–€C”¼Œa“àj
+	//		//é™æ‘©æ“¦ï¼ˆé™æ­¢æ‘©æ“¦åŠå¾„å†…ï¼‰
 	//		fricIr->normal = tangent.unit();
 	//		fricIr->depth = tangent.norm();
 	//		sp->irs.push_back(fricIr);
@@ -378,7 +378,7 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation2(PHShapePairFo
 	//	}
 
 	//	if(epsilon < l && l < tangent.norm()){
-	//		// “®–€C
+	//		// å‹•æ‘©æ“¦
 	//		fricIr->normal = tangent.unit();
 	//		fricIr->depth = l;
 	//		sp->irs.push_back(fricIr);
@@ -487,24 +487,24 @@ void PHHapticEngine::SetHapticEngineMode(HapticEngineMode mode){
 }
 
 void PHHapticEngine::StartDetection(){
-	// ContactMode‚Ìİ’è
+	// ContactModeã®è¨­å®š
 	SetContactMode();
-	// AABB‚ÌXV
+	// AABBã®æ›´æ–°
 	UpdateEdgeList();
-	// —ÍŠoƒ|ƒCƒ“ƒ^‚²‚Æ‚É‹ß–T•¨‘Ì‚ğŒ©‚Â‚¯‚é
+	// åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã”ã¨ã«è¿‘å‚ç‰©ä½“ã‚’è¦‹ã¤ã‘ã‚‹
 	for(int i = 0; i < (int)hapticPointers.size(); i++){
 		Detect(hapticPointers[i]);
 	}
-	// ƒ[ƒJƒ‹‚ÅƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚·‚é‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒO‚ğİ’è
+	// ãƒ­ãƒ¼ã‚«ãƒ«ã§ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ã‹ã©ã†ã‹ã®ãƒ•ãƒ©ã‚°ã‚’è¨­å®š
 	for(int i = 0; i < (int)hapticSolids.size(); i++){
 		PHSolidForHaptic* h = hapticSolids[i];
 		if(DCAST(PHHapticPointer, h->sceneSolid)) continue;
 		if(h->NLocal == 0 && h->NLocalFirst > 0){
-			h->doSim = 1;			// ‚Í‚¶‚ß‚Ä‹ß–T‚É‚È‚Á‚½
+			h->doSim = 1;			// ã¯ã˜ã‚ã¦è¿‘å‚ã«ãªã£ãŸ
 		}else if(h->NLocal > 0){
-			h->doSim = 2;			// ‹ß–Tó‘Ô‚ğŒp‘±
+			h->doSim = 2;			// è¿‘å‚çŠ¶æ…‹ã‚’ç¶™ç¶š
 		}else{
-			h->doSim = 0;			// ‹ß–T‚Å‚È‚¢
+			h->doSim = 0;			// è¿‘å‚ã§ãªã„
 		}
 		h->NLocal = 0; 
 		h->NLocalFirst = 0;
@@ -529,8 +529,8 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 	int ct = GetScene()->GetCount();
 	int dt = GetScene()->GetTimeStep();
 	const int pointerSolidID = pointer->GetSolidID();
-	Vec3f range3d = Vec3f(1.0, 1.0, 1.0) * pointer->GetLocalRange(); // ŒŸoè‡’l
-	// pointer‚ÌBBox‚ğrange3d•ª‚¾‚¯Šg‚°‚é
+	Vec3f range3d = Vec3f(1.0, 1.0, 1.0) * pointer->GetLocalRange(); // æ¤œå‡ºé–¾å€¤
+	// pointerã®BBoxã‚’range3dåˆ†ã ã‘æ‹¡ã’ã‚‹
 	edges[pointerSolidID].min -= range3d;
 	edges[pointerSolidID].max += range3d;
 	
@@ -539,19 +539,19 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 	int N = hapticSolids.size();
 	pointer->neighborSolidIDs.clear();
 	for(int i = 0; i < N; i++){
-		if(i == pointerSolidID) continue;	// ƒ|ƒCƒ“ƒ^‚Æ„‘Ì‚ª“¯‚¶ê‡
+		if(i == pointerSolidID) continue;	// ãƒã‚¤ãƒ³ã‚¿ã¨å‰›ä½“ãŒåŒã˜å ´åˆ
 		Vec3f soMin = edges[i].min;
 		Vec3f soMax = edges[i].max;
-		int nAxes = 0;		// ‚¢‚­‚Â‚Ì²‚ÅŒğ·‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
+		int nAxes = 0;		// ã„ãã¤ã®è»¸ã§äº¤å·®ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
 		for(int i = 0; i < 3; i++){
-			int inAxis = 0;	// ‚»‚Ì²‚ÅŒğ·‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
-			// pointer‚ÌBBox“à‚Ésolid‚ÌBBox‚ª‚ ‚Á‚½‚çŒğ·
+			int inAxis = 0;	// ãã®è»¸ã§äº¤å·®ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
+			// pointerã®BBoxå†…ã«solidã®BBoxãŒã‚ã£ãŸã‚‰äº¤å·®
 			if(pMin[i] <= soMin[i] && soMin[i] <= pMax[i]) inAxis++; 
 			if(pMin[i] <= soMax[i] && soMax[i] <= pMax[i]) inAxis++; 
-			// ƒ\ƒŠƒbƒh‚ÌBox“à‚ÉƒNƒGƒŠ‚ÌBBox‚ª‚ ‚Á‚½‚çŒğ·
+			// ã‚½ãƒªãƒƒãƒ‰ã®Boxå†…ã«ã‚¯ã‚¨ãƒªã®BBoxãŒã‚ã£ãŸã‚‰äº¤å·®
 			if(soMin[i] <= pMin[i] && pMin[i] <= soMax[i]) inAxis++;
 			if(soMin[i] <= pMax[i] && pMax[i] <= soMax[i]) inAxis++;
-			// in‚ª1ˆÈã‚È‚ç‚»‚Ì²‚ÅŒğ·
+			// inãŒ1ä»¥ä¸Šãªã‚‰ãã®è»¸ã§äº¤å·®
 			if(inAxis > 0) nAxes++;
 #if 0
 				DSTR << i << " pMin[i] = " << pMin[i] << "  soMin[i] = " << soMin[i] << "  pMax[i] = " << pMax[i] << std::endl;
@@ -565,26 +565,26 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 		}
 #endif
 #if 1
-		// 2.‹ß–T•¨‘Ì‚Æ”»’è
+		// 2.è¿‘å‚ç‰©ä½“ã¨åˆ¤å®š
 		const int pointerID = pointer->GetPointerID();
 		PHSolidPairForHaptic* sp = solidPairs.item(i, pointerID);
-		if(DCAST(PHHapticPointer, sp->solid[0])) continue;	// „‘Ì‚ªƒ|ƒCƒ“ƒ^‚Ìê‡
+		if(DCAST(PHHapticPointer, sp->solid[0])) continue;	// å‰›ä½“ãŒãƒã‚¤ãƒ³ã‚¿ã®å ´åˆ
 		if(nAxes == 3){
-			sp->Detect(this, ct, dt);	// Œ`ó–ˆ‚Ì‹ß–T“_’TõAÚG‰ğÍ
+			sp->Detect(this, ct, dt);	// å½¢çŠ¶æ¯ã®è¿‘å‚ç‚¹æ¢ç´¢ã€æ¥è§¦è§£æ
 			pointer->neighborSolidIDs.push_back(i);
 			PHSolidForHaptic* h = hapticSolids[i];
-			*h->GetLocalSolid() = *h->sceneSolid;	// ‹ß–T‚Æ”»’è‚³‚ê‚½‚Ì‚ÅƒRƒs[
+			*h->GetLocalSolid() = *h->sceneSolid;	// è¿‘å‚ã¨åˆ¤å®šã•ã‚ŒãŸã®ã§ã‚³ãƒ”ãƒ¼
 			if(sp->inLocal == 0){
-				// ‰‚ß‚Ä‹ß–T‚É‚È‚Á‚½
+				// åˆã‚ã¦è¿‘å‚ã«ãªã£ãŸ
 				sp->inLocal = 1;	
 				h->NLocalFirst += 1;
 			}else{
-				// Œp‘±‚µ‚Ä‹ß–T‚Å‚ ‚é
+				// ç¶™ç¶šã—ã¦è¿‘å‚ã§ã‚ã‚‹
 				sp->inLocal = 2;
 				h->NLocal += 1;
 			}
 		}else{
-			// ‹ß–T‚Å‚È‚¢
+			// è¿‘å‚ã§ãªã„
 			sp->inLocal = 0;
 		}
 #endif
@@ -594,7 +594,7 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 bool PHHapticEngine::AddChildObject(ObjectIf* o){
 	PHSolid* s = DCAST(PHSolid, o);
 	if(s && std::find(solids.begin(), solids.end(), s) == solids.end()){
-		// solids‚Ésolid‚ğ•Û‘¶(pointer‚àŠÜ‚Ü‚ê‚é)
+		// solidsã«solidã‚’ä¿å­˜(pointerã‚‚å«ã¾ã‚Œã‚‹)
 		solids.push_back(s);				
 		PHSolidForHaptic* h = DBG_NEW PHSolidForHaptic();
 		h->sceneSolid = s;
@@ -604,9 +604,9 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 		int NSolids = (int)solids.size();
 		int NPointers = (int)hapticPointers.size();
 
-		// PHSolidPairFoHaptic‚ğ’Ç‰Á s solid, —ñ pointer
-		// PHSolid‚ªPHHapticPointer‚Ìê‡
-		// —ñ‚ğ’Ç‰Á
+		// PHSolidPairFoHapticã‚’è¿½åŠ  è¡Œ solid, åˆ— pointer
+		// PHSolidãŒPHHapticPointerã®å ´åˆ
+		// åˆ—ã‚’è¿½åŠ 
 		PHHapticPointer* p = DCAST(PHHapticPointer, o);
 		if(p){
 			NPointers += 1;
@@ -625,8 +625,8 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 			if(s->NShape())	UpdateShapePairs(s);
 		}
 
-		// PHSolid‚Ìê‡
-		// s‚Ì‚İ’Ç‰Á
+		// PHSolidã®å ´åˆ
+		// è¡Œã®ã¿è¿½åŠ 
 		solidPairs.resize(NSolids, NPointers);
 		for(int i = 0; i < NPointers; i++){
 			solidPairs.item(NSolids - 1, i) = DBG_NEW PHSolidPairForHaptic();
@@ -641,7 +641,7 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 	return false;
 }
 
-// –¢Š®¬
+// æœªå®Œæˆ
 bool PHHapticEngine::DelChildObject(ObjectIf* o){
 	//PHSolid* s = DCAST(PHSolid, o);
 	//if(s){
@@ -675,7 +675,7 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 	int i, j;
 	PHSolidPairForHaptic* sp;
 	PHSolid* s[2];
-	// solid‚Ìê‡(s‚ÌXVj
+	// solidã®å ´åˆ(è¡Œã®æ›´æ–°ï¼‰
 	for(i = 0; i < NHapticPointers(); i++){
 		sp = solidPairs.item(isolid, i);
 		s[0] = solid;
@@ -691,7 +691,7 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 
 	PHHapticPointer* pointer = DCAST(PHHapticPointer, solid);
 	if(!pointer) return;
-	// PHHapticPointer‚Ìê‡i—ñ‚ÌXVj
+	// PHHapticPointerã®å ´åˆï¼ˆåˆ—ã®æ›´æ–°ï¼‰
 	int pointerID = pointer->GetPointerID();
 	int pointerSolidID = pointer->GetSolidID();
 	for(i = 0; i < (int)solids.size(); i++){
@@ -710,7 +710,7 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 }
 
 void PHHapticEngine::SetContactMode(){
-	// —ÍŠoƒ|ƒCƒ“ƒ^‚ğƒV[ƒ“‚ÌÚG‚©‚çØ‚é
+	// åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã‚’ã‚·ãƒ¼ãƒ³ã®æ¥è§¦ã‹ã‚‰åˆ‡ã‚‹
 	for(int i = 0; i < (int)hapticPointers.size(); i++){
 		GetScene()->SetContactMode(hapticPointers[i]->Cast(), PHSceneDesc::MODE_NONE);
 	}

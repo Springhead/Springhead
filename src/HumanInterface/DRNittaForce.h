@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,7 +18,7 @@ class SPR_DLL DRNittaForce: public HIRealDevice{
 public:
 	SPR_OBJECTDEF_NOIF(DRNittaForce);
 
-	///	‰¼‘zƒfƒoƒCƒX
+	///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹
 	class DV: public DVForce{
 	public:
 		DV(DRNittaForce* r):DVForce(r){}
@@ -69,17 +69,17 @@ public:
 	DRNittaForce(int boardNum=0);
 	///
 	virtual ~DRNittaForce();
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	virtual bool Init();
-	///	“o˜^
+	///	ç™»éŒ²
 	//virtual void Register(HIVirtualDevicePool& vpool);
-	///	ƒ{[ƒhã‚Ìƒ^ƒCƒ}[‚Ì“Ç‚Ýo‚µ
+	///	ãƒœãƒ¼ãƒ‰ä¸Šã®ã‚¿ã‚¤ãƒžãƒ¼ã®èª­ã¿å‡ºã—
 	unsigned short GetCounter2K();
-	///	ƒ{[ƒhã‚Ìƒ^ƒCƒ}[‚Ì“Ç‚Ýo‚µ
+	///	ãƒœãƒ¼ãƒ‰ä¸Šã®ã‚¿ã‚¤ãƒžãƒ¼ã®èª­ã¿å‡ºã—
 	unsigned short GetCounter8K();
-	///	ƒ^ƒCƒ}[‚È‚Ç‚ÌƒŠƒZƒbƒg
+	///	ã‚¿ã‚¤ãƒžãƒ¼ãªã©ã®ãƒªã‚»ãƒƒãƒˆ
 	void Reset();
-	///	—Í‚Ì“Ç‚Ýo‚µ
+	///	åŠ›ã®èª­ã¿å‡ºã—
 	float GetForce(int ch){
 		if (ch > DOF-1) ch = DOF-1;
 		if (ch < 0) ch = 0;
@@ -87,13 +87,13 @@ public:
 		return Force(ch);
 	}
 protected:
-	///	ƒf[ƒ^‚ðƒjƒ…[ƒgƒ“‚É•ÏŠ·
+	///	ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ‹ãƒ¥ãƒ¼ãƒˆãƒ³ã«å¤‰æ›
 	float DRNittaForce::Force(int num){
 		return (float)force[num]/(float)16384*(float)full_range[num];
 	}
-	///	—Í‚ÌŽæ“¾
+	///	åŠ›ã®å–å¾—
 	void ReadForce(int ch);
-	///	ƒŒƒWƒXƒ^‚Ì“Ç‚Ýo‚µ
+	///	ãƒ¬ã‚¸ã‚¹ã‚¿ã®èª­ã¿å‡ºã—
 	void ReadReg(unsigned short a, unsigned short* d);
 	void WriteReg(unsigned short a, unsigned short d);
 };

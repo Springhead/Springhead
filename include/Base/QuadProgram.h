@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -20,30 +20,30 @@
 #include <Base/TMatrix.h>
 using namespace PTM;
 /*
-“ñŸŒv‰æ–@
-                                                          2003/02/04@Ô‰H m
+äºŒæ¬¡è¨ˆç”»æ³•
+                                                          2003/02/04ã€€èµ¤ç¾½ å…‹ä»
 
-1.–Ú“I
-	ƒ{ƒbƒNƒX§–ñğŒ‰º(minX<=x<=maxX)‚ÅAŸŒ³‚ª¬‹K–Í‚Ì“ñŸŒv‰æ–â‘è‚ğ‰ğ‚­ƒvƒƒOƒ‰ƒ€‚Å‚·B
-	SPIDAR—p‚ÉŠJ”­‚³‚ê‚Ä‚¢‚Ü‚·‚ªAƒ{ƒbƒNƒX§–ñğŒ‰º‚È‚ç‚ÎAˆê”Ê‚Ì“ñŸŒv‰æ–â‘è‚ğ‰ğ‚­‚±‚Æ‚à‚Å‚«‚Ü‚·B
-	‹ï‘Ì“I‚É‚ÍAˆÈ‰º‚Ì’Ê‚è
+1.ç›®çš„
+	ãƒœãƒƒã‚¯ã‚¹åˆ¶ç´„æ¡ä»¶ä¸‹(minX<=x<=maxX)ã§ã€æ¬¡å…ƒãŒå°è¦æ¨¡ã®äºŒæ¬¡è¨ˆç”»å•é¡Œã‚’è§£ããƒ—ãƒ­ã‚°ãƒ©ãƒ ã§ã™ã€‚
+	SPIDARç”¨ã«é–‹ç™ºã•ã‚Œã¦ã„ã¾ã™ãŒã€ãƒœãƒƒã‚¯ã‚¹åˆ¶ç´„æ¡ä»¶ä¸‹ãªã‚‰ã°ã€ä¸€èˆ¬ã®äºŒæ¬¡è¨ˆç”»å•é¡Œã‚’è§£ãã“ã¨ã‚‚ã§ãã¾ã™ã€‚
+	å…·ä½“çš„ã«ã¯ã€ä»¥ä¸‹ã®é€šã‚Š
 	
 	f(x) = (1/2)x'Qx - c'x   -> minimize
 	minX <= x <= maxX
 	
-	‚ğ—LŒø§–ñ–@(Active Set Strategy Methods)‚ğ—p‚¢‚Ä‰ğ‚¢‚Ä‚¢‚Ü‚·B
+	ã‚’æœ‰åŠ¹åˆ¶ç´„æ³•(Active Set Strategy Methods)ã‚’ç”¨ã„ã¦è§£ã„ã¦ã„ã¾ã™ã€‚
 */
 /**	Quadratic Programming (C++ template)
-	@param MATNN	nsn—ñ‚Ìs—ñŒ^
-	@param VECN		ns‚ÌƒxƒNƒgƒ‹Œ^
-	@param VEC2N	2ns‚ÌƒxƒNƒgƒ‹Œ^
-	@param VECNI	intŒ^‚Ìns‚ÌƒxƒNƒgƒ‹Œ^	*/
+	@param MATNN	nè¡Œnåˆ—ã®è¡Œåˆ—å‹
+	@param VECN		nè¡Œã®ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@param VEC2N	2nè¡Œã®ãƒ™ã‚¯ãƒˆãƒ«å‹
+	@param VECNI	intå‹ã®nè¡Œã®ãƒ™ã‚¯ãƒˆãƒ«å‹	*/
 template <typename MATNN, typename VECN, typename VEC2N, typename VECNI>
 class QuadProgramImp{
 public:
-	MATNN matQ;				///<	–Ú“IŠÖ”‚Ì2Ÿ‚ÌŒW”s—ñ
-	VECN vecC;				///<	–Ú“IŠÖ”‚Ì1Ÿ‚ÌŒW”ƒxƒNƒgƒ‹
-	VECN vecX;				///<	‰ğ
+	MATNN matQ;				///<	ç›®çš„é–¢æ•°ã®2æ¬¡ã®ä¿‚æ•°è¡Œåˆ—
+	VECN vecC;				///<	ç›®çš„é–¢æ•°ã®1æ¬¡ã®ä¿‚æ•°ãƒ™ã‚¯ãƒˆãƒ«
+	VECN vecX;				///<	è§£
 	int Dim(){ return vecX.size(); }
 	typedef TYPENAME VECN::element_type T;
 
@@ -126,8 +126,8 @@ protected:
 	void CalcMatRXL(MATNN& a, VEC2N& x, VECN& b){
 		int i,j,k;
 		T p,q,s;
-		// ˜A—§‚PŸ•û’ö®‚ğ‰ğ‚­
-		//iƒKƒEƒX‚ÌÁ‹–@ ‰ÈŠw‹ZpŒvZƒnƒ“ƒhƒuƒbƒN‚æ‚èj‰ü‘P‚Ì—]’n‚ ‚è
+		// é€£ç«‹ï¼‘æ¬¡æ–¹ç¨‹å¼ã‚’è§£ã
+		//ï¼ˆã‚¬ã‚¦ã‚¹ã®æ¶ˆå»æ³• ç§‘å­¦æŠ€è¡“è¨ˆç®—ãƒãƒ³ãƒ‰ãƒ–ãƒƒã‚¯ã‚ˆã‚Šï¼‰æ”¹å–„ã®ä½™åœ°ã‚ã‚Š
 		for ( k=0 ; k<Dim()-1 ; ++k )
 		{
 			p=a[k][k];
@@ -151,7 +151,7 @@ protected:
 			x[k]=s;
 		}  
 
-		// Œ‹‰Ê‚ğŠi”[
+		// çµæœã‚’æ ¼ç´
 		for(i=0;i<Dim();i++){
 			if(isActiveSet[i] > 0){
 				x[Dim()+i] = x[i];
@@ -239,13 +239,13 @@ protected:
 };
 
 /**	Quadratic Programming (C++ template)
-	@param T	Œ^–¼
-	@param N	ŸŒ³”						*/
+	@param T	å‹å
+	@param N	æ¬¡å…ƒæ•°						*/
 template <typename T, int N>
 class TQuadProgram:public QuadProgramImp< TMatrixRow<N, N, T>, TVector<N, T>, TVector<2*N, T>, TVector<N, int> >{
 };
 /**	Quadratic Programming (C++ template)
-	@param T	Œ^–¼	*/
+	@param T	å‹å	*/
 template <class T>
 class VQuadProgram:public QuadProgramImp< VMatrixRow<T>, VVector<T>, VVector<T>, VVector<int> >{
 public:
@@ -255,7 +255,7 @@ public:
 	typedef T ET;
 #endif
 	typedef QuadProgramImp< VMatrixRow<ET>, VVector<ET>, VVector<ET>, VVector<int> > base_type;
-	///	ŸŒ³‚ğİ’è
+	///	æ¬¡å…ƒã‚’è¨­å®š
 	void SetDim(int n){
 		matQ.resize(n,n);
 		vecC.resize(n);
@@ -271,7 +271,7 @@ public:
 		vecD.resize(n);
 		isActiveSet.resize(n);
 	}
-	///	‰Šú‰»CminT‚ÌŸŒ³‚ÅCŸŒ³‚ğİ’è
+	///	åˆæœŸåŒ–ï¼ŒminTã®æ¬¡å…ƒã§ï¼Œæ¬¡å…ƒã‚’è¨­å®š
 	void Init(VVector<ET> minT, VVector<ET> maxT){
 		SetDim(minT.size());
 		base_type::Init(minT, maxT);

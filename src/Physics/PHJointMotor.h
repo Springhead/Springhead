@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -21,7 +21,7 @@ class PH1DJoint;
 class PHBallJoint;
 class PHSpring;
 
-///	ƒpƒ‰ƒ[ƒ^ˆê——i1D/3D/6D‚ð‹¤’Ê‚Åˆµ‚¦‚é‚æ‚¤‚É‚·‚é‚½‚ß‚ÌƒfƒXƒNƒŠƒvƒ^‚à‚Ç‚«j
+///	ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ä¸€è¦§ï¼ˆ1D/3D/6Dã‚’å…±é€šã§æ‰±ãˆã‚‹ã‚ˆã†ã«ã™ã‚‹ãŸã‚ã®ãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ã‚‚ã©ãï¼‰
 template<int NDOF>
 struct PHNDJointMotorParam {
 	// State
@@ -38,99 +38,99 @@ struct PHNDJointMotorParam {
 	double hardnessRate;
 };
 
-///	NŽ©—R“xŠÖß‚ÌŠÖßƒRƒ“ƒgƒ[ƒ‰
+///	Nè‡ªç”±åº¦é–¢ç¯€ã®é–¢ç¯€ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 template<int NDOF>
 class PHNDJointMotor {
 public:
 	typedef PTM::TVector<NDOF,double> VecNd;
 
-	/// ƒRƒ“ƒgƒ[ƒ‹‚Ì‘ÎÛ‚Æ‚È‚éŠÖß
+	/// ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ã®å¯¾è±¡ã¨ãªã‚‹é–¢ç¯€
 	PHJoint* joint;
 
-	///< Œ»Ý‚Ì‚Î‚Ë•”‚Ì‹——£iŽO—v‘fƒ‚ƒfƒ‹—pj
+	///< ç¾åœ¨ã®ã°ã­éƒ¨ã®è·é›¢ï¼ˆä¸‰è¦ç´ ãƒ¢ãƒ‡ãƒ«ç”¨ï¼‰
 	SpatialVector newXs;
 
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHNDJointMotor() {}
 
-	// ----- Motor‚Ì‹@”\
+	// ----- Motorã®æ©Ÿèƒ½
 
-	/// S‘©Ž²‚ðŒˆ’è‚·‚é
+	/// æ‹˜æŸè»¸ã‚’æ±ºå®šã™ã‚‹
 	virtual void SetupAxisIndex();
 
-	/// dA, db‚ðŒvŽZ‚·‚é
+	/// dA, dbã‚’è¨ˆç®—ã™ã‚‹
 	virtual void CompBias();
 
-	// ----- ‚±‚ÌƒNƒ‰ƒX‚Ì‹@”\
+	// ----- ã“ã®ã‚¯ãƒ©ã‚¹ã®æ©Ÿèƒ½
 
-	/// ’e«•ÏŒ`—p‚ÌCompBias
+	/// å¼¾æ€§å¤‰å½¢ç”¨ã®CompBias
 	void CompBiasElastic();
 
-	/// ‘Y«•ÏŒ`—p‚ÌCompBias
+	/// å¡‘æ€§å¤‰å½¢ç”¨ã®CompBias
 	void CompBiasPlastic();
 
-	/// ~•š‚µ‚½‚©‚Ç‚¤‚©
+	/// é™ä¼ã—ãŸã‹ã©ã†ã‹
 	void CheckYielded();
 
-	// ----- ”h¶ƒNƒ‰ƒX‚ÅŽÀ‘•‚·‚é‹@”\
-	/// propV‚ðŒvŽZ‚·‚é
+	// ----- æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
+	/// propVã‚’è¨ˆç®—ã™ã‚‹
 	virtual PTM::TVector<NDOF,double> GetPropV() { return PTM::TVector<NDOF,double>(); }
 
-	/// ƒpƒ‰ƒ[ƒ^‚ðŽæ“¾‚·‚é
+	/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
 	virtual void GetParams(PHNDJointMotorParam<NDOF>& p) {}
 
-	/// ƒpƒ‰ƒ[ƒ^‚ð”½‰f‚·‚é
+	/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’åæ˜ ã™ã‚‹
 	virtual void SetParams(PHNDJointMotorParam<NDOF>& p) {}
 };
 
-///	1Ž©—R“xŠÖß‚ÌŠÖßƒRƒ“ƒgƒ[ƒ‰
+///	1è‡ªç”±åº¦é–¢ç¯€ã®é–¢ç¯€ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 class PH1DJointMotor : public PHNDJointMotor<1> {
 public:
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PH1DJointMotor() {}
 
-	// ----- PHNDJointMotor‚Ì”h¶ƒNƒ‰ƒX‚ÅŽÀ‘•‚·‚é‹@”\
-	/// propV‚ðŒvŽZ‚·‚é
+	// ----- PHNDJointMotorã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
+	/// propVã‚’è¨ˆç®—ã™ã‚‹
 	virtual PTM::TVector<1,double> GetPropV();
 
-	/// ƒpƒ‰ƒ[ƒ^‚ðŽæ“¾‚·‚é
+	/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
 	virtual void GetParams(PHNDJointMotorParam<1>& p);
 
-	/// ƒpƒ‰ƒ[ƒ^‚ð”½‰f‚·‚é
+	/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’åæ˜ ã™ã‚‹
 	virtual void SetParams(PHNDJointMotorParam<1>& p);
 };
 
-///	‹…ŠÖß‚ÌŠÖßƒRƒ“ƒgƒ[ƒ‰
+///	çƒé–¢ç¯€ã®é–¢ç¯€ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 class PHBallJointMotor : public PHNDJointMotor<3> {
 public:
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHBallJointMotor() {}
 
-	// ----- PHNDJointMotor‚Ì”h¶ƒNƒ‰ƒX‚ÅŽÀ‘•‚·‚é‹@”\
-	/// propV‚ðŒvŽZ‚·‚é
+	// ----- PHNDJointMotorã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
+	/// propVã‚’è¨ˆç®—ã™ã‚‹
 	virtual PTM::TVector<3,double> GetPropV();
 
-	/// ƒpƒ‰ƒ[ƒ^‚ðŽæ“¾‚·‚é
+	/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
 	virtual void GetParams(PHNDJointMotorParam<3>& p);
 
-	/// ƒpƒ‰ƒ[ƒ^‚ð”½‰f‚·‚é
+	/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’åæ˜ ã™ã‚‹
 	virtual void SetParams(PHNDJointMotorParam<3>& p);
 };
 
-///	ƒoƒlƒ_ƒ“ƒp‚ÌƒRƒ“ƒgƒ[ƒ‰
+///	ãƒãƒãƒ€ãƒ³ãƒ‘ã®ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©
 class PHSpringMotor : public PHNDJointMotor<6> {
 public:
-	/// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHSpringMotor() {}
 
-	// ----- PHNDJointMotor‚Ì”h¶ƒNƒ‰ƒX‚ÅŽÀ‘•‚·‚é‹@”\
-	/// propV‚ðŒvŽZ‚·‚é
+	// ----- PHNDJointMotorã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã™ã‚‹æ©Ÿèƒ½
+	/// propVã‚’è¨ˆç®—ã™ã‚‹
 	virtual PTM::TVector<6,double> GetPropV();
 
-	/// ƒpƒ‰ƒ[ƒ^‚ðŽæ“¾‚·‚é
+	/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
 	virtual void GetParams(PHNDJointMotorParam<6>& p);
 
-	/// ƒpƒ‰ƒ[ƒ^‚ð”½‰f‚·‚é
+	/// ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’åæ˜ ã™ã‚‹
 	virtual void SetParams(PHNDJointMotorParam<6>& p);
 };
 

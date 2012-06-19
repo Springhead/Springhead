@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2011, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,33 +18,33 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHSolidForHaptic
-//Haptic‘¤‚©‚çPhysics‘¤‚Ö“n‚·î•ñ
+//Hapticå´ã‹ã‚‰Physicså´ã¸æ¸¡ã™æƒ…å ±
 struct PHSolidForHapticSt{
 public:
-	Vec3d force;			// —ÍŠoƒŒƒ“ƒ_ƒŠƒ“ƒO‚É‚æ‚Á‚Ä‰Á‚í‚é‘S‚Ä‚Ì—Í
-	Vec3d torque;;			// —ÍŠoƒŒƒ“ƒ_ƒŠƒ“ƒO‚É‚æ‚Á‚Ä‰Á‚í‚é‘S‚Ä‚Ìƒgƒ‹ƒN
+	Vec3d force;			// åŠ›è¦šãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã«ã‚ˆã£ã¦åŠ ã‚ã‚‹å…¨ã¦ã®åŠ›
+	Vec3d torque;;			// åŠ›è¦šãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã«ã‚ˆã£ã¦åŠ ã‚ã‚‹å…¨ã¦ã®ãƒˆãƒ«ã‚¯
 };
-// Physics‘¤‚©‚çHaptic‘¤‚Ö“n‚·î•ñ
+// Physicså´ã‹ã‚‰Hapticå´ã¸æ¸¡ã™æƒ…å ±
 struct PHSolidForHapticSt2{
 public:
-	PHSolid* sceneSolid;	// PHScene‚ª‚Â„‘Ì
+	PHSolid* sceneSolid;	// PHSceneãŒæŒã¤å‰›ä½“
 	
-	bool bPointer;			// —ÍŠoƒ|ƒCƒ“ƒ^‚Å‚ ‚é‚©‚Ç‚¤‚©
-	int doSim;				// ‹ß–T‚Å‚ ‚é‚©‚Ç‚¤‚© 0:‹ß–T‚Å‚È‚¢C1:‚Í‚¶‚ß‚Ä‹ß–TC2:Œp‘±‚µ‚Ä‹ß–T
+	bool bPointer;			// åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã§ã‚ã‚‹ã‹ã©ã†ã‹
+	int doSim;				// è¿‘å‚ã§ã‚ã‚‹ã‹ã©ã†ã‹ 0:è¿‘å‚ã§ãªã„ï¼Œ1:ã¯ã˜ã‚ã¦è¿‘å‚ï¼Œ2:ç¶™ç¶šã—ã¦è¿‘å‚
 
-	SpatialVector b;		///< —\‘ªƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Å‹‚ß‚½ƒ‚ƒrƒŠƒeƒBid—Í“™‚Ì’è”€j
-	SpatialVector curb;		///< ’ÊíƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Å‚Å‚½’è”€
-	SpatialVector lastb;	///< ‘O‰ñ‚Ì—\‘ªƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚Å‹‚ß‚½’è”€
+	SpatialVector b;		///< äºˆæ¸¬ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã§æ±‚ã‚ãŸãƒ¢ãƒ“ãƒªãƒ†ã‚£ï¼ˆé‡åŠ›ç­‰ã®å®šæ•°é …ï¼‰
+	SpatialVector curb;		///< é€šå¸¸ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã§ã§ãŸå®šæ•°é …
+	SpatialVector lastb;	///< å‰å›ã®äºˆæ¸¬ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã§æ±‚ã‚ãŸå®šæ•°é …
 	SpatialVector bimpact;
 };
 
 class PHSolidForHaptic : public PHSolidForHapticSt, public PHSolidForHapticSt2, public UTRefCount{  
 public:
-	PHSolid localSolid;		// sceneSolid‚ÌƒNƒ[ƒ“
+	PHSolid localSolid;		// sceneSolidã®ã‚¯ãƒ­ãƒ¼ãƒ³
 
-	// Õ“Ë”»’è—p‚Ìˆê•Ï”
-	int NLocalFirst;		// ‚Í‚¶‚ß‚Ä‹ß–T‚É‚È‚é—ÍŠoƒ|ƒCƒ“ƒ^‚Ì”iÕ“Ë”»’è‚Å—˜—pj
-	int NLocal;				// ‹ß–T‚È—ÍŠoƒ|ƒCƒ“ƒ^‚Ì”iÕ“Ë”»’è‚Å—˜—pj
+	// è¡çªåˆ¤å®šç”¨ã®ä¸€æ™‚å¤‰æ•°
+	int NLocalFirst;		// ã¯ã˜ã‚ã¦è¿‘å‚ã«ãªã‚‹åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã®æ•°ï¼ˆè¡çªåˆ¤å®šã§åˆ©ç”¨ï¼‰
+	int NLocal;				// è¿‘å‚ãªåŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã®æ•°ï¼ˆè¡çªåˆ¤å®šã§åˆ©ç”¨ï¼‰
 	PHSolidForHaptic();
 	PHSolid* GetLocalSolid(){ return &localSolid; }
 	void AddForce(Vec3d f);
@@ -57,19 +57,19 @@ class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
 class PHSolidPairForHaptic;
 class PHShapePairForHaptic : public CDShapePair{
 public:	
-	// 0:solidA1:pointer
-	// Vec3d normal‚Í„‘Ì‚©‚ç—ÍŠoƒ|ƒCƒ“ƒ^‚Ö‚Ì–@üƒxƒNƒgƒ‹
-	Posed lastShapePoseW[2];	///< ‘O‰ñ‚ÌŒ`óp¨
-	Vec3d lastClosestPoint[2];	///< ‘O‰ñ‚Ì‹ß–T“_(ƒ[ƒJƒ‹À•W)
-	Vec3d lastNormal;			///< ‘O‰ñ‚Ì‹ß–T•¨‘Ì‚Ì’ñ¦–Ê‚Ì–@ü
-	std::vector< Vec3d > intersectionVertices; ///< ÚG‘ÌÏ‚Ì’¸“_(ƒ[ƒJƒ‹À•W)
+	// 0:solidã€1:pointer
+	// Vec3d normalã¯å‰›ä½“ã‹ã‚‰åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã¸ã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«
+	Posed lastShapePoseW[2];	///< å‰å›ã®å½¢çŠ¶å§¿å‹¢
+	Vec3d lastClosestPoint[2];	///< å‰å›ã®è¿‘å‚ç‚¹(ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™)
+	Vec3d lastNormal;			///< å‰å›ã®è¿‘å‚ç‰©ä½“ã®æç¤ºé¢ã®æ³•ç·š
+	std::vector< Vec3d > intersectionVertices; ///< æ¥è§¦ä½“ç©ã®é ‚ç‚¹(ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™)
 	std::vector< UTRef< PHIr > > irs;
 
 	PHShapePairForHaptic();
 	PHShapePairForHaptic(const PHShapePairForHaptic& s);
-	/// ÚG”»’èD‹ß–T“_‘Î‚ğíXV
+	/// æ¥è§¦åˆ¤å®šï¼è¿‘å‚ç‚¹å¯¾ã‚’å¸¸æ™‚æ›´æ–°
 	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
-	/// ÚG‚Ì”»’è
+	/// æ¥è§¦æ™‚ã®åˆ¤å®š
 	int OnDetect(unsigned ct, const Vec3d& center0);
 	bool AnalyzeContactRegion();
 	bool CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bMultiPoints);
@@ -78,13 +78,13 @@ public:
 //----------------------------------------------------------------------------
 
 struct PHSolidPairForHapticSt{
-	Vec3d force;			///< —ÍŠoƒ|ƒCƒ“ƒ^‚ª‚±‚Ì„‘Ì‚É‰Á‚¦‚é—Í
-	Vec3d torque;			///< —ÍŠoƒ|ƒCƒ“ƒ^‚ª‚±‚Ì„‘Ì‚É‰Á‚¦‚éƒgƒ‹ƒN
+	Vec3d force;			///< åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ãŒã“ã®å‰›ä½“ã«åŠ ãˆã‚‹åŠ›
+	Vec3d torque;			///< åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ãŒã“ã®å‰›ä½“ã«åŠ ãˆã‚‹ãƒˆãƒ«ã‚¯
 
-	Posed interpolationPose;	///< „‘Ì‚Ì•âŠÔp¨
+	Posed interpolationPose;	///< å‰›ä½“ã®è£œé–“å§¿å‹¢
 	Posed lastInterpolationPose;
-	Posed initialRelativePose;	///< ÚGŠJn‚Ì‘Š‘ÎˆÊ’up¨
-	Posed relativePose;			///< ÚG’†‚Ì‘Š‘ÎˆÊ’up¨
+	Posed initialRelativePose;	///< æ¥è§¦é–‹å§‹æ™‚ã®ç›¸å¯¾ä½ç½®å§¿å‹¢
+	Posed relativePose;			///< æ¥è§¦ä¸­ã®ç›¸å¯¾ä½ç½®å§¿å‹¢
 
 	int contactCount;
 	Vec3d vibrationVel;
@@ -101,14 +101,14 @@ public:
 	int solidID[2];
 	
 	int inLocal;	// 0:NONE, 1:in local first, 2:in local
-	TMatrixRow<6, 3, double> A;		// LocalDynamics‚Åg‚¤ƒAƒNƒZƒŒƒ‰ƒ“ƒX
-	TMatrixRow<6, 6, double> A6D;  // LocalDynamics6D‚Åg‚¤ƒAƒNƒZƒŒƒ‰ƒ“ƒX
+	TMatrixRow<6, 3, double> A;		// LocalDynamicsã§ä½¿ã†ã‚¢ã‚¯ã‚»ãƒ¬ãƒ©ãƒ³ã‚¹
+	TMatrixRow<6, 6, double> A6D;  // LocalDynamics6Dã§ä½¿ã†ã‚¢ã‚¯ã‚»ãƒ¬ãƒ©ãƒ³ã‚¹
 	
 	PHSolidPairForHaptic();
 	PHSolidPairForHaptic(const PHSolidPairForHaptic& s);
-	/// Œğ·‚ªŒŸ’m‚³‚ê‚½Œã‚Ìˆ—
+	/// äº¤å·®ãŒæ¤œçŸ¥ã•ã‚ŒãŸå¾Œã®å‡¦ç†
 	virtual bool Detect(engine_type* engine, unsigned int ct, double dt);
-	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< Œğ·‚ªŒŸ’m‚³‚ê‚½‚Æ‚«‚Ìˆ—
+	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< äº¤å·®ãŒæ¤œçŸ¥ã•ã‚ŒãŸã¨ãã®å‡¦ç†
 	virtual PHIrs CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose);
 	virtual bool CompFrictionIntermediateRepresentation(PHShapePairForHaptic* sp);
 	virtual bool CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp);
@@ -144,7 +144,7 @@ public:
 	PHHapticRender* GetHapticRender();
 	PHHapticLoopImp* GetHapticLoop();
 
-	///< ƒfƒoƒbƒN—pƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“Às
+	///< ãƒ‡ãƒãƒƒã‚¯ç”¨ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³å®Ÿè¡Œ
 	virtual void StepPhysicsSimulation();
 };
 
@@ -172,53 +172,53 @@ public:
 
 
 	//-------------------------------------------------------------------
-	// API‚ÌÀ‘•
-	///< —ÍŠo’ñ¦ŒvZ‚ÌON/OFF
+	// APIã®å®Ÿè£…
+	///< åŠ›è¦šæç¤ºè¨ˆç®—ã®ON/OFF
 	void EnableHapticEngine(bool b){ bHapticEngine = b; }
-	///< ƒGƒ“ƒWƒ“ƒ‚[ƒh‚Ì‘I‘ğ
+	///< ã‚¨ãƒ³ã‚¸ãƒ³ãƒ¢ãƒ¼ãƒ‰ã®é¸æŠ
 	void SetHapticEngineMode(HapticEngineMode mode);
-	///< —ÍŠoƒ|ƒCƒ“ƒ^‚Ì”‚ğ•Ô‚·
+	///< åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã®æ•°ã‚’è¿”ã™
 	int NHapticPointers(){ return (int)hapticPointers.size(); }
-	///< —ÍŠoƒ|ƒCƒ“ƒ^‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
+	///< åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
 	PHHapticPointer* GetHapticPointer(int i){ return hapticPointers[i]; }
-	///< state•Û‘¶‚Ì‚½‚ß‚ÉŠm•Û‚µ‚½—Ìˆæ‚ğŠJ•ú‚·‚é
+	///< stateä¿å­˜ã®ãŸã‚ã«ç¢ºä¿ã—ãŸé ˜åŸŸã‚’é–‹æ”¾ã™ã‚‹
 	void ReleaseState();
 
 	//-------------------------------------------------------------------
-	// PHHapticEngine‚ÌÀ‘•
-	///< ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“ƒ‹[ƒv‚ÌXViPHScene::Integrate()‚©‚çƒR[ƒ‹j
+	// PHHapticEngineã®å®Ÿè£…
+	///< ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ãƒ«ãƒ¼ãƒ—ã®æ›´æ–°ï¼ˆPHScene::Integrate()ã‹ã‚‰ã‚³ãƒ¼ãƒ«ï¼‰
 	virtual void Step(){ if(bHapticEngine && bPhysicStep) engineImp->Step1(); }
 	virtual void Step2(){ if(bHapticEngine && bPhysicStep) engineImp->Step2(); }
-	///< —ÍŠoƒ‹[ƒv‚ÌXV	
+	///< åŠ›è¦šãƒ«ãƒ¼ãƒ—ã®æ›´æ–°	
 	virtual void StepHapticLoop(){ if(bHapticEngine) engineImp->StepHapticLoop(); }
 
-	///< —ÍŠoƒŒƒ“ƒ_ƒŠƒ“ƒO—p‚ÌÕ“Ë”»’èŠJn
+	///< åŠ›è¦šãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ç”¨ã®è¡çªåˆ¤å®šé–‹å§‹
 	virtual void StartDetection();
-	///< BBox‚ÌŒü‚«‚ğXV
+	///< BBoxã®å‘ãã‚’æ›´æ–°
 	void UpdateEdgeList();
-	///< ‚ ‚é„‘Ì‚Ì‹ß–T‚Ì„‘Ì‚ğAABB‚Å‚İ‚Â‚¯‚éirange‚ÍBBox‚ğ‚³‚ç‚Érange•ª‚¾‚¯L‚°‚é
+	///< ã‚ã‚‹å‰›ä½“ã®è¿‘å‚ã®å‰›ä½“ã‚’AABBã§ã¿ã¤ã‘ã‚‹ï¼ˆrangeã¯BBoxã‚’ã•ã‚‰ã«rangeåˆ†ã ã‘åºƒã’ã‚‹
 	void Detect(PHHapticPointer* pointer);
 	int GetPriority() const { return SGBP_HAPTICENGINE1; }
-	///< „‘Ì‚Ì’Ç‰Á
+	///< å‰›ä½“ã®è¿½åŠ 
 	bool AddChildObject(ObjectIf* o);
-	///< „‘Ì‚Ìíœ
+	///< å‰›ä½“ã®å‰Šé™¤
 	bool DelChildObject(ObjectIf* o);
-	///< ShapePair‚ÌXV
+	///< ShapePairã®æ›´æ–°
 	void UpdateShapePairs(PHSolid* solid);
-	///< ÚGƒ‚[ƒh‚Ì•ÏX
+	///< æ¥è§¦ãƒ¢ãƒ¼ãƒ‰ã®å¤‰æ›´
 	virtual void SetContactMode();
-	//< ƒGƒ“ƒWƒ“ƒ‚[ƒh‚Ìæ“¾
+	//< ã‚¨ãƒ³ã‚¸ãƒ³ãƒ¢ãƒ¼ãƒ‰ã®å–å¾—
 	int GetHapticEngineMode();
-	///< ƒ[ƒJƒ‹‘¤‚Ì—ÍŠoƒ|ƒCƒ“ƒ^‚ğ‚Æ‚Á‚Ä‚­‚é
+	///< ãƒ­ãƒ¼ã‚«ãƒ«å´ã®åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã‚’ã¨ã£ã¦ãã‚‹
 	PHHapticPointers* GetLocalHapticPointers();
 
-	///< ƒfƒoƒbƒN—pƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“Às
-	///iPHScene::Step‚Ì•Ï‚í‚è‚ÉŒÄ‚Ôj
+	///< ãƒ‡ãƒãƒƒã‚¯ç”¨ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³å®Ÿè¡Œ
+	///ï¼ˆPHScene::Stepã®å¤‰ã‚ã‚Šã«å‘¼ã¶ï¼‰
 	virtual void StepPhysicsSimulation(){ engineImp->StepPhysicsSimulation(); }
 
 };
 
-// PHScene‚©‚çStep()‚ğ2‰ñŒÄ‚Ô‚½‚ß‚Ì‹[—ƒNƒ‰ƒX
+// PHSceneã‹ã‚‰Step()ã‚’2å›å‘¼ã¶ãŸã‚ã®æ“¬ä¼¼ã‚¯ãƒ©ã‚¹
 class PHHapticEngineCallStep2 : public PHEngine{
 public:
 	SPR_OBJECTDEF_NOIF(PHHapticEngineCallStep2);

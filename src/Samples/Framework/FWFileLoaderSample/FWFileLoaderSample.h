@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -6,23 +6,23 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-#ifndef FW_FILELOADER_SAMPLE_H						// ƒwƒbƒ_ƒtƒ@ƒCƒ‹‚ğì‚é‚Ì‚¨‚Ü‚¶‚È‚¢
-#define FW_FILELOADER_SAMPLE_H						// “¯ã
+#ifndef FW_FILELOADER_SAMPLE_H						// ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œã‚‹æ™‚ã®ãŠã¾ã˜ãªã„
+#define FW_FILELOADER_SAMPLE_H						// åŒä¸Š
 
-#include <Springhead.h>								// Springhead‚ÌAPI‚ğg‚¤‚½‚ß‚Ìƒwƒbƒ_ƒtƒ@ƒCƒ‹
-#include <Framework/SprFWApp.h>						// FrameworkƒNƒ‰ƒX‚ªéŒ¾‚³‚ê‚Ä‚¢‚éƒwƒbƒ_ƒtƒ@ƒCƒ‹
+#include <Springhead.h>								// Springheadã®APIã‚’ä½¿ã†ãŸã‚ã®ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«
+#include <Framework/SprFWApp.h>						// Frameworkã‚¯ãƒ©ã‚¹ãŒå®£è¨€ã•ã‚Œã¦ã„ã‚‹ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«
 
-using namespace Spr;								// Springhead‚Ì–¼‘O‹óŠÔ
+using namespace Spr;								// Springheadã®åå‰ç©ºé–“
 
 class FWFileLoaderSample : public FWApp{
 public:
-	std::string fileName;							///< ƒ[ƒh‚·‚éƒtƒ@ƒCƒ‹–¼
-	FWFileLoaderSample();							///< ƒRƒ“ƒXƒgƒ‰ƒNƒ^i‚±‚ÌƒNƒ‰ƒX‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ª¶¬‚³‚ê‚½‚ÉŒÄ‚Î‚ê‚éŠÖ”j
-	virtual void Init(int argc, char* argv[]);		///< ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚Ì‰Šú‰»
-	virtual void Keyboard(int key, int x, int y);	///< ƒL[ƒ{[ƒhŠÖ”
+	std::string fileName;							///< ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«å
+	FWFileLoaderSample();							///< ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ï¼ˆã“ã®ã‚¯ãƒ©ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒç”Ÿæˆã•ã‚ŒãŸæ™‚ã«å‘¼ã°ã‚Œã‚‹é–¢æ•°ï¼‰
+	virtual void Init(int argc, char* argv[]);		///< ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆæœŸåŒ–
+	virtual void Keyboard(int key, int x, int y);	///< ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰é–¢æ•°
 
-	void InitCameraView();							///< ‰ŠúƒJƒƒ‰ˆÊ’u‚Ìİ’è		
-	void Reset();									///< ƒŠƒZƒbƒg
+	void InitCameraView();							///< åˆæœŸã‚«ãƒ¡ãƒ©ä½ç½®ã®è¨­å®š		
+	void Reset();									///< ãƒªã‚»ãƒƒãƒˆ
 }; 
 
 #endif

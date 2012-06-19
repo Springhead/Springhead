@@ -1,4 +1,4 @@
-#pragma hdrstop
+﻿#pragma hdrstop
 #include "UTDllLoader.h"
 #include <Base/BaseDebug.h>
 #include <stdlib.h>

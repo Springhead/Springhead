@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprDRDevice.h
- *	@brief �q���[�}���C���^�t�F�[�X����邽�߂̍ޗ��ɂȂ�f�o�C�X�̃N���X�D���Ƃ��΁CD/A,A/D,PIO�ȂǁD
+ *	@brief ヒューマンインタフェースを作るための材料になるデバイスのクラス．たとえば，D/A,A/D,PIOなど．
 */
 
 #ifndef SPR_HIDevice_H
@@ -22,53 +22,53 @@ struct HISdkIf;
 //@{
 
 /**
-	�f�o�C�X�̊�{�N���X
+	デバイスの基本クラス
  **/
 struct HIDeviceIf : NamedObjectIf{
 	SPR_IFDEF(HIDevice);
 private:
-	///	�f�o�C�X�̖��O�́A�N���X�ƑΉ�����{�[�h��ID�Ȃǂ��玩���Ō��܂�̂ŁA�ݒ�s�B
+	///	デバイスの名前は、クラスと対応するボードのIDなどから自動で決まるので、設定不可。
 	void SetName(const char* n);	
 };
 
 struct HIVirtualDeviceIf;
 
 /**
-	���f�o�C�X�D�C���^�t�F�[�X�J�[�h�Ƃ��CUSB�f�o�C�X�Ƃ��C
+	実デバイス．インタフェースカードとか，USBデバイスとか，
  **/
 struct HIRealDeviceIf : HIDeviceIf{
 	SPR_IFDEF(HIRealDevice);
 
-	/// �f�o�C�X�����擾
+	/// デバイス名を取得
 	//UTString	GetDeviceName();
 
-	///	�������Ɖ��z�f�o�C�X�̓o�^
+	///	初期化と仮想デバイスの登録
 	bool Init();
-	///	���z�f�o�C�X�̓o�^
+	///	仮想デバイスの登録
 	//void Register(HISdkIf* sdk);
 
-	/// ���z�f�o�C�X�̎擾
+	/// 仮想デバイスの取得
 	HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);
-	/// ���z�f�o�C�X�̕ԋp
+	/// 仮想デバイスの返却
 	bool				Return(HIVirtualDeviceIf* dv);
 
-	///	��Ԃ̍X�V
+	///	状態の更新
 	void Update();
 };
 
 /**
-	�o�[�`�����f�o�C�X�DA/D, D/A��1�`�����l�����Ƃ��C�@�\�Ƃ��Ẵf�o�C�X�D
+	バーチャルデバイス．A/D, D/Aの1チャンネル分とか，機能としてのデバイス．
  **/
 struct HIVirtualDeviceIf : HIDeviceIf{
 	SPR_IFDEF(HIVirtualDevice);
 
-	/// �|�[�g�ԍ����擾�i�|�[�g�ԍ������f�o�C�X�̂݁j
+	/// ポート番号を取得（ポート番号を持つデバイスのみ）
 	int	GetPortNo() const;
 	
-	/// �g�p��Ԃ̎擾
+	/// 使用状態の取得
 	bool IsUsed();
 
-	///	���f�o�C�X�ւ̃|�C���^
+	///	実デバイスへのポインタ
 	HIRealDeviceIf* GetRealDevice();
 	
 	///
@@ -76,72 +76,72 @@ struct HIVirtualDeviceIf : HIDeviceIf{
 };
 
 /**
-	A/D�ϊ�
+	A/D変換
  **/
 struct DVAdIf : HIVirtualDeviceIf{
 	SPR_IFDEF(DVAd);
 
-	///	���̓f�W�^���l�̎擾
+	///	入力デジタル値の取得
 	int Digit();
-	///	���͓d���̎擾
+	///	入力電圧の取得
 	float Voltage();
 };
 
 /**
-	D/A�ϊ�
+	D/A変換
  **/
 struct DVDaIf : HIVirtualDeviceIf{
 	SPR_IFDEF(DVDa);
 
-	///	�o�͂���f�W�^���l�̐ݒ�
+	///	出力するデジタル値の設定
 	void Digit(int d);
-	///	�o�͓d���̐ݒ�
+	///	出力電圧の設定
 	void Voltage(float volt);
 };
 
 /**
-	�J�E���^
+	カウンタ
  **/
 struct DVCounterIf : HIVirtualDeviceIf{
 	SPR_IFDEF(DVCounter);
 
-	///	�J�E���^�l�̐ݒ�
+	///	カウンタ値の設定
 	void Count(long count);
-	///	�J�E���^�l�̓ǂݏo��
+	///	カウンタ値の読み出し
 	long Count();
 };
 
-///	���o�̓|�[�g�̂��߂̒萔�̒�`�Ȃǂ������s���D
+///	入出力ポートのための定数の定義などだけを行う．
 struct DVPortEnum{
 	enum TLevel {LEVEL_LO, LEVEL_HI};
 	enum TDir {DIR_IN, DIR_OUT};
 };
 
 /**
-	�p������I/O
+	パラレルI/O
  **/
 struct DVPioIf : public HIVirtualDeviceIf, public DVPortEnum{
 	SPR_IFDEF(DVPio);
 
-	///	�|�[�g�̃��W�b�N���x���̓��́BHi:true Lo:false
+	///	ポートのロジックレベルの入力。Hi:true Lo:false
 	int Get();
-	///	�|�[�g�̃��W�b�N���x���̏o�́BHi:true Lo:false
+	///	ポートのロジックレベルの出力。Hi:true Lo:false
 	void Set(int l);
 };
 
 /**
-	�͂̓���
+	力の入力
  */
 struct DVForceIf : public HIVirtualDeviceIf{
 	SPR_IFDEF(DVForce);
 
-	///	���R�x�̎擾
+	///	自由度の取得
 	int GetDOF();
-	///	�͂̎擾
+	///	力の取得
 	float GetForce(int ch);
-	///	�͂̎擾
+	///	力の取得
 	void GetForce3(Vec3f& f);
-	///	�͂̎擾
+	///	力の取得
 	void GetForce6(Vec3f& f, Vec3f& t);
 };
 

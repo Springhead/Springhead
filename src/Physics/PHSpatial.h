@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,16 +11,16 @@
 /**
  SpatialVector	  V(v, w) = [v; w];
  SpatialTransform X(R, r) = [R^T, -R^T * r%; O, R^T];
- ^T‚Í“]’u, %‚ÍŠOÏs—ñCO‚Í—ës—ñD
+ ^Tã¯è»¢ç½®, %ã¯å¤–ç©è¡Œåˆ—ï¼ŒOã¯é›¶è¡Œåˆ—ï¼
  X(R, r) * V(v, w) = [R^T * (v + w % r); R^T * w];
 
- ‡¬: X(R1, r1) * X(R2, r2) = X(R2 * R1, r2 + R2 * r1);
- ‹t:   X(R, r)^-1 = X(R^T, -R^T * r);
+ åˆæˆ: X(R1, r1) * X(R2, r2) = X(R2 * R1, r2 + R2 * r1);
+ é€†:   X(R, r)^-1 = X(R^T, -R^T * r);
 
- “]’u: X(R, r)^T = [R, O; r% * R, R];
+ è»¢ç½®: X(R, r)^T = [R, O; r% * R, R];
 	X(R, r)^T * V(f, t) = V(R * f, r % (R * f) + R * t);
- “]’u‚Ì‡¬: X(R1, r1)^T * X(R2, r2)^T = (X(R2, r2) * X(R1, r1))^T = X(R1 * R2, r1 + R1 * r2)^T
- “]’u‚Ì‹t: (X(R, r)^T)^-1 = (X(R, r)^-1)^T
+ è»¢ç½®ã®åˆæˆ: X(R1, r1)^T * X(R2, r2)^T = (X(R2, r2) * X(R1, r1))^T = X(R1 * R2, r1 + R1 * r2)^T
+ è»¢ç½®ã®é€†: (X(R, r)^T)^-1 = (X(R, r)^-1)^T
 
  */
 
@@ -31,7 +31,7 @@ namespace Spr{;
 typedef PTM::TMatrixCol<6, 6, double> Matrix6d;
 typedef PTM::TVector<6, double> Vec6d;
 
-///	v1 * v2^T ‚Å“¾‚ç‚ê‚és—ñ
+///	v1 * v2^T ã§å¾—ã‚‰ã‚Œã‚‹è¡Œåˆ—
 inline Matrix3d VVtr(const Vec3d& v1, const Vec3d& v2){
 	return Matrix3d(
 		v1[0] * v2[0], v1[0] * v2[1], v1[0] * v2[2],

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -36,47 +36,47 @@ public:
 	CRBone() { InitVars(); }
 	CRBone(const CRBoneDesc& desc) : CRBoneDesc(desc) { InitVars(); }
 
-	/** @brief ƒ‰ƒxƒ‹i–ğŠ„‚ğ¦‚·•¶š—ñFHand‚È‚Çj‚Ìæ“¾
+	/** @brief ãƒ©ãƒ™ãƒ«ï¼ˆå½¹å‰²ã‚’ç¤ºã™æ–‡å­—åˆ—ï¼šHandãªã©ï¼‰ã®å–å¾—
 	 */
 	virtual const char* GetLabel() const { return label.c_str(); }
 
-	/** @brief ƒ‰ƒxƒ‹i–ğŠ„‚ğ¦‚·•¶š—ñFHand‚È‚Çj‚Ìİ’è
+	/** @brief ãƒ©ãƒ™ãƒ«ï¼ˆå½¹å‰²ã‚’ç¤ºã™æ–‡å­—åˆ—ï¼šHandãªã©ï¼‰ã®è¨­å®š
 	 */
 	void SetLabel(const char* str) { label = std::string(str); }
 
-	/** @brief PHSolid‚ğæ“¾
+	/** @brief PHSolidã‚’å–å¾—
 	 */
 	PHSolidIf* GetPHSolid() { return solid; }
 
-	/** @brief PHSolid‚ğİ’è
+	/** @brief PHSolidã‚’è¨­å®š
 	 */
 	void SetPHSolid(PHSolidIf* so) { solid = so; }
 
-	/** @brief PHJoint‚ğæ“¾
+	/** @brief PHJointã‚’å–å¾—
 	 */
 	PHJointIf* GetPHJoint() { return joint; }
 
-	/** @brief PHJoint‚ğİ’è
+	/** @brief PHJointã‚’è¨­å®š
 	 */
 	void SetPHJoint(PHJointIf* jo) { joint = jo; }
 
-	/** @brief IKƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ğæ“¾
+	/** @brief IKã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã‚’å–å¾—
 	 */
 	PHIKEndEffectorIf* GetIKEndEffector() { return endeffector; }
 
-	/** @brief IKƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ğİ’è
+	/** @brief IKã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã‚’è¨­å®š
 	 */
 	void SetIKEndEffector(PHIKEndEffectorIf* ikEE) { endeffector = ikEE; }
 
-	/** @brief IKƒAƒNƒ`ƒ…ƒG[ƒ^‚ğæ“¾
+	/** @brief IKã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã‚’å–å¾—
 	 */
 	PHIKActuatorIf* GetIKActuator() { return actuator; }
 
-	/** @brief IKƒAƒNƒ`ƒ…ƒG[ƒ^‚ğİ’è
+	/** @brief IKã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿ã‚’è¨­å®š
 	 */
 	void SetIKActuator(PHIKActuatorIf* ikAct) { actuator = ikAct; }
 
-	/** @brief q—v‘f‚Ìˆµ‚¢
+	/** @brief å­è¦ç´ ã®æ‰±ã„
 	*/
 	virtual size_t NChildObject() const {
 		return( ((solid==NULL)?0:1) + ((joint==NULL)?0:1) + ((endeffector==NULL)?0:1) + ((actuator==NULL)?0:1) );

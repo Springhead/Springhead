@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -14,7 +14,7 @@
 
 namespace Spr{
 
-// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 CRDebugLinkBodyGenDesc::CRDebugLinkBodyGenDesc(bool enableRange, bool enableFMax){
 	soNSolids		= 0;
 	joNBallJoints	= 0;
@@ -166,7 +166,7 @@ void CRDebugLinkBodyGen::InitBody(){
 }
 
 void CRDebugLinkBodyGen::InitContact(){
-	// ©•ª‚É‘®‚·‚é„‘Ì“¯m‚ÌÚG‚ğOffi‚Ü‚¾­‚È‚·‚¬‚é‚©‚àHÅ’áŒÀ‚ÌÚG‚Íc‚µ‚½‚¢i07/09/25, mitakejj
+	// è‡ªåˆ†ã«å±ã™ã‚‹å‰›ä½“åŒå£«ã®æ¥è§¦ã‚’Offï¼ˆã¾ã å°‘ãªã™ãã‚‹ã‹ã‚‚ï¼Ÿæœ€ä½é™ã®æ¥è§¦ã¯æ®‹ã—ãŸã„ï¼ˆ07/09/25, mitakeï¼‰ï¼‰
 	for (unsigned int i=0; i<solids.size(); ++i) {
 		for (unsigned int j=0; j<solids.size(); ++j) {
 			if (i!=j) {

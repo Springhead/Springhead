@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -38,7 +38,7 @@ FWGLUT* FWGLUT::GetInstance(){
 	return (FWGLUT*)&*(FWGraphicsHandler::instance);
 }
 
-/** ƒR[ƒ‹ƒoƒbƒNŠÖ”*///////////////////////////////////////////////////////
+/** ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°*///////////////////////////////////////////////////////
 
 void FWGLUT::GlutDisplayFunc(){
 	FWApp::GetApp()->Display();	
@@ -46,13 +46,13 @@ void FWGLUT::GlutDisplayFunc(){
 
 void FWGLUT::GlutReshapeFunc(int w, int h){
 	FWWinIf* win = FWApp::GetApp()->GetCurrentWin();
-	// –„‚ß‚İGUIƒRƒ“ƒgƒ[ƒ‹‚ª‚ ‚éê‡‚ğ‘z’è‚µ‚Äƒrƒ…[ƒ|[ƒg‚ÌŒvZ‚ğs‚¤
+	// åŸ‹ã‚è¾¼ã¿GUIã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ«ãŒã‚ã‚‹å ´åˆã‚’æƒ³å®šã—ã¦ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®è¨ˆç®—ã‚’è¡Œã†
 	int l = 0, t = 0;
 	FWGraphicsHandler::instance->CalcViewport(l, t, w, h);
 	win->GetRender()->Reshape(Vec2f(l, t), Vec2f(w,h));
-	// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“‚É‚à’Ê’miqƒEƒBƒ“ƒhƒE‚ÌƒŠƒTƒCƒY‚È‚Ç‚Ì‚½‚ßj
+	// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã«ã‚‚é€šçŸ¥ï¼ˆå­ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒªã‚µã‚¤ã‚ºãªã©ã®ãŸã‚ï¼‰
 	FWApp::GetApp()->Reshape(w, h);
-	// V‚µ‚¢ƒEƒBƒ“ƒhƒEƒTƒCƒY‚ğ‹L‰¯
+	// æ–°ã—ã„ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚µã‚¤ã‚ºã‚’è¨˜æ†¶
 	FWWinBase* winBase = win->Cast();
 	FWWinBaseDesc desc;
 	winBase->FWWinBase::GetDesc(&desc);
@@ -65,7 +65,7 @@ void FWGLUT::GlutTimerFunc(int value){
 	UTTimerIf* timer = UTTimerIf::Get(value);
 	if(!timer)
 		return;
-	// ƒ^ƒCƒ}[‚ª‰Ò“­’†‚È‚çƒR[ƒ‹ƒoƒbƒN‚ğŒÄ‚ÑÄ“o˜^‚·‚é
+	// ã‚¿ã‚¤ãƒãƒ¼ãŒç¨¼åƒä¸­ãªã‚‰ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’å‘¼ã³å†ç™»éŒ²ã™ã‚‹
 	if(timer->IsStarted()){
 		timer->Call();
 		glutTimerFunc(timer->GetInterval(), GlutTimerFunc, timer->GetID());
@@ -73,12 +73,12 @@ void FWGLUT::GlutTimerFunc(int value){
 
 }
 void FWGLUT::GlutIdleFunc(){
-	// –ˆÈ‰º2Œn“‚ÌIdleˆ—‚Í“ˆê‚·‚×‚«	tazz
+	// ï¼Šä»¥ä¸‹2ç³»çµ±ã®Idleå‡¦ç†ã¯çµ±ä¸€ã™ã¹ã	tazz
 
-	// UTTimerProvider‚Æ‚µ‚Ä‚Ì‹@”\DIDLEƒ‚[ƒh‚Ìƒ^ƒCƒ}‚ÌTimerFunc‚ªŒÄ‚Î‚ê‚é
+	// UTTimerProviderã¨ã—ã¦ã®æ©Ÿèƒ½ï¼IDLEãƒ¢ãƒ¼ãƒ‰ã®ã‚¿ã‚¤ãƒã®TimerFuncãŒå‘¼ã°ã‚Œã‚‹
 	UTTimerProvider::CallIdle();
 
-	// FWApp::IdleFunc‚ğŒÄ‚Ô
+	// FWApp::IdleFuncã‚’å‘¼ã¶
 	FWApp::GetApp()->IdleFunc();
 }
 
@@ -124,14 +124,14 @@ void FWGLUT::Init(int argc, char** argv){
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
 	atexit(FWGLUT::AtExit);
 
-	// UTTimerProvider‚Æ‚µ‚Ä“o˜^
+	// UTTimerProviderã¨ã—ã¦ç™»éŒ²
 	Register();
 
-	// ƒOƒ‰ƒtƒBƒNƒXƒfƒoƒCƒX‚ğì¬
+	// ã‚°ãƒ©ãƒ•ã‚£ã‚¯ã‚¹ãƒ‡ãƒã‚¤ã‚¹ã‚’ä½œæˆ
 	grDevice = FWApp::GetApp()->GetSdk()->GetGRSdk()->CreateDeviceGL();
 	grDevice->Init();
 
-	// ƒL[ƒ{[ƒhEƒ}ƒEƒX‚ÆƒWƒ‡ƒCƒXƒeƒBƒbƒNƒfƒoƒCƒX‚Ì“o˜^
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ»ãƒã‚¦ã‚¹ã¨ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²
 	HISdkIf* hiSdk = FWApp::GetApp()->GetSdk()->GetHISdk();
 	keyMouse = hiSdk->AddRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic())->Cast();
 	joyStick = hiSdk->AddRealDevice(DRJoyStickGLUTIf::GetIfInfoStatic())->Cast();
@@ -143,12 +143,12 @@ bool FWGLUT::StartTimer(UTTimer* timer){
 }
 
 bool FWGLUT::StopTimer(UTTimer* timer){
-	// ƒ^ƒCƒ}ƒR[ƒ‹ƒoƒbƒN‚É‚¨‚¢‚ÄÄ“o˜^‚ğ~‚ß‚é‚Ì‚Å‚±‚±‚Å‚Í‰½‚à‚µ‚È‚¢
+	// ã‚¿ã‚¤ãƒã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã«ãŠã„ã¦å†ç™»éŒ²ã‚’æ­¢ã‚ã‚‹ã®ã§ã“ã“ã§ã¯ä½•ã‚‚ã—ãªã„
 	return true;
 }
 
 void FWGLUT::StartMainLoop(){
-	// CPU‚ªí100%‚É‚È‚é–â‘è‚ ‚è
+	// CPUãŒå¸¸æ™‚100%ã«ãªã‚‹å•é¡Œã‚ã‚Š
 	EnableIdleFunc(idleFuncFlag);
 	glutMainLoop();
 }
@@ -164,13 +164,13 @@ void FWGLUT::LeaveGameMode(){
 	glutLeaveGameMode();
 }
 
-/** ƒEƒBƒ“ƒhƒE *////////////////////////////////////////////////////////////////
+/** ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ *////////////////////////////////////////////////////////////////
 
-///	ƒEƒBƒ“ƒhƒE‚ğì¬‚µAƒEƒBƒ“ƒhƒE ID‚ğ•Ô‚·
+///	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ä½œæˆã—ã€ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ IDã‚’è¿”ã™
 FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 	int wid=0;
 
-	// ƒtƒ‹ƒXƒNƒŠ[ƒ“‚Ìê‡‚ÌƒEƒBƒ“ƒhƒE¶¬
+	// ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã®å ´åˆã®ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ç”Ÿæˆ
 	if(desc.fullscreen){	
 		std::stringstream gameMode;
 		gameMode << desc.width << "x" << desc.height << ":32@60";
@@ -180,7 +180,7 @@ FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 #endif
 		wid	= glutEnterGameMode();
 	}
-	// ƒEƒBƒ“ƒhƒEƒ‚[ƒh‚Ìê‡‚Ì¶¬
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰ã®å ´åˆã®ç”Ÿæˆ
 	else{
 		if(parent){
 			wid = glutCreateSubWindow(parent->GetID(), desc.left, desc.top, desc.width, desc.height);
@@ -191,19 +191,19 @@ FWWinIf* FWGLUT::CreateWin(const FWWinDesc& desc, FWWinIf* parent){
 			wid = glutCreateWindow(desc.title.c_str());
 		}
 	}
-	// ‚±‚ÌWindow‚ÌglewƒRƒ“ƒeƒLƒXƒg‚Ì‰Šú‰»
+	// ã“ã®Windowã®glewã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã®åˆæœŸåŒ–
 	int rv = glewInit();
 
-	// window‚ÉŠÖ˜A‚·‚éƒR[ƒ‹ƒoƒbƒN‚Ìİ’è
+	// windowã«é–¢é€£ã™ã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã®è¨­å®š
 	RegisterCallbacks();
 	
 
-	// ƒEƒBƒ“ƒhƒE‚ğì¬
+	// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ä½œæˆ
 	FWWin* win = DBG_NEW FWWin();
 	win->SetDesc(&desc);
 	win->id = wid;
 	
-	// ƒL[ƒ{[ƒhEƒ}ƒEƒX‚ÆƒWƒ‡ƒCƒXƒeƒBƒbƒN‚Ì‰¼‘zƒfƒoƒCƒX‚ğì¬‚µ‚ÄŠÖ˜A•t‚¯
+	// ã‚­ãƒ¼ãƒœãƒ¼ãƒ‰ãƒ»ãƒã‚¦ã‚¹ã¨ã‚¸ãƒ§ã‚¤ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã‚’ä½œæˆã—ã¦é–¢é€£ä»˜ã‘
 	HISdkIf* hiSdk = FWApp::GetApp()->GetSdk()->GetHISdk();
 	HIRealDeviceIf* dr;
 	if(desc.useKeyMouse){
@@ -231,7 +231,7 @@ void FWGLUT::RegisterCallbacks(){
 #endif
 }
 
-///	ƒEƒBƒ“ƒhƒE‚ğ”jŠü‚·‚é
+///	ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’ç ´æ£„ã™ã‚‹
 void FWGLUT::DestroyWin(FWWinIf* w){
 	if (w->GetFullScreen()){
 		glutLeaveGameMode();
@@ -240,19 +240,19 @@ void FWGLUT::DestroyWin(FWWinIf* w){
 		glutDestroyWindow(w->GetID());
 	}
 };
-///	ƒJƒŒƒ“ƒgƒEƒBƒ“ƒhƒE‚ğİ’è‚·‚é
+///	ã‚«ãƒ¬ãƒ³ãƒˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¨­å®šã™ã‚‹
 void FWGLUT::SetCurrentWin(FWWinIf* w){
 	glutSetWindow(w->GetID());
 };
-///	ƒJƒŒƒ“ƒgƒEƒBƒ“ƒhƒE‚ğ•Ô‚·B
+///	ã‚«ãƒ¬ãƒ³ãƒˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã‚’è¿”ã™ã€‚
 int FWGLUT::GetCurrentWin(){
 	return glutGetWindow();
 }
-///ƒJƒŒƒ“ƒgƒEƒBƒ“ƒhƒE‚Ìƒm[ƒ}ƒ‹ƒvƒŒ[ƒ“‚ğCÄ•`‰æ‚Ì•K—v‚É‰‚¶‚Äƒ}[ƒN‚·‚é
+///ã‚«ãƒ¬ãƒ³ãƒˆã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®ãƒãƒ¼ãƒãƒ«ãƒ—ãƒ¬ãƒ¼ãƒ³ã‚’ï¼Œå†æç”»ã®å¿…è¦ã«å¿œã˜ã¦ãƒãƒ¼ã‚¯ã™ã‚‹
 void FWGLUT::PostRedisplay(){
 	return glutPostRedisplay();
 };
-/// Shift,Ctrl,Alt‚ÌƒXƒe[ƒg‚ğ•Ô‚·
+/// Shift,Ctrl,Altã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’è¿”ã™
 int FWGLUT::GetModifiers(){
 	return glutGetModifiers();
 };

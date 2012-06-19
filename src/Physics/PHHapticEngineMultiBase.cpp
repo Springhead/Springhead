@@ -1,4 +1,4 @@
-#include <Physics/PHHapticEngineMultiBase.h>
+ï»¿#include <Physics/PHHapticEngineMultiBase.h>
 
 namespace Spr{;
 //----------------------------------------------------------------------------
@@ -58,16 +58,16 @@ void PHHapticEngineMultiBase::StepHapticLoop(){
 
 void PHHapticEngineMultiBase::SyncThreads(){
 	if(bSync){ 
-		/// “¯Šú‚ÌÀs
+		/// åŒæœŸã®å®Ÿè¡Œ
 		SyncHapticPointers();			
 		SyncHaptic2Physic();
 		SyncArrays();
 		SyncPhysic2Haptic();
-		/// “¯ŠúI—¹ˆ—
-		hapticLoop->loopCount = 0;		// HapticLoop‚ÌƒJƒEƒ“ƒg‰Šú‰»
-		bSync = false;					// “¯ŠúI—¹ƒtƒ‰ƒO
+		/// åŒæœŸçµ‚äº†å‡¦ç†
+		hapticLoop->loopCount = 0;		// HapticLoopã®ã‚«ã‚¦ãƒ³ãƒˆåˆæœŸåŒ–
+		bSync = false;					// åŒæœŸçµ‚äº†ãƒ•ãƒ©ã‚°
 	}
-	/// “¯Šú¸”s‚Ìˆ—
+	/// åŒæœŸå¤±æ•—æ™‚ã®å‡¦ç†
 	#define COUNT_MAX 100
 	if(hapticLoop->loopCount > COUNT_MAX) {
 		DSTR << "Too Many Loops in HapticLoop!" << std::endl;
@@ -83,16 +83,16 @@ void PHHapticEngineMultiBase::SyncHapticPointers(){
 	for(int i = 0; i < hapticLoop->NHapticPointers(); i++){
 		PHHapticPointer* ppointer = GetHapticPointer(i);
 		PHHapticPointer* hpointer = hapticLoop->GetHapticPointer(i);
-		/* haptic‘¤‚Ìƒ|ƒCƒ“ƒ^‚Ìó‘Ô‚ğphysics‘¤‚Ìƒ|ƒCƒ“ƒ^‚Ö”½‰f
+		/* hapticå´ã®ãƒã‚¤ãƒ³ã‚¿ã®çŠ¶æ…‹ã‚’physicså´ã®ãƒã‚¤ãƒ³ã‚¿ã¸åæ˜ 
 		// physics <-------- haptic
 		*/
-		// 1.ƒ|ƒCƒ“ƒ^‚ÌˆÊ’up¨‚Ì“¯Šú
+		// 1.ãƒã‚¤ãƒ³ã‚¿ã®ä½ç½®å§¿å‹¢ã®åŒæœŸ
 		if(ppointer->bDebugControl){
-			// physics‚©‚ç‚Ì“ü—Í‚ğhaptic‚Ö
+			// physicsã‹ã‚‰ã®å…¥åŠ›ã‚’hapticã¸
 			ppointer->hiSolid = *DCAST(PHSolid, ppointer);
 			hpointer->hiSolid = ppointer->hiSolid;
 		}else{
-			// haptic‚©‚ç‚Ì“ü—Í‚ğphysics‚Ö
+			// hapticã‹ã‚‰ã®å…¥åŠ›ã‚’physicsã¸
 
 			//DSTR << "sync ppointer" << ppointer->GetHapticForce() << std::endl;
 			//DSTR << "sync hpointer" << hpointer->GetHapticForce() << std::endl;
@@ -100,12 +100,12 @@ void PHHapticEngineMultiBase::SyncHapticPointers(){
 		}
 		ppointer->UpdateDirect();
 		
-		// 2.î•ñ‚Ì“¯Šú
+		// 2.æƒ…å ±ã®åŒæœŸ
 		PHHapticPointerSt* pst = (PHHapticPointerSt*)ppointer;
 		PHHapticPointerSt* hst = (PHHapticPointerSt*)hpointer;
 		*pst = *hst;
 
-		/* physics‘¤‚Ì•ÏX‚ğhaptic‘¤‚Ö”½‰f
+		/* physicså´ã®å¤‰æ›´ã‚’hapticå´ã¸åæ˜ 
 		// haptic <--------- physics
 		*/
 		if(ppointer->hapticRenderMode == ppointer->VC){
@@ -129,10 +129,10 @@ void PHHapticEngineMultiBase::SyncHapticPointers(){
 
 void PHHapticEngineMultiBase::SyncArrays(){
 	// haptic <------------- physics
-	// Physics‚ÅV‚µ‚­’Ç‰Á‚³‚ê‚½ƒIƒuƒWƒFƒNƒg‚ğHaptic‘¤‚ÉƒRƒs[
-	// 1.—ÍŠoƒ|ƒCƒ“ƒ^‚Ì‘‰Á•ª
-	int hNpointers = hapticLoop->NHapticPointers();	// haptic‘¤‚Ìƒ|ƒCƒ“ƒ^”
-	int pNpointers = NHapticPointers();				// physics‘¤‚Ìƒ|ƒCƒ“ƒ^”
+	// Physicsã§æ–°ã—ãè¿½åŠ ã•ã‚ŒãŸã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’Hapticå´ã«ã‚³ãƒ”ãƒ¼
+	// 1.åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã®å¢—åŠ åˆ†
+	int hNpointers = hapticLoop->NHapticPointers();	// hapticå´ã®ãƒã‚¤ãƒ³ã‚¿æ•°
+	int pNpointers = NHapticPointers();				// physicså´ã®ãƒã‚¤ãƒ³ã‚¿æ•°
 	PHHapticPointers* hpointers = hapticLoop->GetHapticPointers();
 	for(int i = hNpointers; i < pNpointers; i++){
 		hpointers->push_back(DBG_NEW PHHapticPointer(*GetHapticPointer(i)));
@@ -141,7 +141,7 @@ void PHHapticEngineMultiBase::SyncArrays(){
 	//DSTR << pNpointers << hNpointers << std::endl;
 	//DSTR << hNpointers << std::endl;
 
-	// 2. Solid‚Ì‘‰Á•ª
+	// 2. Solidã®å¢—åŠ åˆ†
 	const int hNsolids = hapticLoop->NHapticSolids();
 	const int pNsolids = NHapticSolids();
 	if(hNsolids == pNsolids) return;
@@ -150,8 +150,8 @@ void PHHapticEngineMultiBase::SyncArrays(){
 		hsolids->push_back(DBG_NEW PHSolidForHaptic(*GetHapticSolid(i)));
 	}
 
-	// 3. solidPair, shapePair‚Ì‘‰Á•ª
-	// 3.1 —ÍŠoƒ|ƒCƒ“ƒ^‚Ì‘‰Á•ª
+	// 3. solidPair, shapePairã®å¢—åŠ åˆ†
+	// 3.1 åŠ›è¦šãƒã‚¤ãƒ³ã‚¿ã®å¢—åŠ åˆ†
 	PHSolidPairsForHaptic* hsolidPairs = hapticLoop->GetSolidPairsForHaptic();
 	hsolidPairs->resize(pNsolids, pNpointers);
 	for(int i = 0; i < pNsolids; i++){
@@ -160,7 +160,7 @@ void PHHapticEngineMultiBase::SyncArrays(){
 			hsolidPairs->item(i, j) = DBG_NEW PHSolidPairForHaptic(*psolidPair);
 		}
 	}
-	// 3.2 solid‚Ì‘‰Á•ª
+	// 3.2 solidã®å¢—åŠ åˆ†
 	for(int i = hNsolids; i < pNsolids; i++){
 		for(int j = 0; j < pNpointers; j++){
 			PHSolidPairForHaptic* psolidPair = GetSolidPairForHaptic(i, j);
@@ -174,12 +174,12 @@ void PHHapticEngineMultiBase::SyncArrays(){
 }
 
 
-// ƒfƒoƒbƒN—pƒR[ƒh
-// ‹Œ”ÅAPHScene::Step()‚ª“à‘ ‚³‚ê‚Ä‚¢‚é‚Ì‚Å
+// ãƒ‡ãƒãƒƒã‚¯ç”¨ã‚³ãƒ¼ãƒ‰
+// æ—§ç‰ˆã€PHScene::Step()ãŒå†…è”µã•ã‚Œã¦ã„ã‚‹ã®ã§
 void PHHapticEngineMultiBase::StepPhysicsSimulation(){
 	if (bSync) return;
 	if (bCalcPhys){
-		/// ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚ÌÀs
+		/// ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®å®Ÿè¡Œ
 		engine->GetScene()->Step();
 		bCalcPhys = false;
 	}

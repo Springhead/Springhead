@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -19,18 +19,18 @@ namespace Spr{;
 
 /**
  *	@file SprGRRender.h
- *	@brief ƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[‚ÌƒCƒ“ƒ^ƒtƒF[ƒXAŠî–{ƒCƒ“ƒ^ƒtƒF[ƒX
+ *	@brief ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã€åŸºæœ¬ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
  */
 
-/**	@brief	ƒeƒLƒXƒg•`‰æ‚ÌƒtƒHƒ“ƒg */
+/**	@brief	ãƒ†ã‚­ã‚¹ãƒˆæç”»ã®ãƒ•ã‚©ãƒ³ãƒˆ */
 class SPR_DLL GRFont{
 public:
-	int height;				///<	ƒtƒHƒ“ƒg‚Ì‚‚³
-	int width;				///<	•½‹Ï•¶š•
-	int weight;				///<	ƒtƒHƒ“ƒg‚Ì‘¾‚³i0 - 900j
-	std::string face;		///<	ƒ^ƒCƒvƒtƒFƒCƒX
-	unsigned long color;	///<	ƒtƒHƒ“ƒg‚ÌF
-	bool bItalic;			///<	ƒCƒ^ƒŠƒbƒN‘Ì
+	int height;				///<	ãƒ•ã‚©ãƒ³ãƒˆã®é«˜ã•
+	int width;				///<	å¹³å‡æ–‡å­—å¹…
+	int weight;				///<	ãƒ•ã‚©ãƒ³ãƒˆã®å¤ªã•ï¼ˆ0 - 900ï¼‰
+	std::string face;		///<	ã‚¿ã‚¤ãƒ—ãƒ•ã‚§ã‚¤ã‚¹
+	unsigned long color;	///<	ãƒ•ã‚©ãƒ³ãƒˆã®è‰²
+	bool bItalic;			///<	ã‚¤ã‚¿ãƒªãƒƒã‚¯ä½“
 	GRFont(int h=20, const char* f=NULL){
 		height=h;
 		face=f ? f : "";
@@ -55,36 +55,36 @@ public:
 	}
 };
 	
-/** @brief ŒõŒ¹‚ÌƒCƒ“ƒ^ƒtƒF[ƒX		*/
+/** @brief å…‰æºã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹		*/
 struct GRLightIf: public GRVisualIf{
 	SPR_IFDEF(GRLight);
 };
-/**	@brief	ŒõŒ¹		*/
+/**	@brief	å…‰æº		*/
 struct GRLightDesc : GRVisualDesc{
 	SPR_DESCDEF(GRLight);
-    Vec4f ambient;		///<	ŠÂ‹«Œõ
-    Vec4f diffuse;		///<	ŠgUŒõ
-    Vec4f specular;		///<	‹¾–ÊŒõ
-    Vec4f position;		///<	ŒõŒ¹ˆÊ’uiw=1.0‚Å“_ŒõŒ¹Aw=0.0‚Å•½sŒõŒ¹j
-    float range;		///<	Œõ‚ª“Í‚­”ÍˆÍidevice‚ªDirectX‚Ìê‡‚Ì‚İ—˜—p‰Â”\j
+    Vec4f ambient;		///<	ç’°å¢ƒå…‰
+    Vec4f diffuse;		///<	æ‹¡æ•£å…‰
+    Vec4f specular;		///<	é¡é¢å…‰
+    Vec4f position;		///<	å…‰æºä½ç½®ï¼ˆw=1.0ã§ç‚¹å…‰æºã€w=0.0ã§å¹³è¡Œå…‰æºï¼‰
+    float range;		///<	å…‰ãŒå±Šãç¯„å›²ï¼ˆdeviceãŒDirectXã®å ´åˆã®ã¿åˆ©ç”¨å¯èƒ½ï¼‰
 	/**
-	 *	@name	Œ¸Šƒpƒ‰ƒ[ƒ^
-	 *@@ ‚±‚ê‚ç‚ğİ’è‚·‚é‚±‚Æ‚ÅŒõ‚ÌŒ¸Š‚ğ•\Œ»‚Å‚«‚éB \n
-	 *@@ Œ¸Š‚Ìƒpƒ‰ƒ[ƒ^‚ğİ’è‚·‚é‚ÆAŒõŒ¹‚©‚ç—£‚ê‚é‚Ù‚Ç‚Œ´‚É‚æ‚éŒø‰Ê‚Í¬‚³‚­‚È‚éB \n
-	 *@@ ƒfƒtƒHƒ‹ƒg‚Å‚ÍAŒ¸Š‚È‚µ‚Éİ’è‚³‚ê‚Ä‚¢‚éB \n
-	 *@@ •½sŒõŒ¹‚Ìê‡AŒ¸Š‚Í‚³‚¹‚È‚¢B \n
-	 *@@@@ Œ¸ŠŒW” = 1/( att0 + att1 * d + att2 * d^2)@@@d:‹——£
+	 *	@name	æ¸›è¡°ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
+	 *ã€€ã€€ ã“ã‚Œã‚‰ã‚’è¨­å®šã™ã‚‹ã“ã¨ã§å…‰ã®æ¸›è¡°ã‚’è¡¨ç¾ã§ãã‚‹ã€‚ \n
+	 *ã€€ã€€ æ¸›è¡°ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¨­å®šã™ã‚‹ã¨ã€å…‰æºã‹ã‚‰é›¢ã‚Œã‚‹ã»ã©é«˜åŸã«ã‚ˆã‚‹åŠ¹æœã¯å°ã•ããªã‚‹ã€‚ \n
+	 *ã€€ã€€ ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§ã¯ã€æ¸›è¡°ãªã—ã«è¨­å®šã•ã‚Œã¦ã„ã‚‹ã€‚ \n
+	 *ã€€ã€€ å¹³è¡Œå…‰æºã®å ´åˆã€æ¸›è¡°ã¯ã•ã›ãªã„ã€‚ \n
+	 *ã€€ã€€ã€€ã€€ æ¸›è¡°ä¿‚æ•° = 1/( att0 + att1 * d + att2 * d^2)ã€€ã€€ã€€d:è·é›¢
 	 *	@{
 	 */
-	float attenuation0;	///<	ˆê’èŒ¸Š—¦
-    float attenuation1;	///<	üŒ`Œ¸Š—¦
-    float attenuation2;	///<	2ŸŒ¸Š—¦
-	/** @} */	// end of Œ¸Šƒpƒ‰ƒ[ƒ^
+	float attenuation0;	///<	ä¸€å®šæ¸›è¡°ç‡
+    float attenuation1;	///<	ç·šå½¢æ¸›è¡°ç‡
+    float attenuation2;	///<	2æ¬¡æ¸›è¡°ç‡
+	/** @} */	// end of æ¸›è¡°ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿
 
-	Vec3f spotDirection;///<	ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌŒü‚«
-    float spotFalloff;	///<	ƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ì‰~“à‚Å‚ÌŒ¸Š—¦(‘å‚«‚¢‚Ù‚Ç‹}s) 0..‡
-	float spotInner;	///<	ƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ì’†S•”•ª(“à•”ƒR[ƒ“)idevice‚ªDirectX‚Ìê‡‚Ì‚İ—˜—p‰Â”\j 0..spotCutoff
-	float spotCutoff;	///<	ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌL‚ª‚èŠp“x(“x)(ŠO•”ƒR[ƒ“) 0..ƒÎ(pi)
+	Vec3f spotDirection;///<	ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®å‘ã
+    float spotFalloff;	///<	ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®å††éŒå†…ã§ã®æ¸›è¡°ç‡(å¤§ãã„ã»ã©æ€¥å³») 0..âˆ
+	float spotInner;	///<	ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ä¸­å¿ƒéƒ¨åˆ†(å†…éƒ¨ã‚³ãƒ¼ãƒ³)ï¼ˆdeviceãŒDirectXã®å ´åˆã®ã¿åˆ©ç”¨å¯èƒ½ï¼‰ 0..spotCutoff
+	float spotCutoff;	///<	ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®åºƒãŒã‚Šè§’åº¦(åº¦)(å¤–éƒ¨ã‚³ãƒ¼ãƒ³) 0..Ï€(pi)
 	GRLightDesc(){
 		ambient = Vec4f(0.0, 0.0, 0.0, 1.0);
 		diffuse = Vec4f(1.0, 1.0, 1.0, 1.0);
@@ -103,20 +103,20 @@ struct GRLightDesc : GRVisualDesc{
 
 
 
-/** @brief@Ş¿‚ÌƒCƒ“ƒ^ƒtƒF[ƒX@@	*/
+/** @briefã€€æè³ªã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã€€ã€€	*/
 struct GRMaterialIf: public GRVisualIf{
 	SPR_IFDEF(GRMaterial);
 	bool IsOpaque() const;
 };
-/**	@brief	Ş¿	*/
+/**	@brief	æè³ª	*/
 struct GRMaterialDesc : GRVisualDesc{
 	SPR_DESCDEF(GRMaterial);
-	Vec4f ambient;					///<	ŠÂ‹«Œõ‚É‘Î‚·‚é”½Ë—¦
-	Vec4f diffuse;					///<	ŠgUŒõ‚É‘Î‚·‚é”½Ë—¦
-	Vec4f specular;					///<	‹¾–ÊŒõ‚É‘Î‚·‚é”½Ë—¦
-	Vec4f emissive;					///<	•úË‹P“x
-	float power;					///<	‹¾–Ê”½Ë‚Ì‹­“xA‹¾–ÊŒW”
-	std::string	texname;			///<	ƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼iƒtƒ@ƒCƒ‹‚Ì•Û‘¶‚·‚é‘Š‘ÎƒpƒX–¼j
+	Vec4f ambient;					///<	ç’°å¢ƒå…‰ã«å¯¾ã™ã‚‹åå°„ç‡
+	Vec4f diffuse;					///<	æ‹¡æ•£å…‰ã«å¯¾ã™ã‚‹åå°„ç‡
+	Vec4f specular;					///<	é¡é¢å…‰ã«å¯¾ã™ã‚‹åå°„ç‡
+	Vec4f emissive;					///<	æ”¾å°„è¼åº¦
+	float power;					///<	é¡é¢åå°„ã®å¼·åº¦ã€é¡é¢ä¿‚æ•°
+	std::string	texname;			///<	ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆãƒ•ã‚¡ã‚¤ãƒ«ã®ä¿å­˜ã™ã‚‹ç›¸å¯¾ãƒ‘ã‚¹åï¼‰
 
 	GRMaterialDesc(){
 		ambient = Vec4f(0.2, 0.2, 0.2, 1.0);
@@ -131,9 +131,9 @@ struct GRMaterialDesc : GRVisualDesc{
 		ambient(c), diffuse(c), specular(c), emissive(c), power(p){}
 	GRMaterialDesc(Vec4f c):
 		ambient(c), diffuse(c), specular(c), emissive(c), power(0.0f){}
-	/**	W()—v‘f‚ÍAƒAƒ‹ƒtƒ@’l(0.0`1.0‚Å“§–¾“x‚ğ•\‚·). 1.0‚ª•s“§–¾‚ğ•\‚·.
-		material‚ÌW()—v‘f‚ğ”»’è‚µ‚ÄA•s“§–¾•¨‘Ì‚©A“§–¾•¨‘Ì‚©‚ğ”»’è‚·‚é. 
-		“§–¾‚ÈƒIƒuƒWƒFƒNƒg‚ğ•`‚­‚Æ‚«A‰“‚­‚Ì‚à‚Ì‚©‚ç‡”Ô‚É•`‰æ‚µ‚È‚¢‚ÆAˆÓ}‚É”½‚µ‚½Œ‹‰Ê‚Æ‚È‚é. */
+	/**	W()è¦ç´ ã¯ã€ã‚¢ãƒ«ãƒ•ã‚¡å€¤(0.0ï½1.0ã§é€æ˜åº¦ã‚’è¡¨ã™). 1.0ãŒä¸é€æ˜ã‚’è¡¨ã™.
+		materialã®W()è¦ç´ ã‚’åˆ¤å®šã—ã¦ã€ä¸é€æ˜ç‰©ä½“ã‹ã€é€æ˜ç‰©ä½“ã‹ã‚’åˆ¤å®šã™ã‚‹. 
+		é€æ˜ãªã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æãã¨ãã€é ãã®ã‚‚ã®ã‹ã‚‰é †ç•ªã«æç”»ã—ãªã„ã¨ã€æ„å›³ã«åã—ãŸçµæœã¨ãªã‚‹. */
 	bool IsOpaque() const {		
 		return ambient.W() >= 1.0 && diffuse.W() >= 1.0 && specular.W() >= 1.0 && emissive.W() >= 1.0;
 	}
@@ -142,18 +142,18 @@ struct GRMaterialDesc : GRVisualDesc{
 
 struct GRFrameIf;
 struct GRCameraDesc;
-///	ƒJƒƒ‰‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+///	ã‚«ãƒ¡ãƒ©ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 struct GRCameraIf: public GRVisualIf{
 	SPR_IFDEF(GRCamera);
 	GRFrameIf* GetFrame();
 	void SetFrame(GRFrameIf* fr);
 };
-/**	@brief	ƒJƒƒ‰‚Ìî•ñ			*/
+/**	@brief	ã‚«ãƒ¡ãƒ©ã®æƒ…å ±			*/
 struct GRCameraDesc : GRVisualDesc{
 	SPR_DESCDEF(GRCamera);
-	Vec2f size;				///<	ƒXƒNƒŠ[ƒ“‚ÌƒTƒCƒY
-	Vec2f center;			///<	ƒJƒƒ‰‚©‚ç‚ÌƒXƒNƒŠ[ƒ“‚Ì‚¸‚ê
-	float front, back;		///<	‹“_‚©‚çƒNƒŠƒbƒv–Ê‚Ü‚Å‚Ì‘Š‘Î‹——£i³‚Ì’l‚Åw’èj
+	Vec2f size;				///<	ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã®ã‚µã‚¤ã‚º
+	Vec2f center;			///<	ã‚«ãƒ¡ãƒ©ã‹ã‚‰ã®ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ã®ãšã‚Œ
+	float front, back;		///<	è¦–ç‚¹ã‹ã‚‰ã‚¯ãƒªãƒƒãƒ—é¢ã¾ã§ã®ç›¸å¯¾è·é›¢ï¼ˆæ­£ã®å€¤ã§æŒ‡å®šï¼‰
 	//GRCameraDesc():center(Vec2f()), size(Vec2f(0.2f, 0)), front(0.1f), back(500.0f){}
 	GRCameraDesc(Vec2f sz = Vec2f(0.2f, 0.0f), Vec2f c = Vec2f(), float f = 0.1f, float b = 500.0f):
 		size(sz), center(c), front(f), back(b) {}
@@ -162,11 +162,11 @@ struct GRCameraDesc : GRVisualDesc{
 struct GRDeviceIf;
 typedef unsigned GRHandler;
 
-/**	@brief	ƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[‚ÌƒCƒ“ƒ^ƒtƒF[ƒXiƒ†[ƒUƒCƒ“ƒ^ƒtƒF[ƒXj */
+/**	@brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ï¼ˆãƒ¦ãƒ¼ã‚¶ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ï¼‰ */
 struct GRRenderBaseIf: public ObjectIf{
 	SPR_IFDEF(GRRenderBase);
 
-	///	ƒvƒŠƒ~ƒeƒBƒu‚Ìí—Ş
+	///	ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã®ç¨®é¡
 	enum TPrimitiveType {
 		POINTS,
 		LINES,
@@ -178,26 +178,26 @@ struct GRRenderBaseIf: public ObjectIf{
 		QUADS
 	};
 	/**
-	 *	@name	ƒfƒvƒXƒoƒbƒtƒ@–@‚É—p‚¢‚é”»’èğŒ
+	 *	@name	ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡æ³•ã«ç”¨ã„ã‚‹åˆ¤å®šæ¡ä»¶
 	 *	@{
 	 */
 	enum TDepthFunc{
-		DF_NEVER,		///<	V‚µ‚¢Z’l‚ÉŠÖŒW‚È‚­XV‚µ‚È‚¢
-		DF_LESS,		///<	V‚µ‚¢Z’l‚ª¬‚³‚¯‚ê‚ÎXV‚·‚éidefault)
-		DF_EQUAL,		///<	V‚µ‚¢Z’l‚ª“™‚µ‚¯‚ê‚Î•`‚©‚ê‚é
-		DF_LEQUAL,		///<	V‚µ‚¢Z’l‚ª‘å‚«‚­‚È‚¯‚ê‚Î•`‚©‚ê‚é
-		DF_GREATER,		///<	V‚µ‚¢Z’l‚ª‘å‚«‚¯‚ê‚Î•`‚©‚ê‚é
-		DF_NOTEQUAL,	///<	V‚µ‚¢Z’l‚Æ“™‚µ‚­‚È‚¯‚ê‚Î•`‚©‚ê‚é
-		DF_GEQUAL,		///<	V‚µ‚¢Z’l‚ª¬‚³‚­‚È‚¯‚ê‚Î•`‚©‚ê‚é
-		DF_ALWAYS		///<	V‚µ‚¢Z’l‚ÉŠÖŒW‚È‚­XV‚·‚é
+		DF_NEVER,		///<	æ–°ã—ã„Zå€¤ã«é–¢ä¿‚ãªãæ›´æ–°ã—ãªã„
+		DF_LESS,		///<	æ–°ã—ã„Zå€¤ãŒå°ã•ã‘ã‚Œã°æ›´æ–°ã™ã‚‹ï¼ˆdefault)
+		DF_EQUAL,		///<	æ–°ã—ã„Zå€¤ãŒç­‰ã—ã‘ã‚Œã°æã‹ã‚Œã‚‹
+		DF_LEQUAL,		///<	æ–°ã—ã„Zå€¤ãŒå¤§ãããªã‘ã‚Œã°æã‹ã‚Œã‚‹
+		DF_GREATER,		///<	æ–°ã—ã„Zå€¤ãŒå¤§ãã‘ã‚Œã°æã‹ã‚Œã‚‹
+		DF_NOTEQUAL,	///<	æ–°ã—ã„Zå€¤ã¨ç­‰ã—ããªã‘ã‚Œã°æã‹ã‚Œã‚‹
+		DF_GEQUAL,		///<	æ–°ã—ã„Zå€¤ãŒå°ã•ããªã‘ã‚Œã°æã‹ã‚Œã‚‹
+		DF_ALWAYS		///<	æ–°ã—ã„Zå€¤ã«é–¢ä¿‚ãªãæ›´æ–°ã™ã‚‹
 	};
 	/** @} */	
 	/**
-	 *	@name	ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚Ì¬‡ŒW”
-	 *@@ SRC‚ª‚±‚ê‚©‚ç•`‰æ‚³‚ê‚é‡¬‚³‚¹‚½‚¢FADEST‚ª‚·‚Å‚É•`‚©‚ê‚½ƒJƒ‰[ƒoƒbƒtƒ@‚ÌF    \n
-	 *@@@@ ‡¬Œ‹‰Ê =SRC * SRC‚ÌƒuƒŒƒ“ƒfƒBƒ“ƒOŒW” + DEST * DEST‚ÌƒuƒŒƒ“ƒfƒBƒ“ƒOŒW” 			\n
-	 *@@ ‚½‚¾‚µABF_BOTHINVSRCALPHAABF_BLENDFACTORABF_INVBLENDFACTOR ‚ÉŠÖ‚µ‚Ä‚ÍA			\n
-	 *@@ device‚ªDirectX‚Ì‚Æ‚«‚Ì‚İ—˜—p‰Â”\Bw’è‚µ‚Ä‚àBF_ZERO‚Æ‚µ‚Äˆµ‚¤B
+	 *	@name	ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã®æ··åˆä¿‚æ•°
+	 *ã€€ã€€ SRCãŒã“ã‚Œã‹ã‚‰æç”»ã•ã‚Œã‚‹åˆæˆã•ã›ãŸã„è‰²ã€DESTãŒã™ã§ã«æã‹ã‚ŒãŸã‚«ãƒ©ãƒ¼ãƒãƒƒãƒ•ã‚¡ã®è‰²    \n
+	 *ã€€ã€€ã€€ã€€ åˆæˆçµæœ =SRC * SRCã®ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ä¿‚æ•° + DEST * DESTã®ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ä¿‚æ•° 			\n
+	 *ã€€ã€€ ãŸã ã—ã€BF_BOTHINVSRCALPHAã€BF_BLENDFACTORã€BF_INVBLENDFACTOR ã«é–¢ã—ã¦ã¯ã€			\n
+	 *ã€€ã€€ deviceãŒDirectXã®ã¨ãã®ã¿åˆ©ç”¨å¯èƒ½ã€‚æŒ‡å®šã—ã¦ã‚‚BF_ZEROã¨ã—ã¦æ‰±ã†ã€‚
 	 *	@{
 	 */
 	enum TBlendFunc{
@@ -211,273 +211,273 @@ struct GRRenderBaseIf: public ObjectIf{
 		BF_INVDESTALPHA,		///<	(1-Ad, 1-Ad, 1-Ad, 1-Ad) 
 		BF_DESTCOLOR,			///<	(Rd, Gd, Bd, Ad)
 		BF_INVDESTCOLOR,		///<	(1-Rd, 1-Gd, 1-Bd, 1-Ad) 
-		BF_SRCALPHASAT,			///<	(f, f, f, 1)Af = min(As, 1-Ad) 
-		BF_BOTHINVSRCALPHA,		///<	SRCƒuƒŒƒ“ƒfƒBƒ“ƒOŒW”‚Í(1-As, 1-As, 1-As, 1-As)BDSTƒuƒŒƒ“ƒfƒBƒ“ƒOŒW”‚Í(As, As, As, As)B
-		BF_BLENDFACTOR,			///<	ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‡¬‚Ég‚í‚ê‚é’è”F‚Å‡¬
-		BF_INVBLENDFACTOR		///<	ƒtƒŒ[ƒ€ƒoƒbƒtƒ@‡¬‚Ég‚í‚ê‚é’è”F‚ğ”½“]‚µ‚½F‚Å‡¬
+		BF_SRCALPHASAT,			///<	(f, f, f, 1)ã€f = min(As, 1-Ad) 
+		BF_BOTHINVSRCALPHA,		///<	SRCãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ä¿‚æ•°ã¯(1-As, 1-As, 1-As, 1-As)ã€‚DSTãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ä¿‚æ•°ã¯(As, As, As, As)ã€‚
+		BF_BLENDFACTOR,			///<	ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡åˆæˆæ™‚ã«ä½¿ã‚ã‚Œã‚‹å®šæ•°è‰²ã§åˆæˆ
+		BF_INVBLENDFACTOR		///<	ãƒ•ãƒ¬ãƒ¼ãƒ ãƒãƒƒãƒ•ã‚¡åˆæˆæ™‚ã«ä½¿ã‚ã‚Œã‚‹å®šæ•°è‰²ã‚’åè»¢ã—ãŸè‰²ã§åˆæˆ
 	};
 	/** @} */
 
-	///	ƒŒƒ“ƒ_ƒ‰[‚Å—pˆÓ‚µ‚Ä‚ ‚éŞ¿
+	///	ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã§ç”¨æ„ã—ã¦ã‚ã‚‹æè³ª
 	enum TMaterialSample {
-		// ÔŒn
+		// èµ¤ç³»
 		INDIANRED, LIGHTCORAL, SALMON, DARKSALMON, LIGHTSALMON, RED, CRIMSON, FIREBRICK, DARKRED,
-		// ƒsƒ“ƒNŒn
+		// ãƒ”ãƒ³ã‚¯ç³»
 		PINK, LIGHTPINK, HOTPINK, DEEPPINK, MEDIUMVIOLETRED, PALEVIOLETRED,
-		// ƒIƒŒƒ“ƒWŒn
+		// ã‚ªãƒ¬ãƒ³ã‚¸ç³»
 		CORAL, TOMATO, ORANGERED, DARKORANGE, ORANGE,
-		// ‰©Œa
+		// é»„å¾„
 		GOLD, YELLOW, LIGHTYELLOW, LEMONCHIFFON, LIGHTGOLDENRODYELLOW, PAPAYAWHIP, MOCCASIN, PEACHPUFF, PALEGOLDENROD, KHAKI, DARKKHAKI,
-		// ‡Œn
+		// ç´«ç³»
 		LAVENDER, THISTLE, PLUM, VIOLET, ORCHILD, FUCHSIA, MAGENTA, MEDIUMORCHILD, MEDIUMPURPLE,
 		BLUEVIOLET, DARKVIOLET, DARKORCHILD, DARKMAGENTA, PURPLE, INDIGO, DARKSLATEBLUE, SLATEBLUE, MEDIUMSLATEBLUE,
-		// —ÎŒn
+		// ç·‘ç³»
 		GREENYELLOW, CHARTREUSE, LAWNGREEN, LIME, LIMEGREEN, PALEGREEN, LIGHTGREEN, MEDIUMSPRINGGREEN,
 		SPRINGGREEN, MEDIUMSEAGREEN, SEAGREEN, FORESTGREEN, GREEN, DARKGREEN, YELLOWGREEN, OLIVEDRAB,
 		OLIVE, DARKOLIVEGREEN, MEDIUMAQUAMARINE, DARKSEAGREEN, LIGHTSEAGREEN, DARKCYAN, TEAL,
-		// ÂŒn
+		// é’ç³»
 		AQUA, CYAN, LIGHTCYAN, PALETURQUOISE, AQUAMARINE, TURQUOISE, MEDIUMTURQUOISE, DARKTURQUOISE, CADETBLUE,
 		STEELBLUE, LIGHTSTEELBLUE, POWDERBLUE, LIGHTBLUE, SKYBLUE, LIGHTSKYBLUE, DEEPSKYBLUE,
 		DODGERBLUE, CORNFLOWERBLUE, ROYALBLUE, BLUE, MEDIUMBLUE, DARKBLUE, NAVY, MIDNIGHTBLUE,
-		// ’ƒŒn
+		// èŒ¶ç³»
 		CORNSILK, BLANCHEDALMOND, BISQUE, NAVAJOWHITE, WHEAT, BURLYWOOD, TAN, ROSYBROWN, SANDYBROWN,
 		GOLDENROD, DARKGOLDENROD, PERU, CHOCOLATE, SADDLEBROWN, SIENNA, BROWN, MAROON,
-		// ”’Œn
+		// ç™½ç³»
 		WHITE, SNOW, HONEYDEW, MINTCREAM, AZURE, ALICEBLUE, GHOSTWHITE, WHITESMOKE, SEASHELL, BEIGE,
 		OLDLACE, FLORALWHITE, IVORY, ANTIQUEWHITE, LINEN, LAVENDERBLUSH, MISTYROSE,
-		// ŠDŒn
+		// ç°ç³»
 		GAINSBORO, LIGHTGRAY, SILVER, DARKGRAY, GRAY, DIMGRAY, LIGHTSLATEGRAY, SLATEGRAY, DARKSLATEGRAY, BLACK,
 		MATERIAL_SAMPLE_END
 	};
 
-	///	ƒrƒ…[ƒ|[ƒg‚Ìİ’è
+	///	ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®è¨­å®š
 	void SetViewport(Vec2f pos, Vec2f sz);
-	///	ƒoƒbƒtƒ@ƒNƒŠƒA
+	///	ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 	void ClearBuffer();
-	///	ƒoƒbƒtƒ@‚Ì“ü‚ê‘Ö‚¦i•\¦j
+	///	ãƒãƒƒãƒ•ã‚¡ã®å…¥ã‚Œæ›¿ãˆï¼ˆè¡¨ç¤ºï¼‰
 	void SwapBuffers();
-	/// ”wŒiF‚Ìæ“¾
+	/// èƒŒæ™¯è‰²ã®å–å¾—
 	void GetClearColor(Vec4f& color);
-	/// ”wŒiF‚Ìİ’è
+	/// èƒŒæ™¯è‰²ã®è¨­å®š
 	void SetClearColor(const Vec4f& color);
-	///	ƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌŠJn‘O‚ÉŒÄ‚ÔŠÖ”
+	///	ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®é–‹å§‹å‰ã«å‘¼ã¶é–¢æ•°
 	void BeginScene();
-	///	ƒŒƒ“ƒ_ƒŠƒ“ƒO‚ÌI—¹Œã‚ÉŒÄ‚ÔŠÖ”
+	///	ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã®çµ‚äº†å¾Œã«å‘¼ã¶é–¢æ•°
 	void EndScene();
-	///	ƒJƒŒƒ“ƒg‚Ì‹“_s—ñ‚ğafv‚Å’u‚«Š·‚¦‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®è¦–ç‚¹è¡Œåˆ—ã‚’afvã§ç½®ãæ›ãˆã‚‹
 	void SetViewMatrix(const Affinef& afv);
-	///	ƒJƒŒƒ“ƒg‚Ì‹“_s—ñ‚ğæ“¾‚·‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®è¦–ç‚¹è¡Œåˆ—ã‚’å–å¾—ã™ã‚‹
 	void GetViewMatrix(Affinef& afv);
-	///	ƒJƒŒƒ“ƒg‚Ì“Š‰es—ñ‚ğafp‚Å’u‚«Š·‚¦‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®æŠ•å½±è¡Œåˆ—ã‚’afpã§ç½®ãæ›ãˆã‚‹
 	void SetProjectionMatrix(const Affinef& afp);
-	///	ƒJƒŒƒ“ƒg‚Ì“Š‰es—ñ‚ğæ“¾‚·‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®æŠ•å½±è¡Œåˆ—ã‚’å–å¾—ã™ã‚‹
 	void GetProjectionMatrix(Affinef& afp);
-	///	ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚ğafw‚Å’u‚«Š·‚¦‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’afwã§ç½®ãæ›ãˆã‚‹
 	void SetModelMatrix(const Affinef& afw);
-	///	ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚ğæ“¾‚·‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’å–å¾—ã™ã‚‹
 	void GetModelMatrix(Affinef& afw);
-	///	ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚É‘Î‚µ‚Äafw‚ğŠ|‚¯‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã«å¯¾ã—ã¦afwã‚’æ›ã‘ã‚‹
 	void MultModelMatrix(const Affinef& afw);
-	///	ƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚ğƒ‚ƒfƒ‹s—ñƒXƒ^ƒbƒN‚Ö•Û‘¶‚·‚é
+	///	ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚’ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚¹ã‚¿ãƒƒã‚¯ã¸ä¿å­˜ã™ã‚‹
 	void PushModelMatrix();
-	///	ƒ‚ƒfƒ‹s—ñƒXƒ^ƒbƒN‚©‚çæ‚èo‚µAƒJƒŒƒ“ƒg‚Ìƒ‚ƒfƒ‹s—ñ‚Æ‚·‚é
+	///	ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã‚¹ã‚¿ãƒƒã‚¯ã‹ã‚‰å–ã‚Šå‡ºã—ã€ã‚«ãƒ¬ãƒ³ãƒˆã®ãƒ¢ãƒ‡ãƒ«è¡Œåˆ—ã¨ã™ã‚‹
 	void PopModelMatrix();
-	/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚Ì‘S—v‘f‚ğíœ‚·‚é
+	/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã®å…¨è¦ç´ ã‚’å‰Šé™¤ã™ã‚‹
 	void ClearBlendMatrix();
-	/// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚ğİ’è‚·‚é
+	/// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã‚’è¨­å®šã™ã‚‹
 	bool SetBlendMatrix(const Affinef& afb, unsigned int id=0);
-	///	’¸“_ƒtƒH[ƒ}ƒbƒg‚Ìw’è
+	///	é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®æŒ‡å®š
 	void SetVertexFormat(const GRVertexElement* e);
-	///	’¸“_ƒVƒF[ƒ_[‚Ìw’è	API‰»Œó•âDˆø”‚È‚Ç—vŒŸ“¢ 2006.6.7 hase
+	///	é ‚ç‚¹ã‚·ã‚§ãƒ¼ãƒ€ãƒ¼ã®æŒ‡å®š	APIåŒ–å€™è£œï¼å¼•æ•°ãªã©è¦æ¤œè¨ 2006.6.7 hase
 	void SetVertexShader(void* shader);
 
-	///	’¸“_‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+	///	é ‚ç‚¹ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 	void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
-	///	’¸“_‚ÆƒCƒ“ƒfƒbƒNƒX‚ğw’è‚µ‚ÄƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+	///	é ‚ç‚¹ã¨ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’æŒ‡å®šã—ã¦ãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 	void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
- 	///	’¸“_‚Ì¬•ª‚²‚Æ‚Ì”z—ñ‚ğw’è‚µ‚ÄCƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+ 	///	é ‚ç‚¹ã®æˆåˆ†ã”ã¨ã®é…åˆ—ã‚’æŒ‡å®šã—ã¦ï¼Œãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 	void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count);
- 	///	ƒCƒ“ƒfƒbƒNƒX‚Æ’¸“_‚Ì¬•ª‚²‚Æ‚Ì”z—ñ‚ğw’è‚µ‚ÄCƒvƒŠƒ~ƒeƒBƒu‚ğ•`‰æ
+ 	///	ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã¨é ‚ç‚¹ã®æˆåˆ†ã”ã¨ã®é…åˆ—ã‚’æŒ‡å®šã—ã¦ï¼Œãƒ—ãƒªãƒŸãƒ†ã‚£ãƒ–ã‚’æç”»
 	void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, GRVertexArray* arrays, size_t count);
 
-	/// “_‚ğ•`‰æ
+	/// ç‚¹ã‚’æç”»
 	void	DrawPoint(Vec3f p);
-	/// ü•ª‚ğ•`‰æ
+	/// ç·šåˆ†ã‚’æç”»
 	void	DrawLine(Vec3f p0, Vec3f p1);
-	/** @brief ƒXƒvƒ‰ƒCƒ“‹Èü‚ğ•`‰æ
-		@param	p0		n“_
-		@param	p1		I“_
-		@param	v0		n“_‚Å‚Ì”÷ŒW”
-		@param	v1		I“_‚Å‚Ì”÷ŒW”
-		@param	ndiv	Ü‚êü‹ß—‚Ì•ªŠ„”
-		ƒXƒvƒ‰ƒCƒ“‹Èü‚ğp(s)‚Æ‚·‚é‚Æ, p(0) = p0, p(1) = p1C(d/ds)p(0) = v0, (d/ds)p(1) = v1‚ª¬‚è—§‚ÂD
+	/** @brief ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³æ›²ç·šã‚’æç”»
+		@param	p0		å§‹ç‚¹
+		@param	p1		çµ‚ç‚¹
+		@param	v0		å§‹ç‚¹ã§ã®å¾®ä¿‚æ•°
+		@param	v1		çµ‚ç‚¹ã§ã®å¾®ä¿‚æ•°
+		@param	ndiv	æŠ˜ã‚Œç·šè¿‘ä¼¼ã®åˆ†å‰²æ•°
+		ã‚¹ãƒ—ãƒ©ã‚¤ãƒ³æ›²ç·šã‚’p(s)ã¨ã™ã‚‹ã¨, p(0) = p0, p(1) = p1ï¼Œ(d/ds)p(0) = v0, (d/ds)p(1) = v1ãŒæˆã‚Šç«‹ã¤ï¼
 	 **/
 	void	DrawSpline(Vec3f p0, Vec3f v0, Vec3f p1, Vec3f v1, int ndiv = 12);
-	/// –îˆó‚ğ•`‰æ
+	/// çŸ¢å°ã‚’æç”»
 	void	DrawArrow(Vec3f p0, Vec3f p1, float rbar, float rhead, float lhead, int slice, bool solid);
-	/// ’¼•û‘Ì‚ğ•`‰æ
+	/// ç›´æ–¹ä½“ã‚’æç”»
 	void	DrawBox(float sx, float sy, float sz, bool solid=true);
-	/// ‹…‘Ì‚ğ•`‰æ
+	/// çƒä½“ã‚’æç”»
 	void	DrawSphere(float radius, int slices, int stacks, bool solid=true);
-	/// ‰~‚Ì•`‰æ
+	/// å††éŒã®æç”»
 	void	DrawCone(float radius, float height, int slice, bool solid=true);
-	/// ‰~“›‚Ì•`‰æ
+	/// å††ç­’ã®æç”»
 	void	DrawCylinder(float radius, float height, int slice, bool solid=true, bool cap=true);
-	/// ‰~”Â‚Ì•`‰æ
+	/// å††æ¿ã®æç”»
 	void	DrawDisk(float radius, int slice, bool solid=true);
-	/// ƒJƒvƒZƒ‹‚Ì•`‰æ
+	/// ã‚«ãƒ—ã‚»ãƒ«ã®æç”»
 	void	DrawCapsule(float radius, float height, int slice=20, bool solid=true);
-	/// ‹…‰~‚Ì•`‰æ
+	/// çƒå††éŒã®æç”»
 	void	DrawRoundCone(float rbottom, float rtop, float height, int slice=20, bool solid=true);
-	/**	ƒOƒŠƒbƒh‚ğ•`‰æ
-		@param	size		•
-		@param	slice		•ªŠ„”
-		@param	lineWidth	ü‚Ì‘¾‚³
-		xy–Êã‚ÉƒOƒŠƒbƒh‚ğ•`‰æ‚·‚é
+	/**	ã‚°ãƒªãƒƒãƒ‰ã‚’æç”»
+		@param	size		å¹…
+		@param	slice		åˆ†å‰²æ•°
+		@param	lineWidth	ç·šã®å¤ªã•
+		xyé¢ä¸Šã«ã‚°ãƒªãƒƒãƒ‰ã‚’æç”»ã™ã‚‹
 	 */
 	void	DrawGrid(float size, int slice, float lineWidth = 1.0f);
-	/** ‹Èü‚ğ•`‰æ
-		@param	curve		‹Èü
+	/** æ›²ç·šã‚’æç”»
+		@param	curve		æ›²ç·š
 	 **/
 	void	DrawCurve(const Curve3f& curve);
 
-	///	ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ìì¬(‹L˜^ŠJn)
+	///	ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®ä½œæˆ(è¨˜éŒ²é–‹å§‹)
 	int StartList();
-	///	ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚ÌI—¹(‹L˜^I—¹)
+	///	ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®çµ‚äº†(è¨˜éŒ²çµ‚äº†)
 	void EndList();
-	///	ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ì•`‰æ
+	///	ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®æç”»
 	void DrawList(int i);
-	///	ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ì‰ğ•ú
+	///	ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®è§£æ”¾
 	void ReleaseList(int i);
 
-	/** @brief	ƒtƒHƒ“ƒg‚Ìİ’è(WindowsŒÀ’è)
-		@param	font	ƒtƒHƒ“ƒg‚ÉŠÖ‚·‚éİ’è
-		WindowsŠÂ‹«(VC)‚Å‚Ì‚İfont‚ğƒTƒ|[ƒg‚µA‘¼‚ÌŠÂ‹«‚Å‚Ífont‚ğw’è‚µ‚Ä‚à—˜—p‚³‚ê‚È‚¢B	
+	/** @brief	ãƒ•ã‚©ãƒ³ãƒˆã®è¨­å®š(Windowsé™å®š)
+		@param	font	ãƒ•ã‚©ãƒ³ãƒˆã«é–¢ã™ã‚‹è¨­å®š
+		Windowsç’°å¢ƒ(VC)ã§ã®ã¿fontã‚’ã‚µãƒãƒ¼ãƒˆã—ã€ä»–ã®ç’°å¢ƒã§ã¯fontã‚’æŒ‡å®šã—ã¦ã‚‚åˆ©ç”¨ã•ã‚Œãªã„ã€‚	
 	 */
 	void SetFont(const GRFont& font);
 	
-	/** @brief	2ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æ
+	/** @brief	2æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»
 	 */
 	void DrawFont(Vec2f pos, const std::string str);
 
-	/** @brief	3ŸŒ³ƒeƒLƒXƒg‚Ì•`‰æ
-		@param  pos		WorldÀ•WŒn‚Å‚Ì‘‚«n‚ß‚ÌˆÊ’uCƒrƒ…[ƒ|[ƒg‚ğ‚Í‚İo‚·‚Æ‰½‚à•\¦‚³‚ê‚È‚­‚È‚é‚Ì‚Å’ˆÓD
-		@param	str		‘‚­•¶š—ñ(bitmapfont‚Å‘‚¯‚é•¨‚Ì‚İ)
+	/** @brief	3æ¬¡å…ƒãƒ†ã‚­ã‚¹ãƒˆã®æç”»
+		@param  pos		Worldåº§æ¨™ç³»ã§ã®æ›¸ãå§‹ã‚ã®ä½ç½®ï¼Œãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã‚’ã¯ã¿å‡ºã™ã¨ä½•ã‚‚è¡¨ç¤ºã•ã‚Œãªããªã‚‹ã®ã§æ³¨æ„ï¼
+		@param	str		æ›¸ãæ–‡å­—åˆ—(bitmapfontã§æ›¸ã‘ã‚‹ç‰©ã®ã¿)
 	 */
 	void DrawFont(Vec3f pos, const std::string str);
 
-	///	•`‰æƒ}ƒeƒŠƒAƒ‹‚Ìİ’èiƒfƒXƒNƒŠƒvƒ^”Åj
+	///	æç”»ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®šï¼ˆãƒ‡ã‚¹ã‚¯ãƒªãƒ—ã‚¿ç‰ˆï¼‰
 	void SetMaterial(const GRMaterialDesc& mat);
-	///	•`‰æƒ}ƒeƒŠƒAƒ‹‚Ìİ’èiƒIƒuƒWƒFƒNƒg”Åj
+	///	æç”»ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®šï¼ˆã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆç‰ˆï¼‰
 	void SetMaterial(const GRMaterialIf* mat);
-	/// •`‰æƒ}ƒeƒŠƒAƒ‹‚Ìİ’èi—\–ñƒ}ƒeƒŠƒAƒ‹‚Ì–¼‘O‚Åw’èj
+	/// æç”»ãƒãƒ†ãƒªã‚¢ãƒ«ã®è¨­å®šï¼ˆäºˆç´„ãƒãƒ†ãƒªã‚¢ãƒ«ã®åå‰ã§æŒ‡å®šï¼‰
 	void SetMaterial(int matname);
-	/** @brief •`‰æ‚·‚é“_‚Ì‘å‚«‚³‚Ìİ’è
-		@param sz		‘å‚«‚³
-		@param smooth	ƒAƒ“ƒ`ƒGƒCƒŠƒAƒVƒ“ƒO‚·‚é‚©
+	/** @brief æç”»ã™ã‚‹ç‚¹ã®å¤§ãã•ã®è¨­å®š
+		@param sz		å¤§ãã•
+		@param smooth	ã‚¢ãƒ³ãƒã‚¨ã‚¤ãƒªã‚¢ã‚·ãƒ³ã‚°ã™ã‚‹ã‹
 	 **/
 	void SetPointSize(float sz, bool smooth = false);
-	/** @brief •`‰æ‚·‚éü‚Ì‘¾‚³‚Ìİ’è
-		@param w		‘¾‚³
-		@param smooth	ƒAƒ“ƒ`ƒGƒCƒŠƒAƒVƒ“ƒO‚·‚é‚©
+	/** @brief æç”»ã™ã‚‹ç·šã®å¤ªã•ã®è¨­å®š
+		@param w		å¤ªã•
+		@param smooth	ã‚¢ãƒ³ãƒã‚¨ã‚¤ãƒªã‚¢ã‚·ãƒ³ã‚°ã™ã‚‹ã‹
 	 **/
 	void SetLineWidth(float w, bool smooth = false);
-	///	ŒõŒ¹ƒXƒ^ƒbƒN‚ğPush
+	///	å…‰æºã‚¹ã‚¿ãƒƒã‚¯ã‚’Push
 	void PushLight(const GRLightDesc& light);
 	void PushLight(const GRLightIf* light);
-	///	ŒõŒ¹ƒXƒ^ƒbƒN‚ğPop
+	///	å…‰æºã‚¹ã‚¿ãƒƒã‚¯ã‚’Pop
 	void PopLight();
-	/// İ’è‚³‚ê‚Ä‚¢‚éŒõŒ¹‚Ì”
+	/// è¨­å®šã•ã‚Œã¦ã„ã‚‹å…‰æºã®æ•°
 	int	 NLights();
-	///	ƒfƒvƒXƒoƒbƒtƒ@‚Ö‚Ì‘‚«‚İ‚ğ‹–‰Â/‹Ö~‚·‚é
+	///	ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡ã¸ã®æ›¸ãè¾¼ã¿ã‚’è¨±å¯/ç¦æ­¢ã™ã‚‹
 	void SetDepthWrite(bool b);
-	///	ƒfƒvƒXƒeƒXƒg‚ğ—LŒø/–³Œø‚É‚·‚é
+	///	ãƒ‡ãƒ—ã‚¹ãƒ†ã‚¹ãƒˆã‚’æœ‰åŠ¹/ç„¡åŠ¹ã«ã™ã‚‹
 	void SetDepthTest(bool b);
-	///	ƒfƒvƒXƒoƒbƒtƒ@–@‚É—p‚¢‚é”»’èğŒ‚ğw’è‚·‚é
+	///	ãƒ‡ãƒ—ã‚¹ãƒãƒƒãƒ•ã‚¡æ³•ã«ç”¨ã„ã‚‹åˆ¤å®šæ¡ä»¶ã‚’æŒ‡å®šã™ã‚‹
 	void SetDepthFunc(GRRenderBaseIf::TDepthFunc f);
-	/// ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚ğ—LŒø/–³Œø‚É‚·‚é
+	/// ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã‚’æœ‰åŠ¹/ç„¡åŠ¹ã«ã™ã‚‹
 	void SetAlphaTest(bool b);
-	///	ƒAƒ‹ƒtƒ@ƒuƒŒƒ“ƒfƒBƒ“ƒO‚Ìƒ‚[ƒhİ’è(SRC‚Ì¬‡ŒW”, DEST¬‡ŒW”)
+	///	ã‚¢ãƒ«ãƒ•ã‚¡ãƒ–ãƒ¬ãƒ³ãƒ‡ã‚£ãƒ³ã‚°ã®ãƒ¢ãƒ¼ãƒ‰è¨­å®š(SRCã®æ··åˆä¿‚æ•°, DESTæ··åˆä¿‚æ•°)
 	void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest);
-	///	ƒVƒF[ƒfƒBƒ“ƒOON(glMaterial) or OFFiglColor)
+	///	ã‚·ã‚§ãƒ¼ãƒ‡ã‚£ãƒ³ã‚°ON(glMaterial) or OFFï¼ˆglColor)
 	void SetLighting(bool l);
-	/// ƒeƒNƒXƒ`ƒƒ‚Ìƒ[ƒhi–ß‚è’lFƒeƒNƒXƒ`ƒƒIDj
+	/// ãƒ†ã‚¯ã‚¹ãƒãƒ£ã®ãƒ­ãƒ¼ãƒ‰ï¼ˆæˆ»ã‚Šå€¤ï¼šãƒ†ã‚¯ã‚¹ãƒãƒ£IDï¼‰
 	unsigned int LoadTexture(const std::string filename);
-	/// ƒeƒNƒXƒ`ƒƒ‰æ‘œ‚Ìİ’è
+	/// ãƒ†ã‚¯ã‚¹ãƒãƒ£ç”»åƒã®è¨­å®š
 	void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb);
-	/// ƒVƒF[ƒ_‚Ì‰Šú‰»
+	/// ã‚·ã‚§ãƒ¼ãƒ€ã®åˆæœŸåŒ–
 	void InitShader();
-	/// ƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg‚Ìİ’è
+	/// ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®è¨­å®š
 	void SetShaderFormat(GRShaderFormat::ShaderType type);
-	/// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚Ìì¬
+	/// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
 	bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader);
-	/// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚Ìì¬AGRDeviceGL::shader‚Ö‚Ì“o˜^i‚ ‚ç‚©‚¶‚ßShaderFile–¼‚ğ“o˜^‚µ‚Ä‚¨‚­•K—v‚ª‚ ‚éj	
+	/// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆã€GRDeviceGL::shaderã¸ã®ç™»éŒ²ï¼ˆã‚ã‚‰ã‹ã˜ã‚ShaderFileåã‚’ç™»éŒ²ã—ã¦ãŠãå¿…è¦ãŒã‚ã‚‹ï¼‰	
 	GRHandler CreateShader();
-	/// ƒVƒF[ƒ_‚Ìƒ\[ƒXƒvƒƒOƒ‰ƒ€‚ğƒƒ‚ƒŠ‚É“Ç‚İ‚İAƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒg‚ÆŠÖ˜A•t‚¯‚é
+	/// ã‚·ã‚§ãƒ¼ãƒ€ã®ã‚½ãƒ¼ã‚¹ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’ãƒ¡ãƒ¢ãƒªã«èª­ã¿è¾¼ã¿ã€ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¨é–¢é€£ä»˜ã‘ã‚‹
 	bool ReadShaderSource(GRHandler shader, std::string file);	
-	/// ƒƒP[ƒVƒ‡ƒ“î•ñ‚Ìæ“¾iSetShaderFormat()‚ÅƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg‚ğİ’è‚µ‚Ä‚¨‚­•K—v‚ ‚èj
+	/// ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ã®å–å¾—ï¼ˆSetShaderFormat()ã§ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã‚’è¨­å®šã—ã¦ãŠãå¿…è¦ã‚ã‚Šï¼‰
 	void GetShaderLocation(GRHandler shader, void* location);	
 };
 
-/**	@brief	ƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[‚ÌƒCƒ“ƒ^ƒtƒF[ƒXiƒfƒoƒCƒX‚Ìİ’èAƒJƒƒ‰‚Ìİ’èj */
+/**	@brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ï¼ˆãƒ‡ãƒã‚¤ã‚¹ã®è¨­å®šã€ã‚«ãƒ¡ãƒ©ã®è¨­å®šï¼‰ */
 struct GRRenderIf: public GRRenderBaseIf{
 	SPR_IFDEF(GRRender);
 
-	///	ƒfƒoƒCƒX‚Ìİ’è
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®è¨­å®š
 	void SetDevice(GRDeviceIf* dev);
-	///	ƒfƒoƒCƒX‚Ìæ“¾
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®å–å¾—
 	GRDeviceIf* GetDevice();
-	///	ƒJƒƒ‰‚Ìİ’è
+	///	ã‚«ãƒ¡ãƒ©ã®è¨­å®š
 	void SetCamera(const GRCameraDesc& cam);
-	///	ƒJƒƒ‰‚Ìæ“¾
+	///	ã‚«ãƒ¡ãƒ©ã®å–å¾—
 	const GRCameraDesc& GetCamera();
-	///	ƒXƒNƒŠ[ƒ“(ƒEƒBƒ“ƒhƒE)ƒTƒCƒY•ÏX‚ÌViewport‚ÆË‰es—ñ‚ğİ’è
+	///	ã‚¹ã‚¯ãƒªãƒ¼ãƒ³(ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦)ã‚µã‚¤ã‚ºå¤‰æ›´æ™‚ã®Viewportã¨å°„å½±è¡Œåˆ—ã‚’è¨­å®š
 	void Reshape(Vec2f pos, Vec2f screenSize);
-	/// ƒrƒ…[ƒ|[ƒg‚ÌŠî“_À•W‚Ìæ“¾
+	/// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®åŸºç‚¹åº§æ¨™ã®å–å¾—
 	Vec2f GetViewportPos();
-	/// ƒrƒ…[ƒ|[ƒg‚ÌƒTƒCƒY‚Ìæ“¾
+	/// ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®ã‚µã‚¤ã‚ºã®å–å¾—
 	Vec2f GetViewportSize();
-	/// 1ƒsƒNƒZƒ‹‚Ì•¨—ƒTƒCƒY‚ğæ“¾
+	/// 1ãƒ”ã‚¯ã‚»ãƒ«ã®ç‰©ç†ã‚µã‚¤ã‚ºã‚’å–å¾—
 	Vec2f GetPixelSize();
 
-	/** @brief ƒXƒNƒŠ[ƒ“À•W‚©‚çƒJƒƒ‰À•W‚Ö‚Ì•ÏŠ·
-		@param	x		ƒXƒNƒŠ[ƒ“xÀ•W
-		@param	y		ƒXƒNƒŠ[ƒ“yÀ•W
-		@param depth	zÀ•W
-		@param LorR		true‚È‚ç¶èÀ•W(D3D)Cfalse‚È‚ç‚Î‰EèÀ•W(GL)
-		@return			ƒJƒƒ‰À•W
-		ƒJ[ƒ\ƒ‹ˆÊ’u‚È‚Ç‚ÌƒXƒNƒŠ[ƒ“À•WiƒsƒNƒZƒ‹j‚ğƒJƒƒ‰À•WŒn‚É•ÏŠ·‚·‚éD
-		z•ûŒü‚É©—R“x‚ªc‚é‚Ì‚Ådepth‚Åw’è‚·‚éD
-		depth‚ÍƒJƒƒ‰Œ´“_‚©‚ç‚Ìz•ûŒü‹——£‚Å•K‚¸depth > 0D
+	/** @brief ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã‹ã‚‰ã‚«ãƒ¡ãƒ©åº§æ¨™ã¸ã®å¤‰æ›
+		@param	x		ã‚¹ã‚¯ãƒªãƒ¼ãƒ³xåº§æ¨™
+		@param	y		ã‚¹ã‚¯ãƒªãƒ¼ãƒ³yåº§æ¨™
+		@param depth	zåº§æ¨™
+		@param LorR		trueãªã‚‰å·¦æ‰‹åº§æ¨™(D3D)ï¼Œfalseãªã‚‰ã°å³æ‰‹åº§æ¨™(GL)
+		@return			ã‚«ãƒ¡ãƒ©åº§æ¨™
+		ã‚«ãƒ¼ã‚½ãƒ«ä½ç½®ãªã©ã®ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ï¼ˆãƒ”ã‚¯ã‚»ãƒ«ï¼‰ã‚’ã‚«ãƒ¡ãƒ©åº§æ¨™ç³»ã«å¤‰æ›ã™ã‚‹ï¼
+		zæ–¹å‘ã«è‡ªç”±åº¦ãŒæ®‹ã‚‹ã®ã§depthã§æŒ‡å®šã™ã‚‹ï¼
+		depthã¯ã‚«ãƒ¡ãƒ©åŸç‚¹ã‹ã‚‰ã®zæ–¹å‘è·é›¢ã§å¿…ãšdepth > 0ï¼
 	 */
 	Vec3f	ScreenToCamera(int x, int y, float depth, bool LorR = false);
 
-	/** @brief ƒXƒNƒŠ[ƒ“À•WŒn‚ÖØ‚è‘Ö‚¦‚é
-		ƒXƒNƒŠ[ƒ“À•W‚Å•¶š‚È‚Ç‚ğ•`‰æ‚·‚é‚½‚ß‚Ì‹@”\D
-		‰æ–Ê¶ã‚ªŒ´“_C‰æ–Ê‰E•ûŒü‚ªx²³•ûŒüC‰æ–Ê‰º•ûŒü‚ªy²³•ûŒüD
-		À•W‚ÍƒsƒNƒZƒ‹’PˆÊD
+	/** @brief ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ç³»ã¸åˆ‡ã‚Šæ›¿ãˆã‚‹
+		ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ã§æ–‡å­—ãªã©ã‚’æç”»ã™ã‚‹ãŸã‚ã®æ©Ÿèƒ½ï¼
+		ç”»é¢å·¦ä¸ŠãŒåŸç‚¹ï¼Œç”»é¢å³æ–¹å‘ãŒxè»¸æ­£æ–¹å‘ï¼Œç”»é¢ä¸‹æ–¹å‘ãŒyè»¸æ­£æ–¹å‘ï¼
+		åº§æ¨™ã¯ãƒ”ã‚¯ã‚»ãƒ«å˜ä½ï¼
 	 */
 	void EnterScreenCoordinate();
-	/// ƒXƒNƒŠ[ƒ“À•WŒn‚©‚ç–ß‚é
+	/// ã‚¹ã‚¯ãƒªãƒ¼ãƒ³åº§æ¨™ç³»ã‹ã‚‰æˆ»ã‚‹
 	void LeaveScreenCoordinate();
 	
 };
 
-/**	@brief	ƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[‚ÌƒfƒoƒCƒXƒNƒ‰ƒXDOpenGL‚âDirectX‚Ìƒ‰ƒbƒp */
+/**	@brief	ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®ãƒ‡ãƒã‚¤ã‚¹ã‚¯ãƒ©ã‚¹ï¼OpenGLã‚„DirectXã®ãƒ©ãƒƒãƒ‘ */
 struct GRDeviceIf: public GRRenderBaseIf{
 	SPR_IFDEF(GRDevice);
-	///	‰Šú‰»
+	///	åˆæœŸåŒ–
 	void Init();
-	///	ƒfƒoƒbƒO—p‚Ìó‘ÔƒŒƒ|[ƒg
+	///	ãƒ‡ãƒãƒƒã‚°ç”¨ã®çŠ¶æ…‹ãƒ¬ãƒãƒ¼ãƒˆ
 	void Print(std::ostream& os) const;
 };
 
-/**	@brief	OpenGL‚ÌƒŒƒ“ƒ_ƒ‰[Šî–{ƒNƒ‰ƒX */
+/**	@brief	OpenGLã®ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼åŸºæœ¬ã‚¯ãƒ©ã‚¹ */
 struct GRDeviceGLIf: public GRDeviceIf{
 	SPR_IFDEF(GRDeviceGL);
 };
 
-/**	@brief	DirectX‚ÌƒŒƒ“ƒ_ƒ‰[Šî–{ƒNƒ‰ƒX */
+/**	@brief	DirectXã®ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼åŸºæœ¬ã‚¯ãƒ©ã‚¹ */
 /*
 struct GRDeviceD3DIf: public GRDeviceIf{
 	SPR_IFDEF(GRDeviceD3D);

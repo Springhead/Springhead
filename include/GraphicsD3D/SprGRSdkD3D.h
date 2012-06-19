@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,7 +8,7 @@
 
 /**
  *	@file SprGRSdkD3D.h
- *	@brief DirectX‚ÌƒOƒ‰ƒtƒBƒbƒNƒXSDK‚ÌŠî–{ƒNƒ‰ƒX
+ *	@brief DirectXã®ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹SDKã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
  */
 #ifndef SPR_GRSDKD3D_H
 #define SPR_GRSDKD3D_H
@@ -25,7 +25,7 @@ struct GRAnimationMeshDesc;
 typedef bool (SPR_CDECL *GRDeviceD3DConfirmDeviceFunc)(D3DCAPS9* pCaps, DWORD dwBehavior);
 typedef void (SPR_CDECL *GRDeviceD3DListenerFunc)();
 
-/**	@brief	DirectX‚ÌƒŒƒ“ƒ_ƒ‰[Šî–{ƒNƒ‰ƒX */
+/**	@brief	DirectXã®ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼åŸºæœ¬ã‚¯ãƒ©ã‚¹ */
 struct GRDeviceD3DIf: public GRDeviceIf{
 	SPR_IFDEF(GRDeviceD3D);
 	virtual void SetConfirmDeviceFunc(GRDeviceD3DConfirmDeviceFunc func)=0;
@@ -35,7 +35,7 @@ struct GRDeviceD3DIf: public GRDeviceIf{
 	virtual bool IsFullScreen()=0;
 };
 
-/**	@brief	DirectX‚ÌƒfƒoƒbƒOî•ñƒŒƒ“ƒ_ƒ‰[‚ÌŠî–{ƒNƒ‰ƒX */
+/**	@brief	DirectXã®ãƒ‡ãƒãƒƒã‚°æƒ…å ±ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ */
 struct GRDebugRenderD3DIf:public GRDebugRenderIf{
 	SPR_IFDEF(GRDebugRenderD3D);
 };
@@ -43,7 +43,7 @@ struct GRDebugRenderD3DIf:public GRDebugRenderIf{
 struct GRSdkD3DDesc{
 };
 
-/**	@brief	DirectX‚ÌƒOƒ‰ƒtƒBƒbƒNƒXSDK‚ÌŠî–{ƒNƒ‰ƒX@ */
+/**	@brief	DirectXã®ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹SDKã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ã€€ */
 struct GRSdkD3DIf: public SdkIf{
 	SPR_IFDEF(GRSdkD3D);
 	virtual GRDeviceD3DIf* CreateDeviceD3D()=0;

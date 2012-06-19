@@ -1,4 +1,4 @@
-/*
+Ôªø/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -7,7 +7,7 @@
  */
 /**
  *	@file SprHINovint.h
- *	@brief NovintÇÃÉCÉìÉ^ÉtÉFÅ[ÉX
+ *	@brief Novint„ÅÆ„Ç§„É≥„Çø„Éï„Çß„Éº„Çπ
 */
 
 #ifndef SPR_HINovint_H
@@ -20,7 +20,7 @@ namespace Spr{;
 /**	\addtogroup	gpHumanInterface	*/
 //@{
 
-/**	@brief	NovintFalconÇÃÉCÉìÉ^ÉtÉFÅ[ÉX	*/
+/**	@brief	NovintFalcon„ÅÆ„Ç§„É≥„Çø„Éï„Çß„Éº„Çπ	*/
 struct HINovintFalconIf: public HIHapticIf{
 	SPR_VIFDEF(HINovintFalcon);
 };

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -9,101 +9,101 @@
 #define SPR_FIFile_H
 #include <Foundation/SprObject.h>
 
-/**	\defgroup gpFileIO	ƒtƒ@ƒCƒ‹“üo—ÍSDK	*/
+/**	\defgroup gpFileIO	ãƒ•ã‚¡ã‚¤ãƒ«å…¥å‡ºåŠ›SDK	*/
 //@{
 namespace Spr{;
 
 class UTTypeDescDb;
 
-///	ƒtƒ@ƒCƒ‹ƒ[ƒ_EƒZ[ƒo
+///	ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ãƒ»ã‚»ãƒ¼ãƒ
 struct FIFileIf: public ObjectIf{
 	SPR_IFDEF(FIFile);
-	/**	@brief ƒV[ƒ“‚ğƒtƒ@ƒCƒ‹‚©‚çƒ[ƒh‚·‚é
-		@param objs ƒ[ƒh‚·‚éƒV[ƒ“‚Ìe‚Æ‚È‚éƒIƒuƒWƒFƒNƒg‚ÌƒXƒ^ƒbƒN
-		@param fn	ƒtƒ@ƒCƒ‹–¼
-		@return		¬Œ÷‚µ‚½‚çtrueC¸”s‚µ‚½‚çfalse
+	/**	@brief ã‚·ãƒ¼ãƒ³ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰ã™ã‚‹
+		@param objs ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã‚·ãƒ¼ãƒ³ã®è¦ªã¨ãªã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ã‚¹ã‚¿ãƒƒã‚¯
+		@param fn	ãƒ•ã‚¡ã‚¤ãƒ«å
+		@return		æˆåŠŸã—ãŸã‚‰trueï¼Œå¤±æ•—ã—ãŸã‚‰false
 	 */
 	bool Load(ObjectIfs& objs, const char* fn);
 
-	/** @brief ƒV[ƒ“‚ğƒtƒ@ƒCƒ‹‚ÖƒZ[ƒu‚·‚é
-		@param objs	ƒZ[ƒu‚·‚éƒV[ƒ“‚ÌÅãˆÊƒIƒuƒWƒFƒNƒg‚ğŠi”[‚µ‚½”z—ñ
-		@param fn	ƒtƒ@ƒCƒ‹–¼
-		@return		¬Œ÷‚µ‚½‚çtrue, ¸”s‚µ‚½‚çfalse
+	/** @brief ã‚·ãƒ¼ãƒ³ã‚’ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã‚»ãƒ¼ãƒ–ã™ã‚‹
+		@param objs	ã‚»ãƒ¼ãƒ–ã™ã‚‹ã‚·ãƒ¼ãƒ³ã®æœ€ä¸Šä½ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’æ ¼ç´ã—ãŸé…åˆ—
+		@param fn	ãƒ•ã‚¡ã‚¤ãƒ«å
+		@return		æˆåŠŸã—ãŸã‚‰true, å¤±æ•—ã—ãŸã‚‰false
 	 */
 	bool Save(const ObjectIfs& objs, const char* fn);
 
-	/** @brief	ƒCƒ“ƒ|[ƒgî•ñ‚Ìİ’è
-		@param	ƒCƒ“ƒ|[ƒgî•ñ
-		ƒV[ƒ“‚ğƒZ[ƒu‚·‚éÛ‚ÉCˆê•”‚ğ•Êƒtƒ@ƒCƒ‹‚ÖƒGƒNƒXƒ|[ƒg‚µ‚½‚¢ê‡‚Í
-		Save‚Éæ—§‚Á‚ÄSetImport‚ğŒÄ‚ÔD
+	/** @brief	ã‚¤ãƒ³ãƒãƒ¼ãƒˆæƒ…å ±ã®è¨­å®š
+		@param	ã‚¤ãƒ³ãƒãƒ¼ãƒˆæƒ…å ±
+		ã‚·ãƒ¼ãƒ³ã‚’ã‚»ãƒ¼ãƒ–ã™ã‚‹éš›ã«ï¼Œä¸€éƒ¨ã‚’åˆ¥ãƒ•ã‚¡ã‚¤ãƒ«ã¸ã‚¨ã‚¯ã‚¹ãƒãƒ¼ãƒˆã—ãŸã„å ´åˆã¯
+		Saveã«å…ˆç«‹ã£ã¦SetImportã‚’å‘¼ã¶ï¼
 	 */
 	void SetImport(ImportIf* import);
 
-	/**	@brief  ƒCƒ“ƒ|[ƒgî•ñ‚Ìæ“¾
-		@return	ƒCƒ“ƒ|[ƒgî•ñ
-		ƒV[ƒ“‚Ìƒ[ƒhŒã‚ÉƒCƒ“ƒ|[ƒg‚ğæ“¾‚µ‚½‚¢Û‚Ég—p‚·‚éD
+	/**	@brief  ã‚¤ãƒ³ãƒãƒ¼ãƒˆæƒ…å ±ã®å–å¾—
+		@return	ã‚¤ãƒ³ãƒãƒ¼ãƒˆæƒ…å ±
+		ã‚·ãƒ¼ãƒ³ã®ãƒ­ãƒ¼ãƒ‰å¾Œã«ã‚¤ãƒ³ãƒãƒ¼ãƒˆã‚’å–å¾—ã—ãŸã„éš›ã«ä½¿ç”¨ã™ã‚‹ï¼
 	 */
 	ImportIf* GetImport();
 
-	///	î•ñ‚ÌDSTR‚Ìo—Í‚Ì—L–³
-	/// ”Ä—p«‚ª’á‚¢‚Ì‚ÅObjectIf‚ÉƒfƒoƒbƒOo—ÍƒŒƒxƒ‹‚ğİ’è‚·‚éAPI‚ğ‚Â‚¯‚é‚×‚«‚©Htazz
+	///	æƒ…å ±ã®DSTRã®å‡ºåŠ›ã®æœ‰ç„¡
+	/// æ±ç”¨æ€§ãŒä½ã„ã®ã§ObjectIfã«ãƒ‡ãƒãƒƒã‚°å‡ºåŠ›ãƒ¬ãƒ™ãƒ«ã‚’è¨­å®šã™ã‚‹APIã‚’ã¤ã‘ã‚‹ã¹ãã‹ï¼Ÿtazz
 	void SetDSTR(bool f);
 };
 
-///	Sprƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹ƒ[ƒ_‚ÆƒZ[ƒo
+///	Sprãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã¨ã‚»ãƒ¼ãƒ
 struct FIFileSprIf: public FIFileIf{
 	SPR_IFDEF(FIFileSpr);
-	///	ƒ[ƒh
+	///	ãƒ­ãƒ¼ãƒ‰
 	bool Load(ObjectIfs& objs, const char* fn);
-	///	ƒZ[ƒu
+	///	ã‚»ãƒ¼ãƒ–
 	bool Save(const ObjectIfs& objs, const char* fn);
 };
 struct FIFileSprDesc{
 	SPR_DESCDEF(FIFileSpr);
 };
 
-///	DirectXƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹ƒ[ƒ_‚ÆƒZ[ƒo
+///	DirectXãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã¨ã‚»ãƒ¼ãƒ
 struct FIFileXIf: public FIFileIf{
 	SPR_IFDEF(FIFileX);
-	///	ƒ[ƒh
+	///	ãƒ­ãƒ¼ãƒ‰
 	bool Load(ObjectIfs& objs, const char* fn);
-	///	ƒZ[ƒu
+	///	ã‚»ãƒ¼ãƒ–
 	bool Save(const ObjectIfs& objs, const char* fn);
 };
 struct FIFileXDesc{
 	SPR_DESCDEF(FIFileX);
 };
 
-///	DirectXƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹ƒ[ƒ_‚ÆƒZ[ƒo
+///	DirectXãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã¨ã‚»ãƒ¼ãƒ
 struct FIFileVRMLIf: public FIFileIf{
 	SPR_IFDEF(FIFileVRML);
-	///	ƒ[ƒh
+	///	ãƒ­ãƒ¼ãƒ‰
 	bool Load(ObjectIfs& objs, const char* fn);
-	///	ƒZ[ƒu
+	///	ã‚»ãƒ¼ãƒ–
 	bool Save(const ObjectIfs& objs, const char* fn);
 };
 struct FIFileVRMLDesc{
 	SPR_DESCDEF(FIFileVRML);
 };
 
-///	COLLADAƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹ƒ[ƒ_‚ÆƒZ[ƒo
+///	COLLADAãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã¨ã‚»ãƒ¼ãƒ
 struct FIFileCOLLADAIf: public FIFileIf{
 	SPR_IFDEF(FIFileCOLLADA);
-	///	ƒ[ƒh
+	///	ãƒ­ãƒ¼ãƒ‰
 	bool Load(ObjectIfs& objs, const char* fn);
-	///	ƒZ[ƒu
+	///	ã‚»ãƒ¼ãƒ–
 	bool Save(const ObjectIfs& objs, const char* fn);
 };
 struct FIFileCOLLADADesc{
 	SPR_DESCDEF(FIFileCOLLADA);
 };
 
-///	ƒoƒCƒiƒŠƒtƒ@ƒCƒ‹‚Ìƒtƒ@ƒCƒ‹ƒ[ƒ_‚ÆƒZ[ƒo
+///	ãƒã‚¤ãƒŠãƒªãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ€ã¨ã‚»ãƒ¼ãƒ
 struct FIFileBinaryIf: public FIFileIf{
 	SPR_IFDEF(FIFileBinary);
-	///	ƒ[ƒh
+	///	ãƒ­ãƒ¼ãƒ‰
 	bool Load(ObjectIfs& objs, const char* fn);
-	///	ƒZ[ƒu
+	///	ã‚»ãƒ¼ãƒ–
 	bool Save(const ObjectIfs& objs, const char* fn);
 };
 struct FIFileBinaryDesc{

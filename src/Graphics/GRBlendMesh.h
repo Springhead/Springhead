@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -16,28 +16,28 @@ namespace Spr{;
 class GRMaterial;
 
 /** @class GRBlendMesh
-	@brief ƒOƒ‰ƒtƒBƒbƒNƒXƒV[ƒ“ƒOƒ‰ƒt‚Å‚ÌÀ•WŒn‚ğ•\‚·D	*/
+	@brief ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã‚·ãƒ¼ãƒ³ã‚°ãƒ©ãƒ•ã§ã®åº§æ¨™ç³»ã‚’è¡¨ã™ï¼	*/
 class GRBlendMesh: public GRVisual, public GRBlendMeshDesc{
-	GRRenderIf* render;							///< ƒŒƒ“ƒ_ƒ‰[				
-	std::vector<unsigned int> list;				///< ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚Ì¯•Êq
+	GRRenderIf* render;							///< ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼				
+	std::vector<unsigned int> list;				///< ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã®è­˜åˆ¥å­
 			
-	/// ’¸“_ƒtƒH[ƒ}ƒbƒgAƒVƒF[ƒ_ƒtƒH[ƒ}ƒbƒg ‚É‡‚í‚¹AƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚ğì¬‚·‚éD
+	/// é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã€ã‚·ã‚§ãƒ¼ãƒ€ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ ã«åˆã‚ã›ã€ãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ä½œæˆã™ã‚‹ï¼
 	void CreateList(GRRenderIf* r);
 public:
 	SPR_OBJECTDEF(GRBlendMesh);
 	ACCESS_DESC(GRBlendMesh);
 
-	std::vector< UTRef<GRMaterial> > material;				///< ƒ}ƒeƒŠƒAƒ‹
-	std::vector<int>                 materialList;			///< ƒ}ƒeƒŠƒAƒ‹‚ÌƒCƒ“ƒfƒbƒNƒXƒŠƒXƒg
+	std::vector< UTRef<GRMaterial> > material;				///< ãƒãƒ†ãƒªã‚¢ãƒ«
+	std::vector<int>                 materialList;			///< ãƒãƒ†ãƒªã‚¢ãƒ«ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãƒªã‚¹ãƒˆ
 	/**
-	   faces‚ÆAOŠpŒ`•ªŠ„‚·‚é‘O‚ÌXƒtƒ@ƒCƒ‹‚Åw’è‚³‚ê‚½–Ê‚Æ‚ÌŠÖ˜A•t‚¯ \n
-	  iXƒtƒ@ƒCƒ‹‚©‚çƒ[ƒh‚³‚ê‚½–Ê‚ÍA‚·‚×‚ÄOŠpŒ`•ªŠ„‚³‚ê‚Ä‚¢‚é‚½‚ßA
-	   ‚Ç‚Ì–Ê‚ª‚Ç‚Ìƒ}ƒeƒŠƒAƒ‹‚ğ“K—p‚·‚é‚Ì‚©”»’f‚·‚é‚½‚ß‚Ì‚à‚Ìj			*/
-	std::vector<int> originalFaces;				///< OŠpŒ`•ªŠ„‘O‚Ì–Ê‚É‘Î‰‚·‚é’¸“_
-	std::vector<unsigned int> originalFaceIds;	///< OŠpŒ`‚É‘Î‰‚·‚é•ªŠ„‘O‚Ì–Ê‚Ì”Ô†
-	std::vector<int> faceNormals;				///< –@üƒCƒ“ƒfƒbƒNƒX
+	   facesã¨ã€ä¸‰è§’å½¢åˆ†å‰²ã™ã‚‹å‰ã®Xãƒ•ã‚¡ã‚¤ãƒ«ã§æŒ‡å®šã•ã‚ŒãŸé¢ã¨ã®é–¢é€£ä»˜ã‘ \n
+	  ï¼ˆXãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ­ãƒ¼ãƒ‰ã•ã‚ŒãŸé¢ã¯ã€ã™ã¹ã¦ä¸‰è§’å½¢åˆ†å‰²ã•ã‚Œã¦ã„ã‚‹ãŸã‚ã€
+	   ã©ã®é¢ãŒã©ã®ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’é©ç”¨ã™ã‚‹ã®ã‹åˆ¤æ–­ã™ã‚‹ãŸã‚ã®ã‚‚ã®ï¼‰			*/
+	std::vector<int> originalFaces;				///< ä¸‰è§’å½¢åˆ†å‰²å‰ã®é¢ã«å¯¾å¿œã™ã‚‹é ‚ç‚¹
+	std::vector<unsigned int> originalFaceIds;	///< ä¸‰è§’å½¢ã«å¯¾å¿œã™ã‚‹åˆ†å‰²å‰ã®é¢ã®ç•ªå·
+	std::vector<int> faceNormals;				///< æ³•ç·šã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
 	
-	std::vector<Affinef>				blendMatrix;			///< ƒuƒŒƒ“ƒh•ÏŠ·s—ñ
+	std::vector<Affinef>				blendMatrix;			///< ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—
 
 	
 	GRBlendMesh(const GRBlendMeshDesc& desc=GRBlendMeshDesc());

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -26,24 +26,24 @@
 namespace Spr{;
 
 FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
-	// ƒfƒtƒHƒ‹ƒg•`‰æİ’è
+	// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆæç”»è¨­å®š
 	renderPHScene = true;
-	// ƒ\ƒŠƒbƒh•`‰æ‚Ì‚İ
+	// ã‚½ãƒªãƒƒãƒ‰æç”»ã®ã¿
 	renderSolid = true;
 	renderWire  = false;
-	// •t‰Áî•ñ‚Ì•`‰æ‚Í‚È‚µ
+	// ä»˜åŠ æƒ…å ±ã®æç”»ã¯ãªã—
 	renderAxisWorld = renderAxisSolid = renderAxisConst = false;
 	renderForceSolid = renderForceConst	= false;
 	renderGridX = renderGridY = renderGridZ = false;
 	renderLimit     = false;
 	renderContact	= false;
 	renderIK		= false;
-	// ”{—¦‚Í“™”{
+	// å€ç‡ã¯ç­‰å€
 	scaleAxisWorld = scaleAxisSolid = scaleAxisConst = 1.0f;
 	scaleForce = 1.0f;
 	scaleMoment = 1.0f;
 	scaleIK = 1.0f;
-	// ƒ}ƒeƒŠƒAƒ‹
+	// ãƒãƒ†ãƒªã‚¢ãƒ«
 	matAxis.x	= GRRenderIf::RED;
 	matAxis.y	= GRRenderIf::GREEN;
 	matAxis.z	= GRRenderIf::BLUE;
@@ -51,26 +51,26 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	matForce	= GRRenderIf::ORANGE;
 	matMoment	= GRRenderIf::CYAN;
 	matGrid.x = matGrid.y = matGrid.z = GRRenderIf::GRAY;
-	// À•W²
+	// åº§æ¨™è»¸
 	axisStyle = FWSceneIf::AXIS_LINES;
-	// ƒOƒŠƒbƒh
+	// ã‚°ãƒªãƒƒãƒ‰
 	gridOffset.clear();
 	gridSize = Vec3f(100.0f, 100.0f, 100.0f);
 	gridSlice = Vec3i(100, 100, 100);
 }
 
 NamedObjectIf* FWScene::FindObject(UTString name, UTString cls){
-	//	—]•ª‚ÉphScene,grScene‚Ì2‚Â‚ÌƒV[ƒ“‚ğŒŸõ‚·‚é‚Ì‚ÅCNameManager::FindObject‚Æ‚¿‚å‚Á‚Æˆá‚¤D
-	//	2‚Â‚ÌƒV[ƒ“‚ÍCSdk‚ÉŠ—L‚³‚ê‚Ä‚¢‚é‚Ì‚ÅC•’Ê‚ÉNameManager‚Æ‚µ‚ÄCFWScene‚ğw’è‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢D
+	//	ä½™åˆ†ã«phScene,grSceneã®2ã¤ã®ã‚·ãƒ¼ãƒ³ã‚’æ¤œç´¢ã™ã‚‹ã®ã§ï¼ŒNameManager::FindObjectã¨ã¡ã‚‡ã£ã¨é•ã†ï¼
+	//	2ã¤ã®ã‚·ãƒ¼ãƒ³ã¯ï¼ŒSdkã«æ‰€æœ‰ã•ã‚Œã¦ã„ã‚‹ã®ã§ï¼Œæ™®é€šã«NameManagerã¨ã—ã¦ï¼ŒFWSceneã‚’æŒ‡å®šã™ã‚‹ã“ã¨ã¯ã§ããªã„ï¼
 
-	//	‚Ü‚¸©•ª‚Æq‘·‚ğŒŸõ
+	//	ã¾ãšè‡ªåˆ†ã¨å­å­«ã‚’æ¤œç´¢
 	NamedObjectIf* rv = FindObjectFromDescendant(name, cls);
 	if (rv) return rv;
-	//	æ‘c‚ğŒŸõ
+	//	å…ˆç¥–ã‚’æ¤œç´¢
 	rv = FindObjectFromAncestor(name, cls);
 	if (rv) return rv;
 
-	//	‚È‚¯‚ê‚ÎCphScene‚ÆgrScene‚É‚Â‚¢‚Ä©•ª‚Æq‘·‚ğ’T‚·B
+	//	ãªã‘ã‚Œã°ï¼ŒphSceneã¨grSceneã«ã¤ã„ã¦è‡ªåˆ†ã¨å­å­«ã‚’æ¢ã™ã€‚
 	if (phScene){
 		rv = DCAST(PHScene, phScene)->FindObjectFromDescendant(name, cls);
 		if (rv) return rv;
@@ -80,9 +80,9 @@ NamedObjectIf* FWScene::FindObject(UTString name, UTString cls){
 		if (rv) return rv;
 	}
 
-	//	‚»‚ê‚Å‚à‚È‚¢‚È‚ç‚ÎAnamespace‚ğí‚Á‚ÄA‚à‚¤ˆê“xŒŸõ
+	//	ãã‚Œã§ã‚‚ãªã„ãªã‚‰ã°ã€namespaceã‚’å‰Šã£ã¦ã€ã‚‚ã†ä¸€åº¦æ¤œç´¢
 	size_t pos = name.find('/');
-	if (pos != UTString::npos){	//	 –¼‘O‹óŠÔ‚Ìw’è‚ª‚ ‚éê‡
+	if (pos != UTString::npos){	//	 åå‰ç©ºé–“ã®æŒ‡å®šãŒã‚ã‚‹å ´åˆ
 		UTString n = name.substr(pos+1);
 		rv = FindObject(n, cls);
 	}
@@ -113,7 +113,7 @@ bool FWScene::AddChildObject(ObjectIf* o){
 		if (obj) {
 			fwObjects.push_back(obj->Cast());
 			obj->SetScene(Cast());
-			// ƒfƒtƒHƒ‹ƒgƒl[ƒ€
+			// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆãƒãƒ¼ãƒ 
 			if(strcmp(obj->GetName(), "") == 0){
 				char name[256];
 				sprintf(name, "object%d", NObject()-1);
@@ -198,12 +198,12 @@ FWSceneIf* SPR_CDECL CreateFWScene(const void* desc){
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 void FWScene::Sync(){
-	//	ƒIƒuƒWƒFƒNƒgˆÊ’uEp¨‚Ì“¯Šú
+	//	ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä½ç½®ãƒ»å§¿å‹¢ã®åŒæœŸ
 	for(FWObjects::iterator it = fwObjects.begin(); it!=fwObjects.end(); ++it){
 		DCAST(FWObject, *it)->Sync();
 	}
 	
-	//	ƒJƒƒ‰‚Ì“¯Šú (–¢À‘•H)
+	//	ã‚«ãƒ¡ãƒ©ã®åŒæœŸ (æœªå®Ÿè£…ï¼Ÿ)
 	if(grScene){
 		HIForceDevice6D* device = GetHumanInterface(HI_CAMERACONTROLLER);
 		GRCameraIf* camera = grScene->GetCamera();
@@ -232,7 +232,7 @@ void FWScene::Step(){
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// •`‰æŒn
+// æç”»ç³»
 
 void FWScene::Draw(GRRenderIf* render, bool ph_or_gr){
 	render->ClearBuffer();
@@ -248,16 +248,16 @@ void FWScene::Draw(GRRenderIf* render, bool ph_or_gr){
 	render->EndScene();
 }
 
-/// ƒV[ƒ““à‚Ì‘S‚Ä‚ÌƒIƒuƒWƒFƒNƒg‚ğƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚é
+/// ã‚·ãƒ¼ãƒ³å†…ã®å…¨ã¦ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹
 void FWScene::DrawPHScene(GRRenderIf* render){
 	if (!phScene) return;
 
-	// GRScene‚ÌƒJƒƒ‰‚Ì‹“_‚ğ”½‰f
+	// GRSceneã®ã‚«ãƒ¡ãƒ©ã®è¦–ç‚¹ã‚’åæ˜ 
 	GRCameraIf* cam = NULL;
 	if (grScene) cam = grScene->GetCamera();
 	if (cam) cam->Render(render);
 			
-	// ŒõŒ¹‚ª1‚Â‚àƒZƒbƒg‚³‚ê‚È‚¢ê‡
+	// å…‰æºãŒ1ã¤ã‚‚ã‚»ãƒƒãƒˆã•ã‚Œãªã„å ´åˆ
 	bool defLight = false;
 	if(render->NLights() == 0){
 		defLight = true;
@@ -269,7 +269,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		render->PushLight(ld);
 	}
 
-	// ƒ[ƒ‹ƒhÀ•W²
+	// ãƒ¯ãƒ¼ãƒ«ãƒ‰åº§æ¨™è»¸
 	if(renderAxisWorld){
 		if(renderSolid)
 			DrawCoordinateAxis(render, scaleAxisWorld, true);
@@ -280,7 +280,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		}
 	}
 
-	// ƒOƒŠƒbƒh
+	// ã‚°ãƒªãƒƒãƒ‰
 	render->SetLighting(false);
 	if(renderGridX){
 		render->PushModelMatrix();
@@ -307,13 +307,13 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 	}
 	render->SetLighting(true);
 
-	// „‘Ì
+	// å‰›ä½“
 	PHSolidIf **solids = phScene->GetSolids();
 	for(int i = 0; i < phScene->NSolids(); ++i){
 		if(!IsRenderEnabled(solids[i]))
 			continue;
 
-		// Œ`ó‚ğ•`‰æ
+		// å½¢çŠ¶ã‚’æç”»
 		if(renderSolid){
 			int matSolid = GetSolidMaterial(solids[i]);
 			if(matSolid == -1)
@@ -332,14 +332,14 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		}
 	}
 
-	// S‘©
+	// æ‹˜æŸ
 	for(int i = 0; i < phScene->NJoints(); ++i){
 		PHConstraintIf* con = phScene->GetJoint(i);
 		if(IsRenderEnabled(con))
 			DrawConstraint(render, con);
 	}
 	
-	// ÚG
+	// æ¥è§¦
 	if(renderContact){
 		for(int i = 0; i < phScene->NContacts(); ++i){
 			PHContactPointIf* con = phScene->GetContact(i);
@@ -350,7 +350,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		}
 	}
 
-	// ŠÖß‰Â“®ˆæ
+	// é–¢ç¯€å¯å‹•åŸŸ
 	if(renderLimit){
 		for(int i = 0; i < phScene->NJoints(); ++i){
 			PHConstraintIf* con = phScene->GetJoint(i);
@@ -380,7 +380,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 
 }
 
-/// „‘Ì‚ğƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚é
+/// å‰›ä½“ã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹
 void FWScene::DrawSolid(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire){
 	Affinef aff;
 	solid->GetPose().ToAffine(aff);
@@ -398,11 +398,11 @@ void FWScene::DrawSolid(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire
 		}
 	}
 
-	// À•W²
+	// åº§æ¨™è»¸
 	if(renderAxisSolid)
 		DrawCoordinateAxis(render, scaleAxisSolid, solid_or_wire);
 
-	// —Í
+	// åŠ›
 	if(renderForceSolid){
 		DrawForce(render, solid->GetForce(), solid->GetTorque());
 	}
@@ -418,7 +418,7 @@ void FWScene::DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire
 	CDRoundConeIf*	rc		= DCAST(CDRoundConeIf, shape);
 	CDConvexMeshIf* mesh	= DCAST(CDConvexMeshIf, shape);
 
-	// solid, wireframe‚Ì‡‚É•`‰æ
+	// solid, wireframeã®é †ã«æç”»
 	const int slice = 16;
 	if(box){
 		Vec3f sz = box->GetBoxSize();
@@ -479,7 +479,7 @@ void FWScene::DrawConstraint(GRRenderIf* render, PHConstraintIf* con){
 		render->PopModelMatrix();
 	}
 
-	// ’Ç‰ÁS‘©À•WŒniˆê•”‚ÌJointLimit‚ªŠÖß–{‘Ì‚Æ‚Í•Ê‚É‚Á‚Ä‚¢‚éj
+	// è¿½åŠ æ‹˜æŸåº§æ¨™ç³»ï¼ˆä¸€éƒ¨ã®JointLimitãŒé–¢ç¯€æœ¬ä½“ã¨ã¯åˆ¥ã«æŒã£ã¦ã„ã‚‹ï¼‰
 	if(renderAxisConst){
 		PHBallJoint* bj = con->Cast();
 		if (bj) {
@@ -510,7 +510,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 
 	if (renderLimit) {
 
-		// ƒ{[ƒ‹ƒWƒ‡ƒCƒ“ƒg‚ÌLimit
+		// ãƒœãƒ¼ãƒ«ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®Limit
 		PHBallJoint* bj = con->Cast();
 		if (bj) {
 			(con->GetPlugSolid()->GetPose() * plug).ToAffine(aff);
@@ -529,7 +529,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 			render->MultModelMatrix(aff);
 			render->SetLighting(false);
 
-			// Spline‰Â“®ˆæ‹Èü‚Ì•\¦
+			// Splineå¯å‹•åŸŸæ›²ç·šã®è¡¨ç¤º
 			PHBallJointSplineLimit* spL = bj->GetLimit()->Cast();
 			if (spL) {
 				for (int i=0; i<spL->limitCurve.NEdges(); ++i) {
@@ -555,10 +555,10 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 				}
 			}
 
-			// ‰~Œ`‰Â“®ˆæ‹Èü‚Ì•\¦
+			// å††å½¢å¯å‹•åŸŸæ›²ç·šã®è¡¨ç¤º
 			PHBallJointConeLimit* coL = bj->GetLimit()->Cast();
 			if (coL) {
-				// i’jŒ»ólimitDir‚É‚Í”ñ‘Î‰<!!>
+				// ï¼ˆæ³¨ï¼‰ç¾çŠ¶limitDirã«ã¯éå¯¾å¿œ<!!>
 				Vec2d lim; coL->GetSwingRange(lim);
 				for (double t=0; t<2*M_PI; t+=Rad(10)) {
 					double z = cos(lim[1]);
@@ -574,7 +574,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 			render->PopModelMatrix();
 		}
 
-		// ƒqƒ“ƒWƒWƒ‡ƒCƒ“ƒg‚ÌLimit
+		// ãƒ’ãƒ³ã‚¸ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®Limit
 		PHHingeJoint* hj = con->Cast();
 		if (hj) {
 			PH1DJointLimit* limit = hj->GetLimit()->Cast();
@@ -604,7 +604,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 			}
 		}
 
-		// ƒXƒ‰ƒCƒ_ƒWƒ‡ƒCƒ“ƒg‚Ì‚ÌLimit
+		// ã‚¹ãƒ©ã‚¤ãƒ€ã‚¸ãƒ§ã‚¤ãƒ³ãƒˆã®ã®Limit
 		PHSliderJoint* sj = con->Cast();
 		if (sj) {
 			PH1DJointLimit* limit = sj->GetLimit()->Cast();
@@ -647,7 +647,7 @@ void FWScene::DrawContact(GRRenderIf* render, PHContactPointIf* con){
 	render->SetLighting(true);
 }
 
-/// IK‚ÌŒvZŒ‹‰Ê‚ğƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚é
+/// IKã®è¨ˆç®—çµæœã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹
 void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 	render->SetLighting(false);
 	render->SetDepthTest(false);
@@ -655,7 +655,7 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 	render->PushModelMatrix();
 	render->SetModelMatrix(Affinef());
 
-	// IKü‚è‚ÌAPI•ÏX‚É‘Î‰‚·‚é‚æ‚¤‚É‚¢‚¸‚ê‘‚«Š·‚¦‚é@i10/01/09, mitakej
+	// IKå‘¨ã‚Šã®APIå¤‰æ›´ã«å¯¾å¿œã™ã‚‹ã‚ˆã†ã«ã„ãšã‚Œæ›¸ãæ›ãˆã‚‹ã€€ï¼ˆ10/01/09, mitakeï¼‰
 	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->actuators.size(); ++i) {
 		PHIKActuator* ikAct = DCAST(PHIKEngine,ikEngine)->actuators[i];
 		if(!ikAct) continue;
@@ -736,7 +736,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 	int Npointers = he->NHapticPointers();
 	if(Npointers == 0) return;
 
-	// ƒvƒƒLƒV‚Ì•`‰æ
+	// ãƒ—ãƒ­ã‚­ã‚·ã®æç”»
 	for(int i = 0; i< he->NHapticPointers(); i++){
 		PHHapticPointer* pointer = he->GetHapticPointer(i);
 		Posed proxyPose = pointer->proxyPose;
@@ -773,7 +773,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 				for(int l = 0; l < solidPair->solid[1]->NShape(); l++){
 					PHShapePairForHaptic* sp = solidPair->shapePairs.item(k, l);
 					for(int m = 0; m < 2; m++){
-						// ‹ß–T“_‘Î
+						// è¿‘å‚ç‚¹å¯¾
 						Posed p;
 						p.Pos() = sp->shapePoseW[m] * sp->closestPoint[m];
 						Affinef aff;
@@ -784,7 +784,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 						render->DrawSphere(0.01f, 10, 10, true);
 						render->PopModelMatrix();
 					}
-					// ÚG“_
+					// æ¥è§¦ç‚¹
 					for(int m = 0; m < (int)sp->intersectionVertices.size(); m++){
 						Posed p;
 						p.Pos() = sp->shapePoseW[1] * sp->intersectionVertices[m];
@@ -797,8 +797,8 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 						render->PopModelMatrix();
 					}
 
-					// –Ê
-					Posed p;	// –Ê‚ÌˆÊ’up¨
+					// é¢
+					Posed p;	// é¢ã®ä½ç½®å§¿å‹¢
 					p.Pos() = sp->shapePoseW[0] * sp->closestPoint[0];
 					Vec3d vec = Vec3d(0.0, 1.0, 0.0);
 					double angle = acos(vec * sp->normal);
@@ -844,7 +844,7 @@ void FWScene::DrawMesh(GRRenderIf* render, CDConvexMeshIf* mesh, bool solid){
 }
 
 void FWScene::DrawFaceSolid(GRRenderIf* render, CDFaceIf* face, Vec3f * base){
-	int numIndices = face->NIndex();			// (=3 :OŠpŒ`‚È‚Ì‚Å3’¸“_)
+	int numIndices = face->NIndex();			// (=3 :ä¸‰è§’å½¢ãªã®ã§3é ‚ç‚¹)
 	struct Vtx{
 		Vec3f n;
 		Vec3f p;
@@ -1007,9 +1007,9 @@ bool FWScene::IsRenderEnabled(ObjectIf* obj){
 	return true;
 }
 int FWScene::GetSolidMaterial(PHSolidIf* solid){
-	// Å‰‚É“Á’è‚Ìsolid‚É‚ ‚Ä‚ç‚ê‚½ƒ}ƒeƒŠƒAƒ‹‚ª‚ ‚é‚©’²‚×C
-	// ‚È‚¯‚ê‚ÎŸ‚É0 (‘S„‘Ì)‚Ìƒ}ƒeƒŠƒAƒ‹‚ğ’²‚×C
-	// ‚Ç‚¿‚ç‚à‚È‚¯‚ê‚Î-1‚ğ•Ô‚·
+	// æœ€åˆã«ç‰¹å®šã®solidã«ã‚ã¦ã‚‰ã‚ŒãŸãƒãƒ†ãƒªã‚¢ãƒ«ãŒã‚ã‚‹ã‹èª¿ã¹ï¼Œ
+	// ãªã‘ã‚Œã°æ¬¡ã«0 (å…¨å‰›ä½“)ã®ãƒãƒ†ãƒªã‚¢ãƒ«ã‚’èª¿ã¹ï¼Œ
+	// ã©ã¡ã‚‰ã‚‚ãªã‘ã‚Œã°-1ã‚’è¿”ã™
 	std::map<PHSolidIf*, int>::iterator it;
 	it = matSolid.find(solid);
 	if(it != matSolid.end())
@@ -1030,9 +1030,9 @@ int FWScene::GetWireMaterial(PHSolidIf* solid){
 	return -1;
 }
 int FWScene::GetAutoMaterial(int i){
-	/// i‚ª‚Ğ‚Æ‚Â‘‚¦‚é‚½‚Ñ‚ÉFŒn“‚ª•Ï‚í‚é‚æ‚¤‚ÉF‚ğ‘I‘ğ‚·‚é
-	const int colorGroups		= 8;  // Œn“‚Ì”@@@”’AŠDFŒn‚Í”ğ‚¯‚½‚Ì‚Å‚WŒn“
-	const int colorsPerGroup	= 5;  // Œn““à‚ÌF”@ƒIƒŒƒ“ƒWŒn‚ª‚TF‚µ‚©‚È‚¢‚Ì‚Å‚ ‚í‚¹‚é
+	/// iãŒã²ã¨ã¤å¢—ãˆã‚‹ãŸã³ã«è‰²ç³»çµ±ãŒå¤‰ã‚ã‚‹ã‚ˆã†ã«è‰²ã‚’é¸æŠã™ã‚‹
+	const int colorGroups		= 8;  // ç³»çµ±ã®æ•°ã€€ã€€ã€€ç™½ã€ç°è‰²ç³»ã¯é¿ã‘ãŸã®ã§ï¼˜ç³»çµ±
+	const int colorsPerGroup	= 5;  // ç³»çµ±å†…ã®è‰²æ•°ã€€ã‚ªãƒ¬ãƒ³ã‚¸ç³»ãŒï¼•è‰²ã—ã‹ãªã„ã®ã§ã‚ã‚ã›ã‚‹
 	GRRenderIf::TMaterialSample groupTop[] = {
 		GRRenderIf::INDIANRED,
 		GRRenderIf::PINK,
@@ -1052,7 +1052,7 @@ int FWScene::GetAutoMaterial(int i){
 	return color;
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// HumanInterfaceŒn
+// HumanInterfaceç³»
 
 void FWScene::AddHumanInterface(HIForceDevice6D* d){
 	//	hase	TBW

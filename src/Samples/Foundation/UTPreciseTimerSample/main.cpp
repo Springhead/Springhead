@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,10 +8,10 @@
 
 /*
 	UTPreciseTimerSample
-	CPUƒNƒƒbƒN‚ğg‚Á‚½ŠÔ‚ÌŒv‘ª
-	UTTimer‚ÌMultiMediaTimerƒ‚[ƒh‚ğg‚Á‚ÄA1ms‚Ì•p“x‚ÅƒR[ƒ‹ƒoƒbƒN
-	ƒR[ƒ‹ƒoƒbƒN‚É‚©‚©‚éŠÔ‚ğUTPreceiseTimerAUTQPTimer‚ğg‚¢‘ª’è‚·‚éB
-	5•b‚½‚Á‚½‚çI—¹‚µAŒ‹‰Ê‚ğCSVŒ`®‚Åo—Í‚·‚éB
+	CPUã‚¯ãƒ­ãƒƒã‚¯ã‚’ä½¿ã£ãŸæ™‚é–“ã®è¨ˆæ¸¬
+	UTTimerã®MultiMediaTimerãƒ¢ãƒ¼ãƒ‰ã‚’ä½¿ã£ã¦ã€1msã®é »åº¦ã§ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯
+	ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã«ã‹ã‹ã‚‹æ™‚é–“ã‚’UTPreceiseTimerã€UTQPTimerã‚’ä½¿ã„æ¸¬å®šã™ã‚‹ã€‚
+	5ç§’ãŸã£ãŸã‚‰çµ‚äº†ã—ã€çµæœã‚’CSVå½¢å¼ã§å‡ºåŠ›ã™ã‚‹ã€‚
 */
 
 
@@ -27,18 +27,18 @@
 
 using namespace Spr;
 
-unsigned int dt = 1;	// ŒJ‚è•Ô‚µŠÔŠums
-int mt = 5000;			// ‘ª’èŠÔms
+unsigned int dt = 1;	// ç¹°ã‚Šè¿”ã—é–“éš”ms
+int mt = 5000;			// æ¸¬å®šæ™‚é–“ms
 
-UTPreciseTimer pTimer;		// ƒÊs’PˆÊ‚ÅŒv‘ª‰Â”\‚Èƒ^ƒCƒ}
-UTQPTimer qTimer;			// ƒ}ƒ‹ƒ`ƒXƒŒƒbƒh‘Î‰”Å
-std::vector< Vec2d > time;	// Œv‘ªŠÔ
+UTPreciseTimer pTimer;		// Î¼så˜ä½ã§è¨ˆæ¸¬å¯èƒ½ãªã‚¿ã‚¤ãƒ
+UTQPTimer qTimer;			// ãƒãƒ«ãƒã‚¹ãƒ¬ãƒƒãƒ‰å¯¾å¿œç‰ˆ
+std::vector< Vec2d > time;	// è¨ˆæ¸¬æ™‚é–“
 
 void CPSCounter(double intervalms, double periodms);
 void SPR_CDECL CallBack(int id, void* arg){
 	Vec2d sec;
 #if 1
-	// 1ƒ‹[ƒvŠÔ‚ÌŒv‘ª—p
+	// 1ãƒ«ãƒ¼ãƒ—é–“ã®è¨ˆæ¸¬ç”¨
 	sec.x = pTimer.Stop() * 1e-6;
 	sec.y = qTimer.Stop() * 1e-6;
 	time.push_back(sec);
@@ -47,7 +47,7 @@ void SPR_CDECL CallBack(int id, void* arg){
 	pTimer.Start();
 	qTimer.Start();
 #else
-	// ‚ ‚éƒAƒ‹ƒSƒŠƒYƒ€‚ªI—¹‚·‚é‚Ü‚Å‚É‚©‚©‚éŠÔŒv‘ª—p
+	// ã‚ã‚‹ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ãŒçµ‚äº†ã™ã‚‹ã¾ã§ã«ã‹ã‹ã‚‹æ™‚é–“è¨ˆæ¸¬ç”¨
 	pTimer.Clear();
 	qTimer.Clear();
 	pTimer.Start();
@@ -61,9 +61,9 @@ void SPR_CDECL CallBack(int id, void* arg){
 	//CPSCounter(dt, 1000);
 }
 
-// iƒIƒvƒVƒ‡ƒ“jCPS‚ğ•\¦‚·‚éŠÖ”
-// intervalms:—‘zŠ„‚è‚İŠÔ ms
-// periodms:Œv‘ªŠÔŠu ms i1000‚¾‚Æ1secŠÔ‚Ì•½‹Ï‚ğ•\¦j
+// ï¼ˆã‚ªãƒ—ã‚·ãƒ§ãƒ³ï¼‰CPSã‚’è¡¨ç¤ºã™ã‚‹é–¢æ•°
+// intervalms:ç†æƒ³å‰²ã‚Šè¾¼ã¿æ™‚é–“ ms
+// periodms:è¨ˆæ¸¬é–“éš” ms ï¼ˆ1000ã ã¨1secé–“ã®å¹³å‡ã‚’è¡¨ç¤ºï¼‰
 void CPSCounter(double intervalms, double periodms){
 	static int cnt=0;
 	static DWORD lastTick;
@@ -79,29 +79,29 @@ void CPSCounter(double intervalms, double periodms){
 }
 
 int _cdecl main(int argc, char* argv[]){
-	pTimer.Init();								// Œv‘ª—pƒ^ƒCƒ}‚Ì‰Šú‰»
+	pTimer.Init();								// è¨ˆæ¸¬ç”¨ã‚¿ã‚¤ãƒã®åˆæœŸåŒ–
 
-	UTTimerIf* timer1;							// ƒR[ƒ‹ƒoƒbƒNƒ^ƒCƒ}
-	timer1 = UTTimerIf::Create();				// ƒR[ƒ‹ƒoƒbƒNƒ^ƒCƒ}‚Ìì¬
-	timer1->SetMode(UTTimerIf::MULTIMEDIA);		// ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ‚[ƒh‚Éİ’è
-	timer1->SetResolution(1);					//	ŒÄ‚Ñ‚¾‚µ•ª‰ğ”\ms
-	timer1->SetInterval(dt);					// ŒÄ‚Ñ‚¾‚µ•p“xms
-	timer1->SetCallback(CallBack, NULL);		// ŒÄ‚Ñ‚¾‚·ŠÖ”
-	timer1->Start();							// ƒ^ƒCƒ}ƒXƒ^[ƒg
+	UTTimerIf* timer1;							// ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚¿ã‚¤ãƒ
+	timer1 = UTTimerIf::Create();				// ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚¿ã‚¤ãƒã®ä½œæˆ
+	timer1->SetMode(UTTimerIf::MULTIMEDIA);		// ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ãƒ¢ãƒ¼ãƒ‰ã«è¨­å®š
+	timer1->SetResolution(1);					//	å‘¼ã³ã ã—åˆ†è§£èƒ½ms
+	timer1->SetInterval(dt);					// å‘¼ã³ã ã—é »åº¦ms
+	timer1->SetCallback(CallBack, NULL);		// å‘¼ã³ã ã™é–¢æ•°
+	timer1->Start();							// ã‚¿ã‚¤ãƒã‚¹ã‚¿ãƒ¼ãƒˆ
 	std::cout << "Start the mearsurement." << std::endl;
 	std::cout << "Pleas wait " << mt * 0.001 << " seconds." << std::endl; 
-	Sleep(mt);									// 5secŠÔŒv‘ª
-	timer1->Stop();								// ƒ^ƒCƒ}ƒXƒgƒbƒv
+	Sleep(mt);									// 5secé–“è¨ˆæ¸¬
+	timer1->Stop();								// ã‚¿ã‚¤ãƒã‚¹ãƒˆãƒƒãƒ—
 
 	std::cout << "Saving the data to a file." << std::endl;
 
-	// Œv‘ªƒf[ƒ^‚ğcsv‚Åo—Í
+	// è¨ˆæ¸¬ãƒ‡ãƒ¼ã‚¿ã‚’csvã§å‡ºåŠ›
 	CSVOUT << "count" << "," << "Precise timer [s]" << "," << "QPTimer [s]" << std::endl;
 	for(int i = 0; i < time.size(); i++){
 		CSVOUT << i << "," << time[i].x << "," << time[i].y << std::endl;
 	}
 
-	// Œv‘ªŠ®—¹
+	// è¨ˆæ¸¬å®Œäº†
 	std::cout << "Complete!" << std::endl;
 	std::cout << "Press any key to exit." << std::endl;
 	while(!_kbhit()){}

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -29,13 +29,13 @@ public:
 	///
 	HIBase(){ updateStep = deviceUpdateStep; isGood=false;}
 
-	///	SDK‚Ìæ“¾
+	///	SDKã®å–å¾—
 	HISdkIf* GetSdk();
-	///	ƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“‚Ì‘O‚És‚¤ˆ—
+	///	ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®å‰ã«è¡Œã†å‡¦ç†
 	virtual bool BeforeCalibration(){ return true; }
-	///	ƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“ˆ—
+	///	ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³å‡¦ç†
 	virtual bool Calibration(){ return true; }
-	///	ƒLƒƒƒŠƒuƒŒ[ƒVƒ‡ƒ“‚Ì‚ ‚Æ‚És‚¤ˆ—
+	///	ã‚­ãƒ£ãƒªãƒ–ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã®ã‚ã¨ã«è¡Œã†å‡¦ç†
 	virtual bool AfterCalibration(){ return true; }
 	///	Is this human interface good for use?
 	bool IsGood(){ return isGood; }
@@ -98,17 +98,17 @@ public:
 	virtual ~HIHaptic(){}
 	virtual void Update(float dt);
 
-	/**@name	ƒfƒoƒCƒX‚Ìó‘Ô	*/
+	/**@name	ãƒ‡ãƒã‚¤ã‚¹ã®çŠ¶æ…‹	*/
 	//@{
-	///	ƒfƒoƒCƒX‚ÌÀÛ‚Ì’ñ¦ƒgƒ‹ƒN‚ğ•Ô‚·
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®å®Ÿéš›ã®æç¤ºãƒˆãƒ«ã‚¯ã‚’è¿”ã™
 	virtual Vec3f GetTorque(){ return Vec3f(); }
-	///	ƒfƒoƒCƒX‚ÌÀÛ‚Ì’ñ¦—Í‚ğ•Ô‚·
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®å®Ÿéš›ã®æç¤ºåŠ›ã‚’è¿”ã™
 	virtual Vec3f GetForce(){ return Vec3f(); }
-	///	ƒfƒoƒCƒX‚Ì–Ú•Wo—Í‚Æƒgƒ‹ƒNo—Í‚ğİ’è‚·‚é
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç›®æ¨™å‡ºåŠ›ã¨ãƒˆãƒ«ã‚¯å‡ºåŠ›ã‚’è¨­å®šã™ã‚‹
 	virtual void SetForce(const Vec3f& f, const Vec3f& t = Vec3f()){}
-	///	ƒfƒoƒCƒX‚Ì‘¬“x‚ğ•Ô‚·
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®é€Ÿåº¦ã‚’è¿”ã™
 	virtual Vec3f GetVelocity(){ return vel; }
-	///	ƒfƒoƒCƒX‚ÌŠp‘¬“x‚ğ•Ô‚·
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®è§’é€Ÿåº¦ã‚’è¿”ã™
 	virtual Vec3f GetAngularVelocity(){ return angVel; }
 	//@}
 };

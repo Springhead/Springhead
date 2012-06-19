@@ -1,4 +1,4 @@
-#pragma hdrstop
+Ôªø#pragma hdrstop
 #include "UTPath.h"
 #ifdef _MSC_VER	
 # include <windows.h>
@@ -147,14 +147,14 @@ UTString UTPath::FullPath(){
 	if (path.length() && path[0] == '\\'
 		|| path.length()>=2 && path[1] == ':'){
 		if (path.length()>=2 && path[0]=='\\' && path[1]!='\\'){
-			//	ÉhÉâÉCÉuñºÇ™è»ó™Ç≥ÇÍÇƒÇ¢ÇÈÇÃÇ≈ï‚äÆÅD
+			//	„Éâ„É©„Ç§„ÉñÂêç„ÅåÁúÅÁï•„Åï„Çå„Å¶„ÅÑ„Çã„ÅÆ„ÅßË£úÂÆåÔºé
 			UTString cwd = GetCwd();
 			int bsPos = cwd.find_first_of('\\', 2);
 			UTString rv = cwd.substr(0, bsPos-1);
 			rv += path;
 			return rv;
 		}else{
-			//	Ç‡Ç∆Ç‡Ç∆ê‚ëŒÉpÉX
+			//	„ÇÇ„Å®„ÇÇ„Å®Áµ∂ÂØæ„Éë„Çπ
 			return Path();
 		}
 	}else{
@@ -167,16 +167,16 @@ UTString UTPath::FullPath(){
 UTString UTPath::RelPath(){
 	if (path.length() && path[0] == '\\' || path.length()>=2 && path[1] == ':'){
 		UTString fp = FullPath();
-		//	Ç‡Ç∆Ç‡Ç∆ê‚ëŒÉpÉX
+		//	„ÇÇ„Å®„ÇÇ„Å®Áµ∂ÂØæ„Éë„Çπ
 		UTString cwd = GetCwd();
 		unsigned int i;
 		for(i=0; i<cwd.length() && i<fp.length(); ++i){
 			if (cwd[i] != fp[i]) break;
 		}
  		i = cwd.find_last_of('\\', i)+1;
-		if (i < 2){	//	ã§í ïîï™Ç»Çµ
+		if (i < 2){	//	ÂÖ±ÈÄöÈÉ®ÂàÜ„Å™„Åó
 			return fp;
-		}else{	//	ã§í ïîï™Ç™Ç†ÇÈÇÃÇ≈ëäëŒÉpÉXâª
+		}else{	//	ÂÖ±ÈÄöÈÉ®ÂàÜ„Åå„ÅÇ„Çã„ÅÆ„ÅßÁõ∏ÂØæ„Éë„ÇπÂåñ
 			int c=0;
 			for(int p=i; p!=(int)cwd.npos; c++){
 				p = cwd.find('\\', p+1);
@@ -189,7 +189,7 @@ UTString UTPath::RelPath(){
 			return rv;
 		}
 	}else{
-		//	Ç‡Ç∆Ç‡Ç∆ëäëŒÉpÉX
+		//	„ÇÇ„Å®„ÇÇ„Å®Áõ∏ÂØæ„Éë„Çπ
 		return Path();
 	}
 }

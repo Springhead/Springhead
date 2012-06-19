@@ -1,8 +1,8 @@
-#ifndef SPR_FWEDITOR_H
+ï»¿#ifndef SPR_FWEDITOR_H
 #define SPR_FWEDITOR_H
 
 /**
-	ObjectIf‚ÌAPI‚ð‰î‚µ‚½•\Ž¦E•ÒW‚ðs‚¤ƒNƒ‰ƒX
+	ObjectIfã®APIã‚’ä»‹ã—ãŸè¡¨ç¤ºãƒ»ç·¨é›†ã‚’è¡Œã†ã‚¯ãƒ©ã‚¹
  */
 
 #include <Foundation/SprObject.h>

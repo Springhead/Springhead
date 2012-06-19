@@ -1,4 +1,4 @@
-#ifndef UTMMTIMER_H
+ï»¿#ifndef UTMMTIMER_H
 #define UTMMTIMER_H
 #if _MSC_VER >= 1000
 #pragma once
@@ -10,9 +10,9 @@ using namespace std;
 
 namespace Spr {
 
-/**	ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}[.
-	ƒ^ƒCƒ}[“®ì’†‚ÉƒfƒoƒbƒK‚ğg‚¤‚ÆOS‚ª—‚¿‚é‚Ì‚ÅCƒfƒoƒbƒO—p‚É
-	ƒXƒŒƒbƒh‚É‚æ‚é‹[—“®ìƒ‚[ƒh‚ğ—pˆÓ‚µ‚Ä‚ ‚éD	*/
+/**	ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒãƒ¼.
+	ã‚¿ã‚¤ãƒãƒ¼å‹•ä½œä¸­ã«ãƒ‡ãƒãƒƒã‚¬ã‚’ä½¿ã†ã¨OSãŒè½ã¡ã‚‹ã®ã§ï¼Œãƒ‡ãƒãƒƒã‚°ç”¨ã«
+	ã‚¹ãƒ¬ãƒƒãƒ‰ã«ã‚ˆã‚‹æ“¬ä¼¼å‹•ä½œãƒ¢ãƒ¼ãƒ‰ã‚’ç”¨æ„ã—ã¦ã‚ã‚‹ï¼	*/
 typedef void MMTimerFunc(void* arg);
 typedef void  SPR_CDECL MMTimerIdFunc(int id);
 
@@ -23,17 +23,17 @@ public:
 	//typedef void MMTimerFunc(void* arg);
 
 protected:
-	static unsigned resolution;		///<	ƒ^ƒCƒ}[‚ÌŠÔ¸“x
-	unsigned interval;					///<	ƒ^ƒCƒ}[‚ÌŠÔŠÔŠu
-	MMTimerFunc* func;				///<	ŠÔ‚ª—ˆ‚é‚½‚Ñ‚ÉŒÄ‚Î‚ê‚éƒR[ƒ‹ƒoƒbƒNŠÖ”D
-	MMTimerIdFunc* idFunc;				///<	ŠÔ‚ª—ˆ‚é‚½‚Ñ‚ÉŒÄ‚Î‚ê‚éƒR[ƒ‹ƒoƒbƒNŠÖ”D
-	void* arg;								///<	ƒR[ƒ‹ƒoƒbƒNŠÖ”‚É“n‚·ˆø”
-	int id;								///<	ƒR[ƒ‹ƒoƒbƒNŠÖ”‚É“n‚·intŒ^ˆø”
+	static unsigned resolution;		///<	ã‚¿ã‚¤ãƒãƒ¼ã®æ™‚é–“ç²¾åº¦
+	unsigned interval;					///<	ã‚¿ã‚¤ãƒãƒ¼ã®æ™‚é–“é–“éš”
+	MMTimerFunc* func;				///<	æ™‚é–“ãŒæ¥ã‚‹ãŸã³ã«å‘¼ã°ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ï¼
+	MMTimerIdFunc* idFunc;				///<	æ™‚é–“ãŒæ¥ã‚‹ãŸã³ã«å‘¼ã°ã‚Œã‚‹ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ï¼
+	void* arg;								///<	ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã«æ¸¡ã™å¼•æ•°
+	int id;								///<	ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã«æ¸¡ã™intå‹å¼•æ•°
 	unsigned timerID;
-	volatile bool bCreated;				///<	ƒ^ƒCƒ}[‚ª“®ì‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
-	volatile bool bThread;				///<	ƒ^ƒCƒ}[‚ªƒXƒŒƒbƒh‚Æ‚µ‚Ä‹[—“®ì‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
-    volatile bool bRun;					///<	ƒR[ƒ‹ƒoƒbƒNŠÖ”‚ªÀs’†‚©‚Ç‚¤‚©
-	void* hThread;						///<	‹[—“®ì—pƒXƒŒƒbƒh
+	volatile bool bCreated;				///<	ã‚¿ã‚¤ãƒãƒ¼ãŒå‹•ä½œã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
+	volatile bool bThread;				///<	ã‚¿ã‚¤ãƒãƒ¼ãŒã‚¹ãƒ¬ãƒƒãƒ‰ã¨ã—ã¦æ“¬ä¼¼å‹•ä½œã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
+    volatile bool bRun;					///<	ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ãŒå®Ÿè¡Œä¸­ã‹ã©ã†ã‹
+	void* hThread;						///<	æ“¬ä¼¼å‹•ä½œç”¨ã‚¹ãƒ¬ãƒƒãƒ‰
 	static void SPR_STDCALL TimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long);
 	static unsigned long SPR_STDCALL ThreadCallback(void* arg);
 	void BeginPeriod();
@@ -42,24 +42,24 @@ protected:
 	public:
 	volatile int heavy;
 
-	UTMMTimer();							///<	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	~UTMMTimer();							///<	ƒfƒXƒgƒ‰ƒNƒ^
+	UTMMTimer();							///<	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	~UTMMTimer();							///<	ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 
-	unsigned Resolution();					///<	ƒ^ƒCƒ}[‚ÌŠÔ¸“x
-	void Resolution(unsigned res);		///<	ƒ^ƒCƒ}[‚ÌŠÔ¸“x‚Ìİ’è
-	unsigned Interval();						///<	ƒ^ƒCƒ}[‚ÌŠÔŠÔŠu
-	void Interval(unsigned i);				///<	ƒ^ƒCƒ}[‚ÌŠÔŠÔŠu‚Ìİ’è
+	unsigned Resolution();					///<	ã‚¿ã‚¤ãƒãƒ¼ã®æ™‚é–“ç²¾åº¦
+	void Resolution(unsigned res);		///<	ã‚¿ã‚¤ãƒãƒ¼ã®æ™‚é–“ç²¾åº¦ã®è¨­å®š
+	unsigned Interval();						///<	ã‚¿ã‚¤ãƒãƒ¼ã®æ™‚é–“é–“éš”
+	void Interval(unsigned i);				///<	ã‚¿ã‚¤ãƒãƒ¼ã®æ™‚é–“é–“éš”ã®è¨­å®š
 	void Set(MMTimerFunc* f, void* arg);
 	void Set(MMTimerIdFunc* f, int i);
-													///<	ƒR[ƒ‹ƒoƒbƒNŠÖ”‚Ìİ’è
-	void Init(unsigned int r, unsigned int i, MMTimerFunc* f, void* arg);				///< ŠÔ¸“xCŠÔŠuCƒR[ƒ‹ƒoƒbƒNŠÖ”‚ğˆê“x‚Åİ’è 
-	bool Create();								///<	ƒ^ƒCƒ}[“®ìŠJn
-	bool Thread();							///<	ƒ^ƒCƒ}[‹[—“®ìŠJn
+													///<	ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã®è¨­å®š
+	void Init(unsigned int r, unsigned int i, MMTimerFunc* f, void* arg);				///< æ™‚é–“ç²¾åº¦ï¼Œé–“éš”ï¼Œã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã‚’ä¸€åº¦ã§è¨­å®š 
+	bool Create();								///<	ã‚¿ã‚¤ãƒãƒ¼å‹•ä½œé–‹å§‹
+	bool Thread();							///<	ã‚¿ã‚¤ãƒãƒ¼æ“¬ä¼¼å‹•ä½œé–‹å§‹
 	bool IsCreated(){return bCreated;}
-													///<	ƒ^ƒCƒ}[‚ª“®ì‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
+													///<	ã‚¿ã‚¤ãƒãƒ¼ãŒå‹•ä½œã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
 	bool IsThread(){return bThread;}
-													///<	ƒ^ƒCƒ}[‚ª‹[—“®ì‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©
-	void Release();							///<	ƒ^ƒCƒ}[‚Ì’â~
+													///<	ã‚¿ã‚¤ãƒãƒ¼ãŒæ“¬ä¼¼å‹•ä½œã—ã¦ã„ã‚‹ã‹ã©ã†ã‹
+	void Release();							///<	ã‚¿ã‚¤ãƒãƒ¼ã®åœæ­¢
 };
 
 }	//	namespace Spr

@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,16 +8,16 @@
 /** 
  Springhead2/src/tests/Collision/QuickHull2D/main.cpp
 
-yŠT—vz
-  EQucickHull2D ‚¨‚æ‚Ñ QuickHull3D ‚ÌƒeƒXƒgƒvƒƒOƒ‰ƒ€
+ã€æ¦‚è¦ã€‘
+  ãƒ»QucickHull2D ãŠã‚ˆã³ QuickHull3D ã®ãƒ†ã‚¹ãƒˆãƒ—ãƒ­ã‚°ãƒ©ãƒ 
   
-yI—¹Šî€z
-  EƒvƒƒOƒ‰ƒ€‚ª³íI—¹‚µ‚½‚ç0‚ğ•Ô‚·B
+ã€çµ‚äº†åŸºæº–ã€‘
+  ãƒ»ãƒ—ãƒ­ã‚°ãƒ©ãƒ ãŒæ­£å¸¸çµ‚äº†ã—ãŸã‚‰0ã‚’è¿”ã™ã€‚
  
-yˆ—‚Ì—¬‚êz
-  EQuickHull‚ªg—p‚·‚é’¸“_‚ğ“o˜^‚·‚éB
-  Eİ’è‚µ‚½’¸“_‚©‚ç“Ê•ï‚ğì‚èAo—ˆ‚½–Ê‚ğo—Í‚·‚éB
-    ‚Ü‚½AQuickHull2D‚Ìê‡‚ÍAƒGƒNƒZƒ‹‚Éo—ˆ‚½–Ê‚ğo—Í‚·‚éB
+ã€å‡¦ç†ã®æµã‚Œã€‘
+  ãƒ»QuickHullãŒä½¿ç”¨ã™ã‚‹é ‚ç‚¹ã‚’ç™»éŒ²ã™ã‚‹ã€‚
+  ãƒ»è¨­å®šã—ãŸé ‚ç‚¹ã‹ã‚‰å‡¸åŒ…ã‚’ä½œã‚Šã€å‡ºæ¥ãŸé¢ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
+    ã¾ãŸã€QuickHull2Dã®å ´åˆã¯ã€ã‚¨ã‚¯ã‚»ãƒ«ã«å‡ºæ¥ãŸé¢ã‚’å‡ºåŠ›ã™ã‚‹ã€‚
 
  */
 #include "Collision/CDQuickHull3DImp.h"
@@ -27,7 +27,7 @@
 
 using namespace Spr;
 
-//	2D‚ÌƒeƒXƒg
+//	2Dã®ãƒ†ã‚¹ãƒˆ
 int main2D(){
 	std::vector<CDQHVtx2DSample> vtxBufs;
 #if 0
@@ -64,10 +64,10 @@ int main2D(){
 
 	CDQHLines<CDQHVtx2DSample> lines(50);
 	lines.CreateConvexHull(&vtxs.front(), &vtxs.back()+1);
-	//	‚Å‚«‚½–Ê‚ğ•\¦
+	//	ã§ããŸé¢ã‚’è¡¨ç¤º
 	std::cout << lines;
 
-	//	‚Å‚«‚½–Ê‚ğƒGƒNƒZƒ‹‚ÅƒOƒ‰ƒt‚É‚Å‚«‚é‚æ‚¤‚Éƒtƒ@ƒCƒ‹‚Éo—Í
+	//	ã§ããŸé¢ã‚’ã‚¨ã‚¯ã‚»ãƒ«ã§ã‚°ãƒ©ãƒ•ã«ã§ãã‚‹ã‚ˆã†ã«ãƒ•ã‚¡ã‚¤ãƒ«ã«å‡ºåŠ›
 	std::ofstream file("hull.xls");
 	CDQHLine<CDQHVtx2DSample>* cur = lines.end-1;
 	do {
@@ -83,7 +83,7 @@ int main2D(){
 	return 0;
 }
 
-//	3D‚ÌƒeƒXƒg
+//	3Dã®ãƒ†ã‚¹ãƒˆ
 int main3D(){
 	std::vector<CDQHVtx3DSample> vtxBufs;
 	struct NormalDist{
@@ -119,7 +119,7 @@ int main3D(){
 
 	CDQHPlanes<CDQHVtx3DSample> planes(50);
 	planes.CreateConvexHull(&vtxs.front(), &vtxs.back()+1);
-	//	‚Å‚«‚½–Ê‚ğ•\¦
+	//	ã§ããŸé¢ã‚’è¡¨ç¤º
 	std::cout << planes;
 	return 0;
 }

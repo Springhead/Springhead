@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -13,13 +13,13 @@
 #include <fstream>
 #include <sstream>
 
-/**	@file BaseDebug.h ƒfƒoƒbƒO—pƒ†[ƒeƒBƒŠƒeƒB[ƒNƒ‰ƒXEŠÖ”‚Ì’è‹`.	*/
+/**	@file BaseDebug.h ãƒ‡ãƒãƒƒã‚°ç”¨ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ãƒ¼ã‚¯ãƒ©ã‚¹ãƒ»é–¢æ•°ã®å®šç¾©.	*/
 
 #ifndef DBG_NEW
 # ifdef _DEBUG
 #  include <crtdbg.h>
 #  define _CRTDBG_MAP_ALLOC
-///	Debug—p new ƒŠ[ƒN‚És”Ô†‚ğ•\¦
+///	Debugç”¨ new ãƒªãƒ¼ã‚¯æ™‚ã«è¡Œç•ªå·ã‚’è¡¨ç¤º
 #  define DBG_NEW  ::new(_NORMAL_BLOCK, __FILE__, __LINE__)
 # else
 #  define DBG_NEW new
@@ -27,15 +27,15 @@
 #endif
 
 
-/**	ƒfƒoƒbƒO—p printf ŠÖ”.
+/**	ãƒ‡ãƒãƒƒã‚°ç”¨ printf é–¢æ•°.
 	@verbatim
-	DPF("ƒƒbƒZ[ƒW:%s", msg);@endverbatim
-	‚Ì—l‚Ég‚¤D							*/
+	DPF("ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸:%s", msg);@endverbatim
+	ã®æ§˜ã«ä½¿ã†ï¼							*/
 #define DPF	Spr::DebugPrintf::GetInstance()->FileLine(__FILE__, __LINE__)
-/**	ƒfƒoƒbƒO—p o—ÍƒXƒgƒŠ[ƒ€.
+/**	ãƒ‡ãƒãƒƒã‚°ç”¨ å‡ºåŠ›ã‚¹ãƒˆãƒªãƒ¼ãƒ .
 	@verbatim
-	DSTR << "ƒƒbƒZ[ƒW:" << msg;@endverbatim
-	‚Ì—l‚Ég‚¤D							*/
+	DSTR << "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸:" << msg;@endverbatim
+	ã®æ§˜ã«ä½¿ã†ï¼							*/
 #define DSTR (Spr::DebugPrintf::GetInstance()->Stream())
 
 #include <assert.h>
@@ -58,7 +58,7 @@ public:
 	static void Set(void (*out)(const char*));
 };
 
-#if 0	//	ƒvƒƒOƒ‰ƒ€‚Ì“®ì‚ğÚ×‚É•ñ‚³‚¹‚é‚È‚ç 1
+#if 0	//	ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã®å‹•ä½œã‚’è©³ç´°ã«å ±å‘Šã•ã›ã‚‹ãªã‚‰ 1
  #define TRACEALL DebugPrintf
 #else
  #define TRACEALL (void*)
@@ -71,14 +71,14 @@ public:
 #endif
 
 
-/**	ƒfƒoƒbƒO—p CSVo—ÍƒXƒgƒŠ[ƒ€.
+/**	ãƒ‡ãƒãƒƒã‚°ç”¨ CSVå‡ºåŠ›ã‚¹ãƒˆãƒªãƒ¼ãƒ .
 	@verbatim
-	CSVout << "ƒƒbƒZ[ƒW:" << msg;@endverbatim
-	‚Ì—l‚Ég‚¤D							*/
+	CSVout << "ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸:" << msg;@endverbatim
+	ã®æ§˜ã«ä½¿ã†ï¼							*/
 #define CSVOUT (Spr::DebugCSV::GetInstance()->Stream())
-/**	ƒfƒoƒbƒO—p CSVo—ÍƒXƒgƒŠ[ƒ€.
-	Œ»İŠJ‚¢‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚ğclose‚·‚éD
-	•Û‘¶‚·‚é‚É‚Í•K‚¸ŒÄ‚Ô•K—v‚ª‚ ‚éB
+/**	ãƒ‡ãƒãƒƒã‚°ç”¨ CSVå‡ºåŠ›ã‚¹ãƒˆãƒªãƒ¼ãƒ .
+	ç¾åœ¨é–‹ã„ã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã‚’closeã™ã‚‹ï¼
+	ä¿å­˜ã™ã‚‹ã«ã¯å¿…ãšå‘¼ã¶å¿…è¦ãŒã‚ã‚‹ã€‚
 	*/
 #define CSVCLOSE (Spr::DebugCSV::GetInstance()->Close())
 
@@ -92,7 +92,7 @@ public:
 	void Set(void (*out)(const char*));
 	static void defcsvOutFunc(const char* str);
 	void Close();
-	std::string FileNameSearch();							//ƒtƒHƒ‹ƒ_“à‚ÌCSVƒtƒ@ƒCƒ‹‚ğƒT[ƒ`‚µV‚µ‚¢ƒtƒ@ƒCƒ‹–¼‚ğ¶¬
+	std::string FileNameSearch();							//ãƒ•ã‚©ãƒ«ãƒ€å†…ã®CSVãƒ•ã‚¡ã‚¤ãƒ«ã‚’ã‚µãƒ¼ãƒã—æ–°ã—ã„ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ç”Ÿæˆ
 };
 
 }	//	namespace Spr

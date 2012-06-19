@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,18 +8,18 @@
 /**
  Springhead2/src/tests/Graphics/GRSimple/main.cpp
 
-yŠT—vz
-  ƒOƒ‰ƒtƒBƒbƒNƒXƒŒƒ“ƒ_ƒ‰[ƒNƒ‰ƒX‚ÌAPI‚ğg‚¢AGLƒfƒoƒCƒX‚ÅƒŒƒ“ƒ_ƒŠƒ“ƒO‚ğs‚¤B@
+ã€æ¦‚è¦ã€‘
+  ã‚°ãƒ©ãƒ•ã‚£ãƒƒã‚¯ã‚¹ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼ã‚¯ãƒ©ã‚¹ã®APIã‚’ä½¿ã„ã€GLãƒ‡ãƒã‚¤ã‚¹ã§ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã‚’è¡Œã†ã€‚ã€€
   
-yI—¹Šî€z
-  E5000ƒXƒeƒbƒvŒã‚É‹­§I—¹B
+ã€çµ‚äº†åŸºæº–ã€‘
+  ãƒ»5000ã‚¹ãƒ†ãƒƒãƒ—å¾Œã«å¼·åˆ¶çµ‚äº†ã€‚
 
-yˆ—‚Ì—¬‚êz
-  EƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚É•K—v‚Èî•ñ(„‘Ì‚ÌŒ`óE¿—ÊEŠµ«ƒeƒ“ƒ\ƒ‹‚È‚Ç)‚ğİ’è‚·‚éB  
-  E—^‚¦‚ç‚ê‚½ğŒ‚É‚æ‚è‡™t•bŒã‚ÌˆÊ’u‚Ì•Ï‰»‚ğÏ•ª‚µAOpenGL‚ÅƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚·‚éB
+ã€å‡¦ç†ã®æµã‚Œã€‘
+  ãƒ»ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã«å¿…è¦ãªæƒ…å ±(å‰›ä½“ã®å½¢çŠ¶ãƒ»è³ªé‡ãƒ»æ…£æ€§ãƒ†ãƒ³ã‚½ãƒ«ãªã©)ã‚’è¨­å®šã™ã‚‹ã€‚  
+  ãƒ»ä¸ãˆã‚‰ã‚ŒãŸæ¡ä»¶ã«ã‚ˆã‚ŠâŠ¿tç§’å¾Œã®ä½ç½®ã®å¤‰åŒ–ã‚’ç©åˆ†ã—ã€OpenGLã§ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã™ã‚‹ã€‚
 
  */
-#include <Springhead.h>		//	Springhead‚ÌƒCƒ“ƒ^ƒtƒF[ƒX
+#include <Springhead.h>		//	Springheadã®ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹
 #include <ctime>
 #include <string>
 #ifdef USE_HDRSTOP
@@ -46,7 +46,7 @@ PHSceneIf* phScene;
 PHSolidIf* soFloor;
 std::vector<PHSolidIf*> soBlock;
 
-// Ş¿‚Ìİ’è
+// æè³ªã®è¨­å®š
 GRMaterialDesc matFloor(Vec4f(0.2, 0.2, 0.2, 1.0),		// ambient
 					Vec4f(0.6, 0.6, 0.6, 1.0),		// diffuse
 					Vec4f(0.2, 0.2, 0.2, 1.0),		// specular
@@ -65,16 +65,16 @@ GRMaterialDesc matLine(Vec4f(1.0, 1.0, 1.0, 1.0),
 
 
 /**
- brief     	glutDisplayFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param		‚È‚µ
- return 	‚È‚µ
+ brief     	glutDisplayFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param		ãªã—
+ return 	ãªã—
  */
 void display(){
-	//	ƒoƒbƒtƒ@ƒNƒŠƒA
+	//	ãƒãƒƒãƒ•ã‚¡ã‚¯ãƒªã‚¢
 	render->ClearBuffer();
 	render->BeginScene();
 
-	// ‹“_‚ğÄİ’è‚·‚é
+	// è¦–ç‚¹ã‚’å†è¨­å®šã™ã‚‹
 	Affinef view;
 	view.Pos() = Vec3f(5.0, 15.0, 15.0);								// eye
 	view.LookAtGL(Vec3f(0.0, 0.0, 0.0), Vec3f(0.0, 1.0, 0.0));			// center, up 
@@ -82,16 +82,16 @@ void display(){
 	render->SetViewMatrix(view);
 
 	//-----------------------------------
-	//		°(soFloor) 
+	//		åºŠ(soFloor) 
 	//-----------------------------------
 	render->SetAlphaTest(true);
 	render->SetAlphaMode(render->BF_ONE, render->BF_ZERO);
 
-	render->SetMaterial(matFloor);		// ƒ}ƒeƒŠƒAƒ‹İ’è
+	render->SetMaterial(matFloor);		// ãƒãƒ†ãƒªã‚¢ãƒ«è¨­å®š
 	fwScene->DrawSolid(render, soFloor, true);
 
 	//-----------------------------------
-	//		ƒuƒƒbƒN(soBlock)
+	//		ãƒ–ãƒ­ãƒƒã‚¯(soBlock)
 	//-----------------------------------
 	render->SetDepthWrite(false); 
 	render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
@@ -104,7 +104,7 @@ void display(){
 	render->SetAlphaTest(false);
 
 	//-----------------------------------
-	//				²
+	//				è»¸
 	//-----------------------------------
 	render->SetMaterial(matLine);
 	Vec3f vtx[4] = {Vec3f(0,0,0), Vec3f(10,0,0), Vec3f(0,10,0), Vec3f(0,0,10)};
@@ -115,7 +115,7 @@ void display(){
 
 
 	//-----------------------------------
-	//		ƒeƒLƒXƒg•`‰æ/ƒtƒHƒ“ƒg
+	//		ãƒ†ã‚­ã‚¹ãƒˆæç”»/ãƒ•ã‚©ãƒ³ãƒˆ
 	//-----------------------------------
 	GRFont font1;
 	font1.height = 30;
@@ -127,7 +127,7 @@ void display(){
 	std::string str = "X";
 	render->SetFont(font1);
 	render->DrawFont(Vec3f(8.0, 1.0, -1.0), str);
-	font1.face = "‚l‚r –¾’©";
+	font1.face = "ï¼­ï¼³ æ˜æœ";
 	font1.color = 0xFFFF00;
 	str = "Y";
 	render->SetFont(font1);
@@ -144,9 +144,9 @@ void display(){
 }
 
 /**
- brief		ŒõŒ¹‚Ìİ’è
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief		å…‰æºã®è¨­å®š
+ param	 	ãªã—
+ return 	ãªã—
  */
 void setLight() {
 	GRLightDesc light0;
@@ -170,21 +170,21 @@ void setLight() {
 	render->PushLight(light1);
 }
 /**
- brief		glutReshapeFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param		<in/--> w@@•
- param		<in/--> h@@‚‚³
- return		 ‚È‚µ
+ brief		glutReshapeFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param		<in/--> wã€€ã€€å¹…
+ param		<in/--> hã€€ã€€é«˜ã•
+ return		 ãªã—
  */
 void reshape(int w, int h){
-	// Viewport‚ÆË‰es—ñ‚ğİ’è
+	// Viewportã¨å°„å½±è¡Œåˆ—ã‚’è¨­å®š
 	render->Reshape(Vec2f(0,0), Vec2f(w,h));
 }
 /**
- brief 		glutKeyboardFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ” 
- param		<in/--> key@@ ASCIIƒR[ƒh
- param 		<in/--> x@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- param 		<in/--> y@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- return 	‚È‚µ
+ brief 		glutKeyboardFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•° 
+ param		<in/--> keyã€€ã€€ ASCIIã‚³ãƒ¼ãƒ‰
+ param 		<in/--> xã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ param 		<in/--> yã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ return 	ãªã—
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
@@ -194,9 +194,9 @@ void keyboard(unsigned char key, int x, int y){
 	}
 }	
 /**
- brief  	glutIdleFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief  	glutIdleFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void idle(){
 	fwScene->Step();
@@ -206,10 +206,10 @@ void idle(){
 	if (++count > EXIT_TIMER) exit(0);
 }
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char* argv[]){
 	fwSdk = FWSdkIf::CreateSdk();
@@ -225,15 +225,15 @@ int main(int argc, char* argv[]){
 
 	unsigned int blockCnt;
 	for (blockCnt=0; blockCnt<NUM_BLOCKS; ++blockCnt){
-		soBlock.push_back(phScene->CreateSolid(desc));		// „‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
+		soBlock.push_back(phScene->CreateSolid(desc));		// å‰›ä½“ã‚’descã«åŸºã¥ã„ã¦ä½œæˆ
 	}
 
 	desc.mass = 1e20f;
 	desc.inertia *= 1e20f;
-	soFloor = phScene->CreateSolid(desc);		// „‘Ì‚ğdesc‚ÉŠî‚Ã‚¢‚Äì¬
+	soFloor = phScene->CreateSolid(desc);		// å‰›ä½“ã‚’descã«åŸºã¥ã„ã¦ä½œæˆ
 	soFloor->SetGravity(false);
 	
-	//	Œ`ó‚Ìì¬
+	//	å½¢çŠ¶ã®ä½œæˆ
 	CDConvexMeshIf* meshFloor=NULL;
 	CDConvexMeshIf* meshBlock=NULL;
 	{
@@ -248,7 +248,7 @@ int main(int argc, char* argv[]){
 		md.vertices.push_back(Vec3f( 1, 1, 1));
 		meshBlock = DCAST(CDConvexMeshIf, phSdk->CreateShape(md));
 
-		// soFloor(meshFloor)‚É‘Î‚µ‚ÄƒXƒP[ƒŠƒ“ƒO
+		// soFloor(meshFloor)ã«å¯¾ã—ã¦ã‚¹ã‚±ãƒ¼ãƒªãƒ³ã‚°
 		for(unsigned i=0; i<md.vertices.size(); ++i){
 			md.vertices[i].x *= 30;
 			md.vertices[i].z *= 30;
@@ -263,7 +263,7 @@ int main(int argc, char* argv[]){
 		soBlock[blockCnt]->SetFramePosition(Vec3f(3, 15*(blockCnt+1), 3));
 	}
 
-	phScene->SetGravity(Vec3f(0,-9.8f, 0));	// d—Í‚ğİ’è
+	phScene->SetGravity(Vec3f(0,-9.8f, 0));	// é‡åŠ›ã‚’è¨­å®š
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
@@ -273,7 +273,7 @@ int main(int argc, char* argv[]){
 	render = grSdk->CreateRender();
 	grDevice = grSdk->CreateDeviceGL();
 
-	// ‰Šúİ’è
+	// åˆæœŸè¨­å®š
 	grDevice->Init();
 
 	glutDisplayFunc(display);

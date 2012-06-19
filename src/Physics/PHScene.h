@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -62,7 +62,7 @@ protected:
 	PHRays					rays;
 	PHFemEngine*			femEngine;
 	PHHapticEngine*			hapticEngine;
-	double					timeStepInv;	///< timeStep‚Ì‹t”D‚‘¬‰»—p
+	double					timeStepInv;	///< timeStepã®é€†æ•°ï¼Žé«˜é€ŸåŒ–ç”¨
 public:
 	
 	friend class			PHSolid;
@@ -71,20 +71,20 @@ public:
 
 
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-	///	ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	PHScene(const PHSceneDesc& desc = PHSceneDesc());
 	void Init();
-	///	ƒfƒXƒgƒ‰ƒNƒ^
+	///	ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	~PHScene(){}
 
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-	//‚±‚ÌƒNƒ‰ƒX“à‚Å‚Ì‹@”\.
+	//ã“ã®ã‚¯ãƒ©ã‚¹å†…ã§ã®æ©Ÿèƒ½.
 	PHEngines*				GetEngines();
 	CDShapeIf*				CreateShape(const IfInfo* ii, const CDShapeDesc& desc);	
 	double					GetTimeStepInv(){ return timeStepInv; }
 	
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-	//ƒCƒ“ƒ^ƒtƒF[ƒX(PHSceneIf)‚ÌŽÀ‘•
+	//ã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹(PHSceneIf)ã®å®Ÿè£…
 	PHSdkIf*				GetSdk();
 	PHSolidIf*				CreateSolid(const PHSolidDesc& desc = PHSolidDesc());
 	int						NSolids() const;
@@ -131,29 +131,29 @@ public:
 
 	//void 					FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids);
 
-	/// Ï•ªƒXƒeƒbƒv‚ð•Ô‚·
+	/// ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¿”ã™
 	double					GetTimeStep()const{return timeStep;}
-	/// Ï•ªƒXƒeƒbƒv‚ðÝ’è‚·‚é
+	/// ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¨­å®šã™ã‚‹
 	void					SetTimeStep(double dt);
-	/// —ÍŠoÏ•ªƒXƒeƒbƒv‚ð•Ô‚·
+	/// åŠ›è¦šç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¿”ã™
 	double					GetHapticTimeStep()const{ return haptictimeStep; }
-	/// —ÍŠoÏ•ªƒXƒeƒbƒv‚ðÝ’è‚·‚é
+	/// åŠ›è¦šç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—ã‚’è¨­å®šã™ã‚‹
 	void					SetHapticTimeStep(double dt){ haptictimeStep = dt; }
-	/// ƒJƒEƒ“ƒg”‚ð•Ô‚·
+	/// ã‚«ã‚¦ãƒ³ãƒˆæ•°ã‚’è¿”ã™
 	unsigned				GetCount()const{return count;}
-	/// ƒJƒEƒ“ƒg”‚ðÝ’è‚·‚é
+	/// ã‚«ã‚¦ãƒ³ãƒˆæ•°ã‚’è¨­å®šã™ã‚‹
 	void					SetCount(unsigned c){count = c;}
-	///	ƒV[ƒ“‚ÌŽž‚ði‚ß‚é ClearForce(); GenerateForce(); Integrate(); ‚Æ“¯‚¶
+	///	ã‚·ãƒ¼ãƒ³ã®æ™‚åˆ»ã‚’é€²ã‚ã‚‹ ClearForce(); GenerateForce(); Integrate(); ã¨åŒã˜
 	void					Step();
-	///	ƒV[ƒ“‚ÌŽž‚ði‚ß‚éi—Í‚ÌƒNƒŠƒAj
+	///	ã‚·ãƒ¼ãƒ³ã®æ™‚åˆ»ã‚’é€²ã‚ã‚‹ï¼ˆåŠ›ã®ã‚¯ãƒªã‚¢ï¼‰
 	void					ClearForce();
-	///	ƒV[ƒ“‚ÌŽž‚ði‚ß‚éi—Í‚Ì¶¬j
+	///	ã‚·ãƒ¼ãƒ³ã®æ™‚åˆ»ã‚’é€²ã‚ã‚‹ï¼ˆåŠ›ã®ç”Ÿæˆï¼‰
 	void					GenerateForce();
-	///	ƒV[ƒ“‚ÌŽž‚ði‚ß‚éi—Í‚Æ‘¬“x‚ðÏ•ª‚µ‚ÄC‘¬“x‚ÆˆÊ’u‚ðXVj
+	///	ã‚·ãƒ¼ãƒ³ã®æ™‚åˆ»ã‚’é€²ã‚ã‚‹ï¼ˆåŠ›ã¨é€Ÿåº¦ã‚’ç©åˆ†ã—ã¦ï¼Œé€Ÿåº¦ã¨ä½ç½®ã‚’æ›´æ–°ï¼‰
 	void					Integrate();
 	void					IntegratePart1();
 	void					IntegratePart2();
-	///	ƒV[ƒ“‚ð‹ó‚É‚·‚éD
+	///	ã‚·ãƒ¼ãƒ³ã‚’ç©ºã«ã™ã‚‹ï¼Ž
 	void					Clear();
 	virtual void			SetGravity(const Vec3d& accel);
 	virtual Vec3d			GetGravity();

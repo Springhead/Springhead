@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2011, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -6,9 +6,9 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
-/*	SPIDARG6‚Ìo—Í‚ğŠm”F‚·‚é‚½‚ß‚ÌƒvƒƒOƒ‰ƒ€
-	ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}‚ÌŠ„‚è‚İ‚ğg‚¤‚±‚Æ‚ÅC
-	–ñ1ms‚ÌXV‚ª‰Â”\D
+/*	SPIDARG6ã®å‡ºåŠ›ã‚’ç¢ºèªã™ã‚‹ãŸã‚ã®ãƒ—ãƒ­ã‚°ãƒ©ãƒ 
+	ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒã®å‰²ã‚Šè¾¼ã¿ã‚’ä½¿ã†ã“ã¨ã§ï¼Œ
+	ç´„1msã®æ›´æ–°ãŒå¯èƒ½ï¼
 */
 
 #include <conio.h>
@@ -17,26 +17,26 @@
 
 using namespace Spr;
 
-// Šeí•Ï”
+// å„ç¨®å¤‰æ•°
 UTRef<HISdkIf> hiSdk;
 UTRef<HISpidarGIf> spg;
-float dt = 0.001f;		// XVüŠú
-double K = 5000;		// ƒoƒlŒW”
-double D = 5;			// ƒ_ƒ“ƒpŒW”
-double fy = -0.009;		// —ÍŠo’ñ¦ˆÊ’u
+float dt = 0.001f;		// æ›´æ–°å‘¨æœŸ
+double K = 5000;		// ãƒãƒä¿‚æ•°
+double D = 5;			// ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
+double fy = -0.009;		// åŠ›è¦šæç¤ºä½ç½®
 
-// ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}‚ÌƒR[ƒ‹ƒoƒbƒNŠÖ”
+// ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒã®ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
 void SPR_CDECL CallBackLoop(int id, void* arg){
 	spg->Update(dt);
 
-	double py  = spg->GetPosition().y;	//ƒ|ƒCƒ“ƒ^‚ÌˆÊ’u
-	double pvy = spg->GetVelocity().y;	//ƒ|ƒCƒ“ƒ^‚Ì‘¬“x
-	double dy  = py-fy;					//°‚Æƒ|ƒCƒ“ƒ^‚ÌˆÊ’u‚Ì·
-	double dv  = pvy - 0;				//°‚Æƒ|ƒCƒ“ƒ^‚Ì‘¬“x·
+	double py  = spg->GetPosition().y;	//ãƒã‚¤ãƒ³ã‚¿ã®ä½ç½®
+	double pvy = spg->GetVelocity().y;	//ãƒã‚¤ãƒ³ã‚¿ã®é€Ÿåº¦
+	double dy  = py-fy;					//åºŠã¨ãƒã‚¤ãƒ³ã‚¿ã®ä½ç½®ã®å·®
+	double dv  = pvy - 0;				//åºŠã¨ãƒã‚¤ãƒ³ã‚¿ã®é€Ÿåº¦å·®
 
 	Vec3d f = Vec3d();
 #if 1
-	if(dy < 0)	f.y= -K * dy - D * dv;		//—Í‚ÌŒvZ
+	if(dy < 0)	f.y= -K * dy - D * dv;		//åŠ›ã®è¨ˆç®—
 #else	
 	if(dy< 0)	f.y = 5;
 #endif
@@ -46,7 +46,7 @@ void SPR_CDECL CallBackLoop(int id, void* arg){
 }
 
 void __cdecl main(){
-	// —ÍŠoƒCƒ“ƒ^ƒtƒF[ƒX‚Æ‚ÌÚ‘±İ’è
+	// åŠ›è¦šã‚¤ãƒ³ã‚¿ãƒ•ã‚§ãƒ¼ã‚¹ã¨ã®æ¥ç¶šè¨­å®š
 	hiSdk = HISdkIf::CreateSdk();
 	// win32
 	DRUsb20SimpleDesc usbSimpleDesc;
@@ -70,13 +70,13 @@ void __cdecl main(){
 	spg->Init(&HISpidarGDesc("SpidarG6X3R"));
 	spg->Calibration();
 
-	// ƒ}ƒ‹ƒ`ƒƒfƒBƒAƒ^ƒCƒ}[‚Ìİ’è
+	// ãƒãƒ«ãƒãƒ¡ãƒ‡ã‚£ã‚¢ã‚¿ã‚¤ãƒãƒ¼ã®è¨­å®š
 	UTTimerIf* timer = UTTimerIf::Create();				
-	timer->SetMode(UTTimerIf::MULTIMEDIA);		// ƒ^ƒCƒ}‚Ìƒ‚[ƒhİ’è(MULTIMEDIA or THREAD)
-	timer->SetCallback(CallBackLoop, NULL);		// ŒÄ‚Ñ‚¾‚·ŠÖ”
-	timer->SetResolution(1);					// •ª‰ğ”\(ms)
-	timer->SetInterval((unsigned int)(dt*1000));// ‚İ(ms)
-	timer->Start();								// ƒ^ƒCƒ}ƒXƒ^[ƒg
+	timer->SetMode(UTTimerIf::MULTIMEDIA);		// ã‚¿ã‚¤ãƒã®ãƒ¢ãƒ¼ãƒ‰è¨­å®š(MULTIMEDIA or THREAD)
+	timer->SetCallback(CallBackLoop, NULL);		// å‘¼ã³ã ã™é–¢æ•°
+	timer->SetResolution(1);					// åˆ†è§£èƒ½(ms)
+	timer->SetInterval((unsigned int)(dt*1000));// åˆ»ã¿(ms)
+	timer->Start();								// ã‚¿ã‚¤ãƒã‚¹ã‚¿ãƒ¼ãƒˆ
 	
 	std::cout << "Start the application. " << std::endl;
 	std::cout << "Press any key to exit." << std::endl;

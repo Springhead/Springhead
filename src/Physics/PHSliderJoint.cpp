@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -44,20 +44,20 @@ void PHSliderJointNode::CompRelativePosition() {
 PHSliderJoint::PHSliderJoint(const PHSliderJointDesc& desc) {
 	SetDesc(&desc);
 
-	// ‰Â“®²ES‘©²‚Ìİ’è
+	// å¯å‹•è»¸ãƒ»æ‹˜æŸè»¸ã®è¨­å®š
 	nMovableAxes   = 1;
 	movableAxes[0] = 2;
 	InitTargetAxes();
 }
 
-// ----- ƒGƒ“ƒWƒ“‚©‚çŒÄ‚Ño‚³‚ê‚éŠÖ”
+// ----- ã‚¨ãƒ³ã‚¸ãƒ³ã‹ã‚‰å‘¼ã³å‡ºã•ã‚Œã‚‹é–¢æ•°
 
 void PHSliderJoint::UpdateJointState() {
 	position[0] = Xjrel.r.z;
 	velocity[0] = vjrel.v().z;
 }
 
-// ----- PHConstraint‚Ì”h¶ƒNƒ‰ƒX‚ÅÀ‘•‚³‚ê‚é‹@”\
+// ----- PHConstraintã®æ´¾ç”Ÿã‚¯ãƒ©ã‚¹ã§å®Ÿè£…ã•ã‚Œã‚‹æ©Ÿèƒ½
 
 void PHSliderJoint::SetupAxisIndex() {
 	if (!bArticulated) {
@@ -75,7 +75,7 @@ void PHSliderJoint::SetupAxisIndex() {
 		if (bConstraintRollZ) { axes.Enable(5); }
 	}
 
-	// -- PH1DJoint::SetupAxisIndex ‚É‘Š“–‚·‚é•”•ª
+	// -- PH1DJoint::SetupAxisIndex ã«ç›¸å½“ã™ã‚‹éƒ¨åˆ†
 	motor.SetupAxisIndex();
 	if (limit) { limit->SetupAxisIndex(); }
 }
@@ -83,7 +83,7 @@ void PHSliderJoint::SetupAxisIndex() {
 void PHSliderJoint::CompBias() {
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 
-	if (engine->numIterCorrection==0){ // Correction‚ğ‘¬“xLCP‚Ås‚¤ê‡
+	if (engine->numIterCorrection==0){ // Correctionã‚’é€Ÿåº¦LCPã§è¡Œã†å ´åˆ
 		db.v()	 = Xjrel.r * dtinv;
 		db.v().z = 0.0;
 		if (!bConstraintY) { db.v().y = 0.0; }
@@ -95,7 +95,7 @@ void PHSliderJoint::CompBias() {
 		db *= engine->velCorrectionRate;
 	}
 
-	// eƒNƒ‰ƒX‚ÌCompBiasDmotor,limit‚ÌCompBias‚ªŒÄ‚Î‚ê‚é‚Ì‚ÅÅŒã‚ÉŒÄ‚Ô
+	// è¦ªã‚¯ãƒ©ã‚¹ã®CompBiasï¼motor,limitã®CompBiasãŒå‘¼ã°ã‚Œã‚‹ã®ã§æœ€å¾Œã«å‘¼ã¶
 	PH1DJoint::CompBias();
 }
 

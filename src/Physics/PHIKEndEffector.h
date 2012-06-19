@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,7 +18,7 @@ class PHIKActuator;
 class PHIKEndEffector;
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-// IKEndEffectorFIK‚ÌƒGƒ“ƒhƒGƒtƒFƒNƒ^i“’B‚³‚¹‚é‘ÎÛj
+// IKEndEffectorï¼šIKã®ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ï¼ˆåˆ°é”ã•ã›ã‚‹å¯¾è±¡ï¼‰
 // 
 
 class PHIKEndEffector : public SceneObject, public PHIKEndEffectorDesc {
@@ -26,28 +26,28 @@ public:
 	SPR_OBJECTDEF(PHIKEndEffector);
 	ACCESS_DESC(PHIKEndEffector)
 
-	/// ŠÈ—ª•\‹L—ptypedef
+	/// ç°¡ç•¥è¡¨è¨˜ç”¨typedef
 	typedef std::set<PHIKEndEffector*>	ESet;
 	typedef ESet::iterator				ESetIter;
 	typedef std::set<PHIKActuator*>		ASet;
 	typedef ASet::iterator				ASetIter;
 
-	/// ©—R“x
+	/// è‡ªç”±åº¦
 	int ndof;
 
-	/// ©—R“x•Ï‰»ƒtƒ‰ƒO
+	/// è‡ªç”±åº¦å¤‰åŒ–ãƒ•ãƒ©ã‚°
 	bool bNDOFChanged;
 
-	/// ”Ô†
+	/// ç•ªå·
 	int number;
 
-	/// §Œä“_‚Ì‚ ‚é„‘Ì
+	/// åˆ¶å¾¡ç‚¹ã®ã‚ã‚‹å‰›ä½“
 	PHSolidIf* solid;
 
-	/// ‚±‚ÌƒGƒ“ƒhƒGƒtƒFƒNƒ^‚ª˜A“®‚·‚éƒAƒNƒ`ƒ…ƒG[ƒ^
+	/// ã“ã®ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ãŒé€£å‹•ã™ã‚‹ã‚¢ã‚¯ãƒãƒ¥ã‚¨ãƒ¼ã‚¿
 	ASet linkedActuators;
 
-	/** @brief ‰Šú‰»‚·‚é
+	/** @brief åˆæœŸåŒ–ã™ã‚‹
 	*/
 	void Init() {
 		solid = NULL;
@@ -56,13 +56,13 @@ public:
 		number = -1;
 	}
 
-	/** @brief ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/** @brief ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	*/
 	PHIKEndEffector() {
 		Init();
 	}
 
-	/** @brief ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	/** @brief ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	*/
 	PHIKEndEffector(const PHIKEndEffectorDesc& desc) {
 		Init();
@@ -71,21 +71,21 @@ public:
 
 	// --- --- --- --- ---
 
-	/** @brief “®ì‘ÎÛ‚Ì„‘Ì‚ğİ’è‚·‚éi‚PƒGƒ“ƒhƒGƒtƒFƒNƒ^‚É‚Â‚«‚P„‘Ì‚ª•K‚¸‘Î‰‚·‚éj
+	/** @brief å‹•ä½œå¯¾è±¡ã®å‰›ä½“ã‚’è¨­å®šã™ã‚‹ï¼ˆï¼‘ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã«ã¤ãï¼‘å‰›ä½“ãŒå¿…ãšå¯¾å¿œã™ã‚‹ï¼‰
 	*/
 	void SetSolid(PHSolidIf* solid) { this->solid = solid; }
 
-	/** @brief “®ì‘ÎÛ‚Æ‚µ‚Äİ’è‚³‚ê‚½„‘Ì‚ğæ“¾‚·‚é
+	/** @brief å‹•ä½œå¯¾è±¡ã¨ã—ã¦è¨­å®šã•ã‚ŒãŸå‰›ä½“ã‚’å–å¾—ã™ã‚‹
 	*/
 	PHSolidIf* GetSolid() { return this->solid; }
 
 	// --- --- --- --- ---
 
-	/** @brief —LŒøE–³Œø‚ğİ’è‚·‚é
+	/** @brief æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’è¨­å®šã™ã‚‹
 	*/
 	void Enable(bool enable);
 
-	/** @brief —LŒøE–³Œø‚ğæ“¾‚·‚é
+	/** @brief æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’å–å¾—ã™ã‚‹
 	*/
 	bool IsEnabled() { return bEnabled; }
 
@@ -111,86 +111,86 @@ public:
 
 	// --- --- --- --- ---
 
-	/** @brief ˆÊ’u‚Ì§Œä‚Ì—LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @brief ä½ç½®ã®åˆ¶å¾¡ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	*/
 	void EnablePositionControl(bool enable) {
 		bPosition = enable;
 		ChangeNDOF();
 	}
 
-	/** @brief ˆÊ’u§Œä‚Ìƒvƒ‰ƒCƒIƒŠƒeƒB‚ğİ’è‚·‚é
+	/** @brief ä½ç½®åˆ¶å¾¡ã®ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetPositionPriority(double priority){ positionPriority = priority; }
 
-	/** @brief ˆÊ’u‚Ì–Ú•W’l‚ğİ’è‚·‚é
+	/** @brief ä½ç½®ã®ç›®æ¨™å€¤ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetPosition(Vec3d position) { targetPosition = position; }
 
-	/** @brief „‘Ì‚É‚¨‚¢‚Ä“’B‚³‚¹‚½‚¢ˆÊ’u‚Ì„‘Ìƒ[ƒJƒ‹À•W‚ğİ’è‚·‚é
+	/** @brief å‰›ä½“ã«ãŠã„ã¦åˆ°é”ã•ã›ãŸã„ä½ç½®ã®å‰›ä½“ãƒ­ãƒ¼ã‚«ãƒ«åº§æ¨™ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetLocalPosition(Vec3d localPosition) { targetLocalPosition = localPosition; }
 
-	/** @brief İ’è‚³‚ê‚½ˆÊ’u‚Ì–Ú•W’l‚ğæ“¾‚·‚é
+	/** @brief è¨­å®šã•ã‚ŒãŸä½ç½®ã®ç›®æ¨™å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetPosition() { return targetPosition; }
 
-	/** @brief ƒGƒ“ƒhƒGƒtƒFƒNƒ^‚É‚¨‚¯‚é“’B‚³‚¹‚½‚¢ˆÊ’u‚Ìİ’è‚³‚ê‚½–Ú•W’l‚ğæ“¾‚·‚é
+	/** @brief ã‚¨ãƒ³ãƒ‰ã‚¨ãƒ•ã‚§ã‚¯ã‚¿ã«ãŠã‘ã‚‹åˆ°é”ã•ã›ãŸã„ä½ç½®ã®è¨­å®šã•ã‚ŒãŸç›®æ¨™å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetLocalPosition() { return targetLocalPosition; }
 
 	// --- --- --- --- ---
 
-	/** @brief p¨‚Ì§Œä‚Ì—LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @brief å§¿å‹¢ã®åˆ¶å¾¡ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	*/
 	void EnableOrientationControl(bool enable) {
 		bOrientation = enable;
 		ChangeNDOF();
 	}
 
-	/** @brief p¨§Œä‚Ìƒvƒ‰ƒCƒIƒŠƒeƒB‚ğİ’è‚·‚é
+	/** @brief å§¿å‹¢åˆ¶å¾¡ã®ãƒ—ãƒ©ã‚¤ã‚ªãƒªãƒ†ã‚£ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetOrientationPriority(double priority){ orientationPriority = priority; }
 
-	/** @brief p¨‚Ì–Ú•W’l‚ğİ’è‚·‚é
+	/** @brief å§¿å‹¢ã®ç›®æ¨™å€¤ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetOrientation(Quaterniond orientation) { targetOrientation = orientation; }
 
-	/** @brief İ’è‚³‚ê‚½p¨‚Ì–Ú•W’l‚ğæ“¾‚·‚é
+	/** @brief è¨­å®šã•ã‚ŒãŸå§¿å‹¢ã®ç›®æ¨™å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	Quaterniond GetTargetOrientation() { return targetOrientation; }
 
 	// --- --- --- --- ---
 
-	/** @brief —Í‚Ì§Œä‚Ì—LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @brief åŠ›ã®åˆ¶å¾¡ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	*/
 	void EnableForceControl(bool enable) { bForce = enable; }
 
-	/** @brief —Í‚Ì–Ú•W’l‚ğİ’è‚·‚é
+	/** @brief åŠ›ã®ç›®æ¨™å€¤ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetForce(Vec3d force, Vec3d workingPoint) {
 		targetForce				= force;
 		targetForceWorkingPoint	= workingPoint;
 	}
 
-	/** @brief İ’è‚³‚ê‚½—Í‚Ì–Ú•W’l‚ğæ“¾‚·‚é
+	/** @brief è¨­å®šã•ã‚ŒãŸåŠ›ã®ç›®æ¨™å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetForce() { return targetForce; }
 
-	/** @brief İ’è‚³‚ê‚½—Í‚Ìì—p“_‚ğæ“¾‚·‚é
+	/** @brief è¨­å®šã•ã‚ŒãŸåŠ›ã®ä½œç”¨ç‚¹ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetForceWorkingPoint() { return targetForceWorkingPoint; }
 
 	// --- --- --- --- ---
 
-	/** @brief ƒgƒ‹ƒN‚Ì§Œä‚Ì—LŒøE–³Œø‚ğØ‚è‘Ö‚¦‚é
+	/** @brief ãƒˆãƒ«ã‚¯ã®åˆ¶å¾¡ã®æœ‰åŠ¹ãƒ»ç„¡åŠ¹ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹
 	*/
 	void EnableTorqueControl(bool enable) { bTorque = enable; }
 
-	/** @brief ƒgƒ‹ƒN‚Ì–Ú•W’l‚ğİ’è‚·‚é
+	/** @brief ãƒˆãƒ«ã‚¯ã®ç›®æ¨™å€¤ã‚’è¨­å®šã™ã‚‹
 	*/
 	void SetTargetTorque(Vec3d torque) { targetTorque = torque; }
 
-	/** @brief İ’è‚³‚ê‚½ƒgƒ‹ƒN‚Ì–Ú•W’l‚ğæ“¾‚·‚é
+	/** @brief è¨­å®šã•ã‚ŒãŸãƒˆãƒ«ã‚¯ã®ç›®æ¨™å€¤ã‚’å–å¾—ã™ã‚‹
 	*/
 	Vec3d GetTargetTorque() { return targetTorque; }
 
@@ -203,7 +203,7 @@ public:
 	// --- --- --- --- --- --- --- --- --- ---
 	// Non API Methods
 
-	/** @brief b’è–Ú•W’n“_‚ğæ“¾‚·‚é
+	/** @brief æš«å®šç›®æ¨™åœ°ç‚¹ã‚’å–å¾—ã™ã‚‹
 	*/
 	void GetTempTarget(PTM::VVector<double> &v);
 };

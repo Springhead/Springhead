@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -15,7 +15,7 @@ namespace Spr {;
 //	GRDebugRenderD3D
 IF_SPR_OBJECTIMP(GRDebugRenderD3D, GRDebugRender);
 
-/// ƒV[ƒ““à‚Ì‘S‚Ä‚ÌƒIƒuƒWƒFƒNƒg‚ðƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚é
+/// ã‚·ãƒ¼ãƒ³å†…ã®å…¨ã¦ã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹
 void GRDebugRenderD3D::DrawScene(PHSceneIf* scene){
 	PHSolidIf **solids = scene->GetSolids();
 	for (int num=0; num < scene->NSolids(); ++num){
@@ -24,7 +24,7 @@ void GRDebugRenderD3D::DrawScene(PHSceneIf* scene){
 	}	
 }
 
-/// „‘Ì‚ðƒŒƒ“ƒ_ƒŠƒ“ƒO‚·‚é
+/// å‰›ä½“ã‚’ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°ã™ã‚‹
 void GRDebugRenderD3D::DrawSolid(PHSolidIf* so){
 	Affinef soaf;
 	so->GetPose().ToAffine(soaf);

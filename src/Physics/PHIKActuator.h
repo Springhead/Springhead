@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -21,7 +21,7 @@ namespace Spr{;
 class PHIKActuator;
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
-// IKActuator�FIK�Ɏg�p�ł���A�N�`���G�[�^�i�쓮���i�j
+// IKActuator：IKに使用できるアクチュエータ（作動部品）
 // 
 
 class PHIKActuator : public SceneObject{
@@ -29,57 +29,57 @@ public:
 	SPR_OBJECTDEF(PHIKActuator);
 	SPR_DECLMEMBEROF_PHIKActuatorDesc;
 
-	// �֐߃c���[��łȂ������A�N�`���G�[�^
-	// �� �v�Z�ɕK�v�ƂȂ�̂�
-	//    �u��c�Ǝq���ɂ�����A�N�`���G�[�^���ׂāv
-	//      �i�g�u���̃A�N�`���G�[�^�œ������邢���ꂩ�̃G���h�G�t�F�N�^�v�𓮂����鑼�̃A�N�`���G�[�^�h �ɂ�����j
-	//    �u�q���ɂ�����A�N�`���G�[�^�ɂȂ��ꂽ�G���h�G�t�F�N�^���ׂāv
-	//      �i�g���̃A�N�`���G�[�^�œ�������G���h�G�t�F�N�^�h �ɂ�����j
+	// 関節ツリー上でつながったアクチュエータ
+	// ※ 計算に必要となるのは
+	//    「先祖と子孫にあたるアクチュエータすべて」
+	//      （“「このアクチュエータで動かせるいずれかのエンドエフェクタ」を動かせる他のアクチュエータ” にあたる）
+	//    「子孫にあたるアクチュエータにつながれたエンドエフェクタすべて」
+	//      （“このアクチュエータで動かせるエンドエフェクタ” にあたる）
 
-	/// ���n�c��E�q���i�����܂ށj�E���ڂ̎q��
+	/// 直系祖先・子孫（自分含む）・直接の子供
 	std::vector<PHIKActuator*> ascendant, descendant, children;
-	/// �c��E�q���ɂ܂Ƃ߂ăA�N�Z�X����֐�
+	/// 祖先・子孫にまとめてアクセスする関数
 	PHIKActuator* Link(size_t i) { return (i<ascendant.size()) ? ascendant[i] : descendant[i-ascendant.size()]; }
 	int NLinks() {return ascendant.size()+descendant.size();}
 
-	/// ���̃A�N�`���G�[�^�Œ��ڂȂ��ꂽ�G���h�G�t�F�N�^�D1�A�N�`���G�[�^�ɑ΂�1�G���h�G�t�F�N�^���Ή�
+	/// このアクチュエータで直接つながれたエンドエフェクタ．1アクチュエータに対し1エンドエフェクタが対応
 	PHIKEndEffector* eef;
 
 	// --- --- --- --- ---
 
-	/// �ԍ�
+	/// 番号
 	int number;
 
-	/// ���R�x
+	/// 自由度
 	int ndof;
 
-	/// ���R�x�ω��t���O
+	/// 自由度変化フラグ
 	bool bNDOFChanged;
 
-	/// �A�N�`���G�[�^�ǉ��t���O
+	/// アクチュエータ追加フラグ
 	bool bActuatorAdded;
 
 	// --- --- --- --- ---
 
-	/// �v�Z�p�̈ꎞ�ϐ�
+	/// 計算用の一時変数
 	PTM::VVector<double>						alpha, beta;
 	std::map< int, PTM::VMatrixRow<double> >	gamma;
 
-	/// ���R�r�A��
+	/// ヤコビアン
 	std::map< int,PTM::VMatrixRow<double> > Mj;
 
-	/// IK��Iteration�̈��O�̌v�Z���ʁi��������p�j
+	/// IKのIterationの一回前の計算結果（収束判定用）
 	PTM::VVector<double> omega_prev;
 
-	/// IK�̌v�Z���ʁi�p�x�j
+	/// IKの計算結果（角度）
 	PTM::VVector<double> omega;
 
-	/// ID�̌v�Z���ʁi�g���N�j
+	/// IDの計算結果（トルク）
 	PTM::VVector<double> tau;
 
 	// --- --- --- --- --- --- --- --- --- ---
 
-	/** @brief ������
+	/** @brief 初期化
 	*/
 	virtual void Init() {
 		number = -1;
@@ -89,13 +89,13 @@ public:
 		if (descendant.size()==0) { descendant.push_back(this); }
 	}
 
-	/** @brief �f�t�H���g�R���X�g���N�^
+	/** @brief デフォルトコンストラクタ
 	*/
 	PHIKActuator(){
 		Init();
 	}
 
-	/** @brief �R���X�g���N�^
+	/** @brief コンストラクタ
 	*/
 	PHIKActuator(const PHIKActuatorDesc& desc){
 		Init();
@@ -104,37 +104,37 @@ public:
 
 	// --- --- --- --- ---
 
-	/** @brief IK�̌v�Z����������
+	/** @brief IKの計算準備をする
 	*/
 	virtual void PrepareSolve();
 
-	/** @brief IK�̌v�Z�J�Ԃ��̂P�X�e�b�v�����s����
+	/** @brief IKの計算繰返しの１ステップを実行する
 	*/
 	virtual void ProceedSolve();
 
-	/** @brief �[���t�����������܂܂�"����"�v�Z���ʂ��擾����
+	/** @brief 擬似逆解を解いたままの"生の"計算結果を取得する
 	*/
 	virtual PTM::VVector<double> GetRawSolution(){ return omega; }
 
 	// --- --- --- --- ---
 
-	/** @brief �v�Z���ʂɏ]���Đ���Ώۂ𓮂���
+	/** @brief 計算結果に従って制御対象を動かす
 	*/
 	virtual void Move(){}
 
 	// --- --- --- --- ---
 
-	/** @brief �������ɂ�����ݒ�E�擾����
+	/** @brief 動かしにくさを設定・取得する
 	*/
 	void  SetBias(float bias){ this->bias = bias; }
 	float GetBias()          { return bias; }
 
-	/** @brief ���x����̔��W����ݒ�E�擾����
+	/** @brief 速度制御の比例係数を設定・取得する
 	*/
 	void   SetVelocityGain(double velocityGain){ this->velocityGain = velocityGain; }
 	double GetVelocityGain()                   { return velocityGain; }
 
-	/** @brief �L���E������ݒ�E�擾����
+	/** @brief 有効・無効を設定・取得する
 	*/
 	void Enable(bool enable){ bEnabled = enable; }
 	bool IsEnabled()        { return bEnabled; }
@@ -148,27 +148,27 @@ public:
 	// --- --- --- --- --- --- --- --- --- ---
 	// Non API Methods
 
-	/** @brief ���R�r�A���v�Z�O�̏���
+	/** @brief ヤコビアン計算前の処理
 	*/
 	virtual void BeforeCalcAllJacobian() {}
 
-	/** @brief �֌W���邷�ׂĂ̐���_�Ƃ̃��R�r�A�������ꂼ�ꋁ�߂�
+	/** @brief 関係するすべての制御点とのヤコビアンをそれぞれ求める
 	*/
 	void CalcAllJacobian();
 
-	/** @brief �v�Z�p�ϐ�����������O�̏���
+	/** @brief 計算用変数を準備する前の処理
 	*/
 	virtual void BeforeSetupMatrix() {}
 
-	/** @brief �v�Z�p�ϐ�����������
+	/** @brief 計算用変数を準備する
 	*/
 	void SetupMatrix();
 
-	/** @brief �w�肵������_�Ƃ̊Ԃ̃��R�r�A�����v�Z����
+	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual void CalcJacobian(PHIKEndEffector* endeffector) {}
 
-	/** @brief �J�Ԃ��v�Z�̈�X�e�b�v�̌�ɍs������
+	/** @brief 繰返し計算の一ステップの後に行う処理
 	*/
 	virtual void AfterProceedSolve() {}
 };
@@ -180,15 +180,15 @@ public:
 	SPR_OBJECTDEF(PHIKBallActuator);
 	SPR_DECLMEMBEROF_PHIKBallActuatorDesc;
 
-	/// ����Ώۂ̊֐�
+	/// 制御対象の関節
 	PHBallJointIf* joint;
 
-	/// IK�̉�]��
+	/// IKの回転軸
 	Vec3d e[3];
 
 	// --- --- --- --- --- --- --- --- --- ---
 
-	/** @brief ������
+	/** @brief 初期化
 	*/
 	virtual void Init() {
 		ndof = 2;
@@ -196,13 +196,13 @@ public:
 		PHIKActuator::Init();
 	}
 
-	/** @brief �f�t�H���g�R���X�g���N�^
+	/** @brief デフォルトコンストラクタ
 	*/
 	PHIKBallActuator(){
 		Init();
 	}
 
-	/** @brief �R���X�g���N�^
+	/** @brief コンストラクタ
 	*/
 	PHIKBallActuator(const PHIKBallActuatorDesc& desc) {
 		Init();
@@ -211,17 +211,17 @@ public:
 
 	// --- --- --- --- ---
 
-	/** @brief �v�Z���ʂɏ]���Đ���Ώۂ𓮂���
+	/** @brief 計算結果に従って制御対象を動かす
 	*/
 	virtual void Move();
 
 	// --- --- --- --- ---
 
-	/** @brief ����Ώۂ̊֐߂�ݒ肷��i�P�A�N�`���G�[�^�ɂ��P�֐߂��K���Ή�����j
+	/** @brief 動作対象の関節を設定する（１アクチュエータにつき１関節が必ず対応する）
 	*/
 	virtual void SetJoint(PHBallJointIf* joint) { this->joint = joint; }
 
-	/** @brief ����ΏۂƂ��Đݒ肳�ꂽ�֐߂��擾����
+	/** @brief 動作対象として設定された関節を取得する
 	*/
 	virtual PHBallJointIf* GetJoint() { return this->joint; }
 
@@ -234,19 +234,19 @@ public:
 	// --- --- --- --- --- --- --- --- --- ---
 	// Non API Methods
 
-	/** @brief ��]�����v�Z����
+	/** @brief 回転軸を計算する
 	*/
 	virtual void CalcAxis();
 
-	/** @brief ���R�r�A���v�Z�O�̏���
+	/** @brief ヤコビアン計算前の処理
 	*/
 	virtual void BeforeCalcAllJacobian();
 
-	/** @brief �v�Z�p�ϐ�����������O�̏���
+	/** @brief 計算用変数を準備する前の処理
 	*/
 	virtual void BeforeSetupMatrix();
 
-	/** @brief �w�肵������_�Ƃ̊Ԃ̃��R�r�A�����v�Z����
+	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual void CalcJacobian(PHIKEndEffector* endeffector);
 };
@@ -258,12 +258,12 @@ public:
 	SPR_OBJECTDEF(PHIKHingeActuator);
 	SPR_DECLMEMBEROF_PHIKBallActuatorDesc;
 
-	/// ����Ώۂ̊֐�
+	/// 制御対象の関節
 	PHHingeJointIf *joint;
 
 	// --- --- --- --- --- --- --- --- --- ---
 
-	/** @brief ������
+	/** @brief 初期化
 	*/
 	virtual void Init() {
 		ndof = 1;
@@ -271,13 +271,13 @@ public:
 		PHIKActuator::Init();
 	}
 
-	/** @brief �f�t�H���g�R���X�g���N�^
+	/** @brief デフォルトコンストラクタ
 	*/
 	PHIKHingeActuator(){
 		Init();
 	}
 
-	/** @brief �R���X�g���N�^
+	/** @brief コンストラクタ
 	*/
 	PHIKHingeActuator(const PHIKHingeActuatorDesc& desc) {
 		Init();
@@ -286,17 +286,17 @@ public:
 
 	// --- --- --- --- ---
 
-	/** @brief �v�Z���ʂɏ]���Đ���Ώۂ𓮂���
+	/** @brief 計算結果に従って制御対象を動かす
 	*/
 	virtual void Move();
 
 	// --- --- --- --- ---
 
-	/** @brief ����Ώۂ̊֐߂�ݒ肷��i�P�A�N�`���G�[�^�ɂ��P�֐߂��K���Ή�����j
+	/** @brief 動作対象の関節を設定する（１アクチュエータにつき１関節が必ず対応する）
 	*/
 	virtual void SetJoint(PHHingeJointIf* joint) { this->joint = joint; }
 
-	/** @brief ����ΏۂƂ��Đݒ肳�ꂽ�֐߂��擾����
+	/** @brief 動作対象として設定された関節を取得する
 	*/
 	virtual PHHingeJointIf* GetJoint() { return this->joint; }
 
@@ -309,7 +309,7 @@ public:
 	// --- --- --- --- --- --- --- --- --- ---
 	// Non API Methods
 
-	/** @brief �w�肵������_�Ƃ̊Ԃ̃��R�r�A�����v�Z����
+	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual void CalcJacobian(PHIKEndEffector* endeffector);
 };

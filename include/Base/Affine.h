@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -10,59 +10,59 @@
 
 /** \addtogroup gpLinearAlgebra */
 //@{
-/** \defgroup gpAffine @!JAAffines—ñƒNƒ‰ƒX@!ENA Affine Matrix@!*
-	\section secAffineIntro @!JA‚Í‚¶‚ß‚É@!ENIntroduction@!*
+/** \defgroup gpAffine @!JAAffineè¡Œåˆ—ã‚¯ãƒ©ã‚¹@!ENA Affine Matrix@!*
+	\section secAffineIntro @!JAã¯ã˜ã‚ã«@!ENIntroduction@!*
 		@!JA
-		‚±‚Ìƒy[ƒW‚ÍAffines—ñƒNƒ‰ƒX(Spr::TAffine, Spr::TAffine2)‚Ìà–¾‚Å‚·D
-		Affines—ñƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ‚ÍC3DƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“‚É•K{‚È
-		Affines—ñ‚ğC++‚ÌƒNƒ‰ƒX‚É‚µ‚½‚à‚Ì‚Å‚·D
+		ã“ã®ãƒšãƒ¼ã‚¸ã¯Affineè¡Œåˆ—ã‚¯ãƒ©ã‚¹(Spr::TAffine, Spr::TAffine2)ã®èª¬æ˜ã§ã™ï¼
+		Affineè¡Œåˆ—ã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¯ï¼Œ3Dã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ã«å¿…é ˆãª
+		Affineè¡Œåˆ—ã‚’C++ã®ã‚¯ãƒ©ã‚¹ã«ã—ãŸã‚‚ã®ã§ã™ï¼
 		@!EN
 		This is a document for Affine Matrix Library.
 		Affine Matrix Library is a set of classes for affine matrix,
 		which are necessary for 3D simulation.
 		@!*
-	\section secAffineUsage @!JAg‚¢•û@!ENUsage@!*
+	\section secAffineUsage @!JAä½¿ã„æ–¹@!ENUsage@!*
 	@!JA
-	Affine s—ñƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ‚ÍCƒwƒbƒ_ƒtƒ@ƒCƒ‹‚¾‚¯‚©‚ç‚È‚é
-	ƒNƒ‰ƒXƒ‰ƒCƒuƒ‰ƒŠ‚È‚Ì‚Å, TAffine.h, TinyVec.h, TinyMat.h, TMatrix.h, TMatrixUtility.h, TVector.h
-	‚ğ“¯‚¶ƒtƒHƒ‹ƒ_‚É“ü‚ê‚Ä‚¨‚«C.cppƒtƒ@ƒCƒ‹‚©‚çƒwƒbƒ_‚ğƒCƒ“ƒNƒ‹[ƒh‚·‚é‚¾‚¯‚Å
-	g—p‚Å‚«‚Ü‚·D
+	Affine è¡Œåˆ—ã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¯ï¼Œãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ã ã‘ã‹ã‚‰ãªã‚‹
+	ã‚¯ãƒ©ã‚¹ãƒ©ã‚¤ãƒ–ãƒ©ãƒªãªã®ã§, TAffine.h, TinyVec.h, TinyMat.h, TMatrix.h, TMatrixUtility.h, TVector.h
+	ã‚’åŒã˜ãƒ•ã‚©ãƒ«ãƒ€ã«å…¥ã‚Œã¦ãŠãï¼Œ.cppãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ˜ãƒƒãƒ€ã‚’ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã™ã‚‹ã ã‘ã§
+	ä½¿ç”¨ã§ãã¾ã™ï¼
 	@!EN
 	Affine Matrix Library consist only from some header files.
 	You can use this library just coping some header files
 	(TAffine.h, TinyVec.h, TinyMat.h, TMatrix.h, TMatrixUtility.h, TVector.h)
 	and including them from your .cpp files.
 	@!*
-	\subsection secAffineSample @!JA ƒTƒ“ƒvƒ‹ @!EN sample@!*
+	\subsection secAffineSample @!JA ã‚µãƒ³ãƒ—ãƒ« @!EN sample@!*
 	\verbatim
-#include "Affine.h"                         //  TAffines—ñƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒCƒ“ƒNƒ‹[ƒh‚·‚éD
+#include "Affine.h"                         //  TAffineè¡Œåˆ—ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã™ã‚‹ï¼
 #include <iostream>
 
-using namespace Spr;	//  @!JA Affines—ñƒNƒ‰ƒX‚ÍSpr–¼‘O‹óŠÔ‚Ì’†‚ÅéŒ¾‚³‚ê‚Ä‚¢‚éD@!EN Affine matrix class is declared in the name space of Spr.@!*
+using namespace Spr;	//  @!JA Affineè¡Œåˆ—ã‚¯ãƒ©ã‚¹ã¯Språå‰ç©ºé–“ã®ä¸­ã§å®£è¨€ã•ã‚Œã¦ã„ã‚‹ï¼@!EN Affine matrix class is declared in the name space of Spr.@!*
 
 void main(){
-    Affinef af=Affinef::Rad(Rad(30), 'z');  //  @!JA—v‘f‚ªfloat‚ÈTAffines—ñ‚ğéŒ¾. 
+    Affinef af=Affinef::Rad(Rad(30), 'z');  //  @!JAè¦ç´ ãŒfloatãªTAffineè¡Œåˆ—ã‚’å®£è¨€. 
                                                 @!ENDeclare an Affine matrix of float element.
                                                 @!*
-                                                @!JAz²‰ñ‚è30“x‰ñ“]s—ñ‚É‰Šú‰»
+                                                @!JAzè»¸å›ã‚Š30åº¦å›è»¢è¡Œåˆ—ã«åˆæœŸåŒ–
                                                 @!ENInitializing as a matrix of rotation of 30 degrees around z axis.
                                                 @!*
                                                 
-    Vec3f vec(1,0,0);                       //  @!JA—v‘f‚ªfloat‚È3ŸŒ³‚ÌƒxƒNƒgƒ‹‚ğéŒ¾
+    Vec3f vec(1,0,0);                       //  @!JAè¦ç´ ãŒfloatãª3æ¬¡å…ƒã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å®£è¨€
                                                 @!ENDeclare a vector of float element.
                                                 @!*
     std::cout << af;
     std::cout << vec << std::endl;
     std::cout << af * vec << std::endl;
 }\endverbatim
-	\subsection secAffineVecFunc @!JA Affines—ñEƒxƒNƒgƒ‹‚Ìƒƒ“ƒo‚Æ‰‰Z  @!EN Functions of Affine matrixs and vectors. @!*
+	\subsection secAffineVecFunc @!JA Affineè¡Œåˆ—ãƒ»ãƒ™ã‚¯ãƒˆãƒ«ã®ãƒ¡ãƒ³ãƒã¨æ¼”ç®—  @!EN Functions of Affine matrixs and vectors. @!*
 	@!JA
-	•’Ê‚É‰‰Z‚ª‚Å‚«‚Ü‚·D
+	æ™®é€šã«æ¼”ç®—ãŒã§ãã¾ã™ï¼
 	<ul>
-	<li> +:˜a, -:·, *:Ï/“àÏ, /:’è”•ª‚Ì1
-	<li> ==:”äŠr, =:‘ã“ü
-	<li> <<:o—Í, >>:“ü—Í
-	<li> %:ƒxƒNƒgƒ‹‚ÌŠOÏ
+	<li> +:å’Œ, -:å·®, *:ç©/å†…ç©, /:å®šæ•°åˆ†ã®1
+	<li> ==:æ¯”è¼ƒ, =:ä»£å…¥
+	<li> <<:å‡ºåŠ›, >>:å…¥åŠ›
+	<li> %:ãƒ™ã‚¯ãƒˆãƒ«ã®å¤–ç©
 	</ul>
 	@!EN Normal calculations are supported.
 	<ul>
@@ -73,11 +73,11 @@ void main(){
 	</ul>
 	@!*
 	@!JA
-	Affine•ÏŠ·‚ÍC
+	Affineå¤‰æ›ã¯ï¼Œ
 	\verbatim
 	TAffine<float> af; TVec3<float> v, af_v;
 	af_v = af * v;\endverbatim
-	‚Æ‚·‚ê‚Î‚Å‚«‚Ü‚·D
+	ã¨ã™ã‚Œã°ã§ãã¾ã™ï¼
 	@!EN
 	Affine transformation is executed by:
 	\verbatim
@@ -85,13 +85,13 @@ void main(){
 	af_v = af * v;\endverbatim
 	@!*
 	@!JA
-	‚Ü‚½CŸ‚Ì‚æ‚¤‚ÉTAffines—ñ‚Ì•”•ª‚ğæ‚èo‚·‚±‚Æ‚ª‚Å‚«‚Ü‚·D
+	ã¾ãŸï¼Œæ¬¡ã®ã‚ˆã†ã«TAffineè¡Œåˆ—ã®éƒ¨åˆ†ã‚’å–ã‚Šå‡ºã™ã“ã¨ãŒã§ãã¾ã™ï¼
 	<ul>
-		<li> af.Ex():	X²Šî’êƒxƒNƒgƒ‹D(3ŸŒ³ƒxƒNƒgƒ‹)D
-		<li> af.Ey():	Y²Šî’êƒxƒNƒgƒ‹D(3ŸŒ³ƒxƒNƒgƒ‹)D
-		<li> af.Ez():	Z²Šî’êƒxƒNƒgƒ‹D(3ŸŒ³ƒxƒNƒgƒ‹)D
-		<li> af.Trn():	•½sˆÚ“®•”•ªD(3ŸŒ³ƒxƒNƒgƒ‹)D
-		<li> af.Rot():	‰ñ“]•ÏŠ·•”•ªD(3~‚Rs—ñ)D
+		<li> af.Ex():	Xè»¸åŸºåº•ãƒ™ã‚¯ãƒˆãƒ«ï¼(3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«)ï¼
+		<li> af.Ey():	Yè»¸åŸºåº•ãƒ™ã‚¯ãƒˆãƒ«ï¼(3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«)ï¼
+		<li> af.Ez():	Zè»¸åŸºåº•ãƒ™ã‚¯ãƒˆãƒ«ï¼(3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«)ï¼
+		<li> af.Trn():	å¹³è¡Œç§»å‹•éƒ¨åˆ†ï¼(3æ¬¡å…ƒãƒ™ã‚¯ãƒˆãƒ«)ï¼
+		<li> af.Rot():	å›è»¢å¤‰æ›éƒ¨åˆ†ï¼(3Ã—ï¼“è¡Œåˆ—)ï¼
 	</ul>
 	@!EN
 	You can extract some portion of the Affine matrix as:
@@ -99,61 +99,61 @@ void main(){
 		<li> af.Ex():	base vector for x axis (3 dimensional vector)
 		<li> af.Ey():	base vector for y axis (3 dimensional vector)
 		<li> af.Ez():	base vector for z axis (3 dimensional vector)
-		<li> af.Trn():	portion of translationD(3 dimensional vector)
-		<li> af.Rot():	portion of rotationD(3x3 matrix)
+		<li> af.Trn():	portion of translationï¼(3 dimensional vector)
+		<li> af.Rot():	portion of rotationï¼(3x3 matrix)
 	</ul>
 	@!*
-	@!JA •”•ª‚Ö‚Ì‘ã“ü‚È‚Ç‚à‚Å‚«‚Ü‚·D
+	@!JA éƒ¨åˆ†ã¸ã®ä»£å…¥ãªã©ã‚‚ã§ãã¾ã™ï¼
 	@!EN You can assign portion of affine matrx.
 	@!*
 	\verbatim
 	TAffine<float> af;
 	af.Pos() = Vec3f(10,0,0);
 	af.Rot() = TAffine<float>::Rot(Rad(30), 'x').Rot() * af.Rot();\endverbatim
-	@!JA ƒxƒNƒgƒ‹‚ÍŸ‚Ì‚æ‚¤‚Èƒƒ“ƒoŠÖ”‚ğ‚¿‚Ü‚·D
+	@!JA ãƒ™ã‚¯ãƒˆãƒ«ã¯æ¬¡ã®ã‚ˆã†ãªãƒ¡ãƒ³ãƒé–¢æ•°ã‚’æŒã¡ã¾ã™ï¼
 	@!EN a vector has following members.
 	@!*
 	<ul>
-	<li> unit(): @!JA Œü‚«‚ª“™‚µ‚¢’PˆÊƒxƒNƒgƒ‹‚ğ•Ô‚·D
+	<li> unit(): @!JA å‘ããŒç­‰ã—ã„å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¿”ã™ï¼
 				 @!EN return a unit vector.
 				 @!*
-	<li> norm(): @!JA ƒxƒNƒgƒ‹‚Ì‘å‚«‚³(ƒmƒ‹ƒ€)‚ğ•Ô‚·D
+	<li> norm(): @!JA ãƒ™ã‚¯ãƒˆãƒ«ã®å¤§ãã•(ãƒãƒ«ãƒ )ã‚’è¿”ã™ï¼
 				 @!EN return the size (norm) of a vector.
 				 @!*
 	</ul>
-	\subsection secAffineConstruct Affines—ñ‚Ì‰Šú‰» 
-	TAffines—ñ(Spr::TAffine)‚É‚Í•Ö—˜‚ÈƒRƒ“ƒXƒgƒ‰ƒNƒ^‚â‰Šú‰»ŠÖ”‚ğ—pˆÓ‚µ‚Ü‚µ‚½D
-	‚¢‚­‚Â‚©‚ğ‚±‚±‚ÅĞ‰î‚µ‚Ü‚·D
+	\subsection secAffineConstruct Affineè¡Œåˆ—ã®åˆæœŸåŒ– 
+	TAffineè¡Œåˆ—(Spr::TAffine)ã«ã¯ä¾¿åˆ©ãªã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚„åˆæœŸåŒ–é–¢æ•°ã‚’ç”¨æ„ã—ã¾ã—ãŸï¼
+	ã„ãã¤ã‹ã‚’ã“ã“ã§ç´¹ä»‹ã—ã¾ã™ï¼
 	<ul>
 		<li> Spr::TAffine::Trn (T px, T py, T pz):	
-				•½sˆÚ“®‚·‚és—ñ‚É‰Šú‰»DT‚ÍTAffine<T>‚ÌTDfloat‚âdouble‚È‚Ç‚Å—Ç‚¢D
+				å¹³è¡Œç§»å‹•ã™ã‚‹è¡Œåˆ—ã«åˆæœŸåŒ–ï¼Tã¯TAffine<T>ã®Tï¼floatã‚„doubleãªã©ã§è‰¯ã„ï¼
 		<li> Spr::TAffine::Rot(element_type th, char axis):
-				‰ñ“]s—ñ‚ğ•Ô‚·Dth‚Íƒ‰ƒWƒAƒ“Daxis‚ÍC'x', 'y', 'z'Delement_type‚ÍT‚Ì‚±‚ÆD
+				å›è»¢è¡Œåˆ—ã‚’è¿”ã™ï¼thã¯ãƒ©ã‚¸ã‚¢ãƒ³ï¼axisã¯ï¼Œ'x', 'y', 'z'ï¼element_typeã¯Tã®ã“ã¨ï¼
 		<li> Spr::TAffine::ProjectionD3D (TVec3 screen, TVec2 size, T front=1.0f, T back=10000.0f):
-				D3D—pË‰es—ñ‚Æ‚µ‚Ä‰Šú‰»D
+				D3Dç”¨å°„å½±è¡Œåˆ—ã¨ã—ã¦åˆæœŸåŒ–ï¼
 		<li> Spr::TAffine::ProjectionGL (TVec3 screen, TVec2 size, T front=1.0f, T back=10000.0f):
 		<br>
-			OpenGL—pË‰es—ñ‚Æ‚µ‚Ä‰Šú‰»(-Z‚ª‘O)D
+			OpenGLç”¨å°„å½±è¡Œåˆ—ã¨ã—ã¦åˆæœŸåŒ–(-ZãŒå‰)ï¼
 			<ul>
-				<li> screen  ƒJƒƒ‰‚©‚çŒ©‚½ƒrƒ…[ƒ|[ƒg‚Ì’†S‚ÌˆÊ’u
-				<li> size    ƒrƒ…[ƒ|[ƒg‚ÌƒTƒCƒY
-				<li> front   è‘O‚ÌƒNƒŠƒbƒsƒ“ƒO•½–Ê‚ÆƒJƒƒ‰‚Ì‹——£
-				<li> back    ‰œ‚ÌƒNƒŠƒbƒsƒ“ƒO•½–Ê‚ÆƒJƒƒ‰‚Ì‹——£
+				<li> screen  ã‚«ãƒ¡ãƒ©ã‹ã‚‰è¦‹ãŸãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®ä¸­å¿ƒã®ä½ç½®
+				<li> size    ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®ã‚µã‚¤ã‚º
+				<li> front   æ‰‹å‰ã®ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°å¹³é¢ã¨ã‚«ãƒ¡ãƒ©ã®è·é›¢
+				<li> back    å¥¥ã®ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°å¹³é¢ã¨ã‚«ãƒ¡ãƒ©ã®è·é›¢
 			</ul>
 		<li> Spr::TAffine::LookAtGL (TVec3 pos, TVec3 diry)
-			ˆÊ’u‚Í‚»‚Ì‚Ü‚Ü‚ÅCpos‚É-Ez(), diry ‚É Ey()‚ªŒü‚­‚æ‚¤‚ÈAffines—ñD
-			OpenGL‚ÌgluLookAt‚Æ“™‰¿D
+			ä½ç½®ã¯ãã®ã¾ã¾ã§ï¼Œposã«-Ez(), diry ã« Ey()ãŒå‘ãã‚ˆã†ãªAffineè¡Œåˆ—ï¼
+			OpenGLã®gluLookAtã¨ç­‰ä¾¡ï¼
 	</ul>
 	
-	\section thanks Ó«
-	LU•ª‰ğC‹ts—ñCƒKƒEƒXÁ‹–@‚È‚Ç‚Ìs—ñŒvZƒAƒ‹ƒSƒŠƒYƒ€‚ÍC<br>
-    uw‚bŒ¾Œê‚É‚æ‚éÅVƒAƒ‹ƒSƒŠƒYƒ€–“Tx‘Sƒ\[ƒXƒR[ƒhv<br>
+	\section thanks è¬è¾
+	LUåˆ†è§£ï¼Œé€†è¡Œåˆ—ï¼Œã‚¬ã‚¦ã‚¹æ¶ˆå»æ³•ãªã©ã®è¡Œåˆ—è¨ˆç®—ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ ã¯ï¼Œ<br>
+    ã€Œã€ï¼£è¨€èªã«ã‚ˆã‚‹æœ€æ–°ã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ äº‹å…¸ã€å…¨ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã€<br>
     ftp://ftp.matsusaka-u.ac.jp/pub/algorithms<br>
-	‰œ‘º °•F Haruhiko Okumura<br>
-	‚ğ‰ü•Ï‚µ‚Ä—¬—p‚³‚¹‚Ä‚¢‚½‚¾‚«‚Ü‚µ‚½D
-	©—R‚ÉƒR[ƒh‚ğg‚¦‚é‚æ‚¤ŒöŠJ‚µ‚Ä‚­‚¾‚³‚Á‚Ä‚ ‚è‚ª‚Æ‚¤‚²‚´‚¢‚Ü‚·D
+	å¥¥æ‘ æ™´å½¦ Haruhiko Okumura<br>
+	ã‚’æ”¹å¤‰ã—ã¦æµç”¨ã•ã›ã¦ã„ãŸã ãã¾ã—ãŸï¼
+	è‡ªç”±ã«ã‚³ãƒ¼ãƒ‰ã‚’ä½¿ãˆã‚‹ã‚ˆã†å…¬é–‹ã—ã¦ãã ã•ã£ã¦ã‚ã‚ŠãŒã¨ã†ã”ã–ã„ã¾ã™ï¼
 
-	@section secRefLA ƒŠƒtƒ@ƒŒƒ“ƒX
+	@section secRefLA ãƒªãƒ•ã‚¡ãƒ¬ãƒ³ã‚¹
 		@ref gpLinearAlgebra
 */
 //@{
@@ -165,9 +165,9 @@ void main(){
 #include "TinyMat.h"
 #include "VectorDebug.h"
 
-/**	@file Affine.h 2/3ŸŒ³ƒAƒtƒBƒ“s—ñ*/
+/**	@file Affine.h 2/3æ¬¡å…ƒã‚¢ãƒ•ã‚£ãƒ³è¡Œåˆ—*/
 
-#ifndef PTM_PACK	//	’P‘Ì‚Åg—p‚·‚éê‡‚ÍCnamespace ‚É“ü‚ê‚È‚¢
+#ifndef PTM_PACK	//	å˜ä½“ã§ä½¿ç”¨ã™ã‚‹å ´åˆã¯ï¼Œnamespace ã«å…¥ã‚Œãªã„
 namespace Spr {
 #endif
 
@@ -175,14 +175,14 @@ namespace Spr {
 #ifdef __BORLANDC__
 #define M_PI 3.14159265358979323846
 #else
-///	‰~ü—¦ƒÎ
+///	å††å‘¨ç‡Ï€
 const double M_PI = 3.14159265358979323846;
 #endif
 
 #undef abs
 #ifdef __BORLANDC__
-/*	â‘Î’lDBCB6‚ªˆá‚¤ŠÖ”‚ğƒŠƒ“ƒN‚µ‚Ä‚µ‚Ü‚¤(‚½‚Ô‚ñƒoƒO)‚Ì‚ÅCtemplate ‚Íg—p‚µ‚Ä‚¢‚È‚¢
-	std::abs ‚Æ‚Ô‚Â‚©‚é‚½‚ß‚¾‚Æv‚í‚ê‚éD	*/
+/*	çµ¶å¯¾å€¤ï¼BCB6ãŒé•ã†é–¢æ•°ã‚’ãƒªãƒ³ã‚¯ã—ã¦ã—ã¾ã†(ãŸã¶ã‚“ãƒã‚°)ã®ã§ï¼Œtemplate ã¯ä½¿ç”¨ã—ã¦ã„ãªã„
+	std::abs ã¨ã¶ã¤ã‹ã‚‹ãŸã‚ã ã¨æ€ã‚ã‚Œã‚‹ï¼	*/
 #define DEF_ABS_FUNC(T)		inline T abs(T t){ return t > T()  ?  t  :  -t; }
 DEF_ABS_FUNC(float)
 DEF_ABS_FUNC(double)
@@ -194,7 +194,7 @@ template <class T> T abs(T t){ return t > T()  ?  t  :  -t; }
 #endif
 
 #undef sign
-///	•„†(³‚È‚ç1, •‰‚È‚ç -1 ‚ğ•Ô‚·)
+///	ç¬¦å·(æ­£ãªã‚‰1, è² ãªã‚‰ -1 ã‚’è¿”ã™)
 template <class T> T sign(T t){
 	return t > T()  ?  T(1)  :  T(-1);
 }
@@ -202,38 +202,38 @@ template <class T> T sign(T t){
 #if _MSC_VER < 12
 
 #undef min
-/// ¬‚³‚¢•û‚ğ•Ô‚·
+/// å°ã•ã„æ–¹ã‚’è¿”ã™
 template <class T> T min(T a, T b){return a < b ? a : b;}
 
 #undef max
-/// ‘å‚«‚¢•û‚ğ•Ô‚·
+/// å¤§ãã„æ–¹ã‚’è¿”ã™
 template <class T> T max(T a, T b){return a > b ? a : b;}
 
 #endif
 
-/// •½‹Ï‚ğ‚Æ‚é
+/// å¹³å‡ã‚’ã¨ã‚‹
 template <class T> T ave(T a, T b){return T(0.5 * (a + b));}
 
-///	“x‚ğƒ‰ƒWƒAƒ“‚É•ÏŠ·
+///	åº¦ã‚’ãƒ©ã‚¸ã‚¢ãƒ³ã«å¤‰æ›
 inline double Rad(double deg){
 	return ((double)deg/360*2*M_PI);
 }
 inline float Radf(double deg){
 	return (float)((double)deg/360*2*M_PI);
 }
-///	ƒ‰ƒWƒAƒ“‚ğ“x‚É•ÏŠ·
+///	ãƒ©ã‚¸ã‚¢ãƒ³ã‚’åº¦ã«å¤‰æ›
 inline double Deg(double rad){
 	return (rad/(2*M_PI)) * 360;
 }
 inline float Degf(double rad){
 	return (float)(rad/(2*M_PI)) * 360;
 }
-///	2æ
+///	2ä¹—
 template <class SC>
 inline SC Square(SC x){
 	return x*x;
 }
-///	2x2s—ñ‚Ìs—ñ®
+///	2x2è¡Œåˆ—ã®è¡Œåˆ—å¼
 template <class SC>
 inline SC Det2(SC a, SC b, SC c, SC d){
 	return ((a)*(d) - (b)*(c));
@@ -242,8 +242,8 @@ inline SC Det2(SC a, SC b, SC c, SC d){
 //-----------------------------------------------------------------------------
 //	TAffine2
 
-/**	TAffine2s—ñ(‰ñ“],Šg‘å,•½sˆÚ“®‚ğ•\‚·)s—ñ.
-	ŠT—v‚ÍC\ref pgAffine QÆD
+/**	TAffine2è¡Œåˆ—(å›è»¢,æ‹¡å¤§,å¹³è¡Œç§»å‹•ã‚’è¡¨ã™)è¡Œåˆ—.
+	æ¦‚è¦ã¯ï¼Œ\ref pgAffine å‚ç…§ï¼
 */
 template <class T>
 class TAffine2:public PTM::TMatrixBase<3,3,
@@ -251,7 +251,7 @@ class TAffine2:public PTM::TMatrixBase<3,3,
 public:
 	typedef PTM::TMatrixDescCol< TAffine2<T>, PTM::TMatrixRow<3,3,T>, 3,3,3,T> desc;
 	typedef PTM::TMatrixBase<3,3,desc> base_type;
-	///	Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹` @see ::DEF_MATRIX_BASIC_MEMBER
+	///	åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾© @see ::DEF_MATRIX_BASIC_MEMBER
 	DEF_MATRIX_BASIC_MEMBER(TAffine2);
 	union{
 		struct{
@@ -261,11 +261,11 @@ public:
 		};
 		T data[3][3];
 	};
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i, size_t j){ return data[j][i]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[j][i]; }
 	
-	/**@name	Šî’êƒxƒNƒgƒ‹‚Ö‚ÌƒAƒNƒZƒX	*/
+	/**@name	åŸºåº•ãƒ™ã‚¯ãƒˆãƒ«ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹	*/
 	//@{
 	/// 
 	TVec2<element_type>& Ex(){
@@ -297,7 +297,7 @@ public:
 	const TVec2<element_type>& Pos() const { return Trn(); }
 	//@}
 
-	/**@name	—v‘f‚Ö‚ÌƒAƒNƒZƒX	*/
+	/**@name	è¦ç´ ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹	*/
 	//@{
 	/// 
 	element_type& ExX() {return Ex().X();}
@@ -311,50 +311,50 @@ public:
 	element_type& TrnX() {return Trn().X();}
 	/// 
 	element_type& TrnY() {return Trn().Y();}
-	///	TrnX()‚Ì•Ê–¼
+	///	TrnX()ã®åˆ¥å
 	element_type& PosX() {return Trn().X();}
-	///	TrnY()‚Ì•Ê–¼
+	///	TrnY()ã®åˆ¥å
 	element_type& PosY() {return Trn().Y();}
 	//@}
 
-	///	‰ñ“]Šg‘å•ÏŠ·•”‚ğæ‚èo‚·.
+	///	å›è»¢æ‹¡å¤§å¤‰æ›éƒ¨ã‚’å–ã‚Šå‡ºã™.
 	PTM::TSubMatrixCol<2,2, desc>& Rot() { return sub_matrix(0,0,PTM::TSubMatrixCol<2,2, desc>()); }
-	///	‰ñ“]Šg‘å•ÏŠ·•”‚ğæ‚èo‚· (const”Å).
+	///	å›è»¢æ‹¡å¤§å¤‰æ›éƒ¨ã‚’å–ã‚Šå‡ºã™ (constç‰ˆ).
 	const PTM::TSubMatrixCol<2,2, desc>& Rot() const { return sub_matrix(0,0,PTM::TSubMatrixCol<2,2, desc>()); }
 	
-	/**@name	‰Šú‰»‚Æ\’z	*/
+	/**@name	åˆæœŸåŒ–ã¨æ§‹ç¯‰	*/
 	//@{
-	///	’PˆÊs—ñ
+	///	å˜ä½è¡Œåˆ—
 	static TAffine2<T> Unit(){
 		TAffine2<T> y;
 		PTM::init_unitize(y);
 		return y;
 	}
-	///	•½sˆÚ“®
+	///	å¹³è¡Œç§»å‹•
 	static TAffine2<T> Trn(element_type px, element_type py){
 		TAffine2<T> y;
 		y.Trn().X() = px;
 		y.Trn().Y() = py;
 		return y;
 	}
-	///	‰ñ“]C‚È‚º‚©ˆø”‚ª‚Ğ‚Æ‚Â‚¾‚ÆVC.net‚ÅƒGƒ‰[‚É‚È‚éD
+	///	å›è»¢ï¼Œãªãœã‹å¼•æ•°ãŒã²ã¨ã¤ã ã¨VC.netã§ã‚¨ãƒ©ãƒ¼ã«ãªã‚‹ï¼
 	static TAffine2<T> Rot(element_type th, int d=0){
 		TAffine2 y;
 		PTM::init_rot(y.Rot(), th);
 		return y;
 	}
-	/// Šg‘å
+	/// æ‹¡å¤§
 	static TAffine2<T> Scale(element_type sx, element_type sy){
 		TAffine2<T> y;
 		y.item(0, 0) = sx; y.item(1, 1) = sy;
 		return y;
 	}
-	///ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	void set_default(){PTM::init_unitize(*this);}
 	//@}
 };
 
-///	TAffine2‚ÆƒxƒNƒgƒ‹‚ÌŠ|‚¯Z
+///	TAffine2ã¨ãƒ™ã‚¯ãƒˆãƒ«ã®æ›ã‘ç®—
 template <class TD, class TV>
 TVec2<TV> operator * (const PTM::TMatrixBase<3,3, TD>& a, const TVec2<TV>& b){
 	TVec2<TV> r;
@@ -366,8 +366,8 @@ TVec2<TV> operator * (const PTM::TMatrixBase<3,3, TD>& a, const TVec2<TV>& b){
 
 //-----------------------------------------------------------------------------
 //	TAffine
-/**	TAffines—ñ(‰ñ“],Šg‘å,•½sˆÚ“®‚ğ•\‚·)s—ñ.
-	ŠT—v‚ÍC\ref pgAffine QÆD	*/
+/**	TAffineè¡Œåˆ—(å›è»¢,æ‹¡å¤§,å¹³è¡Œç§»å‹•ã‚’è¡¨ã™)è¡Œåˆ—.
+	æ¦‚è¦ã¯ï¼Œ\ref pgAffine å‚ç…§ï¼	*/
 
 template <class T>
 class TAffine:public PTM::TMatrixBase<4,4,
@@ -375,7 +375,7 @@ class TAffine:public PTM::TMatrixBase<4,4,
 public:
 	typedef PTM::TMatrixDescCol< TAffine<T>, PTM::TMatrixRow<4,4,T>, 4,4,4,T> desc;
 	typedef PTM::TMatrixBase<4,4,desc> base_type;
-	/**	Œp³‚³‚ê‚È‚¢Šî–{“I‚Èƒƒ“ƒo‚Ì’è‹`.
+	/**	ç¶™æ‰¿ã•ã‚Œãªã„åŸºæœ¬çš„ãªãƒ¡ãƒ³ãƒã®å®šç¾©.
 		@see ::DEF_MATRIX_BASIC_MEMBER	*/
 	DEF_MATRIX_BASIC_MEMBER(TAffine);
 	union{
@@ -387,11 +387,11 @@ public:
 		};
 		T data[4][4];
 	};
-	///	—v‘f‚ÌƒAƒNƒZƒX
+	///	è¦ç´ ã®ã‚¢ã‚¯ã‚»ã‚¹
 	element_type& item_impl(size_t i, size_t j){ return data[j][i]; }
 	const element_type& item_impl(size_t i, size_t j) const { return data[j][i]; }
 
-	/**@name	Šî’êƒxƒNƒgƒ‹‚Ö‚ÌƒAƒNƒZƒX	*/
+	/**@name	åŸºåº•ãƒ™ã‚¯ãƒˆãƒ«ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹	*/
 	//@{
 	/// 
 	TVec3<element_type>& Ex() { return (TVec3<element_type>&)this->col(0); }
@@ -409,13 +409,13 @@ public:
 	TVec3<element_type>& Trn() { return (TVec3<element_type>&)this->col(3); }
 	/// 
 	const TVec3<element_type>& Trn() const { return (TVec3<element_type>&)this->col(3); }
-	///	•½sˆÚ“®¬•ª(Trn()‚Ì•Ê–¼)
+	///	å¹³è¡Œç§»å‹•æˆåˆ†(Trn()ã®åˆ¥å)
 	TVec3<element_type>& Pos() {return Trn();}
-	///	•½sˆÚ“®¬•ª(Trn()‚Ì•Ê–¼,const ”Å)
+	///	å¹³è¡Œç§»å‹•æˆåˆ†(Trn()ã®åˆ¥å,const ç‰ˆ)
 	const TVec3<element_type>& Pos() const {return Trn();}
 	//@}
 
-	/**@name	—v‘f‚Ö‚ÌƒAƒNƒZƒX	*/
+	/**@name	è¦ç´ ã¸ã®ã‚¢ã‚¯ã‚»ã‚¹	*/
 	//@{
 	/// 
 	element_type& ExX() {return Ex().X();}
@@ -453,13 +453,13 @@ public:
 	/// 
 	element_type& TrnZ() {return Trn().Z();}
 	const element_type& TrnZ() const {return Trn().Z();}
-	///	TrnX()‚Ì•Ê–¼
+	///	TrnX()ã®åˆ¥å
 	element_type& PosX() {return TrnX();}
 	const element_type& PosX() const {return TrnX();}
-	///	TrnY()‚Ì•Ê–¼
+	///	TrnY()ã®åˆ¥å
 	element_type& PosY() {return TrnY();}
 	const element_type& PosY() const {return TrnY();}
-	///	TrnZ()‚Ì•Ê–¼
+	///	TrnZ()ã®åˆ¥å
 	element_type& PosZ() {return TrnZ();}
 	const element_type& PosZ() const {return TrnZ();}
 	///
@@ -479,19 +479,19 @@ public:
 	const element_type& PosW() const {return this->item(3,3);}
 	//@}
 
-	///	‰ñ“]Šg‘å•ÏŠ·•”‚Ö‚ÌQÆ‚ğ•Ô‚·.
+	///	å›è»¢æ‹¡å¤§å¤‰æ›éƒ¨ã¸ã®å‚ç…§ã‚’è¿”ã™.
 	PTM::TSubMatrixCol<3,3, desc>& Rot(){ return this->sub_matrix(PTM::TSubMatrixDim<0,0,3,3>()); }
-	///	‰ñ“]Šg‘å•ÏŠ·•”‚Ö‚ÌQÆ‚ğ•Ô‚· (const”Å).
+	///	å›è»¢æ‹¡å¤§å¤‰æ›éƒ¨ã¸ã®å‚ç…§ã‚’è¿”ã™ (constç‰ˆ).
 	const PTM::TSubMatrixCol<3,3, desc>& Rot() const { return this->sub_matrix(PTM::TSubMatrixDim<0,0,3,3>()); }
 
-	/**@name	‰Šú‰»‚Æ\’z	*/
-	///	’PˆÊs—ñ
+	/**@name	åˆæœŸåŒ–ã¨æ§‹ç¯‰	*/
+	///	å˜ä½è¡Œåˆ—
 	static TAffine<T> Unit(){
 		TAffine<T> y;
 		PTM::init_unitize(y);
 		return y;
 	}
-	///	•½sˆÚ“®
+	///	å¹³è¡Œç§»å‹•
 	static TAffine<T> Trn(element_type px, element_type py, element_type pz){
 		TAffine<T> y;
 		y.Trn().X() = px;
@@ -499,7 +499,7 @@ public:
 		y.Trn().Z() = pz;
 		return y;
 	}
-	///	x/y/z²‚Ü‚í‚è‰ñ“]
+	///	x/y/zè»¸ã¾ã‚ã‚Šå›è»¢
 	static TAffine<T> Rot(element_type th, char axis)
 	{
 		TAffine<T> y;
@@ -511,7 +511,7 @@ public:
 #endif
 		return y;
 	}
-	/**	”CˆÓ²‚Ü‚í‚è‰ñ“]
+	/**	ä»»æ„è»¸ã¾ã‚ã‚Šå›è»¢
 \verbatim
 		+																	   +
 		|u^2+(1-u^2)cos(th)      uv(1-cos(th))-wsin(th)  wu(1-cos(th))+vsin(th)|
@@ -529,17 +529,17 @@ public:
 		y.Rot() = r;
 		return y;
 	}
-	/// Šg‘å
+	/// æ‹¡å¤§
 	static TAffine<T> Scale(element_type sx, element_type sy, element_type sz){
 		TAffine<T> y;
 		y.item(0, 0) = sx; y.item(1, 1) = sy; y.item(2, 2) = sz;
 		return y;
 	}
-	/**	OpenGL‚ÌË‰es—ñ‚Æ‚µ‚Ä‰Šú‰»
-		@param screen	ƒJƒƒ‰‚©‚çŒ©‚½ƒrƒ…[ƒ|[ƒg‚Ì’†S‚ÌˆÊ’u
-		@param size		ƒrƒ…[ƒ|[ƒg‚ÌƒTƒCƒY
-		@param front	è‘O‚ÌƒNƒŠƒbƒsƒ“ƒO•½–Ê‚ÆƒJƒƒ‰‚Ì‹——£
-		@param back		‰œ‚ÌƒNƒŠƒbƒsƒ“ƒO•½–Ê‚ÆƒJƒƒ‰‚Ì‹——£	*/
+	/**	OpenGLã®å°„å½±è¡Œåˆ—ã¨ã—ã¦åˆæœŸåŒ–
+		@param screen	ã‚«ãƒ¡ãƒ©ã‹ã‚‰è¦‹ãŸãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®ä¸­å¿ƒã®ä½ç½®
+		@param size		ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®ã‚µã‚¤ã‚º
+		@param front	æ‰‹å‰ã®ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°å¹³é¢ã¨ã‚«ãƒ¡ãƒ©ã®è·é›¢
+		@param back		å¥¥ã®ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°å¹³é¢ã¨ã‚«ãƒ¡ãƒ©ã®è·é›¢	*/
 	template <class BUFS, class BUFZ>
 	static TAffine<T> ProjectionGL(
 		const PTM::TVectorBase<3, BUFS>& screen,
@@ -550,11 +550,11 @@ public:
 		PTM::init_projection_gl(y, screen, size, front, back);
 		return y;
 	}
-	/**	Direct3D‚ÌË‰es—ñ‚Æ‚µ‚Ä‰Šú‰»
-		@param screen	ƒJƒƒ‰‚©‚çŒ©‚½ƒrƒ…[ƒ|[ƒg‚Ì’†S‚ÌˆÊ’u
-		@param size		ƒrƒ…[ƒ|[ƒg‚ÌƒTƒCƒY
-		@param front	è‘O‚ÌƒNƒŠƒbƒsƒ“ƒO•½–Ê‚ÆƒJƒƒ‰‚Ì‹——£
-		@param back		‰œ‚ÌƒNƒŠƒbƒsƒ“ƒO•½–Ê‚ÆƒJƒƒ‰‚Ì‹——£	*/
+	/**	Direct3Dã®å°„å½±è¡Œåˆ—ã¨ã—ã¦åˆæœŸåŒ–
+		@param screen	ã‚«ãƒ¡ãƒ©ã‹ã‚‰è¦‹ãŸãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®ä¸­å¿ƒã®ä½ç½®
+		@param size		ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®ã‚µã‚¤ã‚º
+		@param front	æ‰‹å‰ã®ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°å¹³é¢ã¨ã‚«ãƒ¡ãƒ©ã®è·é›¢
+		@param back		å¥¥ã®ã‚¯ãƒªãƒƒãƒ”ãƒ³ã‚°å¹³é¢ã¨ã‚«ãƒ¡ãƒ©ã®è·é›¢	*/
 	template <class BUFS, class BUFZ>
 	static TAffine<T> ProjectionD3D(const PTM::TVectorBase<3, BUFS>& screen,
 	const PTM::TVectorBase<2, BUFZ>& size,
@@ -565,8 +565,8 @@ public:
 		return y;
 	}
 
-	/** OpenGL‚Ì’¼ŒğË‰e•ÏŠ·
-		@param vpSize	ƒrƒ…[ƒ|[ƒg‚ÌƒTƒCƒY
+	/** OpenGLã®ç›´äº¤å°„å½±å¤‰æ›
+		@param vpSize	ãƒ“ãƒ¥ãƒ¼ãƒãƒ¼ãƒˆã®ã‚µã‚¤ã‚º
 	 */
 	template <class BUFS>
 	static TAffine<T> OrthoGL(const PTM::TVectorBase<2,BUFS>& vpSize){
@@ -575,20 +575,20 @@ public:
 		return y;
 	}
 
-	/* obsolete. ƒfƒtƒHƒ‹ƒgˆø”‚É•Ï‚¦‚Ü‚µ‚½ tazz
+	/* obsolete. ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå¼•æ•°ã«å¤‰ãˆã¾ã—ãŸ tazz
 	template <class BUF>
 	void LookAt(const PTM::TVectorBase<3, BUF>& targetPos)
 	{
 		PTM::init_look_at(*this, targetPos);
 	}
 	*/
-	/**	’‹s—ñ‚Æ‚µ‚Ä‰Šú‰»
-		@param targetPos ’‹“_‚ÌˆÊ’u
-		@param upDir ‚™Œü‚«ƒxƒNƒgƒ‹
-		Affines—ñ‚ÌˆÊ’u‚Í‚»‚Ì‚Ü‚Ü‚ÉCEz()‚ªtargetPos‚ÖŒü‚«CEy()‚ªupDir‚ÖŒü‚­‚æ‚¤‚ÉŒX‚«‚ğİ’è‚·‚éD
-		ˆÊ’u‚ÍTrn() (Pos())‚Å—\‚ßİ’è‚·‚éD
-		// NOTE: ¡‚Ü‚Å‚ÌÀ‘•‚Å‚ÍupDir‚ªˆÊ’uƒxƒNƒgƒ‹‚Æ‚µ‚ÄÀ‘•‚³‚ê‚Ä‚¢‚Ü‚µ‚½‚ªCOpenGL‚Ìd—l‚É‡‚í‚¹‚é‚½‚ß
-		// •ûŒüƒxƒNƒgƒ‹‚Æ‚µ‚Ü‚µ‚½DŠù‘¶‚ÌƒR[ƒh‚Í‰e‹¿‚ğó‚¯‚é‰Â”\«‚ª‚ ‚è‚Ü‚·D tazz 09/05/29
+	/**	æ³¨è¦–è¡Œåˆ—ã¨ã—ã¦åˆæœŸåŒ–
+		@param targetPos æ³¨è¦–ç‚¹ã®ä½ç½®
+		@param upDir ï½™å‘ããƒ™ã‚¯ãƒˆãƒ«
+		Affineè¡Œåˆ—ã®ä½ç½®ã¯ãã®ã¾ã¾ã«ï¼ŒEz()ãŒtargetPosã¸å‘ãï¼ŒEy()ãŒupDirã¸å‘ãã‚ˆã†ã«å‚¾ãã‚’è¨­å®šã™ã‚‹ï¼
+		ä½ç½®ã¯Trn() (Pos())ã§äºˆã‚è¨­å®šã™ã‚‹ï¼
+		// NOTE: ä»Šã¾ã§ã®å®Ÿè£…ã§ã¯upDirãŒä½ç½®ãƒ™ã‚¯ãƒˆãƒ«ã¨ã—ã¦å®Ÿè£…ã•ã‚Œã¦ã„ã¾ã—ãŸãŒï¼ŒOpenGLã®ä»•æ§˜ã«åˆã‚ã›ã‚‹ãŸã‚
+		// æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã¨ã—ã¾ã—ãŸï¼æ—¢å­˜ã®ã‚³ãƒ¼ãƒ‰ã¯å½±éŸ¿ã‚’å—ã‘ã‚‹å¯èƒ½æ€§ãŒã‚ã‚Šã¾ã™ï¼ tazz 09/05/29
 	*/
 	template <class BUF>
 	void LookAt(const PTM::TVectorBase<3, BUF>& targetPos,
@@ -603,12 +603,12 @@ public:
 		PTM::init_look_at_gl(*this, targetPos);
 	}
 	*/
-	/** ’‹s—ñ‚Æ‚µ‚Ä‰Šú‰»
-		@param targetPos ’‹“_‚ÌˆÊ’u
-		@param upDir ‚™Œü‚«ƒxƒNƒgƒ‹
-		Affines—ñ‚ÌˆÊ’u‚Í‚»‚Ì‚Ü‚Ü‚ÉC-Ez()‚ªtargetPos‚ÖŒü‚«CEy()‚ªupDir‚ÖŒü‚­‚æ‚¤‚ÉŒX‚«‚ğİ’è‚·‚éD
-		ˆÊ’u‚ÍTrn() (Pos())‚Å—\‚ßİ’è‚·‚éD
-		// NOTE: ã‚Æ“¯—l‚Ì’ˆÓD
+	/** æ³¨è¦–è¡Œåˆ—ã¨ã—ã¦åˆæœŸåŒ–
+		@param targetPos æ³¨è¦–ç‚¹ã®ä½ç½®
+		@param upDir ï½™å‘ããƒ™ã‚¯ãƒˆãƒ«
+		Affineè¡Œåˆ—ã®ä½ç½®ã¯ãã®ã¾ã¾ã«ï¼Œ-Ez()ãŒtargetPosã¸å‘ãï¼ŒEy()ãŒupDirã¸å‘ãã‚ˆã†ã«å‚¾ãã‚’è¨­å®šã™ã‚‹ï¼
+		ä½ç½®ã¯Trn() (Pos())ã§äºˆã‚è¨­å®šã™ã‚‹ï¼
+		// NOTE: ä¸Šã¨åŒæ§˜ã®æ³¨æ„ï¼
 	 */
 	template <class BUF>
 	void LookAtGL(const PTM::TVectorBase<3, BUF>& targetPos,
@@ -616,7 +616,7 @@ public:
 	{
 		PTM::init_look_at_gl(*this, targetPos, upDir);
 	}
-	/// ³‹K’¼Œğ‰»
+	/// æ­£è¦ç›´äº¤åŒ–
 	void Orthonormalization(){
 		this->Ex() /= this->Ex().norm();
 		this->Ey() /= this->Ey().norm();
@@ -641,12 +641,12 @@ public:
 		}
 	}
 	
-	///ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	///ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	void set_default(){PTM::init_unitize(*this);}
 };
 
-/**	TAffine‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^’è‹`‚Ìƒ}ƒNƒDƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÍŒp³‚³‚ê‚È‚¢‚ªC
-	‚±‚ê‚ğDefine‚·‚é‚±‚Æ‚ÅCƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğˆø‚«Œp‚®‚±‚Æ‚ª‚Å‚«‚éD	*/
+/**	TAffineã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿å®šç¾©ã®ãƒã‚¯ãƒ­ï¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¯ç¶™æ‰¿ã•ã‚Œãªã„ãŒï¼Œ
+	ã“ã‚Œã‚’Defineã™ã‚‹ã“ã¨ã§ï¼Œã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’å¼•ãç¶™ãã“ã¨ãŒã§ãã‚‹ï¼	*/
 #define DEF_TAFFINE_CONSTRUCTORS(TAffine)												\
 	TAffine(){*this=Unit();}															\
 	TAffine(element_type px, element_type py, element_type pz){*this=Trn(px, py, pz);}	\
@@ -682,8 +682,8 @@ public:
 			item(0, 3) = posi.X(); item(1, 3) = posi.Y(); item(2, 3) = posi.Z();		\
 			}
 
-/**	TAffine2‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^’è‹`‚Ìƒ}ƒNƒDƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÍŒp³‚³‚ê‚È‚¢‚ªC
-	‚±‚ê‚ğDefine‚·‚é‚±‚Æ‚ÅCƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğˆø‚«Œp‚®‚±‚Æ‚ª‚Å‚«‚éD	*/
+/**	TAffine2ã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿å®šç¾©ã®ãƒã‚¯ãƒ­ï¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¯ç¶™æ‰¿ã•ã‚Œãªã„ãŒï¼Œ
+	ã“ã‚Œã‚’Defineã™ã‚‹ã“ã¨ã§ï¼Œã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’å¼•ãç¶™ãã“ã¨ãŒã§ãã‚‹ï¼	*/
 #define DEF_TAFFINE_CONSTRUCTORS2(TAffine)												\
 	TAffine(element_type th, char axis) {												\
 		*this=Rot(th, axis);															\
@@ -716,7 +716,7 @@ public:
 
 	
 	
-	///	TAffine‚ÆƒxƒNƒgƒ‹‚ÌŠ|‚¯Z
+	///	TAffineã¨ãƒ™ã‚¯ãƒˆãƒ«ã®æ›ã‘ç®—
 template <class TD, class TV>
 TVec3<TV> operator * (const PTM::TMatrixBase<4,4, TD>& a, const TVec3<TV>& b){
 	TVec3<TV> r;
@@ -729,19 +729,19 @@ TVec3<TV> operator * (const PTM::TMatrixBase<4,4, TD>& a, const TVec3<TV>& b){
  #pragma warning (default: 4700)
 #endif
 
-///	float”Å2ŸŒ³ƒAƒtƒBƒ“s—ñ.
+///	floatç‰ˆ2æ¬¡å…ƒã‚¢ãƒ•ã‚£ãƒ³è¡Œåˆ—.
 typedef TAffine2<float> Affine2f;
-///	double”Å2ŸŒ³ƒAƒtƒBƒ“s—ñ.
+///	doubleç‰ˆ2æ¬¡å…ƒã‚¢ãƒ•ã‚£ãƒ³è¡Œåˆ—.
 typedef TAffine2<double> Affine2d;
-///	float”Å3ŸŒ³ƒAƒtƒBƒ“s—ñ.
+///	floatç‰ˆ3æ¬¡å…ƒã‚¢ãƒ•ã‚£ãƒ³è¡Œåˆ—.
 typedef TAffine<float> Affinef;
-///	double”Å3ŸŒ³ƒAƒtƒBƒ“s—ñ.
+///	doubleç‰ˆ3æ¬¡å…ƒã‚¢ãƒ•ã‚£ãƒ³è¡Œåˆ—.
 typedef TAffine<double> Affined;
 //@}
 //@}
 
 
-#ifndef PTM_PACK	//	’P‘Ì‚Åg—p‚·‚éê‡‚ÍCnamespace ‚É“ü‚ê‚È‚¢
+#ifndef PTM_PACK	//	å˜ä½“ã§ä½¿ç”¨ã™ã‚‹å ´åˆã¯ï¼Œnamespace ã«å…¥ã‚Œãªã„
 }	//	namespace Spr
 #endif
 

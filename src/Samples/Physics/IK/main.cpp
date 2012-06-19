@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,16 +8,16 @@
 /** \page pageIKSample
  Springhead2/src/Samples/IK/main.cpp
 
-\ref pagePhysics ‚Ì‹t‰^“®ŠwiIKj‹@”\‚Ìƒfƒ‚ƒvƒƒOƒ‰ƒ€B
+\ref pagePhysics ã®é€†é‹å‹•å­¦ï¼ˆIKï¼‰æ©Ÿèƒ½ã®ãƒ‡ãƒ¢ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã€‚
 
-\secntion secSpecIKSample d—l
-ƒA[ƒ€‚Ìæ’[„‘Ì‚Ì’†SˆÊ’u‚ª‚ªƒ|ƒCƒ“ƒ^i‹…‘Ìj‚ÌˆÊ’u‚É‚È‚é‚æ‚¤“’B‰^“®‚·‚éD
-‘æˆêE‘æ“ñŠÖß‚Æ‚à‚É‰Â“®ˆæ§ŒÀ‚ª‚©‚©‚Á‚Ä‚¢‚éD
-- ƒXƒy[ƒXƒL[‚ÅƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“ŠJnD
-- 'i'‚ğƒ^ƒCƒv‚·‚é‚Æƒ|ƒCƒ“ƒ^ˆÊ’u‚ªã‚É“®‚­D
-- 'k'‚ÅA‰º‚Ö
-- 'j'‚ÅA¶‚Ö
-- 'l'‚ÅA‰E‚Ö
+\secntion secSpecIKSample ä»•æ§˜
+ã‚¢ãƒ¼ãƒ ã®å…ˆç«¯å‰›ä½“ã®ä¸­å¿ƒä½ç½®ãŒãŒãƒã‚¤ãƒ³ã‚¿ï¼ˆçƒä½“ï¼‰ã®ä½ç½®ã«ãªã‚‹ã‚ˆã†åˆ°é”é‹å‹•ã™ã‚‹ï¼
+ç¬¬ä¸€ãƒ»ç¬¬äºŒé–¢ç¯€ã¨ã‚‚ã«å¯å‹•åŸŸåˆ¶é™ãŒã‹ã‹ã£ã¦ã„ã‚‹ï¼
+- ã‚¹ãƒšãƒ¼ã‚¹ã‚­ãƒ¼ã§ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³é–‹å§‹ï¼
+- 'i'ã‚’ã‚¿ã‚¤ãƒ—ã™ã‚‹ã¨ãƒã‚¤ãƒ³ã‚¿ä½ç½®ãŒä¸Šã«å‹•ãï¼
+- 'k'ã§ã€ä¸‹ã¸
+- 'j'ã§ã€å·¦ã¸
+- 'l'ã§ã€å³ã¸
 */
 
 #include "../../SampleApp.h"
@@ -28,14 +28,14 @@ using namespace Spr;
 using namespace std;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// ƒAƒvƒŠƒP[ƒVƒ‡ƒ“ƒNƒ‰ƒX
+// ã‚¢ãƒ—ãƒªã‚±ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹
 class IKSampleApp : public SampleApp{
 public:
-	/// ƒy[ƒWID
+	/// ãƒšãƒ¼ã‚¸ID
 	enum {
 		MENU_MAIN = MENU_SCENE,
 	};
-	/// ƒAƒNƒVƒ‡ƒ“ID
+	/// ã‚¢ã‚¯ã‚·ãƒ§ãƒ³ID
 	enum {
 		ID_RESET,
 		ID_UP,
@@ -65,7 +65,7 @@ public:
 	}
 	~IKSampleApp(){}
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	virtual void Init(int argc, char* argv[]) {
 		this->argc = argc;
 		this->argv = argv;
@@ -83,7 +83,7 @@ public:
 	PHSolidIf*         soTarget;
 	PHIKEndEffectorIf* ikeTarget;
 
-	// ƒV[ƒ“\’z
+	// ã‚·ãƒ¼ãƒ³æ§‹ç¯‰
 	virtual void BuildScene() {
 		PHSdkIf* phSdk = phScene->GetSdk();
 
@@ -209,10 +209,10 @@ public:
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char *argv[]) {
 	app.Init(argc, argv);

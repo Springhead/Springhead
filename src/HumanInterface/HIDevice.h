@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -18,30 +18,30 @@ namespace Spr {;
 
 class HIVirtualDevice;
 
-/// ƒfƒoƒCƒX‚ÌŠî–{ƒNƒ‰ƒX
+/// ãƒ‡ãƒã‚¤ã‚¹ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
 class SPR_DLL HIDevice : public NamedObject{
 public:
 	SPR_OBJECTDEF_ABST(HIDevice);
 };
 
-///	ÀƒfƒoƒCƒX‚ÌŠî–{ƒNƒ‰ƒXDISAƒJ[ƒh1–‡‚È‚Ç‚É‘Š“–‚·‚é.
+///	å®Ÿãƒ‡ãƒã‚¤ã‚¹ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ï¼ISAã‚«ãƒ¼ãƒ‰1æšãªã©ã«ç›¸å½“ã™ã‚‹.
 class SPR_DLL HIRealDevice: public HIDevice{
 public:
 	SPR_OBJECTDEF_ABST(HIRealDevice);
 	
-	/// ’ñ‹Ÿ‚·‚é‰¼‘zƒfƒoƒCƒX‚Ì”z—ñ
+	/// æä¾›ã™ã‚‹ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®é…åˆ—
 	std::vector< UTRef<HIVirtualDevice> >	dvPool;
 public:
-	///	‰Šú‰»‚Æ‰¼‘zƒfƒoƒCƒX‚Ì“o˜^BSDK‚É“o˜^‚·‚éÛ‚ÉŒÄ‚Î‚ê‚éB
+	///	åˆæœŸåŒ–ã¨ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ç™»éŒ²ã€‚SDKã«ç™»éŒ²ã™ã‚‹éš›ã«å‘¼ã°ã‚Œã‚‹ã€‚
 	virtual bool Init(){ return false; }
 
-	/// ‰¼‘zƒfƒoƒCƒX‚Ìì¬
+	/// ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®ä½œæˆ
 	virtual HIVirtualDeviceIf*	Rent(const IfInfo* ii, const char* name, int portNo);
-	/// ‰¼‘zƒfƒoƒCƒX‚Ì•Ô‹p
+	/// ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®è¿”å´
 	virtual bool Return(HIVirtualDeviceIf* dv);
-	///	ó‘Ô‚ÌXV
+	///	çŠ¶æ…‹ã®æ›´æ–°
 	virtual void Update(){}
-	///	ƒ_ƒ“ƒvo—Í
+	///	ãƒ€ãƒ³ãƒ—å‡ºåŠ›
 	//virtual void Print(std::ostream& o) const;
 
 	virtual bool		AddChildObject(ObjectIf* o);
@@ -50,13 +50,13 @@ public:
 };
 
 /*
-/// ƒEƒBƒ“ƒhƒE‚ÉŠÖ˜A•t‚¯‚ç‚ê‚éƒfƒoƒCƒX‚ÌŠî–{ƒNƒ‰ƒX
+/// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã«é–¢é€£ä»˜ã‘ã‚‰ã‚Œã‚‹ãƒ‡ãƒã‚¤ã‚¹ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹
 class DRWinDeviceBase : public HIRealDevice{
 public:
 	SPR_OBJECTDEF_NOIF(DRWinDeviceBase);
 
 public:
-	/// ƒR[ƒ‹ƒoƒbƒNŠÖ”‚Ì“o˜^
+	/// ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°ã®ç™»éŒ²
 	virtual void	RegisterCallback(){}
 };
 */
@@ -64,60 +64,60 @@ public:
 //----------------------------------------------------------------------------
 //	HIVirtualDevice
 
-///	‰¼‘zƒfƒoƒCƒX‚ÌŠî–{ƒNƒ‰ƒXDDA,ƒJƒEƒ“ƒ^‚È‚Ç‚Ì1ƒ`ƒƒƒ“ƒlƒ‹‚É‘Š“–‚·‚é.
+///	ä»®æƒ³ãƒ‡ãƒã‚¤ã‚¹ã®åŸºæœ¬ã‚¯ãƒ©ã‚¹ï¼DA,ã‚«ã‚¦ãƒ³ã‚¿ãªã©ã®1ãƒãƒ£ãƒ³ãƒãƒ«ã«ç›¸å½“ã™ã‚‹.
 class SPR_DLL HIVirtualDevice: public HIDevice{
 public:
 	SPR_OBJECTDEF_ABST(HIVirtualDevice);
 	friend class HIVirtualDevicePool;
 
-	/// g—p’†ƒtƒ‰ƒO
+	/// ä½¿ç”¨ä¸­ãƒ•ãƒ©ã‚°
 	bool used;
-	/// ƒ|[ƒg”Ô†
+	/// ãƒãƒ¼ãƒˆç•ªå·
 	int	portNo;
-	/// ÀƒfƒoƒCƒX‚Ö‚ÌQÆ
+	/// å®Ÿãƒ‡ãƒã‚¤ã‚¹ã¸ã®å‚ç…§
 	HIRealDevice*	realDevice;
 public:
 	HIVirtualDevice(HIRealDevice* dev, int ch = -1);
 	virtual ~HIVirtualDevice(){}
 
-	/// ƒfƒoƒCƒX–¼‚Ìİ’è
+	/// ãƒ‡ãƒã‚¤ã‚¹åã®è¨­å®š
 	void SetDeviceName();
-	/// g—p’†ƒtƒ‰ƒO
+	/// ä½¿ç”¨ä¸­ãƒ•ãƒ©ã‚°
 	bool IsUsed(){ return used; }
 	void SetUsed(bool b=true){ used = b; }
-	/// ƒ|[ƒg”Ô†
+	/// ãƒãƒ¼ãƒˆç•ªå·
 	int	GetPortNo() const { return portNo; }
-	///	ÀƒfƒoƒCƒX‚Ö‚Ìƒ|ƒCƒ“ƒ^
+	///	å®Ÿãƒ‡ãƒã‚¤ã‚¹ã¸ã®ãƒã‚¤ãƒ³ã‚¿
 	HIRealDeviceIf* GetRealDevice(){ return realDevice->Cast(); }
 	
-	///	ƒ_ƒ“ƒvo—Í
+	///	ãƒ€ãƒ³ãƒ—å‡ºåŠ›
 	//virtual void Print(std::ostream& o) const;
-	/// ƒfƒoƒCƒXƒ^ƒCƒv
+	/// ãƒ‡ãƒã‚¤ã‚¹ã‚¿ã‚¤ãƒ—
 	//virtual const char* GetDeviceType() const = 0;
-	/// ó‘Ô‚ÌXV
+	/// çŠ¶æ…‹ã®æ›´æ–°
 	virtual void Update(){}
 };
 
-///	“ü—Íƒ|[ƒg‚Ì1’[q‚ğ‚ ‚ç‚í‚·D
+///	å…¥åŠ›ãƒãƒ¼ãƒˆã®1ç«¯å­ã‚’ã‚ã‚‰ã‚ã™ï¼
 class SPR_DLL DVInputPort: public HIVirtualDevice, public DVPortEnum{
 public:
-	///	“ü—Íƒ|[ƒg‚Ì“dˆ³ƒŒƒxƒ‹(Hi:1, Lo:0) ‚ğ•Ô‚·D
+	///	å…¥åŠ›ãƒãƒ¼ãƒˆã®é›»åœ§ãƒ¬ãƒ™ãƒ«(Hi:1, Lo:0) ã‚’è¿”ã™ï¼
 	virtual int Get()=0;
 
-	///	ƒfƒoƒCƒX‚Ìí—Ş
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
 	//static const char* GetDeviceTypeStatic() { return "input port"; }
 	//virtual const char* GetDeviceType() const{ return GetDeviceTypeStatic(); }
 
 	DVInputPort(HIRealDevice* r, int c):HIVirtualDevice(r, c){}
 };
 
-///	o—Íƒ|[ƒg‚Ì1’[q‚ğ‚ ‚ç‚í‚·D
+///	å‡ºåŠ›ãƒãƒ¼ãƒˆã®1ç«¯å­ã‚’ã‚ã‚‰ã‚ã™ï¼
 class SPR_DLL DVOutputPort: public HIVirtualDevice, public DVPortEnum{
 public:
-	///	“ü—Íƒ|[ƒg‚Ì“dˆ³ƒŒƒxƒ‹(Hi:1, Lo:0) ‚ğ•Ô‚·D
+	///	å…¥åŠ›ãƒãƒ¼ãƒˆã®é›»åœ§ãƒ¬ãƒ™ãƒ«(Hi:1, Lo:0) ã‚’è¿”ã™ï¼
 	virtual void Set(int l)=0;
 
-	///	ƒfƒoƒCƒX‚Ìí—Ş
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
 	//static const char* GetDeviceTypeStatic() { return "output port"; }
 	//virtual const char* GetDeviceType() const{ return GetDeviceTypeStatic(); }
 
@@ -125,32 +125,32 @@ public:
 };
 
 
-///	PIO‚Ì1’[q‚ğ•\‚·D
+///	PIOã®1ç«¯å­ã‚’è¡¨ã™ï¼
 class SPR_DLL DVPio: public HIVirtualDevice, public DVPortEnum{
 public:
 	SPR_OBJECTDEF_ABST(DVPio);
-	///	ƒ|[ƒg‚ÌƒƒWƒbƒNƒŒƒxƒ‹‚Ì“ü—ÍBHi:true Lo:false
+	///	ãƒãƒ¼ãƒˆã®ãƒ­ã‚¸ãƒƒã‚¯ãƒ¬ãƒ™ãƒ«ã®å…¥åŠ›ã€‚Hi:true Lo:false
 	virtual int Get()=0;
-	///	ƒ|[ƒg‚ÌƒƒWƒbƒNƒŒƒxƒ‹‚Ìo—ÍBHi:true Lo:false
+	///	ãƒãƒ¼ãƒˆã®ãƒ­ã‚¸ãƒƒã‚¯ãƒ¬ãƒ™ãƒ«ã®å‡ºåŠ›ã€‚Hi:true Lo:false
 	virtual void Set(int l)=0;
 	
-	///	ƒfƒoƒCƒX‚Ìí—Ş
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
 	//static const char* GetDeviceTypeStatic() { return "PIO"; }
 	//virtual const char* GetDeviceType() const{ return GetDeviceTypeStatic(); }
 
 	DVPio(HIRealDevice* r, int c):HIVirtualDevice(r, c){}
 };
 
-///	ƒJƒEƒ“ƒ^‚Ì1ƒ`ƒƒƒ“ƒlƒ‹‚ğ•\‚·D
+///	ã‚«ã‚¦ãƒ³ã‚¿ã®1ãƒãƒ£ãƒ³ãƒãƒ«ã‚’è¡¨ã™ï¼
 class SPR_DLL DVCounter: public HIVirtualDevice{
 public:
 	SPR_OBJECTDEF_ABST(DVCounter);
 	
-	///	ƒJƒEƒ“ƒ^’l‚Ìİ’è
+	///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®è¨­å®š
 	virtual void Count(long count)=0;
-	///	ƒJƒEƒ“ƒ^’l‚Ì“Ç‚İo‚µ
+	///	ã‚«ã‚¦ãƒ³ã‚¿å€¤ã®èª­ã¿å‡ºã—
 	virtual long Count()=0;
-	///	ƒfƒoƒCƒX‚Ìí—Ş
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
 	//static const char* GetDeviceTypeStatic() { return "Counter"; }
 	//virtual const char* GetDeviceType() const{ return GetDeviceTypeStatic(); }
 
@@ -160,16 +160,16 @@ public:
 //----------------------------------------------------------------------------
 //	DVAd
 
-///	A/D‚Ì1ƒ`ƒƒƒ“ƒlƒ‹‚ğ•\‚·D
+///	A/Dã®1ãƒãƒ£ãƒ³ãƒãƒ«ã‚’è¡¨ã™ï¼
 class DVAd: public HIVirtualDevice{
 public:
 	SPR_OBJECTDEF_ABST(DVAd);
-	///	“ü—ÍƒfƒWƒ^ƒ‹’l‚Ìæ“¾
+	///	å…¥åŠ›ãƒ‡ã‚¸ã‚¿ãƒ«å€¤ã®å–å¾—
 	virtual int Digit()=0;
-	///	“ü—Í“dˆ³‚Ìæ“¾
+	///	å…¥åŠ›é›»åœ§ã®å–å¾—
 	virtual float Voltage()=0;
 	
-	///	ƒfƒoƒCƒX‚Ìí—Ş
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
 	//static const char* GetDeviceTypeStatic() { return "A/D"; }
 	//virtual const char* GetDeviceType() const{ return GetDeviceTypeStatic(); }
 
@@ -179,17 +179,17 @@ public:
 //----------------------------------------------------------------------------
 //	DVDa
 
-///	D/A‚Ì1ƒ`ƒƒƒ“ƒlƒ‹‚ğ•\‚·D
+///	D/Aã®1ãƒãƒ£ãƒ³ãƒãƒ«ã‚’è¡¨ã™ï¼
 class SPR_DLL DVDa: public HIVirtualDevice{
 public:
 	SPR_OBJECTDEF_ABST(DVDa);
 	
-	///	o—Í‚·‚éƒfƒWƒ^ƒ‹’l‚Ìİ’è
+	///	å‡ºåŠ›ã™ã‚‹ãƒ‡ã‚¸ã‚¿ãƒ«å€¤ã®è¨­å®š
 	virtual void Digit(int d)=0;
-	///	o—Í“dˆ³‚Ìİ’è
+	///	å‡ºåŠ›é›»åœ§ã®è¨­å®š
 	virtual void Voltage(float volt)=0;
 
-	///	ƒfƒoƒCƒX‚Ìí—Ş
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
 	//static const char* GetDeviceTypeStatic() { return "D/A"; }
 	//virtual const char* GetDeviceType() const{ return GetDeviceTypeStatic(); }
 
@@ -203,17 +203,17 @@ class SPR_DLL DVForce: public HIVirtualDevice{
 public:
 	SPR_OBJECTDEF_ABST(DVForce);
 
-	///	©—R“x‚Ìæ“¾
+	///	è‡ªç”±åº¦ã®å–å¾—
 	virtual int GetDOF() = 0;
-	///	—Í‚Ìæ“¾
+	///	åŠ›ã®å–å¾—
 	virtual float GetForce(int ch) = 0;
-	///	—Í‚Ìæ“¾
+	///	åŠ›ã®å–å¾—
 	virtual void GetForce3(Vec3f& f) {
 		f[0] = GetForce(0);
 		f[1] = GetForce(1);
 		f[2] = GetForce(2);
 	}
-	///	—Í‚Ìæ“¾
+	///	åŠ›ã®å–å¾—
 	virtual void GetForce6(Vec3f& f, Vec3f& t) {
 		f.X() = GetForce(0);
 		f.Y() = GetForce(1);
@@ -223,7 +223,7 @@ public:
 		t.Z() = GetForce(5);
 	}
 
-	///	ƒfƒoƒCƒX‚Ìí—Ş
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
 	//static const char* GetDeviceTypeStatic(){ return "Force"; }
 	//virtual const char* GetDeviceType() const{ return GetDeviceTypeStatic(); }
 
@@ -250,7 +250,7 @@ class SPR_DLL DVKeyMouse: public DVCallbackContainer<DVKeyMouseCallback>, public
 public:
 	SPR_OBJECTDEF_ABST(DVKeyMouse);
 public:
-	// “o˜^‚³‚ê‚Ä‚¢‚éƒnƒ“ƒhƒ‰‚ğŒÄ‚Ño‚·
+	// ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ãƒãƒ³ãƒ‰ãƒ©ã‚’å‘¼ã³å‡ºã™
 	virtual void OnMouse(int button, int state, int x, int y);
 	virtual void OnDoubleClick(int button, int x, int y);
 	virtual void OnMouseMove(int button, int x, int y, int zdelta);
@@ -259,7 +259,7 @@ public:
 	virtual int GetKeyState(int key){ return 0; }
 	virtual void GetMousePosition(int& x, int& y, int& time, int count=0){}
 
-	///	ƒfƒoƒCƒX‚Ìí—Ş
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
 	//static const char* GetDeviceTypeStatic() { return "KeyMouse"; }
 	//virtual const char* GetDeviceType() const{ return GetDeviceTypeStatic(); }
 
@@ -274,7 +274,7 @@ public:
 
 	int pollInterval;
 public:
-	// “o˜^‚³‚ê‚Ä‚¢‚éƒnƒ“ƒhƒ‰‚ğŒÄ‚Ño‚·
+	// ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ãƒãƒ³ãƒ‰ãƒ©ã‚’å‘¼ã³å‡ºã™
 	void OnUpdate(int buttonMask, int x, int y, int z);
 
 	virtual void SetPollInterval(int ms){}
@@ -286,15 +286,15 @@ public:
 };
 
 //-------------------------------------------------------------------------------------------------
-///	Œü‚«‚ğ•Ô‚·ƒfƒoƒCƒX
+///	å‘ãã‚’è¿”ã™ãƒ‡ãƒã‚¤ã‚¹
 class SPR_DLL DVOrientation: public HIVirtualDevice{
 public:
-	///	Œü‚«‚Ìæ“¾(‰ñ“]s—ñ‚Å‚ ‚ç‚í‚·)
+	///	å‘ãã®å–å¾—(å›è»¢è¡Œåˆ—ã§ã‚ã‚‰ã‚ã™)
 	virtual Vec3f GetEuler() = 0;
-	///	Œü‚«‚Ìæ“¾(‰ñ“]s—ñ‚Å‚ ‚ç‚í‚·)
+	///	å‘ãã®å–å¾—(å›è»¢è¡Œåˆ—ã§ã‚ã‚‰ã‚ã™)
 	virtual void GetMatrix(Matrix3f& ori) = 0;
 	
-	///	ƒfƒoƒCƒX‚Ìí—Ş
+	///	ãƒ‡ãƒã‚¤ã‚¹ã®ç¨®é¡
 	//static const char* GetDeviceTypeStatic() { return "Orientation"; }
 	//virtual const char* GetDeviceType() const{ return GetDeviceTypeStatic(); }
 

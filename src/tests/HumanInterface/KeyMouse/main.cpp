@@ -1,4 +1,4 @@
-#include <conio.h>
+ï»¿#include <conio.h>
 #include <Springhead.h>
 #include <HumanInterface/SprHIKeyMouse.h>
 #include <iomanip>
@@ -35,30 +35,30 @@ void _cdecl Disp(){
 }
 
 
-//	ƒƒCƒ“‚Ìˆ—
+//	ãƒ¡ã‚¤ãƒ³ã®å‡¦ç†
 void _cdecl Idle(){
-	//	‰Šú‰»ˆ—
+	//	åˆæœŸåŒ–å‡¦ç†
 	if (!OldWndProc){
-		//	PreviewMesssage()‚ðŒÄ‚Ño‚·‚½‚ß‚ÌƒvƒƒV[ƒWƒƒ‚Ì“ü‚ê‘Ö‚¦
-		//	hWnd‚ÌŽæ“¾
+		//	PreviewMesssage()ã‚’å‘¼ã³å‡ºã™ãŸã‚ã®ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã®å…¥ã‚Œæ›¿ãˆ
+		//	hWndã®å–å¾—
 		HWND hWnd = FindWindow(NULL, "KeyMouse Test");
-		// ƒEƒBƒ“ƒhƒEƒvƒƒV[ƒWƒƒ‚ð’u‚«Š·‚¦
+		// ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ãƒ—ãƒ­ã‚·ãƒ¼ã‚¸ãƒ£ã‚’ç½®ãæ›ãˆ
 		OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
 
-		//	KeyMouse‚ÆTrackball‚Ìì¬
+		//	KeyMouseã¨Trackballã®ä½œæˆ
 		HISdkIf::RegisterSdk();
 		sdk = HISdkIf::CreateSdk();
 		sdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
 
-		//	ŽÀƒfƒoƒCƒX‚ÌŽæ“¾
+		//	å®Ÿãƒ‡ãƒã‚¤ã‚¹ã®å–å¾—
 		win32KeyMouse = sdk->FindRealDevice(DRKeyMouseWin32If::GetIfInfoStatic())->Cast();
 		sdk->Print(DSTR);
 		trackball = sdk->CreateHumanInterface("HITrackball")->Cast();
 		trackball->SetKeyMouse(sdk->RentVirtualDevice("DVKeyMouse", NULL, (int)hWnd)->Cast());
 	}
 
-	//	ƒL[‚Ì“Ç‚Ýo‚µ‚È‚Ç
+	//	ã‚­ãƒ¼ã®èª­ã¿å‡ºã—ãªã©
 	if (trackball->GetKeyMouse()->GetKeyState('Q') & DVKeySt::PRESSED)
 		exit(0);
 	for(int i=0; i<200; ++i){

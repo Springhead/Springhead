@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -11,7 +11,7 @@
 #if (!defined SWIG) || (defined SWIG_OLDNODEHANDLER)
 
 #ifdef SWIG_OLDNODEHANDLER
-#define VECTOR_LENGTH(x)	[x]		///	SWIG‚É”z—ñ‚Ì’·‚³î•ñ‚ğ“n‚·
+#define VECTOR_LENGTH(x)	[x]		///	SWIGã«é…åˆ—ã®é•·ã•æƒ…å ±ã‚’æ¸¡ã™
 #else
 #define VECTOR_LENGTH(x)
 #endif
@@ -20,49 +20,49 @@
 namespace SprOldSpringhead{;
 using namespace Spr;
 
-///	\defgroup gpFWOldSpringheadNode ‹Œ(Springhead1)ƒtƒ@ƒCƒ‹ƒ[ƒh—pŒİŠ·ƒm[ƒh
+///	\defgroup gpFWOldSpringheadNode æ—§(Springhead1)ãƒ•ã‚¡ã‚¤ãƒ«ãƒ­ãƒ¼ãƒ‰ç”¨äº’æ›ãƒãƒ¼ãƒ‰
 //@{
-/// Xƒtƒ@ƒCƒ‹Œ`®‚Ìƒo[ƒWƒ‡ƒ“î•ñD
+/// Xãƒ•ã‚¡ã‚¤ãƒ«å½¢å¼ã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±ï¼
 struct Header{
 	unsigned int major;		
 	unsigned int minor;		
 	unsigned int flags;
 };
 	
-///	DirectX‚ÌFrameD GRFrame‚É‘Î‰D
+///	DirectXã®Frameï¼ GRFrameã«å¯¾å¿œï¼
 struct Frame{
 };
 	
-///	DirectX‚ÌFrameTransformMatrixDƒtƒŒ[ƒ€‚Ì•ÏŠ·s—ñ‚ğ•\‚·DGRFrame::transform‚É‘Î‰D
+///	DirectXã®FrameTransformMatrixï¼ãƒ•ãƒ¬ãƒ¼ãƒ ã®å¤‰æ›è¡Œåˆ—ã‚’è¡¨ã™ï¼GRFrame::transformã«å¯¾å¿œï¼
 struct FrameTransformMatrix{
 	Affinef matrix;
 };
 
-///	Springehead1‚ÌŒõŒ¹DGRLight‚É‘Î‰D
+///	Springehead1ã®å…‰æºï¼GRLightã«å¯¾å¿œï¼
 struct Light8{
 	enum XLightType{
-		XLIGHT_POINT = 1,			///< “_ŒõŒ¹
-		XLIGHT_SPOT = 2,			/// ƒXƒ|ƒbƒgƒ‰ƒCƒg
-		XLIGHT_DIRECTIONAL = 3,		///< •½sŒõŒ¹
+		XLIGHT_POINT = 1,			///< ç‚¹å…‰æº
+		XLIGHT_SPOT = 2,			/// ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆ
+		XLIGHT_DIRECTIONAL = 3,		///< å¹³è¡Œå…‰æº
 	} type;
-    Vec4f diffuse;		///<	ŠgUŒõ
-    Vec4f specular;		///<	‹¾–ÊŒõ
-    Vec4f ambient;		///<	ŠÂ‹«Œõ
-    Vec3f position;		///<	ŒõŒ¹‚ÌˆÊ’u
-    Vec3f direction;	///<	ŒõŒ¹‚Ì•ûŒü
-    float range;		///<	Œõ‚ª“Í‚­”ÍˆÍ
-    float falloff;		///<	Œ¸Š‚Ì‘‚³(‘å‚«‚¢‚Ù‚Ç‹}s)		0..‡
-    ///@name	Œ¸Š—¦DAtten = 1/( att0 + att1 * d + att2 * d^2)
+    Vec4f diffuse;		///<	æ‹¡æ•£å…‰
+    Vec4f specular;		///<	é¡é¢å…‰
+    Vec4f ambient;		///<	ç’°å¢ƒå…‰
+    Vec3f position;		///<	å…‰æºã®ä½ç½®
+    Vec3f direction;	///<	å…‰æºã®æ–¹å‘
+    float range;		///<	å…‰ãŒå±Šãç¯„å›²
+    float falloff;		///<	æ¸›è¡°ã®æ—©ã•(å¤§ãã„ã»ã©æ€¥å³»)		0..âˆ
+    ///@name	æ¸›è¡°ç‡ï¼Atten = 1/( att0 + att1 * d + att2 * d^2)
 	//@{
-	float attenuation0;	///<	att0	0..‡
-    float attenuation1;	///<	att1	0..‡
-    float attenuation2;	///<	att2	0..‡
+	float attenuation0;	///<	att0	0..âˆ
+    float attenuation1;	///<	att1	0..âˆ
+    float attenuation2;	///<	att2	0..âˆ
 	//@}
-	float spotInner;	///<	ƒXƒ|ƒbƒgƒ‰ƒCƒg‚Ì’†S•”•ª		0..spotCutoff
-	float spotCutoff;	///<	ƒXƒ|ƒbƒgƒ‰ƒCƒg‚ÌŒõ‚ª“–‚½‚é”ÍˆÍ	0..ƒÎ
+	float spotInner;	///<	ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®ä¸­å¿ƒéƒ¨åˆ†		0..spotCutoff
+	float spotCutoff;	///<	ã‚¹ãƒãƒƒãƒˆãƒ©ã‚¤ãƒˆã®å…‰ãŒå½“ãŸã‚‹ç¯„å›²	0..Ï€
 };
 
-///	DirectX‚Ìƒ}ƒeƒŠƒAƒ‹DGRMateiral‚É‘Î‰D
+///	DirectXã®ãƒãƒ†ãƒªã‚¢ãƒ«ï¼GRMateiralã«å¯¾å¿œï¼
 struct Material{
 	Vec4f face;				// face color
 	float power;			// shininess power
@@ -70,13 +70,13 @@ struct Material{
 	Vec3f emissive;			// emissive color
 };
 
-///	DirectX‚ÌMesh‚Ì–ÊD
+///	DirectXã®Meshã®é¢ï¼
 struct MeshFace{
 	int nFaceVertexIndices;
 	std::vector<int> faceVertexIndices;
 };
 
-///	DirectX‚ÌMeshDGRMesh‚É‘Î‰D
+///	DirectXã®Meshï¼GRMeshã«å¯¾å¿œï¼
 struct Mesh{
 	int nVertices;
 	std::vector<Vec3f> vertices;
@@ -84,7 +84,7 @@ struct Mesh{
 	std::vector<MeshFace> faces;
 };
 
-///	DirectX‚ÌMesh‚Ì–@üƒxƒNƒgƒ‹D
+///	DirectXã®Meshã®æ³•ç·šãƒ™ã‚¯ãƒˆãƒ«ï¼
 struct MeshNormals{
 	int nNormals;
 	std::vector<Vec3f> normals;
@@ -92,37 +92,37 @@ struct MeshNormals{
 	std::vector<MeshFace> faceNormals;
 };
 
-///	DirectX‚ÌMesh‚Ìƒ}ƒeƒŠƒAƒ‹ƒŠƒXƒgD
+///	DirectXã®Meshã®ãƒãƒ†ãƒªã‚¢ãƒ«ãƒªã‚¹ãƒˆï¼
 struct MeshMaterialList{
 	int nMaterials;
 	int nFaceIndexes;
 	std::vector<int> faceIndexes;
 };
 
-///	DirectX‚ÌMesh‚Ì’¸“_FD
+///	DirectXã®Meshã®é ‚ç‚¹è‰²ï¼
 struct IndexColor{
 	int index;
 	Vec4f indexColor;
 };
 
-///	DirectX‚ÌMesh‚Ì’¸“_FƒŠƒXƒgD
+///	DirectXã®Meshã®é ‚ç‚¹è‰²ãƒªã‚¹ãƒˆï¼
 struct MeshVertexColors{
 	int nVertexColors;
 	std::vector<IndexColor> vertexColors VECTOR_LENGTH(nVertexColors);
 };
 
-/// DirectX‚ÌƒeƒNƒXƒ`ƒƒƒtƒ@ƒCƒ‹–¼iMaterial‚Ì“à•”ƒ^ƒO)D
+/// DirectXã®ãƒ†ã‚¯ã‚¹ãƒãƒ£ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆMaterialã®å†…éƒ¨ã‚¿ã‚°)ï¼
 struct TextureFilename{
 	std::string filename;
 };
 
-///	DirectX‚ÌMesh‚ÌƒeƒNƒXƒ`ƒƒÀ•WD
+///	DirectXã®Meshã®ãƒ†ã‚¯ã‚¹ãƒãƒ£åº§æ¨™ï¼
 struct MeshTextureCoords{
 	int nTextureCoords;
 	std::vector<Vec2f> textureCoords;
 };
 
-//	DirectX‚ÌSkinƒƒbƒVƒ…‚ÌSkinWeight•”‚Ìƒwƒbƒ_
+//	DirectXã®Skinãƒ¡ãƒƒã‚·ãƒ¥ã®SkinWeightéƒ¨ã®ãƒ˜ãƒƒãƒ€
 struct XSkinMeshHeader{
 	int nMaxSkinWeightsPerVertex;
 	int nMaxSkinWeightsPerFace;
@@ -136,7 +136,7 @@ struct XSkinMeshHeader{
 };
 */
 
-//	DirectX‚ÌSkinƒƒbƒVƒ…‚ÌSkinWeight
+//	DirectXã®Skinãƒ¡ãƒƒã‚·ãƒ¥ã®SkinWeight
 struct SkinWeights {
 	std::string transformNodeName;
 	unsigned int nWeights;
@@ -145,7 +145,7 @@ struct SkinWeights {
 	Affinef matrixOffset;
 };
 
-//	ƒAƒjƒ[ƒVƒ‡ƒ“ŠÖŒW
+//	ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³é–¢ä¿‚
 struct Animation {
 };
 
@@ -173,17 +173,17 @@ struct AnimTicksPerSecond {
 };
 
 
-///	Springhead1‚ÌSceneD
+///	Springhead1ã®Sceneï¼
 struct Scene{
 };
 
-///	Springhead1‚ÌSimulatorD
+///	Springhead1ã®Simulatorï¼
 struct Simulator{
-	double timeStep;	///< Ï•ªƒXƒeƒbƒv
-	double decay;		///< „‘Ì‚Ì‘¬“x‚ÌŒ¸Š—¦	
+	double timeStep;	///< ç©åˆ†ã‚¹ãƒ†ãƒƒãƒ—
+	double decay;		///< å‰›ä½“ã®é€Ÿåº¦ã®æ¸›è¡°ç‡	
 };
 	
-///	Springhead1‚ÌCameraD
+///	Springhead1ã®Cameraï¼
 struct Camera{
 	Affinef view;
 	float width;
@@ -194,73 +194,73 @@ struct Camera{
 	float back;
 };
 
-///	Springhead1‚ÌSolidD
+///	Springhead1ã®Solidï¼
 struct Solid{
-	float mass;				///< ¿—Ê
-	Matrix3f inertia;		///< Šµ«ƒ‚[ƒƒ“ƒg
-	Vec3f velocity;			///< ‘¬“x
-	Vec3f angularVelocity;	///< Šp‘¬“x
-	Vec3f center;			///< ’†SˆÊ’u
+	float mass;				///< è³ªé‡
+	Matrix3f inertia;		///< æ…£æ€§ãƒ¢ãƒ¼ãƒ¡ãƒ³ãƒˆ
+	Vec3f velocity;			///< é€Ÿåº¦
+	Vec3f angularVelocity;	///< è§’é€Ÿåº¦
+	Vec3f center;			///< ä¸­å¿ƒä½ç½®
 };
 
-/// Springhead1‚ÌSphereDGRSphere‚É‘Î‰D
+/// Springhead1ã®Sphereï¼GRSphereã«å¯¾å¿œï¼
 struct Sphere{
-	float radius;			///< ”¼Œa
-	int slices;				///< Œoü•ûŒü‚Ì•ªŠ„”
-	int stacks;				///< ˆÜü•ûŒü‚Ì•ªŠ„”
+	float radius;			///< åŠå¾„
+	int slices;				///< çµŒç·šæ–¹å‘ã®åˆ†å‰²æ•°
+	int stacks;				///< ç·¯ç·šæ–¹å‘ã®åˆ†å‰²æ•°
 };	
 	
-/// Springhead1‚Ì•¨—ƒ}ƒeƒŠƒAƒ‹
+/// Springhead1ã®ç‰©ç†ãƒãƒ†ãƒªã‚¢ãƒ«
 struct PhysicalMaterial{				
-	float ns;				///< R—Í‚Ì‚Î‚ËŒW”
-	float nd;				///< R—Í‚Ìƒ_ƒ“ƒpŒW”
-	float fs;				///< –€C—Í‚Ì‚Î‚ËŒW”
-	float fd;				///< –€C—Í‚Ìƒ_ƒ“ƒpŒW”
-	float s;				///< Å‘åÃ~–€CŒW”
-	float d;				///< “®–€CŒW”
+	float ns;				///< æŠ—åŠ›ã®ã°ã­ä¿‚æ•°
+	float nd;				///< æŠ—åŠ›ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
+	float fs;				///< æ‘©æ“¦åŠ›ã®ã°ã­ä¿‚æ•°
+	float fd;				///< æ‘©æ“¦åŠ›ã®ãƒ€ãƒ³ãƒ‘ä¿‚æ•°
+	float s;				///< æœ€å¤§é™æ­¢æ‘©æ“¦ä¿‚æ•°
+	float d;				///< å‹•æ‘©æ“¦ä¿‚æ•°
 };
 
-/// Springhead1‚ÌSolidContainerD
+/// Springhead1ã®SolidContainerï¼
 struct SolidContainer{
 };
 	
-///	Springhead1‚ÌGravityEngineD
+///	Springhead1ã®GravityEngineï¼
 struct GravityEngine{
 	Vec3f gravity;
 };
 
-/// Springhead1‚ÌContactInactiveD
+/// Springhead1ã®ContactInactiveï¼
 struct ContactInactive{
 	int nSolids;
 	std::vector<int> solidIndexes;
 };
 
-///	Springhead1‚ÌContactEngineD
+///	Springhead1ã®ContactEngineï¼
 struct ContactEngine{
 };
 	
-/// Springhead1‚ÌJointEngineD
+/// Springhead1ã®JointEngineï¼
 struct JointEngine{
 };
 	
-/// Springhead1‚ÌJointD
+/// Springhead1ã®Jointï¼
 struct Joint{
-	int			nType;				///<	ŠÖßí—Ş 0:’±”Ô, 1:ƒXƒ‰ƒCƒh
-	Vec3f		prj;				///<	e„‘Ì‚ÌƒtƒŒ[ƒ€‚©‚çŒ©‚½ŠÖßˆÊ’u
-	Matrix3f	pRj;				///<	e„‘Ì‚ÌƒtƒŒ[ƒ€‚©‚çŒ©‚½ŠÖßp¨
-	Vec3f		crj;				///<	q„‘Ì‚ÌƒtƒŒ[ƒ€‚©‚çŒ©‚½ŠÖßˆÊ’u
-	Matrix3f	cRj;				///<	q„‘Ì‚ÌƒtƒŒ[ƒ€‚©‚çŒ©‚½ŠÖßp¨
+	int			nType;				///<	é–¢ç¯€ç¨®é¡ 0:è¶ç•ª, 1:ã‚¹ãƒ©ã‚¤ãƒ‰
+	Vec3f		prj;				///<	è¦ªå‰›ä½“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰è¦‹ãŸé–¢ç¯€ä½ç½®
+	Matrix3f	pRj;				///<	è¦ªå‰›ä½“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰è¦‹ãŸé–¢ç¯€å§¿å‹¢
+	Vec3f		crj;				///<	å­å‰›ä½“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰è¦‹ãŸé–¢ç¯€ä½ç½®
+	Matrix3f	cRj;				///<	å­å‰›ä½“ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰è¦‹ãŸé–¢ç¯€å§¿å‹¢
 
-	float		fPosition;			///<	•ÏˆÊ
-	float		fVelocity;			///<	‘¬“x
-	float		fMaxTorque;			///<	Å‘åƒgƒ‹ƒN
-	float		fMinPosition;		///<	‰Â“®”ÍˆÍ(Å‘å’l)
-	float		fMaxPosition;		///<	‰Â“®”ÍˆÍ(Å¬’l)
-	int			nInputType;			///<	“ü—Í‚Ìí—Ş @see PHJointInputType
-	float		fInput;				///<	“ü—Í’l‚Ì‰Šú’l
-	float		fPValue;			///<	PID§Œä‚ÌP‚Ì’l
-	float		fIValue;			///<	PID§Œä‚ÌI‚Ì’l
-	float		fDValue;			///<	PID§Œä‚ÌD‚Ì’l
+	float		fPosition;			///<	å¤‰ä½
+	float		fVelocity;			///<	é€Ÿåº¦
+	float		fMaxTorque;			///<	æœ€å¤§ãƒˆãƒ«ã‚¯
+	float		fMinPosition;		///<	å¯å‹•ç¯„å›²(æœ€å¤§å€¤)
+	float		fMaxPosition;		///<	å¯å‹•ç¯„å›²(æœ€å°å€¤)
+	int			nInputType;			///<	å…¥åŠ›ã®ç¨®é¡ @see PHJointInputType
+	float		fInput;				///<	å…¥åŠ›å€¤ã®åˆæœŸå€¤
+	float		fPValue;			///<	PIDåˆ¶å¾¡ã®Pã®å€¤
+	float		fIValue;			///<	PIDåˆ¶å¾¡ã®Iã®å€¤
+	float		fDValue;			///<	PIDåˆ¶å¾¡ã®Dã®å€¤
 };
 
 //@}

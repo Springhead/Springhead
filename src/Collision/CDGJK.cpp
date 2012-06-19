@@ -1,18 +1,18 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/*	‚±‚Ìƒtƒ@ƒCƒ‹‚Ìƒ‰ƒCƒZƒ“ƒX‚É‚Â‚¢‚Ä‚Ì’ˆÓ
-	‚±‚Ìƒ\[ƒX‚ÍCˆê•” SOLID (Software Library for Interference Detection) 2.0
-	http://www.win.tue.nl/~gino/solid ‚Ì src/Convex.cpp ‚ğQl‚É‘‚¢‚Ä‚¢‚Ü‚·D
-	˜_•¶‚Æƒ\[ƒX‚ğŒöŠJ‚³‚ê‚Ä‚¢‚é Bergen ‚³‚ñ‚ÉŠ´Ó‚µ‚Ü‚·D
+/*	ã“ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ©ã‚¤ã‚»ãƒ³ã‚¹ã«ã¤ã„ã¦ã®æ³¨æ„
+	ã“ã®ã‚½ãƒ¼ã‚¹ã¯ï¼Œä¸€éƒ¨ SOLID (Software Library for Interference Detection) 2.0
+	http://www.win.tue.nl/~gino/solid ã® src/Convex.cpp ã‚’å‚è€ƒã«æ›¸ã„ã¦ã„ã¾ã™ï¼
+	è«–æ–‡ã¨ã‚½ãƒ¼ã‚¹ã‚’å…¬é–‹ã•ã‚Œã¦ã„ã‚‹ Bergen ã•ã‚“ã«æ„Ÿè¬ã—ã¾ã™ï¼
 
-	’·’Jì‚ÍC‚±‚Ìƒ\[ƒX‚ªSolid2.0‚Ìˆê•”‚Ì”h¶•¨‚Å‚Í‚È‚¢‚ÆM‚¶‚Ä‚¢‚Ü‚·D
-	‚µ‚©‚µC—‚Ä‚¢‚é‰ÓŠ‚ª‚ ‚è‚Ü‚·D‚à‚µ”h¶•¨‚¾‚Æ”F’è‚³‚ê‚½ê‡C
-	ƒ‰ƒCƒZƒ“ƒX‚ªLGPL‚Æ‚È‚è‚Ü‚·D‚²’ˆÓ‚­‚¾‚³‚¢D
+	é•·è°·å·ã¯ï¼Œã“ã®ã‚½ãƒ¼ã‚¹ãŒSolid2.0ã®ä¸€éƒ¨ã®æ´¾ç”Ÿç‰©ã§ã¯ãªã„ã¨ä¿¡ã˜ã¦ã„ã¾ã™ï¼
+	ã—ã‹ã—ï¼Œä¼¼ã¦ã„ã‚‹ç®‡æ‰€ãŒã‚ã‚Šã¾ã™ï¼ã‚‚ã—æ´¾ç”Ÿç‰©ã ã¨èªå®šã•ã‚ŒãŸå ´åˆï¼Œ
+	ãƒ©ã‚¤ã‚»ãƒ³ã‚¹ãŒLGPLã¨ãªã‚Šã¾ã™ï¼ã”æ³¨æ„ãã ã•ã„ï¼
 */
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
@@ -174,21 +174,21 @@ void ContFindCommonPointCall(std::istream& file, PHSdkIf* sdk){
 
 
 const double sqEpsilon = 1e-3;
-const double epsilon   = 1e-6;  // s‚ª2e-6‚É‚È‚é‚±‚Æ‚à‚ ‚Á‚½D‚Ü‚¾‚¾‚ß‚©‚à‚µ‚ê‚È‚¢Dimitakej
+const double epsilon   = 1e-6;  // sãŒ2e-6ã«ãªã‚‹ã“ã¨ã‚‚ã‚ã£ãŸï¼ã¾ã ã ã‚ã‹ã‚‚ã—ã‚Œãªã„ï¼ï¼ˆmitakeï¼‰
 const double epsilon2  = epsilon*epsilon;
 
 namespace GJK{
-	Vec3f p[4];			///<	A‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg(ƒ[ƒJƒ‹Œn)
-	Vec3f q[4];			///<	B‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg(ƒ[ƒJƒ‹Œn)
-	int p_id[4];		///<	A‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚Ì’¸“_”Ô†i‹…‚È‚Ç’¸“_‚ª‚È‚¢ê‡‚Í -1j
-	int q_id[4];		///<	B‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚Ì’¸“_”Ô†i‹…‚È‚Ç’¸“_‚ª‚È‚¢ê‡‚Í -1j
-	Vec3d w[4];			///<	ContFindCommonPoint‚Åg—p‚·‚é‘¬“xŒü‚«À•WŒn‚Å‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg
-	Vec3d v[4];			///<	ContFindCommonPoint‚Åg—p‚·‚év
-	int nSupport;		///<	‰½“_‚Ìsupport‚©‚çÅ‹ß–T“_‚ğŒvZ‚µ‚½‚©‚ğ•\‚·B(ContFindCommonPointê—p)
-	Vec3d dec;			///<	“à•ª‚ÌŠ„‡
-	int ids[4];			///<	’¸“_ID‘Î‰•\
+	Vec3f p[4];			///<	Aã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆ(ãƒ­ãƒ¼ã‚«ãƒ«ç³»)
+	Vec3f q[4];			///<	Bã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆ(ãƒ­ãƒ¼ã‚«ãƒ«ç³»)
+	int p_id[4];		///<	Aã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã®é ‚ç‚¹ç•ªå·ï¼ˆçƒãªã©é ‚ç‚¹ãŒãªã„å ´åˆã¯ -1ï¼‰
+	int q_id[4];		///<	Bã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã®é ‚ç‚¹ç•ªå·ï¼ˆçƒãªã©é ‚ç‚¹ãŒãªã„å ´åˆã¯ -1ï¼‰
+	Vec3d w[4];			///<	ContFindCommonPointã§ä½¿ç”¨ã™ã‚‹é€Ÿåº¦å‘ãåº§æ¨™ç³»ã§ã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆ
+	Vec3d v[4];			///<	ContFindCommonPointã§ä½¿ç”¨ã™ã‚‹v
+	int nSupport;		///<	ä½•ç‚¹ã®supportã‹ã‚‰æœ€è¿‘å‚ç‚¹ã‚’è¨ˆç®—ã—ãŸã‹ã‚’è¡¨ã™ã€‚(ContFindCommonPointå°‚ç”¨)
+	Vec3d dec;			///<	å†…åˆ†ã®å‰²åˆ
+	int ids[4];			///<	é ‚ç‚¹IDå¯¾å¿œè¡¨
 
-	Vec3d p_q[4];		///<	ƒ~ƒ“ƒRƒXƒL[˜aã‚Å‚ÌƒTƒ|[ƒgƒ|ƒCƒ“ƒg(ƒ[ƒ‹ƒhŒn) Cont‚Å‚È‚¢FindXX‚Åg—p
+	Vec3d p_q[4];		///<	ãƒŸãƒ³ã‚³ã‚¹ã‚­ãƒ¼å’Œä¸Šã§ã®ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆ(ãƒ¯ãƒ¼ãƒ«ãƒ‰ç³») Contã§ãªã„FindXXã§ä½¿ç”¨
 }	//	namespace GJK
 using namespace GJK;
 
@@ -248,7 +248,7 @@ inline Vec3d TriDecompose(Vec2d p1, Vec2d p2, Vec2d p3){
 	return r;
 }
 
-//	ˆÈ‰ºAContFindCommonPoint()ŠÖ”ê—p‚Ìƒ}ƒNƒ
+//	ä»¥ä¸‹ã€ContFindCommonPoint()é–¢æ•°å°‚ç”¨ã®ãƒã‚¯ãƒ­
 #define XY()	sub_vector( PTM::TSubVectorDim<0,2>() )
 #define CalcSupport(n)														\
 	p_id[n] = a->Support(p[n], a2z.Ori().Conjugated() * (v[n]));			\
@@ -259,9 +259,9 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	const Posed& a2w, const Posed& b2w, const Vec3d& dir, double start, double end,
 	Vec3d& normal, Vec3d& pa, Vec3d& pb, double& dist){
 	nSupport = 0;
-	//	range ‚ª+Z‚É‚È‚é‚æ‚¤‚ÈÀ•WŒn‚ğ‹‚ß‚éD
+	//	range ãŒ+Zã«ãªã‚‹ã‚ˆã†ãªåº§æ¨™ç³»ã‚’æ±‚ã‚ã‚‹ï¼
 	Quaterniond w2z;
-	Vec3d u = -dir;	//	u: •¨‘Ì‚Å‚Í‚È‚­Œ´“_‚Ì‘¬“x‚ÌŒü‚«‚È‚Ì‚Å - ‚ª‚Â‚­D
+	Vec3d u = -dir;	//	u: ç‰©ä½“ã§ã¯ãªãåŸç‚¹ã®é€Ÿåº¦ã®å‘ããªã®ã§ - ãŒã¤ãï¼
 	if (u.Z() < -1+epsilon){
 		w2z = Quaterniond::Rot(Rad(180), 'x');
 	}else if (u.Z() < 1-epsilon){
@@ -277,27 +277,27 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	b2z.Pos() = w2z * b2w.Pos();
 
 	
-	//	GJK‚Æ—‚½•û–@‚ÅCŒğ“_‚ğ‹‚ß‚é
-	//	‚Ü‚¸A2ŸŒ³‚ÅŒ©‚½‚Æ‚«‚ÉAŒ´“_‚ªŠÜ‚Ü‚ê‚é‚æ‚¤‚ÈOŠpŒ`‚Ü‚½‚Íü•ª‚ğì‚é
+	//	GJKã¨ä¼¼ãŸæ–¹æ³•ã§ï¼Œäº¤ç‚¹ã‚’æ±‚ã‚ã‚‹
+	//	ã¾ãšã€2æ¬¡å…ƒã§è¦‹ãŸã¨ãã«ã€åŸç‚¹ãŒå«ã¾ã‚Œã‚‹ã‚ˆã†ãªä¸‰è§’å½¢ã¾ãŸã¯ç·šåˆ†ã‚’ä½œã‚‹
 
-	//	w0‚ğ‹‚ß‚é
+	//	w0ã‚’æ±‚ã‚ã‚‹
 	v[0] = Vec3d(0,0,1);
 	CalcSupport(0);
 	if (w[0].Z() > end) 
-		return -1;	//	”ÍˆÍ“à‚Å‚ÍÚG‚µ‚È‚¢‚ªCend‚æ‚èæ‚ÅÚG‚·‚é‚©‚à‚µ‚ê‚È‚¢D
+		return -1;	//	ç¯„å›²å†…ã§ã¯æ¥è§¦ã—ãªã„ãŒï¼Œendã‚ˆã‚Šå…ˆã§æ¥è§¦ã™ã‚‹ã‹ã‚‚ã—ã‚Œãªã„ï¼
 
-	if (w[0].Z() < start){	//	”½‘Î‘¤‚Ìsupport‚ğ‹‚ß‚Ä‚İ‚ÄC”ÍˆÍŠO‚©Šm”F
+	if (w[0].Z() < start){	//	åå¯¾å´ã®supportã‚’æ±‚ã‚ã¦ã¿ã¦ï¼Œç¯„å›²å¤–ã‹ç¢ºèª
 		v[3] = Vec3d(0,0,-1);
 		CalcSupport(3);
 		if (w[3].Z() < start){
-			//	”ÍˆÍ“à‚Å‚ÍÚG‚µ‚È‚¢‚ªCŒã‚ë‚É‰„’·‚·‚é‚ÆÚG‚·‚é‚©‚à‚µ‚ê‚È‚¢D
+			//	ç¯„å›²å†…ã§ã¯æ¥è§¦ã—ãªã„ãŒï¼Œå¾Œã‚ã«å»¶é•·ã™ã‚‹ã¨æ¥è§¦ã™ã‚‹ã‹ã‚‚ã—ã‚Œãªã„ï¼
 			return -2;
 		}
 	}
 
-	//	w1‚ğ‹‚ß‚é
+	//	w1ã‚’æ±‚ã‚ã‚‹
 	v[1] = Vec3d(w[0].X(), w[0].Y(), 0);
-	if (v[1].XY().square() < epsilon2){		//	w0=Õ“Ë“_‚Ìê‡
+	if (v[1].XY().square() < epsilon2){		//	w0=è¡çªç‚¹ã®å ´åˆ
 		normal = u.unit();
 		pa = p[0]; pb = q[0];
 		dist = w[0].Z();
@@ -309,22 +309,22 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	}
 	CalcSupport(1);
 	if (w[1].XY() * v[1].XY() > 0) 
-		return 0;	//	w[1]‚ÌŠO‘¤‚ÉO‚ª‚ ‚é‚Ì‚ÅG‚Á‚Ä‚È‚¢
+		return 0;	//	w[1]ã®å¤–å´ã«OãŒã‚ã‚‹ã®ã§è§¦ã£ã¦ãªã„
 	
 	
-	//	w[0]-w[1]-w[0] ‚ğOŠpŒ`‚Æl‚¦‚ÄƒXƒ^[ƒg‚µ‚ÄCo‚ªOŠpŒ`‚Ì“à•”‚É“ü‚é‚Ü‚ÅŒJ‚è•Ô‚µ
-	ids[0] = 1;	//	V‚µ‚¢’¸“_
-	ids[1] = 0;	//	‚à‚Æ‚Ìü•ª
-	ids[2] = 0;	//	‚à‚Æ‚Ìü•ª
+	//	w[0]-w[1]-w[0] ã‚’ä¸‰è§’å½¢ã¨è€ƒãˆã¦ã‚¹ã‚¿ãƒ¼ãƒˆã—ã¦ï¼ŒoãŒä¸‰è§’å½¢ã®å†…éƒ¨ã«å…¥ã‚‹ã¾ã§ç¹°ã‚Šè¿”ã—
+	ids[0] = 1;	//	æ–°ã—ã„é ‚ç‚¹
+	ids[1] = 0;	//	ã‚‚ã¨ã®ç·šåˆ†
+	ids[2] = 0;	//	ã‚‚ã¨ã®ç·šåˆ†
 	while(1){
 		double s;
 		Vec3d vNew;
 		if ((s = w[(int)ids[0]].XY() ^ w[(int)ids[1]].XY()) > epsilon){
-			//	“_O‚ªAü•ª1-0‚©‚çAOŠpŒ`‚ÌŠO‚É‚Í‚İo‚µ‚Ä‚¢‚éê‡  
-			//		... epsilon=1e-8‚¾‚Æ–³ŒÀƒ‹[ƒvC1e-7‚Å‚à‹H‚É–³ŒÀƒ‹[ƒv
-			//	1-0‚Ì–@ü‚ÌŒü‚«vNew‚Åsupport point‚ğ’T‚µAV‚µ‚¢OŠpŒ`‚É‚·‚éB
+			//	ç‚¹OãŒã€ç·šåˆ†1-0ã‹ã‚‰ã€ä¸‰è§’å½¢ã®å¤–ã«ã¯ã¿å‡ºã—ã¦ã„ã‚‹å ´åˆ  
+			//		... epsilon=1e-8ã ã¨ç„¡é™ãƒ«ãƒ¼ãƒ—ï¼Œ1e-7ã§ã‚‚ç¨€ã«ç„¡é™ãƒ«ãƒ¼ãƒ—
+			//	1-0ã®æ³•ç·šã®å‘ãvNewã§support pointã‚’æ¢ã—ã€æ–°ã—ã„ä¸‰è§’å½¢ã«ã™ã‚‹ã€‚
 			Vec2d l = w[(int)ids[1]].XY() - w[(int)ids[0]].XY();
-			assert(l.square() >= epsilon2);		//	w0=w1‚È‚ç‚ÎC‚·‚Å‚É”²‚¯‚Ä‚¢‚é‚Í‚¸D
+			assert(l.square() >= epsilon2);		//	w0=w1ãªã‚‰ã°ï¼Œã™ã§ã«æŠœã‘ã¦ã„ã‚‹ã¯ãšï¼
 			double ll_inv = 1/l.square();
 			vNew.XY() = (w[(int)ids[1]].XY()*l*ll_inv) * w[(int)ids[0]].XY()
 				   - (w[(int)ids[0]].XY()*l*ll_inv) * w[(int)ids[1]].XY();
@@ -332,10 +332,10 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			ids[2] = ids[0];
 			ids[0] = FindVacantId(ids[1], ids[2]);
 		}else if ((s = w[(int)ids[2]].XY() ^ w[(int)ids[0]].XY()) > epsilon){
-			//	“_O‚ªAü•ª2-0‚©‚çAOŠpŒ`‚ÌŠO‚É‚Í‚İo‚µ‚Ä‚¢‚éê‡
-			//	2-0‚Ì–@ü‚ÌŒü‚«v‚Åsupport point‚ğ’T‚µAV‚µ‚¢OŠpŒ`‚É‚·‚éB
+			//	ç‚¹OãŒã€ç·šåˆ†2-0ã‹ã‚‰ã€ä¸‰è§’å½¢ã®å¤–ã«ã¯ã¿å‡ºã—ã¦ã„ã‚‹å ´åˆ
+			//	2-0ã®æ³•ç·šã®å‘ãvã§support pointã‚’æ¢ã—ã€æ–°ã—ã„ä¸‰è§’å½¢ã«ã™ã‚‹ã€‚
 			Vec2d l = w[(int)ids[2]].XY() - w[(int)ids[0]].XY();
-			assert(l.square() >= epsilon2);		//	w0=w1‚È‚ç‚ÎC‚·‚Å‚É”²‚¯‚Ä‚¢‚é‚Í‚¸D
+			assert(l.square() >= epsilon2);		//	w0=w1ãªã‚‰ã°ï¼Œã™ã§ã«æŠœã‘ã¦ã„ã‚‹ã¯ãšï¼
 			double ll_inv = 1/l.square();
 			vNew.XY() = (w[(int)ids[2]].XY()*l*ll_inv) * w[(int)ids[0]].XY()
 				   - (w[(int)ids[0]].XY()*l*ll_inv) * w[(int)ids[2]].XY();
@@ -343,9 +343,9 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			ids[1] = ids[0];
 			ids[0] = FindVacantId(ids[1], ids[2]);
 		}else{
-			//	“_O‚ÍOŠpŒ`‚Ì“à‘¤‚É‚ ‚éB
+			//	ç‚¹Oã¯ä¸‰è§’å½¢ã®å†…å´ã«ã‚ã‚‹ã€‚
 			if (ids[1] == ids[2]){
-				//	1‚Æ2‚ª“¯‚¶“_=Å‰‚©‚çonline‚¾‚Á‚½‚½‚ßA3ŠpŒ`‚ª‚Å‚«‚È‚©‚Á‚½B
+				//	1ã¨2ãŒåŒã˜ç‚¹=æœ€åˆã‹ã‚‰onlineã ã£ãŸãŸã‚ã€3è§’å½¢ãŒã§ããªã‹ã£ãŸã€‚
 				assert(ids[0] == 1);
 				assert(ids[1] == 0);
 				ids[2] = 2;
@@ -357,19 +357,19 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			break;
 		}
 		v[ids[0]] = vNew;
-		CalcSupport(ids[0]);	//	–@ü‚ÌŒü‚«vNew‚ÅƒTƒ|[ƒgƒ|ƒCƒ“ƒg‚ğ’T‚·
-		if (w[ids[0]].XY() * v[ids[0]].XY() > -epsilon2){	//	0‚ÌŠO‘¤‚Éo‚ª‚ ‚é‚Ì‚ÅG‚Á‚Ä‚È‚¢
+		CalcSupport(ids[0]);	//	æ³•ç·šã®å‘ãvNewã§ã‚µãƒãƒ¼ãƒˆãƒã‚¤ãƒ³ãƒˆã‚’æ¢ã™
+		if (w[ids[0]].XY() * v[ids[0]].XY() > -epsilon2){	//	0ã®å¤–å´ã«oãŒã‚ã‚‹ã®ã§è§¦ã£ã¦ãªã„
 			return 0;
 		}
-		//	V‚µ‚¢support‚ª1‰ñ‘O‚Ìü•ª‚©‚ç‚Ü‚Á‚½‚­“®‚¢‚Ä‚¢‚È‚¢ ¨ “_O‚ÍŠO‘¤
+		//	æ–°ã—ã„supportãŒ1å›å‰ã®ç·šåˆ†ã‹ã‚‰ã¾ã£ãŸãå‹•ã„ã¦ã„ãªã„ â†’ ç‚¹Oã¯å¤–å´
 		double d1 = -vNew.XY() * (w[(int)ids[0]].XY()-w[(int)ids[1]].XY());
 		double d2 = -vNew.XY() * (w[(int)ids[0]].XY()-w[(int)ids[2]].XY());
 		if (d1 < epsilon2 || d2 < epsilon2) 
 			return 0;
 	}
 	ids[3] = 3;
-	//	OŠpŒ` ids[0-1-2] ‚Ì’†‚Éo‚ª‚ ‚éDids[0]‚ªÅŒã‚ÉXV‚µ‚½’¸“_w
-#if USERNAME==hase	//	’·’Jìê—pƒfƒoƒbƒOƒR[ƒhDOŠpŒ`‚ªŒ´“_‚ğŠÜ‚Ş‚±‚Æ‚ğŠm”F
+	//	ä¸‰è§’å½¢ ids[0-1-2] ã®ä¸­ã«oãŒã‚ã‚‹ï¼ids[0]ãŒæœ€å¾Œã«æ›´æ–°ã—ãŸé ‚ç‚¹w
+#if USERNAME==hase	//	é•·è°·å·å°‚ç”¨ãƒ‡ãƒãƒƒã‚°ã‚³ãƒ¼ãƒ‰ï¼ä¸‰è§’å½¢ãŒåŸç‚¹ã‚’å«ã‚€ã“ã¨ã‚’ç¢ºèª
 	int sign[3];
 	double d[3];
 	for(int i=0; i<3; ++i){
@@ -392,7 +392,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	}
 #endif
 	
-	//	OŠpŒ`‚ğ¬‚³‚­‚µ‚Ä‚¢‚­
+	//	ä¸‰è§’å½¢ã‚’å°ã•ãã—ã¦ã„ã
 	int notuse = -1;
 	int count = 0;
 	Vec3d lastV;
@@ -401,32 +401,32 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 	while(1){
 		count ++;
 		if (count > 1000) {
-#if 1	//	USERNAME==hase	//	’·’Jìê—pƒfƒoƒbƒOƒR[ƒhBŒ»İ“–‚½‚è”»’èDebug’†B			
+#if 1	//	USERNAME==hase	//	é•·è°·å·å°‚ç”¨ãƒ‡ãƒãƒƒã‚°ã‚³ãƒ¼ãƒ‰ã€‚ç¾åœ¨å½“ãŸã‚Šåˆ¤å®šDebugä¸­ã€‚			
 			DSTR << "Too many loop in CCDGJK." << std::endl;
 			ContFindCommonPointSaveParam(a, b, a2w, b2w, dir, start, end, normal, pa, pb, dist);			
 			//DebugBreak();
 			bGJKDebug = true;
 #endif
 		}
-		Vec3d s;		//	OŠpŒ`‚Ì—LŒü–ÊÏ
+		Vec3d s;		//	ä¸‰è§’å½¢ã®æœ‰å‘é¢ç©
 		s = (w[ids[1]]-w[ids[0]]) % (w[ids[2]]-w[ids[0]]);
 		if (s.Z() > epsilon*100.0 || -s.Z() > epsilon*100.0){
-			if (s.Z() < 0){		//	‹tŒü‚«‚Ìê‡A‚Ğ‚Á‚­‚è•Ô‚·
+			if (s.Z() < 0){		//	é€†å‘ãã®å ´åˆã€ã²ã£ãã‚Šè¿”ã™
 				std::swap(ids[1], ids[2]);
 				s *= -1;
 			}
 			if (bGJKDebug) DSTR << "TRI ";
-			//	OŠpŒ`‚É‚È‚éê‡
+			//	ä¸‰è§’å½¢ã«ãªã‚‹å ´åˆ
 			notuse = -1;
-			lastTriV = v[ids[3]] = s.unit();	//	3ŠpŒ`‚Ì–@ü‚ğg‚¤
+			lastTriV = v[ids[3]] = s.unit();	//	3è§’å½¢ã®æ³•ç·šã‚’ä½¿ã†
 
-			//	V‚µ‚¢ w w[3] ‚ğ‹‚ß‚é
+			//	æ–°ã—ã„ w w[3] ã‚’æ±‚ã‚ã‚‹
 			CalcSupport(ids[3]);
 		}else{
 			if (bGJKDebug) DSTR << "LINE";
 			int id0, id1;
 			if (notuse >= 0){	
-				//	‘O‰ñ‚àü•ª‚¾‚Á‚½ê‡BV‚µ‚¢“_‚ÆŒÃ‚¢ü•ª‚Ì‚Ç‚¿‚ç‚©‚Ì’¸“_‚ÅV‚½‚Èü•ª‚ğì‚éB
+				//	å‰å›ã‚‚ç·šåˆ†ã ã£ãŸå ´åˆã€‚æ–°ã—ã„ç‚¹ã¨å¤ã„ç·šåˆ†ã®ã©ã¡ã‚‰ã‹ã®é ‚ç‚¹ã§æ–°ãŸãªç·šåˆ†ã‚’ä½œã‚‹ã€‚
 				double ip1 = w[ids[notuse]].XY() * w[ids[(notuse+1)%3]].XY();
 				double ip2 = w[ids[notuse]].XY() * w[ids[(notuse+2)%3]].XY();
 				double ipN = w[ids[(notuse+1)%3]].XY() * w[ids[(notuse+2)%3]].XY();
@@ -440,8 +440,8 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 					notuse = (notuse+1)%3;
 				}
 			}else{
-				//	‰‚ß‚Äü•ª‚É‚È‚éê‡B
-				//	‚Ü‚¸A— ‘¤‚Ìü•ªiz²Œü‚«‚ÉŒ©‚ÄA‘¼‚Ì1or2•Ó‚Ì‰e‚É‰B‚ê‚éü•ª)‚ÉdoutUseƒ}[ƒN‚ğ‚Â‚¯‚éB
+				//	åˆã‚ã¦ç·šåˆ†ã«ãªã‚‹å ´åˆã€‚
+				//	ã¾ãšã€è£å´ã®ç·šåˆ†ï¼ˆzè»¸å‘ãã«è¦‹ã¦ã€ä»–ã®1or2è¾ºã®å½±ã«éš ã‚Œã‚‹ç·šåˆ†)ã«doutUseãƒãƒ¼ã‚¯ã‚’ã¤ã‘ã‚‹ã€‚
 				bool dontUse[3] = {false, false, false};
 				for(int i=0; i<3; ++i){
 					Vec3d dir = w[ids[(i+1)%3]] - w[ids[i]];
@@ -456,7 +456,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 						}
 					}
 				}
-				//	g‚¦‚éü•ª‚Ì‚¤‚¿AŒ´“_‚ğŠÜ‚Ş‚à‚Ì‚ğ’T‚·B
+				//	ä½¿ãˆã‚‹ç·šåˆ†ã®ã†ã¡ã€åŸç‚¹ã‚’å«ã‚€ã‚‚ã®ã‚’æ¢ã™ã€‚
 				double ipMin = DBL_MAX;
 				int use = -1;
 				for(int i=0; i<3; ++i){
@@ -471,11 +471,11 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				id1 = (use+1)%3;
 				notuse = (use+2)%3;
 			}
-			//	support vector—p–@ü‚É‚ÍA‘O‰ñ‚Ì(ÅŒã‚Éì‚Á‚½OŠpŒ`‚Ì)–@ü‚ğg‚¤B
+			//	support vectorç”¨æ³•ç·šã«ã¯ã€å‰å›ã®(æœ€å¾Œã«ä½œã£ãŸä¸‰è§’å½¢ã®)æ³•ç·šã‚’ä½¿ã†ã€‚
 			if (lastTriV.square() != 0){
 				v[ids[3]] = lastTriV;
 			}else{
-				//	‰‚ß‚Ä‚È‚ç‚ÎA2’¸“_‚Ì–@ü‚Ì•½‹Ï‚Ìü•ª‚É‚’¼‚È¬•ª‚ğ‚Â‚©‚¤B
+				//	åˆã‚ã¦ãªã‚‰ã°ã€2é ‚ç‚¹ã®æ³•ç·šã®å¹³å‡ã®ç·šåˆ†ã«å‚ç›´ãªæˆåˆ†ã‚’ã¤ã‹ã†ã€‚
 				Vec3d ave = v[ids[id0]] + v[ids[id1]];
 				Vec3d line = (w[ids[id1]] - w[ids[id0]]).unit();
 				ave = ave - (ave * line) * line;
@@ -489,7 +489,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				DSTR << "  w[" << (int) ids[i] << "] = " << w[ids[i]];
 			}
 			DSTR << std::endl;
-			/*	//	Excel‚ÅW‚ÆV‚ğŒ©‚é‚½‚ß‚Ìo—Í	
+			/*	//	Excelã§Wã¨Vã‚’è¦‹ã‚‹ãŸã‚ã®å‡ºåŠ›	
 			for(int j=0; j<3; ++j) DSTR << v[ids[3]][j] << "\t";
 			DSTR << std::endl;
 			for(int i=0; i<4; ++i){
@@ -503,7 +503,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			DSTR << "notuse:" << notuse;
 			for(int i=0; i<4; ++i) DSTR << " " << ids[i];
 		}
-		if (notuse>=0){	//	ü•ª‚Ìê‡Ag‚Á‚½2“_‚ÆV‚µ‚¢“_‚ÅOŠpŒ`‚ğì‚é
+		if (notuse>=0){	//	ç·šåˆ†ã®å ´åˆã€ä½¿ã£ãŸ2ç‚¹ã¨æ–°ã—ã„ç‚¹ã§ä¸‰è§’å½¢ã‚’ä½œã‚‹
 			int nid[3];
 			nid[0] = ids[(notuse+1)%3];
 			nid[1] = ids[(notuse+2)%3];
@@ -517,7 +517,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			lastZ = newZ;
 			std::swap(ids[notuse], ids[3]);
 		}else{
-			//	‚Ç‚Ì2“_‚Æw[3]‚ÅOŠpŒ`‚ğì‚ê‚é‚©Šm”F‚·‚é
+			//	ã©ã®2ç‚¹ã¨w[3]ã§ä¸‰è§’å½¢ã‚’ä½œã‚Œã‚‹ã‹ç¢ºèªã™ã‚‹
 			Vec3d decs[3];
 			double minDec[3];
 			int i;
@@ -535,7 +535,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 				if (minDec[1] > minDec[2]) i = 1;
 				else i=2;
 			}
-			//	‚±‚±‚Å‰ü‘P‚µ‚½‚©ƒ`ƒFƒbƒN‚·‚é
+			//	ã“ã“ã§æ”¹å–„ã—ãŸã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 			int nid0 = ids[i];
 			int nid1 = ids[(i+1)%3];
 			int nid2 = ids[3];
@@ -549,7 +549,7 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			std::swap(ids[(i+2)%3], ids[3]);
 		}
 	}
-	//	–³–’â~
+	//	ç„¡äº‹åœæ­¢
 final:
 	if (notuse >=0){
 		int id0 = ids[(notuse+1)%3];	int id1 = ids[(notuse+2)%3];
@@ -583,23 +583,23 @@ final:
 
 #define USE_NON_CONTINUOUS_DETECTORS
 #ifdef USE_NON_CONTINUOUS_DETECTORS
-/*	GJKƒAƒ‹ƒSƒŠƒYƒ€(FindCommonPoint(), FindClosestPoint())‚ÌÀ‘•D
-	SOLID‚Ìƒ\[ƒX‚ğQl‚É‚µ‚Ä‘‚¢‚½•”•ª‚Å‚·D
-	FindClosestPoint‚Íg‚Á‚Ä‚¢‚Ü‚¹‚ñD
+/*	GJKã‚¢ãƒ«ã‚´ãƒªã‚ºãƒ (FindCommonPoint(), FindClosestPoint())ã®å®Ÿè£…ï¼
+	SOLIDã®ã‚½ãƒ¼ã‚¹ã‚’å‚è€ƒã«ã—ã¦æ›¸ã„ãŸéƒ¨åˆ†ã§ã™ï¼
+	FindClosestPointã¯ä½¿ã£ã¦ã„ã¾ã›ã‚“ï¼
 	
-	FindCommonPoint‚ÍC
+	FindCommonPointã¯ï¼Œ
 		CDShapePair::Detect()
 		CDContactAnalysis::CalcNormal(CDShapePair* cp)
-	‚Åg‚Á‚Ä‚¢‚Ü‚·Dƒyƒiƒ‹ƒeƒB–@‚ğg‚¤‚ÆŒÄ‚Ño‚³‚ê‚Ü‚·D	*/
+	ã§ä½¿ã£ã¦ã„ã¾ã™ï¼ãƒšãƒŠãƒ«ãƒ†ã‚£æ³•ã‚’ä½¿ã†ã¨å‘¼ã³å‡ºã•ã‚Œã¾ã™ï¼	*/
 
-//	‰ß‹‚ÌSupportPoint‚ª’£‚éŒ`ó(“_Eü•ªE3ŠpŒ`C4–Ê‘Ì)DÅ‘å4“_‚Ü‚ÅD
-static int usedBits;		//	‰ºˆÊ4ƒrƒbƒg‚ªC‚Ç‚Ì4“_‚ÅŒ»İ‚ÌŒ`ó‚ª\¬‚³‚ê‚é‚©‚ğ•\‚·D
-static int lastId;			//	ÅŒã‚ÉŒ©‚Â‚¯‚½SupportPoint‚ğ‚µ‚Ü‚Á‚½êŠ(0`3)
-static int lastBit;			//	lastBit = 1<<lastId (ƒrƒbƒg‚Å•\‚µ‚½‚à‚Ìj
-static int allUsedBits;		//	usedBits‚ÉlastBit‚ğ‰Á‚¦‚½‚à‚Ì
-static double det[16][4];	//	ŒW”
-//	det[3][0] * p[0] + det[3][1]*p[1] + det[3][2]*p[2] / sum ‚ÅÅ‹ß–T“_‚ª‹‚Ü‚é
-//	p_qƒxƒNƒgƒ‹‚½‚¿‚ª’£‚éŒ`ó‚Ì‘ÌÏ(or’·‚³or–ÊÏ)D4“_‚©‚çì‚ê‚é16’Ê‚è‚É‚Â‚¢‚Ä
+//	éå»ã®SupportPointãŒå¼µã‚‹å½¢çŠ¶(ç‚¹ãƒ»ç·šåˆ†ãƒ»3è§’å½¢ï¼Œ4é¢ä½“)ï¼æœ€å¤§4ç‚¹ã¾ã§ï¼
+static int usedBits;		//	ä¸‹ä½4ãƒ“ãƒƒãƒˆãŒï¼Œã©ã®4ç‚¹ã§ç¾åœ¨ã®å½¢çŠ¶ãŒæ§‹æˆã•ã‚Œã‚‹ã‹ã‚’è¡¨ã™ï¼
+static int lastId;			//	æœ€å¾Œã«è¦‹ã¤ã‘ãŸSupportPointã‚’ã—ã¾ã£ãŸå ´æ‰€(0ï½3)
+static int lastBit;			//	lastBit = 1<<lastId (ãƒ“ãƒƒãƒˆã§è¡¨ã—ãŸã‚‚ã®ï¼‰
+static int allUsedBits;		//	usedBitsã«lastBitã‚’åŠ ãˆãŸã‚‚ã®
+static double det[16][4];	//	ä¿‚æ•°
+//	det[3][0] * p[0] + det[3][1]*p[1] + det[3][2]*p[2] / sum ã§æœ€è¿‘å‚ç‚¹ãŒæ±‚ã¾ã‚‹
+//	p_qãƒ™ã‚¯ãƒˆãƒ«ãŸã¡ãŒå¼µã‚‹å½¢çŠ¶ã®ä½“ç©(oré•·ã•oré¢ç©)ï¼4ç‚¹ã‹ã‚‰ä½œã‚Œã‚‹16é€šã‚Šã«ã¤ã„ã¦
 
 /*
       a   |
@@ -607,13 +607,13 @@ static double det[16][4];	//	ŒW”
     /     | va = (1-k)aa + kba = vb = (1-k)ab + kbb
    /v     | -kaa + kba + kab - kbb = -aa + ab
   b       | k = a^2-ab / (a^2+b^2-2ab), 1-k = b^2-ab / (a^2+b^2-2ab)
-----------+ ‚È‚Ì‚ÅC k = a^2-ab ‚ğ ‚Æ (k-1) = b^2-ab‚ğ‹L˜^‚µ‚Ä‚¨‚­	*/
+----------+ ãªã®ã§ï¼Œ k = a^2-ab ã‚’ ã¨ (k-1) = b^2-abã‚’è¨˜éŒ²ã—ã¦ãŠã	*/
 
-///	det(’·‚³E–ÊÏE‘ÌÏ)‚ÌŒvZD‚ü‚Ì‘«‚ª’¸“_‚ğ‰½:‰½‚É“à•ª‚·‚é‚©‚àŒvZ
+///	det(é•·ã•ãƒ»é¢ç©ãƒ»ä½“ç©)ã®è¨ˆç®—ï¼å‚ç·šã®è¶³ãŒé ‚ç‚¹ã‚’ä½•:ä½•ã«å†…åˆ†ã™ã‚‹ã‹ã‚‚è¨ˆç®—
 inline void CalcDet() {
 	static double dotp[4][4];	//	p_q[i] * p_q[j] 
 
-	//	V‚µ‚­‘‚¦‚½“_(lastId)‚É‚Â‚¢‚ÄC“àÏ‚ğŒvZ
+	//	æ–°ã—ãå¢—ãˆãŸç‚¹(lastId)ã«ã¤ã„ã¦ï¼Œå†…ç©ã‚’è¨ˆç®—
 	for (int i = 0, curPoint = 1; i < 4; ++i, curPoint <<=1){
 		if (usedBits & curPoint) 
 			dotp[i][lastId] = dotp[lastId][i] = p_q[i] * p_q[lastId];
@@ -623,10 +623,10 @@ inline void CalcDet() {
 	det[lastBit][lastId] = 1;
 	for (int j = 0, sj = 1; j < 4; ++j, sj <<= 1) {
 		if (usedBits & sj) {		
-			int s2 = sj|lastBit;	//	V‚µ‚­‘‚¦‚½“_‚É‚Â‚¢‚ÄŒW”‚ÌŒvZ
+			int s2 = sj|lastBit;	//	æ–°ã—ãå¢—ãˆãŸç‚¹ã«ã¤ã„ã¦ä¿‚æ•°ã®è¨ˆç®—
 			det[s2][j] = dotp[lastId][lastId] - dotp[lastId][j];	//	a^2-ab
 			det[s2][lastId] = dotp[j][j] - dotp[j][lastId];			//	b^2-ab
-			for (int k = 0, sk = 1; k < j; ++k, sk <<= 1) {	//	3“_‚Ìê‡
+			for (int k = 0, sk = 1; k < j; ++k, sk <<= 1) {	//	3ç‚¹ã®å ´åˆ
 				if (usedBits & sk) {
 					int s3 = sk|s2;
 					det[s3][k] = det[s2][j] * (dotp[j][j] - dotp[j][k]) + 
@@ -639,7 +639,7 @@ inline void CalcDet() {
 			}
 		}
 	}
-	if (allUsedBits == 15) {	//	4“_‚Ìê‡
+	if (allUsedBits == 15) {	//	4ç‚¹ã®å ´åˆ
 		det[15][0] =	det[14][1] * (dotp[1][1] - dotp[1][0]) + 
 						det[14][2] * (dotp[2][1] - dotp[2][0]) + 
 						det[14][3] * (dotp[3][1] - dotp[3][0]);
@@ -656,7 +656,7 @@ inline void CalcDet() {
 }
 
 
-//	ŒW”‚©‚çCÅ‹ß–T“_ v ‚ğŒvZ
+//	ä¿‚æ•°ã‹ã‚‰ï¼Œæœ€è¿‘å‚ç‚¹ v ã‚’è¨ˆç®—
 inline void CalcVector(int usedBits, Vec3d& v) {
 	double sum = 0;
 	v.clear();
@@ -669,7 +669,7 @@ inline void CalcVector(int usedBits, Vec3d& v) {
 	v *= 1 / sum;
 }
 
-//	ŒW”‚©‚çCÅ‹ß–T“_‚ÆCŒ³‚Ì2‚Â‚Ì}Œ`ã‚Å‚ÌC‚»‚Ì“_‚ÌˆÊ’u‚ğŒvZ
+//	ä¿‚æ•°ã‹ã‚‰ï¼Œæœ€è¿‘å‚ç‚¹ã¨ï¼Œå…ƒã®2ã¤ã®å›³å½¢ä¸Šã§ã®ï¼Œãã®ç‚¹ã®ä½ç½®ã‚’è¨ˆç®—
 inline void CalcPoints(int usedBits, Vec3d& p1, Vec3d& p2) {
 	double sum = 0;
 	p1.clear();
@@ -691,7 +691,7 @@ inline void CalcPoints(int usedBits, Vec3d& p1, Vec3d& p2) {
 	}
 }
 
-//	Å‹ß–T“_‚ğ•Ô‚·D
+//	æœ€è¿‘å‚ç‚¹ã‚’è¿”ã™ï¼
 inline bool CalcClosest(Vec3d& v) {
 	CalcDet();
 	if (!usedBits){
@@ -722,7 +722,7 @@ inline bool CalcClosest(Vec3d& v) {
 			}
 			if (nSimplex[nVtx-1] == 0){
 				usedBits = s;
-				CalcVector(usedBits, v);	//	Å‹ß–T“_‚ğŒvZ‚µ‚Ä•Ô‚·D			
+				CalcVector(usedBits, v);	//	æœ€è¿‘å‚ç‚¹ã‚’è¨ˆç®—ã—ã¦è¿”ã™ï¼			
 				return true;
 			}
 		}
@@ -730,7 +730,7 @@ inline bool CalcClosest(Vec3d& v) {
 	return false;
 }
 
-//	V‚µ‚¢“_w‚ªC¡‚Ü‚Å‚Ì“_‚Æ“™‚µ‚¢ê‡
+//	æ–°ã—ã„ç‚¹wãŒï¼Œä»Šã¾ã§ã®ç‚¹ã¨ç­‰ã—ã„å ´åˆ
 inline bool HasSame(const Vec3d& w) {
 	for (int i = 0; i < 4; ++i){
 		if ((allUsedBits & (1<<i)) && (p_q[i]-w).square() < epsilon2) return true;
@@ -755,10 +755,10 @@ bool FASTCALL FindCommonPoint(const CDConvex* a, const CDConvex* b,
 		p_id[lastId] = a->Support(p[lastId], a2w.Ori().Conjugated() * (-v));
 		q_id[lastId] = b->Support(q[lastId], b2w.Ori().Conjugated() * v);
 		w = a2w * p[lastId]  -  b2w * q[lastId];
-		if (v*w > 0) return false;			//	Œ´“_‚ªsupport–Ê‚ÌŠO‘¤
-		if (HasSame(w)) return false;		//	support‚ª1“_‚ÉW’†Œ´“_‚ÍŠO‚É‚ ‚éD
-		p_q[lastId] = w;					//	V‚µ‚¢“_‚ğ‘ã“ü
-		allUsedBits = usedBits|lastBit;//	g—p’†’¸“_ƒŠƒXƒg‚É’Ç‰Á
+		if (v*w > 0) return false;			//	åŸç‚¹ãŒsupporté¢ã®å¤–å´
+		if (HasSame(w)) return false;		//	supportãŒ1ç‚¹ã«é›†ä¸­ï¼åŸç‚¹ã¯å¤–ã«ã‚ã‚‹ï¼
+		p_q[lastId] = w;					//	æ–°ã—ã„ç‚¹ã‚’ä»£å…¥
+		allUsedBits = usedBits|lastBit;//	ä½¿ç”¨ä¸­é ‚ç‚¹ãƒªã‚¹ãƒˆã«è¿½åŠ 
 		if (!CalcClosest(v)) return false;
 
 		count ++;

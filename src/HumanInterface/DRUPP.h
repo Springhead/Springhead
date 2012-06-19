@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -12,38 +12,38 @@
 
 namespace Spr {
 
-/**	UPP(Universal Pulse Processor)‚Ìƒhƒ‰ƒCƒo[.
-	CRatorUppCard, CPCCardDriver‚ªg‚¤	*/
+/**	UPP(Universal Pulse Processor)ã®ãƒ‰ãƒ©ã‚¤ãƒãƒ¼.
+	CRatorUppCard, CPCCardDriverãŒä½¿ã†	*/
 class SPR_DLL DRUpp{
 public:
 	class SPR_DLL UppFunc
 	{
 	public:
-		///	UPP‚Ì–½—ßŒê
+		///	UPPã®å‘½ä»¤èª
 		enum {	FRS = 0x00, INS = 0x10, UDS = 0x20, GTS = 0x30,
 			FRC = 0x40, INC = 0x50, PWC = 0x60, OSC = 0x70,
 			FFC = 0x80, TPC = 0x98, GTC = 0xA0, CTO = 0xB0,
 			SIT = 0xC0, SOT = 0xD0, SPO = 0xE0, NOP = 0xF0};
-		///	UPP‚Ì–½—ßŒê‚ÌƒIƒvƒVƒ‡ƒ“
+		///	UPPã®å‘½ä»¤èªã®ã‚ªãƒ—ã‚·ãƒ§ãƒ³
 		enum {};
-		///	’[q‚ÌƒGƒbƒWŒŸo
+		///	ç«¯å­ã®ã‚¨ãƒƒã‚¸æ¤œå‡º
 		enum {};
 		enum {IDLEN = 20};
-		///	–½—ß‚ğ¯•Ê‚·‚é‚½‚ß‚ÌIDA“Á’è‚Ì–½—ß‚ğ–½—ß•\‚©‚çíœ‚·‚é‚½‚ß‚É—p‚¢‚é
+		///	å‘½ä»¤ã‚’è­˜åˆ¥ã™ã‚‹ãŸã‚ã®IDã€ç‰¹å®šã®å‘½ä»¤ã‚’å‘½ä»¤è¡¨ã‹ã‚‰å‰Šé™¤ã™ã‚‹ãŸã‚ã«ç”¨ã„ã‚‹
 		char id[IDLEN+1];
 			
-		///	UPP–½—ß
+		///	UPPå‘½ä»¤
 		int cmd, ar, br, ioa, iob, ioc, iod;
 	
-		/**	ƒRƒ“ƒXƒgƒ‰ƒNƒ^.
-		@param aCmd		–½—ß
-		@param anAr		AƒŒƒWƒXƒ^
-		@param anBr		BƒŒƒWƒXƒ^
-		@param anIoa	’[qA
-		@param anIob	’[qB
-		@param anIoc	’[qC
-		@param anIod	’[qD
-		@param anId		¯•Ê•¶š—ñ(È—ª‰Â)	*/
+		/**	ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿.
+		@param aCmd		å‘½ä»¤
+		@param anAr		Aãƒ¬ã‚¸ã‚¹ã‚¿
+		@param anBr		Bãƒ¬ã‚¸ã‚¹ã‚¿
+		@param anIoa	ç«¯å­A
+		@param anIob	ç«¯å­B
+		@param anIoc	ç«¯å­C
+		@param anIod	ç«¯å­D
+		@param anId		è­˜åˆ¥æ–‡å­—åˆ—(çœç•¥å¯)	*/
 		UppFunc(int aCmd = NOP, int anAr = 0, int anBr = 0,
 			int anIoa = 0, int anIob = 0, int anIoc = 0, int anIod = 0, char* anId = "");
 		bool operator ==(const UppFunc& f) const;
@@ -52,16 +52,16 @@ public:
 		bool operator !=(const UppFunc& f) const;
 	};
 protected:
-	///	UPP“à•”ƒŒƒWƒXƒ^‚ÌƒAƒhƒŒƒX
+	///	UPPå†…éƒ¨ãƒ¬ã‚¸ã‚¹ã‚¿ã®ã‚¢ãƒ‰ãƒ¬ã‚¹
 	enum {PORT1 = 0x3, PORT2 = 0x2, UDR_BASE=0x40};
-	///	‰Šú‰»Ï‚İ‚È‚ç true.
+	///	åˆæœŸåŒ–æ¸ˆã¿ãªã‚‰ true.
 	bool bInitalized;
-	///	FNR‚Ì•\
+	///	FNRã®è¡¨
 
 	static int FNR[17];
-	///	UPP‚Ì–½—ß•\‚ğUPP‚Éİ’è‚·‚é
+	///	UPPã®å‘½ä»¤è¡¨ã‚’UPPã«è¨­å®šã™ã‚‹
 	void SetFunc();
-	///	UPP‚Ì–½—ß•\
+	///	UPPã®å‘½ä»¤è¡¨
 
 	std::vector<UppFunc> func;
 public:
@@ -69,53 +69,53 @@ public:
 	DRUpp();
 	/// 
 	virtual bool Init();
-	///	UPP‚ÌƒŒƒWƒXƒ^‚ÌƒAƒhƒŒƒX a ‚É’l v ‚ğ‘‚«‚±‚Ş
+	///	UPPã®ãƒ¬ã‚¸ã‚¹ã‚¿ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ a ã«å€¤ v ã‚’æ›¸ãã“ã‚€
 	virtual void Out(unsigned a, unsigned v)=0;
-	///	UPP‚ÌƒŒƒWƒXƒ^‚ÌƒAƒhƒŒƒX a ‚Ì’l‚ğ“Ç‚İo‚·
+	///	UPPã®ãƒ¬ã‚¸ã‚¹ã‚¿ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ a ã®å€¤ã‚’èª­ã¿å‡ºã™
 	virtual int In(unsigned a)=0;
-	///	UPP‚ÌÀsó‘Ô‚Ìæ“¾
+	///	UPPã®å®Ÿè¡ŒçŠ¶æ…‹ã®å–å¾—
 	bool	Run();
-	/**	UPP‚Ìó‘Ô‚ğİ’è‚·‚é.
-	@param b İ’è‚µ‚½‚¢ó‘Ô. true:Àsó‘Ô false:’â~ó‘Ô	*/
+	/**	UPPã®çŠ¶æ…‹ã‚’è¨­å®šã™ã‚‹.
+	@param b è¨­å®šã—ãŸã„çŠ¶æ…‹. true:å®Ÿè¡ŒçŠ¶æ…‹ false:åœæ­¢çŠ¶æ…‹	*/
 	void	Run(bool b);
-	///	–½—ß•\‚É–½—ß‚ğ’Ç‰Á‚·‚é
+	///	å‘½ä»¤è¡¨ã«å‘½ä»¤ã‚’è¿½åŠ ã™ã‚‹
 	void	Add(const UppFunc& f);
-	///	–½—ß•\‚©‚ç–½—ß‚ğíœ‚·‚é
+	///	å‘½ä»¤è¡¨ã‹ã‚‰å‘½ä»¤ã‚’å‰Šé™¤ã™ã‚‹
 	void	Del(char* id);
-	///	–½—ß•\‚©‚ç–½—ß‚ğíœ‚·‚é
+	///	å‘½ä»¤è¡¨ã‹ã‚‰å‘½ä»¤ã‚’å‰Šé™¤ã™ã‚‹
 	void	Del(int id);
 	
-	/**	UPP‚Ì’[q‚ğg—p‚·‚éƒ†ƒjƒbƒg‚Ìİ’è.
-	1bit–Ú‚ªƒ|[ƒg0‚ÉA16bit–Ú‚ªƒ|[ƒg0‚É‘Î‰‚·‚éB
+	/**	UPPã®ç«¯å­ã‚’ä½¿ç”¨ã™ã‚‹ãƒ¦ãƒ‹ãƒƒãƒˆã®è¨­å®š.
+	1bitç›®ãŒãƒãƒ¼ãƒˆ0ã«ã€16bitç›®ãŒãƒãƒ¼ãƒˆ0ã«å¯¾å¿œã™ã‚‹ã€‚
     @verbatim
-	UPP‚Ì’[q‚Æƒrƒbƒg‚ÌŠ„‚è“–‚Ä
+	UPPã®ç«¯å­ã¨ãƒ“ãƒƒãƒˆã®å‰²ã‚Šå½“ã¦
 	0xABCD
 	dir  MSB 0x   A    B    C    D LSB
 	port       FEDC BA98 7654 3210
 	@endverbatim
-	0: PIO‚ªg—p	1: UPP‚ªg—p	*/
+	0: PIOãŒä½¿ç”¨	1: UPPãŒä½¿ç”¨	*/
 	void	PortOwner(unsigned owner = 0xFFFF);
-	/**	UPP‚Ì’[q‚Ì“üo—Í‚Ìİ’è.
-	1bit–Ú‚ªƒ|[ƒg0‚ÉA16bit–Ú‚ªƒ|[ƒg0‚É‘Î‰‚·‚éB
+	/**	UPPã®ç«¯å­ã®å…¥å‡ºåŠ›ã®è¨­å®š.
+	1bitç›®ãŒãƒãƒ¼ãƒˆ0ã«ã€16bitç›®ãŒãƒãƒ¼ãƒˆ0ã«å¯¾å¿œã™ã‚‹ã€‚
     @verbatim
-	UPP‚Ì’[q‚Æƒrƒbƒg‚ÌŠ„‚è“–‚Ä
+	UPPã®ç«¯å­ã¨ãƒ“ãƒƒãƒˆã®å‰²ã‚Šå½“ã¦
 	0xABCD
 	dir  MSB 0x   A    B    C    D LSB
 	port       FEDC BA98 7654 3210
 	@endverbatim
-	0: “ü—Í	1: o—Í	*/
+	0: å…¥åŠ›	1: å‡ºåŠ›	*/
 	void	PortDir(unsigned dir = 0x0000);
-	///	PIO‚Ì’l‚ğ“ü—Í(PortOwner‚ªPIO‚É‚È‚Á‚Ä‚¢‚é’[q‚Ì‚İg—p‚Å‚«‚é)
+	///	PIOã®å€¤ã‚’å…¥åŠ›(PortOwnerãŒPIOã«ãªã£ã¦ã„ã‚‹ç«¯å­ã®ã¿ä½¿ç”¨ã§ãã‚‹)
 	unsigned short PioRead();
-	///	PIO‚Ö’l‚ğo—Í(PortOwner‚ªPIO‚É‚È‚Á‚Ä‚¢‚é’[q‚Ì‚İg—p‚Å‚«‚é)
+	///	PIOã¸å€¤ã‚’å‡ºåŠ›(PortOwnerãŒPIOã«ãªã£ã¦ã„ã‚‹ç«¯å­ã®ã¿ä½¿ç”¨ã§ãã‚‹)
 	void	PioWrite(unsigned short d);
-	/**	UPP Data Register ‚Ì’l‚ğİ’è.
-	@param	no	UDR‚Ì”Ô†(0-23)
-	@param	v	’l	*/
+	/**	UPP Data Register ã®å€¤ã‚’è¨­å®š.
+	@param	no	UDRã®ç•ªå·(0-23)
+	@param	v	å€¤	*/
 	void	UdrWrite(unsigned no,unsigned short v);
-	/**	UPP Data Register ‚Ì’l‚Ì“Ç‚İo‚µ.
-	@param	no	UDR‚Ì”Ô†(0-23)
-	@return		’l	*/
+	/**	UPP Data Register ã®å€¤ã®èª­ã¿å‡ºã—.
+	@param	no	UDRã®ç•ªå·(0-23)
+	@return		å€¤	*/
 	unsigned short	UdrRead(unsigned no);
 };
 }	//	namespace Spr

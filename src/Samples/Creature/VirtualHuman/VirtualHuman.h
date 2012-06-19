@@ -1,4 +1,4 @@
-#ifndef VIRTUALHUMAN_H
+ï»¿#ifndef VIRTUALHUMAN_H
 #define VIRTUALHUMAN_H
 
 #include <vector>
@@ -20,7 +20,7 @@ public:
 
 	Vec3d gravity;
 
-	//ƒfƒoƒbƒN•\¦‚Ég‚¤•Ï”
+	//ãƒ‡ãƒãƒƒã‚¯è¡¨ç¤ºã«ä½¿ã†å¤‰æ•°
 	bool bGravity;
 	bool bDebug;
 	bool bGraphic;
@@ -28,16 +28,16 @@ public:
 	bool bOneStep;
 	bool bIK;
 
-	// ƒ†[ƒU‚Ìw
+	// ãƒ¦ãƒ¼ã‚¶ã®æŒ‡
 	PHSolidIf* soCursor;
 	double zP;
 
-	// ˜r‚Ì“·‘Ì‚É‘Î‚·‚éWritheness
+	// è…•ã®èƒ´ä½“ã«å¯¾ã™ã‚‹Writheness
 	double wrL, wrR, wrLG;
 	Vec3d trunkUp, j1, j2, j3, g1;
 	Vec3d via1L;
 
-	// ƒNƒŠ[ƒ`ƒƒ
+	// ã‚¯ãƒªãƒ¼ãƒãƒ£
 	CRBallHumanBodyGen            *bodyGen;
 
 	CRSdkIf                       *crSdk;

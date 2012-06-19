@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  Copyright (c) 2003-2006, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -8,19 +8,19 @@
 /**
  Springhead2/src/tests/Graphics/GRVertexBlending/main.cpp
 
-yŠT—vz
-  EVertexBlending ‚ÌƒeƒXƒgƒvƒƒOƒ‰ƒ€
+ã€æ¦‚è¦ã€‘
+  ãƒ»VertexBlending ã®ãƒ†ã‚¹ãƒˆãƒ—ãƒ­ã‚°ãƒ©ãƒ 
 
-y“à—ez
-  EŠe’¸“_À•W‚É‘Î‚µA•ÏŠ·s—ñ‚ğ—^‚¦AƒEƒFƒCƒg‚Å‡¬‚·‚éB
-  E‚»‚ê‚¼‚ê‚ÌƒIƒuƒWƒFƒNƒg‚Í‚R‚Â‚ÌQuad‚©‚ç\¬‚³‚êA
-	Blue Quad ‚É‚Í‰E‚É‚P‚¸‚ç‚µ‚½•ÏŠ·s—ñ‚ğ—^‚¦AYellow Quad ‚É‚Í¶‚É‚P‚¸‚ç‚µ‚½•ÏŠ·s—ñ‚ğ—^‚¦‚éB
-  E‚Ü‚½A¶‚©‚ç‡‚ÉAGRVertexElement::VFP3fB4fAGRVertexElement::VFC3fP3fB4fAGRVertexElement::VFC4bP3fB4f ‚ÌƒeƒXƒg‚Å‚ ‚èA
-  @ƒŒƒ“ƒ_ƒŠƒ“ƒOŒ‹‰Ê‚ÍA
-  @	GRVertexElement::VFP3fB4f		@	F”’‚©‚ç‚È‚é‚R‚Â‚ÌƒuƒƒbƒN
-		GRVertexElement::VFC3fP3fB4f		FÂ—Î‰©‚©‚ç‚È‚é‚R‚Â‚ÌƒuƒƒbƒN
-		GRVertexElement::VFC4bP3fB4f		FÂ—Î‰©‚©‚ç‚È‚é‚R‚Â‚ÌƒuƒƒbƒN
-	‚Æ‚È‚éB
+ã€å†…å®¹ã€‘
+  ãƒ»å„é ‚ç‚¹åº§æ¨™ã«å¯¾ã—ã€å¤‰æ›è¡Œåˆ—ã‚’ä¸ãˆã€ã‚¦ã‚§ã‚¤ãƒˆã§åˆæˆã™ã‚‹ã€‚
+  ãƒ»ãã‚Œãã‚Œã®ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã¯ï¼“ã¤ã®Quadã‹ã‚‰æ§‹æˆã•ã‚Œã€
+	Blue Quad ã«ã¯å³ã«ï¼‘ãšã‚‰ã—ãŸå¤‰æ›è¡Œåˆ—ã‚’ä¸ãˆã€Yellow Quad ã«ã¯å·¦ã«ï¼‘ãšã‚‰ã—ãŸå¤‰æ›è¡Œåˆ—ã‚’ä¸ãˆã‚‹ã€‚
+  ãƒ»ã¾ãŸã€å·¦ã‹ã‚‰é †ã«ã€GRVertexElement::VFP3fB4fã€GRVertexElement::VFC3fP3fB4fã€GRVertexElement::VFC4bP3fB4f ã®ãƒ†ã‚¹ãƒˆã§ã‚ã‚Šã€
+  ã€€ãƒ¬ãƒ³ãƒ€ãƒªãƒ³ã‚°çµæœã¯ã€
+  ã€€	GRVertexElement::VFP3fB4f		ã€€	ï¼šç™½ã‹ã‚‰ãªã‚‹ï¼“ã¤ã®ãƒ–ãƒ­ãƒƒã‚¯
+		GRVertexElement::VFC3fP3fB4f		ï¼šé’ç·‘é»„ã‹ã‚‰ãªã‚‹ï¼“ã¤ã®ãƒ–ãƒ­ãƒƒã‚¯
+		GRVertexElement::VFC4bP3fB4f		ï¼šé’ç·‘é»„ã‹ã‚‰ãªã‚‹ï¼“ã¤ã®ãƒ–ãƒ­ãƒƒã‚¯
+	ã¨ãªã‚‹ã€‚
 
  */
 #include <stdlib.h>
@@ -62,17 +62,17 @@ VertexC3f verticesC3f[] =
 	// r    g    b      x    y    z      w0   w1    mi0   mi1    nb
 	{ 0.0f,0.0f,1.0f,  1.0f,6.0f,0.0f,  1.0f,0.0f,  0.0f,0.0f,  1.0f },
 	{ 0.0f,0.0f,1.0f, -1.0f,6.0f,0.0f,  1.0f,0.0f,  0.0f,0.0f,  1.0f },
-	{ 0.0f,0.0f,1.0f, -1.0f,4.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f }, // Blue Quad iãj
+	{ 0.0f,0.0f,1.0f, -1.0f,4.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f }, // Blue Quad ï¼ˆä¸Šï¼‰
 	{ 0.0f,0.0f,1.0f,  1.0f,4.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
 
 	{ 0.0f,1.0f,0.0f,  1.0f,4.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
 	{ 0.0f,1.0f,0.0f, -1.0f,4.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
-	{ 0.0f,1.0f,0.0f, -1.0f,2.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f }, // Green Quadi’†j
+	{ 0.0f,1.0f,0.0f, -1.0f,2.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f }, // Green Quadï¼ˆä¸­ï¼‰
 	{ 0.0f,1.0f,0.0f,  1.0f,2.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
 
 	{ 1.0f,1.0f,0.0f,  1.0f,2.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
 	{ 1.0f,1.0f,0.0f, -1.0f,2.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
-	{ 1.0f,1.0f,0.0f, -1.0f,0.0f,0.0f,  1.0f,0.0f,  1.0f,0.0f,  1.0f }, // Yellow Quadi‰ºj
+	{ 1.0f,1.0f,0.0f, -1.0f,0.0f,0.0f,  1.0f,0.0f,  1.0f,0.0f,  1.0f }, // Yellow Quadï¼ˆä¸‹ï¼‰
 	{ 1.0f,1.0f,0.0f,  1.0f,0.0f,0.0f,  1.0f,0.0f,  1.0f,0.0f,  1.0f }
 };
 
@@ -89,17 +89,17 @@ VertexC4f verticesC4f[] =
 	// r    g    b    a        x    y    z     w0   w1    mi0   mi1    nb
 	{ 0.0f,0.0f,1.0f,1.0f,   1.0f,6.0f,0.0f,  1.0f,0.0f,  0.0f,0.0f,  1.0f },
 	{ 0.0f,0.0f,1.0f,1.0f,  -1.0f,6.0f,0.0f,  1.0f,0.0f,  0.0f,0.0f,  1.0f },
-	{ 0.0f,0.0f,1.0f,1.0f,  -1.0f,4.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f }, // Blue Quad iãj
+	{ 0.0f,0.0f,1.0f,1.0f,  -1.0f,4.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f }, // Blue Quad ï¼ˆä¸Šï¼‰
 	{ 0.0f,0.0f,1.0f,1.0f,   1.0f,4.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
 
 	{ 0.0f,1.0f,0.0f,1.0f,   1.0f,4.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
 	{ 0.0f,1.0f,0.0f,1.0f,  -1.0f,4.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
-	{ 0.0f,1.0f,0.0f,1.0f,  -1.0f,2.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f }, // Green Quadi’†j
+	{ 0.0f,1.0f,0.0f,1.0f,  -1.0f,2.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f }, // Green Quadï¼ˆä¸­ï¼‰
 	{ 0.0f,1.0f,0.0f,1.0f,   1.0f,2.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
 
 	{ 1.0f,1.0f,0.0f,1.0f,   1.0f,2.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
 	{ 1.0f,1.0f,0.0f,1.0f,  -1.0f,2.0f,0.0f,  0.5f,0.5f,  0.0f,1.0f,  2.0f },
-	{ 1.0f,1.0f,0.0f,1.0f,  -1.0f,0.0f,0.0f,  1.0f,0.0f,  1.0f,0.0f,  1.0f }, // Yellow Quadi‰ºj
+	{ 1.0f,1.0f,0.0f,1.0f,  -1.0f,0.0f,0.0f,  1.0f,0.0f,  1.0f,0.0f,  1.0f }, // Yellow Quadï¼ˆä¸‹ï¼‰
 	{ 1.0f,1.0f,0.0f,1.0f,   1.0f,0.0f,0.0f,  1.0f,0.0f,  1.0f,0.0f,  1.0f }
 };
 
@@ -108,18 +108,18 @@ VertexC4f verticesC4f[] =
 
 
 /**
- brief  	glutReshapeFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	<in/--> w@@•
- param  	<in/--> h@@‚‚³
- return 	‚È‚µ
+ brief  	glutReshapeFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	<in/--> wã€€ã€€å¹…
+ param  	<in/--> hã€€ã€€é«˜ã•
+ return 	ãªã—
  */
 void reshape(int w, int h){
 	render->Reshape(Vec2f(0,0), Vec2f(w,h));
 }
 /**
- brief     	glutDisplayFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief     	glutDisplayFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void display(void) {
 	render->ClearBuffer();
@@ -145,20 +145,20 @@ void display(void) {
 	glutSwapBuffers();
 }
 /**
- brief 		glutKeyboardFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ” 
- param		<in/--> key@@ ASCIIƒR[ƒh
- param 		<in/--> x@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- param 		<in/--> y@@@ ƒL[‚ª‰Ÿ‚³‚ê‚½‚Ìƒ}ƒEƒXÀ•W
- return 	‚È‚µ
+ brief 		glutKeyboardFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•° 
+ param		<in/--> keyã€€ã€€ ASCIIã‚³ãƒ¼ãƒ‰
+ param 		<in/--> xã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ param 		<in/--> yã€€ã€€ã€€ ã‚­ãƒ¼ãŒæŠ¼ã•ã‚ŒãŸæ™‚ã®ãƒã‚¦ã‚¹åº§æ¨™
+ return 	ãªã—
  */
 void keyboard(unsigned char key, int x, int y) {
 	if (key == 27) 
 		exit(0);
 }
 /**
- brief  	glutIdleFunc‚Åw’è‚µ‚½ƒR[ƒ‹ƒoƒbƒNŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief  	glutIdleFuncã§æŒ‡å®šã—ãŸã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯é–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void idle(){
 	glutPostRedisplay();
@@ -170,9 +170,9 @@ void idle(){
 	}
 }
 /**
- brief  	’¸“_ƒf[ƒ^İ’èŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief  	é ‚ç‚¹ãƒ‡ãƒ¼ã‚¿è¨­å®šé–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void SetVertex(){
 	int nIndex=0;
@@ -227,22 +227,22 @@ void SetVertex(){
 		}
 	}
 	
-	// ’¸“_ƒtƒH[ƒ}ƒbƒg‚Ìƒf[ƒ^Œ^‚É‘Î‚·‚éƒCƒ“ƒfƒbƒNƒXİ’è
+	// é ‚ç‚¹ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆã®ãƒ‡ãƒ¼ã‚¿å‹ã«å¯¾ã™ã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹è¨­å®š
 	for (size_t index=0; index<12; ++index){
 		faces.push_back(index);
 	}
 }
 
 /**
- brief  	ƒVƒF[ƒ_İ’èŠÖ”
- param	 	‚È‚µ
- return 	‚È‚µ
+ brief  	ã‚·ã‚§ãƒ¼ãƒ€è¨­å®šé–¢æ•°
+ param	 	ãªã—
+ return 	ãªã—
  */
 void SetShader(){
-	// ƒVƒF[ƒ_‚Ì‰Šú‰»
+	// ã‚·ã‚§ãƒ¼ãƒ€ã®åˆæœŸåŒ–
 	render->InitShader();	
 
-	// ƒVƒF[ƒ_ƒIƒuƒWƒFƒNƒgì¬AƒƒP[ƒVƒ‡ƒ“î•ñ‚Ìæ“¾
+	// ã‚·ã‚§ãƒ¼ãƒ€ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä½œæˆã€ãƒ­ã‚±ãƒ¼ã‚·ãƒ§ãƒ³æƒ…å ±ã®å–å¾—
 	render->SetShaderFormat(GRShaderFormat::shP3fB4f);
 	shaderP3fB4f = render->CreateShader();
 	render->GetShaderLocation(shaderP3fB4f, &locP3fB4f);
@@ -255,19 +255,19 @@ void SetShader(){
 	shaderC4bP3fB4f = render->CreateShader();
 	render->GetShaderLocation(shaderC4bP3fB4f, &locC4bP3fB4f);
 
-	// ƒuƒŒƒ“ƒh•ÏŠ·s—ñ‚Ìİ’è
+	// ãƒ–ãƒ¬ãƒ³ãƒ‰å¤‰æ›è¡Œåˆ—ã®è¨­å®š
 	Affinef vMatrix0, vMatrix1;
-	vMatrix0.data[3][0] = 1.0;		// ‰E‚É1‚¾‚¯•½sˆÚ“®
-	vMatrix1.data[3][0] = -1.0;		// ¶‚É1‚¾‚¯•½sˆÚ“®	
+	vMatrix0.data[3][0] = 1.0;		// å³ã«1ã ã‘å¹³è¡Œç§»å‹•
+	vMatrix1.data[3][0] = -1.0;		// å·¦ã«1ã ã‘å¹³è¡Œç§»å‹•	
 	render->ClearBlendMatrix();
 	render->SetBlendMatrix(vMatrix0);
 	render->SetBlendMatrix(vMatrix1);
 }
 /**
- brief		ƒƒCƒ“ŠÖ”
- param		<in/--> argc@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í‚ÌŒÂ”
- param		<in/--> argv@@ƒRƒ}ƒ“ƒhƒ‰ƒCƒ““ü—Í
- return		0 (³íI—¹)
+ brief		ãƒ¡ã‚¤ãƒ³é–¢æ•°
+ param		<in/--> argcã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›ã®å€‹æ•°
+ param		<in/--> argvã€€ã€€ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å…¥åŠ›
+ return		0 (æ­£å¸¸çµ‚äº†)
  */
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
@@ -282,12 +282,12 @@ int main(int argc, char **argv) {
 	render->SetDevice(grDevice);
 	grDevice->Init();
 
-	// ƒf[ƒ^İ’è
+	// ãƒ‡ãƒ¼ã‚¿è¨­å®š
 	SetVertex();
-	// ƒVƒF[ƒ_İ’è
+	// ã‚·ã‚§ãƒ¼ãƒ€è¨­å®š
 	SetShader();
 
-	// ƒVƒF[ƒ_‚ğ“K—p‚µ‚½ƒfƒBƒXƒvƒŒƒCƒŠƒXƒg‚ğì¬‚·‚é
+	// ã‚·ã‚§ãƒ¼ãƒ€ã‚’é©ç”¨ã—ãŸãƒ‡ã‚£ã‚¹ãƒ—ãƒ¬ã‚¤ãƒªã‚¹ãƒˆã‚’ä½œæˆã™ã‚‹
 	listP3fB4f = render->StartList();
 	render->SetVertexFormat(GRVertexElement::vfP3fB4f);
 	render->SetShaderFormat(GRShaderFormat::shP3fB4f);

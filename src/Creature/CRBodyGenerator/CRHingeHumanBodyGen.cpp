@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
@@ -17,11 +17,11 @@
 
 namespace Spr{
 
-//�R���X�g���N�^
+//コンストラクタ
 CRHingeHumanBodyGenDesc::CRHingeHumanBodyGenDesc(){
-	jointOrder = SOCKET_PARENT; // ���̂����Ȃ���
+	jointOrder = SOCKET_PARENT; // そのうちなくす
 
-	bodyMass = 1.0f;  /// �f�t�H���g������Ȃ̂͂ǂ����ς���(mitake)
+	bodyMass = 1.0f;  /// デフォルトがこれなのはどうも変だが(mitake)
 
 	waistHeight    = 0.2298;
 	waistBreadth   = 0.3067;
@@ -96,7 +96,7 @@ CRHingeHumanBodyGenDesc::CRHingeHumanBodyGenDesc(){
 
 	posRightUpperArm = Vec3d(0,0,0);
 
-	// Vec2d(lower, upper)  lower>upper�̂Ƃ����搧������
+	// Vec2d(lower, upper)  lower>upperのとき可動域制限無効
 	rangeWaistAbdomen = Vec2d(Rad(+360) , Rad(-360));
 	rangeAbdomenChest = Vec2d(Rad(+360) , Rad(-360));
 	rangeChestNeckX   = Vec2d(Rad(+360) , Rad(-360));
@@ -754,11 +754,11 @@ void CRHingeHumanBodyGen::CreateFoot(LREnum lr){
 
 // --- --- ---
 void CRHingeHumanBodyGen::InitContact(){
-	// �����͋߂����đ��̑�������ł͏Փ˂��Ă��܂����߁D
-	// �O�̂��ߍ��͎c���Ă��邪���̃R�[�h������Εs�v�ȋC������D(mitake)
+	// 両足は近すぎて足の太さ次第では衝突してしまうため．
+	// 念のため今は残してあるが下のコードがあれば不要な気がする．(mitake)
 	phScene->SetContactMode(solids[SO_LEFT_UPPER_LEG], solids[SO_RIGHT_UPPER_LEG], PHSceneDesc::MODE_NONE);
 
-	// �����ɑ����鍄�̓��m�̐ڐG��Off�i�܂����Ȃ����邩���H�Œ���̐ڐG�͎c�������i07/09/25, mitake�j�j
+	// 自分に属する剛体同士の接触をOff（まだ少なすぎるかも？最低限の接触は残したい（07/09/25, mitake））
 	for (unsigned int i=0; i<solids.size(); ++i) {
 		for (unsigned int j=0; j<solids.size(); ++j) {
 			if (i!=j) {
@@ -768,7 +768,7 @@ void CRHingeHumanBodyGen::InitContact(){
 	}
 
 	/*
-	// �����ȊO�ɂ��ł�Body������΂���Body�ɑ����鍄�̂Ƃ�Contact���؂�
+	// 自分以外にすでにBodyが居ればそのBodyに属する剛体とのContactも切る
 	for (int i=0; i<creature->NBodies(); ++i) {
 		CRBodyIf* body = creature->GetBody(i);
 		if (DCAST(CRHingeHumanBodyGenIf,body)!=(this->Cast())) {
