@@ -27,10 +27,10 @@ public:
 	ACCESS_DESC(PHIKEndEffector)
 
 	/// 簡略表記用typedef
-	typedef std::set<PHIKEndEffector*>	ESet;
-	typedef ESet::iterator				ESetIter;
-	typedef std::set<PHIKActuator*>		ASet;
-	typedef ASet::iterator				ASetIter;
+	typedef std::set< PHIKEndEffector* >	ESet;
+	typedef ESet::iterator					ESetIter;
+	typedef std::set< PHIKActuator* >		ASet;
+	typedef ASet::iterator					ASetIter;
 
 	/// 自由度
 	int ndof;

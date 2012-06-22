@@ -48,8 +48,8 @@ public:
 	SPR_OBJECTDEF1(PHBallJoint, PHJoint);
 	SPR_DECLMEMBEROF_PHBallJointDesc;
 
-	PHBallJointLimit*	limit;		///< 可動範囲拘束
-	PHBallJointMotor	motor;		///< 関節コントローラ
+	UTRef<PHBallJointLimit>		limit;		///< 可動範囲拘束
+	PHBallJointMotor			motor;		///< 関節コントローラ
 
 	/// コンストラクタ
 	PHBallJoint(const PHBallJointDesc& desc = PHBallJointDesc());
