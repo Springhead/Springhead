@@ -26,8 +26,8 @@ public:
 
 	// --- --- --- --- ---
 
-	std::vector<PHIKActuator*>		actuators;
-	std::vector<PHIKEndEffector*>	endeffectors;
+	std::vector< UTRef<PHIKActuator> >		actuators;
+	std::vector< UTRef<PHIKEndEffector> >	endeffectors;
 
 	// --- --- --- --- ---
 
