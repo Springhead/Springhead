@@ -3,6 +3,7 @@
 
 if "%1"=="RELEASE" set EXT=
 if "%1"=="DEBUG" set EXT=D
+if "%1"=="TRACE" set EXT=T
 if "%1"=="MFCRELEASE" set EXT=M
 if "%1"=="MFCDEBUG" set EXT=MD
 if "%2"=="7" set EXT=7%EXT%
@@ -20,8 +21,6 @@ set INPUT=%INPUT% Graphics/Graphics%EXT%.lib
 set INPUT=%INPUT% FileIO/FileIO%EXT%.lib
 set INPUT=%INPUT% Framework/Framework%EXT%.lib
 set INPUT=%INPUT% HumanInterface/HumanInterface%EXT%.lib
-
-rem set INPUT=Device/Device%EXT%.lib HIS/HIS%EXT%.lib
 
 if "%INPUT%"=="" echo 環境変数用メモリの空きが不足しています．
 if "%INPUT%"=="" echo 空きを増やしてもう一度実行します．
