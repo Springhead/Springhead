@@ -7,6 +7,7 @@
 #include <EmbPython\EmbPython.h>
 #include <EmbPython\SprEPUtility.h>
 
+
 static PyMethodDef Spr_methods[] = {
 	{NULL, NULL}
 };

@@ -122,7 +122,7 @@ public:
 
 	/** @brief 終了処理ハンドラ
 	 */
-	virtual void AtExit(){}
+	virtual void AtExit(){ }
 
 	/** DVKeyMouseHandlerの仮想関数
 		デフォルトではFWAppの従来のイベントハンドラを呼びだすのみ．

@@ -22,9 +22,9 @@ struct PHHapticPointerDesc{
 	};
 };
 
-struct PHHapticPointerIf : public PHHapticPointerDesc, public PHSolidIf{
+struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	SPR_IFDEF(PHHapticPointer);
-	void	SetHapticRenderMode(HapticRenderMode m);
+	void	SetHapticRenderMode(PHHapticPointerDesc::HapticRenderMode m);
 	void	EnableForce(bool b);
 	void	EnableFriction(bool b);
 	void	EnableVibration(bool b);
