@@ -17,11 +17,214 @@
 #include <Framework/SprFWEditor.h>
 #include <map>
 
+#include "Python.h"
+
 using namespace std;
 namespace Spr{;
 
 #define ESC		27
 
+class EPApp : public FWApp {
+	enum HumanInterface{
+		SPIDAR,				
+		XBOX,				
+		FALCON,
+	} humanInterface;
+
+	enum EngineType{
+		SINGLE = 0,				// シングルすれっど
+		MULTI,					// マルチスレッド
+		LD,						// マルチ+局所シミュレーション
+	} engineType;
+
+	PHSceneIf* phscene;			// PHSceneへのポインタ
+	PHHapticPointerIf* pointer; // 力覚ポインタへのポインタ
+	float pdt;					// 物理スレッドの刻み
+	float hdt;					// 力覚スレッドの刻み
+	int physicsTimerID;			// 物理スレッドのタイマ
+	int hapticTimerID;			// 力覚スレッドのタイマ
+	UTRef<HIBaseIf> spg;		// 力覚インタフェースへのポインタ
+
+	PyObject* afterStepFunc;	// Step後にCallbackされるPythonの関数
+
+	bool bPhysicsEnabled;		// シミュレーションを実行するか
+
+public:
+	// ----- ----- ----- ----- -----
+
+	EPApp() {
+		pdt = 0.02;
+		hdt = 0.001;
+
+		engineType		= LD;
+		humanInterface	= SPIDAR;
+		afterStepFunc	= NULL;
+
+		bPhysicsEnabled = false;
+	}
+
+	void SetAfterStepFunc(PyObject* func) {
+		if (!PyCallable_Check(func)) {
+			PyErr_SetString(PyExc_TypeError, "parameter must be callable");
+			return;
+		}
+		Py_XINCREF(func);											// 新たなコールバックへの参照を追加
+		Py_XDECREF(afterStepFunc);									// 以前のコールバックを捨てる
+		afterStepFunc = func;										// 新たなコールバックを記憶
+	}
+
+	void EnablePhysics(bool e) {
+		bPhysicsEnabled = e;
+	}
+
+	void InitInterface() {
+		HISdkIf* hiSdk = GetSdk()->GetHISdk();
+
+		if(humanInterface == SPIDAR){
+			// x86
+			DRUsb20SimpleDesc usbSimpleDesc;
+			hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
+			DRUsb20Sh4Desc usb20Sh4Desc;
+			for(int i=0; i< 10; ++i){
+				usb20Sh4Desc.channel = i;
+				hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+			}
+			// x64
+			DRCyUsb20Sh4Desc cyDesc;
+			for(int i=0; i<10; ++i){
+				cyDesc.channel = i;
+				hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+			}
+			hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
+			hiSdk->Print(DSTR);
+			hiSdk->Print(std::cout);
+
+			spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+			spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+			spg->Calibration();
+		}else if(humanInterface == XBOX){
+			spg = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
+		}else if(humanInterface == FALCON){
+			spg = hiSdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
+			spg->Init(NULL);
+		}
+	}
+
+	void CreatePointer() {
+		PHSdkIf* phSdk = GetSdk()->GetPHSdk();				// シェイプ作成のためにPHSdkへのポインタをとってくる
+		phscene = GetSdk()->GetScene(0)->GetPHScene();		// 剛体作成のためにPHSceneへのポインタをとってくる
+
+		pointer = phscene->CreateHapticPointer();			// 力覚ポインタの作成
+
+		CDSphereDesc cd;
+		cd.radius = 0.1f;
+		cd.material.mu = 0.4;
+		pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
+
+		Posed defaultPose;
+		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);	
+		pointer->SetDefaultPose(defaultPose);		// 力覚ポインタ初期姿勢の設定
+		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia());	// 慣性テンソルの設定
+		pointer->SetLocalRange(0.1);				// 局所シミュレーション範囲の設定
+		pointer->SetPosScale(50);					// 力覚ポインタの移動スケールの設定
+		pointer->SetReflexSpring(5000);				// バネ係数の設定
+		pointer->SetReflexDamper(0.1 * 0.0);		// ダンパ係数の設定
+		pointer->EnableFriction(false);				// 摩擦を有効にするかどうか
+
+		FWHapticPointerIf* fwPointer = GetSdk()->GetScene(0)->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
+		fwPointer->SetHumanInterface(spg);		// HumanInterfaceの設定
+		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfの設定
+	}
+
+	void Initialize(){
+		Init(0, NULL);
+		instance = this;
+	}
+	
+	void Init(int argc = 0, char* argv[] = 0) {
+		// ----- ----- ----- ----- -----
+		// 最も基本的な初期化処理		
+		CreateSdk();										// SDK初期化
+		GetSdk()->CreateScene();							// シーンを作成
+
+		// ----- ----- ----- ----- -----
+		// HapticAppの初期化処理
+		InitInterface();									// インタフェースの初期化
+		CreatePointer();									// 力覚ポインタの作成
+		PHHapticEngineIf* he = phscene->GetHapticEngine();	// 力覚エンジンをとってくる
+		he->EnableHapticEngine(true);						// 力覚エンジンの有効化
+
+		if(engineType == SINGLE){
+			// シングルスレッドモード
+			he->SetHapticEngineMode(PHHapticEngineDesc::SINGLE_THREAD);
+			phscene->SetTimeStep(hdt);
+		}else if(engineType == MULTI){
+			// マルチスレッドモード
+			he->SetHapticEngineMode(PHHapticEngineDesc::MULTI_THREAD);
+			phscene->SetTimeStep(pdt);
+		}else if(engineType == LD){
+			// 局所シミュレーションモード
+			he->SetHapticEngineMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
+			phscene->SetTimeStep(pdt);
+		}
+
+		{
+			UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// 物理スレッド用のマルチメディアタイマを作成
+			timer->SetResolution(1);								// 分解能(ms)
+			timer->SetInterval(unsigned int(pdt * 1000));			// 刻み(ms)h
+			physicsTimerID = timer->GetID();						// 物理スレッドのタイマIDの取得
+			timer->Start();											// タイマスタート
+		}
+
+		{
+			UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// 力覚スレッド用のマルチメディアタイマを作成
+			timer->SetResolution(1);								// 分解能(ms)
+			timer->SetInterval(unsigned int(hdt * 1000));			// 刻み(ms)h
+			hapticTimerID = timer->GetID();							// 力覚スレッドのタイマIDの取得
+			timer->Start();											// タイマスタート
+		}
+	}
+
+	void TimerFunc(int id) {
+		if (! bPhysicsEnabled) { return; }
+
+		if(engineType == 0){
+			if(hapticTimerID == id){
+				GetSdk()->GetScene(0)->UpdateHapticPointers();
+			}
+		}else if(engineType > 0){
+			if(hapticTimerID == id){
+				GetSdk()->GetScene(0)->UpdateHapticPointers();
+				phscene->StepHapticLoop();
+			}else{
+				PHHapticEngineIf* he = phscene->GetHapticEngine();
+				he->StepPhysicsSimulation();
+				/* <!!>
+				if (afterStepFunc != NULL) {
+					std::cout << "Calling... : " << afterStepFunc << std::endl;
+					PyObject* arglist = Py_BuildValue("()");
+					PyEval_CallObject(afterStepFunc, arglist);
+					std::cout << "Call fin." << std::endl;
+					Py_DECREF(arglist);
+					std::cout << "decref args." << std::endl;
+				} else {
+					std::cout << "Null..." << std::endl;
+				}
+				*/
+			}
+		}
+	}
+
+	void Finalize() {
+		GetTimer(0)->Stop();
+		GetTimer(1)->Stop();
+	}
+};
+
+
+
+
+#if 0
 class EPApp : public FWApp{
 public:
 	/** メニューID
@@ -700,6 +903,7 @@ public: /** FWAppの実装 **/
 	}
 
 };
+#endif
 
 }
 
