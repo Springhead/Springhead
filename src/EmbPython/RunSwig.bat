@@ -43,10 +43,5 @@ echo 	call .\EmbPythonSwig.bat Framework FileIO HumanInterface Graphics Physics 
 
 make -f%MAKEFILE%
 
-set EPMODULES=Framework FileIO HumanInterface Graphics Physics Foundation Base Collision Creature
-for %%f in (%EPMODULES%) do nkf -w8 < EP%%f.h   > ..\..\..\src\EmbPython\EP%%f.h
-for %%f in (%EPMODULES%) do nkf -w8 < EP%%f.cpp > ..\..\..\src\EmbPython\EP%%f.cpp
-for %%f in (%EPMODULES%) do nkf -w8 < ..\..\include\EmbPython\SprEP%%f.h > ..\..\..\include\EmbPython\SprEP%%f.h
-
 set PATH=%PATHORG%
 set PATHORG=

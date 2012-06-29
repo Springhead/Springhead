@@ -88,6 +88,10 @@ type %CPP% >> %MODULE%.tmp
 
 move /Y %MODULE%.tmp %CPP%
 
+nkf -w8 < EP%MODULE%.h   > ..\..\..\src\EmbPython\EP%%f.h
+nkf -w8 < EP%MODULE%.cpp > ..\..\..\src\EmbPython\EP%%f.cpp
+nkf -w8 < ..\..\include\EmbPython\SprEP%MODULE%.h > ..\..\..\include\EmbPython\SprEP%MODULE%.h
+
 :end
 exit /b
 
