@@ -23,9 +23,14 @@ for %%f in (..\EmbPython\Utility\*.i)   do nkf -s < %%f > ..\..\swigtemp\src\Emb
 cd ..\..\swigtemp\src\EmbPython
 set PATH=%PATH%;..\..\..\bin;..\..\..\bin\swig
 
+set SRCINTF=
+for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do set SRCINTF=!SRCINTF! ../../../include/%%p/%%f
+set SRCIMP=
+for %%p in (%TARGET%) do for %%f in (../%%p/*.h) do set SRCIMP=!SRCIMP! ../../../src/%%p/%%f
+
 echo #	Do not edit. RunSwig.bat will update this file.> %MAKEFILE%
-echo all: %MODULE%Stub.cpp>>%MAKEFILE%
-echo %MODULE%Stub.cpp: %SRCINTF% %SRCIMP%>>%MAKEFILE%
+echo all: EPBase.cpp>>%MAKEFILE%
+echo EPBase.cpp: %SRCINTF% %SRCIMP%>>%MAKEFILE%
 echo 	call .\EmbPythonSwig.bat Base >>%MAKEFILE%
 echo 	call .\EmbPythonSwig.bat Foundation >>%MAKEFILE%
 echo 	call .\EmbPythonSwig.bat FileIO Foundation >>%MAKEFILE%

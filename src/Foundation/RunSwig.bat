@@ -25,11 +25,7 @@ for %%p in (%TARGET%) do if not exist ..\..\swigtemp\include\%%p mkdir ..\..\swi
 
 for %%p in (%TARGET%) do for %%f in (..\..\include\%%p\*.h) do nkf -s < ..\..\include\%%p\%%f > ..\..\swigtemp\include\%%p\%%f
 for %%p in (%TARGET%) do for %%f in (..\%%p\*.h) do nkf -s < ..\%%p\%%f > ..\..\swigtemp\src\%%p\%%f
-rem for %%p in (%TARGET%) do for %%f in (..\%%p\*.i) do nkf -s < ..\%%p\%%f > ..\..\swigtemp\src\%%p\%%f
 nkf -s < ..\..\include\Springhead.h > ..\..\swigtemp\include\Springhead.h
-nkf -s < ..\..\include\base\Env.h > ..\..\swigtemp\include\base\Env.h
-nkf -s < ..\..\include\Base\BaseDebug.h > ..\..\swigtemp\include\Base\BaseDebug.h
-nkf -s < ..\..\src\Foundation\UTTypeDesc.h > ..\..\swigtemp\src\Foundation\UTTypeDesc.h
 
 cd ..\..\swigtemp\src\Foundation
 set PATH=..\..\..\bin;..\..\..\bin\swig
@@ -40,8 +36,10 @@ for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do set SRCINTF=!SRCI
 set SRCIMP=
 for %%p in (%TARGET%) do for %%f in (../%%p/*.h) do set SRCIMP=!SRCIMP! ../%%p/%%f
 
-rem echo interface files:%SRCINTF%
-rem echo src files:%SRCIMP%
+set SRCINTFDEP=
+for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do set SRCINTFDEP=!SRCINTFDEP! ../../../include/%%p/%%f
+set SRCIMPDEP=
+for %%p in (%TARGET%) do for %%f in (../%%p/*.h) do set SRCIMPDEP=!SRCIMPDEP! ../../../src/%%p/%%f
 
 echo #	Do not edit. RunSwig.bat will update this file.> %MODULE%.i
 echo %%module %MODULE%>> %MODULE%.i
@@ -55,7 +53,7 @@ for %%p in (%SRCIMP%) do echo %%include "%%p">> %MODULE%.i
 
 echo #	Do not edit. RunSwig.bat will update this file.> %MAKEFILE%
 echo all: %MODULE%Stub.cpp>>%MAKEFILE%
-echo %MODULE%Stub.cpp: %SRCINTF% %SRCIMP%>>%MAKEFILE%
+echo %MODULE%Stub.cpp: %SRCINTFDEP% %SRCIMPDEP%>>%MAKEFILE%
 echo 	swig -spr -w312,319,325,401,402 -DSWIG_%MODULE% -c++ %MODULE%.i>>%MAKEFILE%
 echo 	copy Spr%MODULE%Decl.hpp ..\..\..\include\%MODULE% >>%MAKEFILE%
 echo 	copy %MODULE%Stub.cpp ..\..\..\src\%MODULE% >>%MAKEFILE%
