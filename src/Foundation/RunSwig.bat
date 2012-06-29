@@ -26,6 +26,9 @@ for %%p in (%TARGET%) do if not exist ..\..\swigtemp\include\%%p mkdir ..\..\swi
 for %%p in (%TARGET%) do for %%f in (..\..\include\%%p\*.h) do nkf -s < ..\..\include\%%p\%%f > ..\..\swigtemp\include\%%p\%%f
 for %%p in (%TARGET%) do for %%f in (..\%%p\*.h) do nkf -s < ..\%%p\%%f > ..\..\swigtemp\src\%%p\%%f
 nkf -s < ..\..\include\Springhead.h > ..\..\swigtemp\include\Springhead.h
+nkf -s < ..\..\include\base\Env.h > ..\..\swigtemp\include\base\Env.h
+nkf -s < ..\..\include\Base\BaseDebug.h > ..\..\swigtemp\include\Base\BaseDebug.h
+nkf -s < ..\..\src\Foundation\UTTypeDesc.h > ..\..\swigtemp\src\Foundation\UTTypeDesc.h
 
 cd ..\..\swigtemp\src\Foundation
 set PATH=..\..\..\bin;..\..\..\bin\swig
