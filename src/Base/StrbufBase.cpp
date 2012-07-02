@@ -50,7 +50,7 @@ int BCC_CDECL UTStreambufBase::underflow()
 		return (int)tbuf;
 	}
 
-	if ((count=read((void *)(eback()), (size_t)(egptr()-eback()-lahead))) <= 0){
+	if ((count=read((void *)(eback()), (unsigned)(egptr()-eback()-lahead))) <= 0){
 		return EOF;     // reached EOF
 	}
 	setg(eback(),(egptr()-count),egptr());   // _gptr = _egptr - count

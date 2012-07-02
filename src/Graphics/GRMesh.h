@@ -88,7 +88,7 @@ public:
 		if (vtxs.size()) return &vtxs[0];
 		else return NULL;
 	}
-	int GetNVertex(){ return vtxs.size()/stride; }			///< 頂点数
+	int GetNVertex(){ return (int)vtxs.size()/stride; }			///< 頂点数
 	const GRVertexElement* GetVertexFormat(){				///< 頂点フォーマットを返す。
 		return vtxFormat;
 	}

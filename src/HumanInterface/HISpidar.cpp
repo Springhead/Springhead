@@ -28,7 +28,7 @@ namespace Spr {;
 bool HISpidar::Init(const void* pDesc){
 	HISdkIf* sdk = GetSdk();
 	const HISpidarDesc& desc = *(const HISpidarDesc*)pDesc;
-	int nMotor = desc.motors.size();
+	size_t nMotor = desc.motors.size();
 	motors.resize(nMotor);
 	
 	size_t i;

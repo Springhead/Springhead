@@ -167,7 +167,7 @@ public:
 	///回転行列変換
 	template<class AM> void FromMatrix(const AM& m)
 	{
-		ET tr = m[0][0] + m[1][1] + m[2][2] + 1;
+		ET tr = m[0][0] + m[1][1] + m[2][2] + (ET)1;
 		if (tr > (0.1f)){
 			ET s = ET( 0.5/sqrt(tr) );
 			W() = ET( 0.25 / s );
@@ -263,8 +263,8 @@ public:
 			V() = PTM::cross(v0, (v0==TVec3<ET>(1,0,0) ? TVec3<ET>(0,1,0) : TVec3<ET>(1,0,0))).unit();
 		}
 		else{
-			s = sqrt((1.0 + d) * 2.0);
-			W() = s / 2.0;
+			s = sqrt(((ET)1.0 + d) * (ET)2.0);
+			W() = s / (ET)2.0;
 			V() = c / s;
 		}
 	}

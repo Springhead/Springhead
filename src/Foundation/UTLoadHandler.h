@@ -57,7 +57,7 @@ public:
 	template <class S>
 	void Get(S*& s, UTLoadContext* ctx){
 		s = NULL;
-		for(int i=ctx->objects.size()-1; i>=0 && !s; --i){
+		for(int i=(int)ctx->objects.size()-1; i>=0 && !s; --i){
 			s = DCAST(S, ctx->objects[i]);
 		}
 		assert(s);

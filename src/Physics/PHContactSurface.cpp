@@ -672,7 +672,7 @@ void PHContactSurface::SearchClosestPoint(int L, int R){
 				if(i != 0){
 					R--;
 					if(R < 0){
-						R = (int)section.size()-1;
+						R = (int)section.size() - 1;
 					}
 					break;
 				}

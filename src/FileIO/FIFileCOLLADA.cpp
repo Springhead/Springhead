@@ -347,7 +347,7 @@ void FIFileCOLLADA::LoadImp(FILoadContext* fc){
 		fileContext->fileMaps.Top()->end, start, cmt);
 	PopLoaderContext();
 }
-#define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
+#define INDENT(x)	UTPadding(((int)sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)
 void FIFileCOLLADA::OnSaveFileStart(FISaveContext* sc){
 	sc->Stream() << "xof 0302txt 0064" << std::endl;

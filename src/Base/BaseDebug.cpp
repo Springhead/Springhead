@@ -63,7 +63,7 @@ public:
 #ifdef _MSC_VER
 	DPFStreambuf(std::_Uninitialized):UTStreambufBase(std::_Noinit){}
 #endif
-	DPFStreambuf(char* gb, size_t gl, char* pb, size_t pl):UTStreambufBase(gb, gl, pb ,pl){
+	DPFStreambuf(char* gb, size_t gl, char* pb, size_t pl):UTStreambufBase(gb, (int)gl, pb ,(int)pl){
 	}
 	virtual unsigned int read(void* buf, unsigned int bufLen){
 		return 0;

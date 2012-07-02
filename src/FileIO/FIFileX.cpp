@@ -321,7 +321,7 @@ void FIFileX::LoadImp(FILoadContext* fc){
 
 //----------------------------------------------------
 //	セーブ時のハンドラ
-#define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
+#define INDENT(x)	UTPadding(((int)sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)
 void FIFileX::OnSaveFileStart(FISaveContext* sc){
 	sc->RegisterGroupToDb("Foundation Physics Graphics FileIO Framework Creature OldSpringhead");

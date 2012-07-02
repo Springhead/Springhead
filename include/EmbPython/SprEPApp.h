@@ -53,8 +53,8 @@ public:
 	// ----- ----- ----- ----- -----
 
 	EPApp() {
-		pdt = 0.02;
-		hdt = 0.001;
+		pdt = 0.02f;
+		hdt = 0.001f;
 
 		engineType		= LD;
 		humanInterface	= SPIDAR;
@@ -118,14 +118,14 @@ public:
 
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
-		cd.material.mu = 0.4;
+		cd.material.mu = 0.4f;
 		pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
 
 		Posed defaultPose;
 		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);	
 		pointer->SetDefaultPose(defaultPose);		// 力覚ポインタ初期姿勢の設定
 		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia());	// 慣性テンソルの設定
-		pointer->SetLocalRange(0.1);				// 局所シミュレーション範囲の設定
+		pointer->SetLocalRange(0.1f);				// 局所シミュレーション範囲の設定
 		pointer->SetPosScale(50);					// 力覚ポインタの移動スケールの設定
 		pointer->SetReflexSpring(5000);				// バネ係数の設定
 		pointer->SetReflexDamper(0.1 * 0.0);		// ダンパ係数の設定

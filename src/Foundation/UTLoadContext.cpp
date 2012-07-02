@@ -186,17 +186,17 @@ void UTLoadedData::EnumLinkAncestor(std::vector<UTLoadedDatas>& res, UTString tn
 		res.back().push_back(this);
 		return;
 	}
-	int nRes = res.size();
+	int nRes = (int)res.size();
 	if (parent){
 		parent->EnumLinkAncestor(res, tn);
 		for(unsigned r=nRes; r<res.size(); ++r){
 			res[r].push_back(this);
 		}
 	}
-	for(unsigned i=0; i<linkFrom.size(); ++i){
-		unsigned nRes = res.size();
+	for(size_t i=0; i<linkFrom.size(); ++i){
+		size_t nRes = res.size();
 		linkFrom[i]->EnumLinkAncestor(res, tn);
-		for(unsigned r=nRes; r<res.size(); ++r){
+		for(size_t r=nRes; r<res.size(); ++r){
 			res[r].push_back(this);
 		}
 	}
@@ -207,17 +207,17 @@ void UTLoadedData::EnumLinkDescendant(std::vector<UTLoadedDatas>& res, UTString 
 		res.back().push_back(this);
 		return;
 	}
-	for(unsigned i=0; i<children.size(); ++i){
-		unsigned nRes = res.size();
+	for(size_t i=0; i<children.size(); ++i){
+		size_t nRes = res.size();
 		children[i]->EnumLinkDescendant(res, tn);
-		for(unsigned r=nRes; r<res.size(); ++r){
+		for(size_t r=nRes; r<res.size(); ++r){
 			res[r].push_back(this);
 		}
 	}
-	for(unsigned i=0; i<linkTo.size(); ++i){
-		unsigned nRes = res.size();
+	for(size_t i=0; i<linkTo.size(); ++i){
+		size_t nRes = res.size();
 		linkTo[i]->EnumLinkDescendant(res, tn);
-		for(unsigned r=nRes; r<res.size(); ++r){
+		for(size_t r=nRes; r<res.size(); ++r){
 			res[r].push_back(this);
 		}
 	}
@@ -366,8 +366,8 @@ UTLoadedData* UTNameManagerForData::FindData(UTString name, UTString cls){
 	if (rv) return rv;
 
 	//	それでもないならば、namespaceを削って、もう一度検索
-	int pos = name.find('/');
-	if (pos != (int)UTString::npos){	//	 名前空間の指定がある場合
+	size_t pos = name.find('/');
+	if (pos != UTString::npos){	//	 名前空間の指定がある場合
 		UTString n = name.substr(pos+1);
 		rv = FindData(n, cls);
 	}
@@ -411,8 +411,8 @@ UTLoadedData* UTNameManagerForData::FindDataFromDescendant(UTString name, UTStri
 //	ネームスペース込みで名前を検索する。検索場所については再帰なし。
 UTLoadedData* UTNameManagerForData::FindDataExact(UTString name, UTString cls){
 	UTLoadedData* rv = NULL;
-	int pos = name.find('/');
-	if (pos != (int)UTString::npos){	//	 名前空間の指定がある場合
+	size_t pos = name.find('/');
+	if (pos != UTString::npos){	//	 名前空間の指定がある場合
 		UTString n = name.substr(pos+1);
 		UTString ns = name.substr(0, pos);
 		//	ぴったりのものを探す．

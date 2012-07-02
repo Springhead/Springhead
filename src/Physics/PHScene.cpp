@@ -463,7 +463,7 @@ PHEngines* PHScene::GetEngines(){
 
 int PHScene::NEngines(){
 	
-	return engines.size();
+	return (int)engines.size();
 }
 
 PHEngineIf* PHScene::GetEngine(int i){
@@ -627,7 +627,7 @@ void PHScene::DumpObjectR(std::ostream& os, int level) const{
 	os << std::endl;
 	os << level << " PHScene::engines" << std::endl;
 	for(size_t i=0; i<n; ++i){
-		engines[i]->DumpObjectR(os, level+1);
+		engines[(int)i]->DumpObjectR(os, level+1);
 	}
 }
 

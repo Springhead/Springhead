@@ -382,7 +382,7 @@ void FIFileSpr::LoadImp(FILoadContext* fc){
 
 //----------------------------------------------------
 //	セーブ時のハンドラ
-#define INDENT(x)	UTPadding((sc->objects.size()+x)*2)
+#define INDENT(x)	UTPadding(((int)sc->objects.size()+x)*2)
 //<< (sc->objects.size()+x)
 void FIFileSpr::OnSaveFileStart(FISaveContext* sc){
 	sc->RegisterGroupToDb("Foundation Physics Graphics FileIO Framework Creature OldSpringhead");
@@ -420,8 +420,8 @@ bool FIFileSpr::OnSaveFieldStart(FISaveContext* sc, int nElements){
 		void* data = sc->datas.Top()->data;
 		int dataLen=-1, defaultDataLen=-1;
 		if (field->varType == UTTypeDesc::Field::VECTOR){
-			dataLen = field->VectorSize(data);
-			defaultDataLen = field->VectorSize(defaultData);
+			dataLen = (int)field->VectorSize(data);
+			defaultDataLen = (int)field->VectorSize(defaultData);
 		}else if(field->varType == UTTypeDesc::Field::ARRAY){
 			dataLen = defaultDataLen = field->length;
 		}

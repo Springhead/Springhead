@@ -170,7 +170,7 @@ struct GRAnimationControllerIf: public SceneObjectIf{
 	///	GRAnimationの削除
 	bool DelChildObject(ObjectIf* o);
 	///	GRAnimationの数
-	int NChildObject();
+	size_t NChildObject();
 	///	GRAnimationの取得
 	ObjectIf* GetChildObject(size_t p);
 	///	GRAnimationSetの取得

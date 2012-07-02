@@ -507,7 +507,7 @@ void solve(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){
 template <class AD, class BD>
 void cholesky(MatrixImp<AD>& a, VectorImp<BD>& s){
 	int i,j,k;
-	int num = a.height();
+	int num = (int)a.height();
 	
 	//reduction  foreward
 	a.item(0,0) = sqrt(a.item(0,0));

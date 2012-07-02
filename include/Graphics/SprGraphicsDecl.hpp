@@ -42,7 +42,7 @@
 	void LoadInitialPose(){	base::LoadInitialPose();}	\
 	bool AddChildObject(Spr::ObjectIf* o){	return	base::AddChildObject(o);}	\
 	bool DelChildObject(Spr::ObjectIf* o){	return	base::DelChildObject(o);}	\
-	int NChildObject(){	return	base::NChildObject();}	\
+	size_t NChildObject(){	return	base::NChildObject();}	\
 	Spr::ObjectIf* GetChildObject(size_t p){	return	base::GetChildObject(p);}	\
 	Spr::GRAnimationSetIf* GetAnimationSet(size_t p){	return	base::GetAnimationSet(p);}	\
 

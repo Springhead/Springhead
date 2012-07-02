@@ -176,7 +176,7 @@ bool Object::WriteState(std::string fileName){
 }
 bool Object::WriteStateR(std::ostream& fout){
 	fout << GetTypeInfo()->ClassName();
-	unsigned ss = GetStateSize();
+	size_t ss = GetStateSize();
 	char* state = DBG_NEW char [ss];
 	ConstructState(state);
 	GetState(state);
@@ -202,7 +202,7 @@ bool Object::ReadStateR(std::istream& fin){
 	buf[strlen(GetTypeInfo()->ClassName())] = '\0';
 	assert(strcmp(buf, GetTypeInfo()->ClassName()) == 0);
 
-	unsigned ss = GetStateSize();
+	size_t ss = GetStateSize();
 	char* state = DBG_NEW char [ss];
 	ConstructState(state);
 	fin.read(state, ss);
