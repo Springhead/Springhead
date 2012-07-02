@@ -32,8 +32,8 @@ set SRCIMP=
 for %%p in (%TARGET%) do for %%f in (../%%p/*.h) do set SRCIMP=!SRCIMP! ../../../src/%%p/%%f
 
 echo #	Do not edit. RunSwig.bat will update this file.> %MAKEFILE%
-echo all: EPBase.cpp>>%MAKEFILE%
-echo EPBase.cpp: %SRCINTF% %SRCIMP%>>%MAKEFILE%
+echo all: ..\..\..\src\EmbPython\EPBase.cpp>>%MAKEFILE%
+echo ..\..\..\src\EmbPython\EPBase.cpp: %SRCINTF% %SRCIMP%>>%MAKEFILE%
 echo 	call .\EmbPythonSwig.bat Base >>%MAKEFILE%
 echo 	call .\EmbPythonSwig.bat Foundation >>%MAKEFILE%
 echo 	call .\EmbPythonSwig.bat FileIO Foundation >>%MAKEFILE%
