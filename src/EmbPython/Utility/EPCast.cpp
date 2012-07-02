@@ -118,7 +118,7 @@ ConvertStr::ConvertStr( PyObject *obj )
 		buff = new char[size*2+1];
 
 		setlocale( LC_CTYPE, "japanese" );
-		int ret = wcstombs(buff,(const wchar_t*)PyUnicode_AS_DATA(obj),size*2);
+		int ret = (int)wcstombs(buff,(const wchar_t*)PyUnicode_AS_DATA(obj),size*2);
 		if (ret == -1) assert(0);//変換エラー 
 		buff[ret] = '\0';
 		

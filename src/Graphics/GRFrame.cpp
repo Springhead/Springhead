@@ -176,8 +176,8 @@ void GRFrame::AddRBFKeyFrame(PTM::VVector<float> pos){
 	kfPositions.push_back(pos);
 
 	// 次元の取得
-	int nKeys	= kfPositions.size();
-	int nKeyDim	= pos.size();
+	int nKeys	= (int)kfPositions.size();
+	int nKeyDim	= (int)pos.size();
 	int nMatDim	= nKeys + 1 + nKeyDim;
 
 	// 目標値ベクトルの次元・値設定と係数ベクトルの次元設定
@@ -252,8 +252,8 @@ void GRFrame::BlendRBF(PTM::VVector<float> pos){
 	Affinef aff;
 
 	// 次元の取得
-	int nKeys	= kfPositions.size();
-	int nKeyDim	= pos.size();
+	int nKeys	= (int)kfPositions.size();
+	int nKeyDim	= (int)pos.size();
 	int nMatDim	= nKeys + 1 + nKeyDim;
 
 	// 計算用ベクトルの用意
@@ -442,7 +442,7 @@ GRAnimationKey GRAnimation::GetAnimationKey(int n){
 	}
 }
 int GRAnimation::NAnimationKey(){
-	return keys.size();
+	return (int)keys.size();
 }
 
 void GRAnimation::SetCurrentPose(float t){

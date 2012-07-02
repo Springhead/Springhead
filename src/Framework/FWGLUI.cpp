@@ -72,7 +72,7 @@ FWControl* FWGLUI::CreateControl(FWDialog* owner, const IfInfo* ii, const FWCont
 	GLUI_Panel* gluiPanel	= 0;
 	void*		handle		= 0;
 
-	int id = ctrls.size();
+	int id = (int)ctrls.size();
 
 	if(parent){
 		par = parent->Cast();
@@ -329,7 +329,7 @@ void FWGLUI::SetSpeed(FWTranslationControl* trnCtrl, float sp){
 
 void FWGLUI::AddItem(FWListBox*	listBox, UTString label){
 	GLUI_Listbox* gluiList = (GLUI_Listbox*)listBox->handle;
-	gluiList->add_item(listBox->items.size(), label.c_str());
+	gluiList->add_item((int)listBox->items.size(), label.c_str());
 }
 
 //-------------------------------------------------------------------------------------------------

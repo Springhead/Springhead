@@ -44,7 +44,7 @@ public:
 	MATNN matQ;				///<	目的関数の2次の係数行列
 	VECN vecC;				///<	目的関数の1次の係数ベクトル
 	VECN vecX;				///<	解
-	int Dim(){ return vecX.size(); }
+	int Dim(){ return (int)vecX.size(); }
 	typedef TYPENAME VECN::element_type T;
 
 protected:
@@ -273,7 +273,7 @@ public:
 	}
 	///	初期化，minTの次元で，次元を設定
 	void Init(VVector<ET> minT, VVector<ET> maxT){
-		SetDim(minT.size());
+		SetDim((int)minT.size());
 		base_type::Init(minT, maxT);
 	}
 

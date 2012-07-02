@@ -272,8 +272,8 @@ void GRDeviceGL::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t
 	if (vertexColor) glEnable(GL_COLOR_MATERIAL);
 	else glDisable(GL_COLOR_MATERIAL);
 	SetMaterial(currentMaterial);
-	glInterleavedArrays(vertexFormatGl, stride, vtx);
-	glDrawArrays(mode, 0, count);
+	glInterleavedArrays(vertexFormatGl, (GLsizei)stride, vtx);
+	glDrawArrays(mode, 0, (GLsizei)count);
 }
 /// 頂点座標とインデックスを指定してプリミティブを描画
 void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
@@ -292,8 +292,8 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	if (!stride) stride = vertexSize;
 	if (vertexColor) glEnable(GL_COLOR_MATERIAL);
 	else glDisable(GL_COLOR_MATERIAL);
-	glInterleavedArrays(vertexFormatGl, stride, vtx);
-	glDrawElements(mode, count, GL_UNSIGNED_INT, idx);
+	glInterleavedArrays(vertexFormatGl, (GLsizei)stride, vtx);
+	glDrawElements(mode, (GLsizei)count, GL_UNSIGNED_INT, idx);
 	//naga
 	//glFinish()はスキンウェイトのある頂点の場合，途中で書き換えがあるので，データ書き換え中に描画されないようにする．
 	//しかし，著しく処理が重くなる可能性がある．画面がちらつくのを我慢するか，処理が重くなるのを我慢するか注意する必要がある．
@@ -497,7 +497,7 @@ void GRDeviceGL::DrawCurve(const Curve3f& curve){
 	else{
 		// それ以外の曲線は折れ線近似で描画
 		float t0 = curve.GetTime(0);
-		float t1 = curve.GetTime(N-1);
+		float t1 = curve.GetTime((int)N-1);
 		const float ndiv = 100.0f;
 		float dt = (t1 - t0) / ndiv;
 		Vec3f p0 = curve.GetPos(t0);
@@ -572,7 +572,7 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 		glRasterPos3fv(pos);
 		glPushAttrib(GL_LIST_BIT);
 		glListBase(fontBase);											// 	ディスプレイリストを渡す.	
-		glCallLists(str.size(), GL_UNSIGNED_BYTE, str.c_str());		// 文字列を渡す.
+		glCallLists((GLsizei)str.size(), GL_UNSIGNED_BYTE, str.c_str());		// 文字列を渡す.
 		glPopAttrib();
 	}
 	else{
@@ -1218,7 +1218,7 @@ bool GRDeviceGL::ReadShaderSource(GRHandler shader, std::string file){
 				DSTR << "Could not allocate read buffer." << std::endl;
 				return false;
 			}
-			length = fread((void *)source,sizeof(char),length,fp);
+			length = (int)fread((void *)source,sizeof(char),length,fp);
 			source[length] = '\0';
 		}
 		fclose(fp);

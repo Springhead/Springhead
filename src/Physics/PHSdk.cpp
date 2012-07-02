@@ -101,7 +101,7 @@ PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
 	return rv;
 }
 int PHSdk::NScene(){
-	return scenes.size();
+	return (int)scenes.size();
 }
 PHSceneIf* PHSdk::GetScene(int i){
 	if (i < (int)scenes.size()) return scenes[i];
@@ -152,7 +152,7 @@ ObjectIf* PHSdk::CreateObject(const IfInfo* info, const void* desc){
 }
 ObjectIf* PHSdk::GetChildObject(size_t i){		
 	if(i < shapes.size()) return shapes[i]->Cast();
-	return GetScene(i - shapes.size());
+	return GetScene((int)(i - shapes.size()));
 }
 
 bool PHSdk::AddChildObject(ObjectIf* o){

@@ -148,7 +148,7 @@ void GRMesh::SwitchCoordinate(){
 void GRMesh::MakeBuffer(){
 	vtxs.clear();
 
-	int nVtxs = max(max(vertices.size(), normals.size()), max(colors.size(), texCoords.size()));
+	int nVtxs = max(max((int)vertices.size(), (int)normals.size()), max((int)colors.size(), (int)texCoords.size()));
 	
 	if (tex3d && texCoords.size() && normals.size()){
 		stride		 = sizeof(GRVertexElement::VFT4fC4fN3fP4f)/sizeof(float);

@@ -19,35 +19,35 @@ GRVertexElement::GRVertexElement(){
 }
 GRVertexElement GRVertexElement::Position2f(size_t o){
 	GRVertexElement rv;
-	rv.offset = o;
+	rv.offset = (short)o;
 	rv.type = GRVET_FLOAT2;
 	rv.usage = GRVEU_POSITION;
 	return rv;
 }
 GRVertexElement GRVertexElement::Position3f(size_t o){
 	GRVertexElement rv;
-	rv.offset = o;
+	rv.offset = (short)o;
 	rv.type = GRVET_FLOAT3;
 	rv.usage = GRVEU_POSITION;
 	return rv;
 }
 GRVertexElement GRVertexElement::Position4f(size_t o){
 	GRVertexElement rv;
-	rv.offset = o;
+	rv.offset = (short)o;
 	rv.type = GRVET_FLOAT4;
 	rv.usage = GRVEU_POSITION;
 	return rv;
 }
 GRVertexElement GRVertexElement::Normal3f(size_t o){
 	GRVertexElement rv;
-	rv.offset = o;
+	rv.offset = (short)o;
 	rv.type = GRVET_FLOAT3;
 	rv.usage = GRVEU_NORMAL;
 	return rv;
 }
 GRVertexElement GRVertexElement::TexCoords2f(size_t o){
 	GRVertexElement rv;
-	rv.offset = o;
+	rv.offset = (short)o;
 	rv.type = GRVET_FLOAT2;
 	rv.method = GRVEM_UV;
 	rv.usage= GRVEU_TEXCOORD;
@@ -55,7 +55,7 @@ GRVertexElement GRVertexElement::TexCoords2f(size_t o){
 }
 GRVertexElement GRVertexElement::TexCoords4f(size_t o){
 	GRVertexElement rv;
-	rv.offset = o;
+	rv.offset = (short)o;
 	rv.type = GRVET_FLOAT4;
 	rv.method = GRVEM_STRQ;
 	rv.usage= GRVEU_TEXCOORD;
@@ -63,21 +63,21 @@ GRVertexElement GRVertexElement::TexCoords4f(size_t o){
 }
 GRVertexElement GRVertexElement::Color4b(size_t o){
 	GRVertexElement rv;
-	rv.offset = o;
+	rv.offset = (short)o;
 	rv.type = GRVET_UBYTE4;
 	rv.usage = GRVEU_COLOR;
 	return rv;
 }
 GRVertexElement GRVertexElement::Color4f(size_t o){
 	GRVertexElement rv;
-	rv.offset = o;
+	rv.offset = (short)o;
 	rv.type = GRVET_FLOAT4;
 	rv.usage = GRVEU_COLOR;
 	return rv;
 }
 GRVertexElement GRVertexElement::Color3f(size_t o){
 	GRVertexElement rv;
-	rv.offset = o;
+	rv.offset = (short)o;
 	rv.type = GRVET_FLOAT3;
 	rv.usage = GRVEU_COLOR;
 	return rv;
@@ -85,7 +85,7 @@ GRVertexElement GRVertexElement::Color3f(size_t o){
 
 GRVertexElement GRVertexElement::BlendNf(size_t o, size_t n){
 	GRVertexElement rv;
-	rv.offset = o;
+	rv.offset = (short)o;
 	if (n==1) rv.type = GRVET_FLOAT1;
 	if (n==2) rv.type = GRVET_FLOAT2;
 	if (n==3) rv.type = GRVET_FLOAT3;

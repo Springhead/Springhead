@@ -138,8 +138,8 @@ NamedObjectIf* NameManager::FindObject(UTString name, UTString cls){
 	if (rv) return rv;
 
 	//	それでもないならば、namespaceを削って、もう一度検索
-	int pos = name.find('/');
-	if (pos != (int)UTString::npos){	//	 名前空間の指定がある場合
+	size_t pos = name.find('/');
+	if (pos != UTString::npos){	//	 名前空間の指定がある場合
 		UTString n = name.substr(pos+1);
 		rv = FindObject(n, cls);
 	}
@@ -181,8 +181,8 @@ NamedObjectIf* NameManager::FindObjectFromDescendant(UTString name, UTString cls
 //	ネームスペース込みで名前を検索する。検索場所については再帰なし。
 NamedObjectIf* NameManager::FindObjectExact(UTString name, UTString cls){
 	NamedObjectIf* rv = NULL;
-	int pos = name.find('/');
-	if (pos != (int)UTString::npos){	//	 名前空間の指定がある場合
+	size_t pos = name.find('/');
+	if (pos != UTString::npos){	//	 名前空間の指定がある場合
 		UTString n = name.substr(pos+1);
 		UTString ns = name.substr(0, pos);
 		//	ぴったりのものを探す．
