@@ -142,7 +142,7 @@ void CDConvexMesh::CalcFace(){
 		pvtxs[i] = &vtxs[i];
 	}
 	CDQhullVtx::base = &*base.begin();
-	int n = base.size();
+	int n = (int)base.size();
 //	CDQHPlanes<CDQhullVtx> planes(n*(n-1)*(n-2)/6);
 	CDQHPlanes<CDQhullVtx> planes(n*10);
 	planes.CreateConvexHull(&*pvtxs.begin(), &*pvtxs.begin() + pvtxs.size());
@@ -161,8 +161,8 @@ void CDConvexMesh::CalcFace(){
 		vtxIds.push_back(*it);
 	}
 	//	baseから不要な頂点を削除
-	int pos = base.size()-1;
-	int i = vtxIds.size()-1;
+	int pos = (int)base.size()-1;
+	int i = (int)vtxIds.size()-1;
 	while(true){
 		while(pos >= 0 && (i < 0 || pos>vtxIds[i])){
 			base.erase(base.begin()+pos);
@@ -222,7 +222,7 @@ void CDConvexMesh::MergeFace(){
 			}
 		}
 	}
-	nPlanes = faces.size();
+	nPlanes = (int)faces.size();
 	faces.insert(faces.end(), erased.begin(), erased.end());
 	//	DSTR << "Poly faces:" << nf << "->" << faces.size() << std::endl;
 }
@@ -249,7 +249,7 @@ int CDConvexMesh::Support(Vec3f& w, const Vec3f& v) const {
 	while (1) {
 		const std::vector<int>& curNeighbor = neighbor[curPos];
 		int i = 0;
-		int n = curNeighbor.size();
+		int n = (int)curNeighbor.size();
 		while(i!=n){
 			++ count;
 			if (curNeighbor[i] == lastPos){
@@ -280,13 +280,13 @@ CDFaceIf* CDConvexMesh::GetFace(int i){
 	return faces.at(i).Cast();
 }
 int CDConvexMesh::NFace(){
-	return faces.size();
+	return (int)faces.size();
 }
 Vec3f* CDConvexMesh::GetVertices(){
 	return &*base.begin();
 }
 int CDConvexMesh::NVertex(){
-	return base.size();
+	return (int)base.size();
 }
 
 int CDConvexMesh::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){

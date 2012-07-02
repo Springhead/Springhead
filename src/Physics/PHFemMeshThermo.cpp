@@ -2232,7 +2232,7 @@ void PHFemMeshThermo::Step(double dt){
 		//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
 
 		//温度のベクトルから節点へ温度の反映
-		UpdateVertexTempAll(vertices.size());
+		UpdateVertexTempAll((unsigned)vertices.size());
 	//for(unsigned i =0;i<vertices.size();i++){
 	//	DSTR << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
 	//}
@@ -3834,7 +3834,7 @@ void PHFemMeshThermo::SetTempAllToTVecAll(unsigned size){
 
 
 void PHFemMeshThermo::CreateTempMatrix(){
-	unsigned int dmnN = vertices.size();
+	unsigned dmnN = (unsigned)vertices.size();
 	TVecAll.resize(dmnN);
 	SetTempAllToTVecAll(dmnN);
 	//for(std::vector<unsigned int>::size_type i=0; i < dmnN ; i++){

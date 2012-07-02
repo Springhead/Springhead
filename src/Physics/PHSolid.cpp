@@ -453,7 +453,7 @@ void PHSolid::AddForce(Vec3d f, Vec3d r){
 	force += f;
 }*/
 
-int PHSolid::NFrame(){ return frames.size(); }
+int PHSolid::NFrame(){ return (int)frames.size(); }
 PHFrameIf* PHSolid::GetFrame(int i){
 	if (i >= (int)frames.size()) return NULL;
 	return frames[i]->Cast();
@@ -516,7 +516,7 @@ void	PHSolid::SetShapePose(int i, const Posed& pose){
 	}
 }
 int PHSolid::NShape(){
-	return frames.size();
+	return (int)frames.size();
 }
 CDShapeIf* PHSolid::GetShape(int i){
 	return frames[i]->shape->Cast();

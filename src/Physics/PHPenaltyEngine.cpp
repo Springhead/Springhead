@@ -464,7 +464,7 @@ void PHPenaltyEngine::Step(){
 	PHScene* scene = DCAST(PHScene, GetScene());
 	unsigned int ct = scene->GetCount();
 	double dt = scene->GetTimeStep();
-	int n = solids.size();
+	int n = (int)solids.size();
 	int i, j;
 	for(i = 0; i < n; i++)for(j = i+1; j < n; j++)
 		solidPairs.item(i,j)->Setup(ct, dt);

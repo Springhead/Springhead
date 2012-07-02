@@ -465,7 +465,7 @@ public:
 #ifdef REPORT_TIME
 		ptimerForCd.CountUS();
 #endif
-		int N = solids.size();
+		int N = (int)solids.size();
 
 		//1. BBoxレベルの衝突判定
 		Vec3f dir(0,0,1);
@@ -534,7 +534,7 @@ public:
 #ifdef REPORT_TIME
 		ptimerForCd.CountUS();
 #endif
-		int N = solids.size();
+		int N = (int)solids.size();
 
 		//1. BBoxレベルの衝突判定
 		Vec3f dir(0,0,1);

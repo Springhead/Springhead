@@ -347,7 +347,7 @@ Vec4d ClosedSplineCurve::GetEdgeSwingDirCoeff(int i) {
 }
 
 void ClosedSplineCurve::AddNode(PHSplineLimitNode node, int pos) {
-	if (pos < 0) { pos += nodes->size(); }
+	if (pos < 0) { pos += (int)nodes->size(); }
 	std::vector<PHSplineLimitNode>::iterator it = nodes->begin();
 	for (int i=0; i<pos; ++i) { ++it; }
 	nodes->insert(it, node);

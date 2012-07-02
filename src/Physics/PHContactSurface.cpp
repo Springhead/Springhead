@@ -500,7 +500,7 @@ double PHContactSurface::CalcSignedArea(Vec3d p, Vec3d q, Vec3d r){
 bool PHContactSurface::CheckInside(int& L, int& R){
 	int l,m,r;	//m 探索範囲の中点
 	l = 0;
-	r = section.size();	//探索範囲の初期化
+	r = (int)section.size();	//探索範囲の初期化
 	while(r-l>1){
 		m = (l+r)/2;
 		if(CalcSignedArea(section[l], Vec3d(0.0,0.0,0.0), section[m]) <= 0.0){/* if angle(l, g, m)<=180) */
@@ -572,10 +572,10 @@ void PHContactSurface::SearchClosestPoint(int L, int R){
 			break;
 		}
 		if(L<0){
-			L = section.size()-1;
+			L = (int)section.size()-1;
 		}
 		if(L==0){
-			l = section.size()-1;
+			l = (int)section.size()-1;
 			r = L;
 		}
 		else{
@@ -672,7 +672,7 @@ void PHContactSurface::SearchClosestPoint(int L, int R){
 				if(i != 0){
 					R--;
 					if(R < 0){
-						R = section.size()-1;
+						R = (int)section.size()-1;
 					}
 					break;
 				}
@@ -687,7 +687,7 @@ void PHContactSurface::SearchClosestPoint(int L, int R){
 		fpoint = ClosestPointL;
 		lastL = L-1;
 		if(lastL < 0){
-			lastL = section.size() - 1;
+			lastL = (int)section.size() - 1;
 		}
 		lastR = L;
 	}

@@ -65,7 +65,7 @@ void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
 	}
 	PHIrs irs = CompIntermediateRepresentation(pointer);
 	SpatialVector outForce = SpatialVector();
-	int NIrs = irs.size();
+	int NIrs = (int)irs.size();
 	if(NIrs > 0){
 		for(int i = 0; i < NIrs; i++){
 			PHIr* ir = irs[i];
@@ -99,7 +99,7 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 	PHIrs irs = CompIntermediateRepresentation(pointer);
 		
 	SpatialVector outForce = SpatialVector();
-	int Nirs = irs.size();
+	int Nirs = (int)irs.size();
 	if(Nirs > 0){
 		// プロキシ姿勢計算のための連立不等式
 		VMatrixRow< double > c;
@@ -213,7 +213,7 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 
 void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 	if(!pointer->bVibration) return;
-	int Nneigbors = pointer->neighborSolidIDs.size();
+	int Nneigbors = (int)pointer->neighborSolidIDs.size();
 	for(int j = 0; j < (int)Nneigbors; j++){
 		int solidID = pointer->neighborSolidIDs[j];
 		PHSolidPairForHaptic* sp = sps->item(solidID, pointer->GetPointerID());

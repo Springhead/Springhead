@@ -88,12 +88,12 @@ void PHShapePairForLCP::EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSo
 	//	面と面が触れる場合があるので、接触が凸多角形や凸形状になることがある。
 	//	切り口を求める。まず、それぞれの形状の切り口を列挙
 	CDCutRing cutRing(commonPoint, local);	//	commonPointならば、それを含む面で切れば、必ず切り口の中になる。
-	int nPoint = engine->points.size();
+	int nPoint = (int)engine->points.size();
 	//	両方に切り口がある場合．(球などないものもある)
 	bool found = shape[0]->FindCutRing(cutRing, shapePoseW[0]);
-	int nLine0 = cutRing.lines.size();
+	int nLine0 = (int)cutRing.lines.size();
 	if (found) found = shape[1]->FindCutRing(cutRing, shapePoseW[1]);
-	int nLine1 = cutRing.lines.size() - nLine0;
+	int nLine1 = (int)cutRing.lines.size() - nLine0;
 	if (found){
 		//	2つの切り口のアンドをとって、2物体の接触面の形状を求める。
 		cutRing.MakeRing();		

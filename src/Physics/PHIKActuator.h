@@ -40,7 +40,7 @@ public:
 	std::vector<PHIKActuator*> ascendant, descendant, children;
 	/// 祖先・子孫にまとめてアクセスする関数
 	PHIKActuator* Link(size_t i) { return (i<ascendant.size()) ? ascendant[i] : descendant[i-ascendant.size()]; }
-	int NLinks() {return ascendant.size()+descendant.size();}
+	int NLinks() {return (int)(ascendant.size()+descendant.size());}
 
 	/// このアクチュエータで直接つながれたエンドエフェクタ．1アクチュエータに対し1エンドエフェクタが対応
 	PHIKEndEffector* eef;

@@ -325,7 +325,7 @@ void PHHapticEngineLDDev::SyncHaptic2Physic(){
 	for(int i = 0; i < hapticLoop->NHapticPointers(); i++){
 		PHHapticPointer* hpointer = hapticLoop->GetHapticPointer(i);
 		int hpointerID = hpointer->GetPointerID();
-		int nNeighbors = hpointer->neighborSolidIDs.size();
+		int nNeighbors = (int)hpointer->neighborSolidIDs.size();
 		// 近傍物体であるペアだけ同期
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = hpointer->neighborSolidIDs[j];
@@ -392,7 +392,7 @@ void PHHapticEngineLDDev::SyncPhysic2Haptic(){
 	for(int i = 0; i < NHapticPointers(); i++){
 		PHHapticPointer* ppointer = GetHapticPointer(i);
 		const int ppointerID = ppointer->GetPointerID();
-		const int nNeighbors = ppointer->neighborSolidIDs.size();
+		const int nNeighbors = (int)ppointer->neighborSolidIDs.size();
 		for(int j = 0; j < nNeighbors; j++){
 			const int solidID = ppointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(solidID, ppointerID);

@@ -44,7 +44,7 @@ public:
 	bool IsEnabled(int i) { return bCurr[i]; }
 
 	/// 拘束軸番号リストのサイズを取得する
-	int  size() { return sz; }
+	int  size() { return (int)sz; }
 
 	/// 拘束軸番号リストのn番目の軸番号を取得する
 	int& operator[](int n){ return idx[n]; }
