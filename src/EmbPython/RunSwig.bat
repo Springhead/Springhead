@@ -1,19 +1,22 @@
+@echo off
 set MAKEFILE=EmbPython.mak.txt
 set PATHORG=%PATH%;
 
-
 set PATH=%PATH%;..\..\bin
-if not exist ..\..\swigtemp mkdir ..\..\swigtemp
-if not exist ..\..\swigtemp\src mkdir ..\..\swigtemp\src
-if not exist ..\..\swigtemp\include mkdir ..\..\swigtemp\include
-if not exist ..\..\swigtemp\src\Foundation mkdir ..\..\swigtemp\src\Foundation
-if not exist ..\..\swigtemp\include\Base mkdir ..\..\swigtemp\include\Base
-if not exist ..\..\swigtemp\src\EmbPython mkdir ..\..\swigtemp\src\EmbPython
-if not exist ..\..\swigtemp\src\EmbPython\Utility mkdir ..\..\swigtemp\src\EmbPython\Utility
-if not exist ..\..\swigtemp\include\EmbPython mkdir ..\..\swigtemp\include\EmbPython
+set MODULES=Base Foundation Collision Physics FileIO EmbPython Framework Graphics GraphicsD3D HumanInterface
+set PLACES=include src
 
-for %%f in (..\..\include\EmbPython\*.h) do nkf -s < ..\..\include\EmbPython\%%f > ..\..\swigtemp\include\EmbPython\%%f
-for %%f in (..\EmbPython\*.h) do nkf -s < ..\EmbPython\%%f > ..\..\swigtemp\src\EmbPython\%%f
+
+
+rem Create swigtemp folders.
+if not exist ..\..\swigtemp mkdir ..\..\swigtemp
+for %%P in (%PLACES%) do if not exist ..\..\swigtemp\%%P mkdir ..\..\swigtemp\%%P
+for %%P in (%PLACES%) do for %%M in (%MODULES%) do if not exist ..\..\swigtemp\%%P\%%M mkdir ..\..\swigtemp\%%P\%%M
+
+rem Convert
+for %%P in (%PLACES%) do for %%M in (%MODULES%) do for %%F in (..\..\%%P\%%M\*.h) do for %%G in (..\..\..\swigtemp\%%P\%%M\%%~nxF) do if "%%~tF" GTR "%%~tG" nkf -s %%F >..\..\swigtemp\%%P\%%M\%%~nxF
+
+if not exist ..\..\swigtemp\src\EmbPython\Utility mkdir ..\..\swigtemp\src\EmbPython\Utility
 for %%f in (..\EmbPython\*.bat) do copy ..\EmbPython\%%f ..\..\swigtemp\src\EmbPython\%%f
 for %%f in (..\EmbPython\*.i) do copy ..\EmbPython\%%f ..\..\swigtemp\src\EmbPython\%%f
 for %%f in (..\EmbPython\Utility\*.cpp) do nkf -s < %%f > ..\..\swigtemp\src\EmbPython\%%f
@@ -43,5 +46,6 @@ echo 	call .\EmbPythonSwig.bat Framework FileIO HumanInterface Graphics Physics 
 
 make -f%MAKEFILE%
 
+cd ..\..\..\src\EmbPython
 set PATH=%PATHORG%
 set PATHORG=
