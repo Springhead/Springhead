@@ -298,7 +298,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 
 bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairForHaptic* sp){
 	// 摩擦
-	int Nirs = sp->irs.size();
+	int Nirs = (int)sp->irs.size();
 	if(Nirs == 0) return false;
 	for(int i = 0; i < Nirs; i++){
 		PHIr* ir = sp->irs[i];
@@ -536,7 +536,7 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 	
 	Vec3f pMin = edges[pointerSolidID].min;
 	Vec3f pMax = edges[pointerSolidID].max;
-	int N = hapticSolids.size();
+	int N = (int)hapticSolids.size();
 	pointer->neighborSolidIDs.clear();
 	for(int i = 0; i < N; i++){
 		if(i == pointerSolidID) continue;	// ポインタと剛体が同じ場合

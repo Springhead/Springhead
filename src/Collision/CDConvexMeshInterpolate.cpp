@@ -34,7 +34,7 @@ Vec3f CDConvexMeshInterpolate::Support(const Vec3f& v) const {
 	while (1) {
 		const std::vector<int>& curNeighbor = neighbor[curPos];
 		int i = 0;
-		int n = curNeighbor.size();
+		int n = (int)curNeighbor.size();
 		while(i!=n){
 			++ count;
 			if (curNeighbor[i] == lastPos){

@@ -199,7 +199,7 @@ public:
 	std::vector<PHSplineLimitNode>* nodes;
 	
 	/// 辺の数
-	int NEdges() { return nodes->size()-1; /* 始点と終点が被るので */ }
+	int NEdges() { return int(nodes->size()-1); /* 始点と終点が被るので */ }
 
 	/// i番目の辺のSwingスプライン係数を返す
 	Vec4d GetEdgeSwingCoeff(int i);

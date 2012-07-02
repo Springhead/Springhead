@@ -71,7 +71,7 @@ void PHIKEngine::Step(){
 		}
 
 		// 繰り返し計算の実行
-		int iter = ((numIter > 0) ? numIter : 200);
+		int iter = (int)((numIter > 0) ? numIter : 200);
 		for(int n=0; n<iter; n++){
 			double dErr = 0;
 			for(size_t i=0; i<actuators.size(); ++i){
@@ -131,14 +131,14 @@ bool PHIKEngine::AddChildObject(ObjectIf* o){
 	PHIKBallActuator* bj = o->Cast();
 	if(bj){
 		actuators.push_back(bj);
-		bj->number = (actuators.size()-1);
+		bj->number = int(actuators.size()-1);
 		return true;
 	}
 
 	PHIKHingeActuator* hj = o->Cast();
 	if(hj){
 		actuators.push_back(hj);
-		hj->number = (actuators.size()-1);
+		hj->number = int(actuators.size()-1);
 		return true;
 	}
 
@@ -147,7 +147,7 @@ bool PHIKEngine::AddChildObject(ObjectIf* o){
 	PHIKEndEffector* ef = o->Cast();
 	if(ef){
 		endeffectors.push_back(ef);
-		ef->number = (endeffectors.size()-1);
+		ef->number = int(endeffectors.size()-1);
 		return true;
 	}
 

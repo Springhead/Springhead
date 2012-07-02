@@ -81,7 +81,7 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	return s->Cast();
 }
 int PHScene::NSolids()const{
-	return solids->solids.size();
+	return (int)solids->solids.size();
 }
 PHSolidIf** PHScene::GetSolids(){
 	return solids->solids.empty() ? NULL : (PHSolidIf**)&*solids->solids.begin();
@@ -97,13 +97,13 @@ PHJointIf* PHScene::CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii
 	return joint->Cast();
 }
 int PHScene::NJoints()const{
-	return constraintEngine->joints.size();
+	return (int)constraintEngine->joints.size();
 }
 PHJointIf* PHScene::GetJoint(int i){
 	return DCAST(PHJointIf, constraintEngine->joints[i]);
 }
 int PHScene::NContacts()const{
-	return constraintEngine->points.size();
+	return (int)constraintEngine->points.size();
 }
 PHContactPointIf* PHScene::GetContact(int i){
 	return DCAST(PHContactPointIf, constraintEngine->points[i]);
@@ -139,7 +139,7 @@ PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& des
 	return node->Cast();
 }
 int PHScene::NRootNodes()const{
-	return constraintEngine->trees.size();
+	return (int)constraintEngine->trees.size();
 }
 PHRootNodeIf* PHScene::GetRootNode(int i){
 	return constraintEngine->trees[i]->Cast();
@@ -159,7 +159,7 @@ PHGearIf* PHScene::CreateGear(PH1DJointIf* lhs, PH1DJointIf* rhs, const PHGearDe
 	return gear->Cast();
 }
 int PHScene::NGears()const{
-	return constraintEngine->gears.size();
+	return (int)constraintEngine->gears.size();
 }
 PHGearIf* PHScene::GetGear(int i){
 	return constraintEngine->gears[i]->Cast();
@@ -170,7 +170,7 @@ PHPathIf* PHScene::CreatePath(const PHPathDesc& desc){
 	return path->Cast();
 }
 int PHScene::NPaths()const{
-	return constraintEngine->paths.size();
+	return (int)constraintEngine->paths.size();
 }
 PHPathIf* PHScene::GetPath(int i){
 	return constraintEngine->paths[i]->Cast();
@@ -182,7 +182,7 @@ PHRayIf* PHScene::CreateRay(const PHRayDesc& desc){
 	return ray->Cast();
 }
 int PHScene::NRays()const{
-	return rays.size();
+	return (int)rays.size();
 }
 PHRayIf* PHScene::GetRay(int i){
 	return rays[i]->Cast();
@@ -194,7 +194,7 @@ PHIKActuatorIf* PHScene::CreateIKActuator(const IfInfo* ii, const PHIKActuatorDe
 	return actuator->Cast();
 }
 int PHScene::NIKActuators(){
-	return ikEngine->actuators.size();
+	return (int)ikEngine->actuators.size();
 }
 PHIKActuatorIf* PHScene::GetIKActuator(int i){
 	return ikEngine->actuators[i]->Cast();
@@ -205,13 +205,13 @@ PHIKEndEffectorIf* PHScene::CreateIKEndEffector(const PHIKEndEffectorDesc& desc)
 	return endeffector->Cast();
 }
 int PHScene::NIKEndEffectors(){
-	return ikEngine->endeffectors.size();
+	return (int)ikEngine->endeffectors.size();
 }
 PHIKEndEffectorIf* PHScene::GetIKEndEffector(int i){
 	return ikEngine->endeffectors[i]->Cast();
 }
 int PHScene::NFemMeshes() const {
-	return femEngine->meshes.size();
+	return (int)femEngine->meshes.size();
 }
 PHFemMeshIf* PHScene::GetFemMesh(int i){
 	return femEngine->meshes[i]->Cast();
@@ -336,17 +336,17 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 	//return engines[pos]->Cast();
 	if(pos < (size_t)NSolids()) return GetSolids()[pos];
 	pos -= NSolids();
-	if(pos < (size_t)NJoints()) return GetJoint(pos);
+	if(pos < (size_t)NJoints()) return GetJoint((int)pos);
 	pos -= NJoints();
-	if(pos < (size_t)NRootNodes()) return GetRootNode(pos);
+	if(pos < (size_t)NRootNodes()) return GetRootNode((int)pos);
 	pos -= NRootNodes();
-	if(pos < (size_t)NGears()) return GetGear(pos);
+	if(pos < (size_t)NGears()) return GetGear((int)pos);
 	pos -= NGears();
-	if(pos < (size_t)NPaths()) return GetPath(pos);
+	if(pos < (size_t)NPaths()) return GetPath((int)pos);
 	pos -= NPaths();
-	if(pos < (size_t)NContacts()) return GetContact(pos);
+	if(pos < (size_t)NContacts()) return GetContact((int)pos);
 	pos -= NContacts();
-	if(pos < (size_t)NRays()) return GetRay(pos);
+	if(pos < (size_t)NRays()) return GetRay((int)pos);
 	return NULL;
 }
 bool PHScene::AddChildObject(ObjectIf* o){
@@ -577,7 +577,7 @@ bool PHScene::WriteStateR(std::ostream& fout){
 	fout.write((char*)&ss, sizeof(ss));
 	fout.write(state, ss);
 	if (constraintEngine->bSaveConstraints){
-		int off = ss - sizeof(PHConstraintsSt);
+		int off = (int)(ss - sizeof(PHConstraintsSt));
 		PHConstraintsSt* cst = (PHConstraintsSt*)(state + off);
 		if (cst->gears.size()) fout.write((char*)&*cst->gears.begin(), sizeof(PHConstraintState)*cst->gears.size());
 		if (cst->joints.size()) fout.write((char*)&*cst->joints.begin(), sizeof(PHConstraintState)*cst->joints.size());
@@ -599,7 +599,7 @@ bool PHScene::ReadStateR(std::istream& fin){
 
 	PHConstraintsSt* cst = NULL;
 	if (constraintEngine->bSaveConstraints){
-		int off = ss - sizeof(PHConstraintsSt);
+		int off = int(ss - sizeof(PHConstraintsSt));
 		cst = (PHConstraintsSt*)(state + off);
 		size_t gsz = cst->gears.size();
 		size_t jsz = cst->joints.size();

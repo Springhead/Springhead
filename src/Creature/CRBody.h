@@ -46,7 +46,7 @@ public:
 
 	/** @brief ボーンの数を得る
 	*/
-	virtual int	NBones() { return bones.size(); }
+	virtual int	NBones() { return (int)bones.size(); }
 
 	/** @brief i番目のボーンを得る
 	*/
@@ -69,7 +69,7 @@ public:
 	/** @brief 子要素の扱い
 	*/
 	virtual size_t NChildObject() const { return bones.size(); }
-	virtual ObjectIf* GetChildObject(size_t i) { return GetBone(i); }
+	virtual ObjectIf* GetChildObject(size_t i) { return GetBone((int)i); }
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);
 

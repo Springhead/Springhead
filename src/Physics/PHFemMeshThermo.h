@@ -280,7 +280,7 @@ public:
 	//HTR=HeatTransferRatio
 
 	int GetSurfaceVertex(int id){return surfaceVertices[id];};
-	int NSurfaceVertices(){return surfaceVertices.size();};
+	int NSurfaceVertices(){return int(surfaceVertices.size());};
 	//	周囲流体温度を更新	熱伝達率は変えない
 	void SetVertexTc(int id,double temp){
 		// ...PHFemMeshThermo::SetLocalFluidTemp()で周囲流体温度の設定、CreateVecfLocal()の更新

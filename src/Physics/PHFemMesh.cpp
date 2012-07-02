@@ -142,7 +142,7 @@ void PHFemMesh::SetDesc(const void* p) {
 			faces.push_back(allFaces[i]);	//	表面
 		}
 	}
-	nSurfaceFace = faces.size();
+	nSurfaceFace = (unsigned)faces.size();
 	faces.insert(faces.end(), ifaces.begin(), ifaces.end());
 	surfaceVertices.clear();
 	//	表面の頂点の列挙
@@ -166,7 +166,7 @@ void PHFemMesh::SetDesc(const void* p) {
 	std::sort(edges.begin(), edges.end());
 	std::vector<Edge>::iterator newEEnd = std::unique(edges.begin(), edges.end());
 	edges.erase(newEEnd, edges.end());
-	nSurfaceEdge = edges.size();
+	nSurfaceEdge = (unsigned)edges.size();
 	//	内部の辺の列挙
 	std::vector<Edge> iEdges;
 	for(unsigned i=nSurfaceFace; i<faces.size() ;++i){
@@ -290,7 +290,7 @@ void PHFemMesh::UpdateJacobian(){
 }
 
 unsigned PHFemMesh::GetNFace(){
-	return faces.size();
+	return (unsigned)faces.size();
 }
 
 std::vector<Vec3d> PHFemMesh::GetFaceEdgeVtx(unsigned id){

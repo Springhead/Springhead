@@ -39,7 +39,7 @@ public:
 
 	/** @brief 現在の接触の個数を返す
 	*/
-	virtual int NContacts(){ return contactList.size(); }
+	virtual int NContacts(){ return (int)contactList.size(); }
 
 	/** @brief 接触情報を返す
 	*/
