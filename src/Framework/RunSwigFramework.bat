@@ -27,6 +27,7 @@ nkf -s < ..\..\src\Framework\FWOldSpringheadNodeHandler.h > ..\..\swigtemp\src\F
 cd ..\..\swigtemp\src\Foundation
 set PATH=..\..\..\bin;..\..\..\bin\swig
 set SRCIMP=..\Framework\FWOldSpringheadNodeHandler.h
+set SRCIMPDEP=..\..\..\src\Framework\FWOldSpringheadNodeHandler.h
 
 echo src files:%SRCIMP%
 
@@ -39,8 +40,8 @@ echo %%include "../../src/Foundation/UTTypeDesc.h">> %MODULE%.i
 for %%p in (%SRCIMP%) do echo %%include "%%p">> %MODULE%.i
 
 echo #	Do not edit. RunSwig.bat will update this file.> %MAKEFILE%
-echo all: %MODULE%Stub.cpp>>%MAKEFILE%
-echo %MODULE%Stub.cpp: %SRCIMP%>>%MAKEFILE%
+echo all: ..\..\..\src\Framework\%MODULE%Stub.cpp>>%MAKEFILE%
+echo ..\..\..\src\Framework\%MODULE%Stub.cpp: %SRCIMPDEP%>>%MAKEFILE%
 echo 	swig\swig -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++ %MODULE%.i>>%MAKEFILE%
 echo 	copy Spr%MODULE%Decl.hpp ..\..\..\include\%MODULE% >>%MAKEFILE%
 echo 	copy %MODULE%Stub.cpp ..\..\..\src\Framework >>%MAKEFILE%
