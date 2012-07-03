@@ -37,6 +37,10 @@ struct CRBodyIf : SceneObjectIf{
 	/** @brief ボディの総質量を得る
 	*/
 	double GetSumOfMass();
+
+	/** @brief １ステップ
+	*/
+	void Step();
 };
 
 /// クリーチャのボディモデルのデスクリプタ

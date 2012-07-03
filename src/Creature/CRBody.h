@@ -66,6 +66,16 @@ public:
 	*/
 	virtual double GetSumOfMass();
 
+	/** @brief １ステップ
+	*/
+	void Step() {
+		for (size_t i=0; i<bones.size(); ++i) {
+			bones[i]->StepTrajectory();
+			bones[i]->StepSearchArea();
+			bones[i]->StepListContact();
+		}
+	}
+
 	/** @brief 子要素の扱い
 	*/
 	virtual size_t NChildObject() const { return bones.size(); }

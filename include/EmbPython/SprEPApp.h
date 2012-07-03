@@ -37,7 +37,7 @@ class EPApp : public FWApp {
 		LD,						// マルチ+局所シミュレーション
 	} engineType;
 
-	PHSceneIf* phscene;			// PHSceneへのポインタ
+	PHSceneIf* phScene;			// PHSceneへのポインタ
 	PHHapticPointerIf* pointer; // 力覚ポインタへのポインタ
 	float pdt;					// 物理スレッドの刻み
 	float hdt;					// 力覚スレッドの刻み
@@ -56,7 +56,7 @@ public:
 		pdt = 0.02f;
 		hdt = 0.001f;
 
-		engineType		= LD;
+		engineType		= MULTI;
 		humanInterface	= SPIDAR;
 		afterStepFunc	= NULL;
 
@@ -74,10 +74,13 @@ public:
 	}
 
 	void EnablePhysics(bool e) {
+		UTAutoLock LOCK(EPCriticalSection);
 		bPhysicsEnabled = e;
 	}
 
 	void InitInterface() {
+		UTAutoLock LOCK(EPCriticalSection);
+
 		HISdkIf* hiSdk = GetSdk()->GetHISdk();
 
 		if(humanInterface == SPIDAR){
@@ -111,10 +114,13 @@ public:
 	}
 
 	void CreatePointer() {
-		PHSdkIf* phSdk = GetSdk()->GetPHSdk();				// シェイプ作成のためにPHSdkへのポインタをとってくる
-		phscene = GetSdk()->GetScene(0)->GetPHScene();		// 剛体作成のためにPHSceneへのポインタをとってくる
+		UTAutoLock LOCK(EPCriticalSection);
 
-		pointer = phscene->CreateHapticPointer();			// 力覚ポインタの作成
+		FWSdkIf* fwSdk = GetSdk();
+		PHSdkIf* phSdk = fwSdk->GetPHSdk();
+		phScene = phSdk->GetScene(0);
+
+		pointer = phScene->CreateHapticPointer();	// 力覚ポインタの作成
 
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
@@ -137,35 +143,44 @@ public:
 	}
 
 	void Initialize(){
-		Init(0, NULL);
+		// ----- ----- ----- ----- -----
+		// 最も基本的な初期化処理
+		{
+			UTAutoLock LOCK(EPCriticalSection);
+			CreateSdk();									// SDK初期化
+		}
+		InitInterface();									// インタフェースの初期化
+		InitScene();
+
 		instance = this;
 	}
-	
-	void Init(int argc = 0, char* argv[] = 0) {
-		// ----- ----- ----- ----- -----
-		// 最も基本的な初期化処理		
-		CreateSdk();										// SDK初期化
+
+	void InitScene() {
+		UTAutoLock LOCK(EPCriticalSection);
+
+		// for (int i=0; i<NTimers(); ++i) { GetTimer(i)->Stop(); }
+
+		// GetSdk()->Clear();
 		GetSdk()->CreateScene();							// シーンを作成
 
 		// ----- ----- ----- ----- -----
 		// HapticAppの初期化処理
-		InitInterface();									// インタフェースの初期化
 		CreatePointer();									// 力覚ポインタの作成
-		PHHapticEngineIf* he = phscene->GetHapticEngine();	// 力覚エンジンをとってくる
+		PHHapticEngineIf* he = phScene->GetHapticEngine();	// 力覚エンジンをとってくる
 		he->EnableHapticEngine(true);						// 力覚エンジンの有効化
 
 		if(engineType == SINGLE){
 			// シングルスレッドモード
 			he->SetHapticEngineMode(PHHapticEngineDesc::SINGLE_THREAD);
-			phscene->SetTimeStep(hdt);
+			phScene->SetTimeStep(hdt);
 		}else if(engineType == MULTI){
 			// マルチスレッドモード
 			he->SetHapticEngineMode(PHHapticEngineDesc::MULTI_THREAD);
-			phscene->SetTimeStep(pdt);
+			phScene->SetTimeStep(pdt);
 		}else if(engineType == LD){
 			// 局所シミュレーションモード
 			he->SetHapticEngineMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
-			phscene->SetTimeStep(pdt);
+			phScene->SetTimeStep(pdt);
 		}
 
 		{
@@ -195,9 +210,9 @@ public:
 		}else if(engineType > 0){
 			if(hapticTimerID == id){
 				GetSdk()->GetScene(0)->UpdateHapticPointers();
-				phscene->StepHapticLoop();
+				phScene->StepHapticLoop();
 			}else{
-				PHHapticEngineIf* he = phscene->GetHapticEngine();
+				PHHapticEngineIf* he = phScene->GetHapticEngine();
 				he->StepPhysicsSimulation();
 				/* <!!>
 				if (afterStepFunc != NULL) {

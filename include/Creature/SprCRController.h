@@ -14,6 +14,7 @@
 namespace Spr{;
 
 struct PHSolidIf;
+struct CRBoneIf;
 
 //@{
 
@@ -49,6 +50,9 @@ struct CRGazeControllerIf : public CRControllerIf{
 
 	///  視対象位置をセットする
 	void SetTargetPosition(Vec3d pos);
+
+	/// 頭ボーンを設定する
+	void SetHeadBone(CRBoneIf* head);
 };
 
 struct CRGazeControllerDesc{
