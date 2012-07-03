@@ -19,6 +19,7 @@ namespace Spr {;
 
 ///	クリーチャのエンジンの基本クラス．
 class CREngine : public SceneObject {
+protected:
 	/// 有効か・無効か
 	bool enabled;
 

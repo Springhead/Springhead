@@ -4,6 +4,7 @@
 	Spr::CRBoneIf* GetBone(int i){	return	base::GetBone(i);}	\
 	Vec3d GetCenterOfMass(){	return	base::GetCenterOfMass();}	\
 	double GetSumOfMass(){	return	base::GetSumOfMass();}	\
+	void Step(){	base::Step();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRBoneIf(base)	\
 	const char* GetLabel()const{	return	base::GetLabel();}	\
@@ -16,6 +17,26 @@
 	void SetPHJoint(Spr::PHJointIf* jo){	base::SetPHJoint(jo);}	\
 	Spr::PHIKActuatorIf* GetIKActuator(){	return	base::GetIKActuator();}	\
 	void SetIKActuator(Spr::PHIKActuatorIf* ikAct){	base::SetIKActuator(ikAct);}	\
+	void SetOriginSolid(Spr::PHSolidIf* solid){	base::SetOriginSolid(solid);}	\
+	void SetTargetPos(Vec3d pos){	base::SetTargetPos(pos);}	\
+	void SetTargetOri(Quaterniond ori){	base::SetTargetOri(ori);}	\
+	void SetTargetPose(Posed pose){	base::SetTargetPose(pose);}	\
+	void SetTimeLimit(float timeLimit){	base::SetTimeLimit(timeLimit);}	\
+	void StepTrajectory(){	base::StepTrajectory();}	\
+	void Start(){	base::Start();}	\
+	void Pause(){	base::Pause();}	\
+	void Stop(){	base::Stop();}	\
+	void Plan(){	base::Plan();}	\
+	void SetViewArea(Posed relativePose, double horizRange, double vertRange){	base::SetViewArea(relativePose, horizRange, vertRange);}	\
+	int NVisibleSolids(){	return	base::NVisibleSolids();}	\
+	Spr::PHSolidIf* GetVisibleSolid(int i){	return	base::GetVisibleSolid(i);}	\
+	void StepSearchArea(){	base::StepSearchArea();}	\
+	int NContacts(){	return	base::NContacts();}	\
+	Vec3f GetContactForce(int i){	return	base::GetContactForce(i);}	\
+	double GetContactArea(int i){	return	base::GetContactArea(i);}	\
+	Vec3f GetContactPosition(int i){	return	base::GetContactPosition(i);}	\
+	Spr::PHSolidIf* GetContactSolid(int i){	return	base::GetContactSolid(i);}	\
+	void StepListContact(){	base::StepListContact();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRControllerIf(base)	\
 	void Reset(){	base::Reset();}	\
@@ -23,6 +44,7 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRGazeControllerIf(base)	\
 	void SetTargetPosition(Vec3d pos){	base::SetTargetPosition(pos);}	\
+	void SetHeadBone(Spr::CRBoneIf* head){	base::SetHeadBone(head);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRReachControllerIf(base)	\
 	void SetTargetPosition(Vec3d pos){	base::SetTargetPosition(pos);}	\

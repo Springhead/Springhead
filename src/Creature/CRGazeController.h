@@ -10,6 +10,9 @@
 
 #include <Creature/CREngine.h>
 #include <Creature/SprCRController.h>
+#include <Creature/SprCRBone.h>
+#include <Physics/SprPHSolid.h>
+#include <Physics/SprPHIK.h>
 
 //@{
 namespace Spr{;
@@ -18,6 +21,10 @@ namespace Spr{;
 */
 class CRGazeController : public CRController, public CRGazeControllerDesc {
 private:
+	Quaterniond orig;
+	CRBoneIf*   head;
+
+	Vec3d       pos;
 
 public:
 	SPR_OBJECTDEF(CRGazeController);
@@ -43,6 +50,9 @@ public:
 
 	///  視対象位置をセットする
 	virtual void SetTargetPosition(Vec3d pos);
+
+	/// 頭ボーンを設定する
+	virtual void SetHeadBone(CRBoneIf* head) { this->head = head; }
 };
 }
 //@}
