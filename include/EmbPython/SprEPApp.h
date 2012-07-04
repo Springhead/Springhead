@@ -68,9 +68,18 @@ public:
 			PyErr_SetString(PyExc_TypeError, "parameter must be callable");
 			return;
 		}
-		Py_XINCREF(func);											// 新たなコールバックへの参照を追加
+		Py_XINCREF(func);
 		Py_XDECREF(afterStepFunc);									// 以前のコールバックを捨てる
 		afterStepFunc = func;										// 新たなコールバックを記憶
+	}
+
+	void CallAfterStepFunc() {
+		if (afterStepFunc != NULL) {
+			PyEval_InitThreads();
+			PyGILState_STATE state = PyGILState_Ensure();
+			PyObject_CallObject(afterStepFunc, NULL);
+			PyGILState_Release(state);
+		}
 	}
 
 	void EnablePhysics(bool e) {
@@ -209,23 +218,15 @@ public:
 			}
 		}else if(engineType > 0){
 			if(hapticTimerID == id){
+				UTAutoLock LOCK(EPCriticalSection);
 				GetSdk()->GetScene(0)->UpdateHapticPointers();
 				phScene->StepHapticLoop();
 			}else{
 				PHHapticEngineIf* he = phScene->GetHapticEngine();
 				he->StepPhysicsSimulation();
-				/* <!!>
-				if (afterStepFunc != NULL) {
-					std::cout << "Calling... : " << afterStepFunc << std::endl;
-					PyObject* arglist = Py_BuildValue("()");
-					PyEval_CallObject(afterStepFunc, arglist);
-					std::cout << "Call fin." << std::endl;
-					Py_DECREF(arglist);
-					std::cout << "decref args." << std::endl;
-				} else {
-					std::cout << "Null..." << std::endl;
+				if (he->IsAfterStepPhysicsSimulation()) {
+					CallAfterStepFunc();
 				}
-				*/
 			}
 		}
 	}

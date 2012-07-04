@@ -44,6 +44,7 @@ protected:
 	volatile int	hapticCount;
 	volatile bool	bSync;
 	bool			bCalcPhys;
+	bool			bAfterCalcPhys;
 
 public:
 	PHHapticEngineMultiBase();
@@ -58,6 +59,7 @@ public:
 
 	//デバック用コード
 	virtual void StepPhysicsSimulation();
+	virtual bool IsAfterStepPhysicsSimulation();
 };
 
 }

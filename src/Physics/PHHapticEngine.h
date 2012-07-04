@@ -146,6 +146,8 @@ public:
 
 	///< デバック用シミュレーション実行
 	virtual void StepPhysicsSimulation();
+
+	virtual bool IsAfterStepPhysicsSimulation();
 };
 
 //----------------------------------------------------------------------------
@@ -216,6 +218,8 @@ public:
 	///（PHScene::Stepの変わりに呼ぶ）
 	virtual void StepPhysicsSimulation(){ engineImp->StepPhysicsSimulation(); }
 
+	/// シミュレーションを実行した直後かどうかを返す
+	virtual bool IsAfterStepPhysicsSimulation() { return engineImp->IsAfterStepPhysicsSimulation(); }
 };
 
 // PHSceneからStep()を2回呼ぶための擬似クラス
