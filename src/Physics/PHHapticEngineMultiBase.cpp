@@ -48,6 +48,7 @@ PHHapticRender* PHHapticLoopImp::GetHapticRender(){
 PHHapticEngineMultiBase::PHHapticEngineMultiBase(){
 	bSync = false;
 	bCalcPhys =  true;
+	bAfterCalcPhys = false;
 	hapticCount = 1;
 }
 
@@ -180,8 +181,10 @@ void PHHapticEngineMultiBase::StepPhysicsSimulation(){
 	if (bSync) return;
 	if (bCalcPhys){
 		/// シミュレーションの実行
+		bAfterCalcPhys = false;
 		engine->GetScene()->Step();
 		bCalcPhys = false;
+		bAfterCalcPhys = true;
 	}
 	double pdt = GetPhysicsTimeStep();
 	double hdt = GetHapticTimeStep();
@@ -191,5 +194,10 @@ void PHHapticEngineMultiBase::StepPhysicsSimulation(){
 	bCalcPhys = true;	
 }
 
+bool PHHapticEngineMultiBase::IsAfterStepPhysicsSimulation() {
+	bool rv = bAfterCalcPhys;
+	bAfterCalcPhys = false;
+	return rv;
+}
 
 }

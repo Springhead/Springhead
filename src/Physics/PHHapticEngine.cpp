@@ -432,6 +432,10 @@ void PHHapticEngineImp::StepPhysicsSimulation(){
 	engine->GetScene()->Step();
 }
 
+bool PHHapticEngineImp::IsAfterStepPhysicsSimulation(){
+	return true;
+}
+
 //----------------------------------------------------------------------------
 // PHHapticEngine
 PHHapticEngineDesc::PHHapticEngineDesc(){

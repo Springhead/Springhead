@@ -155,6 +155,10 @@ public:
 	*/
 	void StepPhysicsSimulation();
 
+	/** @brief シミュレーションを実行した直後かどうかを返す
+	*/
+	bool IsAfterStepPhysicsSimulation();
+
 	/** @breif シーングラフの状態(ObjectStatesIf)を開放する。
 				動的にオブジェクトを追加する時には直前に呼ぶ必要がある。
 	*/

@@ -72,7 +72,7 @@ public:
 		for (size_t i=0; i<bones.size(); ++i) {
 			bones[i]->StepTrajectory();
 			bones[i]->StepSearchArea();
-			bones[i]->StepListContact();
+			// bones[i]->StepListContact(); // <!!>
 		}
 	}
 
