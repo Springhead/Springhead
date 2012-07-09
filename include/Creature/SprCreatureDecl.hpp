@@ -19,6 +19,7 @@
 	void SetIKActuator(Spr::PHIKActuatorIf* ikAct){	base::SetIKActuator(ikAct);}	\
 	void SetOriginSolid(Spr::PHSolidIf* solid){	base::SetOriginSolid(solid);}	\
 	void SetTargetPos(Vec3d pos){	base::SetTargetPos(pos);}	\
+	Vec3d GetTargetPos(){	return	base::GetTargetPos();}	\
 	void SetTargetOri(Quaterniond ori){	base::SetTargetOri(ori);}	\
 	void SetTargetPose(Posed pose){	base::SetTargetPose(pose);}	\
 	void SetTimeLimit(float timeLimit){	base::SetTimeLimit(timeLimit);}	\

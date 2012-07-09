@@ -176,10 +176,18 @@ public:
 	*/
 	void SetTargetPos(Vec3d pos);
 
+	/** @brief 現在設定されている目標位置の取得
+	*/
+	Vec3d GetTargetPos();
+
 	/** @brief 目標姿勢の設定
 		@param ori 目標姿勢
 	*/
 	void SetTargetOri(Quaterniond ori);
+
+	/** @brief 現在設定されている目標姿勢の取得
+	*/
+	Vec3d GetTargetOri();
 
 	/** @brief 目標位置・姿勢の設定
 		@param pose 目標位置・姿勢
