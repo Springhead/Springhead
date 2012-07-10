@@ -51,6 +51,9 @@ struct CRGazeControllerIf : public CRControllerIf{
 	///  視対象位置をセットする
 	void SetTargetPosition(Vec3d pos);
 
+	///  セットされている視対象位置を取得する
+	Vec3d GetTargetPosition();
+
 	/// 頭ボーンを設定する
 	void SetHeadBone(CRBoneIf* head);
 };
@@ -60,7 +63,15 @@ struct CRGazeControllerDesc{
 
 	/// ラベル <!!>
 
+	/// 頭の正面ベクトル
+	Vec3d front;
+
+	/// 頭の上ベクトル
+	Vec3d up;
+
 	CRGazeControllerDesc(){
+		front = Vec3d( 0, 1, 0);
+		up    = Vec3d( 0, 0,-1);
 	}
 };
 
