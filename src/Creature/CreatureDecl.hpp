@@ -36,12 +36,18 @@ public:\
 
 #define SPR_DECLMEMBEROF_CRGazeControllerDesc \
 protected:\
+	Vec3d	front;	\
+	Vec3d	up;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
+		front = ((CRGazeControllerDesc*)ptr)->front;	\
+		up = ((CRGazeControllerDesc*)ptr)->up;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		((CRGazeControllerDesc*)ptr)->front = front;	\
+		((CRGazeControllerDesc*)ptr)->up = up;	\
 		return true;	\
 	}\
 

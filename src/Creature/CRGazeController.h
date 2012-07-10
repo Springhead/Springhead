@@ -51,6 +51,9 @@ public:
 	///  視対象位置をセットする
 	virtual void SetTargetPosition(Vec3d pos);
 
+	///  セットされている視対象位置を取得する
+	Vec3d GetTargetPosition();
+
 	/// 頭ボーンを設定する
 	virtual void SetHeadBone(CRBoneIf* head) { this->head = head; }
 };

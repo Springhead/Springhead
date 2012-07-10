@@ -75,7 +75,6 @@ struct CRBoneIf : SceneObjectIf {
 	void SetTargetPos(Vec3d pos);
 
 	/** @brief 現在設定されている目標位置の取得
-		@param pos 目標位置
 	*/
 	Vec3d GetTargetPos();
 
@@ -83,6 +82,10 @@ struct CRBoneIf : SceneObjectIf {
 		@param ori 目標姿勢
 	*/
 	void SetTargetOri(Quaterniond ori);
+
+	/** @brief 現在設定されている目標姿勢の取得
+	*/
+	Quaterniond GetTargetOri();
 
 	/** @brief 目標位置・姿勢の設定
 		@param pose 目標位置・姿勢

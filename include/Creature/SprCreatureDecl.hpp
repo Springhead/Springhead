@@ -21,6 +21,7 @@
 	void SetTargetPos(Vec3d pos){	base::SetTargetPos(pos);}	\
 	Vec3d GetTargetPos(){	return	base::GetTargetPos();}	\
 	void SetTargetOri(Quaterniond ori){	base::SetTargetOri(ori);}	\
+	Quaterniond GetTargetOri(){	return	base::GetTargetOri();}	\
 	void SetTargetPose(Posed pose){	base::SetTargetPose(pose);}	\
 	void SetTimeLimit(float timeLimit){	base::SetTimeLimit(timeLimit);}	\
 	void StepTrajectory(){	base::StepTrajectory();}	\
@@ -45,6 +46,7 @@
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRGazeControllerIf(base)	\
 	void SetTargetPosition(Vec3d pos){	base::SetTargetPosition(pos);}	\
+	Vec3d GetTargetPosition(){	return	base::GetTargetPosition();}	\
 	void SetHeadBone(Spr::CRBoneIf* head){	base::SetHeadBone(head);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CRReachControllerIf(base)	\
