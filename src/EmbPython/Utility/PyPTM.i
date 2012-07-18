@@ -337,6 +337,44 @@ public:
 }
 EXTEND_NEW(Vec4i)
 
+
+class Vec6f{
+public:
+	float vx, vy, vz, wx, wy, wz;
+	VEC_MEMBER(Vec6f)
+	VEC_CONSTRUCTOR(Vec6f, float, _6f)
+	Vec6f(float vxi, float vyi, float vzi, float wxi, float wyi, float wzi);
+};
+%extend Vec6f{
+	VEC_EXTEND(Vec6f, float)
+}
+EXTEND_NEW(Vec6f)
+
+class Vec6d{
+public:
+	double vx, vy, vz, wx, wy, wz;
+	VEC_MEMBER(Vec6d)
+	VEC_CONSTRUCTOR(Vec6d, double, _6d)
+	Vec6d(double vxi, double vyi, double vzi, double wxi, double wyi, double wzi);
+};
+%extend Vec6d{
+	VEC_EXTEND(Vec6d, double)
+}
+EXTEND_NEW(Vec6d)
+
+class Vec6i{
+public:
+	int vx, vy, vz, wx, wy, wz;
+	VEC_MEMBER(Vec6i)
+	VEC_CONSTRUCTOR(Vec6i, int, _6i)
+	Vec6i(int vxi, int vyi, int vzi, int wxi, int wyi, int wzi);
+};
+%extend Vec6i{
+	VEC_EXTEND(Vec6i, int)
+}
+EXTEND_NEW(Vec6i)
+
+
 class Matrix2f{
 public:
 	float xx, xy, yx, yy;

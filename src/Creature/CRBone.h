@@ -14,6 +14,8 @@
 #include <Physics/SprPHJoint.h>
 #include <Physics/SprPHIK.h>
 
+#include <queue>
+
 //@{
 namespace Spr{;
 
@@ -26,11 +28,20 @@ class CRBone : public SceneObject, public CRBoneDesc {
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	//  軌道運動関連
 	
-	/// 到達位置の相対基準剛体
+	/// 軌道の相対基準剛体
 	PHSolidIf* originSolid;
 
-	/// 経過時間
+	/// 軌道を構成する点群
+	std::deque<CRTrajectoryNode> trajNodes;
+
+	/// 現在時刻
 	float time;
+
+	/// 現在の状態
+	CRTrajectoryNode current;
+
+
+
 
 	/// 到達目標時間
 	float timeLimit;
@@ -79,6 +90,8 @@ class CRBone : public SceneObject, public CRBoneDesc {
 		bPause  = false;
 
 		originSolid = NULL;
+		time        = 0.0f;
+		ClearTrajectory();
 
 		relativePose = Posed();
 		horizRange = vertRange = -1;
@@ -171,6 +184,53 @@ public:
 	*/
 	void SetOriginSolid(PHSolidIf* solid);
 
+	/** @brief 軌道の通過点を追加する
+		@param time     通過時刻
+		@param pose     目標位置・姿勢
+		@param dpose    目標速度・角速度
+		@param priority 優先度ベクトル（位置・姿勢・速度・角速度 の各優先度．0でdisable）
+	*/
+	void AddTrajectoryNode(CRTrajectoryNode node);
+
+	/** @brief i番目（時刻ベース）の通過点を取得する
+	*/
+	CRTrajectoryNode GetTrajectoryNode(int i);
+
+	/** @brief 通過点を数を取得する
+	*/
+	int NTrajectoryNodes() { return trajNodes.size(); }
+
+	/** @brief 時刻tにおけるの通過点を取得する
+	*/
+	CRTrajectoryNode GetTrajectoryNodeAt(float t);
+
+	/** @brief i番目（時刻ベース）の通過点を設定する
+		（追加した軌道通過点を後から編集したい場合に使う．普通は使わない）
+	*/
+	void SetTrajectoryNode(int i, CRTrajectoryNode node);
+
+	/** @brief 現在通過中の点を取得する
+	*/
+	CRTrajectoryNode GetCurrentNode();
+
+	/** @brief 軌道の通過点を全削除する
+	*/
+	void ClearTrajectory();
+
+	/** @brief １ステップ
+	*/
+	void StepTrajectory();
+
+	/** @brief 軌道を計画する
+	*/
+	void Plan();
+	void PlanSegment(CRTrajectoryNode &from, CRTrajectoryNode &to);
+
+
+
+
+	/// ----- そのうちObsoleteにするかも＜ここから＞ -----
+
 	/** @brief 目標位置の設定
 		@param pos 目標位置
 	*/
@@ -199,10 +259,6 @@ public:
 	*/
 	void SetTimeLimit(float timeLimit);
 
-	/** @brief １ステップ
-	*/
-	void StepTrajectory();
-
 	/** @brief 動作開始
 	*/
 	void Start();
@@ -215,9 +271,7 @@ public:
 	*/
 	void Stop();
 
-	/** @brief 軌道を計画する
-	*/
-	void Plan();
+	/// ----- そのうちObsoleteにするかも＜ここまで＞ -----
 
 	// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 	// 視覚関連

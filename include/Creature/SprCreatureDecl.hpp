@@ -18,17 +18,24 @@
 	Spr::PHIKActuatorIf* GetIKActuator(){	return	base::GetIKActuator();}	\
 	void SetIKActuator(Spr::PHIKActuatorIf* ikAct){	base::SetIKActuator(ikAct);}	\
 	void SetOriginSolid(Spr::PHSolidIf* solid){	base::SetOriginSolid(solid);}	\
+	void AddTrajectoryNode(Spr::CRTrajectoryNode node){	base::AddTrajectoryNode(node);}	\
+	Spr::CRTrajectoryNode GetTrajectoryNode(int i){	return	base::GetTrajectoryNode(i);}	\
+	int NTrajectoryNodes(){	return	base::NTrajectoryNodes();}	\
+	Spr::CRTrajectoryNode GetTrajectoryNodeAt(float t){	return	base::GetTrajectoryNodeAt(t);}	\
+	void SetTrajectoryNode(int i, Spr::CRTrajectoryNode node){	base::SetTrajectoryNode(i, node);}	\
+	Spr::CRTrajectoryNode GetCurrentNode(){	return	base::GetCurrentNode();}	\
+	void ClearTrajectory(){	base::ClearTrajectory();}	\
+	void StepTrajectory(){	base::StepTrajectory();}	\
+	void Plan(){	base::Plan();}	\
 	void SetTargetPos(Vec3d pos){	base::SetTargetPos(pos);}	\
 	Vec3d GetTargetPos(){	return	base::GetTargetPos();}	\
 	void SetTargetOri(Quaterniond ori){	base::SetTargetOri(ori);}	\
 	Quaterniond GetTargetOri(){	return	base::GetTargetOri();}	\
 	void SetTargetPose(Posed pose){	base::SetTargetPose(pose);}	\
 	void SetTimeLimit(float timeLimit){	base::SetTimeLimit(timeLimit);}	\
-	void StepTrajectory(){	base::StepTrajectory();}	\
 	void Start(){	base::Start();}	\
 	void Pause(){	base::Pause();}	\
 	void Stop(){	base::Stop();}	\
-	void Plan(){	base::Plan();}	\
 	void SetViewArea(Posed relativePose, double horizRange, double vertRange){	base::SetViewArea(relativePose, horizRange, vertRange);}	\
 	int NVisibleSolids(){	return	base::NVisibleSolids();}	\
 	Spr::PHSolidIf* GetVisibleSolid(int i){	return	base::GetVisibleSolid(i);}	\

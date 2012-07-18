@@ -29,7 +29,6 @@ namespace Spr{;
 #define SUBMAT(r, c, h, w) sub_matrix(PTM::TSubMatrixDim<r, c, h, w>())
 #define SUBVEC(o, l) sub_vector(PTM::TSubVectorDim<o, l>())
 typedef PTM::TMatrixCol<6, 6, double> Matrix6d;
-typedef PTM::TVector<6, double> Vec6d;
 
 ///	v1 * v2^T で得られる行列
 inline Matrix3d VVtr(const Vec3d& v1, const Vec3d& v2){

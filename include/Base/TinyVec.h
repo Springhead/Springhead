@@ -225,6 +225,79 @@ public:
 protected:
 	void set_default(){this->clear();}
 };
+
+//-----------------------------------------------------------------------------
+//		TVec6
+///	6次元ベクトルクラス.
+template<class T>
+class TVec6:public PTM::TVectorBase<6, TVecDesc<TVec6<T>, T> >{
+public:
+	typedef TVecDesc<TVec6<T>, T> desc;
+	typedef PTM::TVectorBase<6, desc> base_type;
+	/**	継承されない基本的なメンバの定義.
+		@see ::DEF_TVECTOR_BASIC_MEMBER	*/
+	DEF_TVECTOR_BASIC_MEMBER(TVec6);
+	union{
+		T data[6];
+		struct{
+			T vx,vy,vz,wx,wy,wz;
+		};
+	};
+	///	要素のアクセス
+	T& item_impl(size_t i){ return data[i]; }
+	///	要素のアクセス
+	const T& item_impl(size_t i) const { return data[i]; }
+	///	ストライド
+	size_t stride_impl() const { return 1; }
+
+	///@name 初期化関数
+	//@{
+	/// 零ベクトル
+	static TVec6<T> Zero(){TVec6<T> v; v.clear(); return v;}
+	//@}
+
+	///@name 変数アクセス
+	//@{
+	///	vx成分
+	const element_type& VX() const { return vx; }
+	///	vy成分
+	const element_type& VY() const { return vy; }
+	///	vz成分
+	const element_type& VZ() const { return vz; }
+	///	wx成分
+	const element_type& WX() const { return wx; }
+	///	wy成分
+	const element_type& WY() const { return wy; }
+	///	wz成分
+	const element_type& WZ() const { return wz; }
+	///	vx成分
+	element_type& VX(){ return vx; }
+	///	vy成分
+	element_type& VY(){ return vy; }
+	///	vz成分
+	element_type& VZ(){ return vz; }
+	///	wx成分
+	element_type& WX(){ return wx; }
+	///	wy成分
+	element_type& WY(){ return wy; }
+	///	wz成分
+	element_type& WZ(){ return wz; }
+	//@}
+	
+	///@name 初期化・構築
+	//@{
+	///	コンストラクタ
+	template <class TVX, class TVY, class TVZ, class TWX, class TWY, class TWZ>
+	TVec6 (TVX vxi, TVY vyi, TVZ vzi, TWX wxi, TWY wyi, TWZ wzi){
+		VX() = element_type(vxi); VY() = element_type(vyi); VZ() = element_type(vzi);
+		WX() = element_type(wxi); WY() = element_type(wyi); WZ() = element_type(wzi);
+	}
+	//@}
+protected:
+	void set_default(){this->clear();}
+};
+
+
 /// int版2次元ベクトル
 typedef TVec2<int> Vec2i;
 ///	float版2次元ベクトル
@@ -243,6 +316,12 @@ typedef TVec4<int> Vec4i;
 typedef TVec4<float> Vec4f;
 ///	double版4次元ベクトル
 typedef TVec4<double> Vec4d;
+/// int版6次元ベクトル
+typedef TVec6<int> Vec6i;
+/// float版6次元ベクトル
+typedef TVec6<float> Vec6f;
+/// double版6次元ベクトル
+typedef TVec6<double> Vec6d;
 //@}
 
 #ifndef PTM_PACK	//	単体で使用する場合は，namespace に入れない
