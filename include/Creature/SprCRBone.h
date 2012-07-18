@@ -17,6 +17,43 @@ struct PHJointIf;
 struct PHIKActuatorIf;
 struct PHIKEndEffectorIf;
 
+/// 運動軌道の通過点
+struct CRTrajectoryNode {
+	float  time;
+	Posed  pose;
+	Vec6d  dpose;
+	Vec4d  priority;
+	Posed  viapose;
+	float  viatime;
+
+	Vec4d  coeff[4];
+	double length;
+
+	CRTrajectoryNode(){
+		time		= 0;
+		pose		= Posed();
+		dpose		= Vec6d();
+		priority	= Vec4d();
+
+		for (int i=0; i<4; ++i) { coeff[i] = Vec4d(); }
+		length      = DBL_MAX;
+		viapose     = Posed();
+		viatime     = 0.5;
+	};
+
+	CRTrajectoryNode(float t, Posed p, Vec6d dp, Vec4d pr) {
+		time		= t;
+		pose		= p;
+		dpose		= dp;
+		priority	= pr;
+
+		for (int i=0; i<4; ++i) { coeff[i] = Vec4d(); }
+		length      = DBL_MAX;
+		viapose     = Posed();
+		viatime     = 0.5;
+	}
+};
+
 /// クリーチャのボーン（剛体一つ＋親ボーンへの関節一つ）
 struct CRBoneIf : SceneObjectIf {
 	SPR_IFDEF(CRBone);
@@ -69,6 +106,52 @@ struct CRBoneIf : SceneObjectIf {
 	*/
 	void SetOriginSolid(PHSolidIf* solid);
 
+	/** @brief 軌道の通過点を追加する
+		@param time     通過時刻
+		@param pose     目標位置・姿勢
+		@param dpose    目標速度・角速度
+		@param priority 優先度ベクトル（位置・姿勢・速度・角速度 の各優先度．0でdisable）
+	*/
+	void AddTrajectoryNode(CRTrajectoryNode node);
+
+	/** @brief i番目（時刻ベース）の通過点を取得する
+	*/
+	CRTrajectoryNode GetTrajectoryNode(int i);
+
+	/** @brief 通過点を数を取得する
+	*/
+	int NTrajectoryNodes();
+
+	/** @brief 時刻tにおけるの通過点を取得する
+	*/
+	CRTrajectoryNode GetTrajectoryNodeAt(float t);
+
+	/** @brief i番目（時刻ベース）の通過点を設定する
+		（追加した軌道通過点を後から編集したい場合に使う．普通は使わない）
+	*/
+	void SetTrajectoryNode(int i, CRTrajectoryNode node);
+
+	/** @brief 現在通過中の点を取得する
+	*/
+	CRTrajectoryNode GetCurrentNode();
+
+	/** @brief 軌道の通過点を全削除する
+	*/
+	void ClearTrajectory();
+
+	/** @brief １ステップ
+	*/
+	void StepTrajectory();
+
+	/** @brief 軌道を計画する
+	*/
+	void Plan();
+
+
+
+
+	/// ----- そのうちObsoleteにするかも＜ここから＞ -----
+
 	/** @brief 目標位置の設定
 		@param pos 目標位置
 	*/
@@ -97,10 +180,6 @@ struct CRBoneIf : SceneObjectIf {
 	*/
 	void SetTimeLimit(float timeLimit);
 
-	/** @brief １ステップ
-	*/
-	void StepTrajectory();
-
 	/** @brief 動作開始
 	*/
 	void Start();
@@ -113,9 +192,7 @@ struct CRBoneIf : SceneObjectIf {
 	*/
 	void Stop();
 
-	/** @brief 軌道を計画する
-	*/
-	void Plan();
+	/// ----- そのうちObsoleteにするかも＜ここまで＞ -----
 
 	// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 	// 視覚関連

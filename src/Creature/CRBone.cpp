@@ -20,6 +20,285 @@ void CRBone::SetOriginSolid(PHSolidIf* solid) {
 	originSolid = solid;
 }
 
+void CRBone::AddTrajectoryNode(CRTrajectoryNode node) {
+	bool bAdded = false;
+	for (std::deque<CRTrajectoryNode>::iterator it=trajNodes.begin(); it!=trajNodes.end(); ++it) {
+		if (node.time <= it->time) { trajNodes.insert(it, node); bAdded=true; break; }
+	}
+	if (!bAdded) { trajNodes.push_back(node); }
+	Plan();
+}
+
+CRTrajectoryNode CRBone::GetTrajectoryNode(int i) {
+	return trajNodes[i];
+}
+
+CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float t) {
+	Vec3d  r0 = trajNodes[0].pose.Pos();
+	Vec6d  v0 = trajNodes[0].dpose;
+	Vec3d  a0 = Vec3d();
+
+	Vec3d  rf = trajNodes[1].pose.Pos();
+	Vec6d  vf = trajNodes[1].dpose;
+	Vec3d  af = Vec3d();
+	double tf = trajNodes[1].time - trajNodes[0].time;
+
+	Vec3d  r1 = trajNodes[0].viapose.Pos();
+	double t1 = trajNodes[0].viatime;
+
+	Vec3d  rt = Vec3d();
+	Vec3d  vt = Vec3d();
+
+	for (int i=0; i<3; ++i) {
+		Vec4d  pi = trajNodes[0].coeff[i];
+		if (t < t1) {
+			rt[i] = r0[i] + v0[i]*t + 0.5*a0[i]*t*t
+				+   pi[0]*pow(t,3) +   pi[1]*pow(t,4) +   pi[2]*pow(t,5);
+			vt[i] =         v0[i]   +     a0[i]*t
+				+ 3*pi[0]*pow(t,2) + 4*pi[1]*pow(t,3) + 5*pi[2]*pow(t,4);
+		} else {
+			rt[i] = r0[i] + v0[i]*t + 0.5*a0[i]*t*t
+				+   pi[0]*pow(t,3) +   pi[1]*pow(t,4) +   pi[2]*pow(t,5)
+				+   (pow(t-t1,5)*pi[3]/120.0);
+			vt[i] =         v0[i]   +     a0[i]*t
+				+ 3*pi[0]*pow(t,2) + 4*pi[1]*pow(t,3) + 5*pi[2]*pow(t,4)
+				+ (5*pow(t-t1,4)*pi[3]/120.0);
+		}
+	}
+
+	CRTrajectoryNode node;
+	node.time = t;
+	node.pose.Pos() = rt;
+	for (int i=0; i<3; ++i) { node.dpose[i] = vt[i]; }
+
+	return node;
+}
+
+void CRBone::SetTrajectoryNode(int i, CRTrajectoryNode node) {
+	if (0<=i && (size_t)i<trajNodes.size()) {
+		trajNodes[i] = node;
+	} else {
+		std::cout << "CRBone::SetTrajectoryNode() : Out of Range : " << i << std::endl; // <!!>
+	}
+}
+
+CRTrajectoryNode CRBone::GetCurrentNode() {
+	return current;
+}
+
+void CRBone::ClearTrajectory() {
+	CRTrajectoryNode current = GetCurrentNode();
+	current.time = 0.0f;
+	this->time   = 0.0f;
+
+	trajNodes.clear();
+	trajNodes.push_back(current);
+}
+
+void CRBone::StepTrajectory() {
+	if (trajNodes.size() >  1 && (trajNodes[1].time-trajNodes[0].time) < time) {
+		trajNodes.pop_front(); time=0.0f;
+	}
+	if (trajNodes.size() <= 1) { return; }
+
+	Vec3d  r0 = trajNodes[0].pose.Pos();
+	Vec6d  v0 = trajNodes[0].dpose;
+	Vec3d  a0 = Vec3d();
+
+	Vec3d  rf = trajNodes[1].pose.Pos();
+	Vec6d  vf = trajNodes[1].dpose;
+	Vec3d  af = Vec3d();
+	double tf = trajNodes[1].time - trajNodes[0].time;
+
+	Vec3d  r1 = trajNodes[0].viapose.Pos(); // (r0 + rf) * 0.5;
+	double t1 = trajNodes[0].viatime;       // tf * 0.5;
+
+	Vec3d  rt = Vec3d();
+	Vec3d  vt = Vec3d();
+	double t  = (double)time;
+
+	for (int i=0; i<3; ++i) {
+		Vec4d  pi = trajNodes[0].coeff[i];
+		if (t < t1) {
+			rt[i] = r0[i] + v0[i]*t + 0.5*a0[i]*t*t
+				+   pi[0]*pow(t,3) +   pi[1]*pow(t,4) +   pi[2]*pow(t,5);
+			vt[i] =         v0[i]   +     a0[i]*t
+				+ 3*pi[0]*pow(t,2) + 4*pi[1]*pow(t,3) + 5*pi[2]*pow(t,4);
+		} else {
+			rt[i] = r0[i] + v0[i]*t + 0.5*a0[i]*t*t
+				+   pi[0]*pow(t,3) +   pi[1]*pow(t,4) +   pi[2]*pow(t,5)
+				+   (pow(t-t1,5)*pi[3]/120.0);
+			vt[i] =         v0[i]   +     a0[i]*t
+				+ 3*pi[0]*pow(t,2) + 4*pi[1]*pow(t,3) + 5*pi[2]*pow(t,4)
+				+ (5*pow(t-t1,4)*pi[3]/120.0);
+		}
+	}
+
+	current.time = time;
+	current.pose.Pos() = rt;
+	for (int i=0; i<3; ++i) { current.dpose[i] = vt[i]; }
+
+
+
+	PHSceneIf* phScene = DCAST(PHSceneIf,solid->GetScene());
+	PHSolidIf* soDebug = phScene->FindObject("soDebug")->Cast();
+	if (soDebug) {
+		soDebug->SetFramePosition(rt);
+	}
+
+	SetTargetPos(rt);
+
+	time += phScene->GetTimeStep();
+
+	// <!!>
+
+
+	/*
+	// --
+	PHSolidIf* soDebug = DCAST(CRCreatureIf,GetScene())->GetPHScene()->FindObject("soDebug")->Cast();
+	if (soDebug) {
+		DCAST(CRCreatureIf,GetScene())->GetPHScene()->SetContactMode(soDebug, PHSceneDesc::MODE_NONE);
+	}
+	// --
+
+	double dt = DCAST(CRCreatureIf,GetScene())->GetPHScene()->GetTimeStep();
+
+	// à íuêßå‰
+	Vec3f finalPosAbs=finalPos, initPosAbs=initPos;
+	if (originSolid) {
+		initPosAbs  = originSolid->GetPose() * initPosAbs;
+		finalPosAbs = originSolid->GetPose() * finalPosAbs;
+	}
+
+	if (bCtlPos && bEnable) {
+		time += (float)dt;
+
+		//	ê≥ãKâªÇµÇΩéûçè (0..1)
+		float s = std::min( time / timeLimit , 1.0f );
+
+		//	ïRÇÃí∑Ç≥Ç∆ë¨ìx
+		double length = 1 - (10*pow(s,3) - 15*pow(s,4) + 6*pow(s,5));
+		double deltaLength = -30*(pow(s,2) - 2*pow(s,3) + pow(s,4));
+		if (length<0) {
+			length = 0;
+			deltaLength = 0;
+		}
+
+		Vec3d tlp = Vec3d(); if (endeffector) { tlp = endeffector->GetTargetLocalPosition(); }
+		Vec3f dir = (solid->GetPose() * tlp)-finalPosAbs;
+		if (dir.norm() != 0) { dir /= dir.norm(); }
+
+		Vec3d currPos = finalPosAbs + dir*(finalPosAbs - initPosAbs).norm()*length;
+		if (endeffector) { endeffector->SetTargetPosition(currPos); }
+		if (soDebug)     { soDebug->SetFramePosition(initPosAbs);   }
+
+		if (time > timeLimit) {
+			bCtlPos = false;
+		}
+	}
+
+	if (bEnable && time > timeLimit) {
+		if (endeffector) { endeffector->SetTargetPosition(finalPosAbs); }
+	}
+
+	// épê®êßå‰
+	if (bCtlOri && bEnable) {
+		bCtlOri = false; // ñ¢é¿ëï
+	}
+	*/
+}
+
+void CRBone::Plan() {
+	if (trajNodes.size() <= 1) { return; }
+
+	for (size_t segment=0; segment<trajNodes.size()-1; ++segment) {
+		trajNodes[segment].viapose.Pos() = (trajNodes[segment].pose.Pos() + trajNodes[segment+1].pose.Pos()) * 0.5;
+		trajNodes[segment].viatime       =  (trajNodes[segment+1].time - trajNodes[segment].time) * 0.5;
+		PlanSegment(trajNodes[segment], trajNodes[segment+1]);
+
+		std::cout << "Before : " << trajNodes[segment].viatime << ", " << trajNodes[segment].length << std::endl;
+
+		// <!!> ÇøÇÂÇ¡Ç∆NaiveÇ∑Ç¨ÇÈÇ©Ç‡ÅDóvâ¸ëP
+		CRTrajectoryNode candidates[300];
+		for (int i=0; i<300; ++i) {
+			candidates[i] = trajNodes[segment];
+			Vec2d theta = Vec2d(
+				(((double)rand()/(double)RAND_MAX)*1.0 - 0.5) * 3.14159,
+				(((double)rand()/(double)RAND_MAX)*2.0 - 1.0) * 3.14159
+				);
+			Quaterniond rot = Quaterniond::Rot(theta[1],'y') * Quaterniond::Rot(theta[0],'x');
+			candidates[i].viapose.Pos() += (rot * (candidates[i].viapose.Pos() - trajNodes[segment].pose.Pos()));
+			candidates[i].viatime = (((double)rand()/(double)RAND_MAX)*0.2 + 0.4) * (trajNodes[segment+1].time - trajNodes[segment].time);
+
+			PlanSegment(candidates[i], trajNodes[segment+1]);
+			if (candidates[i].length < trajNodes[segment].length) {
+				trajNodes[segment] = candidates[i];
+			}
+		}		
+
+		std::cout << "After  : " << trajNodes[segment].viatime << ", " << trajNodes[segment].length << std::endl;
+	}
+}
+
+void CRBone::PlanSegment(CRTrajectoryNode &from, CRTrajectoryNode &to) {
+	// Calc Coeff
+	Vec3d  r0 = from.pose.Pos();
+	Vec6d  v0 = from.dpose;
+	Vec3d  a0 = Vec3d();
+
+	Vec3d  rf = to.pose.Pos();
+	Vec6d  vf = to.dpose;
+	Vec3d  af = Vec3d();
+	double tf = to.time - from.time;
+
+	Vec3d  r1 = from.viapose.Pos(); // (r0 + rf) * 0.5;
+	double t1 = from.viatime;       // tf * 0.5;
+
+	Vec3d  rt = Vec3d();
+
+	for (int i=0; i<3; ++i) {
+		PTM::TMatrixRow<4,4,double> A;
+		A.row(0) = Vec4d(    pow(t1,3),    pow(t1,4),    pow(t1,5), 0                   );
+		A.row(1) = Vec4d(    pow(tf,3),    pow(tf,4),    pow(tf,5), pow(tf-t1,5)/120.0  );
+		A.row(2) = Vec4d(  3*pow(tf,2),  4*pow(tf,3),  5*pow(tf,4), pow(tf-t1,4)/24.0   );
+		A.row(3) = Vec4d(  6*pow(tf,1), 12*pow(tf,2), 20*pow(tf,3), pow(tf-t1,3)/6.0    );
+
+		PTM::TMatrixRow<4,1,double> b;
+		b[0][0] = r1[i] - (r0[i] + v0[i]*t1 + 0.5*a0[i]*t1*t1);
+		b[1][0] = rf[i] - (r0[i] + v0[i]*tf + 0.5*a0[i]*tf*tf);
+		b[2][0] = vf[i] - (v0[i]            +     a0[i]*tf);
+		b[3][0] = af[i] -                         a0[i];
+
+		PTM::TMatrixRow<4,1,double> pi = A.inv() * b;
+		for (int n=0; n<4; ++n) { from.coeff[i][n] = pi[n][0]; }
+	}
+
+	// Get Total Jerk
+	Vec3d  pos  = r0;
+	double jerk = 0.0;
+	int sep = 20;
+	for (int s=0; s<sep; ++s) {
+		double t  = ((double)s / (double)sep) * tf;
+		Vec3d  jk = Vec3d();
+
+		for (int i=0; i<3; ++i) {
+			Vec4d  pi = from.coeff[i];
+			if (t < t1) {
+				jk[i] = a0[i] + 6*pi[0]*t + 12*pi[1]*pow(t,2) + 20*pi[2]*pow(t,3);
+			} else {
+				jk[i] = a0[i] + 6*pi[0]*t + 12*pi[1]*pow(t,2) + 20*pi[2]*pow(t,3)
+					+ (20*pow(t-t1,3)*pi[3]/120.0);
+			}
+		}
+
+		jerk += jk.norm();
+		pos = rt;
+	}
+	if (jerk != 0) { from.length = jerk; }
+}
+
+/// ----- ÇªÇÃÇ§ÇøObsoleteÇ…Ç∑ÇÈÇ©Ç‡ÅÉÇ±Ç±Ç©ÇÁÅÑ -----
+
 void CRBone::SetTargetPos(Vec3d pos) {
 	if (!bCtlPos) {
 		Vec3d tlp = endeffector ? endeffector->GetTargetLocalPosition() : Vec3d();
@@ -65,64 +344,11 @@ void CRBone::SetTimeLimit(float timeLimit) {
 	this->timeLimit = timeLimit;
 }
 
-void CRBone::StepTrajectory() {
-	// --
-	PHSolidIf* soDebug = DCAST(CRCreatureIf,GetScene())->GetPHScene()->FindObject("soDebug")->Cast();
-	if (soDebug) {
-		DCAST(CRCreatureIf,GetScene())->GetPHScene()->SetContactMode(soDebug, PHSceneDesc::MODE_NONE);
-	}
-	// --
-
-	double dt = DCAST(CRCreatureIf,GetScene())->GetPHScene()->GetTimeStep();
-
-	// à íuêßå‰
-	Vec3f finalPosAbs=finalPos, initPosAbs=initPos;
-	if (originSolid) {
-		initPosAbs  = originSolid->GetPose() * initPosAbs;
-		finalPosAbs = originSolid->GetPose() * finalPosAbs;
-	}
-
-	if (bCtlPos && bEnable) {
-		time += (float)dt;
-
-		//	ê≥ãKâªÇµÇΩéûçè (0..1)
-		float s = std::min( time / timeLimit , 1.0f );
-
-		//	ïRÇÃí∑Ç≥Ç∆ë¨ìx
-		double length = 1 - (10*pow(s,3) - 15*pow(s,4) + 6*pow(s,5));
-		double deltaLength = -30*(pow(s,2) - 2*pow(s,3) + pow(s,4));
-		if (length<0) {
-			length = 0;
-			deltaLength = 0;
-		}
-
-		Vec3f dir = (solid->GetPose() * endeffector->GetTargetLocalPosition())-finalPosAbs;
-		if (dir.norm() != 0) { dir /= dir.norm(); }
-
-		Vec3d currPos = finalPosAbs + dir*(finalPosAbs - initPosAbs).norm()*length;
-		endeffector->SetTargetPosition(currPos);
-		if (soDebug) { soDebug->SetFramePosition(initPosAbs); }
-
-		if (time > timeLimit) {
-			bCtlPos = false;
-		}
-	}
-
-	if (bEnable && time > timeLimit) {
-		endeffector->SetTargetPosition(finalPosAbs);
-	}
-
-	// épê®êßå‰
-	if (bCtlOri && bEnable) {
-		bCtlOri = false; // ñ¢é¿ëï
-	}
-}
-
 void CRBone::Start() {
 	if ((!bEnable && !bPause) || (time > timeLimit)) {
 		time = 0.0f;
 	}
-	endeffector->Enable(true);
+	if (endeffector) { endeffector->Enable(true); }
 	bEnable = true;
 	bPause = false;
 }
@@ -135,13 +361,11 @@ void CRBone::Pause() {
 void CRBone::Stop() {
 	bEnable = false;
 	bPause  = false;
-	endeffector->Enable(false);
+	if (endeffector) { endeffector->Enable(false); }
 	time = 0.0f;
 }
 
-void CRBone::Plan() {
-	// ñ¢é¿ëï
-}
+/// ----- ÇªÇÃÇ§ÇøObsoleteÇ…Ç∑ÇÈÇ©Ç‡ÅÉÇ±Ç±Ç‹Ç≈ÅÑ -----
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // ï®ëÃíTçı
