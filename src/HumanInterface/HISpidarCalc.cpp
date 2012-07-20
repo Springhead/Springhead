@@ -47,7 +47,7 @@ void HISpidarCalc3Dof::Init(int dof, const VVector<float>& minF, const VVector<f
 void HISpidarCalc3Dof::SetForce(const Vec3f& TF){
 	int i,j;
 	
-	size_t wire = wireDirection.size();
+	int wire = (int)wireDirection.size();
 	for(i=0;i<wire;i++){
 		quadpr.matQ[i][i] = wireDirection[i]*wireDirection[i]+smooth;
 		for(j=i+1;j<wire;j++){
@@ -67,7 +67,7 @@ void HISpidarCalc3Dof::Update(){
 
 	MeasureWire();
 	MakeWireVec();
-	size_t wire = matA.height();
+	int wire = (int)matA.height();
 	for(int step=0; step< nRepeat; ++ step){
 		for(i=0;i<wire;i++) {
 			matA[i][0]=wireDirection[i].X();
@@ -125,7 +125,7 @@ void HISpidarCalc6Dof::Update(){
 	MeasureWire();	//get length from encorder
 	MakeWireVec();
 
-	size_t nWire = matA.height();
+	int nWire = (int)matA.height();
 	for(int step=0; step < nRepeat; ++step){
 		for(i=0;i<nWire;i++) {
 			matA[i][0]=wireDirection[i].X();
@@ -176,7 +176,7 @@ void HISpidarCalc6Dof::Update(){
 }
 
 void HISpidarCalc6Dof::SetForce(const Vec3f& trnF ,const Vec3f& rotF){
-	size_t nWire = wireDirection.size();
+	int nWire = (int)wireDirection.size();
 
 	int i,j;
 
