@@ -32,7 +32,7 @@ public:
 	///	ロード後に呼ばれる。grMeshからphMeshを生成し、grMeshもphMeshに合わせたものに置き換える
 	void Loaded(UTLoadContext* );
 	///	グラフィクス表示前の同期処理
-	void Sync(bool ph2gr);
+	void Sync();
 	///	子オブジェクトの数
 	virtual size_t NChildObject() const;
 	///	子オブジェクトの取得

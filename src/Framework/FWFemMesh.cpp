@@ -136,7 +136,7 @@ void FWFemMesh::DrawVtxLine(float length, float x, float y, float z){
 }
 
 
-void FWFemMesh::Sync(bool ph2gr){	
+void FWFemMesh::Sync(){	
 	//	テスト用
 	//static double value, delta;
 	//if (value <= 0) delta = 0.01;
@@ -174,8 +174,8 @@ void FWFemMesh::Sync(bool ph2gr){
 	//	50度刻みごとにdtexを加算せずに、gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;だけでやるのも手
 
 	//	同期処理
-	FWObject::Sync(); // ph2grは廃止しました。syncSource==FWObjectDesc::PHYSICS を使って下さい (mitake) <!!>
-	if (ph2gr && grMesh->IsTex3D()){
+	FWObject::Sync();
+	if (syncSource==FWObjectDesc::PHYSICS && grMesh->IsTex3D()){
 		float* gvtx = grMesh->GetVertexBuffer();
 		if (gvtx){
 			int tex = grMesh->GetTexOffset();
