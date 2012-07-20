@@ -37,34 +37,34 @@ public:
 	virtual size_t     NChildObject() const;
 
 	// Getter・Setter
-	PHSolidIf*	GetPHSolid(){ return phSolid; }
-	void		SetPHSolid(PHSolidIf* s){ phSolid = s; }
+	virtual PHSolidIf*	GetPHSolid(){ return phSolid; }
+	virtual void		SetPHSolid(PHSolidIf* s){ phSolid = s; }
 
-	GRFrameIf*	GetGRFrame(){ return grFrame; }
-	void		SetGRFrame(GRFrameIf* f){ grFrame = f; }
+	virtual GRFrameIf*	GetGRFrame(){ return grFrame; }
+	virtual void		SetGRFrame(GRFrameIf* f){ grFrame = f; }
 
-	PHJointIf*	GetPHJoint(){ return phJoint; }
-	void		SetPHJoint(PHJointIf* j){ phJoint = j; }
+	virtual PHJointIf*	GetPHJoint(){ return phJoint; }
+	virtual void		SetPHJoint(PHJointIf* j){ phJoint = j; }
 
-	GRFrameIf*	GetChildFrame(){ return childFrame; }
-	void		SetChildFrame(GRFrameIf* f){ childFrame = f; }
+	virtual GRFrameIf*	GetChildFrame(){ return childFrame; }
+	virtual void		SetChildFrame(GRFrameIf* f){ childFrame = f; }
 
 	// 同期オプション
-	void		SetSyncSource(FWObjectDesc::FWObjectSyncSource syncSrc) { syncSource = syncSrc; }
-	FWObjectDesc::FWObjectSyncSource GetSyncSource() { return syncSource; }
+	virtual void		SetSyncSource(FWObjectDesc::FWObjectSyncSource syncSrc) { syncSource = syncSrc; }
+	virtual FWObjectDesc::FWObjectSyncSource GetSyncSource() { return syncSource; }
 
-	void		EnableAbsolute(bool bAbs) { bAbsolute = bAbs; }
-	bool		IsAbsolute() { return bAbsolute; }
+	virtual void		EnableAbsolute(bool bAbs) { bAbsolute = bAbs; }
+	virtual bool		IsAbsolute() { return bAbsolute; }
 
 	// グラフィックス用メッシュに関するヘルパ
-	bool		LoadMesh(const char* filename, const IfInfo* ii = NULL, GRFrameIf* frame = NULL);
-	void		GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
+	virtual bool		LoadMesh(const char* filename, const IfInfo* ii = NULL, GRFrameIf* frame = NULL);
+	virtual void		GenerateCDMesh(GRFrameIf* frame = NULL, const PHMaterial& mat = PHMaterial());
 
 	// 同期
-	void		Sync();
+	virtual void		Sync();
 
 	// モディファイ
-	void		Modify();
+	virtual void		Modify();
 };
 
 }
