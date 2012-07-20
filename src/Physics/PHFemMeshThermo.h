@@ -361,6 +361,10 @@ public:
 	void SetIHbandDrawVtx(double xS, double xE);
 	Vec2d GetIHbandDrawVtx();
 
+	//時間表示
+	double		cpstime;		//[sec] 　1　/　PHFemMeshThermo呼び出し回数[1/sec]
+
+
 };
 
 
