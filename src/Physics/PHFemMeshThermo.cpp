@@ -14,6 +14,8 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 
+#include "windows.h"
+
 using namespace PTM;
 
 namespace Spr{;
@@ -1531,7 +1533,11 @@ void PHFemMeshThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll){
 		for(unsigned i=0;i < nSurfaceFace; i++){
 			if(faces[i].fluxarea){
 				faces[i].heatflux = faces[i].fluxarea / faceS * dqdtAll;		//	熱流束の量をheatfluxの面積から計算
-//				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
+//				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;			
+				// debug
+				//for(unsigned j = 0; j < 3;++j){
+ 				//	vertices[faces[i].vertices[j]].temp = 100.0;
+				//}
 			}
 		}
 	}
@@ -2176,6 +2182,34 @@ void PHFemMeshThermo::DrawEdge(unsigned id0, unsigned id1){
 
 void PHFemMeshThermo::Step(double dt){
 
+	// cps表示用
+	static bool bOneSecond = false;
+	{
+		static DWORD lastTick = GetTickCount();
+		static int cpsCount = 0;
+		int ellapsed = GetTickCount() - lastTick;
+		++cpsCount;
+		bOneSecond = false;
+		if (ellapsed > 1000) {
+			std::cout << "cps : " << cpsCount << std::endl;
+			cpslog << StepCount<< "," << cpsCount << "," ;	
+			lastTick = GetTickCount();
+			cpsCount = 0;
+			bOneSecond = true;
+		}
+		if(cpsCount){	cpstime	= 1 / cpsCount;		}
+	}
+	static DWORD stepStart = GetTickCount();
+	//途中時間
+	if (bOneSecond) {
+		std::cout << "1: " << GetTickCount() - stepStart << std::endl;
+		cpslog << GetTickCount() - stepStart << ",";
+	} 
+	//stepStart = GetTickCount();
+	//途中時間
+	//if (bOneSecond) { std::cout << "1: " << GetTickCount() - stepStart << std::endl; }
+	// %%% CPS表示
+
 	//std::ofstream templog("templog.txt");
 
 	std::ofstream ofs_("log_.txt");
@@ -2496,6 +2530,11 @@ void PHFemMeshThermo::AfterSetDesc() {
 	int hogeshidebug =0;
 	//	節点温度推移の書き出し
 	templog.open("templog.csv");
+
+	//	CPSの経時変化を書き出す
+	cpslog.open("cpslog.csv");
+
+
 
 	// カウントの初期化
 	Ndt =0;
