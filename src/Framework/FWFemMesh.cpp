@@ -38,8 +38,8 @@ void FWFemMesh::DrawIHBorder(double xs, double xe){
 
 	//xs:0.095,xe=0.1
 	//	値を直打ち
-	Vec3d xS = Vec3d(xs, 0.0, 0.0);
-	Vec3d xE = Vec3d(xe, 0.0, 0.0);
+	Vec3d xS = Vec3d(xs, 0.003, -0.2);
+	Vec3d xE = Vec3d(xe, 0.003, -0.2);
 	Vec3d wS = this->GetGRFrame()->GetWorldTransform() * xS;
 	Vec3d wE = this->GetGRFrame()->GetWorldTransform() * xE;
 
