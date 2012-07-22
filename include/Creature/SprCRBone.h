@@ -124,7 +124,7 @@ struct CRBoneIf : SceneObjectIf {
 
 	/** @brief 時刻tにおけるの通過点を取得する
 	*/
-	CRTrajectoryNode GetTrajectoryNodeAt(float t);
+	CRTrajectoryNode GetTrajectoryNodeAt(float time);
 
 	/** @brief i番目（時刻ベース）の通過点を設定する
 		（追加した軌道通過点を後から編集したい場合に使う．普通は使わない）
@@ -146,6 +146,10 @@ struct CRBoneIf : SceneObjectIf {
 	/** @brief 軌道を計画する
 	*/
 	void Plan();
+
+	/** @brief 軌道計画中かどうかを返す
+	*/
+	bool IsPlanning();
 
 
 

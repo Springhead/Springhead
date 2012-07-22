@@ -21,12 +21,13 @@
 	void AddTrajectoryNode(Spr::CRTrajectoryNode node){	base::AddTrajectoryNode(node);}	\
 	Spr::CRTrajectoryNode GetTrajectoryNode(int i){	return	base::GetTrajectoryNode(i);}	\
 	int NTrajectoryNodes(){	return	base::NTrajectoryNodes();}	\
-	Spr::CRTrajectoryNode GetTrajectoryNodeAt(float t){	return	base::GetTrajectoryNodeAt(t);}	\
+	Spr::CRTrajectoryNode GetTrajectoryNodeAt(float time){	return	base::GetTrajectoryNodeAt(time);}	\
 	void SetTrajectoryNode(int i, Spr::CRTrajectoryNode node){	base::SetTrajectoryNode(i, node);}	\
 	Spr::CRTrajectoryNode GetCurrentNode(){	return	base::GetCurrentNode();}	\
 	void ClearTrajectory(){	base::ClearTrajectory();}	\
 	void StepTrajectory(){	base::StepTrajectory();}	\
 	void Plan(){	base::Plan();}	\
+	bool IsPlanning(){	return	base::IsPlanning();}	\
 	void SetTargetPos(Vec3d pos){	base::SetTargetPos(pos);}	\
 	Vec3d GetTargetPos(){	return	base::GetTargetPos();}	\
 	void SetTargetOri(Quaterniond ori){	base::SetTargetOri(ori);}	\
