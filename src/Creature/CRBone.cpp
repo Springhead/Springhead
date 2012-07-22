@@ -21,36 +21,54 @@ void CRBone::SetOriginSolid(PHSolidIf* solid) {
 }
 
 void CRBone::AddTrajectoryNode(CRTrajectoryNode node) {
+	bPlan = true;
 	bool bAdded = false;
 	for (std::deque<CRTrajectoryNode>::iterator it=trajNodes.begin(); it!=trajNodes.end(); ++it) {
 		if (node.time <= it->time) { trajNodes.insert(it, node); bAdded=true; break; }
 	}
 	if (!bAdded) { trajNodes.push_back(node); }
 	Plan();
+	bPlan = false;
 }
 
 CRTrajectoryNode CRBone::GetTrajectoryNode(int i) {
 	return trajNodes[i];
 }
 
-CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float t) {
-	Vec3d  r0 = trajNodes[0].pose.Pos();
-	Vec6d  v0 = trajNodes[0].dpose;
+CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
+	/// セグメントが存在しない場合
+	if (trajNodes.size() <= 1) {
+		CRTrajectoryNode node;
+		node.time = 0.0f;
+		return node;
+	}
+
+	/// 時刻tに対応するセグメントを見つける
+	size_t segment=0;
+	for (; segment<trajNodes.size()-1; ++segment) {
+		if (trajNodes[segment].time <= time && time < trajNodes[segment+1].time) { break; }
+	}
+
+	/// 当該セグメントから軌道を計算する
+	Vec3d  r0 = trajNodes[segment].pose.Pos();
+	Vec6d  v0 = trajNodes[segment].dpose;
 	Vec3d  a0 = Vec3d();
 
-	Vec3d  rf = trajNodes[1].pose.Pos();
-	Vec6d  vf = trajNodes[1].dpose;
+	Vec3d  rf = trajNodes[segment+1].pose.Pos();
+	Vec6d  vf = trajNodes[segment+1].dpose;
 	Vec3d  af = Vec3d();
-	double tf = trajNodes[1].time - trajNodes[0].time;
+	double tf = trajNodes[segment+1].time - trajNodes[segment].time;
 
-	Vec3d  r1 = trajNodes[0].viapose.Pos();
-	double t1 = trajNodes[0].viatime;
+	Vec3d  r1 = trajNodes[segment].viapose.Pos();
+	double t1 = trajNodes[segment].viatime;
 
 	Vec3d  rt = Vec3d();
 	Vec3d  vt = Vec3d();
 
+	float   t = time - trajNodes[segment].time;
+
 	for (int i=0; i<3; ++i) {
-		Vec4d  pi = trajNodes[0].coeff[i];
+		Vec4d  pi = trajNodes[segment].coeff[i];
 		if (t < t1) {
 			rt[i] = r0[i] + v0[i]*t + 0.5*a0[i]*t*t
 				+   pi[0]*pow(t,3) +   pi[1]*pow(t,4) +   pi[2]*pow(t,5);
@@ -67,7 +85,7 @@ CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float t) {
 	}
 
 	CRTrajectoryNode node;
-	node.time = t;
+	node.time = time;
 	node.pose.Pos() = rt;
 	for (int i=0; i<3; ++i) { node.dpose[i] = vt[i]; }
 
@@ -96,59 +114,23 @@ void CRBone::ClearTrajectory() {
 }
 
 void CRBone::StepTrajectory() {
-	if (trajNodes.size() >  1 && (trajNodes[1].time-trajNodes[0].time) < time) {
-		trajNodes.pop_front(); time=0.0f;
-	}
-	if (trajNodes.size() <= 1) { return; }
+	if (trajNodes.size() <= 1) { current.time=0.0f; time=0.0f; return; }
+	if (trajNodes[trajNodes.size()-1].time < time) { ClearTrajectory(); return; }
 
-	Vec3d  r0 = trajNodes[0].pose.Pos();
-	Vec6d  v0 = trajNodes[0].dpose;
-	Vec3d  a0 = Vec3d();
-
-	Vec3d  rf = trajNodes[1].pose.Pos();
-	Vec6d  vf = trajNodes[1].dpose;
-	Vec3d  af = Vec3d();
-	double tf = trajNodes[1].time - trajNodes[0].time;
-
-	Vec3d  r1 = trajNodes[0].viapose.Pos(); // (r0 + rf) * 0.5;
-	double t1 = trajNodes[0].viatime;       // tf * 0.5;
-
-	Vec3d  rt = Vec3d();
-	Vec3d  vt = Vec3d();
-	double t  = (double)time;
-
-	for (int i=0; i<3; ++i) {
-		Vec4d  pi = trajNodes[0].coeff[i];
-		if (t < t1) {
-			rt[i] = r0[i] + v0[i]*t + 0.5*a0[i]*t*t
-				+   pi[0]*pow(t,3) +   pi[1]*pow(t,4) +   pi[2]*pow(t,5);
-			vt[i] =         v0[i]   +     a0[i]*t
-				+ 3*pi[0]*pow(t,2) + 4*pi[1]*pow(t,3) + 5*pi[2]*pow(t,4);
-		} else {
-			rt[i] = r0[i] + v0[i]*t + 0.5*a0[i]*t*t
-				+   pi[0]*pow(t,3) +   pi[1]*pow(t,4) +   pi[2]*pow(t,5)
-				+   (pow(t-t1,5)*pi[3]/120.0);
-			vt[i] =         v0[i]   +     a0[i]*t
-				+ 3*pi[0]*pow(t,2) + 4*pi[1]*pow(t,3) + 5*pi[2]*pow(t,4)
-				+ (5*pow(t-t1,4)*pi[3]/120.0);
-		}
-	}
-
-	current.time = time;
-	current.pose.Pos() = rt;
-	for (int i=0; i<3; ++i) { current.dpose[i] = vt[i]; }
-
-
+	current = GetTrajectoryNodeAt(time);
 
 	PHSceneIf* phScene = DCAST(PHSceneIf,solid->GetScene());
 	PHSolidIf* soDebug = phScene->FindObject("soDebug")->Cast();
 	if (soDebug) {
-		soDebug->SetFramePosition(rt);
+		soDebug->SetFramePosition(current.pose.Pos());
 	}
 
-	SetTargetPos(rt);
+	SetTargetPos(current.pose.Pos());
 
 	time += phScene->GetTimeStep();
+
+
+
 
 	// <!!>
 

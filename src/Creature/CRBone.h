@@ -40,6 +40,9 @@ class CRBone : public SceneObject, public CRBoneDesc {
 	/// 現在の状態
 	CRTrajectoryNode current;
 
+	/// 軌道計画中フラグ
+	bool bPlan;
+
 
 
 
@@ -91,6 +94,7 @@ class CRBone : public SceneObject, public CRBoneDesc {
 
 		originSolid = NULL;
 		time        = 0.0f;
+		bPlan       = false;
 		ClearTrajectory();
 
 		relativePose = Posed();
@@ -202,7 +206,7 @@ public:
 
 	/** @brief 時刻tにおけるの通過点を取得する
 	*/
-	CRTrajectoryNode GetTrajectoryNodeAt(float t);
+	CRTrajectoryNode GetTrajectoryNodeAt(float time);
 
 	/** @brief i番目（時刻ベース）の通過点を設定する
 		（追加した軌道通過点を後から編集したい場合に使う．普通は使わない）
@@ -226,7 +230,9 @@ public:
 	void Plan();
 	void PlanSegment(CRTrajectoryNode &from, CRTrajectoryNode &to);
 
-
+	/** @brief 軌道計画中かどうかを返す
+	*/
+	bool IsPlanning() { return bPlan; }
 
 
 	/// ----- そのうちObsoleteにするかも＜ここから＞ -----
