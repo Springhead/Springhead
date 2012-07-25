@@ -28,6 +28,7 @@
 	void StepTrajectory(){	base::StepTrajectory();}	\
 	void Plan(){	base::Plan();}	\
 	bool IsPlanning(){	return	base::IsPlanning();}	\
+	bool IsNewTrajectoryStarted(){	return	base::IsNewTrajectoryStarted();}	\
 	void SetTargetPos(Vec3d pos){	base::SetTargetPos(pos);}	\
 	Vec3d GetTargetPos(){	return	base::GetTargetPos();}	\
 	void SetTargetOri(Quaterniond ori){	base::SetTargetOri(ori);}	\
