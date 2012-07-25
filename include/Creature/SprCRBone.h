@@ -151,6 +151,10 @@ struct CRBoneIf : SceneObjectIf {
 	*/
 	bool IsPlanning();
 
+	/** @brief 新しい軌道が開始されたかどうかを返す
+	*/
+	bool IsNewTrajectoryStarted();
+
 
 
 

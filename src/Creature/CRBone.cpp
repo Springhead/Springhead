@@ -28,7 +28,8 @@ void CRBone::AddTrajectoryNode(CRTrajectoryNode node) {
 	}
 	if (!bAdded) { trajNodes.push_back(node); }
 	Plan();
-	bPlan = false;
+	bPlan    = false;
+	bChanged = true;
 }
 
 CRTrajectoryNode CRBone::GetTrajectoryNode(int i) {
@@ -37,11 +38,17 @@ CRTrajectoryNode CRBone::GetTrajectoryNode(int i) {
 
 CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
 	/// セグメントが存在しない場合
-	if (trajNodes.size() <= 1) {
+	if        (trajNodes.size() == 1) {
+		return trajNodes[0];
+	} else if (trajNodes.size() <= 0) {
 		CRTrajectoryNode node;
 		node.time = 0.0f;
 		return node;
 	}
+
+	/// 時刻がレンジ外の場合
+	if (time < trajNodes[0].time)                  { return trajNodes[0]; } 
+	if (trajNodes[trajNodes.size()-1].time < time) { return trajNodes[trajNodes.size()-1]; }
 
 	/// 時刻tに対応するセグメントを見つける
 	size_t segment=0;
@@ -111,9 +118,13 @@ void CRBone::ClearTrajectory() {
 
 	trajNodes.clear();
 	trajNodes.push_back(current);
+	bCleared = true;
+	bChanged = false;
 }
 
 void CRBone::StepTrajectory() {
+	/// とりあえず今は動かさない。後でEnable関数つけるなりすること <!!>
+	/*
 	if (trajNodes.size() <= 1) { current.time=0.0f; time=0.0f; return; }
 	if (trajNodes[trajNodes.size()-1].time < time) { ClearTrajectory(); return; }
 
@@ -128,6 +139,11 @@ void CRBone::StepTrajectory() {
 	SetTargetPos(current.pose.Pos());
 
 	time += phScene->GetTimeStep();
+	*/
+
+	// ここまで
+
+
 
 
 
@@ -193,12 +209,19 @@ void CRBone::StepTrajectory() {
 void CRBone::Plan() {
 	if (trajNodes.size() <= 1) { return; }
 
+	/*
+	std::cout << trajNodes.size()-1 << " segments." << std::endl;
+	for (size_t segment=0; segment<trajNodes.size()-1; ++segment) {
+		std::cout << segment << " : " << trajNodes[segment].pose.Pos() << " - " << trajNodes[segment+1].pose.Pos() << std::endl;
+	}
+	*/
+
 	for (size_t segment=0; segment<trajNodes.size()-1; ++segment) {
 		trajNodes[segment].viapose.Pos() = (trajNodes[segment].pose.Pos() + trajNodes[segment+1].pose.Pos()) * 0.5;
 		trajNodes[segment].viatime       =  (trajNodes[segment+1].time - trajNodes[segment].time) * 0.5;
 		PlanSegment(trajNodes[segment], trajNodes[segment+1]);
 
-		std::cout << "Before : " << trajNodes[segment].viatime << ", " << trajNodes[segment].length << std::endl;
+		// std::cout << "Before : " << trajNodes[segment].viatime << ", " << trajNodes[segment].length << std::endl;
 
 		// <!!> ちょっとNaiveすぎるかも．要改善
 		CRTrajectoryNode candidates[300];
@@ -218,7 +241,7 @@ void CRBone::Plan() {
 			}
 		}		
 
-		std::cout << "After  : " << trajNodes[segment].viatime << ", " << trajNodes[segment].length << std::endl;
+		// std::cout << "After  : " << trajNodes[segment].viatime << ", " << trajNodes[segment].length << std::endl;
 	}
 }
 

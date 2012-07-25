@@ -43,6 +43,11 @@ class CRBone : public SceneObject, public CRBoneDesc {
 	/// 軌道計画中フラグ
 	bool bPlan;
 
+	/// 軌道変更フラグ
+	bool bChanged;
+
+	/// 軌道クリアフラグ
+	bool bCleared;
 
 
 
@@ -95,6 +100,8 @@ class CRBone : public SceneObject, public CRBoneDesc {
 		originSolid = NULL;
 		time        = 0.0f;
 		bPlan       = false;
+		bChanged    = false;
+		bCleared    = false;
 		ClearTrajectory();
 
 		relativePose = Posed();
@@ -233,6 +240,12 @@ public:
 	/** @brief 軌道計画中かどうかを返す
 	*/
 	bool IsPlanning() { return bPlan; }
+
+	/** @brief 新しい軌道が開始されたかどうかを返す
+	*/
+	bool IsNewTrajectoryStarted() { if (bCleared && bChanged) { bCleared=false; bChanged=false; return true; } else { return false; } }
+
+
 
 
 	/// ----- そのうちObsoleteにするかも＜ここから＞ -----
