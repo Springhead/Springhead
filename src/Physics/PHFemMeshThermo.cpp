@@ -2498,7 +2498,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//円環加熱：IH
 	//CalcIHdqdt(0.04,0.095,231.9 * 0.005 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
 	//CalcIHdqdt_atleast(0.06,0.095,231.9 * 0.005 * 1e5);		///	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
-	CalcIHdqdt_atleast(0.07,0.1,231.9 * 0.005 * 1e5);
+	CalcIHdqdt_atleast(0.09,0.12,231.9 * 0.005 * 2e5);
 	//..debug 
 
 	//バンド状加熱
