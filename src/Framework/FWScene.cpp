@@ -237,6 +237,7 @@ void FWScene::Step(){
 void FWScene::Draw(GRRenderIf* render, bool ph_or_gr){
 	render->ClearBuffer();
 	render->BeginScene();
+
 	
 	if(ph_or_gr)
 		DrawPHScene(render);

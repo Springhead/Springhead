@@ -54,17 +54,19 @@ void FWFemMesh::DrawIHBorder(double xs, double xe){
 	glEnd();
 }
 
-void FWFemMesh::DrawIHBorderXZPlane(){
-	Vec3d origin = Vec3d(0.0, 0.0, 0.0);
-	origin = origin + Vec3d(0.07,0.0,-0.05); 
-	Vec3d wpos = this->GetGRFrame()->GetWorldTransform() * origin;
-	double dl = 0.1;
-	glBegin(GL_QUADS);
-	glVertex3d( wpos.x - dl, wpos.y, wpos.z - dl);
-	glVertex3d( wpos.x - dl, wpos.y, wpos.z + dl);
-	glVertex3d( wpos.x + dl, wpos.y, wpos.z + dl);
-	glVertex3d( wpos.x + dl, wpos.y, wpos.z - dl);
-	glEnd();
+void FWFemMesh::DrawIHBorderXZPlane(bool sw){
+	if(sw){
+		Vec3d origin = Vec3d(0.0, 0.0, 0.0);
+		origin = origin + Vec3d(0.07,0.0,-0.05); 
+		Vec3d wpos = this->GetGRFrame()->GetWorldTransform() * origin;
+		double dl = 0.1;
+		glBegin(GL_QUADS);
+		glVertex3d( wpos.x - dl, wpos.y, wpos.z - dl);
+		glVertex3d( wpos.x - dl, wpos.y, wpos.z + dl);
+		glVertex3d( wpos.x + dl, wpos.y, wpos.z + dl);
+		glVertex3d( wpos.x + dl, wpos.y, wpos.z - dl);
+		glEnd();
+	}
 
 }
 void FWFemMesh::DrawFaceEdge(){
@@ -143,13 +145,13 @@ void FWFemMesh::Sync(){
 	//if (value >= 1) delta = -0.01;
 	//value += delta;
 
-	//	デバッグ用
-	// face辺を描画
-	DrawFaceEdge();
-	//	XZ平面を描画
-	DrawIHBorderXZPlane();
-	//	IH加熱領域の境界線を引く
-	DrawIHBorder(0.095,0.1);
+	////	デバッグ用
+	//// face辺を描画
+	//DrawFaceEdge();
+	////	XZ平面を描画	true:描画する
+	//DrawIHBorderXZPlane(0);
+	////	IH加熱領域の境界線を引く
+	//DrawIHBorder(0.095,0.1);
 
 
 	///	テクスチャと温度、水分量との対応表は、Samples/Physics/FEMThermo/テクスチャの色と温度の対応.xls	を参照のこと
@@ -173,6 +175,7 @@ void FWFemMesh::Sync(){
 	//	これを満たすように、50,100,150度などを変数にしてもよい。が、他に流用しないし、一目でわかりやすいので、このままでいいかも。
 	//	50度刻みごとにdtexを加算せずに、gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;だけでやるのも手
 
+	
 	//	同期処理
 	FWObject::Sync();
 	if (syncSource==FWObjectDesc::PHYSICS && grMesh->IsTex3D()){
@@ -207,6 +210,15 @@ void FWFemMesh::Sync(){
 				//		tvtxs[j].tex1memo = tratio * dl + texz;	//tex1memoを更新する
 				//	}
 				//}
+
+				if(texturemode == BROWNED){
+					//	焦げテクスチャ切り替え
+				}else if(texturemode == MOISTURE){
+					//	水分蒸発表示モード
+				}else if(texturemode == THERMAL){
+					//	温度変化表示モード
+				}
+
 
 				//サーモが非テクスチャ化された場合、テクスチャのロードは不要になるので、以下のコードを変更
 				double temp = phMesh->vertices[pv].temp;

@@ -59,10 +59,7 @@ void FWFileLoaderSample::Keyboard(int key, int x, int y){
 			break;
 		case 'w':
 			// カメラ位置の初期化
-			InitCameraView();	static bool bDebug = GetSdk()->GetDebugMode();
-				if(bDebug)	bDebug = false;
-				else		bDebug = true;
-				GetSdk()->SetDebugMode(bDebug);
+			InitCameraView();	
 			break;
 		case 'd':				
 			{

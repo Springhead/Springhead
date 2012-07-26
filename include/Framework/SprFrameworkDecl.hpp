@@ -1,5 +1,6 @@
 #define SPR_OVERRIDEMEMBERFUNCOF_FWFemMeshIf(base)	\
 	PHFemMeshIf* GetPHMesh(){	return	base::GetPHMesh();}	\
+	void DrawIHBorderXZPlane(bool sw){	base::DrawIHBorderXZPlane(sw);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_FWHapticPointerIf(base)	\
 	void SetPHHapticPointer(PHHapticPointerIf* hpGlobal){	base::SetPHHapticPointer(hpGlobal);}	\

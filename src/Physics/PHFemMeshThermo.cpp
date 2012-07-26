@@ -39,7 +39,6 @@ void PHFemMeshThermoDesc::Init(){
 ///////////////////////////////////////////////////////////////////
 //	PHFemMeshThermo
 
-
 PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 	deformed = true;			//変数の初期化、形状が変わったかどうか
 	SetDesc(&desc);
@@ -118,7 +117,6 @@ void PHFemMeshThermo::CreateMatKAll(){
 void PHFemMeshThermo::CreateMatCAll(){
 
 }
-
 
 void PHFemMeshThermo::ScilabTest(){
 	if (!ScilabStart()) std::cout << "Error : ScilabStart \n";
@@ -994,7 +992,6 @@ void PHFemMeshThermo::CalcIHarea(double radius,double Radius,double dqdtAll){
 }
 
 
-
 //void PHFemMeshThermo::CalcIHdqdt4(double radius,double Radius,double dqdtAll){
 //	///	内半径と外半径の間の節点に熱流束境界条件を設定
 //	//> 四面体面の三角形と円環領域の重複部分の形状・面積を求める当たり判定を計算する。
@@ -1328,7 +1325,6 @@ void PHFemMeshThermo::CalcIHdqdt3(double r,double R,double dqdtAll){
 
 }
 
-
 void PHFemMeshThermo::CalcIHdqdt2(double r,double R,double dqdtAll){
 	///	内半径と外半径の間の節点に熱流束境界条件を設定
 	//> 円環で区切られる四面体面の領域を三角形で近似する
@@ -1546,8 +1542,6 @@ void PHFemMeshThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll){
 	SetIHbandDrawVtx(xS,xE);
 }
 
-
-
 void PHFemMeshThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll){
 	///	x座標：xS~xEの間の節点に熱流束境界条件を設定
 
@@ -1665,7 +1659,6 @@ void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll){
 	//	ガウスザイデル計算できるように処理など、準備する
 
 }
-
 
 void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
 	///	内半径と外半径の間の節点に熱流束境界条件を設定
@@ -2164,7 +2157,6 @@ void PHFemMeshThermo::HeatTransFromPanToFoodShell(){
 
 }
 
-
 void PHFemMeshThermo::DrawEdge(unsigned id0, unsigned id1){
 	//Vec3d pos0 = vertices[id0].pos;
 	//Vec3d pos1 = vertices[id1].pos;
@@ -2329,7 +2321,6 @@ void PHFemMeshThermo::Step(double dt){
 
 void PHFemMeshThermo::CreateMatrix(){
 }
-
 
 void PHFemMeshThermo::InitTcAll(){
 	for(unsigned i =0; i <vertices.size();i++){
@@ -2503,14 +2494,20 @@ void PHFemMeshThermo::AfterSetDesc() {
 	CalcVtxDisFromOrigin();
 	//>	IHからの単位時間当たりの加熱熱量
 	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
-//	CalcIHdqdt(0.04,0.095,231.9 * 0.005 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
-//	CalcIHdqdt_atleast(0.06,0.095,231.9 * 0.005 * 1e6);		///	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
+	//CalcIHdqdt(0.04,0.095,231.9 * 0.005 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
+	CalcIHdqdt_atleast(0.06,0.095,231.9 * 0.005 * 1e6);		///	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
 	//..debug 
 //	CalcIHdqdtband_(-0.02,0.20,231.9 * 0.005 * 1e6);
-	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	値を変えて実験	//*1e3　//*1e4 //5e3
+
+	
+	//%%	IH加熱のモード切替
+	//	ライン状に加熱
+	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	値を変えて実験	//*1e3　//*1e4 //5e3
+	//	円環状に加熱
+	
+	//CalcIHarea(0.04,0.095,231.9 * 0.005 * 1e6);
 
 
-//.	CalcIHarea(0.04,0.095,231.9 * 0.005 * 1e6);
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
 
 	InitCreateMatC();					///	CreateMatCの初期化
@@ -2541,8 +2538,6 @@ void PHFemMeshThermo::AfterSetDesc() {
 
 	
 }
-
-
 
 //void PHFemMeshThermo::CreateLocalMatrixAndSet(){
 //	//K,C,Fの行列を作る関数を呼び出して、作らせる
@@ -2625,7 +2620,6 @@ void PHFemMeshThermo::CreateMatcLocal(unsigned id){
 	//}
 	int piyodebug =0;
 }
-
 
 void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 	
@@ -3354,7 +3348,6 @@ void PHFemMeshThermo::CreateVecf3_(unsigned id){
 	//int hogeshishi =0;
 }
 
-
 void PHFemMeshThermo::CreateVecf3(unsigned id){
 	//	初期化
 	for(unsigned i =0; i < 4 ;i++){
@@ -3465,7 +3458,6 @@ void PHFemMeshThermo::CreateVecf3(unsigned id){
 	//DSTR << vecf3 << std::endl;
 	//int hogeshishi =0;
 }
-
 
 double PHFemMeshThermo::CalcTetrahedraVolume(Tet tets){
 	PTM::TMatrixRow<4,4,double> tempMat44;
@@ -3864,13 +3856,11 @@ void PHFemMeshThermo::SetHeatTransRatioToAllVertex(){
 	}
 }
 
-
 void PHFemMeshThermo::SetTempAllToTVecAll(unsigned size){
 	for(unsigned i =0; i < size;i++){
 		TVecAll[i] = vertices[i].temp;
 	}
 }
-
 
 void PHFemMeshThermo::CreateTempMatrix(){
 	unsigned dmnN = (unsigned)vertices.size();
@@ -3890,7 +3880,6 @@ void PHFemMeshThermo::CreateTempMatrix(){
 	//}
 
 }
-
 
 void PHFemMeshThermo::SetTempToTVecAll(unsigned vtxid){
 	TVecAll[vtxid] = vertices[vtxid].temp;
@@ -3924,7 +3913,6 @@ void PHFemMeshThermo::SetVerticesTempAll(double temp){
 			vertices[i].temp = temp;
 		}
 }
-
 
 void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt){
 	vecFAll[id][0] = dqdt;
