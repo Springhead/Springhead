@@ -2252,7 +2252,7 @@ void PHFemMeshThermo::Step(double dt){
 	//	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く　クランクニコルソン法のみを使いたい場合
 
 //	dNdt = 10.0 * dt;
-		CalcHeatTransUsingGaussSeidel(1,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
+		CalcHeatTransUsingGaussSeidel(5,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
 
 		//温度を表示してみる
 		//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
@@ -2494,9 +2494,14 @@ void PHFemMeshThermo::AfterSetDesc() {
 	CalcVtxDisFromOrigin();
 	//>	IHからの単位時間当たりの加熱熱量
 	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
+	
+	//円環加熱：IH
 	//CalcIHdqdt(0.04,0.095,231.9 * 0.005 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
-	CalcIHdqdt_atleast(0.06,0.095,231.9 * 0.005 * 1e6);		///	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
+	//CalcIHdqdt_atleast(0.06,0.095,231.9 * 0.005 * 1e5);		///	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
+	CalcIHdqdt_atleast(0.07,0.1,231.9 * 0.005 * 1e5);
 	//..debug 
+
+	//バンド状加熱
 //	CalcIHdqdtband_(-0.02,0.20,231.9 * 0.005 * 1e6);
 
 	
