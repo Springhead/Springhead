@@ -24,6 +24,9 @@
 # define PDEBUG(x)
 #endif
 
+//メッシュエッジの表示、など
+//#define VTX_DBG
+
 namespace Spr{;
 
 FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
@@ -145,14 +148,15 @@ void FWFemMesh::Sync(){
 	//if (value >= 1) delta = -0.01;
 	//value += delta;
 
+#ifdef VTX_DBG
 	////	デバッグ用
 	//// face辺を描画
-	//DrawFaceEdge();
+	DrawFaceEdge();
 	////	XZ平面を描画	true:描画する
 	//DrawIHBorderXZPlane(0);
 	////	IH加熱領域の境界線を引く
 	//DrawIHBorder(0.095,0.1);
-
+#endif
 
 	///	テクスチャと温度、水分量との対応表は、Samples/Physics/FEMThermo/テクスチャの色と温度の対応.xls	を参照のこと
 	//negitest

@@ -17,7 +17,7 @@ namespace Spr{
 // FEMEngine
 PHFemEngine::PHFemEngine(){ 
 	freq	=	0;
-	freqN	=	10;
+	freqN	=	1000;
 }
 
 void PHFemEngine::Step(){
