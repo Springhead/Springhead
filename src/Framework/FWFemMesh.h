@@ -24,7 +24,7 @@ class FWFemMesh: public FWObject{
 	SPR_OBJECTDEF(FWFemMesh);		
 	SPR_DECLMEMBEROF_FWFemMeshDesc;	//	FWFemMeshDescのメンバとGetDesc(), GetDescSize()の実装
 //protected:
-	GRMesh* grMesh;
+	UTRef<GRMesh> grMesh;
 	UTRef<PHFemMesh> phMesh;
 	std::vector<int> vertexIdMap;	//	grMeshからphMeshへの頂点の対応表
 public:
