@@ -27,6 +27,7 @@ public:
 		LD,						// マルチ+局所シミュレーション
 	} engineType;
 	PHSceneIf* phscene;			// PHSceneへのポインタ
+
 	PHHapticPointerIf* pointer; // 力覚ポインタへのポインタ
 	float pdt;					// 物理スレッドの刻み
 	float hdt;					// 力覚スレッドの刻み

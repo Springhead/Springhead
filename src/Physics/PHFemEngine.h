@@ -24,6 +24,8 @@ public:
 	std::vector<PHFemMesh*> meshes;
 
 	PHFemEngine();
+	unsigned freq;
+	int freqN;
 
 	int  GetPriority() const {return SGBP_DYNAMICALSYSTEM;}
 	void Step();

@@ -56,8 +56,17 @@ public:
 	//	メッシュのface辺を描画
 	void DrawFaceEdge();
 	//	IH加熱領域の境界線を引く
-	void DrawIHBorderXZPlane();
+	void DrawIHBorderXZPlane(bool sw);
 	void DrawIHBorder(double xs, double xe);
+	//void SetTextureMode();
+public:
+	enum TEXTURE_MODE{
+		BROWNED,
+		MOISTURE,
+		THERMAL,
+	} texturemode;
+
+	
 };
 }
 

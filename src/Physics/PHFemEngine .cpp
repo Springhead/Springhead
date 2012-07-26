@@ -16,13 +16,20 @@ namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // FEMEngine
 PHFemEngine::PHFemEngine(){ 
+	freq	=	0;
+	freqN	=	10;
 }
 
 void PHFemEngine::Step(){
 	double dt = GetScene()->GetTimeStep();
-	for(size_t i=0; i<meshes.size(); ++i){
-		meshes[i]->Step(dt);
+	// Step  (freqN)回に一回だけ呼び出す
+	if(freq > freqN){
+		for(size_t i=0; i<meshes.size(); ++i){
+			meshes[i]->Step(dt * freqN);
+		}
+		freq = 0;
 	}
+	freq +=1;
 }
 
 void PHFemEngine::Clear(){
