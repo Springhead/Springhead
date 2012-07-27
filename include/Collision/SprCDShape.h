@@ -45,9 +45,9 @@ struct CDShapeIf : public NamedObjectIf{
 	void	SetDynamicFriction(float mu);
 	/// 動摩擦係数の取得
 	float	GetDynamicFriction();
-	/// 跳ね返り係数の設定
+	/// 反発係数(はねかえり係数)の設定
 	void	SetElasticity(float e);
-	/// 跳ね返り係数の取得
+	/// 反発係数(はねかえり係数)の取得
 	float	GetElasticity();
 	/// 密度の設定
 	void	SetDensity(float d);
