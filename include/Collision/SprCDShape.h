@@ -53,6 +53,7 @@ struct CDShapeIf : public NamedObjectIf{
 	void	SetDensity(float d);
 	/// 密度の取得
 	float	GetDensity();
+	// ペナルティ法演算用
 	/// 跳ね返りバネ係数の設定
 	void	SetReflexSpring(float K);
 	/// 跳ね返りバネ係数の取得
