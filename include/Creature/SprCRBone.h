@@ -112,7 +112,7 @@ struct CRBoneIf : SceneObjectIf {
 		@param dpose    目標速度・角速度
 		@param priority 優先度ベクトル（位置・姿勢・速度・角速度 の各優先度．0でdisable）
 	*/
-	void AddTrajectoryNode(CRTrajectoryNode node);
+	void AddTrajectoryNode(CRTrajectoryNode node, bool clear=0);
 
 	/** @brief i番目（時刻ベース）の通過点を取得する
 	*/

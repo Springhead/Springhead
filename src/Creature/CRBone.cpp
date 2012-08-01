@@ -20,7 +20,9 @@ void CRBone::SetOriginSolid(PHSolidIf* solid) {
 	originSolid = solid;
 }
 
-void CRBone::AddTrajectoryNode(CRTrajectoryNode node) {
+void CRBone::AddTrajectoryNode(CRTrajectoryNode node, bool clear) {
+	if (clear) { ClearTrajectory(); }
+
 	bPlan = true;
 	bool bAdded = false;
 	for (std::deque<CRTrajectoryNode>::iterator it=trajNodes.begin(); it!=trajNodes.end(); ++it) {
