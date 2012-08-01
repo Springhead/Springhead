@@ -18,7 +18,7 @@
 	Spr::PHIKActuatorIf* GetIKActuator(){	return	base::GetIKActuator();}	\
 	void SetIKActuator(Spr::PHIKActuatorIf* ikAct){	base::SetIKActuator(ikAct);}	\
 	void SetOriginSolid(Spr::PHSolidIf* solid){	base::SetOriginSolid(solid);}	\
-	void AddTrajectoryNode(Spr::CRTrajectoryNode node){	base::AddTrajectoryNode(node);}	\
+	void AddTrajectoryNode(Spr::CRTrajectoryNode node, bool clear){	base::AddTrajectoryNode(node, clear);}	\
 	Spr::CRTrajectoryNode GetTrajectoryNode(int i){	return	base::GetTrajectoryNode(i);}	\
 	int NTrajectoryNodes(){	return	base::NTrajectoryNodes();}	\
 	Spr::CRTrajectoryNode GetTrajectoryNodeAt(float time){	return	base::GetTrajectoryNodeAt(time);}	\
