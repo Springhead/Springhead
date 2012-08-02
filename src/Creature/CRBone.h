@@ -245,6 +245,10 @@ public:
 	*/
 	bool IsNewTrajectoryStarted() { if (bCleared && bChanged) { bCleared=false; bChanged=false; return true; } else { return false; } }
 
+	/** @brief 軌道が変更されたかどうかを返す
+	    IsNewTrajectoryChangedより前に呼ぶとIsNewTrajectoryChangedがうまく判定できなくなるので注意
+	*/
+	bool IsTrajectoryChanged() { if (bChanged) { bChanged=false; return true; } else { return false; } }
 
 
 

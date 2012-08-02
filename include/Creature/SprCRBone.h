@@ -155,6 +155,10 @@ struct CRBoneIf : SceneObjectIf {
 	*/
 	bool IsNewTrajectoryStarted();
 
+	/** @brief 軌道が変更されたかどうかを返す
+	    IsNewTrajectoryChangedより前に呼ぶとIsNewTrajectoryChangedがうまく判定できなくなるので注意
+	*/
+	bool IsTrajectoryChanged();
 
 
 
