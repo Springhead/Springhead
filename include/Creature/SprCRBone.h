@@ -54,6 +54,14 @@ struct CRTrajectoryNode {
 	}
 };
 
+/// 接触リスト
+struct CRTouchInfo{
+	Vec3f      force;
+	double     area;
+	Vec3f      position;
+	PHSolidIf* solid;
+};
+
 /// クリーチャのボーン（剛体一つ＋親ボーンへの関節一つ）
 struct CRBoneIf : SceneObjectIf {
 	SPR_IFDEF(CRBone);
@@ -233,7 +241,23 @@ struct CRBoneIf : SceneObjectIf {
 
 	/** @brief 接触の数を返す
 	*/
-	int NContacts();
+	int NTouches();
+
+	/** @brief i番目の接触情報を返す
+	*/
+	CRTouchInfo GetTouchInfo(int i);
+
+	/** @brief 接触情報を追加する
+	*/
+	void AddTouchInfo(CRTouchInfo ci);
+
+	/** @brief 接触情報をクリアする
+	*/
+	void ClearTouchInfo();
+
+
+
+	/// --- Will be Obsoleted
 
 	/** @brief i番目の接触の接触力を返す
 	*/
@@ -254,6 +278,8 @@ struct CRBoneIf : SceneObjectIf {
 	/** @brief １ステップ
 	*/
 	void StepListContact();
+
+
 };
 
 struct CRBoneDesc {

@@ -77,13 +77,7 @@ class CRBone : public SceneObject, public CRBoneDesc {
 	//  触覚関連
 	
 	/// 接触リスト
-	struct ContactInfo{
-		Vec3f      force;
-		double     area;
-		Vec3f      position;
-		PHSolidIf* solid;
-	};
-	std::vector<ContactInfo> contactList;
+	std::vector<CRTouchInfo> touchList;
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -323,7 +317,29 @@ public:
 
 	/** @brief 接触の数を返す
 	*/
-	int NContacts();
+	int NTouches();
+
+	/** @brief i番目の接触情報を返す
+	*/
+	CRTouchInfo GetTouchInfo(int i) {
+		return touchList[i];
+	}
+
+	/** @brief 接触情報を追加する
+	*/
+	void AddTouchInfo(CRTouchInfo ci) {
+		touchList.push_back(ci);
+	}
+
+	/** @brief 接触情報をクリアする
+	*/
+	void ClearTouchInfo() {
+		touchList.clear();
+	}
+
+
+
+	/// --- Will be Obsoleted
 
 	/** @brief i番目の接触の接触力を返す
 	*/
