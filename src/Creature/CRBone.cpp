@@ -21,6 +21,7 @@ void CRBone::SetOriginSolid(PHSolidIf* solid) {
 }
 
 void CRBone::AddTrajectoryNode(CRTrajectoryNode node, bool clear) {
+	// std::cout << this->GetPHSolid()->GetName() << " node Added" << std::endl;
 	if (clear) { ClearTrajectory(); }
 
 	bPlan = true;
