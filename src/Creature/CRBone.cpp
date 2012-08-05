@@ -76,6 +76,7 @@ CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
 
 	float   t = time - trajNodes[segment].time;
 
+	/*
 	for (int i=0; i<3; ++i) {
 		Vec4d  pi = trajNodes[segment].coeff[i];
 		if (t < t1) {
@@ -92,6 +93,10 @@ CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
 				+ (5*pow(t-t1,4)*pi[3]/120.0);
 		}
 	}
+	*/
+
+	// üŒ`•âŠÔ
+	rt = (rf - r0) * (t / tf) + r0;
 
 	CRTrajectoryNode node;
 	node.time = time;
