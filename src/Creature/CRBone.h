@@ -360,6 +360,17 @@ public:
 	/** @brief １ステップ
 	*/
 	void StepListContact();
+
+
+
+	// 一時的に追加　あとで消します
+	double damper, spring;
+	void SetDamper(double d) { damper = d; }
+	void SetSpring(double s) { spring = s; }
+	double GetDamper() { return damper; }
+	double GetSpring() { return spring; }
+
+
 };
 
 }
