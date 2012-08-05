@@ -43,7 +43,10 @@
 	int NVisibleSolids(){	return	base::NVisibleSolids();}	\
 	Spr::PHSolidIf* GetVisibleSolid(int i){	return	base::GetVisibleSolid(i);}	\
 	void StepSearchArea(){	base::StepSearchArea();}	\
-	int NContacts(){	return	base::NContacts();}	\
+	int NTouches(){	return	base::NTouches();}	\
+	Spr::CRTouchInfo GetTouchInfo(int i){	return	base::GetTouchInfo(i);}	\
+	void AddTouchInfo(Spr::CRTouchInfo ci){	base::AddTouchInfo(ci);}	\
+	void ClearTouchInfo(){	base::ClearTouchInfo();}	\
 	Vec3f GetContactForce(int i){	return	base::GetContactForce(i);}	\
 	double GetContactArea(int i){	return	base::GetContactArea(i);}	\
 	Vec3f GetContactPosition(int i){	return	base::GetContactPosition(i);}	\

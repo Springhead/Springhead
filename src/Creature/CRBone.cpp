@@ -418,29 +418,29 @@ PHSolidIf* CRBone::GetVisibleSolid(int i) {
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // ÚGˆê——
-int CRBone::NContacts() {
-	return contactList.size();
+int CRBone::NTouches() {
+	return touchList.size();
 }
 
 Vec3f CRBone::GetContactForce(int i) {
-	return contactList[i].force;
+	return touchList[i].force;
 }
 
 double CRBone::GetContactArea(int i) {
-	return contactList[i].area;
+	return touchList[i].area;
 }
 
 Vec3f CRBone::GetContactPosition(int i) {
-	return contactList[i].position;
+	return touchList[i].position;
 }
 
 PHSolidIf* CRBone::GetContactSolid(int i) {
-	return contactList[i].solid;
+	return touchList[i].solid;
 }
 
 void CRBone::StepListContact() {
 	PHSceneIf* phScene = DCAST(CRCreatureIf,GetScene())->GetPHScene();
-	contactList.clear();
+	touchList.clear();
 
 	int stepCount = phScene->GetCount();
 
@@ -505,13 +505,13 @@ void CRBone::StepListContact() {
 						}
 
 						// ÚGî•ñ‚Ì’Ç‰Á
-						ContactInfo contact;
+						CRTouchInfo contact;
 						contact.position = solidPair->GetCommonPoint(c1, c2);
 						contact.solid    = soTarget;
 						contact.force    = force;
 						contact.area     = area;
 
-						contactList.push_back(contact);
+						touchList.push_back(contact);
 					}
 				}
 			}

@@ -174,6 +174,7 @@ exit /b
 echo //--->>%MODULE%.i
 echo %%include "Utility/EPObject.i">>%MODULE%.i
 echo EXTEND_NEW(CRContactInfo)>>%MODULE%.i
+echo EXTEND_NEW(CRTouchInfo)>>%MODULE%.i
 echo EXTEND_NEW(CRTrajectoryNode)>>%MODULE%.i
 echo EXTEND_N_GET_TO_LIST(Spr::CRSdkIf		,NCreatures		,GetCreature	,CRCreatureIf	)>>%MODULE%.i
 echo EXTEND_N_GET_TO_LIST(Spr::CRCreatureIf	,NEngines		,GetEngine			,CREngineIf		)>>%MODULE%.i
@@ -181,7 +182,6 @@ rem echo EXTEND_N_GET_TO_LIST(Spr::CRCreatureIf	,NBodies		,GetBody		,CRBodyIf		)
 rem echo EXTEND_N_GET_TO_LIST(Spr::CRBoneIf	,NContacts		,GetContactForce	,Vec3f			)>>%MODULE%.i  RuntimeDownCast‚ª‚Å‚«‚È‚¢
 rem echo EXTEND_N_GET_TO_LIST(Spr::CRBoneIf	,NContacts		,GetContactArea		,double			)>>%MODULE%.i newEPdouble‚É‚È‚Á‚Ä‚µ‚Ü‚¤
 rem echo EXTEND_N_GET_TO_LIST(Spr::CRBoneIf	,NContacts		,GetContactPosition	,Vec3f			)>>%MODULE%.i  RuntimeDownCast‚ª‚Å‚«‚È‚¢
-echo EXTEND_N_GET_TO_LIST(Spr::CRBoneIf	,NContacts		,GetContactSolid	,PHSolidIf		)>>%MODULE%.i
 echo EXTEND_N_GET_TO_LIST(Spr::CRBoneIf	,NVisibleSolids	,GetVisibleSolid	,PHSolidIf		)>>%MODULE%.i
 echo EXTEND_N_GET_TO_LIST(Spr::CRBodyIf		,NBones		,GetBone			,CRBoneIf		)>>%MODULE%.i
 echo %%ignore Spr::CRTrajectoryNode::coeff; >> %MODULE%.i
