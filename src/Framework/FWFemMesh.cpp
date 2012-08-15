@@ -34,11 +34,6 @@ FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 }
 
 void FWFemMesh::DrawIHBorder(double xs, double xe){
-	//phMesh->
-	//GetIHbandDrawVtx();
-	//phMesh->Get
-	//Vec2d VtxX = phMesh->;
-
 	//xs:0.095,xe=0.1
 	//	値を直打ち
 	Vec3d xS = Vec3d(xs, 0.003, -0.2);
@@ -285,6 +280,10 @@ ObjectIf* FWFemMesh::GetChildObject(size_t pos){
 		if (pos == 0) return phMesh->Cast();
 		else pos --;
 	}
+	//if (phMeshThermo){
+	//	if (pos == 0) return phMeshThermo->Cast();
+	//	else pos --;
+	//}
 	return NULL;
 }
 bool FWFemMesh::AddChildObject(ObjectIf* o){
@@ -298,6 +297,11 @@ bool FWFemMesh::AddChildObject(ObjectIf* o){
 		grMesh = mesh;
 		return true;
 	}
+	//PHFemMeshThermo* pmth = o->Cast();
+	//if (pmth){
+	//	phMeshThermo = pmth;
+	//	return true;
+	//}
 	return FWObject::AddChildObject(o);
 }
 void FWFemMesh::Loaded(UTLoadContext*){
@@ -331,8 +335,12 @@ bool FWFemMesh::CreatePHFromGR(){
 	pmd.tets.assign(tetsOut, tetsOut + nTetsOut*4);
 	//	PHMeshの生成
 	phMesh = DBG_NEW PHFemMeshThermo(pmd);
+	//	PHFemMeshThermoの生成を追加
+	//phMeshThermo = DBG_NEW PHFemMeshThermo(pmd);
+	//phMesh = phMeshThermo;
 	if (GetPHSolid() && GetPHSolid()->GetScene())
 		GetPHSolid()->GetScene()->AddChildObject(phMesh->Cast());
+		//GetPHSolid()->GetScene()->AddChildObject(phMeshThermo->Cast());
 	return true;
 }
 struct FaceMap{

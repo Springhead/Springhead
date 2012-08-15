@@ -11,6 +11,7 @@
 #include <Framework/SprFWFemMesh.h>
 #include <Framework/FWObject.h>
 #include <Physics/PHFemMesh.h>
+//#include <Physics/PHFemMeshThermo.h>
 #include "FrameworkDecl.hpp"
 
 namespace Spr{;
@@ -21,11 +22,13 @@ class GRMesh;
 	毎ステップ、PHFemMeshのFEMシミュレーション結果をGRMeshに反映させる。
 	初期化時には、GRMeshからPHFemMeshを生成し、さらにPHFemMeshからGRMeshを生成し、grMeshとgrFrameの下のGRMeshと置き換える。*/
 class FWFemMesh: public FWObject{
+
 	SPR_OBJECTDEF(FWFemMesh);		
 	SPR_DECLMEMBEROF_FWFemMeshDesc;	//	FWFemMeshDescのメンバとGetDesc(), GetDescSize()の実装
 //protected:
 	UTRef<GRMesh> grMesh;
 	UTRef<PHFemMesh> phMesh;
+	//UTRef<PHFemMeshThermo> phMeshThermo;
 	std::vector<int> vertexIdMap;	//	grMeshからphMeshへの頂点の対応表
 public:
 	FWFemMesh(const FWFemMeshDesc& d=FWFemMeshDesc());		//コンストラクタ
