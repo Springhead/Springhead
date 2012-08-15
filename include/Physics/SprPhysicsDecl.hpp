@@ -54,6 +54,7 @@
 	Vec3d GetFaceEdgeVtx(unsigned int id, unsigned int vtx){	return	base::GetFaceEdgeVtx(id, vtx);}	\
 	Vec2d GetIHbandDrawVtx(){	return	base::GetIHbandDrawVtx();}	\
 	void CalcIHdqdt_atleast(double r, double R, double dqdtAll){	base::CalcIHdqdt_atleast(r, R, dqdtAll);}	\
+	void UpdateIHheat(unsigned int heating){	base::UpdateIHheat(heating);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHapticPointerIf(base)	\
 	void SetHapticRenderMode(Spr::PHHapticPointerDesc::HapticRenderMode m){	base::SetHapticRenderMode(m);}	\
