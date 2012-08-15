@@ -238,11 +238,20 @@ public:
 	};
 	struct Coeff{
 	};
+
+	enum HEATING_MODE{
+		OFF,
+		WEEK,
+		MIDDLE,
+		STRONG
+	};
+
 	std::vector<StateVar> vertexVars;
 	std::vector<Coeff> edgeCoeffs;
 	
 	PHFemMeshThermo(const PHFemMeshThermoDesc& desc=PHFemMeshThermoDesc(), SceneIf* s=NULL);
-	void AfterSetDesc();		//	伝熱行列の計算など
+	void AfterSetDesc();		//	伝熱行列の計算など、IH加熱モードは次の関数で設定
+	void UpdateIHheat(unsigned heating);	//	heatingは加熱強さ：4段階（0:OFF・1:弱火・2:中火・3:強火）
 	/// 熱伝導シミュレーションでエンジンが用いるステップをオーバーライド		
 	void Step(double dt);
 	//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
