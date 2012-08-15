@@ -1637,6 +1637,7 @@ void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll){
 		for(unsigned i=0;i < nSurfaceFace; i++){
 			if(faces[i].mayIHheated){
 				faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+
 //				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
 			}
 		}
@@ -2498,9 +2499,12 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//円環加熱：IH
 	//CalcIHdqdt(0.04,0.095,231.9 * 0.005 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
 	//CalcIHdqdt_atleast(0.06,0.095,231.9 * 0.005 * 1e5);		///	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
-	CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5);
+	
+	//	重要
+//20120811	//CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5);		//mainの中に実装、phPanにだけ実行させたい
+	
+	
 	//..debug 
-
 	//バンド状加熱
 //	CalcIHdqdtband_(-0.02,0.20,231.9 * 0.005 * 1e6);
 

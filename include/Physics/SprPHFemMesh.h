@@ -68,8 +68,9 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void SetRohSpheat(double roh,double Cp);		//素材固有の物性
 	unsigned GetNFace();
 	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
-	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
+	Vec3d GetFaceEdgeVtx(unsigned id, unsigned	 vtx);
 	Vec2d GetIHbandDrawVtx();
+	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);
 };
 
 //@}
