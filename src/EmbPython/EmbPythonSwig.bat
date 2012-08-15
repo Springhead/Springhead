@@ -15,7 +15,7 @@ set API_INCLUDE=../../include
 rem makefile‚Ìì¬‚ÆMake‚ÌŽÀs
 set PATHORG=%PATH%;
 
-set PATH=..\..\..\bin;..\..\..\bin\swig
+set PATH=..\..\bin;..\..\bin\swig
 set SRCINTF=
 for %%f in (%API_INCLUDE%/%MODULE%/*.h) do set SRCINTF=!SRCINTF! %API_INCLUDE%/%MODULE%/%%f
 
@@ -71,7 +71,7 @@ call swig.exe -cpperraswarn -sprpy -c++ %MODULE%.i & if errorlevel 1 echo !!!!SW
 
 :astyle
 echo AStyle Part
-call ..\..\..\bin\AStyle.exe  --style=allman --indent=tab "%CPP%" "%HPP%" "%SPRH%" & if errorlevel 1 @pause
+call ..\..\bin\AStyle.exe  --style=allman --indent=tab "%CPP%" "%HPP%" "%SPRH%" & if errorlevel 1 @pause
 del /Q .\SprEP%MODULE%.*.orig
 del /Q .\EP%MODULE%.*.orig
 
@@ -87,10 +87,6 @@ echo #pragma warning(disable:4244) >> %MODULE%.tmp
 type %CPP% >> %MODULE%.tmp
 
 move /Y %MODULE%.tmp %CPP%
-
-nkf -w8 < EP%MODULE%.h   > ..\..\..\src\EmbPython\EP%MODULE%.h
-nkf -w8 < EP%MODULE%.cpp > ..\..\..\src\EmbPython\EP%MODULE%.cpp
-nkf -w8 < ..\..\include\EmbPython\SprEP%MODULE%.h > ..\..\..\include\EmbPython\SprEP%MODULE%.h
 
 :end
 exit /b
