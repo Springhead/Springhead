@@ -31,6 +31,7 @@ namespace Spr{;
 
 FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 	SetDesc(&d);
+	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }
 
 void FWFemMesh::DrawIHBorder(double xs, double xe){
@@ -157,10 +158,11 @@ void FWFemMesh::Sync(){
 	//negitest
 	//焦げテクスチャの枚数
 	unsigned kogetex	= 5;
-	//サーモテクスチャの枚数
-	unsigned thtex		= 6;
 	//水分テクスチャの枚数
 	unsigned watex		= 2;
+	//サーモテクスチャの枚数
+	unsigned thtex		= 6;
+	//	ロードテクスチャーが焦げ→水→温度の順	（または）水→温度→焦げ	にも変更可能（ファイル名のリネームが必要）
 	
 	double dtex =(double) 1.0 / ( kogetex + thtex + watex);		//	テクスチャ奥行座標の層間隔
 	double texstart = dtex /2.0;								//	テクスチャ座標の初期値 = 焦げテクスチャのスタート座標
@@ -210,51 +212,59 @@ void FWFemMesh::Sync(){
 				//	}
 				//}
 
-				if(texturemode == BROWNED){
+				//if(texturemode == BROWNED){
+				if(texture_mode == 1){
 					//	焦げテクスチャ切り替え
-				}else if(texturemode == MOISTURE){
+					//	焼け具合に沿った変化
+					gvtx[stride*gv + tex + 2] = texstart;
+				//}else if(texturemode == MOISTURE){
+				}else if(texture_mode == 3){
 					//	水分蒸発表示モード
-				}else if(texturemode == THERMAL){
+					//	残水率に沿った変化
+					gvtx[stride*gv + tex + 2] = wastart;
+				//}else if(texturemode == THERMAL){
+				}else if(texture_mode == 2){
 					//	温度変化表示モード
+					//サーモが非テクスチャ化された場合、テクスチャのロードは不要になるので、以下のコードを変更
+					double temp = phMesh->vertices[pv].temp;
+					// -50.0~0.0:aqua to blue
+					if(temp <= -50.0){
+						gvtx[stride*gv + tex + 2] = thstart;
+					}
+					else if(-50.0 < temp && temp <= 0){	
+						gvtx[stride*gv + tex + 2] = (thstart ) + ((temp + 50.0) * dtex /50.0);
+					}
+					//	0~50.0:blue to green
+					else if(0.0 < temp && temp <= 50.0 ){
+						//double green = temp * dtex / 50.0 + thstart;
+						gvtx[stride*gv + tex + 2] = temp * dtex / 50.0 + thstart + dtex;
+					}
+					//	50.0~100.0:green to yellow
+					else if(50.0 < temp && temp <= 100.0){
+						gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex /	 50.0 + thstart + 2 * dtex;
+					}
+					//	100.0~150:yellow to orange	
+					else if(100.0 < temp && temp <= 150.0){
+						gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
+					}
+					//	150~200:orange to red
+					else if(150.0 < temp && temp <= 200.0){
+						double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+						gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
+					}
+					//	200~250:red to purple
+					else if(200.0 < temp && temp <= 250.0){
+						gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
+					}
+					///	250~:only purple
+					else if(250.0 < temp){
+						gvtx[stride*gv + tex + 2] = dtex * 6.0 + thstart;
+						//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
+					}
 				}
 
 
-				//サーモが非テクスチャ化された場合、テクスチャのロードは不要になるので、以下のコードを変更
-				double temp = phMesh->vertices[pv].temp;
-				// -50.0~0.0:aqua to blue
-				if(temp <= -50.0){
-					gvtx[stride*gv + tex + 2] = thstart;
-				}
-				else if(-50.0 < temp && temp <= 0){	
-					gvtx[stride*gv + tex + 2] = (thstart ) + ((temp + 50.0) * dtex /50.0);
-				}
-				//	0~50.0:blue to green
-				else if(0.0 < temp && temp <= 50.0 ){
-					//double green = temp * dtex / 50.0 + thstart;
-					gvtx[stride*gv + tex + 2] = temp * dtex / 50.0 + thstart + dtex;
-				}
-				//	50.0~100.0:green to yellow
-				else if(50.0 < temp && temp <= 100.0){
-					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex /	 50.0 + thstart + 2 * dtex;
-				}
-				//	100.0~150:yellow to orange	
-				else if(100.0 < temp && temp <= 150.0){
-					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
-				}
-				//	150~200:orange to red
-				else if(150.0 < temp && temp <= 200.0){
-					double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
-					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
-				}
-				//	200~250:red to purple
-				else if(200.0 < temp && temp <= 250.0){
-					gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
-				}
-				///	250~:only purple
-				else if(250.0 < temp){
-					gvtx[stride*gv + tex + 2] = dtex * 6.0 + thstart;
-					//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
-				}
+				
 			}
 		}	
 	}else{

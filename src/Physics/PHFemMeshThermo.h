@@ -146,7 +146,7 @@ protected:
 	void CreateLocalMatrixAndSet();				//K,C,Fすべての行列・ベクトルについて要素剛性行列を作って、エッジに入れる	又は	全体剛性行列を作る関数
 	
 	//	初期化
-	void InitTcAll();							//	Tcの温度を初期化
+	void InitTcAll(double temp);							//	Tcの温度を初期化
 
 	//	何用に用いる？	行列作成の関数をまとめるだけ？
 	void CreateMatrix();					
@@ -308,6 +308,10 @@ public:
 
 	Vec3d GetPose(unsigned id){ return vertices[id].pos; };
 	Vec3d GetSufVtxPose(unsigned id){return vertices[surfaceVertices[id]].pos; };
+	// メッシュ節点の温度を取得
+	double GetVertexTemp(unsigned id){ return vertices[id].temp; };
+	// メッシュ表面の節点温度を取得
+	double GetSufVertexTemp(unsigned id){ return vertices[surfaceVertices[id]].temp; };
 
 	//%%%	Stepカウントのための変数、関数定義		%%%//
 	unsigned long StepCount;			//	Step数カウントアップの加算係数	

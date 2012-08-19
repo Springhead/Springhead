@@ -81,6 +81,10 @@ public:
 		//PTM::TMatrixRow<4,4,double> matk1;
 		//PTM::TMatrixRow<4,4,double> matk2;
 		PTM::TVector<4,double> vecf[4];			//>	
+
+		//水分蒸発計算
+		double wratio;			//	含水率
+
 	};
 	//	四面体の面。
 	class Face{

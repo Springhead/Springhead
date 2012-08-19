@@ -68,8 +68,10 @@ public:
 		MOISTURE,
 		THERMAL,
 	} texturemode;
-
-	
+	//enum化する
+	//void SetTexmode(TEXTURE_MODE){TEXTURE_MODE =  };
+	unsigned texture_mode;
+	void SetTexmode(unsigned mode){texture_mode = mode;};
 };
 }
 
