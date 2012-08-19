@@ -179,96 +179,98 @@ void FWFemMesh::Sync(){
 	
 	//	同期処理
 	FWObject::Sync();
-	if (syncSource==FWObjectDesc::PHYSICS && grMesh->IsTex3D()){
-		float* gvtx = grMesh->GetVertexBuffer();
-		if (gvtx){
-			int tex = grMesh->GetTexOffset();
-			int stride = grMesh->GetStride();
-			for(unsigned gv=0; gv<vertexIdMap.size(); ++gv){
-				int pv = vertexIdMap[gv];
-				//	PHから何らかの物理量を取ってくる
-						//phから節点の温度を取ってくる
-				//PHFemMeshThermoの各節点の温度を取ってくる。
-				//温度の値に応じて、↑の係数を用いて、テクスチャ座標を計算する
-				//	value = phMeshの派生クラス->thermo[pv];
-				//	GRのテクスチャ座標として設定する。	s t r q の rを設定
-				//gvtx[stride*gv + tex + 2] = value + gvtx[stride*gv];	//	gvtx[stride*gv]で場所によって違う深度を拾ってくることに
-				//gvtx[stride*gv + tex + 2] = 0.1 + value;
-				////gvtx[stride*gv + tex + 2] = thstart;
-//				gvtx[stride*gv + tex + 2] = thstart;
+	if (syncSource==FWObjectDesc::PHYSICS){
+		if (grMesh && grMesh->IsTex3D()){
+			float* gvtx = grMesh->GetVertexBuffer();
+			if (gvtx){
+				int tex = grMesh->GetTexOffset();
+				int stride = grMesh->GetStride();
+				for(unsigned gv=0; gv<vertexIdMap.size(); ++gv){
+					int pv = vertexIdMap[gv];
+					//	PHから何らかの物理量を取ってくる
+							//phから節点の温度を取ってくる
+					//PHFemMeshThermoの各節点の温度を取ってくる。
+					//温度の値に応じて、↑の係数を用いて、テクスチャ座標を計算する
+					//	value = phMeshの派生クラス->thermo[pv];
+					//	GRのテクスチャ座標として設定する。	s t r q の rを設定
+					//gvtx[stride*gv + tex + 2] = value + gvtx[stride*gv];	//	gvtx[stride*gv]で場所によって違う深度を拾ってくることに
+					//gvtx[stride*gv + tex + 2] = 0.1 + value;
+					////gvtx[stride*gv + tex + 2] = thstart;
+	//				gvtx[stride*gv + tex + 2] = thstart;
 
-				//	どのテクスチャにするかの条件分岐を作る
-				//	直前のテクスチャ座標を保存しておく。なければ、初期値を設定
-				//	テクスチャの表示モードを切り替えるSWをキーボードから切り替え⇒SampleApp.hのAddHotkey、AddAction周りをいじる
+					//	どのテクスチャにするかの条件分岐を作る
+					//	直前のテクスチャ座標を保存しておく。なければ、初期値を設定
+					//	テクスチャの表示モードを切り替えるSWをキーボードから切り替え⇒SampleApp.hのAddHotkey、AddAction周りをいじる
 				
-				//	CADThermoの該当部分のソース
-				//if(tvtxs[j].temp <= tvtxs[j].temp5){		//tvtxs[j].wmass > wmass * ratio1
-				//	texz	= texbegin;
-				//	double texznew =diff * grad + texz;//実質,テクスチャ座標の初期値
-				//	////前のテクスチャｚ座標よりも今回の計算値が深かったら、この計算結果を反映させる
-				//	if(tvtxs[j].tex1memo <= texznew){			//初めはこの条件がなくてもいいけれど、一度温度が上がって、冷めてからは必要になる
-				//		tvtxs[j].SetTexZ(tratio * dl + texz);	//テクスチャのZ座標を決定する。//表示テクスチャはその線形和を表示させるので、Z座標も線形和で表示するので、線形和の計算を使用
-				//		tvtxs[j].tex1memo = tratio * dl + texz;	//tex1memoを更新する
-				//	}
-				//}
+					//	CADThermoの該当部分のソース
+					//if(tvtxs[j].temp <= tvtxs[j].temp5){		//tvtxs[j].wmass > wmass * ratio1
+					//	texz	= texbegin;
+					//	double texznew =diff * grad + texz;//実質,テクスチャ座標の初期値
+					//	////前のテクスチャｚ座標よりも今回の計算値が深かったら、この計算結果を反映させる
+					//	if(tvtxs[j].tex1memo <= texznew){			//初めはこの条件がなくてもいいけれど、一度温度が上がって、冷めてからは必要になる
+					//		tvtxs[j].SetTexZ(tratio * dl + texz);	//テクスチャのZ座標を決定する。//表示テクスチャはその線形和を表示させるので、Z座標も線形和で表示するので、線形和の計算を使用
+					//		tvtxs[j].tex1memo = tratio * dl + texz;	//tex1memoを更新する
+					//	}
+					//}
 
-				//if(texturemode == BROWNED){
-				if(texture_mode == 1){
-					//	焦げテクスチャ切り替え
-					//	焼け具合に沿った変化
-					gvtx[stride*gv + tex + 2] = texstart;
-				//}else if(texturemode == MOISTURE){
-				}else if(texture_mode == 3){
-					//	水分蒸発表示モード
-					//	残水率に沿った変化
-					gvtx[stride*gv + tex + 2] = wastart;
-				//}else if(texturemode == THERMAL){
-				}else if(texture_mode == 2){
-					//	温度変化表示モード
-					//サーモが非テクスチャ化された場合、テクスチャのロードは不要になるので、以下のコードを変更
-					double temp = phMesh->vertices[pv].temp;
-					// -50.0~0.0:aqua to blue
-					if(temp <= -50.0){
-						gvtx[stride*gv + tex + 2] = thstart;
+					//if(texturemode == BROWNED){
+					if(texture_mode == 1){
+						//	焦げテクスチャ切り替え
+						//	焼け具合に沿った変化
+						gvtx[stride*gv + tex + 2] = texstart;
+					//}else if(texturemode == MOISTURE){
+					}else if(texture_mode == 3){
+						//	水分蒸発表示モード
+						//	残水率に沿った変化
+						gvtx[stride*gv + tex + 2] = wastart;
+					//}else if(texturemode == THERMAL){
+					}else if(texture_mode == 2){
+						//	温度変化表示モード
+						//サーモが非テクスチャ化された場合、テクスチャのロードは不要になるので、以下のコードを変更
+						double temp = phMesh->vertices[pv].temp;
+						// -50.0~0.0:aqua to blue
+						if(temp <= -50.0){
+							gvtx[stride*gv + tex + 2] = thstart;
+						}
+						else if(-50.0 < temp && temp <= 0){	
+							gvtx[stride*gv + tex + 2] = (thstart ) + ((temp + 50.0) * dtex /50.0);
+						}
+						//	0~50.0:blue to green
+						else if(0.0 < temp && temp <= 50.0 ){
+							//double green = temp * dtex / 50.0 + thstart;
+							gvtx[stride*gv + tex + 2] = temp * dtex / 50.0 + thstart + dtex;
+						}
+						//	50.0~100.0:green to yellow
+						else if(50.0 < temp && temp <= 100.0){
+							gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex /	 50.0 + thstart + 2 * dtex;
+						}
+						//	100.0~150:yellow to orange	
+						else if(100.0 < temp && temp <= 150.0){
+							gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
+						}
+						//	150~200:orange to red
+						else if(150.0 < temp && temp <= 200.0){
+							double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+							gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
+						}
+						//	200~250:red to purple
+						else if(200.0 < temp && temp <= 250.0){
+							gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
+						}
+						///	250~:only purple
+						else if(250.0 < temp){
+							gvtx[stride*gv + tex + 2] = dtex * 6.0 + thstart;
+							//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
+						}
 					}
-					else if(-50.0 < temp && temp <= 0){	
-						gvtx[stride*gv + tex + 2] = (thstart ) + ((temp + 50.0) * dtex /50.0);
-					}
-					//	0~50.0:blue to green
-					else if(0.0 < temp && temp <= 50.0 ){
-						//double green = temp * dtex / 50.0 + thstart;
-						gvtx[stride*gv + tex + 2] = temp * dtex / 50.0 + thstart + dtex;
-					}
-					//	50.0~100.0:green to yellow
-					else if(50.0 < temp && temp <= 100.0){
-						gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex /	 50.0 + thstart + 2 * dtex;
-					}
-					//	100.0~150:yellow to orange	
-					else if(100.0 < temp && temp <= 150.0){
-						gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
-					}
-					//	150~200:orange to red
-					else if(150.0 < temp && temp <= 200.0){
-						double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
-						gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
-					}
-					//	200~250:red to purple
-					else if(200.0 < temp && temp <= 250.0){
-						gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
-					}
-					///	250~:only purple
-					else if(250.0 < temp){
-						gvtx[stride*gv + tex + 2] = dtex * 6.0 + thstart;
-						//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
-					}
+
+
+				
 				}
-
-
-				
-			}
-		}	
-	}else{
-		assert(0);	//	not supported.
+			}	
+		}else{
+			DSTR << "Error: " << GetName() << ":FWFemMesh does not have 3D Mesh" << std::endl;
+		}
 	}
 }
 
