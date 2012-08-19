@@ -84,6 +84,9 @@ public:
 
 		//水分蒸発計算
 		double wratio;			//	含水率
+		double wmass;			//	水分量
+		double wmass_start;		//	水分量の初期値
+		double tetsMg;
 
 	};
 	//	四面体の面。

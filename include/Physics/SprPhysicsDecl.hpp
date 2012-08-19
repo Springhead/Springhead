@@ -50,13 +50,14 @@
 	double GetSufVertexTemp(unsigned int id){	return	base::GetSufVertexTemp(id);}	\
 	void SetVertexTemp(unsigned int id, double temp){	base::SetVertexTemp(id, temp);}	\
 	void SetvecFAll(unsigned int id, double dqdt){	base::SetvecFAll(id, dqdt);}	\
-	void SetRohSpheat(double roh, double Cp){	base::SetRohSpheat(roh, Cp);}	\
+	void SetRhoSpheat(double rho, double Cp){	base::SetRhoSpheat(rho, Cp);}	\
 	unsigned int GetNFace(){	return	base::GetNFace();}	\
 	std::vector< Vec3d > GetFaceEdgeVtx(unsigned int id){	return	base::GetFaceEdgeVtx(id);}	\
 	Vec3d GetFaceEdgeVtx(unsigned int id, unsigned int vtx){	return	base::GetFaceEdgeVtx(id, vtx);}	\
 	Vec2d GetIHbandDrawVtx(){	return	base::GetIHbandDrawVtx();}	\
 	void CalcIHdqdt_atleast(double r, double R, double dqdtAll){	base::CalcIHdqdt_atleast(r, R, dqdtAll);}	\
 	void UpdateIHheat(unsigned int heating){	base::UpdateIHheat(heating);}	\
+	void DecrMoist(){	base::DecrMoist();}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_PHHapticPointerIf(base)	\
 	void SetHapticRenderMode(Spr::PHHapticPointerDesc::HapticRenderMode m){	base::SetHapticRenderMode(m);}	\

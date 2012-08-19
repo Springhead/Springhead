@@ -96,7 +96,7 @@ protected:
 	//	温度固定境界条件を用いたいときには、熱伝達率（最後の引数）を入力しない。また、毎Step実行時に特定節点の温度を一定温度に保つようにする。
 	void SetInitThermoConductionParam(
 		double thConduct,		// thConduct:熱伝導率
-		double roh,				// roh:密度
+		double rho,				// roh:密度
 		double specificHeat,	// specificHeat:比熱 J/ (K・kg):1960
 		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
 		);
@@ -360,7 +360,7 @@ public:
 		);
 	//Vec4d CalcIntersectionPoint4(unsigned id0,unsigned id1,double r,double R);		/// 4点と交わることを想定:			同上
 	///	メッシュ固有のパラメータの設定
-	void SetRohSpheat(double roh,double Cp);	// 素材固有の密度、比熱の設定
+	void SetRhoSpheat(double rho,double Cp);	// 素材固有の密度、比熱の設定
 
 	/// dtを定数倍する
 	unsigned Ndt;
@@ -376,6 +376,9 @@ public:
 
 	//時間表示
 	double		cpstime;		//[sec] 　1　/　PHFemMeshThermo呼び出し回数[1/sec]
+
+public:
+	void DecrMoist();
 
 
 };

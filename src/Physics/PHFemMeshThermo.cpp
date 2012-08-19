@@ -113,6 +113,7 @@ void PHFemMeshThermo::CreateMatCAll(){
 
 }
 
+
 void PHFemMeshThermo::ScilabTest(){
 	if (!ScilabStart()) std::cout << "Error : ScilabStart \n";
 
@@ -225,7 +226,7 @@ void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp
 //	}
 }
 
-void PHFemMeshThermo::SetRohSpheat(double r,double Spheat){
+void PHFemMeshThermo::SetRhoSpheat(double r,double Spheat){
 	//> 密度、比熱 of メッシュのグローバル変数(=メッシュ固有の値)を更新
 	rho = r;
 	specificHeat = Spheat;
@@ -3960,6 +3961,39 @@ void PHFemMeshThermo::SetVerticesTempAll(double temp){
 
 void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt){
 	vecFAll[id][0] = dqdt;
+}
+
+void PHFemMeshThermo::DecrMoist(){
+	for(unsigned id =0; id < tets.size() ; id++){
+		////頂点が100度以上で残水量が０ではないとき
+		double tempAdd = 0.0;	//	加算温度
+		for(unsigned i=0; i < 4; i++){
+			tempAdd += vertices[tets[id].vertices[i]].temp;
+		}
+		//単位換算は合っているか？
+		double wlatheat = 2.26 * 1000;		//水1kg当たりの潜熱(latent heat)[W・s]=[J] 水の潜熱が540cal/gよりJに変換して使用   W=J/s 2.26[kJ/kg]
+		tets[id].tetsMg = tets[id].volume * rho;		//四面体の質量
+		double wlat = (tempAdd / 4.0) - 100.0;	//100度を超えただけ蒸発する。
+		double dw = wlat * specificHeat *  tets[id].tetsMg / wlatheat;	//	水分蒸発量	//	(温度と沸点100度との差分の熱量)÷水の潜熱で蒸発する水の量が分かる。;		//	水分蒸発量
+		double exwater	= 0;	//流出する水の量全体(蒸発 + 流出 + 水分移動)
+		//平均温度が100度超過
+		if( tempAdd / 4.0 >= 100.0){
+			//dwの分だけ、質量や水分量から引く
+			//double delw = (dt / 0.01 * 1.444*(0.000235/0.29)  / 10000000)*100;
+			double delw = (1.444*(0.000235/0.29)  / 10000000)*100;
+			tets[id].tetsMg -= dw - delw * 500;
+			tets[id].wmass -= dw - delw * 500;
+			exwater = delw * 500;				//検証する:ひとまず、exwaterが０でなければ、音を再生させることにしようか。音を出したら、そのメッシュのexwaterの値を０にしよう。
+			//wlatの分だけ、温度から引く
+			for(unsigned j=0; j < 4; j++){
+				vertices[j].temp -= wlat;
+			}
+		}
+		//とりあえず、簡単に、水分を減らすコード
+		//if(tets[id].wmass >= tets[id].wmass_start *0.01){
+		//	tets[id].wmass -= tets[id].wmass_start * 0.01;
+		//}
+	}
 }
 
 }
