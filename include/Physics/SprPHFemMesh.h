@@ -67,13 +67,14 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	double GetSufVertexTemp(unsigned id);		// メッシュ表面の節点温度を取得
 	void SetVertexTemp(unsigned id,double temp);
 	void SetvecFAll(unsigned id,double dqdt);
-	void SetRohSpheat(double roh,double Cp);		//素材固有の物性
+	void SetRhoSpheat(double rho,double Cp);		//素材固有の物性
 	unsigned GetNFace();
 	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
 	Vec3d GetFaceEdgeVtx(unsigned id, unsigned	 vtx);
 	Vec2d GetIHbandDrawVtx();
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);
-	void UpdateIHheat(unsigned heating);						//IH加熱状態の更新
+	void UpdateIHheat(unsigned heating);						//	IH加熱状態の更新
+	void DecrMoist();						//	
 };
 
 //@}
