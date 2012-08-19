@@ -46,6 +46,9 @@ enum PHBehaviorPriority{
 		//SGBP_CONTACTENGINE,
 		//SGBP_STICKENGINE,
 		//SGBP_WARPENGINE,
+	//コールしない
+	SGBP_NONE					= 600,
+
 };
 
 class PHScene;

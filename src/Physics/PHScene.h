@@ -163,6 +163,7 @@ public:
 	PHGravityEngineIf*		GetGravityEngine();
 	PHPenaltyEngineIf*		GetPenaltyEngine();
 	PHIKEngineIf*			GetIKEngine();
+	PHFemEngineIf*			GetFemEngine();
 	PHHapticEngineIf*		GetHapticEngine();
 	PHHapticPointerIf*		CreateHapticPointer();
 	void					StepHapticLoop();

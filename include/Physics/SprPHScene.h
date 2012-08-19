@@ -428,6 +428,11 @@ public:
 	*/
 	PHIKEngineIf*  GetIKEngine();
 
+	/** @brief FemEngineを取得する
+		@return FemEngineへのポインタ
+	*/
+	PHFemEngineIf*  GetFemEngine();
+
 	/** @brief HapticEngineを取得する
 		@return HapticEngineへのポインタ
 	*/

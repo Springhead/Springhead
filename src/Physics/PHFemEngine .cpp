@@ -22,14 +22,18 @@ PHFemEngine::PHFemEngine(){
 
 void PHFemEngine::Step(){
 	double dt = GetScene()->GetTimeStep();
-	// Step  (freqN)回に一回だけ呼び出す
-	if(freq > freqN){
-		for(size_t i=0; i<meshes.size(); ++i){
-			meshes[i]->Step(dt * freqN);
-		}
-		freq = 0;
+	//// Step  (freqN)回に一回だけ呼び出す
+	//if(freq > freqN){
+	//	//for(size_t i=0; i<meshes.size(); ++i){
+	//		meshes[i]->Step(dt * freqN);
+	//	}
+	//	freq = 0;
+	//}
+	//freq +=1;
+
+	for(size_t i=0; i<meshes.size(); ++i){
+		meshes[i]->Step(dt);
 	}
-	freq +=1;
 }
 
 void PHFemEngine::Clear(){
