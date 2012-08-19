@@ -26,9 +26,6 @@ void PHSolidForHaptic::AddForce(Vec3d f, Vec3d r){
 //----------------------------------------------------------------------------
 // PHSapePairForHaptic
 PHShapePairForHaptic::PHShapePairForHaptic(){}
-PHShapePairForHaptic::PHShapePairForHaptic(const PHShapePairForHaptic& s){
-	*this = s;
-}
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
 	// 0:剛体, 1:力覚ポインタ
 	// 前回の状態を保存
@@ -178,12 +175,10 @@ PHSolidPairForHaptic::PHSolidPairForHaptic(){
 }
 PHSolidPairForHaptic::PHSolidPairForHaptic(const PHSolidPairForHaptic& s){
 	*this = s;
-	const int height = s.shapePairs.height();
-	const int width = s.shapePairs.width();
-	shapePairs.resize(height, width);
-	for(int i = 0; i < height; i++){
-		for(int j = 0; j < width; j++){
-			shapePairs.item(i, j) = DBG_NEW PHShapePairForHaptic(*s.shapePairs.item(i, j));
+	for(int i = 0; i < s.shapePairs.height(); i++){
+		for(int j = 0; j < s.shapePairs.width(); j++){
+			PHShapePairForHaptic* src = s.shapePairs.item(i, j);
+			if (src) shapePairs.item(i, j) = DBG_NEW PHShapePairForHaptic(*src);
 		}
 	}
 }

@@ -66,7 +66,6 @@ public:
 	std::vector< UTRef< PHIr > > irs;
 
 	PHShapePairForHaptic();
-	PHShapePairForHaptic(const PHShapePairForHaptic& s);
 	/// 接触判定．近傍点対を常時更新
 	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	/// 接触時の判定
