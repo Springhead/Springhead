@@ -63,6 +63,8 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	Vec3d GetSufVtxPose(unsigned id);
 	unsigned long GetStepCount();		///	カウント１
 	unsigned long GetStepCountCyc();		///	カウント１が何週目か	計算式:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
+	double GetVertexTemp(unsigned id);			// メッシュ節点の温度を取得
+	double GetSufVertexTemp(unsigned id);		// メッシュ表面の節点温度を取得
 	void SetVertexTemp(unsigned id,double temp);
 	void SetvecFAll(unsigned id,double dqdt);
 	void SetRohSpheat(double roh,double Cp);		//素材固有の物性

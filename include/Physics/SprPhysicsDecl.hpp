@@ -46,6 +46,8 @@
 	Vec3d GetSufVtxPose(unsigned int id){	return	base::GetSufVtxPose(id);}	\
 	unsigned long GetStepCount(){	return	base::GetStepCount();}	\
 	unsigned long GetStepCountCyc(){	return	base::GetStepCountCyc();}	\
+	double GetVertexTemp(unsigned int id){	return	base::GetVertexTemp(id);}	\
+	double GetSufVertexTemp(unsigned int id){	return	base::GetSufVertexTemp(id);}	\
 	void SetVertexTemp(unsigned int id, double temp){	base::SetVertexTemp(id, temp);}	\
 	void SetvecFAll(unsigned int id, double dqdt){	base::SetvecFAll(id, dqdt);}	\
 	void SetRohSpheat(double roh, double Cp){	base::SetRohSpheat(roh, Cp);}	\

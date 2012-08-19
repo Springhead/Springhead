@@ -2321,9 +2321,9 @@ void PHFemMeshThermo::Step(double dt){
 void PHFemMeshThermo::CreateMatrix(){
 }
 
-void PHFemMeshThermo::InitTcAll(){
+void PHFemMeshThermo::InitTcAll(double temp){
 	for(unsigned i =0; i <vertices.size();i++){
-		vertices[i].Tc = 0.0;
+		vertices[i].Tc = temp;
 	}
 }
 
@@ -2419,50 +2419,6 @@ void PHFemMeshThermo::InitCreateVecf(){
 }
 
 void PHFemMeshThermo::UpdateIHheat(unsigned heating){
-	////時間刻み幅	dtの設定
-	//PHFemMeshThermo::dt = 0.01;
-
-	//%%%	初期化類		%%%//
-	//各種メンバ変数の初期化⇒コンストラクタでできたほうがいいかもしれない。
-	/////	Edges
-	//for(unsigned i =0; i < edges.size();i++){
-	//	edges[i].c = 0.0;
-	//	edges[i].k = 0.0;
-	//}
-
-	/////	faces
-	//for(unsigned i=0;i<faces.size();i++){
-	//	faces[i].alphaUpdated = true;
-	//	faces[i].area = 0.0;
-	//	faces[i].heatTransRatio = 0.0;
-	//	faces[i].deformed = true;				//初期状態は、変形後とする
-	//	faces[i].fluxarea =0.0;
-	//	faces[i].heatflux =0.0;
-	//}
-
-	///	vertex
-
-	///	tets
-
-	//行列の成分数などを初期化
-	//bVecAll.resize(vertices.size(),1);
-
-	//行列を作る
-		//行列を作るために必要な節点や四面体の情報は、PHFemMeshThermoの構造体に入っている。
-			//PHFemMeshThermoのオブジェクトを作る際に、ディスクリプタに値を設定して作る
-		
-	//節点温度の初期設定(行列を作る前に行う)
-	//SetVerticesTempAll(0.0);			///	初期温度の設定
-
-	//周囲流体温度の初期化(0.0度にする)
-	//InitTcAll();
-
-	//節点の初期温度を設定する⇒{T}縦ベクトルに代入
-		//{T}縦ベクトルを作成する。以降のK,C,F行列・ベクトルの節点番号は、この縦ベクトルの節点の並び順に合わせる?
-		
-	//dmnN 次元の温度の縦（列）ベクトル
-	//CreateTempMatrix();
-
 	//熱伝導率、密度、比熱、熱伝達率　のパラメーターを設定・代入
 		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
 		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
@@ -2486,62 +2442,18 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heating){
 	else if(heating == STRONG){
 		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e7);		//
 	}
-
-
-	//>	熱放射率の設定
-	//SetThermalEmissivityToVerticesAll(0.0);				///	暫定値0.0で初期化	：熱放射はしないｗ
-
-	//>	行列の作成　行列の作成に必要な変数はこの行以前に設定が必要
-		//計算に用いるマトリクス、ベクトルを作成（メッシュごとの要素剛性行列/ベクトル⇒全体剛性行列/ベクトル）
-		//{T}縦ベクトルの節点の並び順に並ぶように、係数行列を加算する。係数行列には、面積や体積、熱伝達率などのパラメータの積をしてしまったものを入れる。
-
-
-	//> IH加熱するfaceをある程度(表面face && 下底面)絞る、関係しそうなface節点の原点からの距離を計算し、face[].mayIHheatedを判定
-	//CalcVtxDisFromOrigin();
-	//>	IHからの単位時間当たりの加熱熱量
-	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
-	
-	//円環加熱：IH
-	//CalcIHdqdt(0.04,0.095,231.9 * 0.005 * 1e6);		/// 単位 m,m,J/sec		//> 0.002:dtの分;Stepで用いるdt倍したいが...	// 0.05,0.11は適当値
-	//CalcIHdqdt_atleast(0.06,0.095,231.9 * 0.005 * 1e5);		///	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
-	
-	
-	
-	
-	//..debug 
-	//バンド状加熱
-//	CalcIHdqdtband_(-0.02,0.20,231.9 * 0.005 * 1e6);
-
-	
 	//%%	IH加熱のモード切替
 	//	ライン状に加熱
 	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	値を変えて実験	//*1e3　//*1e4 //5e3
 	//	円環状に加熱
-	
 
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
-
-	//InitCreateMatC();					///	CreateMatCの初期化
 	InitCreateVecf();					///	CreateVecfの初期化
-	//InitCreateMatk();					///	CreateMatKの初期化
-	//..	CreateLocalMatrixAndSet();			//> 以上の処理を、この関数に集約
-
 	///	熱伝達率を各節点に格納
 	//SetHeatTransRatioToAllVertex();
 	for(unsigned i=0; i < this->tets.size(); i++){
-		//各行列を作って、ガウスザイデルで計算するための係数の基本を作る。Timestepの入っている項は、このソース(SetDesc())では、実現できないことが分かった(NULLが返ってくる)
-		//CreateMatkLocal(i);				///	Matk1 Matk2(更新が必要な場合がある)を作る
-		//CreateMatKall();		//CreateMatkLocal();に実装したので、後程分ける。
-		//CreateMatcLocal(i);
 		CreateVecfLocal(i);
 	}
-	int hogeshidebug =0;
-	//	節点温度推移の書き出し
-	templog.open("templog.csv");
-	//	CPSの経時変化を書き出す
-	cpslog.open("cpslog.csv");
-	// カウントの初期化
-	Ndt =0;
 }
 
 void PHFemMeshThermo::AfterSetDesc() {	
@@ -2586,8 +2498,8 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//節点温度の初期設定(行列を作る前に行う)
 	SetVerticesTempAll(0.0);			///	初期温度の設定
 
-	//周囲流体温度の初期化(0.0度にする)
-	InitTcAll();
+	//周囲流体温度の初期化(temp度にする)
+	InitTcAll(0.0);
 
 	//節点の初期温度を設定する⇒{T}縦ベクトルに代入
 		//{T}縦ベクトルを作成する。以降のK,C,F行列・ベクトルの節点番号は、この縦ベクトルの節点の並び順に合わせる?
@@ -2599,8 +2511,11 @@ void PHFemMeshThermo::AfterSetDesc() {
 		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
 		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
 		//SetInitThermoConductionParam(0.574,970,1.96,25);
-	SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.01);		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
-		//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
+	SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001);		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
+	
+	//断熱過程
+	//SetInitThermoConductionParam(0.574,970,0.1960,0.0);		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
+	//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
 
 	//> 熱流束の初期化
 	SetVtxHeatFluxAll(0.0);
@@ -2624,7 +2539,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	
 	//	重要
 	//20120811
-	CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5);		//mainの中に実装、phPanにだけ実行させたい
+	//CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5);		//mainの中に実装、phPanにだけ実行させたい
 	
 	
 	//..debug 
