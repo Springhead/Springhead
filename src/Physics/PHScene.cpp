@@ -486,6 +486,10 @@ PHIKEngineIf* PHScene::GetIKEngine(){
 	return XCAST(ikEngine);
 }
 
+PHFemEngineIf* PHScene::GetFemEngine(){
+	return XCAST(femEngine);
+}
+
 PHHapticEngineIf* PHScene::GetHapticEngine(){
 	return XCAST(hapticEngine);
 }

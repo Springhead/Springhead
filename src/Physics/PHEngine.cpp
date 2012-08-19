@@ -57,8 +57,8 @@ void PHEngines::GenerateForce(){
 }
 
 void PHEngines::Integrate(){
-//	for(iterator it = dynamicalSystem; it != motion && it!=end2(); ++it)	本当はmotionまでにすべきだけど，
-	for(iterator it = dynamicalSystem; it!=end2(); ++it)
+	for(iterator it = dynamicalSystem; it != motion && it!=end2(); ++it)	//本当はmotionまでにすべきだけど，
+//	for(iterator it = dynamicalSystem; it!=end2(); ++it)
 		UTRef<PHEngine>(*it)->Step();
 }
 

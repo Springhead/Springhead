@@ -27,7 +27,7 @@ public:
 	unsigned freq;
 	int freqN;
 
-	int  GetPriority() const {return SGBP_DYNAMICALSYSTEM;}
+	int  GetPriority() const {return SGBP_NONE; }//SGBP_DYNAMICALSYSTEM;}
 	void Step();
 	void Clear();
 	virtual bool		AddChildObject(ObjectIf* o);
