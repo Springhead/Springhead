@@ -84,7 +84,7 @@ void PHHapticEngineImpulse::SyncPhysic2Haptic(){
 	for(int i = 0; i < NHapticPointers(); i++){
 		PHHapticPointer* ppointer = GetHapticPointer(i);
 		const int ppointerID = ppointer->GetPointerID();
-		for(int j = 0; j < ppointer->neighborSolidIDs.size(); j++){
+		for(size_t j = 0; j < ppointer->neighborSolidIDs.size(); j++){
 			const int solidID = ppointer->neighborSolidIDs[j];
 			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(solidID, ppointerID);
 			PHSolidPairForHaptic* ppair = GetSolidPairForHaptic(solidID, ppointerID);
