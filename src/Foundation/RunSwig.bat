@@ -39,7 +39,7 @@ for %%p in (%SRCIMP%) do echo %%include "%%p">> %MODULE%.i
 echo #	Do not edit. RunSwig.bat will update this file.> %MAKEFILE%
 echo all: ..\..\src\%MODULE%\%MODULE%Stub.cpp>>%MAKEFILE%
 echo ..\..\src\%MODULE%\%MODULE%Stub.cpp: %SRCINTFDEP% %SRCIMPDEP%>>%MAKEFILE%
-echo 	swig -spr -w312,319,325,401,402 -DSWIG_%MODULE% -c++ %MODULE%.i>>%MAKEFILE%
+echo 	swig -spr -w305,312,319,325,401,402 -DSWIG_%MODULE% -c++ %MODULE%.i>>%MAKEFILE%
 make -f%MAKEFILE%
 set PATH=%PATHORG%
 set PATHORG=
