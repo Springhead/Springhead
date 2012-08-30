@@ -16,7 +16,7 @@
 namespace Spr{;
 
 class PHBallJoint;
-enum PHDeformationType;
+// enum PHDeformationType;
 
 ///	ボールジョイントに対応するツリーノード
 class PHBallJointNode : public PHTreeNodeND<3>{
