@@ -17,7 +17,7 @@
 #include <Framework/SprFWEditor.h>
 #include <map>
 
-#include "Python.h"
+#include <Python/Python.h>
 
 using namespace std;
 namespace Spr{;
