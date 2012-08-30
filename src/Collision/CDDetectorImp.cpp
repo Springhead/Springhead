@@ -63,9 +63,10 @@ bool CDShapePair::ContDetect(unsigned ct, const Posed& pose0, const Posed& pose1
 	shapePoseW[1] = pose1;	
 	if (lastContactCount == unsigned(ct-1) ){	//	継続した接触の場合
 		//	法線向きに判定するとどれだけ戻ると離れるか調べる．
+		//　end = -epsilonとすることで、侵入していない状態(dist == 0)も接触に含むようにした(2012/5/22susa)
 		double dist;
 		int res=ContFindCommonPoint(shape[0], shape[1], shapePoseW[0], shapePoseW[1], 
-			-normal, -DBL_MAX, 0, normal, closestPoint[0], closestPoint[1], dist);
+			-normal, -DBL_MAX, -epsilon, normal, closestPoint[0], closestPoint[1], dist);
 		if (res <= 0) {	//	範囲内では、接触していない場合
 			return false;
 		}
