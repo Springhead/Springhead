@@ -98,10 +98,10 @@ bool PHShapePairForHaptic::AnalyzeContactRegion(){
 		if(SELECTION){
 			Vec3d w0 = shapePoseW[0] * closestPoint[0];	// 中間表現面上の点（剛体の近傍点）
 			double dot = (point - w0) * normal;
-			if(dot < -1e-2)	intersectionVertices.push_back(shapePoseW[1].Inv() * point);
+			if(dot < -5e-008)	intersectionVertices.push_back(shapePoseW[1].Inv() * point);
 		}else{
 			intersectionVertices.push_back(shapePoseW[1].Inv() * point);
-		}
+		} 
 	}
 	// 面が見つからなかった、shapeがconvex or boxではなかった場合
 	if(intersectionVertices.size() == 0){
@@ -193,9 +193,11 @@ void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* en
 	if(sp->state == sp->NEW || sp->state == sp->CONTINUE){
 		sp->OnDetect(ct, solid[1]->GetCenterPosition());	// CCDGJKで近傍点対を再取得
 		sp->AnalyzeContactRegion();		// 侵入領域の頂点を取得
+		//DSTR << "multi point" << std::endl;
 	}else{
 		// 接触していない場合、近傍点を侵入領域の頂点とする
 		sp->intersectionVertices.push_back(sp->closestPoint[1]);
+		//DSTR << "1point" << std::endl;
 	}
 
 	// はじめて近傍の場合

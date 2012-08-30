@@ -21,9 +21,11 @@ void FWHapticPointer::UpdateHumanInterface(PHHapticPointer* hpLocal, float dt){
 	Posed pose = hif->GetPose();
 
 	//// デバックのための擬似入力
-	//Vec3d debug_vel = Vec3d(-0.1, 0.0, 0.0);
-	//static Posed debug_pose = hapticPointer->GetDefaultPose();
+	//Vec3d debug_vel = Vec3d(-0.001, 0.0, 0.0);
+	//static Posed debug_pose = Posed();
 	//debug_pose.Pos() = debug_pose.Pos() + debug_vel * dt;
+	//pose = debug_pose;
+	//vel.v() = debug_vel;
 
 	hpLocal->UpdateHumanInterface(pose, vel);
 }
