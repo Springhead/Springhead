@@ -21,7 +21,7 @@ struct FWFemMeshIf : FWObjectIf {
 	SPR_IFDEF(FWFemMesh);
 	PHFemMeshIf* GetPHMesh();
 	void DrawIHBorderXZPlane(bool sw);		// FEMMeshにXZ平面を表示：使うとき：swにtrue、使わない：false
-
+	void DrawFaceEdge();	//	メッシュのエッジ境界を描画
 };
 
 

@@ -1774,6 +1774,7 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 
 			for(unsigned j =0; j < vertices.size() ; j++){		//初回ループだけ	係数ベクトルbVecAllの成分を計算
 				bVecAll[j][0] = 0.0;							//bVecAll[j][0]の初期化
+				bVecAll_IH[j][0] = 0.0;
 				//節点が属すedges毎に　対角成分(j,j)と非対角成分(j,?)毎に計算
 				//対角成分は、vertices[j].k or .c に入っている値を、非対角成分はedges[hoge].vertices[0] or vertices[1] .k or .cに入っている値を用いる
 				//ⅰ)非対角成分について
@@ -2417,6 +2418,12 @@ void PHFemMeshThermo::InitCreateVecf(){
 	}
 	vecFAll.resize(vertices.size(),1);		///	全体剛性ベクトルFのサイズを規定
 	vecFAll.clear();						///	初期化
+	vecFAll_f2IHw.resize(vertices.size(),1);		///	弱火Fのサイズを規定
+	vecFAll_f2IHw.clear();							///	初期化
+	vecFAll_f2IHm.resize(vertices.size(),1);		///	全体剛性ベクトルFのサイズを規定
+	vecFAll_f2IHm.clear();							///	初期化
+	vecFAll_f2IHs.resize(vertices.size(),1);		///	全体剛性ベクトルFのサイズを規定
+	vecFAll_f2IHs.clear();							///	初期化
 }
 
 void PHFemMeshThermo::UpdateIHheat(unsigned heating){
@@ -2582,6 +2589,9 @@ void PHFemMeshThermo::AfterSetDesc() {
 	// カウントの初期化
 	Ndt =0;
 
+	//水分蒸発周りの初期化
+	InitMoist();
+
 }
 
 //void PHFemMeshThermo::CreateLocalMatrixAndSet(){
@@ -2692,6 +2702,7 @@ void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 	for(unsigned j =0;j < 4; j++){
 		int vtxid0 = tets[id].vertices[j];
 		vecFAll[vtxid0][0] = vecf[j];
+		vecFAll_f2IHw[vtxid0][0] = vecf[j];
 	}
 	//	for debug
 	//vecFAllに値が入ったのかどうかを調べる 2011.09.21全部に値が入っていることを確認した
@@ -3959,8 +3970,34 @@ void PHFemMeshThermo::SetVerticesTempAll(double temp){
 		}
 }
 
+void PHFemMeshThermo::AddvecFAll(unsigned id,double dqdt){
+	vecFAll[id][0] += dqdt;		//	+=に変更
+}
+
 void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt){
-	vecFAll[id][0] = dqdt;
+	vecFAll[id][0] = dqdt;		//	+=に変更
+}
+
+void PHFemMeshThermo::InitAllVertexTemp(){
+	//	このメッシュの全長点の温度を0にする
+	for(unsigned i=0; i < vertices.size(); i++){
+		vertices[i].temp = 0.0;
+		//	どのメッシュでリセットかけたか　GetMe()->
+	}
+}
+
+void PHFemMeshThermo::InitMoist(){
+	for(unsigned id =0; id < tets.size(); id++){
+		tets[id].wratio = 0.917;
+		double rho = 970;
+		if(tets[id].volume){
+			tets[id].tetsMg = tets[id].volume * rho;	//質量*密度
+			tets[id].wmass = tets[id].tetsMg * tets[id].wratio;
+		}else if(tets[id].volume < 0.0){
+			DSTR << "tets[" << id << "]の体積が計算されていません" << std::endl;
+			CalcTetrahedraVolume(tets[id]);
+		}
+	}
 }
 
 void PHFemMeshThermo::DecrMoist(){
@@ -3981,9 +4018,14 @@ void PHFemMeshThermo::DecrMoist(){
 			//dwの分だけ、質量や水分量から引く
 			//double delw = (dt / 0.01 * 1.444*(0.000235/0.29)  / 10000000)*100;
 			double delw = (1.444*(0.000235/0.29)  / 10000000)*100;
-			tets[id].tetsMg -= dw - delw * 500;
-			tets[id].wmass -= dw - delw * 500;
-			exwater = delw * 500;				//検証する:ひとまず、exwaterが０でなければ、音を再生させることにしようか。音を出したら、そのメッシュのexwaterの値を０にしよう。
+			exwater = delw * 500;
+			tets[id].tetsMg -= dw - exwater;
+			if(tets[id].wmass > dw - exwater){
+				tets[id].wmass -= dw - exwater;
+			}else{
+				DSTR << "水分流出量が多すぎます" << std::endl;
+			}
+			//検証する:ひとまず、exwaterが０でなければ、音を再生させることにしようか。音を出したら、そのメッシュのexwaterの値を０にしよう。
 			//wlatの分だけ、温度から引く
 			for(unsigned j=0; j < 4; j++){
 				vertices[j].temp -= wlat;

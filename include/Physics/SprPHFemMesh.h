@@ -66,7 +66,8 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	double GetVertexTemp(unsigned id);			// メッシュ節点の温度を取得
 	double GetSufVertexTemp(unsigned id);		// メッシュ表面の節点温度を取得
 	void SetVertexTemp(unsigned id,double temp);
-	void SetvecFAll(unsigned id,double dqdt);
+	void AddvecFAll(unsigned id,double dqdt);		//セットだと、値をそう入れ替えしそうな名前で危険。実際には、add又は、IH加熱ベクトルのみにSetする。ベクトルにSetする関数を作って、ロードしてもいいと思う。
+	void SetvecFAll(unsigned id,double dqdt);		//FAllの成分に加算だが、危険
 	void SetRhoSpheat(double rho,double Cp);		//素材固有の物性
 	unsigned GetNFace();
 	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
@@ -75,6 +76,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);
 	void UpdateIHheat(unsigned heating);						//	IH加熱状態の更新
 	void DecrMoist();						//	
+	void InitAllVertexTemp();
 };
 
 //@}

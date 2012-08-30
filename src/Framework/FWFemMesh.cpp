@@ -88,6 +88,7 @@ void FWFemMesh::DrawFaceEdge(){
 			//glFlush();	//ただちに実行
 		}
 	}
+	glutPostRedisplay();
 
 	//	gomi
 	//PHFemMeshIf* phfem = this->GetPHMesh();
@@ -185,7 +186,7 @@ void FWFemMesh::Sync(){
 			if (gvtx){
 				int tex = grMesh->GetTexOffset();
 				int stride = grMesh->GetStride();
-				for(unsigned gv=0; gv<vertexIdMap.size(); ++gv){
+				for(unsigned gv = 0; gv < vertexIdMap.size(); ++gv){
 					int pv = vertexIdMap[gv];
 					//	PHから何らかの物理量を取ってくる
 							//phから節点の温度を取ってくる
@@ -222,7 +223,22 @@ void FWFemMesh::Sync(){
 					}else if(texture_mode == 3){
 						//	水分蒸発表示モード
 						//	残水率に沿った変化
-						gvtx[stride*gv + tex + 2] = wastart;
+						gvtx[stride * gv + tex + 2] = wastart + 2 * dtex;
+						for(unsigned j =0; j < phMesh->tets.size(); j++){
+							//	割合直打ちでいいや
+							if(0.5 < phMesh->tets[j].wratio && phMesh->tets[j].wratio < 1.0){
+								gvtx[stride * gv + tex + 2] = wastart + 2 * dtex - ( (phMesh->tets[j].wratio -0.5) * (dtex / 0.5) );
+							}
+							else if(0.0 < phMesh->tets[j].wratio && phMesh->tets[j].wratio < 0.5){
+								gvtx[stride * gv + tex + 2] = wastart + 1 * dtex - ( (phMesh->tets[j].wratio -0.5) * (dtex / 0.5) );
+							}
+							//grad	= dl/(ratio1-ratio2); //0.125
+							//ratio	= tvtxs[j].wmass / wmass;
+							//diff	= ratio1 - ratio;
+							//tvtxs[j].SetTexZ( diff * grad + texz);
+							//tvtxs[j].tex3memo = diff * grad + texz;
+						}
+
 					//}else if(texturemode == THERMAL){
 					}else if(texture_mode == 2){
 						//	温度変化表示モード
@@ -230,7 +246,7 @@ void FWFemMesh::Sync(){
 						double temp = phMesh->vertices[pv].temp;
 						// -50.0~0.0:aqua to blue
 						if(temp <= -50.0){
-							gvtx[stride*gv + tex + 2] = thstart;
+							gvtx[stride * gv + tex + 2] = thstart;
 						}
 						else if(-50.0 < temp && temp <= 0){	
 							gvtx[stride*gv + tex + 2] = (thstart ) + ((temp + 50.0) * dtex /50.0);
