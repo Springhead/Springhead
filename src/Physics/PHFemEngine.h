@@ -31,6 +31,8 @@ public:
 	void Step();
 	void Clear();
 	virtual bool		AddChildObject(ObjectIf* o);
+	double _dt;
+	void Set_dt(double _dt);
 };
 
 }

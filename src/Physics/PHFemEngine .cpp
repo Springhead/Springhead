@@ -22,6 +22,7 @@ PHFemEngine::PHFemEngine(){
 
 void PHFemEngine::Step(){
 	double dt = GetScene()->GetTimeStep();
+	
 	//// Step  (freqN)回に一回だけ呼び出す
 	//if(freq > freqN){
 	//	//for(size_t i=0; i<meshes.size(); ++i){
@@ -32,11 +33,15 @@ void PHFemEngine::Step(){
 	//freq +=1;
 
 	for(size_t i=0; i<meshes.size(); ++i){
-		meshes[i]->Step(dt);
+		meshes[i]->Step(_dt);
 	}
 }
 
 void PHFemEngine::Clear(){
+}
+
+void PHFemEngine::Set_dt(double dt){
+	_dt = dt;
 }
 
 bool PHFemEngine::AddChildObject(ObjectIf* o){

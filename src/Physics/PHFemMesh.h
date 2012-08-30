@@ -80,13 +80,13 @@ public:
 		PTM::TMatrixRow<4,4,double> matk[3];	//>	
 		//PTM::TMatrixRow<4,4,double> matk1;
 		//PTM::TMatrixRow<4,4,double> matk2;
-		PTM::TVector<4,double> vecf[4];			//>	
+		PTM::TVector<4,double> vecf[4];			//>	{f1}:vecf[0],{f2}:vecf[1],{f3}:vecf[2],...
 
 		//水分蒸発計算
 		double wratio;			//	含水率
 		double wmass;			//	水分量
 		double wmass_start;		//	水分量の初期値
-		double tetsMg;
+		double tetsMg;			//	質量
 
 	};
 	//	四面体の面。

@@ -53,13 +53,13 @@ protected:
 //	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
 	
 	//f3:外側の面に面している面のみ計算する　要注意
-	PTM::TVector<4,double> vecf3;
+	PTM::TVector<4,double> vecf3;				// 熱伝達境界条件
 	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
 	PTM::TVector<4,double> vecf3array[4];
 	//f1~f4を合算した縦ベクトル
-	PTM::TVector<4,double> vecf;			
-	PTM::TVector<4,double> vecf2;
-	PTM::TVector<4,double> vecf2array[4];
+	PTM::TVector<4,double> vecf;				// 熱
+	PTM::TVector<4,double> vecf2;				// 熱流束境界条件
+	PTM::TVector<4,double> vecf2array[4];		//
 //	PTM::VVector<double> Vechoge;
 	//	変数は小文字　関数は大文字
 
@@ -85,6 +85,7 @@ protected:
 	PTM::VMatrixRow<double> _dMatAll;
 	// ..ガウスザイデルの計算に用いる定数行列bの縦ベクトル	Rowである必要はあるのか？⇒Colにした
 	PTM::VMatrixCol<double> bVecAll;
+	PTM::VMatrixCol<double> bVecAll_IH;
 	//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
 
 	// 表示用	//デバッグ
@@ -264,6 +265,8 @@ public:
 	void UpdateheatTransRatio(unsigned id,double heatTransRatio);
 
 	// If としての実装
+	void PHFemMeshThermo::AddvecFAll(unsigned id,double dqdt);
+	// AddVecFAllが完成したら、消す
 	void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt);
 
 	//%%%%%%%%		熱伝導境界条件の設定関数の宣言		%%%%%%%%//
@@ -325,6 +328,9 @@ public:
 	//	ガウスザイデル計算で用いる関数群
 	//	..{F}の 全体 剛性ベクトル
 	PTM::VMatrixCol<double> vecFAll;			
+	PTM::VMatrixCol<double> vecFAll_f2IHw;		// 弱火ベクトル
+	PTM::VMatrixCol<double> vecFAll_f2IHm;		// 中火
+	PTM::VMatrixCol<double> vecFAll_f2IHs;		// 強火
 
 	///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
 	void CalcVtxDisFromOrigin();
@@ -379,6 +385,8 @@ public:
 
 public:
 	void DecrMoist();
+	void InitMoist();
+	void InitAllVertexTemp();
 
 
 };
