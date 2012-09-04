@@ -12,6 +12,10 @@ set PATH=%BIN%;%BIN%\swig
 
 call swig.exe -cpperraswarn -sprpy -c++ %MODULE%.i & if errorlevel 1 echo !!!!SWIG FAILED!!!!! & @pause
 
+call AStyle.exe  --style=allman --indent=tab "EP%MODULE%.cpp" "EP%MODULE%.h" "SprEP%MODULE%.h" & if errorlevel 1 @pause
+del /Q .\SprEP%MODULE%.*.orig
+del /Q .\EP%MODULE%.*.orig
+
 ren EP%MODULE%.cpp EP%MODULE%.cpp.tmp
 
 echo #include "%INCLUDE%/Springhead.h"                 > EP%MODULE%.cpp
