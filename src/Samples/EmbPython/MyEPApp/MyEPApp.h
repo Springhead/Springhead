@@ -6,6 +6,17 @@
 
 #include "windows.h"
 
+// 構造体を使うサンプル
+struct Hogeshi {
+	float  fuga;
+	double guho;
+	int    piyo;
+	bool   bOfu;
+
+	Hogeshi() {
+	}
+};
+
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // アプリケーションクラス
 class MyEPApp : public SampleApp{
@@ -27,6 +38,12 @@ public:
 
 	int argc;
 	char** argv;
+
+
+	// 構造体の配列へPythonからアクセス可能にするサンプル
+	std::vector<Hogeshi> vhoge;
+
+
 
 	MyEPApp(){
 		appName = "Python with Springhead";
