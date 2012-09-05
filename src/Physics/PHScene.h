@@ -54,6 +54,7 @@ class SPR_DLL PHScene : public Scene, public PHSceneDesc{
 public:
 	PHEngines				engines;
 protected:
+	/// 各種エンジン
 	PHSolidContainer*		solids;
 	PHPenaltyEngine*		penaltyEngine;
 	PHConstraintEngine*		constraintEngine;
@@ -62,6 +63,7 @@ protected:
 	PHRays					rays;
 	PHFemEngine*			femEngine;
 	PHHapticEngine*			hapticEngine;
+
 	double					timeStepInv;	///< timeStepの逆数．高速化用
 public:
 	
@@ -117,8 +119,6 @@ public:
 	PHRayIf*				CreateRay(const PHRayDesc& desc = PHRayDesc());
 	int						NRays() const;
 	PHRayIf*				GetRay(int i);
-	double					GetAirResistanceRate(){return airResistanceRate;}
-	void					SetAirResistanceRate(double rate){airResistanceRate =rate;}
 
 	PHIKActuatorIf*			CreateIKActuator(const IfInfo* ii, const PHIKActuatorDesc& desc = PHIKActuatorDesc());
 	int						NIKActuators();
@@ -132,17 +132,24 @@ public:
 	//void 					FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids);
 
 	/// 積分ステップを返す
-	double					GetTimeStep()const{return timeStep;}
+	double		GetTimeStep()const{return timeStep;}
 	/// 積分ステップを設定する
-	void					SetTimeStep(double dt);
+	void		SetTimeStep(double dt);
 	/// 力覚積分ステップを返す
-	double					GetHapticTimeStep()const{ return haptictimeStep; }
+	double		GetHapticTimeStep()const{ return haptictimeStep; }
 	/// 力覚積分ステップを設定する
-	void					SetHapticTimeStep(double dt){ haptictimeStep = dt; }
+	void		SetHapticTimeStep(double dt){ haptictimeStep = dt; }
 	/// カウント数を返す
-	unsigned				GetCount()const{return count;}
+	unsigned	GetCount()const{return count;}
 	/// カウント数を設定する
-	void					SetCount(unsigned c){count = c;}
+	void		SetCount(unsigned c){count = c;}
+	
+	void	SetGravity(const Vec3d& accel);
+	Vec3d	GetGravity();
+	
+	double	GetAirResistanceRate(){return airResistanceRate;}
+	void	SetAirResistanceRate(double rate){airResistanceRate =rate;}
+
 	///	シーンの時刻を進める ClearForce(); GenerateForce(); Integrate(); と同じ
 	void					Step();
 	///	シーンの時刻を進める（力のクリア）
@@ -153,10 +160,9 @@ public:
 	void					Integrate();
 	void					IntegratePart1();
 	void					IntegratePart2();
-	///	シーンを空にする．
-	void					Clear();
-	virtual void			SetGravity(const Vec3d& accel);
-	virtual Vec3d			GetGravity();
+	
+	void					StepHapticLoop();
+	
 	int						NEngines();
 	PHEngineIf*				GetEngine(int i);
 	PHConstraintEngineIf*	GetConstraintEngine();
@@ -166,14 +172,15 @@ public:
 	PHFemEngineIf*			GetFemEngine();
 	PHHapticEngineIf*		GetHapticEngine();
 	PHHapticPointerIf*		CreateHapticPointer();
-	void					StepHapticLoop();
-	ObjectIf*				CreateObject(const IfInfo* info, const void* desc);
+	void					SetStateMode(bool bConstraints);
+	
+	virtual void			Clear();
+	virtual ObjectIf*		CreateObject(const IfInfo* info, const void* desc);
 	virtual size_t			NChildObject() const;
 	virtual ObjectIf*		GetChildObject(size_t pos);
 	virtual bool			AddChildObject(ObjectIf* o);
 	virtual bool			DelChildObject(ObjectIf* o);	
-	virtual void			SetStateMode(bool bConstraints);
-
+	
 	ACCESS_DESC(PHScene);
 	virtual size_t GetStateSize() const;
 	virtual void ConstructState(void* m) const;

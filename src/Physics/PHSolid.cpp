@@ -202,7 +202,6 @@ bool PHSolid::DelChildObject(ObjectIf* obj){
 SpatialVector PHSolid::GetAcceleration() const {
 	return dv / ((PHScene*)GetScene())->GetTimeStep(); 
 }
-
 Vec3d PHSolid::GetDeltaPosition() const {
 	PHScene* s = DCAST(PHScene, nameManager);
 	return velocity * s->GetTimeStep();
@@ -244,8 +243,8 @@ void PHSolid::UpdateCacheLCP(double dt){
 	Quaterniond qc = GetOrientation().Conjugated();
 	f.v() = qc * nextForce;
 	f.w() = qc * nextTorque;
-	v.v() = qc * GetVelocity();
-	v.w() = qc * GetAngularVelocity();
+	v.v() = qc * velocity;
+	v.w() = qc * angVelocity;
 
 	// ツリーに属する場合はPHRootNode::SetupDynamicsでdvが計算される
 	if(IsArticulated())return;
@@ -299,9 +298,17 @@ void PHSolid::UpdateVelocity(double dt){
 }
 void PHSolid::UpdatePosition(double dt){
 	if(IsFrozen()) return;
+
+	// 移動後の質量中心位置
+	Vec3d pc = GetCenterPosition() + pose.Ori() * (v.v() * dt + dV.v());
+	// 向きの変化
+	Vec3d dq = v.w() * dt + dV.w();
+	pose.Ori() = (pose.Ori() * Quaterniond::Rot(dq)).unit();
+	// 質量中心位置から座標原点位置を求める
+	pose.Pos() = pc - pose.Ori() * center;
+
 	// SetOrientation -> SetCenterPositionの順に呼ぶ必要がある．逆だとSetOrientationによって重心位置がずれてしまう tazz
-	SetOrientation((GetOrientation() * Quaterniond::Rot(v.w() * dt + dV.w())).unit());
-	SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
+	//SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
 	//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
 	//solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */info->dW)).unit());
 }

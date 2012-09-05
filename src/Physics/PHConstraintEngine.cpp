@@ -195,11 +195,11 @@ PHConstraintEngineDesc::PHConstraintEngineDesc(){
 	numIterContactCorrection = 0;
 	velCorrectionRate		 = 0.3;
 	posCorrectionRate		 = 0.3;
+	contactCorrectionRate	 = 0.1;
 	shrinkRate				 = 0.7;
 	shrinkRateCorrection	 = 0.7;
 	freezeThreshold			 = 0.0;
 	accelSOR				 = 1.0;
-	contactCorrectionRate	 = 0.1;
 	bGearNodeReady	 = false;
 	bSaveConstraints = false;
 	bUpdateAllState	 = true;
@@ -305,14 +305,6 @@ bool PHConstraintEngine::AddChildObject(ObjectIf* o){
 	if(con){
 		con->engine = this;
 		joints.push_back(con);
-
-		/* 特定の関節種類のみ特別扱いするのは問題です　tazz
-		PH3ElementBallJoint* threeBallJoint = DCAST(PH3ElementBallJoint, o);
-		if(threeBallJoint){
-			threeBallJoints.push_back(threeBallJoint);
-			return true;
-		}*/
-
 		return true;
 	}
 	PHRootNode* root = DCAST(PHRootNode, o);
@@ -360,7 +352,6 @@ void PHConstraintEngine::UpdateGearNode(){
 }
 
 bool PHConstraintEngine::DelChildObject(ObjectIf* o){
-	
 	// ＊相互依存するオブジェクトの削除が必要だが未実装
 	if(Detector::DelChildObject(o))
 		return true;
@@ -409,22 +400,21 @@ bool PHConstraintEngine::DelChildObject(ObjectIf* o){
 void PHConstraintEngine::SetupLCP(){
 	/* 相互に依存関係があるので呼び出し順番には注意する */
 	
-	//ツリー構造の前処理(ABA関係)
+	// ツリー構造の前処理(ABA関係)
 	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
 		(*it)->SetupABA();
 
-	//接触拘束の前処理
+	// 接触拘束の前処理
 	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
 		(*it)->SetupLCP();
-	//関節拘束の前処理
+	
+	// 関節拘束の前処理
 	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
 		(*it)->SetupLCP();
-	//ギア拘束の前処理
+	
+	// ギア拘束の前処理
 	for(PHGears::iterator it = gears.begin(); it != gears.end(); it++)
 		(*it)->SetupLCP();
-	//ツリー構造の前処理
-	//for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-	//	(*it)->SetupLCP();
 
 }
 void PHConstraintEngine::SetupCorrectionLCP(){
@@ -452,8 +442,6 @@ void PHConstraintEngine::IterateLCP(){
 			(*it)->IterateLCP();
 		for(PHGears::iterator it = gears.begin(); it != gears.end(); it++)
 			(*it)->IterateLCP();
-		//for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-		//	(*it)->IterateLCP();
 		count++;
 	}
 }
@@ -491,11 +479,6 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 	}
 }
 
-// ほとんど同じ処理のためフラグ処理にしました．aliasしてますがobsoleteとします tazz
-//void PHConstraintEngine::UpdateOnlyVelocity(){
-//	UpdateSolids(true);
-//}
-
 #ifdef REPORT_TIME
 }
 #include <Foundation/UTPreciseTimer.h>
@@ -515,6 +498,7 @@ void PHConstraintEngine::StepPart1(){
 		UpdateGearNode();
 		bGearNodeReady = true;
 	}
+
 	//交差を検知
 	points.clear();
 #ifdef REPORT_TIME
@@ -538,9 +522,9 @@ void PHConstraintEngine::StepPart1(){
 void PHConstraintEngine::StepPart2(){
 	double dt = GetScene()->GetTimeStep();
 
-	//前回のStep以降に別の要因によって剛体の位置・速度が変化した場合
-	//ヤコビアン等の再計算
-	//各剛体の前処理
+	// 前回のStep以降に別の要因によって剛体の位置・速度が変化した場合
+	// ヤコビアン等の再計算
+	// 各剛体の前処理
 	for(PHSolids::iterator it = solids.begin(); it != solids.end(); it++)
 		(*it)->UpdateCacheLCP(dt);
 	for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
@@ -559,7 +543,7 @@ void PHConstraintEngine::StepPart2(){
 #endif
 	SetupCorrectionLCP();
 	IterateCorrectionLCP();
-	//位置・速度の更新
+	// 位置・速度の更新
 	UpdateSolids(!bUpdateAllState);
 
 	for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)

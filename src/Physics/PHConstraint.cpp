@@ -128,8 +128,7 @@ void PHConstraint::IterateLCP() {
 	for (int n=0; n<axes.size(); ++n) {
 		// Gauss-Seidel Iteration
 		int i = axes[n];
-		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i]*f[i] + b[i] + db[i] 
-				+ J[0].row(i)*solid[0]->dv + J[1].row(i)*solid[1]->dv);
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i]*f[i] + b[i] + db[i] + J[0].row(i)*solid[0]->dv + J[1].row(i)*solid[1]->dv);
 
 		// Projection
 		Projection(fnew[i], i);
@@ -151,8 +150,7 @@ void PHConstraint::SetupCorrectionLCP() {
 	CompError();
 	
 	// velocity updateによる影響を加算
-	B += (J[0] * (solid[0]->v + solid[0]->dv)
-			+ J[1] * (solid[1]->v + solid[1]->dv)) * GetScene()->GetTimeStep();
+	B += (J[0] * (solid[0]->v + solid[0]->dv) + J[1] * (solid[1]->v + solid[1]->dv)) * GetScene()->GetTimeStep();
 	B *= engine->posCorrectionRate;
 		
 	// 拘束力初期値による位置変化量を計算
@@ -232,10 +230,11 @@ void PHConstraint::CompResponseMatrix() {
 			if (solid[i]->IsArticulated()) {
 				// -- ABA --
 				for (int j=0; j<6; ++j) {
+					// ABAにdf = J^Tを入力することでM^-1 J^Tを計算し，結果にJをかけてAを得る
 					(Vec6d&)df = J[i].row(j);
 					solid[i]->treeNode->CompResponse(df, false, false);
 					A[j] += J[i].row(j) * solid[i]->treeNode->da;
-					//もう片方の剛体も同一のツリーに属する場合はその影響項も加算
+					// もう片方の剛体も同一のツリーに属する場合はその影響項も加算
 					if(solid[!i]->IsArticulated() && root[i] == root[!i]) {
 						A[j] += J[!i].row(j) * solid[!i]->treeNode->da;
 					}

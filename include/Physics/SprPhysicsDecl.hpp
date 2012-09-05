@@ -400,8 +400,8 @@
 	void SetFramePosition(const Vec3d& p){	base::SetFramePosition(p);}	\
 	Vec3d GetCenterPosition()const{	return	base::GetCenterPosition();}	\
 	void SetCenterPosition(const Vec3d& p){	base::SetCenterPosition(p);}	\
-	Vec3d GetDeltaPosition(const Vec3d& p)const{	return	base::GetDeltaPosition(p);}	\
 	Vec3d GetDeltaPosition()const{	return	base::GetDeltaPosition();}	\
+	Vec3d GetDeltaPosition(const Vec3d& p)const{	return	base::GetDeltaPosition(p);}	\
 	Quaterniond GetOrientation()const{	return	base::GetOrientation();}	\
 	void SetOrientation(const Quaterniond& q){	base::SetOrientation(q);}	\
 	Posed GetPose()const{	return	base::GetPose();}	\

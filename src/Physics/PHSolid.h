@@ -256,10 +256,10 @@ public:
 		return velocity + (angVelocity^(posW - pose*center));
 	}
 
-	///	速度と角速度をまとめて取得
-	SpatialVector GetSpatialVelocity() const { return SpatialVector(velocity,angVelocity); }
+	///	質量中心の速度と角速度をまとめて取得
+	SpatialVector GetSpatialVelocity() const { return SpatialVector(velocity, angVelocity); }
 
-	///	（最後のStep()での）剛体の加速度
+	///	（最後のStep()での）剛体の質量中心の加速度
 	SpatialVector GetAcceleration() const;
 
 	///	shapeの数。

@@ -30,12 +30,12 @@ struct PHFrameIf: public SceneObjectIf{
 
 ///	剛体のステート
 struct PHSolidState{
-	Vec3d		velocity;		///<	速度			(World系)
-	Vec3d		angVelocity;	///<	角速度			(World系)
-//	Vec3d		lastVelocity;	///<	前回の速度		(World系)
-//	Vec3d		lastAngVelocity;///<	前回の角速度	(World系)
-	Posed		pose;			///<	位置と向き		(World系)
-//	Posed		lastPose;		///<	前回の位置と向き(World系)
+	Vec3d		velocity;		///<	質量中心の速度		(World系)
+	Vec3d		angVelocity;	///<	角速度				(World系)
+//	Vec3d		lastVelocity;	///<	前回の速度			(World系)
+//	Vec3d		lastAngVelocity;///<	前回の角速度			(World系)
+	Posed		pose;			///<	座標原点の位置と向き	(World系)
+//	Posed		lastPose;		///<	前回の位置と向き		(World系)
 };
 
 ///	剛体のディスクリプタ
@@ -71,8 +71,8 @@ struct PHSolidIf : public SceneObjectIf{
 	void AddTorque(Vec3d t);
 	
 	/**	@brief 力を指定した作用点に加える
-		@param f 力
-		@param r シーン座標系で表わした作用点の位置
+		@param f 力（ワールド座標系）
+		@param r 作用点の位置（ワールド座標系）
 	 */
 	void AddForce(Vec3d f, Vec3d r);
 
@@ -92,12 +92,12 @@ struct PHSolidIf : public SceneObjectIf{
 	void		SetMass(double m);
 	
 	/** @brief 質量中心を取得する
-		@return 質量中心の位置(Local)
+		@return 質量中心の位置(剛体座標系)
 	 */
 	Vec3d		GetCenterOfMass();
 	
 	/** @brief 質量中心を設定する
-		@param center 質量中心の位置(Local)
+		@param center 質量中心の位置(剛体座標系)
 	 */
 	void		SetCenterOfMass(const Vec3d& center);
 	
@@ -141,15 +141,11 @@ struct PHSolidIf : public SceneObjectIf{
 	void		SetCenterPosition(const Vec3d& p);
 	
 	/** @brief 剛体の前のステップからの並進移動量を返す
-		@return 前のステップからの並進移動量
-	 */
-	Vec3d GetDeltaPosition(const Vec3d& p) const;
-
-	/** @brief 剛体の前のステップからの並進移動量を返す．
 		@param pos 重心からの相対位置．この位置の並進移動量を返す．
 		@return 前のステップからの並進移動量
-	*/
+	 */
 	Vec3d GetDeltaPosition() const;
+	Vec3d GetDeltaPosition(const Vec3d& p) const;
 
 	/** @brief 剛体の向きを取得する
 		@return シーンに対する剛体の向き
