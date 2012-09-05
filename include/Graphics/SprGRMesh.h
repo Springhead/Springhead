@@ -74,6 +74,12 @@ struct GRMeshIf: public GRVisualIf{
 	/// スキンウェイトの作成
 	GRSkinWeightIf* CreateSkinWeight(const GRSkinWeightDesc& desc);
 
+	/** bounding boxを計算
+		@param bbmin
+		@param bbmax
+		@param aff		AABBを定義する座標系との変換
+	 */
+	void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Affinef& aff = Affinef());
 };
 
 ///	@brief 表示用のMesh(GRMesh)のデスクリプタ．

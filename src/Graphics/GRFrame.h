@@ -54,26 +54,30 @@ public:
 
 	GRFrame(const GRFrameDesc& desc=GRFrameDesc());
 
-	GRSceneIf* GetScene(){return DCAST(GRSceneIf, GRVisual::GetScene());}
-	
+	// インタフェースの実装
+	GRSceneIf*   GetScene(){return DCAST(GRSceneIf, GRVisual::GetScene());}
+	GRFrameIf*   GetParent(){ return parent->Cast(); }
+	void         SetParent(GRFrameIf* fr);
+	int          NChildren(){ return (int)children.size(); }
+	GRVisualIf** GetChildren(){ return children.empty() ? NULL : (GRVisualIf**)&*children.begin(); }
+	Affinef      GetWorldTransform(){ if (parent) return parent->GetWorldTransform() * transform; return transform; }
+	Affinef      GetTransform(){ return transform; }
+	void         SetTransform(const Affinef& af){ transform = af; }
+	bool         CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Affinef& aff = Affinef());
+
+	// Objectの仮想関数
 	virtual SceneObjectIf* CloneObject(); 
-	virtual GRFrameIf* GetParent(){ return parent->Cast(); }
-	virtual void SetParent(GRFrameIf* fr);
-	virtual int NChildren(){ return (int)children.size(); }
-	virtual GRVisualIf** GetChildren(){ return children.empty() ? NULL : (GRVisualIf**)&*children.begin(); }
 	virtual bool AddChildObject(ObjectIf* v);
 	virtual bool DelChildObject(ObjectIf* v);
-
-	virtual void Render(GRRenderIf* r);
-	virtual void Rendered(GRRenderIf* r);
 	virtual size_t NChildObject() const;
 	virtual ObjectIf* GetChildObject(size_t pos);
-	virtual Affinef GetWorldTransform(){ if (parent) return parent->GetWorldTransform() * transform; return transform; }
-	virtual Affinef GetTransform(){ return transform; }
-	virtual void SetTransform(const Affinef& af){ transform = af; }
 	virtual void Clear(){children.clear();}
-	void Print(std::ostream& os) const ;
+	virtual void Print(std::ostream& os) const ;
 
+	// GRVisualの仮想関数
+	virtual void Render(GRRenderIf* r);
+	virtual void Rendered(GRRenderIf* r);
+	
 	// Keyframe Blending based on Radial Basis Function 
 	std::vector< PTM::VVector<float> > kfPositions;
 	PTM::VVector<float> kfAffines[4][4], kfCoeffs[4][4];

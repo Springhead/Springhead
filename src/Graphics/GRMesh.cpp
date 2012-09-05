@@ -54,6 +54,32 @@ GRMesh::~GRMesh(){
 		render->ReleaseList(list);
 }
 
+void GRMesh::DuplicateVertices(){
+	// faceNormals���w�肳��Ă���ꍇ�C�ʓ��m�ł̋��L�����邽�ߒ��_�Ɩ@���𕡐�����
+	if(faceNormals.empty())
+		return;
+
+	int nVertices = 0;
+	for(int i = 0; i < (int)faces.size(); i++){
+		nVertices += faces[i].nVertices;
+	}
+	vector<Vec3f>	newVertices(nVertices);
+	vector<Vec3f>	newNormals(nVertices);
+
+	int idx = 0;
+	for(int i = 0; i < (int)faces.size(); i++){
+		for(int j = 0; j < faces[i].nVertices; j++){
+			newVertices[idx] = vertices[faces[i].indices[j]];
+			newNormals[idx] = normals[faceNormals[i].indices[j]];
+			faces[i].indices[j] = idx;
+			faceNormals[i].indices[j] = idx;
+			idx++;
+		}
+	}
+	vertices.swap(newVertices);
+	normals.swap(newNormals);
+}
+
 void GRMesh::DecomposeFaces(){
 	// 面の3角形分割
 	//orgFaceIds.clear();
@@ -119,15 +145,28 @@ void GRMesh::GenerateNormals(){
 }
 
 void GRMesh::AfterSetDesc(){
-	DecomposeFaces();
 	if(normals.empty())
 		GenerateNormals();
+	//DuplicateVertices();
+	DecomposeFaces();
 }
 
 GRSkinWeightIf* GRMesh::CreateSkinWeight(const GRSkinWeightDesc& desc){
 	GRSkinWeight* sw = DBG_NEW GRSkinWeight(desc);
 	AddChildObject(sw->Cast());
 	return sw->Cast();
+}
+
+void GRMesh::CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Affinef& aff){
+	for(unsigned i = 0; i < vertices.size(); i++){
+		Vec3f v = aff * vertices[i];
+		bbmin.x = std::min(bbmin.x, v.x);
+		bbmin.y = std::min(bbmin.y, v.y);
+		bbmin.z = std::min(bbmin.z, v.z);
+		bbmax.x = std::max(bbmax.x, v.x);
+		bbmax.y = std::max(bbmax.y, v.y);
+		bbmax.z = std::max(bbmax.z, v.z);
+	}
 }
 
 void GRMesh::SwitchCoordinate(){
@@ -145,229 +184,190 @@ void GRMesh::SwitchCoordinate(){
 	}
 }
 
+template<class T>
+inline void CopyVertices(T* v, const vector<Vec3f>& vertices){
+	for (int i = 0; i < (int)vertices.size(); ++i)
+		v[i].p = vertices[i];
+}
+template<class T>
+inline void CopyVerticesAndWeights(T* v, const vector<Vec3f>& vertices){
+	for (int i = 0; i < (int)vertices.size(); ++i){
+		v[i].p.x = vertices[i].x;
+		v[i].p.y = vertices[i].y;
+		v[i].p.z = vertices[i].z;
+		v[i].p.w = 1;
+	}
+}
+template<class T>
+inline void CopyNormals(T* v, const vector<Vec3f>& normals){
+	for (int i = 0; i < (int)normals.size(); ++i)
+		v[i].n = normals[i];
+}
+template<class T>
+inline void CopyColors(T* v, const vector<Vec4f>& colors){
+	for(int i = 0; i < (int)colors.size(); ++i)
+		v[i].c = colors[i];
+}
+template<class T>
+inline void CopyColorsInt(T* v, const vector<Vec4f>& colors){
+	for (int i = 0; i < (int)colors.size(); ++i)
+		v[i].c = ((unsigned char)(colors[i].x*255)) | ((unsigned char)(colors[i].y*255) << 8) | ((unsigned char)(colors[i].z*255) << 16) | ((unsigned char)(colors[i].w*255) << 24);
+}
+template<class T>
+inline void CopyTexCoords(T* v, const vector<Vec2f>& texCoords){
+	for (int i = 0; i < (int)texCoords.size(); ++i)
+		v[i].t = texCoords[i];
+}
+template<class T>
+inline void CopyTexCoords3D(T* v, const vector<Vec2f>& texCoords){
+	for (int i = 0; i < (int)texCoords.size(); ++i){
+		v[i].t.x = texCoords[i].x;
+		v[i].t.y = texCoords[i].y;
+		v[i].t.z = 0.0f;
+		v[i].t.w = 1.0f;
+	}
+}
+// �ȉ��Cw��0�ɐݒ肵�Ă���̂��Ӑ}�I�Ȃ̂��o�O�Ȃ̂��s��
+template<class T>
+inline void CopyTexCoords3D2(T* v, const vector<Vec2f>& texCoords){
+	for (int i = 0; i < (int)texCoords.size(); ++i){
+		v[i].t.x = texCoords[i].x;
+		v[i].t.y = texCoords[i].y;
+		v[i].t.z = 0.0f;
+		v[i].t.w = 0.0f;
+	}
+}
+
 void GRMesh::MakeBuffer(){
 	vtxs.clear();
 
 	int nVtxs = max(max((int)vertices.size(), (int)normals.size()), max((int)colors.size(), (int)texCoords.size()));
 	
 	if (tex3d && texCoords.size() && normals.size()){
-		stride		 = sizeof(GRVertexElement::VFT4fC4fN3fP4f)/sizeof(float);
-		normalOffset = (float*)(((GRVertexElement::VFT4fC4fN3fP4f*)NULL)->n) - (float*)NULL;
+		stride         = sizeof(GRVertexElement::VFT4fC4fN3fP4f)/sizeof(float);
+		normalOffset   = (float*)(((GRVertexElement::VFT4fC4fN3fP4f*)NULL)->n) - (float*)NULL;
 		positionOffset = (float*)(((GRVertexElement::VFT4fC4fN3fP4f*)NULL)->p) - (float*)NULL;
-		texOffset	 = (float*)(((GRVertexElement::VFT4fC4fN3fP4f*)NULL)->t) - (float*)NULL;
+		texOffset      = (float*)(((GRVertexElement::VFT4fC4fN3fP4f*)NULL)->t) - (float*)NULL;
 		
-		//vtxs = DBG_NEW float[stride * nVtxs];
 		vtxs.resize(stride * nVtxs);
+		vtxFormat = GRVertexElement::vfT4fC4fN3fP4f;
 		GRVertexElement::VFT4fC4fN3fP4f* v = (GRVertexElement::VFT4fC4fN3fP4f*)&vtxs[0];
 		
-		/// 頂点座標
-		for (int i = 0; i < (int)vertices.size(); ++i){
-			v[i].p.x = vertices[i].x;
-			v[i].p.y = vertices[i].y;
-			v[i].p.z = vertices[i].z;
-			v[i].p.w = 1;
-		}
-
-		/// 法線
-		if(faceNormals.size())
-			for(int i = 0; i < (int)faces.size(); ++i)
-				for(int j = 0; j < (int)faces[i].nVertices; j++)
-					v[faces[i].indices[j]].n = normals[faceNormals[i].indices[j]];
-		else
-			for(int i = 0; i < (int)normals.size(); ++i)
-				v[i].n = normals[i];
-
-		/// 頂点色
-		for(int i = 0; i < (int)colors.size(); ++i)
-			v[i].c = colors[i];
-
-		/// テクスチャ座標
-		for (int i = 0; i < (int)texCoords.size(); ++i){
-			v[i].t.x = texCoords[i].x;
-			v[i].t.y = texCoords[i].y;
-			v[i].t.z = 0.0f;
-			v[i].t.w = 1.0f;
-		}
-		vtxFormat = GRVertexElement::vfT4fC4fN3fP4f;
+		CopyVerticesAndWeights(v, vertices);
+		CopyNormals(v, normals);
+		CopyColors(v, colors);
+		CopyTexCoords3D(v, texCoords);
 	}
 	else if (texCoords.size() && normals.size() && colors.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fC4fN3fP3f)/sizeof(float);
 		normalOffset = (float*)(((GRVertexElement::VFT2fC4fN3fP3f*)NULL)->n) - (float*)NULL;
 		positionOffset = (float*)(((GRVertexElement::VFT2fC4fN3fP3f*)NULL)->p) - (float*)NULL;
 		texOffset	 = (float*)(((GRVertexElement::VFT2fC4fN3fP3f*)NULL)->t) - (float*)NULL;
+		
 		vtxs.resize(stride * nVtxs);
+		vtxFormat = GRVertexElement::vfT2fC4fN3fP3f;
 		GRVertexElement::VFT2fC4fN3fP3f* v = (GRVertexElement::VFT2fC4fN3fP3f*)&vtxs[0];
 		
-		for (int i = 0; i < (int)vertices.size(); ++i)
-			v[i].p = vertices[i];
-
-		if(faceNormals.size())
-			for (int i = 0; i < (int)faces.size(); ++i)
-				for(int j = 0; j < faces[i].nVertices; j++)
-					v[faces[i].indices[j]].n = normals[faceNormals[i].indices[j]];
-		else
-			for (int i = 0; i < (int)normals.size(); ++i)
-				v[i].n = normals[i];
-
-		if (colors.size())
-			for (int i = 0; i < (int)colors.size(); ++i)
-				v[i].c = colors[i];
-		else 
-			for (int i = 0; i < (int)vertices.size(); ++i)
-				v[i].c = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-		for (int i = 0; i < (int)texCoords.size(); ++i)
-			v[i].t = texCoords[i];
-
-		vtxFormat = GRVertexElement::vfT2fC4fN3fP3f;
+		CopyVertices(v, vertices);
+		CopyNormals(v, normals);
+		CopyColors(v, colors);
+		CopyTexCoords(v, texCoords);
 	}
 	else if (texCoords.size() && normals.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fN3fP3f)/sizeof(float);
 		normalOffset = (float*)(((GRVertexElement::VFT2fN3fP3f*)NULL)->n) - (float*)NULL;
 		positionOffset = (float*)(((GRVertexElement::VFT2fN3fP3f*)NULL)->p) - (float*)NULL;
 		texOffset	 = (float*)(((GRVertexElement::VFT2fN3fP3f*)NULL)->t) - (float*)NULL;		
+		
 		vtxs.resize(stride * nVtxs);
+		vtxFormat = GRVertexElement::vfT2fN3fP3f;
 		GRVertexElement::VFT2fN3fP3f* v = (GRVertexElement::VFT2fN3fP3f*)&vtxs[0];
 
-		for(int i = 0; i < (int)vertices.size(); ++i)
-			v[i].p = vertices[i];
-
-		if(faceNormals.size())
-			for(int i = 0; i < (int)faces.size(); ++i)
-				for(int j = 0; j < faces[i].nVertices; ++j)
-					v[faces[i].indices[j]].n = normals[faceNormals[i].indices[j]];
-		else
-			for(int i = 0; i < (int)normals.size(); ++i)
-				v[i].n = normals[i];
-
-		for(int i = 0; i < (int)texCoords.size(); ++i)
-			v[i].t = texCoords[i];
-
-		vtxFormat = GRVertexElement::vfT2fN3fP3f;
+		CopyVertices(v, vertices);
+		CopyNormals(v, normals);
+		CopyTexCoords(v, texCoords);
 	}
 	else if (texCoords.size() && colors.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fC4bP3f)/sizeof(float);
 		positionOffset = (float*)(((GRVertexElement::VFT2fC4bP3f*)NULL)->p) - (float*)NULL;
 		texOffset	 = (float*)(((GRVertexElement::VFT2fC4bP3f*)NULL)->t) - (float*)NULL;
+		
 		vtxs.resize(stride * nVtxs);
+		vtxFormat = GRVertexElement::vfT2fC4bP3f;
 		GRVertexElement::VFT2fC4bP3f* v = (GRVertexElement::VFT2fC4bP3f*)&vtxs[0];
 
-		for (int i = 0; i < (int)vertices.size(); ++i)
-			v[i].p = vertices[i];
-
-		for (int i = 0; i < (int)colors.size(); ++i)
-			v[i].c = ((unsigned char)(colors[i].x*255)) |
-					 ((unsigned char)(colors[i].y*255) << 8) |
-					 ((unsigned char)(colors[i].z*255) << 16) |
-					 ((unsigned char)(colors[i].w*255) << 24);
-
-		for (int i = 0; i < (int)texCoords.size(); ++i)
-			v[i].t = texCoords[i];
-
-		vtxFormat = GRVertexElement::vfT2fC4bP3f;
+		CopyVertices(v, vertices);
+		CopyColorsInt(v, colors);
+		CopyTexCoords(v, texCoords);
 	}
 	else if (normals.size() && colors.size()){
 		stride		 = sizeof(GRVertexElement::VFC4fN3fP3f)/sizeof(float);
 		normalOffset = (float*)(((GRVertexElement::VFC4fN3fP3f*)NULL)->n) - (float*)NULL;
 		positionOffset = (float*)(((GRVertexElement::VFC4fN3fP3f*)NULL)->p) - (float*)NULL;
+		
 		vtxs.resize(stride * nVtxs);
+		vtxFormat = GRVertexElement::vfC4fN3fP3f;
 		GRVertexElement::VFC4fN3fP3f* v = (GRVertexElement::VFC4fN3fP3f*)&vtxs[0];
 
-		for (int i = 0; i < (int)vertices.size(); ++i)
-			v[i].p = vertices[i];
-
-		if(faceNormals.size())
-			for(int i = 0; i < (int)faces.size(); ++i)
-				for(int j = 0; j < faces[i].nVertices; ++j)
-					v[faces[i].indices[j]].n = normals[faceNormals[i].indices[j]];
-		else
-			for(int i = 0; i < (int)normals.size(); ++i)
-				v[i].n = normals[i];
-		
-		for(int i = 0; i < (int)colors.size(); ++i)
-			v[i].c = colors[i];
-
-		vtxFormat = GRVertexElement::vfC4fN3fP3f;
+		CopyVertices(v, vertices);
+		CopyNormals(v, normals);
+		CopyColors(v, colors);
 	}
 	else if (normals.size()){
 		stride		 = sizeof(GRVertexElement::VFN3fP3f)/sizeof(float);
 		normalOffset = (float*)(((GRVertexElement::VFN3fP3f*)NULL)->n) - (float*)NULL;
 		positionOffset = (float*)(((GRVertexElement::VFN3fP3f*)NULL)->p) - (float*)NULL;
+		
 		vtxs.resize(stride * nVtxs);
+		vtxFormat = GRVertexElement::vfN3fP3f;
 		GRVertexElement::VFN3fP3f* v = (GRVertexElement::VFN3fP3f*)&vtxs[0];
 
-		for(int i = 0; i < (int)vertices.size(); ++i)
-			v[i].p = vertices[i];
-
-		if(faceNormals.size())
-			for(int i = 0; i < (int)faces.size(); ++i)
-				for(int j = 0; j < faces[i].nVertices; ++j)
-					v[faces[i].indices[j]].n = normals[faceNormals[i].indices[j]];
-		else
-			for(int i = 0; i < (int)normals.size(); ++i)
-				v[i].n = normals[i];
-		
-		vtxFormat = GRVertexElement::vfN3fP3f;
+		CopyVertices(v, vertices);
+		CopyNormals(v, normals);
 	}
 	else if (tex3d && texCoords.size()){
 		stride		 = sizeof(GRVertexElement::VFT4fP4f)/sizeof(float);
 		positionOffset = (float*)(((GRVertexElement::VFT4fP4f*)NULL)->p) - (float*)NULL;
 		texOffset	 = (float*)(((GRVertexElement::VFT4fP4f*)NULL)->t) - (float*)NULL;
+		
 		vtxs.resize(stride * nVtxs);
+		vtxFormat = GRVertexElement::vfT4fP4f;
 		GRVertexElement::VFT4fP4f* v = (GRVertexElement::VFT4fP4f*)&vtxs[0];
 
-		for (int i = 0; i < (int)vertices.size(); ++i)
-			v[i].p = vertices[i];
-
-		for (int i=0; i < (int)texCoords.size(); ++i){
-			v[i].t.x = texCoords[i].x;
-			v[i].t.y = texCoords[i].y;
-			v[i].t.z = 0.0f;
-			v[i].t.w = 0.0f;
-		}
-		vtxFormat = GRVertexElement::vfT4fP4f;
+		CopyVertices(v, vertices);
+		CopyTexCoords3D2(v, texCoords);
 	}
 	else if (texCoords.size()){
 		stride		 = sizeof(GRVertexElement::VFT2fP3f)/sizeof(float);
 		positionOffset = (float*)(((GRVertexElement::VFT2fP3f*)NULL)->p) - (float*)NULL;
+		
 		vtxs.resize(stride * nVtxs);
+		vtxFormat = GRVertexElement::vfT2fP3f;
 		GRVertexElement::VFT2fP3f* v = (GRVertexElement::VFT2fP3f*)&vtxs[0];
 
-		for (int i = 0; i < (int)vertices.size(); ++i)
-			v[i].p = vertices[i];
-
-		for (int i = 0; i < (int)texCoords.size(); ++i)
-			v[i].t = texCoords[i];
-
-		vtxFormat = GRVertexElement::vfT2fP3f;
+		CopyVertices(v, vertices);
+		CopyTexCoords(v, texCoords);
 	}
 	else if (colors.size()){
 		stride		 = sizeof(GRVertexElement::VFC4bP3f)/sizeof(float);
 		positionOffset = (float*)(((GRVertexElement::VFC4bP3f*)NULL)->p) - (float*)NULL;
+		
 		vtxs.resize(stride * nVtxs);
+		vtxFormat = GRVertexElement::vfC4bP3f;
 		GRVertexElement::VFC4bP3f* v = (GRVertexElement::VFC4bP3f*)&vtxs[0];
 
-		for (int i = 0; i < (int)vertices.size(); ++i)
-			v[i].p = vertices[i];
-
-		for (int i = 0; i < (int)colors.size(); ++i)
-			v[i].c = ((unsigned char)(colors[i].x*255)) |
-					 ((unsigned char)(colors[i].y*255) << 8) |
-					 ((unsigned char)(colors[i].z*255) << 16) |
-					 ((unsigned char)(colors[i].w*255) << 24);
-
-		vtxFormat = GRVertexElement::vfC4bP3f;
+		CopyVertices(v, vertices);
+		CopyColorsInt(v, colors);
 	}
 	else{
 		stride		 = sizeof(GRVertexElement::VFP3f)/sizeof(float);
 		positionOffset = (float*)(((GRVertexElement::VFP3f*)NULL)->p) - (float*)NULL;
+		
 		vtxs.resize(stride * nVtxs);
+		vtxFormat = GRVertexElement::vfP3f;
 		GRVertexElement::VFC4bP3f* v = (GRVertexElement::VFC4bP3f*)&vtxs[0];
 
-		for (int i = 0; i < (int)vertices.size(); ++i)
-			v[i].p = vertices[i];
-
-		vtxFormat = GRVertexElement::vfP3f;
+		CopyVertices(v, vertices);
 	}
 
 	blendedVtxs.clear();
