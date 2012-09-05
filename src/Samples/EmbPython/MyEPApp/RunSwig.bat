@@ -24,6 +24,7 @@ echo #include "%INCLUDE%/EmbPython/SprEPUtility.h"    >> EP%MODULE%.cpp
 echo #include "%INCLUDE%/EmbPython/SprEPBase.h"       >> EP%MODULE%.cpp
 echo #include "%INCLUDE%/EmbPython/SprEPFoundation.h" >> EP%MODULE%.cpp
 echo #include "%MODULE%.h"                            >> EP%MODULE%.cpp
+echo #include "SprEP%MODULE%.h"                       >> EP%MODULE%.cpp
 echo #pragma warning(disable:4244)                    >> EP%MODULE%.cpp
 
 type EP%MODULE%.cpp.tmp >> EP%MODULE%.cpp
