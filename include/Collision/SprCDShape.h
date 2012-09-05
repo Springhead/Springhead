@@ -71,17 +71,17 @@ struct CDShapeIf : public NamedObjectIf{
 	/// 摩擦ダンパ係数の取得
 	float	GetFrictionDamper();
 
-	void SetVibration(float vibA, float vibB, float vibW);
-	void SetVibA(float vibA);
-	float GetVibA();
-	void SetVibB(float vibB);
-	float GetVibB();
-	void SetVibW(float vibW);
-	float GetVibW();
-	void SetVibT(float vibT);
-	float GetVibT();
-	void SetVibContact(bool vibContact);
-	bool GetVibContact();
+	void    SetVibration(float vibA, float vibB, float vibW);
+	void    SetVibA(float vibA);
+	float   GetVibA();
+	void    SetVibB(float vibB);
+	float   GetVibB();
+	void    SetVibW(float vibW);
+	float   GetVibW();
+	void    SetVibT(float vibT);
+	float   GetVibT();
+	void    SetVibContact(bool vibContact);
+	bool    GetVibContact();
 
 	/// 物性をまとめて取得
 	const PHMaterial&	GetMaterial();
@@ -89,11 +89,36 @@ struct CDShapeIf : public NamedObjectIf{
 	void				SetMaterial(const PHMaterial& mat);
 
 	/// 幾何計算
-	float	CalcVolume();			///< 体積を計算
-	Vec3f	CalcCenterOfMass();		///< 質量中心
-	Matrix3f CalcMomentOfInertia();	///< 質量当たりの質量中心に関する慣性行列（massを掛けて使う）
 
+	/** 体積を計算
+		@return 形状の体積
+	 */
+	float	 CalcVolume();
 
+	/** 質量中心を計算
+		@return 形状の質量中心の位置
+	 */
+	Vec3f	 CalcCenterOfMass();
+
+	/** 慣性モーメントを計算
+		@return 単位質量当たりの質量中心に関する慣性行列を計算する．
+	 */
+	Matrix3f CalcMomentOfInertia();
+
+	/** 点との交差判定
+		@param	p	判定点
+		@return		形状の境界上あるいは内部ならtrue
+		点pが形状に含まれるか判定する
+	 */
+	void     IsInside(const Vec3f& p);
+
+	/** bounding boxを計算
+		@param bbmin	bounding boxの下限
+		@param bbmax	bounding boxの上限
+		@param pose		bounding boxを定義する座標変換
+		形状の位置と向きがposeで与えられたときの，その座標系に関するaxis-aligned bounding box (AABB)を計算する．
+	 */
+	void     CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose = Posed());
 };
 
 ///	形状ペアの基本クラス

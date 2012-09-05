@@ -31,6 +31,8 @@
 	float CalcVolume(){	return	base::CalcVolume();}	\
 	Vec3f CalcCenterOfMass(){	return	base::CalcCenterOfMass();}	\
 	Matrix3f CalcMomentOfInertia(){	return	base::CalcMomentOfInertia();}	\
+	void IsInside(const Vec3f& p){	base::IsInside(p);}	\
+	void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose){	base::CalcBBox(bbmin, bbmax, pose);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_CDShapePairIf(base)	\
 	Spr::CDShapeIf* GetShape(int i){	return	base::GetShape(i);}	\
