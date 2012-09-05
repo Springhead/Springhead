@@ -8,7 +8,7 @@
 // DRUsb20Sh4.cpp: DRUsb20Sh4 クラスのインプリメンテーション
 //
 //////////////////////////////////////////////////////////////////////
-#include <Springhead.h>
+//#include <Springhead.h>
 #ifdef USE_CLOSED_SRC
 #include "../../closed/HumanInterface/DRUsb20Sh4.cpp"
 #else
