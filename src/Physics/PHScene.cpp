@@ -30,6 +30,7 @@ void PHScene::Init(){
 	engines.scene = this;
 	Scene::Clear();
 
+	// エンジン作成
 	solids = DBG_NEW PHSolidContainer;
 	engines.Add(solids);
 	PHSolidInitializer* si = DBG_NEW PHSolidInitializer;
@@ -62,10 +63,12 @@ void PHScene::Init(){
 void PHScene::AfterSetDesc(){
 	gravityEngine->accel = gravity;
 	constraintEngine->numIter = numIteration;
-	timeStepInv = 1.0/timeStep;	
+	timeStepInv = 1.0/timeStep;
+
 }
 void PHScene::BeforeGetDesc() const{
 	// EngineのAPIを介して変更される可能性もあるので
+	// BeforeGetDescがconst仕様なのでcastが必要
 	(Vec3d&)gravity = gravityEngine->accel;
 	(int&)numIteration = constraintEngine->numIter;
 }

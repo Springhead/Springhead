@@ -108,7 +108,14 @@ public:
 	/// Projection用の各軸のMin/Max
 	double fMaxDt[6], fMinDt[6];
 
-	// ----- 拘束軸管理
+	/** ----- 拘束軸管理
+		拘束空間は全6自由度（並進x,y,z + 回転x,y,z）．
+		- movableAxes : 可動自由度の集合
+		- targetAxes  : 拘束自由度の集合．movableAxesの補集合
+		
+		- movableAxesに属する自由度は，モータ有効時や可動範囲境界にある場合に動的に拘束対象となる．
+		  axesは拘束自由度および動的に拘束対象となっている可動自由度の両方を保持し，かつ前ステップからの拘束状態の切り替わりを記憶する．
+	 */
 
 	/// 拘束軸管理クラス
 	AxisIndex<6> axes;

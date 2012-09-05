@@ -97,7 +97,7 @@ struct PHSceneDesc: public PHSceneState{
 	Vec3d	gravity;			///< 重力加速度ベクトル
 	double	airResistanceRate;	///< 毎ステップ剛体の速度に掛けられる倍率
 	int		numIteration;		///< LCPの反復回数
-
+	
 	PHSceneDesc(){Init();}
 	void Init(){
 		PHSceneState::Init();
