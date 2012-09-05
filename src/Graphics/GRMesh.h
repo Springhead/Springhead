@@ -57,6 +57,8 @@ protected:
 	void DecomposeFaces();
 	/// 法線自動生成
 	void GenerateNormals();
+	/// ���_����
+	void DuplicateVertices();
 
 	virtual void AfterSetDesc();
 public:
@@ -100,11 +102,6 @@ public:
 	void	EnableTex3D(bool on = true){ tex3d = on; }
 	bool	IsTex3D(){ return tex3d; }						///< 3次元テクスチャなら true
 
-	GRMesh(const GRMeshDesc& desc=GRMeshDesc());
-	~GRMesh();
-	void Render(GRRenderIf* r);
-	void Rendered(GRRenderIf* r);
-
 	int		NVertex(){ return (int)vertices.size(); }
 	int		NFace(){ return (int)faces.size(); }
 	int		NTriangle(){ return (int)triFaces.size()/3; }
@@ -121,14 +118,21 @@ public:
 
 	GRSkinWeightIf* CreateSkinWeight(const GRSkinWeightDesc& desc);
 	
+	void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Affinef& aff = Affinef());
+	
+	// Objectの仮想関数
 	virtual bool AddChildObject(ObjectIf* o);
-	///	子オブジェクトの数
 	virtual size_t NChildObject() const ;
-	///	子オブジェクトの取得
 	virtual ObjectIf* GetChildObject(size_t pos) ;
-	///
-	void Print(std::ostream& os) const ;
+	virtual void Print(std::ostream& os) const ;
 
+	// GRVisualの仮想関数
+	virtual void Render(GRRenderIf* r);
+	virtual void Rendered(GRRenderIf* r);
+
+	GRMesh(const GRMeshDesc& desc=GRMeshDesc());
+	~GRMesh();
+	
 };
 
 }

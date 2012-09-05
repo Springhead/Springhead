@@ -318,6 +318,22 @@ void GRFrame::BlendRBF(PTM::VVector<float> pos){
 	}
 }
 
+bool GRFrame::CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Affinef& aff){
+	bool ok = false;
+	Affinef a = aff * transform;
+	for(unsigned i = 0; i < children.size(); i++){
+		GRFrame* frame = children[i]->Cast();
+		if(frame){
+			ok |= frame->CalcBBox(bbmin, bbmax, a);
+		}
+		GRMesh* mesh = children[i]->Cast();
+		if(mesh){
+			mesh->CalcBBox(bbmin, bbmax, a);
+			ok = true;
+		}
+	}
+	return ok;
+}
 
 //-----------------------------------------------------------------
 //	GRDummyFrame

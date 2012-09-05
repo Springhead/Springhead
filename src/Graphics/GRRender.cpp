@@ -162,6 +162,10 @@ GRRender::GRRender(){
 	RGB(DARKSLATEGRAY,			 47,  79,  79);
 	RGB(BLACK,					  0,   0,   0);
 
+	// �����͊g�U���Ɠ����ɐݒ�
+	for(int i = 0; i < (int)matSample.size(); i++)
+		matSample[i].ambient = matSample[i].diffuse;
+
 	/*matSample.resize(24);
 	std::vector<GRMaterialDesc>::iterator itr;
 	itr = matSample.begin();

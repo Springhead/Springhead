@@ -38,7 +38,6 @@ struct GRVisualIf: public SceneObjectIf{
 	void Enable(bool on = true);
 	/// 有効/無効状態の取得
 	bool IsEnabled();
-
 };
 		
 ///	DirectX の Frame の変換を表す FrameTransformMatrix ノードを読むためのDesc
@@ -72,11 +71,17 @@ struct GRFrameIf: public GRVisualIf{
 	/** @brief 親ノードとの相対変換を設定 */
 	void SetTransform(const Affinef& af);
 
-	/** @brief メッシュを削除する */
-	void Clear();
+	/** bounding boxを計算
+		@param bbmin
+		@param bbmax
+		@param aff		AABBを定義する座標系との変換
+		@return 子ビジュアルにGRMeshがなくてbboxが求まらない場合false
 
-	void Print(std::ostream& os) const ;
+		このフレーム以下にあるGRMeshをもとにbounding boxを計算する
+	 */
+	bool CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Affinef& aff = Affinef());
 };
+
 ///	@brief GRFrame のDesc．座標系を指定する
 struct GRFrameDesc:public GRVisualDesc{
 	SPR_DESCDEF(GRFrame);

@@ -14,8 +14,7 @@
 	Affinef GetTransform(){	return	base::GetTransform();}	\
 	Affinef GetWorldTransform(){	return	base::GetWorldTransform();}	\
 	void SetTransform(const Affinef& af){	base::SetTransform(af);}	\
-	void Clear(){	base::Clear();}	\
-	void Print(std::ostream& os)const{	base::Print(os);}	\
+	bool CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Affinef& aff){	return	base::CalcBBox(bbmin, bbmax, aff);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRDummyFrameIf(base)	\
 
@@ -63,6 +62,7 @@
 	void EnableTex3D(bool on){	base::EnableTex3D(on);}	\
 	bool IsTex3D(){	return	base::IsTex3D();}	\
 	Spr::GRSkinWeightIf* CreateSkinWeight(const Spr::GRSkinWeightDesc& desc){	return	base::CreateSkinWeight(desc);}	\
+	void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Affinef& aff){	base::CalcBBox(bbmin, bbmax, aff);}	\
 
 #define SPR_OVERRIDEMEMBERFUNCOF_GRLightIf(base)	\
 
