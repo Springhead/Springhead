@@ -147,7 +147,7 @@ public:
 
 		// ウィンドウプロシージャを置き換え
 		OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
-		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
+		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)(NewWndProc));
 
 		// メニューのデフォルトを切り替え
 		menus[MENU_DRAW][ID_DRAW_AXIS].enabled = false;

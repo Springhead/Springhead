@@ -91,7 +91,7 @@ void MyEPApp::Init(int argc, char* argv[]) {
 
 	// ウィンドウプロシージャを置き換え
 	OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
-	SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
+	SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)(NewWndProc));
 
 	fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
 
