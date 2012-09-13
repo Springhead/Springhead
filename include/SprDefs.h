@@ -1,1 +1,1 @@
-﻿#define USE_CLOSED_SRC
+#undef USE_CLOSED_SRC 
