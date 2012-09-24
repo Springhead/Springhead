@@ -128,6 +128,7 @@ void FWGLUT::Init(int argc, char** argv){
 	Register();
 
 	// グラフィクスデバイスを作成
+	if (! FWApp::GetApp()->GetSdk()) FWApp::GetApp()->CreateSdk();
 	grDevice = FWApp::GetApp()->GetSdk()->GetGRSdk()->CreateDeviceGL();
 	grDevice->Init();
 
