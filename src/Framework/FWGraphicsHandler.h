@@ -30,6 +30,7 @@ public:
 
 	GRDeviceIf*		grDevice;		///< グラフィクスデバイスへの参照
 public:
+	FWGraphicsHandler():grDevice(NULL){}
 	///	初期化を行う。最初にこれを呼ぶ必要がある。
 	virtual void Init(int argc = 0, char** argv = NULL){}	
 	/// メインループを開始
