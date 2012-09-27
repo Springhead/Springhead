@@ -73,7 +73,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
 	Vec3d GetFaceEdgeVtx(unsigned id, unsigned	 vtx);
 	Vec2d GetIHbandDrawVtx();
-	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);
+	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);
 	void UpdateIHheat(unsigned heating);						//	IH加熱状態の更新
 	void DecrMoist();						//	
 	void InitAllVertexTemp();

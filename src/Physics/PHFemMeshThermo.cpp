@@ -113,7 +113,6 @@ void PHFemMeshThermo::CreateMatCAll(){
 
 }
 
-
 void PHFemMeshThermo::ScilabTest(){
 	if (!ScilabStart()) std::cout << "Error : ScilabStart \n";
 
@@ -987,7 +986,6 @@ void PHFemMeshThermo::CalcIHarea(double radius,double Radius,double dqdtAll){
 	}
 }
 
-
 //void PHFemMeshThermo::CalcIHdqdt4(double radius,double Radius,double dqdtAll){
 //	///	内半径と外半径の間の節点に熱流束境界条件を設定
 //	//> 四面体面の三角形と円環領域の重複部分の形状・面積を求める当たり判定を計算する。
@@ -1259,7 +1257,7 @@ void PHFemMeshThermo::CalcIHarea(double radius,double Radius,double dqdtAll){
 //}
 
 
-void PHFemMeshThermo::CalcIHdqdt3(double r,double R,double dqdtAll){
+void PHFemMeshThermo::CalcIHdqdt3(double r,double R,double dqdtAll,unsigned num){
 	///	内半径と外半径の間の節点に熱流束境界条件を設定
 
 	//> 加熱する四面体面の面積の総和を求める
@@ -1297,7 +1295,7 @@ void PHFemMeshThermo::CalcIHdqdt3(double r,double R,double dqdtAll){
 		//>	熱流束の面積計算はfluxareaを用いて行う
 		for(unsigned i=0;i < nSurfaceFace; i++){
 			if(faces[i].mayIHheated){
-				faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+				faces[i].heatflux[num] = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
 //				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
 			}
 		}
@@ -1321,7 +1319,7 @@ void PHFemMeshThermo::CalcIHdqdt3(double r,double R,double dqdtAll){
 
 }
 
-void PHFemMeshThermo::CalcIHdqdt2(double r,double R,double dqdtAll){
+void PHFemMeshThermo::CalcIHdqdt2(double r,double R,double dqdtAll,unsigned num){
 	///	内半径と外半径の間の節点に熱流束境界条件を設定
 	//> 円環で区切られる四面体面の領域を三角形で近似する
 
@@ -1450,7 +1448,7 @@ void PHFemMeshThermo::CalcIHdqdt2(double r,double R,double dqdtAll){
 		//>	熱流束の面積計算はfluxareaを用いて行う
 		for(unsigned i=0;i < nSurfaceFace; i++){
 			if(faces[i].mayIHheated){
-				faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+				faces[i].heatflux[num] = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
 //				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
 			}
 		}
@@ -1479,7 +1477,7 @@ void PHFemMeshThermo::SetIHbandDrawVtx(double xS, double xE){
 	IHLineVtxX = Vec2d(xS,xE);
 }
 
-void PHFemMeshThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll){
+void PHFemMeshThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned num){
 	///	x座標：xS~xEの間の節点に熱流束境界条件を設定
 	// xS,ｘEの間にいずれか一点がある、
 	// 
@@ -1524,7 +1522,7 @@ void PHFemMeshThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll){
 		//>	熱流束の面積計算はfluxareaを用いて行う
 		for(unsigned i=0;i < nSurfaceFace; i++){
 			if(faces[i].fluxarea){
-				faces[i].heatflux = faces[i].fluxarea / faceS * dqdtAll;		//	熱流束の量をheatfluxの面積から計算
+				faces[i].heatflux[num] = faces[i].fluxarea / faceS * dqdtAll;		//	熱流束の量をheatfluxの面積から計算
 //				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;			
 				// debug
 				//for(unsigned j = 0; j < 3;++j){
@@ -1538,7 +1536,7 @@ void PHFemMeshThermo::CalcIHdqdtband_(double xS,double xE,double dqdtAll){
 	SetIHbandDrawVtx(xS,xE);
 }
 
-void PHFemMeshThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll){
+void PHFemMeshThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num){
 	///	x座標：xS~xEの間の節点に熱流束境界条件を設定
 
 	//> 加熱する四面体面の面積の総和を求める
@@ -1578,7 +1576,7 @@ void PHFemMeshThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll){
 		//>	熱流束の面積計算はfluxareaを用いて行う
 		for(unsigned i=0;i < nSurfaceFace; i++){
 			if(faces[i].mayIHheated){
-				faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+				faces[i].heatflux[num] = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
 //				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
 			}
 		}
@@ -1590,7 +1588,7 @@ void PHFemMeshThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll){
 
 	}
 
-void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll){
+void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num){
 	///	内半径と外半径の間の節点に熱流束境界条件を設定
 	//	北野天満宮祈願祈念コメント
 	//	少しでも領域にかかっていれば、IH加熱に含める
@@ -1632,7 +1630,7 @@ void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll){
 		//>	熱流束の面積計算はfluxareaを用いて行う
 		for(unsigned i=0;i < nSurfaceFace; i++){
 			if(faces[i].mayIHheated){
-				faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+				faces[i].heatflux[num] = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
 				//debug
 				//if(faces[i].fluxarea > 0.0){
 				//	int kattonnnn =0;
@@ -1660,7 +1658,7 @@ void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll){
 
 }
 
-void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
+void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll,unsigned num){
 	///	内半径と外半径の間の節点に熱流束境界条件を設定
 
 	//> 加熱する四面体面の面積の総和を求める
@@ -1698,7 +1696,7 @@ void PHFemMeshThermo::CalcIHdqdt(double r,double R,double dqdtAll){
 		//>	熱流束の面積計算はfluxareaを用いて行う
 		for(unsigned i=0;i < nSurfaceFace; i++){
 			if(faces[i].mayIHheated){
-				faces[i].heatflux = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+				faces[i].heatflux[num] = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
 //				DSTR << "faces[" << i <<"].heatflux: " << faces[i].heatflux <<std::endl;
 			}
 		}
@@ -2439,16 +2437,16 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heating){
 	//SetVtxHeatFluxAll(0.0);
 	//..	IH加熱設定
 	if(heating == OFF){
-		CalcIHdqdt_atleast(0.0,0.0,0.0);		//	IH加熱行列の係数0となるため、計算されない
+		CalcIHdqdt_atleast(0.0,0.0,0.0,0);		//	IH加熱行列の係数0となるため、計算されない
 	}
 	else if(heating == WEEK){	
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5);		//
+		CalcIHdqdt_atleast(0.11,0.14,231.9 * 5e1,0);		//
 	}
 	else if(heating == MIDDLE){
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e6);		//
+		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e4,1);		//
 	}
 	else if(heating == STRONG){
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e7);		//
+		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5,2);		//
 	}
 	//%%	IH加熱のモード切替
 	//	ライン状に加熱
@@ -2489,7 +2487,12 @@ void PHFemMeshThermo::AfterSetDesc() {
 		faces[i].heatTransRatio = 0.0;
 		faces[i].deformed = true;				//初期状態は、変形後とする
 		faces[i].fluxarea =0.0;
-		faces[i].heatflux =0.0;
+//		faces[i].heatflux =0.0;
+		//faces[i].heatflux.clear();				// 初期化
+		//faces[i].heatflux[hum]の領域確保：配列として、か、vetorとしてのpush_backか、どちらかを行う。配列ならここに記述。
+		for(unsigned j =0; j<3; j++){
+			faces[i].heatflux[j] = 0.0;
+		}
 	}
 
 	///	vertex
@@ -2701,8 +2704,8 @@ void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 	//j:要素の中の何番目か
 	for(unsigned j =0;j < 4; j++){
 		int vtxid0 = tets[id].vertices[j];
-		vecFAll[vtxid0][0] = vecf[j];
-		vecFAll_f2IHw[vtxid0][0] = vecf[j];
+		vecFAll[vtxid0][0] += vecf[j];
+		//vecFAll_f2IHw[vtxid0][0] = vecf[j];
 	}
 	//	for debug
 	//vecFAllに値が入ったのかどうかを調べる 2011.09.21全部に値が入っていることを確認した
@@ -3125,6 +3128,59 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 
 }
 
+void PHFemMeshThermo::CreateVecf2surface(unsigned id,unsigned num){
+	// 初期化
+	tets[id].vecf[1].clear();
+	//l=0の時f21,1の時:f22, 2の時:f23, 3の時:f24	を生成
+	///	..j番目の行列の成分が0のベクトルを作成
+	for(unsigned l= 0 ; l < 4; l++){
+		vecf2array[l] = Create41Vec1();
+		vecf2array[l][l] = 0.0;			//	l行を0に
+	}
+	for(unsigned l= 0 ; l < 4; l++){
+		///	四面体の各面(l = 0 ～ 3) についてメッシュ表面かどうかをチェックする。表面なら、行列を作ってvecf2arrayに入れる
+		//faces[tets.faces[i]].sorted;		/// 1,24,58みたいな節点番号が入っている
+		///	..行列型の入れ物を用意
+		//faces[tets.faces[l]].vertices;
+		if(tets[id].faces[l] < (int)nSurfaceFace && faces[tets[id].faces[l]].fluxarea > 0 ){			///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある
+			///	四面体の三角形の面積を計算		///	この関数の外で面積分の面積計算を実装する。移動する
+			if(faces[tets[id].faces[l]].area ==0 || faces[tets[id].faces[l]].deformed ){		///	面積が計算されていない時（はじめ） or deformed(変形した時・初期状態)がtrueの時		///	条件の追加	面積が0か ||(OR) αが更新されたか
+				faces[tets[id].faces[l]].area = CalcTriangleArea(faces[tets[id].faces[l]].vertices[0], faces[tets[id].faces[l]].vertices[1], faces[tets[id].faces[l]].vertices[2]);
+				faces[tets[id].faces[l]].deformed = false;
+			}
+			///	計算結果を行列に代入
+			///	areaの計算に使っていない点が入っている行を除いたベクトルの積をとる
+			///	積分計算を根本から考える
+			unsigned vtx = tets[id].vertices[0] + tets[id].vertices[1] + tets[id].vertices[2] + tets[id].vertices[3];			
+			///	area計算に使われていない節点ID：ID
+			unsigned ID = vtx -( faces[tets[id].faces[l]].vertices[0] + faces[tets[id].faces[l]].vertices[1] + faces[tets[id].faces[l]].vertices[2] );
+			for(unsigned j=0;j<4;j++){
+				if(tets[id].vertices[j] == ID){					///	形状関数が１、（すなわち）このfaceに対面する頂点　と一致したら　その時のfaceで面積分する
+					///	外殻にないメッシュ面の面積は0で初期化しておく
+					///	以下の[]は上までの[l]と異なる。
+					///	IDが何番目かによって、形状関数の係数が異なるので、
+					tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux[num] * (1.0/3.0) * faces[tets[id].faces[l]].area * vecf2array[j];
+					//DSTR << "tets[id].matk2にfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "を加算: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
+					//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
+				}
+				//else{
+				//	///	IDと一致しない場合には、matk2array[j]には全成分0を入れる
+				//	///	としたいところだが、
+				//	//matk2array[j] =0.0 * matk2array[j];
+				//	//DSTR << "matk2array[" << j << "]: " << matk2array[j] << std::endl;
+				//}
+			}
+		}
+		///	SurfaceFaceじゃなかったら、matk2arrayには0を入れる
+		//else{
+		//	//matk2array[l];
+		//}
+	}
+
+
+}
+
+
 void PHFemMeshThermo::CreateVecf2surface(unsigned id){
 	// 初期化
 	tets[id].vecf[1].clear();
@@ -3156,7 +3212,7 @@ void PHFemMeshThermo::CreateVecf2surface(unsigned id){
 					///	外殻にないメッシュ面の面積は0で初期化しておく
 					///	以下の[]は上までの[l]と異なる。
 					///	IDが何番目かによって、形状関数の係数が異なるので、
-					tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux * (1.0/3.0) * faces[tets[id].faces[l]].area * vecf2array[j];
+					tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux[0] * (1.0/3.0) * faces[tets[id].faces[l]].area * vecf2array[j];
 					//DSTR << "tets[id].matk2にfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "を加算: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
 					//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
 				}
@@ -3176,6 +3232,93 @@ void PHFemMeshThermo::CreateVecf2surface(unsigned id){
 
 
 }
+
+void PHFemMeshThermo::CreateVecf2surfaceAll(){
+	//	初期化
+	//	弱火、中火、強火について初期化(ベクトルの行数設定、初期化)
+	for(unsigned i =0; i < 3 ;i++){
+		vecFAll_f2IH[i].resize(vertices.size(),1);			//表面だけでなく、全節点について計算しないと、ベクトル×行列の計算が不成立のため。
+		vecFAll_f2IH[i].clear();
+	}
+	
+	//四面体要素ごとに行列を作り、どこかで合成する
+	//idを入れて、再帰的に作っている
+	for(unsigned id =0; id < tets.size();id++){ 
+		//行列を作る
+		for(unsigned num =0; num <3 ; num++){
+			CreateVecf2surface(id,num);			//	この関数も、引数に指定したベクトルに入れられるようにする?
+			//num毎に、入れ物に入れる。
+			for(unsigned j =0;j < 4; j++){
+				int vtxid0 = tets[id].vertices[j];
+				//vecFAll[vtxid0][0] = vecf[j];			//全体剛性ベクトルを作成：ガウスザイデル計算内でやっている処理・これを行う。ここまでをVecf2でやる。
+				//vecFAll_f2IHw[vtxid0][0] = vecf[j];
+				vecFAll_f2IH[num][vtxid0][0] = 	tets[id].vecf[1][num];		//	+= じゃなくてもいいのか？同様に、元のソースでも += の必要があるのでは？
+			}
+
+		}
+
+
+	
+		////要素の節点番号の場所に、その節点のfの値を入れる
+		////j:要素の中の何番目か
+		//for(unsigned j =0;j < 4; j++){
+		//	int vtxid0 = tets[id].vertices[j]
+		//	vecFAll_f2IHw[vtxid0][0] = vecf[j];tets[id].vecf[1]//のj要素
+		//}
+
+		//
+		////入れ物に入れる
+		////j:要素の中の何番目か
+		//for(unsigned j =0;j < 4; j++){
+		//	int vtxid0 = tets[id].vertices[j];
+		//	vecFAll[vtxid0][0] = vecf[j];			//全体剛性ベクトルを作成：ガウスザイデル計算内でやっている処理・これを行う。ここまでをVecf2でやる。
+		//	vecFAll_f2IHw[vtxid0][0] = vecf[j];
+		//	
+		//}
+	}
+
+	//作った後に、ガウスザイデル計算で、VecFAllにセットする関数を作る。
+	//VecFAllに加算とかすると、どんどん増えてしまうし、逆に、他の、変化しない要素{F_3}など、全体ベクトルも作って、保存しておく必要
+	//ガウスザイデルの計算の中で、これまでの計算でFベクトルを使うのに代えて、マイステップで、VecFをF1,F2から作る必要がある。
+
+	//  入れ物に入れる
+	for(unsigned i =0; i < 3 ;i++){
+		vecFAll_f2IH[i][0][0] = 1.0;
+		//	入れ方は、他の関数のコードを参考にする
+		//熱流束ベクトルは、個々に入れて保存するだけで十分か？
+		//ガウすザイデルで解く場合、全体剛性行列に、保存用IH行列を作っておくだけでいいのか？
+			//いい場合、全体剛性行列が保存容器で、計算時には、bVecなんちゃらに、ロードして使う。
+			//良くない場合、ガウスザイデル用に作った剛性行列を保存して、ガウスザイデル計算に用いる
+			//計算時には、VecFAllを加算するだけなので、全体剛性行列があれば良い
+	}
+	
+
+
+	for(unsigned id = 0; id < tets.size();id++){
+		//.	表面の節点について//faces[nSurfaceface-1]までのfaceを構成する節点で
+
+			//tets[tets[id]] > CreateVecf2surface(id);
+		//.	要素剛性行列を全体剛性行列に統合
+		for(unsigned j =0;j < 4; j++){
+			int vtxid0 = tets[id].vertices[j];
+			//vecFAll[vtxid0][0] = vecf[j];
+			//vecf[1]
+			//vecFAll_f2IHw[vtxid0][0] = vecf[j];
+		}
+	}
+
+	//以下、CreateVecfLocalからコピペ　2012.9.25
+	//すべての要素について係数行列を作る
+	//f1を作る
+	//>	熱流束境界条件	vecf2を作る			
+
+
+	
+
+
+
+}
+
 
 void PHFemMeshThermo::CreateVecf2(unsigned id){
 	//	初期化

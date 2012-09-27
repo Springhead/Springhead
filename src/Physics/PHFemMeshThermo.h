@@ -86,7 +86,14 @@ protected:
 	// ..ガウスザイデルの計算に用いる定数行列bの縦ベクトル	Rowである必要はあるのか？⇒Colにした
 	PTM::VMatrixCol<double> bVecAll;
 	PTM::VMatrixCol<double> bVecAll_IH;
-	//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
+		//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
+	//	..{F}の 全体剛性行列(ベクトル)
+	PTM::VMatrixCol<double> vecFAll;			
+	PTM::VMatrixCol<double> vecFAll_f2IHw;		// 弱火ベクトル
+	PTM::VMatrixCol<double> vecFAll_f2IHm;		// 中火
+	PTM::VMatrixCol<double> vecFAll_f2IHs;		// 強火
+	PTM::VMatrixCol<double> vecFAll_f2IH[3];		// 全体剛性ベクトルを弱火、中火、強火の順に入れる配列
+
 
 	// 表示用	//デバッグ
 	Vec2d IHLineVtxX;		//	IH加熱の境界線を引く	x軸の最小地、最大値が格納
@@ -141,6 +148,9 @@ protected:
 	void CreateVecf3_(unsigned id);					//	熱伝達率も、周囲流体温度も相加平均
 	void CreateVecf2(unsigned id);					//	四面体のIDを引数に
 	void CreateVecf2surface(unsigned id);			//> 四面体IDに含まれるfaceの内、表面のfaceについてだけ計算
+	void CreateVecf2surface(unsigned id,unsigned num);			//> 同上　加えて、vecFAll_f2IH[num]に格納、弱火、中火、強火の時は、num = 3
+	void CreateVecf2surfaceAll();					//	IH等の加熱条件設定から、全体剛性ベクトル(・行列)(何×何？)を作る関数　2012.08.30追記
+		//CreateVecfLocal(unsigned id);を改造
 
 	//	{T}:節点温度ベクトルを作る関数
 	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
@@ -326,23 +336,18 @@ public:
 
 
 	//	ガウスザイデル計算で用いる関数群
-	//	..{F}の 全体 剛性ベクトル
-	PTM::VMatrixCol<double> vecFAll;			
-	PTM::VMatrixCol<double> vecFAll_f2IHw;		// 弱火ベクトル
-	PTM::VMatrixCol<double> vecFAll_f2IHm;		// 中火
-	PTM::VMatrixCol<double> vecFAll_f2IHs;		// 強火
 
 	///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
 	void CalcVtxDisFromOrigin();
 
 	//	IHによ四面体のface面の熱流束加熱のための行列成分計算関数
-	void CalcIHdqdt(double r,double R,double dqdtAll);				//	IHヒーターの設定
-	void CalcIHdqdt_atleast(double r,double R,double dqdtAll);		//	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
-	void CalcIHdqdtband(double xS,double xE,double dqdtAll);		//	帯状に加熱、x軸で切る
-	void CalcIHdqdtband_(double xS,double xE,double dqdtAll);		//	帯状に加熱、x軸で切る mayIHheatedを使わない
-	void CalcIHdqdt2(double r,double R,double dqdtAll);				//	IHヒーターの設定
-	void CalcIHdqdt3(double r,double R,double dqdtAll);				//	IHヒーターの設定	1頂点でも領域内に入っているときには、それをIH計算の領域に加算する
-	void CalcIHdqdt4(double radius,double Radius,double dqdtAll);	//	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。
+	void CalcIHdqdt(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定
+	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);		//	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
+	void CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num);		//	帯状に加熱、x軸で切る
+	void CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned num);		//	帯状に加熱、x軸で切る mayIHheatedを使わない
+	void CalcIHdqdt2(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定  numは火力別(0:week, 1:middle, 2:high or strong )
+	void CalcIHdqdt3(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定	1頂点でも領域内に入っているときには、それをIH計算の領域に加算する
+	void CalcIHdqdt4(double radius,double Radius,double dqdtAll,unsigned num);	//	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。
 	//	face頂点のIH加熱時の行列成分を計算	半径10cm程度の円弧と、円環幅数cm幅をまたぐ程度の三角形サイズを想定
 	void CalcIHarea(double radius,double Radius,double dqdtAll);
 	//	DSTR に交点計算結果を表示する
