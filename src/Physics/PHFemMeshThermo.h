@@ -92,8 +92,8 @@ protected:
 	PTM::VMatrixCol<double> vecFAll_f2IHw;		// 弱火ベクトル
 	PTM::VMatrixCol<double> vecFAll_f2IHm;		// 中火
 	PTM::VMatrixCol<double> vecFAll_f2IHs;		// 強火
-	PTM::VMatrixCol<double> vecFAll_f2IH[3];		// 全体剛性ベクトルを弱火、中火、強火の順に入れる配列
-
+	PTM::VMatrixCol<double> vecFAll_f2IH[4];		// 全体剛性ベクトルを弱火、中火、強火の順に入れる配列
+	PTM::VMatrixCol<double> vecFAll_f3;			// f3
 
 	// 表示用	//デバッグ
 	Vec2d IHLineVtxX;		//	IH加熱の境界線を引く	x軸の最小地、最大値が格納
@@ -140,17 +140,18 @@ protected:
 //	void CreateDumMatkLocal();					//	全要素が0のダミーk
 	void CreateMatKall();
 	//	[C]:熱容量マトリクスを作る関数
-	void CreateMatcLocal(unsigned id);			//	matC1,C2,C3・・・毎に分割すべき？
+	void CreatedMatCAll(unsigned id);			//	matC1,C2,C3・・・毎に分割すべき？
 	void CreateMatc(unsigned id);				// cの要素剛性行列を作る関数
 	//	{F}:熱流束ベクトルを作る関数
-	void CreateVecfLocal(unsigned id);				//	四面体メッシュのIDを引数に
+	void CreateVecFAll(unsigned id);				//	四面体メッシュのIDを引数に
 	void CreateVecf3(unsigned id);					//	熱伝達率は相加平均、周囲流体温度は各々を形状関数に？
 	void CreateVecf3_(unsigned id);					//	熱伝達率も、周囲流体温度も相加平均
 	void CreateVecf2(unsigned id);					//	四面体のIDを引数に
 	void CreateVecf2surface(unsigned id);			//> 四面体IDに含まれるfaceの内、表面のfaceについてだけ計算
 	void CreateVecf2surface(unsigned id,unsigned num);			//> 同上　加えて、vecFAll_f2IH[num]に格納、弱火、中火、強火の時は、num = 3
-	void CreateVecf2surfaceAll();					//	IH等の加熱条件設定から、全体剛性ベクトル(・行列)(何×何？)を作る関数　2012.08.30追記
+	void CreateVecF2surfaceAll();					//	IH等の加熱条件設定から、全体剛性ベクトル(・行列)(何×何？)を作る関数　2012.08.30追記
 		//CreateVecfLocal(unsigned id);を改造
+	void CreateVecF3surfaceAll();
 
 	//	{T}:節点温度ベクトルを作る関数
 	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
@@ -181,7 +182,8 @@ protected:
 		unsigned NofCyc,		// NofCyc:繰り返し計算回数
 		double dt,				// dt:ステップ時間
 		double eps				// eps:積分の種類 0.0:前進積分,0.5:クランクニコルソン差分式,1.0:後退積分・陰解法
-		);		
+		);
+	void UpdateVecFAll(unsigned mode);		// 方程式を解く前に、熱流束ベクトルをロードして、結合するなどベクトルを作る。modeには加熱モードを入れる
 
 	void SetTempAllToTVecAll(unsigned size);		//	TVecAllに全節点の温度を設定する関数
 	void SetTempToTVecAll(unsigned vtxid);			//	TVecAllに特定の節点の温度を設定する関数
@@ -254,7 +256,7 @@ public:
 		OFF,
 		WEEK,
 		MIDDLE,
-		STRONG
+		HIGH
 	};
 
 	std::vector<StateVar> vertexVars;
@@ -345,7 +347,7 @@ public:
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);		//	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
 	void CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num);		//	帯状に加熱、x軸で切る
 	void CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned num);		//	帯状に加熱、x軸で切る mayIHheatedを使わない
-	void CalcIHdqdt2(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定  numは火力別(0:week, 1:middle, 2:high or strong )
+	void CalcIHdqdt2(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定  numは火力別(0:week, 1:middle, 2:high )
 	void CalcIHdqdt3(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定	1頂点でも領域内に入っているときには、それをIH計算の領域に加算する
 	void CalcIHdqdt4(double radius,double Radius,double dqdtAll,unsigned num);	//	IHヒーターの設定	2よりも、対応できる三角形の場合が幅広い。しかし、三角形の大きさの割に、加熱円半径が小さい場合は、考慮しない。
 	//	face頂点のIH加熱時の行列成分を計算	半径10cm程度の円弧と、円環幅数cm幅をまたぐ程度の三角形サイズを想定

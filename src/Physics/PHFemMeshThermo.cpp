@@ -189,7 +189,7 @@ void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp
 		}
 		for(unsigned i=0; i< this->tets.size();i++){
 			//DSTR << "this->tets.size(): " << this->tets.size() <<std::endl;			//12
-			CreateVecfLocal(i);				///	VecFの再作成
+			CreateVecFAll(i);				///	VecFの再作成
 			CreateMatkLocal(i);				///	MatK2の再作成 →if(deformed==true){matk1を生成}		matK1はmatk1の変数に入れておいて、matk2だけ、作って、加算
 			//DSTR <<"tets["<< i << "]: " << std::endl;
 			//DSTR << "this->tets[i].matk1: " <<std::endl;
@@ -219,7 +219,7 @@ void PHFemMeshThermo::UsingHeatTransferBoundaryCondition(unsigned id,double temp
 		//}
 		InitCreateVecf_();
 		for(unsigned i=0; i < this->tets.size();i++){
-			CreateVecfLocal(i);				///	VeecFの再作成
+			CreateVecFAll(i);				///	VeecFの再作成
 													///	MatK2の再作成→matK1はmatk1の変数に入れておいて、matk2だけ、作って、加算
 		}
 //	}
@@ -2171,6 +2171,26 @@ void PHFemMeshThermo::DrawEdge(unsigned id0, unsigned id1){
 	//glFlush();
 }
 
+void PHFemMeshThermo::UpdateVecFAll(unsigned mode){
+	// F2,F3を加算する
+	for(unsigned id = 0; id < vertices.size();id++){
+		if(mode == OFF){ 
+			// F2は加算しない
+			vecFAll[id][0] = vecFAll_f3[id][0]; //F3
+		}
+		else if(mode == WEEK){
+			vecFAll[id][0] =  vecFAll_f2IH[mode][id][0]+ vecFAll_f3[id][0];//F2+F3		//mode=0 -> F2のWEEKの強さ
+		}
+		else if(mode == MIDDLE){
+			vecFAll[id][0] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=1 -> F2のmiddleの強さ
+		}
+		else if(mode == HIGH){
+			vecFAll[id][0] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=2 -> F2のhighの強さ
+		}
+	}
+}
+
+
 void PHFemMeshThermo::Step(double dt){
 
 	// cps表示用
@@ -2251,13 +2271,19 @@ void PHFemMeshThermo::Step(double dt){
 	//	CalcHeatTransUsingGaussSeidel(20,dt);			//ガウスザイデル法で熱伝導計算を解く　クランクニコルソン法のみを使いたい場合
 
 //	dNdt = 10.0 * dt;
-		CalcHeatTransUsingGaussSeidel(1,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
 
-		//温度を表示してみる
-		//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
+#if 0
+	// 解く前にかならず行う
+	UpdateVecFAll(WEEK);				// 引数に加熱強さを与える。(OFF/WEEK/MIDDLE/HIGH)
+#endif
+	//ガウスザイデル法で解く
+	CalcHeatTransUsingGaussSeidel(1,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
 
-		//温度のベクトルから節点へ温度の反映
-		UpdateVertexTempAll((unsigned)vertices.size());
+	//温度を表示してみる
+	//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
+
+	//温度のベクトルから節点へ温度の反映
+	UpdateVertexTempAll((unsigned)vertices.size());
 	//for(unsigned i =0;i<vertices.size();i++){
 	//	DSTR << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
 	//}
@@ -2416,12 +2442,10 @@ void PHFemMeshThermo::InitCreateVecf(){
 	}
 	vecFAll.resize(vertices.size(),1);		///	全体剛性ベクトルFのサイズを規定
 	vecFAll.clear();						///	初期化
-	vecFAll_f2IHw.resize(vertices.size(),1);		///	弱火Fのサイズを規定
-	vecFAll_f2IHw.clear();							///	初期化
-	vecFAll_f2IHm.resize(vertices.size(),1);		///	全体剛性ベクトルFのサイズを規定
-	vecFAll_f2IHm.clear();							///	初期化
-	vecFAll_f2IHs.resize(vertices.size(),1);		///	全体剛性ベクトルFのサイズを規定
-	vecFAll_f2IHs.clear();							///	初期化
+	for(unsigned i=0;i < 4;i++){
+		vecFAll_f2IH[i].resize(vertices.size(),1);
+		vecFAll_f2IH[i].clear();
+	}
 }
 
 void PHFemMeshThermo::UpdateIHheat(unsigned heating){
@@ -2440,13 +2464,13 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heating){
 		CalcIHdqdt_atleast(0.0,0.0,0.0,0);		//	IH加熱行列の係数0となるため、計算されない
 	}
 	else if(heating == WEEK){	
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 5e1,0);		//
+		CalcIHdqdt_atleast(0.11,0.14,231.9 * 5e1,1);		//
 	}
 	else if(heating == MIDDLE){
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e4,1);		//
+		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e4,2);		//
 	}
-	else if(heating == STRONG){
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5,2);		//
+	else if(heating == HIGH){
+		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5,3);		//
 	}
 	//%%	IH加熱のモード切替
 	//	ライン状に加熱
@@ -2458,7 +2482,7 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heating){
 	///	熱伝達率を各節点に格納
 	//SetHeatTransRatioToAllVertex();
 	for(unsigned i=0; i < this->tets.size(); i++){
-		CreateVecfLocal(i);
+		CreateVecFAll(i);
 	}
 }
 
@@ -2579,9 +2603,13 @@ void PHFemMeshThermo::AfterSetDesc() {
 		//各行列を作って、ガウスザイデルで計算するための係数の基本を作る。Timestepの入っている項は、このソース(SetDesc())では、実現できないことが分かった(NULLが返ってくる)
 		CreateMatkLocal(i);				///	Matk1 Matk2(更新が必要な場合がある)を作る
 		//CreateMatKall();		//CreateMatkLocal();に実装したので、後程分ける。
-		CreateMatcLocal(i);
-		CreateVecfLocal(i);
+		CreatedMatCAll(i);
+		CreateVecFAll(i);
 	}
+#if 0
+	CreateVecF2surfaceAll();		//	CreateVecFAll(i);の代わり
+	CreateVecF3surfaceAll();		//	CreateVecFAll(i);の代わり
+#endif
 	int hogeshidebug =0;
 	//	節点温度推移の書き出し
 	templog.open("templog.csv");
@@ -2632,7 +2660,7 @@ void PHFemMeshThermo::CreateMatc(unsigned id){
 		//int hogemat =0 ;
 }
 
-void PHFemMeshThermo::CreateMatcLocal(unsigned id){
+void PHFemMeshThermo::CreatedMatCAll(unsigned id){
 	//すべての要素について係数行列を作る
 		//c
 	CreateMatc(id);
@@ -2679,7 +2707,10 @@ void PHFemMeshThermo::CreateMatcLocal(unsigned id){
 	int piyodebug =0;
 }
 
-void PHFemMeshThermo::CreateVecfLocal(unsigned id){
+void PHFemMeshThermo::CreateVecFAll(unsigned id){
+
+	//	注意
+	//	f3を使用する場合:周囲流体温度Tcが0の節点の要素は0になるため、温度の設定が必要
 	
 	//すべての要素について係数行列を作る
 	//f1を作る
@@ -2705,7 +2736,7 @@ void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 	for(unsigned j =0;j < 4; j++){
 		int vtxid0 = tets[id].vertices[j];
 		vecFAll[vtxid0][0] += vecf[j];
-		//vecFAll_f2IHw[vtxid0][0] = vecf[j];
+		//vecFAll_f2IH[num][vtxid0][0] += vecf[j];
 	}
 	//	for debug
 	//vecFAllに値が入ったのかどうかを調べる 2011.09.21全部に値が入っていることを確認した
@@ -2713,7 +2744,6 @@ void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 	//for(unsigned j =0; j < vertices.size() ; j++){
 	//	DSTR << j << " ele is :  " << vecFAll[j][0] << std::endl;
 	//}
-	int hogeshi =0;
 
 	////	調べる
 	////vecFAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
@@ -2724,10 +2754,6 @@ void PHFemMeshThermo::CreateVecfLocal(unsigned id){
 	//	}
 	//}
 
-
-	//	注意
-	//	f3を使用する場合:周囲流体温度Tcが0の節点の要素は0になるため、温度の設定が必要
-	//int hogef =0;
 }
 
 void PHFemMeshThermo::CreateMatkLocal(unsigned id){
@@ -3180,7 +3206,6 @@ void PHFemMeshThermo::CreateVecf2surface(unsigned id,unsigned num){
 
 }
 
-
 void PHFemMeshThermo::CreateVecf2surface(unsigned id){
 	// 初期化
 	tets[id].vecf[1].clear();
@@ -3212,7 +3237,7 @@ void PHFemMeshThermo::CreateVecf2surface(unsigned id){
 					///	外殻にないメッシュ面の面積は0で初期化しておく
 					///	以下の[]は上までの[l]と異なる。
 					///	IDが何番目かによって、形状関数の係数が異なるので、
-					tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux[0] * (1.0/3.0) * faces[tets[id].faces[l]].area * vecf2array[j];
+					tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux[1] * (1.0/3.0) * faces[tets[id].faces[l]].area * vecf2array[j];
 					//DSTR << "tets[id].matk2にfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "を加算: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
 					//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
 				}
@@ -3232,11 +3257,33 @@ void PHFemMeshThermo::CreateVecf2surface(unsigned id){
 
 
 }
-
-void PHFemMeshThermo::CreateVecf2surfaceAll(){
+#if 0
+void PHFemMeshThermo::CreateVecF3surfaceAll(){
 	//	初期化
 	//	弱火、中火、強火について初期化(ベクトルの行数設定、初期化)
-	for(unsigned i =0; i < 3 ;i++){
+	vecFAll_f3.resize(vertices.size(),1);			//表面だけでなく、全節点について計算しないと、ベクトル×行列の計算が不成立のため。
+	vecFAll_f3.clear();
+	
+	//四面体要素ごとに行列を作り、どこかで合成する
+	//idを入れて、再帰的に作っている
+	for(unsigned id =0; id < tets.size();id++){ 
+		//行列を作る
+		CreateVecf3(id);//;		// f3surfaceではないけれど、いいのか？	//CreateVecf2surface(id,num);	//	この関数も、引数に指定したベクトルに入れられるようにする?
+		for(unsigned j =0;j < 4; j++){
+			int vtxid0 = tets[id].vertices[j];
+			//vecFAll[vtxid0][0] = vecf[j];			//全体剛性ベクトルを作成：ガウスザイデル計算内でやっている処理・これを行う。ここまでをVecf2でやる。
+			vecFAll_f3[vtxid0][0] += tets[id].vecf[2][j];		//	+= じゃなくてもいいのか？同様に、元のソースでも += の必要があるのでは？
+		}
+	}
+	//作った後に、ガウスザイデル計算で、VecFAllにセットする関数を作る。
+	//VecFAllに加算とかすると、どんどん増えてしまうし、逆に、他の、変化しない要素{F_3}など、全体ベクトルも作って、保存しておく必要
+	//ガウスザイデルの計算の中で、これまでの計算でFベクトルを使うのに代えて、マイステップで、VecFをF1,F2から作る必要がある。
+}
+
+void PHFemMeshThermo::CreateVecF2surfaceAll(){
+	//	初期化
+	//	弱火、中火、強火について初期化(ベクトルの行数設定、初期化)
+	for(unsigned i =0; i < 4 ;i++){
 		vecFAll_f2IH[i].resize(vertices.size(),1);			//表面だけでなく、全節点について計算しないと、ベクトル×行列の計算が不成立のため。
 		vecFAll_f2IH[i].clear();
 	}
@@ -3245,14 +3292,14 @@ void PHFemMeshThermo::CreateVecf2surfaceAll(){
 	//idを入れて、再帰的に作っている
 	for(unsigned id =0; id < tets.size();id++){ 
 		//行列を作る
-		for(unsigned num =0; num <3 ; num++){
+		for(unsigned num =0; num <4 ; num++){	//全火力(OFF/WEEK/MIDDLE/HIGH)について
 			CreateVecf2surface(id,num);			//	この関数も、引数に指定したベクトルに入れられるようにする?
 			//num毎に、入れ物に入れる。
 			for(unsigned j =0;j < 4; j++){
 				int vtxid0 = tets[id].vertices[j];
 				//vecFAll[vtxid0][0] = vecf[j];			//全体剛性ベクトルを作成：ガウスザイデル計算内でやっている処理・これを行う。ここまでをVecf2でやる。
 				//vecFAll_f2IHw[vtxid0][0] = vecf[j];
-				vecFAll_f2IH[num][vtxid0][0] = 	tets[id].vecf[1][num];		//	+= じゃなくてもいいのか？同様に、元のソースでも += の必要があるのでは？
+				vecFAll_f2IH[num][vtxid0][0] += tets[id].vecf[1][j];		//f2の[num(火力)]	+= じゃなくてもいいのか？同様に、元のソースでも += の必要があるのでは？
 			}
 
 		}
@@ -3275,36 +3322,12 @@ void PHFemMeshThermo::CreateVecf2surfaceAll(){
 		//	vecFAll_f2IHw[vtxid0][0] = vecf[j];
 		//	
 		//}
-	}
+	
 
 	//作った後に、ガウスザイデル計算で、VecFAllにセットする関数を作る。
 	//VecFAllに加算とかすると、どんどん増えてしまうし、逆に、他の、変化しない要素{F_3}など、全体ベクトルも作って、保存しておく必要
 	//ガウスザイデルの計算の中で、これまでの計算でFベクトルを使うのに代えて、マイステップで、VecFをF1,F2から作る必要がある。
 
-	//  入れ物に入れる
-	for(unsigned i =0; i < 3 ;i++){
-		vecFAll_f2IH[i][0][0] = 1.0;
-		//	入れ方は、他の関数のコードを参考にする
-		//熱流束ベクトルは、個々に入れて保存するだけで十分か？
-		//ガウすザイデルで解く場合、全体剛性行列に、保存用IH行列を作っておくだけでいいのか？
-			//いい場合、全体剛性行列が保存容器で、計算時には、bVecなんちゃらに、ロードして使う。
-			//良くない場合、ガウスザイデル用に作った剛性行列を保存して、ガウスザイデル計算に用いる
-			//計算時には、VecFAllを加算するだけなので、全体剛性行列があれば良い
-	}
-	
-
-
-	for(unsigned id = 0; id < tets.size();id++){
-		//.	表面の節点について//faces[nSurfaceface-1]までのfaceを構成する節点で
-
-			//tets[tets[id]] > CreateVecf2surface(id);
-		//.	要素剛性行列を全体剛性行列に統合
-		for(unsigned j =0;j < 4; j++){
-			int vtxid0 = tets[id].vertices[j];
-			//vecFAll[vtxid0][0] = vecf[j];
-			//vecf[1]
-			//vecFAll_f2IHw[vtxid0][0] = vecf[j];
-		}
 	}
 
 	//以下、CreateVecfLocalからコピペ　2012.9.25
@@ -3318,8 +3341,7 @@ void PHFemMeshThermo::CreateVecf2surfaceAll(){
 
 
 }
-
-
+#endif
 void PHFemMeshThermo::CreateVecf2(unsigned id){
 	//	初期化
 	for(unsigned i =0; i < 4 ;i++){
