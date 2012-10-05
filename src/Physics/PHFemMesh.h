@@ -116,7 +116,7 @@ public:
 		bool deformed;				///	属する頂点の移動により、変形されたとき
 		double thermalEmissivity;	///	熱放射率
 		//double heatflux;			///	熱流束値　構成する３節点の相加平均で計算?	弱火、中火、強火の順(vector化したほうがいいかも)
-		double heatflux[3];	// 
+		double heatflux[4];	// 
 		double fluxarea;			//>	 熱流束の計算に用いる、faceのエリア
 		bool mayIHheated;				//	IHで加熱する可能性のある面　段階的に絞る
 		std::vector<Vec2d>	ihvtx;//[12];	//	vectorにしなくても、数は最大、以下くらい。vectorだと領域を使いすぎるので.
