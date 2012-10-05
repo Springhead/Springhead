@@ -17,7 +17,30 @@ namespace Spr{;
 class PHFemMeshThermo: public PHFemMesh{
 	SPR_OBJECTDEF(PHFemMeshThermo);
 	SPR_DECLMEMBEROF_PHFemMeshThermoDesc;
+
+public:
+	//	メンバ変数宣言
+	//	頂点
+	struct StateVar{
+		double temperature;
+	};
+	struct Coeff{
+	};
+
+	enum HEATING_MODE{
+		OFF,
+		WEEK,
+		MIDDLE,
+		HIGH
+	};
+
+	std::vector<StateVar> vertexVars;
+	std::vector<Coeff> edgeCoeffs;
+
 protected:
+
+	
+	//	行列の宣言
 	//PHFemMeshThermo内のみで用いる計算
 
 	//%%%%%%%%		行列の宣言・定義		%%%%%%%%//	
@@ -88,7 +111,8 @@ protected:
 	PTM::VMatrixCol<double> bVecAll_IH;
 		//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
 	//	..{F}の 全体剛性行列(ベクトル)
-	PTM::VMatrixCol<double> vecFAll;			
+	PTM::VVector<double> vecFAllSum;			//	PTM::VMatrixCol<double> vecFAll;	// から変更				
+	PTM::VVector<double> vecFAll[4];			// 全体剛性ベクトルを格納しておくベクトル
 	PTM::VMatrixCol<double> vecFAll_f2IHw;		// 弱火ベクトル
 	PTM::VMatrixCol<double> vecFAll_f2IHm;		// 中火
 	PTM::VMatrixCol<double> vecFAll_f2IHs;		// 強火
@@ -115,7 +139,7 @@ protected:
 	void SetHeatTransRatioToAllVertex();	//SetInit で設定している熱伝達係数を、節点(FemVertex)の構造体のメンバ変数に代入
 
 	void InitCreateMatC();			///	行列作成で用いる入れ物などの初期化
-	void InitCreateVecf();			///	Vecfの作成前に実行する初期化処理
+	void InitVecFAlls();			///	Vecfの作成前に実行する初期化処理 modify@ 2012.10.4
 	void InitCreateMatk();			///	Matkの作成前に実行する初期化処理
 
 	///	熱伝達率が変化した時などの再計算用の初期化関数
@@ -136,22 +160,29 @@ protected:
 	void CreateMatk3t(unsigned id);
 
 	void CreateMatk2array();
-	void CreateMatkLocal(unsigned i);
+	void CreateMatkLocal(unsigned i);			//	edgesに入れつつ、チェック用の全体剛性行列も、ifdefスイッチで作れる仕様
 //	void CreateDumMatkLocal();					//	全要素が0のダミーk
 	void CreateMatKall();
+	void CreateMatKAll();						//	Kの全体剛性行列	//	SciLab	で用いる
+	
+
 	//	[C]:熱容量マトリクスを作る関数
 	void CreatedMatCAll(unsigned id);			//	matC1,C2,C3・・・毎に分割すべき？
 	void CreateMatc(unsigned id);				// cの要素剛性行列を作る関数
+
+	void CreateMatCAll();						//	Cの全体剛性行	//	SciLab	で用いる
+
 	//	{F}:熱流束ベクトルを作る関数
 	void CreateVecFAll(unsigned id);				//	四面体メッシュのIDを引数に
 	void CreateVecf3(unsigned id);					//	熱伝達率は相加平均、周囲流体温度は各々を形状関数に？
 	void CreateVecf3_(unsigned id);					//	熱伝達率も、周囲流体温度も相加平均
 	void CreateVecf2(unsigned id);					//	四面体のIDを引数に
-	void CreateVecf2surface(unsigned id);			//> 四面体IDに含まれるfaceの内、表面のfaceについてだけ計算
-	void CreateVecf2surface(unsigned id,unsigned num);			//> 同上　加えて、vecFAll_f2IH[num]に格納、弱火、中火、強火の時は、num = 3
+	void CreateVecf2surface(unsigned id);			//> 四面体IDに含まれるfaceの内、表面のfaceについてだけ計算 加熱量は弱火モードで設定
+	void CreateVecf2surface(unsigned id,unsigned mode);			//> 同上　加えて、vecFAll_f2IH[num]に格納、OFF、弱火、中火。強火の時は、mode = 4
 	void CreateVecF2surfaceAll();					//	IH等の加熱条件設定から、全体剛性ベクトル(・行列)(何×何？)を作る関数　2012.08.30追記
 		//CreateVecfLocal(unsigned id);を改造
 	void CreateVecF3surfaceAll();
+	
 
 	//	{T}:節点温度ベクトルを作る関数
 	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
@@ -160,6 +191,12 @@ protected:
 	//	初期化
 	void InitTcAll(double temp);							//	Tcの温度を初期化
 
+public:
+	//	毎Step呼び出す
+	void UpdateIHheat(unsigned heatingMODE);	// 毎Step呼ぶ：熱流束ベクトル{F}を生成・保存	//.heatingMODEは加熱強さ：4段階（0:OFF・1:弱火(WEEK)・2:中火(MIDDLE)・3:強火(HIGH)）
+	void UpdateVecF(unsigned mode);			// 方程式を解く前に、熱流束ベクトルをロードして、結合するなどベクトルを作る。modeには加熱モードを入れる
+
+protected:
 	//	何用に用いる？	行列作成の関数をまとめるだけ？
 	void CreateMatrix();					
 
@@ -183,7 +220,6 @@ protected:
 		double dt,				// dt:ステップ時間
 		double eps				// eps:積分の種類 0.0:前進積分,0.5:クランクニコルソン差分式,1.0:後退積分・陰解法
 		);
-	void UpdateVecFAll(unsigned mode);		// 方程式を解く前に、熱流束ベクトルをロードして、結合するなどベクトルを作る。modeには加熱モードを入れる
 
 	void SetTempAllToTVecAll(unsigned size);		//	TVecAllに全節点の温度を設定する関数
 	void SetTempToTVecAll(unsigned vtxid);			//	TVecAllに特定の節点の温度を設定する関数
@@ -193,9 +229,7 @@ protected:
 	//	SciLab
 	void ScilabTest();								//	Scilabを使ってみる関数
 
-	//		全体剛性行列を作る		//	SciLab	で用いる
-	void CreateMatKAll();						//	Kの全体剛性行列
-	void CreateMatCAll();						//	Cの全体剛性行
+
 
 	void TexChange(unsigned id,double tz);		//		GRへ移植　やり方を先生に聞く
 	void SetTexZ(unsigned id,double tz);		//	テクスチャ座標を変更
@@ -245,26 +279,10 @@ public:
 	//	bool hUpdated;				///	熱輻射率が更新されたか
 	//};
 
-	//	頂点
-	struct StateVar{
-		double temperature;
-	};
-	struct Coeff{
-	};
-
-	enum HEATING_MODE{
-		OFF,
-		WEEK,
-		MIDDLE,
-		HIGH
-	};
-
-	std::vector<StateVar> vertexVars;
-	std::vector<Coeff> edgeCoeffs;
 	
+	// 加熱計算等を呼び出す Set系関数
 	PHFemMeshThermo(const PHFemMeshThermoDesc& desc=PHFemMeshThermoDesc(), SceneIf* s=NULL);
 	void AfterSetDesc();		//	伝熱行列の計算など、IH加熱モードは次の関数で設定
-	void UpdateIHheat(unsigned heating);	//	heatingは加熱強さ：4段階（0:OFF・1:弱火・2:中火・3:強火）
 	/// 熱伝導シミュレーションでエンジンが用いるステップをオーバーライド		
 	void Step(double dt);
 	//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
@@ -344,7 +362,7 @@ public:
 
 	//	IHによ四面体のface面の熱流束加熱のための行列成分計算関数
 	void CalcIHdqdt(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定
-	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);		//	少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
+	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);		//	face面での熱流束量を計算：少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
 	void CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num);		//	帯状に加熱、x軸で切る
 	void CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned num);		//	帯状に加熱、x軸で切る mayIHheatedを使わない
 	void CalcIHdqdt2(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定  numは火力別(0:week, 1:middle, 2:high )

@@ -1256,7 +1256,6 @@ void PHFemMeshThermo::CalcIHarea(double radius,double Radius,double dqdtAll){
 //	}
 //}
 
-
 void PHFemMeshThermo::CalcIHdqdt3(double r,double R,double dqdtAll,unsigned num){
 	///	内半径と外半径の間の節点に熱流束境界条件を設定
 
@@ -1469,9 +1468,7 @@ void PHFemMeshThermo::CalcIHdqdt2(double r,double R,double dqdtAll,unsigned num)
 	//	ガウスザイデル計算できるように処理など、準備する
 }
 
-Vec2d PHFemMeshThermo::GetIHbandDrawVtx(){
-	return IHLineVtxX;
-}
+Vec2d PHFemMeshThermo::GetIHbandDrawVtx(){	return IHLineVtxX;	}
 
 void PHFemMeshThermo::SetIHbandDrawVtx(double xS, double xE){
 	IHLineVtxX = Vec2d(xS,xE);
@@ -1588,7 +1585,7 @@ void PHFemMeshThermo::CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned
 
 	}
 
-void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num){
+void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned mode){
 	///	内半径と外半径の間の節点に熱流束境界条件を設定
 	//	北野天満宮祈願祈念コメント
 	//	少しでも領域にかかっていれば、IH加熱に含める
@@ -1630,7 +1627,7 @@ void PHFemMeshThermo::CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsign
 		//>	熱流束の面積計算はfluxareaを用いて行う
 		for(unsigned i=0;i < nSurfaceFace; i++){
 			if(faces[i].mayIHheated){
-				faces[i].heatflux[num] = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
+				faces[i].heatflux[mode] = dqdtds * faces[i].fluxarea;		//	熱流束の量をheatfluxの面積から計算
 				//debug
 				//if(faces[i].fluxarea > 0.0){
 				//	int kattonnnn =0;
@@ -1801,8 +1798,8 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 				bVecAll[j][0] += (-1.0/2.0 * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] ) * TVecAll[j];
 				ofs << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;			// DSTR
 				//{F}を加算
-				bVecAll[j][0] += vecFAll[j][0];		//Fを加算
-				//DSTR << " vecFAll[" << j << "][0] : "  << vecFAll[j][0] << std::endl;
+				bVecAll[j][0] += vecFAllSum[j];		//Fを加算
+				//DSTR << " vecFAllSum[" << j << "] : "  << vecFAllSum[j] << std::endl;
 				//DSTR << std::endl;
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
 				bVecAll[j][0] = bVecAll[j][0] * _dMatAll[0][j];
@@ -1988,8 +1985,8 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,do
 				ofs << "dMatKAll[0][" << j <<"] : " << dMatKAll[0][j] << std::endl;			// DSTR
 				ofs << "dMatCAll[0][" << j <<"] : " << dMatCAll[0][j] << std::endl;			// DSTR
 				//{F}を加算
-				bVecAll[j][0] += vecFAll[j][0];		//Fを加算
-				//DSTR << " vecFAll[" << j << "][0] : "  << vecFAll[j][0] << std::endl;
+				bVecAll[j][0] += vecFAllSum[j];		//Fを加算
+				//DSTR << " vecFAllSum[" << j << "] : "  << vecFAllSum[j] << std::endl;
 				//DSTR << std::endl;
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
 				bVecAll[j][0] = bVecAll[j][0] * _dMatAll[0][j];
@@ -2171,24 +2168,7 @@ void PHFemMeshThermo::DrawEdge(unsigned id0, unsigned id1){
 	//glFlush();
 }
 
-void PHFemMeshThermo::UpdateVecFAll(unsigned mode){
-	// F2,F3を加算する
-	for(unsigned id = 0; id < vertices.size();id++){
-		if(mode == OFF){ 
-			// F2は加算しない
-			vecFAll[id][0] = vecFAll_f3[id][0]; //F3
-		}
-		else if(mode == WEEK){
-			vecFAll[id][0] =  vecFAll_f2IH[mode][id][0]+ vecFAll_f3[id][0];//F2+F3		//mode=0 -> F2のWEEKの強さ
-		}
-		else if(mode == MIDDLE){
-			vecFAll[id][0] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=1 -> F2のmiddleの強さ
-		}
-		else if(mode == HIGH){
-			vecFAll[id][0] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=2 -> F2のhighの強さ
-		}
-	}
-}
+
 
 
 void PHFemMeshThermo::Step(double dt){
@@ -2258,8 +2238,8 @@ void PHFemMeshThermo::Step(double dt){
 	//for(unsigned i =0; i < surfaceVertices.size(); i++){
 	//	UsingHeatTransferBoundaryCondition(surfaceVertices[i],150.0);
 	//}
-	//DSTR << "vecFAll : " <<std::endl;
-	//DSTR << vecFAll << std::endl;
+	//DSTR << "vecFAllSum : " <<std::endl;
+	//DSTR << vecFAllSum << std::endl;
 
 	//	test　shapepairを取ってくる
 	//GetScene()->
@@ -2431,24 +2411,48 @@ void PHFemMeshThermo::InitCreateVecf_(){
 	for(unsigned i =0; i < 4 ; i++){
 			vecf[i] = 0.0;
 	}
-	vecFAll.clear();						///	初期化
+	vecFAllSum.clear();						///	初期化
 }
 
-void PHFemMeshThermo::InitCreateVecf(){
-	///	Vecfについて
-	//Vecfの初期化
-	for(unsigned i =0; i < 4 ; i++){
-			vecf[i] = 0.0;
-	}
-	vecFAll.resize(vertices.size(),1);		///	全体剛性ベクトルFのサイズを規定
-	vecFAll.clear();						///	初期化
-	for(unsigned i=0;i < 4;i++){
+void PHFemMeshThermo::InitVecFAlls(){
+	for(unsigned i =0; i < 4 ; i++){ vecf[i] = 0.0;}	/// Vecfの初期化
+	vecFAllSum.resize(vertices.size());					///	全体剛性ベクトルFのサイズを規定
+	vecFAllSum.clear();									///		〃			の初期化
+	for(unsigned i=0;i < HIGH +1 ; i++){				/// IH加熱モードの各ベクトルを初期化
 		vecFAll_f2IH[i].resize(vertices.size(),1);
 		vecFAll_f2IH[i].clear();
 	}
 }
 
-void PHFemMeshThermo::UpdateIHheat(unsigned heating){
+void PHFemMeshThermo::UpdateVecF(unsigned mode){
+	//Σ{F[i]}_{i=1}^{4}
+
+	//vecFAll[1],[2]に代入
+	for(unsigned id = 0; id < vertices.size();id++){
+		if(mode == OFF){ 
+			// F2は加算しない
+			vecFAllSum[id] = vecFAllSum[id]; //F3
+		}
+		else if(mode == WEEK){
+			vecFAllSum[id] =  vecFAll_f2IH[mode][id][0] + vecFAll_f3[id][0];//F2+F3		//mode=0 -> F2のWEEKの強さ
+		}
+		else if(mode == MIDDLE){
+			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=1 -> F2のmiddleの強さ
+		}
+		else if(mode == HIGH){
+			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=2 -> F2のhighの強さ
+		}
+	}
+
+
+	for(unsigned i =0; i< 4;i++){
+		vecFAllSum += vecFAll[i];				//全体剛性行列の和を取る
+	}
+	// F2,F3を加算する
+}
+
+void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
+
 	//熱伝導率、密度、比熱、熱伝達率　のパラメーターを設定・代入
 		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
 		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
@@ -2459,41 +2463,45 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heating){
 	//.		熱流束の設定
 	//..	初期化
 	//SetVtxHeatFluxAll(0.0);
-	//..	IH加熱設定
-	if(heating == OFF){
-		CalcIHdqdt_atleast(0.0,0.0,0.0,0);		//	IH加熱行列の係数0となるため、計算されない
+
+	//1.フライパン位置を取ってくる
+		//ih加熱円環中心からの同心円状加熱領域を計算し、ihdqdtに当てはめるメッシュ情報を生成
+
+	//2...	face面での熱流束量を計算（毎回フライパンの位置が変化するので、フライパン位置の変化の度に生成する）
+	if(heatingMODE == OFF){
+		CalcIHdqdt_atleast(0.0,0.0,0.0, OFF);		//	IH加熱行列の係数0となるため、計算されない
 	}
-	else if(heating == WEEK){	
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 5e1,1);		//
+	else if(heatingMODE == WEEK){	
+		CalcIHdqdt_atleast(0.11,0.14,231.9 * 5e1, WEEK);		//
 	}
-	else if(heating == MIDDLE){
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e4,2);		//
+	else if(heatingMODE == MIDDLE){
+		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e4, MIDDLE);		//
 	}
-	else if(heating == HIGH){
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5,3);		//
+	else if(heatingMODE == HIGH){
+		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e5, HIGH);		//
 	}
+
+	//3.各面での熱流束量から全体剛性ベクトルを作る。{F}に代入
+//	UpdateVecF(heatingMODE);
+
 	//%%	IH加熱のモード切替
 	//	ライン状に加熱
 	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	値を変えて実験	//*1e3　//*1e4 //5e3
 	//	円環状に加熱
 
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
-	InitCreateVecf();					///	CreateVecfの初期化
 	///	熱伝達率を各節点に格納
 	//SetHeatTransRatioToAllVertex();
 	for(unsigned i=0; i < this->tets.size(); i++){
 		CreateVecFAll(i);
 	}
+#if 0
+	CreateVecF2surfaceAll();		//	CreateVecFAll(i);の代わり
+	CreateVecF3surfaceAll();		//	CreateVecFAll(i);の代わり
+#endif
 }
 
 void PHFemMeshThermo::AfterSetDesc() {	
-	////時間刻み幅	dtの設定
-	//PHFemMeshThermo::dt = 0.01;
-
-	//シーンから、シーンの時間ステップを取得する⇒以下のコードでは、GetTimeStepしようとすると、NULLが返ってくるので、PHEngineで行う
-	//DSTR << DCAST(PHSceneIf, GetScene()) << std::endl;
-	//DSTR << DCAST(PHSceneIf, GetScene())->GetTimeStep() << std::endl;
-	//int hogeshimitake =0;
 
 	//%%%	初期化類		%%%//
 
@@ -2514,7 +2522,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 //		faces[i].heatflux =0.0;
 		//faces[i].heatflux.clear();				// 初期化
 		//faces[i].heatflux[hum]の領域確保：配列として、か、vetorとしてのpush_backか、どちらかを行う。配列ならここに記述。
-		for(unsigned j =0; j<3; j++){
+		for(unsigned j =0; j < HIGH +1 ; j++){			// 加熱モードの数だけ、ベクトルを生成
 			faces[i].heatflux[j] = 0.0;
 		}
 	}
@@ -2590,10 +2598,12 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//CalcIHarea(0.04,0.095,231.9 * 0.005 * 1e6);
 
 
+
+
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
 
 	InitCreateMatC();					///	CreateMatCの初期化
-	InitCreateVecf();					///	CreateVecfの初期化
+	InitVecFAlls();					///	VecFAll類の初期化
 	InitCreateMatk();					///	CreateMatKの初期化
 	//..	CreateLocalMatrixAndSet();			//> 以上の処理を、この関数に集約
 
@@ -2601,15 +2611,12 @@ void PHFemMeshThermo::AfterSetDesc() {
 	SetHeatTransRatioToAllVertex();
 	for(unsigned i=0; i < this->tets.size(); i++){
 		//各行列を作って、ガウスザイデルで計算するための係数の基本を作る。Timestepの入っている項は、このソース(SetDesc())では、実現できないことが分かった(NULLが返ってくる)
-		CreateMatkLocal(i);				///	Matk1 Matk2(更新が必要な場合がある)を作る
+		CreateMatkLocal(i);				///	Matk1 Matk2(更新が必要な場合がある)を作る	//ifdefスイッチで全体剛性行列も(表示用だが)生成可能
 		//CreateMatKall();		//CreateMatkLocal();に実装したので、後程分ける。
 		CreatedMatCAll(i);
 		CreateVecFAll(i);
 	}
-#if 0
-	CreateVecF2surfaceAll();		//	CreateVecFAll(i);の代わり
-	CreateVecF3surfaceAll();		//	CreateVecFAll(i);の代わり
-#endif
+
 	int hogeshidebug =0;
 	//	節点温度推移の書き出し
 	templog.open("templog.csv");
@@ -2716,18 +2723,13 @@ void PHFemMeshThermo::CreateVecFAll(unsigned id){
 	//f1を作る
 	//>	熱流束境界条件	vecf2を作る			
 	//CreateVecf2(id);				//>	tets[id].vecf[1] を初期化,代入		熱流束は相加平均で求める
-	CreateVecf2surface(id);			//
+	CreateVecf2surface(id);			
 	//>	熱伝達境界条件	f3を作る
-	CreateVecf3(id);			//>	tets[id].vecf[2] を初期化,代入		熱伝達率は相加平均、周囲流体温度は節点の形状関数？ごとに求める
+	CreateVecf3(id);			// surface化すべきだよね	//>	tets[id].vecf[2] を初期化,代入		熱伝達率は相加平均、周囲流体温度は節点の形状関数？ごとに求める
 	//CreateVecf3_(id);			//>	tets[id].vecf[2] を初期化,代入		熱伝達率、周囲流体温度を相加平均で求める
 	//f4を作る
 	//f1:vecf[0],f2:vecf[1],f3:vecf[2],f4:vecf[3]を加算する
 	vecf = tets[id].vecf[1] + tets[id].vecf[2];		//>	+ tets[id].vecf[0] +  tets[id].vecf[3] の予定
-	//	for debug
-	//DSTR << "vecf : " << std::endl;
-	//DSTR << vecf << std::endl;
-	//DSTR << "vecf3 : " << std::endl;
-	//DSTR << vecf3 << std::endl;
 	//	(ガウスザイデルを使った計算時)要素毎に作った行列の成分より、エッジに係数を格納する
 	//	or	(ガウスザイデルを使わない計算時)要素ごとの計算が終わるたびに、要素剛性行列の成分だけをエッジや点に作る変数に格納しておく	#ifedefでモード作って、どちらもできるようにしておいても良いけどw
 
@@ -2735,22 +2737,22 @@ void PHFemMeshThermo::CreateVecFAll(unsigned id){
 	//j:要素の中の何番目か
 	for(unsigned j =0;j < 4; j++){
 		int vtxid0 = tets[id].vertices[j];
-		vecFAll[vtxid0][0] += vecf[j];
+		vecFAllSum[vtxid0] += vecf[j];
 		//vecFAll_f2IH[num][vtxid0][0] += vecf[j];
 	}
 	//	for debug
-	//vecFAllに値が入ったのかどうかを調べる 2011.09.21全部に値が入っていることを確認した
-	//DSTR << "vecFAll : " << std::endl;
+	//vecFAllSumに値が入ったのかどうかを調べる 2011.09.21全部に値が入っていることを確認した
+	//DSTR << "vecFAllSum : " << std::endl;
 	//for(unsigned j =0; j < vertices.size() ; j++){
-	//	DSTR << j << " ele is :  " << vecFAll[j][0] << std::endl;
+	//	DSTR << j << " ele is :  " << vecFAllSum[j] << std::endl;
 	//}
 
 	////	調べる
-	////vecFAllの成分のうち、0となる要素があったら、エラー表示をするコードを書く
+	////vecFAllSumの成分のうち、0となる要素があったら、エラー表示をするコードを書く
 	//// try catch文にする
 	//for(unsigned j = 0; j < vertices.size() ; j++){
-	//	if(vecFAll[j][0] ==0.0){
-	//		DSTR << "vecFAll[" << j << "][0] element is blank" << std::endl;
+	//	if(vecFAllSum[j] ==0.0){
+	//		DSTR << "vecFAllSum[" << j << "] element is blank" << std::endl;
 	//	}
 	//}
 
@@ -3238,15 +3240,7 @@ void PHFemMeshThermo::CreateVecf2surface(unsigned id){
 					///	以下の[]は上までの[l]と異なる。
 					///	IDが何番目かによって、形状関数の係数が異なるので、
 					tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux[1] * (1.0/3.0) * faces[tets[id].faces[l]].area * vecf2array[j];
-					//DSTR << "tets[id].matk2にfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "を加算: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
-					//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
 				}
-				//else{
-				//	///	IDと一致しない場合には、matk2array[j]には全成分0を入れる
-				//	///	としたいところだが、
-				//	//matk2array[j] =0.0 * matk2array[j];
-				//	//DSTR << "matk2array[" << j << "]: " << matk2array[j] << std::endl;
-				//}
 			}
 		}
 		///	SurfaceFaceじゃなかったら、matk2arrayには0を入れる
@@ -3271,22 +3265,22 @@ void PHFemMeshThermo::CreateVecF3surfaceAll(){
 		CreateVecf3(id);//;		// f3surfaceではないけれど、いいのか？	//CreateVecf2surface(id,num);	//	この関数も、引数に指定したベクトルに入れられるようにする?
 		for(unsigned j =0;j < 4; j++){
 			int vtxid0 = tets[id].vertices[j];
-			//vecFAll[vtxid0][0] = vecf[j];			//全体剛性ベクトルを作成：ガウスザイデル計算内でやっている処理・これを行う。ここまでをVecf2でやる。
+			//vecFAllSum[vtxid0] = vecf[j];			//全体剛性ベクトルを作成：ガウスザイデル計算内でやっている処理・これを行う。ここまでをVecf2でやる。
 			vecFAll_f3[vtxid0][0] += tets[id].vecf[2][j];		//	+= じゃなくてもいいのか？同様に、元のソースでも += の必要があるのでは？
 		}
 	}
 	//作った後に、ガウスザイデル計算で、VecFAllにセットする関数を作る。
-	//VecFAllに加算とかすると、どんどん増えてしまうし、逆に、他の、変化しない要素{F_3}など、全体ベクトルも作って、保存しておく必要
+	//vecFAllSumに加算とかすると、どんどん増えてしまうし、逆に、他の、変化しない要素{F_3}など、全体ベクトルも作って、保存しておく必要
 	//ガウスザイデルの計算の中で、これまでの計算でFベクトルを使うのに代えて、マイステップで、VecFをF1,F2から作る必要がある。
 }
 
 void PHFemMeshThermo::CreateVecF2surfaceAll(){
 	//	初期化
-	//	弱火、中火、強火について初期化(ベクトルの行数設定、初期化)
-	for(unsigned i =0; i < 4 ;i++){
-		vecFAll_f2IH[i].resize(vertices.size(),1);			//表面だけでなく、全節点について計算しないと、ベクトル×行列の計算が不成立のため。
-		vecFAll_f2IH[i].clear();
-	}
+	//	弱火、中火、強火について初期化(ベクトルの行数設定、初期化) initVecFAlls()で実行
+	//for(unsigned i =0; i < 4 ;i++){
+	//	vecFAll_f2IH[i].resize(vertices.size(),1);			//表面だけでなく、全節点について計算しないと、ベクトル×行列の計算が不成立のため。
+	//	vecFAll_f2IH[i].clear();
+	//}
 	
 	//四面体要素ごとに行列を作り、どこかで合成する
 	//idを入れて、再帰的に作っている
@@ -3297,7 +3291,7 @@ void PHFemMeshThermo::CreateVecF2surfaceAll(){
 			//num毎に、入れ物に入れる。
 			for(unsigned j =0;j < 4; j++){
 				int vtxid0 = tets[id].vertices[j];
-				//vecFAll[vtxid0][0] = vecf[j];			//全体剛性ベクトルを作成：ガウスザイデル計算内でやっている処理・これを行う。ここまでをVecf2でやる。
+				//vecFAllSum[vtxid0][0] = vecf[j];			//全体剛性ベクトルを作成：ガウスザイデル計算内でやっている処理・これを行う。ここまでをVecf2でやる。
 				//vecFAll_f2IHw[vtxid0][0] = vecf[j];
 				vecFAll_f2IH[num][vtxid0][0] += tets[id].vecf[1][j];		//f2の[num(火力)]	+= じゃなくてもいいのか？同様に、元のソースでも += の必要があるのでは？
 			}
@@ -3318,14 +3312,14 @@ void PHFemMeshThermo::CreateVecF2surfaceAll(){
 		////j:要素の中の何番目か
 		//for(unsigned j =0;j < 4; j++){
 		//	int vtxid0 = tets[id].vertices[j];
-		//	vecFAll[vtxid0][0] = vecf[j];			//全体剛性ベクトルを作成：ガウスザイデル計算内でやっている処理・これを行う。ここまでをVecf2でやる。
+		//	vecFAllSum[vtxid0] = vecf[j];			//全体剛性ベクトルを作成：ガウスザイデル計算内でやっている処理・これを行う。ここまでをVecf2でやる。
 		//	vecFAll_f2IHw[vtxid0][0] = vecf[j];
 		//	
 		//}
 	
 
-	//作った後に、ガウスザイデル計算で、VecFAllにセットする関数を作る。
-	//VecFAllに加算とかすると、どんどん増えてしまうし、逆に、他の、変化しない要素{F_3}など、全体ベクトルも作って、保存しておく必要
+	//作った後に、ガウスザイデル計算で、vecFAllSumにセットする関数を作る。
+	//vecFAllSumに加算とかすると、どんどん増えてしまうし、逆に、他の、変化しない要素{F_3}など、全体ベクトルも作って、保存しておく必要
 	//ガウスザイデルの計算の中で、これまでの計算でFベクトルを使うのに代えて、マイステップで、VecFをF1,F2から作る必要がある。
 
 	}
@@ -4136,11 +4130,11 @@ void PHFemMeshThermo::SetVerticesTempAll(double temp){
 }
 
 void PHFemMeshThermo::AddvecFAll(unsigned id,double dqdt){
-	vecFAll[id][0] += dqdt;		//	+=に変更
+	vecFAllSum[id] += dqdt;		//	+=に変更
 }
 
 void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt){
-	vecFAll[id][0] = dqdt;		//	+=に変更
+	vecFAllSum[id] = dqdt;		//	+=に変更
 }
 
 void PHFemMeshThermo::InitAllVertexTemp(){
