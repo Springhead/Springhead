@@ -2418,23 +2418,84 @@ void PHFemMeshThermo::InitVecFAlls(){
 	for(unsigned i =0; i < 4 ; i++){ vecf[i] = 0.0;}	/// Vecfの初期化
 	vecFAllSum.resize(vertices.size());					///	全体剛性ベクトルFのサイズを規定
 	vecFAllSum.clear();									///		〃			の初期化
+
 	for(unsigned i=0;i < HIGH +1 ; i++){				/// IH加熱モードの各ベクトルを初期化
 		vecFAll_f2IH[i].resize(vertices.size(),1);
 		vecFAll_f2IH[i].clear();
 	}
+	// tets.vecf[4]の初期化
+	for(unsigned i=0;i<tets.size();i++){
+		for(unsigned j=0; j <4;j++){
+			tets[i].vecf[j].clear();
+		}
+	}
+	// vecFAllの初期化
+	//initialize
+	for(unsigned i =0;i<4;i++){
+		vecFAll[i].resize(vertices.size());
+		vecFAll[i].clear();
+	}
 }
 
 void PHFemMeshThermo::UpdateVecF(unsigned mode){
-	// Create {F2}
-#if 0 
-	vecFAll[1] = //Function:CreteVecF2,mode
-#endif
-	// Create {F3}
-#if 0 
-	vecFAll[2] = //Function:CreteVecF2
-#endif
-	//Σ{F[i]}_{i=1}^{4}
+	// modeは必要か？
+	
+	//	Initialize
+	InitVecFAlls();		// この中の初期化のすべてが必要か？
 
+//. 1)最初の2つ({F2},{F3})は、F2,F3のどちらかだけ更新すれば良い場合に用いる
+#if 0
+	// {F2}
+	for(unsigned tetsid = 0; tetsid < tets.size();tetsid++){
+		unsigned id = tetsid;
+		CreateVecf2surface(id);			// tets[id].vecf[1];に結果格納
+		for(unsigned j =0;j < 4; j++){
+			int vtxid0 = tets[id].vertices[j];
+			//vecFAll[1][vtxid0] += vecf[j];
+			vecFAll[1][vtxid0] += tets[id].vecf[1][j];
+		}
+	}	
+#endif
+
+#if 0
+	// {F3}
+	for(unsigned tetsid = 0; tetsid < tets.size();tetsid++){
+		unsigned id = tetsid;
+		CreateVecf3(id);		// tets[id].vecf[2];に結果格納
+		//vecf = tets[id].vecf[2];
+		for(unsigned j =0;j < 4; j++){
+			int vtxid0 = tets[id].vertices[j];
+			//vecFAll[1][vtxid0] += vecf[j];
+			vecFAll[2][vtxid0] += tets[id].vecf[2][j];
+		}
+	}	
+#endif
+
+//. 2) {F2,F3}の両方共更新して良い場合
+#if 1
+	for(unsigned tetsid = 0; tetsid < tets.size();tetsid++){
+		unsigned id = tetsid;
+		CreateVecf2surface(id);
+		CreateVecf3(id);		// tets[id].vecf[2];に結果格納
+		//vecf = tets[id].vecf[2];
+		for(unsigned j =0;j < 4; j++){
+			int vtxid0 = tets[id].vertices[j];
+			//vecFAll[1][vtxid0] += vecf[j];
+			vecFAll[1][vtxid0] += tets[id].vecf[1][j];
+			vecFAll[2][vtxid0] += tets[id].vecf[2][j];
+		}
+	}
+#endif
+
+int debugParam =0;
+
+	//Σ{F[i]}_{i=1}^{4}
+	vecFAllSum = vecFAll[1] + vecFAll[2];
+
+//%%%% この関数はここまででとりあえず完成 2012.10.09
+
+	//	消去予定
+#if 0
 //depend on mode, I don't need to use mode state.Because mode state cause different calc result of heatflus.
 // I just use the result of IHdqdt Function.
 	//vecFAll[1],[2]に代入
@@ -2454,11 +2515,14 @@ void PHFemMeshThermo::UpdateVecF(unsigned mode){
 		}
 	}
 
+#endif
 
+#if 0
 	for(unsigned i =0; i< 4;i++){
 		vecFAllSum += vecFAll[i];				//全体剛性行列の和を取る
 	}
 	// F2,F3を加算する
+#endif
 }
 
 void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
@@ -2476,6 +2540,7 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 
 	//1.フライパン位置を取ってくる
 		//ih加熱円環中心からの同心円状加熱領域を計算し、ihdqdtに当てはめるメッシュ情報を生成
+		//　if(フライパンが動いたか)	動いていなければ、vecfも、1step前の値を使えるようにしておきたい。
 
 	//2...	face面での熱流束量を計算（フライパン位置又はポインタを引数に代入：毎回フライパンの位置が変化するので、フライパン位置の変化の度に生成する）
 	if(heatingMODE == OFF){
@@ -2492,7 +2557,8 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 	}
 
 	//3.各面での熱流束量から全体剛性ベクトルを作る。{F}に代入
-#if 0
+
+#if 1			// switch1
 	UpdateVecF(heatingMODE);
 #endif
 	//%%	IH加熱のモード切替
@@ -2503,9 +2569,13 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
 	///	熱伝達率を各節点に格納
 	//SetHeatTransRatioToAllVertex();
+#if 0			//!switch1
+	InitVecFAlls();
 	for(unsigned i=0; i < this->tets.size(); i++){
 		CreateVecFAll(i);
 	}
+#endif
+
 #if 0
 	CreateVecF2surfaceAll();		//	CreateVecFAll(i);の代わり
 	CreateVecF3surfaceAll();		//	CreateVecFAll(i);の代わり
