@@ -2425,8 +2425,18 @@ void PHFemMeshThermo::InitVecFAlls(){
 }
 
 void PHFemMeshThermo::UpdateVecF(unsigned mode){
+	// Create {F2}
+#if 0 
+	vecFAll[1] = //Function:CreteVecF2,mode
+#endif
+	// Create {F3}
+#if 0 
+	vecFAll[2] = //Function:CreteVecF2
+#endif
 	//Σ{F[i]}_{i=1}^{4}
 
+//depend on mode, I don't need to use mode state.Because mode state cause different calc result of heatflus.
+// I just use the result of IHdqdt Function.
 	//vecFAll[1],[2]に代入
 	for(unsigned id = 0; id < vertices.size();id++){
 		if(mode == OFF){ 
@@ -2467,7 +2477,7 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 	//1.フライパン位置を取ってくる
 		//ih加熱円環中心からの同心円状加熱領域を計算し、ihdqdtに当てはめるメッシュ情報を生成
 
-	//2...	face面での熱流束量を計算（毎回フライパンの位置が変化するので、フライパン位置の変化の度に生成する）
+	//2...	face面での熱流束量を計算（フライパン位置又はポインタを引数に代入：毎回フライパンの位置が変化するので、フライパン位置の変化の度に生成する）
 	if(heatingMODE == OFF){
 		CalcIHdqdt_atleast(0.0,0.0,0.0, OFF);		//	IH加熱行列の係数0となるため、計算されない
 	}
@@ -2482,8 +2492,9 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 	}
 
 	//3.各面での熱流束量から全体剛性ベクトルを作る。{F}に代入
-//	UpdateVecF(heatingMODE);
-
+#if 0
+	UpdateVecF(heatingMODE);
+#endif
 	//%%	IH加熱のモード切替
 	//	ライン状に加熱
 	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	値を変えて実験	//*1e3　//*1e4 //5e3
