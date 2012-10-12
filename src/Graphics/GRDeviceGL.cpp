@@ -292,6 +292,7 @@ void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, voi
 	if (!stride) stride = vertexSize;
 	if (vertexColor) glEnable(GL_COLOR_MATERIAL);
 	else glDisable(GL_COLOR_MATERIAL);
+
 	glInterleavedArrays(vertexFormatGl, (GLsizei)stride, vtx);
 	glDrawElements(mode, (GLsizei)count, GL_UNSIGNED_INT, idx);
 	//naga
