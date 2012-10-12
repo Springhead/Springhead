@@ -28,7 +28,7 @@ static char* GetEnv(char* buf, const char* var){
 			char* env = getenv(varstr);
 			if (!env){
 				env = "";
-				DSTR << "UTDllLoader::Load fails to find environment value of '" << var << "'" << std::endl;
+				DSTR << "UTDllLoader::Load fails to find environment value of '" << varstr << "' for resolving '" << var << "'" << std::endl;
 			}
 			strcpy(buf+bufCur, env);
 			bufCur += strlen(env);
@@ -43,7 +43,7 @@ static char* GetEnv(char* buf, const char* var){
 			char* env = getenv(varstr);
 			if (!env){
 				env = "";
-				DSTR << "UTDllLoader::Load fails to find environment value of '" << var << "'" << std::endl;
+				DSTR << "UTDllLoader::Load fails to find environment value of '" << varstr << "' for resolving '" << var << "'" << std::endl;
 			}
 			strcpy(buf+bufCur, env);
 			bufCur += strlen(env);
