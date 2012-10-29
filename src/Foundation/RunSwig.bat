@@ -15,6 +15,7 @@ set PATHORG=%PATH%;
 rem Create SJIS World
 set PATH=..\..\bin;..\..\bin\swig
 
+set AUXDEP=../../include/Springhead.h ../../include/base/Env.h ../../include/Base/BaseDebug.h ../../src/Foundation/UTTypeDesc.h
 
 set SRCINTF=
 for %%p in (%TARGET%) do for %%f in (../../include/%%p/*.h) do set SRCINTF=!SRCINTF! ../../include/%%p/%%f
@@ -38,7 +39,7 @@ for %%p in (%SRCIMP%) do echo %%include "%%p">> %MODULE%.i
 
 echo #	Do not edit. RunSwig.bat will update this file.> %MAKEFILE%
 echo all: ..\..\src\%MODULE%\%MODULE%Stub.cpp>>%MAKEFILE%
-echo ..\..\src\%MODULE%\%MODULE%Stub.cpp: %SRCINTFDEP% %SRCIMPDEP%>>%MAKEFILE%
+echo ..\..\src\%MODULE%\%MODULE%Stub.cpp: %AUXDEP% %SRCINTFDEP% %SRCIMPDEP%>>%MAKEFILE%
 echo 	swig -spr -w305,312,319,325,401,402 -DSWIG_%MODULE% -c++ %MODULE%.i>>%MAKEFILE%
 make -f%MAKEFILE%
 set PATH=%PATHORG%
