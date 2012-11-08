@@ -15,7 +15,7 @@
 namespace Spr{;
 
 #ifdef _DEBUG
-//#define TRACE_PARSE
+//	#define TRACE_PARSE
 #endif
 
 #ifdef TRACE_PARSE
@@ -75,18 +75,6 @@ static void NameSet(const char* b, const char* e){
 	UTString n(b,e);
 	fileContext->datas.back()->SetName(UTString(b,e));
 }
-///	ノードの始まり．型を見つけてセット
-static void NodeStartFromId(const char c){
-	PDEBUG( DSTR << "NodeStartFromId " << idTypeId << std::endl );
-	assert(idType == IT_FIELD);
-	fileContext->fieldIts.PushType(fileContext->fieldIts.Top().type);
-	fileContext->FindField(idTypeId);
-	UTString typeName = fileContext->fieldIts.Top().field->typeName;
-	fileContext->fieldIts.Pop();
-	fileContext->NodeStart(typeName);
-	fileContext->datas.back()->SetName(idTypeId);
-}
-
 ///	ノードの終わり
 static void NodeEnd(const char* b, const char* e){
 	PDEBUG(DSTR << "NodeEnd " << fileContext->fieldIts.back().type->GetTypeName() << std::endl);
@@ -98,22 +86,40 @@ static void NodeSkip(const char* b, const char* e){
 	fileContext->datas.Top()->str = UTString(b,e);
 }
 
-static size_t letStartDepth;
+
+//	右辺がブロックの場合の代入
+static void BlockLetStart(const char c){
+	//	ブロック開始時のイテレータの深さを保存
+	fileContext->startDepthes.Push(fileContext->fieldIts.size());
+	PDEBUG( DSTR << "BlockLetStart " << idTypeId << " (" <<  fileContext->startDepthes.Top() << ")" << std::endl );
+	//	指定のフィールドに移動
+	fileContext->FindField(idTypeId);
+	//	コンポジット＝ブロックの中に入る
+	fileContext->CompositStart();
+}
+static void BlockLetEnd(const char* b, const char* e){
+	PDEBUG( DSTR << "BlockLetEnd " << " (" <<  fileContext->startDepthes.Top() << ")" << std::endl );
+	while (fileContext->fieldIts.size() > fileContext->startDepthes.Top()) fileContext->CompositEnd();
+	fileContext->startDepthes.Pop();
+}
+
+//	値を並べるだけの代入
 static void LetStart(const char* b, const char* e){
 	fileContext->FindField(idTypeId);
-	letStartDepth = fileContext->fieldIts.size()+1;	//	同階層でNextしてはいけないので、+1。
+	fileContext->startDepthes.Push(fileContext->fieldIts.size()+1);	//	同階層でNextしてはいけないので、+1。
 }
 static void LetEnd(const char* b, const char* e){
-	letStartDepth = 0;
-	while (fileContext->fieldIts.size() > fileContext->nodeStartDepthes.Top()) 
+	fileContext->startDepthes.Pop();
+	while (fileContext->fieldIts.size() > fileContext->startDepthes.Top()) 
 		fileContext->CompositEnd();
 }
+
 /**	ブロック読み出し中，フィールドを読む前に呼ばれる．
 	TypeDescを見て次に読み出すべきフィールドをセットする．
 	読み出すべきフィールドがある間 true を返す．	*/
 static bool NextField(){
-	if (letStartDepth > fileContext->fieldIts.size()){
-		PDEBUG( DSTR << "NextField:failed. letStartDepth=" << letStartDepth << "." << std::endl);
+	if (fileContext->startDepthes.Top() > fileContext->fieldIts.size()){
+		PDEBUG( DSTR << "NextField:failed. letStartDepth=" << fileContext->startDepthes.Top() << "." << std::endl);
 		return false;
 	}
 
@@ -296,18 +302,18 @@ void FIFileSpr::Init(){
 	//	本文用パーサ
 	start		=	*node;
 	node		=	id[&SetIdType] >> if_p(&IsIdNode)[ 
-						eps_p[&NodeStart] >> !id[&NameSet] >> (ch_p('{') >> block | ExpP("'{'"))
+						eps_p[&NodeStart] >> !id[&NameSet] >> (ch_p('{') >> block[&NodeEnd] | ExpP("'{'"))
 					].else_p[ nothing_p ] | ExpP("node type");
-	block		=	*data >> (ch_p('}') | ExpP("'}'"))[&NodeEnd];
+	block		=	*data >> (ch_p('}') | ExpP("'}'"));
 	data		=	ch_p('*') >> id[&RefSet] |
 					id[&SetIdType] >> 
 					if_p(&IsIdNode)[	//	型名の場合は子ノード
-						eps_p[&NodeStart] >> !id[&NameSet] >> (ch_p('{') >> block | ExpP("'{'")) 
+						eps_p[&NodeStart] >> !id[&NameSet] >> (ch_p('{') >> block[&NodeEnd] | ExpP("'{'")) 
 					].else_p[
 						if_p(&IsIdField)[	//	フィールド名なら代入
 							ch_p('=') >> (
-								ch_p('{')[&NodeStartFromId] >> block	//	ブロック形式にするか
-								| eps_p[&LetStart] >> right [&LetEnd]	//	値を並べて書くか
+								ch_p('{')[&BlockLetStart] >> block[&BlockLetEnd]	//	ブロック形式で書く場合
+								| eps_p[&LetStart] >> right [&LetEnd]				//	値を順番に並べて書く場合
 							)
 						].else_p [ ExpP("field or type name") ]
 					];

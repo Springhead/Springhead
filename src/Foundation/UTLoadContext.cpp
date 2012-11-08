@@ -509,7 +509,7 @@ void UTLoadContext::NodeStart(UTString tn, UTLoadedData::Attributes* attrs){
 	datas.Push(data);
 
 	//	ノードのロード開始時のスタックの深さを記録
-	nodeStartDepthes.Push(fieldIts.size());
+	startDepthes.Push(fieldIts.size());
 
 
 	//	DOMロード前ハンドラの呼び出し
@@ -532,11 +532,11 @@ void UTLoadContext::NodeEnd(){
 	}
 
 	//	スタックの片付け
-	while(nodeStartDepthes.Top() > fieldIts.size()){
+	while(startDepthes.Top() > fieldIts.size()){
 		datas.Pop();
 		fieldIts.Pop();
 	}
-	nodeStartDepthes.Pop();
+	startDepthes.Pop();
 	datas.Pop();
 	fieldIts.Pop();
 }
@@ -577,7 +577,6 @@ bool UTLoadContext::FindField(UTString name){
 	fieldIts.Top().SetFieldInfo((char*)datas.Top()->data);
 	return true;
 }
-
 
 void UTLoadContext::AddDataLink(std::string ref, const char* pos){
 	dataLinks.push_back(DBG_NEW UTDataLinkTask(datas.Top(), ref, fileMaps.Top(), pos));
