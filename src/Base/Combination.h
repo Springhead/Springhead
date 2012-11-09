@@ -55,25 +55,34 @@ public:
 	/// r番目の行を削除し，[r+1, height())番目の行を1つ上に詰める
 	void erase_row(int row){
 		assert(0 <= row && row < height_);
-		if(row != height_ - 1){
-			int r, c;
-			for(r = row+1; r < height_; r++)
-				for(c = 0; c < width_; c++)
-					item(r, c) = item(r-1, c);
-		}
+		int r, c;
+		for(r = row+1; r < height_; r++)
+			for(c = 0; c < width_; c++)
+				item(r-1, c) = item(r, c);
 		height_--;
 		base_type::resize(height_ * width_);
 	}
 	/// c番目の列を削除し，[c+1, width())番目の列を1つ左に詰める
 	void erase_col(int col){
 		assert(0 <= col && col < width_);
-		if(col != width_ - 1){
+		int wnew = width_ - 1;
+		/*if(col != width_ - 1){
 			int r, c;
 			for(c = col+1; c < width_; c++)
 				for(r = 0; r < height_; r++)
-					item(r, c) = item(r, c-1);
+					item(r, c-1) = item(r, c);
+		}*/
+		int r, c;
+		typename base_type::iterator b = this->begin();
+		for(r = 0; r < height_; r++){
+			for(c = 0; c < width_; c++){
+				if(c < col)
+					b[wnew * r + c] = b[width_ * r + c];
+				if(c > col)
+					b[wnew * r + c-1] = b[width_ * r + c];
+			}
 		}
-		width_--;
+		width_ = wnew;
 		base_type::resize(height_ * width_);
 	}
 	int height() const { return height_; };
