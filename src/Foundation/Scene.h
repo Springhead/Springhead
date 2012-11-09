@@ -93,7 +93,7 @@ protected:
 
 public:
 	NameManager();
-	~NameManager();
+	virtual ~NameManager();
 	virtual void SetNameManager(NameManager* s);
 	void AddChildManager(NameManager* c);
 	void DelChildManager(NameManager* c);

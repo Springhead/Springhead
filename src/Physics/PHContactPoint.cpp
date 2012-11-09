@@ -17,6 +17,9 @@ namespace Spr{;
 
 PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1){
 	shapePair = sp;
+	mu0 = 0.5 * (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0);
+	mu  = 0.5 * (shapePair->shape[0]->GetMaterial().mu  + shapePair->shape[1]->GetMaterial().mu );
+	e   = 0.5 * (shapePair->shape[0]->GetMaterial().e   + shapePair->shape[1]->GetMaterial().e  );
 	pos = p;
 	solid[0] = s0, solid[1] = s1;
 
@@ -38,7 +41,7 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	movableAxes[2] = 5;
 	InitTargetAxes();	
 }
-
+/*
 PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1){
 	shapePair = sp;
 	pos = p;
@@ -81,33 +84,29 @@ PHContactPoint::PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSo
 	movableAxes[0] = 3;
 	movableAxes[1] = 4;
 	movableAxes[2] = 5;
-	InitTargetAxes();	
+	InitTargetAxes();
 }
+*/
 
 void PHContactPoint::CompBias(){
 	//	correctionを位置LCPで別に行う場合は、速度を変更しての位置補正はしない。
 	if (engine->numIterContactCorrection) return;
-	double dtinv = 1.0 / GetScene()->GetTimeStep();
-	double overlap = 0.002;
-
+	PHSceneIf* scene = GetScene();
+	double dt    = scene->GetTimeStep();
+	double dtinv = scene->GetTimeStepInv();
+	double tol   = scene->GetContactTolerance();
+	double vth   = scene->GetImpactThreshold();
 #if 1
-	//	接触用の correctionRate
-	double contactCorrectionRate = 0;
-
-	double e;
 	//	速度が小さい場合は、跳ね返りなし。
-	if (vjrel[0]*GetScene()->GetTimeStep() > -0.1){
-		e = 0;
-		contactCorrectionRate = engine->contactCorrectionRate;
-	}else{
-		//	跳ね返り係数: 2物体の平均値を使う
-		e = 0.5 * (shapePair->shape[0]->GetMaterial().e + shapePair->shape[1]->GetMaterial().e);
+	//if (vjrel[0] * dt > -0.1){
+	if(vjrel[0] > - vth){
+		db[0] = - engine->contactCorrectionRate * std::max(shapePair->depth - tol, 0.0) * dtinv;
+	}
+	else{
 		//	跳ね返るときは補正なし
-		contactCorrectionRate = 0;
+		db[0] = e * vjrel[0];
 	}
 
-	if (overlap > shapePair->depth) overlap = shapePair->depth;
-	db[0] = - contactCorrectionRate * (shapePair->depth - overlap) / GetScene()->GetTimeStep() + e * vjrel[0];
 #endif
 
 #if 0
@@ -142,25 +141,33 @@ void PHContactPoint::CompBias(){
 }
 
 void PHContactPoint::Projection(double& f_, int i) {
-	static double flim;
-	if(i == 0){	//垂直抗力 >= 0の制約
+	static double fx, flim;
+	if(i == 0){	
+		//垂直抗力 >= 0の制約
 		f_ = max(0.0, f_);
-		//	最大静止摩擦
-		flim = 0.5 * (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0) * f_;	}
+		// 垂直抗力
+		fx   = f_;
+		// 最大静止摩擦力
+		flim = mu0 * fx;
+	}
 	else{
 		//	動摩擦を試しに実装してみる。
-		double fu;
-		if (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0 == 0){
+		double fu = mu * fx;
+		/*if (mu0 == 0.0){
 			fu = 0;
-		}else{
+		}
+		else{
 			fu = (shapePair->shape[0]->GetMaterial().mu + shapePair->shape[1]->GetMaterial().mu)
 				/ (shapePair->shape[0]->GetMaterial().mu0 + shapePair->shape[1]->GetMaterial().mu0)
 				* flim;	
-		}
-		if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	静止摩擦
+		}*/
+		//if (-0.01 < vjrel[1] && vjrel[1] < 0.01){	//	静止摩擦
+		double vth = GetScene()->GetFrictionThreshold();
+		if(-vth < vjrel[1] && vjrel[1] < vth){
 			if (f_ > flim) f_ = fu;
 			else if (f_ < -flim) f_ = -fu;
-		}else{					//	動摩擦
+		}
+		else{					//	動摩擦
 			if (f_ > fu) f_ = fu;
 			else if (f_ < -fu) f_ = -fu;		
 		}

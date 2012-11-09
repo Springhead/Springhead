@@ -188,13 +188,14 @@ bool PHSolid::DelChildObject(ObjectIf* obj){
 	if (DCAST(PHFrameIf, obj)){
 		PHFrameIf* f = obj->Cast();
 		for(int i=0; i<NFrame(); ++i){
-			if (GetFrame(i) == f) DelFrame(i);
+			if (GetFrame(i) == f)
+				DelFrame(i);
 			i--;
 		}
 		return true;
 	}
 	if (DCAST(CDShapeIf, obj)){
-		DelShape(DCAST(CDShapeIf, obj));
+		RemoveShape(DCAST(CDShapeIf, obj));
 		return true;
 	}
 	return false;
@@ -281,9 +282,17 @@ void PHSolid::UpdateVelocity(double dt){
 		v *= scene->GetAirResistanceRate();
 
 		// 角速度の制限　（要API化）
-		double vMax = 100;
-		if (v.w().norm() > 100)
-			v.w() = v.w().unit() * vMax;
+		//double vMax = 100;
+		//if (v.w().norm() > 100)
+		//	v.w() = v.w().unit() * vMax;
+		double vmax = scene->GetMaxVelocity();
+		double wmax = scene->GetMaxAngularVelocity();
+		double vnorm = v.v().norm();
+		double wnorm = v.w().norm();
+		if(vnorm > vmax)
+			v.v() *= (vmax/vnorm);
+		if(wnorm > wmax)
+			v.w() *= (wmax/wnorm);
 
 		SetVelocity       (GetOrientation() * v.v());
 		SetAngularVelocity(GetOrientation() * v.w());
@@ -498,13 +507,18 @@ void PHSolid::AddShape(CDShapeIf* shape){
 	scene->constraintEngine->UpdateShapePairs(this);
 	scene->hapticEngine->UpdateShapePairs(this);
 }
-void PHSolid::DelShape(CDShapeIf* shape){
+void PHSolid::RemoveShape(int i){
+	if(0 <= i && i < (int)frames.size())
+		DelFrame(i);
+}
+void PHSolid::RemoveShape(CDShapeIf* shape){
 	CDShape* sh = DCAST(CDShape, shape);
-	for(unsigned i=0; i<frames.size(); ++i)
+	for(unsigned i=0; i<frames.size(); ++i){
 		if (frames[i]->shape == sh){
 			DelFrame(i);
 			i--;
 		}
+	}
 }
 
 Posed	PHSolid::GetShapePose(int i){
@@ -571,7 +585,7 @@ PHSolidContainer::PHSolidContainer(){
 }
 
 bool PHSolidContainer::AddChildObject(ObjectIf* o){
-	PHSolidIf* s = DCAST(PHSolidIf, o);
+	PHSolid* s = o->Cast();
 	if (s && std::find(solids.begin(), solids.end(), s) == solids.end()){
 		solids.push_back(s);
 		return true;
@@ -579,25 +593,23 @@ bool PHSolidContainer::AddChildObject(ObjectIf* o){
 	return false;
 }
 bool PHSolidContainer::DelChildObject(ObjectIf* o){
-	PHSolidIf* so = DCAST(PHSolidIf, o);
+	PHSolid* so = o->Cast();
 	if (so){
-		solids.Erase(so);
+		solids.erase(find(solids.begin(), solids.end(), so));
 		return true;
 	}
 	return false;
 }
 
 void PHSolidContainer::Reset(){
-	for(PHSolidIfs::iterator it = solids.begin(); it != solids.end(); ++it){
-		PHSolid* s = XCAST(*it);
-		s->SetUpdated(false);
+	for(PHSolidRefs::iterator it = solids.begin(); it != solids.end(); ++it){
+		(*it)->SetUpdated(false);
 	}
 }
 
 void PHSolidContainer::Step(){
-	for(PHSolidIfs::iterator it = solids.begin(); it != solids.end(); ++it){
-		PHSolid* s = XCAST(*it);
-		s->Step();
+	for(PHSolidRefs::iterator it = solids.begin(); it != solids.end(); ++it){
+		(*it)->Step();
 	}
 }
 

@@ -427,35 +427,46 @@ bool PHScene::AddChildObject(ObjectIf* o){
 	return ok;
 }
 bool PHScene::DelChildObject(ObjectIf* o){
-	PHSolidIf* solid = DCAST(PHSolidIf, o);
-	if(solid){
-		solids->DelChildObject(o);
+	if(DCAST(PHSolidIf, o)){
+		gravityEngine->DelChildObject(o);
 		penaltyEngine->DelChildObject(o);
 		constraintEngine->DelChildObject(o);
-		gravityEngine->DelChildObject(o);
+		hapticEngine->DelChildObject(o);
+		// UTRefで参照しているSolidContainerから最後に削除する
+		solids->DelChildObject(o);
 		return true;
 	}
-	PHJointIf* con = DCAST(PHJointIf, o);
-	if(con)
+	
+	if(DCAST(PHJointIf, o))
 		return constraintEngine->DelChildObject(o);
-	PHTreeNodeIf* node = DCAST(PHTreeNodeIf, o);
-	if(node)
+	
+	if(DCAST(PHTreeNodeIf, o))
 		return constraintEngine->DelChildObject(o);
-	PHGearIf* gear = DCAST(PHGearIf, o);
-	if(gear)
+	
+	if(DCAST(PHGearIf, o))
 		return constraintEngine->DelChildObject(o);
-	PHPathIf* path = DCAST(PHPathIf, o);
-	if(path)
+
+	if(DCAST(PHPathIf, o))
 		return constraintEngine->DelChildObject(o);
-	PHRayIf* ray = DCAST(PHRayIf, o);
+
+	PHRay* ray = DCAST(PHRay, o);
 	if(ray){
-		PHRays::iterator it = find(rays.begin(), rays.end(), (PHRay*)ray->Cast());
+		PHRays::iterator it = find(rays.begin(), rays.end(), ray);
 		if(it != rays.end()){
 			rays.erase(it);
 			return true;
 		}
 		return false;
 	}
+
+	if(DCAST(PHIKActuatorIf, o))
+		return ikEngine->DelChildObject(o);
+
+	if(DCAST(PHIKEndEffectorIf, o))
+		return ikEngine->DelChildObject(o);
+		
+	if(DCAST(PHFemMeshIf, o))
+		return femEngine->DelChildObject(o);
 
 	return false;
 }
