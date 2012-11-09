@@ -201,37 +201,61 @@ struct PHSolidIf : public SceneObjectIf{
 
 	/** @brief 剛体に形状を登録する
 		@param shape 形状へのポインタ
+
+		剛体が保持する形状リストの末尾に新しく形状を追加する
 	 */
 	void		AddShape(CDShapeIf* shape);
 
+	/** @brief 剛体から形状を取り外す
+		@param index	形状インデックス
+
+		形状リストからindex番目の形状を削除する．
+		その結果，index+1番目以降の形状のインデックスは1つ先頭に向かってシフトするので注意が必要．
+	 */
+	void		RemoveShape(int index);
+
+	/** @brief 剛体から形状を取り外す
+		@param shape	形状へのポインタ
+
+		形状リストの中からshapeを参照している要素をすべて削除する．
+		その結果，削除された要素よりも後ろにある要素は先頭に向かってシフトするので注意が必要．
+	 */
+	void		RemoveShape(CDShapeIf* shape);
+
 	/** @brief 登録されている形状の個数を取得する
 		@return 形状の個数
+
+		形状リストの要素数を返す．
 	 */
 	int			NShape();
 
 	/**	@brief 登録されている形状を取得する
-		@param index 形状のインデックス
+		@param index 形状インデックス
 		@return 形状へのポインタ
-		最初に登録された形状のインデックスは0，その次に登録された形状のインデックスは1，
-		以下同様．
+
+		形状リストのindex番目の形状を返す．
 	 */
 	CDShapeIf*	GetShape(int index);
 
 	/** @brief 形状の位置と向きを取得する
 		@param index 対象とする形状のインデックス
 		@return 剛体に対する形状の位置と向き
-		インデックスについてはGetShapeを参照．
+		
+		形状リストのindex番目の形状の位置と向きを取得する．
 	 */
 	Posed		GetShapePose(int index);
 
 	/** @brief 形状の位置と向きを設定する
 		@param index 対象とする形状のインデックス
 		@param pose 剛体に対する形状の位置と向き
-		インデックスについてはGetShapeを参照．
+		
+		形状リストのindex番目の位置と向きを設定する．
 	 */
 	void		SetShapePose(int index, const Posed& pose);
 
 	/** @brief 形状をClearする
+
+		形状リストを空にする．
 	 */
 	void		ClearShape();
 	

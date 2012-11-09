@@ -692,12 +692,22 @@ public:\
 protected:\
 	Vec3d	gravity;	\
 	double	airResistanceRate;	\
+	double	contactTolerance;	\
+	double	impactThreshold;	\
+	double	frictionThreshold;	\
+	double	maxVelocity;	\
+	double	maxAngularVelocity;	\
 	int	numIteration;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHScene::SetState((PHSceneState*)(PHSceneDesc*)ptr);	\
 		gravity = ((PHSceneDesc*)ptr)->gravity;	\
 		airResistanceRate = ((PHSceneDesc*)ptr)->airResistanceRate;	\
+		contactTolerance = ((PHSceneDesc*)ptr)->contactTolerance;	\
+		impactThreshold = ((PHSceneDesc*)ptr)->impactThreshold;	\
+		frictionThreshold = ((PHSceneDesc*)ptr)->frictionThreshold;	\
+		maxVelocity = ((PHSceneDesc*)ptr)->maxVelocity;	\
+		maxAngularVelocity = ((PHSceneDesc*)ptr)->maxAngularVelocity;	\
 		numIteration = ((PHSceneDesc*)ptr)->numIteration;	\
 		AfterSetDesc();	\
 	}\
@@ -706,6 +716,11 @@ public:\
 		PHScene::GetState((PHSceneState*)(PHSceneDesc*)ptr);	\
 		((PHSceneDesc*)ptr)->gravity = gravity;	\
 		((PHSceneDesc*)ptr)->airResistanceRate = airResistanceRate;	\
+		((PHSceneDesc*)ptr)->contactTolerance = contactTolerance;	\
+		((PHSceneDesc*)ptr)->impactThreshold = impactThreshold;	\
+		((PHSceneDesc*)ptr)->frictionThreshold = frictionThreshold;	\
+		((PHSceneDesc*)ptr)->maxVelocity = maxVelocity;	\
+		((PHSceneDesc*)ptr)->maxAngularVelocity = maxAngularVelocity;	\
 		((PHSceneDesc*)ptr)->numIteration = numIteration;	\
 		return true;	\
 	}\

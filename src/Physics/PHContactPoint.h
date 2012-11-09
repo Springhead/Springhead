@@ -25,10 +25,11 @@ public:
 
 	PHShapePairForLCP* shapePair;
 	Vec3d pos;
+	double	mu0, mu, e;
 
 	/// コンストラクタ
 	PHContactPoint(){}
-	PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
+	//PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
 	PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
 
 	// ----- PHConstraintの派生クラスで実装する機能

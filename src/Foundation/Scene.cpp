@@ -111,19 +111,10 @@ void NameManager::DelChildManager(NameManager* c){
 }
 
 void NameManager::Print(std::ostream& os) const {
-	int w = os.width();
-	os.width(0);
-	os << UTPadding(w);
-	os << "<" << GetTypeInfo()->ClassName() << " " << name.c_str() << ">" << std::endl;
-	os.width(w+2);
+	PrintHeader(os, false);
 	names.Print(os); 
-	for(size_t i=0; i<NChildObject(); ++i){
-		GetChildObject(i)->Print(os);
-	}
-	os.width(0);
-	os << UTPadding(w);
-	os << "</" << GetTypeInfo()->ClassName() << ">" << std::endl;
-	os.width(w);
+	PrintChildren(os);
+	PrintFooter(os);
 }
 
 //	名前を再帰的に検索。namespace を考慮

@@ -277,8 +277,10 @@ public:
 	CDShapeIf*	GetShape(int i);
 	///	shape を この剛体が持つSpr::CDShapeのリスト の最後に追加する．
 	void		AddShape(CDShapeIf* shape);
+	/// i番目のshapeを削除
+	void		RemoveShape(int i);
 	///	この剛体が持つshapeを全て削除
-	void		DelShape(CDShapeIf* shape);
+	void		RemoveShape(CDShapeIf* shape);
 	///	この剛体が持つ i番目の SPR::CDShape のこの剛体から見た姿勢を取得
 	Posed		GetShapePose(int i);
 	///	この剛体が持つ i番目の SPR::CDShape のこの剛体から見た姿勢を設定
@@ -301,49 +303,14 @@ protected:
 	virtual void AfterSetDesc();
 };
 
-class PHSolidIfs : public std::vector< UTRef<PHSolidIf> >{
-public:
-	UTRef<PHSolidIf> Erase(const PHSolidIf* s){
-		iterator it = std::find(begin(), end(), s);
-		if (it == end()) return NULL;
-		UTRef<PHSolidIf> rv = *it;
-		erase(it);
-		return *it;
-	}
-	UTRef<PHSolidIf>* Find(const PHSolidIf* s){
-		iterator it = std::find(begin(), end(), s);
-		if (it == end()) return NULL;
-		else return &*it;
-	}
-	UTRef<PHSolidIf>* Find(const PHSolidIf* s) const {
-		return ((PHSolidIfs*)this)->Find(s);
-	}
-};
-class PHSolids : public std::vector< UTRef<PHSolid> >{
-public:
-	/* 以下削除候補
-	UTRef<PHSolid> Erase(const PHSolid* s){
-		iterator it = std::find(begin(), end(), s);
-		if (it == end()) return NULL;
-		UTRef<PHSolid> rv = *it;
-		erase(it);
-		return rv;
-	}
-	UTRef<PHSolid>* Find(const PHSolid* s){
-		iterator it = std::find(begin(), end(), s);
-		if (it == end()) return NULL;
-		else return &*it;
-	}
-	UTRef<PHSolid>* Find(const PHSolid* s) const {
-		return ((PHSolids*)this)->Find(s);
-	}*/
-};
+typedef std::vector< UTRef<PHSolid> >	PHSolidRefs;
+typedef std::vector< PHSolid* >			PHSolids;
 
 /**	Solidを保持するクラス．Solidの更新も行う．	*/
 class PHSolidContainer:public PHEngine{
 	SPR_OBJECTDEF_NOIF(PHSolidContainer);
 public:
-	PHSolidIfs solids;
+	PHSolidRefs solids;
 	///
 	int GetPriority() const {return SGBP_SOLIDCONTAINER;}
 	/// solidのリセット
@@ -357,7 +324,7 @@ public:
 	///	所有しているsolidの数
 	virtual size_t NChildObject() const { return solids.size(); }
 	///	所有しているsolid
-	virtual ObjectIf* GetChildObject(size_t i){ return solids[i]; }
+	virtual ObjectIf* GetChildObject(size_t i){ return solids[i]->Cast(); }
 
 	PHSolidContainer();
 };

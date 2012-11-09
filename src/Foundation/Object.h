@@ -322,7 +322,7 @@ public:
 	NamedObject():nameManager(NULL){}
 	NamedObject(const NamedObject& n);
 	NamedObject& operator=(const NamedObject& n);
-	~NamedObject();
+	virtual ~NamedObject();
 	///	名前の取得
 	const char* GetName() const { return name.c_str(); }
 	///	名前の設定
