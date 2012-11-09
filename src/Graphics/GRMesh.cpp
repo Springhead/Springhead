@@ -145,10 +145,10 @@ void GRMesh::GenerateNormals(){
 }
 
 void GRMesh::AfterSetDesc(){
+	DecomposeFaces();
 	if(normals.empty())
 		GenerateNormals();
 	//DuplicateVertices();
-	DecomposeFaces();
 }
 
 GRSkinWeightIf* GRMesh::CreateSkinWeight(const GRSkinWeightDesc& desc){
