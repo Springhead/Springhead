@@ -147,9 +147,24 @@ public:
 	void	SetGravity(const Vec3d& accel);
 	Vec3d	GetGravity();
 	
-	double	GetAirResistanceRate(){return airResistanceRate;}
-	void	SetAirResistanceRate(double rate){airResistanceRate =rate;}
+	double	GetAirResistanceRate(){ return airResistanceRate; }
+	void	SetAirResistanceRate(double rate){ airResistanceRate = rate; }
 
+	double  GetContactTolerance(){ return contactTolerance; }
+	void    SetContactTolerance(double tol){ contactTolerance = tol; }
+
+	double	GetImpactThreshold(){ return impactThreshold; }
+	void	SetImpactThreshold(double vth){ impactThreshold = vth; }
+	
+	double	GetFrictionThreshold(){ return frictionThreshold; }
+	void	SetFrictionThreshold(double vth){ frictionThreshold = vth; }
+	
+	double  GetMaxVelocity(){ return maxVelocity; }
+	void    SetMaxVelocity(double vmax){ maxVelocity = vmax; }
+	
+	double  GetMaxAngularVelocity(){ return maxAngularVelocity; }
+	void    SetMaxAngularVelocity(double wmax){ maxAngularVelocity = wmax; }
+	
 	///	シーンの時刻を進める ClearForce(); GenerateForce(); Integrate(); と同じ
 	void					Step();
 	///	シーンの時刻を進める（力のクリア）

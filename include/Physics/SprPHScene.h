@@ -39,17 +39,13 @@ struct PHRaycastHit{
 	CDShapeIf* shape;
 	Vec3f	 point;
 	float	 distance;
-//	PHRaycastResultEntry(){};
-//	PHRaycastResultEntry(PHSolidIf* sld, CDShapeIf* shp, const Vec3f& p, float o):solid(sld), shape(shp), point(p), offset(o){}
 };
-/*struct PHRaycastResult{
-	 std::vector<PHRaycastResultEntry> results;
-	 PHRaycastResultEntry* Nearest();
-};*/
+
 struct PHRayDesc{
 	Vec3d origin;
 	Vec3d direction;
 };
+
 struct PHRayIf : SceneObjectIf{
 public:
 	SPR_IFDEF(PHRay);
@@ -64,9 +60,6 @@ public:
 	PHRaycastHit* GetDynamicalNearest();
 };
 
-//struct PHJointDesc: public PHConstraintDesc{
-//};
-
 /// 物理エンジンのシーンの状態
 struct PHSceneState{
 	/// 積分ステップ[s]
@@ -74,6 +67,7 @@ struct PHSceneState{
 	double haptictimeStep;
 	/// 積分した回数
 	unsigned count;
+
 	PHSceneState(){Init();}
 	void Init(){
 		timeStep = 0.005;
@@ -96,6 +90,11 @@ struct PHSceneDesc: public PHSceneState{
 	 */
 	Vec3d	gravity;			///< 重力加速度ベクトル
 	double	airResistanceRate;	///< 毎ステップ剛体の速度に掛けられる倍率
+	double	contactTolerance;	///< 接触の許容交差量
+	double	impactThreshold;
+	double	frictionThreshold;
+	double	maxVelocity;
+	double	maxAngularVelocity;
 	int		numIteration;		///< LCPの反復回数
 	
 	PHSceneDesc(){Init();}
@@ -103,6 +102,11 @@ struct PHSceneDesc: public PHSceneState{
 		PHSceneState::Init();
 		gravity				= Vec3d(0.0, -9.8, 0.0);
 		airResistanceRate	= 1.0;
+		contactTolerance    = 0.002;
+		impactThreshold     = 10.0;
+		frictionThreshold   = 0.01;
+		maxVelocity         = FLT_MAX;
+		maxAngularVelocity  = 100.0;
 		numIteration		= 15;
 	}
 };
@@ -366,14 +370,32 @@ public:
 	Vec3d GetGravity();
 
 	/** @brief 回転に対する空気抵抗の割合を設定する
-		@param rate 回転に対する空気抵抗の割合 標準は1.0 比率を下げるとシミュレーションが安定する(PHSolid::UpdateVelocity()内で呼ばれる）
+		@param rate 回転に対する空気抵抗の割合
+		標準は1.0 比率を下げるとシミュレーションが安定する(PHSolid::UpdateVelocity()内で呼ばれる）
 	 */
 	void SetAirResistanceRate(double rate);
 	
 	/** @brief 回転に対する空気抵抗の割合を取得する
-		@return 回転に対する空気抵抗の割合　標準は1.0 比率を下げるとシミュレーションが安定する(PHSolid::UpdateVelocity()内で呼ばれる）
+		@return 回転に対する空気抵抗の割合
 	 */
 	double GetAirResistanceRate();
+
+	/// @brief 接触の許容交差量を設定する
+	void SetContactTolerance(double tol);
+	/// @brief 接触の許容交差量を取得する
+	double GetContactTolerance();
+
+	void SetImpactThreshold(double vth);
+	double GetImpactThreshold();
+
+	void SetFrictionThreshold(double vth);
+	double GetFrictionThreshold();
+
+	void SetMaxVelocity(double vmax);
+	double GetMaxVelocity();
+
+	void SetMaxAngularVelocity(double wmax);
+	double GetMaxAngularVelocity();
 
 	///	@brief LCPソルバの計算回数の取得．MODE_LCPの場合の拘束力の繰り返し近似計算の回数．
 	int GetNumIteration();
