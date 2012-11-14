@@ -16,7 +16,8 @@
 ::			(=.../Springhead2/src/[project]/Makefile.swig)
 :: ***********************************************************************************
 ::  Version:
-::	Ver 1.0	2012/10/25	F.Kanehori
+::	Ver 1.0	  2012/10/25	F.Kanehori
+::	Ver 1.0a  2012/11/14	F.Kanehori	PATHの設定の変更 (x64版にも対応)
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set CWD=%cd%
@@ -44,7 +45,13 @@ set TMPFILE=swigprojs.tmp
 
 :: 使用するプログラムとパス
 ::
-set PATH=C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE;..\..\src\Foundation;%PATH%
+set X64PATH=C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE
+set X32PATH=C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE
+set ADDPATH=..\..\src\Foundation
+set DEVENV=devenv.exe
+if exist "%X32PATH%\%DEVENV%" set PATH=%X32PATH%;%ADDPATH%;%PATH%
+if exist "%X64PATH%\%DEVENV%" set PATH=%X64PATH%;%ADDPATH%;%PATH%
+
 set NMAKE=nmake
 set SWIG=RunSwig.bat
 

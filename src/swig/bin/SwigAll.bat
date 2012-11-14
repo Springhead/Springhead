@@ -1,5 +1,5 @@
 @echo off
-:: ***************************************************************************
+:: *******************************************************************************
 ::  File:
 ::	SwigAll.bat
 ::
@@ -22,13 +22,20 @@
 ::	
 ::	処理の内容については、make プロジェクトを参照のこと.
 ::		※ 実際の処理は $(BINDIR)/do_swigall.bat が行なう.
-:: ***************************************************************************
+:: *******************************************************************************
 ::  Version:
 ::	Ver 1.0	  2012/10/17	F.Kanehori
-::	Ver 1.0a  2012/11/12	F.Kanehori  このスクリプトの格納場所を変更
-:: ***************************************************************************
+::	Ver 1.0a  2012/11/14	F.Kanehori  このスクリプトの格納場所を変更
+::					    PATHの設定の変更 (x64版にも対応)
+:: *******************************************************************************
 setlocal
 set CWD=%cd%
+
+set X64PATH=C:\Program Files (x86)\Microsoft Visual Studio 10.0\Common7\IDE
+set X32PATH=C:\Program Files\Microsoft Visual Studio 10.0\Common7\IDE
+set DEVENV=devenv.exe
+if exist "%X32PATH%\%DEVENV%" set PATH=%X32PATH%;%PATH%
+if exist "%X64PATH%\%DEVENV%" set PATH=%X64PATH%;%PATH%
 
 set SOLUTION=..\src\Springhead10.sln
 devenv %SOLUTION% /build  Debug
