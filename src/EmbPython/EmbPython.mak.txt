@@ -1,0 +1,29 @@
+all: ../../include/*.h EPBase.cpp EPFoundation.cpp EPFileIO.cpp EPCollision.cpp EPPhysics.cpp EPGraphics.cpp EPCreature.cpp EPHumanInterface.cpp EPFramework.cpp
+
+EPBase.cpp:  ../../include/Base/*.h
+	call .\EmbPythonSwig.bat Base 
+
+EPFoundation.cpp:  ../../include/Foundation/*.h
+	call .\EmbPythonSwig.bat Foundation 
+
+EPFileIO.cpp:  ../../include/FileIO/*.h
+	call .\EmbPythonSwig.bat FileIO Foundation 
+
+EPCollision.cpp:  ../../include/Collision/*.h
+	call .\EmbPythonSwig.bat Collision Foundation 
+
+EPPhysics.cpp:  ../../include/Physics/*.h
+	call .\EmbPythonSwig.bat Physics Collision Foundation 
+
+EPGraphics.cpp:  ../../include/Graphics/*.h
+	call .\EmbPythonSwig.bat Graphics Physics Foundation 
+
+EPCreature.cpp:  ../../include/Creature/*.h
+	call .\EmbPythonSwig.bat Creature Graphics Physics Foundation 
+
+EPHumanInterface.cpp:  ../../include/HumanInterface/*.h
+	call .\EmbPythonSwig.bat HumanInterface Graphics Foundation 
+
+EPFramework.cpp:  ../../include/Framework/*.h
+	call .\EmbPythonSwig.bat Framework FileIO HumanInterface Graphics Physics Foundation 
+
