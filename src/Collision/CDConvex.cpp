@@ -123,17 +123,11 @@ void CDConvex::AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float ep
 		// bboxが完全に含まれるか調べる
 		if(IsBoxInside(bbmin, bbmax)){
 			Vec3f sz2(sz.x*sz.x, sz.y*sz.y, sz.z*sz.z);
-			Matrix3f I = vol * 1.0f/12.0f * Matrix3f::Diag(sz2.y + sz2.z, sz2.x + sz2.z, sz2.x + sz2.y);
-			//Matrix3f offset;
-			//OffsetInertia(c, offset);
+			Matrix3f I = 1.0f/12.0f * Matrix3f::Diag(sz2.y + sz2.z, sz2.x + sz2.z, sz2.x + sz2.y);
 			boxels.push_back(Boxel());
 			boxels.back().pos = c;
 			boxels.back().volume = vol;
 			boxels.back().moment = I;
-			//volume += vol;
-			//center += vol * c;
-			//moment += I + vol * offset;
-//			g_included++;
 		}
 		else{
 		// 再分割
