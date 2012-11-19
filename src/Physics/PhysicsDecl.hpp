@@ -309,14 +309,17 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHHingeJointDesc \
 protected:\
+	bool	cyclic;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PH1DJoint::SetDesc((PH1DJointDesc*)(PHHingeJointDesc*)ptr);	\
+		cyclic = ((PHHingeJointDesc*)ptr)->cyclic;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PH1DJoint::GetDesc((PH1DJointDesc*)(PHHingeJointDesc*)ptr);	\
+		((PHHingeJointDesc*)ptr)->cyclic = cyclic;	\
 		return true;	\
 	}\
 

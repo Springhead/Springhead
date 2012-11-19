@@ -40,15 +40,17 @@ public:
 	virtual PHTreeNode* CreateTreeNode(){ return DBG_NEW PHHingeJointNode(); }
 
 	// ----- PHConstraintの派生クラスで実装する機能
-
 	virtual void UpdateJointState();
 	virtual void CompBias();
 	virtual void CompError();
 
-	// ----- インタフェースの実装
-
+	// ----- PH1DJointの派生クラスで実装する機能
 	virtual double GetDeviation();
 
+	// ----- インタフェースの実装
+	bool IsCyclic(){ return cyclic; }
+	void SetCyclic(bool on){ cyclic = on; }
+	
 };
 
 }

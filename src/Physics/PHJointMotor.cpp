@@ -179,7 +179,8 @@ template class PHNDJointMotor<6>;
 PTM::TVector<1,double> PH1DJointMotor::GetPropV() {
 	PH1DJoint* j = joint->Cast();
 	PTM::TVector<1,double> propV;
-	propV[0] = j->targetPosition - DCAST(PH1DJoint,joint)->GetPosition();
+	//propV[0] = j->targetPosition - DCAST(PH1DJoint,joint)->GetPosition();
+	propV[0] = -1.0 * j->GetDeviation();
 	return propV;
 }
 
