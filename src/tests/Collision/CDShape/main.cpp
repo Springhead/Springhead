@@ -15,6 +15,7 @@
   ・プログラムが正常終了したら0を返す。
       
  */
+#include <iostream>
 #include <Springhead.h>		//	Springheadのインタフェース
 #ifdef USE_HDRSTOP
 #pragma hdrstop
@@ -53,9 +54,9 @@ int main(int argc, char* argv[]){
 	Vec3d comBox = box->CalcCenterOfMass();
 	Matrix3d iMesh = mesh->CalcMomentOfInertia();
 	Matrix3d iBox = box->CalcMomentOfInertia();
-	DSTR << "CoG:" << comMesh << comBox << std::endl;
-	DSTR << "Inertia:" << std::endl;
-	DSTR << iMesh << iBox << std::endl;
+	std::cout << "CoG:" << comMesh << comBox << std::endl;
+	std::cout << "Inertia:" << std::endl;
+	std::cout << iMesh << iBox << std::endl;
 	if (comMesh != comBox) return -1;
 	if (iMesh != iBox) return -1;
 	return 0;
