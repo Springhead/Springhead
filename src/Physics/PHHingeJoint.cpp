@@ -57,8 +57,14 @@ void PHHingeJoint::UpdateJointState(){
 	position[0] = Xjrel.q.Theta();
 
 	// -π～πの範囲に収める
-	position[0] = ( (position[0] / (2*M_PI)) - floor(position[0] / (2*M_PI)) ) * (2*M_PI);
-	if (position[0] > M_PI) { position[0] -= 2 * M_PI; }
+	//position[0] = ( (position[0] / (2*M_PI)) - floor(position[0] / (2*M_PI)) ) * (2*M_PI);
+	//if (position[0] > M_PI) { position[0] -= 2 * M_PI; }
+	if(cyclic){
+		while(position[0] >  M_PI)
+			position[0] -= 2 * M_PI;
+		while(position[0] < -M_PI)
+			position[0] += 2 * M_PI;
+	}
 
 	if (Xjrel.q.Axis().Z() < 0.0) { position = -position; }
 	velocity[0] = vjrel.w().z;
@@ -98,8 +104,14 @@ void PHHingeJoint::CompError(){
 
 double PHHingeJoint::GetDeviation(){
 	double diff = PH1DJoint::GetDeviation();
-	diff = ( (diff / (2*M_PI)) - floor(diff / (2*M_PI)) ) * (2*M_PI);
-	if (diff > M_PI) { diff -= 2 * M_PI; }
+	//diff = ( (diff / (2*M_PI)) - floor(diff / (2*M_PI)) ) * (2*M_PI);
+	//if (diff > M_PI) { diff -= 2 * M_PI; }
+	if(cyclic){
+		while(diff >  M_PI)
+			diff -= 2 * M_PI;
+		while(diff < -M_PI)
+			diff += 2 * M_PI;
+	}
 	return diff;
 }
 

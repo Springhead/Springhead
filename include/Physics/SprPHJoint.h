@@ -330,12 +330,24 @@ struct PH1DJointIf : public PHJointIf{
 /// ヒンジのインタフェース
 struct PHHingeJointIf : public PH1DJointIf{
 	SPR_IFDEF(PHHingeJoint);
+
+	/** @brief cyclicかどうかを取得
+		trueの場合，positionが[-pi, pi]の範囲で循環する．
+	 */
+	bool	IsCyclic();
+
+	/** @brief cyclicかどうかを設定
+	 */
+	void	SetCyclic(bool on);
 };
 
 /// ヒンジのデスクリプタ
 struct PHHingeJointDesc : public PH1DJointDesc{
 	SPR_DESCDEF(PHHingeJoint);
-	PHHingeJointDesc(){}
+	bool cyclic;
+	PHHingeJointDesc(){
+		cyclic = true;
+	}
 };
 
 /// スライダのインタフェース
