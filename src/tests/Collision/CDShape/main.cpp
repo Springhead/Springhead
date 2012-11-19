@@ -53,7 +53,10 @@ int main(int argc, char* argv[]){
 	Vec3d comBox = box->CalcCenterOfMass();
 	Matrix3d iMesh = mesh->CalcMomentOfInertia();
 	Matrix3d iBox = box->CalcMomentOfInertia();
-	DSTR << "CoG:" << comMesh << comBox << comMesh-comBox << std::endl;
-	DSTR << "Inertia:" << iMesh << iBox << iMesh-comBox << std::endl;
+	DSTR << "CoG:" << comMesh << comBox << std::endl;
+	DSTR << "Inertia:" << std::endl;
+	DSTR << iMesh << iBox << std::endl;
+	if (comMesh != comBox) return -1;
+	if (iMesh != iBox) return -1;
 	return 0;
 }
