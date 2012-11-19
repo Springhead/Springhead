@@ -46,7 +46,7 @@ set TMPFILE=swigprojs.tmp
 :: 使用するプログラムとパス
 ::
 set ADDPATH=..\..\src\Foundation
-set PATH=\%ADDPATH%;%PATH%
+set PATH=%ADDPATH%;%PATH%
 
 set NMAKE=nmake
 set SWIG=RunSwig.bat
