@@ -11,6 +11,19 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_FWFemMeshNewDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		FWObject::SetDesc((FWObjectDesc*)(FWFemMeshNewDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		FWObject::GetDesc((FWObjectDesc*)(FWFemMeshNewDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_FWObjectDesc \
 protected:\
 	bool	bAbsolute;	\

@@ -12,6 +12,7 @@
 #include <Framework/FWObject.h>
 #include <Framework/FWScene.h>
 #include <Framework/FWFemMesh.h>
+#include <Framework/FWFemMeshNew.h>
 #include <Physics/PHSdk.h>
 #include <Physics/PHScene.h>
 #include <Graphics/GRSdk.h>
@@ -43,6 +44,7 @@ void SPR_CDECL FWSdkIf::RegisterSdk(){
 	FWSdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWScene));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWObject));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWFemMesh));
+	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(FWFemMeshNew));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHSdk));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHScene));
 	FWSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(GRSdk));

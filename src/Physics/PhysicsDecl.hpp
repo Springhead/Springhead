@@ -65,6 +65,37 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHFemMeshNewState \
+protected:\
+public:\
+	virtual void SetState(const void* ptr){ \
+	}\
+	virtual bool GetState(void* ptr) const { \
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemMeshNewDesc \
+protected:\
+	std::vector< Vec3d >	vertices;	\
+	std::vector< int >	tets;	\
+	std::vector< int >	faces;	\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHFemMeshNew::SetState((PHFemMeshNewState*)(PHFemMeshNewDesc*)ptr);	\
+		vertices = ((PHFemMeshNewDesc*)ptr)->vertices;	\
+		tets = ((PHFemMeshNewDesc*)ptr)->tets;	\
+		faces = ((PHFemMeshNewDesc*)ptr)->faces;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFemMeshNew::GetState((PHFemMeshNewState*)(PHFemMeshNewDesc*)ptr);	\
+		((PHFemMeshNewDesc*)ptr)->vertices = vertices;	\
+		((PHFemMeshNewDesc*)ptr)->tets = tets;	\
+		((PHFemMeshNewDesc*)ptr)->faces = faces;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHHapticPointerDesc \
 protected:\
 public:\
