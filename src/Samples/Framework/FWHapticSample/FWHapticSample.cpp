@@ -14,7 +14,7 @@ FWHapticSample::FWHapticSample(){
 	pdt = 0.02;
 	hdt = 0.001;
 	engineType = LD;
-	humanInterface = XBOX;
+	humanInterface = SPIDAR;
 }
 
 void FWHapticSample::BuildScene(){
