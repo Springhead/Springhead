@@ -8,14 +8,17 @@
 // DRUsb20Sh4.cpp: DRUsb20Sh4 クラスのインプリメンテーション
 //
 //////////////////////////////////////////////////////////////////////
-//#include <Springhead.h>
+#include <SprDefs.h>
 #ifdef USE_CLOSED_SRC
 #include "../../closed/HumanInterface/DRUsb20Sh4.cpp"
 #else
 #include "DRUsb20Sh4.h"
 namespace Spr {;
 DRUsb20Sh4::DRUsb20Sh4(const DRUsb20Sh4Desc& d):DRUsb20Simple(d){}
-bool DRUsb20Sh4::Init(){return false;}
+bool DRUsb20Sh4::Init(){
+	DSTR << "You have to define USE_CLOSED_SRC in SprDefs.h to use Spidar" << std::endl;
+	assert(0);
+	return false;}
 void DRUsb20Sh4::Update(){}
 void DRUsb20Sh4::UsbUpdate(){}
 void DRUsb20Sh4::UsbSend(unsigned char* outBuffer){}
