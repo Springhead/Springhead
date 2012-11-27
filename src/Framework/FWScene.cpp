@@ -14,6 +14,7 @@
 #include <Physics/PHContactPoint.h>
 #include <Physics/PHConstraintEngine.h>
 #include <Physics/PHHapticEngine.h>
+#include <Physics/PHFemEngine.h>
 #include <Physics/PHBallJoint.h>
 #include <Physics/PHHingeJoint.h>
 #include <Physics/PHSliderJoint.h>
@@ -38,6 +39,7 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	renderLimit     = false;
 	renderContact	= false;
 	renderIK		= false;
+	renderFEM		= false;
 	// 倍率は等倍
 	scaleAxisWorld = scaleAxisSolid = scaleAxisConst = 1.0f;
 	scaleForce = 1.0f;
@@ -373,6 +375,13 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		PHHapticEngineIf* hapticEngine = phScene->GetHapticEngine();
 		if(hapticEngine){
 			DrawHaptic(render, hapticEngine);
+		}
+	}
+
+	if(renderFEM){
+		PHFemEngineIf* femEngine = phScene->GetFemEngine();
+		if(femEngine){
+			DrawFem(render, femEngine);
 		}
 	}
 
@@ -828,6 +837,41 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 	render->SetDepthTest(true);
 }
 
+void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
+	PHFemEngine* fe = DCAST(PHFemEngine, femEngine);
+
+	render->SetLighting(false);
+	render->SetDepthTest(false);
+	for(int i = 0; i< (int)fe->meshes_n.size(); i++){
+		PHFemMeshNew* mesh = fe->meshes_n[i];
+		Posed solidPose = mesh->GetPHSolid()->GetPose();
+		//// 頂点の描画
+		//int nv = (int)mesh->vertices.size();
+		//for(int j = 0; j < nv; j++){
+		//	Posed p;
+		//	p.Pos() = solidPose * mesh->vertices[j].pos;
+		//	Affinef aff;
+		//	p.ToAffine(aff);
+		//	render->PushModelMatrix();
+		//	render->MultModelMatrix(aff);
+		//	render->SetMaterial(GRRenderIf::YELLOW);
+		//	render->DrawSphere(0.01f, 10, 10, true);
+		//	render->PopModelMatrix();
+		//}
+		// 辺の描画
+		int ne = (int)mesh->edges.size();
+		for(int j = 0; j < ne; j++){
+			Vec3d p[2];
+			p[0] = solidPose * mesh->vertices[mesh->edges[j].vertices[0]].pos;
+			p[1] = solidPose * mesh->vertices[mesh->edges[j].vertices[1]].pos;
+			render->SetMaterial(GRRenderIf::YELLOW);
+			render->DrawLine(p[0], p[1]);
+		}
+	}
+	render->SetLighting(true);
+	render->SetDepthTest(true);
+}
+
 void FWScene::DrawMesh(GRRenderIf* render, CDConvexMeshIf* mesh, bool solid){
 	Vec3f* base = mesh->GetVertices();
 	if(solid){
@@ -1001,6 +1045,10 @@ void FWScene::EnableRenderLimit(bool enable){
 void FWScene::EnableRenderHaptic(bool enable){
 	renderHaptic = enable;
 }
+void FWScene::EnableRenderFem(bool enable){
+	renderFEM = enable;
+}
+
 bool FWScene::IsRenderEnabled(ObjectIf* obj){
 	std::map<ObjectIf*, bool>::iterator it = renderObject.find(obj);
 	if(it != renderObject.end())

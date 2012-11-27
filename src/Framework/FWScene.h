@@ -61,6 +61,7 @@ public:
 	bool		renderLimit;
 	bool		renderIK;
 	bool		renderHaptic;
+	bool		renderFEM;
 
 	/// 描画スケール
 	float		scaleAxisWorld, scaleAxisSolid, scaleAxisConst;
@@ -103,6 +104,7 @@ public:
 	void			SetGRScene(GRSceneIf* s){ grScene = s; }
 	FWObjectIf*		CreateFWObject();
 	int				NObject()const{ return (int)fwObjects.size(); }
+	FWObjectIf*		GetObject(int i){ return fwObjects[i]; }
 	FWObjectIf**	GetObjects(){ return (FWObjectIf**)&*fwObjects.begin(); }
 
 	void		Sync();
@@ -119,6 +121,7 @@ public:
 	void	DrawIK			(GRRenderIf* render, PHIKEngineIf* ikEngine);
 	void	DrawLimit		(GRRenderIf* render, PHConstraintIf* con);
 	void	DrawHaptic		(GRRenderIf* render, PHHapticEngineIf* hapticEngine);
+	void	DrawFem			(GRRenderIf* render, PHFemEngineIf* femEngine);
 	
 	/// 描画制御
 	void	SetRenderMode		(bool solid, bool wire);
@@ -149,6 +152,8 @@ public:
 	void	EnableRenderLimit	(bool enable);
 
 	void	EnableRenderHaptic	(bool enable);
+
+	void	EnableRenderFem		(bool enable);
 
 	//void	EnableRender		(int item, bool enable = true, ObjectIf* obj = 0);
 	//void	SetSolidMaterial	(int item, int mat, ObjectIf* obj = 0);

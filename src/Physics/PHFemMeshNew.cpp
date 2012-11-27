@@ -229,6 +229,14 @@ void PHFemMeshNew::SetDesc(const void* p){
 	}
 }
 
+void PHFemMeshNew::SetPHSolid(PHSolidIf* s){
+	solid = s;
+}
+
+PHSolidIf* PHFemMeshNew::GetPHSolid(){
+	return solid;
+}
+
 void PHFemMeshNew::Step(double dt){
 
 }

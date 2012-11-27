@@ -22,5 +22,6 @@
 #include "Physics/SprPHNodeHandlers.h"
 #include "Physics/SprPHIK.h"
 #include "Physics/SprPHFemMesh.h"
+#include "Physics/SprPHFemMeshNew.h"
 #include "Physics/SprPHHaptic.h"
 #endif

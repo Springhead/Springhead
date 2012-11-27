@@ -41,7 +41,7 @@ public:
 	///	ロード後に呼ばれる。grMeshからphMeshを生成し、grMeshもphMeshに合わせたものに置き換える
 	void Loaded(UTLoadContext* );
 	///	grFemMeshから四面体メッシュを生成する。Tetgenを使いphFemMeshに格納する。
-	virtual bool CreatePHFromGR();
+	virtual bool CreatePHFemMeshFromGRMesh();
 	///	phFemMeshからをGRMeshを生成する。マテリアルなどはgrMeshから拾う。
 	void CreateGRFromPH();
 
@@ -50,9 +50,9 @@ public:
 
 	/// Draw関係はすべてFWSceneに移動させる予定
 	///	メッシュのface辺を描画
-	void DrawVtxLine(float length, float x, float y, float z);
-	void DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1);
-	void DrawEdge(Vec3d vtx0, Vec3d vtx1);
+	//void DrawVtxLine(float length, float x, float y, float z);
+	//void DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1);
+	//void DrawEdge(Vec3d vtx0, Vec3d vtx1);
 	//	メッシュのface辺を描画
 	void DrawFaceEdge();
 

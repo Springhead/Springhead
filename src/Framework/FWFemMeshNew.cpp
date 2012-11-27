@@ -68,15 +68,16 @@ bool FWFemMeshNew::AddChildObject(ObjectIf* o){
 }
 
 void FWFemMeshNew::Loaded(UTLoadContext*){
-	//if (!phFemMesh && grFemMesh) CreatePHFromGR();
+	if (!phFemMesh && grFemMesh) CreatePHFemMeshFromGRMesh();
 	//if (grFrame){
 	//	grFrame->DelChildObject(grFemMesh->Cast());
 	//	CreateGRFromPH();
 	//	grFrame->AddChildObject(grFemMesh->Cast());
 	//}
+	if(GetPHSolid() && phFemMesh) phFemMesh->SetPHSolid(GetPHSolid());
 }
 
-bool FWFemMeshNew::CreatePHFromGR(){
+bool FWFemMeshNew::CreatePHFemMeshFromGRMesh(){
 	//	呼び出された時点で grFemMesh にグラフィクスのメッシュが入っている
 	//	grFemMeshを変換して、phFemMeshをつくる。
 	
@@ -85,7 +86,7 @@ bool FWFemMeshNew::CreatePHFromGR(){
 	int* tetsOut=NULL;
 	int nVtxsOut=0, nTetsOut=0;
 	std::vector<Vec3d> vtxsIn;
-	for(unsigned i=0; i<grFemMesh->vertices.size(); ++i) vtxsIn.push_back(grFemMesh->vertices[i]);
+	for(unsigned i = 0; i < grFemMesh->vertices.size(); ++i) vtxsIn.push_back(grFemMesh->vertices[i]);
 	// swithes q+(半径/最短辺) (e.g. = q1.0~2.0) a 最大の体積 
 	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grFemMesh->vertices.size(), &vtxsIn[0], (int)grFemMesh->faces.size(), &grFemMesh->faces[0], "pq2.1a0.002");//a0.3 //a0.003 
 	
@@ -369,43 +370,6 @@ void FWFemMeshNew::Sync(){
 /// Draw関係はFWSceneに移動させる
 #include <GL/glew.h>
 #include <GL/glut.h>
-void FWFemMeshNew::DrawVtxLine(float length, float x, float y, float z){
-	Vec3d pos = Vec3f(x,y,z);
-	Vec3d wpos = this->GetGRFrame()->GetWorldTransform() * pos; //* ローカル座標を 世界座標への変換して代入
-	glColor3d(1.0,0.0,0.0);
-	glBegin(GL_LINES);
-		glVertex3f(wpos.x,wpos.y,wpos.z);
-		wpos.y = wpos.y + length;
-		glVertex3f(wpos.x,wpos.y,wpos.z);
-	glEnd();
-	glFlush();
-}
-
-void FWFemMeshNew::DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1){
-	Vec3d pos0 = Vec3f(x0,y0,z0);
-	Vec3d pos1 = Vec3f(x1,y1,z1);
-	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * pos0; //* ローカル座標を 世界座標への変換して代入
-	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * pos1; //* ローカル座標を 世界座標への変換して代入
-	glColor3d(1.0,0.0,0.0);
-	glBegin(GL_LINES);
-		glVertex3f(wpos0[0],wpos0[1],wpos0[2]);
-		glVertex3f(wpos0[0] + wpos1[0], wpos0[1] + wpos1[1], wpos0[2] + wpos1[2]);
-	glEnd();
-	glFlush();
-}
-
-void FWFemMeshNew::DrawEdge(Vec3d vtx0, Vec3d vtx1){
-	Vec3d pos0 = vtx0;
-	Vec3d pos1 = vtx1;
-	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * pos0; //* ローカル座標を 世界座標への変換して代入
-	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * pos1; //* ローカル座標を 世界座標への変換して代入
-	glColor3d(1.0,0.0,0.0);
-	glBegin(GL_LINES);
-		glVertex3f(wpos0[0],wpos0[1],wpos0[2]);
-		glVertex3f(wpos0[0] + wpos1[0], wpos0[1] + wpos1[1], wpos0[2] + wpos1[2]);
-	glEnd();
-	glFlush();
-}
 
 void FWFemMeshNew::DrawFaceEdge(){
 	//	使用例

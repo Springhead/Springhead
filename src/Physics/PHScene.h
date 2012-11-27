@@ -14,8 +14,6 @@
 #include <Physics/PHIKEngine.h>
 #include <Physics/PHIKActuator.h>
 #include <Physics/PHIKEndEffector.h>
-#include <Physics/PHFemEngine.h>
-
 
 namespace Spr {;
 
@@ -128,6 +126,8 @@ public:
 	PHIKEndEffectorIf*		GetIKEndEffector(int i);
 	int						NFemMeshes()const;
 	PHFemMeshIf*			GetFemMesh(int i);
+	int						NFemMeshesNew() const;
+	PHFemMeshNewIf*			GetFemMeshNew(int i);
 
 	//void 					FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids);
 
