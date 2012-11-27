@@ -10,9 +10,9 @@
 
 #include <Physics/PHEngine.h>
 #include <Physics/PHFemMesh.h>
+#include <Physics/PHFemMeshNew.h>
 
 namespace Spr{;
-class PHFemMesh;
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
 // FEMエンジン
@@ -21,18 +21,18 @@ class PHFemMesh;
 class PHFemEngine : public PHEngine{
 public:
 	SPR_OBJECTDEF(PHFemEngine);
+	double fdt;
 	std::vector<PHFemMesh*> meshes;
+	std::vector<PHFemMeshNew*> meshes_n;
 
 	PHFemEngine();
-	unsigned freq;
-	int freqN;
 
 	int  GetPriority() const {return SGBP_NONE; }//SGBP_DYNAMICALSYSTEM;}
 	void Step();
 	void Clear();
-	virtual bool		AddChildObject(ObjectIf* o);
-	double _dt;
-	void Set_dt(double _dt);
+	virtual bool AddChildObject(ObjectIf* o);
+	void SetTimeStep(double dt);
+	double GetTimeStep();
 };
 
 }

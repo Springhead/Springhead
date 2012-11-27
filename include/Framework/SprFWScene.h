@@ -20,6 +20,7 @@ struct PHConstraintIf;
 struct PHContactPointIf;
 struct PHIKEngineIf;
 struct PHHapticEngineIf;
+struct PHFemEngineIf;
 struct PHSceneIf;
 struct GRSceneIf;
 struct GRRenderIf;
@@ -64,6 +65,9 @@ public:
 
 	/// オブジェクトの数を取得する
 	int NObject()const;
+
+	/// オブジェクトを取得する
+	FWObjectIf* GetObject(int i);
 
 	/// オブジェクトの配列を取得する
 	FWObjectIf** GetObjects();
@@ -201,8 +205,11 @@ public:
 	/**  @brief 関節可動域の描画 */
 	void EnableRenderLimit(bool enable = true);
 
-	/** @brief Hapticの計算結果の描画 */
+	/** @brief Hapticの描画 */
 	void EnableRenderHaptic(bool enable = true);
+
+	/** @brief FEMの描画 */
+	void EnableRenderFem(bool enable = true);
 	
 	void AddHumanInterface(HIForceDevice6D* d);
 

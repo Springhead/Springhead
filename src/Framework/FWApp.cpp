@@ -175,7 +175,10 @@ FWWinIf* FWApp::GetWin(int pos){
 }
 
 FWWinIf* FWApp::GetCurrentWin(){
-	return GetWinFromId(FWGraphicsHandler::instance->GetCurrentWin());
+	if(FWGraphicsHandler::instance)
+		return GetWinFromId(FWGraphicsHandler::instance->GetCurrentWin());
+	DSTR << "Error in FWApp::GetCurrentWin(): FWGraphicsHandler::instance does not exist." << std::endl;
+	return NULL;
 }
 
 void FWApp::DestroyWin(FWWinIf* win){

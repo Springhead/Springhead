@@ -14,6 +14,7 @@
 #include <Physics/PHPenaltyEngine.h>
 #include <Physics/PHConstraintEngine.h>
 #include <Physics/PHHapticEngine.h>
+#include <Physics/PHFemEngine.h>
 #include <sstream>
 
 namespace Spr{;
@@ -219,6 +220,12 @@ int PHScene::NFemMeshes() const {
 PHFemMeshIf* PHScene::GetFemMesh(int i){
 	return femEngine->meshes[i]->Cast();
 }
+int PHScene::NFemMeshesNew() const{
+	return (int)femEngine->meshes_n.size();
+}
+PHFemMeshNewIf*	PHScene::GetFemMeshNew(int i){
+	return femEngine->meshes_n[i]->Cast();
+}
 
 void PHScene::Clear(){
 	engines.Clear();
@@ -395,6 +402,9 @@ bool PHScene::AddChildObject(ObjectIf* o){
 	PHFemMeshIf* fem = o->Cast();
 	if (fem && femEngine->AddChildObject(o))
 		ok = true;
+	PHFemMeshNewIf* fem_n = o->Cast();
+	if(fem_n && femEngine->AddChildObject(o))
+		ok = true;
 
 	// MergeSceneなどで他のSceneから移動してくる場合もあるので所有権を更新する
 	if(ok){
@@ -420,6 +430,8 @@ bool PHScene::AddChildObject(ObjectIf* o){
 			else if(ikPoint)
 				sprintf(name, "ikeef%d", NIKEndEffectors()-1);
 			else if(fem)
+				sprintf(name, "fem%d", NFemMeshes()-1);
+			else if(fem_n)
 				sprintf(name, "fem%d", NFemMeshes()-1);
 			so->SetName(name);
 		}

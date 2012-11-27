@@ -180,7 +180,7 @@ bool FWSdk::SaveScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectI
 }
 
 FWSceneIf* FWSdk::GetScene(int i){
-	if(i == -1)
+	if(i == -1 && FWApp::GetApp()->GetCurrentWin() != NULL)
 		return FWApp::GetApp()->GetCurrentWin()->GetScene();
     if(0 <= i && i < NScene())
 		return scenes[i];

@@ -65,7 +65,10 @@ public:
 	/* PHFemMeshNewのメンバ変数、関数群 */
 	SPR_OBJECTDEF(PHFemMeshNew);
 	//SPR_DECLMEMBEROF_PHFemMeshNewDesc;
+protected:
 	///	基本情報(生成時にデスクリプタから与えられる情報)
+	PHSolidIf* solid;					///< 関連づけられている剛体
+public:
 	std::vector<FemVertex> vertices;	///< 頂点
 	std::vector<Tet> tets;				///< 四面体
 	
@@ -86,6 +89,10 @@ public:
 	virtual void SetDesc(const void* p);
 	///	時刻をdt進める。PHFemEngineが呼び出す。
 	virtual void Step(double dt);
+	/// 剛体を関連づける
+	void SetPHSolid(PHSolidIf* s);
+	/// 関連付けされている剛体を返す
+	PHSolidIf* GetPHSolid();
 	///	面の総数を返す
 	unsigned GetNFace();
 	///	Face辺の両端点の座標を返す?
