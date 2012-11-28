@@ -21,13 +21,14 @@
 # define PDEBUG(x)
 #endif
 
-//メッシュエッジの表示、など
-//#define VTX_DBG
-
 namespace Spr{;
 
 FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	grFemMesh = NULL;
+	// p: piecewise linear comlex, q:2.1が正四面体の歪み(1以上～？以下）、a:粗さ
+	//meshRoughness = "pq2.1a0.002";
+	//meshRoughness = "pq2.1a0.003";
+	meshRoughness = "pq2.1a0.3";	
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }
@@ -57,6 +58,7 @@ bool FWFemMeshNew::AddChildObject(ObjectIf* o){
 	PHFemMeshNew* pm = o->Cast();
 	if (pm){
 		phFemMesh = pm;
+		phFemMesh->SetPHSolid(GetPHSolid());
 		return true;
 	}
 	GRMesh* mesh = o->Cast();
@@ -68,18 +70,42 @@ bool FWFemMeshNew::AddChildObject(ObjectIf* o){
 }
 
 void FWFemMeshNew::Loaded(UTLoadContext*){
-	if (!phFemMesh && grFemMesh) CreatePHFemMeshFromGRMesh();
-	//if (grFrame){
-	//	grFrame->DelChildObject(grFemMesh->Cast());
-	//	CreateGRFromPH();
-	//	grFrame->AddChildObject(grFemMesh->Cast());
-	//}
-	if(GetPHSolid() && phFemMesh) phFemMesh->SetPHSolid(GetPHSolid());
+	DSTR << "phFemMesh" << phFemMesh << std::endl;
+	DSTR << "grFemMesh" << grFemMesh << std::endl;
+	DSTR << "phsolid" << GetPHSolid() << std::endl;
+	DSTR << "grFrame" << GetGRFrame() << std::endl;
+	DSTR << "phFemVibration" << phFemMesh->femVibration << std::endl;
+	DSTR << "phFemMesh desc size" << phFemMesh->GetDescSize() << std::endl;
+	DSTR << "phFemMesh vertices" << phFemMesh->vertices.size() << std::endl;
+
+	if(grFemMesh){
+		if(!phFemMesh){
+			// phFemMeshがNULLの場合、新たに生成する。
+			// 計算モジュールは作られないので別に作る必要がある（未実装）。
+			phFemMesh = DBG_NEW PHFemMeshNew();
+			// PHFemEngineに追加登録	
+			if(GetPHSolid() && GetPHSolid()->GetScene()){
+				GetPHSolid()->GetScene()->AddChildObject(phFemMesh->Cast());
+				phFemMesh->SetPHSolid(GetPHSolid());
+			}
+			CreatePHFemMeshFromGRMesh();		
+		}else if(phFemMesh->vertices.size() == 0){
+			// phFemMeshの頂点が空の場合
+			// tetgenによるメッシュの生成
+			CreatePHFemMeshFromGRMesh();
+		}
+	}
+
+	if (grFrame){
+		grFrame->DelChildObject(grFemMesh->Cast());
+		CreateGRFromPH();
+		grFrame->AddChildObject(grFemMesh->Cast());
+	}
 }
 
 bool FWFemMeshNew::CreatePHFemMeshFromGRMesh(){
-	//	呼び出された時点で grFemMesh にグラフィクスのメッシュが入っている
-	//	grFemMeshを変換して、phFemMeshをつくる。
+	//	呼び出された時点でgrFemMesh にグラフィクスのメッシュが入っている。
+	//	grFemMeshを四面体メッシュに変換して、phFemMeshをつくる。
 	
 	//TetGenで四面体メッシュ化
 	Vec3d* vtxsOut=NULL;
@@ -88,7 +114,7 @@ bool FWFemMeshNew::CreatePHFemMeshFromGRMesh(){
 	std::vector<Vec3d> vtxsIn;
 	for(unsigned i = 0; i < grFemMesh->vertices.size(); ++i) vtxsIn.push_back(grFemMesh->vertices[i]);
 	// swithes q+(半径/最短辺) (e.g. = q1.0~2.0) a 最大の体積 
-	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grFemMesh->vertices.size(), &vtxsIn[0], (int)grFemMesh->faces.size(), &grFemMesh->faces[0], "pq2.1a0.002");//a0.3 //a0.003 
+	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grFemMesh->vertices.size(), &vtxsIn[0], (int)grFemMesh->faces.size(), &grFemMesh->faces[0], meshRoughness);
 	
 	//	phFemMesh用のディスクリプタpmdに値を入れていく
 	PHFemMeshNewDesc pmd;
@@ -96,12 +122,8 @@ bool FWFemMeshNew::CreatePHFemMeshFromGRMesh(){
 		pmd.vertices.push_back(vtxsOut[i]);
 	} 
 	pmd.tets.assign(tetsOut, tetsOut + nTetsOut*4);
-	//	phFemMeshの生成
-	phFemMesh = DBG_NEW PHFemMeshNew(pmd);
-		
-	if(GetPHSolid() && GetPHSolid()->GetScene()){
-		GetPHSolid()->GetScene()->AddChildObject(phFemMesh->Cast());
-	}
+	phFemMesh->SetDesc(&pmd);
+
 	return true;
 }
 
@@ -116,6 +138,9 @@ struct FaceMap{
 };
 
 void FWFemMeshNew::CreateGRFromPH(){
+	// 3Dテクスチャを使えるようにするために、grFemMeshを再構築する？
+	// 3Dテクスチャを使わない場合は必要ない？
+
 	//	頂点の対応表を用意
 	std::vector<int> vtxMap;
 	vtxMap.resize(phFemMesh->vertices.size(), -1);
@@ -236,6 +261,7 @@ void FWFemMeshNew::CreateGRFromPH(){
 	//	対応表に応じて、頂点のテクスチャ座標を作成
 	//		phの１点がgrの頂点複数に対応する場合がある。
 	//		その場合は頂点のコピーを作る必要がある。
+	assert(grFemMesh->faceNormals.size());	// ロードしたファイルに法線情報が含まれていない
 	std::vector<bool> vtxUsed(gmd.vertices.size(), false);
 	for(unsigned pf=0; pf<pFaceMap.size(); ++pf){		
 		for(unsigned i=0; i<3; ++i){
@@ -272,6 +298,7 @@ void FWFemMeshNew::CreateGRFromPH(){
 							DSTR << (ax==2 ? "\n" : "\t");
 						}
 					}
+					//assert(grFemMesh->texCoords.size() == 0);	// ロードしたファイルにUVマッピングの情報がない
 					texCoord += weight[j] * grFemMesh->texCoords[gFace.indices[j]];
 					if(gNormal) normal += weight[j] * grFemMesh->normals[gNormal->indices[j]];
 				}
@@ -303,6 +330,7 @@ void FWFemMeshNew::CreateGRFromPH(){
 						}
 						DSTR << "の外側に物理の頂点:\t" << gmd.vertices[pv] << "があります" << std::endl;
 					}
+					//assert(grFemMesh->texCoords.size() == 0);	// ロードしたファイルにUVマッピングの情報がない
 					texCoord += weight[maxId][j] * grFemMesh->texCoords[gFace.indices[j<maxId?j:j+1]];
 					if(gNormal){
 						normal += weight[maxId][j] * grFemMesh->normals[gFaceNormal.indices[j<maxId?j:j+1]];
@@ -341,57 +369,19 @@ void FWFemMeshNew::CreateGRFromPH(){
 	grFemMesh = rv;
 }
 
-void FWFemMeshNew::Sync(){	
-
-#ifdef VTX_DBG
-	////	デバッグ用
-	//// face辺を描画
-	DrawFaceEdge();
-#endif
-	
+void FWFemMeshNew::Sync(){		
 	//	同期処理
 	FWObject::Sync();
 	if(syncSource == FWObjectDesc::PHYSICS){
-		if(grFemMesh && grFemMesh->IsTex3D()){
-			float* gvtx = grFemMesh->GetVertexBuffer();
-			if(gvtx){
-				int tex = grFemMesh->GetTexOffset();
-				int stride = grFemMesh->GetStride();
-				for(unsigned gv = 0; gv < vertexIdMap.size(); ++gv){
-					int pv = vertexIdMap[gv];
-				}
-			}	
-		}else{
-			DSTR << "Error: " << "FWFemMeshNew::Sync()" << " : FWFemMeshNew does not have GRMesh." << std::endl;
-		}
+		//if(phFemThermo){
+		//	if(grFemMesh && grFemMesh->IsTex3D()){	
+		//		SyncThermoInfo();
+		//	}else{
+		//		//DSTR << "Error: " << GetName() << ":FWFemMesh does not have 3D Mesh" << std::endl;
+		//	}
+		//}
 	}
 }
 
-/// Draw関係はFWSceneに移動させる
-#include <GL/glew.h>
-#include <GL/glut.h>
-
-void FWFemMeshNew::DrawFaceEdge(){
-	//	使用例
-	//	phFemMesh->GetFaceEdgeVtx(0,1);
-	for(unsigned i =0; i < phFemMesh->GetNFace();i++){
-		for(unsigned j =0;j < 3;j++){
-			glBegin(GL_LINES);
-			Vec3d wpos = this->GetGRFrame()->GetWorldTransform() * phFemMesh->GetFaceEdgeVtx(i,j);
-			double posx = wpos.x;
-			double posy = wpos.y;
-			double posz = wpos.z;
-			glVertex3d(wpos.x,wpos.y,wpos.z);
-			wpos = this->GetGRFrame()->GetWorldTransform() * phFemMesh->GetFaceEdgeVtx(i,(j+1)%3);
-			posx = wpos.x;
-			posy = wpos.y;
-			posz = wpos.z;
-			glVertex3d(wpos.x,wpos.y,wpos.z);
-			glEnd();
-			//glFlush();	//ただちに実行
-		}
-	}
-	glutPostRedisplay();
-}
 
 }

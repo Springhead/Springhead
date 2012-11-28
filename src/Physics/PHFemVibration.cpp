@@ -5,25 +5,20 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#ifndef SPR_FW_FEMMESH_NEW_IF_H
-#define SPR_FW_FEMMESH_NEW_IF_H
-
-#include <Framework/SprFWObject.h>
-#include <Physics/SprPHFemMeshNew.h>
+#include <Physics/PHFemVibration.h>
 
 namespace Spr{;
 
-struct FWFemMeshNewDesc: public FWObjectDesc{
-};
+PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
+	SetDesc(&desc);
+	Init();
+} 
 
-/** 
- */
-struct FWFemMeshNewIf : FWObjectIf{
-	SPR_IFDEF(FWFemMeshNew);
-	PHFemMeshNewIf* GetPHFemMesh();
-};
+void PHFemVibration::Init(){
+}
+
+void PHFemVibration::Step(){
+}
 
 
 }
-
-#endif

@@ -96,6 +96,30 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHFemDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemVibrationDesc \
+protected:\
+public:\
+	virtual void SetDesc(const void* ptr){ \
+		PHFem::SetDesc((PHFemDesc*)(PHFemVibrationDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFem::GetDesc((PHFemDesc*)(PHFemVibrationDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHHapticPointerDesc \
 protected:\
 public:\

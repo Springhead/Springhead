@@ -17,6 +17,8 @@
 #include <Physics/PHGear.h>
 #include <Physics/PHFemMesh.h>
 #include <Physics/PHFemMeshThermo.h>
+#include <Physics/PHFemMeshNew.h>
+#include <Physics/PHFemVibration.h>
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
 #include <Collision/CDCapsule.h>
@@ -73,6 +75,8 @@ void PHSdkIf::RegisterSdk(){
 
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMesh));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMeshThermo));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMeshNew));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemVibration));
 
 	PHSolidIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFrame));
 
