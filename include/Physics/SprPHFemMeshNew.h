@@ -34,6 +34,32 @@ struct PHFemMeshNewDesc: public PHFemMeshNewState{
 	std::vector<int> faces;
 };
 
+/// Femの共通計算部分
+struct PHFemIf : public SceneObjectIf{
+	SPR_IFDEF(PHFem);
+};
+
+/// Femのデスクリプタ
+struct PHFemDesc{
+};
+
+/// 振動計算
+struct PHFemVibrationIf : public PHFemIf{
+	SPR_IFDEF(PHFemVibration);
+};
+
+/// 振動計算のデスクリプタ
+struct PHFemVibrationDesc : public PHFemDesc{
+	SPR_DESCDEF(PHFemVibration);
+};
+
+
+
+
+
+
+
+
 //@}
 
 }	//	namespace Spr

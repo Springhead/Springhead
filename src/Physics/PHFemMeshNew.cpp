@@ -7,14 +7,15 @@
  */
 
 #include <Physics/PHFemMeshNew.h>
+#include <Physics/PHFemVibration.h>
 
-using namespace PTM;
+//using namespace PTM;
 namespace Spr{;
 
 ///////////////////////////////////////////////////////////////////
 /* 四面体を表すためのクラス、構造体の定義 */
 // 四面体
-int& PHFemMeshNew::Tet::edge(int i, int j){
+int& Tet::edge(int i, int j){
 	if (i>j) std::swap(i, j);
 	if (j==3) return edges[3+i];
 	if (j==2 && i==0) return edges[2];
@@ -22,20 +23,20 @@ int& PHFemMeshNew::Tet::edge(int i, int j){
 }
 
 // 四面体の面
-void PHFemMeshNew::Face::Update(){
+void FemFace::Update(){
 	for(int i=0; i<3; ++i) sorted[i] = vertices[i];
 	std::sort(sorted, sorted+3);
 }
-bool PHFemMeshNew::Face::operator < (const Face& f2){
-	const Face& f1 = *this;
+bool FemFace::operator < (const FemFace& f2){
+	const FemFace& f1 = *this;
 	for(int i=0; i<3; ++i){
 		if (f1.sorted[i] < f2.sorted[i]) return true;
 		if (f1.sorted[i] > f2.sorted[i]) return false;
 	}
 	return false;
 } 
-bool PHFemMeshNew::Face::operator == (const Face& f2){
-	const Face& f1 = *this;
+bool FemFace::operator == (const FemFace& f2){
+	const FemFace& f1 = *this;
 	for(int i=0; i<3; ++i){
 		if (f1.sorted[i] != f2.sorted[i]) return false;
 	}
@@ -43,19 +44,19 @@ bool PHFemMeshNew::Face::operator == (const Face& f2){
 }
 
 // 辺
-PHFemMeshNew::Edge::Edge(int v1, int v2){
+FemEdge::FemEdge(int v1, int v2){
 	if (v1>v2) std::swap(v1, v2);
 	assert(v1==-1 && v2==-1 || v1 < v2);
 	vertices[0] = v1;
 	vertices[1] = v2;
 }
-bool PHFemMeshNew::Edge::operator < (const Edge& e2){
+bool FemEdge::operator < (const FemEdge& e2){
 	if (vertices[0] < e2.vertices[0]) return true;
 	if (vertices[0] > e2.vertices[0]) return false;
 	if (vertices[1] < e2.vertices[1]) return true;
 	return false;
 }
-bool PHFemMeshNew::Edge::operator == (const Edge& e2){
+bool FemEdge::operator == (const FemEdge& e2){
 	return vertices[0] == e2.vertices[0] && vertices[1] == e2.vertices[1];
 }
 
@@ -106,7 +107,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 		}
 	}
 	//	表面を探す
-	std::vector<Face> allFaces;
+	std::vector<FemFace> allFaces;
 	//	裏表を考える必要がある。
 	/*
 					0
@@ -119,7 +120,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	int tfs[4][3]={{0,1,2}, {0,2,3}, {0,3,1}, {3,2,1}};
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
-			Face f;	
+			FemFace f;	
 			for(unsigned k=0; k<3; ++k) f.vertices[k] = tets[i].vertices[tfs[j][k]];
 			f.Update();
 			allFaces.push_back(f);
@@ -128,7 +129,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	std::sort(allFaces.begin(), allFaces.end());
 
 	faces.clear();
-	std::vector<Face> ifaces;
+	std::vector<FemFace> ifaces;
 	for(unsigned i=0; i<allFaces.size(); ++i){
 		if (i+1<allFaces.size() && allFaces[i] == allFaces[i+1]){
 			ifaces.push_back(allFaces[i]);	//	中面
@@ -155,18 +156,18 @@ void PHFemMeshNew::SetDesc(const void* p){
 	edges.clear();
 	for(unsigned i=0; i<nSurfaceFace; ++i){
 		for(unsigned j=0; j<3; ++j){
-			edges.push_back(Edge(faces[i].vertices[j], faces[i].vertices[(j+1)%3]));
+			edges.push_back(FemEdge(faces[i].vertices[j], faces[i].vertices[(j+1)%3]));
 		}
 	}
 	std::sort(edges.begin(), edges.end());
-	std::vector<Edge>::iterator newEEnd = std::unique(edges.begin(), edges.end());
+	std::vector<FemEdge>::iterator newEEnd = std::unique(edges.begin(), edges.end());
 	edges.erase(newEEnd, edges.end());
 	nSurfaceEdge = (unsigned)edges.size();
 	//	内部の辺の列挙
-	std::vector<Edge> iEdges;
+	std::vector<FemEdge> iEdges;
 	for(unsigned i=nSurfaceFace; i<faces.size() ;++i){
 		for(unsigned j=0; j<3; ++j){
-			iEdges.push_back(Edge(faces[i].vertices[j], faces[i].vertices[(j+1)%3]));
+			iEdges.push_back(FemEdge(faces[i].vertices[j], faces[i].vertices[(j+1)%3]));
 		}
 	}
 	//	重複を削除
@@ -187,7 +188,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	//	四面体に面を追加
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
-			Face f;
+			FemFace f;
 			for(unsigned k=0; k<3; ++k) f.vertices[k] = tets[i].vertices[k<j ? k : k+1];
 			f.Update();
 			unsigned k;
@@ -207,7 +208,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 			FemVertex& vtx = vertices[tets[i].vertices[j]];
 			//	四面体のある頂点から出ている辺のうち、その頂点が始点(vertices[0])になっているものについて
 			for(unsigned k=0; k<vtx.edges.size(); ++k){
-				Edge& e = edges[vtx.edges[k]];
+				FemEdge& e = edges[vtx.edges[k]];
 				if (e.vertices[0] != tets[i].vertices[j]) continue;
 				//	辺が四面体に含まれる場合、辺を設定
 				for(int l=0; l<4; ++l){
@@ -229,16 +230,32 @@ void PHFemMeshNew::SetDesc(const void* p){
 	}
 }
 
+bool PHFemMeshNew::AddChildObject(ObjectIf* o){
+	PHFemVibration* obj = DCAST(PHFemVibration, o);
+	if(obj){
+		femVibration = obj;	
+		return true;
+	}
+
+/*	PHFemThermo* obj = DCAST(PHFemThermo, o);
+	if(obj){
+		femThermo = obj;	
+		return true;
+	}*/ 
+	return false;
+}
+
+void PHFemMeshNew::Step(double dt){
+	femVibration->Step();
+
+}
+
 void PHFemMeshNew::SetPHSolid(PHSolidIf* s){
 	solid = s;
 }
 
 PHSolidIf* PHFemMeshNew::GetPHSolid(){
 	return solid;
-}
-
-void PHFemMeshNew::Step(double dt){
-
 }
 
 unsigned PHFemMeshNew::GetNFace(){

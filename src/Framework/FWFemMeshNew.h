@@ -26,7 +26,8 @@ class FWFemMeshNew: public FWObject{
 public:
 	UTRef< PHFemMeshNew > phFemMesh;	///< 物理計算用のメッシュ
 	UTRef< GRMesh > grFemMesh;			///< 描画用のメッシュ
-	std::vector<int> vertexIdMap;		///<	grFemMeshからphFemMeshへの頂点の対応表
+	std::vector<int> vertexIdMap;		///< grFemMeshからphFemMeshへの頂点の対応表
+	char* meshRoughness;			///< tetgenで生成するメッシュの粗さ
 
 	FWFemMeshNew(const FWFemMeshNewDesc& d=FWFemMeshNewDesc());		//コンストラクタ
 	///	子オブジェクトの数
@@ -47,14 +48,6 @@ public:
 
 	///	グラフィクス表示前の同期処理
 	void Sync();
-
-	/// Draw関係はすべてFWSceneに移動させる予定
-	///	メッシュのface辺を描画
-	//void DrawVtxLine(float length, float x, float y, float z);
-	//void DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1);
-	//void DrawEdge(Vec3d vtx0, Vec3d vtx1);
-	//	メッシュのface辺を描画
-	void DrawFaceEdge();
 
 public:
 	enum TEXTURE_MODE{
