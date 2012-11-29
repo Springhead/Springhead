@@ -79,6 +79,7 @@ void reshape(int w, int h){
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
+		std::cout << "exited by ESC key" << std::endl;
 		exit(0);
 	}
 	if ('0'<= key && key <= '9' && phSdk && phSdk->NScene()){
@@ -128,7 +129,7 @@ int main(int argc, char* argv[]){
 		fileX->Load(objs, argv[1]);				//	ファイルローダに渡す方式
 	}else{
 		if (! fileX->Load(objs, TEST_FILEX) ) {	//	PHSDKごとロードして，
-			DSTR << "Error: Cannot open load file. " << std::endl;
+			std::cerr << "Error: Cannot open load file. " << std::endl;
 			exit(EXIT_FAILURE);
 		}
 		phSdk = NULL;
@@ -145,10 +146,10 @@ int main(int argc, char* argv[]){
 	
 	fiSdk=NULL;	//	ファイルローダのメモリを解放．
 	objs.clear();
-	grSdk->Print(DSTR);
+	grSdk->Print(std::cout);
 	scene = grSdk->GetScene(0);		// Sceneの取得
-	DSTR << "Loaded : " << "NScene=" << (int)grSdk->NScene() << std::endl;
-	scene->Print(DSTR);
+	std::cout << "Loaded : " << "NScene=" << (int)grSdk->NScene() << std::endl;
+	scene->Print(std::cout);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);

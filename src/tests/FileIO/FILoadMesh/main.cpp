@@ -74,7 +74,7 @@ void display(){
 	render->ClearBuffer();
 	scene->Render(render);
 	if (!scene){
-		DSTR << "scene == NULL. File may not found." << std::endl;
+		std::cerr << "scene == NULL. File may not found." << std::endl;
 		exit(-1);
 	}
 	render->EndScene();
@@ -135,6 +135,7 @@ void reshape(int w, int h){
  */
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
+		std::cout << "exited by ESC key" << std::endl;
 		exit(0);
 	}
 }
@@ -150,7 +151,7 @@ void idle(){
 	static int count=0;
 	count++;
 	if (count > EXIT_TIMER){
-		DSTR << EXIT_TIMER << " count passed." << std::endl;
+		std::cout << EXIT_TIMER << " count passed." << std::endl;
 		exit(0);
 	}
 }

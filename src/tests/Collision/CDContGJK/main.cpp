@@ -277,7 +277,7 @@ void dstrSolid(const std::string& solidName) {
 	PHSolidIf* solid = NULL;
 	if (solidName == "soFloor")			solid = soFloor;
 	else if (solidName == "soBlock")	solid = soBlock;
-	DSTR << "***  " << solidName << "   ***\n";
+	std::cout << "***  " << solidName << "   ***\n";
 
 	for(int i=0; i<solid->NShape(); ++i){
 		CDShapeIf* shape = solid->GetShape(i);
@@ -287,9 +287,9 @@ void dstrSolid(const std::string& solidName) {
 			for(int f=0; f<mesh->NFace();++f){
 				CDFaceIf* face = mesh->GetFace(f);
 				for(int v=0; v<face->NIndex(); ++v){
-					DSTR << base[face->GetIndices()[v]];
+					std::cout << base[face->GetIndices()[v]];
 				}
-				DSTR << std::endl;
+				std::cout << std::endl;
 			}
 		}
 	}

@@ -176,7 +176,7 @@ void SPR_CDECL idle(){
 	blueVel		+= force * blueTeapot->GetMassInv() * dt;	// (force/m)*dt
 	bluePos		+= blueVel * dt;
 
-	std::cout << redTeapot->GetCenterPosition() << blueTeapot->GetCenterPosition() << std::endl;
+	DSTR << redTeapot->GetCenterPosition() << blueTeapot->GetCenterPosition() << std::endl;
 	
 	// 10secにシミュレーション結果と期待値を比較
 	if (stepCnt >= 10.0) {	
@@ -185,16 +185,16 @@ void SPR_CDECL idle(){
 		blueApprox	= approx(bluePos, blueTeapot->GetFramePosition());
 
 		if (redApprox && blueApprox) {	// シミュレーション結果は正しい結果となりました。
-			DSTR << "\nPHSimpleGL success (redTeapot:success, blueTeapot:success)" << std::endl;
+			std::cout << "\nPHSimpleGL success (redTeapot:success, blueTeapot:success)" << std::endl;
 			exit(EXIT_SUCCESS);
 		} else if (redApprox) {			// 赤いティーポットは正しい結果が得られましたが、青いティーポットは正しい結果が得られませんでした。
-			DSTR << "\nPHSimpleGL failure (redTeapot:success, blueTeapot:failure)" << std::endl;
+			std::cout << "\nPHSimpleGL failure (redTeapot:success, blueTeapot:failure)" << std::endl;
 			exit(EXIT_FAILURE);
 		} else if (blueApprox) {		// 青いティーポットは正しい結果が得られましたが、赤いティーポットは正しい結果が得られませんでした。		
-			DSTR << "\nPHSimpleGL failure (redTeapot:failure, blueTeapot:success)" << std::endl;
+			std::cout << "\nPHSimpleGL failure (redTeapot:failure, blueTeapot:success)" << std::endl;
 			exit(EXIT_FAILURE);
 		} else {						// 青いティーポットと赤いティーポットはともに正しい結果が得られませんでした。
-			DSTR << "\nPHSimpleGL failure (redTeapot:failure, blueTeapot:failure)" << std::endl;
+			std::cout << "\nPHSimpleGL failure (redTeapot:failure, blueTeapot:failure)" << std::endl;
 			exit(EXIT_FAILURE);
 		}
 	} 

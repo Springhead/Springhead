@@ -73,6 +73,7 @@ public:
 		((Fuga*)arg)->Print();
 	}
 	void Print(){
+		std::cout.flush();
 		std::cout << std::endl << "fugafuga " << count << std::endl;
 		count ++;
 	}
@@ -90,7 +91,9 @@ void idle(){
 	unsigned time = timeGetTime();
 	int delta = (int)time - (int)startTime;
 	if (delta > 2000){
-		DSTR << "hoge:" << hogeCount << "  fuga:" << fuga.count << "  piyo:" << piyoCount << std::endl;
+		std::cout.flush();
+		std::cout << std::endl;
+		std::cout << "hoge:" << hogeCount << "  fuga:" << fuga.count << "  piyo:" << piyoCount << std::endl;
 		if (hogeCount != 26) exit(-1);
 		if (fuga.count != 10) exit(-2);
 		if (piyoCount != 52) exit(-3);
@@ -139,6 +142,9 @@ int _cdecl main(int argc, char* argv[]){
 void keyboard(unsigned char key, int x, int y){
 	timer1.Stop();
 	fuga.timer2.Stop();
+	std::cout.flush();
+	std::cout << std::endl;
+	std::cout << "exited by key hit" << std::endl;
 	exit(0);
 }	
 void display(){
