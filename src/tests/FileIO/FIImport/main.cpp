@@ -35,7 +35,7 @@ ImportIf*		import;
 
 /// 手動構築
 void Build(){
-	DSTR << "building scene" << endl;
+	std::cout << "building scene" << endl;
 
 	PHSceneIf* phScene = phSdk->CreateScene();
 	PHSolidIf* solid0 = phScene->CreateSolid();
@@ -57,7 +57,7 @@ void Build(){
 }
 
 void Save(const char* filename){
-	DSTR << "saving scene" << endl;
+	std::cout << "saving scene" << endl;
 
 	FIFileIf* file = fiSdk->CreateFileFromExt(filename);
 	ObjectIfs objs;
@@ -69,7 +69,7 @@ void Save(const char* filename){
 }
 
 void Load(const char* filename){
-	DSTR << "loading scene" << endl;
+	std::cout << "loading scene" << endl;
 
 	FIFileIf* file = fiSdk->CreateFileFromExt(filename);
 	ObjectIfs objs;
@@ -87,18 +87,18 @@ int main(int argc, char* argv[]){
 
 	/// シーンを手動構築
 	Build();
-	phSdk->Print(DSTR);
+	phSdk->Print(std::cout);
 
 	/// セーブ
 	Save("test.x");
 
 	/// クリア
 	phSdk->Clear();
-	phSdk->Print(DSTR);
+	phSdk->Print(std::cout);
 
 	/// ロード
 	Load("test.x");
-	phSdk->Print(DSTR);
+	phSdk->Print(std::cout);
 
 	/// もう一度セーブ
 	Save("afterload/test.x");

@@ -139,6 +139,7 @@ void reshape(int w, int h){
 void keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
 		delete[] vtx;
+		std::cout << "exited by ESC key" << std::endl;
 		exit(0);
 	}
 	if ('0'<= key && key <= '9' && phSdk->NScene()){
@@ -195,13 +196,13 @@ int main(int argc, char* argv[]){
 			fwSdk = FWSdkIf::CreateSdk();					//	FWSDKを用意して，
 			objs.push_back(fwSdk);		
 			if (! file->Load(objs, "test.spr") ) {	//	PHSDKごとロードして，
-				DSTR << "Error: Cannot open load file. " << std::endl;
+				std::cerr << "Error: Cannot open load file. " << std::endl;
 				exit(EXIT_FAILURE);
 			}
 			phSdk = NULL;
 			grSdk = NULL;
 			for(unsigned  i=0; i<objs.size(); ++i){	
-				objs[i]->Print(DSTR);
+				objs[i]->Print(std::cout);
 				if(!phSdk) phSdk = DCAST(PHSdkIf, objs[i]);	//	PHSDKを受け取る方式
 				if(!grSdk) grSdk = DCAST(GRSdkIf, objs[i]);	//	GRSdkも受け取る
 			}
@@ -215,11 +216,11 @@ int main(int argc, char* argv[]){
 		}
 		fiSdk = NULL;	//	ファイルローダのメモリを解放．
 		objs.clear();
-		phSdk->Print(DSTR);
+		phSdk->Print(std::cout);
 
 		scene = phSdk->GetScene(0);		// Sceneの取得
 	//	shape = phSdk->GetShapes();		// Shapeの取得
-		DSTR << "Loaded : " << "NScene=" << phSdk->NScene() << ", NShape=" << phSdk->NShape() << std::endl;
+		std::cout << "Loaded : " << "NScene=" << phSdk->NScene() << ", NShape=" << phSdk->NShape() << std::endl;
 		if (scene) scene->SetTimeStep(0.01);
 
 		glutInit(&argc, argv);

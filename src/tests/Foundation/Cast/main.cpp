@@ -23,7 +23,7 @@ void main(){
 	NameManagerIf* nameManIf = nameMan->Cast();
 	obj->SetNameManager(nameManIf);
 	objIf->SetName("firstObject");
-	nameManIf->Print(DSTR);
+	nameManIf->Print(std::cout);
 
 	/*
 	HIPose* poseObj = new HIPose;
