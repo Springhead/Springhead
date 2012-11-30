@@ -346,7 +346,7 @@ struct PHHingeJointDesc : public PH1DJointDesc{
 	SPR_DESCDEF(PHHingeJoint);
 	bool cyclic;
 	PHHingeJointDesc(){
-		cyclic = true;
+		cyclic = false;
 	}
 };
 
