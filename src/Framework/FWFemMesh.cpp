@@ -248,7 +248,7 @@ void FWFemMesh::Sync(){
 						if(temp <= -50.0){
 							gvtx[stride * gv + tex + 2] = thstart;
 						}
-						else if(-50.0 < temp && temp <= 0){	
+						else if(-50.0 < temp && temp <= 0.0){	
 							gvtx[stride*gv + tex + 2] = (thstart ) + ((temp + 50.0) * dtex /50.0);
 						}
 						//	0~50.0:blue to green
@@ -277,6 +277,9 @@ void FWFemMesh::Sync(){
 						else if(250.0 < temp){
 							gvtx[stride*gv + tex + 2] = dtex * 6.0 + thstart;
 							//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
+						}
+						else{
+							DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
 						}
 					}
 

@@ -2173,29 +2173,29 @@ void PHFemMeshThermo::DrawEdge(unsigned id0, unsigned id1){
 
 void PHFemMeshThermo::Step(double dt){
 
-	// cps表示用
-	static bool bOneSecond = false;
-	{
-		static DWORD lastTick = GetTickCount();
-		static int cpsCount = 0;
-		int ellapsed = GetTickCount() - lastTick;
-		++cpsCount;
-		bOneSecond = false;
-		if (ellapsed > 1000) {
-			std::cout << "cps : " << cpsCount << std::endl;
-			cpslog << StepCount<< "," << cpsCount << "," ;	
-			lastTick = GetTickCount();
-			cpsCount = 0;
-			bOneSecond = true;
-		}
-		if(cpsCount){	cpstime	= 1 / cpsCount;		}
-	}
-	static DWORD stepStart = GetTickCount();
-	//途中時間
-	if (bOneSecond) {
-		std::cout << "1: " << GetTickCount() - stepStart << std::endl;
-		cpslog << GetTickCount() - stepStart << ",";
-	} 
+	//// cps表示用
+	//static bool bOneSecond = false;
+	//{
+	//	static DWORD lastTick = GetTickCount();
+	//	static int cpsCount = 0;
+	//	int ellapsed = GetTickCount() - lastTick;
+	//	++cpsCount;
+	//	bOneSecond = false;
+	//	if (ellapsed > 1000) {
+	//		std::cout << "cps : " << cpsCount << std::endl;
+	//		cpslog << StepCount<< "," << cpsCount << "," ;	
+	//		lastTick = GetTickCount();
+	//		cpsCount = 0;
+	//		bOneSecond = true;
+	//	}
+	//	if(cpsCount){	cpstime	= 1 / cpsCount;		}
+	//}
+	//static DWORD stepStart = GetTickCount();
+	////途中時間
+	//if (bOneSecond) {
+	//	std::cout << "1: " << GetTickCount() - stepStart << std::endl;
+	//	cpslog << GetTickCount() - stepStart << ",";
+	//} 
 	//stepStart = GetTickCount();
 	//途中時間
 	//if (bOneSecond) { std::cout << "1: " << GetTickCount() - stepStart << std::endl; }
@@ -2254,7 +2254,7 @@ void PHFemMeshThermo::Step(double dt){
 
 #if 0
 	// 解く前にかならず行う
-	UpdateVecFAll(WEEK);				// 引数に加熱強さを与える。(OFF/WEEK/MIDDLE/HIGH)
+	UpdateVecFAll_frypan(WEEK);				// 引数に加熱強さを与える。(OFF/WEEK/MIDDLE/HIGH)
 #endif
 	//ガウスザイデル法で解く
 	CalcHeatTransUsingGaussSeidel(1,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
@@ -2437,7 +2437,7 @@ void PHFemMeshThermo::InitVecFAlls(){
 	}
 }
 
-void PHFemMeshThermo::UpdateVecF(unsigned mode){
+void PHFemMeshThermo::UpdateVecF_frypan(unsigned mode){
 	// modeは必要か？
 	
 	//	Initialize
@@ -2489,6 +2489,7 @@ void PHFemMeshThermo::UpdateVecF(unsigned mode){
 
 int debugParam =0;
 
+	vecFAllSum.clear();	// 前Stepでの熱入出力を消去
 	//Σ{F[i]}_{i=1}^{4}
 	vecFAllSum = vecFAll[1] + vecFAll[2];
 
@@ -2516,6 +2517,73 @@ int debugParam =0;
 	}
 
 #endif
+
+#if 0
+	for(unsigned i =0; i< 4;i++){
+		vecFAllSum += vecFAll[i];				//全体剛性行列の和を取る
+	}
+	// F2,F3を加算する
+#endif
+}
+
+
+void PHFemMeshThermo::UpdateVecF(){
+	// modeは必要か？
+	
+	//	Initialize
+	//InitVecFAlls();		// この中の初期化のすべてが必要か？
+
+//. 1)最初の2つ({F2},{F3})は、F2,F3のどちらかだけ更新すれば良い場合に用いる
+#if 0
+	// {F2}
+	for(unsigned tetsid = 0; tetsid < tets.size();tetsid++){
+		unsigned id = tetsid;
+		CreateVecf2surface(id);			// tets[id].vecf[1];に結果格納
+		for(unsigned j =0;j < 4; j++){
+			int vtxid0 = tets[id].vertices[j];
+			//vecFAll[1][vtxid0] += vecf[j];
+			vecFAll[1][vtxid0] += tets[id].vecf[1][j];
+		}
+	}	
+#endif
+
+#if 0
+	// {F3}
+	for(unsigned tetsid = 0; tetsid < tets.size();tetsid++){
+		unsigned id = tetsid;
+		CreateVecf3(id);		// tets[id].vecf[2];に結果格納
+		//vecf = tets[id].vecf[2];
+		for(unsigned j =0;j < 4; j++){
+			int vtxid0 = tets[id].vertices[j];
+			//vecFAll[1][vtxid0] += vecf[j];
+			vecFAll[2][vtxid0] += tets[id].vecf[2][j];
+		}
+	}	
+#endif
+
+//. 2) {F2,F3}の両方共更新して良い場合
+#if 0
+	for(unsigned tetsid = 0; tetsid < tets.size();tetsid++){
+		unsigned id = tetsid;
+		CreateVecf2surface(id);
+		CreateVecf3(id);		// tets[id].vecf[2];に結果格納
+		//vecf = tets[id].vecf[2];
+		for(unsigned j =0;j < 4; j++){
+			int vtxid0 = tets[id].vertices[j];
+			//vecFAll[1][vtxid0] += vecf[j];
+			vecFAll[1][vtxid0] += tets[id].vecf[1][j];
+			vecFAll[2][vtxid0] += tets[id].vecf[2][j];
+		}
+	}
+#endif
+
+int debugParam =0;
+
+	vecFAllSum.clear();	// 前Stepでの熱入出力を消去
+	//Σ{F[i]}_{i=1}^{4}
+//	vecFAllSum = vecFAll[1] + vecFAll[2];
+
+//%%%% この関数はここまででとりあえず完成 2012.12.03
 
 #if 0
 	for(unsigned i =0; i< 4;i++){
@@ -2559,7 +2627,7 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 	//3.各面での熱流束量から全体剛性ベクトルを作る。{F}に代入
 
 #if 1			// switch1
-	UpdateVecF(heatingMODE);
+	UpdateVecF_frypan(heatingMODE);
 #endif
 	//%%	IH加熱のモード切替
 	//	ライン状に加熱
@@ -2635,8 +2703,11 @@ void PHFemMeshThermo::AfterSetDesc() {
 		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
 		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
 		//SetInitThermoConductionParam(0.574,970,1.96,25);
-	SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
-	
+	//. 熱伝達する SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
+	//. 熱伝達しない
+	SetInitThermoConductionParam(0.574,970,0.1960,0 );		// 熱伝達率=0;にしているw
+
+
 	//断熱過程
 	//SetInitThermoConductionParam(0.574,970,0.1960,0.0);		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
 	//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
@@ -2703,7 +2774,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	templog.open("templog.csv");
 
 	//	CPSの経時変化を書き出す
-	cpslog.open("cpslog.csv");
+	//cpslog.open("cpslog.csv");
 
 	// カウントの初期化
 	Ndt =0;
@@ -2844,7 +2915,7 @@ void PHFemMeshThermo::CreateMatkLocal(unsigned id){
 
 	//	k1を作る	k1kでも、k1bでもどちらでも構わない	どりらが速いか調べる
 	///	変形した時だけ生成する
-	if(deformed){	CreateMatk1k(id);}			//	k理論を根拠に、加筆して、形状関数を導出	
+	if(deformed){	CreateMatk1k(id);}			//  K第一項の行列作成	//k理論を根拠に、加筆して、形状関数を導出	
 //	if(deformed){	CreateMatk1b(id);}			//	書籍の理論を根拠に、公式を用いて形状関数を導出
 	//DSTR << "tets[id].matk1: " << tets[id].matk1 << std::endl;
 
@@ -3990,8 +4061,7 @@ void PHFemMeshThermo::CreateMatk2t(unsigned id){
 						+ vertices[faces[tets[id].faces[l]].vertices[2]].heatTransRatio ) / 3.0;		///	当該faceの熱伝達率を構成節点での値の相加平均をとる
 					///	以下の[]は上までの[l]と異なる。
 					///	IDが何番目かによって、形状関数の係数が異なるので、
-					//tets[id].matk2 += faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];
-					tets[id].matk[1] += faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];
+					tets[id].matk[1] += faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];		//元はtets[id].matk2 +=
 					//DSTR << "tets[id].matk2にfaces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[" << j << "]"<< "を加算: " <<faces[tets[id].faces[l]].heatTransRatio * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j] << std::endl;
 					//DSTR << "tets[id].matk2 +=  " << tets[id].matk2 << std::endl;
 				}
@@ -4215,7 +4285,7 @@ void PHFemMeshThermo::AddvecFAll(unsigned id,double dqdt){
 }
 
 void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt){
-	vecFAllSum[id] = dqdt;		//	+=に変更
+	vecFAllSum[id] = dqdt;		//	+=に変更すべきで、削除予定
 }
 
 void PHFemMeshThermo::InitAllVertexTemp(){
