@@ -189,6 +189,7 @@ bool PHSolidPairForHaptic::Detect(engine_type* engine, unsigned int ct, double d
 }
 
 void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* engine, unsigned ct, double dt){
+	if(sp == NULL) assert(0);
 	sp->intersectionVertices.clear();
 	if(sp->state == sp->NEW || sp->state == sp->CONTINUE){
 		sp->OnDetect(ct, solid[1]->GetCenterPosition());	// CCDGJKで近傍点対を再取得
@@ -202,6 +203,7 @@ void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* en
 
 	// はじめて近傍の場合
 	if(inLocal == 1){
+		//DSTR << "To be in Local at first" << std::endl;
 		for(int i = 0; i < 2; i++){
 			sp->lastShapePoseW[i] = sp->shapePoseW[i];
 			sp->lastClosestPoint[i] = sp->closestPoint[i];
@@ -584,6 +586,8 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 				sp->inLocal = 2;
 				h->NLocal += 1;
 			}
+			// グラフィクス表示用にコピーをとる
+			*solidPairsTemp.item(i, pointerID) = *sp;
 		}else{
 			// 近傍でない
 			sp->inLocal = 0;
@@ -617,11 +621,15 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 			hapticPointers.push_back(p);
 			h->bPointer = true;
 			solidPairs.resize(NSolids, NPointers);
+			solidPairsTemp.resize(NSolids, NPointers);
 			for(int i = 0; i < NSolids; i++){
 				solidPairs.item(i, pointerID) = DBG_NEW PHSolidPairForHaptic();
 				solidPairs.item(i, pointerID)->Init(solids[i], s);
 				solidPairs.item(i, pointerID)->solidID[0] = i;
 				solidPairs.item(i, pointerID)->solidID[1] = NSolids - 1;
+				// fwSceneで描画するための一時領域を確保
+				solidPairsTemp.item(i, pointerID) = DBG_NEW PHSolidPairForHaptic();
+				*solidPairsTemp.item(i, pointerID) = *solidPairs.item(i, pointerID);
 			}
 			if(s->NShape())	UpdateShapePairs(s);
 		}
@@ -633,7 +641,9 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 			solidPairs.item(NSolids - 1, i) = DBG_NEW PHSolidPairForHaptic();
 			solidPairs.item(NSolids - 1, i)->Init(solids[NSolids - 1], hapticPointers[i]);	
 			solidPairs.item(NSolids - 1, i)->solidID[0] = NSolids - 1;	
-			solidPairs.item(NSolids - 1, i)->solidID[1] = hapticPointers[i]->GetSolidID();	
+			solidPairs.item(NSolids - 1, i)->solidID[1] = hapticPointers[i]->GetSolidID();
+			solidPairsTemp.item(NSolids - 1, i) = DBG_NEW PHSolidPairForHaptic();
+			*solidPairsTemp.item(NSolids - 1, i) = *solidPairs.item(NSolids - 1, i); 
 		}
 		if(s->NShape())	UpdateShapePairs(s);
 

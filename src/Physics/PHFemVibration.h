@@ -19,6 +19,7 @@ public:
 	SPR_OBJECTDEF(PHFemVibration);
 	ACCESS_DESC(PHFemVibration);
 
+	UTRef< PHFemMeshNew > femMesh;
 	PHFemVibration(const PHFemVibrationDesc& desc = PHFemVibrationDesc());
 	virtual void Init();
 	virtual void Step();
