@@ -378,6 +378,7 @@ CDContactAnalysis::VtxBuffer CDContactAnalysis::vtxBuffer(CONTACT_ANALYSIS_BUFFE
 CDContactAnalysis::Vtxs CDContactAnalysis::vtxs(CONTACT_ANALYSIS_BUFFER);
 CDQHPlanes<CDContactAnalysisFace> CDContactAnalysis::planes(CONTACT_ANALYSIS_BUFFER);
 CDContactAnalysisFace** CDContactAnalysis::FindIntersection(CDShapePair* cp){
+	if(!cp) return NULL;	// この部分を消すとinvalid floating point errorとなる 2012.12.05 susa
 	planes.Clear();
 	vtxBuffer.clear();
 	vtxs.clear();
