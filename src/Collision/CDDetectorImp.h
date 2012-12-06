@@ -153,6 +153,18 @@ public:
 		頂点→面の接続．	面→頂点は頂点の並び順から分かる．	*/
 	CDQHPlane<CDContactAnalysisFace>* horizon;
 	//@}
+
+	/** コンストラクタ
+		変数の初期化をしておかないと、Floating-point invalid operationが起こる
+		2012.12.06 susa
+	**/
+	CDContactAnalysisFace(){
+		face = NULL;
+		id = -1;
+		normal = Vec3d();
+		dist = 0.0f;
+		horizon = NULL;
+	}
 	
 	///	QuickHullにとっての頂点．この面を双対変換してできる頂点
 	Vec3f GetPos() const { return normal / dist; }

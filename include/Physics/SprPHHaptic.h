@@ -29,6 +29,7 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	void	EnableFriction(bool b);
 	void	EnableVibration(bool b);
 	void	EnableMultiPoints(bool b);
+	bool	IsMultiPoints();
 	void	EnableDebugControl(bool b);
 
 	void	SetReflexSpring(float s);
