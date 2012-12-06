@@ -50,6 +50,7 @@ public:
 	void	EnableForce(bool b){ bForce = b; }
 	void	EnableFriction(bool b){ bFriction = b; }
 	void	EnableMultiPoints(bool b){ bMultiPoints = b; }
+	bool	IsMultiPoints(){ return bMultiPoints; }
 	void	EnableVibration(bool b){ bVibration = b; }
 	void	EnableDebugControl(bool b){ bDebugControl = b; }
 	void	SetReflexSpring(float s){ reflexSpring = s; }
