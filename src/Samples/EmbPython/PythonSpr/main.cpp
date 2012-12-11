@@ -93,6 +93,10 @@ public:
 		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
 
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(6.5,6,20));
+
+		// --- --- --- --- ---
+
+		timer->SetMode(UTTimerIf::IDLE);
 	}
 
 	virtual void OnStep(){
