@@ -191,14 +191,17 @@ bool PHSolidPairForHaptic::Detect(engine_type* engine, unsigned int ct, double d
 void PHSolidPairForHaptic::OnDetect(PHShapePairForHaptic* sp, PHHapticEngine* engine, unsigned ct, double dt){
 	if(sp == NULL) assert(0);
 	sp->intersectionVertices.clear();
+	PHHapticPointerIf* pointer = GetSolid(1)->Cast();
 	if(sp->state == sp->NEW || sp->state == sp->CONTINUE){
 		sp->OnDetect(ct, solid[1]->GetCenterPosition());	// CCDGJKで近傍点対を再取得
-		sp->AnalyzeContactRegion();		// 侵入領域の頂点を取得
-		//DSTR << "multi point" << std::endl;
+		if(pointer->IsMultiPoints()){
+			sp->AnalyzeContactRegion();		// 侵入領域の頂点を取得
+		}else{
+			sp->intersectionVertices.push_back(sp->closestPoint[1]);
+		}
 	}else{
 		// 接触していない場合、近傍点を侵入領域の頂点とする
 		sp->intersectionVertices.push_back(sp->closestPoint[1]);
-		//DSTR << "1point" << std::endl;
 	}
 
 	// はじめて近傍の場合
@@ -637,6 +640,7 @@ bool PHHapticEngine::AddChildObject(ObjectIf* o){
 		// PHSolidの場合
 		// 行のみ追加
 		solidPairs.resize(NSolids, NPointers);
+		solidPairsTemp.resize(NSolids, NPointers);
 		for(int i = 0; i < NPointers; i++){
 			solidPairs.item(NSolids - 1, i) = DBG_NEW PHSolidPairForHaptic();
 			solidPairs.item(NSolids - 1, i)->Init(solids[NSolids - 1], hapticPointers[i]);	

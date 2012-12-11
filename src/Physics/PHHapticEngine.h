@@ -162,7 +162,8 @@ public:
 	PHSolidsForHaptic hapticSolids;
 	typedef std::vector< HIBaseIf* > HIBaseIfs;
 	HIBaseIfs humanInterfaces;
-	UTCombination< UTRef< PHSolidPairForHaptic > > solidPairsTemp;	///< hapticsの情報をグラフィクスで表示するためのもの
+	///描画アクセスで落ちる場合があるかもで追加 2012.12.11 susa
+	UTCombination< UTRef< PHSolidPairForHaptic > > solidPairsTemp;	///< hapticsの情報をグラフィクスで表示するためのキャッシュ
 
 	struct Edge{ Vec3f min, max; };
 	std::vector< Edge > edges;
