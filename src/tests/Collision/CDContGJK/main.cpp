@@ -292,6 +292,12 @@ void dstrSolid(const std::string& solidName) {
 				std::cout << std::endl;
 			}
 		}
+		CDSphereIf* sphere = DCAST(CDSphereIf, shape);
+		if (sphere){
+			std::cout << "radius: " << sphere->GetRadius() << std::endl;
+		}
+		std::cout << "mass: " << solid->GetMass() << std::endl;
+		std::cout << "inertia: " << std::endl << solid->GetInertia() << std::endl;
 	}
 }
 
