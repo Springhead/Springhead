@@ -53,14 +53,14 @@ public:
 
 volatile int hogeCount;
 void CallBackHoge(int id, void*){
-	std::cout << "h";
-	std::cout.flush();
+	std::cerr << "h";
+	std::cerr.flush();
 	hogeCount++;
 }
 volatile int piyoCount;
 void CallBackPiyo(int id, void*){
-	std::cout << "p";
-	std::cout.flush();
+	std::cerr << "p";
+	std::cerr.flush();
 	piyoCount++;
 }
 
@@ -73,8 +73,8 @@ public:
 		((Fuga*)arg)->Print();
 	}
 	void Print(){
-		std::cout.flush();
-		std::cout << std::endl << "fugafuga " << count << std::endl;
+		std::cerr.flush();
+		std::cerr << std::endl << "fugafuga " << count << std::endl;
 		count ++;
 	}
 };
@@ -91,9 +91,9 @@ void idle(){
 	unsigned time = timeGetTime();
 	int delta = (int)time - (int)startTime;
 	if (delta > 2000){
-		std::cout.flush();
-		std::cout << std::endl;
-		std::cout << "hoge:" << hogeCount << "  fuga:" << fuga.count << "  piyo:" << piyoCount << std::endl;
+		std::cerr.flush();
+		std::cerr << std::endl;
+		std::cerr << "hoge:" << hogeCount << "  fuga:" << fuga.count << "  piyo:" << piyoCount << std::endl;
 		if (hogeCount != 26) exit(-1);
 		if (fuga.count != 10) exit(-2);
 		if (piyoCount != 52) exit(-3);
