@@ -187,6 +187,10 @@ public:
 	void SetForceMaterial(int matForce, int matMoment);
 	void SetForceScale(float scaleForce, float scaleMoment);
 
+	/**  @brief PHSceneの描画 */
+	void EnableRenderPHScene(bool enable = true);
+	/**  @brief GRSceneの描画 */
+	void EnableRenderGRScene(bool enable = true);
 	/**  @brief 接触面の描画 */
 	void EnableRenderContact(bool enable = true);
 	void SetContactMaterial(int mat);

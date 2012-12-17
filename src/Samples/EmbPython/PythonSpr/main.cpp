@@ -90,7 +90,7 @@ public:
 		OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
 		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)(NewWndProc));
 
-		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
+		GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
 
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(6.5,6,20));
 
@@ -101,9 +101,9 @@ public:
 
 	virtual void OnStep(){
 		UTAutoLock critical(EPCriticalSection);
-		spaceNavigator0->Update(fwScene->GetPHScene()->GetTimeStep());
-		spaceNavigator1->Update(fwScene->GetPHScene()->GetTimeStep());
-		fwScene->Step();
+		spaceNavigator0->Update(GetFWScene()->GetPHScene()->GetTimeStep());
+		spaceNavigator1->Update(GetFWScene()->GetPHScene()->GetTimeStep());
+		GetFWScene()->Step();
 	}
 
 	// 描画関数．描画要求が来たときに呼ばれる
@@ -148,7 +148,7 @@ void EPLoopInit(void* arg) {
 	PyObject *dict = PyModule_GetDict(m);
 
 	ACCESS_SPR_FROM_PY(FWApp, app, app);
-	ACCESS_SPR_FROM_PY(FWSceneIf,			fwScene,			app->fwScene		);
+	ACCESS_SPR_FROM_PY(FWSceneIf,			fwScene,			app->GetFWScene()		);
 	ACCESS_SPR_FROM_PY(HITrackballIf,		hiTrackball,		app->GetCurrentWin()->GetTrackball() );
 	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator0,	app->spaceNavigator0	);
 	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator1,	app->spaceNavigator1	);
