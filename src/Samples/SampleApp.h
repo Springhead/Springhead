@@ -66,6 +66,7 @@ public:
 	};
 	/// 描画の設定
 	enum ActionDraw{
+		ID_DRAW_GRAPHICS,			///< グラフィクスシーンの表示
 		ID_DRAW_SOLID,				///< ソリッド
 		ID_DRAW_WIREFRAME,			///< ワイヤフレーム
 		ID_DRAW_AXIS,				///< 座標軸
@@ -113,8 +114,6 @@ public:
 	UTString				message;		///< 一行メッセージ
 	
 	FWEditorOverlay			editor;			///< 内部情報の表示/編集機能
-	FWSceneIf*				fwScene;		///< アクティブなシーン
-	PHSceneIf*				phScene;
 	UTRef<ObjectStatesIf>	states;			///< 状態保存用
 	UTTimerIf*				timer;			///< タイマ
 
@@ -144,6 +143,9 @@ public:
 	float xbrief;
 
 public:
+	///	アクティブなシーン
+	FWSceneIf*				GetFWScene(){ return GetCurrentWin()->GetScene(); }
+	PHSceneIf*				GetPHScene(){ return GetCurrentWin()->GetScene()->GetPHScene(); }
 	/// メニューの登録
 	void AddMenu(int menu, UTString brief){
 		menus[menu].brief = brief;
@@ -170,7 +172,7 @@ public:
 
 	/// 床の作成
 	PHSolidIf* CreateFloor(){
-		PHSolidIf* soFloor = phScene->CreateSolid();
+		PHSolidIf* soFloor = GetPHScene()->CreateSolid();
 		soFloor->SetDynamical(false);
 		soFloor->SetFramePosition(Vec3f(0,-1,0));
 	
@@ -184,7 +186,7 @@ public:
 		soFloor->SetShapePose(3, Posed::Trn( 60, 0,   0));
 		soFloor->SetShapePose(4, Posed::Trn(  0, 0,  40));
 
-		fwScene->SetSolidMaterial(GRRenderIf::GRAY, soFloor);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::GRAY, soFloor);
 
 		return soFloor;
 	}
@@ -194,10 +196,8 @@ public:
 			return;
 		curScene = id;
 		// id番目のシーンを選択
-		fwScene = GetSdk()->GetScene(id);
-		phScene = fwScene->GetPHScene();
-		GetCurrentWin()->SetScene(fwScene);
-		editor.SetObject(phScene);
+		GetCurrentWin()->SetScene(GetSdk()->GetScene(id));
+		editor.SetObject(GetPHScene());
 		//cameraInfo.Fit(GetSdk()->GetRender()->GetCamera(), activeHandler->GetSceneRadius());
 	}
 	
@@ -206,12 +206,12 @@ public:
 	 */
 	void Drop(int shape, int mat, Vec3d v, Vec3d w, Vec3d p, Quaterniond q){
 		// ステートを解放
-		states->ReleaseState(phScene);
+		states->ReleaseState(GetPHScene());
 	
 		// 剛体を作成
-		PHSolidIf* solid = phScene->CreateSolid();
+		PHSolidIf* solid = GetPHScene()->CreateSolid();
 		// マテリアルを設定
-		fwScene->SetSolidMaterial(mat, solid);
+		GetFWScene()->SetSolidMaterial(mat, solid);
 			
 		// 形状の割当て
 		if(shape == SHAPE_BOX)
@@ -399,9 +399,13 @@ public:
 		AddHotKey(MENU_CONFIG, ID_DEC_TIMER, 'S');
 		/// 描画設定系
 		AddMenu(MENU_DRAW, "< drawing setting >");
+		AddAction(MENU_DRAW, ID_DRAW_GRAPHICS,
+			"enable graphics scene", "graphics scene enabled.",
+			"disable graphics scene", "graphics scene disabled.");
+		AddHotKey(MENU_DRAW, ID_DRAW_GRAPHICS, 'G');
 		AddAction(MENU_DRAW, ID_DRAW_WIREFRAME,
 			"enable wireframe", "wireframe enabled.",
-			"disable wireframe", "wireframe disabled");
+			"disable wireframe", "wireframe disabled.");
 		AddHotKey(MENU_DRAW, ID_DRAW_WIREFRAME, 'W');
 		AddAction(MENU_DRAW, ID_DRAW_SOLID,
 			"enable solid", "solid enabled.",
@@ -429,12 +433,12 @@ public: /** 派生クラスが実装する関数 **/
 
 	/// 1ステップのシミュレーション
 	virtual void OnStep(){
-		fwScene->Step();
+		GetFWScene()->Step();
 	}
 
 	/// 描画
 	virtual void OnDraw(GRRenderIf* render){
-		fwScene->DrawPHScene(render);
+		GetFWScene()->Draw(render);
 	}
 
 	/// アクション処理
@@ -446,65 +450,65 @@ public: /** 派生クラスが実装する関数 **/
 			if(id == ID_RUN)
 				ToggleAction(menu, id);
 			if(id == ID_STEP)
-				fwScene->Step();
+				GetFWScene()->Step();
 		}
 		if(menu == MENU_STATE){
 			if(id == ID_LOAD_STATE)
-				states->LoadState(phScene);
+				states->LoadState(GetPHScene());
 			if(id == ID_SAVE_STATE)
-				states->SaveState(phScene);
+				states->SaveState(GetPHScene());
 			if(id == ID_RELEASE_STATE)
-				states->ReleaseState(phScene);
+				states->ReleaseState(GetPHScene());
 			if(id == ID_READ_STATE)
-				phScene->ReadState("state.bin");
+				GetPHScene()->ReadState("state.bin");
 			if(id == ID_WRITE_STATE)
-				phScene->WriteState("state.bin");
+				GetPHScene()->WriteState("state.bin");
 			if(id == ID_DUMP){
 				std::ofstream f("dump.bin", std::ios::binary|std::ios::out);
-				phScene->DumpObjectR(f);
+				GetPHScene()->DumpObjectR(f);
 			}
 		}
 		if(menu == MENU_CONFIG){
 			if(id == ID_SWITCH_LCP_PENALTY){
 				if(ToggleAction(menu, id))
-					 phScene->SetContactMode(PHSceneDesc::MODE_LCP);
-				else phScene->SetContactMode(PHSceneDesc::MODE_PENALTY);
+					 GetPHScene()->SetContactMode(PHSceneDesc::MODE_LCP);
+				else GetPHScene()->SetContactMode(PHSceneDesc::MODE_PENALTY);
 			}
 			if(id == ID_TOGGLE_GRAVITY){
 				if(ToggleAction(menu, id)){
-					phScene->SetGravity(tmpGravity);
-					//for(int i = 0; i < phScene->NSolids(); i++)
-					//	phScene->GetSolids()[i]->SetGravity(true);
+					GetPHScene()->SetGravity(tmpGravity);
+					//for(int i = 0; i < GetPHScene()->NSolids(); i++)
+					//	GetPHScene()->GetSolids()[i]->SetGravity(true);
 				}
 				else{
-					tmpGravity = phScene->GetGravity();
-					phScene->SetGravity(Vec3d());
-					//for(int i = 0; i < phScene->NSolids(); i++)
-					//	phScene->GetSolids()[i]->SetGravity(false);
+					tmpGravity = GetPHScene()->GetGravity();
+					GetPHScene()->SetGravity(Vec3d());
+					//for(int i = 0; i < GetPHScene()->NSolids(); i++)
+					//	GetPHScene()->GetSolids()[i]->SetGravity(false);
 				}
 			}
 			if(id == ID_TOGGLE_JOINT){
 				bool on = ToggleAction(menu, id);
-				for(int i = 0; i < (int)phScene->NJoints(); i++)
-					phScene->GetJoint(i)->Enable(on);
+				for(int i = 0; i < (int)GetPHScene()->NJoints(); i++)
+					GetPHScene()->GetJoint(i)->Enable(on);
 			}
 			if(id == ID_TOGGLE_ABA){
 				bool on = ToggleAction(menu, id);
-				for(int i=0; i<phScene->NRootNodes(); ++i){
-					PHRootNodeIf* rn = phScene->GetRootNode(i);
+				for(int i=0; i<GetPHScene()->NRootNodes(); ++i){
+					PHRootNodeIf* rn = GetPHScene()->GetRootNode(i);
 					rn->Enable(on);
 				}
 			}
 			if(id == ID_INC_TIMESTEP){
-				phScene->SetTimeStep(std::min(0.1, 2.0 * phScene->GetTimeStep()));
+				GetPHScene()->SetTimeStep(std::min(0.1, 2.0 * GetPHScene()->GetTimeStep()));
 				ss.str("");
-				ss << "time step is now " << phScene->GetTimeStep();
+				ss << "time step is now " << GetPHScene()->GetTimeStep();
 				message = ss.str();
 			}
 			if(id == ID_DEC_TIMESTEP){
-				phScene->SetTimeStep(std::max(0.001, 0.5 * phScene->GetTimeStep()));
+				GetPHScene()->SetTimeStep(std::max(0.001, 0.5 * GetPHScene()->GetTimeStep()));
 				ss.str("");
-				ss << "time step is now " << phScene->GetTimeStep();
+				ss << "time step is now " << GetPHScene()->GetTimeStep();
 				message = ss.str();
 			}
 			if(id == ID_INC_TIMER){
@@ -521,20 +525,23 @@ public: /** 派生クラスが実装する関数 **/
 			}
 		}
 		if(menu == MENU_DRAW){
+			if(id == ID_DRAW_GRAPHICS){
+				
+			}
 			if(id == ID_DRAW_SOLID)
-				fwScene->SetRenderMode(ToggleAction(menu, id), menus[menu][ID_DRAW_WIREFRAME].enabled);
+				GetFWScene()->SetRenderMode(ToggleAction(menu, id), menus[menu][ID_DRAW_WIREFRAME].enabled);
 			if(id == ID_DRAW_WIREFRAME)
-				fwScene->SetRenderMode(menus[menu][ID_DRAW_SOLID].enabled, ToggleAction(menu, id));
+				GetFWScene()->SetRenderMode(menus[menu][ID_DRAW_SOLID].enabled, ToggleAction(menu, id));
 			if(id == ID_DRAW_AXIS){
 				bool on = ToggleAction(menu, id);
-				fwScene->EnableRenderAxis(on, on, on);
+				GetFWScene()->EnableRenderAxis(on, on, on);
 			}
 			if(id == ID_DRAW_FORCE){
 				bool on = ToggleAction(menu, id);
-				fwScene->EnableRenderForce(on, on);
+				GetFWScene()->EnableRenderForce(on, on);
 			}
 			if(id == ID_DRAW_CONTACT){
-				fwScene->EnableRenderContact(ToggleAction(menu, id));
+				GetFWScene()->EnableRenderContact(ToggleAction(menu, id));
 			}
 		}
 		// この時点でメッセージが設定されていなければデフォルトメッセージ
@@ -595,24 +602,23 @@ public: /** FWAppの実装 **/
 		
 		/// シーンの作成
 		for(int i = 0; i < numScenes; i++){
-			fwScene = GetSdk()->CreateScene();
+			GetCurrentWin()->SetScene(GetSdk()->CreateScene());
 			/// 描画設定
-			//fwScene->SetSolidMaterial(GRRenderIf::WHITE);
-			fwScene->SetWireMaterial(GRRenderIf::WHITE);
-			fwScene->SetRenderMode(true, true);				///< ソリッド描画，ワイヤフレーム描画
-			fwScene->EnableRenderAxis(true, true, true);		///< 座標軸
-			fwScene->SetAxisStyle(FWSceneIf::AXIS_ARROWS);	///< 座標軸のスタイル
-			fwScene->EnableRenderForce(false, true);			///< 力
-			fwScene->EnableRenderContact(true);				///< 接触断面
+			//GetFWScene()->SetSolidMaterial(GRRenderIf::WHITE);
+			GetFWScene()->SetWireMaterial(GRRenderIf::WHITE);
+			GetFWScene()->SetRenderMode(true, true);				///< ソリッド描画，ワイヤフレーム描画
+			GetFWScene()->EnableRenderAxis(true, true, true);		///< 座標軸
+			GetFWScene()->SetAxisStyle(FWSceneIf::AXIS_ARROWS);	///< 座標軸のスタイル
+			GetFWScene()->EnableRenderForce(false, true);			///< 力
+			GetFWScene()->EnableRenderContact(true);				///< 接触断面
 
-			phScene = fwScene->GetPHScene();
-			phScene->SetGravity(Vec3f(0.0f, -9.8f, 0.0f));	// 重力を設定
-			phScene->SetTimeStep(0.05);
-			phScene->SetNumIteration(15);
-			//phScene->SetNumIteration(10, 1);	// correction iteration
-			//phScene->SetNumIteration(10, 2);	// contact iteration
+			GetPHScene()->SetGravity(Vec3f(0.0f, -9.8f, 0.0f));	// 重力を設定
+			GetPHScene()->SetTimeStep(0.05);
+			GetPHScene()->SetNumIteration(15);
+			//GetPHScene()->SetNumIteration(10, 1);	// correction iteration
+			//GetPHScene()->SetNumIteration(10, 2);	// contact iteration
 		
-			phScene->SetStateMode(true);
+			GetPHScene()->SetStateMode(true);
 			//scene->GetConstraintEngine()->SetUseContactSurface(true); //面接触での力計算を有効化
 
 			// シーン構築
@@ -688,7 +694,7 @@ public: /** FWAppの実装 **/
 		// 共有メニュー
 		if(curMenu == MENU_EDITOR){
 			editor.Key(key);
-			editor.SetObject(phScene);
+			editor.SetObject(GetPHScene());
 		}
 		else{
 			id = menus[curMenu].Query(key);

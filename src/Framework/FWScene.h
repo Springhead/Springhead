@@ -53,6 +53,7 @@ public:
 	/// 描画制御フラグ
 	std::map<ObjectIf*, bool>	renderObject;
 	bool		renderPHScene;
+	bool		renderGRScene;
 	bool		renderSolid, renderWire;
 	bool		renderAxisWorld, renderAxisSolid, renderAxisConst;
 	bool		renderForceSolid, renderForceConst;
@@ -113,6 +114,7 @@ public:
 
 	/** 描画機能
 	 */
+	void	Draw			(GRRenderIf* render);
 	void	Draw			(GRRenderIf* render, bool ph_or_gr);
 	void	DrawPHScene		(GRRenderIf* render);
 	void	DrawSolid		(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire);
@@ -125,6 +127,9 @@ public:
 	void	DrawFem			(GRRenderIf* render, PHFemEngineIf* femEngine);
 	
 	/// 描画制御
+	void	EnableRenderPHScene(bool enable = true);
+	void	EnableRenderGRScene(bool enable = true);
+
 	void	SetRenderMode		(bool solid, bool wire);
 	void	EnableRender		(ObjectIf* obj, bool enable);
 	void	SetSolidMaterial	(int mat, PHSolidIf* solid);

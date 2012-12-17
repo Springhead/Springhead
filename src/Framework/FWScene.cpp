@@ -29,6 +29,7 @@ namespace Spr{;
 FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	// デフォルト描画設定
 	renderPHScene = true;
+	renderGRScene = false;
 	// ソリッド描画のみ
 	renderSolid = true;
 	renderWire  = false;
@@ -242,18 +243,26 @@ void FWScene::Step(){
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // 描画系
 
-void FWScene::Draw(GRRenderIf* render, bool ph_or_gr){
+void FWScene::Draw(GRRenderIf* render, bool debug){
+	if (debug){
+		renderPHScene = true;
+		renderGRScene = false;
+	}else{
+		renderPHScene = false;
+		renderGRScene = true;
+	}
+	Draw(render);
+}
+void FWScene::Draw(GRRenderIf* render){
 	render->ClearBuffer();
 	render->BeginScene();
 
 	
-	if(ph_or_gr)
-		DrawPHScene(render);
-	else if(GetGRScene()){
+	if (renderPHScene) DrawPHScene(render);
+	if (renderGRScene && GetGRScene()){
 		Sync();
 		GetGRScene()->Render(render);
 	}
-
 	render->EndScene();
 }
 
@@ -981,6 +990,12 @@ void FWScene::DrawForce(GRRenderIf* render, const Vec3d& f, const Vec3d& t){
 	render->SetLighting(true);
 }
 
+void FWScene::EnableRenderPHScene(bool enable){
+	renderPHScene = enable;
+}
+void FWScene::EnableRenderGRScene(bool enable){
+	renderGRScene = enable;
+}
 void FWScene::SetRenderMode(bool solid, bool wire){
 	renderSolid = solid;
 	renderWire  = wire;
