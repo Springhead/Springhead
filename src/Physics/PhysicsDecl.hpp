@@ -109,14 +109,29 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHFemVibrationDesc \
 protected:\
+	double	young;	\
+	double	poisson;	\
+	double	density;	\
+	double	alpha;	\
+	double	beta;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		PHFem::SetDesc((PHFemDesc*)(PHFemVibrationDesc*)ptr);	\
+		young = ((PHFemVibrationDesc*)ptr)->young;	\
+		poisson = ((PHFemVibrationDesc*)ptr)->poisson;	\
+		density = ((PHFemVibrationDesc*)ptr)->density;	\
+		alpha = ((PHFemVibrationDesc*)ptr)->alpha;	\
+		beta = ((PHFemVibrationDesc*)ptr)->beta;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHFem::GetDesc((PHFemDesc*)(PHFemVibrationDesc*)ptr);	\
+		((PHFemVibrationDesc*)ptr)->young = young;	\
+		((PHFemVibrationDesc*)ptr)->poisson = poisson;	\
+		((PHFemVibrationDesc*)ptr)->density = density;	\
+		((PHFemVibrationDesc*)ptr)->alpha = alpha;	\
+		((PHFemVibrationDesc*)ptr)->beta = beta;	\
 		return true;	\
 	}\
 
