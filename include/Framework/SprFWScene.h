@@ -96,6 +96,7 @@ public:
 
 	 */
 	void Draw(GRRenderIf* grRender, bool debug);
+	void Draw(GRRenderIf* grRender);
 
 	/** @brief	Physicsシーンをレンダリングする
 		@param	render	レンダラ
