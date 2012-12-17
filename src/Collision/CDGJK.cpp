@@ -477,8 +477,18 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 			}else{
 				//	初めてならば、2頂点の法線の平均の線分に垂直な成分をつかう。
 				Vec3d ave = v[ids[id0]] + v[ids[id1]];
-				Vec3d line = (w[ids[id1]] - w[ids[id0]]).unit();
-				ave = ave - (ave * line) * line;
+				Vec3d line = (w[ids[id1]] - w[ids[id0]]);
+				double len = line.norm();
+				if (len == 0){
+					DSTR << "id0:" << id0 << " id1:" << id1 << std::endl;
+					DSTR << "ids:"; for(int i=0; i<4; ++i) DSTR << ids[i]; DSTR << std::endl;
+					DSTR << "w:"; for(int i=0; i<4; ++i) DSTR << w[i]; DSTR << std::endl;
+					DSTR << "v:"; for(int i=0; i<4; ++i) DSTR << v[i]; DSTR << std::endl;
+					__debugbreak();
+				}else{
+					line /= len;
+					ave = ave - (ave * line) * line;
+				}
 				v[ids[3]] = ave.unit();
 			}
 			CalcSupport(ids[3]);
