@@ -61,7 +61,7 @@ public:
 	virtual void		SetIntRange		(FWTextBox* text, int rmin, int rmax);
 	virtual void		SetFloatRange	(FWTextBox* text, float rmin, float rmax);
 	virtual const char*	GetString		(FWTextBox* text);
-	virtual void		SetString		(FWTextBox* text, char* str);
+	virtual void		SetString		(FWTextBox* text, const char* str);
 	virtual Matrix3f	GetRotation		(FWRotationControl* rotCtrl);
 	virtual void		SetRotation		(FWRotationControl* rotCtrl, const Matrix3f& rot);
 	virtual void		SetDamping		(FWRotationControl* rotCtrl, float d);

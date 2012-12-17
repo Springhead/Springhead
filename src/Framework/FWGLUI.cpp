@@ -257,7 +257,7 @@ const char* FWGLUI::GetString(FWTextBox* text){
 	return gluiText->get_text();
 }
 
-void FWGLUI::SetString(FWTextBox* text, char* str){
+void FWGLUI::SetString(FWTextBox* text, const char* str){
 	GLUI_EditText* gluiText = (GLUI_EditText*)text->handle;
 	gluiText->set_text(str);
 }
