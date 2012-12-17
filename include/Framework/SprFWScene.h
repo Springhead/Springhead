@@ -30,6 +30,7 @@ struct FWSceneDesc{
 };
 
 class HIForceDevice6D;
+struct FWSdkIf;
 
 struct FWSceneIf : SceneIf {
 	SPR_IFDEF(FWScene);
@@ -40,6 +41,10 @@ struct FWSceneIf : SceneIf {
 	};
 
 public:
+	/** @brief このSceneをもつSDKを返す
+		@return SDKのインタフェース
+	 */
+	FWSdkIf* GetSdk();
 		
 	/// Physicsモジュールのシーンを取得する
 	PHSceneIf*	GetPHScene();

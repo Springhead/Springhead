@@ -61,6 +61,12 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	gridSlice = Vec3i(100, 100, 100);
 }
 
+FWSdkIf* FWScene::GetSdk(){
+	NameManagerIf* nm = GetNameManager();
+	FWSdkIf* sdk = DCAST(FWSdkIf, nm);
+	return sdk;
+}
+
 NamedObjectIf* FWScene::FindObject(UTString name, UTString cls){
 	//	余分にphScene,grSceneの2つのシーンを検索するので，NameManager::FindObjectとちょっと違う．
 	//	2つのシーンは，Sdkに所有されているので，普通にNameManagerとして，FWSceneを指定することはできない．

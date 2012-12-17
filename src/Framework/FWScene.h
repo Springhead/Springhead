@@ -98,6 +98,7 @@ public:
 	
 	/** 基本機能
 	 */
+	FWSdkIf*		GetSdk();
 	PHSceneIf*		GetPHScene(){ return phScene; }
 	void			SetPHScene(PHSceneIf* s){ phScene = s; }
 	GRSceneIf*		GetGRScene(){ return grScene; }
