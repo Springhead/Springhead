@@ -51,13 +51,19 @@ struct PHFemVibrationIf : public PHFemIf{
 /// 振動計算のデスクリプタ
 struct PHFemVibrationDesc : public PHFemDesc{
 	SPR_DESCDEF(PHFemVibration);
+	double young;		///< ヤング率(Pa, N/m2)
+	double poisson;		///< ポアソン比(*一様な立方体の場合、-1 <= v <= 0.5)
+	double density;		///< 密度(kg/m3)
+	double alpha;		///< 粘性減衰率
+	double beta;		///< 構造減衰率
+	PHFemVibrationDesc(){
+		young = 1.0;
+		poisson = 0.5;
+		density = 1.0;
+		alpha = 0.0;
+		beta = 0.0;
+	}
 };
-
-
-
-
-
-
 
 
 //@}

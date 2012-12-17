@@ -13,13 +13,17 @@
 namespace Spr{;
 
 ///////////////////////////////////////////////////////////////////
+/* 計算モジュールの共通部分 */
+
+
+///////////////////////////////////////////////////////////////////
 /* 四面体を表すためのクラス、構造体の定義 */
 // 四面体
-int& Tet::edge(int i, int j){
+int& FemTet::edge(int i, int j){
 	if (i>j) std::swap(i, j);
-	if (j==3) return edges[3+i];
-	if (j==2 && i==0) return edges[2];
-	return edges[i];
+	if (j==3) return edgeIDs[3+i];
+	if (j==2 && i==0) return edgeIDs[2];
+	return edgeIDs[i];
 }
 
 // 四面体の面
@@ -47,17 +51,17 @@ bool FemFace::operator == (const FemFace& f2){
 FemEdge::FemEdge(int v1, int v2){
 	if (v1>v2) std::swap(v1, v2);
 	assert(v1==-1 && v2==-1 || v1 < v2);
-	vertices[0] = v1;
-	vertices[1] = v2;
+	vertexIDs[0] = v1;
+	vertexIDs[1] = v2;
 }
 bool FemEdge::operator < (const FemEdge& e2){
-	if (vertices[0] < e2.vertices[0]) return true;
-	if (vertices[0] > e2.vertices[0]) return false;
-	if (vertices[1] < e2.vertices[1]) return true;
+	if (vertexIDs[0] < e2.vertexIDs[0]) return true;
+	if (vertexIDs[0] > e2.vertexIDs[0]) return false;
+	if (vertexIDs[1] < e2.vertexIDs[1]) return true;
 	return false;
 }
 bool FemEdge::operator == (const FemEdge& e2){
-	return vertices[0] == e2.vertices[0] && vertices[1] == e2.vertices[1];
+	return vertexIDs[0] == e2.vertexIDs[0] && vertexIDs[1] == e2.vertexIDs[1];
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -76,7 +80,7 @@ bool PHFemMeshNew::GetDesc(void* p) const {
 	d->tets.resize(tets.size() * 4);
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j)
-			d->tets[i*4+j] = tets[i].vertices[j];
+			d->tets[i*4+j] = tets[i].vertexIDs[j];
 	}
 	d->vertices.resize(vertices.size());
 	for(unsigned i=0; i < vertices.size(); ++i){
@@ -93,17 +97,17 @@ void PHFemMeshNew::SetDesc(const void* p){
 	vertices.resize(d->vertices.size());
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j)
-			tets[i].vertices[j] = d->tets[i*4+j];
+			tets[i].vertexIDs[j] = d->tets[i*4+j];
 	}
 	for(unsigned i=0; i<vertices.size(); ++i){
 		vertices[i].pos = d->vertices[i];
-		vertices[i].tets.clear();
+		vertices[i].tetIDs.clear();
 	}
 	//	接続情報の更新
 	//	頂点に属する四面体を追加
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
-			vertices[tets[i].vertices[j]].tets.push_back(i);
+			vertices[tets[i].vertexIDs[j]].tetIDs.push_back(i);
 		}
 	}
 	//	表面を探す
@@ -121,7 +125,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
 			FemFace f;	
-			for(unsigned k=0; k<3; ++k) f.vertices[k] = tets[i].vertices[tfs[j][k]];
+			for(unsigned k=0; k<3; ++k) f.vertices[k] = tets[i].vertexIDs[tfs[j][k]];
 			f.Update();
 			allFaces.push_back(f);
 		}
@@ -182,19 +186,19 @@ void PHFemMeshNew::SetDesc(const void* p){
 	//	頂点に辺を追加
 	for(unsigned i=0; i<edges.size(); ++i){
 		for(int j=0; j<2; ++j){
-			vertices[edges[i].vertices[j]].edges.push_back(i);
+			vertices[edges[i].vertexIDs[j]].edgeIDs.push_back(i);
 		}
 	}
 	//	四面体に面を追加
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
 			FemFace f;
-			for(unsigned k=0; k<3; ++k) f.vertices[k] = tets[i].vertices[k<j ? k : k+1];
+			for(unsigned k=0; k<3; ++k) f.vertices[k] = tets[i].vertexIDs[k<j ? k : k+1];
 			f.Update();
 			unsigned k;
 			for(k=0; k<faces.size(); ++k){
 				if (faces[k] == f){
-					tets[i].faces[j] = k;
+					tets[i].faceIDs[j] = k;
 					break;
 				}
 			}
@@ -205,15 +209,15 @@ void PHFemMeshNew::SetDesc(const void* p){
 	for(unsigned i=0; i<tets.size(); ++i){
 		int count = 0;
 		for(unsigned j=0; j<4; ++j){
-			FemVertex& vtx = vertices[tets[i].vertices[j]];
+			FemVertex& vtx = vertices[tets[i].vertexIDs[j]];
 			//	四面体のある頂点から出ている辺のうち、その頂点が始点(vertices[0])になっているものについて
-			for(unsigned k=0; k<vtx.edges.size(); ++k){
-				FemEdge& e = edges[vtx.edges[k]];
-				if (e.vertices[0] != tets[i].vertices[j]) continue;
+			for(unsigned k=0; k<vtx.edgeIDs.size(); ++k){
+				FemEdge& e = edges[vtx.edgeIDs[k]];
+				if (e.vertexIDs[0] != tets[i].vertexIDs[j]) continue;
 				//	辺が四面体に含まれる場合、辺を設定
 				for(int l=0; l<4; ++l){
-					if (e.vertices[1] == tets[i].vertices[l]){
-						tets[i].edge(j, l) = vtx.edges[k];
+					if (e.vertexIDs[1] == tets[i].vertexIDs[l]){
+						tets[i].edge(j, l) = vtx.edgeIDs[k];
 						count ++;
 						break;
 					}
@@ -225,29 +229,44 @@ void PHFemMeshNew::SetDesc(const void* p){
 	//	頂点に属する面を追加
 	for(unsigned i=0;i<faces.size();i++){
 		for(unsigned j=0;j<3;j++){
-			vertices[faces[i].vertices[j]].faces.push_back(i);
+			vertices[faces[i].vertices[j]].faceIDs.push_back(i);
 		}
 	}
+	// 初期値をとっておく
+	initVertices.clear();
+	initVertices = vertices;
 }
 
 bool PHFemMeshNew::AddChildObject(ObjectIf* o){
-	PHFemVibration* obj = DCAST(PHFemVibration, o);
-	if(obj){
-		femVibration = obj;	
-		return true;
+	bool bCheck = false;
+	PHFemVibration* fVib = DCAST(PHFemVibration, o);
+	if(fVib){
+		femVibration = fVib;
+		bCheck = true;
 	}
 
-/*	PHFemThermo* obj = DCAST(PHFemThermo, o);
-	if(obj){
-		femThermo = obj;	
-		return true;
+/*	PHFemThermo* fThermo = DCAST(PHFemThermo, o);
+	if(fThermo){
+		femThermo = fThermo;	
+		bCheck = true;
 	}*/ 
-	return false;
+
+	PHFem* f = DCAST(PHFem, o);
+	if(f){
+		f->SetPHFemMesh(this);
+		fems.push_back(f);
+	}
+	return bCheck;
+}
+
+void PHFemMeshNew::Init(){
+	for(PHFems::iterator it = fems.begin(); it != fems.end(); it++)
+		(*it)->Init();
 }
 
 void PHFemMeshNew::Step(double dt){
-	femVibration->Step();
-
+	for(PHFems::iterator it = fems.begin(); it != fems.end(); it++)
+		(*it)->Step();
 }
 
 void PHFemMeshNew::SetPHSolid(PHSolidIf* s){
@@ -296,7 +315,7 @@ void PHFemMeshNew::UpdateJacobian(){
 		Matrix3d J;	///<	各四面体の直交座標系(ξ,η,ζ)から四面体(x,y,z)へのヤコビアン (d(x,y,z) / d(ξ,η,ζ))
 		for(int i=1; i<3; ++i){
 			for(int j=0; j<3; ++j){
-				J[i][j] = vertices[tets[t].vertices[i+1]].pos[j] - vertices[tets[t].vertices[0]].pos[j];
+				J[i][j] = vertices[tets[t].vertexIDs[i+1]].pos[j] - vertices[tets[t].vertexIDs[0]].pos[j];
 			}
 		}
 		Matrix3d A = invDet(J);
@@ -312,4 +331,49 @@ void PHFemMeshNew::UpdateJacobian(){
 	}
 }
 
+double PHFemMeshNew::GetTetrahedronVolume(int tetID){
+	TMatrixRow< 4, 4, double > mat;
+	mat.clear(0.0);
+	for(int i = 0; i < 4; i++){
+		mat[i][0] = 1.0;
+		mat[i][1] =	vertices[tets[tetID].vertexIDs[i]].pos.x;
+		mat[i][2] = vertices[tets[tetID].vertexIDs[i]].pos.y;
+		mat[i][3] = vertices[tets[tetID].vertexIDs[i]].pos.z;
+	}
+	double volume = mat.det() / 6.0;
+	if(volume < 0.0) volume = 0.0;
+	return volume;
+}
+
+bool PHFemMeshNew::AddDisplacement(int vtxId, Vec3d disW){
+	if(0 <= vtxId && vtxId <= vertices.size() -1){
+		vertices[vtxId].pos += GetPHSolid()->GetPose().Inv() * disW;
+		return true;
+	}
+	return false;
+}
+
+bool PHFemMeshNew::AddLocalDisplacement(int vtxId, Vec3d disL){
+	if(0 <= vtxId && vtxId <= vertices.size() -1){
+		vertices[vtxId].pos += disL;
+		return true;
+	}
+	return false;
+}
+
+bool PHFemMeshNew::SetVertexPosition(int vtxId, Vec3d posW){
+	if(0 <= vtxId && vtxId <= vertices.size() -1){
+		vertices[vtxId].pos = GetPHSolid()->GetPose().Inv() * posW;
+		return true;
+	}
+	return false;
+}
+
+bool PHFemMeshNew::SetLocalVertexPosition(int vtxId, Vec3d posL){
+	if(0 <= vtxId && vtxId <= vertices.size() -1){
+		vertices[vtxId].pos = posL;
+		return true;
+	}
+	return false;
+}
 }

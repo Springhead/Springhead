@@ -14,14 +14,23 @@
 #include <Physics/PHScene.h>
 
 namespace Spr{;
+using namespace PTM;
 
 /// 計算モジュールの共通部分
+class PHFemMeshNew;
 class PHFem: public SceneObject{
 public:
 	SPR_OBJECTDEF_ABST(PHFem);
 	SPR_DECLMEMBEROF_PHFemDesc;
-
+protected:
+	UTRef< PHFemMeshNew > phFemMesh;
+public:
 	PHFem(){}
+	virtual void Init(){}
+	virtual void Step(){}
+
+	void SetPHFemMesh(PHFemMeshNew* m){ phFemMesh = m; }
+	PHFemMeshNew* GetPHFemMesh(){ return phFemMesh; }
 
 };
 
@@ -30,20 +39,20 @@ public:
 class FemVertex{
 public:
 	Vec3d pos;
-	std::vector<int> tets;
-	std::vector<int> edges;
-	std::vector<int> faces;
+	Vec3d initialPos;
+	std::vector<int> tetIDs;
+	std::vector<int> edgeIDs;
+	std::vector<int> faceIDs;
 	bool vtxDeformed;		///< 四面体の変形でこの節点がローカル座標基準で移動したかどうか
 	double disFromOrigin;	///< x-z平面でのローカル座標の原点からの距離
 };
 //	四面体
-class Tet{
+class FemTet{
 public:
-	int vertices[4];	///< 頂点ID																																	  
-	int faces[4];		///< 表面４つ
-	int edges[6];		///< 対応する辺のID。0:辺01, 1:辺12, 2:辺20, 3:辺03, 4:辺13, 5:辺23
-	double volume;		///< 積分計算で用いるための体積
-	PTM::TMatrixRow<4,4,double> matk[3];	///<	
+	int vertexIDs[4];	///< 頂点ID																																	  
+	int faceIDs[4];		///< 表面４つ
+	int edgeIDs[6];		///< 対応する辺のID。0:辺01, 1:辺12, 2:辺20, 3:辺03, 4:辺13, 5:辺23
+	double volume;		///< 四面体の体積
 	PTM::TVector<4,double> vecf[4];			///<	{f1}:vecf[0],{f2}:vecf[1],{f3}:vecf[2],...
 	int& edge(int i, int j);
 };
@@ -60,16 +69,13 @@ public:
 };
 //	辺
 struct FemEdge{
-	int vertices[2];
+	int vertexIDs[2];
 	bool operator < (const FemEdge& e2); 	///< 頂点IDで比較
 	bool operator == (const FemEdge& e2);	///< 頂点IDで比較
-	double k;	///< 全体剛性行列Kの要素
-	double c;	///<
-	double b;	///< ガウスザイデル計算で用いる定数b
 	FemEdge(int v1=-1, int v2=-1);
 };
 
-
+typedef std::vector< UTRef< PHFem > > PHFems;
 class PHFemVibration;
 class PHFemMeshNew : public SceneObject{//, public PHFemMeshNewDesc{
 public:
@@ -81,7 +87,8 @@ protected:
 	PHSolidIf* solid;					///< 関連づけられている剛体
 public:
 	std::vector<FemVertex> vertices;	///< 頂点
-	std::vector<Tet> tets;				///< 四面体
+	std::vector<FemVertex> initVertices;///< 初期頂点
+	std::vector<FemTet> tets;			///< 四面体
 	
 	/// 追加情報	基本情報からSetDesc()が計算して求める。
 	std::vector<int> surfaceVertices;	///< 物体表面の頂点のID
@@ -91,7 +98,7 @@ public:
 	unsigned nSurfaceEdge;		///< 物体表面に存在する辺。表面:edges[0],..,edges[nSurfaceEdge-1]、内面:edges[nSurfaceEdge],..,edges[edges.size()]
 
 	/// 計算モジュール
-	//PHFems** fems;
+	PHFems fems;
 	UTRef< PHFemVibration > femVibration;
 	//PHFemThermo*	thermo;
 
@@ -106,6 +113,8 @@ public:
 	/// 子オブジェクトの追加
 	virtual bool AddChildObject(ObjectIf* o);
 
+	/// 初期化
+	virtual void Init();
 	///	時刻をdt進める。PHFemEngineが呼び出す。
 	virtual void Step(double dt);
 	/// 剛体を関連づける
@@ -120,6 +129,17 @@ public:
 	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
 	/// 四面体の計算(対象によらずに必要になる形状関数のXXを計算する関数)
 	void UpdateJacobian();
+	/// 四面体の体積を返す
+	double GetTetrahedronVolume(int tetID);
+	/// 頂点に変位を与える（ワールド座標系）
+	bool AddDisplacement(int vtxId, Vec3d disW);
+	/// 頂点に変位を与える（ローカル座標系）
+	bool AddLocalDisplacement(int vtxId, Vec3d disL);
+	/// 頂点の位置を指定する（ワールド座標系）
+	bool SetVertexPosition(int vtxId, Vec3d posW);
+	/// 頂点の位置を指定する（ローカル座標系）
+	bool SetLocalVertexPosition(int vtxId, Vec3d posL);
+
 };
 
 }
