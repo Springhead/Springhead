@@ -147,6 +147,7 @@ void EPLoopInit(void* arg) {
 	PyObject *m = PyImport_AddModule("__main__");
 	PyObject *dict = PyModule_GetDict(m);
 
+	ACCESS_SPR_FROM_PY(FWApp, app, app);
 	ACCESS_SPR_FROM_PY(FWSceneIf,			fwScene,			app->fwScene		);
 	ACCESS_SPR_FROM_PY(HITrackballIf,		hiTrackball,		app->GetCurrentWin()->GetTrackball() );
 	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator0,	app->spaceNavigator0	);
