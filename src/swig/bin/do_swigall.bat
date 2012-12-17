@@ -228,7 +228,7 @@ exit /b
 :dirlist
 set DIR=%2
 set DIR=%DIR:"=%
-echo dipendent module: [%1/%DIR%]
+echo dependent module: [%1/%DIR%]
 for %%d in (%1/%DIR%/*.h) do (
     rem echo output: [%1/%DIR%/%%d]
     echo %1/%DIR%/%%d >> %3
