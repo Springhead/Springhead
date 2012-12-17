@@ -781,6 +781,8 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 	render->SetModelMatrix(Affinef());
 	for (int i = 0; i < Npointers; i++){
 		PHHapticPointer* pointer = he->GetHapticPointer(i);
+		float range = pointer->GetLocalRange();
+		float radius = 0.02f;
 		int nNeighbors = (int)pointer->neighborSolidIDs.size();
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = pointer->neighborSolidIDs[j];
@@ -797,7 +799,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 						render->PushModelMatrix();
 						render->MultModelMatrix(aff);
 						render->SetMaterial(GRRenderIf::WHITE);
-						render->DrawSphere(0.01f, 10, 10, true);
+						render->DrawSphere(range * radius, 10, 10, true);
 						render->PopModelMatrix();
 					}
 					// 接触点		：黄色
@@ -809,30 +811,30 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 						render->PushModelMatrix();
 						render->MultModelMatrix(aff);
 						render->SetMaterial(GRRenderIf::YELLOW);
-						render->DrawSphere(0.01f, 10, 10, true);
+						render->DrawSphere(range * radius, 10, 10, true);
 						render->PopModelMatrix();
 					}
 
-					// 面
-					Posed p;	// 面の位置姿勢
-					p.Pos() = sp->shapePoseW[0] * sp->closestPoint[0];
-					Vec3d vec = Vec3d(0.0, 1.0, 0.0);
-					double angle = acos(vec * sp->normal);
-					Vec3d axis = vec % sp->normal;
-					if(axis.norm() < 1e-5) axis = vec;
-					p.Ori() = Quaterniond::Rot(angle, axis);
-					
-					Affinef aff;
-					p.ToAffine(aff);
-					Vec4f moon(1.0, 1.0, 0.8, 0.3);
-					render->PushModelMatrix();
-					render->MultModelMatrix(aff);
-					render->SetMaterial( GRMaterialDesc(moon) );
-					render->SetAlphaTest(true);
-					render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
-					render->DrawBox(0.2f, 0.005f, 0.2f, true);
-					render->PopModelMatrix();
-					render->SetAlphaTest(false);
+					//// 面
+					//Posed p;	// 面の位置姿勢
+					//p.Pos() = sp->shapePoseW[0] * sp->closestPoint[0];
+					//Vec3d vec = Vec3d(0.0, 1.0, 0.0);
+					//double angle = acos(vec * sp->normal);
+					//Vec3d axis = vec % sp->normal;
+					//if(axis.norm() < 1e-5) axis = vec;
+					//p.Ori() = Quaterniond::Rot(angle, axis);
+					//
+					//Affinef aff;
+					//p.ToAffine(aff);
+					//Vec4f moon(1.0, 1.0, 0.8, 0.3);
+					//render->PushModelMatrix();
+					//render->MultModelMatrix(aff);
+					//render->SetMaterial( GRMaterialDesc(moon) );
+					//render->SetAlphaTest(true);
+					//render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
+					//render->DrawBox(range * 0.5f, 0.005f, range * 0.5f, true);
+					//render->PopModelMatrix();
+					//render->SetAlphaTest(false);
 				}
 			}
 		}
@@ -851,25 +853,29 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 	for(int i = 0; i< (int)fe->meshes_n.size(); i++){
 		PHFemMeshNew* mesh = fe->meshes_n[i];
 		Posed solidPose = mesh->GetPHSolid()->GetPose();
-		//// 頂点の描画
-		//int nv = (int)mesh->vertices.size();
-		//for(int j = 0; j < nv; j++){
-		//	Posed p;
-		//	p.Pos() = solidPose * mesh->vertices[j].pos;
-		//	Affinef aff;
-		//	p.ToAffine(aff);
-		//	render->PushModelMatrix();
-		//	render->MultModelMatrix(aff);
-		//	render->SetMaterial(GRRenderIf::YELLOW);
-		//	render->DrawSphere(0.01f, 10, 10, true);
-		//	render->PopModelMatrix();
-		//}
+		// 頂点の描画
+		int nv = (int)mesh->vertices.size();
+		for(int j = 0; j < nv; j++){
+			Posed p;
+			p.Pos() = solidPose * mesh->vertices[j].pos;
+			Affinef aff;
+			p.ToAffine(aff);
+			render->PushModelMatrix();
+			render->MultModelMatrix(aff);
+			render->SetMaterial(GRRenderIf::YELLOW);
+			render->DrawSphere(0.01f, 10, 10, true);
+			render->PopModelMatrix();
+			// 頂点番号の描画
+			std::stringstream str;
+			str << j;
+			render->DrawFont((Vec3f)p.Pos(), str.str());
+		}
 		// 辺の描画
 		int ne = (int)mesh->edges.size();
 		for(int j = 0; j < ne; j++){
 			Vec3d p[2];
-			p[0] = solidPose * mesh->vertices[mesh->edges[j].vertices[0]].pos;
-			p[1] = solidPose * mesh->vertices[mesh->edges[j].vertices[1]].pos;
+			p[0] = solidPose * mesh->vertices[mesh->edges[j].vertexIDs[0]].pos;
+			p[1] = solidPose * mesh->vertices[mesh->edges[j].vertexIDs[1]].pos;
 			render->SetMaterial(GRRenderIf::YELLOW);
 			render->DrawLine(p[0], p[1]);
 		}

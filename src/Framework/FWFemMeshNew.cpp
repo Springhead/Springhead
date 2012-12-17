@@ -28,7 +28,7 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	// p: piecewise linear comlex, q:2.1が正四面体の歪み(1以上～？以下）、a:粗さ
 	//meshRoughness = "pq2.1a0.002";
 	//meshRoughness = "pq2.1a0.003";
-	meshRoughness = "pq2.1a0.3";	
+	meshRoughness = "pq2.1a1.0";	
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }
@@ -70,14 +70,6 @@ bool FWFemMeshNew::AddChildObject(ObjectIf* o){
 }
 
 void FWFemMeshNew::Loaded(UTLoadContext*){
-	DSTR << "phFemMesh" << phFemMesh << std::endl;
-	DSTR << "grFemMesh" << grFemMesh << std::endl;
-	DSTR << "phsolid" << GetPHSolid() << std::endl;
-	DSTR << "grFrame" << GetGRFrame() << std::endl;
-	DSTR << "phFemVibration" << phFemMesh->femVibration << std::endl;
-	DSTR << "phFemMesh desc size" << phFemMesh->GetDescSize() << std::endl;
-	DSTR << "phFemMesh vertices" << phFemMesh->vertices.size() << std::endl;
-
 	if(grFemMesh){
 		if(!phFemMesh){
 			// phFemMeshがNULLの場合、新たに生成する。
@@ -101,6 +93,8 @@ void FWFemMeshNew::Loaded(UTLoadContext*){
 		CreateGRFromPH();
 		grFrame->AddChildObject(grFemMesh->Cast());
 	}
+
+	phFemMesh->Init();
 }
 
 bool FWFemMeshNew::CreatePHFemMeshFromGRMesh(){
