@@ -24,7 +24,8 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 	SPR_IFDEF(PHFemMeshNew);
 	void SetPHSolid(PHSolidIf* s);
 	PHSolidIf* GetPHSolid();
-	unsigned GetNFace();
+	int NVertices();
+	int NFaces();
 	double GetTetrahedronVolume(int tetID);
 	bool AddDisplacement(int vtxId, Vec3d disW);
 	bool AddLocalDisplacement(int vtxId, Vec3d disL);
