@@ -13,14 +13,20 @@
 namespace Spr{;
 
 struct PHConstraintsIf;
+struct PHSceneIf;
 
 /** \addtogroup gpPhysics */
 //@{
-
 ///	エンジンの基本クラス
 struct PHEngineIf : public SceneObjectIf{
 public:
 	SPR_IFDEF(PHEngine);
+	///	実行順序を決めるプライオリティ値．小さいほど早い
+	int GetPriority() const;
+	///	時間を dt 進める
+	void Step();
+	///
+	PHSceneIf* GetScene();
 };
 
 struct PHConstraintEngineIf : PHEngineIf{
@@ -127,6 +133,8 @@ public:
 
 struct PHFemEngineIf : PHEngineIf{
 public:
+	void SetTimeStep(double dt);
+	double GetTimeStep();
 	SPR_IFDEF(PHFemEngine);
 };
 

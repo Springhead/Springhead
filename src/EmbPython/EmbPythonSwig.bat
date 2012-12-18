@@ -103,8 +103,7 @@ echo %%ignore Spr::UTStringLess;>> %MODULE%.i
 echo %%ignore Spr::UTEatWhite;>> %MODULE%.i
 echo %%ignore Spr::UTTypeInfo;>> %MODULE%.i
 echo %%ignore Spr::UTTypeInfoObjectBase;>> %MODULE%.i
-echo %%ignore Spr::UTTimerProvider;>> %MODULE%.i
-echo %%ignore Spr::UTTimerIf;>> %MODULE%.i
+echo %%ignore Spr::UTTimerIf::SetCallback;>> %MODULE%.i
 echo %%ignore Spr::DebugPrintf;>> %MODULE%.i
 echo %%ignore Spr::DebugCSV;>> %MODULE%.i
 echo //--->>%MODULE%.i
