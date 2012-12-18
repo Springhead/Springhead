@@ -1,4 +1,3 @@
-#	Do not edit. RunSwig.bat will update this file.
 #pragma SWIG nowarn=-401-325
 %module Framework
 //-- 
@@ -17,9 +16,12 @@
 %ignore Spr::FWInteractSceneIf::GetIAAdaptee; //APIの不整合がありコンパイル不可なので
 %ignore Spr::FWSceneIf::GetObjects; // **が出てくるので未対応
 %ignore Spr::FWSceneIf::AddHumanInterface;//HIForceDevice6DがAPIヘッダで定義されていない
-
-%ignore Spr::FWApp::GetTimer;
 %ignore Spr::FWApp::CreateTimer;
+%extend Spr::FWApp{
+	Spr::UTTimerIf* CreateTimer(int mode){
+		ret_tmp = c_self->CreateTimer((Spr::UTTimerIf::Mode)c_param1);
+	}
+}
 %ignore Spr::FWApp::timers;
 %ignore Spr::FWApp::GRInit;
 %ignore Spr::FWApp::Init;
