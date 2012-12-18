@@ -18,9 +18,18 @@
 //@{
 namespace Spr{;
 
+struct PHSolidIf;
 /// PHFemMeshNewへのインタフェース
 struct PHFemMeshNewIf : public SceneObjectIf{
 	SPR_IFDEF(PHFemMeshNew);
+	void SetPHSolid(PHSolidIf* s);
+	PHSolidIf* GetPHSolid();
+	unsigned GetNFace();
+	double GetTetrahedronVolume(int tetID);
+	bool AddDisplacement(int vtxId, Vec3d disW);
+	bool AddLocalDisplacement(int vtxId, Vec3d disL);
+	bool SetVertexPosition(int vtxId, Vec3d posW);
+	bool SetLocalVertexPosition(int vtxId, Vec3d posL);
 };
 
 ///	FemMeshのステート
@@ -46,6 +55,26 @@ struct PHFemDesc{
 /// 振動計算
 struct PHFemVibrationIf : public PHFemIf{
 	SPR_IFDEF(PHFemVibration);
+	void SetTimeStep(double dt);
+	double GetTimeStep();
+	void SetYoungModulus(double value);
+	double GetYoungModulus();
+	void SetPoissonsRatio(double value);
+	double GetPoissonsRatio();
+	void SetDensity(double value);
+	double GetDensity();
+	void SetAlpha(double value);
+	double GetAlpha();
+	void SetBeta(double value);
+	double GetBeta();
+	// 境界条件を加える
+	bool AddBoundaryCondition(int vtxId, Vec3i dof);
+	// 境界条件を加える(頂点順）
+	bool AddBoundaryCondition(PTM::VVector< Vec3i > bcs); 
+	// 頂点に力を加える（ワールド座標系）
+	bool AddVertexForce(int vtxId, Vec3d fW);
+	// 頂点群に力を加える（ワールド座標系）
+	bool AddVertexForce(PTM::VVector< Vec3d > fWs);
 };
 
 /// 振動計算のデスクリプタ
@@ -57,11 +86,14 @@ struct PHFemVibrationDesc : public PHFemDesc{
 	double alpha;		///< 粘性減衰率
 	double beta;		///< 構造減衰率
 	PHFemVibrationDesc(){
-		young = 1.0;
-		poisson = 0.5;
-		density = 1.0;
-		alpha = 0.0;
-		beta = 0.0;
+		// アルミの物性
+		// ポアソン比:0.35,ヤング率 70GPa, 密度2.70g/cm3
+		// 減衰比は適当に設定
+		poisson = 0.35;
+		young = 70 * 1e6;
+		density =  2.7 * 1e3; 
+		alpha = 0.001;
+		beta = 0.0001;
 	}
 };
 

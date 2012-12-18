@@ -19,7 +19,7 @@ public:
 	SPR_OBJECTDEF(PHFemVibration);
 	ACCESS_DESC(PHFemVibration);
 
-	double timeStep;
+	double vdt;
 	VMatrixRow< double > matK;		// 全体剛性行列
 	VMatrixRow< double > matM;		// 全体質量行列
 	VMatrixRow< double > matMInv;	// 全体質量行列の逆行列
@@ -39,8 +39,11 @@ public:
 	/// 時間積分
 	virtual void ExplicitEuler();
 	virtual void ImplicitEuler();
+	virtual void NewmarkBeta(double b);
 
 	/// 各種設定
+	void SetTimeStep(double dt){ vdt = dt; }
+	double GetTimeStep(){ return vdt; }
 	void SetYoungModulus(double value){ young = value; }
 	double GetYoungModulus(){ return young; }
 	void SetPoissonsRatio(double value){ poisson = value; }
@@ -51,7 +54,14 @@ public:
 	double GetAlpha(){ return alpha; }
 	void SetBeta(double value){ beta = value; }
 	double GetBeta(){ return beta; }
+	// 境界条件を加える
 	bool AddBoundaryCondition(int vtxId, Vec3i dof);
+	// 境界条件を加える(頂点順）
+	bool AddBoundaryCondition(VVector< Vec3i > bcs); 
+	// 頂点に力を加える（ワールド座標系）
+	bool AddVertexForce(int vtxId, Vec3d fW);
+	// 頂点群に力を加える（ワールド座標系）
+	bool AddVertexForce(VVector< Vec3d > fWs);
 };
 
 }
