@@ -110,8 +110,9 @@ echo %%ignore Spr::DebugPrintf;>> %MODULE%.i
 echo %%ignore Spr::DebugCSV;>> %MODULE%.i
 echo %%ignore Spr::UTTimerIf::SetCallback;>> %MODULE%.i
 echo %%extend Spr::UTTimerIf{						>> %MODULE%.i
-echo 	PyObject* SetCallback(PyObject* self, PyObject* arg){>> %MODULE%.i
-echo		$self-^>SetCallback(PyUTTimerFunc, arg);>> %MODULE%.i
+echo 	PyObject* SetCallback(PyObject* arg){>> %MODULE%.i
+echo 		$self-^>SetCallback(PyUTTimerFunc, c_param1);>> %MODULE%.i
+echo 		ret_tmp = NULL;>>%MODULE%.i
 echo 	}>> %MODULE%.i
 echo }	>> %MODULE%.i
 echo //--->>%MODULE%.i
