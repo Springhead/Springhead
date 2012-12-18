@@ -11,17 +11,14 @@ namespace Spr{;
 
 PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	SetDesc(&desc);
-	// アルミの物性
-	// ポアソン比:0.35,ヤング率 70GPa, 密度2.70g/cm3
-	poisson = 0.35;
-	young = 70 * 1e6;
-	density =  2.7 * 1e3; 
-	alpha = 0.001;
-	beta = 0.0001;
-	timeStep = 0.001;
 } 
 
 void PHFemVibration::Init(){
+	/// 刻み時間の設定
+	PHSceneIf* scene = GetPHFemMesh()->GetScene()->Cast();
+	if(scene) vdt = scene->GetTimeStep();
+	else vdt = 0.001;
+
 	/// 全体剛性行列、全体質量行列、全体減衰行列の計算
 	/// これらはすべてローカル系
 	PHFemMeshNew* mesh = GetPHFemMesh();
@@ -185,7 +182,6 @@ void PHFemVibration::Init(){
 			// u = (x1, ..., xn-1, y1, ..., yn-1, z1, ..., zn-1)の順
 			xlocalLast[i + NVertices * j] = mesh->vertices[i].pos[j];
 			xlocal[i + NVertices * j] = mesh->vertices[i].pos[j];
-			//flocal[i + NVertices * j] = ;
 			//DSTR << i+NVertices*j << " " << xlocal[i+NVertices*j] << std::endl;
 		}
 	}
@@ -195,9 +191,13 @@ void PHFemVibration::Init(){
 	DSTR << vlocal << std::endl;
 
 	// テストコード
-	//AddBoundaryCondition(0, Vec3d(1, 1, 1));
-	mesh->AddLocalDisplacement(1, Vec3d(0.1, 0.0, 0.0));
-}
+	vdt = 0.001;
+	AddBoundaryCondition(0, Vec3d(1, 1, 1));
+	//AddVertexForce(1, Vec3d(100000.0, 0.0, 0.0));
+	//mesh->AddLocalDisplacement(1, Vec3d(0.1, 0.0, 0.0));
+	DSTR << "flocal" << std::endl;
+	DSTR << flocal << std::endl;
+} 
 
 #define DEBUG
 void PHFemVibration::Step(){
@@ -224,8 +224,11 @@ void PHFemVibration::Step(){
 #endif
 
 	///積分
-	ExplicitEuler();
+	//ExplicitEuler();
 	//ImplicitEuler();
+	NewmarkBeta(0.0);
+	
+	flocal.clear(0.0);
 
 	/// 計算結果をFemVertexに戻す
 	for(int i = 0; i < NVertices; i++){
@@ -256,21 +259,15 @@ void PHFemVibration::ExplicitEuler(){
 	xlocalLast = xlocal;
 	vlocalLast = vlocal;
 #endif 
-	vlocal += matMInv * tmp * timeStep;
-	xlocal += vlocal * timeStep;
-	//DSTR << matK * (xlocal - xlocalLast) << std::endl;
-	//DSTR << "tmp" << std::endl;
-	//DSTR << tmp << std::endl;
-	//DSTR << "matMinv * tmp" << std::endl;
-	//DSTR << matMInv * tmp << std::endl;
-	//DSTR << matMInv << std::endl;
+	vlocal += matMInv * tmp * vdt;
+	xlocal += vlocal * vdt;
 }
 
 void PHFemVibration::ImplicitEuler(){
-	// xlocalは位置なんだけど、変位が考慮されてない。。。
 	// 外力をまだ組み込んでない
+	// うまく動いていない
 	int NDof = GetPHFemMesh()->vertices.size() * 3;
-	VMatrixRow< double > E;
+	VMatrixRow< double > E;	// 単位行列
 	E.resize(NDof, NDof);
 	E.clear(0.0);
 	for(int i = 0; i < NDof; i++){
@@ -279,32 +276,74 @@ void PHFemVibration::ImplicitEuler(){
 	VMatrixRow< double > _K;
 	_K.resize(NDof, NDof);
 	_K.clear(0.0);	
-	VMatrixRow< double > _C;
-	_C.resize(NDof, NDof);
-	_C.clear(0.0);
+	VMatrixRow< double > _CInv;
+	_CInv.resize(NDof, NDof);
+	_CInv.clear(0.0);
 	VMatrixRow< double > D;
 	D.resize(NDof, NDof);
 	D.clear(0.0);
 
-	_K = matMInv * matK * timeStep;
-	_C = E + matMInv * matC * timeStep;
-	D = E + _C.inv() * _K * timeStep;
+	_K = matMInv * matK * vdt;
+	_CInv = (E + matMInv * matC * vdt).inv();
+	D = E + _CInv * _K * vdt;
+#if 1
+	xlocalLast = xlocal;
+	vlocalLast = vlocal;
+#endif
+	xlocal += D.inv() * vlocal * vdt;
+	vlocal += -1 * _CInv * _K * (xlocal - xlocalLast);
+	//DSTR << "Integrate" << std::endl;
+	//DSTR << "_K" << std::endl;
+	//DSTR << _K << std::endl;
+	//DSTR << "_CInv" << std::endl;
+	//DSTR << _CInv << std::endl;
+	//DSTR << "D.inv()" << std::endl;
+	//DSTR << D.inv() << std::endl;
+}
 
-	xlocal = D.inv() * (xlocal + _C.inv() * vlocal * timeStep);
-	vlocal = _C.inv() * (vlocal - _K * xlocal);
+void PHFemVibration::NewmarkBeta(double b){
+	int NDof = GetPHFemMesh()->vertices.size() * 3;
+	static VVector< double > alocal;
+	alocal.resize(NDof);
+	alocal.clear(0.0);
 
-	DSTR << "Integrate" << std::endl;
-	DSTR << "_K" << std::endl;
-	DSTR << _K << std::endl;
-	DSTR << "_C" << std::endl;
-	DSTR << _C << std::endl;
-	DSTR << "D.inv()" << std::endl;
-	DSTR << D.inv() << std::endl;
+	static VVector< double > alocalLast;
+	alocalLast.resize(NDof);
+	alocalLast.clear(0.0);
+
+	VMatrixRow< double > _MInv;
+	_MInv.resize(NDof, NDof);
+	_MInv.clear(0.0);
+	_MInv = (matM + 0.5 * matC * vdt + b * matK * pow(vdt, 2)).inv();
+
+	VVector< double > Ct;
+	Ct.resize(NDof);
+	Ct.clear(0.0);
+
+	VVector< double > Kt;
+	Kt.resize(NDof);
+	Kt.clear(0.0);
+
+	vlocal -= vlocalLast;
+	xlocal -= xlocalLast;
+	static bool bflag = true;
+	if(bflag){
+		alocal = _MInv * (- 1 * matC * vlocal -1 * matK * xlocal + flocal);
+		bflag = false;
+	}
+
+	Ct = -1 * matC * (vlocal + 0.5 * alocal * vdt);
+	Kt = -1 * matK * (xlocal + vlocal * vdt + alocal * pow(vdt, 2) * (0.5-b));
+	alocalLast = alocal;
+	alocal = _MInv * (flocal - Ct - Kt);
+	vlocalLast = vlocal;
+	vlocal += 0.5 * (alocalLast + alocal) * vdt;
+	xlocal += vlocalLast * vdt + (0.5 - b)* alocalLast * pow(vdt, 2) + alocal * b * pow(vdt, 2);
 }
 
 bool PHFemVibration::AddBoundaryCondition(int vtxId, Vec3i dof){
 	PHFemMeshNew* mesh = GetPHFemMesh();
-	if(0 <= vtxId && vtxId <= mesh->vertices.size() -1){
+	if(0 <= vtxId && vtxId <= (int)mesh->vertices.size() -1){
 		if(dof[0] == 1){
 			// x方向の拘束
 			const int xId = vtxId;
@@ -345,6 +384,69 @@ bool PHFemVibration::AddBoundaryCondition(int vtxId, Vec3i dof){
 		return true;
 	}
 	return false;
+}
+
+bool PHFemVibration::AddBoundaryCondition(VVector< Vec3i > bcs){
+	PHFemMeshNew* mesh = GetPHFemMesh();
+	if(mesh->vertices.size() != bcs.size()) return false;
+	for(int i = 0; i < (int)bcs.size(); i++){
+		if(bcs[i].x == 1){
+			// x方向の拘束
+			const int xId = i;
+			matK.row(xId).clear(0.0);
+			matK[xId][xId] = 1.0;
+			matC.row(xId).clear(0.0);
+			matC[xId][xId] = 1.0;
+			matMInv.row(xId).clear(0.0);
+			matMInv[xId][xId] = 1.0;
+		}
+		if(bcs[i].y == 1){
+			// y方向の拘束
+			const int yId = i + 4;
+			matK.row(yId).clear(0.0);
+			matK[yId][yId] = 1.0;
+			matC.row(yId).clear(0.0);
+			matC[yId][yId] = 1.0;
+			matMInv.row(yId).clear(0.0);
+			matMInv[yId][yId] = 1.0;		
+		}
+		if(bcs[i].z == 1){
+			// z方向の拘束
+			const int zId = i + 8;
+			matK.row(zId).clear(0.0);
+			matK[zId][zId] = 1.0;
+			matMInv.row(zId).clear(0.0);			
+			matC.row(zId).clear(0.0);
+			matC[zId][zId] = 1.0;
+			matMInv.row(zId).clear(0.0);
+			matMInv[zId][zId] = 1.0;		
+		}		
+	}
+	return true;
+}
+
+bool PHFemVibration::AddVertexForce(int vtxId, Vec3d fW){
+	PHFemMeshNew* mesh = GetPHFemMesh();
+	if(0 <= vtxId && vtxId <= (int)mesh->vertices.size() -1){
+		Vec3d fL = mesh->GetPHSolid()->GetPose() * fW;
+		flocal[vtxId] += fL.x;
+		flocal[vtxId + 4] += fL.y;
+		flocal[vtxId +8] += fL.z;
+		return true;
+	}
+	return false;
+}
+
+bool PHFemVibration::AddVertexForce(VVector< Vec3d > fWs){
+	PHFemMeshNew* mesh = GetPHFemMesh();
+	if(mesh->vertices.size() != fWs.size()) return false;
+	for(int i = 0; i < (int)fWs.size(); i++){
+		Vec3d fL = mesh->GetPHSolid()->GetPose().Inv() * fWs[i];
+		flocal[i] += fL.x;
+		flocal[i + 4] += fL.y;
+		flocal[i +8] += fL.z;
+	}
+	return true;
 }
 
 }

@@ -346,7 +346,7 @@ double PHFemMeshNew::GetTetrahedronVolume(int tetID){
 }
 
 bool PHFemMeshNew::AddDisplacement(int vtxId, Vec3d disW){
-	if(0 <= vtxId && vtxId <= vertices.size() -1){
+	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		vertices[vtxId].pos += GetPHSolid()->GetPose().Inv() * disW;
 		return true;
 	}
@@ -354,7 +354,7 @@ bool PHFemMeshNew::AddDisplacement(int vtxId, Vec3d disW){
 }
 
 bool PHFemMeshNew::AddLocalDisplacement(int vtxId, Vec3d disL){
-	if(0 <= vtxId && vtxId <= vertices.size() -1){
+	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		vertices[vtxId].pos += disL;
 		return true;
 	}
@@ -362,7 +362,7 @@ bool PHFemMeshNew::AddLocalDisplacement(int vtxId, Vec3d disL){
 }
 
 bool PHFemMeshNew::SetVertexPosition(int vtxId, Vec3d posW){
-	if(0 <= vtxId && vtxId <= vertices.size() -1){
+	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		vertices[vtxId].pos = GetPHSolid()->GetPose().Inv() * posW;
 		return true;
 	}
@@ -370,7 +370,7 @@ bool PHFemMeshNew::SetVertexPosition(int vtxId, Vec3d posW){
 }
 
 bool PHFemMeshNew::SetLocalVertexPosition(int vtxId, Vec3d posL){
-	if(0 <= vtxId && vtxId <= vertices.size() -1){
+	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		vertices[vtxId].pos = posL;
 		return true;
 	}
