@@ -14,7 +14,7 @@ namespace Spr{;
 
 ///////////////////////////////////////////////////////////////////
 /* 計算モジュールの共通部分 */
-
+int PHFem::NVertices(){ return GetPHFemMesh()->NVertices(); }
 
 ///////////////////////////////////////////////////////////////////
 /* 四面体を表すためのクラス、構造体の定義 */
@@ -277,8 +277,12 @@ PHSolidIf* PHFemMeshNew::GetPHSolid(){
 	return solid;
 }
 
-unsigned PHFemMeshNew::GetNFace(){
-	return (unsigned)faces.size();
+int PHFemMeshNew::NVertices(){
+	return (int)vertices.size();
+}
+
+int PHFemMeshNew::NFaces(){
+	return (int)faces.size();
 }
 
 std::vector< Vec3d > PHFemMeshNew::GetFaceEdgeVtx(unsigned id){

@@ -31,7 +31,7 @@ public:
 
 	void SetPHFemMesh(PHFemMeshNew* m){ phFemMesh = m; }
 	PHFemMeshNew* GetPHFemMesh(){ return phFemMesh; }
-
+	int NVertices();
 };
 
 /* 四面体を表すためのクラス、構造体の宣言 */
@@ -121,8 +121,10 @@ public:
 	void SetPHSolid(PHSolidIf* s);
 	/// 関連付けされている剛体を返す
 	PHSolidIf* GetPHSolid();
+	/// 頂点の総数を返す
+	int NVertices();
 	///	面の総数を返す
-	unsigned GetNFace();
+	int NFaces();
 	///	Face辺の両端点の座標を返す?
 	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
 	//	Face辺の両端点の座標を返す?
