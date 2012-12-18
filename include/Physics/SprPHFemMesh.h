@@ -61,11 +61,12 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void SetVertexTc(int id,double temp,double heatTrans);
 	Vec3d GetPose(int id);
 	Vec3d GetSufVtxPose(unsigned id);
-	unsigned long GetStepCount();		///	カウント１
-	unsigned long GetStepCountCyc();		///	カウント１が何週目か	計算式:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
-	double GetVertexTemp(unsigned id);			// メッシュ節点の温度を取得
-	double GetSufVertexTemp(unsigned id);		// メッシュ表面の節点温度を取得
+	unsigned long GetStepCount();					///	カウント１
+	unsigned long GetStepCountCyc();				///	カウント１が何週目か	計算式:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
+	double GetVertexTemp(unsigned id);				// メッシュ節点の温度を取得
+	double GetSufVertexTemp(unsigned id);			// メッシュ表面の節点温度を取得
 	void SetVertexTemp(unsigned id,double temp);
+	void SetVerticesTempAll(double temp);
 	void AddvecFAll(unsigned id,double dqdt);		//セットだと、値をそう入れ替えしそうな名前で危険。実際には、add又は、IH加熱ベクトルのみにSetする。ベクトルにSetする関数を作って、ロードしてもいいと思う。
 	void SetvecFAll(unsigned id,double dqdt);		//FAllの成分に加算だが、危険
 	void SetRhoSpheat(double rho,double Cp);		//素材固有の物性

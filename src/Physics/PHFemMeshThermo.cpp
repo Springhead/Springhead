@@ -4248,7 +4248,9 @@ void PHFemMeshThermo::CreateTempMatrix(){
 }
 
 void PHFemMeshThermo::SetTempToTVecAll(unsigned vtxid){
-	TVecAll[vtxid] = vertices[vtxid].temp;
+	if(0 <= vtxid && vtxid < TVecAll.size()){
+		TVecAll[vtxid] = vertices[vtxid].temp;
+	}
 }
 
 void PHFemMeshThermo::UpdateheatTransRatio(unsigned id,double heatTransRatio){
@@ -4276,8 +4278,9 @@ void PHFemMeshThermo::SetVertexTemp(unsigned i,double temp){
 
 void PHFemMeshThermo::SetVerticesTempAll(double temp){
 	for(std::vector<unsigned int>::size_type i=0; i < vertices.size() ; i++){
-			vertices[i].temp = temp;
-		}
+		vertices[i].temp = temp;
+		SetTempToTVecAll(i);
+	}
 }
 
 void PHFemMeshThermo::AddvecFAll(unsigned id,double dqdt){
