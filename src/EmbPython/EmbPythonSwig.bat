@@ -98,14 +98,22 @@ rem ================================================================
 
 :Extend_Foundation
 echo //--->>%MODULE%.i
+echo %%header%%{>> %MODULE%.i
+echo void SPR_CDECL PyUTTimerFunc(int id, void* arg);>> %MODULE%.i
+echo %%}>> %MODULE%.i
 echo %%ignore Spr::UTPadding;>> %MODULE%.i
 echo %%ignore Spr::UTStringLess;>> %MODULE%.i
 echo %%ignore Spr::UTEatWhite;>> %MODULE%.i
 echo %%ignore Spr::UTTypeInfo;>> %MODULE%.i
 echo %%ignore Spr::UTTypeInfoObjectBase;>> %MODULE%.i
-echo %%ignore Spr::UTTimerIf::SetCallback;>> %MODULE%.i
 echo %%ignore Spr::DebugPrintf;>> %MODULE%.i
 echo %%ignore Spr::DebugCSV;>> %MODULE%.i
+echo %%ignore Spr::UTTimerIf::SetCallback;>> %MODULE%.i
+echo %%extend Spr::UTTimerIf{						>> %MODULE%.i
+echo 	PyObject* SetCallback(PyObject* self, PyObject* arg){>> %MODULE%.i
+echo		$self-^>SetCallback(PyUTTimerFunc, arg);>> %MODULE%.i
+echo 	}>> %MODULE%.i
+echo }	>> %MODULE%.i
 echo //--->>%MODULE%.i
 exit /b
 
