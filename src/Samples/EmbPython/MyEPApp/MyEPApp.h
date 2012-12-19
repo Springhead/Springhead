@@ -56,9 +56,9 @@ public:
 
 	virtual void OnStep(){
 		UTAutoLock critical(EPCriticalSection);
-		spaceNavigator0->Update(fwScene->GetPHScene()->GetTimeStep());
-		spaceNavigator1->Update(fwScene->GetPHScene()->GetTimeStep());
-		fwScene->Step();
+		spaceNavigator0->Update(GetFWScene()->GetPHScene()->GetTimeStep());
+		spaceNavigator1->Update(GetFWScene()->GetPHScene()->GetTimeStep());
+		GetFWScene()->Step();
 	}
 
 	// •`‰æŠÖ”D•`‰æ—v‹‚ª—ˆ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚é

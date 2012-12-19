@@ -93,7 +93,7 @@ void MyEPApp::Init(int argc, char* argv[]) {
 	OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
 	SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)(NewWndProc));
 
-	fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
+	GetFWScene()->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
 
 	GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(6.5,6,20));
 }
@@ -129,7 +129,7 @@ void EPLoopInit(void* arg) {
 	PyObject *dict = PyModule_GetDict(m);
 
 	ACCESS_SPR_FROM_PY(MyEPApp,				app,				app										);
-	ACCESS_SPR_FROM_PY(FWSceneIf,			fwScene,			app->fwScene							);
+	ACCESS_SPR_FROM_PY(FWSceneIf,			fwScene,			app->GetFWScene()						);
 	ACCESS_SPR_FROM_PY(HITrackballIf,		hiTrackball,		app->GetCurrentWin()->GetTrackball()	);
 	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator0,	app->spaceNavigator0					);
 	ACCESS_SPR_FROM_PY(HISpaceNavigatorIf,	spaceNavigator1,	app->spaceNavigator1					);
