@@ -13,7 +13,6 @@
 
 #include <Collision/CDQuickHull2DImp.h>
 
-
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -154,9 +153,10 @@ void FWFemMesh::Sync(){
 	////	IH加熱領域の境界線を引く
 	//DrawIHBorder(0.095,0.1);
 #endif
+	std::string fwfood;
+	fwfood = this->GetName();		//	fwmeshの名前取得
 
-	///	テクスチャと温度、水分量との対応表は、Samples/Physics/FEMThermo/テクスチャの色と温度の対応.xls	を参照のこと
-	//negitest
+	//テクスチャの設定
 	//焦げテクスチャの枚数
 	unsigned kogetex	= 5;
 	//水分テクスチャの枚数
@@ -164,7 +164,15 @@ void FWFemMesh::Sync(){
 	//サーモテクスチャの枚数
 	unsigned thtex		= 6;
 	//	ロードテクスチャーが焦げ→水→温度の順	（または）水→温度→焦げ	にも変更可能（ファイル名のリネームが必要）
-	
+
+	// num of texture layers
+	if(fwfood == "fwNegi"){		///	テクスチャと温度、水分量との対応表は、Samples/Physics/FEMThermo/テクスチャの色と温度の対応.xls	を参照のこと
+		kogetex	= 5;
+	}
+	else if(fwfood == "fwNsteak"){
+		kogetex	= 7;		//7にする
+	}
+
 	double dtex =(double) 1.0 / ( kogetex + thtex + watex);		//	テクスチャ奥行座標の層間隔
 	double texstart = dtex /2.0;								//	テクスチャ座標の初期値 = 焦げテクスチャのスタート座標
 	double wastart = texstart + kogetex * dtex ;				//	水分量表示テクスチャのスタート座標
@@ -218,7 +226,38 @@ void FWFemMesh::Sync(){
 					if(texture_mode == 1){
 						//	焦げテクスチャ切り替え
 						//	焼け具合に沿った変化
-						gvtx[stride*gv + tex + 2] = texstart;
+						gvtx[stride*gv + tex + 2] = texstart;		// 焦げテクスチャの初期座標
+						//メッシュの判別
+						DSTR << "this->GetName(): " << this->GetName() << std::endl; ;	//phMesh->GetName():fem4
+						//下記三種のどのやり方でもOK
+						std::string strg;
+						strg = this->GetName();
+						if(strg == "fwNegi"){
+							DSTR << "Negi STR" << std::endl;
+						}
+						//
+						FWFemMeshIf* fmeshif;
+						GetScene()->FindObject(fmeshif,"fwNegi");
+						if( fmeshif ){
+							DSTR << fmeshif->GetName() << std::endl;
+							DSTR << "NEGINEGI GET" << std::endl;
+
+						}
+						//
+						FWFemMeshIf* fnsteakifif;
+						GetScene()->FindObject(fnsteakifif,"fwNsteak");
+						if( fnsteakifif ){
+							DSTR << fnsteakifif->GetName() << std::endl;
+							DSTR << "NIKUNIKU GET" << std::endl;
+						}
+						if(fwfood == "fwNegi"){
+
+						}
+						else if(fwfood == "fwNsteak"){
+
+						}
+
+						int phmeshdebug =0;
 					//}else if(texturemode == MOISTURE){
 					}else if(texture_mode == 3){
 						//	水分蒸発表示モード
@@ -240,9 +279,7 @@ void FWFemMesh::Sync(){
 						}
 
 					//}else if(texturemode == THERMAL){
-					}else if(texture_mode == 2){
-						//	温度変化表示モード
-						//サーモが非テクスチャ化された場合、テクスチャのロードは不要になるので、以下のコードを変更
+					}else if(texture_mode == 2){	//	温度変化表示モード	//サーモが非テクスチャ化された場合、テクスチャのロードは不要になるので、以下のコードを変更
 						double temp = phMesh->vertices[pv].temp;
 						// -50.0~0.0:aqua to blue
 						if(temp <= -50.0){
@@ -282,9 +319,6 @@ void FWFemMesh::Sync(){
 							DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
 						}
 					}
-
-
-				
 				}
 			}	
 		}else{
