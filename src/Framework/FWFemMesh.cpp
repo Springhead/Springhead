@@ -227,15 +227,15 @@ void FWFemMesh::Sync(){
 						//	焦げテクスチャ切り替え
 						//	焼け具合に沿った変化
 						gvtx[stride*gv + tex + 2] = texstart;		// 焦げテクスチャの初期座標
+#if 0
 						//メッシュの判別
-						DSTR << "this->GetName(): " << this->GetName() << std::endl; ;	//phMesh->GetName():fem4
+						//DSTR << "this->GetName(): " << this->GetName() << std::endl; ;	//phMesh->GetName():fem4
 						//下記三種のどのやり方でもOK
 						std::string strg;
 						strg = this->GetName();
 						if(strg == "fwNegi"){
 							DSTR << "Negi STR" << std::endl;
 						}
-						//
 						FWFemMeshIf* fmeshif;
 						GetScene()->FindObject(fmeshif,"fwNegi");
 						if( fmeshif ){
@@ -249,12 +249,52 @@ void FWFemMesh::Sync(){
 						if( fnsteakifif ){
 							DSTR << fnsteakifif->GetName() << std::endl;
 							DSTR << "NIKUNIKU GET" << std::endl;
-						}
+						}  
+						
+#endif
 						if(fwfood == "fwNegi"){
 
 						}
 						else if(fwfood == "fwNsteak"){
-
+							// 温度変化と同じで　
+							double temp = phMesh->vertices[pv].temp;
+							// -50.0~0.0:aqua to blue
+							if(temp <= -50.0){
+								gvtx[stride * gv + tex + 2] = texstart;
+							}
+							else if(-50.0 < temp && temp <= 0.0){	
+								gvtx[stride*gv + tex + 2] = (texstart ) + ((temp + 50.0) * dtex /50.0);
+							}
+							//	0~50.0:blue to green
+							else if(0.0 < temp && temp <= 50.0 ){
+								//double green = temp * dtex / 50.0 + thstart;
+								gvtx[stride*gv + tex + 2] = temp * dtex / 50.0 + texstart + dtex;
+							}
+							//	50.0~100.0:green to yellow
+							else if(50.0 < temp && temp <= 100.0){
+								gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex /	 50.0 + texstart + 2 * dtex;
+							}
+							//	100.0~150:yellow to orange	
+							else if(100.0 < temp && temp <= 150.0){
+								gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + 2 * dtex;
+							}
+							//	150~200:orange to red
+							else if(150.0 < temp && temp <= 200.0){
+								double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+								gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + 2 * dtex;
+							}
+							//	200~250:red to purple
+							else if(200.0 < temp && temp <= 250.0){
+								gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + 2 * dtex;
+							}
+							///	250~:only purple
+							else if(250.0 < temp){
+								gvtx[stride*gv + tex + 2] = dtex * 6.0 + texstart;
+								//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
+							}
+							else{
+								DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
+							}
 						}
 
 						int phmeshdebug =0;
