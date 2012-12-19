@@ -9,7 +9,7 @@
 #define GRMesh_H
 
 #include <Graphics/SprGRMesh.h>
-#include <Graphics/GRFrame.h>
+#include "GRFrame.h"
 
 namespace Spr{;
 

@@ -9,7 +9,7 @@
 #define PH_IKENGINE_H
 
 #include <Physics/SprPHIK.h>
-#include <Physics/PHEngine.h>
+#include "PHEngine.h"
 
 namespace Spr{;
 

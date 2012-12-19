@@ -9,9 +9,9 @@
 #define FWFEMMESH_H
 
 #include <Framework/SprFWFemMesh.h>
-#include <Framework/FWObject.h>
-#include <Physics/PHFemMesh.h>
-//#include <Physics/PHFemMeshThermo.h>
+#include "FWObject.h"
+#include "../Physics/PHFemMesh.h"
+//#include "..Physics/PHFemMeshThermo.h"
 #include "FrameworkDecl.hpp"
 
 namespace Spr{;

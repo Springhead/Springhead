@@ -9,10 +9,10 @@
 #define PHSOLID_H
 
 #include <Physics/SprPHSolid.h>
-#include <Physics/PHEngine.h>
-#include <Physics/PHSpatial.h>
 #include <Collision/SprCDShape.h>
-#include <Foundation/Object.h>
+#include "../Physics/PHEngine.h"
+#include "../Physics/PHSpatial.h"
+#include "../Foundation/Object.h"
 
 namespace Spr{;
 

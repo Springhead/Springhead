@@ -8,10 +8,10 @@
 #ifndef PHCONSTRAINTENGINE_H
 #define PHCONSTRAINTENGINE_H
 
-#include <Collision/CDDetectorImp.h>
-#include <Physics/PHConstraint.h>
-#include <Physics/PHGear.h>
-#include <Physics/PHContactDetector.h>
+#include "../Collision/CDDetectorImp.h"
+#include "PHConstraint.h"
+#include "PHGear.h"
+#include "PHContactDetector.h"
 
 namespace Spr{;
 

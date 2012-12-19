@@ -10,8 +10,8 @@
 
 #include <Physics/SprPHIK.h>
 #include <Physics/SprPHJoint.h>
-#include <Foundation/Object.h>
-#include <Physics/PHIKEndEffector.h>
+#include "../Foundation/Object.h"
+#include "PHIKEndEffector.h"
 #include "PhysicsDecl.hpp"
 #include <set>
 #include <map>

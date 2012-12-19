@@ -8,9 +8,9 @@
 #ifndef PHGEAR_H
 #define PHGEAR_H
 
-#include <Foundation/Object.h>
+#include "../Foundation/Object.h"
 #include <Physics/SprPHJoint.h>
-#include <Physics/PhysicsDecl.hpp>
+#include "PhysicsDecl.hpp"
 
 namespace Spr{;
 

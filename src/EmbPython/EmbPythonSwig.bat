@@ -23,6 +23,7 @@ echo ========================= MODULE %MODULE% =============================
 
 rem .iファイルを手書きするときはここにモジュール名を追加
 if "%MODULE%" == "Base" goto swig
+if "%MODULE%" == "Foundation" goto swig
 if "%MODULE%" == "Framework" goto swig
 if "%MODULE%" == "Physics" goto swig
 
@@ -92,31 +93,6 @@ move /Y %MODULE%.tmp %CPP%
 exit /b
 
 
-
-
-rem ================================================================
-
-:Extend_Foundation
-echo //--->>%MODULE%.i
-echo %%header%%{>> %MODULE%.i
-echo void SPR_CDECL PyUTTimerFunc(int id, void* arg);>> %MODULE%.i
-echo %%}>> %MODULE%.i
-echo %%ignore Spr::UTPadding;>> %MODULE%.i
-echo %%ignore Spr::UTStringLess;>> %MODULE%.i
-echo %%ignore Spr::UTEatWhite;>> %MODULE%.i
-echo %%ignore Spr::UTTypeInfo;>> %MODULE%.i
-echo %%ignore Spr::UTTypeInfoObjectBase;>> %MODULE%.i
-echo %%ignore Spr::DebugPrintf;>> %MODULE%.i
-echo %%ignore Spr::DebugCSV;>> %MODULE%.i
-echo %%ignore Spr::UTTimerIf::SetCallback;>> %MODULE%.i
-echo %%extend Spr::UTTimerIf{						>> %MODULE%.i
-echo 	PyObject* SetCallback(PyObject* arg){>> %MODULE%.i
-echo 		$self-^>SetCallback(PyUTTimerFunc, c_param1);>> %MODULE%.i
-echo 		ret_tmp = NULL;>>%MODULE%.i
-echo 	}>> %MODULE%.i
-echo }	>> %MODULE%.i
-echo //--->>%MODULE%.i
-exit /b
 
 :Extend_FileIO
 echo //--->>%MODULE%.i

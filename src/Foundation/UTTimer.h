@@ -52,6 +52,8 @@ public:
 	bool SetInterval(unsigned i);
 	
 	bool SetCallback(UTTimerIf::TimerFunc f, void* arg=NULL);
+	UTTimerIf::TimerFunc GetCallback();
+	void* GetCallbackArg();
 	
 	UTTimerIf::Mode GetMode() { return mode; }
 	bool SetMode(UTTimerIf::Mode m);

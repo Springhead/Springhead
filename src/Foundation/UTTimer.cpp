@@ -322,6 +322,12 @@ bool UTTimer::SetCallback(UTTimerIf::TimerFunc f, void* a){
 	arg = a;
 	return Start();
 }
+UTTimerIf::TimerFunc UTTimer::GetCallback(){
+	return func;
+}
+void* UTTimer::GetCallbackArg(){
+	return arg;
+}
 
 bool UTTimer::SetInterval(unsigned int i){
 	if (IsStarted() && !Stop())
