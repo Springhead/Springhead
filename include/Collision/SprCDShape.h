@@ -110,7 +110,7 @@ struct CDShapeIf : public NamedObjectIf{
 		@return		形状の境界上あるいは内部ならtrue
 		点pが形状に含まれるか判定する
 	 */
-	void     IsInside(const Vec3f& p);
+	bool     IsInside(const Vec3f& p);
 
 	/** bounding boxを計算
 		@param bbmin	bounding boxの下限
