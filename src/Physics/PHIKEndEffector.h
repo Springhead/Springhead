@@ -8,7 +8,7 @@
 #ifndef PH_IKENDEFFECTOR_H
 #define PH_IKENDEFFECTOR_H
 
-#include <Foundation/Object.h>
+#include "../Foundation/Object.h"
 #include <Physics/SprPHIK.h>
 #include <set>
 

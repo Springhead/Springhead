@@ -8,9 +8,9 @@
 #ifndef PH_FEMENGINE_H
 #define PH_FEMENGINE_H
 
-#include <Physics/PHEngine.h>
-#include <Physics/PHFemMesh.h>
-#include <Physics/PHFemMeshNew.h>
+#include "PHEngine.h"
+#include "PHFemMesh.h"
+#include "PHFemMeshNew.h"
 
 namespace Spr{;
 

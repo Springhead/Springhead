@@ -8,12 +8,12 @@
 #ifndef PHSCENE_H
 #define PHSCENE_H
 #include <Physics/SprPHScene.h>
-#include <Foundation/Scene.h>
-#include <Physics/PHEngine.h>
-#include <Physics/PHSolid.h>
-#include <Physics/PHIKEngine.h>
-#include <Physics/PHIKActuator.h>
-#include <Physics/PHIKEndEffector.h>
+#include "../Foundation/Scene.h"
+#include "PHEngine.h"
+#include "PHSolid.h"
+#include "PHIKEngine.h"
+#include "PHIKActuator.h"
+#include "PHIKEndEffector.h"
 
 namespace Spr {;
 

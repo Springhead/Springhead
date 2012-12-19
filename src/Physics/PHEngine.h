@@ -8,7 +8,7 @@
 #ifndef PHEngine_H
 #define PHEngine_H
 
-#include <Foundation/Object.h>
+#include "../Foundation/Object.h"
 #include <Physics/SprPHEngine.h>
 #include <Physics/SprPHScene.h>
 

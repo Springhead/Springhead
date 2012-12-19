@@ -8,9 +8,9 @@
 #ifndef PHSHAPE_H
 #define PHSHAPE_H
 
-#include <Foundation/Object.h>
+#include "../Foundation/Object.h"
 #include <Collision/SprCDShape.h>
-#include <Collision/CollisionDecl.hpp>
+#include "../Collision/CollisionDecl.hpp"
 
 namespace Spr{;
 

@@ -9,12 +9,12 @@
 #define PHCONTACTDETECTOR_H
 
 #include <vector>
-#include <Base/Combination.h>
-#include <Collision/CDDetectorImp.h>
-#include <Physics/PHScene.h>
-#include <Physics/PHEngine.h>
-#include <Physics/PHSolid.h>
-#include <Foundation/UTPreciseTimer.h>
+#include "../Base/Combination.h"
+#include "../Collision/CDDetectorImp.h"
+#include "PHScene.h"
+#include "PHEngine.h"
+#include "PHSolid.h"
+#include "../Foundation/UTPreciseTimer.h"
 
 namespace Spr{;
 

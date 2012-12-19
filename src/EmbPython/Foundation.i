@@ -23,21 +23,21 @@ void SPR_CDECL PyUTTimerFunc(int id, void* arg);
 %ignore Spr::UTTypeInfoObjectBase;
 %ignore Spr::DebugPrintf;
 %ignore Spr::DebugCSV;
+%ignore Spr::UTTimerIf::GetCallback;
 %ignore Spr::UTTimerIf::SetCallback;
 %extend Spr::UTTimerIf{						
 	PyObject* SetCallback(PyObject* arg){
+		ret_tmp = Py_None;
 		if (PyCallable_Check($var1)) {
 			PyErr_SetString(PyExc_TypeError, "parameter must be callable");
-			return NULL;
-		}
-		Py_XINCREF($var1);
-			Py_XDECREF((PyObject*)($self->GetCallbackArg()));
-		}
-		if ($self->GetCallback() == PyUTTimerFunc 
-			&& PyCallable_Check((PyObject*)$self->GetCallbackArg())){
+		}else{
+			Py_XINCREF($var1);
+			if ( $self->GetCallback() == PyUTTimerFunc 
+				&& PyCallable_Check( (PyObject*)($self->GetCallbackArg()) ) ){
+				Py_XDECREF((PyObject*)($self->GetCallbackArg()));
+			}
 			$self->SetCallback(PyUTTimerFunc, $var1);
 		}
-		ret_tmp = Py_None;
 	}
 }	
 //---

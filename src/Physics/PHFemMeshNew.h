@@ -10,8 +10,8 @@
 #define PH_FEMMESH_NEW_H
 
 #include <Physics/SprPHFemMeshNew.h>
-#include <Foundation/Object.h>
-#include <Physics/PHScene.h>
+#include "../Foundation/Object.h"
+#include "PHScene.h"
 
 namespace Spr{;
 using namespace PTM;

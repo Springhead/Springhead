@@ -9,8 +9,8 @@
 #define PHFEMMESH_H
 
 #include <Physics/SprPHFemMesh.h>
-#include <Foundation/Object.h>
-#include <Physics/PHScene.h>
+#include "../Foundation/Object.h"
+#include "../Physics/PHScene.h"
 
 namespace Spr{;
 

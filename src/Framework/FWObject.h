@@ -9,7 +9,7 @@
 #define FWOBJECT_H
 
 #include <Framework/SprFWObject.h>
-#include <Foundation/Object.h>
+#include "../Foundation/Object.h"
 
 namespace Spr{;
 

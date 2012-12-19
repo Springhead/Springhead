@@ -8,10 +8,10 @@
 #ifndef CDDETECTORIMP_H
 #define CDDETECTORIMP_H
 
-#include <Collision/CDQuickHull3DImp.h>
-#include <Collision/CDConvex.h>
+#include "CDQuickHull3DImp.h"
+#include "CDConvex.h"
 
-#include <Physics/PHSpatial.h>	//	PHSpacial.hをBaseかFoundationに移動することを希望
+#include "../Physics/PHSpatial.h"	//	PHSpacial.hをBaseかFoundationに移動することを希望
 
 namespace Spr {;
 

@@ -56,6 +56,10 @@ struct UTTimerIf : ObjectIf{
 	
 	/// コールバック関数の設定
 	bool SetCallback(TimerFunc f, void* arg=NULL);
+	///	
+	UTTimerIf::TimerFunc GetCallback();
+	///
+	void* GetCallbackArg();
 	/// タイマーの動作モードの取得
 	Mode GetMode();
 	/// タイマーの動作モードの設定

@@ -8,7 +8,7 @@
 #ifndef CDQUICKHULL3DIMP_H
 #define CDQUICKHULL3DIMP_H
 
-#include <Collision/CDQuickHull3D.h>
+#include "CDQuickHull3D.h"
 #include <Base/Affine.h>
 #include <Base/BaseDebug.h>
 #include <vector>

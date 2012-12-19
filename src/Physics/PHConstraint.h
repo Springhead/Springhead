@@ -8,9 +8,9 @@
 #ifndef PHCONSTRAINT_H
 #define PHCONSTRAINT_H
 
-#include <Physics/PHContactDetector.h>
-#include <Physics/PHSpatial.h>
-#include <Physics/PHAxisIndex.h>
+#include "PHContactDetector.h"
+#include "PHSpatial.h"
+#include "PHAxisIndex.h"
 
 #include <vector>
 

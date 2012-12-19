@@ -8,8 +8,8 @@
 #ifndef PHFEMMESHTHERMO_H
 #define PHFEMMESHTHERMO_H
 
-#include <Physics/PHFemMesh.h>
-#include <Physics/PhysicsDecl.hpp>
+#include "PHFemMesh.h"
+#include "PhysicsDecl.hpp"
 
 namespace Spr{;
 

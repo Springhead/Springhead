@@ -8,8 +8,8 @@
 #ifndef CDCONVEXMESH_H
 #define CDCONVEXMESH_H
 
-#include <Foundation/Object.h>
-#include <Collision/CDConvex.h>
+#include "../Foundation/Object.h"
+#include "CDConvex.h"
 #include <vector>
 
 namespace Spr{;

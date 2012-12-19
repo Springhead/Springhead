@@ -8,7 +8,7 @@
 #ifndef CDCUTRING_H
 #define CDCUTRING_H
 
-#include <Collision/CDQuickHull2DImp.h>
+#include "CDQuickHull2DImp.h"
 
 namespace Spr{;
 

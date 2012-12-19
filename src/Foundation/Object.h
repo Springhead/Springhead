@@ -9,7 +9,7 @@
 #define FOUNDATION_OBJECT_H
 
 #include <Foundation/SprObject.h>
-#include <Base/Base.h>
+#include "../Base/Base.h"
 #include <iostream>
 #include <fstream>
 /*	hase memo
