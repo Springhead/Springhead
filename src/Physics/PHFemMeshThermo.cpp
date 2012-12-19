@@ -1915,12 +1915,14 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 //	deformed = true;
 }
 
+#define FEMLOG(x)
+//#define FEMLOG(x) x
 void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double eps){
 	//dt = 0.0000000000001 * dt;		//デバッグ用に、dtをものすごく小さくしても、節点0がマイナスになるのか、調べた
 	double _eps = 1-eps;			// 1-epsの計算に利用
 	//dtはPHFemEngine.cppで取得する動力学シミュレーションのステップ時間
 	bool DoCalc =true;											//初回だけ定数ベクトルbの計算を行うbool		//NofCycが0の時にすればいいのかも
-	std::ofstream ofs("log.txt");
+	FEMLOG( std::ofstream ofs("log.txt") ) ;
 	for(unsigned i=0; i < NofCyc; i++){							//ガウスザイデルの計算ループ
 		if(DoCalc){												
 			if(deformed || alphaUpdated ){												//D_iiの作成　形状が更新された際に1度だけ行えばよい
@@ -1981,19 +1983,17 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,do
 				}
 				//ⅱ)対角成分について
 				bVecAll[j][0] += (-_eps * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] ) * TVecAll[j];
-				ofs << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;			// DSTR
-				ofs << "dMatKAll[0][" << j <<"] : " << dMatKAll[0][j] << std::endl;			// DSTR
-				ofs << "dMatCAll[0][" << j <<"] : " << dMatCAll[0][j] << std::endl;			// DSTR
+				FEMLOG(ofs << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;)			// DSTR
+				FEMLOG(ofs << "dMatKAll[0][" << j <<"] : " << dMatKAll[0][j] << std::endl;)			// DSTR
+				FEMLOG(ofs << "dMatCAll[0][" << j <<"] : " << dMatCAll[0][j] << std::endl;)			// DSTR
 				//{F}を加算
 				bVecAll[j][0] += vecFAllSum[j];		//Fを加算
 				//DSTR << " vecFAllSum[" << j << "] : "  << vecFAllSum[j] << std::endl;
 				//DSTR << std::endl;
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
 				bVecAll[j][0] = bVecAll[j][0] * _dMatAll[0][j];
-				ofs << "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl;
-				//	DSTR <<  "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl;
-				ofs << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl;
-				//	DSTR << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl;
+				FEMLOG(ofs << "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl);
+				FEMLOG(ofs << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl);
 			}
 			DoCalc = false;			//初回のループだけで利用
 			//値が入っているか、正常そうかをチェック
@@ -2057,12 +2057,12 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,do
 			//}
 			//DSTR << i << "回目の計算、" << j <<"行目のtempkj: " << tempkj << std::endl;
 			//tempkj =0.0;
-			ofs << j << std::endl;
-			ofs << "tempkj: "<< tempkj << std::endl;
-			ofs << "DMatAll[0][j] * ( -1.0 * tempkj) :" <<_dMatAll[0][j] * ( -1.0 * tempkj) << std::endl;
-			ofs << "bVecAll[j][0] :  " <<  bVecAll[j][0] << std::endl;
-			ofs << "  TVecAll[j] : " << TVecAll[j] << std::endl;
-			ofs << std::endl;
+			FEMLOG(ofs << j << std::endl);
+			FEMLOG(ofs << "tempkj: "<< tempkj << std::endl);
+			FEMLOG(ofs << "DMatAll[0][j] * ( -1.0 * tempkj) :" <<_dMatAll[0][j] * ( -1.0 * tempkj) << std::endl;)
+			FEMLOG(ofs << "bVecAll[j][0] :  " <<  bVecAll[j][0] << std::endl;)
+			FEMLOG(ofs << "  TVecAll[j] : " << TVecAll[j] << std::endl;)
+			FEMLOG(ofs << std::endl;)
 		}
 		////	for Debug
 		//for(unsigned j=0;j < vertices.size();j++){
@@ -2083,21 +2083,21 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,do
 		//DSTR << i <<  "th Cyc" << std::endl; 
 		//DSTR << i << "回目の計算、TVecAll : " <<std::endl;
 		//DSTR << TVecAll << std::endl;
-		ofs << i <<  "th Cyc" << std::endl;
-		ofs << i << "回目の計算、TVecAll : " <<std::endl;
-		ofs << TVecAll << std::endl;
-		ofs << "bVecAll: " <<std::endl;
-		ofs << bVecAll << std::endl;
-		ofs << "_dMatAll: " <<std::endl; 
-		ofs << _dMatAll <<std::endl;
+		FEMLOG(ofs << i <<  "th Cyc" << std::endl;)
+		FEMLOG(ofs << i << "回目の計算、TVecAll : " <<std::endl;)
+		FEMLOG(ofs << TVecAll << std::endl;)
+		FEMLOG(ofs << "bVecAll: " <<std::endl;)
+		FEMLOG(ofs << bVecAll << std::endl;)
+		FEMLOG(ofs << "_dMatAll: " <<std::endl;) 
+		FEMLOG(ofs << _dMatAll <<std::endl;)
 		int piyopiyoyo =0;
 		double tempTemp=0.0;
 		for(unsigned j=0;j <vertices.size() ; j++){
 			tempTemp += TVecAll[j];
 		}
 		//	DSTR
-		ofs << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;
-		ofs << std::endl;
+		FEMLOG(ofs << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;)
+		FEMLOG(ofs << std::endl;)
 	}
 //	deformed = true;
 }
