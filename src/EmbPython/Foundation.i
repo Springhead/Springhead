@@ -1,4 +1,3 @@
-#	Do not edit. RunSwig.bat will update this file.
 #pragma SWIG nowarn=-401-325
 %module Foundation
 //-- 
