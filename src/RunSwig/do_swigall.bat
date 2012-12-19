@@ -7,9 +7,9 @@
 ::	swig の実行が必要かどうかを判定/実行させるための Makefile を作成するための
 ::	スクリプト. 
 ::	関連するファイル：
-::	  input:  swigprojs.list(=%LISTFILE%)
+::	  input:  do_swigall.projs(=%LISTFILE%)
 ::			swig 実行の対象とするプロジェクトを記述したファイル.
-::			.../Springhead2/test/bat(=%ETCDIR%) に置かれているものとする.
+::			.../Springhead2/src/RunSwig(=%ETCDIR%) に置かれているものとする.
 ::	  output: Makefile.swig(=%MAKEFILENAME%)
 ::			swig を実行させるための makefile.
 ::			各プロジェクトのビルドディレクトリに出力される
@@ -18,6 +18,9 @@
 ::  Version:
 ::	Ver 1.0	  2012/10/25	F.Kanehori
 ::	Ver 1.0a  2012/11/14	F.Kanehori	PATHの設定の変更 (x64版にも対応)
+::	Ver 1.0b  2012/12/19	F.Kanehori	PATHの設定の変更 (do_swig.batを移動)
+::						ファイル名の変更
+::						(swigprojes.list -> do_swigall.projs)
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set CWD=%cd%
@@ -30,7 +33,7 @@ set CWD=%cd%
 :: (make を実行するディレクトリからみた相対パス)
 set INCDIR=../../include
 set SRCDIR=../../src
-set ETCDIR=../../src/swig/etc
+set ETCDIR=../../src/RunSwig
 ::
 :: (build を実行するディレクトリからみた相対パス)
 set ACTINCDIR=../../include
@@ -38,7 +41,7 @@ set ACTSRCDIR=.
 
 :: 使用するファイル名
 ::
-set LISTFILE=swigprojs.list
+set LISTFILE=do_swigall.projs
 set MAKEFILENAME=Makefile.swig
 set STUBFILE=Stub.cpp
 set TMPFILE=swigprojs.tmp
