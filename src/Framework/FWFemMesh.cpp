@@ -31,6 +31,9 @@ namespace Spr{;
 FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
+	saishodakenegi =true;
+	saishodakeniku = true;
+	saishodakepan = true;
 }
 
 void FWFemMesh::DrawIHBorder(double xs, double xe){
@@ -181,6 +184,8 @@ void FWFemMesh::Sync(){
 	double wastart = texstart + kogetex * dtex ;				//	水分量表示テクスチャのスタート座標
 	double thstart = texstart + kogetex * dtex + 1.0 * dtex ;	//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
 	
+	
+
 
 	//	50度刻み:テクスチャの深さ計算(0~50)	( vertices.temp - 50.0 ) * dtex / 50.0
 	//	50度刻み:テクスチャの深さ計算(50~100)	( vertices.temp - 100.0 ) * dtex / 50.0
@@ -224,6 +229,29 @@ void FWFemMesh::Sync(){
 					//		tvtxs[j].tex1memo = tratio * dl + texz;	//tex1memoを更新する
 					//	}
 					//}
+
+					// 物性値を設定する：ディスクリプタで読み込んで対処すべき  // 事実上リセット関数。テクスチャ座標もリセット必要か？
+					if( saishodakenegi && fwfood == "fwNegi"){
+						//negiの物性値を設定し、行列を作り直す
+						PHFemMeshThermoIf* pfem;
+						pfem = DCAST(PHFemMeshThermoIf,this->phMesh);//で合っているかな？ダウンキャスト？だけど
+						pfem->SetParamAndReCreateMatrix(0.574,970.0,1960.0 * 0.0001);		//具体的な値を入れる//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960
+						saishodakenegi = false;		// 比熱の値は、大きくて、加熱が遅いので、小さくしている,以前の値：(0.574,970,0.1960
+					}
+					else if( saishodakeniku && fwfood == "fwNsteak"){
+						//Nsteakの物性値を設定し、行列を作り直す
+						PHFemMeshThermoIf* pfem;
+						pfem = DCAST(PHFemMeshThermoIf,this->phMesh);//で合っているかな？ダウンキャスト？だけど
+						pfem->SetParamAndReCreateMatrix(0.479,928.0,1540.0 * 0.0001);		//具体的な値を入れる　
+						saishodakeniku = false;
+					}
+					else if(saishodakepan && fwfood == "fwPan"){
+						//Panの物性値を設定し、行列を作り直す
+						PHFemMeshThermoIf* pfem;
+						pfem = DCAST(PHFemMeshThermoIf,this->phMesh);//で合っているかな？ダウンキャスト？だけど
+						pfem->SetParamAndReCreateMatrix(83.5,7870,461 * 0.0001);		//具体的な値を入れる　83.5
+						saishodakepan = false;
+					}
 
 					//if(texturemode == BROWNED){
 					if(texture_mode == 1){
@@ -340,6 +368,9 @@ void FWFemMesh::Sync(){
 							else{
 								DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
 							}
+						}
+						else if(fwfood == "tPan"){
+							DSTR << "tPan are there" << std::endl;
 						}
 
 						int phmeshdebug =0;
