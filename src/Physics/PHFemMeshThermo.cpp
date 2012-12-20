@@ -2717,6 +2717,8 @@ void PHFemMeshThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,do
 	//水分蒸発周りの初期化
 	InitMoist();
 
+	SetVerticesTempAll(0.0);
+
 }
 
 void PHFemMeshThermo::AfterSetDesc() {	
@@ -4349,7 +4351,7 @@ void PHFemMeshThermo::SetVertexTemp(unsigned i,double temp){
 void PHFemMeshThermo::SetVerticesTempAll(double temp){
 	for(std::vector<unsigned int>::size_type i=0; i < vertices.size() ; i++){
 		vertices[i].temp = temp;
-		SetTempToTVecAll(i);
+		SetTempToTVecAll(i);	// 要検討：Aftersetdeskの中で呼ばれる時、TVecAllの要素の数が固まっておらず、アクセス違反の可能性がある
 	}
 }
 
