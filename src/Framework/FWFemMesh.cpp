@@ -172,6 +172,9 @@ void FWFemMesh::Sync(){
 	else if(fwfood == "fwNsteak"){
 		kogetex	= 7;		//7にする
 	}
+	else if(fwfood == "fwPan"){
+		kogetex = 5;
+	}
 
 	double dtex =(double) 1.0 / ( kogetex + thtex + watex);		//	テクスチャ奥行座標の層間隔
 	double texstart = dtex /2.0;								//	テクスチャ座標の初期値 = 焦げテクスチャのスタート座標
@@ -226,7 +229,7 @@ void FWFemMesh::Sync(){
 					if(texture_mode == 1){
 						//	焦げテクスチャ切り替え
 						//	焼け具合に沿った変化
-						gvtx[stride*gv + tex + 2] = texstart;		// 焦げテクスチャの初期座標
+					//gvtx[stride*gv + tex + 2] = texstart;		// 焦げテクスチャの初期座標
 #if 0
 						//メッシュの判別
 						//DSTR << "this->GetName(): " << this->GetName() << std::endl; ;	//phMesh->GetName():fem4
@@ -251,8 +254,12 @@ void FWFemMesh::Sync(){
 							DSTR << "NIKUNIKU GET" << std::endl;
 						}  
 						
-#endif
-						if(fwfood == "fwNegi"){
+#endif	
+
+						if(fwfood == "fwPan"){
+							gvtx[stride * gv + tex + 2] = texstart;// + dtex;		// ねずみ色の底面
+						}
+						else if(fwfood == "fwNegi"){
 							// 温度変化と同じで　
 							double temp = phMesh->vertices[pv].temp;
 							// -50.0~0.0:aqua to blue
