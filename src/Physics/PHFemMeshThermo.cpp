@@ -2437,7 +2437,7 @@ void PHFemMeshThermo::InitVecFAlls(){
 	}
 }
 
-void PHFemMeshThermo::UpdateVecF_frypan(unsigned mode){
+void PHFemMeshThermo::UpdateVecF_frypan(){
 	// modeは必要か？
 	
 	//	Initialize
@@ -2627,7 +2627,7 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 	//3.各面での熱流束量から全体剛性ベクトルを作る。{F}に代入
 
 #if 1			// switch1
-	UpdateVecF_frypan(heatingMODE);
+	UpdateVecF_frypan();
 #endif
 	//%%	IH加熱のモード切替
 	//	ライン状に加熱

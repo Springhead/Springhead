@@ -122,6 +122,7 @@ protected:
 	// 表示用	//デバッグ
 	Vec2d IHLineVtxX;		//	IH加熱の境界線を引く	x軸の最小地、最大値が格納
 
+public:
 	//%%%		関数の宣言		%%%%%%%%//
 	//%%%%%%		熱伝導計算本体		%%%//
 	//	熱伝達境界条件の時はすべての引数を満たす必要がある。
@@ -194,7 +195,7 @@ protected:
 public:
 	//	毎Step呼び出す
 	void UpdateIHheat(unsigned heatingMODE);	// 毎Step呼ぶ：熱流束ベクトル{F}を生成・保存	//.heatingMODEは加熱強さ：4段階（0:OFF・1:弱火(WEEK)・2:中火(MIDDLE)・3:強火(HIGH)）
-	void UpdateVecF_frypan(unsigned mode);			// 方程式を解く前に、熱流束ベクトルをロードして、結合するなどベクトルを作る。modeには加熱モードを入れる
+	void UpdateVecF_frypan();			// 方程式を解く前に、熱流束ベクトルをロードして、結合するなどベクトルを作る。modeには加熱モードを入れる
 	void UpdateVecF();		// 食材用
 
 protected:

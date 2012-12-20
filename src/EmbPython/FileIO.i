@@ -15,12 +15,7 @@
 //---
 %begin%{
 #include "../../include/Springhead.h"
-#include "SprDefs.h" 
-#if EMB_PYTHON_VER==33 
-#include "../../include/Python33/Python.h" 
-#else 
-#include "../../include/Python32/Python.h" 
-#endif 
+#include "../../include/Python/Python.h"
 #include "../../include/EmbPython/SprEPUtility.h"
 #include "../../include/EmbPython/SprEPBase.h"
 #include "../../include/EmbPython/SprEPFoundation.h"
