@@ -415,6 +415,7 @@ public:
 	void InitMoist();
 	void InitAllVertexTemp();
 
+	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);//熱伝達率以外（熱伝達率は現行main.cppで行っているため
 
 };
 

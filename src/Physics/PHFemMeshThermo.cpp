@@ -2650,6 +2650,75 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 #endif
 }
 
+void PHFemMeshThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0){
+	for(unsigned i =0; i < edges.size();i++){
+		edges[i].c = 0.0;
+		edges[i].k = 0.0;
+	}
+
+	///	faces
+	for(unsigned i=0;i<faces.size();i++){
+		faces[i].alphaUpdated = true;
+		faces[i].area = 0.0;
+		faces[i].heatTransRatio = 0.0;
+		faces[i].deformed = true;				//初期状態は、変形後とする
+		faces[i].fluxarea =0.0;
+		for(unsigned j =0; j < HIGH +1 ; j++){			// 加熱モードの数だけ、ベクトルを生成
+			faces[i].heatflux[j] = 0.0;
+		}
+	}
+
+	//行列の成分数などを初期化
+	bVecAll.resize(vertices.size(),1);
+
+	//節点温度の初期設定(行列を作る前に行う)
+	SetVerticesTempAll(0.0);			///	初期温度の設定
+
+	//周囲流体温度の初期化(temp度にする)
+	InitTcAll(0.0);
+
+	//dmnN 次元の温度の縦（列）ベクトル
+	CreateTempMatrix();
+
+	//熱伝導率、密度、比熱、熱伝達率　のパラメーターを設定・代入
+		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
+		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
+	//. 熱伝達する SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
+	//. 熱伝達しない
+	SetInitThermoConductionParam(thConduct0,roh0,specificHeat0,0);		// 熱伝達率=0;にしているw
+	
+	//> 熱流束の初期化
+	SetVtxHeatFluxAll(0.0);
+
+	//>	熱放射率の設定
+	SetThermalEmissivityToVerticesAll(0.0);				///	暫定値0.0で初期化	：熱放射はしないｗ
+
+	//> IH加熱するfaceをある程度(表面face && 下底面)絞る、関係しそうなface節点の原点からの距離を計算し、face[].mayIHheatedを判定
+	CalcVtxDisFromOrigin();
+	//>	IHからの単位時間当たりの加熱熱量	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
+	
+	//	この後で、熱流束ベクトルを計算する関数を呼び出す
+	InitCreateMatC();					///	CreateMatCの初期化
+	InitVecFAlls();					///	VecFAll類の初期化
+	InitCreateMatk();					///	CreateMatKの初期化
+
+	///	熱伝達率を各節点に格納
+	SetHeatTransRatioToAllVertex();
+	for(unsigned i=0; i < this->tets.size(); i++){
+		//各行列を作って、ガウスザイデルで計算するための係数の基本を作る。Timestepの入っている項は、このソース(SetDesc())では、実現できないことが分かった(NULLが返ってくる)
+		CreateMatkLocal(i);				///	Matk1 Matk2(更新が必要な場合がある)を作る	//ifdefスイッチで全体剛性行列も(表示用だが)生成可能
+		CreatedMatCAll(i);
+		CreateVecFAll(i);
+	}
+	
+	// カウントの初期化
+	//Ndt =0;
+
+	//水分蒸発周りの初期化
+	InitMoist();
+
+}
+
 void PHFemMeshThermo::AfterSetDesc() {	
 
 	//%%%	初期化類		%%%//
@@ -2657,7 +2726,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//各種メンバ変数の初期化⇒コンストラクタでできたほうがいいかもしれない。
 	///	Edges
 	for(unsigned i =0; i < edges.size();i++){
-		edges[i].c = 0.0;
+		edges[i].c = 0.0;	
 		edges[i].k = 0.0;
 	}
 
@@ -2706,6 +2775,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//. 熱伝達する SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
 	//. 熱伝達しない
 	SetInitThermoConductionParam(0.574,970,0.1960,0 );		// 熱伝達率=0;にしているw
+	
 
 
 	//断熱過程

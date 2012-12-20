@@ -86,6 +86,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 		double specificHeat,	// specificHeat:比熱 J/ (K・kg):1960
 		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
 		);
+	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);
 };
 
 //@}

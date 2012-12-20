@@ -72,6 +72,10 @@ public:
 	//void SetTexmode(TEXTURE_MODE){TEXTURE_MODE =  };
 	unsigned texture_mode;
 	void SetTexmode(unsigned mode){texture_mode = mode;};
+	bool saishodakenegi;
+	bool saishodakeniku;
+	bool saishodakepan;
+
 };
 }
 
