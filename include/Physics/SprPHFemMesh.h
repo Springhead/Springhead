@@ -79,6 +79,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void UpdateVecF();						//	被加熱物体の熱流束リセット
 	void DecrMoist();						//	
 	void InitAllVertexTemp();
+
 };
 
 //@}
