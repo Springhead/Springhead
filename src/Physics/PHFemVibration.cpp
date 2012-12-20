@@ -9,8 +9,11 @@
 
 namespace Spr{;
 
+//* 初期化と行列の作成
+/////////////////////////////////////////////////////////////////////////////////////////
 PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	SetDesc(&desc);
+	integration_mode = PHFemVibrationDesc::MODE_NEWMARK_BETA;
 } 
 
 void PHFemVibration::Init(){
@@ -127,15 +130,16 @@ void PHFemVibration::Init(){
 		/// 全体行列の計算
 		/// 頂点番号順
 		/// u = (u0, ..., un-1, v0, ..., vn-1, w0, ..., wn-1)として計算 
+		// j:頂点数, k:頂点数
 		for(int j = 0; j < 4; j++){
 			for(int k = 0; k < 4; k++){
 				int id = mesh->tets[i].vertexIDs[j];
 				int id2 = mesh->tets[i].vertexIDs[k];
 				//DSTR << "ID1:ID2 " << id << " : " << id2 << std::endl;
 				// 全体剛性行列
-				matK[id][id2] += matKe[j][k];
-				matK[NVer + id][NVer + id2] += matKe[j+4][k+4];
-				matK[NVer * 2 + id][NVer * 2 + id2] += matKe[j+8][k+8];
+				matK[id][id2] += matKe[j][k];	// uの位置
+				matK[NVer + id][NVer + id2] += matKe[j+4][k+4];			// vの位置
+				matK[NVer * 2 + id][NVer * 2 + id2] += matKe[j+8][k+8];	// wの位置
 
 				// 全体質量行列
 				matM[id][id2] += matMe[j][k];
@@ -153,11 +157,12 @@ void PHFemVibration::Init(){
 
 		//DSTR << "matCk1" << std::endl;	DSTR << matCk1 << std::endl;
 		//DSTR << "matCk1Inv" << std::endl;	DSTR << matCk1Inv << std::endl;
-		//DSTR << "matCInv" << std::endl;	DSTR << matCkInv << std::endl;
+		//DSTR << "matCkInv" << std::endl;	DSTR << matCkInv << std::endl;
 		//DSTR << "matB" << std::endl;		DSTR << matB << std::endl;
 		//DSTR << "matD" << std::endl;		DSTR << matD << std::endl;
 		//DSTR << "matBtDB" << std::endl;	DSTR << matBtDB << std::endl;
 		//DSTR << "matKe" << std::endl;		DSTR << matKe << std::endl;
+		//DSTR << "det matKe" << std::endl;		DSTR << matKe.det() << std::endl;
 		//DSTR << "matMe" << std::endl;		DSTR << matMe << std::endl;
 	}
 	//DSTR << "matK" << std::endl;		DSTR << matK << std::endl;
@@ -165,7 +170,7 @@ void PHFemVibration::Init(){
 	//DSTR << "matM" << std::endl;		DSTR << matM << std::endl;
 	//DSTR << "matC" << std::endl;		DSTR << matC << std::endl;
 
-	// 各種変数の初期化
+	/// 各種変数の初期化
 	xlocalInit.resize(NDof);
 	xlocalInit.clear(0.0);
 	xlocal.resize(NDof);
@@ -187,14 +192,16 @@ void PHFemVibration::Init(){
 
 	// テストコード
 	vdt = 0.001;
+	matC.clear(0.0);
 	AddBoundaryCondition(0, Vec3d(1, 1, 1));
 	AddBoundaryCondition(5, Vec3d(1, 1, 1));
-	//AddVertexForce(1, Vec3d(100000.0, 0.0, 0.0));
+	//AddVertexForce(1, Vec3d(1000.0, 0.0, 0.0));
 	//mesh->AddLocalDisplacement(1, Vec3d(0.1, 0.0, 0.0));
 	DSTR << "flocal" << std::endl;	DSTR << flocal << std::endl;
+	DSTR << matK.det() << std::endl;
 } 
 
-#define DEBUG
+//#define DEBUG
 void PHFemVibration::Step(){
 	//DSTR << "Step" << std::endl;
 #ifdef DEBUG
@@ -215,10 +222,19 @@ void PHFemVibration::Step(){
 #endif
 
 	///積分
-	//ExplicitEuler();
-	//ImplicitEuler();
-	NewmarkBeta();
-	
+	switch(integration_mode){
+		case PHFemVibrationDesc::MODE_EXPLICIT_EULER:
+			ExplicitEuler();
+			break;
+		case PHFemVibrationDesc::MODE_IMPLICIT_EULER:
+			ImplicitEuler();
+			break;
+		case PHFemVibrationDesc::MODE_NEWMARK_BETA:
+			NewmarkBeta();
+			break;
+		default:
+			break;
+	}
 	flocal.clear(0.0);
 
 	/// 計算結果をFemVertexに戻す
@@ -234,6 +250,8 @@ void PHFemVibration::Step(){
 #endif
 }
 
+//* 積分関数
+/////////////////////////////////////////////////////////////////////////////////////////
 void PHFemVibration::ExplicitEuler(){
 	int NDof = NVertices() * 3;
 	VVector< double > xlocalDisp;
@@ -250,7 +268,6 @@ void PHFemVibration::ExplicitEuler(){
 
 void PHFemVibration::ImplicitEuler(){
 	// 外力をまだ組み込んでない
-	// うまく動いていない
 	int NDof = GetPHFemMesh()->vertices.size() * 3;
 	VMatrixRow< double > E;	// 単位行列
 	E.resize(NDof, NDof);
@@ -264,23 +281,23 @@ void PHFemVibration::ImplicitEuler(){
 	VMatrixRow< double > _CInv;
 	_CInv.resize(NDof, NDof);
 	_CInv.clear(0.0);
-	VMatrixRow< double > D;
-	D.resize(NDof, NDof);
-	D.clear(0.0);
+	VMatrixRow< double > _DInv;
+	_DInv.resize(NDof, NDof);
+	_DInv.clear(0.0);
 
 	_K = matMInv * matK * vdt;
 	_CInv = (E + matMInv * matC * vdt).inv();
-	D = E + _CInv * _K * vdt;
+	_DInv = (E + _CInv * _K * vdt).inv();
 
-	xlocal += D.inv() * vlocal * vdt;
-	vlocal += -1 * _CInv * _K * (xlocal - xlocalInit);
+	xlocal = _DInv * (xlocal + _CInv * (vlocal + _K * xlocalInit) * vdt);
+	vlocal = _CInv * (vlocal - _K * (xlocal - xlocalInit));
 	//DSTR << "Integrate" << std::endl;
 	//DSTR << "_K" << std::endl;
 	//DSTR << _K << std::endl;
 	//DSTR << "_CInv" << std::endl;
 	//DSTR << _CInv << std::endl;
-	//DSTR << "D.inv()" << std::endl;
-	//DSTR << D.inv() << std::endl;
+	//DSTR << "_DInv" << std::endl;
+	//DSTR << _DInv << std::endl;
 }
 
 void PHFemVibration::NewmarkBeta(const double b){
@@ -311,10 +328,10 @@ void PHFemVibration::NewmarkBeta(const double b){
 	xlocalDisp.clear(0.0);
 	xlocalDisp = xlocal - xlocalInit;
 
-	static bool bflag = true;
-	if(bflag){
+	static bool bFirst = true;
+	if(bFirst){
 		alocal = _MInv * (- 1 * matC * vlocal -1 * matK * xlocalDisp + flocal);
-		bflag = false;
+		bFirst = false;
 	}
 
 	Ct = matC * (vlocal + 0.5 * alocal * vdt);
@@ -327,6 +344,13 @@ void PHFemVibration::NewmarkBeta(const double b){
 	//DSTR << "Kt" << std::endl;		DSTR << Kt << std::endl;
 	//DSTR << "alocal" << std::endl;	DSTR << alocal << std::endl;
 	//DSTR << "_MInv" << std::endl;	DSTR << _MInv << std::endl;
+}
+
+
+//* 各種設定関数
+/////////////////////////////////////////////////////////////////////////////////////////
+void PHFemVibration::SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode){
+	integration_mode = mode;
 }
 
 bool PHFemVibration::AddBoundaryCondition(int vtxId, Vec3i dof){
@@ -370,12 +394,12 @@ bool PHFemVibration::AddBoundaryCondition(int vtxId, Vec3i dof){
 			matMInv.row(zId).clear(0.0);
 			matMInv[zId][zId] = 1.0;		
 		}
-		DSTR << "matK with boundary condition" << std::endl;
-		DSTR << matK << std::endl;
-		DSTR << "matC with boundary condition" << std::endl;
-		DSTR << matC << std::endl;
-		DSTR << "matMInv with boundary condition" << std::endl;
-		DSTR << matMInv << std::endl;
+		//DSTR << "matK with boundary condition" << std::endl;
+		//DSTR << matK << std::endl;
+		//DSTR << "matC with boundary condition" << std::endl;
+		//DSTR << matC << std::endl;
+		//DSTR << "matMInv with boundary condition" << std::endl;
+		//DSTR << matMInv << std::endl;
 		return true;
 	}
 	return false;

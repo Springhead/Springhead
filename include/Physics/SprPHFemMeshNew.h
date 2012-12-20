@@ -19,11 +19,22 @@
 namespace Spr{;
 
 struct PHSolidIf;
+struct PHFemVibrationIf;
+
+///	FemMeshのステート
+struct PHFemMeshNewState{};
+///	FemMeshのディスクリプタ
+struct PHFemMeshNewDesc: public PHFemMeshNewState{
+	std::vector<Vec3d> vertices;
+	std::vector<int> tets;
+	std::vector<int> faces;
+};
 /// PHFemMeshNewへのインタフェース
 struct PHFemMeshNewIf : public SceneObjectIf{
 	SPR_IFDEF(PHFemMeshNew);
 	void SetPHSolid(PHSolidIf* s);
 	PHSolidIf* GetPHSolid();
+	PHFemVibrationIf* GetPHFemVibration();
 	int NVertices();
 	int NFaces();
 	double GetTetrahedronVolume(int tetID);
@@ -33,54 +44,20 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 	bool SetLocalVertexPosition(int vtxId, Vec3d posL);
 };
 
-///	FemMeshのステート
-struct PHFemMeshNewState{};
-
-///	FemMeshのディスクリプタ
-struct PHFemMeshNewDesc: public PHFemMeshNewState{
-	SPR_DESCDEF(PHFemMeshNew);
-	std::vector<Vec3d> vertices;
-	std::vector<int> tets;
-	std::vector<int> faces;
-};
-
+/// Femのデスクリプタ
+struct PHFemDesc{};
 /// Femの共通計算部分
 struct PHFemIf : public SceneObjectIf{
 	SPR_IFDEF(PHFem);
 };
 
-/// Femのデスクリプタ
-struct PHFemDesc{
-};
-
-/// 振動計算
-struct PHFemVibrationIf : public PHFemIf{
-	SPR_IFDEF(PHFemVibration);
-	void SetTimeStep(double dt);
-	double GetTimeStep();
-	void SetYoungModulus(double value);
-	double GetYoungModulus();
-	void SetPoissonsRatio(double value);
-	double GetPoissonsRatio();
-	void SetDensity(double value);
-	double GetDensity();
-	void SetAlpha(double value);
-	double GetAlpha();
-	void SetBeta(double value);
-	double GetBeta();
-	// 境界条件を加える
-	bool AddBoundaryCondition(int vtxId, Vec3i dof);
-	// 境界条件を加える(頂点順）
-	bool AddBoundaryCondition(PTM::VVector< Vec3i > bcs); 
-	// 頂点に力を加える（ワールド座標系）
-	bool AddVertexForce(int vtxId, Vec3d fW);
-	// 頂点群に力を加える（ワールド座標系）
-	bool AddVertexForce(PTM::VVector< Vec3d > fWs);
-};
-
 /// 振動計算のデスクリプタ
 struct PHFemVibrationDesc : public PHFemDesc{
-	SPR_DESCDEF(PHFemVibration);
+	enum INTEGRATION_MODE{
+		MODE_EXPLICIT_EULER,
+		MODE_IMPLICIT_EULER,
+		MODE_NEWMARK_BETA
+	};
 	double young;		///< ヤング率(Pa, N/m2)
 	double poisson;		///< ポアソン比(*一様な立方体の場合、-1 <= v <= 0.5)
 	double density;		///< 密度(kg/m3)
@@ -98,6 +75,31 @@ struct PHFemVibrationDesc : public PHFemDesc{
 	}
 };
 
+/// 振動計算
+struct PHFemVibrationIf : public PHFemIf{
+	SPR_IFDEF(PHFemVibration);
+	void SetTimeStep(double dt);
+	double GetTimeStep();
+	void SetYoungModulus(double value);
+	double GetYoungModulus();
+	void SetPoissonsRatio(double value);
+	double GetPoissonsRatio();
+	void SetDensity(double value);
+	double GetDensity();
+	void SetAlpha(double value);
+	double GetAlpha();
+	void SetBeta(double value);
+	double GetBeta();
+	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
+	// 境界条件を加える
+	bool AddBoundaryCondition(int vtxId, Vec3i dof);
+	// 境界条件を加える(頂点順）
+	bool AddBoundaryCondition(PTM::VVector< Vec3i > bcs); 
+	// 頂点に力を加える（ワールド座標系）
+	bool AddVertexForce(int vtxId, Vec3d fW);
+	// 頂点群に力を加える（ワールド座標系）
+	bool AddVertexForce(PTM::VVector< Vec3d > fWs);
+};
 
 //@}
 

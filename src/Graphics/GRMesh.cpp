@@ -46,6 +46,7 @@ GRMesh::GRMesh(const GRMeshDesc& desc):GRMeshDesc(desc){
 	positionOffset	= -1;
 	texOffset		= -1;
 	tex3d			= false;
+	alwaysCreateBuffer = false;
 
 	AfterSetDesc();
 }
@@ -454,6 +455,13 @@ void GRMesh::Render(GRRenderIf* r){
 		if (r!=render) render = r;
 		if (render){
 			if (vtxs.empty()) MakeBuffer();
+			render->SetVertexFormat(vtxFormat);
+			DrawBuffer(&vtxs[0]);
+		}
+	}else if(alwaysCreateBuffer){
+		if (r!=render) render = r;
+		if (render){
+			MakeBuffer();
 			render->SetVertexFormat(vtxFormat);
 			DrawBuffer(&vtxs[0]);
 		}
