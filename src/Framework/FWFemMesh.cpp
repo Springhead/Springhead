@@ -253,43 +253,81 @@ void FWFemMesh::Sync(){
 						
 #endif
 						if(fwfood == "fwNegi"){
-
+							// 温度変化と同じで　
+							double temp = phMesh->vertices[pv].temp;
+							// -50.0~0.0:aqua to blue
+							if(temp <= -50.0){
+								gvtx[stride * gv + tex + 2] = texstart + dtex;
+							}
+							else if(-50.0 < temp && temp <= 0.0){	
+								gvtx[stride * gv + tex + 2] = texstart + dtex;//(texstart ) + ((temp + 50.0) * dtex /50.0);
+							}
+							//	0~50.0:blue to green
+							else if(0.0 < temp && temp <= 50.0 ){
+								//double green = temp * dtex / 50.0 + thstart;
+								gvtx[stride * gv + tex + 2] = (temp - 50.0)  * dtex / 50.0 + texstart + dtex; //+     dtex;
+							}
+							//	50.0~100.0:green to yellow
+							else if(50.0 < temp && temp <= 100.0){
+								gvtx[stride * gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+							}
+							//	100.0~150:yellow to orange	
+							else if(100.0 < temp && temp <= 150.0){
+								gvtx[stride * gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+							}
+							//	150~200:orange to red
+							else if(150.0 < temp && temp <= 200.0){
+								double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+								gvtx[stride * gv + tex + 2] = dtex * 4.0 + texstart;//(temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+							}
+							//	200~250:red to purple
+							else if(200.0 < temp && temp <= 250.0){
+								gvtx[stride * gv + tex + 2] = dtex * 4.0 + texstart;//(temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+							}
+							///	250~:only purple
+							else if(250.0 < temp){
+								gvtx[stride * gv + tex + 2] = dtex * 4.0 + texstart;
+								//gvtx[stride*gv + tex + 2] = wastart;			//whit
+							}
+							else{
+								DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
+							}
 						}
 						else if(fwfood == "fwNsteak"){
 							// 温度変化と同じで　
 							double temp = phMesh->vertices[pv].temp;
 							// -50.0~0.0:aqua to blue
 							if(temp <= -50.0){
-								gvtx[stride * gv + tex + 2] = texstart;
+								gvtx[stride * gv + tex + 2] = texstart + dtex;
 							}
 							else if(-50.0 < temp && temp <= 0.0){	
-								gvtx[stride*gv + tex + 2] = (texstart ) + ((temp + 50.0) * dtex /50.0);
+								gvtx[stride * gv + tex + 2] = texstart + dtex;//(texstart ) + ((temp + 50.0) * dtex /50.0);
 							}
 							//	0~50.0:blue to green
 							else if(0.0 < temp && temp <= 50.0 ){
 								//double green = temp * dtex / 50.0 + thstart;
-								gvtx[stride*gv + tex + 2] = temp * dtex / 50.0 + texstart + dtex;
+								gvtx[stride * gv + tex + 2] = (temp - 50.0)  * dtex / 50.0 + texstart + dtex; //+     dtex;
 							}
 							//	50.0~100.0:green to yellow
 							else if(50.0 < temp && temp <= 100.0){
-								gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex /	 50.0 + texstart + 2 * dtex;
+								gvtx[stride * gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
 							}
 							//	100.0~150:yellow to orange	
 							else if(100.0 < temp && temp <= 150.0){
-								gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + 2 * dtex;
+								gvtx[stride * gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
 							}
 							//	150~200:orange to red
 							else if(150.0 < temp && temp <= 200.0){
 								double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
-								gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + 2 * dtex;
+								gvtx[stride * gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
 							}
 							//	200~250:red to purple
 							else if(200.0 < temp && temp <= 250.0){
-								gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + 2 * dtex;
+								gvtx[stride * gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
 							}
 							///	250~:only purple
 							else if(250.0 < temp){
-								gvtx[stride*gv + tex + 2] = dtex * 6.0 + texstart;
+								gvtx[stride * gv + tex + 2] = dtex * 6.0 + texstart;
 								//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
 							}
 							else{
