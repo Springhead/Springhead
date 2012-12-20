@@ -927,12 +927,32 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTexImage3D(GL_TEXTURE_3D, 0, nc, tx, ty, tz, 0, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
 		GLenum err = glGetError();	
+		while (err == 0x501 && tx > 2 && ty > 2){
+			//	テクスチャのサイズを半分にしてみる
+			pictureSize /= 4;
+			tx /= 2;
+			ty /= 2;
+			char* newTexbuf = DBG_NEW char[pictureSize * tz];
+			for(int z=0; z<tz; ++z){
+				for(int y=0; y<ty; ++y){
+					for(int x=0; x<tx; ++x){
+						for(int c=0; c<nc; ++c){
+							newTexbuf[z*pictureSize + (y*tx + x)*nc+c] 
+								= texbuf[z*pictureSize*4 + (2*y*2*tx + 2*x)*nc+c];
+						}
+					}					
+				}					
+			}
+			delete texbuf;
+			texbuf = newTexbuf;
+			glTexImage3D(GL_TEXTURE_3D, 0, nc, tx, ty, tz, 0, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
+			err = glGetError();
+		}
 		if (err){
 			DSTR << "glTexImage3D glGetError:" << std::setbase(16) << err << std::endl;
 		}
 		glBindTexture(GL_TEXTURE_3D, 0);
 		if (enableDebugMessage){ std::cout << "8: glBindTexture(GL_TEXTURE_3D, " << 0 << ");" << std::endl; }
-
 		delete texbuf;
 	}else{	
 		//	2D textureの場合
@@ -963,7 +983,6 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-
 		if (loadFromFile) {
 			int rv = gluBuild2DMipmaps(GL_TEXTURE_2D, nc, tx, ty, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
 			delete texbuf;
