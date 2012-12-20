@@ -77,9 +77,15 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);
 	void UpdateIHheat(unsigned heating);	//	IH加熱状態の更新
 	void UpdateVecF();						//	被加熱物体の熱流束リセット
+	void UpdateVecF_frypan();				//	被加熱物体の熱流束リセット
 	void DecrMoist();						//	
 	void InitAllVertexTemp();
-
+	void SetInitThermoConductionParam(
+		double thConduct,		// thConduct:熱伝導率
+		double rho,				// roh:密度
+		double specificHeat,	// specificHeat:比熱 J/ (K・kg):1960
+		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
+		);
 };
 
 //@}
