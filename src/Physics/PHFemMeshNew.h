@@ -121,6 +121,8 @@ public:
 	void SetPHSolid(PHSolidIf* s);
 	/// ŠÖ˜A•t‚¯‚³‚ê‚Ä‚¢‚é„‘Ì‚ğ•Ô‚·
 	PHSolidIf* GetPHSolid();
+	/// PHFemVibrationIf‚ğ•Ô‚·
+	PHFemVibrationIf* GetPHFemVibration();
 	/// ’¸“_‚Ì‘”‚ğ•Ô‚·
 	int NVertices();
 	///	–Ê‚Ì‘”‚ğ•Ô‚·

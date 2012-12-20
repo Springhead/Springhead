@@ -48,6 +48,8 @@ public:
 
 	///	グラフィクス表示前の同期処理
 	void Sync();
+	/// PHVibrationの情報を同期
+	void SyncVibrationInfo();
 
 public:
 	enum TEXTURE_MODE{

@@ -277,6 +277,10 @@ PHSolidIf* PHFemMeshNew::GetPHSolid(){
 	return solid;
 }
 
+PHFemVibrationIf* PHFemMeshNew::GetPHFemVibration(){
+	return femVibration->Cast();
+}
+
 int PHFemMeshNew::NVertices(){
 	return (int)vertices.size();
 }

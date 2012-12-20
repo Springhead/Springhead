@@ -20,18 +20,22 @@ public:
 	ACCESS_DESC(PHFemVibration);
 
 	double vdt;
+	PHFemVibrationDesc::INTEGRATION_MODE integration_mode;
 	VMatrixRow< double > matK;		// 全体剛性行列
 	VMatrixRow< double > matM;		// 全体質量行列
 	VMatrixRow< double > matMInv;	// 全体質量行列の逆行列
 	VMatrixRow< double > matC;		// 全体減衰行列
 	VVector< double > xlocalInit;	// 初期頂点位置
 	VVector< double > xlocal;		// 計算用の頂点位置(u = (x1, ..., xn-1, y1, ..., yn-1, z1, ..., zn-1)
-	VVector< double > vlocal;		// 初期頂点速度
+	VVector< double > vlocal;		// 頂点速度
 	VVector< double > flocal;		// 計算用の外力
 
 	PHFemVibration(const PHFemVibrationDesc& desc = PHFemVibrationDesc());
 	/// 初期化
 	virtual void Init();
+	//virtual void CompStiffnessMatrix();
+	//virtual void CompMassMatrix();
+	//virtual void CompDampingMatrix();
 	/// シミュレーションステップ
 	virtual void Step();
 
@@ -53,6 +57,7 @@ public:
 	double GetAlpha(){ return alpha; }
 	void SetBeta(double value){ beta = value; }
 	double GetBeta(){ return beta; }
+	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
 	// 境界条件を加える
 	bool AddBoundaryCondition(int vtxId, Vec3i dof);
 	// 境界条件を加える(頂点順）

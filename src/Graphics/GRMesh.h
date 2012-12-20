@@ -65,7 +65,8 @@ public:
 	SPR_OBJECTDEF(GRMesh);
 	ACCESS_DESC(GRMesh);
 
-	bool tex3d;												///< 3次元テクスチャの場合 true
+	bool tex3d;		///< 3次元テクスチャの場合 true
+	bool alwaysCreateBuffer;
 
 	/// 子オブジェクト
 	std::vector< UTRef<GRMaterial> >	material;			///< マテリアル
@@ -101,6 +102,7 @@ public:
 
 	void	EnableTex3D(bool on = true){ tex3d = on; }
 	bool	IsTex3D(){ return tex3d; }						///< 3次元テクスチャなら true
+	void	EnableAlwaysCreateBuffer(bool on = true){ alwaysCreateBuffer = on; }
 
 	int		NVertex(){ return (int)vertices.size(); }
 	int		NFace(){ return (int)faces.size(); }

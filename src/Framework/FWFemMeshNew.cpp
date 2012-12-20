@@ -27,7 +27,7 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	grFemMesh = NULL;
 	// p: piecewise linear comlex, q:2.1が正四面体の歪み(1以上～？以下）、a:粗さ
 	//meshRoughness = "pq2.1a0.002";
-	//meshRoughness = "pq2.1a0.003";
+	//meshRoughness = "pq2.1a0.05";
 	meshRoughness = "pq2.1a1.0";	
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
@@ -250,6 +250,14 @@ void FWFemMeshNew::CreateGRFromPH(){
 	for(unsigned pf=0; pf<gmd.materialList.size(); ++pf){
 		gmd.materialList[pf] = grFemMesh->materialList[pFaceMap[pf].face];
 	}
+
+	//gmd.colors.resize(grFemMesh->colors.size() ? vtxMap.size() : 0);
+	//gmd.colors.resize(vtxMap.size());
+	////for(unsigned pv=0; pv<gmd.colors.size(); ++pv){
+	////	gmd.colors[pv] = grFemMesh->colors[vtxMap[pv]];
+	////	DSTR << gmd.colors[pv] << std::endl;
+	////}
+
 	//	新しく作るGRMeshの頂点からphFemMeshの頂点への対応表
 	vertexIdMap.resize(gmd.vertices.size(), -1);
 	//	対応表に応じて、頂点のテクスチャ座標を作成
@@ -367,15 +375,26 @@ void FWFemMeshNew::Sync(){
 	//	同期処理
 	FWObject::Sync();
 	if(syncSource == FWObjectDesc::PHYSICS){
+		if(GetPHFemMesh()->GetPHFemVibration()){
+			SyncVibrationInfo();
+		}
 		//if(phFemThermo){
-		//	if(grFemMesh && grFemMesh->IsTex3D()){	
 		//		SyncThermoInfo();
-		//	}else{
-		//		//DSTR << "Error: " << GetName() << ":FWFemMesh does not have 3D Mesh" << std::endl;
-		//	}
 		//}
 	}
 }
+
+void FWFemMeshNew::SyncVibrationInfo(){
+	if(!grFemMesh) return;
+	grFemMesh->EnableAlwaysCreateBuffer();
+	// 頂点位置の同期
+	Vec3f* grVertices = grFemMesh->GetVertices();
+	for(int i = 0; i < (int)vertexIdMap.size(); i++){
+		int pId = vertexIdMap[i];
+		grVertices[i] = (Vec3f)phFemMesh->vertices[pId].pos;
+	}
+}
+
 
 
 }
