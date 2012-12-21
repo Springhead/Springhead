@@ -42,7 +42,14 @@ void SPR_CDECL PyUTTimerFunc(int id, void* arg);
 //---
 %begin%{
 #include "../../include/Springhead.h"
-#include "../../include/Python/Python.h"
+
+#include "../../include/EmbPython/SprEPVersion.h"
+#if   EMB_PYTHON_VER==33
+#include "../../include/Python33/Python.h"
+#else
+#include "../../include/Python32/Python.h"
+#endif
+
 #include "../../include/EmbPython/SprEPUtility.h"
 #include "../../include/EmbPython/SprEPBase.h"
 %}

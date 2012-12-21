@@ -1,7 +1,13 @@
 ﻿#ifndef SPREPOBJECT_H
 #define SPREPOBJECT_H
 
-#include <Python/Python.h>
+#include <EmbPython/SprEPVersion.h>
+#if EMB_PYTHON_VER==33
+#include <Python33/Python.h>
+#else
+#include <Python32/Python.h>
+#endif
+
 #include <Springhead.h>
 
 using namespace Spr;

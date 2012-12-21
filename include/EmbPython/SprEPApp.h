@@ -17,7 +17,12 @@
 #include <Framework/SprFWEditor.h>
 #include <map>
 
-#include <Python/Python.h>
+#include <EmbPython/SprEPVersion.h>
+#if EMB_PYTHON_VER==33
+#include <Python33/Python.h>
+#else
+#include <Python32/Python.h>
+#endif
 
 using namespace std;
 namespace Spr{;
