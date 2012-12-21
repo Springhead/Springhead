@@ -2776,7 +2776,8 @@ void PHFemMeshThermo::AfterSetDesc() {
 		//SetInitThermoConductionParam(0.574,970,1.96,25);
 	//. ”M“`’B‚·‚é SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:”M“`“±—¦ ,roh:–§“x,	specificHeat:”ä”M J/ (KEkg):1960 ,@heatTrans:”M“`’B—¦ W/(m^2EK)
 	//. ”M“`’B‚µ‚È‚¢
-	SetInitThermoConductionParam(0.574,970,0.1960,0 );		// ”M“`’B—¦=0;‚É‚µ‚Ä‚¢‚éw
+//	SetInitThermoConductionParam(0.574,970,0.1960,0 );		// ”M“`’B—¦=0;‚É‚µ‚Ä‚¢‚éw
+	SetInitThermoConductionParam(50.574,970,0.1960,0 );		// ”M“`’B—¦=0;‚É‚µ‚Ä‚¢‚éw
 	
 
 
