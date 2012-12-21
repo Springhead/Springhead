@@ -16,6 +16,9 @@
 
 #include "windows.h"
 
+//#define THCOND 0.574
+#define THCOND 5.74
+
 using namespace PTM;
 
 namespace Spr{;
@@ -30,7 +33,7 @@ PHFemMeshThermoDesc::PHFemMeshThermoDesc(){
 	Init();
 }
 void PHFemMeshThermoDesc::Init(){
-	thConduct = 0.574;
+	thConduct = THCOND;
 	rho = 970;
 	heatTrans = 25;
 	specificHeat = 0.196;		//1960
@@ -2777,7 +2780,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//. ”M“`’B‚·‚é SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:”M“`“±—¦ ,roh:–§“x,	specificHeat:”ä”M J/ (KEkg):1960 ,@heatTrans:”M“`’B—¦ W/(m^2EK)
 	//. ”M“`’B‚µ‚È‚¢
 //	SetInitThermoConductionParam(0.574,970,0.1960,0 );		// ”M“`’B—¦=0;‚É‚µ‚Ä‚¢‚éw
-	SetInitThermoConductionParam(50.574,970,0.1960,0 );		// ”M“`’B—¦=0;‚É‚µ‚Ä‚¢‚éw
+	SetInitThermoConductionParam(THCOND,970,0.1960,0 );		// ”M“`’B—¦=0;‚É‚µ‚Ä‚¢‚éw
 	
 
 
