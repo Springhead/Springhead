@@ -1,7 +1,14 @@
 ﻿#ifndef SPREPCAST_H
 #define SPREPCAST_H
 #include <Springhead.h>
-#include <Python/Python.h>
+
+#include <EmbPython/SprEPVersion.h>
+#if EMB_PYTHON_VER==33
+#include <Python33/Python.h>
+#else
+#include <Python32/Python.h>
+#endif
+
 #include <string>
 #include <map>
 #include "SprEPObject.h"
