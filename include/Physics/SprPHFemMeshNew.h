@@ -56,7 +56,8 @@ struct PHFemVibrationDesc : public PHFemDesc{
 	enum INTEGRATION_MODE{
 		MODE_EXPLICIT_EULER,
 		MODE_IMPLICIT_EULER,
-		MODE_NEWMARK_BETA
+		MODE_NEWMARK_BETA,
+		MODE_MODAL_ANALYSIS
 	};
 	double young;		///< ヤング率(Pa, N/m2)
 	double poisson;		///< ポアソン比(*一様な立方体の場合、-1 <= v <= 0.5)

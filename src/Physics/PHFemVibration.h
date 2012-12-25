@@ -14,6 +14,30 @@
 
 namespace Spr{;
 
+
+//* ŒvZŠÖ”
+//template <class AD, class BD>
+//void CholeskyDecomposition(const PTM::MatrixImp< AD >& a, PTM::MatrixImp< BD >& l){
+//	int n = a.height();
+//	l.clear(0.0);
+//	l.item(0, 0) = sqrt(a.item(0, 0));
+//	// 1—ñ–Ú
+//	for(int i = 0; i < n; i++)
+//		l.item(i, 0) = a.item(i, 0) / l.item(0, 0);
+//	for(int i = 1; i < n; i++){		
+//		// ‘ÎŠp¬•ª
+//		for(int k = 0; k < i; k++)
+//			l.item(i, i) += pow(l.item(i, k), 2);
+//		l.item(i, i) = sqrt(a.item(i, i) - l.item(i, i));
+//		// ”ñ‘ÎŠp¬•ª
+//		for(int j = 1; j < i; j++){
+//			for(int k = 0; k < j; k++)
+//				l.item(i, j) += l.item(i, k) * l.item(j, k);
+//			l.item(i, j) = (a.item(i, j) - l.item(i, j)) / l.item(j, j);
+//		}	
+//	}
+//}
+
 class PHFemVibration : public PHFemVibrationDesc, public PHFem{
 public:
 	SPR_OBJECTDEF(PHFemVibration);
@@ -43,6 +67,7 @@ public:
 	virtual void ExplicitEuler();
 	virtual void ImplicitEuler();
 	virtual void NewmarkBeta(const double b = 1.0/6.0);
+	virtual void ModalAnalysis();
 
 	/// Šeíİ’è
 	void SetTimeStep(double dt){ vdt = dt; }
