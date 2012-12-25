@@ -165,10 +165,10 @@ void PHFemVibration::Init(){
 		//DSTR << "det matKe" << std::endl;		DSTR << matKe.det() << std::endl;
 		//DSTR << "matMe" << std::endl;		DSTR << matMe << std::endl;
 	}
-	//DSTR << "matK" << std::endl;		DSTR << matK << std::endl;
-	//DSTR << "det matK" << std::endl;	DSTR << matK.det() << std::endl;
-	//DSTR << "matM" << std::endl;		DSTR << matM << std::endl;
-	//DSTR << "matC" << std::endl;		DSTR << matC << std::endl;
+	DSTR << "matK" << std::endl;		DSTR << matK << std::endl;
+	DSTR << "det matK" << std::endl;	DSTR << matK.det() << std::endl;
+	DSTR << "matM" << std::endl;		DSTR << matM << std::endl;
+	DSTR << "matC" << std::endl;		DSTR << matC << std::endl;
 
 	/// 各種変数の初期化
 	xlocalInit.resize(NDof);
@@ -192,9 +192,8 @@ void PHFemVibration::Init(){
 
 	// テストコード
 	vdt = 0.001;
-	matC.clear(0.0);
-	AddBoundaryCondition(0, Vec3d(1, 1, 1));
-	AddBoundaryCondition(5, Vec3d(1, 1, 1));
+	//AddBoundaryCondition(0, Vec3d(1, 1, 1));
+	//AddBoundaryCondition(5, Vec3d(1, 1, 1));
 	//AddVertexForce(1, Vec3d(1000.0, 0.0, 0.0));
 	//mesh->AddLocalDisplacement(1, Vec3d(0.1, 0.0, 0.0));
 	DSTR << "flocal" << std::endl;	DSTR << flocal << std::endl;
@@ -231,6 +230,9 @@ void PHFemVibration::Step(){
 			break;
 		case PHFemVibrationDesc::MODE_NEWMARK_BETA:
 			NewmarkBeta();
+			break;
+		case PHFemVibrationDesc::MODE_MODAL_ANALYSIS:
+			ModalAnalysis();
 			break;
 		default:
 			break;
@@ -345,6 +347,20 @@ void PHFemVibration::NewmarkBeta(const double b){
 	//DSTR << "alocal" << std::endl;	DSTR << alocal << std::endl;
 	//DSTR << "_MInv" << std::endl;	DSTR << _MInv << std::endl;
 }
+
+void PHFemVibration::ModalAnalysis(){
+	DSTR << "//////////////////////////////////" << std::endl;
+	int NDof = NVertices() * 3;
+	VMatrixRow< double > matKcho;
+	matKcho.resize(NDof, NDof);
+	matKcho.clear(0.0);
+	cholesky(matK, matKcho);
+	//DSTR << "matKcho" << std::endl;
+	//DSTR << matKcho << std::endl;
+	//DSTR << "matKcho * matKchoT" << std::endl;
+	//DSTR << matKcho * matKcho.trans() << std::endl;
+}
+
 
 
 //* 各種設定関数
@@ -470,5 +486,6 @@ bool PHFemVibration::AddVertexForce(VVector< Vec3d > fWs){
 	}
 	return true;
 }
+
 
 }
