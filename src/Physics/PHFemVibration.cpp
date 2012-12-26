@@ -232,7 +232,7 @@ void PHFemVibration::Step(){
 			NewmarkBeta();
 			break;
 		case PHFemVibrationDesc::MODE_MODAL_ANALYSIS:
-			ModalAnalysis();
+			ModalAnalysis(3);
 			break;
 		default:
 			break;
@@ -256,10 +256,10 @@ void PHFemVibration::Step(){
 /////////////////////////////////////////////////////////////////////////////////////////
 void PHFemVibration::ExplicitEuler(){
 	int NDof = NVertices() * 3;
-	VVector< double > xlocalDisp;
+	VVectord xlocalDisp;
 	xlocalDisp.resize(NDof);
 	xlocalDisp.clear(0.0);
-	VVector< double > tmp;
+	VVectord tmp;
 	tmp.resize(NDof);
 	tmp.clear(0.0);
 	xlocalDisp = xlocal - xlocalInit;
@@ -271,19 +271,19 @@ void PHFemVibration::ExplicitEuler(){
 void PHFemVibration::ImplicitEuler(){
 	// 外力をまだ組み込んでない
 	int NDof = GetPHFemMesh()->vertices.size() * 3;
-	VMatrixRow< double > E;	// 単位行列
+	VMatrixRd E;	// 単位行列
 	E.resize(NDof, NDof);
 	E.clear(0.0);
 	for(int i = 0; i < NDof; i++){
 		E[i][i] = 1.0;
 	}
-	VMatrixRow< double > _K;
+	VMatrixRd _K;
 	_K.resize(NDof, NDof);
 	_K.clear(0.0);	
-	VMatrixRow< double > _CInv;
+	VMatrixRd _CInv;
 	_CInv.resize(NDof, NDof);
 	_CInv.clear(0.0);
-	VMatrixRow< double > _DInv;
+	VMatrixRd _DInv;
 	_DInv.resize(NDof, NDof);
 	_DInv.clear(0.0);
 
@@ -304,28 +304,28 @@ void PHFemVibration::ImplicitEuler(){
 
 void PHFemVibration::NewmarkBeta(const double b){
 	int NDof = NVertices() * 3;
-	static VVector< double > alocal;
+	static VVectord alocal;
 	alocal.resize(NDof);
 	alocal.clear(0.0);
 
-	VVector< double > alocalLast;
+	VVectord alocalLast;
 	alocalLast.resize(NDof);
 	alocalLast.clear(0.0);
 
-	VMatrixRow< double > _MInv;
+	VMatrixRd _MInv;
 	_MInv.resize(NDof, NDof);
 	_MInv.clear(0.0);
 	_MInv = (matM + 0.5 * matC * vdt + b * matK * pow(vdt, 2)).inv();
 
-	VVector< double > Ct;
+	VVectord Ct;
 	Ct.resize(NDof);
 	Ct.clear(0.0);
 
-	VVector< double > Kt;
+	VVectord Kt;
 	Kt.resize(NDof);
 	Kt.clear(0.0);
 
-	VVector< double > xlocalDisp;
+	VVectord xlocalDisp;
 	xlocalDisp.resize(NDof);
 	xlocalDisp.clear(0.0);
 	xlocalDisp = xlocal - xlocalInit;
@@ -348,20 +348,114 @@ void PHFemVibration::NewmarkBeta(const double b){
 	//DSTR << "_MInv" << std::endl;	DSTR << _MInv << std::endl;
 }
 
-void PHFemVibration::ModalAnalysis(){
+void PHFemVibration::ModalAnalysis(int nmode){
 	DSTR << "//////////////////////////////////" << std::endl;
-	int NDof = NVertices() * 3;
-	VMatrixRow< double > matKcho;
-	matKcho.resize(NDof, NDof);
-	matKcho.clear(0.0);
-	cholesky(matK, matKcho);
-	//DSTR << "matKcho" << std::endl;
-	//DSTR << matKcho << std::endl;
-	//DSTR << "matKcho * matKchoT" << std::endl;
-	//DSTR << matKcho * matKcho.trans() << std::endl;
+	VVectord e; 
+	VMatrixRd v;
+	SubSpace(matM, matK, nmode, 1e-5, e, v);
+	DSTR << "eigenvalue" << std::endl;
+	DSTR << e << std::endl;
+	DSTR << "eigenvector" << std::endl;
+	DSTR << v << std::endl;
+	
+#if 0
+	/// テストコード
+	VMatrixRd k;
+	k.resize(4, 4);
+	k.clear(0.0);
+	k.item(0, 0) = 200;		k.item(0, 1) = -100;
+	k.item(1, 0) = -100;	k.item(1, 1) = 100;
+	k.item(2, 2) = 20;
+	k.item(3, 3) = 20;
+
+	VMatrixRd m;
+	m.resize(4, 4);
+	m.clear(0.0);
+	m.item(0, 0) = 3;	m.item(0, 2) = 2;
+	m.item(1, 1) = 3;	m.item(1, 3) = 2;
+	m.item(2, 0) = 2;	m.item(2, 2) = 4;
+	m.item(3, 1) = 2;	m.item(3, 3) = 4;
+
+	SubSpace(m,k, 4,1e-10, e, v);
+#endif
 }
 
+//* 計算関数（そのうちTMatirixへ）
+/////////////////////////////////////////////////////////////////////////////////////////
+/// サブスペース法（同時逆反復法？）
+/// VMatrixRd& _M:質量行列（正値対称）, VMatrixRd& _K:剛性行列（正値対称）
+/// int nmode:モード次数, double epsilon:収束条件, VVectord& e:固有振動数[Hz], VMatrixRd& v:固有ベクトル(列順）
+void PHFemVibration::SubSpace(const VMatrixRd& _M, const VMatrixRd& _K, 
+	const int nmode, const double epsilon, VVectord& e, VMatrixRd& v){
+	const int size = _M.height();
+	if(nmode > size) assert(0);
+	/// 初期化
+	// 固有値
+	e.resize(nmode);
+	e.clear(0.0);
+	// 固有ベクトル
+	v.resize(size, nmode);
+	v.clear(0.0);
+	// 初期値ベクトル
+	VMatrixRd y;
+	y.resize(size, nmode);
+	y.clear(0.0);
+	VMatrixRd ylast;
+	ylast.resize(size, nmode);
+	ylast.clear(0.0);
+	VVectord yini;
+	yini.resize(size);
+	yini.clear(1.0);
+	yini.unitize();
+	for(int i = 0; i < nmode; i++){
+		y.col(i) = yini;
+		ylast.col(i) = yini;
+	}
+	
+	/// _M, _Kをコレスキー分解
+	// _AInvの計算はコレスキー分解値を使ってfor文で計算したほうが速いはず。
+	// 今は速さを気にせず逆行列を計算してる。
+	VMatrixRd _Mc;
+	_Mc.resize(size, size);
+	_Mc.clear(0.0);
+	cholesky(_M, _Mc);	
+	VMatrixRd _Kc;
+	_Kc.resize(size, size);
+	_Kc.clear(0.0);
+	cholesky(_K, _Kc);
+	VMatrixRd _AInv;			
+	_AInv.resize(size, size);
+	_AInv.clear(0.0);
+	_AInv = _Mc.trans() * (_Kc.inv()).trans() * _Kc.inv() * _Mc;
 
+	/// 反復計算
+	for(int k = 0; k < nmode; k++){
+		VVectord z;
+		z.resize(size);
+		z.clear(0.0);
+		while(1){
+			// zの計算
+			z = _AInv * y.col(k);	 
+			// グラム・シュミットの直交化
+			VVectord c;
+			c.resize(size);
+			c.clear(0.0);
+			for(int i = 0; i < k; i++){
+				double a = y.col(i) * z;
+				c += a * y.col(i);
+			}
+			y.col(k) = z - c;
+			y.col(k).unitize();
+
+			double error = 0.0;
+			error = sqrt((ylast.col(k) - y.col(k)) * (ylast.col(k) - y.col(k)));
+			ylast.col(k) = y.col(k);
+			if(abs(error) < epsilon) break;
+		}
+		v.col(k) = _Mc.trans().inv() * y.col(k);
+		e[k] = sqrt(1.0 / (y.col(k) * _AInv * y.col(k))) / (2 * M_PI);	// 角振動数[rad/s]から[Hz]に変換
+	}
+}
 
 //* 各種設定関数
 /////////////////////////////////////////////////////////////////////////////////////////

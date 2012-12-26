@@ -14,45 +14,23 @@
 
 namespace Spr{;
 
-
-//* 計算関数
-//template <class AD, class BD>
-//void CholeskyDecomposition(const PTM::MatrixImp< AD >& a, PTM::MatrixImp< BD >& l){
-//	int n = a.height();
-//	l.clear(0.0);
-//	l.item(0, 0) = sqrt(a.item(0, 0));
-//	// 1列目
-//	for(int i = 0; i < n; i++)
-//		l.item(i, 0) = a.item(i, 0) / l.item(0, 0);
-//	for(int i = 1; i < n; i++){		
-//		// 対角成分
-//		for(int k = 0; k < i; k++)
-//			l.item(i, i) += pow(l.item(i, k), 2);
-//		l.item(i, i) = sqrt(a.item(i, i) - l.item(i, i));
-//		// 非対角成分
-//		for(int j = 1; j < i; j++){
-//			for(int k = 0; k < j; k++)
-//				l.item(i, j) += l.item(i, k) * l.item(j, k);
-//			l.item(i, j) = (a.item(i, j) - l.item(i, j)) / l.item(j, j);
-//		}	
-//	}
-//}
-
 class PHFemVibration : public PHFemVibrationDesc, public PHFem{
 public:
 	SPR_OBJECTDEF(PHFemVibration);
 	ACCESS_DESC(PHFemVibration);
+	typedef VMatrixRow< double > VMatrixRd;
+	typedef VVector< double > VVectord;
 
 	double vdt;
 	PHFemVibrationDesc::INTEGRATION_MODE integration_mode;
-	VMatrixRow< double > matK;		// 全体剛性行列
-	VMatrixRow< double > matM;		// 全体質量行列
-	VMatrixRow< double > matMInv;	// 全体質量行列の逆行列
-	VMatrixRow< double > matC;		// 全体減衰行列
-	VVector< double > xlocalInit;	// 初期頂点位置
-	VVector< double > xlocal;		// 計算用の頂点位置(u = (x1, ..., xn-1, y1, ..., yn-1, z1, ..., zn-1)
-	VVector< double > vlocal;		// 頂点速度
-	VVector< double > flocal;		// 計算用の外力
+	VMatrixRd matK;			// 全体剛性行列
+	VMatrixRd matM;			// 全体質量行列
+	VMatrixRd matMInv;		// 全体質量行列の逆行列
+	VMatrixRd matC;			// 全体減衰行列
+	VVectord xlocalInit;	// 初期頂点位置
+	VVectord xlocal;		// 計算用の頂点位置(u = (x1, ..., xn-1, y1, ..., yn-1, z1, ..., zn-1)
+	VVectord vlocal;		// 頂点速度
+	VVectord flocal;		// 計算用の外力
 
 	PHFemVibration(const PHFemVibrationDesc& desc = PHFemVibrationDesc());
 	/// 初期化
@@ -67,7 +45,11 @@ public:
 	virtual void ExplicitEuler();
 	virtual void ImplicitEuler();
 	virtual void NewmarkBeta(const double b = 1.0/6.0);
-	virtual void ModalAnalysis();
+	virtual void ModalAnalysis(int nmode);
+
+	/// 固有値解析
+	virtual void SubSpace(const VMatrixRd& _M, const VMatrixRd& _K, 
+							const int nmode, const double epsilon, VVectord& e, VMatrixRd& v);
 
 	/// 各種設定
 	void SetTimeStep(double dt){ vdt = dt; }
