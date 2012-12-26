@@ -888,6 +888,15 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 			render->SetMaterial(GRRenderIf::YELLOW);
 			render->DrawLine(p[0], p[1]);
 		}
+		if(mesh->GetPHFemVibration()){
+			PHFemVibrationIf* fv = mesh->GetPHFemVibration();
+			render->EnterScreenCoordinate();
+			float pos = 20.0f;
+			float margin = 20.0f;
+			std::stringstream str;
+			render->DrawFont(Vec2f(20, pos), str.str());
+			render->LeaveScreenCoordinate();
+		}
 	}
 	render->SetLighting(true);
 	render->SetDepthTest(true);

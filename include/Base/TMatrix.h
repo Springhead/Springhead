@@ -544,21 +544,17 @@ template <class AD, class BD>
 void cholesky(const PTM::MatrixImp< AD >& a, PTM::MatrixImp< BD >& l){
 	int n = a.height();
 	l.clear(0.0);
-	l.item(0, 0) = sqrt(a.item(0, 0));
-	// 1列目
-	for(int i = 0; i < n; i++)
-		l.item(i, 0) = a.item(i, 0) / l.item(0, 0);
-	for(int i = 1; i < n; i++){		
-		// 対角成分
-		for(int k = 0; k < i; k++)
-			l.item(i, i) += pow(l.item(i, k), 2);
-		l.item(i, i) = sqrt(a.item(i, i) - l.item(i, i));
+	for(int i = 0; i < n; i++){		
 		// 非対角成分
-		for(int j = 1; j < i; j++){
+		for(int j = 0; j < i; j++){
 			for(int k = 0; k < j; k++)
 				l.item(i, j) += l.item(i, k) * l.item(j, k);
 			l.item(i, j) = (a.item(i, j) - l.item(i, j)) / l.item(j, j);
 		}	
+		// 対角成分
+		for(int k = 0; k < i; k++)
+			l.item(i, i) += pow(l.item(i, k), 2);
+		l.item(i, i) = sqrt(a.item(i, i) - l.item(i, i));
 	}
 }
 ///	ガウスの消去法，作業領域(行交換の記録)として， int ip[height()];  が必要．行列aを破壊．
