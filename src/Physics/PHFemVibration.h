@@ -23,10 +23,10 @@ public:
 
 	double vdt;
 	PHFemVibrationDesc::INTEGRATION_MODE integration_mode;
-	VMatrixRd matK;			// 全体剛性行列
-	VMatrixRd matM;			// 全体質量行列
+	VMatrixRd matKIni;		// 全体剛性行列の初期値
+	VMatrixRd matMIni;		// 全体質量行列の初期値
 	VMatrixRd matMInv;		// 全体質量行列の逆行列
-	VMatrixRd matC;			// 全体減衰行列
+	VMatrixRd matCIni;		// 全体減衰行列の初期値
 	VVectord xlocalInit;	// 初期頂点位置
 	VVectord xlocal;		// 計算用の頂点位置(u = (x1, ..., xn-1, y1, ..., yn-1, z1, ..., zn-1)
 	VVectord vlocal;		// 頂点速度
@@ -65,10 +65,13 @@ public:
 	void SetBeta(double value){ beta = value; }
 	double GetBeta(){ return beta; }
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
-	// 境界条件を加える
-	bool AddBoundaryCondition(int vtxId, Vec3i dof);
+	// 境界条件を加える(行列と番号）
+	bool AddBoundaryCondition(VMatrixRd& mat, const int id);
+	// 境界条件を加える(頂点）
+	bool AddBoundaryCondition(const int vtxId, const Vec3i dof);
 	// 境界条件を加える(頂点順）
-	bool AddBoundaryCondition(VVector< Vec3i > bcs); 
+	bool AddBoundaryCondition(const VVector< Vec3i > bcs); 
+
 	// 頂点に力を加える（ワールド座標系）
 	bool AddVertexForce(int vtxId, Vec3d fW);
 	// 頂点群に力を加える（ワールド座標系）
