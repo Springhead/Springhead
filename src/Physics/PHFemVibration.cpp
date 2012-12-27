@@ -17,6 +17,7 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 } 
 
 void PHFemVibration::Init(){
+	DSTR << "Initializing PHFemVibration" << std::endl;
 	/// 刻み時間の設定
 	PHSceneIf* scene = GetPHFemMesh()->GetScene()->Cast();
 	if(scene) vdt = scene->GetTimeStep();
@@ -29,14 +30,14 @@ void PHFemVibration::Init(){
 	int NVer= NVertices();
 	int NDof = NVer * 3;
 	// 各全体行列の初期化
-	matK.resize(NDof, NDof);
-	matK.clear(0.0);
-	matM.resize(NDof, NDof);
-	matM.clear(0.0);
+	matKIni.resize(NDof, NDof);
+	matKIni.clear(0.0);
+	matMIni.resize(NDof, NDof);
+	matMIni.clear(0.0);
 	matMInv.resize(NDof, NDof);
 	matMInv.clear(0.0);
-	matC.resize(NDof, NDof);
-	matC.clear(0.0);
+	matCIni.resize(NDof, NDof);
+	matCIni.clear(0.0);
 	for(int i = 0; i < NTets; i++){
 		// 要素行列の計算
 		/// tetが持つ頂点順
@@ -137,23 +138,23 @@ void PHFemVibration::Init(){
 				int id2 = mesh->tets[i].vertexIDs[k];
 				//DSTR << "ID1:ID2 " << id << " : " << id2 << std::endl;
 				// 全体剛性行列
-				matK[id][id2] += matKe[j][k];	// uの位置
-				matK[NVer + id][NVer + id2] += matKe[j+4][k+4];			// vの位置
-				matK[NVer * 2 + id][NVer * 2 + id2] += matKe[j+8][k+8];	// wの位置
+				matKIni[id][id2] += matKe[j][k];	// uの位置
+				matKIni[NVer + id][NVer + id2] += matKe[j+4][k+4];			// vの位置
+				matKIni[NVer * 2 + id][NVer * 2 + id2] += matKe[j+8][k+8];	// wの位置
 
 				// 全体質量行列
-				matM[id][id2] += matMe[j][k];
-				matM[NVer + id][NVer + id2] += matMe[j+4][k+4];
-				matM[NVer * 2 + id][NVer * 2 + id2] += matMe[j+8][k+8];
+				matMIni[id][id2] += matMe[j][k];
+				matMIni[NVer + id][NVer + id2] += matMe[j+4][k+4];
+				matMIni[NVer * 2 + id][NVer * 2 + id2] += matMe[j+8][k+8];
 
 				// 全体減衰行列
-				matC[id][id2] += matCe[j][k];
-				matC[NVer + id][NVer + id2] += matCe[j+4][k+4];
-				matC[NVer * 2 + id][NVer * 2 + id2] += matCe[j+8][k+8];
+				matCIni[id][id2] += matCe[j][k];
+				matCIni[NVer + id][NVer + id2] += matCe[j+4][k+4];
+				matCIni[NVer * 2 + id][NVer * 2 + id2] += matCe[j+8][k+8];
 			}
 		}
 		// 毎ステップ計算する必要のないものを保存
-		matMInv = matM.inv();
+		matMInv = matMIni.inv();
 
 		//DSTR << "matCk1" << std::endl;	DSTR << matCk1 << std::endl;
 		//DSTR << "matCk1Inv" << std::endl;	DSTR << matCk1Inv << std::endl;
@@ -162,13 +163,15 @@ void PHFemVibration::Init(){
 		//DSTR << "matD" << std::endl;		DSTR << matD << std::endl;
 		//DSTR << "matBtDB" << std::endl;	DSTR << matBtDB << std::endl;
 		//DSTR << "matKe" << std::endl;		DSTR << matKe << std::endl;
-		//DSTR << "det matKe" << std::endl;		DSTR << matKe.det() << std::endl;
+		//DSTR << "det matKe" << std::endl;	DSTR << matKe.det() << std::endl;
 		//DSTR << "matMe" << std::endl;		DSTR << matMe << std::endl;
 	}
-	DSTR << "matK" << std::endl;		DSTR << matK << std::endl;
-	DSTR << "det matK" << std::endl;	DSTR << matK.det() << std::endl;
-	DSTR << "matM" << std::endl;		DSTR << matM << std::endl;
-	DSTR << "matC" << std::endl;		DSTR << matC << std::endl;
+	//DSTR << "matKIni" << std::endl;	DSTR << matKIni << std::endl;
+	//DSTR << "matMIni" << std::endl;	DSTR << matMIni << std::endl;
+	//DSTR << "matCIni" << std::endl;	DSTR << matCIni << std::endl;
+	DSTR << "det(matKIni) = " << matKIni.det() << std::endl;
+	DSTR << "det(matMIni) = " << matMIni.det() << std::endl;	
+	DSTR << "det(matCIni) = " << matCIni.det() << std::endl;
 
 	/// 各種変数の初期化
 	xlocalInit.resize(NDof);
@@ -187,17 +190,16 @@ void PHFemVibration::Init(){
 			xlocal[i + NVer * j] = mesh->vertices[i].pos[j];
 		}
 	}
-	DSTR << "initial xlocal" << std::endl;	DSTR << xlocalInit << std::endl;
-	DSTR << "initial vlocal" << std::endl;	DSTR << vlocal << std::endl;
+	//DSTR << "initial xlocal" << std::endl;	DSTR << xlocalInit << std::endl;
+	//DSTR << "initial vlocal" << std::endl;	DSTR << vlocal << std::endl;
+	DSTR << "Initializing Completed." << std::endl;
 
 	// テストコード
 	vdt = 0.001;
-	//AddBoundaryCondition(0, Vec3d(1, 1, 1));
+	AddBoundaryCondition(0, Vec3d(1, 1, 1));
 	//AddBoundaryCondition(5, Vec3d(1, 1, 1));
 	//AddVertexForce(1, Vec3d(1000.0, 0.0, 0.0));
 	//mesh->AddLocalDisplacement(1, Vec3d(0.1, 0.0, 0.0));
-	DSTR << "flocal" << std::endl;	DSTR << flocal << std::endl;
-	DSTR << matK.det() << std::endl;
 } 
 
 //#define DEBUG
@@ -263,7 +265,7 @@ void PHFemVibration::ExplicitEuler(){
 	tmp.resize(NDof);
 	tmp.clear(0.0);
 	xlocalDisp = xlocal - xlocalInit;
-	tmp = -1 * matK * xlocalDisp - matC * vlocal + flocal;
+	tmp = -1 * matKIni * xlocalDisp - matCIni * vlocal + flocal;
 	vlocal += matMInv * tmp * vdt;
 	xlocal += vlocal * vdt;
 }
@@ -287,8 +289,8 @@ void PHFemVibration::ImplicitEuler(){
 	_DInv.resize(NDof, NDof);
 	_DInv.clear(0.0);
 
-	_K = matMInv * matK * vdt;
-	_CInv = (E + matMInv * matC * vdt).inv();
+	_K = matMInv * matKIni * vdt;
+	_CInv = (E + matMInv * matCIni * vdt).inv();
 	_DInv = (E + _CInv * _K * vdt).inv();
 
 	xlocal = _DInv * (xlocal + _CInv * (vlocal + _K * xlocalInit) * vdt);
@@ -315,7 +317,7 @@ void PHFemVibration::NewmarkBeta(const double b){
 	VMatrixRd _MInv;
 	_MInv.resize(NDof, NDof);
 	_MInv.clear(0.0);
-	_MInv = (matM + 0.5 * matC * vdt + b * matK * pow(vdt, 2)).inv();
+	_MInv = (matMIni + 0.5 * matCIni * vdt + b * matKIni * pow(vdt, 2)).inv();
 
 	VVectord Ct;
 	Ct.resize(NDof);
@@ -332,12 +334,12 @@ void PHFemVibration::NewmarkBeta(const double b){
 
 	static bool bFirst = true;
 	if(bFirst){
-		alocal = _MInv * (- 1 * matC * vlocal -1 * matK * xlocalDisp + flocal);
+		alocal = _MInv * (- 1 * matCIni * vlocal -1 * matKIni * xlocalDisp + flocal);
 		bFirst = false;
 	}
 
-	Ct = matC * (vlocal + 0.5 * alocal * vdt);
-	Kt = matK * (xlocalDisp + vlocal * vdt + alocal * pow(vdt, 2) * (0.5-b));
+	Ct = matCIni * (vlocal + 0.5 * alocal * vdt);
+	Kt = matKIni * (xlocalDisp + vlocal * vdt + alocal * pow(vdt, 2) * (0.5-b));
 	alocalLast = alocal;
 	alocal = _MInv * (flocal - Ct - Kt);
 	vlocal += 0.5 * (alocalLast + alocal) * vdt;
@@ -352,13 +354,18 @@ void PHFemVibration::ModalAnalysis(int nmode){
 	DSTR << "//////////////////////////////////" << std::endl;
 	VVectord e; 
 	VMatrixRd v;
-	SubSpace(matM, matK, nmode, 1e-5, e, v);
+#if 1
+	DSTR << "det(matMIni)" << std::endl;
+	DSTR << matMIni.det() << std::endl;
+	DSTR << "det(matKIni)" << std::endl;
+	DSTR << matKIni.det() << std::endl;
+	SubSpace(matMIni, matKIni, nmode, 1e-5, e, v);
 	DSTR << "eigenvalue" << std::endl;
 	DSTR << e << std::endl;
 	DSTR << "eigenvector" << std::endl;
 	DSTR << v << std::endl;
 	
-#if 0
+#else
 	/// テストコード
 	VMatrixRd k;
 	k.resize(4, 4);
@@ -375,9 +382,15 @@ void PHFemVibration::ModalAnalysis(int nmode){
 	m.item(1, 1) = 3;	m.item(1, 3) = 2;
 	m.item(2, 0) = 2;	m.item(2, 2) = 4;
 	m.item(3, 1) = 2;	m.item(3, 3) = 4;
+	DSTR << "det(k)" << std::endl;
+	DSTR << k.det() << std::endl;
+	DSTR << "det(m)" << std::endl;
+	DSTR << m.det() << std::endl;
 
 	SubSpace(m,k, 4,1e-10, e, v);
 #endif
+
+
 }
 
 //* 計算関数（そのうちTMatirixへ）
@@ -386,16 +399,20 @@ void PHFemVibration::ModalAnalysis(int nmode){
 /// VMatrixRd& _M:質量行列（正値対称）, VMatrixRd& _K:剛性行列（正値対称）
 /// int nmode:モード次数, double epsilon:収束条件, VVectord& e:固有振動数[Hz], VMatrixRd& v:固有ベクトル(列順）
 void PHFemVibration::SubSpace(const VMatrixRd& _M, const VMatrixRd& _K, 
-	const int nmode, const double epsilon, VVectord& e, VMatrixRd& v){
+	const int nmode, const double epsilon, VVectord& evalue, VMatrixRd& evector){
 	const int size = _M.height();
+	if(abs(_K.det()) < 1e-5){
+		DSTR << "Stiffness Matrix is not regular matrix." << std::endl;
+		return;
+	}
 	if(nmode > size) assert(0);
 	/// 初期化
 	// 固有値
-	e.resize(nmode);
-	e.clear(0.0);
+	evalue.resize(nmode);
+	evalue.clear(0.0);
 	// 固有ベクトル
-	v.resize(size, nmode);
-	v.clear(0.0);
+	evector.resize(size, nmode);
+	evector.clear(0.0);
 	// 初期値ベクトル
 	VMatrixRd y;
 	y.resize(size, nmode);
@@ -410,8 +427,16 @@ void PHFemVibration::SubSpace(const VMatrixRd& _M, const VMatrixRd& _K,
 	for(int i = 0; i < nmode; i++){
 		y.col(i) = yini;
 		ylast.col(i) = yini;
-	}
-	
+	}	
+	//// yiniを変更
+	//for(int i = 0; i < size; i++){
+	//	yini[i] = i;
+	//}
+	//yini.unitize();
+	//for(int i = 0; i < nmode; i++){
+	//	y.col(i) = yini;
+	//	ylast.col(i) = yini;
+	//}
 	/// _M, _Kをコレスキー分解
 	// _AInvの計算はコレスキー分解値を使ってfor文で計算したほうが速いはず。
 	// 今は速さを気にせず逆行列を計算してる。
@@ -427,6 +452,11 @@ void PHFemVibration::SubSpace(const VMatrixRd& _M, const VMatrixRd& _K,
 	_AInv.resize(size, size);
 	_AInv.clear(0.0);
 	_AInv = _Mc.trans() * (_Kc.inv()).trans() * _Kc.inv() * _Mc;
+	//DSTR << "_Mc" << std::endl;
+	//DSTR << _Mc << std::endl;
+	//DSTR << _Mc * _Mc.trans() << std::endl;
+	DSTR << "yini" << std::endl;
+	DSTR << yini << std::endl;
 
 	/// 反復計算
 	for(int k = 0; k < nmode; k++){
@@ -446,14 +476,30 @@ void PHFemVibration::SubSpace(const VMatrixRd& _M, const VMatrixRd& _K,
 			}
 			y.col(k) = z - c;
 			y.col(k).unitize();
+			//DSTR << "k " << k << std::endl;
+			//DSTR << "c" << std::endl;
+			//DSTR << c << std::endl;
+			//DSTR << "z" << std::endl;
+			//DSTR << z << std::endl;
+			//DSTR << "y.col(k)" << std::endl;
+			//DSTR << y.col(k) << std::endl;
 
 			double error = 0.0;
 			error = sqrt((ylast.col(k) - y.col(k)) * (ylast.col(k) - y.col(k)));
+			//DSTR << "yl - y" << std::endl;
+			//DSTR << ylast.col(k) - y.col(k) << std::endl;
 			ylast.col(k) = y.col(k);
 			if(abs(error) < epsilon) break;
+			//DSTR << "error" << std::endl;
+			//DSTR << error << std::endl;
+			//DSTR << "y" << std::endl;
+			//DSTR << y << std::endl;
+			//DSTR << "loop/////////////////" << std::endl;
 		}
-		v.col(k) = _Mc.trans().inv() * y.col(k);
-		e[k] = sqrt(1.0 / (y.col(k) * _AInv * y.col(k))) / (2 * M_PI);	// 角振動数[rad/s]から[Hz]に変換
+		evector.col(k) = _Mc.trans().inv() * y.col(k);
+		evalue[k] = sqrt(1.0 / (y.col(k) * _AInv * y.col(k))) / (2 * M_PI);	// 角振動数[rad/s]から[Hz]に変換
+		//DSTR << v.col(k) << std::endl;
+		//DSTR << e[k] << std::endl;
 	}
 }
 
@@ -463,98 +509,56 @@ void PHFemVibration::SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mod
 	integration_mode = mode;
 }
 
-bool PHFemVibration::AddBoundaryCondition(int vtxId, Vec3i dof){
-	PHFemMeshNew* mesh = GetPHFemMesh();
-	int NVertices = mesh->vertices.size();
-	if(0 <= vtxId && vtxId <= NVertices -1){
-		if(dof[0] == 1){
-			// x方向の拘束
-			const int xId = vtxId;
-			matK.row(xId).clear(0.0);
-			matK[xId][xId] = 1.0;
-			matC.row(xId).clear(0.0);
-			matC[xId][xId] = 1.0;
-			matM.row(xId).clear(0.0);
-			matM[xId][xId] = 1.0;
-			matMInv.row(xId).clear(0.0);
-			matMInv[xId][xId] = 1.0;
+bool PHFemVibration::AddBoundaryCondition(VMatrixRd& mat, const int id){
+	int n = mat.height();
+	if(id > n - 1) return false;
+	mat.vsub_matrix(id, id, 1, n - id).clear(0.0);	// 行をクリア
+	mat.vsub_matrix(id, id, n - id, 1).clear(0.0);	// 列をクリア
+	mat[id][id] = 1.0;
+	return true;
+}
+
+bool PHFemVibration::AddBoundaryCondition(const int vtxId, const Vec3i dof){
+	int NVer = NVertices();
+	if(0 <= vtxId && vtxId <= NVer -1){
+		for(int i = 0; i < 3; i++){
+			if(dof[i] == 1){
+				const int id = vtxId + i * NVer;
+				AddBoundaryCondition(matKIni, id);
+				AddBoundaryCondition(matCIni, id);
+				AddBoundaryCondition(matMIni, id);
+				AddBoundaryCondition(matMInv, id);
+			}
 		}
-		if(dof[1] == 1){
-			// y方向の拘束
-			const int yId = vtxId + NVertices;
-			matK.row(yId).clear(0.0);
-			matK[yId][yId] = 1.0;
-			matC.row(yId).clear(0.0);
-			matC[yId][yId] = 1.0;
-			matM.row(yId).clear(0.0);
-			matM[yId][yId] = 1.0;	
-			matMInv.row(yId).clear(0.0);
-			matMInv[yId][yId] = 1.0;		
-		}
-		if(dof[2] == 1){
-			// z方向の拘束
-			const int zId = vtxId + NVertices * 2;
-			matK.row(zId).clear(0.0);
-			matK[zId][zId] = 1.0;
-			matMInv.row(zId).clear(0.0);			
-			matC.row(zId).clear(0.0);
-			matC[zId][zId] = 1.0;
-			matM.row(zId).clear(0.0);
-			matM[zId][zId] = 1.0;			
-			matMInv.row(zId).clear(0.0);
-			matMInv[zId][zId] = 1.0;		
-		}
-		//DSTR << "matK with boundary condition" << std::endl;
-		//DSTR << matK << std::endl;
-		//DSTR << "matC with boundary condition" << std::endl;
-		//DSTR << matC << std::endl;
+		//DSTR << "matKIni with boundary condition" << std::endl;
+		//DSTR << matKIni << std::endl;
+		//DSTR << "matCIni with boundary condition" << std::endl;
+		//DSTR << matCIni << std::endl;
 		//DSTR << "matMInv with boundary condition" << std::endl;
 		//DSTR << matMInv << std::endl;
+		DSTR << "After adding boundary condition" << std::endl;
+		DSTR << "det(matKIni) = " << matKIni.det() << std::endl;
+		DSTR << "det(matCIni) = " << matCIni.det() << std::endl;
+		DSTR << "det(matMIni) = " << matMIni.det() << std::endl;
+		DSTR << "det(matMInv) = " << matMInv.det() << std::endl;
 		return true;
 	}
 	return false;
 }
 
-bool PHFemVibration::AddBoundaryCondition(VVector< Vec3i > bcs){ 
-	if(NVertices() != bcs.size()) return false;
+bool PHFemVibration::AddBoundaryCondition(const VVector< Vec3i > bcs){ 
+	int NVer = NVertices();
+	if(NVer != bcs.size()) return false;
 	for(int i = 0; i < (int)bcs.size(); i++){
-		if(bcs[i].x == 1){
-			// x方向の拘束
-			const int xId = i;
-			matK.row(xId).clear(0.0);
-			matK[xId][xId] = 1.0;
-			matC.row(xId).clear(0.0);
-			matC[xId][xId] = 1.0;
-			matM.row(xId).clear(0.0);
-			matM[xId][xId] = 1.0;
-			matMInv.row(xId).clear(0.0);
-			matMInv[xId][xId] = 1.0;
+		for(int j = 0; j < 3; j++){
+			if(bcs[i][j] == 1){
+				const int id = i + j * NVer;
+				AddBoundaryCondition(matKIni, id);
+				AddBoundaryCondition(matCIni, id);
+				AddBoundaryCondition(matMIni, id);
+				AddBoundaryCondition(matMInv, id);
+			}
 		}
-		if(bcs[i].y == 1){
-			// y方向の拘束
-			const int yId = i + NVertices();
-			matK.row(yId).clear(0.0);
-			matK[yId][yId] = 1.0;
-			matC.row(yId).clear(0.0);
-			matC[yId][yId] = 1.0;
-			matM.row(yId).clear(0.0);
-			matM[yId][yId] = 1.0;
-			matMInv.row(yId).clear(0.0);
-			matMInv[yId][yId] = 0.0;		
-		}
-		if(bcs[i].z == 1){
-			// z方向の拘束
-			const int zId = i + NVertices() * 2;
-			matK.row(zId).clear(0.0);
-			matK[zId][zId] = 1.0;
-			matMInv.row(zId).clear(0.0);			
-			matC.row(zId).clear(0.0);
-			matC[zId][zId] = 1.0;
-			matM.row(zId).clear(0.0);
-			matM[zId][zId] = 1.0;
-			matMInv.row(zId).clear(0.0);
-			matMInv[zId][zId] = 0.0;		
-		}		
 	}
 	return true;
 }
