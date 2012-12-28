@@ -14,6 +14,7 @@ namespace Spr{;
 PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	SetDesc(&desc);
 	integration_mode = PHFemVibrationDesc::MODE_NEWMARK_BETA;
+	integration_mode = PHFemVibrationDesc::MODE_MODAL_ANALYSIS;
 } 
 
 void PHFemVibration::Init(){
@@ -234,7 +235,7 @@ void PHFemVibration::Step(){
 			NewmarkBeta();
 			break;
 		case PHFemVibrationDesc::MODE_MODAL_ANALYSIS:
-			ModalAnalysis(3);
+			ModalAnalysis(4);
 			break;
 		default:
 			break;
@@ -352,19 +353,78 @@ void PHFemVibration::NewmarkBeta(const double b){
 
 void PHFemVibration::ModalAnalysis(int nmode){
 	DSTR << "//////////////////////////////////" << std::endl;
-	VVectord e; 
-	VMatrixRd v;
+	// まだ減衰を含んでいない
+	// n:自由度、m:モード次数
+	static double time = 0.0;		// 経過時間
+	static VVectord evalue;			// 固有振動数(m)
+	static VMatrixRd evector;		// 固有ベクトル(n*m)
+	static VVectord w;				// 固有角振動数(m)
+	static VVectord q0;				// モード振動ベクトルの初期値(m)
+	static VVectord qv0;			// モード振動速度ベクトルの初期値(m)
+	static VMatrixRd fC;	// モード外力の積分cos成分(0列:今回, 1列前回)(m)
+	static VMatrixRd fS;	// モード外力の積分sin成分(0列:今回, 1列前回)(m)
+
 #if 1
-	DSTR << "det(matMIni)" << std::endl;
-	DSTR << matMIni.det() << std::endl;
-	DSTR << "det(matKIni)" << std::endl;
-	DSTR << matKIni.det() << std::endl;
-	SubSpace(matMIni, matKIni, nmode, 1e-5, e, v);
-	DSTR << "eigenvalue" << std::endl;
-	DSTR << e << std::endl;
-	DSTR << "eigenvector" << std::endl;
-	DSTR << v << std::endl;
+	static bool bFirst = true;
+	if(bFirst){
+		DSTR << "det(matMIni)" << std::endl;
+		DSTR << matMIni.det() << std::endl;
+		DSTR << "det(matKIni)" << std::endl;
+		DSTR << matKIni.det() << std::endl;
+		evalue.resize(nmode);
+		evalue.clear(0.0);
+		evector.resize(matMIni.height(), nmode);
+		evector.clear(0.0);
+		SubSpace(matMIni, matKIni, nmode, 1e-10, evalue, evector);
+		DSTR << "eigenvalue" << std::endl;
+		DSTR << evalue << std::endl;
+		DSTR << "eigenvector" << std::endl;
+		DSTR << evector << std::endl;
 	
+		// 初期変位、速度をモード座標系にする
+		q0.resize(nmode);
+		q0.clear(0.0);
+		q0 = evector.trans() * matMIni * (xlocal - xlocalInit);
+		qv0.resize(nmode);
+		qv0.clear(0.0);
+		qv0 = evector.trans() * matMIni * vlocal / vdt;
+		fC.resize(nmode, 2);
+		fC.clear(0.0);
+		fS.resize(nmode, 2);
+		fS.clear(0.0);
+		w.resize(evalue.size());
+		w = evalue * 2 * M_PI;	// 振動数から角振動数に変換		
+		bFirst = false;
+	}
+
+	// 積分
+	VVectord q;		// 更新後のモード振動ベクトル(m)
+	q.resize(nmode);
+	q.clear(0.0);
+	VVectord qv;	// 更新後のモード振動速度ベクトル(m)
+	qv.resize(nmode);
+	qv.clear(0.0);
+	VVectord fM;	// モード外力(m)
+	fM.resize(nmode);
+	fM.clear(0.0);
+	fM =  evector.trans() * flocal;
+
+	for(int i = 0; i < nmode; i++){
+		double wt = w[i] * time;
+		fC.item(i, 0) += 0.5 * (fM[i] * cos(wt) + fC.item(i, 1)) * vdt;
+		fC.item(i, 1) = fC.item(i, 0);
+		fS.item(i, 0) += 0.5 * (fM[i] * sin(wt) + fS.item(i, 1)) * vdt;
+		fS.item(i, 1) = fS.item(i, 0);
+		q[i] = q0[i] * cos(wt) + qv0[i] * sin(wt) / w[i] + (fC.item(i, 0) * sin(wt) - fS.item(i, 0) * cos(wt))/ w[i];
+	}
+	DSTR << fM << std::endl;
+	DSTR << fC << std::endl;
+	DSTR << fS << std::endl;
+
+	xlocal += evector * q;
+
+	time += vdt;
+
 #else
 	/// テストコード
 	VMatrixRd k;
@@ -389,7 +449,6 @@ void PHFemVibration::ModalAnalysis(int nmode){
 
 	SubSpace(m,k, 4,1e-10, e, v);
 #endif
-
 
 }
 
