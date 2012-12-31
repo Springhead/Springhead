@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Physics/PHFemVibration.h>
+#include <SciLab/SprSciLab.h>
 
 namespace Spr{;
 
@@ -14,10 +15,16 @@ namespace Spr{;
 PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	SetDesc(&desc);
 	integration_mode = PHFemVibrationDesc::MODE_NEWMARK_BETA;
+	integration_mode = PHFemVibrationDesc::MODE_EXPLICIT_EULER;
 	integration_mode = PHFemVibrationDesc::MODE_MODAL_ANALYSIS;
 } 
 
 void PHFemVibration::Init(){
+	// Scilab
+	if (!ScilabStart()){
+		std::cout << "Error : ScilabStart \n";
+		return;
+	}
 	DSTR << "Initializing PHFemVibration" << std::endl;
 	/// 刻み時間の設定
 	PHSceneIf* scene = GetPHFemMesh()->GetScene()->Cast();
@@ -157,17 +164,17 @@ void PHFemVibration::Init(){
 		// 毎ステップ計算する必要のないものを保存
 		matMInv = matMIni.inv();
 
-		//DSTR << "matCk1" << std::endl;	DSTR << matCk1 << std::endl;
-		//DSTR << "matCk1Inv" << std::endl;	DSTR << matCk1Inv << std::endl;
-		//DSTR << "matCkInv" << std::endl;	DSTR << matCkInv << std::endl;
-		//DSTR << "matB" << std::endl;		DSTR << matB << std::endl;
-		//DSTR << "matD" << std::endl;		DSTR << matD << std::endl;
-		//DSTR << "matBtDB" << std::endl;	DSTR << matBtDB << std::endl;
-		//DSTR << "matKe" << std::endl;		DSTR << matKe << std::endl;
-		//DSTR << "det matKe" << std::endl;	DSTR << matKe.det() << std::endl;
+		DSTR << "matCk1" << std::endl;	DSTR << matCk1 << std::endl;
+		DSTR << "matCk1Inv" << std::endl;	DSTR << matCk1Inv << std::endl;
+		DSTR << "matCkInv" << std::endl;	DSTR << matCkInv << std::endl;
+		DSTR << "matB" << std::endl;		DSTR << matB << std::endl;
+		DSTR << "matD" << std::endl;		DSTR << matD << std::endl;
+		DSTR << "matBtDB" << std::endl;	DSTR << matBtDB << std::endl;
+		DSTR << "matKe" << std::endl;		DSTR << matKe << std::endl;
+		DSTR << "det matKe" << std::endl;	DSTR << matKe.det() << std::endl;
 		//DSTR << "matMe" << std::endl;		DSTR << matMe << std::endl;
 	}
-	//DSTR << "matKIni" << std::endl;	DSTR << matKIni << std::endl;
+	DSTR << "matKIni" << std::endl;	DSTR << matKIni << std::endl;
 	//DSTR << "matMIni" << std::endl;	DSTR << matMIni << std::endl;
 	//DSTR << "matCIni" << std::endl;	DSTR << matCIni << std::endl;
 	DSTR << "det(matKIni) = " << matKIni.det() << std::endl;
@@ -196,11 +203,13 @@ void PHFemVibration::Init(){
 	DSTR << "Initializing Completed." << std::endl;
 
 	// テストコード
+
 	vdt = 0.001;
 	AddBoundaryCondition(0, Vec3d(1, 1, 1));
 	//AddBoundaryCondition(5, Vec3d(1, 1, 1));
 	//AddVertexForce(1, Vec3d(1000.0, 0.0, 0.0));
 	//mesh->AddLocalDisplacement(1, Vec3d(0.1, 0.0, 0.0));
+	matCIni.clear(0.0);
 } 
 
 //#define DEBUG
@@ -235,7 +244,7 @@ void PHFemVibration::Step(){
 			NewmarkBeta();
 			break;
 		case PHFemVibrationDesc::MODE_MODAL_ANALYSIS:
-			ModalAnalysis(4);
+			ModalAnalysis(1);
 			break;
 		default:
 			break;
@@ -352,7 +361,7 @@ void PHFemVibration::NewmarkBeta(const double b){
 }
 
 void PHFemVibration::ModalAnalysis(int nmode){
-	DSTR << "//////////////////////////////////" << std::endl;
+	//DSTR << "//////////////////////////////////" << std::endl;
 	// まだ減衰を含んでいない
 	// n:自由度、m:モード次数
 	static double time = 0.0;		// 経過時間
@@ -367,20 +376,32 @@ void PHFemVibration::ModalAnalysis(int nmode){
 #if 1
 	static bool bFirst = true;
 	if(bFirst){
-		DSTR << "det(matMIni)" << std::endl;
-		DSTR << matMIni.det() << std::endl;
-		DSTR << "det(matKIni)" << std::endl;
-		DSTR << matKIni.det() << std::endl;
 		evalue.resize(nmode);
 		evalue.clear(0.0);
 		evector.resize(matMIni.height(), nmode);
 		evector.clear(0.0);
-		SubSpace(matMIni, matKIni, nmode, 1e-10, evalue, evector);
+		SubSpace(matMIni, matKIni, 23, 1e-10, evalue, evector);
 		DSTR << "eigenvalue" << std::endl;
 		DSTR << evalue << std::endl;
 		DSTR << "eigenvector" << std::endl;
 		DSTR << evector << std::endl;
-	
+
+		// Scilab
+		std::cout << "Scilab" << std::endl;
+		VMatrixRd MinvK;
+		MinvK.assign(matMIni.inv() * matKIni);
+		ScilabSetMatrix("MinvK", MinvK);
+		ScilabJob("[P D] = spec(MinvK);");
+		DSTR << "eigenvector scilab" << std::endl;
+		VMatrixRd P;
+		ScilabGetMatrix(P, "P");
+		DSTR << P << std::endl;
+		DSTR << "eigenvalue scilab" << std::endl;
+		VMatrixRd D;
+		ScilabGetMatrix(D, "D");
+		DSTR << D << std::endl;
+		ScilabEnd();
+
 		// 初期変位、速度をモード座標系にする
 		q0.resize(nmode);
 		q0.clear(0.0);
@@ -393,7 +414,9 @@ void PHFemVibration::ModalAnalysis(int nmode){
 		fS.resize(nmode, 2);
 		fS.clear(0.0);
 		w.resize(evalue.size());
-		w = evalue * 2 * M_PI;	// 振動数から角振動数に変換		
+		for(int i = 0; i < w.size(); i++){
+			w[i] = sqrt(evalue[i]);	// 固有角振動数
+		}
 		bFirst = false;
 	}
 
@@ -411,15 +434,18 @@ void PHFemVibration::ModalAnalysis(int nmode){
 
 	for(int i = 0; i < nmode; i++){
 		double wt = w[i] * time;
-		fC.item(i, 0) += 0.5 * (fM[i] * cos(wt) + fC.item(i, 1)) * vdt;
-		fC.item(i, 1) = fC.item(i, 0);
-		fS.item(i, 0) += 0.5 * (fM[i] * sin(wt) + fS.item(i, 1)) * vdt;
-		fS.item(i, 1) = fS.item(i, 0);
+		double ftemp = fM[i] * cos(wt);
+		fC.item(i, 0) += 0.5 * (ftemp + fC.item(i, 1)) * vdt;
+		fC.item(i, 1) = ftemp;
+		ftemp = fM[i] * sin(wt);
+		fS.item(i, 0) += 0.5 * (ftemp + fS.item(i, 1)) * vdt;
+		fS.item(i, 1) = ftemp;
 		q[i] = q0[i] * cos(wt) + qv0[i] * sin(wt) / w[i] + (fC.item(i, 0) * sin(wt) - fS.item(i, 0) * cos(wt))/ w[i];
 	}
-	DSTR << fM << std::endl;
-	DSTR << fC << std::endl;
-	DSTR << fS << std::endl;
+	//DSTR << fM << std::endl;
+	//DSTR << fC << std::endl;
+	//DSTR << fS << std::endl;
+	//DSTR << time << std::endl;
 
 	xlocal += evector * q;
 
@@ -447,9 +473,31 @@ void PHFemVibration::ModalAnalysis(int nmode){
 	DSTR << "det(m)" << std::endl;
 	DSTR << m.det() << std::endl;
 
-	SubSpace(m,k, 4,1e-10, e, v);
-#endif
+	SubSpace(m,k, 3, 1e-10, evalue, evector);
+	DSTR << "eigen vibration value" << std::endl;
+	for(int i = 0; i < evalue.size(); i++){
+		DSTR << sqrt(evalue[i])/2/M_PI << std::endl;
+	}
+	DSTR << "eigenvalue" << std::endl;
+	DSTR << evalue << std::endl;
+	DSTR << "eigenvector" << std::endl;
+	DSTR << evector << std::endl;
+	DSTR << evector.trans() * m * evector << std::endl;
+	DSTR << evector.trans() * k * evector << std::endl;
 
+	std::cout << "Scilab" << std::endl;
+	ScilabSetMatrix("MinvK", m.inv() * k);
+	ScilabJob("[P D] = spec(MinvK);");
+	DSTR << "eigenvector scilab" << std::endl;
+	VMatrixRd P;
+	ScilabGetMatrix(P, "P");
+	DSTR << P << std::endl;
+	DSTR << "eigenvalue scilab" << std::endl;
+	VMatrixRd D;
+	ScilabGetMatrix(D, "D");
+	DSTR << D << std::endl;
+	ScilabEnd();
+#endif
 }
 
 //* 計算関数（そのうちTMatirixへ）
@@ -487,15 +535,7 @@ void PHFemVibration::SubSpace(const VMatrixRd& _M, const VMatrixRd& _K,
 		y.col(i) = yini;
 		ylast.col(i) = yini;
 	}	
-	//// yiniを変更
-	//for(int i = 0; i < size; i++){
-	//	yini[i] = i;
-	//}
-	//yini.unitize();
-	//for(int i = 0; i < nmode; i++){
-	//	y.col(i) = yini;
-	//	ylast.col(i) = yini;
-	//}
+
 	/// _M, _Kをコレスキー分解
 	// _AInvの計算はコレスキー分解値を使ってfor文で計算したほうが速いはず。
 	// 今は速さを気にせず逆行列を計算してる。
@@ -511,17 +551,13 @@ void PHFemVibration::SubSpace(const VMatrixRd& _M, const VMatrixRd& _K,
 	_AInv.resize(size, size);
 	_AInv.clear(0.0);
 	_AInv = _Mc.trans() * (_Kc.inv()).trans() * _Kc.inv() * _Mc;
-	//DSTR << "_Mc" << std::endl;
-	//DSTR << _Mc << std::endl;
-	//DSTR << _Mc * _Mc.trans() << std::endl;
-	DSTR << "yini" << std::endl;
-	DSTR << yini << std::endl;
 
 	/// 反復計算
 	for(int k = 0; k < nmode; k++){
 		VVectord z;
 		z.resize(size);
 		z.clear(0.0);
+		int cnt = 0;
 		while(1){
 			// zの計算
 			z = _AInv * y.col(k);	 
@@ -535,30 +571,19 @@ void PHFemVibration::SubSpace(const VMatrixRd& _M, const VMatrixRd& _K,
 			}
 			y.col(k) = z - c;
 			y.col(k).unitize();
-			//DSTR << "k " << k << std::endl;
-			//DSTR << "c" << std::endl;
-			//DSTR << c << std::endl;
-			//DSTR << "z" << std::endl;
-			//DSTR << z << std::endl;
-			//DSTR << "y.col(k)" << std::endl;
-			//DSTR << y.col(k) << std::endl;
 
 			double error = 0.0;
 			error = sqrt((ylast.col(k) - y.col(k)) * (ylast.col(k) - y.col(k)));
-			//DSTR << "yl - y" << std::endl;
-			//DSTR << ylast.col(k) - y.col(k) << std::endl;
 			ylast.col(k) = y.col(k);
 			if(abs(error) < epsilon) break;
-			//DSTR << "error" << std::endl;
-			//DSTR << error << std::endl;
-			//DSTR << "y" << std::endl;
-			//DSTR << y << std::endl;
-			//DSTR << "loop/////////////////" << std::endl;
+			cnt++;
+			if(cnt > 1e5){
+				DSTR << "Can not converge in subspace" << std::endl;
+				break;
+			}
 		}
-		evector.col(k) = _Mc.trans().inv() * y.col(k);
-		evalue[k] = sqrt(1.0 / (y.col(k) * _AInv * y.col(k))) / (2 * M_PI);	// 角振動数[rad/s]から[Hz]に変換
-		//DSTR << v.col(k) << std::endl;
-		//DSTR << e[k] << std::endl;
+		evector.col(k) = _Mc.trans().inv() * y.col(k);		// 固有ベクトル
+		evalue[k] = 1.0 / (y.col(k) * _AInv * y.col(k));	// 固有値
 	}
 }
 
