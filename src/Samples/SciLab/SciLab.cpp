@@ -1,10 +1,24 @@
-﻿#include <SciLab/SprSciLab.h>
+﻿/*
+ *  Copyright (c) 2003-2012, Shoichi Hasegawa and Springhead development team 
+ *  All rights reserved.
+ *  This software is free software. You can freely use, distribute and modify this 
+ *  software. Please deal with this software under one of the following licenses: 
+ *  This license itself, Boost Software License, The MIT License, The BSD License.   
+ */
+
+/* ScilabとSpringhead2をリンクさせるためのサンプル
+動作必要要件：LibScilab.dll(Scilabインストール時にscilab\bin内にあるはず）
+scilab-5.3.3で動作確認、別バージョンを利用したい場合はScilabStub.cpp:StartScilab()内に
+pathを記述する必要がある。
+*/
+#include <SciLab/SprSciLab.h>
 #include <Base/Affine.h>
 using namespace Spr;
 
 int main(){
-	if (!ScilabStart()) std::cout << "Error : ScilabStart \n";
-
+	if (!ScilabStart()){
+		std::cout << "Error : ScilabStart \n";
+	}
 	//	行列の読み書き
 	Matrix2f A;
 	A.Ex() = Vec2f(1,2);
@@ -48,5 +62,7 @@ int main(){
 	for(int i=0; i<100000; ++i){
 		ScilabJob("");
 	}
+
 	ScilabEnd();
+	return 0;
 }
