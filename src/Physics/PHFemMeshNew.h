@@ -87,7 +87,7 @@ protected:
 	PHSolidIf* solid;					///< 関連づけられている剛体
 public:
 	std::vector<FemVertex> vertices;	///< 頂点
-	std::vector<FemVertex> initVertices;///< 初期頂点
+	//std::vector<FemVertex> initVertices;///< 初期頂点
 	std::vector<FemTet> tets;			///< 四面体
 	
 	/// 追加情報	基本情報からSetDesc()が計算して求める。
@@ -135,15 +135,24 @@ public:
 	void UpdateJacobian();
 	/// 四面体の体積を返す
 	double GetTetrahedronVolume(int tetID);
-	/// 頂点に変位を与える（ワールド座標系）
-	bool AddDisplacement(int vtxId, Vec3d disW);
-	/// 頂点に変位を与える（ローカル座標系）
-	bool AddLocalDisplacement(int vtxId, Vec3d disL);
-	/// 頂点の位置を指定する（ワールド座標系）
-	bool SetVertexPosition(int vtxId, Vec3d posW);
-	/// 頂点の位置を指定する（ローカル座標系）
-	bool SetLocalVertexPosition(int vtxId, Vec3d posL);
 
+	/// 頂点の初期位置を取得する（ローカル座標系）
+	Vec3d GetVertexInitPositionL(int vtxId);
+
+	/// 頂点の位置を取得する（ローカル座標系）
+	Vec3d GetVertexPositionL(int vtxId);
+	/// 頂点の変位を取得する（ローカル座標系）
+	Vec3d GetVertexDisplacementL(int vtxId);
+	
+	/// 頂点に変位を与える（ワールド座標系）
+	bool AddVertexDisplacementW(int vtxId, Vec3d disW);
+	/// 頂点に変位を与える（ローカル座標系）
+	bool AddVertexDisplacementL(int vtxId, Vec3d disL);
+	
+	/// 頂点の位置を指定する（ワールド座標系）
+	bool SetVertexPositionW(int vtxId, Vec3d posW);
+	/// 頂点の位置を指定する（ローカル座標系）
+	bool SetVertexPositionL(int vtxId, Vec3d posL);
 };
 
 }

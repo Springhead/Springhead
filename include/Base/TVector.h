@@ -243,6 +243,11 @@ public:
 	inline size_t size() const { return exp().size_impl(); }
 	///	サイズの設定
 	inline void resize(size_t sz){ exp().resize_impl(sz); }
+	/// サイズの設定とベクトルの要素を全てvにする
+	inline void resize(size_t sz, const element_type v){
+		resize(sz);
+		clear(v);
+	}
 	///	ストライドの取得
 	inline size_t stride() const { return exp().stride_impl(); }
 	//@}

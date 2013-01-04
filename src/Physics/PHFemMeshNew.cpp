@@ -101,6 +101,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	}
 	for(unsigned i=0; i<vertices.size(); ++i){
 		vertices[i].pos = d->vertices[i];
+		vertices[i].initialPos = vertices[i].pos;
 		vertices[i].tetIDs.clear();
 	}
 	//	ê⁄ë±èÓïÒÇÃçXêV
@@ -232,9 +233,6 @@ void PHFemMeshNew::SetDesc(const void* p){
 			vertices[faces[i].vertices[j]].faceIDs.push_back(i);
 		}
 	}
-	// èâä˙ílÇÇ∆Ç¡ÇƒÇ®Ç≠
-	initVertices.clear();
-	initVertices = vertices;
 }
 
 bool PHFemMeshNew::AddChildObject(ObjectIf* o){
@@ -353,7 +351,28 @@ double PHFemMeshNew::GetTetrahedronVolume(int tetID){
 	return volume;
 }
 
-bool PHFemMeshNew::AddDisplacement(int vtxId, Vec3d disW){
+Vec3d PHFemMeshNew::GetVertexInitPositionL(int vtxId){
+	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
+		return vertices[vtxId].initialPos;
+	}
+	return Vec3d();
+}
+
+Vec3d PHFemMeshNew::GetVertexPositionL(int vtxId){
+	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
+		return vertices[vtxId].pos;
+	}
+	return Vec3d();
+}
+
+Vec3d PHFemMeshNew::GetVertexDisplacementL(int vtxId){
+	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
+		return vertices[vtxId].pos - vertices[vtxId].initialPos;
+	}
+	return Vec3d();
+}
+
+bool PHFemMeshNew::AddVertexDisplacementW(int vtxId, Vec3d disW){
 	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		vertices[vtxId].pos += GetPHSolid()->GetPose().Inv() * disW;
 		return true;
@@ -361,7 +380,7 @@ bool PHFemMeshNew::AddDisplacement(int vtxId, Vec3d disW){
 	return false;
 }
 
-bool PHFemMeshNew::AddLocalDisplacement(int vtxId, Vec3d disL){
+bool PHFemMeshNew::AddVertexDisplacementL(int vtxId, Vec3d disL){
 	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		vertices[vtxId].pos += disL;
 		return true;
@@ -369,7 +388,7 @@ bool PHFemMeshNew::AddLocalDisplacement(int vtxId, Vec3d disL){
 	return false;
 }
 
-bool PHFemMeshNew::SetVertexPosition(int vtxId, Vec3d posW){
+bool PHFemMeshNew::SetVertexPositionW(int vtxId, Vec3d posW){
 	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		vertices[vtxId].pos = GetPHSolid()->GetPose().Inv() * posW;
 		return true;
@@ -377,11 +396,12 @@ bool PHFemMeshNew::SetVertexPosition(int vtxId, Vec3d posW){
 	return false;
 }
 
-bool PHFemMeshNew::SetLocalVertexPosition(int vtxId, Vec3d posL){
+bool PHFemMeshNew::SetVertexPositionL(int vtxId, Vec3d posL){
 	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		vertices[vtxId].pos = posL;
 		return true;
 	}
 	return false;
 }
+
 }

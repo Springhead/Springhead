@@ -50,6 +50,7 @@ public:
 	void Sync();
 	/// PHVibration‚Ìî•ñ‚ğ“¯Šú
 	void SyncVibrationInfo();
+	Vec4f CompThermoColor(float value);
 
 public:
 	enum TEXTURE_MODE{
