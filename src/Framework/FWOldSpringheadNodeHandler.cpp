@@ -310,6 +310,18 @@ public:
 			desc.materialList.insert(desc.materialList.end(), ml->faceIndexes.begin(), ml->faceIndexes.end());
 		}
 
+		// 頂点カラー
+		UTLoadedData* vcData = ld->FindDescendant("MeshVertexColors");
+		if(vcData){
+			MeshVertexColors* vc = (MeshVertexColors*) vcData->data;
+			desc.colors.resize(vc->vertexColors.size());
+			for(int i = 0; i < (int)vc->vertexColors.size(); i++){
+				//desc.colors[vc->vertexColors[i].index] = vc->vertexColors[i].indexColor;
+				desc.colors[i] = vc->vertexColors[i].indexColor;
+			}
+			//desc.colors.insert(desc.colors.end(), vc->vertexColors.begin(), vc->vertexColors.end());
+		}
+
 		//	スキンメッシュのヘッダ
 		UTLoadedData* skinHeader = ld->FindDescendant("XSkinMeshHeader");
 		if (skinHeader){

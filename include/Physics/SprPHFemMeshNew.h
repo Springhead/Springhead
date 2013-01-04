@@ -38,10 +38,10 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 	int NVertices();
 	int NFaces();
 	double GetTetrahedronVolume(int tetID);
-	bool AddDisplacement(int vtxId, Vec3d disW);
-	bool AddLocalDisplacement(int vtxId, Vec3d disL);
-	bool SetVertexPosition(int vtxId, Vec3d posW);
-	bool SetLocalVertexPosition(int vtxId, Vec3d posL);
+	bool AddVertexDisplacementW(int vtxId, Vec3d disW);
+	bool AddVertexDisplacementL(int vtxId, Vec3d disL);
+	bool SetVertexPositionW(int vtxId, Vec3d posW);
+	bool SetVertexPositionL(int vtxId, Vec3d posL);
 };
 
 /// Femのデスクリプタ

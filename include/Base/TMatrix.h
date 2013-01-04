@@ -722,9 +722,14 @@ public:
 	size_t width() const { return exp().width_impl(); }
 	///	サイズの設定
 	void resize(size_t h, size_t w){ exp().resize_impl(h,w); }
+	/// サイズの設定と、要素をすべてvにする
+	void resize(size_t h, size_t w, const element_type v){
+		resize(h, w);
+		clear(v);
+	}
 	///	stride の取得
 	size_t stride() const { return exp().stride_impl(); }
-	/**	ベクトルの要素を全てvにする.
+	/**	行列の要素を全てvにする.
 		@param v 要素型の値.	*/
 	void clear(const element_type v=zero(0)){
 		for(size_t i=0; i<height(); ++i)

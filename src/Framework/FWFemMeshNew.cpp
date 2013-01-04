@@ -250,13 +250,8 @@ void FWFemMeshNew::CreateGRFromPH(){
 	for(unsigned pf=0; pf<gmd.materialList.size(); ++pf){
 		gmd.materialList[pf] = grFemMesh->materialList[pFaceMap[pf].face];
 	}
+	DSTR << grFemMesh->materialList.size() << pFaceMap.size() << std::endl;
 
-	//gmd.colors.resize(grFemMesh->colors.size() ? vtxMap.size() : 0);
-	//gmd.colors.resize(vtxMap.size());
-	////for(unsigned pv=0; pv<gmd.colors.size(); ++pv){
-	////	gmd.colors[pv] = grFemMesh->colors[vtxMap[pv]];
-	////	DSTR << gmd.colors[pv] << std::endl;
-	////}
 
 	//	新しく作るGRMeshの頂点からphFemMeshの頂点への対応表
 	vertexIdMap.resize(gmd.vertices.size(), -1);
@@ -360,6 +355,14 @@ void FWFemMeshNew::CreateGRFromPH(){
 			}
 		}
 	}
+	
+	//DSTR << grFemMesh->colors.size() << " "<< vertexIdMap.size() << std::endl;
+	//gmd.colors.resize(grFemMesh->colors.size() ? vertexIdMap.size() : 0);
+	//for(unsigned pv=0; pv<gmd.colors.size(); ++pv){
+	//	gmd.colors[pv] = grFemMesh->colors[vertexIdMap[pv]];
+	//	DSTR << gmd.colors[pv] << std::endl;
+	//}
+
 	//	GRMeshを作成
 	GRMesh* rv = grFemMesh->GetNameManager()->CreateObject(GRMeshIf::GetIfInfoStatic(), &gmd)->Cast();
 	//	マテリアルの追加
@@ -393,8 +396,37 @@ void FWFemMeshNew::SyncVibrationInfo(){
 		int pId = vertexIdMap[i];
 		grVertices[i] = (Vec3f)phFemMesh->vertices[pId].pos;
 	}
+	//// 変位で色変化
+	//Vec4f* vc = grFemMesh->GetColors();
+	//if(!vc) return;
+	//float base = 0.001;
+	//float offset = 0.001;
+	//PHFemVibrationIf* fvib = phFemMesh->GetPHFemVibration();
+	//VVector< Vec3d > disp;
+	//disp.assign(fvib->GetVertexDisplacement());
+	//for(int i = 0; i < (int)vertexIdMap.size(); i++){
+	//	int pId = vertexIdMap[i];
+	//	float value = disp[pId].norm();
+	//	vc[pId] = CompThermoColor(abs(value/base)+offset);
+	//}
 }
 
+Vec4f FWFemMeshNew::CompThermoColor(float value){
+	float cos = -0.5 * std::cos( 4 * M_PI * value) + 0.5;
+	Vec4f color;
+	if(value > 1.0){
+		color = Vec4f(1.0, 0.0, 0.0, 1.0);
+	}else if(value > 3.0 / 4.0){
+		color = Vec4f(1.0, cos, 0.0, 1.0);
+	}else if(value > 2.0 / 4.0){
+		color = Vec4f(cos, 1.0, 0.0, 1.0);
+	}else if(value > 1.0 / 4.0){
+		color = Vec4f(0.0, 1.0, cos, 1.0);
+	}else if(value > 0.0){
+		color = Vec4f(0.0, 0.0, 1.0, 1.0);
+	}
+	return color;
+}
 
 
 }
