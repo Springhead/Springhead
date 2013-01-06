@@ -30,6 +30,14 @@ public:
 	VVectord xdl;		// 頂点変位(u = (x1, ..., xn-1, y1, ..., yn-1, z1, ..., zn-1)
 	VVectord vl;		// 頂点速度
 	VVectord fl;		// 計算用の外力
+	VMatrixRd matKp;	// 全体剛性行列
+	VMatrixRd matMp;	// 全体質量行列
+	VMatrixRd matCp;	// 全体減衰行列
+	VVectord xdlp;		// 頂点変位(u = (x1, ..., xn-1, y1, ..., yn-1, z1, ..., zn-1)
+	VVectord vlp;		// 頂点速度
+	VVectord flp;		// 計算用の外力
+
+	VVector< int > boundary;	// 境界条件ID
 
 	PHFemVibration(const PHFemVibrationDesc& desc = PHFemVibrationDesc());
 	/// 初期化
@@ -76,21 +84,38 @@ public:
 	void UpdateVerticesPosition(VVectord& _xd);
 
 	// 境界条件を加える(行列と番号）
-	bool AddBoundaryCondition(VMatrixRd& mat, const int id);
+	bool AddBoundaryCondition(VMatrixRd& base, VMatrixRd& mat, const int id);
 	// 境界条件を加える(頂点）
 	bool AddBoundaryCondition(const int vtxId, const Vec3i dof);
 	// 境界条件を加える(頂点順）
-	bool AddBoundaryCondition(const VVector< Vec3i > bcs); 
+	bool AddBoundaryCondition(const VVector< Vec3i > bcs);
+	// 境界条件を反映させるための行列を計算する
+	void CompBoundaryMatrix(VMatrixRd& _L, VMatrixRd& _R, const VVector< int > bc);
+	// 境界条件に応じて行列の自由度を削減する
+	void ReduceMatrixSize(VMatrixRd& mat, const VVector< int > bc);
+	// 境界条件に応じて行列自由度を削減する
+	void ReduceMatrixSize(VMatrixRd& _M, VMatrixRd& _K, VMatrixRd& _C, const VVector< int > bc);
+	// 境界条件に応じてベクトルの自由度を削減する
+	void ReduceVectorSize(VVectord& r, const VVector< int > bc);
+	// 境界条件に応じてベクトルの自由度を削減する
+	void ReduceVectorSize(VVectord& _xd, VVectord& _v, VVectord& _f,const VVector< int > bc);
+	// ベクトルの自由度を元に戻す
+	void GainVectorSize(VVectord& r, const VVector< int > bc);
+	// ベクトルの自由度を元に戻す
+	void GainVectorSize(VVectord& _xd, VVectord& _v, const VVector< int > bc);
 
 	// 頂点に力を加える（ワールド座標系）
 	bool AddVertexForce(int vtxId, Vec3d fW);
 	// 頂点群に力を加える（ワールド座標系）
 	bool AddVertexForce(VVector< Vec3d > fWs);
 
-	// scilabデバック
+	/// scilabデバック
 	bool IsScilabStarted;
-	//void ScilabDeterminant(VMatrixRd& _M, VMatrixRd& _K, VMatrixRd& _K);
+	void ScilabDeterminant(VMatrixRd& _M, VMatrixRd& _K, VMatrixRd& _C);
 	void ScilabEigenValueAnalysis(VMatrixRd& _M, VMatrixRd& _K);
+
+	/// 行列のファイル出力
+	void MatrixFileOut(VMatrixRd mat, std::string filename);
 };
 
 }

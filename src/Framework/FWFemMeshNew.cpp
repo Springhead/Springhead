@@ -250,8 +250,6 @@ void FWFemMeshNew::CreateGRFromPH(){
 	for(unsigned pf=0; pf<gmd.materialList.size(); ++pf){
 		gmd.materialList[pf] = grFemMesh->materialList[pFaceMap[pf].face];
 	}
-	DSTR << grFemMesh->materialList.size() << pFaceMap.size() << std::endl;
-
 
 	//	新しく作るGRMeshの頂点からphFemMeshの頂点への対応表
 	vertexIdMap.resize(gmd.vertices.size(), -1);
