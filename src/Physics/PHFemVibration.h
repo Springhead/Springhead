@@ -27,15 +27,15 @@ public:
 	VMatrixRd matMIni;	// 全体質量行列の初期値
 	VMatrixRd matMInv;	// 全体質量行列の逆行列
 	VMatrixRd matCIni;	// 全体減衰行列の初期値
-	VVectord xdl;		// 頂点変位(u = (x1, ..., xn-1, y1, ..., yn-1, z1, ..., zn-1)
+	VVectord xdl;		// 頂点変位(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
 	VVectord vl;		// 頂点速度
 	VVectord fl;		// 計算用の外力
-	VMatrixRd matKp;	// 全体剛性行列
-	VMatrixRd matMp;	// 全体質量行列
-	VMatrixRd matCp;	// 全体減衰行列
-	VVectord xdlp;		// 頂点変位(u = (x1, ..., xn-1, y1, ..., yn-1, z1, ..., zn-1)
-	VVectord vlp;		// 頂点速度
-	VVectord flp;		// 計算用の外力
+	VMatrixRd matKp;	// 全体剛性行列の一部
+	VMatrixRd matMp;	// 全体質量行列の一部
+	VMatrixRd matCp;	// 全体減衰行列の一部
+	VVectord xdlp;		// 頂点変位の一部(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
+	VVectord vlp;		// 頂点速度の一部
+	VVectord flp;		// 計算用の外力の一部
 
 	VVector< int > boundary;	// 境界条件ID
 
