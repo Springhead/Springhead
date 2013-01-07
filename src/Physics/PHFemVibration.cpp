@@ -44,6 +44,8 @@ void PHFemVibration::Init(){
 	matKIni.resize(NDof, NDof, 0.0);
 	matMIni.resize(NDof, NDof, 0.0);
 	matCIni.resize(NDof, NDof, 0.0);
+	VMatrixRd matKtest;
+	matKtest.assign(matKIni);
 	for(int i = 0; i < NTets; i++){
 		// 要素行列の計算
 		/// tetが持つ頂点順
@@ -72,6 +74,28 @@ void PHFemVibration::Init(){
 			}
 		}
 
+		///test 行列Cの計算
+		PTM::TMatrixRow< 1, 4, double > vec[4];
+		for(int j = 0; j < 4; j++){
+			vec[j].item(0, 0) = 1.0;
+			vec[j].item(0, 1) = pos[j].x;
+			vec[j].item(0, 2) = pos[j].y;
+			vec[j].item(0, 3) = pos[j].z;
+			DSTR << vec[j] << std::endl;
+		}
+		PTM::TMatrixRow< 12, 12, double > matCtest;
+		matCtest.clear(0.0);
+		for(int j = 0; j < 4; j++){
+			int id = 3 * j;
+			matCtest.vsub_matrix(id, 0, 1, 4) = vec[j];
+			matCtest.vsub_matrix(id+1, 4, 1, 4)= vec[j];
+			matCtest.vsub_matrix(id+2, 8, 1, 4)= vec[j];
+		}
+		DSTR << matCtest << std::endl;
+		DSTR << matCtest.inv() << std::endl;
+
+		/// test終わり
+
 		/// 行列B（定数）
 		PTM::TMatrixRow< 6,12,double > matB;
 		matB.clear(0.0);
@@ -87,11 +111,11 @@ void PHFemVibration::Init(){
 		const double E = GetYoungModulus();
 		const double v = GetPoissonsRatio();
 		const double a = 1 - v;
-		const double b = (1 - 2 * v);
-		const double c = b / 2;
+		const double b = 1 - 2 * v;
+		const double c = 0.5 * b;
 		double Em;
 		if(b == 0.0) Em = DBL_MAX; /// 変形しない。ほんとうは+∞になる。
-		else Em = E / (b * (v + 1));
+		else Em = E / ((1 + v) * b);
 		PTM::TMatrixRow< 6, 6,double > matD;
 		matD.clear(0.0);
 		matD[0][0] = a; matD[0][1] = v; matD[0][2] = v;
@@ -112,6 +136,35 @@ void PHFemVibration::Init(){
 		matKe.clear(0.0);
 		matKe = matCkInv.trans() * matBtDB * matCkInv * mesh->GetTetrahedronVolume(i);	
 
+		/// テスト
+		TMatrixRow< 12, 12,double > matKetest;
+		matKetest.clear(0.0);
+		matKetest = matCtest.inv().trans() * matBtDB * matCtest.inv() * mesh->GetTetrahedronVolume(i);
+		DSTR << matKetest << std::endl;
+		MatrixFileOut(matKetest, "matKetest.csv");
+		/// u = (u0, ..., un-1, v0, ..., vn-1, w0, ..., wn-1)として計算 
+		// j:頂点数, k:頂点数
+		// l:ブロック数, m:ブロック数
+		for(int j = 0; j < 4; j++){
+			for(int k = 0; k < 4; k++){
+				int id = mesh->tets[i].vertexIDs[j];
+				int id2 = mesh->tets[i].vertexIDs[k];
+				int t = id * 3;
+				int l = id2 * 3;
+				int h = 3;
+				int w = 3;
+				int te = j * 3;
+				int le = k * 3;
+				// 全体剛性行列
+				matKtest.vsub_matrix(t, l, h, w) += matKetest.vsub_matrix(te, le, h, w);
+			}
+		}
+		DSTR << "matKtest" << std::endl;
+		DSTR << matKtest << std::endl;
+		DSTR << matKtest.det() << std::endl;
+
+		// テスト終わり
+
 		/// 質量行列の計算
 		TMatrixRow< 12, 12, double > matMe;
 		matMe.clear(0.0);
@@ -130,7 +183,7 @@ void PHFemVibration::Init(){
 		TMatrixRow< 12, 12, double > matCe;
 		matCe.clear(0.0);
 		matCe = GetAlpha() * matMe + GetBeta() * matKe;
-
+		
 		/// 全体行列の計算
 		/// 頂点番号順
 		/// u = (u0, ..., un-1, v0, ..., vn-1, w0, ..., wn-1)として計算 
@@ -188,9 +241,8 @@ void PHFemVibration::Init(){
 	boundary.resize(NDof, 0.0);
 	/// FemVertexから変位を取ってくる
 	GetVerticesDisplacement(xdl);
-
-	DSTR << "initial xdl" << std::endl;	DSTR << xdl << std::endl;
-	DSTR << "initial vl" << std::endl;	DSTR << vl << std::endl;
+	//DSTR << "initial xdl" << std::endl;	DSTR << xdl << std::endl;
+	//DSTR << "initial vl" << std::endl;	DSTR << vl << std::endl;
 	DSTR << "Initializing Completed." << std::endl;
 
 	// テスト（境界条件の付加）
@@ -199,15 +251,11 @@ void PHFemVibration::Init(){
 	AddBoundaryCondition(0, con);
 	AddBoundaryCondition(3, con);
 	AddBoundaryCondition(1, con);
-	DSTR << "Before Reducing" << std::endl;
-	DSTR << "matMp" << std::endl;	DSTR << matMp << std::endl;
-	DSTR << "matKp" << std::endl;	DSTR << matKp << std::endl;
-	DSTR << "matCp" << std::endl;	DSTR << matCp << std::endl;
 	ReduceMatrixSize(matMp, matKp, matCp, boundary);
 	DSTR << "After Reducing" << std::endl;
-	DSTR << "matMp" << std::endl;	DSTR << matMp << std::endl;
+	//DSTR << "matMp" << std::endl;	DSTR << matMp << std::endl;
 	DSTR << "matKp" << std::endl;	DSTR << matKp << std::endl;
-	DSTR << "matCp" << std::endl;	DSTR << matCp << std::endl;
+	//DSTR << "matCp" << std::endl;	DSTR << matCp << std::endl;
 	ScilabDeterminant(matMp, matKp, matCp);
 	ScilabEigenValueAnalysis(matMp, matKp);
 
@@ -256,7 +304,7 @@ void PHFemVibration::Step(){
 			NewmarkBeta(matMp, matKp, matCp, flp, vdt, xdlp, vlp);
 			break;
 		case PHFemVibrationDesc::MODE_MODAL_ANALYSIS:
-			ModalAnalysis(matMIni, matKIni, matCIni,fl,vdt, xdl, vl, 1);
+			ModalAnalysis(matMp, matKp, matCp, flp,vdt, xdlp, vlp, matMp.height());
 			break;
 		default:
 			break;
@@ -394,7 +442,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRd& _M, const VMatrixRd& _K, con
 		q0.resize(nmode, 0.0);
 		q0 = evector.trans() * _M * _xd;
 		qv0.resize(nmode, 0.0);
-		qv0 = evector.trans() * matMIni * _v / _dt;
+		qv0 = evector.trans() * _M * _v / _dt;
 		fC.resize(nmode, 2, 0.0);
 		fS.resize(nmode, 2, 0.0);
 		w.resize(evalue.size());
@@ -411,7 +459,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRd& _M, const VMatrixRd& _K, con
 	qv.resize(nmode, 0.0);
 	VVectord fM;	// モード外力(m)
 	fM.resize(nmode, 0.0);
-	fM =  evector.trans() * fl;
+	fM =  evector.trans() * _f;
 
 	for(int i = 0; i < nmode; i++){
 		double wt = w[i] * time;
@@ -423,6 +471,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRd& _M, const VMatrixRd& _K, con
 		fS.item(i, 1) = ftemp;
 		q[i] = q0[i] * cos(wt) + qv0[i] * sin(wt) / w[i] + (fC.item(i, 0) * sin(wt) - fS.item(i, 0) * cos(wt))/ w[i];
 	}
+	//DSTR << _f << std::endl;
 	//DSTR << fM << std::endl;
 	//DSTR << fC << std::endl;
 	//DSTR << fS << std::endl;
@@ -730,10 +779,10 @@ void PHFemVibration::ScilabEigenValueAnalysis(VMatrixRd& _M, VMatrixRd& _K){
 	DSTR << "ScilabEigenValueAnalysis Start." << std::endl;
 	DSTR << "det(M) springhead2 : " << _M.det() << std::endl;
 	DSTR << "det(K) springhead2 : " << _K.det() << std::endl;
-#if 0
+#if 1
 	VVectord evalue;
 	VMatrixRd evector;
-	SubSpace(_M, _K, 5, 1e-5, evalue, evector);
+	SubSpace(_M, _K, _M.height(), 1e-5, evalue, evector);
 	DSTR << "eigenvalue springhead2" << std::endl;
 	DSTR << evalue << std::endl;
 	DSTR << "eigen vibration value springhead2" << std::endl;
