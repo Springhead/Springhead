@@ -13,6 +13,16 @@
 namespace Spr{;
 
 struct FWFemMeshDesc: public FWObjectDesc{
+	//	3次元テクスチャ使用枚数
+	//unsigned kogePics;		// 焦げ表示切り替えテクスチャ(画像)枚数
+	//unsigned thermoPics;	// 温度表示切り替えテクスチャ
+	//unsigned waterPics;		// 水分情報切り替えテクスチャ
+	//FWFemMeshDesc(){Init();}
+	//void Init(){
+	//	kogePics	= 5;
+	//	thermoPics	= 6;
+	//	waterPics	= 2;
+	//}
 };
 
 /** 

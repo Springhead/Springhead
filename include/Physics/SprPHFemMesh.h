@@ -79,6 +79,8 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void UpdateVecF();						//	被加熱物体の熱流束リセット
 	void UpdateVecF_frypan();				//	被加熱物体の熱流束リセット
 	void DecrMoist();						//	
+	void DecrMoist_velo(double vel);						//
+	void DecrMoist_vel(double dt);						//
 	void InitAllVertexTemp();
 	void SetInitThermoConductionParam(
 		double thConduct,		// thConduct:熱伝導率
@@ -87,6 +89,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
 		);
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);
+
 };
 
 //@}

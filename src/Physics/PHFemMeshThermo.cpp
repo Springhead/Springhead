@@ -17,7 +17,7 @@
 #include "windows.h"
 
 //#define THCOND 0.574
-#define THCOND 5.74
+#define THCOND 0.574//5.74
 
 using namespace PTM;
 
@@ -4389,6 +4389,127 @@ void PHFemMeshThermo::InitMoist(){
 	}
 }
 
+
+void PHFemMeshThermo::DecrMoist_velo(double vel){
+	//制限速度ver
+	for(unsigned id =0; id < tets.size() ; id++){
+		////頂点が100度以上で残水量が０ではないとき
+		double tempAdd = 0.0;	//	加算温度
+		for(unsigned i=0; i < 4; i++){
+			tempAdd += vertices[tets[id].vertices[i]].temp;
+		}
+		//単位換算は合っているか？
+		double wlatheat = 2.26 * 1000;		//水1kg当たりの潜熱(latent heat)[W・s]=[J] 水の潜熱が540cal/gよりJに変換して使用   W=J/s 2.26[kJ/kg]
+		tets[id].tetsMg = tets[id].volume * rho;		//四面体の質量
+		//単位時間あたり蒸発量は、dw/dt = A/W * Rc  A:見かけ表面積、W:見かけの無水物質量
+		double faceS=0.0;
+		for(int ii=0;ii<4;ii++){
+			int facet = tets[id].faces[ii];
+			if(facet <= nSurfaceFace){
+				faceS += faces[facet].area;
+			}
+		}
+		//double surfaceS = tets[id].faces[  //	四面体に属するfaceがnSurfacefaceより小さい番号のfaceなら、表面のface
+		double sokudo = vel;
+		double dwdt = faceS / tets[id].tetsMg * sokudo;//単位時間あたりなのでdt要素を入れる		//1stepで減る水の量
+		//double wlat = (tempAdd / 4.0) - 100.0;	//100度を超えただけ蒸発する。
+		//double dw = dwdt * specificHeat *  tets[id].tetsMg / wlatheat;	//	水分蒸発量	//	(温度と沸点100度との差分の熱量)÷水の潜熱で蒸発する水の量が分かる。;		//	水分蒸発量
+		double exwater	= 0;	//流出する水の量全体(蒸発 + 流出 + 水分移動)
+		//平均温度が100度超過
+
+		//100度未満：蒸気圧差　による蒸発・乾燥
+			//質量を減じ
+			tets[id].tetsMg -= dwdt;
+			//熱量を奪う	四面体の質量が持っている熱量から、dwdt分を削る		//	4節点の平均温度でいいのか？	//ここに無理がありそう。
+			double tetsheating = rho * specificHeat * tets[id].volume * (vertices[tets[id].vertices[0]].temp + vertices[tets[id].vertices[1]].temp + vertices[tets[id].vertices[2]].temp + vertices[tets[id].vertices[3]].temp)/4.0;
+
+			//
+
+
+		//100度以上：潜熱による蒸発・乾燥
+
+
+		//変性に依る流出　タンパク質変性・構造変化と水分流出
+
+
+
+		//	多分、以下のコードが問題。
+		//if( tempAdd / 4.0 >= 100.0){
+		//	//dwの分だけ、質量や水分量から引く
+		//	//double delw = (dt / 0.01 * 1.444*(0.000235/0.29)  / 10000000)*100;
+		//	double delw = (1.444*(0.000235/0.29)  / 10000000)*100;
+		//	exwater = delw * 500;
+		//	tets[id].tetsMg -= dw - exwater;
+		//	if(tets[id].wmass > dw - exwater){
+		//		tets[id].wmass -= dw - exwater;
+		//	}else{
+		//		DSTR << "水分流出量が多すぎます" << std::endl;
+		//	}
+		//	//検証する:ひとまず、exwaterが０でなければ、音を再生させることにしようか。音を出したら、そのメッシュのexwaterの値を０にしよう。
+		//	//wlatの分だけ、温度から引く
+		//	for(unsigned j=0; j < 4; j++){
+		//		vertices[j].temp -= dwdt;
+		//	}
+		//}
+		//とりあえず、簡単に、水分を減らすコード
+		//if(tets[id].wmass >= tets[id].wmass_start *0.01){
+		//	tets[id].wmass -= tets[id].wmass_start * 0.01;
+		//}
+	}
+}
+
+
+void PHFemMeshThermo::DecrMoist_vel(double dt){
+	//制限速度ver
+	for(unsigned id =0; id < tets.size() ; id++){
+		////頂点が100度以上で残水量が０ではないとき
+		double tempAdd = 0.0;	//	加算温度
+		for(unsigned i=0; i < 4; i++){
+			tempAdd += vertices[tets[id].vertices[i]].temp;
+		}
+		//単位換算は合っているか？
+		double wlatheat = 2.26 * 1000;		//水1kg当たりの潜熱(latent heat)[W・s]=[J] 水の潜熱が540cal/gよりJに変換して使用   W=J/s 2.26[kJ/kg]
+		tets[id].tetsMg = tets[id].volume * rho;		//四面体の質量
+		//単位時間あたり蒸発量は、dw/dt = A/W * Rc  A:見かけ表面積、W:見かけの無水物質量
+		double faceS=0.0;
+		for(int ii=0;ii<4;ii++){
+			int facet = tets[id].faces[ii];
+			if(facet <= nSurfaceFace){
+				faceS += faces[facet].area;
+			}
+		}
+		//double surfaceS = tets[id].faces[  //	四面体に属するfaceがnSurfacefaceより小さい番号のfaceなら、表面のface
+		double sokudo = 1.0;
+		double dwdt = faceS / tets[id].tetsMg * sokudo;//単位時間あたりなのでdt要素を入れる
+		//double wlat = (tempAdd / 4.0) - 100.0;	//100度を超えただけ蒸発する。
+		double dw = dwdt * specificHeat *  tets[id].tetsMg / wlatheat;	//	水分蒸発量	//	(温度と沸点100度との差分の熱量)÷水の潜熱で蒸発する水の量が分かる。;		//	水分蒸発量
+		double exwater	= 0;	//流出する水の量全体(蒸発 + 流出 + 水分移動)
+		//平均温度が100度超過
+		if( tempAdd / 4.0 >= 100.0){
+			//dwの分だけ、質量や水分量から引く
+			//double delw = (dt / 0.01 * 1.444*(0.000235/0.29)  / 10000000)*100;
+			double delw = (1.444*(0.000235/0.29)  / 10000000)*100;
+			exwater = delw * 500;
+			tets[id].tetsMg -= dw - exwater;
+			if(tets[id].wmass > dw - exwater){
+				tets[id].wmass -= dw - exwater;
+			}else{
+				DSTR << "水分流出量が多すぎます" << std::endl;
+			}
+			//検証する:ひとまず、exwaterが０でなければ、音を再生させることにしようか。音を出したら、そのメッシュのexwaterの値を０にしよう。
+			//wlatの分だけ、温度から引く
+			for(unsigned j=0; j < 4; j++){
+				vertices[j].temp -= dwdt;
+			}
+		}
+		//とりあえず、簡単に、水分を減らすコード
+		//if(tets[id].wmass >= tets[id].wmass_start *0.01){
+		//	tets[id].wmass -= tets[id].wmass_start * 0.01;
+		//}
+	}
+}
+
+
 void PHFemMeshThermo::DecrMoist(){
 	for(unsigned id =0; id < tets.size() ; id++){
 		////頂点が100度以上で残水量が０ではないとき
@@ -4399,6 +4520,7 @@ void PHFemMeshThermo::DecrMoist(){
 		//単位換算は合っているか？
 		double wlatheat = 2.26 * 1000;		//水1kg当たりの潜熱(latent heat)[W・s]=[J] 水の潜熱が540cal/gよりJに変換して使用   W=J/s 2.26[kJ/kg]
 		tets[id].tetsMg = tets[id].volume * rho;		//四面体の質量
+		//単位時間あたり蒸発量は、
 		double wlat = (tempAdd / 4.0) - 100.0;	//100度を超えただけ蒸発する。
 		double dw = wlat * specificHeat *  tets[id].tetsMg / wlatheat;	//	水分蒸発量	//	(温度と沸点100度との差分の熱量)÷水の潜熱で蒸発する水の量が分かる。;		//	水分蒸発量
 		double exwater	= 0;	//流出する水の量全体(蒸発 + 流出 + 水分移動)

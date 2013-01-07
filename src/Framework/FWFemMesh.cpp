@@ -469,7 +469,6 @@ void FWFemMesh::Loaded(UTLoadContext*){
 bool FWFemMesh::CreatePHFromGR(){
 	//	呼び出された時点で grMesh にグラフィクスのメッシュが入っている
 	//	grMeshを変換して、phMeshをつくる。
-
 	//	以下で、grMeshからtetgenを呼び出して変換して、pmdに値を入れていけば良い。
 	PHFemMeshThermoDesc pmd;
 	
@@ -535,6 +534,7 @@ void FWFemMesh::CreateGRFromPH(){
 		pnormals[pf] = ((gmd.vertices[gmd.faces[pf].indices[2]] - gmd.vertices[gmd.faces[pf].indices[0]]) %
 		(gmd.vertices[gmd.faces[pf].indices[1]] - gmd.vertices[gmd.faces[pf].indices[0]])).unit();
 	}
+	DSTR << grMesh->faces.size() << std::endl;
 	std::vector<Vec3f> gnormals(grMesh->faces.size());
 	struct FaceWall{
 		Vec3f wall[4];

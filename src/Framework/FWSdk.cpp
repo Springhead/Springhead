@@ -142,7 +142,7 @@ bool FWSdk::LoadScene(UTString filename, ImportIf* ex, const IfInfo* ii, ObjectI
 	FIFileIf* file = CreateFile(path.Ext(), ii);
 	if (ex) file->SetImport(ex);
 	//file->SetDSTR(DSTRFlag);
-	//	ファイルのロード
+	//	ファイルのロード成否
 	if(!file->Load(*objs, filename.data()) ) {
 		DSTR << "Error: Cannot load file " << filename.c_str() << std::endl;
 		//exit(EXIT_FAILURE);
