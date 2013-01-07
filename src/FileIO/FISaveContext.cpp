@@ -82,8 +82,14 @@ void FISaveContext::RegisterGroupToDb(const char* gp){
 		if (p < end){
 			UTString group(p, end);
 			p = end+1;
-			*handlerDbs.Top() += *UTLoadHandlerDbPool::Get(group.c_str());
-			*typeDbs.Top() += *UTTypeDescDbPool::Get(group.c_str());
+			UTLoadHandlerDb* hdb = UTLoadHandlerDbPool::Get(group.c_str());
+			UTTypeDescDb* tdb = UTTypeDescDbPool::Get(group.c_str());
+			if (hdb && tdb){
+				*handlerDbs.Top() += *hdb;
+				*typeDbs.Top() += *tdb;
+			}else{
+				assert(0);
+			}
 		}else{
 			break;
 		}

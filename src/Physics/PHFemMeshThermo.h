@@ -412,6 +412,8 @@ public:
 
 public:
 	void DecrMoist();
+	void DecrMoist_vel(double dt);
+	void DecrMoist_velo(double vel);
 	void InitMoist();
 	void InitAllVertexTemp();
 
