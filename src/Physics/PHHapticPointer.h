@@ -73,6 +73,13 @@ public:
 	}
 	Posed	GetDefaultPose(){ return defaultPose; }
 
+	int     NNeighborSolids() { return (int)neighborSolidIDs.size(); }
+	PHSolidIf*   GetNeighborSolid(int i) {
+		int j = neighborSolidIDs[i];
+		return DCAST(PHSceneIf,GetScene())->GetSolids()[j];
+	}
+	float   GetContactForce(int i);
+
 	// Implementation
 	void	SetPointerID(int id){ pointerID = id; }
 	int		GetPointerID(){ return pointerID; }
@@ -81,7 +88,7 @@ public:
 	void	UpdateHumanInterface(Posed pose, SpatialVector vel);
 	void	UpdateDirect();
 	void	AddHapticForce(SpatialVector f);
-	SpatialVector	GetHapticForce(){ return hapticForce; }
+	SpatialVector	GetHapticForce();
 
 	virtual void UpdateVelocity(double dt){}
 	virtual void UpdatePosition(double dt){}

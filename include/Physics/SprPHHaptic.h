@@ -49,6 +49,9 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	void	SetDefaultPose(Posed p);
 	Posed	GetDefaultPose();
 
+	int     NNeighborSolids();
+	PHSolidIf*   GetNeighborSolid(int i);
+	float   GetContactForce(int i);
 };
 
 }

@@ -56,6 +56,10 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	*/
 	void EnablePositionControl(bool enable);
 
+	/** @brief 位置の制御の有効・無効を取得する
+	*/
+	bool IsPositionControlEnabled();
+
 	/** @brief 位置制御のプライオリティを設定する
 	*/
 	void SetPositionPriority(double priority);
@@ -81,6 +85,10 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	/** @brief 姿勢の制御の有効・無効を切り替える
 	*/
 	void EnableOrientationControl(bool enable);
+
+	/** @brief 姿勢の制御の有効・無効を取得する
+	*/
+	bool IsOrientationControlEnabled();
 
 	/** @brief 姿勢制御のプライオリティを設定する
 	*/

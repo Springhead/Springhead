@@ -1,6 +1,11 @@
 ﻿#define _NOT_USE_PYTHON_SPR_LIB
 
-#include "Python.h"
+#include <EmbPython/SprEPVersion.h>
+#if EMB_PYTHON_VER==33
+#include <Python33/Python.h>
+#else
+#include <Python32/Python.h>
+#endif
 
 // #include <iostream>
 
