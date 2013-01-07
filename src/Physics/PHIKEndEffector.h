@@ -118,6 +118,10 @@ public:
 		ChangeNDOF();
 	}
 
+	/** @brief 位置の制御の有効・無効を取得する
+	*/
+	bool IsPositionControlEnabled() { return bPosition; }
+
 	/** @brief 位置制御のプライオリティを設定する
 	*/
 	void SetPositionPriority(double priority){ positionPriority = priority; }
@@ -146,6 +150,10 @@ public:
 		bOrientation = enable;
 		ChangeNDOF();
 	}
+
+	/** @brief 姿勢の制御の有効・無効を取得する
+	*/
+	bool IsOrientationControlEnabled() { return bOrientation; }
 
 	/** @brief 姿勢制御のプライオリティを設定する
 	*/

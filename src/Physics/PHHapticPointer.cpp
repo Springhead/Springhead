@@ -25,6 +25,28 @@ PHHapticPointer::PHHapticPointer(const PHHapticPointer& p){
 	*this = p;
 }
 
+float PHHapticPointer::GetContactForce(int i){
+		float rv = 0.0f;
+		int j = neighborSolidIDs[i];
+		PHHapticEngine* he = DCAST(PHSceneIf,GetScene())->GetHapticEngine()->Cast();
+		PHSolidPairForHaptic* sop = he->solidPairsTemp.item(j,0);
+		for (int m=0; m<sop->solid[0]->NShape(); ++m) {
+			for (int n=0; n<sop->solid[0]->NShape(); ++n) {
+				PHShapePairForHaptic* shp = sop->shapePairs.item(m,n);
+				Vec3d p0 = (shp->shapePoseW[0]*shp->closestPoint[0]);
+				Vec3d p1 = (shp->shapePoseW[1]*shp->closestPoint[1]);
+				Vec3d di = (p0-p1);
+				if (di.norm()!=0  &&  PTM::dot(di.unit(), shp->normal.unit()) > 0) {
+					// 仮実装<!!>
+					// これはdepthであってforceではない．
+					// あとでちゃんと力が取得できるようにすること． mitake
+					rv += di.norm();
+				}
+			}
+		}
+		return rv;
+}
+
 void PHHapticPointer::UpdateHumanInterface(Posed pose, SpatialVector vel){
 	if(bDebugControl) return;
 	// HumanInterfaceから状態を取得
@@ -47,6 +69,13 @@ void PHHapticPointer::UpdateDirect(){
 	lastProxyPose = proxyPose;
 	proxyPose = GetPose();
 	targetProxy = GetPose();
+}
+
+SpatialVector PHHapticPointer::GetHapticForce() {
+	SpatialVector rv = hapticForce;
+	rv.v() = GetDefaultPose().Ori().Inv() * rv.v();
+	rv.w() = GetDefaultPose().Ori().Inv() * rv.w();
+	return rv;
 }
 
 void PHHapticPointer::AddHapticForce(SpatialVector f){
