@@ -86,7 +86,7 @@ void PHFemVibration::Init(){
 		const double v = GetPoissonsRatio();
 		const double a = 1 - v;
 		const double b = 1 - 2 * v;
-		const double c = 0.5 * b;
+		const double c = 0.5 - v;
 		double Em;
 		if(b == 0.0) Em = DBL_MAX; /// 変形しない。ほんとうは+∞になる。
 		else Em = E / ((1 + v) * b);
@@ -128,10 +128,10 @@ void PHFemVibration::Init(){
 		b.assign(matCofact.col(1));
 		c.assign(matCofact.col(2));
 		d.assign(matCofact.col(3));
-		DSTR << matCofact << std::endl;
-		DSTR << b << std::endl;
-		DSTR << c << std::endl;
-		DSTR << d << std::endl;
+		//DSTR << matCofact << std::endl;
+		//DSTR << b << std::endl;
+		//DSTR << c << std::endl;
+		//DSTR << d << std::endl;
 
 		/// 行列B（ひずみ-変位）
 		PTM::TMatrixRow< 6,12,double > matB;
@@ -142,7 +142,7 @@ void PHFemVibration::Init(){
 		matB[3][0] = c[0];	matB[3][1] = b[0];	matB[3][3] = c[1];	matB[3][4] = b[1];	matB[3][6] = c[2];	matB[3][7] = b[2];	matB[3][9] = c[3];	matB[3][10] = b[3];
 		matB[4][1] = d[0];	matB[4][2] = c[0];	matB[4][4] = d[1];	matB[4][5] = c[1];	matB[4][7] = d[2];	matB[4][8] = c[2];	matB[4][10] = d[3];	matB[4][11] = c[3];
 		matB[5][0] = d[0];	matB[5][2] = b[0];	matB[5][3] = d[1];	matB[5][5] = b[1];	matB[5][6] = d[2];	matB[5][8] = b[2];	matB[5][9] = d[3];	matB[5][11] = b[3];
-		DSTR << matB << std::endl;
+		//DSTR << matB << std::endl;
 		double div = 1 / (6.0 * mesh->GetTetrahedronVolume(i));
 		matB *= div;
 
@@ -813,6 +813,7 @@ void PHFemVibration::ScilabEigenValueAnalysis(VMatrixRd& _M, VMatrixRd& _K){
 		DSTR << "Scilab has not started" << std::endl;
 		return;
 	}
+	ScilabJob("clear;");
 	ScilabSetMatrix("M", _M);
 	ScilabJob("detM = det(M);");
 	std::cout << "det(M) scilab : ";
