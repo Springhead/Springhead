@@ -354,12 +354,13 @@ void FWFemMeshNew::CreateGRFromPH(){
 		}
 	}
 	
-	//DSTR << grFemMesh->colors.size() << " "<< vertexIdMap.size() << std::endl;
-	//gmd.colors.resize(grFemMesh->colors.size() ? vertexIdMap.size() : 0);
-	//for(unsigned pv=0; pv<gmd.colors.size(); ++pv){
-	//	gmd.colors[pv] = grFemMesh->colors[vertexIdMap[pv]];
-	//	DSTR << gmd.colors[pv] << std::endl;
-	//}
+	// 頂点カラーの設定
+	DSTR << grFemMesh->colors.size() << " "<< vertexIdMap.size() << std::endl;
+	gmd.colors.resize(grFemMesh->colors.size() ? vertexIdMap.size() : 0);
+	for(unsigned pv=0; pv<gmd.colors.size(); ++pv){
+		gmd.colors[pv] = grFemMesh->colors[vertexIdMap[pv]];
+		DSTR << gmd.colors[pv] << std::endl;
+	}
 
 	//	GRMeshを作成
 	GRMesh* rv = grFemMesh->GetNameManager()->CreateObject(GRMeshIf::GetIfInfoStatic(), &gmd)->Cast();
@@ -394,33 +395,37 @@ void FWFemMeshNew::SyncVibrationInfo(){
 		int pId = vertexIdMap[i];
 		grVertices[i] = (Vec3f)phFemMesh->vertices[pId].pos;
 	}
-	//// 変位で色変化
-	//Vec4f* vc = grFemMesh->GetColors();
-	//if(!vc) return;
-	//float base = 0.001;
-	//float offset = 0.001;
-	//PHFemVibrationIf* fvib = phFemMesh->GetPHFemVibration();
-	//VVector< Vec3d > disp;
-	//disp.assign(fvib->GetVertexDisplacement());
-	//for(int i = 0; i < (int)vertexIdMap.size(); i++){
-	//	int pId = vertexIdMap[i];
-	//	float value = disp[pId].norm();
-	//	vc[pId] = CompThermoColor(abs(value/base)+offset);
-	//}
+	// 変位で色変化
+	Vec4f* vc = grFemMesh->GetColors();
+	if(!vc) return;
+	float base = 0.01;
+	float offset = 0.001;
+	for(int i = 0; i < (int)vertexIdMap.size(); i++){
+		int pId = vertexIdMap[i];
+		float value = phFemMesh->GetVertexDisplacementL(pId).norm();
+		//DSTR << value << std::endl;
+		//DSTR << value/base + offset << std::endl;
+		vc[i] = CompThermoColor(value/base + offset);
+	}
 }
 
 Vec4f FWFemMeshNew::CompThermoColor(float value){
 	float cos = -0.5 * std::cos( 4 * M_PI * value) + 0.5;
 	Vec4f color;
 	if(value > 1.0){
+		// red
 		color = Vec4f(1.0, 0.0, 0.0, 1.0);
 	}else if(value > 3.0 / 4.0){
+		// red + green
 		color = Vec4f(1.0, cos, 0.0, 1.0);
 	}else if(value > 2.0 / 4.0){
+		// green
 		color = Vec4f(cos, 1.0, 0.0, 1.0);
 	}else if(value > 1.0 / 4.0){
+		// green + blue
 		color = Vec4f(0.0, 1.0, cos, 1.0);
 	}else if(value > 0.0){
+		// blue
 		color = Vec4f(0.0, 0.0, 1.0, 1.0);
 	}
 	return color;
