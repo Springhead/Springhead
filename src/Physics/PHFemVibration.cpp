@@ -9,6 +9,7 @@
 #include <SciLab/SprSciLab.h>
 
 namespace Spr{;
+typedef std::numeric_limits< double > dbl;	// streamの精度
 
 //* 初期化と行列の作成
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -40,7 +41,6 @@ void PHFemVibration::Init(){
 	int NVer= NVertices();
 	int NDof = NVer * 3;
 	// 各全体行列の初期化
-	matKIni.resize(NDof,NDof, 0.0);
 	matKIni.resize(NDof, NDof, 0.0);
 	matMIni.resize(NDof, NDof, 0.0);
 	matCIni.resize(NDof, NDof, 0.0);
@@ -119,22 +119,17 @@ void PHFemVibration::Init(){
 			matPos.item(j, 1) = pos.x;
 			matPos.item(j, 2) = pos.y;
 			matPos.item(j, 3) = pos.z;
-			DSTR << mesh->tets[i].vertexIDs[j] << std::endl;
+			//DSTR << mesh->tets[i].vertexIDs[j] << std::endl;
 		}
-		DSTR << matPos << std::endl;
 		PTM::TMatrixRow< 4, 4, double > matCofact;		// matの余因子行列
 		matCofact = (matPos.det() * matPos.inv()).trans();
-		VVectord b, c, d;	// 形状関数の係数
+		Vec4d b, c, d;	// 形状関数の係数
 		b.assign(matCofact.col(1));
 		c.assign(matCofact.col(2));
 		d.assign(matCofact.col(3));
-		//DSTR << matCofact << std::endl;
-		//DSTR << b << std::endl;
-		//DSTR << c << std::endl;
-		//DSTR << d << std::endl;
 
 		/// 行列B（ひずみ-変位）
-		PTM::TMatrixRow< 6,12,double > matB;
+		PTM::TMatrixRow< 6, 12, double > matB;
 		matB.clear(0.0);
 		matB[0][0] = b[0];	matB[0][3] = b[1];	matB[0][6] = b[2];	matB[0][9] = b[3];
 		matB[1][1] = c[0];	matB[1][4] = c[1];	matB[1][7] = c[2];	matB[1][10] = c[3];
@@ -142,21 +137,20 @@ void PHFemVibration::Init(){
 		matB[3][0] = c[0];	matB[3][1] = b[0];	matB[3][3] = c[1];	matB[3][4] = b[1];	matB[3][6] = c[2];	matB[3][7] = b[2];	matB[3][9] = c[3];	matB[3][10] = b[3];
 		matB[4][1] = d[0];	matB[4][2] = c[0];	matB[4][4] = d[1];	matB[4][5] = c[1];	matB[4][7] = d[2];	matB[4][8] = c[2];	matB[4][10] = d[3];	matB[4][11] = c[3];
 		matB[5][0] = d[0];	matB[5][2] = b[0];	matB[5][3] = d[1];	matB[5][5] = b[1];	matB[5][6] = d[2];	matB[5][8] = b[2];	matB[5][9] = d[3];	matB[5][11] = b[3];
-		//DSTR << matB << std::endl;
-		double div = 1 / (6.0 * mesh->GetTetrahedronVolume(i));
+		double div = 1.0 / (6.0 * mesh->GetTetrahedronVolume(i));
 		matB *= div;
 
 		/// 弾性係数行列Dの計算（応力-ひずみ）
 		/// （ヤング率、ポアソン比に応じてかわる）
-		const double E = GetYoungModulus();
-		const double v = GetPoissonsRatio();
-		const double av = 1 - v;
-		const double bv = 1 - 2 * v;
-		const double cv = 0.5 - v;
+		double E = GetYoungModulus();
+		double v = GetPoissonsRatio();
+		double av = 1.0 - v;
+		double bv = 1.0 - 2.0 * v;
+		double cv = 0.5 - v;
 		double Em;
 		if(bv == 0.0) Em = DBL_MAX; /// 変形しない。ほんとうは+∞になる。
-		else Em = E / ((1 + v) * bv);
-		PTM::TMatrixRow< 6, 6,double > matD;
+		else Em = E / ((1.0 + v) * bv);
+		PTM::TMatrixRow< 6, 6, double > matD;
 		matD.clear(0.0);
 		matD[0][0] = av;	matD[0][1] = v;		matD[0][2] = v;
 		matD[1][0] = v;		matD[1][1] = av;	matD[1][2] = v;
@@ -167,9 +161,25 @@ void PHFemVibration::Init(){
 		matD *= Em;
 
 		/// 要素剛性行列の計算(エネルギー原理）
-		TMatrixRow< 12, 12,double > matKe; // 要素剛性行列
+		TMatrixRow< 12, 12, double > matKe;
 		matKe.clear(0.0);
 		matKe = matB.trans() * matD * matB * mesh->GetTetrahedronVolume(i);
+		
+		ScilabDeterminant(matKe, "matKe");
+		ScilabFileOut(matKe, "matKe.dat");
+		MatrixFileOut(matKe, "matKe.csv");
+		
+		//VMatrixRow< double > hoge;
+		//std::ostringstream oss;
+		//oss.precision(dbl::digits10);
+		//oss << matKe << std::endl;
+		//std::istringstream iss(oss.str().c_str());
+		//iss.precision(dbl::digits10);
+		//iss >> hoge;
+		//DSTR << hoge << std::endl;
+		//ScilabDeterminant(hoge);
+		//ScilabFileOut(hoge, "hoge.dat");
+		//MatrixFileOut(hoge, "hoge.csv");
 		// テスト終わり
 #endif
 		/// 質量行列の計算
@@ -185,7 +195,7 @@ void PHFemVibration::Init(){
 				int h = 3;
 				int w = 3;
 				if(j == k){
-					matMe.vsub_matrix(t, l, h, w) = 2 * I;
+					matMe.vsub_matrix(t, l, h, w) = 2.0 * I;
 				}else{
 					matMe.vsub_matrix(t, l, h, w) = I;
 				}
@@ -223,24 +233,24 @@ void PHFemVibration::Init(){
 		//DSTR << "matB" << std::endl;		DSTR << matB << std::endl;
 		//DSTR << "matD" << std::endl;		DSTR << matD << std::endl;
 		//DSTR << "matBtDB" << std::endl;	DSTR << matBtDB << std::endl;
-		DSTR << "det matKe : "<< matKe.det() << std::endl;
-		DSTR << "matKe" << std::endl;		DSTR << matKe << std::endl;
+		//DSTR << "det matKe : "<< matKe.det() << std::endl;
+		//DSTR << "matKe" << std::endl;		DSTR << matKe << std::endl;
 		//DSTR << "matMe" << std::endl;		DSTR << matMe << std::endl;
 		if(i == 0){
 			MatrixFileOut(matKe, "matKe0.csv");
 		}else if( i == 1){
 			MatrixFileOut(matKe, "matKe1.csv");		
 		}
-	}
-	// 毎ステップ計算する必要のないものを保存	
+	}	
 	DSTR << "det(matKIni) = " << matKIni.det() << std::endl;
 	DSTR << "matKIni" << std::endl;	DSTR << matKIni << std::endl;
+	ScilabDeterminant(matKIni, "matKIni");
+	ScilabFileOut(matKIni, "matKIni.dat");
+	MatrixFileOut(matKIni, "matKini.csv");
 	//DSTR << "det(matMIni) = " << matMIni.det() << std::endl;
 	//DSTR << "matMIni" << std::endl;	DSTR << matMIni << std::endl;
 	//DSTR << "det(matCIni) = " << matCIni.det() << std::endl;
 	//DSTR << "matCIni" << std::endl;	DSTR << matCIni << std::endl;
-	ScilabDeterminant(matMIni, matKIni, matCIni);
-	MatrixFileOut(matKIni, "matKIni.csv");
 
 	/// 各種変数の初期化
 	matMp.assign(matMIni);
@@ -267,9 +277,10 @@ void PHFemVibration::Init(){
 	//DSTR << "matMp" << std::endl;	DSTR << matMp << std::endl;
 	DSTR << "matKp" << std::endl;	DSTR << matKp << std::endl;
 	//DSTR << "matCp" << std::endl;	DSTR << matCp << std::endl;
-	ScilabDeterminant(matMp, matKp, matCp);
+	ScilabDeterminant(matKIni, "matKConst");
+	ScilabFileOut(matKIni, "matConst.dat");
+	MatrixFileOut(matKIni, "matKConst.csv");
 	ScilabEigenValueAnalysis(matMp, matKp);
-
 #if 0
 	// 固有値のサイラボテスト
 	VMatrixRd matk;
@@ -457,7 +468,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRd& _M, const VMatrixRd& _K, con
 		fC.resize(nmode, 2, 0.0);
 		fS.resize(nmode, 2, 0.0);
 		w.resize(evalue.size());
-		for(int i = 0; i < w.size(); i++){
+		for(int i = 0; i < (int)w.size(); i++){
 			w[i] = sqrt(evalue[i]);	// 固有角振動数
 		}
 		bFirst = false;
@@ -763,32 +774,6 @@ bool PHFemVibration::AddVertexForce(VVector< Vec3d > fWs){
 
 //* scilabデバック
 /////////////////////////////////////////////////////////////////////////////////////////
-void PHFemVibration::ScilabDeterminant(VMatrixRd& _M, VMatrixRd& _K, VMatrixRd& _C){
-	DSTR << "////////////////////////////////////////////" << std::endl;
-	DSTR << "Scilab Determinant Start." << std::endl;	
-	DSTR << "det(M) springhead2 : " << _M.det() << std::endl;
-	DSTR << "det(K) springhead2 : " << _K.det() << std::endl;
-	DSTR << "det(C) springhead2 : " << _C.det() << std::endl;	
-	if(!IsScilabStarted){
-		DSTR << "Scilab has not started" << std::endl;
-		return;
-	}
-	ScilabJob("clear;");
-	ScilabSetMatrix("M", _M);
-	ScilabJob("detM = det(M);");
-	std::cout << "det(M) scilab : ";
-	ScilabJob("disp(detM);");	
-	ScilabSetMatrix("K", _K);
-	ScilabJob("detK = det(K);");
-	std::cout << "det(K) scilab : ";
-	ScilabJob("disp(detK);");
-	ScilabSetMatrix("C", _C);
-	ScilabJob("detC = det(C);");
-	std::cout << "det(C) scilab : ";
-	ScilabJob("disp(detC);");
-	DSTR << "Scilab Determinant End." << std::endl;	
-	DSTR << "////////////////////////////////////////////" << std::endl;
-}
 
 void PHFemVibration::ScilabEigenValueAnalysis(VMatrixRd& _M, VMatrixRd& _K){
 	DSTR << "////////////////////////////////////////////" << std::endl;
@@ -843,12 +828,15 @@ void PHFemVibration::MatrixFileOut(VMatrixRd mat, std::string filename){
 		return;
 	}
 
-	for (int i = 0; i < mat.height(); i++){
-		for(int j = 0; j < mat.width(); j ++){
+	ofs.precision(dbl::digits10);
+	for (int i = 0; i < (int)mat.height(); i++){
+		for(int j = 0; j < (int)mat.width(); j ++){
 			ofs << mat.item(i, j) << ",";
 		}
 		ofs << std::endl;
     }
     ofs.close();
 }
+
+
 }

@@ -111,7 +111,39 @@ public:
 
 	/// scilabデバック
 	bool IsScilabStarted;
-	void ScilabDeterminant(VMatrixRd& _M, VMatrixRd& _K, VMatrixRd& _C);
+
+	template < class AD >
+	void ScilabFileOut(PTM::MatrixImp<AD>& a, const std::string filename = "scimat.dat"){
+		ScilabJob("clear;");
+		ScilabSetMatrix("A", a);
+		std::stringstream str;
+		str << "fprintfMat('" << filename << "', A);";
+		ScilabJob(str.str().c_str());
+	}
+
+	template < class AD >
+	void ScilabDeterminant(PTM::MatrixImp<AD>& a, const std::string name = ""){
+		DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
+		DSTR << "Scilab Determinant Start." << std::endl;	
+		DSTR << "det(" << name << ") springhead2 : " << a.det() << std::endl;
+		if(!IsScilabStarted){
+			DSTR << "Scilab has not started" << std::endl;
+			return;
+		}
+		ScilabJob("clear;");
+		ScilabSetMatrix("A", a);
+		ScilabJob("detA = det(A);");
+		DSTR << "Determinant of scilab is written in console." << std::endl;
+		std::cout << "det("<< name << ") scilab : ";
+		ScilabJob("disp(detA);");	
+
+		//ScilabJob("[L U] = lu(K);");
+		//ScilabJob("disp(L);");
+		//ScilabJob("disp(U);");
+		//ScilabJob("disp(K);");
+		DSTR << "Scilab Determinant End." << std::endl;	
+		DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
+	}
 	void ScilabEigenValueAnalysis(VMatrixRd& _M, VMatrixRd& _K);
 
 	/// 行列のファイル出力
