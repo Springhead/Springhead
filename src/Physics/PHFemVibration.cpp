@@ -48,8 +48,8 @@ void PHFemVibration::Init(){
 		// 要素行列の計算
 		/// tetが持つ頂点順
 		/// 要素剛性行列 u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)として計算
-
-		/// 行列Cの計算（頂点座標に応じて変わる）
+#if 0
+		///// 行列C(変形-基本変形量）の計算（頂点座標に応じて変わる）
 		PTM::TMatrixRow< 1, 4, double > vec[4];
 		for(int j = 0; j < 4; j++){
 			Vec3d pos = mesh->vertices[mesh->tets[i].vertexIDs[j]].pos;
@@ -57,6 +57,7 @@ void PHFemVibration::Init(){
 			vec[j].item(0, 1) = pos.x;
 			vec[j].item(0, 2) = pos.y;
 			vec[j].item(0, 3) = pos.z;
+			DSTR << mesh->tets[i].vertexIDs[j] << std::endl;
 		}
 		PTM::TMatrixRow< 12, 12, double > matCk;
 		matCk.clear(0.0);
@@ -69,7 +70,7 @@ void PHFemVibration::Init(){
 		PTM::TMatrixRow< 12, 12, double > matCkInv;
 		matCkInv.assign(matCk.inv());
 
-		/// 行列B（定数）
+		/// 行列B(ひずみ-基本変形量）（定数）
 		PTM::TMatrixRow< 6,12,double > matB;
 		matB.clear(0.0);
 		matB[0][1] = 1.0;
@@ -79,7 +80,7 @@ void PHFemVibration::Init(){
 		matB[4][7] = 1.0;	matB[4][10] = 1.0;
 		matB[5][3] = 1.0;	matB[5][9] = 1.0;
 
-		/// 弾性係数行列Dの計算
+		/// 弾性係数行列D（応力-ひずみ）の計算
 		/// （ヤング率、ポアソン比に応じてかわる）
 		const double E = GetYoungModulus();
 		const double v = GetPoissonsRatio();
@@ -104,11 +105,73 @@ void PHFemVibration::Init(){
 		matBtDB.clear(0.0);
 		matBtDB = matB.trans() * matD * matB;
 
-		/// 要素剛性行列の計算
+		/// 要素剛性行列の計算(エネルギー原理）
 		TMatrixRow< 12, 12,double > matKe; // 要素剛性行列
 		matKe.clear(0.0);
 		matKe = matCkInv.trans() * matBtDB * matCkInv * mesh->GetTetrahedronVolume(i);
+#else
+		/// テスト(形状関数版）
+		/// 形状関数の計算（頂点座標に応じて変わる）
+		PTM::TMatrixRow< 4, 4, double > matPos;
+		for(int j = 0; j < 4; j++){
+			Vec3d pos = mesh->vertices[mesh->tets[i].vertexIDs[j]].pos;
+			matPos.item(j, 0) = 1.0;
+			matPos.item(j, 1) = pos.x;
+			matPos.item(j, 2) = pos.y;
+			matPos.item(j, 3) = pos.z;
+			DSTR << mesh->tets[i].vertexIDs[j] << std::endl;
+		}
+		DSTR << matPos << std::endl;
+		PTM::TMatrixRow< 4, 4, double > matCofact;		// matの余因子行列
+		matCofact = (matPos.det() * matPos.inv()).trans();
+		VVectord b, c, d;	// 形状関数の係数
+		b.assign(matCofact.col(1));
+		c.assign(matCofact.col(2));
+		d.assign(matCofact.col(3));
+		DSTR << matCofact << std::endl;
+		DSTR << b << std::endl;
+		DSTR << c << std::endl;
+		DSTR << d << std::endl;
 
+		/// 行列B（ひずみ-変位）
+		PTM::TMatrixRow< 6,12,double > matB;
+		matB.clear(0.0);
+		matB[0][0] = b[0];	matB[0][3] = b[1];	matB[0][6] = b[2];	matB[0][9] = b[3];
+		matB[1][1] = c[0];	matB[1][4] = c[1];	matB[1][7] = c[2];	matB[1][10] = c[3];
+		matB[2][2] = d[0];	matB[2][5] = d[1];	matB[2][8] = d[2];	matB[2][11] = d[3];
+		matB[3][0] = c[0];	matB[3][1] = b[0];	matB[3][3] = c[1];	matB[3][4] = b[1];	matB[3][6] = c[2];	matB[3][7] = b[2];	matB[3][9] = c[3];	matB[3][10] = b[3];
+		matB[4][1] = d[0];	matB[4][2] = c[0];	matB[4][4] = d[1];	matB[4][5] = c[1];	matB[4][7] = d[2];	matB[4][8] = c[2];	matB[4][10] = d[3];	matB[4][11] = c[3];
+		matB[5][0] = d[0];	matB[5][2] = b[0];	matB[5][3] = d[1];	matB[5][5] = b[1];	matB[5][6] = d[2];	matB[5][8] = b[2];	matB[5][9] = d[3];	matB[5][11] = b[3];
+		DSTR << matB << std::endl;
+		double div = 1 / (6.0 * mesh->GetTetrahedronVolume(i));
+		matB *= div;
+
+		/// 弾性係数行列Dの計算（応力-ひずみ）
+		/// （ヤング率、ポアソン比に応じてかわる）
+		const double E = GetYoungModulus();
+		const double v = GetPoissonsRatio();
+		const double av = 1 - v;
+		const double bv = 1 - 2 * v;
+		const double cv = 0.5 - v;
+		double Em;
+		if(bv == 0.0) Em = DBL_MAX; /// 変形しない。ほんとうは+∞になる。
+		else Em = E / ((1 + v) * bv);
+		PTM::TMatrixRow< 6, 6,double > matD;
+		matD.clear(0.0);
+		matD[0][0] = av;	matD[0][1] = v;		matD[0][2] = v;
+		matD[1][0] = v;		matD[1][1] = av;	matD[1][2] = v;
+		matD[2][0] = v;		matD[2][1] = v;		matD[2][2] = av;
+		matD[3][3] = cv;
+		matD[4][4] = cv;
+		matD[5][5] = cv;
+		matD *= Em;
+
+		/// 要素剛性行列の計算(エネルギー原理）
+		TMatrixRow< 12, 12,double > matKe; // 要素剛性行列
+		matKe.clear(0.0);
+		matKe = matB.trans() * matD * matB * mesh->GetTetrahedronVolume(i);
+		// テスト終わり
+#endif
 		/// 質量行列の計算
 		TMatrixRow< 12, 12, double > matMe;
 		matMe.clear(0.0);
