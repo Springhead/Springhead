@@ -4,16 +4,35 @@
 ::	do_swigall.bat
 ::
 ::  Description:
-::	swig の実行が必要かどうかを判定/実行させるための Makefile を作成するための
-::	スクリプト. 
-::	関連するファイル：
-::	  input:  do_swigall.projs(=%LISTFILE%)
-::			swig 実行の対象とするプロジェクトを記述したファイル.
-::			.../Springhead2/src/RunSwig(=%ETCDIR%) に置かれているものとする.
-::	  output: Makefile.swig(=%MAKEFILENAME%)
-::			swig を実行させるための makefile.
-::			各プロジェクトのビルドディレクトリに出力される
-::			(=.../Springhead2/src/[project]/Makefile.swig)
+::	処理対象となる各プロジェクトのディレクトリを巡り, 次の処理を行なう.
+::	  (1) nmake -f Makefile.swig の実行
+::	  (2) make_manager.bat -r の実行
+::
+::	(1) 条件が満たされた場合には,
+::	　　(a) make_manager.bat -t を実行して, 必要なディレクトリを再スキャンした
+::		makefile (=Makefile.swig.tmp) をテンポラリに作成する.
+::	　　(b) RunSwig.bat を実行する.
+::
+::	(2) (1)-(a) で作成したテンポラリの Makefile.swig.tmp を, 正式の makefile で
+::	　　ある Makefile.swig とする.
+::	　　※ RunSwig.bat の実行より先に makefile を再作成する必然性はないが, 実行
+::	　　　 順序の違和感をなくすためにこうする.
+::
+::	RunSwig プロジェクトの構成プロパティ ([NMake → 全般] のコマンドライン) に
+::	次の設定をしておくこと.
+::	　　ビルド		make_manager.bat -A -c && nmake -f Makefile
+::	　　すべてリビルド	make_manager.bat -A -d -c && nmake -f Makefile
+::	　　クリーン		make_manager.bat -A -d
+::
+::	依存関係を定義したファイル do_swigall.projs (=%PROJFILE%) の書式：
+::	    <line> ::= <project> ' ' <dependency-list>
+::	    <project> ::= 処理の対象とするプロジェクト名 (=モジュール名)
+::	    <dependency-list> ::= ε| <dependent-project> ',' <dependency-list>
+::	    <dependent-project> ::= 依存関係にあるプロジェクト名 (=モジュール名)
+::	    ※ 注意
+::		<project>と<dependency-list>の間区切り文字は「空白1個」
+::		<dependency-list>の要素間の区切り文字は「カンマ1個」
+::
 :: ***********************************************************************************
 ::  Version:
 ::	Ver 1.0	  2012/10/25	F.Kanehori
@@ -21,153 +40,57 @@
 ::	Ver 1.0b  2012/12/19	F.Kanehori	PATHの設定の変更 (do_swig.batを移動)
 ::						ファイル名の変更
 ::						(swigprojes.list -> do_swigall.projs)
+::	Ver 2.0	  2013/01/07	F.Kanehori	全面改訂
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set CWD=%cd%
+set DEBUG=0
 
 :: ----------
 ::  各種定義
 :: ----------
-:: 関連するヘッダファイルがあるディレクトリ
+:: ディレクトリの定義
 ::
-:: (make を実行するディレクトリからみた相対パス)
-set INCDIR=../../include
-set SRCDIR=../../src
-set ETCDIR=../../src/RunSwig
-::
-:: (build を実行するディレクトリからみた相対パス)
-set ACTINCDIR=../../include
-set ACTSRCDIR=.
+set BINDIR=%CWD%
+set ETCDIR=%CWD%
+set SRCDIR=..\..\src
 
 :: 使用するファイル名
 ::
-set LISTFILE=do_swigall.projs
-set MAKEFILENAME=Makefile.swig
-set STUBFILE=Stub.cpp
-set TMPFILE=swigprojs.tmp
+set PROJFILE=do_swigall.projs
+set MAKEFILE=Makefile.swig
 
-:: 使用するプログラムとパス
+:: 使用するプログラム名
 ::
-set ADDPATH=..\..\src\Foundation
-set PATH=%ADDPATH%;%PATH%
+set MAKE=nmake
+set MAKEMANAGER=make_manager.bat
 
-set NMAKE=nmake
-set SWIG=RunSwig.bat
-
-:: 常に依存関係にあるファイルの一覧
+:: 使用するパス
 ::
-set FIXDEPSINC=%ACTINCDIR%/Springhead.h %ACTINCDIR%/Base/Env.h %ACTINCDIR%/Base/BaseDebug.h
-set FIXDEPSSRC=%ACTSRCDIR%/../Foundation/UTTypeDesc.h
-set FIXHDRS=%FIXDEPSINC% %FIXDEPSSRC%
-
-:: 依存関係にはないと見做すファイルの一覧
-::
-set EXCLUDES=
+set X32=C:\Program Files
+set X64=C:\Program Files (x86)
+set ARCH=
+if exist "%X32%" set ARCH=%X32%
+if exist "%X64%" set ARCH=%X64%
+if "%ARCH%"=="" (
+    echo do_swigall: can not find %MAKE% path.
+    exit /b
+)
+set MAKEPATH=%ARCH%\Microsoft Visual Studio 10.0\VC\bin
+set SWIGPATH=%SRCDIR%\Foundation
+set PATH=%BINDIR%;%SWIGPATH%;%MAKEPATH%;%PATH%
 
 :: ----------
 ::  処理開始
 :: ----------
-:: echo start at %CWD%
-for /f "tokens=1,*" %%p in (%ETCDIR%\%LISTFILE%) do (
+rem echo start at %CWD%
+for /f "tokens=1,*" %%p in (%ETCDIR%\%PROJFILE%) do (
     echo.
     echo *** %%p ***
-    echo.
-
-    rem 依存関係にあるファイルの一覧を、変数 *HDRS に集める.
-    rem     毎回ディレクトリのリストをとるので、新規のファイルが追加されても大丈夫.
-    rem	    サブルーチン parse は、依存関係にあるプロジェクトについて処理を行なう.
-    rem	 ※ Makefile マクロのデリミタと batch subroutine 引数のデリミタが同じなので
-    rem	    面倒である (!*HDRS! を1つの引数に纏められれば簡単になる). 
-    rem	    サブルーチン :add_headers の結果は環境変数 STR1 に、:add_prefix の結果は
-    rem	    環境変数 STR2 に設定される.
-    rem
-    rem	依存関係を定義したファイル swigprojs.list (=%LISTFILE%) の書式は次のとおり.
-    rem	    <line> ::= <project> ' ' <dependency-list>
-    rem	    <project> ::= 処理の対象とするプロジェクト名 (=モジュール名)
-    rem	    <dependency-list> ::= ε| <dependent-project> ',' <dependency-list>
-    rem	    <dependent-project> ::= 依存関係にあるプロジェクト名 (=モジュール名)
-    rem ※ 少々見難いが、<project>と<dependency-list>の間区切り文字は＊空白1個＊、
-    rem	   <dependency-list>の要素間の区切り文字は＊カンマ1個＊に限る.
-    rem
-    rem echo FIXHDRS [%FIXHDRS%]
-
-    set INCHDRS=
-    for %%d in (%INCDIR%/%%p/*.h) do (
-	call :add_headers !INCHDRS! %%d
-	set INCHDRS=!STR1!
-    )
-    call :add_prefix %ACTINCDIR%/%%p
-    set INCHDRS=!STR2!
-    if "%%q" neq "" (
-	call :parse %INCDIR% "%%q" %TMPFILE% "init"
-	for /f %%e in (%TMPFILE%) do (
-	    set INCHDRS=!INCHDRS! %%e
-	)
-	del %TMPFILE% 2> nul
-    )
-    rem echo INCHDRS [!INCHDRS!]
-
-    set SRCHDRS=
-    for %%d in (%SRCDIR%/%%p/*.h) do (
-	call :add_headers !SRCHDRS! %%d
-	set SRCHDRS=!STR1!
-    )
-    call :add_prefix %ACTSRCDIR%
-    set SRCHDRS=!STR2!
-    if "%%q" neq "" (
-	call :parse %SRCDIR% "%%q" %TMPFILE% "init"
-	for /f %%e in (%TMPFILE%) do (
-	    set SRCHDRS=!SRCHDRS! %%e
-	)
-	del %TMPFILE% 2> nul
-    )
-    rem echo SRCHDRS [!SRCHDRS!]
-
-    rem Makefile を作成する.
-    rem
-    set MAKEFILE=%SRCDIR%/%%p/%MAKEFILENAME%
-    echo making !MAKEFILE!
-    echo # THIS FILE IS AUTO-GENERATED. ** DO NOT EDIT THIS FILE ** > !MAKEFILE!
-    echo # File: %MAKEFILENAME%	>> !MAKEFILE!
-    echo.  			>> !MAKEFILE!
-    echo FIXHDRS=\>> !MAKEFILE!
-    for %%h in (!FIXHDRS!) do (
-	echo %%h\>> !MAKEFILE!
-    )
-    echo.  			>> !MAKEFILE!
-    echo INCHDRS=\>> !MAKEFILE!
-    for %%h in (!INCHDRS!) do (
-	echo %%h\>> !MAKEFILE!
-    )
-    echo.  			>> !MAKEFILE!
-    echo SRCHDRS=\>> !MAKEFILE!
-    for %%h in (!SRCHDRS!) do (
-	echo %%h\>> !MAKEFILE!
-    )
-    echo.  			>> !MAKEFILE!
-    echo all:	%%p%STUBFILE%	>> !MAKEFILE!
-    echo.  			>> !MAKEFILE!
-    echo %%p%STUBFILE%:	$^(FIXHDRS^) $^(INCHDRS^) $^(SRCHDRS^)	>> !MAKEFILE!
-
-    set SWIGARGS=%%p
-    if "%%q" neq "" (
-	set SWIGOPTS=%%q
-	set SWIGARGS=!SWIGARGS! !SWIGOPTS:,= !
-    )
-    echo.	%SWIG% !SWIGARGS!	>> !MAKEFILE!
-
-    echo.  			>> !MAKEFILE!
-    echo $^(FIXHDRS^):		>> !MAKEFILE!
-    echo.  			>> !MAKEFILE!
-    echo $^(INCHDRS^):		>> !MAKEFILE!
-    echo.  			>> !MAKEFILE!
-    echo $^(SRCHDRS^):		>> !MAKEFILE!
-
-    rem 上で作成した Makefile を実行する.
-    rem     依存関係に列挙したファイルに変更があったときのみ swig が実行される.
-    rem
-    cd %SRCDIR%/%%p
-    %NMAKE% -f %MAKEFILENAME%
+    :: 各ディレクトリへ移動して make を実行する
+    cd %SRCDIR%\%%p
+    cmd /c %MAKE% -f %MAKEFILE%
+    cmd /c %MAKEMANAGER% -r
     cd %CWD%
 )
 
@@ -176,82 +99,3 @@ for /f "tokens=1,*" %%p in (%ETCDIR%\%LISTFILE%) do (
 :: ----------
 endlocal
 exit /b
-
-:: -----------------------------------------------------------------------------------
-::  変数 *HDRS にファイル名を追加する (デリミタは空白文字).
-::
-::  引数 %1	変数 *HDRS の現在値
-::	 %2	*HDRS に追加するファイル名
-:: -----------------------------------------------------------------------------------
-:add_headers
-set STR1=
-:loop
-    if "%1" equ "" goto :endloop
-    for %%f in (%EXCLUDES%) do if %1 equ %%f goto :next
-    if "!STR1!" equ "" (
-	set STR1=%1
-    ) else (
-	set STR1=!STR1! %1
-    )
-:next
-    shift /1
-    goto :loop
-:endloop
-exit /b
-
-:: -----------------------------------------------------------------------------------
-::  引数で与えられたカンマ区切りの文字列を解析し、要素(＝依存するプロジェクト名)毎に
-::  サブルーチン dirlist を呼び出してヘッダ情報の収集を行なう.
-::
-::  引数 %1	走査するディレクトリのベースパス
-::	 %2	依存するプロジェクトのリスト (カンマ区切りのリスト)
-::	 %3	作業用ファイル名
-::	 %4	作業用ファイル初期化フラグ (何かが設定されていたら初期化を行なう)
-:: -----------------------------------------------------------------------------------
-:parse
-setlocal
-set LIST=%2
-set LIST=%LIST:"=%
-for /f "delims=, tokens=1,*" %%a in ("%LIST%") do (
-    if "%4" neq "" del %3 2> nul
-    if "%%a" neq "" call :dirlist %1 %%a %3
-    if "%%b" neq "" call :parse %1 "%%b" %3
-)
-endlocal
-exit /b
-
-:: -----------------------------------------------------------------------------------
-::  引数で与えられたプロジェクト<p>について、include/<p> ディレクトリに存在するヘッダ
-::  ファイルをリストアップして作業ファイルに書き出す (1ファイル/1行). 
-::
-::  引数 %1	走査するディレクトリのベースパス
-::	 %2	プロジェクト名
-::	 %3	作業用ファイル名
-:: -----------------------------------------------------------------------------------
-:dirlist
-set DIR=%2
-set DIR=%DIR:"=%
-echo dependent module: [%1/%DIR%]
-for %%d in (%1/%DIR%/*.h) do (
-    rem echo output: [%1/%DIR%/%%d]
-    echo %1/%DIR%/%%d >> %3
-)
-exit /b
-
-:: -----------------------------------------------------------------------------------
-::  変数 STR1 に設定されている各ファイル名に、引数で指定された prefix を追加する.
-::  結果は、環境変数 STR2 に設定される.
-::
-::  引数 %1	追加するプリフィックス
-:: -----------------------------------------------------------------------------------
-:add_prefix
-set STR2=
-for %%f in (!STR1!) do (
-    if "!STR2!" equ "" (
-	set STR2=%1/%%f
-    ) else (
-	set STR2=!STR2! %1/%%f
-    )
-)
-exit /b
-
