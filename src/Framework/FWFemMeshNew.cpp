@@ -353,13 +353,13 @@ void FWFemMeshNew::CreateGRFromPH(){
 			}
 		}
 	}
-	
+#if 0	
 	// 頂点カラーの設定
 	gmd.colors.resize(grFemMesh->colors.size() ? vertexIdMap.size() : 0);
 	for(unsigned pv=0; pv<gmd.colors.size(); ++pv){
 		gmd.colors[pv] = grFemMesh->colors[vertexIdMap[pv]];
 	}
-
+#endif
 	//	GRMeshを作成
 	GRMesh* rv = grFemMesh->GetNameManager()->CreateObject(GRMeshIf::GetIfInfoStatic(), &gmd)->Cast();
 	//	マテリアルの追加
@@ -394,14 +394,14 @@ void FWFemMeshNew::SyncVibrationInfo(){
 		grVertices[i] = (Vec3f)phFemMesh->vertices[pId].pos;
 	}
 	// 変位で色変化
+	if(grFemMesh->NColors() < 1) return;
 	Vec4f* vc = grFemMesh->GetColors();
-	if(!vc) return;
-	float base = 0.1;
-	float offset = 0.0001;
+	float base = 0.1f;
+	float offset = 0.0001f;
 	for(int i = 0; i < (int)vertexIdMap.size(); i++){
 		int pId = vertexIdMap[i];
 		float value = phFemMesh->GetVertexDisplacementL(pId).norm();
-		DSTR << value << std::endl;
+		//DSTR << value << std::endl;
 		//DSTR << value/base + offset << std::endl;
 		vc[i] = CompThermoColor(value/base + offset);
 	}

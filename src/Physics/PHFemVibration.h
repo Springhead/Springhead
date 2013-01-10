@@ -18,21 +18,23 @@ class PHFemVibration : public PHFemVibrationDesc, public PHFem{
 public:
 	SPR_OBJECTDEF(PHFemVibration);
 	ACCESS_DESC(PHFemVibration);
-	typedef VMatrixRow< double > VMatrixRd;
+	typedef double element_type;
+	typedef VMatrixRow< element_type > VMatrixRe;
 	typedef VVector< double > VVectord;
+	#define element_limit std::numeric_limits< element_type >::max_digits10 	// streamの精度
 
 	double vdt;
 	PHFemVibrationDesc::INTEGRATION_MODE integration_mode;
-	VMatrixRd matKIni;	// 全体剛性行列の初期値
-	VMatrixRd matMIni;	// 全体質量行列の初期値
-	VMatrixRd matMInv;	// 全体質量行列の逆行列
-	VMatrixRd matCIni;	// 全体減衰行列の初期値
+	VMatrixRe matKIni;	// 全体剛性行列の初期値
+	VMatrixRe matMIni;	// 全体質量行列の初期値
+	VMatrixRe matMInv;	// 全体質量行列の逆行列
+	VMatrixRe matCIni;	// 全体減衰行列の初期値
 	VVectord xdl;		// 頂点変位(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
 	VVectord vl;		// 頂点速度
 	VVectord fl;		// 計算用の外力
-	VMatrixRd matKp;	// 全体剛性行列の一部
-	VMatrixRd matMp;	// 全体質量行列の一部
-	VMatrixRd matCp;	// 全体減衰行列の一部
+	VMatrixRe matKp;	// 全体剛性行列の一部
+	VMatrixRe matMp;	// 全体質量行列の一部
+	VMatrixRe matCp;	// 全体減衰行列の一部
 	VVectord xdlp;		// 頂点変位の一部(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
 	VVectord vlp;		// 頂点速度の一部
 	VVectord flp;		// 計算用の外力の一部
@@ -50,18 +52,18 @@ public:
 
 	/// 時間積分
 	/// _M:質量行列、_K:剛性行列、_C:減衰行列、_f:外力、_dt:積分刻み、_xd:変位、_v:速度
-	virtual void ExplicitEuler(const VMatrixRd& _MInv, const VMatrixRd& _K, const VMatrixRd& _C, 
+	virtual void ExplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
-	virtual void ImplicitEuler(const VMatrixRd& _MInv, const VMatrixRd& _K, const VMatrixRd& _C, 
+	virtual void ImplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
-	virtual void NewmarkBeta(const VMatrixRd& _M, const VMatrixRd& _K, const VMatrixRd& _C, 
+	virtual void NewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, const double b = 1.0 /6.0);
-	virtual void ModalAnalysis(const VMatrixRd& _M, const VMatrixRd& _K, const VMatrixRd& _C, 
+	virtual void ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, const int nmode);
 
 	/// 固有値解析
-	virtual void SubSpace(const VMatrixRd& _M, const VMatrixRd& _K, 
-							const int nmode, const double epsilon, VVectord& e, VMatrixRd& v);
+	virtual void SubSpace(const VMatrixRe& _M, const VMatrixRe& _K, 
+							const int nmode, const double epsilon, VVectord& e, VMatrixRe& v);
 
 	/// 各種設定
 	void SetTimeStep(double dt){ vdt = dt; }
@@ -84,17 +86,17 @@ public:
 	void UpdateVerticesPosition(VVectord& _xd);
 
 	// 境界条件を加える(行列と番号）
-	bool AddBoundaryCondition(VMatrixRd& base, VMatrixRd& mat, const int id);
+	bool AddBoundaryCondition(VMatrixRe& mat, const int id);
 	// 境界条件を加える(頂点）
 	bool AddBoundaryCondition(const int vtxId, const Vec3i dof);
 	// 境界条件を加える(頂点順）
 	bool AddBoundaryCondition(const VVector< Vec3i > bcs);
 	// 境界条件を反映させるための行列を計算する
-	void CompBoundaryMatrix(VMatrixRd& _L, VMatrixRd& _R, const VVector< int > bc);
+	void CompBoundaryMatrix(VMatrixRe& _L, VMatrixRe& _R, const VVector< int > bc);
 	// 境界条件に応じて行列の自由度を削減する
-	void ReduceMatrixSize(VMatrixRd& mat, const VVector< int > bc);
+	void ReduceMatrixSize(VMatrixRe& mat, const VVector< int > bc);
 	// 境界条件に応じて行列自由度を削減する
-	void ReduceMatrixSize(VMatrixRd& _M, VMatrixRd& _K, VMatrixRd& _C, const VVector< int > bc);
+	void ReduceMatrixSize(VMatrixRe& _M, VMatrixRe& _K, VMatrixRe& _C, const VVector< int > bc);
 	// 境界条件に応じてベクトルの自由度を削減する
 	void ReduceVectorSize(VVectord& r, const VVector< int > bc);
 	// 境界条件に応じてベクトルの自由度を削減する
@@ -117,7 +119,7 @@ public:
 		ScilabJob("clear;");
 		ScilabSetMatrix("A", a);
 		std::stringstream str;
-		str << "fprintfMat('" << filename << "', A);";
+		str << "fprintfMat('" << filename << "', A, '%Lf');";
 		ScilabJob(str.str().c_str());
 	}
 
@@ -144,10 +146,10 @@ public:
 		DSTR << "Scilab Determinant End." << std::endl;	
 		DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
 	}
-	void ScilabEigenValueAnalysis(VMatrixRd& _M, VMatrixRd& _K);
+	void ScilabEigenValueAnalysis(VMatrixRe& _M, VMatrixRe& _K);
 
 	/// 行列のファイル出力
-	void MatrixFileOut(VMatrixRd mat, std::string filename);
+	void MatrixFileOut(VMatrixRe mat, std::string filename);
 };
 
 }
