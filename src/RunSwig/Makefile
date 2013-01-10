@@ -27,19 +27,45 @@
 #
 #	プロパティのコマンドラインに実際に設定するコマンドは次のとおり.
 #
-#	ビルドコマンドライン　　　　：make_manager.bat -A -c && nmake -f Makefile
-#	すべてリビルドコマンドライン：make_manager.bat -A -d -c && nmake -f Makefile
-#	クリーンコマンドライン　　　：make_manager.bat -A -d
+#	ビルドコマンドライン：	       make_manager.bat -A -c && nmake -f Makefile
+#	すべてリビルドコマンドライン： make_manager.bat -A -d -c && nmake -f Makefile
+#	クリーンコマンドライン：       make_manager.bat -A -d
 #
 #################################################################################
 #  Version:
 #	Ver 1.0	    2012/10/15 F.Kanehori
 #	Ver 1.0a    2012/11/12 F.Kanehori  スクリプトの場所を変更
 #	Ver 1.0b    2012/12/19 F.Kanehori  スクリプトの場所を変更
+#	Ver 2.0     2013/01/10 F.Kanehori  前処理を追加
 #################################################################################
-#
-BINDIR	= .
-SCRIPT	= do_swigall.bat
 
-all:	
-	$(BINDIR)\$(SCRIPT)
+#  ディレクトリの定義
+#
+BINDIR		= .
+INCDIR		= ..\..\include
+FOUNDATION	= ..\Foundation
+FRAMEWORK	= ..\Framework
+
+#  使用するスクリプト
+#
+SCILABSWIG	= ScilabSwig.bat
+RUNSWIGFW	= RunSwigFramework.bat
+SCRIPT		= do_swigall.bat
+
+#  前処理で作成するファイル
+#
+SCILABSTUBHDR	= $(INCDIR)\ScilabStub.hpp
+FWOLDSPRSTUB	= $(FRAMEWORK)\FWOldSpringheadStub.cpp
+
+all:	PreWork RunSwig
+
+PreWork:	$(SCILABSTUBHDR) $(FWOLDSPRSTUB)
+
+$(SCILABSTUBHDR):	
+		cd $(FOUNDATION) && $(SCILABSWIG)
+
+$(FWOLDSPRSTUB):	
+		cd $(FRAMEWORK) && $(RUNSWIGFW)
+
+RunSwig:	
+		$(BINDIR)\$(SCRIPT)
