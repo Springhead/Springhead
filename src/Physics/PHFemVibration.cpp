@@ -9,7 +9,6 @@
 #include <SciLab/SprSciLab.h>
 
 namespace Spr{;
-typedef std::numeric_limits< double > dbl;	// streamの精度
 
 //* 初期化と行列の作成
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -49,17 +48,17 @@ void PHFemVibration::Init(){
 		/// tetが持つ頂点順
 		/// 要素剛性行列 u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)として計算
 #if 0
-		///// 行列C(変形-基本変形量）の計算（頂点座標に応じて変わる）
-		PTM::TMatrixRow< 1, 4, double > vec[4];
+		/// 基本変形量版
+		/// 行列C(変形-基本変形量）の計算（頂点座標に応じて変わる）
+		PTM::TMatrixRow< 1, 4, element_type > vec[4];
 		for(int j = 0; j < 4; j++){
 			Vec3d pos = mesh->vertices[mesh->tets[i].vertexIDs[j]].pos;
 			vec[j].item(0, 0) = 1.0;
 			vec[j].item(0, 1) = pos.x;
 			vec[j].item(0, 2) = pos.y;
 			vec[j].item(0, 3) = pos.z;
-			DSTR << mesh->tets[i].vertexIDs[j] << std::endl;
 		}
-		PTM::TMatrixRow< 12, 12, double > matCk;
+		PTM::TMatrixRow< 12, 12, element_type > matCk;
 		matCk.clear(0.0);
 		for(int j = 0; j < 4; j++){
 			int id = 3 * j;
@@ -67,11 +66,11 @@ void PHFemVibration::Init(){
 			matCk.vsub_matrix(id + 1, 4, 1, 4)= vec[j];
 			matCk.vsub_matrix(id + 2, 8, 1, 4)= vec[j];
 		}
-		PTM::TMatrixRow< 12, 12, double > matCkInv;
+		PTM::TMatrixRow< 12, 12, element_type > matCkInv;
 		matCkInv.assign(matCk.inv());
 
 		/// 行列B(ひずみ-基本変形量）（定数）
-		PTM::TMatrixRow< 6,12,double > matB;
+		PTM::TMatrixRow< 6, 12, element_type > matB;
 		matB.clear(0.0);
 		matB[0][1] = 1.0;
 		matB[1][6] = 1.0;
@@ -82,15 +81,15 @@ void PHFemVibration::Init(){
 
 		/// 弾性係数行列D（応力-ひずみ）の計算
 		/// （ヤング率、ポアソン比に応じてかわる）
-		const double E = GetYoungModulus();
-		const double v = GetPoissonsRatio();
-		const double a = 1 - v;
-		const double b = 1 - 2 * v;
-		const double c = 0.5 - v;
+		double E = GetYoungModulus();
+		double v = GetPoissonsRatio();
+		double a = 1 - v;
+		double b = 1 - 2 * v;
+		double c = 0.5 - v;
 		double Em;
 		if(b == 0.0) Em = DBL_MAX; /// 変形しない。ほんとうは+∞になる。
 		else Em = E / ((1 + v) * b);
-		PTM::TMatrixRow< 6, 6,double > matD;
+		PTM::TMatrixRow< 6, 6, element_type > matD;
 		matD.clear(0.0);
 		matD[0][0] = a; matD[0][1] = v; matD[0][2] = v;
 		matD[1][0] = v; matD[1][1] = a; matD[1][2] = v;
@@ -101,35 +100,35 @@ void PHFemVibration::Init(){
 		matD *= Em;
 		
 		/// BtDBの計算
-		PTM::TMatrixRow< 12, 12,double > matBtDB;
+		PTM::TMatrixRow< 12, 12, element_type > matBtDB;
 		matBtDB.clear(0.0);
 		matBtDB = matB.trans() * matD * matB;
 
 		/// 要素剛性行列の計算(エネルギー原理）
-		TMatrixRow< 12, 12,double > matKe; // 要素剛性行列
+		TMatrixRow< 12, 12, element_type > matKe; // 要素剛性行列
 		matKe.clear(0.0);
 		matKe = matCkInv.trans() * matBtDB * matCkInv * mesh->GetTetrahedronVolume(i);
 #else
-		/// テスト(形状関数版）
+		/// 形状関数版
 		/// 形状関数の計算（頂点座標に応じて変わる）
-		PTM::TMatrixRow< 4, 4, double > matPos;
+		PTM::TMatrixRow< 4, 4, element_type > matPos;
 		for(int j = 0; j < 4; j++){
-			Vec3d pos = mesh->vertices[mesh->tets[i].vertexIDs[j]].pos;
+			TVector< 3, element_type > pos = mesh->vertices[mesh->tets[i].vertexIDs[j]].pos;
 			matPos.item(j, 0) = 1.0;
-			matPos.item(j, 1) = pos.x;
-			matPos.item(j, 2) = pos.y;
-			matPos.item(j, 3) = pos.z;
+			matPos.item(j, 1) = pos[0];
+			matPos.item(j, 2) = pos[1];
+			matPos.item(j, 3) = pos[2];
 			//DSTR << mesh->tets[i].vertexIDs[j] << std::endl;
 		}
-		PTM::TMatrixRow< 4, 4, double > matCofact;		// matの余因子行列
+		PTM::TMatrixRow< 4, 4, element_type > matCofact;		// matの余因子行列
 		matCofact = (matPos.det() * matPos.inv()).trans();
-		Vec4d b, c, d;	// 形状関数の係数
+		TVector<4, element_type > b, c, d;	// 形状関数の係数
 		b.assign(matCofact.col(1));
 		c.assign(matCofact.col(2));
 		d.assign(matCofact.col(3));
 
 		/// 行列B（ひずみ-変位）
-		PTM::TMatrixRow< 6, 12, double > matB;
+		PTM::TMatrixRow< 6, 12, element_type > matB;
 		matB.clear(0.0);
 		matB[0][0] = b[0];	matB[0][3] = b[1];	matB[0][6] = b[2];	matB[0][9] = b[3];
 		matB[1][1] = c[0];	matB[1][4] = c[1];	matB[1][7] = c[2];	matB[1][10] = c[3];
@@ -137,7 +136,7 @@ void PHFemVibration::Init(){
 		matB[3][0] = c[0];	matB[3][1] = b[0];	matB[3][3] = c[1];	matB[3][4] = b[1];	matB[3][6] = c[2];	matB[3][7] = b[2];	matB[3][9] = c[3];	matB[3][10] = b[3];
 		matB[4][1] = d[0];	matB[4][2] = c[0];	matB[4][4] = d[1];	matB[4][5] = c[1];	matB[4][7] = d[2];	matB[4][8] = c[2];	matB[4][10] = d[3];	matB[4][11] = c[3];
 		matB[5][0] = d[0];	matB[5][2] = b[0];	matB[5][3] = d[1];	matB[5][5] = b[1];	matB[5][6] = d[2];	matB[5][8] = b[2];	matB[5][9] = d[3];	matB[5][11] = b[3];
-		double div = 1.0 / (6.0 * mesh->GetTetrahedronVolume(i));
+		element_type div = 1.0 / (6.0 * mesh->GetTetrahedronVolume(i));
 		matB *= div;
 
 		/// 弾性係数行列Dの計算（応力-ひずみ）
@@ -150,7 +149,7 @@ void PHFemVibration::Init(){
 		double Em;
 		if(bv == 0.0) Em = DBL_MAX; /// 変形しない。ほんとうは+∞になる。
 		else Em = E / ((1.0 + v) * bv);
-		PTM::TMatrixRow< 6, 6, double > matD;
+		PTM::TMatrixRow< 6, 6, element_type > matD;
 		matD.clear(0.0);
 		matD[0][0] = av;	matD[0][1] = v;		matD[0][2] = v;
 		matD[1][0] = v;		matD[1][1] = av;	matD[1][2] = v;
@@ -161,31 +160,14 @@ void PHFemVibration::Init(){
 		matD *= Em;
 
 		/// 要素剛性行列の計算(エネルギー原理）
-		TMatrixRow< 12, 12, double > matKe;
+		TMatrixRow< 12, 12, element_type > matKe;
 		matKe.clear(0.0);
 		matKe = matB.trans() * matD * matB * mesh->GetTetrahedronVolume(i);
-		
-		ScilabDeterminant(matKe, "matKe");
-		ScilabFileOut(matKe, "matKe.dat");
-		MatrixFileOut(matKe, "matKe.csv");
-		
-		//VMatrixRow< double > hoge;
-		//std::ostringstream oss;
-		//oss.precision(dbl::digits10);
-		//oss << matKe << std::endl;
-		//std::istringstream iss(oss.str().c_str());
-		//iss.precision(dbl::digits10);
-		//iss >> hoge;
-		//DSTR << hoge << std::endl;
-		//ScilabDeterminant(hoge);
-		//ScilabFileOut(hoge, "hoge.dat");
-		//MatrixFileOut(hoge, "hoge.csv");
-		// テスト終わり
 #endif
 		/// 質量行列の計算
-		TMatrixRow< 12, 12, double > matMe;
+		TMatrixRow< 12, 12, element_type > matMe;
 		matMe.clear(0.0);
-		TMatrixRow< 3, 3, double > I;
+		TMatrixRow< 3, 3, element_type > I;
 		I.clear(0.0);
 		I[0][0] = 1.0; I[1][1] = 1.0; I[2][2] = 1.0;
 		for(int j = 0; j < 4; j++){
@@ -204,7 +186,7 @@ void PHFemVibration::Init(){
 		matMe *= GetDensity() * mesh->GetTetrahedronVolume(i) / 20.0;
 
 		/// 減衰行列（比例減衰）
-		TMatrixRow< 12, 12, double > matCe;
+		TMatrixRow< 12, 12, element_type > matCe;
 		matCe.clear(0.0);
 		matCe = GetAlpha() * matMe + GetBeta() * matKe;
 		
@@ -236,11 +218,11 @@ void PHFemVibration::Init(){
 		//DSTR << "det matKe : "<< matKe.det() << std::endl;
 		//DSTR << "matKe" << std::endl;		DSTR << matKe << std::endl;
 		//DSTR << "matMe" << std::endl;		DSTR << matMe << std::endl;
-		if(i == 0){
-			MatrixFileOut(matKe, "matKe0.csv");
-		}else if( i == 1){
-			MatrixFileOut(matKe, "matKe1.csv");		
-		}
+		//if(i == 0){
+		//	MatrixFileOut(matKe, "matKe0.csv");
+		//}else if( i == 1){
+		//	MatrixFileOut(matKe, "matKe1.csv");		
+		//}
 	}	
 	DSTR << "det(matKIni) = " << matKIni.det() << std::endl;
 	DSTR << "matKIni" << std::endl;	DSTR << matKIni << std::endl;
@@ -277,13 +259,12 @@ void PHFemVibration::Init(){
 	//DSTR << "matMp" << std::endl;	DSTR << matMp << std::endl;
 	DSTR << "matKp" << std::endl;	DSTR << matKp << std::endl;
 	//DSTR << "matCp" << std::endl;	DSTR << matCp << std::endl;
-	ScilabDeterminant(matKIni, "matKConst");
-	ScilabFileOut(matKIni, "matConst.dat");
-	MatrixFileOut(matKIni, "matKConst.csv");
+	MatrixFileOut(matKp, "matKp.csv");
+	ScilabDeterminant(matKp, "matKp");
 	ScilabEigenValueAnalysis(matMp, matKp);
 #if 0
 	// 固有値のサイラボテスト
-	VMatrixRd matk;
+	VMatrixRe matk;
 	matk.resize(5, 5, 0.0);
 	matk.item(0, 0) = 200;		matk.item(0, 1) = -100;
 	matk.item(1, 0) = -100;	    matk.item(1, 1) = 100;
@@ -291,7 +272,7 @@ void PHFemVibration::Init(){
 	matk.item(3, 3) = 20;
 	matk.item(4,4) = 1;
 
-	VMatrixRd matm;
+	VMatrixRe matm;
 	matm.resize(5, 5, 0.0);
 	matm.item(0, 0) = 3;	matm.item(0, 2) = 2;
 	matm.item(1, 1) = 3;	matm.item(1, 3) = 2;
@@ -313,7 +294,7 @@ void PHFemVibration::Step(){
 	VVectord flp;
 	flp.assign(fl);
 	ReduceVectorSize(xdlp, vlp, flp, boundary);
-
+#if 1
 	///積分
 	switch(integration_mode){
 		case PHFemVibrationDesc::MODE_EXPLICIT_EULER:
@@ -331,6 +312,7 @@ void PHFemVibration::Step(){
 		default:
 			break;
 	}
+#endif
 	fl.clear(0.0);
 	// 計算結果をFemVertexに反映
 	GainVectorSize(xdlp, vlp, boundary);
@@ -353,7 +335,7 @@ void PHFemVibration::Step(){
 
 //* 積分関数
 /////////////////////////////////////////////////////////////////////////////////////////
-void PHFemVibration::ExplicitEuler(const VMatrixRd& _MInv, const VMatrixRd& _K, const VMatrixRd& _C, 
+void PHFemVibration::ExplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v){
 	int NDof = NVertices() * 3;
 	VVectord tmp;
@@ -364,24 +346,24 @@ void PHFemVibration::ExplicitEuler(const VMatrixRd& _MInv, const VMatrixRd& _K, 
 }
 
 // 定式化しなおさないといけない.2013.1.3
-void PHFemVibration::ImplicitEuler(const VMatrixRd& _MInv, const VMatrixRd& _K, const VMatrixRd& _C, 
+void PHFemVibration::ImplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v){
 #if 0
 	// 外力をまだ組み込んでない
 	int NDof = GetPHFemMesh()->vertices.size() * 3;
-	VMatrixRd E;	// 単位行列
+	VMatrixRe E;	// 単位行列
 	E.resize(NDof, NDof);
 	E.clear(0.0);
 	for(int i = 0; i < NDof; i++){
 		E[i][i] = 1.0;
 	}
-	VMatrixRd _Kt;
+	VMatrixRe _Kt;
 	_Kt.resize(NDof, NDof);
 	_Kt.clear(0.0);	
-	VMatrixRd _CtInv;
+	VMatrixRe _CtInv;
 	_CtInv.resize(NDof, NDof);
 	_CtInv.clear(0.0);
-	VMatrixRd _DInv;
+	VMatrixRe _DInv;
 	_DInv.resize(NDof, NDof);
 	_DInv.clear(0.0);
 
@@ -401,7 +383,7 @@ void PHFemVibration::ImplicitEuler(const VMatrixRd& _MInv, const VMatrixRd& _K, 
 #endif
 }
 
-void PHFemVibration::NewmarkBeta(const VMatrixRd& _M, const VMatrixRd& _K, const VMatrixRd& _C, 
+void PHFemVibration::NewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v,  const double b){
 	int NDof = (int)_xd.size();
 	static VVectord _a;		// 今回の加速度
@@ -409,7 +391,7 @@ void PHFemVibration::NewmarkBeta(const VMatrixRd& _M, const VMatrixRd& _K, const
 	static VVectord _al;	// 前回の加速度
 	_al.resize(NDof, 0.0);
 
-	VMatrixRd _SInv;
+	VMatrixRe _SInv;
 	_SInv.resize(NDof, NDof, 0.0);
 	_SInv = (_M + (0.5 * _C * vdt) + (b * _K * pow(vdt, 2))).inv();
 
@@ -436,19 +418,19 @@ void PHFemVibration::NewmarkBeta(const VMatrixRd& _M, const VMatrixRd& _K, const
 	//DSTR << "_MInv" << std::endl;	DSTR << _MInv << std::endl;
 }
 
-void PHFemVibration::ModalAnalysis(const VMatrixRd& _M, const VMatrixRd& _K, const VMatrixRd& _C, 
+void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, const int nmode){
 	//DSTR << "//////////////////////////////////" << std::endl;
 	// まだ減衰を含んでいない
 	// n:自由度、m:モード次数
 	static double time = 0.0;		// 経過時間
 	static VVectord evalue;			// 固有振動数(m)
-	static VMatrixRd evector;		// 固有ベクトル(n*m)
+	static VMatrixRe evector;		// 固有ベクトル(n*m)
 	static VVectord w;				// 固有角振動数(m)
 	static VVectord q0;				// モード振動ベクトルの初期値(m)
 	static VVectord qv0;			// モード振動速度ベクトルの初期値(m)
-	static VMatrixRd fC;			// モード外力の積分cos成分(0列:今回, 1列前回)(m)
-	static VMatrixRd fS;			// モード外力の積分sin成分(0列:今回, 1列前回)(m)
+	static VMatrixRe fC;			// モード外力の積分cos成分(0列:今回, 1列前回)(m)
+	static VMatrixRe fS;			// モード外力の積分sin成分(0列:今回, 1列前回)(m)
 
 	static bool bFirst = true;
 	if(bFirst){
@@ -500,32 +482,29 @@ void PHFemVibration::ModalAnalysis(const VMatrixRd& _M, const VMatrixRd& _K, con
 	//DSTR << time << std::endl;
 
 	_xd = evector * q;
-
 	time += _dt;
 }
 
 //* 計算関数（そのうちTMatirixへ）
 /////////////////////////////////////////////////////////////////////////////////////////
 /// サブスペース法（同時逆反復法？）
-/// VMatrixRd& _M:質量行列（正値対称）, VMatrixRd& _K:剛性行列（正値対称）
-/// int nmode:モード次数, double epsilon:収束条件, VVectord& e:固有振動数[Hz], VMatrixRd& v:固有ベクトル(列順）
-void PHFemVibration::SubSpace(const VMatrixRd& _M, const VMatrixRd& _K, 
-	const int nmode, const double epsilon, VVectord& evalue, VMatrixRd& evector){
+/// VMatrixRe& _M:質量行列（正値対称）, VMatrixRe& _K:剛性行列（正値対称）
+/// int nmode:モード次数, double epsilon:収束条件, VVectord& e:固有振動数[Hz], VMatrixRe& v:固有ベクトル(列順）
+void PHFemVibration::SubSpace(const VMatrixRe& _M, const VMatrixRe& _K, 
+	const int nmode, const double epsilon, VVectord& evalue, VMatrixRe& evector){
 	const int size = _M.height();
-	if(_K.det() > 0){
+	if(_K.det() <= 0){
 		DSTR << "Stiffness Matrix is not regular matrix." << std::endl;
 		return;
 	}
 	if(nmode > size) assert(0);
 	/// 初期化
-	// 固有値
-	evalue.resize(nmode, 0.0);
-	// 固有ベクトル
-	evector.resize(size, nmode, 0.0);
+	evalue.resize(nmode, 0.0);			// 固有値
+	evector.resize(size, nmode, 0.0);	// 固有ベクトル
 	// 初期値ベクトル
-	VMatrixRd y;
+	VMatrixRe y;
 	y.resize(size, nmode, 0.0);
-	VMatrixRd ylast;
+	VMatrixRe ylast;
 	ylast.resize(size, nmode, 0.0);
 	VVectord yini;
 	yini.resize(size, 1.0);		// 初期値は1.0
@@ -538,18 +517,17 @@ void PHFemVibration::SubSpace(const VMatrixRd& _M, const VMatrixRd& _K,
 	/// _M, _Kをコレスキー分解
 	// _AInvの計算はコレスキー分解値を使ってfor文で計算したほうが速いはず。
 	// 今は速さを気にせず逆行列を計算してる。
-	VMatrixRd _Mc;
+	VMatrixRe _Mc;
 	_Mc.resize(size, size, 0.0);
 	cholesky(_M, _Mc);	
-	VMatrixRd _Kc;
+	VMatrixRe _Kc;
 	_Kc.resize(size, size, 0.0);
 	cholesky(_K, _Kc);
-	DSTR << "cholesky" << std::endl;
-	DSTR << _Mc * _Mc.trans() << std::endl;
-	DSTR << _Kc * _Kc.trans()  << std::endl;
+	//DSTR << "cholesky" << std::endl;
+	//DSTR << _Mc << std::endl;
+	//DSTR << _Kc  << std::endl;
 
-
-	VMatrixRd _AInv;			
+	VMatrixRe _AInv;			
 	_AInv.resize(size, size, 0.0);
 	_AInv = _Mc.trans() * (_Kc.inv()).trans() * _Kc.inv() * _Mc;
 
@@ -619,23 +597,13 @@ void PHFemVibration::UpdateVerticesPosition(VVectord& _xd){
 	}
 }
 
-bool PHFemVibration::AddBoundaryCondition(VMatrixRd& base, VMatrixRd& mat, const int id){
-	int n = base.height();
+bool PHFemVibration::AddBoundaryCondition(VMatrixRe& mat, const int id){
+	int n = mat.height();
 	if(id > n - 1) return false;
-#if 1
 	// base, matの両方に境界条件をいれる
-	base.col(id).clear(0.0);
-	base.row(id).clear(0.0);
-	base.item(id, id) = 1.0;
-	mat.assign(base);
-#else
-	// matのみに境界条件をいれる
-	mat.assign(base);
 	mat.col(id).clear(0.0);
 	mat.row(id).clear(0.0);
 	mat.item(id, id) = 1.0;
-	mat.assign(base);
-#endif
 	return true;
 }
 
@@ -645,10 +613,10 @@ bool PHFemVibration::AddBoundaryCondition(const int vtxId, const Vec3i dof = Vec
 		for(int i = 0; i < 3; i++){
 			if(dof[i] == 1){
 				const int id = vtxId * 3 + i;
-				AddBoundaryCondition(matMIni, matMp, id);
-				AddBoundaryCondition(matKIni, matKp, id);
-				AddBoundaryCondition(matCIni, matCp, id);	
-				boundary[id] = 1.0;
+				//AddBoundaryCondition(matMp, id);
+				//AddBoundaryCondition(matKp, id);
+				//AddBoundaryCondition(matCp, id);
+				boundary[id] = 1;
 			}
 		}
 		return true;
@@ -663,16 +631,17 @@ bool PHFemVibration::AddBoundaryCondition(const VVector< Vec3i > bcs){
 		for(int j = 0; j < 3; j++){
 			if(bcs[i][j] == 1){
 				const int id = i + j;
-				AddBoundaryCondition(matMIni, matMp, id);
-				AddBoundaryCondition(matKIni, matKp, id);
-				AddBoundaryCondition(matCIni, matCp, id);
+				//AddBoundaryCondition(matMp, id);
+				//AddBoundaryCondition(matKp, id);
+				//AddBoundaryCondition(matCp, id);
+				boundary[id] = 1;
 			}
 		}
 	}
 	return true;
 }
 
-void PHFemVibration::CompBoundaryMatrix(VMatrixRd& _L, VMatrixRd& _R, const VVector< int > bc){
+void PHFemVibration::CompBoundaryMatrix(VMatrixRe& _L, VMatrixRe& _R, const VVector< int > bc){
 	int n = bc.size();		// 全自由度
 	int m = 0;				// 境界条件導入後の自由度
 	for(int i = 0; i < n; i++){
@@ -689,18 +658,18 @@ void PHFemVibration::CompBoundaryMatrix(VMatrixRd& _L, VMatrixRd& _R, const VVec
 		}
 	}
 }
-void PHFemVibration::ReduceMatrixSize(VMatrixRd& mat, const VVector< int > bc){
-	VMatrixRd matL, matR;
+void PHFemVibration::ReduceMatrixSize(VMatrixRe& mat, const VVector< int > bc){
+	VMatrixRe matL, matR;
 	CompBoundaryMatrix(matL, matR, bc);
-	VMatrixRd tmp;
+	VMatrixRe tmp;
 	tmp.assign(matL * mat * matR);
 	mat.assign(tmp);
 }
 
-void PHFemVibration::ReduceMatrixSize(VMatrixRd& _M, VMatrixRd& _K, VMatrixRd& _C, const VVector< int > bc){
-	VMatrixRd matL, matR;
+void PHFemVibration::ReduceMatrixSize(VMatrixRe& _M, VMatrixRe& _K, VMatrixRe& _C, const VVector< int > bc){
+	VMatrixRe matL, matR;
 	CompBoundaryMatrix(matL, matR, bc);
-	VMatrixRd tmp;
+	VMatrixRe tmp;
 	tmp.assign(matL * _M * matR);
 	_M.assign(tmp);
 	tmp.assign(matL * _K * matR);
@@ -711,7 +680,7 @@ void PHFemVibration::ReduceMatrixSize(VMatrixRd& _M, VMatrixRd& _K, VMatrixRd& _
 }
 
 void PHFemVibration::ReduceVectorSize(VVectord& r, const VVector< int > bc){
-	VMatrixRd matL, matR;
+	VMatrixRe matL, matR;
 	CompBoundaryMatrix(matL, matR, bc);
 	VVectord tmp;
 	tmp.assign(matL * r);
@@ -719,7 +688,7 @@ void PHFemVibration::ReduceVectorSize(VVectord& r, const VVector< int > bc){
 }
 
 void PHFemVibration::ReduceVectorSize(VVectord& _xd, VVectord& _v, VVectord& _f,const VVector< int > bc){
-	VMatrixRd matL, matR;
+	VMatrixRe matL, matR;
 	CompBoundaryMatrix(matL, matR, bc);
 	VVectord tmp;
 	tmp.assign(matL * _xd);
@@ -731,7 +700,7 @@ void PHFemVibration::ReduceVectorSize(VVectord& _xd, VVectord& _v, VVectord& _f,
 }
 
 void PHFemVibration::GainVectorSize(VVectord& r, const VVector< int > bc){
-	VMatrixRd matL, matR;
+	VMatrixRe matL, matR;
 	CompBoundaryMatrix(matL, matR, bc);
 	VVectord tmp;
 	tmp.assign(matR * r);
@@ -739,7 +708,7 @@ void PHFemVibration::GainVectorSize(VVectord& r, const VVector< int > bc){
 }
 
 void PHFemVibration::GainVectorSize(VVectord& _xd, VVectord& _v, const VVector< int > bc){
-	VMatrixRd matL, matR;
+	VMatrixRe matL, matR;
 	CompBoundaryMatrix(matL, matR, bc);
 	VVectord tmp;
 	tmp.assign(matR * _xd);
@@ -775,19 +744,19 @@ bool PHFemVibration::AddVertexForce(VVector< Vec3d > fWs){
 //* scilabデバック
 /////////////////////////////////////////////////////////////////////////////////////////
 
-void PHFemVibration::ScilabEigenValueAnalysis(VMatrixRd& _M, VMatrixRd& _K){
-	DSTR << "////////////////////////////////////////////" << std::endl;
+void PHFemVibration::ScilabEigenValueAnalysis(VMatrixRe& _M, VMatrixRe& _K){
+	DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
 	DSTR << "ScilabEigenValueAnalysis Start." << std::endl;
 	DSTR << "det(M) springhead2 : " << _M.det() << std::endl;
 	DSTR << "det(K) springhead2 : " << _K.det() << std::endl;
-#if 0
+#if 1
 	VVectord evalue;
-	VMatrixRd evector;
+	VMatrixRe evector;
 	SubSpace(_M, _K, _M.height(), 1e-5, evalue, evector);
 	DSTR << "eigenvalue springhead2" << std::endl;
 	DSTR << evalue << std::endl;
 	DSTR << "eigen vibration value springhead2" << std::endl;
-	for(int i = 0; i < evalue.size(); i++){
+	for(int i = 0; i < (int)evalue.size(); i++){
 		evalue[i] = sqrt(evalue[i])/2/M_PI;
 	}
 	DSTR << evalue << std::endl;
@@ -809,26 +778,26 @@ void PHFemVibration::ScilabEigenValueAnalysis(VMatrixRd& _M, VMatrixRd& _K){
 	ScilabJob("disp(detK);");
 
 	ScilabJob("[P D] = spec(inv(M) * K);");
-	VMatrixRd D;
+	VMatrixRe D;
 	ScilabGetMatrix(D, "D");
 	DSTR << "eigenvalue scilab" << std::endl;
 	DSTR << D << std::endl;
-	VMatrixRd P;
+	VMatrixRe P;
 	ScilabGetMatrix(P, "P");
 	DSTR << "eigenvector scilab" << std::endl;
 	DSTR << P << std::endl;
 	DSTR << "ScilabEigenValueAnalysis End." << std::endl;
-	DSTR << "////////////////////////////////////////////" << std::endl;
+	DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
 }
 
-void PHFemVibration::MatrixFileOut(VMatrixRd mat, std::string filename){
+void PHFemVibration::MatrixFileOut(VMatrixRe mat, std::string filename){
 	std::ofstream ofs(filename);
 	if (!ofs){
 		DSTR << "Can not open the file : " << filename << std::endl;
 		return;
 	}
 
-	ofs.precision(dbl::digits10);
+	ofs.precision(element_limit);
 	for (int i = 0; i < (int)mat.height(); i++){
 		for(int j = 0; j < (int)mat.width(); j ++){
 			ofs << mat.item(i, j) << ",";

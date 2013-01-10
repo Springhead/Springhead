@@ -110,6 +110,7 @@ public:
 	
 	Vec3f*		GetVertices(){ return &vertices[0]; }
 	Vec3f*		GetNormals(){ return &normals[0]; }
+	int			NColors(){	return (int)colors.size(); }
 	Vec4f*		GetColors(){ return &colors[0]; }
 	Vec2f*		GetTexCoords(){ return &texCoords[0]; }
 	GRMeshFace*	GetFaces(){ return &faces[0]; }
