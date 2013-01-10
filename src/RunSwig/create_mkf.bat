@@ -158,10 +158,11 @@ for %%h in (%SRCHDRS%) do (
     echo !MSPATH:\=/! \>> %MAKEFILE%
 )
 echo.  			>> %MAKEFILE%
+
 echo all:	%PROJECT%%STUBFILE%	>> %MAKEFILE%
 echo.  			>> %MAKEFILE%
-echo %PROJECT%%STUBFILE%:	$^(FIXHDRS^) $^(INCHDRS^) $^(SRCHDRS^)	>> %MAKEFILE%
 
+echo %PROJECT%%STUBFILE%:	$^(FIXHDRS^) $^(INCHDRS^) $^(SRCHDRS^)	>> %MAKEFILE%
 set SWIGARGS=%PROJECT%
 if %DEPENDENCIES% neq "" (
     set SWIGOPTS=%DEPENDENCIES:"=%
@@ -169,8 +170,8 @@ if %DEPENDENCIES% neq "" (
 )
 echo.	%BINDIR%\%MAKEMGR% -t	>> %MAKEFILE%
 echo.	%SWIGPATH%\%SWIG% %SWIGARGS%	>> %MAKEFILE%
-
 echo.  			>> %MAKEFILE%
+
 echo $^(FIXHDRS^):		>> %MAKEFILE%
 echo.  			>> %MAKEFILE%
 echo $^(INCHDRS^):		>> %MAKEFILE%
