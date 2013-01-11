@@ -57,6 +57,7 @@ public:
 		std::vector<int> tets;
 		std::vector<int> edges;
 		std::vector<int> faces;
+		std::vector<int> nextSurfaceVertices;
 		FemVertex();
 		double temp;		//	温度
 		double k;			//	全体剛性行列Kの要素　計算に利用
