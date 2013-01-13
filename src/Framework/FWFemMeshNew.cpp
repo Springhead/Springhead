@@ -27,8 +27,8 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	grFemMesh = NULL;
 	// p: piecewise linear comlex, q:2.1が正四面体の歪み(1以上～？以下）、a:粗さ
 	//meshRoughness = "pq2.1a0.002";
-	//meshRoughness = "pq2.1a0.05";
-	meshRoughness = "pq2.1a1.0";	
+	meshRoughness = "pq2.1a0.01";
+	//meshRoughness = "pq2.1a1.0";	
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }
@@ -150,7 +150,7 @@ void FWFemMeshNew::CreateGRFromPH(){
 		GRMeshFace f;
 		f.nVertices = 3;
 		for(int j=0; j<3; ++j){
-			f.indices[j] = vtxMap[phFemMesh->faces[i].vertices[j]];
+			f.indices[j] = vtxMap[phFemMesh->faces[i].vertexIDs[j]];
 		}
 		gmd.faces.push_back(f);
 	}

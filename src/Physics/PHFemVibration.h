@@ -85,6 +85,7 @@ public:
 	// FemVertexに頂点変位を加える
 	void UpdateVerticesPosition(VVectord& _xd);
 
+	std::vector< int > FindVertices(const int vtxId, const Vec3d _vecl);
 	// 境界条件を加える(行列と番号）
 	bool AddBoundaryCondition(VMatrixRe& mat, const int id);
 	// 境界条件を加える(頂点）
@@ -112,10 +113,14 @@ public:
 	bool AddVertexForce(VVector< Vec3d > fWs);
 
 	/// scilabデバック
-	bool IsScilabStarted;
-
+	bool IsScilabStarted;	/// scilabがスタートしているかどうかのフラグ
+	/// scilabで読み込ませるdat形式ファイルを出力
 	template < class AD >
 	void ScilabFileOut(PTM::MatrixImp<AD>& a, const std::string filename = "scimat.dat"){
+		if(!IsScilabStarted){
+			DSTR << "Scilab has not started" << std::endl;
+			return;
+		}		
 		ScilabJob("clear;");
 		ScilabSetMatrix("A", a);
 		std::stringstream str;
@@ -123,6 +128,7 @@ public:
 		ScilabJob(str.str().c_str());
 	}
 
+	/// 行列式計算
 	template < class AD >
 	void ScilabDeterminant(PTM::MatrixImp<AD>& a, const std::string name = ""){
 		DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
@@ -138,18 +144,18 @@ public:
 		DSTR << "Determinant of scilab is written in console." << std::endl;
 		std::cout << "det("<< name << ") scilab : ";
 		ScilabJob("disp(detA);");	
-
-		//ScilabJob("[L U] = lu(K);");
-		//ScilabJob("disp(L);");
-		//ScilabJob("disp(U);");
-		//ScilabJob("disp(K);");
 		DSTR << "Scilab Determinant End." << std::endl;	
 		DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
 	}
+	/// 固有値固有ベクトル計算
 	void ScilabEigenValueAnalysis(VMatrixRe& _M, VMatrixRe& _K);
 
 	/// 行列のファイル出力
 	void MatrixFileOut(VMatrixRe mat, std::string filename);
+
+	/// 実装中
+	std::vector< int > FindNeigborTetrahedron(Vec3d pos);
+	std::vector< int >  FindNeigborFaces(Vec3d pos);
 };
 
 }

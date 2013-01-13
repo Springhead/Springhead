@@ -888,15 +888,59 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 			render->SetMaterial(GRRenderIf::YELLOW);
 			render->DrawLine(p[0], p[1]);
 		}
-		if(mesh->GetPHFemVibration()){
-			PHFemVibrationIf* fv = mesh->GetPHFemVibration();
-			render->EnterScreenCoordinate();
-			float pos = 20.0f;
-			float margin = 20.0f;
-			std::stringstream str;
+		// 各種情報を2次元座標で描画
+		// テクスチャ、温度、振動変位の描画などはFWFemMeshでおこなう
+		render->EnterScreenCoordinate();
+		float pos = 20.0f;
+		float margin = 20.0f;
+		std::stringstream str;
+		{
+			// 頂点数
+			str << "Vertices : " << mesh->vertices.size() << std::endl;
 			render->DrawFont(Vec2f(20, pos), str.str());
-			render->LeaveScreenCoordinate();
+			str.str("");
+			str.clear(std::stringstream::goodbit);
+			pos += margin;		
 		}
+		{
+			// 辺数
+			str << "Edges : " << mesh->edges.size() << std::endl;
+			render->DrawFont(Vec2f(20, pos), str.str());
+			str.str("");
+			str.clear(std::stringstream::goodbit);
+			pos += margin;
+		}
+		{
+			// 四面体数
+			str << "Tetrahedrons : " << (int)mesh->tets.size() << std::endl;
+			render->DrawFont(Vec2f(20, pos), str.str());			
+			str.str("");
+			str.clear(std::stringstream::goodbit);
+			pos += margin;
+		}
+		
+		/// FemVibration関係の情報描画
+		if(mesh->GetPHFemVibration()){
+			PHFemVibrationIf* vib = mesh->GetPHFemVibration()->Cast();
+			//{
+			//	// 積分モード
+			//	str << "Integration Mode : " << vib- << std::endl;
+			//	render->DrawFont(Vec2f(20, pos), str.str());			
+			//	str.str("");
+			//	str.clear(std::stringstream::goodbit);
+			//	pos += margin;
+			//}
+			{
+				// 刻み
+				str << "dt : " << vib->GetTimeStep() << std::endl;
+				render->DrawFont(Vec2f(20, pos), str.str());			
+				str.str("");
+				str.clear(std::stringstream::goodbit);
+				pos += margin;
+			}
+
+		}
+		render->LeaveScreenCoordinate();
 	}
 	render->SetLighting(true);
 	render->SetDepthTest(true);
