@@ -60,7 +60,7 @@ public:
 class FemFace{
 	int sorted[3];		///< 比較するための、ソート済みの頂点id。Update()で更新。
 public:
-	int vertexIDs[3];	///<頂点ID。順番で面の表裏を表す。
+	int vertexIDs[3];	///<頂点ID。順番で面の表裏を表す。（*表から見て時計回り。ただし全体形状nSurfaceFaceの表面のみ正しく、内部の面は正しくない。）
 	void Update();
 	bool operator < (const FemFace& f2);	///< 頂点IDで比較
 	bool operator == (const FemFace& f2);	///< 頂点IDで比較
@@ -126,8 +126,8 @@ public:
 	///	面の総数を返す
 	int NFaces();
 
-	//* 頂点に関する関数 */
 	///////////////////////////////////////////////////////////////////////////////////////////
+	//* 頂点に関する関数 */
 	/// 頂点の初期位置を取得する（ローカル座標系）
 	Vec3d GetVertexInitPositionL(int vtxId);
 	/// 頂点の位置を取得する（ローカル座標系）
@@ -143,12 +143,12 @@ public:
 	/// 頂点の位置を指定する（ローカル座標系）
 	bool SetVertexPositionL(int vtxId, Vec3d posL);
 
-	//* 四面体に関する関数 */
 	///////////////////////////////////////////////////////////////////////////////////////////
+	//* 四面体に関する関数 */
 	/// 四面体の計算(対象によらずに必要になる形状関数のXXを計算する関数)
 	void UpdateJacobian();
 	/// 四面体の体積を返す
-	double CompTetrahedronVolume(int tetID);
+	double CompTetVolume(int tetID);
 	/// 形状関数の係数を返す	
 	/*
 		|N0|			|a0 b0 c0 d0||1|
@@ -156,10 +156,14 @@ public:
 		|N2|			|a2 b2 c2 d2||y|
 		|N3|			|a3 b3 c3 d3||z|
 	*/
-	TMatrixRow< 4, 4, double > CompTetraShapeFunctionCoeff(int tetId);
+	TMatrixRow< 4, 4, double > CompTetShapeFunctionCoeff(int tetId);
+	/// ある四面体内のある点における形状関数値を返す(四面体外の位置を指定すると負値がでる）
+	bool CompTetShapeFunctionValue(int tetId, Vec3d pos, Vec4d& value);
+	/// 面から四面体を探す
+	int FindTetFromFace(int faceId);
 
-	//* 面に関する関数 */
 	///////////////////////////////////////////////////////////////////////////////////////////
+	//* 面に関する関数 */
 	///	Face辺の両端点の座標を返す?
 	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
 	///	Face辺の両端点の座標を返す?

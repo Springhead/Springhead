@@ -37,7 +37,7 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 	PHFemVibrationIf* GetPHFemVibration();
 	int NVertices();
 	int NFaces();
-	double CompTetrahedronVolume(int tetID);
+	double CompTetVolume(int tetID);
 	bool AddVertexDisplacementW(int vtxId, Vec3d disW);
 	bool AddVertexDisplacementL(int vtxId, Vec3d disL);
 	bool SetVertexPositionW(int vtxId, Vec3d posW);
@@ -97,9 +97,9 @@ struct PHFemVibrationIf : public PHFemIf{
 	// 境界条件を加える(頂点順）
 	bool AddBoundaryCondition(PTM::VVector< Vec3i > bcs); 
 	// 頂点に力を加える（ワールド座標系）
-	bool AddVertexForce(int vtxId, Vec3d fW);
+	bool AddVertexForceW(int vtxId, Vec3d fW);
 	// 頂点群に力を加える（ワールド座標系）
-	bool AddVertexForce(PTM::VVector< Vec3d > fWs);
+	bool AddVertexForceW(PTM::VVector< Vec3d > fWs);
 };
 
 //@}

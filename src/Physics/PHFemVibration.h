@@ -107,10 +107,14 @@ public:
 	// ベクトルの自由度を元に戻す
 	void GainVectorSize(VVectord& _xd, VVectord& _v, const VVector< int > bc);
 
+	// 頂点に力を加える（ローカル座標系）
+	bool AddVertexForceL(int vtxId, Vec3d fL);
 	// 頂点に力を加える（ワールド座標系）
-	bool AddVertexForce(int vtxId, Vec3d fW);
+	bool AddVertexForceW(int vtxId, Vec3d fW);
 	// 頂点群に力を加える（ワールド座標系）
-	bool AddVertexForce(VVector< Vec3d > fWs);
+	bool AddVertexForceW(VVector< Vec3d > fWs);
+	// 力を加える
+	void AddForce(Vec3d fW, Vec3d posW);
 
 	/// scilabデバック
 	bool IsScilabStarted;	/// scilabがスタートしているかどうかのフラグ

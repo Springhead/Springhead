@@ -288,6 +288,7 @@ int PHFemMeshNew::NFaces(){
 	return (int)faces.size();
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////
 //* 頂点に関する関数 */
 Vec3d PHFemMeshNew::GetVertexInitPositionL(int vtxId){
 	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
@@ -342,6 +343,7 @@ bool PHFemMeshNew::SetVertexPositionL(int vtxId, Vec3d posL){
 	return false;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////
 //* 四面体に関する関数 */
 #define DET2_INV_TMATRIXBASE(a,b,c,d)	(a*d - b*c)
 inline Matrix3d invDet(const Matrix3d& a){
@@ -381,7 +383,7 @@ void PHFemMeshNew::UpdateJacobian(){
 	}
 }
 
-double PHFemMeshNew::CompTetrahedronVolume(int tetID){
+double PHFemMeshNew::CompTetVolume(int tetID){
 	TMatrixRow< 4, 4, double > mat;
 	mat.clear(0.0);
 	for(int i = 0; i < 4; i++){
@@ -395,7 +397,7 @@ double PHFemMeshNew::CompTetrahedronVolume(int tetID){
 	return volume;
 }
 
-TMatrixRow< 4, 4, double > PHFemMeshNew::CompTetraShapeFunctionCoeff(int tetId){
+TMatrixRow< 4, 4, double > PHFemMeshNew::CompTetShapeFunctionCoeff(int tetId){
 	PTM::TMatrixRow< 4, 4, double > matPos;
 	for(int i = 0; i < 4; i++){
 		Vec3d pos = vertices[tets[tetId].vertexIDs[i]].pos;
@@ -404,11 +406,34 @@ TMatrixRow< 4, 4, double > PHFemMeshNew::CompTetraShapeFunctionCoeff(int tetId){
 		matPos.item(i, 2) = pos[1];
 		matPos.item(i, 3) = pos[2];
 	}
-	PTM::TMatrixRow< 4, 4, double > matCofact;		// matの余因子行列
-	matCofact = (matPos.det() * matPos.inv()).trans();
-	return matCofact;
+	PTM::TMatrixRow< 4, 4, double > funcCoeff;		// matの余因子行列
+	funcCoeff = (matPos.det() * matPos.inv()).trans();
+	return funcCoeff;
 }
 
+bool PHFemMeshNew::CompTetShapeFunctionValue(int tetId, Vec3d pos, Vec4d& value){
+	bool bCorrect = true;
+	TMatrixRow< 4, 4, double > matCofact;
+	matCofact = CompTetShapeFunctionCoeff(tetId);
+	for(int i = 0; i < 4; i++){
+		value[i] = matCofact[i][0] + matCofact[i][1] * pos.x + 	matCofact[i][2] * pos.y + 	matCofact[i][3] * pos.z;
+		if(value[i] < 0) bCorrect = false;
+	}
+	return bCorrect;
+}
+
+int PHFemMeshNew::FindTetFromFace(int faceId){
+	for(int i = 0; i < (int)tets.size(); i++){
+		for(int j = 0; j < 4; j++){
+			if(faceId == tets[i].faceIDs[j]){
+				return i;
+			}
+		}
+	}
+	return -1;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
 //* 面に関する関数 */
 std::vector< Vec3d > PHFemMeshNew::GetFaceEdgeVtx(unsigned id){
 	std::vector<Vec3d> fev;
@@ -435,7 +460,9 @@ Vec3d PHFemMeshNew::CompFaceNormal(int faceId){
 	Vec3d vec[2];
 	vec[0] = pos[1] - pos[0];
 	vec[1] = pos[2] - pos[0];
-	return vec[1] % vec[0];	// 反時計周り
+	// 頂点は表面から見て時計周り
+	// 外積は反時計まわりにかける
+	return (vec[1] % vec[0]).unit();
 }
 
 
