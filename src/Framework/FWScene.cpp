@@ -857,8 +857,8 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 	PHFemEngine* fe = DCAST(PHFemEngine, femEngine);
 
+	//render->SetDepthTest(false);
 	render->SetLighting(false);
-	render->SetDepthTest(false);
 	for(int i = 0; i< (int)fe->meshes_n.size(); i++){
 		PHFemMeshNew* mesh = fe->meshes_n[i];
 		Posed solidPose = mesh->GetPHSolid()->GetPose();
@@ -881,6 +881,7 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 		}
 		// 辺の描画
 		int ne = (int)mesh->edges.size();
+		ne = (int)mesh->nSurfaceEdge;
 		for(int j = 0; j < ne; j++){
 			Vec3d p[2];
 			p[0] = solidPose * mesh->vertices[mesh->edges[j].vertexIDs[0]].pos;
@@ -943,7 +944,7 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 		render->LeaveScreenCoordinate();
 	}
 	render->SetLighting(true);
-	render->SetDepthTest(true);
+	//render->SetDepthTest(true);
 }
 
 void FWScene::DrawMesh(GRRenderIf* render, CDConvexMeshIf* mesh, bool solid){

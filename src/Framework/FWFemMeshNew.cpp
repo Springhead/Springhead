@@ -27,8 +27,8 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	grFemMesh = NULL;
 	// p: piecewise linear comlex, q:2.1が正四面体の歪み(1以上～？以下）、a:粗さ
 	//meshRoughness = "pq2.1a0.002";
-	meshRoughness = "pq2.1a0.01";
-	//meshRoughness = "pq2.1a1.0";	
+	//meshRoughness = "pq2.1a0.01";
+	meshRoughness = "pq2.1a1.0";	
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }
@@ -353,7 +353,7 @@ void FWFemMeshNew::CreateGRFromPH(){
 			}
 		}
 	}
-#if 0	
+#if 1	
 	// 頂点カラーの設定
 	gmd.colors.resize(grFemMesh->colors.size() ? vertexIdMap.size() : 0);
 	for(unsigned pv=0; pv<gmd.colors.size(); ++pv){
@@ -396,7 +396,7 @@ void FWFemMeshNew::SyncVibrationInfo(){
 	// 変位で色変化
 	if(grFemMesh->NColors() < 1) return;
 	Vec4f* vc = grFemMesh->GetColors();
-	float base = 0.1f;
+	float base = 0.000016f;
 	float offset = 0.0001f;
 	for(int i = 0; i < (int)vertexIdMap.size(); i++){
 		int pId = vertexIdMap[i];
