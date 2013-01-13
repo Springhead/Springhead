@@ -52,7 +52,6 @@ public:
 	int vertexIDs[4];	///< 頂点ID																																	  
 	int faceIDs[4];		///< 表面４つ
 	int edgeIDs[6];		///< 対応する辺のID。0:辺01, 1:辺12, 2:辺20, 3:辺03, 4:辺13, 5:辺23
-	double volume;		///< 四面体の体積
 	PTM::TVector<4,double> vecf[4];			///<	{f1}:vecf[0],{f2}:vecf[1],{f3}:vecf[2],...
 	int& edge(int i, int j);
 };
@@ -61,11 +60,10 @@ public:
 class FemFace{
 	int sorted[3];		///< 比較するための、ソート済みの頂点id。Update()で更新。
 public:
-	int vertices[3];	///<頂点ID。順番で面の表裏を表す。
+	int vertexIDs[3];	///<頂点ID。順番で面の表裏を表す。
 	void Update();
 	bool operator < (const FemFace& f2);	///< 頂点IDで比較
 	bool operator == (const FemFace& f2);	///< 頂点IDで比較
-	double area;						///< 四面体の各面の面積
 };
 //	辺
 struct FemEdge{
@@ -87,7 +85,6 @@ protected:
 	PHSolidIf* solid;					///< 関連づけられている剛体
 public:
 	std::vector<FemVertex> vertices;	///< 頂点
-	//std::vector<FemVertex> initVertices;///< 初期頂点
 	std::vector<FemTet> tets;			///< 四面体
 	
 	/// 追加情報	基本情報からSetDesc()が計算して求める。
@@ -123,36 +120,56 @@ public:
 	PHSolidIf* GetPHSolid();
 	/// PHFemVibrationIfを返す
 	PHFemVibrationIf* GetPHFemVibration();
+
 	/// 頂点の総数を返す
 	int NVertices();
 	///	面の総数を返す
 	int NFaces();
-	///	Face辺の両端点の座標を返す?
-	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
-	//	Face辺の両端点の座標を返す?
-	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
-	/// 四面体の計算(対象によらずに必要になる形状関数のXXを計算する関数)
-	void UpdateJacobian();
-	/// 四面体の体積を返す
-	double GetTetrahedronVolume(int tetID);
 
+	//* 頂点に関する関数 */
+	///////////////////////////////////////////////////////////////////////////////////////////
 	/// 頂点の初期位置を取得する（ローカル座標系）
 	Vec3d GetVertexInitPositionL(int vtxId);
-
 	/// 頂点の位置を取得する（ローカル座標系）
 	Vec3d GetVertexPositionL(int vtxId);
 	/// 頂点の変位を取得する（ローカル座標系）
 	Vec3d GetVertexDisplacementL(int vtxId);
-	
 	/// 頂点に変位を与える（ワールド座標系）
 	bool AddVertexDisplacementW(int vtxId, Vec3d disW);
 	/// 頂点に変位を与える（ローカル座標系）
 	bool AddVertexDisplacementL(int vtxId, Vec3d disL);
-	
 	/// 頂点の位置を指定する（ワールド座標系）
 	bool SetVertexPositionW(int vtxId, Vec3d posW);
 	/// 頂点の位置を指定する（ローカル座標系）
 	bool SetVertexPositionL(int vtxId, Vec3d posL);
+
+	//* 四面体に関する関数 */
+	///////////////////////////////////////////////////////////////////////////////////////////
+	/// 四面体の計算(対象によらずに必要になる形状関数のXXを計算する関数)
+	void UpdateJacobian();
+	/// 四面体の体積を返す
+	double CompTetrahedronVolume(int tetID);
+	/// 形状関数の係数を返す	
+	/*
+		|N0|			|a0 b0 c0 d0||1|
+		|N1|=	1/6V *	|a1 b1 c1 d1||x|
+		|N2|			|a2 b2 c2 d2||y|
+		|N3|			|a3 b3 c3 d3||z|
+	*/
+	TMatrixRow< 4, 4, double > CompTetraShapeFunctionCoeff(int tetId);
+
+	//* 面に関する関数 */
+	///////////////////////////////////////////////////////////////////////////////////////////
+	///	Face辺の両端点の座標を返す?
+	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
+	///	Face辺の両端点の座標を返す?
+	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
+	/// 面積を返す
+	double CompFaceArea(int faceId);
+	/// 面表面方向の法線を返す
+	Vec3d CompFaceNormal(int faceId);
+
+
 };
 
 }

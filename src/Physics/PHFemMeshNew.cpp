@@ -28,9 +28,10 @@ int& FemTet::edge(int i, int j){
 
 // 四面体の面
 void FemFace::Update(){
-	for(int i=0; i<3; ++i) sorted[i] = vertices[i];
+	for(int i=0; i<3; ++i) sorted[i] = vertexIDs[i];
 	std::sort(sorted, sorted+3);
 }
+
 bool FemFace::operator < (const FemFace& f2){
 	const FemFace& f1 = *this;
 	for(int i=0; i<3; ++i){
@@ -126,7 +127,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
 			FemFace f;	
-			for(unsigned k=0; k<3; ++k) f.vertices[k] = tets[i].vertexIDs[tfs[j][k]];
+			for(unsigned k=0; k<3; ++k) f.vertexIDs[k] = tets[i].vertexIDs[tfs[j][k]];
 			f.Update();
 			allFaces.push_back(f);
 		}
@@ -149,7 +150,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	//	表面の頂点の列挙
 	for(unsigned i=0; i<nSurfaceFace; ++i){
 		for(unsigned j=0; j<3; ++j){
-			surfaceVertices.push_back(faces[i].vertices[j]);
+			surfaceVertices.push_back(faces[i].vertexIDs[j]);
 		}
 	}
 	std::sort(surfaceVertices.begin(), surfaceVertices.end());
@@ -161,7 +162,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	edges.clear();
 	for(unsigned i=0; i<nSurfaceFace; ++i){
 		for(unsigned j=0; j<3; ++j){
-			edges.push_back(FemEdge(faces[i].vertices[j], faces[i].vertices[(j+1)%3]));
+			edges.push_back(FemEdge(faces[i].vertexIDs[j], faces[i].vertexIDs[(j+1)%3]));
 		}
 	}
 	std::sort(edges.begin(), edges.end());
@@ -172,7 +173,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	std::vector<FemEdge> iEdges;
 	for(unsigned i=nSurfaceFace; i<faces.size() ;++i){
 		for(unsigned j=0; j<3; ++j){
-			iEdges.push_back(FemEdge(faces[i].vertices[j], faces[i].vertices[(j+1)%3]));
+			iEdges.push_back(FemEdge(faces[i].vertexIDs[j], faces[i].vertexIDs[(j+1)%3]));
 		}
 	}
 	//	重複を削除
@@ -194,7 +195,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	for(unsigned i=0; i<tets.size(); ++i){
 		for(unsigned j=0; j<4; ++j){
 			FemFace f;
-			for(unsigned k=0; k<3; ++k) f.vertices[k] = tets[i].vertexIDs[k<j ? k : k+1];
+			for(unsigned k=0; k<3; ++k) f.vertexIDs[k] = tets[i].vertexIDs[k<j ? k : k+1];
 			f.Update();
 			unsigned k;
 			for(k=0; k<faces.size(); ++k){
@@ -230,7 +231,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 	//	頂点に属する面を追加
 	for(unsigned i=0;i<faces.size();i++){
 		for(unsigned j=0;j<3;j++){
-			vertices[faces[i].vertices[j]].faceIDs.push_back(i);
+			vertices[faces[i].vertexIDs[j]].faceIDs.push_back(i);
 		}
 	}
 }
@@ -287,70 +288,7 @@ int PHFemMeshNew::NFaces(){
 	return (int)faces.size();
 }
 
-std::vector< Vec3d > PHFemMeshNew::GetFaceEdgeVtx(unsigned id){
-	std::vector<Vec3d> fev;
-	for(unsigned i=0;i<3;i++){
-		fev.push_back(vertices[faces[id].vertices[i]].pos);
-	}
-	return fev;
-}
-
-Vec3d PHFemMeshNew::GetFaceEdgeVtx(unsigned id, unsigned vtx){
-	return vertices[faces[id].vertices[vtx]].pos;
-}
-
-#define DET2_INV_TMATRIXBASE(a,b,c,d)	(a*d - b*c)
-inline Matrix3d invDet(const Matrix3d& a){
-	Matrix3d rtv;
-	rtv.item(0,0) = DET2_INV_TMATRIXBASE(a.item(1,1), a.item(1,2), a.item(2,1), a.item(2,2));
-	rtv.item(1,0) = DET2_INV_TMATRIXBASE(a.item(1,2), a.item(1,0), a.item(2,2), a.item(2,0));
-	rtv.item(2,0) = DET2_INV_TMATRIXBASE(a.item(1,0), a.item(1,1), a.item(2,0), a.item(2,1));
-		
-	rtv.item(0,1) = DET2_INV_TMATRIXBASE(a.item(2,1), a.item(2,2), a.item(0,1), a.item(0,2));
-	rtv.item(1,1) = DET2_INV_TMATRIXBASE(a.item(2,2), a.item(2,0), a.item(0,2), a.item(0,0));
-	rtv.item(2,1) = DET2_INV_TMATRIXBASE(a.item(2,0), a.item(2,1), a.item(0,0), a.item(0,1));
-	
-	rtv.item(0,2) = DET2_INV_TMATRIXBASE(a.item(0,1), a.item(0,2), a.item(1,1), a.item(1,2));
-	rtv.item(1,2) = DET2_INV_TMATRIXBASE(a.item(0,2), a.item(0,0), a.item(1,2), a.item(1,0));
-	rtv.item(2,2) = DET2_INV_TMATRIXBASE(a.item(0,0), a.item(0,1), a.item(1,0), a.item(1,1));
-	return rtv;
-}
-
-void PHFemMeshNew::UpdateJacobian(){
-	for(unsigned t=0; t<tets.size(); ++t){
-		Matrix3d J;	///<	各四面体の直交座標系(ξ,η,ζ)から四面体(x,y,z)へのヤコビアン (d(x,y,z) / d(ξ,η,ζ))
-		for(int i=1; i<3; ++i){
-			for(int j=0; j<3; ++j){
-				J[i][j] = vertices[tets[t].vertexIDs[i+1]].pos[j] - vertices[tets[t].vertexIDs[0]].pos[j];
-			}
-		}
-		Matrix3d A = invDet(J);
-		Vec4d Nx = Vec4d(- A[0][0] - A[0][1] -A[0][2],  A[0][0],  A[0][1],  A[0][2]);
-		Vec4d Ny = Vec4d(- A[1][0] - A[1][1] -A[1][2],  A[1][0],  A[1][1],  A[1][2]);
-		Vec4d Nz = Vec4d(- A[2][0] - A[2][1] -A[2][2],  A[2][0],  A[2][1],  A[2][2]);
-		Affined Km;
-		for(int i=0; i<4; ++i){
-			for(int j=0; j<4; ++j){
-				Km[i][j] = Nx[i]*Nx[j] + Ny[i]*Ny[j] + Nz[i]*Nz[j];
-			}
-		}
-	}
-}
-
-double PHFemMeshNew::GetTetrahedronVolume(int tetID){
-	TMatrixRow< 4, 4, double > mat;
-	mat.clear(0.0);
-	for(int i = 0; i < 4; i++){
-		mat[i][0] = 1.0;
-		mat[i][1] =	vertices[tets[tetID].vertexIDs[i]].pos.x;
-		mat[i][2] = vertices[tets[tetID].vertexIDs[i]].pos.y;
-		mat[i][3] = vertices[tets[tetID].vertexIDs[i]].pos.z;
-	}
-	double volume = mat.det() / 6.0;
-	if(volume < 0.0) volume = 0.0;
-	return volume;
-}
-
+//* 頂点に関する関数 */
 Vec3d PHFemMeshNew::GetVertexInitPositionL(int vtxId){
 	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		return vertices[vtxId].initialPos;
@@ -403,5 +341,104 @@ bool PHFemMeshNew::SetVertexPositionL(int vtxId, Vec3d posL){
 	}
 	return false;
 }
+
+//* 四面体に関する関数 */
+#define DET2_INV_TMATRIXBASE(a,b,c,d)	(a*d - b*c)
+inline Matrix3d invDet(const Matrix3d& a){
+	Matrix3d rtv;
+	rtv.item(0,0) = DET2_INV_TMATRIXBASE(a.item(1,1), a.item(1,2), a.item(2,1), a.item(2,2));
+	rtv.item(1,0) = DET2_INV_TMATRIXBASE(a.item(1,2), a.item(1,0), a.item(2,2), a.item(2,0));
+	rtv.item(2,0) = DET2_INV_TMATRIXBASE(a.item(1,0), a.item(1,1), a.item(2,0), a.item(2,1));
+		
+	rtv.item(0,1) = DET2_INV_TMATRIXBASE(a.item(2,1), a.item(2,2), a.item(0,1), a.item(0,2));
+	rtv.item(1,1) = DET2_INV_TMATRIXBASE(a.item(2,2), a.item(2,0), a.item(0,2), a.item(0,0));
+	rtv.item(2,1) = DET2_INV_TMATRIXBASE(a.item(2,0), a.item(2,1), a.item(0,0), a.item(0,1));
+	
+	rtv.item(0,2) = DET2_INV_TMATRIXBASE(a.item(0,1), a.item(0,2), a.item(1,1), a.item(1,2));
+	rtv.item(1,2) = DET2_INV_TMATRIXBASE(a.item(0,2), a.item(0,0), a.item(1,2), a.item(1,0));
+	rtv.item(2,2) = DET2_INV_TMATRIXBASE(a.item(0,0), a.item(0,1), a.item(1,0), a.item(1,1));
+	return rtv;
+}
+
+void PHFemMeshNew::UpdateJacobian(){
+	for(unsigned t=0; t<tets.size(); ++t){
+		Matrix3d J;	///<	各四面体の直交座標系(ξ,η,ζ)から四面体(x,y,z)へのヤコビアン (d(x,y,z) / d(ξ,η,ζ))
+		for(int i=1; i<3; ++i){
+			for(int j=0; j<3; ++j){
+				J[i][j] = vertices[tets[t].vertexIDs[i+1]].pos[j] - vertices[tets[t].vertexIDs[0]].pos[j];
+			}
+		}
+		Matrix3d A = invDet(J);
+		Vec4d Nx = Vec4d(- A[0][0] - A[0][1] -A[0][2],  A[0][0],  A[0][1],  A[0][2]);
+		Vec4d Ny = Vec4d(- A[1][0] - A[1][1] -A[1][2],  A[1][0],  A[1][1],  A[1][2]);
+		Vec4d Nz = Vec4d(- A[2][0] - A[2][1] -A[2][2],  A[2][0],  A[2][1],  A[2][2]);
+		Affined Km;
+		for(int i=0; i<4; ++i){
+			for(int j=0; j<4; ++j){
+				Km[i][j] = Nx[i]*Nx[j] + Ny[i]*Ny[j] + Nz[i]*Nz[j];
+			}
+		}
+	}
+}
+
+double PHFemMeshNew::CompTetrahedronVolume(int tetID){
+	TMatrixRow< 4, 4, double > mat;
+	mat.clear(0.0);
+	for(int i = 0; i < 4; i++){
+		mat[i][0] = 1.0;
+		mat[i][1] =	vertices[tets[tetID].vertexIDs[i]].pos.x;
+		mat[i][2] = vertices[tets[tetID].vertexIDs[i]].pos.y;
+		mat[i][3] = vertices[tets[tetID].vertexIDs[i]].pos.z;
+	}
+	double volume = mat.det() / 6.0;
+	if(volume < 0.0) volume = 0.0;
+	return volume;
+}
+
+TMatrixRow< 4, 4, double > PHFemMeshNew::CompTetraShapeFunctionCoeff(int tetId){
+	PTM::TMatrixRow< 4, 4, double > matPos;
+	for(int i = 0; i < 4; i++){
+		Vec3d pos = vertices[tets[tetId].vertexIDs[i]].pos;
+		matPos.item(i, 0) = 1.0;
+		matPos.item(i, 1) = pos[0];
+		matPos.item(i, 2) = pos[1];
+		matPos.item(i, 3) = pos[2];
+	}
+	PTM::TMatrixRow< 4, 4, double > matCofact;		// matの余因子行列
+	matCofact = (matPos.det() * matPos.inv()).trans();
+	return matCofact;
+}
+
+//* 面に関する関数 */
+std::vector< Vec3d > PHFemMeshNew::GetFaceEdgeVtx(unsigned id){
+	std::vector<Vec3d> fev;
+	for(unsigned i=0;i<3;i++){
+		fev.push_back(vertices[faces[id].vertexIDs[i]].pos);
+	}
+	return fev;
+}
+
+Vec3d PHFemMeshNew::GetFaceEdgeVtx(unsigned id, unsigned vtx){
+	return vertices[faces[id].vertexIDs[vtx]].pos;
+}
+
+double PHFemMeshNew::CompFaceArea(int faceId){
+	return CompFaceNormal(faceId).norm() * 0.5;
+}
+
+Vec3d PHFemMeshNew::CompFaceNormal(int faceId){
+	FemFace face = faces[faceId];
+	Vec3d pos[3];
+	for(int i = 0; i < 3; i++){
+		pos[i] = vertices[face.vertexIDs[i]].pos;
+	}
+	Vec3d vec[2];
+	vec[0] = pos[1] - pos[0];
+	vec[1] = pos[2] - pos[0];
+	return vec[1] % vec[0];	// 反時計周り
+}
+
+
+
 
 }

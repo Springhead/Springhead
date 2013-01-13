@@ -16,6 +16,8 @@ namespace Spr{;
 struct HIXbox360ControllerIf : public HIHapticIf{
 	SPR_VIFDEF(HIXbox360Controller);
 	bool Init();
+	void SetMaxVelocity(float v);
+	void SetMaxAngularVelocity(float v);
 	void SetVibration(Vec2f lr);
 	bool UP();
 	bool DOWN();
