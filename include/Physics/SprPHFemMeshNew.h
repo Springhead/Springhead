@@ -53,11 +53,14 @@ struct PHFemIf : public SceneObjectIf{
 
 /// 振動計算のデスクリプタ
 struct PHFemVibrationDesc : public PHFemDesc{
+	enum ANALYSIS_MODE{
+		ANALYSIS_DIRECT,
+		ANALYSIS_MODAL
+	};
 	enum INTEGRATION_MODE{
-		MODE_EXPLICIT_EULER,
-		MODE_IMPLICIT_EULER,
-		MODE_NEWMARK_BETA,
-		MODE_MODAL_ANALYSIS
+		INT_EXPLICIT_EULER,
+		INT_IMPLICIT_EULER,
+		INT_NEWMARK_BETA,
 	};
 	double young;		///< ヤング率(Pa, N/m2)
 	double poisson;		///< ポアソン比(*一様な立方体の場合、-1 <= v <= 0.5)
@@ -91,6 +94,7 @@ struct PHFemVibrationIf : public PHFemIf{
 	double GetAlpha();
 	void SetBeta(double value);
 	double GetBeta();
+	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
 	// 境界条件を加える
 	bool AddBoundaryCondition(int vtxId, Vec3i dof);
