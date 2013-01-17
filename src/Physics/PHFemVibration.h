@@ -24,6 +24,7 @@ public:
 	#define element_limit std::numeric_limits< element_type >::max_digits10 	// streamの精度
 
 	double vdt;
+	PHFemVibrationDesc::ANALYSIS_MODE analysis_mode;
 	PHFemVibrationDesc::INTEGRATION_MODE integration_mode;
 	VMatrixRe matKIni;	// 全体剛性行列の初期値
 	VMatrixRe matMIni;	// 全体質量行列の初期値
@@ -47,8 +48,13 @@ public:
 	//virtual void CompStiffnessMatrix();
 	//virtual void CompMassMatrix();
 	//virtual void CompDampingMatrix();
+
 	/// シミュレーションステップ
 	virtual void Step();
+	virtual void NumericalIntegration(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
+		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
+	virtual void ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
+		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, const int nmode);
 
 	/// 時間積分
 	/// _M:質量行列、_K:剛性行列、_C:減衰行列、_f:外力、_dt:積分刻み、_xd:変位、_v:速度
@@ -58,8 +64,6 @@ public:
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
 	virtual void NewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, const double b = 1.0 /6.0);
-	virtual void ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, const int nmode);
 
 	/// 固有値解析
 	virtual void SubSpace(const VMatrixRe& _M, const VMatrixRe& _K, 
@@ -78,6 +82,7 @@ public:
 	double GetAlpha(){ return alpha; }
 	void SetBeta(double value){ beta = value; }
 	double GetBeta(){ return beta; }
+	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
 
 	// FemVertexから頂点変位を取得し、計算できる形に変換する
@@ -159,7 +164,7 @@ public:
 
 	/// 実装中
 	std::vector< int > FindNeigborTetrahedron(Vec3d pos);
-	std::vector< int >  FindNeigborFaces(Vec3d pos);
+	bool FindNeigborFaces(Vec3d pos, std::vector< int >& faceIds, std::vector< Vec3d >& closestPoints);
 };
 
 }
