@@ -4,30 +4,36 @@
 namespace Spr{;
 
 void FWHapticPointer::UpdateHumanInterface(PHHapticPointer* hpLocal, float dt){
-	HIHapticIf* hif = DCAST(HIHapticIf, humanInterface);
+	HIHapticIf* hiHaptic = DCAST(HIHapticIf, humanInterface);
+	HIPoseIf*   hiPose   = DCAST(HIPoseIf, humanInterface);
+
 	// 力の出力
-	hapticForce  = hpLocal->GetHapticForce();
-	if(hpLocal->bForce){
-		hif->SetForce(hapticForce.v(), hapticForce.w());
-	}else{
-		hif->SetForce(Vec3f(), Vec3f());
+	if (hiHaptic) {
+		hapticForce  = hpLocal->GetHapticForce();
+		if(hpLocal->bForce){
+			hiHaptic->SetForce(hapticForce.v(), hapticForce.w());
+		}else{
+			hiHaptic->SetForce(Vec3f(), Vec3f());
+		}
 	}
 
 	// インタフェースの状態更新
-	hif->Update(dt);
-	SpatialVector vel;
-	vel.v() = (Vec3d)hif->GetVelocity();
-	vel.w() = (Vec3d)hif->GetAngularVelocity();
-	Posed pose = hif->GetPose();
+	if (hiPose) {
+		hiPose->Update(dt);
+		SpatialVector vel;
+		vel.v() = (Vec3d)hiPose->GetVelocity();
+		vel.w() = (Vec3d)hiPose->GetAngularVelocity();
+		Posed pose = hiPose->GetPose();
 
-	//// デバックのための擬似入力
-	//Vec3d debug_vel = Vec3d(-0.001, 0.0, 0.0);
-	//static Posed debug_pose = Posed();
-	//debug_pose.Pos() = debug_pose.Pos() + debug_vel * dt;
-	//pose = debug_pose;
-	//vel.v() = debug_vel;
+		//// デバックのための擬似入力
+		//Vec3d debug_vel = Vec3d(-0.001, 0.0, 0.0);
+		//static Posed debug_pose = Posed();
+		//debug_pose.Pos() = debug_pose.Pos() + debug_vel * dt;
+		//pose = debug_pose;
+		//vel.v() = debug_vel;
 
-	hpLocal->UpdateHumanInterface(pose, vel);
+		hpLocal->UpdateHumanInterface(pose, vel);
+	}
 }
 
 

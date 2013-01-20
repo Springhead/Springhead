@@ -19,20 +19,17 @@ namespace Spr{;
 */
 class CRVisualSensor : public CREngine, public CRVisualSensorDesc {
 private:
-	/// 利用する剛体
-	PHSolidIf *soLEye, *soREye;
+	// 視覚情報バッファ
+	std::vector<CRVisualInfo> visibleList[3];
 
-	/// 書き込み先の内部シーン
-	// CRSceneIf* internalScene;
+	// 視覚情報バッファの用途
+	// write : Stepで書込み中
+	// read  : NContacts/GetContactでアクセスされる対象
+	// keep  : Updateされた時にreadにするためのバッファ
+	int write, read, keep, empty;
 
-	/// 自己の剛体のセット（自己に属する剛体かどうかを判定するのに使う）
-	std::set<PHSolidIf*> selfSolids;
-
-	/// 視野内外判定の基盤となる関数
-	bool  IsInside(Vec3f pos, double rangeIn, double rangeOut, double rangeVert);
-
-	/// 方向ベクトルを水平・垂直角度に変換
-	Vec2d Vec3ToAngle(Vec3d v);
+	/// 視覚センサを貼り付ける剛体
+	PHSolidIf *soVisualSensor;
 
 public:
 	SPR_OBJECTDEF(CRVisualSensor);
@@ -42,39 +39,40 @@ public:
 	CRVisualSensor(const CRVisualSensorDesc& desc) 
 		: CRVisualSensorDesc(desc) 
 	{
+		write=0; read=1; keep=-1, empty=2;
 	}
 
 	/** @brief 実行順序を決めるプライオリティ値．小さいほど早い
 	*/
 	virtual int GetPriority() const { return CREngineDesc::CREP_SENSOR; }
 
-	/** @brief 初期化処理
-	*/
-	virtual void Init();
-
 	/** @brief １ステップ分の処理
 	*/
 	virtual void Step();
 
-	/** @brief 視野内外判定を行う
+	/** @brief 現在の視覚情報の個数を返す
 	*/
-	virtual bool IsVisible(PHSolidIf* solid);
+	int NVisibles(){ return (int)visibleList[read].size(); }
 
-	/** @brief 中心視野内外判定を行う
+	/** @brief 視覚情報を返す
 	*/
-	virtual bool IsInCenter(PHSolidIf* solid);
+	virtual CRVisualInfo GetVisible(int n){ return visibleList[read][n]; }
 
-	/** @brief 視野内外判定を行う
+	/** @brief 視覚情報をアップデートする
 	*/
-	virtual bool IsVisible(Vec3f pos);
+	void Update() { if (keep >= 0) { empty=read; read=keep; keep=-1; } }
 
-	/** @brief 中心視野内外判定を行う
+	/** @brief 視野の大きさを設定する
 	*/
-	virtual bool IsInCenter(Vec3f pos);
+	void SetRange(Vec2d range) { this->range = range; }
 
-	/** @brief 自分自身の剛体かどうかを判定する
+	/** @brief 視覚センサを対象剛体に貼り付ける位置・姿勢を指定する
 	*/
-	virtual bool IsSelfSolid(PHSolidIf* solid);
+	void SetPose(Posed pose) { this->pose = pose; }
+
+	/** @brief 視覚センサを貼り付ける対象の剛体をセットする
+	*/
+	void SetSolid(PHSolidIf* solid) { soVisualSensor = solid; }
 };
 }
 //@}

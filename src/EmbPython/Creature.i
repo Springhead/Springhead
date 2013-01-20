@@ -16,6 +16,7 @@
 %include "Utility/EPObject.i"
 EXTEND_NEW(CRContactInfo)
 EXTEND_NEW(CRTouchInfo)
+EXTEND_NEW(CRVisualInfo)
 EXTEND_NEW(CRTrajectoryNode)
 EXTEND_N_GET_TO_LIST(Spr::CRSdkIf		,NCreatures		,GetCreature	,CRCreatureIf	)
 EXTEND_N_GET_TO_LIST(Spr::CRCreatureIf	,NEngines		,GetEngine			,CREngineIf		)

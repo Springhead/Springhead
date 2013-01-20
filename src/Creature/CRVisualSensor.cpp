@@ -6,156 +6,63 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Creature/CRVisualSensor.h>
+#include <Creature/SprCRBody.h>
+#include <Creature/SprCRBone.h>
+#include <Creature/SprCRCreature.h>
+#include <Physics/SprPHScene.h>
 
 namespace Spr{
-void CRVisualSensor::Init(){
-	/*
-	CRSensor::Init();
-
-	/// 依存する他オブジェクトの取得
-	for (int i=0; i<creature->NBodies(); ++i) {
-		CRHingeHumanBodyGenIf* body = DCAST(CRHingeHumanBodyGenIf, creature->GetBody(i));
-		if (body) {
-			soLEye = body->GetSolid(CRHingeHumanBodyGenDesc::SO_LEFT_EYE);
-			soREye = body->GetSolid(CRHingeHumanBodyGenDesc::SO_RIGHT_EYE);
-		}
-	}
-
-	internalScene = creature->GetInternalScene();
-
-	/// InternalSceneの組み立て
-	for (int i=0; i<phScene->NSolids(); i++) {
-		CRISAttractiveObjectDesc desc;
-		{
-			desc.solid        = DCAST(PHSceneIf, creature->GetScene())->GetSolids()[i];
-			desc.position     = Vec3f(0,0,0);
-			desc.bottomupAttr = 0.0f;
-		}
-		internalScene->CreateInternalSceneObject(desc);
-	}
-
-	/// 自己に属する剛体をあらかじめ取得
-	for (int i=0; i<creature->NBodies(); ++i) {
-		CRHingeHumanBodyGenIf* body = DCAST(CRHingeHumanBodyGenIf, creature->GetBody(i));
-		if (body) {
-			for (int i=0; i<CRHingeHumanBodyGenDesc::SO_NSOLIDS; i++) {
-				selfSolids.insert(body->GetSolid(i));
-			}
-		}
-	}
-	*/
-}
 
 void CRVisualSensor::Step(){
-	/*
-	CRSensor::Init();
+	CRBodyIf*  body    = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetBody(0);
+	PHSceneIf* phScene = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetPHScene();
 
-	Vec3f dirL = soLEye->GetPose().Ori() * Vec3f(0,0,-1);
-	Vec3f dirR = soREye->GetPose().Ori() * Vec3f(0,0,-1);
-	Vec3f visualAxis = ((dirL + dirR) * 0.5f).unit();
+	// 視覚リストの構築を開始する
+	visibleList[write].clear();
 
-	for (int i=0; i<internalScene->NObjects(); ++i) {
-		CRISAttractiveObjectIf* att = DCAST(CRISAttractiveObjectIf, internalScene->GetISObject(i));
-		if (att && !IsSelfSolid(att->GetSolid())) {
-			Vec3f pos = att->GetSolid()->GetPose() * att->GetPos();
-			if (IsInCenter(pos)) {
-				att->DecUncertainty();
-				//
-				// if (att->GetISObjType()) {
-				// 	std::cout << "InCenter : " << att->GetSolid()->GetPose().Pos() << att->GetISObjType() << std::endl;
-				// } else {
-				// 	std::cout << "InCenter : " << att->GetSolid()->GetPose().Pos() << std::endl;
-				// }
-				//
-			}
-		}
-	}
-	*/
-
-	/*
+	// PHScene中のすべての剛体についてチェック
 	for (int i=0; i<phScene->NSolids(); ++i) {
-		PHSolidIf* solid = phScene->GetSolids()[i];
-		if (IsVisible(solid) && !IsSelfSolid(solid)) {
-			CRISAttractiveObjectIf* ao = DCAST(CRISAttractiveObjectIf, internalScene->FindObject(solid, Vec3f(0,0,0)));
-			if (ao) {
-				// Where-Howストリーム
-				Vec3f position    = solid->GetPose().Pos();
-				Vec3f velocity    = solid->GetVelocity();
-				Vec3f angVelocity = solid->GetAngularVelocity();
-
-				float r = 1.0f + (position - ((soLEye->GetPose().Pos() + soREye->GetPose().Pos())*0.5)).norm();
-
-				Vec3f dir = (position - ((soLEye->GetPose().Pos() + soREye->GetPose().Pos())*0.5)).unit();
-				Vec3f letinalPos = position - (visualAxis * PTM::dot(visualAxis,position));
-				
-				float trnAmmount = (velocity - (visualAxis * PTM::dot(velocity,visualAxis))).norm() * 3.0f / r;
-				float divAmmount = abs(PTM::dot(velocity,visualAxis)) * 2.0f / r;
-				float rotAmmount = abs(PTM::dot(angVelocity,visualAxis));
-
-				ao->AddBottomupAttr((trnAmmount + divAmmount + rotAmmount) * 5);
-
-				// Whatストリーム
-				//if (IsInCenter(solid)) {
-				//	ao->DecUncertainty();
-				//	if (ao->GetISObjType()) {
-				//		std::cout << "InCenter : " << ao->GetSolid()->GetPose().Pos() << ao->GetISObjType() << std::endl;
-				//	} else {
-				//		std::cout << "InCenter : " << ao->GetSolid()->GetPose().Pos() << std::endl;
-				//	}
-				//}
-			}
+		bool bMyBody = false;
+		for (int n=0; n<body->NBones(); ++n) {
+			if (body->GetBone(n) && body->GetBone(n)->GetPHSolid() == phScene->GetSolids()[i]) { bMyBody = true; }
 		}
+
+		PHSolidIf* so = phScene->GetSolids()[i];
+
+		Vec3d pos      = so->GetPose().Pos();
+		Vec3d localPos = (soVisualSensor->GetPose() * pose).Inv() * pos;
+			
+		double dist = localPos.norm();
+		if (localPos.norm() != 0) { localPos = localPos.unit(); }
+
+		Vec2d theta = Vec2d(atan2(localPos.x, -localPos.y), atan2(localPos.z, -localPos.y));
+		theta.y *= (range.X() / range.Y());
+		if (theta.norm() < (range.X() / 2.0) && dist < 16) { // 決め打ち<!!>
+			// Visible
+			CRVisualInfo visible;
+			visible.posWorld = pos;
+			visible.posLocal = localPos;
+			visible.velWorld = so->GetVelocity();
+			visible.velLocal = (so->GetPose() * pose).Inv() * so->GetVelocity();
+			visible.solid    = so;
+			visible.bMyBody  = bMyBody;
+
+			visibleList[write].push_back(visible);
+		}		
 	}
-	*/
-}
 
-Vec2d CRVisualSensor::Vec3ToAngle(Vec3d v){
-	/*
-	double D1 = sqrt(v.Y()*v.Y()+v.Z()*v.Z());
-	double D2 = sqrt(v.X()*v.X()+v.Z()*v.Z());
-	return(Vec2d( atan2( v.Y()/D1, -v.Z()/D1), atan2(-v.X()/D2, -v.Z()/D2) ));
-	*/
-	return Vec2d();
-}
-
-bool CRVisualSensor::IsInside(Vec3f pos, double rangeIn, double rangeOut, double rangeVert){
-	/*
-	Vec2d angleL = Vec3ToAngle(soLEye->GetPose().Ori().Inv() * (pos-soLEye->GetPose().Pos()));
-	if ((-rangeIn<angleL.Y() && angleL.Y()<rangeOut) && (-rangeVert<angleL.X() && angleL.X()<rangeVert)) {
-		return true;
+	// 書き込み完了　→　バッファをローテーション
+	if (empty >= 0) {
+		// 読み終わったバッファがある場合：そのバッファに書く．
+		keep  = write;
+		write = empty;
+		empty = -1;
+	} else {
+		// 読み終わったバッファがない場合：前に書き終わってkeepしているバッファに書く．
+		int w = write;
+		write = keep;
+		keep  = w;
 	}
-
-	Vec2d angleR = Vec3ToAngle(soREye->GetPose().Ori().Inv() * (pos-soREye->GetPose().Pos()));
-	if ((-rangeOut<angleR.Y() && angleR.Y()<rangeIn) && (-rangeVert<angleR.X() && angleR.X()<rangeVert)) {
-		return true;
-	}
-	*/
-
-	return false;
 }
 
-bool CRVisualSensor::IsVisible(PHSolidIf* solid){
-	// return IsInside(solid->GetPose().Pos(), Rad(30), Rad(50), Rad(45));
-	return false;
-}
-
-bool CRVisualSensor::IsInCenter(PHSolidIf* solid){
-	// return IsInside(solid->GetPose().Pos(), Rad(5), Rad(5), Rad(5));
-	return false;
-}
-
-bool CRVisualSensor::IsVisible(Vec3f pos){
-	// return IsInside(pos, Rad(30), Rad(50), Rad(45));
-	return false;
-}
-
-bool CRVisualSensor::IsInCenter(Vec3f pos){
-	// return IsInside(pos, Rad(20), Rad(20), Rad(20));
-	return false;
-}
-
-bool CRVisualSensor::IsSelfSolid(PHSolidIf* solid){
-	// return(!(selfSolids.find(solid)==selfSolids.end()));
-	return false;
-}
 }

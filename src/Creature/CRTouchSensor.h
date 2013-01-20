@@ -17,7 +17,14 @@ namespace Spr{;
 /** @brief 感覚処理
 */
 class CRTouchSensor : public CREngine, public CRTouchSensorDesc {
-	std::vector<CRContactInfo> contactList;
+	// 接触情報バッファ
+	std::vector<CRContactInfo> contactList[3];
+
+	// 接触情報バッファの用途
+	// write : Stepで書込み中
+	// read  : NContacts/GetContactでアクセスされる対象
+	// keep  : Updateされた時にreadにするためのバッファ
+	int write, read, keep, empty;
 
 public:
 	SPR_OBJECTDEF(CRTouchSensor);
@@ -27,6 +34,7 @@ public:
 	CRTouchSensor(const CRTouchSensorDesc& desc) 
 		: CRTouchSensorDesc(desc) 
 	{
+		write=0; read=1; keep=-1, empty=2;
 	}
 
 	/** @brief 実行順序を決めるプライオリティ値．小さいほど早い
@@ -39,11 +47,15 @@ public:
 
 	/** @brief 現在の接触の個数を返す
 	*/
-	virtual int NContacts(){ return (int)contactList.size(); }
+	virtual int NContacts(){ return (int)contactList[read].size(); }
 
 	/** @brief 接触情報を返す
 	*/
-	virtual CRContactInfo GetContact(int n){ return contactList[n]; }
+	virtual CRContactInfo GetContact(int n){ return contactList[read][n]; }
+
+	/** @brief 接触情報をアップデートする
+	*/
+	void Update() { if (keep >= 0) { empty=read; read=keep; keep=-1; } }
 };
 }
 //@}
