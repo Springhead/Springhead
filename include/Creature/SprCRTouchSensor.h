@@ -34,6 +34,10 @@ struct CRTouchSensorIf : CREngineIf{
 	/** @brief 接触情報を返す
 	*/
 	CRContactInfo GetContact(int n);
+
+	/** @brief 接触情報をアップデートする
+	*/
+	void Update();
 };
 
 /// 触覚センサのデスクリプタ

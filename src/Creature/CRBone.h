@@ -203,7 +203,7 @@ public:
 
 	/** @brief 通過点を数を取得する
 	*/
-	int NTrajectoryNodes() { return trajNodes.size(); }
+	int NTrajectoryNodes() { return (int)(trajNodes.size()); }
 
 	/** @brief 時刻tにおけるの通過点を取得する
 	*/

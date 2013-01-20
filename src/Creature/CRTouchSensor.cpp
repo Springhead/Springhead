@@ -10,16 +10,17 @@
 #include <Creature/SprCRBone.h>
 #include <Creature/SprCRCreature.h>
 #include <Physics/SprPHScene.h>
+#include <Physics/PHHapticEngine.h>
+#include <Creature/CRBone.h>
 
 namespace Spr{;
 
 void CRTouchSensor::Step() {
-	// いずれAddChildObjectで指定するようにすべき (mitake, 09/07/19)
-	CRBodyIf* body = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetBody(0);
+	CRBodyIf*  body    = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetBody(0);
 	PHSceneIf* phScene = DCAST(CRCreatureIf,DCAST(SceneObjectIf,this)->GetScene())->GetPHScene();
 
 	// 接触リストの構築を開始する
-	contactList.clear();
+	contactList[write].clear();
 
 	int sceneCnt = phScene->GetCount();
 
@@ -49,83 +50,105 @@ void CRTouchSensor::Step() {
 				so2 = soMe		= phScene->GetSolids()[j];
 			}
 
-			solidPair = phScene->GetSolidPair(i, j);
-			PHConstraintIf* constraint = phScene->GetConstraintEngine()->GetContactPoints()->FindBySolidPair(so1, so2);
+			// ハプティックポインタが含まれていないか確認
+			PHHapticPointer* hp1 = so1->Cast();
+			PHHapticPointer* hp2 = so2->Cast();
 
-			if (!solidPair)  { continue; }
-			if (!constraint) { continue; }
+			if (hp1!=NULL && hp2!=NULL) {
+				/// 両方ハプティックポインタである場合
+				// <!!> 未対応
 
-			Vec3d force = phScene->GetConstraintEngine()->GetContactPoints()->GetTotalForce(so1, so2);
+			} else if (hp1!=NULL || hp2!=NULL) {
+				/// 一方がハプティックポインタである場合
+				PHSolidIf* so; PHHapticPointer* hp;
+				if (hp1) { hp = hp1; so = so2; }
+				if (hp2) { hp = hp2; so = so1; }
+				
+				for (int m=0; m<hp->NNeighborSolids(); ++m) {
+					if (hp->GetNeighborSolid(m) == so) {
+						int n = hp->neighborSolidIDs[m];
+						PHHapticEngine* he = phScene->GetHapticEngine()->Cast();
+						PHSolidPairForHaptic* sop = he->solidPairsTemp.item(n,0);
+						for (int x=0; x<sop->solid[0]->NShape(); ++x) {
+							for (int y=0; y<sop->solid[0]->NShape(); ++y) {
+								PHShapePairForHaptic* shp = sop->shapePairs.item(x,y);
+								Vec3d p0 = (shp->shapePoseW[0]*shp->closestPoint[0]);
+								Vec3d p1 = (shp->shapePoseW[1]*shp->closestPoint[1]);
+								Vec3d di = (p0-p1);
+								if (di.norm()!=0  &&  PTM::dot(di.unit(), shp->normal.unit()) > 0) {
+									CRContactInfo contact;
+									contact.pos			= soOther->GetPose().Pos(); // <!!>
+									contact.soMe		= soMe;
+									contact.soOther		= soOther;
+									contact.force		= di;
+									contact.pressure	= di.norm();
 
-			for (int s=0; s<so1->NShape(); ++s) {
-				for (int t=0; t<so2->NShape(); ++t) {
-
-					// この方法だと同じ剛体の異なるShapeについての接触は
-					// 異なるContactとなる。
-					// それを剛体ごとにまとめるには皮膚感覚の加算についての知見が必要。
-					// とりあえずあとまわし (mitake, 09/02/07)
-
-					shapePair = solidPair->GetShapePair(s, t);
-
-					if (!shapePair) { continue; }
-
-					int			contactStat	= solidPair->GetContactState(s, t);
-					unsigned	lastContCnt	= solidPair->GetLastContactCount(s, t);
-
-
-					if (contactStat == 1 || (contactStat == 2 && (lastContCnt == sceneCnt-1))) {
-
-						totalForce += force;
-
-						double		depth			= solidPair->GetContactDepth(s, t);
-						int			nSectionVtx		= shapePair->NSectionVertexes();
-
-						CRContactInfo contact;
-						contact.pos			= solidPair->GetCommonPoint(s, t);
-						contact.soMe		= soMe;
-						contact.soOther		= soOther;
-						contact.force		= force;
-						contact.pressure	= force.norm();
-						/*
-						if (nSectionVtx != 0) {
-							contact.normal		= shapePair->GetNormalVector();
-							contact.dimension	= shapePair->GetContactDimension();
-							contact.pressure	= fabs(force.dot(contact.normal));
-						} else {
-							// 接触面の曲率半径
-							CDConvexIf* sh1 = shapePair->GetShape(0)->Cast();
-							int i1=0; for (; i1<so1->NShape(); ++i1) { if (so1->GetShape(i1)==sh1) break; }
-							Posed q1 = so1->GetShapePose(i1).Inv() * so1->GetPose().Inv();
-							double r1 = sh1->CurvatureRadius(q1 * contact.pos);
-
-							CDConvexIf* sh2 = shapePair->GetShape(1)->Cast();
-							int i2=0; for (; i2<so2->NShape(); ++i2) { if (so2->GetShape(i2)==sh2) break; }
-							Posed q2 = so2->GetShapePose(i2).Inv() * so2->GetPose().Inv();
-							double r2 = sh2->CurvatureRadius(q2 * contact.pos);
-
-							// Hertzの接触公式
-							double E = 4.2e+5;	/// -- 皮膚のYoung率   この辺に実の値を使うのはいろいろ無意味かも。
-							double v = 0.49;	/// -- 皮膚のPoisson比
-							double P = force.norm();  /// -- 押し込み力
-							double a = pow((3.0/4.0)*P*( 2*(1-v*v)/E )/(1/r1 + 1/r2), 1/3.0);
-							double pMax = 3*P/(2*3.1415926*a*a);
-
-							if (so1 == soMe) {
-								contact.normal = q1.Ori().Inv() * sh1->Normal(q1 * contact.pos);
-							} else {
-								contact.normal = q2.Ori().Inv() * sh2->Normal(q2 * contact.pos);
+									contactList[write].push_back(contact);
+								}
 							}
-							contact.dimension	= 1e-4;
-							contact.pressure	= pMax;
 						}
-						*/
-						contactList.push_back(contact);
 					}
+				}
 
+			} else {
+				/// どちらもハプティックポインタではない場合
+				solidPair = phScene->GetSolidPair(i, j);
+				PHConstraintIf* constraint = phScene->GetConstraintEngine()->GetContactPoints()->FindBySolidPair(so1, so2);
+
+				if (!solidPair)  { continue; }
+				if (!constraint) { continue; }
+
+				Vec3d force = phScene->GetConstraintEngine()->GetContactPoints()->GetTotalForce(so1, so2);
+
+				for (int s=0; s<so1->NShape(); ++s) {
+					for (int t=0; t<so2->NShape(); ++t) {
+
+						// この方法だと同じ剛体の異なるShapeについての接触は
+						// 異なるContactとなる。
+						// それを剛体ごとにまとめるには皮膚感覚の加算についての知見が必要。
+						// とりあえずあとまわし (mitake, 09/02/07)
+
+						shapePair = solidPair->GetShapePair(s, t);
+
+						if (!shapePair) { continue; }
+
+						int			contactStat	= solidPair->GetContactState(s, t);
+						unsigned	lastContCnt	= solidPair->GetLastContactCount(s, t);
+
+
+						if (contactStat == 1 || (contactStat == 2 && (lastContCnt == sceneCnt-1))) {
+
+							totalForce += force;
+
+							double		depth			= solidPair->GetContactDepth(s, t);
+							int			nSectionVtx		= shapePair->NSectionVertexes();
+
+							CRContactInfo contact;
+							contact.pos			= solidPair->GetCommonPoint(s, t);
+							contact.soMe		= soMe;
+							contact.soOther		= soOther;
+							contact.force		= force;
+							contact.pressure	= force.norm();
+
+							contactList[write].push_back(contact);
+						}
+					}
 				}
 			}
-
 		}
+	}
+
+	// 書き込み完了　→　バッファをローテーション
+	if (empty >= 0) {
+		// 読み終わったバッファがある場合：そのバッファに書く．
+		keep  = write;
+		write = empty;
+		empty = -1;
+	} else {
+		// 読み終わったバッファがない場合：前に書き終わってkeepしているバッファに書く．
+		int w = write;
+		write = keep;
+		keep  = w;
 	}
 }
 

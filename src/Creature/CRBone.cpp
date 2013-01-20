@@ -77,7 +77,7 @@ CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
 
 	float   t = time - trajNodes[segment].time;
 
-	/*
+	/**/
 	for (int i=0; i<3; ++i) {
 		Vec4d  pi = trajNodes[segment].coeff[i];
 		if (t < t1) {
@@ -94,10 +94,10 @@ CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
 				+ (5*pow(t-t1,4)*pi[3]/120.0);
 		}
 	}
-	*/
+	/**/
 
 	// ê¸å`ï‚ä‘
-	rt = (rf - r0) * (t / tf) + r0;
+	// rt = (rf - r0) * (t / tf) + r0;
 
 	CRTrajectoryNode node;
 	node.time = time;
@@ -132,7 +132,7 @@ void CRBone::ClearTrajectory() {
 
 void CRBone::StepTrajectory() {
 	/// Ç∆ÇËÇ†Ç¶Ç∏ç°ÇÕìÆÇ©Ç≥Ç»Ç¢ÅBå„Ç≈Enableä÷êîÇ¬ÇØÇÈÇ»ÇËÇ∑ÇÈÇ±Ç∆ <!!>
-	/*
+	/**/
 	if (trajNodes.size() <= 1) { current.time=0.0f; time=0.0f; return; }
 	if (trajNodes[trajNodes.size()-1].time < time) { ClearTrajectory(); return; }
 
@@ -145,9 +145,10 @@ void CRBone::StepTrajectory() {
 	}
 
 	SetTargetPos(current.pose.Pos());
+	if (endeffector) { endeffector->SetTargetPosition(current.pose.Pos()); }
 
 	time += phScene->GetTimeStep();
-	*/
+	/**/
 
 	// Ç±Ç±Ç‹Ç≈
 
@@ -411,7 +412,7 @@ void CRBone::StepSearchArea() {
 }
 
 int CRBone::NVisibleSolids() {
-	return foundSolids.size();
+	return (int)(foundSolids.size());
 }
 
 PHSolidIf* CRBone::GetVisibleSolid(int i) {
@@ -425,7 +426,7 @@ PHSolidIf* CRBone::GetVisibleSolid(int i) {
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // ê⁄êGàÍóó
 int CRBone::NTouches() {
-	return touchList.size();
+	return (int)(touchList.size());
 }
 
 Vec3f CRBone::GetContactForce(int i) {

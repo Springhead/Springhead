@@ -121,14 +121,20 @@ public:\
 
 #define SPR_DECLMEMBEROF_CRVisualSensorDesc \
 protected:\
+	Vec2d	range;	\
+	Posed	pose;	\
 public:\
 	virtual void SetDesc(const void* ptr){ \
 		CREngine::SetDesc((CREngineDesc*)(CRVisualSensorDesc*)ptr);	\
+		range = ((CRVisualSensorDesc*)ptr)->range;	\
+		pose = ((CRVisualSensorDesc*)ptr)->pose;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		CREngine::GetDesc((CREngineDesc*)(CRVisualSensorDesc*)ptr);	\
+		((CRVisualSensorDesc*)ptr)->range = range;	\
+		((CRVisualSensorDesc*)ptr)->pose = pose;	\
 		return true;	\
 	}\
 
