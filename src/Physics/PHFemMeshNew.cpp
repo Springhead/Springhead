@@ -406,7 +406,7 @@ TMatrixRow< 4, 4, double > PHFemMeshNew::CompTetShapeFunctionCoeff(int tetId){
 		matPos.item(i, 2) = pos[1];
 		matPos.item(i, 3) = pos[2];
 	}
-	PTM::TMatrixRow< 4, 4, double > funcCoeff;		// matの余因子行列
+	PTM::TMatrixRow< 4, 4, double > funcCoeff;		// matの余因子行列の転置
 	funcCoeff = (matPos.det() * matPos.inv()).trans();
 	return funcCoeff;
 }
