@@ -32,12 +32,14 @@ public:
 	VMatrixRe matCIni;	// 全体減衰行列の初期値
 	VVectord xdl;		// 頂点変位(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
 	VVectord vl;		// 頂点速度
+	VVectord al;		// 頂点加速度（一部の積分ではつかわない）
 	VVectord fl;		// 計算用の外力
 	VMatrixRe matKp;	// 全体剛性行列の一部
 	VMatrixRe matMp;	// 全体質量行列の一部
 	VMatrixRe matCp;	// 全体減衰行列の一部
 	VVectord xdlp;		// 頂点変位の一部(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
 	VVectord vlp;		// 頂点速度の一部
+	VVectord alp;		// 頂点加速度の一部
 	VVectord flp;		// 計算用の外力の一部
 
 	VVector< int > boundary;	// 境界条件ID
@@ -52,18 +54,27 @@ public:
 	/// シミュレーションステップ
 	virtual void Step();
 	virtual void NumericalIntegration(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
+		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a);
+	virtual void NumericalIntegration(const double& _m, const double& _k, const double& _c, 
+		const double& _f, const double& _dt, double& _x, double& _v, double& _a);
 	virtual void ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, const int nmode);
+		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode);
 
 	/// 時間積分
 	/// _M:質量行列、_K:剛性行列、_C:減衰行列、_f:外力、_dt:積分刻み、_xd:変位、_v:速度
+	/// 行列版
+	virtual void CompInitialCondition(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C,
+		const VVectord& _f, VVectord& _x, VVectord& _v, VVectord& _a);
 	virtual void ExplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
 	virtual void ImplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
 	virtual void NewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, const double b = 1.0 /6.0);
+		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a, const double b = 1.0 /6.0);
+	/// 1自由度版
+	virtual void NewmarkBeta(const double& _m, const double& _k, const double& _c,
+		const double& _f, const double& _dt, double& _x, double& _v, double& _a, const double b = 1.0/6.0);
+
 
 	/// 固有値解析
 	virtual void SubSpace(const VMatrixRe& _M, const VMatrixRe& _K, 
@@ -106,11 +117,11 @@ public:
 	// 境界条件に応じてベクトルの自由度を削減する
 	void ReduceVectorSize(VVectord& r, const VVector< int > bc);
 	// 境界条件に応じてベクトルの自由度を削減する
-	void ReduceVectorSize(VVectord& _xd, VVectord& _v, VVectord& _f,const VVector< int > bc);
+	void ReduceVectorSize(VVectord& _xd, VVectord& _v, VVectord& _a, VVectord& _f,const VVector< int > bc);
 	// ベクトルの自由度を元に戻す
 	void GainVectorSize(VVectord& r, const VVector< int > bc);
 	// ベクトルの自由度を元に戻す
-	void GainVectorSize(VVectord& _xd, VVectord& _v, const VVector< int > bc);
+	void GainVectorSize(VVectord& _xd, VVectord& _v, VVectord& _a, const VVector< int > bc);
 
 	// 頂点に力を加える（ローカル座標系）
 	bool AddVertexForceL(int vtxId, Vec3d fL);
