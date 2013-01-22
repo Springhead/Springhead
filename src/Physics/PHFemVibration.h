@@ -72,6 +72,8 @@ public:
 	virtual void NewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a, const double b = 1.0 /6.0);
 	/// 1自由度版
+	virtual void ExplicitEuler(const double& _mInv, const double& _k, const double& _c, 
+		const double& _f, const double& _dt, double& _x, double& _v);
 	virtual void NewmarkBeta(const double& _m, const double& _k, const double& _c,
 		const double& _f, const double& _dt, double& _x, double& _v, double& _a, const double b = 1.0/6.0);
 
@@ -169,6 +171,7 @@ public:
 	}
 	/// 固有値固有ベクトル計算
 	void ScilabEigenValueAnalysis(VMatrixRe& _M, VMatrixRe& _K);
+	void CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, VVectord& e, VMatrixRe& v);
 
 	/// 行列のファイル出力
 	void MatrixFileOut(VMatrixRe mat, std::string filename);

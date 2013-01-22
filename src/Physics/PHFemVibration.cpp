@@ -211,7 +211,7 @@ void PHFemVibration::Init(){
 		//DSTR << "matB" << std::endl;		DSTR << matB << std::endl;
 		//DSTR << "matD" << std::endl;		DSTR << matD << std::endl;
 		//DSTR << "matBtDB" << std::endl;	DSTR << matBtDB << std::endl;
-		DSTR << "det matKe : "<< matKe.det() << std::endl;
+		//DSTR << "det matKe : "<< matKe.det() << std::endl;
 		//DSTR << "matKe" << std::endl;		DSTR << matKe << std::endl;
 		//DSTR << "matMe" << std::endl;		DSTR << matMe << std::endl;
 		//if(i == 0){
@@ -221,9 +221,9 @@ void PHFemVibration::Init(){
 		//	MatrixFileOut(matKe, "matKe1.csv");		
 		//}
 	}	
-	DSTR << "det(matKIni) = " << matKIni.det() << std::endl;
-	DSTR << "matKIni" << std::endl;	DSTR << matKIni << std::endl;
-	ScilabDeterminant(matKIni, "matKIni");
+	//DSTR << "det(matKIni) = " << matKIni.det() << std::endl;
+	//DSTR << "matKIni" << std::endl;	DSTR << matKIni << std::endl;
+	//ScilabDeterminant(matKIni, "matKIni");
 	//ScilabFileOut(matKIni, "matKIni.dat");
 	//MatrixFileOut(matKIni, "matKini.csv");
 	//DSTR << "det(matMIni) = " << matMIni.det() << std::endl;
@@ -257,10 +257,10 @@ void PHFemVibration::Init(){
 	//matCp.clear(0.0);
 
 	ReduceMatrixSize(matMp, matKp, matCp, boundary);
-	DSTR << "After Reducing" << std::endl;
+	DSTR << "All matrices has reduced." << std::endl;
 	//DSTR << "matMp" << std::endl;	DSTR << matMp << std::endl;
-	DSTR << "matKp" << std::endl;	DSTR << matKp << std::endl;
-	DSTR << "matCp" << std::endl;	DSTR << matCp << std::endl;
+	//DSTR << "matKp" << std::endl;	DSTR << matKp << std::endl;
+	//DSTR << "matCp" << std::endl;	DSTR << matCp << std::endl;
 	//MatrixFileOut(matKp, "matKp.csv");
 	//ScilabDeterminant(matKp, "matKp");
 	//ScilabEigenValueAnalysis(matMp, matKp);
@@ -342,7 +342,7 @@ void PHFemVibration::NumericalIntegration(const VMatrixRe& _M, const VMatrixRe& 
 			//ImplicitEuler(_M.inv(), _K, _C, _f, _dt, _xd, _v);
 			break;
 		case PHFemVibrationDesc::INT_NEWMARK_BETA:
-			NewmarkBeta(_M, _K, _C, _f, _dt, _xd, _v, _a, 1.0/6.0);
+			NewmarkBeta(_M, _K, _C, _f, _dt, _xd, _v, _a, 1.0/4.0);
 			break;
 		default:
 			break;
@@ -354,14 +354,16 @@ void PHFemVibration::NumericalIntegration(const double& _m, const double& _k, co
 	/// 数値積分
 	switch(integration_mode){
 		case PHFemVibrationDesc::INT_EXPLICIT_EULER:
+			ExplicitEuler(1.0/_m, _k, _c, _f, _dt, _x, _v);
 			break;
 		case PHFemVibrationDesc::INT_IMPLICIT_EULER:
 			break;
 		case PHFemVibrationDesc::INT_NEWMARK_BETA:
-			NewmarkBeta(_m, _k, _c, _f, _dt, _x, _v, _a, 1.0/6.0);
+			NewmarkBeta(_m, _k, _c, _f, _dt, _x, _v, _a);
 			break;
 		default:
 			break;
+
 	}
 }
 
@@ -383,43 +385,39 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		// 固有値・固有ベクトルを求める
 		evalue.resize(nmode, 0.0);
 		evector.resize(_M.height(), nmode, 0.0);
-		SubSpace(_M, _K, nmode, 1e-10, evalue, evector);
-		// MK系の固有角振動数
-		w.resize(evalue.size(), 0.0);
-		for(int i = 0; i < (int)w.size(); i++){
-			w[i] = sqrt(evalue[i]);
-		}
-		DSTR << "eigenvalue" << std::endl;
+#if 1
+		SubSpace(_M, _K, nmode, 1e-5, evalue, evector);
+		DSTR << "eigenvalue springhead" << std::endl;
 		DSTR << evalue << std::endl;
-		DSTR << "eigenvector" << std::endl;
-		DSTR << evector << std::endl;
+		//DSTR << "eigenvector springhead" << std::endl;
+		//DSTR << evector << std::endl;
+		//MatrixFileOut(evector, "evectorSpringhead.csv");
+#else
 		VMatrixRe Ms, Ks;
 		Ms.assign(_M);
 		Ks.assign(_K);
-		ScilabEigenValueAnalysis(Ms, Ks);
-
-#if 0
-		// 固有ベクトルを質量正規固有モードに変換
-		// 通常は正規化されているはず
-		VMatrixRe D;
-		D.resize(_M.height(), _M.width(), 0.0);
-		D = (evector.trans() * _M * evector).inv();
-		for(int i = 0; i < D.height(); i++){
-			evector.col(i) *= sqrt(D.item(i, i));
-		}
+		CompScilabEigenValue(Ms, Ks, evalue, evector);
+		evalue.resize(nmode);
+		evector.resize(Ms.height(), nmode);
+		DSTR << "eigenvalue scilab" << std::endl;
+		DSTR << evalue << std::endl;
+		//DSTR << "eigenvector scilab" << std::endl;
+		//DSTR << evector << std::endl;
+		//MatrixFileOut(evector, "evectorScilab.csv");
 #endif
+		// MK系の固有振動数
+		w.resize(evalue.size(), 0.0);
+		for(int i = 0; i < (int)w.size(); i++){
+			w[i] = sqrt(evalue[i]) / (2.0 * M_PI);
+		}
+		DSTR << "eigen Vibration Value" << std::endl;
+		DSTR << w << std::endl;
+
 		// モード質量、剛性, 減衰行列の計算
 		Mm.assign(evector.trans() * _M * evector);
 		Km.assign(evector.trans() * _K * evector);
 		Cm.assign(evector.trans() * _C * evector);
 		bFirst = false;
-		
-		DSTR << "Mm" << std::endl;
-		DSTR << Mm << std::endl;
-		DSTR << "Km" << std::endl;
-		DSTR << Km << std::endl;
-		DSTR << "Cm" << std::endl;
-		DSTR << Cm << std::endl;
 	}
 
 	VVectord q;		// モード振動ベクトル(m)
@@ -430,9 +428,11 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 	qv.assign(evector.trans() * _M * _v);
 	qa.assign(evector.trans() * _M * _a);
 	fm.assign(evector.trans() * _f);
-#if 1
+#if 0
+	// 行列で計算
 	NumericalIntegration(Mm, Km, Cm, fm, _dt, q, qv, qa); 
 #else
+	// 1次独立の連立方程式なので、各方程式毎に計算
 	for(int i = 0; i < nmode; i++){
 		NumericalIntegration(Mm[i][i], Km[i][i], Cm[i][i], fm[i], _dt, q[i], qv[i], qa[i]);
 	}
@@ -456,8 +456,8 @@ void PHFemVibration::ExplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, 
 	VVectord tmp;
 	tmp.resize(NDof, 0.0);
 	tmp = -1 * (_K * _xd) - (_C * _v) + _f;
-	_v += _MInv * tmp * _dt;
 	_xd += _v * _dt;
+	_v += _MInv * tmp * _dt;
 }
 
 // 定式化しなおさないといけない.2013.1.3
@@ -514,8 +514,16 @@ void PHFemVibration::NewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const
 	_Ct = _C * (_v + (0.5 * _a * _dt));
 	_Kt = _K * (_x + (_v * _dt) + (_a * pow(_dt, 2) * (0.5 - b)));
 	_a = _SInv * (_f - _Ct - _Kt);
+	_x += (_v * _dt) + ((0.5 - b) * _al * pow(_dt, 2)) + (_a * b * pow(_dt, 2));	// xの更新が先
 	_v += 0.5 * (_al + _a) * _dt;
-	_x += (_v * _dt) + ((0.5 - b) * _al * pow(_dt, 2)) + (_a * b * pow(_dt, 2));
+}
+
+void PHFemVibration::ExplicitEuler(const double& _mInv, const double& _k, const double& _c, 
+		const double& _f, const double& _dt, double& _x, double& _v){
+	double tmp;
+	tmp = -1 * (_k * _x) - (_c * _v) + _f;
+	_x += _v * _dt;
+	_v += _mInv * tmp * _dt;
 }
 
 void PHFemVibration::NewmarkBeta(const double& _m, const double& _k, const double& _c,
@@ -525,8 +533,8 @@ void PHFemVibration::NewmarkBeta(const double& _m, const double& _k, const doubl
 	double _ct = _c * (_v + (0.5 * _a * _dt));
 	double _kt = _k * (_x + (_v * _dt) + (_a * pow(_dt, 2) * (0.5 - b)));
 	_a = _sInv * (_f - _ct - _kt);
+	_x += (_v * _dt) + ((0.5 - b) * _al * pow(_dt, 2)) + (_a * b * pow(_dt, 2));	// xの更新が先
 	_v += 0.5 * (_al + _a) * _dt;
-	_x += (_v * _dt) + ((0.5 - b) * _al * pow(_dt, 2)) + (_a * b * pow(_dt, 2));
 }
 
 #if 0
@@ -957,6 +965,53 @@ void PHFemVibration::ScilabEigenValueAnalysis(VMatrixRe& _M, VMatrixRe& _K){
 	DSTR << P << std::endl;
 	DSTR << "ScilabEigenValueAnalysis End." << std::endl;
 	DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
+}
+
+struct ScilabEigenValue{
+	double e;
+	VVector< double > v;
+	int id;
+		bool operator()(const ScilabEigenValue& a, const ScilabEigenValue& b){
+		return a.e < b.e;
+	}
+};
+
+void PHFemVibration::CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, VVectord& e, VMatrixRe& v){
+	if(!IsScilabStarted){
+		DSTR << "Scilab has not started" << std::endl;
+		return;
+	}
+	ScilabJob("clear;");
+	ScilabSetMatrix("M", _M);
+	ScilabSetMatrix("K", _K);
+
+	ScilabJob("[P D] = spec(inv(M) * K);");
+	VMatrixRe D;	// 固有値(対角）
+	VMatrixRe P;	// 固有ベクトル
+	ScilabGetMatrix(D, "D");
+	ScilabGetMatrix(P, "P");
+	// 固有値を小さい順にソート
+	std::vector< ScilabEigenValue > ds;
+	ds.resize(D.height());
+	for(int i =0; i < ds.size(); i++){
+		ds[i].e = D[i][i];
+		ds[i].v = P.col(i);
+		ds[i].id = i;
+	}
+	std::sort(ds.begin(), ds.end(), ScilabEigenValue());
+	e.resize(ds.size(), 0.0);
+	v.resize(ds.size(), ds.size(), 0.0);
+	for(int i =0; i < ds.size(); i++){
+		e[i] = ds[i].e;
+		v.col(i) = ds[i].v;
+	}
+	// 固有ベクトルを質量正規固有モードに変換
+	// Subspaceは正規化されているはず
+	VMatrixRe V;
+	V.assign((v.trans() * _M * v).inv());
+	for(int i = 0; i < V.height(); i++){
+		v.col(i) *= sqrt(V.item(i, i));
+	}
 }
 
 void PHFemVibration::MatrixFileOut(VMatrixRe mat, std::string filename){
