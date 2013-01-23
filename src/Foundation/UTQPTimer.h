@@ -9,6 +9,8 @@
 #define UTQTTIMER_H
 #pragma once
 #include <Foundation/UTPreciseTimer.h> //UTLargeIntegerの読み込み
+#include <vector>
+#include <sstream>
 namespace Spr{;
 
 //梶本先生のソースコード
@@ -39,6 +41,29 @@ public:
 	unsigned long Stop();		///< 計測停止，経過時間（stopWatchの値）をus単位で返す
 	unsigned long GetTime();	///< 現在の時間（stopWatchの値）をus単位で返す
 	unsigned long Clear();		///< クリア，stopWatchを0にする
+};
+
+/// UTQPTimerを使い、プログラムの計算時間を測定するためのクラス
+class UTQPTimerFileOut : public UTQPTimer{
+private:
+	double unit;	// file出力時の単位(1e-6でsec)
+	std::vector< std::vector< unsigned long > > data;	// 計測データ
+	// 名前でデータの場所を管理
+	struct Name{
+		int id;					// dataの位置
+		std::string name;		// 計測場所の名前
+		unsigned long lastTime;	// 計測開始時の時間
+	};
+	std::vector< Name > names;
+public:
+	UTQPTimerFileOut(double u = 1e-6);
+	void Init();
+	void StartCounting(std::string name);	// 計測開始点
+	void StopCounting(std::string name);	// 計測終了点
+	void FileOut(std::string filename);		// データの吐き出し.xlsでしてい
+private:
+	int FindIdByName(std::string name);		// 名前からidを取得する
+	int ResizeDataArea(std::string name);	// データ領域のリサイズ
 };
 
 }

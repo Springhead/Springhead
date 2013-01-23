@@ -87,4 +87,84 @@ unsigned long UTQPTimer::Clear(){
 	return rv;
 }
 
+
+UTQPTimerFileOut::UTQPTimerFileOut(double u){
+	unit = u;
+	Init();
+}
+
+void UTQPTimerFileOut::Init(){
+	Clear();
+	Start();
+}
+
+void UTQPTimerFileOut::StartCounting(std::string name){
+	int id = ResizeDataArea(name);
+	names[id].lastTime = GetTime();
+}
+
+void UTQPTimerFileOut::StopCounting(std::string name){
+	int id = FindIdByName(name);
+	if(id == -1) return;
+	unsigned long interval = GetTime() - names[id].lastTime;
+	data[id].push_back(interval);
+}
+
+void UTQPTimerFileOut::FileOut(std::string filename){
+	std::ofstream ofs(filename);
+	if (!ofs){
+		DSTR << "Can not open the file : " << filename << std::endl;
+		return;
+	}
+
+	ofs.precision(std::numeric_limits< unsigned long >::max_digits10);
+	for (int i = 0; i < (int)names.size(); i++){
+		ofs << names[i].name << "\t";
+	}
+	ofs << std::endl;
+
+	int nrow = (int)data[0].size();
+	int ncol = (int)names.size();
+
+	// i:列, j:行
+	// data[列][行]
+	for (int i = 0; i < nrow; i++){
+		for (int j = 0; j < ncol; j++){
+			// dataの行数よりもiが大きい場合
+			if(data[j].size() -1 < i){
+				ofs << 0 << "\t";
+			}else{
+				ofs << data[j][i] * unit << "\t";
+			}
+		}
+		ofs << std::endl;
+	}
+	ofs.close();
+	DSTR << "UTQPTimerFileOut::FileOut complete." << std::endl;
+}
+
+int UTQPTimerFileOut::FindIdByName(std::string name){
+	for(int i = 0; i < names.size(); i++){
+		if(names[i].name == name){
+			return names[i].id;
+		}
+	}
+	return -1;
+}
+
+int UTQPTimerFileOut::ResizeDataArea(std::string name){
+	int id;
+	id = FindIdByName(name);
+	if(id > -1) return id;
+	Name newname;
+	id = names.size();
+	newname.id = id;
+	newname.name = name;
+	names.push_back(newname);
+
+	std::vector< unsigned long > d;
+	data.push_back(d);
+	return id;
+}
+
 }

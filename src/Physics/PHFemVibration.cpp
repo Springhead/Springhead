@@ -7,6 +7,7 @@
  */
 #include <Physics/PHFemVibration.h>
 #include <SciLab/SprSciLab.h>
+#include <Foundation/UTQPTimer.h>
 
 namespace Spr{;
 
@@ -286,8 +287,11 @@ void PHFemVibration::Init(){
 #endif
 } 
 
+UTQPTimerFileOut qtimer;
 void PHFemVibration::Step(){
 	// FemVertex‚©‚ç•ÏˆÊ‚ð‚Æ‚Á‚Ä‚­‚é
+	qtimer.StopCounting("step");
+	qtimer.StartCounting("step");
 	GetVerticesDisplacement(xdl);
 	VVectord xdlp;
 	xdlp.assign(xdl);
@@ -298,7 +302,8 @@ void PHFemVibration::Step(){
 	VVectord flp;
 	flp.assign(fl);
 	ReduceVectorSize(xdlp, vlp, alp, flp, boundary);
-	
+
+	qtimer.StartCounting("integration");
 	switch(analysis_mode){
 		case PHFemVibrationDesc::ANALYSIS_DIRECT:
 			NumericalIntegration(matMp, matKp, matCp, flp, vdt, xdlp, vlp, alp);
@@ -309,7 +314,9 @@ void PHFemVibration::Step(){
 		default:
 			break;
 	}
+	qtimer.StopCounting("integration");
 
+	qtimer.StartCounting("gain");
 	fl.clear(0.0);
 	// ŒvŽZŒ‹‰Ê‚ðFemVertex‚É”½‰f
 	GainVectorSize(xdlp, vlp, alp, boundary);
@@ -317,6 +324,11 @@ void PHFemVibration::Step(){
 	vl.assign(vlp);
 	al.assign(alp);
 	UpdateVerticesPosition(xdl);
+	qtimer.StopCounting("gain");
+
+	static int count = 0;
+	count++;
+	if(count == 5000) qtimer.FileOut("hoge.xls");
 
 #if 0
 	DSTR << "vl updated" << std::endl;	DSTR << vl << std::endl;
@@ -359,7 +371,7 @@ void PHFemVibration::NumericalIntegration(const double& _m, const double& _k, co
 		case PHFemVibrationDesc::INT_IMPLICIT_EULER:
 			break;
 		case PHFemVibrationDesc::INT_NEWMARK_BETA:
-			NewmarkBeta(_m, _k, _c, _f, _dt, _x, _v, _a);
+			NewmarkBeta(_m, _k, _c, _f, _dt, _x, _v, _a, 1.0/4.0);
 			break;
 		default:
 			break;
