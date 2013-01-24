@@ -43,6 +43,8 @@ public:
 	VVectord flp;		// 計算用の外力の一部
 
 	VVector< int > boundary;	// 境界条件ID
+	VMatrixRe matBoundaryL;		// 境界条件行列（左からかける）
+	VMatrixRe matBoundaryR;		// 境界条件行列（右からかける）
 
 	PHFemVibration(const PHFemVibrationDesc& desc = PHFemVibrationDesc());
 	/// 初期化
@@ -114,14 +116,20 @@ public:
 	void CompBoundaryMatrix(VMatrixRe& _L, VMatrixRe& _R, const VVector< int > bc);
 	// 境界条件に応じて行列の自由度を削減する
 	void ReduceMatrixSize(VMatrixRe& mat, const VVector< int > bc);
+	// 境界条件に応じて行列の自由度を削減する(境界条件行列左右を使う）
+	void ReduceMatrixSize(VMatrixRe& _M, VMatrixRe& _K, VMatrixRe& _C, const VMatrixRe& matL, const VMatrixRe& matR);
 	// 境界条件に応じて行列自由度を削減する
 	void ReduceMatrixSize(VMatrixRe& _M, VMatrixRe& _K, VMatrixRe& _C, const VVector< int > bc);
 	// 境界条件に応じてベクトルの自由度を削減する
 	void ReduceVectorSize(VVectord& r, const VVector< int > bc);
+	// 境界条件に応じてベクトルの自由度を削減する（境界条件行列左を使う）
+	void ReduceVectorSize(VVectord& _xd, VVectord& _v, VVectord& _a, VVectord& _f, const VMatrixRe& matL);
 	// 境界条件に応じてベクトルの自由度を削減する
 	void ReduceVectorSize(VVectord& _xd, VVectord& _v, VVectord& _a, VVectord& _f,const VVector< int > bc);
 	// ベクトルの自由度を元に戻す
 	void GainVectorSize(VVectord& r, const VVector< int > bc);
+	// ベクトルの自由度を元に戻す(境界条件行列右を使う）
+	void GainVectorSize(VVectord& _xd, VVectord& _v, VVectord& _a, const VMatrixRe& matR);
 	// ベクトルの自由度を元に戻す
 	void GainVectorSize(VVectord& _xd, VVectord& _v, VVectord& _a, const VVector< int > bc);
 
