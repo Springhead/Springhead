@@ -44,7 +44,7 @@ public:
 };
 
 /// UTQPTimerを使い、プログラムの計算時間を測定するためのクラス
-class UTQPTimerFileOut : public UTQPTimer{
+class UTQPTimerFileOut : private UTQPTimer{
 private:
 	double unit;	// file出力時の単位(1e-6でsec)
 	std::vector< std::vector< unsigned long > > data;	// 計測データ
@@ -58,8 +58,9 @@ private:
 public:
 	UTQPTimerFileOut(double u = 1e-6);
 	void Init();
-	void StartCounting(std::string name);	// 計測開始点
-	void StopCounting(std::string name);	// 計測終了点
+	void StartPoint(std::string name);	// 計測開始点
+	void EndPoint(std::string name);	// 計測終了点
+	void Interval(std::string start, std::string name);	// 計測開始点からのインターバル
 	void FileOut(std::string filename);		// データの吐き出し.xlsでしてい
 private:
 	int FindIdByName(std::string name);		// 名前からidを取得する

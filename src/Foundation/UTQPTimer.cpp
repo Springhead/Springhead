@@ -98,15 +98,22 @@ void UTQPTimerFileOut::Init(){
 	Start();
 }
 
-void UTQPTimerFileOut::StartCounting(std::string name){
+void UTQPTimerFileOut::StartPoint(std::string name){
 	int id = ResizeDataArea(name);
 	names[id].lastTime = GetTime();
 }
 
-void UTQPTimerFileOut::StopCounting(std::string name){
+void UTQPTimerFileOut::EndPoint(std::string name){
 	int id = FindIdByName(name);
 	if(id == -1) return;
 	unsigned long interval = GetTime() - names[id].lastTime;
+	data[id].push_back(interval);
+}
+
+void UTQPTimerFileOut::Interval(std::string start, std::string name){
+	int startId = FindIdByName(start);
+	int id = ResizeDataArea(name);
+	unsigned long interval = GetTime() - names[startId].lastTime;
 	data[id].push_back(interval);
 }
 
