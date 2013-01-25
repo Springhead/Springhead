@@ -23,14 +23,17 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	//integration_mode = PHFemVibrationDesc::INT_IMPLICIT_EULER;
 	integration_mode = PHFemVibrationDesc::INT_NEWMARK_BETA;
 	IsScilabStarted = false;
+	bRecomp = true;
 } 
 
 void PHFemVibration::Init(){
+#if _DEBUG
 	// Scilabの起動
-	//IsScilabStarted = ScilabStart();
+	IsScilabStarted = ScilabStart();
 	if(!IsScilabStarted){
 		DSTR << "Scilab can not start." << std::endl;
 	}
+#endif
 
 	DSTR << "Initializing PHFemVibration" << std::endl;
 	/// 刻み時間の設定
@@ -245,10 +248,18 @@ void PHFemVibration::Step(){
 	qtimer.Interval("step", "getvalue");
 	switch(analysis_mode){
 		case PHFemVibrationDesc::ANALYSIS_DIRECT:
-			NumericalIntegration(matMp, matKp, matCp, flp, vdt, xdlp, vlp, alp);
+			{
+				static VMatrixRe matSInv;
+				if(bRecomp){
+					bRecomp = false;
+					matSInv.resize(matMp.height(), matMp.width(), 0.0);
+					InitNumericalIntegration(matMp, matKp, matCp, vdt, matSInv);
+				}
+				NumericalIntegration(matSInv, matKp, matCp, flp, vdt, xdlp, vlp, alp);
+			}
 			break;
 		case PHFemVibrationDesc::ANALYSIS_MODAL:
-			ModalAnalysis(matMp, matKp, matCp, flp, vdt, xdlp, vlp, alp, matMp.height());
+			ModalAnalysis(matMp, matKp, matCp, flp, vdt, bRecomp, xdlp, vlp, alp, matMp.height());
 			break;
 		default:
 			break;
@@ -281,45 +292,77 @@ void PHFemVibration::Step(){
 #endif
 }
 
-void PHFemVibration::NumericalIntegration(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a){
-	/// 数値積分
+void PHFemVibration::InitNumericalIntegration(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, const double& _dt, VMatrixRe& _SInv){
 	switch(integration_mode){
 		case PHFemVibrationDesc::INT_EXPLICIT_EULER:
-			ExplicitEuler(_M.inv(), _K, _C, _f, _dt, _xd, _v);
+			InitExplicitEuler(_M, _SInv);
 			break;
 		case PHFemVibrationDesc::INT_IMPLICIT_EULER:
 			//ImplicitEuler(_M.inv(), _K, _C, _f, _dt, _xd, _v);
 			break;
 		case PHFemVibrationDesc::INT_NEWMARK_BETA:
-			NewmarkBeta(_M, _K, _C, _f, _dt, _xd, _v, _a, 1.0/4.0);
+			InitNewmarkBeta(_M, _K, _C, _dt, _SInv);
 			break;
 		default:
 			break;
 	}
 }
 
-void PHFemVibration::NumericalIntegration(const double& _m, const double& _k, const double& _c, 
-	const double& _f, const double& _dt, double& _x, double& _v, double& _a){
+void PHFemVibration::NumericalIntegration(const VMatrixRe& _SInv, const VMatrixRe& _K, const VMatrixRe& _C, 
+		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a){
 	/// 数値積分
 	switch(integration_mode){
 		case PHFemVibrationDesc::INT_EXPLICIT_EULER:
-			ExplicitEuler(1.0/_m, _k, _c, _f, _dt, _x, _v);
+			ExplicitEuler(_SInv, _K, _C, _f, _dt, _xd, _v);
+			break;
+		case PHFemVibrationDesc::INT_IMPLICIT_EULER:
+			//ImplicitEuler(_M.inv(), _K, _C, _f, _dt, _xd, _v);
+			break;
+		case PHFemVibrationDesc::INT_NEWMARK_BETA:
+			NewmarkBeta(_SInv, _K, _C, _f, _dt, _xd, _v, _a, 1.0/4.0);
+			break;
+		default:
+			break;
+	}
+}
+
+void PHFemVibration::InitNumericalIntegration(const double& _m, const double& _k, const double& _c, const double& _dt, double& _sInv){
+	/// 数値積分
+	switch(integration_mode){
+		case PHFemVibrationDesc::INT_EXPLICIT_EULER:
+			InitExplicitEuler(_m, _sInv);
 			break;
 		case PHFemVibrationDesc::INT_IMPLICIT_EULER:
 			break;
 		case PHFemVibrationDesc::INT_NEWMARK_BETA:
-			NewmarkBeta(_m, _k, _c, _f, _dt, _x, _v, _a, 1.0/4.0);
+			InitNewmarkBeta(_m, _k , _c, _dt, _sInv);
 			break;
 		default:
 			break;
+	}
+}
 
+void PHFemVibration::NumericalIntegration(const double& _sInv, const double& _k, const double& _c, 
+	const double& _f, const double& _dt, double& _x, double& _v, double& _a){
+	/// 数値積分
+	switch(integration_mode){
+		case PHFemVibrationDesc::INT_EXPLICIT_EULER:
+			ExplicitEuler(_sInv, _k, _c, _f, _dt, _x, _v);
+			break;
+		case PHFemVibrationDesc::INT_IMPLICIT_EULER:
+			break;
+		case PHFemVibrationDesc::INT_NEWMARK_BETA:
+			NewmarkBeta(_sInv, _k, _c, _f, _dt, _x, _v, _a, 1.0/4.0);
+			break;
+		default:
+			break;
 	}
 }
 
 // モード解析法（レイリー減衰系）
+//#define USE_MATRIX 1
 void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode){
+		const VVectord& _f, const double& _dt, bool& bFirst, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode){
 	//DSTR << "//////////////////////////////////" << std::endl;
 	// n:自由度、m:モード次数
 	static VVectord evalue;			// 固有値(m)
@@ -329,9 +372,10 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 	static VMatrixRe Mm;			// モード質量行列(m*m)
 	static VMatrixRe Km;			// モード剛性行列(m*m)
 	static VMatrixRe Cm;			// モード減衰行列(m*m)
+	static VMatrixRe SmInv;			// M,K,C行列が変化しない限り定数の行列(時間積分で使う)(m*m)
 
-	static bool bFirst = true;
 	if(bFirst){
+		bFirst = false;
 		// 固有値・固有ベクトルを求める
 		evalue.resize(nmode, 0.0);
 		evector.resize(_M.height(), nmode, 0.0);
@@ -367,8 +411,15 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		Mm.assign(evector.trans() * _M * evector);
 		Km.assign(evector.trans() * _K * evector);
 		Cm.assign(evector.trans() * _C * evector);
-		bFirst = false;
-		DSTR << _M.height() << std::endl;
+		SmInv.resize(Mm.height(), Mm.width(), 0.0);
+
+#ifdef USE_MATRIX
+		InitNumericalIntegration(Mm, Km, Cm, _dt, SmInv);
+#else
+		for(int i = 0; i < nmode; i++){
+			InitNumericalIntegration(Mm[i][i], Km[i][i], Cm[i][i], _dt, SmInv[i][i]);
+		}
+#endif
 	}
 
 	VVectord q;		// モード振動ベクトル(m)
@@ -379,13 +430,14 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 	qv.assign(evector.trans() * (_M * _v));
 	qa.assign(evector.trans() * (_M * _a));
 	fm.assign(evector.trans() * _f);
-#if 0
+
+#ifdef USE_MATRIX
 	// 行列で計算
-	NumericalIntegration(Mm, Km, Cm, fm, _dt, q, qv, qa); 
+	NumericalIntegration(SmInv, Km, Cm, fm, _dt, q, qv, qa); 
 #else
 	// 1次独立の連立方程式なので、各方程式毎に計算
 	for(int i = 0; i < nmode; i++){
-		NumericalIntegration(Mm[i][i], Km[i][i], Cm[i][i], fm[i], _dt, q[i], qv[i], qa[i]);
+		NumericalIntegration(SmInv[i][i], Km[i][i], Cm[i][i], fm[i], _dt, q[i], qv[i], qa[i]);
 	}
 #endif
 	_xd = evector * q;
@@ -401,14 +453,16 @@ void PHFemVibration::CompInitialCondition(const VMatrixRe& _M, const VMatrixRe& 
 	_a = _M.inv() * (_C * (-1.0 * _v) + _K * (-1.0 * _x) + _f);
 }
 
+void PHFemVibration::InitExplicitEuler(const VMatrixRe& _M, VMatrixRe& _MInv){
+	_MInv.assign(_M.inv());
+}
+
 void PHFemVibration::ExplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v){
-	int NDof = NVertices() * 3;
 	VVectord tmp;
-	tmp.resize(NDof, 0.0);
-	tmp = -1 * (_K * _xd) - (_C * _v) + _f;
-	_xd += _v * _dt;
+	tmp.assign(_f - (_K *_xd) - ( _C* _v));
 	_v += _MInv * tmp * _dt;
+	_xd += _v * _dt;			// 更新後の速度で変位を更新すると発振しにくくなる
 }
 
 // 定式化しなおさないといけない.2013.1.3
@@ -449,45 +503,53 @@ void PHFemVibration::ImplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, 
 #endif
 }
 
-void PHFemVibration::NewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
+void PHFemVibration::InitNewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
+	const double& _dt, VMatrixRe& _SInv, const double b){
+	double dt2 = pow(_dt, 2);
+	_SInv.assign((_M + (0.5 *_dt * _C) + (b * dt2 * _K)).inv());	// _M, _K, Cが変化しない限り定数
+}
+
+void PHFemVibration::NewmarkBeta(const VMatrixRe& _SInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _x, VVectord& _v, VVectord& _a, const double b){
 	double dt2 = pow(_dt, 2);
-	int NDof = (int)_x.size();
-	VMatrixRe _SInv;
-	_SInv.resize(NDof, NDof, 0.0);
 	VVectord _Ct;
-	_Ct.resize(NDof, 0.0);
+	_Ct.assign(_C * (_v + (0.5 * _dt * _a)));
 	VVectord _Kt;
-	_Kt.resize(NDof, 0.0);
+	_Kt.assign(_K * (_x + (_dt * _v) + ((0.5 - b)* dt2 * _a)));
 	VVectord _al;	// 前回の加速度
 	_al.assign(_a);
 
-	_SInv = (_M + (0.5 * _C * _dt) + (b * _K * dt2)).inv();			// _K, Cが変化しない限り定数
-	_Ct = _C * (_v + (0.5 * _a * _dt));
-	_Kt = _K * (_x + (_v * _dt) + (_a * dt2 * (0.5 - b)));
 	_a = _SInv * (_f - _Ct - _Kt);
-	_x += (_v * _dt) + ((0.5 - b) * _al * dt2) + (_a * b * dt2);	// xの更新が先
-	_v += 0.5 * (_al + _a) * _dt;
+	_x += (_dt * _v) + ((0.5 - b) * dt2 * _al) + (b * dt2 * _a);	// xの更新が先
+	_v += 0.5 * _dt * (_al + _a);
 }
 
-void PHFemVibration::ExplicitEuler(const double& _mInv, const double& _k, const double& _c, 
+void PHFemVibration::InitExplicitEuler(const double& _m, double& _sInv){
+	_sInv = 1.0 / _m;		// _mが変化しない限り定数
+}
+
+void PHFemVibration::ExplicitEuler(const double& _sInv, const double& _k, const double& _c, 
 		const double& _f, const double& _dt, double& _x, double& _v){
-	double tmp;
-	tmp = -1.0 * (_k * _x) - (_c * _v) + _f;
-	_x += _v * _dt;
-	_v += _mInv * tmp * _dt;
+	double tmp = _f - (_k * _x) - (_c * _v);
+	_v += _dt * _sInv * tmp;
+	_x += _dt * _v;			// 更新後の速度で変位を更新すると発振しにくくなる
 }
 
-void PHFemVibration::NewmarkBeta(const double& _m, const double& _k, const double& _c,
+void PHFemVibration::InitNewmarkBeta(const double& _m, const double& _k , const double& _c, 
+	const double & _dt, double& _sInv, const double b){
+	double dt2 = pow(_dt, 2);
+	_sInv = 1.0 / (_m + (0.5 * vdt * _c) + (b * dt2 * _k));		// _m, _k, _cが変化しない場合は定数
+}
+
+void PHFemVibration::NewmarkBeta(const double& _sInv, const double& _k, const double& _c,
 		const double& _f, const double& _dt, double& _x, double& _v, double& _a, const double b){
 	double dt2 = pow(_dt, 2);
 	double _al = _a;	// 前回の加速度
-	double _sInv = 1.0 / (_m + (0.5 * _c * vdt) + (b * _k * dt2));			// _k, _cが変化しない場合は定数
-	double _ct = _c * (_v + (0.5 * _a * _dt));
-	double _kt = _k * (_x + (_v * _dt) + (_a * dt2 * (0.5 - b)));
+	double _ct = _c * (_v + (0.5 * _dt * _a));
+	double _kt = _k * (_x + (_dt * _v) + ((0.5 - b) * dt2 * _a));
 	_a = _sInv * (_f - _ct - _kt);
-	_x += (_v * _dt) + ((0.5 - b) * _al * dt2) + (_a * b * dt2);	// xの更新が先
-	_v += 0.5 * (_al + _a) * _dt;
+	_x += (_dt * _v) + ((0.5 - b) * dt2 * _al) + (b * dt2 * _a);	// xの更新が先
+	_v += 0.5 * _dt * (_al + _a);
 }
 
 #if 0

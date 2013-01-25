@@ -26,9 +26,9 @@ public:
 	double vdt;
 	PHFemVibrationDesc::ANALYSIS_MODE analysis_mode;
 	PHFemVibrationDesc::INTEGRATION_MODE integration_mode;
+	bool bRecomp;		// 全体行列が再計算された場合のフラグ
 	VMatrixRe matKIni;	// 全体剛性行列の初期値
 	VMatrixRe matMIni;	// 全体質量行列の初期値
-	VMatrixRe matMInv;	// 全体質量行列の逆行列
 	VMatrixRe matCIni;	// 全体減衰行列の初期値
 	VVectord xdl;		// 頂点変位(u = (u0, v0, w0, ..., un-1, vn-1, wn-1))
 	VVectord vl;		// 頂点速度
@@ -55,28 +55,43 @@ public:
 
 	/// シミュレーションステップ
 	virtual void Step();
+	// 時間積分方法のスイッチ（行列）
+	virtual void InitNumericalIntegration(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, const double& _dt, VMatrixRe& _SInv);
 	virtual void NumericalIntegration(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a);
-	virtual void NumericalIntegration(const double& _m, const double& _k, const double& _c, 
+	// 時間積分方法のスイッチ(1自由度)
+	virtual void InitNumericalIntegration(const double& _m, const double& _k, const double& _c, const double& _dt, double& _sInv);
+	virtual void NumericalIntegration(const double& _sInv, const double& _k, const double& _c, 
 		const double& _f, const double& _dt, double& _x, double& _v, double& _a);
 	virtual void ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode);
+		const VVectord& _f, const double& _dt, bool& bFirst, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode);
 
 	/// 時間積分
 	/// _M:質量行列、_K:剛性行列、_C:減衰行列、_f:外力、_dt:積分刻み、_xd:変位、_v:速度
 	/// 行列版
 	virtual void CompInitialCondition(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C,
 		const VVectord& _f, VVectord& _x, VVectord& _v, VVectord& _a);
+	// 前進オイラー
+	virtual void InitExplicitEuler(const VMatrixRe& _M, VMatrixRe& _MInv);
 	virtual void ExplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
-	virtual void ImplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
+	// 後退オイラー
+	//virtual void InitImplicitEuler(VMatrixRe& _M, double& _SInv);
+	virtual void ImplicitEuler(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
-	virtual void NewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
+	// NewmarkBeta
+	virtual void InitNewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
+		const double& _dt, VMatrixRe& _SInv, const double b = 1.0/6.0);
+	virtual void NewmarkBeta(const VMatrixRe& _SInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a, const double b = 1.0 /6.0);
 	/// 1自由度版
-	virtual void ExplicitEuler(const double& _mInv, const double& _k, const double& _c, 
+	// 前進オイラー
+	virtual void InitExplicitEuler(const double& _m, double& _sInv);
+	virtual void ExplicitEuler(const double& _sInv, const double& _k, const double& _c, 
 		const double& _f, const double& _dt, double& _x, double& _v);
-	virtual void NewmarkBeta(const double& _m, const double& _k, const double& _c,
+	// NewmarkBeta
+	virtual void InitNewmarkBeta(const double& _m, const double& _k , const double& _c, const double & _dt, double& _sInv, const double b = 1.0/6.0);
+	virtual void NewmarkBeta(const double& _sInv, const double& _k, const double& _c,
 		const double& _f, const double& _dt, double& _x, double& _v, double& _a, const double b = 1.0/6.0);
 
 
