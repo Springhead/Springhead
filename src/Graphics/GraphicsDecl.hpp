@@ -9,6 +9,7 @@ protected:\
 	std::vector< Vec4f >	matrixIndices;	\
 	std::vector< Vec4f >	numMatrix;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		positions = ((GRBlendMeshDesc*)ptr)->positions;	\
 		normals = ((GRBlendMeshDesc*)ptr)->normals;	\
@@ -36,6 +37,7 @@ public:\
 #define SPR_DECLMEMBEROF_GRVisualDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -48,6 +50,7 @@ public:\
 protected:\
 	Affinef	transform;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		GRVisual::SetDesc((GRVisualDesc*)(GRFrameDesc*)ptr);	\
 		transform = ((GRFrameDesc*)ptr)->transform;	\
@@ -63,6 +66,7 @@ public:\
 #define SPR_DECLMEMBEROF_GRDummyFrameDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		GRVisual::SetDesc((GRVisualDesc*)(GRDummyFrameDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -77,6 +81,7 @@ public:\
 protected:\
 	std::vector< Spr::GRAnimationKey >	keys;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		keys = ((GRAnimationDesc*)ptr)->keys;	\
 		AfterSetDesc();	\
@@ -90,6 +95,7 @@ public:\
 #define SPR_DECLMEMBEROF_GRAnimationSetDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -101,6 +107,7 @@ public:\
 #define SPR_DECLMEMBEROF_GRAnimationControllerDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -115,6 +122,7 @@ protected:\
 	std::vector< unsigned int >	indices;	\
 	std::vector< float >	weights;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		offset = ((GRSkinWeightDesc*)ptr)->offset;	\
 		indices = ((GRSkinWeightDesc*)ptr)->indices;	\
@@ -139,6 +147,7 @@ protected:\
 	std::vector< Vec2f >	texCoords;	\
 	std::vector< int >	materialList;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		GRVisual::SetDesc((GRVisualDesc*)(GRMeshDesc*)ptr);	\
 		vertices = ((GRMeshDesc*)ptr)->vertices;	\
@@ -178,6 +187,7 @@ protected:\
 	float	spotInner;	\
 	float	spotCutoff;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		GRVisual::SetDesc((GRVisualDesc*)(GRLightDesc*)ptr);	\
 		ambient = ((GRLightDesc*)ptr)->ambient;	\
@@ -221,6 +231,7 @@ protected:\
 	float	power;	\
 	std::string	texname;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		GRVisual::SetDesc((GRVisualDesc*)(GRMaterialDesc*)ptr);	\
 		ambient = ((GRMaterialDesc*)ptr)->ambient;	\
@@ -250,6 +261,7 @@ protected:\
 	float	front;	\
 	float	back;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		GRVisual::SetDesc((GRVisualDesc*)(GRCameraDesc*)ptr);	\
 		size = ((GRCameraDesc*)ptr)->size;	\
@@ -271,6 +283,7 @@ public:\
 #define SPR_DECLMEMBEROF_GRSceneDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -282,6 +295,7 @@ public:\
 #define SPR_DECLMEMBEROF_GRSdkDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -296,6 +310,7 @@ protected:\
 	int	slices;	\
 	int	stacks;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		radius = ((GRSphereDesc*)ptr)->radius;	\
 		slices = ((GRSphereDesc*)ptr)->slices;	\

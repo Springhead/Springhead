@@ -1,6 +1,7 @@
 #define SPR_DECLMEMBEROF_FWFemMeshDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWObject::SetDesc((FWObjectDesc*)(FWFemMeshDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -14,6 +15,7 @@ public:\
 #define SPR_DECLMEMBEROF_FWFemMeshNewDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWObject::SetDesc((FWObjectDesc*)(FWFemMeshNewDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -29,6 +31,7 @@ protected:\
 	bool	bAbsolute;	\
 	enum Spr::FWObjectDesc::FWObjectSyncSource	syncSource;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		bAbsolute = ((FWObjectDesc*)ptr)->bAbsolute;	\
 		syncSource = ((FWObjectDesc*)ptr)->syncSource;	\
@@ -44,6 +47,7 @@ public:\
 #define SPR_DECLMEMBEROF_FWSceneDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -55,6 +59,7 @@ public:\
 #define SPR_DECLMEMBEROF_FWSdkDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -71,6 +76,7 @@ protected:\
 	int	top;	\
 	UTString	title;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		width = ((FWWinBaseDesc*)ptr)->width;	\
 		height = ((FWWinBaseDesc*)ptr)->height;	\
@@ -95,6 +101,7 @@ protected:\
 	int	align;	\
 	int	style;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		label = ((FWControlDesc*)ptr)->label;	\
 		align = ((FWControlDesc*)ptr)->align;	\
@@ -113,6 +120,7 @@ public:\
 protected:\
 	bool	open;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWControl::SetDesc((FWControlDesc*)(FWPanelDesc*)ptr);	\
 		open = ((FWPanelDesc*)ptr)->open;	\
@@ -130,6 +138,7 @@ protected:\
 	int	style;	\
 	bool	checked;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWControl::SetDesc((FWControlDesc*)(FWButtonDesc*)ptr);	\
 		style = ((FWButtonDesc*)ptr)->style;	\
@@ -147,6 +156,7 @@ public:\
 #define SPR_DECLMEMBEROF_FWStaticTextDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWControl::SetDesc((FWControlDesc*)(FWStaticTextDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -166,6 +176,7 @@ protected:\
 	float	floatMax;	\
 	bool	spinner;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWControl::SetDesc((FWControlDesc*)(FWTextBoxDesc*)ptr);	\
 		text = ((FWTextBoxDesc*)ptr)->text;	\
@@ -191,6 +202,7 @@ public:\
 #define SPR_DECLMEMBEROF_FWListBoxDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWControl::SetDesc((FWControlDesc*)(FWListBoxDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -206,6 +218,7 @@ protected:\
 	Matrix3f	rot;	\
 	float	damping;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWControl::SetDesc((FWControlDesc*)(FWRotationControlDesc*)ptr);	\
 		rot = ((FWRotationControlDesc*)ptr)->rot;	\
@@ -225,6 +238,7 @@ protected:\
 	Vec3f	pos;	\
 	float	speed;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWControl::SetDesc((FWControlDesc*)(FWTranslationControlDesc*)ptr);	\
 		pos = ((FWTranslationControlDesc*)ptr)->pos;	\
@@ -244,6 +258,7 @@ protected:\
 	bool	dock;	\
 	int	dockPos;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWWinBase::SetDesc((FWWinBaseDesc*)(FWDialogDesc*)ptr);	\
 		dock = ((FWDialogDesc*)ptr)->dock;	\
@@ -267,6 +282,7 @@ protected:\
 	int	joyStickPollInterval;	\
 	bool	useTrackball;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWWinBase::SetDesc((FWWinBaseDesc*)(FWWinDesc*)ptr);	\
 		debugMode = ((FWWinDesc*)ptr)->debugMode;	\

@@ -2,6 +2,7 @@
 protected:\
 	Spr::PHMaterial	material;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		material = ((CDShapeDesc*)ptr)->material;	\
 		AfterSetDesc();	\
@@ -16,6 +17,7 @@ public:\
 protected:\
 	std::vector< Vec3f >	vertices;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		CDShape::SetDesc((CDShapeDesc*)(CDConvexMeshDesc*)ptr);	\
 		vertices = ((CDConvexMeshDesc*)ptr)->vertices;	\
@@ -31,6 +33,7 @@ public:\
 #define SPR_DECLMEMBEROF_CDConvexMeshInterpolateDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		CDConvexMesh::SetDesc((CDConvexMeshDesc*)(CDConvexMeshInterpolateDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -45,6 +48,7 @@ public:\
 protected:\
 	float	radius;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		CDShape::SetDesc((CDShapeDesc*)(CDSphereDesc*)ptr);	\
 		radius = ((CDSphereDesc*)ptr)->radius;	\
@@ -62,6 +66,7 @@ protected:\
 	float	radius;	\
 	float	length;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		CDShape::SetDesc((CDShapeDesc*)(CDCapsuleDesc*)ptr);	\
 		radius = ((CDCapsuleDesc*)ptr)->radius;	\
@@ -81,6 +86,7 @@ protected:\
 	Vec2f	radius;	\
 	float	length;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		CDShape::SetDesc((CDShapeDesc*)(CDRoundConeDesc*)ptr);	\
 		radius = ((CDRoundConeDesc*)ptr)->radius;	\
@@ -99,6 +105,7 @@ public:\
 protected:\
 	Vec3f	boxsize;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		CDShape::SetDesc((CDShapeDesc*)(CDBoxDesc*)ptr);	\
 		boxsize = ((CDBoxDesc*)ptr)->boxsize;	\

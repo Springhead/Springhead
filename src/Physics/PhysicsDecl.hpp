@@ -1,6 +1,7 @@
 #define SPR_DECLMEMBEROF_PHHapticEngineDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -24,6 +25,7 @@ protected:\
 	std::vector< int >	tets;	\
 	std::vector< int >	faces;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHFemMesh::SetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
 		vertices = ((PHFemMeshDesc*)ptr)->vertices;	\
@@ -47,6 +49,7 @@ protected:\
 	double	heatTrans;	\
 	double	specificHeat;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHFemMesh::SetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
 		rho = ((PHFemMeshThermoDesc*)ptr)->rho;	\
@@ -80,6 +83,7 @@ protected:\
 	std::vector< int >	tets;	\
 	std::vector< int >	faces;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHFemMeshNew::SetState((PHFemMeshNewState*)(PHFemMeshNewDesc*)ptr);	\
 		vertices = ((PHFemMeshNewDesc*)ptr)->vertices;	\
@@ -99,6 +103,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHFemDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -115,6 +120,7 @@ protected:\
 	double	alpha;	\
 	double	beta;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHFem::SetDesc((PHFemDesc*)(PHFemVibrationDesc*)ptr);	\
 		young = ((PHFemVibrationDesc*)ptr)->young;	\
@@ -138,6 +144,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHHapticPointerDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -164,6 +171,7 @@ protected:\
 	Vec3d	targetForceWorkingPoint;	\
 	Vec3d	targetTorque;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		bEnabled = ((PHIKEndEffectorDesc*)ptr)->bEnabled;	\
 		bPosition = ((PHIKEndEffectorDesc*)ptr)->bPosition;	\
@@ -208,6 +216,7 @@ protected:\
 	float	bias;	\
 	double	velocityGain;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		bEnabled = ((PHIKActuatorDesc*)ptr)->bEnabled;	\
 		bias = ((PHIKActuatorDesc*)ptr)->bias;	\
@@ -225,6 +234,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHIKBallActuatorDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHIKActuator::SetDesc((PHIKActuatorDesc*)(PHIKBallActuatorDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -238,6 +248,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHIKHingeActuatorDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHIKActuator::SetDesc((PHIKActuatorDesc*)(PHIKHingeActuatorDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -265,6 +276,7 @@ protected:\
 	bool	bUpdateAllState;	\
 	bool	bUseContactSurface;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		numIter = ((PHConstraintEngineDesc*)ptr)->numIter;	\
 		numIterCorrection = ((PHConstraintEngineDesc*)ptr)->numIterCorrection;	\
@@ -307,6 +319,7 @@ protected:\
 	Posed	poseSocket;	\
 	Posed	posePlug;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		bEnabled = ((PHConstraintDesc*)ptr)->bEnabled;	\
 		poseSocket = ((PHConstraintDesc*)ptr)->poseSocket;	\
@@ -325,6 +338,7 @@ public:\
 protected:\
 	double	fMax;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHConstraint::SetDesc((PHConstraintDesc*)(PHJointDesc*)ptr);	\
 		fMax = ((PHJointDesc*)ptr)->fMax;	\
@@ -349,6 +363,7 @@ protected:\
 	double	hardnessRate;	\
 	double	secondMoment;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint::SetDesc((PHJointDesc*)(PH1DJointDesc*)ptr);	\
 		spring = ((PH1DJointDesc*)ptr)->spring;	\
@@ -381,6 +396,7 @@ public:\
 protected:\
 	bool	cyclic;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PH1DJoint::SetDesc((PH1DJointDesc*)(PHHingeJointDesc*)ptr);	\
 		cyclic = ((PHHingeJointDesc*)ptr)->cyclic;	\
@@ -399,6 +415,7 @@ protected:\
 	bool	bConstraintRollX;	\
 	bool	bConstraintRollZ;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PH1DJoint::SetDesc((PH1DJointDesc*)(PHSliderJointDesc*)ptr);	\
 		bConstraintY = ((PHSliderJointDesc*)ptr)->bConstraintY;	\
@@ -420,6 +437,7 @@ protected:\
 	std::vector< Spr::PHPathPoint >	points;	\
 	bool	bLoop;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		points = ((PHPathDesc*)ptr)->points;	\
 		bLoop = ((PHPathDesc*)ptr)->bLoop;	\
@@ -435,6 +453,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHPathJointDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PH1DJoint::SetDesc((PH1DJointDesc*)(PHPathJointDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -457,6 +476,7 @@ protected:\
 	double	hardnessRate;	\
 	Vec3d	secondMoment;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint::SetDesc((PHJointDesc*)(PHBallJointDesc*)ptr);	\
 		spring = ((PHBallJointDesc*)ptr)->spring;	\
@@ -497,6 +517,7 @@ protected:\
 	double	hardnessRate;	\
 	Vec3d	secondMoment;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHJoint::SetDesc((PHJointDesc*)(PHSpringDesc*)ptr);	\
 		spring = ((PHSpringDesc*)ptr)->spring;	\
@@ -529,6 +550,7 @@ public:\
 protected:\
 	bool	bEnabled;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		bEnabled = ((PHTreeNodeDesc*)ptr)->bEnabled;	\
 		AfterSetDesc();	\
@@ -542,6 +564,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHRootNodeDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode::SetDesc((PHTreeNodeDesc*)(PHRootNodeDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -555,6 +578,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHTreeNode1DDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode::SetDesc((PHTreeNodeDesc*)(PHTreeNode1DDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -568,6 +592,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHHingeJointNodeDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode1D::SetDesc((PHTreeNode1DDesc*)(PHHingeJointNodeDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -581,6 +606,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHSliderJointNodeDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode1D::SetDesc((PHTreeNode1DDesc*)(PHSliderJointNodeDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -594,6 +620,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHPathJointNodeDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode1D::SetDesc((PHTreeNode1DDesc*)(PHPathJointNodeDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -607,6 +634,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHBallJointNodeDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHTreeNode::SetDesc((PHTreeNodeDesc*)(PHBallJointNodeDesc*)ptr);	\
 		AfterSetDesc();	\
@@ -621,6 +649,7 @@ public:\
 protected:\
 	double	ratio;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		ratio = ((PHGearDesc*)ptr)->ratio;	\
 		AfterSetDesc();	\
@@ -637,6 +666,7 @@ protected:\
 	double	damper;	\
 	Vec2d	range;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		spring = ((PH1DJointLimitDesc*)ptr)->spring;	\
 		damper = ((PH1DJointLimitDesc*)ptr)->damper;	\
@@ -669,6 +699,7 @@ protected:\
 	double	damper;	\
 	Vec3d	limitDir;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHBallJointLimit::SetState((PHBallJointLimitState*)(PHBallJointLimitDesc*)ptr);	\
 		spring = ((PHBallJointLimitDesc*)ptr)->spring;	\
@@ -691,6 +722,7 @@ protected:\
 	Vec2d	limitSwingDir;	\
 	Vec2d	limitTwist;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHBallJointLimit::SetDesc((PHBallJointLimitDesc*)(PHBallJointConeLimitDesc*)ptr);	\
 		limitSwing = ((PHBallJointConeLimitDesc*)ptr)->limitSwing;	\
@@ -712,6 +744,7 @@ protected:\
 	std::vector< Spr::PHSplineLimitNode >	nodes;	\
 	Vec2d	poleTwist;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHBallJointLimit::SetDesc((PHBallJointLimitDesc*)(PHBallJointSplineLimitDesc*)ptr);	\
 		nodes = ((PHBallJointSplineLimitDesc*)ptr)->nodes;	\
@@ -731,6 +764,7 @@ protected:\
 	Vec3d	origin;	\
 	Vec3d	direction;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		origin = ((PHRayDesc*)ptr)->origin;	\
 		direction = ((PHRayDesc*)ptr)->direction;	\
@@ -772,6 +806,7 @@ protected:\
 	double	maxAngularVelocity;	\
 	int	numIteration;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHScene::SetState((PHSceneState*)(PHSceneDesc*)ptr);	\
 		gravity = ((PHSceneDesc*)ptr)->gravity;	\
@@ -801,6 +836,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHSdkDesc \
 protected:\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		AfterSetDesc();	\
 	}\
@@ -813,6 +849,7 @@ public:\
 protected:\
 	Posed	pose;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		pose = ((PHFrameDesc*)ptr)->pose;	\
 		AfterSetDesc();	\
@@ -848,6 +885,7 @@ protected:\
 	Vec3d	center;	\
 	bool	dynamical;	\
 public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHSolid::SetState((PHSolidState*)(PHSolidDesc*)ptr);	\
 		mass = ((PHSolidDesc*)ptr)->mass;	\
