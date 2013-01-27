@@ -139,6 +139,7 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 		sc->fieldIts.Push(UTTypeDescFieldIt(type));
 		//	オブジェクトからデータを取り出す．
 		void* data = (void*)obj->GetDescAddress();
+		std::cout << tn << " addr : " << data << std::endl;
 		if (data){
 			sc->datas.Push(DBG_NEW UTLoadedData(NULL, type, data));
 		}else{
