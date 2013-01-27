@@ -519,6 +519,12 @@ EXTEND_NEW(Affine2f)
 	Matrix3f getRot(){
 		return $self->Rot();
 	}
+	float get(int $var1, int $var2){
+		return $self->data[$var1][$var2];
+	}
+	float set(int $var1, int $var2, float $var3){
+		return $self->data[$var1][$var2] = $var3;
+	}
 }	
 class Affinef{
 public:
@@ -605,6 +611,12 @@ EXTEND_NEW(Affine2d)
 	}
 	Matrix3d getRot(){
 		return $self->Rot();
+	}
+	double get(int $var1, int $var2){
+		return $self->data[$var1][$var2];
+	}
+	double set(int $var1, int $var2, double $var3){
+		return $self->data[$var1][$var2] = $var3;
 	}
 }	
 class Affined{

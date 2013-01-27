@@ -41,11 +41,20 @@ public:
 	virtual Quaternionf		GetOrientation();
 	virtual Affinef			GetAffine();
 
-	virtual Vec3f			GetVelocity()			{ return velocity; }
-	virtual Vec3f			GetAngularVelocity()	{ return angularVelocity; }
+	virtual Vec3f			GetVelocity()			{ return Vec3f(); velocity; }
+	virtual Vec3f			GetAngularVelocity()	{ return Vec3f(); angularVelocity; }
 
 	virtual void			SetMaxVelocity(float mV)         { maxVelocity = mV; }
 	virtual void			SetMaxAngularVelocity(float mAV) { maxAngularVelocity = mAV; }
+
+	virtual void			SetViewMatrix(Affinef view) { mView = view; }
+	virtual void			SetPersMatrix(Affinef pers) {
+		for (int i=0; i<4; ++i) {
+			for (int j=0; j<4; ++j) {
+				mPers[i][j] = pers[i][j];
+			}
+		}
+	}
 
 	virtual bool			PreviewMessage(void *m);
 
@@ -59,8 +68,11 @@ private:
 	static const int INPUT_ABS_MAX = 350; // SpaceNavigatorの取り得る絶対値の最大値
 
 	void *hDevice;
-	Posef currPose;
-	Vec3d velocity, angularVelocity;
+	Posef basePose, currPose;
+	Vec3d velocity, angularVelocity, v, aV;
+	Affinef mView;
+	typedef PTM::TMatrixRow<4,4,float> Matrix4f;
+	Matrix4f mPers;
 };
 
 }
