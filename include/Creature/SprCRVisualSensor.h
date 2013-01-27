@@ -49,6 +49,18 @@ struct CRVisualSensorIf : CREngineIf{
 	/** @brief 視覚センサを貼り付ける対象の剛体をセットする
 	*/
 	void SetSolid(PHSolidIf* solid);
+
+	/** @brief 視野の大きさを取得する
+	*/
+	Vec2d GetRange();
+
+	/** @brief 視覚センサを対象剛体に貼り付ける位置・姿勢を取得する
+	*/
+	Posed GetPose();
+
+	/** @brief 視覚センサを貼り付ける対象の剛体を取得する
+	*/
+	PHSolidIf* GetSolid();
 };
 
 /// 視覚センサのデスクリプタ

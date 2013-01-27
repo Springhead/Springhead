@@ -35,6 +35,12 @@ struct HISpaceNavigatorIf: public HIPoseIf{
 
 	/// RAW Input Windowsメッセージを解釈する
 	bool PreviewMessage(void *m);
+
+	/// カーソル移動を視点変換するためのView行列をセットする
+	void SetViewMatrix(Affinef view);
+
+	/// カーソル移動を視点変換するためのPerspective行列をセットする
+	void SetPersMatrix(Affinef pers);
 };
 struct HISpaceNavigatorDesc{
 	SPR_DESCDEF(HISpaceNavigator);

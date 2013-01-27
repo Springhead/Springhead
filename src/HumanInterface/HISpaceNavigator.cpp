@@ -15,7 +15,15 @@ namespace Spr {;
 std::vector<void*> HISpaceNavigator::deviceHandles;
 
 bool HISpaceNavigator::Init(const void* desc) {
-	currPose = Posed();
+	mView = Affinef();
+	mPers = Matrix4f(); for (int i=0; i<4; ++i) { mPers[i][i]=1.0f; }
+
+	basePose = Posef();
+	currPose = Posef();
+
+	v  = Vec3d();
+	aV = Vec3d();
+
 	hWnd = ((HISpaceNavigatorDesc*)desc)->hWnd;
 
 	if (hWnd) {
@@ -65,17 +73,96 @@ bool HISpaceNavigator::Init(const void* desc) {
 }
 
 bool HISpaceNavigator::Calibration() {
+	basePose = Posef();
 	currPose = Posef();
+	v  = Vec3d();
+	aV = Vec3d();
 	return true;
 }
 
 void HISpaceNavigator::Update(float dt) {
-	currPose.Pos() += (velocity * dt);
-	currPose.Ori() = Quaterniond::Rot(angularVelocity * dt) * currPose.Ori();
+	currPose = basePose;
+
+	double posScale = 0.1;
+	double oriScale = 0.1;
+	double velScale = 1.0;
+	double aveScale = 1.0;
+
+	v  = 0.99*v  + 0.01*velocity;
+	aV = 0.99*aV + 0.01*angularVelocity;
+
+	Vec3f dP = v  * posScale;
+	Vec3f dQ = aV * oriScale;
+
+	currPose.Pos() += dP;
+	currPose.Ori()  = Quaterniond::Rot(dQ) * currPose.Ori();
+
+	double rSecondShell = 0.7;
+	if (dP.norm() > rSecondShell) {
+		basePose.Pos() += ( dP.unit() * (dP.norm() - rSecondShell) ) * velScale * dt;
+	}
+
+
+	/*
+	Vec3d dV = velocity * dt;
+	Vec3d dQ = angularVelocity * dt;
+
+	bool bCameraCoord  = false;
+	bool bLimitInSight = true;
+	float depthFar=50, depthNear=3;
+
+	Affinef  mViewInv = mView.inv();
+	Matrix4f mPersInv = mPers.inv();
+	Quaterniond ori0, ori0_, ori1;
+	Vec3d pos0, pos1, pos_limited, pos_limited_3d;
+
+	// ポインタの新しい座標を計算する
+	if (bCameraCoord) {
+		Quaterniond q; q.FromMatrix(mView.Rot());
+		ori0 = q.Inv();
+		pos0 = currPose.Pos();
+		pos1 = ori0*dV + pos0;
+
+		ori0_= currPose.Ori();
+		ori1 = Quaterniond::Rot(ori0*dQ) * ori0_;
+	} else {
+		pos0 = currPose.Pos();
+		pos1 = dV + pos0;
+
+		ori0_= currPose.Ori();
+		ori1 = Quaterniond::Rot(dQ) * ori0_;
+	}
+
+	// ポインタの左右位置を視野内に制限する
+	Vec4f pos_screen = mPers * Vec4f(pos1.x, pos1.y, pos1.z, 1);
+	float w          = pos_screen[3];
+	pos_screen *= (1.0 / w);
+
+	pos_limited = Vec3f(pos_screen.x, pos_screen.y, pos_screen.z);
+	if (bLimitInSight) {
+		pos_limited.x    = min(max( -1.0,  pos_limited.x),  1.0);
+		pos_limited.y    = min(max( -1.0,  pos_limited.y),  1.0);
+	}
+	Vec4f pos_limited_3d_ = mPersInv * Vec4f(pos_limited.x*w, pos_limited.y*w, pos_limited.z*w, w);
+	pos_limited_3d = Vec3f(pos_limited_3d_.x, pos_limited_3d_.y, pos_limited_3d_.z);
+
+	// ポインタの前後位置を一定範囲内に制限する
+	pos_limited_3d = mView * pos_limited_3d;
+	if (bLimitInSight) {
+		pos_limited_3d.z = min(max( -depthFar,  pos_limited_3d.z),  -depthNear);
+	}
+	pos_limited_3d = mViewInv * pos_limited_3d;
+
+	// ポインタの位置・姿勢に反映
+	currPose.Pos() = pos_limited_3d;
+	currPose.Ori() = ori1;
+	*/
 }
 
 bool HISpaceNavigator::SetPose(Posef pose) {
-	currPose = pose;
+	// currPose = pose;
+	basePose = pose;
+	currPose = Posef();
 	return true;
 }
 

@@ -73,6 +73,18 @@ public:
 	/** @brief 視覚センサを貼り付ける対象の剛体をセットする
 	*/
 	void SetSolid(PHSolidIf* solid) { soVisualSensor = solid; }
+
+	/** @brief 視野の大きさを取得する
+	*/
+	Vec2d GetRange() { return range; }
+
+	/** @brief 視覚センサを対象剛体に貼り付ける位置・姿勢を取得する
+	*/
+	Posed GetPose() { return pose; }
+
+	/** @brief 視覚センサを貼り付ける対象の剛体を取得する
+	*/
+	PHSolidIf* GetSolid() { return soVisualSensor; }
 };
 }
 //@}
