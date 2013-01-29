@@ -290,7 +290,7 @@ int PHFemMeshNew::NFaces(){
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //* 頂点に関する関数 */
-Vec3d PHFemMeshNew::GetVertexInitPositionL(int vtxId){
+Vec3d PHFemMeshNew::GetVertexInitalPositionL(int vtxId){
 	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		return vertices[vtxId].initialPos;
 	}
@@ -345,81 +345,67 @@ bool PHFemMeshNew::SetVertexPositionL(int vtxId, Vec3d posL){
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 //* 四面体に関する関数 */
-#define DET2_INV_TMATRIXBASE(a,b,c,d)	(a*d - b*c)
-inline Matrix3d invDet(const Matrix3d& a){
-	Matrix3d rtv;
-	rtv.item(0,0) = DET2_INV_TMATRIXBASE(a.item(1,1), a.item(1,2), a.item(2,1), a.item(2,2));
-	rtv.item(1,0) = DET2_INV_TMATRIXBASE(a.item(1,2), a.item(1,0), a.item(2,2), a.item(2,0));
-	rtv.item(2,0) = DET2_INV_TMATRIXBASE(a.item(1,0), a.item(1,1), a.item(2,0), a.item(2,1));
-		
-	rtv.item(0,1) = DET2_INV_TMATRIXBASE(a.item(2,1), a.item(2,2), a.item(0,1), a.item(0,2));
-	rtv.item(1,1) = DET2_INV_TMATRIXBASE(a.item(2,2), a.item(2,0), a.item(0,2), a.item(0,0));
-	rtv.item(2,1) = DET2_INV_TMATRIXBASE(a.item(2,0), a.item(2,1), a.item(0,0), a.item(0,1));
-	
-	rtv.item(0,2) = DET2_INV_TMATRIXBASE(a.item(0,1), a.item(0,2), a.item(1,1), a.item(1,2));
-	rtv.item(1,2) = DET2_INV_TMATRIXBASE(a.item(0,2), a.item(0,0), a.item(1,2), a.item(1,0));
-	rtv.item(2,2) = DET2_INV_TMATRIXBASE(a.item(0,0), a.item(0,1), a.item(1,0), a.item(1,1));
-	return rtv;
-}
 
-void PHFemMeshNew::UpdateJacobian(){
-	for(unsigned t=0; t<tets.size(); ++t){
-		Matrix3d J;	///<	各四面体の直交座標系(ξ,η,ζ)から四面体(x,y,z)へのヤコビアン (d(x,y,z) / d(ξ,η,ζ))
-		for(int i=1; i<3; ++i){
-			for(int j=0; j<3; ++j){
-				J[i][j] = vertices[tets[t].vertexIDs[i+1]].pos[j] - vertices[tets[t].vertexIDs[0]].pos[j];
-			}
-		}
-		Matrix3d A = invDet(J);
-		Vec4d Nx = Vec4d(- A[0][0] - A[0][1] -A[0][2],  A[0][0],  A[0][1],  A[0][2]);
-		Vec4d Ny = Vec4d(- A[1][0] - A[1][1] -A[1][2],  A[1][0],  A[1][1],  A[1][2]);
-		Vec4d Nz = Vec4d(- A[2][0] - A[2][1] -A[2][2],  A[2][0],  A[2][1],  A[2][2]);
-		Affined Km;
-		for(int i=0; i<4; ++i){
-			for(int j=0; j<4; ++j){
-				Km[i][j] = Nx[i]*Nx[j] + Ny[i]*Ny[j] + Nz[i]*Nz[j];
-			}
-		}
-	}
-}
-
-double PHFemMeshNew::CompTetVolume(int tetID){
+double PHFemMeshNew::CompTetVolume(const Vec3d pos[4]){
 	TMatrixRow< 4, 4, double > mat;
 	mat.clear(0.0);
 	for(int i = 0; i < 4; i++){
 		mat[i][0] = 1.0;
-		mat[i][1] =	vertices[tets[tetID].vertexIDs[i]].pos.x;
-		mat[i][2] = vertices[tets[tetID].vertexIDs[i]].pos.y;
-		mat[i][3] = vertices[tets[tetID].vertexIDs[i]].pos.z;
+		mat[i][1] =	pos[i].x;
+		mat[i][2] = pos[i].y;
+		mat[i][3] = pos[i].z;
 	}
 	double volume = mat.det() / 6.0;
 	if(volume < 0.0) volume = 0.0;
 	return volume;
 }
 
-TMatrixRow< 4, 4, double > PHFemMeshNew::CompTetShapeFunctionCoeff(int tetId){
+double PHFemMeshNew::CompTetVolume(const int& tetID, const bool& bDeform){
+	Vec3d pos[4];
+	for(int i = 0; i < 4; i++){
+		if(bDeform)		pos[i] = vertices[tets[tetID].vertexIDs[i]].pos;
+		else			pos[i] = vertices[tets[tetID].vertexIDs[i]].initialPos;
+	}
+	return CompTetVolume(pos);
+}
+
+TMatrixRow< 4, 4, double > PHFemMeshNew::CompTetShapeFunctionCoeff(Vec3d pos[4]){
 	PTM::TMatrixRow< 4, 4, double > matPos;
 	for(int i = 0; i < 4; i++){
-		Vec3d pos = vertices[tets[tetId].vertexIDs[i]].pos;
 		matPos.item(i, 0) = 1.0;
-		matPos.item(i, 1) = pos[0];
-		matPos.item(i, 2) = pos[1];
-		matPos.item(i, 3) = pos[2];
+		matPos.item(i, 1) = pos[i].x;
+		matPos.item(i, 2) = pos[i].y;
+		matPos.item(i, 3) = pos[i].z;
 	}
 	PTM::TMatrixRow< 4, 4, double > funcCoeff;		// matの余因子行列の転置
 	funcCoeff = (matPos.det() * matPos.inv()).trans();
 	return funcCoeff;
 }
 
-bool PHFemMeshNew::CompTetShapeFunctionValue(int tetId, Vec3d pos, Vec4d& value){
-	bool bCorrect = true;
-	TMatrixRow< 4, 4, double > matCofact;
-	matCofact = CompTetShapeFunctionCoeff(tetId);
+TMatrixRow< 4, 4, double > PHFemMeshNew::CompTetShapeFunctionCoeff(const int& tetId, const bool& bDeform){
+	Vec3d pos[4];
 	for(int i = 0; i < 4; i++){
-		value[i] = matCofact[i][0] + matCofact[i][1] * pos.x + 	matCofact[i][2] * pos.y + 	matCofact[i][3] * pos.z;
+		if(bDeform)		pos[i] = vertices[tets[tetId].vertexIDs[i]].pos;
+		else			pos[i] = vertices[tets[tetId].vertexIDs[i]].initialPos;
+	}
+	return CompTetShapeFunctionCoeff(pos);
+}
+
+bool PHFemMeshNew::CompTetShapeFunctionValue(const TMatrixRow< 4, 4, double >& sf, const double& vol, const Vec3d& posL, Vec4d& value){
+	bool bCorrect = true;
+	double volInv = 1.0 / (6.0 * vol);
+	for(int i = 0; i < 4; i++){
+		value[i] = volInv * (sf[i][0] + sf[i][1] * posL.x + sf[i][2] * posL.y + sf[i][3] * posL.z);
+		if(abs(value[i]) < 1e-10) value[i] = 0;		// valueが閾値内の場合の補正(*posが四面体の辺、頂点付近にある場合数値誤差で-になることがある）
 		if(value[i] < 0) bCorrect = false;
 	}
 	return bCorrect;
+}
+
+bool PHFemMeshNew::CompTetShapeFunctionValue(const int& tetId, const Vec3d& posL, Vec4d& value, const bool& bDeform){
+	TMatrixRow< 4, 4, double > shapeFunc = CompTetShapeFunctionCoeff(tetId, bDeform);
+	double vol = CompTetVolume(tetId, bDeform);
+	return CompTetShapeFunctionValue(shapeFunc, vol, posL, value);
 }
 
 int PHFemMeshNew::FindTetFromFace(int faceId){
@@ -447,24 +433,43 @@ Vec3d PHFemMeshNew::GetFaceEdgeVtx(unsigned id, unsigned vtx){
 	return vertices[faces[id].vertexIDs[vtx]].pos;
 }
 
-double PHFemMeshNew::CompFaceArea(int faceId){
-	return CompFaceNormal(faceId).norm() * 0.5;
-}
-
-Vec3d PHFemMeshNew::CompFaceNormal(int faceId){
-	FemFace face = faces[faceId];
-	Vec3d pos[3];
-	for(int i = 0; i < 3; i++){
-		pos[i] = vertices[face.vertexIDs[i]].pos;
-	}
+double PHFemMeshNew::CompFaceArea(const Vec3d pos[3]){
 	Vec3d vec[2];
 	vec[0] = pos[1] - pos[0];
 	vec[1] = pos[2] - pos[0];
-	// 頂点は表面から見て時計周り
-	// 外積は反時計まわりにかける
+	double n[2];
+	n[0] = vec[0].norm();	n[1] = vec[1].norm();
+	double S = 0.5 * sqrt(pow(n[0], 2) * pow(n[1], 2) - pow((vec[0] * vec[1]), 2));
+	if(S < 0.0) S = 0.0;
+	return S;
+}
+
+double PHFemMeshNew::CompFaceArea(const int& faceId, const bool& bDeform){
+	Vec3d pos[3];
+	for(int i = 0; i < 3; i++){
+		if(bDeform)		pos[i] = vertices[faces[faceId].vertexIDs[i]].pos;
+		else			pos[i] = vertices[faces[faceId].vertexIDs[i]].initialPos;
+	}
+	return CompFaceArea(pos);
+}
+
+Vec3d PHFemMeshNew::CompFaceNormal(const Vec3d pos[3]){
+	Vec3d vec[2];
+	vec[0] = pos[1] - pos[0];
+	vec[1] = pos[2] - pos[0];
+	// FemMeshの頂点は表面から見て時計周りに並ぶ
+	// 表面方向の法線は外積は反時計まわりにかける
 	return (vec[1] % vec[0]).unit();
 }
 
+Vec3d PHFemMeshNew::CompFaceNormal(const int& faceId, const bool& bDeform){
+	Vec3d pos[3];
+	for(int i = 0; i < 3; i++){
+		if(bDeform)		pos[i] = vertices[faces[faceId].vertexIDs[i]].pos;
+		else			pos[i] = vertices[faces[faceId].vertexIDs[i]].initialPos;
+	}
+	return CompFaceNormal(pos);
+}
 
 
 

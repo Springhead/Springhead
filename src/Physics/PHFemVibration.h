@@ -155,7 +155,18 @@ public:
 	// 頂点群に力を加える（ワールド座標系）
 	bool AddVertexForceW(VVector< Vec3d > fWs);
 	// 力を加える
-	void AddForce(Vec3d fW, Vec3d posW);
+	bool AddForce(int tetId, Vec3d posW, Vec3d fW);
+
+	// 形状関数を使って任意の点の変位を取得する
+	bool GetDisplacement(int tetId, Vec3d posW, Vec3d& disp);
+
+	/// 実装中
+	bool FindClosestPointOnMesh( const Vec3d& posW, const Vec3d pos[3], Vec3d& cp, double& dist);
+	/// ある点から近い面と面上の点を探す
+	bool FindNeighborFaces(Vec3d posW, std::vector< int >& faceIds, std::vector< Vec3d >& cpWs, bool bDeform);
+	/// ある点から近い四面体と四面体上の点を探す
+	bool FindNeighborTetrahedron(Vec3d posW, int& tetId, Vec3d& cpW, bool bDeform);
+
 
 	/// scilabデバック
 	bool IsScilabStarted;	/// scilabがスタートしているかどうかのフラグ
@@ -198,10 +209,6 @@ public:
 
 	/// 行列のファイル出力
 	void MatrixFileOut(VMatrixRe mat, std::string filename);
-
-	/// 実装中
-	std::vector< int > FindNeigborTetrahedron(Vec3d pos);
-	bool FindNeigborFaces(Vec3d pos, std::vector< int >& faceIds, std::vector< Vec3d >& closestPoints);
 };
 
 }

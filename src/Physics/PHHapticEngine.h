@@ -136,6 +136,8 @@ public:
 	int NHapticSolids();
 	PHHapticPointer* GetHapticPointer(int i);
 	PHSolidForHaptic* GetHapticSolid(int i);
+	///< 剛体と力覚ポインタのペアを取得する（i:剛体、j:力覚ポインタ）
+	// iには力覚ポインタも含まれる。
 	PHSolidPairForHaptic* GetSolidPairForHaptic(int i, int j);
 	PHHapticPointers* GetHapticPointers();
 	PHSolidsForHaptic* GetHapticSolids();
