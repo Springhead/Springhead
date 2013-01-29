@@ -37,7 +37,7 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 	PHFemVibrationIf* GetPHFemVibration();
 	int NVertices();
 	int NFaces();
-	double CompTetVolume(int tetID);
+	double CompTetVolume(int tetID, bool bDeform);
 	bool AddVertexDisplacementW(int vtxId, Vec3d disW);
 	bool AddVertexDisplacementL(int vtxId, Vec3d disL);
 	bool SetVertexPositionW(int vtxId, Vec3d posW);

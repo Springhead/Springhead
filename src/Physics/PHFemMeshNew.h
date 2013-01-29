@@ -43,8 +43,6 @@ public:
 	std::vector<int> tetIDs;
 	std::vector<int> edgeIDs;
 	std::vector<int> faceIDs;
-	bool vtxDeformed;		///< 四面体の変形でこの節点がローカル座標基準で移動したかどうか
-	double disFromOrigin;	///< x-z平面でのローカル座標の原点からの距離
 };
 //	四面体
 class FemTet{
@@ -60,7 +58,8 @@ public:
 class FemFace{
 	int sorted[3];		///< 比較するための、ソート済みの頂点id。Update()で更新。
 public:
-	int vertexIDs[3];	///<頂点ID。順番で面の表裏を表す。（*表から見て時計回り。ただし全体形状nSurfaceFaceの表面のみ正しく、内部の面は正しくない。）
+	int vertexIDs[3];	///<頂点ID。順番で面の表裏を表す。
+	//（*表から見て時計回り。ただし全体形状nSurfaceFaceの表面のみ正しい。内部は2つの四面体が共有するため、表裏がいえない。）
 	void Update();
 	bool operator < (const FemFace& f2);	///< 頂点IDで比較
 	bool operator == (const FemFace& f2);	///< 頂点IDで比較
@@ -129,7 +128,7 @@ public:
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//* 頂点に関する関数 */
 	/// 頂点の初期位置を取得する（ローカル座標系）
-	Vec3d GetVertexInitPositionL(int vtxId);
+	Vec3d GetVertexInitalPositionL(int vtxId);
 	/// 頂点の位置を取得する（ローカル座標系）
 	Vec3d GetVertexPositionL(int vtxId);
 	/// 頂点の変位を取得する（ローカル座標系）
@@ -146,19 +145,27 @@ public:
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//* 四面体に関する関数 */
 	/// 四面体の計算(対象によらずに必要になる形状関数のXXを計算する関数)
-	void UpdateJacobian();
+
 	/// 四面体の体積を返す
-	double CompTetVolume(int tetID);
-	/// 形状関数の係数を返す	
+	double CompTetVolume(const Vec3d pos[4]);
+	double CompTetVolume(const int& tetID, const bool& bDeform);
+
+	/// 形状関数の係数を返す
 	/*
+		(下記のa, b, c, dの行列）
 		|N0|			|a0 b0 c0 d0||1|
 		|N1|=	1/6V *	|a1 b1 c1 d1||x|
 		|N2|			|a2 b2 c2 d2||y|
 		|N3|			|a3 b3 c3 d3||z|
 	*/
-	TMatrixRow< 4, 4, double > CompTetShapeFunctionCoeff(int tetId);
-	/// ある四面体内のある点における形状関数値を返す(四面体外の位置を指定すると負値がでる）
-	bool CompTetShapeFunctionValue(int tetId, Vec3d pos, Vec4d& value);
+	TMatrixRow< 4, 4, double > CompTetShapeFunctionCoeff(Vec3d pos[4]);
+	TMatrixRow< 4, 4, double > CompTetShapeFunctionCoeff(const int& tetId, const bool& bDeform);
+
+	/// 四面体内のある点における形状関数値を返す
+	/// (四面体外の位置を指定すると負値がでるのfalseを返す）
+	bool CompTetShapeFunctionValue(const TMatrixRow< 4, 4, double >& sf, const double& vol, const Vec3d& posL, Vec4d& value);
+	bool CompTetShapeFunctionValue(const int& tetId, const Vec3d& posL, Vec4d& value, const bool& bDeform);
+
 	/// 面から四面体を探す
 	int FindTetFromFace(int faceId);
 
@@ -168,11 +175,14 @@ public:
 	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
 	///	Face辺の両端点の座標を返す?
 	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
-	/// 面積を返す
-	double CompFaceArea(int faceId);
-	/// 面表面方向の法線を返す
-	Vec3d CompFaceNormal(int faceId);
 
+	/// 面積を返す
+	double CompFaceArea(const Vec3d pos[3]);		// 任意の頂点
+	double CompFaceArea(const int& faceId, const bool& bDeform);
+
+	/// 面の法線を返す
+	Vec3d CompFaceNormal(const Vec3d pos[3]);		// 任意の頂点
+	Vec3d CompFaceNormal(const int& faceId, const bool& bDeform);
 
 };
 
