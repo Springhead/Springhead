@@ -100,7 +100,7 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHFemDesc \
+#define SPR_DECLMEMBEROF_PHFemBaseDesc \
 protected:\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
@@ -122,7 +122,7 @@ protected:\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
-		PHFem::SetDesc((PHFemDesc*)(PHFemVibrationDesc*)ptr);	\
+		PHFemBase::SetDesc((PHFemBaseDesc*)(PHFemVibrationDesc*)ptr);	\
 		young = ((PHFemVibrationDesc*)ptr)->young;	\
 		poisson = ((PHFemVibrationDesc*)ptr)->poisson;	\
 		density = ((PHFemVibrationDesc*)ptr)->density;	\
@@ -132,7 +132,7 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		PHFem::GetDesc((PHFemDesc*)(PHFemVibrationDesc*)ptr);	\
+		PHFemBase::GetDesc((PHFemBaseDesc*)(PHFemVibrationDesc*)ptr);	\
 		((PHFemVibrationDesc*)ptr)->young = young;	\
 		((PHFemVibrationDesc*)ptr)->poisson = poisson;	\
 		((PHFemVibrationDesc*)ptr)->density = density;	\

@@ -16,7 +16,7 @@
 namespace Spr{;
 using namespace PTM;
 
-class PHFemVibration : public PHFemVibrationDesc, public PHFem{
+class PHFemVibration : public PHFemVibrationDesc, public PHFemBase{
 public:
 	SPR_OBJECTDEF(PHFemVibration);
 	ACCESS_DESC(PHFemVibration);
@@ -67,41 +67,6 @@ public:
 		const double& _f, const double& _dt, double& _x, double& _v, double& _a);
 	virtual void ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, bool& bFirst, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode);
-
-	/// 時間積分
-	/// _M:質量行列、_K:剛性行列、_C:減衰行列、_f:外力、_dt:積分刻み、_xd:変位、_v:速度
-	/// 行列版
-	virtual void CompInitialCondition(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C,
-		const VVectord& _f, VVectord& _x, VVectord& _v, VVectord& _a);
-	// 前進オイラー
-	virtual void InitExplicitEuler(const VMatrixRe& _M, VMatrixRe& _MInv);
-	virtual void ExplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
-	// 後退オイラー
-	//virtual void InitImplicitEuler(VMatrixRe& _M, double& _SInv);
-	virtual void ImplicitEuler(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
-	// シンプレクティック
-	virtual void InitSimplectic(const VMatrixRe& _M, VMatrixRe& _MInv);
-	virtual void Simplectic(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
-	// NewmarkBeta
-	virtual void InitNewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const double& _dt, VMatrixRe& _SInv, const double b = 1.0/6.0);
-	virtual void NewmarkBeta(const VMatrixRe& _SInv, const VMatrixRe& _K, const VMatrixRe& _C, 
-		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v, VVectord& _a, const double b = 1.0 /6.0);
-	/// 1自由度版
-	// 前進オイラー
-	virtual void InitExplicitEuler(const double& _m, double& _sInv);
-	virtual void ExplicitEuler(const double& _sInv, const double& _k, const double& _c, 
-		const double& _f, const double& _dt, double& _x, double& _v);
-	// シンプレクティック
-	virtual void InitSimplectic(const double& _m, double& _sInv);
-	virtual void Simplectic(const double& _sInv, const double& _k, const double& _c, 
-		const double& _f, const double& _dt, double& _x, double& _v);	// NewmarkBeta
-	virtual void InitNewmarkBeta(const double& _m, const double& _k , const double& _c, const double & _dt, double& _sInv, const double b = 1.0/6.0);
-	virtual void NewmarkBeta(const double& _sInv, const double& _k, const double& _c,
-		const double& _f, const double& _dt, double& _x, double& _v, double& _a, const double b = 1.0/6.0);
 
 
 	/// 固有値解析
