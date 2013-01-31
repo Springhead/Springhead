@@ -10,29 +10,12 @@
 #define PH_FEMMESH_NEW_H
 
 #include <Physics/SprPHFemMeshNew.h>
-#include "../Foundation/Object.h"
+//#include <Physics/PHFemBase.h>
+#include "Foundation/Object.h"
 #include "PHScene.h"
 
 namespace Spr{;
 using namespace PTM;
-
-/// 計算モジュールの共通部分
-class PHFemMeshNew;
-class PHFem: public SceneObject{
-public:
-	SPR_OBJECTDEF_ABST(PHFem);
-	SPR_DECLMEMBEROF_PHFemDesc;
-protected:
-	UTRef< PHFemMeshNew > phFemMesh;
-public:
-	PHFem(){}
-	virtual void Init(){}
-	virtual void Step(){}
-
-	void SetPHFemMesh(PHFemMeshNew* m){ phFemMesh = m; }
-	PHFemMeshNew* GetPHFemMesh(){ return phFemMesh; }
-	int NVertices();
-};
 
 /* 四面体を表すためのクラス、構造体の宣言 */
 //	頂点
@@ -72,6 +55,7 @@ struct FemEdge{
 	FemEdge(int v1=-1, int v2=-1);
 };
 
+class PHFem;
 typedef std::vector< UTRef< PHFem > > PHFems;
 class PHFemVibration;
 class PHFemMeshNew : public SceneObject{//, public PHFemMeshNewDesc{

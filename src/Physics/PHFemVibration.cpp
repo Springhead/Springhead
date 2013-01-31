@@ -22,10 +22,13 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	analysis_mode = PHFemVibrationDesc::ANALYSIS_MODAL;
 	//integration_mode = PHFemVibrationDesc::INT_EXPLICIT_EULER;
 	//integration_mode = PHFemVibrationDesc::INT_IMPLICIT_EULER;
+	//integration_mode = PHFemVibrationDesc::INT_SIMPLECTIC;
 	integration_mode = PHFemVibrationDesc::INT_NEWMARK_BETA;
-	IsScilabStarted = false;
+	SetAlpha(208.645);
+	SetBeta(0.00200335);
+	IsScilabStarted = false; 
 	bRecomp = true;
-} 
+}
 
 void PHFemVibration::Init(){
 #if _DEBUG
@@ -302,6 +305,9 @@ void PHFemVibration::InitNumericalIntegration(const VMatrixRe& _M, const VMatrix
 		case PHFemVibrationDesc::INT_IMPLICIT_EULER:
 			//ImplicitEuler(_M.inv(), _K, _C, _f, _dt, _xd, _v);
 			break;
+		case PHFemVibrationDesc::INT_SIMPLECTIC:
+			InitSimplectic(_M, _SInv);
+			break;
 		case PHFemVibrationDesc::INT_NEWMARK_BETA:
 			InitNewmarkBeta(_M, _K, _C, _dt, _SInv, 1.0/4.0);
 			break;
@@ -320,6 +326,9 @@ void PHFemVibration::NumericalIntegration(const VMatrixRe& _SInv, const VMatrixR
 		case PHFemVibrationDesc::INT_IMPLICIT_EULER:
 			//ImplicitEuler(_M.inv(), _K, _C, _f, _dt, _xd, _v);
 			break;
+		case PHFemVibrationDesc::INT_SIMPLECTIC:
+			Simplectic(_SInv, _K, _C, _f, _dt, _xd, _v);
+			break;
 		case PHFemVibrationDesc::INT_NEWMARK_BETA:
 			NewmarkBeta(_SInv, _K, _C, _f, _dt, _xd, _v, _a, 1.0/4.0);
 			break;
@@ -335,6 +344,9 @@ void PHFemVibration::InitNumericalIntegration(const double& _m, const double& _k
 			InitExplicitEuler(_m, _sInv);
 			break;
 		case PHFemVibrationDesc::INT_IMPLICIT_EULER:
+			break;
+		case PHFemVibrationDesc::INT_SIMPLECTIC:
+			InitSimplectic(_m, _sInv);
 			break;
 		case PHFemVibrationDesc::INT_NEWMARK_BETA:
 			InitNewmarkBeta(_m, _k , _c, _dt, _sInv, 1.0/4.0);
@@ -352,6 +364,9 @@ void PHFemVibration::NumericalIntegration(const double& _sInv, const double& _k,
 			ExplicitEuler(_sInv, _k, _c, _f, _dt, _x, _v);
 			break;
 		case PHFemVibrationDesc::INT_IMPLICIT_EULER:
+			break;
+		case PHFemVibrationDesc::INT_SIMPLECTIC:
+			Simplectic(_sInv, _k, _c, _f, _dt, _x, _v);
 			break;
 		case PHFemVibrationDesc::INT_NEWMARK_BETA:
 			NewmarkBeta(_sInv, _k, _c, _f, _dt, _x, _v, _a, 1.0/4.0);
@@ -408,6 +423,28 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		}
 		DSTR << "eigen Vibration Value" << std::endl;
 		DSTR << w << std::endl;
+		// MK系の固有角振動数
+		VVectord dr;
+		dr.resize(evalue.size(), 0.0);
+		w.resize(evalue.size(), 0.0);
+		for(int i = 0; i < (int)w.size(); i++){
+			w[i] = sqrt(evalue[i]);
+			dr[i] = CompModalDampingRatio(w[i]);
+		}
+		DSTR << "eigen Angular Vibration Value" << std::endl;
+		DSTR << w << std::endl;
+		DSTR << "modal damping ratio" << std::endl;
+		DSTR << dr << std::endl;
+		double wrad[2];
+		wrad[0] = w[0];
+		wrad[1] = w[dr.size() - 1];
+		double ratio[2];
+		ratio[0] = 0.1;
+		ratio[1] = 0.1;
+		double a, b;
+		CompRayleighDampingCoeffcient(wrad, ratio, a, b);
+		DSTR << "reiley coefficient" << std::endl;
+		DSTR << a << " " << b << std::endl;
 
 		// モード質量、剛性, 減衰行列の計算
 		Mm.assign(evector.trans() * _M * evector);
@@ -462,9 +499,9 @@ void PHFemVibration::InitExplicitEuler(const VMatrixRe& _M, VMatrixRe& _MInv){
 void PHFemVibration::ExplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v){
 	VVectord tmp;
-	tmp.assign(_f - (_K *_xd) - ( _C* _v));
+	tmp.assign(_f - (_K *_xd) - ( _C * _v));
 	_v += _MInv * tmp * _dt;
-	_xd += _v * _dt;			// 更新後の速度で変位を更新すると発振しにくくなる
+	_xd += _v * _dt;
 }
 
 // 定式化しなおさないといけない.2013.1.3
@@ -505,6 +542,18 @@ void PHFemVibration::ImplicitEuler(const VMatrixRe& _MInv, const VMatrixRe& _K, 
 #endif
 }
 
+void PHFemVibration::InitSimplectic(const VMatrixRe& _M, VMatrixRe& _MInv){
+	_MInv.assign(_M.inv());
+}
+
+void PHFemVibration::Simplectic(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
+	const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v){
+	VVectord tmp;
+	tmp.assign(_f - (_K *_xd) - ( _C* _v));
+	_xd += _v * _dt;
+	_v += _MInv * tmp * _dt;
+}
+
 void PHFemVibration::InitNewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 	const double& _dt, VMatrixRe& _SInv, const double b){
 	double dt2 = pow(_dt, 2);
@@ -534,8 +583,21 @@ void PHFemVibration::ExplicitEuler(const double& _sInv, const double& _k, const 
 		const double& _f, const double& _dt, double& _x, double& _v){
 	double tmp = _f - (_k * _x) - (_c * _v);
 	_v += _dt * _sInv * tmp;
-	_x += _dt * _v;			// 更新後の速度で変位を更新すると発振しにくくなる
+	_x += _dt * _v;			// 速度更新が後
 }
+
+
+void PHFemVibration::InitSimplectic(const double& _m, double& _sInv){
+	_sInv = 1.0 / _m;		// _mが変化しない限り定数
+}
+
+void PHFemVibration::Simplectic(const double& _sInv, const double& _k, const double& _c, 
+		const double& _f, const double& _dt, double& _x, double& _v){
+	double tmp = _f - (_k * _x) - (_c * _v);
+	_v += _dt * _sInv * tmp;	// 速度更新が先
+	_x += _dt * _v;
+}
+
 
 void PHFemVibration::InitNewmarkBeta(const double& _m, const double& _k , const double& _c, 
 	const double & _dt, double& _sInv, const double b){
@@ -870,22 +932,22 @@ bool PHFemVibration::AddForce(int tetId, Vec3d posW, Vec3d fW){
 	return true;
 }
 
-bool PHFemVibration::GetDisplacement(int tetId, Vec3d posW, Vec3d& disp){
+bool PHFemVibration::GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bDeform){
 	disp = Vec3d();
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
 	Vec3d posL = inv * posW;
 	Vec4d v;
-	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, false)) return false;
+	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform)) return false;
 	for(int i = 0; i < 4; i++){
 		int vtxId = mesh->tets[tetId].vertexIDs[i];
 		disp += mesh->GetVertexDisplacementL(vtxId) * v[i];
 	}
 	mesh->GetPHSolid()->GetPose() * disp;
-	return true;;
+	return true;
 }
 
-bool PHFemVibration::FindClosestPointOnMesh(const Vec3d& p, const Vec3d fp[3], Vec3d& cp, double& dist){
+bool PHFemVibration::FindClosestPointOnMesh(const Vec3d& p, const Vec3d fp[3], Vec3d& cp, double& dist, bool bDeform){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	const Vec3d normal = mesh->CompFaceNormal(fp);
 	const Vec3d p0 = fp[0] - p;			// pからfp[0]までのベクトル
@@ -926,7 +988,7 @@ bool PHFemVibration::FindNeighborFaces(Vec3d posW, std::vector< int >& faceIds, 
 		}
 		Vec3d cpW;
 		double d;
-		if(!FindClosestPointOnMesh(posW, fp, cpW, d)) continue;
+		if(!FindClosestPointOnMesh(posW, fp, cpW, d, bDeform)) continue;
 		if(d < dist){
 			// 前回よりも点-面間の距離が近い場合は近い方を選ぶ
 			dist = d;
@@ -965,6 +1027,15 @@ bool PHFemVibration::FindNeighborTetrahedron(Vec3d posW, int& tetId, Vec3d& cpW,
 	return true;
 }
 
+double PHFemVibration::CompModalDampingRatio(double wrad){
+	return 0.5 * (GetAlpha() / wrad + GetBeta() * wrad);
+}
+
+void PHFemVibration::CompRayleighDampingCoeffcient(double wrad[2], double ratio[2], double& a, double& b){
+	double tmp = (2.0 * wrad[0] * wrad[1]) / (pow(wrad[0], 2) - pow(wrad[1], 2));
+	a = wrad[0] * ratio[1] - wrad[1] * ratio[0];
+	b = (ratio[0] / wrad[1]) - (ratio[1] / wrad[0]);
+}
 
 //* scilabデバック
 /////////////////////////////////////////////////////////////////////////////////////////

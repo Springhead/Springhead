@@ -9,10 +9,12 @@
 #ifndef PH_FEM_VIBRATION_H
 #define PH_FEM_VIBRATION_H
 
-#include <Physics/PHFemMeshNew.h>
+//#include <Physics/PHFemMeshNew.h>
+#include <Physics/PHFemBase.h>
 #include <Foundation/Object.h>
 
 namespace Spr{;
+using namespace PTM;
 
 class PHFemVibration : public PHFemVibrationDesc, public PHFem{
 public:
@@ -79,6 +81,10 @@ public:
 	//virtual void InitImplicitEuler(VMatrixRe& _M, double& _SInv);
 	virtual void ImplicitEuler(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
+	// シンプレクティック
+	virtual void InitSimplectic(const VMatrixRe& _M, VMatrixRe& _MInv);
+	virtual void Simplectic(const VMatrixRe& _MInv, const VMatrixRe& _K, const VMatrixRe& _C, 
+		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
 	// NewmarkBeta
 	virtual void InitNewmarkBeta(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const double& _dt, VMatrixRe& _SInv, const double b = 1.0/6.0);
@@ -89,7 +95,10 @@ public:
 	virtual void InitExplicitEuler(const double& _m, double& _sInv);
 	virtual void ExplicitEuler(const double& _sInv, const double& _k, const double& _c, 
 		const double& _f, const double& _dt, double& _x, double& _v);
-	// NewmarkBeta
+	// シンプレクティック
+	virtual void InitSimplectic(const double& _m, double& _sInv);
+	virtual void Simplectic(const double& _sInv, const double& _k, const double& _c, 
+		const double& _f, const double& _dt, double& _x, double& _v);	// NewmarkBeta
 	virtual void InitNewmarkBeta(const double& _m, const double& _k , const double& _c, const double & _dt, double& _sInv, const double b = 1.0/6.0);
 	virtual void NewmarkBeta(const double& _sInv, const double& _k, const double& _c,
 		const double& _f, const double& _dt, double& _x, double& _v, double& _a, const double b = 1.0/6.0);
@@ -99,7 +108,7 @@ public:
 	virtual void SubSpace(const VMatrixRe& _M, const VMatrixRe& _K, 
 							const int nmode, const double epsilon, VVectord& e, VMatrixRe& v);
 
-	/// 各種設定
+	/// 各種設定、計算
 	void SetTimeStep(double dt){ vdt = dt; }
 	double GetTimeStep(){ return vdt; }
 	void SetYoungModulus(double value){ young = value; }
@@ -158,15 +167,18 @@ public:
 	bool AddForce(int tetId, Vec3d posW, Vec3d fW);
 
 	// 形状関数を使って任意の点の変位を取得する
-	bool GetDisplacement(int tetId, Vec3d posW, Vec3d& disp);
+	bool GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bDeform);
 
 	/// 実装中
-	bool FindClosestPointOnMesh( const Vec3d& posW, const Vec3d pos[3], Vec3d& cp, double& dist);
+	bool FindClosestPointOnMesh( const Vec3d& posW, const Vec3d pos[3], Vec3d& cp, double& dist, bool bDeform);
 	/// ある点から近い面と面上の点を探す
 	bool FindNeighborFaces(Vec3d posW, std::vector< int >& faceIds, std::vector< Vec3d >& cpWs, bool bDeform);
 	/// ある点から近い四面体と四面体上の点を探す
 	bool FindNeighborTetrahedron(Vec3d posW, int& tetId, Vec3d& cpW, bool bDeform);
 
+	/// モード解析用
+	double CompModalDampingRatio(double wrad);
+	void CompRayleighDampingCoeffcient(double wrad[2], double ratio[2], double& a, double& b);
 
 	/// scilabデバック
 	bool IsScilabStarted;	/// scilabがスタートしているかどうかのフラグ

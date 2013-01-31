@@ -60,6 +60,7 @@ struct PHFemVibrationDesc : public PHFemDesc{
 	enum INTEGRATION_MODE{
 		INT_EXPLICIT_EULER,
 		INT_IMPLICIT_EULER,
+		INT_SIMPLECTIC,
 		INT_NEWMARK_BETA,
 	};
 	double young;		///< ƒ„ƒ“ƒO—¦(Pa, N/m2)
