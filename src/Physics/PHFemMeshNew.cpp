@@ -7,14 +7,11 @@
  */
 
 #include <Physics/PHFemMeshNew.h>
+#include <Physics/PHFemBase.h>
 #include <Physics/PHFemVibration.h>
 
 //using namespace PTM;
 namespace Spr{;
-
-///////////////////////////////////////////////////////////////////
-/* 計算モジュールの共通部分 */
-int PHFem::NVertices(){ return GetPHFemMesh()->NVertices(); }
 
 ///////////////////////////////////////////////////////////////////
 /* 四面体を表すためのクラス、構造体の定義 */
