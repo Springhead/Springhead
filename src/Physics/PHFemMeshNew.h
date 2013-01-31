@@ -10,7 +10,6 @@
 #define PH_FEMMESH_NEW_H
 
 #include <Physics/SprPHFemMeshNew.h>
-//#include <Physics/PHFemBase.h>
 #include "Foundation/Object.h"
 #include "PHScene.h"
 
@@ -55,8 +54,8 @@ struct FemEdge{
 	FemEdge(int v1=-1, int v2=-1);
 };
 
-class PHFem;
-typedef std::vector< UTRef< PHFem > > PHFems;
+class PHFemBase;
+typedef std::vector< UTRef< PHFemBase > > PHFemBases;
 class PHFemVibration;
 class PHFemMeshNew : public SceneObject{//, public PHFemMeshNewDesc{
 public:
@@ -78,7 +77,7 @@ public:
 	unsigned nSurfaceEdge;		///< 物体表面に存在する辺。表面:edges[0],..,edges[nSurfaceEdge-1]、内面:edges[nSurfaceEdge],..,edges[edges.size()]
 
 	/// 計算モジュール
-	PHFems fems;
+	PHFemBases femBases;
 	UTRef< PHFemVibration > femVibration;
 	//PHFemThermo*	thermo;
 

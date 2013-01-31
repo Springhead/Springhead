@@ -10,7 +10,6 @@
 #include <Physics/PHFemBase.h>
 #include <Physics/PHFemVibration.h>
 
-//using namespace PTM;
 namespace Spr{;
 
 ///////////////////////////////////////////////////////////////////
@@ -247,21 +246,21 @@ bool PHFemMeshNew::AddChildObject(ObjectIf* o){
 		bCheck = true;
 	}*/ 
 
-	PHFem* f = DCAST(PHFem, o);
+	PHFemBase* f = DCAST(PHFemBase, o);
 	if(f){
 		f->SetPHFemMesh(this);
-		fems.push_back(f);
+		femBases.push_back(f);
 	}
 	return bCheck;
 }
 
 void PHFemMeshNew::Init(){
-	for(PHFems::iterator it = fems.begin(); it != fems.end(); it++)
+	for(PHFemBases::iterator it = femBases.begin(); it != femBases.end(); it++)
 		(*it)->Init();
 }
 
 void PHFemMeshNew::Step(double dt){
-	for(PHFems::iterator it = fems.begin(); it != fems.end(); it++)
+	for(PHFemBases::iterator it = femBases.begin(); it != femBases.end(); it++)
 		(*it)->Step();
 }
 

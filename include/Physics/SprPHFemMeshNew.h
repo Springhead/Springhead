@@ -45,14 +45,14 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 };
 
 /// Femのデスクリプタ
-struct PHFemDesc{};
+struct PHFemBaseDesc{};
 /// Femの共通計算部分
-struct PHFemIf : public SceneObjectIf{
-	SPR_IFDEF(PHFem);
+struct PHFemBaseIf : public SceneObjectIf{
+	SPR_IFDEF(PHFemBase);
 };
 
 /// 振動計算のデスクリプタ
-struct PHFemVibrationDesc : public PHFemDesc{
+struct PHFemVibrationDesc : public PHFemBaseDesc{
 	enum ANALYSIS_MODE{
 		ANALYSIS_DIRECT,
 		ANALYSIS_MODAL
@@ -81,7 +81,7 @@ struct PHFemVibrationDesc : public PHFemDesc{
 };
 
 /// 振動計算
-struct PHFemVibrationIf : public PHFemIf{
+struct PHFemVibrationIf : public PHFemBaseIf{
 	SPR_IFDEF(PHFemVibration);
 	void SetTimeStep(double dt);
 	double GetTimeStep();
