@@ -9,7 +9,6 @@
 #ifndef PH_FEM_VIBRATION_H
 #define PH_FEM_VIBRATION_H
 
-//#include <Physics/PHFemMeshNew.h>
 #include <Physics/PHFemBase.h>
 #include <Foundation/Object.h>
 

@@ -24,8 +24,8 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	//integration_mode = PHFemVibrationDesc::INT_IMPLICIT_EULER;
 	//integration_mode = PHFemVibrationDesc::INT_SIMPLECTIC;
 	integration_mode = PHFemVibrationDesc::INT_NEWMARK_BETA;
-	SetAlpha(208.645);
-	SetBeta(0.00200335);
+	SetAlpha(4.76869);
+	SetBeta(4.57875e-005);
 	IsScilabStarted = false; 
 	bRecomp = true;
 }
@@ -282,7 +282,7 @@ void PHFemVibration::Step(){
 
 	static int count = 0;
 	count++;
-	if(count == 5000) qtimer.FileOut("hoge.xls");
+	if(count == 5000) qtimer.FileOut("time.xls");
 
 #if 0
 	DSTR << "vl updated" << std::endl;	DSTR << vl << std::endl;
@@ -424,25 +424,27 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		DSTR << "eigen Vibration Value" << std::endl;
 		DSTR << w << std::endl;
 		// MKŒn‚ÌŒÅ—LŠpU“®”
-		VVectord dr;
-		dr.resize(evalue.size(), 0.0);
+		VVectord wrad;
+		VVectord dratio;
+		wrad.resize(evalue.size(), 0.0);
+		dratio.assign(wrad);
 		w.resize(evalue.size(), 0.0);
 		for(int i = 0; i < (int)w.size(); i++){
-			w[i] = sqrt(evalue[i]);
-			dr[i] = CompModalDampingRatio(w[i]);
+			wrad[i] = sqrt(evalue[i]);
+			dratio[i] = CompModalDampingRatio(wrad[i]);
 		}
 		DSTR << "eigen Angular Vibration Value" << std::endl;
-		DSTR << w << std::endl;
+		DSTR << wrad << std::endl;
 		DSTR << "modal damping ratio" << std::endl;
-		DSTR << dr << std::endl;
-		double wrad[2];
-		wrad[0] = w[0];
-		wrad[1] = w[dr.size() - 1];
+		DSTR << dratio << std::endl;
+		double tw[2];
+		tw[0] = wrad[0];
+		tw[1] = wrad[wrad.size() - 1];
 		double ratio[2];
-		ratio[0] = 0.1;
-		ratio[1] = 0.1;
+		ratio[0] = 0.05;
+		ratio[1] = 0.05;
 		double a, b;
-		CompRayleighDampingCoeffcient(wrad, ratio, a, b);
+		CompRayleighDampingCoeffcient(tw, ratio, a, b);
 		DSTR << "reiley coefficient" << std::endl;
 		DSTR << a << " " << b << std::endl;
 
@@ -895,9 +897,9 @@ double PHFemVibration::CompModalDampingRatio(double wrad){
 }
 
 void PHFemVibration::CompRayleighDampingCoeffcient(double wrad[2], double ratio[2], double& a, double& b){
-	double tmp = (2.0 * wrad[0] * wrad[1]) / (pow(wrad[0], 2) - pow(wrad[1], 2));
-	a = wrad[0] * ratio[1] - wrad[1] * ratio[0];
-	b = (ratio[0] / wrad[1]) - (ratio[1] / wrad[0]);
+	double tmp = (2.0 * wrad[0] * wrad[1]) / (pow(wrad[1], 2) - pow(wrad[0], 2));
+	a = tmp * (wrad[1] * ratio[0] - wrad[0] * ratio[1]);
+	b = tmp * ((ratio[1] / wrad[0]) - (ratio[0] / wrad[1]));
 }
 
 //* scilabƒfƒoƒbƒN
