@@ -28,6 +28,7 @@ struct PHFemMeshDesc: public PHFemMeshState{
 	std::vector<int> faces;
 	PHFemMeshDesc();
 	void Init();
+
 };
 
 ///	FEM用の四面体メッシュ

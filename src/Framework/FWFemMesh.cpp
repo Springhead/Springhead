@@ -74,14 +74,8 @@ void FWFemMesh::DrawFaceEdge(){
 		for(unsigned j =0;j < 3;j++){
 			glBegin(GL_LINES);
 			Vec3d wpos = this->GetGRFrame()->GetWorldTransform() * phMesh->GetFaceEdgeVtx(i,j);
-			double posx = wpos.x;
-			double posy = wpos.y;
-			double posz = wpos.z;
 			glVertex3d(wpos.x,wpos.y,wpos.z);
 			wpos = this->GetGRFrame()->GetWorldTransform() * phMesh->GetFaceEdgeVtx(i,(j+1)%3);
-			posx = wpos.x;
-			posy = wpos.y;
-			posz = wpos.z;
 			glVertex3d(wpos.x,wpos.y,wpos.z);
 			glEnd();
 			//glFlush();	//ただちに実行
@@ -98,17 +92,40 @@ void FWFemMesh::DrawFaceEdge(){
 	//}
 }
 
-void FWFemMesh::DrawEdge(Vec3d vtx0, Vec3d vtx1){
-	Vec3d pos0 = vtx0;
-	Vec3d pos1 = vtx1;
-	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * pos0; //* ローカル座標を 世界座標への変換して代入
-	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * pos1; //* ローカル座標を 世界座標への変換して代入
+
+void FWFemMesh::DrawNormal(Vec3d vtx0, Vec3d vtx1){
+	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * vtx0; //* ローカル座標を 世界座標への変換して代入
+	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() *( vtx0 + vtx1); //* ローカル座標を 世界座標への変換して代入
 	glColor3d(1.0,0.0,0.0);
 	glBegin(GL_LINES);
-		glVertex3f(wpos0[0],wpos0[1],wpos0[2]);
-		glVertex3f(wpos0[0] + wpos1[0], wpos0[1] + wpos1[1], wpos0[2] + wpos1[2]);
+		glVertex3d(wpos0[0],wpos0[1],wpos0[2]);
+		glVertex3d(wpos1[0],wpos1[1],wpos1[2]);
 	glEnd();
-	glFlush();
+	//glFlush();
+}
+
+void FWFemMesh::DrawEdgeCW(Vec3d vtx0, Vec3d vtx1,float R,float G,float B){
+	// 入力された2頂点座標間を結ぶ
+	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * vtx0; //* ローカル座標を 世界座標への変換して代入
+	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * vtx1; //* ローカル座標を 世界座標への変換して代入
+	glBegin(GL_LINES);
+		glColor3d(R,G,B);
+		glVertex3d(wpos0[0],wpos0[1],wpos0[2]);
+		glVertex3d(wpos1[0],wpos1[1],wpos1[2]);
+	glEnd();
+	//glFlush();
+}
+
+
+void FWFemMesh::DrawEdge(Vec3d vtx0, Vec3d vtx1){
+	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * vtx0; //* ローカル座標を 世界座標への変換して代入
+	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * vtx1; //* ローカル座標を 世界座標への変換して代入
+	glColor3d(1.0,0.0,0.0);
+	glBegin(GL_LINES);
+		glVertex3d(wpos0[0],wpos0[1],wpos0[2]);
+		glVertex3d(wpos1[0],wpos1[1],wpos1[2]);
+	glEnd();
+	//glFlush();
 }
 
 void FWFemMesh::DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1){
@@ -119,7 +136,7 @@ void FWFemMesh::DrawEdge(float x0, float y0, float z0, float x1, float y1, float
 	glColor3d(1.0,0.0,0.0);
 	glBegin(GL_LINES);
 		glVertex3f(wpos0[0],wpos0[1],wpos0[2]);
-		glVertex3f(wpos0[0] + wpos1[0], wpos0[1] + wpos1[1], wpos0[2] + wpos1[2]);
+		glVertex3f(wpos1[0],wpos1[1],wpos1[2]);
 	glEnd();
 	glFlush();
 }
@@ -143,7 +160,6 @@ void FWFemMesh::Sync(){
 	//if (value <= 0) delta = 0.01;
 	//if (value >= 1) delta = -0.01;
 	//value += delta;
-
 #ifdef VTX_DBG
 	////	デバッグ用
 	//// face辺を描画
@@ -153,6 +169,7 @@ void FWFemMesh::Sync(){
 	////	IH加熱領域の境界線を引く
 	//DrawIHBorder(0.095,0.1);
 #endif
+
 	std::string fwfood;
 	fwfood = this->GetName();		//	fwmeshの名前取得
 
@@ -181,6 +198,42 @@ void FWFemMesh::Sync(){
 	double wastart = texstart + kogetex * dtex ;				//	水分量表示テクスチャのスタート座標
 	double thstart = texstart + kogetex * dtex + 1.0 * dtex ;	//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
 	
+	if(fwfood == "fwNegi"){
+	//	 //vertexの法線？表示
+	//	for(unsigned i =0; i < phMesh->vertices.size();i++){
+	//		DrawNormal(phMesh->vertices[i].pos, phMesh->vertices[i].normal);
+	//	}
+
+		for(unsigned i=0; i < phMesh->faces.size(); i++){
+			//.	faceエッジを表示	
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,0),phMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+		}
+	//	for(unsigned i = 0; i < phMesh->faces.size(); i++){
+	//		//.	三角形の重心からの法線を表示
+	//		Vec3d jushin = Vec3d(0.0,0.0,0.0);
+	//		for(unsigned j=0; j< 3;j++){
+	//			jushin += phMesh->vertices[phMesh->faces[i].vertices[j]].pos;
+	//		}
+	//		jushin *= 1.0/3.0;
+	//		DrawNormal(jushin,phMesh->faces[i].normal);
+	//		
+	//	}
+	}
+
+	if(fwfood == "fwPan"){
+		//for(unsigned i =0; i < phMesh->vertices.size();i++){
+		//	DrawNormal(phMesh->vertices[i].pos, phMesh->vertices[i].normal);
+		//}
+		for(unsigned i=0; i < phMesh->faces.size(); i++){
+			//.	faceエッジを表示	
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,0),phMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+		}
+
+	}
 	
 
 

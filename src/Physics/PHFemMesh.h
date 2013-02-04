@@ -68,6 +68,7 @@ public:
 		double thermalEmissivity;	///	熱放射率　節点での
 		double disFromOrigin;		//>	x-z平面でのローカル座標の原点からの距離
 		double heatFluxValue;		//>	熱流束値
+		Vec3d normal;				// 属するfacceから算出した法線（現在、face法線の単純和を正規化した法線だが、同じ向きのface法線を一本化する予定：要改善
 	};
 	//	四面体
 	class Tet{
@@ -84,13 +85,11 @@ public:
 		PTM::TVector<4,double> vecf[4];			//>	{f1}:vecf[0],{f2}:vecf[1],{f3}:vecf[2],...
 		//PTM::TVector<4,double> vecf[4][3];			//>	{f1}:vecf[0],{f2}:vecf[1],{f3}:vecf[2],...
 
-
 		//水分蒸発計算
 		double wratio;			//	含水率
 		double wmass;			//	水分量
 		double wmass_start;		//	水分量の初期値
 		double tetsMg;			//	質量
-
 	};
 	//	四面体の面。
 	class Face{
@@ -124,6 +123,9 @@ public:
 		//Vec2d ihvtx[12];			//	IH加熱領域内に入る点の(x,z)座標 (x,z)
 		//unsigned ninnerVtx;			//	IH加熱領域内に入る点の(x,z)座標の数
 		std::vector<Vec3d> shapefunc;//[12];		//	IH加熱領域内に入る点の形状関数(f1,f2,f3)
+		//faceの法線Vec3d fnormal
+		Vec3d normal;
+		Vec3d normal_origin;		// 法線の始点
 	};
 	//	辺
 	struct Edge{
@@ -167,9 +169,7 @@ public:
 	void UpdateJacobian();
 	//@}
 
-
 	SPR_OBJECTDEF(PHFemMesh);
-
 
 	PHFemMesh(const PHFemMeshDesc& desc=PHFemMeshDesc(), SceneIf* s=NULL);
 	///	デスクリプタのサイズ
@@ -192,7 +192,6 @@ public:
 	//	IH境界領域のX座標を求める
 	//Vec2d GetIHBorderX();
 	
-
 	//int GetSurfaceVertex(int id){return surfaceVertices[id];};
 	//int NSurfaceVertices(){return surfaceVertices.size();};
 	//void SetVertexTc(int id,double temp){

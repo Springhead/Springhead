@@ -1736,7 +1736,7 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 	
 	//dtはPHFemEngine.cppで取得する動力学シミュレーションのステップ時間
 	bool DoCalc =true;											//初回だけ定数ベクトルbの計算を行うbool		//NofCycが0の時にすればいいのかも
-	std::ofstream ofs("log.txt");
+	//std::ofstream ofs("log.txt");
 	for(unsigned i=0; i < NofCyc; i++){							//ガウスザイデルの計算ループ
 		if(DoCalc){		
 			if(deformed || alphaUpdated){												//D_iiの作成　形状や熱伝達率が更新された際に1度だけ行えばよい
@@ -1799,16 +1799,16 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 				}
 				//ⅱ)対角成分について
 				bVecAll[j][0] += (-1.0/2.0 * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] ) * TVecAll[j];
-				ofs << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;			// DSTR
+				//ofs << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;			// DSTR
 				//{F}を加算
 				bVecAll[j][0] += vecFAllSum[j];		//Fを加算
 				//DSTR << " vecFAllSum[" << j << "] : "  << vecFAllSum[j] << std::endl;
 				//DSTR << std::endl;
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
 				bVecAll[j][0] = bVecAll[j][0] * _dMatAll[0][j];
-				ofs << "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl;
+				//ofs << "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl;
 				//	DSTR <<  "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl;
-				ofs << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl;
+				//ofs << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl;
 				//	DSTR << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl;
 			}
 			DoCalc = false;			//初回のループだけで利用
@@ -1873,12 +1873,13 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 			//}
 			//DSTR << i << "回目の計算、" << j <<"行目のtempkj: " << tempkj << std::endl;
 			//tempkj =0.0;
-			ofs << j << std::endl;
-			ofs << "tempkj: "<< tempkj << std::endl;
-			ofs << "DMatAll[0][j] * ( -1.0 * tempkj) :" <<_dMatAll[0][j] * ( -1.0 * tempkj) << std::endl;
-			ofs << "bVecAll[j][0] :  " <<  bVecAll[j][0] << std::endl;
-			ofs << "  TVecAll[j] : " << TVecAll[j] << std::endl;
-			ofs << std::endl;
+
+			//ofs << j << std::endl;
+			//ofs << "tempkj: "<< tempkj << std::endl;
+			//ofs << "DMatAll[0][j] * ( -1.0 * tempkj) :" <<_dMatAll[0][j] * ( -1.0 * tempkj) << std::endl;
+			//ofs << "bVecAll[j][0] :  " <<  bVecAll[j][0] << std::endl;
+			//ofs << "  TVecAll[j] : " << TVecAll[j] << std::endl;
+			//ofs << std::endl;
 		}
 		////	for Debug
 		//for(unsigned j=0;j < vertices.size();j++){
@@ -1899,21 +1900,21 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		//DSTR << i <<  "th Cyc" << std::endl; 
 		//DSTR << i << "回目の計算、TVecAll : " <<std::endl;
 		//DSTR << TVecAll << std::endl;
-		ofs << i <<  "th Cyc" << std::endl;
-		ofs << i << "回目の計算、TVecAll : " <<std::endl;
-		ofs << TVecAll << std::endl;
-		ofs << "bVecAll: " <<std::endl;
-		ofs << bVecAll << std::endl;
-		ofs << "_dMatAll: " <<std::endl; 
-		ofs << _dMatAll <<std::endl;
+		//ofs << i <<  "th Cyc" << std::endl;
+		//ofs << i << "回目の計算、TVecAll : " <<std::endl;
+		//ofs << TVecAll << std::endl;
+		//ofs << "bVecAll: " <<std::endl;
+		//ofs << bVecAll << std::endl;
+		//ofs << "_dMatAll: " <<std::endl; 
+		//ofs << _dMatAll <<std::endl;
 		int piyopiyoyo =0;
 		double tempTemp=0.0;
 		for(unsigned j=0;j <vertices.size() ; j++){
 			tempTemp += TVecAll[j];
 		}
 		//	DSTR
-		ofs << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;
-		ofs << std::endl;
+		//ofs << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;
+		//ofs << std::endl;
 	}
 //	deformed = true;
 }
@@ -1925,7 +1926,7 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,do
 	double _eps = 1-eps;			// 1-epsの計算に利用
 	//dtはPHFemEngine.cppで取得する動力学シミュレーションのステップ時間
 	bool DoCalc =true;											//初回だけ定数ベクトルbの計算を行うbool		//NofCycが0の時にすればいいのかも
-	FEMLOG( std::ofstream ofs("log.txt") ) ;
+	//FEMLOG( std::ofstream ofs("log.txt") ) ;
 	for(unsigned i=0; i < NofCyc; i++){							//ガウスザイデルの計算ループ
 		if(DoCalc){												
 			if(deformed || alphaUpdated ){												//D_iiの作成　形状が更新された際に1度だけ行えばよい
@@ -1986,17 +1987,17 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,do
 				}
 				//ⅱ)対角成分について
 				bVecAll[j][0] += (-_eps * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] ) * TVecAll[j];
-				FEMLOG(ofs << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;)			// DSTR
-				FEMLOG(ofs << "dMatKAll[0][" << j <<"] : " << dMatKAll[0][j] << std::endl;)			// DSTR
-				FEMLOG(ofs << "dMatCAll[0][" << j <<"] : " << dMatCAll[0][j] << std::endl;)			// DSTR
-				//{F}を加算
+				//FEMLOG(ofs << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;)			// DSTR
+				//FEMLOG(ofs << "dMatKAll[0][" << j <<"] : " << dMatKAll[0][j] << std::endl;)			// DSTR
+				//FEMLOG(ofs << "dMatCAll[0][" << j <<"] : " << dMatCAll[0][j] << std::endl;)			// DSTR
+				//  {F}を加算
 				bVecAll[j][0] += vecFAllSum[j];		//Fを加算
 				//DSTR << " vecFAllSum[" << j << "] : "  << vecFAllSum[j] << std::endl;
 				//DSTR << std::endl;
 				//D_iiで割る ⇒この場所は、ここで良いの？どこまで掛け算するの？
 				bVecAll[j][0] = bVecAll[j][0] * _dMatAll[0][j];
-				FEMLOG(ofs << "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl);
-				FEMLOG(ofs << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl);
+				//FEMLOG(ofs << "bVecAll[" << j <<"][0] * _dMatAll : " << bVecAll[j][0] << std::endl);
+				//FEMLOG(ofs << "TVecAll[" << j <<"] : " << TVecAll[j] << std::endl);
 			}
 			DoCalc = false;			//初回のループだけで利用
 			//値が入っているか、正常そうかをチェック
@@ -2060,12 +2061,13 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,do
 			//}
 			//DSTR << i << "回目の計算、" << j <<"行目のtempkj: " << tempkj << std::endl;
 			//tempkj =0.0;
-			FEMLOG(ofs << j << std::endl);
-			FEMLOG(ofs << "tempkj: "<< tempkj << std::endl);
-			FEMLOG(ofs << "DMatAll[0][j] * ( -1.0 * tempkj) :" <<_dMatAll[0][j] * ( -1.0 * tempkj) << std::endl;)
-			FEMLOG(ofs << "bVecAll[j][0] :  " <<  bVecAll[j][0] << std::endl;)
-			FEMLOG(ofs << "  TVecAll[j] : " << TVecAll[j] << std::endl;)
-			FEMLOG(ofs << std::endl;)
+
+			//FEMLOG(ofs << j << std::endl);
+			//FEMLOG(ofs << "tempkj: "<< tempkj << std::endl);
+			//FEMLOG(ofs << "DMatAll[0][j] * ( -1.0 * tempkj) :" <<_dMatAll[0][j] * ( -1.0 * tempkj) << std::endl;)
+			//FEMLOG(ofs << "bVecAll[j][0] :  " <<  bVecAll[j][0] << std::endl;)
+			//FEMLOG(ofs << "  TVecAll[j] : " << TVecAll[j] << std::endl;)
+			//FEMLOG(ofs << std::endl;)
 		}
 		////	for Debug
 		//for(unsigned j=0;j < vertices.size();j++){
@@ -2086,21 +2088,22 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,do
 		//DSTR << i <<  "th Cyc" << std::endl; 
 		//DSTR << i << "回目の計算、TVecAll : " <<std::endl;
 		//DSTR << TVecAll << std::endl;
-		FEMLOG(ofs << i <<  "th Cyc" << std::endl;)
-		FEMLOG(ofs << i << "回目の計算、TVecAll : " <<std::endl;)
-		FEMLOG(ofs << TVecAll << std::endl;)
-		FEMLOG(ofs << "bVecAll: " <<std::endl;)
-		FEMLOG(ofs << bVecAll << std::endl;)
-		FEMLOG(ofs << "_dMatAll: " <<std::endl;) 
-		FEMLOG(ofs << _dMatAll <<std::endl;)
+
+		//FEMLOG(ofs << i <<  "th Cyc" << std::endl;)
+		//FEMLOG(ofs << i << "回目の計算、TVecAll : " <<std::endl;)
+		//FEMLOG(ofs << TVecAll << std::endl;)
+		//FEMLOG(ofs << "bVecAll: " <<std::endl;)
+		//FEMLOG(ofs << bVecAll << std::endl;)
+		//FEMLOG(ofs << "_dMatAll: " <<std::endl;) 
+		//FEMLOG(ofs << _dMatAll <<std::endl;)
 		int piyopiyoyo =0;
 		double tempTemp=0.0;
 		for(unsigned j=0;j <vertices.size() ; j++){
 			tempTemp += TVecAll[j];
 		}
 		//	DSTR
-		FEMLOG(ofs << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;)
-		FEMLOG(ofs << std::endl;)
+		//FEMLOG(ofs << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;)
+		//FEMLOG(ofs << std::endl;)
 	}
 //	deformed = true;
 }
@@ -2206,7 +2209,7 @@ void PHFemMeshThermo::Step(double dt){
 
 	//std::ofstream templog("templog.txt");
 
-	std::ofstream ofs_("log_.txt");
+	//std::ofstream ofs_("log_.txt");
 //	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
 //	UsingFixedTempBoundaryCondition(0,200.0);
@@ -2272,28 +2275,29 @@ void PHFemMeshThermo::Step(double dt){
 	//}
 	int templogkatoon =0;
 
-	for(unsigned i =0;i<vertices.size();i++){
-		if(vertices[i].temp !=0){
-			ofs_ << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
-		}
-	}
+	//for(unsigned i =0;i<vertices.size();i++){
+	//	if(vertices[i].temp !=0){
+	//		ofs_ << "vertices[" << i << "].temp : " << vertices[i].temp << std::endl;
+	//	}
+	//}
 	int hogehoge=0;
 
 	//	節点の温度の推移履歴の保存
-	if(StepCount ==0){
-		templog <<"ステップ数"<<",";
-		templog <<"熱シミュレーション時間"<<",";
-		for(unsigned i=0; i<vertices.size();i++){
-			templog << "節点" << i << "の温度" << ",";
-		}
-		templog <<"," << std::endl;
-		}
-	templog << StepCount << ", ";
-	templog << StepCount * dt << ", ";
-	for(unsigned i=0; i<vertices.size();i++){
-		templog << vertices[i].temp << ",";
-	}
-	templog <<"," << std::endl;
+	//if(StepCount ==0){
+	//	templog <<"ステップ数"<<",";
+	//	templog <<"熱シミュレーション時間"<<",";
+	//	for(unsigned i=0; i<vertices.size();i++){
+	//		templog << "節点" << i << "の温度" << ",";
+	//	}
+	//	templog <<"," << std::endl;
+	//	}
+	//templog << StepCount << ", ";
+	//templog << StepCount * dt << ", ";
+	//for(unsigned i=0; i<vertices.size();i++){
+	//	templog << vertices[i].temp << ",";
+	//}
+	//templog <<"," << std::endl;
+
 	//templog;
 	//節点温度を画面に表示する⇒3次元テクスチャを使ったテクスチャ切り替えに値を渡す⇒関数化
 
