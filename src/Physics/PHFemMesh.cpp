@@ -156,7 +156,6 @@ void PHFemMesh::SetDesc(const void* p) {
 	std::sort(surfaceVertices.begin(), surfaceVertices.end());
 	std::vector<int>::iterator newEnd = std::unique(surfaceVertices.begin(), surfaceVertices.end());
 	surfaceVertices.erase(newEnd, surfaceVertices.end());
-
 	//	辺の列挙
 	//	まず表面の辺
 	edges.clear();
@@ -233,6 +232,144 @@ void PHFemMesh::SetDesc(const void* p) {
 		for(unsigned j=0;j<3;j++){
 			vertices[faces[i].vertices[j]].faces.push_back(i);
 		}
+	}
+	//	faceの法線を計算
+	//.	表面の頂点に、法線ベクトルを追加
+	//.	について再帰的に実行
+	Vec3d extp;		//	外向き法線
+	Vec3d tempV;	//	外向き判定比較頂点(該当face面上にない頂点序数)
+	//Spr::ObjectIf* sprobject;
+	//DSTR << this->GetMe(sprobject)->GetName() << std::endl;
+	DSTR << "tets.size(): " << tets.size() << std::endl;
+	for(unsigned tid=0; tid < tets.size(); tid++){
+		//	どの頂点IDでfaceが構成されているのか
+		unsigned idsum = 0;
+		for(unsigned i=0;i<4;i++){
+			idsum += tets[tid].vertices[i];
+		}
+		for(unsigned fid = 0; fid < 4; fid++){
+			//DSTR << "fid :" << fid <<std::endl;
+			extp = (vertices[faces[tets[tid].faces[fid]].vertices[1]].pos - vertices[faces[tets[tid].faces[fid]].vertices[0]].pos)
+				% (vertices[faces[tets[tid].faces[fid]].vertices[2]].pos - vertices[faces[tets[tid].faces[fid]].vertices[0]].pos);
+			extp = extp / extp.norm();
+			Vec3d chkN[2] = {vertices[faces[tets[tid].faces[fid]].vertices[1]].pos - vertices[faces[tets[tid].faces[fid]].vertices[2]].pos
+				, vertices[faces[tets[tid].faces[fid]].vertices[2]].pos - vertices[faces[tets[tid].faces[fid]].vertices[1]].pos};
+			if(extp * chkN[0]/(extp.norm() * chkN[0].norm()) > 1e-15 ){		// 1e-17くらい0より大きく、完全な法線にはなっていないため
+				DSTR << "this normal is invalid. make sure to check it out. " << "tid: "<< tid << ", fid: " << fid << " ; "<< this->GetName() << std::endl;
+				DSTR << "the invalid value is... " << extp * chkN[0]/(extp.norm() * chkN[0].norm()) <<", " << extp * chkN[1]/(extp.norm() * chkN[1].norm()) << std::endl;
+				assert(0);
+			}
+			if(extp == 0){
+				DSTR << "ERROR: extp value == 0" << "tid = " << tid << ", fid = " << fid << std::endl;
+			}
+			//.	法線の始点を計算
+			
+			//PTM::TMatrixRow<3,3,double> A;		// 係数行列
+			//Vec3d NRML;	// 法線の始点位置座標
+			//PTM::TMatrixCol<3,1,double> B;		// 右辺
+			//A.clear();
+			//B.clear();
+			//NRML.clear();
+			//for(unsigned i=0; i < 3; i++){
+			//	for(unsigned j=0; j<3; j++){
+			//		//	A行列の要素を代入
+			//		Vec3d dpos = vertices[faces[tets[tid].faces[fid]].vertices[(i+1)%3]].pos - vertices[faces[tets[tid].faces[fid]].vertices[i]].pos;
+			//		A[i][j] =  dpos[j];
+			//		//	B行列の要素を生成・代入
+			//	
+			//	}
+			//	for(unsigned j=0;j<3;j++){
+			//		B[j][0] += A[i][j] * faces[tets[tid].faces[fid]].normal[j];
+			//		faces[tets[tid].faces[fid]].normal_origin = A.inv() * B;
+			//		DSTR << "faces[tets[tid].faces[fid]].normal_origin: " << faces[tets[tid].faces[fid]].normal_origin <<std::endl;
+			//	}		
+			//}
+			
+			//DSTR << "NRML: " << NRML << std::endl;
+
+	
+			//unsigned expVtx =0;		//	face面上にない、0~3番目の四面体頂点
+			unsigned idsumt =idsum;
+			for(unsigned j=0;j<3;j++){
+				idsumt -= faces[tets[tid].faces[fid]].vertices[j];
+				//DSTR << "faces[" << fid << "].vertices["<<j <<"]: "<< faces[tets[tid].faces[fid]].vertices[j];
+			}
+			//DSTR << " idsumt: " << idsumt <<  std::endl;
+			//if(fid==0){		 expVtx = 3; }	//	0,1,2
+			//else if(fid== 1){expVtx = 1;}		//	0,2,3
+			//else if(fid== 2){expVtx = 2;} 	//	0,3,1
+			//else if(fid== 3){expVtx = 0;} 	//	3,2,1
+			//. face重心からface外頂点へのベクトルtempV計算
+			Vec3d jushin = vertices[faces[tets[tid].faces[fid]].vertices[0]].pos + vertices[faces[tets[tid].faces[fid]].vertices[1]].pos
+				+ vertices[faces[tets[tid].faces[fid]].vertices[2]].pos;
+			jushin *= 1.0 / 3.0;
+			tempV = vertices[idsumt].pos - jushin;
+			//DSTR << "tempV:" << tempV <<std::endl;
+			if(tempV==Vec3d(0.0,0.0,0.0)){
+				DSTR <<"ERROR:	for normal calculating, some vertices judging is invalids"<< std::endl;
+			}
+	//		DSTR << "tid: " << tid << ", fid: " << fid ; 
+	//		DSTR << " cosθ: " << (tempV * extp / (tempV.norm() * extp.norm())) << std::endl;
+			if((tempV * extp / (tempV.norm() * extp.norm()) ) < 0.0){
+				//extpとtempVが±９０度以上離れている：extpが外向き法線
+				faces[tets[tid].faces[fid]].normal = extp / 10.0;		//	長さを１0cmに
+				//DSTR << "extp" << extp <<std::endl;
+			}else{
+				//extpとtempVが９０度以内：extpの向きを180度変えて、faces[fid].normalに代入
+				faces[tets[tid].faces[fid]].normal = - extp / 10.0;		// 逆ベクトル
+			}
+			int debughogeshi=0;
+			//DSTR << std::endl;		//tid
+		}
+		//Debug
+		//全faceに、外向き法線ベクトルを表示させてみて、様子を見れば、確認できるかな？又は、シンプルなメッシュで表示してみるか
+	}
+	//debug
+	//DSTR << "faces.normal checking" << std::endl;
+	//DSTR << "tets.size():" << tets.size() << std::endl;
+	//for(unsigned tid=0;tid<tets.size();tid++){
+	//	for(unsigned fid=0;fid<4;fid++){
+	//		DSTR << "faces[tets[" << tid << "].faces[" << fid << "]].normal:" << faces[tets[tid].faces[fid]].normal << std::endl;
+	//	}
+	//}
+
+	//	頂点の法線を計算
+	//	頂点の属するface面より平均？正規化した頂点法線を求める
+	std::vector<Vec3d> faceNormal;
+	faceNormal.clear();
+	for(unsigned vid = 0; vid < vertices.size(); vid++ ){
+		//unsigned fsize = vertices[vid].faces.size();
+		for(unsigned fid = 0; fid < vertices[vid].faces.size(); fid++ ){
+			//.	属するface法線がほぼ同じ方向を向いてるものが見つかった場合は、1つだけ加算して平均をとるように変更する
+/*			if(fid == 0) faceNormal.push_back( faces[vertices[vid].faces[fid]].normal);		//	1つ目を入れておく
+			//.	verticesが属する全faceIDについてその法線がすでにvectorに入っていないか、チェック
+			for(unsigned i=0; i < faceNormal.size(); i++){										//  2つ目以降は、格納済み法線ベクトルと比較して入れる
+			//	DSTR << "内積: " << (faceNormal[i] * faces[vertices[vid].faces[fid]].normal ) 
+			//		/ ( faceNormal[i].norm() * faces[vertices[vid].faces[fid]].normal.norm() ) << std::endl;  
+				if( ( (faceNormal[i] * faces[vertices[vid].faces[fid]].normal )
+					/ ( faceNormal[i].norm() * faces[vertices[vid].faces[fid]].normal.norm() ) )  < 0.99  ){		// >0.9 0.99		//:計算誤差でほぼ同じ向きだが別値法線を排除するため
+
+					faceNormal.push_back( faces[vertices[vid].faces[fid]].normal );			// 落ちる原因は、このコードであることが分かった
+				}
+			}
+*/
+			//外側の法線だけ加算
+			if(vertices[vid].faces[fid] < nSurfaceFace){
+				vertices[vid].normal += faces[vertices[vid].faces[fid]].normal;		// このコードに代わって、上記vectorコードと以下の加算コードに置き換え
+			}
+				/*			if(faces[vertices[vid].faces[fid]].normal == 0){
+				DSTR << "facenormal value invalid : vertices[" << vid << "].faces[" << fid << "]" << std::endl;
+				assert(0);
+			}
+*/
+		}
+/*
+		for(unsigned j = 0; j < faceNormal.size(); j++){
+			vertices[vid].normal += faceNormal[j];									//	置き換えコード
+			//DSTR << "faceNormal[" << j << "]: " << faceNormal[j] << std::endl; 
+		}
+*/
+		vertices[vid].normal = vertices[vid].normal / vertices[vid].normal.norm();		//	単位ベクトル化
 	}
 }
 

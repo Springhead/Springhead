@@ -51,10 +51,12 @@ public:
 	//	phMeshからGRMeshを生成する。マテリアルなどはgrMeshから拾う。
 	void CreateGRFromPH();
 
-	//	メッシュのface辺を描画
+	//	メッシュのface辺を描画	//辺以外も描画可能
 	void DrawVtxLine(float length, float x, float y, float z);
-	void DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1);
-	void DrawEdge(Vec3d vtx0, Vec3d vtx1);
+	void DrawEdge(float x0, float y0, float z0, float x1, float y1, float z1);		// 2位置座標をつなぐ線を引く
+	void DrawEdge(Vec3d vtx0, Vec3d vtx1);											// 2位置座標をつなぐ線を引く
+	void DrawEdgeCW(Vec3d vtx0, Vec3d vtx1,float Red,float Green,float Blue);		// 2位置座標をつなぐ線を引く,Color,World coordinate
+	void DrawNormal(Vec3d vtx0, Vec3d vtx1);		// vtx0:始点位置ベクトル vtx1:法線ベクトル
 	//void DrawEdge(unsigned id0, unsigned id1);
 	//	メッシュのface辺を描画
 	void DrawFaceEdge();

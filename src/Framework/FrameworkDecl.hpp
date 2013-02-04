@@ -1,14 +1,23 @@
 #define SPR_DECLMEMBEROF_FWFemMeshDesc \
 protected:\
+	unsigned int	kogePics;	\
+	unsigned int	thermoPics;	\
+	unsigned int	waterPics;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWObject::SetDesc((FWObjectDesc*)(FWFemMeshDesc*)ptr);	\
+		kogePics = ((FWFemMeshDesc*)ptr)->kogePics;	\
+		thermoPics = ((FWFemMeshDesc*)ptr)->thermoPics;	\
+		waterPics = ((FWFemMeshDesc*)ptr)->waterPics;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		FWObject::GetDesc((FWObjectDesc*)(FWFemMeshDesc*)ptr);	\
+		((FWFemMeshDesc*)ptr)->kogePics = kogePics;	\
+		((FWFemMeshDesc*)ptr)->thermoPics = thermoPics;	\
+		((FWFemMeshDesc*)ptr)->waterPics = waterPics;	\
 		return true;	\
 	}\
 
