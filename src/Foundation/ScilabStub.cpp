@@ -7,7 +7,7 @@ static Spr::UTDllLoader dllLoader;
 #define SWIGDLL_GETPROC(x)	dllLoader.GetProc(x)
 
 #include "ScilabStubImpl.cxx"
-int (*StartScilabOrg)(char *SCIpath,char *ScilabStartup,int *Stacksize);
+int (_cdecl *StartScilabOrg)(char *SCIpath,char *ScilabStartup,int *Stacksize);
 
 #define SC_IMP_STACKVAR(x) SC##x* p##x
 SC_IMP_STACKVAR(stack);
