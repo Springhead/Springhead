@@ -24,8 +24,8 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	//integration_mode = PHFemVibrationDesc::INT_IMPLICIT_EULER;
 	//integration_mode = PHFemVibrationDesc::INT_SIMPLECTIC;
 	integration_mode = PHFemVibrationDesc::INT_NEWMARK_BETA;
-	SetAlpha(4.76869);
-	SetBeta(4.57875e-005);
+	SetAlpha(28.6093);
+	SetBeta(1.75117e-006);
 	IsScilabStarted = false; 
 	bRecomp = true;
 }
@@ -195,10 +195,17 @@ void PHFemVibration::Init(){
 
 	// テスト（境界条件の付加）
 	vdt = 0.001;
-	std::vector< int > veIds = FindVertices(2, Vec3d(0.0, -1.0, 0.0));
-	for(int i = 0; i < (int)veIds.size(); i++){
-		DSTR << veIds[i] << std::endl;
-	}
+	std::vector< int > veIds;
+	//veIds = FindVertices(2, Vec3d(0.0, -1.0, 0.0));
+	//for(int i = 0; i < (int)veIds.size(); i++){
+	//	DSTR << veIds[i] << std::endl;
+	//}
+	//veIds.push_back(1);
+	//veIds.push_back(3);
+	veIds.push_back(2);
+	veIds.push_back(4);
+	veIds.push_back(6);
+	veIds.push_back(7);
 	Vec3i con = Vec3i(1,1,1);
 	for(int i = 0; i < (int)veIds.size(); i++){
 		AddBoundaryCondition(veIds[i], con);
@@ -396,7 +403,8 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		// 固有値・固有ベクトルを求める
 		evalue.resize(nmode, 0.0);
 		evector.resize(_M.height(), nmode, 0.0);
-#if 1
+		qtimer.StartPoint("CompEigen");
+#if 0
 		SubSpace(_M, _K, nmode, 1e-5, evalue, evector);
 		DSTR << "eigenvalue springhead" << std::endl;
 		DSTR << evalue << std::endl;
@@ -416,6 +424,8 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		//DSTR << evector << std::endl;
 		//MatrixFileOut(evector, "evectorScilab.csv");
 #endif
+		qtimer.EndPoint("CompEigen");
+
 		// MK系の固有振動数
 		w.resize(evalue.size(), 0.0);
 		for(int i = 0; i < (int)w.size(); i++){
@@ -441,8 +451,8 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		tw[0] = wrad[0];
 		tw[1] = wrad[wrad.size() - 1];
 		double ratio[2];
-		ratio[0] = 0.05;
-		ratio[1] = 0.05;
+		ratio[0] = 0.01;
+		ratio[1] = 0.01;
 		double a, b;
 		CompRayleighDampingCoeffcient(tw, ratio, a, b);
 		DSTR << "reiley coefficient" << std::endl;
@@ -488,6 +498,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 
 void PHFemVibration::SubSpace(const VMatrixRe& _M, const VMatrixRe& _K, 
 	const int nmode, const double epsilon, VVectord& evalue, VMatrixRe& evector){
+	DSTR << "Start Computing eigenvalues and eigenvectors by SubSpace method" << std::endl;
 	const int size = _M.height();
 	if(_K.det() <= 0){
 		DSTR << "Stiffness Matrix is not regular matrix." << std::endl;
@@ -527,6 +538,7 @@ void PHFemVibration::SubSpace(const VMatrixRe& _M, const VMatrixRe& _K,
 	_AInv.resize(size, size, 0.0);
 	_AInv = _Mc.trans() * (_Kc.inv()).trans() * _Kc.inv() * _Mc;
 
+	qtimer.StartPoint("iteration");
 	/// 反復計算
 	for(int k = 0; k < nmode; k++){
 		VVectord z;
@@ -534,21 +546,23 @@ void PHFemVibration::SubSpace(const VMatrixRe& _M, const VMatrixRe& _K,
 		int cnt = 0;
 		while(1){
 			// zの計算
-			z = _AInv * y.col(k);	 
-			// グラム・シュミットの直交化
-			VVectord c;
-			c.resize(size, 0.0);
+			z = _AInv * y.col(k);
+			// 修正グラム・シュミット法でベクトルを直交化
 			for(int i = 0; i < k; i++){
 				double a = y.col(i) * z;
-				c += a * y.col(i);
+				z -= a * y.col(i);
 			}
-			y.col(k) = z - c;
+			y.col(k) = z;
 			y.col(k).unitize();
 
 			double error = 0.0;
 			error = sqrt((ylast.col(k) - y.col(k)) * (ylast.col(k) - y.col(k)));
 			ylast.col(k) = y.col(k);
-			if(abs(error) < epsilon) break;
+			if(abs(error) < epsilon){
+				//DSTR << cnt << std::endl;
+				//DSTR << abs(error) << std::endl;
+				break;
+			}
 			cnt++;
 			if(cnt > 1e5){
 				DSTR << "Can not converge in subspace" << std::endl;
@@ -558,6 +572,7 @@ void PHFemVibration::SubSpace(const VMatrixRe& _M, const VMatrixRe& _K,
 		evector.col(k) = _Mc.trans().inv() * y.col(k);		// 固有ベクトル
 		evalue[k] = 1.0 / (y.col(k) * _AInv * y.col(k));	// 固有値
 	}
+	qtimer.EndPoint("iteration");
 }
 
 //* 各種設定関数
@@ -970,6 +985,7 @@ struct ScilabEigenValue{
 };
 
 void PHFemVibration::CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, VVectord& e, VMatrixRe& v){
+	DSTR << "Start computing eigenvalues and eigenvalues by ScilabEigneValue" << std::endl;
 	if(!IsScilabStarted){
 		DSTR << "Scilab has not started" << std::endl;
 		return;
@@ -979,6 +995,7 @@ void PHFemVibration::CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, VVectord
 	ScilabSetMatrix("K", _K);
 
 	ScilabJob("[P D] = spec(inv(M) * K);");
+	//ScilabJob("disp(D);");
 	VMatrixRe D;	// 固有値(対角）
 	VMatrixRe P;	// 固有ベクトル
 	ScilabGetMatrix(D, "D");

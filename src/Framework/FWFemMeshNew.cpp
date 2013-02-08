@@ -28,8 +28,8 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	// p: piecewise linear comlex, q:2.1が正四面体の歪み(1以上～？以下）、a:粗さ
 	//meshRoughness = "pq2.1a0.002";
 	//meshRoughness = "pq2.1a0.01";
-	meshRoughness = "pq2.1a0.09";
-	//meshRoughness = "pq2.1a1.0";	
+	//meshRoughness = "pq2.1a0.09";
+	meshRoughness = "pq2.1a20.0";	
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }
@@ -354,8 +354,10 @@ void FWFemMeshNew::CreateGRFromPH(){
 			}
 		}
 	}
-#if 0
 	// 頂点カラーの設定
+	//*デバックモードだとmesh形状によって落ちる。どこかでメモリを破壊してる可能性あり
+#if _DEBUG
+#else
 	gmd.colors.resize(grFemMesh->colors.size() ? vertexIdMap.size() : 0);
 	for(unsigned pv=0; pv<gmd.colors.size(); ++pv){
 		gmd.colors[pv] = grFemMesh->colors[vertexIdMap[pv]];

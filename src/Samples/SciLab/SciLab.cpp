@@ -10,6 +10,9 @@
 動作必要要件：LibScilab.dll(Scilabインストール時にscilab\bin内にあるはず）
 scilab-5.3.3で動作確認、別バージョンを利用したい場合はScilabStub.cpp:StartScilab()内に
 pathを記述する必要がある。
+また、Releaseモードで実行する場合にはdllの呼び出し規約を_cdeclにする必要がある。
+その変更はScilabStub.cpp, ScilabStub.hpp, ScilabStubImpl.cxxで宣言されている関数ポインタを_cdeclで呼び出しにする。
+これらのファイルはswigで自動生成されるので、参考ファイルとしてScilabStub.hpp.org, ScilabStubImpl.cxx.orgを参照すること。
 */
 #include <SciLab/SprSciLab.h>
 #include <Base/Affine.h>
