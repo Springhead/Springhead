@@ -13,6 +13,7 @@ namespace Spr{;
 
 UTQPTimerFileOut qtimer;	// 計算時間計測用
 #define EDGE_EPS 1e-7		// 内積をとったときの閾値（*面のエッジにporthoがきたときに誤差で-になることがあるため）
+#define USE_SUBSPACE 0
 
 //* 初期化と行列の作成
 /////////////////////////////////////////////////////////////////////////////////////////
@@ -24,20 +25,18 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	//integration_mode = PHFemVibrationDesc::INT_IMPLICIT_EULER;
 	//integration_mode = PHFemVibrationDesc::INT_SIMPLECTIC;
 	integration_mode = PHFemVibrationDesc::INT_NEWMARK_BETA;
-	SetAlpha(28.6093);
-	SetBeta(1.75117e-006);
+	SetAlpha(1.65524);
+	SetBeta(9.56456e-006);
 	IsScilabStarted = false; 
 	bRecomp = true;
 }
 
 void PHFemVibration::Init(){
-#if _DEBUG
 	// Scilabの起動
 	IsScilabStarted = ScilabStart();
 	if(!IsScilabStarted){
 		DSTR << "Scilab can not start." << std::endl;
 	}
-#endif
 
 	DSTR << "Initializing PHFemVibration" << std::endl;
 	/// 刻み時間の設定
@@ -271,7 +270,7 @@ void PHFemVibration::Step(){
 			}
 			break;
 		case PHFemVibrationDesc::ANALYSIS_MODAL:
-			ModalAnalysis(matMp, matKp, matCp, flp, vdt, bRecomp, xdlp, vlp, alp, matMp.height());
+			ModalAnalysis(matMp, matKp, matCp, flp, vdt, bRecomp, xdlp, vlp, alp, 55);//matMp.height());
 			break;
 		default:
 			break;
@@ -404,20 +403,19 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		evalue.resize(nmode, 0.0);
 		evector.resize(_M.height(), nmode, 0.0);
 		qtimer.StartPoint("CompEigen");
-#if 0
+#if USE_SUBSPACE
 		SubSpace(_M, _K, nmode, 1e-5, evalue, evector);
 		DSTR << "eigenvalue springhead" << std::endl;
 		DSTR << evalue << std::endl;
 		//DSTR << "eigenvector springhead" << std::endl;
 		//DSTR << evector << std::endl;
-		//MatrixFileOut(evector, "evectorSpringhead.csv");
+		MatrixFileOut(evector, "evectorSpringhead.csv");
 #else
 		VMatrixRe Ms, Ks;
 		Ms.assign(_M);
 		Ks.assign(_K);
-		CompScilabEigenValue(Ms, Ks, evalue, evector);
-		evalue.resize(nmode);
-		evector.resize(Ms.height(), nmode);
+		CompScilabEigenValue(Ms, Ks, nmode, evalue, evector);
+
 		DSTR << "eigenvalue scilab" << std::endl;
 		DSTR << evalue << std::endl;
 		//DSTR << "eigenvector scilab" << std::endl;
@@ -455,8 +453,13 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		ratio[1] = 0.01;
 		double a, b;
 		CompRayleighDampingCoeffcient(tw, ratio, a, b);
-		DSTR << "reiley coefficient" << std::endl;
+		DSTR << "comp reiley coefficient" << std::endl;
 		DSTR << a << " " << b << std::endl;
+		double dampingratio[2];
+		dampingratio[0] = 0.5 * (GetAlpha() / tw[0] + tw[0] * GetBeta());
+		dampingratio[1] = 0.5 * (GetAlpha() / tw[1] + tw[1] * GetBeta());
+		DSTR << "damiping ratio" << std::endl;
+		DSTR << dampingratio[0] << " " << dampingratio[1] << std::endl;
 
 		// モード質量、剛性, 減衰行列の計算
 		Mm.assign(evector.trans() * _M * evector);
@@ -984,7 +987,7 @@ struct ScilabEigenValue{
 	}
 };
 
-void PHFemVibration::CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, VVectord& e, VMatrixRe& v){
+void PHFemVibration::CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, int nmode, VVectord& e, VMatrixRe& v){
 	DSTR << "Start computing eigenvalues and eigenvalues by ScilabEigneValue" << std::endl;
 	if(!IsScilabStarted){
 		DSTR << "Scilab has not started" << std::endl;
@@ -1022,6 +1025,14 @@ void PHFemVibration::CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, VVectord
 	for(int i = 0; i < (int)V.height(); i++){
 		v.col(i) *= sqrt(V.item(i, i));
 	}
+
+	// 必要なモード数分にリサイズ
+	VVectord etmp;
+	etmp.assign(e.v_range(0, nmode));
+	e.assign(etmp);
+	VMatrixRd vtmp;
+	vtmp.assign(v.vsub_matrix(0, 0, _M.height(), nmode));
+	v.assign(vtmp);
 }
 
 void PHFemVibration::MatrixFileOut(VMatrixRe mat, std::string filename){
