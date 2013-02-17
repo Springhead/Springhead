@@ -181,7 +181,7 @@ public:
 	}
 	/// 固有値固有ベクトル計算
 	void ScilabEigenValueAnalysis(VMatrixRe& _M, VMatrixRe& _K);
-	void CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, VVectord& e, VMatrixRe& v);
+	void CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, int nmode, VVectord& e, VMatrixRe& v);
 
 	/// 行列のファイル出力
 	void MatrixFileOut(VMatrixRe mat, std::string filename);
