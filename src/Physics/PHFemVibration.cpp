@@ -8,6 +8,10 @@
 #include <Physics/PHFemVibration.h>
 #include <SciLab/SprSciLab.h>
 #include <Foundation/UTQPTimer.h>
+//#undef _OPENMP
+#ifdef _OPENMP
+	#include <omp.h>
+#endif
 
 namespace Spr{;
 
@@ -25,8 +29,8 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	//integration_mode = PHFemVibrationDesc::INT_IMPLICIT_EULER;
 	//integration_mode = PHFemVibrationDesc::INT_SIMPLECTIC;
 	integration_mode = PHFemVibrationDesc::INT_NEWMARK_BETA;
-	SetAlpha(1.65524);
-	SetBeta(9.56456e-006);
+	SetAlpha(24.8286);
+	SetBeta(0.000143468);
 	IsScilabStarted = false; 
 	bRecomp = true;
 }
@@ -43,6 +47,7 @@ void PHFemVibration::Init(){
 	PHSceneIf* scene = GetPHFemMesh()->GetScene()->Cast();
 	if(scene) vdt = scene->GetTimeStep();
 	else vdt = 0.001;
+	vdt = 0.001;
 
 	/// 全体剛性行列、全体質量行列、全体減衰行列の計算
 	/// これらはすべてローカル系
@@ -193,7 +198,6 @@ void PHFemVibration::Init(){
 	DSTR << "Initializing Completed." << std::endl;
 
 	// テスト（境界条件の付加）
-	vdt = 0.001;
 	std::vector< int > veIds;
 	//veIds = FindVertices(2, Vec3d(0.0, -1.0, 0.0));
 	//for(int i = 0; i < (int)veIds.size(); i++){
@@ -255,8 +259,8 @@ void PHFemVibration::Step(){
 	VVectord flp;
 	flp.assign(fl);
 	ReduceVectorSize(xdlp, vlp, alp, flp, matBoundaryL);
+	qtimer.Interval("step", "reduce");
 
-	qtimer.Interval("step", "getvalue");
 	switch(analysis_mode){
 		case PHFemVibrationDesc::ANALYSIS_DIRECT:
 			{
@@ -449,8 +453,8 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		tw[0] = wrad[0];
 		tw[1] = wrad[wrad.size() - 1];
 		double ratio[2];
-		ratio[0] = 0.01;
-		ratio[1] = 0.01;
+		ratio[0] = 0.15;
+		ratio[1] = 0.15;
 		double a, b;
 		CompRayleighDampingCoeffcient(tw, ratio, a, b);
 		DSTR << "comp reiley coefficient" << std::endl;
@@ -462,16 +466,36 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		DSTR << dampingratio[0] << " " << dampingratio[1] << std::endl;
 
 		// モード質量、剛性, 減衰行列の計算
-		Mm.assign(evector.trans() * _M * evector);
-		Km.assign(evector.trans() * _K * evector);
-		Cm.assign(evector.trans() * _C * evector);
-		SmInv.resize(Mm.height(), Mm.width(), 0.0);
+		#pragma omp parallel
+		#pragma omp sections
+		{
+			#pragma omp section
+			{
+				Mm.assign(evector.trans() * _M * evector);
+			}
+			#pragma omp section
+			{
+				Km.assign(evector.trans() * _K * evector);
+			}
+			#pragma omp section
+			{	
+				Cm.assign(evector.trans() * _C * evector);
+			}
+			#pragma omp section
+			{	
+				SmInv.resize(nmode, nmode, 0.0);
+			}
+		}
 
 #ifdef USE_MATRIX
 		InitNumericalIntegration(Mm, Km, Cm, _dt, SmInv);
 #else
-		for(int i = 0; i < nmode; i++){
-			InitNumericalIntegration(Mm[i][i], Km[i][i], Cm[i][i], _dt, SmInv[i][i]);
+		//#pragma omp parallel
+		{
+			//#pragma omp for
+			for(int i = 0; i < nmode; i++){
+				InitNumericalIntegration(Mm[i][i], Km[i][i], Cm[i][i], _dt, SmInv[i][i]);
+			}
 		}
 #endif
 	}
@@ -723,15 +747,26 @@ void PHFemVibration::ReduceVectorSize(VVectord& r, const VVector< int > bc){
 }
 
 void PHFemVibration::ReduceVectorSize(VVectord& _xd, VVectord& _v, VVectord& _a, VVectord& _f, const VMatrixRe& matL){
-	VVectord tmp;
-	tmp.assign(matL * _xd);
-	_xd.assign(tmp);
-	tmp.assign(matL * _v);
-	_v.assign(tmp);	
-	tmp.assign(matL * _a);
-	_a.assign(tmp);	
-	tmp.assign(matL * _f);
-	_f.assign(tmp);
+	#pragma omp parallel
+	#pragma omp sections
+	{
+		#pragma omp section
+		{
+			_xd.assign(matL * _xd);
+		}
+		#pragma omp section
+		{
+			_v.assign(matL * _v);
+		}
+		#pragma omp section
+		{
+			_a.assign(matL * _a);
+		}
+		#pragma omp section
+		{
+			_f.assign(matL * _f);
+		}
+	}
 }
 
 void PHFemVibration::ReduceVectorSize(VVectord& _xd, VVectord& _v, VVectord& _a, VVectord& _f,const VVector< int > bc){
@@ -1025,7 +1060,8 @@ void PHFemVibration::CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, int nmod
 	for(int i = 0; i < (int)V.height(); i++){
 		v.col(i) *= sqrt(V.item(i, i));
 	}
-
+	DSTR << "All eigen value size" << std::endl;
+	DSTR << e.size() << std::endl;
 	// 必要なモード数分にリサイズ
 	VVectord etmp;
 	etmp.assign(e.v_range(0, nmode));
