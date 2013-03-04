@@ -30,6 +30,7 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	//meshRoughness = "pq2.1a0.01";
 	//meshRoughness = "pq2.1a0.09";
 	meshRoughness = "pq2.1a0.001";
+	meshRoughness = "pq2.1a0.0001";
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }
@@ -399,8 +400,8 @@ void FWFemMeshNew::SyncVibrationInfo(){
 	// 変位で色変化
 	if(grFemMesh->NColors() < 1) return;
 	Vec4f* vc = grFemMesh->GetColors();
-	float base = 1e-9;
-	float offset = 1e-8;
+	double base = 1e-9;
+	double offset = 1e-8;
 	for(int i = 0; i < (int)vertexIdMap.size(); i++){
 		int pId = vertexIdMap[i];
 		float value = phFemMesh->GetVertexDisplacementL(pId).norm();
