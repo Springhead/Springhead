@@ -393,8 +393,8 @@ public:
 			UTLoadedData* meshDataNode = meshes[i][0];
 			//	CDConvexMeshが生成済みかどうかチェック
 			CDConvexMesh* cm = NULL;
-			for(unsigned i=0; i<meshDataNode->loadedObjects.size(); ++i){
-				cm = meshDataNode->loadedObjects[i]->Cast();
+			for(unsigned j=0; j<meshDataNode->loadedObjects.size(); ++j){
+				cm = meshDataNode->loadedObjects[j]->Cast();
 				if (cm) break;
 			}
 			if (!cm){

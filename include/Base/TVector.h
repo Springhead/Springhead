@@ -35,7 +35,9 @@
 #endif
 
 #ifdef _MSC_VER
- #define for if(0); else for
+	#if _MSC_VER <= 1310
+		#define for if(0); else for	// openMPで#pragma omp parallel forに影響を与える 2013.3.1susa
+	#endif
  #pragma warning (disable: 4786)
  #pragma warning (disable: 4200)
 #endif

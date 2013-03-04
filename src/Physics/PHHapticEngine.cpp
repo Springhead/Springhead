@@ -549,14 +549,14 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 		Vec3f soMin = edges[i].min;
 		Vec3f soMax = edges[i].max;
 		int nAxes = 0;		// いくつの軸で交差しているかどうか
-		for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
 			int inAxis = 0;	// その軸で交差しているかどうか
 			// pointerのBBox内にsolidのBBoxがあったら交差
-			if(pMin[i] <= soMin[i] && soMin[i] <= pMax[i]) inAxis++; 
-			if(pMin[i] <= soMax[i] && soMax[i] <= pMax[i]) inAxis++; 
+			if(pMin[j] <= soMin[j] && soMin[j] <= pMax[j]) inAxis++; 
+			if(pMin[j] <= soMax[j] && soMax[j] <= pMax[j]) inAxis++; 
 			// ソリッドのBox内にクエリのBBoxがあったら交差
-			if(soMin[i] <= pMin[i] && pMin[i] <= soMax[i]) inAxis++;
-			if(soMin[i] <= pMax[i] && pMax[i] <= soMax[i]) inAxis++;
+			if(soMin[j] <= pMin[j] && pMin[j] <= soMax[j]) inAxis++;
+			if(soMin[j] <= pMax[j] && pMax[j] <= soMax[j]) inAxis++;
 			// inが1以上ならその軸で交差
 			if(inAxis > 0) nAxes++;
 #if 0
