@@ -11,7 +11,7 @@
 #include <Collision/CDSphere.h>
 
 namespace Spr {;
-const double epsilon = 1e-8;
+const double epsilon = 1e-16;	//1e-8
 const double epsilon2 = epsilon*epsilon;
 
 bool bUseContactVolume=true;
@@ -194,8 +194,17 @@ void CDShapePair::CalcNormal(){
 		//	凸形状の中心を離す向きを仮法線にする．
 		normal = shapePoseW[1]*shape[1]->CalcCenterOfMass() - shapePoseW[0]*shape[0]->CalcCenterOfMass();
 		double norm = normal.norm();
-		if (norm>epsilon) normal /= norm;
-		else normal = Vec3d(0,1,0);
+		if (norm>epsilon) normal /= norm;		//else{normal = Vec3d(0,1,0)}	//	強制的に正にするのは辞めて欲しい	//だったので、修正
+		else if( normal > 0){
+			normal = Vec3d(0,1,0);			
+		}
+		else if( normal < 0){
+			normal = Vec3d(0,-1,0);
+		}
+		else if( normal == 0){
+			DSTR <<"normal value is 0 " << std::endl;
+			normal = Vec3d(0,1,0);		//いいのか？
+		}
 	}
 	//	前回の法線の向きに動かして，最近傍点を求める
 	Vec3d n = normal;
@@ -208,7 +217,7 @@ void CDShapePair::CalcNormal(){
 	}
 	depth *= -1;
 	center = shapePoseW[0] * closestPoint[0];
-	center -= 0.5f*depth*normal;
+	center -= 0.5f*depth*normal;				//	必ず、center *= -1なのか？なぜ？ 
 }
 
 
