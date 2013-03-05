@@ -194,16 +194,18 @@ void CDShapePair::CalcNormal(){
 		//	凸形状の中心を離す向きを仮法線にする．
 		normal = shapePoseW[1]*shape[1]->CalcCenterOfMass() - shapePoseW[0]*shape[0]->CalcCenterOfMass();
 		double norm = normal.norm();
-		if (norm>epsilon) normal /= norm;		//else{normal = Vec3d(0,1,0)}	//	強制的に正にするのは辞めて欲しい	//だったので、修正
-		else if( normal > 0){
-			normal = Vec3d(0,1,0);			
-		}
-		else if( normal < 0){
-			normal = Vec3d(0,-1,0);
-		}
-		else if( normal == 0){
-			DSTR <<"normal value is 0 " << std::endl;
-			normal = Vec3d(0,1,0);		//いいのか？
+		if (norm > epsilon){
+			normal /= norm;
+		}else if (norm > 1e-200){
+			normal /= norm;
+			normal.unitize();
+		}else{
+			for(i=0; i<3; ++i){
+				normal[i] = normal[i] == 0 ? 0 : (normal[i]>0 ? 1 : -1);
+			}
+			norm = normal.norm();
+			if (norm == 0) return Vec3d(0,1,0);
+			else normal /= norm;
 		}
 	}
 	//	前回の法線の向きに動かして，最近傍点を求める
