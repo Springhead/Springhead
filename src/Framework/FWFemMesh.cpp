@@ -199,10 +199,10 @@ void FWFemMesh::Sync(){
 	double thstart = texstart + kogetex * dtex + 1.0 * dtex ;	//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
 	
 	if(fwfood == "fwNegi"){
-	//	 //vertexの法線？表示
-	//	for(unsigned i =0; i < phMesh->vertices.size();i++){
-	//		DrawNormal(phMesh->vertices[i].pos, phMesh->vertices[i].normal);
-	//	}
+		 //vertexの法線？表示
+		//for(unsigned i =0; i < phMesh->vertices.size();i++){
+		//	DrawNormal(phMesh->vertices[i].pos, phMesh->vertices[i].normal);
+		//}
 
 		for(unsigned i=0; i < phMesh->faces.size(); i++){
 			//.	faceエッジを表示	
@@ -210,16 +210,16 @@ void FWFemMesh::Sync(){
 			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
 			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
 		}
-	//	for(unsigned i = 0; i < phMesh->faces.size(); i++){
-	//		//.	三角形の重心からの法線を表示
-	//		Vec3d jushin = Vec3d(0.0,0.0,0.0);
-	//		for(unsigned j=0; j< 3;j++){
-	//			jushin += phMesh->vertices[phMesh->faces[i].vertices[j]].pos;
-	//		}
-	//		jushin *= 1.0/3.0;
-	//		DrawNormal(jushin,phMesh->faces[i].normal);
-	//		
-	//	}
+		//for(unsigned i = 0; i < phMesh->faces.size(); i++){
+		//	//.	三角形の重心からの法線を表示
+		//	Vec3d jushin = Vec3d(0.0,0.0,0.0);
+		//	for(unsigned j=0; j< 3;j++){
+		//		jushin += phMesh->vertices[phMesh->faces[i].vertices[j]].pos;
+		//	}
+		//	jushin *= 1.0/3.0;
+		//	DrawNormal(jushin,phMesh->faces[i].normal);
+		//	
+		//}
 	}
 
 	if(fwfood == "fwPan"){
@@ -232,9 +232,19 @@ void FWFemMesh::Sync(){
 			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
 			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
 		}
-
 	}
 	
+	if(fwfood == "fwNsteak"){
+		//for(unsigned i =0; i < phMesh->vertices.size();i++){
+		//	DrawNormal(phMesh->vertices[i].pos, phMesh->vertices[i].normal);
+		//}
+		for(unsigned i=0; i < phMesh->faces.size(); i++){
+			//.	faceエッジを表示	
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,0),phMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+		}
+	}
 
 
 	//	50度刻み:テクスチャの深さ計算(0~50)	( vertices.temp - 50.0 ) * dtex / 50.0
