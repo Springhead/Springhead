@@ -200,11 +200,11 @@ void CDShapePair::CalcNormal(){
 			normal /= norm;
 			normal.unitize();
 		}else{
-			for(i=0; i<3; ++i){
+			for(int i=0; i<3; ++i){
 				normal[i] = normal[i] == 0 ? 0 : (normal[i]>0 ? 1 : -1);
 			}
 			norm = normal.norm();
-			if (norm == 0) return Vec3d(0,1,0);
+			if (norm == 0) normal = Vec3d(0,1,0);
 			else normal /= norm;
 		}
 	}
