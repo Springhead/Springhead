@@ -20,7 +20,8 @@
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 1.0	  2013/01/07	F.Kanehori	‰”Å
+::	Ver 1.0	 2013/01/07 F.Kanehori	‰”Å
+::	Ver 1.1	 2013/03/13 F.Kanehori	ƒ‚ƒWƒ…[ƒ‹Ž¯•Ê•¶Žš—ñˆê•”•ÏX
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set CWD=%cd%
@@ -64,7 +65,7 @@ if "%1" == "-A" (
 	cd %SRCDIR%\%%p
 	if !NEEDONEFILE! == 1 (
 	    echo.
-	    echo     *** %%p ***
+	    echo     ***  %%p  ***
 	    echo %%p %%q > %PROJFILEONE%
 	)
 	cmd /c %BINDIR%\%MAKEMGR% %2 %3 %4 %5 %6 %7 %8 %9
