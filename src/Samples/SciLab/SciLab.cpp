@@ -51,6 +51,39 @@ int _cdecl main(){
 	std::cout << "b=" << b << std::endl;
 	std::cout << "x=" << x << std::endl;
 
+	std::cout << std::endl;
+	std::cout << "Scilabメモリ空間内で固有値計算" << std::endl;
+	PTM::VMatrixCol<double> matk;
+	matk.resize(5, 5, 0.0);
+	matk.item(0, 0) = 200;		matk.item(0, 1) = -100;
+	matk.item(1, 0) = -100;	    matk.item(1, 1) = 100;
+	matk.item(2, 2) = 20;
+	matk.item(3, 3) = 20;
+	matk.item(4,4) = 1;
+
+	PTM::VMatrixCol<double> matm;
+	matm.resize(5, 5, 0.0);
+	matm.item(0, 0) = 3;	matm.item(0, 2) = 2;
+	matm.item(1, 1) = 3;	matm.item(1, 3) = 2;
+	matm.item(2, 0) = 2;	matm.item(2, 2) = 4;
+	matm.item(3, 1) = 2;	matm.item(3, 3) = 4;
+	matm.item(4,4) = 1;
+
+	ScilabSetMatrix("K", matk);
+	ScilabSetMatrix("M", matm);
+	ScilabSetMatrix("P", matk);
+	ScilabSetMatrix("D", matm);
+	ScilabJob("[P D] = spec(inv(M) * K);");
+	ScilabJob("disp(P);");
+	ScilabJob("disp(D);");
+	/*
+		Scilabで演算したものはSpringheadにコピーできない
+		バグがあるので一部コメントアウト
+	*/
+	//PTM::VMatrixCol<double> P, D;
+	//ScilabGetMatrix(P, "P");
+	//ScilabGetMatrix(D, "D");
+
 	//std::cout << "Scilabメモリ空間内の行列をSpringheadで計算" << std::endl;
 	//ScilabJob("y = A;");
 	//SCMatrix y = ScilabMatrix("y");
@@ -59,14 +92,14 @@ int _cdecl main(){
 	//std::cout << "y=";	ScilabJob("disp(y);");
 	//ScilabJob("clear;");
 
-	////	グラフ描画
-	//ScilabJob("t = 0:0.01:2*3.141592653;");
-	//ScilabJob("x = sin(t);");
-	//ScilabJob("y = cos(t);");
-	//ScilabJob("plot2d(x, y);");
-	//for(int i=0; i<100000; ++i){
-	//	ScilabJob("");
-	//}
+	//	グラフ描画
+	ScilabJob("t = 0:0.01:2*3.141592653;");
+	ScilabJob("x = sin(t);");
+	ScilabJob("y = cos(t);");
+	ScilabJob("plot2d(x, y);");
+	for(int i=0; i<100000; ++i){
+		ScilabJob("");
+	}
 
 	ScilabEnd();
 	if(_getch())	return 0;

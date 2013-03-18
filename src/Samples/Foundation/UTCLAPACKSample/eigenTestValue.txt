@@ -1,0 +1,27 @@
+VMatrixRe matk;
+matk.resize(5, 5, 0.0);
+matk.item(0, 0) = 200;		matk.item(0, 1) = -100;
+matk.item(1, 0) = -100;	    matk.item(1, 1) = 100;
+matk.item(2, 2) = 20;
+matk.item(3, 3) = 20;
+matk.item(4,4) = 1;
+
+VMatrixRe matm;
+matm.resize(5, 5, 0.0);
+matm.item(0, 0) = 3;	matm.item(0, 2) = 2;
+matm.item(1, 1) = 3;	matm.item(1, 3) = 2;
+matm.item(2, 0) = 2;	matm.item(2, 2) = 4;
+matm.item(3, 1) = 2;	matm.item(3, 3) = 4;
+matm.item(4,4) = 1;
+	
+Kx = É…Mx
+inv(M)Kx = É…x
+	
+eigen value					
+(     1 4.27829 4.90272  22.32 133.499)					
+eigen vector					
+((7.13465e-008 0.0743528 0.0165383 -0.364236 0.601274)					
+ (1.13344e-007 0.120303 -0.0102328 -0.589348 -0.371607)					
+ (2.32325e-007 0.220406 0.416878 0.234692 -0.312335)					
+ (3.23064e-007 0.356563 -0.257677 0.379741 0.193033)					
+ (     1 -9.46972e-007 -5.66266e-008 3.93074e-014 1.28361e-021))					
