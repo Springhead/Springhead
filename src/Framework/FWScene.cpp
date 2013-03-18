@@ -867,13 +867,13 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 		for(int j = 0; j < nv; j++){
 			Posed p;
 			p.Pos() = solidPose * mesh->vertices[j].pos;
-			Affinef aff;
-			p.ToAffine(aff);
-			render->PushModelMatrix();
-			render->MultModelMatrix(aff);
-			render->SetMaterial(GRRenderIf::YELLOW);
-			render->DrawSphere(0.01f, 10, 10, true);
-			render->PopModelMatrix();
+			//Affinef aff;
+			//p.ToAffine(aff);
+			//render->PushModelMatrix();
+			//render->MultModelMatrix(aff);
+			//render->SetMaterial(GRRenderIf::YELLOW);
+			//render->DrawSphere(0.01f, 10, 10, true);
+			//render->PopModelMatrix();
 			// 頂点番号の描画
 			std::stringstream str;
 			str << j;

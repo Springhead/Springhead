@@ -51,6 +51,7 @@ public:
 	virtual void CompStiffnessMatrix();
 	virtual void CompMassMatrix();
 	virtual void CompDampingMatrix();
+	virtual void CompEigenVibration();
 
 	/// シミュレーションステップ
 	virtual void Step();
@@ -66,8 +67,8 @@ public:
 		const VVectord& _f, const double& _dt, bool& bFirst, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode);
 
 
-	/// 固有値解析
-	virtual void SubSpace(const VMatrixRe& _M, const VMatrixRe& _K, 
+	/// 固有値解析(Kx = lamda M x)を解く
+	virtual void SubSpace(const VMatrixRe& _K, const VMatrixRe& _M, 
 							const int nmode, const double epsilon, VVectord& e, VMatrixRe& v);
 
 	/// 各種設定、計算
@@ -133,7 +134,6 @@ public:
 	void CompRayleighDampingCoeffcient(double wrad[2], double ratio[2], double& a, double& b);
 
 	/// scilabデバック
-	bool IsScilabStarted;	/// scilabがスタートしているかどうかのフラグ
 	/// scilabで読み込ませるdat形式ファイルを出力
 	template < class AD >
 	void ScilabFileOut(PTM::MatrixImp<AD>& a, const std::string filename = "scimat.dat"){
