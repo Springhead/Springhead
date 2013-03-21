@@ -42,6 +42,10 @@ public:
 	VVectord vlp;		// 頂点速度の一部
 	VVectord alp;		// 頂点加速度の一部
 	VVectord flp;		// 計算用の外力の一部
+//	VMatrixRe evalue;	// 固有値
+//	VMatrixRe evector;	// 固有ベクトル
+	double dampingRatio[2];	// 減衰比
+	int nMode;			// モード数
 
 	VVector< int > boundary;	// 境界条件ID
 
@@ -50,8 +54,8 @@ public:
 	virtual void Init();
 	virtual void CompStiffnessMatrix();
 	virtual void CompMassMatrix();
-	virtual void CompDampingMatrix();
-	virtual void CompEigenVibration();
+	virtual void CompRayleighDampingMatrix();
+	virtual void CompRayleighDampingMatrixByDampingRatio();
 
 	/// シミュレーションステップ
 	virtual void Step();
@@ -68,6 +72,12 @@ public:
 
 
 	/// 固有値解析(Kx = lamda M x)を解く
+	virtual void CompEigenValue(const VMatrixRd& _M, const VMatrixRd& _K, const int start, const int interval, VVectord& e, VMatrixRd& v);
+	virtual void CompEigenVibrationFrequency(const VVectord& e, VVectord& w);
+	virtual void CompEigenAngularVibrationFrequency(const VVectord& e, VVectord& wrad);
+	double CompModalDampingRatio(double wrad);
+	void CompRayleighDampingCoeffcient(double wrad[2], double ratio[2], double& a, double& b);
+	// Subspace法の実装
 	virtual void SubSpace(const VMatrixRe& _K, const VMatrixRe& _M, 
 							const int nmode, const double epsilon, VVectord& e, VMatrixRe& v);
 
@@ -128,48 +138,6 @@ public:
 	bool FindNeighborFaces(Vec3d posW, std::vector< int >& faceIds, std::vector< Vec3d >& cpWs, bool bDeform);
 	/// ある点から近い四面体と四面体上の点を探す
 	bool FindNeighborTetrahedron(Vec3d posW, int& tetId, Vec3d& cpW, bool bDeform);
-
-	/// モード解析用
-	double CompModalDampingRatio(double wrad);
-	void CompRayleighDampingCoeffcient(double wrad[2], double ratio[2], double& a, double& b);
-
-	/// scilabデバック
-	/// scilabで読み込ませるdat形式ファイルを出力
-	template < class AD >
-	void ScilabFileOut(PTM::MatrixImp<AD>& a, const std::string filename = "scimat.dat"){
-		if(!IsScilabStarted){
-			DSTR << "Scilab has not started" << std::endl;
-			return;
-		}		
-		ScilabJob("clear;");
-		ScilabSetMatrix("A", a);
-		std::stringstream str;
-		str << "fprintfMat('" << filename << "', A, '%Lf');";
-		ScilabJob(str.str().c_str());
-	}
-
-	/// 行列式計算
-	template < class AD >
-	void ScilabDeterminant(PTM::MatrixImp<AD>& a, const std::string name = ""){
-		DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
-		DSTR << "Scilab Determinant Start." << std::endl;	
-		DSTR << "det(" << name << ") springhead2 : " << a.det() << std::endl;
-		if(!IsScilabStarted){
-			DSTR << "Scilab has not started" << std::endl;
-			return;
-		}
-		ScilabJob("clear;");
-		ScilabSetMatrix("A", a);
-		ScilabJob("detA = det(A);");
-		DSTR << "Determinant of scilab is written in console." << std::endl;
-		std::cout << "det("<< name << ") scilab : ";
-		ScilabJob("disp(detA);");	
-		DSTR << "Scilab Determinant End." << std::endl;	
-		DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
-	}
-	/// 固有値固有ベクトル計算
-	void ScilabEigenValueAnalysis(VMatrixRe& _M, VMatrixRe& _K);
-	void CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, int nmode, VVectord& e, VMatrixRe& v);
 
 	/// 行列のファイル出力
 	void MatrixFileOut(VMatrixRe mat, std::string filename);
