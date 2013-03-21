@@ -6,7 +6,6 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Physics/PHFemVibration.h>
-#include <SciLab/SprSciLab.h>
 #include <Foundation/UTQPTimer.h>
 //#include <Foundation/UTOpenMP.h>
 #include <Foundation/UTClapack.h>
@@ -43,6 +42,9 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	integration_mode = PHFemVibrationDesc::INT_NEWMARK_BETA;
 	SetAlpha(1.25978);
 	SetBeta(1.04348e-005);
+	dampingRatio[0] = 0.01;
+	dampingRatio[1] = 0.01;
+	nMode = 55;
 	bRecomp = true;
 }
 
@@ -62,7 +64,7 @@ void PHFemVibration::Init(){
 		SPR_OMP(section)
 		CompMassMatrix();
 	}	
-	CompDampingMatrix();
+	CompRayleighDampingMatrix();
 
 	/// 各種変数の初期化
 	int NDof = NVertices() * 3;
@@ -87,56 +89,40 @@ void PHFemVibration::Init(){
 	//// phboard用
 	//veIds.push_back(1);
 	//veIds.push_back(3);
-	//veIds.push_back(2);
-	//veIds.push_back(4);
-	//veIds.push_back(6);
-	//veIds.push_back(7);
+	veIds.push_back(2);
+	veIds.push_back(4);
+	veIds.push_back(6);
+	veIds.push_back(7);
 
 	//// phSphere用
 	//for(int i = 49; i < 58; i++){
 	//	veIds.push_back(i);
 	//}
 
-	// phBunny用
+	////phBunny用
 	//veIds = FindVertices(123, Vec3d(0.0, -1.0, 0.0));
 	//for(int i = 0; i < (int)veIds.size(); i++){
 	//	DSTR << veIds[i] << std::endl;
 	//}
 
-	// phRing用
-	//veIds1 = FindVertices(16, Vec3d(0.0, 0.0, -1.0));
-	//veIds2 = FindVertices(50, Vec3d(0.0, 0.0, 1.0));
-	veIds.push_back(24);
-	veIds.push_back(25);
-	veIds.push_back(44);
-//	std::set_union(veIds1.begin(), veIds1.end(), veIds2.begin(), veIds2.end(), back_inserter(veIds));
-	for(int i = 0; i < (int)veIds.size(); i++){
-		DSTR << veIds[i] << std::endl;
-	}	
+	//// phRing用
+	//veIds.push_back(24);
+	//veIds.push_back(25);
+	//veIds.push_back(44);
+	//for(int i = 0; i < (int)veIds.size(); i++){
+	//	DSTR << veIds[i] << std::endl;
+	//}	
 
 	Vec3i con = Vec3i(1,1,1);
 	for(int i = 0; i < (int)veIds.size(); i++){
 		AddBoundaryCondition(veIds[i], con);
 	}
 
-	//VVectord e;
-	//e.resize(matMp.height(), 0.0);
-	//VMatrixRe v;
-	//v.resize(matMp.height(), 55, 0.0);
-	//VMatrixRe matKps;
-	//matKps.assign(matKp);
-	//matKps -= 5.0 * matMp;
-	//sprsygvx(matKps, matMp, e, v, 0, 55);
-	//VVectord shift;
-	//shift.resize(55, 5.0);
-	//e += shift;
-	//DSTR << e << std::endl;
-
 	ReduceMatrixSize(matMp, boundary);
 	ReduceMatrixSize(matCp, boundary);
 	ReduceMatrixSize(matKp, boundary);
 	DSTR << "All matrices has reduced." << std::endl;
-
+	//CompRayleighDampingMatrixByDampingRatio();
 	DSTR << "Initializing Completed." << std::endl;
 } 
 
@@ -264,31 +250,44 @@ void PHFemVibration::CompMassMatrix(){
 	matMp.assign(matMIni);
 }
 
-void PHFemVibration::CompDampingMatrix(){
+void PHFemVibration::CompRayleighDampingMatrix(){
 	/// 減衰行列の計算（比例減衰）境界条件導入済み
 	matCIni.assign(GetAlpha() * matMIni + GetBeta() * matKIni);
 	matCp.assign(matCIni);
 }
 
-void PHFemVibration::CompEigenVibration(){
-#if 0
-		// 境界条件導入済みのmatMp, matKpをつかう
-		// 固有値・固有ベクトルを求める
-		int size = matMp.height();
-		VVectord e;
-		e.resize(nmode, 0.0);
-		v.resize(size, interval, 0.0);
-#if USE_SUBSPACE
-		SubSpace(matKp, matMp, interval, 1e-5, e, v);
-#else
-		int info = sprsygvx(matKp, matMp, e, v, start, interval);
-		assert(info == 0);
-#endif
-		DSTR << "eigenvalue" << std::endl;
-		DSTR << e << std::endl;
-		//DSTR << "eigenvector" << std::endl;
-		//DSTR << v << std::endl;
-#endif
+void PHFemVibration::CompRayleighDampingMatrixByDampingRatio(){
+	// 減衰行列の計算
+	// 固有値・固有ベクトルを求める
+	VVectord evalue;
+	VMatrixRd evector;
+	CompEigenValue(matMp, matKp, 0, nMode, evalue, evector);
+	// 固有振動数
+	VVectord ew;
+	CompEigenVibrationFrequency(evalue, ew);
+	// 固有角振動数
+	VVectord ewrad;
+	CompEigenAngularVibrationFrequency(evalue, ewrad);
+
+	// レイリー減衰係数
+	double tw[2];
+	tw[0] = ewrad[0];
+	tw[1] = ewrad[ewrad.size() - 1];
+	double a, b;
+	CompRayleighDampingCoeffcient(tw, dampingRatio, a, b);
+	DSTR << "Reiley coefficient" << std::endl;
+	DSTR << a << " " << b << std::endl;
+	SetAlpha(a);
+	SetBeta(b);
+	CompRayleighDampingMatrix();
+	// 全ての減衰比
+	VVectord dratio;
+	dratio.resize(ewrad.size(), 0.0);
+	for(int i = 0; i < (int)dratio.size(); i++){
+		dratio[i] = CompModalDampingRatio(ewrad[i]);
+	}
+	DSTR << "modal damping ratio" << std::endl;
+	DSTR << dratio << std::endl;
 }
 
 void PHFemVibration::Step(){
@@ -322,7 +321,7 @@ void PHFemVibration::Step(){
 			}
 			break;
 		case PHFemVibrationDesc::ANALYSIS_MODAL:
-			ModalAnalysis(matMp, matKp, matCp, flp, vdt, bRecomp, xdlp, vlp, alp, 55);
+			ModalAnalysis(matMp, matKp, matCp, flp, vdt, bRecomp, xdlp, vlp, alp, nMode);
 			break;
 		default:
 			break;
@@ -432,7 +431,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 	// n:自由度、m:モード次数
 	static VVectord evalue;			// 固有値(m)
 	static VMatrixRe evector;		// 固有ベクトル(n*m)
-	static VVectord w;				// MK系の固有角振動数(m)
+	static VVectord ewrad;				// MK系の固有角振動数(m)
 	static VMatrixRe Mm;			// モード質量行列(m*m)
 	static VMatrixRe Km;			// モード剛性行列(m*m)
 	static VMatrixRe Cm;			// モード減衰行列(m*m)
@@ -445,48 +444,19 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		evalue.resize(nmode, 0.0);
 		evector.resize(size, nmode, 0.0);
 		qtimer.StartPoint("CompEigen");
-#if USE_SUBSPACE
-		SubSpace(_K, _M, nmode, 1e-5, evalue, evector);
-		DSTR << "eigenvalue springhead" << std::endl;
-		DSTR << evalue << std::endl;
-		//DSTR << "eigenvector springhead" << std::endl;
-		//DSTR << evector << std::endl;
-		MatrixFileOut(evector, "evectorSpringhead.csv");
-#else
-		//int info = sprsygv(_K, _M, evalue, evector);
-		int info = sprsygvx(_K, _M, evalue, evector, 0, nmode);
-		assert(info == 0);
-		DSTR << "eigenvalue" << std::endl;
-		DSTR << evalue << std::endl;
-		//DSTR << "eigenvector" << std::endl;
-		//DSTR << evector << std::endl;
-#endif
+		CompEigenValue(_M, _K, 0, nmode, evalue, evector);
 		qtimer.EndPoint("CompEigen");
 
 		// MK系の固有振動数
-		w.resize(evalue.size(), 0.0);
-		for(int i = 0; i < (int)w.size(); i++){
-			w[i] = sqrt(evalue[i]) / (2.0 * M_PI);
-		}
-		DSTR << "eigen Vibration Value" << std::endl;
-		DSTR << w << std::endl;
+		VVectord ew;
+		CompEigenVibrationFrequency(evalue, ew);
 		// MK系の固有角振動数
-		VVectord wrad;
-		VVectord dratio;
-		wrad.resize(evalue.size(), 0.0);
-		dratio.assign(wrad);
-		w.resize(evalue.size(), 0.0);
-		for(int i = 0; i < (int)w.size(); i++){
-			wrad[i] = sqrt(evalue[i]);
-			dratio[i] = CompModalDampingRatio(wrad[i]);
-		}
-		DSTR << "eigen Angular Vibration Value" << std::endl;
-		DSTR << wrad << std::endl;
-		DSTR << "modal damping ratio" << std::endl;
-		DSTR << dratio << std::endl;
+		VVectord ewrad;
+		CompEigenAngularVibrationFrequency(evalue, ewrad);
+		// レイリー減衰係数
 		double tw[2];
-		tw[0] = wrad[0];
-		tw[1] = wrad[wrad.size() - 1];
+		tw[0] = ewrad[0];
+		tw[1] = ewrad[ewrad.size() - 1];
 		double ratio[2];
 		ratio[0] = 0.01;
 		ratio[1] = 0.01;
@@ -499,6 +469,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		dampingratio[1] = 0.5 * (GetAlpha() / tw[1] + tw[1] * GetBeta());
 		DSTR << "damiping ratio" << std::endl;
 		DSTR << dampingratio[0] << " " << dampingratio[1] << std::endl;
+
 
 		// モード質量、剛性, 減衰行列の計算
 		#pragma omp parallel sections
@@ -527,23 +498,23 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 	VVectord q;		// モード振動ベクトル(m)
 	VVectord qv;	// モード振動速度ベクトル(m)
 	VVectord qa;	// モード振動加速度ベクトル(m)
-	VVectord fm;	// モード外力(m)
+	VVectord qf;	// モード外力(m)
 
 	// デカルト座標からモード座標系に変換
 	q.assign(evector.trans() * (_M * _xd));
 	qv.assign(evector.trans() * (_M * _v));
 	qa.assign(evector.trans() * (_M * _a));
-	fm.assign(evector.trans() * _f);
+	qf.assign(evector.trans() * _f);
 
 	// 積分
 #ifdef USE_MATRIX
 	// 行列で計算
-	NumericalIntegration(SmInv, Km, Cm, fm, _dt, q, qv, qa); 
+	NumericalIntegration(SmInv, Km, Cm, qf, _dt, q, qv, qa); 
 #else
 	// 1次独立の連立方程式なので、各方程式毎に計算
 	//#pragma omp parallel for
 	for(int i = 0; i < nmode; i++){
-		NumericalIntegration(SmInv[i][i], Km[i][i], Cm[i][i], fm[i], _dt, q[i], qv[i], qa[i]);
+		NumericalIntegration(SmInv[i][i], Km[i][i], Cm[i][i], qf[i], _dt, q[i], qv[i], qa[i]);
 	}
 #endif
 	// モード座標系からデカルト座標系に変換
@@ -551,6 +522,56 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 	_v = evector * qv;
 	_a = evector * qa;
 	qtimer.EndPoint("integration core");
+}
+
+void PHFemVibration::CompEigenValue(const VMatrixRd& _M, const VMatrixRd& _K, const int start, const int interval, VVectord& e, VMatrixRd& v){
+#if 1
+		// 境界条件導入済みのmatMp, matKpをつかう
+		// 固有値・固有ベクトルを求める
+		int size = _M.height();
+		e.resize(interval, 0.0);
+		v.resize(size, interval, 0.0);
+#if USE_SUBSPACE
+		SubSpace(_K, _M, interval, 1e-5, e, v);
+#else
+		int info = sprsygvx(_K, _M, e, v, start, interval);
+		assert(info == 0);
+#endif
+		DSTR << "eigenvalue" << std::endl;
+		DSTR << e << std::endl;
+		//DSTR << "eigenvector" << std::endl;
+		//DSTR << v << std::endl;
+
+#endif
+}
+
+void PHFemVibration::CompEigenVibrationFrequency(const VVectord& e, VVectord& w){
+	// 固有振動数
+	w.resize(e.size(), 0.0);
+	for(int i = 0; i < (int)w.size(); i++){
+		w[i] = sqrt(e[i]) / (2.0 * M_PI);
+	}
+	DSTR << "eigen Vibration Value" << std::endl;
+	DSTR << w << std::endl;
+}
+
+void PHFemVibration::CompEigenAngularVibrationFrequency(const VVectord& e, VVectord& wrad){
+	wrad.resize(e.size(), 0.0);
+	for(int i = 0; i < (int)wrad.size(); i++){
+		wrad[i] = sqrt(e[i]);
+	}
+	DSTR << "eigen Angular Vibration Value" << std::endl;
+	DSTR << wrad << std::endl;
+}
+
+double PHFemVibration::CompModalDampingRatio(double wrad){
+	return 0.5 * (GetAlpha() / wrad + GetBeta() * wrad);
+}
+
+void PHFemVibration::CompRayleighDampingCoeffcient(double wrad[2], double ratio[2], double& a, double& b){
+	double tmp = (2.0 * wrad[0] * wrad[1]) / (pow(wrad[1], 2) - pow(wrad[0], 2));
+	a = tmp * (wrad[1] * ratio[0] - wrad[0] * ratio[1]);
+	b = tmp * ((ratio[1] / wrad[0]) - (ratio[0] / wrad[1]));
 }
 
 void PHFemVibration::SubSpace(const VMatrixRe& _K, const VMatrixRe& _M, 
@@ -932,132 +953,6 @@ bool PHFemVibration::FindNeighborTetrahedron(Vec3d posW, int& tetId, Vec3d& cpW,
 	//	}
 	//}
 	return true;
-}
-
-double PHFemVibration::CompModalDampingRatio(double wrad){
-	return 0.5 * (GetAlpha() / wrad + GetBeta() * wrad);
-}
-
-void PHFemVibration::CompRayleighDampingCoeffcient(double wrad[2], double ratio[2], double& a, double& b){
-	double tmp = (2.0 * wrad[0] * wrad[1]) / (pow(wrad[1], 2) - pow(wrad[0], 2));
-	a = tmp * (wrad[1] * ratio[0] - wrad[0] * ratio[1]);
-	b = tmp * ((ratio[1] / wrad[0]) - (ratio[0] / wrad[1]));
-}
-
-//* scilabデバック
-/////////////////////////////////////////////////////////////////////////////////////////
-
-void PHFemVibration::ScilabEigenValueAnalysis(VMatrixRe& _M, VMatrixRe& _K){
-	DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
-	ScilabStart();
-	DSTR << "ScilabEigenValueAnalysis Start." << std::endl;
-	DSTR << "det(M) springhead2 : " << _M.det() << std::endl;
-	DSTR << "det(K) springhead2 : " << _K.det() << std::endl;
-#if 0
-	VVectord evalue;
-	VMatrixRe evector;
-	SubSpace(_M, _K, _M.height(), 1e-5, evalue, evector);
-	DSTR << "eigenvalue springhead2" << std::endl;
-	DSTR << evalue << std::endl;
-	DSTR << "eigen vibration value springhead2" << std::endl;
-	for(int i = 0; i < (int)evalue.size(); i++){
-		evalue[i] = sqrt(evalue[i])/2/M_PI;
-	}
-	DSTR << evalue << std::endl;
-	DSTR << "eigenvector springhead2" << std::endl;
-	DSTR << evector << std::endl;
-#endif
-	ScilabJob("clear;");
-	ScilabSetMatrix("M", _M);
-	ScilabJob("detM = det(M);");
-	std::cout << "det(M) scilab : ";
-	ScilabJob("disp(detM);");	
-	ScilabSetMatrix("K", _K);
-	ScilabJob("detK = det(K);");
-	std::cout << "det(K) scilab : ";
-	ScilabJob("disp(detK);");
-
-	ScilabJob("[P D] = spec(inv(M) * K);");
-	VMatrixRe D;
-	ScilabGetMatrix(D, "D");
-	DSTR << "eigenvalue scilab" << std::endl;
-	DSTR << D << std::endl;
-	std::vector< double > ds;
-	for(int i =0; i < (int)D.height(); i++){
-		ds.push_back(sqrt(D[i][i]) * 0.5 / M_PI);
-	}
-	std::sort(ds.begin(), ds.end());
-	DSTR << "eigen vibration value scilab" << std::endl;
-	for(int i =0; i < (int)D.height(); i++){
-		DSTR << ds[i] << std::endl;
-	}
-	VMatrixRe P;
-	ScilabGetMatrix(P, "P");
-	DSTR << "eigenvector scilab" << std::endl;
-	DSTR << P << std::endl;
-	DSTR << "ScilabEigenValueAnalysis End." << std::endl;
-	ScilabEnd();
-	DSTR << "////////////////////////////////////////////////////////////////////////////////////////" << std::endl;
-}
-
-struct ScilabEigenValue{
-	double e;
-	VVector< double > v;
-	int id;
-		bool operator()(const ScilabEigenValue& a, const ScilabEigenValue& b){
-		return a.e < b.e;
-	}
-};
-
-void PHFemVibration::CompScilabEigenValue(VMatrixRe& _M, VMatrixRe& _K, int nmode, VVectord& e, VMatrixRe& v){
-	ScilabStart();
-	DSTR << "Start computing eigenvalues and eigenvalues by ScilabEigneValue" << std::endl;
-	VMatrixRe P;	// 固有ベクトル
-	VMatrixRe D;	// 固有値(対角）
-	ScilabJob("clear;");
-	//ScilabJob("stacsize('max')");
-	std::cout << ScilabSetMatrix("M", _M) << std::endl;
-	std::cout << ScilabSetMatrix("K", _K) << std::endl;
-	std::cout << ScilabSetMatrix("Ps", _M) << std::endl;
-	std::cout << ScilabSetMatrix("Ds", _M) << std::endl;
-	std::cout << ScilabGetMatrix(P, "Ps") << std::endl;
-	ScilabJob("[P D] = spec(inv(M) * K);");
-	ScilabJob("Ps = P;");
-	ScilabJob("Ds = D;");
-	ScilabGetMatrix(P, "Ps");
-	ScilabGetMatrix(D, "Ds");
-	// 固有値を小さい順にソート
-	std::vector< ScilabEigenValue > ds;
-	ds.resize(D.height());
-	for(int i =0; i < (int)ds.size(); i++){
-		ds[i].e = D[i][i];
-		ds[i].v = P.col(i);
-		ds[i].id = i;
-	}
-	std::sort(ds.begin(), ds.end(), ScilabEigenValue());
-	e.resize(ds.size(), 0.0);
-	v.resize(ds.size(), ds.size(), 0.0);
-	for(int i =0; i < (int)ds.size(); i++){
-		e[i] = ds[i].e;
-		v.col(i) = ds[i].v;
-	}
-	// 固有ベクトルを質量正規固有モードに変換
-	// Subspaceは正規化されているはず
-	VMatrixRe V;
-	V.assign((v.trans() * _M * v).inv());
-	for(int i = 0; i < (int)V.height(); i++){
-		v.col(i) *= sqrt(V.item(i, i));
-	}
-	DSTR << "All eigen value size" << std::endl;
-	DSTR << e.size() << std::endl;
-	// 必要なモード数分にリサイズ
-	VVectord etmp;
-	etmp.assign(e.v_range(0, nmode));
-	e.assign(etmp);
-	VMatrixRd vtmp;
-	vtmp.assign(v.vsub_matrix(0, 0, (int)_M.height(), nmode));
-	v.assign(vtmp);
-	ScilabEnd();
 }
 
 void PHFemVibration::MatrixFileOut(VMatrixRe mat, std::string filename){
