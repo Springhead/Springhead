@@ -1,5 +1,5 @@
 @echo off
-rm EPBase.cpp
+del EPBase.cpp
 set MAKEFILE=EmbPython.mak.txt
 set PATHORG=%PATH%;
 
