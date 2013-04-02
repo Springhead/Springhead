@@ -77,6 +77,8 @@ public:
 	SPR_OBJECTDEF_ABST(GRRenderBase);
 	
 	virtual void SetViewport(Vec2f pos, Vec2f sz){}
+	virtual Vec2f GetViewportPos(){ return Vec2f(); }
+	virtual Vec2f GetViewportSize(){ return Vec2f(); }
 	virtual void ClearBuffer(){}
 	///	バッファの入れ替え（表示）
 	virtual void SwapBuffers(){}
@@ -157,8 +159,6 @@ class GRRender: public GRRenderBase{
 protected:
 	UTRef<GRDeviceIf> device;		///<	デバイス
 	GRCameraDesc camera;			///<	カメラ
-	Vec2f viewportPos;				///<	ビューポートの左上
-	Vec2f viewportSize;				///<	ビューポートのサイズ
 	Affinef	affViewTmp, affModelTmp, affProjTmp;	///< 退避用アフィン行列
 	bool	screenCoord;			///<	画面座標モードか
 
@@ -167,6 +167,8 @@ protected:
 public:
 #define REDIRECTIMP_GRRENDERBASE(ptr)																		\
 	virtual void SetViewport(Vec2f p, Vec2f s){ ptr SetViewport(p, s); }									\
+	virtual Vec2f GetViewportPos(){ return ptr GetViewportPos(); }                                          \
+	virtual Vec2f GetViewportSize(){ return ptr GetViewportSize(); }                                        \
 	virtual void ClearBuffer(){ ptr ClearBuffer(); }														\
 	virtual void SwapBuffers(){ ptr SwapBuffers(); }														\
 	virtual void GetClearColor(Vec4f& color){ ptr GetClearColor(color); }									\
@@ -269,11 +271,9 @@ public:
 
 	/// 予約マテリアルの設定
 	virtual void SetMaterial(int matname);
+	/// 予約色の取得
+	Vec4f	GetReservedColor(int matname){ return matSample[matname].diffuse; }
 	
-	/// Viewportの基点座標の取得
-	Vec2f GetViewportPos(){ return viewportPos; }
-	/// Viewportのサイズの取得
-	Vec2f GetViewportSize(){ return viewportSize; }
 	///
 	Vec2f GetPixelSize();
 	/// スクリーン・カメラ座標変換

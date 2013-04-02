@@ -207,17 +207,15 @@ void GRRender::Print(std::ostream& os) const{
 	device->Print(os);
 }
 void GRRender::Reshape(Vec2f pos, Vec2f screen){
-	viewportPos = pos;
-	viewportSize = screen;
 	SetViewport(pos, screen);
 	bool yIsZero = false, xIsZero = false;
 	if (camera.size.y<=0){
 		yIsZero = true;
-		camera.size.y = camera.size.x*(viewportSize.y/viewportSize.x);
+		camera.size.y = camera.size.x*(screen.y/screen.x);
 	}
 	if (camera.size.x<=0){
 		xIsZero = true;
-		camera.size.x = camera.size.y*(viewportSize.x/viewportSize.y);
+		camera.size.x = camera.size.y*(screen.x/screen.y);
 	}
 	Affinef afProj = Affinef::ProjectionGL(Vec3f(camera.center.x, camera.center.y, camera.front), 
 		camera.size, camera.front, camera.back);
@@ -230,18 +228,21 @@ void GRRender::SetMaterial(int matname){
 		SetMaterial(matSample[matname]);
 }
 void GRRender::SetCamera(const GRCameraDesc& c){
-	if (memcmp(&camera,&c, sizeof(c)) != 0){
+	Vec2f vpsize = GetViewportSize();
+	// メモリ比較でフィルタすると外部からSetProjectionMatrixした際にカメラが反映されないので無効化 tazz
+	//if (memcmp(&camera,&c, sizeof(c)) != 0){
 		camera = c;
-		if (camera.size.y==0) camera.size.y = camera.size.x*(viewportSize.y/viewportSize.x);
-		if (camera.size.x==0) camera.size.x = camera.size.y*(viewportSize.x/viewportSize.y);
+		if (camera.size.y==0) camera.size.y = camera.size.x*(vpsize.y/vpsize.x);
+		if (camera.size.x==0) camera.size.x = camera.size.y*(vpsize.x/vpsize.y);
 		Affinef afProj = Affinef::ProjectionGL(Vec3f(camera.center.x, camera.center.y, camera.front), 
 			camera.size, camera.front, camera.back);
 		SetProjectionMatrix(afProj);
-	}
+	//}
 }
 Vec2f GRRender::GetPixelSize(){
 	// ピクセルサイズ = スクリーンサイズ / ビューポートサイズ
-	Vec2f px(camera.size.x / viewportSize.x, camera.size.y / viewportSize.y);
+	Vec2f vpsize = GetViewportSize();
+	Vec2f px(camera.size.x / vpsize.x, camera.size.y / vpsize.y);
 	if(px.x == 0.0f)
 		px.x = px.y;
 	if(px.y == 0.0f)
@@ -250,7 +251,8 @@ Vec2f GRRender::GetPixelSize(){
 }	
 Vec3f GRRender::ScreenToCamera(int x, int y, float depth, bool LorR){
 	//アスペクト比
-	double r = (viewportSize.x / viewportSize.y);
+	Vec2f vpsize = GetViewportSize();
+	double r = (vpsize.x / vpsize.y);
 
 	//スクリーンサイズ
 	Vec2f camSize = camera.size;
@@ -258,8 +260,8 @@ Vec3f GRRender::ScreenToCamera(int x, int y, float depth, bool LorR){
 	if(camSize.y ==0) camSize.y = camSize.x / r ;
 
 	Vec3f pos(
-		 camera.center.x + ((float)x - viewportSize.x / 2.0f) * (camSize.x / viewportSize.x),
-		 camera.center.y + (viewportSize.y / 2.0f - (float)y) * (camSize.y / viewportSize.y),
+		 camera.center.x + ((float)x - vpsize.x / 2.0f) * (camSize.x / vpsize.x),
+		 camera.center.y + (vpsize.y / 2.0f - (float)y) * (camSize.y / vpsize.y),
 		 (LorR ? camera.front : -camera.front));
 	pos *= (depth / camera.front);
 	return pos;

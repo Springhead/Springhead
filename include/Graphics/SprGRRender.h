@@ -101,8 +101,6 @@ struct GRLightDesc : GRVisualDesc{
 	}
 };
 
-
-
 /** @brief　材質のインタフェース　　	*/
 struct GRMaterialIf: public GRVisualIf{
 	SPR_IFDEF(GRMaterial);
@@ -252,6 +250,10 @@ struct GRRenderBaseIf: public ObjectIf{
 
 	///	ビューポートの設定
 	void SetViewport(Vec2f pos, Vec2f sz);
+	/// ビューポートの基点座標の取得
+	Vec2f GetViewportPos();
+	/// ビューポートのサイズの取得
+	Vec2f GetViewportSize();
 	///	バッファクリア
 	void ClearBuffer();
 	///	バッファの入れ替え（表示）
@@ -433,13 +435,11 @@ struct GRRenderIf: public GRRenderBaseIf{
 	const GRCameraDesc& GetCamera();
 	///	スクリーン(ウィンドウ)サイズ変更時のViewportと射影行列を設定
 	void Reshape(Vec2f pos, Vec2f screenSize);
-	/// ビューポートの基点座標の取得
-	Vec2f GetViewportPos();
-	/// ビューポートのサイズの取得
-	Vec2f GetViewportSize();
 	/// 1ピクセルの物理サイズを取得
 	Vec2f GetPixelSize();
-
+	/// 予約色を取得
+	Vec4f GetReservedColor(int matname);
+	
 	/** @brief スクリーン座標からカメラ座標への変換
 		@param	x		スクリーンx座標
 		@param	y		スクリーンy座標

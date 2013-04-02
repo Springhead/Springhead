@@ -65,6 +65,16 @@ void GRDeviceGL::Init(){
 void GRDeviceGL::SetViewport(Vec2f pos, Vec2f sz){
 	glViewport((int)pos.x , (int)pos.y, (int)sz.x, (int)sz.y);
 }
+Vec2f GRDeviceGL::GetViewportPos(){
+	int tmp[4];
+	glGetIntegerv(GL_VIEWPORT, tmp);
+	return Vec2f(tmp[0], tmp[1]);
+}
+Vec2f GRDeviceGL::GetViewportSize(){
+	int tmp[4];
+	glGetIntegerv(GL_VIEWPORT, tmp);
+	return Vec2f(tmp[2], tmp[3]);
+}
 /// バッファクリア
 void GRDeviceGL::ClearBuffer(){
 	glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);

@@ -111,6 +111,8 @@ public:
 	
 	virtual void Init();
 	virtual void SetViewport(Vec2f pos, Vec2f sz);
+	virtual Vec2f GetViewportPos();
+	virtual Vec2f GetViewportSize();
 	virtual void ClearBuffer();
 	virtual void BeginScene();
 	virtual void EndScene();
