@@ -44,8 +44,8 @@ bool HISpaceNavigator::Init(const void* desc) {
 
 				// Space Navigatorをみつけた
 				bool bAlreadyUsed = false;
-				for (int i=0; i<(int)deviceHandles.size(); ++i) {
-					if (deviceHandles[i] == deviceList[i].hDevice) { bAlreadyUsed = true; }
+				for (int j=0; j<(int)deviceHandles.size(); ++j) {
+					if (deviceHandles[j] == deviceList[i].hDevice) { bAlreadyUsed = true; }
 				}
 				if (!bAlreadyUsed) {
 					deviceHandles.push_back(deviceList[i].hDevice);
