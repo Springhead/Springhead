@@ -4409,7 +4409,7 @@ void PHFemMeshThermo::DecrMoist_velo(double vel){
 		double faceS=0.0;
 		for(int ii=0;ii<4;ii++){
 			int facet = tets[id].faces[ii];
-			if(facet <= nSurfaceFace){
+			if(facet <= (int)nSurfaceFace){
 				faceS += faces[facet].area;
 			}
 		}
@@ -4478,7 +4478,7 @@ void PHFemMeshThermo::DecrMoist_vel(double dt){
 		double faceS=0.0;
 		for(int ii=0;ii<4;ii++){
 			int facet = tets[id].faces[ii];
-			if(facet <= nSurfaceFace){
+			if(facet <= (int)nSurfaceFace){
 				faceS += faces[facet].area;
 			}
 		}
