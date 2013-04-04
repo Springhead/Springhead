@@ -354,7 +354,7 @@ void PHFemMesh::SetDesc(const void* p) {
 			}
 */
 			//外側の法線だけ加算
-			if(vertices[vid].faces[fid] < nSurfaceFace){
+			if(vertices[vid].faces[fid] < (int)nSurfaceFace){
 				vertices[vid].normal += faces[vertices[vid].faces[fid]].normal;		// このコードに代わって、上記vectorコードと以下の加算コードに置き換え
 			}
 				/*			if(faces[vertices[vid].faces[fid]].normal == 0){
