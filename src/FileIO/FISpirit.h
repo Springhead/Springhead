@@ -26,6 +26,10 @@
 #pragma warning (disable:4761 4786 4096)
 #endif
 
+// intrin.hとinterlocked.hppとの呼び出し規約の不整合を回避するためにwindows.hをインクルードするように指示
+#if defined _MSC_VER
+# define BOOST_USE_WINDOWS_H
+#endif
 #include <boost/spirit/include/classic_core.hpp>
 #include <boost/spirit/include/classic_safe_bool.hpp>
 #include <boost/spirit/include/classic_if.hpp>
@@ -35,6 +39,9 @@
 #include <boost/spirit/include/classic_escape_char.hpp>
 #include <boost/spirit/include/classic_functor_parser.hpp>
 #include <boost/shared_ptr.hpp>
+// windows.h対策
+#undef CreateFile
+#undef CreateObject
 
 #if defined(BOOST_MSVC) && (BOOST_MSVC <= 1300)
 #define BOOST_SPIRIT_IT_NS boost::spirit::classic::impl

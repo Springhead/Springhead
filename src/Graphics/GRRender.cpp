@@ -6,6 +6,11 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Graphics/GRRender.h>
+
+// intrin.hとinterlocked.hppとの呼び出し規約の不整合を回避するためにwindows.hをインクルードするように指示
+#if defined _MSC_VER
+# define BOOST_USE_WINDOWS_H
+#endif
 #include <boost/regex.hpp>
 
 namespace Spr {;
@@ -17,6 +22,7 @@ bool GRMaterialDesc::Is3D() const{
 
 //----------------------------------------------------------------------------
 //	GRRender
+#undef  RGB
 #define RGB(name, x, y, z) {matSample[GRRenderBaseIf::##name].diffuse = Vec4f((float)x/255.0f, (float)y/255.0f, (float)z/255.0f, 1.0f);}
 
 GRRender::GRRender(){

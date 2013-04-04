@@ -29,6 +29,10 @@
 #include <io.h>
 #endif
 
+// intrin.hとinterlocked.hppとの呼び出し規約の不整合を回避するためにwindows.hをインクルードするように指示
+#if defined _MSC_VER
+# define BOOST_USE_WINDOWS_H
+#endif
 #include <boost/regex.hpp>
 
 static bool enableDebugMessage = false;
