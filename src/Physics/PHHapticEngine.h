@@ -148,7 +148,10 @@ public:
 	///< デバック用シミュレーション実行
 	virtual void StepPhysicsSimulation();
 
-	virtual bool IsAfterStepPhysicsSimulation();
+	/// シミュレーションを実行する直前に実行されるコールバックを登録する
+	virtual bool SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg);
+	/// シミュレーションを実行した直後に実行されるコールバックを登録する
+	virtual bool SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg);
 };
 
 //----------------------------------------------------------------------------
@@ -221,8 +224,10 @@ public:
 	///（PHScene::Stepの変わりに呼ぶ）
 	virtual void StepPhysicsSimulation(){ engineImp->StepPhysicsSimulation(); }
 
-	/// シミュレーションを実行した直後かどうかを返す
-	virtual bool IsAfterStepPhysicsSimulation() { return engineImp->IsAfterStepPhysicsSimulation(); }
+	/// シミュレーションを実行する直前に実行されるコールバックを登録する
+	virtual bool SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg) { return engineImp->SetCallbackBeforeStep(f, arg); }
+	/// シミュレーションを実行した直後に実行されるコールバックを登録する
+	virtual bool SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg)  { return engineImp->SetCallbackAfterStep(f, arg); }
 };
 
 // PHSceneからStep()を2回呼ぶための擬似クラス

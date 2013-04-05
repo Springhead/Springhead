@@ -434,7 +434,11 @@ void PHHapticEngineImp::StepPhysicsSimulation(){
 	engine->GetScene()->Step();
 }
 
-bool PHHapticEngineImp::IsAfterStepPhysicsSimulation(){
+bool PHHapticEngineImp::SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg) {
+	return true;
+}
+
+bool PHHapticEngineImp::SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg) {
 	return true;
 }
 

@@ -21,6 +21,9 @@
 %ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t,PHSceneDesc::ContactMode);
 %ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t);
 %ignore Spr::PHSceneIf::GetSolidPair(PHSolidIf*, PHSolidIf*, bool&);
+%ignore Spr::PHHapticEngineIf::Callback;
+%ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
+%ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
 %include "Utility/EPObject.i"
 EXTEND_NEW(PHSolidDesc)
 EXTEND_NEW(PHPathPoint)
