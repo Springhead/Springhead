@@ -497,6 +497,7 @@ void CRBallHumanBodyGen::CreateUpperArm(LREnum lr){
 	// ballDesc.poseSocket.Ori() = Quaterniond::Rot(Rad(90),'y');
 	SetJointSpringDamper(ballDesc, springShoulder, damperShoulder, solids[SO_CHEST]->GetPHSolid()->GetMass());
 	joints[joNShoulder]       = CreateJoint(solids[soNUpperArm], solids[SO_CHEST], ballDesc);
+	solids[soNUpperArm]->AddChildObject(joints[joNShoulder]->GetPHJoint());
 	CreateIKActuator(joNShoulder);
 
 	phScene->SetContactMode(solids[soNUpperArm]->GetPHSolid(), solids[SO_CHEST]->GetPHSolid(), PHSceneDesc::MODE_NONE);

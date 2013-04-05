@@ -47,28 +47,28 @@ public:
 	virtual void BuildScene(){
 		Posed pose;
 		pose.Pos() = Vec3d(3.0, 2.0, 0.0);
-		robot.Build(pose, phScene, GetSdk()->GetPHSdk());			//	ロボット
+		robot.Build(pose, GetFWScene()->GetPHScene(), GetSdk()->GetPHSdk());			//	ロボット
 		pose.Pos() = Vec3d(0.0, 1.0, 1.0);
 
 		CreateFloor();								//	床
 		CDBoxDesc box;								//	三つ重なっている箱
 		box.boxsize = Vec3f(1.0, 1.0, 2.0);
-		CDBoxIf* boxBody = phScene->GetSdk()->CreateShape(box)->Cast();
+		CDBoxIf* boxBody = GetFWScene()->GetPHScene()->GetSdk()->CreateShape(box)->Cast();
 		PHSolidDesc sd;
 		sd.mass *= 0.7;
 		sd.inertia *= 0.7;
 		PHSolidIf* soBox;
 		for(int i=0; i<3;++i){
-			soBox = phScene->CreateSolid(sd);
+			soBox = GetFWScene()->GetPHScene()->CreateSolid(sd);
 			soBox->AddShape(boxBody);
 			soBox->SetPose(pose);
 			pose.PosY()+=1.0;
 			pose.PosX()-=0.05;
 		}
 
-		phScene->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	重力を設定
+		GetFWScene()->GetPHScene()->SetGravity(Vec3f(0.0, -9.8, 0.0));	//	重力を設定
 
-		fwScene->EnableRenderAxis(false, false, false);
+		GetFWScene()->EnableRenderAxis(false, false, false);
 
 		ToggleAction(MENU_ALWAYS, ID_RUN);
 	}

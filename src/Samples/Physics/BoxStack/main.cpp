@@ -95,7 +95,7 @@ public:
 
 		// 床を揺らす
 		if (soFloor){
-			double time = phScene->GetCount() * phScene->GetTimeStep();
+			double time = GetFWScene()->GetPHScene()->GetCount() * GetFWScene()->GetPHScene()->GetTimeStep();
 			double omega = 2.0 * M_PI;
 			soFloor->SetFramePosition(Vec3d(floorShakeAmplitude*sin(time*omega),0,0));			
 			soFloor->SetVelocity(Vec3d(floorShakeAmplitude*omega*cos(time*omega),0,0));
@@ -107,7 +107,7 @@ public:
 		SampleApp::OnDraw(render);
 
 		std::ostringstream sstr;
-		sstr << "NObj = " << phScene->NSolids();
+		sstr << "NObj = " << GetFWScene()->GetPHScene()->NSolids();
 		render->DrawFont(Vec2f(-21, 23), sstr.str());
 	}
 
