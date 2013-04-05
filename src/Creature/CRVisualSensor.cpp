@@ -37,6 +37,9 @@ void CRVisualSensor::Step(){
 
 		Vec2d theta = Vec2d(atan2(localPos.x, -localPos.y), atan2(localPos.z, -localPos.y));
 		theta.y *= (range.X() / range.Y());
+
+		Vec2d thetaC = Vec2d(atan2(localPos.x, -localPos.y), atan2(localPos.z, -localPos.y));
+		thetaC.y *= (centerRange.X() / centerRange.Y());
 		if (theta.norm() < (range.X() / 2.0) && dist < 16) { // 決め打ち<!!>
 			// Visible
 			CRVisualInfo visible;
@@ -46,9 +49,10 @@ void CRVisualSensor::Step(){
 			visible.velLocal = (so->GetPose() * pose).Inv() * so->GetVelocity();
 			visible.solid    = so;
 			visible.bMyBody  = bMyBody;
+			visible.bCenter  = ( thetaC.norm() < (centerRange.X() / 2.0) );
 
 			visibleList[write].push_back(visible);
-		}		
+		}
 	}
 
 	// 書き込み完了　→　バッファをローテーション

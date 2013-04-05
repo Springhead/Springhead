@@ -210,6 +210,11 @@ struct PHIKActuatorIf : SceneObjectIf{
 	/** @brief 有効・無効を取得する
 	*/
 	bool IsEnabled();
+
+	/** @brief 祖先を取得する
+	*/
+	int NAncestors();
+	PHIKActuatorIf* GetAncestor(int i);
 };
 
 /// IKアクチュエータのディスクリプタ

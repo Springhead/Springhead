@@ -66,6 +66,10 @@ public:
 	*/
 	void SetRange(Vec2d range) { this->range = range; }
 
+	/** @brief 中心視野の大きさを設定する
+	*/
+	void SetCenterRange(Vec2d range) { this->centerRange = range; }
+
 	/** @brief 視覚センサを対象剛体に貼り付ける位置・姿勢を指定する
 	*/
 	void SetPose(Posed pose) { this->pose = pose; }
@@ -77,6 +81,10 @@ public:
 	/** @brief 視野の大きさを取得する
 	*/
 	Vec2d GetRange() { return range; }
+
+	/** @brief 中心視野の大きさを取得する
+	*/
+	Vec2d GetCenterRange() { return centerRange; }
 
 	/** @brief 視覚センサを対象剛体に貼り付ける位置・姿勢を取得する
 	*/

@@ -98,10 +98,10 @@ public:
 		ToggleAction(MENU_ALWAYS, ID_RUN);
 		curScene = 0;
 
-		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
+		GetFWScene()->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3d(0,0,50));
 
-		fwScene->EnableRenderGrid(false,true,false);
+		GetFWScene()->EnableRenderGrid(false,true,false);
 	}
 
 	PHSolidIf*         soTarget;
@@ -110,7 +110,7 @@ public:
 
 	// シーン構築
 	virtual void BuildScene() {
-		PHSdkIf* phSdk = phScene->GetSdk();
+		PHSdkIf* phSdk = GetFWScene()->GetPHScene()->GetSdk();
 
 		PHSolidDesc descSolid;
 
@@ -127,36 +127,36 @@ public:
 		Posed shapePose; shapePose.Ori() = Quaterniond::Rot(Rad(90), 'x');
 
 		// Base Link
-		PHSolidIf* so0 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so0 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so0->SetDynamical(false);
 		so0->AddShape(phSdk->CreateShape(descCapsule));
 		so0->SetShapePose(0, shapePose);
 
 		// Link 1
-		PHSolidIf* so1 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so1 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so1->SetFramePosition(Vec3d(0,4,0));
 		so1->AddShape(phSdk->CreateShape(descCapsule));
 		so1->SetShapePose(0, shapePose);
 
 		// Link 2
-		PHSolidIf* so2 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so2 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so2->SetFramePosition(Vec3d(0,8,0));
 		so2->AddShape(phSdk->CreateShape(descCapsule));
 		so2->SetShapePose(0, shapePose);
 
 		// Pointer
-		PHSolidIf* so4 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so4 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so4->SetFramePosition(Vec3d(6,0,0));
 		so4->AddShape(phSdk->CreateShape(descSphere));
 		so4->SetDynamical(false);
 
 		// Obstacle
-		PHSolidIf* so5 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so5 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so5->SetFramePosition(Vec3d(4,0,0));
 		so5->AddShape(phSdk->CreateShape(descBox));
 
 		// Obstacle Base
-		PHSolidIf* so6 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so6 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so6->SetFramePosition(Vec3d(4,-2,0));
 		so6->AddShape(phSdk->CreateShape(descBox));
 		so6->SetDynamical(false);
@@ -178,19 +178,19 @@ public:
 		PHIKEndEffectorDesc descIKE;
 
 		// Base <-> Link 1
-		PHHingeJointIf* jo1 = phScene->CreateJoint(so0, so1, descJoint)->Cast();
-		PHIKHingeActuatorIf* ika1 = phScene->CreateIKActuator(descIKA)->Cast();
+		PHHingeJointIf* jo1 = GetFWScene()->GetPHScene()->CreateJoint(so0, so1, descJoint)->Cast();
+		PHIKHingeActuatorIf* ika1 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKA)->Cast();
 		ika1->AddChildObject(jo1);
 
 		// Link 1 <-> Link 2
-		PHHingeJointIf* jo2  = phScene->CreateJoint(so1, so2, descJoint)->Cast();
-		PHIKHingeActuatorIf* ika2 = phScene->CreateIKActuator(descIKA)->Cast();
+		PHHingeJointIf* jo2  = GetFWScene()->GetPHScene()->CreateJoint(so1, so2, descJoint)->Cast();
+		PHIKHingeActuatorIf* ika2 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKA)->Cast();
 		ika2->AddChildObject(jo2);
 		joX = jo2;
 
 		// Link2 = End Effector
 		descIKE.targetLocalPosition = Vec3d(0,2,0);
-		PHIKEndEffectorIf* ike1 = phScene->CreateIKEndEffector(descIKE);
+		PHIKEndEffectorIf* ike1 = GetFWScene()->GetPHScene()->CreateIKEndEffector(descIKE);
 		ike1->AddChildObject(so2);
 		ika1->AddChildObject(ike1);
 		ika2->AddChildObject(ike1);
@@ -201,17 +201,17 @@ public:
 		// Obstacle <-> Obstacle Base
 		descJoint.poseSocket = Posed(1,0,0,0, 0,-1.2,0);
 		descJoint.posePlug   = Posed(1,0,0,0, 0, 1.2,0);
-		PHHingeJointIf* jo3  = phScene->CreateJoint(so5, so6, descJoint)->Cast();
+		PHHingeJointIf* jo3  = GetFWScene()->GetPHScene()->CreateJoint(so5, so6, descJoint)->Cast();
 		jo3->SetSpring(200.0);
 		jo3->SetDamper( 20.0);
 
 		// ----- ----- ----- ----- -----
 
 		ike1->SetTargetPosition(soTarget->GetPose().Pos());
-		phScene->GetIKEngine()->Enable(true);
+		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
 
-		phScene->SetContactMode(PHSceneDesc::MODE_NONE);
-		phScene->SetContactMode(so2, so5, PHSceneDesc::MODE_LCP);
+		GetFWScene()->GetPHScene()->SetContactMode(PHSceneDesc::MODE_NONE);
+		GetFWScene()->GetPHScene()->SetContactMode(so2, so5, PHSceneDesc::MODE_LCP);
 	}
 
 	virtual void OnStep(){
@@ -231,13 +231,13 @@ public:
 		// ----- ----- ----- ----- -----
 		if (bHard) {
 			for (size_t i=0; i<2; ++i) {
-				PHHingeJointIf* jo = phScene->GetJoint(i)->Cast();
+				PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 				jo->SetSpring(  100.0);
 				jo->SetDamper(10000.0);
 			}
 		} else {
 			for (size_t i=0; i<2; ++i) {
-				PHHingeJointIf* jo = phScene->GetJoint(i)->Cast();
+				PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 				jo->SetSpring( 10.0);
 				jo->SetDamper(100.0);
 			}
@@ -247,12 +247,12 @@ public:
 		if (bPM) {
 			StepPliant();
 		} else {
-			phScene->GetIKEngine()->Enable(true);
-			for (size_t i=0; i<phScene->NJoints(); ++i) {
-				PHHingeJointIf* jo = phScene->GetJoint(i)->Cast();
+			GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
+			for (size_t i=0; i<GetFWScene()->GetPHScene()->NJoints(); ++i) {
+				PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 				if (jo) { jo->SetOffsetForce(0); }
 			}
-			phScene->Step();
+			GetFWScene()->GetPHScene()->Step();
 		}
 	}
 
@@ -308,31 +308,31 @@ public:
 		double springs[2];
 		double dampers[2];
 
-		states->SaveState(phScene);
-		phScene->GetConstraintEngine()->EnableContactDetection(false);
-		phScene->GetIKEngine()->Enable(true);
+		states->SaveState(GetFWScene()->GetPHScene());
+		GetFWScene()->GetPHScene()->GetConstraintEngine()->EnableContactDetection(false);
+		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
 		for (size_t i=0; i<2; ++i) {
-			PHHingeJointIf* jo = phScene->GetJoint(i)->Cast();
+			PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 			springs[i]    = jo->GetSpring();
 			dampers[i]    = jo->GetDamper();
 			jo->SetSpring(0);
 			jo->SetDamper(FLT_MAX);
 		}
 
-		phScene->Step();
+		GetFWScene()->GetPHScene()->Step();
 		for (size_t i=0; i<2; ++i) {
-			PHHingeJointIf* jo = phScene->GetJoint(i)->Cast();
+			PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 			offsets[i]    = jo->GetMotorForce();
 			targets[i]    = jo->GetTargetPosition();
 			velocities[i] = jo->GetTargetVelocity();
 		}
 
-		states->LoadState(phScene);
-		phScene->GetConstraintEngine()->EnableContactDetection(true);
-		phScene->GetIKEngine()->Enable(false);
+		states->LoadState(GetFWScene()->GetPHScene());
+		GetFWScene()->GetPHScene()->GetConstraintEngine()->EnableContactDetection(true);
+		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(false);
 
 		for (size_t i=0; i<2; ++i) {
-			PHHingeJointIf* jo = phScene->GetJoint(i)->Cast();
+			PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 			jo->SetOffsetForce(offsets[i]);
 			jo->SetSpring(springs[i]);
 			jo->SetDamper(0);
@@ -340,7 +340,7 @@ public:
 			jo->SetTargetVelocity(velocities[i]);
 		}
 
-		phScene->Step();
+		GetFWScene()->GetPHScene()->Step();
 	}
 } app;
 

@@ -30,10 +30,12 @@ protected:\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
+		CREngine::SetDesc((CREngineDesc*)(CRControllerDesc*)ptr);	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		CREngine::GetDesc((CREngineDesc*)(CRControllerDesc*)ptr);	\
 		return true;	\
 	}\
 
@@ -72,10 +74,12 @@ protected:\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
+		CRController::SetDesc((CRControllerDesc*)(CRGrabControllerDesc*)ptr);	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		CRController::GetDesc((CRControllerDesc*)(CRGrabControllerDesc*)ptr);	\
 		return true;	\
 	}\
 
@@ -132,12 +136,14 @@ public:\
 #define SPR_DECLMEMBEROF_CRVisualSensorDesc \
 protected:\
 	Vec2d	range;	\
+	Vec2d	centerRange;	\
 	Posed	pose;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		CREngine::SetDesc((CREngineDesc*)(CRVisualSensorDesc*)ptr);	\
 		range = ((CRVisualSensorDesc*)ptr)->range;	\
+		centerRange = ((CRVisualSensorDesc*)ptr)->centerRange;	\
 		pose = ((CRVisualSensorDesc*)ptr)->pose;	\
 		AfterSetDesc();	\
 	}\
@@ -145,6 +151,7 @@ public:\
 		BeforeGetDesc();	\
 		CREngine::GetDesc((CREngineDesc*)(CRVisualSensorDesc*)ptr);	\
 		((CRVisualSensorDesc*)ptr)->range = range;	\
+		((CRVisualSensorDesc*)ptr)->centerRange = centerRange;	\
 		((CRVisualSensorDesc*)ptr)->pose = pose;	\
 		return true;	\
 	}\
