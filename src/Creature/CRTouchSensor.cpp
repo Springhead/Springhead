@@ -63,6 +63,7 @@ void CRTouchSensor::Step() {
 				PHSolidIf* so; PHHapticPointer* hp;
 				if (hp1) { hp = hp1; so = so2; }
 				if (hp2) { hp = hp2; so = so1; }
+				DSTR << so->GetName() << std::endl;
 				
 				for (int m=0; m<hp->NNeighborSolids(); ++m) {
 					if (hp->GetNeighborSolid(m) == so) {
@@ -71,19 +72,21 @@ void CRTouchSensor::Step() {
 						PHSolidPairForHaptic* sop = he->solidPairsTemp.item(n,0);
 						for (int x=0; x<sop->solid[0]->NShape(); ++x) {
 							for (int y=0; y<sop->solid[0]->NShape(); ++y) {
-								PHShapePairForHaptic* shp = sop->shapePairs.item(x,y);
-								Vec3d p0 = (shp->shapePoseW[0]*shp->closestPoint[0]);
-								Vec3d p1 = (shp->shapePoseW[1]*shp->closestPoint[1]);
-								Vec3d di = (p0-p1);
-								if (di.norm()!=0  &&  PTM::dot(di.unit(), shp->normal.unit()) > 0) {
-									CRContactInfo contact;
-									contact.pos			= soOther->GetPose().Pos(); // <!!>
-									contact.soMe		= soMe;
-									contact.soOther		= soOther;
-									contact.force		= di;
-									contact.pressure	= di.norm();
+								if (x < sop->shapePairs.height() && y < sop->shapePairs.width()) {
+									PHShapePairForHaptic* shp = sop->shapePairs.item(x,y);
+									Vec3d p0 = (shp->shapePoseW[0]*shp->closestPoint[0]);
+									Vec3d p1 = (shp->shapePoseW[1]*shp->closestPoint[1]);
+									Vec3d di = (p0-p1) * 100.0; // <!!>
+									if (di.norm()!=0  &&  PTM::dot(di.unit(), shp->normal.unit()) > 0) {
+										CRContactInfo contact;
+										contact.pos			= soOther->GetPose().Pos(); // <!!>
+										contact.soMe		= soMe;
+										contact.soOther		= soOther;
+										contact.force		= di;
+										contact.pressure	= di.norm();
 
-									contactList[write].push_back(contact);
+										contactList[write].push_back(contact);
+									}
 								}
 							}
 						}

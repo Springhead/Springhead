@@ -63,7 +63,7 @@ public:
 
 	/// 状態をリセットする
 	virtual void Reset() {
-		grabSpring->Enable(false);
+		if (grabSpring) { grabSpring->Enable(false); }
 		grabbingSolid = NULL;
 		grabSpring    = NULL;
 	}
@@ -107,6 +107,11 @@ public:
 	/// 把持に使用する剛体を返す
 	PHSolidIf* GetSolid() {
 		return solid->GetPHSolid();
+	}
+
+	/// 把持に使用する剛体を設定する
+	void SetSolid(CRBoneIf* so) {
+		solid = so;
 	}
 };
 }

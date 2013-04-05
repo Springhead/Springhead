@@ -29,7 +29,7 @@ struct CRControllerIf : public CREngineIf{
 	int GetStatus();
 };
 
-struct CRControllerDesc{
+struct CRControllerDesc : CREngineDesc {
 	SPR_DESCDEF(CRController);
 
 	/// コントローラの現状を表すEnum
@@ -104,9 +104,12 @@ struct CRGrabControllerIf : public CRControllerIf{
 
 	/// 把持に使用する剛体を返す
 	PHSolidIf* GetSolid();
+
+	/// 把持に使用する剛体を設定する
+	void SetSolid(CRBoneIf* so);
 };
 
-struct CRGrabControllerDesc{
+struct CRGrabControllerDesc : CRControllerDesc{
 	SPR_DESCDEF(CRGrabController);
 
 	/// ラベル <!!>

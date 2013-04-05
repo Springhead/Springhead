@@ -26,12 +26,6 @@ public:
 	SPR_OBJECTDEF(PHIKEndEffector);
 	ACCESS_DESC(PHIKEndEffector)
 
-	/// 簡略表記用typedef
-	typedef std::set< PHIKEndEffector* >	ESet;
-	typedef ESet::iterator					ESetIter;
-	typedef std::set< PHIKActuator* >		ASet;
-	typedef ASet::iterator					ASetIter;
-
 	/// 自由度
 	int ndof;
 
@@ -43,9 +37,6 @@ public:
 
 	/// 制御点のある剛体
 	PHSolidIf* solid;
-
-	/// このエンドエフェクタが連動するアクチュエータ
-	ASet linkedActuators;
 
 	/** @brief 初期化する
 	*/

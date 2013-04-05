@@ -139,6 +139,11 @@ public:
 	void Enable(bool enable){ bEnabled = enable; }
 	bool IsEnabled()        { return bEnabled; }
 
+	/** @brief 祖先を取得する
+	*/
+	int NAncestors() { return (int)ascendant.size(); }
+	PHIKActuatorIf* GetAncestor(int i) { return ascendant[i]->Cast(); }
+
 	// --- --- --- --- ---
 
 	virtual bool		AddChildObject(ObjectIf* o);

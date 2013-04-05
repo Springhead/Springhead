@@ -114,7 +114,10 @@ public:
 	virtual double GetHardnessRate() { return hardnessRate; }
 	virtual void SetSecondMoment(Vec3d sM) { secondMoment = sM; }
 	virtual Vec3d GetSecondMoment() { return secondMoment; }
-	virtual Vec3d GetMotorForce() { if (limit) { if (limit->IsOnLimit()) return 0; } return(f.w()*(1 / GetScene()->GetTimeStep())); }
+	virtual Vec3d GetMotorForce() {
+		if (limit) { if (limit->IsOnLimit()) { return Vec3d(); } }
+		return(f.w()*(1 / GetScene()->GetTimeStep()));
+	}
 };
 
 }

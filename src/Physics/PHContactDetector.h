@@ -386,9 +386,10 @@ public:
 			slhs = solid;
 			srhs = sp->solid[1];
 			//	消えたShapeに対応する行を詰める
-			for(j = 0; j < srhs->NShape(); j++){
-				for(int k=delPos+1; k<srhs->NShape(); ++k)
+			for(j = 0; j < srhs->NShape(); j++) {
+				for(int k=delPos+1; k<slhs->NShape(); ++k) {
 					sp->shapePairs.item(k-1, j) = sp->shapePairs.item(k, j);
+				}
 			}
 			//	サイズの更新
 			sp->shapePairs.resize(solid->NShape(), srhs->NShape());

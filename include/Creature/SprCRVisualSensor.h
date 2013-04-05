@@ -21,6 +21,7 @@ struct CRVisualInfo {
 	Vec3d		velLocal;
 	PHSolidIf*	solid;
 	bool		bMyBody;
+	bool		bCenter;
 };
 
 struct CRVisualSensorIf : CREngineIf{
@@ -42,6 +43,10 @@ struct CRVisualSensorIf : CREngineIf{
 	*/
 	void SetRange(Vec2d range);
 
+	/** @brief 中心視野の大きさを設定する
+	*/
+	void SetCenterRange(Vec2d range);
+
 	/** @brief 視覚センサを対象剛体に貼り付ける位置・姿勢を指定する
 	*/
 	void SetPose(Posed pose);
@@ -53,6 +58,10 @@ struct CRVisualSensorIf : CREngineIf{
 	/** @brief 視野の大きさを取得する
 	*/
 	Vec2d GetRange();
+
+	/** @brief 中心視野の大きさを取得する
+	*/
+	Vec2d GetCenterRange();
 
 	/** @brief 視覚センサを対象剛体に貼り付ける位置・姿勢を取得する
 	*/
@@ -67,11 +76,13 @@ struct CRVisualSensorIf : CREngineIf{
 struct CRVisualSensorDesc : CREngineDesc{
 	SPR_DESCDEF(CRVisualSensor);
 
-	Vec2d range; ///< 視野の大きさ： 水平角度，垂直角度
-	Posed pose;  ///< 視覚センサを対象剛体に貼り付ける位置・姿勢
+	Vec2d range;       ///< 視野の大きさ： 水平角度，垂直角度
+	Vec2d centerRange; ///< 中心視野の大きさ： 水平角度，垂直角度
+	Posed pose;        ///< 視覚センサを対象剛体に貼り付ける位置・姿勢
 
 	CRVisualSensorDesc(){
 		range = Vec2d(Rad(90), Rad(90));
+		centerRange = Vec2d(Rad(10), Rad(10));
 		pose  = Posed();
 	}
 };
