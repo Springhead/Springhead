@@ -163,14 +163,29 @@ public:
 	*/
 	void StepPhysicsSimulation();
 
+	/** @brief シミュレーションを実行する直前かどうかを返す
+	*/
+	// bool IsBeforeStepPhysicsSimulation();
+
 	/** @brief シミュレーションを実行した直後かどうかを返す
 	*/
-	bool IsAfterStepPhysicsSimulation();
+	// bool IsAfterStepPhysicsSimulation();
 
 	/** @breif シーングラフの状態(ObjectStatesIf)を開放する。
 				動的にオブジェクトを追加する時には直前に呼ぶ必要がある。
 	*/
 	void ReleaseState();
+
+	///	コールバック関数の型
+	typedef void (SPR_CDECL *Callback)(void* arg);
+
+	/** @brief シミュレーションを実行する直前に実行されるコールバックを登録する
+	*/
+	bool SetCallbackBeforeStep(Callback f, void* arg);
+
+	/** @brief シミュレーションを実行した直後に実行されるコールバックを登録する
+	*/
+	bool SetCallbackAfterStep(Callback f, void* arg);
 
 };
 //@}

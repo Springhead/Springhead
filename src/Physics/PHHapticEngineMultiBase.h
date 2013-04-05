@@ -44,7 +44,10 @@ protected:
 	volatile int	hapticCount;
 	volatile bool	bSync;
 	bool			bCalcPhys;
-	bool			bAfterCalcPhys;
+
+	PHHapticEngineIf::Callback cbBeforeStep;
+	PHHapticEngineIf::Callback cbAfterStep;
+	void *callbackArg;
 
 public:
 	PHHapticEngineMultiBase();
@@ -59,7 +62,18 @@ public:
 
 	//デバック用コード
 	virtual void StepPhysicsSimulation();
-	virtual bool IsAfterStepPhysicsSimulation();
+
+	virtual bool SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg) {
+		cbBeforeStep = f;
+		callbackArg  = arg;
+		return true;
+	}
+
+	virtual bool SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg) {
+		cbAfterStep = f;
+		callbackArg = arg;
+		return true;
+	}
 };
 
 }

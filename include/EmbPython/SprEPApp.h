@@ -229,9 +229,11 @@ public:
 			}else{
 				PHHapticEngineIf* he = phScene->GetHapticEngine();
 				he->StepPhysicsSimulation();
+				/* <!!>
 				if (he->IsAfterStepPhysicsSimulation()) {
 					CallAfterStepFunc();
 				}
+				*/
 			}
 		}
 	}
