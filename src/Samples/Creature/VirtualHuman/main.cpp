@@ -71,16 +71,16 @@ public:
 		ToggleAction(MENU_ALWAYS, ID_RUN);
 		curScene = 0;
 
-		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
+		GetFWScene()->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(3,3,5));
-		fwScene->EnableRenderAxis(true, false, false);
+		GetFWScene()->EnableRenderAxis(true, false, false);
 	}
 
 	PHSolidIf*         soTarget;
 
 	// シーン構築
 	virtual void BuildScene() {
-		PHSdkIf* phSdk = phScene->GetSdk();
+		PHSdkIf* phSdk = GetFWScene()->GetPHScene()->GetSdk();
 
 		PHSolidDesc descSolid;
 
@@ -88,7 +88,7 @@ public:
 		descSphere.radius  = 0.1;
 
 		// Pointer
-		PHSolidIf* so4 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so4 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so4->SetFramePosition(Vec3d(1.2,0,0));
 		so4->AddShape(phSdk->CreateShape(descSphere));
 		so4->SetDynamical(false);
@@ -98,12 +98,12 @@ public:
 		CRSdkIf* crSdk = CRSdkIf::CreateSdk();
 		CRCreatureDesc descCreature;
 		CRCreatureIf* crCreature = crSdk->CreateCreature(descCreature);
-		crCreature->AddChildObject(phScene);
+		crCreature->AddChildObject(GetFWScene()->GetPHScene());
 		CRBallHumanBodyGenDesc descBody;
 		CRBallHumanBodyGen bodyGen(descBody);
 		CRBodyIf* body = bodyGen.Generate(crCreature);
 
-		body->GetSolid(CRBallHumanBodyGenDesc::SO_WAIST)->GetPHSolid()->SetDynamical(false);
+		body->FindByLabel("waist")->GetPHSolid()->SetDynamical(false);
 	}
 
 	virtual void OnAction(int menu, int id){

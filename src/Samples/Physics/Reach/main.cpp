@@ -66,17 +66,17 @@ public:
 
 		// hip
 		bd.boxsize = Vec3f(0.19, 0.077, 0.137);
-		hip = phScene->CreateSolid();
+		hip = GetFWScene()->GetPHScene()->CreateSolid();
 		hip->AddShape(phSdk->CreateShape(bd));
 		hip->SetFramePosition(Vec3f(0.0, 0.0, 0.0));
 		hip->SetDynamical(false);
 		// body
 		bd.boxsize = Vec3f(0.15, 0.08, 0.108);
-		body = phScene->CreateSolid();
+		body = GetFWScene()->GetPHScene()->CreateSolid();
 		body->AddShape(phSdk->CreateShape(bd));
 		// chest
 		bd.boxsize = Vec3f(0.18, 0.2, 0.1);
-		chest = phScene->CreateSolid();
+		chest = GetFWScene()->GetPHScene()->CreateSolid();
 		chest->AddShape(phSdk->CreateShape(bd));
 		// body joints
 		jd.damper = 60.0;
@@ -85,17 +85,17 @@ public:
 		jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'x');
 		jd.poseSocket.Pos() = Vec3d(0, -0.04, 0);
 		jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
-		phScene->CreateJoint(body, hip, jd);
+		GetFWScene()->GetPHScene()->CreateJoint(body, hip, jd);
 		//
 		jd.posePlug.Pos() = Vec3d(0, 0.04, 0);
 		jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
 		jd.poseSocket.Pos() = Vec3d(0, -0.1, 0);
 		jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
-		phScene->CreateJoint(chest, body, jd);
+		GetFWScene()->GetPHScene()->CreateJoint(chest, body, jd);
 
 		// head
 		sd.radius = 0.06;
-		head = phScene->CreateSolid();
+		head = GetFWScene()->GetPHScene()->CreateSolid();
 		head->AddShape(phSdk->CreateShape(sd));
 		// neck
 		jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
@@ -105,22 +105,22 @@ public:
 		jd.damper = 1.0;
 		jd.spring = 100.0;
 		jd.targetPosition = Rad(0);
-		phScene->CreateJoint(head, chest, jd);
+		GetFWScene()->GetPHScene()->CreateJoint(head, chest, jd);
 		
 		// upper arm
 		bd.boxsize = Vec3f(0.049, 0.16, 0.048);
 		shapeUpArm = phSdk->CreateShape(bd);
-		upArmR = phScene->CreateSolid();
+		upArmR = GetFWScene()->GetPHScene()->CreateSolid();
 		upArmR->AddShape(shapeUpArm);
-		upArmL = phScene->CreateSolid();
+		upArmL = GetFWScene()->GetPHScene()->CreateSolid();
 		upArmL->AddShape(shapeUpArm);
 		// lower arm
 		bd.boxsize = Vec3f(0.046, 0.12, 0.046);
 		shapeLoArm = phSdk->CreateShape(bd);
-		loArmR = phScene->CreateSolid();
+		loArmR = GetFWScene()->GetPHScene()->CreateSolid();
 		loArmR->AddShape(shapeLoArm);
 		loArmR->SetOrientation(Quaterniond::Rot(Rad(90), 'x'));
-		loArmL = phScene->CreateSolid();
+		loArmL = GetFWScene()->GetPHScene()->CreateSolid();
 		loArmL->AddShape(shapeLoArm);
 		loArmL->SetOrientation(Quaterniond::Rot(Rad(90), 'x'));
 		// shoulder
@@ -129,12 +129,12 @@ public:
 		bjd.damper = 6.0;
 		bjd.spring = 10.0;
 		(Vec3d&)bjd.targetPosition = Vec3d(Rad(-30), Rad(30), Rad(-30));
-		phScene->CreateJoint(upArmR, chest, bjd);
+		GetFWScene()->GetPHScene()->CreateJoint(upArmR, chest, bjd);
 		
 		bjd.posePlug.Pos() = Vec3d(-0.13, 0.1, 0.0);
 		bjd.poseSocket.Pos() = Vec3d(0, 0.1, 0);
 		(Vec3d&)bjd.targetPosition = Vec3d(Rad(30), Rad(30), Rad(30));
-		phScene->CreateJoint(upArmL, chest, bjd);
+		GetFWScene()->GetPHScene()->CreateJoint(upArmL, chest, bjd);
 		// elbow
 		jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
 		jd.posePlug.Pos() = Vec3d(0, -0.09, 0);
@@ -143,24 +143,24 @@ public:
 		jd.damper = 4.0;
 		jd.spring = 6.0;
 		jd.targetPosition = Rad(-30);
-		phScene->CreateJoint(loArmR, upArmR, jd);
+		GetFWScene()->GetPHScene()->CreateJoint(loArmR, upArmR, jd);
 		
 		jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
 		jd.posePlug.Pos() = Vec3d(0, -0.09, 0);
 		jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
 		jd.poseSocket.Pos() = Vec3d(0, 0.07, 0);
 		jd.targetPosition = Rad(-30);
-		phScene->CreateJoint(loArmL, upArmL, jd);
+		GetFWScene()->GetPHScene()->CreateJoint(loArmL, upArmL, jd);
 
 		// reaching targets
 		sd.radius = 0.02;
 		shapeTarget = phSdk->CreateShape(sd);
-		targetR = phScene->CreateSolid();
+		targetR = GetFWScene()->GetPHScene()->CreateSolid();
 		targetR->AddShape(shapeTarget);
 		targetR->SetDynamical(false);
 		targetR->SetFramePosition(targetPosR);
 	
-		targetL = phScene->CreateSolid();
+		targetL = GetFWScene()->GetPHScene()->CreateSolid();
 		targetL->AddShape(shapeTarget);
 		targetL->SetDynamical(false);
 		targetL->SetFramePosition(targetPosL);
@@ -169,26 +169,26 @@ public:
 		spd.damper = Vec3f(1,1,1) * 1000;
 		spd.spring = Vec3f(1,1,1) * 3000;
 		spd.posePlug.Pos() = Vec3d(0, -0.09, 0);
-		phScene->CreateJoint(targetR, loArmR, spd);
-		phScene->CreateJoint(targetL, loArmL, spd);
+		GetFWScene()->GetPHScene()->CreateJoint(targetR, loArmR, spd);
+		GetFWScene()->GetPHScene()->CreateJoint(targetL, loArmL, spd);
 
 		// 重力を設定
-		phScene->SetGravity(Vec3f(0, -9.8, 0));
+		GetFWScene()->GetPHScene()->SetGravity(Vec3f(0, -9.8, 0));
 
 		//
-		fwScene->SetRenderMode(true, false);
-		fwScene->SetSolidMaterial(GRRenderIf::BLUE, head);
-		fwScene->SetSolidMaterial(GRRenderIf::BLUE, chest);
-		fwScene->SetSolidMaterial(GRRenderIf::BLUE, body);
-		fwScene->SetSolidMaterial(GRRenderIf::BLUE, hip);
-		fwScene->SetSolidMaterial(GRRenderIf::BLUE, upArmL);
-		fwScene->SetSolidMaterial(GRRenderIf::BLUE, loArmL);
-		fwScene->SetSolidMaterial(GRRenderIf::BLUE, upArmR);
-		fwScene->SetSolidMaterial(GRRenderIf::BLUE, loArmR);
+		GetFWScene()->SetRenderMode(true, false);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::BLUE, head);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::BLUE, chest);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::BLUE, body);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::BLUE, hip);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::BLUE, upArmL);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::BLUE, loArmL);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::BLUE, upArmR);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::BLUE, loArmR);
 		
-		fwScene->SetSolidMaterial(GRRenderIf::RED, targetL);
-		fwScene->SetSolidMaterial(GRRenderIf::RED, targetR);
-		fwScene->EnableRenderAxis(false, false, false);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::RED, targetL);
+		GetFWScene()->SetSolidMaterial(GRRenderIf::RED, targetR);
+		GetFWScene()->EnableRenderAxis(false, false, false);
 
 		//	接触を切る
 		//scene->SetContactMode(&soTarget[0], PHSceneDesc::MODE_NONE);

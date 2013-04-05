@@ -71,17 +71,17 @@ public:
 		ToggleAction(MENU_ALWAYS, ID_RUN);
 		curScene = 0;
 
-		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
+		GetFWScene()->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(3,3,5));
-		fwScene->EnableRenderAxis(true, false, false);
-		fwScene->EnableRenderLimit(true);
+		GetFWScene()->EnableRenderAxis(true, false, false);
+		GetFWScene()->EnableRenderLimit(true);
 	}
 
 	PHSolidIf*         soTarget;
 
 	// シーン構築
 	virtual void BuildScene() {
-		PHSdkIf* phSdk = phScene->GetSdk();
+		PHSdkIf* phSdk = GetFWScene()->GetPHScene()->GetSdk();
 
 		PHSolidDesc descSolid;
 
@@ -89,7 +89,7 @@ public:
 		descSphere.radius  = 0.1;
 
 		// Pointer
-		PHSolidIf* so4 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so4 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so4->SetFramePosition(Vec3d(1.2,0,0));
 		so4->AddShape(phSdk->CreateShape(descSphere));
 		so4->SetDynamical(false);
@@ -99,12 +99,12 @@ public:
 		CRSdkIf* crSdk = CRSdkIf::CreateSdk();
 		CRCreatureDesc descCreature;
 		CRCreatureIf* crCreature = crSdk->CreateCreature(descCreature);
-		crCreature->AddChildObject(phScene);
+		crCreature->AddChildObject(GetFWScene()->GetPHScene());
 		CRBallHumanBodyGenDesc descBody;
 		CRBallHumanBodyGen bodyGen(descBody);
 		CRBodyIf* body = bodyGen.Generate(crCreature);
 
-		body->GetSolid(CRBallHumanBodyGenDesc::SO_WAIST)->GetPHSolid()->SetDynamical(false);
+		body->FindByLabel("waist")->GetPHSolid()->SetDynamical(false);
 
 		// ----- ----- ----- ----- -----
 
@@ -114,7 +114,7 @@ public:
 		descSplineLimit.spring    = 5.0;
 		descSplineLimit.damper    = 0.5;
 
-		PHBallJointIf* joLShoulder = body->GetJoint(7)->GetPHJoint()->Cast();
+		PHBallJointIf* joLShoulder = body->FindByLabel("left_upper_arm")->GetPHJoint()->Cast();
 		PHBallJointSplineLimitIf* limitL = joLShoulder->CreateLimit(descSplineLimit)->Cast();
 		limitL->AddNode(Rad(0),Rad(90),Rad(50),Rad(10),Rad(0),Rad(-90));
 		limitL->AddNode(Rad(48.0775),Rad(87.8079),Rad(50),Rad(10),Rad(0),Rad(-90));
@@ -126,8 +126,8 @@ public:
 		limitL->AddNode(Rad(360),Rad(90),Rad(50),Rad(10),Rad(0),Rad(-90));
 
 		if (joLShoulder) {
-			joLShoulder->SetDamper(10.0);
-			joLShoulder->SetSpring( 1.0);
+			joLShoulder->SetDamper(0.5);
+			joLShoulder->SetSpring(1.0);
 		}
 	}
 

@@ -74,7 +74,7 @@ public:
 		ToggleAction(MENU_ALWAYS, ID_RUN);
 		curScene = 0;
 
-		fwScene->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
+		GetFWScene()->GetPHScene()->GetConstraintEngine()->SetBSaveConstraints(true);
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(6.5,6,20));
 
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3d(0,0,50));
@@ -85,7 +85,7 @@ public:
 
 	// シーン構築
 	virtual void BuildScene() {
-		PHSdkIf* phSdk = phScene->GetSdk();
+		PHSdkIf* phSdk = GetFWScene()->GetPHScene()->GetSdk();
 
 		PHSolidDesc descSolid;
 
@@ -102,25 +102,25 @@ public:
 		Posed shapePose; shapePose.Ori() = Quaterniond::Rot(Rad(90), 'x');
 
 		// Base Link
-		PHSolidIf* so0 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so0 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so0->SetDynamical(false);
 		so0->AddShape(phSdk->CreateShape(descCapsule));
 		so0->SetShapePose(0, shapePose);
 
 		// Link 1
-		PHSolidIf* so1 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so1 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so1->SetFramePosition(Vec3d(0,4,0));
 		so1->AddShape(phSdk->CreateShape(descCapsule));
 		so1->SetShapePose(0, shapePose);
 
 		// Link 2
-		PHSolidIf* so2 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so2 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so2->SetFramePosition(Vec3d(0,8,0));
 		so2->AddShape(phSdk->CreateShape(descCapsule));
 		so2->SetShapePose(0, shapePose);
 
 		// Pointer
-		PHSolidIf* so4 = phScene->CreateSolid(descSolid);
+		PHSolidIf* so4 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so4->SetFramePosition(Vec3d(-10,0,0));
 		so4->AddShape(phSdk->CreateShape(descSphere));
 		so4->SetDynamical(false);
@@ -146,21 +146,21 @@ public:
 		PHIKEndEffectorDesc descIKE;
 
 		// Base <-> Link 1
-		PHHingeJointIf* jo1 = phScene->CreateJoint(so0, so1, descJoint)->Cast();
+		PHHingeJointIf* jo1 = GetFWScene()->GetPHScene()->CreateJoint(so0, so1, descJoint)->Cast();
 		descLimit.range  = Vec2d(Rad(-90), Rad(90));
 		jo1->CreateLimit(descLimit);
-		PHIKHingeActuatorIf* ika1 = phScene->CreateIKActuator(descIKA)->Cast();
+		PHIKHingeActuatorIf* ika1 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKA)->Cast();
 		ika1->AddChildObject(jo1);
 
 		// Link 1 <-> Link 2
-		PHHingeJointIf* jo2  = phScene->CreateJoint(so1, so2, descJoint)->Cast();
+		PHHingeJointIf* jo2  = GetFWScene()->GetPHScene()->CreateJoint(so1, so2, descJoint)->Cast();
 		descLimit.range  = Vec2d(Rad(0), Rad(180));
 		jo2->CreateLimit(descLimit);
-		PHIKHingeActuatorIf* ika2 = phScene->CreateIKActuator(descIKA)->Cast();
+		PHIKHingeActuatorIf* ika2 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKA)->Cast();
 		ika2->AddChildObject(jo2);
 
 		// Link2 = End Effector
-		PHIKEndEffectorIf* ike1 = phScene->CreateIKEndEffector(descIKE);
+		PHIKEndEffectorIf* ike1 = GetFWScene()->GetPHScene()->CreateIKEndEffector(descIKE);
 		ike1->AddChildObject(so2);
 		ika1->AddChildObject(ike1);
 		ika2->AddChildObject(ike1);
@@ -171,9 +171,9 @@ public:
 		// ----- ----- ----- ----- -----
 
 		ike1->SetTargetPosition(soTarget->GetPose().Pos());
-		phScene->GetIKEngine()->Enable(true);
+		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
 
-		phScene->SetContactMode(PHSceneDesc::MODE_NONE);
+		GetFWScene()->GetPHScene()->SetContactMode(PHSceneDesc::MODE_NONE);
 	}
 
 	virtual void OnAction(int menu, int id){
