@@ -104,17 +104,17 @@ public:
 		//FWFemMeshIf* fm[1] = GetSdk()->GetScene()->FindObject("fwNegi")->Cast();
 		//FWFemMeshIf* fm[1] = GetSdk()->GetScene()->FindObject("fwPan")->Cast();
 		
-		PHFemMeshThermoDesc d;		//	入れ物を作る
-		fm[1]->GetPHMesh()->GetDesc(&d);			//	アドレスを渡す
-		for(unsigned i=0; i < d.vertices.size(); i++){
-			d.vertices[i].y = 0.5 *d.vertices[i].y;
-		}
-		fm[1]->GetPHMesh()->SetDesc(&d);
-		
-		//	PHMeshからGRMeshを作る。
-		fm[1]->grFrame->DelChildObject(fm[1]->grMesh->Cast());
-		fm[1]->CreateGRFromPH();
-		fm[1]->grFrame->AddChildObject(fm[1]->grMesh->Cast());
+		//PHFemMeshThermoDesc d;		//	入れ物を作る
+		//fm[1]->GetPHMesh()->GetDesc(&d);			//	アドレスを渡す
+		//for(unsigned i=0; i < d.vertices.size(); i++){
+		//	d.vertices[i].y = 0.5 *d.vertices[i].y;
+		//}
+		//fm[1]->GetPHMesh()->SetDesc(&d);
+		//
+		////	PHMeshからGRMeshを作る。
+		//fm[1]->grFrame->DelChildObject(fm[1]->grMesh->Cast());
+		//fm[1]->CreateGRFromPH();
+		//fm[1]->grFrame->AddChildObject(fm[1]->grMesh->Cast());
 
 
 		//DSTR << "fm[0]: " << fm[0] <<std::endl;
@@ -142,8 +142,10 @@ public:
 
 //		fm[1]->GetPHSolid()->GetPose()
 
+		FWSceneIf* fwScene = GetCurrentWin()->GetScene();
+		PHSceneIf* phScene = GetCurrentWin()->GetScene()->GetPHScene();
 		/// 描画設定
-		if (fwScene){
+		if (GetCurrentWin()->GetScene()){
 			fwScene->SetWireMaterial(GRRenderIf::WHITE);
 			fwScene->SetRenderMode(true, true);				///< ソリッド描画，ワイヤフレーム描画
 			fwScene->EnableRenderAxis(false, true, true);		///< 座標軸
@@ -169,14 +171,14 @@ public:
 	// 描画関数．描画要求が来たときに呼ばれる
 	virtual void OnDraw(GRRenderIf* render) {
 		if (debugRender){
-			fwScene->DrawPHScene(render);
+			GetCurrentWin()->GetScene()->DrawPHScene(render);
 		}else{
-			fwScene->Sync();
-			fwScene->GetGRScene()->Render(render);
+			GetCurrentWin()->GetScene()->Sync();
+			GetCurrentWin()->GetScene()->GetGRScene()->Render(render);
 		}
 
 		std::ostringstream sstr;
-		sstr << "NObj = " << phScene->NSolids();
+		sstr << "NObj = " << GetCurrentWin()->GetScene()->GetPHScene()->NSolids();
 		render->DrawFont(Vec2f(-21, 23), sstr.str());
 	}
 
@@ -192,7 +194,7 @@ public:
 			}else if(id==ID_SWITCHRENDER){
 				debugRender = !debugRender; 
 			}else if(id=ID_TEMPUP){
-				FWObjectIf** fwobject = fwScene->GetObjects();	
+				FWObjectIf** fwobject = GetCurrentWin()->GetScene()->GetObjects();	
 				//fwScene
 			}else if(id=ID_TEMPDN){
 
@@ -421,10 +423,11 @@ public:
 		solids[0] = fmesh[0]->GetPHSolid()->Cast();
 		solids[1] = fmesh[1]->GetPHSolid()->Cast();
 		//	FEMMeshは接触判定がなくCDConvexMeshにある。CDConvexMeshの位置を取ってくる
-		if (solids[0]->NShape() != 1 || solids[0]->NShape() !=1){
-			DSTR << "複数形状には未対応" << std::endl;
-			return;
-		}
+		//if (solids[0]->NShape() != 1 || solids[0]->NShape() !=1){
+		//	DSTR << "複数形状には未対応" << std::endl;
+		//	return;
+		//}
+
 		PHScene* scene = solids[0]->GetScene()->Cast();
 		//	接触ペアを見つけて、未判定なら判定する。
 		bool bSwap;
@@ -844,9 +847,9 @@ filled:;
 
 		//curScene = id;
 		//// id番目のシーンを選択
-		//fwScene = GetSdk()->GetScene(id);
-		//phScene = fwScene->GetPHScene();
-		//GetCurrentWin()->SetScene(fwScene);
+		//GetCurrentWin()->GetScene() = GetSdk()->GetScene(id);
+		//phScene = GetCurrentWin()->GetScene()->GetPHScene();
+		//GetCurrentWin()->SetScene(GetCurrentWin()->GetScene());
 		//editor.SetObject(phScene);
 
 		//tmesh->GetScene();

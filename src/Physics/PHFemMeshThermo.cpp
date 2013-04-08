@@ -17,7 +17,7 @@
 #include "windows.h"
 
 //#define THCOND 0.574
-#define THCOND 0.574//5.74
+#define THCOND 0.0574//5.74
 
 using namespace PTM;
 
@@ -96,12 +96,37 @@ void PHFemMeshThermo::CalcVtxDisFromOrigin(){
 			}
 		}
 	}
-	/// debug	
-	//unsigned katoonNum =0;
-	//for(unsigned i=0;i < nSurfaceFace;i++){
-	//	if(faces[i].mayIHheated){katoonNum +=1;}
-	//}
-	//DSTR << "number of faces.mayIHheated: " << katoonNum << std::endl;		///		174/980(nSurfaceFace)
+}
+
+void PHFemMeshThermo::CalcVtxDisFromVertex(Vec2d originVertexIH){
+	//>	nSurfaceの内、x,z座標から距離を求めてsqrt(2乗和)、それをFemVertexに格納する
+	//> 同心円系の計算に利用する　distance from origin
+	
+	/// 判定フラグの初期化
+	for(unsigned i=0; i<nSurfaceFace; i++){
+		faces[i].mayIHheated = false;
+	}
+	/// 初期化
+	for(unsigned i =0;i<vertices.size();i++){
+		vertices[i].disFromOrigin =0.0;
+	}
+
+	/// debug
+	//DSTR << "faces.size(): " << faces.size() << std::endl;
+
+	//> 表面faceの内、原点から各faceの節点のローカル(x,z)座標系での平面上の距離の計算を、faceの全節点のy座標が負のものに対して、IH加熱の可能性を示すフラグを設定
+	for(unsigned i=0;i<nSurfaceFace;i++){
+		//> 表面のfaceの全節点のy座標が負ならば、そのfaceをIH加熱のface面と判定し、フラグを与える
+		if(vertices[faces[i].vertices[0]].pos.y < 0.0 && vertices[faces[i].vertices[1]].pos.y < 0.0 && vertices[faces[i].vertices[2]].pos.y < 0.0){
+			faces[i].mayIHheated = true;
+			//	(x,z)平面におけるmayIHheatedのface全節点の原点からの距離を計算する
+			for(unsigned j=0; j<3; j++){
+				double dx = vertices[faces[i].vertices[j]].pos.x - originVertexIH.x;
+				double dz = vertices[faces[i].vertices[j]].pos.z - originVertexIH.y;	//	表記はyだが、実質z座標が入っている
+				vertices[faces[i].vertices[j]].disFromOrigin = sqrt( dx * dx + dz * dz);
+			}
+		}
+	}
 }
 
 void PHFemMeshThermo::SetThermalBoundaryCondition(){
@@ -2622,7 +2647,7 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 		CalcIHdqdt_atleast(0.0,0.0,0.0, OFF);		//	IH加熱行列の係数0となるため、計算されない
 	}
 	else if(heatingMODE == WEEK){	
-		CalcIHdqdt_atleast(0.11,0.14,231.9 * 5e1, WEEK);		//
+		CalcIHdqdt_atleast(0.13,0.14,231.9 * 5e1, WEEK);		//
 	}
 	else if(heatingMODE == MIDDLE){
 		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e4, MIDDLE);		//
@@ -2702,6 +2727,7 @@ void PHFemMeshThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,do
 
 	//> IH加熱するfaceをある程度(表面face && 下底面)絞る、関係しそうなface節点の原点からの距離を計算し、face[].mayIHheatedを判定
 	CalcVtxDisFromOrigin();
+	//CalcVtxDisFromVertex(0.0,-1.2);
 	//>	IHからの単位時間当たりの加熱熱量	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
 	
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
@@ -2804,7 +2830,9 @@ void PHFemMeshThermo::AfterSetDesc() {
 
 
 	//> IH加熱するfaceをある程度(表面face && 下底面)絞る、関係しそうなface節点の原点からの距離を計算し、face[].mayIHheatedを判定
-	CalcVtxDisFromOrigin();
+	//CalcVtxDisFromOrigin();
+	CalcVtxDisFromVertex(Vec2d(0.0, -0.005));
+	
 	//>	IHからの単位時間当たりの加熱熱量
 	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
 	

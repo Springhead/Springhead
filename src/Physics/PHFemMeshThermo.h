@@ -361,6 +361,8 @@ public:
 
 	///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
 	void CalcVtxDisFromOrigin();
+	void CalcVtxDisFromVertex(Vec2d originVertexIH);
+	Vec2d originVertexIH;
 
 	//	IHによ四面体のface面の熱流束加熱のための行列成分計算関数
 	void CalcIHdqdt(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定
