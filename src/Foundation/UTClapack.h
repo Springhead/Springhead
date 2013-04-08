@@ -15,6 +15,29 @@
 #include <boost/numeric/ublas/io.hpp>
 
 #ifdef _DEBUG
+#ifdef _DLL
+# pragma comment(lib, "LIBF2C10MD.lib")
+# pragma comment(lib, "BLAS10MD.lib")
+# pragma comment(lib, "CLAPACK10MD.lib")
+#else
+# pragma comment(lib, "LIBF2C10D.lib")
+# pragma comment(lib, "BLAS10D.lib")
+# pragma comment(lib, "CLAPACK10D.lib")
+#endif
+#else
+#ifdef _DLL
+# pragma comment(lib, "LIBF2C10M.lib")
+# pragma comment(lib, "BLAS10M.lib")
+# pragma comment(lib, "CLAPACK10M.lib")
+#else
+# pragma comment(lib, "LIBF2C10.lib")
+# pragma comment(lib, "BLAS10.lib")
+# pragma comment(lib, "CLAPACK10.lib")
+#endif
+#endif
+
+/**
+#ifdef _DEBUG
 # pragma comment(lib, "libf2cd.lib")
 # pragma comment(lib, "BLASd.lib")
 # pragma comment(lib, "clapackd.lib")
@@ -23,6 +46,7 @@
 # pragma comment(lib, "BLAS.lib")
 # pragma comment(lib, "clapack.lib")
 #endif
+**/
 
 /*
 / リンクするlibファイルは_cdeclで呼び出し
