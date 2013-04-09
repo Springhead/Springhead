@@ -21,6 +21,7 @@ set INPUT=%INPUT% Graphics/Graphics%EXT%.lib
 set INPUT=%INPUT% FileIO/FileIO%EXT%.lib
 set INPUT=%INPUT% Framework/Framework%EXT%.lib
 set INPUT=%INPUT% HumanInterface/HumanInterface%EXT%.lib
+set INPUT=%INPUT% Creature/Creature%EXT%.lib
 
 if "%INPUT%"=="" echo 環境変数用メモリの空きが不足しています．
 if "%INPUT%"=="" echo 空きを増やしてもう一度実行します．
