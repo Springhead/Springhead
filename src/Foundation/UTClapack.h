@@ -146,7 +146,7 @@ int sprsygvx(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vect
 	int iu = start + interval;			// 求めたい固有値の最大インデックス（最大はsize)
 	real_type abstol = 0.0;				// 許容誤差
 	int m = 0;							// 求められた固有値の数
-	vector_type w(interval);			// 固有値ベクトル
+	vector_type w(size);				// 固有値ベクトル
 	matrix_type z(size, interval);		// 固有ベクトル
 	ublas::vector< int > ifail(size);	// 固有値を求めた際の収束に関する情報
 	int info = lapack::sygvx(1, 'V', 'I', la_uplo, lb_uplo, vl, vu, il, iu, abstol, m, w, z, ifail);
