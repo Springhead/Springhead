@@ -259,6 +259,10 @@ struct PHSolidIf : public SceneObjectIf{
 	 */
 	void		ClearShape();
 	
+	/** @brief BoundingBoxを再計算する．
+	 */
+	void		CalcBBox();
+
 	/** @brief 重力を有効/無効化する
 		@param bOn trueならば剛体に重力が加わる．falseならば加わらない．
 	 */
