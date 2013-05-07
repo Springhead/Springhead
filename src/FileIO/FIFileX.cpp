@@ -267,7 +267,7 @@ void FIFileX::Init(){
 				  if_p(&IsFieldReal)[ rNum | ExpP("numeric value") ] >>
 				  if_p(&IsFieldStr)[ str | ExpP("string") ] >>
 				  if_p(&IsFieldBlock)[ eps_p[&BlockStart] >> block[&BlockEnd] ];
-	id			= lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-') ];
+	id			= lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-'|'.') ];
 	boolVal		= (str_p("true") | "TRUE" | "false" | "FALSE" | "1" | "0")[&BoolSet];
 	iNum		= id[&EnumSet] | int_p[&NumSet];
 	rNum		= real_p[&NumSet];
