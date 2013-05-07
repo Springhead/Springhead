@@ -333,7 +333,7 @@ void FIFileSpr::Init(){
 					if_p(&IsFieldReal)[ rNum | ExpP("numeric value") ].else_p[
 					if_p(&IsFieldStr)[ str | ExpP("string") ].else_p[ nothing_p ]]]];
 
-	id			=	lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-') ];
+	id			=	lexeme_d[ (alpha_p|'_') >> *(alnum_p|'_'|'-'|'.') ];
 	boolVal		=	(str_p("true") | "TRUE" | "false" | "FALSE" | "1" | "0")[&BoolSet];
 	iNum		=	id[&EnumSet] | int_p[&NumSet];
 	rNum		=	real_p[&NumSet];
