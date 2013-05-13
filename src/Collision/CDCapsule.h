@@ -23,6 +23,7 @@ public:
 	
 	virtual bool IsInside(const Vec3f& p);
 	virtual float CalcVolume();
+	virtual Matrix3f CalcMomentOfInertia();
 	
 	///	サポートポイントを求める．
 	virtual int Support(Vec3f& w, const Vec3f& v) const;
@@ -31,8 +32,6 @@ public:
 	/// 球体に関してFindCutRing()が呼び出された場合には、assertionが発生する。
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 	
-	virtual Matrix3f CalcMomentOfInertia();
-
 	float	GetRadius(){ return radius; }
 	void	SetRadius(float r){ radius = r; }
 	float	GetLength(){ return length; }

@@ -22,7 +22,10 @@ public:
 	SPR_OBJECTDEF_ABST(CDShape);
 	SPR_DECLMEMBEROF_CDShapeDesc;
 
-	void	SetStaticFriction(float mu0){ material.mu0 = mu0; }
+	void	SetStaticFriction(float mu0){
+		material.mu0 = mu0;
+		DSTR << "friction: " << material.mu0 << std::endl;
+	}
 	float	GetStaticFriction(){ return material.mu0; }
 	void	SetDynamicFriction(float mu){ material.mu = mu; }
 	float	GetDynamicFriction(){ return material.mu; }
@@ -30,6 +33,10 @@ public:
 	float	GetElasticity(){ return material.e; }
 	void	SetDensity(float d){ material.density = d; }
 	float	GetDensity(){ return material.density; }
+	void    SetContactSpring(float K){ material.spring = K; }
+	float   GetContactSpring(){ return material.spring; }
+	void    SetContactDamper(float D){ material.damper = D; }
+	float   GetContactDamper(){ return material.damper; }
 
 	void	SetReflexSpring(float K){ material.reflexSpring = K; }
 	float	GetReflexSpring(){return material.reflexSpring;}
@@ -67,6 +74,20 @@ public:
 	virtual void     CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose)=0;
 	virtual bool     IsInside(const Vec3f& p){ return false; }
 	virtual int	     LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){ return 0; }
+
+	// 幾何計算用のstatic関数
+	static float    CalcCylinderVolume    (float r, float l);
+	static Matrix3f CalcCylinderInertia   (float r, float l);
+	static float    CalcHemisphereCoM     (float r);
+	static float    CalcHemisphereVolume  (float r);
+	static Matrix3f CalcHemisphereInertia (float r);
+	static float    CalcConeCoM           (float l);
+	static float    CalcConeVolume        (float r, float l);
+	static Matrix3f	CalcConeInertia       (float r, float l);
+	static float    CalcTetrahedronVolume (const Vec3f& a, const Vec3f& b, const Vec3f& c);
+	static Vec3f    CalcTetrahedronCoM    (const Vec3f& a, const Vec3f& b, const Vec3f& c);
+	static Matrix3f CalcTetrahedronInertia(const Vec3f& a, const Vec3f& b, const Vec3f& c);
+	
 };
 
 }	//	namespace Spr

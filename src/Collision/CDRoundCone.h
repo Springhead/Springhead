@@ -21,9 +21,11 @@ public:
 	CDRoundCone();
 	CDRoundCone(const CDRoundConeDesc& desc);
 	
-	virtual bool IsInside(const Vec3f& p);
-	virtual float CalcVolume();
-	
+	virtual bool     IsInside(const Vec3f& p);
+	virtual float    CalcVolume();
+	virtual Vec3f    CalcCenterOfMass();
+	virtual Matrix3f CalcMomentOfInertia();
+
 	///	サポートポイントを求める．
 	virtual int Support(Vec3f&w, const Vec3f& v) const;
 	///	切り口を求める．接触解析に使う．
@@ -35,8 +37,6 @@ public:
 	///< 表面上の点pにおける法線
 	virtual Vec3d Normal(Vec3d p);
 
-	virtual Matrix3f CalcMomentOfInertia();
-	
 	Vec2f GetRadius();
 	float GetLength();
 	void SetRadius(Vec2f r);
