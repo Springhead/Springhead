@@ -140,6 +140,7 @@ public:
 	Matrix3d	Iinv;		///< 慣性行列の逆行列
 	SpatialVector f;		///< ローカル座標での外力
 	SpatialVector v;		///< ローカル座標での現在の速度
+	SpatialVector dv0;		///< 外力のみによる速度変化
 	SpatialVector dV;		///< Correctionによる移動量，回転量
 	///	LCP関連補助変数の初期化。毎ステップLCPの前に呼ばれる。
 	void UpdateCacheLCP(double dt);
