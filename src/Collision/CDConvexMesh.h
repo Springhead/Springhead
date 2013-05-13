@@ -25,8 +25,8 @@ public:
 class CDFace:public Object{
 public:
 	SPR_OBJECTDEF(CDFace);
-	int vtxs[3];	///< 面の頂点ID
-	Vec3f	normal;
+	int      vtxs[3];		///< 面の頂点ID
+	Vec3f    normal;		///< 法線
 
 	/// CDFaceの面のインデックス数
 	virtual int NIndex(){ return 3; }
@@ -35,6 +35,7 @@ public:
 };
 
 class CDFaces:public std::vector<CDFace>{
+
 };
 
 ///	凸多面体
@@ -42,6 +43,13 @@ class CDConvexMesh : public CDConvex{
 protected:
 	/// 全頂点の平均
 	Vec3f average;
+	/// 体積
+	float volume;
+	/// 重心
+	Vec3f center;
+	/// 慣性行列
+	Matrix3f inertia;
+
 public:
 	SPR_OBJECTDEF(CDConvexMesh);
 	//	Descのメンバ、SPR_DECLMEMBEROF_CDConvexMeshDesc は使わない。代わりにGetDesc, SetDesc, GetDescSizeを使う
@@ -64,31 +72,31 @@ public:
 
 	///	頂点から面や接続情報を生成する．
 	void CalcFace();
+	/// 体積, 重心, 慣性行列の計算
+	void CalcMetric();
 
-	///
-	virtual bool IsInside(const Vec3f& p);
+	/// CDShapeの仮想関数
+	virtual float    CalcVolume();
+	virtual Vec3f    CalcCenterOfMass();
+	virtual Matrix3f CalcMomentOfInertia();
+	virtual bool     IsInside(const Vec3f& p);
+	virtual int      LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 	
-	///	サポートポイントを求める．
-	int Support(Vec3f& w, const Vec3f& v) const;
-	
-	///	切り口を求める．接触解析に使う．
-	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
-	///	指定の頂点 vtx の隣の頂点番号を返す
+	virtual int               Support(Vec3f& w, const Vec3f& v) const;
+	virtual bool              FindCutRing(CDCutRing& r, const Posed& toW);
 	virtual std::vector<int>& FindNeighbors(int vtx);
-	///	頂点バッファを返す。
-	virtual Vec3f* GetBase(){return &*base.begin();}	
+	virtual Vec3f*            GetBase(){return &*base.begin();}	
 
 	CDFaceIf* GetFace(int i);
-	int NFace();
-	Vec3f* GetVertices();
-	int NVertex();
+	int       NFace();
+	Vec3f*    GetVertices();
+	int       NVertex();
 
 	///	デスクリプタCDConvexMeshDescの読み書き	
 	virtual bool GetDesc(void *desc) const;
 	virtual void SetDesc(const void* desc);
 	virtual size_t GetDescSize() const { return sizeof(CDConvexMeshDesc); }
 
-	virtual int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 	virtual void Print(std::ostream& os) const;
 
 protected:

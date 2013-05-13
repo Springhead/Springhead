@@ -44,7 +44,7 @@ float CDSphere::CalcVolume(){
 	return float(4.0/3.0*M_PI*radius*radius*radius);
 }
 Matrix3f CDSphere::CalcMomentOfInertia(){
-	return 0.4f * radius * radius * Matrix3f::Unit();
+	return (CalcVolume() * (0.4f * radius * radius)) * Matrix3f::Unit();
 }
 
 int CDSphere::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){

@@ -21,15 +21,156 @@ CDRoundCone::CDRoundCone(const CDRoundConeDesc& desc){
 }
 
 bool CDRoundCone::IsInside(const Vec3f& p){
-	return (p - Vec3f(0.0f, 0.0f, 0.5f * -length)).square() < radius[0] * radius[0] ||
-		   (p - Vec3f(0.0f, 0.0f, 0.5f * +length)).square() < radius[1] * radius[1] ||
-		   (p.x*p.x + p.y*p.y < radius * radius && -0.5f*length < p.z && p.z < 0.5f*length);
+	float halfl = 0.5f * length;
+	float px2 = p.x*p.x;
+	float py2 = p.y*p.y;
+	float pz[2];
+	float pz2[2];
+	pz[0] = (p.z + halfl);
+	pz[1] = (p.z - halfl);
+	pz2[0] = pz[0]*pz[0];
+	pz2[1] = pz[1]*pz[1];
+
+	if(px2 + py2 + pz2[0] < radius[0]*radius[0])
+		return true;
+	if(px2 + py2 + pz2[1] < radius[1]*radius[1])
+		return true;
+	if(-halfl < p.z && p.z < halfl){
+		float r = (radius[1] - radius[0])/length * p.z + (radius[1] + radius[0])/2.0f;
+		if(px2 + py2 < r*r)
+			return true;
+	}
+	return false;
 }
+
 float CDRoundCone::CalcVolume(){
-	return  2.0f/3.0f * (float)M_PI * radius[0] * radius[0] * radius[0] +
-			2.0f/3.0f * (float)M_PI * radius[1] * radius[1] * radius[1] +
-			(float)M_PI * (radius[0]*radius[0] + radius[0]*radius[1] + radius[1]*radius[1]) * length / 3.0f;
+	return  CDShape::CalcHemisphereVolume(radius[0]) +
+			CDShape::CalcHemisphereVolume(radius[1]) +
+			(1.0f/3.0f) * (float)M_PI * (radius[0]*radius[0] + radius[0]*radius[1] + radius[1]*radius[1]) * length;
 }
+
+Vec3f CDRoundCone::CalcCenterOfMass(){
+	// 半球の半径が等しければ重心は原点に一致
+	const float eps = 1.0e-10f;
+	if(std::abs(radius[0] - radius[1]) < eps)
+		return Vec3f();
+	
+	// 下の半球，上の半球，大円錐，小円錐（切り取られる方）の体積と重心
+	float V[4];
+	float c[4];
+	float halfl = 0.5f * length;
+	float lcone;
+	float com;
+
+	V[0] = CDShape::CalcHemisphereVolume(radius[0]);
+	V[1] = CDShape::CalcHemisphereVolume(radius[1]);
+	c[0] = -halfl - CDShape::CalcHemisphereCoM(radius[0]);
+	c[1] =  halfl + CDShape::CalcHemisphereCoM(radius[1]);
+
+	if(radius[0] > radius[1]){
+		lcone = (radius[1]/(radius[0]-radius[1]))*length;
+		V[2] = CDShape::CalcConeVolume(radius[0], lcone + length);
+		V[3] = CDShape::CalcConeVolume(radius[1], lcone);
+		c[2] = -halfl + CDShape::CalcConeCoM(lcone + length);
+		c[3] =  halfl + CDShape::CalcConeCoM(lcone);
+	}
+	else{
+		lcone = (radius[0]/(radius[1]-radius[0]))*length;
+		V[2] = CDShape::CalcConeVolume(radius[1], lcone + length);
+		V[3] = CDShape::CalcConeVolume(radius[0], lcone);
+		c[2] =  halfl - CDShape::CalcConeCoM(lcone + length);
+		c[3] = -halfl - CDShape::CalcConeCoM(lcone);
+	}
+	com = (V[0]*c[0] + V[1]*c[1] + V[2]*c[2] - V[3]*c[3]) / (V[0] + V[1] + V[2] + V[3]);
+	return Vec3f(0.0f, 0.0f, com);
+}
+
+Matrix3f CDRoundCone::CalcMomentOfInertia(){
+	// 上下の半球と間の円錐台の慣性行列を足し合せる
+	// 円錐台は半径が等しい場合は円柱，異なる場合は大小円錐の引き算
+	float r0 = radius[0], r02 = r0*r0, r03 = r02*r0;
+	float r1 = radius[1], r12 = r1*r1, r13 = r12*r1;
+	float fpi = (float)M_PI;
+	float halfl = 0.5f * length;
+	float lcone;
+	
+	float    V[4], Vsum;
+	float    c[4];
+	Matrix3f I[4], Isum;
+	float    offset[4];
+	
+	// 半球の体積と慣性行列
+	V[0] = CDShape::CalcHemisphereVolume(radius[0]);
+	V[1] = CDShape::CalcHemisphereVolume(radius[1]);
+	c[0] = CDShape::CalcHemisphereCoM(radius[0]);
+	c[1] = CDShape::CalcHemisphereCoM(radius[1]);
+	offset[0] = V[0]*halfl*(halfl + 2.0f*c[0]);
+	offset[1] = V[1]*halfl*(halfl + 2.0f*c[1]);
+	I[0] = CDShape::CalcHemisphereInertia(radius[0]) + Matrix3f::Diag(offset[0], offset[0], 0.0f);
+	I[1] = CDShape::CalcHemisphereInertia(radius[1]) + Matrix3f::Diag(offset[1], offset[1], 0.0f);
+
+	const float eps = 1.0e-10f;
+	if(std::abs(r0 - r1) < eps){
+		// 円柱の体積と慣性行列
+		I[2] = CDShape::CalcCylinderInertia((radius[0] + radius[1])/2.0f, length);
+		V[2] = CDShape::CalcCylinderVolume ((radius[0] + radius[1])/2.0f, length);
+		Isum = I[0] + I[1] + I[2];
+		Vsum = V[0] + V[1] + V[2];
+	}
+	else{
+		if(r0 > r1){
+			lcone = (r1/(r0-r1))*length;
+			V[2] = CDShape::CalcConeVolume(radius[0], lcone + length);
+			V[3] = CDShape::CalcConeVolume(radius[1], lcone);
+			c[2] = CDShape::CalcConeCoM(lcone + length);
+			c[3] = CDShape::CalcConeCoM(lcone);
+			offset[2] = V[2]*halfl*(halfl - 2.0f*c[2]);
+			offset[3] = V[3]*halfl*(halfl + 2.0f*c[3]);
+			I[2] = CDShape::CalcConeInertia(radius[0], lcone + length) + Matrix3f::Diag(offset[2], offset[2], 0.0f);
+			I[3] = CDShape::CalcConeInertia(radius[1], lcone)          + Matrix3f::Diag(offset[3], offset[3], 0.0f);
+		}
+		else{
+			lcone = (r0/(r1-r0))*length;
+			V[2] = CDShape::CalcConeVolume(radius[1], lcone + length);
+			V[3] = CDShape::CalcConeVolume(radius[0], lcone);
+			c[2] = CDShape::CalcConeCoM(lcone + length);
+			c[3] = CDShape::CalcConeCoM(lcone);
+			offset[2] = V[2]*halfl*(halfl - 2.0f*c[2]);
+			offset[3] = V[3]*halfl*(halfl + 2.0f*c[3]);
+			I[2] = CDShape::CalcConeInertia(radius[0], lcone + length) + Matrix3f::Diag(offset[2], offset[2], 0.0f);
+			I[3] = CDShape::CalcConeInertia(radius[1], lcone)          + Matrix3f::Diag(offset[3], offset[3], 0.0f);
+		}
+		Isum = I[0] + I[1] + I[2] - I[3];
+		Vsum = V[0] + V[1] + V[2] - V[3];
+	}
+	
+	// 重心基準の慣性行列に変換
+	Vec3f com = CalcCenterOfMass();
+	Matrix3f cross = Matrix3f::Cross(com);
+	Isum += Vsum * (cross*cross);
+	return Isum;
+}
+
+/*Matrix3f CDRoundCone::CalcMomentOfInertia(){
+	Matrix3f ans;
+	//円錐台の部分は円柱近似
+	// http://www12.plala.or.jp/ksp/mechanics/inertiaTable1/
+	// http://www.dynamictouch.matrix.jp/tensormodel.php
+
+	float r = (radius[0] + radius[1]) * 0.5f;	 //円柱の半径
+	
+	ans[0][0] = ((r * r)/4.0f + (length*length)/12.0f + 83.0f/320.0f * ( radius[0] * radius[0] +  radius[1] * radius[1]))+ length * length / 2.0f; 
+	ans[0][1] = 0.0f;
+	ans[0][2] = 0.0f;
+	ans[1][0] = 0.0f;
+	ans[1][1] = ((r * r)/4.0f + (length*length)/12.0f + 83.0f/320.0f * ( radius[0] * radius[0] +  radius[1] * radius[1]))+ length * length / 2.0f;
+	ans[1][2] = 0.0f;
+	ans[2][0] = 0.0f;
+	ans[2][1] = 0.0f;
+	ans[2][2] = (9.0f/5.0f * r * r);
+
+	return ans;
+}*/
 	
 // サポートポイントを求める
 int CDRoundCone::Support(Vec3f&w, const Vec3f& v) const{
@@ -187,27 +328,6 @@ double CDRoundCone::CurvatureRadius(Vec3d p){
 	double Rmin = eS*eS / eL;
 
 	return Rmin;
-}
-
-Matrix3f CDRoundCone::CalcMomentOfInertia(){
-	Matrix3f ans;
-	//円錐台の部分は円柱近似
-	// http://www12.plala.or.jp/ksp/mechanics/inertiaTable1/
-	// http://www.dynamictouch.matrix.jp/tensormodel.php
-
-	float r = (radius[0] + radius[1]) * 0.5f;	 //円柱の半径
-	
-	ans[0][0] = ((r * r)/4.0f + (length*length)/12.0f + 83.0f/320.0f * ( radius[0] * radius[0] +  radius[1] * radius[1]))+ length * length / 2.0f; 
-	ans[0][1] = 0.0f;
-	ans[0][2] = 0.0f;
-	ans[1][0] = 0.0f;
-	ans[1][1] = ((r * r)/4.0f + (length*length)/12.0f + 83.0f/320.0f * ( radius[0] * radius[0] +  radius[1] * radius[1]))+ length * length / 2.0f;
-	ans[1][2] = 0.0f;
-	ans[2][0] = 0.0f;
-	ans[2][1] = 0.0f;
-	ans[2][2] = (9.0f/5.0f * r * r);
-
-	return ans;
 }
 
 Vec2f CDRoundCone::GetRadius() {

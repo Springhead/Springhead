@@ -37,7 +37,7 @@ float CDBox::CalcVolume(){
 Matrix3f CDBox::CalcMomentOfInertia(){
 	Vec3f sz = boxsize;
 	Vec3f sz2 = Vec3f(sz.x*sz.x, sz.y*sz.y, sz.z*sz.z);
-	return 1.0f/12.0f * Matrix3f::Diag(sz2.y + sz2.z, sz2.x + sz2.z, sz2.x + sz2.y);
+	return ((sz.x * sz.y * sz.z) / 12.0f) * Matrix3f::Diag(sz2.y + sz2.z, sz2.x + sz2.z, sz2.x + sz2.y);
 }
 
 void CDBox::Recalc(){

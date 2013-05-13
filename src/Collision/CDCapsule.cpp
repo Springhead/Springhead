@@ -23,8 +23,32 @@ bool CDCapsule::IsInside(const Vec3f& p){
 		   (p.x*p.x + p.y*p.y < radius * radius && -0.5f*length < p.z && p.z < 0.5f*length);
 }
 float CDCapsule::CalcVolume(){
-	return  4.0f/3.0f * (float)M_PI * radius * radius * radius + 
-			(float)M_PI * radius * radius * length;
+	return  2.0f * CDShape::CalcHemisphereVolume(radius) + CDShape::CalcCylinderVolume(radius, length);
+}
+
+Matrix3f CDCapsule::CalcMomentOfInertia(){
+	/*Matrix3f ans;
+	// 下記いずれもリンク切れ
+	// http://www12.plala.or.jp/ksp/mechanics/inertiaTable1/
+	// http://www.dynamictouch.matrix.jp/tensormodel.php
+	ans[0][0] = ((radius * radius)/4.0f + (length*length)/12.0f + 2.0f * 83.0f/320.0f * radius * radius) + length * length / 2.0f;
+	ans[0][1] = 0.0f;
+	ans[0][2] = 0.0f;
+	ans[1][0] = 0.0f;
+	ans[1][1] = ((radius * radius)/4.0f + (length*length)/12.0f+ 2.0f * 83.0f/320.0f * radius * radius) + length * length / 2.0f;
+	ans[1][2] = 0.0f;
+	ans[2][0] = 0.0f;
+	ans[2][1] = 0.0f;
+	ans[2][2] = (9.0f/5.0f * radius * radius);
+	return ans;*/
+	Matrix3f I0 = CDShape::CalcCylinderInertia  (radius, length);
+	float    V1 = CDShape::CalcHemisphereVolume (radius);
+	Matrix3f I1 = CDShape::CalcHemisphereInertia(radius);
+	float    c1 = CDShape::CalcHemisphereCoM    (radius);
+	float    halfl  = length / 2.0f;
+	float    offset = halfl*(halfl + 2.0f*c1);
+
+	return I0 + 2.0f * (I1 + V1 * Matrix3f::Diag(offset, offset, 0.0f));
 }
 	
 // サポートポイントを求める
@@ -72,24 +96,6 @@ bool CDCapsule::FindCutRing(CDCutRing& ring, const Posed& toW) {
 	}else{
 		return false;
 	}
-}
-
-Matrix3f CDCapsule::CalcMomentOfInertia(){
-	Matrix3f ans;
-	
-	// http://www12.plala.or.jp/ksp/mechanics/inertiaTable1/
-	// http://www.dynamictouch.matrix.jp/tensormodel.php
-	ans[0][0] = ((radius * radius)/4.0f + (length*length)/12.0f + 2.0f * 83.0f/320.0f * radius * radius) + length * length / 2.0f;
-	ans[0][1] = 0.0f;
-	ans[0][2] = 0.0f;
-	ans[1][0] = 0.0f;
-	ans[1][1] = ((radius * radius)/4.0f + (length*length)/12.0f+ 2.0f * 83.0f/320.0f * radius * radius) + length * length / 2.0f;
-	ans[1][2] = 0.0f;
-	ans[2][0] = 0.0f;
-	ans[2][1] = 0.0f;
-	ans[2][2] = (9.0f/5.0f * radius * radius);
-
-	return ans;
 }
 
 int CDCapsule::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){

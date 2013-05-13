@@ -46,8 +46,11 @@ void CDConvexMesh::SetDesc(const void *ptr){
 	CDShape::SetDesc(ptr);
 	const CDConvexMeshDesc* desc = (const CDConvexMeshDesc*)ptr;
 	base = desc->vertices;
-	CalcFace();	
+
+	CalcFace();
+	CalcMetric();
 }
+
 bool CDConvexMesh::GetDesc(void *ptr) const {
 	CDConvexMeshDesc* desc = (CDConvexMeshDesc*)ptr;
 	desc->vertices = base;
@@ -126,6 +129,7 @@ public:
 };
 
 Vec3f* CDQhullVtx::base;
+
 void CDConvexMesh::CalcFace(){
 	curPos = 0;
 	faces.clear();
@@ -172,6 +176,7 @@ void CDConvexMesh::CalcFace(){
 		--i;
 		--pos;
 	}
+
 	// 平均座標の計算
 	CalcAverage();
 
@@ -196,10 +201,11 @@ void CDConvexMesh::CalcFace(){
 			neighbor[pos].push_back(next);
 		}
 	}
+
 	//	凸多面体の面のうち，半平面表現に必要な面だけを前半に集める．
 	MergeFace();
-	//CalcCenter();
 }
+
 void CDConvexMesh::MergeFace(){
 	//int nf = faces.size();
 	CDFaces erased;
@@ -226,6 +232,7 @@ void CDConvexMesh::MergeFace(){
 	faces.insert(faces.end(), erased.begin(), erased.end());
 	//	DSTR << "Poly faces:" << nf << "->" << faces.size() << std::endl;
 }
+
 void CDConvexMesh::CalcAverage(){
 	average.clear();
 	for(unsigned i=0; i<base.size(); ++i){
@@ -233,9 +240,47 @@ void CDConvexMesh::CalcAverage(){
 	}
 	average /= base.size();
 }
+
+float CDConvexMesh::CalcVolume(){
+	return volume;
+}
+
+Vec3f CDConvexMesh::CalcCenterOfMass(){
+	return center;
+}
+
+Matrix3f CDConvexMesh::CalcMomentOfInertia(){
+	return inertia;
+}
+
+void CDConvexMesh::CalcMetric(){
+	volume  = 0.0f;
+	center  = Vec3f();
+	inertia = Matrix3f::Zero();
+
+	// 各面と原点からなる四面体の体積，重心，慣性行列を計算
+	for(int i = 0; i < nPlanes; i++){
+		CDFace& f = faces[i];
+		Vec3f& v0 = base[f.vtxs[0]];
+		Vec3f& v1 = base[f.vtxs[1]];
+		Vec3f& v2 = base[f.vtxs[2]];
+		float v = CDShape::CalcTetrahedronVolume(v0, v1, v2);
+		volume  += v;
+		center  += v * CDShape::CalcTetrahedronCoM(v0, v1, v2);
+		inertia += CDShape::CalcTetrahedronInertia(v0, v1, v2);
+	}
+		
+	// 重心は体積による重み平均
+	center /= volume;
+
+	// 慣性行列を原点基準から重心基準へ変換
+	Matrix3f cross = Matrix3f::Cross(center);
+	inertia += volume * (cross*cross);
+}
+
 bool CDConvexMesh::IsInside(const Vec3f& p){
-	for(int i = 0; i < (int)faces.size(); i++){
-		if(faces[i].normal * (base[faces[i].vtxs[0]] - p) < 0.0f)
+	for(int i = 0; i < nPlanes; i++){
+		if(faces[i].normal * (base[faces[i].vtxs[0]] - p) <= 0.0f)
 			return false;
 	}
 	return true;
@@ -297,7 +342,7 @@ int CDConvexMesh::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* re
 	Vec3f p, u1, u2, diff;
 	int num = 0;
 
-	for(int i = 0; i < (int)faces.size(); i++){
+	for(int i = 0; i < nPlanes; i++){
 		const CDFace& f = faces[i];
 		const Vec3f& n = f.normal;
 		float tmp = n * dir;

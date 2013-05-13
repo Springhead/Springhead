@@ -11,6 +11,7 @@
 
 namespace Spr{;
 
+
 /**	\defgroup	gpShape	形状・接触判定クラス	*/	
 //@{
 /**	@file SprCDShape.h
@@ -53,6 +54,15 @@ struct CDShapeIf : public NamedObjectIf{
 	void	SetDensity(float d);
 	/// 密度の取得
 	float	GetDensity();
+	/// 静接触の弾性の設定
+	void    SetContactSpring(float K);
+	/// 静接触の弾性の取得
+	float   GetContactSpring();
+	/// 静接触の粘性の設定
+	void    SetContactDamper(float D);
+	/// 静接触の粘性の取得
+	float   GetContactDamper();
+
 	// ペナルティ法演算用
 	/// 跳ね返りバネ係数の設定
 	void	SetReflexSpring(float K);
@@ -101,7 +111,7 @@ struct CDShapeIf : public NamedObjectIf{
 	Vec3f	 CalcCenterOfMass();
 
 	/** 慣性モーメントを計算
-		@return 単位質量当たりの質量中心に関する慣性行列を計算する．
+		@return 密度を1としたときの質量中心に関する慣性行列を計算する．
 	 */
 	Matrix3f CalcMomentOfInertia();
 
@@ -154,11 +164,14 @@ struct PHMaterial{
 	PHMaterial();
 	//	質量・慣性テンソルの計算用
 	float density;			///< 密度
-	//	クーロン摩擦
+	//	LCP(PHConstarintEngine)による拘束力計算用
 	float mu;				///< 動摩擦摩擦係数
 	float mu0;				///< 静止摩擦係数	
-	//	LCP(PHConstarintEngine)による拘束力計算用
 	float e;				///< 跳ね返り係数
+	// 静接触の粘弾性．springとdamperが0の場合は粘弾性なし
+	float spring;			///< 静接触のバネ係数
+	float damper;			///< 静接触のダンパ係数
+
 	//	ペナルティ法(PHPenaltyEngine)のためのバネ・ダンパ係数
 	float reflexSpring;
 	float reflexDamper;

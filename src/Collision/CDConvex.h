@@ -16,31 +16,23 @@
 namespace Spr{;
 
 class CDConvex : public CDShape{
-protected:
-	bool		valid;
-	struct Boxel{
-		Vec3f		pos;
-		float		volume;
-		Matrix3f	moment;
-	};
-	std::vector<Boxel> boxels;
-
-	float		volume;
-	Vec3f		center;
-	Matrix3f	moment;
-
-	/// 
-	bool	IsBoxInside(const Vec3f& bbmin, const Vec3f& bbmax);
-	/// 幾何情報の無効化
-	void	Invalidate(){valid = false;}
-	/// 幾何解析
-	void	Analyze();
-	void	AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float eps);
 public:
 	SPR_OBJECTDEF_ABST(CDConvex);
 
-	/// 偏心によって生じるイナーシャ
-	static void OffsetInertia(const Vec3f& c, Matrix3f& I);
+	/** ボクセル近似による体積，重心，慣性行列の計算
+		使用していないが比較のために残してある
+	 */
+	struct Boxel{
+		float		volume;
+		Vec3f		center;
+		Matrix3f	inertia;
+
+		Boxel(float v, const Vec3f& c, const Matrix3f& I):volume(v), center(c), inertia(I){}
+	};
+	std::vector<Boxel> boxels;
+	
+	void	AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float eps);
+	void	CalcMetricByBoxel(float& volume, Vec3f& center, Matrix3f& inertia);
 
 	/**	サポートポイント(方向ベクトルvとの内積が最大の点)をwに格納する。
 		戻り値には、頂点番号があれば返す。無ければ-1。頂点番号はメッシュの頂点の場合
@@ -60,20 +52,7 @@ public:
 	///< 表面上の点pにおける法線
 	virtual Vec3d Normal(Vec3d p){ return Vec3d(); } /// 現時点ではRoundConeについてのみ実装されている(09/02/14, mitake)
 
-	virtual float CalcVolume(){
-		if(!valid)Analyze();
-		return volume;
-	}
-	virtual Vec3f	CalcCenterOfMass(){
-		if(!valid)Analyze();
-		return center;
-	}
-	virtual Matrix3f CalcMomentOfInertia(){
-		if(!valid)Analyze();
-		return moment;
-	}
-
-	CDConvex():valid(false){}
+	CDConvex(){}
 };
 
 }	//	namespace Spr
