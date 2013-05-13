@@ -123,8 +123,8 @@ void PHFrame::SetPose(Posed p){
 }
 
 void PHFrame::CompInertia(){
-	mass = shape->GetMaterial().density * shape->CalcVolume();
-	center = shape->CalcCenterOfMass();
+	mass    = shape->GetMaterial().density * shape->CalcVolume();
+	center  = shape->CalcCenterOfMass();
 	inertia = shape->GetMaterial().density * shape->CalcMomentOfInertia();
 }
 
@@ -251,12 +251,13 @@ void PHSolid::UpdateCacheLCP(double dt){
 	if(IsArticulated())return;
 	
 	if(IsDynamical() && !IsFrozen()){
-		dv.v() = minv * f.v() * dt;
-		dv.w() = Iinv * (f.w() - v.w() % (GetInertia() * v.w())) * dt;
+		dv0.v() = minv * f.v() * dt;
+		dv0.w() = Iinv * (f.w() - v.w() % (GetInertia() * v.w())) * dt;
 	}
 	else{
-		dv.clear();
+		dv0.clear();
 	}
+	dv = dv0;
 	dV.clear();
 }
 /*
@@ -563,12 +564,12 @@ void PHSolid::CompInertia(){
 		center *= (1.0 / mass);
 	
 	Matrix3d R;
+	Matrix3f cross;
 	inertia.clear();
 	for(int i = 0; i < (int)frames.size(); i++){
 		frames[i]->pose.Ori().ToMatrix(R);
-		Matrix3f offset;
-		CDConvex::OffsetInertia(center - frames[i]->pose * frames[i]->center, offset);
-		inertia += R * frames[i]->inertia * R.trans() + (float)frames[i]->mass * offset;
+		cross = Matrix3f::Cross(center - frames[i]->pose * frames[i]->center);
+		inertia += R * frames[i]->inertia * R.trans() - (float)frames[i]->mass * (cross*cross);
 	}
 }
 
