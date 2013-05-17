@@ -40,8 +40,9 @@ void main()
 	#endif
 
 	#ifdef SHADOW_RENDER
-	float shadow = textureProj(shadowTex, shadowCoord);
-	color = mix(mix(color, shadowColor, shadowColor.a), color, shadow);
+	float notInShadow = textureProj(shadowTex, shadowCoord);
+	vec4 mixedColor = vec4(mix(color.rgb, shadowColor.rgb, shadowColor.a), 1.0);
+	color = mix(mixedColor, color, notInShadow);
 	#endif
 
 	// no need to set color when creating shadow
