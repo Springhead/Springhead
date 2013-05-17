@@ -23,14 +23,17 @@ namespace Spr{;
 class GRDeviceGL: public GRDevice{
 	SPR_OBJECTDEF(GRDeviceGL);
 protected:
-	int		nLights;					///< 光源の数
-	int		vertexFormatGl;				///< glInterleavedArraysで使う，GLの頂点フォーマットID
-	size_t	vertexSize;					///< 頂点のサイズ
-	bool	vertexColor;				///< 頂点が色を持つかどうか
+	int            majorVersion;		///< GLコンテキストのメジャーバージョン
+	int            minorVersion;		///< GLコンテキストのマイナーバージョン
+
+	int            nLights;				///< 光源の数
+	int            vertexFormatGl;		///< glInterleavedArraysで使う，GLの頂点フォーマットID
+	size_t         vertexSize;			///< 頂点のサイズ
+	bool           vertexColor;			///< 頂点が色を持つかどうか
 	GRMaterialDesc currentMaterial;		///< 現在のマテリアル
 
-	bool	pointSmooth;				///< DrawPointにアンチエイリアスかけるか
-	bool	lineSmooth;					///< DrawLineにアンチエイリアスかけるか
+	bool	       bPointSmooth;		///< DrawPointにアンチエイリアスかけるか
+	bool	       bLineSmooth;			///< DrawLineにアンチエイリアスかけるか
 	
 	/**
 	 *	@name	マトリックス変数
@@ -67,9 +70,37 @@ protected:
 	 *	@name	シェーダ変数
 	 *	@{
 	 */
-	std::string vertexShaderFile;						///< VertexShader ファイル名
-	std::string fragmentShaderFile;						///< FragmentShader ファイル名
-	GRShaderFormat::ShaderType shaderType;				///< シェーダのロケーションタイプ
+	//std::string vertexShaderFile;						///< VertexShader ファイル名
+	//std::string fragmentShaderFile;						///< FragmentShader ファイル名
+	//GRShaderFormat::ShaderType shaderType;				///< シェーダのロケーションタイプ
+
+	/// シェーダ情報
+	typedef std::vector< UTRef<GRShader> >		Shaders;
+	Shaders		shaders;
+	GRShader*	curShader;			//< 使用中のシェーダインデックス
+
+	/// シェーダユニフォーム変数のロケーションID
+	int enableLightingLoc;	//< ライティングを行う
+	int enableTex2DLoc;		//< 二次元テクスチャを使う
+	int enableTex3DLoc;		//< 三次元テクスチャを使う
+	int tex2DLoc;			//< 二次元テクスチャサンプラ
+	int tex3DLoc;			//< 三次元テクスチャサンプラ
+	int shadowTexLoc;		//< シャドウテクスチャサンプラ
+	int shadowMatrixLoc;	//< シャドウテクスチャ座標変換
+	int shadowColorLoc;		//<
+	
+	/// シャドウマッピング
+	GRShadowLightDesc	shadowDesc;	//< 現在のシャドウ設定
+	unsigned shadowTexId;			//< シャドウテクスチャのID
+	unsigned shadowBufferId;		//< シャドウテクスチャをバインドするフレームバッファのID
+	Affinef  shadowView;			//< 光源変換
+	Affinef  shadowProj;			//< 
+	Affinef  shadowMatrix;			//< 頂点座標からシャドウテクスチャ座標を得るための変換
+	Vec2f    shadowVpPosTmp;		//< ビューポートの退避用
+	Vec2f    shadowVpSizeTmp;		//<
+	Affinef  shadowViewTmp;			//< カメラ変換の退避用
+	Affinef  shadowProjTmp;			//<
+	
 	/** @} */	
 
 	/** sin, cosのキャッシュ
@@ -105,6 +136,15 @@ protected:
 		return arr._cos[i%slice];
 	}
 	
+	/// シェーダを削除
+	//void DeleteShader();
+	/// シェーダソース読み込み
+	bool ReadShaderSource(const char* filename, std::string& src);
+	/// シェーダのコンパイル・リンクレポート
+	void PrintShaderInfoLog(int id, bool prog_or_shader);
+	/// シャドウマッピング用変換を計算
+	void CalcShadowMatrix();
+
 public:
 	///	コンストラクタ
 	GRDeviceGL(){}
@@ -113,7 +153,7 @@ public:
 	virtual void SetViewport(Vec2f pos, Vec2f sz);
 	virtual Vec2f GetViewportPos();
 	virtual Vec2f GetViewportSize();
-	virtual void ClearBuffer();
+	virtual void ClearBuffer(bool color, bool depth);
 	virtual void BeginScene();
 	virtual void EndScene();
 	///	バッファを表示するための呼ぶ関数
@@ -134,7 +174,7 @@ public:
 	virtual bool SetBlendMatrix(const Affinef& afb);
 	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id);
 	virtual void SetVertexFormat(const GRVertexElement* e);
-	virtual void SetVertexShader(void* s);
+	//virtual void SetVertexShader(void* s);
 	virtual void DrawDirect		(GRRenderBaseIf::TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
 	virtual void DrawIndexed	(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
 	virtual void DrawPoint		(Vec3f p);
@@ -172,14 +212,21 @@ public:
 	virtual void SetAlphaTest(bool b);
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest);
 	virtual void SetLighting(bool on);
+	virtual void SetTexture2D(bool b);
+	virtual void SetTexture3D(bool b);
 	virtual unsigned int LoadTexture(const std::string filename);
 	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format,const char* tb);
-	virtual void InitShader();
-	virtual void SetShaderFormat(GRShaderFormat::ShaderType type);	
-	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader);
-	virtual GRHandler CreateShader();
-	virtual bool ReadShaderSource(GRHandler shader, std::string file);	
-	virtual void GetShaderLocation(GRHandler shader, void* location);		
+	//virtual void InitShader();
+	//virtual void SetShaderFormat(GRShaderFormat::ShaderType type);	
+	//virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader);
+	//virtual GRHandler CreateShader();
+	//virtual bool ReadShaderSource(GRHandler shader, std::string file);	
+	//virtual void GetShaderLocation(GRHandler shader, void* location);		
+	virtual GRShaderIf* CreateShader(const GRShaderDesc& sd);
+	virtual void SetShader(GRShaderIf* sh);
+	virtual void SetShadowLight(const GRShadowLightDesc& sld);
+	virtual void EnterShadowMapGeneration();
+	virtual void LeaveShadowMapGeneration();
 };
 
 }

@@ -9,7 +9,7 @@
  *	@file Graphics.h
  *	@brief グラフィックスレンダラーのヘッダファイル群
 */
-#include <Springhead.h>
+//#include <Springhead.h>
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
 #include "GRSdk.h"

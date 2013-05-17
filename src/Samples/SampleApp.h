@@ -17,6 +17,8 @@
 #include <Framework/SprFWEditor.h>
 #include <map>
 
+//#include <Collision/CDConvex.h>
+
 using namespace std;
 using namespace Spr;
 
@@ -141,6 +143,11 @@ public:
 	float yline;
 	float xkeys;
 	float xbrief;
+	
+	/// シェーダ
+	GRShaderIf*	shaderBase;
+	GRShaderIf* shaderShadowCreate;
+	GRShaderIf* shaderShadowRender;
 
 public:
 	///	アクティブなシーン
@@ -228,7 +235,7 @@ public:
 			for(int i=0; i < nv; ++i){
 				Vec3d v;
 				for(int c=0; c<3; ++c){
-					v[c] = (rand() % 100 / 100.0 - 0.5) * 5 * 1.3;
+					v[c] = ((rand() % 100) / 100.0 - 0.5) * 5 * 1.3;
 				}
 				md.vertices.push_back(v);
 			}
@@ -566,9 +573,33 @@ public: /** FWAppの実装 **/
 		FWWinIf* win = CreateWin(windowDesc);		
 		win->GetTrackball()->SetPosition(Vec3f(30,30,50));
 		win->GetTrackball()->SetTarget(Vec3f(0,0,0));
+
+		/// シェーダ
+		string shaderDir = "../../../../shader/";
+		GRRenderIf* render = GetCurrentWin()->GetRender();
+
+		GRShaderDesc shd;
+		shd.vsname = shaderDir + "vsbase.txt";
+		shd.fsname = shaderDir + "fsbase.txt";
+		shd.bEnableLighting = true;
+		shd.bEnableTexture  = true;
+		shd.bShadowCreate   = false;
+		shd.bShadowRender   = false;
+		shaderBase = render->CreateShader(shd);
+
+		shd.bEnableLighting = false;
+		shd.bEnableTexture  = false;
+		shd.bShadowCreate   = true;
+		shd.bShadowRender   = false;
+		shaderShadowCreate = render->CreateShader(shd);
+
+		shd.bEnableLighting = true;
+		shd.bEnableTexture  = true;
+		shd.bShadowCreate   = false;
+		shd.bShadowRender   = true;
+		shaderShadowRender = render->CreateShader(shd);
 		
 		/// 光源設定
-		GRRenderIf* render = GetCurrentWin()->GetRender();
 		GRLightDesc ld;
 		ld.diffuse  = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
 		ld.specular = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
@@ -620,7 +651,9 @@ public: /** FWAppの実装 **/
 		
 			GetPHScene()->SetStateMode(true);
 			//scene->GetConstraintEngine()->SetUseContactSurface(true); //面接触での力計算を有効化
-
+			GetPHScene()->SetNumIteration(10);
+			GetPHScene()->SetLCPSolver(PHSceneDesc::SOLVER_GS);
+		
 			// シーン構築
 			curScene = i;
 			BuildScene();
@@ -630,7 +663,9 @@ public: /** FWAppの実装 **/
 		
 		// タイマ
 		timer = CreateTimer(UTTimerIf::FRAMEWORK);
-		timer->SetInterval(10);
+		timer->SetInterval(25);
+
+		EnableIdleFunc(false);
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
@@ -638,23 +673,45 @@ public: /** FWAppの実装 **/
 		/// 時刻のチェックと画面の更新を行う
 		if (menus[MENU_ALWAYS][ID_RUN].enabled){
 			OnStep();
+			// 再描画要求
+			PostRedisplay();
 		}
-		// 再描画要求
-		PostRedisplay();
 	}
 
 	// 描画関数．描画要求が来たときに呼ばれる
 	virtual void Display() {
 		FWWinIf* win = GetCurrentWin();
 		GRRenderIf *render = win->GetRender();
-		render->ClearBuffer();
 		render->BeginScene();
-
+		 
+		// 直上から照らす点光源で影を生成
+		GRShadowLightDesc sld;
+		sld.directional = false;
+		//sld.directional = true;
+		sld.position    = Vec3f(0.0f, 100.0f, 0.0f);
+		sld.lookat      = Vec3f(0.0f, 0.0f, 0.0f);
+		sld.up          = Vec3f(1.0f, 0.0f, 0.0f);
+		sld.fov         = (float)Rad(45.0);
+		sld.size        = Vec2f(30.0f, 30.0f);
+		sld.front       =  50.0f;
+		sld.back        = 110.0f;
+		sld.color       = Vec4f(0.0f, 0.0f, 1.0f, 0.3f);
+		render->SetShadowLight(sld);
+		
+		// シャドウマップ生成パス
+		render->SetShader(shaderShadowCreate);
+		render->EnterShadowMapGeneration();
+		render->ClearBuffer(false, true);
+		OnDraw(render);
+	
+		// メインパス
+		render->SetShader(shaderShadowRender);
+		render->LeaveShadowMapGeneration();
+		render->ClearBuffer(true, true);
 		GRCameraDesc camera = render->GetCamera();
 		camera.front = 0.3f;
 		render->SetCamera(camera);
 		render->SetViewMatrix(win->GetTrackball()->GetAffine().inv());
-
 		OnDraw(render);
 		DrawHelp(render);
 

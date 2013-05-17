@@ -9,6 +9,8 @@
 # include <windows.h>
 # undef CreateDialog
 #endif
+
+#include <SprDefs.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <Framework/SprFWApp.h>
@@ -115,6 +117,11 @@ void FWGLUT::AtExit(){
 /** Init *////////////////////////////////////////////////////////////////
 
 void FWGLUT::Init(int argc, char** argv){
+	// OpenGLコンテキストバージョンを指定
+#ifdef USE_FREEGLUT
+	glutInitContextVersion(OPENGL_MAJOR_VERSION, OPENGL_MINOR_VERSION);
+#endif
+
 	if(argc == 0){
 		argc = 1;
 		char* dummy[] = {"", NULL};
@@ -130,8 +137,7 @@ void FWGLUT::Init(int argc, char** argv){
 	// グラフィクスデバイスを作成
 	if (! FWApp::GetApp()->GetSdk()) FWApp::GetApp()->CreateSdk();
 	grDevice = FWApp::GetApp()->GetSdk()->GetGRSdk()->CreateDeviceGL();
-	grDevice->Init();
-
+	
 	// キーボード・マウスとジョイスティックデバイスの登録
 	HISdkIf* hiSdk = FWApp::GetApp()->GetSdk()->GetHISdk();
 	keyMouse = hiSdk->AddRealDevice(DRKeyMouseGLUTIf::GetIfInfoStatic())->Cast();

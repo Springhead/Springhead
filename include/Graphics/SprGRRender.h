@@ -157,8 +157,45 @@ struct GRCameraDesc : GRVisualDesc{
 		size(sz), center(c), front(f), back(b) {}
 };
 
+/** 影生成ライト */
+struct GRShadowLightIf : GRVisualIf{
+	SPR_IFDEF(GRShadowLight);
+
+};
+struct GRShadowLightDesc : GRVisualDesc{
+	SPR_DESCDEF(GRShadowLight);
+
+	bool  directional;		//< 方向光源か点光源
+	Vec3f position;			//< 光源位置
+	Vec3f lookat;			//< 光源注視点
+	Vec3f up;				//< 光源視野の上方向
+	Vec2f size;				//< 光源視野の大きさ（方向光源）
+	float fov;				//< field of view [rad]（点光源）
+	float front;			//< 前方投影面
+	float back;				//< 後方投影面
+	int   texWidth;			//< シャドウテクスチャのピクセル数
+	int   texHeight;		//<
+	float offset;			//< Zオフセット（影の染みだし対策）
+	Vec4f color;			//< 影の色
+
+	GRShadowLightDesc(){
+		directional = true;
+		position  = Vec3f(0.0f, 10.0f, 0.0f);
+		lookat    = Vec3f();
+		up        = Vec3f(1.0f, 0.0f, 0.0f);
+		size      = Vec2f(10.0f, 10.0f);
+		fov       = (float)Rad(60.0);
+		front     = 1.0f;
+		back      = 100.0f;
+		texWidth  = 1024;
+		texHeight = 1024;
+		offset    = 100.0f;
+		color     = Vec4f(0.0f, 0.0f, 0.0f, 1.0f);
+	};
+};
+
 struct GRDeviceIf;
-typedef unsigned GRHandler;
+//typedef unsigned GRShaderID;
 
 /**	@brief	グラフィックスレンダラーのインタフェース（ユーザインタフェース） */
 struct GRRenderBaseIf: public ObjectIf{
@@ -254,8 +291,11 @@ struct GRRenderBaseIf: public ObjectIf{
 	Vec2f GetViewportPos();
 	/// ビューポートのサイズの取得
 	Vec2f GetViewportSize();
-	///	バッファクリア
-	void ClearBuffer();
+	/**	@brief バッファクリア
+		@param color	カラーバッファをクリアする
+		@param depth	デプスバッファをクリアする
+	 */
+	void ClearBuffer(bool color = true, bool depth = true);
 	///	バッファの入れ替え（表示）
 	void SwapBuffers();
 	/// 背景色の取得
@@ -291,7 +331,7 @@ struct GRRenderBaseIf: public ObjectIf{
 	///	頂点フォーマットの指定
 	void SetVertexFormat(const GRVertexElement* e);
 	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
-	void SetVertexShader(void* shader);
+	//void SetVertexShader(void* shader);
 
 	///	頂点を指定してプリミティブを描画
 	void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
@@ -403,22 +443,43 @@ struct GRRenderBaseIf: public ObjectIf{
 	void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest);
 	///	シェーディングON(glMaterial) or OFF（glColor)
 	void SetLighting(bool l);
+	/// テクスチャマッピングを有効/無効にする
+	void SetTexture2D(bool b);
+	void SetTexture3D(bool b);
 	/// テクスチャのロード（戻り値：テクスチャID）
 	unsigned int LoadTexture(const std::string filename);
 	/// テクスチャ画像の設定
 	void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb);
+	
+
 	/// シェーダの初期化
-	void InitShader();
+	//void InitShader();
 	/// シェーダフォーマットの設定
-	void SetShaderFormat(GRShaderFormat::ShaderType type);
+	//void SetShaderFormat(GRShaderFormat::ShaderType type);
 	/// シェーダオブジェクトの作成
-	bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader);
+	GRShaderIf* CreateShader(const GRShaderDesc& sd);
+	/** @brief シェーダを選択
+		@param shaderIndex	シェーダインデックス
+		shaderIndexにCreateShaderの戻り値を指定するとそのシェーダへ切り替える．
+		shaderIndexに-1を指定するとシェーダを無効化し固定機能パイプラインへ切り替える．
+	 */
+	void SetShader(GRShaderIf* shader);
 	/// シェーダオブジェクトの作成、GRDeviceGL::shaderへの登録（あらかじめShaderFile名を登録しておく必要がある）	
-	GRHandler CreateShader();
-	/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける
-	bool ReadShaderSource(GRHandler shader, std::string file);	
+	//GRHandler CreateShader();
 	/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
-	void GetShaderLocation(GRHandler shader, void* location);	
+	//void GetShaderLocation(GRHandler shader, void* location);	
+
+	/** @brief シャドウマップ用ライトのパラメータを設定
+	 */
+	void SetShadowLight(const GRShadowLightDesc& sld);
+
+	/** @brief シャドウマップ生成パスへ切り替え
+	 */
+	void EnterShadowMapGeneration();
+
+	/** @brief シャドウマップ生成パスから通常パスへ戻る
+	 */
+	void LeaveShadowMapGeneration();
 };
 
 /**	@brief	グラフィックスレンダラーのインタフェース（デバイスの設定、カメラの設定） */
@@ -460,7 +521,6 @@ struct GRRenderIf: public GRRenderBaseIf{
 	void EnterScreenCoordinate();
 	/// スクリーン座標系から戻る
 	void LeaveScreenCoordinate();
-	
 };
 
 /**	@brief	グラフィックスレンダラーのデバイスクラス．OpenGLやDirectXのラッパ */

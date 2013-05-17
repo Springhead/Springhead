@@ -70,6 +70,21 @@ public:
 	void Render(GRRenderIf* render);
 };
 
+class GRShader : public Object{
+public:
+	SPR_OBJECTDEF(GRShader);
+	
+	int programId;
+	int vertShaderId;
+	int fragShaderId;
+};
+
+class GRShadowLight : public Object{
+public:
+	SPR_OBJECTDEF(GRShadowLight);
+	
+};
+
 /**	@class	GRRenderBase
     @brief	グラフィックスレンダラー/デバイスの基本クラス　 */
 class GRRenderBase: public Object{
@@ -79,7 +94,7 @@ public:
 	virtual void SetViewport(Vec2f pos, Vec2f sz){}
 	virtual Vec2f GetViewportPos(){ return Vec2f(); }
 	virtual Vec2f GetViewportSize(){ return Vec2f(); }
-	virtual void ClearBuffer(){}
+	virtual void ClearBuffer(bool color, bool depth){}
 	///	バッファの入れ替え（表示）
 	virtual void SwapBuffers(){}
 	/// 背景色の取得
@@ -101,7 +116,7 @@ public:
 	virtual void ClearBlendMatrix(){}
 	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id=0){return 0;}	
 	virtual void SetVertexFormat(const GRVertexElement* e){}
-	virtual void SetVertexShader(void* shader){}
+	//virtual void SetVertexShader(void* shader){}
 	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0){}
 	virtual void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0){}
 	virtual void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count){}
@@ -141,15 +156,21 @@ public:
 	virtual void SetAlphaTest(bool b){}
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){}
 	virtual void SetLighting(bool l){}
-
+	virtual void SetTexture2D(bool b){}
+	virtual void SetTexture3D(bool b){}
 	virtual unsigned int LoadTexture(const std::string filename){return 0;}
 	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb){}
-	virtual void InitShader(){}
-	virtual void SetShaderFormat(GRShaderFormat::ShaderType type){}	
-	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){return 0;}
-	virtual GRHandler CreateShader(){return 0;}
-	virtual bool ReadShaderSource(GRHandler shader, std::string file){return 0;}	
-	virtual void GetShaderLocation(GRHandler shader, void* location){}
+	//virtual void InitShader(){}
+	//virtual void SetShaderFormat(GRShaderFormat::ShaderType type){}	
+	//virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){return 0;}
+	//virtual GRHandler CreateShader(){return 0;}
+	//virtual bool ReadShaderSource(GRHandler shader, std::string file){return 0;}	
+	//virtual void GetShaderLocation(GRHandler shader, void* location){}
+	virtual GRShaderIf* CreateShader(const GRShaderDesc& sd){ return 0; }
+	virtual void SetShader(GRShaderIf* sh){}
+	virtual void SetShadowLight(const GRShadowLightDesc& sld){}
+	virtual void EnterShadowMapGeneration(){}
+	virtual void LeaveShadowMapGeneration(){}
 };
 
 /**	@class	GRRender
@@ -169,7 +190,7 @@ public:
 	virtual void SetViewport(Vec2f p, Vec2f s){ ptr SetViewport(p, s); }									\
 	virtual Vec2f GetViewportPos(){ return ptr GetViewportPos(); }                                          \
 	virtual Vec2f GetViewportSize(){ return ptr GetViewportSize(); }                                        \
-	virtual void ClearBuffer(){ ptr ClearBuffer(); }														\
+	virtual void ClearBuffer(bool color, bool depth){ ptr ClearBuffer(color, depth); }						\
 	virtual void SwapBuffers(){ ptr SwapBuffers(); }														\
 	virtual void GetClearColor(Vec4f& color){ ptr GetClearColor(color); }									\
 	virtual void SetClearColor(const Vec4f& color){ ptr SetClearColor(color); }								\
@@ -241,8 +262,10 @@ public:
 	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest)				\
 		{ ptr SetAlphaMode(src, dest); }																	\
 	virtual void SetLighting(bool l) { ptr SetLighting(l); }												\
+	virtual void SetTexture2D(bool b){ ptr SetTexture2D(b); }												\
+	virtual void SetTexture3D(bool b){ ptr SetTexture3D(b); }												\
 	virtual unsigned int LoadTexture(const std::string filename){ return ptr LoadTexture(filename); }		\
-	virtual void InitShader(){ ptr InitShader(); }															\
+	/*virtual void InitShader(){ ptr InitShader(); }													\
 	virtual void SetShaderFormat(GRShaderFormat::ShaderType type){ ptr SetShaderFormat(type); }				\
 	virtual bool CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader)			\
 		{ return ptr CreateShader(vShaderFile, fShaderFile, shader); }										\
@@ -250,38 +273,32 @@ public:
 	virtual bool ReadShaderSource(GRHandler shader, std::string file)										\
 		{ return ptr ReadShaderSource(shader, file); }														\
 	virtual void GetShaderLocation(GRHandler shader, void* location)										\
-		{ ptr GetShaderLocation(shader, location); }														\
-	
+		{ ptr GetShaderLocation(shader, location); }													*/\
+	virtual GRShaderIf* CreateShader(const GRShaderDesc& sd){ return ptr CreateShader(sd); }				\
+	virtual void SetShader(GRShaderIf* sh){ ptr SetShader(sh); }											\
+	virtual void SetShadowLight(const GRShadowLightDesc& sld){ ptr SetShadowLight(sld); }					\
+	virtual void EnterShadowMapGeneration()  { ptr EnterShadowMapGeneration(); }							\
+	virtual void LeaveShadowMapGeneration()  { ptr LeaveShadowMapGeneration(); }							\
+
 	REDIRECTIMP_GRRENDERBASE(device->)
 
-	///	デバイスの設定
 	virtual void SetDevice(GRDeviceIf* dev){ device = dev; }
-	///	デバイスの取得
 	virtual GRDeviceIf* GetDevice(){ return device; }
 	
-	///	デバッグ表示
 	virtual void Print(std::ostream& os) const;
 	
-	///	カメラの設定
 	void SetCamera(const GRCameraDesc& c);
 	const GRCameraDesc& GetCamera(){ return camera; }
 	
-	///	スクリーンサイズとプロジェクション行列の設定
 	virtual void Reshape(Vec2f pos, Vec2f sz);
 
-	/// 予約マテリアルの設定
 	virtual void SetMaterial(int matname);
-	/// 予約色の取得
 	Vec4f	GetReservedColor(int matname){ return matSample[matname].diffuse; }
 	
-	///
 	Vec2f GetPixelSize();
-	/// スクリーン・カメラ座標変換
 	Vec3f ScreenToCamera(int x, int y, float depth, bool LorR = false);
 
-	/// スクリーン座標系へ切り替える
 	void EnterScreenCoordinate();
-	/// スクリーン座標系から戻る
 	void LeaveScreenCoordinate();
 	
 	GRRender();

@@ -280,6 +280,56 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_GRShadowLightDesc \
+protected:\
+	bool	directional;	\
+	Vec3f	position;	\
+	Vec3f	lookat;	\
+	Vec3f	up;	\
+	Vec2f	size;	\
+	float	fov;	\
+	float	front;	\
+	float	back;	\
+	int	texWidth;	\
+	int	texHeight;	\
+	float	offset;	\
+	Vec4f	color;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		GRVisual::SetDesc((GRVisualDesc*)(GRShadowLightDesc*)ptr);	\
+		directional = ((GRShadowLightDesc*)ptr)->directional;	\
+		position = ((GRShadowLightDesc*)ptr)->position;	\
+		lookat = ((GRShadowLightDesc*)ptr)->lookat;	\
+		up = ((GRShadowLightDesc*)ptr)->up;	\
+		size = ((GRShadowLightDesc*)ptr)->size;	\
+		fov = ((GRShadowLightDesc*)ptr)->fov;	\
+		front = ((GRShadowLightDesc*)ptr)->front;	\
+		back = ((GRShadowLightDesc*)ptr)->back;	\
+		texWidth = ((GRShadowLightDesc*)ptr)->texWidth;	\
+		texHeight = ((GRShadowLightDesc*)ptr)->texHeight;	\
+		offset = ((GRShadowLightDesc*)ptr)->offset;	\
+		color = ((GRShadowLightDesc*)ptr)->color;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		GRVisual::GetDesc((GRVisualDesc*)(GRShadowLightDesc*)ptr);	\
+		((GRShadowLightDesc*)ptr)->directional = directional;	\
+		((GRShadowLightDesc*)ptr)->position = position;	\
+		((GRShadowLightDesc*)ptr)->lookat = lookat;	\
+		((GRShadowLightDesc*)ptr)->up = up;	\
+		((GRShadowLightDesc*)ptr)->size = size;	\
+		((GRShadowLightDesc*)ptr)->fov = fov;	\
+		((GRShadowLightDesc*)ptr)->front = front;	\
+		((GRShadowLightDesc*)ptr)->back = back;	\
+		((GRShadowLightDesc*)ptr)->texWidth = texWidth;	\
+		((GRShadowLightDesc*)ptr)->texHeight = texHeight;	\
+		((GRShadowLightDesc*)ptr)->offset = offset;	\
+		((GRShadowLightDesc*)ptr)->color = color;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_GRSceneDesc \
 protected:\
 public:\
@@ -301,6 +351,36 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_GRShaderDesc \
+protected:\
+	std::string	vsname;	\
+	std::string	fsname;	\
+	bool	bEnableLighting;	\
+	bool	bEnableTexture;	\
+	bool	bShadowCreate;	\
+	bool	bShadowRender;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		vsname = ((GRShaderDesc*)ptr)->vsname;	\
+		fsname = ((GRShaderDesc*)ptr)->fsname;	\
+		bEnableLighting = ((GRShaderDesc*)ptr)->bEnableLighting;	\
+		bEnableTexture = ((GRShaderDesc*)ptr)->bEnableTexture;	\
+		bShadowCreate = ((GRShaderDesc*)ptr)->bShadowCreate;	\
+		bShadowRender = ((GRShaderDesc*)ptr)->bShadowRender;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((GRShaderDesc*)ptr)->vsname = vsname;	\
+		((GRShaderDesc*)ptr)->fsname = fsname;	\
+		((GRShaderDesc*)ptr)->bEnableLighting = bEnableLighting;	\
+		((GRShaderDesc*)ptr)->bEnableTexture = bEnableTexture;	\
+		((GRShaderDesc*)ptr)->bShadowCreate = bShadowCreate;	\
+		((GRShaderDesc*)ptr)->bShadowRender = bShadowRender;	\
 		return true;	\
 	}\
 

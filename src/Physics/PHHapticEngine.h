@@ -8,7 +8,8 @@
 #ifndef PH_HAPTICENGINE_H
 #define PH_HAPTICENGINE_H
 
-#include <Springhead.h>
+//#include <Springhead.h>
+#include <HumanInterface/SprHIBase.h>
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHHapticPointer.h>
 #include <Physics/PHHapticRender.h>

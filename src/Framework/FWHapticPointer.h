@@ -1,7 +1,7 @@
 ﻿#ifndef FW_HAPTICPOINTER_H
 #define FW_HAPTICPOINTER_H
 
-#include <Springhead.h>
+//#include <Springhead.h>
 #include <Framework/SprFWHapticPointer.h>
 #include <Physics/PHHapticPointer.h>
 #include <Foundation/Object.h>

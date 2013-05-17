@@ -5,9 +5,13 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Springhead.h>
+//#include <Springhead.h>
 #include <Framework/SprFWApp.h>
-//#include <Framework/SprFWSdk.h>
+#include <Framework/SprFWSdk.h>
+#include <Framework/SprFWScene.h>
+#include <HumanInterface/SprHISdk.h>
+#include <Graphics/SprGRSdk.h>
+
 #include <Framework/FWGLUT.h>
 #include <Framework/FWGLUI.h>
 

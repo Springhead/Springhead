@@ -31,6 +31,30 @@ struct SFBlendLocation{
 };	
 //@}	
 
+/// シェーダ情報
+struct GRShaderDesc{
+	std::string vsname;			///< バーテックスシェーダのソースコードへのパス
+	std::string fsname;			///< フラグメントシェーダのソースコードへのパス
+	bool bEnableLighting;		///< ライティングコードの有効化
+	bool bEnableTexture;		///< テクスチャマッピングコードの有効化
+	bool bShadowCreate;			///< シャドウマップ生成
+	bool bShadowRender;			///< シャドウマップレンダリング
+
+	GRShaderDesc(){
+		vsname = "vsbase.txt";
+		fsname = "fsbase.txt";
+		bEnableLighting = true;
+		bEnableTexture  = true;
+		bShadowCreate   = false;
+		bShadowRender   = false;
+	}
+};
+
+struct GRShaderIf : ObjectIf{
+	SPR_IFDEF(GRShader);
+
+};
+
 struct GRShaderFormat {
 
 	///	@name シェーダタイプ
