@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <Springhead.h>
+//#include <Springhead.h>
 #include <HumanInterface/HISdk.h>
 #include <HumanInterface/DRKeyMouseWin32.h>
 #include <HumanInterface/DRKeyMouseGLUT.h>

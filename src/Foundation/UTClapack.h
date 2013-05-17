@@ -1,7 +1,8 @@
 #ifndef UT_CLAPACK_H
 #define UT_CLAPACK_H
 
-#include <Springhead.h>
+//#include <Springhead.h>
+
 #define BOOST_NUMERIC_BINDINGS_USE_CLAPACK
 //#include <boost/numeric/ublas/fwd.hpp>
 #include <boost/numeric/bindings/lapack/driver/sygv.hpp>

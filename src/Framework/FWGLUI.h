@@ -9,6 +9,7 @@
 #define FWGLUI_H
 
 #include <Framework/FWGLUT.h>
+
 #include <GL/glui.h>
 
 /** @brief GLUIを用いるアプリケーションクラス

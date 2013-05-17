@@ -63,7 +63,7 @@
 */
 
 #include <sstream>
-#include <Springhead.h>
+//#include <Springhead.h>
 #include <Foundation/Object.h>
 #include <Base/Affine.h>
 #include <stdio.h>

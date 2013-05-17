@@ -5,24 +5,24 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#include <SprDefs.h>
 #include <Graphics/GRDeviceGL.h>
+#include "GRLoadBmp.h"
 
-#define USE_GREW
-//#define GLEW_MX
-#if defined(USE_GREW)
+// OpenGL
+#if defined(USE_GLEW)
 #ifndef _MSC_VER
 # define GLEW_STATIC		// 定義するとAPI宣言にdeclspecキーワードが付かない
 #endif
 # include <GL/glew.h>
 #endif
 
+#include <GL/glut.h>
+
 #ifdef _MSC_VER
 # include <windows.h>
 #endif
-#include <stack>
 
-#include <GL/glut.h>
-#include "GRLoadBmp.h"
 #include <iomanip>
 #include <sstream>
 #ifdef _MSC_VER
@@ -44,10 +44,14 @@ namespace Spr {;
 //	GRDeviceGL
 /// 初期設定
 void GRDeviceGL::Init(){
-	nLights = 0;
-	fontBase = -1;
-	pointSmooth = false;
-	lineSmooth = false;
+	// バージョン取得
+	glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
+	glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
+
+	nLights      = 0;
+	fontBase     = -1;
+	bPointSmooth = false;
+	bLineSmooth  = false;
 
 	glDrawBuffer(GL_BACK);
 	glEnable(GL_LIGHTING);
@@ -64,7 +68,16 @@ void GRDeviceGL::Init(){
 	viewMatrix = viewMatrix.inv();
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(viewMatrix);
+
+	// デフォルトでシェーダ不使用
+	SetShader(0);
+
+	// シャドウ関係
+	shadowTexId     = 0;
+	shadowBufferId  = 0;
+	SetShadowLight(shadowDesc);
 }
+
 ///	Viewport設定
 void GRDeviceGL::SetViewport(Vec2f pos, Vec2f sz){
 	glViewport((int)pos.x , (int)pos.y, (int)sz.x, (int)sz.y);
@@ -80,10 +93,15 @@ Vec2f GRDeviceGL::GetViewportSize(){
 	return Vec2f(tmp[2], tmp[3]);
 }
 /// バッファクリア
-void GRDeviceGL::ClearBuffer(){
-	glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
-	glClearDepth(1.0); 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+void GRDeviceGL::ClearBuffer(bool color, bool depth){
+	if(color){
+		glClearColor(clearColor[0], clearColor[1], clearColor[2], clearColor[3]);
+		glClear(GL_COLOR_BUFFER_BIT);
+	}
+	if(depth){
+		glClearDepth(1.0); 
+		glClear(GL_DEPTH_BUFFER_BIT);
+	}
 }
 void GRDeviceGL::SwapBuffers(){
 	glutSwapBuffers();
@@ -123,6 +141,8 @@ void GRDeviceGL::SetModelMatrix(const Affinef& afw){
 	modelMatrix = afw;		// モデル行列の保存
 	glMatrixMode(GL_MODELVIEW);
 	glLoadMatrixf(viewMatrix * modelMatrix);
+
+	CalcShadowMatrix();
 }
 void GRDeviceGL::GetModelMatrix(Affinef& afw){
 	afw = modelMatrix;
@@ -132,6 +152,8 @@ void GRDeviceGL::MultModelMatrix(const Affinef& afw){
 	modelMatrix = modelMatrix * afw;		
 	glMatrixMode(GL_MODELVIEW);
 	glMultMatrixf(afw);
+
+	CalcShadowMatrix();
 }
 /// カレントのモデル行列をモデル行列スタックへ保存する
 void GRDeviceGL::PushModelMatrix(){
@@ -145,11 +167,13 @@ void GRDeviceGL::PopModelMatrix(){
 	modelMatrixStack.pop();
 	glMatrixMode(GL_MODELVIEW);
 	glPopMatrix();
+
+	CalcShadowMatrix();
 }
 /// ブレンド変換行列の全要素を削除する
 void GRDeviceGL::ClearBlendMatrix(){
 	blendMatrix.clear();
-}	
+}
 /// ブレンド変換行列を設定する
 bool GRDeviceGL::SetBlendMatrix(const Affinef& afb){
 	blendMatrix.push_back(afb);
@@ -264,10 +288,9 @@ void GRDeviceGL::SetVertexFormat(const GRVertexElement* e){
 		assert(0);
 	}
 }
-/// 頂点座標を指定してプリミティブを描画
-void GRDeviceGL::SetVertexShader(void* s){
+/*void GRDeviceGL::SetVertexShader(void* s){
 	assert(0);	//	To Be Implemented
-}
+}*/
 /// 頂点座標を指定してプリミティブを描画
 void GRDeviceGL::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride){
 	GLenum mode = GL_TRIANGLES;
@@ -440,13 +463,13 @@ void GRDeviceGL::DrawDisk(float radius, int slice, bool solid){
 }
 
 void GRDeviceGL::DrawCapsule(float radius, float height, int slice, bool solid){
-	DrawCylinder(radius, height, 20, solid, false);
+	DrawCylinder(radius, height, slice, solid, false);
 
 	this->PushModelMatrix();
-	glTranslatef(0,0,-height/2);
-	solid ? glutSolidSphere(radius, 20, 20) : glutWireSphere(radius, 20, 20);
-	glTranslatef(0,0,height);
-	solid ? glutSolidSphere(radius, 20, 20) : glutWireSphere(radius, 20, 20);
+	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, -height/2.0f));
+	solid ? glutSolidSphere(radius, slice, slice) : glutWireSphere(radius, slice, slice);
+	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, height));
+	solid ? glutSolidSphere(radius, slice, slice) : glutWireSphere(radius, slice, slice);
 	this->PopModelMatrix();
 }
 
@@ -475,9 +498,9 @@ void GRDeviceGL::DrawRoundCone(float rbottom, float rtop, float height, int slic
 	}
 
 	this->PushModelMatrix();
-	glTranslatef(0,0,-height/2);
+	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, -height/2.0f));
 	solid ? glutSolidSphere(rbottom, 20, 20) : glutWireSphere(rbottom, 20, 20);
-	glTranslatef(0,0,height);
+	this->MultModelMatrix(Affinef::Trn(0.0f, 0.0f, height));
 	solid ? glutSolidSphere(rtop, 20, 20) : glutWireSphere(rtop, 20, 20);
 	this->PopModelMatrix();
 
@@ -577,8 +600,11 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str){
 
 /// 3次元テキストの描画（GLオンリー版でfontは指定なし）.. Vec3f pos
 void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
+	// シェーダが有効だとビットマップ関係がうまく動かないので一時無効化して対処
+	glUseProgram(0);
+
 	bool lighting = !!glIsEnabled(GL_LIGHTING);
-	glDisable(GL_LIGHTING);
+	SetLighting(false);
 	if(fontBase != -1){
 		glBindTexture(GL_TEXTURE_3D,0);								//直前に使用した3Dテクスチャを文字色に反映させない.
 		glColor3f(((font.color >> 16) & 0xFF) / 255.0,
@@ -600,7 +626,11 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 		}
 	}
 	if(lighting)
-		glEnable(GL_LIGHTING);
+		SetLighting(true);
+
+	// シェーダを再度有効化
+	if(curShader != 0)
+		glUseProgram(curShader->programId);
 }
 
 void GRDeviceGL::SetFont(const GRFont& font){
@@ -697,18 +727,20 @@ void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 	if (mat.texname.length()){
 		int texId = LoadTexture(mat.texname);
 		if (mat.Is3D()){
-			glDisable(GL_TEXTURE_2D);
-			glEnable(GL_TEXTURE_3D);
+			SetTexture2D(false);
+			SetTexture3D(true);
 			glBindTexture(GL_TEXTURE_3D, texId);
 			if (enableDebugMessage){ std::cout << "1: glBindTexture(GL_TEXTURE_3D, " << texId << ");" << std::endl; }
 		}else{
 			// std::cout << " SetMaterial : id : " << texId << std::endl;
-			glDisable(GL_TEXTURE_3D);
-			glEnable(GL_TEXTURE_2D);
+			SetTexture3D(false);
+			SetTexture2D(true);
 			glBindTexture(GL_TEXTURE_2D, texId);
 			if (enableDebugMessage){ std::cout << "2: glBindTexture(GL_TEXTURE_2D, " << texId << ");" << std::endl; }
 		}
 	}else{
+		SetTexture2D(false);
+		SetTexture3D(false);
 		glBindTexture(GL_TEXTURE_3D, 0);
 		if (enableDebugMessage){ std::cout << "3: glBindTexture(GL_TEXTURE_3D, " << 0 << ");" << std::endl; }
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -718,20 +750,20 @@ void GRDeviceGL::SetMaterial(const GRMaterialDesc& mat){
 }
 
 void GRDeviceGL::SetPointSize(float sz, bool smooth){
-	if(pointSmooth && !smooth)
+	if(bPointSmooth && !smooth)
 		glDisable(GL_POINT_SMOOTH);
-	if(!pointSmooth && smooth)
+	if(!bPointSmooth && smooth)
 		glEnable(GL_POINT_SMOOTH);
-	pointSmooth = smooth;
+	bPointSmooth = smooth;
 	glPointSize(sz);
 }
 
 void GRDeviceGL::SetLineWidth(float w, bool smooth){
-	if(lineSmooth && !smooth)
+	if(bLineSmooth && !smooth)
 		glDisable(GL_LINE_SMOOTH);
-	if(!lineSmooth && smooth)
+	if(!bLineSmooth && smooth)
 		glEnable(GL_LINE_SMOOTH);
-	lineSmooth = smooth;
+	bLineSmooth = smooth;
 	glLineWidth(w);
 }
 
@@ -821,8 +853,22 @@ void GRDeviceGL::SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TB
 	glBlendFunc(glfac[0], glfac[1]);
 }
 void GRDeviceGL::SetLighting(bool on){
-	if(on) glEnable(GL_LIGHTING);
+	if(on) glEnable (GL_LIGHTING);
 	else   glDisable(GL_LIGHTING);
+
+	glUniform1i(enableLightingLoc, (int)on);
+}
+
+void GRDeviceGL::SetTexture2D(bool on){
+	if(on) glEnable (GL_TEXTURE_2D);
+	else   glDisable(GL_TEXTURE_2D);
+	glUniform1f(enableTex2DLoc, (float)on);
+}
+
+void GRDeviceGL::SetTexture3D(bool on){
+	if(on) glEnable (GL_TEXTURE_3D);
+	else   glDisable(GL_TEXTURE_3D);
+	glUniform1f(enableTex3DLoc, (float)on);
 }
 
 void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb){
@@ -1012,18 +1058,6 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 	return texId;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 #if 0		//	頂点シェーダーを使って頂点ブレンドをする時の参考用
 /// インデックス形式によるシェーダを適用した DisplayList の作成（SetVertexFormat() および SetShaderFormat() の後に呼ぶ）
 int GRDeviceGL::CreateShaderIndexedList(GRHandler shader, void* location, 
@@ -1098,16 +1132,11 @@ int GRDeviceGL::CreateShaderIndexedList(GRHandler shader, void* location,
 
 	return list;
 }	
-
-
 #endif
 
-
-
-
 /// シェーダの初期化	
-void GRDeviceGL::InitShader(){
-#if defined(USE_GREW)
+/*void GRDeviceGL::InitShader(){
+#if defined(USE_GLEW)
     glewInit();
 	if ( GLEW_ARB_vertex_shader && GLEW_ARB_fragment_shader ) {
 		DSTR << "GLSL ready" << std::endl;
@@ -1122,9 +1151,9 @@ void GRDeviceGL::InitShader(){
 	DSTR << "No GLSL support." << std::endl;
 	assert(0);
 #endif	
-}	
+}*/	
 /// シェーダフォーマットの設定
-void GRDeviceGL::SetShaderFormat(GRShaderFormat::ShaderType type){
+/*void GRDeviceGL::SetShaderFormat(GRShaderFormat::ShaderType type){
 	shaderType = type;
 	 if (type == GRShaderFormat::shP3fB4f) {
 		vertexShaderFile = "shP3fB4f.vert";
@@ -1158,12 +1187,12 @@ void GRDeviceGL::SetShaderFormat(GRShaderFormat::ShaderType type){
 		fragmentShaderFile = "";
 		assert(0);
 	}
-}	
+}*/	
 /// シェーダオブジェクトの作成	
-bool GRDeviceGL::CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){
+/*bool GRDeviceGL::CreateShader(std::string vShaderFile, std::string fShaderFile, GRHandler& shader){
 	GRHandler vertexShader;
 	GRHandler fragmentShader;
-#if defined(USE_GREW)
+#if defined(USE_GLEW)
     vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); 
     fragmentShader = glCreateShaderObjectARB(GL_FRAGMENT_SHADER_ARB);
     if (ReadShaderSource(vertexShader, vShaderFile)==false)   return false;
@@ -1193,13 +1222,13 @@ bool GRDeviceGL::CreateShader(std::string vShaderFile, std::string fShaderFile, 
 	glUseProgram(shader);	    
 #endif
 	return true;
-}		
+}*/		
 /// シェーダオブジェクトの作成、GRDeviceGL::shaderへの登録（あらかじめShaderFile名を登録しておく必要がある）	
-GRHandler GRDeviceGL::CreateShader(){
+/*GRHandler GRDeviceGL::CreateShader(){
 	GRHandler vertexShader;
 	GRHandler fragmentShader;
 	GRHandler shaderProgram;
-#if defined(USE_GREW)
+#if defined(USE_GLEW)
 //	GLEWContext* ctx = NULL;
 //	ctx = glewGetContext();
 	vertexShader = glCreateShaderObjectARB(GL_VERTEX_SHADER_ARB); 
@@ -1231,40 +1260,159 @@ GRHandler GRDeviceGL::CreateShader(){
 	glUseProgram(shaderProgram);	    
 #endif
 	return shaderProgram;
-}	
-/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける	
-bool GRDeviceGL::ReadShaderSource(GRHandler shader, std::string file){
-	FILE *fp;
-	char *source = NULL;
-	int length=0;
+}*/	
 
-	if (file.empty()) 	
+/// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける	
+bool GRDeviceGL::ReadShaderSource(const char* filename, std::string& src){
+	std::ifstream ifs;
+	ifs.open(filename, std::ios_base::in);
+	if(!ifs.is_open())
 		return false;
 
-	fp = fopen(file.c_str(),"rb");
-	if (fp != NULL) {      
-      	fseek(fp, 0, SEEK_END);
-      	length = ftell(fp);
-      	rewind(fp);					
-		if (length > 0) {
-			source = (char *)malloc(sizeof(char) * (length+1));
-			if (source == NULL) {
-				DSTR << "Could not allocate read buffer." << std::endl;
-				return false;
-			}
-			length = (int)fread((void *)source,sizeof(char),length,fp);
-			source[length] = '\0';
-		}
-		fclose(fp);
-	}	
-	const char* sourceStrings =  (char*)source;
-	glShaderSource(shader, 1, &sourceStrings, (const GLint *)&length);
-
-	free((void*)source);
+	char c;
+	src.clear();
+	while(c = ifs.get(), ifs.good())
+		src.push_back(c);
+	
+	ifs.close();
 	return true;
-}			
+}
+
+GRShaderIf* GRDeviceGL::CreateShader(const GRShaderDesc& sd){
+	UTRef<GRShader> shader = DBG_NEW GRShader();
+	
+	std::string vssrc, fssrc;
+	if(!ReadShaderSource(sd.vsname.c_str(), vssrc)){
+		DSTR << "failed to read vertex shader source " << sd.vsname << std::endl;
+		return 0;
+	}
+	if(!ReadShaderSource(sd.fsname.c_str(), fssrc)){
+		DSTR << "failed to read fragment shader source " << sd.fsname << std::endl;
+		return 0;
+	}
+
+	// #defineを付加
+	std::string defines;
+	if(sd.bEnableLighting)
+		defines += "#define ENABLE_LIGHTING\n";
+	if(sd.bEnableTexture)
+		defines += "#define ENABLE_TEXTURE\n";
+	if(sd.bShadowCreate)
+		defines += "#define SHADOW_CREATE\n";
+	if(sd.bShadowRender)
+		defines += "#define SHADOW_RENDER\n";
+	vssrc = defines + vssrc;
+	fssrc = defines + fssrc;
+
+	shader->vertShaderId = glCreateShader(GL_VERTEX_SHADER);
+	shader->fragShaderId = glCreateShader(GL_FRAGMENT_SHADER);
+
+	const char* vsSourceArray[] = {vssrc.c_str()};
+	const char* fsSourceArray[] = {fssrc.c_str()};
+
+	glShaderSource(shader->vertShaderId, 1, vsSourceArray, NULL);
+	glShaderSource(shader->fragShaderId, 1, fsSourceArray, NULL);
+
+	int result;
+	
+	glCompileShader(shader->vertShaderId);
+	glGetShaderiv  (shader->vertShaderId, GL_COMPILE_STATUS, &result);
+	if(result == GL_FALSE){
+		DSTR << "vertex shader compilation failed" << std::endl;
+		PrintShaderInfoLog(shader->vertShaderId, false);
+		return 0;
+	}
+
+	glCompileShader(shader->fragShaderId);
+	glGetShaderiv  (shader->fragShaderId, GL_COMPILE_STATUS, &result);
+	if(result == GL_FALSE){
+		DSTR << "fragment shader compilation failed" << std::endl;
+		PrintShaderInfoLog(shader->fragShaderId, false);
+		return 0;
+	}
+
+	shader->programId = glCreateProgram();
+	glAttachShader(shader->programId, shader->vertShaderId);
+	glAttachShader(shader->programId, shader->fragShaderId);
+
+	glLinkProgram (shader->programId);
+	glGetProgramiv(shader->programId, GL_LINK_STATUS, &result);
+	if(result == GL_FALSE){
+		DSTR << "shader program link failed" << std::endl;
+		PrintShaderInfoLog(shader->programId, true);
+		return 0;
+	}
+
+	shaders.push_back(shader);
+
+	return shader->Cast();
+}
+
+void GRDeviceGL::SetShader(GRShaderIf* sh){
+	if(!sh){
+		glUseProgram(0);
+		curShader = 0;
+		return;
+	}
+
+	GRShader* shader = sh->Cast();
+
+	// シェーダを選択
+	glUseProgram(shader->programId);
+
+	// ユニフォーム変数のロケーション取得
+	enableLightingLoc = glGetUniformLocation(shader->programId, "enableLighting");
+	enableTex2DLoc    = glGetUniformLocation(shader->programId, "enableTex2D"   );
+	enableTex3DLoc    = glGetUniformLocation(shader->programId, "enableTex3D"   );
+	tex2DLoc          = glGetUniformLocation(shader->programId, "tex2D"         );
+	tex3DLoc          = glGetUniformLocation(shader->programId, "tex3D"         );
+	shadowTexLoc      = glGetUniformLocation(shader->programId, "shadowTex"     );
+	shadowMatrixLoc   = glGetUniformLocation(shader->programId, "shadowMatrix"  );
+	shadowColorLoc    = glGetUniformLocation(shader->programId, "shadowColor"   );
+	
+	// テクスチャサンプラとテクスチャユニット番号の対応
+	if(tex2DLoc != -1)
+		glUniform1i(tex2DLoc, 0);
+	if(tex3DLoc != -1)
+		glUniform1i(tex3DLoc, 0);
+	if(shadowTexLoc != -1)
+		glUniform1i(shadowTexLoc, 1);
+
+	curShader = shader;
+}
+
+/*
+void GRDeviceGL::DeleteShader(){
+	if(vertShaderId != -1)
+		glDeleteShader(vertShaderId);
+	if(fragShaderId != -1)
+		glDeleteShader(fragShaderId);
+	if(programId != -1)
+		glDeleteProgram(programId);
+	vertShaderId = fragShaderId = programId = -1;
+}
+*/
+
+void GRDeviceGL::PrintShaderInfoLog(int id, bool prog_or_shader){
+	int loglen;
+	if(prog_or_shader)
+		 glGetProgramiv(id, GL_INFO_LOG_LENGTH, &loglen);
+	else glGetShaderiv (id, GL_INFO_LOG_LENGTH, &loglen);
+
+	if(loglen > 0){
+		std::string logstr;
+		logstr.resize(loglen);
+		GLsizei nwritten;
+		if(prog_or_shader)
+			 glGetProgramInfoLog(id, loglen, &nwritten, &logstr[0]);
+		else glGetShaderInfoLog (id, loglen, &nwritten, &logstr[0]);
+
+		DSTR << logstr << std::endl;
+	}
+}
+
 /// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
-void GRDeviceGL::GetShaderLocation(GRHandler shader, void* location){
+/*void GRDeviceGL::GetShaderLocation(GRHandler shader, void* location){
 	if ((shaderType == GRShaderFormat::shP3fB4f)
 			|| (shaderType == GRShaderFormat::shC4bP3fB4f)
 			|| (shaderType == GRShaderFormat::shC3fP3fB4f))
@@ -1285,8 +1433,136 @@ void GRDeviceGL::GetShaderLocation(GRHandler shader, void* location){
 		DSTR << "To Be Implemented. " << std::endl;
 		assert(0);
 	}
-}	
+}*/	
 	
-	
+void GRDeviceGL::SetShadowLight(const GRShadowLightDesc& sld){
+	shadowView.Pos() = sld.position;
+	shadowView.LookAtGL(sld.lookat, sld.up);
+	shadowView = shadowView.inv();
+
+	// スクリーンの幅
+	shadowProj.clear();
+	if(sld.directional){
+		shadowProj[0][0] =  2.0f / sld.size.x;
+		shadowProj[1][1] =  2.0f / sld.size.y;
+		shadowProj[2][2] = -2.0f / (sld.back - sld.front);
+		shadowProj[2][3] = -(sld.back + sld.front) / (sld.back - sld.front);
+		shadowProj[3][3] =  1.0f;
+	}
+	else{
+		float f = 1.0f / tanf(sld.fov / 2.0f);
+		shadowProj[0][0] = f;
+		shadowProj[1][1] = f;
+		shadowProj[2][2] = - (sld.back + sld.front) / (sld.back - sld.front);
+		shadowProj[2][3] = -2.0f * sld.front * sld.back / (sld.back - sld.front);
+		shadowProj[3][2] = -1.0f;
+	}
+
+	CalcShadowMatrix();
+
+	if(shadowTexId == 0 || shadowDesc.texWidth != sld.texWidth || shadowDesc.texHeight != sld.texHeight){
+		float border[] = {1.0f, 0.0f, 0.0f, 0.0};
+		if(shadowTexId != 0)
+			glDeleteTextures(1, &shadowTexId);
+
+		glGenTextures(1, &shadowTexId);
+		glBindTexture(GL_TEXTURE_2D, shadowTexId);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, sld.texWidth, sld.texHeight, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR/*GL_NEAREST*/);
+		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR/*GL_NEAREST*/);
+		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, border);
+		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+		glTexParameteri (GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LESS);
+	}
+
+	// フレームバッファ作成
+	if(shadowBufferId == 0){
+		glGenFramebuffers(1, &shadowBufferId);
+	}
+
+	// フレームバッファにシャドウテクスチャをバインド
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowBufferId);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, shadowTexId, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	shadowDesc = sld;
+}
+
+void GRDeviceGL::CalcShadowMatrix(){
+	const float bias[] = {
+		0.5, 0.0, 0.0, 0.0,
+		0.0, 0.5, 0.0, 0.0,
+		0.0, 0.0, 0.5, 0.0,
+		0.5, 0.5, 0.5, 1.0};
+	shadowMatrix = (*(Affinef*)bias) * shadowProj * shadowView * modelMatrix;
+	glUniformMatrix4fv(shadowMatrixLoc, 1, false, (float*)&shadowMatrix);
+}
+
+void GRDeviceGL::EnterShadowMapGeneration(){
+	// シャドウテクスチャ用フレームバッファをバインド
+	glBindFramebuffer(GL_FRAMEBUFFER, shadowBufferId);
+
+	// カラーバッファへの書き込みを禁止
+	glDrawBuffer(GL_NONE);
+
+	// 現在の始点・投影変換を退避
+	GetViewMatrix      (shadowViewTmp);
+	GetProjectionMatrix(shadowProjTmp);
+
+	// 光源に合わせた視点・投影変換
+	SetViewMatrix      (shadowView);
+	SetProjectionMatrix(shadowProj);
+
+	// ビューポート退避
+	shadowVpPosTmp  = GetViewportPos();
+	shadowVpSizeTmp = GetViewportSize();
+
+	// テクスチャ用ビューポート
+	SetViewport(Vec2f(), Vec2f((float)shadowDesc.texWidth, (float)shadowDesc.texHeight));
+
+	// デプスオフセット
+	// - GL_LINESなどの線描画にはオフセットが効かないので不要な影がついてしまう
+	// - 線描画時にglPolygonModeでGL_LINEに切り替えれば良さそうだが未対応
+	glEnable(GL_POLYGON_OFFSET_FILL);
+	glPolygonOffset(1.0f, shadowDesc.offset);
+
+	// 前面カリング
+	// - 両面描画してるケースが割りと多いので却下
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_FRONT);
+
+	//＊デプスバッファをクリアはユーザが行う
+
+}
+
+void GRDeviceGL::LeaveShadowMapGeneration(){
+	// デフォルトフレームバッファをバインド
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	// 視点・投影変換を復帰
+	SetViewMatrix      (shadowViewTmp);
+	SetProjectionMatrix(shadowProjTmp);
+
+	// ビューポートを復帰
+	SetViewport(shadowVpPosTmp, shadowVpSizeTmp);
+
+	// シャドウテクスチャをユニット1にバインド
+	glActiveTexture(GL_TEXTURE1);
+	glBindTexture(GL_TEXTURE_2D, shadowTexId);
+	glActiveTexture(GL_TEXTURE0);
+
+	// デプスオフセット
+	glPolygonOffset(0.0f, 0.0f);
+
+	// 影の色と透明度
+	glUniform4fv(shadowColorLoc, 1, (float*)&shadowDesc.color);
+
+	// 背面カリング有効化
+	//glEnable(GL_CULL_FACE);
+	//glCullFace(GL_BACK);
+}
+
 }	//	Spr
 

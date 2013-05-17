@@ -8,6 +8,7 @@
 #ifndef FWGLUT_H
 #define FWGLUT_H
 
+#include <SprDefs.h>
 #include <Foundation/UTTimer.h>
 #include <Framework/FWGraphicsHandler.h>
 #include <Framework/FWWin.h>
@@ -31,7 +32,7 @@ protected:
 
 	static FWGLUT*	GetInstance();
 
-	/** コールバック関数*/
+	/** コールバック関数 */
 	static void SPR_CDECL GlutDisplayFunc();
 	static void SPR_CDECL GlutReshapeFunc(int w, int h);
 	static void SPR_CDECL GlutTimerFunc(int id);
@@ -42,7 +43,7 @@ protected:
 	static void SPR_CDECL GlutKeyFunc(unsigned char ch, int x, int y);
 	static void SPR_CDECL GlutSpecialKeyFunc(int ch, int x, int y);
 #ifdef USE_FREEGLUT
-	static void GlutMouseWheelFunc(int, int, int, int);
+	static void SPR_CDECL GlutMouseWheelFunc(int, int, int, int);
 #endif
 	static void SPR_CDECL AtExit();
 
