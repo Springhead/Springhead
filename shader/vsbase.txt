@@ -1,0 +1,152 @@
+#ifdef SHADOW_RENDER
+uniform mat4 shadowMatrix;
+varying vec4 shadowCoord;
+#endif
+
+#ifdef ENABLE_LIGHTING
+uniform bool enableLighting;
+
+vec4 position;		//< vertex position in eye coordinate
+vec3 normal;		//< normalized normal vector in eye coordinate
+
+varying vec4 ambient;
+varying vec4 diffuse;		//< vertex diffuse color
+varying vec4 specular;		//< vertex specular color
+#endif
+
+#ifdef ENABLE_LIGHTING
+void PointLighting(int i)
+{
+   float ndotvp;
+   float ndothv;
+   float pf;
+   float attenuation;
+   float d;
+   vec3  vp;
+   vec3  halfvector;
+   vec3  eye = vec3(0.0, 0.0, 1.0);
+   vec3  pos3 = (vec3(position)) / position.w;
+	
+   vp = vec3(gl_LightSource[i].position) - pos3;
+   d  = length(vp);
+   vp = normalize(vp);
+
+   attenuation = 1.0 / (gl_LightSource[i].constantAttenuation +
+       gl_LightSource[i].linearAttenuation    * d +
+       gl_LightSource[i].quadraticAttenuation * d * d);
+
+   halfvector = normalize(vp + eye);
+
+   ndotvp = max(0.0, dot(normal, vp));
+   ndothv = max(0.0, dot(normal, halfvector));
+
+   if (ndotvp == 0.0)
+   {
+       pf = 0.0;
+   }
+   else
+   {
+       pf = pow(ndothv, gl_FrontMaterial.shininess);
+   }
+
+   ambient  += gl_LightSource[i].ambient  * attenuation;
+   diffuse  += gl_LightSource[i].diffuse  * ndotvp * attenuation;
+   specular += gl_LightSource[i].specular * pf * attenuation;
+}
+
+void DirectionalLighting(int i)
+{
+	float ndotvp;
+	float ndothv;
+	float pf;
+
+	ndotvp = max(0.0, dot(normal, normalize(vec3(gl_LightSource[i].position))));
+	ndothv = max(0.0, dot(normal, vec3(gl_LightSource[i].halfVector)));
+
+	if(ndotvp == 0.0)
+	{
+		pf = 0.0;
+	}
+	else
+	{
+		pf = pow(ndothv, gl_FrontMaterial.shininess);
+	}
+	ambient  += gl_LightSource[i].ambient;
+	diffuse  += gl_LightSource[i].diffuse * ndotvp;
+	specular += gl_LightSource[i].specular * pf;
+}
+
+void Lighting()
+{
+	vec4 color;
+	
+	ambient  = vec4(0.0);
+	diffuse  = vec4(0.0);
+	specular = vec4(0.0);
+
+	int nlights = gl_MaxLights;
+	for(int i = 0; i < nlights; i++)
+	{
+		if(gl_LightSource[i].position.w == 0.0)
+		{
+			DirectionalLighting(i);
+		}
+		else
+		{
+			PointLighting(i);
+		}
+	}
+
+	color = gl_FrontLightModelProduct.sceneColor +
+		ambient  * gl_FrontMaterial.ambient +
+		diffuse  * gl_FrontMaterial.diffuse +
+	    specular * gl_FrontMaterial.specular;
+	color = clamp(color, 0.0, 1.0);
+
+	gl_FrontColor = color;
+}
+#endif
+
+#ifdef ENABLE_TEXTURE
+void Texture()
+{
+	// no multi-texture supported
+	gl_TexCoord[0] = gl_MultiTexCoord0;
+}
+#endif
+
+void main()
+{
+	#ifdef ENABLE_LIGHTING
+	normal = gl_NormalMatrix * gl_Normal;
+	normal = normalize(normal);
+
+	// vertex position in eye coordinate
+	position = gl_ModelViewMatrix * gl_Vertex;
+
+	// vertex color
+	if(enableLighting == true)
+	{
+		Lighting();
+	}
+	else
+	{
+		gl_FrontColor = gl_Color;
+	}
+	#else
+	gl_FrontColor = gl_Color;
+	#endif
+
+	#ifdef ENABLE_TEXTURE
+	// texture
+	Texture();
+	#endif
+
+	#ifdef SHADOW_RENDER
+	// shadow coordinate
+	shadowCoord = shadowMatrix * gl_Vertex;
+	#endif
+
+	// vertex position
+	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+}
