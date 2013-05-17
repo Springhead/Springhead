@@ -651,9 +651,7 @@ public: /** FWAppの実装 **/
 		
 			GetPHScene()->SetStateMode(true);
 			//scene->GetConstraintEngine()->SetUseContactSurface(true); //面接触での力計算を有効化
-			GetPHScene()->SetNumIteration(10);
-			GetPHScene()->SetLCPSolver(PHSceneDesc::SOLVER_GS);
-		
+			
 			// シーン構築
 			curScene = i;
 			BuildScene();
