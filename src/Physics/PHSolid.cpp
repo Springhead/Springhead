@@ -571,6 +571,9 @@ void PHSolid::CompInertia(){
 		cross = Matrix3f::Cross(center - frames[i]->pose * frames[i]->center);
 		inertia += R * frames[i]->inertia * R.trans() - (float)frames[i]->mass * (cross*cross);
 	}
+
+	SetMass(mass);
+	SetInertia(inertia);
 }
 
 PHTreeNodeIf* PHSolid::GetTreeNode(){
