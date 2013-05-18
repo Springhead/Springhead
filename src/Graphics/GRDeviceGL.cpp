@@ -44,7 +44,9 @@ namespace Spr {;
 //	GRDeviceGL
 /// 初期設定
 void GRDeviceGL::Init(){
-	// バージョン取得
+	// バージョン取得 (glGetIntegerによるバージョン取得は3.0以降が必要)
+	majorVersion = 1;
+	minorVersion = 0;
 	glGetIntegerv(GL_MAJOR_VERSION, &majorVersion);
 	glGetIntegerv(GL_MINOR_VERSION, &minorVersion);
 
@@ -75,7 +77,6 @@ void GRDeviceGL::Init(){
 	// シャドウ関係
 	shadowTexId     = 0;
 	shadowBufferId  = 0;
-	SetShadowLight(shadowDesc);
 }
 
 ///	Viewport設定
@@ -685,7 +686,10 @@ void GRDeviceGL::SetFont(const GRFont& font){
 		// 0から256のコードの文字を、DisplayListのbase番目から登録.
 		// wglUseFontBitmaps()関数、使用して、生成したフォントをディスプレイリストに割当てる.
 		hOldFont = (HFONT)SelectObject(hDC, hFont);			
-		BOOL b = wglUseFontBitmaps(hDC, 0, range, fontBase);
+		BOOL b;
+		// wglUseFontBitmapsは一度目のコールでエラーし二度目に成功するケースがある
+		b = wglUseFontBitmaps(hDC, 0, range, fontBase);
+		b = wglUseFontBitmaps(hDC, 0, range, fontBase);
 		if (!b){
 			DWORD e = GetLastError();
 			char* lpMsgBuf;
@@ -697,8 +701,8 @@ void GRDeviceGL::SetFont(const GRFont& font){
 		        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
 		        (LPSTR)&lpMsgBuf,
 		        0, NULL );
-			// DSTR << "wglUseFontBitmaps() failed with error:" << e << std::endl;
-			// DSTR << lpMsgBuf << std::endl;
+			DSTR << "wglUseFontBitmaps() failed with error:" << e << std::endl;
+			DSTR << lpMsgBuf << std::endl;
 			LocalFree(lpMsgBuf);
 		}
 		SelectObject(hDC, hOldFont);
@@ -1262,6 +1266,14 @@ int GRDeviceGL::CreateShaderIndexedList(GRHandler shader, void* location,
 	return shaderProgram;
 }*/	
 
+bool GRDeviceGL::CheckGLVersion(int major, int minor){
+	if(majorVersion < major || (majorVersion == major && minorVersion < minor)){
+		DSTR << "this function requires OpenGL " << major << "." << minor << "or higher" << std::endl;
+		return false;
+	}
+	return true;
+}
+
 /// シェーダのソースプログラムをメモリに読み込み、シェーダオブジェクトと関連付ける	
 bool GRDeviceGL::ReadShaderSource(const char* filename, std::string& src){
 	std::ifstream ifs;
@@ -1436,6 +1448,9 @@ void GRDeviceGL::PrintShaderInfoLog(int id, bool prog_or_shader){
 }*/	
 	
 void GRDeviceGL::SetShadowLight(const GRShadowLightDesc& sld){
+	if(!CheckGLVersion(3, 0))
+		return;
+
 	shadowView.Pos() = sld.position;
 	shadowView.LookAtGL(sld.lookat, sld.up);
 	shadowView = shadowView.inv();
@@ -1501,6 +1516,12 @@ void GRDeviceGL::CalcShadowMatrix(){
 }
 
 void GRDeviceGL::EnterShadowMapGeneration(){
+	if(!CheckGLVersion(3, 0))
+		return;
+
+	if(shadowTexId == 0 || shadowBufferId == 0)
+		SetShadowLight(shadowDesc);
+
 	// シャドウテクスチャ用フレームバッファをバインド
 	glBindFramebuffer(GL_FRAMEBUFFER, shadowBufferId);
 
@@ -1538,6 +1559,9 @@ void GRDeviceGL::EnterShadowMapGeneration(){
 }
 
 void GRDeviceGL::LeaveShadowMapGeneration(){
+	if(!CheckGLVersion(3, 0))
+		return;
+
 	// デフォルトフレームバッファをバインド
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
