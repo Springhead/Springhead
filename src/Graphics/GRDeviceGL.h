@@ -136,8 +136,8 @@ protected:
 		return arr._cos[i%slice];
 	}
 	
-	/// シェーダを削除
-	//void DeleteShader();
+	/// OpenGLバージョンチェック
+	bool CheckGLVersion(int major, int minor);
 	/// シェーダソース読み込み
 	bool ReadShaderSource(const char* filename, std::string& src);
 	/// シェーダのコンパイル・リンクレポート
