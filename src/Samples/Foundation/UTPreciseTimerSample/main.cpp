@@ -21,7 +21,7 @@
 #include <vector>
 #include <conio.h>
 #include <GL/glut.h>
-#include <windows.h>
+#include <mmsystem.h>
 #include <Foundation/UTPreciseTimer.h>
 #include <Foundation/UTQPTimer.h>
 

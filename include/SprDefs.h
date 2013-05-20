@@ -18,4 +18,4 @@
 /** Springhead2/closed のソースを使用するかどうか
 	開発者以外は未定義としてください
  */
-#define USE_CLOSED_SRC 
+#include "UseClosedSrcOrNot.h" 
