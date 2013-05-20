@@ -5,7 +5,7 @@
 #include <map>
 #include <conio.h>
 #include <GL/glut.h>
-#include <windows.h>
+#include <mmsystem.h>
 using namespace Spr;
 
 unsigned startTime;
