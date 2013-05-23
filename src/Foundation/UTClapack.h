@@ -17,37 +17,49 @@
 
 #ifdef _DEBUG
 #ifdef _DLL
+#ifdef WIN64
+# pragma comment(lib, "LIBF2C10MDx64.lib")
+# pragma comment(lib, "BLAS10MDx64.lib")
+# pragma comment(lib, "CLAPACK10MDx64.lib")
+#else
 # pragma comment(lib, "LIBF2C10MD.lib")
 # pragma comment(lib, "BLAS10MD.lib")
 # pragma comment(lib, "CLAPACK10MD.lib")
+#endif	// WIN64
+#else	// _DLL
+#ifdef WIN64
+# pragma comment(lib, "LIBF2C10Dx64.lib")
+# pragma comment(lib, "BLAS10Dx64.lib")
+# pragma comment(lib, "CLAPACK10Dx64.lib")
 #else
 # pragma comment(lib, "LIBF2C10D.lib")
 # pragma comment(lib, "BLAS10D.lib")
 # pragma comment(lib, "CLAPACK10D.lib")
-#endif
-#else
+#endif	// WIN64
+#endif	// _DLL
+#else	// _DEBUG
 #ifdef _DLL
+#ifdef WIN64
+# pragma comment(lib, "LIBF2C10Mx64.lib")
+# pragma comment(lib, "BLAS10Mx64.lib")
+# pragma comment(lib, "CLAPACK10Mx64.lib")
+#else
 # pragma comment(lib, "LIBF2C10M.lib")
 # pragma comment(lib, "BLAS10M.lib")
 # pragma comment(lib, "CLAPACK10M.lib")
+#endif	// WIN64
+#else	// _DLL
+#ifdef WIN64
+# pragma comment(lib, "LIBF2C10x64.lib")
+# pragma comment(lib, "BLAS10x64.lib")
+# pragma comment(lib, "CLAPACK10x64.lib")
 #else
 # pragma comment(lib, "LIBF2C10.lib")
 # pragma comment(lib, "BLAS10.lib")
 # pragma comment(lib, "CLAPACK10.lib")
-#endif
-#endif
-
-/**
-#ifdef _DEBUG
-# pragma comment(lib, "libf2cd.lib")
-# pragma comment(lib, "BLASd.lib")
-# pragma comment(lib, "clapackd.lib")
-#else
-# pragma comment(lib, "libf2c.lib")
-# pragma comment(lib, "BLAS.lib")
-# pragma comment(lib, "clapack.lib")
-#endif
-**/
+#endif	// WIN64
+#endif	// _DLL
+#endif	// _DEBUG
 
 /*
 / リンクするlibファイルは_cdeclで呼び出し
