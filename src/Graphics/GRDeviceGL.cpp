@@ -1371,6 +1371,14 @@ void GRDeviceGL::SetShader(GRShaderIf* sh){
 
 	// シェーダを選択
 	glUseProgram(shader->programId);
+	GLenum rv = glGetError();
+	if (rv != GL_NO_ERROR){
+		const GLubyte * str = gluErrorString(rv);
+		DSTR << "Error: glUseProgram returns 0x" << std::setbase(16) << rv << " " << (str ? str : (const GLubyte*)"") << std::endl;
+		glUseProgram(0);
+		curShader = 0;
+		return;
+	}
 
 	// ユニフォーム変数のロケーション取得
 	enableLightingLoc = glGetUniformLocation(shader->programId, "enableLighting");
