@@ -1360,11 +1360,11 @@ GRShaderIf* GRDeviceGL::CreateShader(const GRShaderDesc& sd){
 	return shader->Cast();
 }
 
-void GRDeviceGL::SetShader(GRShaderIf* sh){
+bool GRDeviceGL::SetShader(GRShaderIf* sh){
 	if(!sh){
 		glUseProgram(0);
 		curShader = 0;
-		return;
+		return false;
 	}
 
 	GRShader* shader = sh->Cast();
@@ -1373,11 +1373,11 @@ void GRDeviceGL::SetShader(GRShaderIf* sh){
 	glUseProgram(shader->programId);
 	GLenum rv = glGetError();
 	if (rv != GL_NO_ERROR){
-		const GLubyte * str = gluErrorString(rv);
-		DSTR << "Error: glUseProgram returns 0x" << std::setbase(16) << rv << " " << (str ? str : (const GLubyte*)"") << std::endl;
+		//const GLubyte * str = gluErrorString(rv);
+		//DSTR << "Error: glUseProgram returns 0x" << std::setbase(16) << rv << " " << (str ? str : (const GLubyte*)"") << std::endl;
 		glUseProgram(0);
 		curShader = 0;
-		return;
+		return false;
 	}
 
 	// ユニフォーム変数のロケーション取得
@@ -1399,6 +1399,7 @@ void GRDeviceGL::SetShader(GRShaderIf* sh){
 		glUniform1i(shadowTexLoc, 1);
 
 	curShader = shader;
+	return true;
 }
 
 /*

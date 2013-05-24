@@ -697,14 +697,15 @@ public: /** FWAppの実装 **/
 		render->SetShadowLight(sld);
 		
 		// シャドウマップ生成パス
-		render->SetShader(shaderShadowCreate);
-		render->EnterShadowMapGeneration();
-		render->ClearBuffer(false, true);
-		OnDraw(render);
-	
+		if (render->SetShader(shaderShadowCreate)){
+			render->EnterShadowMapGeneration();
+			render->ClearBuffer(false, true);
+			OnDraw(render);
+			// メインパス用レンダラに戻す
+			render->SetShader(shaderShadowRender);
+			render->LeaveShadowMapGeneration();
+		}
 		// メインパス
-		render->SetShader(shaderShadowRender);
-		render->LeaveShadowMapGeneration();
 		render->ClearBuffer(true, true);
 		GRCameraDesc camera = render->GetCamera();
 		camera.front = 0.3f;

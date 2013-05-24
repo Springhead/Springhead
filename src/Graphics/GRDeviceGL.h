@@ -223,7 +223,7 @@ public:
 	//virtual bool ReadShaderSource(GRHandler shader, std::string file);	
 	//virtual void GetShaderLocation(GRHandler shader, void* location);		
 	virtual GRShaderIf* CreateShader(const GRShaderDesc& sd);
-	virtual void SetShader(GRShaderIf* sh);
+	virtual bool SetShader(GRShaderIf* sh);
 	virtual void SetShadowLight(const GRShadowLightDesc& sld);
 	virtual void EnterShadowMapGeneration();
 	virtual void LeaveShadowMapGeneration();
