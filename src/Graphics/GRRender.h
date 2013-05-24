@@ -167,7 +167,7 @@ public:
 	//virtual bool ReadShaderSource(GRHandler shader, std::string file){return 0;}	
 	//virtual void GetShaderLocation(GRHandler shader, void* location){}
 	virtual GRShaderIf* CreateShader(const GRShaderDesc& sd){ return 0; }
-	virtual void SetShader(GRShaderIf* sh){}
+	virtual bool SetShader(GRShaderIf* sh){return false;}
 	virtual void SetShadowLight(const GRShadowLightDesc& sld){}
 	virtual void EnterShadowMapGeneration(){}
 	virtual void LeaveShadowMapGeneration(){}
@@ -275,7 +275,7 @@ public:
 	virtual void GetShaderLocation(GRHandler shader, void* location)										\
 		{ ptr GetShaderLocation(shader, location); }													*/\
 	virtual GRShaderIf* CreateShader(const GRShaderDesc& sd){ return ptr CreateShader(sd); }				\
-	virtual void SetShader(GRShaderIf* sh){ ptr SetShader(sh); }											\
+	virtual bool SetShader(GRShaderIf* sh){ return ptr SetShader(sh); }											\
 	virtual void SetShadowLight(const GRShadowLightDesc& sld){ ptr SetShadowLight(sld); }					\
 	virtual void EnterShadowMapGeneration()  { ptr EnterShadowMapGeneration(); }							\
 	virtual void LeaveShadowMapGeneration()  { ptr LeaveShadowMapGeneration(); }							\

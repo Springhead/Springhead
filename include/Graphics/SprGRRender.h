@@ -463,7 +463,7 @@ struct GRRenderBaseIf: public ObjectIf{
 		shaderIndexにCreateShaderの戻り値を指定するとそのシェーダへ切り替える．
 		shaderIndexに-1を指定するとシェーダを無効化し固定機能パイプラインへ切り替える．
 	 */
-	void SetShader(GRShaderIf* shader);
+	bool SetShader(GRShaderIf* shader);
 	/// シェーダオブジェクトの作成、GRDeviceGL::shaderへの登録（あらかじめShaderFile名を登録しておく必要がある）	
 	//GRHandler CreateShader();
 	/// ロケーション情報の取得（SetShaderFormat()でシェーダフォーマットを設定しておく必要あり）
