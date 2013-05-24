@@ -17,7 +17,7 @@
 
 #ifdef _DEBUG
 #ifdef _DLL
-#ifdef WIN64
+#ifdef _WIN64 
 # pragma comment(lib, "LIBF2C10MDx64.lib")
 # pragma comment(lib, "BLAS10MDx64.lib")
 # pragma comment(lib, "CLAPACK10MDx64.lib")
@@ -27,7 +27,7 @@
 # pragma comment(lib, "CLAPACK10MD.lib")
 #endif	// WIN64
 #else	// _DLL
-#ifdef WIN64
+#ifdef _WIN64 
 # pragma comment(lib, "LIBF2C10Dx64.lib")
 # pragma comment(lib, "BLAS10Dx64.lib")
 # pragma comment(lib, "CLAPACK10Dx64.lib")
@@ -39,7 +39,7 @@
 #endif	// _DLL
 #else	// _DEBUG
 #ifdef _DLL
-#ifdef WIN64
+#ifdef _WIN64 
 # pragma comment(lib, "LIBF2C10Mx64.lib")
 # pragma comment(lib, "BLAS10Mx64.lib")
 # pragma comment(lib, "CLAPACK10Mx64.lib")
@@ -49,7 +49,7 @@
 # pragma comment(lib, "CLAPACK10M.lib")
 #endif	// WIN64
 #else	// _DLL
-#ifdef WIN64
+#ifdef _WIN64 
 # pragma comment(lib, "LIBF2C10x64.lib")
 # pragma comment(lib, "BLAS10x64.lib")
 # pragma comment(lib, "CLAPACK10x64.lib")
