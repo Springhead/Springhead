@@ -265,9 +265,10 @@ void CDConvexMesh::CalcMetric(){
 		Vec3f& v1 = base[f.vtxs[1]];
 		Vec3f& v2 = base[f.vtxs[2]];
 		float v = CDShape::CalcTetrahedronVolume(v0, v1, v2);
-		volume  += v;
-		center  += v * CDShape::CalcTetrahedronCoM(v0, v1, v2);
-		inertia += CDShape::CalcTetrahedronInertia(v0, v1, v2);
+		float sign = (f.normal * v0 > 0.0f ? 1.0f : -1.0f);
+		volume  += sign * v;
+		center  += sign * v * CDShape::CalcTetrahedronCoM(v0, v1, v2);
+		inertia += sign * CDShape::CalcTetrahedronInertia(v0, v1, v2);
 	}
 		
 	// 重心は体積による重み平均
@@ -275,7 +276,8 @@ void CDConvexMesh::CalcMetric(){
 
 	// 慣性行列を原点基準から重心基準へ変換
 	Matrix3f cross = Matrix3f::Cross(center);
-	inertia += volume * (cross*cross);
+	Matrix3f cross2 = cross*cross;
+	inertia += volume * (cross2);
 }
 
 bool CDConvexMesh::IsInside(const Vec3f& p){
