@@ -71,7 +71,7 @@ float CDShape::CalcTetrahedronVolume(const Vec3f& a, const Vec3f& b, const Vec3f
 	return (1.0f/6.0f) * std::abs(a * (b % c));
 }
 Vec3f CDShape::CalcTetrahedronCoM(const Vec3f& a, const Vec3f& b, const Vec3f& c){
-	return (1.0f/3.0f) * (a + b + c);
+	return (1.0f/4.0f) * (a + b + c);
 }
 Matrix3f CDShape::CalcTetrahedronInertia(const Vec3f& a, const Vec3f& b, const Vec3f& c){
 	// 正準四面体からの変換行列
@@ -87,7 +87,7 @@ Matrix3f CDShape::CalcTetrahedronInertia(const Vec3f& a, const Vec3f& b, const V
 		c1, c0, c1,
 		c1, c1, c0);
 	// C行列の変換
-	Matrix3f Cd = A.det() * (A * C * A.trans());
+	Matrix3f Cd = std::abs(A.det()) * (A * C * A.trans());
 	Matrix3f Id = (Cd[0][0] + Cd[1][1] + Cd[2][2]) * Matrix3f::Unit() - Cd;
 	return Id;
 }
