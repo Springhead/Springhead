@@ -72,7 +72,8 @@ void GRDeviceGL::Init(){
 	glLoadMatrixf(viewMatrix);
 
 	// デフォルトでシェーダ不使用
-	SetShader(0);
+	//SetShader(0);
+	curShader = 0;
 
 	// シャドウ関係
 	shadowTexId     = 0;
