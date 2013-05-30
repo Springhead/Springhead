@@ -74,6 +74,14 @@ void GRDeviceGL::Init(){
 	// デフォルトでシェーダ不使用
 	//SetShader(0);
 	curShader = 0;
+	enableLightingLoc = -1;
+	enableTex2DLoc    = -1;
+	enableTex3DLoc    = -1;
+	tex2DLoc          = -1;
+	tex3DLoc          = -1;
+	shadowTexLoc      = -1;
+	shadowMatrixLoc   = -1;
+	shadowColorLoc    = -1;
 
 	// シャドウ関係
 	shadowTexId     = 0;
@@ -861,19 +869,24 @@ void GRDeviceGL::SetLighting(bool on){
 	if(on) glEnable (GL_LIGHTING);
 	else   glDisable(GL_LIGHTING);
 
-	glUniform1i(enableLightingLoc, (int)on);
+	if(enableLightingLoc != -1)
+		glUniform1i(enableLightingLoc, (int)on);
 }
 
 void GRDeviceGL::SetTexture2D(bool on){
 	if(on) glEnable (GL_TEXTURE_2D);
 	else   glDisable(GL_TEXTURE_2D);
-	glUniform1f(enableTex2DLoc, (float)on);
+
+	if(enableTex2DLoc != -1)
+		glUniform1f(enableTex2DLoc, (float)on);
 }
 
 void GRDeviceGL::SetTexture3D(bool on){
 	if(on) glEnable (GL_TEXTURE_3D);
 	else   glDisable(GL_TEXTURE_3D);
-	glUniform1f(enableTex3DLoc, (float)on);
+
+	if(enableTex3DLoc != -1)
+		glUniform1f(enableTex3DLoc, (float)on);
 }
 
 void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb){
@@ -1522,7 +1535,9 @@ void GRDeviceGL::CalcShadowMatrix(){
 		0.0, 0.0, 0.5, 0.0,
 		0.5, 0.5, 0.5, 1.0};
 	shadowMatrix = (*(Affinef*)bias) * shadowProj * shadowView * modelMatrix;
-	glUniformMatrix4fv(shadowMatrixLoc, 1, false, (float*)&shadowMatrix);
+
+	if(shadowMatrixLoc != -1)
+		glUniformMatrix4fv(shadowMatrixLoc, 1, false, (float*)&shadowMatrix);
 }
 
 void GRDeviceGL::EnterShadowMapGeneration(){
@@ -1591,7 +1606,8 @@ void GRDeviceGL::LeaveShadowMapGeneration(){
 	glPolygonOffset(0.0f, 0.0f);
 
 	// 影の色と透明度
-	glUniform4fv(shadowColorLoc, 1, (float*)&shadowDesc.color);
+	if(shadowColorLoc != -1)
+		glUniform4fv(shadowColorLoc, 1, (float*)&shadowDesc.color);
 
 	// 背面カリング有効化
 	//glEnable(GL_CULL_FACE);
