@@ -233,7 +233,7 @@ void PHFemMesh::SetDesc(const void* p) {
 			vertices[faces[i].vertices[j]].faces.push_back(i);
 		}
 	}
-	//	faceの法線を計算
+	//	全faceの法線を計算
 	//.	表面の頂点に、法線ベクトルを追加
 	//.	について再帰的に実行
 	Vec3d extp;		//	外向き法線
@@ -262,31 +262,6 @@ void PHFemMesh::SetDesc(const void* p) {
 			if(extp == 0){
 				DSTR << "ERROR: extp value == 0" << "tid = " << tid << ", fid = " << fid << std::endl;
 			}
-			//.	法線の始点を計算
-			
-			//PTM::TMatrixRow<3,3,double> A;		// 係数行列
-			//Vec3d NRML;	// 法線の始点位置座標
-			//PTM::TMatrixCol<3,1,double> B;		// 右辺
-			//A.clear();
-			//B.clear();
-			//NRML.clear();
-			//for(unsigned i=0; i < 3; i++){
-			//	for(unsigned j=0; j<3; j++){
-			//		//	A行列の要素を代入
-			//		Vec3d dpos = vertices[faces[tets[tid].faces[fid]].vertices[(i+1)%3]].pos - vertices[faces[tets[tid].faces[fid]].vertices[i]].pos;
-			//		A[i][j] =  dpos[j];
-			//		//	B行列の要素を生成・代入
-			//	
-			//	}
-			//	for(unsigned j=0;j<3;j++){
-			//		B[j][0] += A[i][j] * faces[tets[tid].faces[fid]].normal[j];
-			//		faces[tets[tid].faces[fid]].normal_origin = A.inv() * B;
-			//		DSTR << "faces[tets[tid].faces[fid]].normal_origin: " << faces[tets[tid].faces[fid]].normal_origin <<std::endl;
-			//	}		
-			//}
-			
-			//DSTR << "NRML: " << NRML << std::endl;
-
 	
 			//unsigned expVtx =0;		//	face面上にない、0~3番目の四面体頂点
 			unsigned idsumt =idsum;
@@ -294,11 +269,11 @@ void PHFemMesh::SetDesc(const void* p) {
 				idsumt -= faces[tets[tid].faces[fid]].vertices[j];
 				//DSTR << "faces[" << fid << "].vertices["<<j <<"]: "<< faces[tets[tid].faces[fid]].vertices[j];
 			}
-			//DSTR << " idsumt: " << idsumt <<  std::endl;
-			//if(fid==0){		 expVtx = 3; }	//	0,1,2
+			//if(fid==0){	   expVtx = 3;}	//	0,1,2
 			//else if(fid== 1){expVtx = 1;}		//	0,2,3
 			//else if(fid== 2){expVtx = 2;} 	//	0,3,1
 			//else if(fid== 3){expVtx = 0;} 	//	3,2,1
+			
 			//. face重心からface外頂点へのベクトルtempV計算
 			Vec3d jushin = vertices[faces[tets[tid].faces[fid]].vertices[0]].pos + vertices[faces[tets[tid].faces[fid]].vertices[1]].pos
 				+ vertices[faces[tets[tid].faces[fid]].vertices[2]].pos;
@@ -308,18 +283,14 @@ void PHFemMesh::SetDesc(const void* p) {
 			if(tempV==Vec3d(0.0,0.0,0.0)){
 				DSTR <<"ERROR:	for normal calculating, some vertices judging is invalids"<< std::endl;
 			}
-	//		DSTR << "tid: " << tid << ", fid: " << fid ; 
-	//		DSTR << " cosθ: " << (tempV * extp / (tempV.norm() * extp.norm())) << std::endl;
 			if((tempV * extp / (tempV.norm() * extp.norm()) ) < 0.0){
 				//extpとtempVが±９０度以上離れている：extpが外向き法線
 				faces[tets[tid].faces[fid]].normal = extp / 10.0;		//	長さを１0cmに
-				//DSTR << "extp" << extp <<std::endl;
 			}else{
 				//extpとtempVが９０度以内：extpの向きを180度変えて、faces[fid].normalに代入
 				faces[tets[tid].faces[fid]].normal = - extp / 10.0;		// 逆ベクトル
 			}
 			int debughogeshi=0;
-			//DSTR << std::endl;		//tid
 		}
 		//Debug
 		//全faceに、外向き法線ベクトルを表示させてみて、様子を見れば、確認できるかな？又は、シンプルなメッシュで表示してみるか
@@ -353,7 +324,7 @@ void PHFemMesh::SetDesc(const void* p) {
 				}
 			}
 */
-			//外側の法線だけ加算
+			//外側の頂点の法線だけ加算			
 			if(vertices[vid].faces[fid] < (int)nSurfaceFace){
 				vertices[vid].normal += faces[vertices[vid].faces[fid]].normal;		// このコードに代わって、上記vectorコードと以下の加算コードに置き換え
 			}

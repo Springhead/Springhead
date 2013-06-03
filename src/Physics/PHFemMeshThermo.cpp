@@ -52,6 +52,163 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 	//GetFramePosition();
 }
 
+
+void StartVtxTempTrace(){
+	//GetVtxTempLog();
+}
+void GetVtxTempLog(){
+	//Vibrationのコードをコピペして使う
+}
+
+
+double PHFemMeshThermo::CalcTempInnerTets(unsigned id,PTM::TVector<4,double> N){
+	double temp = 0.0;
+	for(unsigned i=0;i<4;i++){
+		 temp += N[i] * vertices[tets[id].vertices[i]].temp;
+	}
+	return temp;
+};
+
+
+double PHFemMeshThermo::GetVtxTempInTets(Vec3d temppos){
+	PTM::TMatrixCol<4,4,double> Vertex;
+	PTM::TVector<4,double> coeffk;
+	PTM::TVector<4,double> arbitPos;
+	// [a][x] = [b]を解く
+	Vertex.clear();		//a
+	coeffk.clear();		//x
+	arbitPos.clear();	//b
+	// b: ax =b ：単に逆行列から求めるとき
+	arbitPos[0] = temppos[0];
+	arbitPos[1] = temppos[1];
+	arbitPos[2] = temppos[2];
+	arbitPos[3] = 1.0;
+	for(unsigned id =0;  id < tets.size(); id++){
+		// 四面体ごとに点が含まれるか判定		
+		for(unsigned j=0; j < 4;j++){
+			Vertex[0][j] = vertices[tets[id].vertices[j]].pos.x;
+			Vertex[1][j] = vertices[tets[id].vertices[j]].pos.y;
+			Vertex[2][j] = vertices[tets[id].vertices[j]].pos.z;
+			Vertex[3][j] = 1.0;
+		}
+		// 逆行列で解く
+		coeffk = Vertex.inv() * arbitPos;
+		//	四面体の中にあるかどうかを判別する
+		if( 0 <= coeffk[0] && coeffk[0] <= 1 && 0 <= coeffk[1] && coeffk[1] <= 1 && 0 <= coeffk[2] && coeffk[2] <= 1 && 0 <= coeffk[3] && coeffk[3] <= 1 ){
+			//四面体内の形状関数から、温度を求め、returnする
+			//DSTR << CalcTempInnerTets( id , coeffk) << std::endl;
+			return CalcTempInnerTets( id , coeffk);		
+		}
+		coeffk.clear();
+	}
+	return 0;
+}
+
+
+
+struct ID_LENGTH{
+	unsigned id;
+	double coord; //value of axis
+};
+class LessLength{
+public:
+	bool operator()(const ID_LENGTH& a, const ID_LENGTH& b)
+	{
+		return a.coord < b.coord;
+	}
+};
+
+Vec3d PHFemMeshThermo::GetDistVecDotTri(Vec3d Dotpos,Vec3d trivtx[3]){
+	//				 a
+	//				/|
+	//			   / |
+	//		.Q	  / P|
+	//			 / . |
+	//	.		/____|
+	//	O		b   c
+	//	triedge[0] = b->a, triedge[1] = b->c,
+	//  QP =  OP - OQ = Ob + param[0] * ba + param[1] * bc - OQ
+	//	QP⊥ba,QP⊥bc => param[0~1]を求める 
+	double param[2] = {0.0,0.0}; 
+	Vec3d triedge[2] = {Vec3d(0.0,0.0,0.0),Vec3d(0.0,0.0,0.0)};
+	
+	//
+	triedge[0] = trivtx[1] - trivtx[0];
+	triedge[1] = trivtx[2] - trivtx[0];
+	param[1] = (triedge[0] * trivtx[0]) * (triedge[0] * triedge[1]) - triedge[0].norm() * triedge[0].norm() * (trivtx[0] * triedge[1])
+		/ ( (triedge[0].norm() * triedge[0].norm() )  *  (triedge[1].norm() * triedge[1].norm() ) - (triedge[0] * triedge[1]) * (triedge[0] * triedge[1]) );
+	param[0] = (-1) / (triedge[0].norm() * triedge[0].norm()) * ((triedge[0] * triedge[1]) * param[1] + (triedge[0] * trivtx[0]));
+
+	Vec3d VecQP = trivtx[0] + param[0] * triedge[0] + param[1] * triedge[1] - Dotpos;
+	return VecQP;
+
+}
+
+
+double PHFemMeshThermo::GetArbitraryPointTemp(Vec3d temppos){
+	//tempposがどの四面体に属するか
+	
+	//四面体のface面の向きで判定
+	DSTR << "from origin: (0.0,0.0,0.0) " << std::endl;
+	for(unsigned i=0;i<faces.size(); i++){
+		Vec3d facevtx[3] = {vertices[faces[i].vertices[0]].pos,vertices[faces[i].vertices[1]].pos,vertices[faces[i].vertices[2]].pos};
+		DSTR << "facevtx[0]: " << facevtx[0] << "facevtx[1]: " << facevtx[1] << "facevtx[2]: " << facevtx[2] << std::endl;
+		DSTR <<"i: " << i <<", GetDistVecDotTri(temppos,facevtx): " << GetDistVecDotTri(temppos,facevtx) << std::endl;
+		DSTR << std::endl;
+	}
+
+
+	//小さい順にsortしてくれるコンテナを使う map? list? 中には、長さと頂点idを入れる。最初から4つめまでの頂点IDEALLYを含む四面体を見つける
+	//最初に、faceとマッチングをとって、その後で、そのfaceを含む四面体とのマッチングをとる方法もありそう。具体的なアルゴリズムが浮かばない
+	double length = 0.0;
+	for(unsigned id=0; id < vertices.size(); id++){
+		//一番近い順に４つの点をソート
+		length = sqrt( (temppos.x - vertices[id].pos.x) * (temppos.x - vertices[id].pos.x)
+			+ (temppos.y - vertices[id].pos.y) * (temppos.y - vertices[id].pos.y)
+			+ (temppos.z - vertices[id].pos.z) * (temppos.z - vertices[id].pos.z) 
+			);
+	}
+	//AABBでやる
+	//4点からx,y,zのmin/max
+	//小さい順位並べる
+	ID_LENGTH idl;
+	std::vector<ID_LENGTH> id_length_x;
+	//std::vector<double> xarray,yarray,zarray;
+	for(unsigned id=0; id < tets.size(); id++){
+		for(unsigned j=0; j < 4; j++){
+			idl.id = tets[id].vertices[j];
+			idl.coord = vertices[tets[id].vertices[j]].pos.x;
+			id_length_x.push_back(idl);
+		}
+	}
+	DSTR << "begfore .sort()" << std::endl;
+	for(unsigned i=0; i < id_length_x.size() ; i++){
+		DSTR << "id_length_x["<< i <<"].id: " << id_length_x[i].id << " .coord: " << id_length_x[i].coord << std::endl; 
+	}
+	//tempposに近い順に並べる
+	std::sort( id_length_x.begin(), id_length_x.end(), LessLength());
+	
+	DSTR << "after .sort()" << std::endl;
+	for(unsigned i=0; i < id_length_x.size() ; i++){
+		DSTR << "id_length_x["<< i <<"].id: " << id_length_x[i].id << " .coord: " << id_length_x[i].coord << std::endl; 
+	}
+
+	//最近と最遠をXmin、xmaxに入れる。その際に、頂点idが必要なので、上記構造体では、座標値(param)を調べるソートアルゴリズムを記述する。
+	//paramが最小値の時のid、最大値のときのidを使って、頂点の識別をする
+		
+	//AABBから、tempposeがこの四面体の中か、近くか、判定する。
+	//中なら良し！
+	//中じゃなければ、近隣の四面体を探す
+	
+
+	//属する四面体の形状関数から、温度を取得 T=NTより
+
+	//温度を取得できたら、返す。ダメならnullかDBL_MAX
+	//if(temp) return temp:
+	//else	return null;
+	return 1;
+}
+
 void PHFemMeshThermo::CalcVtxDisFromOrigin(){
 	//>	nSurfaceの内、x,z座標から距離を求めてsqrt(2乗和)、それをFemVertexに格納する
 	//> 同心円系の計算に利用する　distance from origin

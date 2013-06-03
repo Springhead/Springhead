@@ -90,7 +90,8 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
 		);
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);
-
+	double GetArbitraryPointTemp(Vec3d temppos);
+	double GetVtxTempInTets(Vec3d temppos);
 };
 
 //@}
