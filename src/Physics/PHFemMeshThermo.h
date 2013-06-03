@@ -419,8 +419,11 @@ public:
 	void InitMoist();
 	void InitAllVertexTemp();
 
-	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);//熱伝達率以外（熱伝達率は現行main.cppで行っているため
-
+	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);	//熱伝達率以外（熱伝達率は現行main.cppで行っているため
+	double GetArbitraryPointTemp(Vec3d temppos);							//	四面体内任意点の温度を取得	temppose:知りたい点のローカル座標
+	Vec3d GetDistVecDotTri(Vec3d Dotpos,Vec3d trivtx[3]);					//	点から三角形面(2辺のベクトルで定義)へのベクトルを計算
+	double GetVtxTempInTets(Vec3d temppos);											//	任意点の四面体内外判定：tempposがあるfaceIDを返す。見つから無ければ、-1を返す。
+	double CalcTempInnerTets(unsigned id,PTM::TVector<4,double> N);			//	与えられた形状関数での四面体内の温度を返す
 };
 
 
