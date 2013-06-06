@@ -16,8 +16,8 @@ rem makefileÇÃçÏê¨Ç∆MakeÇÃé¿çs
 set PATHORG=%PATH%;
 
 set PATH=..\..\bin;..\..\bin\swig
-set SRCINTF=
-for %%f in (%API_INCLUDE%/%MODULE%/*.h) do set SRCINTF=!SRCINTF! %API_INCLUDE%/%MODULE%/%%f
+rem set SRCINTF=
+rem for %%f in (%API_INCLUDE%/%MODULE%/*.h) do set SRCINTF=!SRCINTF! %API_INCLUDE%/%MODULE%/%%f
 
 :swig
 echo Swig Part
