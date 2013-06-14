@@ -12,7 +12,7 @@ int (_cdecl *StartScilabOrg)(char *SCIpath, char *ScilabStartup,int *Stacksize);
 StrCtx** ppvApiCtx;
 
 bool StartScilab(char* SCIpath, char *ScilabStartup,int *Stacksize){
-	char* dllPath = "C:\Program Files\scilab-5.4.0\bin;C:\Program Files (x86)\scilab-5.4.0\bin";
+	char* dllPath = "C:\\Program Files\\scilab-5.4.0\\bin;C:\\Program Files (x86)\\scilab-5.4.0\\bin";
 	if(!dllLoader.Load("call_Scilab.dll", dllPath)) return false;
 	if(!dllLoader2.Load("api_Scilab.dll", dllPath)) return false;
 

@@ -492,6 +492,7 @@ void solve(MatrixImp<AD>& a, VectorImp<XD>& x, const VectorImp<BD>& b, int* ip){
 	int i, j, ii;
 	TYPENAME XD::element_type t;
 	const int n = (int)a.height();
+	x.resize(n);
 	for (i = 0; i < n; i++) {       // Gauss消去法の残り
 		ii = ip[i];  t = b[ii];
 		for (j = 0; j < i; j++) t -= a.item(ii, j) * x[j];

@@ -7,6 +7,7 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include <conio.h>
 #include <Springhead.h>
 #include <Foundation/UTClapack.h>
@@ -14,9 +15,65 @@
 using namespace Spr;
 using namespace PTM;
 
+//	lapackでガウスの消去法を試してみたくていっぱい追記してしまいました。
+//	いろいろ汚してしまってごめんなさい（長谷川）
+#if 1
+#include <Foundation/UTPreciseTimer.h>
 int _cdecl main()
 {
+	PTM::VMatrixRow<double> matk;
+	PTM::VVector<double> x;
+	PTM::VVector<double> b;
+	PTM::VVector<int> ip;
+	int n= 5000;
+	matk.resize(n, n, 0.0);
+	b.resize(n);
+	ip.resize(n);
+	for(int i=0; i<n; ++i){
+		for(int j=0; j<n; ++j){
+			matk[i][j] = rand();
+		}
+	}
+	for(int i=0; i<n; ++i){
+		b[i] = i*10+15;
+	}
+	UTPreciseTimer timer;
+	timer.Clear();
+	timer.Start();
+#if 1
+	typedef double element_type;
+	typedef bindings::remove_imaginary<element_type>::type real_type ;
+	typedef bindings::remove_imaginary<int>::type int_type ;
+	typedef ublas::vector< real_type > vector_type;
+	typedef ublas::matrix< element_type, ublas::column_major > matrix_type;
+	ublas::vector<int_type> ipiv(n);
+	matrix_type mm(n, n);
+	vector_type bb(n);
+	for(int i=0; i<n; ++i){
+		bb[i] = b[i];
+	}
+	for(int i=0; i<n; ++i){
+		for(int j=0; j<n; ++j){
+			mm.at_element(i, j)=matk[i][j];
+		}
+	}
+	double det = lapack::gesv(mm, ipiv, bb);
+	x.resize(n);
+	for(int i=0; i<n; ++i){
+		x[i] = bb[i];
+	}	
+#else
+	double det = matk.gauss(x, b, ip);
+#endif
+	DSTR << std::endl;
+	DSTR << timer.Stop() << "us for " << n << " det=" << det << std::endl;
+	std::ofstream file("out.txt");
+	file << x;
+}	
 
+#else
+int _cdecl main()
+{
 	PTM::VMatrixRow<double> matk;
 	matk.resize(5, 5, 0.0);
 	matk.item(0, 0) = 200;		matk.item(0, 1) = -100;
@@ -55,3 +112,4 @@ int _cdecl main()
 	std::cout << "Press any key to end." << std::endl;
 	if(_getch()) return 0;
 }
+#endif
