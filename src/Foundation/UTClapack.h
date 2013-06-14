@@ -7,6 +7,7 @@
 //#include <boost/numeric/ublas/fwd.hpp>
 #include <boost/numeric/bindings/lapack/driver/sygv.hpp>
 #include <boost/numeric/bindings/lapack/driver/sygvx.hpp>
+#include <boost/numeric/bindings/lapack/driver/gesv.hpp>
 #include <boost/numeric/bindings/noop.hpp>
 #include <boost/numeric/bindings/ublas/matrix.hpp>
 #include <boost/numeric/bindings/ublas/matrix_proxy.hpp>
