@@ -99,6 +99,8 @@ protected:
 	// ..[C]
 	PTM::VMatrixRow<double> matCAll;
 
+	PTM::VMatrixRow<double> tempMat;
+
 	// 全体の剛性行列の代わり
 	// ..全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
 	PTM::VMatrixRow<double> dMatKAll;
@@ -251,6 +253,7 @@ protected:
 	///	条件利用後にはfalseに戻す。初期値はtrue	for	初期化
 	bool deformed;					///	形状が変わったかどうか		///	構造体に持っていてほしい
 	bool alphaUpdated;				///	熱伝達率が更新、matk2,Vecf3等が更新されたか
+	bool doCalc;					///	ガウスザイデル計算するフラグ
 	
 	std::ofstream templog;		// 頂点の温度変化
 	std::ofstream cpslog;		//	CPSの変化
@@ -424,6 +427,10 @@ public:
 	Vec3d GetDistVecDotTri(Vec3d Dotpos,Vec3d trivtx[3]);					//	点から三角形面(2辺のベクトルで定義)へのベクトルを計算
 	double GetVtxTempInTets(Vec3d temppos);											//	任意点の四面体内外判定：tempposがあるfaceIDを返す。見つから無ければ、-1を返す。
 	double CalcTempInnerTets(unsigned id,PTM::TVector<4,double> N);			//	与えられた形状関数での四面体内の温度を返す
+
+	std::ofstream matCAllout;
+	std::ofstream matKAllout;
+
 };
 
 

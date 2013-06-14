@@ -29,7 +29,7 @@ namespace Spr{;
 
 FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 	SetDesc(&d);
-	texture_mode = 2;		//	テクスチャ表示の初期値：温度
+	texture_mode = 4;		//	テクスチャ表示の初期値：温度
 }
 
 void FWFemMesh::DrawIHBorder(double xs, double xe){
@@ -179,6 +179,7 @@ void FWFemMesh::Sync(){
 	unsigned watex		= 2;
 	//サーモテクスチャの枚数
 	unsigned thtex		= 6;
+	unsigned thcamtex   = 9;		//熱カメラっぽい表示用
 	//	ロードテクスチャーが焦げ→水→温度の順	（または）水→温度→焦げ	にも変更可能（ファイル名のリネームが必要）
 
 	// num of texture layers
@@ -192,10 +193,11 @@ void FWFemMesh::Sync(){
 		kogetex = 5;
 	}
 
-	double dtex =(double) 1.0 / ( kogetex + thtex + watex);		//	テクスチャ奥行座標の層間隔
-	double texstart = dtex /2.0;								//	テクスチャ座標の初期値 = 焦げテクスチャのスタート座標
-	double wastart = texstart + kogetex * dtex ;				//	水分量表示テクスチャのスタート座標
-	double thstart = texstart + kogetex * dtex + 1.0 * dtex ;	//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
+	double dtex =(double) 1.0 / ( kogetex + thtex + watex + thcamtex);		//	テクスチャ奥行座標の層間隔
+	double texstart = dtex /2.0;										//	テクスチャ座標の初期値 = 焦げテクスチャのスタート座標
+	double wastart = texstart + kogetex * dtex;							//	水分量表示テクスチャのスタート座標
+	double thstart = texstart + kogetex * dtex + 1.0 * dtex;			//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
+	double thcamstart = texstart + (thtex + kogetex + watex) * dtex;	//	
 	
 	if(fwfood == "fwNegi"){
 		 //vertexの法線？表示
@@ -470,6 +472,51 @@ void FWFemMesh::Sync(){
 							DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
 						}
 					}
+					else if(texture_mode == 4){
+						double temp = phMesh->vertices[pv].temp;
+						// -50.0~0.0:aqua to blue => 20 : purple
+						if(temp <= 20.0){
+							gvtx[stride * gv + tex + 2] = thcamstart;
+						}
+						else if(20.0 < temp && temp <= 30.0){	
+							gvtx[stride*gv + tex + 2] = thcamstart + (temp - 20.0) * dtex / 10.0;
+						}
+						//	0~50.0:blue to green
+						else if(30.0 < temp && temp <= 40.0 ){
+							//double green = temp * dtex / 50.0 + thstart;
+							gvtx[stride*gv + tex + 2] = thcamstart + dtex + (temp - 30.0) * dtex / 10.0;
+						}
+						//	50.0~100.0:green to yellow
+						else if(40.0 < temp && temp <= 50.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 2 * dtex + (temp - 40.0) * dtex / 10.0;
+						}
+						//	100.0~150:yellow to orange	
+						else if(50.0 < temp && temp <= 60.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 3 * dtex + (temp - 50.0) * dtex / 10.0;
+						}
+						//	150~200:orange to red
+						else if(60.0 < temp && temp <= 70.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 4 * dtex + (temp - 60.0) * dtex / 10.0;
+						}
+						//	200~250:red to purple
+						else if(70.0 < temp && temp <= 80.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 5 * dtex + (temp - 70.0) * dtex / 10.0;
+						}
+						///	250~:only purple
+						else if(80.0 < temp && temp <= 90.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 6 * dtex + (temp - 80.0) * dtex / 10.0;
+						}
+						else if(90.0 < temp && temp <= 100.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 7 * dtex + (temp - 90.0) * dtex / 10.0;
+						}
+						else if(100.0 < temp){
+							gvtx[stride*gv + tex + 2] = thcamstart + 8 * dtex;
+						}
+						else{
+							DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
+						}
+
+					}
 				}
 			}	
 		}else{
@@ -541,7 +588,7 @@ bool FWFemMesh::CreatePHFromGR(){
 	std::vector<Vec3d> vtxsIn;
 	for(unsigned i=0; i<grMesh->vertices.size(); ++i) vtxsIn.push_back(grMesh->vertices[i]);
 	// swithes q+(半径/最短辺) (e.g. = q1.0~2.0) a 最大の体積 
-	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], "pq2.1a1e-7");
+	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], "pq2.1a1.0e-5");
 	//sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], "pq2.0a1e-7V");//"pq10.1a1.0e-1V");//a0.3 //a0.003 //pq2.1a0.002:20130322
 	
 	//	PHMesh用のディスクリプタpmdに値を入れていく

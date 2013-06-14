@@ -238,8 +238,6 @@ void PHFemMesh::SetDesc(const void* p) {
 	//.	について再帰的に実行
 	Vec3d extp;		//	外向き法線
 	Vec3d tempV;	//	外向き判定比較頂点(該当face面上にない頂点序数)
-	//Spr::ObjectIf* sprobject;
-	//DSTR << this->GetMe(sprobject)->GetName() << std::endl;
 	DSTR << "tets.size(): " << tets.size() << std::endl;
 	for(unsigned tid=0; tid < tets.size(); tid++){
 		//	どの頂点IDでfaceが構成されているのか

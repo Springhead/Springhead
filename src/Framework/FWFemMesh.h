@@ -69,6 +69,7 @@ public:
 		BROWNED,
 		MOISTURE,
 		THERMAL,
+		THERMAL_CAM,
 	} texturemode;
 	//enum化する
 	//void SetTexmode(TEXTURE_MODE){TEXTURE_MODE =  };
