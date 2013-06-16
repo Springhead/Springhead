@@ -101,6 +101,9 @@ protected:
 
 	PTM::VMatrixRow<double> tempMat;
 
+	PTM::VMatrixRow<double> keisu;			//	直接法で計算時のT(t+dt)係数行列
+	PTM::VMatrixRow<double> keisuInv;
+
 	// 全体の剛性行列の代わり
 	// ..全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
 	PTM::VMatrixRow<double> dMatKAll;
@@ -224,7 +227,9 @@ protected:
 		double dt,				// dt:ステップ時間
 		double eps				// eps:積分の種類 0.0:前進積分,0.5:クランクニコルソン差分式,1.0:後退積分・陰解法
 		);
-
+	void CalcHeatTransDirect(
+		double dt			// dt:ステップ時間
+		);
 	void SetTempAllToTVecAll(unsigned size);		//	TVecAllに全節点の温度を設定する関数
 	void SetTempToTVecAll(unsigned vtxid);			//	TVecAllに特定の節点の温度を設定する関数
 	void UpdateVertexTemp(unsigned vtxid);			//	計算結果としての温度をTVecAllから節点に更新する
@@ -403,10 +408,6 @@ public:
 	/// dtを定数倍する
 	unsigned Ndt;
 	double dNdt;
-
-
-	//エッジの描画
-	void DrawEdge(unsigned id0, unsigned id1);
 
 	//	x軸と垂直なIH加熱の帯領域に線を引くために必要
 	void SetIHbandDrawVtx(double xS, double xE);

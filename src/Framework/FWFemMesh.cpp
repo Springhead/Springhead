@@ -588,7 +588,7 @@ bool FWFemMesh::CreatePHFromGR(){
 	std::vector<Vec3d> vtxsIn;
 	for(unsigned i=0; i<grMesh->vertices.size(); ++i) vtxsIn.push_back(grMesh->vertices[i]);
 	// swithes q+(半径/最短辺) (e.g. = q1.0~2.0) a 最大の体積 
-	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], "pq2.1a1.0e-5");
+	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], "pq2.1a1.0e-8");
 	//sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], "pq2.0a1e-7V");//"pq10.1a1.0e-1V");//a0.3 //a0.003 //pq2.1a0.002:20130322
 	
 	//	PHMesh用のディスクリプタpmdに値を入れていく
