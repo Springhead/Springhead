@@ -16,6 +16,9 @@
 
 #include "windows.h"
 
+#define FEMLOG(x)
+
+
 //#define THCOND 0.574
 //玉ねぎの値
 //#define THCOND 0.574 * 0.02 // W/(m K)
@@ -36,7 +39,7 @@
 // 弱火加熱パラメータ
 //#define inr 0.048
 //#define outR 0.052
-//#define weekPow 231.9 * 1e3 * 0.02 // 231.9 * 1e3:算出した値、0.02：物理ステップ時間 
+#define weekPow 231.9 * 1e3 * 0.02 // 231.9 * 1e3:算出した値、0.02：物理ステップ時間 
 
 //1度だけ上げる
 #define THCOND 83.5 * 0.02 // W/(m K)
@@ -47,7 +50,7 @@
 //#define weekPow 231.9 * 0.02
 
 //行列のテスト
-#define weekPow 0.0
+//#define weekPow 0.0
 
 //#define mai.cpp の only1deg
 
@@ -1975,6 +1978,27 @@ void PHFemMeshThermo::SetVtxHeatFluxAll(double heatFlux){
 	}
 }
 
+void PHFemMeshThermo::CalcHeatTransDirect(double dt){
+	double eps =0.5;
+	//	係数行列の作成
+	keisu.resize(vertices.size(),vertices.size());
+	keisu.clear();
+
+	PTM::VVector<double> uhen;
+	uhen.resize(vertices.size(),1);
+	uhen.clear();
+
+	keisu = eps * matKAll + 1 / dt * matCAll;
+	uhen = (- (1.0 - eps) * matKAll + 1 / dt * matCAll ) * TVecAll + vecFAllSum;
+
+	if(deformed) keisuInv = keisu.inv(); deformed = false;
+	TVecAll = keisuInv * uhen;
+	//for(unsigned i=0;i<vertices.size();i++){
+	//	DSTR << TVecAll[i] << std::endl;
+	//}
+	//int debughensu=0;
+}
+
 void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 	//dt = 0.0000000000001 * dt;		//デバッグ用に、dtをものすごく小さくしても、節点0がマイナスになるのか、調べた
 	
@@ -2108,8 +2132,7 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 			}
 			//	TVecAllの計算
 			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//	-b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]なので、bVecAllはただの加算でよい
-			//TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];   // -b = D^(-1) [ (-1/2 * K + 1/dt * C ){T(t+dt)} + {F} ]なので、bVecAllはただの加算でよい
-//			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//この計算式だと、まともそうな値が出るが・・・理論的にはどうなのか、分からない。。。
+
 			////	for DEBUG
 			//int hofgeshi =0;
 			//if(TVecAll[j] != 0.0){
@@ -2152,10 +2175,10 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 		//ofs << "_dMatAll: " <<std::endl; 
 		//ofs << _dMatAll <<std::endl;
 		int piyopiyoyo =0;
-		double tempTemp=0.0;
-		for(unsigned j=0;j <vertices.size() ; j++){
-			tempTemp += TVecAll[j];
-		}
+		//double tempTemp=0.0;
+		//for(unsigned j=0;j <vertices.size() ; j++){
+		//	tempTemp += TVecAll[j];
+		//}
 		//	DSTR
 		//ofs << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;
 		//ofs << std::endl;
@@ -2163,8 +2186,6 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 //	deformed = true;
 }
 
-#define FEMLOG(x)
-//#define FEMLOG(x) x
 void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double eps){
 	//dt = 0.0000000000001 * dt;		//デバッグ用に、dtをものすごく小さくしても、節点0がマイナスになるのか、調べた
 	double _eps = 1-eps;			// 1-epsの計算に利用
@@ -2341,10 +2362,10 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,do
 		//FEMLOG(ofs << "_dMatAll: " <<std::endl;) 
 		//FEMLOG(ofs << _dMatAll <<std::endl;)
 		int piyopiyoyo =0;
-		double tempTemp=0.0;
-		for(unsigned j=0;j <vertices.size() ; j++){
-			tempTemp += TVecAll[j];
-		}
+		//double tempTemp=0.0;
+		//for(unsigned j=0;j <vertices.size() ; j++){
+		//	tempTemp += TVecAll[j];
+		//}
 		//	DSTR
 		//FEMLOG(ofs << i <<"回目の計算時の　全節点の温度の和 : " << tempTemp << std::endl;)
 		//FEMLOG(ofs << std::endl;)
@@ -2359,63 +2380,6 @@ void PHFemMeshThermo::UpdateVertexTempAll(unsigned size){
 }
 void PHFemMeshThermo::UpdateVertexTemp(unsigned vtxid){
 		vertices[vtxid].temp = TVecAll[vtxid];
-}
-
-void PHFemMeshThermo::TexChange(unsigned id,double tz){
-
-}
-
-void PHFemMeshThermo::HeatTransFromPanToFoodShell(){
-	//if(pan){
-	//	Affinef afPan = pan->GetGRFrame()->GetWorldTransform();
-	//	Affinef afMesh = tmesh.obj->GetGRFrame()->GetWorldTransform();
-	//	Affinef afMeshToPan = afPan.inv() * afMesh;	
-	//}
-
-	//shape pair solid pair
-	
-
-	//	2物体の接触面から、加熱する節点を決める。
-	//	Shape pair のSolid pare辺りに記述がある
-
-	//	最外殻の節点を世界座標に変換し、そのフライパン又は、鉄板を基にした座標系に変換した座標値が、ある座標以下なら
-	//	最外殻の節点に熱伝達する
-	//PHSolidIf* phs ;
-//	Affinef afPan = phs
-	//Affinef afPan = pan->GetGRFrame()->GetWorldTransform();
-	//Affinef afMesh = tmesh.obj->GetGRFrame()->GetWorldTransform();
-	//Affinef afMeshToPan = afPan.inv() * afMesh;	
-//	for(unsigned i=-0; i < surfaceVertices.size();i++){
-//		if(vertices[surfaceVertices[i]].pos){};
-//		//vertices[surfaceVertices[i]].Tc;
-//	}
-
-	//	接触面からの距離が一定距離以内なら
-
-	//	熱伝達境界条件で、熱伝達
-
-	//	熱伝達境界条件で熱伝達後、フライパンの熱は吸熱というか、減るが、それは有限要素法をどのように結合してやればいいのか？
-	
-	//	節点周囲のTcと熱伝達率αによって、熱が伝わるので、ここで、フライパンから熱を伝えたい節点のTcと熱伝達率を設定する
-
-	//	熱伝達率は、相手との関係によって異なるので、節点が何と接しているかによって変更する
-
-
-}
-
-void PHFemMeshThermo::DrawEdge(unsigned id0, unsigned id1){
-	//Vec3d pos0 = vertices[id0].pos;
-	//Vec3d pos1 = vertices[id1].pos;
-	//
-	//Vec3d wpos0 = 
-	//	GetWorldTransform() * pos0; //* ローカル座標を 世界座標への変換して代入
-	//Vec3d wpos1 = GetWorldTransform() * pos1; //* ローカル座標を 世界座標への変換して代入
-	//glColor3d(1.0,0.0,0.0);
-	//glBegin(GL_LINES);
-	//	glVertex3f(wpos0[0],wpos0[1],wpos0[2]);
-	//	glVertex3f(wpos0[0] + wpos1[0], wpos0[1] + wpos1[1], wpos0[2] + wpos1[2]);
-	//glEnd();
-	//glFlush();
 }
 
 
@@ -2451,9 +2415,6 @@ void PHFemMeshThermo::Step(double dt){
 	//if (bOneSecond) { std::cout << "1: " << GetTickCount() - stepStart << std::endl; }
 	// %%% CPS表示
 
-	//std::ofstream templog("templog.txt");
-
-	//std::ofstream ofs_("log_.txt");
 //	ScilabTest();									//	Scilabを使うテスト
 	//境界条件を設定:温度の設定
 //	UsingFixedTempBoundaryCondition(0,200.0);
@@ -2507,11 +2468,57 @@ void PHFemMeshThermo::Step(double dt){
 	UpdateVecFAll_frypan(WEEK);				// 引数に加熱強さを与える。(OFF/WEEK/MIDDLE/HIGH)
 #endif
 
+	//debug
+	//PTM::VVector<double> checkdiffTVecAll;
+	//checkdiffTVecAll.resize(vertices.size());
+
+	//checkdiffTVecAll = TVecAll;
+
+	//std::ofstream checkmat;
+	//checkmat.open("before_TVecAll.txt");
+	//checkmat.clear();
+	//for(unsigned i=0;i<vertices.size();i++){
+	//	checkmat << TVecAll[i] << std::endl;
+	//}
+	//checkmat.close();
+
+	//
+	//checkmat.open("matCAll.txt");
+	//checkmat.clear();
+	//checkmat << matCAll << std::endl;
+	//checkmat.close();
+
+	//checkmat.open("matKAll.txt");
+	//checkmat.clear();
+	//checkmat << matKAll << std::endl;
+	//checkmat.close();
+
+
 	if(doCalc){
 	//ガウスザイデル法で解く
-		CalcHeatTransUsingGaussSeidel(1,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
+		//CalcHeatTransUsingGaussSeidel(1,dt,1.0);			//ガウスザイデル法で熱伝導計算を解く 第三引数は、前進・クランクニコルソン・後退積分のいずれかを数値で選択
+		CalcHeatTransDirect(dt);
 	}
 	doCalc = false;
+
+	//checkmat.open("after_TVecAll.txt");
+	//checkmat.clear();
+	//for(unsigned i=0;i<vertices.size();i++){
+	//	checkmat << TVecAll[i] << std::endl;
+	//}
+	//checkmat.close();
+
+	//for(unsigned i=0;i<vertices.size();i++){
+	//	checkdiffTVecAll[i] -= TVecAll[i];
+	//}
+
+	//checkmat.open("diff_TVecAll.txt");
+	//checkmat.clear();
+	//for(unsigned i=0;i<vertices.size();i++){
+	//	checkmat << checkdiffTVecAll[i] << std::endl;
+	//}
+	//checkmat.close();
+
 	//温度を表示してみる
 	//DSTR << "vertices[3].temp : " << vertices[3].temp << std::endl;
 
@@ -2533,7 +2540,7 @@ void PHFemMeshThermo::Step(double dt){
 	//}
 	
 
-	double diffQ2=0.0;
+	double diffQ2 = 0.0;
 
 	for(unsigned i=0;i<tets.size();i++){
 		double tempAvg2=0;
@@ -2543,10 +2550,11 @@ void PHFemMeshThermo::Step(double dt){
 		tempAvg2 *= 1.0/4.0;
 		diffQ2 += tets[i].volume * tempAvg2 * RHO * SPECIFICHEAT;
 	}
-	if(diffQ2 - diffQ != 0.0){
+	if(diffQ2 - diffQ <= 0.0){
 		DSTR << "diffQ: " << diffQ << ", diffQ2: "<< diffQ2 << ", diffQ2 - diffQ: " << diffQ2 - diffQ << std::endl;
 	}
-	if( weekPow - 1e-8 <= abs(diffQ - diffQ2) && abs(diffQ - diffQ2) <= weekPow + 1e-8 ){
+
+	if( weekPow - 1e-8 <= abs(diffQ2 - diffQ) && abs(diffQ2 - diffQ) <= weekPow + 1e-8 ){
 		//DSTR << "abs(diffQ - diffQ2): " << abs(diffQ - diffQ2) <<std::endl;
 		DSTR << "熱量は保存されている" << std::endl;
 	} 
@@ -3107,11 +3115,13 @@ void PHFemMeshThermo::AfterSetDesc() {
 
 
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
-
 	InitCreateMatC();					///	CreateMatCの初期化
 	InitVecFAlls();					///	VecFAll類の初期化
 	InitCreateMatk();					///	CreateMatKの初期化
 	//..	CreateLocalMatrixAndSet();			//> 以上の処理を、この関数に集約
+
+	keisuInv.resize(vertices.size(),vertices.size());
+	keisuInv.clear();
 
 	///	熱伝達率を各節点に格納
 	SetHeatTransRatioToAllVertex();
@@ -3127,43 +3137,44 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//	節点温度推移の書き出し
 //	templog.open("templog.csv");
 
-	matCAllout.open("matCAllout.txt"); 
-	matKAllout.open("matKAllout.txt");
-	
-	matCAllout << matCAll << std::endl;
-	matKAllout << matKAll << std::endl;
-	
-	matCAllout.close();
+	//matCAllout.open("matCAllout.txt"); 
+	//matKAllout.open("matKAllout.txt");
+	//
+	//matCAllout << matCAll << std::endl;
+	//matKAllout << matKAll << std::endl;
+	//
+	//matCAllout.close();
 
-	matCAllout.open("matCAll-1out.txt");
-	matCAllout << matCAll.inv() << std::endl;
-	matCAllout.close();
-	//scilabを呼ばないで、SPRの機能で、C.inv() K を求める
-	matCAllout.open("matCAll.inv()xmatKAll.txt");
-	matCAllout << matCAll.inv() * matKAll << std::endl; 
-	matCAllout.close();
+	//matCAllout.open("matCAll-1out.txt");
+	//matCAllout << matCAll.inv() << std::endl;
+	//matCAllout.close();
+	////scilabを呼ばないで、SPRの機能で、C.inv() K を求める
+	//matCAllout.open("matCAll.inv()xmatKAll.txt");
+	//matCAllout << matCAll.inv() * matKAll << std::endl; 
+	//matCAllout.close();
 
-	tempMat.resize(vertices.size(),vertices.size());
-	tempMat.clear();
-	tempMat = matCAll.inv() * matKAll;
-	std::vector<double> rowval;
-	double tempval=0;
-	for(unsigned i=0;i<vertices.size();i++){
-		for(unsigned j=0;j<vertices.size();j++){
-		tempval += tempMat[i][j];
-		}
-		rowval.push_back(tempval);
-	}
-	matCAllout.open("matCAll.inv()xmatKAllの各列の和.txt");
-	for(unsigned i=0;i<vertices.size();i++){
-		matCAllout << rowval[i] <<std::endl;
-	}
-	matCAllout.close();
+	//tempMat.resize(vertices.size(),vertices.size());
+	//tempMat.clear();
+	//tempMat = matCAll.inv() * matKAll;
 
-	for(unsigned i=0;i<tets.size();i++){
-		DSTR << tets[i].volume << std::endl;
-	}
+	//std::vector<double> rowval;
+	//double tempval=0;
+	//for(unsigned i=0;i<vertices.size();i++){
+	//	for(unsigned j=0;j<vertices.size();j++){
+	//	tempval += tempMat[i][j];
+	//	}
+	//	rowval.push_back(tempval);
+	//}
+	//matCAllout.open("matCAll.inv()xmatKAllの各列の和.txt");
+	//for(unsigned i=0;i<vertices.size();i++){
+	//	matCAllout << rowval[i] <<std::endl;
+	//}
+	//matCAllout.close();
 
+	//for(unsigned i=0;i<tets.size();i++){
+	//	DSTR << tets[i].volume << std::endl;
+	//}
+	DSTR <<vertices.size() <<std::endl;
 
 
 
