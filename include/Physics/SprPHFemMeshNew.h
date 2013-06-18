@@ -68,16 +68,8 @@ struct PHFemVibrationDesc : public PHFemBaseDesc{
 	double density;		///< 密度(kg/m3)
 	double alpha;		///< 粘性減衰率
 	double beta;		///< 構造減衰率
-	PHFemVibrationDesc(){
-		// アルミの物性
-		// ポアソン比:0.35,ヤング率 70GPa, 密度2.70g/cm3
-		// 減衰比は適当に設定
-		poisson = 0.35;
-		young = 70 * 1e6;
-		density =  2.7 * 1e3; 
-		alpha = 0.001;
-		beta = 0.0001;
-	}
+	std::vector<int> fixedVertices;	///< 固定頂点のIDs
+	PHFemVibrationDesc();
 };
 
 /// 振動計算
@@ -105,6 +97,12 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	bool AddVertexForceW(int vtxId, Vec3d fW);
 	// 頂点群に力を加える（ワールド座標系）
 	bool AddVertexForceW(PTM::VVector< Vec3d > fWs);
+
+	bool SetDampingRatio_Wood();
+	bool SetDampingRatio_Aluminum();
+	bool SetDampingRatio_Plastic();
+	void SetbRecomp();
+	void Init();
 };
 
 //@}

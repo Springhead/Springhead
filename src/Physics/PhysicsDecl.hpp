@@ -119,6 +119,7 @@ protected:\
 	double	density;	\
 	double	alpha;	\
 	double	beta;	\
+	std::vector< int >	fixedVertices;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -128,6 +129,7 @@ public:\
 		density = ((PHFemVibrationDesc*)ptr)->density;	\
 		alpha = ((PHFemVibrationDesc*)ptr)->alpha;	\
 		beta = ((PHFemVibrationDesc*)ptr)->beta;	\
+		fixedVertices = ((PHFemVibrationDesc*)ptr)->fixedVertices;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -138,6 +140,7 @@ public:\
 		((PHFemVibrationDesc*)ptr)->density = density;	\
 		((PHFemVibrationDesc*)ptr)->alpha = alpha;	\
 		((PHFemVibrationDesc*)ptr)->beta = beta;	\
+		((PHFemVibrationDesc*)ptr)->fixedVertices = fixedVertices;	\
 		return true;	\
 	}\
 

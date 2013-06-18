@@ -29,8 +29,11 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	//meshRoughness = "pq2.1a0.002";
 	//meshRoughness = "pq2.1a0.01";
 	//meshRoughness = "pq2.1a1.0";
-	meshRoughness = "pq2.1a0.005";
-	//meshRoughness = "pq2.1a0.0001";
+	meshRoughness = "pq2.1a0.01";//cube
+		//meshRoughness = "pq3.1a0.1";//cube飛んでく
+	//meshRoughness = "pq2.1a0.00005";
+	//meshRoughness = "pq2.1a0.02";
+	//eshRoughness = "pq2.1a0.1";
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }

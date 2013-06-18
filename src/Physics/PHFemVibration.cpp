@@ -27,6 +27,27 @@
 
 namespace Spr{;
 
+
+PHFemVibrationDesc::PHFemVibrationDesc(){
+	// アルミの物性
+	// ポアソン比:0.35,ヤング率 70GPa, 密度2.70g/cm3
+	// 減衰比は適当に設定
+	//poisson = 0.345;
+	//young = 7.03* 10e10;
+	//density =  2.7 * 1e3; 
+	//alpha = 50;
+	//beta = 1.0e-5;
+
+	//段ボール
+	poisson = 0.1;
+	young = 2.156 * 1e9;
+	density =  0.2 * 1e3; 
+	alpha = 73.88;
+	beta = 1.0784 * 1e-5;
+}
+
+
+
 UTQPTimerFileOut qtimer;	// 計算時間計測用
 #define EDGE_EPS 1e-7		// 内積をとったときの閾値（*面のエッジにporthoがきたときに誤差で-になることがあるため）
 
@@ -40,10 +61,11 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	//integration_mode = PHFemVibrationDesc::INT_IMPLICIT_EULER;
 	//integration_mode = PHFemVibrationDesc::INT_SIMPLECTIC;
 	integration_mode = PHFemVibrationDesc::INT_NEWMARK_BETA;
-	SetAlpha(1.25978);
-	SetBeta(1.04348e-005);
-	dampingRatio[0] = 0.01;
-	dampingRatio[1] = 0.01;
+	//SetAlpha(55.5071);//αとβをセット
+	//SetBeta(3.12387e-006);
+
+	//dampingRatio[0] = 0.3;//(compRaileighDampingRatio)
+	//dampingRatio[1] = 0.015;
 	nMode = 55;
 	bRecomp = true;
 }
@@ -68,7 +90,7 @@ void PHFemVibration::Init(){
 
 	/// 各種変数の初期化
 	int NDof = NVertices() * 3;
-	xdl.resize(NDof, 0.0);
+	xdl.resize(NDof, 0.0);//FEMメッシュの座標系での変位
 	vl.resize(NDof, 0.0);
 	al.resize(NDof, 0.0);
 	fl.resize(NDof, 0.0);
@@ -78,6 +100,11 @@ void PHFemVibration::Init(){
 
 	// テスト（境界条件の付加）
 	std::vector< int > veIds, veIds1, veIds2;
+
+	veIds= fixedVertices;
+
+
+
 	// phpipe用
 	//veIds1 = FindVertices(521, Vec3d(1.0, 0.0, 0.0));
 	//veIds2 = FindVertices(1, Vec3d(-1.0, 0.0, 0.0));
@@ -89,11 +116,12 @@ void PHFemVibration::Init(){
 	//// phboard用
 	//veIds.push_back(1);
 	//veIds.push_back(3);
+
 	veIds.push_back(2);
 	veIds.push_back(4);
 	veIds.push_back(6);
 	veIds.push_back(7);
-
+	
 	//// phSphere用
 	//for(int i = 49; i < 58; i++){
 	//	veIds.push_back(i);
@@ -122,7 +150,7 @@ void PHFemVibration::Init(){
 	ReduceMatrixSize(matCp, boundary);
 	ReduceMatrixSize(matKp, boundary);
 	DSTR << "All matrices has reduced." << std::endl;
-	//CompRayleighDampingMatrixByDampingRatio();
+	//CompRayleighDampingMatrixByDampingRatio();//
 	DSTR << "Initializing Completed." << std::endl;
 } 
 
@@ -277,6 +305,8 @@ void PHFemVibration::CompRayleighDampingMatrixByDampingRatio(){
 	CompRayleighDampingCoeffcient(tw, dampingRatio, a, b);
 	DSTR << "Reiley coefficient" << std::endl;
 	DSTR << a << " " << b << std::endl;
+	std::cout << "Reiley coefficient" << std::endl;
+	std::cout << a << " "<< b << std::endl;
 	SetAlpha(a);
 	SetBeta(b);
 	CompRayleighDampingMatrix();
@@ -336,7 +366,8 @@ void PHFemVibration::Step(){
 	AssignVector(alp, al, boundary);
 	qtimer.EndPoint("gain");
 	UpdateVerticesPosition(xdl);
-	qtimer.EndPoint("step");
+	UpdateVerticesVelocity(vl);
+		qtimer.EndPoint("step");
 
 	static int count = 0;
 	count++;
@@ -446,7 +477,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		qtimer.StartPoint("CompEigen");
 		CompEigenValue(_M, _K, 0, nmode, evalue, evector);
 		qtimer.EndPoint("CompEigen");
-
+		
 		// MK系の固有振動数
 		VVectord ew;
 		CompEigenVibrationFrequency(evalue, ew);
@@ -457,13 +488,18 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		double tw[2];
 		tw[0] = ewrad[0];
 		tw[1] = ewrad[ewrad.size() - 1];
-		double ratio[2];
-		ratio[0] = 0.01;
-		ratio[1] = 0.01;
-		double a, b;
-		CompRayleighDampingCoeffcient(tw, ratio, a, b);
-		DSTR << "comp reiley coefficient" << std::endl;
-		DSTR << a << " " << b << std::endl;
+		//double ratio[2];
+		//ratio[0] = 0.15;
+		//ratio[1] = 0.01;
+
+	//	double a, b;
+	//	CompRayleighDampingCoeffcient(tw, dampingRatio, a, b);
+	//	DSTR << "comp reiley coefficient" << std::endl;
+	//	DSTR << a << " " << b << std::endl;
+		//std::cout << "comp reiley coefficient" << std::endl;
+		//std::cout << a << " "<< b << std::endl;
+	//	SetAlpha(a);
+	//	SetBeta(b);
 		double dampingratio[2];
 		dampingratio[0] = 0.5 * (GetAlpha() / tw[0] + tw[0] * GetBeta());
 		dampingratio[1] = 0.5 * (GetAlpha() / tw[1] + tw[1] * GetBeta());
@@ -492,6 +528,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		}
 #endif
 		DSTR << "Initializing modal analysis complete." << std::endl;
+		std::cout << "Initializing modal analysis complete."<< std::endl;
 	}
 
 	qtimer.StartPoint("integration core");
@@ -691,6 +728,21 @@ void PHFemVibration::UpdateVerticesPosition(VVectord& _xd){
 	}
 }
 
+void PHFemVibration::UpdateVerticesVelocity(VVectord& _v){
+	/// 計算結果をFemVertexに戻す
+	// u = (u0, v0, w0, ...., un-1, vn-1, wn-1)の順
+	int NVer = NVertices();
+	PHFemMeshNew* mesh = GetPHFemMesh();
+	for(int i = 0; i < NVer; i++){
+		int id = i * 3;
+		Vec3d initialPos = mesh->GetVertexInitalPositionL(i);
+		GetPHFemMesh()->vertices[i].vel.x = _v[id];
+		GetPHFemMesh()->vertices[i].vel.y = _v[id + 1];		
+		GetPHFemMesh()->vertices[i].vel.z = _v[id + 2];
+	}
+}
+
+
 std::vector< int > PHFemVibration::FindVertices(const int vtxId, const Vec3d _vecl){
 	std::vector< int > ve;
 	PHFemMeshNew* mesh = GetPHFemMesh();
@@ -860,6 +912,69 @@ bool PHFemVibration::AddForce(int tetId, Vec3d posW, Vec3d fW){
 	return true;
 }
 
+bool PHFemVibration::Damping(int tetId, Vec3d posW, double damp_ratio){
+	PHFemMeshNew* mesh = GetPHFemMesh();
+	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
+	Vec3d posL = inv * posW;
+	Vec4d v;
+	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, false)) return false;
+	for(int i = 0; i < 4; i++){
+		int vtxId = mesh->tets[tetId].vertexIDs[i];
+		double r = pow(damp_ratio, v[i]);
+		if(0 <= vtxId && vtxId <= NVertices() -1){
+			int id = vtxId * 3;
+			vl[id] *= r;
+			vl[id + 1] *= r;
+			vl[id + 2] *= r;
+			return true;
+		}
+	}
+	return true;
+}
+
+
+bool PHFemVibration::SetDampingRatio_Wood(){
+	dampingRatio[0] = 0.08;
+	dampingRatio[1] = 0.1;
+	SetAlpha(55.5414);
+	SetBeta(8.78132e-008);
+	std::cout << ""<< std::endl;
+	std::cout << "Rayleigh" << std::endl;
+	std::cout << GetAlpha() << " "<< GetBeta() << std::endl;
+	Init();
+	bRecomp = true;
+
+	return true;
+}
+
+bool PHFemVibration::SetDampingRatio_Aluminum(){
+	dampingRatio[0] = 0.15;
+	dampingRatio[1] = 0.05;
+	SetAlpha(10.5547);
+	SetBeta(1.55302e-005);
+	std::cout << ""<< std::endl;
+	std::cout << "Rayleigh" << std::endl;
+	std::cout << GetAlpha() << " "<< GetBeta() << std::endl;
+	Init();
+	bRecomp = true;
+	return true;
+}
+
+bool PHFemVibration::SetDampingRatio_Plastic(){
+	dampingRatio[0] = 0.1;
+	dampingRatio[1] = 0.1;
+	SetAlpha(61.0102);
+	SetBeta(6.67343e-005);
+	std::cout << ""<< std::endl;
+	std::cout << "Rayleigh" << std::endl;
+	std::cout << GetAlpha() << " "<< GetBeta() << std::endl;
+	Init();
+	bRecomp = true;
+	return true;
+}
+
+
+
 bool PHFemVibration::GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bDeform){
 	disp = Vec3d();
 	PHFemMeshNew* mesh = GetPHFemMesh();
@@ -874,6 +989,22 @@ bool PHFemVibration::GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bD
 	mesh->GetPHSolid()->GetPose() * disp;
 	return true;
 }
+
+bool PHFemVibration::GetVelocity(int tetId, Vec3d posW, Vec3d& vel, bool bDeform){
+	vel = Vec3d();
+	PHFemMeshNew* mesh = GetPHFemMesh();
+	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
+	Vec3d posL = inv * posW;
+	Vec4d v;
+	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform)) return false;
+	for(int i = 0; i < 4; i++){
+		int vtxId = mesh->tets[tetId].vertexIDs[i];
+		vel += mesh->GetVertexVelocityL(vtxId) * v[i];
+	}
+	mesh->GetPHSolid()->GetPose() * vel;
+	return true;
+}
+
 
 bool PHFemVibration::FindClosestPointOnMesh(const Vec3d& p, const Vec3d fp[3], Vec3d& cp, double& dist, bool bDeform){
 	PHFemMeshNew* mesh = GetPHFemMesh();
