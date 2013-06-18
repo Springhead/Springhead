@@ -21,11 +21,11 @@ public:
 	SPR_OBJECTDEF_ABST(PHFemBase);
 	SPR_DECLMEMBEROF_PHFemBaseDesc;
 protected:
-	UTRef< PHFemMeshNew > phFemMesh;
+	PHFemMeshNew* phFemMesh;
 public:
 	typedef VVector< double > VVectord;
 	typedef VMatrixRow< double > VMatrixRd;
-	PHFemBase(){}
+	PHFemBase():phFemMesh(NULL){}
 	virtual void Init(){}
 	virtual void Step(){}
 

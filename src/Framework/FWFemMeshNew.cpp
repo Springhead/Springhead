@@ -93,7 +93,7 @@ void FWFemMeshNew::Loaded(UTLoadContext*){
 		}
 	}
 
-	if (grFrame){
+	if (grFrame && grFemMesh){
 		grFrame->DelChildObject(grFemMesh->Cast());
 		CreateGRFromPH();
 		grFrame->AddChildObject(grFemMesh->Cast());
@@ -137,8 +137,8 @@ struct FaceMap{
 };
 
 void FWFemMeshNew::CreateGRFromPH(){
-	// 3Dテクスチャを使えるようにするために、grFemMeshを再構築する？
-	// 3Dテクスチャを使わない場合は必要ない？
+	// 3Dテクスチャを使えるようにするために、grFemMeshを再構築する
+	// 3Dテクスチャを使わない場合は必要ない
 
 	//	頂点の対応表を用意
 	std::vector<int> vtxMap;

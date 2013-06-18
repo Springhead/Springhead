@@ -566,6 +566,7 @@ void PHFemVibration::CompEigenValue(const VMatrixRd& _M, const VMatrixRd& _K, co
 		// 境界条件導入済みのmatMp, matKpをつかう
 		// 固有値・固有ベクトルを求める
 		int size = _M.height();
+		if (!size) return;
 		e.resize(interval, 0.0);
 		v.resize(size, interval, 0.0);
 #if USE_SUBSPACE
