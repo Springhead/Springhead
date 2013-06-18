@@ -94,6 +94,7 @@ public:
 	double GetAlpha(){ return alpha; }
 	void SetBeta(double value){ beta = value; }
 	double GetBeta(){ return beta; }
+	void SetbRecomp(){ bRecomp=true; }
 	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
 
@@ -101,6 +102,8 @@ public:
 	void GetVerticesDisplacement(VVectord& _xd);
 	// FemVertexに頂点変位を加える
 	void UpdateVerticesPosition(VVectord& _xd);
+	// FemVertexに頂点速度を加える
+	void UpdateVerticesVelocity(VVectord& _v);
 
 	std::vector< int > FindVertices(const int vtxId, const Vec3d _vecl);
 	// 境界条件を加える(行列と番号）
@@ -128,9 +131,18 @@ public:
 	bool AddVertexForceW(VVector< Vec3d > fWs);
 	// 力を加える
 	bool AddForce(int tetId, Vec3d posW, Vec3d fW);
+	// 振動を抑える
+	bool Damping(int tetId, Vec3d posW, double damp_ratio);
+	// 減衰係数の設定
+	bool SetDampingRatio_Wood();
+	bool SetDampingRatio_Aluminum();
+	bool SetDampingRatio_Plastic();
 
 	// 形状関数を使って任意の点の変位を取得する
 	bool GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bDeform);
+
+	// 形状関数を使って任意の点の速度を取得する
+	bool GetVelocity(int tetId, Vec3d posW, Vec3d& vel, bool bDeform);
 
 	/// 実装中
 	bool FindClosestPointOnMesh( const Vec3d& posW, const Vec3d pos[3], Vec3d& cp, double& dist, bool bDeform);

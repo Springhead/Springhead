@@ -919,6 +919,8 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 			str.clear(std::stringstream::goodbit);
 			pos += margin;
 		}
+
+
 		
 		/// FemVibration関係の情報描画
 		if(mesh->GetPHFemVibration()){

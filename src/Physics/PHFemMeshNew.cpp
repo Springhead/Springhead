@@ -307,6 +307,13 @@ Vec3d PHFemMeshNew::GetVertexDisplacementL(int vtxId){
 	return Vec3d();
 }
 
+Vec3d PHFemMeshNew::GetVertexVelocityL(int vtxId){
+	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
+		return vertices[vtxId].vel;
+	}
+	return Vec3d();
+}
+
 bool PHFemMeshNew::AddVertexDisplacementW(int vtxId, Vec3d disW){
 	if(0 <= vtxId && vtxId <= (int)vertices.size() -1){
 		vertices[vtxId].pos += GetPHSolid()->GetPose().Inv() * disW;

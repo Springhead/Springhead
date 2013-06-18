@@ -22,6 +22,7 @@ class FemVertex{
 public:
 	Vec3d pos;
 	Vec3d initialPos;
+	Vec3d vel;
 	std::vector<int> tetIDs;
 	std::vector<int> edgeIDs;
 	std::vector<int> faceIDs;
@@ -116,6 +117,8 @@ public:
 	Vec3d GetVertexPositionL(int vtxId);
 	/// 頂点の変位を取得する（ローカル座標系）
 	Vec3d GetVertexDisplacementL(int vtxId);
+	/// 頂点の速度を取得する（ローカル座標系）
+	Vec3d GetVertexVelocityL(int vtxId);
 	/// 頂点に変位を与える（ワールド座標系）
 	bool AddVertexDisplacementW(int vtxId, Vec3d disW);
 	/// 頂点に変位を与える（ローカル座標系）
