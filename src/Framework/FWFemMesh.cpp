@@ -475,7 +475,10 @@ void FWFemMesh::Sync(){
 					else if(texture_mode == 4){
 						double temp = phMesh->vertices[pv].temp;
 						// -50.0~0.0:aqua to blue => 20 : purple
-						if(temp <= 20.0){
+						if(temp < 20.0){
+							gvtx[stride * gv + tex + 2] = thstart + 6.0 * dtex; 
+						}
+						else if(temp = 20.0){
 							gvtx[stride * gv + tex + 2] = thcamstart;
 						}
 						else if(20.0 < temp && temp <= 30.0){	

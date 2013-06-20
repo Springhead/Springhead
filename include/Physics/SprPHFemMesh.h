@@ -91,6 +91,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);
 	double GetArbitraryPointTemp(Vec3d temppos);
 	double GetVtxTempInTets(Vec3d temppos);
+	void InitVecFAlls();
 };
 
 //@}
