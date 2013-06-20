@@ -104,6 +104,11 @@ protected:
 	PTM::VMatrixRow<double> keisu;			//	直接法で計算時のT(t+dt)係数行列
 	PTM::VMatrixRow<double> keisuInv;
 
+	PTM::VVector<double> TVecAll2;
+
+	
+
+
 	// 全体の剛性行列の代わり
 	// ..全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
 	PTM::VMatrixRow<double> dMatKAll;
@@ -191,7 +196,7 @@ public:
 	
 
 	//	{T}:節点温度ベクトルを作る関数
-	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
+	void CreateTempVertex();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
 	void CreateLocalMatrixAndSet();				//K,C,Fすべての行列・ベクトルについて要素剛性行列を作って、エッジに入れる	又は	全体剛性行列を作る関数
 	
 	//	初期化
@@ -212,12 +217,17 @@ protected:
 	void SetkcfParam(Tet tets);
 	// 頂点ID　３点から成る三角形の求積　(四面体の三角形面積分等で利用)
 	double CalcTriangleArea(int id0, int id2, int id3);		
-	double CalcTetrahedraVolume(Tet tets);			// 四面体のIDを入れると、その体積を計算してくれる関数
+	double CalcTetrahedraVolume(Tet tet);			// 四面体のIDを入れると、その体積を計算してくれる関数
+	double CalcTetrahedraVolume2(unsigned id);			// 四面体のIDを入れると、その体積を計算してくれる関数
 	//void PrepareStep();							// Step()で必要な変数を計算する関数
 	//double CalcbVec(int vtxid,
 	
 	//	（クランクニコルソン法を用いた）ガウスザイデル法で熱伝導を計算
 	void CalcHeatTransUsingGaussSeidel(
+		unsigned NofCyc,	// NofCyc:繰り返し計算回数
+		double dt			// dt:ステップ時間
+		);
+	void CalcHeatTransUsingGaussSeidel2(
 		unsigned NofCyc,	// NofCyc:繰り返し計算回数
 		double dt			// dt:ステップ時間
 		);
@@ -230,10 +240,13 @@ protected:
 	void CalcHeatTransDirect(
 		double dt			// dt:ステップ時間
 		);
+	void CalcHeatTransDirect2(
+		double dt			// dt:ステップ時間
+		);
 	void SetTempAllToTVecAll(unsigned size);		//	TVecAllに全節点の温度を設定する関数
 	void SetTempToTVecAll(unsigned vtxid);			//	TVecAllに特定の節点の温度を設定する関数
 	void UpdateVertexTemp(unsigned vtxid);			//	計算結果としての温度をTVecAllから節点に更新する
-	void UpdateVertexTempAll(unsigned size);		//	計算結果としての温度をTVecAllから全節点に更新する
+	void UpdateVertexTempAll();		//	計算結果としての温度をTVecAllから全節点に更新する
 
 	//	SciLab
 	void ScilabTest();								//	Scilabを使ってみる関数
@@ -431,6 +444,8 @@ public:
 
 	std::ofstream matCAllout;
 	std::ofstream matKAllout;
+	std::ofstream checkTVecAllout;
+	unsigned long long COUNT;
 
 };
 
