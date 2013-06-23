@@ -107,7 +107,7 @@ void FWWin::SetSize(int width, int height){
 }
 
 void FWWin::OnUpdatePose(HITrackballIf*){
-	if(!scene)
+	if(!GetScene() || !GetScene()->GetGRScene())
 		return;
 
 	// トラックボールとGRSceneのカメラフレームの同期
