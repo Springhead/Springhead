@@ -33,6 +33,7 @@ EXTEND_N_GET_TO_LIST(Spr::PHSdkIf				,NShape				,GetShape			,CDShapeIf			)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NJoints			,GetJoint			,PHJointIf			)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NContacts			,GetContact			,PHContactPointIf	)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NFemMeshes			,GetFemMesh			,PHFemMeshIf		)
+EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NFemMeshesNew		,GetFemMeshNew		,PHFemMeshNewIf		)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NRootNodes			,GetRootNode		,PHRootNodeIf		)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NGears				,GetGear			,PHGearIf			)
 EXTEND_N_GET_TO_LIST(Spr::PHSceneIf				,NPaths				,GetPath			,PHPathIf			)
@@ -63,6 +64,7 @@ EXTEND_N_GET_TO_LIST(Spr::PHSolidIf				,NShape				,GetShape			,CDShapeIf			)
 %include "../../include/Physics/SprPHDef.h"
 %include "../../include/Physics/SprPHEngine.h"
 %include "../../include/Physics/SprPHFemMesh.h"
+%include "../../include/Physics/SprPHFemMeshNew.h"
 %include "../../include/Physics/SprPHIK.h"
 %include "../../include/Physics/SprPHJoint.h"
 %include "../../include/Physics/SprPHJointLimit.h"

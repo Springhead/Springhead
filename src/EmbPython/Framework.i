@@ -68,6 +68,7 @@ class UTRefCount {};
 %}
 //--  
 %include "../../include/Framework/SprFWFemMesh.h"
+%include "../../include/Framework/SprFWFemMeshNew.h"
 %include "../../include/Framework/SprFWObject.h"
 %include "../../include/Framework/SprFWScene.h"
 %include "../../include/Framework/SprFWSdk.h"
