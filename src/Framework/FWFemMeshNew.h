@@ -8,9 +8,9 @@
 #ifndef FW_FEMMESH_NEW_H
 #define FW_FEMMESH_NEW_H
 
-#include <Framework/FWObject.h>
+#include "FWObject.h"
 #include <Framework/SprFWFemMeshNew.h>
-#include <Physics/PHFemMeshNew.h>
+#include "../Physics/PHFemMeshNew.h"
 #include "FrameworkDecl.hpp"
 
 namespace Spr{;
@@ -50,7 +50,10 @@ public:
 	void Sync();
 	/// PHVibration‚Ìî•ñ‚ğ“¯Šú
 	void SyncVibrationInfo();
+	/// PHThermo‚Ìî•ñ‚ğ“¯Šú
+	void SyncThermoInfo();
 	Vec4f CompThermoColor(float value);
+
 
 public:
 	enum TEXTURE_MODE{

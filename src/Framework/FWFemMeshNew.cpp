@@ -385,13 +385,36 @@ void FWFemMeshNew::Sync(){
 		if(GetPHFemMesh()->GetPHFemVibration()){
 			SyncVibrationInfo();
 		}
-		//if(phFemThermo){
-		//		SyncThermoInfo();
-		//}
+		if(GetPHFemMesh()->GetPHFemThermo()){
+				SyncThermoInfo();
+		}
 	}
 }
 
 void FWFemMeshNew::SyncVibrationInfo(){
+	if(!grFemMesh) return;
+	grFemMesh->EnableAlwaysCreateBuffer();
+	// 頂点位置の同期
+	Vec3f* grVertices = grFemMesh->GetVertices();
+	for(int i = 0; i < (int)vertexIdMap.size(); i++){
+		int pId = vertexIdMap[i];
+		grVertices[i] = (Vec3f)phFemMesh->vertices[pId].pos;
+	}
+	// 変位で色変化
+	if(grFemMesh->NColors() < 1) return;
+	Vec4f* vc = grFemMesh->GetColors();
+	double base = 1e-8;
+	double offset = 1e-8;
+	for(int i = 0; i < (int)vertexIdMap.size(); i++){
+		int pId = vertexIdMap[i];
+		float value = phFemMesh->GetVertexDisplacementL(pId).norm();
+		//DSTR << value << std::endl;
+		//DSTR << value/base + offset << std::endl;
+		vc[i] = CompThermoColor(value/base + offset);
+	}
+}
+
+void FWFemMeshNew::SyncThermoInfo(){
 	if(!grFemMesh) return;
 	grFemMesh->EnableAlwaysCreateBuffer();
 	// 頂点位置の同期
