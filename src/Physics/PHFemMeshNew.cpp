@@ -9,6 +9,7 @@
 #include <Physics/PHFemMeshNew.h>
 #include <Physics/PHFemBase.h>
 #include <Physics/PHFemVibration.h>
+#include <Physics/PHFemThermo.h>
 
 namespace Spr{;
 
@@ -240,11 +241,11 @@ bool PHFemMeshNew::AddChildObject(ObjectIf* o){
 		bCheck = true;
 	}
 
-/*	PHFemThermo* fThermo = DCAST(PHFemThermo, o);
+	PHFemThermo* fThermo = DCAST(PHFemThermo, o);
 	if(fThermo){
 		femThermo = fThermo;	
 		bCheck = true;
-	}*/ 
+	}
 
 	PHFemBase* f = DCAST(PHFemBase, o);
 	if(f){
@@ -274,6 +275,10 @@ PHSolidIf* PHFemMeshNew::GetPHSolid(){
 
 PHFemVibrationIf* PHFemMeshNew::GetPHFemVibration(){
 	return femVibration->Cast();
+}
+
+PHFemThermoIf* PHFemMeshNew::GetPHFemThermo(){
+	return femThermo->Cast();
 }
 
 int PHFemMeshNew::NVertices(){

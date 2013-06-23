@@ -58,6 +58,7 @@ struct FemEdge{
 class PHFemBase;
 typedef std::vector< UTRef< PHFemBase > > PHFemBases;
 class PHFemVibration;
+class PHFemThermo;
 class PHFemMeshNew : public SceneObject{//, public PHFemMeshNewDesc{
 public:
 	/* PHFemMeshNewのメンバ変数、関数群 */
@@ -80,7 +81,7 @@ public:
 	/// 計算モジュール
 	PHFemBases femBases;
 	UTRef< PHFemVibration > femVibration;
-	//PHFemThermo*	thermo;
+	UTRef< PHFemThermo > femThermo;
 
 	///	デスクリプタ
 	PHFemMeshNew(const PHFemMeshNewDesc& desc = PHFemMeshNewDesc(), SceneIf* s=NULL);
@@ -103,6 +104,8 @@ public:
 	PHSolidIf* GetPHSolid();
 	/// PHFemVibrationIfを返す
 	PHFemVibrationIf* GetPHFemVibration();
+	/// PHFemThermoIfを返す
+	PHFemThermoIf* GetPHFemThermo();
 
 	/// 頂点の総数を返す
 	int NVertices();

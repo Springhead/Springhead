@@ -144,6 +144,32 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHFemThermoDesc \
+protected:\
+	double	rho;	\
+	double	thConduct;	\
+	double	heatTrans;	\
+	double	specificHeat;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHFemBase::SetDesc((PHFemBaseDesc*)(PHFemThermoDesc*)ptr);	\
+		rho = ((PHFemThermoDesc*)ptr)->rho;	\
+		thConduct = ((PHFemThermoDesc*)ptr)->thConduct;	\
+		heatTrans = ((PHFemThermoDesc*)ptr)->heatTrans;	\
+		specificHeat = ((PHFemThermoDesc*)ptr)->specificHeat;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFemBase::GetDesc((PHFemBaseDesc*)(PHFemThermoDesc*)ptr);	\
+		((PHFemThermoDesc*)ptr)->rho = rho;	\
+		((PHFemThermoDesc*)ptr)->thConduct = thConduct;	\
+		((PHFemThermoDesc*)ptr)->heatTrans = heatTrans;	\
+		((PHFemThermoDesc*)ptr)->specificHeat = specificHeat;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHHapticPointerDesc \
 protected:\
 public:\
