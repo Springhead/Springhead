@@ -20,6 +20,7 @@ namespace Spr{;
 
 struct PHSolidIf;
 struct PHFemVibrationIf;
+struct PHFemThermoIf;
 
 ///	FemMeshのステート
 struct PHFemMeshNewState{};
@@ -35,6 +36,7 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 	void SetPHSolid(PHSolidIf* s);
 	PHSolidIf* GetPHSolid();
 	PHFemVibrationIf* GetPHFemVibration();
+	PHFemThermoIf* GetPHFemThermo();
 	int NVertices();
 	int NFaces();
 	double CompTetVolume(int tetID, bool bDeform);
@@ -89,7 +91,7 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	double GetBeta();
 	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
-	// 境界条件を加える
+
 	bool AddBoundaryCondition(int vtxId, Vec3i dof);
 	// 境界条件を加える(頂点順）
 	bool AddBoundaryCondition(PTM::VVector< Vec3i > bcs); 
@@ -98,11 +100,61 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	// 頂点群に力を加える（ワールド座標系）
 	bool AddVertexForceW(PTM::VVector< Vec3d > fWs);
 
-	bool SetDampingRatio_Wood();
-	bool SetDampingRatio_Aluminum();
-	bool SetDampingRatio_Plastic();
-	void SetbRecomp();
+	bool SetDampingRatio_Wood();	
+	bool SetDampingRatio_Aluminum();	
+	bool SetDampingRatio_Plastic();	
+	void SetbRecomp();	
 	void Init();
+};
+
+///FemThermoのデスクリプタ
+struct PHFemThermoDesc: public PHFemBaseDesc{
+	double rho;						//	密度
+	double thConduct;				//熱伝導率
+	double heatTrans;				//熱伝達率			//class 節点には、heatTransRatioが存在する
+	double specificHeat;			//比熱
+	PHFemThermoDesc();
+	void Init();
+};
+
+///	温度のFEM用のメッシュ
+struct PHFemThermoIf : public PHFemBaseIf{
+	SPR_IFDEF(PHFemThermo);
+	int GetSurfaceVertex(int id);
+	int NSurfaceVertices();
+	void SetVertexTc(int id,double temp);
+	void SetVertexTc(int id,double temp,double heatTrans);
+	Vec3d GetPose(int id);
+	Vec3d GetSufVtxPose(unsigned id);
+	unsigned long GetStepCount();					///	カウント１
+	unsigned long GetStepCountCyc();				///	カウント１が何週目か	計算式:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
+	double GetVertexTemp(unsigned id);				// メッシュ節点の温度を取得
+	double GetSufVertexTemp(unsigned id);			// メッシュ表面の節点温度を取得
+	void SetVertexTemp(unsigned id,double temp);
+	void SetVerticesTempAll(double temp);
+	void AddvecFAll(unsigned id,double dqdt);		//セットだと、値をそう入れ替えしそうな名前で危険。実際には、add又は、IH加熱ベクトルのみにSetする。ベクトルにSetする関数を作って、ロードしてもいいと思う。
+	void SetvecFAll(unsigned id,double dqdt);		//FAllの成分に加算だが、危険
+	void SetRhoSpheat(double rho,double Cp);		//素材固有の物性
+	int NFaces();
+	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
+	Vec3d GetFaceEdgeVtx(unsigned id, unsigned	 vtx);
+	Vec2d GetIHbandDrawVtx();
+	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);
+	void UpdateIHheat(unsigned heating);	//	IH加熱状態の更新
+	void UpdateVecF();						//	被加熱物体の熱流束リセット
+	void UpdateVecF_frypan();				//	被加熱物体の熱流束リセット
+	void DecrMoist();						//	
+	void DecrMoist_velo(double vel);						//
+	void DecrMoist_vel(double dt);						//
+	void InitAllVertexTemp();
+	void SetInitThermoConductionParam(
+		double thConduct,		// thConduct:熱伝導率
+		double rho,				// roh:密度
+		double specificHeat,	// specificHeat:比熱 J/ (K・kg):1960
+		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
+		);
+	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);
+
 };
 
 //@}
