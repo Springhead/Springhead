@@ -478,7 +478,7 @@ void FWFemMesh::Sync(){
 						if(temp < 20.0){
 							gvtx[stride * gv + tex + 2] = thstart + 6.0 * dtex; 
 						}
-						else if(temp = 20.0){
+						else if(temp == 20.0){
 							gvtx[stride * gv + tex + 2] = thcamstart;
 						}
 						else if(20.0 < temp && temp <= 30.0){	
