@@ -684,6 +684,26 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->actuators.size(); ++i) {
 		PHIKActuator* ikAct = DCAST(PHIKEngine,ikEngine)->actuators[i];
 		if(!ikAct) continue;
+
+		Affinef aff;
+
+		for (size_t n=0; n<ikAct->solidTempPoseHistory.size(); ++n) {
+			Posed solidTempPose = ikAct->solidTempPoseHistory[n];
+			solidTempPose.ToAffine(aff);
+			render->PushModelMatrix();
+			render->MultModelMatrix(aff);
+	
+			PHSolidIf* solid = ikAct->joint->GetPlugSolid();
+			for(int j = 0; j < solid->NShape(); ++j){
+				CDShapeIf* shape = solid->GetShape(j);
+				solid->GetShapePose(j).ToAffine(aff);
+				render->PushModelMatrix();
+				render->MultModelMatrix(aff);
+				DrawShape(render, shape, false);
+				render->PopModelMatrix();
+			}
+			render->PopModelMatrix();
+		}
 		
 		PHIKBallActuator* ikBJ = ikAct->Cast();
 		if (ikBJ) {
@@ -691,7 +711,7 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 			for (int j=0; j < (int)ikBJ->omega.size(); ++j) {
 				w += (ikBJ->omega[j]/ikBJ->GetBias()) * ikBJ->e[j];
 			}
-			PHBallJointIf* jt = ikBJ->joint;
+			PHBallJointIf* jt = ikBJ->joint->Cast();
 			PHBallJointDesc d;
 			jt->GetDesc(&d);
 			Vec3d Pj = jt->GetSocketSolid()->GetPose() * d.poseSocket.Pos();
@@ -715,7 +735,7 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 
 		PHIKHingeActuator* ikHJ = ikAct->Cast();
 		if (ikHJ) {
-			PHHingeJointIf* jt = ikHJ->joint;
+			PHHingeJointIf* jt = ikHJ->joint->Cast();
 			PHHingeJointDesc d; jt->GetDesc(&d);
 
 			Vec3d Pj = jt->GetSocketSolid()->GetPose() * d.poseSocket.Pos();

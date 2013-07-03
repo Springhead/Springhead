@@ -88,12 +88,14 @@ public:
 	const UTTypeInfo* objInfo;
 	///	クラス名
 	const char* className;
+	///	この型のオブジェクトをCreateできる親（RegisterFactory時に登録する）
+	IfInfo* creator;
 
 	typedef std::vector< UTRef<FactoryBase> > Factories;
 	///	子オブジェクトを生成するクラス(ファクトリー)
 	Factories factories;
 	///	コンストラクタ
-	IfInfo(const char* cn, const IfInfo** bl, const UTTypeInfo* o):baseList(bl), objInfo(o), className(cn){id = ++maxId;}
+	IfInfo(const char* cn, const IfInfo** bl, const UTTypeInfo* o):baseList(bl), objInfo(o), className(cn), creator(NULL){id = ++maxId;}
 	///	デストラクタ
 	virtual ~IfInfo() {};
 	///	クラス名
@@ -182,6 +184,8 @@ public:																	\
 #define SPR_OVERRIDEMEMBERFUNCOF(cls, base)
 #endif
 
+struct ObjectIfs;
+
 ///	すべてのインタフェースクラスの基本クラス
 struct ObjectIf{
 	SPR_IFDEF(Object);
@@ -265,6 +269,8 @@ struct ObjectIf{
 	//@}
 	///	オブジェクトツリーのメモリイメージをダンプ
 	void DumpObjectR(std::ostream& os, int level=0) const;
+	/// オブジェクトツリーを再帰的に複製
+	ObjectIf* CopyObjectR(ObjectIfs* context, ObjectIfs* copied);
 };
 
 ///	インタフェースクラスへのポインタの配列

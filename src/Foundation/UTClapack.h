@@ -8,13 +8,18 @@
 #include <boost/numeric/bindings/lapack/driver/sygv.hpp>
 #include <boost/numeric/bindings/lapack/driver/sygvx.hpp>
 #include <boost/numeric/bindings/lapack/driver/gesv.hpp>
+#include <boost/numeric/bindings/lapack/driver/gels.hpp>
+#include <boost/numeric/bindings/lapack/driver/gelsd.hpp>
+#include <boost/numeric/bindings/lapack/driver/gesdd.hpp>
 #include <boost/numeric/bindings/noop.hpp>
+#include <boost/numeric/bindings/ublas/banded.hpp>
 #include <boost/numeric/bindings/ublas/matrix.hpp>
 #include <boost/numeric/bindings/ublas/matrix_proxy.hpp>
 #include <boost/numeric/bindings/ublas/symmetric.hpp>
 #include <boost/numeric/bindings/ublas/vector.hpp>
 #include <boost/numeric/bindings/ublas/vector_proxy.hpp>
 #include <boost/numeric/ublas/io.hpp>
+#include <boost/numeric/ublas/lu.hpp>
 
 #ifdef _DEBUG
 #ifdef _DLL
@@ -172,6 +177,91 @@ int sprsygvx(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::Vect
 		for(int j = 0; j < interval; j++)
 			v.item(i, j) = z(i, j);
 	return info;
+}
+
+// c.f.) http://d.hatena.ne.jp/blono/20081118/1227001319
+inline int least_squares(const ublas::matrix<double>& A, const ublas::vector<double>& b, ublas::vector<double>& x, ublas::vector<double>& S, double rcond=0.01) {
+    BOOST_UBLAS_CHECK(A.size1() == b.size(), ublas::external_logic());
+
+    ublas::matrix<double> B(b.size(), 1), X;
+    ublas::column(B, 0).assign(b);
+
+    ublas::matrix<double, ublas::column_major> CA(A), CX((std::max)(A.size1(), A.size2()), B.size2());
+    ublas::project(CX, ublas::range(0, B.size1()), ublas::range(0, B.size2())).assign(B);
+
+    lapack::optimal_workspace work;
+    int info;
+	fortran_int_t rank;
+
+	S.resize((std::min)(A.size1(), A.size2()));
+
+	info = lapack::gelsd(CA, CX, S, rcond, rank, work);
+    BOOST_UBLAS_CHECK(info == 0, ublas::internal_logic());
+
+    X = ublas::project(CX, ublas::range(0, A.size2()), ublas::range(0, B.size2()));
+
+    x = ublas::column(X, 0);
+
+	return rank;
+}
+
+// c.f.) http://d.hatena.ne.jp/blono/20080922/1222049807
+inline void svd(const ublas::matrix<double>& A, ublas::matrix<double>& U, ublas::diagonal_matrix<double>& D, ublas::matrix<double>& VT) {
+	ublas::vector<double> s((std::min)(A.size1(), A.size2()));
+    ublas::matrix<double, ublas::column_major> CA(A), CU(A.size1(), A.size1()), CVT(A.size2(), A.size2());
+    int info;
+
+    info = lapack::gesdd('A', CA, s, CU, CVT);
+    BOOST_UBLAS_CHECK(info == 0, ublas::internal_logic());
+
+    ublas::matrix<double> CCU(CU), CCVT(CVT);
+    ublas::diagonal_matrix<double> CD(A.size1(), A.size2());
+
+    for (std::size_t i = 0; i < s.size(); ++i) {
+        CD(i, i) = s[i];
+    }
+
+	#if BOOST_UBLAS_TYPE_CHECK
+		BOOST_UBLAS_CHECK(
+			ublas::detail::expression_type_check(ublas::prod(ublas::matrix<double>(ublas::prod(CCU, CD)), CCVT), A),
+			ublas::internal_logic()
+		);
+	#endif
+
+    U.assign_temporary(CCU);
+    D.assign_temporary(CD);
+    VT.assign_temporary(CCVT);
+}
+
+
+// c.f.) http://d.hatena.ne.jp/blono/20080913/1221328687
+template <class M, class MI>
+void invert(const M& m, MI& mi) {
+    BOOST_UBLAS_CHECK(m.size1() == m.size2(), ublas::external_logic());
+
+    ublas::matrix<double>       lhs(m);
+    ublas::matrix<double>       rhs(ublas::identity_matrix<double>(m.size1()));
+    ublas::permutation_matrix<> pm(m.size1());
+
+    ublas::lu_factorize(lhs, pm);
+    ublas::lu_substitute(lhs, pm, rhs);
+
+    BOOST_UBLAS_CHECK(rhs.size1() == m.size1(), ublas::internal_logic());
+    BOOST_UBLAS_CHECK(rhs.size2() == m.size2(), ublas::internal_logic());
+
+	#if BOOST_UBLAS_TYPE_CHECK
+		BOOST_UBLAS_CHECK(
+			ublas::detail::expression_type_check(
+				ublas::prod(m, rhs),
+				ublas::identity_matrix<typename M::value_type>(m.size1())
+			),
+			ublas::internal_logic()
+		);
+	#endif
+
+    mi.resize(rhs.size1(), rhs.size2(), false);
+    mi.assign(rhs);
+    // mi.assign_temporary(rhs);
 }
 
 }
