@@ -91,7 +91,7 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	double GetBeta();
 	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
-
+//#ifndef SWIG
 	bool AddBoundaryCondition(int vtxId, Vec3i dof);
 	// 境界条件を加える(頂点順）
 	bool AddBoundaryCondition(PTM::VVector< Vec3i > bcs); 
@@ -99,7 +99,7 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	bool AddVertexForceW(int vtxId, Vec3d fW);
 	// 頂点群に力を加える（ワールド座標系）
 	bool AddVertexForceW(PTM::VVector< Vec3d > fWs);
-
+//#endif
 	bool SetDampingRatio_Wood();	
 	bool SetDampingRatio_Aluminum();	
 	bool SetDampingRatio_Plastic();	
@@ -120,6 +120,8 @@ struct PHFemThermoDesc: public PHFemBaseDesc{
 ///	温度のFEM用のメッシュ
 struct PHFemThermoIf : public PHFemBaseIf{
 	SPR_IFDEF(PHFemThermo);
+	void SetTimeStep(double dt);
+	double GetTimeStep();
 	int GetSurfaceVertex(int id);
 	int NSurfaceVertices();
 	void SetVertexTc(int id,double temp);
@@ -135,9 +137,9 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	void AddvecFAll(unsigned id,double dqdt);		//セットだと、値をそう入れ替えしそうな名前で危険。実際には、add又は、IH加熱ベクトルのみにSetする。ベクトルにSetする関数を作って、ロードしてもいいと思う。
 	void SetvecFAll(unsigned id,double dqdt);		//FAllの成分に加算だが、危険
 	void SetRhoSpheat(double rho,double Cp);		//素材固有の物性
-	int NFaces();
-	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
-	Vec3d GetFaceEdgeVtx(unsigned id, unsigned	 vtx);
+	//int NFaces();
+	//std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
+	//Vec3d GetFaceEdgeVtx(unsigned id, unsigned	 vtx);
 	Vec2d GetIHbandDrawVtx();
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);
 	void UpdateIHheat(unsigned heating);	//	IH加熱状態の更新
@@ -154,6 +156,8 @@ struct PHFemThermoIf : public PHFemBaseIf{
 		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
 		);
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);
+	void InitVecFAlls();
+	double GetVtxTempInTets(Vec3d temppos);
 
 };
 
