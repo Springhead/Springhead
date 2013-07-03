@@ -122,7 +122,7 @@ void PHIKEngine::CalcJacobian() {
 	}
 	// std::cout << J << std::endl;
 
-	// <!!>引き戻し速度の計算
+	// <!!>標準姿勢に戻ろうとする関節角速度の計算
 	for(size_t i=0; i<actuators.size(); ++i){
 		if (actuators[i]->IsEnabled()) {
 			PHIKActuator* act = actuators[i];
@@ -157,63 +157,36 @@ void PHIKEngine::IK() {
 	}
 	// std::cout << "V : " << V << std::endl;
 
-	// <!!>擬似逆解を求める・lapack版
-	/*
-	bool bOverwrite = true;
-	ublas::vector<double> S;
-	int rank = least_squares(J, V, W, S, 0.05);
-	*/
-
-	bool bOverwrite = true;
-
 	// <!!>擬似逆解を求める・lapack-SVD版
 	vector_type S; S.resize((std::min)(J.size1(), J.size2())); S.clear();
 
-	// lapack::gesdd('A', J, S, U, Vt);
 	ublas::matrix<double> U, Vt;
 	ublas::diagonal_matrix<double> D, Di;
 	svd(J, U, D, Vt);
 
 	Di.resize(D.size2(), D.size1());
 	for (size_t i=0; i<(std::min(J.size1(),J.size2())); ++i) {
-		if (D(i,i) > 1e-5) {
-			Di.at_element(i, i) = 1/D(i,i);
-		} else {
-			Di.at_element(i, i) = 0;
-		}
+		// Tikhonov Regularization
+		double epsilon = 0.7;
+		Di.at_element(i,i) = D(i,i) / (D(i,i)*D(i,i) + epsilon*epsilon);
 	}
 
 	vector_type   UtV  = ublas::prod(ublas::trans(U)  , V    );
 	vector_type DiUtV  = ublas::prod(Di               , UtV  );
 	W                  = ublas::prod(ublas::trans(Vt) , DiUtV);
 
-
-
-	// <!!>Wに引き戻し速度を加える
+	// <!!>Wに標準姿勢復帰速度を加える
 	vector_type      JWp = ublas::prod(J                ,      Wp);
 	vector_type    UtJWp = ublas::prod(ublas::trans(U)  ,     JWp);
 	vector_type  DiUtJWp = ublas::prod(Di               ,   UtJWp);
 	vector_type VDiUtJWp = ublas::prod(ublas::trans(Vt) , DiUtJWp);
 	W = W + Wp - VDiUtJWp;
 
-	/*
-	matrix_type DiUt = ublas::prod(Di, ublas::trans(U));
-	matrix_type Js   = ublas::prod(ublas::trans(Vt), DiUt);
-	matrix_type JsJ  = ublas::prod(Js, J);
-	matrix_type I    = ublas::identity_matrix<double>(JsJ.size1(), JsJ.size2());
-	vector_type ns   = ublas::prod(I-JsJ, Wp);
-
-	matrix_type JJsJ = ublas::prod(J, JsJ);
-	std::cout << "Check : " << (J - JJsJ) << std::endl;
-	*/
-
-
-
-
-
+	// <!!>大きくなりすぎた解を切り捨てる
+	double limitW = Rad(100); // max 100[deg/step]
 	for (size_t i=0; i<W.size(); ++i) {
-		if (W[i] >  1.0e+10) { W[i] = 0; }
-		if (W[i] < -1.0e+10) { W[i] = 0; }
+		if (W[i] >  limitW) { W[i] =  limitW; }
+		if (W[i] < -limitW) { W[i] = -limitW; }
 	}
 
 	// 繰り返し計算の実行
@@ -231,14 +204,12 @@ void PHIKEngine::IK() {
 	}
 
 	// <!!>計算結果を擬似逆解で上書き
-	if (bOverwrite) {
-		for (size_t i=0; i<actuators.size(); ++i) {
-			if (actuators[i]->IsEnabled()) {
-				PHIKActuator* act = actuators[i];
-				for (size_t x=0; x<act->ndof; ++x) {
-					int X = strideAct[i] + x;
-					act->omega[x] = W[X];
-				}
+	for (size_t i=0; i<actuators.size(); ++i) {
+		if (actuators[i]->IsEnabled()) {
+			PHIKActuator* act = actuators[i];
+			for (size_t x=0; x<act->ndof; ++x) {
+				int X = strideAct[i] + x;
+				act->omega[x] = W[X];
 			}
 		}
 	}
@@ -260,39 +231,6 @@ void PHIKEngine::FK() {
 	}
 }
 
-void PHIKEngine::Pullback() {
-	/*
-	// <!!>Wに引き戻し速度を加える
-	vector_type      JWp = ublas::prod(J                ,      Wp);
-	vector_type    UtJWp = ublas::prod(ublas::trans(U)  ,     JWp);
-	vector_type  DiUtJWp = ublas::prod(Di               ,   UtJWp);
-	vector_type VDiUtJWp = ublas::prod(ublas::trans(Vt) , DiUtJWp);
-	W = Wp - VDiUtJWp;
-	for (size_t i=0; i<W.size(); ++i) {
-		if (W[i] >  1.0e+10) { W[i] = 0; }
-		if (W[i] < -1.0e+10) { W[i] = 0; }
-	}
-
-	// <!!>計算結果を上書き
-	for (size_t i=0; i<actuators.size(); ++i) {
-		if (actuators[i]->IsEnabled()) {
-			PHIKActuator* act = actuators[i];
-			for (size_t x=0; x<act->ndof; ++x) {
-				int X = strideAct[i] + x;
-				act->omega[x] = W[X];
-			}
-		}
-	}
-
-	// 結果をActuatorの一時変数に保存
-	for(size_t i=0; i<actuators.size(); ++i){
-		if (actuators[i]->IsEnabled()) {
-			actuators[i]->MoveTempJoint();
-		}
-	}
-	*/
-}
-
 void PHIKEngine::Move() {
 	// 関節の動作
 	for(size_t i=0; i<actuators.size(); ++i){
@@ -302,100 +240,28 @@ void PHIKEngine::Move() {
 	}
 }
 
+void PHIKEngine::SaveFKResult() {
+	for (size_t j=0; j<actuators.size(); ++j) {
+		if (actuators[j]->IsEnabled()) {
+			actuators[j]->SaveFKResult();
+		}
+	}
+}
+
 void PHIKEngine::Step() {
 	if (!bEnabled) return;
 	if (actuators.empty() || endeffectors.empty()) return;
 
-	// std::cout << "1" << std::endl;
-
 	Prepare();
-	// std::cout << "2" << std::endl;
-
-	// 開始地点を標準姿勢側に引き戻し　→　FK
-	/*
-	for(size_t i=0; i<actuators.size(); ++i){
-		if (actuators[i]->IsEnabled()) {
-			actuators[i]->PullbackTempJoint(pullbackRate);
-		}
-	}
-	*/
 	FK();
-	// std::cout << "3" << std::endl;
-
-	for (size_t j=0; j<actuators.size(); ++j) {
-		if (actuators[j]->IsEnabled()) {
-			actuators[j]->SaveFKResult();
-		}
-	}
-
-	// IK繰り返し数決定
-	/*
-	PHIKEndEffector* eef = NULL;
-	double maxdev = 0;
-	for (size_t i=0; i<endeffectors.size(); ++i) {
-		if (endeffectors[i]->IsEnabled()) {
-			double dev = endeffectors[i]->PosDeviation();
-			if (dev > maxdev) {
-				maxdev = dev;
-				eef    = endeffectors[i];
-			}
-		}
-	}
-	int iter = min((int)(maxdev/linearDist), 50);
-	std::cout << "max=" << eef->GetName() << ", iter=" << iter << std::endl;
-	*/
+	SaveFKResult();
 
 	CalcJacobian();
-	// std::cout << "4" << std::endl;
 	IK();
-	// std::cout << "5" << std::endl;
-
-
-	// <!!>Pullback地点候補そのいち
-	/*
-	bool bPullback = true;
-	for (size_t i=0; i<endeffectors.size(); ++i) {
-		PTM::VVector<double> tt; endeffectors[i]->GetTempTarget(tt);
-		Vec3d temp = Vec3d(tt[0], tt[1], tt[2]);
-		Vec3d goal; endeffectors[i]->GetTargetPosition();
-		if ((temp - goal).norm() > 0.1) { bPullback = false; }
-	}
-
-	if (bPullback) {
-		Pullback();
-	}
-	*/
-
-
-
 	FK();
-	// std::cout << "6" << std::endl;
-
-	for (size_t j=0; j<actuators.size(); ++j) {
-		if (actuators[j]->IsEnabled()) {
-			actuators[j]->SaveFKResult();
-		}
-	}
-	// std::cout << "7" << std::endl;
+	SaveFKResult();
 
 	Move();
-	// std::cout << "8" << std::endl;
-
-
-	// <!!>Pullback地点候補そのに
-	bool bPullback = true;
-	for (size_t i=0; i<endeffectors.size(); ++i) {
-		PTM::VVector<double> tt; endeffectors[i]->GetTempTarget(tt);
-		Vec3d temp = Vec3d(tt[0], tt[1], tt[2]);
-		Vec3d goal; endeffectors[i]->GetTargetPosition();
-		if ((temp - goal).norm() > 0.1) { bPullback = false; }
-	}
-
-	if (bPullback) {
-		Pullback();
-	}
-
-	// std::cout << "9" << std::endl;
 }
 
 void PHIKEngine::Clear(){
