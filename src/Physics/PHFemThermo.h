@@ -22,8 +22,9 @@ class PHFemThermo: public PHFemThermoDesc, public PHFemBase{
 
 public:
 	//	メンバ変数宣言
+	double tdt;
 	//	頂点
-	struct StateVar{
+	struct StateVertex{
 		double temp;		//	温度
 		double k;			//	全体剛性行列Kの要素　計算に利用
 		double c;			//	同上
@@ -32,14 +33,17 @@ public:
 		bool vtxDeformed;		//	四面体の変形でこの節点がローカル座標基準で移動したかどうか
 		double thermalEmissivity;	///	熱放射率　節点での
 		double disFromOrigin;		//>	x-z平面でのローカル座標の原点からの距離
-		double heatFluxValue;		//>	熱流束値
+		//double heatFluxValue;		//>	熱流束値
 		Vec3d normal;				// 属するfacceから算出した法線（現在、face法線の単純和を正規化した法線だが、同じ向きのface法線を一本化する予定：要改善
+		std::vector<int> nextSurfaceVertices;
 	};
-	struct Coeff{
+	//辺
+	struct StateEdge{
 		double k;		//全体剛性行列Kの要素
 		double c;
 		double b;		//ガウスザイデル計算で用いる定数b
 	};
+	//面
 	struct StateFace{
 		double area;				///	四面体の各面の面積
 		double iharea;				//	IH加熱するface内の面積
@@ -60,7 +64,11 @@ public:
 		//Vec2d ihvtx[12];			//	IH加熱領域内に入る点の(x,z)座標 (x,z)
 		//unsigned ninnerVtx;			//	IH加熱領域内に入る点の(x,z)座標の数
 		std::vector<Vec3d> shapefunc;//[12];		//	IH加熱領域内に入る点の形状関数(f1,f2,f3)
+		//faceの法線Vec3d fnormal
+		Vec3d normal;
+		Vec3d normal_origin;		// 法線の始点
 	};
+	//四面体
 	struct StateTet{
 		double volume;
 		PTM::TMatrixRow<4,4,double> matk[3];
@@ -78,8 +86,8 @@ public:
 		HIGH
 	};
 
-	std::vector<StateVar> vertexVars;
-	std::vector<Coeff> edgeCoeffs;
+	std::vector<StateVertex> vertexVars;
+	std::vector<StateEdge> edgeVars;
 	std::vector<StateFace> faceVars;
 	std::vector<StateTet> tetVars;
 
@@ -145,6 +153,16 @@ protected:
 	// ..[C]
 	PTM::VMatrixRow<double> matCAll;
 
+	PTM::VMatrixRow<double> tempMat;
+
+	PTM::VMatrixRow<double> keisu;			//	直接法で計算時のT(t+dt)係数行列
+	PTM::VMatrixRow<double> keisuInv;
+
+	PTM::VVector<double> TVecAll2;
+
+
+
+
 	// 全体の剛性行列の代わり
 	// ..全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
 	PTM::VMatrixRow<double> dMatKAll;
@@ -199,7 +217,7 @@ public:
 	//	..yagawa1983の計算法の3次元拡張した計算法 b:book の意味	//>	k1btに改称する
 	void CreateMatk1b(unsigned id);
 	//	..四面体ごとに作るので、四面体を引数に取る 内外すべての四面体について行う
-	void CreateMatk2(unsigned id,FemTet tets); // shiba
+	void CreateMatk2(unsigned id,FemTet tets);
 	//void CreateMatk2f(Face faces);		// 四面体ごとに作る式になっているが、外殻の三角形face毎に作る　facesのf
 	//	..四面体ごとに作る　tetsのt
 	void CreateMatk2t(unsigned id);
@@ -232,13 +250,15 @@ public:
 	
 
 	//	{T}:節点温度ベクトルを作る関数
-	void CreateTempMatrix();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
+	void CreateTempVertex();					//節点の温度が入った節点配列から、全体縦ベクトルを作る。	この縦行列の節点の並び順は、i番目の節点IDがiなのかな
 	void CreateLocalMatrixAndSet();				//K,C,Fすべての行列・ベクトルについて要素剛性行列を作って、エッジに入れる	又は	全体剛性行列を作る関数
 	
 	//	初期化
 	void InitTcAll(double temp);							//	Tcの温度を初期化
 
 public:
+	void SetTimeStep(double dt){ tdt = dt; }
+	double GetTimeStep(){ return tdt; }
 	//	毎Step呼び出す
 	void UpdateIHheat(unsigned heatingMODE);	// 毎Step呼ぶ：熱流束ベクトル{F}を生成・保存	//.heatingMODEは加熱強さ：4段階（0:OFF・1:弱火(WEEK)・2:中火(MIDDLE)・3:強火(HIGH)）
 	void UpdateVecF_frypan();			// 方程式を解く前に、熱流束ベクトルをロードして、結合するなどベクトルを作る。modeには加熱モードを入れる
@@ -253,7 +273,8 @@ protected:
 	void SetkcfParam(FemTet tets); // shiba
 	// 頂点ID　３点から成る三角形の求積　(四面体の三角形面積分等で利用)
 	double CalcTriangleArea(int id0, int id2, int id3);		
-	double CalcTetrahedraVolume(FemTet tets); // shiba			// 四面体のIDを入れると、その体積を計算してくれる関数
+	double CalcTetrahedraVolume(FemTet tet); 		// 四面体のIDを入れると、その体積を計算してくれる関数
+	double CalcTetrahedraVolume2(unsigned id);			// 四面体のIDを入れると、その体積を計算してくれる関数
 	//void PrepareStep();							// Step()で必要な変数を計算する関数
 	//double CalcbVec(int vtxid,
 	
@@ -268,11 +289,16 @@ protected:
 		double dt,				// dt:ステップ時間
 		double eps				// eps:積分の種類 0.0:前進積分,0.5:クランクニコルソン差分式,1.0:後退積分・陰解法
 		);
-
+	void CalcHeatTransDirect(
+		double dt			// dt:ステップ時間
+		);
+	void CalcHeatTransDirect2(
+		double dt			// dt:ステップ時間
+		);
 	void SetTempAllToTVecAll(unsigned size);		//	TVecAllに全節点の温度を設定する関数
 	void SetTempToTVecAll(unsigned vtxid);			//	TVecAllに特定の節点の温度を設定する関数
 	void UpdateVertexTemp(unsigned vtxid);			//	計算結果としての温度をTVecAllから節点に更新する
-	void UpdateVertexTempAll(unsigned size);		//	計算結果としての温度をTVecAllから全節点に更新する
+	void UpdateVertexTempAll();		//	計算結果としての温度をTVecAllから全節点に更新する
 
 	//	SciLab
 	void ScilabTest();								//	Scilabを使ってみる関数
@@ -297,7 +323,8 @@ protected:
 	///	条件利用後にはfalseに戻す。初期値はtrue	for	初期化
 	bool deformed;					///	形状が変わったかどうか		///	構造体に持っていてほしい
 	bool alphaUpdated;				///	熱伝達率が更新、matk2,Vecf3等が更新されたか
-	
+	bool doCalc;					///	ガウスザイデル計算するフラグ
+
 	std::ofstream templog;		// 頂点の温度変化
 	std::ofstream cpslog;		//	CPSの変化
 
@@ -329,10 +356,12 @@ public:
 
 	
 	// 加熱計算等を呼び出す Set系関数
-	PHFemThermo(const PHFemThermoDesc& desc=PHFemThermoDesc()/*, SceneIf* s=NULL*/);
+	PHFemThermo(const PHFemThermoDesc& desc=PHFemThermoDesc(), SceneIf* s=NULL);
+	virtual void Init();
 	void AfterSetDesc();		//	伝熱行列の計算など、IH加熱モードは次の関数で設定
-	void Setup();
-	/// 熱伝導シミュレーションでエンジンが用いるステップをオーバーライド		
+	//void Setup();
+	/// 熱伝導シミュレーションでエンジンが用いるステップをオーバーライド	
+	virtual void Step();
 	void Step(double dt);
 	//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
 	void SetVerticesTempAll(double temp);
@@ -467,13 +496,22 @@ public:
 	void InitAllVertexTemp();
 
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);//熱伝達率以外（熱伝達率は現行main.cppで行っているため
+	double GetArbitraryPointTemp(Vec3d temppos);							//	四面体内任意点の温度を取得	temppose:知りたい点のローカル座標
+	Vec3d GetDistVecDotTri(Vec3d Dotpos,Vec3d trivtx[3]);					//	点から三角形面(2辺のベクトルで定義)へのベクトルを計算
+	double GetVtxTempInTets(Vec3d temppos);											//	任意点の四面体内外判定：tempposがあるfaceIDを返す。見つから無ければ、-1を返す。
+	double CalcTempInnerTets(unsigned id,PTM::TVector<4,double> N);			//	与えられた形状関数での四面体内の温度を返す
+
+	std::ofstream matCAllout;
+	std::ofstream matKAllout;
+	std::ofstream checkTVecAllout;
+	unsigned long long COUNT;
 
 	///	メッシュの面の総数を返す
-	int NFaces();
+	//int NFaces();
 	///	メッシュのFace辺の両端点の座標を返す?
-	std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
+	//std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
 	///	メッシュのFace辺の両端点の座標を返す?
-	Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
+	//Vec3d GetFaceEdgeVtx(unsigned id, unsigned vtx);
 };
 
 
