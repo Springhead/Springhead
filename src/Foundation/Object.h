@@ -284,6 +284,8 @@ public:
 	virtual void DestructState(void* m) const {}
 	///	メモリデバッグ用。単純にツリーのオブジェクトをファイルにダンプする。
 	virtual void DumpObjectR(std::ostream& os, int level=0) const;
+	/// オブジェクトツリーを再帰的に複製
+	virtual ObjectIf* CopyObjectR(ObjectIfs* context, ObjectIfs* copied);
 
 protected:
 	/// 開き括弧

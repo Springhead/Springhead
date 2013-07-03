@@ -10,6 +10,7 @@
 
 #include <Physics/SprPHIK.h>
 #include <Physics/SprPHJoint.h>
+#include <Physics/SprPHSolid.h>
 #include "../Foundation/Object.h"
 #include "PHIKEndEffector.h"
 #include "PhysicsDecl.hpp"
@@ -38,12 +39,17 @@ public:
 
 	/// 直系祖先・子孫（自分含む）・直接の子供
 	std::vector<PHIKActuator*> ascendant, descendant, children;
+	/// 直接の親
+	PHIKActuator* parent;
 	/// 祖先・子孫にまとめてアクセスする関数
 	PHIKActuator* Link(size_t i) { return (i<ascendant.size()) ? ascendant[i] : descendant[i-ascendant.size()]; }
 	int NLinks() {return (int)(ascendant.size()+descendant.size());}
 
 	/// このアクチュエータで直接つながれたエンドエフェクタ．1アクチュエータに対し1エンドエフェクタが対応
 	PHIKEndEffector* eef;
+
+	/// 制御対象の関節
+	PHJointIf* joint;
 
 	// --- --- --- --- ---
 
@@ -61,12 +67,25 @@ public:
 
 	// --- --- --- --- ---
 
+	/// IK-FK計算用の一時変数：プラグ剛体姿勢
+	Posed solidTempPose;
+	std::vector<Posed> solidTempPoseHistory;
+	size_t historyCnt;
+
+	/// IK-FK計算用の一時変数：関節角度
+	Quaterniond jointTempOri;
+
+	// --- --- --- --- ---
+
 	/// 計算用の一時変数
 	PTM::VVector<double>						alpha, beta;
 	std::map< int, PTM::VMatrixRow<double> >	gamma;
 
 	/// ヤコビアン
 	std::map< int,PTM::VMatrixRow<double> > Mj;
+
+	/// 標準姿勢引戻し速度
+	PTM::VVector<double> domega_pull;
 
 	/// IKのIterationの一回前の計算結果（収束判定用）
 	PTM::VVector<double> omega_prev;
@@ -82,10 +101,19 @@ public:
 	/** @brief 初期化
 	*/
 	virtual void Init() {
-		number = -1;
-		bNDOFChanged = true;
+		number         = -1;
+		bNDOFChanged   = true;
 		bActuatorAdded = false;
-		eef = NULL;
+		parent         = NULL;
+		eef            = NULL;
+		joint          = NULL;
+		solidTempPose  = Posed();
+
+		solidTempPoseHistory.resize(2);
+		for (size_t i=0; i<solidTempPoseHistory.size(); ++i) { solidTempPoseHistory[i] = Posed(); }
+		historyCnt = 0;
+
+		jointTempOri   = Quaterniond();
 		if (descendant.size()==0) { descendant.push_back(this); }
 	}
 
@@ -173,9 +201,35 @@ public:
 	*/
 	virtual void CalcJacobian(PHIKEndEffector* endeffector) {}
 
+	/** @brief 引き戻し速度を計算する
+	*/
+	virtual void CalcPullbackVelocity(double ratio) {}
+
 	/** @brief 繰返し計算の一ステップの後に行う処理
 	*/
 	virtual void AfterProceedSolve() {}
+
+	// --- --- --- --- --- --- --- --- --- ---
+
+	/** @brief 一時変数の関節角度をratio倍する
+	*/
+	virtual void PullbackTempJoint(double ratio) {}
+
+	/** @brief IK計算結果にしたがって一時変数の関節角度を動かす
+	*/
+	virtual void MoveTempJoint() {}
+
+	/** @brief 順運動学（FK）計算
+	*/
+	void FK();
+
+	/** @brief FK結果の保存（デバッグ・表示用）
+	*/
+	void SaveFKResult() {
+		solidTempPoseHistory[historyCnt] = solidTempPose;
+		historyCnt++;
+		if (historyCnt >= solidTempPoseHistory.size()) { historyCnt = 0; }
+	}
 };
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -184,9 +238,6 @@ class PHIKBallActuator : public PHIKActuator{
 public:
 	SPR_OBJECTDEF(PHIKBallActuator);
 	SPR_DECLMEMBEROF_PHIKBallActuatorDesc;
-
-	/// 制御対象の関節
-	PHBallJointIf* joint;
 
 	/// IKの回転軸
 	Vec3d e[3];
@@ -197,7 +248,6 @@ public:
 	*/
 	virtual void Init() {
 		ndof = 2;
-		joint = NULL;
 		PHIKActuator::Init();
 	}
 
@@ -228,7 +278,7 @@ public:
 
 	/** @brief 動作対象として設定された関節を取得する
 	*/
-	virtual PHBallJointIf* GetJoint() { return this->joint; }
+	virtual PHBallJointIf* GetJoint() { return this->joint->Cast(); }
 
 	// --- --- --- --- ---
 
@@ -254,6 +304,20 @@ public:
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual void CalcJacobian(PHIKEndEffector* endeffector);
+
+	/** @brief 引き戻し速度を計算する
+	*/
+	virtual void CalcPullbackVelocity(double ratio);
+
+	// --- --- --- --- --- --- --- --- --- ---
+
+	/** @brief 一時変数の関節角度をratio倍する
+	*/
+	virtual void PullbackTempJoint(double ratio);
+
+	/** @brief IK計算結果にしたがって一時変数の関節角度を動かす
+	*/
+	virtual void MoveTempJoint();
 };
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -263,8 +327,10 @@ public:
 	SPR_OBJECTDEF(PHIKHingeActuator);
 	SPR_DECLMEMBEROF_PHIKBallActuatorDesc;
 
-	/// 制御対象の関節
-	PHHingeJointIf *joint;
+	// --- --- --- --- ---
+
+	/// IK-FK計算用の一時変数：関節角度
+	double jointTempAngle;
 
 	// --- --- --- --- --- --- --- --- --- ---
 
@@ -272,7 +338,7 @@ public:
 	*/
 	virtual void Init() {
 		ndof = 1;
-		joint = NULL;
+		jointTempAngle = 0;
 		PHIKActuator::Init();
 	}
 
@@ -303,7 +369,7 @@ public:
 
 	/** @brief 動作対象として設定された関節を取得する
 	*/
-	virtual PHHingeJointIf* GetJoint() { return this->joint; }
+	virtual PHHingeJointIf* GetJoint() { return this->joint->Cast(); }
 
 	// --- --- --- --- ---
 
@@ -317,6 +383,20 @@ public:
 	/** @brief 指定した制御点との間のヤコビアンを計算する
 	*/
 	virtual void CalcJacobian(PHIKEndEffector* endeffector);
+
+	/** @brief 引き戻し速度を計算する
+	*/
+	virtual void CalcPullbackVelocity(double ratio);
+
+	// --- --- --- --- --- --- --- --- --- ---
+
+	/** @brief 一時変数の関節角度をratio倍する
+	*/
+	virtual void PullbackTempJoint(double ratio);
+
+	/** @brief IK計算結果にしたがって一時変数の関節角度を動かす
+	*/
+	virtual void MoveTempJoint();
 };
 
 }

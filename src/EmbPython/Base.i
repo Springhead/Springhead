@@ -28,7 +28,10 @@ using namespace std;
 namespace Spr{
 
 %feature("not_newable","1");
-	class IfInfo{};
+	class IfInfo{
+	public:
+	IfInfo* creator;
+	};
 	class ostream{};
 	class istream{};
 %feature("not_newable","");

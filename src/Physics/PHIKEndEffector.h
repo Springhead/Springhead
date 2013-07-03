@@ -38,12 +38,16 @@ public:
 	/// 制御点のある剛体
 	PHSolidIf* solid;
 
+	/// IK-FK計算用の一時変数：剛体姿勢
+	Posed solidTempPose;
+
 	/** @brief 初期化する
 	*/
 	void Init() {
 		solid = NULL;
 		ndof = 3;
 		bNDOFChanged = true;
+		solidTempPose = Posed();
 		number = -1;
 	}
 
@@ -205,6 +209,12 @@ public:
 	/** @brief 暫定目標地点を取得する
 	*/
 	void GetTempTarget(PTM::VVector<double> &v);
+
+	/** @brief 目標地点までの距離を取得する
+	*/
+	double PosDeviation() {
+		return ((solidTempPose * targetLocalPosition) - targetPosition).norm();
+	}
 };
 
 }

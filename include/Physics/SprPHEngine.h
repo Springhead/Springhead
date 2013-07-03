@@ -128,6 +128,16 @@ public:
 	*/
 	void SetNumIter(int numIter);
 
+	/** @brief 引き戻し率
+	*/
+	void SetPullbackRate(double pullbackRate);
+	double GetPullbackRate();
+
+	/** @brief IK1回あたりの移動可能距離（＝線形近似可能な移動距離）
+	*/
+	void SetLinearDistance(double linearDist);
+	double GetLinearDistance();
+
 	SPR_IFDEF(PHIKEngine);
 };
 

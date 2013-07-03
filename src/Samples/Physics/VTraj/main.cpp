@@ -27,6 +27,8 @@
 #include <vector>
 #include "../../SampleApp.h"
 
+#include "windows.h"
+
 #pragma  hdrstop
 
 using namespace Spr;
@@ -168,8 +170,9 @@ public:
 		PHHingeJointDesc descJoint;
 		descJoint.poseSocket = Posed(1,0,0,0, 0, 2,0);
 		descJoint.posePlug   = Posed(1,0,0,0, 0,-2,0);
-		descJoint.spring =      1.0;
+		descJoint.spring =   1000.0;
 		descJoint.damper =    100.0;
+		descJoint.cyclic =     true;
 		descJoint.fMax   =   1000.0;
 
 		PHIKHingeActuatorDesc descIKA;
@@ -232,14 +235,14 @@ public:
 		if (bHard) {
 			for (size_t i=0; i<2; ++i) {
 				PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
-				jo->SetSpring(  100.0);
-				jo->SetDamper(10000.0);
+				jo->SetSpring(1000.0);
+				jo->SetDamper( 100.0);
 			}
 		} else {
 			for (size_t i=0; i<2; ++i) {
 				PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
-				jo->SetSpring( 10.0);
-				jo->SetDamper(100.0);
+				jo->SetSpring(  1.0);
+				jo->SetDamper(  0.1);
 			}
 		}
 
@@ -253,6 +256,20 @@ public:
 				if (jo) { jo->SetOffsetForce(0); }
 			}
 			GetFWScene()->GetPHScene()->Step();
+		}
+
+		// ----- ----- ----- ----- -----
+		{
+			static int cycle = 0;
+			static DWORD lastCounted = timeGetTime();
+			DWORD now = timeGetTime();
+			if (now - lastCounted > 1000) {
+				float cps = (float)(cycle) / (float)(now - lastCounted) * 1000.0f;
+				lastCounted = now;
+				cycle = 0;
+				std::cout << "CPS : " << cps << std::endl;
+			}
+			cycle++;
 		}
 	}
 
