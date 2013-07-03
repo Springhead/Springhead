@@ -376,8 +376,8 @@ void PHIKBallActuator::CalcPullbackVelocity(double ratio) {
 	Vec3d pullback = -(jointTempOri.RotationHalf()) * ratio;
 
 	// <!!> Limit Max Pullback Angle
-	if (pullback.norm() > Rad(20)) {
-		pullback = pullback.unit() * Rad(20);
+	if (pullback.norm() > Rad(50)) {
+		pullback = pullback.unit() * Rad(50);
 	}
 
 	Posed soParentPose = (parent) ? parent->solidTempPose : joint->GetSocketSolid()->GetPose();

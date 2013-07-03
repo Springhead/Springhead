@@ -47,13 +47,6 @@ public:
 	// 全体ヤコビアン
 	matrix_type J;
 
-	// JのSVD（=U・D・Vt）
-	/*
-	matrix_type      U;
-	diag_matrix_type Di; // Dの擬似逆行列
-	matrix_type      Vt;
-	*/
-
 	// 全エンドエフェクタ変位
 	vector_type V;
 
@@ -95,8 +88,8 @@ public:
 	void CalcJacobian();
 	void IK();
 	void FK();
+	void SaveFKResult();
 	void Move();
-	void Pullback();
 
 	// --- --- --- --- ---
 

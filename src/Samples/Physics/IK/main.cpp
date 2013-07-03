@@ -253,7 +253,7 @@ public:
 		ike1->SetTargetLocalPosition(Vec3d(0,2,0));
 
 		ike1->EnablePositionControl(true);
-		ike1->EnableOrientationControl(true);
+		ike1->EnableOrientationControl(false);
 
 		/*
 		// Link6 = End Effector
@@ -275,8 +275,8 @@ public:
 		// ike2->SetTargetPosition(soTarget2->GetPose().Pos());
 
 		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
-		GetFWScene()->GetPHScene()->GetIKEngine()->SetPullbackRate(0.1);
-		GetFWScene()->GetPHScene()->GetIKEngine()->SetLinearDistance(0.1);
+		GetFWScene()->GetPHScene()->GetIKEngine()->SetPullbackRate(1.0);
+		GetFWScene()->GetPHScene()->GetIKEngine()->SetLinearDistance(0.5);
 
 		GetFWScene()->GetPHScene()->SetContactMode(PHSceneDesc::MODE_NONE);
 	}
@@ -285,42 +285,42 @@ public:
 		if(menu == MENU_SCENE){
 			if(id == ID_UP){
 				Vec3d currPos = soTarget1->GetPose().Pos();
-				soTarget1->SetFramePosition(currPos + Vec3d( 0.0,  0.1,  0.0));
+				soTarget1->SetFramePosition(currPos + Vec3d( 0.0,  1.0,  0.0));
 				ikeTarget1->SetTargetPosition(soTarget1->GetPose().Pos());
 				ikeTarget1->SetTargetOrientation(soTarget1->GetPose().Ori());
 			}
 
 			if(id == ID_DOWN){
 				Vec3d currPos = soTarget1->GetPose().Pos();
-				soTarget1->SetFramePosition(currPos + Vec3d( 0.0, -0.1,  0.0));
+				soTarget1->SetFramePosition(currPos + Vec3d( 0.0, -1.0,  0.0));
 				ikeTarget1->SetTargetPosition(soTarget1->GetPose().Pos());
 				ikeTarget1->SetTargetOrientation(soTarget1->GetPose().Ori());
 			}
 
 			if(id == ID_LEFT){
 				Vec3d currPos = soTarget1->GetPose().Pos();
-				soTarget1->SetFramePosition(currPos + Vec3d(-0.1,  0.0,  0.0));
+				soTarget1->SetFramePosition(currPos + Vec3d(-1.0,  0.0,  0.0));
 				ikeTarget1->SetTargetPosition(soTarget1->GetPose().Pos());
 				ikeTarget1->SetTargetOrientation(soTarget1->GetPose().Ori());
 			}
 
 			if(id == ID_RIGHT){
 				Vec3d currPos = soTarget1->GetPose().Pos();
-				soTarget1->SetFramePosition(currPos + Vec3d( 0.1,  0.0,  0.0));
+				soTarget1->SetFramePosition(currPos + Vec3d( 1.0,  0.0,  0.0));
 				ikeTarget1->SetTargetPosition(soTarget1->GetPose().Pos());
 				ikeTarget1->SetTargetOrientation(soTarget1->GetPose().Ori());
 			}
 
 			if(id == ID_FORE){
 				Vec3d currPos = soTarget1->GetPose().Pos();
-				soTarget1->SetFramePosition(currPos + Vec3d( 0.0,  0.0,  0.1));
+				soTarget1->SetFramePosition(currPos + Vec3d( 0.0,  0.0,  1.0));
 				ikeTarget1->SetTargetPosition(soTarget1->GetPose().Pos());
 				ikeTarget1->SetTargetOrientation(soTarget1->GetPose().Ori());
 			}
 
 			if(id == ID_BACK){
 				Vec3d currPos = soTarget1->GetPose().Pos();
-				soTarget1->SetFramePosition(currPos + Vec3d( 0.0,  0.0, -0.1));
+				soTarget1->SetFramePosition(currPos + Vec3d( 0.0,  0.0, -1.0));
 				ikeTarget1->SetTargetPosition(soTarget1->GetPose().Pos());
 				ikeTarget1->SetTargetOrientation(soTarget1->GetPose().Ori());
 			}
