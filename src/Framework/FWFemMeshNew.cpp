@@ -423,6 +423,8 @@ void FWFemMeshNew::SyncThermoInfo(){
 		int pId = vertexIdMap[i];
 		grVertices[i] = (Vec3f)phFemMesh->vertices[pId].pos;
 	}
+	//’¸“_‰·“x‚Ì“¯Šú
+	GetPHFemMesh()->GetPHFemThermo()->UpdateVertexTempAll();
 	// •ÏˆÊ‚ÅF•Ï‰»
 	if(grFemMesh->NColors() < 1) return;
 	Vec4f* vc = grFemMesh->GetColors();
