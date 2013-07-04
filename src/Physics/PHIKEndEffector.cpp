@@ -64,40 +64,27 @@ void PHIKEndEffector::Enable(bool enable){
 void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 	v.resize(ndof);
 
-	PHIKEngineIf* engine = DCAST(PHSceneIf,GetScene())->GetIKEngine();
+	PHSceneIf*    phScene = DCAST(PHSceneIf,GetScene());
+	PHIKEngineIf* engine  = phScene->GetIKEngine();
 	double dt = DCAST(PHSceneIf,GetScene())->GetTimeStep();
 
 	if (bPosition) {
 		Vec3d currPos = solidTempPose*targetLocalPosition;
 		Vec3d dir     = (targetPosition - currPos);
 
-		double maxmove = engine->GetLinearDistance();
+		double maxmove = engine->GetMaxVelocity() * phScene->GetTimeStep();
 		if (dir.norm() > maxmove) {
 			dir = dir.unit() * maxmove;
 		}
+		dir *= positionPriority;
 
 		for (int i=0; i<3; ++i) { v[i] = dir[i]; }
-
-		/*
-		Vec3d solidPos = solid->GetPose()*targetLocalPosition;
-		Vec3d dir = (targetPosition - solidPos) * positionPriority;
-		double epsilon = 1.0 * positionPriority;
-
-		Vec3d v_p;
-		if (dir.norm() > epsilon) {
-			dir.unitize();
-			dir *= epsilon;
-		}
-		v_p = dir;
-
-		for (int i=0; i<3; ++i) { v[i] = v_p[i]; }
-		*/
 	}
 
 	if (bOrientation) {
 		Quaterniond qS = solidTempPose.Ori();
 		Quaterniond qG = (targetOrientation * qS.Inv());
-		double maxmove = Rad(10.0);
+		double maxmove = engine->GetMaxAngularVelocity() * phScene->GetTimeStep();
 
 		Vec3d v_o;
 		if (qG.Theta() < maxmove) {
@@ -105,6 +92,7 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 		} else {
 			v_o = (qG.Axis() * maxmove);
 		}
+		v_o *= orientationPriority;
 
 		int stride = (bPosition ? 3 : 0);
 		for (int i=0; i<3; ++i) { v[i+stride] = v_o[i]; }

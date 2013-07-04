@@ -82,6 +82,7 @@ void PHIKActuator::SetupMatrix(){
 		// --- --- --- --- ---
 		// 変数の初期化
 
+		/*
 		// α、β
 		if (this->bNDOFChanged) {
 			alpha.resize(this->ndof);
@@ -97,6 +98,7 @@ void PHIKActuator::SetupMatrix(){
 			}
 			gamma[Link(nLink)->number].clear();
 		}
+		*/
 
 		// Ｊ（ヤコビアン）
 		for (int nDesc=0; nDesc<(int)descendant.size(); ++nDesc) {
@@ -136,6 +138,7 @@ void PHIKActuator::CalcAllJacobian(){
 void PHIKActuator::PrepareSolve(){
 	if (!bEnabled) { return; }
 
+	/*
 	PHIKEngineIf* engine = DCAST(PHSceneIf,GetScene())->GetIKEngine();
 
 	for (int i=0; i< ndof; ++i) {
@@ -151,8 +154,8 @@ void PHIKActuator::PrepareSolve(){
 			for (int k=0; k < childEef->ndof; ++k) {
 
 				// α、β
-				alpha[i] += ( (Mj[eef_n][k][i]/bias) * (Mj[eef_n][k][i]) );
-				beta[i]  += ( (Mj[eef_n][k][i]/bias) * (eef_v[k])  );
+				alpha[i] += ( (Mj[eef_n][k][i]) * (Mj[eef_n][k][i]) );
+				beta[i]  += ( (Mj[eef_n][k][i]) * (eef_v[k])  );
 
 				// γ[act_y, this] （act_y == this の場合を含む）
 				for (int nLink=0; nLink < NLinks(); ++nLink) {
@@ -160,7 +163,7 @@ void PHIKActuator::PrepareSolve(){
 					int act_n = Link(nLink)->number;
 					for (int j=0; j<Link(nLink)->ndof; ++j) {
 						if (Link(nLink)->Mj.find(eef_n) != Link(nLink)->Mj.end()) {
-							gamma[act_n][i][j] += ( (Mj[eef_n][k][i]/bias) * (Link(nLink)->Mj[eef_n][k][j] / Link(nLink)->bias) );
+							gamma[act_n][i][j] += ( (Mj[eef_n][k][i]) * (Link(nLink)->Mj[eef_n][k][j]) );
 						}
 					}
 				}
@@ -168,6 +171,7 @@ void PHIKActuator::PrepareSolve(){
 			}
 		}
 	}
+	*/
 
 	omega.clear();
 	omega_prev.clear();
@@ -366,14 +370,22 @@ void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 			}
 		}
 	}
+
+	// 重み付け
+	size_t ndof_eef=0;
+	ndof_eef += (endeffector->bPosition    ? 3 : 0);
+	ndof_eef += (endeffector->bOrientation ? 3 : 0);
+	for (size_t i=0; i<ndof_eef; ++i) {
+		for (size_t j=0; j<ndof; ++j) {
+			Mj[n][i][j] *= sqsaib;
+		}
+	}
 }
 
-void PHIKBallActuator::CalcPullbackVelocity(double ratio) {
+void PHIKBallActuator::CalcPullbackVelocity() {
 	Matrix3d m(e[0], e[1], e[2]);
 
-	// ratio = 0.01;
-
-	Vec3d pullback = -(jointTempOri.RotationHalf()) * ratio;
+	Vec3d pullback = -(jointTempOri.RotationHalf()) * pullbackRate;
 
 	// <!!> Limit Max Pullback Angle
 	if (pullback.norm() > Rad(50)) {
@@ -384,18 +396,8 @@ void PHIKBallActuator::CalcPullbackVelocity(double ratio) {
 	Posed socketPose; joint->GetSocketPose(socketPose);
 
 	Vec3d pullback_ = m.inv() * (soParentPose.Ori() * (socketPose.Ori() * pullback));
+
 	for (size_t i=0; i<ndof; ++i) { domega_pull[i] = pullback_[i]; }
-
-	/*
-	Vec3d pbv = (jointTempOri.Inv() * Quaterniond::Rot(rot)).RotationHalf();
-
-	// Jacobian系に変換する
-	Matrix3d m(e[0], e[1], e[2]);
-	Posed soParentPose = (parent) ? parent->solidTempPose : joint->GetSocketSolid()->GetPose();
-	Posed socketPose; joint->GetSocketPose(socketPose);
-
-	domega_pull = m.inv() * soParentPose * socketPose * pbv;
-	*/
 }
 
 void PHIKBallActuator::Move(){
@@ -406,16 +408,10 @@ void PHIKBallActuator::Move(){
 	return;
 }
 
-void PHIKBallActuator::PullbackTempJoint(double ratio) {
-	Vec3d rot = jointTempOri.RotationHalf();
-	rot *= (1-ratio);
-	jointTempOri = Quaterniond::Rot(rot);
-}
-
 void PHIKBallActuator::MoveTempJoint() {
 	// 回転軸ベクトルにする
 	Vec3d  w = Vec3d();
-	for (int i=0; i<ndof; ++i) { w += ( omega[i]/bias) * e[i]; }
+	for (int i=0; i<ndof; ++i) { w += ( omega[i]*sqsaib ) * e[i]; }
 
 	// 関節座標系にする
 	Posed soParentPose = (parent) ? parent->solidTempPose : joint->GetSocketSolid()->GetPose();
@@ -466,18 +462,6 @@ void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 		for (int i=0; i<3; ++i) {
 			Mj[n][i][0] = M3[i];
 		}
-
-		/*
-		Vec3d Pm = j->solid[0]->GetPose() * j->Xj[0].r;
-		Vec3d Rm = j->solid[0]->GetPose().Ori() * j->Xj[0].q * Vec3d(0,0,1);
-
-		Vec3d Pe = endeffector->solid->GetPose() * endeffector->targetLocalPosition;
-
-		Vec3d M3 = PTM::cross((Pm-Pe), Rm);
-		for (int i=0; i<3; ++i) {
-			Mj[n][i][0] = M3[i];
-		}
-		*/
 	}
 
 	// アクチュエータ回転 <=> エンドエフェクタ回転
@@ -490,43 +474,35 @@ void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 			Mj[n][i+stride][0] = Rm[i];
 		}
 	}
+
+
+	// 重み付け
+	size_t ndof_eef=0;
+	ndof_eef += (endeffector->bPosition    ? 3 : 0);
+	ndof_eef += (endeffector->bOrientation ? 3 : 0);
+	for (size_t i=0; i<ndof_eef; ++i) {
+		for (size_t j=0; j<ndof; ++j) {
+			Mj[n][i][j] *= sqsaib;
+		}
+	}
 }
 
-void PHIKHingeActuator::CalcPullbackVelocity(double ratio) {
-	double pullbacked = (1-ratio) * jointTempAngle;
+void PHIKHingeActuator::CalcPullbackVelocity() {
+	double pullbacked = (1-pullbackRate) * jointTempAngle;
 	domega_pull[0] = pullbacked - jointTempAngle;
-	domega_pull[0] = max(Rad(-10), min(domega_pull[0], Rad(10)));
+	domega_pull[0] = max(Rad(-50), min(domega_pull[0], Rad(50)));
 }
 
 void PHIKHingeActuator::Move(){
 	if (!bEnabled) { return; }
-
 	DCAST(PHHingeJoint,joint)->SetTargetPosition(jointTempAngle);
-
-	/*
-	double dTheta = omega[0]/bias;
-	DCAST(PHHingeJoint,joint)->SetTargetPosition(DCAST(PHHingeJoint,joint)->GetTargetPosition() + dTheta);
-	DCAST(PHHingeJoint,joint)->SetTargetVelocity(dTheta / DCAST(PHSceneIf,GetScene())->GetTimeStep());
-	*/
-
 	return;
 }
 
-void PHIKHingeActuator::PullbackTempJoint(double ratio) {
-	jointTempAngle = (1-ratio) * jointTempAngle + ratio * Rad(10);
-
-	if(DCAST(PHHingeJointIf,joint)->IsCyclic()){
-		while(jointTempAngle >  M_PI)
-			jointTempAngle -= 2 * M_PI;
-		while(jointTempAngle < -M_PI)
-			jointTempAngle += 2 * M_PI;
-	}
-	jointTempOri = Quaterniond::Rot(jointTempAngle, 'z');
-}
-
 void PHIKHingeActuator::MoveTempJoint() {
-	double dTheta = omega[0]/bias;
+	double dTheta = omega[0]*sqsaib;
 	jointTempAngle += dTheta;
+
 	if(DCAST(PHHingeJointIf,joint)->IsCyclic()){
 		while(jointTempAngle >  M_PI)
 			jointTempAngle -= 2 * M_PI;

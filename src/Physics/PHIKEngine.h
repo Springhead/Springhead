@@ -62,9 +62,8 @@ public:
 	bool	bTrajectory;
 	bool	bTest;
 	size_t	numIter;
-	double  pullbackRate;
-	double  linearDist;
-
+	double  maxVel, maxAngVel;
+	double  regularizeParam;
 	int     lastM, lastN;
 
 	// --- --- --- --- --- --- --- --- --- ---
@@ -77,10 +76,13 @@ public:
 	bool IsEnabled()                          { return this->bEnabled; }
 	void Enable(bool bEnabled)                { this->bEnabled    = bEnabled; }
 	void SetNumIter(int numIter)              { this->numIter     = numIter; }
-	void SetPullbackRate(double pullbackRate) { this->pullbackRate = pullbackRate; }
-	double GetPullbackRate()                  { return pullbackRate; }
-	void SetLinearDistance(double linearDist) { this->linearDist = linearDist; }
-	double GetLinearDistance()                { return linearDist; }
+	void SetMaxVelocity(double maxVel)        { this->maxVel = maxVel; }
+	double GetMaxVelocity()                   { return maxVel; }
+	void SetMaxAngularVelocity(double maxAV)  { this->maxAngVel = maxAV; }
+	double GetMaxAngularVelocity()            { return maxAngVel; }
+	void SetRegularizeParam(double epsilon)   { this->regularizeParam = epsilon; }
+	double GetRegularizeParam()               { return regularizeParam; }
+
 
 	// --- --- --- --- ---
 
