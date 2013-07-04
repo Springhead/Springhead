@@ -298,7 +298,7 @@ protected:
 	void SetTempAllToTVecAll(unsigned size);		//	TVecAllに全節点の温度を設定する関数
 	void SetTempToTVecAll(unsigned vtxid);			//	TVecAllに特定の節点の温度を設定する関数
 	void UpdateVertexTemp(unsigned vtxid);			//	計算結果としての温度をTVecAllから節点に更新する
-	void UpdateVertexTempAll();		//	計算結果としての温度をTVecAllから全節点に更新する
+
 
 	//	SciLab
 	void ScilabTest();								//	Scilabを使ってみる関数
@@ -371,6 +371,8 @@ public:
 	void SetLocalFluidTemp(unsigned i,double temp);
 	///	頂点の熱伝達率を更新し、行列を作り直す
 	void UpdateheatTransRatio(unsigned id,double heatTransRatio);
+	//	計算結果としての温度をTVecAllから全節点に更新する
+	void UpdateVertexTempAll();	
 
 	// If としての実装
 	void PHFemThermo::AddvecFAll(unsigned id,double dqdt);
@@ -504,6 +506,7 @@ public:
 	std::ofstream matCAllout;
 	std::ofstream matKAllout;
 	std::ofstream checkTVecAllout;
+	std::ofstream FEMLOG;
 	unsigned long long COUNT;
 
 	///	メッシュの面の総数を返す
