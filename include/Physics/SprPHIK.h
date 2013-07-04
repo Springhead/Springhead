@@ -195,13 +195,13 @@ struct PHIKActuatorIf : SceneObjectIf{
 	*/
 	float GetBias();
 
-	/** @brief 速度制御の比例係数を設定する
+	/** @brief 標準姿勢への復帰率を設定（0.0～1.0）
 	*/
-	void SetVelocityGain(double velocityGain);
+	void SetPullbackRate(double pullbackRate);
 
-	/** @brief 速度制御の比例係数を取得する
+	/** @brief 標準姿勢への復帰率を取得
 	*/
-	double GetVelocityGain();
+	double GetPullbackRate();
 
 	/** @brief 有効・無効を設定する
 	*/
@@ -215,6 +215,18 @@ struct PHIKActuatorIf : SceneObjectIf{
 	*/
 	int NAncestors();
 	PHIKActuatorIf* GetAncestor(int i);
+
+
+	// <!!> To Be Obsoleted
+
+	/** @brief 速度制御の比例係数を設定する
+	*/
+	void SetVelocityGain(double velocityGain);
+
+	/** @brief 速度制御の比例係数を取得する
+	*/
+	double GetVelocityGain();
+
 };
 
 /// IKアクチュエータのディスクリプタ
@@ -223,11 +235,16 @@ struct PHIKActuatorDesc{
 
 	bool bEnabled;        ///< 有効かどうか
 	float	bias;	      ///< 動かしにくさの係数
+	double  pullbackRate; ///< 標準姿勢復帰の割合
+	
+	// <!!> To Be Obsoleted
 	double  velocityGain; ///< 速度制御の比例係数
 
 	PHIKActuatorDesc() {
 		bEnabled     = true;
 		bias         = 1.0;
+		pullbackRate = 0.1;
+
 		velocityGain = 10.0;
 	}
 };

@@ -96,6 +96,9 @@ public:
 	/// IDの計算結果（トルク）
 	PTM::VVector<double> tau;
 
+	/// Biasの逆数の平方根
+	double sqsaib;
+
 	// --- --- --- --- --- --- --- --- --- ---
 
 	/** @brief 初期化
@@ -108,6 +111,7 @@ public:
 		eef            = NULL;
 		joint          = NULL;
 		solidTempPose  = Posed();
+		sqsaib         = 1.0;
 
 		solidTempPoseHistory.resize(2);
 		for (size_t i=0; i<solidTempPoseHistory.size(); ++i) { solidTempPoseHistory[i] = Posed(); }
@@ -154,13 +158,13 @@ public:
 
 	/** @brief 動かしにくさを設定・取得する
 	*/
-	void  SetBias(float bias){ this->bias = bias; }
+	void  SetBias(float bias){ this->bias = bias; sqsaib = 1/sqrt(bias); }
 	float GetBias()          { return bias; }
 
-	/** @brief 速度制御の比例係数を設定・取得する
+	/** @brief 標準姿勢への復帰率を取得・設定する
 	*/
-	void   SetVelocityGain(double velocityGain){ this->velocityGain = velocityGain; }
-	double GetVelocityGain()                   { return velocityGain; }
+	void SetPullbackRate(double pullbackRate) { this->pullbackRate = pullbackRate; }
+	double GetPullbackRate() { return this->pullbackRate; }
 
 	/** @brief 有効・無効を設定・取得する
 	*/
@@ -171,6 +175,13 @@ public:
 	*/
 	int NAncestors() { return (int)ascendant.size(); }
 	PHIKActuatorIf* GetAncestor(int i) { return ascendant[i]->Cast(); }
+
+
+	// <!!> To Be Obsoleted
+	/** @brief 速度制御の比例係数を設定・取得する
+	*/
+	void   SetVelocityGain(double velocityGain){ this->velocityGain = velocityGain; }
+	double GetVelocityGain()                   { return velocityGain; }
 
 	// --- --- --- --- ---
 
@@ -203,17 +214,13 @@ public:
 
 	/** @brief 引き戻し速度を計算する
 	*/
-	virtual void CalcPullbackVelocity(double ratio) {}
+	virtual void CalcPullbackVelocity() {}
 
 	/** @brief 繰返し計算の一ステップの後に行う処理
 	*/
 	virtual void AfterProceedSolve() {}
 
 	// --- --- --- --- --- --- --- --- --- ---
-
-	/** @brief 一時変数の関節角度をratio倍する
-	*/
-	virtual void PullbackTempJoint(double ratio) {}
 
 	/** @brief IK計算結果にしたがって一時変数の関節角度を動かす
 	*/
@@ -307,13 +314,9 @@ public:
 
 	/** @brief 引き戻し速度を計算する
 	*/
-	virtual void CalcPullbackVelocity(double ratio);
+	virtual void CalcPullbackVelocity();
 
 	// --- --- --- --- --- --- --- --- --- ---
-
-	/** @brief 一時変数の関節角度をratio倍する
-	*/
-	virtual void PullbackTempJoint(double ratio);
 
 	/** @brief IK計算結果にしたがって一時変数の関節角度を動かす
 	*/
@@ -386,13 +389,9 @@ public:
 
 	/** @brief 引き戻し速度を計算する
 	*/
-	virtual void CalcPullbackVelocity(double ratio);
+	virtual void CalcPullbackVelocity();
 
 	// --- --- --- --- --- --- --- --- --- ---
-
-	/** @brief 一時変数の関節角度をratio倍する
-	*/
-	virtual void PullbackTempJoint(double ratio);
 
 	/** @brief IK計算結果にしたがって一時変数の関節角度を動かす
 	*/

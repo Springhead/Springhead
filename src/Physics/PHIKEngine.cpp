@@ -16,7 +16,17 @@ namespace Spr{
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // IKEngine
-PHIKEngine::PHIKEngine():numIter(25), bEnabled(false), bTrajectory(false), bTest(false), pullbackRate(0.1), linearDist(0.1), lastM(0), lastN(0) {}
+PHIKEngine::PHIKEngine():
+	numIter(25),
+	bEnabled(false),
+	bTrajectory(false),
+	bTest(false),
+	maxVel(20), // 20[m/s]
+	maxAngVel(Rad(500)), // 500[deg/s]
+	regularizeParam(0.7),
+	lastM(0),
+	lastN(0)
+	{}
 
 void PHIKEngine::Prepare() {
 	// エンドエフェクタの有効・無効に基づいてアクチュエータの有効・無効を切替え
@@ -127,7 +137,7 @@ void PHIKEngine::CalcJacobian() {
 		if (actuators[i]->IsEnabled()) {
 			PHIKActuator* act = actuators[i];
 
-			act->CalcPullbackVelocity(pullbackRate);
+			act->CalcPullbackVelocity();
 
 			for (size_t x=0; x<act->ndof; ++x) {
 				int X = strideAct[i] + x;
@@ -167,8 +177,7 @@ void PHIKEngine::IK() {
 	Di.resize(D.size2(), D.size1());
 	for (size_t i=0; i<(std::min(J.size1(),J.size2())); ++i) {
 		// Tikhonov Regularization
-		double epsilon = 0.7;
-		Di.at_element(i,i) = D(i,i) / (D(i,i)*D(i,i) + epsilon*epsilon);
+		Di.at_element(i,i) = D(i,i) / (D(i,i)*D(i,i) + regularizeParam*regularizeParam);
 	}
 
 	vector_type   UtV  = ublas::prod(ublas::trans(U)  , V    );
@@ -182,13 +191,14 @@ void PHIKEngine::IK() {
 	vector_type VDiUtJWp = ublas::prod(ublas::trans(Vt) , DiUtJWp);
 	W = W + Wp - VDiUtJWp;
 
-	// <!!>大きくなりすぎた解を切り捨てる
-	double limitW = Rad(100); // max 100[deg/step]
+	// <!!>非常に大きくなりすぎた解を切り捨てる
+	double limitW = 1e+10;
 	for (size_t i=0; i<W.size(); ++i) {
 		if (W[i] >  limitW) { W[i] =  limitW; }
 		if (W[i] < -limitW) { W[i] = -limitW; }
 	}
 
+	/*
 	// 繰り返し計算の実行
 	int iter = (int)((numIter > 0) ? numIter : 200);
 	for(int n=0; n<iter; n++){
@@ -202,8 +212,9 @@ void PHIKEngine::IK() {
 		}
 		if ((((int)numIter) < 0) && (sqrt(dErr) < 1e-8)) { break; }
 	}
+	*/
 
-	// <!!>計算結果を擬似逆解で上書き
+	// <!!>各Actuatorのωに擬似逆解を代入
 	for (size_t i=0; i<actuators.size(); ++i) {
 		if (actuators[i]->IsEnabled()) {
 			PHIKActuator* act = actuators[i];
@@ -214,7 +225,7 @@ void PHIKEngine::IK() {
 		}
 	}
 
-	// 結果をActuatorの一時変数に保存
+	// 結果にしたがってActuatorの一時変数を動かす
 	for(size_t i=0; i<actuators.size(); ++i){
 		if (actuators[i]->IsEnabled()) {
 			actuators[i]->MoveTempJoint();

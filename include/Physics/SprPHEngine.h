@@ -128,15 +128,20 @@ public:
 	*/
 	void SetNumIter(int numIter);
 
-	/** @brief 引き戻し率
+	/** @brief IKエンドエフェクタの移動速度限界（1stepあたりの移動量限界を決める）
 	*/
-	void SetPullbackRate(double pullbackRate);
-	double GetPullbackRate();
+	void SetMaxVelocity(double maxVel);
+	double GetMaxVelocity();
 
-	/** @brief IK1回あたりの移動可能距離（＝線形近似可能な移動距離）
+	/** @brief IKエンドエフェクタの回転角速度限界（1stepあたりの回転量限界を決める）
 	*/
-	void SetLinearDistance(double linearDist);
-	double GetLinearDistance();
+	void SetMaxAngularVelocity(double maxAV);
+	double GetMaxAngularVelocity();
+
+	/** @brief ヤコビアンの擬似逆の正則化パラメータ
+	*/
+	void SetRegularizeParam(double epsilon);
+	double GetRegularizeParam();
 
 	SPR_IFDEF(PHIKEngine);
 };
