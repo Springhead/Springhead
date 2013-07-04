@@ -212,7 +212,7 @@ void PHFemThermo::Init(){
 
 
 
-
+	FEMLOG << vecFAll << std::endl;
 	//	この後で、熱流束ベクトルを計算する関数を呼び出す
 	InitCreateMatC();					///	CreateMatCの初期化
 	InitVecFAlls();					///	VecFAll類の初期化
@@ -267,6 +267,7 @@ void PHFemThermo::Init(){
 		}
 	}
 
+	FEMLOG.open("femLogNew.csv");
 	//	CPSの経時変化を書き出す
 	//cpslog.open("cpslog.csv");
 
@@ -2364,12 +2365,7 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 #define FEMLOG(x)
 //#define FEMLOG(x) x
 void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double eps){
-
 	PHFemMeshNew* mesh = GetPHFemMesh();
-	for(unsigned i = 0; i < TVecAll.size(); i++){
-
-	}
-
 	//dt = 0.0000000000001 * dt;		//デバッグ用に、dtをものすごく小さくしても、節点0がマイナスになるのか、調べた
 	double _eps = 1-eps;			// 1-epsの計算に利用
 	//dtはPHFemEngine.cppで取得する動力学シミュレーションのステップ時間
@@ -2435,9 +2431,9 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 				}
 				//ⅱ)対角成分について
 				bVecAll[j][0] += (-_eps * dMatKAll[0][j] + 1.0/dt * dMatCAll[0][j] ) * TVecAll[j];
-				//FEMLOG(ofs << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;)			// DSTR
-				//FEMLOG(ofs << "dMatKAll[0][" << j <<"] : " << dMatKAll[0][j] << std::endl;)			// DSTR
-				//FEMLOG(ofs << "dMatCAll[0][" << j <<"] : " << dMatCAll[0][j] << std::endl;)			// DSTR
+				//FEMLOG << "bVecAll[" << j <<"][0] : " << bVecAll[j][0] << std::endl;		// DSTR
+				//FEMLOG << "dMatKAll[0][" << j <<"] : " << dMatKAll[0][j] << std::endl;			// DSTR
+				//FEMLOG << "dMatCAll[0][" << j <<"] : " << dMatCAll[0][j] << std::endl;			// DSTR
 				//  {F}を加算
 				bVecAll[j][0] += vecFAllSum[j];		//Fを加算
 				//DSTR << " vecFAllSum[" << j << "] : "  << vecFAllSum[j] << std::endl;
@@ -2504,10 +2500,10 @@ void PHFemThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double
 //			TVecAll[j] =	_dMatAll[0][j] * ( -1.0 * tempkj) + bVecAll[j][0];			//この計算式だと、まともそうな値が出るが・・・理論的にはどうなのか、分からない。。。
 			////	for DEBUG
 			//int hofgeshi =0;
-			if(TVecAll[j] != 0.0){
-				DSTR << "!=0 TVecAll["<< j<<"] : " << TVecAll[j] <<std::endl;
-			}
-			DSTR << i << "回目の計算、" << j <<"行目のtempkj: " << tempkj << std::endl;
+			//if(TVecAll[j] != 0.0){
+			//	DSTR << "!=0 TVecAll["<< j<<"] : " << TVecAll[j] <<std::endl;
+			//}
+			//DSTR << i << "回目の計算、" << j <<"行目のtempkj: " << tempkj << std::endl;
 			//tempkj =0.0;
 
 			//FEMLOG(ofs << j << std::endl);
@@ -2735,7 +2731,7 @@ void PHFemThermo::Step(double dt){
 
 
 	//温度のベクトルから節点へ温度の反映
-	UpdateVertexTempAll();
+	//UpdateVertexTempAll();	//FWFemMeshNewのSync内で温度を反映するように変更
 
 	//for(unsigned i=0;i<vertices.size();i++){
 	//	if(vertices[i].temp != TVecAll[i]){
@@ -3156,7 +3152,7 @@ void PHFemThermo::UpdateIHheat(unsigned heatingMODE){
 		CalcIHdqdt_atleast(0.0,0.0,0.0, OFF);		//	IH加熱行列の係数0となるため、計算されない
 	}
 	else if(heatingMODE == WEEK){	
-		CalcIHdqdt_atleast(0.13,0.14,231.9 * 5e1, WEEK);		//
+		CalcIHdqdt_atleast(inr,outR,weekPow, WEEK);		//
 	}
 	else if(heatingMODE == MIDDLE){
 		CalcIHdqdt_atleast(0.11,0.14,231.9 * 0.005 * 1e4, MIDDLE);		//
