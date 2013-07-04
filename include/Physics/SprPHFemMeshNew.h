@@ -158,6 +158,7 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);
 	void InitVecFAlls();
 	double GetVtxTempInTets(Vec3d temppos);
+	void UpdateVertexTempAll();		//	計算結果としての温度をTVecAllから全節点に更新する
 
 };
 
