@@ -223,6 +223,14 @@ public:
 	 */
 	PHFemMeshIf* GetFemMesh(int i);
 
+	/** @brief FEM MeshNewの数を取得する
+	 */
+	int NFemMeshesNew()const;
+
+	/** @brief FEM MeshNewを取得する
+	 */
+	PHFemMeshNewIf* GetFemMeshNew(int i);
+
 	/** @brief ルートノードを作成する
 		@param root ルートノードとなる剛体
 		@return ルートノードのインタフェース
