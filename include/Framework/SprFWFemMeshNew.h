@@ -21,6 +21,7 @@ struct FWFemMeshNewDesc: public FWObjectDesc{
 struct FWFemMeshNewIf : FWObjectIf{
 	SPR_IFDEF(FWFemMeshNew);
 	PHFemMeshNewIf* GetPHFemMesh();
+	void SetTexmode(unsigned mode);
 };
 
 
