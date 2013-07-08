@@ -24,7 +24,7 @@ class PHIKEndEffector;
 class PHIKEndEffector : public SceneObject, public PHIKEndEffectorDesc {
 public:
 	SPR_OBJECTDEF(PHIKEndEffector);
-	ACCESS_DESC(PHIKEndEffector)
+	ACCESS_DESC_STATE(PHIKEndEffector);
 
 	/// 自由度
 	int ndof;
@@ -37,9 +37,6 @@ public:
 
 	/// 制御点のある剛体
 	PHSolidIf* solid;
-
-	/// IK-FK計算用の一時変数：剛体姿勢
-	Posed solidTempPose;
 
 	/** @brief 初期化する
 	*/
@@ -106,6 +103,16 @@ public:
 
 	// --- --- --- --- ---
 
+	/** @brief 剛体において到達させたい位置の剛体ローカル座標を設定する
+	*/
+	void SetTargetLocalPosition(Vec3d localPosition) { targetLocalPosition = localPosition; }
+
+	/** @brief エンドエフェクタにおける到達させたい位置の設定された目標値を取得する
+	*/
+	Vec3d GetTargetLocalPosition() { return targetLocalPosition; }
+
+	// --- --- --- --- ---
+
 	/** @brief 位置の制御の有効・無効を切り替える
 	*/
 	void EnablePositionControl(bool enable) {
@@ -125,17 +132,9 @@ public:
 	*/
 	void SetTargetPosition(Vec3d position) { targetPosition = position; }
 
-	/** @brief 剛体において到達させたい位置の剛体ローカル座標を設定する
-	*/
-	void SetTargetLocalPosition(Vec3d localPosition) { targetLocalPosition = localPosition; }
-
 	/** @brief 設定された位置の目標値を取得する
 	*/
 	Vec3d GetTargetPosition() { return targetPosition; }
-
-	/** @brief エンドエフェクタにおける到達させたい位置の設定された目標値を取得する
-	*/
-	Vec3d GetTargetLocalPosition() { return targetLocalPosition; }
 
 	// --- --- --- --- ---
 
@@ -161,6 +160,24 @@ public:
 	/** @brief 設定された姿勢の目標値を取得する
 	*/
 	Quaterniond GetTargetOrientation() { return targetOrientation; }
+
+	// --- --- --- --- ---
+
+	/** @brief 速度の目標値を設定する
+	*/
+	void SetTargetVelocity(Vec3d velocity) { targetVelocity = velocity; }
+
+	/** @brief 速度の目標値を取得する
+	*/
+	Vec3d GetTargetVelocity() { return targetVelocity; }
+
+	/** @brief 角速度の目標値を設定する
+	*/
+	void SetTargetAngularVelocity(Vec3d angVel) { targetAngVel = angVel; }
+
+	/** @brief 角速度の目標値を設定する
+	*/
+	Vec3d GetTargetAngularVelocity() { return targetAngVel; }
 
 	// --- --- --- --- ---
 
@@ -209,6 +226,10 @@ public:
 	/** @brief 暫定目標地点を取得する
 	*/
 	void GetTempTarget(PTM::VVector<double> &v);
+
+	/** @brief 暫定目標速度を取得する
+	*/
+	void GetTempVelocity(PTM::VVector<double> &v);
 
 	/** @brief 目標地点までの距離を取得する
 	*/

@@ -31,8 +31,10 @@ PHIKEndEffectorDesc::PHIKEndEffectorDesc() {
 	torquePriority		= 1.0;
 
 	targetPosition			= Vec3d();
+	targetVelocity			= Vec3d();
 	targetLocalPosition		= Vec3d();
 	targetOrientation		= Quaterniond();
+	targetAngVel			= Vec3d();
 	targetForce				= Vec3d();
 	targetForceWorkingPoint	= Vec3d();
 	targetTorque			= Vec3d();
@@ -99,5 +101,19 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 	}
 }
 
+void PHIKEndEffector::GetTempVelocity(PTM::VVector<double> &v){
+	v.resize(ndof);
+
+	if (bPosition) {
+		Vec3d dir = GetTargetVelocity();
+		for (int i=0; i<3; ++i) { v[i] = dir[i]; }
+	}
+
+	if (bOrientation) {
+		Vec3d v_o = GetTargetAngularVelocity();
+		int stride = (bPosition ? 3 : 0);
+		for (int i=0; i<3; ++i) { v[i+stride] = v_o[i]; }
+	}
+}
 }
 

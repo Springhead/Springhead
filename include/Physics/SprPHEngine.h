@@ -116,17 +116,10 @@ public:
 
 struct PHIKEngineIf : PHEngineIf{
 public:
-	/** @brief 有効か無効かを取得する
-	*/
-	bool IsEnabled();
-
-	/** @brief 有効・無効を切り替える
+	/** @brief IK機能が有効か無効か
 	*/
 	void Enable(bool bEnabled);
-
-	/** @brief 繰り返し回数をセットする
-	*/
-	void SetNumIter(int numIter);
+	bool IsEnabled();
 
 	/** @brief IKエンドエフェクタの移動速度限界（1stepあたりの移動量限界を決める）
 	*/
@@ -142,6 +135,16 @@ public:
 	*/
 	void SetRegularizeParam(double epsilon);
 	double GetRegularizeParam();
+
+	/** @brief 軌道制御（＝速度の明示的な指定）の有効・無効
+	*/
+	void EnableTrajectoryControl(bool enable);
+	bool IsTrajectoryControlEnabled();
+
+	// <!!> Gauss-SeidelソルバをやめたらObsoleteになる予感
+	/** @brief 繰り返し回数をセットする
+	*/
+	void SetNumIter(int numIter);
 
 	SPR_IFDEF(PHIKEngine);
 };

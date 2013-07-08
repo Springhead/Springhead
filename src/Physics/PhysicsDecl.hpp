@@ -182,6 +182,18 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHIKEndEffectorState \
+protected:\
+	Posed	solidTempPose;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		solidTempPose = ((PHIKEndEffectorState*)ptr)->solidTempPose;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		((PHIKEndEffectorState*)ptr)->solidTempPose = solidTempPose;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHIKEndEffectorDesc \
 protected:\
 	bool	bEnabled;	\
@@ -194,14 +206,17 @@ protected:\
 	double	forcePriority;	\
 	double	torquePriority;	\
 	Vec3d	targetPosition;	\
+	Vec3d	targetVelocity;	\
 	Vec3d	targetLocalPosition;	\
 	Quaterniond	targetOrientation;	\
+	Vec3d	targetAngVel;	\
 	Vec3d	targetForce;	\
 	Vec3d	targetForceWorkingPoint;	\
 	Vec3d	targetTorque;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
+		PHIKEndEffector::SetState((PHIKEndEffectorState*)(PHIKEndEffectorDesc*)ptr);	\
 		bEnabled = ((PHIKEndEffectorDesc*)ptr)->bEnabled;	\
 		bPosition = ((PHIKEndEffectorDesc*)ptr)->bPosition;	\
 		bOrientation = ((PHIKEndEffectorDesc*)ptr)->bOrientation;	\
@@ -212,8 +227,10 @@ public:\
 		forcePriority = ((PHIKEndEffectorDesc*)ptr)->forcePriority;	\
 		torquePriority = ((PHIKEndEffectorDesc*)ptr)->torquePriority;	\
 		targetPosition = ((PHIKEndEffectorDesc*)ptr)->targetPosition;	\
+		targetVelocity = ((PHIKEndEffectorDesc*)ptr)->targetVelocity;	\
 		targetLocalPosition = ((PHIKEndEffectorDesc*)ptr)->targetLocalPosition;	\
 		targetOrientation = ((PHIKEndEffectorDesc*)ptr)->targetOrientation;	\
+		targetAngVel = ((PHIKEndEffectorDesc*)ptr)->targetAngVel;	\
 		targetForce = ((PHIKEndEffectorDesc*)ptr)->targetForce;	\
 		targetForceWorkingPoint = ((PHIKEndEffectorDesc*)ptr)->targetForceWorkingPoint;	\
 		targetTorque = ((PHIKEndEffectorDesc*)ptr)->targetTorque;	\
@@ -221,6 +238,7 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		PHIKEndEffector::GetState((PHIKEndEffectorState*)(PHIKEndEffectorDesc*)ptr);	\
 		((PHIKEndEffectorDesc*)ptr)->bEnabled = bEnabled;	\
 		((PHIKEndEffectorDesc*)ptr)->bPosition = bPosition;	\
 		((PHIKEndEffectorDesc*)ptr)->bOrientation = bOrientation;	\
@@ -231,11 +249,31 @@ public:\
 		((PHIKEndEffectorDesc*)ptr)->forcePriority = forcePriority;	\
 		((PHIKEndEffectorDesc*)ptr)->torquePriority = torquePriority;	\
 		((PHIKEndEffectorDesc*)ptr)->targetPosition = targetPosition;	\
+		((PHIKEndEffectorDesc*)ptr)->targetVelocity = targetVelocity;	\
 		((PHIKEndEffectorDesc*)ptr)->targetLocalPosition = targetLocalPosition;	\
 		((PHIKEndEffectorDesc*)ptr)->targetOrientation = targetOrientation;	\
+		((PHIKEndEffectorDesc*)ptr)->targetAngVel = targetAngVel;	\
 		((PHIKEndEffectorDesc*)ptr)->targetForce = targetForce;	\
 		((PHIKEndEffectorDesc*)ptr)->targetForceWorkingPoint = targetForceWorkingPoint;	\
 		((PHIKEndEffectorDesc*)ptr)->targetTorque = targetTorque;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKActuatorState \
+protected:\
+	Posed	solidTempPose;	\
+	Quaterniond	jointTempOri;	\
+	double	jointTempAngle;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		solidTempPose = ((PHIKActuatorState*)ptr)->solidTempPose;	\
+		jointTempOri = ((PHIKActuatorState*)ptr)->jointTempOri;	\
+		jointTempAngle = ((PHIKActuatorState*)ptr)->jointTempAngle;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		((PHIKActuatorState*)ptr)->solidTempPose = solidTempPose;	\
+		((PHIKActuatorState*)ptr)->jointTempOri = jointTempOri;	\
+		((PHIKActuatorState*)ptr)->jointTempAngle = jointTempAngle;	\
 		return true;	\
 	}\
 
@@ -248,6 +286,7 @@ protected:\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
+		PHIKActuator::SetState((PHIKActuatorState*)(PHIKActuatorDesc*)ptr);	\
 		bEnabled = ((PHIKActuatorDesc*)ptr)->bEnabled;	\
 		bias = ((PHIKActuatorDesc*)ptr)->bias;	\
 		pullbackRate = ((PHIKActuatorDesc*)ptr)->pullbackRate;	\
@@ -256,6 +295,7 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		PHIKActuator::GetState((PHIKActuatorState*)(PHIKActuatorDesc*)ptr);	\
 		((PHIKActuatorDesc*)ptr)->bEnabled = bEnabled;	\
 		((PHIKActuatorDesc*)ptr)->bias = bias;	\
 		((PHIKActuatorDesc*)ptr)->pullbackRate = pullbackRate;	\
