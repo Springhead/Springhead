@@ -55,7 +55,8 @@ public:
 		ID_PLIANT,
 		ID_SOFT,
 		ID_STIFF,
-		ID_TRAJ,
+		ID_INCITERHIGH,
+		ID_DECITERHIGH,
 	};
 
 	int argc;
@@ -63,6 +64,7 @@ public:
 
 	bool bPM, bHard;
 	int  time;
+	int  iter_high;
 
 	VTrajSampleApp(){
 		appName = "IK Sample";
@@ -89,12 +91,17 @@ public:
 		AddAction(MENU_SCENE, ID_STIFF, "Stiff Tracking");
 		AddHotKey(MENU_SCENE, ID_STIFF, 'b');
 
-		AddAction(MENU_SCENE, ID_TRAJ, "Toggle Trajectory");
-		AddHotKey(MENU_SCENE, ID_TRAJ, 'x');
+		AddAction(MENU_SCENE, ID_INCITERHIGH, "Increase LCP NumIter(High)");
+		AddHotKey(MENU_SCENE, ID_INCITERHIGH, 'x');
+
+		AddAction(MENU_SCENE, ID_DECITERHIGH, "Decrease LCP NumIter(High)");
+		AddHotKey(MENU_SCENE, ID_DECITERHIGH, 'z');
 
 		bPM   = false;
 		bHard = false;
 		time = 0;
+
+		iter_high = 50;
 	}
 	~VTrajSampleApp(){}
 
@@ -221,12 +228,11 @@ public:
 		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
 		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxVelocity(50);
 		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxAngularVelocity(Rad(1000));
-		GetFWScene()->GetPHScene()->GetIKEngine()->EnableTrajectoryControl(false);
 
 		GetFWScene()->GetPHScene()->SetContactMode(PHSceneDesc::MODE_NONE);
-		// GetFWScene()->GetPHScene()->SetContactMode(so2, so5, PHSceneDesc::MODE_LCP);
+		GetFWScene()->GetPHScene()->SetContactMode(so2, so5, PHSceneDesc::MODE_LCP);
 
-		GetFWScene()->GetPHScene()->SetNumIteration(50);
+		GetFWScene()->GetPHScene()->SetNumIteration(15);
 	}
 
 	virtual void OnStep(){
@@ -248,21 +254,6 @@ public:
 		Vec3d      dir = soTarget->GetPose().Pos() - Vec3d(0,0,0);
 		double      dt = GetFWScene()->GetPHScene()->GetTimeStep();
 		ikeTarget->SetTargetPosition(dir *  length);
-		ikeTarget->SetTargetVelocity(dir * dLength * sgn / (100*dt));
-
-		/*
-		// <!!>
-		static Vec3d lastTP = Vec3d();
-		Vec3d currTP = dir *  length;
-		Vec3d vel = (currTP - lastTP) / dt;
-		ikeTarget->SetTargetVelocity(currTP - lastTP);
-		lastTP = currTP;
-
-		// <!!>
-		PTM::VVector<double> tempTarg; DCAST(PHIKEndEffector,ikeTarget)->GetTempTarget(tempTarg);
-		Vec3d targDR  = Vec3d(tempTarg[0], tempTarg[1], tempTarg[2]);
-		Vec3d currPos = DCAST(PHIKEndEffector,ikeTarget)->solidTempPose*DCAST(PHIKEndEffector,ikeTarget)->targetLocalPosition;
-		*/
 
 		// ----- ----- ----- ----- -----
 		if (bHard) {
@@ -304,14 +295,6 @@ public:
 			}
 			cycle++;
 		}
-
-		/*
-		// <!!>
-		Vec3d newPos = DCAST(PHIKEndEffector,ikeTarget)->solidTempPose*DCAST(PHIKEndEffector,ikeTarget)->targetLocalPosition;
-		Vec3d resultDR = newPos - currPos;
-		
-		std::cout << targDR << " <=> " << resultDR << "  | " << (targDR-resultDR) << std::endl;
-		*/
 	}
 
 	virtual void OnAction(int menu, int id){
@@ -355,11 +338,9 @@ public:
 				bHard = true;
 			}
 
-			if(id == ID_TRAJ){
-				bool bTraj = GetFWScene()->GetPHScene()->GetIKEngine()->IsTrajectoryControlEnabled();
-				bTraj = !bTraj;
-				GetFWScene()->GetPHScene()->GetIKEngine()->EnableTrajectoryControl(bTraj);
-				std::cout << "bTraj : " << (bTraj ? "On" : "Off") << std::endl;
+			if(id == ID_INCITERHIGH || id == ID_DECITERHIGH){
+				iter_high += ((id==ID_INCITERHIGH) ? +10 : -10);
+				std::cout << "NumIter(High) : " << iter_high << std::endl;
 			}
 		}
 
@@ -387,6 +368,9 @@ public:
 			jo->SetOffsetForce(0);
 		}
 
+		int iter_orig = GetFWScene()->GetPHScene()->GetNumIteration();
+		GetFWScene()->GetPHScene()->SetNumIteration(iter_high);
+
 		GetFWScene()->GetPHScene()->Step();
 		for (size_t i=0; i<2; ++i) {
 			PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
@@ -401,9 +385,10 @@ public:
 
 		states->LoadState(GetFWScene()->GetPHScene());
 
-		// GetFWScene()->GetPHScene()->GetConstraintEngine()->EnableContactDetection(true);
+		GetFWScene()->GetPHScene()->GetConstraintEngine()->EnableContactDetection(true);
 		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(false);
 
+		GetFWScene()->GetPHScene()->SetNumIteration(iter_orig);
 
 		for (size_t i=0; i<2; ++i) {
 			PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();

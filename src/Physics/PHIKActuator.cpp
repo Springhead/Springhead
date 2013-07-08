@@ -426,18 +426,7 @@ void PHIKBallActuator::MoveTempJoint() {
 	jointTempOri  = Quaterniond::Rot(w) * jointTempOri;
 
 	// ----- 速度 -----
-	if (DCAST(PHSceneIf,GetScene())->GetIKEngine()->IsTrajectoryControlEnabled()) {
-		// 回転軸ベクトルにする
-		Vec3d  w2 = Vec3d();
-		for (int i=0; i<ndof; ++i) { w += ( omega2[i]*sqsaib ) * e[i]; }
-
-		// 関節座標系にする
-		w2 = (soParentPose * socketPose).Inv().Ori() * w2;
-		jointVelocity = w2;
-
-	} else {
-		jointVelocity = w  * (1/DCAST(PHSceneIf,GetScene())->GetTimeStep());
-	}
+	jointVelocity = w  * (1/DCAST(PHSceneIf,GetScene())->GetTimeStep());
 }
 
 // --- --- --- --- ---
@@ -530,14 +519,8 @@ void PHIKHingeActuator::MoveTempJoint() {
 			jointTempAngle += 2 * M_PI;
 	}
 
-	jointTempOri = Quaterniond::Rot(jointTempAngle, 'z');
-
-	if (DCAST(PHSceneIf,GetScene())->GetIKEngine()->IsTrajectoryControlEnabled()) {
-		double dTheta2 = omega2[0]*sqsaib;
-		jointVelocity  = dTheta2;
-	} else {
-		jointVelocity  = dTheta  / DCAST(PHSceneIf,GetScene())->GetTimeStep();
-	}
+	jointTempOri  = Quaterniond::Rot(jointTempAngle, 'z');
+	jointVelocity = dTheta  / DCAST(PHSceneIf,GetScene())->GetTimeStep();
 }
 
 }
