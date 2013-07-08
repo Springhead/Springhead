@@ -28,7 +28,9 @@ class PHIKActuator;
 class PHIKActuator : public SceneObject{
 public:
 	SPR_OBJECTDEF(PHIKActuator);
+	SPR_DECLMEMBEROF_PHIKActuatorState;
 	SPR_DECLMEMBEROF_PHIKActuatorDesc;
+	virtual size_t GetStateSize() const { return sizeof(PHIKActuatorState); }
 
 	// 関節ツリー上でつながったアクチュエータ
 	// ※ 計算に必要となるのは
@@ -67,13 +69,9 @@ public:
 
 	// --- --- --- --- ---
 
-	/// IK-FK計算用の一時変数：プラグ剛体姿勢
-	Posed solidTempPose;
+	/// デバッグ表示用の姿勢履歴
 	std::vector<Posed> solidTempPoseHistory;
 	size_t historyCnt;
-
-	/// IK-FK計算用の一時変数：関節角度
-	Quaterniond jointTempOri;
 
 	// --- --- --- --- ---
 
@@ -92,6 +90,7 @@ public:
 
 	/// IKの計算結果（角度）
 	PTM::VVector<double> omega;
+	PTM::VVector<double> omega2; // 軌道速度用
 
 	/// IDの計算結果（トルク）
 	PTM::VVector<double> tau;
@@ -153,6 +152,13 @@ public:
 	/** @brief 計算結果に従って制御対象を動かす
 	*/
 	virtual void Move(){}
+
+	/** @brief 現在の剛体・関節姿勢をIKの内部目標に反映する
+	*/
+	virtual void ApplyCurrentPose(){
+		solidTempPose = joint->GetPlugSolid()->GetPose();
+		jointTempOri  = joint->GetRelativePoseQ();
+	}
 
 	// --- --- --- --- ---
 
@@ -237,6 +243,10 @@ public:
 		historyCnt++;
 		if (historyCnt >= solidTempPoseHistory.size()) { historyCnt = 0; }
 	}
+
+	/** @brief solidTempPoseにアクセスする
+	*/
+	virtual Posed GetSolidTempPose() { return solidTempPose; }
 };
 
 // ---- ---- ---- ---- ---- ---- ---- ---- ---- ----
@@ -248,6 +258,9 @@ public:
 
 	/// IKの回転軸
 	Vec3d e[3];
+
+	/// 関節で実現すべき速度
+	Vec3d jointVelocity;
 
 	// --- --- --- --- --- --- --- --- --- ---
 
@@ -328,12 +341,12 @@ public:
 class PHIKHingeActuator : public PHIKActuator{
 public:
 	SPR_OBJECTDEF(PHIKHingeActuator);
-	SPR_DECLMEMBEROF_PHIKBallActuatorDesc;
+	SPR_DECLMEMBEROF_PHIKHingeActuatorDesc;
 
 	// --- --- --- --- ---
 
-	/// IK-FK計算用の一時変数：関節角度
-	double jointTempAngle;
+	/// 関節で実現すべき速度
+	double jointVelocity;
 
 	// --- --- --- --- --- --- --- --- --- ---
 
@@ -363,6 +376,13 @@ public:
 	/** @brief 計算結果に従って制御対象を動かす
 	*/
 	virtual void Move();
+
+	/** @brief 現在の剛体・関節姿勢をIKの内部目標に反映する
+	*/
+	virtual void ApplyCurrentPose(){
+		PHIKActuator::ApplyCurrentPose();
+		jointTempAngle = DCAST(PHHingeJointIf,joint)->GetPosition();
+	}
 
 	// --- --- --- --- ---
 

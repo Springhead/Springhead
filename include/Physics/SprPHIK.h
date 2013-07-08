@@ -52,6 +52,16 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 
 	// --- --- --- --- ---
 
+	/** @brief 剛体において到達させたい位置の剛体ローカル座標を設定する
+	*/
+	void SetTargetLocalPosition(Vec3d localPosition);
+
+	/** @brief エンドエフェクタにおける到達させたい位置の設定された目標値を取得する
+	*/
+	Vec3d GetTargetLocalPosition();
+
+	// --- --- --- --- ---
+
 	/** @brief 位置の制御の有効・無効を切り替える
 	*/
 	void EnablePositionControl(bool enable);
@@ -68,17 +78,9 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	*/
 	void SetTargetPosition(Vec3d position);
 
-	/** @brief 剛体において到達させたい位置の剛体ローカル座標を設定する
-	*/
-	void SetTargetLocalPosition(Vec3d localPosition);
-
 	/** @brief 設定された位置の目標値を取得する
 	*/
 	Vec3d GetTargetPosition();
-
-	/** @brief エンドエフェクタにおける到達させたい位置の設定された目標値を取得する
-	*/
-	Vec3d GetTargetLocalPosition();
 
 	// --- --- --- --- ---
 
@@ -101,6 +103,24 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	/** @brief 設定された姿勢の目標値を取得する
 	*/
 	Quaterniond GetTargetOrientation();
+
+	// --- --- --- --- ---
+
+	/** @brief 速度の目標値を設定する
+	*/
+	void SetTargetVelocity(Vec3d velocity);
+
+	/** @brief 速度の目標値を取得する
+	*/
+	Vec3d GetTargetVelocity();
+
+	/** @brief 角速度の目標値を設定する
+	*/
+	void SetTargetAngularVelocity(Vec3d angVel);
+
+	/** @brief 角速度の目標値を設定する
+	*/
+	Vec3d GetTargetAngularVelocity();
 
 	// --- --- --- --- ---
 
@@ -136,8 +156,16 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 
 };
 
+/// IKエンドエフェクタのステート
+struct PHIKEndEffectorState{	
+	Posed solidTempPose;  ///< IK-FK計算用の一時変数：剛体姿勢
+	PHIKEndEffectorState(){
+		solidTempPose = Posed();
+	}
+};
+
 /// IKエンドエフェクタのデスクリプタ
-struct PHIKEndEffectorDesc {
+struct PHIKEndEffectorDesc : public PHIKEndEffectorState {
 	SPR_DESCDEF(PHIKEndEffector);
 
 	bool   bEnabled;				///< エンドエフェクタを作動させるかどうか
@@ -153,8 +181,10 @@ struct PHIKEndEffectorDesc {
 	double torquePriority;			///< トルク制御の達成優先度（1～0、大きいほど優先度が高い）
 
 	Vec3d		targetPosition;				///< 到達目標位置
+	Vec3d		targetVelocity;				///< 目標速度
 	Vec3d		targetLocalPosition;		///< エンドエフェクタにおける到達させたい部位の位置
 	Quaterniond	targetOrientation;			///< 到達目標姿勢
+	Vec3d		targetAngVel;               ///< 目標角速度
 	Vec3d		targetForce;				///< 力の目標値
 	Vec3d		targetForceWorkingPoint;	///< 出したい力の作用点
 	Vec3d		targetTorque;				///< トルクの目標値
@@ -184,6 +214,10 @@ struct PHIKActuatorIf : SceneObjectIf{
 	/** @brief 計算結果に従って制御対象を動かす
 	*/
 	void Move();
+
+	/** @brief 現在の剛体・関節姿勢をIKの内部目標に反映する
+	*/
+	void ApplyCurrentPose();
 
 	// --- --- --- --- ---
 
@@ -229,11 +263,26 @@ struct PHIKActuatorIf : SceneObjectIf{
 
 };
 
+/// IKアクチュエータのステート
+struct PHIKActuatorState{
+	Posed       solidTempPose;  ///< IK-FK計算用の一時変数：プラグ剛体姿勢	
+	Quaterniond jointTempOri;   ///< IK-FK計算用の一時変数：関節角度
+
+	// <!!> ヒンジでしか使わないが，Stateの多重継承を防ぐためここに入れてある．(13/07/08 mitake)
+	double      jointTempAngle; ///< IK-FK計算用の一時変数：関節角度（ヒンジ用）
+
+	PHIKActuatorState() {
+		solidTempPose  = Posed();
+		jointTempOri   = Quaterniond();
+		jointTempAngle = 0.0;
+	}
+};
+
 /// IKアクチュエータのディスクリプタ
-struct PHIKActuatorDesc{
+struct PHIKActuatorDesc : public PHIKActuatorState{
 	SPR_DESCDEF(PHIKActuator);
 
-	bool bEnabled;        ///< 有効かどうか
+	bool    bEnabled;     ///< 有効かどうか
 	float	bias;	      ///< 動かしにくさの係数
 	double  pullbackRate; ///< 標準姿勢復帰の割合
 	

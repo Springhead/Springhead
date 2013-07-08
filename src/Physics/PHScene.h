@@ -119,10 +119,10 @@ public:
 	PHRayIf*				GetRay(int i);
 
 	PHIKActuatorIf*			CreateIKActuator(const IfInfo* ii, const PHIKActuatorDesc& desc = PHIKActuatorDesc());
-	int						NIKActuators();
+	int						NIKActuators() const;
 	PHIKActuatorIf*			GetIKActuator(int i);
 	PHIKEndEffectorIf*		CreateIKEndEffector(const PHIKEndEffectorDesc& desc = PHIKEndEffectorDesc());
-	int						NIKEndEffectors();
+	int						NIKEndEffectors() const;
 	PHIKEndEffectorIf*		GetIKEndEffector(int i);
 	int						NFemMeshes()const;
 	PHFemMeshIf*			GetFemMesh(int i);

@@ -197,7 +197,7 @@ PHIKActuatorIf* PHScene::CreateIKActuator(const IfInfo* ii, const PHIKActuatorDe
 	AddChildObject(actuator->Cast());
 	return actuator->Cast();
 }
-int PHScene::NIKActuators(){
+int PHScene::NIKActuators() const{
 	return (int)ikEngine->actuators.size();
 }
 PHIKActuatorIf* PHScene::GetIKActuator(int i){
@@ -208,7 +208,7 @@ PHIKEndEffectorIf* PHScene::CreateIKEndEffector(const PHIKEndEffectorDesc& desc)
 	AddChildObject(endeffector->Cast());
 	return endeffector->Cast();
 }
-int PHScene::NIKEndEffectors(){
+int PHScene::NIKEndEffectors() const{
 	return (int)ikEngine->endeffectors.size();
 }
 PHIKEndEffectorIf* PHScene::GetIKEndEffector(int i){
@@ -340,7 +340,7 @@ ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
 size_t PHScene::NChildObject() const{
 	//return engines.size();
 	return NSolids() + NJoints() + NRootNodes() + NGears() + NPaths()
-		+ NContacts() + NRays();
+		+ NContacts() + NRays() + NIKActuators() + NIKEndEffectors();
 }
 ObjectIf* PHScene::GetChildObject(size_t pos){
 	//return engines[pos]->Cast();
@@ -357,6 +357,10 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 	if(pos < (size_t)NContacts()) return GetContact((int)pos);
 	pos -= NContacts();
 	if(pos < (size_t)NRays()) return GetRay((int)pos);
+	pos -= NRays();
+	if(pos < (size_t)NIKActuators()) return GetIKActuator((int)pos);
+	pos -= NIKActuators();
+	if(pos < (size_t)NIKEndEffectors()) return GetIKEndEffector((int)pos);
 	return NULL;
 }
 bool PHScene::AddChildObject(ObjectIf* o){
@@ -575,11 +579,11 @@ void PHScene::GetStateR(char*& s){
 	assert(rv || sz==0);
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
-		// childとしてSolidだけを呼ぶ→なぜ？
+		// childとしてConstraintは除外
 		/*→Constraintをセーブしたい時は
 		PHConstrainEngine::SetBSaveConstraintsをtrueに
 		*/
-		if(DCAST(PHSolidIf, GetChildObject(i))){
+		if(! DCAST(PHConstraintIf, GetChildObject(i))){
 			((PHSolid*)GetChildObject(i))->GetStateR(s);
 		}
 	}
@@ -589,11 +593,11 @@ void PHScene::SetStateR(const char*& s){
 	s += GetStateSize();
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
-		// childとしてSolidだけを呼ぶ
+		// childとしてConstraintは除外
 		/*→Constraintをセーブしたい時は
 		PHConstrainEngine::SetBSaveConstraintsをtrueに
 		*/
-		if(DCAST(PHSolidIf, GetChildObject(i))){
+		if(! DCAST(PHConstraintIf, GetChildObject(i))){
 			((PHSolid*)GetChildObject(i))->SetStateR(s);
 		}
 	}

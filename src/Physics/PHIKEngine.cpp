@@ -86,7 +86,9 @@ void PHIKEngine::Prepare() {
 	if (m!=lastM || n!=lastN) {
 		J.resize(m, n); J.clear();
 		W.resize(n);    W.clear();
+		W2.resize(n);   W2.clear();
 		V.resize(m);    V.clear();
+		V2.resize(m);   V2.clear();
 		Wp.resize(n);   Wp.clear();
 
 		lastM = m;
@@ -153,15 +155,26 @@ void PHIKEngine::IK() {
 		actuators[i]->PrepareSolve();
 	}
 
-	// <!!>Vの作成
+	// <!!>V, V2の作成
 	for (size_t j=0; j<endeffectors.size(); ++j){
 		if (endeffectors[j]->IsEnabled()) {
+			// V
 			PHIKEndEffector* eff = endeffectors[j];
 			PTM::VVector<double> Vpart; Vpart.resize(eff->ndof);
 			eff->GetTempTarget(Vpart);
 			for (size_t y=0; y<eff->ndof; ++y) {
 				int Y = strideEff[j] + y;
 				V[Y] = Vpart[y];
+			}
+
+			// V2
+			if (bTrajectory) {
+				PTM::VVector<double> V2part; V2part.resize(eff->ndof);
+				eff->GetTempVelocity(V2part);
+				for (size_t y=0; y<eff->ndof; ++y) {
+					int Y = strideEff[j] + y;
+					V2[Y] = V2part[y];
+				}
 			}
 		}
 	}
@@ -180,9 +193,17 @@ void PHIKEngine::IK() {
 		Di.at_element(i,i) = D(i,i) / (D(i,i)*D(i,i) + regularizeParam*regularizeParam);
 	}
 
+	// --- 位置
 	vector_type   UtV  = ublas::prod(ublas::trans(U)  , V    );
 	vector_type DiUtV  = ublas::prod(Di               , UtV  );
 	W                  = ublas::prod(ublas::trans(Vt) , DiUtV);
+
+	// --- 速度
+	if (bTrajectory) {
+		vector_type   UtV2  = ublas::prod(ublas::trans(U)  , V2    );
+		vector_type DiUtV2  = ublas::prod(Di               , UtV2  );
+		W2                  = ublas::prod(ublas::trans(Vt) , DiUtV2);
+	}
 
 	// <!!>Wに標準姿勢復帰速度を加える
 	vector_type      JWp = ublas::prod(J                ,      Wp);
@@ -190,13 +211,24 @@ void PHIKEngine::IK() {
 	vector_type  DiUtJWp = ublas::prod(Di               ,   UtJWp);
 	vector_type VDiUtJWp = ublas::prod(ublas::trans(Vt) , DiUtJWp);
 	W = W + Wp - VDiUtJWp;
+	if (bTrajectory) { W2 = W2 + Wp - VDiUtJWp; }
 
 	// <!!>非常に大きくなりすぎた解を切り捨てる
 	double limitW = 1e+10;
 	for (size_t i=0; i<W.size(); ++i) {
-		if (W[i] >  limitW) { W[i] =  limitW; }
-		if (W[i] < -limitW) { W[i] = -limitW; }
+		if (W[i]  >  limitW) { W[i]  =  limitW; }
+		if (W[i]  < -limitW) { W[i]  = -limitW; }
+		if (bTrajectory) {
+			if (W2[i] >  limitW) { W2[i] =  limitW; }
+			if (W2[i] < -limitW) { W2[i] = -limitW; }
+		}
 	}
+
+	/*
+	std::cout << V  << std::endl;
+	std::cout << V2 << std::endl;
+	std::cout << " -- " << std::endl;
+	*/
 
 	/*
 	// 繰り返し計算の実行
@@ -221,6 +253,9 @@ void PHIKEngine::IK() {
 			for (size_t x=0; x<act->ndof; ++x) {
 				int X = strideAct[i] + x;
 				act->omega[x] = W[X];
+				if (bTrajectory) {
+					act->omega2[x] = W2[X];
+				}
 			}
 		}
 	}
