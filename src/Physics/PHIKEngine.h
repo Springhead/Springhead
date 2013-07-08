@@ -50,22 +50,15 @@ public:
 	// 全エンドエフェクタ目標変位
 	vector_type V;
 
-	// 全エンドエフェクタ目標速度
-	vector_type V2;
-
 	// 全関節角引き戻し変位
 	vector_type Wp;
 
 	// 全関節角変位（IK計算結果）
 	vector_type W;
 
-	// 全関節角速度（IK計算結果その２）
-	vector_type W2;
-
 	// --- --- --- --- ---
 
 	bool	bEnabled;
-	bool	bTrajectory;
 	bool	bTest;
 	size_t	numIter;
 	double  maxVel, maxAngVel;
@@ -88,9 +81,6 @@ public:
 	double GetMaxAngularVelocity()            { return maxAngVel; }
 	void SetRegularizeParam(double epsilon)   { this->regularizeParam = epsilon; }
 	double GetRegularizeParam()               { return regularizeParam; }
-	void EnableTrajectoryControl(bool enable) { this->bTrajectory = enable; }
-	bool IsTrajectoryControlEnabled()         { return bTrajectory; }
-
 
 	// --- --- --- --- ---
 
