@@ -117,10 +117,10 @@ void PHFemVibration::Init(){
 	//veIds.push_back(1);
 	//veIds.push_back(3);
 
-	veIds.push_back(2);
-	veIds.push_back(4);
-	veIds.push_back(6);
-	veIds.push_back(7);
+	//veIds.push_back(2);
+	//veIds.push_back(4);
+	//veIds.push_back(6);
+	//veIds.push_back(7);
 	
 	//// phSphere用
 	//for(int i = 49; i < 58; i++){
@@ -140,6 +140,10 @@ void PHFemVibration::Init(){
 	//for(int i = 0; i < (int)veIds.size(); i++){
 	//	DSTR << veIds[i] << std::endl;
 	//}	
+	veIds.push_back(10);
+	veIds.push_back(11);
+	veIds.push_back(12);
+	veIds.push_back(13);
 
 	Vec3i con = Vec3i(1,1,1);
 	for(int i = 0; i < (int)veIds.size(); i++){
@@ -462,7 +466,7 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 	// n:自由度、m:モード次数
 	static VVectord evalue;			// 固有値(m)
 	static VMatrixRe evector;		// 固有ベクトル(n*m)
-	static VVectord ewrad;				// MK系の固有角振動数(m)
+	static VVectord ewrad;			// MK系の固有角振動数(m)
 	static VMatrixRe Mm;			// モード質量行列(m*m)
 	static VMatrixRe Km;			// モード剛性行列(m*m)
 	static VMatrixRe Cm;			// モード減衰行列(m*m)

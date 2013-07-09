@@ -52,7 +52,7 @@ int __cdecl main(){
 		std::cout << std::setprecision(2) << spgpos << std::endl;
 		Vec3f f(0.0, 0.0, 0.0);
 		if(spgpos.y < -0.015){
-			f[1] = 1.5;
+			f[1] = -(spgpos.y -  -0.015) * 1000;
 		}
 		spg->SetForce(f, Vec3f());
 #else if
