@@ -10,9 +10,6 @@
 #include <sstream>
 #include <iomanip>
 
-// <!!>
-#include <Collision\SprCDShape.h>
-
 namespace Spr {;
 
 struct MemCheck{
@@ -229,73 +226,6 @@ void Object::DumpObjectR(std::ostream& os, int level) const {
 		((Object*)GetChildObject(i))->DumpObjectR(os, level+1);
 	}
 }
-
-ObjectIf* Object::CopyObjectR(ObjectIfs* context, ObjectIfs* copied) {
-	ObjectIf* src = this->Cast();
-
-	// srcがコピー済みなら，対応するコピーを返す
-	for (size_t i=0; i<copied->size(); i+=2) {
-		if (src == (*copied)[i]) { return (*copied)[i+1]; }
-	}
-
-	// contextを逆順にたどってsrcのコピーを作成できる人を探しコピーする
-	ObjectIf* newobj  = NULL;
-	ObjectIf* creator = NULL;
-	ObjectIf* parent  = (*context)[context->size()-1];
-	std::cout << src->GetIfInfo()->ClassName() << "Desc : " << src->GetDescSize() << std::endl;
-	{
-		void* desc;
-		bool  new_desc = false;
-		if (src->GetIfInfo() != (CDConvexMeshIf::GetIfInfoStatic())) { new_desc = true; }
-		CDConvexMeshDesc convexDesc;
-
-		if (new_desc) {
-			desc = (void*)(new char[src->GetDescSize() + 8]);
-		} else {
-			desc = (void*)(&convexDesc);
-			std::cout << DCAST(CDConvexMeshIf,src)->GetName() << std::endl;
-		}
-		src->GetDesc(desc);
-
-		for (size_t n=context->size(); n > 0; --n) { int i = n-1;
-			if ((*context)[i]) {
-				newobj = (*context)[i]->CreateObject(src->GetIfInfo(), desc);
-				if (newobj) {
-					creator = (*context)[i];
-					break;
-				}
-			}
-		}
-
-		if (new_desc) { delete desc; }
-	}
-	std::cout << "-- Object Created : " << newobj << std::endl;
-
-
-	if (newobj) {
-		copied->Push(src);
-		copied->Push(newobj);
-
-		context->Push(newobj);
-
-		// srcの子要素をCopyObject
-		for (size_t i=0; i<src->NChildObject(); ++i) {
-			src->GetChildObject(i)->CopyObjectR(context, copied);
-		}
-
-		/*
-		parent->AddChildObject(newobj);
-		if (creator != parent) {
-			creator->AddChildObject(newobj);
-		}
-		*/
-
-		//context->Pop();
-	}
-
-	return newobj;
-}
-
 
 //----------------------------------------------------------------------------
 //	NamedObject

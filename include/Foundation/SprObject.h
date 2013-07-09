@@ -269,8 +269,6 @@ struct ObjectIf{
 	//@}
 	///	オブジェクトツリーのメモリイメージをダンプ
 	void DumpObjectR(std::ostream& os, int level=0) const;
-	/// オブジェクトツリーを再帰的に複製
-	ObjectIf* CopyObjectR(ObjectIfs* context, ObjectIfs* copied);
 };
 
 ///	インタフェースクラスへのポインタの配列
