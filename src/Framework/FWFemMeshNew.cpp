@@ -35,7 +35,7 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	//meshRoughness = "pq2.1a0.02";
 	//eshRoughness = "pq2.1a0.1";
 	SetDesc(&d);
-	texture_mode = 2z;		//	テクスチャ表示の初期値：温度
+	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }
 
 size_t FWFemMeshNew::NChildObject() const{
