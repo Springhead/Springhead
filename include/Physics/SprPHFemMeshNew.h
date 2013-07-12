@@ -91,7 +91,6 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	double GetBeta();
 	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
-//#ifndef SWIG
 	bool AddBoundaryCondition(int vtxId, Vec3i dof);
 	// 境界条件を加える(頂点順）
 	bool AddBoundaryCondition(PTM::VVector< Vec3i > bcs); 
@@ -99,7 +98,6 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	bool AddVertexForceW(int vtxId, Vec3d fW);
 	// 頂点群に力を加える（ワールド座標系）
 	bool AddVertexForceW(PTM::VVector< Vec3d > fWs);
-//#endif
 	bool SetDampingRatio_Wood();	
 	bool SetDampingRatio_Aluminum();	
 	bool SetDampingRatio_Plastic();	
@@ -159,6 +157,7 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	void InitVecFAlls();
 	double GetVtxTempInTets(Vec3d temppos);
 	void UpdateVertexTempAll();		//	計算結果としての温度をTVecAllから全節点に更新する
+	float calcGvtx(std::string fwfood, int pv, unsigned texture_mode);
 
 };
 
