@@ -111,7 +111,7 @@ public:
 	// 境界条件を加える(頂点）
 	bool AddBoundaryCondition(const int vtxId, const Vec3i dof);
 	// 境界条件を加える(頂点順）
-	bool AddBoundaryCondition(const VVector< Vec3i >& bcs);
+	bool AddBoundaryCondition(const std::vector< Vec3i >& bcs);
 	// 境界条件に応じて行列の自由度を削減する
 	void ReduceMatrixSize(VMatrixRe& mat, const VVector< int >& bc);
 	// 境界条件に応じて行列自由度を削減する
@@ -128,7 +128,7 @@ public:
 	// 頂点に力を加える（ワールド座標系）
 	bool AddVertexForceW(int vtxId, Vec3d fW);
 	// 頂点群に力を加える（ワールド座標系）
-	bool AddVertexForceW(VVector< Vec3d > fWs);
+	bool AddVertexForceW(std::vector< Vec3d > fWs);
 	// 力を加える
 	bool AddForce(int tetId, Vec3d posW, Vec3d fW);
 	// 振動を抑える
