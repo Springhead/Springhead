@@ -784,7 +784,7 @@ bool PHFemVibration::AddBoundaryCondition(const int vtxId, const Vec3i dof = Vec
 	return false;
 }
 
-bool PHFemVibration::AddBoundaryCondition(const VVector< Vec3i >& bcs){ 
+bool PHFemVibration::AddBoundaryCondition(const std::vector< Vec3i >& bcs){ 
 	int NVer = NVertices();
 	if(NVer != bcs.size()) return false;
 	for(int i = 0; i < (int)bcs.size(); i++){
@@ -893,7 +893,7 @@ bool PHFemVibration::AddVertexForceW(int vtxId, Vec3d fW){
 	return false;
 }
 
-bool PHFemVibration::AddVertexForceW(VVector< Vec3d > fWs){
+bool PHFemVibration::AddVertexForceW(std::vector< Vec3d > fWs){
 	if(NVertices() != fWs.size()) return false;
 	for(int i = 0; i < (int)fWs.size(); i++){
 		Vec3d fL = GetPHFemMesh()->GetPHSolid()->GetOrientation().Inv() * fWs[i];

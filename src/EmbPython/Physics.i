@@ -24,6 +24,8 @@
 %ignore Spr::PHHapticEngineIf::Callback;
 %ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
 %ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
+%ignore Spr::PHFemVibrationIf::AddBoundaryCondition;
+%ignore Spr::PHFemVibrationIf::AddVertexForceW;
 %include "Utility/EPObject.i"
 EXTEND_NEW(PHSolidDesc)
 EXTEND_NEW(PHPathPoint)
