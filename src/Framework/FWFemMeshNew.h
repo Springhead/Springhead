@@ -13,6 +13,9 @@
 #include "../Physics/PHFemMeshNew.h"
 #include "FrameworkDecl.hpp"
 
+#include <GL/glew.h>
+#include <GL/glut.h>
+
 namespace Spr{;
 
 class GRMesh;
@@ -52,6 +55,9 @@ public:
 	void SyncVibrationInfo();
 	/// PHThermo‚Ìî•ñ‚ğ“¯Šú
 	void SyncThermoInfo();
+
+	void DrawEdgeCW(Vec3d vtx0, Vec3d vtx1,float Red,float Green,float Blue);		// 2ˆÊ’uÀ•W‚ğ‚Â‚È‚®ü‚ğˆø‚­,Color,World coordinate
+
 	Vec4f CompThermoColor(float value);
 
 
