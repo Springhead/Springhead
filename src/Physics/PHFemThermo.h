@@ -372,7 +372,7 @@ public:
 	///	頂点の熱伝達率を更新し、行列を作り直す
 	void UpdateheatTransRatio(unsigned id,double heatTransRatio);
 	//	計算結果としての温度をTVecAllから全節点に更新する
-	void UpdateVertexTempAll();	
+	void UpdateVertexTempAll();
 
 	// If としての実装
 	void PHFemThermo::AddvecFAll(unsigned id,double dqdt);
@@ -508,6 +508,8 @@ public:
 	std::ofstream checkTVecAllout;
 	std::ofstream FEMLOG;
 	unsigned long long COUNT;
+
+	float calcGvtx(std::string fwfood, int pv, unsigned texture_mode);
 
 	///	メッシュの面の総数を返す
 	//int NFaces();

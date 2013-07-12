@@ -2557,8 +2557,9 @@ void PHFemThermo::UpdateVertexTempAll(){
 		vertexVars[i].temp = TVecAll[i];
 	}
 }
+
 void PHFemThermo::UpdateVertexTemp(unsigned vtxid){
-		vertexVars[vtxid].temp = TVecAll[vtxid];
+	vertexVars[vtxid].temp = TVecAll[vtxid];
 }
 
 void PHFemThermo::Step(){
@@ -5309,6 +5310,226 @@ void PHFemThermo::DecrMoist(){
 //Vec3d PHFemThermo::GetFaceEdgeVtx(unsigned id, unsigned vtx){
 //	return GetPHFemMesh()->GetFaceEdgeVtx(id, vtx);
 //	}
+
+float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
+	float gvtx;
+	//テクスチャの設定
+	//焦げテクスチャの枚数
+	unsigned kogetex	= 5;
+	//水分テクスチャの枚数
+	unsigned watex		= 2;
+	//サーモテクスチャの枚数
+	unsigned thtex		= 6;
+	unsigned thcamtex   = 9;		//熱カメラっぽい表示用
+	//	ロードテクスチャーが焦げ→水→温度の順	（または）水→温度→焦げ	にも変更可能（ファイル名のリネームが必要）
+
+	// num of texture layers
+	if(fwfood == "fwNegi"){		///	テクスチャと温度、水分量との対応表は、Samples/Physics/FEMThermo/テクスチャの色と温度の対応.xls	を参照のこと
+		kogetex	= 5;
+	}
+	else if(fwfood == "fwNsteak"){
+		kogetex	= 7;		//7にする
+	}
+	else if(fwfood == "fwPan"){
+		kogetex = 5;
+	}
+
+	double dtex =(double) 1.0 / ( kogetex + thtex + watex + thcamtex);		//	テクスチャ奥行座標の層間隔
+	double texstart = dtex /2.0;										//	テクスチャ座標の初期値 = 焦げテクスチャのスタート座標
+	double wastart = texstart + kogetex * dtex;							//	水分量表示テクスチャのスタート座標
+	double thstart = texstart + kogetex * dtex + 1.0 * dtex;			//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
+	double thcamstart = texstart + (thtex + kogetex + watex) * dtex;	//	
+
+	if(texture_mode == 1){
+		if(fwfood == "fwPan"){
+			gvtx = texstart;// + dtex;		// ねずみ色の底面
+		}else if(fwfood == "fwNegi"){
+			// 温度変化と同じで　
+			double temp = vertexVars[pv].temp;
+			// -50.0~0.0:aqua to blue
+			if(temp <= -50.0){
+				gvtx = texstart + dtex;
+			}
+			else if(-50.0 < temp && temp <= 0.0){	
+				gvtx = texstart + dtex;//(texstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			//	0~50.0:blue to green
+			else if(0.0 < temp && temp <= 50.0 ){
+				//double green = temp * dtex / 50.0 + thstart;
+				gvtx = (temp - 50.0)  * dtex / 50.0 + texstart + dtex; //+     dtex;
+			}
+			//	50.0~100.0:green to yellow
+			else if(50.0 < temp && temp <= 100.0){
+				gvtx = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			//	100.0~150:yellow to orange	
+			else if(100.0 < temp && temp <= 150.0){
+				gvtx = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			//	150~200:orange to red
+			else if(150.0 < temp && temp <= 200.0){
+				double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+				gvtx = dtex * 4.0 + texstart;//(temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			//	200~250:red to purple
+			else if(200.0 < temp && temp <= 250.0){
+				gvtx = dtex * 4.0 + texstart;//(temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			///	250~:only purple
+			else if(250.0 < temp){
+				gvtx = dtex * 4.0 + texstart;
+				//gvtx[stride*gv + tex + 2] = wastart;			//whit
+			}
+			else{
+				DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
+			}
+		}
+		else if(fwfood == "fwNsteak"){
+			// 温度変化と同じで　
+			double temp = vertexVars[pv].temp;
+			// -50.0~0.0:aqua to blue
+			if(temp <= -50.0){
+				gvtx = texstart + dtex;
+			}
+			else if(-50.0 < temp && temp <= 0.0){	
+				gvtx = texstart + dtex;//(texstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			//	0~50.0:blue to green
+			else if(0.0 < temp && temp <= 50.0 ){
+				//double green = temp * dtex / 50.0 + thstart;
+				gvtx = (temp - 50.0)  * dtex / 50.0 + texstart + dtex; //+     dtex;
+			}
+			//	50.0~100.0:green to yellow
+			else if(50.0 < temp && temp <= 100.0){
+				gvtx = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			//	100.0~150:yellow to orange	
+			else if(100.0 < temp && temp <= 150.0){
+				gvtx = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			//	150~200:orange to red
+			else if(150.0 < temp && temp <= 200.0){
+				double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+				gvtx = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			//	200~250:red to purple
+			else if(200.0 < temp && temp <= 250.0){
+				gvtx = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			///	250~:only purple
+			else if(250.0 < temp){
+				gvtx = dtex * 6.0 + texstart;
+				//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
+			}
+			else{
+				DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
+			}
+		}
+		else if(fwfood == "tPan"){
+			DSTR << "tPan are there" << std::endl;
+		}
+		int phmeshdebug =0;
+	}else if(texture_mode == 3){
+		//	水分蒸発表示モード
+		//	残水率に沿った変化
+		gvtx = wastart + 2 * dtex;
+		for(unsigned j =0; j < GetPHFemMesh()->tets.size(); j++){
+			//	割合直打ちでいいや
+			if(0.5 < tetVars[j].wratio && tetVars[j].wratio < 1.0){
+				gvtx = wastart + 2 * dtex - ( (tetVars[j].wratio -0.5) * (dtex / 0.5) );
+			}
+			else if(0.0 < tetVars[j].wratio && tetVars[j].wratio < 0.5){
+				gvtx = wastart + 1 * dtex - ( (tetVars[j].wratio -0.5) * (dtex / 0.5) );
+			}
+		}
+	}else if(texture_mode == 2){
+		double temp = vertexVars[pv].temp;
+		// -50.0~0.0:aqua to blue
+		if(temp <= -50.0){
+			gvtx = thstart;
+		}
+		else if(-50.0 < temp && temp <= 0.0){	
+			gvtx = (thstart ) + ((temp + 50.0) * dtex /50.0);
+		}
+		//	0~50.0:blue to green
+		else if(0.0 < temp && temp <= 50.0 ){
+			//double green = temp * dtex / 50.0 + thstart;
+			gvtx = temp * dtex / 50.0 + thstart + dtex;
+		}
+		//	50.0~100.0:green to yellow
+		else if(50.0 < temp && temp <= 100.0){
+			gvtx = (temp - 50.0 ) * dtex /	 50.0 + thstart + 2 * dtex;
+		}
+		//	100.0~150:yellow to orange	
+		else if(100.0 < temp && temp <= 150.0){
+			gvtx = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
+		}
+		//	150~200:orange to red
+		else if(150.0 < temp && temp <= 200.0){
+			double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+			gvtx = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
+		}
+		//	200~250:red to purple
+		else if(200.0 < temp && temp <= 250.0){
+			gvtx = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
+		}
+		///	250~:only purple
+		else if(250.0 < temp){
+			gvtx = dtex * 6.0 + thstart;
+			//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
+		}
+		else{
+			DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
+		}
+	}else if(texture_mode == 4){
+		double temp = vertexVars[pv].temp;
+		// -50.0~0.0:aqua to blue => 20 : purple
+		if(temp < 20.0){
+			gvtx = thstart + 6.0 * dtex; 
+		}
+		else if(temp == 20.0){
+			gvtx = thcamstart;
+		}
+		else if(20.0 < temp && temp <= 30.0){	
+			gvtx = thcamstart + (temp - 20.0) * dtex / 10.0;
+		}
+		//	0~50.0:blue to green
+		else if(30.0 < temp && temp <= 40.0 ){
+			//double green = temp * dtex / 50.0 + thstart;
+			gvtx = thcamstart + dtex + (temp - 30.0) * dtex / 10.0;
+		}
+		//	50.0~100.0:green to yellow
+		else if(40.0 < temp && temp <= 50.0){
+			gvtx = thcamstart + 2 * dtex + (temp - 40.0) * dtex / 10.0;
+		}
+		//	100.0~150:yellow to orange	
+		else if(50.0 < temp && temp <= 60.0){
+			gvtx = thcamstart + 3 * dtex + (temp - 50.0) * dtex / 10.0;
+		}
+		//	150~200:orange to red
+		else if(60.0 < temp && temp <= 70.0){
+			gvtx = thcamstart + 4 * dtex + (temp - 60.0) * dtex / 10.0;
+		}
+		//	200~250:red to purple
+		else if(70.0 < temp && temp <= 80.0){
+			gvtx = thcamstart + 5 * dtex + (temp - 70.0) * dtex / 10.0;
+		}
+		///	250~:only purple
+		else if(80.0 < temp && temp <= 90.0){
+			gvtx = thcamstart + 6 * dtex + (temp - 80.0) * dtex / 10.0;
+		}
+		else if(90.0 < temp && temp <= 100.0){
+			gvtx = thcamstart + 7 * dtex + (temp - 90.0) * dtex / 10.0;
+		}
+		else if(100.0 < temp){
+			gvtx = thcamstart + 8 * dtex;
+		}
+		else{
+			DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
+		}
+	}
+	return gvtx;
+}
 
 }
 
