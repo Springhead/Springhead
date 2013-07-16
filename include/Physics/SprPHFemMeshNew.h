@@ -91,6 +91,7 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	double GetBeta();
 	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
+#ifndef SWIG
 	bool AddBoundaryCondition(int vtxId, Vec3i dof);
 	// 境界条件を加える(頂点順）
 	bool AddBoundaryCondition(std::vector< Vec3i >& bcs); 
@@ -98,6 +99,7 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	bool AddVertexForceW(int vtxId, Vec3d fW);
 	// 頂点群に力を加える（ワールド座標系）
 	bool AddVertexForceW(std::vector< Vec3d >& fWs);
+#endif
 	bool SetDampingRatio_Wood();	
 	bool SetDampingRatio_Aluminum();	
 	bool SetDampingRatio_Plastic();	
