@@ -100,9 +100,6 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	// 頂点群に力を加える（ワールド座標系）
 	bool AddVertexForceW(std::vector< Vec3d >& fWs);
 #endif
-	bool SetDampingRatio_Wood();	
-	bool SetDampingRatio_Aluminum();	
-	bool SetDampingRatio_Plastic();	
 	void SetbRecomp();	
 	void Init();
 };
