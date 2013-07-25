@@ -42,6 +42,22 @@ public:
 	VVectord vlp;		// 頂点速度の一部
 	VVectord alp;		// 頂点加速度の一部
 	VVectord flp;		// 計算用の外力の一部
+
+	//モード座標系　 n:自由度、m:モード次数
+	VVectord q;			// モード振動ベクトル(m)
+	VVectord qv;		// モード振動速度ベクトル(m)
+	VVectord qa;		// モード振動加速度ベクトル(m)
+	VVectord qf;		// モード外力(m)
+		
+	VVectord evalue;	// 固有値(m)
+	VMatrixRe evector;	// 固有ベクトル(n*m)
+	VVectord ewrad;		// MK系の固有角振動数(m)
+	VMatrixRe Mm;		// モード質量行列(m*m)
+	VMatrixRe Km;		// モード剛性行列(m*m)
+	VMatrixRe Cm;		// モード減衰行列(m*m)
+	VMatrixRe SmInv;	// M,K,C行列が変化しない限り定数の行列(時間積分で使う)(m*m)
+
+
 //	VMatrixRe evalue;	// 固有値
 //	VMatrixRe evector;	// 固有ベクトル
 	double dampingRatio[2];	// 減衰比
@@ -68,6 +84,8 @@ public:
 	virtual void NumericalIntegration(const double& _sInv, const double& _k, const double& _c, 
 		const double& _f, const double& _dt, double& _x, double& _v, double& _a);
 	virtual void ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
+		const VVectord& _f, const double& _dt, bool& bFirst, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode);
+	virtual void InitModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, const VMatrixRe& _C, 
 		const VVectord& _f, const double& _dt, bool& bFirst, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode);
 
 
@@ -134,9 +152,7 @@ public:
 	// 振動を抑える
 	bool Damping(int tetId, Vec3d posW, double damp_ratio);
 	// 減衰係数の設定
-	bool SetDampingRatio_Wood();
-	bool SetDampingRatio_Aluminum();
-	bool SetDampingRatio_Plastic();
+	bool SetDampingRatio();
 
 	// 形状関数を使って任意の点の変位を取得する
 	bool GetDisplacement(int tetId, Vec3d posW, Vec3d& disp, bool bDeform);
