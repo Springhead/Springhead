@@ -26,6 +26,7 @@ public:
 	std::vector<int> tetIDs;
 	std::vector<int> edgeIDs;
 	std::vector<int> faceIDs;
+	bool bUpdated;
 };
 //	Žl–Ê‘Ì
 class FemTet{
