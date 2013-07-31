@@ -30,7 +30,7 @@ public:
 	UTRef< PHFemMeshNew > phFemMesh;	///< 物理計算用のメッシュ
 	UTRef< GRMesh > grFemMesh;			///< 描画用のメッシュ
 	std::vector<int> vertexIdMap;		///< grFemMeshからphFemMeshへの頂点の対応表
-	char* meshRoughness;			///< tetgenで生成するメッシュの粗さ
+	//char* meshRoughness;			///< tetgenで生成するメッシュの粗さ
 
 	FWFemMeshNew(const FWFemMeshNewDesc& d=FWFemMeshNewDesc());		//コンストラクタ
 	///	子オブジェクトの数
