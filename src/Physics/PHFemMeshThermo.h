@@ -445,6 +445,7 @@ public:
 	std::ofstream matCAllout;
 	std::ofstream matKAllout;
 	std::ofstream checkTVecAllout;
+	std::ofstream FEMLOG;
 	unsigned long long COUNT;
 
 };
