@@ -23,15 +23,21 @@ public:\
 
 #define SPR_DECLMEMBEROF_FWFemMeshNewDesc \
 protected:\
+	unsigned int	kogetex;	\
+	std::string	meshRoughness;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWObject::SetDesc((FWObjectDesc*)(FWFemMeshNewDesc*)ptr);	\
+		kogetex = ((FWFemMeshNewDesc*)ptr)->kogetex;	\
+		meshRoughness = ((FWFemMeshNewDesc*)ptr)->meshRoughness;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		FWObject::GetDesc((FWObjectDesc*)(FWFemMeshNewDesc*)ptr);	\
+		((FWFemMeshNewDesc*)ptr)->kogetex = kogetex;	\
+		((FWFemMeshNewDesc*)ptr)->meshRoughness = meshRoughness;	\
 		return true;	\
 	}\
 
