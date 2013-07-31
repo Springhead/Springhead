@@ -2055,6 +2055,10 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt){
 }
 
 void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,double eps){
+	//for(unsigned i=0; i < vertices.size(); i++){
+	//	FEMLOG << vertices[i].k <<","<< vertices[i].c << std::endl;
+	//}
+	FEMLOG << vecFAllSum << std::endl;
 	//dt = 0.0000000000001 * dt;		//デバッグ用に、dtをものすごく小さくしても、節点0がマイナスになるのか、調べた
 	double _eps = 1-eps;			// 1-epsの計算に利用
 	//dtはPHFemEngine.cppで取得する動力学シミュレーションのステップ時間
@@ -3108,7 +3112,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 			checkTVecAllout << "頂点" << i << std::endl;
 		}
 	}
-
+	FEMLOG.open("femLog.csv");
 
 	//	CPSの経時変化を書き出す
 	//cpslog.open("cpslog.csv");
