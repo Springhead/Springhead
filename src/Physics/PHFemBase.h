@@ -9,8 +9,8 @@
 #ifndef PH_FEM_BASE_H
 #define PH_FEM_BASE_H
 
-#include "Physics/PHFemMeshNew.h"
-#include "Foundation/Object.h"
+#include "PHFemMeshNew.h"
+#include "../Foundation/Object.h"
 #include "PHScene.h"
 
 namespace Spr{;
@@ -42,7 +42,7 @@ public:
 	virtual void InitExplicitEuler(const VMatrixRd& _M, VMatrixRd& _MInv);
 	virtual void ExplicitEuler(const VMatrixRd& _MInv, const VMatrixRd& _K, const VMatrixRd& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
-	// 後退オイラー
+	// 後退オイラー0
 	//virtual void InitImplicitEuler(VMatrixRd& _M, double& _SInv);
 	virtual void ImplicitEuler(const VMatrixRd& _M, const VMatrixRd& _K, const VMatrixRd& _C, 
 		const VVectord& _f, const double& _dt, VVectord& _xd, VVectord& _v);
