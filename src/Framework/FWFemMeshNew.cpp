@@ -23,15 +23,20 @@
 
 namespace Spr{;
 
+FWFemMeshNewDesc::FWFemMeshNewDesc(){
+	Init();
+}
+void FWFemMeshNewDesc::Init(){
+	meshRoughness = "pq2.1a0.000005";//phStick (四面体200個)
+	kogetex = 5;
+}
+
 FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	grFemMesh = NULL;
 	// p: piecewise linear comlex, q:2.1が正四面体の歪み(1以上～？以下）、a:粗さ
-	
 	//meshRoughness = "pq3.1a0.5";//phSphere 
 	//meshRoughness = "pq2.1a0.1";//phRec 
 	//meshRoughness = "pq2.1a0.00015";//phCube phBoardmini phPipemini
-	meshRoughness = "pq2.1a0.000005";//phStick (四面体200個)
-	
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }
@@ -111,7 +116,7 @@ bool FWFemMeshNew::CreatePHFemMeshFromGRMesh(){
 	std::vector<Vec3d> vtxsIn;
 	for(unsigned i = 0; i < grFemMesh->vertices.size(); ++i) vtxsIn.push_back(grFemMesh->vertices[i]);
 	// swithes q+(半径/最短辺) (e.g. = q1.0~2.0) a 最大の体積 
-	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grFemMesh->vertices.size(), &vtxsIn[0], (int)grFemMesh->faces.size(), &grFemMesh->faces[0], meshRoughness);
+	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grFemMesh->vertices.size(), &vtxsIn[0], (int)grFemMesh->faces.size(), &grFemMesh->faces[0], (char*)meshRoughness.c_str());
 	
 	//	phFemMesh用のディスクリプタpmdに値を入れていく
 	PHFemMeshNewDesc pmd;
@@ -384,7 +389,7 @@ void FWFemMeshNew::Sync(){
 			SyncVibrationInfo();
 		}
 		if(GetPHFemMesh()->GetPHFemThermo()){
-				SyncThermoInfo();
+			SyncThermoInfo();
 		}
 	}
 }
@@ -423,18 +428,176 @@ void FWFemMeshNew::SyncThermoInfo(){
 	}
 	//頂点温度の同期
 	GetPHFemMesh()->GetPHFemThermo()->UpdateVertexTempAll();
-	// 変位で色変化
-	if(grFemMesh->NColors() < 1) return;
-	Vec4f* vc = grFemMesh->GetColors();
-	double base = 1e-8;
-	double offset = 1e-8;
-	for(int i = 0; i < (int)vertexIdMap.size(); i++){
-		int pId = vertexIdMap[i];
-		float value = phFemMesh->GetVertexDisplacementL(pId).norm();
-		//DSTR << value << std::endl;
-		//DSTR << value/base + offset << std::endl;
-		vc[i] = CompThermoColor(value/base + offset);
+	
+	//	テスト用
+	//static double value, delta;
+	//if (value <= 0) delta = 0.01;
+	//if (value >= 1) delta = -0.01;
+	//value += delta;
+#ifdef VTX_DBG
+	////	デバッグ用
+	//// face辺を描画
+	DrawFaceEdge();
+	////	XZ平面を描画	true:描画する
+	//DrawIHBorderXZPlane(0);
+	////	IH加熱領域の境界線を引く
+	//DrawIHBorder(0.095,0.1);
+#endif
+
+	std::string fwfood;
+	fwfood = this->GetName();		//	fwmeshの名前取得
+
+
+	if(fwfood == "fwNegi"){
+		 //vertexの法線？表示
+		//for(unsigned i =0; i < phMesh->vertices.size();i++){
+		//	DrawNormal(phMesh->vertices[i].pos, phMesh->vertices[i].normal);
+		//}
+
+		for(unsigned i=0; i < phFemMesh->faces.size(); i++){
+			//.	faceエッジを表示	
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+		}
+		//for(unsigned i = 0; i < phMesh->faces.size(); i++){
+		//	//.	三角形の重心からの法線を表示
+		//	Vec3d jushin = Vec3d(0.0,0.0,0.0);
+		//	for(unsigned j=0; j< 3;j++){
+		//		jushin += phMesh->vertices[phMesh->faces[i].vertices[j]].pos;
+		//	}
+		//	jushin *= 1.0/3.0;
+		//	DrawNormal(jushin,phMesh->faces[i].normal);
+		//	
+		//}
 	}
+
+	if(fwfood == "fwPan"){
+		//for(unsigned i =0; i < phMesh->vertices.size();i++){
+		//	DrawNormal(phMesh->vertices[i].pos, phMesh->vertices[i].normal);
+		//}
+		for(unsigned i=0; i < phFemMesh->faces.size(); i++){
+			//.	faceエッジを表示	
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+		}
+	}
+	
+	if(fwfood == "fwNsteak"){
+		//for(unsigned i =0; i < phMesh->vertices.size();i++){
+		//	DrawNormal(phMesh->vertices[i].pos, phMesh->vertices[i].normal);
+		//}
+		for(unsigned i=0; i < phFemMesh->faces.size(); i++){
+			//.	faceエッジを表示	
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+		}
+	}
+
+
+	//	50度刻み:テクスチャの深さ計算(0~50)	( vertices.temp - 50.0 ) * dtex / 50.0
+	//	50度刻み:テクスチャの深さ計算(50~100)	( vertices.temp - 100.0 ) * dtex / 50.0
+	//	50度刻み:テクスチャの深さ計算(100~150)	( vertices.temp - 150.0 ) * dtex / 50.0
+	//	これを満たすように、50,100,150度などを変数にしてもよい。が、他に流用しないし、一目でわかりやすいので、このままでいいかも。
+	//	50度刻みごとにdtexを加算せずに、gvtx[stride*gv + tex + 2] = (temp - 50.0 ) * dtex / 50.0 + thstart;だけでやるのも手
+
+	
+	//	同期処理
+	FWObject::Sync();
+	if (syncSource==FWObjectDesc::PHYSICS){
+		if (grFemMesh && grFemMesh->IsTex3D()){
+			float* gvtx = grFemMesh->GetVertexBuffer();
+			if (gvtx){
+				int tex = grFemMesh->GetTexOffset();
+				int stride = grFemMesh->GetStride();
+				for(unsigned gv = 0; gv < vertexIdMap.size(); ++gv){
+					float gvtxTemp;
+					int pv = vertexIdMap[gv];
+					//	PHから何らかの物理量を取ってくる
+							//phから節点の温度を取ってくる
+					//PHFemMeshThermoの各節点の温度を取ってくる。
+					//温度の値に応じて、↑の係数を用いて、テクスチャ座標を計算する
+					//	value = phMeshの派生クラス->thermo[pv];
+					//	GRのテクスチャ座標として設定する。	s t r q の rを設定
+					//gvtx[stride*gv + tex + 2] = value + gvtx[stride*gv];	//	gvtx[stride*gv]で場所によって違う深度を拾ってくることに
+					//gvtx[stride*gv + tex + 2] = 0.1 + value;
+					////gvtx[stride*gv + tex + 2] = thstart;
+	//				gvtx[stride*gv + tex + 2] = thstart;
+
+					//	どのテクスチャにするかの条件分岐を作る
+					//	直前のテクスチャ座標を保存しておく。なければ、初期値を設定
+					//	テクスチャの表示モードを切り替えるSWをキーボードから切り替え⇒SampleApp.hのAddHotkey、AddAction周りをいじる
+				
+					//	CADThermoの該当部分のソース
+					//if(tvtxs[j].temp <= tvtxs[j].temp5){		//tvtxs[j].wmass > wmass * ratio1
+					//	texz	= texbegin;
+					//	double texznew =diff * grad + texz;//実質,テクスチャ座標の初期値
+					//	////前のテクスチャｚ座標よりも今回の計算値が深かったら、この計算結果を反映させる
+					//	if(tvtxs[j].tex1memo <= texznew){			//初めはこの条件がなくてもいいけれど、一度温度が上がって、冷めてからは必要になる
+					//		tvtxs[j].SetTexZ(tratio * dl + texz);	//テクスチャのZ座標を決定する。//表示テクスチャはその線形和を表示させるので、Z座標も線形和で表示するので、線形和の計算を使用
+					//		tvtxs[j].tex1memo = tratio * dl + texz;	//tex1memoを更新する
+					//	}
+					//}
+					//if(texturemode == BROWNED){
+					if(texture_mode == 1){
+						//	焦げテクスチャ切り替え
+						//	焼け具合に沿った変化
+					//gvtx[stride*gv + tex + 2] = texstart;		// 焦げテクスチャの初期座標
+#if 0
+						//メッシュの判別
+						//DSTR << "this->GetName(): " << this->GetName() << std::endl; ;	//phMesh->GetName():fem4
+						//下記三種のどのやり方でもOK
+						std::string strg;
+						strg = this->GetName();
+						if(strg == "fwNegi"){
+							DSTR << "Negi STR" << std::endl;
+						}
+						FWFemMeshIf* fmeshif;
+						GetScene()->FindObject(fmeshif,"fwNegi");
+						if( fmeshif ){
+							DSTR << fmeshif->GetName() << std::endl;
+							DSTR << "NEGINEGI GET" << std::endl;
+
+						}
+						//
+						FWFemMeshIf* fnsteakifif;
+						GetScene()->FindObject(fnsteakifif,"fwNsteak");
+						if( fnsteakifif ){
+							DSTR << fnsteakifif->GetName() << std::endl;
+							DSTR << "NIKUNIKU GET" << std::endl;
+						}  
+						
+#endif	
+						gvtxTemp = phFemMesh->GetPHFemThermo()->calcGvtx(fwfood, pv, texture_mode);
+						if(gvtx){
+							gvtx[stride * gv + tex + 2] = gvtxTemp;
+						}
+					}else if(texture_mode == 3 || texture_mode == 2 || texture_mode == 4){
+						gvtxTemp = phFemMesh->GetPHFemThermo()->calcGvtx(fwfood, pv, texture_mode);
+						if(gvtx){
+							gvtx[stride * gv + tex + 2] = gvtxTemp;
+						}
+					}
+				}
+			}	
+		}else{
+			DSTR << "Error: " << GetName() << ":FWFemMesh does not have 3D Mesh" << std::endl;
+		}
+	}
+}
+
+void FWFemMeshNew::DrawEdgeCW(Vec3d vtx0, Vec3d vtx1,float R,float G,float B){
+	// 入力された2頂点座標間を結ぶ
+	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * vtx0; //* ローカル座標を 世界座標への変換して代入
+	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * vtx1; //* ローカル座標を 世界座標への変換して代入
+	glBegin(GL_LINES);
+		glColor3d(R,G,B);
+		glVertex3d(wpos0[0],wpos0[1],wpos0[2]);
+		glVertex3d(wpos1[0],wpos1[1],wpos1[2]);
+	glEnd();
+	//glFlush();
 }
 
 Vec4f FWFemMeshNew::CompThermoColor(float value){
