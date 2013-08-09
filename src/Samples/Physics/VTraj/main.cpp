@@ -57,14 +57,19 @@ public:
 		ID_STIFF,
 		ID_INCITERHIGH,
 		ID_DECITERHIGH,
+		ID_TOGGLETEST,
+		ID_OUTFILE,
 	};
 
 	int argc;
 	char** argv;
 
-	bool bPM, bHard;
+	bool bPM, bHard, bTest, bOutTest, bOutFile;
 	int  time;
 	int  iter_high;
+
+	double torque[400][2];
+	double intT[2], intRatio[2];
 
 	VTrajSampleApp(){
 		appName = "IK Sample";
@@ -97,9 +102,24 @@ public:
 		AddAction(MENU_SCENE, ID_DECITERHIGH, "Decrease LCP NumIter(High)");
 		AddHotKey(MENU_SCENE, ID_DECITERHIGH, 'z');
 
+		AddAction(MENU_SCENE, ID_TOGGLETEST, "Toggle Test Mode");
+		AddHotKey(MENU_SCENE, ID_TOGGLETEST, 'n');
+
+		AddAction(MENU_SCENE, ID_OUTFILE, "Start Output File");
+		AddHotKey(MENU_SCENE, ID_OUTFILE, 'm');
+
 		bPM   = false;
 		bHard = false;
 		time = 0;
+
+		bTest = true;
+		bOutTest = false;
+		bOutFile = false;
+
+		for (int i=0; i<2; ++i) {
+			intT[i]  = 0;
+			intRatio[i] = 1;
+		}
 
 		iter_high = 50;
 	}
@@ -248,6 +268,28 @@ public:
 			time = 0;
 		}
 
+		if (time==0 && bOutTest) { bTest = false; bOutTest = false; }
+		if (time==0) {
+			for (int i=0; i<2; ++i) {
+				double intMav = 0;
+				for (int t=1; t<=200; ++t) {
+					double mav = 0; double c=0;
+					for (int m=-20; m<=20; ++m) {
+						if (1<= t+m && t+m <=200) {
+							mav += torque[t+m][i];
+							c++;
+						}
+					}
+					mav = mav/c;
+					double x = (mav * GetFWScene()->GetPHScene()->GetTimeStep());
+					intMav += (x*x);
+				}
+				intRatio[i] = intT[i] / intMav;
+				std::cout << "IntRatio " << i << " : " << intRatio[i] << std::endl;
+				intT[i] = 0;
+			}
+		}
+
 		time++;
 		double  length = (10*pow(s,3) - 15*pow(s,4) +  6*pow(s,5));
 		double dLength = (30*pow(s,2) - 60*pow(s,3) + 30*pow(s,4));
@@ -265,8 +307,8 @@ public:
 		} else {
 			for (size_t i=0; i<2; ++i) {
 				PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
-				jo->SetSpring(  20.0);
-				jo->SetDamper(   0.0);
+				jo->SetSpring(  50.0);
+				jo->SetDamper(  20.0);
 			}
 		}
 
@@ -282,8 +324,41 @@ public:
 			GetFWScene()->GetPHScene()->Step();
 		}
 
+		if (!bTest) {
+			static Vec3d lastpos = Vec3d(), lastposT = Vec3d();
+			Vec3d pos  = ikeTarget->GetSolid()->GetPose() * ikeTarget->GetTargetLocalPosition();
+			Vec3d posT = ikeTarget->GetTargetPosition();
+			{
+				std::ofstream ofs( "pos.txt", std::ios::out | std::ios::app );
+				ofs << time << " " << pos.X() << " " << pos.Y() << " " << posT.X() << " " << posT.Y() << std::endl;
+				ofs.close();
+			}
+			{
+				Vec3d vel  = (pos  - lastpos)  / dt;
+				Vec3d velT = (posT - lastposT) / dt;
+				std::ofstream ofs( "vel.txt", std::ios::out | std::ios::app );
+				// ofs << time << " " << vel.X() << " " << vel.Y() << " " << velT.X() << " " << velT.Y() << std::endl;
+				ofs << time << " " << vel.norm() << " " << velT.norm() << std::endl;
+				ofs.close();
+				lastpos  = pos;
+				lastposT = posT;
+			}
+
+			{
+				Vec2d joPos, joVel;
+				for (int i=0; i<2; ++i) {
+					PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
+					joPos[i] = jo->GetPosition();
+					joVel[i] = jo->GetVelocity();
+				}
+				std::ofstream ofs( "jopos.txt", std::ios::out | std::ios::app );
+				ofs << time << " " << joPos.X() << " " << joPos.Y() << " " << joVel.X() << " " << joVel.Y() << std::endl;
+				ofs.close();
+			}
+		}
+
 		// ----- ----- ----- ----- -----
-		{
+		/*{
 			static int cycle = 0;
 			static DWORD lastCounted = timeGetTime();
 			DWORD now = timeGetTime();
@@ -294,7 +369,7 @@ public:
 				std::cout << "CPS : " << cps << std::endl;
 			}
 			cycle++;
-		}
+		}*/
 	}
 
 	virtual void OnAction(int menu, int id){
@@ -341,6 +416,19 @@ public:
 			if(id == ID_INCITERHIGH || id == ID_DECITERHIGH){
 				iter_high += ((id==ID_INCITERHIGH) ? +10 : -10);
 				std::cout << "NumIter(High) : " << iter_high << std::endl;
+			}
+
+			if(id == ID_TOGGLETEST){
+				if (bTest) {
+					bOutTest = true;
+				} else {
+					bTest = true;
+				}
+				/// bTest = !bTest;
+			}
+
+			if(id == ID_OUTFILE){
+				bOutFile = true;
 			}
 		}
 
@@ -390,9 +478,44 @@ public:
 
 		GetFWScene()->GetPHScene()->SetNumIteration(iter_orig);
 
+		// std::cout << time << " " << offsets[0] << std::endl;
+		if (bOutFile) {
+			std::ofstream ofs( "torque.txt", std::ios::out | std::ios::app );
+			ofs << time << " " << offsets[0] << " " << offsets[1] << std::endl;
+			ofs.close();
+		}
+
 		for (size_t i=0; i<2; ++i) {
 			PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
-			jo->SetOffsetForce(offsets[i]);
+
+			// <!!>
+			double alpha = 1.0;
+			if (bTest) {
+				torque[time][i] = offsets[i];
+				jo->SetOffsetForce(offsets[i]);
+				double x = (offsets[i] * GetFWScene()->GetPHScene()->GetTimeStep());
+				intT[i] += (x*x);
+			} else {
+				double mav = 0; double c=0;
+				for (int m=-20; m<=20; ++m) {
+					if (1<= time+m && time+m <=200) {
+						mav += torque[time+m][i];
+						c++;
+					}
+				}
+				mav = (mav/c); // * sqrt(intRatio[i]);
+
+				{
+					std::ofstream ofs( (i==0 ? "torqueA0.txt" : "torqueA1.txt"), std::ios::out | std::ios::app );
+					ofs << time << " " << torque[time][i] << " " << mav << std::endl;
+					ofs.close();
+				}
+
+				jo->SetOffsetForce(mav);
+				// jo->SetOffsetForce(torque[time][i]);
+			}
+
+			// jo->SetOffsetForce(offsets[i]);
 			jo->SetSpring(springs[i]);
 			jo->SetDamper(dampers[i]);
 			jo->SetTargetPosition(targets[i]);
