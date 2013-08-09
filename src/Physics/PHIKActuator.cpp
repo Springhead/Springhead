@@ -390,7 +390,9 @@ void PHIKBallActuator::CalcPullbackVelocity() {
 
 	Vec3d pullback = -(jointTempOri.RotationHalf()) * pullbackRate;
 
-	// <!!> Limit Max Pullback Angle
+	// <!!> 本当はLimit成分を入れたほうが良い気がする
+
+	// <!!> Pullback量が一定以下になるよう制限する．
 	if (pullback.norm() > Rad(50)) {
 		pullback = pullback.unit() * Rad(50);
 	}
@@ -410,6 +412,24 @@ void PHIKBallActuator::Move(){
 	DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
 	
 	return;
+}
+
+bool PHIKBallActuator::LimitTempJoint() {
+	PHBallJointConeLimitIf* limit = DCAST(PHBallJointIf,joint)->GetLimit()->Cast(); 
+	if (limit) {
+		Vec2d range; limit->GetSwingRange(range);
+		Vec3d   dir  = (jointTempOri * Vec3d(0,0,1)).unit();
+		Vec3d  axis  =   (PTM::cross(Vec3d(0,0,1), dir)).unit();
+		double angle = acos(PTM::dot(Vec3d(0,0,1), dir));
+
+		if (range[1]<1e+30 && range[1] <= angle) {
+			Quaterniond pullback = Quaterniond::Rot( axis * (range[1] - angle) );
+			jointTempOri  = pullback * jointTempOri;
+			jointVelocity = Vec3d();
+			return true;
+		}
+	}
+	return false;
 }
 
 void PHIKBallActuator::MoveTempJoint() {
@@ -483,7 +503,6 @@ void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 		}
 	}
 
-
 	// 重み付け
 	size_t ndof_eef=0;
 	ndof_eef += (endeffector->bPosition    ? 3 : 0);
@@ -497,7 +516,19 @@ void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 
 void PHIKHingeActuator::CalcPullbackVelocity() {
 	double pullbacked = (1-pullbackRate) * jointTempAngle;
+
+	// リミット成分
+	PH1DJointLimitIf* limit = DCAST(PHHingeJointIf,joint)->GetLimit();
+	if (limit) {
+		Vec2d range; limit->GetRange(range);
+		if (limit->IsValid()) {
+			pullbacked = max(range[0], min(pullbacked, range[1]));
+		}
+	}
+
 	domega_pull[0] = pullbacked - jointTempAngle;
+
+	// <!!> Pullback量が一定以下になるよう制限する．
 	domega_pull[0] = max(Rad(-50), min(domega_pull[0], Rad(50)));
 }
 
@@ -508,7 +539,25 @@ void PHIKHingeActuator::Move(){
 	return;
 }
 
+bool PHIKHingeActuator::LimitTempJoint() {
+	PH1DJointLimitIf* limit = DCAST(PHHingeJointIf,joint)->GetLimit();
+	if (limit) {
+		Vec2d range; limit->GetRange(range);
+		if (limit->IsValid()) {
+			if (jointTempAngle <= range[0] || range[1] <= jointTempAngle) {
+				jointTempAngle = max(range[0], min(jointTempAngle, range[1]));
+				jointTempOri   = Quaterniond::Rot(jointTempAngle, 'z');
+				jointVelocity  = 0;
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
 void PHIKHingeActuator::MoveTempJoint() {
+	if (!bEnabled) { return; }
+
 	double dTheta = omega[0]*sqsaib;
 
 	jointTempAngle += dTheta;

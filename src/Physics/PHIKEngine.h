@@ -84,9 +84,10 @@ public:
 
 	// --- --- --- --- ---
 
-	void Prepare();
+	void Prepare(bool second = false);
 	void CalcJacobian();
 	void IK();
+	void Limit();
 	void FK();
 	void SaveFKResult();
 	void Move();

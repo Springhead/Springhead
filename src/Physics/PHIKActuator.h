@@ -228,6 +228,10 @@ public:
 
 	// --- --- --- --- --- --- --- --- --- ---
 
+	/** @brief 一時変数の関節角度を可動域内にクリップする
+	*/
+	virtual bool LimitTempJoint() { return false; }
+
 	/** @brief IK計算結果にしたがって一時変数の関節角度を動かす
 	*/
 	virtual void MoveTempJoint() {}
@@ -331,6 +335,10 @@ public:
 
 	// --- --- --- --- --- --- --- --- --- ---
 
+	/** @brief 一時変数の関節角度を可動域内にクリップする
+	*/
+	virtual bool LimitTempJoint();
+
 	/** @brief IK計算結果にしたがって一時変数の関節角度を動かす
 	*/
 	virtual void MoveTempJoint();
@@ -413,9 +421,17 @@ public:
 
 	// --- --- --- --- --- --- --- --- --- ---
 
+	/** @brief 一時変数の関節角度を可動域内にクリップする
+	*/
+	virtual bool LimitTempJoint();
+
 	/** @brief IK計算結果にしたがって一時変数の関節角度を動かす
 	*/
 	virtual void MoveTempJoint();
+
+
+	// <!!>
+	double GTA() { return jointTempAngle; }
 };
 
 }

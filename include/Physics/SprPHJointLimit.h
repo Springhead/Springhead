@@ -57,6 +57,11 @@ struct PH1DJointLimitIf : public SceneObjectIf{
 		@return かかっていればtrue
 	*/
 	bool IsOnLimit();
+
+	/** @brief 可動域が有効かどうかを返す（MaxがMinより小さいなどは無効となる）
+		@return 有効ならtrue
+	*/
+	bool IsValid();
 };
 
 ///	1自由度関節の可動域拘束
@@ -162,6 +167,16 @@ struct PHBallJointConeLimitIf : public PHBallJointLimitIf{
 		@param upper 最大ツイスト角度
 	 */
 	void GetTwistRange(Vec2d& range);
+
+	/** @brief Swing可動域が有効かどうかを返す（MaxがMinより小さいなどは無効となる）
+		@return 有効ならtrue
+	*/
+	bool IsSwingValid();
+
+	/** @brief Twist可動域が有効かどうかを返す（MaxがMinより小さいなどは無効となる）
+		@return 有効ならtrue
+	*/
+	bool IsTwistValid();
 };
 
 /// ボールジョイントの円錐可動域制限のデスクリプタ
