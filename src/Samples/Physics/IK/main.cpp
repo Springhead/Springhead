@@ -98,11 +98,11 @@ public:
 
 	// シーン構築
 	virtual void BuildScene() {
-		BuildSceneBallBranch();
-		// BuildSceneHingeBranch();
+		// BuildSceneBallBranch();
+		BuildSceneHinge(false);
 	}
 
-	virtual void BuildSceneHingeBranch() {
+	virtual void BuildSceneHinge(bool branch = false) {
 		PHSdkIf* phSdk = GetFWScene()->GetPHScene()->GetSdk();
 
 		PHSolidDesc descSolid;
@@ -150,16 +150,22 @@ public:
 		so4->SetShapePose(0, shapePose);
 
 		// Link 5
-		PHSolidIf* so5 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
-		so5->SetFramePosition(Vec3d(0,12,0));
-		so5->AddShape(phSdk->CreateShape(descCapsule));
-		so5->SetShapePose(0, shapePose);
+		PHSolidIf* so5=NULL;
+		if (branch) {
+			so5 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
+			so5->SetFramePosition(Vec3d(0,12,0));
+			so5->AddShape(phSdk->CreateShape(descCapsule));
+			so5->SetShapePose(0, shapePose);
+		}
 
 		// Link 6
-		PHSolidIf* so6 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
-		so6->SetFramePosition(Vec3d(0,16,0));
-		so6->AddShape(phSdk->CreateShape(descCapsule));
-		so6->SetShapePose(0, shapePose);
+		PHSolidIf* so6=NULL;
+		if (branch) {
+			so6 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
+			so6->SetFramePosition(Vec3d(0,16,0));
+			so6->AddShape(phSdk->CreateShape(descCapsule));
+			so6->SetShapePose(0, shapePose);
+		}
 
 		// Pointer 1
 		PHSolidIf* soP1 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
@@ -169,11 +175,14 @@ public:
 		soTarget1 = soP1;
 
 		// Pointer 2
-		PHSolidIf* soP2 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
-		soP2->SetFramePosition(Vec3d( -5,3,0));
-		soP2->AddShape(phSdk->CreateShape(descSphere));
-		soP2->SetDynamical(false);
-		soTarget2 = soP2;
+		PHSolidIf* soP2=NULL;
+		if (branch) {
+			soP2 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
+			soP2->SetFramePosition(Vec3d( -5,3,0));
+			soP2->AddShape(phSdk->CreateShape(descSphere));
+			soP2->SetDynamical(false);
+			soTarget2 = soP2;
+		}
 
 		// ----- ----- ----- ----- -----
 
@@ -184,6 +193,9 @@ public:
 		descHinge.damper     =   1000.0;
 		// descHinge.fMax    =   1000.0;
 		descHinge.cyclic     =     true;
+
+		PH1DJointLimitDesc descLimit;
+		descLimit.range = Vec2d(0, Rad(60));
 
 		PHBallJointDesc descBall;
 		descBall.poseSocket = Posed(1,0,0,0, 0, 2,0);
@@ -201,6 +213,7 @@ public:
 		PHHingeJointIf* jo1 = GetFWScene()->GetPHScene()->CreateJoint(so0, so1, descHinge)->Cast();
 		PHIKHingeActuatorIf* ika1 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKHinge)->Cast();
 		ika1->AddChildObject(jo1);
+		jo1->CreateLimit(descLimit);
 
 		// Link 1 <-> Link 2
 		PHHingeJointIf* jo2  = GetFWScene()->GetPHScene()->CreateJoint(so1, so2, descHinge)->Cast();
@@ -218,22 +231,30 @@ public:
 		ika4->AddChildObject(jo4);
 
 		// Link 2 <-> Link 5
-		PHHingeJointIf* jo5  = GetFWScene()->GetPHScene()->CreateJoint(so2, so5, descHinge)->Cast();
-		PHIKHingeActuatorIf* ika5 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKHinge)->Cast();
-		ika5->AddChildObject(jo5);
+		PHHingeJointIf* jo5=NULL;
+		PHIKHingeActuatorIf* ika5=NULL;
+		if (branch) {
+			jo5 = GetFWScene()->GetPHScene()->CreateJoint(so2, so5, descHinge)->Cast();
+			ika5 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKHinge)->Cast();
+			ika5->AddChildObject(jo5);
+		}
 
 		// Link 5 <-> Link 6
-		PHHingeJointIf* jo6  = GetFWScene()->GetPHScene()->CreateJoint(so5, so6, descHinge)->Cast();
-		PHIKHingeActuatorIf* ika6 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKHinge)->Cast();
-		ika6->AddChildObject(jo6);
-
+		PHHingeJointIf* jo6=NULL;
+		PHIKHingeActuatorIf* ika6=NULL;
+		if (branch) {
+			jo6 = GetFWScene()->GetPHScene()->CreateJoint(so5, so6, descHinge)->Cast();
+			ika6 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKHinge)->Cast();
+			ika6->AddChildObject(jo6);
+		}
 
 		ika1->AddChildObject(ika2);
 		ika2->AddChildObject(ika3);
 		ika3->AddChildObject(ika4);
-		ika2->AddChildObject(ika5);
-		ika5->AddChildObject(ika6);
-
+		if (branch) {
+			ika2->AddChildObject(ika5);
+			ika5->AddChildObject(ika6);
+		}
 
 		// Link4 = End Effector
 		PHIKEndEffectorIf* ike1 = GetFWScene()->GetPHScene()->CreateIKEndEffector(descIKE);
@@ -243,45 +264,64 @@ public:
 
 		ike1->EnablePositionControl(true);
 		ike1->EnableOrientationControl(false);
+		ikeTarget1 = ike1;
+		ike1->SetTargetPosition(soTarget1->GetPose().Pos());
 
 		// Link6 = End Effector
-		PHIKEndEffectorIf* ike2 = GetFWScene()->GetPHScene()->CreateIKEndEffector(descIKE);
-		ike1->AddChildObject(so6);
-		ika6->AddChildObject(ike2);
-		ike2->SetTargetLocalPosition(Vec3d(0,2,0));
+		PHIKEndEffectorIf* ike2=NULL;
+		if (branch) {
+			ike2 = GetFWScene()->GetPHScene()->CreateIKEndEffector(descIKE);
+			ike1->AddChildObject(so6);
+			ika6->AddChildObject(ike2);
+			ike2->SetTargetLocalPosition(Vec3d(0,2,0));
 
-		ike2->EnablePositionControl(true);
-		ike2->EnableOrientationControl(false);
-
-		ikeTarget1 = ike1;
-		ikeTarget2 = ike2;
+			ike2->EnablePositionControl(true);
+			ike2->EnableOrientationControl(false);
+			ikeTarget2 = ike2;
+			ike2->SetTargetPosition(soTarget2->GetPose().Pos());
+		}
 
 		// ----- ----- ----- ----- -----
-
-		ike1->SetTargetPosition(soTarget1->GetPose().Pos());
-		ike2->SetTargetPosition(soTarget2->GetPose().Pos());
 
 		double pbr = 1.0;
 		ika1->SetPullbackRate(pbr);
 		ika2->SetPullbackRate(pbr);
 		ika3->SetPullbackRate(pbr);
 		ika4->SetPullbackRate(pbr);
-		ika5->SetPullbackRate(pbr);
-		ika6->SetPullbackRate(pbr);
+		if (branch) {
+			ika5->SetPullbackRate(pbr);
+			ika6->SetPullbackRate(pbr);
+		}
 
+		/*
 		ika1->SetBias( 8.0);
 		ika2->SetBias( 4.0);
 		ika3->SetBias( 2.0);
 		ika4->SetBias( 1.0);
-		ika5->SetBias( 2.0);
-		ika6->SetBias( 1.0);
+		if (branch) {
+			ika5->SetBias( 2.0);
+			ika6->SetBias( 1.0);  
+		}
+		*/
+
+		ika1->Enable(true);
+		ika2->Enable(true);
+		ika3->Enable(true);
+		ika4->Enable(true);
+		if (branch) {
+			ika5->Enable(true);
+			ika6->Enable(true);
+		}
 
 		ike1->SetPositionPriority(1.0);
-		ike2->SetPositionPriority(0.2);
+		if (branch) {
+			ike2->SetPositionPriority(0.2);
+		}
 
 		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
 		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxVelocity(20);
 		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxAngularVelocity(Rad(500));
+		GetFWScene()->GetPHScene()->GetIKEngine()->SetRegularizeParam(1.5);
 
 		GetFWScene()->GetPHScene()->SetContactMode(PHSceneDesc::MODE_NONE);
 	}

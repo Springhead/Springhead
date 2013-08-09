@@ -27,16 +27,19 @@ PHIKEngine::PHIKEngine():
 	lastN(0)
 	{}
 
-void PHIKEngine::Prepare() {
-	// エンドエフェクタの有効・無効に基づいてアクチュエータの有効・無効を切替え
-	for(size_t i=0; i<actuators.size(); ++i){
-		actuators[i]->Enable(false);
-	}
-	for(size_t i=0; i<actuators.size(); ++i){
-		if (actuators[i]->eef && actuators[i]->eef->IsEnabled()) {
-			actuators[i]->Enable(true);
-			for(size_t j=0; j<actuators[i]->ascendant.size(); ++j){
-				actuators[i]->ascendant[j]->Enable(true);
+void PHIKEngine::Prepare(bool second) {
+	// <!!>
+	if (second) {
+		// エンドエフェクタの有効・無効に基づいてアクチュエータの有効・無効を切替え
+		for(size_t i=0; i<actuators.size(); ++i){
+			actuators[i]->Enable(false);
+		}
+		for(size_t i=0; i<actuators.size(); ++i){
+			if (actuators[i]->eef && actuators[i]->eef->IsEnabled()) {
+				actuators[i]->Enable(true);
+				for(size_t j=0; j<actuators[i]->ascendant.size(); ++j){
+					actuators[i]->ascendant[j]->Enable(true);
+				}
 			}
 		}
 	}
@@ -234,10 +237,37 @@ void PHIKEngine::IK() {
 	}
 }
 
+void PHIKEngine::Limit() {
+	// IK計算結果をリミットの中に収める
+	bool anyLimit = false;
+	std::vector<int> disabled;
+	for (int i=0; i<actuators.size(); ++i) {
+		if (actuators[i]->IsEnabled()) {
+			bool limit = actuators[i]->LimitTempJoint();
+			anyLimit = anyLimit || limit;
+			if (limit) {
+				actuators[i]->Enable(false);
+				disabled.push_back(i);
+			}
+		}
+	}
+
+	// リミットにかかった関節があればIK-Disableして再度IK計算をやりなおす
+	if (anyLimit) {
+		FK();
+		Prepare(true);
+		CalcJacobian();
+		IK();
+		for (int n=0; n<disabled.size(); ++n) {
+			actuators[disabled[n]]->Enable(true);
+		}
+	}
+}
+
 void PHIKEngine::FK() {
 	// 順運動学
 	for(size_t i=0; i<actuators.size(); ++i){
-		if (actuators[i]->IsEnabled() && actuators[i]->parent==NULL) {
+		if (actuators[i]->parent==NULL) {
 			actuators[i]->FK();
 		}
 	}
@@ -254,9 +284,7 @@ void PHIKEngine::Move() {
 
 void PHIKEngine::SaveFKResult() {
 	for (size_t j=0; j<actuators.size(); ++j) {
-		if (actuators[j]->IsEnabled()) {
-			actuators[j]->SaveFKResult();
-		}
+		actuators[j]->SaveFKResult();
 	}
 }
 
@@ -266,10 +294,10 @@ void PHIKEngine::Step() {
 
 	Prepare();
 	FK();
-	SaveFKResult();
 
 	CalcJacobian();
 	IK();
+	Limit();
 	FK();
 	SaveFKResult();
 
