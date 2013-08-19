@@ -419,14 +419,17 @@ bool PHIKBallActuator::LimitTempJoint() {
 	if (limit) {
 		Vec2d range; limit->GetSwingRange(range);
 		Vec3d   dir  = (jointTempOri * Vec3d(0,0,1)).unit();
-		Vec3d  axis  = (PTM::cross(Vec3d(0,0,1), dir)).unit();
-		double angle = acos(PTM::dot(Vec3d(0,0,1), dir));
+		Vec3d  axis  = PTM::cross(Vec3d(0,0,1), dir);
+		if (axis.norm() > 1e-5) {
+			axis.unitize();
+			double angle = acos(PTM::dot(Vec3d(0,0,1), dir));
 
-		if (range[1] <= angle) {
-			Quaterniond pullback = Quaterniond::Rot( axis * (range[1] - angle) );
-			jointTempOri  = pullback * jointTempOri;
-			jointVelocity = Vec3d();
-			return true;
+			if (range[1] <= angle) {
+				Quaterniond pullback = Quaterniond::Rot( axis * (range[1] - angle) );
+				jointTempOri  = pullback * jointTempOri;
+				jointVelocity = Vec3d();
+				return true;
+			}
 		}
 	}
 	return false;
