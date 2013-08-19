@@ -20,7 +20,6 @@ EXTEND_NEW(CRVisualInfo)
 EXTEND_NEW(CRTrajectoryNode)
 EXTEND_N_GET_TO_LIST(Spr::CRSdkIf		,NCreatures		,GetCreature	,CRCreatureIf	)
 EXTEND_N_GET_TO_LIST(Spr::CRCreatureIf	,NEngines		,GetEngine			,CREngineIf		)
-EXTEND_N_GET_TO_LIST(Spr::CRBoneIf	,NVisibleSolids	,GetVisibleSolid	,PHSolidIf		)
 EXTEND_N_GET_TO_LIST(Spr::CRBodyIf		,NBones		,GetBone			,CRBoneIf		)
 %ignore Spr::CRTrajectoryNode::coeff; 
 //---

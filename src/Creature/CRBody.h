@@ -44,6 +44,17 @@ public:
 	*/
 	virtual CRBoneIf* FindByLabel(UTString label);
 
+	/** @brief あるIKActuatorを持つ構成要素を探す
+	*/
+	virtual CRBoneIf* FindByIKActuator(PHIKActuatorIf* actuator) {
+		for (size_t i=0; i<bones.size(); ++i) {
+			if (bones[i]->GetIKActuator()!=NULL && bones[i]->GetIKActuator()==actuator) {
+				return bones[i];
+			}
+		}
+		return NULL;
+	}
+
 	/** @brief ボーンの数を得る
 	*/
 	virtual int	NBones() { return (int)bones.size(); }
@@ -71,8 +82,6 @@ public:
 	void Step() {
 		for (size_t i=0; i<bones.size(); ++i) {
 			bones[i]->StepTrajectory();
-			bones[i]->StepSearchArea();
-			// bones[i]->StepListContact(); // <!!>
 		}
 	}
 

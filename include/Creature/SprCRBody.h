@@ -13,10 +13,15 @@
 namespace Spr{;
 
 struct CRBoneIf;
+struct PHIKActuatorIf;
 
 /// クリーチャのボディモデルのインターフェイス
 struct CRBodyIf : SceneObjectIf{
 	SPR_IFDEF(CRBody);
+
+	/** @brief あるIKActuatorを持つ構成要素を探す
+	*/
+	CRBoneIf* FindByIKActuator(PHIKActuatorIf* actuator);
 
 	/** @brief ラベルから構成要素を探す
 	*/

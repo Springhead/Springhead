@@ -182,12 +182,9 @@ public:
 	int NAncestors() { return (int)ascendant.size(); }
 	PHIKActuatorIf* GetAncestor(int i) { return ascendant[i]->Cast(); }
 
-
-	// <!!> To Be Obsoleted
-	/** @brief 速度制御の比例係数を設定・取得する
+	/** @brief 直接の親を取得する
 	*/
-	void   SetVelocityGain(double velocityGain){ this->velocityGain = velocityGain; }
-	double GetVelocityGain()                   { return velocityGain; }
+	PHIKActuatorIf* GetParent() { return parent->Cast(); }
 
 	// --- --- --- --- ---
 

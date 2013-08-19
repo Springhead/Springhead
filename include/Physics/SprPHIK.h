@@ -250,17 +250,9 @@ struct PHIKActuatorIf : SceneObjectIf{
 	int NAncestors();
 	PHIKActuatorIf* GetAncestor(int i);
 
-
-	// <!!> To Be Obsoleted
-
-	/** @brief 速度制御の比例係数を設定する
+	/** @brief 直接の親を取得する
 	*/
-	void SetVelocityGain(double velocityGain);
-
-	/** @brief 速度制御の比例係数を取得する
-	*/
-	double GetVelocityGain();
-
+	PHIKActuatorIf* GetParent();
 };
 
 /// IKアクチュエータのステート
@@ -286,15 +278,10 @@ struct PHIKActuatorDesc : public PHIKActuatorState{
 	float	bias;	      ///< 動かしにくさの係数
 	double  pullbackRate; ///< 標準姿勢復帰の割合
 	
-	// <!!> To Be Obsoleted
-	double  velocityGain; ///< 速度制御の比例係数
-
 	PHIKActuatorDesc() {
 		bEnabled     = true;
 		bias         = 1.0;
 		pullbackRate = 0.1;
-
-		velocityGain = 10.0;
 	}
 };
 
