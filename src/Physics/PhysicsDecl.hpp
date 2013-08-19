@@ -282,7 +282,6 @@ protected:\
 	bool	bEnabled;	\
 	float	bias;	\
 	double	pullbackRate;	\
-	double	velocityGain;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -290,7 +289,6 @@ public:\
 		bEnabled = ((PHIKActuatorDesc*)ptr)->bEnabled;	\
 		bias = ((PHIKActuatorDesc*)ptr)->bias;	\
 		pullbackRate = ((PHIKActuatorDesc*)ptr)->pullbackRate;	\
-		velocityGain = ((PHIKActuatorDesc*)ptr)->velocityGain;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -299,7 +297,6 @@ public:\
 		((PHIKActuatorDesc*)ptr)->bEnabled = bEnabled;	\
 		((PHIKActuatorDesc*)ptr)->bias = bias;	\
 		((PHIKActuatorDesc*)ptr)->pullbackRate = pullbackRate;	\
-		((PHIKActuatorDesc*)ptr)->velocityGain = velocityGain;	\
 		return true;	\
 	}\
 
