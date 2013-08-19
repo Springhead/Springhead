@@ -53,7 +53,6 @@ public:
 	void    SetDamper(double damper)  { this->damper = damper; }
 	double  GetDamper()               { return damper; }
 	bool    IsOnLimit()               { return bOnLimit; }
-	bool    IsValid()                 { return( (range[0]<=range[1]) && ((range[0]<1e+30) || (range[1]<1e+30)) ); }
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -160,15 +159,6 @@ public:
 	void GetSwingRange(Vec2d& range){ range = limitSwing; }
 	void SetTwistRange(Vec2d range) { limitTwist = range; }
 	void GetTwistRange(Vec2d& range){ range = limitTwist; }
-
-	bool IsSwingValid() {
-		return( ((limitSwing[0]<1e+30)&&(limitSwing[1]<1e+30)&&(limitSwing[0]<=limitSwing[1]))
-		     || ((limitSwing[0]<1e+30) || (limitSwing[1]<1e+30)) );
-	}
-	bool IsTwistValid() {
-		return( ((limitTwist[0]<1e+30)&&(limitTwist[1]<1e+30)&&(limitTwist[0]<=limitTwist[1]))
-		     || ((limitTwist[0]<1e+30) || (limitTwist[1]<1e+30)) );
-	}
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
