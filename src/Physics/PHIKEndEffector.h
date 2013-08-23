@@ -10,6 +10,7 @@
 
 #include "../Foundation/Object.h"
 #include <Physics/SprPHIK.h>
+#include <Physics/SprPHSolid.h>
 #include <set>
 
 namespace Spr{;
@@ -222,6 +223,12 @@ public:
 	
 	// --- --- --- --- --- --- --- --- --- ---
 	// Non API Methods
+
+	/** @brief 一時変数の剛体姿勢を現実の剛体姿勢に合わせる
+	*/
+	virtual void ApplyExactState() {
+		solidTempPose  = solid->GetPose();
+	}
 
 	/** @brief 暫定目標地点を取得する
 	*/

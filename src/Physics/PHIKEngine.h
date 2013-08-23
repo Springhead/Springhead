@@ -84,6 +84,8 @@ public:
 
 	// --- --- --- --- ---
 
+	void ApplyExactState();
+
 	void Prepare(bool second = false);
 	void CalcJacobian();
 	void IK();

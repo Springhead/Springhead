@@ -450,6 +450,7 @@ void PHIKBallActuator::MoveTempJoint() {
 
 	// ----- 速度 -----
 	jointVelocity = w  * (1/DCAST(PHSceneIf,GetScene())->GetTimeStep());
+
 }
 
 // --- --- --- --- ---
