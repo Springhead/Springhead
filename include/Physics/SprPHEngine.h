@@ -136,6 +136,10 @@ public:
 	void SetRegularizeParam(double epsilon);
 	double GetRegularizeParam();
 
+	/** @brief 一時変数の関節角度・剛体姿勢を現実のものに合わせる
+	*/
+	void ApplyExactState();
+
 	// <!!> Gauss-SeidelソルバをやめたらObsoleteになる予感
 	/** @brief 繰り返し回数をセットする
 	*/

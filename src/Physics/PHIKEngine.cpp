@@ -27,6 +27,15 @@ PHIKEngine::PHIKEngine():
 	lastN(0)
 	{}
 
+void PHIKEngine::ApplyExactState() {
+	for(size_t i=0; i<actuators.size(); ++i){
+		actuators[i]->ApplyExactState();
+	}
+	for(size_t i=0; i<endeffectors.size(); ++i){
+		endeffectors[i]->ApplyExactState();
+	}
+}
+
 void PHIKEngine::Prepare(bool second) {
 	// <!!>
 	if (second) {

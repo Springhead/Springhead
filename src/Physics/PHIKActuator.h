@@ -153,13 +153,6 @@ public:
 	*/
 	virtual void Move(){}
 
-	/** @brief 現在の剛体・関節姿勢をIKの内部目標に反映する
-	*/
-	virtual void ApplyCurrentPose(){
-		solidTempPose = joint->GetPlugSolid()->GetPose();
-		jointTempOri  = joint->GetRelativePoseQ();
-	}
-
 	// --- --- --- --- ---
 
 	/** @brief 動かしにくさを設定・取得する
@@ -224,6 +217,10 @@ public:
 	virtual void AfterProceedSolve() {}
 
 	// --- --- --- --- --- --- --- --- --- ---
+
+	/** @brief 一時変数の関節角度を現実の関節角度に合わせる
+	*/
+	virtual void ApplyExactState() { }
 
 	/** @brief 一時変数の関節角度を可動域内にクリップする
 	*/
@@ -332,6 +329,13 @@ public:
 
 	// --- --- --- --- --- --- --- --- --- ---
 
+	/** @brief 一時変数の関節角度を現実の関節角度に合わせる
+	*/
+	virtual void ApplyExactState() {
+		jointTempOri  = DCAST(PHBallJointIf,joint)->GetPosition();
+		solidTempPose = joint->GetPlugSolid()->GetPose();
+	}
+
 	/** @brief 一時変数の関節角度を可動域内にクリップする
 	*/
 	virtual bool LimitTempJoint();
@@ -382,13 +386,6 @@ public:
 	*/
 	virtual void Move();
 
-	/** @brief 現在の剛体・関節姿勢をIKの内部目標に反映する
-	*/
-	virtual void ApplyCurrentPose(){
-		PHIKActuator::ApplyCurrentPose();
-		jointTempAngle = DCAST(PHHingeJointIf,joint)->GetPosition();
-	}
-
 	// --- --- --- --- ---
 
 	/** @brief 動作対象の関節を設定する（１アクチュエータにつき１関節が必ず対応する）
@@ -417,6 +414,14 @@ public:
 	virtual void CalcPullbackVelocity();
 
 	// --- --- --- --- --- --- --- --- --- ---
+
+	/** @brief 一時変数の関節角度を現実の関節角度に合わせる
+	*/
+	virtual void ApplyExactState() {
+		jointTempAngle = DCAST(PHHingeJointIf,joint)->GetPosition();
+		jointTempOri   = Quaterniond::Rot(jointTempAngle, 'z');
+		solidTempPose  = joint->GetPlugSolid()->GetPose();
+	}
 
 	/** @brief 一時変数の関節角度を可動域内にクリップする
 	*/

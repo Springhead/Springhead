@@ -41,7 +41,6 @@ public:
 	PH1DJointLimit(const PH1DJointLimitDesc& desc = PH1DJointLimitDesc()) { SetDesc(&desc); }
 	
 	// ----- Limitの機能
-
 	virtual void SetupAxisIndex();
 	virtual void CompBias();
 

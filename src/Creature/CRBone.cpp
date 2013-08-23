@@ -177,6 +177,11 @@ void CRBone::ClearTrajectory() {
 	current.time = 0.0f;
 	this->time   = 0.0f;
 
+	// <!!>
+	if (solid && endeffector) {
+		current.pose = solid->GetPose() * endeffector->GetTargetLocalPosition();
+	}
+
 	trajNodes.clear();
 	trajNodes.push_back(current);
 	bCleared = true;

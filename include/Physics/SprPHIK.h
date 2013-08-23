@@ -154,6 +154,11 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	*/
 	Vec3d GetTargetTorque();
 
+	// --- --- --- --- ---
+
+	/** @brief 一時変数の剛体姿勢を現実の剛体姿勢に合わせる
+	*/
+	void ApplyExactState();
 };
 
 /// IKエンドエフェクタのステート
@@ -215,9 +220,9 @@ struct PHIKActuatorIf : SceneObjectIf{
 	*/
 	void Move();
 
-	/** @brief 現在の剛体・関節姿勢をIKの内部目標に反映する
+	/** @brief 一時変数の関節角度を現実の関節角度に合わせる
 	*/
-	void ApplyCurrentPose();
+	void ApplyExactState();
 
 	// --- --- --- --- ---
 
