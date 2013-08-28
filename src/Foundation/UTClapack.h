@@ -21,51 +21,63 @@
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
 
-#ifdef _DEBUG
-#ifdef _DLL
-#ifdef _WIN64 
-# pragma comment(lib, "LIBF2C10MDx64.lib")
-# pragma comment(lib, "BLAS10MDx64.lib")
-# pragma comment(lib, "CLAPACK10MDx64.lib")
-#else
-# pragma comment(lib, "LIBF2C10MD.lib")
-# pragma comment(lib, "BLAS10MD.lib")
-# pragma comment(lib, "CLAPACK10MD.lib")
-#endif	// WIN64
-#else	// _DLL
-#ifdef _WIN64 
-# pragma comment(lib, "LIBF2C10Dx64.lib")
-# pragma comment(lib, "BLAS10Dx64.lib")
-# pragma comment(lib, "CLAPACK10Dx64.lib")
-#else
-# pragma comment(lib, "LIBF2C10D.lib")
-# pragma comment(lib, "BLAS10D.lib")
-# pragma comment(lib, "CLAPACK10D.lib")
-#endif	// WIN64
-#endif	// _DLL
-#else	// _DEBUG
-#ifdef _DLL
-#ifdef _WIN64 
-# pragma comment(lib, "LIBF2C10Mx64.lib")
-# pragma comment(lib, "BLAS10Mx64.lib")
-# pragma comment(lib, "CLAPACK10Mx64.lib")
-#else
-# pragma comment(lib, "LIBF2C10M.lib")
-# pragma comment(lib, "BLAS10M.lib")
-# pragma comment(lib, "CLAPACK10M.lib")
-#endif	// WIN64
-#else	// _DLL
-#ifdef _WIN64 
-# pragma comment(lib, "LIBF2C10x64.lib")
-# pragma comment(lib, "BLAS10x64.lib")
-# pragma comment(lib, "CLAPACK10x64.lib")
-#else
-# pragma comment(lib, "LIBF2C10.lib")
-# pragma comment(lib, "BLAS10.lib")
-# pragma comment(lib, "CLAPACK10.lib")
-#endif	// WIN64
-#endif	// _DLL
-#endif	// _DEBUG
+#ifdef TRACE		// Trace
+  #ifdef _WIN64 
+    # pragma comment(lib, "LIBF2C10Tx64.lib")
+    # pragma comment(lib, "BLAS10Tx64.lib")
+    # pragma comment(lib, "CLAPACK10Tx64.lib")
+  #else
+    # pragma comment(lib, "LIBF2C10T.lib")
+    # pragma comment(lib, "BLAS10T.lib")
+    # pragma comment(lib, "CLAPACK10T.lib")
+  #endif
+#else /* TRACE */
+  #ifdef _DEBUG
+    #ifdef _DLL		// Debug (former DebugDll)
+      #ifdef _WIN64 
+        # pragma comment(lib, "LIBF2C10MDx64.lib")
+        # pragma comment(lib, "BLAS10MDx64.lib")
+        # pragma comment(lib, "CLAPACK10MDx64.lib")
+      #else
+        # pragma comment(lib, "LIBF2C10MD.lib")
+        # pragma comment(lib, "BLAS10MD.lib")
+        # pragma comment(lib, "CLAPACK10MD.lib")
+      #endif
+    #else		// (former Debug)
+      #ifdef _WIN64 
+        # pragma comment(lib, "LIBF2C10Dx64.lib")
+        # pragma comment(lib, "BLAS10Dx64.lib")
+        # pragma comment(lib, "CLAPACK10Dx64.lib")
+      #else
+        # pragma comment(lib, "LIBF2C10D.lib")
+        # pragma comment(lib, "BLAS10D.lib")
+        # pragma comment(lib, "CLAPACK10D.lib")
+      #endif
+    #endif
+  #else /* _DEBUG */
+    #ifdef _DLL		// Release (former ReleaseDll)
+      #ifdef _WIN64 
+        # pragma comment(lib, "LIBF2C10Mx64.lib")
+        # pragma comment(lib, "BLAS10Mx64.lib")
+        # pragma comment(lib, "CLAPACK10Mx64.lib")
+      #else
+        # pragma comment(lib, "LIBF2C10M.lib")
+        # pragma comment(lib, "BLAS10M.lib")
+        # pragma comment(lib, "CLAPACK10M.lib")
+      #endif
+    #else		// (former Release)
+      #ifdef _WIN64 
+        # pragma comment(lib, "LIBF2C10x64.lib")
+        # pragma comment(lib, "BLAS10x64.lib")
+        # pragma comment(lib, "CLAPACK10x64.lib")
+      #else
+        # pragma comment(lib, "LIBF2C10.lib")
+        # pragma comment(lib, "BLAS10.lib")
+        # pragma comment(lib, "CLAPACK10.lib")
+      #endif
+    #endif
+  #endif /* _DEBUG */
+#endif /* TRACE */
 
 /*
 / リンクするlibファイルは_cdeclで呼び出し

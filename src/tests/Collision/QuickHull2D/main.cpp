@@ -123,7 +123,7 @@ int main3D(){
 	std::cout << planes;
 	return 0;
 }
-int main(){
+int __cdecl main(){
 	int rv = main2D();
 	if (rv) return rv;
 	return main3D();

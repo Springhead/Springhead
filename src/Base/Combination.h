@@ -30,7 +30,7 @@ public:
 			base_type::resize(hnew * wnew);
 		}
 		typename base_type::iterator b = this->begin();
-		int hmin = std::min(hnew, height_);
+		int hmin = (std::min)(hnew, height_);
 		int r, c;
 		if (wnew > width_){	//	幅が増える場合，後ろから移動
 			for(r = hmin-1; r >= 0; --r){

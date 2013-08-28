@@ -77,7 +77,7 @@ void MyEPApp::Init(int argc, char* argv[]) {
 	// --- --- --- --- ---
 	// SpaceNavigator
 
-	HWND hWnd = FindWindow(L"GLUT", L"Python with Springhead");
+	HWND hWnd = FindWindow((LPCSTR) "GLUT", (LPCSTR) "Python with Springhead");
 	HISpaceNavigatorDesc descSN;
 	descSN.hWnd = &hWnd;
 
@@ -172,7 +172,7 @@ LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int main(int argc, char *argv[]) {
+int __cdecl main(int argc, char *argv[]) {
 	app.Init(argc, argv);
 
 	EPInterpreter* interpreter = EPInterpreter::Create();

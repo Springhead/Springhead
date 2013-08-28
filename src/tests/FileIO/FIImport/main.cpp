@@ -79,7 +79,7 @@ void Load(const char* filename){
 	file->Load(objs, filename);
 }
 
-int main(int argc, char* argv[]){
+int __cdecl main(int argc, char* argv[]){
 	grSdk = GRSdkIf::CreateSdk();
 	phSdk = PHSdkIf::CreateSdk();
 	fiSdk = FISdkIf::CreateSdk();

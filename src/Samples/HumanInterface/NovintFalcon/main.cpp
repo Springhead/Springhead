@@ -21,7 +21,7 @@ int __cdecl main(){
 	UTRef<HINovintFalconIf> intf = sdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
 	intf->Init(NULL);
 	int t = 0;
-	for(int i=0; !kbhit() && i<100000; ++i){
+	for(int i=0; !_kbhit() && i<100000; ++i){
 		t += 1;
 		intf->Update(0.001f);
 #if 1
@@ -35,5 +35,5 @@ int __cdecl main(){
 #endif
 
 	}
-	if (kbhit()) getch();
+	if (_kbhit()) _getch();
 }

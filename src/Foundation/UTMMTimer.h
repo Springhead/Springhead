@@ -6,6 +6,17 @@
 
 #include <Base/Env.h>
 #include <iostream>
+
+#if _MSC_VER >= 1700
+//  #include <windows.h>
+typedef	unsigned int UINT;
+#if defined(_WIN64)
+typedef	unsigned __int64 DWORD_PTR;
+#else
+typedef __w64 unsigned long DWORD_PTR;
+#endif
+#endif // _MSC_VER >= 1700
+
 using namespace std; 
 
 namespace Spr {
@@ -34,7 +45,11 @@ protected:
 	volatile bool bThread;				///<	タイマーがスレッドとして擬似動作しているかどうか
     volatile bool bRun;					///<	コールバック関数が実行中かどうか
 	void* hThread;						///<	擬似動作用スレッド
+#if (_MSC_VER >= 1700)
+	static void SPR_STDCALL TimerCallback(UINT uID, UINT, DWORD_PTR dwUser, DWORD_PTR, DWORD_PTR);
+#else
 	static void SPR_STDCALL TimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long);
+#endif
 	static unsigned long SPR_STDCALL ThreadCallback(void* arg);
 	void BeginPeriod();
 	void EndPeriod();

@@ -6,6 +6,10 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 
+#if (_MSC_VER >= 1700)
+#include <functional>
+#endif
+
 #include <Graphics/GRMesh.h>
 #include <Foundation/UTLoadHandler.h>
 #include "FWFemMeshNew.h"

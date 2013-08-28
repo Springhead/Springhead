@@ -40,7 +40,7 @@ using namespace Spr;
  param	 	なし
  return 	なし
  */
-void display(){
+void __cdecl display(){
 	//	バッファクリア
 	render->ClearBuffer();
 	scene->Render(render);
@@ -93,7 +93,7 @@ void setLight() {
  param  	<in/--> h　　高さ
  return 	なし
  */
-void reshape(int w, int h){
+void __cdecl reshape(int w, int h){
 	render->Reshape(Vec2f(), Vec2f(w,h));
 }
 
@@ -104,7 +104,7 @@ void reshape(int w, int h){
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void keyboard(unsigned char key, int x, int y){
+void __cdecl keyboard(unsigned char key, int x, int y){
 	if (key == ESC) {
 		std::cout << "exited by ESC key" << std::endl;
 		exit(0);
@@ -116,7 +116,7 @@ void keyboard(unsigned char key, int x, int y){
  param	 	なし
  return 	なし
  */
-void idle(){
+void __cdecl idle(){
 //	if(scene && *scene) (*(scene))->Step();
 	glutPostRedisplay();
 	static int count=0;
@@ -133,7 +133,7 @@ void idle(){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int main(int argc, char* argv[]){
+int __cdecl main(int argc, char* argv[]){
 //	FISdkIf::RegisterSdk();
 
 	fiSdk = FISdkIf::CreateSdk();

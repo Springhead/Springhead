@@ -60,7 +60,7 @@ void CRTouchSensor::Step() {
 
 			} else if (hp1!=NULL || hp2!=NULL) {
 				/// 一方がハプティックポインタである場合
-				PHSolidIf* so; PHHapticPointer* hp;
+				PHSolidIf* so = NULL; PHHapticPointer* hp = NULL;
 				if (hp1) { hp = hp1; so = so2; }
 				if (hp2) { hp = hp2; so = so1; }
 				DSTR << so->GetName() << std::endl;

@@ -44,7 +44,7 @@ void _cdecl Idle(){
 		HWND hWnd = FindWindow(NULL, "KeyMouse Test");
 		// ウィンドウプロシージャを置き換え
 		OldWndProc = (WNDPROC)(GetWindowLongPtr(hWnd, GWLP_WNDPROC));
-		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG)(NewWndProc));
+		SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)(NewWndProc));
 
 		//	KeyMouseとTrackballの作成
 		HISdkIf::RegisterSdk();

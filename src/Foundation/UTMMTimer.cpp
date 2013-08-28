@@ -35,7 +35,11 @@ bool UTMMTimer::Create()
 	if (bThread) Release();
 	if (count == 0) BeginPeriod();
 	count ++;
+#if (_MSC_VER >= 1700)
+	timerID = timeSetEvent(interval, resolution, TimerCallback, (DWORD_PTR)this, TIME_PERIODIC);
+#else
 	timerID = timeSetEvent(interval, resolution, TimerCallback, (unsigned long)this, TIME_PERIODIC);
+#endif
 	bCreated = (timerID != 0);
 	return bCreated;
 	}
@@ -91,7 +95,11 @@ void UTMMTimer::EndPeriod()
 	{
 	timeEndPeriod(resolution);
 	}
+#if (_MSC_VER >= 1700)
+void SPR_STDCALL UTMMTimer::TimerCallback(UINT uID, UINT, DWORD_PTR dwUser, DWORD_PTR, DWORD_PTR)
+#else
 void SPR_STDCALL UTMMTimer::TimerCallback(unsigned uID, unsigned, unsigned long dwUser, unsigned long, unsigned long)
+#endif
 	{
 	UTMMTimer& mmtimer = *(UTMMTimer*)dwUser;
 #if 0

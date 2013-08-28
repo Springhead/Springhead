@@ -18,7 +18,7 @@ class TimerProviderGL: public UTTimerProvider{
 	};
 	typedef std::vector< UTRef<Arg> > Args;
 	Args args;
-	static void Callback(int a){
+	static void __cdecl Callback(int a){
 		Arg* arg = (Arg*)a;
 		if (!arg->bStop){
 			arg->timer->Call();
@@ -52,13 +52,13 @@ public:
 };
 
 volatile int hogeCount;
-void CallBackHoge(int id, void*){
+void __cdecl CallBackHoge(int id, void*){
 	std::cerr << "h";
 	std::cerr.flush();
 	hogeCount++;
 }
 volatile int piyoCount;
-void CallBackPiyo(int id, void*){
+void __cdecl CallBackPiyo(int id, void*){
 	std::cerr << "p";
 	std::cerr.flush();
 	piyoCount++;
@@ -69,7 +69,7 @@ public:
 	UTTimer timer2;
 	int count;
 	Fuga(): count(0){}
-	static void CallBackFuga(int id, void* arg){
+	static void __cdecl CallBackFuga(int id, void* arg){
 		((Fuga*)arg)->Print();
 	}
 	void Print(){
@@ -86,7 +86,7 @@ Fuga fuga;					/// クラスFuga
 
 TimerProviderGL providerGL;	//	タイマーにフレームワークを登録 
 
-void idle(){
+void __cdecl idle(){
 	providerGL.CallIdle();
 	unsigned time = timeGetTime();
 	int delta = (int)time - (int)startTime;
@@ -100,9 +100,9 @@ void idle(){
 		exit(0);
 	}
 }
-void keyboard(unsigned char key, int x, int y);
-void display();
-void reshape(int w, int h);
+void __cdecl keyboard(unsigned char key, int x, int y);
+void __cdecl display();
+void __cdecl reshape(int w, int h);
 
 int _cdecl main(int argc, char* argv[]){
 	glutInit(&argc, argv);
@@ -139,7 +139,7 @@ int _cdecl main(int argc, char* argv[]){
 	glutMainLoop();
 	return 0;
 }
-void keyboard(unsigned char key, int x, int y){
+void __cdecl keyboard(unsigned char key, int x, int y){
 	timer1.Stop();
 	fuga.timer2.Stop();
 	std::cout.flush();
@@ -147,7 +147,7 @@ void keyboard(unsigned char key, int x, int y){
 	std::cout << "exited by key hit" << std::endl;
 	exit(0);
 }	
-void display(){
+void __cdecl display(){
 }
-void reshape(int w, int h){
+void __cdecl reshape(int w, int h){
 }

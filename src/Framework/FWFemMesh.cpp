@@ -12,6 +12,10 @@
 #include <GL/glut.h>
 #include <Collision/CDQuickHull2DImp.h>
 
+#if (_MSC_VER >= 1700)
+#include <functional>
+#endif
+
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
