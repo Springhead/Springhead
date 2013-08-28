@@ -107,7 +107,7 @@ public:
 	virtual void OnAction(int id){
 		PHSceneIf* phScene = GetPHScene();
 
-		PHSolidIf* so;
+		PHSolidIf* so = NULL;
 		if(id == ID_HINGE || id == ID_BALL || id == ID_SLIDER){
 			so = phScene->CreateSolid();
 			so->AddShape(app->shapeBox);

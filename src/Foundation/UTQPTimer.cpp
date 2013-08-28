@@ -46,7 +46,7 @@ int  UTQPTimer::CountUS()
 
 	QueryPerformanceCounter( &now);
 	
-	retval =  (int)((now.QuadPart-lasttime.quadPart)*1000000 / freq.quadPart);
+	retval =  (int)(((now.QuadPart-lasttime.quadPart)*1000000 / freq.quadPart) & 0xffffffff);
 	lasttime.quadPart = now.QuadPart;
 	return retval;
 }

@@ -29,7 +29,7 @@ using namespace Spr;
  param		<in/--> argv　　コマンドライン入力
  return	0 (正常終了)
  */
-int main(int argc, char* argv[]){
+int __cdecl main(int argc, char* argv[]){
 	UTRef<PHSdkIf> sdk = PHSdkIf::CreateSdk();				//	SDKの作成
 	PHSceneIf* scene = sdk->CreateScene();			//	シーンの作成
 	PHSolidDesc desc;

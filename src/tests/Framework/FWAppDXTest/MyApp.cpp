@@ -143,6 +143,8 @@ LRESULT CALLBACK MyApp::MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
     return DefWindowProc( hWnd, msg, wParam, lParam );
 }
 
+#define	DAILY_BUILD
+
 int exitCount = 0;
 void MyApp::dx9MainLoop(){
 	exitCount ++;
@@ -154,5 +156,9 @@ void MyApp::dx9MainLoop(){
 	while( GetMessage( &msg, NULL, 0, 0 ) ){
             TranslateMessage( &msg );
             DispatchMessage( &msg );
+			
+#ifdef	DAILY_BUILD
+		if (++exitCount > 80) exit(0);
+#endif
 	}
 }

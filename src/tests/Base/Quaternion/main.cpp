@@ -2,7 +2,7 @@
 
 using namespace Spr;
 
-int main(){
+int __cdecl main(){
 	Quaterniond q = Quaterniond::Rot(Rad(30), 'y');
 	Vec3d r1 = q.RotationHalf();
 	std::cout << q << r1 << std::endl;	

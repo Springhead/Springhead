@@ -16,7 +16,7 @@
 
 using namespace Spr;
 
-void main(){
+void __cdecl main(){
 	UTRef<NameManager> nameMan = DBG_NEW NameManager;
 	UTRef<NamedObject> obj = DBG_NEW NamedObject;
 	NamedObjectIf* objIf = obj->Cast();

@@ -89,7 +89,7 @@ public:
 	}
 } app;
 
-int main(int argc, char* argv[]){
+int __cdecl main(int argc, char* argv[]){
 	app.Init(argc, argv);
 	app.StartMainLoop();
 	return 0;
