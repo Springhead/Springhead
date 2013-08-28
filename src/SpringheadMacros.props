@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <LibConfDebug>D</LibConfDebug>
+    <LibConfRelease />
+    <LibConfTrace>T</LibConfTrace>
+    <LibCOnfDebugDll>MD</LibCOnfDebugDll>
+    <LibCOnfReleaseDll>M</LibCOnfReleaseDll>
+  </PropertyGroup>
+  <PropertyGroup />
+  <ItemDefinitionGroup />
+  <ItemGroup>
+    <BuildMacro Include="LibConfDebug">
+      <Value>$(LibConfDebug)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="LibConfRelease">
+      <Value>$(LibConfRelease)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="LibConfTrace">
+      <Value>$(LibConfTrace)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="LibCOnfDebugDll">
+      <Value>$(LibCOnfDebugDll)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+    <BuildMacro Include="LibCOnfReleaseDll">
+      <Value>$(LibCOnfReleaseDll)</Value>
+      <EnvironmentVariable>true</EnvironmentVariable>
+    </BuildMacro>
+  </ItemGroup>
+</Project>
