@@ -5,6 +5,7 @@ rem <<Settings>>
 set MODULE=MyEPApp
 set BIN=..\..\..\..\bin
 set INCLUDE=../../../../include
+set VERSION=%1
 
 rem ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -19,7 +20,7 @@ del /Q .\EP%MODULE%.*.orig
 ren EP%MODULE%.cpp EP%MODULE%.cpp.tmp
 
 echo #include "%INCLUDE%/Springhead.h"                 > EP%MODULE%.cpp
-echo #include "%INCLUDE%/Python/Python.h"             >> EP%MODULE%.cpp
+echo #include "%INCLUDE%/Python%VERSION%/Python.h"    >> EP%MODULE%.cpp
 echo #include "%INCLUDE%/EmbPython/SprEPUtility.h"    >> EP%MODULE%.cpp
 echo #include "%INCLUDE%/EmbPython/SprEPBase.h"       >> EP%MODULE%.cpp
 echo #include "%INCLUDE%/EmbPython/SprEPFoundation.h" >> EP%MODULE%.cpp
