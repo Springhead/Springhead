@@ -2,7 +2,7 @@
 set PY_VERSION=%1
 set EPVERSION_FILE=..\..\include\EmbPython\SprEPVersion.h
 
-call CurrEPVersion.bat
+call CurrEPVersion.bat %1
 
 if %PY_VERSION%==%CURR_PY_VERSION% (
 echo "Do Nothing."
