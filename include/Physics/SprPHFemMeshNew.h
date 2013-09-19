@@ -93,11 +93,11 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
 #ifndef SWIG
 	bool AddBoundaryCondition(int vtxId, Vec3i dof);
-	// 境界条件を加える(頂点順）
+	// 境界条件を加える(頂点順）Add the voudnary conditions (vertex order)
 	bool AddBoundaryCondition(std::vector< Vec3i >& bcs); 
-	// 頂点に力を加える（ワールド座標系）
+	// 頂点に力を加える（ワールド座標系）  Applying force to the vertex (world coordinate system)
 	bool AddVertexForceW(int vtxId, Vec3d fW);
-	// 頂点群に力を加える（ワールド座標系）
+	// 頂点群に力を加える（ワールド座標系） Applying force to a group of vertices (world coordinate system)
 	bool AddVertexForceW(std::vector< Vec3d >& fWs);
 #endif
 	void SetbRecomp();	
