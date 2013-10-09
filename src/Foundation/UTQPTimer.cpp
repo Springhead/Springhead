@@ -130,13 +130,14 @@ void UTQPTimerFileOut::FileOut(std::string filename){
 	}
 	ofs << std::endl;
 
-	int nrow = (int)data[0].size();
-	int ncol = (int)names.size();
-
+	int nRow = 0;
+	for (int j = 0; j < data.size(); j++){
+		nRow = nRow < data[j].size() ? data[j].size() : nRow;
+	}
 	// i:列, j:行
 	// data[列][行]
-	for (int i = 0; i < nrow; i++){
-		for (int j = 0; j < ncol; j++){
+	for (int i = 0; i < nRow; i++){
+		for (int j = 0; j < names.size(); j++){
 			// dataの行数よりもiが大きい場合
 			if(data[j].size() -1 < i){
 				ofs << 0 << "\t";

@@ -112,6 +112,9 @@ public:
 	double GetAlpha(){ return alpha; }
 	void SetBeta(double value){ beta = value; }
 	double GetBeta(){ return beta; }
+	void SetBoundary(int value){fixedVertices.push_back(value);}
+	std::vector<int> GetBoundary(){return fixedVertices;} 
+
 	void SetbRecomp(){ bRecomp=true; }
 	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
@@ -128,6 +131,8 @@ public:
 	bool AddBoundaryCondition(VMatrixRe& mat, const int id);
 	// 境界条件を加える(頂点）
 	bool AddBoundaryCondition(const int vtxId, const Vec3i dof);
+	//境界条件を消す(頂点)
+	void DeleteBoundaryCondition(){fixedVertices.pop_back();}
 	// 境界条件を加える(頂点順）
 	bool AddBoundaryCondition(const std::vector< Vec3i >& bcs);
 	// 境界条件に応じて行列の自由度を削減する
