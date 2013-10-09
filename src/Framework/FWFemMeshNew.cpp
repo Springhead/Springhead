@@ -393,7 +393,7 @@ void FWFemMeshNew::Sync(){
 			SyncVibrationInfo();
 		}
 		if(GetPHFemMesh()->GetPHFemThermo()){
-			SyncThermoInfo();
+				SyncThermoInfo();
 		}
 	}
 }
@@ -463,7 +463,7 @@ void FWFemMeshNew::SyncThermoInfo(){
 			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
 			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
 			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
-		}
+	}
 		//for(unsigned i = 0; i < phMesh->faces.size(); i++){
 		//	//.	三角形の重心からの法線を表示
 		//	Vec3d jushin = Vec3d(0.0,0.0,0.0);
