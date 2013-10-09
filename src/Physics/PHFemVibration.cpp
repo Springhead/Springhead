@@ -33,10 +33,10 @@ PHFemVibrationDesc::PHFemVibrationDesc(){
 	// ポアソン比:0.35,ヤング率 70GPa, 密度2.70g/cm3
 	// 減衰比は適当に設定
 	poisson = 0.345;
-	young = 7.03e10;
-	density =  2.7 * 1e3;
-	alpha = 10.1;
-	beta = 1.664e-6;
+	young = 1.0e9/27;
+	density = 2700/3;
+	alpha = 48.8;
+	beta =1.74e-5;
 				
 	//段ボール
 	/*poisson = 0.1;
@@ -65,8 +65,9 @@ PHFemVibration::PHFemVibration(const PHFemVibrationDesc& desc){
 	//SetAlpha(55.5071);//αとβをセット
 	//SetBeta(3.12387e-006);
 
-	//dampingRatio[0] = 0.3;//(compRaileighDampingRatio)
-	//dampingRatio[1] = 0.015;
+	//++//
+	//dampingRatio[0] = 0.15;//(compRaileighDampingRatio)
+	//dampingRatio[1] = 0.03;
 	nMode = 55;
 	bRecomp = true;
 }
@@ -96,6 +97,7 @@ void PHFemVibration::Init(){
 	al.resize(NDof, 0.0);
 	fl.resize(NDof, 0.0);
 	boundary.resize(NDof, 0.0);
+	boundary.clear();
 	GetVerticesDisplacement(xdl);		// FemVertexから変位を取ってくる
 	//CompInitialCondition(matMIni, matKIni, matCIni, fl, xdl, vl, al);
 
@@ -104,8 +106,7 @@ void PHFemVibration::Init(){
 
 	veIds= fixedVertices;
 
-
-
+	fixedVertices.clear();
 	// phpipe用
 	//veIds1 = FindVertices(521, Vec3d(1.0, 0.0, 0.0));
 	//veIds2 = FindVertices(1, Vec3d(-1.0, 0.0, 0.0));
@@ -127,11 +128,21 @@ void PHFemVibration::Init(){
 	//veIds.push_back(5);
 
 	//// phboard用
-	//veIds.push_back(2);
-	//veIds.push_back(4);
-	//veIds.push_back(6);
-	//veIds.push_back(7);
+	//
+	fixedVertices.push_back(35);
+	fixedVertices.push_back(34);
 	
+	fixedVertices.push_back(37);
+	fixedVertices.push_back(36);
+	
+  //四点接地
+	//veIds.push_back(40);
+	//veIds.push_back(41);
+
+	//veIds.push_back(38);
+	//veIds.push_back(39);
+
+
 	//// phSphere用
 	//for(int i = 49; i < 58; i++){
 	//	veIds.push_back(i);
@@ -152,21 +163,28 @@ void PHFemVibration::Init(){
 	//}
 	
 	//// phStick用
-	veIds.push_back(54);
-	veIds.push_back(55);
-	veIds.push_back(46);
-	veIds.push_back(47);
+	//veIds.push_back(54);
+	//veIds.push_back(55);
+	//veIds.push_back(46);
+	//veIds.push_back(47);
 	
+	//phStick 片持ち
+	//veIds.push_back(0);
+	//veIds.push_back(7);
+	//veIds.push_back(5);
+	//veIds.push_back(6);
+
 	Vec3i con = Vec3i(1,1,1);
 	for(int i = 0; i < (int)veIds.size(); i++){
-		AddBoundaryCondition(veIds[i], con);
+		AddBoundaryCondition(fixedVertices[i], con);
 	}
 
 	ReduceMatrixSize(matMp, boundary);
 	ReduceMatrixSize(matCp, boundary);
 	ReduceMatrixSize(matKp, boundary);
 	DSTR << "All matrices has reduced." << std::endl;
-	//CompRayleighDampingMatrixByDampingRatio();//
+	//++//
+	//CompRayleighDampingMatrixByDampingRatio();
 
 	if(analysis_mode == PHFemVibrationDesc::ANALYSIS_MODAL){
 			InitModalAnalysis(matMp, matKp, matCp, flp, vdt, bRecomp, xdlp, vlp, alp, nMode);
@@ -496,7 +514,13 @@ void PHFemVibration::InitModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K,
 		qtimer.StartPoint("CompEigen");
 		CompEigenValue(_M, _K, 0, nmode, evalue, evector);
 		qtimer.EndPoint("CompEigen");
-		
+
+		q.resize(nmode,0);
+		qv.resize(nmode,0);
+		qa.resize(nmode,0);
+		qf.resize(nmode,0);
+
+
 		// MK系の固有振動数
 		VVectord ew;
 		CompEigenVibrationFrequency(evalue, ew);
@@ -590,10 +614,11 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 		_Mp.resize(NVer * 3,0.0);
 	}
 	*/
+
 	// デカルト座標からモード座標系に変換
-	q.assign(evector.trans() * (_M * _xd));
-	qv.assign(evector.trans() * (_M * _v));
-	qa.assign(evector.trans() * (_M * _a));
+	//q.assign(evector.trans() * (_M * _xd));
+	//qv.assign(evector.trans() * (_M * _v));
+	//qa.assign(evector.trans() * (_M * _a));
 	qf.assign(evector.trans() * _f);
 
 	// 積分
@@ -603,14 +628,52 @@ void PHFemVibration::ModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K, con
 #else
 	// 1次独立の連立方程式なので、各方程式毎に計算
 	//#pragma omp parallel for
+	VVectord  q_temp = q;
+	VVectord qv_temp = qv;
+	VVectord qa_temp = qa;
+
 	for(int i = 0; i < nmode; i++){
 		NumericalIntegration(SmInv[i][i], Km[i][i], Cm[i][i], qf[i], _dt, q[i], qv[i], qa[i]);
 	}
 #endif
 	// モード座標系からデカルト座標系に変換
+	
+	
 	_xd = evector * q;
 	_v = evector * qv;
 	_a = evector * qa;
+
+	//std::cout << "evector=" << evector << std::endl;
+	//std::cout << "" << std::endl;
+
+/*
+	const int NVer = NVertices() ;
+	int counter = 0;
+	for(int i = 0; i < NVer; i++){//160頂点
+		for(int j=0 ;j < nmode; j++){//55モード
+			int id = i * 3;//480　(160 * x,y,z)
+			if(qv_temp[j]!=qv[j]){//そのモードの振動ベクトルが変化していたら
+				_v[counter] = evector[id] * qv;
+				_v[counter+1] = evector[id+1] * qv;
+				_v[counter+2] = evector[id+2] * qv;
+				counter += 3;
+			}
+		}
+	}
+	*/
+	/*for(int i = 0; i < nmode; i++){	
+		if(q_temp[i]==q[i]){
+			_xd = evector[i] * q;
+		}
+		
+		if(qv_temp[i]==qv[i]){
+			_v[i] = evector[i] * qv;
+		}
+		if(qa_temp[i]==qa[i]){
+			_a[i] = evector[i] * qa;
+		}
+	}
+	*/
 	qtimer.EndPoint("integration core");
 }
 
@@ -821,12 +884,18 @@ bool PHFemVibration::AddBoundaryCondition(VMatrixRe& mat, const int id){
 
 bool PHFemVibration::AddBoundaryCondition(const int vtxId, const Vec3i dof = Vec3i(1, 1, 1)){
 	int NVer = NVertices();
+
+	//for(int j=0;j<= (NVer-1)*3 ;j++){
+//		boundary[j]=0;
+//	}
+
 	if(0 <= vtxId && vtxId <= NVer -1){
 		for(int i = 0; i < 3; i++){
 			if(dof[i] == 1){
 				const int id = vtxId * 3 + i;
 				boundary[id] = 1;
 			}
+
 		}
 		return true;
 	}

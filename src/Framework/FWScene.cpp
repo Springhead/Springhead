@@ -887,6 +887,7 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 		for(int j = 0; j < nv; j++){
 			Posed p;
 			p.Pos() = solidPose * mesh->vertices[j].pos;
+			//p.Pos().y -= 0.01;
 			//Affinef aff;
 			//p.ToAffine(aff);
 			//render->PushModelMatrix();
@@ -897,7 +898,7 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 			// 頂点番号の描画
 			std::stringstream str;
 			str << j;
-			render->DrawFont((Vec3f)p.Pos(), str.str());
+			//render->DrawFont((Vec3f)p.Pos(), str.str());
 		}
 		// 辺の描画
 		int ne = (int)mesh->edges.size();
@@ -907,7 +908,7 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 			p[0] = solidPose * mesh->vertices[mesh->edges[j].vertexIDs[0]].pos;
 			p[1] = solidPose * mesh->vertices[mesh->edges[j].vertexIDs[1]].pos;
 			render->SetMaterial(GRRenderIf::YELLOW);
-			render->DrawLine(p[0], p[1]);
+		//	render->DrawLine(p[0], p[1]);
 		}
 		// 各種情報を2次元座標で描画
 		// テクスチャ、温度、振動変位の描画などはFWFemMeshでおこなう

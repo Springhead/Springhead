@@ -89,10 +89,15 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	double GetAlpha();
 	void SetBeta(double value);
 	double GetBeta();
+	void SetBoundary(int vtxIds);
+	std::vector<int>  GetBoundary();
 	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
-#ifndef SWIG
 	bool AddBoundaryCondition(int vtxId, Vec3i dof);
+	void DeleteBoundaryCondition();
+#ifndef SWIG
+
+
 	// 境界条件を加える(頂点順）Add the voudnary conditions (vertex order)
 	bool AddBoundaryCondition(std::vector< Vec3i >& bcs); 
 	// 頂点に力を加える（ワールド座標系）  Applying force to the vertex (world coordinate system)
