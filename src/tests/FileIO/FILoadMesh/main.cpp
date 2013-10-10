@@ -67,7 +67,7 @@ void __cdecl display(){
 	GRMesh* mesh = scene->FindObject("tire_tex3d")->Cast();
 	if (mesh){
 		for(int i=0; i<mesh->NVertex(); ++i){
-			mesh->GetVertices()[i][2] = (i+count)%10 * 0.1;
+			mesh->GetVertices()[i][2] = (i+count)%10 * 0.1f;
 		}
 	}
 

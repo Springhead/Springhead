@@ -92,10 +92,10 @@ void __cdecl display(){
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// 材質の設定
-	static GLfloat mat_floor[]      = { 1.0, 0.7, 0.7, 0.8 };
-	static GLfloat mat_block[]      = { 0.7, 0.7, 1.0, 0.8 };
-	static GLfloat mat_specular[]   = { 1.0, 1.0, 1.0, 0.8 };
-	static GLfloat mat_shininess[]  = { 120.0 };
+	static GLfloat mat_floor[]      = { 1.0f, 0.7f, 0.7f, 0.8f };
+	static GLfloat mat_block[]      = { 0.7f, 0.7f, 1.0f, 0.8f };
+	static GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 0.8f };
+	static GLfloat mat_shininess[]  = { 120.0f };
 
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);

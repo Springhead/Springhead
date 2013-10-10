@@ -85,7 +85,7 @@ public:
 		PHSolidDesc descSolid;
 
 		CDSphereDesc descSphere;
-		descSphere.radius  = 0.1;
+		descSphere.radius  = 0.1f;
 
 		// Pointer
 		PHSolidIf* so4 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);

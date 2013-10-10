@@ -132,8 +132,8 @@ void PHIKEngine::CalcJacobian() {
 					PTM::VMatrixRow<double>& Jpart = (*it).second;
 					for (size_t x=0; x<Jpart.width(); ++x) {
 						for (size_t y=0; y<Jpart.height(); ++y) {
-							int X = strideAct[i] + x;
-							int Y = strideEff[j] + y;
+							size_t X = strideAct[i] + x;
+							size_t Y = strideEff[j] + y;
 							J.at_element(Y,X) = Jpart[y][x];
 						}
 					}
@@ -150,8 +150,8 @@ void PHIKEngine::CalcJacobian() {
 
 			act->CalcPullbackVelocity();
 
-			for (size_t x=0; x<act->ndof; ++x) {
-				int X = strideAct[i] + x;
+			for (size_t x=0; x<(size_t)act->ndof; ++x) {
+				size_t X = strideAct[i] + x;
 				Wp[X] = act->domega_pull[x];
 			}
 		}
@@ -171,8 +171,8 @@ void PHIKEngine::IK() {
 			PHIKEndEffector* eff = endeffectors[j];
 			PTM::VVector<double> Vpart; Vpart.resize(eff->ndof);
 			eff->GetTempTarget(Vpart);
-			for (size_t y=0; y<eff->ndof; ++y) {
-				int Y = strideEff[j] + y;
+			for (size_t y=0; y<(size_t)eff->ndof; ++y) {
+				size_t Y = strideEff[j] + y;
 				V[Y] = Vpart[y];
 			}
 		}
@@ -231,8 +231,8 @@ void PHIKEngine::IK() {
 	for (size_t i=0; i<actuators.size(); ++i) {
 		if (actuators[i]->IsEnabled()) {
 			PHIKActuator* act = actuators[i];
-			for (size_t x=0; x<act->ndof; ++x) {
-				int X = strideAct[i] + x;
+			for (size_t x=0; x<(size_t)act->ndof; ++x) {
+				size_t X = strideAct[i] + x;
 				act->omega[x] = W[X];
 			}
 		}
@@ -250,13 +250,13 @@ void PHIKEngine::Limit() {
 	// IK計算結果をリミットの中に収める
 	bool anyLimit = false;
 	std::vector<int> disabled;
-	for (int i=0; i<actuators.size(); ++i) {
+	for (size_t i=0; i<actuators.size(); ++i) {
 		if (actuators[i]->IsEnabled()) {
 			bool limit = actuators[i]->LimitTempJoint();
 			anyLimit = anyLimit || limit;
 			if (limit) {
 				actuators[i]->Enable(false);
-				disabled.push_back(i);
+				disabled.push_back((const int)i);
 			}
 		}
 	}
@@ -267,7 +267,7 @@ void PHIKEngine::Limit() {
 		Prepare(true);
 		CalcJacobian();
 		IK();
-		for (int n=0; n<disabled.size(); ++n) {
+		for (size_t n=0; n<disabled.size(); ++n) {
 			actuators[disabled[n]]->Enable(true);
 		}
 	}

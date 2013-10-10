@@ -543,17 +543,17 @@ void cholesky(MatrixImp<AD>& a, VectorImp<BD>& s){
 ///	コレスキー法．a:非破壊
 template <class AD, class BD>
 void cholesky(const PTM::MatrixImp< AD >& a, PTM::MatrixImp< BD >& l){
-	int n = a.height();
+	size_t n = a.height();
 	l.clear(0.0);
-	for(int i = 0; i < n; i++){		
+	for(size_t i = 0; i < n; i++){		
 		// 非対角成分
-		for(int j = 0; j < i; j++){
-			for(int k = 0; k < j; k++)
+		for(size_t j = 0; j < i; j++){
+			for(size_t k = 0; k < j; k++)
 				l.item(i, j) += l.item(i, k) * l.item(j, k);
 			l.item(i, j) = (a.item(i, j) - l.item(i, j)) / l.item(j, j);
 		}	
 		// 対角成分
-		for(int k = 0; k < i; k++)
+		for(size_t k = 0; k < i; k++)
 			l.item(i, i) += pow(l.item(i, k), 2);
 		l.item(i, i) = sqrt(a.item(i, i) - l.item(i, i));
 	}

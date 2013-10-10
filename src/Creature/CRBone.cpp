@@ -33,7 +33,7 @@ CRBoneIf* CRBone::GetParentBone() {
 int CRBone::NChildBones() {
 	int count = 0;
 	if (actuator) {
-		for (int i=0; i<actuator->NChildObject(); ++i) {
+		for (size_t i=0; i<actuator->NChildObject(); ++i) {
 			PHIKActuatorIf* child = actuator->GetChildObject(i)->Cast();
 			if (child) {
 				for (int i=0; i<DCAST(CRCreatureIf,GetScene())->NBodies(); ++i) {
@@ -50,7 +50,7 @@ int CRBone::NChildBones() {
 CRBoneIf* CRBone::GetChildBone(int number) {
 	int count = -1;
 	if (actuator) {
-		for (int i=0; i<actuator->NChildObject(); ++i) {
+		for (int i=0; (size_t)i<actuator->NChildObject(); ++i) {
 			PHIKActuatorIf* child = actuator->GetChildObject(i)->Cast();
 			if (child) {
 				for (int i=0; i<DCAST(CRCreatureIf,GetScene())->NBodies(); ++i) {

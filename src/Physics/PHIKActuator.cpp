@@ -379,7 +379,7 @@ void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 	ndof_eef += (endeffector->bPosition    ? 3 : 0);
 	ndof_eef += (endeffector->bOrientation ? 3 : 0);
 	for (size_t i=0; i<ndof_eef; ++i) {
-		for (size_t j=0; j<ndof; ++j) {
+		for (size_t j=0; j<(size_t)ndof; ++j) {
 			Mj[n][i][j] *= sqsaib;
 		}
 	}
@@ -402,7 +402,7 @@ void PHIKBallActuator::CalcPullbackVelocity() {
 
 	Vec3d pullback_ = m.inv() * (soParentPose.Ori() * (socketPose.Ori() * pullback));
 
-	for (size_t i=0; i<ndof; ++i) { domega_pull[i] = pullback_[i]; }
+	for (size_t i=0; i<(size_t)ndof; ++i) { domega_pull[i] = pullback_[i]; }
 }
 
 void PHIKBallActuator::Move(){
@@ -512,7 +512,7 @@ void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 	ndof_eef += (endeffector->bPosition    ? 3 : 0);
 	ndof_eef += (endeffector->bOrientation ? 3 : 0);
 	for (size_t i=0; i<ndof_eef; ++i) {
-		for (size_t j=0; j<ndof; ++j) {
+		for (size_t j=0; j<(size_t)ndof; ++j) {
 			Mj[n][i][j] *= sqsaib;
 		}
 	}

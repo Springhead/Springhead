@@ -130,14 +130,14 @@ void UTQPTimerFileOut::FileOut(std::string filename){
 	}
 	ofs << std::endl;
 
-	int nRow = 0;
-	for (int j = 0; j < data.size(); j++){
+	size_t nRow = 0;
+	for (size_t j = 0; j < data.size(); j++){
 		nRow = nRow < data[j].size() ? data[j].size() : nRow;
 	}
 	// i:列, j:行
 	// data[列][行]
-	for (int i = 0; i < nRow; i++){
-		for (int j = 0; j < names.size(); j++){
+	for (size_t i = 0; i < nRow; i++){
+		for (size_t j = 0; j < names.size(); j++){
 			// dataの行数よりもiが大きい場合
 			if(data[j].size() -1 < i){
 				ofs << 0 << "\t";
@@ -152,7 +152,7 @@ void UTQPTimerFileOut::FileOut(std::string filename){
 }
 
 int UTQPTimerFileOut::FindIdByName(std::string name){
-	for(int i = 0; i < names.size(); i++){
+	for(size_t i = 0; i < names.size(); i++){
 		if(names[i].name == name){
 			return names[i].id;
 		}
@@ -165,7 +165,7 @@ int UTQPTimerFileOut::ResizeDataArea(std::string name){
 	id = FindIdByName(name);
 	if(id > -1) return id;
 	Name newname;
-	id = names.size();
+	id = (int)names.size();
 	newname.id = id;
 	newname.name = name;
 	names.push_back(newname);
