@@ -83,7 +83,7 @@ UTString UTPath::Ext(){
 }
 UTString UTPath::Drive(){
 	if (path.length() >=2 && path[0]=='\\' && path[1]=='\\'){
-		int n = path.find('\\', 2);
+		size_t n = path.find('\\', 2);
 		return path.substr(0, n-1);
 	}else{
 		char buf[1024];
@@ -104,13 +104,13 @@ UTString UTPath::Dir(){
 #endif
 	if ((path.length() >=2 && path[0]==delim && path[1]==delim)
 		|| (path.length() >=2 && path[1]==':')){
-		int b = path.find(delim, 2);
-		int e = path.find_last_of(delim);
-		if (e == (int)path.npos) return "";
+		size_t b = path.find(delim, 2);
+		size_t e = path.find_last_of(delim);
+		if (e == path.npos) return "";
 		return path.substr(b, e-b+1);
 	}else{
-		int e = path.find_last_of(delim);
-		if (e == (int)path.npos) return "";
+		size_t e = path.find_last_of(delim);
+		if (e == path.npos) return "";
 		return path.substr(0, e+1);
 	}
 }
@@ -149,7 +149,7 @@ UTString UTPath::FullPath(){
 		if (path.length()>=2 && path[0]=='\\' && path[1]!='\\'){
 			//	ドライブ名が省略されているので補完．
 			UTString cwd = GetCwd();
-			int bsPos = cwd.find_first_of('\\', 2);
+			size_t bsPos = cwd.find_first_of('\\', 2);
 			UTString rv = cwd.substr(0, bsPos-1);
 			rv += path;
 			return rv;
@@ -169,7 +169,7 @@ UTString UTPath::RelPath(){
 		UTString fp = FullPath();
 		//	もともと絶対パス
 		UTString cwd = GetCwd();
-		unsigned int i;
+		size_t i;
 		for(i=0; i<cwd.length() && i<fp.length(); ++i){
 			if (cwd[i] != fp[i]) break;
 		}
@@ -178,7 +178,7 @@ UTString UTPath::RelPath(){
 			return fp;
 		}else{	//	共通部分があるので相対パス化
 			int c=0;
-			for(int p=i; p!=(int)cwd.npos; c++){
+			for(size_t p=i; p!=cwd.npos; c++){
 				p = cwd.find('\\', p+1);
 			}
 			UTString rv;

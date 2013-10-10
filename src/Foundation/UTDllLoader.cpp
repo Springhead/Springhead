@@ -16,11 +16,11 @@ void UTDllLoader::Init(){
 }
 
 static char* GetEnv(char* buf, const char* var){
-	int cur = 0;
-	int bufCur = 0;
+	size_t cur = 0;
+	size_t bufCur = 0;
 	while(var[cur]){
 		if (var[cur] == '$' && var[cur+1] == '('){
-			int start = cur+2;
+			size_t start = cur+2;
 			while(var[cur] && var[cur] != ')') cur ++;
 			char varstr[1024];
 			varstr[cur-start] = '\0';
@@ -35,7 +35,7 @@ static char* GetEnv(char* buf, const char* var){
 			cur ++;
 		}else if (var[cur] == '%'){
 			cur += 1;
-			int start = cur;
+			size_t start = cur;
 			while(var[cur] && var[cur] != '%') cur ++;
 			char varstr[1024];
 			varstr[cur-start] = '\0';

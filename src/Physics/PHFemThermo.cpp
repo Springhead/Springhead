@@ -1276,7 +1276,7 @@ void PHFemThermo::CalcIHdqdt(double r,double R,double dqdtAll,unsigned num){
 void PHFemThermo::CalcHeatTransDirect2(double dt){
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	//lapack利用
-	int n = mesh->vertices.size();
+	int n = (int)mesh->vertices.size();
 
 	double eps =0.5;
 	//	係数行列の作成
@@ -4319,7 +4319,7 @@ void PHFemThermo::SetTempAllToTVecAll(unsigned size){
 
 void PHFemThermo::CreateTempVertex(){		//Resize and Set Temp to TVecAll 
 	TVecAll.resize(GetPHFemMesh()->vertices.size());
-	SetTempAllToTVecAll(GetPHFemMesh()->vertices.size());
+	SetTempAllToTVecAll((unsigned)GetPHFemMesh()->vertices.size());
 }
 
 void PHFemThermo::SetTempToTVecAll(unsigned vtxid){
@@ -4352,7 +4352,7 @@ void PHFemThermo::SetVertexTemp(unsigned i,double temp){
 void PHFemThermo::SetVerticesTempAll(double temp){
 	for(std::vector<unsigned int>::size_type i=0; i < GetPHFemMesh()->vertices.size() ; i++){
 		vertexVars[i].temp = temp;
-		SetTempToTVecAll(i);	// 要検討：Aftersetdeskの中で呼ばれる時、TVecAllの要素の数が固まっておらず、アクセス違反の可能性がある
+		SetTempToTVecAll((unsigned)i);	// 要検討：Aftersetdeskの中で呼ばれる時、TVecAllの要素の数が固まっておらず、アクセス違反の可能性がある
 	}
 }
 

@@ -28,7 +28,7 @@ using namespace Spr;
 #define TOTAL_IDLE_COUNTER	1000	// 静止しない場合に利用	
 #define NUM_BLOCK			6//6	// 生成するボックス数
 
-const float boxStride = 2+0.1;
+const float boxStride = (const float)(2+0.1);
 float boxpos[][3] = {
 /*	{0,boxStride*1,0},
 	{0,boxStride*2,0},
@@ -36,8 +36,8 @@ float boxpos[][3] = {
 	{0,boxStride*4,0},
 	{0,boxStride*5,0},
 */
-	{-2.4, 1.1, 0}, {0, 1.1, 0}, {2.4, 1.1, 0}, {-1.2, 4.2, 0}, {1.2, 4.2, 0},
-	{0, 7.4, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
+	{-2.4f, 1.1f, 0}, {0, 1.1f, 0}, {2.4f, 1.1f, 0}, {-1.2f, 4.2f, 0}, {1.2f, 4.2f, 0},
+	{0, 7.4f, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}, {0, 0, 0}
 };
 
 UTRef<PHSdkIf> sdk;

@@ -25,10 +25,10 @@ UTRef<HITrackballIf> trackball;
 void _cdecl Disp(){
 	glClear(GL_COLOR_BUFFER_BIT);
 	glColor3f(1,1,1);
-	glRasterPos2f(-0.95, 0.3);
+	glRasterPos2f(-0.95f, 0.3f);
 	char* p = "Drag this area to change the pose.";
 	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
-	glRasterPos2f(-0.95, -0.3);
+	glRasterPos2f(-0.95f, -0.3f);
 	p = "To quit, press 'Q'.";
 	while (*p != '\0') glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, *p++);
 	glFlush();

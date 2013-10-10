@@ -318,7 +318,7 @@ int __cdecl main(int argc, char* argv[]){
 	soBlock->AddShape(meshBlock);
 	soFloor->SetFramePosition(Vec3f(0,-1,0));
 	soBlock->SetFramePosition(Vec3f(-0.5,5,0));
-	soBlock->SetOrientation(Quaternionf::Rot(Rad(30), 'z'));
+	soBlock->SetOrientation(Quaternionf::Rot((float)Rad(30), 'z'));
 
 	scene->SetGravity(Vec3f(0,-9.8f, 0));	// 重力を設定
 

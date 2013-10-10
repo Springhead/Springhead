@@ -150,7 +150,7 @@ template <class AD, class BD>
 int sprsygvx(const PTM::MatrixImp<AD>& a, const PTM::MatrixImp<AD>& b, PTM::VectorImp<BD>& e, PTM::MatrixImp<AD>& v, int start, int interval){
 	e.clear();
 	v.clear();
-	int size = a.height();
+	int size = (int)a.height();
 	assert(a.width() == size);
 	assert(b.height() == size || b.width() == size);
 	assert(e.size() == interval);

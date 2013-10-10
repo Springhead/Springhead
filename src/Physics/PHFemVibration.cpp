@@ -508,7 +508,7 @@ void PHFemVibration::InitModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K,
 		const VVectord& _f, const double& _dt, bool& bFirst, VVectord& _xd, VVectord& _v, VVectord& _a, const int nmode){
 
 	// 固有値・固有ベクトルを求める
-		int size = _M.height();
+		size_t size = _M.height();
 		evalue.resize(nmode, 0.0);
 		evector.resize(size, nmode, 0.0);
 		qtimer.StartPoint("CompEigen");
@@ -681,7 +681,7 @@ void PHFemVibration::CompEigenValue(const VMatrixRd& _M, const VMatrixRd& _K, co
 #if 1
 		// 境界条件導入済みのmatMp, matKpをつかう
 		// 固有値・固有ベクトルを求める
-		int size = _M.height();
+		size_t size = _M.height();
 		if (!size) return;
 		e.resize(interval, 0.0);
 		v.resize(size, interval, 0.0);
