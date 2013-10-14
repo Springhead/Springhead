@@ -681,7 +681,10 @@ public: /** FWAppの実装 **/
 		FWWinIf* win = GetCurrentWin();
 		GRRenderIf *render = win->GetRender();
 		render->BeginScene();
-		 
+		
+		/* OpenGLのバージョンチェックが正しく機能していないため，GL3.0未対応の処理系で不具合
+		   応急処置としてシャドウ描画を無効化
+
 		// 直上から照らす点光源で影を生成
 		GRShadowLightDesc sld;
 		sld.directional = false;
@@ -705,6 +708,7 @@ public: /** FWAppの実装 **/
 			render->SetShader(shaderShadowRender);
 			render->LeaveShadowMapGeneration();
 		}
+		*/
 		// メインパス
 		render->ClearBuffer(true, true);
 		GRCameraDesc camera = render->GetCamera();
