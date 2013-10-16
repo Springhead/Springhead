@@ -75,7 +75,13 @@ void CRBone::SetOriginSolid(PHSolidIf* solid) {
 }
 
 void CRBone::AddTrajectoryNode(CRTrajectoryNode node, bool clear) {
-	if (clear) { ClearTrajectory(); }
+	if (clear) {
+		ClearTrajectory();
+		PHSceneIf* phScene = solid->GetScene()->Cast();
+		if (phScene) {
+			this->time = phScene->GetTimeStep();
+		}
+	}
 
 	bPlan = true;
 	bool bAdded = false;
@@ -83,6 +89,7 @@ void CRBone::AddTrajectoryNode(CRTrajectoryNode node, bool clear) {
 		if (node.time <= it->time) { trajNodes.insert(it, node); bAdded=true; break; }
 	}
 	if (!bAdded) { trajNodes.push_back(node); }
+
 	Plan();
 	bPlan    = false;
 	bChanged = true;
@@ -103,8 +110,8 @@ CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
 	}
 
 	/// 時刻がレンジ外の場合
-	if (time < trajNodes[0].time)                  { return trajNodes[0]; } 
-	if (trajNodes[trajNodes.size()-1].time < time) { return trajNodes[trajNodes.size()-1]; }
+	if (time < trajNodes[0].time)      { return trajNodes[0]; } 
+	if (trajNodes.back().time <= time) { return trajNodes[trajNodes.size()-1]; }
 
 	/// 時刻tに対応するセグメントを見つける
 	size_t segment=0;
@@ -113,6 +120,7 @@ CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
 	}
 
 	/// 当該セグメントから軌道を計算する
+	/*
 	Vec3d  r0 = trajNodes[segment].pose.Pos();
 	Vec6d  v0 = trajNodes[segment].dpose;
 	Vec3d  a0 = Vec3d();
@@ -121,41 +129,36 @@ CRTrajectoryNode CRBone::GetTrajectoryNodeAt(float time) {
 	Vec6d  vf = trajNodes[segment+1].dpose;
 	Vec3d  af = Vec3d();
 	double tf = trajNodes[segment+1].time - trajNodes[segment].time;
-
-	Vec3d  r1 = trajNodes[segment].viapose.Pos();
-	double t1 = trajNodes[segment].viatime;
+	*/
 
 	Vec3d  rt = Vec3d();
 	Vec3d  vt = Vec3d();
+	Vec3d  at = Vec3d();
 
 	float   t = time - trajNodes[segment].time;
 
 	/**/
 	for (int i=0; i<3; ++i) {
-		Vec4d  pi = trajNodes[segment].coeff[i];
-		if (t < t1) {
-			rt[i] = r0[i] + v0[i]*t + 0.5*a0[i]*t*t
-				+   pi[0]*pow(t,3) +   pi[1]*pow(t,4) +   pi[2]*pow(t,5);
-			vt[i] =         v0[i]   +     a0[i]*t
-				+ 3*pi[0]*pow(t,2) + 4*pi[1]*pow(t,3) + 5*pi[2]*pow(t,4);
-		} else {
-			rt[i] = r0[i] + v0[i]*t + 0.5*a0[i]*t*t
-				+   pi[0]*pow(t,3) +   pi[1]*pow(t,4) +   pi[2]*pow(t,5)
-				+   (pow(t-t1,5)*pi[3]/120.0);
-			vt[i] =         v0[i]   +     a0[i]*t
-				+ 3*pi[0]*pow(t,2) + 4*pi[1]*pow(t,3) + 5*pi[2]*pow(t,4)
-				+ (5*pow(t-t1,4)*pi[3]/120.0);
-		}
+		rt[i] = trajNodes[segment].coeff[i] * Vec6d(1, t, pow(t,2),   pow(t,3),    pow(t,4),    pow(t,5));
+		vt[i] = trajNodes[segment].coeff[i] * Vec6d(0, 1,      2*t, 3*pow(t,2),  4*pow(t,3),  5*pow(t,4));
+		at[i] = trajNodes[segment].coeff[i] * Vec6d(0, 0,        2,        6*t, 12*pow(t,2), 20*pow(t,3));
+	}
+
+	/*/
+
+	// 線形補間
+	if (tf > 1e-3) {
+		rt = (rf - r0) * (t / tf) + r0;
+	} else {
+		rt = r0;
 	}
 	/**/
 
-	// 線形補間
-	// rt = (rf - r0) * (t / tf) + r0;
-
 	CRTrajectoryNode node;
 	node.time = time;
-	node.pose.Pos() = rt;
-	for (int i=0; i<3; ++i) { node.dpose[i] = vt[i]; }
+	node.r    = rt;
+	node.v    = vt;
+	node.a    = at;
 
 	return node;
 }
@@ -172,15 +175,21 @@ CRTrajectoryNode CRBone::GetCurrentNode() {
 	return current;
 }
 
-void CRBone::ClearTrajectory() {
+void CRBone::ClearTrajectory(bool apply) {
 	CRTrajectoryNode current = GetCurrentNode();
 	current.time = 0.0f;
 	this->time   = 0.0f;
 
 	// <!!>
-	if (solid && endeffector) {
-		current.pose = solid->GetPose() * endeffector->GetTargetLocalPosition();
+	/**/
+	if (solid && endeffector && apply) {
+		Vec3d eefpos = endeffector->GetTargetLocalPosition();
+		current.r = solid->GetPose() * eefpos;
+		// current.v = solid->GetVelocity() + (solid->GetAngularVelocity() % eefpos);
+		// current.a = eefAcc;
+		endeffector->SetTargetPosition(current.r);
 	}
+	/**/
 
 	trajNodes.clear();
 	trajNodes.push_back(current);
@@ -197,21 +206,21 @@ void CRBone::StepTrajectory() {
 	PHSceneIf* phScene = DCAST(PHSceneIf,solid->GetScene());
 	PHSolidIf* soDebug = phScene->FindObject("soDebug")->Cast();
 	if (soDebug) {
-		soDebug->SetFramePosition(current.pose.Pos());
+		soDebug->SetFramePosition(current.r);
 	}
 
 
 	if (!bCtlPos) {
 		Vec3d tlp = endeffector ? endeffector->GetTargetLocalPosition() : Vec3d();
 		initPos  = solid->GetPose() * tlp;
-		finalPos = current.pose.Pos();
+		finalPos = current.r;
 		bCtlPos  = true;
 		if (endeffector) {
 			endeffector->Enable(true);
 			endeffector->EnablePositionControl(true);
 		}
 	} else {
-		finalPos = current.pose.Pos();
+		finalPos = current.r;
 	}
 	if (originSolid) {
 		initPos  = originSolid->GetPose().Inv() * initPos;
@@ -219,94 +228,57 @@ void CRBone::StepTrajectory() {
 	}
 
 
-	if (endeffector) { endeffector->SetTargetPosition(current.pose.Pos()); }
+	if (endeffector) { endeffector->SetTargetPosition(current.r); }
 
 	time += phScene->GetTimeStep();
+
+
+	Vec3d eefpos = endeffector->GetTargetLocalPosition();
+	Vec3d eefVel = solid->GetVelocity() + (solid->GetAngularVelocity() % eefpos);
+	eefAcc = (eefVel - eefLastVel) / phScene->GetTimeStep();
+	eefLastVel   = eefVel;
 }
 
 void CRBone::Plan() {
 	if (trajNodes.size() <= 1) { return; }
 
 	for (size_t segment=0; segment<trajNodes.size()-1; ++segment) {
-		trajNodes[segment].viapose.Pos() = (trajNodes[segment].pose.Pos() + trajNodes[segment+1].pose.Pos()) * 0.5;
-		trajNodes[segment].viatime       =  (trajNodes[segment+1].time - trajNodes[segment].time) * 0.5;
 		PlanSegment(trajNodes[segment], trajNodes[segment+1]);
-
-		// <!!> ちょっとNaiveすぎるかも．要改善
-		CRTrajectoryNode candidates[300];
-		for (int i=0; i<300; ++i) {
-			candidates[i] = trajNodes[segment];
-			Vec2d theta = Vec2d(
-				(((double)rand()/(double)RAND_MAX)*1.0 - 0.5) * 3.14159,
-				(((double)rand()/(double)RAND_MAX)*2.0 - 1.0) * 3.14159
-				);
-			Quaterniond rot = Quaterniond::Rot(theta[1],'y') * Quaterniond::Rot(theta[0],'x');
-			candidates[i].viapose.Pos() += (rot * (candidates[i].viapose.Pos() - trajNodes[segment].pose.Pos()));
-			candidates[i].viatime = (((double)rand()/(double)RAND_MAX)*0.2 + 0.4) * (trajNodes[segment+1].time - trajNodes[segment].time);
-
-			PlanSegment(candidates[i], trajNodes[segment+1]);
-			if (candidates[i].length < trajNodes[segment].length) {
-				trajNodes[segment] = candidates[i];
-			}
-		}		
 	}
 }
 
 void CRBone::PlanSegment(CRTrajectoryNode &from, CRTrajectoryNode &to) {
 	// Calc Coeff
-	Vec3d  r0 = from.pose.Pos();
-	Vec6d  v0 = from.dpose;
-	Vec3d  a0 = Vec3d();
+	Vec3d  r0 = from.r;
+	Vec6d  v0 = from.v;
+	Vec3d  a0 = from.a;
+	double t0 = 0.0;
 
-	Vec3d  rf = to.pose.Pos();
-	Vec6d  vf = to.dpose;
-	Vec3d  af = Vec3d();
-	double tf = to.time - from.time;
-
-	Vec3d  r1 = from.viapose.Pos(); // (r0 + rf) * 0.5;
-	double t1 = from.viatime;       // tf * 0.5;
-
-	Vec3d  rt = Vec3d();
+	Vec3d  r1 = to.r;
+	Vec6d  v1 = to.v;
+	Vec3d  a1 = to.a;
+	double t1 = to.time - from.time;
 
 	for (int i=0; i<3; ++i) {
-		PTM::TMatrixRow<4,4,double> A;
-		A.row(0) = Vec4d(    pow(t1,3),    pow(t1,4),    pow(t1,5), 0                   );
-		A.row(1) = Vec4d(    pow(tf,3),    pow(tf,4),    pow(tf,5), pow(tf-t1,5)/120.0  );
-		A.row(2) = Vec4d(  3*pow(tf,2),  4*pow(tf,3),  5*pow(tf,4), pow(tf-t1,4)/24.0   );
-		A.row(3) = Vec4d(  6*pow(tf,1), 12*pow(tf,2), 20*pow(tf,3), pow(tf-t1,3)/6.0    );
+		PTM::TMatrixRow<6,6,double> A;
+		A.row(0) = Vec6d( 1,  t0,  pow(t0,2),    pow(t0,3),     pow(t0,4),     pow(t0,5)); // r0
+		A.row(1) = Vec6d( 0,   1,       2*t0,  3*pow(t0,2),   4*pow(t0,3),   5*pow(t0,4)); // v0
+		A.row(2) = Vec6d( 0,   0,          2,         6*t0,  12*pow(t0,2),  20*pow(t0,3)); // a0
+		A.row(3) = Vec6d( 1,  t1,  pow(t1,2),    pow(t1,3),     pow(t1,4),     pow(t1,5)); // r1
+		A.row(4) = Vec6d( 0,   1,       2*t1,  3*pow(t1,2),   4*pow(t1,3),   5*pow(t1,4)); // v1
+		A.row(5) = Vec6d( 0,   0,          2,         6*t1,  12*pow(t1,2),  20*pow(t1,3)); // a1
 
-		PTM::TMatrixRow<4,1,double> b;
-		b[0][0] = r1[i] - (r0[i] + v0[i]*t1 + 0.5*a0[i]*t1*t1);
-		b[1][0] = rf[i] - (r0[i] + v0[i]*tf + 0.5*a0[i]*tf*tf);
-		b[2][0] = vf[i] - (v0[i]            +     a0[i]*tf);
-		b[3][0] = af[i] -                         a0[i];
+		PTM::TMatrixRow<6,1,double> b;
+		b[0][0] = r0[i];
+		b[1][0] = v0[i];
+		b[2][0] = a0[i];
+		b[3][0] = r1[i];
+		b[4][0] = v1[i];
+		b[5][0] = a1[i];
 
-		PTM::TMatrixRow<4,1,double> pi = A.inv() * b;
-		for (int n=0; n<4; ++n) { from.coeff[i][n] = pi[n][0]; }
+		PTM::TMatrixRow<6,1,double> pi = A.inv() * b;
+		for (int n=0; n<6; ++n) { from.coeff[i][n] = pi[n][0]; }
 	}
-
-	// Get Total Jerk
-	Vec3d  pos  = r0;
-	double jerk = 0.0;
-	int sep = 20;
-	for (int s=0; s<sep; ++s) {
-		double t  = ((double)s / (double)sep) * tf;
-		Vec3d  jk = Vec3d();
-
-		for (int i=0; i<3; ++i) {
-			Vec4d  pi = from.coeff[i];
-			if (t < t1) {
-				jk[i] = a0[i] + 6*pi[0]*t + 12*pi[1]*pow(t,2) + 20*pi[2]*pow(t,3);
-			} else {
-				jk[i] = a0[i] + 6*pi[0]*t + 12*pi[1]*pow(t,2) + 20*pi[2]*pow(t,3)
-					+ (20*pow(t-t1,3)*pi[3]/120.0);
-			}
-		}
-
-		jerk += jk.norm();
-		pos = rt;
-	}
-	if (jerk != 0) { from.length = jerk; }
 }
 
 }

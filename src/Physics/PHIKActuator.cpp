@@ -227,6 +227,22 @@ void PHIKActuator::FK()  {
 	Posed jto = Posed(); jto.Ori() = jointTempOri;
 	solidTempPose = soParentPose * socketPose * jto * plugPose.Inv();
 
+	Vec3d soParentVel  = (parent) ? parent->solidVelocity        : joint->GetSocketSolid()->GetVelocity();
+	Vec3d soParentAVel = (parent) ? parent->solidAngularVelocity : joint->GetSocketSolid()->GetAngularVelocity();
+
+	Vec3d jointTempAngVel = Vec3d();
+	PHIKBallActuator*  ba = this->Cast(); if (ba) { jointTempAngVel = ba->jointVelocity; }
+	PHIKHingeActuator* ha = this->Cast(); if (ha) { jointTempAngVel = Vec3d(0,0,ha->jointVelocity); }
+	jointTempAngVel = soParentPose.Ori() * socketPose.Ori() * jointTempAngVel;
+
+	solidVelocity        = soParentVel
+						 + PTM::cross(soParentAVel, soParentPose.Ori() * socketPose.Pos())
+						 + PTM::cross(soParentAVel+jointTempAngVel, -(solidTempPose.Ori() * plugPose.Pos()));
+	solidAngularVelocity = soParentAVel + jointTempAngVel;
+
+	// std::cout << joint->GetPlugSolid()->GetName() << " :(T) " << solidVelocity << ", " << solidAngularVelocity << std::endl;
+	// std::cout << joint->GetPlugSolid()->GetName() << " :(R) " << joint->GetPlugSolid()->GetVelocity() << ", " << joint->GetPlugSolid()->GetAngularVelocity() << std::endl;
+
 	for (size_t i=0; i<children.size(); ++i) {
 		children[i]->FK();
 	}
@@ -414,6 +430,17 @@ void PHIKBallActuator::Move(){
 	return;
 }
 
+void PHIKBallActuator::ApplyExactState(bool reverse) {
+	if (!reverse) {
+		solidTempPose        = joint->GetPlugSolid()->GetPose();
+		jointTempOri         = DCAST(PHBallJointIf,joint)->GetPosition();
+	} else {
+		joint->GetPlugSolid()->SetPose(solidTempPose);
+		joint->GetPlugSolid()->SetVelocity(solidVelocity);
+		joint->GetPlugSolid()->SetAngularVelocity(solidAngularVelocity);
+	}
+}
+
 bool PHIKBallActuator::LimitTempJoint() {
 	PHBallJointConeLimitIf* limit = DCAST(PHBallJointIf,joint)->GetLimit()->Cast(); 
 	if (limit) {
@@ -450,7 +477,6 @@ void PHIKBallActuator::MoveTempJoint() {
 
 	// ----- 速度 -----
 	jointVelocity = w  * (1/DCAST(PHSceneIf,GetScene())->GetTimeStep());
-
 }
 
 // --- --- --- --- ---
@@ -538,9 +564,31 @@ void PHIKHingeActuator::CalcPullbackVelocity() {
 
 void PHIKHingeActuator::Move(){
 	if (!bEnabled) { return; }
-	DCAST(PHHingeJoint,joint)->SetTargetPosition(jointTempAngle);
-	DCAST(PHHingeJoint,joint)->SetTargetVelocity(jointVelocity);
+	PHHingeJointIf* hj = joint->Cast();
+
+	hj->SetTargetPosition(jointTempAngle);
+	hj->SetTargetVelocity(jointVelocity);
+	
+	// <!!>
+	/*/
+	double  dt  = DCAST(PHSceneIf,GetScene())->GetTimeStep();
+	double  vel = (jointTempAngle - hj->GetPosition()) / dt;
+	hj->SetTargetVelocity( vel );
+	/**/
+
 	return;
+}
+
+void PHIKHingeActuator::ApplyExactState(bool reverse) {
+	if (!reverse) {
+		jointTempAngle = DCAST(PHHingeJointIf,joint)->GetPosition();
+		jointTempOri   = Quaterniond::Rot(jointTempAngle, 'z');
+		solidTempPose  = joint->GetPlugSolid()->GetPose();
+	} else {
+		joint->GetPlugSolid()->SetPose(solidTempPose);
+		joint->GetPlugSolid()->SetVelocity(solidVelocity);
+		joint->GetPlugSolid()->SetAngularVelocity(solidAngularVelocity);
+	}
 }
 
 bool PHIKHingeActuator::LimitTempJoint() {

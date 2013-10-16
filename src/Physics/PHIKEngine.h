@@ -84,7 +84,7 @@ public:
 
 	// --- --- --- --- ---
 
-	void ApplyExactState();
+	void ApplyExactState(bool reverse=false);
 
 	void Prepare(bool second = false);
 	void CalcJacobian();

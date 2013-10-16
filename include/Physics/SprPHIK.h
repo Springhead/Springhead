@@ -222,7 +222,7 @@ struct PHIKActuatorIf : SceneObjectIf{
 
 	/** @brief 一時変数の関節角度を現実の関節角度に合わせる
 	*/
-	void ApplyExactState();
+	void ApplyExactState(bool reverse=false);
 
 	// --- --- --- --- ---
 
@@ -262,15 +262,15 @@ struct PHIKActuatorIf : SceneObjectIf{
 
 /// IKアクチュエータのステート
 struct PHIKActuatorState{
-	Posed       solidTempPose;  ///< IK-FK計算用の一時変数：プラグ剛体姿勢	
-	Quaterniond jointTempOri;   ///< IK-FK計算用の一時変数：関節角度
+	Posed       solidTempPose;    ///< IK-FK計算用の一時変数：プラグ剛体姿勢	
+	Quaterniond jointTempOri;     ///< IK-FK計算用の一時変数：関節角度
 
 	// <!!> ヒンジでしか使わないが，Stateの多重継承を防ぐためここに入れてある．(13/07/08 mitake)
 	double      jointTempAngle; ///< IK-FK計算用の一時変数：関節角度（ヒンジ用）
 
 	PHIKActuatorState() {
-		solidTempPose  = Posed();
-		jointTempOri   = Quaterniond();
+		solidTempPose    = Posed();
+		jointTempOri     = Quaterniond();
 		jointTempAngle = 0.0;
 	}
 };

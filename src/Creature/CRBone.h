@@ -62,6 +62,9 @@ class CRBone : public SceneObject, public CRBoneDesc {
 	Vec3d		finalVel, initVel; bool bCtlVel;
 	Vec3d		finalAvl, initAvl; bool bCtlAvl;
 
+	/// エンドエフェクタ加速度
+	Vec3d eefAcc, eefLastVel;
+
 	/// 有効か
 	bool bEnable;
 	bool bPause;
@@ -83,6 +86,10 @@ class CRBone : public SceneObject, public CRBoneDesc {
 		bPlan       = false;
 		bChanged    = false;
 		bCleared    = false;
+
+		eefLastVel  = Vec3d();
+		eefAcc      = Vec3d();
+
 		ClearTrajectory();
 	}
 
@@ -216,7 +223,7 @@ public:
 
 	/** @brief 軌道の通過点を全削除する
 	*/
-	void ClearTrajectory();
+	void ClearTrajectory(bool apply=0);
 
 	/** @brief １ステップ
 	*/
