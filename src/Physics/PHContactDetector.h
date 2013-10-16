@@ -153,6 +153,10 @@ public:
 	}
 	///指定したsolidを返す
 	PHSolidIf* GetSolid(int i){return solid[i]->Cast();}
+
+	/// 剛体同士の接触が有効かどうかを取得・設定する
+	bool IsContactEnabled()         { return bEnabled;   }
+	void EnableContact(bool enable) { bEnabled = enable; }
 };
 
 ///	PHContactDetectorの状態
