@@ -331,6 +331,11 @@ struct PHSolidPairForLCPIf : public ObjectIf{
 	
 	PHSolidIf* GetSolid(int i);
 
+	/** @brief 剛体同士の接触が有効かどうかを取得・設定する
+	*/
+	bool IsContactEnabled();
+	void EnableContact(bool enable);
+
 	/** @brief 剛体同士の接触状態を取得する
 		@param i,j:Shapeの番号．
 		ただしFindBySolidPairとセットで使うこと.

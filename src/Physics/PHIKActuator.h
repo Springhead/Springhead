@@ -100,6 +100,14 @@ public:
 
 	// --- --- --- --- --- --- --- --- --- ---
 
+	/// 剛体に実現されるべき速度
+	Vec3d solidVelocity;
+
+	/// 剛体に実現されるべき角速度
+	Vec3d solidAngularVelocity;
+
+	// --- --- --- --- --- --- --- --- --- ---
+
 	/** @brief 初期化
 	*/
 	virtual void Init() {
@@ -220,7 +228,7 @@ public:
 
 	/** @brief 一時変数の関節角度を現実の関節角度に合わせる
 	*/
-	virtual void ApplyExactState() { }
+	virtual void ApplyExactState(bool reverse=false) { }
 
 	/** @brief 一時変数の関節角度を可動域内にクリップする
 	*/
@@ -267,6 +275,9 @@ public:
 	virtual void Init() {
 		ndof = 2;
 		PHIKActuator::Init();
+		jointVelocity = Vec3d();
+		solidVelocity = Vec3d();
+		solidAngularVelocity = Vec3d();
 	}
 
 	/** @brief デフォルトコンストラクタ
@@ -331,10 +342,7 @@ public:
 
 	/** @brief 一時変数の関節角度を現実の関節角度に合わせる
 	*/
-	virtual void ApplyExactState() {
-		jointTempOri  = DCAST(PHBallJointIf,joint)->GetPosition();
-		solidTempPose = joint->GetPlugSolid()->GetPose();
-	}
+	virtual void ApplyExactState(bool reverse=false);
 
 	/** @brief 一時変数の関節角度を可動域内にクリップする
 	*/
@@ -417,11 +425,7 @@ public:
 
 	/** @brief 一時変数の関節角度を現実の関節角度に合わせる
 	*/
-	virtual void ApplyExactState() {
-		jointTempAngle = DCAST(PHHingeJointIf,joint)->GetPosition();
-		jointTempOri   = Quaterniond::Rot(jointTempAngle, 'z');
-		solidTempPose  = joint->GetPlugSolid()->GetPose();
-	}
+	virtual void ApplyExactState(bool reverse=false);
 
 	/** @brief 一時変数の関節角度を可動域内にクリップする
 	*/

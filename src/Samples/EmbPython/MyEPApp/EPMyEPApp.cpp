@@ -1,5 +1,5 @@
 #include "../../../../include/Springhead.h"                 
-#include "../../../../include/Python32/Python.h"    
+#include "../../../../include/Python/Python.h"             
 #include "../../../../include/EmbPython/SprEPUtility.h"    
 #include "../../../../include/EmbPython/SprEPBase.h"       
 #include "../../../../include/EmbPython/SprEPFoundation.h" 
@@ -9,6 +9,168 @@
 //*********** Decl Global variables ***********
 
 
+
+//{*********EPFWApp*******
+int __PYDECL EPFWAppObjectFWApp( PyObject* self,PyObject* arg,PyObject* kwds )
+{
+	if(!arg) return 0;
+	EPObject_Ptr(self) = new FWApp();
+	return 0;
+
+}
+
+static PyMethodDef EPFWApp_method_table[] =
+{
+	{NULL}
+};
+static PyNumberMethods EPFWApp_math_method_table=
+{
+	(binaryfunc)NULL,/* __add__ */
+	(binaryfunc)NULL,/* __sub__ */
+	(binaryfunc)NULL,/* __mul__ */
+	(binaryfunc)NULL,/* __mod__ */
+	(binaryfunc)NULL,/* __divmod__ */
+	(ternaryfunc)NULL,/* __pow__ */
+	(unaryfunc)NULL,/* __neg__ */
+	(unaryfunc)NULL,/* __pos__ */
+	(unaryfunc)NULL,/* __abs__ */
+	(inquiry)NULL,/* __bool__ */
+	(unaryfunc)NULL,/* __invert__ */
+	(binaryfunc)NULL,/* __lshift__ */
+	(binaryfunc)NULL,/* __rshift__ */
+	(binaryfunc)NULL,/* __and__ */
+	(binaryfunc)NULL,/* __xor__ */
+	(binaryfunc)NULL,/* __or__ */
+	(unaryfunc)NULL,/* __int__ */
+	(void *)NULL,/* __reserved__ */
+	(unaryfunc)NULL,/* __float__ */
+	(binaryfunc)NULL,/* __iadd__ */
+	(binaryfunc)NULL,/* __isub__ */
+	(binaryfunc)NULL,/* __imul__ */
+	(binaryfunc)NULL,/* __imod__ */
+	(ternaryfunc)NULL,/* __ipow__ */
+	(binaryfunc)NULL,/* __ilshift__ */
+	(binaryfunc)NULL,/* __irshift__ */
+	(binaryfunc)NULL,/* __iand__ */
+	(binaryfunc)NULL,/* __ixor__ */
+	(binaryfunc)NULL,/* __ior__ */
+	(binaryfunc)NULL,/* __floordiv__ */
+	(binaryfunc)NULL,/* __div__ */
+	(binaryfunc)NULL,/* __ifloordiv__ */
+	(binaryfunc)NULL,/* __itruediv__ */
+};
+static PyGetSetDef EPFWApp_getset_table[] =
+{
+	{NULL}
+};
+void __PYDECL EPFWApp_dealloc(PyObject* self)
+{
+#ifdef DEBUG_OUTPUT
+	printf("FWApp dealloc called (MemoryManager=");
+	if( ((EPObject*)self)->mm == EP_MM_SPR ) printf("Springhead)\n");
+	else if( ((EPObject*)self)->mm == EP_MM_PY ) printf("Python)\n");
+#endif
+	if ( ((EPObject*)self)->mm == EP_MM_PY ) delete EPObject_Ptr(self);
+	self->ob_type->tp_free(self);
+}
+PyObject* __PYDECL EPFWApp_str()
+{
+	return Py_BuildValue("s","This is EPFWAppObject.");
+}
+PyObject* __PYDECL EPFWApp_new(PyTypeObject *type,PyObject *args, PyObject *kwds)
+{
+	PyObject* self;
+	self = type->tp_alloc(type,0);
+	if ( self != NULL )
+	{
+		EPObject_Ptr(self) = NULL;
+		((EPObject*)self)->mm = EP_MM_PY;
+		return self;
+	}
+	return PyErr_NoMemory();
+}
+PyTypeObject EPFWAppType =
+{
+	PyVarObject_HEAD_INIT(NULL,0)
+	"MyEPApp.FWApp",/*tp_name*/
+	sizeof(EPObject),/*tp_basicsize*/
+	0,/*tp_itemsize*/
+	(destructor)EPFWApp_dealloc,/*tp_dealloc*/
+	0,/*tp_print*/
+	0,/*tp_getattr*/
+	0,/*tp_setattr*/
+	0,/*tp_reserved*/
+	0,/*tp_repr*/
+	&EPFWApp_math_method_table,/*tp_as_number*/
+	0,/*tp_as_sequence*/
+	0,/*tp_as_mapping*/
+	0,/*tp_call*/
+	0,/*tp_hash*/
+	(reprfunc)EPFWApp_str,/*tp_str*/
+	0,/*tp_getattro*/
+	0,/*tp_setattro*/
+	0,/*tp_as_buffer*/
+	Py_TPFLAGS_DEFAULT|Py_TPFLAGS_BASETYPE,/*tp_flags*/
+	"FWApp",/*tp_doc*/
+	0,/*tp_traverse*/
+	0,/*tp_clear*/
+	0,/*tp_richcompare*/
+	0,/*tp_weaklistoffset*/
+	0,/*tp_iter*/
+	0,/*tp_iternext*/
+	EPFWApp_method_table,/*tp_methods*/
+	0,/*tp_members*/
+	EPFWApp_getset_table,/*tp_getset*/
+	&EPObjectType,
+	0,/*tp_dict*/
+	0,/*tp_descr_get*/
+	0,/*tp_descr_set*/
+	0,/*tp_dictoffset*/
+	(initproc)EPFWAppObjectFWApp,/*tp_init*/
+	0,/*tp_alloc*/
+	(newfunc)EPFWApp_new,/*tp_new*/
+};
+void initEPFWApp(PyObject *rootModule)
+{
+	if ( PyType_Ready( &EPFWAppType ) < 0 ) return ;//PythonƒNƒ‰ƒX‚Ìì¬
+	string package;
+	if(rootModule) package = PyModule_GetName(rootModule);
+	else // rootModule‚ª“n‚³‚ê‚½ê‡‚ÍEP_MODULE_NAME‚Í–³Ž‹‚³‚ê‚é
+	{
+#ifdef EP_MODULE_NAME
+		package = EP_MODULE_NAME ".";
+		rootModule = PyImport_AddModule( EP_MODULE_NAME );
+#else
+		package = "";
+		rootModule = PyImport_AddModule("__main__");
+#endif
+	}
+#ifdef EP_USE_SUBMODULE
+	PyObject *subModule = PyImport_AddModule( (package+"MyEPApp").c_str() );
+	Py_INCREF(subModule);
+	PyModule_AddObject(rootModule,"MyEPApp",subModule);
+#else
+	PyObject *subModule = rootModule;
+#endif
+	Py_INCREF(&EPFWAppType);
+	PyModule_AddObject(subModule,"FWApp",(PyObject*)&EPFWAppType);
+}
+PyObject* newEPFWApp(const FWApp* org)
+{
+	if(org == NULL)
+	{
+		Py_RETURN_NONE;
+	}
+	PyObject *ret = EPFWApp_new(&EPFWAppType,NULL,NULL);
+	EPObject_Ptr(ret) = org;
+	((EPObject*)ret)->mm = EP_MM_SPR;
+	return ret;
+}
+void toEPFWApp( EPObject* obj)
+{
+	obj->ob_base.ob_type = &EPFWAppType;
+}
+//}FWApp
 
 //{*********EPSampleApp*******
 int __PYDECL EPSampleAppObjectSampleApp( PyObject* self,PyObject* arg,PyObject* kwds )
@@ -121,7 +283,7 @@ PyTypeObject EPSampleAppType =
 	EPSampleApp_method_table,/*tp_methods*/
 	0,/*tp_members*/
 	EPSampleApp_getset_table,/*tp_getset*/
-	&EPObjectType,
+	&EPFWAppType,/*tp_base*/
 	0,/*tp_dict*/
 	0,/*tp_descr_get*/
 	0,/*tp_descr_set*/
@@ -411,6 +573,23 @@ int __PYDECL EPMyEPAppObjectMyEPApp( PyObject* self,PyObject* arg,PyObject* kwds
 	return 0;
 
 }
+PyObject* __PYDECL EPMyEPApp_CallbackFunc( PyObject* self )
+{
+	UTAutoLock LOCK(EPCriticalSection);
+
+	if( EPObject_Ptr(self) == NULL )
+	{
+		PyErr_SetString( PyErr_Spr_NullReference , "Null Reference in MyEPApp.CallbackFunc");
+		return NULL;
+	}
+	if(true)
+	{
+		EPObject_Cast(self,MyEPApp)->CallbackFunc();
+		Py_RETURN_NONE;
+	}
+	PyErr_BadArgument();
+	return NULL;
+}
 PyObject* __PYDECL EPMyEPApp_Drop( PyObject* self,PyObject* arg )
 {
 	UTAutoLock LOCK(EPCriticalSection);
@@ -442,6 +621,34 @@ PyObject* __PYDECL EPMyEPApp_Drop( PyObject* self,PyObject* arg )
 
 		EPObject_Cast(self,MyEPApp)->Drop(c_param1,c_param2,c_param3,c_param4,c_param5,c_param6);
 		Py_RETURN_NONE;
+	}
+	PyErr_BadArgument();
+	return NULL;
+}
+PyObject* __PYDECL EPMyEPApp_GetWin( PyObject* self )
+{
+	UTAutoLock LOCK(EPCriticalSection);
+
+	if( EPObject_Ptr(self) == NULL )
+	{
+		PyErr_SetString( PyErr_Spr_NullReference , "Null Reference in MyEPApp.GetWin");
+		return NULL;
+	}
+	if(true)
+	{
+		FWWinIf* ret_tmp;
+		ret_tmp = EPObject_Cast(self,MyEPApp)->GetWin();
+		FWWinIf* c_ret =  ret_tmp;
+		PyObject* py_ret = newEPFWWinIf(c_ret);
+		if ( !py_ret )
+		{
+			PyErr_BadInternalCall();
+			return NULL;
+		}
+		if ( py_ret == Py_None ) Py_RETURN_NONE;
+		if ( !EPObject_Ptr(py_ret) ) Py_RETURN_NONE;
+		EPObject_RuntimeDCast((EPObject*)py_ret,c_ret->GetIfInfo());
+		return py_ret;
 	}
 	PyErr_BadArgument();
 	return NULL;
@@ -506,6 +713,26 @@ PyObject* __PYDECL EPMyEPApp_OnStep( PyObject* self )
 	PyErr_BadArgument();
 	return NULL;
 }
+PyObject* __PYDECL EPMyEPApp_SetCallbackFunc( PyObject* self,PyObject* arg )
+{
+	UTAutoLock LOCK(EPCriticalSection);
+
+	if( EPObject_Ptr(self) == NULL )
+	{
+		PyErr_SetString( PyErr_Spr_NullReference , "Null Reference in MyEPApp.SetCallbackFunc");
+		return NULL;
+	}
+	if(true)
+	{
+		PyObject * py_param1 = arg;
+		PyObject * c_param1 = py_param1;
+
+		EPObject_Cast(self,MyEPApp)->SetCallbackFunc(c_param1);
+		Py_RETURN_NONE;
+	}
+	PyErr_BadArgument();
+	return NULL;
+}
 static PyObject* __PYDECL EPMyEPApp_get_vhoge(PyObject* self)
 {
 	std::vector< Hogeshi > c_vhoge = EPObject_Cast(self,MyEPApp)->vhoge;
@@ -537,12 +764,30 @@ static int __PYDECL EPMyEPApp_set_vhoge(PyObject* self, PyObject* arg)
 	c_vhoge = c_arg;
 	return 0;
 }
+static PyObject* __PYDECL EPMyEPApp_get_callbackFunc(PyObject* self)
+{
+	PyObject* c_callbackFunc = EPObject_Cast(self,MyEPApp)->callbackFunc;
+	PyObject* py_callbackFunc = c_callbackFunc;
+	return py_callbackFunc;
+}
+static int __PYDECL EPMyEPApp_set_callbackFunc(PyObject* self, PyObject* arg)
+{
+	PyObject* &c_callbackFunc = EPObject_Cast(self,MyEPApp)->callbackFunc;
+	PyObject * py_arg = arg;
+	PyObject* c_arg = py_arg;
+
+	c_callbackFunc = c_arg;
+	return 0;
+}
 static PyMethodDef EPMyEPApp_method_table[] =
 {
+	{"CallbackFunc",(PyCFunction)EPMyEPApp_CallbackFunc,METH_NOARGS ,"EPMyEPApp::CallbackFunc"},
 	{"Drop",(PyCFunction)EPMyEPApp_Drop,METH_VARARGS ,"EPMyEPApp::Drop"},
+	{"GetWin",(PyCFunction)EPMyEPApp_GetWin,METH_NOARGS ,"EPMyEPApp::GetWin"},
 	{"OnAction",(PyCFunction)EPMyEPApp_OnAction,METH_VARARGS ,"EPMyEPApp::OnAction"},
 	{"OnDraw",(PyCFunction)EPMyEPApp_OnDraw,METH_O ,"EPMyEPApp::OnDraw"},
 	{"OnStep",(PyCFunction)EPMyEPApp_OnStep,METH_NOARGS ,"EPMyEPApp::OnStep"},
+	{"SetCallbackFunc",(PyCFunction)EPMyEPApp_SetCallbackFunc,METH_O ,"EPMyEPApp::SetCallbackFunc"},
 	{NULL}
 };
 static PyNumberMethods EPMyEPApp_math_method_table=
@@ -584,6 +829,7 @@ static PyNumberMethods EPMyEPApp_math_method_table=
 static PyGetSetDef EPMyEPApp_getset_table[] =
 {
 	{"vhoge",(getter)EPMyEPApp_get_vhoge,(setter)EPMyEPApp_set_vhoge,"member (std::vector< Hogeshi >)vhoge of MyEPApp",NULL},
+	{"callbackFunc",(getter)EPMyEPApp_get_callbackFunc,(setter)EPMyEPApp_set_callbackFunc,"member (PyObject*)callbackFunc of MyEPApp",NULL},
 	{NULL}
 };
 void __PYDECL EPMyEPApp_dealloc(PyObject* self)
@@ -713,6 +959,7 @@ PyObject* newEPHogeshi()
 /**************** for Module ******************/
 void initMyEPApp(PyObject *rootModule)
 {
+	initEPFWApp(rootModule);
 	initEPSampleApp(rootModule);
 	initEPHogeshi(rootModule);
 	initEPMyEPApp(rootModule);

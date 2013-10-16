@@ -27,12 +27,14 @@ PHIKEngine::PHIKEngine():
 	lastN(0)
 	{}
 
-void PHIKEngine::ApplyExactState() {
+void PHIKEngine::ApplyExactState(bool reverse) {
 	for(size_t i=0; i<actuators.size(); ++i){
-		actuators[i]->ApplyExactState();
+		actuators[i]->ApplyExactState(reverse);
 	}
-	for(size_t i=0; i<endeffectors.size(); ++i){
-		endeffectors[i]->ApplyExactState();
+	if (!reverse) {
+		for(size_t i=0; i<endeffectors.size(); ++i){
+			endeffectors[i]->ApplyExactState();
+		}
 	}
 }
 
@@ -301,14 +303,42 @@ void PHIKEngine::Step() {
 	if (!bEnabled) return;
 	if (actuators.empty() || endeffectors.empty()) return;
 
+	/*
+	for (int i=0; i<actuators.size(); ++i) {
+		for (int j=0; j<i; ++j) { std::cout << " "; }
+		std::cout << actuators[i]->joint->GetPlugSolid()->GetName() << " :(R) ";
+		std::cout << actuators[i]->joint->GetPlugSolid()->GetVelocity() << " , ";
+		std::cout << actuators[i]->joint->GetPlugSolid()->GetAngularVelocity();
+		std::cout << std::endl;
+	}
+	*/
+
+	// <!!>
+	// ApplyExactState();
+
 	Prepare();
 	FK();
+
+	// <!!>
+	// ApplyExactState(/* reverse = */ true);
 
 	CalcJacobian();
 	IK();
 	Limit();
 	FK();
 	SaveFKResult();
+
+	/*
+	std::cout << " -- " << std::endl;
+
+	for (int i=0; i<actuators.size(); ++i) {
+		for (int j=0; j<i; ++j) { std::cout << " "; }
+		std::cout << actuators[i]->joint->GetPlugSolid()->GetName() << " :(T) ";
+		std::cout << actuators[i]->solidVelocity << " , ";
+		std::cout << actuators[i]->solidAngularVelocity;
+		std::cout << std::endl;
+	}
+	*/
 
 	Move();
 }
