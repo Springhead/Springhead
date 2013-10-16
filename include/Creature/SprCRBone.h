@@ -20,37 +20,34 @@ struct PHIKEndEffectorIf;
 /// 運動軌道の通過点
 struct CRTrajectoryNode {
 	float  time;
-	Posed  pose;
-	Vec6d  dpose;
+	Vec3d  r;
+	Vec3d  v;
+	Vec3d  a;
 	Vec4d  priority;
-	Posed  viapose;
-	float  viatime;
 
-	Vec4d  coeff[4];
+	Vec6d  coeff[3];
 	double length;
 
 	CRTrajectoryNode(){
 		time		= 0;
-		pose		= Posed();
-		dpose		= Vec6d();
+		r			= Vec3d();
+		v			= Vec3d();
+		a			= Vec3d();
 		priority	= Vec4d();
 
-		for (int i=0; i<4; ++i) { coeff[i] = Vec4d(); }
+		for (int i=0; i<3; ++i) { coeff[i] = Vec6d(); }
 		length      = DBL_MAX;
-		viapose     = Posed();
-		viatime     = 0.5;
 	};
 
-	CRTrajectoryNode(float t, Posed p, Vec6d dp, Vec4d pr) {
+	CRTrajectoryNode(float t, Vec3d r, Vec3d v, Vec3d a, Vec4d pr) {
 		time		= t;
-		pose		= p;
-		dpose		= dp;
+		this->r		= r;
+		this->v		= v;
+		this->a		= a;
 		priority	= pr;
 
-		for (int i=0; i<4; ++i) { coeff[i] = Vec4d(); }
+		for (int i=0; i<3; ++i) { coeff[i] = Vec6d(); }
 		length      = DBL_MAX;
-		viapose     = Posed();
-		viatime     = 0.5;
 	}
 };
 
@@ -156,7 +153,7 @@ struct CRBoneIf : SceneObjectIf {
 
 	/** @brief 軌道の通過点を全削除する
 	*/
-	void ClearTrajectory();
+	void ClearTrajectory(bool apply=0);
 
 	/** @brief １ステップ
 	*/
