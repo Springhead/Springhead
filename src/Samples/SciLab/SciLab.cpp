@@ -17,6 +17,7 @@ ScilabStub.hpp, ScilabStubImpl.cxxはswigで自動生成されるので、参考
 #include <SciLab/SprSciLab.h>
 #include <Base/Affine.h>
 #include <conio.h>
+#include <Scilab/SprScilab.h>
 using namespace Spr;
 
 int _cdecl main(){

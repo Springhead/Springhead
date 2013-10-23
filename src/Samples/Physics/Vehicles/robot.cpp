@@ -64,7 +64,7 @@ void Robot::Build(const Posed& pose, PHSceneIf* phScene, PHSdkIf* phSdk){
 		const double K = 100.0, D = 0.01;
 	
 		Posed pose;
-		PHTreeNodeIf* node;
+//		PHTreeNodeIf* node;				// unused!
 		for(int j = 0; j < 2; j++){
 			pose.Pos() = Vec3d(0.9, 0.4, (j == 0 ? 0.06 : -0.06));
 			jd.poseSocket = poseLeg[i] * pose;

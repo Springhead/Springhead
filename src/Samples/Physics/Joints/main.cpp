@@ -91,7 +91,7 @@ public:
 		handlers.push_back(DBG_NEW ChainHandler(this));
 		handlers.push_back(DBG_NEW LinkHandler(this));
 		handlers.push_back(DBG_NEW ArmHandler(this));
-		numScenes	= handlers.size();
+		numScenes	= (int)handlers.size();
 	}
 	virtual ~MyApp(){}
 

@@ -26,6 +26,9 @@ int _cdecl main()
 	PTM::VVector<double> b;
 	PTM::VVector<int> ip;
 	int n= 5000;
+#ifdef DAILY_BUILD
+	n=1000;
+#endif
 	matk.resize(n, n, 0.0);
 	b.resize(n);
 	ip.resize(n);
@@ -57,7 +60,7 @@ int _cdecl main()
 			mm.at_element(i, j)=matk[i][j];
 		}
 	}
-	double det = lapack::gesv(mm, ipiv, bb);
+	double det = (double) lapack::gesv(mm, ipiv, bb);
 	x.resize(n);
 	for(int i=0; i<n; ++i){
 		x[i] = bb[i];

@@ -82,25 +82,25 @@ public:
 		jd.damper = 60.0;
 		jd.spring = 160.0;
 		jd.posePlug.Pos() = Vec3d(0,0.04, 0);
-		jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'x');
+		jd.posePlug.Ori() = Quaternionf::Rot((float)Rad(90), 'x');
 		jd.poseSocket.Pos() = Vec3d(0, -0.04, 0);
-		jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'x');
+		jd.poseSocket.Ori() = Quaternionf::Rot((float)Rad(90), 'x');
 		GetFWScene()->GetPHScene()->CreateJoint(body, hip, jd);
 		//
 		jd.posePlug.Pos() = Vec3d(0, 0.04, 0);
-		jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
+		jd.posePlug.Ori() = Quaternionf::Rot((float)Rad(90), 'y');
 		jd.poseSocket.Pos() = Vec3d(0, -0.1, 0);
-		jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+		jd.poseSocket.Ori() = Quaternionf::Rot((float)Rad(90), 'y');
 		GetFWScene()->GetPHScene()->CreateJoint(chest, body, jd);
 
 		// head
-		sd.radius = 0.06;
+		sd.radius = 0.06f;
 		head = GetFWScene()->GetPHScene()->CreateSolid();
 		head->AddShape(phSdk->CreateShape(sd));
 		// neck
-		jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
+		jd.posePlug.Ori() = Quaternionf::Rot((float)Rad(90), 'y');
 		jd.posePlug.Pos() = Vec3d(0, 0.1, 0);
-		jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+		jd.poseSocket.Ori() = Quaternionf::Rot((float)Rad(90), 'y');
 		jd.poseSocket.Pos() = Vec3d(0, -0.08, 0);
 		jd.damper = 1.0;
 		jd.spring = 100.0;
@@ -136,24 +136,24 @@ public:
 		(Vec3d&)bjd.targetPosition = Vec3d(Rad(30), Rad(30), Rad(30));
 		GetFWScene()->GetPHScene()->CreateJoint(upArmL, chest, bjd);
 		// elbow
-		jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
+		jd.posePlug.Ori() = Quaternionf::Rot((float)Rad(90), 'y');
 		jd.posePlug.Pos() = Vec3d(0, -0.09, 0);
-		jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+		jd.poseSocket.Ori() = Quaternionf::Rot((float)Rad(90), 'y');
 		jd.poseSocket.Pos() = Vec3d(0, 0.07, 0);
 		jd.damper = 4.0;
 		jd.spring = 6.0;
 		jd.targetPosition = Rad(-30);
 		GetFWScene()->GetPHScene()->CreateJoint(loArmR, upArmR, jd);
 		
-		jd.posePlug.Ori() = Quaternionf::Rot(Rad(90), 'y');
+		jd.posePlug.Ori() = Quaternionf::Rot((float)Rad(90), 'y');
 		jd.posePlug.Pos() = Vec3d(0, -0.09, 0);
-		jd.poseSocket.Ori() = Quaternionf::Rot(Rad(90), 'y');
+		jd.poseSocket.Ori() = Quaternionf::Rot((float)Rad(90), 'y');
 		jd.poseSocket.Pos() = Vec3d(0, 0.07, 0);
 		jd.targetPosition = Rad(-30);
 		GetFWScene()->GetPHScene()->CreateJoint(loArmL, upArmL, jd);
 
 		// reaching targets
-		sd.radius = 0.02;
+		sd.radius = 0.02f;
 		shapeTarget = phSdk->CreateShape(sd);
 		targetR = GetFWScene()->GetPHScene()->CreateSolid();
 		targetR->AddShape(shapeTarget);
