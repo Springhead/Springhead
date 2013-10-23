@@ -299,13 +299,13 @@ public:
 
 		// ----- ----- ----- ----- -----
 		if (bHard) {
-			for (size_t i=0; i<2; ++i) {
+			for (int i=0; i<2; ++i) {
 				PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 				jo->SetSpring(5000.0);
 				jo->SetDamper( 500.0);
 			}
 		} else {
-			for (size_t i=0; i<2; ++i) {
+			for (int i=0; i<2; ++i) {
 				PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 				jo->SetSpring(  50.0);
 				jo->SetDamper(  20.0);
@@ -317,7 +317,7 @@ public:
 			StepPliant();
 		} else {
 			GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
-			for (size_t i=0; i<GetFWScene()->GetPHScene()->NJoints(); ++i) {
+			for (int i=0; i<GetFWScene()->GetPHScene()->NJoints(); ++i) {
 				PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 				if (jo) { jo->SetOffsetForce(0); }
 			}
@@ -447,7 +447,7 @@ public:
 		states->SaveState(GetFWScene()->GetPHScene());
 		GetFWScene()->GetPHScene()->GetConstraintEngine()->EnableContactDetection(false);
 		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
-		for (size_t i=0; i<2; ++i) {
+		for (int i=0; i<2; ++i) {
 			PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 			springs[i]    = jo->GetSpring();
 			dampers[i]    = jo->GetDamper();
@@ -460,7 +460,7 @@ public:
 		GetFWScene()->GetPHScene()->SetNumIteration(iter_high);
 
 		GetFWScene()->GetPHScene()->Step();
-		for (size_t i=0; i<2; ++i) {
+		for (int i=0; i<2; ++i) {
 			PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 			offsets[i]    = jo->GetMotorForce();
 			targets[i]    = jo->GetTargetPosition();
@@ -485,7 +485,7 @@ public:
 			ofs.close();
 		}
 
-		for (size_t i=0; i<2; ++i) {
+		for (int i=0; i<2; ++i) {
 			PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
 
 			// <!!>

@@ -543,7 +543,7 @@ public:
 			}
 			//	マークした頂点を削除
 			for(int i=0; i<2; ++i){
-				for(int j=eraseVtxs[i].size()-1; j>0; --j){
+				for(size_t j=eraseVtxs[i].size()-1; j>0; --j){
 					condVtxs[i].erase(condVtxs[i].begin() + eraseVtxs[i][j]);
 				}
 				if (condVtxs[i].size() == 0){
@@ -565,7 +565,7 @@ public:
 					condVtxs[i][j].area = 0;
 					int vid = condVtxs[i][j].vid;
 					for(unsigned k=0; k<condVtxs[i].pmesh->vertices[vid].faces.size(); ++k){
-						if (condVtxs[i].pmesh->vertices[vid].faces[k] < condVtxs[i].pmesh->nSurfaceFace){
+						if ((unsigned)condVtxs[i].pmesh->vertices[vid].faces[k] < condVtxs[i].pmesh->nSurfaceFace){
 							PHFemMesh::Face& face = condVtxs[i].pmesh->faces[condVtxs[i].pmesh->vertices[vid].faces[k]];
 							Vec3d a = condVtxs[i].pmesh->vertices[face.vertices[2]].pos - condVtxs[i].pmesh->vertices[face.vertices[0]].pos;
 							Vec3d b = condVtxs[i].pmesh->vertices[face.vertices[1]].pos - condVtxs[i].pmesh->vertices[face.vertices[0]].pos;
@@ -584,7 +584,7 @@ public:
 				CondVtx tmp;
 				tmp.pos[1] = 0.5*(bboxMin.y+bboxMax.y);
 				CondVtxs::iterator it = std::lower_bound(condVtxs[i].begin(), condVtxs[i].end(), tmp, CondVtx::Less(1));
-				int cit = it - condVtxs[i].begin();
+				int cit = (int) (it - condVtxs[i].begin());
 				double minDistX = DBL_MAX;
 				for(int y=0; y<5; ++y){
 					if (cit-y >= 0 && cit-y < (int)condVtxs[i].size()){
@@ -974,7 +974,7 @@ filled:;
 
 	}
 	void CreatePHFemMeshThermo(){
-		PHFemMeshThermoIf* phmesht;
+//		PHFemMeshThermoIf* phmesht;				// unused!
 		PHFemMeshThermoDesc desc;
 	}
 	void SetInductionHeating(double radius,double width,double heatFlux){						//>	磁束→熱流束　heatFlux

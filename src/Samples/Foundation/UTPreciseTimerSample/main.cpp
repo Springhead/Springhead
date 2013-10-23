@@ -97,7 +97,7 @@ int _cdecl main(int argc, char* argv[]){
 
 	// 計測データをcsvで出力
 	CSVOUT << "count" << "," << "Precise timer [s]" << "," << "QPTimer [s]" << std::endl;
-	for(int i = 0; i < time.size(); i++){
+	for(size_t i = 0; i < time.size(); i++){
 		CSVOUT << i << "," << time[i].x << "," << time[i].y << std::endl;
 	}
 

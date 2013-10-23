@@ -29,7 +29,7 @@ int __cdecl main(){
 		std::cout << std::setprecision(2) << intfpos << std::endl;
 		Vec3f f(0.0, 0.0, 0.0);
 		if(intfpos.y < -0.015){
-			f[1] = -(intfpos.y - (-0.015)) * 1000;
+			f[1] = (float) (-(intfpos.y - (-0.015)) * 1000);
 		}
 		intf->SetForce(f, Vec3f());
 #endif

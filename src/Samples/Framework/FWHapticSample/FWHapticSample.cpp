@@ -11,8 +11,8 @@
 using namespace Spr;
 
 FWHapticSample::FWHapticSample(){
-	pdt = 0.02;
-	hdt = 0.001;
+	pdt = 0.02f;
+	hdt = 0.001f;
 	engineType = LD;
 	humanInterface = SPIDAR;
 }
@@ -28,8 +28,8 @@ void FWHapticSample::BuildScene(){
 		// 床を作成
 		CDBoxDesc bd;
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
-		bd.material.mu = 0.5;
-		bd.material.mu0 = 0.6;
+		bd.material.mu = 0.5f;
+		bd.material.mu0 = 0.6f;
 		PHSolidIf* floor = phscene->CreateSolid();
 		floor->AddShape(phSdk->CreateShape(bd));
 		floor->SetFramePosition(Vec3d(0, -1.0, 0.0));
@@ -40,14 +40,14 @@ void FWHapticSample::BuildScene(){
 		soBox->SetMass(0.3f);
 		bd.boxsize.clear(0.4f);
 		soBox->AddShape(phSdk->CreateShape(bd));
-		soBox->SetInertia(soBox->GetShape(0)->CalcMomentOfInertia() * soBox->GetMass());
+		soBox->SetInertia(soBox->GetShape(0)->CalcMomentOfInertia() * (float)soBox->GetMass());
 		soBox->SetFramePosition(Vec3d(-0.5 , -0.35, 0.0));
 
 		// 力覚ポインタの作成
 		pointer = phscene->CreateHapticPointer();	// 力覚ポインタの作成
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
-		cd.material.mu = 0.4;
+		cd.material.mu = 0.4f;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		//pointer->AddShape(phSdk->CreateShape(bd));	// シェイプの追加
 		pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
@@ -55,7 +55,7 @@ void FWHapticSample::BuildScene(){
 		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);	
 		pointer->SetDefaultPose(defaultPose);		// 力覚ポインタ初期姿勢の設定
 		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia());	// 慣性テンソルの設定
-		pointer->SetLocalRange(0.1);				// 局所シミュレーション範囲の設定
+		pointer->SetLocalRange(0.1f);				// 局所シミュレーション範囲の設定
 		pointer->SetPosScale(50);					// 力覚ポインタの移動スケールの設定
 		pointer->SetReflexSpring(5000);				// バネ係数の設定
 		pointer->SetReflexDamper(0.1 * 0.0);		// ダンパ係数の設定
@@ -151,7 +151,7 @@ void FWHapticSample::TimerFunc(int id){
 
 void FWHapticSample::Keyboard(int key, int x, int y){
 	// 各スレッドの共有メモリのアクセス違反回避のために全てのタイマをとめる
-	float dr = 0.01;
+	float dr = 0.01f;
 	for(int i = 0; i < NTimers(); i++)	GetTimer(i)->Stop();
 	switch(key){
 		case 'q':
@@ -260,7 +260,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 				PHSolidIf* box = phscene->CreateSolid();
 				box->SetMass(0.3f);
 				box->AddShape(GetSdk()->GetPHSdk()->CreateShape(bd));
-				box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * box->GetMass());
+				box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * (float)box->GetMass());
 				box->SetFramePosition(Vec3d(-0.5, 1.0, 0.0));
 			}
 		case 356: // left
