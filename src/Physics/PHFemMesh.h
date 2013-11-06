@@ -68,7 +68,9 @@ public:
 		double thermalEmissivity;	///	熱放射率　節点での
 		double disFromOrigin;		//>	x-z平面でのローカル座標の原点からの距離
 		//double heatFluxValue;		//>	熱流束値
+		double area;		//	頂点の担当する面積
 		Vec3d normal;				// 属するfacceから算出した法線（現在、face法線の単純和を正規化した法線だが、同じ向きのface法線を一本化する予定：要改善
+		bool beCondVtxs;	//小野原追加 これがTrueのとき対応を取ったとする。
 	};
 	//	四面体
 	class Tet{
@@ -99,6 +101,10 @@ public:
 		///	頂点ID。順番で面の表裏を表す。
 		int vertices[3];
 		void Update();
+		/*小野原追加 ここから*/
+		//隣の三角形の情報（ID)
+		int adjacentFace[3];
+		/*小野原追加 ここまで*/
 		///	頂点IDで比較
 		bool operator < (const Face& f2);
 		///	頂点IDで比較
