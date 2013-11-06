@@ -101,10 +101,8 @@ public:
 		///	頂点ID。順番で面の表裏を表す。
 		int vertices[3];
 		void Update();
-		/*小野原追加 ここから*/
-		//隣の三角形の情報（ID)
-		int adjacentFace[3];
-		/*小野原追加 ここまで*/
+		int adjacentFace[3]; //隣の三角形の情報（ID) 小野原追加
+
 		///	頂点IDで比較
 		bool operator < (const Face& f2);
 		///	頂点IDで比較
