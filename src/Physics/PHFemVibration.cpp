@@ -175,7 +175,7 @@ void PHFemVibration::Init(){
 	//veIds.push_back(6);
 
 	Vec3i con = Vec3i(1,1,1);
-	for(int i = 0; i < (int)veIds.size(); i++){
+	for(int i = 0; i < (int)fixedVertices.size(); i++){
 		AddBoundaryCondition(fixedVertices[i], con);
 	}
 
