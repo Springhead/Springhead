@@ -26,7 +26,7 @@ class PHPath;
 class PHShapePairForLCP: public CDShapePair{
 public:
 	SPR_OBJECTDEF(PHShapePairForLCP);
-	std::vector<Vec3d>	section;	///< 交差断面の頂点．個々がPHContactPointとなる．可視化のために保持
+	std::vector<Vec3d>	section;	///< 交差断面の頂点．個々がPHContactPointとなる．
 	///	接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．
 	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1);
 	int NSectionVertexes(){return (int)section.size();}		//(sectionの数を返す）
@@ -121,6 +121,7 @@ public:
 	PHRootNodes		trees;			///< Articulated Body Systemの配列
 	PHGears			gears;			///< ギアの配列
 	PHPaths			paths;			///< パスの配列
+
 	void SetupLCP();				///< 速度更新LCPの準備
 	void IterateLCP();				///< 速度更新LCPの一度の反復
 	void SetupCorrectionLCP();		///< 誤差修正LCPの準備
@@ -152,6 +153,25 @@ public:
 
 	bool bContactDetectionEnabled; ///< 接触判定が有効か．これがfalseだと接触判定自体を行わない
 	virtual void	EnableContactDetection(bool enable) { bContactDetectionEnabled = enable; }
+
+	//	接触領域を表示するための情報を更新するかどうか
+	virtual void	EnableRenderContact	(bool enable);
+	//	表示情報を更新するかどうかのフラグ
+	bool renderContact;
+	//	接触領域の表示用
+	struct SectionInfo{
+		std::vector<Vec3f> section;
+	};
+	struct SectionInfos: public std::vector<SectionInfo> {
+		PHConstraints points;
+		void Clear();
+	};
+	struct SectionInfoQueue{
+		SectionInfos sectionInfos[3];
+		volatile int reading;	//	読出中のindex(0..2) 0を読んでいる間、2に書き込む、1に読み進んでも大丈夫。
+		SectionInfoQueue();
+	} sectionInfoQueue;
+	void UpdateSectionInfoQueue();
 };
 
 }	//	namespace Spr

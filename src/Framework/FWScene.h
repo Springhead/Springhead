@@ -11,6 +11,7 @@
 #include <Framework/SprFWScene.h>
 #include <Framework/SprFWObject.h>
 #include <Framework/SprFWHapticPointer.h>
+#include <Physics/SprPHEngine.h>
 #include <Foundation/Scene.h>
 #include <HumanInterface/HIBase.h>
 
@@ -121,6 +122,7 @@ public:
 	void	DrawShape		(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire);
 	void	DrawConstraint	(GRRenderIf* render, PHConstraintIf* con);
 	void	DrawContact		(GRRenderIf* render, PHContactPointIf* con);
+	void	DrawContactSafe	(GRRenderIf* render, PHConstraintEngineIf* ce);
 	void	DrawIK			(GRRenderIf* render, PHIKEngineIf* ikEngine);
 	void	DrawLimit		(GRRenderIf* render, PHConstraintIf* con);
 	void	DrawHaptic		(GRRenderIf* render, PHHapticEngineIf* hapticEngine);

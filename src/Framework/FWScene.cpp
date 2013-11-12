@@ -359,6 +359,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 	
 	// 接触
 	if(renderContact){
+#if 0
 		for(int i = 0; i < phScene->NContacts(); ++i){
 			PHContactPointIf* con = phScene->GetContact(i);
 			if(IsRenderEnabled(con)){
@@ -366,6 +367,11 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 				DrawContact(render, con);
 			}
 		}
+#else
+		//	DrawContactはsectionが変化するので、裏でシミュレーションが走ると落ちる。
+		//	pointsも同様
+		DrawContactSafe(render, phScene->GetConstraintEngine());
+#endif
 	}
 
 	// 関節可動域
@@ -652,6 +658,30 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 	}
 }
 
+void FWScene::DrawContactSafe(GRRenderIf* render, PHConstraintEngineIf* cei){
+	if (!cei) return;
+	PHConstraintEngine* ce = cei->Cast();
+	PHConstraintEngine::SectionInfos& infos = ce->sectionInfoQueue.sectionInfos[ce->sectionInfoQueue.reading];
+
+	for(unsigned i=0; i<infos.points.size(); ++i){
+		PHContactPointIf* con = (PHContactPointIf*)&*infos.points[i];
+		if(IsRenderEnabled(con)) DrawConstraint(render, con);
+	}
+
+	render->SetMaterial(matContact);
+	render->SetLighting(false);
+	render->SetDepthTest(false);
+	render->SetVertexFormat(GRVertexElement::vfP3f);
+	for(unsigned i=0; i<infos.size(); ++i){
+		if(infos[i].section.size() < 3) continue;	
+		render->DrawDirect(GRRenderBaseIf::LINE_LOOP, &infos[i].section[0], infos[i].section.size());
+	}
+	infos.Clear();
+	if (ce->sectionInfoQueue.reading < 2) ce->sectionInfoQueue.reading ++;
+	else ce->sectionInfoQueue.reading = 0;
+	render->SetDepthTest(true);
+	render->SetLighting(true);
+}
 void FWScene::DrawContact(GRRenderIf* render, PHContactPointIf* con){
 	render->SetMaterial(matContact);
 
@@ -1116,6 +1146,10 @@ void FWScene::SetForceScale(float scalef, float scalem){
 }
 void FWScene::EnableRenderContact(bool enable){
 	renderContact = enable;
+	if (phScene){
+		PHConstraintEngineIf* c = phScene->GetConstraintEngine();
+		if (c) c->EnableRenderContact(enable);
+	}
 }
 void FWScene::SetContactMaterial(int mat){
 	matContact = mat;
