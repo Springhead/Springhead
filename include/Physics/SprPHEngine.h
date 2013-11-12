@@ -101,6 +101,10 @@ public:
 	/** @brief 接触判定エンジンの有効・無効を設定する．ここでの無効化はPHScene::SetContactModeより優先する．
 	*/
 	void EnableContactDetection(bool enable);
+
+	/** @breif 接触領域を表示するための情報を更新するかどうか。FWSceen::EnableRenderContact()が呼び出す。
+	*/
+	void EnableRenderContact(bool enable);
 };
 
 struct PHGravityEngineIf : PHEngineIf{
