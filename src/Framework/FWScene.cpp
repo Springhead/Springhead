@@ -661,7 +661,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 void FWScene::DrawContactSafe(GRRenderIf* render, PHConstraintEngineIf* cei){
 	if (!cei) return;
 	PHConstraintEngine* ce = cei->Cast();
-	PHConstraintEngine::SectionInfos& infos = ce->sectionInfoQueue.sectionInfos[ce->sectionInfoQueue.reading];
+	PHConstraintEngine::ContactInfo& infos = ce->contactInfoQueue.queue[ce->contactInfoQueue.reading];
 
 	for(unsigned i=0; i<infos.points.size(); ++i){
 		PHContactPointIf* con = (PHContactPointIf*)&*infos.points[i];
@@ -672,13 +672,14 @@ void FWScene::DrawContactSafe(GRRenderIf* render, PHConstraintEngineIf* cei){
 	render->SetLighting(false);
 	render->SetDepthTest(false);
 	render->SetVertexFormat(GRVertexElement::vfP3f);
-	for(unsigned i=0; i<infos.size(); ++i){
-		if(infos[i].section.size() < 3) continue;	
-		render->DrawDirect(GRRenderBaseIf::LINE_LOOP, &infos[i].section[0], infos[i].section.size());
+	for(unsigned i=0; i<infos.sections.size(); ++i){
+		if(infos.sections[i].size() < 3) continue;	
+		render->DrawDirect(GRRenderBaseIf::LINE_LOOP, &infos.sections[i][0], infos.sections[i].size());
 	}
-	infos.Clear();
-	if (ce->sectionInfoQueue.reading < 2) ce->sectionInfoQueue.reading ++;
-	else ce->sectionInfoQueue.reading = 0;
+	if (ce->contactInfoQueue.reading != ce->contactInfoQueue.wrote){
+		ce->contactInfoQueue.reading = 
+			ce->contactInfoQueue.reading < 2 ? ce->contactInfoQueue.reading+1 : 0;
+	}
 	render->SetDepthTest(true);
 	render->SetLighting(true);
 }

@@ -107,6 +107,9 @@ void FWWin::SetSize(int width, int height){
 }
 
 void FWWin::OnUpdatePose(HITrackballIf*){
+	FWApp* app = FWApp::GetApp();
+	if (app) app->PostRedisplay();
+
 	if(!GetScene() || !GetScene()->GetGRScene())
 		return;
 

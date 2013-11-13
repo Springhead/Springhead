@@ -159,19 +159,18 @@ public:
 	//	表示情報を更新するかどうかのフラグ
 	bool renderContact;
 	//	接触領域の表示用
-	struct SectionInfo{
-		std::vector<Vec3f> section;
-	};
-	struct SectionInfos: public std::vector<SectionInfo> {
+	struct ContactInfo{
 		PHConstraints points;
+		std::vector< std::vector<Vec3f> > sections;
 		void Clear();
 	};
-	struct SectionInfoQueue{
-		SectionInfos sectionInfos[3];
+	struct ContactInfoQueue{
+		ContactInfo queue[3];
 		volatile int reading;	//	読出中のindex(0..2) 0を読んでいる間、2に書き込む、1に読み進んでも大丈夫。
-		SectionInfoQueue();
-	} sectionInfoQueue;
-	void UpdateSectionInfoQueue();
+		volatile int wrote;		//	書込後のindex(0..2) 2に書き込み終わると、2になる。
+		ContactInfoQueue();
+	} contactInfoQueue;
+	void UpdateContactInfoQueue();
 };
 
 }	//	namespace Spr
