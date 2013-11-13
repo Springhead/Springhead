@@ -507,7 +507,7 @@ void PHConstraintEngine::StepPart1(){
 	if(bContactEnabled && bContactDetectionEnabled){
 		//Detect(ct, dt);
 		ContDetect(ct, dt);
-		if (renderContact) UpdateSectionInfoQueue();
+		if (renderContact) UpdateContactInfoQueue();
 #ifdef _DEBUG
 //		DSTR << "nMaxOverlapObject = " << nMaxOverlapObject << std::endl;
 #endif
@@ -617,26 +617,28 @@ void PHConstraintEngine::SetState(const void* s){
 void PHConstraintEngine::EnableRenderContact(bool enable){
 	renderContact = enable;
 }
-void PHConstraintEngine::UpdateSectionInfoQueue(){
-	int writing = sectionInfoQueue.reading-1;
-	if (writing < 0) writing = 2;
-	if (sectionInfoQueue.sectionInfos[writing].size() == 0){
-		sectionInfoQueue.sectionInfos[writing].points = points;
-		sectionInfoQueue.sectionInfos[writing].resize(points.size());
-		for(unsigned i=0; i<points.size(); ++i){
-			PHContactPoint* point = (PHContactPoint*) &*points[i];
-			std::vector<Vec3d>& section = point->shapePair->section;
-			sectionInfoQueue.sectionInfos[writing][i].section.resize(section.size());
-			std::copy(section.begin(), section.end(), sectionInfoQueue.sectionInfos[writing][i].section.begin());			
-		}
+void PHConstraintEngine::UpdateContactInfoQueue(){
+	int writing = contactInfoQueue.wrote + 1;
+	if (writing > 2) writing = 0;
+	if (contactInfoQueue.reading == writing) return;
+
+	contactInfoQueue.queue[writing].Clear();
+	contactInfoQueue.queue[writing].points = points;
+	contactInfoQueue.queue[writing].sections.resize(points.size());
+	for(unsigned i=0; i<points.size(); ++i){
+		PHContactPoint* point = (PHContactPoint*) &*points[i];
+		std::vector<Vec3d>& section = point->shapePair->section;
+		contactInfoQueue.queue[writing].sections[i].resize(section.size());
+		std::copy(section.begin(), section.end(), contactInfoQueue.queue[writing].sections[i].begin());			
 	}
+	contactInfoQueue.wrote = writing;
 }
-void PHConstraintEngine::SectionInfos::Clear(){
-	clear();
+void PHConstraintEngine::ContactInfo::Clear(){
+	sections.clear();
 	points.clear();
 }
 
-PHConstraintEngine::SectionInfoQueue::SectionInfoQueue():reading(0){
+PHConstraintEngine::ContactInfoQueue::ContactInfoQueue():reading(0),wrote(0){
 }
 
 
