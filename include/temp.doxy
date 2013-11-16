@@ -12,4 +12,6 @@ TAGFILES=
 RECURSIVE              = NO
 
 CHM_FILE               = ..\temp.chm
-GENERATE_HTMLHELP      = YES
+
+#GENERATE_HTMLHELP      = YES
+#	YES‚É‚·‚é‚ÆA•’Ê‚ÌHTML‚©‚çƒcƒŠ[‚ªÁ‚¦‚é
