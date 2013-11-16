@@ -3,9 +3,6 @@ INPUT = ./docsrc ../src/Framework/FWOldSpringheadNodeHandler.h
 
 HTML_OUTPUT = ./html
 GENERATE_TAGFILE       = ./html/springhead.tag
-IMAGE_PATH             = ./docsrc/01UsersGuide \
-							./docsrc/02Tutorial \
-							./docsrc/03ReferenceManual
 
 #EXAMPLE_PATH           = ./ ../src/Samples/
 #EXAMPLE_PATTERNS       = *.cpp
