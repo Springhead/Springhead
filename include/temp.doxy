@@ -4,6 +4,8 @@
 
 INPUT      = ../src/Framework/FWOldSpringheadNodeHandler.h ./docsrc/
 
+HTML_OUTPUT            = ./temp
+
 GENERATE_TAGFILE       = ./html/temp.tag
 TAGFILES=
 
