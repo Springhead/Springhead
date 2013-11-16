@@ -2,16 +2,11 @@
 
 @INCLUDE = ./common.doxy
 
-INPUT      = ../src/Framework/FWOldSpringheadNodeHandler.h ./docsrc/ \
-							./docsrc/01UsersGuide \
-							./docsrc/02Tutorial \
-							./docsrc/03ReferenceManual
+INPUT      = ../src/Framework/FWOldSpringheadNodeHandler.h ./docsrc/
 
 GENERATE_TAGFILE       = ./html/temp.tag
 TAGFILES=
-IMAGE_PATH  = ./docsrc/01UsersGuide \
-							./docsrc/02Tutorial \
-							./docsrc/03ReferenceManual
+
 RECURSIVE              = NO
 
 ALLEXTERNALS = YES
