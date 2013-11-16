@@ -1,17 +1,11 @@
 # Doxyfile 1.4.6-NO
 
 @INCLUDE = ./common.doxy
-
-INPUT      = ../src/Framework/FWOldSpringheadNodeHandler.h ./docsrc/
-
-HTML_OUTPUT            = ./temp
-
-GENERATE_TAGFILE       = ./html/temp.tag
-TAGFILES=
-
 RECURSIVE              = NO
 
-CHM_FILE               = ..\temp.chm
+INPUT         = ../src/Framework/FWOldSpringheadNodeHandler.h ./docsrc/
+CHM_FILE      = ..\temp.chm
+HTML_OUTPUT   = ./temp
 
 #GENERATE_HTMLHELP      = YES
 #	YESÇ…Ç∑ÇÈÇ∆ÅAïÅí ÇÃHTMLÇ©ÇÁÉcÉäÅ[Ç™è¡Ç¶ÇÈ
