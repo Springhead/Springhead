@@ -11,8 +11,5 @@ TAGFILES=
 
 RECURSIVE              = NO
 
-ALLEXTERNALS = YES
-EXTERNAL_GROUPS = YES
-
 CHM_FILE               = ..\temp.chm
 GENERATE_HTMLHELP      = YES
