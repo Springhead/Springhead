@@ -7,7 +7,7 @@ cd springhead2
 
 rem 公開できないファイルの削除と設定変更
 del /F /S /Q closed
-echo #undef USE_CLOSED_SRC > include/SprDefs.h
+echo #undef USE_CLOSED_SRC > include/UseClosedSrcOrNot.h
 
 set PATH=%PATH%;bin
 
