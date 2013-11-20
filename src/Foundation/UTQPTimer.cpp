@@ -118,13 +118,15 @@ void UTQPTimerFileOut::Interval(std::string start, std::string name){
 }
 
 void UTQPTimerFileOut::FileOut(std::string filename){
-	std::ofstream ofs(filename);
+	std::ofstream ofs(filename.c_str());
 	if (!ofs){
 		DSTR << "Can not open the file : " << filename << std::endl;
 		return;
 	}
 
+#if (_MSC_VER > 1500)
 	ofs.precision(std::numeric_limits< unsigned long >::max_digits10);
+#endif
 	for (int i = 0; i < (int)names.size(); i++){
 		ofs << names[i].name << "\t";
 	}

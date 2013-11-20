@@ -1189,13 +1189,15 @@ bool PHFemVibration::FindNeighborTetrahedron(Vec3d posW, int& tetId, Vec3d& cpW,
 }
 
 void PHFemVibration::MatrixFileOut(VMatrixRe mat, std::string filename){
-	std::ofstream ofs(filename);
+	std::ofstream ofs(filename.c_str());
 	if (!ofs){
 		DSTR << "Can not open the file : " << filename << std::endl;
 		return;
 	}
 
+#if (_MSC_VER > 1500)
 	ofs.precision(element_limit);
+#endif
 	for (int i = 0; i < (int)mat.height(); i++){
 		for(int j = 0; j < (int)mat.width(); j ++){
 			ofs << mat.item(i, j) << ",";
