@@ -14,3 +14,5 @@ set PATH=%PATH%;bin
 minitar -c -z9 ../Springhead2.tgz *.*
 cd ..
 cd ..
+
+exit /b
