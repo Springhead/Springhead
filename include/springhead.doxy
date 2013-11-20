@@ -23,7 +23,7 @@ IMAGE_PATH  = ./docsrc/01UsersGuide \
 							./docsrc/03ReferenceManual
 
 CHM_FILE               = ..\Springhead.chm
-GENERATE_HTMLHELP      = YES
+GENERATE_HTMLHELP      = NO
 
 ALLEXTERNALS = YES
 EXTERNAL_GROUPS = YES
