@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/** \page pageVirtualHuman
+/** \page pageVirtualHuman バーチャルヒューマンのデモプログラム
  Springhead2/src/Samples/Creature/VirtualHuman/main.cpp
 
 \ref バーチャルヒューマンのデモプログラム
