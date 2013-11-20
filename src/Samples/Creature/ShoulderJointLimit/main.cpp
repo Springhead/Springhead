@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/** \page pageShoulderJointLimit
+/** \page pageShoulderJointLimit 肩関節可動域制限のデモ
  Springhead2/src/Samples/Creature/ShoulderJointLimit/main.cpp
 
 \ref 肩関節可動域制限のデモ
