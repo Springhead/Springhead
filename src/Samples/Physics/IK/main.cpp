@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/** \page pageIKSample
+/** \page pageIKSample 逆運動学（IK）機能のデモ
  Springhead2/src/Samples/IK/main.cpp
 
 \ref pagePhysics の逆運動学（IK）機能のデモプログラム。
