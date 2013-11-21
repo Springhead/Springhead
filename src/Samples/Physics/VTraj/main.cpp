@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/** \page pageVTrajSample
+/** \page pageVTrajSample 柔らかい軌道追従制御のデモ
  Springhead2/src/Samples/VTraj/main.cpp
 
 \ref 柔らかい軌道追従制御のデモプログラム．
