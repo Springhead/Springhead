@@ -10,6 +10,8 @@
 #include <string>
 
 namespace Spr{;
+/** \addtogroup gpFramework */
+//@{
 
 /** FWEditor
 	basic functions for viewing and editting descriptors
@@ -99,7 +101,7 @@ public:
 
 	FWEditorOverlay();
 };
-
+//@}
 }
 
 #endif

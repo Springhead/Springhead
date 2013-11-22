@@ -12,6 +12,9 @@
 
 namespace Spr{;
 
+/** \addtogroup gpFramework */
+//@{
+
 struct FWFemMeshDesc: public FWObjectDesc{
 	//	3次元テクスチャ使用枚数
 	unsigned kogePics;		// 焦げ表示切り替えテクスチャ(画像)枚数
@@ -35,7 +38,7 @@ struct FWFemMeshIf : FWObjectIf {
 	void SetTexmode(unsigned mode);
 };
 
-
+//@}
 }
 
 #endif

@@ -24,6 +24,10 @@ struct PHFemEngineIf;
 struct PHSceneIf;
 struct GRSceneIf;
 struct GRRenderIf;
+
+/** \addtogroup gpFramework */
+//@{
+
 struct FWHapticPointerIf;
 
 struct FWSceneDesc{
@@ -235,7 +239,7 @@ public:
 
 FWSceneIf* SPR_CDECL CreateFWScene();
 FWSceneIf* SPR_CDECL CreateFWScene(const void* desc);
-
+//@}
 }
 
 #endif
