@@ -22,6 +22,9 @@ struct FWSceneIf;
 struct PHIKEndEffectorIf;
 struct PHIKActuatorIf;
 
+/** \addtogroup gpFramework */
+//@{
+
 struct FWObjectDesc{
 	/// ボーンの同期を絶対位置で行う（親フレームからの差分でなくワールド座標系に対する変換をセットする）
 	bool bAbsolute;
@@ -97,7 +100,7 @@ struct FWObjectIf : SceneObjectIf {
 	/// PHSolidとGRFrameの同期
 	void Sync();
 };
-
+//@}
 }
 
 #endif

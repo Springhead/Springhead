@@ -13,6 +13,8 @@
 #include <Framework/SprFWWin.h>
 
 namespace Spr{;
+/** \addtogroup gpFramework */
+//@{
 
 struct FWSdkIf;
 class FWGraphicsHandler;
@@ -263,6 +265,6 @@ public:
 	void	Reset(){}
 
 };
-
+//@}
 }
 #endif

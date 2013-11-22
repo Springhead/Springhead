@@ -12,6 +12,8 @@
 #include <Physics/SprPHFemMeshNew.h>
 
 namespace Spr{;
+/** \addtogroup gpFramework */
+//@{
 
 struct FWFemMeshNewDesc: public FWObjectDesc{
 	unsigned kogetex; //焦げテクスチャの枚数
@@ -28,7 +30,7 @@ struct FWFemMeshNewIf : FWObjectIf{
 	void SetTexmode(unsigned mode);
 };
 
-
+//@}
 }
 
 #endif

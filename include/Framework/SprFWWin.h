@@ -18,6 +18,10 @@ struct DVKeyMouseIf;
 struct DVJoyStickIf;
 struct HITrackballIf;
 //struct HIDraggerIf;
+
+/** \addtogroup gpFramework */
+//@{
+
 struct FWSceneIf;
 struct FWPanelIf;
 struct FWStaticTextIf;
@@ -431,6 +435,6 @@ struct FWWinDesc : FWWinBaseDesc{
 		//useDragger		= true;
 	}
 };
-
+//@}
 }
 #endif 

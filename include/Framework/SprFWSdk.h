@@ -12,6 +12,8 @@
 #include <Graphics/SprGRScene.h>
 
 namespace Spr{;
+/** \addtogroup gpFramework フレームワークSDK */
+//@{
 
 struct ImportIf;
 struct FWSceneIf;
@@ -137,6 +139,8 @@ struct FWSdkIf : SdkIf {
 
 	static void SPR_CDECL RegisterSdk();
 };
+
+//@}
 
 }
 

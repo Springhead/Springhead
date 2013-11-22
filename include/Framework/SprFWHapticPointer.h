@@ -15,6 +15,8 @@
 #include <Foundation/SprObject.h>
 
 namespace Spr{;
+/** \addtogroup gpFramework */
+//@{
 
 struct FWHapticPointerIf : SceneObjectIf {
 	SPR_IFDEF(FWHapticPointer);
@@ -44,7 +46,7 @@ struct FWHapticPointerIf : SceneObjectIf {
 	//Vec3f GetHapticTorque();
 };
 
-
+//@}
 }
 
 #endif
