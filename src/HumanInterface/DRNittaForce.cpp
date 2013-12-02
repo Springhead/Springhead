@@ -5,6 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#if ( _MSC_VER > 1500 )
+
 #include <Foundation/UTDllLoader.h>
 #include <HumanInterface/DRPortIO.h>
 #include <HumanInterface/DRNittaForce.h>
@@ -133,3 +135,5 @@ void DRNittaForce::Reset(){
 }
 
 }	//	namespace Spr
+
+#endif	// ( _MSC_VER > 1500 )

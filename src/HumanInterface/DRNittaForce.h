@@ -8,6 +8,8 @@
 #ifndef DEVICE_DRNITTAFORCE_H
 #define DEVICE_DRNITTAFORCE_H
 
+#if ( _MSC_VER > 1500 )
+
 #include <HumanInterface/HIDevice.h>
 #include <base/Affine.h>
 
@@ -99,5 +101,7 @@ protected:
 };
 
 }	//	namespace Spr
+
+#endif	// ( _MSC_VER > 1500 )
 
 #endif

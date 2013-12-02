@@ -3,8 +3,8 @@ setlocal enabledelayedexpansion
 @echo ライブラリをマージします．VisualC++のライブラリ管理ツール LIB.EXE にパスを通しておいてください．
 
 set CONVENTION=old
-if "%1"=="win32" set CONVENTION=new
-if "%1"=="win64" set CONVENTION=new
+if /i "%1"=="win32" set CONVENTION=new
+if /i "%1"=="win64" set CONVENTION=new
 
 if "%CONVENTION%"=="new" (
     :: Visual Studio 2012 以降に適用
@@ -15,18 +15,20 @@ if "%CONVENTION%"=="old" (
     rem
     rem Visual Studio 2010 以前に適用
     rem
-    if "%1"=="RELEASE" set EXT=
-    if "%1"=="DEBUG" set EXT=D
-    if "%1"=="TRACE" set EXT=T
-    if "%1"=="MFCRELEASE" set EXT=M
-    if "%1"=="MFCDEBUG" set EXT=MD
+    if /i "%1"=="RELEASE" set EXT=
+    if /i "%1"=="DEBUG" set EXT=D
+    if /i "%1"=="TRACE" set EXT=T
+    if /i "%1"=="MFCDEBUG" set EXT=MD
+    if /i "%1"=="MFCRELEASE" set EXT=M
+    if /i "%1"=="DEBUGDLL" set EXT=MD
+    if /i "%1"=="RELEASEDLL" set EXT=M
     if "%2"=="7" set EXT=7!EXT!
     if "%2"=="8" set EXT=8!EXT!
     if "%2"=="9" set EXT=9!EXT!
     if "%2"=="10" set EXT=10!EXT!
     rem 
     rem 第3引数を追加します（Platform - Defaultは"Win32"）
-    if "%3"=="x64" (
+    if /i "%3"=="x64" (
 	    set OUTDIR=win64
 	    set EXT=!EXT!x64
     ) else (

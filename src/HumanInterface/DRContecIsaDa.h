@@ -8,6 +8,8 @@
 #ifndef VR_DRCONTECISADA_H
 #define VR_DRCONTECISADA_H
 
+#if ( _MSC_VER > 1500 )
+
 #include <HumanInterface/HIDevice.h>
 
 namespace Spr {
@@ -46,5 +48,7 @@ public:
 
 
 }	//	namespace Spr
+
+#endif	// ( _MSC_VER > 1500 )
 
 #endif

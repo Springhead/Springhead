@@ -22,14 +22,26 @@
 #include <boost/numeric/ublas/lu.hpp>
 
 #ifdef TRACE		// Trace
-  #ifdef _WIN64 
-    # pragma comment(lib, "LIBF2C10Tx64.lib")
-    # pragma comment(lib, "BLAS10Tx64.lib")
-    # pragma comment(lib, "CLAPACK10Tx64.lib")
-  #else
-    # pragma comment(lib, "LIBF2C10T.lib")
-    # pragma comment(lib, "BLAS10T.lib")
-    # pragma comment(lib, "CLAPACK10T.lib")
+  #if (_MSC_VER == 1500)    // Visual Studio 2008
+    #ifdef _WIN64 
+      # pragma comment(lib, "LIBF2C10x64.lib")
+      # pragma comment(lib, "BLAS10x64.lib")
+      # pragma comment(lib, "CLAPACK10x64.lib")
+    #else
+      # pragma comment(lib, "LIBF2C10.lib")
+      # pragma comment(lib, "BLAS10.lib")
+      # pragma comment(lib, "CLAPACK10.lib")
+    #endif
+  #else			    // after Visual Studio 2010
+    #ifdef _WIN64 
+      # pragma comment(lib, "LIBF2C10Tx64.lib")
+      # pragma comment(lib, "BLAS10Tx64.lib")
+      # pragma comment(lib, "CLAPACK10Tx64.lib")
+    #else
+      # pragma comment(lib, "LIBF2C10T.lib")
+      # pragma comment(lib, "BLAS10T.lib")
+      # pragma comment(lib, "CLAPACK10T.lib")
+    #endif
   #endif
 #else /* TRACE */
   #ifdef _DEBUG
