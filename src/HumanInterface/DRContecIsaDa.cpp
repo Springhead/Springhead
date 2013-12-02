@@ -5,6 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#if ( _MSC_VER > 1500 )
+
 #include <HumanInterface/DRContecIsaDa.h>
 #include <HumanInterface/DRPortIO.h>
 #ifdef USE_HDRSTOP
@@ -60,3 +62,4 @@ void DRContecIsaDa::Digit(int ch, int value){
 
 }	//	namespace Spr
 
+#endif	// ( _MSC_VER > 1500 )

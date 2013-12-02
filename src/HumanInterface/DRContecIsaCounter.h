@@ -8,6 +8,8 @@
 #ifndef VR_DRCONTECISACOUNTER_H
 #define VR_DRCONTECISACOUNTER_H
 
+#if ( _MSC_VER > 1500 )
+
 #include <HumanInterface/HIDevice.h>
 
 namespace Spr {
@@ -48,5 +50,7 @@ public:
 	long Count(int ch);
 };
 }	//	namespace Spr
+
+#endif	// ( _MSC_VER > 1500 )
 
 #endif
