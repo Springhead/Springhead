@@ -322,6 +322,7 @@ MyApp app;
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
+#include <GL/glut.h>
 int __cdecl main(int argc, char *argv[]) {
 	app.Init(argc, argv);
 

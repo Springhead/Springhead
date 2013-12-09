@@ -101,8 +101,8 @@ public:
 
 	virtual void OnStep(){
 		UTAutoLock critical(EPCriticalSection);
-		spaceNavigator0->Update(GetFWScene()->GetPHScene()->GetTimeStep());
-		spaceNavigator1->Update(GetFWScene()->GetPHScene()->GetTimeStep());
+		spaceNavigator0->Update((float) GetFWScene()->GetPHScene()->GetTimeStep());
+		spaceNavigator1->Update((float) GetFWScene()->GetPHScene()->GetTimeStep());
 		GetFWScene()->Step();
 	}
 
@@ -191,6 +191,7 @@ LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
+#include <GL/glut.h>
 int __cdecl main(int argc, char *argv[]) {
 	app.Init(argc, argv);
 
