@@ -67,7 +67,7 @@ CRBoneIf* CRBone::GetChildBone(int number) {
 	return NULL;
 }
 
-
+#if 0
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // ‹O“¹‰^“®
 void CRBone::SetOriginSolid(PHSolidIf* solid) {
@@ -83,7 +83,6 @@ void CRBone::AddTrajectoryNode(CRTrajectoryNode node, bool clear) {
 		}
 	}
 
-	bPlan = true;
 	bool bAdded = false;
 	for (std::deque<CRTrajectoryNode>::iterator it=trajNodes.begin(); it!=trajNodes.end(); ++it) {
 		if (node.time <= it->time) { trajNodes.insert(it, node); bAdded=true; break; }
@@ -91,8 +90,6 @@ void CRBone::AddTrajectoryNode(CRTrajectoryNode node, bool clear) {
 	if (!bAdded) { trajNodes.push_back(node); }
 
 	Plan();
-	bPlan    = false;
-	bChanged = true;
 }
 
 CRTrajectoryNode CRBone::GetTrajectoryNode(int i) {
@@ -176,7 +173,6 @@ CRTrajectoryNode CRBone::GetCurrentNode() {
 }
 
 void CRBone::ClearTrajectory(bool apply) {
-	CRTrajectoryNode current = GetCurrentNode();
 	current.time = 0.0f;
 	this->time   = 0.0f;
 
@@ -193,8 +189,6 @@ void CRBone::ClearTrajectory(bool apply) {
 
 	trajNodes.clear();
 	trajNodes.push_back(current);
-	bCleared = true;
-	bChanged = false;
 }
 
 void CRBone::StepTrajectory() {
@@ -250,12 +244,12 @@ void CRBone::Plan() {
 void CRBone::PlanSegment(CRTrajectoryNode &from, CRTrajectoryNode &to) {
 	// Calc Coeff
 	Vec3d  r0 = from.r;
-	Vec6d  v0 = from.v;
+	Vec3d  v0 = from.v;
 	Vec3d  a0 = from.a;
 	double t0 = 0.0;
 
 	Vec3d  r1 = to.r;
-	Vec6d  v1 = to.v;
+	Vec3d  v1 = to.v;
 	Vec3d  a1 = to.a;
 	double t1 = to.time - from.time;
 
@@ -280,5 +274,6 @@ void CRBone::PlanSegment(CRTrajectoryNode &from, CRTrajectoryNode &to) {
 		for (int n=0; n<6; ++n) { from.coeff[i][n] = pi[n][0]; }
 	}
 }
+#endif
 
 }

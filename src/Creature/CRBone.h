@@ -16,58 +16,17 @@
 #include <Physics/SprPHJoint.h>
 #include <Physics/SprPHIK.h>
 
-#include <queue>
-
 //@{
 namespace Spr{;
 
 class CRBone : public SceneObject, public CRBoneDesc {
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	//  Bone構成要素
+
 	PHSolidIf*			solid;
 	PHJointIf*			joint;
 	PHIKEndEffectorIf*	endeffector;
 	PHIKActuatorIf*		actuator;
-
-	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	//  軌道運動関連
-	
-	/// 軌道の相対基準剛体
-	PHSolidIf* originSolid;
-
-	/// 軌道を構成する点群
-	std::deque<CRTrajectoryNode> trajNodes;
-
-	/// 現在時刻
-	float time;
-
-	/// 現在の状態
-	CRTrajectoryNode current;
-
-	/// 軌道計画中フラグ
-	bool bPlan;
-
-	/// 軌道変更フラグ
-	bool bChanged;
-
-	/// 軌道クリアフラグ
-	bool bCleared;
-
-
-
-	/// 到達目標時間
-	float timeLimit;
-
-	/// 最終及び初期の目標位置・速度・姿勢・角速度
-	Vec3d		finalPos, initPos; bool bCtlPos;
-	Quaterniond	finalOri, initOri; bool bCtlOri;
-	Vec3d		finalVel, initVel; bool bCtlVel;
-	Vec3d		finalAvl, initAvl; bool bCtlAvl;
-
-	/// エンドエフェクタ加速度
-	Vec3d eefAcc, eefLastVel;
-
-	/// 有効か
-	bool bEnable;
-	bool bPause;
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
@@ -76,21 +35,6 @@ class CRBone : public SceneObject, public CRBoneDesc {
 		endeffector	= NULL;
 		joint		= NULL;
 		actuator	= NULL;
-
-		bCtlPos = bCtlOri = bCtlVel = bCtlAvl = false;
-		bEnable = false;
-		bPause  = false;
-
-		originSolid = NULL;
-		time        = 0.0f;
-		bPlan       = false;
-		bChanged    = false;
-		bCleared    = false;
-
-		eefLastVel  = Vec3d();
-		eefAcc      = Vec3d();
-
-		ClearTrajectory();
 	}
 
 public:
@@ -183,69 +127,6 @@ public:
 		if (o==actuator)	{ actuator		= NULL; return true; }
 		return false;
 	}
-
-	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	//  軌道運動関連
-	
-	/** @brief 到達の相対基準となる剛体を設定 NULLだと絶対位置
-		@param solid 基準剛体
-	*/
-	void SetOriginSolid(PHSolidIf* solid);
-
-	/** @brief 軌道の通過点を追加する
-		@param time     通過時刻
-		@param pose     目標位置・姿勢
-		@param dpose    目標速度・角速度
-		@param priority 優先度ベクトル（位置・姿勢・速度・角速度 の各優先度．0でdisable）
-	*/
-	void AddTrajectoryNode(CRTrajectoryNode node, bool clear=0);
-
-	/** @brief i番目（時刻ベース）の通過点を取得する
-	*/
-	CRTrajectoryNode GetTrajectoryNode(int i);
-
-	/** @brief 通過点を数を取得する
-	*/
-	int NTrajectoryNodes() { return (int)(trajNodes.size()); }
-
-	/** @brief 時刻tにおけるの通過点を取得する
-	*/
-	CRTrajectoryNode GetTrajectoryNodeAt(float time);
-
-	/** @brief i番目（時刻ベース）の通過点を設定する
-		（追加した軌道通過点を後から編集したい場合に使う．普通は使わない）
-	*/
-	void SetTrajectoryNode(int i, CRTrajectoryNode node);
-
-	/** @brief 現在通過中の点を取得する
-	*/
-	CRTrajectoryNode GetCurrentNode();
-
-	/** @brief 軌道の通過点を全削除する
-	*/
-	void ClearTrajectory(bool apply=0);
-
-	/** @brief １ステップ
-	*/
-	void StepTrajectory();
-
-	/** @brief 軌道を計画する
-	*/
-	void Plan();
-	void PlanSegment(CRTrajectoryNode &from, CRTrajectoryNode &to);
-
-	/** @brief 軌道計画中かどうかを返す
-	*/
-	bool IsPlanning() { return bPlan; }
-
-	/** @brief 新しい軌道が開始されたかどうかを返す
-	*/
-	bool IsNewTrajectoryStarted() { if (bCleared && bChanged) { bCleared=false; bChanged=false; return true; } else { return false; } }
-
-	/** @brief 軌道が変更されたかどうかを返す
-	    IsNewTrajectoryChangedより前に呼ぶとIsNewTrajectoryChangedがうまく判定できなくなるので注意
-	*/
-	bool IsTrajectoryChanged() { if (bChanged) { bChanged=false; return true; } else { return false; } }
 };
 
 }

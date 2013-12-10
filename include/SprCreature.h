@@ -27,6 +27,7 @@
 
 // コントローラ
 #include "Creature/SprCRController.h"
+#include "Creature/SprCRReachController.h"
 
 // センサ　（１ファイルに統合予定） <!!>
 #include "Creature/SprCRTouchSensor.h"

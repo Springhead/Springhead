@@ -9,6 +9,9 @@
 #include <Physics/PHTreeNode.h>
 #include <Physics/PHConstraintEngine.h>
 
+#include <iomanip>
+#include <fstream>
+
 using namespace std;
 using namespace PTM;
 namespace Spr{;
@@ -219,6 +222,9 @@ void PHConstraint::CompResponseMatrix() {
 	// その対角成分はある拘束力成分から自分自身の拘束速度成分への影響の強さを表す
 
 	A.clear();
+	T[0].clear();
+	T[1].clear();
+
 	PHRootNode* root[2] = {
 		solid[0]->IsArticulated() ? solid[0]->treeNode->GetRootNode() : NULL,
 		solid[1]->IsArticulated() ? solid[1]->treeNode->GetRootNode() : NULL,

@@ -79,11 +79,7 @@ public:
 
 	/** @brief １ステップ
 	*/
-	void Step() {
-		for (size_t i=0; i<bones.size(); ++i) {
-			bones[i]->StepTrajectory();
-		}
-	}
+	void Step() {}
 
 	/** @brief 子要素の扱い
 	*/
