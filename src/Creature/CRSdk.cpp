@@ -36,8 +36,10 @@ void SPR_CDECL CRSdkIf::RegisterSdk(){
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRTouchSensor));
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRVisualSensor));
 
-	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRGazeController));
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRReachController));
+
+	// 使っているのだろうか？ <!!>
+	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRGazeController));
 	CRCreatureIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(CRGrabController));
 }
 

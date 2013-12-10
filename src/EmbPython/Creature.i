@@ -15,13 +15,10 @@
 //---
 %include "Utility/EPObject.i"
 EXTEND_NEW(CRContactInfo)
-EXTEND_NEW(CRTouchInfo)
 EXTEND_NEW(CRVisualInfo)
-EXTEND_NEW(CRTrajectoryNode)
-EXTEND_N_GET_TO_LIST(Spr::CRSdkIf		,NCreatures		,GetCreature	,CRCreatureIf	)
-EXTEND_N_GET_TO_LIST(Spr::CRCreatureIf	,NEngines		,GetEngine			,CREngineIf		)
-EXTEND_N_GET_TO_LIST(Spr::CRBodyIf		,NBones		,GetBone			,CRBoneIf		)
-%ignore Spr::CRTrajectoryNode::coeff; 
+EXTEND_N_GET_TO_LIST(Spr::CRSdkIf		,NCreatures	,GetCreature	,CRCreatureIf	)
+EXTEND_N_GET_TO_LIST(Spr::CRCreatureIf	,NEngines	,GetEngine		,CREngineIf		)
+EXTEND_N_GET_TO_LIST(Spr::CRBodyIf		,NBones		,GetBone		,CRBoneIf		)
 //---
 %begin%{
 #include "../../include/Springhead.h"
@@ -43,6 +40,7 @@ EXTEND_N_GET_TO_LIST(Spr::CRBodyIf		,NBones		,GetBone			,CRBoneIf		)
 %include "../../include/Creature/SprCRBody.h"
 %include "../../include/Creature/SprCRBone.h"
 %include "../../include/Creature/SprCRController.h"
+%include "../../include/Creature/SprCRReachController.h"
 %include "../../include/Creature/SprCRCreature.h"
 %include "../../include/Creature/SprCREngine.h"
 %include "../../include/Creature/SprCRSdk.h"

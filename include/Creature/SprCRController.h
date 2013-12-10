@@ -75,23 +75,6 @@ struct CRGazeControllerDesc{
 	}
 };
 
-///	到達運動コントローラ
-struct CRReachControllerIf : public CRControllerIf{
-	SPR_IFDEF(CRReachController);
-
-	///  到達対象位置をセットする
-	void SetTargetPosition(Vec3d pos);
-};
-
-struct CRReachControllerDesc{
-	SPR_DESCDEF(CRReachController);
-
-	/// ラベル <!!>
-
-	CRReachControllerDesc(){
-	}
-};
-
 ///	把持コントローラ
 struct CRGrabControllerIf : public CRControllerIf{
 	SPR_IFDEF(CRGrabController);
@@ -122,4 +105,4 @@ struct CRGrabControllerDesc : CRControllerDesc{
 
 }
 
-#endif//SPR_CRENGINEIF_H
+#endif//SPR_CRCONTROLLERIF_H

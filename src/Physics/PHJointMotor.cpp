@@ -11,6 +11,8 @@
 #include <Physics/PHSpring.h>
 #include <Physics/PHConstraintEngine.h>
 
+#include <iomanip>
+
 using namespace PTM;
 using namespace std;
 namespace Spr{;

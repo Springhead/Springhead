@@ -71,7 +71,7 @@ PyObject* __repr__(){
 
 	char data_buf[32];
 	for( int i=0 ; i < size ; i++){
-		sprintf_s(data_buf,"%s%.3lf", (i==0?"":","),$self->data[i] );
+		sprintf_s(data_buf,"%s%.20lf", (i==0?"":","),$self->data[i] );
 		PyUnicode_AppendAndDel(&buf,PyUnicode_FromFormat(data_buf));
 	}
 	PyUnicode_AppendAndDel(&buf,end);

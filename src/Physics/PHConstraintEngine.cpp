@@ -14,6 +14,9 @@
 #include <Physics/PHContactPoint.h>
 #include <Physics/PHContactSurface.h>
 
+#include <iomanip>
+#include <fstream>
+
 using namespace PTM;
 using namespace std;
 namespace Spr{;
@@ -415,7 +418,6 @@ void PHConstraintEngine::SetupLCP(){
 	// ギア拘束の前処理
 	for(PHGears::iterator it = gears.begin(); it != gears.end(); it++)
 		(*it)->SetupLCP();
-
 }
 void PHConstraintEngine::SetupCorrectionLCP(){
  	if(numIterCorrection)
@@ -436,12 +438,16 @@ void PHConstraintEngine::IterateLCP(){
 	while(true){
 		if(count == numIter)
 			break;
+
 		for(PHConstraints::iterator it = points.begin(); it != points.end(); it++)
 			(*it)->IterateLCP();
+
 		for(PHConstraints::iterator it = joints.begin(); it != joints.end(); it++)
 			(*it)->IterateLCP();
+
 		for(PHGears::iterator it = gears.begin(); it != gears.end(); it++)
 			(*it)->IterateLCP();
+
 		count++;
 	}
 }
