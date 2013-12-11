@@ -460,6 +460,10 @@ public:
 	void ReleaseState(ObjectIf* o);
 	///	状態のサイズを求める
 	size_t CalcStateSize(ObjectIf* o);
+	/// SprBlender用再帰的ではないセーブ
+	void SingleSave(ObjectIf* o);
+	/// SprBlender用再帰的ではないロード
+	void SingleLoad(ObjectIf* o);
 };
 
 
