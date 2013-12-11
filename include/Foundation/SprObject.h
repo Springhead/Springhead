@@ -346,6 +346,10 @@ struct ObjectStatesIf: public ObjectIf{
 	void SaveState(ObjectIf* o);
 	///	状態をロードする．
 	void LoadState(ObjectIf* o);
+	/// シングルセーブ
+	void SingleSave(ObjectIf* o);
+	/// シングルロード
+	void SingleLoad(ObjectIf* o);
 	///	ObjectStateオブジェクトを作成する．
 	static ObjectStatesIf* SPR_CDECL Create();
 };
