@@ -363,6 +363,21 @@ void ObjectStates::SaveState(ObjectIf* o){
 	((Object*)o)->GetStateR(s);
 }
 
+void ObjectStates::SingleSave(ObjectIf* o){
+	if (!state) ReleaseState(o);
+	size_t size = o->GetStateSize();
+	state = new char[size];
+	char* s = state;
+	o->ConstructState(s);
+	((Object*)o)->GetState(s);
+}
+
+void ObjectStates::SingleLoad(ObjectIf* o){
+	if (!state) return;
+	const char* s = state;
+	((Object*)o)->SetState(s);
+}
+
 void ObjectStates::LoadState(ObjectIf* o){
 	if (!state) return;
 	const char* s = state;
