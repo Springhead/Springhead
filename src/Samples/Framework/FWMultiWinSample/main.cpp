@@ -16,7 +16,7 @@
 
 FWMultiWinSample app;
 
-#if _MSC_VER <= 1500
+#if _MSC_VER <= 1600
 #include <GL/glut.h>
 #endif
 int __cdecl main(int argc, char* argv[]){	
