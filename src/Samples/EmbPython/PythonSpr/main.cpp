@@ -191,7 +191,9 @@ LRESULT CALLBACK NewWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) {
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
+#if _MSC_VER <= 1500
 #include <GL/glut.h>
+#endif
 int __cdecl main(int argc, char *argv[]) {
 	app.Init(argc, argv);
 
