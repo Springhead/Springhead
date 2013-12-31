@@ -4,10 +4,10 @@
 
 - プログラムの機能
  - 床の上に箱が載っているだけのシーン。
- - 描画は \ref pagePhysics のデバッグ表示のみ。
+ - 描画は \ref gpPhysics のデバッグ表示のみ。
 - ソースについて
  - シーンの構築は、C++言語でAPIを呼び出して行う。
- - \ref pageFramework と \ref pagePhysics のみを使用
+ - \ref gpFramework と \ref gpPhysics のみを使用
 */
 
 #include <Springhead.h>

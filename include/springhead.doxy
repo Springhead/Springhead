@@ -18,9 +18,7 @@ GENERATE_TAGFILE       = ./html/springhead.tag
 TAGFILES               =
 #TAGFILES               = ../src/Samples/html/SamplesDoc.tag
 
-IMAGE_PATH  = ./docsrc/01UsersGuide \
-							./docsrc/02Tutorial \
-							./docsrc/03ReferenceManual
+IMAGE_PATH  = 
 
 CHM_FILE               = ..\Springhead.chm
 GENERATE_HTMLHELP      = NO
