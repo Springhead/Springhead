@@ -6,11 +6,15 @@ Springheadのサンプルは、/src/Samples/ 以下にあります。
 
 \section secSampleForBeginner 入門用サンプル
 初めての方には、\ref pageFWAppSample : src/Samples/FwAppSample がお勧めです。
-FWAppSample.sln を開いてビルドしてください。~
+FWAppSampleXXX.sln を開いてビルドしてください(XXXにはVisual Studioのバージョンが入ります)。~
 
 \section secSampleIntro サンプルプログラムの紹介
 - FWAppSample: \ref pageFWAppSample
-- BoxStack: \ref pageBoxStack
-- Joints: \ref pageJoints
+- Physics
+-- BoxStack: \ref pageBoxStack
+-- Joints: \ref pageJoints
+- Creature
+-- ShoulderJointLimit: \ref pageShoulderJointLimit
+-- VirtualHuman: ref \pageVirtualHuman
 
 */
