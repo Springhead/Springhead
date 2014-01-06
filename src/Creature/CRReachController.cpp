@@ -8,6 +8,8 @@
 #include <Creature/CRReachController.h>
 #include <Physics/SprPHScene.h>
 
+#include <float.h>
+
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
@@ -50,36 +52,43 @@ void CRReachController::Step() {
 	/// --- 到達運動の計算と実行
 
 	if (time <= reachTime) {
-		for (int i=0; i<3; ++i) {
-			PTM::TMatrixRow<6,6,double> A;
-			PTM::TMatrixRow<6,1,double> b, x;
+		if ((initPos - targPos).norm() > 1e-5) {
 
-			if (viaTime > 0) {
-				double t0 = 0, tF = reachTime, tV = viaTime;
-				A.row(0)=Vec6d(1, t0, pow(t0,2),   pow(t0,3),    pow(t0,4),    pow(t0,5)); b[0][0]=initPos[i];
-				A.row(1)=Vec6d(0,  1,      2*t0, 3*pow(t0,2),  4*pow(t0,3),  5*pow(t0,4)); b[1][0]=initVel[i];
-				A.row(2)=Vec6d(1, tV, pow(tV,2),   pow(tV,3),    pow(tV,4),    pow(tV,5)); b[2][0]=viaPos[i];
-				A.row(3)=Vec6d(1, tF, pow(tF,2),   pow(tF,3),    pow(tF,4),    pow(tF,5)); b[3][0]=targPos[i];
-				A.row(4)=Vec6d(0,  1,      2*tF, 3*pow(tF,2),  4*pow(tF,3),  5*pow(tF,4)); b[4][0]=targVel[i];
-				A.row(5)=Vec6d(0,  0,         2,        6*tF, 12*pow(tF,2), 20*pow(tF,3)); b[5][0]=0;
-			} else {
-				double t0 = 0, tF = reachTime;
-				A.row(0)=Vec6d(1, t0, pow(t0,2),   pow(t0,3),    pow(t0,4),    pow(t0,5)); b[0][0]=initPos[i];
-				A.row(1)=Vec6d(0,  1,      2*t0, 3*pow(t0,2),  4*pow(t0,3),  5*pow(t0,4)); b[1][0]=initVel[i];
-				A.row(2)=Vec6d(0,  0,         2,        6*t0, 12*pow(t0,2), 20*pow(t0,3)); b[2][0]=0;
-				A.row(3)=Vec6d(1, tF, pow(tF,2),   pow(tF,3),    pow(tF,4),    pow(tF,5)); b[3][0]=targPos[i];
-				A.row(4)=Vec6d(0,  1,      2*tF, 3*pow(tF,2),  4*pow(tF,3),  5*pow(tF,4)); b[4][0]=targVel[i];
-				A.row(5)=Vec6d(0,  0,         2,        6*tF, 12*pow(tF,2), 20*pow(tF,3)); b[5][0]=0;
+			for (int i=0; i<3; ++i) {
+				PTM::TMatrixRow<6,6,double> A;
+				PTM::TMatrixRow<6,1,double> b, x;
+
+				if (viaTime > 0) {
+					double t0 = 0, tF = reachTime, tV = viaTime;
+					A.row(0)=Vec6d(1, t0, pow(t0,2),   pow(t0,3),    pow(t0,4),    pow(t0,5)); b[0][0]=initPos[i];
+					A.row(1)=Vec6d(0,  1,      2*t0, 3*pow(t0,2),  4*pow(t0,3),  5*pow(t0,4)); b[1][0]=initVel[i];
+					A.row(2)=Vec6d(1, tV, pow(tV,2),   pow(tV,3),    pow(tV,4),    pow(tV,5)); b[2][0]=viaPos[i];
+					A.row(3)=Vec6d(1, tF, pow(tF,2),   pow(tF,3),    pow(tF,4),    pow(tF,5)); b[3][0]=targPos[i];
+					A.row(4)=Vec6d(0,  1,      2*tF, 3*pow(tF,2),  4*pow(tF,3),  5*pow(tF,4)); b[4][0]=targVel[i];
+					A.row(5)=Vec6d(0,  0,         2,        6*tF, 12*pow(tF,2), 20*pow(tF,3)); b[5][0]=0;
+				} else {
+					double t0 = 0, tF = reachTime;
+					A.row(0)=Vec6d(1, t0, pow(t0,2),   pow(t0,3),    pow(t0,4),    pow(t0,5)); b[0][0]=initPos[i];
+					A.row(1)=Vec6d(0,  1,      2*t0, 3*pow(t0,2),  4*pow(t0,3),  5*pow(t0,4)); b[1][0]=initVel[i];
+					A.row(2)=Vec6d(0,  0,         2,        6*t0, 12*pow(t0,2), 20*pow(t0,3)); b[2][0]=0;
+					A.row(3)=Vec6d(1, tF, pow(tF,2),   pow(tF,3),    pow(tF,4),    pow(tF,5)); b[3][0]=targPos[i];
+					A.row(4)=Vec6d(0,  1,      2*tF, 3*pow(tF,2),  4*pow(tF,3),  5*pow(tF,4)); b[4][0]=targVel[i];
+					A.row(5)=Vec6d(0,  0,         2,        6*tF, 12*pow(tF,2), 20*pow(tF,3)); b[5][0]=0;
+				}
+
+				x = A.inv() * b;
+
+				Vec6d pi; for(int n=0; n<6; ++n){ pi[n] = x[n][0]; }
+
+				double t = time;
+				currPos[i] = pi * Vec6d(1, t, pow(t,2),   pow(t,3),    pow(t,4),    pow(t,5));
+				currVel[i] = pi * Vec6d(0, 1,      2*t, 3*pow(t,2),  4*pow(t,3),  5*pow(t,4));
+				// currAcc[i] = pi * Vec6d(0, 0,        2,        6*t, 12*pow(t,2), 20*pow(t,3));
 			}
 
-			x = A.inv() * b;
-
-			Vec6d pi; for(int n=0; n<6; ++n){ pi[n] = x[n][0]; }
-
-			double t = time;
-			currPos[i] = pi * Vec6d(1, t, pow(t,2),   pow(t,3),    pow(t,4),    pow(t,5));
-			currVel[i] = pi * Vec6d(0, 1,      2*t, 3*pow(t,2),  4*pow(t,3),  5*pow(t,4));
-			// currAcc[i] = pi * Vec6d(0, 0,        2,        6*t, 12*pow(t,2), 20*pow(t,3));
+		} else {
+			currPos = targPos;
+			currVel = targVel;
 		}
 
 		ikEff->SetTargetPosition(currPos);
