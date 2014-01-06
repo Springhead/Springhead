@@ -128,6 +128,7 @@ public:
 	/** @brief 位置制御のプライオリティを設定する
 	*/
 	void SetPositionPriority(double priority){ positionPriority = priority; }
+	double GetPositionPriority(){ return positionPriority; }
 
 	/** @brief 位置の目標値を設定する
 	*/
