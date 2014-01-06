@@ -73,6 +73,7 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	/** @brief 位置制御のプライオリティを設定する
 	*/
 	void SetPositionPriority(double priority);
+	double GetPositionPriority();
 
 	/** @brief 位置の目標値を設定する
 	*/
