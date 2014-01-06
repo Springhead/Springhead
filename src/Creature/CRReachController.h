@@ -38,7 +38,12 @@ public:
 	//  親クラス（CRController）のAPI
 
 	/// 初期化を実行する
-	virtual void Init() {}
+	virtual void Init() {
+		currPos  = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
+		currVel  = Vec3d();
+		initPos  = currPos;
+		initVel  = currVel;
+	}
 
 	/// 制御処理を実行する
 	virtual void Step();
@@ -81,6 +86,9 @@ public:
 	*/
 	void SetAverageSpeed(double speed) {
 		this->averageSpeed = speed;
+	}
+	double GetAverageSpeed() {
+		return this->averageSpeed;
 	}
 
 	/** @brief 許容位置誤差をセットする（これ以上の誤差がある限り再度挑戦する）
@@ -178,6 +186,11 @@ public:
 		if (o==ikEff) { ikEff = NULL; return true; }
 		return false;
 	}
+
+	/** @brief 到達に使うエンドエフェクタを設定・取得する
+	*/
+	void SetIKEndEffector(PHIKEndEffectorIf* ikEff) { this->ikEff = ikEff; }
+	PHIKEndEffectorIf* GetIKEndEffector() { return this->ikEff; }
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	//  非API関数

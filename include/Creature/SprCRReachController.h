@@ -31,6 +31,7 @@ struct CRReachControllerIf : public CRControllerIf{
 	/** @brief 平均到達速度をセットする（ここから目標到達時間が計算される）
 	*/
 	void SetAverageSpeed(double speed);
+	double GetAverageSpeed();
 
 	/** @brief 許容位置誤差をセットする（これ以上の誤差がある限り再度挑戦する）
 	*/
@@ -83,6 +84,12 @@ struct CRReachControllerIf : public CRControllerIf{
 	/** @brief 経由姿勢をセットする
 	*/
 	void SetViaOri(Quaterniond ori);
+
+
+	/** @brief 到達に使うエンドエフェクタを設定・取得する
+	*/
+	void SetIKEndEffector(PHIKEndEffectorIf* ikEff);
+	PHIKEndEffectorIf* GetIKEndEffector();
 };
 
 //@{

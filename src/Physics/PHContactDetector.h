@@ -9,6 +9,7 @@
 #define PHCONTACTDETECTOR_H
 
 #include <vector>
+#include <iomanip>
 #include "../Base/Combination.h"
 #include "../Collision/CDDetectorImp.h"
 #include "PHScene.h"
