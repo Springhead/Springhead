@@ -154,6 +154,7 @@ public:
 	/** @brief 姿勢制御のプライオリティを設定する
 	*/
 	void SetOrientationPriority(double priority){ orientationPriority = priority; }
+	double GetOrientationPriority(){ return orientationPriority; }
 
 	/** @brief 姿勢の目標値を設定する
 	*/
