@@ -454,26 +454,12 @@ void FWFemMeshNew::SyncThermoInfo(){
 
 	if(fwfood == "fwNegi"){
 		 //vertexの法線？表示
-		//for(unsigned i =0; i < phMesh->vertices.size();i++){
-		//	DrawNormal(phMesh->vertices[i].pos, phMesh->vertices[i].normal);
-		//}
-
 		for(unsigned i=0; i < phFemMesh->faces.size(); i++){
 			//.	faceエッジを表示	
 			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
 			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
 			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
-	}
-		//for(unsigned i = 0; i < phMesh->faces.size(); i++){
-		//	//.	三角形の重心からの法線を表示
-		//	Vec3d jushin = Vec3d(0.0,0.0,0.0);
-		//	for(unsigned j=0; j< 3;j++){
-		//		jushin += phMesh->vertices[phMesh->faces[i].vertices[j]].pos;
-		//	}
-		//	jushin *= 1.0/3.0;
-		//	DrawNormal(jushin,phMesh->faces[i].normal);
-		//	
-		//}
+		}
 	}
 
 	if(fwfood == "fwPan"){
@@ -545,6 +531,24 @@ void FWFemMeshNew::SyncThermoInfo(){
 					//	}
 					//}
 					//if(texturemode == BROWNED){
+#if 0
+					// 変位で色変化前に書いているはずがこちらの命令が優先
+					
+					if(grFemMesh->NColors() < 1) return;
+					Vec4f* vc = grFemMesh->GetColors();
+					double base = 1e-8;
+					double offset = 1e-8;
+					for(int i = 0; i < (int)vertexIdMap.size(); i++){
+						int pId = vertexIdMap[i];
+						float value = phFemMesh->GetVertexDisplacementL(pId).norm();
+						//value = phFemMesh->//サーモ用の関数で頂点温度を取得
+						//DSTR << value << std::endl;
+						DSTR << value/base + offset << std::endl;
+						//DSTR << value/base + offset +rand() << std::endl;
+						vc[i] = CompThermoColor(value/base + offset);
+						//vc[i] = CompThermoColor(1.0);
+					}
+#endif
 					if(texture_mode == 1){
 						//	焦げテクスチャ切り替え
 						//	焼け具合に沿った変化

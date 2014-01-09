@@ -113,6 +113,7 @@ PHFemThermo::PHFemThermo(const PHFemThermoDesc& desc, SceneIf* s){
 
 void PHFemThermo::Init(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemThermoIf* phm = mesh->GetPHFemThermo();
 	
 	for(unsigned i = 0; i < mesh->vertices.size(); i++){
 		StateVertex vars;
@@ -153,6 +154,7 @@ void PHFemThermo::Init(){
 			faceVars[i].heatflux[mode] = 0.0;
 		}
 	}
+	DSTR <<"thConduct: " <<thConduct<<std::endl;
 
 	//行列の成分数などを初期化
 	bVecAll.resize(mesh->vertices.size(),1);
@@ -4213,14 +4215,6 @@ void PHFemThermo::CreateMatk2t(unsigned id){
 
 		//faces[tets.faces[l]].vertices;
 		if(mesh->tets[id].faceIDs[l] < (int)mesh->nSurfaceFace && faceVars[mesh->tets[id].faceIDs[l]].alphaUpdated ){			///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある
-			//最後に入れる行列を初期化
-			for(unsigned i =0; i < 4 ;i++){
-				for(unsigned j =0; j < 4 ;j++){
-					//matk2[i][j] = 0.0;
-					//tets[id].matk2[i][j] = 0.0;
-					tetVars[id].matk[1][i][j] = 0.0;
-				}
-			}
 			///	四面体の三角形の面積を計算		///	この関数の外で面積分の面積計算を実装する。移動する
 			if(faceVars[mesh->tets[id].faceIDs[l]].area ==0 || faceVars[mesh->tets[id].faceIDs[l]].deformed ){		///	面積が計算されていない時（はじめ） or deformed(変形した時・初期状態)がtrueの時		///	条件の追加	面積が0か ||(OR) αが更新されたか
 				faceVars[mesh->tets[id].faceIDs[l]].area = CalcTriangleArea(mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[0], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[1], mesh->faces[mesh->tets[id].faceIDs[l]].vertexIDs[2]);

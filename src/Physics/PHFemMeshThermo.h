@@ -38,19 +38,14 @@ public:
 	std::vector<Coeff> edgeCoeffs;
 
 protected:
-
-	
-	//	行列の宣言
-	//PHFemMeshThermo内のみで用いる計算
-
-	//%%%%%%%%		行列の宣言・定義		%%%%%%%%//	
-	//行列の生成　小文字は要素剛性行列、大文字は全体剛性行列
-	//節点温度ベクトルの	温度の	TVec:要素（縦）ベクトル(4x1)	TVecall:全体（縦）ベクトル(nx1)
-	//熱伝導マトリクスの	k:k1~k3の加算したもの,	k1:体積分項,	面積分の	k2:熱伝達境界条件,	k3:熱輻射境界条件	積分
-	//熱容量マトリクスの	c:体積分項
-	//熱流束ベクトルの		f:f1~f4の加算したもの,	体積分の	f1:内部発熱による項,	面積分の	f2:熱流束境界条件,	f3:熱伝達境界条件,	f4:熱輻射境界条件
-	//体積分の場合:要素1つにつき1つの行列、面積分の場合:要素内の各面ごとに1つで計4つの行列なので配列に入れる
-	//kやfに関しては、面ごとに計算した係数行列を格納する配列Mat(k/f)arrayを定義
+	//%%%%
+	//	行列の生成　小文字は要素剛性行列、大文字は全体剛性行列
+	//	節点温度ベクトルの	温度の	TVec:要素（縦）ベクトル(4x1)	TVecall:全体（縦）ベクトル(nx1)
+	//	熱伝導マトリクスの	k:k1~k3の加算したもの,	k1:体積分項,	面積分の	k2:熱伝達境界条件,	k3:熱輻射境界条件	積分
+	//	熱容量マトリクスの	c:体積分項
+	//	熱流束ベクトルの		f:f1~f4の加算したもの,	体積分の	f1:内部発熱による項,	面積分の	f2:熱流束境界条件,	f3:熱伝達境界条件,	f4:熱輻射境界条件
+	//	体積分の場合:要素1つにつき1つの行列、面積分の場合:要素内の各面ごとに1つで計4つの行列なので配列に入れる
+	//	kやfに関しては、面ごとに計算した係数行列を格納する配列Mat(k/f)arrayを定義
 	//	Col:列単位の行列	Row:行単位の行列	hogeVector:ベクトル
 
 	//節点温度ベクトル
@@ -58,9 +53,6 @@ protected:
 	PTM::VVector<double> TVecAll;				///>	全体の節点温度ベクトル
 
 	//要素の係数行列
-//	PTM::TMatrixRow<4,4,double> matk1;			//CreateMatk1k() / k1b				///	struct Tetへ移植
-//	PTM::TMatrixRow<4,4,double> matk2;			//CreateMatk2()						///	
-	//int Matk2array[4];						//matk2が入った配列		//CreateMatk2array()
 	//Kmの3つの4×4行列の入れ物　Matk1を作るまでの間の一時的なデータ置場
 	PTM::TMatrixRow<4,4,double> matk1array[4];
 	//k21,k22,k23,k24の4×4行列の入れ物　Matkを作るまでの間の一時的なデータ置場
@@ -75,15 +67,14 @@ protected:
 //	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
 //	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
 	
-	//f3:外側の面に面している面のみ計算する　要注意
-	PTM::TVector<4,double> vecf3;				// 熱伝達境界条件
+	
+	//f1~f4を合算した縦ベクトル
+	PTM::TVector<4,double> vecf;				// 熱流束ベクトルの合算用か
+	PTM::TVector<4,double> vecf2;				// 熱流束境界条件
+	PTM::TVector<4,double> vecf2array[4];		
+	PTM::TVector<4,double> vecf3;				// 熱伝達境界条件	//f3:外側に面している面のみ
 	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
 	PTM::TVector<4,double> vecf3array[4];
-	//f1~f4を合算した縦ベクトル
-	PTM::TVector<4,double> vecf;				// 熱
-	PTM::TVector<4,double> vecf2;				// 熱流束境界条件
-	PTM::TVector<4,double> vecf2array[4];		//
-//	PTM::VVector<double> Vechoge;
 	//	変数は小文字　関数は大文字
 
 	//行列kの計算用の係数行列
@@ -143,7 +134,7 @@ public:
 		double specificHeat,	// specificHeat:比熱 J/ (K・kg):1960
 		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
 		);
-
+	double Get_thConduct();
 	void SetThermalEmissivityToVtx(unsigned id,double thermalEmissivity);			///	熱放射率を節点 id に設定する関数
 	void SetThermalEmissivityToVerticesAll(double thermalEmissivity);					///	熱放射率を全節点に設定
 
@@ -167,6 +158,7 @@ public:
 	//void CreateMatk2f(Face faces);		// 四面体ごとに作る式になっているが、外殻の三角形face毎に作る　facesのf
 	//	..四面体ごとに作る　tetsのt
 	void CreateMatk2t(unsigned id);
+	void CreateMatk2t_(unsigned id);		//	vector HeatTransRatiosの値を利用する
 	//	..四面体(tets)のt 毎に生成
 	void CreateMatk3t(unsigned id);
 
@@ -192,7 +184,9 @@ public:
 	void CreateVecf2surface(unsigned id,unsigned mode);			//> 同上　加えて、vecFAll_f2IH[num]に格納、OFF、弱火、中火。強火の時は、mode = 4
 	void CreateVecF2surfaceAll();					//	IH等の加熱条件設定から、全体剛性ベクトル(・行列)(何×何？)を作る関数　2012.08.30追記
 		//CreateVecfLocal(unsigned id);を改造
-	void CreateVecF3surfaceAll();
+	void CreateVecf3surface(unsigned id);			//.	空気などへの熱伝達境界条件
+	void CreateVecF3surfaceAll();					//> 消去予定
+	
 	
 
 	//	{T}:節点温度ベクトルを作る関数
@@ -200,7 +194,15 @@ public:
 	void CreateLocalMatrixAndSet();				//K,C,Fすべての行列・ベクトルについて要素剛性行列を作って、エッジに入れる	又は	全体剛性行列を作る関数
 	
 	//	初期化
-	void InitTcAll(double temp);							//	Tcの温度を初期化
+	void InitTcAll(double temp);							//	Tcの温度を初期化	
+	//	放熱等初期温度分布を考慮したいとき
+	bool SetConcentricHeatMap(
+		std::vector<double> r,			//	半径範囲の配列
+		std::vector<double> temp,		//	温度の配列
+		Vec2d origin					//	x-z平面での原点
+		);		//	(半径,温度)のペア	
+	void LMS(std::vector<double> tempe, std::vector<int> r);
+	std::vector<double> LMS_result;
 
 public:
 	//	毎Step呼び出す
@@ -333,6 +335,8 @@ public:
 	void UsingHeatTransferBoundaryCondition(unsigned id,double temp);
 	//	熱伝達率も設定可能な関数	//>	名前を変えるべき　要改善
 	void UsingHeatTransferBoundaryCondition(unsigned id,double temp,double heatTransratio);
+
+	
 	
 	//	以下、考え途中
 	//	改称案

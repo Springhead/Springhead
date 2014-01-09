@@ -34,7 +34,7 @@ public:
 	int vertexIDs[4];	///< ’¸“_ID																																	  
 	int faceIDs[4];		///< •\–Ê‚S‚Â
 	int edgeIDs[6];		///< ‘Î‰ž‚·‚é•Ó‚ÌIDB0:•Ó01, 1:•Ó12, 2:•Ó20, 3:•Ó03, 4:•Ó13, 5:•Ó23
-	PTM::TVector<4,double> vecf[4];			///<	{f1}:vecf[0],{f2}:vecf[1],{f3}:vecf[2],...
+	PTM::TVector<4,double> vecf[4];		//>	{f1}:vecf[0],{f2(”M—¬‘©)}:vecf[1],{f3(”M“`’B)}:vecf[2],{f4(”MçtŽË)}:vecf[3]
 	int& edge(int i, int j);
 };
 

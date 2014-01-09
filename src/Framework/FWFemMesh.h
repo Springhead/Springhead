@@ -48,6 +48,7 @@ public:
 //protected:
 	//	TetGenを用いて、GRMeshを四面体メッシュ化し、phMeshに格納する。
 	virtual bool CreatePHFromGR();
+	virtual bool CreatePHFromGRroughness();
 	//	phMeshからGRMeshを生成する。マテリアルなどはgrMeshから拾う。
 	void CreateGRFromPH();
 
@@ -70,6 +71,7 @@ public:
 		MOISTURE,
 		THERMAL,
 		THERMAL_CAM,
+		THERMAL_CAM2,
 	} texturemode;
 	//enum化する
 	//void SetTexmode(TEXTURE_MODE){TEXTURE_MODE =  };
