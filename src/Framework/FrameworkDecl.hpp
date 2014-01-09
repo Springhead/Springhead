@@ -3,6 +3,7 @@ protected:\
 	unsigned int	kogePics;	\
 	unsigned int	thermoPics;	\
 	unsigned int	waterPics;	\
+	std::string	meshRoughness;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -10,6 +11,7 @@ public:\
 		kogePics = ((FWFemMeshDesc*)ptr)->kogePics;	\
 		thermoPics = ((FWFemMeshDesc*)ptr)->thermoPics;	\
 		waterPics = ((FWFemMeshDesc*)ptr)->waterPics;	\
+		meshRoughness = ((FWFemMeshDesc*)ptr)->meshRoughness;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -18,6 +20,7 @@ public:\
 		((FWFemMeshDesc*)ptr)->kogePics = kogePics;	\
 		((FWFemMeshDesc*)ptr)->thermoPics = thermoPics;	\
 		((FWFemMeshDesc*)ptr)->waterPics = waterPics;	\
+		((FWFemMeshDesc*)ptr)->meshRoughness = meshRoughness;	\
 		return true;	\
 	}\
 

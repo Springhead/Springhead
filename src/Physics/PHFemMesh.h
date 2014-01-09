@@ -68,9 +68,8 @@ public:
 		double thermalEmissivity;	///	熱放射率　節点での
 		double disFromOrigin;		//>	x-z平面でのローカル座標の原点からの距離
 		//double heatFluxValue;		//>	熱流束値
-		double area;		//	頂点の担当する面積
 		Vec3d normal;				// 属するfacceから算出した法線（現在、face法線の単純和を正規化した法線だが、同じ向きのface法線を一本化する予定：要改善
-		bool beCondVtxs;	//小野原追加 これがTrueのとき対応を取ったとする。
+		bool beCondvtx;
 	};
 	//	四面体
 	class Tet{
@@ -80,12 +79,8 @@ public:
 		int edges[6];		//	対応する辺のID。0:辺01, 1:辺12, 2:辺20, 3:辺03, 4:辺13, 5:辺23
 		int& edge(int i, int j);
 		double volume;		//	積分計算で用いるための体積
-		//matk1,matk2 -> matk[3] に統合予定
 		PTM::TMatrixRow<4,4,double> matk[3];	//>	
-		//PTM::TMatrixRow<4,4,double> matk1;
-		//PTM::TMatrixRow<4,4,double> matk2;
-		PTM::TVector<4,double> vecf[4];			//>	{f1}:vecf[0],{f2}:vecf[1],{f3}:vecf[2],...
-		//PTM::TVector<4,double> vecf[4][3];			//>	{f1}:vecf[0],{f2}:vecf[1],{f3}:vecf[2],...
+		PTM::TVector<4,double> vecf[4];			//>	{f1}:vecf[0],{f2(熱流束)}:vecf[1],{f3(熱伝達)}:vecf[2],{f4(熱輻射)}:vecf[3]
 
 		//水分蒸発計算
 		double wratio;			//	含水率
@@ -101,8 +96,6 @@ public:
 		///	頂点ID。順番で面の表裏を表す。
 		int vertices[3];
 		void Update();
-		int adjacentFace[3]; //隣の三角形の情報（ID) 小野原追加
-
 		///	頂点IDで比較
 		bool operator < (const Face& f2);
 		///	頂点IDで比較
@@ -116,6 +109,7 @@ public:
 		///	原点から近い順にvertices[3]を並べ替えた頂点ID
 		int ascendVtx[3];			///	毎熱Stepで使う？使わない？
 		double heatTransRatio;		///	その面における熱伝達率		///	構成節点の熱伝達率の相加平均す		///	すべての関数で、この値を更新できていないので、信用できない。
+		std::vector<double> heatTransRatios;	//>	熱伝達率が複数存在する
 		bool alphaUpdated;			///	属する頂点の熱伝達率が更新された際にtrueに	
 		bool deformed;				///	属する頂点の移動により、変形されたとき
 		double thermalEmissivity;	///	熱放射率

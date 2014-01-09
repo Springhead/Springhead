@@ -47,7 +47,7 @@ struct PHFemMeshThermoDesc: public PHFemMeshDesc{
 	double rho;						//	密度
 	double thConduct;				//熱伝導率
 	double heatTrans;				//熱伝達率			//class 節点には、heatTransRatioが存在する
-	double specificHeat;			//比熱
+	double specificHeat;			//比熱	
 	PHFemMeshThermoDesc();
 	void Init();
 };
@@ -92,6 +92,8 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	double GetArbitraryPointTemp(Vec3d temppos);
 	double GetVtxTempInTets(Vec3d temppos);
 	void InitVecFAlls();
+	double Get_thConduct();
+	bool SetConcentricHeatMap(std::vector<double> r, std::vector<double> temp, Vec2d origin);
 };
 
 //@}

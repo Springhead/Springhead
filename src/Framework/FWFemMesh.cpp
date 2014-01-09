@@ -33,7 +33,7 @@ namespace Spr{;
 
 FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 	SetDesc(&d);
-	texture_mode = 4;		//	テクスチャ表示の初期値：温度
+	texture_mode = 5;		//	テクスチャ表示の初期値：温度
 }
 
 void FWFemMesh::DrawIHBorder(double xs, double xe){
@@ -194,7 +194,8 @@ void FWFemMesh::Sync(){
 		kogetex	= 7;		//7にする
 	}
 	else if(fwfood == "fwPan"){
-		kogetex = 5;
+		//kogetex = 5;
+		kogetex = kogePics;
 	}
 
 	double dtex =(double) 1.0 / ( kogetex + thtex + watex + thcamtex);		//	テクスチャ奥行座標の層間隔
@@ -522,7 +523,46 @@ void FWFemMesh::Sync(){
 						else{
 							DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
 						}
-
+					}
+					else if(texture_mode == 5){
+						double temp = phMesh->vertices[pv].temp;
+						// -50.0~0.0:aqua to blue => 20 : purple
+						if(temp < 120.0){
+							gvtx[stride * gv + tex + 2] = thstart + 6.0 * dtex; 
+						}
+						else if(temp == 120.0){
+							gvtx[stride * gv + tex + 2] = thcamstart;
+						}
+						else if(120.0 < temp && temp <= 130.0){	
+							gvtx[stride*gv + tex + 2] = thcamstart + (temp - 120.0) * dtex / 10.0;
+						}
+						else if(130.0 < temp && temp <= 140.0 ){
+							gvtx[stride*gv + tex + 2] = thcamstart + dtex + (temp - 130.0) * dtex / 10.0;
+						}
+						else if(140.0 < temp && temp <= 150.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 2 * dtex + (temp - 140.0) * dtex / 10.0;
+						}
+						else if(150.0 < temp && temp <= 160.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 3 * dtex + (temp - 150.0) * dtex / 10.0;
+						}
+						else if(160.0 < temp && temp <= 170.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 4 * dtex + (temp - 160.0) * dtex / 10.0;
+						}
+						else if(170.0 < temp && temp <= 180.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 5 * dtex + (temp - 170.0) * dtex / 10.0;
+						}
+						else if(180.0 < temp && temp <= 190.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 6 * dtex + (temp - 180.0) * dtex / 10.0;
+						}
+						else if(190.0 < temp && temp <= 200.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 7 * dtex + (temp - 190.0) * dtex / 10.0;
+						}
+						else if(200.0 < temp){
+							gvtx[stride*gv + tex + 2] = thcamstart + 8 * dtex;
+						}
+						else{
+							DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
+						}
 					}
 				}
 			}	
@@ -575,14 +615,16 @@ bool FWFemMesh::AddChildObject(ObjectIf* o){
 	return FWObject::AddChildObject(o);
 }
 void FWFemMesh::Loaded(UTLoadContext*){
-	if (!phMesh && grMesh) CreatePHFromGR();
+	//if (!phMesh && grMesh) CreatePHFromGR();
+	if (!phMesh && grMesh) CreatePHFromGRroughness();
+
 	if (grFrame){
 		grFrame->DelChildObject(grMesh->Cast());
 		CreateGRFromPH();
 		grFrame->AddChildObject(grMesh->Cast());
 	}
 }
-bool FWFemMesh::CreatePHFromGR(){
+bool FWFemMesh::CreatePHFromGRroughness(){
 	//	呼び出された時点で grMesh にグラフィクスのメッシュが入っている
 	//	grMeshを変換して、phMeshをつくる。
 	//	以下で、grMeshからtetgenを呼び出して変換して、pmdに値を入れていけば良い。
@@ -595,7 +637,7 @@ bool FWFemMesh::CreatePHFromGR(){
 	std::vector<Vec3d> vtxsIn;
 	for(unsigned i=0; i<grMesh->vertices.size(); ++i) vtxsIn.push_back(grMesh->vertices[i]);
 	// swithes q+(半径/最短辺) (e.g. = q1.0~2.0) a 最大の体積 
-	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], "pq2.1a1.0e-8");
+	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], (char*)meshRoughness.c_str());
 	//sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], "pq2.0a1e-7V");//"pq10.1a1.0e-1V");//a0.3 //a0.003 //pq2.1a0.002:20130322
 	
 	//	PHMesh用のディスクリプタpmdに値を入れていく
@@ -613,6 +655,39 @@ bool FWFemMesh::CreatePHFromGR(){
 		//GetPHSolid()->GetScene()->AddChildObject(phMeshThermo->Cast());
 	return true;
 }
+
+bool FWFemMesh::CreatePHFromGR(){
+	//	呼び出された時点で grMesh にグラフィクスのメッシュが入っている
+	//	grMeshを変換して、phMeshをつくる。
+	//	以下で、grMeshからtetgenを呼び出して変換して、pmdに値を入れていけば良い。
+	PHFemMeshThermoDesc pmd;
+	
+	//TetGenで四面体メッシュ化
+	Vec3d* vtxsOut=NULL;
+	int* tetsOut=NULL;
+	int nVtxsOut=0, nTetsOut=0;
+	std::vector<Vec3d> vtxsIn;
+	for(unsigned i=0; i<grMesh->vertices.size(); ++i) vtxsIn.push_back(grMesh->vertices[i]);
+	// swithes q+(半径/最短辺) (e.g. = q1.0~2.0) a 最大の体積 
+	sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], "pq2.1a1.0e-5");
+	//sprTetgen(nVtxsOut, vtxsOut, nTetsOut, tetsOut, (int)grMesh->vertices.size(), &vtxsIn[0], (int)grMesh->faces.size(), &grMesh->faces[0], "pq2.0a1e-7V");//"pq10.1a1.0e-1V");//a0.3 //a0.003 //pq2.1a0.002:20130322
+	
+	//	PHMesh用のディスクリプタpmdに値を入れていく
+	for(int i=0; i < nVtxsOut; i++){
+		pmd.vertices.push_back(vtxsOut[i]);
+	} 
+	pmd.tets.assign(tetsOut, tetsOut + nTetsOut*4);
+	//	PHMeshの生成
+	phMesh = DBG_NEW PHFemMeshThermo(pmd);
+	//	PHFemMeshThermoの生成を追加
+	//phMeshThermo = DBG_NEW PHFemMeshThermo(pmd);
+	//phMesh = phMeshThermo;
+	if (GetPHSolid() && GetPHSolid()->GetScene())
+		GetPHSolid()->GetScene()->AddChildObject(phMesh->Cast());
+		//GetPHSolid()->GetScene()->AddChildObject(phMeshThermo->Cast());
+	return true;
+}
+
 struct FaceMap{
 	FaceMap(){
 		vtxs[0] = vtxs[1] = vtxs[2] = -1;
