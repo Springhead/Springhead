@@ -23,12 +23,10 @@ struct FWFemMeshDesc: public FWObjectDesc{
 	std::string meshRoughness;			//tetgenで生成するメッシュの粗さ
 	FWFemMeshDesc(){Init();}
 	void Init(){
-		if(!meshRoughness.length()){				//
-			meshRoughness = "pq2.1a1.0e-5";		// 
-		}
+		meshRoughness = "pq2.1a1.0e-5";		// SetDescの前に呼ばれていますよね？
 		//kogePics	= 5;
 		//thermoPics	= 6;
-		//waterPics	= 2;
+		//waterPics	= 2;b
 	}
 };
 
