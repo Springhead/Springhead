@@ -45,7 +45,6 @@ protected:
 	int positionOffset;	///< 頂点座標までのオフセット
 	int normalOffset;	///< 法線までのオフセット
 	int texOffset;		///< テクスチャ座標までのオフセット
-
 	Vec3f& Pos(std::vector<float>& v, int i){ return (Vec3f&)v[stride*i + positionOffset]; }
 	Vec3f& Normal(std::vector<float>& v, int i){ return (Vec3f&)v[stride*i + normalOffset]; }
 	/// 頂点バッファの作成

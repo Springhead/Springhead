@@ -77,7 +77,7 @@
 //#define SPECIFICHEAT 4.2
 
 //境界条件
-#define NOTUSE_HEATTRANS_HERE
+//#define NOTUSE_HEATTRANS_HERE
 
 
 
@@ -2981,27 +2981,27 @@ void PHFemMeshThermo::AfterSetDesc() {
 	
 	TVecAll.resize(vertices.size());
 	//節点温度の初期設定(行列を作る前に行う)
-	SetVerticesTempAll(29.9);
-	std::vector<double> round;
-	std::vector<double> tempe;
-	for(unsigned i=0;i<9;++i){
-		round.push_back(i*0.01);
-	}
-	tempe.push_back(211.3);
-	tempe.push_back(211.2);
-//	tempe.push_back(0.0);
-	tempe.push_back(210.2);
-//	tempe.push_back(0.0);
-	tempe.push_back(207.6);
-//	tempe.push_back(0.0);
-	tempe.push_back(203.9);
-	tempe.push_back(198.0);
-	tempe.push_back(189.3);
-	tempe.push_back(178.7);
-	tempe.push_back(169.8);
-	tempe.push_back(158.5);
+	SetVerticesTempAll(0.0);
+	//std::vector<double> round;
+	//std::vector<double> tempe;
+	//for(unsigned i=0;i<9;++i){
+	//	round.push_back(i*0.01);
+	//}
+//	tempe.push_back(211.3);
+//	tempe.push_back(211.2);
+////	tempe.push_back(0.0);
+//	tempe.push_back(210.2);
+////	tempe.push_back(0.0);
+//	tempe.push_back(207.6);
+////	tempe.push_back(0.0);
+//	tempe.push_back(203.9);
+//	tempe.push_back(198.0);
+//	tempe.push_back(189.3);
+//	tempe.push_back(178.7);
+//	tempe.push_back(169.8);
+//	tempe.push_back(158.5);
 
-	SetConcentricHeatMap(round,tempe,Vec2d(0.0, -0.005));
+	//SetConcentricHeatMap(round,tempe,Vec2d(0.0, -0.005));
 
 	//周囲流体温度の初期化(temp度にする)
 	InitTcAll(0.0);
@@ -3069,6 +3069,17 @@ void PHFemMeshThermo::AfterSetDesc() {
 	///	熱伝達率を各節点に格納
 	SetHeatTransRatioToAllVertex();
 	for(unsigned i=0; i < this->tets.size(); i++){
+
+		/*小野原追加ここから--------------------------------------------*/
+		//表面faceの面積を計算
+		for(unsigned j= 0 ; j < 4; j++){
+			if(tets[i].faces[j] < (int)nSurfaceFace){			///	外殻の面
+				///	四面体の三角形の面積を計算		///	この関数の外で面積分の面積計算を実装する。移動する
+				faces[tets[i].faces[j]].area = CalcTriangleArea(faces[tets[i].faces[j]].vertices[0], faces[tets[i].faces[j]].vertices[1], faces[tets[i].faces[j]].vertices[2]);
+			}
+		}
+		/*小野原追加ここまで--------------------------------------------*/
+
 		tets[i].volume = CalcTetrahedraVolume2(i);
 
 		//各行列を作って、ガウスザイデルで計算するための係数の基本を作る。Timestepの入っている項は、このソース(SetDesc())では、実現できないことが分かった(NULLが返ってくる)
@@ -3077,6 +3088,8 @@ void PHFemMeshThermo::AfterSetDesc() {
 		CreatedMatCAll(i);
 		CreateVecFAll(i);
 	}
+	//頂点の表面面積を計算（小野原追加）
+	calcVerticesArea();
 #if 0
 
 	//	頂点１の担当体積に対し、熱量を加えるために、担当体積換算で熱量を頂点の温度として与える。{F}を使わないので、熱流束を使わない。
@@ -3708,6 +3721,21 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 	//DSTR << "Inner Function _tets[id].matk1 : " << tets[id].matk1 << std::endl;
 
 }
+
+///*小野原追加ここから--------------------------------------------*/
+/////頂点の担当する面積の計算を予めしておく。（物体が剛体なのでメッシュ情報は変化しない前提）
+void PHFemMeshThermo::calcVerticesArea(){
+	for(unsigned i=0; i<surfaceVertices.size(); i++){
+		vertices[surfaceVertices[i]].area = 0; //これを求める
+		for(unsigned j=0; j<vertices[surfaceVertices[i]].faces.size(); ++j){
+			if(vertices[surfaceVertices[i]].faces[j] < nSurfaceFace){ //もしfaceが表面の面であったら
+				Face& face = faces[vertices[surfaceVertices[i]].faces[j]];
+				vertices[surfaceVertices[i]].area += face.area / 3 ;
+			}
+		}
+	}
+}
+///*小野原追加ここまで--------------------------------------------*/
 
 void PHFemMeshThermo::CreateVecf2surface(unsigned id,unsigned num){
 	// 初期化
