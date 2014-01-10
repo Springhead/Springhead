@@ -55,6 +55,17 @@ void FWFemMesh::DrawIHBorder(double xs, double xe){
 	glEnd();
 }
 
+//小野原追加ここから---------------------------------------
+void FWFemMesh::DrawCompanion(Vec3d vtx){
+	Vec3d wVtx = this->GetGRFrame()->GetWorldTransform() * vtx;
+	glBegin(GL_LINES);
+		glColor3d(1.0,0.0,0.0);
+		glVertex3d(wVtx[0], wVtx[1], wVtx[2]);
+		glVertex3d(wVtx[0], wVtx[1]-0.05, wVtx[2]);
+	glEnd();
+}
+//小野原追加ここまで---------------------------------------
+
 void FWFemMesh::DrawIHBorderXZPlane(bool sw){
 	if(sw){
 		Vec3d origin = Vec3d(0.0, 0.0, 0.0);
@@ -238,6 +249,13 @@ void FWFemMesh::Sync(){
 			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
 			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
 		}
+		//小野原追加ここから(デバッグ用)---------------------------------------
+		for(unsigned i=0; i<phMesh->vertices.size(); i++){
+			if(phMesh->vertices[i].beCondvtx == true){
+				DrawCompanion(phMesh->vertices[i].pos);
+			}
+		}
+		//小野原追加ここまで(デバッグ用)---------------------------------------
 	}
 	
 	if(fwfood == "fwNsteak"){
@@ -261,7 +279,12 @@ void FWFemMesh::Sync(){
 
 	
 	//	同期処理
-	FWObject::Sync();
+	if(fwfood == "fwNsteak"){ //小野原追加 デバック用（本来は、syncを呼び出すだけだが、デバック用にステーキの場合はsync2を呼ぶ）
+		FWObject::Sync2();
+	}
+	else{
+		FWObject::Sync();
+	}
 	if (syncSource==FWObjectDesc::PHYSICS){
 		if (grMesh && grMesh->IsTex3D()){
 			float* gvtx = grMesh->GetVertexBuffer();
@@ -524,44 +547,28 @@ void FWFemMesh::Sync(){
 							DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
 						}
 					}
-					else if(texture_mode == 5){
+					else if(texture_mode == 5){//小野原追加　デバックモード
+						if(fwfood == "fwPan"){
+							DSTR << phMesh->vertices[pv].temp << std::endl;
+						}
 						double temp = phMesh->vertices[pv].temp;
-						// -50.0~0.0:aqua to blue => 20 : purple
-						if(temp < 120.0){
+						if(temp < 30.0){
 							gvtx[stride * gv + tex + 2] = thstart + 6.0 * dtex; 
 						}
-						else if(temp == 120.0){
-							gvtx[stride * gv + tex + 2] = thcamstart;
+						else if(30.0 < temp && temp <= 35.0 ){
+							gvtx[stride*gv + tex + 2] = thcamstart + dtex + (temp - 30.0) * dtex / 10.0;
 						}
-						else if(120.0 < temp && temp <= 130.0){	
-							gvtx[stride*gv + tex + 2] = thcamstart + (temp - 120.0) * dtex / 10.0;
+						else if(35.0 < temp && temp <= 40.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 2 * dtex + (temp - 35.0) * dtex / 10.0;
 						}
-						else if(130.0 < temp && temp <= 140.0 ){
-							gvtx[stride*gv + tex + 2] = thcamstart + dtex + (temp - 130.0) * dtex / 10.0;
+						else if(40.0 < temp && temp <= 45.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 3 * dtex + (temp - 40.0) * dtex / 10.0;
 						}
-						else if(140.0 < temp && temp <= 150.0){
-							gvtx[stride*gv + tex + 2] = thcamstart + 2 * dtex + (temp - 140.0) * dtex / 10.0;
-						}
-						else if(150.0 < temp && temp <= 160.0){
-							gvtx[stride*gv + tex + 2] = thcamstart + 3 * dtex + (temp - 150.0) * dtex / 10.0;
-						}
-						else if(160.0 < temp && temp <= 170.0){
-							gvtx[stride*gv + tex + 2] = thcamstart + 4 * dtex + (temp - 160.0) * dtex / 10.0;
-						}
-						else if(170.0 < temp && temp <= 180.0){
-							gvtx[stride*gv + tex + 2] = thcamstart + 5 * dtex + (temp - 170.0) * dtex / 10.0;
-						}
-						else if(180.0 < temp && temp <= 190.0){
-							gvtx[stride*gv + tex + 2] = thcamstart + 6 * dtex + (temp - 180.0) * dtex / 10.0;
-						}
-						else if(190.0 < temp && temp <= 200.0){
-							gvtx[stride*gv + tex + 2] = thcamstart + 7 * dtex + (temp - 190.0) * dtex / 10.0;
-						}
-						else if(200.0 < temp){
-							gvtx[stride*gv + tex + 2] = thcamstart + 8 * dtex;
+						else if(45.0 < temp && temp <= 50.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 4 * dtex + (temp - 45.0) * dtex / 10.0;
 						}
 						else{
-							DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
+						//	DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
 						}
 					}
 				}

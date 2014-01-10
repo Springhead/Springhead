@@ -64,6 +64,7 @@ public:
 	//	IH加熱領域の境界線を引く
 	void DrawIHBorderXZPlane(bool sw);
 	void DrawIHBorder(double xs, double xe);
+	void DrawCompanion(Vec3d vtx); //小野原追加
 	//void SetTextureMode();
 public:
 	enum TEXTURE_MODE{
@@ -71,7 +72,8 @@ public:
 		MOISTURE,
 		THERMAL,
 		THERMAL_CAM,
-		THERMAL_CAM2,
+		//THERMAL_CAM2,
+		DEBUG, //小野原追加
 	} texturemode;
 	//enum化する
 	//void SetTexmode(TEXTURE_MODE){TEXTURE_MODE =  };

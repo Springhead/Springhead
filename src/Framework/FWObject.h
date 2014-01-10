@@ -62,6 +62,7 @@ public:
 
 	// 同期
 	virtual void		Sync();
+	virtual void		Sync2(); //小野原追加
 
 	// モディファイ
 	virtual void		Modify();

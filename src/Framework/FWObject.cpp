@@ -109,6 +109,73 @@ void FWObject::Sync(){
 	}
 }
 
+void FWObject::Sync2(){ //小野原追加 デバック用（肉を別表示）
+	if(!phSolid || !grFrame){
+		return;
+	}
+
+	if (phJoint==NULL || bAbsolute) {
+		if(syncSource==FWObjectDesc::PHYSICS){
+			// 剛体をフレームへ
+			Affinef aff;
+			phSolid->GetPose().ToAffine(aff);
+			grFrame->SetTransform(Affinef::Trn(0.0, 0.15, 0.0));
+
+		} else {
+			// フレームを剛体へ
+			Affinef af;
+			af = grFrame->GetTransform();
+
+			// ボーンのルートフレームだった場合。必要性が不明のため残しとくが、後ほど検証のこと (12/05/17, mitake) <!!>
+			// af = grFrame->GetWorldTransform();
+			// af.Orthonormalization();
+
+			Posed pose; pose.FromAffine(af);
+			phSolid->SetPose(pose);
+		}
+
+	} else {
+		if(syncSource==FWObjectDesc::PHYSICS){
+			// 関節をフレームへ
+			Posed jointPosition;
+			jointPosition.Ori() = phJoint->GetRelativePoseQ() * sockOffset.Ori().Inv();
+			Posed poseSocket; phJoint->GetSocketPose(poseSocket);
+			Posed pose = poseSocket * jointPosition;
+
+			Affinef af; pose.ToAffine(af);
+			DCAST(GRFrame, grFrame)->SetTransform(af);
+
+			PHSolidIf *so1 = phJoint->GetSocketSolid(), *so2 = phJoint->GetPlugSolid();
+			if (so1 && so2) {
+				DCAST(FWSceneIf,GetScene())->GetPHScene()->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE);
+			}
+
+		} else {
+			// フレームを関節（を構成する剛体）へ
+			Affinef af = grFrame->GetWorldTransform();
+			af.Orthonormalization(); //正規直交化
+			Posed pose; pose.FromAffine(af);
+
+			//アフィン行列→クォータニオンの変換誤差が大きい場合のエラー表示
+			Affinef af2; pose.ToAffine(af2);
+			Matrix3d mat=af.Rot(), mat2=af2.Rot();
+			double epsilon = 0.1;
+			bool   bErr    = false;
+			for(int i=0;i<2;i++){
+				for(int j=0;j<2;j++){
+					if(fabs(mat[i][j]-mat2[i][j]) > epsilon){ bErr = true; }
+				}
+			}
+			if(bErr){
+				DSTR << "in FWObject[" << GetName() << "] : ";
+				DSTR << mat << " <=> " << mat2 << " has error larger than " << epsilon << std::endl;
+			}
+			
+			phSolid->SetPose(pose);
+		}
+	}
+}
+
 bool FWObject::AddChildObject(ObjectIf* o){
 	bool bAdded = false;
 

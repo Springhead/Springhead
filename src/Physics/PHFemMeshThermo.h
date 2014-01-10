@@ -309,6 +309,8 @@ public:
 	PHFemMeshThermo(const PHFemMeshThermoDesc& desc=PHFemMeshThermoDesc(), SceneIf* s=NULL);
 	void AfterSetDesc();		//	伝熱行列の計算など、IH加熱モードは次の関数で設定
 	/// 熱伝導シミュレーションでエンジンが用いるステップをオーバーライド		
+	void calcVerticesArea(void);
+	///表面の担当面積を計算する関数（小野原追加）
 	void Step(double dt);
 	//（節点温度の行列を作成する前に）頂点の温度を設定する（単位摂氏℃）
 	void SetVerticesTempAll(double temp);

@@ -79,7 +79,6 @@ struct GRMeshIf: public GRVisualIf{
 		@param bbmax
 		@param aff		AABBを定義する座標系との変換
 	 */
-	void CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Affinef& aff = Affinef());
 };
 
 ///	@brief 表示用のMesh(GRMesh)のデスクリプタ．
