@@ -22,6 +22,9 @@
 
 using namespace std;
 
+//{*********EPvector*******
+#define EPvector_Check(ob) PyList_Check(ob)
+//}EPvector
 %}
 
 
