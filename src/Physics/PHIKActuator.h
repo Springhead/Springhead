@@ -187,6 +187,11 @@ public:
 	*/
 	PHIKActuatorIf* GetParent() { return parent->Cast(); }
 
+	/** @brief 直接の子アクチュエータを取得する
+	*/
+	int NChildActuators() { return (int)children.size(); }
+	PHIKActuatorIf* GetChildActuator(int i) { return children[i]->Cast(); }
+
 	// --- --- --- --- ---
 
 	virtual bool		AddChildObject(ObjectIf* o);

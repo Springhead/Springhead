@@ -195,7 +195,9 @@ public:
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	//  非API関数
 
+	double GetLength();
 
+	void AutoStart();
 
 	#if 0
 	/** @brief 軌道の通過点を追加する

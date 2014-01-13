@@ -260,6 +260,11 @@ struct PHIKActuatorIf : SceneObjectIf{
 	/** @brief 直接の親を取得する
 	*/
 	PHIKActuatorIf* GetParent();
+
+	/** @brief 直接の子アクチュエータを取得する
+	*/
+	int NChildActuators();
+	PHIKActuatorIf* GetChildActuator(int i);
 };
 
 /// IKアクチュエータのステート
