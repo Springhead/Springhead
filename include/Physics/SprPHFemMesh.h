@@ -47,7 +47,8 @@ struct PHFemMeshThermoDesc: public PHFemMeshDesc{
 	double rho;						//	密度
 	double thConduct;				//熱伝導率
 	double heatTrans;				//熱伝達率			//class 節点には、heatTransRatioが存在する
-	double specificHeat;			//比熱	
+	double specificHeat;			//比熱
+	double radiantHeat;				//熱輻射率（空気への熱伝達率）
 	PHFemMeshThermoDesc();
 	void Init();
 };
@@ -89,11 +90,23 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
 		);
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);
-	double GetArbitraryPointTemp(Vec3d temppos);
-	double GetVtxTempInTets(Vec3d temppos);
+	double GetArbitraryPointTemp(Vec3d temppos);			//	多分、未使用
+	double GetVtxTempInTets(Vec3d temppos);					//	使用している関数	
 	void InitVecFAlls();
 	double Get_thConduct();
 	bool SetConcentricHeatMap(std::vector<double> r, std::vector<double> temp, Vec2d origin);
+	void SetThermalEmissivityToVerticesAll(double thermalEmissivity);
+	// 熱放射同定関係
+	void SetOuterTemp(double temp);
+	void SetThermalRadiation(double ems);
+	void SetGaussCalcParam(unsigned cyc,double epsilon);
+	void InitTcAll(double temp);
+	void InitToutAll(double temp);
+	void SetWeekPow(double weekPow_);
+	void SetIHParamWEEK(double inr_, double outR_, double weekPow_);
+	void SetHeatTransRatioToAllVertex(double heatTransR_);
+	void AfterSetDesc();												//全行列などを作り直す
+	void ReProduceMat_Vec_ThermalRadiation();
 };
 
 //@}

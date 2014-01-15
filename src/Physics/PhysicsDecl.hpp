@@ -48,6 +48,7 @@ protected:\
 	double	thConduct;	\
 	double	heatTrans;	\
 	double	specificHeat;	\
+	double	radiantHeat;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -56,6 +57,7 @@ public:\
 		thConduct = ((PHFemMeshThermoDesc*)ptr)->thConduct;	\
 		heatTrans = ((PHFemMeshThermoDesc*)ptr)->heatTrans;	\
 		specificHeat = ((PHFemMeshThermoDesc*)ptr)->specificHeat;	\
+		radiantHeat = ((PHFemMeshThermoDesc*)ptr)->radiantHeat;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -65,6 +67,7 @@ public:\
 		((PHFemMeshThermoDesc*)ptr)->thConduct = thConduct;	\
 		((PHFemMeshThermoDesc*)ptr)->heatTrans = heatTrans;	\
 		((PHFemMeshThermoDesc*)ptr)->specificHeat = specificHeat;	\
+		((PHFemMeshThermoDesc*)ptr)->radiantHeat = radiantHeat;	\
 		return true;	\
 	}\
 

@@ -1,5 +1,5 @@
 ﻿/*
- *  Copyright (c) 2003-2008, Shoichi Hasegawa and Springhead development team 
+ *  Copyright (c) 2003-2014, Shoichi Hasegawa and Springhead development team 
  *  All rights reserved.
  *  This software is free software. You can freely use, distribute and modify this 
  *  software. Please deal with this software under one of the following licenses: 
@@ -63,9 +63,9 @@ protected:
 	//Matk=Matk1+Matk2+Matk3	matk1~3を合成した要素剛性行列	CreateMatkLocal()
 	PTM::TMatrixRow<4,4,double> matk;			
 	PTM::TMatrixRow<4,4,double> matc;			//
-//	PTM::TMatrixCol<4,1,double> Vecf3;			//f3:外側の面に面している面のみ計算する　要注意
-//	PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
-//	PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
+	//PTM::TMatrixCol<4,1,double> Vecf3;			//f3:外側の面に面している面のみ計算する　要注意
+	//PTM::TMatrixCol<4,1,double> Vecf3array[4];	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
+	//PTM::TMatrixCol<4,1,double> Vecf;			//f1~f4を合算した縦ベクトル
 	
 	
 	//f1~f4を合算した縦ベクトル
@@ -76,6 +76,7 @@ protected:
 	//f31,f32,f33,f34の4×1ベクトルの入れ物		Matkを作るまでの間の一時的なデータ置場
 	PTM::TVector<4,double> vecf3array[4];
 	//	変数は小文字　関数は大文字
+	PTM::TVector<4,double> vecf4array[4];
 
 	//行列kの計算用の係数行列
 	PTM::TMatrixRow<3,3,double> mata;
@@ -89,16 +90,12 @@ protected:
 	PTM::VMatrixRow<double> matKAll;
 	// ..[C]
 	PTM::VMatrixRow<double> matCAll;
-
 	PTM::VMatrixRow<double> tempMat;
 
 	PTM::VMatrixRow<double> keisu;			//	直接法で計算時のT(t+dt)係数行列
 	PTM::VMatrixRow<double> keisuInv;
 
 	PTM::VVector<double> TVecAll2;
-
-	
-
 
 	// 全体の剛性行列の代わり
 	// ..全体剛性行列Kの対角成分になるはずの値をそのまま代入		実装中での初期化の仕方	DMatKAll.resize(1,vertices.size());
@@ -113,7 +110,7 @@ protected:
 		//double *constb;								//ガウスザイデルの係数bを入れる配列のポインタ	後で乗り換える
 	//	..{F}の 全体剛性行列(ベクトル)
 	PTM::VVector<double> vecFAllSum;			//	PTM::VMatrixCol<double> vecFAll;	// から変更				
-	PTM::VVector<double> vecFAll[4];			// 全体剛性ベクトルを格納しておくベクトル
+	PTM::VVector<double> vecFAll[4];			// f1~f4の全体剛性ベクトルを格納しておくベクトル
 	PTM::VMatrixCol<double> vecFAll_f2IHw;		// 弱火ベクトル
 	PTM::VMatrixCol<double> vecFAll_f2IHm;		// 中火
 	PTM::VMatrixCol<double> vecFAll_f2IHs;		// 強火
@@ -148,10 +145,10 @@ public:
 	void InitCreateVecf_();				
 	void InitCreateMatk_();
 
-	//	[K]:熱伝導マトリクスを作る関数群
-	//	..kimura式を参考にして(惑いながら)導出した計算法			//>	k1ktに改称する
+	//	[K]:熱伝導マトリクスを作る関数群		末尾の命名ルール：k:座標変換、b：書籍の公式利用、t：四面体単位で計算
+	//	..kimura式を参考にして(惑いながら)導出した計算法			//>	k1ktに改称すべき
 	void CreateMatk1k(unsigned id);
-	//	..yagawa1983の計算法の3次元拡張した計算法 b:book の意味	//>	k1btに改称する
+	//	..yagawa1983の計算法の3次元拡張した計算法 b:book の意味		//>	k1btに改称すべき
 	void CreateMatk1b(unsigned id);
 	//	..四面体ごとに作るので、四面体を引数に取る 内外すべての四面体について行う
 	void CreateMatk2(unsigned id,Tet tets);
@@ -164,7 +161,7 @@ public:
 
 	void CreateMatk2array();
 	void CreateMatkLocal(unsigned i);			//	edgesに入れつつ、チェック用の全体剛性行列も、ifdefスイッチで作れる仕様
-//	void CreateDumMatkLocal();					//	全要素が0のダミーk
+	//void CreateDumMatkLocal();					//	全要素が0のダミーk
 	void CreateMatKall();
 	void CreateMatKAll();						//	Kの全体剛性行列	//	SciLab	で用いる
 	
@@ -186,7 +183,7 @@ public:
 		//CreateVecfLocal(unsigned id);を改造
 	void CreateVecf3surface(unsigned id);			//.	空気などへの熱伝達境界条件
 	void CreateVecF3surfaceAll();					//> 消去予定
-	
+	void CreateVecf4surface(unsigned id);			//	空気などへの熱輻射境界条件　f3は熱伝達率、f4は熱輻射率
 	
 
 	//	{T}:節点温度ベクトルを作る関数
@@ -195,6 +192,7 @@ public:
 	
 	//	初期化
 	void InitTcAll(double temp);							//	Tcの温度を初期化	
+	void InitToutAll(double temp);							//	Toutの温度を初期化	
 	//	放熱等初期温度分布を考慮したいとき
 	bool SetConcentricHeatMap(
 		std::vector<double> r,			//	半径範囲の配列
@@ -267,6 +265,12 @@ protected:
 	PTM::TMatrixRow<4,4,double> Create44Mat21();	//共通で用いる、4×4の2と1でできた行列を返す関数
 	//あるいは、引数を入れると、引数を変えてくれる関数
 	PTM::TMatrixCol<4,1,double> Create41Vec1();		//共通で用いる、4×1の1でできた行列(ベクトル)を返す関数
+
+	//%%% 評価実験用変数
+	std::vector<double> tempe;
+	std::vector<double> round;
+	
+
 
 	//%%%%%%%%		バイナリスイッチの宣言		%%%%%%%%//
 	///	PHFemMeshに属する構造体、クラスで定義されている同様のboolが更新されたら、こちらも更新する
@@ -445,7 +449,7 @@ public:
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);	//熱伝達率以外（熱伝達率は現行main.cppで行っているため
 	double GetArbitraryPointTemp(Vec3d temppos);							//	四面体内任意点の温度を取得	temppose:知りたい点のローカル座標
 	Vec3d GetDistVecDotTri(Vec3d Dotpos,Vec3d trivtx[3]);					//	点から三角形面(2辺のベクトルで定義)へのベクトルを計算
-	double GetVtxTempInTets(Vec3d temppos);											//	任意点の四面体内外判定：tempposがあるfaceIDを返す。見つから無ければ、-1を返す。
+	double GetVtxTempInTets(Vec3d temppos);									//	任意点の四面体内外判定：tempposがあるfaceIDを返す。見つから無ければ、-1を返す。
 	double CalcTempInnerTets(unsigned id,PTM::TVector<4,double> N);			//	与えられた形状関数での四面体内の温度を返す
 
 	std::ofstream matCAllout;
@@ -453,7 +457,24 @@ public:
 	std::ofstream checkTVecAllout;
 	std::ofstream FEMLOG;
 	unsigned long long COUNT;
-
+public:
+	//実験用
+	double jout;
+	double ems;
+	void SetOuterTemp(double temp);
+	void SetThermalRadiation(double ems);
+	void SetGaussCalcParam(unsigned cyc,double epsilon);
+	double epsilonG;
+	double NofCyc;
+	double temp_c;
+	double temp_out;
+	double weekPow_;
+	void SetWeekPow(double weekPow_);
+	double inr_;
+	double outR_;
+	void SetIHParamWEEK(double inr_, double outR_, double weekPow_);	//	弱火のIHパラメータを設定
+	void SetHeatTransRatioToAllVertex(double heatTransR_);
+	void ReProduceMat_Vec_ThermalRadiation();							//	熱輻射用に、行列やベクトルを作り直す,AfterSerDescのほぼコピー
 };
 
 
