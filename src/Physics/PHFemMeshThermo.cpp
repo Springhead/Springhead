@@ -2452,7 +2452,7 @@ void PHFemMeshThermo::Step(double dt){
 
 	}
 	if(COUNT * dt >= 10.04){
-		assert(0);			//	止めたい
+		//assert(0);			//	止めたい
 	}
 #endif
 	doCalc =true;
@@ -3086,8 +3086,10 @@ void PHFemMeshThermo::AfterSetDesc() {
 
 	//行列の成分数などを初期化
 	bVecAll.resize(vertices.size(),1);
-	
 	TVecAll.resize(vertices.size());
+
+	//	メッシュ節点温度 初期化
+	SetVerticesTempAll(30.0);
 
 	//評価実験用コード
 	//>	LMSのためのコード
@@ -3097,9 +3099,6 @@ void PHFemMeshThermo::AfterSetDesc() {
 
 //	jout = 77.85;
 //	ems = 4.9258;
-
-
-	SetVerticesTempAll(jout);
 	
 	// main.cppで動くように設定する
 	round.clear();
