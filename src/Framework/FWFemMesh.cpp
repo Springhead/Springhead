@@ -33,7 +33,7 @@ namespace Spr{;
 
 FWFemMesh::FWFemMesh(const FWFemMeshDesc& d):grMesh(NULL){
 	SetDesc(&d);
-	texture_mode = 5;		//	テクスチャ表示の初期値：温度
+	texture_mode = 4;		//	テクスチャ表示の初期値：温度
 }
 
 void FWFemMesh::DrawIHBorder(double xs, double xe){
@@ -569,6 +569,46 @@ void FWFemMesh::Sync(){
 						}
 						else{
 						//	DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
+						}
+					}
+					else if(texture_mode == 6){
+						double temp = phMesh->vertices[pv].temp;
+						// -50.0~0.0:aqua to blue => 20 : purple
+						if(temp < 120.0){
+							gvtx[stride * gv + tex + 2] = thstart + 6.0 * dtex; 
+						}
+						else if(temp == 120.0){
+							gvtx[stride * gv + tex + 2] = thcamstart;
+						}
+						else if(120.0 < temp && temp <= 130.0){	
+							gvtx[stride*gv + tex + 2] = thcamstart + (temp - 120.0) * dtex / 10.0;
+						}
+						else if(130.0 < temp && temp <= 140.0 ){
+							gvtx[stride*gv + tex + 2] = thcamstart + dtex + (temp - 130.0) * dtex / 10.0;
+						}
+						else if(140.0 < temp && temp <= 150.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 2 * dtex + (temp - 140.0) * dtex / 10.0;
+						}
+						else if(150.0 < temp && temp <= 160.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 3 * dtex + (temp - 150.0) * dtex / 10.0;
+						}
+						else if(160.0 < temp && temp <= 170.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 4 * dtex + (temp - 160.0) * dtex / 10.0;
+						}
+						else if(170.0 < temp && temp <= 180.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 5 * dtex + (temp - 170.0) * dtex / 10.0;
+						}
+						else if(180.0 < temp && temp <= 190.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 6 * dtex + (temp - 180.0) * dtex / 10.0;
+						}
+						else if(190.0 < temp && temp <= 200.0){
+							gvtx[stride*gv + tex + 2] = thcamstart + 7 * dtex + (temp - 190.0) * dtex / 10.0;
+						}
+						else if(200.0 < temp){
+							gvtx[stride*gv + tex + 2] = thcamstart + 8 * dtex;
+						}
+						else{
+							DSTR << "phMesh->vertices[" << pv << "].temp = " << phMesh->vertices[pv].temp << std::endl;
 						}
 					}
 				}
