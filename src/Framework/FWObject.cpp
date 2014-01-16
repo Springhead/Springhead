@@ -119,7 +119,7 @@ void FWObject::Sync2(){ //小野原追加 デバック用（肉を別表示）
 			// 剛体をフレームへ
 			Affinef aff;
 			phSolid->GetPose().ToAffine(aff);
-			grFrame->SetTransform(Affinef::Trn(0.0, 0.15, 0.0));
+			grFrame->SetTransform(Affinef::Trn(0.0f, 0.15f, 0.0f));
 
 		} else {
 			// フレームを剛体へ
