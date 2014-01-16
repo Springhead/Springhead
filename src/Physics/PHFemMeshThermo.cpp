@@ -3866,7 +3866,7 @@ void PHFemMeshThermo::calcVerticesArea(){
 	for(unsigned i=0; i<surfaceVertices.size(); i++){
 		vertices[surfaceVertices[i]].area = 0; //これを求める
 		for(unsigned j=0; j<vertices[surfaceVertices[i]].faces.size(); ++j){
-			if(vertices[surfaceVertices[i]].faces[j] < nSurfaceFace){ //もしfaceが表面の面であったら
+			if(vertices[surfaceVertices[i]].faces[j] < (int) nSurfaceFace){ //もしfaceが表面の面であったら
 				Face& face = faces[vertices[surfaceVertices[i]].faces[j]];
 				vertices[surfaceVertices[i]].area += face.area / 3 ;
 			}
@@ -4926,7 +4926,7 @@ bool PHFemMeshThermo::SetConcentricHeatMap(std::vector<double> r, std::vector<do
 
 	//インタフェース化して、用いる。
 	for(unsigned k=0; k < vertices.size(); ++k){
-		for(int i=0; i < r.size();++i){
+		for(size_t i=0; i < r.size();++i){
 			if(i>0){
 				if( (r[i-1] + r[i]) / 2.0 < vertices[k].disFromOrigin && vertices[k].disFromOrigin <= ( r[i] + r[i+1]) / 2.0 ){
 					vertices[k].temp = temp[i];
