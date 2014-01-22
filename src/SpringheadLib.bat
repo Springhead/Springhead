@@ -4,11 +4,12 @@ setlocal enabledelayedexpansion
 
 set CONVENTION=old
 if /i "%1"=="win32" set CONVENTION=new
-if /i "%1"=="win64" set CONVENTION=new
+if /i "%1"=="x64" set CONVENTION=new
 
 if "%CONVENTION%"=="new" (
     :: Visual Studio 2012 à»ç~Ç…ìKóp
     set OUTDIR=%1
+    if "!%OUTDIR!"=="x64" set OUTDIR=win64
     set EXT=%2
 )
 if "%CONVENTION%"=="old" (
