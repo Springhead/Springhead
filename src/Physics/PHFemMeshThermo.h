@@ -478,6 +478,7 @@ public:
 	void ReProduceMat_Vec_ThermalRadiation();							//	熱輻射用に、行列やベクトルを作り直す,AfterSerDescのほぼコピー
 	void UpdateMatK();		//実装途中。main.cppで値を設定後に、もう一度行列を作り直したくなった時に用いる。
 	double stopTime;
+	void SetStopTimespan(double timespan);
 };
 
 
