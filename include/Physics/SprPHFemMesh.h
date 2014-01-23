@@ -107,6 +107,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void SetHeatTransRatioToAllVertex(double heatTransR_);
 	void AfterSetDesc();												//全行列などを作り直す
 	//void ReProduceMat_Vec_ThermalRadiation();
+	void SetStopTimespan(double timespan);
 };
 
 //@}

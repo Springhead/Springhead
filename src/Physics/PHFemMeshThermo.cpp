@@ -100,7 +100,7 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 	weekPow_ = 79;
 	inr_ = 0.036;
 	outR_ = 0.084;
-	stopTime = 10000000.00;
+	stopTime = 60.00;
 
 	// ディスクリプタにセット
 	SetDesc(&desc);
@@ -110,6 +110,10 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 
 }
 
+void PHFemMeshThermo::SetStopTimespan(double timespan){
+	stopTime = timespan;
+	//	本来は、PHSceneが時間をmanageすべきなため、暫定的
+}
 void PHFemMeshThermo::SetIHParamWEEK(double inr2, double outR2, double weekPow2){
 	inr_ = inr2;
 	outR_ = outR2;
@@ -3561,7 +3565,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//	四面体ごとに計算
 	for(unsigned i=0; i < this->tets.size(); i++){
 
-#if 0
+#if 1
 		/*小野原追加ここから--------------------------------------------*/
 		//表面faceの面積を計算
 		for(unsigned j= 0 ; j < 4; j++){
@@ -3580,7 +3584,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 		CreatedMatCAll(i);
 		CreateVecFAll(i);
 	}
-#if 0
+#if 1
 	//頂点の表面面積を計算（小野原追加）
 	calcVerticesArea();
 #endif
