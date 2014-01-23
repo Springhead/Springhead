@@ -398,6 +398,7 @@ public:
 	//	IHによ四面体のface面の熱流束加熱のための行列成分計算関数
 	void CalcIHdqdt(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);		//	face面での熱流束量を計算：少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
+	void CalcIHdqdt_inner(double r,double R,double dqdtAll,unsigned num);		//	コイル内部のうっすら加熱を再現
 	void CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num);		//	帯状に加熱、x軸で切る
 	void CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned num);		//	帯状に加熱、x軸で切る mayIHheatedを使わない
 	void CalcIHdqdt2(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定  numは火力別(0:week, 1:middle, 2:high )
@@ -475,6 +476,8 @@ public:
 	void SetIHParamWEEK(double inr_, double outR_, double weekPow_);	//	弱火のIHパラメータを設定
 	void SetHeatTransRatioToAllVertex(double heatTransR_);
 	void ReProduceMat_Vec_ThermalRadiation();							//	熱輻射用に、行列やベクトルを作り直す,AfterSerDescのほぼコピー
+	void UpdateMatK();		//実装途中。main.cppで値を設定後に、もう一度行列を作り直したくなった時に用いる。
+	double stopTime;
 };
 
 
