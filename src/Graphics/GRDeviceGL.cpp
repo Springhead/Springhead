@@ -611,7 +611,7 @@ void GRDeviceGL::DrawFont(Vec2f pos, const std::string str){
 /// 3次元テキストの描画（GLオンリー版でfontは指定なし）.. Vec3f pos
 void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 	// シェーダが有効だとビットマップ関係がうまく動かないので一時無効化して対処
-	glUseProgram(0);
+	if(curShader != 0) glUseProgram(0);
 
 	bool lighting = !!glIsEnabled(GL_LIGHTING);
 	SetLighting(false);
