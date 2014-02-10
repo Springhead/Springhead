@@ -18,3 +18,5 @@ EXTERNAL_GROUPS = YES
 
 EXAMPLE_PATH = .
 EXAMPLE_RECURSIVE = NO
+
+IMAGE_PATH = ./docsrc/02Tutorial/ ./docsrc/02Tutorial/04AipBasic/
