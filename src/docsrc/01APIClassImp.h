@@ -100,17 +100,17 @@ APIクラスだけにあり，実装クラスにない関数があると，
 Springhead2/src/Sdk名/Sdk名Stub.cpp をコンパイルするときに，
 エラーになります．
 
-\section secFileLoadSave ファイルからのロード・ファイルへのセーブ
-FileIO SDK(\ref pageFileIO) でロード・セーブができるようにするためには，
+\section sec_FileLoadSave ファイルからのロード・ファイルへのセーブ
+FileIO SDK (FileIO) でロード・セーブができるようにするためには，
 APIクラスの定義に若干の細工をする必要があります．
 FileIO SDK の詳細は，\ref pageFileIOImp を参照してください．
 
 \subsection secCreateLoadableObject ロード・セーブ可能なオブジェクトの作り方
 
 <ol>
- <li>ロードしたいデータを含んだディスクリプタ (例:PHSolidDesc)を作ります．
- <li>インタフェースクラス (例：PHSolidIf) を作ります．
- <li>実装クラス (例：PHSolid)を作ります．このとき実装クラスで，
+ <li>ロードしたいデータを含んだディスクリプタ(例:PHSolidDesc)を作ります．
+ <li>インタフェースクラス(例:PHSolidIf)を作ります．
+ <li>実装クラス(例:PHSolid)を作ります．このとき実装クラスで，
 	<pre>
 	///	デスクリプタの読み出し(コピー版)
 	virtual bool GetDesc(void* desc) const { return false; }
@@ -128,9 +128,9 @@ FileIO SDK の詳細は，\ref pageFileIOImp を参照してください．
 	virtual const void* GetDescAddress() const { return NULL; }
 	</pre>
 	をオーバーロードするとコピーが減って効率がよくなります。
- <li> シーングラフ上で，実装クラス(例：PHSolid)の先祖になるクラスのなかから，
-      実装クラス(例：PHSolid)を生成するクラス(例：PHScene)を決めます．
- <li> 生成クラス(例：PHScene)のCreateObject()が実装クラス(PHSolid)を作れるように，
+ <li> シーングラフ上で，実装クラス(例:PHSolid)の先祖になるクラスのなかから，
+      実装クラス(例:PHSolid)を生成するクラス(例:PHScene)を決めます．
+ <li> 生成クラス(例:PHScene)のCreateObject()が実装クラス(PHSolid)を作れるように，
       <pre>
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(new FactoryImp(PHSolid));
 	  </pre>
@@ -175,8 +175,8 @@ SPR_DECLMEMBEROF_デスクリプタ名 マクロ(例:SPR_DECLMEMBEROF_PHBallJoin
 
 状態の保存・再現ができるクラスを作るには，
 <ol>
- <li> 保存したい状態を保持する構造体(例：PHSolidState)を作ります．
- <li> 実装クラス (例：PHSolid を作ります．
+ <li> 保存したい状態を保持する構造体(例:PHSolidState)を作ります．
+ <li> 実装クラス (例:PHSolid)を作ります．
 	このとき実装クラスで，
 	<pre>
 	///	状態の読み出し(コピー版)
@@ -193,7 +193,7 @@ SPR_DECLMEMBEROF_デスクリプタ名 マクロ(例:SPR_DECLMEMBEROF_PHBallJoin
 	virtual void DestructState(void* m) const {}
 	</pre>
 	をオーバーロードしてください．<br>
-	実装クラス(例：PHSolid)が状態構造体(例：PHSolidState)を継承しているなら，
+	実装クラス(例:PHSolid)が状態構造体(例:PHSolidState)を継承しているなら，
 	<pre>
 	ACCESS_STATE(実装クラス名);
 	</pre>

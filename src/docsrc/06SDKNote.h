@@ -15,10 +15,10 @@ dynamic_castをサポートしない処理系も多いので，次のようにCa
 </pre>
 
 
-\section sec_TypeInfo 型情報について
+\section secTypeInfo 型情報について
  Springhead2では，RTTIをサポートしていない処理系でも動くように，自前で型情報を
  用意しています．
-\subsection sec_typeInfoForObject オブジェクトの型情報
+\subsection sectypeInfoForObject オブジェクトの型情報
  Springheadのオブジェクトのクラスの宣言には，
 <pre>
  SPR_OBJECTDEF???(クラス名);

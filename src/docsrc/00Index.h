@@ -3,9 +3,11 @@
  このマニュアルは，Springhead2 SDKを開発する方むけのマニュアルです．
  このドキュメントを読む前に，Springhead2 SDKを利用する方むけのマニュアル 
  <ul>
- <li> \ref pageUsersGuide 使い方の説明
- <li> \ref pageTutorial 使い方を学ぶための練習コース
- <li> \ref pageReferenceManual APIの詳細な説明<br>
+ <li> <a href="..\..\doc\SprManual\main.pdf">　<b>ユーザーズマニュアル</b></a>
+	&nbsp;使い方の説明 (Springhead Users Manual)
+ <li> \ref pageTutorial &nbsp;使い方を学ぶための練習コース
+ <li> <a href="..\..\include\html\index.html">　<b>リファレンスマニュアル</b></a>
+	&nbsp;APIの詳細な説明<br>
  </ul>
  を先にご覧ください．
  Springhead2を使用していて，APIに不足を感じたり，SDKの拡張の必要があると
