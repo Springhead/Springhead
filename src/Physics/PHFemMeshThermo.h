@@ -132,8 +132,8 @@ public:
 		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
 		);
 	double Get_thConduct();
-	void SetThermalEmissivityToVtx(unsigned id,double thermalEmissivity);			///	熱放射率を節点 id に設定する関数
-	void SetThermalEmissivityToVerticesAll(double thermalEmissivity);					///	熱放射率を全節点に設定
+	void SetThermalEmissivityToVtx(unsigned id,double thermalEmissivity,double thermalEmissivity_const);			///	熱放射率を節点 id に設定する関数
+	void SetThermalEmissivityToVerticesAll(double thermalEmissivity,double thermalEmissivity_const);					///	熱放射率を全節点に設定
 
 	void SetHeatTransRatioToAllVertex();	//SetInit で設定している熱伝達係数を、節点(FemVertex)の構造体のメンバ変数に代入
 
@@ -161,6 +161,7 @@ public:
 
 	void CreateMatk2array();
 	void CreateMatkLocal(unsigned i);			//	edgesに入れつつ、チェック用の全体剛性行列も、ifdefスイッチで作れる仕様
+	void CreateMatkLocal_update(unsigned i);			//	edgesに入れつつ、チェック用の全体剛性行列も、ifdefスイッチで作れる仕様
 	//void CreateDumMatkLocal();					//	全要素が0のダミーk
 	void CreateMatKall();
 	void CreateMatKAll();						//	Kの全体剛性行列	//	SciLab	で用いる
@@ -207,7 +208,7 @@ public:
 	void UpdateIHheat(unsigned heatingMODE);	// 毎Step呼ぶ：熱流束ベクトル{F}を生成・保存	//.heatingMODEは加熱強さ：4段階（0:OFF・1:弱火(WEEK)・2:中火(MIDDLE)・3:強火(HIGH)）
 	void UpdateVecF_frypan();			// 方程式を解く前に、熱流束ベクトルをロードして、結合するなどベクトルを作る。modeには加熱モードを入れる
 	void UpdateVecF();		// 食材用
-
+	void UpdateMatk_RadiantHeatToAir();
 protected:
 	//	何用に用いる？	行列作成の関数をまとめるだけ？
 	void CreateMatrix();					
@@ -397,8 +398,12 @@ public:
 
 	//	IHによ四面体のface面の熱流束加熱のための行列成分計算関数
 	void CalcIHdqdt(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定
-	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);		//	face面での熱流束量を計算：少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
-	void CalcIHdqdt_inner(double r,double R,double dqdtAll,unsigned num);		//	コイル内部のうっすら加熱を再現
+	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);			//	face面での熱流束量を計算：少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
+	void CalcIHdqdt_atleast_high(double r,double R,double dqdtAll,unsigned num);			//	温度の高い節点では電気抵抗率が上がっているため、流れる電流が抵抗値に反比例するモデルを導入
+	void CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned num);				//	加算分
+	void CalcIHdqdt_decrease(double r,double R,double dqdtAll,unsigned num);		//	減算分
+	void CalcIHdqdt_add_high(double r,double R,double dqdtAll,unsigned num);				//	加算分
+	void CalcIHdqdt_decrease_high(double r,double R,double dqdtAll,unsigned num);		//	減算分
 	void CalcIHdqdtband(double xS,double xE,double dqdtAll,unsigned num);		//	帯状に加熱、x軸で切る
 	void CalcIHdqdtband_(double xS,double xE,double dqdtAll,unsigned num);		//	帯状に加熱、x軸で切る mayIHheatedを使わない
 	void CalcIHdqdt2(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定  numは火力別(0:week, 1:middle, 2:high )
@@ -453,8 +458,10 @@ public:
 	double GetVtxTempInTets(Vec3d temppos);									//	任意点の四面体内外判定：tempposがあるfaceIDを返す。見つから無ければ、-1を返す。
 	double CalcTempInnerTets(unsigned id,PTM::TVector<4,double> N);			//	与えられた形状関数での四面体内の温度を返す
 
+	//%%%		ファイル出力,CSV
 	std::ofstream matCAllout;
 	std::ofstream matKAllout;
+	std::ofstream matkcheck;					//	Kの一部デバッグ用	
 	std::ofstream checkTVecAllout;
 	std::ofstream FEMLOG;
 	unsigned long long COUNT;
@@ -462,17 +469,24 @@ public:
 	//実験用
 	double jout;
 	double ems;
+	double ems_const;
 	void SetOuterTemp(double temp);
-	void SetThermalRadiation(double ems);
+	void SetThermalRadiation(double ems,double ems_const);
 	void SetGaussCalcParam(unsigned cyc,double epsilon);
 	double epsilonG;
 	double NofCyc;
 	double temp_c;
 	double temp_out;
 	double weekPow_;
+	double weekPow_add;
+	double weekPow_decr;
 	void SetWeekPow(double weekPow_);
 	double inr_;
 	double outR_;
+	double inr_add;
+	double outR_add;
+	double inr_decr;
+	double outR_decr;
 	void SetIHParamWEEK(double inr_, double outR_, double weekPow_);	//	弱火のIHパラメータを設定
 	void SetHeatTransRatioToAllVertex(double heatTransR_);
 	void ReProduceMat_Vec_ThermalRadiation();							//	熱輻射用に、行列やベクトルを作り直す,AfterSerDescのほぼコピー

@@ -95,10 +95,10 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void InitVecFAlls();
 	double Get_thConduct();
 	bool SetConcentricHeatMap(std::vector<double> r, std::vector<double> temp, Vec2d origin);
-	void SetThermalEmissivityToVerticesAll(double thermalEmissivity);
+	void SetThermalEmissivityToVerticesAll(double thermalEmissivity,double thermalEmissivity_const);
 	// 熱放射同定関係
 	void SetOuterTemp(double temp);
-	void SetThermalRadiation(double ems);
+	void SetThermalRadiation(double ems,double ems_const);
 	void SetGaussCalcParam(unsigned cyc,double epsilon);
 	void InitTcAll(double temp);
 	void InitToutAll(double temp);
@@ -108,6 +108,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void AfterSetDesc();												//全行列などを作り直す
 	//void ReProduceMat_Vec_ThermalRadiation();
 	void SetStopTimespan(double timespan);
+	void UpdateMatk_RadiantHeatToAir();
 };
 
 //@}
