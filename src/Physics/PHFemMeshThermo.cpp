@@ -57,8 +57,14 @@
 //#define RHO	1.0e6
 //#define SPECIFICHEAT 4.2
 
+//	%%%%%%%		動作条件　挙動条件
+
 //境界条件
 #define NOTUSE_HEATTRANS_HERE
+
+//コイル加熱を使うか否か
+//#define DSISABLE_COIL
+
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -78,11 +84,15 @@ PHFemMeshThermoDesc::PHFemMeshThermoDesc(){
 void PHFemMeshThermoDesc::Init(){
 #if 1
 	thConduct = 83.5;		//THCOND;
+	thConduct_x = 83.5;
+	thConduct_y = 83.5;
+	thConduct_z = 83.5;
 #endif
 	rho = 7874;	//RHO;
 	heatTrans = 0;//25;
 	specificHeat = 459.94;//SPECIFICHEAT;//0.196;		//1960
 	radiantHeat =0;
+	initial_temp=0.0;
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -95,26 +105,27 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 	NofCyc = 100;
 	epsilonG = 0.5;
 	//%%%	初期条件
-	jout = 29.9;		//(48.0+30.0)/2.0;		// 150:77.85, 200:94.25, 100:58.7
+	jout = 22.9;		//(48.0+30.0)/2.0;		// 150:77.85, 200:94.25, 100:58.7
 	ems = 3.8e-2;//3.63e-2;//3.58		//	節点での熱輻射係数：温度の差分に比例する値なので、3.58e-2	SUS430での値
 	ems_const = -1.14;//-1.1507//-1.063;
 	temp_c = 30.0;
-	temp_out = 30.0;
+	temp_out = 23.8;
+
 	//%%%%%4
-	weekPow_ = 79.0;
+	weekPow_FULL = 85.0;
+	weekPow_ = 77.0;
 	inr_ = 0.0355;
-	outR_ = 0.0835;
+	outR_ = 0.0825;
 	//%%%%%
 	weekPow_add = 3.1;
 	inr_add = 0.009;
 	outR_add = 0.03;
-
 	//%%%%%
-	weekPow_decr = 2.1;		//　値はプラスだが、計算関数内でマイナスに成る		//2.1
+	weekPow_decr = 2.2;		//　値はプラスだが、計算関数内でマイナスに成る		//2.1
 	inr_decr = 0.039;
 	outR_decr = 0.041;
 	//%%%
-	stopTime = 180.00;
+	stopTime = 180.3;
 
 	// ディスクリプタにセット
 	SetDesc(&desc);
@@ -1561,6 +1572,77 @@ void PHFemMeshThermo::CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned m
 	if( debugdq <= dqdtAll - 1e-8 &&  dqdtAll + 1e-8 <= debugdq){	DSTR << "面積が大体同じではない" <<std::endl;} 	//大体同じではないときに、警告			大体同じときの条件判定　dqdtAll - 1e-8 <= debugdq && debugdq <= dqdtAll + 1e-8: 大体同じ 
 }		// /*CalcIHdqdt_add*/
 
+void PHFemMeshThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigned mode){
+	double faceS[10]={0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};								//　円環毎の面積保存
+	double ratio[10] = {0.14, 0.19, 0.43, 0.74, 1.09, 1.37, 1.52, 1.42, 1.03, 0.48};		//	加熱流束分担割合
+	for(unsigned i=0;i<10;++i){
+		ratio[i] = ratio[i] / 8.41 * dqdtAll;
+	}
+
+	//	初期化
+	//for(unsigned i=0;i<faces.size();i++){
+	//	faces[i].fluxarea[0] = 0.0;
+	//	faces[i].fluxarea[1] = 0.0;
+	//	faces[i].fluxarea[2] = 0.0;
+	//}
+
+	//　計算されていない場合に備えて
+	for(unsigned i=0;i < nSurfaceFace; i++){
+		if(faces[i].mayIHheated){			// faceの節点のy座標が負の場合→IH加熱の対象節点
+			if(faces[i].area==0) faces[i].area = CalcTriangleArea(faces[i].vertices[0],faces[i].vertices[1],faces[i].vertices[2]);
+		}
+	}
+
+	//> 表面faceの内、原点から各faceの節点のローカル(x,z)座標系での平面上の距離の計算を、faceの全節点のy座標が負のものに対して、IH加熱の可能性を示すフラグを設定
+	for(unsigned i=0;i<nSurfaceFace;i++){
+		//	(x,z)平面におけるmayIHheatedのface全節点の原点からの距離を計算する
+		for(unsigned j=0; j<3; j++){
+			double dx = vertices[faces[i].vertices[j]].pos.x - origin[0];
+			double dz = vertices[faces[i].vertices[j]].pos.z - origin[1];	//	表記はyだが、実質z座標が入っている
+			vertices[faces[i].vertices[j]].disFromOrigin = sqrt( dx * dx + dz * dz);
+		}
+	}
+	//求めた距離に応じて、設定された初期条件を満たすような温度分布を作る
+	float r[10];
+	for(unsigned i=0;i<10;++i){
+		r[i] = 0.01 * i;
+	}
+
+	//インタフェース化して、用いる。
+	for(unsigned id=0;id<nSurfaceFace;++id){
+		if(faces[id].mayIHheated){
+			//	faceの重心の原点からの距離を求める
+			double grvPnt = 1.0 / 3.0 * (vertices[faces[id].vertices[0]].disFromOrigin + vertices[faces[id].vertices[1]].disFromOrigin +vertices[faces[id].vertices[2]].disFromOrigin);
+			for(unsigned i=0; i < 10;++i){
+				if(i>0){
+					if( (r[i-1] + r[i]) / 2.0 < grvPnt && grvPnt <= ( r[i] + r[i+1]) / 2.0 ){
+						faceS[i] += faces[id].area;
+						faces[id].map = i;
+					} 
+				}
+				else{
+					if(grvPnt <=  (r[i] + r[i+1]) /2.0){
+						faceS[i] += faces[id].area;
+						faces[id].map = i;
+					} 
+				}
+			}
+		}		
+	}
+	for(unsigned i=0;i<10;i++){
+		DSTR <<"faceS["<< i << "]:"<<  faceS[i] << std::endl;
+	}
+	for(unsigned id=0;id<nSurfaceFace;++id){
+		if(faces[id].mayIHheated){
+			for(unsigned i=0;i<10;i++){
+				if(faceS[i]>0){
+					faces[id].heatflux[mode][3] = faces[id].area / faceS[i] * ratio[faces[id].map];
+					//DSTR << faces[id].heatflux[mode][3] <<std::endl;
+				}
+			}
+		}		
+	}
+}		// /*CalcIHdqdt_atleast_hogehoge*/
 
 void PHFemMeshThermo::CalcIHdqdt_atleast_high(double r,double R,double dqdtAll,unsigned mode){
 	//dqdtAllを単位面積辺り位に直す
@@ -2406,7 +2488,7 @@ void PHFemMeshThermo::CalcHeatTransUsingGaussSeidel(unsigned NofCyc,double dt,do
 	//for(unsigned i=0; i < vertices.size(); i++){
 	//	FEMLOG << vertices[i].k <<","<< vertices[i].c << std::endl;
 	//}
-	FEMLOG << vecFAllSum << std::endl;
+	//FEMLOG << vecFAllSum << std::endl;
 	//dt = 0.0000000000001 * dt;		//デバッグ用に、dtをものすごく小さくしても、節点0がマイナスになるのか、調べた
 	double _eps = 1-eps;			// 1-epsの計算に利用
 	//dtはPHFemEngine.cppで取得する動力学シミュレーションのステップ時間
@@ -2695,7 +2777,7 @@ void PHFemMeshThermo::Step(double dt){
 		}
 	}
 	//	評価実験用
-	if(COUNT * dt >= stopTime -0.01  ){
+	if(COUNT * dt >= stopTime -0.02  ){
 		checkTVecAllout.close();
 		DSTR << "STOP:" <<COUNT * dt<<"Sec passed" << std::endl;
 		std::cout << "stopTime are set as" << stopTime <<"[sec]" << std::endl;
@@ -2887,8 +2969,9 @@ void PHFemMeshThermo::Step(double dt){
 		DSTR<<"------------------"<<std::endl;
 
 	}
-	if(COUNT * dt >= stopTime + 0.02){
-		assert(0);			//	止めたい
+	if(COUNT * dt >= stopTime + 0.1){
+		//assert(0);			//	止めたい
+
 	}
 #endif
 	doCalc =true;
@@ -3384,9 +3467,15 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 		CalcIHdqdt_add_high(inr_add,outR_add,weekPow_add, WEEK);
 		CalcIHdqdt_decrease_high(inr_decr,outR_decr,weekPow_decr, WEEK);
 #else
+	#ifdef DSISABLE_COIL
+		CalcIHdqdt_atleast_map(Vec2d(0.0, -0.005),weekPow_FULL,WEEK);
+
+	#else
 		CalcIHdqdt_atleast(inr_,outR_,weekPow_, WEEK);		//	API化済み
 		CalcIHdqdt_add(inr_add,outR_add,weekPow_add, WEEK);
 		CalcIHdqdt_decrease(inr_decr,outR_decr,weekPow_decr, WEEK);
+	#endif
+
 		//CalcIHdqdt_atleast(inr,outR,weekPow, WEEK);		//	昔の.	1e3:KJなため pdt=0.02
 		UpdateMatk_RadiantHeatToAir();				//	熱伝達境界条件で空気への熱伝達項だけ更新する
 #endif
@@ -3785,23 +3874,24 @@ void PHFemMeshThermo::AfterSetDesc() {
 
 	//%%%		加熱のパラメータ
 	//	はじめから　10sec 10:01:56
-	tempe.push_back(29.7);
-	tempe.push_back(29.7);
-	tempe.push_back(29.6);
-	tempe.push_back(29.8);
-	tempe.push_back(29.7);
+	//tempe.push_back(29.7);
+	//tempe.push_back(29.7);
+	//tempe.push_back(29.6);
+	//tempe.push_back(29.8);
+	//tempe.push_back(29.7);
 
-	tempe.push_back(29.7);
-	tempe.push_back(29.7);
-	tempe.push_back(29.7);
-	tempe.push_back(29.8);
-	tempe.push_back(29.8);
+	//tempe.push_back(29.7);
+	//tempe.push_back(29.7);
+	//tempe.push_back(29.7);
+	//tempe.push_back(29.8);
+	//tempe.push_back(29.8);
 
-	SetConcentricHeatMap(round,tempe,Vec2d(0.0, -0.005));		//	-0.001にしても、初期温度は不変だった。
-	DSTR << "入力 check it out" <<std::endl;
-	for(unsigned i=0; i< tempe.size();++i){
-		DSTR << round[i] << "; "<< i*0.01 <<"; " <<  tempe[i] << std::endl;
-	}
+	//%%%%%		SetConcentricHeatMap()と一緒に使う
+	//SetConcentricHeatMap(round,tempe,Vec2d(0.0, -0.005));		//	-0.001にしても、初期温度は不変だった。
+	//DSTR << "入力 check it out" <<std::endl;
+	//for(unsigned i=0; i< tempe.size();++i){
+	//	DSTR << round[i] << "; "<< i*0.01 <<"; " <<  tempe[i] << std::endl;
+	//}
 	//周囲への熱伝達温度の初期化(temp度にする)　≠　熱輻射
 	InitTcAll(temp_c);
 	InitToutAll(temp_out);
@@ -4623,8 +4713,13 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 
 	//	Km の算出
 	//tets[id].matk1 = Nx.trans() * Nx + Ny.trans() * Ny + Nz.trans() * Nz;
+#if 0
 	tets[id].matk[0] = Nx.trans() * Nx + Ny.trans() * Ny + Nz.trans() * Nz;
-
+#else
+	//	異方性熱伝導率に対応
+	//DSTR << "thConduct_x:" << thConduct_x <<"," << "thConduct_y:" << thConduct_y <<"," << "thConduct_z:" << thConduct_z <<std::endl;
+	tets[id].matk[0] = thConduct_x * Nx.trans() * Nx + thConduct_y * Ny.trans() * Ny + thConduct_z * Nz.trans() * Nz;
+#endif
 	////	for debug
 	//DSTR << "Nx : " << Nx << std::endl;
 	//DSTR << "Nx^T : " << Nx.trans() << std::endl;
@@ -4642,8 +4737,11 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 	
 	//tets[id].matk1 = thConduct / (36 * CalcTetrahedraVolume(tets[id]) ) * tets[id].matk1;
 	//tets[id].matk[0] = thConduct / (36 * CalcTetrahedraVolume(tets[id]) ) * tets[id].matk[0];
+#if 0
 	tets[id].matk[0] = thConduct / (36 * tets[id].volume ) * tets[id].matk[0];
-
+#else
+	tets[id].matk[0] =  1.0/ ( 36 * tets[id].volume ) * tets[id].matk[0];
+#endif
 	//DSTR << "Inner Function _tets[id].matk1 : " << tets[id].matk1 << std::endl;
 
 }
@@ -4746,9 +4844,13 @@ void PHFemMeshThermo::CreateVecf2surface(unsigned id){
 					///	以下の[]は上までの[l]と異なる。
 					///	IDが何番目かによって、形状関数の係数が異なるので、
 					//	複数の熱流束に対応:i
+#ifdef DSISABLE_COIL
+					tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux[1][3] * (1.0/3.0) * faces[tets[id].faces[l]].area * vecf2array[j];	//+=:j=0~3のvecf2arrayを加算										
+#else 
 					for(unsigned i=0;i<3;++i){
 						tets[id].vecf[1] += faces[tets[id].faces[l]].heatflux[1][i] * (1.0/3.0) * faces[tets[id].faces[l]].fluxarea[i] * vecf2array[j];	//+=:j=0~3のvecf2arrayを加算
 					}
+#endif
 				}
 			}
 		}
@@ -5715,13 +5817,14 @@ bool PHFemMeshThermo::SetConcentricHeatMap(std::vector<double> r, std::vector<do
 	//> 表面faceの内、原点から各faceの節点のローカル(x,z)座標系での平面上の距離の計算を、faceの全節点のy座標が負のものに対して、IH加熱の可能性を示すフラグを設定
 	for(unsigned i=0;i<nSurfaceFace;i++){
 		//> 表面のfaceの全節点のy座標が負ならば、そのfaceをIH加熱のface面と判定し、フラグを与える
-		faces[i].mayIHheated = true;
-		//	(x,z)平面におけるmayIHheatedのface全節点の原点からの距離を計算する
-		for(unsigned j=0; j<3; j++){
-			double dx = vertices[faces[i].vertices[j]].pos.x - origin[0];
-			double dz = vertices[faces[i].vertices[j]].pos.z - origin[1];	//	表記はyだが、実質z座標が入っている
-			vertices[faces[i].vertices[j]].disFromOrigin = sqrt( dx * dx + dz * dz);
-		}
+		//if(faces[i].mayIHheated = true){
+			//	(x,z)平面におけるmayIHheatedのface全節点の原点からの距離を計算する
+			for(unsigned j=0; j<3; j++){
+				double dx = vertices[faces[i].vertices[j]].pos.x - origin[0];
+				double dz = vertices[faces[i].vertices[j]].pos.z - origin[1];	//	表記はyだが、実質z座標が入っている
+				vertices[faces[i].vertices[j]].disFromOrigin = sqrt( dx * dx + dz * dz);
+			}
+		//}
 	}
 	//求めた距離に応じて、設定された初期条件を満たすような温度分布を作る
 

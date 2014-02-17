@@ -119,7 +119,7 @@ public:
 		//double thermalEmissivity;	///	熱放射率
 		//double thermalEmissivity_const;	///	熱放射率
 		//double heatflux;			///	熱流束値　構成する３節点の相加平均で計算?	弱火、中火、強火の順(vector化したほうがいいかも)
-		double heatflux[4][3];		//	[4]:OFF,WEEK,MID,HIGH	[3]:[0] main coil,[1]:add elements,[2]:decrease elements (内側分を加熱する微弱要素)
+		double heatflux[4][4];		//	[4]:OFF,WEEK,MID,HIGH	[3]:[0] main coil,[1]:add elements,[2]:decrease elements (内側分を加熱する微弱要素),[3]:コイル分布を使わない
 		double fluxarea[3];			//>	 熱流束の計算に用いる、faceのエリア
 		bool mayIHheated;				//	IHで加熱する可能性のある面　段階的に絞る
 		std::vector<Vec2d>	ihvtx;//[12];	//	vectorにしなくても、数は最大、以下くらい。vectorだと領域を使いすぎるので.
@@ -129,6 +129,7 @@ public:
 		//faceの法線Vec3d fnormal
 		Vec3d normal;
 		Vec3d normal_origin;		// 法線の始点
+		unsigned map;
 	};
 	//	辺
 	struct Edge{

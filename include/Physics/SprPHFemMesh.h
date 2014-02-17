@@ -46,9 +46,15 @@ struct PHFemMeshIf : public SceneObjectIf{
 struct PHFemMeshThermoDesc: public PHFemMeshDesc{
 	double rho;						//	密度
 	double thConduct;				//熱伝導率
+	double thConduct_x;				//	x方向	熱伝導率
+	double thConduct_y;				//	y方向	熱伝導率
+	double thConduct_z;				//	z方向	熱伝導率
 	double heatTrans;				//熱伝達率			//class 節点には、heatTransRatioが存在する
 	double specificHeat;			//比熱
 	double radiantHeat;				//熱輻射率（空気への熱伝達率）
+	//float	distance[10];			//	中心からの距離	一つ目は0.0
+	//float	ondo[10];				//	上記距離の温度
+	double initial_temp;			//	均質な初期温度、
 	PHFemMeshThermoDesc();
 	void Init();
 };

@@ -400,6 +400,7 @@ public:
 	void CalcIHdqdt(double r,double R,double dqdtAll,unsigned num);				//	IHヒーターの設定
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);			//	face面での熱流束量を計算：少しでも円環領域にかかっていたら、そのfaceの面積全部にIH加熱をさせる
 	void CalcIHdqdt_atleast_high(double r,double R,double dqdtAll,unsigned num);			//	温度の高い節点では電気抵抗率が上がっているため、流れる電流が抵抗値に反比例するモデルを導入
+	void CalcIHdqdt_atleast_map(Vec2d origin,double dqdt,unsigned HeatMode);		//	鉄板中心から外側に向けた加熱量を1cmごとの離散値で指定
 	void CalcIHdqdt_add(double r,double R,double dqdtAll,unsigned num);				//	加算分
 	void CalcIHdqdt_decrease(double r,double R,double dqdtAll,unsigned num);		//	減算分
 	void CalcIHdqdt_add_high(double r,double R,double dqdtAll,unsigned num);				//	加算分
@@ -477,6 +478,7 @@ public:
 	double NofCyc;
 	double temp_c;
 	double temp_out;
+	double weekPow_FULL;
 	double weekPow_;
 	double weekPow_add;
 	double weekPow_decr;
