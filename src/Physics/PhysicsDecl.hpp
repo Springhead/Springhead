@@ -46,18 +46,26 @@ public:\
 protected:\
 	double	rho;	\
 	double	thConduct;	\
+	double	thConduct_x;	\
+	double	thConduct_y;	\
+	double	thConduct_z;	\
 	double	heatTrans;	\
 	double	specificHeat;	\
 	double	radiantHeat;	\
+	double	initial_temp;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHFemMesh::SetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
 		rho = ((PHFemMeshThermoDesc*)ptr)->rho;	\
 		thConduct = ((PHFemMeshThermoDesc*)ptr)->thConduct;	\
+		thConduct_x = ((PHFemMeshThermoDesc*)ptr)->thConduct_x;	\
+		thConduct_y = ((PHFemMeshThermoDesc*)ptr)->thConduct_y;	\
+		thConduct_z = ((PHFemMeshThermoDesc*)ptr)->thConduct_z;	\
 		heatTrans = ((PHFemMeshThermoDesc*)ptr)->heatTrans;	\
 		specificHeat = ((PHFemMeshThermoDesc*)ptr)->specificHeat;	\
 		radiantHeat = ((PHFemMeshThermoDesc*)ptr)->radiantHeat;	\
+		initial_temp = ((PHFemMeshThermoDesc*)ptr)->initial_temp;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -65,9 +73,13 @@ public:\
 		PHFemMesh::GetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
 		((PHFemMeshThermoDesc*)ptr)->rho = rho;	\
 		((PHFemMeshThermoDesc*)ptr)->thConduct = thConduct;	\
+		((PHFemMeshThermoDesc*)ptr)->thConduct_x = thConduct_x;	\
+		((PHFemMeshThermoDesc*)ptr)->thConduct_y = thConduct_y;	\
+		((PHFemMeshThermoDesc*)ptr)->thConduct_z = thConduct_z;	\
 		((PHFemMeshThermoDesc*)ptr)->heatTrans = heatTrans;	\
 		((PHFemMeshThermoDesc*)ptr)->specificHeat = specificHeat;	\
 		((PHFemMeshThermoDesc*)ptr)->radiantHeat = radiantHeat;	\
+		((PHFemMeshThermoDesc*)ptr)->initial_temp = initial_temp;	\
 		return true;	\
 	}\
 
