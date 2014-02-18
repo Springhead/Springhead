@@ -72,6 +72,7 @@ public:
 		Vec3d normal;				// 属するfacceから算出した法線（現在、face法線の単純和を正規化した法線だが、同じ向きのface法線を一本化する予定：要改善
 		double area;		//	頂点の担当する面積
 		bool beCondvtx;		//小野原追加 これがTrueのとき対応を取ったとする。
+		bool toofar;		//小野原追加 これがTrueのときは遠くて隣接点に加えない
 		double Tout;
 	};
 	//	四面体

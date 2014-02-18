@@ -55,16 +55,6 @@ void FWFemMesh::DrawIHBorder(double xs, double xe){
 	glEnd();
 }
 
-//小野原追加ここから---------------------------------------
-void FWFemMesh::DrawCompanion(Vec3d vtx){
-	Vec3d wVtx = this->GetGRFrame()->GetWorldTransform() * vtx;
-	glBegin(GL_LINES);
-		glColor3d(1.0,0.0,0.0);
-		glVertex3d(wVtx[0], wVtx[1], wVtx[2]);
-		glVertex3d(wVtx[0], wVtx[1]-0.05, wVtx[2]);
-	glEnd();
-}
-//小野原追加ここまで---------------------------------------
 
 void FWFemMesh::DrawIHBorderXZPlane(bool sw){
 	if(sw){
@@ -249,13 +239,7 @@ void FWFemMesh::Sync(){
 			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
 			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
 		}
-		//小野原追加ここから(デバッグ用)---------------------------------------
-		for(unsigned i=0; i<phMesh->vertices.size(); i++){
-			if(phMesh->vertices[i].beCondvtx == true){
-				DrawCompanion(phMesh->vertices[i].pos);
-			}
-		}
-		//小野原追加ここまで(デバッグ用)---------------------------------------
+
 	}
 	
 	if(fwfood == "fwNsteak"){
@@ -279,12 +263,12 @@ void FWFemMesh::Sync(){
 
 	
 	//	同期処理
-	if(fwfood == "fwNsteak"){ //小野原追加 デバック用（本来は、syncを呼び出すだけだが、デバック用にステーキの場合はsync2を呼ぶ）
-		FWObject::Sync2();
-	}
-	else{
+	//if(fwfood == "fwNsteak"){ //小野原追加 デバック用（本来は、syncを呼び出すだけだが、デバック用にステーキの場合はsync2を呼ぶ）
+	//	FWObject::Sync2();
+	//}
+	//else{
 		FWObject::Sync();
-	}
+	//}
 	if (syncSource==FWObjectDesc::PHYSICS){
 		if (grMesh && grMesh->IsTex3D()){
 			float* gvtx = grMesh->GetVertexBuffer();

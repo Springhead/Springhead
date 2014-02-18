@@ -234,7 +234,17 @@ void PHFemMesh::SetDesc(const void* p) {
 			vertices[faces[i].vertices[j]].faces.push_back(i);
 		}
 	}
-	//	全faceの法線を計算
+
+
+
+	/*小野原追加ここから--------------------------------------------*/
+	//beCondVtxsとtoofarにFalseをいれておく。初期化
+	for(unsigned i=0; i<surfaceVertices.size(); i++){
+		vertices[surfaceVertices[i]].beCondVtxs = vertices[surfaceVertices[i]].toofar = false;
+	}
+	/*小野原追加ここまで--------------------------------------------*/
+
+	//	faceの法線を計算
 	//.	表面の頂点に、法線ベクトルを追加
 	//.	について再帰的に実行
 	Vec3d extp;		//	外向き法線

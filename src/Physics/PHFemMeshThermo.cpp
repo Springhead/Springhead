@@ -2991,6 +2991,13 @@ void PHFemMeshThermo::Step(double dt){
 		StepCount_ += 1;
 	}
 
+	/*小野原追加ここから--------------------------------------------*/
+	//beCondVtxsとtoofarにFalseをいれておく。初期化
+	for(unsigned i=0; i<surfaceVertices.size(); i++){
+		vertices[surfaceVertices[i]].beCondVtxs = vertices[surfaceVertices[i]].toofar = false;
+	}
+	/*小野原追加ここまで--------------------------------------------*/
+}
 
 }
 
@@ -3515,6 +3522,65 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 	CreateVecF3surfaceAll();		//	CreateVecFAll(i);の代わり
 #endif
 }
+
+//小野原追加ここから==========================================
+void PHFemMeshThermo::UpdateIHheatband(double xS,double xE,unsigned heatingMODE){////x座標：xS~xEの間の節点に熱流束境界条件を設定
+
+	//熱伝導率、密度、比熱、熱伝達率　のパラメーターを設定・代入
+		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
+		//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
+		//SetInitThermoConductionParam(0.574,970,1.96,25);
+	//SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.01);		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
+		//これら、変数値は後から計算の途中で変更できるようなSetParam()関数を作っておいたほうがいいかな？
+
+	//.		熱流束の設定
+	//..	初期化
+	//SetVtxHeatFluxAll(0.0);
+
+	//1.フライパン位置を取ってくる
+		//ih加熱円環中心からの同心円状加熱領域を計算し、ihdqdtに当てはめるメッシュ情報を生成
+		//　if(フライパンが動いたか)	動いていなければ、vecfも、1step前の値を使えるようにしておきたい。
+
+	//2...	face面での熱流束量を計算（フライパン位置又はポインタを引数に代入：毎回フライパンの位置が変化するので、フライパン位置の変化の度に生成する）
+	if(heatingMODE == OFF){
+		CalcIHdqdtband(xS,xE,0.0, OFF);		//	IH加熱行列の係数0となるため、計算されない
+	}
+	else if(heatingMODE == WEEK){	
+		CalcIHdqdtband(xS,xE,231.9 * 1e1, WEEK);		//
+	}
+	else if(heatingMODE == MIDDLE){
+		CalcIHdqdtband(xS,xE,231.9 * 0.005 * 1e4, MIDDLE);		//
+	}
+	else if(heatingMODE == HIGH){
+		CalcIHdqdtband(xS,xE,231.9 * 0.005 * 1e5, HIGH);		//
+	}
+
+	//3.各面での熱流束量から全体剛性ベクトルを作る。{F}に代入
+
+#if 1			// switch1
+	UpdateVecF_frypan();
+#endif
+	//%%	IH加熱のモード切替
+	//	ライン状に加熱
+	//	CalcIHdqdtband_(0.09,0.10,231.9 * 5e3);		//*0.5*1e4	値を変えて実験	//*1e3　//*1e4 //5e3
+	//	円環状に加熱
+
+	//	この後で、熱流束ベクトルを計算する関数を呼び出す
+	///	熱伝達率を各節点に格納
+	//SetHeatTransRatioToAllVertex();
+#if 0			//!switch1
+	InitVecFAlls();
+	for(unsigned i=0; i < this->tets.size(); i++){
+		CreateVecFAll(i);
+	}
+#endif
+
+#if 0
+	CreateVecF2surfaceAll();		//	CreateVecFAll(i);の代わり
+	CreateVecF3surfaceAll();		//	CreateVecFAll(i);の代わり
+#endif
+}
+//小野原追加ここまで==========================================
 
 void PHFemMeshThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0){
 	// デバッグのため　&&　使われていなかったので、コメントアウト
