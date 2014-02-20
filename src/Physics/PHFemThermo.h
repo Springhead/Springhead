@@ -425,7 +425,7 @@ public:
 	// メッシュ表面の節点温度を取得
 	double GetSufVertexTemp(unsigned id){ return vertexVars[GetPHFemMesh()->surfaceVertices[id]].temp; };
 	double GetVertexHeatTransRatio(int vtxId);
-
+	void SetVertexHeatTransRatio(int vtxId, double heatTransRatio);
 
 	//%%%	Stepカウントのための変数、関数定義		%%%//
 	unsigned long StepCount;			//	Step数カウントアップの加算係数	
