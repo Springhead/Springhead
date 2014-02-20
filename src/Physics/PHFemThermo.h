@@ -224,7 +224,6 @@ public:
 	//	..四面体(tets)のt 毎に生成
 	void CreateMatk3t(unsigned id);
 
-	void CreateMatk2array();
 	void CreateMatkLocal(unsigned i);			//	edgesに入れつつ、チェック用の全体剛性行列も、ifdefスイッチで作れる仕様
 //	void CreateDumMatkLocal();					//	全要素が0のダミーk
 	void CreateMatKall();
@@ -425,6 +424,8 @@ public:
 	double GetVertexTemp(unsigned id){ return vertexVars[id].temp; };
 	// メッシュ表面の節点温度を取得
 	double GetSufVertexTemp(unsigned id){ return vertexVars[GetPHFemMesh()->surfaceVertices[id]].temp; };
+	double GetVertexHeatTransRatio(int vtxId);
+
 
 	//%%%	Stepカウントのための変数、関数定義		%%%//
 	unsigned long StepCount;			//	Step数カウントアップの加算係数	
