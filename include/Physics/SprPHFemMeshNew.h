@@ -21,6 +21,7 @@ namespace Spr{;
 struct PHSolidIf;
 struct PHFemVibrationIf;
 struct PHFemThermoIf;
+//struct PHFemWOMoveIf;
 
 ///	FemMeshのステート
 struct PHFemMeshNewState{};
@@ -37,6 +38,7 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 	PHSolidIf* GetPHSolid();
 	PHFemVibrationIf* GetPHFemVibration();
 	PHFemThermoIf* GetPHFemThermo();
+	//PHFemWOMoveIf* GetPHFemWOMove();
 	int NVertices();
 	int NFaces();
 	double CompTetVolume(int tetID, bool bDeform);
@@ -134,6 +136,7 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	unsigned long GetStepCountCyc();				///	カウント１が何週目か	計算式:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
 	double GetVertexTemp(unsigned id);				// メッシュ節点の温度を取得
 	double GetSufVertexTemp(unsigned id);			// メッシュ表面の節点温度を取得
+	double GetVertexHeatTransRatio(int vtxId);
 	void SetVertexTemp(unsigned id,double temp);
 	void SetVerticesTempAll(double temp);
 	void AddvecFAll(unsigned id,double dqdt);		//セットだと、値をそう入れ替えしそうな名前で危険。実際には、add又は、IH加熱ベクトルのみにSetする。ベクトルにSetする関数を作って、ロードしてもいいと思う。
@@ -164,6 +167,35 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	float calcGvtx(std::string fwfood, int pv, unsigned texture_mode);
 
 };
+
+/*
+struct PHFemWOMoveDesc: public PHFemBaseDesc{
+	double wDiff;	//食品中での水分の拡散係数(m^2/s)
+	double wDiffAir; //空気中での水分の拡散係数(m^2/s)
+	double wDens;	//水の密度(g/m^3)
+	double oDens;	//油の密度(g/m^3)
+	double wwInit;	//含水率の初期値
+	double woInit;	//含油率の初期値
+	double evapoRate;	//蒸発速度定数
+	double wTrans;	//水の透過係数(g/m)
+	double oTrans;	//油の透過係数
+	double denatTemp;	//変性温度	頂点がこの温度に達すると、結合水を含水率ベクトルに加える
+	double boundWaterRatio;	//結合水の割合 0.15～0.25
+	double equilWaterCont;	//減率第1段乾燥期の平衡含水量
+	double limitWaterCont;	//限界水分量 恒率乾燥期と減率第1段乾燥期の閾値
+	double boundaryThick;	//境膜の厚さ
+	PHFemWOMoveDesc();
+	void Init();
+};
+
+struct PHFemWOMoveIf: public PHFemBaseIf{
+	SPR_IFDEF(PHFemWOMove);
+	void SetTimeStep(double dt);
+	double GetTimeStep();
+	void UpdateVertexWwAll();
+	void UpdateVertexWoAll();
+};
+*/
 
 //@}
 
