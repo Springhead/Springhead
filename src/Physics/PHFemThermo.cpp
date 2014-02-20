@@ -4568,6 +4568,10 @@ double PHFemThermo::GetVertexHeatTransRatio(int vtxId){
 	return vertexVars[vtxId].heatTransRatio;
 }
 
+void PHFemThermo::SetVertexHeatTransRatio(int vtxId, double heatTransRatio){
+	vertexVars[vtxId].heatTransRatio = heatTransRatio;
+}
+
 float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 	float gvtx;
 	//テクスチャの設定
