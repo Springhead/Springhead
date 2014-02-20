@@ -4564,6 +4564,10 @@ void PHFemThermo::DecrMoist(){
 //	return GetPHFemMesh()->GetFaceEdgeVtx(id, vtx);
 //	}
 
+double PHFemThermo::GetVertexHeatTransRatio(int vtxId){
+	return vertexVars[vtxId].heatTransRatio;
+}
+
 float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 	float gvtx;
 	//テクスチャの設定
