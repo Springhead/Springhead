@@ -137,6 +137,7 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	double GetVertexTemp(unsigned id);				// メッシュ節点の温度を取得
 	double GetSufVertexTemp(unsigned id);			// メッシュ表面の節点温度を取得
 	double GetVertexHeatTransRatio(int vtxId);
+	void SetVertexHeatTransRatio(int vexId, double heatTransRatio);
 	void SetVertexTemp(unsigned id,double temp);
 	void SetVerticesTempAll(double temp);
 	void AddvecFAll(unsigned id,double dqdt);		//セットだと、値をそう入れ替えしそうな名前で危険。実際には、add又は、IH加熱ベクトルのみにSetする。ベクトルにSetする関数を作って、ロードしてもいいと思う。
