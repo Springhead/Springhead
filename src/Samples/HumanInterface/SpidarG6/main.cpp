@@ -47,7 +47,7 @@ int __cdecl main(){
 	while(!_kbhit()){
 		t += 1;
 		spg->Update(0.001f);
-#if 0
+#if 1
 		Vec3f spgpos = spg->GetPosition();
 		std::cout << std::setprecision(2) << spgpos << std::endl;
 		Vec3f f(0.0, 0.0, 0.0);

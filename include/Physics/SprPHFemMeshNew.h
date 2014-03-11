@@ -92,6 +92,7 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 	void SetBeta(double value);
 	double GetBeta();
 	void SetBoundary(int vtxIds);
+	void ClearBoundary();
 	std::vector<int>  GetBoundary();
 	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
