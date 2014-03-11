@@ -211,6 +211,8 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 	//CSVOUT << outForce[0] << "," << outForce[1] << "," << outForce[2] << "," << outForce[3] << "," << outForce[4] << "," << outForce[5] << "," <<std::endl;
 }
 
+
+
 void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 	if(!pointer->bVibration) return;
 	int Nneigbors = (int)pointer->neighborSolidIDs.size();

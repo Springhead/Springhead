@@ -73,6 +73,7 @@ public:
 	virtual void CompRayleighDampingMatrix();
 	virtual void CompRayleighDampingMatrixByDampingRatio();
 
+
 	/// シミュレーションステップ
 	virtual void Step();
 	// 時間積分方法のスイッチ（行列）
@@ -114,7 +115,7 @@ public:
 	double GetBeta(){ return beta; }
 	void SetBoundary(int value){fixedVertices.push_back(value);}
 	std::vector<int> GetBoundary(){return fixedVertices;} 
-
+	void ClearBoundary() {fixedVertices.clear();}
 	void SetbRecomp(){ bRecomp=true; }
 	void SetAnalysisMode(PHFemVibrationDesc::ANALYSIS_MODE mode);
 	void SetIntegrationMode(PHFemVibrationDesc::INTEGRATION_MODE mode);
@@ -164,6 +165,10 @@ public:
 
 	// 形状関数を使って任意の点の速度を取得する
 	bool GetVelocity(int tetId, Vec3d posW, Vec3d& vel, bool bDeform);
+
+	// 形状関数を使って任意の点の位置(変化後)を取得する
+	bool GetPosition(int tetId, Vec3d posW, Vec3d& pos, bool bDeform);
+
 
 	/// 実装中
 	bool FindClosestPointOnMesh( const Vec3d& posW, const Vec3d pos[3], Vec3d& cp, double& dist, bool bDeform);

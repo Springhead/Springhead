@@ -31,7 +31,7 @@ FWFemMeshNewDesc::FWFemMeshNewDesc(){
 	Init();
 }
 void FWFemMeshNewDesc::Init(){
-	meshRoughness = "pq2.1a0.000005";//phStick (四面体200個)
+//	meshRoughness = "pq2.1a0.000005";//phStick (四面体200個)
 	kogetex = 5;
 }
 
@@ -40,7 +40,7 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	// p: piecewise linear comlex, q:2.1が正四面体の歪み(1以上～？以下）、a:粗さ
 	//meshRoughness = "pq3.1a0.5";//phSphere 
 	//meshRoughness = "pq2.1a0.1";//phRec 
-	//meshRoughness = "pq2.1a0.00015";//phCube phBoardmini phPipemini
+	//meshRoughness = "pq2.1a1.15";//phCube phBoardmini phPipemini
 	SetDesc(&d);
 	texture_mode = 2;		//	テクスチャ表示の初期値：温度
 }
@@ -410,14 +410,15 @@ void FWFemMeshNew::SyncVibrationInfo(){
 	// 変位で色変化
 	if(grFemMesh->NColors() < 1) return;
 	Vec4f* vc = grFemMesh->GetColors();
-	double base = 1e-8;
-	double offset = 1e-8;
+	double base = 1e-6;
+	double offset = 1e-5;
 	for(int i = 0; i < (int)vertexIdMap.size(); i++){
 		int pId = vertexIdMap[i];
-		float value = phFemMesh->GetVertexDisplacementL(pId).norm();
-		//DSTR << value << std::endl;
-		//DSTR << value/base + offset << std::endl;
-		vc[i] = CompThermoColor(value/base + offset);
+		//float value = phFemMesh->GetVertexDisplacementL(pId).norm();
+		float value = phFemMesh->GetVertexVelocityL(pId).norm();
+		//CSVOUT << value << "," << value/base+offset <<  std::endl;			
+		//vc[i] = CompThermoColor(value/base + offset);
+		vc[i] = CompThermoColor(value/0.001+0.01);
 	}
 }
 

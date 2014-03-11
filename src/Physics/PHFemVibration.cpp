@@ -29,22 +29,14 @@ namespace Spr{;
 
 
 PHFemVibrationDesc::PHFemVibrationDesc(){
-	// アルミの物性
 	// ポアソン比:0.35,ヤング率 70GPa, 密度2.70g/cm3
 	// 減衰比は適当に設定
-	poisson = 0.345;
-	young = 1.0e9/27;
-	density = 2700/3;
-	alpha = 48.8;
-	beta =1.74e-5;
-				
-	//段ボール
-	/*poisson = 0.1;
-	young = 2.156 * 1e9;
-	density =  0.2 * 1e3; 
-	alpha = 73.88;
-	beta = 1.0784 * 1e-5;
-	*/
+	poisson = 0.25;
+	young = (2.5e9)/27;
+	density =610/3;
+	alpha = 120;
+	beta =7.05e-5;
+	
 }
 
 
@@ -104,9 +96,8 @@ void PHFemVibration::Init(){
 	// テスト（境界条件の付加）
 	std::vector< int > veIds, veIds1, veIds2;
 
-	veIds= fixedVertices;
 
-	fixedVertices.clear();
+	
 	// phpipe用
 	//veIds1 = FindVertices(521, Vec3d(1.0, 0.0, 0.0));
 	//veIds2 = FindVertices(1, Vec3d(-1.0, 0.0, 0.0));
@@ -129,11 +120,11 @@ void PHFemVibration::Init(){
 
 	//// phboard用
 	//
-	fixedVertices.push_back(35);
-	fixedVertices.push_back(34);
+	//fixedVertices.push_back(35);
+	//fixedVertices.push_back(34);
 	
-	fixedVertices.push_back(37);
-	fixedVertices.push_back(36);
+	//fixedVertices.push_back(37);
+	//fixedVertices.push_back(36);
 	
   //四点接地
 	//veIds.push_back(40);
@@ -177,6 +168,7 @@ void PHFemVibration::Init(){
 	Vec3i con = Vec3i(1,1,1);
 	for(int i = 0; i < (int)fixedVertices.size(); i++){
 		AddBoundaryCondition(fixedVertices[i], con);
+	//	std::cout << fixedVertices[i] << std::endl;
 	}
 
 	ReduceMatrixSize(matMp, boundary);
@@ -1107,6 +1099,20 @@ bool PHFemVibration::GetVelocity(int tetId, Vec3d posW, Vec3d& vel, bool bDeform
 	return true;
 }
 
+bool PHFemVibration::GetPosition(int tetId, Vec3d posW, Vec3d& pos, bool bDeform){
+	pos = Vec3d();
+	PHFemMeshNew* mesh = GetPHFemMesh();
+	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
+	Vec3d posL = inv * posW;
+	Vec4d v;
+	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform)) return false;
+	for(int i = 0; i < 4; i++){
+		int vtxId = mesh->tets[tetId].vertexIDs[i];
+		pos += mesh->GetVertexPositionL(vtxId) * v[i];
+	}
+	mesh->GetPHSolid()->GetPose() * pos;
+	return true;
+}
 
 bool PHFemVibration::FindClosestPointOnMesh(const Vec3d& p, const Vec3d fp[3], Vec3d& cp, double& dist, bool bDeform){
 	PHFemMeshNew* mesh = GetPHFemMesh();
