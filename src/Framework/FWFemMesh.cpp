@@ -190,6 +190,9 @@ void FWFemMesh::Sync(){
 	// num of texture layers
 	if(fwfood == "fwNegi"){		///	テクスチャと温度、水分量との対応表は、Samples/Physics/FEMThermo/テクスチャの色と温度の対応.xls	を参照のこと
 		kogetex	= 5;
+		//	PHSolidの位置をとって、GRに当てはめたい
+
+		//this->phMesh
 	}
 	else if(fwfood == "fwNsteak"){
 		kogetex	= 7;		//7にする
@@ -210,6 +213,9 @@ void FWFemMesh::Sync(){
 		//for(unsigned i =0; i < phMesh->vertices.size();i++){
 		//	DrawNormal(phMesh->vertices[i].pos, phMesh->vertices[i].normal);
 		//}
+		//GRMeshDesc* grmd;
+		//grMesh.obj->GetDesc( 
+		//grMesh->GetDesc(grmd);
 
 		for(unsigned i=0; i < phMesh->faces.size(); i++){
 			//.	faceエッジを表示	
@@ -263,12 +269,16 @@ void FWFemMesh::Sync(){
 
 	
 	//	同期処理
-	//if(fwfood == "fwNsteak"){ //小野原追加 デバック用（本来は、syncを呼び出すだけだが、デバック用にステーキの場合はsync2を呼ぶ）
-	//	FWObject::Sync2();
-	//}
-	//else{
+#if 0
+	if(fwfood == "fwNsteak"){
+#else
+	if(fwfood == "fwNegi"){ //小野原追加 デバック用（本来は、syncを呼び出すだけだが、デバック用にステーキの場合はsync2を呼ぶ）
+#endif
+		FWObject::Sync2();
+	}
+	else{
 		FWObject::Sync();
-	//}
+	}
 	if (syncSource==FWObjectDesc::PHYSICS){
 		if (grMesh && grMesh->IsTex3D()){
 			float* gvtx = grMesh->GetVertexBuffer();

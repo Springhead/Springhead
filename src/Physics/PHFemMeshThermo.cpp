@@ -65,18 +65,19 @@
 //一定加熱量×３によるフラットがちなコイル加熱を使うか否か
 #define DISABLE_COIL
 
+//#define UseMatAll
+//#define DEBUG
+//#define DumK		//debug用のdummyK?	使っていない
+
+//	LMS表示などをDSTRするかどうかSW
+//#define HYOKA
+
 
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 using namespace PTM;
 
 namespace Spr{;
-
-//#define UseMatAll
-//#define DEBUG
-//#define DumK
-
-
 
 PHFemMeshThermoDesc::PHFemMeshThermoDesc(){
 	Init();
@@ -103,13 +104,13 @@ PHFemMeshThermo::PHFemMeshThermo(const PHFemMeshThermoDesc& desc, SceneIf* s){
 	doCalc = true;
 	//%%%	ガウスザイデル引数
 	NofCyc = 100;
-	epsilonG = 0.5;
+	epsilonG = 1.0;
 	//%%%	初期条件
-	jout = 29.9;	//22.9;//	A5052試料利用熱伝達実験時		//(48.0+30.0)/2.0;		// 150:77.85, 200:94.25, 100:58.7
+	jout = 22.9;	//A5052熱伝達実験時:22.9, SUS430放熱実験時:29.9	//(48.0+30.0)/2.0;		// 150:77.85, 200:94.25, 100:58.7
 	ems = 3.8e-2;//3.63e-2;//3.58		//	節点での熱輻射係数：温度の差分に比例する値なので、3.58e-2	SUS430での値
 	ems_const = -1.14;//-1.1507//-1.063;
 	temp_c = 30.0;
-	temp_out = 29.9;	//23.8;//A5052試料時室温
+	temp_out = 23.8;	//A5052試料時室温:23.8, SUS430放熱実験時:29.9
 
 	//%%%%%4
 	weekPow_FULL = 120.0;
@@ -1580,11 +1581,13 @@ void PHFemMeshThermo::CalcIHdqdt_atleast_map(Vec2d origin,double dqdtAll,unsigne
 	double ratio[10] = {0.007653061,	0.015306122,	0.043367347,	0.084183673,	0.130102041,	0.168367347,	0.18877551,	0.181122449,	0.130102041,	0.051020408};
 	//	最初の4項から0.01ひいて、後ろに加算
 	//double ratio[10] = {0.002653061,	0.010306122,	0.038367347,	0.079183673,	0.130102041,	0.168367347,	0.18977551,	0.182122449,	0.131102041,	0.052020408};
-	for(unsigned i=0;i<5;++i){
-		ratio[i] = ratio[i] - 0.006;
+	ratio[5] += ratio[0];
+	ratio[0] -= ratio[0];
+	for(unsigned i=1;i<5;++i){
+		ratio[i] = ratio[i] - 0.007;
 	}
-	for(unsigned i=5;i<10;++i){
-		ratio[i] = ratio[i] + 0.006;
+	for(unsigned i=6;i<10;++i){
+		ratio[i] = ratio[i] + 0.007;
 	}
 	double areaQ[10] = {0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	for(unsigned i=0;i<10;++i){
@@ -2810,6 +2813,7 @@ void PHFemMeshThermo::Step(double dt){
 			}
 		}
 	}
+#ifdef HYOKA
 	//	評価実験用
 	if(COUNT * dt >= stopTime -0.02  ){
 		checkTVecAllout.close();
@@ -2909,17 +2913,17 @@ void PHFemMeshThermo::Step(double dt){
 		//hyouka.push_back(34.6);
 
 		//%%%	加熱同定　最初から60sec
-		//hyouka.push_back(59.6);
-		//hyouka.push_back(61.6);
-		//hyouka.push_back(68.7);
-		//hyouka.push_back(79.3);
-		//hyouka.push_back(90.0);
+		hyouka.push_back(59.6);
+		hyouka.push_back(61.6);
+		hyouka.push_back(68.7);
+		hyouka.push_back(79.3);
+		hyouka.push_back(90.0);
 
-		//hyouka.push_back(97.5);
-		//hyouka.push_back(99.1);
-		//hyouka.push_back(92.0);
-		//hyouka.push_back(79.6);
-		//hyouka.push_back(62.1);
+		hyouka.push_back(97.5);
+		hyouka.push_back(99.1);
+		hyouka.push_back(92.0);
+		hyouka.push_back(79.6);
+		hyouka.push_back(62.1);
 
 		//%%%	jの外側が低い温度に設定してあるので、jの値は信用出来ない。iも信用出来ないとして、-2
 		for(unsigned i=0;i<tempe.size() - 9; i++){
@@ -3003,6 +3007,7 @@ void PHFemMeshThermo::Step(double dt){
 		DSTR<<"------------------"<<std::endl;
 
 	}
+#endif HYOKA
 	if(COUNT * dt >= stopTime + 0.1){
 		//assert(0);			//	止めたい
 
@@ -3269,6 +3274,7 @@ void PHFemMeshThermo::UpdateVecF_frypan(){
 #endif
 }
 
+
 void PHFemMeshThermo::UpdateVecF(){
 	// modeは必要か？
 	
@@ -3322,6 +3328,7 @@ void PHFemMeshThermo::UpdateVecF(){
 int debugParam =0;
 
 	vecFAllSum.clear();	// 前Stepでの熱入出力を消去
+
 	//Σ{F[i]}_{i=1}^{4}
 //	vecFAllSum = vecFAll[1] + vecFAll[2];
 
@@ -3465,6 +3472,19 @@ int debugParam =0;
 //
 //}
 
+void PHFemMeshThermo::IfRadiantHeatTrans(){
+	for(unsigned id =0;id<NSurfaceVertices();id++){
+		if(vertices[id].beRadiantHeat){
+			vertices[id].thermalEmissivity = ems;
+			vertices[id].thermalEmissivity_const = ems_const;
+		}
+		else{
+			vertices[id].thermalEmissivity = 0.0;
+			vertices[id].thermalEmissivity_const = 0.0;
+		}	
+	}
+}
+
 void PHFemMeshThermo::UpdateMatk_RadiantHeatToAir(){
 		for(unsigned i =0; i < edges.size();i++){
 			edges[i].k = 0.0;
@@ -3476,6 +3496,8 @@ void PHFemMeshThermo::UpdateMatk_RadiantHeatToAir(){
 }
 
 void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
+
+	//方針：熱流束ベクトル計算のみを含める。（熱伝導や熱容量は共通なのでこの関数には含めない）
 
 	//熱伝導率、密度、比熱、熱伝達率　のパラメーターを設定・代入
 		//PHFemMEshThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
@@ -3517,8 +3539,7 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 		CalcIHdqdt_decrease(inr_decr,outR_decr,weekPow_decr, WEEK);
 	#endif
 
-		//CalcIHdqdt_atleast(inr,outR,weekPow, WEEK);		//	昔の.	1e3:KJなため pdt=0.02
-		UpdateMatk_RadiantHeatToAir();				//	熱伝達境界条件で空気への熱伝達項だけ更新する
+	//>個別に呼ぶ仕様に変更	//UpdateMatk_RadiantHeatToAir();				//	熱伝達境界条件で空気への熱伝達項だけ更新する
 #endif
 	}	
 	else if(heatingMODE == MIDDLE){
@@ -3883,10 +3904,16 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//	メッシュ節点温度 初期化
 	//SetVerticesTempAll(30.0);
 
+	//	空気への熱伝達による熱輻射境界条件による計算実行の設定
+	SetVerticesTempAll(jout);
+
+
 	//matkcheck.open("matkcheck.csv",std::fstream::out,std::fstream::app);
 	matkcheck.open("matkcheck.csv");
 	matkcheck << "jout,ems,ems_const" << std::endl;
 	matkcheck << jout <<","<< ems <<","<< ems_const << std::endl;
+
+
 
 	//評価実験用コード
 	//>	LMSSのためのコード
@@ -3895,7 +3922,8 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//	j以遠の温度は全体をこの温度にして設定
 	//SetVerticesTempAll((158.5 + (30.0 + 158.5) /2.0)/2.0 );
 	//SetVerticesTempAll((158.5+30.0)/2.0);
-	SetVerticesTempAll(jout);
+	
+
 
 //	jout = 77.85;
 //	ems = 4.9258;
@@ -3999,9 +4027,11 @@ void PHFemMeshThermo::AfterSetDesc() {
 	InitTcAll(temp_c);
 	InitToutAll(temp_out);
 	SetThermalEmissivityToVerticesAll(ems,ems_const);	
+	for(unsigned id=0;id<NSurfaceVertices();++id){
+		vertices[id].beRadiantHeat =true;
+	}
 	///	熱伝達率を各節点に格納
 	SetHeatTransRatioToAllVertex();
-
 	
 	DSTR << "temp_c " << temp_c <<std::endl;
 	//>	熱放射関係	LMSS
@@ -4179,6 +4209,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	//水分蒸発周りの初期化
 	//InitMoist();
 
+	this->OutputMatKall();
 }
 
 //void PHFemMeshThermo::CreateLocalMatrixAndSet(){
@@ -4199,6 +4230,11 @@ void PHFemMeshThermo::AfterSetDesc() {
 
 //void PHFemMeshThermo::SetkcfParam(Tet tets){
 //}
+
+void PHFemMeshThermo::OutputMatKall(){
+	matKAllout.open("matKAllout.txt");
+	matKAllout << matKAll << std::endl;
+}
 
 void PHFemMeshThermo::CreateMatc(unsigned id){
 	//最後に入れる行列を初期化
@@ -4335,6 +4371,7 @@ void PHFemMeshThermo::CreateVecFAll(unsigned id){
 
 }
 
+
 void PHFemMeshThermo::CreateMatkLocal_update(unsigned id){
 	//	四面体要素について係数行列[k]を作る			命名規則	
 	//..	k1を作る	k1kでも、k1bでもどちらでも構わない	どちらが速いか調べる
@@ -4346,22 +4383,12 @@ void PHFemMeshThermo::CreateMatkLocal_update(unsigned id){
 	
 	//....		熱伝達境界条件に必要なk2
 	//CreateMatk2t(id);					///	K2: 熱 伝達 境界条件
-	CreateMatk3t(id);					///	K3: 熱 輻射 境界条件(空気への熱伝達率)
+	//CreateMatk3t(id);					///	K3: 熱 輻射 境界条件(空気への熱伝達率)
+	CreateMatk3t_nonRadiantHeat(id);	//>	上記K3に対し、熱伝達faceでは、
+
 	//k1,k2,k3を加算する(使っている数値だけ)
 	matk = tets[id].matk[0] + tets[id].matk[1] + tets[id].matk[2];	
 	//<注意>	matk[0]:K1, matk[1]:K2, matk[2]:K3
-	//if(id == 0){
-	//	DSTR << "update matk" << std::endl;
-	//	DSTR << matk << std::endl;
-	//	DSTR << "update tets.matk[2]" << std::endl;
-	//	DSTR << tets[id].matk[2] << std::endl;
-	//}
-	//DSTR << "tets[id].matk[0]" << std::endl;
-	//DSTR << tets[id].matk[0] << std::endl;
-	//DSTR << "tets[id].matk[1]" << std::endl;
-	//DSTR << tets[id].matk[1] << std::endl;
-	//DSTR << "tets[id].matk[2]" << std::endl;
-	//DSTR << tets[id].matk[2] << std::endl;
 
 	//	(ガウスザイデルを使った計算時)要素毎に作った行列の成分より、エッジに係数を格納する
 	//	or	(ガウスザイデルを使わない計算時)要素ごとの計算が終わるたびに、要素剛性行列の成分だけをエッジや点に作る変数に格納しておく	#ifedefでモード作って、どちらもできるようにしておいても良いけどw
@@ -4829,7 +4856,7 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 	//DSTR << "Nx^T * Nx : " << Nx.trans() * Nx << std::endl;
 	//DSTR << "Ny^T * Ny : " << Ny.trans() * Ny << std::endl;
 	//DSTR << "Nz^T * Nz : " << Nz.trans() * Nz << std::endl;
-	//DSTR << "matk1 : " << matk1 << std::endl;
+	//DSTR << "matk1 : " << tets[id].matk[0] << std::endl;
 	//int hogehoge =0;
 
 	//	for	DEBUG
@@ -4843,10 +4870,18 @@ void PHFemMeshThermo::CreateMatk1k(unsigned id){
 #if 0
 	tets[id].matk[0] = thConduct / (36 * tets[id].volume ) * tets[id].matk[0];
 #else
-	tets[id].matk[0] =  1.0/ ( 36 * tets[id].volume ) * tets[id].matk[0];
+	//tets[id].matk[0] =  1.0/ ( 36 * tets[id].volume ) * tets[id].matk[0];
+	tets[id].matk[0] =  1.0 / ( 36.0 * tets[id].volume ) * tets[id].matk[0];
+	//tets[id].matk[0] *=  1.0 / ( 36.0 * tets[id].volume )
 #endif
 	//DSTR << "Inner Function _tets[id].matk1 : " << tets[id].matk1 << std::endl;
 
+}
+
+PTM::TMatrixRow<4,4,double> PHFemMeshThermo::GetKMatInTet(unsigned id){
+	//for(unsigned id=0;id<tets.size();++id){
+	return tets[id].matk[0];
+	//}
 }
 
 ///*小野原追加ここから--------------------------------------------*/
@@ -5612,6 +5647,75 @@ PTM::TMatrixRow<4,4,double> PHFemMeshThermo::Create44Mat21(){
 	return MatTemp;
 }
 
+void PHFemMeshThermo::ActivateVtxbeRadiantHeat(){
+	for(unsigned i=0;i<NSurfaceVertices();++i){
+		vertices[i].beRadiantHeat =true;
+	}
+}
+
+
+void PHFemMeshThermo::CreateMatk3t_nonRadiantHeat(unsigned id){
+	//l=0の時k21,1の時:k22, 2の時:k23, 3の時:k24	を生成
+	for(unsigned l= 0 ; l < 4; l++){
+		//matk2array[l] = matk2temp;
+		matk3array[l] = Create44Mat21();
+		//	1行i列を0に
+		for(int i=0;i<4;i++){
+			matk3array[l][l][i] = 0.0;
+		}
+		//	i行1列を0に
+		for(int i=0;i<4;i++){
+			matk3array[l][i][l] = 0.0;
+		}
+	}
+	///	初期化
+	tets[id].matk[2].clear();
+	for(unsigned l= 0 ; l < 4; l++){
+		///	四面体の各面(l = 0 ～ 3) についてメッシュ表面かどうかをチェックする。表面なら、行列を作ってmatk2arrayに入れる
+		//faces[tets.faces[i]].sorted;		/// 1,24,58みたいな節点番号が入っている
+
+		///	外殻の面 且つ 熱伝達率が更新されたら matk2を更新する必要がある	//2014.3.12加藤追記	熱伝達頂点を含むfaceでは、行列に参入しない
+		if(tets[id].faces[l] < (int)nSurfaceFace && faces[tets[id].faces[l]].alphaUpdated){
+			if(vertices[faces[tets[id].faces[l]].vertices[0]].beRadiantHeat && vertices[faces[tets[id].faces[l]].vertices[1]].beRadiantHeat 
+				&& vertices[faces[tets[id].faces[l]].vertices[2]].beRadiantHeat	){
+
+				//最後に入れる行列を初期化
+				for(unsigned i =0; i < 4 ;i++){
+					for(unsigned j =0; j < 4 ;j++){
+						tets[id].matk[2][i][j] = 0.0;
+					}
+				}
+				///	四面体の三角形の面積を計算		///	この関数の外で面積分の面積計算を実装する。移動する
+				if(faces[tets[id].faces[l]].area ==0 || faces[tets[id].faces[l]].deformed ){		///	面積が計算されていない時（はじめ） or deformed(変形した時・初期状態)がtrueの時		///	条件の追加	面積が0か ||(OR) αが更新されたか
+					faces[tets[id].faces[l]].area = CalcTriangleArea(faces[tets[id].faces[l]].vertices[0], faces[tets[id].faces[l]].vertices[1], faces[tets[id].faces[l]].vertices[2]);
+					faces[tets[id].faces[l]].deformed = false;
+				}
+				///	計算結果を行列に代入
+				///	areaの計算に使っていない点が入っている行と列を除いた行列の積をとる
+				///	積分計算を根本から考える
+				unsigned vtx = tets[id].vertices[0] + tets[id].vertices[1] + tets[id].vertices[2] + tets[id].vertices[3];
+				unsigned ID = vtx -( faces[tets[id].faces[l]].vertices[0] + faces[tets[id].faces[l]].vertices[1] + faces[tets[id].faces[l]].vertices[2] );
+				for(unsigned j=0;j<4;j++){
+					if(tets[id].vertices[j] == ID){					///	形状関数が１、（すなわち）このfaceに対面する頂点　と一致したら　その時のfaceで面積分する
+						///	j番目の行列の成分を0にしたmatk2arrayで計算する
+						///	外殻にないメッシュ面の面積は0で初期化しておく
+						//faces[tets[id].faces[l]].thermalEmissivity = 
+						double ems_temp = ( 	
+							vertices[faces[tets[id].faces[l]].vertices[0]].thermalEmissivity * vertices[faces[tets[id].faces[l]].vertices[0]].temp + vertices[faces[tets[id].faces[l]].vertices[0]].thermalEmissivity_const
+							+ vertices[faces[tets[id].faces[l]].vertices[1]].thermalEmissivity * vertices[faces[tets[id].faces[l]].vertices[1]].temp + vertices[faces[tets[id].faces[l]].vertices[1]].thermalEmissivity_const
+							+ vertices[faces[tets[id].faces[l]].vertices[2]].thermalEmissivity * vertices[faces[tets[id].faces[l]].vertices[2]].temp + vertices[faces[tets[id].faces[l]].vertices[2]].thermalEmissivity_const
+							) / 3.0;		///	当該faceの熱伝達率を構成節点での値の相加平均をとる
+						///	以下の[]は上までの[l]と異なる。
+						///	IDが何番目かによって、形状関数の係数が異なるので、
+						tets[id].matk[2] += ems_temp * (1.0/12.0) * faces[tets[id].faces[l]].area * matk3array[j];
+					}
+				}
+			}
+		}
+	}
+
+}
+
 void PHFemMeshThermo::CreateMatk3t(unsigned id){
 	//l=0の時k21,1の時:k22, 2の時:k23, 3の時:k24	を生成
 	for(unsigned l= 0 ; l < 4; l++){
@@ -5660,7 +5764,7 @@ void PHFemMeshThermo::CreateMatk3t(unsigned id){
 						) / 3.0;		///	当該faceの熱伝達率を構成節点での値の相加平均をとる
 					///	以下の[]は上までの[l]と異なる。
 					///	IDが何番目かによって、形状関数の係数が異なるので、
-					tets[id].matk[2] += ems_temp * (1.0/12.0) * faces[tets[id].faces[l]].area * matk2array[j];
+					tets[id].matk[2] += ems_temp * (1.0/12.0) * faces[tets[id].faces[l]].area * matk3array[j];
 				}
 			}
 		}
@@ -5933,21 +6037,31 @@ bool PHFemMeshThermo::SetConcentricHeatMap(std::vector<double> r, std::vector<do
 
 	//インタフェース化して、用いる。
 	for(unsigned k=0; k < vertices.size(); ++k){
-		for(size_t i=0; i < r.size();++i){
-			if(i>0){
+		for(size_t i=0; i < r.size()-1;++i){
+			if(i>0 ){
 				if( (r[i-1] + r[i]) / 2.0 < vertices[k].disFromOrigin && vertices[k].disFromOrigin <= ( r[i] + r[i+1]) / 2.0 ){
 					vertices[k].temp = temp[i];
-				} 
-			}else{
+				}
+			}
+			//else if(i == r.size()-1){
+			//	if(r[i] < vertices[k].disFromOrigin){
+			//		if(temp.size() == r.size()){
+			//			vertices[k].temp = temp[i];
+			//		}
+			//		else if(temp.size() < r.size()){
+			//			vertices[k].temp = temp[temp.size() -1];
+			//		}
+			//	}
+			//}
+			else{
 				if(vertices[k].disFromOrigin <=  (r[i] + r[i+1]) /2.0){
 					vertices[k].temp = temp[i];
 				} 
 			}
 		} 
-
 	}
 	if(r.size() != temp.size()) return -1;
-	return 0;
+	return 1;
 }
 
 

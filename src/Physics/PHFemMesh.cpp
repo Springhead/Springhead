@@ -237,10 +237,11 @@ void PHFemMesh::SetDesc(const void* p) {
 
 
 
-	/*小野原追加ここから--------------------------------------------*/
+	/*小野原追加ここから--------------------------------------------*/			//	2014.3.12加藤追記
 	//beCondVtxsとtoofarにFalseをいれておく。初期化
 	for(unsigned i=0; i<surfaceVertices.size(); i++){
 		vertices[surfaceVertices[i]].beCondVtxs = vertices[surfaceVertices[i]].toofar = false;
+		vertices[surfaceVertices[i]].beRadiantHeat = false;				//	標準では、熱輻射による熱伝達は計算しない
 	}
 	/*小野原追加ここまで--------------------------------------------*/
 
@@ -351,6 +352,7 @@ void PHFemMesh::SetDesc(const void* p) {
 */
 		vertices[vid].normal = vertices[vid].normal / vertices[vid].normal.norm();		//	単位ベクトル化
 	}
+	
 }
 
 bool PHFemMesh::GetDesc(void* p) const {
