@@ -3167,7 +3167,7 @@ void PHFemMeshThermo::UpdateVecF_frypan(){
 	// modeは必要か？
 
 	//	Initialize
-	InitVecFAlls();		// この中の初期化のすべてが必要か？
+	//InitVecFAlls();		// この中の初期化のすべてが必要か？
 
 //. 1)最初の2つ({F2},{F3})は、F2,F3のどちらかだけ更新すれば良い場合に用いる
 #if 0
@@ -3228,7 +3228,7 @@ void PHFemMeshThermo::UpdateVecF_frypan(){
 	vecFAllSum = vecFAll[1] + vecFAll[2];
 #else
 
-	vecFAllSum = vecFAll[1] + vecFAll[3];
+	vecFAllSum += vecFAll[1] + vecFAll[3];
 
 	// VecFAll がweekpowで入れた総熱量と合致するかチェックコード
 	//double tempSumVECF=0.0;
@@ -3276,10 +3276,8 @@ void PHFemMeshThermo::UpdateVecF_frypan(){
 
 
 void PHFemMeshThermo::UpdateVecF(){
-	// modeは必要か？
-	
-	//	Initialize
-	//InitVecFAlls();		// この中の初期化のすべてが必要か？
+	// 引数にenum modeを入れてモード指定を行う仕様に変える
+
 
 //. 1)最初の2つ({F2},{F3})は、F2,F3のどちらかだけ更新すれば良い場合に用いる
 #if 0
@@ -3310,29 +3308,73 @@ void PHFemMeshThermo::UpdateVecF(){
 #endif
 
 //. 2) {F2,F3}の両方共更新して良い場合
-#if 0
+#if 1
 	for(unsigned tetsid = 0; tetsid < tets.size();tetsid++){
 		unsigned id = tetsid;
-		Createurface(id);
+		CreateVecf2surface(id);
+		CreateVecf4surface(id);
+#if 0
+		CreateVecf3surface(id);
+#endif
+#ifndef NOTUSE_HEATTRANS_HERE
 		CreateVecf3(id);		// tets[id].vecf[2];に結果格納
+#endif
 		//vecf = tets[id].vecf[2];
 		for(unsigned j =0;j < 4; j++){
 			int vtxid0 = tets[id].vertices[j];
 			//vecFAll[1][vtxid0] += vecf[j];
 			vecFAll[1][vtxid0] += tets[id].vecf[1][j];
+			vecFAll[3][vtxid0] -= tets[id].vecf[3][j];
+			//DSTR << "vtxid0: " << vtxid0 <<", tets[id].vecf[1]["<< j << "]: " << tets[id].vecf[1][j] << std::endl; 
+#ifndef NOTUSE_HEATTRANS_HERE
 			vecFAll[2][vtxid0] += tets[id].vecf[2][j];
+#endif
 		}
 	}
 #endif
 
-int debugParam =0;
-
-	vecFAllSum.clear();	// 前Stepでの熱入出力を消去
-
 	//Σ{F[i]}_{i=1}^{4}
-//	vecFAllSum = vecFAll[1] + vecFAll[2];
+#ifndef NOTUSE_HEATTRANS_HERE
+	vecFAllSum = vecFAll[1] + vecFAll[2];
+#else
 
-//%%%% この関数はここまででとりあえず完成 2012.12.03
+	vecFAllSum += vecFAll[1] + vecFAll[3];
+
+	// VecFAll がweekpowで入れた総熱量と合致するかチェックコード
+	//double tempSumVECF=0.0;
+	//for(unsigned i=0;i<vertices.size();i++){
+	//	tempSumVECF += vecFAllSum[i];
+	//}
+	//DSTR <<"vecFAllSum の Sum: " << tempSumVECF << std::endl;
+
+#endif
+	//DSTR << "vecFAll[1]: " << vecFAll[1] << std::endl;
+
+
+//%%%% この関数はここまででとりあえず完成 2012.10.09
+
+	//	消去予定
+#if 0
+//depend on mode, I don't need to use mode state.Because mode state cause different calc result of heatflus.
+// I just use the result of IHdqdt Function.
+	//vecFAll[1],[2]に代入
+	for(unsigned id = 0; id < vertices.size();id++){
+		if(mode == OFF){ 
+			// F2は加算しない
+			vecFAllSum[id] = vecFAllSum[id]; //F3
+		}
+		else if(mode == WEEK){
+			vecFAllSum[id] =  vecFAll_f2IH[mode][id][0] + vecFAll_f3[id][0];//F2+F3		//mode=0 -> F2のWEEKの強さ
+		}
+		else if(mode == MIDDLE){
+			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=1 -> F2のmiddleの強さ
+		}
+		else if(mode == HIGH){
+			vecFAllSum[id] = vecFAll_f2IH[mode][id][0];//F2+F3		//mode=2 -> F2のhighの強さ
+		}
+	}
+
+#endif
 
 #if 0
 	for(unsigned i =0; i< 4;i++){
@@ -3555,7 +3597,7 @@ void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
 	//3.各面での熱流束量から全体剛性ベクトルを作る。{F}に代入
 
 #if 1			// switch1
-	UpdateVecF_frypan();
+	//UpdateVecF_frypan();		//	関数の外に移動2014.3.12
 #endif
 	//%%	IH加熱のモード切替
 	//	ライン状に加熱
