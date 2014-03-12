@@ -123,8 +123,13 @@ void FWObject::Sync2(){ //小野原追加 デバック用（肉を別表示）
 			//Affinef trn = Affinef::Trn(0.0, -0.01, -0.1);
 			//Affinef rot = Affinef::Rot(M_PI, 'x');
 			//grFrame->SetTransform(trn*rot);
-			grFrame->SetTransform(Affinef::Trn(0.0f, 0.05f, 0.0f));
-			//grFrame->SetTransform(Affinef::Rot(M_PI, 'x'));
+#if 0
+			grFrame->SetTransform(Affinef::Trn(0.0, 0.05, 0.0));
+#else
+			aff = Affinef::Trn(0.0, 0.05, -0.03)* Affinef::Rot(-M_PI /2.0, 'x') * aff;
+			grFrame->SetTransform(aff);
+#endif		
+			
 
 		} else {
 			// フレームを剛体へ
