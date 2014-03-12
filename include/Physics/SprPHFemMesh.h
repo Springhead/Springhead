@@ -119,6 +119,7 @@ struct PHFemMeshThermoIf : public PHFemMeshIf{
 	void ActivateVtxbeRadiantHeat();			//
 	PTM::TMatrixRow<4,4,double> GetKMatInTet(unsigned id);
 	void OutputMatKall();
+	void IfRadiantHeatTrans();
 };
 
 //@}
