@@ -158,9 +158,11 @@ public:
 	void CreateMatk2t_(unsigned id);		//	vector HeatTransRatiosの値を利用する
 	//	..四面体(tets)のt 毎に生成
 	void CreateMatk3t(unsigned id);
+	void CreateMatk3t_nonRadiantHeat(unsigned id);			//	熱伝達faceでは、放熱を行わない用に、行列を更新する
+	void ActivateVtxbeRadiantHeat();						//	空気への熱伝達を有効化する
 
 	void CreateMatk2array();
-	void CreateMatkLocal(unsigned i);			//	edgesに入れつつ、チェック用の全体剛性行列も、ifdefスイッチで作れる仕様
+	void CreateMatkLocal(unsigned i);					//	edgesに入れつつ、チェック用の全体剛性行列も、ifdefスイッチで作れる仕様
 	void CreateMatkLocal_update(unsigned i);			//	edgesに入れつつ、チェック用の全体剛性行列も、ifdefスイッチで作れる仕様
 	//void CreateDumMatkLocal();					//	全要素が0のダミーk
 	void CreateMatKall();
@@ -208,7 +210,8 @@ public:
 	void UpdateIHheat(unsigned heatingMODE);	// 毎Step呼ぶ：熱流束ベクトル{F}を生成・保存	//.heatingMODEは加熱強さ：4段階（0:OFF・1:弱火(WEEK)・2:中火(MIDDLE)・3:強火(HIGH)）
 	void UpdateIHheatband(double xS,double xE,unsigned heatingMODE);//小野原追加
 	void UpdateVecF_frypan();			// 方程式を解く前に、熱流束ベクトルをロードして、結合するなどベクトルを作る。modeには加熱モードを入れる
-	void UpdateVecF();		// 食材用
+	void UpdateVecF();					//> 食材用		->	不要な可能性大；initしかしていない2014.03
+	//void InitVecF_heatflux();			//	熱伝達計算前に、熱流束ベクトルの値を消去
 	void UpdateMatk_RadiantHeatToAir();
 protected:
 	//	何用に用いる？	行列作成の関数をまとめるだけ？
@@ -493,9 +496,13 @@ public:
 	void SetIHParamWEEK(double inr_, double outR_, double weekPow_);	//	弱火のIHパラメータを設定
 	void SetHeatTransRatioToAllVertex(double heatTransR_);
 	void ReProduceMat_Vec_ThermalRadiation();							//	熱輻射用に、行列やベクトルを作り直す,AfterSerDescのほぼコピー
-	void UpdateMatK();		//実装途中。main.cppで値を設定後に、もう一度行列を作り直したくなった時に用いる。
+	//void UpdateMatK();		//実装途中。main.cppで値を設定後に、もう一度行列を作り直したくなった時に用いる。
+	void IfRadiantHeatTrans();//unsigned verticesID);
 	double stopTime;
 	void SetStopTimespan(double timespan);
+	PTM::TMatrixRow<4,4,double> GetKMatInTet(unsigned id);
+	void OutputMatKall();
+	//int cntdbgk;						//debug用変数
 };
 
 

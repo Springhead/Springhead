@@ -74,6 +74,7 @@ public:
 		bool beCondVtxs;		//小野原追加 これがTrueのとき対応を取ったとする。
 		bool toofar;		//小野原追加 これがTrueのときは遠くて隣接点に加えない
 		double Tout;
+		bool beRadiantHeat;		//	物体間熱伝達計算を行っている頂点なのか？
 	};
 	//	四面体
 	class Tet{
@@ -203,6 +204,7 @@ public:
 	//	vertices[id].Tc = temp;
 	//};
 	/////
+
 	//Vec3d GetPose(unsigned id){ vertices[id].pos; };
 	//Vec3d GetSufVtxPose(unsigned id){ vertices[surfaceVertices[id]].pos; };
 };
