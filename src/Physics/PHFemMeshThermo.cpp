@@ -3515,7 +3515,7 @@ void PHFemMeshThermo::UpdateVecF(){
 //}
 
 void PHFemMeshThermo::IfRadiantHeatTrans(){
-	for(unsigned id =0;id<NSurfaceVertices();id++){
+	for(int id =0;id<NSurfaceVertices();id++){
 		if(vertices[id].beRadiantHeat){
 			vertices[id].thermalEmissivity = ems;
 			vertices[id].thermalEmissivity_const = ems_const;
@@ -4069,7 +4069,7 @@ void PHFemMeshThermo::AfterSetDesc() {
 	InitTcAll(temp_c);
 	InitToutAll(temp_out);
 	SetThermalEmissivityToVerticesAll(ems,ems_const);	
-	for(unsigned id=0;id<NSurfaceVertices();++id){
+	for(int id=0;id<NSurfaceVertices();++id){
 		vertices[id].beRadiantHeat =true;
 	}
 	///	”M“`’B—¦‚ðŠeß“_‚ÉŠi”[
@@ -5690,7 +5690,7 @@ PTM::TMatrixRow<4,4,double> PHFemMeshThermo::Create44Mat21(){
 }
 
 void PHFemMeshThermo::ActivateVtxbeRadiantHeat(){
-	for(unsigned i=0;i<NSurfaceVertices();++i){
+	for(int i=0;i<NSurfaceVertices();++i){
 		vertices[i].beRadiantHeat =true;
 	}
 }
