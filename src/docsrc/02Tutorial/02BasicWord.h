@@ -2,8 +2,8 @@
 
 <br>
 ここでは基本的な用語について説明しています． <br>
-より詳細な説明は <a href="..\..\doc\SprManual\main.pdf"> 使い方の説明 (Springhead Users Manual)</a>
-または <a href="..\..\include\html\index.html">APIの詳細な説明 (リファレンスマニュアル)</a> を参照して下さい．
+より詳細な説明は <a href="../../doc/SprManual/main.pdf"> 使い方の説明 (Springhead Users Manual)</a>
+または <a href="../../include/html/index.html">APIの詳細な説明 (リファレンスマニュアル)</a> を参照して下さい．
 <br><br>
 
 <ul type="circle">
