@@ -29,7 +29,7 @@ C C++-コード生成を選び，ランタイムライブラリを MT(リリー�
 Springheadを使うためには，ライブラリを追加する必要があります．
 新しく作ったプロジェクト (下図のfirst) を右クリックして 追加(D)-既存項目の追加(G)を選び，
 \image html addLib.png
-<a href="..\..\doc\SprManual\main.pdf">使い方の説明 (Springhead Users Manual)</a> の 第2章 GettingStarted 
+<a href="../../doc/SprManual/main.pdf">使い方の説明 (Springhead Users Manual)</a> の 第2章 GettingStarted 
 で作成したライブラリファイル lib/win32/Springhead10MD.lib および lib/win32/Springhead10M.lib を追加します．<br>
 　(注意) 追加するライブラリファイルは，使用する Visual Studio のバージョンによって異なります．
 　<ul>
