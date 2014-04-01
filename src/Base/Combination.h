@@ -86,7 +86,7 @@ public:
 		base_type::resize(height_ * width_);
 	}
 	int height() const { return height_; };
-	int width() const { return width_; };
+	int width () const { return width_; };
 	T& item(int i, int j){
 		assert(i < height());
 		assert(j < width());
