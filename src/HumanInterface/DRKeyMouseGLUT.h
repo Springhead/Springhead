@@ -8,6 +8,7 @@
 #ifndef DRKeyMouseGLUT_H
 #define DRKeyMouseGLUT_H
 
+#include <SprDefs.h>
 #include <HumanInterface/HIDevice.h>
 #include <GL/glut.h>
 #include <vector>
