@@ -17,8 +17,8 @@ namespace Spr{;
 // PHSliderJointNode
 
 void PHSliderJointNode::CompJointJacobian() {
-	J.col(0).SUBVEC(0,3) = Vec3d(0.0, 0.0, 1.0);
-	J.col(0).SUBVEC(3,3).clear();
+	J.clear();
+	J.col(0)[2] = 1.0;
 	PHTreeNode1D::CompJointJacobian();
 }
 
@@ -29,12 +29,12 @@ void PHSliderJointNode::CompJointCoriolisAccel() {
 void PHSliderJointNode::CompRelativeVelocity() {
 	PH1DJoint* j = GetJoint();
 	j->vjrel.v() = Vec3d(0.0, 0.0, j->velocity[0]);
-	j->vjrel.w().clear();
+	j->vjrel.w() = Vec3d();
 }
 
 void PHSliderJointNode::CompRelativePosition() {
 	PH1DJoint* j = GetJoint();
-	j->Xjrel.q = Matrix3d::Unit();
+	j->Xjrel.q = Quaterniond();
 	j->Xjrel.r = Vec3d(0.0, 0.0, j->position[0]);
 }
 
@@ -44,10 +44,7 @@ void PHSliderJointNode::CompRelativePosition() {
 PHSliderJoint::PHSliderJoint(const PHSliderJointDesc& desc) {
 	SetDesc(&desc);
 
-	// 可動軸・拘束軸の設定
-	nMovableAxes   = 1;
-	movableAxes[0] = 2;
-	InitTargetAxes();
+	movableAxes.Enable(2);
 }
 
 // ----- エンジンから呼び出される関数
@@ -60,7 +57,7 @@ void PHSliderJoint::UpdateJointState() {
 // ----- PHConstraintの派生クラスで実装される機能
 
 void PHSliderJoint::SetupAxisIndex() {
-	if (!bArticulated) {
+	if (!IsArticulated()) {
 		// -- 0 
 		axes.Enable(0);
 		// -- 1
@@ -76,21 +73,21 @@ void PHSliderJoint::SetupAxisIndex() {
 	}
 
 	// -- PH1DJoint::SetupAxisIndex に相当する部分
-	motor.SetupAxisIndex();
-	if (limit) { limit->SetupAxisIndex(); }
+	//motor.SetupAxisIndex();
+	//if (limit) { limit->SetupAxisIndex(); }
 }
 
 void PHSliderJoint::CompBias() {
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 
 	if (engine->numIterCorrection==0){ // Correctionを速度LCPで行う場合
-		db.v()	 = Xjrel.r * dtinv;
-		db.v().z = 0.0;
-		if (!bConstraintY) { db.v().y = 0.0; }
+		db.v() = Xjrel.r * dtinv;
+		db[2] = 0.0;
+		if (!bConstraintY) { db[1] = 0.0; }
 
-		db.w() =  Xjrel.q.RotationHalf() * dtinv;
-		if (!bConstraintRollX) { db.w().x = 0.0; }
-		if (!bConstraintRollZ) { db.w().z = 0.0; }
+		db.w() = Xjrel.q.RotationHalf() * dtinv;
+		if (!bConstraintRollX) { db[3] = 0.0; }
+		if (!bConstraintRollZ) { db[5] = 0.0; }
 
 		db *= engine->velCorrectionRate;
 	}
@@ -100,13 +97,7 @@ void PHSliderJoint::CompBias() {
 }
 
 void PHSliderJoint::CompError() {
-	/*B.v() = Xjrel.r;
-	B.w() = Xjrel.q.V();
-	if(onUpper)
-		B.v().z = Xjrel.r.z - upper;
-	else if(onLower)
-		B.v().z = Xjrel.r.z - lower;
-	else B.v().z = 0.0;*/
+
 }
 
 }

@@ -13,6 +13,7 @@
 #include <Physics/PHConstraintEngine.h>
 #include <Physics/PHHapticEngine.h>
 #include <Collision/CDShape.h>
+
 #include <float.h>
 
 using namespace PTM;
@@ -37,7 +38,7 @@ void PHBBox::GetSupport(const Vec3f& dir, float& minS, float& maxS){
 	maxS = c+d;
 }
 
-void PHBBox::GetBBoxWorldMinMax(Posed& pos , Vec3d& min, Vec3d& max){
+void PHBBox::GetBBoxWorldMinMax(Posed& pose, Vec3d& _min, Vec3d& _max){
 	Vec3d ext[8];
 	Vec3d bb = bboxExtent;
 	ext[0] = Vec3f( bb.x,  bb.y,  bb.z);
@@ -49,30 +50,45 @@ void PHBBox::GetBBoxWorldMinMax(Posed& pos , Vec3d& min, Vec3d& max){
 	ext[6] = Vec3f(-bb.x,  bb.y, -bb.z);
 	ext[7] = Vec3f(-bb.x, -bb.y, -bb.z);
 
-	for(int i =0; i<8 ;i++){
-		ext[i] = pos * ext[i];
-	}
+	for(int i = 0; i < 8; i++)
+		ext[i] = pose * (bboxCenter + ext[i]);
 
-	min = ext[0];
-	max = ext[0];
+	_min = ext[0];
+	_max = ext[0];
 
-	for(int i =1; i<8 ;i++){
-		for(int j =0; j<3 ;j++){
-			if(min[j]>ext[i][j]){
-				min[j] = ext[i][j];
-			}
-			if(max[j]<ext[i][j]){
-				max[j] = ext[i][j];
-			}
+	for(int i = 1; i < 8; i++){
+		for(int k = 0; k < 3; k++){
+			_min[k] = std::min(_min[k], ext[i][k]);
+			_max[k] = std::max(_max[k], ext[i][k]);
 		}
 	}
+}
+bool PHBBox::Intersect(PHBBox& lhs, PHBBox& rhs){
+	Vec3f bbmin[2];
+	Vec3f bbmax[2];
+	bbmin[0] = lhs.GetBBoxMin();
+	bbmax[0] = lhs.GetBBoxMax();
+	bbmin[1] = rhs.GetBBoxMin();
+	bbmax[1] = rhs.GetBBoxMax();
+	for(int k = 0; k < 3; k++){
+		if(bbmax[0][k] < bbmin[1][k])
+			return false;
+		if(bbmax[1][k] < bbmin[0][k])
+			return false;
+	}
+	return true;
 }
 
 //----------------------------------------------------------------------------
 //	PHFrame
 PHFrame::PHFrame():solid(NULL), shape(NULL){
+	bboxReady = false;
+}
+PHFrame::PHFrame(PHSolid* so, CDShape* sh):solid(so), shape(sh){
+	bboxReady = false;
 }
 PHFrame::PHFrame(const PHFrameDesc& desc):PHFrameDesc(desc), solid(NULL), shape(NULL){
+	bboxReady = false;
 }
 
 ObjectIf* PHFrame::GetChildObject(size_t pos){
@@ -91,12 +107,13 @@ bool PHFrame::AddChildObject(ObjectIf * o){
 			solid->AddFrame(f->Cast());
 		} 
 		if (solid){
-			solid->CalcBBox();
+			//solid->bboxReady = false;
+			solid->aabbReady = false;
 			//接触エンジンのshapePairsを更新する
 			PHScene* scene = DCAST(PHScene,solid->GetScene());
-			scene->penaltyEngine->UpdateShapePairs(solid);
+			scene->penaltyEngine   ->UpdateShapePairs(solid);
 			scene->constraintEngine->UpdateShapePairs(solid);
-			scene->hapticEngine->UpdateShapePairs(solid);
+			scene->hapticEngine    ->UpdateShapePairs(solid);
 		}
 		return true;
 	}
@@ -119,7 +136,51 @@ Posed PHFrame::GetPose(){
 	return pose;
 }
 void PHFrame::SetPose(Posed p){
-	pose = p;
+	pose      = p;
+	pose_abs  = solid->pose * p;
+	bboxReady = false;
+}
+bool PHFrame::CalcBBox(){
+	CDConvex* convex = shape->Cast();
+	if(!convex)
+		return false;
+	if(bboxReady && convex->bboxReady)
+		return false;
+
+	Vec3f _min, _max;
+	float inf = std::numeric_limits<float>::max();
+	_min = Vec3f( inf,  inf,  inf);
+	_max = Vec3f(-inf, -inf, -inf);
+	shape->CalcBBox(_min, _max, Posed());
+	bbShape.SetBBoxMinMax(_min, _max);
+
+	_min = Vec3f( inf,  inf,  inf);
+	_max = Vec3f(-inf, -inf, -inf);
+	shape->CalcBBox(_min, _max, pose);
+	bbSolid.SetBBoxMinMax(_min, _max);
+
+	convex->bboxReady = true;
+	bboxReady = true;
+	return true;
+}
+void PHFrame::CalcAABB(){
+	// 形状ローカルのBBoxを囲うAABBを作る
+	// 形状自体からAABBを作った方が無駄は無いが計算がかさむ
+	pose_abs = solid->pose * pose;
+
+	Vec3d bbmin, bbmax;
+	bbShape.GetBBoxWorldMinMax(pose_abs, bbmin, bbmax);
+	bbWorld[0].SetBBoxMinMax(bbmin, bbmax);
+	
+	// CCD用は前時刻からの並進移動量を考慮してAABBを膨らませる
+	for(int k = 0; k < 3; k++){
+		Vec3f dir;
+		if(delta[k] < 0)
+				bbmin[k] += delta[k];
+		else bbmax[k] += delta[k];
+	}
+	bbWorld[1].SetBBoxMinMax(bbmin, bbmax);
+
 }
 
 void PHFrame::CompInertia(){
@@ -130,13 +191,18 @@ void PHFrame::CompInertia(){
 
 ///////////////////////////////////////////////////////////////////
 //	PHSolid
+
 PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	integrationMode = PHINT_SIMPLETIC;
-	inertia_inv = inertia.inv();
-	treeNode = NULL;
-	bFrozen = false;
+	Iinv            = inertia.inv();
+	treeNode        = NULL;
+	bFrozen         = false;
+	//bboxReady       = false;
+	aabbReady       = false;
+
 	if (s){ SetScene(s); }
 }
+
 SceneObjectIf* PHSolid::CloneObject(){
 	PHSolidDesc desc;
 	PHSolidIf* origin = DCAST(PHSolidIf,this);
@@ -189,7 +255,7 @@ bool PHSolid::DelChildObject(ObjectIf* obj){
 		PHFrameIf* f = obj->Cast();
 		for(int i=0; i<NFrame(); ++i){
 			if (GetFrame(i) == f)
-				DelFrame(i);
+				RemoveShape(i);
 			i--;
 		}
 		return true;
@@ -200,9 +266,9 @@ bool PHSolid::DelChildObject(ObjectIf* obj){
 	}
 	return false;
 }
-SpatialVector PHSolid::GetAcceleration() const {
+/*SpatialVector PHSolid::GetAcceleration() const {
 	return dv / ((PHScene*)GetScene())->GetTimeStep(); 
-}
+}*/
 Vec3d PHSolid::GetDeltaPosition() const {
 	PHScene* s = DCAST(PHScene, nameManager);
 	return velocity * s->GetTimeStep();
@@ -213,24 +279,78 @@ Vec3d PHSolid::GetDeltaPosition(const Vec3d& p) const {
 	Quaterniond rot = Quaterniond::Rot(angVelocity*dt);
 	return velocity*dt + (rot*(p-center) - p);
 }
-void PHSolid::CalcBBox(){
-	Vec3f bboxMin = Vec3f(FLT_MAX, FLT_MAX, FLT_MAX);
-	Vec3f bboxMax = Vec3f(-FLT_MAX,-FLT_MAX,-FLT_MAX);
+bool PHSolid::CalcBBox(){
+	//if(bboxReady)
+	//	return;
+
+	bool changed = false;
+	for(int i = 0; i < (int)frames.size(); i++)
+		changed |= frames[i]->CalcBBox();
+
+	if(!changed)
+		return false;
+
+	float inf = std::numeric_limits<float>::max();
+	Vec3f bbmin = Vec3f( inf,  inf,  inf);
+	Vec3f bbmax = Vec3f(-inf, -inf, -inf);
+	
 	for(int i = 0; i < (int)frames.size(); i++){
-		frames[i]->shape->CalcBBox(bboxMin, bboxMax, frames[i]->pose);
+		frames[i]->CalcBBox();
+		bbmin.element_min(frames[i]->bbSolid.GetBBoxMin());
+		bbmax.element_max(frames[i]->bbSolid.GetBBoxMax());
 	}
-	if (bboxMin.X() == FLT_MAX){
-		bbox.SetBBoxMinMax(Vec3f(0,0,0), Vec3f(-1,-1,-1));
-	}else{
-		bbox.SetBBoxMinMax(bboxMin, bboxMax);
+
+	if(bbmin.x == inf)
+		 bbLocal.SetBBoxMinMax(Vec3f(0,0,0), Vec3f(-1,-1,-1));
+	else bbLocal.SetBBoxMinMax(bbmin, bbmax);
+
+	//bboxReady = true;
+	return true;
+}
+void PHSolid::CalcAABB(){
+	//if(aabbReady)
+	//	return;
+
+	bool changed = CalcBBox();
+	if(!changed && aabbReady)
+		return;
+
+	float inf = std::numeric_limits<float>::max();
+	Vec3f bbmin = Vec3f( inf,  inf,  inf);
+	Vec3f bbmax = Vec3f(-inf, -inf, -inf);
+	
+	for(int i = 0; i < (int)frames.size(); i++){
+		frames[i]->CalcAABB();
+		bbmin.element_min(frames[i]->bbWorld[0].GetBBoxMin());
+		bbmax.element_max(frames[i]->bbWorld[0].GetBBoxMax());
 	}
-//	DSTR << GetName() << bbox.GetBBoxMin() << bbox.GetBBoxMax() << std::endl;
+
+	if(bbmin.x == inf)
+		 bbWorld.SetBBoxMinMax(Vec3f(0,0,0), Vec3f(-1,-1,-1));
+	else bbWorld.SetBBoxMinMax(bbmin, bbmax);
+
+	//poseChanged = false;
+	aabbReady = true;
+}
+void PHSolid::GetBBox(Vec3d& bbmin, Vec3d& bbmax, bool world){
+	if(world){
+		CalcAABB();
+		bbmin = bbWorld.GetBBoxMin();
+		bbmax = bbWorld.GetBBoxMax();
+	}
+	else{
+		CalcBBox();
+		bbmin = bbLocal.GetBBoxMin();
+		bbmax = bbLocal.GetBBoxMax();
+	}
 }
 void PHSolid::GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS){
-		bbox.GetSupport(GetOrientation().Inv()*dir, minS, maxS);
-		float c = Vec3f(GetFramePosition()) * dir;
-		minS += c;
-		maxS += c;
+	//if(!bboxReady)
+	CalcBBox();
+	bbLocal.GetSupport(GetOrientation().Inv()*dir, minS, maxS);
+	float c = Vec3f(GetFramePosition()) * dir;
+	minS += c;
+	maxS += c;
 }
 
 bool PHSolid::IsArticulated(){
@@ -241,18 +361,38 @@ void PHSolid::UpdateCacheLCP(double dt){
 	if(mass != 0)
 		minv = GetMassInv();
 	Iinv = GetInertiaInv();
+	Minv.clear();
+	Minv.vv() = Matrix3d::Unit() * minv;
+	Minv.ww() = Iinv;
+
+	PHSceneIf* scene = GetScene()->Cast();
+
+	// 力・モーメントの制限
+	double fmax = scene->GetMaxForce ();
+	double tmax = scene->GetMaxMoment();
+	double fn = nextForce .norm();
+	double tn = nextTorque.norm();
+	if(fn > fmax){
+		DSTR << "solid external force exceeded limit: " << fn << std::endl;
+		nextForce *= (fmax/fn);
+	}
+	if(tn > tmax){
+		DSTR << "solid external moment exceeded limit: " << tn << std::endl;
+		nextTorque *= (tmax/tn);
+	}
+
 	Quaterniond qc = GetOrientation().Conjugated();
-	f.v() = qc * nextForce;
-	f.w() = qc * nextTorque;
-	v.v() = qc * velocity;
+	f.v() = qc * nextForce  ;
+	f.w() = qc * nextTorque ;
+	v.v() = qc * velocity   ;
 	v.w() = qc * angVelocity;
 
 	// ツリーに属する場合はPHRootNode::SetupDynamicsでdvが計算される
 	if(IsArticulated())return;
 	
-	if(IsDynamical() && !IsFrozen()){
+	if(IsDynamical() && !IsStationary() && !IsFrozen()){
 		dv0.v() = minv * f.v() * dt;
-		dv0.w() = Iinv * (f.w() - v.w() % (GetInertia() * v.w())) * dt;
+		dv0.w() = Iinv * (f.w() - v.w() % (GetInertia() * v.w()) * dt);
 	}
 	else{
 		dv0.clear();
@@ -273,42 +413,86 @@ void PHSolid::UpdateCachePenalty(int c){
 	cog = ori * GetCenterOfMass() + pos;
 }
 */
-void PHSolid::UpdateVelocity(double dt){
-	SpatialVector vold = v;
-	if(IsDynamical() && !IsFrozen()){
-		v += dv;
 
-		// 空気抵抗係数をかける
-		PHSceneIf* scene = GetScene()->Cast();
-		v *= scene->GetAirResistanceRate();
+void PHSolid::SetVelocity(const Vec3d& v){
+	velocity     = v;
+	velocityNorm = v.norm();
+	SetFrozen(false);
 
-		// 角速度の制限　（要API化）
-		//double vMax = 100;
-		//if (v.w().norm() > 100)
-		//	v.w() = v.w().unit() * vMax;
-		double vmax = scene->GetMaxVelocity();
-		double wmax = scene->GetMaxAngularVelocity();
-		double vnorm = v.v().norm();
-		double wnorm = v.w().norm();
-		if(vnorm > vmax)
-			v.v() *= (vmax/vnorm);
-		if(wnorm > wmax)
-			v.w() *= (wmax/wnorm);
+	PHSceneIf* scene = GetScene()->Cast();
+	double vmax = scene->GetMaxVelocity();
 
-		SetVelocity       (GetOrientation() * v.v());
-		SetAngularVelocity(GetOrientation() * v.w());
+	if(velocityNorm > vmax){
+		DSTR << "solid " << GetName() << " velocity exceeded limit: " << velocityNorm << std::endl;
+		velocity *= (vmax/velocityNorm);
+		velocityNorm = vmax;
 	}
+}
+
+void PHSolid::SetAngularVelocity(const Vec3d& av){
+	angVelocity     = av;
+	angVelocityNorm = av.norm();
+	SetFrozen(false);
+
+	PHSceneIf* scene = GetScene()->Cast();
+	double wmax = scene->GetMaxAngularVelocity();
+
+	if(angVelocityNorm > wmax){
+		DSTR << "solid " << GetName() << " ang.velocity exceeded limit: " << angVelocityNorm << std::endl;
+		angVelocity *= (wmax/angVelocityNorm);
+		angVelocityNorm = wmax;
+	}
+}
+
+void PHSolid::UpdateVelocity(double* dt){
+	if(!IsDynamical())
+		return;
+	if(IsStationary())
+		return;
+	if(IsFrozen())
+		return;
+	if(IsUpdated())
+		return;
+		
+	SpatialVector vold = v;
+	v += dv;
+
+	// 空気抵抗係数をかける
+	PHSceneIf* scene = GetScene()->Cast();
+	v *= scene->GetAirResistanceRate();
+
+	// 速度更新
+	SetVelocity       (GetOrientation() * v.v());
+	SetAngularVelocity(GetOrientation() * v.w());
+
+	// 位置更新のステップ幅を計算
+	double dpmax = scene->GetMaxDeltaPosition();
+	double dqmax = scene->GetMaxDeltaOrientation();
+	if(velocityNorm * (*dt) > dpmax)
+		*dt = dpmax/velocityNorm;
+	if(angVelocityNorm * (*dt) > dqmax)
+		*dt = dqmax/angVelocityNorm;
+
+	// ステートの加速度を更新
+	accel    = dv.v() * scene->GetTimeStepInv();
+	angAccel = dv.w() * scene->GetTimeStepInv();
+	
 	// フリーズ判定．速度が一定以下になると，積分などの処理をやめる．
 	if(!IsFrozen()){
 		if(vold.square() < engine->freezeThreshold && v.square() < engine->freezeThreshold){
 			SetFrozen(true);
 		}
 	}
-
 }
-void PHSolid::UpdatePosition(double dt){
-	if(IsFrozen()) return;
 
+void PHSolid::UpdatePosition(double dt){
+	if(IsFrozen())
+		return;
+	if(IsStationary())
+		return;
+	if(IsUpdated())
+		return;
+	
 	// 移動後の質量中心位置
 	Vec3d pc = GetCenterPosition() + pose.Ori() * (v.v() * dt + dV.v());
 	// 向きの変化
@@ -317,34 +501,33 @@ void PHSolid::UpdatePosition(double dt){
 	// 質量中心位置から座標原点位置を求める
 	pose.Pos() = pc - pose.Ori() * center;
 
-	// SetOrientation -> SetCenterPositionの順に呼ぶ必要がある．逆だとSetOrientationによって重心位置がずれてしまう tazz
-	//SetCenterPosition(GetCenterPosition() + GetVelocity() * dt + GetOrientation() * dV.v());
-	//solid->SetOrientation((solid->GetOrientation() + solid->GetOrientation().Derivative(solid->GetOrientation() * is->dW)).unit());
-	//solid->SetOrientation((solid->GetOrientation() * Quaterniond::Rot(/*solid->GetOrientation() * */info->dW)).unit());
+	// 形状の位置と向きを更新
+	Posed pose_prev;
+	for(int i = 0; i < (int)frames.size(); i++){
+		pose_prev = frames[i]->pose_abs;
+		frames[i]->pose_abs = pose * frames[i]->pose;
+		frames[i]->delta    = frames[i]->pose_abs.Pos() - pose_prev.Pos();
+	}
+
+	aabbReady = false;
+	SetUpdated(true);
 }
 
 void PHSolid::Step(){
-	force = nextForce;
+	force  = nextForce;
 	torque = nextTorque;
-	nextForce.clear();
+	nextForce .clear();
 	nextTorque.clear();
 
-	//既に他のエンジンによって更新が成された場合は積分を行わない
-	if(IsUpdated()) return;
+	// 既に他のエンジンによって更新が成された場合は積分を行わない
+	if(IsUpdated   ()) return;
+	// 静止物体はスキップ
+	if(IsStationary()) return;
 
 	PHScene* s = DCAST(PHScene, GetScene());
 	double dt = s->GetTimeStep();
 	assert(GetIntegrationMode() != PHINT_NONE);
-#ifdef _DEBUG
-	if (!finite(velocity.norm()) || velocity.norm() > 100 || angVelocity.norm() > 100){	
-		DSTR << "Warning: solid '" << GetName() << "' has a very fast velocity. v:" << velocity << "w:" << angVelocity << std::endl;
-	}
-#endif
-	//k1 = f(y);
-	//k2 = f(y + k1 * h / 2);
-	//k3 = f(y + k2 * h / 2);
-	//k4 = f(y + k3);
-	//y += (k1 + 2 * k2 + 2 * k3 + k4) * h / 6;
+
 	//	積分計算
 	Vec3d dv, dw;				//<	速度・角速度の変化量
 	Vec3d	_angvel[4];			//<	数値積分係数
@@ -367,7 +550,7 @@ void PHSolid::Step(){
 		SetCenterPosition(GetCenterPosition() + velocity * dt);
 		velocity = force / mass;		//速度は力に比例する
 		Vec3d tq = pose.Ori().Conjugated() * torque;	//トルクをローカルへ
-		angVelocity = pose.Ori() * (inertia_inv * tq);	//角速度はトルクに比例する
+		angVelocity = pose.Ori() * (Iinv * tq);	//角速度はトルクに比例する
 		//クウォータニオンを積分、正規化
 		pose.Ori() += pose.Ori().Derivative(angVelocity) * dt;
 		pose.Ori().unitize();
@@ -454,7 +637,7 @@ void PHSolid::Step(){
 	}
 }
 void PHSolid::AddTorque(Vec3d t){
-	nextTorque += t; 
+	nextTorque += t;
 }
 void PHSolid::AddForce(Vec3d f){
 	nextForce += f;
@@ -462,13 +645,8 @@ void PHSolid::AddForce(Vec3d f){
 
 void PHSolid::AddForce(Vec3d f, Vec3d r){
 	nextTorque += (r - pose*center) ^ f;
-	nextForce += f;
+	nextForce  += f;
 }
-
-/*void PHSolid::AddForceLocal(Vec3d f, Vec3d r){
-	torque += cross(pose.Ori() * (r - center), f);
-	force += f;
-}*/
 
 int PHSolid::NFrame(){ return (int)frames.size(); }
 PHFrameIf* PHSolid::GetFrame(int i){
@@ -481,7 +659,8 @@ void PHSolid::AddFrame(PHFrameIf* fi){
 	frames.push_back(f->Cast());
 	frames.back()->solid = this;
 	if (frames.back()->shape){
-		CalcBBox();
+		//bboxReady = false;
+		aabbReady = false;
 		//接触エンジンのshapePairsを更新する
 		PHScene* scene = DCAST(PHScene,GetScene());
 		scene->penaltyEngine->UpdateShapePairs(this);
@@ -489,39 +668,65 @@ void PHSolid::AddFrame(PHFrameIf* fi){
 		scene->hapticEngine->UpdateShapePairs(this);
 	}
 }
-void PHSolid::DelFrame(int i){
+/*void PHSolid::DelFrame(int i){
 	frames.erase(frames.begin()+i);
 	CalcBBox();
 	//接触エンジンのshapePairsを更新する
 	PHScene* scene = DCAST(PHScene, GetScene());
-	scene->penaltyEngine->DelShapePairs(this, i);
+	scene->penaltyEngine   ->DelShapePairs(this, i);
 	scene->constraintEngine->DelShapePairs(this, i);	
-}
+}*/
 void PHSolid::AddShape(CDShapeIf* shape){
-	CDShape* sh = DCAST(CDShape, shape);
-	frames.push_back(DBG_NEW PHFrame());
-	frames.back()->shape = sh;
-	CalcBBox();
-	//接触エンジンのshapePairsを更新する
+	frames.push_back(DBG_NEW PHFrame(this, shape->Cast()));
+	//bboxReady = false;
+	aabbReady = false;
 	PHScene* scene = DCAST(PHScene,GetScene());
-	scene->penaltyEngine->UpdateShapePairs(this);
+	scene->penaltyEngine   ->UpdateShapePairs(this);
 	scene->constraintEngine->UpdateShapePairs(this);
-	scene->hapticEngine->UpdateShapePairs(this);
+	scene->hapticEngine    ->UpdateShapePairs(this);
+}
+void PHSolid::AddShapes(CDShapeIf** shBegin, CDShapeIf** shEnd){
+	for(CDShapeIf** sh = shBegin; sh != shEnd; sh++){
+		CDShape* shape = DCAST(CDShape, *sh);
+		frames.push_back(DBG_NEW PHFrame());
+		frames.back()->shape = shape;
+	}
+	//bboxReady = false;
+	aabbReady = false;
+	PHScene* scene = DCAST(PHScene,GetScene());
+	scene->penaltyEngine   ->UpdateShapePairs(this);
+	scene->constraintEngine->UpdateShapePairs(this);
+	scene->hapticEngine    ->UpdateShapePairs(this);
 }
 void PHSolid::RemoveShape(int i){
-	if(0 <= i && i < (int)frames.size())
-		DelFrame(i);
+	RemoveShapes(i, i+1);
+}
+void PHSolid::RemoveShapes(int iBegin, int iEnd){
+	if(iBegin < 0 || iBegin >= (int)frames.size())
+		return;
+	if(iEnd   < 0 || iEnd   >= (int)frames.size())
+		return;
+	if(iEnd <= iBegin)
+		return;
+	int n = iEnd - iBegin;
+	for(int i = 0; i < n; i++)
+		frames.erase(frames.begin() + iBegin);
+	//bboxReady = false;
+	aabbReady = false;
+	//接触エンジンのshapePairsを更新する
+	PHScene* scene = DCAST(PHScene, GetScene());
+	scene->penaltyEngine   ->DelShapePairs(this, iBegin, iEnd);
+	scene->constraintEngine->DelShapePairs(this, iBegin, iEnd);	
 }
 void PHSolid::RemoveShape(CDShapeIf* shape){
 	CDShape* sh = DCAST(CDShape, shape);
 	for(unsigned i=0; i<frames.size(); ++i){
 		if (frames[i]->shape == sh){
-			DelFrame(i);
+			RemoveShape(i);
 			i--;
 		}
 	}
 }
-
 Posed	PHSolid::GetShapePose(int i){
 	if(0 <= i && i < (int)frames.size())
 		return frames[i]->pose;
@@ -531,10 +736,11 @@ void PHSolid::ClearShape(){
 	frames.clear();
 }
 
-void	PHSolid::SetShapePose(int i, const Posed& pose){
+void PHSolid::SetShapePose(int i, const Posed& pose){
 	if(0 <= i && i < (int)frames.size()){
-		frames[i]->pose = pose;
-		CalcBBox();
+		frames[i]->SetPose(pose);
+		//bboxReady = false;
+		aabbReady = false;
 	}
 }
 int PHSolid::NShape(){

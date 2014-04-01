@@ -17,6 +17,75 @@ namespace Spr{;
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PH1DJointLimit
 
+void PH1DJointLimit::SetupAxisIndex(){
+	onLower = onUpper = false;
+	axes.Clear();
+
+	// 無効な可動範囲
+	if (range[0] >= range[1])
+		return;
+
+	double pos = joint->GetPosition();
+	if(pos <= range[0]){
+		onLower = true;
+		axes.Enable(0);
+		joint->targetAxes.Enable(joint->movableAxes[0]);
+		diff = pos - range[0];
+	}
+	if(pos >= range[1]){
+		onUpper = true;
+		axes.Enable(0);
+		joint->targetAxes.Enable(joint->movableAxes[0]);
+		diff = pos - range[1];
+	}
+}
+
+void PH1DJointLimit::Setup(){
+	if(onLower || onUpper){
+		double tmp = 1.0 / (damper + spring * joint->GetScene()->GetTimeStep());
+		dA[0] = tmp * joint->GetScene()->GetTimeStepInv();
+		db[0] = tmp * spring * diff;
+
+		A   [0] = joint->A[joint->movableAxes[0]];
+		Ainv[0] = 1.0 / (A[0] + dA[0]);
+
+		f[0] *= axes.IsContinued(0) ? joint->engine->shrinkRate : 0;
+	}
+
+}
+
+void PH1DJointLimit::Iterate(){
+	if(!onLower && !onUpper)
+		return;
+
+	int i = joint->movableAxes[0];
+
+	// Gauss-Seidel Update
+	res [0] = joint->b[i] + db[0] + dA[0]*f[0] + joint->dv[i];
+	fnew[0] = f[0] - joint->engine->accelSOR * Ainv[0] * res[0];
+	
+	// Projection
+	if(onLower)
+		fnew[0] = std::max(fnew[0], 0.0);
+	if(onUpper)
+		fnew[0] = std::min(fnew[0], 0.0);
+
+	// Comp Response & Update f
+	df[0] = fnew[0] - f[0];
+	CompResponseDirect(df[0], 0);
+	f[0] = fnew[0];
+}
+
+void PH1DJointLimit::CompResponse(double df, int i){
+	joint->CompResponse(df, joint->movableAxes[0]);
+}
+
+void PH1DJointLimit::CompResponseDirect(double df, int i){
+	joint->CompResponseDirect(df, joint->movableAxes[0]);
+}
+
+
+/*
 void PH1DJointLimit::SetupAxisIndex() {
 	bOnLimit = false;
 	if (range[0] >= range[1]){ return; }
@@ -27,7 +96,7 @@ void PH1DJointLimit::SetupAxisIndex() {
 
 		diff = joint->GetPosition() - range[0];
 
-		joint->fMaxDt[joint->movableAxes[0]] =  FLT_MAX;
+		//joint->fMaxDt[joint->movableAxes[0]] =  FLT_MAX;
 		joint->fMinDt[joint->movableAxes[0]] =  0;
 	}
 
@@ -38,7 +107,7 @@ void PH1DJointLimit::SetupAxisIndex() {
 		diff = joint->GetPosition() - range[1];
 
 		joint->fMaxDt[joint->movableAxes[0]] =  0;
-		joint->fMinDt[joint->movableAxes[0]] = -FLT_MAX;
+		//joint->fMinDt[joint->movableAxes[0]] = -FLT_MAX;
 	}
 }
 
@@ -47,8 +116,8 @@ void PH1DJointLimit::CompBias() {
 
 	double tmp = 1.0 / (damper + spring * joint->GetScene()->GetTimeStep());
 
-	joint->dA[joint->movableAxes[0]] = tmp * joint->GetScene()->GetTimeStepInv();
-	joint->db[joint->movableAxes[0]] = tmp * spring * diff;
+	joint->dA[joint->movableAxes[0]] += tmp * joint->GetScene()->GetTimeStepInv();
+	joint->db[joint->movableAxes[0]] += tmp * spring * diff;
 
 	joint->db[joint->movableAxes[0]] += tmp * (
 		  joint->GetSpring() * (joint->GetPosition() - joint->GetTargetPosition())
@@ -56,70 +125,60 @@ void PH1DJointLimit::CompBias() {
 		- joint->GetOffsetForce() * joint->GetScene()->GetTimeStepInv()
 		);
 }
-
+*/
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHBallJointLimit
 
 PHBallJointLimit::PHBallJointLimit(){
-	f.clear();
-	
+}
+
+/// LCPを解く前段階の計算
+void PHBallJointLimit::Setup() {
+	// 拘束座標系ヤコビアンを計算
+	CompJacobian();
+
+	// 拘束する自由度を決定
 	for(int i=0; i<3; i++){
 		fMaxDt[i] =  FLT_MAX;
 		fMinDt[i] = -FLT_MAX;
 	}
-}
-
-/// LCPを解く前段階の計算
-void PHBallJointLimit::SetupLCP() {
-	// 拘束座標系ヤコビアンを計算
-	CompJacobian();
-
-	// 拘束軸フラグのクリア <<ここからaxes.CreateList()までaxes[n]は使えない．>>
-	axes.Clear();
-
-	// Projection用の最大・最小値をリセットする（
-	for (int i=0; i<3; i++) { fMinDt[i] = -FLT_MAX; fMaxDt[i] =  FLT_MAX; }
-
-	// 拘束する自由度の決定
-	SetupAxisIndex();
-		
+	
 	// LCPの係数A, bの補正値dA, dbを計算
-	dA.clear();
-	db.clear();
-	CompBias();
-
-	// LCPのA行列の対角成分を計算
-	CompResponseMatrix();
-		
-	// LCPのbベクトル == 論文中のw[t]を計算
-	b = J[0] * joint->solid[0]->v.w() + J[1] * joint->solid[1]->v.w();
-
-	// ここまでで決定された拘束軸フラグを使って軸番号リストを作成　<<ここからはaxes[n]を使用可能>>
-	axes.CreateList();
-
-	// 拘束力の初期値を更新
-	for (int n=0; n<axes.size(); ++n) {
-		f[axes[n]] *= axes.IsContinued(axes[n]) ? joint->engine->shrinkRate : 0;
+	double tmp = 1.0 / (damper + spring * joint->GetScene()->GetTimeStep());
+	for(int n = 0; n < axes.size(); n++){
+		int j = axes[n];
+		dA[j] = tmp * joint->GetScene()->GetTimeStepInv();
+		db[j] = tmp * spring * diff[j];
 	}
 
-	// 拘束力初期値による速度変化量を計算
-	for (int n=0; n<axes.size(); ++n) {
-		int i = axes[n];
-		CompResponse(f[i], i);
+	// LCPのA行列の対角成分を計算
+	SpatialMatrix Aj = joint->adj.Find(joint)->A;
+	Matrix3d _A = Jcinv * Aj.ww() * Jcinv.trans();
+	Vec3d    _b = Jcinv * joint->b.w();
+	for (int n=0; n<axes.size(); ++n){
+		int j = axes[n];
+		A   [j] = _A[j][j];
+		Ainv[j] = 1.0 / (A[j] + dA[j]);
+		b   [j] = _b[j];
+	}
+
+	// 拘束力の初期値を更新
+	for (int n=0; n<axes.size(); ++n){
+		int j = axes[n];
+		f[j] *= axes.IsContinued(j) ? joint->engine->shrinkRate : 0;
 	}
 }
 
 /// LCPの繰り返し計算
-void PHBallJointLimit::IterateLCP() {
-	Vec3d fnew, df;
-	
+void PHBallJointLimit::Iterate() {
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
 
 		// Gauss Seidel Iteration
-		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * (dA[i]*f[i] + b[i] + db[i] 
-				+ J[0].row(i)*joint->solid[0]->dv.w() + J[1].row(i)*joint->solid[1]->dv.w());
+		dv  [i] = Jcinv.row(i) * joint->dv.w();
+		res [i] = dA[i]*f[i] + b[i] + db[i] + dv[i];
+		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * res[i];
 
 		// Projection
 		fnew[i] = min(max(fMinDt[i], fnew[i]), fMaxDt[i]);
@@ -131,12 +190,23 @@ void PHBallJointLimit::IterateLCP() {
 	}
 }
 
+void PHBallJointLimit::CompResponse(double df, int i){
+	for(int j = 0; j < 3; j++)
+		joint->CompResponse(Jcinv[i][j] * df, 3+j);
+}
+
+void PHBallJointLimit::CompResponseDirect(double df, int i){
+	for(int j = 0; j < 3; j++)
+		joint->CompResponseDirect(Jcinv[i][j] * df, 3+j);
+}
+
+/*
 /// Aの対角成分を計算する．A = J * M^-1 * J^T
 void PHBallJointLimit::CompResponseMatrix() {
 	A.clear();
 	PHRootNode* root[2] = {
-		joint->solid[0]->IsArticulated() ? joint->solid[0]->treeNode->GetRootNode() : NULL,
-		joint->solid[1]->IsArticulated() ? joint->solid[1]->treeNode->GetRootNode() : NULL,
+		joint->solid[0]->IsArticulated() ? DCAST(PHRootNode, joint->solid[0]->treeNode->GetRootNode()) : NULL,
+		joint->solid[1]->IsArticulated() ? DCAST(PHRootNode, joint->solid[1]->treeNode->GetRootNode()) : NULL,
 	};
 
 	SpatialVector df;
@@ -147,7 +217,7 @@ void PHBallJointLimit::CompResponseMatrix() {
 				for (int j=0; j<3; ++j) {
 					df.v().clear();
 					df.w() = J[i].row(j);
-					joint->solid[i]->treeNode->CompResponse(df, false, false);
+					joint->solid[i]->treeNode->CompResponse(df);
 					A[j] += J[i].row(j) * joint->solid[i]->treeNode->da.w();
 					//もう片方の剛体も同一のツリーに属する場合はその影響項も加算
 					if(joint->solid[!i]->IsArticulated() && root[i] == root[!i]) {
@@ -188,18 +258,8 @@ void PHBallJointLimit::CompResponseMatrix() {
 		}
 	}
 }
-
-void PHBallJointLimit::CompBias() {
-	double tmp = 1.0 / (damper + spring * joint->GetScene()->GetTimeStep());
-
-	for (int i=0; i<3; ++i) {
-		if (axes.IsEnabled(i)) {
-			dA[i] = tmp * joint->GetScene()->GetTimeStepInv();
-			db[i] = tmp * spring * diff[i];
-		}
-	}
-}
-
+*/
+/*
 void PHBallJointLimit::CompResponse(double df, int i) {
 	SpatialVector dfs;
 	for (int k=0; k<2; ++k) {
@@ -207,20 +267,19 @@ void PHBallJointLimit::CompResponse(double df, int i) {
 		if (joint->solid[k]->IsArticulated()) {
 			dfs.v().clear();
 			dfs.w() = J[k].row(i) * df;
-			joint->solid[k]->treeNode->CompResponse(dfs, true, false);
+			joint->solid[k]->treeNode->CompResponse(dfs);
 		} else {
 			joint->solid[k]->dv.w() += T[k].row(i) * df;
 		}
 	}
 }
-
+*/
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHBallJointConeLimit
 
 /// 拘束座標系のJabocianを計算
 void PHBallJointConeLimit::CompJacobian() {
 	// 標準的な関節Jacobianを固有の拘束座標系に変換する行列
-	Matrix3d Jc, Jcinv;
 	const double eps = 1.0e-5;
 	Jc.Ez() = joint->Xjrel.q * Vec3d(0.0, 0.0, 1.0);
 	Vec3d tmp = Jc.Ez() - limitDir;
@@ -230,23 +289,28 @@ void PHBallJointConeLimit::CompJacobian() {
 	Jcinv   = Jc.trans();
 	
 	// 関節Jacobianを取得・変換してLimitのJacobianとする
-	J[0] = Jcinv * joint->J[0].ww();
-	J[1] = Jcinv * joint->J[1].ww();
+	//J[0] = Jcinv * GetWW(joint->J[0]);
+	//J[1] = Jcinv * GetWW(joint->J[1]);
 }
 
 /// 可動域制限にかかっているか確認しどの自由度を速度拘束するかを設定
 void PHBallJointConeLimit::SetupAxisIndex() {
 	Vec2d limit[3] = { limitSwing, limitSwingDir, limitTwist };
 
+	axes.Clear();
 	for (int i=0; i<3; ++i) {
 		if ((limit[i][0] < FLT_MAX*0.1) && joint->position[i] < limit[i][0]) {
-			axes.Enable(i); bOnLimit = true;
+			axes.Enable(i);
+			joint->targetAxes.Enable(joint->movableAxes[i]);
+			bOnLimit = true;
 			diff[i] = joint->position[i] - limit[i][0];
 			fMinDt[i] = 0;
 		} else if ((limit[i][1] < FLT_MAX*0.1) && joint->position[i] > limit[i][1]) {
 			axes.Enable(i);
+			joint->targetAxes.Enable(joint->movableAxes[i]);
+			bOnLimit = true;
 			diff[i] = joint->position[i] - limit[i][1];
-			fMaxDt[i] = 0; bOnLimit = true;
+			fMaxDt[i] = 0;
 		}
 	}
 }
@@ -367,7 +431,7 @@ SplinePoint ClosedSplineCurve::GetPointOnEdge(int i, double t) {
 
 /// 拘束座標系のJabocianを計算
 void PHBallJointSplineLimit::CompJacobian() {
-	currPos = joint->position;
+	currPos = joint->GetPosition();
 
 	// 変換前の標準Jacobian
 	Matrix3d Jc, Jcinv=Matrix3d::Unit();
@@ -384,17 +448,23 @@ void PHBallJointSplineLimit::CompJacobian() {
 	CheckTwistLimit();
 
 	// Jacobianを変換する
-	if (bOnSwing) { Jcinv = neighbor.CompJacobian().trans(); }
-	J[0] = Jcinv * joint->J[0].ww();
-	J[1] = Jcinv * joint->J[1].ww();
+	if (bOnSwing)
+		Jcinv = neighbor.CompJacobian().trans();
+
+	//J[0] = Jcinv * GetWW(joint->J[0]);
+	//J[1] = Jcinv * GetWW(joint->J[1]);
 }
 
 /// どの自由度を速度拘束するかを設定
 void PHBallJointSplineLimit::SetupAxisIndex() {
+	axes.Clear();
 	if (bOnSwing) {
 		axes.Enable(0);
-	} else if (bOnTwist) {
+		joint->targetAxes.Enable(joint->movableAxes[0]);
+	}
+	else if (bOnTwist) {
 		axes.Enable(2);
+		joint->targetAxes.Enable(joint->movableAxes[2]);
 	}
 }
 

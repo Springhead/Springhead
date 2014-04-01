@@ -8,7 +8,8 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHHapticPointer
-struct PHHapticPointerSt : public PHHapticPointerDesc{
+class PHHapticPointerSt{
+public:
 	Vec3d last_dr;
 	Vec3d last_dtheta;
 	Posed proxyPose;	// 摩擦計算用のプロキシ
@@ -17,9 +18,11 @@ struct PHHapticPointerSt : public PHHapticPointerDesc{
 	SpatialVector vcForce;
 	SpatialVector hapticForce;
 };
-class PHHapticPointer : public PHHapticPointerSt, public PHSolid{
+class PHHapticPointer : public PHHapticPointerSt, public PHHapticPointerDesc, public PHSolid{
+public:
 	SPR_OBJECTDEF(PHHapticPointer);
 	ACCESS_DESC(PHHapticPointer);
+
 protected:
 	int pointerID;
 	int pointerSolidID;
@@ -29,7 +32,6 @@ protected:
 	double posScale;
 	Posed defaultPose;
 	double rotaionalWeight;
-
 
 public:
 	bool bDebugControl;		// physicsLoopから力覚ポインタを操作するためのフラグ
@@ -85,9 +87,9 @@ public:
 	int		GetPointerID(){ return pointerID; }
 	void	SetSolidID(int id){ pointerSolidID = id; }
 	int		GetSolidID(){ return pointerSolidID; }
-	void	UpdateHumanInterface(Posed pose, SpatialVector vel);
+	void	UpdateHumanInterface(const Posed& pose, const SpatialVector& vel);
 	void	UpdateDirect();
-	void	AddHapticForce(SpatialVector f);
+	void	AddHapticForce(const SpatialVector& f);
 	SpatialVector	GetHapticForce();
 
 	virtual void UpdateVelocity(double dt){}

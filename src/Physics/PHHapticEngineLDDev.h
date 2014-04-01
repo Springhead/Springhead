@@ -22,7 +22,7 @@ class PHHapticEngineLDDev : public PHHapticEngineMultiBase{
 protected:
 	PHHapticLoopLDDev hapticLoopLD;
 	UTRef<ObjectStatesIf> states;
-	std::vector< SpatialVector > lastvels;
+	std::vector<SpatialVector> lastvels;
 
 public:
 	PHHapticEngineLDDev();

@@ -49,7 +49,7 @@ public:
 	SPR_DECLMEMBEROF_PHBallJointDesc;
 
 	UTRef<PHBallJointLimit>		limit;		///< 可動範囲拘束
-	PHBallJointMotor			motor;		///< 関節コントローラ
+	UTRef<PHBallJointMotor>		motor;		///< 関節コントローラ
 
 	/// コンストラクタ
 	PHBallJoint(const PHBallJointDesc& desc = PHBallJointDesc());
@@ -59,13 +59,13 @@ public:
 
 	// ----- PHConstraintの機能をオーバーライド
 
-	virtual void	SetupLCP();
-	virtual	void	IterateLCP();
+	//virtual void	Setup();
+	//virtual	void	IterateGS();
 
 	// ----- PHConstraintの派生クラスで実装する機能
 
 	virtual void	UpdateJointState();
-	virtual void	SetupAxisIndex() { PHJoint::SetupAxisIndex(); motor.SetupAxisIndex(); }
+	//virtual void	SetupAxisIndex() { PHJoint::SetupAxisIndex(); motor.SetupAxisIndex(); }
 	virtual void	CompBias();
 	virtual void	CompError();
 
@@ -90,33 +90,33 @@ public:
 		return limit;
 	}
 
-	virtual Vec3d		GetAngle(){return position;}
-	virtual Quaterniond GetPosition(){return Xjrel.q;}
-	virtual Vec3d		GetVelocity(){return velocity;}
-
 	PHBallJointLimitIf* GetLimit() { return limit->Cast(); }
 
-	virtual void SetSpring(const double& spring) { this->spring = spring; }
-	virtual double GetSpring() { return spring; }
-	virtual void SetDamper(const double& damper) { this->damper = damper; }
-	virtual double GetDamper() { return damper; }
-	virtual void SetSecondDamper(const Vec3d& secondDamper) { this->secondDamper = secondDamper; }
-	virtual Vec3d GetSecondDamper() { return secondDamper; }
-	virtual void SetTargetPosition(const Quaterniond& targetPosition) { this->targetPosition = targetPosition; }
-	virtual Quaterniond GetTargetPosition() { return targetPosition; }
-	virtual void SetTargetVelocity(const Vec3d& targetVelocity) { this->targetVelocity = targetVelocity; }
-	virtual Vec3d GetTargetVelocity() { return targetVelocity; }
-	virtual void SetOffsetForce(const Vec3d& offsetForce) { this->offsetForce = offsetForce; }
-	virtual Vec3d GetOffsetForce() { return offsetForce; }
-	virtual void SetYieldStress(const double& yieldStress) { this->yieldStress = yieldStress; }
-	virtual double GetYieldStress() { return yieldStress; }
-	virtual void SetHardnessRate(const double& hardnessRate) { this->hardnessRate = hardnessRate; }
-	virtual double GetHardnessRate() { return hardnessRate; }
-	virtual void SetSecondMoment(Vec3d sM) { secondMoment = sM; }
-	virtual Vec3d GetSecondMoment() { return secondMoment; }
-	virtual Vec3d GetMotorForce() {
-		if (limit) { if (limit->IsOnLimit()) { return Vec3d(); } }
-		return(f.w()*(1 / GetScene()->GetTimeStep()));
+	Vec3d		GetAngle   (){ return Vec3d(position[0], position[1], position[2]); }
+	Quaterniond GetPosition(){ return Xjrel.q; }
+	Vec3d		GetVelocity(){ return Vec3d(velocity[0], velocity[1], velocity[2]); }
+	void        SetSpring(const double& spring) { this->spring = spring; }
+	double      GetSpring() { return spring; }
+	void        SetDamper(const double& damper) { this->damper = damper; }
+	double      GetDamper() { return damper; }
+	void        SetSecondDamper(const Vec3d& secondDamper) { this->secondDamper = secondDamper; }
+	Vec3d       GetSecondDamper() { return secondDamper; }
+	void        SetTargetPosition(const Quaterniond& targetPosition) { this->targetPosition = targetPosition; }
+	Quaterniond GetTargetPosition() { return targetPosition; }
+	void        SetTargetVelocity(const Vec3d& targetVelocity) { this->targetVelocity = targetVelocity; }
+	Vec3d       GetTargetVelocity() { return targetVelocity; }
+	void        SetOffsetForce(const Vec3d& offsetForce) { this->offsetForce = offsetForce; }
+	Vec3d       GetOffsetForce() { return offsetForce; }
+	void        SetYieldStress(const double& yieldStress) { this->yieldStress = yieldStress; }
+	double      GetYieldStress() { return yieldStress; }
+	void        SetHardnessRate(const double& hardnessRate) { this->hardnessRate = hardnessRate; }
+	double      GetHardnessRate() { return hardnessRate; }
+	void        SetSecondMoment(Vec3d sM) { secondMoment = sM; }
+	Vec3d       GetSecondMoment() { return secondMoment; }
+	Vec3d       GetMotorForce() {
+		if (limit && limit->IsOnLimit())
+			return Vec3d();
+		return f.w() *  GetScene()->GetTimeStepInv();
 	}
 };
 

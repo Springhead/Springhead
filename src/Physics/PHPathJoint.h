@@ -32,8 +32,9 @@ namespace Spr{;
 	本当の拘束条件は[p; q] in im(f)だが非線形なので扱えない．
  */
 
-struct PHPathPointWithJacobian : public PHPathPoint {
-	Matrix6d	J;
+class PHPathPointWithJacobian : public PHPathPoint {
+public:
+	SpatialMatrix	J;
 };
 
 /// 関節の軌道のキーフレームを持ち，補完して返したりヤコビアンを計算したりするクラス
@@ -49,11 +50,13 @@ public:
 
 	virtual void SetLoop(bool OnOff = true){bLoop = OnOff;}
 	virtual bool IsLoop(){return bLoop;}
-	void AddPoint(double s, const Posed& pose);
+	
+	void AddPoint    (double s, const Posed& pose);
 	void CompJacobian();
-	void GetPose(double s, Posed& pose);
-	void GetJacobian(double s, Matrix6d& J);
-	void Rollover(double& s);
+	void GetPose     (double s, Posed& pose);
+	void GetJacobian (double s, SpatialMatrix& J);
+	double Rollover    (double s);
+	
 	PHPath(const PHPathDesc& desc=PHPathDesc());
 };
 

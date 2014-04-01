@@ -20,18 +20,18 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 // PHSolidForHaptic
 //Haptic側からPhysics側へ渡す情報
-struct PHSolidForHapticSt{
+class PHSolidForHapticSt{
 public:
 	Vec3d force;			// 力覚レンダリングによって加わる全ての力
 	Vec3d torque;;			// 力覚レンダリングによって加わる全てのトルク
 };
 // Physics側からHaptic側へ渡す情報
-struct PHSolidForHapticSt2{
+class PHSolidForHapticSt2{
 public:
 	PHSolid* sceneSolid;	// PHSceneが持つ剛体
 	
 	bool bPointer;			// 力覚ポインタであるかどうか
-	int doSim;				// 近傍であるかどうか 0:近傍でない，1:はじめて近傍，2:継続して近傍
+	int  doSim;				// 近傍であるかどうか 0:近傍でない，1:はじめて近傍，2:継続して近傍
 
 	SpatialVector b;		///< 予測シミュレーションで求めたモビリティ（重力等の定数項）
 	SpatialVector curb;		///< 通常シミュレーションででた定数項
@@ -56,7 +56,7 @@ class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
 //----------------------------------------------------------------------------
 // PHShapePairForHaptic
 class PHSolidPairForHaptic;
-class PHShapePairForHaptic : public CDShapePair{
+class PHShapePairForHaptic : public PHShapePair{
 public:	
 	// 0:solid、1:pointer
 	// Vec3d normalは剛体から力覚ポインタへの法線ベクトル
@@ -96,22 +96,27 @@ struct PHSolidPairForHapticSt{
 	} frictionState;
 };
 
-class PHSolidPairForHaptic : public PHSolidPairForHapticSt, public PHSolidPair< PHShapePairForHaptic, PHHapticEngine >, public Object{
+class PHSolidPairForHaptic : public PHSolidPairForHapticSt, public PHSolidPair/*< PHShapePairForHaptic, PHHapticEngine >*/{
 public:
 	int solidID[2];
 	
 	int inLocal;	// 0:NONE, 1:in local first, 2:in local
 	TMatrixRow<6, 3, double> A;		// LocalDynamicsで使うアクセレランス
-	TMatrixRow<6, 6, double> A6D;  // LocalDynamics6Dで使うアクセレランス
+	//TMatrixRow<6, 6, double> A6D;  // LocalDynamics6Dで使うアクセレランス
+	SpatialMatrix A6D;
 	
 	PHSolidPairForHaptic();
 	PHSolidPairForHaptic(const PHSolidPairForHaptic& s);
+
+	virtual PHShapePairForHaptic* CreateShapePair(){ return DBG_NEW PHShapePairForHaptic(); }
+	PHShapePairForHaptic*       GetShapePair(int i, int j){ return (PHShapePairForHaptic*)&*shapePairs.item(i,j); }
+	const PHShapePairForHaptic* GetShapePair(int i, int j) const { return (const PHShapePairForHaptic*)&*shapePairs.item(i,j); }
+
 	/// 交差が検知された後の処理
-	virtual bool Detect(engine_type* engine, unsigned int ct, double dt);
-	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< 交差が検知されたときの処理
+	virtual void  OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
 	virtual PHIrs CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose);
-	virtual bool CompFrictionIntermediateRepresentation(PHShapePairForHaptic* sp);
-	virtual bool CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp);
+	virtual bool  CompFrictionIntermediateRepresentation (PHShapePairForHaptic* sp);
+	virtual bool  CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp);
 };
 class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> >{};
 
@@ -135,16 +140,17 @@ public:
 
 	int NHapticPointers();
 	int NHapticSolids();
-	PHHapticPointer* GetHapticPointer(int i);
-	PHSolidForHaptic* GetHapticSolid(int i);
+	PHHapticPointer*       GetHapticPointer(int i);
+	PHSolidForHaptic*      GetHapticSolid(int i);
+
 	///< 剛体と力覚ポインタのペアを取得する（i:剛体、j:力覚ポインタ）
 	// iには力覚ポインタも含まれる。
-	PHSolidPairForHaptic* GetSolidPairForHaptic(int i, int j);
-	PHHapticPointers* GetHapticPointers();
-	PHSolidsForHaptic* GetHapticSolids();
+	PHSolidPairForHaptic*  GetSolidPairForHaptic(int i, int j);
+	PHHapticPointers*      GetHapticPointers();
+	PHSolidsForHaptic*     GetHapticSolids();
 	PHSolidPairsForHaptic* GetSolidPairsForHaptic();
-	PHHapticRender* GetHapticRender();
-	PHHapticLoopImp* GetHapticLoop();
+	PHHapticRender*        GetHapticRender();
+	PHHapticLoopImp*       GetHapticLoop();
 
 	///< デバック用シミュレーション実行
 	virtual void StepPhysicsSimulation();
@@ -157,19 +163,22 @@ public:
 
 //----------------------------------------------------------------------------
 // PHHapticEngine
-class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector< PHShapePairForHaptic, PHSolidPairForHaptic, PHHapticEngine >{
+class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector/*< PHShapePairForHaptic, PHSolidPairForHaptic, PHHapticEngine >*/{
 public:
 	SPR_OBJECTDEF1(PHHapticEngine, PHEngine);
 	ACCESS_DESC(PHHapticEngine);
-	UTRef< PHHapticEngineImp > engineImp;
+
+	UTRef< PHHapticEngineImp >              engineImp;
 	std::vector< UTRef<PHHapticEngineImp> > engineImps;
-	UTRef< PHHapticRender > hapticRender;
-	PHHapticPointers hapticPointers;
-	PHSolidsForHaptic hapticSolids;
+	UTRef< PHHapticRender >                 hapticRender;
+	PHHapticPointers                        hapticPointers;
+	PHSolidsForHaptic                       hapticSolids;
+
 	typedef std::vector< HIBaseIf* > HIBaseIfs;
 	HIBaseIfs humanInterfaces;
+	
 	///描画アクセスで落ちる場合があるかもで追加 2012.12.11 susa
-	UTCombination< UTRef< PHSolidPairForHaptic > > solidPairsTemp;	///< hapticsの情報をグラフィクスで表示するためのキャッシュ
+	PHSolidPairs solidPairsTemp;	///< hapticsの情報をグラフィクスで表示するためのキャッシュ
 
 	struct Edge{ Vec3f min, max; };
 	std::vector< Edge > edges;
@@ -193,8 +202,13 @@ public:
 	///< state保存のために確保した領域を開放する
 	void ReleaseState();
 
-	//-------------------------------------------------------------------
+	// PHContactDetectorの仮想関数
+	PHSolidPair* CreateSolidPair(){ return DBG_NEW PHSolidPairForHaptic(); }
+	
 	// PHHapticEngineの実装
+	PHSolidPairForHaptic* GetSolidPair    (int i, int j){ return (PHSolidPairForHaptic*)&*solidPairs    .item(i,j); }
+	PHSolidPairForHaptic* GetSolidPairTemp(int i, int j){ return (PHSolidPairForHaptic*)&*solidPairsTemp.item(i,j); }
+
 	///< シミュレーションループの更新（PHScene::Integrate()からコール）
 	virtual void Step(){ if(bHapticEngine && bPhysicStep) engineImp->Step1(); }
 	virtual void Step2(){ if(bHapticEngine && bPhysicStep) engineImp->Step2(); }

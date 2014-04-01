@@ -20,12 +20,8 @@ namespace Spr{;
 
 void PHBallJointNode::CompJointJacobian(){
 	PHBallJoint* j = GetJoint();
-	Quaterniond q = j->Xjrel.q;
-	for(int i = 0; i < 3; i++)
-		J.col(i).sub_vector(PTM::TSubVectorDim<0,3>()).clear();
-	J.col(0).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(1.0, 0.0, 0.0);
-	J.col(1).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 1.0, 0.0);
-	J.col(2).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 0.0, 1.0);
+	J.SUBMAT(0,0,3,3).clear();
+	J.SUBMAT(3,0,3,3) = TMatrix3<double>::Unit();
 	PHTreeNodeND<3>::CompJointJacobian();
 }
 
@@ -46,8 +42,8 @@ void PHBallJointNode::CompRelativePosition(){
 
 void PHBallJointNode::CompRelativeVelocity(){
 	PHBallJoint* j = GetJoint();
-	j->vjrel.v().clear();
-	j->vjrel.w() = j->velocity;
+	j->vjrel.v() = Vec3d();
+	j->vjrel.w() = j->GetVelocity();
 }
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -55,32 +51,30 @@ void PHBallJointNode::CompRelativeVelocity(){
 
 PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	SetDesc(&desc);
-	nMovableAxes   = 3;
-	movableAxes[0] = 3;
-	movableAxes[1] = 4;
-	movableAxes[2] = 5;
-	InitTargetAxes();
-
-	limit = NULL;
-	motor.joint = this;
+	movableAxes.Enable(3);
+	movableAxes.Enable(4);
+	movableAxes.Enable(5);
+	
+	limit = 0;
+	motor = 0;
+	//limit = NULL;
+	//motor = DBG_NEW PHBallJointMotor();
+	//motor->joint = this;
+}
+/*
+void PHBallJoint::Setup(){
+	PHJoint::Setup();
+	if (limit) { limit->Setup(); }
 }
 
-void PHBallJoint::SetupLCP(){
-	PHJoint::SetupLCP();
-	if (limit) { limit->SetupLCP(); }
+void PHBallJoint::IterateGS(){
+	PHJoint::IterateGS();
+	if (limit) { limit->IterateGS(); }
 }
-
-void PHBallJoint::IterateLCP(){
-	PHJoint::IterateLCP();
-	if (limit) { limit->IterateLCP(); }
-}
-
+*/
 void PHBallJoint::CompBias(){
 	//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ
-	db.v_range(0,3) = Xjrel.r * GetScene()->GetTimeStepInv();
-	db.v_range(0,3) *= engine->velCorrectionRate;
-
-	motor.CompBias();
+	dv.v() = Xjrel.r * GetScene()->GetTimeStepInv() * engine->velCorrectionRate;
 }
 
 void PHBallJoint::UpdateJointState(){
@@ -123,7 +117,7 @@ void PHBallJoint::UpdateJointState(){
 }
 
 void PHBallJoint::CompError(){
-	B.v_range(0,3) = Xjrel.r;
+	B.v() = Xjrel.r;
 }
 
 }

@@ -20,45 +20,57 @@ namespace Spr{;
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHNDJointMotor
 
-/// 拘束軸を決定する
 template<int NDOF>
-void PHNDJointMotor<NDOF>::SetupAxisIndex() {
+void PHNDJointMotor<NDOF>::SetupAxisIndex(){
 	PHNDJointMotorParam<NDOF> p; GetParams(p);
-
-	// jointの可動自由度を拘束する
-	for (int n=0; n<joint->nMovableAxes; ++n) {
-		int i = joint->movableAxes[n];
-
+	axes.Clear();
+	for(int n = 0; n < joint->movableAxes.size(); ++n) {
 		double epsilon = 1e-10;
-		if (p.spring[n] > epsilon || p.damper[n] > epsilon) {
-			// 拘束軸を有効にする
-			joint->axes.Enable(i);
+		if (p.spring[n] > epsilon || p.damper[n] > epsilon){
+			axes.Enable(n);
+			joint->targetAxes.Enable(joint->movableAxes[n]);
 		}
+	}
+}	
 
-		// Projection用のMax / Minを設定する
-		double dt = joint->GetScene()->GetTimeStep();
-		joint->fMaxDt[i]  =  (joint->GetMaxForce() * dt);
-		joint->fMinDt[i]  = -(joint->GetMaxForce() * dt);
+template<int NDOF>
+void PHNDJointMotor<NDOF>::Setup(){
+	PHNDJointMotorParam<NDOF> p; GetParams(p);
+	PHSceneIf* scene = joint->GetScene();
+	double dt = scene->GetTimeStep();
+	
+	for(int n = 0; n < joint->movableAxes.size(); ++n){
+		int j = joint->movableAxes[n];
+		double fmax = std::min(
+			(j < 3 ? scene->GetMaxForce() : scene->GetMaxMoment()),
+			joint->GetMaxForce());
+		fMaxDt[n]  =  (fmax * dt);
+		fMinDt[n]  = -(fmax * dt);
 	}
 
-	SetParams(p);
-}
+	for(int n = 0; n < axes.size(); ++n) {
+		int j = axes[n];
 
-/// dA, dbを計算する
-template<int NDOF>
-void PHNDJointMotor<NDOF>::CompBias() {
-	PHNDJointMotorParam<NDOF> p; GetParams(p);
+		b [j] = joint->b [joint->movableAxes[j]];
+		dv[j] = joint->dv[joint->movableAxes[j]];
+
+		f [j] *= axes.IsContinued(j) ? joint->engine->shrinkRate : 0;
+	}
 
 	double epsilon = 1e-10;
 	if (p.spring.norm() < epsilon && p.damper.norm() < epsilon) {
 		// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
-		for (int n=0; n<joint->nMovableAxes; ++n) {
-			PTM::TVector<NDOF,double> oF = p.offsetForce;
-			joint->f[joint->movableAxes[n]] = min(oF[n], joint->GetMaxForce());
+		for(int n = 0; n < joint->movableAxes.size(); ++n)
+			f[n] = p.offsetForce[n];
+	}
+	else {
+		VecNd sd = p.secondDamper;
+		bool bHasSecondDamper = true;
+		for (int i=0; i<NDOF; ++i) {
+			if (sd[i] > FLT_MAX*0.1) {
+				bHasSecondDamper = false;
+			}
 		}
-	} else {
-		VecNd sd = p.secondDamper; bool bHasSecondDamper = true;
-		for (int i=0; i<NDOF; ++i) { if (sd[i] > FLT_MAX*0.1) { bHasSecondDamper = false; } }
 		if (!bHasSecondDamper) {
 			// 第二ダンパを無視（バネダンパ：弾性変形）
 			CompBiasElastic();
@@ -79,7 +91,41 @@ void PHNDJointMotor<NDOF>::CompBias() {
 		}
 	}
 
+	for(int n = 0; n < axes.size(); ++n){
+		int j = axes[n];
+		A   [n] = joint->A[joint->movableAxes[j]];
+		Ainv[n] = 1.0 / (A[n] + dA[n]);
+	}
+
 	SetParams(p);
+
+}
+
+template<int NDOF>
+void PHNDJointMotor<NDOF>::Iterate(){
+	for (int n=0; n<axes.size(); ++n) {
+		int i = axes[n];
+
+		dv  [i] = joint->dv[joint->movableAxes[i]];
+		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
+		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * res[i];
+	
+		fnew[i] = min(max(fMinDt[i], fnew[i]), fMaxDt[i]);
+
+		df[i] = fnew[i] - f[i];
+		CompResponseDirect(df[i], i);
+		f[i] = fnew[i];
+	}
+}
+
+template<int NDOF>
+void PHNDJointMotor<NDOF>::CompResponse(double df, int i){
+	joint->CompResponse(df, joint->movableAxes[i]);
+}
+
+template<int NDOF>
+void PHNDJointMotor<NDOF>::CompResponseDirect(double df, int i){
+	joint->CompResponseDirect(df, joint->movableAxes[i]);
 }
 
 /// 弾性変形用のCompBias
@@ -88,16 +134,16 @@ void PHNDJointMotor<NDOF>::CompBiasElastic() {
 	PHNDJointMotorParam<NDOF> p; GetParams(p);
 
 	double dt = joint->GetScene()->GetTimeStep();
-	PTM::TVector<NDOF,double> propV = GetPropV();
-	for (int n=0; n<NDOF; ++n) {
-		int i = joint->movableAxes[n];
-		if (joint->axes.IsEnabled(i)) {
-			double K   = p.spring[n];
-			double D   = p.damper[n];
-			double tmp = 1.0 / (D + K*dt);
-			joint->dA[i] = tmp * (1.0/dt);
-			joint->db[i] = tmp * (-K*propV[n] - D*p.targetVelocity[n] - p.offsetForce[n]);
-		}
+	VecNd propV = GetPropV();
+	
+	for(int n = 0; n < axes.size(); ++n) {
+		int j = axes[n];
+		
+		double K   = p.spring[j];
+		double D   = p.damper[j];
+		double tmp = 1.0 / (D + K*dt);
+		dA[j] = tmp * (1.0/dt);
+		db[j] = tmp * (-K*propV[j] - D*p.targetVelocity[j] - p.offsetForce[j]);
 	}
 
 	SetParams(p);
@@ -109,31 +155,32 @@ void PHNDJointMotor<NDOF>::CompBiasPlastic() {
 	PHNDJointMotorParam<NDOF> p; GetParams(p);
 
 	double dt = joint->GetScene()->GetTimeStep();
-	for (int n=0; n<NDOF; ++n) {
-		int i = joint->movableAxes[n];
-		if (joint->axes.IsEnabled(i)) {
-			// こっちだけhardnessRate掛けてるけどいいの？
-			double K   = p.spring[n] * p.hardnessRate;
-			double D   = p.damper[n] * p.hardnessRate;
-			double D2  = p.secondDamper[n] * p.hardnessRate;
-			double tmp = D+D2+K*dt;
 
-			newXs[i] = ((D+D2)/tmp)*p.xs[i] + (D2*dt/tmp) * joint->vjrel[i];
+	for(int n = 0; n < axes.size(); ++n) {
+		int j = axes[n];
+		
+		// こっちだけhardnessRate掛けてるけどいいの？
+		double K   = p.spring      [j] * p.hardnessRate;
+		double D   = p.damper      [j] * p.hardnessRate;
+		double D2  = p.secondDamper[j] * p.hardnessRate;
+		double tmp = D+D2+K*dt;
 
-			joint->dA[i] = tmp/(D2*(K*dt + D)) * (1.0/dt);
-			joint->db[i] = K/(K*dt + D)*(p.xs[i]);
-		}
+		int i = joint->movableAxes[j];
+		newXs[i] = ((D+D2)/tmp)*p.xs[i] + (D2*dt/tmp) * joint->vjrel[i];
+
+		dA[j] = tmp/(D2*(K*dt + D)) * (1.0/dt);
+		db[j] = K/(K*dt + D)*(p.xs[i]);
 	}
 
 	// 弾塑性変形：TargetPositionを変更して残留変位を残す
 	if (p.yieldStress < (FLT_MAX * 0.1)) {
 		if (joint->vjrel.w().norm() < 0.01) {
-			if (DCAST(PH1DJoint,joint)) {
-				DCAST(PH1DJoint,joint)->SetTargetPosition(DCAST(PH1DJoint,joint)->GetPosition());
-			}
-			if (DCAST(PHBallJoint,joint)) {
-				DCAST(PHBallJoint,joint)->SetTargetPosition(DCAST(PHBallJoint,joint)->GetPosition());
-			}
+			PH1DJoint* jnt1D = joint->Cast();
+			if(jnt1D)
+				jnt1D->SetTargetPosition(jnt1D->GetPosition());
+			PHBallJoint* ball = joint->Cast();
+			if(ball)
+				ball->SetTargetPosition(ball->GetPosition());
 		}
 	}
 
@@ -147,15 +194,17 @@ template<int NDOF>
 void PHNDJointMotor<NDOF>::CheckYielded() {
 	PHNDJointMotorParam<NDOF> p; GetParams(p);
 
-	VecNd motorf;
-	for (int n=0; n<NDOF; ++n) { motorf[n] = joint->f[joint->movableAxes[n]]; }
-	p.fAvg = (0.8 * p.fAvg) + (0.2 * motorf / joint->GetScene()->GetTimeStep());
+	for(int n = 0; n < axes.size(); n++){
+		int j = axes[n];
+		p.fAvg[j] = (0.8 * p.fAvg[j]) + (0.2 * f[j] * joint->GetScene()->GetTimeStepInv());
+	}
 
-	if (p.bYielded) {
+	if(p.bYielded) {
 		if (p.fAvg.norm() < p.yieldStress) {
 			if (NDOF==3) {
 				Vec3d angle = newXs.w();
-				Quaterniond qForct; qForct.FromEuler(Vec3d(angle.y, angle.z, angle.x));
+				Quaterniond qForct;
+				qForct.FromEuler(Vec3d(angle.y, angle.z, angle.x));
 				DCAST(PHBallJoint,joint)->SetTargetPosition( qForct.Inv() * joint->Xjrel.q );
 			}   // NDOF=1や，NDOF=6(PHSpring）の場合は未実装 <!!>
 			p.bYielded = false;
@@ -181,7 +230,6 @@ template class PHNDJointMotor<6>;
 PTM::TVector<1,double> PH1DJointMotor::GetPropV() {
 	PH1DJoint* j = joint->Cast();
 	PTM::TVector<1,double> propV;
-	//propV[0] = j->targetPosition - DCAST(PH1DJoint,joint)->GetPosition();
 	propV[0] = -1.0 * j->GetDeviation();
 	return propV;
 }
@@ -238,7 +286,7 @@ void PHBallJointMotor::GetParams(PHNDJointMotorParam<3>& p) {
 /// パラメータを反映する
 void PHBallJointMotor::SetParams(PHNDJointMotorParam<3>& p) {
 	PHBallJoint* j = joint->Cast();
-	j->fAvg.w() = (Vec3d)(p.fAvg);
+	j->fAvg.w() = p.fAvg;
 	j->xs       = p.xs;
 	j->bYielded = p.bYielded;
 	// 上記以外の変数は特に反映する必要はない．
@@ -249,17 +297,18 @@ void PHBallJointMotor::SetParams(PHNDJointMotorParam<3>& p) {
 
 /// propVを計算する
 PTM::TVector<6,double> PHSpringMotor::GetPropV() {
-	SpatialVector propV;
-	propV.v() = -joint->Xjrel.r;
+	Vec6d propV;
 	Quaterniond diff = joint->Xjrel.q.Inv();
-	propV.w() = diff.RotationHalf();
-	return((PTM::TVector<6,double>)(propV));
+	propV.SUBVEC(0,3) = -joint->Xjrel.r;
+	propV.SUBVEC(3,3) = diff.RotationHalf();
+	return propV;
 }
 
 /// パラメータを取得する
 void PHSpringMotor::GetParams(PHNDJointMotorParam<6>& p) {
 	PHSpring* j = joint->Cast();
-	p.fAvg                                    = j->fAvg;
+	p.fAvg.SUBVEC(0,3)                        = j->fAvg.v();
+	p.fAvg.SUBVEC(3,3)                        = j->fAvg.w();
 	p.xs                                      = j->xs;
 	p.bYielded                                = j->bYielded;
 	for(int i=0;i<3;++i){ p.spring[i]         = j->spring[i]; }
@@ -282,4 +331,5 @@ void PHSpringMotor::SetParams(PHNDJointMotorParam<6>& p) {
 	j->bYielded = p.bYielded;
 	// 上記以外の変数は特に反映する必要はない．
 }
+
 }

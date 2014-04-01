@@ -9,8 +9,9 @@
 #define PH_JOINT_MOTOR_H
 
 #include <Physics/SprPHJoint.h>
+#include <Physics/SprPHJointMotor.h>
 #include <Physics/PhysicsDecl.hpp>
-#include <Physics/PHSpatial.h>
+#include <Physics/PHConstraint.h>
 
 namespace Spr{;
 
@@ -23,29 +24,35 @@ class PHSpring;
 
 ///	パラメータ一覧（1D/3D/6Dを共通で扱えるようにするためのデスクリプタもどき）
 template<int NDOF>
-struct PHNDJointMotorParam {
+class PHNDJointMotorParam {
+public:
+	typedef PTM::TVector<NDOF,double> VecNd;
+
 	// State
-	PTM::TVector<NDOF,double> fAvg;
-	SpatialVector             xs;
-	bool                      bYielded;
+	VecNd			fAvg;
+	SpatialVector   xs;
+	bool            bYielded;
 	// Desc
-	PTM::TVector<NDOF,double> spring;
-	PTM::TVector<NDOF,double> damper;
-	PTM::TVector<NDOF,double> secondDamper;
-	PTM::TVector<NDOF,double> targetVelocity;
-	PTM::TVector<NDOF,double> offsetForce;
-	double yieldStress;
-	double hardnessRate;
+	VecNd           spring;
+	VecNd           damper;
+	VecNd           secondDamper;
+	VecNd           targetVelocity;
+	VecNd           offsetForce;
+	double          yieldStress;
+	double          hardnessRate;
 };
 
 ///	N自由度関節の関節コントローラ
 template<int NDOF>
-class PHNDJointMotor {
+class PHNDJointMotor : public PHConstraintBase{
 public:
 	typedef PTM::TVector<NDOF,double> VecNd;
 
 	/// コントロールの対象となる関節
 	PHJoint* joint;
+
+	VecNd	fMinDt;
+	VecNd	fMaxDt;
 
 	///< 現在のばね部の距離（三要素モデル用）
 	SpatialVector newXs;
@@ -53,13 +60,18 @@ public:
 	/// コンストラクタ
 	PHNDJointMotor() {}
 
-	// ----- Motorの機能
+	// ----- PHConstraintBaseの仮想関数
+	virtual void SetupAxisIndex();
+	virtual void Setup         ();
+	virtual void Iterate       ();
+	virtual void CompResponse      (double df, int i);
+	virtual void CompResponseDirect(double df, int i);
 
 	/// 拘束軸を決定する
-	virtual void SetupAxisIndex();
+	//virtual void SetupAxisIndex();
 
 	/// dA, dbを計算する
-	virtual void CompBias();
+	//virtual void CompBias();
 
 	// ----- このクラスの機能
 
@@ -74,7 +86,7 @@ public:
 
 	// ----- 派生クラスで実装する機能
 	/// propVを計算する
-	virtual PTM::TVector<NDOF,double> GetPropV() { return PTM::TVector<NDOF,double>(); }
+	virtual VecNd GetPropV() { return VecNd(); }
 
 	/// パラメータを取得する
 	virtual void GetParams(PHNDJointMotorParam<NDOF>& p) {}
@@ -84,8 +96,11 @@ public:
 };
 
 ///	1自由度関節の関節コントローラ
-class PH1DJointMotor : public PHNDJointMotor<1> {
+class PH1DJointMotor : public SceneObject, public PHNDJointMotor<1> {
 public:
+	SPR_OBJECTDEF(PH1DJointMotor);
+	SPR_DECLMEMBEROF_PH1DJointMotorDesc;
+
 	/// コンストラクタ
 	PH1DJointMotor() {}
 
@@ -101,8 +116,11 @@ public:
 };
 
 ///	球関節の関節コントローラ
-class PHBallJointMotor : public PHNDJointMotor<3> {
+class PHBallJointMotor : public SceneObject, public PHNDJointMotor<3> {
 public:
+	SPR_OBJECTDEF(PHBallJointMotor);
+	SPR_DECLMEMBEROF_PHBallJointMotorDesc;
+
 	/// コンストラクタ
 	PHBallJointMotor() {}
 
@@ -118,8 +136,11 @@ public:
 };
 
 ///	バネダンパのコントローラ
-class PHSpringMotor : public PHNDJointMotor<6> {
+class PHSpringMotor : public SceneObject, public PHNDJointMotor<6> {
 public:
+	SPR_OBJECTDEF(PHSpringMotor);
+	SPR_DECLMEMBEROF_PHSpringMotorDesc;
+
 	/// コンストラクタ
 	PHSpringMotor() {}
 
