@@ -92,9 +92,9 @@ public:
 			joints[i]->SetDamper(jointDamper);
 		}
 		if(useABA){
-			PHTreeNodeIf* node = phScene->CreateRootNode(soFloor, PHRootNodeDesc());
-			for(int i = 0; i < nLinks; i++)
-				node = phScene->CreateTreeNode(node, links[0], PHTreeNodeDesc());
+			PHTreeNodeIf* node = phScene->CreateRootNode(links[0], PHRootNodeDesc());
+			for(int i = 1; i < nLinks; i++)
+				node = phScene->CreateTreeNode(node, links[i], PHTreeNodeDesc());
 		}
 
 		// ボール（目標物体)

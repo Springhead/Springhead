@@ -17,7 +17,6 @@ public:
 		ID_GEAR,
 	};
 
-	PHSolidIf*				soFloor;
 	vector<PHSolidIf*>		links;
 	vector<PHJointIf*>		joints;
 
@@ -33,7 +32,7 @@ public:
 
 public:
 	ChainHandler(SampleApp* a):Handler(a){
-		rootPos		= Vec3d(0.0, 20.0, 0.0);
+		rootPos		= Vec3d(0.0, 6.0, 0.0);
 		iniPos		= Vec3d(10, 10, 0);
 
 		posLevel	= 0;
@@ -103,6 +102,7 @@ public:
 		so->SetFramePosition(rootPos);
 		so->SetDynamical(false);
 		links.push_back(so);
+		nodeTree.push_back(GetPHScene()->CreateRootNode(so));
 	}
 	virtual void OnAction(int id){
 		PHSceneIf* phScene = GetPHScene();
@@ -146,7 +146,8 @@ public:
 		}
 		if(id == ID_HINGE || id == ID_BALL || id == ID_SLIDER){
 			links.push_back(so);
-			UpdateJoint(joints.back());
+			nodeTree.push_back(GetPHScene()->CreateTreeNode(nodeTree.back(), so));
+			//UpdateJoint(joints.back());
 		}
 
 		if(id == ID_INC_POS){
@@ -182,7 +183,7 @@ public:
 			UpdateJoint(joints.back());
 		}
 		if(id == ID_GEAR){
-				// 以下はギアの作成コード
+			// 以下はギアの作成コード
 			/*if(jntLink.size() >= 2){
 				size_t m = jntLink.size();
 				PHGearDesc gdesc;
@@ -192,44 +193,3 @@ public:
 		}
 	}
 };
-
-/*		if(key == 'a') soBox[1]->SetVelocity(Vec3d(2.0, 0.0, 0.0));
-		else if(key == 's') soBox[1]->SetVelocity(Vec3d(-2.0, 0.0, 0.0));
-		else if(key == 'd') soBox[1]->SetVelocity(Vec3d(0.0, 0.0, -2.0));
-		else if(key == 'f') soBox[1]->SetVelocity(Vec3d(0.0, 0.0, 2.0));
-		else if(key == 'g') soBox[1]->SetAngularVelocity(Vec3d(0.0, 2.0, 0.0));
-		else if(key == 'h') soBox[1]->SetAngularVelocity(Vec3d(0.0, -2.0, 0.0));
-		else if(key == 'w'){
-			soBox[1]->SetVelocity(Vec3d(0.0, 0.0, 2.0));
-			soBox[1]->SetAngularVelocity(Vec3d(0.0, -2.0, 0.0));
-		}
-		else if(key == 'e'){
-			soBox[1]->SetVelocity(Vec3d(0.0, 0.0, 2.0));
-			soBox[1]->SetAngularVelocity(Vec3d(0.0, 2.0, 0.0));
-		}
-		else if(key == 'r'){
-			soBox[1]->SetVelocity(Vec3d(0.0, 0.0, -2.0));
-			soBox[1]->SetAngularVelocity(Vec3d(0.0, -2.0, 0.0));
-		}
-		else if(key == 't'){
-			soBox[1]->SetVelocity(Vec3d(2.0, 0.0, 0.0));
-			soBox[1]->SetAngularVelocity(Vec3d(0.0, 2.0, 0.0));
-		}
-		else if(key == 'y'){
-			soBox[1]->SetVelocity(Vec3d(-2.0, 0.0, 0.0));
-			soBox[1]->SetAngularVelocity(Vec3d(0.0, -2.0, 0.0));
-		}
-		else if(key == 'u')	soBox[1]->SetAngularVelocity(Vec3d(2.0, 0.0, 0.0));
-
-		desc.spring			  = 1000;
-		desc.damper			  = 10;
-		desc.targetPosition	  = Rad(0);
-		desc.lower			  = Rad(-60);
-		desc.upper			  = Rad( 60);
-		jntLink[0] = phScene->CreateJoint(soBox[0], soBox[1], desc);
-
-		curAngle = 0.0;
-
-		Handler::Build();
-	}
-	*/

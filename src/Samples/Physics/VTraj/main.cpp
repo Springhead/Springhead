@@ -445,7 +445,7 @@ public:
 		PHIKEndEffectorState stE;
 
 		states->SaveState(GetFWScene()->GetPHScene());
-		GetFWScene()->GetPHScene()->GetConstraintEngine()->EnableContactDetection(false);
+		GetFWScene()->GetPHScene()->EnableContactDetection(false);
 		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
 		for (int i=0; i<2; ++i) {
 			PHHingeJointIf* jo = GetFWScene()->GetPHScene()->GetJoint(i)->Cast();
@@ -473,7 +473,7 @@ public:
 
 		states->LoadState(GetFWScene()->GetPHScene());
 
-		GetFWScene()->GetPHScene()->GetConstraintEngine()->EnableContactDetection(true);
+		GetFWScene()->GetPHScene()->EnableContactDetection(true);
 		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(false);
 
 		GetFWScene()->GetPHScene()->SetNumIteration(iter_orig);

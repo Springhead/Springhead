@@ -87,6 +87,7 @@ public:
 
 	virtual void BuildScene(){
 		soFloor = CreateFloor();
+		GetPHScene()->SetContactDetectionRange(Vec3f(), Vec3f(40.0f, 40.0f, 40.0f), 10, 1, 10);
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
