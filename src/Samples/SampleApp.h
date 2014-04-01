@@ -581,22 +581,25 @@ public: /** FWAppの実装 **/
 		GRShaderDesc shd;
 		shd.vsname = shaderDir + "vsbase.txt";
 		shd.fsname = shaderDir + "fsbase.txt";
-		shd.bEnableLighting = true;
-		shd.bEnableTexture  = true;
-		shd.bShadowCreate   = false;
-		shd.bShadowRender   = false;
+		shd.bEnableLighting  = true;
+		shd.bEnableTexture2D = true;
+		shd.bEnableTexture3D = false;
+		shd.bShadowCreate    = false;
+		shd.bShadowRender    = false;
 		shaderBase = render->CreateShader(shd);
 
-		shd.bEnableLighting = false;
-		shd.bEnableTexture  = false;
-		shd.bShadowCreate   = true;
-		shd.bShadowRender   = false;
+		shd.bEnableLighting  = false;
+		shd.bEnableTexture2D = false;
+		shd.bEnableTexture3D = false;
+		shd.bShadowCreate    = true;
+		shd.bShadowRender    = false;
 		shaderShadowCreate = render->CreateShader(shd);
 
-		shd.bEnableLighting = true;
-		shd.bEnableTexture  = true;
-		shd.bShadowCreate   = false;
-		shd.bShadowRender   = true;
+		shd.bEnableLighting  = true;
+		shd.bEnableTexture2D = true;
+		shd.bEnableTexture3D = false;
+		shd.bShadowCreate    = false;
+		shd.bShadowRender    = true;
 		shaderShadowRender = render->CreateShader(shd);
 		
 		/// 光源設定
