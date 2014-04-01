@@ -39,6 +39,7 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	renderGridX = renderGridY = renderGridZ = false;
 	renderLimit     = false;
 	renderContact	= false;
+	renderBBox      = false;
 	renderIK		= false;
 	renderFEM		= false;
 	// 倍率は等倍
@@ -51,6 +52,7 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	matAxis.y	= GRRenderIf::GREEN;
 	matAxis.z	= GRRenderIf::BLUE;
 	matContact	= GRRenderIf::YELLOW;
+	matBBox     = GRRenderIf::WHITE;
 	matForce	= GRRenderIf::ORANGE;
 	matMoment	= GRRenderIf::CYAN;
 	matGrid.x = matGrid.y = matGrid.z = GRRenderIf::GRAY;
@@ -325,11 +327,26 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 	}
 	render->SetLighting(true);
 
+	// 接触判定
+	if(renderBBox){
+		PHConstraintEngine* engine = phScene->GetConstraintEngine()->Cast();
+		//DrawDetectorRegion(render, &engine->rootRegion);
+		for(int c = 0; c < (int)engine->cells.size(); c++)
+			DrawBBox(render, &engine->cells[c].bbox);
+	}
+
 	// 剛体
 	PHSolidIf **solids = phScene->GetSolids();
 	for(int i = 0; i < phScene->NSolids(); ++i){
 		if(!IsRenderEnabled(solids[i]))
 			continue;
+
+		// BBox
+		if(renderBBox){
+			PHSolid* so = solids[i]->Cast();
+			render->SetMaterial(matBBox);
+			DrawBBox(render, &so->bbWorld);
+		}
 
 		// 形状を描画
 		if(renderSolid){
@@ -442,6 +459,15 @@ void FWScene::DrawSolid(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire
 	render->PopModelMatrix();
 }
 
+void FWScene::DrawBBox(GRRenderIf* render, PHBBox* bbox){
+	Vec3d bbcenter = bbox->GetBBoxCenter();
+	Vec3d bbextent = bbox->GetBBoxExtent();
+	render->PushModelMatrix();
+	render->MultModelMatrix(Affinef::Trn(bbcenter.x, bbcenter.y, bbcenter.z));
+	render->DrawBox(2.0*bbextent.x, 2.0*bbextent.y, 2.0*bbextent.z, false);
+	render->PopModelMatrix();
+}
+
 void FWScene::DrawShape(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire){
 	CDBoxIf*		box		= DCAST(CDBoxIf, shape);
 	CDSphereIf*		sphere	= DCAST(CDSphereIf, shape);
@@ -517,7 +543,7 @@ void FWScene::DrawConstraint(GRRenderIf* render, PHConstraintIf* con){
 			PHBallJointLimit* limit = bj->GetLimit()->Cast();
 			if (limit) {
 				con->GetSocketSolid()->GetPose().ToAffine(aff);
-				Matrix3d Jcinv = bj->limit->J[0] * bj->J[0].ww().inv();
+				Matrix3d Jcinv = bj->limit->Jcinv;
 				aff.Rot() = Jcinv.trans() * aff.Rot();
 				aff.Trn() = con->GetPlugSolid()->GetPose().Pos();
 
@@ -703,6 +729,15 @@ void FWScene::DrawContact(GRRenderIf* render, PHContactPointIf* con){
 	render->SetLighting(true);
 }
 
+/*void FWScene::DrawDetectorRegion(GRRenderIf* render, PHContactDetector::Region* region){
+	int n = (int)region->regions.size();
+	// 最下層のみBBoxを描画
+	if(n == 0)
+		DrawBBox(render, &region->bbox);
+	for(int i = 0; i < n; i++)
+		DrawDetectorRegion(render, region->regions[i]);
+}*/
+
 /// IKの計算結果をレンダリングする
 void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 	render->SetLighting(false);
@@ -846,10 +881,10 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 		int nNeighbors = (int)pointer->neighborSolidIDs.size();
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = pointer->neighborSolidIDs[j];
-			PHSolidPairForHaptic* solidPair = he->solidPairsTemp.item(solidID, i);
+			PHSolidPairForHaptic* solidPair = he->GetSolidPairTemp(solidID, i);
 			for(int k = 0; k < solidPair->solid[0]->NShape(); k++){
 				for(int l = 0; l < solidPair->solid[1]->NShape(); l++){
-					PHShapePairForHaptic* sp = solidPair->shapePairs.item(k, l);
+					PHShapePairForHaptic* sp = solidPair->GetShapePair(k, l);
 					for(int m = 0; m < 2; m++){
 						// 近傍点対		・白点
 						Posed p;
@@ -1149,13 +1184,19 @@ void FWScene::SetForceScale(float scalef, float scalem){
 }
 void FWScene::EnableRenderContact(bool enable){
 	renderContact = enable;
-	if (phScene){
+	/*if (phScene){
 		PHConstraintEngineIf* c = phScene->GetConstraintEngine();
 		if (c) c->EnableRenderContact(enable);
-	}
+	}*/
 }
 void FWScene::SetContactMaterial(int mat){
 	matContact = mat;
+}
+void FWScene::EnableRenderBBox(bool enable){
+	renderBBox = enable;
+}
+void FWScene::SetBBoxMaterial(int mat){
+	matBBox = mat;
 }
 void FWScene::EnableRenderGrid(bool x, bool y, bool z){
 	renderGridX = x;
