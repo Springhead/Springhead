@@ -69,11 +69,11 @@ void CRTouchSensor::Step() {
 					if (hp->GetNeighborSolid(m) == so) {
 						int n = hp->neighborSolidIDs[m];
 						PHHapticEngine* he = phScene->GetHapticEngine()->Cast();
-						PHSolidPairForHaptic* sop = he->solidPairsTemp.item(n,0);
+						PHSolidPairForHaptic* sop = he->GetSolidPairTemp(n,0);
 						for (int x=0; x<sop->solid[0]->NShape(); ++x) {
 							for (int y=0; y<sop->solid[0]->NShape(); ++y) {
 								if (x < sop->shapePairs.height() && y < sop->shapePairs.width()) {
-									PHShapePairForHaptic* shp = sop->shapePairs.item(x,y);
+									PHShapePairForHaptic* shp = sop->GetShapePair(x,y);
 									Vec3d p0 = (shp->shapePoseW[0]*shp->closestPoint[0]);
 									Vec3d p1 = (shp->shapePoseW[1]*shp->closestPoint[1]);
 									Vec3d di = (p0-p1) * 100.0; // <!!>
