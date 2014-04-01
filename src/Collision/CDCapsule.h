@@ -32,10 +32,10 @@ public:
 	/// 球体に関してFindCutRing()が呼び出された場合には、assertionが発生する。
 	virtual bool FindCutRing(CDCutRing& r, const Posed& toW);
 	
-	float	GetRadius(){ return radius; }
-	void	SetRadius(float r){ radius = r; }
-	float	GetLength(){ return length; }
-	void	SetLength(float l){ length = l; }
+	float	GetRadius()       { return radius; }
+	void	SetRadius(float r){ radius = r; bboxReady = false; }
+	float	GetLength()       { return length; }
+	void	SetLength(float l){ length = l; bboxReady = false; }
 
 	int LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset);
 };

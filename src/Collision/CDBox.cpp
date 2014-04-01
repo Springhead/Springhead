@@ -21,8 +21,8 @@ CDBox::CDBox() {
 }
 
 CDBox::CDBox(const CDBoxDesc& desc) {
-	material = desc.material;
-	boxsize = desc.boxsize;
+	material  = desc.material;
+	boxsize   = desc.boxsize;
 	Recalc();
 }
 bool CDBox::IsInside(const Vec3f& p){
@@ -208,7 +208,8 @@ CDFaceIf* CDBox::GetFace(int i){
 
 // 直方体のサイズを設定
 Vec3f CDBox::SetBoxSize(Vec3f boxSize){
-	boxsize = boxSize;
+	boxsize   = boxSize;
+	bboxReady = false;
 	Recalc();
 	return boxsize;
 }

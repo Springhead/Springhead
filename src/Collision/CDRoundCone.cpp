@@ -337,16 +337,20 @@ float CDRoundCone::GetLength() {
 	return length;
 }
 void CDRoundCone::SetRadius(Vec2f r) {
-	radius=r;
+	radius    = r;
+	bboxReady = false;
 }
 void CDRoundCone::SetLength(float l) {
-	length=l;
+	length    = l;
+	bboxReady = false;
 }
 void CDRoundCone::SetWidth(Vec2f r) {
 	Vec2f radiusMargin=r-radius;
 	
 	length-=(radiusMargin.x+radiusMargin.y);
 	radius=r;
+
+	bboxReady = false;
 }
 
 int CDRoundCone::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, float* offset){
