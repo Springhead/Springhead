@@ -14,6 +14,8 @@
 #include <Physics/SprPHEngine.h>
 #include <Foundation/Scene.h>
 #include <HumanInterface/HIBase.h>
+#include <Physics/PHSolid.h>
+#include <Physics/PHContactDetector.h>
 
 namespace Spr{;
 
@@ -59,6 +61,7 @@ public:
 	bool		renderAxisWorld, renderAxisSolid, renderAxisConst;
 	bool		renderForceSolid, renderForceConst;
 	bool		renderContact;
+	bool		renderBBox;
 	bool		renderGridX, renderGridY, renderGridZ;
 	bool		renderLimit;
 	bool		renderIK;
@@ -69,15 +72,19 @@ public:
 	float		scaleAxisWorld, scaleAxisSolid, scaleAxisConst;
 	float		scaleForce, scaleMoment;
 	float		scaleIK;
+
 	/// 描画マテリアル
 	std::map<PHSolidIf*, int>	matSolid, matWire;
 	Vec3i		matAxis;
 	int			matForce, matMoment;
 	int			matContact;
+	int			matBBox;
 	Vec3i		matGrid;
 	int			matIK;
+	
 	/// 座標軸設定
 	int			axisStyle;
+	
 	/// グリッド設定
 	Vec3f		gridOffset;
 	Vec3f		gridSize;
@@ -119,6 +126,7 @@ public:
 	void	Draw			(GRRenderIf* render, bool ph_or_gr);
 	void	DrawPHScene		(GRRenderIf* render);
 	void	DrawSolid		(GRRenderIf* render, PHSolidIf* solid, bool solid_or_wire);
+	void    DrawBBox        (GRRenderIf* render, PHBBox* bbox);
 	void	DrawShape		(GRRenderIf* render, CDShapeIf* shape, bool solid_or_wire);
 	void	DrawConstraint	(GRRenderIf* render, PHConstraintIf* con);
 	void	DrawContact		(GRRenderIf* render, PHContactPointIf* con);
@@ -149,6 +157,9 @@ public:
 	void	EnableRenderContact	(bool enable);
 	void	SetContactMaterial	(int mat);
 
+	void    EnableRenderBBox    (bool enable);
+	void    SetBBoxMaterial     (int mat);
+
 	void	EnableRenderGrid	(bool x, bool y, bool z);
 	void	SetGridOption		(char axis, float offset, float size, int slice);
 	void	SetGridMaterial		(int matX, int matY, int matZ);
@@ -162,19 +173,6 @@ public:
 	void	EnableRenderHaptic	(bool enable);
 
 	void	EnableRenderFem		(bool enable);
-
-	//void	EnableRender		(int item, bool enable = true, ObjectIf* obj = 0);
-	//void	SetSolidMaterial	(int item, int mat, ObjectIf* obj = 0);
-	//void	SetWireMaterial		(int item, int mat, ObjectIf* obj = 0);
-	//void	SetRenderScale		(int item, float scale, ObjectIf* obj = 0);
-	//void	SetGridOption		(char axis, float offset, float size, int slice);
-	/// 旧描画制御API
-	//void	EnableRenderWorldAxis	(bool enable, float scale);
-	//void	EnableRenderAxis		(bool enable, float scale);
-	//void	EnableRenderForce		(bool enable, float scale);
-	//void	EnableRenderContact		(bool enable);
-	//void	EnableRenderGrid		(bool enable, float y, float span);
-	//void	EnableRenderIK			(bool enable, float scale);
 
 	/// 内部用
 	void	DrawCoordinateAxis	(GRRenderIf* render, float scale, bool solid_or_wire);

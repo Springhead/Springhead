@@ -8,6 +8,7 @@
 #include "FWFemMesh.h"
 #include "FWSprTetgen.h"
 
+#include <SprDefs.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <Collision/CDQuickHull2DImp.h>
@@ -219,9 +220,9 @@ void FWFemMesh::Sync(){
 
 		for(unsigned i=0; i < phMesh->faces.size(); i++){
 			//.	faceエッジを表示	
-			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,0),phMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
-			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
-			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,0),phMesh->GetFaceEdgeVtx(i,1),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0f,0.5f,0.1f);
 		}
 		//for(unsigned i = 0; i < phMesh->faces.size(); i++){
 		//	//.	三角形の重心からの法線を表示
@@ -241,9 +242,9 @@ void FWFemMesh::Sync(){
 		//}
 		for(unsigned i=0; i < phMesh->faces.size(); i++){
 			//.	faceエッジを表示	
-			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,0),phMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
-			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
-			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,0),phMesh->GetFaceEdgeVtx(i,1),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0f,0.5f,0.1f);
 		}
 
 	}
@@ -254,9 +255,9 @@ void FWFemMesh::Sync(){
 		//}
 		for(unsigned i=0; i < phMesh->faces.size(); i++){
 			//.	faceエッジを表示	
-			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,0),phMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
-			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
-			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,0),phMesh->GetFaceEdgeVtx(i,1),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,1),phMesh->GetFaceEdgeVtx(i,2),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phMesh->GetFaceEdgeVtx(i,2),phMesh->GetFaceEdgeVtx(i,0),1.0f,0.5f,0.1f);
 		}
 	}
 

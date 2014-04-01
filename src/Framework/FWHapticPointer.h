@@ -16,6 +16,7 @@ protected:
 	PHHapticPointerIf* hapticPointer;
 	SpatialVector hapticForce;
 public:
+
 	void SetPHHapticPointer(PHHapticPointerIf* hpGlobal){ hapticPointer = hpGlobal; }
 	PHHapticPointerIf* GetPHHapticPointer(){ return hapticPointer; }
 	void SetHumanInterface(HIBaseIf* hi){ humanInterface = hi; }
@@ -25,7 +26,7 @@ public:
 		@param dt HumanInterfaceの更新時間
 	 */
 	void UpdateHumanInterface(PHHapticPointer* hpLocal, float dt);
-	Vec3d GetHapticForce(){ return hapticForce.v(); }
+	Vec3d GetHapticForce (){ return hapticForce.v(); }
 	Vec3d GetHapticTorque(){ return hapticForce.w(); }
 };
 

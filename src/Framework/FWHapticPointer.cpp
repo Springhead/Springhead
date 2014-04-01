@@ -12,7 +12,8 @@ void FWHapticPointer::UpdateHumanInterface(PHHapticPointer* hpLocal, float dt){
 		hapticForce  = hpLocal->GetHapticForce();
 		if(hpLocal->bForce){
 			hiHaptic->SetForce(hapticForce.v(), hapticForce.w());
-		}else{
+		}
+		else{
 			hiHaptic->SetForce(Vec3f(), Vec3f());
 		}
 	}
@@ -21,8 +22,8 @@ void FWHapticPointer::UpdateHumanInterface(PHHapticPointer* hpLocal, float dt){
 	if (hiPose) {
 		hiPose->Update(dt);
 		SpatialVector vel;
-		vel.v() = (Vec3d)hiPose->GetVelocity();
-		vel.w() = (Vec3d)hiPose->GetAngularVelocity();
+		vel.v() = hiPose->GetVelocity();
+		vel.w() = hiPose->GetAngularVelocity();
 		Posed pose = hiPose->GetPose();
 
 		//// デバックのための擬似入力
