@@ -36,23 +36,31 @@ struct GRShaderDesc{
 	std::string vsname;			///< バーテックスシェーダのソースコードへのパス
 	std::string fsname;			///< フラグメントシェーダのソースコードへのパス
 	bool bEnableLighting;		///< ライティングコードの有効化
-	bool bEnableTexture;		///< テクスチャマッピングコードの有効化
+	bool bEnableTexture2D;		///< テクスチャマッピングコードの有効化
+	bool bEnableTexture3D;
 	bool bShadowCreate;			///< シャドウマップ生成
 	bool bShadowRender;			///< シャドウマップレンダリング
+	bool bEnableBlending;		///< 頂点ブレンディング
+	int  numBlendMatrices;		///< 設定可能なブレンド行列の数
 
 	GRShaderDesc(){
 		vsname = "vsbase.txt";
 		fsname = "fsbase.txt";
-		bEnableLighting = true;
-		bEnableTexture  = true;
-		bShadowCreate   = false;
-		bShadowRender   = false;
+		bEnableLighting  = true;
+		bEnableTexture2D = true;
+		bEnableTexture3D = false;
+		bShadowCreate    = false;
+		bShadowRender    = false;
+		bEnableBlending  = false;
+		numBlendMatrices = 8;
 	}
 };
 
 struct GRShaderIf : ObjectIf{
 	SPR_IFDEF(GRShader);
 
+	/// シェーダのプログラムIDを取得（外からシェーダを操作したいユーザ用）
+	int	GetProgramID();
 };
 
 struct GRShaderFormat {
