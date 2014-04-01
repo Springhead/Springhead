@@ -327,7 +327,7 @@ struct GRRenderBaseIf: public ObjectIf{
 	/// ブレンド変換行列の全要素を削除する
 	void ClearBlendMatrix();
 	/// ブレンド変換行列を設定する
-	bool SetBlendMatrix(const Affinef& afb, unsigned int id=0);
+	void SetBlendMatrix(const Affinef& afb, unsigned int id=0);
 	///	頂点フォーマットの指定
 	void SetVertexFormat(const GRVertexElement* e);
 	///	頂点シェーダーの指定	API化候補．引数など要検討 2006.6.7 hase
@@ -450,7 +450,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	unsigned int LoadTexture(const std::string filename);
 	/// テクスチャ画像の設定
 	void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb);
-	
+	/// 頂点ブレンディングを有効/無効にする
+	void SetBlending(bool b);
 
 	/// シェーダの初期化
 	//void InitShader();
@@ -535,6 +536,16 @@ struct GRDeviceIf: public GRRenderBaseIf{
 /**	@brief	OpenGLのレンダラー基本クラス */
 struct GRDeviceGLIf: public GRDeviceIf{
 	SPR_IFDEF(GRDeviceGL);
+
+	/// OpenGLのバージョンをチェック
+	bool CheckGLVersion(int major, int minor);
+	/// OpenGLのバージョンを取得
+	int  GetGLMajorVersion();
+	int  GetGLMinorVersion();
+	/** OpenGLのバージョンを設定
+	    あえて古いバージョンのAPIに限定したい場合に使用．
+	 */
+	void SetGLVersion(int major, int minor);
 };
 
 /**	@brief	DirectXのレンダラー基本クラス */
