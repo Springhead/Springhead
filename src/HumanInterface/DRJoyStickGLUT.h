@@ -8,6 +8,7 @@
 #ifndef DR_JOYSTICK_GLUT_H
 #define DR_JOYSTICK_GLUT_H
 
+#include <SprDefs.h>
 #include <HumanInterface/HIDevice.h>
 #include <GL/glut.h>
 #include <map>
