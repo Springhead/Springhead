@@ -30,6 +30,8 @@ public:
 		Boxel(float v, const Vec3f& c, const Matrix3f& I):volume(v), center(c), inertia(I){}
 	};
 	std::vector<Boxel> boxels;
+
+	bool	bboxReady;
 	
 	void	AccumulateBoxels(const Vec3f& bbmin, const Vec3f& bbmax, float eps);
 	void	CalcMetricByBoxel(float& volume, Vec3f& center, Matrix3f& inertia);
@@ -52,7 +54,7 @@ public:
 	///< 表面上の点pにおける法線
 	virtual Vec3d Normal(Vec3d p){ return Vec3d(); } /// 現時点ではRoundConeについてのみ実装されている(09/02/14, mitake)
 
-	CDConvex(){}
+	CDConvex();
 };
 
 }	//	namespace Spr

@@ -184,6 +184,11 @@ found:;
 	if (depth > 5 || depth < 0){
 		DSTR << "depth=" << depth << std::endl;
 		//assert(0);
+
+		// trueを返すと不正な接触が生成され数ステップ後に発散することが多いので，
+		// 対処療法だがfalseを返して接触が生成されないようにする
+		// 本来はここに来ないようにするのがベスト　tazz
+		return false;	
 	}
 	return true;
 }

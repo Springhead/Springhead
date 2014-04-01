@@ -13,6 +13,11 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 //	CDConvex
+
+CDConvex::CDConvex(){
+	bboxReady = false;
+}
+
 std::vector<int>& CDConvex::FindNeighbors(int vtx){
 	static std::vector<int> rv;
 	rv.clear();
@@ -21,11 +26,11 @@ std::vector<int>& CDConvex::FindNeighbors(int vtx){
 
 void CDConvex::CalcBBox(Vec3f& bbmin, Vec3f& bbmax, const Posed& pose){
 	Matrix3f rot;
-	pose.Ori().Inv().ToMatrix(rot);
+	pose.Ori().ToMatrix(rot);
 	for(int i=0; i<3; ++i){
 		Vec3f v[2];
-		Support(v[0], -rot.col(i));
-		Support(v[1], rot.col(i));
+		Support(v[0], -rot.row(i));
+		Support(v[1],  rot.row(i));
 		bbmin[i] = std::min(bbmin[i], (float)((pose.Ori() * v[0])[i] + pose.Pos()[i]));
 		bbmax[i] = std::max(bbmax[i], (float)((pose.Ori() * v[1])[i] + pose.Pos()[i]));
 	}

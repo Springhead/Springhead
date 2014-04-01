@@ -49,6 +49,8 @@ void CDConvexMesh::SetDesc(const void *ptr){
 
 	CalcFace();
 	CalcMetric();
+
+	bboxReady = false;
 }
 
 bool CDConvexMesh::GetDesc(void *ptr) const {
