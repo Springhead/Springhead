@@ -45,7 +45,7 @@ protected:
 	Affinef								viewMatrix;				///< カレント視点行列
 	Affinef								modelMatrix;			///< カレントモデル行列 
 	std::stack<Affinef>                	modelMatrixStack;		///< モデル行列スタック
-	std::vector<Affinef>				blendMatrix;			///< ブレンド変換行列
+	std::vector<Affinef>				blendMatrices;			///< ブレンド変換行列
 	/** @} */
 
 	/**
@@ -79,16 +79,24 @@ protected:
 	Shaders		shaders;
 	GRShader*	curShader;			//< 使用中のシェーダインデックス
 
-	/// シェーダユニフォーム変数のロケーションID
-	int enableLightingLoc;	//< ライティングを行う
-	int enableTex2DLoc;		//< 二次元テクスチャを使う
-	int enableTex3DLoc;		//< 三次元テクスチャを使う
-	int tex2DLoc;			//< 二次元テクスチャサンプラ
-	int tex3DLoc;			//< 三次元テクスチャサンプラ
-	int shadowTexLoc;		//< シャドウテクスチャサンプラ
-	int shadowMatrixLoc;	//< シャドウテクスチャ座標変換
-	int shadowColorLoc;		//<
-	
+	/* 組み込み + 拡張頂点属性インデックス
+		- 普通のビデオカードで16個までは使えると思ってよい
+	 */
+	struct VertexAttribute{
+		enum{
+			// 組み込み属性のPosition ～ MultiTexCoordは参考のみ; nVidia仕様に準拠
+			Position       = 0,
+			Normal         = 2,
+			Color          = 3,
+			SecondaryColor = 4,
+			FogCoord       = 5,
+			MultiTexCoord0 = 8,
+			/// 以下Springhead拡張属性
+			BlendIndex     = 11,
+			BlendWeight    = 12,
+		};
+	};
+
 	/// シャドウマッピング
 	GRShadowLightDesc	shadowDesc;	//< 現在のシャドウ設定
 	unsigned shadowTexId;			//< シャドウテクスチャのID
@@ -136,8 +144,6 @@ protected:
 		return arr._cos[i%slice];
 	}
 	
-	/// OpenGLバージョンチェック
-	bool CheckGLVersion(int major, int minor);
 	/// シェーダソース読み込み
 	bool ReadShaderSource(const char* filename, std::string& src);
 	/// シェーダのコンパイル・リンクレポート
@@ -170,9 +176,9 @@ public:
 	virtual void MultModelMatrix(const Affinef& afw);
 	virtual void PushModelMatrix();
 	virtual void PopModelMatrix();
-	virtual void ClearBlendMatrix();
-	virtual bool SetBlendMatrix(const Affinef& afb);
-	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id);
+	//virtual void ClearBlendMatrix();
+	//virtual bool SetBlendMatrix(const Affinef& afb);
+	virtual void SetBlendMatrix (const Affinef& afb, unsigned int id);
 	virtual void SetVertexFormat(const GRVertexElement* e);
 	//virtual void SetVertexShader(void* s);
 	virtual void DrawDirect		(GRRenderBaseIf::TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
@@ -207,13 +213,14 @@ public:
 	virtual void PopLight();
 	virtual int  NLights();
 	virtual void SetDepthWrite(bool b);
-	virtual void SetDepthTest(bool b);
-	virtual void SetDepthFunc(GRRenderBaseIf::TDepthFunc f);
-	virtual void SetAlphaTest(bool b);
-	virtual void SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest);
-	virtual void SetLighting(bool on);
-	virtual void SetTexture2D(bool b);
-	virtual void SetTexture3D(bool b);
+	virtual void SetDepthTest (bool b);
+	virtual void SetDepthFunc (GRRenderBaseIf::TDepthFunc f);
+	virtual void SetAlphaTest (bool b);
+	virtual void SetAlphaMode (GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest);
+	virtual void SetLighting  (bool b);
+	virtual void SetTexture2D (bool b);
+	virtual void SetTexture3D (bool b);
+	virtual void SetBlending  (bool b);
 	virtual unsigned int LoadTexture(const std::string filename);
 	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format,const char* tb);
 	//virtual void InitShader();
@@ -227,6 +234,12 @@ public:
 	virtual void SetShadowLight(const GRShadowLightDesc& sld);
 	virtual void EnterShadowMapGeneration();
 	virtual void LeaveShadowMapGeneration();
+
+	/// OpenGLバージョンチェック
+	bool CheckGLVersion(int major, int minor);
+	int  GetGLMajorVersion();
+	int  GetGLMinorVersion();
+	void SetGLVersion(int major, int minor);
 };
 
 }

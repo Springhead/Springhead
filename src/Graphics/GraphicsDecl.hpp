@@ -359,18 +359,24 @@ protected:\
 	std::string	vsname;	\
 	std::string	fsname;	\
 	bool	bEnableLighting;	\
-	bool	bEnableTexture;	\
+	bool	bEnableTexture2D;	\
+	bool	bEnableTexture3D;	\
 	bool	bShadowCreate;	\
 	bool	bShadowRender;	\
+	bool	bEnableBlending;	\
+	int	numBlendMatrices;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		vsname = ((GRShaderDesc*)ptr)->vsname;	\
 		fsname = ((GRShaderDesc*)ptr)->fsname;	\
 		bEnableLighting = ((GRShaderDesc*)ptr)->bEnableLighting;	\
-		bEnableTexture = ((GRShaderDesc*)ptr)->bEnableTexture;	\
+		bEnableTexture2D = ((GRShaderDesc*)ptr)->bEnableTexture2D;	\
+		bEnableTexture3D = ((GRShaderDesc*)ptr)->bEnableTexture3D;	\
 		bShadowCreate = ((GRShaderDesc*)ptr)->bShadowCreate;	\
 		bShadowRender = ((GRShaderDesc*)ptr)->bShadowRender;	\
+		bEnableBlending = ((GRShaderDesc*)ptr)->bEnableBlending;	\
+		numBlendMatrices = ((GRShaderDesc*)ptr)->numBlendMatrices;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -378,9 +384,12 @@ public:\
 		((GRShaderDesc*)ptr)->vsname = vsname;	\
 		((GRShaderDesc*)ptr)->fsname = fsname;	\
 		((GRShaderDesc*)ptr)->bEnableLighting = bEnableLighting;	\
-		((GRShaderDesc*)ptr)->bEnableTexture = bEnableTexture;	\
+		((GRShaderDesc*)ptr)->bEnableTexture2D = bEnableTexture2D;	\
+		((GRShaderDesc*)ptr)->bEnableTexture3D = bEnableTexture3D;	\
 		((GRShaderDesc*)ptr)->bShadowCreate = bShadowCreate;	\
 		((GRShaderDesc*)ptr)->bShadowRender = bShadowRender;	\
+		((GRShaderDesc*)ptr)->bEnableBlending = bEnableBlending;	\
+		((GRShaderDesc*)ptr)->numBlendMatrices = numBlendMatrices;	\
 		return true;	\
 	}\
 

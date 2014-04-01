@@ -13,11 +13,30 @@
 #endif
 #include <boost/regex.hpp>
 
+#include <GL/glew.h>
+
 namespace Spr {;
 
 static boost::regex Tex3DRegex("^(.*_tex3d_)([0-9]+)(\\Q.\\E[^\\Q.\\E]+)$");
 bool GRMaterialDesc::Is3D() const{
 	return boost::regex_match(texname, Tex3DRegex);
+}
+
+//----------------------------------------------------------------------------
+//	GRShader
+
+void GRShader::GetLocations(){
+	enableLightingLoc = glGetUniformLocation(programId, "enableLighting");
+	enableTex2DLoc    = glGetUniformLocation(programId, "enableTex2D"   );
+	enableTex3DLoc    = glGetUniformLocation(programId, "enableTex3D"   );
+	tex2DLoc          = glGetUniformLocation(programId, "tex2D"         );
+	tex3DLoc          = glGetUniformLocation(programId, "tex3D"         );
+	shadowTexLoc      = glGetUniformLocation(programId, "shadowTex"     );
+	shadowMatrixLoc   = glGetUniformLocation(programId, "shadowMatrix"  );
+	shadowColorLoc    = glGetUniformLocation(programId, "shadowColor"   );
+	enableBlendingLoc = glGetUniformLocation(programId, "enableBlending");
+	blendMatricesLoc  = glGetUniformLocation(programId, "blendMatrices" );
+
 }
 
 //----------------------------------------------------------------------------

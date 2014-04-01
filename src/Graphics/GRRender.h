@@ -70,13 +70,35 @@ public:
 	void Render(GRRenderIf* render);
 };
 
+/* シェーダ
+	- OpenGL依存になっているのは好ましくないが今のところ保留
+ */
 class GRShader : public Object{
 public:
 	SPR_OBJECTDEF(GRShader);
 	
+	/// プログラムID
 	int programId;
+	/// シェーダID
 	int vertShaderId;
 	int fragShaderId;
+
+	/// シェーダユニフォーム変数のロケーションID
+	int enableLightingLoc;	//< ライティングを行う
+	int enableTex2DLoc;		//< 二次元テクスチャを使う
+	int enableTex3DLoc;		//< 三次元テクスチャを使う
+	int tex2DLoc;			//< 二次元テクスチャサンプラ
+	int tex3DLoc;			//< 三次元テクスチャサンプラ
+	int shadowTexLoc;		//< シャドウテクスチャサンプラ
+	int shadowMatrixLoc;	//< シャドウテクスチャ座標変換
+	int shadowColorLoc;		//<
+	int enableBlendingLoc;  //<
+	int blendMatricesLoc;	//<
+
+public:
+	void GetLocations();
+
+	int GetProgramID(){ return programId; }
 };
 
 class GRShadowLight : public Object{
@@ -114,7 +136,7 @@ public:
 	virtual void PushModelMatrix(){}
 	virtual void PopModelMatrix(){}
 	virtual void ClearBlendMatrix(){}
-	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id=0){return 0;}	
+	virtual void SetBlendMatrix(const Affinef& afb, unsigned int id=0){}
 	virtual void SetVertexFormat(const GRVertexElement* e){}
 	//virtual void SetVertexShader(void* shader){}
 	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0){}
@@ -158,6 +180,7 @@ public:
 	virtual void SetLighting(bool l){}
 	virtual void SetTexture2D(bool b){}
 	virtual void SetTexture3D(bool b){}
+	virtual void SetBlending (bool b){}
 	virtual unsigned int LoadTexture(const std::string filename){return 0;}
 	virtual void SetTextureImage(const std::string id, int components, int xsize, int ysize, int format, const char* tb){}
 	//virtual void InitShader(){}
@@ -205,8 +228,7 @@ public:
 	virtual void MultModelMatrix(const Affinef& afw){ ptr MultModelMatrix(afw); }							\
 	virtual void PushModelMatrix(){ ptr PushModelMatrix(); }												\
 	virtual void PopModelMatrix(){ ptr PopModelMatrix(); }													\
-	virtual bool SetBlendMatrix(const Affinef& afb){ return ptr SetBlendMatrix(afb); }						\
-	virtual bool SetBlendMatrix(const Affinef& afb, unsigned int id){ return ptr SetBlendMatrix(afb, id); }	\
+	virtual void SetBlendMatrix(const Affinef& afb, unsigned int id){ ptr SetBlendMatrix(afb, id); }	    \
 	virtual void ClearBlendMatrix(){ ptr ClearBlendMatrix(); }												\
 	virtual void SetVertexFormat(const GRVertexElement* f){ ptr SetVertexFormat(f); }						\
 	virtual void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t ct, size_t st=0)			\
@@ -264,6 +286,7 @@ public:
 	virtual void SetLighting(bool l) { ptr SetLighting(l); }												\
 	virtual void SetTexture2D(bool b){ ptr SetTexture2D(b); }												\
 	virtual void SetTexture3D(bool b){ ptr SetTexture3D(b); }												\
+	virtual void SetBlending (bool b){ ptr SetBlending (b); }                                               \
 	virtual unsigned int LoadTexture(const std::string filename){ return ptr LoadTexture(filename); }		\
 	/*virtual void InitShader(){ ptr InitShader(); }													\
 	virtual void SetShaderFormat(GRShaderFormat::ShaderType type){ ptr SetShaderFormat(type); }				\
