@@ -265,14 +265,21 @@ public:
 	const T* GetParent() const { return parent; }
 	///	親ノードを設定する．
 	void SetParent(T* n){
-		if (parent == n) return;						//	変更がなければ何もしない．
+		//	変更がなければ何もしない．
+		if (parent == n)
+			return;
 		//	途中でRefCountが0になって消えないように，先に新しいノードの子にする．
 		if (n) n->children.push_back((T*)this);
-		if (parent) {									//	古い親ノードの子リストから削除
-			TYPENAME CO::iterator it = std::find(parent->children.begin(), parent->children.end(), UTRef<T>((T*)this));
-			if (it != parent->children.end()) parent->children.erase(it);
+		//	parent を新しいノードに切り替える．
+		T* parOld = parent;
+		parent = n;
+
+		//	古い親ノードの子リストから削除（親以外から参照されていない場合はここでdeleteされる）
+		if (parOld) {
+			TYPENAME CO::iterator it = std::find(parOld->children.begin(), parOld->children.end(), UTRef<T>((T*)this));
+			if (it != parOld->children.end())
+				parOld->children.erase(it);
 		}
-		parent = n;										//	parent を新しいノードに切り替える．
 	}
 	///	子ノード．
 	CO& Children(){ return children; }
