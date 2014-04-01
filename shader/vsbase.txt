@@ -14,6 +14,14 @@ varying vec4 diffuse;		//< vertex diffuse color
 varying vec4 specular;		//< vertex specular color
 #endif
 
+#ifdef ENABLE_BLENDING
+uniform bool enableBlending;
+uniform mat4 blendMatrices[NUM_BLEND_MATRICES];
+in ivec2 blendIndex;
+in float blendWeight;
+mat4 blendMatrix;
+#endif
+
 #ifdef ENABLE_LIGHTING
 void PointLighting(int i)
 {
@@ -104,10 +112,13 @@ void Lighting()
 	color = clamp(color, 0.0, 1.0);
 
 	gl_FrontColor = color;
+
+	// アルファはマテリアルのdiffuseから取得
+	gl_FrontColor.a = gl_FrontMaterial.diffuse.a;
 }
 #endif
 
-#ifdef ENABLE_TEXTURE
+#if defined(ENABLE_TEXTURE_2D) || defined(ENABLE_TEXTURE_3D)
 void Texture()
 {
 	// no multi-texture supported
@@ -117,7 +128,7 @@ void Texture()
 
 void main()
 {
-	#ifdef ENABLE_LIGHTING
+#ifdef ENABLE_LIGHTING
 	normal = gl_NormalMatrix * gl_Normal;
 	normal = normalize(normal);
 
@@ -133,20 +144,30 @@ void main()
 	{
 		gl_FrontColor = gl_Color;
 	}
-	#else
+#else
 	gl_FrontColor = gl_Color;
-	#endif
+#endif
 
-	#ifdef ENABLE_TEXTURE
+#if defined(ENABLE_TEXTURE_2D) || defined(ENABLE_TEXTURE_3D)
 	// texture
 	Texture();
-	#endif
+#endif
 
-	#ifdef SHADOW_RENDER
+#ifdef SHADOW_RENDER
 	// shadow coordinate
 	shadowCoord = shadowMatrix * gl_Vertex;
-	#endif
+#endif
 
 	// vertex position
+#ifdef ENABLE_BLENDING
+	if(enableBlending){
+		blendMatrix = blendWeight * blendMatrices[blendIndex[0]] + (1 - blendWeight) * blendMatrices[blendIndex[1]];
+		gl_Position = gl_ModelViewProjectionMatrix * blendMatrix * gl_Vertex;
+	}
+	else{
+		gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+	}
+#else
 	gl_Position = gl_ModelViewProjectionMatrix * gl_Vertex;
+#endif
 }
