@@ -16,7 +16,7 @@
 /**	@file BaseDebug.h デバッグ用ユーティリティークラス・関数の定義.	*/
 
 #ifndef DBG_NEW
-# ifdef _DEBUG
+# if defined(_DEBUG)
 #  include <crtdbg.h>
 #  define _CRTDBG_MAP_ALLOC
 ///	Debug用 new リーク時に行番号を表示
