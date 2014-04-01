@@ -80,7 +80,6 @@ void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
 
 			Vec3d addforce = K * ortho + D * dvortho;
 			outForce.v() += addforce;
-			outForce.w() += Vec3d();
 			
 			Vec3d pointForce = -1 * addforce;
 			hsolids->at(irs[i]->solidID)->AddForce(pointForce, irs[i]->contactPointW);
@@ -170,7 +169,7 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 		float DOri = pointer->GetReflexDamperOri() * pointer->GetRotationalWeight();
 
 		outForce.v() = K * dr  + D * (dr - last_dr)/hdt;
-		outForce.w() = (KOri * dtheta + DOri * ((dtheta - last_dtheta)/hdt));
+		outForce.w() = KOri * dtheta + DOri * ((dtheta - last_dtheta)/hdt);
 		pointer->last_dr = dr;
 		pointer->last_dtheta = dtheta; 
 

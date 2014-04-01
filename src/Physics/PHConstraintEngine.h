@@ -8,10 +8,10 @@
 #ifndef PHCONSTRAINTENGINE_H
 #define PHCONSTRAINTENGINE_H
 
-#include "../Collision/CDDetectorImp.h"
-#include "PHConstraint.h"
-#include "PHGear.h"
-#include "PHContactDetector.h"
+#include <Collision/CDDetectorImp.h>
+#include <Physics/PHConstraint.h>
+#include <Physics/PHGear.h>
+#include <Physics/PHContactDetector.h>
 
 namespace Spr{;
 
@@ -23,13 +23,15 @@ class PHConstraintEngine;
 class PHPath;
 
 ///	形状の組
-class PHShapePairForLCP: public CDShapePair{
+class PHShapePairForLCP: public PHShapePair{
 public:
 	SPR_OBJECTDEF(PHShapePairForLCP);
-	std::vector<Vec3d>	section;	///< 交差断面の頂点．個々がPHContactPointとなる．
+
+	std::vector<Vec3d>	section;	///< 交差断面の頂点．個々がPHContactPointとなる．可視化のために保持
+
 	///	接触解析．接触部分の切り口を求めて，切り口を構成する凸多角形の頂点をengineに拘束として追加する．
-	void EnumVertex(PHConstraintEngine* engine, unsigned ct, PHSolid* solid0, PHSolid* solid1);
-	int NSectionVertexes(){return (int)section.size();}		//(sectionの数を返す）
+	void  EnumVertex      (unsigned ct, PHSolid* solid0, PHSolid* solid1);
+	int   NSectionVertexes(){return (int)section.size();}		//(sectionの数を返す）
 	Vec3d GetSectionVertex(int i){return section[i];}	//(i番目のsectionを返す）
 
 	///	接触面積．接触形状の頂点座標から面積を計算
@@ -67,15 +69,18 @@ public:
 /// Solidの組
 class PHConstraintEngine;
 
-class PHSolidPairForLCP : public PHSolidPair<PHShapePairForLCP, PHConstraintEngine>, public Object{
+class PHSolidPairForLCP : public PHSolidPair{
 public:
 	SPR_OBJECTDEF(PHSolidPairForLCP);
-	virtual void OnDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
-	virtual void OnContDetect(PHShapePairForLCP* cp, PHConstraintEngine* engine, unsigned ct, double dt);
-	int	GetContactState(int i, int j){return shapePairs.item(i, j)->state;}
+	
+	virtual PHShapePair* CreateShapePair(){ return DBG_NEW PHShapePairForLCP(); }
+	virtual void OnDetect    (PHShapePair* cp, unsigned ct, double dt);
+	virtual void OnContDetect(PHShapePair* cp, unsigned ct, double dt);
+
+	int	     GetContactState    (int i, int j){return shapePairs.item(i, j)->state;}
 	unsigned GetLastContactCount(int i, int j){return shapePairs.item(i, j)->lastContactCount;}
-	Vec3d GetCommonPoint(int i, int j){return shapePairs.item(i, j)->commonPoint;}
-	double GetContactDepth(int i, int j){return shapePairs.item(i, j)->depth;}
+	Vec3d    GetCommonPoint     (int i, int j){return shapePairs.item(i, j)->commonPoint;}
+	double   GetContactDepth    (int i, int j){return shapePairs.item(i, j)->depth;}
 	PHShapePairForLCPIf* GetShapePair(int i, int j){return shapePairs.item(i, j)->Cast();}
 };
 
@@ -85,35 +90,17 @@ struct PHConstraintsSt{
 };
 
 
-class PHConstraintEngine : public PHConstraintEngineDesc, public PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>{
+class PHConstraintEngine : public PHConstraintEngineDesc, public PHContactDetector/*<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>*/{
 	friend class PHConstraint;
 	friend class PHShapePairForLCP;
 	SPR_OBJECTDEF1(PHConstraintEngine, PHEngine);
 	ACCESS_DESC(PHConstraintEngine);
 public:
-	typedef PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> Detector;
+	//typedef PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> Detector;
 	
-	PHConstraintEngine();
-	~PHConstraintEngine();
-	
-	PHJoint* CreateJoint(const IfInfo* ii, const PHJointDesc& desc, PHSolid* lhs = NULL, PHSolid* rhs = NULL);	///< 関節の追加する
-	PHRootNode* CreateRootNode(const PHRootNodeDesc& desc, PHSolid* solid = NULL);	///< ツリー構造のルートノードを作成
-	PHTreeNode* CreateTreeNode(const PHTreeNodeDesc& desc, PHTreeNode* parent = NULL, PHSolid* solid = NULL);	///< ツリー構造の中間ノードを作成
-	PHGear*		CreateGear(const PHGearDesc& desc, PH1DJoint* lhs = NULL, PH1DJoint* rhs = NULL);	///< ギアを作成
-	PHPath*		CreatePath(const PHPathDesc& desc);
-	void		UpdateGearNode();
-	virtual int GetPriority() const {return SGBP_CONSTRAINTENGINE;}
-	virtual void Step();			///< 
-	virtual void StepPart1();		///< 
-	virtual void StepPart2();		///< 
-	void UpdateSolids(bool bVelOnly);	///< 結果をSolidに反映する. bVelOnly == trueならば結果の速度のみをSolidに反映させ，位置はそのまま．
-	void UpdateOnlyVelocity();			///< obsolete. UpdateSolids(true)を使用のこと
-	void Clear();
-
 	typedef std::vector< UTRef<PHRootNode> >	PHRootNodes;
 	typedef std::vector< UTRef<PHPath> >		PHPaths;
-	//typedef std::vector< UTRef<PHJointLimit> >	PHJointLimits;
-	//typedef std::vector< UTRef<PHMotor> >		PHMotors;
+	typedef std::vector< PHConstraintBase* >	PHConstraintBases;
 	
 	PHConstraints	points;			///< 接触点の配列
 	PHConstraints	joints;			///< 関節の配列
@@ -122,37 +109,63 @@ public:
 	PHGears			gears;			///< ギアの配列
 	PHPaths			paths;			///< パスの配列
 
-	void SetupLCP();				///< 速度更新LCPの準備
-	void IterateLCP();				///< 速度更新LCPの一度の反復
-	void SetupCorrectionLCP();		///< 誤差修正LCPの準備
-	void IterateCorrectionLCP();	///< 誤差修正LCPの一度の反復
+	PHConstraints		cons;		///< 有効な拘束の配列
+	PHConstraintBases	cons_base;
+	//PHGears				gears_active;
 
-	virtual PHConstraintsIf* GetContactPoints();
-	virtual void	SetVelCorrectionRate(double value){velCorrectionRate = value;}
-	virtual double	GetVelCorrectionRate(){return velCorrectionRate;}
-	virtual void	SetPosCorrectionRate(double value){posCorrectionRate = value;}
-	virtual double	GetPosCorrectionRate(){return posCorrectionRate;}
-	virtual void	SetContactCorrectionRate(double value){contactCorrectionRate = value;}
-	virtual double	GetContactCorrectionRate(){return contactCorrectionRate;}
-	virtual void	SetBSaveConstraints(bool value){bSaveConstraints = value;}
-	virtual void	SetUpdateAllSolidState(bool flag){bUpdateAllState = flag;}
-	virtual void	SetUseContactSurface(bool flag){bUseContactSurface = flag;}
+	int count;
 
-	virtual void	SetShrinkRate(double data){shrinkRate = data;}
-	virtual double	GetShrinkRate(){return shrinkRate;}
-	virtual void	SetShrinkRateCorrection(double data){shrinkRateCorrection = data;}
-	virtual double	GetShrinkRateCorrection(){return shrinkRateCorrection;}
+public:
+	PHConstraintEngine();
+	~PHConstraintEngine();
+	
+	PHJoint*    CreateJoint(const IfInfo* ii, const PHJointDesc& desc, PHSolid* lhs = NULL, PHSolid* rhs = NULL);	///< 関節の追加する
+	PHRootNode* CreateRootNode(const PHRootNodeDesc& desc, PHSolid* solid = NULL);	///< ツリー構造のルートノードを作成
+	PHTreeNode* CreateTreeNode(const PHTreeNodeDesc& desc, PHTreeNode* parent = NULL, PHSolid* solid = NULL);	///< ツリー構造の中間ノードを作成
+	PHGear*		CreateGear(const PHGearDesc& desc, PH1DJoint* lhs = NULL, PH1DJoint* rhs = NULL);	///< ギアを作成
+	PHPath*		CreatePath(const PHPathDesc& desc);
+	
+	// Objectの仮想関数
 	virtual bool	AddChildObject(ObjectIf* o);
 	virtual bool	DelChildObject(ObjectIf* o);
-
-	virtual size_t	GetStateSize() const;
+	virtual void	Clear         ();
+	virtual size_t	GetStateSize  () const;
 	virtual void	ConstructState(void* m) const;
-	virtual void	DestructState(void* m) const ;
-	virtual bool	GetState(void* s) const ;
-	virtual void	SetState(const void* s);
+	virtual void	DestructState (void* m) const;
+	virtual bool	GetState      (void* s) const;
+	virtual void	SetState      (const void* s);
 
-	bool bContactDetectionEnabled; ///< 接触判定が有効か．これがfalseだと接触判定自体を行わない
-	virtual void	EnableContactDetection(bool enable) { bContactDetectionEnabled = enable; }
+	// PHEngineの仮想関数
+	virtual int  GetPriority() const {return SGBP_CONSTRAINTENGINE;}
+	virtual void Step();
+
+	// PHContactDetectorの仮想関数
+	virtual PHSolidPair* CreateSolidPair(){ return DBG_NEW PHSolidPairForLCP(); }
+	
+	void StepPart1();
+	void StepPart2();
+	void UpdateSolids(bool bVelOnly);	///< 結果をSolidに反映する. bVelOnly == trueならば結果の速度のみをSolidに反映させ，位置はそのまま．
+	void CompResponseMatrix();
+	void Setup();					///< 速度更新LCPの準備
+	void SetupCorrection();			///< 誤差修正LCPの準備
+	void Iterate();					///< 速度更新LCPの一度の反復
+	void IterateCorrection();		///< 誤差修正LCPの一度の反復
+
+	// インタフェースの実装
+	PHConstraintsIf* GetContactPoints();
+	void	SetVelCorrectionRate     (double value){velCorrectionRate = value;}
+	double	GetVelCorrectionRate     (){return velCorrectionRate;}
+	void	SetPosCorrectionRate     (double value){posCorrectionRate = value;}
+	double	GetPosCorrectionRate     (){return posCorrectionRate;}
+	void	SetContactCorrectionRate (double value){contactCorrectionRate = value;}
+	double	GetContactCorrectionRate (){return contactCorrectionRate;}
+	void	SetBSaveConstraints      (bool value){bSaveConstraints = value;}
+	void	SetUpdateAllSolidState   (bool flag){bUpdateAllState = flag;}
+	void	SetUseContactSurface     (bool flag){bUseContactSurface = flag;}
+	void	SetShrinkRate            (double data){shrinkRate = data;}
+	double	GetShrinkRate            (){return shrinkRate;}
+	void	SetShrinkRateCorrection  (double data){shrinkRateCorrection = data;}
+	double	GetShrinkRateCorrection  (){return shrinkRateCorrection;}
 
 	//	接触領域を表示するための情報を更新するかどうか
 	virtual void	EnableRenderContact	(bool enable);

@@ -17,8 +17,8 @@ namespace Spr{;
 // PHHingeJointNode
 
 void PHHingeJointNode::CompJointJacobian(){
-	J.col(0).sub_vector(PTM::TSubVectorDim<0, 3>()).clear();
-	J.col(0).sub_vector(PTM::TSubVectorDim<3, 3>()) = Vec3d(0.0, 0.0, 1.0);
+	J.clear();
+	J.col(0)[5] = 1.0;
 	PHTreeNode1D::CompJointJacobian();
 }
 
@@ -28,7 +28,7 @@ void PHHingeJointNode::CompJointCoriolisAccel(){
 
 void PHHingeJointNode::CompRelativeVelocity(){
 	PH1DJoint* j = GetJoint();
-	j->vjrel.v().clear();
+	j->vjrel.v() = Vec3d();
 	j->vjrel.w() = Vec3d(0.0, 0.0, j->velocity[0]);
 }
 
@@ -38,16 +38,23 @@ void PHHingeJointNode::CompRelativePosition(){
 	j->Xjrel.r.clear();
 }
 
+void PHHingeJointNode::UpdateJointPosition(double dt){
+	PHTreeNode1D::UpdateJointPosition(dt);
+	if(DCAST(PHHingeJoint, GetJoint())->IsCyclic()){
+		double p = GetJoint()->position[0];
+		while(p >  M_PI) p -= 2 * M_PI;
+		while(p < -M_PI) p += 2 * M_PI;
+		GetJoint()->position[0] = p;
+	}
+}
+
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHHingeJoint
 
 PHHingeJoint::PHHingeJoint(const PHHingeJointDesc& desc) {
 	SetDesc(&desc);
 	
-	// 可動軸・拘束軸の設定
-	nMovableAxes   = 1;
-	movableAxes[0] = 5;
-	InitTargetAxes();
+	movableAxes.Enable(5);
 }
 
 // ----- エンジンから呼び出される関数
@@ -67,7 +74,7 @@ void PHHingeJoint::UpdateJointState(){
 	}
 
 	if (Xjrel.q.Axis().Z() < 0.0) { position = -position; }
-	velocity[0] = vjrel.w().z;
+	velocity[0] = vjrel[5];
 }
 
 // ----- PHConstraintの派生クラスで実装される機能
@@ -104,8 +111,6 @@ void PHHingeJoint::CompError(){
 
 double PHHingeJoint::GetDeviation(){
 	double diff = PH1DJoint::GetDeviation();
-	//diff = ( (diff / (2*M_PI)) - floor(diff / (2*M_PI)) ) * (2*M_PI);
-	//if (diff > M_PI) { diff -= 2 * M_PI; }
 	if(cyclic){
 		while(diff >  M_PI)
 			diff -= 2 * M_PI;

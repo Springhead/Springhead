@@ -24,6 +24,7 @@ public:
 	virtual void CompJointCoriolisAccel();
 	virtual void CompRelativePosition();
 	virtual void CompRelativeVelocity();
+	virtual void UpdateJointPosition(double dt);
 	PHHingeJointNode(const PHHingeJointNodeDesc& desc = PHHingeJointNodeDesc()){}
 };
 
@@ -45,12 +46,7 @@ public:
 	virtual void CompError();
 
 	// ----- PH1DJointの派生クラスで実装する機能
-	virtual double GetDeviation();
-
-	// ----- インタフェースの実装
-	bool IsCyclic(){ return cyclic; }
-	void SetCyclic(bool on){ cyclic = on; }
-	
+	virtual double GetDeviation();	
 };
 
 }

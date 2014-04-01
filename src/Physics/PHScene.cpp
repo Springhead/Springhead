@@ -64,14 +64,16 @@ void PHScene::Init(){
 void PHScene::AfterSetDesc(){
 	gravityEngine->accel = gravity;
 	constraintEngine->numIter = numIteration;
+	constraintEngine->method  = method;
 	timeStepInv = 1.0/timeStep;
 
 }
 void PHScene::BeforeGetDesc() const{
 	// EngineのAPIを介して変更される可能性もあるので
 	// BeforeGetDescがconst仕様なのでcastが必要
-	(Vec3d&)gravity = gravityEngine->accel;
+	(Vec3d&)gravity    = gravityEngine->accel;
 	(int&)numIteration = constraintEngine->numIter;
+	(int&)method       = constraintEngine->method;
 }
 PHSdkIf* PHScene::GetSdk(){
 	NameManagerIf* nm = GetNameManager();
@@ -139,6 +141,8 @@ PHSolidPairForLCPIf* PHScene::GetSolidPair(PHSolidIf* lhs, PHSolidIf* rhs, bool&
 
 PHRootNodeIf* PHScene::CreateRootNode(PHSolidIf* root, const PHRootNodeDesc& desc){
 	PHRootNode* node = constraintEngine->CreateRootNode(desc, root->Cast());
+	if(!node)
+		return NULL;
 	AddChildObject(node->Cast());
 	return node->Cast();
 }
@@ -157,8 +161,36 @@ PHTreeNodeIf* PHScene::CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, co
 	return node->Cast();
 }
 
+void PHScene::CreateTreeNodesRecurs(PHTreeNodeIf* node, PHSolidIf* solid){
+	PHSolidIf* sockSolid;
+	PHSolidIf* plugSolid;
+	for(int i = 0; i < NJoints(); i++){
+		PHJointIf* jnt = GetJoint(i);
+		sockSolid = jnt->GetSocketSolid();
+		plugSolid = jnt->GetPlugSolid  ();
+		if(sockSolid == solid && !DCAST(PHSolid, plugSolid)->IsArticulated()){
+			PHTreeNodeIf* childNode = CreateTreeNode(node, plugSolid);
+			CreateTreeNodesRecurs(childNode, plugSolid);
+		}
+	}
+}
+
+PHRootNodeIf* PHScene::CreateTreeNodes(PHSolidIf* solid){
+	if(DCAST(PHSolid, solid)->IsArticulated())
+		return 0;
+
+	PHRootNodeIf* rootNode = CreateRootNode(solid);
+	CreateTreeNodesRecurs(rootNode, solid);
+
+	rootNode->Print(DSTR);
+
+	return rootNode;
+}
+
 PHGearIf* PHScene::CreateGear(PH1DJointIf* lhs, PH1DJointIf* rhs, const PHGearDesc& desc){
 	PHGear* gear = constraintEngine->CreateGear(desc, lhs->Cast(), rhs->Cast());
+	if(!gear)
+		return NULL;
 	AddChildObject(gear->Cast());
 	return gear->Cast();
 }
@@ -291,23 +323,29 @@ void PHScene::IntegratePart2(){
 }
 	
 void PHScene::SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode mode){
-	penaltyEngine->EnableContact(lhs, rhs, mode == PHSceneDesc::MODE_PENALTY);
+	penaltyEngine   ->EnableContact(lhs, rhs, mode == PHSceneDesc::MODE_PENALTY);
 	constraintEngine->EnableContact(lhs, rhs, mode == PHSceneDesc::MODE_LCP);
 }
 
 void PHScene::SetContactMode(PHSolidIf** group, size_t length, PHSceneDesc::ContactMode mode){
-	penaltyEngine->EnableContact(group, length, mode == PHSceneDesc::MODE_PENALTY);
+	penaltyEngine   ->EnableContact(group, length, mode == PHSceneDesc::MODE_PENALTY);
 	constraintEngine->EnableContact(group, length, mode == PHSceneDesc::MODE_LCP);
 }
 
 void PHScene::SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode mode){
-	penaltyEngine->EnableContact(solid, mode == PHSceneDesc::MODE_PENALTY);
+	penaltyEngine   ->EnableContact(solid, mode == PHSceneDesc::MODE_PENALTY);
 	constraintEngine->EnableContact(solid, mode == PHSceneDesc::MODE_LCP);
 }
 
 void PHScene::SetContactMode(PHSceneDesc::ContactMode mode){
-	penaltyEngine->EnableContact(mode == PHSceneDesc::MODE_PENALTY);
+	penaltyEngine   ->EnableContact(mode == PHSceneDesc::MODE_PENALTY);
 	constraintEngine->EnableContact(mode == PHSceneDesc::MODE_LCP);
+}
+int  PHScene::GetLCPSolver(){
+	return constraintEngine->method;
+}
+void PHScene::SetLCPSolver(int method){
+	constraintEngine->method = method;
 }
 int PHScene::GetNumIteration(){
 	return constraintEngine->numIter;
@@ -367,17 +405,15 @@ bool PHScene::AddChildObject(ObjectIf* o){
 	bool ok = false;
 	PHSolid* solid = DCAST(PHSolid, o);
 	if(solid){
-		if(	solids->AddChildObject(o) &&
-			gravityEngine->AddChildObject(o) &&
-			penaltyEngine->AddChildObject(o) &&
-			constraintEngine->AddChildObject(o) &&
-			hapticEngine->AddChildObject(o))
-		{
-            SetContactMode(solid->Cast(), PHSceneDesc::MODE_LCP);	//デフォルトでLCP
-			solid->scene = this;
-			solid->engine = constraintEngine;
-			ok = true;
-		}
+		solids          ->AddChildObject(o);
+		gravityEngine   ->AddChildObject(o);
+		penaltyEngine   ->AddChildObject(o);
+		constraintEngine->AddChildObject(o);
+		hapticEngine    ->AddChildObject(o);
+		
+		SetContactMode(solid->Cast(), PHSceneDesc::MODE_LCP);	//デフォルトでLCP
+		solid->engine = constraintEngine;
+		ok = true;
 	}
 	PHJointIf* con = DCAST(PHJointIf, o);
 	if(con && constraintEngine->AddChildObject(con)){
@@ -535,8 +571,7 @@ void PHScene::StepHapticLoop(){
 }
 
 size_t PHScene::GetStateSize() const{
-	return sizeof(PHSceneState) + 
-		(constraintEngine ? constraintEngine->GetStateSize() : 0);
+	return sizeof(PHSceneState) + (constraintEngine ? constraintEngine->GetStateSize() : 0);
 }
 void PHScene::ConstructState(void* m) const{
 	new (m) PHSceneState();
@@ -568,7 +603,7 @@ void PHScene::SetState(const void* s){
 	*(PHSceneState*)this = *(const PHSceneState*)p;
 	p += sizeof(PHSceneState);
 	if (constraintEngine){
-		constraintEngine->SetState(p);  // なぜコメントアウトされていたのか？？(2012/1/28, mitake) <!!>
+		constraintEngine->SetState(p);
 	}
 }
 
@@ -653,6 +688,12 @@ bool PHScene::ReadStateR(std::istream& fin){
 
 void PHScene::SetStateMode(bool bConstraints){
 	constraintEngine->bSaveConstraints = bConstraints;
+}
+
+void PHScene::SetContactDetectionRange(Vec3f center, Vec3f extent, int nx, int ny, int nz){
+	constraintEngine->SetDetectionRange(center, extent, nx, ny, nz);
+	penaltyEngine   ->SetDetectionRange(center, extent, nx, ny, nz);
+	hapticEngine    ->SetDetectionRange(center, extent, nx, ny, nz);
 }
 
 void PHScene::DumpObjectR(std::ostream& os, int level) const{

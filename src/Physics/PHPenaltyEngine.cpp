@@ -56,11 +56,13 @@ void PHSolidPairForPenalty::Setup(unsigned int ct, double dt){
 	}
 }
 
-void PHSolidPairForPenalty::OnDetect(PHShapePairForPenalty* sp, PHPenaltyEngine* engine, unsigned ct, double dt){
+void PHSolidPairForPenalty::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
+	PHShapePairForPenalty* sp = (PHShapePairForPenalty*)_sp;
+
 	//contacts.push_back(sp);
 	static CDContactAnalysis analyzer;
 	analyzer.FindIntersection(sp);	//	接触形状の解析
-	analyzer.CalcNormal(sp);		//	法線ベクトルの計算
+	analyzer.CalcNormal      (sp);	//	法線ベクトルの計算
 
 	//	接触力計算の準備
 	float rs[2], rd[2], fs[2], fd[2], sf[2], df[2];
@@ -110,7 +112,7 @@ void PHSolidPairForPenalty::GenerateForce(){
 	int i, j;
 	PHShapePairForPenalty* cp;
 	for(i = 0; i < shapePairs.height(); i++)for(j = 0; j < shapePairs.width(); j++){
-		cp = shapePairs.item(i, j);
+		cp = GetShapePair(i, j);
 		if(cp->state == CDShapePair::NONE) continue;
 		if (!area) continue;
 
@@ -459,20 +461,22 @@ void PHSolidPairForPenalty::CalcFriction(PHShapePairForPenalty* cp){
 
 //----------------------------------------------------------------------------
 void PHPenaltyEngine::Step(){
-	if(!bContactEnabled)return;
-	
 	PHScene* scene = DCAST(PHScene, GetScene());
+	
+	if(!scene->IsContactDetectionEnabled())
+		return;
+	
 	unsigned int ct = scene->GetCount();
-	double dt = scene->GetTimeStep();
+	double       dt = scene->GetTimeStep();
 	int n = (int)solids.size();
 	int i, j;
 	for(i = 0; i < n; i++)for(j = i+1; j < n; j++)
-		solidPairs.item(i,j)->Setup(ct, dt);
+		GetSolidPair(i,j)->Setup(ct, dt);
 
-	Detect(ct, dt);
+	Detect(ct, dt, scene->IsCCDEnabled());
 
 	for(i = 0; i < n; i++)for(j = i+1; j < n; j++)
-		solidPairs.item(i,j)->GenerateForce();
+		GetSolidPair(i,j)->GenerateForce();
 
 }
 

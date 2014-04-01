@@ -28,7 +28,6 @@ namespace Spr{;
 
 #define SUBMAT(r, c, h, w) sub_matrix(PTM::TSubMatrixDim<r, c, h, w>())
 #define SUBVEC(o, l) sub_vector(PTM::TSubVectorDim<o, l>())
-typedef PTM::TMatrixCol<6, 6, double> Matrix6d;
 
 ///	v1 * v2^T で得られる行列
 inline Matrix3d VVtr(const Vec3d& v1, const Vec3d& v2){
@@ -41,7 +40,6 @@ inline Matrix3d VVtr(const Vec3d& v1, const Vec3d& v2){
 /// SpatialTransform
 struct SpatialTransformTranspose;
 struct SpatialTransform{
-	//Matrix3d	R;
 	Vec3d		r;
 	Quaterniond	q;
 
@@ -81,6 +79,8 @@ inline SpatialTransformTranspose operator*(const SpatialTransformTranspose& lhs,
 	return SpatialTransformTranspose(lhs.r + lhs.q * rhs.r, lhs.q * rhs.q);
 }
 
+typedef PTM::TMatrixRow<6, 6, double> Matrix6d;
+
 /// SpatialVector
 struct SpatialVector : public Vec6d{
 	Vec3d& v(){return *(Vec3d*)this;}
@@ -96,6 +96,57 @@ struct SpatialVector : public Vec6d{
 		w() = _w;
 	}
 };
+
+/** SpatialMatrix
+	行ベクトルをポインタでとるためにTMatrixRowを継承
+ */
+struct SpatialMatrix : public PTM::TMatrixRow<6, 6, double>{
+	typedef PTM::TSubMatrixRow<3, 3, PTM::TMatrixRow<6, 6, double>::desc> SubMatrix;
+	SubMatrix&	vv(){return SUBMAT(0, 0, 3, 3);}
+	SubMatrix&	vw(){return SUBMAT(0, 3, 3, 3);}
+	SubMatrix&	wv(){return SUBMAT(3, 0, 3, 3);}
+	SubMatrix&	ww(){return SUBMAT(3, 3, 3, 3);}
+
+	//SpatialMatrix inv(){
+	//	Matrix3d vvinv = vv.inv();
+	//	Matrix3d S = ww - wv * vvinv * vw;
+	//	Matrix3d Sinv = S.inv();
+	//	SpatialMatrix Y;
+	//	Y.vw = -1.0 * vvinv * vw * Sinv;
+	//	Y.vv = (Matrix3d::Unit() - Y.vw * wv) * vvinv;
+	//	Y.wv = -1.0 * Sinv * wv * vvinv;
+	//	Y.ww = Sinv;
+	//	return Y;
+	//}
+	SpatialMatrix& operator=(const SpatialTransform& X){
+		X.q.Conjugated().ToMatrix(vv());
+		vw() = -1.0 * vv() * Matrix3d::Cross(X.r);
+		wv().clear();
+		ww() = vv();
+		return *this;
+	}
+	SpatialMatrix& operator=(const SpatialTransformTranspose& Xtr){
+		Xtr.q.ToMatrix(vv());
+		vw().clear();
+		wv() = Matrix3d::Cross(Xtr.r) * vv();
+		ww() = vv();
+		return *this;
+	}
+	SpatialMatrix(){}
+	SpatialMatrix(const SpatialMatrix& X){
+		*this = X;
+	}
+	SpatialMatrix(const SpatialTransform& X){
+		*this = X;
+	}
+};
+
+inline double QuadForm(const SpatialVector& v1, const SpatialMatrix& M, const SpatialVector& v2){
+	double y = 0.0;
+	for(int i = 0; i < 6; i++)for(int j = 0; j < 6; j++)
+		y += v1[i] * M[i][j] * v2[j];
+	return y;
+}
 
 inline SpatialVector operator+ (const SpatialVector& lhs, const SpatialVector& rhs){
 	return SpatialVector(lhs.v() + rhs.v(), lhs.w() + rhs.w());
@@ -123,40 +174,6 @@ inline SpatialVector operator/(const SpatialVector& lhs, double k){
 	return SpatialVector(lhs.v() / k, lhs.w() / k);
 }
 
-/// SpatialMatrix
-struct SpatialMatrix : public Matrix6d{
-	typedef PTM::TSubMatrixCol<3, 3, Matrix6d::desc> SubMatrix;
-	SubMatrix&	vv(){return SUBMAT(0, 0, 3, 3);}
-	SubMatrix&	vw(){return SUBMAT(0, 3, 3, 3);}
-	SubMatrix&	wv(){return SUBMAT(3, 0, 3, 3);}
-	SubMatrix&	ww(){return SUBMAT(3, 3, 3, 3);}
-
-	/*SpatialMatrix inv(){
-		Matrix3d vvinv = vv.inv();
-		Matrix3d S = ww - wv * vvinv * vw;
-		Matrix3d Sinv = S.inv();
-		SpatialMatrix Y;
-		Y.vw = -1.0 * vvinv * vw * Sinv;
-		Y.vv = (Matrix3d::Unit() - Y.vw * wv) * vvinv;
-		Y.wv = -1.0 * Sinv * wv * vvinv;
-		Y.ww = Sinv;
-		return Y;
-	}*/
-	SpatialMatrix& operator=(const SpatialTransform& X){
-		X.q.Conjugated().ToMatrix(vv());
-		vw() = -1.0 * vv() * Matrix3d::Cross(X.r);
-		wv().clear();
-		ww() = vv();
-		return *this;
-	}
-	SpatialMatrix& operator=(const SpatialTransformTranspose& Xtr){
-		Xtr.q.ToMatrix(vv());
-		vw().clear();
-		wv() = Matrix3d::Cross(Xtr.r) * vv();
-		ww() = vv();
-		return *this;
-	}
-};
 inline SpatialMatrix operator+(const SpatialMatrix& lhs, const SpatialMatrix& rhs){
 	SpatialMatrix Y;
 	(Matrix6d&)Y = (const Matrix6d&)lhs + (const Matrix6d&)rhs;
@@ -187,14 +204,14 @@ inline SpatialMatrix VVtr(const SpatialVector& lhs, const SpatialVector& rhs){
 }
 
 inline void Xtr_Mat_X(SpatialMatrix& Y, const SpatialTransform& X, const SpatialMatrix& A){
-	/*SpatialMatrix Y;
-	Matrix3d tmp = Matrix3d::Cross(X.R.trans() * X.r);
-	Matrix3d tmp2 = A.vw() - A.vv() * tmp;
-	Y.vv() = X.R * A.vv() * X.R.trans();
-	Y.vw() = X.R * tmp2 * X.R.trans();
-	Y.wv() = X.R * (tmp * A.vv() + A.wv()) * X.R.trans();
-	Y.ww() = X.R * (tmp * tmp2 - A.wv() * tmp + A.ww()) * X.R.trans();
-	return Y;*/
+	//SpatialMatrix Y;
+	//Matrix3d tmp = Matrix3d::Cross(X.R.trans() * X.r);
+	//Matrix3d tmp2 = A.vw() - A.vv() * tmp;
+	//Y.vv() = X.R * A.vv() * X.R.trans();
+	//Y.vw() = X.R * tmp2 * X.R.trans();
+	//Y.wv() = X.R * (tmp * A.vv() + A.wv()) * X.R.trans();
+	//Y.ww() = X.R * (tmp * tmp2 - A.wv() * tmp + A.ww()) * X.R.trans();
+	//return Y;
 	SpatialMatrix Xtrm, Xm;
 	Xtrm = X.trans();
 	Xm = X;

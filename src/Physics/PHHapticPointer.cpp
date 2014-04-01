@@ -29,10 +29,10 @@ float PHHapticPointer::GetContactForce(int i){
 		float rv = 0.0f;
 		int j = neighborSolidIDs[i];
 		PHHapticEngine* he = DCAST(PHSceneIf,GetScene())->GetHapticEngine()->Cast();
-		PHSolidPairForHaptic* sop = he->solidPairsTemp.item(j,0);
+		PHSolidPairForHaptic* sop = he->GetSolidPairTemp(j,0);
 		for (int m=0; m<sop->solid[0]->NShape(); ++m) {
 			for (int n=0; n<sop->solid[0]->NShape(); ++n) {
-				PHShapePairForHaptic* shp = sop->shapePairs.item(m,n);
+				PHShapePairForHaptic* shp = sop->GetShapePair(m,n);
 				Vec3d p0 = (shp->shapePoseW[0]*shp->closestPoint[0]);
 				Vec3d p1 = (shp->shapePoseW[1]*shp->closestPoint[1]);
 				Vec3d di = (p0-p1);
@@ -47,15 +47,13 @@ float PHHapticPointer::GetContactForce(int i){
 		return rv;
 }
 
-void PHHapticPointer::UpdateHumanInterface(Posed pose, SpatialVector vel){
+void PHHapticPointer::UpdateHumanInterface(const Posed& pose, const SpatialVector& vel){
 	if(bDebugControl) return;
 	// HumanInterfaceから状態を取得
 	double s = GetPosScale();
-	vel.v() = vel.v() * s;
-	pose.Pos() = pose.Pos() * s;
-	hiSolid.SetVelocity(vel.v());
-	hiSolid.SetAngularVelocity(vel.w());
-	hiSolid.SetPose(GetDefaultPose() * pose);
+	hiSolid.SetVelocity       (s * vel.v());
+	hiSolid.SetAngularVelocity(s * vel.w());
+	hiSolid.SetPose(GetDefaultPose() * Posed(s * pose.Pos(), pose.Ori()));
 }
 
 void PHHapticPointer::UpdateDirect(){
@@ -78,7 +76,7 @@ SpatialVector PHHapticPointer::GetHapticForce() {
 	return rv;
 }
 
-void PHHapticPointer::AddHapticForce(SpatialVector f){
+void PHHapticPointer::AddHapticForce(const SpatialVector& f){
 	hapticForce += f;
 }
 

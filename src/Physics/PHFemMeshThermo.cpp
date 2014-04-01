@@ -5,7 +5,8 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#include <SciLab/SprSciLab.h>
+#include <SprDefs.h>
+#include <Scilab/SprScilab.h>
 #include <Physics/PHFemMeshThermo.h>
 #include <Base/Affine.h>
 //#include <Framework/FWObject.h>

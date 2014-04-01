@@ -17,10 +17,10 @@ namespace Spr{;
 //----------------------------------------------------------------------------
 // PHGear
 PHGear::PHGear(const PHGearDesc& desc){
-	f = A = Ainv = b = 0.0;
 	joint[0] = joint[1] = NULL;
-	bArticulated = false;
 	SetDesc(&desc);
+
+	bArticulated = false;
 }
 
 bool PHGear::AddChildObject(ObjectIf* o){
@@ -57,49 +57,64 @@ ObjectIf* PHGear::GetChildObject(size_t pos){
 	return joint[pos]->Cast();
 }
 
-void PHGear::CompResponse(double f){
-	double fc;
-	SpatialVector fs;
-	PHSolid* s;
-	for(int i = 0; i < 2; i++){
-		fc = (i == 0 ? ratio * f : -f);
-		for(int j = 0; j < 2; j++){
-			s = joint[i]->solid[j];
-			if(!s->IsDynamical())continue;
-			if(s->treeNode){
-				(Vec6d&)fs = joint[i]->J[j].row(joint[i]->movableAxes[0]) * fc;
-				s->treeNode->CompResponse(fs, true, false);
-			}
-			else s->dv += joint[i]->T[j].row(joint[i]->movableAxes[0]) * fc;
-		}
-	}
+bool PHGear::IsFeasible(){
+	return joint[0]->IsEnabled() && joint[0]->IsFeasible() && 
+		   joint[1]->IsEnabled() && joint[1]->IsFeasible();
 }
 
-void PHGear::SetupLCP(){
-	if(bArticulated)return;
+bool PHGear::IsArticulated(){
+	return bArticulated;
+}
+
+bool PHGear::IsCyclic(){
+	return joint[0]->IsCyclic() || joint[1]->IsCyclic();
+}
+
+void PHGear::SetupAxisIndex(){
+	axes.Clear();
+	axes.Enable(0);
+	joint[0]->targetAxes.Enable(joint[0]->movableAxes[0]);
+	joint[1]->targetAxes.Enable(joint[1]->movableAxes[0]);
+}
+
+void PHGear::Setup(){
 	f *= engine->shrinkRate;
 	
 	// LCPのA行列の対角成分を計算
-	A = ratio * ratio * joint[0]->A[joint[0]->movableAxes[0]] + joint[1]->A[joint[1]->movableAxes[0]];
-	Ainv = 1.0 / A;
+	A   [0] = ratio*ratio * joint[0]->A[joint[0]->movableAxes[0]] + joint[1]->A[joint[1]->movableAxes[0]];
+	Ainv[0] = 1.0 / A[0];
 
-	// 拘束力初期値による速度変化量を計算
-	CompResponse(f);
+	// bを計算
+	b[0] = ratio * joint[0]->velocity[0] - joint[1]->velocity[0];
+	if(mode == PHGearDesc::MODE_POS){
+		double e = ratio * joint[0]->position[0] + offset - joint[1]->position[0];
+		if(joint[0]->IsCyclic() || joint[1]->IsCyclic()){
+			while(e > M_PI)
+				e -= 2.0*M_PI;
+			while(e < -M_PI)
+				e += 2.0*M_PI;
+		}
+		db[0] = engine->velCorrectionRate * e;
+	}
+	else db[0] = 0.0;
 }
 
-void PHGear::IterateLCP(){
-	if(bArticulated)return;
-	double fnew;
-	double b[2];
-	for(int i = 0; i < 2; i++){
-		int iaxis = joint[i]->movableAxes[0];
-		b[i] = joint[i]->b[iaxis]
-			+ joint[i]->J[0].row(iaxis) * joint[i]->solid[0]->dv
-			+ joint[i]->J[1].row(iaxis) * joint[i]->solid[1]->dv;
-	}
-	fnew = f - Ainv * (ratio * b[0] - b[1]);
-	CompResponse(fnew - f);
-	f = fnew;
+void PHGear::Iterate(){
+	dv  [0] = ratio * joint[0]->dv[joint[0]->movableAxes[0]] - joint[1]->dv[joint[1]->movableAxes[0]];
+	res [0] = b[0] + db[0] + dv[0];
+	fnew[0] = f[0] - engine->accelSOR * Ainv[0] * res[0];
+	CompResponseDirect(fnew[0] - f[0], 0);
+	f[0] = fnew[0];
+}
+
+void PHGear::CompResponse(double df, int i){
+	joint[0]->CompResponse(ratio * df, joint[0]->movableAxes[0]);
+	joint[1]->CompResponse(-df       , joint[1]->movableAxes[0]);
+}
+
+void PHGear::CompResponseDirect(double df, int i){
+	joint[0]->CompResponseDirect(ratio * df, joint[0]->movableAxes[0]);
+	joint[1]->CompResponseDirect(-df       , joint[1]->movableAxes[0]);
 }
 
 }

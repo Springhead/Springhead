@@ -18,37 +18,37 @@ namespace Spr{;
 class PHSpring : public PHJoint{
 	friend class PHSpringMotor;
 
-	/// 関節コントローラ．PHSpringは6自由度関節（＝拘束しない）であり，実質的なコントロールはMotorが担当．
-	PHSpringMotor  motor;
-
 public:
 	SPR_OBJECTDEF(PHSpring);
 	SPR_DECLMEMBEROF_PHSpringDesc;
 
+	/// 関節コントローラ．PHSpringは6自由度関節（＝拘束しない）であり，実質的なコントロールはMotorが担当．
+	UTRef<PHSpringMotor>  motor;
+
 	/// コンストラクタ
 	PHSpring(const PHSpringDesc& desc = PHSpringDesc()) {
-		motor.joint = this;
+		motor = DBG_NEW PHSpringMotor();
+		motor->joint = this;
 
 		SetDesc(&desc);
 
-		nMovableAxes = 6;
-		for (int i=0; i<6; ++i) { movableAxes[i] = i; }
-		InitTargetAxes();
+		for (int i=0; i<6; ++i)
+			movableAxes.Enable(i);
 	}
 
 	// ----- PHConstraintの派生クラスで実装する機能
 
 	/// どの自由度を速度拘束するかを設定
-	virtual void SetupAxisIndex() {
-		PHJoint::SetupAxisIndex();
-		motor.SetupAxisIndex();
-	}
+	//virtual void SetupAxisIndex() {
+	//	PHJoint::SetupAxisIndex();
+	//	motor.SetupAxisIndex();
+	//}
 
 	/// LCPの補正値の計算．誤差修正用
-	virtual void CompBias() {
-		PHJoint::CompBias();
-		motor.CompBias();
-	}
+	//virtual void CompBias() {
+	//	PHJoint::CompBias();
+	//	motor.CompBias();
+	//}
 
 	// ----- インタフェースの実装
 

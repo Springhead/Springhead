@@ -33,7 +33,7 @@ void PHHapticLoopLDDev::LocalDynamics6D(){
 		vel.v() = localSolid->GetVelocity();
 		vel.w() = localSolid->GetAngularVelocity();
 		if(loopCount == 1){
-			vel += (hsolid->curb - hsolid->lastb) *  pdt;	// 衝突の影響を反映
+			vel += (hsolid->curb - hsolid->lastb) * pdt;	// 衝突の影響を反映
 		}
 		for(int j = 0; j < NHapticPointers(); j++){
 			PHHapticPointer* pointer = GetHapticPointer(j);
@@ -50,9 +50,9 @@ void PHHapticLoopLDDev::LocalDynamics6D(){
 		vel += hsolid->b * hdt;
 		//DSTR << vel << std::endl;
 		//CSVOUT << vel.w().y << std::endl;
-		localSolid->SetVelocity(vel.v());		
+		localSolid->SetVelocity       (vel.v());		
 		localSolid->SetAngularVelocity(vel.w());
-		localSolid->SetOrientation(( Quaterniond::Rot(vel.w() * hdt) * localSolid->GetOrientation()).unit());
+		localSolid->SetOrientation( (Quaterniond::Rot(vel.w() * hdt) * localSolid->GetOrientation()).unit() );
 		//localSolid->SetOrientation(( localSolid->GetOrientation() * Quaterniond::Rot(vel.w() * hdt)).unit());
 		localSolid->SetCenterPosition(localSolid->GetCenterPosition() + vel.v() * hdt);
 
@@ -157,7 +157,7 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 			PHHapticPointer* pointer = GetHapticPointer(j);
 			PHSolidPairForHaptic* solidPair = GetSolidPairForHaptic(i, pointer->GetPointerID());
 			if(solidPair->inLocal == 0) continue;
-			PHShapePairForHaptic* sp = solidPair->shapePairs.item(0, 0);	// 1形状のみ対応
+			PHShapePairForHaptic* sp = solidPair->GetShapePair(0, 0);	// 1形状のみ対応
 			Vec3d cPoint = sp->shapePoseW[0] * sp->closestPoint[0];		// 力を加える点(ワールド座標)
 			Vec3d normal = -1 * sp->normal;
 
@@ -168,7 +168,7 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 			SpatialVector testForce;
 			testForce.v() = solidPair->force;
 			testForce.w() = solidPair->torque;
-			solidPair->force = Vec3d();
+			solidPair->force  = Vec3d();
 			solidPair->torque = Vec3d();
 
 			/// テスト力が0の場合の処理
@@ -178,7 +178,7 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 				testForce.v() = minTestForce * normal;
 				Vec3d cPoint = sp->shapePoseW[0] * sp->closestPoint[0];		// 力を加える点(ワールド座標)
 				Vec3d center = phSolid->GetCenterPosition();
-				testForce.w() = (cPoint - center) % testForce.v();
+				testForce.w() = (cPoint - center) % testForce.w();
 				//DSTR << testForce.w() << std::endl;
 			}
 			///// テストトルクが0の場合の処理
@@ -212,7 +212,8 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 				base2.unitize();
 			}
 			base3 = base1^base2;
-			f[4].v() = f[5].v() = f[0].v();
+			f[4].v() = f[0].v();
+			f[5].v() = f[0].v();
 			f[4].w() = f[3].w().norm() * (base1 + base2).unit();
 			f[5].w() = f[3].w().norm() * (base1 + base3).unit();
 
@@ -251,8 +252,8 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 			svbase1.v() = f[0].v();
 			svbase1.w() = f[0].w();
 			svbase1.unitize();
-			double f_ip = f[0].v()*f[0].v();
-			double t_ip = f[0].w()*f[0].w();
+			double f_ip = f[0].v().square();
+			double t_ip = f[0].w().square();
 			double c = f_ip / t_ip;
 			double a = 1;
 			double b = - a * c;
@@ -268,13 +269,14 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 
 #endif
 
-			TMatrixRow<6,6,double> u = TMatrixRow<6,6,double>();		// 剛体の機械インピーダンス
-			TMatrixRow<6,6,double> F = TMatrixRow<6,6,double>();		// 加える力,トルク行列
+			//TMatrixRow<6,6,double> u = TMatrixRow<6,6,double>();		// 剛体の機械インピーダンス
+			//TMatrixRow<6,6,double> F = TMatrixRow<6,6,double>();		// 加える力,トルク行列
+			SpatialMatrix u, F;
 			for(int k = 0; k < 6; k++)	F.col(k) = f[k];				// テスト力，テストトルクを行列に詰める
 
 			/// テスト力，テストトルクを加えてテストシミュレーション実行
 			for(int k = 0; k < 6; k++){
-				phSolid->AddForce(f[k].v()); 
+				phSolid->AddForce (f[k].v()); 
 				phSolid->AddTorque(f[k].w());
 				#ifdef DIVIDE_STEP
 				phScene->IntegratePart2();
@@ -293,7 +295,9 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 			}
 			//DSTR << F.det() << std::endl; 
 			//DSTR << u << std::endl; 
-			solidPair->A6D = u  * F.inv();			// モビリティAの計算
+			SpatialMatrix Finv;
+			(Matrix6d&)Finv = F.inv();
+			solidPair->A6D = u * Finv;			// モビリティAの計算
 #if 0
 			DSTR << "------------------------" << std::endl;
 			DSTR << "u" << std::endl; DSTR << u << std::endl;
@@ -348,7 +352,7 @@ void PHHapticEngineLDDev::SyncHaptic2Physic(){
 		PHSolidForHaptic* psolid = GetHapticSolid(i);
 		SpatialVector b = (psolid->b + (psolid->curb - psolid->lastb)) * pdt;	// モビリティ定数項
 		//b = SpatialVector();
-		Vec3d v = localSolid->GetVelocity() + b.v();			// 反映速度
+		Vec3d v = localSolid->GetVelocity()        + b.v();			// 反映速度
 		Vec3d w = localSolid->GetAngularVelocity() + b.w();		// 反映角速度
 
 		// 状態の反映

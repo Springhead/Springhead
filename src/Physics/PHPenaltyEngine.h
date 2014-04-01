@@ -12,7 +12,7 @@
 
 namespace Spr{;
 
-class PHShapePairForPenalty : public CDShapePair{
+class PHShapePairForPenalty : public PHShapePair{
 public:
 	///@name	抗力の計算
 	//@{
@@ -57,11 +57,11 @@ public:
 };
 
 class PHPenaltyEngine;
-class PHSolidPairForPenalty : public PHSolidPair<PHShapePairForPenalty, PHPenaltyEngine>, public Object{
+class PHSolidPairForPenalty : public PHSolidPair/*<PHShapePairForPenalty, PHPenaltyEngine>*/{
 public:
-	typedef PHSolidPair<PHShapePairForPenalty, PHPenaltyEngine> base_type;
-	typedef base_type::shapepair_type shapepair_type;
-	typedef base_type::engine_type engine_type;
+	//typedef PHSolidPair<PHShapePairForPenalty, PHPenaltyEngine> base_type;
+	//typedef base_type::shapepair_type shapepair_type;
+	//typedef base_type::engine_type engine_type;
 
 	Vec3f cocog;					///<	2剛体の重心の中点(絶対系)
 	Vec3f reflexForce;				///<	抗力
@@ -72,8 +72,10 @@ public:
 	float area;						///<	接触面積
 	Quaternionf lastOri[2];			///<	前回の剛体の向き(絶対系)
 
-	virtual void OnDetect(shapepair_type* sp, engine_type* engine, unsigned ct, double dt);	///< 交差が検知されたときの処理
+	virtual PHShapePair* CreateShapePair(){ return DBG_NEW PHShapePairForPenalty(); }
+	virtual void OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
 
+	PHShapePairForPenalty* GetShapePair(int i, int j){ return (PHShapePairForPenalty*)(PHShapePair*)shapePairs.item(i,j); }
 	void Setup(unsigned int ct, double dt);
 	void GenerateForce();
 
@@ -114,11 +116,19 @@ protected:
 	void CalcFriction(PHShapePairForPenalty* cp);
 };
 
-class PHPenaltyEngine : public PHContactDetector<PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>{
+class PHPenaltyEngine : public PHContactDetector/*<PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>*/{
 	SPR_OBJECTDEF_NOIF1(PHPenaltyEngine, PHEngine);
 public:
-	int GetPriority() const {return SGBP_PENALTYENGINE;}
+	PHSolidPairForPenalty* GetSolidPair(int i, int j){ return (PHSolidPairForPenalty*)(PHSolidPair*)solidPairs.item(i,j); }
+	
+	// PHEngineの仮想関数
+	virtual int  GetPriority() const {return SGBP_PENALTYENGINE;}
 	virtual void Step();
+
+	// PHContactDetectorの仮想関数
+	virtual PHSolidPair* CreateSolidPair(){ return DBG_NEW PHSolidPairForPenalty(); }
+
 };
+
 }	//	namespace Spr
 #endif

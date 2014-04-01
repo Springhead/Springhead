@@ -18,38 +18,66 @@ namespace Spr{;
 
 class PHTreeNode;
 
-/// 拘束のステート
+/** 拘束のステート
+	- allocatorの関係上SpatialVectorはステートに置けないので注意
+ */
 struct PHConstraintState {
 	/// 拘束力の力積
-	SpatialVector f;
+	Vec6d f;
 
 	/// 拘束誤差を位置のLCPで補正する場合の補正量*質量
-	SpatialVector F;
+	Vec6d F;
 
 	// ----- PHJointに関連する変数
 
 	/// ばね部の距離（三要素モデル用）
-	SpatialVector xs;
+	Vec6d xs;
 
 	/// 拘束力にローパスをかけたもの
-	SpatialVector fAvg;
+	Vec6d fAvg;
 
 	/// 降伏したかどうか
 	bool   bYielded;
 
 	PHConstraintState() {
-		xs       = SpatialVector();
-		fAvg     = SpatialVector();
 		bYielded = false;
 	}
 };
 
-/// 拘束
-class PHConstraint : public SceneObject, public PHConstraintDesc, public PHConstraintState {
+/// 拘束の基本クラス．PHConstraint, PHJointLimit, PHJointMotor, PHGearが派生
+class PHConstraintBase{
 public:
+	SpatialVector b, db, B;
+	SpatialVector A, dA, Ainv;
+	SpatialVector f;
+	SpatialVector F;
+	SpatialVector fnew;
+	SpatialVector df;
+	SpatialVector dv;
+	SpatialVector dF;
+	SpatialVector dV;
+	SpatialVector res;
+	
+	AxisIndex<6> axes;		///< 拘束軸管理クラス
 
+	virtual void SetupAxisIndex    (){}
+	virtual void Setup             (){}	///< 速度LCPの前処理
+	virtual	void Iterate           (){}	///< 速度LCP(GS)の繰り返し計算
+	virtual void SetupCorrection   (){}	///< 位置LCPの前処理
+	virtual void IterateCorrection (){}	///< 位置LCP(GS)の繰り返し計算
+	virtual void CompResponse      (double df, int i){}
+	virtual void CompResponseDirect(double df, int i){}
+	/// 速度LCPの射影
+	//virtual bool Projection(double& f, int i){ return false; }
+	/// 位置LCPの射影
+	//virtual void ProjectionCorrection(double& F, int i){}
+};
+
+/// 拘束
+class PHConstraint : public SceneObject, public PHConstraintDesc, /*public PHConstraintState, */public PHConstraintBase{
+public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
-	ACCESS_DESC_STATE(PHConstraint);
+	ACCESS_DESC(PHConstraint);
 
 	/// 拘束を管理するエンジン
 	PHConstraintEngine* engine;
@@ -57,20 +85,30 @@ public:
 	/// 拘束する剛体
 	PHSolid* solid[2];
 
-	// ----- フラグ
-
-	/// 両方の剛体がundynamicalな場合true
-	bool bFeasible;				
-
+	/// 隣接する拘束とA行列
+	struct Adjacent{
+		PHConstraint* con;
+		SpatialMatrix A;
+	};
+	struct Adjacents : std::vector<Adjacent>{
+		Adjacent* Find(PHConstraint* con){
+			for(iterator it = begin(); it != end(); it++)
+				if(it->con == con)
+					return &*it;
+			return 0;
+		}
+	};
+	Adjacents	adj;
+	
 	/// 関節系を構成している場合true
-	bool bArticulated;			
+	PHTreeNode*		treeNode;
 
 	/// 剛体が解析法に従う場合true	
 	bool bInactive[2];
 
 	/// UpdateState時にUpdateCacheLCPを呼ぶのを禁止する．GetPosition()が呼ばれるたびにdvを書き換えられては困るため．
 	///   （このフラグが立つ頃にはConstraintEngineからUpdateCacheLCPが呼ばれているはずなので禁止しても問題は起きない）
-	bool bProhibitUpdateSolidCacheLCP;
+	//bool bProhibitUpdateSolidCacheLCP;
 
 	// ----- 計算用変数
 
@@ -97,16 +135,28 @@ public:
 	SpatialMatrix J[2];
 
 	/// T = M.inv() * J^t ガウスザイデルで使用               #[6 x n_c] 拘束のある行だけで良い
-	SpatialMatrix T[2];
+	//SpatialMatrix T[2];
 	
 	/// LCPのbベクトルとその補正量                           #[n_c]     拘束のある行だけで良い
-	SpatialVector b, db, B;
+	//SpatialVector b, db, B;
 	
 	/// LCPのA行列の対角成分とその補正量，逆数               #[n_c]
-	SpatialVector A, dA, Ainv;	
+	//SpatialVector A, dA, Ainv;
 
-	/// Projection用の各軸のMin/Max
-	double fMaxDt[6], fMinDt[6];
+	//SpatialVector f;					///< 拘束力の力積
+	//SpatialVector F;					///< 拘束誤差を位置のLCPで補正する場合の補正量*質量
+	SpatialVector fAvg;					///< 拘束力にローパスをかけたもの
+	SpatialVector xs;					///< ばね部の距離（三要素モデル用）
+	bool   bYielded;					///< 降伏したかどうか
+	
+	//SpatialVector fnew;			///< 更新後の拘束力	
+	//SpatialVector df;			///< 拘束力の変化量	
+	//SpatialVector dv;			///< 拘束速度の変化量	
+	//SpatialVector dF;			///< 拘束力の変化量	
+	//SpatialVector dV;
+	//SpatialVector res;			///< 拘束残差		
+	
+	double fMaxDt[6], fMinDt[6];	///< Projection用の各軸のMin/Max
 
 	/** ----- 拘束軸管理
 		拘束空間は全6自由度（並進x,y,z + 回転x,y,z）．
@@ -117,21 +167,18 @@ public:
 		  axesは拘束自由度および動的に拘束対象となっている可動自由度の両方を保持し，かつ前ステップからの拘束状態の切り替わりを記憶する．
 	 */
 
-	/// 拘束軸管理クラス
-	AxisIndex<6> axes;
-
 	/// 拘束の対象となりうる軸番号リスト
-	int targetAxes[6];
-
+	//int targetAxes[6];
 	/// targetAxesの要素数
-	int nTargetAxes;
-
+	//int nTargetAxes;
 	/// 可動（＝本来拘束しない）軸番号リスト
-	int movableAxes[6];
-
+	//int movableAxes[6];
 	/// movableAxesの要素数
-	int nMovableAxes;
+	//int nMovableAxes;
+	AxisIndex<6>	movableAxes;		///< 可動自由度
+	AxisIndex<6>	targetAxes;			///< 関節自身，可動範囲，モータのいずれかによって拘束される自由度
 
+public:
 	// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
 	/// コンストラクタ
@@ -141,32 +188,30 @@ public:
 	void InitTargetAxes();
 
 	// ----- エンジンから呼び出される関数
-
+	/// ツリーノードを構成しているか
+	bool IsArticulated();
+	/// 
+	bool IsFeasible();
 	/// 状態の更新
 	void UpdateState();
-
-	/// LCPを解く前段階の計算
-	virtual void SetupLCP();
-
-	/// LCPの繰り返し計算
-	virtual	void IterateLCP();
-
-	/// 位置LCPを解く前段階の計算
-	virtual void SetupCorrectionLCP();
-
-	/// 位置LCPの繰り返し計算
-	virtual void IterateCorrectionLCP();
+	
+	/// PHConstraintBaseの仮想関数
+	//virtual int  NDof                        (){ return 6; }
+	virtual void Setup                       ();
+	virtual void SetupCorrection             ();
+	virtual	void Iterate                     ();
+	virtual void IterateCorrection           ();
+	virtual bool Projection                  (double& f_, int i);
+	virtual void ProjectionCorrection        (double& F, int k){}
+	virtual void CompResponse                (double df, int i); ///< (M^-1 J^T) df
+	virtual void CompResponseCorrection      (double dF, int i); ///< (M^-1 J^T) dF
+	virtual void CompResponseDirect          (double df, int i); ///< (J M^-1 J^T) df
+	virtual void CompResponseDirectCorrection(double dF, int i); ///< (J M^-1 J^T) dF
 
 	// ----- このクラスで実装する機能
 
 	/// 拘束する2つの剛体の各速度から相対速度へのヤコビアンを計算
-	virtual void CompJacobian();
-
-	/// Aの対角成分を計算する．A = J * M^-1 * J^T
-	void CompResponseMatrix();
-
-	/// 拘束力変化量(df)に対する加速度変化量(dvの差分)を計算して反映
-	void CompResponse(double df, int j);
+	void CompJacobian();
 
 	// ----- 派生クラスで実装する機能
 
@@ -177,55 +222,46 @@ public:
 	virtual void	SetupAxisIndex();
 
 	/// 独自座標系を使う場合のヤコビアンの修正
-	virtual void	ModifyJacobian(){}							
+	//virtual void	ModifyJacobian(){}							
 
 	/// LCPの補正値の計算．誤差修正用
 	virtual void	CompBias(){}
 
-	/// 拘束力の射影
-	virtual void	Projection(double& f_, int i);
-
 	/// Correction用の拘束誤差を設定する
 	virtual void	CompError(){}
 
-	/// Correction用の射影
-	virtual void	ProjectionCorrection(double& F, int k){}
-
 	// ----- インタフェースの実装
+	PHSceneIf*	 GetScene() const { return DCAST(PHSceneIf, SceneObject::GetScene()); }
+	PHSolidIf*	 GetSocketSolid() { return solid[0]->Cast(); }
+	PHSolidIf*	 GetPlugSolid()   { return solid[1]->Cast(); }
 
-	virtual PHSceneIf*	 GetScene() const { return DCAST(PHSceneIf, SceneObject::GetScene()); }
-	virtual PHSolidIf*	 GetSocketSolid() { return solid[0]->Cast(); }
-	virtual PHSolidIf*	 GetPlugSolid()   { return solid[1]->Cast(); }
+	void		 Enable(bool bEnable = true){ bEnabled = bEnable; }
+	bool		 IsEnabled(){return bEnabled;}
 
-	virtual void		 Enable(bool bEnable = true){ bEnabled = bEnable; }
-	virtual bool		 IsEnabled(){return bEnabled;}
+	void		 SetInactive(int index = 0, bool Inaction = true){ bInactive[index]=Inaction; }
+	bool		 IsInactive(int index = 0){ return bInactive[index]; }
 
-	virtual void		 SetInactive(int index = 0, bool Inaction = true){ bInactive[index]=Inaction; }
-	virtual bool		 IsInactive(int index = 0){ return bInactive[index]; }
+	void		 GetSocketPose(Posed& pose){ pose=poseSocket; }
+	void		 SetSocketPose(const Posed& pose){ poseSocket=pose; Xj[0].q=pose.Ori(); Xj[0].r=pose.Pos(); }
+	void		 GetPlugPose(Posed& pose){ pose=posePlug; }
+	void		 SetPlugPose(const Posed& pose){ posePlug=pose; Xj[1].q=pose.Ori(); Xj[1].r=pose.Pos(); }
 
-	virtual void		 GetSocketPose(Posed& pose){ pose=poseSocket; }
-	virtual void		 SetSocketPose(const Posed& pose){ poseSocket=pose; Xj[0].q=pose.Ori(); Xj[0].r=pose.Pos(); }
-	virtual void		 GetPlugPose(Posed& pose){ pose=posePlug; }
-	virtual void		 SetPlugPose(const Posed& pose){ posePlug=pose; Xj[1].q=pose.Ori(); Xj[1].r=pose.Pos(); }
+	void		 GetRelativePose(Posed& p){ UpdateState(); p.Pos()=Xjrel.r; p.Ori()=Xjrel.q; }
+	Vec3d		 GetRelativePoseR(){ UpdateState(); return Xjrel.r; }
+	Quaterniond	 GetRelativePoseQ(){ UpdateState(); return Xjrel.q; }
+	Quaterniond  GetAbsolutePoseQ(){ UpdateState(); return Xjrel.q * X[0].q; } // Socketをつける位置も気にするべきか？
 
-	virtual void		 GetRelativePose(Posed& p){ UpdateState(); p.Pos()=Xjrel.r; p.Ori()=Xjrel.q; }
-	virtual Vec3d		 GetRelativePoseR(){ UpdateState(); return Xjrel.r; }
-	virtual Quaterniond	 GetRelativePoseQ(){ UpdateState(); return Xjrel.q; }
-	virtual Quaterniond  GetAbsolutePoseQ(){ UpdateState(); return Xjrel.q * X[0].q; } // Socketをつける位置も気にするべきか？
+	void		 GetRelativeVelocity(Vec3d& v, Vec3d& w);
+	void		 GetConstraintForce(Vec3d& _f, Vec3d& _t);
 
-	virtual void		 GetRelativeVelocity(Vec3d& v, Vec3d& w);
-	virtual void		 GetConstraintForce(Vec3d& _f, Vec3d& _t);
-
-	virtual Vec3d		 GetForce();
-	virtual Vec3d		 GetTorque();
-
+	/// Objectの仮想関数
 	virtual bool		 AddChildObject(ObjectIf* o);
 	virtual size_t		 NChildObject() const;
 	virtual ObjectIf*	 GetChildObject(size_t i);
 
-protected:
-	virtual void		 AfterSetDesc();
-
+	virtual size_t       GetStateSize() const { return sizeof(PHConstraintState); }
+	virtual bool         GetState(void* s) const;
+	virtual void         SetState(const void* s);
 };
 
 /// 拘束コンテナ
@@ -250,7 +286,7 @@ public:
 	/// 指定された剛体の組に作用している拘束を返す
 	PHConstraint* FindBySolidPair(PHSolid* lhs, PHSolid* rhs){
 		for(iterator it = begin(); it != end(); it++) {
-			if((*it)->solid[0] == lhs && (*it)->solid[1] == rhs) {
+			if((*it)->solid[0] == lhs && (*it)->solid[1] == rhs && (*it)->IsEnabled()) {
 				return *it;
 			}
 		}
@@ -266,11 +302,10 @@ public:
 				Vec3d _f , _t;
 				(*it)->GetConstraintForce(_f, _t);
 				SpatialVector __f;
-				__f.v() = _f; __f.w() = _t;
-				PTM::TVector<6,double> Jf = ((*it)->J[0].trans() * __f);
-				Vec3d Jfv;
-				for(int i=0; i<3; ++i){ Jfv[i] = Jf[i]; }
-				total += Jfv;
+				__f.v() = _f;
+				__f.w() = _t;
+				SpatialVector Jf = (const SpatialVector&)((*it)->J[0].trans() * __f);
+				total += Jf.v();
 			}
 		}
 		return total;

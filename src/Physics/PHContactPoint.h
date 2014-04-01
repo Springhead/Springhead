@@ -25,18 +25,16 @@ public:
 
 	PHShapePairForLCP* shapePair;
 	Vec3d pos;
-	double	mu0, mu, e;
+	double mu0, mu, e;
+	double spring, damper;
 
 	/// コンストラクタ
 	PHContactPoint(){}
-	//PHContactPoint(PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
 	PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);
 
 	// ----- PHConstraintの派生クラスで実装する機能
-
 	virtual void CompBias();
-	virtual void Projection(double& f_, int i);
-
+	virtual bool Projection(double& f_, int i);
 	virtual void CompError();
 	virtual void ProjectionCorrection(double& F, int k);
 };

@@ -42,22 +42,20 @@ void PHPath::SetDesc(const void* desc){
 	bReady = false;	
 }
 
-void PHPath::Rollover(double& s){
+double PHPath::Rollover(double s){
 	double lower = front().s;
 	double upper = back().s;
 	assert(lower < upper);
 	double range = upper - lower;
-	// 苦肉の策
-	if(abs(s) > 1.0e3)
-		s = 0.0;
 	while(s >= upper)s -= range;
 	while(s <  lower)s += range;
+	return s;
 }
 
 PHPath::iterator PHPath::Find(double& s){
 	if(size() <= 1)return begin();
 	if(bLoop)
-		Rollover(s);
+		s = Rollover(s);
 	iterator it;
 	for(it = begin(); it != end(); it++){
 		if(it->s > s)
@@ -81,7 +79,7 @@ void PHPath::AddPoint(double s, const Posed& pose){
 
 //6x6行列Jの一番下の行ベクトルは与えられているとして，
 //gram-schmidtの直交化で残る5本の行ベクトルを設定する
-void Orthogonalize(Matrix6d& J){
+void Orthogonalize(SpatialMatrix& J){
 	int i, j, k;
 	for(i = 4; i >= 0; i--){
 		for(k = 0; k < 6; k++){
@@ -125,10 +123,18 @@ void PHPath::CompJacobian(){
 		v = pd.Pos();
 		qd = pd.Ori();
 		w = (it->pose.Ori()).AngularVelocity(qd);		//1/2 * w * q = qd		=> 2 * qd * q~ = w
-		it->J.row(5).SUBVEC(0,3) =  v;
-		it->J.row(5).SUBVEC(3,3) =  w;
+
+		SpatialVector V;
+		V.v() = v;
+		V.w() = w;
+		it->J.row(5) = V;
 		Orthogonalize(it->J);
 	}
+
+	// ヤコビアンの滑らかさ確認
+	/*for(int i = 0; i < size()-1; i++){
+		DSTR << at(i).J.row(5) * at(i+1).J.row(5) << std::endl;
+	}*/
 	bReady = true;
 }
 
@@ -156,7 +162,7 @@ void PHPath::GetPose(double s, Posed& pose){
 	pose.Ori() = lhs.pose.Ori() * Quaterniond::Rot(angle, axis);
 }
 
-void PHPath::GetJacobian(double s, Matrix6d& J){
+void PHPath::GetJacobian(double s, SpatialMatrix& J){
 	if(!bReady){
 		CompJacobian();
 	}
@@ -173,7 +179,7 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 	}
 	PHPathPointWithJacobian &rhs = *it, &lhs = *--it;
 	double tmp = 1.0 / (rhs.s - lhs.s);
-	J = ((rhs.s - s) * tmp) * lhs.J + ((s - lhs.s) * tmp) * rhs.J;
+	(Matrix6d&)J = ((rhs.s - s) * tmp) * lhs.J + ((s - lhs.s) * tmp) * rhs.J;
 }
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -181,9 +187,9 @@ void PHPath::GetJacobian(double s, Matrix6d& J){
 
 void PHPathJointNode::CompJointJacobian(){
 	PHPathJoint* j = GetJoint();
-	Matrix6d Jq;
+	SpatialMatrix Jq;
 	j->path->GetJacobian(j->position[0], Jq);
-	(Vec6d&)J[0] = Jq.row(5);
+	J.col(0) = Jq.row(5);
 	PHTreeNode1D::CompJointJacobian();
 }
 
@@ -193,7 +199,7 @@ void PHPathJointNode::CompJointCoriolisAccel(){
 
 void PHPathJointNode::CompRelativeVelocity(){
 	PHPathJoint* j = GetJoint();
-	Matrix6d Jq;
+	SpatialMatrix Jq;
 	j->path->GetJacobian(j->position[0], Jq);
 	(Vec6d&)j->vjrel = Jq.row(5) * j->velocity[0];
 }
@@ -210,7 +216,7 @@ void PHPathJointNode::UpdateJointPosition(double dt){
 	PHTreeNode1D::UpdateJointPosition(dt);
 	PHPathJoint* j = GetJoint();
 	if(j->path->IsLoop())
-		j->path->Rollover(j->position[0]);
+		j->position[0] = j->path->Rollover(j->position[0]);
 }
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -219,45 +225,43 @@ void PHPathJointNode::UpdateJointPosition(double dt){
 PHPathJoint::PHPathJoint(const PHPathJointDesc& desc){
 	SetDesc(&desc);
 	
-	// 可動軸・拘束軸の設定
-	nMovableAxes   = 1;
-	movableAxes[0] = 5;
-	InitTargetAxes();
+	movableAxes.Enable(5);
 }
 
 // ----- エンジンから呼び出される関数
 
 void PHPathJoint::UpdateJointState(){
-	Matrix6d J;
+	/*Matrix6d J;
 	path->GetJacobian(position[0], J);
 	velocity[0] = vjrel.norm();
 	if(vjrel * J.row(5) < 0.0)
 		velocity[0] = -velocity[0];
 	position[0] += velocity[0] * GetScene()->GetTimeStep();
-	path->Rollover(position[0]);
+	path->Rollover(position[0]);*/
 }
 
 // ----- PHConstraintの派生クラスで実装される機能
 
 void PHPathJoint::ModifyJacobian(){
-	Matrix6d Jq;
+	/*Matrix6d Jq;
 	path->GetJacobian(position[0], Jq);
 	(Matrix6d&)J[0] = Jq * J[0];
-	(Matrix6d&)J[1] = Jq * J[1];
+	(Matrix6d&)J[1] = Jq * J[1];*/
 }
 
 void PHPathJoint::CompBias(){
+	/*
 	double dtinv = 1.0 / GetScene()->GetTimeStep();
 	Posed p;
 	path->GetPose(position[0], p);
-	db.v() = ((Xjrel.r - p.Pos()) * dtinv/* + vjrel.v()*/);
+	db.v() = ((Xjrel.r - p.Pos()) * dtinv);
 	db.w().clear();
 	Matrix6d Jq;
 	path->GetJacobian(position[0], Jq);
 	(Vec6d&)db = Jq * db;
 	db.w().z = 0.0;
 	db *= engine->velCorrectionRate;
-
+	*/
 	// 親クラスのCompBias．motor,limitのCompBiasが呼ばれるので最後に呼ぶ
 	PH1DJoint::CompBias();
 }

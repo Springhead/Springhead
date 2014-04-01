@@ -9,6 +9,7 @@
 #define PHGEAR_H
 
 #include "../Foundation/Object.h"
+#include "../Physics/PHConstraint.h"
 #include <Physics/SprPHJoint.h>
 #include "PhysicsDecl.hpp"
 
@@ -21,35 +22,56 @@ class PH1DJoint;
 /**
 	ギア：１自由度関節を連動させる拘束
  */
-class PHGear : public SceneObject{
+class PHGear : public SceneObject, public PHConstraintBase{
 public:
 	SPR_OBJECTDEF(PHGear);
 	SPR_DECLMEMBEROF_PHGearDesc;
 
 	PHScene*			scene;
 	PHConstraintEngine* engine;
-	PH1DJoint*		joint[2];		///< 連動させる関節
-	bool			bArticulated;
-	double			A, Ainv, b;
-	double			f;
+	PH1DJoint*		    joint[2];		///< 連動させる関節
+	bool				bArticulated;
 
+public:
+	/// Objectの仮想関数
 	virtual bool AddChildObject(ObjectIf* o);
 	virtual bool DelChildObject(ObjectIf* o);
 	virtual size_t NChildObject()const{ return 2; }
 	virtual ObjectIf* GetChildObject(size_t pos);
-	void	CompResponse(double f);
-	void	SetupLCP();
-	void	IterateLCP();
-	double GetRatio() const { return ratio; }
+
+	bool	IsFeasible();
+	bool	IsArticulated();
+	bool	IsCyclic();
+	
+	/// PHGearIfの実装
+	void    Enable   (bool bEnable){ bEnabled = bEnable; }
+	bool    IsEnabled(){ return bEnabled; }
+	void    SetRatio (double r){ ratio = r; }
+	double  GetRatio () const { return ratio; }
+	void    SetOffset(double o){ offset = o; }
+	double  GetOffset() const { return offset; }
+	void    SetMode  (int m){ mode = m; }
+	int     GetMode  (){ return mode; }
+
+	/// PHConstraintBaseの仮想関数
+	virtual void SetupAxisIndex    ();
+	virtual void Setup             ();
+	virtual void Iterate           ();
+	virtual void CompResponse      (double df, int i);
+	virtual void CompResponseDirect(double df, int i);
+	
 	PHGear(const PHGearDesc& desc = PHGearDesc());
 };
 
 class PHGears : public std::vector< UTRef<PHGear> >{
 public:
 	PHGear* FindByJointPair(PH1DJoint* lhs, PH1DJoint* rhs){
-		for(iterator it = begin(); it != end(); it++)
+		for(iterator it = begin(); it != end(); it++){
 			if((*it)->joint[0] == lhs && (*it)->joint[1] == rhs)
 				return *it;
+			if((*it)->joint[1] == lhs && (*it)->joint[0] == rhs)
+				return *it;
+		}
 		return NULL;
 	}
 };

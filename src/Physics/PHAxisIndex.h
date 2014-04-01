@@ -23,6 +23,12 @@ class AxisIndex {
 	/// idxの要素数
 	size_t sz;
 
+	/// 拘束フラグから拘束軸番号リストを作成する
+	void CreateList() {
+		sz = 0;
+		for (int i=0; i<N; ++i) { if (bCurr[i]) { idx[sz++] = i; } }
+	}
+
 public:
 
 	/// 変化状態をあらわすenum
@@ -35,10 +41,16 @@ public:
 	}
 
 	/// 軸番号iを拘束する
-	void Enable(int i)  { bCurr[i] = true; }
+	void Enable(int i)  {
+		bCurr[i] = true;
+		CreateList();
+	}
 
 	/// 軸番号iの拘束を解除する
-	void Disable(int i) { bCurr[i] = false; }
+	void Disable(int i) {
+		bCurr[i] = false;
+		CreateList();
+	}
 
 	/// 軸番号iが拘束されているかどうかを取得する
 	bool IsEnabled(int i) { return bCurr[i]; }
@@ -52,11 +64,6 @@ public:
 	/// 軸番号iの拘束が継続しているかどうかを返す
 	bool IsContinued(int i) {
 		return(bCurr[i] && bPrev[i]);
-	}
-
-	/// 拘束フラグから拘束軸番号リストを作成する
-	void CreateList() {
-		for (int i=0; i<N; ++i) { if (bCurr[i]) { idx[sz++] = i; } }
 	}
 
 	/// 拘束軸番号リストをクリア

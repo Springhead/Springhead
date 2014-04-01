@@ -28,23 +28,29 @@ void PHHapticLoopLD::LocalDynamics(){
 		if(hsolid->doSim == 0) continue;
 		if(hsolid->GetLocalSolid()->IsDynamical() == false) continue;
 		PHSolid* localSolid = &hsolid->localSolid;
-		SpatialVector vel;
-		vel.v() = localSolid->GetVelocity();
-		vel.w() = localSolid->GetAngularVelocity();
+
+		Vec3d vel_v, vel_w;
+		vel_v = localSolid->GetVelocity();
+		vel_w = localSolid->GetAngularVelocity();
 		if(loopCount == 1){
-			vel += (hsolid->curb - hsolid->lastb) *  pdt;	// 衝突の影響を反映
+			SpatialVector diff = hsolid->curb - hsolid->lastb;
+			vel_v += diff.v() * pdt;	// 衝突の影響を反映
+			vel_w += diff.w() * pdt;
 		}
 		for(int j = 0; j < NHapticPointers(); j++){
 			PHHapticPointer* pointer = GetHapticPointer(j);
 			PHSolidPairForHaptic* sp = GetSolidPairForHaptic(i, pointer->GetPointerID());
 			if(sp->inLocal == 0) continue;
-			vel += (sp->A * sp->force) * hdt;			// 力覚ポインタからの力による速度変化
+			// 力覚ポインタからの力による速度変化
+			vel_v += (sp->A.SUBMAT(0,0,3,3) * sp->force) * hdt;
+			vel_w += (sp->A.SUBMAT(3,0,3,3) * sp->force) * hdt;
 		}
-		vel += hsolid->b * hdt;
-		localSolid->SetVelocity(vel.v());		
-		localSolid->SetAngularVelocity(vel.w());
-		localSolid->SetOrientation(( Quaterniond::Rot(vel.w() * hdt) * localSolid->GetOrientation()).unit());
-		localSolid->SetCenterPosition(localSolid->GetCenterPosition() + vel.v() * hdt);
+		vel_v += hsolid->b.v() * hdt;
+		vel_w += hsolid->b.w() * hdt;
+		localSolid->SetVelocity       (vel_v);		
+		localSolid->SetAngularVelocity(vel_w);
+		localSolid->SetOrientation(( Quaterniond::Rot(vel_w * hdt) * localSolid->GetOrientation()).unit());
+		localSolid->SetCenterPosition(localSolid->GetCenterPosition() + vel_v * hdt);
 
  		localSolid->SetUpdated(true);
 		localSolid->Step();
@@ -137,7 +143,7 @@ void PHHapticEngineLD::PredictSimulation3D(){
 			PHHapticPointer* pointer = GetHapticPointer(j);
 			PHSolidPairForHaptic* solidPair = GetSolidPairForHaptic(i, pointer->GetPointerID());
 			if(solidPair->inLocal == 0) continue;
-			PHShapePairForHaptic* sp = solidPair->shapePairs.item(0, 0);	// 1形状のみ対応
+			PHShapePairForHaptic* sp = solidPair->GetShapePair(0, 0);	// 1形状のみ対応
 			Vec3d cPoint = sp->shapePoseW[0] * sp->closestPoint[0];		// 力を加える点(ワールド座標)
 			Vec3d normal = -1 * sp->normal;
 
@@ -198,7 +204,9 @@ void PHHapticEngineLD::PredictSimulation3D(){
 				#endif
 				nextvel.v() = phSolid->GetVelocity();
 				nextvel.w() = phSolid->GetAngularVelocity();
-				u.col(m) = (nextvel - curvel) / pdt - hsolid->b;
+				SpatialVector tmp = (nextvel - curvel) / pdt - hsolid->b;
+				u.col(m).SUBVEC(0,3) = tmp.v();
+				u.col(m).SUBVEC(3,3) = tmp.w();
 				states->LoadState(phScene);			
 				//DSTR << "force.col" << m << " " << force.col(m) << force.col(m).norm() << std::endl;
 			}
@@ -256,7 +264,7 @@ void PHHapticEngineLD::SyncHaptic2Physic(){
 		PHSolid* localSolid = hsolid->GetLocalSolid();
 		PHSolidForHaptic* psolid = GetHapticSolid(i);
 		SpatialVector b = (psolid->b + (psolid->curb - psolid->lastb)) * pdt;	// モビリティ定数項
-		Vec3d v = localSolid->GetVelocity() + b.v();			// 反映速度
+		Vec3d v = localSolid->GetVelocity()        + b.v();			// 反映速度
 		Vec3d w = localSolid->GetAngularVelocity() + b.w();		// 反映角速度
 
 		// 状態の反映

@@ -116,7 +116,7 @@ void PHHapticEngineMultiBase::SyncHapticPointers(){
 			if(ppointer->hapticRenderMode == ppointer->VC){
 				vcSolid->SetGravity(false);
 				ppointer->vcSolidCopied = *vcSolid;
-				vcSolid->AddForce(hpointer->vcForce.v());
+				vcSolid->AddForce (hpointer->vcForce.v());
 				vcSolid->AddTorque(hpointer->vcForce.w());
 				ppointer->vcForce = SpatialVector();
 				hpointer->vcForce = SpatialVector();

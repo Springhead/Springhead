@@ -69,7 +69,6 @@ public:
 	friend class			PHFrame;
 	friend class			Object;
 
-
 	//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 	///	コンストラクタ
 	PHScene(const PHSceneDesc& desc = PHSceneDesc());
@@ -93,6 +92,8 @@ public:
 	void					SetContactMode(PHSolidIf** group ,size_t length, PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
 	void					SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode = PHSceneDesc::MODE_LCP);
 	void					SetContactMode(PHSceneDesc::ContactMode mode = PHSceneDesc::MODE_LCP);
+	int                     GetLCPSolver();
+	void                    SetLCPSolver(int method);
 	virtual int				GetNumIteration();
 	virtual void			SetNumIteration(int n);
 	PHJointIf*				CreateJoint(PHSolidIf* lhs, PHSolidIf* rhs, const IfInfo* ii, const PHJointDesc& desc);
@@ -108,6 +109,8 @@ public:
 	int						NRootNodes() const;
 	PHRootNodeIf*			GetRootNode(int i);
 	PHTreeNodeIf*			CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc());
+	void					CreateTreeNodesRecurs(PHTreeNodeIf* node, PHSolidIf* solid);
+	PHRootNodeIf*			CreateTreeNodes      (PHSolidIf* solid);
 	PHGearIf*				CreateGear(PH1DJointIf* lhs, PH1DJointIf* rhs, const PHGearDesc& desc = PHGearDesc());
 	int						NGears() const;
 	PHGearIf*				GetGear(int i);
@@ -159,11 +162,23 @@ public:
 	double	GetFrictionThreshold(){ return frictionThreshold; }
 	void	SetFrictionThreshold(double vth){ frictionThreshold = vth; }
 	
-	double  GetMaxVelocity(){ return maxVelocity; }
-	void    SetMaxVelocity(double vmax){ maxVelocity = vmax; }
-	
-	double  GetMaxAngularVelocity(){ return maxAngularVelocity; }
-	void    SetMaxAngularVelocity(double wmax){ maxAngularVelocity = wmax; }
+	double  GetMaxVelocity           ()            { return maxVelocity; }
+	void    SetMaxVelocity           (double vmax) { maxVelocity = vmax; }	
+	double  GetMaxAngularVelocity    ()            { return maxAngularVelocity; }
+	void    SetMaxAngularVelocity    (double wmax) { maxAngularVelocity = wmax; }
+	double  GetMaxForce              ()            { return maxForce; }
+	void    SetMaxForce              (double fmax) { maxForce = fmax; }
+	double  GetMaxMoment             ()            { return maxMoment; }
+	void    SetMaxMoment             (double tmax) { maxMoment = tmax; }
+	double  GetMaxDeltaPosition      ()            { return maxDeltaPosition; }
+	void    SetMaxDeltaPosition      (double dpmax){ maxDeltaPosition = dpmax; }
+	double  GetMaxDeltaOrientation   ()            { return maxDeltaOrientation; }
+	void    SetMaxDeltaOrientation   (double dqmax){ maxDeltaOrientation = dqmax; }
+	void	EnableContactDetection   (bool enable) { bContactDetectionEnabled = enable; }
+	bool    IsContactDetectionEnabled()            { return bContactDetectionEnabled; }
+	void    EnableCCD                (bool enable) { bCCDEnabled = enable; }
+	bool    IsCCDEnabled             ()            { return bCCDEnabled; }
+	void    SetContactDetectionRange (Vec3f center, Vec3f extent, int nx, int ny, int nz);
 	
 	///	シーンの時刻を進める ClearForce(); GenerateForce(); Integrate(); と同じ
 	void					Step();
@@ -197,17 +212,17 @@ public:
 	virtual bool			DelChildObject(ObjectIf* o);	
 	
 	ACCESS_DESC(PHScene);
-	virtual size_t GetStateSize() const;
-	virtual void ConstructState(void* m) const;
-	virtual void DestructState(void* m) const;
+	virtual size_t      GetStateSize   () const;
+	virtual void        ConstructState (void* m) const;
+	virtual void        DestructState  (void* m) const;
 	virtual const void* GetStateAddress() const { return NULL; } // not supported.
-	virtual bool GetState(void* s) const;
-	virtual void SetState(const void* s);
-	virtual void GetStateR(char*& s);
-	virtual void SetStateR(const char*& state);
-	virtual bool WriteStateR(std::ostream& fout);
-	virtual bool ReadStateR(std::istream& fin);
-	virtual void DumpObjectR(std::ostream& os, int level=0) const;
+	virtual bool        GetState       (void* s) const;
+	virtual void        SetState       (const void* s);
+	virtual void        GetStateR      (char*& s);
+	virtual void        SetStateR      (const char*& state);
+	virtual bool        WriteStateR    (std::ostream& fout);
+	virtual bool        ReadStateR     (std::istream& fin);
+	virtual void        DumpObjectR    (std::ostream& os, int level=0) const;
 protected:
 	virtual void AfterSetDesc();
 	virtual void BeforeGetDesc() const;

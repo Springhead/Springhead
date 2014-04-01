@@ -21,9 +21,7 @@ public:
 	SPR_OBJECTDEF_ABST(PHJoint);
 	SPR_DECLMEMBEROF_PHJointDesc;
 
-	/// コンストラクタ
-	PHJoint() {}
-
+public:
 	/// ABAで対応するPHTreeNodeの派生クラスを生成して返す
 	virtual PHTreeNode* CreateTreeNode(){ return NULL; }
 
@@ -41,14 +39,15 @@ protected:
 	friend class PHTreeNodeND<NDOF>;
 
 public:
+	typedef PTM::TVector<NDOF, double> VecNd;
+
 	/// 関節の位置・速度
-	PTM::TVector<NDOF,double> position, velocity;
+	VecNd position, velocity;
 
 	/// コンストラクタ
 	PHNDJoint(){
 		position.clear();
 		velocity.clear();
-		nMovableAxes = NDOF;
 	}
 };
 
@@ -58,34 +57,36 @@ protected:
 	friend class PH1DJointLimit;
 	friend class PH1DJointMotor;
 
-	PH1DJointLimit* limit;			///< 可動範囲拘束
-	PH1DJointMotor  motor;			///< モータ
-
 public:
 	SPR_OBJECTDEF_ABST1(PH1DJoint, PHJoint);
 	SPR_DECLMEMBEROF_PH1DJointDesc;
 
+	UTRef<PH1DJointLimit> limit;			///< 可動範囲拘束
+	UTRef<PH1DJointMotor> motor;			///< モータ
+
 	/// コンストラクタ
-	PH1DJoint() {
-		motor.joint = this;
-		limit = NULL;
+	PH1DJoint(){
+		limit = DBG_NEW PH1DJointLimit();
+		motor = DBG_NEW PH1DJointMotor();
+		limit->joint = this;
+		motor->joint = this;
 	}
 
 	// ----- PHConstraintの派生クラスで実装する機能
 
 	/// どの自由度を速度拘束するかを設定
-	virtual void SetupAxisIndex() {
-		PHJoint::SetupAxisIndex();
-		motor.SetupAxisIndex();
-		if (limit) { limit->SetupAxisIndex(); }
-	}
+	//virtual void SetupAxisIndex() {
+	//	PHJoint::SetupAxisIndex();
+	//	motor.SetupAxisIndex();
+	//	if (limit) { limit->SetupAxisIndex(); }
+	//}
 	
 	/// LCPの補正値の計算．誤差修正用
-	virtual void CompBias() {
-		PHJoint::CompBias();
-		motor.CompBias();
-		if (limit) { limit->CompBias(); }
-	}
+	//virtual void CompBias() {
+	//	PHJoint::CompBias();
+	//	motor.CompBias();
+	//	if (limit) { limit->CompBias(); }
+	//}
 
 	// ----- このクラスと，このクラスから派生するクラスの機能
 
@@ -94,51 +95,88 @@ public:
 		return GetPosition() - GetTargetPosition();
 	}
 
-	// ----- インタフェースの実装
-
 	/// ChildObject．可動域を追加できる
-	virtual bool AddChildObject(ObjectIf* o) {
-		if (!limit) { limit = o->Cast(); if(limit){ limit->joint=this;return true; }}
-		return PHConstraint::AddChildObject(o);
-	}
-	virtual size_t NChildObject() const {
-		return((limit?1:0)+PHConstraint::NChildObject());
-	}
-	virtual ObjectIf* GetChildObject(size_t i) {
-		if (i==0 && limit) { return limit->Cast(); }
-		return PHConstraint::GetChildObject(i - (limit ? 1 : 0));
-	}
-
-	PH1DJointLimitIf* CreateLimit(const PH1DJointLimitDesc& desc) {
-		PH1DJointLimitIf* limit = GetScene()->CreateObject(PH1DJointLimitIf::GetIfInfoStatic(), &desc)->Cast();
-		if (limit) { AddChildObject(limit); }
-		return limit;
-	}
+	virtual bool      AddChildObject(ObjectIf* o);
+	virtual size_t    NChildObject  () const;
+	virtual ObjectIf* GetChildObject(size_t i);
+	PH1DJointLimitIf* CreateLimit   (const PH1DJointLimitDesc& desc);
 
 	double	GetPosition() { UpdateState(); return position[0]; }
 	double	GetVelocity() { UpdateState(); return velocity[0]; }
 
 	PH1DJointLimitIf* GetLimit() { return limit->Cast(); }
 
-	virtual void SetSpring(const double& spring) { this->spring = spring; }
-	virtual double GetSpring() { return spring; }
-	virtual void SetDamper(const double& damper) { this->damper = damper; }
-	virtual double GetDamper() { return damper; }
-	virtual void SetSecondDamper(const double& secondDamper) { this->secondDamper = secondDamper; }
-	virtual double GetSecondDamper() { return secondDamper; }
-	virtual void SetTargetPosition(const double& targetPosition) { this->targetPosition = targetPosition; }
-	virtual double GetTargetPosition() { return targetPosition; }
-	virtual void SetTargetVelocity(const double& targetVelocity) { this->targetVelocity = targetVelocity; }
-	virtual double GetTargetVelocity() { return targetVelocity; }
-	virtual void SetOffsetForce(const double& offsetForce) { this->offsetForce = offsetForce; }
-	virtual double GetOffsetForce() { return offsetForce; }
-	virtual void SetYieldStress(const double& yieldStress) { this->yieldStress = yieldStress; }
-	virtual double GetYieldStress() { return yieldStress; }
-	virtual void SetHardnessRate(const double& hardnessRate) { this->hardnessRate = hardnessRate; }
-	virtual double GetHardnessRate() { return hardnessRate; }
-	virtual void SetSecondMoment(double sM) { secondMoment = sM; }
-	virtual double GetSecondMoment() { return secondMoment; }
-	virtual double GetMotorForce() { if (limit) { if (limit->IsOnLimit()) return 0; } return(f[movableAxes[0]] / GetScene()->GetTimeStep()); }
+	// ----- インタフェースの実装
+	bool   IsCyclic         (){ return cyclic; }
+	void   SetCyclic        (bool on){ cyclic = on; }
+	void   SetSpring        (const double& spring) { this->spring = spring; }
+	double GetSpring        () { return spring; }
+	void   SetDamper        (const double& damper) { this->damper = damper; }
+	double GetDamper        () { return damper; }
+	void   SetSecondDamper  (const double& secondDamper) { this->secondDamper = secondDamper; }
+	double GetSecondDamper  () { return secondDamper; }
+	void   SetTargetPosition(const double& targetPosition) { this->targetPosition = targetPosition; }
+	double GetTargetPosition() { return targetPosition; }
+	void   SetTargetVelocity(const double& targetVelocity) { this->targetVelocity = targetVelocity; }
+	double GetTargetVelocity() { return targetVelocity; }
+	void   SetOffsetForce   (const double& offsetForce) { this->offsetForce = offsetForce; }
+	double GetOffsetForce   () { return offsetForce; }
+	void   SetYieldStress   (const double& yieldStress) { this->yieldStress = yieldStress; }
+	double GetYieldStress   () { return yieldStress; }
+	void   SetHardnessRate  (const double& hardnessRate) { this->hardnessRate = hardnessRate; }
+	double GetHardnessRate  () { return hardnessRate; }
+	void   SetSecondMoment  (double sM) { secondMoment = sM; }
+	double GetSecondMoment  () { return secondMoment; }
+	double GetMotorForce    () {
+		return motor->f[0] * GetScene()->GetTimeStepInv();
+	//	if (limit) { if (limit->IsOnLimit()) return 0; } return(f[movableAxes[0]] / GetScene()->GetTimeStep());
+	}
+};
+
+class PHMate : public PHJoint{
+public:
+	SPR_OBJECTDEF_ABST1(PHMate, PHJoint);
+};
+
+class PHPointToPointMate : public PHMate{
+public:
+	SPR_OBJECTDEF(PHPointToPointMate);
+	virtual void CompBias();
+	PHPointToPointMate(const PHPointToPointMateDesc& desc = PHPointToPointMateDesc());
+};
+class PHPointToLineMate : public PHMate{
+public:
+	SPR_OBJECTDEF(PHPointToLineMate);
+	virtual void CompBias();
+	PHPointToLineMate(const PHPointToLineMateDesc& desc = PHPointToLineMateDesc());
+};
+class PHPointToPlaneMate : public PHMate{
+public:
+	SPR_OBJECTDEF(PHPointToPlaneMate);
+	Vec2d	range;
+	bool	onLower;
+	bool	onUpper;
+	double	diff;
+public:
+	void	SetRange(Vec2d  r){ range = r; }
+	void	GetRange(Vec2d& r){ r = range; }
+
+	virtual void SetupAxisIndex();
+	virtual void CompBias      ();
+
+	PHPointToPlaneMate(const PHPointToPlaneMateDesc& desc = PHPointToPlaneMateDesc());
+};
+class PHLineToLineMate : public PHMate{
+public:
+	SPR_OBJECTDEF(PHLineToLineMate);
+	virtual void CompBias();
+	PHLineToLineMate(const PHLineToLineMateDesc& desc = PHLineToLineMateDesc());
+};
+class PHPlaneToPlaneMate : public PHMate{
+public:
+	SPR_OBJECTDEF(PHPlaneToPlaneMate);
+	virtual void CompBias();
+	PHPlaneToPlaneMate(const PHPlaneToPlaneMateDesc& desc = PHPlaneToPlaneMateDesc());
 };
 
 }

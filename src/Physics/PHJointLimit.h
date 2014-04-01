@@ -11,6 +11,7 @@
 #include <Base/TQuaternion.h>
 #include <Physics/PhysicsDecl.hpp>
 #include <Physics/PHAxisIndex.h>
+#include <Physics/PHConstraint.h>
 
 #include <Physics/SprPHJointLimit.h>
 #include <Foundation/Object.h>
@@ -23,7 +24,7 @@ class PH1DJoint;
 class PHBallJoint;
 
 ///	1自由度関節の可動域拘束
-class PH1DJointLimit : public SceneObject {
+class PH1DJointLimit : public SceneObject, public PHConstraintBase {
 public:
 	SPR_OBJECTDEF(PH1DJointLimit);
 	SPR_DECLMEMBEROF_PH1DJointLimitDesc;
@@ -32,7 +33,8 @@ public:
 	PH1DJoint* joint;
 
 	/// 可動範囲外に出ているか
-	bool bOnLimit;
+	bool   onLower;
+	bool   onUpper;
 
 	/// 可動範囲外に出ている量
 	double diff;
@@ -40,10 +42,13 @@ public:
 	/// コンストラクタ
 	PH1DJointLimit(const PH1DJointLimitDesc& desc = PH1DJointLimitDesc()) { SetDesc(&desc); }
 	
-	// ----- Limitの機能
+	/// PHConstraintBaseの仮想関数
 	virtual void SetupAxisIndex();
-	virtual void CompBias();
-
+	virtual void Setup         ();
+	virtual void Iterate       ();
+	virtual void CompResponse      (double df, int i);
+	virtual void CompResponseDirect(double df, int i);
+	
 	// ----- インタフェースの実装
 	void    SetRange(Vec2d  range)    { this->range = range; }
 	void    GetRange(Vec2d &range)    { range = this->range; }
@@ -51,16 +56,16 @@ public:
 	double  GetSpring()               { return spring; }
 	void    SetDamper(double damper)  { this->damper = damper; }
 	double  GetDamper()               { return damper; }
-	bool    IsOnLimit()               { return bOnLimit; }
+	bool    IsOnLimit()               { return onLower || onUpper; }
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 
 ///	球関節の可動域拘束（ベースクラス）
-class PHBallJointLimit : public SceneObject {
+class PHBallJointLimit : public SceneObject, public PHConstraintBase{
 public:
 	SPR_OBJECTDEF(PHBallJointLimit);
-	SPR_DECLMEMBEROF_PHBallJointLimitState;
+	//SPR_DECLMEMBEROF_PHBallJointLimitState;
 	SPR_DECLMEMBEROF_PHBallJointLimitDesc;
 
 	/// 可動域拘束の対象となる関節
@@ -70,62 +75,35 @@ public:
 	Vec3d diff;
 
 	// ----- Joint本体と異なる座標系を使うための独自のJacobianとLCP計算変数
-
-	/// 拘束ヤコビアン
-	Matrix3d J[2];
-
-	/// T = M.inv() * J^t ガウスザイデルで使用
-	Matrix3d T[2];
+	Matrix3d Jc, Jcinv;
 	
-	/// LCPのbベクトルとその補正量
-	Vec3d b, db, B;
-	
-	/// LCPのA行列の対角成分とその補正量，逆数
-	Vec3d A, dA, Ainv;	
-
 	/// Projection用の各軸のMin/Max
 	double fMaxDt[3], fMinDt[3];
-
-	/// 拘束軸管理クラス
-	AxisIndex<3> axes;
 
 	/// コンストラクタ
 	PHBallJointLimit();
 	
-	// ----- PHBallJointから呼び出される機能
-
-	/// LCPを解く前段階の計算
-	void SetupLCP();
-
-	/// LCPの繰り返し計算
-	void IterateLCP();
+	// ----- PHConstraintBaseの仮想関数
+	virtual void Setup         ();
+	virtual void Iterate       ();
+	virtual void CompResponse      (double df, int i);
+	virtual void CompResponseDirect(double df, int i);
 
 	// ----- このクラスで実装する機能
-
-	/// Aの対角成分を計算する．A = J * M^-1 * J^T
-	void CompResponseMatrix();
-
 	/// LCPの補正値の計算．誤差修正用
 	void CompBias();
 
-	/// 拘束力変化量(df)に対する加速度変化量(dvの差分)を計算して反映
-	void CompResponse(double df, int i);
-
 	// ----- 派生クラスで実装する機能
-
 	/// 拘束座標系のJabocianを計算
 	virtual void CompJacobian(){}
-
-	/// 可動域制限にかかっているか確認しどの自由度を速度拘束するかを設定
-	virtual void SetupAxisIndex(){}
 
 	// ----- インタフェースの実装
 	void    SetSpring(double spring)  { this->spring = spring; }
 	double  GetSpring()               { return spring; }
 	void    SetDamper(double damper)  { this->damper = damper; }
 	double  GetDamper()               { return damper; }
-	void SetLimitDir(Vec3d limDir)    { this->limitDir = limDir; }
-	Vec3d GetLimitDir()               { return limitDir; }
+	void    SetLimitDir(Vec3d limDir) { this->limitDir = limDir; }
+	Vec3d   GetLimitDir()             { return limitDir; }
 
 	virtual bool IsOnLimit()          { return false; }
 };
