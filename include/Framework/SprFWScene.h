@@ -200,6 +200,10 @@ public:
 	void EnableRenderContact(bool enable = true);
 	void SetContactMaterial(int mat);
 
+	/** @brief bboxの描画 */
+	void EnableRenderBBox(bool enable = true);
+	void SetBBoxMaterial(int mat);
+
 	/**  @brief グリッドの描画 */
 	void EnableRenderGrid(bool x = true, bool y = true, bool z = true);
 	/** @brief	グリッドの設定
