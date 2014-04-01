@@ -10,6 +10,7 @@ public:
 		MENU_CHAIN = SampleApp::MENU_SCENE,
 		MENU_LINK,
 		MENU_ARM,
+		MENU_GEAR,
 	};
 	
 	PHSolidDesc		sdFloor;					///< 床剛体のディスクリプタ

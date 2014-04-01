@@ -68,6 +68,7 @@
 #include "ChainHandler.h"
 #include "LinkHandler.h"
 #include "ArmHandler.h"
+#include "GearHandler.h"
 //#include "PathHandler.h"
 
 #ifdef USE_HDRSTOP
@@ -89,8 +90,9 @@ public:
 		
 		// ハンドラ登録
 		handlers.push_back(DBG_NEW ChainHandler(this));
-		handlers.push_back(DBG_NEW LinkHandler(this));
-		handlers.push_back(DBG_NEW ArmHandler(this));
+		handlers.push_back(DBG_NEW LinkHandler (this));
+		handlers.push_back(DBG_NEW ArmHandler  (this));
+		handlers.push_back(DBG_NEW GearHandler (this));
 		numScenes	= (int)handlers.size();
 	}
 	virtual ~MyApp(){}
