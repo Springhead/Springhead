@@ -71,9 +71,9 @@ struct PHSceneState{
 
 	PHSceneState(){Init();}
 	void Init(){
-		timeStep = 0.005;
+		timeStep       = 0.005;
 		haptictimeStep = 0.001;
-		count = 0;
+		count          = 0;
 	}
 };
 /// 物理エンジンのシーンのデスクリプタ
@@ -84,6 +84,11 @@ struct PHSceneDesc: public PHSceneState{
 		MODE_PENALTY,	///< ペナルティ法で解く
 		MODE_LCP		///< LCPで解く
 	};
+	/// LCPの解法
+	enum LCPSolver{
+		SOLVER_GS,		///< ガウスーザイデル法
+		SOLVER_CG,		///< 共役勾配法
+	};
 	
 	/** 設定パラメータ．
 		各EngineのAPIを介して全パラメータが取得・設定可能だが，以下のパラメータは
@@ -92,23 +97,38 @@ struct PHSceneDesc: public PHSceneState{
 	Vec3d	gravity;			///< 重力加速度ベクトル
 	double	airResistanceRate;	///< 毎ステップ剛体の速度に掛けられる倍率
 	double	contactTolerance;	///< 接触の許容交差量
-	double	impactThreshold;
-	double	frictionThreshold;
-	double	maxVelocity;
-	double	maxAngularVelocity;
+	double	impactThreshold;	///< 衝突速度．これよりも大きな速度で接触したら衝突として扱う
+	double	frictionThreshold;	///< 動摩擦速度．接触面に変更な速度成分がこれよりも大きい場合に動摩擦として扱う
+	double  maxDeltaPosition;	///< 1ステップあたりの移動量の上限
+	double  maxDeltaOrientation;///< 1ステップあたりの回転量の上限
+	double	maxVelocity;		///< 剛体および関節の最大速度．これをこえたらクリッピングされる
+	double	maxAngularVelocity;	///< 剛体および関節の最大角速度
+	double  maxForce;			///< 剛体に作用する外力，関節の拘束力，接触力の最大値
+	double  maxMoment;			///< 同モーメントの最大値
 	int		numIteration;		///< LCPの反復回数
+	int		method;
+	bool	bContactDetectionEnabled;	///< 接触判定が有効か．これがfalseだと接触判定自体を行わない
+	bool	bCCDEnabled;				///< Continuous Collision Detectionの有効化
 	
 	PHSceneDesc(){Init();}
+	
 	void Init(){
 		PHSceneState::Init();
-		gravity				= Vec3d(0.0, -9.8, 0.0);
-		airResistanceRate	= 1.0;
-		contactTolerance    = 0.002;
-		impactThreshold     = 10.0;
-		frictionThreshold   = 0.01;
-		maxVelocity         = FLT_MAX;
-		maxAngularVelocity  = 100.0;
-		numIteration		= 15;
+		gravity				     = Vec3d(0.0, -9.8, 0.0);
+		airResistanceRate	     = 1.0;
+		contactTolerance         = 0.002;
+		impactThreshold          = 10.0;
+		frictionThreshold        = 0.01;
+		maxDeltaPosition         = FLT_MAX;
+		maxDeltaOrientation      = FLT_MAX;
+		maxVelocity              = FLT_MAX;
+		maxAngularVelocity       = 100.0;
+		maxForce                 = FLT_MAX;
+		maxMoment                = FLT_MAX;
+		numIteration		     = 15;
+		method                   = SOLVER_GS;
+		bContactDetectionEnabled = true;
+		bCCDEnabled              = true;
 	}
 };
 
@@ -247,15 +267,20 @@ public:
 	PHRootNodeIf* GetRootNode(int i);
 
 	/** @brief ツリーノードを作成する
-		@param parent 親ノードのインタフェース
-		@param child 子ノードとなる剛体
-		@return ツリーノードのインタフェース
+		@param parent 親ノード
+		@param child  子ノードとなる剛体
+		@return       ツリーノード
 		剛体childを参照するツリーノードを作成し，既存のノードparentの子ノードとして追加する．
 		parentが指す剛体とchildをつなぐ関節はCreateTreeNodeの呼び出しよりも前に
 		CreateJointによって作成されていなければならない．
 		さらに，parentがソケット側，childがプラグ側である必要がある．
 	 */
 	PHTreeNodeIf* CreateTreeNode(PHTreeNodeIf* parent, PHSolidIf* child, const PHTreeNodeDesc& desc = PHTreeNodeDesc());
+
+	/** @brief 関節の接続関係を抽出してツリー構造を自動生成する
+		@param solid 根となる剛体
+	 */
+	PHRootNodeIf* CreateTreeNodes(PHSolidIf* solid);
 
 	/** @brief ギアを作成する
 		@param lhs ギアで連動させる関節
@@ -382,39 +407,62 @@ public:
 		@param rate 回転に対する空気抵抗の割合
 		標準は1.0 比率を下げるとシミュレーションが安定する(PHSolid::UpdateVelocity()内で呼ばれる）
 	 */
-	void SetAirResistanceRate(double rate);
+	void    SetAirResistanceRate(double rate);
 	
 	/** @brief 回転に対する空気抵抗の割合を取得する
 		@return 回転に対する空気抵抗の割合
 	 */
-	double GetAirResistanceRate();
+	double  GetAirResistanceRate();
 
 	/// @brief 接触の許容交差量を設定する
-	void SetContactTolerance(double tol);
+	void    SetContactTolerance(double tol);
 	/// @brief 接触の許容交差量を取得する
-	double GetContactTolerance();
+	double  GetContactTolerance();
 
-	void SetImpactThreshold(double vth);
-	double GetImpactThreshold();
+	void    SetImpactThreshold(double vth);
+	double  GetImpactThreshold();
 
-	void SetFrictionThreshold(double vth);
-	double GetFrictionThreshold();
+	void    SetFrictionThreshold(double vth);
+	double  GetFrictionThreshold();
 
-	void SetMaxVelocity(double vmax);
-	double GetMaxVelocity();
-
-	void SetMaxAngularVelocity(double wmax);
-	double GetMaxAngularVelocity();
+	void    SetMaxVelocity        (double vmax);
+	double  GetMaxVelocity        ();
+	void    SetMaxAngularVelocity (double wmax);
+	double  GetMaxAngularVelocity ();
+	void    SetMaxForce           (double fmax);
+	double  GetMaxForce           ();
+	void    SetMaxMoment          (double tmax);
+	double  GetMaxMoment          ();
+	void    SetMaxDeltaPosition   (double dpmax);
+	double  GetMaxDeltaPosition   ();
+	void    SetMaxDeltaOrientation(double dqmax);
+	double  GetMaxDeltaOrientation();
+	
+	/// @brief LCPソルバの選択
+	int  GetLCPSolver();
+	void SetLCPSolver(int method);
 
 	///	@brief LCPソルバの計算回数の取得．MODE_LCPの場合の拘束力の繰り返し近似計算の回数．
 	int GetNumIteration();
 	///	@brief LCPソルバの計算回数の設定．
 	void SetNumIteration(int n);
-
+	
 	/** @brief 状態の保存 (ObjectStates の保存）に，
 		Constraints が持つ拘束力を含めるかどうか設定する．
 	*/
 	void SetStateMode(bool bConstraints);
+
+	/** @brief 接触判定エンジンの有効・無効を設定する．SetContactModeより優先する．
+	*/
+	void EnableContactDetection(bool enable);
+	bool IsContactDetectionEnabled();
+
+	void EnableCCD(bool enable);
+	bool IsCCDEnabled();
+
+	/** 衝突判定処理の対象範囲を設定
+	 */
+	void SetContactDetectionRange(Vec3f center, Vec3f extent, int nx, int ny, int nz);
 
 	/** @brief シーンの時刻を進める
 	 */

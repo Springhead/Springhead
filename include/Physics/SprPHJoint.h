@@ -22,24 +22,6 @@ struct PHSolidIf;
 /** \addtogroup gpPhysics */
 //@{
 
-struct PHConstraintEngineDesc{
-	int		numIter;					///< 速度更新LCPの反復回数
-	int		numIterCorrection;			///< 誤差修正LCPの反復回数
-	int		numIterContactCorrection;	///< 接触点の誤差修正LCPの反復回数
-	double	velCorrectionRate;			///< 速度のLCPで関節拘束の誤差を修正する場合の誤差修正比率
-	double	posCorrectionRate;			///< 位置のLCPで，関節拘束の誤差を修正する場合の誤差修正比率
-	double  contactCorrectionRate;		///< 接触の侵入解消のための，速度のLCPでの補正比率．
-	double	shrinkRate;					///< LCP初期値を前回の解に対して縮小させる比率
-	double	shrinkRateCorrection;
-	double	freezeThreshold;			///< 剛体がフリーズする閾値
-	double	accelSOR;					///< SOR法の加速係数
-	bool	bGearNodeReady;				///< ギアノードがうまく構成されているかのフラグ．ノードやギアを追加・削除するたびにfalseになる
-	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
-	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
-	bool	bUseContactSurface;			///< 面接触を使う
-	PHConstraintEngineDesc();
-};
-
 /** \defgroup gpJoint ジョイント*/
 //@{
 
@@ -77,6 +59,10 @@ struct PHConstraintIf : public SceneObjectIf{
 		@return 有効ならばtrue, 無効ならばfalse
 	 */
 	bool IsEnabled();
+
+	/** @brief ツリーを構成しているかを取得する
+	 */
+	bool IsArticulated();
 
 	/** @brief ソケットの位置・向きを取得・設定する
 	 */
@@ -121,11 +107,11 @@ struct PHConstraintIf : public SceneObjectIf{
 	// <!!>
 	/** @brief 拘束力を取得
 	 */
-	Vec3d GetForce();
+	//Vec3d GetForce();
 
 	/** @brief 拘束トルクを取得
 	 */
-	Vec3d GetTorque();
+	//Vec3d GetTorque();
 };
 
 /// 拘束の集合のインタフェース
@@ -182,6 +168,7 @@ struct PHJointIf : public PHConstraintIf{
 
 /// 1軸関節のデスクリプタ
 struct PH1DJointDesc : public PHJointDesc {
+	bool   cyclic;
 	double spring;
 	double damper;
 	double secondDamper;
@@ -193,6 +180,7 @@ struct PH1DJointDesc : public PHJointDesc {
 	double secondMoment;
 
 	PH1DJointDesc() {
+		cyclic          = false;
 		spring          = 0;
 		damper          = 0;
 		secondDamper    = FLT_MAX;
@@ -213,6 +201,15 @@ struct PH1DJointIf : public PHJointIf{
 	/** @brief 可動域制限を作成する
 	 */
 	PH1DJointLimitIf* CreateLimit(const PH1DJointLimitDesc& desc = PH1DJointLimitDesc());
+
+	/** @brief cyclicかどうかを取得
+		trueの場合，positionが[-pi, pi]の範囲で循環する．
+	 */
+	bool	IsCyclic();
+
+	/** @brief cyclicかどうかを設定
+	 */
+	void	SetCyclic(bool on);
 
 	/** @brief 関節変位を取得する
 		@return 関節変位
@@ -330,24 +327,11 @@ struct PH1DJointIf : public PHJointIf{
 /// ヒンジのインタフェース
 struct PHHingeJointIf : public PH1DJointIf{
 	SPR_IFDEF(PHHingeJoint);
-
-	/** @brief cyclicかどうかを取得
-		trueの場合，positionが[-pi, pi]の範囲で循環する．
-	 */
-	bool	IsCyclic();
-
-	/** @brief cyclicかどうかを設定
-	 */
-	void	SetCyclic(bool on);
 };
 
 /// ヒンジのデスクリプタ
 struct PHHingeJointDesc : public PH1DJointDesc{
 	SPR_DESCDEF(PHHingeJoint);
-	bool cyclic;
-	PHHingeJointDesc(){
-		cyclic = false;
-	}
 };
 
 /// スライダのインタフェース
@@ -419,6 +403,36 @@ struct PHPathJointIf : public PH1DJointIf{
 struct PHPathJointDesc : public PH1DJointDesc{
 	SPR_DESCDEF(PHPathJoint);
 	PHPathJointDesc(){}
+};
+
+// -----  -----  -----  -----  -----
+/** ユーザサイドで完全カスタマイズ可能な関節
+ */
+struct PHGenericJointIf;
+
+class PHGenericJointCallback{
+public:
+	virtual void SetParam(PHGenericJointIf* jnt, const std::string& name, double value){}
+	virtual bool IsCyclic(PHGenericJointIf* jnt){ return false; }
+	// LCP用関数
+	virtual void GetMovableAxes        (PHGenericJointIf* jnt, int& n, int* indices){}
+	virtual void CompBias              (PHGenericJointIf* jnt, Vec3d&  dbv, Vec3d&  dbw, const Vec3d& prel, const Quaterniond& qrel, const Vec3d& vrel, const Vec3d& wrel){}
+	virtual void CompError             (PHGenericJointIf* jnt, Vec3d&  Bv , Vec3d&  Bw , const Vec3d& prel, const Quaterniond& qrel                                      ){}
+	virtual void UpdateJointState      (PHGenericJointIf* jnt, double& pos, double& vel, const Vec3d& prel, const Quaterniond& qrel, const Vec3d& vrel, const Vec3d& wrel){}
+	// ABA用関数
+	virtual void CompJointJacobian     (PHGenericJointIf* jnt, Vec3d& Jv  , Vec3d&       Jw  , double pos            ){}
+	virtual void CompJointCoriolisAccel(PHGenericJointIf* jnt, Vec3d& cv  , Vec3d&       cw  , double pos, double vel){}
+	virtual void CompRelativePosition  (PHGenericJointIf* jnt, Vec3d& prel, Quaterniond& qrel, double pos            ){}
+	virtual void CompRelativeVelocity  (PHGenericJointIf* jnt, Vec3d& vrel, Vec3d&       wrel, double pos, double vel){}
+};
+struct PHGenericJointIf : public PH1DJointIf{
+	SPR_IFDEF(PHGenericJoint);
+	void SetCallback(PHGenericJointCallback* cb);
+	void SetParam   (const std::string& name, double value);
+};
+struct PHGenericJointDesc : public PH1DJointDesc{
+	SPR_DESCDEF(PHGenericJoint);
+	PHGenericJointDesc(){}
 };
 
 // -----  -----  -----  -----  -----
@@ -573,6 +587,17 @@ struct PHBallJointDesc : public PHJointDesc {
 };
 
 // -----  -----  -----  -----  -----
+/** 固定関節
+	自由度を持たない関節．剛体同士の固定に用いる
+ */
+struct PHFixJointIf : public PHJointIf{
+	SPR_IFDEF(PHFixJoint);
+};
+struct PHFixJointDesc : public PHJointDesc{
+	SPR_DESCDEF(PHFixJoint);
+};
+
+// -----  -----  -----  -----  -----
 
 struct PHSpringMotorIf;
 /// バネダンパのインタフェース
@@ -696,6 +721,74 @@ struct PHSpringDesc : public PHJointDesc {
 };
 
 // -----  -----  -----  -----  -----
+/** 合致拘束
+	多様な幾何拘束を課すのに利用
+	3DCADのアセンブリ拘束のようなイメージ
+	PHJointとの違いは
+	・PHJointLimitがない
+	・PHJointMotorがない
+	・PHTreeNodeでABAが利用できない
+ */
+struct PHMateIf : PHJointIf{
+	SPR_IFDEF(PHMate);
+};
+struct PHMateDesc : PHJointDesc{
+	SPR_DESCDEF(PHMate);
+};
+
+/** 点-点対偶
+	ソケットとプラグの原点を一致させる
+	ボールジョイントと似ているが低機能な分高速
+ */
+struct PHPointToPointMateIf : PHMateIf{
+	SPR_IFDEF(PHPointToPointMate);
+};
+struct PHPointToPointMateDesc : PHMateDesc{
+	SPR_DESCDEF(PHPointToPointMate);
+};
+/** 点-線分対偶
+	プラグの原点をソケットのz軸上に拘束する
+	軸上の範囲も指定可
+ */
+struct PHPointToLineMateIf : PHMateIf{
+	SPR_IFDEF(PHPointToLineMate);
+};
+struct PHPointToLineMateDesc : PHMateDesc{
+	SPR_DESCDEF(PHPointToLineMate);
+};
+/** 点-面対偶
+	プラグの原点をソケットのxy平面上に拘束する
+	面上(z方向)の範囲も指定可
+ */
+struct PHPointToPlaneMateIf : PHMateIf{
+	SPR_IFDEF(PHPointToPlaneMate);
+	void	SetRange(Vec2d  range);
+	void	GetRange(Vec2d& range);
+};
+struct PHPointToPlaneMateDesc : PHMateDesc{
+	SPR_DESCDEF(PHPointToPlaneMate);
+	Vec2d	range;
+};
+/** 線-線対偶
+	プラグのz軸とソケットのz軸を一致させる
+ */
+struct PHLineToLineMateIf : PHMateIf{
+	SPR_IFDEF(PHLineToLineMate);
+};
+struct PHLineToLineMateDesc : PHMateDesc{
+	SPR_DESCDEF(PHLineToLineMate);
+};
+/** 面-面対偶
+	プラグのxy平面とソケットのxy平面を一致させる
+ */
+struct PHPlaneToPlaneMateIf : PHMateIf{
+	SPR_IFDEF(PHPlaneToPlaneMate);
+};
+struct PHPlaneToPlaneMateDesc : PHMateDesc{
+	SPR_DESCDEF(PHPlaneToPlaneMate);
+};
+
+// -----  -----  -----  -----  -----
 
 /// ツリーノードのデスクリプタ
 struct PHTreeNodeDesc{
@@ -707,16 +800,15 @@ struct PHTreeNodeDesc{
 struct PHRootNodeDesc : public PHTreeNodeDesc{
 	PHRootNodeDesc(){}
 };
-struct PHTreeNode1DDesc : public PHTreeNodeDesc{
-};
-struct PHHingeJointNodeDesc : public PHTreeNode1DDesc{
-};
-struct PHSliderJointNodeDesc : public PHTreeNode1DDesc{
-};
-struct PHPathJointNodeDesc : public PHTreeNode1DDesc{
-};
-struct PHBallJointNodeDesc : public PHTreeNodeDesc{
-};
+struct PHTreeNode1DDesc      : public PHTreeNodeDesc{};
+struct PHHingeJointNodeDesc  : public PHTreeNode1DDesc{};
+struct PHSliderJointNodeDesc : public PHTreeNode1DDesc{};
+struct PHPathJointNodeDesc   : public PHTreeNode1DDesc{};
+struct PHGenericJointNodeDesc: public PHTreeNode1DDesc{};
+struct PHBallJointNodeDesc   : public PHTreeNodeDesc{};
+struct PHFixJointNodeDesc    : public PHTreeNodeDesc{};
+
+struct PHRootNodeIf;
 
 /// ツリーノードのインタフェース
 struct PHTreeNodeIf : public SceneObjectIf{
@@ -734,9 +826,21 @@ struct PHTreeNodeIf : public SceneObjectIf{
 	 */
 	int NChildren();
 
+	/** @brief 親ノードを取得する
+	 */
+	PHTreeNodeIf* GetParentNode();
+
 	/** @brief 子ノードを取得する
 	 */
-	PHTreeNodeIf* GetChild(int i);
+	PHTreeNodeIf* GetChildNode(int i);
+
+	/** @brief 根ノードを取得する
+	 */
+	PHRootNodeIf* GetRootNode();
+
+	/** @brief 関連づけられている剛体を取得する
+	 */
+	PHSolidIf* GetSolid();
 
 };
 /// ルートノードのインタフェース
@@ -756,23 +860,52 @@ struct PHSliderJointNodeIf : public PHTreeNode1DIf{
 struct PHPathJointNodeIf : public PHTreeNode1DIf{
 	SPR_IFDEF(PHPathJointNode);
 };
+struct PHGenericJointNodeIf : public PHTreeNode1DIf{
+	SPR_IFDEF(PHGenericJointNode);
+};
 struct PHBallJointNodeIf : public PHTreeNodeIf{
 	SPR_IFDEF(PHBallJointNode);
+};
+struct PHFixJointNodeIf : public PHTreeNodeIf{
+	SPR_IFDEF(PHFixJointNode);
 };
 
 // -----  -----  -----  -----  -----
 
 /// ギアのデスクリプタ
 struct PHGearDesc{
+	enum{
+		MODE_VEL,		///< ratio * v0 = v1
+		MODE_POS,		///< ratio * p0 + offset = p1
+	};
+	bool   bEnabled;
 	double ratio;		///< ギア比
+	double offset;
+	int    mode;
+
 	PHGearDesc(){
-		ratio = 1.0;
+		bEnabled = true;
+		ratio    = 1.0;
+		offset   = 0.0;
+		mode     = MODE_VEL;
 	}
 };
 
 /// ギアのインタフェース
 struct PHGearIf : public SceneObjectIf{
 	SPR_IFDEF(PHGear);
+
+	void   Enable(bool bEnable = true);
+	bool   IsEnabled();
+
+	void   SetRatio(double ratio);
+	double GetRatio();
+
+	void   SetOffset(double offset);
+	double GetOffset();
+
+	void   SetMode(int mode);
+	int    GetMode();
 };
 	
 //@}

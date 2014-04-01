@@ -115,12 +115,12 @@ struct PHBallJointLimitIf : public SceneObjectIf {
 };
 	
 /// ボールジョイントの可動域制限のステート
-struct PHBallJointLimitState {
+/*struct PHBallJointLimitState {
 	Vec3d f;   ///< 拘束力の力積
-};
+};*/
 
 /// ボールジョイントの可動域制限のデスクリプタ
-struct PHBallJointLimitDesc : public PHBallJointLimitState {
+struct PHBallJointLimitDesc{
 	SPR_DESCDEF(PHBallJointLimit);
 	double	spring;			///< 可動範囲バネ
 	double	damper;			///< 可動範囲ダンパ

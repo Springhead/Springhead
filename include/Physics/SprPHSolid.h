@@ -20,22 +20,19 @@ namespace Spr{;
 
 ///	形と位置を指定するための衝突判定用フレーム
 struct PHFrameDesc{
-	Posed pose;
+	Posed pose;		///< 剛体に対する位置と向き
 };
 struct PHFrameIf: public SceneObjectIf{
 	SPR_IFDEF(PHFrame);
 	Posed GetPose();
-	void SetPose(Posed p);
+	void  SetPose(Posed p);
 };
 
 ///	剛体のステート
 struct PHSolidState{
 	Vec3d		velocity;		///<	質量中心の速度		(World系)
 	Vec3d		angVelocity;	///<	角速度				(World系)
-//	Vec3d		lastVelocity;	///<	前回の速度			(World系)
-//	Vec3d		lastAngVelocity;///<	前回の角速度			(World系)
 	Posed		pose;			///<	座標原点の位置と向き	(World系)
-//	Posed		lastPose;		///<	前回の位置と向き		(World系)
 };
 
 ///	剛体のディスクリプタ
@@ -44,12 +41,14 @@ struct PHSolidDesc: public PHSolidState{
 	Matrix3d	inertia;		///<	慣性テンソル	(Local系)
 	Vec3d		center;			///<	質量中心の位置	(Local系)
 	bool		dynamical;		///<	物理法則に従うか(速度は積分される)
+	bool        stationary;
 
 	PHSolidDesc(){ Init(); }
 	void Init(){
-		mass = 1.0f;
-		inertia = Matrix3d::Unit();
-		dynamical = true;
+		mass       = 1.0f;
+		inertia    = Matrix3d::Unit();
+		dynamical  = true;
+		stationary = false;
 	}
 };
 
@@ -204,15 +203,17 @@ struct PHSolidIf : public SceneObjectIf{
 
 		剛体が保持する形状リストの末尾に新しく形状を追加する
 	 */
-	void		AddShape(CDShapeIf* shape);
-
+	void AddShape (CDShapeIf* shape);
+	void AddShapes(CDShapeIf** shBegin, CDShapeIf** shEnd);
+	
 	/** @brief 剛体から形状を取り外す
 		@param index	形状インデックス
 
 		形状リストからindex番目の形状を削除する．
 		その結果，index+1番目以降の形状のインデックスは1つ先頭に向かってシフトするので注意が必要．
 	 */
-	void		RemoveShape(int index);
+	void RemoveShape (int index);
+	void RemoveShapes(int idxBegin, int idxEnd);
 
 	/** @brief 剛体から形状を取り外す
 		@param shape	形状へのポインタ
@@ -259,10 +260,13 @@ struct PHSolidIf : public SceneObjectIf{
 	 */
 	void		ClearShape();
 	
-	/** @brief BoundingBoxを再計算する．
+	/** @brief Bounding boxを取得．必要なら再計算
+		@param bbmin  bboxの下限
+		@param bbmax  bboxの上限
+		@param world  trueならワールド座標，falseならローカル座標に平行なbbox
 	 */
-	void		CalcBBox();
-
+	void		GetBBox(Vec3d& bbmin, Vec3d& bbmax, bool world);
+	
 	/** @brief 重力を有効/無効化する
 		@param bOn trueならば剛体に重力が加わる．falseならば加わらない．
 	 */
@@ -279,6 +283,9 @@ struct PHSolidIf : public SceneObjectIf{
 		@return trueならば剛体は物理法則にしたがって運動する．
 	 */
 	bool		IsDynamical();
+
+	void        SetStationary(bool bOn);
+	bool        IsStationary();
 
 
 	/** @brief ツリーノードを取得する

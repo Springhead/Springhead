@@ -97,10 +97,40 @@ public:
 		@return value shrinkRateCorrectionの値
 	*/
 	double GetShrinkRateCorrection();
+};
 
-	/** @brief 接触判定エンジンの有効・無効を設定する．ここでの無効化はPHScene::SetContactModeより優先する．
-	*/
-	void EnableContactDetection(bool enable);
+struct PHConstraintEngineDesc{
+	int		method;						///< LCPの解法
+	int		numIter;					///< 速度更新LCPの反復回数
+	int		numIterCorrection;			///< 誤差修正LCPの反復回数
+	int		numIterContactCorrection;	///< 接触点の誤差修正LCPの反復回数
+	double	velCorrectionRate;			///< 速度のLCPで関節拘束の誤差を修正する場合の誤差修正比率
+	double	posCorrectionRate;			///< 位置のLCPで，関節拘束の誤差を修正する場合の誤差修正比率
+	double  contactCorrectionRate;		///< 接触の侵入解消のための，速度のLCPでの補正比率．
+	double	shrinkRate;					///< LCP初期値を前回の解に対して縮小させる比率
+	double	shrinkRateCorrection;
+	double	freezeThreshold;			///< 剛体がフリーズする閾値
+	double	accelSOR;					///< SOR法の加速係数
+	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
+	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
+	bool	bUseContactSurface;			///< 面接触を使う
+
+	PHConstraintEngineDesc(){
+		numIter					 = 15;
+		numIterCorrection		 = 0;
+		numIterContactCorrection = 0;
+		velCorrectionRate		 = 0.3;
+		posCorrectionRate		 = 0.3;
+		contactCorrectionRate	 = 0.1;
+		shrinkRate				 = 0.7;
+		shrinkRateCorrection	 = 0.7;
+		freezeThreshold			 = 0.0;
+		accelSOR				 = 1.0;
+		bSaveConstraints         = false;
+		bUpdateAllState	         = true;
+		bUseContactSurface       = false;
+	}
+
 
 	/** @breif 接触領域を表示するための情報を更新するかどうか。FWSceen::EnableRenderContact()が呼び出す。
 	*/
