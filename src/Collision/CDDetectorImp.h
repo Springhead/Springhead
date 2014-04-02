@@ -53,7 +53,7 @@ public:
 		(CDShapePairSt&)*this = s;
 	}
 	///	接触判定．接触が見つかった場合に接触状態を更新
-	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
+	virtual bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	//	接触判定時に使う、法線計算。
 	void CalcNormal();
 

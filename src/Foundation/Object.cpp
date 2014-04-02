@@ -285,8 +285,7 @@ void SceneObject::SetScene(SceneIf* s){
 	nameManager->GetNameMap();
 }
 SceneIf* SceneObject::GetScene() const{
-	assert(DCAST(SceneIf, GetNameManager()));
-	return (SceneIf*)GetNameManager();
+	return DCAST(SceneIf, GetNameManager());
 }
 
 SceneObjectIf* SceneObject::CloneObject(){
