@@ -78,16 +78,25 @@ struct PHSceneState{
 };
 /// 物理エンジンのシーンのデスクリプタ
 struct PHSceneDesc: public PHSceneState{
+	/// Broad phaseのモード
+	enum BroadPhaseMode{
+		MODE_SORT_AND_SWEEP_X,	///< AABBを一方向にソートして走査
+		MODE_SORT_AND_SWEEP_Y,
+		MODE_SORT_AND_SWEEP_Z,
+		MODE_PARTITION,			///< 空間を分割
+	};
+
 	///	接触のモード
 	enum ContactMode{
 		MODE_NONE,		///< 無視する
 		MODE_PENALTY,	///< ペナルティ法で解く
 		MODE_LCP		///< LCPで解く
 	};
+
 	/// LCPの解法
 	enum LCPSolver{
 		SOLVER_GS,		///< ガウスーザイデル法
-		SOLVER_CG,		///< 共役勾配法
+		SOLVER_CG,		///< 共役勾配法 (未実装：試したが遅かったので未コミットtazz)
 	};
 	
 	/** 設定パラメータ．
@@ -109,6 +118,7 @@ struct PHSceneDesc: public PHSceneState{
 	int		method;
 	bool	bContactDetectionEnabled;	///< 接触判定が有効か．これがfalseだと接触判定自体を行わない
 	bool	bCCDEnabled;				///< Continuous Collision Detectionの有効化
+	int     broadPhaseMode;
 	
 	PHSceneDesc(){Init();}
 	
@@ -129,6 +139,7 @@ struct PHSceneDesc: public PHSceneState{
 		method                   = SOLVER_GS;
 		bContactDetectionEnabled = true;
 		bCCDEnabled              = true;
+		broadPhaseMode           = MODE_SORT_AND_SWEEP_Z;
 	}
 };
 
@@ -419,22 +430,30 @@ public:
 	/// @brief 接触の許容交差量を取得する
 	double  GetContactTolerance();
 
+	/// 衝突と静接触の閾値
 	void    SetImpactThreshold(double vth);
 	double  GetImpactThreshold();
 
+	/// 静摩擦と動摩擦の閾値
 	void    SetFrictionThreshold(double vth);
 	double  GetFrictionThreshold();
 
+	/// 許容最大速度．超えたら飽和
 	void    SetMaxVelocity        (double vmax);
 	double  GetMaxVelocity        ();
+	/// 許容最大角速度．超えたら飽和
 	void    SetMaxAngularVelocity (double wmax);
 	double  GetMaxAngularVelocity ();
+	/// 許容最大力．超えたら飽和
 	void    SetMaxForce           (double fmax);
 	double  GetMaxForce           ();
+	/// 許容最大モーメント．超えたら飽和
 	void    SetMaxMoment          (double tmax);
 	double  GetMaxMoment          ();
+	/// 許容最大移動量．超えないようにdtを調整
 	void    SetMaxDeltaPosition   (double dpmax);
 	double  GetMaxDeltaPosition   ();
+	/// 許容最大回転量．超えないようにdtを調整
 	void    SetMaxDeltaOrientation(double dqmax);
 	double  GetMaxDeltaOrientation();
 	
@@ -460,7 +479,16 @@ public:
 	void EnableCCD(bool enable);
 	bool IsCCDEnabled();
 
-	/** 衝突判定処理の対象範囲を設定
+	/// 衝突判定のbroad phase手法を設定
+	void SetBroadPhaseMode(int mode);
+	int  GetBroadPhaseMode();
+
+	/** 衝突判定処理の対象範囲を設定 (MODE_PARTITION) 
+		@param center	領域の中心
+		@param extent   領域のサイズ
+		@param nx       x方向分割数
+		@param ny       y方向分割数
+		@param nz       z方向分割数
 	 */
 	void SetContactDetectionRange(Vec3f center, Vec3f extent, int nx, int ny, int nz);
 

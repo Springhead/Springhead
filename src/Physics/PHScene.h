@@ -178,6 +178,8 @@ public:
 	bool    IsContactDetectionEnabled()            { return bContactDetectionEnabled; }
 	void    EnableCCD                (bool enable) { bCCDEnabled = enable; }
 	bool    IsCCDEnabled             ()            { return bCCDEnabled; }
+	void    SetBroadPhaseMode        (int mode)    { broadPhaseMode = mode; }
+	int     GetBroadPhaseMode        ()            { return broadPhaseMode; } 
 	void    SetContactDetectionRange (Vec3f center, Vec3f extent, int nx, int ny, int nz);
 	
 	///	シーンの時刻を進める ClearForce(); GenerateForce(); Integrate(); と同じ

@@ -810,7 +810,6 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 #include <Foundation/UTPreciseTimer.h>
 namespace Spr{
 UTPreciseTimer ptimer;
-UTPreciseTimer ptimerForCd;
 #endif
 
 
@@ -823,7 +822,7 @@ void PHConstraintEngine::StepPart1(){
 
 	PHSceneIf* scene = GetScene();
 	if(scene->IsContactDetectionEnabled()){
-		Detect(scene->GetCount(), scene->GetTimeStep(), scene->IsCCDEnabled());
+		Detect(scene->GetCount(), scene->GetTimeStep(), scene->GetBroadPhaseMode(), scene->IsCCDEnabled());
 		if (renderContact) UpdateContactInfoQueue();
 	}
 

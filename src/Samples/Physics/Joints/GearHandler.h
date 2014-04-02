@@ -90,7 +90,7 @@ public:
 			gears[0].joint->SetTargetVelocity(Rad(180));
 		}
 		if(id == ID_VEL_ZERO){
-			gears[0].joint->SetDamper(0.0);
+			gears[0].joint->SetDamper(damper);
 			gears[0].joint->SetTargetVelocity(Rad(0.0));
 		}
 		if(id == ID_VEL_MINUS){

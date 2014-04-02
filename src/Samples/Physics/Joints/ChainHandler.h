@@ -32,7 +32,7 @@ public:
 
 public:
 	ChainHandler(SampleApp* a):Handler(a){
-		rootPos		= Vec3d(0.0, 6.0, 0.0);
+		rootPos		= Vec3d(0.0, 15.0, 0.0);
 		iniPos		= Vec3d(10, 10, 0);
 
 		posLevel	= 0;
