@@ -473,7 +473,7 @@ void PHPenaltyEngine::Step(){
 	for(i = 0; i < n; i++)for(j = i+1; j < n; j++)
 		GetSolidPair(i,j)->Setup(ct, dt);
 
-	Detect(ct, dt, scene->IsCCDEnabled());
+	Detect(ct, dt, scene->GetBroadPhaseMode(), scene->IsCCDEnabled());
 
 	for(i = 0; i < n; i++)for(j = i+1; j < n; j++)
 		GetSolidPair(i,j)->GenerateForce();

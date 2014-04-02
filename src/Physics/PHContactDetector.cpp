@@ -18,7 +18,7 @@ using namespace std;
 namespace Spr{;
 
 #ifdef REPORT_TIME
-extern Spr::UTPreciseTimer ptimerForCd;
+Spr::UTPreciseTimer ptimerForCd;
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -354,95 +354,7 @@ void PHContactDetector::EnableContact(bool bEnable){
 	for(int i = 0; i < n; i++)for(int j = i+1; j < n; j++)
 		solidPairs.item(i, j)->bEnabled = bEnable;
 }
-/*
-PHContactDetector::Region::Region(){
-	depth = 0;
-}
 
-void PHContactDetector::Region::Divide(int maxDepth){
-	if(maxDepth == 0)
-		return;
-
-	// 長辺を二等分する
-	divideDir = 0;
-	double lmax = 0.0;
-	for(int k = 0; k < 3; k++){
-		double l = bbox.GetBBoxExtent()[k];
-		if(l > lmax){
-			divideDir = k;
-			lmax      = l;
-		}
-	}
-	divideBorder = bbox.GetBBoxCenter()[divideDir];
-
-	int   ndiv[3];
-	float ldiv[3];
-	int   N = 1;
-	for(int k = 0; k < 3; k++){
-		ndiv[k] = (k == divideDir ? 2 : 1);
-		ldiv[k] = 2.0f * bbox.GetBBoxExtent()[k] / (float)ndiv[k];
-		N *= ndiv[k];
-	}
-
-	regions.resize(N);
-
-	Vec3f offset = bbox.GetBBoxMin();
-	int r = 0;
-	for(int ix = 0; ix < ndiv[0]; ix++)for(int iy = 0; iy < ndiv[1]; iy++)for(int iz = 0; iz < ndiv[2]; iz++, r++){
-		regions[r] = DBG_NEW Region();
-		regions[r]->depth = depth + 1;
-		regions[r]->bbox.SetBBoxMinMax(
-			offset + Vec3f(ldiv[0]*(ix+0), ldiv[1]*(iy+0), ldiv[2]*(iz+0)),
-			offset + Vec3f(ldiv[0]*(ix+1), ldiv[1]*(iy+1), ldiv[2]*(iz+1))
-			);
-		regions[r]->Divide(maxDepth - 1);
-	}
-}
-
-void PHContactDetector::Region::Reset(){
-	shapes.clear();
-	//shapesBelow.clear();
-	for(int r = 0; r < (int)regions.size(); r++)
-		regions[r]->Reset();
-}
-
-void PHContactDetector::Region::Assign(const PHBBox& bb, int i, int j){
-	if(!regions.empty()){
-		Vec3f bbmin = bb.GetBBoxMin();
-		Vec3f bbmax = bb.GetBBoxMax();
-		if(bbmax[divideDir] < divideBorder){
-			regions[0]->Assign(bb, i, j);
-			//shapesBelow.push_back(ShapeIndex(i, j));
-			return;
-		}
-		if(bbmin[divideDir] > divideBorder){
-			regions[1]->Assign(bb, i, j);
-			//shapesBelow.push_back(ShapeIndex(i, j));
-			return;
-		}
-	}
-	shapes.push_back(ShapeIndex(i, j));
-}
-
-void PHContactDetector::Region::Report(ostream& os){
-	for(int i = 0; i < depth; i++)
-		os << ' ';
-	os << shapes.size() << endl;
-	for(int i = 0; i < (int)regions.size(); i++)
-		regions[i]->Report(os);
-}
-*/
-/*void PHContactDetector::SetDetectionRange(Vec3f center, Vec3f extent, int depth){
-	// 無効な分割数の場合は空間全域を覆う領域をひとつ作成
-	if(extent == Vec3f()){
-		float inf = numeric_limits<float>::max();
-		rootRegion.bbox.SetBBoxCenterExtent(Vec3f(), Vec3f(inf, inf, inf));
-		return;
-	}
-
-	rootRegion.bbox.SetBBoxCenterExtent(center, extent);
-	rootRegion.Divide(depth);
-}*/
 void PHContactDetector::SetDetectionRange(Vec3f center, Vec3f extent, int nx, int ny, int nz){
 	numDivision = Vec3i(nx, ny, nz);
 	regionBBox.SetBBoxCenterExtent(center, extent);
@@ -473,9 +385,11 @@ void PHContactDetector::SetDetectionRange(Vec3f center, Vec3f extent, int nx, in
 bool PHContactDetector::DetectPair(
 	PHContactDetector::ShapeIndex sh0,
 	PHContactDetector::ShapeIndex sh1, unsigned ct, double dt, bool continuous){
+
 	// 同じ剛体同士はスキップ
 	if(sh0.idxSolid == sh1.idxSolid)
 		return false;
+
 	// 両方の形状とも中心がセルの外ならスキップ
 	if(!sh0.center && !sh1.center)
 		return false;
@@ -484,12 +398,15 @@ bool PHContactDetector::DetectPair(
 		swap(sh0, sh1);
 
 	PHSolidPair* solidPair = solidPairs.item(sh0.idxSolid, sh1.idxSolid);
+	
 	// 無効な剛体対はスキップ
 	if(!solidPair->bEnabled)
 		return false;
+	
 	// 両方frozenならスキップ
 	if(solidPair->solid[0]->IsFrozen() && solidPair->solid[1]->IsFrozen())
 		return false;
+	
 	// 両方non-dynamicalならスキップ
 	if(!solidPair->solid[0]->IsDynamical() && !solidPair->solid[1]->IsDynamical())
 		return false;
@@ -506,49 +423,11 @@ bool PHContactDetector::DetectPair(
 		nNarrow++;
 		return true;
 	}
+
 	return false;
 };
-/*
-bool PHContactDetector::DetectPairsBelow(PHContactDetector::ShapeIndex sh, Region* region, unsigned ct, double dt, bool continuous){
-	// まず領域のBBoxと交差判定
-	if(!PHBBox::Intersect(solids[sh.idxSolid]->frames[sh.idxShape]->bbWorld[continuous], region->bbox))
-		return false;
 
-	bool found = false;
-
-	// この階層の形状との交差判定
-	for(int i = 0; i < (int)region->shapes.size(); i++)
-		found |= DetectPair(sh, region->shapes[i], ct, dt, continuous);
-
-	// 下層の領域との交差判定
-	for(int r = 0; r < (int)region->regions.size(); r++)
-		found |= DetectPairsBelow(sh, region->regions[r], ct, dt, continuous);
-
-	return found;
-}
-*/
-/*
-bool PHContactDetector::DetectRecurs(Region* region, unsigned ct, double dt, bool continuous){
-	bool found = false;
-
-	// この階層にある形状同士の判定
-	int nshapes      = region->shapes     .size();
-	//int nshapesBelow = region->shapesBelow.size();
-	for(int i = 1; i < nshapes; i++)for(int j = 0; j < i; j++)
-		found |= DetectPair(region->shapes[i], region->shapes[j], ct, dt, continuous);
-
-	// この階層と下層の形状間の判定
-	for(int s = 0; s < nshapes; s++)for(int r = 0; r < (int)region->regions.size(); r++)
-		DetectPairsBelow(region->shapes[s], region->regions[r], ct, dt, continuous);
-
-	// 下層の判定
-	for(int r = 0; r < (int)region->regions.size(); r++)
-		found |= DetectRecurs(region->regions[r], ct, dt, continuous);
-	
-	return found;
-}
-*/
-bool PHContactDetector::Detect(unsigned ct, double dt, bool continuous){
+bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous){
 	if(NActiveSolidPairs() == 0)
 		return false;
 	
@@ -565,34 +444,57 @@ bool PHContactDetector::Detect(unsigned ct, double dt, bool continuous){
 	DSTR << "  aabb:" << ptimerForCd.CountUS();
 #endif
 
-	// 各形状を領域に分類
 #ifdef REPORT_TIME
 	ptimerForCd.CountUS();
 #endif
-	cellOutside.shapes.clear();
-	for(int c = 0; c < (int)cells.size(); c++)
-		cells[c].shapes.clear();
 
-	Vec3d regionMin  = regionBBox.GetBBoxMin();
-	Vec3d regionMax  = regionBBox.GetBBoxMax();
-	Vec3d cellExtent = cellBBox  .GetBBoxExtent();
-	Vec3d cellmin, cellmax;
-	Vec3d bbmin, bbmax, bbcenter, bbextent;
-	for(int i = 0; i < nsolids; i++){
-		int nshapes = solids[i]->NShape();
-		for(int j = 0; j < nshapes; j++){
-			PHBBox& bb = solids[i]->frames[j]->bbWorld[continuous];
-			bbmin    = bb.GetBBoxMin   ();
-			bbmax    = bb.GetBBoxMax   ();
-			bbcenter = bb.GetBBoxCenter();
-			bbextent = bb.GetBBoxExtent();
-			bool large = false;
-			for(int k = 0; k < 3; k++)
-				large |= (bbextent[k] > cellExtent[k]);
-			// セルよりも大きな形状は外側扱い
-			if(large)
-				cellOutside.Add(i,j,true);
-			else{
+	if( mode >= PHSceneDesc::MODE_SORT_AND_SWEEP_X &&
+	    mode <= PHSceneDesc::MODE_SORT_AND_SWEEP_Z ){
+		int idx = mode - PHSceneDesc::MODE_SORT_AND_SWEEP_X;
+		
+		edges.clear();
+		std::vector<Edge>::iterator eit = edges.begin();
+		Vec3d bbmin, bbmax;
+		for(int i = 0; i < nsolids; i++){
+			int nshapes = solids[i]->NShape();
+			for(int j = 0; j < nshapes; j++){
+				PHBBox& bb = solids[i]->frames[j]->bbWorld[continuous];
+				bbmin = bb.GetBBoxMin();
+				bbmax = bb.GetBBoxMax();
+				edges.push_back(Edge(i, j, bbmin[idx], true ));
+				edges.push_back(Edge(i, j, bbmax[idx], false));
+			}
+		}
+		std::sort(edges.begin(), edges.end());
+	}
+	else{
+		// 各形状を領域に分類
+		cellOutside.shapes.clear();
+		for(int c = 0; c < (int)cells.size(); c++)
+			cells[c].shapes.clear();
+
+		Vec3d regionMin  = regionBBox.GetBBoxMin();
+		Vec3d regionMax  = regionBBox.GetBBoxMax();
+		Vec3d cellExtent = cellBBox  .GetBBoxExtent();
+		Vec3d cellmin, cellmax;
+		Vec3d bbmin, bbmax, bbcenter, bbextent;
+		for(int i = 0; i < nsolids; i++){
+			int nshapes = solids[i]->NShape();
+			for(int j = 0; j < nshapes; j++){
+				PHBBox& bb = solids[i]->frames[j]->bbWorld[continuous];
+				bbmin    = bb.GetBBoxMin   ();
+				bbmax    = bb.GetBBoxMax   ();
+				bbcenter = bb.GetBBoxCenter();
+				bbextent = bb.GetBBoxExtent();
+				bool large = false;
+				for(int k = 0; k < 3; k++)
+					large |= (bbextent[k] > cellExtent[k]);
+				// セルよりも大きな形状は外側扱い
+				if(large){
+					cellOutside.Add(i,j,true);
+					continue;
+				}
+				
 				Vec3i idx;
 				bool outside = false;
 				for(int k = 0; k < 3; k++){
@@ -600,43 +502,32 @@ bool PHContactDetector::Detect(unsigned ct, double dt, bool continuous){
 					outside |= (idx[k] < 0 || idx[k] >= numDivision[k]);
 				}
 				// 領域よりも外側の形状は外側扱い
-				if(outside)
+				if(outside){
 					cellOutside.Add(i,j,true);
+					continue;
+				}
+
 				// それ以外は中心が含まれるセルおよび（かかっていれば）その隣接セルへ登録
-				else{
-					Cell& cell = GetCell(idx.x, idx.y, idx.z);
-					cellmin = cell.bbox.GetBBoxMin();
-					cellmax = cell.bbox.GetBBoxMax();
-					bool flag[3][3];
-					for(int k = 0; k < 3; k++){
-						flag[k][0] = (bbmin[k] < cellmin[k] && idx[k] > 0);
-						flag[k][1] = true;
-						flag[k][2] = (bbmax[k] > cellmax[k] && idx[k] < numDivision[k]-1);
-					}
-					for(int jx = -1; jx <= 1; jx++)for(int jy = -1; jy <= 1; jy++)for(int jz = -1; jz <= 1; jz++){
-						if(flag[0][jx+1] && flag[1][jy+1] && flag[2][jz+1])
-							GetCell(idx.x + jx, idx.y + jy, idx.z + jz).Add(i,j,(jx == 0 && jy == 0 && jz == 0));
-					}
+				Cell& cell = GetCell(idx.x, idx.y, idx.z);
+				cellmin = cell.bbox.GetBBoxMin();
+				cellmax = cell.bbox.GetBBoxMax();
+				bool flag[3][3];
+				for(int k = 0; k < 3; k++){
+					flag[k][0] = (bbmin[k] < cellmin[k] && idx[k] > 0);
+					flag[k][1] = true;
+					flag[k][2] = (bbmax[k] > cellmax[k] && idx[k] < numDivision[k]-1);
+				}
+				for(int jx = -1; jx <= 1; jx++)for(int jy = -1; jy <= 1; jy++)for(int jz = -1; jz <= 1; jz++){
+					if(flag[0][jx+1] && flag[1][jy+1] && flag[2][jz+1])
+						GetCell(idx.x + jx, idx.y + jy, idx.z + jz).Add(i,j,(jx == 0 && jy == 0 && jz == 0));
 				}
 			}
 		}
 	}
-	/*rootRegion.Reset();
-	for(int i = 0; i < nsolids; i++){
-		int nshapes = solids[i]->NShape();
-		for(int j = 0; j < nshapes; j++){
-			rootRegion.Assign(solids[i]->frames[j]->bbWorld[continuous], i, j);
-		}
-	}*/
+
 #ifdef REPORT_TIME
 	DSTR << "  assign:" << ptimerForCd.CountUS();
 	DSTR << endl;
-	//rootRegion.Report(DSTR);
-	/*DSTR << "   outside: " << cellOutside.shapes.size() << endl;
-	DSTR << "   ";
-	for(int c = 0; c < (int)cells.size(); c++)
-		DSTR << cells[c].shapes.size() << " ";
-	DSTR << endl;*/
 #endif
 
 #ifdef REPORT_TIME
@@ -645,121 +536,56 @@ bool PHContactDetector::Detect(unsigned ct, double dt, bool continuous){
 	nBroad  = 0;
 	nNarrow = 0;
 	bool found = false;
-	// 各セルについて交差判定
-	int ix, iy, iz;
-	for(ix = 0; ix < numDivision.x; ix++)for(iy = 0; iy < numDivision.y; iy++)for(iz = 0; iz < numDivision.z; iz++){
-		Cell& cell = GetCell(ix, iy, iz);
-		int n = (int)cell.shapes.size();
-		for(int s0 = 1; s0 < n; s0++)for(int s1 = 0; s1 < s0; s1++)
-			found |= DetectPair(cell.shapes[s0], cell.shapes[s1], ct, dt, continuous);
+
+	if( mode >= PHSceneDesc::MODE_SORT_AND_SWEEP_X &&
+		mode <= PHSceneDesc::MODE_SORT_AND_SWEEP_Z ){
+		//端から見ていって，接触の可能性があるノードの判定をする．
+		typedef std::set<ShapeIndex> ShapeIndexSet;
+		ShapeIndexSet cur;
+
+		for(std::vector<Edge>::iterator it = edges.begin(); it != edges.end(); ++it){
+			// 初端だったら，リスト内の物体と判定
+			if (it->bMin){
+				for(ShapeIndexSet::iterator itf = cur.begin(); itf != cur.end(); ++itf){
+					found |= DetectPair(it->index, *itf, ct, dt, continuous);
+				}
+				cur.insert(it->index);
+			}
+			// 終端なので削除．
+			else{
+				cur.erase(it->index);
+			}
+		}
+
 	}
-	// 外側とセル間
-	int noutside = (int)cellOutside.shapes.size();
-	for(int c = 0; c < (int)cells.size(); c++){
-		int n = (int)cells[c].shapes.size();
-		for(int s0 = 0; s0 < noutside; s0++)for(int s1 = 0; s1 < n; s1++)
-			found |= DetectPair(cellOutside.shapes[s0], cells[c].shapes[s1], ct, dt, continuous);
+	else{
+		// 各セルについて交差判定
+		int ix, iy, iz;
+		for(ix = 0; ix < numDivision.x; ix++)for(iy = 0; iy < numDivision.y; iy++)for(iz = 0; iz < numDivision.z; iz++){
+			Cell& cell = GetCell(ix, iy, iz);
+			int n = (int)cell.shapes.size();
+			for(int s0 = 1; s0 < n; s0++)for(int s1 = 0; s1 < s0; s1++)
+				found |= DetectPair(cell.shapes[s0], cell.shapes[s1], ct, dt, continuous);
+		}
+
+		// 外側とセル間
+		int noutside = (int)cellOutside.shapes.size();
+		for(int c = 0; c < (int)cells.size(); c++){
+			int n = (int)cells[c].shapes.size();
+			for(int s0 = 0; s0 < noutside; s0++)for(int s1 = 0; s1 < n; s1++)
+				found |= DetectPair(cellOutside.shapes[s0], cells[c].shapes[s1], ct, dt, continuous);
+		}
+
+		// 外側同士
+		for(int s0 = 1; s0 < noutside; s0++)for(int s1 = 0; s1 < s0; s1++)
+			found |= DetectPair(cellOutside.shapes[s0], cellOutside.shapes[s1], ct, dt, continuous);
 	}
-
-	// 外側同士
-	for(int s0 = 1; s0 < noutside; s0++)for(int s1 = 0; s1 < s0; s1++)
-		found |= DetectPair(cellOutside.shapes[s0], cellOutside.shapes[s1], ct, dt, continuous);
-
-	// 領域ツリーに関して再帰的に交差判定
-	//bool found = DetectRecurs(&rootRegion, ct, dt, continuous);
-
 #ifdef REPORT_TIME
 	DSTR << "  check:" << ptimerForCd.CountUS();
 	DSTR << "total: " << NActiveShapePairs() << " broad : " << nBroad << "  narrow: " << nNarrow << std::endl;
 #endif
+
 	return found;
-
-	/*int nregions = (int)regions.size();
-	for(int r = 0; r < nregions; r++){
-		Region& region = regions[r];
-		region.shapes.clear();
-
-		for(int i = 0; i < nsolids; i++){
-			int nshapes = solids[i]->NShape();
-			for(int j = 0; j < nshapes; j++){
-				if(PHBBox::Intersect(region.bbox, solids[i]->frames[j]->bbWorld))
-					region.shapes.push_back(ShapeIndex(i, j));
-			}
-		}
-
-		DSTR << "region " << r << ": " << region.shapes.size() << endl;
-	}*/
-	/*
-	bool found   = false;	
-	int  nBroad  = 0;
-	int  nNarrow = 0;
-
-	// 各領域と交差する形状同士の交差判定
-	for(int r = 0; r < nregions; r++){
-		Region& region = regions[r];
-		int ns = (int)region.shapes.size();
-		for(int i0 = 1; i0 < ns; i0++)for(int i1 = 0; i1 < i0; i1++){
-			int idxSolid0 = region.shapes[i0].idxSolid;
-			int idxSolid1 = region.shapes[i1].idxSolid;
-			int idxShape0 = region.shapes[i0].idxShape;
-			int idxShape1 = region.shapes[i1].idxShape;
-			if(idxSolid0 == idxSolid1)
-				continue;
-			if(idxSolid0 > idxSolid1){
-				swap(idxSolid0, idxSolid1);
-				swap(idxShape0, idxShape1);
-			}
-
-			PHSolidPair* solidPair = solidPairs.item(idxSolid0, idxSolid1);
-			// 無効な剛体対はスキップ
-			if(!solidPair->bEnabled)
-				continue;
-			// 両方frozenならスキップ
-			if(solidPair->solid[0]->IsFrozen() && solidPair->solid[1]->IsFrozen())
-				continue;
-			// 両方non-dynamicalならスキップ
-			if(!solidPair->solid[0]->IsDynamical() && !solidPair->solid[1]->IsDynamical())
-				continue;
-
-			PHShapePair* shapePair = solidPair->shapePairs.item(idxShape0, idxShape1);
-			PHFrame* fr0 = shapePair->frame[0];
-			PHFrame* fr1 = shapePair->frame[1];
-
-			// ShapeのBBox同士の判定で除外できなければnarrow phaseへ
-			if(PHBBox::Intersect(fr0->bbWorld, fr1->bbWorld)){
-				solidPair->Detect(shapePair, ct, dt, continuous);
-				nNarrow++;
-			}
-		}
-	}
-	*/
-	/*for(int j0 = 1; j0 < solidPairs.width(); ++j0)for(int i0 = 0; i0 < j0; ++i0){
-		PHSolidPair* solidPair = solidPairs.item(i0, j0);
-		// 無効な剛体対はスキップ
-		if(!solidPair->bEnabled)
-			continue;
-		// 両方frozenならスキップ
-		if(solidPair->solid[0]->IsFrozen() && solidPair->solid[1]->IsFrozen())
-			continue;
-		// 両方non-dynamicalならスキップ
-		if(!solidPair->solid[0]->IsDynamical() && !solidPair->solid[1]->IsDynamical())
-			continue;
-
-		for(int j1 = 0; j1 < solidPair->shapePairs.width(); j1++)for(int i1 = 0; i1 < solidPair->shapePairs.height(); i1++){
-			nBroad++;
-
-			PHShapePair* shapePair = solidPair->shapePairs.item(i1, j1);
-			PHFrame* fr0 = shapePair->frame[0];
-			PHFrame* fr1 = shapePair->frame[1];
-
-			// ShapeのBBox同士の判定で除外できなければnarrow phaseへ
-			if(PHBBox::Intersect(fr0->bbWorld, fr1->bbWorld)){
-				solidPair->Detect(shapePair, ct, dt, continuous);
-				nNarrow++;
-			}
-		}
-	}*/
-
 }
 
 }
