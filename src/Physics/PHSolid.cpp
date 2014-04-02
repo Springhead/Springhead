@@ -420,12 +420,14 @@ void PHSolid::SetVelocity(const Vec3d& v){
 	SetFrozen(false);
 
 	PHSceneIf* scene = GetScene()->Cast();
-	double vmax = scene->GetMaxVelocity();
+	if (scene){
+		double vmax = scene->GetMaxVelocity();
 
-	if(velocityNorm > vmax){
-		DSTR << "solid " << GetName() << " velocity exceeded limit: " << velocityNorm << std::endl;
-		velocity *= (vmax/velocityNorm);
-		velocityNorm = vmax;
+		if(velocityNorm > vmax){
+			DSTR << "solid " << GetName() << " velocity exceeded limit: " << velocityNorm << std::endl;
+			velocity *= (vmax/velocityNorm);
+			velocityNorm = vmax;
+		}
 	}
 }
 
@@ -435,12 +437,14 @@ void PHSolid::SetAngularVelocity(const Vec3d& av){
 	SetFrozen(false);
 
 	PHSceneIf* scene = GetScene()->Cast();
-	double wmax = scene->GetMaxAngularVelocity();
+	if (scene){
+		double wmax = scene->GetMaxAngularVelocity();
 
-	if(angVelocityNorm > wmax){
-		DSTR << "solid " << GetName() << " ang.velocity exceeded limit: " << angVelocityNorm << std::endl;
-		angVelocity *= (wmax/angVelocityNorm);
-		angVelocityNorm = wmax;
+		if(angVelocityNorm > wmax){
+			DSTR << "solid " << GetName() << " ang.velocity exceeded limit: " << angVelocityNorm << std::endl;
+			angVelocity *= (wmax/angVelocityNorm);
+			angVelocityNorm = wmax;
+		}
 	}
 }
 

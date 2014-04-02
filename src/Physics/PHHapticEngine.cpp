@@ -711,6 +711,8 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 			PHShapePairForHaptic* n = DBG_NEW PHShapePairForHaptic();
 			n->shape[0] = s[0]->GetShape(s[0]->NShape() - 1)->Cast();
 			n->shape[1] = s[1]->GetShape(j)->Cast();
+			n->frame[0] = s[0]->GetFrame(s[0]->NShape() - 1)->Cast();
+			n->frame[1] = s[1]->GetFrame(j)->Cast();
 			sp->shapePairs.item(s[0]->NShape() - 1, j) = n;
 		}
 	}
@@ -730,6 +732,8 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 			PHShapePairForHaptic* n = DBG_NEW PHShapePairForHaptic();
 			n->shape[0] = s[0]->GetShape(j)->Cast();
 			n->shape[1] = s[1]->GetShape(s[1]->NShape()-1)->Cast(); 
+			n->frame[0] = s[0]->GetFrame(j)->Cast();
+			n->frame[1] = s[1]->GetFrame(s[1]->NShape()-1)->Cast(); 
 			sp->shapePairs.item(j, s[1]->NShape()-1) = n;
 		}
 	}

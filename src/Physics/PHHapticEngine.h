@@ -68,7 +68,7 @@ public:
 
 	PHShapePairForHaptic();
 	/// 接触判定．近傍点対を常時更新
-	bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
+	virtual bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	/// 接触時の判定
 	int OnDetect(unsigned ct, const Vec3d& center0);
 	bool AnalyzeContactRegion();

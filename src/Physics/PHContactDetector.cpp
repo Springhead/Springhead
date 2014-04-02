@@ -232,7 +232,7 @@ void PHContactDetector::SetState(const void* s){
 	
 			for(int r = 0; r < solidPair->shapePairs.height(); ++r){
 				for(int c = 0; c < solidPair->shapePairs.width(); ++c){
-					shapePair = solidPair->shapePairs.item(i, j);
+					shapePair = solidPair->shapePairs.item(r, c);
 					shapePair->SetSt(shapeStates[shapePos]);
 					++shapePos;
 				}

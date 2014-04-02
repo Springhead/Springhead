@@ -659,7 +659,7 @@ void PHConstraintEngine::CompResponseMatrix(){
 					con0->adj.push_back(PHConstraint::Adjacent());
 					con0->adj.back().con = con1;
 					con0->adj.back().A   = A;
-					idx[i1] = con0->adj.size()-1;
+					idx[i1] = (int)(con0->adj.size()-1);
 				}
 				else{
 					con0->adj[idx[i1]].A += A;

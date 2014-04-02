@@ -212,7 +212,7 @@ void GRDeviceGL::SetBlendMatrix(const Affinef& afb, unsigned int id){
 	if(id < blendMatrices.size()){
 		blendMatrices[id] = afb;
 		if(curShader)
-			glUniformMatrix4fv(curShader->blendMatricesLoc, blendMatrices.size(), false, (float*)&blendMatrices[0]);
+			glUniformMatrix4fv(curShader->blendMatricesLoc, (int)blendMatrices.size(), false, (float*)&blendMatrices[0]);
 	}
 }		
 /// 頂点フォーマットの指定
