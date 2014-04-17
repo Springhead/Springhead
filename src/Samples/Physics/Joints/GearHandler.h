@@ -40,8 +40,8 @@ public:
 		g.solid->AddShape(phSdk->CreateShape(md));
 		
 		CDCapsuleDesc cd;
-		cd.radius = 0.1;
-		cd.length = l;
+		cd.radius = 0.1f;
+		cd.length = (float)l;
 		g.solid->AddShape(phSdk->CreateShape(cd));
 		g.solid->SetShapePose(1, Posed(Vec3d(r-0.1, 0.0, 0.0), Quaterniond()));
 
