@@ -113,7 +113,7 @@ VertexC4f verticesC4f[] =
  param  	<in/--> h　　高さ
  return 	なし
  */
-void reshape(int w, int h){
+void _cdecl reshape(int w, int h){
 	render->Reshape(Vec2f(0,0), Vec2f(w,h));
 }
 /**
@@ -121,7 +121,7 @@ void reshape(int w, int h){
  param	 	なし
  return 	なし
  */
-void display(void) {
+void _cdecl display(void) {
 	render->ClearBuffer();
 	glLoadIdentity();
 
@@ -151,7 +151,7 @@ void display(void) {
  param 		<in/--> y　　　 キーが押された時のマウス座標
  return 	なし
  */
-void keyboard(unsigned char key, int x, int y) {
+void _cdecl keyboard(unsigned char key, int x, int y) {
 	if (key == 27) 
 		exit(0);
 }
@@ -160,7 +160,7 @@ void keyboard(unsigned char key, int x, int y) {
  param	 	なし
  return 	なし
  */
-void idle(){
+void _cdecl idle(){
 	glutPostRedisplay();
 	static int count=0;
 	count++;
@@ -269,7 +269,7 @@ void SetShader(){
  param		<in/--> argv　　コマンドライン入力
  return		0 (正常終了)
  */
-int main(int argc, char **argv) {
+int _cdecl main(int argc, char **argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100,100);
