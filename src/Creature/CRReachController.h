@@ -163,6 +163,19 @@ public:
 	*/
 	void SetViaOri(Quaterniond ori) { viaOri = ori; }
 
+
+	/** @brief 軌道の通過点を返す s=0.0～1.0
+	*/
+	Vec3d GetTrajectory(float s);
+
+	/** @brief 目標到達時間を返す
+	*/
+	float GetReachTime() { return this->reachTime; }
+
+	/** @brief 現在時刻を返す
+	*/
+	float GetCurrentTime() { return this->time; }
+
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	// 子要素の扱い
 
