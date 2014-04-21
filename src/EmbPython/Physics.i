@@ -13,9 +13,8 @@
 #undef SPR_DLL						
 #define SPR_DLL					
 //---
+%ignore Spr::PHSolidIf::AddShapes;
 %ignore Spr::PHIKActuatorIf::GetRawSolution;
-//%ignore Spr::PHSceneIf::CreateIKEndEffector;
-//%ignore Spr::PHSceneIf::CreateIKActuator;
 %ignore Spr::PHSceneIf::GetSolids;
 %ignore Spr::PHJoint1DIf::GetRange;
 %ignore Spr::PHSceneIf::SetContactMode(PHSolidIf **,size_t,PHSceneDesc::ContactMode);
@@ -26,6 +25,9 @@
 %ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
 %ignore Spr::PHFemVibrationIf::AddBoundaryCondition;
 %ignore Spr::PHFemVibrationIf::AddVertexForceW;
+%ignore Spr::PHFemMeshThermoIf::GetKMatInTet;
+%ignore Spr::PHGenericJointCallback;
+%ignore Spr::PHGenericJointIf::SetCallback;
 %include "Utility/EPObject.i"
 EXTEND_NEW(PHSolidDesc)
 EXTEND_NEW(PHPathPoint)

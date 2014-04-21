@@ -29,6 +29,7 @@ void CRReachController::Step() {
 	} else if ((targPos - finalPos).norm() > 1e-4) {
 		if (reachTime <= time) {
 			// とりあえず現在設定されている到達運動が完了したが、目標到達位置がその間に変わってしまった場合
+			currVel = Vec3d(); // <!!>
 			SetTargetPos(finalPos);
 			SetTargetVel(finalVel);
 			AutoStart();
@@ -40,6 +41,7 @@ void CRReachController::Step() {
 		// 最終目標位置に届いていないので改めて到達運動を行う
 		if (reachTime+reachTimeMargin <= time) {
 			// currPos = currEEfPos;
+			currVel = Vec3d(); // <!!>
 			SetTargetPos(finalPos);
 			SetTargetVel(finalVel);
 			AutoStart();
@@ -83,6 +85,8 @@ void CRReachController::Step() {
 				// currAcc[i] = pi * Vec6d(0, 0,        2,        6*t, 12*pow(t,2), 20*pow(t,3));
 			}
 
+			// std::cout << time/reachTime << "(" << time << " / " << reachTime << ")" << " : " << currVel << std::endl;
+
 		} else {
 			currPos = targPos;
 			currVel = targVel;
@@ -93,6 +97,47 @@ void CRReachController::Step() {
 	}
 
 	time += phScene->GetTimeStep();
+}
+
+Vec3d CRReachController::GetTrajectory(float s) {
+	Vec3d pos;
+
+	if ((initPos - targPos).norm() > 1e-5) {
+
+		for (int i=0; i<3; ++i) {
+			PTM::TMatrixRow<6,6,double> A;
+			PTM::TMatrixRow<6,1,double> b, x;
+
+			if (viaTime > 0) {
+				double t0 = 0, tF = 1, tV = viaTime;
+				A.row(0)=Vec6d(1, t0, pow(t0,2),   pow(t0,3),    pow(t0,4),    pow(t0,5)); b[0][0]=initPos[i];
+				A.row(1)=Vec6d(0,  1,      2*t0, 3*pow(t0,2),  4*pow(t0,3),  5*pow(t0,4)); b[1][0]=initVel[i];
+				A.row(2)=Vec6d(1, tV, pow(tV,2),   pow(tV,3),    pow(tV,4),    pow(tV,5)); b[2][0]=viaPos[i];
+				A.row(3)=Vec6d(1, tF, pow(tF,2),   pow(tF,3),    pow(tF,4),    pow(tF,5)); b[3][0]=targPos[i];
+				A.row(4)=Vec6d(0,  1,      2*tF, 3*pow(tF,2),  4*pow(tF,3),  5*pow(tF,4)); b[4][0]=targVel[i];
+				A.row(5)=Vec6d(0,  0,         2,        6*tF, 12*pow(tF,2), 20*pow(tF,3)); b[5][0]=0;
+			} else {
+				double t0 = 0, tF = 1;
+				A.row(0)=Vec6d(1, t0, pow(t0,2),   pow(t0,3),    pow(t0,4),    pow(t0,5)); b[0][0]=initPos[i];
+				A.row(1)=Vec6d(0,  1,      2*t0, 3*pow(t0,2),  4*pow(t0,3),  5*pow(t0,4)); b[1][0]=initVel[i];
+				A.row(2)=Vec6d(0,  0,         2,        6*t0, 12*pow(t0,2), 20*pow(t0,3)); b[2][0]=0;
+				A.row(3)=Vec6d(1, tF, pow(tF,2),   pow(tF,3),    pow(tF,4),    pow(tF,5)); b[3][0]=targPos[i];
+				A.row(4)=Vec6d(0,  1,      2*tF, 3*pow(tF,2),  4*pow(tF,3),  5*pow(tF,4)); b[4][0]=targVel[i];
+				A.row(5)=Vec6d(0,  0,         2,        6*tF, 12*pow(tF,2), 20*pow(tF,3)); b[5][0]=0;
+			}
+
+			x = A.inv() * b;
+
+			Vec6d pi; for(int n=0; n<6; ++n){ pi[n] = x[n][0]; }
+
+			pos[i] = pi * Vec6d(1, s, pow(s,2),   pow(s,3),    pow(s,4),    pow(s,5));
+		}
+
+	} else {
+		pos = targPos;
+	}
+
+	return pos;
 }
 
 double CRReachController::GetLength() {
@@ -155,6 +200,7 @@ void CRReachController::AutoStart() {
 		currOri  = so->GetPose().Ori();
 		currAVel = Vec3d(); // so->GetAngularVelocity();
 	}
+
 	// 現在位置から滑らかに接続する
 	initPos = currPos; initVel  = currVel;
 	initOri = currOri; initAVel = currAVel;
