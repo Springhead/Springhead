@@ -121,7 +121,7 @@ int  UTPreciseTimer::CountUS()
 #else
 	QueryPerformanceCounter((LARGE_INTEGER*)&cycles);
 #endif
-	retval =  (int)((cycles.quadPart-cycles2.quadPart)*1000000 / freq);
+	retval =  (int)(((cycles.quadPart-cycles2.quadPart)*1000000 / freq) & 0xffffffff);
 	cycles2.quadPart = cycles.quadPart;
 	return retval;
 }
