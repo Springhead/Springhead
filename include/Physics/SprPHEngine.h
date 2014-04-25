@@ -130,11 +130,6 @@ struct PHConstraintEngineDesc{
 		bUpdateAllState	         = true;
 		bUseContactSurface       = false;
 	}
-
-
-	/** @breif 接触領域を表示するための情報を更新するかどうか。FWSceen::EnableRenderContact()が呼び出す。
-	*/
-	void EnableRenderContact(bool enable);
 };
 
 struct PHGravityEngineIf : PHEngineIf{
