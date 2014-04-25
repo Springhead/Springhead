@@ -74,7 +74,7 @@ void PHBallJoint::IterateGS(){
 */
 void PHBallJoint::CompBias(){
 	//	並進誤差の解消のため、速度に誤差/dtを加算, Xjrel.r: ソケットに対するプラグの位置のズレ
-	dv.v() = Xjrel.r * GetScene()->GetTimeStepInv() * engine->velCorrectionRate;
+	db.v() = Xjrel.r * GetScene()->GetTimeStepInv() * engine->velCorrectionRate;
 }
 
 void PHBallJoint::UpdateJointState(){
