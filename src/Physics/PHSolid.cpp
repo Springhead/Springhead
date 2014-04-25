@@ -708,7 +708,7 @@ void PHSolid::RemoveShape(int i){
 void PHSolid::RemoveShapes(int iBegin, int iEnd){
 	if(iBegin < 0 || iBegin >= (int)frames.size())
 		return;
-	if(iEnd   < 0 || iEnd   >= (int)frames.size())
+	if(iEnd   < 1 || iEnd   >  (int)frames.size())
 		return;
 	if(iEnd <= iBegin)
 		return;
