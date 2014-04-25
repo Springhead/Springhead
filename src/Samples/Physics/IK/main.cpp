@@ -98,8 +98,8 @@ public:
 
 	// シーン構築
 	virtual void BuildScene() {
-		// BuildSceneBallBranch();
-		BuildSceneHinge(false);
+		BuildSceneBallBranch();
+		// BuildSceneHinge(false);
 	}
 
 	virtual void BuildSceneHinge(bool branch = false) {
