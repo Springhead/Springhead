@@ -57,9 +57,9 @@ PHBallJoint::PHBallJoint(const PHBallJointDesc& desc){
 	
 	limit = 0;
 	motor = 0;
-	//limit = NULL;
-	//motor = DBG_NEW PHBallJointMotor();
-	//motor->joint = this;
+	// limit = NULL;
+	motor = DBG_NEW PHBallJointMotor();
+	motor->joint = this;
 }
 /*
 void PHBallJoint::Setup(){
