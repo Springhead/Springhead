@@ -5,19 +5,10 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-/** \page pageIKSample 逆運動学（IK）機能のデモ
+/** \page pageBallJointSample ボールジョイントのサンプル
  Springhead2/src/Samples/IK/main.cpp
 
-\ref pagePhysics の逆運動学（IK）機能のデモプログラム。
-
-\secntion secSpecIKSample 仕様
-アームの先端剛体の中心位置ががポインタ（球体）の位置になるよう到達運動する．
-第一・第二関節ともに可動域制限がかかっている．
-- スペースキーでシミュレーション開始．
-- 'i'をタイプするとポインタ位置が上に動く．
-- 'k'で、下へ
-- 'j'で、左へ
-- 'l'で、右へ
+\ref pagePhysics のボールジョイント機能のデモプログラム。
 */
 
 #include "../../SampleApp.h"
@@ -82,6 +73,8 @@ public:
 		PHSolidIf* so0 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so0->AddShape(phSdk->CreateShape(descCapsule));
 		so0->SetDynamical(false);
+		PHTreeNodeIf* nd = GetFWScene()->GetPHScene()->CreateRootNode(so0);
+		PHTreeNodeIf* rt = nd;
 
 		// Link 1
 		PHSolidIf* so1 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
@@ -93,19 +86,51 @@ public:
 
 		// ----- ----- ----- ----- -----
 
-		PHBallJointDesc descBall;
-		descBall.poseSocket.Pos() = Vec3d(0,0, 2);
-		descBall.posePlug.Pos()   = Vec3d(0,0,-2);
+		{
+			PHBallJointDesc descBall;
+			descBall.poseSocket.Pos() = Vec3d(0,0, 2);
+			descBall.posePlug.Pos()   = Vec3d(0,0,-2);
+			descBall.spring = 0;
+			descBall.damper = 0;
 
-		// Base <-> Link 1
-		PHBallJointIf* jo1  = GetFWScene()->GetPHScene()->CreateJoint(so0, so1, descBall)->Cast();
+			// Base <-> Link 1
+			PHBallJointIf* jo1  = GetFWScene()->GetPHScene()->CreateJoint(so0, so1, descBall)->Cast();
+			{
+				PHBallJointConeLimitDesc ld;
+				jo1->CreateLimit(ld);
+				DCAST(PHBallJointConeLimitIf,jo1->GetLimit())->SetSpring(100);
+				DCAST(PHBallJointConeLimitIf,jo1->GetLimit())->SetDamper(  1);
+				DCAST(PHBallJointConeLimitIf,jo1->GetLimit())->SetSwingRange(Vec2d(Rad(-10), Rad(5)));
+			}
+
+			nd = GetFWScene()->GetPHScene()->CreateTreeNode(nd, so1);
+		}
 
 		// Link 1 <-> Link 2
-		PHBallJointIf* jo2  = GetFWScene()->GetPHScene()->CreateJoint(so1, so2, descBall)->Cast();
+		{
+			PHBallJointDesc descBall;
+			descBall.poseSocket.Pos() = Vec3d(0,0, 2);
+			descBall.posePlug.Pos()   = Vec3d(0,0,-2);
+			descBall.spring = 0;
+			descBall.damper = 0;
+
+			PHBallJointIf* jo2  = GetFWScene()->GetPHScene()->CreateJoint(so1, so2, descBall)->Cast();
+			{
+				PHBallJointConeLimitDesc ld;
+				jo2->CreateLimit(ld);
+				DCAST(PHBallJointConeLimitIf,jo2->GetLimit())->SetSpring(100);
+				DCAST(PHBallJointConeLimitIf,jo2->GetLimit())->SetDamper(  1);
+				DCAST(PHBallJointConeLimitIf,jo2->GetLimit())->SetSwingRange(Vec2d(Rad(-10), Rad(100)));
+			}
+
+			nd = GetFWScene()->GetPHScene()->CreateTreeNode(nd, so2);
+		}
 
 		// ----- ----- ----- ----- -----
 
 		GetFWScene()->GetPHScene()->SetContactMode(PHSceneDesc::MODE_NONE);
+
+		rt->Enable(/*/ true /*/ false /**/);
 	}
 
 } app;
