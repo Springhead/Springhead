@@ -466,10 +466,12 @@ public: /** 派生クラスが実装する関数 **/
 				states->SaveState(GetPHScene());
 			if(id == ID_RELEASE_STATE)
 				states->ReleaseState(GetPHScene());
-			if(id == ID_READ_STATE)
-				GetPHScene()->ReadState("state.bin");
-			if(id == ID_WRITE_STATE)
-				GetPHScene()->WriteState("state.bin");
+			if(id == ID_READ_STATE){
+				GetFWScene()->ReadState("state.bin");
+			}
+			if(id == ID_WRITE_STATE){
+				GetFWScene()->WriteState("state.bin");
+			}
 			if(id == ID_DUMP){
 				std::ofstream f("dump.bin", std::ios::binary|std::ios::out);
 				GetPHScene()->DumpObjectR(f);

@@ -25,5 +25,8 @@ void SPR_CDECL PHRegisterTypeDescs(){
 	RegisterTypeDescPhysics(db);
 	db->RegisterAlias("PHConstraintDesc", "PHJointDesc");
 	db->Link();
+	UTTypeDescDb* fdb = UTTypeDescDbPool::Get("Foundation");
+	db->Link(fdb);
+	db->LinkCheck();
 }
 }

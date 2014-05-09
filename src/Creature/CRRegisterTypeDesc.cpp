@@ -17,10 +17,17 @@ void SPR_CDECL CRRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
+	UTTypeDescDb* fdb = UTTypeDescDbPool::Get("Foundation");
+	UTTypeDescDb* pdb = UTTypeDescDbPool::Get("Physics");
+	UTTypeDescDb* gdb = UTTypeDescDbPool::Get("Graphics");
 	UTTypeDescDb* db = UTTypeDescDbPool::Get("Creature");
 	assert(db);
 	RegisterTypeDescCreature(db);
 	db->Link();
+	db->Link(fdb);
+	db->Link(pdb);
+	db->Link(gdb);
+	db->LinkCheck();
 }
 }
 

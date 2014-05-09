@@ -7,6 +7,7 @@
  */
 #include <Foundation/Object.h>
 #include <Foundation/Scene.h>
+#include <Foundation/UTTypeDesc.h>
 #include <sstream>
 #include <iomanip>
 
@@ -176,14 +177,17 @@ bool Object::WriteState(std::string fileName){
 	return true;
 }
 bool Object::WriteStateR(std::ostream& fout){
-	fout << GetTypeInfo()->ClassName();
-	size_t ss = GetStateSize();
-	char* state = DBG_NEW char [ss];
-	ConstructState(state);
-	GetState(state);
-	fout.write(state, ss);
-	DestructState(state);
-	delete state;
+	UTTypeDesc* sd = GetIfInfo()->state;
+	if (sd){
+		fout << '\n' << sd->typeName << '\t';
+		size_t ss = GetStateSize();
+		char* state = DBG_NEW char [ss];
+		ConstructState(state);
+		GetState(state);
+		sd->Write(fout, state);	
+		DestructState(state);
+		delete state;
+	}
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
 		(Object*)GetChildObject(i)->WriteStateR(fout);
@@ -198,18 +202,21 @@ bool Object::ReadState(std::string fileName){
 	return true;
 }
 bool Object::ReadStateR(std::istream& fin){
-	char buf[1024];
-	fin.read(buf, strlen(GetTypeInfo()->ClassName()));
-	buf[strlen(GetTypeInfo()->ClassName())] = '\0';
-	assert(strcmp(buf, GetTypeInfo()->ClassName()) == 0);
-
-	size_t ss = GetStateSize();
-	char* state = DBG_NEW char [ss];
-	ConstructState(state);
-	fin.read(state, ss);
-	SetState(state);
-	DestructState(state);
-	delete state;
+	UTTypeDesc* sd = GetIfInfo()->state;
+	if (sd){
+		if (fin.get() != '\n') assert(0);
+		std::string tn;
+		fin >> tn;
+		assert(tn.compare(sd->typeName)==0);
+		if (fin.get() != '\t') assert(0);
+		size_t ss = GetStateSize();
+		char* state = DBG_NEW char [ss];
+		ConstructState(state);
+		sd->Read(fin, state);	
+		SetState(state);
+		DestructState(state);
+		delete state;
+	}
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
 		(Object*)GetChildObject(i)->ReadStateR(fin);
@@ -387,6 +394,5 @@ ObjectStatesIf* ObjectStatesIf::Create(){
 	ObjectStates* o = new ObjectStates;
 	return o->Cast();
 }
-
 
 }	//	namespace Spr

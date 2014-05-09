@@ -50,5 +50,6 @@ void SPR_CDECL UTRegisterTypeDescs(){
 	RegisterTypeDescFoundation(db);
 
 	db->Link();
+	db->LinkCheck();
 }
 }

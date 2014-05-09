@@ -23,11 +23,26 @@ void SPR_CDECL FWRegisterTypeDescs(){
 	bFirst=false;
 	//
 	UTRegisterTypeDescs();
+	UTTypeDescDb* fdb = UTTypeDescDbPool::Get("Foundation");
+	UTTypeDescDb* pdb = UTTypeDescDbPool::Get("Physics");
+	UTTypeDescDb* gdb = UTTypeDescDbPool::Get("Graphics");
+	UTTypeDescDb* cdb = UTTypeDescDbPool::Get("Creature");
 	UTTypeDescDb* db = UTTypeDescDbPool::Get("Framework");
 	RegisterTypeDescFramework(db);
+	db->Link();
+	db->Link(fdb);
+	db->Link(pdb);
+	db->Link(gdb);
+	db->Link(cdb);
+
 	db = UTTypeDescDbPool::Get("OldSpringhead");
 	RegisterTypeDescFWOldSpringhead(db);
 	db->Link();
+	db->Link(fdb);
+	db->Link(pdb);
+	db->Link(gdb);
+	db->Link(cdb);
+	db->LinkCheck();
 }
 
 }

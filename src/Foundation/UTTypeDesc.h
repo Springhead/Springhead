@@ -138,12 +138,12 @@ public:
 		void AddEnumConst(std::string name, int val);
 		void AddEnumConst(std::string name);
 		///	フィールドのアドレスを計算
-		const void* /*UTTypeDesc::Field::*/GetAddress(const void* base, int pos);
-		void* /*UTTypeDesc::Field::*/GetAddress(void* base, int pos){
+		const void* GetAddress(const void* base, int pos);
+		void* GetAddress(void* base, int pos){
 			return (void*)GetAddress((const void*)base, pos); 
 		}
 		///	フィールドのアドレスを計算．vectorを拡張する．
-		void* /*UTTypeDesc::Field::*/GetAddressEx(void* base, int pos);
+		void* GetAddressEx(void* base, int pos);
 		///	フィールドがstd::vectorの場合，vector::size() を呼び出す．
 		size_t VectorSize(const void * base){ 
 			return type->access->VectorSize(((char*)base)+offset); 
@@ -184,6 +184,8 @@ public:
 		void Link(UTTypeDescDb* db);
 		///
 		void Print(std::ostream& os) const;
+		///
+		Field* Find(const char* id);
 	};
 
 	///	型名
@@ -194,6 +196,8 @@ public:
 	Composit composit;
 	///	プリミティブかどうか
 	bool bPrimitive;
+	///	バイナリダンプが可能かどうか
+	enum BinaryType{UNKNOWN_BINARY, SIMPLE_BINARY, COMPLEX_BINARY} bSimple;
 	///	IfInfo
 	const IfInfo* ifInfo;
 	///
@@ -202,9 +206,10 @@ public:
 	friend class UTTypeDescDb;
 public:
 	///	コンストラクタ
-	UTTypeDesc():size(0), bPrimitive(false), ifInfo(NULL){}
+	UTTypeDesc():size(0), bPrimitive(false), bSimple(UNKNOWN_BINARY), ifInfo(NULL){}
 	///	コンストラクタ
-	UTTypeDesc(std::string tn, int sz=0): typeName(tn), size(sz), bPrimitive(false), ifInfo(NULL){}
+	UTTypeDesc(std::string tn, int sz=0): 
+		typeName(tn), size(sz), bPrimitive(false), bSimple(UNKNOWN_BINARY), ifInfo(NULL){}
 	///	
 	virtual ~UTTypeDesc(){}
 	///
@@ -222,14 +227,23 @@ public:
 
 	///	組み立て型かどうか
 	bool IsPrimitive(){ return bPrimitive; }
+	///	文字列やvectorや参照を含まなければ true
+	bool IsSimple(){ return bSimple == SIMPLE_BINARY; }
+	///	bFlatの初期化
+	BinaryType CheckSimple();
 	///	組み立て型の要素
 	Composit& GetComposit(){ return composit; }
 	///	フィールドの型情報のリンク
 	void Link(UTTypeDescDb* db);
+	///	リンクの確認
+	bool LinkCheck();
 	///
 	const IfInfo* GetIfInfo(){ return ifInfo; }
 
 	//	ユーティリティ関数
+	virtual bool IsBool(){ return false; }
+	virtual bool IsNumber(){ return false; }
+	virtual bool IsString(){ return false; }
 	///	TypeDescがboolの単純型の場合に，boolを読み出す関数
 	virtual bool ReadBool(const void* ptr){ assert(0); return 0;}
 	///	TypeDescが数値の単純型の場合に，数値を書き込む関数
@@ -242,7 +256,7 @@ public:
 	virtual std::string ReadString(const void* ptr){ assert(0);  return 0;}
 	///	文字列書き込み
 	virtual void WriteString(const char* val, void* ptr){ assert(0); }
-
+	
 	///	オブジェクトの構築
 	void* Create(){
 		return access ? access->Create() : NULL;
@@ -265,6 +279,12 @@ public:
 	size_t VectorSize(const void * v){ return access->VectorSize(v); }
 	///
 	size_t SizeOfVector(){ return access->SizeOfVector(); }
+	
+	//	シリアライズ
+	///	ストリームに書き出し
+	void Write(std::ostream& os, void* base);
+	///	ストリームから読み出し
+	void Read(std::istream& is, void* base);
 };
 inline bool operator < (const UTTypeDesc& d1, const UTTypeDesc& d2){
 	return d1.GetTypeName().compare(d2.GetTypeName()) < 0;
@@ -290,6 +310,7 @@ protected:
 	virtual void WriteNumber(double val, void* ptr){
 		*(N*)ptr = (N)val;
 	}
+	virtual bool IsNumber(){ return true; }
 };
 
 template <class N>
@@ -304,14 +325,15 @@ public:
 		bPrimitive = true;
 	}
 protected:
-	///	数値読み出し
+	///	bool読み出し
 	virtual bool ReadBool(const void* ptr){
 		return *(const N*)ptr != 0;
 	}
-	///	数値書き込み
+	///	bool書き込み
 	virtual void WriteBool(bool val, void* ptr){
 		*(N*)ptr = (N)val;
 	}
+	virtual bool IsBool(){ return true; }
 };
 
 class SPR_DLL UTTypeDescString:public UTTypeDesc{
@@ -325,11 +347,12 @@ public:
 		bPrimitive = true;
 	}
 protected:
-	///	数値読み出し
+	virtual bool IsString(){ return true; }
+	///	文字列読み出し
 	virtual std::string ReadString(const void* ptr){
 		return *(std::string*)ptr;
 	}
-	///	数値書き込み
+	///	文字列書き込み
 	virtual void WriteString(const char* val, void* ptr){
 		*(std::string*)ptr = val;
 	}
@@ -372,8 +395,10 @@ public:
 	/**	型情報を名前から検索する．
 		@param tn	型名．prefix は省略してよい．	*/
 	UTTypeDesc* Find(std::string tn);
-	///	DB内の型情報をリンク．
-	void Link();
+	///	DB内の型情報を、引数dbにリンク．
+	void Link(UTTypeDescDb* db=NULL);
+	///	リンクの確認
+	bool LinkCheck();
 	///	DB内の型情報の表示
 	void Print(std::ostream& os) const;
 	UTTypeDescDb& operator += (const UTTypeDescDb& b){

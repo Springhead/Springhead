@@ -638,7 +638,9 @@ void PHScene::SetStateR(const char*& s){
 	}
 }
 bool PHScene::WriteStateR(std::ostream& fout){
+	fout << '\n';
 	fout.write(GetTypeInfo()->ClassName(), strlen(GetTypeInfo()->ClassName()));
+	fout << '\t';
 	size_t ss = GetStateSize();
 	char* state = new char[ss];
 	ConstructState(state);
@@ -660,7 +662,10 @@ bool PHScene::WriteStateR(std::ostream& fout){
 bool PHScene::ReadStateR(std::istream& fin){
 	char buf[1024];
 	memset(buf, 0, sizeof(buf));
+	if (fin.get() != '\n') assert(0);
 	fin.read(buf, strlen(GetTypeInfo()->ClassName()));
+	assert(strcmp(buf, GetTypeInfo()->ClassName()) == 0);
+	if (fin.get() != '\t') assert(0);
 	size_t ss;
 	fin.read((char*)&ss, sizeof(ss));
 	char* state = new char[ss];

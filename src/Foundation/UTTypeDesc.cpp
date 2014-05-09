@@ -129,8 +129,42 @@ void UTTypeDesc::Composit::Print(std::ostream& os) const{
 }
 void UTTypeDesc::Composit::Link(UTTypeDescDb* db) {
 	for(iterator it = begin(); it != end(); ++it){
-		it->type = db->Find(it->typeName);
+		if (it->type == NULL){
+			it->type = db->Find(it->typeName);
+#if 0
+			if (it->type){
+				DSTR << it->typeName << " " << it->name << " = " << it->type->GetTypeName() << std::endl;
+			}
+#endif
+		}
 	}
+}
+
+UTTypeDesc::Field* UTTypeDesc::Composit::Find(const char* id){
+	for(unsigned i=0; i<size(); ++i){
+		if (at(i).name.compare(id) == 0) return &at(i);
+	}
+	return NULL;
+}
+UTTypeDesc::BinaryType UTTypeDesc::CheckSimple(){
+	if (bSimple == UNKNOWN_BINARY){
+		if (IsPrimitive()){
+			if (IsString()) bSimple = COMPLEX_BINARY;
+			else bSimple = SIMPLE_BINARY;
+		}else{
+			bSimple = SIMPLE_BINARY;
+			for(unsigned i=0; i<composit.size(); ++i){
+				if (composit[i].type){
+					bSimple = composit[i].type->CheckSimple();
+					if (bSimple != SIMPLE_BINARY) break;
+				}else{
+					bSimple = UNKNOWN_BINARY;
+					break;
+				}
+			}
+		}
+	}
+	return bSimple;
 }
 
 //----------------------------------------------------------------------------
@@ -178,6 +212,15 @@ UTTypeDesc::Field* UTTypeDesc::AddBase(std::string tn){
 void UTTypeDesc::Link(UTTypeDescDb* db) {
 	composit.Link(db);
 }
+bool UTTypeDesc::LinkCheck(){
+	for(size_t i=0; i<composit.size(); ++i){
+		if (!composit[i].type){
+			DSTR << "Error in UTTypeDesc::CheckLink() " << composit[i].typeName << " " << composit[i].name << " not linked" << std::endl;
+			return false;
+		}
+	}
+	return true;
+}
 void UTTypeDesc::Print(std::ostream& os) const{
 	int w = os.width();
 	os.width(0);
@@ -192,6 +235,88 @@ void UTTypeDesc::Print(std::ostream& os) const{
 	os.width(w);
 }
 
+void UTTypeDesc::Write(std::ostream& os, void* base){
+	if (IsSimple()){
+		//	バイナリ書込でOKな場合
+		os.write((char*)base, GetSize()); 
+	}else if (IsPrimitive()){
+		//	単純型の書き出し。ファイルにデータを書き込むのはここだけ。
+		if (IsString()){
+			std::string str = ReadString(base);
+			unsigned len = str.length();
+			os.write((char*)&len, sizeof(len));
+			os.write(str.c_str(), str.length());
+		}else{
+			assert(0);	//	ここには来ないはず。
+			os.write((char*)base, GetSize());
+		}
+	}else{
+		for(unsigned i=0; i< composit.size(); ++i){
+			UTTypeDesc::Field& field = composit[i];
+			if (field.varType == UTTypeDesc::Field::SINGLE){
+				field.type->Write(os, field.GetAddress(base, 0));
+			}else if (field.varType == UTTypeDesc::Field::ARRAY){
+				unsigned arrayLen = field.length;
+				UTTypeDesc::Field* lf = composit.Find(field.lengthFieldName.c_str());
+				if (lf) arrayLen = lf->ReadNumber(base);
+				os.write((char*)&arrayLen, sizeof(arrayLen));	//	配列の要素数をまず書き出す
+				for(unsigned i=0; i<arrayLen; ++i){
+					field.type->Write(os, field.GetAddress(base, i));
+				}
+			}else if (composit[i].varType == UTTypeDesc::Field::VECTOR){
+				unsigned vecLen = composit[i].VectorSize(base);
+				os.write((char*)&vecLen, sizeof(vecLen));		//	vectorの要素数をまず書き出す
+				for(unsigned i=0; i<vecLen; ++i){
+					field.type->Write(os, field.GetAddress(base, i));
+				}
+			}
+		} 
+	}
+}
+void UTTypeDesc::Read(std::istream& is, void* base){
+	if (IsSimple()){
+		is.read((char*)base, GetSize());
+	}else if (IsPrimitive()){
+		//	単純型の書き出し。ファイルにデータを書き込むのはここだけ
+		if (IsString()){
+			unsigned len;
+			is.read((char*)&len, sizeof(len));		//	まず長さを読みだして
+			char* buf = new char [len+1];
+			is.read(buf, len);				//	文字列を読み出す
+			buf[len] = 0;
+			WriteString(buf, base);			//	読みだした結果をbaseに格納
+			delete buf;
+		}else{
+			assert(0);	//	ここには来ないはず
+			is.read((char*)base, GetSize());
+		}
+	}else{
+		for(unsigned i=0; i< composit.size(); ++i){
+			UTTypeDesc::Field& field = composit[i];
+			if (field.varType == UTTypeDesc::Field::SINGLE){
+				field.type->Read(is, field.GetAddress(base,0));
+			}else if (field.varType == UTTypeDesc::Field::ARRAY){
+				unsigned arrayLen;
+				is.read((char*)&arrayLen, sizeof(arrayLen));	//	配列の要素数をまず読み出す
+				UTTypeDesc::Field* lf = composit.Find(field.lengthFieldName.c_str());
+				if (lf){
+					lf->WriteNumber(base, arrayLen);
+				}else{
+					assert(arrayLen == field.length);
+				}
+				for(unsigned i=0; i<arrayLen; ++i){
+					field.type->Read(is, field.GetAddress(base, i));
+				}
+			}else if (composit[i].varType == UTTypeDesc::Field::VECTOR){
+				unsigned vecLen = composit[i].VectorSize(base);
+				is.read((char*)&vecLen, sizeof(vecLen));		//	vectorの要素数をまず読み出す
+				for(unsigned i=0; i<vecLen; ++i){
+					field.type->Read(is, field.GetAddressEx(base, i));
+				}
+			}
+		} 
+	}
+}
 //----------------------------------------------------------------------------
 //	UTTypeDescDb
 UTTypeDescDb::~UTTypeDescDb(){
@@ -222,10 +347,21 @@ void UTTypeDescDb::SetPrefix(UTString p){
 	}
 	db.insert(descs.begin(), descs.end());
 }
-void UTTypeDescDb::Link() {
+void UTTypeDescDb::Link(UTTypeDescDb* lib) {
+	if (!lib) lib = this;
 	for(Db::iterator it=db.begin(); it!=db.end(); ++it){
-		(*it)->Link(this);
+		(*it)->Link(lib);
 	}
+}
+bool UTTypeDescDb::LinkCheck(){
+	bool rv = true;
+	for(Db::iterator it=db.begin(); it!=db.end(); ++it){
+		rv = rv && (*it)->LinkCheck();
+	}
+	for(Db::iterator it=db.begin(); it!=db.end(); ++it){
+		(*it)->CheckSimple();
+	}
+	return rv;
 }
 void UTTypeDescDb::Print(std::ostream& os) const{
 	int w = os.width();
