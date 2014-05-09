@@ -18,9 +18,12 @@ void SPR_CDECL HIRegisterTypeDescs(){
 	if (!bFirst) return;
 	bFirst = false;
 	UTRegisterTypeDescs();
+	UTTypeDescDb* fdb = UTTypeDescDbPool::Get("Foundation");
 	UTTypeDescDb* db = UTTypeDescDbPool::Get("HumanInterface");
 	assert(db);
 	RegisterTypeDescHumanInterface(db);
 	db->Link();
+	db->Link(fdb);
+	db->LinkCheck();
 }
 }

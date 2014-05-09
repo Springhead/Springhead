@@ -25,6 +25,7 @@ void SPR_CDECL FIRegisterTypeDescs(){
 	UTTypeDescDb* db = UTTypeDescDbPool::Get("FileIO");
 	RegisterTypeDescFileIO(db);
 	db->Link();
+	db->LinkCheck();
 }
 
 }

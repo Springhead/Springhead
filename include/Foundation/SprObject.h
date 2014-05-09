@@ -80,8 +80,10 @@ public:
 	int id;
 	///	idの最大値
 	static int maxId;
-	///	型についての詳細な情報
+	///	対応するデスクリプタ(Desc)型についての詳細な情報
 	UTTypeDesc* desc;
+	///	対応するステート(State)型についての詳細な情報
+	UTTypeDesc* state;
 	///	基本インタフェースリスト
 	const IfInfo** baseList;
 	///	対応するオブジェクトの型情報
@@ -95,7 +97,8 @@ public:
 	///	子オブジェクトを生成するクラス(ファクトリー)
 	Factories factories;
 	///	コンストラクタ
-	IfInfo(const char* cn, const IfInfo** bl, const UTTypeInfo* o):baseList(bl), objInfo(o), className(cn), creator(NULL){id = ++maxId;}
+	IfInfo(const char* cn, const IfInfo** bl, const UTTypeInfo* o):
+		baseList(bl), objInfo(o), className(cn), creator(NULL), desc(NULL), state(NULL){id = ++maxId;}
 	///	デストラクタ
 	virtual ~IfInfo() {};
 	///	クラス名

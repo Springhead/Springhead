@@ -20,8 +20,11 @@ void SPR_CDECL GRRegisterTypeDescs(){
 
 	UTRegisterTypeDescs();
 
+	UTTypeDescDb* fdb = UTTypeDescDbPool::Get("Foundation");
 	UTTypeDescDb* db = UTTypeDescDbPool::Get("Graphics");
 	RegisterTypeDescGraphics(db);
 	db->Link();
+	db->Link(fdb);
+	db->LinkCheck();
 }
 }
