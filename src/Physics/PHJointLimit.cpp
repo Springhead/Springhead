@@ -185,7 +185,7 @@ void PHBallJointLimit::Iterate() {
 
 		// Comp Response & Update f
 		df[i] = fnew[i] - f[i];
-		CompResponse(df[i], i);
+		CompResponseDirect(df[i], i);
 		f[i] = fnew[i];
 	}
 }

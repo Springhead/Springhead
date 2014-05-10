@@ -98,8 +98,8 @@ public:
 			{
 				PHBallJointConeLimitDesc ld;
 				jo1->CreateLimit(ld);
-				DCAST(PHBallJointConeLimitIf,jo1->GetLimit())->SetSpring(100);
-				DCAST(PHBallJointConeLimitIf,jo1->GetLimit())->SetDamper(  1);
+				DCAST(PHBallJointConeLimitIf,jo1->GetLimit())->SetSpring(1000);
+				DCAST(PHBallJointConeLimitIf,jo1->GetLimit())->SetDamper(  10);
 				DCAST(PHBallJointConeLimitIf,jo1->GetLimit())->SetSwingRange(Vec2d(Rad(-10), Rad(5)));
 			}
 
@@ -118,8 +118,8 @@ public:
 			{
 				PHBallJointConeLimitDesc ld;
 				jo2->CreateLimit(ld);
-				DCAST(PHBallJointConeLimitIf,jo2->GetLimit())->SetSpring(100);
-				DCAST(PHBallJointConeLimitIf,jo2->GetLimit())->SetDamper(  1);
+				DCAST(PHBallJointConeLimitIf,jo2->GetLimit())->SetSpring(1000);
+				DCAST(PHBallJointConeLimitIf,jo2->GetLimit())->SetDamper(  10);
 				DCAST(PHBallJointConeLimitIf,jo2->GetLimit())->SetSwingRange(Vec2d(Rad(-10), Rad(100)));
 			}
 
