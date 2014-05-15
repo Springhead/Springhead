@@ -243,7 +243,7 @@ void UTTypeDesc::Write(std::ostream& os, void* base){
 		//	単純型の書き出し。ファイルにデータを書き込むのはここだけ。
 		if (IsString()){
 			std::string str = ReadString(base);
-			unsigned len = str.length();
+			unsigned len = (unsigned) str.length();
 			os.write((char*)&len, sizeof(len));
 			os.write(str.c_str(), str.length());
 		}else{
@@ -264,7 +264,7 @@ void UTTypeDesc::Write(std::ostream& os, void* base){
 					field.type->Write(os, field.GetAddress(base, i));
 				}
 			}else if (composit[i].varType == UTTypeDesc::Field::VECTOR){
-				unsigned vecLen = composit[i].VectorSize(base);
+				unsigned vecLen = (unsigned) composit[i].VectorSize(base);
 				os.write((char*)&vecLen, sizeof(vecLen));		//	vectorの要素数をまず書き出す
 				for(unsigned i=0; i<vecLen; ++i){
 					field.type->Write(os, field.GetAddress(base, i));
@@ -308,7 +308,7 @@ void UTTypeDesc::Read(std::istream& is, void* base){
 					field.type->Read(is, field.GetAddress(base, i));
 				}
 			}else if (composit[i].varType == UTTypeDesc::Field::VECTOR){
-				unsigned vecLen = composit[i].VectorSize(base);
+				unsigned vecLen = (unsigned) composit[i].VectorSize(base);
 				is.read((char*)&vecLen, sizeof(vecLen));		//	vectorの要素数をまず読み出す
 				for(unsigned i=0; i<vecLen; ++i){
 					field.type->Read(is, field.GetAddressEx(base, i));
