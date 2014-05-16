@@ -36,10 +36,10 @@ void CRReachController::Step() {
 		}
 
 	} else {
-		if ((finalPos - currEEfPos).norm() < acceptablePosError) { return; }
-
 		// 最終目標位置に届いていないので改めて到達運動を行う
 		if (reachTime+reachTimeMargin <= time) {
+			if ((finalPos - currEEfPos).norm() < acceptablePosError) { return; }
+
 			// currPos = currEEfPos;
 			currVel = Vec3d(); // <!!>
 			SetTargetPos(finalPos);
