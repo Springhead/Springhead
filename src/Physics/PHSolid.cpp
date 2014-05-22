@@ -392,7 +392,7 @@ void PHSolid::UpdateCacheLCP(double dt){
 	
 	if(IsDynamical() && !IsStationary() && !IsFrozen()){
 		dv0.v() = minv * f.v() * dt;
-		dv0.w() = Iinv * (f.w() - v.w() % (GetInertia() * v.w()) * dt);
+		dv0.w() = Iinv * (f.w() - v.w() % (GetInertia() * v.w())) * dt;
 	}
 	else{
 		dv0.clear();
