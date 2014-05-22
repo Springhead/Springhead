@@ -13,7 +13,7 @@ using namespace Spr;
 FWHapticSample::FWHapticSample(){
 	pdt = 0.02f;
 	hdt = 0.001f;
-	engineType = LD;
+	engineType = LD;										// SINGLE, MULTI, LD
 	humanInterface = SPIDAR;
 }
 
@@ -40,7 +40,7 @@ void FWHapticSample::BuildScene(){
 		soBox->SetMass(0.3f);
 		bd.boxsize.clear(0.4f);
 		soBox->AddShape(phSdk->CreateShape(bd));
-		soBox->SetInertia(soBox->GetShape(0)->CalcMomentOfInertia() * (float)soBox->GetMass());
+		soBox->SetInertia(soBox->GetShape(0)->CalcMomentOfInertia() * (1/soBox->GetShape(0)->CalcVolume()) * (float)soBox->GetMass());
 		soBox->SetFramePosition(Vec3d(-0.5 , -0.35, 0.0));
 
 		// 力覚ポインタの作成
@@ -54,7 +54,7 @@ void FWHapticSample::BuildScene(){
 		Posed defaultPose;
 		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);	
 		pointer->SetDefaultPose(defaultPose);		// 力覚ポインタ初期姿勢の設定
-		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia());	// 慣性テンソルの設定
+		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia() * (1/pointer->GetShape(0)->CalcVolume()));	// 慣性テンソルの設定
 		pointer->SetLocalRange(0.1f);				// 局所シミュレーション範囲の設定
 		pointer->SetPosScale(50);					// 力覚ポインタの移動スケールの設定
 		pointer->SetReflexSpring(5000);				// バネ係数の設定
@@ -260,7 +260,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 				PHSolidIf* box = phscene->CreateSolid();
 				box->SetMass(0.3f);
 				box->AddShape(GetSdk()->GetPHSdk()->CreateShape(bd));
-				box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * (float)box->GetMass());
+				box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * (1/box->GetShape(0)->CalcVolume()) * (float)box->GetMass());
 				box->SetFramePosition(Vec3d(-0.5, 1.0, 0.0));
 			}
 		case 356: // left
