@@ -52,8 +52,8 @@ int __cdecl main(int argc, char* argv[]){
 	CDBoxIf* box = DCAST(CDBoxIf, sdk->CreateShape(bd));
 	Vec3d comMesh = mesh->CalcCenterOfMass();
 	Vec3d comBox = box->CalcCenterOfMass();
-	Matrix3d iMesh = mesh->CalcMomentOfInertia();
-	Matrix3d iBox = box->CalcMomentOfInertia();
+	Matrix3d iMesh = mesh->CalcMomentOfInertia() * (1/mesh->CalcVolume());
+	Matrix3d iBox = box->CalcMomentOfInertia() * (1/box->CalcVolume());
 	std::cout << "CoG:" << comMesh << comBox << std::endl;
 	std::cout << "Inertia:" << std::endl;
 	std::cout << iMesh << iBox << std::endl;

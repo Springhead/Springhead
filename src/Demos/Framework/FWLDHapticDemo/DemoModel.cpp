@@ -45,7 +45,7 @@ PHSolidIf* CreateBox(PHSceneIf* phscene){
 	desc.mass = 0.05;
 	PHSolidIf* solid = phscene->CreateSolid(desc);
 	solid->AddShape(CreateShapeBox(phscene));
-	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
+	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia() * (1/solid->GetShape(0)->CalcMomentOfInertia()));
 	solid->SetFramePosition(Vec3d(-1, 5, 4));
 	return solid;
 }
@@ -55,7 +55,7 @@ PHSolidIf* CreateSphere(PHSceneIf* phscene){
 	desc.mass = 0.05;
 	PHSolidIf* solid = phscene->CreateSolid(desc);
 	solid->AddShape(CreateShapeSphere(phscene));
-	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
+	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia() * (1/solid->GetShape(0)->CalcMomentOfInertia()));
 	solid->SetFramePosition(Vec3f(0.5, 1,0));
 //	solid->SetDynamical(false);
 	return solid;
@@ -66,7 +66,7 @@ PHSolidIf* CreateCapsule(PHSceneIf* phscene){
 	desc.mass = 0.05;
 	PHSolidIf* solid = phscene->CreateSolid(desc);
 	solid->AddShape(CreateShapeCapsule(phscene));
-	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
+	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia() * (1/solid->GetShape(0)->CalcMomentOfInertia()));
 	solid->SetFramePosition(Vec3f(0.5, 20,0));
 	return solid;
 }
@@ -76,7 +76,7 @@ PHSolidIf* CreateRoundCone(PHSceneIf* phscene){
 	desc.mass = 0.05;
 	PHSolidIf*  solid = phscene->CreateSolid(desc);
 	solid->AddShape(CreateShapeCone(phscene));
-	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
+	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia() * (1/solid->GetShape(0)->CalcMomentOfInertia()));
 	solid->SetFramePosition(Vec3d(-0, 0, 0));
 	solid->SetOrientation(Quaterniond::Rot(Rad(90), 'x'));
 	solid->SetShapePose(0,Posed(1,0,0,0,0,0,0));
@@ -102,7 +102,7 @@ PHSolidIf* CreatePolyhedron(PHSceneIf* phscene){
 	shape->SetStaticFriction(0.5);
 	shape->SetDynamicFriction(0.3);
 	solid->AddShape(shape);
-	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia());
+	solid->SetInertia(solid->GetMass() * solid->GetShape(0)->CalcMomentOfInertia() * (1/solid->GetShape(0)->CalcMomentOfInertia()));
 	solid->SetFramePosition(Vec3f(0.5, 20,0));
 	solid->SetOrientation(Quaternionf::Rot(Rad(30), 'y'));
 	return solid;
