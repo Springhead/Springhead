@@ -387,19 +387,35 @@ void HISpidarGDesc::Init(int nMotor, Vec3f* motorPos, Vec3f* knotPos, float vpn,
 }
 
 void HISpidarGDesc::Init(char* type){
-	if (stricmp(type, "SpidarG6X3L")==0 || stricmp(type, "SpidarG6X3R")==0){
+	if (stricmp(type, "SpidarG6X3L")==0 || stricmp(type, "SpidarG6X3R")==0 || stricmp(type, "SpidarG6X3F")==0 ){
 		bool bLeft = stricmp(type, "SpidarG6X3L")==0;
+		bool bFinger = stricmp(type, "SpidarG6X3F")==0;
+
 		//	モータの取り付け位置. モータが直方体に取り付けられている場合は，
-		const float PX = 0.12f/2;		//	x方向の辺の長さ/2
-		const float PY = 0.152f/2;//0.14f/2;		//	y方向の辺の長さ/2
-		const float PZ = 0.12f/2;		//	z方向の辺の長さ/2
+		float PX = 0.12f/2;		//	x方向の辺の長さ/2
+		float PY = 0.152f/2;//0.14f/2;		//	y方向の辺の長さ/2
+		float PZ = 0.12f/2;		//	z方向の辺の長さ/2
 		//	糸のグリップへの取り付け位置．グリップはピンポン玉を採用しています．
-		const float GX = 0.045f/2;		//	x方向の辺の長さ/2
-		const float GY = 0.045f/2;		//	y方向の辺の長さ/2
+		float GX = 0.045f/2;		//	x方向の辺の長さ/2
+		float GY = 0.045f/2;		//	y方向の辺の長さ/2
+		float GZ = 0.0;              //Used only for Spidar Finger grip configuration
+
 		Matrix3f rotR = Matrix3f::Rot((float)Rad(-45), 'y');
 		Matrix3f rotL = Matrix3f::Rot((float)Rad(-45), 'y');
 
-		Vec3f motorPos[2][8][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
+		if (bFinger) {  //configuration for Spider Finger Grip
+			PX = 0.12f/2;		
+			PY = 0.146f/2;		
+			PZ = 0.12f/2;
+
+			GX = 0.032f/2;
+			GZ = 0.032f/2;
+
+			rotR = Matrix3f::Rot((float)Rad(0), 'y');
+			rotL = Matrix3f::Rot((float)Rad(45), 'y');
+		}
+
+		Vec3f motorPos[3][8][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
 			{
 				{rotR*Vec3f(-PX,-PY, PZ), rotR*Vec3f( -GX, 0.0f, 0.0f)},
 				{rotR*Vec3f( PX,-PY, PZ), rotR*Vec3f(  GX, 0.0f, 0.0f)},
@@ -418,7 +434,17 @@ void HISpidarGDesc::Init(char* type){
 				{rotL*Vec3f( PX,-PY,-PZ), rotL*Vec3f(0, 0.0f,  -GX)},
 				{rotL*Vec3f( PX,-PY, PZ), rotL*Vec3f(0, 0.0f,   GX)},
 				{rotL*Vec3f(-PX,-PY, PZ), rotL*Vec3f(0,  -GY, 0.0f)},
-				{rotL*Vec3f(-PX,-PY,-PZ), rotL*Vec3f(0,  -GY, 0.0f)},
+				{rotL*Vec3f(-PX,-PY,-PZ), rotL*Vec3f(0,  -GY, 0.0f)}
+			},
+			{    //Initialization for Spidar Finger Grip
+			    {rotR*Vec3f(-PX,-PY, PZ), rotR*Vec3f(-GX, 0.0f,  0.0f)}, //1
+				{rotR*Vec3f( PX,-PY, PZ), rotR*Vec3f(0.0f, 0.0f,   GZ)}, //2
+				{rotR*Vec3f( PX,-PY,-PZ), rotR*Vec3f(GX,   0.0f, 0.0f)}, //3
+				{rotR*Vec3f(-PX,-PY,-PZ), rotR*Vec3f(0.0f,  0.0f, -GZ)}, //4
+				{rotR*Vec3f(-PX, PY, PZ), rotR*Vec3f(-GX, 0.0f,  0.0f)}, //5
+				{rotR*Vec3f( PX, PY, PZ), rotR*Vec3f(0.0f, 0.0f,   GZ)}, //6
+				{rotR*Vec3f( PX, PY,-PZ), rotR*Vec3f( GX,  0.0f, 0.0f)}, //7
+				{rotR*Vec3f(-PX, PY,-PZ), rotR*Vec3f(0.0f,  0.0f, -GZ)}  //8
 			}
 		};
 		Vec3f mp[8];
@@ -427,6 +453,11 @@ void HISpidarGDesc::Init(char* type){
 			for(int i=0; i<8; ++i){
 				mp[i] = motorPos[1][i][0];
 				kp[i] = motorPos[1][i][1];
+			}
+		}else if (bFinger){
+			for(int i=0; i<8; ++i){
+				mp[i] = motorPos[2][i][0];
+				kp[i] = motorPos[2][i][1];
 			}
 		}else{
 			for(int i=0; i<8; ++i){
