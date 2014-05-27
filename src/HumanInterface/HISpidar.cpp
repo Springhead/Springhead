@@ -413,6 +413,8 @@ void HISpidarGDesc::Init(char* type){
 
 			rotR = Matrix3f::Rot((float)Rad(0), 'y');
 			rotL = Matrix3f::Rot((float)Rad(45), 'y');
+
+
 		}
 
 		Vec3f motorPos[3][8][2] = {		//	モータの取り付け位置(中心を原点とするDirectX座標系（右がX,上がY,奥がZ）)
@@ -465,7 +467,11 @@ void HISpidarGDesc::Init(char* type){
 				kp[i] = motorPos[0][i][1];
 			}
 		}
-		Init(8, mp, kp, 0.365296803653f, 1.66555e-5f, 0.3f, 20.0f);
+		if (bFinger){
+			Init(8, mp, kp, 0.365296803653f, 1.66555e-5f, 0.3f, 20.0f);
+		}else{
+			Init(8, mp, kp, 0.365296803653f, 1.66555e-5f, 0.3f, 20.0f);
+		}
 		if (bLeft){
 			motors[2].lengthPerPulse *= -1;
 			motors[3].lengthPerPulse *= -1;
