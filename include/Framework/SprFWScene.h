@@ -11,6 +11,7 @@
 #include <Foundation/SprScene.h>
 
 #include <Framework/SprFWObject.h>
+#include <Framework/SprFWSkeletonSensor.h>
 
 namespace Spr{;
 
@@ -238,6 +239,14 @@ public:
 	/** @breif HumanInterfaceの状態を取得し、力覚ポインタを更新する
 	*/
 	void UpdateHapticPointers();
+
+	/** @brief スケルトンセンサ（Kinect, Leapmotionなど）を作る
+	*/
+	FWSkeletonSensorIf* CreateSkeletonSensor(const FWSkeletonSensorDesc& desc = FWSkeletonSensorDesc());
+
+	/** @breif スケルトンセンサからの情報を反映する
+	*/
+	void UpdateSkeletonSensors();
 
 };
 

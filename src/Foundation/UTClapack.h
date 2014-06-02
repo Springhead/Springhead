@@ -4,6 +4,8 @@
 //#include <Springhead.h>
 
 #define BOOST_NUMERIC_BINDINGS_USE_CLAPACK
+#pragma warning(push)
+#pragma warning(disable:4267)
 //#include <boost/numeric/ublas/fwd.hpp>
 #include <boost/numeric/bindings/lapack/driver/sygv.hpp>
 #include <boost/numeric/bindings/lapack/driver/sygvx.hpp>
@@ -20,6 +22,7 @@
 #include <boost/numeric/bindings/ublas/vector_proxy.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
+#pragma warning(pop)
 
 #ifdef TRACE		// Trace
   #if (_MSC_VER == 1500)    // Visual Studio 2008

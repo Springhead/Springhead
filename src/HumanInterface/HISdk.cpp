@@ -17,6 +17,7 @@
 #include <HumanInterface/HISpaceNavigator.h>
 #include <HumanInterface/HITrackball.h>
 #include <HumanInterface/HIXbox360Controller.h>
+#include <HumanInterface/HILeap.h>
 #ifdef USE_HDRSTOP
  #pragma hdrstop
 #endif
@@ -48,6 +49,7 @@ void SPR_CDECL HISdkIf::RegisterSdk(){
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HISpaceNavigator));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HITrackball));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIXbox360Controller));
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HILeap));
 
 }
 

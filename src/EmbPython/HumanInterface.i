@@ -49,3 +49,5 @@ EXTEND_NEW(HISpidarMotorDesc)
 %include "../../include/HumanInterface/SprHISpidar.h"
 %include "../../include/HumanInterface/SprHITrackball.h"
 %include "../../include/HumanInterface/SprHIXbox360Controller.h"
+%include "../../include/HumanInterface/SprHISkeletonSensor.h"
+%include "../../include/HumanInterface/SprHILeap.h"

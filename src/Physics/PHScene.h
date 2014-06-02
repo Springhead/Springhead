@@ -14,6 +14,7 @@
 #include "PHIKEngine.h"
 #include "PHIKActuator.h"
 #include "PHIKEndEffector.h"
+#include "PHSkeleton.h"
 
 namespace Spr {;
 
@@ -61,6 +62,8 @@ protected:
 	PHRays					rays;
 	PHFemEngine*			femEngine;
 	PHHapticEngine*			hapticEngine;
+
+	std::vector< UTRef<PHSkeleton> > skeletons;
 
 	double					timeStepInv;	///< timeStepの逆数．高速化用
 public:
@@ -127,6 +130,18 @@ public:
 	PHIKEndEffectorIf*		CreateIKEndEffector(const PHIKEndEffectorDesc& desc = PHIKEndEffectorDesc());
 	int						NIKEndEffectors() const;
 	PHIKEndEffectorIf*		GetIKEndEffector(int i);
+
+	int						NSkeletons() { return (int)(skeletons.size()); }
+	PHSkeletonIf*			GetSkeleton(int i) { return skeletons[i]->Cast(); }
+	PHSkeletonIf*			CreateSkeleton(const PHSkeletonDesc& desc = PHSkeletonDesc()) {
+		PHSkeleton* skeleton = DBG_NEW PHSkeleton();
+		skeleton->SetDesc(&desc);
+		skeletons.push_back(skeleton);
+		skeleton->SetScene(this->Cast());
+		return skeleton->Cast();
+	}
+
+
 	int						NFemMeshes()const;
 	PHFemMeshIf*			GetFemMesh(int i);
 	int						NFemMeshesNew() const;
