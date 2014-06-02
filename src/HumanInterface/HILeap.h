@@ -9,18 +9,24 @@
 #ifndef HI_LEAP_H
 #define HI_LEAP_H
 
+// #define USE_LEAP
+
 #include <HumanInterface/HISkeletonSensor.h>
 #include <HumanInterface/SprHILeap.h>
 
+#ifdef USE_LEAP
 #include "../../Libraries/LeapSDK/include/Leap.h"
 #pragma comment(lib, "Leap.lib")
+#endif
 
 namespace Spr{;
 
 // Leapmotion
 class HILeap: public HILeapDesc, public HISkeletonSensor {
 
+	#ifdef USE_LEAP
 	Leap::Controller* leap;
+	#endif
 
 public:
 	SPR_OBJECTDEF(HILeap);
@@ -29,7 +35,9 @@ public:
 	}
 
 	~HILeap() {
+		#ifdef USE_LEAP
 		if (leap) { delete leap; }; leap = NULL;
+		#endif
 	}
 
 	// ----- ----- ----- ----- -----
@@ -42,6 +50,7 @@ public:
 	// 非API関数
 
 	/// Leap座標系から（scaleを考慮した上での）Springhead座標系へ
+	#ifdef USE_LEAP
 	inline Vec3d ToSpr(Leap::Vector lv) {
 		return rotation * Vec3d(lv.x, lv.y, lv.z) * scale;
 	}
@@ -53,6 +62,7 @@ public:
 		Quaterniond q; q.FromMatrix(m);
 		return q;
 	}
+	#endif
 
 };
 
