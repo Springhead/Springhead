@@ -15,5 +15,6 @@
 #include "Framework/SprFWFemMeshNew.h"
 #include "Framework/SprFWWin.h"
 #include "Framework/SprFWHapticPointer.h"
+#include "Framework/SprFWSkeletonSensor.h"
 
 #endif

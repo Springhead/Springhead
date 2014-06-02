@@ -24,4 +24,5 @@
 #include "Physics/SprPHFemMesh.h"
 #include "Physics/SprPHFemMeshNew.h"
 #include "Physics/SprPHHaptic.h"
+#include "Physics/SprPHSkeleton.h"
 #endif

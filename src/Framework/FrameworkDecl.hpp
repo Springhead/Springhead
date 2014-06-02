@@ -86,6 +86,33 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_FWSkeletonSensorDesc \
+protected:\
+	bool	bCreatePHSkeleton;	\
+	bool	bCreatePHSolid;	\
+	bool	bCreateCDShape;	\
+	bool	bCreatePHSpring;	\
+	Vec2d	radius;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		bCreatePHSkeleton = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSkeleton;	\
+		bCreatePHSolid = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSolid;	\
+		bCreateCDShape = ((FWSkeletonSensorDesc*)ptr)->bCreateCDShape;	\
+		bCreatePHSpring = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSpring;	\
+		radius = ((FWSkeletonSensorDesc*)ptr)->radius;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((FWSkeletonSensorDesc*)ptr)->bCreatePHSkeleton = bCreatePHSkeleton;	\
+		((FWSkeletonSensorDesc*)ptr)->bCreatePHSolid = bCreatePHSolid;	\
+		((FWSkeletonSensorDesc*)ptr)->bCreateCDShape = bCreateCDShape;	\
+		((FWSkeletonSensorDesc*)ptr)->bCreatePHSpring = bCreatePHSpring;	\
+		((FWSkeletonSensorDesc*)ptr)->radius = radius;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_FWWinBaseDesc \
 protected:\
 	int	width;	\

@@ -11,11 +11,14 @@
 #include <Framework/SprFWScene.h>
 #include <Framework/SprFWObject.h>
 #include <Framework/SprFWHapticPointer.h>
+#include <Framework/SprFWSkeletonSensor.h>
+#include <Framework/FWSkeletonSensor.h>
 #include <Physics/SprPHEngine.h>
 #include <Foundation/Scene.h>
 #include <HumanInterface/HIBase.h>
 #include <Physics/PHSolid.h>
 #include <Physics/PHContactDetector.h>
+
 
 namespace Spr{;
 
@@ -193,6 +196,22 @@ public:
 	FWHapticPointerIf*	GetHapticPointer(int i);
 	int					NHapticPointers();
 	void				UpdateHapticPointers();
+
+	/** SkeletonSensor系関数
+	 */
+	std::vector< UTRef<FWSkeletonSensor> >  skeletonSensors;
+	FWSkeletonSensorIf* CreateSkeletonSensor(const FWSkeletonSensorDesc& desc) {
+		FWSkeletonSensor* sensor = DBG_NEW FWSkeletonSensor();
+		sensor->SetDesc(&desc);
+		skeletonSensors.push_back(sensor);
+		sensor->SetScene(this->Cast());
+		return sensor->Cast();
+	}
+	void UpdateSkeletonSensors() {
+		for (int i=0; i<skeletonSensors.size(); ++i) {
+			skeletonSensors[i]->Update();
+		}
+	}
 
 	/** Scene関数の継承
 	 */

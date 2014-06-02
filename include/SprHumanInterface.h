@@ -22,4 +22,6 @@
 #include <HumanInterface/SprHIDRUsb.h>
 #include <HumanInterface/SprHISpaceNavigator.h>
 #include <HumanInterface/SprHIXbox360Controller.h>
+#include <HumanInterface/SprHISkeletonSensor.h>
+#include <HumanInterface/SprHILeap.h>
 #endif

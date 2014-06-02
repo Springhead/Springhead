@@ -23,6 +23,7 @@
 #include <Physics/SprPHFemMesh.h>
 #include <Physics/SprPHFemMeshNew.h>
 #include <Physics/SprPHHaptic.h>
+#include <Physics/SprPHSkeleton.h>
 
 namespace Spr{;
 
@@ -366,6 +367,20 @@ public:
 	/** @brief IKエンドエフェクタを取得する
 	 */
 	PHIKEndEffectorIf* GetIKEndEffector(int i);
+
+
+	/** @brief スケルトン（ボーンの集合）の数
+	 */
+	int NSkeletons();
+
+	/** @brief スケルトン（ボーンの集合）を取得する
+	 */
+	PHSkeletonIf* GetSkeleton(int i);
+
+	/** @brief スケルトン（ボーンの集合）を作成する
+	 */
+	PHSkeletonIf* CreateSkeleton(const PHSkeletonDesc& desc = PHSkeletonDesc());
+
 
 	/** @brief 積分ステップを取得する
 		@return 積分ステップ
