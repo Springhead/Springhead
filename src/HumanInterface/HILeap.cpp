@@ -13,12 +13,15 @@
 namespace Spr{
 
 bool HILeap::Init(const void* desc) {
+	#ifdef USE_LEAP
 	// Leapmotion‚ð‰Šú‰»
 	leap = new Leap::Controller();
+	#endif
 	return true;
 }
 
 void HILeap::Update(float dt) {
+	#ifdef USE_LEAP
 	if (leap) {
 		// Leapmotion‚©‚çƒZƒ“ƒVƒ“ƒOŒ‹‰Ê‚ðŽæ“¾
 		Leap::Frame frame = leap->frame(0);
@@ -54,6 +57,7 @@ void HILeap::Update(float dt) {
 			}
 		}
 	}
+	#endif
 }
 
 }
