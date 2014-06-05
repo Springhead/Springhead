@@ -20,7 +20,7 @@ void FWSkeletonSensor::Update() {
 		PrepareSkeleton(sensor->NSkeletons());
 		for (int i=0; i<sensor->NSkeletons(); ++i) {
 			HISkeletonIf* hiSkel = sensor->GetSkeleton(i);
-			if (i<phSkeletons.size()) {
+			if (i<(int)phSkeletons.size()) {
 				PrepareBone(phSkeletons[i], hiSkel->NBones());
 				for (int j=0; j<hiSkel->NBones(); ++j) {
 					if (j<phSkeletons[i]->NBones()) {
@@ -38,7 +38,7 @@ void FWSkeletonSensor::Update() {
 
 void FWSkeletonSensor::PrepareSkeleton(int n) {
 	PHSceneIf* phScene = DCAST(FWSceneIf,GetScene())->GetPHScene();
-	for (int i=phSkeletons.size(); i<n; ++i) {
+	for (int i=(int)phSkeletons.size(); i<n; ++i) {
 		PHSkeletonIf* phSkel = phScene->CreateSkeleton();
 		phSkel->SetName("skelLeap");
 		phSkeletons.push_back(phSkel);
@@ -56,7 +56,7 @@ void FWSkeletonSensor::PrepareBone(PHSkeletonIf* phSkel, int n) {
 			phBone->SetSolid(so);
 			if (bCreateCDShape) {
 				CDRoundConeDesc descRC;
-				descRC.length = 1e-2;
+				descRC.length = 1e-2f;
 				descRC.radius = this->radius;
 				so->AddShape( phScene->GetSdk()->CreateShape(descRC) );
 

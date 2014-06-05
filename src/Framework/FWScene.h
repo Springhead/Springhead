@@ -208,7 +208,7 @@ public:
 		return sensor->Cast();
 	}
 	void UpdateSkeletonSensors() {
-		for (int i=0; i<skeletonSensors.size(); ++i) {
+		for (int i=0; i<(int)skeletonSensors.size(); ++i) {
 			skeletonSensors[i]->Update();
 		}
 	}
