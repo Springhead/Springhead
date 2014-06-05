@@ -217,11 +217,7 @@ inline int least_squares(const ublas::matrix<double>& A, const ublas::vector<dou
     ublas::project(CX, ublas::range(0, B.size1()), ublas::range(0, B.size2())).assign(B);
 
     lapack::optimal_workspace work;
-#ifdef _WIN64
-	__int64 info;
-#else
-    int info;
-#endif
+	int info;
 	fortran_int_t rank;
 
 	S.resize((std::min)(A.size1(), A.size2()));
@@ -240,11 +236,7 @@ inline int least_squares(const ublas::matrix<double>& A, const ublas::vector<dou
 inline void svd(const ublas::matrix<double>& A, ublas::matrix<double>& U, ublas::diagonal_matrix<double>& D, ublas::matrix<double>& VT) {
 	ublas::vector<double> s((std::min)(A.size1(), A.size2()));
     ublas::matrix<double, ublas::column_major> CA(A), CU(A.size1(), A.size1()), CVT(A.size2(), A.size2());
-#ifdef _WIN64
-	__int64 info;
-#else
     int info;
-#endif
 
     info = lapack::gesdd('A', CA, s, CU, CVT);
     BOOST_UBLAS_CHECK(info == 0, ublas::internal_logic());

@@ -62,7 +62,7 @@ public:
 	HIBoneIf* GetBone(int i) { return bones[i]; }
 	/// ルートボーンを返す
 	HIBoneIf* GetRoot() {
-		for (int i=0; i<bones.size(); ++i) {
+		for (int i=0; i<(int)bones.size(); ++i) {
 			if (bones[i]->GetParent()==NULL) { return bones[i]; }
 		}
 		return NULL;
@@ -75,7 +75,7 @@ public:
 
 	/// 個数に足りない分のボーンを準備
 	void PrepareBone(int n) {
-		for (int i=bones.size(); i<n; ++i) {
+		for (int i=(int)bones.size(); i<n; ++i) {
 			bones.push_back( (DBG_NEW HIBone())->Cast() );
 		}
 	}
@@ -118,7 +118,7 @@ public:
 
 	/// 個数に足りない分のスケルトンを準備
 	void PrepareSkeleton(int n) {
-		for (int i=skeletons.size(); i<n; ++i) {
+		for (int i=(int)skeletons.size(); i<n; ++i) {
 			skeletons.push_back( (DBG_NEW HISkeleton())->Cast() );
 		}
 	}
