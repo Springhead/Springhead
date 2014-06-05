@@ -431,7 +431,7 @@ SplinePoint ClosedSplineCurve::GetPointOnEdge(int i, double t) {
 
 /// 拘束座標系のJabocianを計算
 void PHBallJointSplineLimit::CompJacobian() {
-	currPos = joint->GetPosition();
+	currPos = joint->GetAngle();
 
 	// 変換前の標準Jacobian
 	Matrix3d Jc, Jcinv=Matrix3d::Unit();
