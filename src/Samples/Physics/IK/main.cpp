@@ -44,6 +44,8 @@ public:
 		ID_RIGHT,
 		ID_FORE,
 		ID_BACK,
+		ID_SAVE,
+		ID_LOAD,
 	};
 
 	int argc;
@@ -70,6 +72,12 @@ public:
 
 		AddAction(MENU_SCENE, ID_BACK, "Target move Backward");
 		AddHotKey(MENU_SCENE, ID_BACK, 'o');
+
+		AddAction(MENU_SCENE, ID_SAVE, "IK State Save");
+		AddHotKey(MENU_SCENE, ID_SAVE, 'z');
+
+		AddAction(MENU_SCENE, ID_LOAD, "IK State Load");
+		AddHotKey(MENU_SCENE, ID_LOAD, 'x');
 	}
 	~IKSampleApp(){}
 
@@ -89,12 +97,16 @@ public:
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3f(6.5,6,20));
 
 		GetCurrentWin()->GetTrackball()->SetPosition(Vec3d(0,0,50));
+
+		states = ObjectStatesIf::Create();
 	}
 
 	PHSolidIf*         soTarget1;
 	PHSolidIf*         soTarget2;
 	PHIKEndEffectorIf* ikeTarget1;
 	PHIKEndEffectorIf* ikeTarget2;
+
+	ObjectStatesIf*    states;
 
 	// シーン構築
 	virtual void BuildScene() {
@@ -514,7 +526,7 @@ public:
 		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxVelocity(200);
 		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxAngularVelocity(Rad(2000));
 		GetFWScene()->GetPHScene()->GetIKEngine()->SetRegularizeParam(0.2);
-		GetFWScene()->GetPHScene()->GetIKEngine()->SetNumIter(30);
+		// GetFWScene()->GetPHScene()->GetIKEngine()->SetNumIter(30);
 
 		GetFWScene()->GetPHScene()->SetContactMode(PHSceneDesc::MODE_NONE);
 	}
@@ -561,6 +573,14 @@ public:
 				soTarget1->SetFramePosition(currPos + Vec3d( 0.0,  0.0, -1.0));
 				ikeTarget1->SetTargetPosition(soTarget1->GetPose().Pos());
 				ikeTarget1->SetTargetOrientation(soTarget1->GetPose().Ori());
+			}
+
+			if(id == ID_SAVE){
+				states->SaveState(GetFWScene()->GetPHScene());
+			}
+
+			if(id == ID_LOAD){
+				states->LoadState(GetFWScene()->GetPHScene());
 			}
 		}
 
