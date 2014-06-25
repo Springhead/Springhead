@@ -82,24 +82,6 @@ void PHIKActuator::SetupMatrix(){
 		// --- --- --- --- ---
 		// 変数の初期化
 
-		/*
-		// α、β
-		if (this->bNDOFChanged) {
-			alpha.resize(this->ndof);
-			beta.resize(this->ndof);
-		}
-		alpha.clear();
-		beta.clear();
-
-		// Γ（自分自身を相手とするΓも含む）
-		for (int nLink=0; nLink<NLinks(); ++nLink) {
-			if (this->bNDOFChanged || (Link(nLink)->bNDOFChanged && Link(nLink)->bEnabled) || this->bActuatorAdded) {
-				gamma[Link(nLink)->number].resize(this->ndof, Link(nLink)->ndof);
-			}
-			gamma[Link(nLink)->number].clear();
-		}
-		*/
-
 		// Ｊ（ヤコビアン）
 		for (int nDesc=0; nDesc<(int)descendant.size(); ++nDesc) {
 			PHIKEndEffector* childEef = descendant[nDesc]->eef; if (childEef==NULL) { continue; }
@@ -139,41 +121,6 @@ void PHIKActuator::CalcAllJacobian(){
 
 void PHIKActuator::PrepareSolve(){
 	if (!bEnabled) { return; }
-
-	/*
-	PHIKEngineIf* engine = DCAST(PHSceneIf,GetScene())->GetIKEngine();
-
-	for (int i=0; i< ndof; ++i) {
-		for (int nDesc=0; nDesc<(int)descendant.size(); ++nDesc) {
-			PHIKEndEffector* childEef = descendant[nDesc]->eef;
-			if (childEef==NULL || !(childEef->bEnabled)) { continue; }
-
-			int eef_n = childEef->number;
-
-			PTM::VVector<double> eef_v;
-			childEef->GetTempTarget(eef_v);
-
-			for (int k=0; k < childEef->ndof; ++k) {
-
-				// α、β
-				alpha[i] += ( (Mj[eef_n][k][i]) * (Mj[eef_n][k][i]) );
-				beta[i]  += ( (Mj[eef_n][k][i]) * (eef_v[k])  );
-
-				// γ[act_y, this] （act_y == this の場合を含む）
-				for (int nLink=0; nLink < NLinks(); ++nLink) {
-					if (!(Link(nLink)->bEnabled)) { continue; }
-					int act_n = Link(nLink)->number;
-					for (int j=0; j<Link(nLink)->ndof; ++j) {
-						if (Link(nLink)->Mj.find(eef_n) != Link(nLink)->Mj.end()) {
-							gamma[act_n][i][j] += ( (Mj[eef_n][k][i]) * (Link(nLink)->Mj[eef_n][k][j]) );
-						}
-					}
-				}
-
-			}
-		}
-	}
-	*/
 
 	omega.clear();
 	omega_prev.clear();
@@ -240,9 +187,6 @@ void PHIKActuator::FK()  {
 						 + PTM::cross(soParentAVel+jointTempAngVel, -(solidTempPose.Ori() * plugPose.Pos()));
 	solidAngularVelocity = soParentAVel + jointTempAngVel;
 
-	// std::cout << joint->GetPlugSolid()->GetName() << " :(T) " << solidVelocity << ", " << solidAngularVelocity << std::endl;
-	// std::cout << joint->GetPlugSolid()->GetName() << " :(R) " << joint->GetPlugSolid()->GetVelocity() << ", " << joint->GetPlugSolid()->GetAngularVelocity() << std::endl;
-
 	for (size_t i=0; i<children.size(); ++i) {
 		children[i]->FK();
 	}
@@ -278,29 +222,6 @@ size_t PHIKBallActuator::NChildObject() const{
 }
 
 void PHIKBallActuator::BeforeSetupMatrix(){
-	// 姿勢制御をするエンドエフェクタが無ければ自由度を２に下げる（冗長性回避のため）
-
-	/*
-	bool bFound = false;;
-	for (int i=0; i<(int)descendant.size(); ++i) {
-		if (descendant[i]->eef && descendant[i]->eef->bEnabled && descendant[i]->eef->bOrientation) {
-			bFound = true;
-		}
-	}
-
-	if (bFound) {
-		if (ndof != 3) {
-			ndof = 3;
-			bNDOFChanged = true;
-		}
-	} else {
-		if (ndof != 2) {
-			ndof = 2;
-			bNDOFChanged = true;
-		}
-	}
-	*/
-
 	// <!!>
 	if (ndof != 3) {
 		ndof = 3;
@@ -316,44 +237,6 @@ void PHIKBallActuator::CalcAxis(){
 	e[0] = Vec3d(1,0,0);
 	e[1] = Vec3d(0,1,0);
 	e[2] = Vec3d(0,0,1);
-
-	/*
-	Posed soParentPose = (parent) ? parent->solidTempPose : joint->GetSocketSolid()->GetPose();
-	PHBallJoint* j = DCAST(PHBallJoint,joint);
-	PHBallJointDesc d; j->GetDesc(&d);
-
-	for (int nDesc=0; nDesc<(int)descendant.size(); ++nDesc) {
-		PHIKEndEffector* childEef = descendant[nDesc]->eef; if (childEef==NULL) { continue; }
-		if (childEef->bEnabled && !childEef->bOrientation) {
-			// 関節の回転中心
-			Vec3d Pj = soParentPose * d.poseSocket * Vec3d(0,0,0);
-
-			// エンドエフェクタ位置
-			Vec3d Pe = childEef->solidTempPose * childEef->targetLocalPosition;
-
-			// 関節回転中心<->エンドエフェクタ 軸
-			Vec3d e0 = (Pe - Pj);
-			if (e0.norm() != 0){
-				e0 = e0 / e0.norm();
-			} else {
-				e0 = Vec3d(1,0,0);
-			}
-
-			// 回転軸を求める
-			if (abs(PTM::dot(e0,Vec3d(1,0,0))) > Rad(10)) {
-				e[0] = Vec3d(0,1,0);
-			} else {
-				e[0] = Vec3d(1,0,0);
-			}
-			e[0] = e[0] - (PTM::dot(e[0],e0) * e0);
-			e[0] = e[0] / e[0].norm();
-			e[1] = PTM::cross(e0,e[0]);
-			e[2] = e0;
-
-			break;
-		}
-	}
-	*/
 }
 
 void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
@@ -409,8 +292,8 @@ void PHIKBallActuator::CalcPullbackVelocity() {
 	// <!!> 本当はLimit成分を入れたほうが良い気がする
 
 	// <!!> Pullback量が一定以下になるよう制限する．
-	if (pullback.norm() > Rad(50)) {
-		pullback = pullback.unit() * Rad(50);
+	if (pullback.norm() > Rad(200)) {
+		pullback = pullback.unit() * Rad(200);
 	}
 
 	Posed soParentPose = (parent) ? parent->GetSolidTempPose() : joint->GetSocketSolid()->GetPose();
@@ -559,7 +442,7 @@ void PHIKHingeActuator::CalcPullbackVelocity() {
 	domega_pull[0] = pullbacked - jointTempAngle;
 
 	// <!!> Pullback量が一定以下になるよう制限する．
-	domega_pull[0] = max(Rad(-50), min(domega_pull[0], Rad(50)));
+	domega_pull[0] = max(Rad(-200), min(domega_pull[0], Rad(200)));
 }
 
 void PHIKHingeActuator::Move(){
@@ -569,13 +452,6 @@ void PHIKHingeActuator::Move(){
 	hj->SetTargetPosition(jointTempAngle);
 	hj->SetTargetVelocity(jointVelocity);
 	
-	// <!!>
-	/*/
-	double  dt  = DCAST(PHSceneIf,GetScene())->GetTimeStep();
-	double  vel = (jointTempAngle - hj->GetPosition()) / dt;
-	hj->SetTargetVelocity( vel );
-	/**/
-
 	return;
 }
 

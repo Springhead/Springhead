@@ -17,7 +17,7 @@ namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // IKEngine
 PHIKEngine::PHIKEngine():
-	numIter(25),
+	numIter(1),
 	bEnabled(false),
 	bTest(false),
 	maxVel(20), // 20[m/s]
@@ -213,22 +213,6 @@ void PHIKEngine::IK() {
 		if (W[i]  < -limitW) { W[i]  = -limitW; }
 	}
 
-	/*
-	// 繰り返し計算の実行
-	int iter = (int)((numIter > 0) ? numIter : 200);
-	for(int n=0; n<iter; n++){
-		double dErr = 0;
-		for(size_t i=0; i<actuators.size(); ++i){
-			if (actuators[i]->IsEnabled()) {
-				actuators[i]->ProceedSolve();
-				PTM::VVector<double> diff = actuators[i]->omega_prev - actuators[i]->omega;
-				dErr += (diff.norm() * diff.norm());
-			}
-		}
-		if ((((int)numIter) < 0) && (sqrt(dErr) < 1e-8)) { break; }
-	}
-	*/
-
 	// <!!>各Actuatorのωに擬似逆解を代入
 	for (size_t i=0; i<actuators.size(); ++i) {
 		if (actuators[i]->IsEnabled()) {
@@ -303,16 +287,6 @@ void PHIKEngine::Step() {
 	if (!bEnabled) return;
 	if (actuators.empty() || endeffectors.empty()) return;
 
-	/*
-	for (int i=0; i<actuators.size(); ++i) {
-		for (int j=0; j<i; ++j) { std::cout << " "; }
-		std::cout << actuators[i]->joint->GetPlugSolid()->GetName() << " :(R) ";
-		std::cout << actuators[i]->joint->GetPlugSolid()->GetVelocity() << " , ";
-		std::cout << actuators[i]->joint->GetPlugSolid()->GetAngularVelocity();
-		std::cout << std::endl;
-	}
-	*/
-
 	// <!!>
 	// ApplyExactState();
 
@@ -322,23 +296,13 @@ void PHIKEngine::Step() {
 	// <!!>
 	// ApplyExactState(/* reverse = */ true);
 
-	CalcJacobian();
-	IK();
-	Limit();
-	FK();
-	SaveFKResult();
-
-	/*
-	std::cout << " -- " << std::endl;
-
-	for (int i=0; i<actuators.size(); ++i) {
-		for (int j=0; j<i; ++j) { std::cout << " "; }
-		std::cout << actuators[i]->joint->GetPlugSolid()->GetName() << " :(T) ";
-		std::cout << actuators[i]->solidVelocity << " , ";
-		std::cout << actuators[i]->solidAngularVelocity;
-		std::cout << std::endl;
+	for (int i=0; i<numIter; ++i) {
+		CalcJacobian();
+		IK();
+		Limit();
+		FK();
+		SaveFKResult();
 	}
-	*/
 
 	Move();
 }

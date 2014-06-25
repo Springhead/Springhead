@@ -268,6 +268,7 @@ protected:\
 	bool	bEnabled;	\
 	bool	bPosition;	\
 	bool	bOrientation;	\
+	Spr::PHIKEndEffectorDesc::OriCtlMode	oriCtlMode;	\
 	bool	bForce;	\
 	bool	bTorque;	\
 	double	positionPriority;	\
@@ -277,7 +278,10 @@ protected:\
 	Vec3d	targetPosition;	\
 	Vec3d	targetVelocity;	\
 	Vec3d	targetLocalPosition;	\
+	Vec3d	targetLocalDirection;	\
 	Quaterniond	targetOrientation;	\
+	Vec3d	targetDirection;	\
+	Vec3d	targetLookat;	\
 	Vec3d	targetAngVel;	\
 	Vec3d	targetForce;	\
 	Vec3d	targetForceWorkingPoint;	\
@@ -289,6 +293,7 @@ public:\
 		bEnabled = ((PHIKEndEffectorDesc*)ptr)->bEnabled;	\
 		bPosition = ((PHIKEndEffectorDesc*)ptr)->bPosition;	\
 		bOrientation = ((PHIKEndEffectorDesc*)ptr)->bOrientation;	\
+		oriCtlMode = ((PHIKEndEffectorDesc*)ptr)->oriCtlMode;	\
 		bForce = ((PHIKEndEffectorDesc*)ptr)->bForce;	\
 		bTorque = ((PHIKEndEffectorDesc*)ptr)->bTorque;	\
 		positionPriority = ((PHIKEndEffectorDesc*)ptr)->positionPriority;	\
@@ -298,7 +303,10 @@ public:\
 		targetPosition = ((PHIKEndEffectorDesc*)ptr)->targetPosition;	\
 		targetVelocity = ((PHIKEndEffectorDesc*)ptr)->targetVelocity;	\
 		targetLocalPosition = ((PHIKEndEffectorDesc*)ptr)->targetLocalPosition;	\
+		targetLocalDirection = ((PHIKEndEffectorDesc*)ptr)->targetLocalDirection;	\
 		targetOrientation = ((PHIKEndEffectorDesc*)ptr)->targetOrientation;	\
+		targetDirection = ((PHIKEndEffectorDesc*)ptr)->targetDirection;	\
+		targetLookat = ((PHIKEndEffectorDesc*)ptr)->targetLookat;	\
 		targetAngVel = ((PHIKEndEffectorDesc*)ptr)->targetAngVel;	\
 		targetForce = ((PHIKEndEffectorDesc*)ptr)->targetForce;	\
 		targetForceWorkingPoint = ((PHIKEndEffectorDesc*)ptr)->targetForceWorkingPoint;	\
@@ -311,6 +319,7 @@ public:\
 		((PHIKEndEffectorDesc*)ptr)->bEnabled = bEnabled;	\
 		((PHIKEndEffectorDesc*)ptr)->bPosition = bPosition;	\
 		((PHIKEndEffectorDesc*)ptr)->bOrientation = bOrientation;	\
+		((PHIKEndEffectorDesc*)ptr)->oriCtlMode = oriCtlMode;	\
 		((PHIKEndEffectorDesc*)ptr)->bForce = bForce;	\
 		((PHIKEndEffectorDesc*)ptr)->bTorque = bTorque;	\
 		((PHIKEndEffectorDesc*)ptr)->positionPriority = positionPriority;	\
@@ -320,7 +329,10 @@ public:\
 		((PHIKEndEffectorDesc*)ptr)->targetPosition = targetPosition;	\
 		((PHIKEndEffectorDesc*)ptr)->targetVelocity = targetVelocity;	\
 		((PHIKEndEffectorDesc*)ptr)->targetLocalPosition = targetLocalPosition;	\
+		((PHIKEndEffectorDesc*)ptr)->targetLocalDirection = targetLocalDirection;	\
 		((PHIKEndEffectorDesc*)ptr)->targetOrientation = targetOrientation;	\
+		((PHIKEndEffectorDesc*)ptr)->targetDirection = targetDirection;	\
+		((PHIKEndEffectorDesc*)ptr)->targetLookat = targetLookat;	\
 		((PHIKEndEffectorDesc*)ptr)->targetAngVel = targetAngVel;	\
 		((PHIKEndEffectorDesc*)ptr)->targetForce = targetForce;	\
 		((PHIKEndEffectorDesc*)ptr)->targetForceWorkingPoint = targetForceWorkingPoint;	\

@@ -169,8 +169,7 @@ public:
 	*/
 	void ApplyExactState(bool reverse=false);
 
-	// <!!> Gauss-SeidelソルバをやめたらObsoleteになる予感
-	/** @brief 繰り返し回数をセットする
+	/** @brief (IK->FK)の繰り返し回数をセットする
 	*/
 	void SetNumIter(int numIter);
 
