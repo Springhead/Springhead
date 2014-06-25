@@ -576,7 +576,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 			render->SetLighting(false);
 			render->SetMaterial(matAxis.z);
 			float vtx[2][3] = {{0,0,0}, {0,0,1}};
-			size_t idx[2] = {0, 1};
+			GLuint idx[2] = {0, 1};
 			render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
 			render->SetLighting(true);
 			render->PopModelMatrix();
@@ -606,7 +606,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 						Vec3d p1 = Vec3d(sin(pt.pos[0])*cos(pt.pos[1]), sin(pt.pos[0])*sin(pt.pos[1]), cos(pt.pos[0]));
 
 						float vtx[2][3] = {{p0[0], p0[1], p0[2]}, {p1[0], p1[1], p1[2]}};
-						size_t idx[2] = {0, 1};
+						GLuint idx[2] = {0, 1};
 						render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
 					}
 				}
@@ -621,7 +621,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 					double z = cos(lim[1]);
 					double r = z * tan(lim[1]);
 					float vtx[2][3] = {{r*cos(t), r*sin(t), z}, {r*cos(t+Rad(10)), r*sin(t+Rad(10)), z}};
-					size_t idx[2] = {0, 1};
+					GLuint idx[2] = {0, 1};
 					render->SetMaterial(matAxis.z);
 					render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
 				}
@@ -645,7 +645,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 					for (double t=lim[0]; t<lim[1]; t+=Rad(5)) {
 						double r = 1.0;
 						float vtx[2][3] = {{r*cos(t), r*sin(t), 0.0}, {r*cos(t+Rad(10)), r*sin(t+Rad(10)), 0.0}};
-						size_t idx[2] = {0, 1};
+						GLuint idx[2] = {0, 1};
 						render->SetMaterial(matAxis.z);
 						render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
 					}
@@ -653,7 +653,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 				{
 					render->SetMaterial(matAxis.z);
 					float vtx[2][3] = {{0,0,0}, {1*cos(hj->GetPosition()),1*sin(hj->GetPosition()),0}};
-					size_t idx[2] = {0, 1};
+					GLuint idx[2] = {0, 1};
 					render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
 				}
 				render->SetLighting(true);
@@ -673,7 +673,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 				Vec2d lim; limit->GetRange(lim);
 				if (lim[0] < lim[1]) {
 					float vtx[2][3] = {{lim[0], 0, 0}, {lim[1], 0, 0}};
-					size_t idx[2] = {0, 1};
+					GLuint idx[2] = {0, 1};
 					render->SetMaterial(matAxis.z);
 					render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
 				}
@@ -1092,9 +1092,9 @@ void FWScene::DrawCoordinateAxis(GRRenderIf* render, float scale, bool solid_or_
 		render->MultModelMatrix(Affinef::Scale(scale, scale, scale));
 
 		float vtx[4][3] = {{0.0f, 0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}, {0.0f, 1.0f, 0.0f}, {0.0f, 0.0f, 1.0f}};
-		size_t idx_x[2] = {0, 1};
-		size_t idx_y[2] = {0, 2};
-		size_t idx_z[2] = {0, 3};
+		GLuint idx_x[2] = {0, 1};
+		GLuint idx_y[2] = {0, 2};
+		GLuint idx_z[2] = {0, 3};
 		render->SetMaterial(matAxis.x);
 		render->DrawIndexed(GRRenderBaseIf::LINES, idx_x, (void*)vtx, 2);
 		render->SetMaterial(matAxis.y);

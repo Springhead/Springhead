@@ -7,7 +7,11 @@
 
 namespace Spr{;
 
+#if defined(_WIN64)
+static UTDllLoader dllLoader("sprTetgen.dll", ".;$(SPRINGHEAD2)\\bin\\win64");	//	グローバル変数でローダーを作る．
+#else
 static UTDllLoader dllLoader("sprTetgen.dll", ".;$(SPRINGHEAD2)\\bin\\win32");	//	グローバル変数でローダーを作る．
+#endif
 
 #define DLLFUNC_CTYPE	__cdecl						//	呼び出し規約
 #define DLLFUNC_RTYPE	bool						//	返り値の型 voidの場合は定義してはならない．

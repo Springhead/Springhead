@@ -11,6 +11,11 @@
 #include <Graphics/SprGRFrame.h>
 #include <Graphics/SprGRVertex.h>
 #include <Graphics/SprGRShader.h>
+#if defined(USE_GLEW)
+  #include <GL/glew.h>
+#else
+  typedef unsigned int	GLuint;
+#endif
 
 namespace Spr{;
 
@@ -336,7 +341,7 @@ struct GRRenderBaseIf: public ObjectIf{
 	///	頂点を指定してプリミティブを描画
 	void DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t count, size_t stride=0);
 	///	頂点とインデックスを指定してプリミティブを描画
-	void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+	void DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, GLuint* idx, void* vtx, size_t count, size_t stride=0);
  	///	頂点の成分ごとの配列を指定して，プリミティブを描画
 	void DrawArrays(GRRenderBaseIf::TPrimitiveType ty, GRVertexArray* arrays, size_t count);
  	///	インデックスと頂点の成分ごとの配列を指定して，プリミティブを描画

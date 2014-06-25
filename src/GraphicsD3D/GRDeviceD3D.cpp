@@ -340,7 +340,7 @@ void GRDeviceD3D::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_
 	d3ddevice->DrawPrimitiveUP(dl.primType, dl.primCount, &vertices[0], dl.stride);
 }
 /// 頂点座標とインデックスを指定してプリミティブを描画
-void GRDeviceD3D::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+void GRDeviceD3D::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, GLuint* idx, void* vtx, size_t count, size_t stride){
 	DSTR << "GRDeviceD3D::DrawIndexed() is not implemented." << std::endl;
 }
 
