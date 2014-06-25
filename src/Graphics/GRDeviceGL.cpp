@@ -337,7 +337,7 @@ void GRDeviceGL::DrawDirect(GRRenderBaseIf::TPrimitiveType ty, void* vtx, size_t
 	glDrawArrays(mode, 0, (GLsizei)count);
 }
 /// 頂点座標とインデックスを指定してプリミティブを描画
-void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride){
+void GRDeviceGL::DrawIndexed(GRRenderBaseIf::TPrimitiveType ty, GLuint* idx, void* vtx, size_t count, size_t stride){
 	GLenum mode = GL_TRIANGLES;
 	switch(ty) {
 		case GRRenderBaseIf::POINTS:			mode = GL_POINTS;			break;

@@ -222,7 +222,7 @@ inline int least_squares(const ublas::matrix<double>& A, const ublas::vector<dou
 
 	S.resize((std::min)(A.size1(), A.size2()));
 
-	info = lapack::gelsd(CA, CX, S, rcond, rank, work);
+	info = (int) lapack::gelsd(CA, CX, S, rcond, rank, work);
     BOOST_UBLAS_CHECK(info == 0, ublas::internal_logic());
 
     X = ublas::project(CX, ublas::range(0, A.size2()), ublas::range(0, B.size2()));
@@ -238,7 +238,7 @@ inline void svd(const ublas::matrix<double>& A, ublas::matrix<double>& U, ublas:
     ublas::matrix<double, ublas::column_major> CA(A), CU(A.size1(), A.size1()), CVT(A.size2(), A.size2());
     int info;
 
-    info = lapack::gesdd('A', CA, s, CU, CVT);
+    info = (int) lapack::gesdd('A', CA, s, CU, CVT);
     BOOST_UBLAS_CHECK(info == 0, ublas::internal_logic());
 
     ublas::matrix<double> CCU(CU), CCVT(CVT);

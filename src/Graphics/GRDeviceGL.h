@@ -182,7 +182,7 @@ public:
 	virtual void SetVertexFormat(const GRVertexElement* e);
 	//virtual void SetVertexShader(void* s);
 	virtual void DrawDirect		(GRRenderBaseIf::TPrimitiveType ty, void* begin, size_t count, size_t stride=0);
-	virtual void DrawIndexed	(GRRenderBaseIf::TPrimitiveType ty, size_t* idx, void* vtx, size_t count, size_t stride=0);
+	virtual void DrawIndexed	(GRRenderBaseIf::TPrimitiveType ty, GLuint* idx, void* vtx, size_t count, size_t stride=0);
 	virtual void DrawPoint		(Vec3f p);
 	virtual void DrawLine		(Vec3f p0, Vec3f p1);
 	virtual void DrawSpline		(Vec3f p0, Vec3f v0, Vec3f p1, Vec3f v1, int ndiv);

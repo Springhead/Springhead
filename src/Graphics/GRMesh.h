@@ -10,6 +10,7 @@
 
 #include <Graphics/SprGRMesh.h>
 #include "GRFrame.h"
+#include <GL/glew.h>
 
 namespace Spr{;
 
@@ -76,8 +77,8 @@ public:
 	  （Xファイルからロードされた面は、すべて三角形分割されているため、
 	   どの面がどのマテリアルを適用するのか判断するためのもの）
 	 */
-	std::vector<size_t>	triFaces;		///< 三角形分割後の面の頂点インデックス
-	std::vector<size_t>	triML;			///< 三角形分割後のマテリアルインデックス
+	std::vector<GLuint>	triFaces;		///< 三角形分割後の面の頂点インデックス
+	std::vector<GLuint>	triML;			///< 三角形分割後のマテリアルインデックス
 	//std::vector<int>	orgFaces;		///< 三角形分割前の面に頂点インデックス
 	//std::vector<int>	orgFaceIds;		///< 三角形に対応する分割前の面の番号
 
@@ -114,7 +115,7 @@ public:
 	Vec2f*		GetTexCoords(){ return &texCoords[0]; }
 	GRMeshFace*	GetFaces(){ return &faces[0]; }
 	GRMeshFace*	GetFaceNormals(){ return &faceNormals[0]; }
-	size_t*		GetTriangles(){ return &triFaces[0]; }
+	GLuint*		GetTriangles(){ return &triFaces[0]; }
 	int*		GetMaterialIndices(){ return &materialList[0]; }
 	void		SwitchCoordinate();
 
