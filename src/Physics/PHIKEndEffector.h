@@ -112,6 +112,14 @@ public:
 	*/
 	Vec3d GetTargetLocalPosition() { return targetLocalPosition; }
 
+	/** @brief 方向制御をする場合の方向基準ベクトル（剛体ローカル座標系において）を設定する
+	*/
+	void SetTargetLocalDirection(Vec3d localDirection) { targetLocalDirection = localDirection; }
+
+	/** @brief 方向制御をする場合の方向基準ベクトル（剛体ローカル座標系において）を取得する
+	*/
+	Vec3d GetTargetLocalDirection() { return targetLocalDirection; }
+
 	// --- --- --- --- ---
 
 	/** @brief 位置の制御の有効・無効を切り替える
@@ -156,6 +164,11 @@ public:
 	void SetOrientationPriority(double priority){ orientationPriority = priority; }
 	double GetOrientationPriority(){ return orientationPriority; }
 
+	/** @brief 姿勢制御のモードを設定する
+	*/
+	void SetOriCtlMode(PHIKEndEffectorDesc::OriCtlMode mode) { oriCtlMode = mode; }
+	PHIKEndEffectorDesc::OriCtlMode GetOriCtlMode() { return oriCtlMode; }
+
 	/** @brief 姿勢の目標値を設定する
 	*/
 	void SetTargetOrientation(Quaterniond orientation) { targetOrientation = orientation; }
@@ -163,6 +176,22 @@ public:
 	/** @brief 設定された姿勢の目標値を取得する
 	*/
 	Quaterniond GetTargetOrientation() { return targetOrientation; }
+
+	/** @brief 方向の目標値を設定する
+	*/
+	void SetTargetDirection(Vec3d direction) { targetDirection = direction; }
+
+	/** @brief 方向の目標値を取得する
+	*/
+	Vec3d GetTargetDirection() { return targetDirection; }
+
+	/** @brief 視線方向の目標値を設定する
+	*/
+	void SetTargetLookat(Vec3d lookat) { targetLookat = lookat; }
+
+	/** @brief 視線方向の目標値を取得する
+	*/
+	Vec3d GetTargetLookat() { return targetLookat; }
 
 	// --- --- --- --- ---
 

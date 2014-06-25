@@ -25,6 +25,8 @@ PHIKEndEffectorDesc::PHIKEndEffectorDesc() {
 	bForce			= false;
 	bTorque			= false;
 
+	oriCtlMode		= PHIKEndEffectorDesc::MODE_QUATERNION;
+
 	positionPriority	= 1.0;
 	orientationPriority	= 1.0;
 	forcePriority		= 1.0;
@@ -33,7 +35,10 @@ PHIKEndEffectorDesc::PHIKEndEffectorDesc() {
 	targetPosition			= Vec3d();
 	targetVelocity			= Vec3d();
 	targetLocalPosition		= Vec3d();
+	targetLocalDirection	= Vec3d(0,0,1);
 	targetOrientation		= Quaterniond();
+	targetDirection			= Vec3d(0,0,1);
+	targetLookat			= Vec3d(0,0,0);
 	targetAngVel			= Vec3d();
 	targetForce				= Vec3d();
 	targetForceWorkingPoint	= Vec3d();
@@ -84,10 +89,32 @@ void PHIKEndEffector::GetTempTarget(PTM::VVector<double> &v){
 	}
 
 	if (bOrientation) {
-		Quaterniond qS = solidTempPose.Ori();
-		Quaterniond qG = (targetOrientation * qS.Inv());
-		double maxmove = engine->GetMaxAngularVelocity() * phScene->GetTimeStep();
+		Quaterniond qG;
+		if (oriCtlMode == PHIKEndEffectorDesc::MODE_QUATERNION) {
+			Quaterniond qS = solidTempPose.Ori();
+			qG = (targetOrientation * qS.Inv());
 
+		} else if (oriCtlMode == PHIKEndEffectorDesc::MODE_DIRECTION || oriCtlMode == PHIKEndEffectorDesc::MODE_LOOKAT)  {
+			Vec3d dirS = solidTempPose.Ori() * targetLocalDirection;
+
+			Vec3d dirG;
+			if (oriCtlMode == PHIKEndEffectorDesc::MODE_DIRECTION) {
+				dirG = targetDirection;
+			} else {
+				dirG = targetLookat - (solidTempPose * targetLocalPosition);
+			}
+			if (dirG.norm()>1e-5) { dirG.unitize(); }
+
+			Vec3d rot  = dirS % dirG;
+
+			if (rot.norm() < 1e-5) {
+				qG = Quaterniond();
+			} else {
+				qG = Quaterniond::Rot(rot.norm(), rot.unit());
+			}
+		}
+
+		double maxmove = engine->GetMaxAngularVelocity() * phScene->GetTimeStep();
 		Vec3d v_o;
 		if (qG.Theta() < maxmove) {
 			v_o = (qG.Axis() * qG.Theta());

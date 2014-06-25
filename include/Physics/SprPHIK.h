@@ -29,6 +29,53 @@ struct PHBallJointIf;
 
 // ------------------------------------------------------------------------------
 /// IKのエンドエフェクタ（到達目標に向けて動かされるもの）
+
+/// IKエンドエフェクタのステート
+struct PHIKEndEffectorState{	
+	Posed solidTempPose;  ///< IK-FK計算用の一時変数：剛体姿勢
+	PHIKEndEffectorState(){
+		solidTempPose = Posed();
+	}
+};
+
+/// IKエンドエフェクタのデスクリプタ
+struct PHIKEndEffectorDesc : public PHIKEndEffectorState {
+	// 姿勢制御のモード
+	enum OriCtlMode {
+		MODE_QUATERNION, // 姿勢制御：targetOrientationに示される姿勢をとろうとする
+		MODE_DIRECTION,  // 方向制御：targetLocalDirectionがtargetDirectionに示される向きをとろうとする
+		MODE_LOOKAT,     // 視線方向制御：targetLocalDirectionがtargetLookatに示される位置のほうを向く
+	};
+
+	bool   bEnabled;				///< エンドエフェクタを作動させるかどうか
+
+	bool   bPosition;				///< 位置制御を有効にするかどうか
+	bool   bOrientation;			///< 姿勢制御を有効にするかどうか
+	OriCtlMode oriCtlMode;			///< 姿勢制御のモード（Quaternion, Direction, Lookat）
+	bool   bForce;					///< 力制御を有効にするかどうか
+	bool   bTorque;					///< トルク制御を有効にするかどうか
+
+	double positionPriority;		///< 位置制御の達成優先度（1～0、大きいほど優先度が高い）
+	double orientationPriority;		///< 姿勢制御の達成優先度（1～0、大きいほど優先度が高い）
+	double forcePriority;			///< 力制御の達成優先度（1～0、大きいほど優先度が高い）
+	double torquePriority;			///< トルク制御の達成優先度（1～0、大きいほど優先度が高い）
+
+	Vec3d		targetPosition;				///< 到達目標位置
+	Vec3d		targetVelocity;				///< 目標速度
+	Vec3d		targetLocalPosition;		///< エンドエフェクタにおける到達させたい部位の位置
+	Vec3d		targetLocalDirection;		///< 方向制御をする場合の基準ベクトル（剛体ローカル座標系）
+	Quaterniond	targetOrientation;			///< 到達目標姿勢
+	Vec3d		targetDirection;			///< 方向制御（Direction）の目標方向
+	Vec3d		targetLookat;				///< 方向制御（Lookat）の目標位置
+	Vec3d		targetAngVel;               ///< 目標角速度
+	Vec3d		targetForce;				///< 力の目標値
+	Vec3d		targetForceWorkingPoint;	///< 出したい力の作用点
+	Vec3d		targetTorque;				///< トルクの目標値
+
+	PHIKEndEffectorDesc();
+};
+
+/// IKエンドエフェクタのインタフェース
 struct PHIKEndEffectorIf : SceneObjectIf{
 	SPR_IFDEF(PHIKEndEffector);
 
@@ -59,6 +106,14 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	/** @brief エンドエフェクタにおける到達させたい位置の設定された目標値を取得する
 	*/
 	Vec3d GetTargetLocalPosition();
+
+	/** @brief 方向制御をする場合の方向基準ベクトル（剛体ローカル座標系において）を設定する
+	*/
+	void SetTargetLocalDirection(Vec3d localDirection);
+
+	/** @brief 方向制御をする場合の方向基準ベクトル（剛体ローカル座標系において）を取得する
+	*/
+	Vec3d GetTargetLocalDirection();
 
 	// --- --- --- --- ---
 
@@ -98,6 +153,11 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	void SetOrientationPriority(double priority);
 	double GetOrientationPriority();
 
+	/** @brief 姿勢制御のモードを設定する
+	*/
+	void SetOriCtlMode(PHIKEndEffectorDesc::OriCtlMode mode);
+	PHIKEndEffectorDesc::OriCtlMode GetOriCtlMode();
+
 	/** @brief 姿勢の目標値を設定する
 	*/
 	void SetTargetOrientation(Quaterniond orientation);
@@ -105,6 +165,22 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	/** @brief 設定された姿勢の目標値を取得する
 	*/
 	Quaterniond GetTargetOrientation();
+
+	/** @brief 方向の目標値を設定する
+	*/
+	void SetTargetDirection(Vec3d direction);
+
+	/** @brief 方向の目標値を取得する
+	*/
+	Vec3d GetTargetDirection();
+
+	/** @brief 視線方向の目標値を設定する
+	*/
+	void SetTargetLookat(Vec3d lookat);
+
+	/** @brief 視線方向の目標値を取得する
+	*/
+	Vec3d GetTargetLookat();
 
 	// --- --- --- --- ---
 
@@ -161,42 +237,6 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	/** @brief 一時変数の剛体姿勢を現実の剛体姿勢に合わせる
 	*/
 	void ApplyExactState();
-};
-
-/// IKエンドエフェクタのステート
-struct PHIKEndEffectorState{	
-	Posed solidTempPose;  ///< IK-FK計算用の一時変数：剛体姿勢
-	PHIKEndEffectorState(){
-		solidTempPose = Posed();
-	}
-};
-
-/// IKエンドエフェクタのデスクリプタ
-struct PHIKEndEffectorDesc : public PHIKEndEffectorState {
-	SPR_DESCDEF(PHIKEndEffector);
-
-	bool   bEnabled;				///< エンドエフェクタを作動させるかどうか
-
-	bool   bPosition;				///< 位置制御を有効にするかどうか
-	bool   bOrientation;			///< 姿勢制御を有効にするかどうか
-	bool   bForce;					///< 力制御を有効にするかどうか
-	bool   bTorque;					///< トルク制御を有効にするかどうか
-
-	double positionPriority;		///< 位置制御の達成優先度（1～0、大きいほど優先度が高い）
-	double orientationPriority;		///< 姿勢制御の達成優先度（1～0、大きいほど優先度が高い）
-	double forcePriority;			///< 力制御の達成優先度（1～0、大きいほど優先度が高い）
-	double torquePriority;			///< トルク制御の達成優先度（1～0、大きいほど優先度が高い）
-
-	Vec3d		targetPosition;				///< 到達目標位置
-	Vec3d		targetVelocity;				///< 目標速度
-	Vec3d		targetLocalPosition;		///< エンドエフェクタにおける到達させたい部位の位置
-	Quaterniond	targetOrientation;			///< 到達目標姿勢
-	Vec3d		targetAngVel;               ///< 目標角速度
-	Vec3d		targetForce;				///< 力の目標値
-	Vec3d		targetForceWorkingPoint;	///< 出したい力の作用点
-	Vec3d		targetTorque;				///< トルクの目標値
-
-	PHIKEndEffectorDesc();
 };
 
 // ------------------------------------------------------------------------------

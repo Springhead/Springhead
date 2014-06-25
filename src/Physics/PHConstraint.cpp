@@ -270,7 +270,7 @@ size_t PHConstraint::NChildObject() const {
 }
 
 ObjectIf* PHConstraint::GetChildObject(size_t i) {
-	return solid[i]->Cast();
+	return( (i<2) ? (solid[i]->Cast()) : ((ObjectIf*)(NULL)) );
 }
 
 bool PHConstraint::GetState(void* s) const {

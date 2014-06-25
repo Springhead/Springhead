@@ -339,7 +339,7 @@ public:
 		descSphere.radius  = 0.5;
 
 		CDBoxDesc descBox;
-		descBox.boxsize = Vec3d(1.0, 0.5, 1.0);
+		descBox.boxsize = Vec3d(0.2, 1.0, 4.0);
 
 		Posed shapePose; shapePose.Ori() = Quaterniond::Rot(Rad(90), 'x');
 
@@ -370,7 +370,8 @@ public:
 		// Link 4
 		PHSolidIf* so4 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
 		so4->SetFramePosition(Vec3d(0,16,0));
-		so4->AddShape(phSdk->CreateShape(descCapsule));
+		// so4->AddShape(phSdk->CreateShape(descCapsule));
+		so4->AddShape(phSdk->CreateShape(descBox));
 		so4->SetShapePose(0, shapePose);
 
 		// Link 5
@@ -413,7 +414,7 @@ public:
 		descBall.poseSocket = Posed(1,0,0,0, 0, 2,0);
 		descBall.posePlug   = Posed(1,0,0,0, 0,-2,0);
 		descBall.spring     =  10000.0;
-		descBall.damper     =   1000.0;
+		descBall.damper     =  10000.0;
 		// descBall.fMax    =   1000.0;
 
 		PHIKHingeActuatorDesc descIKHinge;
@@ -464,9 +465,11 @@ public:
 		ike1->AddChildObject(so4);
 		ika4->AddChildObject(ike1);
 		ike1->SetTargetLocalPosition(Vec3d(0,2,0));
+		ike1->SetTargetLocalDirection(Vec3d(1,0,0));
 
 		ike1->EnablePositionControl(true);
-		ike1->EnableOrientationControl(false);
+		ike1->EnableOrientationControl(true);
+		ike1->SetOriCtlMode(PHIKEndEffectorDesc::MODE_LOOKAT);
 
 		// Link6 = End Effector
 		PHIKEndEffectorIf* ike2 = GetFWScene()->GetPHScene()->CreateIKEndEffector(descIKE);
@@ -483,6 +486,8 @@ public:
 		// ----- ----- ----- ----- -----
 
 		ike1->SetTargetPosition(soTarget1->GetPose().Pos());
+		ike1->SetTargetLookat(soTarget2->GetPose().Pos());
+		ike1->SetTargetDirection(Vec3d(1,0,0));
 		ike2->SetTargetPosition(soTarget2->GetPose().Pos());
 
 		double pbr = 1.0;
@@ -506,9 +511,10 @@ public:
 		ike1->SetOrientationPriority(1.0);
 
 		GetFWScene()->GetPHScene()->GetIKEngine()->Enable(true);
-		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxVelocity(20);
-		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxAngularVelocity(Rad(1000));
-		GetFWScene()->GetPHScene()->GetIKEngine()->SetRegularizeParam(0.3);
+		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxVelocity(200);
+		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxAngularVelocity(Rad(2000));
+		GetFWScene()->GetPHScene()->GetIKEngine()->SetRegularizeParam(0.2);
+		GetFWScene()->GetPHScene()->GetIKEngine()->SetNumIter(30);
 
 		GetFWScene()->GetPHScene()->SetContactMode(PHSceneDesc::MODE_NONE);
 	}
