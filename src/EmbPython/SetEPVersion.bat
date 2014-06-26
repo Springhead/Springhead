@@ -18,4 +18,4 @@ echo @echo off                             > CurrEPVersion.bat
 echo set CURR_PY_VERSION=%PY_VERSION%      >> CurrEPVersion.bat
 )
 
-exit
+exit /b
