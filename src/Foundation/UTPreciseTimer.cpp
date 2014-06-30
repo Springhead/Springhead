@@ -32,8 +32,8 @@ UTPreciseTimer::UTPreciseTimer(): stopWatch(0), startFlag(false){
 void UTPreciseTimer::Init(int preiod){
 	UTLargeInteger cycles;
 	unsigned long time = timeGetTime();
-    unsigned long lowPart, highPart;
 #ifdef _M_IX86
+	unsigned long lowPart, highPart;
 	_asm{
 		CPUID
 		RDTSC								;// クロックカウンタを読む
@@ -72,9 +72,9 @@ void UTPreciseTimer::Init(int preiod){
 }
 
 void UTPreciseTimer::WaitUS(int time){
-    unsigned long lowPart, highPart;
 	UTLargeInteger cycles;
 #ifdef _M_IX86
+	unsigned long lowPart, highPart;
 	_asm{
 		CPUID;
 		RDTSC								;// クロックカウンタを読む
