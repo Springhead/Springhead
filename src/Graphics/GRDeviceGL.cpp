@@ -33,7 +33,10 @@
 #if defined _MSC_VER
 # define BOOST_USE_WINDOWS_H
 #endif
+#pragma warning(push)
+#pragma warning(disable:4005)
 #include <boost/regex.hpp>
+#pragma warning(pop)
 
 static bool enableDebugMessage = false;
 

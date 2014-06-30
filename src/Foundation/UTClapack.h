@@ -6,6 +6,7 @@
 #define BOOST_NUMERIC_BINDINGS_USE_CLAPACK
 #pragma warning(push)
 #pragma warning(disable:4267)
+#pragma warning(disable:4005)
 //#include <boost/numeric/ublas/fwd.hpp>
 #include <boost/numeric/bindings/lapack/driver/sygv.hpp>
 #include <boost/numeric/bindings/lapack/driver/sygvx.hpp>
