@@ -72,6 +72,8 @@ void PHSliderJoint::SetupAxisIndex() {
 		if (bConstraintRollZ) { axes.Enable(5); }
 	}
 
+	PHConstraint::SetupAxisIndex();
+
 	// -- PH1DJoint::SetupAxisIndex に相当する部分
 	//motor.SetupAxisIndex();
 	//if (limit) { limit->SetupAxisIndex(); }
