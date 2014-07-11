@@ -14,21 +14,25 @@ namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
 void CRReachController::Step() {
-	PHSceneIf* phScene = DCAST(PHSceneIf,ikEff->GetSolid()->GetScene());
 
+	PHSceneIf* phScene = DCAST(PHSceneIf,ikEff->GetSolid()->GetScene());
+	
 	/// --- 到達運動の判定と開始・停止
 	Vec3d currEEfPos = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
 
+	
 	if ((targPos - finalPos).norm() > restartDistance) {
 		// 最終目標位置が許容範囲以上に変化したので到達運動を最初からやり直す
 		// currPos = currEEfPos;
+		std::cout << "come1" << std::endl;
 		SetTargetPos(finalPos);
 		SetTargetVel(finalVel);
 		AutoStart();
-
+		//std::cout << "length,reachTime:" <<(finalPos - currEEfPos).norm()<<","<< this->reachTime << std::endl;
 	} else if ((targPos - finalPos).norm() > 1e-4) {
 		if (reachTime <= time) {
 			// とりあえず現在設定されている到達運動が完了したが、目標到達位置がその間に変わってしまった場合
+			std::cout << "come2" << std::endl;
 			currVel = Vec3d(); // <!!>
 			SetTargetPos(finalPos);
 			SetTargetVel(finalVel);
@@ -39,7 +43,7 @@ void CRReachController::Step() {
 		// 最終目標位置に届いていないので改めて到達運動を行う
 		if (reachTime+reachTimeMargin <= time) {
 			if ((finalPos - currEEfPos).norm() < acceptablePosError) { return; }
-
+			std::cout << "come3" << std::endl;
 			// currPos = currEEfPos;
 			currVel = Vec3d(); // <!!>
 			SetTargetPos(finalPos);
@@ -47,7 +51,7 @@ void CRReachController::Step() {
 			AutoStart();
 		}
 	}
-
+	
 	/// --- 到達運動の計算と実行
 
 	if (time <= reachTime) {
@@ -91,10 +95,13 @@ void CRReachController::Step() {
 			currPos = targPos;
 			currVel = targVel;
 		}
-
+		
 		ikEff->SetTargetPosition(currPos);
 		// ikEff->SetTargetVelocity(currVel);
+
+		FrontKeep();
 	}
+
 
 	time += phScene->GetTimeStep();
 }
@@ -187,6 +194,8 @@ double CRReachController::GetLength() {
 		lastpos = pos;
 	}
 
+	
+
 	return length;
 }
 
@@ -206,8 +215,68 @@ void CRReachController::AutoStart() {
 	initOri = currOri; initAVel = currAVel;
 
 	// 軌道長に応じて到達目標時刻をセットする
-	this->reachTime = this->GetLength() / averageSpeed;
+	//this->reachTime = this->GetLength() / averageSpeed;
+	this->reachTime = (finalPos - currPos).norm() / averageSpeed;
 	this->time      = 0;
+}
+
+
+void CRReachController::FrontKeep() {
+	
+	//初期化
+	states = ObjectStatesIf::Create();
+	PHSceneIf* phScene = DCAST(PHSceneIf,ikEff->GetSolid()->GetScene());
+	double s;
+	Quaterniond qt;
+
+	//到達姿勢の取得
+	if(this->time == 0){
+		states->SaveState(phScene);
+
+		ikEff->EnableOrientationControl(enabled);
+		ikEff->SetOriCtlMode(PHIKEndEffectorDesc::MODE_LOOKAT);
+
+
+		ikEff->SetTargetLookat(finalPos);
+		ikEff->SetTargetLocalDirection(Vec3d(0,0,-1));
+
+		ikEff->SetTargetPosition(currPos);
+
+		phScene->GetIKEngine()->SetNumIter(30);
+		phScene->GetIKEngine()->Step();
+
+		tempori = ikEff->GetSolidTempPose().Ori();
+		
+		
+		std::cout << "ori" << ikEff->GetSolidTempPose().Ori() << std::endl;
+
+		states->LoadState(phScene);
+	}
+
+	//到達姿勢までの補間を計算
+	float tf = this->reachTime / this->reachTime;
+	float t =  this->time / this->reachTime;
+
+	if(this->reachTime == 0){
+		s = 0;
+	}
+	if(t <= oricontTimeRatio){
+		ikEff->SetOriCtlMode(PHIKEndEffectorDesc::MODE_QUATERNION);
+		s = (oricontTimeRatio - t)/oricontTimeRatio;
+	}else if(oricontTimeRatio < t){
+		ikEff->SetOriCtlMode(PHIKEndEffectorDesc::MODE_LOOKAT);
+		s = 0;
+	}
+	
+	double Ratio = 1 - ( 10 * pow(s,3) - 15 * pow(s,4) + 6 * pow(s,5) );
+
+	Vec3d rot = tempori.RotationHalf();
+	rot = Ratio * rot;
+	qt = Quaterniond::Rot(rot);
+
+	//姿勢をIKにセット
+	ikEff->SetTargetOrientation(qt);
+	ikEff->EnableOrientationControl(enabled);
 }
 
 }

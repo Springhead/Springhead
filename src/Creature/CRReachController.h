@@ -8,11 +8,14 @@
 #ifndef CRREACHCONTROLLER_H
 #define CRREACHCONTROLLER_H
 
+
 #include <Creature/CREngine.h>
 #include <Creature/SprCRController.h>
 #include <Creature/SprCRReachController.h>
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHIK.h>
+#include <Creature/SprCRCreature.h>
+
 
 //@{
 namespace Spr{;
@@ -26,6 +29,8 @@ private:
 public:
 	SPR_OBJECTDEF(CRReachController);
 	ACCESS_DESC_STATE(CRReachController);
+	UTRef<ObjectStatesIf>	states;
+	Quaterniond	tempori;
 
 	// コンストラクタ
 	CRReachController(){ InitVars(); }
@@ -109,6 +114,11 @@ public:
 		this->reachTimeMargin = margin;
 	}
 
+	/** @brief 姿勢制御完了時の時間の割合をセットする
+	*/
+	void SetOriControlCompleteTimeRatio(float oriTime) {
+		this->oricontTimeRatio = oriTime;
+	}
 
 	// ----- ----- -----
 	// 低レベルAPI
@@ -211,6 +221,8 @@ public:
 	double GetLength();
 
 	void AutoStart();
+
+	void FrontKeep();
 
 	#if 0
 	/** @brief 軌道の通過点を追加する

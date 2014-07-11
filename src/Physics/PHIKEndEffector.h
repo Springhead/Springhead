@@ -248,6 +248,13 @@ public:
 
 	// --- --- --- --- ---
 
+	/** @brief 一時変数の剛体の姿勢を取得する
+	*/
+	Posed GetSolidTempPose() {return solidTempPose; }
+
+
+	// --- --- --- --- ---
+
 	virtual bool		AddChildObject(ObjectIf* o);
 	virtual ObjectIf*	GetChildObject(size_t pos);
 	virtual	size_t		NChildObject() const;
