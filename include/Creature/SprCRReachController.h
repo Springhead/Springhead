@@ -45,6 +45,10 @@ struct CRReachControllerIf : public CRControllerIf{
 	*/
 	void SetReachTimeMargin(double margin);
 
+	/** @brief 姿勢制御完了時の時間の割合をセットする
+	*/
+	void SetOriControlCompleteTimeRatio(float oriTime);
+
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	// 低レベルAPI
@@ -117,6 +121,9 @@ struct CRReachControllerState{
 	/// 目標経由点通過時刻（経由点を使わない場合は負の値とする）
 	float viaTime;
 
+	/// 姿勢制御完了時の時間の割合
+	float oricontTimeRatio;
+
 	/// 運動開始時の位置・速度・姿勢・角速度
 	Vec3d initPos, initVel, initAVel;
 	Quaterniond initOri;
@@ -138,7 +145,7 @@ struct CRReachControllerState{
 	Quaterniond finalOri;
 
 	CRReachControllerState(){
-		time = 0; reachTime = -1; viaTime  = -1;
+		time = 0; reachTime = -1; viaTime  = -1; oricontTimeRatio = 0;
 		initPos  = Vec3d(); initVel  = Vec3d(); initOri  = Quaterniond(); initAVel  = Vec3d();
 		targPos  = Vec3d(); targVel  = Vec3d(); targOri  = Quaterniond(); targAVel  = Vec3d();
 		currPos  = Vec3d(); currVel  = Vec3d(); currOri  = Quaterniond(); currAVel  = Vec3d();

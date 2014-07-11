@@ -100,6 +100,7 @@ protected:\
 	float	time;	\
 	float	reachTime;	\
 	float	viaTime;	\
+	float	oricontTimeRatio;	\
 	Vec3d	initPos;	\
 	Vec3d	initVel;	\
 	Vec3d	initAVel;	\
@@ -123,6 +124,7 @@ public:\
 		time = ((CRReachControllerState*)ptr)->time;	\
 		reachTime = ((CRReachControllerState*)ptr)->reachTime;	\
 		viaTime = ((CRReachControllerState*)ptr)->viaTime;	\
+		oricontTimeRatio = ((CRReachControllerState*)ptr)->oricontTimeRatio;	\
 		initPos = ((CRReachControllerState*)ptr)->initPos;	\
 		initVel = ((CRReachControllerState*)ptr)->initVel;	\
 		initAVel = ((CRReachControllerState*)ptr)->initAVel;	\
@@ -146,6 +148,7 @@ public:\
 		((CRReachControllerState*)ptr)->time = time;	\
 		((CRReachControllerState*)ptr)->reachTime = reachTime;	\
 		((CRReachControllerState*)ptr)->viaTime = viaTime;	\
+		((CRReachControllerState*)ptr)->oricontTimeRatio = oricontTimeRatio;	\
 		((CRReachControllerState*)ptr)->initPos = initPos;	\
 		((CRReachControllerState*)ptr)->initVel = initVel;	\
 		((CRReachControllerState*)ptr)->initAVel = initAVel;	\

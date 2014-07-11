@@ -232,6 +232,11 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 	*/
 	Vec3d GetTargetTorque();
 
+	/** @brief 一時変数の剛体姿勢を取得する
+	*/
+
+	Posed GetSolidTempPose();
+
 	// --- --- --- --- ---
 
 	/** @brief 一時変数の剛体姿勢を現実の剛体姿勢に合わせる
