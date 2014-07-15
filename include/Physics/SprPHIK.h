@@ -234,7 +234,6 @@ struct PHIKEndEffectorIf : SceneObjectIf{
 
 	/** @brief 一時変数の剛体姿勢を取得する
 	*/
-
 	Posed GetSolidTempPose();
 
 	// --- --- --- --- ---
@@ -310,6 +309,14 @@ struct PHIKActuatorIf : SceneObjectIf{
 	*/
 	int NChildActuators();
 	PHIKActuatorIf* GetChildActuator(int i);
+
+	/** @brief 子エンドエフェクタを取得する
+	*/
+	PHIKEndEffectorIf* GetChildEndEffector();
+
+	/** @brief 一時変数の剛体姿勢を取得する
+	*/
+	Posed GetSolidTempPose();
 };
 
 /// IKアクチュエータのステート

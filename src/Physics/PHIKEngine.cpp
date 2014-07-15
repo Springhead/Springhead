@@ -24,7 +24,8 @@ PHIKEngine::PHIKEngine():
 	maxAngVel(Rad(500)), // 500[deg/s]
 	regularizeParam(0.7),
 	lastM(0),
-	lastN(0)
+	lastN(0),
+	iterCutOffAngVel(0.01)
 	{}
 
 void PHIKEngine::ApplyExactState(bool reverse) {
@@ -296,12 +297,29 @@ void PHIKEngine::Step() {
 	// <!!>
 	// ApplyExactState(/* reverse = */ true);
 
-	for (size_t i=0; i<numIter; ++i) {
+	size_t iter;
+	for (iter=0; iter<numIter; ++iter) {
 		CalcJacobian();
 		IK();
 		Limit();
 		FK();
 		SaveFKResult();
+
+		double err = 0;
+		for (size_t i=0; i<actuators.size(); ++i) {
+			if (actuators[i]->IsEnabled()) {
+				PHIKActuator* act = actuators[i];
+				for (size_t x=0; x<(size_t)act->ndof; ++x) {
+					size_t X = strideAct[i] + x;
+					err += (W[X]*W[X]);
+				}
+			}
+		}
+
+		if (sqrt(err) < iterCutOffAngVel) {
+			if (numIter > 10) { std::cout << "IK Iter : " << iter << std::endl; }
+			break;
+		}
 	}
 
 	Move();

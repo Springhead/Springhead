@@ -100,91 +100,105 @@ protected:\
 	float	time;	\
 	float	reachTime;	\
 	float	viaTime;	\
-	float	oricontTimeRatio;	\
-	Vec3d	initPos;	\
-	Vec3d	initVel;	\
-	Vec3d	initAVel;	\
-	Quaterniond	initOri;	\
+	Vec3d	pos0;	\
+	Vec3d	vel0;	\
+	Vec3d	pos1;	\
+	Vec3d	vel1;	\
+	Vec3d	pos1AtStartTime;	\
+	Quaterniond	ori0;	\
+	Quaterniond	ori1;	\
 	Vec3d	viaPos;	\
-	Quaterniond	viaOri;	\
-	Vec3d	targPos;	\
-	Vec3d	targVel;	\
-	Vec3d	targAVel;	\
-	Quaterniond	targOri;	\
 	Vec3d	currPos;	\
 	Vec3d	currVel;	\
-	Vec3d	currAVel;	\
-	Quaterniond	currOri;	\
-	Vec3d	finalPos;	\
-	Vec3d	finalVel;	\
-	Vec3d	finalAVel;	\
-	Quaterniond	finalOri;	\
+	Vec3d	targetPos;	\
+	Vec3d	lastTargetPos;	\
+	Vec3d	tempTargetPos;	\
+	Vec3d	lastTempTargetPos;	\
+	Vec3d	tempTargetPosAtStartTime;	\
+	double	posInnerMargin;	\
+	double	posOuterMargin;	\
+	double	dirInnerMargin;	\
+	double	dirOuterMargin;	\
+	Spr::CRReachControllerState::CRReachInOut	posInOut;	\
+	Spr::CRReachControllerState::CRReachInOut	dirInOut;	\
+	Spr::CRReachControllerState::CRReachStat	posStat;	\
+	Spr::CRReachControllerState::CRReachStat	dirStat;	\
+	double	posWaitStarted;	\
+	double	dirWaitStarted;	\
 public:\
 	virtual void SetState(const void* ptr){ \
 		time = ((CRReachControllerState*)ptr)->time;	\
 		reachTime = ((CRReachControllerState*)ptr)->reachTime;	\
 		viaTime = ((CRReachControllerState*)ptr)->viaTime;	\
-		oricontTimeRatio = ((CRReachControllerState*)ptr)->oricontTimeRatio;	\
-		initPos = ((CRReachControllerState*)ptr)->initPos;	\
-		initVel = ((CRReachControllerState*)ptr)->initVel;	\
-		initAVel = ((CRReachControllerState*)ptr)->initAVel;	\
-		initOri = ((CRReachControllerState*)ptr)->initOri;	\
+		pos0 = ((CRReachControllerState*)ptr)->pos0;	\
+		vel0 = ((CRReachControllerState*)ptr)->vel0;	\
+		pos1 = ((CRReachControllerState*)ptr)->pos1;	\
+		vel1 = ((CRReachControllerState*)ptr)->vel1;	\
+		pos1AtStartTime = ((CRReachControllerState*)ptr)->pos1AtStartTime;	\
+		ori0 = ((CRReachControllerState*)ptr)->ori0;	\
+		ori1 = ((CRReachControllerState*)ptr)->ori1;	\
 		viaPos = ((CRReachControllerState*)ptr)->viaPos;	\
-		viaOri = ((CRReachControllerState*)ptr)->viaOri;	\
-		targPos = ((CRReachControllerState*)ptr)->targPos;	\
-		targVel = ((CRReachControllerState*)ptr)->targVel;	\
-		targAVel = ((CRReachControllerState*)ptr)->targAVel;	\
-		targOri = ((CRReachControllerState*)ptr)->targOri;	\
 		currPos = ((CRReachControllerState*)ptr)->currPos;	\
 		currVel = ((CRReachControllerState*)ptr)->currVel;	\
-		currAVel = ((CRReachControllerState*)ptr)->currAVel;	\
-		currOri = ((CRReachControllerState*)ptr)->currOri;	\
-		finalPos = ((CRReachControllerState*)ptr)->finalPos;	\
-		finalVel = ((CRReachControllerState*)ptr)->finalVel;	\
-		finalAVel = ((CRReachControllerState*)ptr)->finalAVel;	\
-		finalOri = ((CRReachControllerState*)ptr)->finalOri;	\
+		targetPos = ((CRReachControllerState*)ptr)->targetPos;	\
+		lastTargetPos = ((CRReachControllerState*)ptr)->lastTargetPos;	\
+		tempTargetPos = ((CRReachControllerState*)ptr)->tempTargetPos;	\
+		lastTempTargetPos = ((CRReachControllerState*)ptr)->lastTempTargetPos;	\
+		tempTargetPosAtStartTime = ((CRReachControllerState*)ptr)->tempTargetPosAtStartTime;	\
+		posInnerMargin = ((CRReachControllerState*)ptr)->posInnerMargin;	\
+		posOuterMargin = ((CRReachControllerState*)ptr)->posOuterMargin;	\
+		dirInnerMargin = ((CRReachControllerState*)ptr)->dirInnerMargin;	\
+		dirOuterMargin = ((CRReachControllerState*)ptr)->dirOuterMargin;	\
+		posInOut = ((CRReachControllerState*)ptr)->posInOut;	\
+		dirInOut = ((CRReachControllerState*)ptr)->dirInOut;	\
+		posStat = ((CRReachControllerState*)ptr)->posStat;	\
+		dirStat = ((CRReachControllerState*)ptr)->dirStat;	\
+		posWaitStarted = ((CRReachControllerState*)ptr)->posWaitStarted;	\
+		dirWaitStarted = ((CRReachControllerState*)ptr)->dirWaitStarted;	\
 	}\
 	virtual bool GetState(void* ptr) const { \
 		((CRReachControllerState*)ptr)->time = time;	\
 		((CRReachControllerState*)ptr)->reachTime = reachTime;	\
 		((CRReachControllerState*)ptr)->viaTime = viaTime;	\
-		((CRReachControllerState*)ptr)->oricontTimeRatio = oricontTimeRatio;	\
-		((CRReachControllerState*)ptr)->initPos = initPos;	\
-		((CRReachControllerState*)ptr)->initVel = initVel;	\
-		((CRReachControllerState*)ptr)->initAVel = initAVel;	\
-		((CRReachControllerState*)ptr)->initOri = initOri;	\
+		((CRReachControllerState*)ptr)->pos0 = pos0;	\
+		((CRReachControllerState*)ptr)->vel0 = vel0;	\
+		((CRReachControllerState*)ptr)->pos1 = pos1;	\
+		((CRReachControllerState*)ptr)->vel1 = vel1;	\
+		((CRReachControllerState*)ptr)->pos1AtStartTime = pos1AtStartTime;	\
+		((CRReachControllerState*)ptr)->ori0 = ori0;	\
+		((CRReachControllerState*)ptr)->ori1 = ori1;	\
 		((CRReachControllerState*)ptr)->viaPos = viaPos;	\
-		((CRReachControllerState*)ptr)->viaOri = viaOri;	\
-		((CRReachControllerState*)ptr)->targPos = targPos;	\
-		((CRReachControllerState*)ptr)->targVel = targVel;	\
-		((CRReachControllerState*)ptr)->targAVel = targAVel;	\
-		((CRReachControllerState*)ptr)->targOri = targOri;	\
 		((CRReachControllerState*)ptr)->currPos = currPos;	\
 		((CRReachControllerState*)ptr)->currVel = currVel;	\
-		((CRReachControllerState*)ptr)->currAVel = currAVel;	\
-		((CRReachControllerState*)ptr)->currOri = currOri;	\
-		((CRReachControllerState*)ptr)->finalPos = finalPos;	\
-		((CRReachControllerState*)ptr)->finalVel = finalVel;	\
-		((CRReachControllerState*)ptr)->finalAVel = finalAVel;	\
-		((CRReachControllerState*)ptr)->finalOri = finalOri;	\
+		((CRReachControllerState*)ptr)->targetPos = targetPos;	\
+		((CRReachControllerState*)ptr)->lastTargetPos = lastTargetPos;	\
+		((CRReachControllerState*)ptr)->tempTargetPos = tempTargetPos;	\
+		((CRReachControllerState*)ptr)->lastTempTargetPos = lastTempTargetPos;	\
+		((CRReachControllerState*)ptr)->tempTargetPosAtStartTime = tempTargetPosAtStartTime;	\
+		((CRReachControllerState*)ptr)->posInnerMargin = posInnerMargin;	\
+		((CRReachControllerState*)ptr)->posOuterMargin = posOuterMargin;	\
+		((CRReachControllerState*)ptr)->dirInnerMargin = dirInnerMargin;	\
+		((CRReachControllerState*)ptr)->dirOuterMargin = dirOuterMargin;	\
+		((CRReachControllerState*)ptr)->posInOut = posInOut;	\
+		((CRReachControllerState*)ptr)->dirInOut = dirInOut;	\
+		((CRReachControllerState*)ptr)->posStat = posStat;	\
+		((CRReachControllerState*)ptr)->dirStat = dirStat;	\
+		((CRReachControllerState*)ptr)->posWaitStarted = posWaitStarted;	\
+		((CRReachControllerState*)ptr)->dirWaitStarted = dirWaitStarted;	\
 		return true;	\
 	}\
 
 #define SPR_DECLMEMBEROF_CRReachControllerDesc \
 protected:\
 	double	averageSpeed;	\
-	double	acceptablePosError;	\
-	double	restartDistance;	\
-	double	reachTimeMargin;	\
+	double	minWait;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		CRController::SetDesc((CRControllerDesc*)(CRReachControllerDesc*)ptr);	\
 		CRReachController::SetState((CRReachControllerState*)(CRReachControllerDesc*)ptr);	\
 		averageSpeed = ((CRReachControllerDesc*)ptr)->averageSpeed;	\
-		acceptablePosError = ((CRReachControllerDesc*)ptr)->acceptablePosError;	\
-		restartDistance = ((CRReachControllerDesc*)ptr)->restartDistance;	\
-		reachTimeMargin = ((CRReachControllerDesc*)ptr)->reachTimeMargin;	\
+		minWait = ((CRReachControllerDesc*)ptr)->minWait;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -192,9 +206,7 @@ public:\
 		CRController::GetDesc((CRControllerDesc*)(CRReachControllerDesc*)ptr);	\
 		CRReachController::GetState((CRReachControllerState*)(CRReachControllerDesc*)ptr);	\
 		((CRReachControllerDesc*)ptr)->averageSpeed = averageSpeed;	\
-		((CRReachControllerDesc*)ptr)->acceptablePosError = acceptablePosError;	\
-		((CRReachControllerDesc*)ptr)->restartDistance = restartDistance;	\
-		((CRReachControllerDesc*)ptr)->reachTimeMargin = reachTimeMargin;	\
+		((CRReachControllerDesc*)ptr)->minWait = minWait;	\
 		return true;	\
 	}\
 

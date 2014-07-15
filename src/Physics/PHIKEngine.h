@@ -64,6 +64,7 @@ public:
 	double  maxVel, maxAngVel;
 	double  regularizeParam;
 	int     lastM, lastN;
+	double  iterCutOffAngVel;
 
 	// --- --- --- --- --- --- --- --- --- ---
 
@@ -75,12 +76,15 @@ public:
 	bool IsEnabled()                          { return this->bEnabled; }
 	void Enable(bool bEnabled)                { this->bEnabled = bEnabled; }
 	void SetNumIter(int numIter)              { this->numIter  = numIter; }
+	int GetNumIter()                          { return (int)(this->numIter); }
 	void SetMaxVelocity(double maxVel)        { this->maxVel = maxVel; }
 	double GetMaxVelocity()                   { return maxVel; }
 	void SetMaxAngularVelocity(double maxAV)  { this->maxAngVel = maxAV; }
 	double GetMaxAngularVelocity()            { return maxAngVel; }
 	void SetRegularizeParam(double epsilon)   { this->regularizeParam = epsilon; }
 	double GetRegularizeParam()               { return regularizeParam; }
+	void SetIterCutOffAngVel(double epsilon)  { this->iterCutOffAngVel = epsilon; }
+	double GetIterCutOffAngVel()              { return iterCutOffAngVel; }
 
 	// --- --- --- --- ---
 
