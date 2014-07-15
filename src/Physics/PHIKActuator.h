@@ -192,6 +192,10 @@ public:
 	int NChildActuators() { return (int)children.size(); }
 	PHIKActuatorIf* GetChildActuator(int i) { return children[i]->Cast(); }
 
+	/** @brief 子エンドエフェクタを取得する
+	*/
+	PHIKEndEffectorIf* GetChildEndEffector() { return eef->Cast(); }
+
 	// --- --- --- --- ---
 
 	virtual bool		AddChildObject(ObjectIf* o);

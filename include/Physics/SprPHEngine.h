@@ -165,13 +165,19 @@ public:
 	void SetRegularizeParam(double epsilon);
 	double GetRegularizeParam();
 
+	/** @brief IK計算結果の関節角速度のノルムがこの値以下になったらIterationを打ち切る
+	*/
+	void SetIterCutOffAngVel(double epsilon);
+	double GetIterCutOffAngVel();
+
 	/** @brief 一時変数の関節角度・剛体姿勢を現実のものに合わせる
 	*/
 	void ApplyExactState(bool reverse=false);
 
-	/** @brief (IK->FK)の繰り返し回数をセットする
+	/** @brief (IK->FK)の繰り返し回数
 	*/
 	void SetNumIter(int numIter);
+	int GetNumIter();
 
 	SPR_IFDEF(PHIKEngine);
 };

@@ -39,6 +39,9 @@ public:
 	/// 制御点のある剛体
 	PHSolidIf* solid;
 
+	/// IK Iterationの1回前でのsolidTempPose
+	Posed lastSolidTempPose;
+
 	/** @brief 初期化する
 	*/
 	void Init() {
@@ -46,6 +49,7 @@ public:
 		ndof = 3;
 		bNDOFChanged = true;
 		solidTempPose = Posed();
+		lastSolidTempPose = Posed();
 		number = -1;
 	}
 
