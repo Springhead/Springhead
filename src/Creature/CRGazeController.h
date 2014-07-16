@@ -14,8 +14,6 @@
 #include <Physics/SprPHSolid.h>
 #include <Physics/SprPHIK.h>
 
-#include <vector>
-
 //@{
 namespace Spr{;
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
@@ -23,11 +21,10 @@ namespace Spr{;
 */
 class CRGazeController : public CRController, public CRGazeControllerDesc {
 private:
-	
-	CRBoneIf*               cbHead;
-	std::vector<CRBoneIf*>  cbEyes;
+	Quaterniond orig;
+	CRBoneIf*   head;
 
-	Vec3d       targetPos;
+	Vec3d       pos;
 
 public:
 	SPR_OBJECTDEF(CRGazeController);
@@ -58,7 +55,7 @@ public:
 	Vec3d GetTargetPosition();
 
 	/// 頭ボーンを設定する
-	virtual void SetHeadBone(CRBoneIf* head) { /* this->head = head; */ }
+	virtual void SetHeadBone(CRBoneIf* head) { this->head = head; }
 };
 }
 //@}

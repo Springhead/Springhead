@@ -242,6 +242,9 @@ public:
 		struct{
 			T vx,vy,vz,wx,wy,wz;
 		};
+		struct{
+			TVec3<T> r, v;
+		};
 	};
 	///	要素のアクセス
 	T& item_impl(size_t i){ return data[i]; }
