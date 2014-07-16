@@ -22,27 +22,77 @@ struct CRReachControllerIf : public CRControllerIf{
 
 	/** @brief 最終到達目標位置をセットする
 	*/
-	void SetTargetPos(Vec3d pos);
+	void SetFinalPos(Vec3d pos);
 
+	/** @brief 最終到達目標速度をセットする（デフォルトは (0,0,0)）
+	*/
+	void SetFinalVel(Vec3d vel);
+	
 	/** @brief 平均到達速度をセットする（ここから目標到達時間が計算される）
 	*/
 	void SetAverageSpeed(double speed);
 	double GetAverageSpeed();
 
-	/** @brief WaitステートからTrajステートへ移行する際の最低待ち時間をセットする
+	/** @brief 許容位置誤差をセットする（これ以上の誤差がある限り再度挑戦する）
 	*/
-	void SetMinWait(double t);
+	void SetAcceptablePosError(double err);
 
-	/** @brief マージンをセットする
+	/** @brief 最終到達目標位置が現在の目標到達位置からこれ以上遠ざかると到達運動を強制的に再始動する
 	*/
-	void SetPosInnerMargin(double margin);
-	void SetPosOuterMargin(double margin);
-	void SetDirInnerMargin(double margin);
-	void SetDirOuterMargin(double margin);
+	void SetRestartDistance(double dist);
 
-	/** @brief 軌道の通過点を返す s=0.0～1.0
+	/** @brief 到達予定時刻経過後の待ち時間をセットする
 	*/
-	Vec3d GetTrajectory(float s);
+	void SetReachTimeMargin(double margin);
+
+	/** @brief 姿勢制御完了時の時間の割合をセットする
+	*/
+	void SetOriControlCompleteTimeRatio(float oriTime);
+
+
+	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+	// 低レベルAPI
+
+	/** @brief 到達運動を開始する
+	*/
+	void Start(float reachTime);
+
+	/** @brief 経由地点通過時刻をセットする（負の場合、経由地点を用いない）
+	*/
+	void SetViaTime(float time);
+
+
+	// （注）位置制御・姿勢制御それぞれの有効・無効はIKEndEffectorでセットすること。
+
+	/** @brief 到達目標位置をセットする
+	*/
+	void SetTargetPos(Vec3d pos);
+
+	/** @brief 到達目標速度をセットする（デフォルトは (0,0,0)）
+	*/
+	void SetTargetVel(Vec3d vel);
+
+	/** @brief 経由地点をセットする
+	*/
+	void SetViaPos(Vec3d pos);
+
+
+	/** @brief 到達目標姿勢をセットする
+	*/
+	void SetTargetOri(Quaterniond ori);
+
+	/** @brief 到達目標角速度をセットする（デフォルトは (0,0,0)）
+	*/
+	void SetTargetAVel(Vec3d avel);
+
+	/** @brief 経由姿勢をセットする
+	*/
+	void SetViaOri(Quaterniond ori);
+
+
+	/** @brief 軌道通過点の位置・速度を返す s=0.0～1.0
+	*/
+	Vec6d GetTrajectory(float s);
 
 	/** @brief 目標到達時間を返す
 	*/
@@ -51,6 +101,7 @@ struct CRReachControllerIf : public CRControllerIf{
 	/** @brief 現在時刻を返す
 	*/
 	float GetCurrentTime();
+
 
 	/** @brief 到達に使うエンドエフェクタを設定・取得する
 	*/
@@ -64,54 +115,42 @@ struct CRReachControllerState{
 	/// 軌道運動開始からの経過時間
 	float time;
 	
-	/// 到達予定時刻（運動開始時を0とする）
+	/// 目標到達時刻（運動開始時を0とする）
 	float reachTime;
 
-	/// 経由点通過予定時刻（経由点を使わない場合は負の値とする）
+	/// 目標経由点通過時刻（経由点を使わない場合は負の値とする）
 	float viaTime;
 
-	/// 軌道始点・終点の位置・速度・姿勢
-	Vec3d pos0, vel0, pos1, vel1, pos1AtStartTime;
-	Quaterniond ori0, ori1;
+	/// 姿勢制御完了時の時間の割合
+	float oricontTimeRatio;
 
-	/// 経由点の目標位置
+	/// 運動開始時の位置・速度・姿勢・角速度
+	Vec3d initPos, initVel, initAVel;
+	Quaterniond initOri;
+
+	/// 経由点の目標位置・姿勢
 	Vec3d viaPos;
+	Quaterniond viaOri;
 
-	/// 現在の位置・速度
-	Vec3d currPos, currVel;
+	/// 現在到達目標としている位置・速度・姿勢・角速度
+	Vec3d targPos, targVel, targAVel;
+	Quaterniond targOri;
 
-	/// 目標位置
-	Vec3d targetPos, lastTargetPos, tempTargetPos, lastTempTargetPos, tempTargetPosAtStartTime;
+	/// 現在の位置・速度・姿勢・角速度
+	Vec3d currPos, currVel, currAVel;
+	Quaterniond currOri;
 
-	// マージン
-	double posInnerMargin, posOuterMargin, dirInnerMargin, dirOuterMargin;
-
-	// マージン内外状態
-	enum CRReachInOut { CRREACH_IN, CRREACH_OUT };
-	CRReachInOut posInOut, dirInOut;
-
-	// 制御状態
-	enum CRReachStat { CRREACH_TRAJ, CRREACH_FOLLOW, CRREACH_WAIT };
-	CRReachStat posStat, dirStat;
-
-	// WAIT状態に入った時刻
-	double posWaitStarted, dirWaitStarted;
+	/// 最終的なの目標位置・速度・姿勢・角速度
+	Vec3d finalPos, finalVel, finalAVel;
+	Quaterniond finalOri;
 
 	CRReachControllerState(){
-		time = 0; reachTime = -1; viaTime = -1;
-
-		pos0  = Vec3d(); vel0  = Vec3d(); ori0  = Quaterniond();
-		pos1  = Vec3d(); vel1  = Vec3d(); ori1  = Quaterniond(); pos1AtStartTime = Vec3d();
-
-		currPos = Vec3d(); currVel = Vec3d();
-		targetPos = Vec3d(); lastTargetPos = Vec3d(); tempTargetPos = Vec3d(); lastTempTargetPos = Vec3d(); tempTargetPosAtStartTime = Vec3d();
-		viaPos = Vec3d();
-
-		posInnerMargin = 0.0;    dirInnerMargin = Rad(0);
-		posOuterMargin = 0.1;    dirOuterMargin = Rad(10);
-		posInOut = CRREACH_OUT;  dirInOut = CRREACH_OUT;
-		posStat  = CRREACH_WAIT; dirStat  = CRREACH_WAIT;
-		posWaitStarted = 0;      dirWaitStarted = 0;
+		time = 0; reachTime = -1; viaTime  = -1; oricontTimeRatio = 0;
+		initPos  = Vec3d(); initVel  = Vec3d(); initOri  = Quaterniond(); initAVel  = Vec3d();
+		targPos  = Vec3d(); targVel  = Vec3d(); targOri  = Quaterniond(); targAVel  = Vec3d();
+		currPos  = Vec3d(); currVel  = Vec3d(); currOri  = Quaterniond(); currAVel  = Vec3d();
+		finalPos = Vec3d(); finalVel = Vec3d(); finalOri = Quaterniond(); finalAVel = Vec3d();
+		viaPos   = Vec3d(); viaOri   = Quaterniond();
 	}
 };
 
@@ -122,12 +161,20 @@ struct CRReachControllerDesc : public CRControllerDesc, public CRReachController
 	// 平均到達速度
 	double averageSpeed;
 
-	// Wait->Traj最低待ち時間
-	double minWait;
+	// 許容位置誤差
+	double acceptablePosError;
+
+	// 到達運動をやりなおす限度
+	double restartDistance;
+
+	// 到達目標時刻経過後の待ち時間
+	double reachTimeMargin;
 
 	CRReachControllerDesc() {
 		averageSpeed       = 0.2;
-		minWait            = 0.0;
+		acceptablePosError = 0.05;
+		restartDistance    = 0.5;
+		reachTimeMargin    = 2.0;
 	}
 };
 
