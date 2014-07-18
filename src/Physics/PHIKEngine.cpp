@@ -310,8 +310,7 @@ void PHIKEngine::Step() {
 			if (actuators[i]->IsEnabled()) {
 				PHIKActuator* act = actuators[i];
 				for (size_t x=0; x<(size_t)act->ndof; ++x) {
-					size_t X = strideAct[i] + x;
-					err += (W[X]*W[X]);
+					err += ((act->omega[x])*(act->omega[x]));
 				}
 			}
 		}
