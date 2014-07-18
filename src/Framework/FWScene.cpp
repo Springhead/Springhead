@@ -272,6 +272,7 @@ void FWScene::Draw(GRRenderIf* render){
 void FWScene::DrawPHScene(GRRenderIf* render){
 	if (!phScene) return;
 
+	/*
 	// GRSceneのカメラの視点を反映
 	GRCameraIf* cam = NULL;
 	if (grScene) cam = grScene->GetCamera();
@@ -288,6 +289,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		ld.position = Vec4f(1,1,1,0);
 		render->PushLight(ld);
 	}
+	*/
 
 	// ワールド座標軸
 	if(renderAxisWorld){
@@ -423,9 +425,10 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		}
 	}
 
+	/*
 	if(defLight) render->PopLight();
 	if (cam) cam->Rendered(render);
-
+	*/
 }
 
 /// 剛体をレンダリングする
@@ -566,25 +569,27 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 	con->GetPlugPose(plug);
 
 	if (renderLimit) {
+		render->SetDepthTest(false);
+		render->SetLineWidth(2);
+		render->SetLighting(false);
 
 		// ボールジョイントのLimit
 		PHBallJoint* bj = con->Cast();
 		if (bj) {
+			// 現在の角度
 			(con->GetPlugSolid()->GetPose() * plug).ToAffine(aff);
 			render->PushModelMatrix();
 			render->MultModelMatrix(aff);
-			render->SetLighting(false);
-			render->SetMaterial(matAxis.z);
-			float vtx[2][3] = {{0,0,0}, {0,0,1}};
-			GLuint idx[2] = {0, 1};
-			render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
-			render->SetLighting(true);
+			render->SetMaterial(matAxis.y);
+			render->DrawLine(Vec3f(0,0,0), Vec3f(0,0,1));
 			render->PopModelMatrix();
 
+			// 基準方向（角度０）
 			(con->GetSocketSolid()->GetPose() * sock).ToAffine(aff);
 			render->PushModelMatrix();
 			render->MultModelMatrix(aff);
-			render->SetLighting(false);
+			render->SetMaterial(matAxis.z);
+			render->DrawLine(Vec3f(0,0,0), Vec3f(0,0,1));
 
 			// Spline可動域曲線の表示
 			PHBallJointSplineLimit* spL = bj->GetLimit()->Cast();
@@ -605,9 +610,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 						pt.t = (t+0.1 > 1.0) ? 1.0 : (t+0.1); pt.Update();
 						Vec3d p1 = Vec3d(sin(pt.pos[0])*cos(pt.pos[1]), sin(pt.pos[0])*sin(pt.pos[1]), cos(pt.pos[0]));
 
-						float vtx[2][3] = {{p0[0], p0[1], p0[2]}, {p1[0], p1[1], p1[2]}};
-						GLuint idx[2] = {0, 1};
-						render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
+						render->DrawLine(p0, p1);
 					}
 				}
 			}
@@ -620,14 +623,11 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 				for (double t=0; t<2*M_PI; t+=Rad(10)) {
 					double z = cos(lim[1]);
 					double r = z * tan(lim[1]);
-					float vtx[2][3] = {{r*cos(t), r*sin(t), z}, {r*cos(t+Rad(10)), r*sin(t+Rad(10)), z}};
-					GLuint idx[2] = {0, 1};
-					render->SetMaterial(matAxis.z);
-					render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
+					render->SetMaterial(matAxis.x);
+					render->DrawLine(Vec3f(r*cos(t), r*sin(t), z), Vec3f(r*cos(t+Rad(10)), r*sin(t+Rad(10)), z));
 				}
 			}
 
-			render->SetLighting(true);
 			render->PopModelMatrix();
 		}
 
@@ -636,27 +636,31 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 		if (hj) {
 			PH1DJointLimit* limit = hj->GetLimit()->Cast();
 			if (limit) {
-				con->GetSocketSolid()->GetPose().ToAffine(aff);
+				// 現在の角度
+				(con->GetPlugSolid()->GetPose() * plug).ToAffine(aff);
 				render->PushModelMatrix();
 				render->MultModelMatrix(aff);
-				render->SetLighting(false);
+				render->SetMaterial(matAxis.y);
+				render->DrawLine(Vec3f(0,0,0), Vec3f(1,0,0));
+				render->PopModelMatrix();
+
+				// 基準方向（角度０）
+				(con->GetSocketSolid()->GetPose() * sock).ToAffine(aff);
+				render->PushModelMatrix();
+				render->MultModelMatrix(aff);
+				render->SetMaterial(matAxis.z);
+				render->DrawLine(Vec3f(0,0,0), Vec3f(1,0,0));
+
+				// 可動範囲
 				Vec2d lim; limit->GetRange(lim);
 				if (lim[0] < lim[1]) {
 					for (double t=lim[0]; t<lim[1]; t+=Rad(5)) {
-						double r = 1.0;
-						float vtx[2][3] = {{r*cos(t), r*sin(t), 0.0}, {r*cos(t+Rad(10)), r*sin(t+Rad(10)), 0.0}};
-						GLuint idx[2] = {0, 1};
-						render->SetMaterial(matAxis.z);
-						render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
+						double r  = 1.0;
+						double t2 = std::min(lim[1], t+Rad(5));
+						render->SetMaterial(matAxis.x);
+						render->DrawLine(Vec3f(r*cos(t), r*sin(t), 0.0), Vec3f(r*cos(t2), r*sin(t2), 0.0));
 					}
 				}
-				{
-					render->SetMaterial(matAxis.z);
-					float vtx[2][3] = {{0,0,0}, {1*cos(hj->GetPosition()),1*sin(hj->GetPosition()),0}};
-					GLuint idx[2] = {0, 1};
-					render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
-				}
-				render->SetLighting(true);
 				render->PopModelMatrix();
 			}
 		}
@@ -669,7 +673,6 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 				con->GetSocketSolid()->GetPose().ToAffine(aff);
 				render->PushModelMatrix();
 				render->MultModelMatrix(aff);
-				render->SetLighting(false);
 				Vec2d lim; limit->GetRange(lim);
 				if (lim[0] < lim[1]) {
 					float vtx[2][3] = {{lim[0], 0, 0}, {lim[1], 0, 0}};
@@ -677,10 +680,13 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 					render->SetMaterial(matAxis.z);
 					render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);
 				}
-				render->SetLighting(true);
 				render->PopModelMatrix();
 			}
 		}
+
+		render->SetLineWidth(1);
+		render->SetLighting(true);
+		render->SetDepthTest(true);
 	}
 }
 
@@ -742,102 +748,37 @@ void FWScene::DrawContact(GRRenderIf* render, PHContactPointIf* con){
 void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 	render->SetLighting(false);
 	render->SetDepthTest(false);
+	render->SetLineWidth(5);
+	render->SetMaterial(matAxis.x);
 
-	render->PushModelMatrix();
-	render->SetModelMatrix(Affinef());
-
-	// IK周りのAPI変更に対応するようにいずれ書き換える　（10/01/09, mitake）
 	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->actuators.size(); ++i) {
-		PHIKActuator* ikAct = DCAST(PHIKEngine,ikEngine)->actuators[i];
-		if(!ikAct) continue;
+		PHIKActuator* ikA = DCAST(PHIKEngine,ikEngine)->actuators[i];
+		if(!ikA) continue;
 
-		Affinef aff;
-
-		for (size_t n=0; n<ikAct->solidTempPoseHistory.size(); ++n) {
-			Posed solidTempPose = ikAct->solidTempPoseHistory[n];
-			solidTempPose.ToAffine(aff);
-			render->PushModelMatrix();
-			render->MultModelMatrix(aff);
-	
-			PHSolidIf* solid = ikAct->joint->GetPlugSolid();
-			for(int j = 0; j < solid->NShape(); ++j){
-				CDShapeIf* shape = solid->GetShape(j);
-				solid->GetShapePose(j).ToAffine(aff);
-				render->PushModelMatrix();
-				render->MultModelMatrix(aff);
-				DrawShape(render, shape, false);
-				render->PopModelMatrix();
-			}
-			render->PopModelMatrix();
-		}
-		
-		PHIKBallActuator* ikBJ = ikAct->Cast();
-		if (ikBJ) {
-			Vec3d w;
-			for (int j=0; j < (int)ikBJ->omega.size(); ++j) {
-				w += (ikBJ->omega[j]/ikBJ->GetBias()) * ikBJ->e[j];
-			}
-			PHBallJointIf* jt = ikBJ->joint->Cast();
-			PHBallJointDesc d;
-			jt->GetDesc(&d);
-			Vec3d Pj = jt->GetSocketSolid()->GetPose() * d.poseSocket.Pos();
-
-			{
-				GRMaterialDesc mat;
-				mat.ambient = mat.diffuse = Vec4f(1,0,0.7,1);
-				render->SetMaterial(mat);
-				render->DrawLine(Pj, Pj + (w * scaleIK));
-			}
-
-			{
-				GRMaterialDesc mat;
-				mat.ambient = mat.diffuse = Vec4f(1.0,0,0,1);
-				render->SetMaterial(mat);
-				for (int j=0; j < ikBJ->ndof; ++j) {
-					render->DrawLine(Pj, Pj + (ikBJ->e[j]));
-				}
-			}
+		PHIKActuator* ikP = ikA->GetParent()->Cast();
+		if (ikP) {
+			Posed ikAp; ikA->joint->GetPlugPose(ikAp);
+			Posed ikPp; ikP->joint->GetPlugPose(ikPp);
+			Vec3d p0 = ikA->GetSolidTempPose() * ikAp.Pos();
+			Vec3d p1 = ikP->GetSolidTempPose() * ikPp.Pos();
+			render->DrawLine(p0, p1);
+		} else {
+			Posed ikAp; ikA->joint->GetPlugPose(ikAp);
+			Vec3d p0 = ikA->GetSolidTempPose() * ikAp.Pos();
+			Vec3d p1 = ikA->joint->GetSocketSolid()->GetPose().Pos();
+			render->DrawLine(p0, p1);
 		}
 
-		PHIKHingeActuator* ikHJ = ikAct->Cast();
-		if (ikHJ) {
-			PHHingeJointIf* jt = ikHJ->joint->Cast();
-			PHHingeJointDesc d; jt->GetDesc(&d);
-
-			Vec3d Pj = jt->GetSocketSolid()->GetPose() * d.poseSocket.Pos();
-			Vec3d wD = jt->GetSocketSolid()->GetPose().Ori() * d.poseSocket.Ori() * Vec3d(0,0,1);
-
-			double w = 0;
-			if (ikHJ->omega.size() != 0) {
-				w = (ikHJ->omega[0]/ikHJ->GetBias());
-			}
-
-			{
-				GRMaterialDesc mat;
-				mat.ambient = mat.diffuse = Vec4f(1.0,0,0,1);
-				render->SetMaterial(mat);
-				render->DrawLine(Pj, Pj + (w * scaleIK * wD));
-			}
+		PHIKEndEffector* ikE = ikA->eef;
+		if (ikE) {
+			Posed ikAp; ikA->joint->GetPlugPose(ikAp);
+			Vec3d p0 = ikA->GetSolidTempPose() * ikAp.Pos();
+			Vec3d p1 = ikE->GetSolidTempPose() * ikE->GetTargetLocalPosition();
+			render->DrawLine(p0, p1);
 		}
 	}
 
-	/*
-	for (size_t i=0; i < DCAST(PHIKEngine,ikEngine)->endeffectors.size(); ++i) {
-		PHIKEndEffector* ikEE = DCAST(PHIKEngine,ikEngine)->endeffectors[i];
-		if (ikEE && DCAST(PHIKEndEffector,ikEE)->bEnabled) {
-			Vec3d sp = ikEE->solid->GetPose() * ikEE->targetLocalPosition;
-			Vec3d tg = ikEE->GetTempTarget();
-			{
-				GRMaterialDesc mat;
-				mat.ambient = mat.diffuse = Vec4f(0,1.0,0,1);
-				SetMaterial(mat);
-				DrawLine(sp, sp + tg);
-			}
-		}
-	}
-	*/
-
-	render->PopModelMatrix();
+	render->SetLineWidth(1);
 	render->SetLighting(true);
 	render->SetDepthTest(true);
 }

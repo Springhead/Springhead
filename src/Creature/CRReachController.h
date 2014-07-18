@@ -27,7 +27,7 @@ private:
 	PHIKEndEffectorIf* ikEff;
 
 	// <!!>
-	Vec3d lastFinalPos, vFinalPosLPF;
+	Vec3d lastFinalPos, vMarginalPosLPF;
 	bool bWaitingTargetSpeedDown;
 	bool bFinished;
 	int tempCounter; // <!!>
@@ -44,7 +44,7 @@ public:
 	void InitVars() {
 		ikEff = NULL;
 		lastFinalPos = Vec3d();
-		vFinalPosLPF = Vec3d();
+		vMarginalPosLPF = Vec3d();
 		bWaitingTargetSpeedDown = false;
 		bFinished = true;
 		tempCounter = 0; // <!!>
@@ -107,6 +107,10 @@ public:
 		return this->averageSpeed;
 	}
 
+	/** @brief マージン（FinalPosからこの半径内に到達すればよい）をセットする
+	*/
+	void SetMargin(double margin) { this->margin = margin; }
+
 	/** @brief 許容位置誤差をセットする（これ以上の誤差がある限り再度挑戦する）
 	*/
 	void SetAcceptablePosError(double err) {
@@ -130,6 +134,10 @@ public:
 	void SetOriControlCompleteTimeRatio(float oriTime) {
 		this->oricontTimeRatio = oriTime;
 	}
+
+	/** @brief デバッグ情報を描画する
+	*/
+	void Draw();
 
 	// ----- ----- -----
 	// 低レベルAPI

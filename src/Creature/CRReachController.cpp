@@ -10,6 +10,8 @@
 
 #include <float.h>
 
+#include <GL/glut.h>
+
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
@@ -17,26 +19,36 @@ void CRReachController::Step() {
 	PHSceneIf* phScene = DCAST(PHSceneIf,ikEff->GetSolid()->GetScene());
 	Vec3d currEEfPos = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
 
-	/// --- 最終目標位置の変化速度を算出
-	Vec3d vFinalPos = (finalPos - lastFinalPos) / phScene->GetTimeStep();
+	/// --- マージンをとった目標位置を計算
+	Vec3d dir = (initPos - finalPos);
+	Vec3d marginalPos;
+	if (dir.norm() > margin) {
+		dir.unitize();
+		marginalPos = finalPos + (dir * margin);
+	} else {
+		marginalPos = currPos;
+	}
+
+	/// --- マージン後目標位置の変化速度を算出
+	Vec3d vMarginalPos = (marginalPos - lastFinalPos) / phScene->GetTimeStep();
 	double alpha = 0.5;
-	vFinalPosLPF = alpha*vFinalPos + (1-alpha)*vFinalPosLPF;
-	lastFinalPos = finalPos;
+	vMarginalPosLPF = alpha*vMarginalPos + (1-alpha)*vMarginalPosLPF;
+	lastFinalPos = marginalPos;
 
 	/// --- 必要に応じて目標位置の更新・再スタートの判断
 	bool bRestart = false;
 	if (bWaitingTargetSpeedDown) {
-		if (vFinalPosLPF.norm() < averageSpeed*0.5) {
+		if (vMarginalPosLPF.norm() < averageSpeed*0.5) {
 			bWaitingTargetSpeedDown = false;
-			targPos = finalPos;
+			targPos = marginalPos;
 			targVel = finalVel;
 			bRestart = true;
 		}
 	} else {
-		if (vFinalPosLPF.norm() > averageSpeed) {
+		if (vMarginalPos.norm() > averageSpeed) {
 			bWaitingTargetSpeedDown = true;
 		} else {
-			targPos = finalPos;
+			targPos = marginalPos;
 			targVel = finalVel;
 		}
 	}
@@ -53,7 +65,7 @@ void CRReachController::Step() {
 		initPos = currPos; initVel  = currVel;
 
 		// 軌道長に応じて到達目標時刻をセットする
-		reachTime = (finalPos - currPos).norm() / averageSpeed; // GetLengthのためにはとりあえずreachTimeが必要なので
+		reachTime = (targPos - currPos).norm() / averageSpeed; // GetLengthのためにはとりあえずreachTimeが必要なので
 		reachTime = this->GetLength() / averageSpeed;
 		time = 0;
 		bFinished = false;
@@ -195,6 +207,34 @@ void CRReachController::FrontKeep() {
 	//姿勢をIKにセット
 	ikEff->SetTargetOrientation(qt);
 	ikEff->EnableOrientationControl(enabled);
+}
+
+void CRReachController::Draw() {
+	glLineWidth(2);
+	glDisable(GL_DEPTH_TEST);
+	glBegin(GL_LINE_STRIP);
+
+	double currS;
+	if (reachTime!=0) {
+		currS = time / reachTime;
+	} else {
+		currS = 0;
+	}
+
+	for (int i=0; i<20; ++i) {
+		double s = ((double)i)/20.0;
+
+		if (s < currS) {
+			glColor4f(1.0, 0.2, 0.2, 1.0);
+		} else {
+			glColor4f(0.2, 0.2, 1.0, 1.0);
+		}
+
+		Vec6f point = GetTrajectory(s);
+		glVertex3f(point.r.x, point.r.y, point.r.z);
+	}
+	glEnd();
+	glEnable(GL_DEPTH_TEST);
 }
 
 }

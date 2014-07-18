@@ -172,6 +172,7 @@ public:\
 
 #define SPR_DECLMEMBEROF_CRReachControllerDesc \
 protected:\
+	double	margin;	\
 	double	averageSpeed;	\
 	double	acceptablePosError;	\
 	double	restartDistance;	\
@@ -181,6 +182,7 @@ public:\
 	virtual void SetDesc(const void* ptr){ \
 		CRController::SetDesc((CRControllerDesc*)(CRReachControllerDesc*)ptr);	\
 		CRReachController::SetState((CRReachControllerState*)(CRReachControllerDesc*)ptr);	\
+		margin = ((CRReachControllerDesc*)ptr)->margin;	\
 		averageSpeed = ((CRReachControllerDesc*)ptr)->averageSpeed;	\
 		acceptablePosError = ((CRReachControllerDesc*)ptr)->acceptablePosError;	\
 		restartDistance = ((CRReachControllerDesc*)ptr)->restartDistance;	\
@@ -191,6 +193,7 @@ public:\
 		BeforeGetDesc();	\
 		CRController::GetDesc((CRControllerDesc*)(CRReachControllerDesc*)ptr);	\
 		CRReachController::GetState((CRReachControllerState*)(CRReachControllerDesc*)ptr);	\
+		((CRReachControllerDesc*)ptr)->margin = margin;	\
 		((CRReachControllerDesc*)ptr)->averageSpeed = averageSpeed;	\
 		((CRReachControllerDesc*)ptr)->acceptablePosError = acceptablePosError;	\
 		((CRReachControllerDesc*)ptr)->restartDistance = restartDistance;	\

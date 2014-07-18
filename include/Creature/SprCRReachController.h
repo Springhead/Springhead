@@ -33,6 +33,10 @@ struct CRReachControllerIf : public CRControllerIf{
 	void SetAverageSpeed(double speed);
 	double GetAverageSpeed();
 
+	/** @brief マージン（FinalPosからこの半径内に到達すればよい）をセットする
+	*/
+	void SetMargin(double margin);
+
 	/** @brief 許容位置誤差をセットする（これ以上の誤差がある限り再度挑戦する）
 	*/
 	void SetAcceptablePosError(double err);
@@ -102,6 +106,9 @@ struct CRReachControllerIf : public CRControllerIf{
 	*/
 	float GetCurrentTime();
 
+	/** @brief デバッグ情報を描画する
+	*/
+	void Draw();
 
 	/** @brief 到達に使うエンドエフェクタを設定・取得する
 	*/
@@ -158,6 +165,9 @@ struct CRReachControllerState{
 struct CRReachControllerDesc : public CRControllerDesc, public CRReachControllerState {
 	SPR_DESCDEF(CRReachController);
 
+	// マージン
+	double margin;
+
 	// 平均到達速度
 	double averageSpeed;
 
@@ -171,6 +181,7 @@ struct CRReachControllerDesc : public CRControllerDesc, public CRReachController
 	double reachTimeMargin;
 
 	CRReachControllerDesc() {
+		margin             = 0.0;
 		averageSpeed       = 0.2;
 		acceptablePosError = 0.05;
 		restartDistance    = 0.5;
