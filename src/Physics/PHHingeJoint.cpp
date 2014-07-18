@@ -67,10 +67,14 @@ void PHHingeJoint::UpdateJointState(){
 	//position[0] = ( (position[0] / (2*M_PI)) - floor(position[0] / (2*M_PI)) ) * (2*M_PI);
 	//if (position[0] > M_PI) { position[0] -= 2 * M_PI; }
 	if(cyclic){
+		/*
 		while(position[0] >  M_PI)
 			position[0] -= 2 * M_PI;
 		while(position[0] < -M_PI)
 			position[0] += 2 * M_PI;
+			*/
+		position[0] = fmod(position[0], 2*M_PI);
+		if (position[0] > M_PI) { position[0] -= 2*M_PI; }
 	}
 
 	if (Xjrel.q.Axis().Z() < 0.0) { position = -position; }
