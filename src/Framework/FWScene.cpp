@@ -654,7 +654,8 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 				// 可動範囲
 				Vec2d lim; limit->GetRange(lim);
 				if (lim[0] < lim[1]) {
-					for (double t=lim[0]; t<lim[1]; t+=Rad(5)) {
+					double l0=std::max(lim[0],-2*M_PI), l1=std::min(lim[1],2*M_PI);
+					for (double t=l0; t<l1; t+=Rad(5)) {
 						double r  = 1.0;
 						double t2 = std::min(lim[1], t+Rad(5));
 						render->SetMaterial(matAxis.x);
