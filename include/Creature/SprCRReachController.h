@@ -17,8 +17,10 @@ namespace Spr{;
 struct CRReachControllerIf : public CRControllerIf{
 	SPR_IFDEF(CRReachController);
 
-	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	// 高レベルAPI
+	/** @brief 到達に使うエンドエフェクタを設定・取得する
+	*/
+	void SetIKEndEffector(PHIKEndEffectorIf* ikEff);
+	PHIKEndEffectorIf* GetIKEndEffector();
 
 	/** @brief 最終到達目標位置をセットする
 	*/
@@ -28,6 +30,16 @@ struct CRReachControllerIf : public CRControllerIf{
 	*/
 	void SetFinalVel(Vec3d vel);
 	
+	/** @brief 経由地点通過時刻をセットする（負の場合、経由地点を用いない）
+	*/
+	void SetViaTime(float time);
+
+	/** @brief 経由地点をセットする
+	*/
+	void SetViaPos(Vec3d pos);
+
+	// ----- ----- -----
+
 	/** @brief 平均到達速度をセットする（ここから目標到達時間が計算される）
 	*/
 	void SetAverageSpeed(double speed);
@@ -37,62 +49,15 @@ struct CRReachControllerIf : public CRControllerIf{
 	*/
 	void SetMargin(double margin);
 
-	/** @brief 許容位置誤差をセットする（これ以上の誤差がある限り再度挑戦する）
+	/** @brief 目標がこの速度以上になったら到達目標の更新を一旦停止
 	*/
-	void SetAcceptablePosError(double err);
+	void SetWaitVel(double vel);
 
-	/** @brief 最終到達目標位置が現在の目標到達位置からこれ以上遠ざかると到達運動を強制的に再始動する
+	/** @brief Wait後に目標がこの速度以下になったら到達運動をリスタート
 	*/
-	void SetRestartDistance(double dist);
+	void SetRestartVel(double vel);
 
-	/** @brief 到達予定時刻経過後の待ち時間をセットする
-	*/
-	void SetReachTimeMargin(double margin);
-
-	/** @brief 姿勢制御完了時の時間の割合をセットする
-	*/
-	void SetOriControlCompleteTimeRatio(float oriTime);
-
-
-	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	// 低レベルAPI
-
-	/** @brief 到達運動を開始する
-	*/
-	void Start(float reachTime);
-
-	/** @brief 経由地点通過時刻をセットする（負の場合、経由地点を用いない）
-	*/
-	void SetViaTime(float time);
-
-
-	// （注）位置制御・姿勢制御それぞれの有効・無効はIKEndEffectorでセットすること。
-
-	/** @brief 到達目標位置をセットする
-	*/
-	void SetTargetPos(Vec3d pos);
-
-	/** @brief 到達目標速度をセットする（デフォルトは (0,0,0)）
-	*/
-	void SetTargetVel(Vec3d vel);
-
-	/** @brief 経由地点をセットする
-	*/
-	void SetViaPos(Vec3d pos);
-
-
-	/** @brief 到達目標姿勢をセットする
-	*/
-	void SetTargetOri(Quaterniond ori);
-
-	/** @brief 到達目標角速度をセットする（デフォルトは (0,0,0)）
-	*/
-	void SetTargetAVel(Vec3d avel);
-
-	/** @brief 経由姿勢をセットする
-	*/
-	void SetViaOri(Quaterniond ori);
-
+	// ----- ----- -----
 
 	/** @brief 軌道通過点の位置・速度を返す s=0.0～1.0
 	*/
@@ -110,10 +75,11 @@ struct CRReachControllerIf : public CRControllerIf{
 	*/
 	void Draw();
 
-	/** @brief 到達に使うエンドエフェクタを設定・取得する
+	// ----- ----- -----
+
+	/** @brief 姿勢制御完了時の時間の割合をセットする
 	*/
-	void SetIKEndEffector(PHIKEndEffectorIf* ikEff);
-	PHIKEndEffectorIf* GetIKEndEffector();
+	void SetOriControlCompleteTimeRatio(float oriTime);
 };
 
 //@{
@@ -171,21 +137,17 @@ struct CRReachControllerDesc : public CRControllerDesc, public CRReachController
 	// 平均到達速度
 	double averageSpeed;
 
-	// 許容位置誤差
-	double acceptablePosError;
+	// 目標更新待ち速度
+	double waitVel;
 
-	// 到達運動をやりなおす限度
-	double restartDistance;
-
-	// 到達目標時刻経過後の待ち時間
-	double reachTimeMargin;
+	// 更新待ち後到達運動再開速度
+	double restartVel;
 
 	CRReachControllerDesc() {
 		margin             = 0.0;
-		averageSpeed       = 0.2;
-		acceptablePosError = 0.05;
-		restartDistance    = 0.5;
-		reachTimeMargin    = 2.0;
+		averageSpeed       = 5.0;
+		waitVel            = 5.0;
+		restartVel         = 2.5;
 	}
 };
 
