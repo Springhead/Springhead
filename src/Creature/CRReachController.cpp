@@ -38,14 +38,14 @@ void CRReachController::Step() {
 	/// --- 必要に応じて目標位置の更新・再スタートの判断
 	bool bRestart = false;
 	if (bWaitingTargetSpeedDown) {
-		if (vMarginalPosLPF.norm() < averageSpeed*0.5) {
+		if (vMarginalPosLPF.norm() < restartVel) {
 			bWaitingTargetSpeedDown = false;
 			targPos = marginalPos;
 			targVel = finalVel;
 			bRestart = true;
 		}
 	} else {
-		if (vMarginalPos.norm() > averageSpeed) {
+		if (vMarginalPos.norm() > waitVel) {
 			bWaitingTargetSpeedDown = true;
 		} else {
 			targPos = marginalPos;

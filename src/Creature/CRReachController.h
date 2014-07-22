@@ -83,115 +83,47 @@ public:
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	//  このクラスのAPI
 
-	// ----- ----- -----
-	// 高レベルAPI
+	/** @brief 到達に使うエンドエフェクタを設定・取得する
+	*/
+	void SetIKEndEffector(PHIKEndEffectorIf* ikEff) { this->ikEff = ikEff; }
+	PHIKEndEffectorIf* GetIKEndEffector() { return this->ikEff; }
 
 	/** @brief 最終到達目標位置をセットする
 	*/
-	void SetFinalPos(Vec3d pos) {
-		this->finalPos = pos;
-	}
+	void SetFinalPos(Vec3d pos) { this->finalPos = pos; }
 
 	/** @brief 最終到達目標速度をセットする（デフォルトは (0,0,0)）
 	*/
-	void SetFinalVel(Vec3d vel) {
-		this->finalVel = vel;
-	}
+	void SetFinalVel(Vec3d vel) { this->finalVel = vel; }
 	
-	/** @brief 平均到達速度をセットする（ここから目標到達時間が計算される）
-	*/
-	void SetAverageSpeed(double speed) {
-		this->averageSpeed = speed;
-	}
-	double GetAverageSpeed() {
-		return this->averageSpeed;
-	}
-
-	/** @brief マージン（FinalPosからこの半径内に到達すればよい）をセットする
-	*/
-	void SetMargin(double margin) { this->margin = margin; }
-
-	/** @brief 許容位置誤差をセットする（これ以上の誤差がある限り再度挑戦する）
-	*/
-	void SetAcceptablePosError(double err) {
-		this->acceptablePosError = err;
-	}
-
-	/** @brief 最終到達目標位置が現在の目標到達位置からこれ以上遠ざかると到達運動を強制的に再始動する
-	*/
-	void SetRestartDistance(double dist) {
-		this->restartDistance = dist;
-	}
-
-	/** @brief 到達予定時刻経過後の待ち時間をセットする
-	*/
-	void SetReachTimeMargin(double margin) {
-		this->reachTimeMargin = margin;
-	}
-
-	/** @brief 姿勢制御完了時の時間の割合をセットする
-	*/
-	void SetOriControlCompleteTimeRatio(float oriTime) {
-		this->oricontTimeRatio = oriTime;
-	}
-
-	/** @brief デバッグ情報を描画する
-	*/
-	void Draw();
-
-	// ----- ----- -----
-	// 低レベルAPI
-
-	/** @brief 到達運動を開始する
-	*/
-	void Start(float reachTime) {
-		if (this->reachTime <= 0) {
-			// 待機中：手先の現在の位置を初期状態とする
-			Vec3d eefPos  = ikEff->GetTargetLocalPosition();
-			PHSolidIf* so = ikEff->GetSolid();
-			currPos  = so->GetPose() * eefPos;
-			currVel  = Vec3d(); // so->GetVelocity() + (so->GetAngularVelocity() % eefPos);
-			currOri  = so->GetPose().Ori();
-			currAVel = Vec3d(); // so->GetAngularVelocity();
-		}
-		// 現在位置から滑らかに接続する
-		initPos = currPos; initVel  = currVel;
-		initOri = currOri; initAVel = currAVel;
-
-		this->reachTime = reachTime;
-		this->time      = 0;
-	}
-
 	/** @brief 経由地点通過時刻をセットする（負の場合、経由地点を用いない）
 	*/
 	void SetViaTime(float time) { viaTime = time; }
-
-
-	/** @brief 到達目標位置をセットする
-	*/
-	void SetTargetPos(Vec3d pos) { targPos = pos; }
-
-	/** @brief 到達目標速度をセットする（デフォルトは (0,0,0)）
-	*/
-	void SetTargetVel(Vec3d vel) { targVel = vel; }
 
 	/** @brief 経由地点をセットする
 	*/
 	void SetViaPos(Vec3d pos) { viaPos = pos; }
 
+	// ----- ----- -----
 
-	/** @brief 到達目標姿勢をセットする
+	/** @brief 平均到達速度をセットする（ここから目標到達時間が計算される）
 	*/
-	void SetTargetOri(Quaterniond ori) { targOri = ori; }
+	void SetAverageSpeed(double speed) { this->averageSpeed = speed; }
+	double GetAverageSpeed() { return this->averageSpeed; }
 
-	/** @brief 到達目標角速度をセットする（デフォルトは (0,0,0)）
+	/** @brief マージン（FinalPosからこの半径内に到達すればよい）をセットする
 	*/
-	void SetTargetAVel(Vec3d avel) { targAVel = avel; }
+	void SetMargin(double margin) { this->margin = margin; }
 
-	/** @brief 経由姿勢をセットする
+	/** @brief 目標がこの速度以上になったら到達目標の更新を一旦停止
 	*/
-	void SetViaOri(Quaterniond ori) { viaOri = ori; }
+	void SetWaitVel(double vel) { this->waitVel = vel; }
 
+	/** @brief Wait後に目標がこの速度以下になったら到達運動をリスタート
+	*/
+	void SetRestartVel(double vel) { this->restartVel = vel; }
+
+	// ----- ----- -----
 
 	/** @brief 軌道の通過点を返す s=0.0～1.0
 	*/
@@ -204,6 +136,18 @@ public:
 	/** @brief 現在時刻を返す
 	*/
 	float GetCurrentTime() { return this->time; }
+
+	/** @brief デバッグ情報を描画する
+	*/
+	void Draw();
+
+	// ----- ----- -----
+
+	/** @brief 姿勢制御完了時の時間の割合をセットする
+	*/
+	void SetOriControlCompleteTimeRatio(float oriTime) {
+		this->oricontTimeRatio = oriTime;
+	}
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	// 子要素の扱い
@@ -229,11 +173,6 @@ public:
 		return false;
 	}
 
-	/** @brief 到達に使うエンドエフェクタを設定・取得する
-	*/
-	void SetIKEndEffector(PHIKEndEffectorIf* ikEff) { this->ikEff = ikEff; }
-	PHIKEndEffectorIf* GetIKEndEffector() { return this->ikEff; }
-
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 	//  非API関数
 
@@ -241,47 +180,6 @@ public:
 
 	void FrontKeep();
 
-	#if 0
-	/** @brief 軌道の通過点を追加する
-	*/
-	void AddNode(CRReachNode node);
-
-	/** @brief i番目（時刻ベース）の通過点を取得する
-	*/
-	CRReachNode GetReachNode(int i);
-
-	/** @brief 通過点を数を取得する
-	*/
-	int NReachNodes() { return (int)(nodes.size()); }
-
-	/** @brief 時刻tにおけるの通過点を取得する
-	*/
-	CRReachNode GetReachNodeAt(float time);
-
-	/** @brief i番目（時刻ベース）の通過点を設定する
-		（追加した軌道通過点を後から編集したい場合に使う．普通は使わない）
-	*/
-	void SetReachNode(int i, CRReachNode node);
-
-	/** @brief 現在通過中の点を取得する
-	*/
-	CRReachNode GetCurrentNode();
-
-	/** @brief 軌道の通過点を全削除する
-	*/
-	void ClearReach(bool apply=0);
-
-	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
-	//  非API関数
-
-	/** @brief 軌道を計画する
-	*/
-	void Plan();
-
-	/** @brief 軌道の一部分を計画する
-	*/
-	void PlanSegment(CRReachNode &from, CRReachNode &to);
-	#endif
 };
 }
 //@}

@@ -174,9 +174,8 @@ public:\
 protected:\
 	double	margin;	\
 	double	averageSpeed;	\
-	double	acceptablePosError;	\
-	double	restartDistance;	\
-	double	reachTimeMargin;	\
+	double	waitVel;	\
+	double	restartVel;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -184,9 +183,8 @@ public:\
 		CRReachController::SetState((CRReachControllerState*)(CRReachControllerDesc*)ptr);	\
 		margin = ((CRReachControllerDesc*)ptr)->margin;	\
 		averageSpeed = ((CRReachControllerDesc*)ptr)->averageSpeed;	\
-		acceptablePosError = ((CRReachControllerDesc*)ptr)->acceptablePosError;	\
-		restartDistance = ((CRReachControllerDesc*)ptr)->restartDistance;	\
-		reachTimeMargin = ((CRReachControllerDesc*)ptr)->reachTimeMargin;	\
+		waitVel = ((CRReachControllerDesc*)ptr)->waitVel;	\
+		restartVel = ((CRReachControllerDesc*)ptr)->restartVel;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -195,9 +193,8 @@ public:\
 		CRReachController::GetState((CRReachControllerState*)(CRReachControllerDesc*)ptr);	\
 		((CRReachControllerDesc*)ptr)->margin = margin;	\
 		((CRReachControllerDesc*)ptr)->averageSpeed = averageSpeed;	\
-		((CRReachControllerDesc*)ptr)->acceptablePosError = acceptablePosError;	\
-		((CRReachControllerDesc*)ptr)->restartDistance = restartDistance;	\
-		((CRReachControllerDesc*)ptr)->reachTimeMargin = reachTimeMargin;	\
+		((CRReachControllerDesc*)ptr)->waitVel = waitVel;	\
+		((CRReachControllerDesc*)ptr)->restartVel = restartVel;	\
 		return true;	\
 	}\
 
