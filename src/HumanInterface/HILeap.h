@@ -10,7 +10,7 @@
 #define HI_LEAP_H
 
 // Libraries/LeapSdkをチェックアウトして以下のdefineのコメントアウトを外すとLeapmotionが使えるようになる。
-#define USE_LEAP
+// #define USE_LEAP
 
 #include <HumanInterface/HISkeletonSensor.h>
 #include <HumanInterface/SprHILeap.h>
