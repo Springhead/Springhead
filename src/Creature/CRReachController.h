@@ -59,6 +59,9 @@ public:
 		currVel  = Vec3d();
 		initPos  = currPos;
 		initVel  = currVel;
+
+		lastFinalPos = finalPos = currPos;
+		ikEff->SetTargetPosition(currPos);
 	}
 
 	/// 制御処理を実行する
