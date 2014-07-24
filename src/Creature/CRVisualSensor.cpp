@@ -33,14 +33,15 @@ void CRVisualSensor::Step(){
 		Vec3d localPos = (soVisualSensor->GetPose() * pose).Inv() * pos;
 			
 		double dist = localPos.norm();
-		if (localPos.norm() != 0) { localPos = localPos.unit(); }
+		Vec3d direction = Vec3d();
+		if (localPos.norm() != 0) { direction = localPos.unit(); }
 
-		Vec2d theta = Vec2d(atan2(localPos.x, -localPos.y), atan2(localPos.z, -localPos.y));
+		Vec2d theta = Vec2d(atan2(direction.x, -direction.y), atan2(direction.z, -direction.y));
 		theta.y *= (range.X() / range.Y());
 
-		Vec2d thetaC = Vec2d(atan2(localPos.x, -localPos.y), atan2(localPos.z, -localPos.y));
+		Vec2d thetaC = Vec2d(atan2(direction.x, -direction.y), atan2(direction.z, -direction.y));
 		thetaC.y *= (centerRange.X() / centerRange.Y());
-		if (theta.norm() < (range.X() / 2.0) && dist < 16) { // 決め打ち<!!>
+		if (theta.norm() < (range.X() / 2.0) && dist < 30) { // 決め打ち<!!>
 			// Visible
 			CRVisualInfo visible;
 			visible.posWorld = pos;
