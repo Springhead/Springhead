@@ -17,16 +17,39 @@ namespace Spr{
 // 
 void CRReachController::Step() {
 	PHSceneIf* phScene = DCAST(PHSceneIf,ikEff->GetSolid()->GetScene());
-	Vec3d currEEfPos = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
+	// Vec3d currEEfPos = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
+
+	/// --- Lookatモードかどうか判定（<!!>本当は設定できるようにする）
+	if (ikEff->IsOrientationControlEnabled() && ikEff->GetOriCtlMode()==PHIKEndEffectorDesc::MODE_LOOKAT) {
+		bLookatMode = true;
+	} else {
+		bLookatMode = false;
+	}
 
 	/// --- マージンをとった目標位置を計算
-	Vec3d dir = (initPos - finalPos);
 	Vec3d marginalPos;
-	if (dir.norm() > margin) {
-		dir.unitize();
-		marginalPos = finalPos + (dir * margin);
+	if (!bLookatMode) {
+		Vec3d dir = (initPos - finalPos);
+		if (dir.norm() > margin) {
+			dir.unitize();
+			marginalPos = finalPos + (dir * margin);
+		} else {
+			marginalPos = currPos;
+		}
 	} else {
-		marginalPos = currPos;
+		Vec3d tipOrigin = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
+		double cosThetaInit = ((currPos-tipOrigin).unit()) * ((finalPos-tipOrigin).unit());
+		if (cosThetaInit < cos(margin)) {
+			double s0=0, s1=1;
+			for (int n=0; n<10; ++n) {
+				double s2 = (s0 + s1) / 2;
+				marginalPos = currPos + (finalPos - currPos) * s2;
+				double cosTheta = ((marginalPos-tipOrigin).unit()) * ((finalPos-tipOrigin).unit());
+				if (cosTheta > cos(margin)) { s1 = s2; } else { s0 = s2; }
+			}
+		} else {
+			marginalPos = currPos;
+		}
 	}
 
 	/// --- マージン後目標位置の変化速度を算出
@@ -57,7 +80,9 @@ void CRReachController::Step() {
 	if (bRestart) {
 		if (bFinished) {
 			// 到達運動してない状態からスタートする場合はIKエンドエフェクタの内部位置を初期状態とする
-			currPos = ikEff->GetSolidTempPose() * ikEff->GetTargetLocalPosition();
+			if (!bLookatMode) {
+				currPos = ikEff->GetSolidTempPose() * ikEff->GetTargetLocalPosition();
+			}
 			currVel = Vec3d();
 		}
 
@@ -76,8 +101,12 @@ void CRReachController::Step() {
 	currPos = point.r;
 	currVel = point.v;
 
-	ikEff->SetTargetPosition(currPos);
-	// ikEff->SetTargetVelocity(currVel);
+	if (bLookatMode) {
+		ikEff->SetTargetLookat(currPos);
+	} else {
+		ikEff->SetTargetPosition(currPos);
+		// ikEff->SetTargetVelocity(currVel);
+	}
 
 	// FrontKeep();
 
