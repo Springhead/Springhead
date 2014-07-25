@@ -32,6 +32,8 @@ private:
 	bool bFinished;
 	int tempCounter; // <!!>
 
+	bool bLookatMode;
+
 public:
 	SPR_OBJECTDEF(CRReachController);
 	ACCESS_DESC_STATE(CRReachController);
@@ -48,6 +50,7 @@ public:
 		bWaitingTargetSpeedDown = false;
 		bFinished = true;
 		tempCounter = 0; // <!!>
+		bLookatMode = false;
 	}
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
