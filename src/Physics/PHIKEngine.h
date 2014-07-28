@@ -102,6 +102,8 @@ public:
 
 	PHIKActuator*		CreateIKActuator(const IfInfo* ii, const PHIKActuatorDesc& desc);
 	PHIKEndEffector*	CreateIKEndEffector(const PHIKEndEffectorDesc& desc);
+
+	virtual bool		DelChildObject(ObjectIf* o);
 	virtual bool		AddChildObject(ObjectIf* o);
 };
 

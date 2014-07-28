@@ -360,6 +360,66 @@ PHIKEndEffector* PHIKEngine::CreateIKEndEffector(const PHIKEndEffectorDesc& desc
 	return ikendeffector;
 }
 
+bool PHIKEngine::DelChildObject(ObjectIf* o){
+	typedef std::vector< UTRef<PHIKActuator>    > ActsU;
+	typedef std::vector< UTRef<PHIKEndEffector> > EffsU;
+	typedef std::vector< PHIKActuator*          > Acts;
+	typedef std::vector< PHIKEndEffector*       > Effs;
+
+	// --- --- --- --- --- --- ---
+	// アクチュエータの場合
+	PHIKActuator* ia = o->Cast();
+	if(ia){
+		ActsU::iterator it = std::find(actuators.begin(), actuators.end(), ia);
+		if (it != actuators.end()) {
+			// actuatorsから削除
+			actuators.erase(it);
+
+			// 現存する全てのactuatorのascendant, descendant, children, parent, eefから削除
+			for (int i=0; i<actuators.size(); ++i) {
+				PHIKActuator* act = actuators[i];
+				{
+					Acts::iterator it_ = std::find(act->ascendant.begin(), act->ascendant.end(), ia);
+					if (it_ != act->ascendant.end()) { act->ascendant.erase(it_); }
+				}
+				{
+					Acts::iterator it_ = std::find(act->descendant.begin(), act->descendant.end(), ia);
+					if (it_ != act->descendant.end()) { act->descendant.erase(it_); }
+				}
+				{
+					Acts::iterator it_ = std::find(act->children.begin(), act->children.end(), ia);
+					if (it_ != act->children.end()) { act->children.erase(it_); }
+				}
+				if (act->parent == ia) { act->parent = NULL; }
+			}
+
+			return true;
+		}
+		return false;
+	}
+
+	// --- --- --- --- --- --- ---
+	// エンドエフェクタの場合
+	PHIKEndEffector* ie = o->Cast();
+	if(ie){
+		std::vector< UTRef<PHIKEndEffector> >::iterator it = std::find(endeffectors.begin(), endeffectors.end(), ie);
+		if (it != endeffectors.end()) {
+			// endeffectorsから削除
+			endeffectors.erase(it);
+
+			// 現存する全てのactuatorのeefから削除
+			for (int i=0; i<actuators.size(); ++i) {
+				if (actuators[i]->eef == ie) { actuators[i]->eef = NULL; }
+			}
+
+			return true;
+		}
+		return false;
+	}
+
+	return false;
+}
+
 bool PHIKEngine::AddChildObject(ObjectIf* o){
 	// --- --- --- --- --- --- ---
 	// アクチュエータの場合
@@ -384,7 +444,7 @@ bool PHIKEngine::AddChildObject(ObjectIf* o){
 	}
 
 	// --- --- --- --- --- --- ---
-	// 制御点の場合
+	// エンドエフェクタの場合
 	PHIKEndEffector* ef = o->Cast();
 	if(ef){
 		if (std::find(endeffectors.begin(), endeffectors.end(), ef)==endeffectors.end()) {

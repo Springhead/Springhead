@@ -17,14 +17,7 @@ namespace Spr{
 // 
 void CRReachController::Step() {
 	PHSceneIf* phScene = DCAST(PHSceneIf,ikEff->GetSolid()->GetScene());
-	// Vec3d currEEfPos = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
-
-	/// --- Lookatモードかどうか判定（<!!>本当は設定できるようにする）
-	if (ikEff->IsOrientationControlEnabled() && ikEff->GetOriCtlMode()==PHIKEndEffectorDesc::MODE_LOOKAT) {
-		bLookatMode = true;
-	} else {
-		bLookatMode = false;
-	}
+	Vec3d tipOrigin = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
 
 	/// --- マージンをとった目標位置を計算
 	Vec3d marginalPos;
@@ -37,7 +30,6 @@ void CRReachController::Step() {
 			marginalPos = currPos;
 		}
 	} else {
-		Vec3d tipOrigin = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
 		double cosThetaInit = ((currPos-tipOrigin).unit()) * ((finalPos-tipOrigin).unit());
 		if (cosThetaInit < cos(margin)) {
 			double s0=0, s1=1;
@@ -53,10 +45,16 @@ void CRReachController::Step() {
 	}
 
 	/// --- マージン後目標位置の変化速度を算出
-	Vec3d vMarginalPos = (marginalPos - lastFinalPos) / phScene->GetTimeStep();
+	Vec3d mp;
+	if (bLookatMode) {
+		mp = (marginalPos - tipOrigin).unit() + tipOrigin;
+	} else {
+		mp = marginalPos;
+	}
+	Vec3d vMarginalPos = (mp - lastFinalPos) / phScene->GetTimeStep();
 	double alpha = 0.5;
 	vMarginalPosLPF = alpha*vMarginalPos + (1-alpha)*vMarginalPosLPF;
-	lastFinalPos = marginalPos;
+	lastFinalPos = mp;
 
 	/// --- 必要に応じて目標位置の更新・再スタートの判断
 	bool bRestart = false;
@@ -89,9 +87,16 @@ void CRReachController::Step() {
 		// 現在位置から滑らかに接続する
 		initPos = currPos; initVel  = currVel;
 
-		// 軌道長に応じて到達目標時刻をセットする
-		reachTime = (targPos - currPos).norm() / averageSpeed; // GetLengthのためにはとりあえずreachTimeが必要なので
-		reachTime = this->GetLength() / averageSpeed;
+		if (bLookatMode) {
+			// なす角に応じて到達目標時刻をセットする
+			Vec3d tipOrigin = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
+			double theta = acos( ((currPos-tipOrigin).unit()) * ((finalPos-tipOrigin).unit()) );
+			reachTime = abs(theta) / averageSpeed;
+		} else {
+			// 軌道長に応じて到達目標時刻をセットする
+			reachTime = (targPos - currPos).norm() / averageSpeed; // GetLengthのためにはとりあえずreachTimeが必要なので
+			reachTime = this->GetLength() / averageSpeed;
+		}
 		time = 0;
 		bFinished = false;
 	}

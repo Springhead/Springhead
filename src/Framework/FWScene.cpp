@@ -593,7 +593,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 
 			// Spline可動域曲線の表示
 			PHBallJointSplineLimit* spL = bj->GetLimit()->Cast();
-			if (spL) {
+			if (spL && spL->IsEnabled()) {
 				for (int i=0; i<spL->limitCurve.NEdges(); ++i) {
 					SplinePoint pt = spL->limitCurve.GetPointOnEdge(i, 0);
 					if (i==0) {
@@ -617,7 +617,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 
 			// 円形可動域曲線の表示
 			PHBallJointConeLimit* coL = bj->GetLimit()->Cast();
-			if (coL) {
+			if (coL && coL->IsEnabled()) {
 				// （注）現状limitDirには非対応<!!>
 				Vec2d lim; coL->GetSwingRange(lim);
 				for (double t=0; t<2*M_PI; t+=Rad(10)) {
@@ -635,7 +635,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 		PHHingeJoint* hj = con->Cast();
 		if (hj) {
 			PH1DJointLimit* limit = hj->GetLimit()->Cast();
-			if (limit) {
+			if (limit && limit->IsEnabled()) {
 				// 現在の角度
 				(con->GetPlugSolid()->GetPose() * plug).ToAffine(aff);
 				render->PushModelMatrix();
@@ -670,7 +670,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 		PHSliderJoint* sj = con->Cast();
 		if (sj) {
 			PH1DJointLimit* limit = sj->GetLimit()->Cast();
-			if (limit) {
+			if (limit && limit->IsEnabled()) {
 				con->GetSocketSolid()->GetPose().ToAffine(aff);
 				render->PushModelMatrix();
 				render->MultModelMatrix(aff);

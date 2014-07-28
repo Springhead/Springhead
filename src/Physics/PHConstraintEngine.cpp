@@ -520,7 +520,7 @@ void PHConstraintEngine::Setup(){
 				// Motorを先に入れないとMotorに対してLimitがかからない
 				if(jnt1D->motor)
 					cons_base.push_back(jnt1D->motor);
-				if(jnt1D->limit)
+				if(jnt1D->limit && jnt1D->limit->IsEnabled())
 					cons_base.push_back(jnt1D->limit);
 			}
 			PHBallJoint* ball = joints[i]->Cast();
@@ -528,7 +528,7 @@ void PHConstraintEngine::Setup(){
 				// Motorを先に入れないとMotorに対してLimitがかからない
 				if(ball->motor)
 					cons_base.push_back(ball->motor);
-				if(ball->limit)
+				if(ball->limit && ball->limit->IsEnabled())
 					cons_base.push_back(ball->limit);
 			}
 			PHSpring* spring = joints[i]->Cast();

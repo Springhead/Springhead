@@ -91,6 +91,10 @@ bool CRBody::DelChildObject(ObjectIf* o){
 				break;
 			}
 		}
+		{
+			CRBones::iterator it = std::find(bones.begin(), bones.end(), b);
+			if (it != bones.end()) { bones.erase(it); }
+		}
 	}
 
 	return false;

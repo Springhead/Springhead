@@ -110,6 +110,11 @@ public:
 	*/
 	void SetViaPos(Vec3d pos) { viaPos = pos; }
 
+	/** @brief 視線モードを有効にする
+	*/
+	void EnableLookatMode(bool bEnable) { bLookatMode = bEnable; }
+	bool IsLookatMode() { return bLookatMode; }
+
 	// ----- ----- -----
 
 	/** @brief 平均到達速度をセットする（ここから目標到達時間が計算される）
