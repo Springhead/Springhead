@@ -38,6 +38,11 @@ struct CRReachControllerIf : public CRControllerIf{
 	*/
 	void SetViaPos(Vec3d pos);
 
+	/** @brief 視線モードを有効にする
+	*/
+	void EnableLookatMode(bool bEnable);
+	bool IsLookatMode();
+
 	// ----- ----- -----
 
 	/** @brief 平均到達速度をセットする（ここから目標到達時間が計算される）

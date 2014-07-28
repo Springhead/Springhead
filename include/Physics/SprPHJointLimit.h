@@ -57,18 +57,28 @@ struct PH1DJointLimitIf : public SceneObjectIf{
 		@return かかっていればtrue
 	*/
 	bool IsOnLimit();
+
+	/** @brief 有効かどうかを設定する
+	*/
+	void    Enable(bool b);
+
+	/** @brief 有効かどうかを取得する
+	*/
+	bool    IsEnabled();
 };
 
 ///	1自由度関節の可動域拘束
 struct PH1DJointLimitDesc{
+	bool    bEnabled;	///< 有効かどうか
 	double	spring;		///< 可動範囲バネ
 	double	damper;		///< 可動範囲ダンパ
 	Vec2d	range;		///< 可動範囲. range[0]:lower < range[1]:upper のときに有効
 
 	PH1DJointLimitDesc() {
-		spring = 10000.0;
-		damper =   100.0;
-		range  = Vec2d(1, -1); /// デフォルトでは拘束無効
+		bEnabled = true;
+		spring   = 10000.0;
+		damper   =   100.0;
+		range    = Vec2d(1, -1); /// デフォルトでは拘束無効
 	}
 };
 
@@ -112,6 +122,14 @@ struct PHBallJointLimitIf : public SceneObjectIf {
 		@return かかっていればtrue
 	*/
 	bool IsOnLimit();
+
+	/** @brief 有効かどうかを設定する
+	*/
+	void    Enable(bool b);
+
+	/** @brief 有効かどうかを取得する
+	*/
+	bool    IsEnabled();
 };
 	
 /// ボールジョイントの可動域制限のステート
@@ -122,11 +140,13 @@ struct PHBallJointLimitIf : public SceneObjectIf {
 /// ボールジョイントの可動域制限のデスクリプタ
 struct PHBallJointLimitDesc{
 	SPR_DESCDEF(PHBallJointLimit);
+	bool    bEnabled;	///< 有効かどうか
 	double	spring;			///< 可動範囲バネ
 	double	damper;			///< 可動範囲ダンパ
 	Vec3d   limitDir;		///< 可動域の基準方向（円錐可動域なら中心線，など）
 
 	PHBallJointLimitDesc() {
+		bEnabled  = false;
 		spring    = 10000.0;
 		damper    =   100.0;
 		limitDir  = Vec3d(0,0,1);

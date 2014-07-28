@@ -910,12 +910,14 @@ public:\
 
 #define SPR_DECLMEMBEROF_PH1DJointLimitDesc \
 protected:\
+	bool	bEnabled;	\
 	double	spring;	\
 	double	damper;	\
 	Vec2d	range;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
+		bEnabled = ((PH1DJointLimitDesc*)ptr)->bEnabled;	\
 		spring = ((PH1DJointLimitDesc*)ptr)->spring;	\
 		damper = ((PH1DJointLimitDesc*)ptr)->damper;	\
 		range = ((PH1DJointLimitDesc*)ptr)->range;	\
@@ -923,6 +925,7 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		((PH1DJointLimitDesc*)ptr)->bEnabled = bEnabled;	\
 		((PH1DJointLimitDesc*)ptr)->spring = spring;	\
 		((PH1DJointLimitDesc*)ptr)->damper = damper;	\
 		((PH1DJointLimitDesc*)ptr)->range = range;	\
@@ -931,12 +934,14 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHBallJointLimitDesc \
 protected:\
+	bool	bEnabled;	\
 	double	spring;	\
 	double	damper;	\
 	Vec3d	limitDir;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
+		bEnabled = ((PHBallJointLimitDesc*)ptr)->bEnabled;	\
 		spring = ((PHBallJointLimitDesc*)ptr)->spring;	\
 		damper = ((PHBallJointLimitDesc*)ptr)->damper;	\
 		limitDir = ((PHBallJointLimitDesc*)ptr)->limitDir;	\
@@ -944,6 +949,7 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		((PHBallJointLimitDesc*)ptr)->bEnabled = bEnabled;	\
 		((PHBallJointLimitDesc*)ptr)->spring = spring;	\
 		((PHBallJointLimitDesc*)ptr)->damper = damper;	\
 		((PHBallJointLimitDesc*)ptr)->limitDir = limitDir;	\

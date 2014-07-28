@@ -57,6 +57,8 @@ public:
 	void    SetDamper(double damper)  { this->damper = damper; }
 	double  GetDamper()               { return damper; }
 	bool    IsOnLimit()               { return onLower || onUpper; }
+	void    Enable(bool b)            { bEnabled = b; }
+	bool    IsEnabled()               { return bEnabled; }
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -106,6 +108,8 @@ public:
 	Vec3d   GetLimitDir()             { return limitDir; }
 
 	virtual bool IsOnLimit()          { return false; }
+	void    Enable(bool b)            { bEnabled = b; }
+	bool    IsEnabled()               { return bEnabled; }
 };
 
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
