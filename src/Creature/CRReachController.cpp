@@ -22,12 +22,17 @@ void CRReachController::Step() {
 	/// --- マージンをとった目標位置を計算
 	Vec3d marginalPos;
 	if (!bLookatMode) {
-		Vec3d dir = (initPos - finalPos);
-		if (dir.norm() > margin) {
-			dir.unitize();
+		Vec3d dir = (currPos - finalPos);
+		double distance = dir.norm();
+		if (distance > 1e-5) { dir.unitize(); }
+		if (distance > margin) {
 			marginalPos = finalPos + (dir * margin);
 		} else {
-			marginalPos = currPos;
+			if (distance < innerMargin) {
+				marginalPos = finalPos + (dir * innerMargin);
+			} else {
+				marginalPos = currPos;
+			}
 		}
 	} else {
 		double cosThetaInit = ((currPos-tipOrigin).unit()) * ((finalPos-tipOrigin).unit());

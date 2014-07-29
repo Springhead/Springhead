@@ -54,6 +54,10 @@ struct CRReachControllerIf : public CRControllerIf{
 	*/
 	void SetMargin(double margin);
 
+	/** @brief 内側マージン（FinalPosからこの半径の中には入らないようにする）をセットする
+	*/
+	void SetInnerMargin(double margin);
+
 	/** @brief 目標がこの速度以上になったら到達目標の更新を一旦停止
 	*/
 	void SetWaitVel(double vel);
@@ -139,6 +143,9 @@ struct CRReachControllerDesc : public CRControllerDesc, public CRReachController
 	// マージン
 	double margin;
 
+	// 内側マージン
+	double innerMargin;
+
 	// 平均到達速度
 	double averageSpeed;
 
@@ -150,6 +157,7 @@ struct CRReachControllerDesc : public CRControllerDesc, public CRReachController
 
 	CRReachControllerDesc() {
 		margin             = 0.0;
+		innerMargin        = 0.0;
 		averageSpeed       = 5.0;
 		waitVel            = 5.0;
 		restartVel         = 2.5;

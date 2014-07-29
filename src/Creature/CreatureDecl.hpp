@@ -173,6 +173,7 @@ public:\
 #define SPR_DECLMEMBEROF_CRReachControllerDesc \
 protected:\
 	double	margin;	\
+	double	innerMargin;	\
 	double	averageSpeed;	\
 	double	waitVel;	\
 	double	restartVel;	\
@@ -182,6 +183,7 @@ public:\
 		CRController::SetDesc((CRControllerDesc*)(CRReachControllerDesc*)ptr);	\
 		CRReachController::SetState((CRReachControllerState*)(CRReachControllerDesc*)ptr);	\
 		margin = ((CRReachControllerDesc*)ptr)->margin;	\
+		innerMargin = ((CRReachControllerDesc*)ptr)->innerMargin;	\
 		averageSpeed = ((CRReachControllerDesc*)ptr)->averageSpeed;	\
 		waitVel = ((CRReachControllerDesc*)ptr)->waitVel;	\
 		restartVel = ((CRReachControllerDesc*)ptr)->restartVel;	\
@@ -192,6 +194,7 @@ public:\
 		CRController::GetDesc((CRControllerDesc*)(CRReachControllerDesc*)ptr);	\
 		CRReachController::GetState((CRReachControllerState*)(CRReachControllerDesc*)ptr);	\
 		((CRReachControllerDesc*)ptr)->margin = margin;	\
+		((CRReachControllerDesc*)ptr)->innerMargin = innerMargin;	\
 		((CRReachControllerDesc*)ptr)->averageSpeed = averageSpeed;	\
 		((CRReachControllerDesc*)ptr)->waitVel = waitVel;	\
 		((CRReachControllerDesc*)ptr)->restartVel = restartVel;	\
