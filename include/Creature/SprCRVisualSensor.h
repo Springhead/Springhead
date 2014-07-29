@@ -20,6 +20,8 @@ struct CRVisualInfo {
 	Vec3d		velWorld;
 	Vec3d		velLocal;
 	PHSolidIf*	solid;
+	PHSolidIf*	solidSensor;
+	Posed		sensorPose;
 	bool		bMyBody;
 	bool		bCenter;
 };

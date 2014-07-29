@@ -27,11 +27,10 @@ void CRVisualSensor::Step(){
 			if (body->GetBone(n) && body->GetBone(n)->GetPHSolid() == phScene->GetSolids()[i]) { bMyBody = true; }
 		}
 
-		PHSolidIf* so = phScene->GetSolids()[i];
-
-		Vec3d pos      = so->GetPose().Pos();
+		PHSolidIf* so  = phScene->GetSolids()[i];
+		Vec3d      pos = so->GetPose().Pos();
 		Vec3d localPos = (soVisualSensor->GetPose() * pose).Inv() * pos;
-			
+		
 		double dist = localPos.norm();
 		Vec3d direction = Vec3d();
 		if (localPos.norm() != 0) { direction = localPos.unit(); }
@@ -44,13 +43,15 @@ void CRVisualSensor::Step(){
 		if (theta.norm() < (range.X() / 2.0) && dist < 30) { // 決め打ち<!!>
 			// Visible
 			CRVisualInfo visible;
-			visible.posWorld = pos;
-			visible.posLocal = localPos;
-			visible.velWorld = so->GetVelocity();
-			visible.velLocal = (so->GetPose() * pose).Inv() * so->GetVelocity();
-			visible.solid    = so;
-			visible.bMyBody  = bMyBody;
-			visible.bCenter  = ( thetaC.norm() < (centerRange.X() / 2.0) );
+			visible.posWorld    = pos;
+			visible.posLocal    = localPos;
+			visible.velWorld    = so->GetVelocity();
+			visible.velLocal    = (so->GetPose() * pose).Inv() * so->GetVelocity();
+			visible.solid       = so;
+			visible.solidSensor = soVisualSensor;
+			visible.sensorPose  = soVisualSensor->GetPose() * pose;
+			visible.bMyBody     = bMyBody;
+			visible.bCenter     = ( thetaC.norm() < (centerRange.X() / 2.0) );
 
 			visibleList[write].push_back(visible);
 		}

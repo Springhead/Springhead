@@ -126,6 +126,10 @@ public:
 	*/
 	void SetMargin(double margin) { this->margin = margin; }
 
+	/** @brief 内側マージン（FinalPosからこの半径の中には入らないようにする）をセットする
+	*/
+	void SetInnerMargin(double margin) { this->innerMargin = margin; }
+
 	/** @brief 目標がこの速度以上になったら到達目標の更新を一旦停止
 	*/
 	void SetWaitVel(double vel) { this->waitVel = vel; }
