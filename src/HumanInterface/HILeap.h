@@ -9,25 +9,31 @@
 #ifndef HI_LEAP_H
 #define HI_LEAP_H
 
-// Libraries/LeapSdk‚ğƒ`ƒFƒbƒNƒAƒEƒg‚µ‚ÄˆÈ‰º‚Ìdefine‚ÌƒRƒƒ“ƒgƒAƒEƒg‚ğŠO‚·‚ÆLeapmotion‚ªg‚¦‚é‚æ‚¤‚É‚È‚éB
+// Libraries/LeapSdkï¿½ï¿½`ï¿½Fï¿½bï¿½Nï¿½Aï¿½Eï¿½gï¿½ï¿½ï¿½ÄˆÈ‰ï¿½ï¿½ï¿½defineï¿½ÌƒRï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Aï¿½Eï¿½gï¿½ï¿½Oï¿½ï¿½ï¿½ï¿½Leapmotionï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½æ‚¤ï¿½É‚È‚ï¿½B
 // #define USE_LEAP
 
-#include <HumanInterface/HISkeletonSensor.h>
-#include <HumanInterface/SprHILeap.h>
+#include <Foundation/UTTimer.h>
+//#include <Foundation/UTSocket.h>
+
+//#include <vector>
+#include <map>
+#include <string>
+#include <list>
 
 #ifdef USE_LEAP
 #include "../../Libraries/LeapSDK/include/Leap.h"
 #pragma comment(lib, "Leap.lib")
 #endif
-
+#include <HumanInterface/HISkeletonSensor.h>
+#include <HumanInterface/SprHILeap.h>
 namespace Spr{;
 
 // Leapmotion
 class HILeap: public HILeapDesc, public HISkeletonSensor {
 
-	#ifdef USE_LEAP
+#ifdef USE_LEAP
 	Leap::Controller* leap;
-	#endif
+#endif
 
 public:
 	SPR_OBJECTDEF(HILeap);
@@ -36,22 +42,22 @@ public:
 	}
 
 	~HILeap() {
-		#ifdef USE_LEAP
+#ifdef USE_LEAP
 		if (leap) { delete leap; }; leap = NULL;
-		#endif
+#endif
 	}
 
 	// ----- ----- ----- ----- -----
-	// HIBase‚ÌAPI
+	// HIBaseï¿½ï¿½API
 
 	bool Init(const void* desc);
 	void Update(float dt);
 
 	// ----- ----- ----- ----- -----
-	// ”ñAPIŠÖ”
+	// ï¿½ï¿½APIï¿½Öï¿½
 
-	/// LeapÀ•WŒn‚©‚çiscale‚ğl—¶‚µ‚½ã‚Å‚ÌjSpringheadÀ•WŒn‚Ö
-	#ifdef USE_LEAP
+	/// Leapï¿½ï¿½ï¿½Wï¿½nï¿½ï¿½ï¿½ï¿½iscaleï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ÌjSpringheadï¿½ï¿½ï¿½Wï¿½nï¿½ï¿½
+#ifdef USE_LEAP
 	inline Vec3d ToSpr(Leap::Vector lv) {
 		return rotation * Vec3d(lv.x, lv.y, lv.z) * scale;
 	}
@@ -61,11 +67,182 @@ public:
 			m[0][i] = lm.xBasis[i]; m[1][i] = lm.yBasis[i]; m[2][i] = lm.zBasis[i];
 		}
 		Quaterniond q; q.FromMatrix(m);
+
 		return q;
 	}
-	#endif
+#endif
 
 };
+
+
+//----- ----- ----- ----- -----
+// ï¿½ÊMï¿½ï¿½ï¿½ï¿½
+
+union Uni {
+	char ch[4];
+	float fl;
+	int i;
+};
+
+struct LeapBone {
+	Spr::Vec3d position;
+	Spr::Vec3d direction;
+	double length;
+
+	LeapBone();
+};
+
+struct LeapFinger {
+	static const int BONE_NUM = 4;
+	LeapBone bones[BONE_NUM];
+
+	LeapFinger();
+};
+
+struct LeapHand {
+	static const int FINGER_NUM = 5;
+	Spr::Vec3d position;
+	Spr::Vec3d direction;
+	LeapFinger leapFingers[FINGER_NUM];
+	int recFingersNum;
+	float confidence;
+	inline int getRecFingersNum() { return recFingersNum; }
+
+	int originalLeapHandID;
+	int bufID;
+
+	int leapID;
+
+	LeapHand();
+	~LeapHand();
+};
+
+struct LeapFrame {
+	std::vector<LeapHand> leapHands;
+	int recHandsNum;
+	int leapID;
+	LeapFrame();
+};
+
+class LeapData {
+public:
+	enum WriteMode {
+		WRITING,
+		WRITE_COMP,
+	} writeMode;
+	
+	enum ReadMode {
+		READING,
+		READ_COMP,
+	} readMode;
+
+	int write, keep, read;
+	LeapData();
+	LeapFrame leapFrameBufs[3];
+
+	std::string hostName;
+};
+
+static const int DISTANCE = 300;
+
+class UDPInit {
+public:
+	static UDPInit* getInstance() {
+		static UDPInit instance;
+		return &instance;
+	}
+
+	UDPInit();
+
+	~UDPInit();
+};
+
+class ProtocolPC {
+private:
+
+	/// ï¿½ï¿½Mï¿½pï¿½|ï¿½[ï¿½gï¿½Ôï¿½
+	int recvPort;
+
+	/// ï¿½ï¿½Mï¿½Xï¿½ï¿½ï¿½bï¿½h
+	UTTimerIf* recvThread;
+
+	/// ï¿½ï¿½Mï¿½pï¿½Pï¿½bï¿½gï¿½ï¿½
+	int nRecv;
+
+	ProtocolPC();
+
+	static void SPR_CDECL recvThreadFunc(int id, void* arg);
+
+	void unpackData(std::vector<char>&, LeapFrame&);
+
+public:
+	//Leapï¿½Å—LIDï¿½ï¿½ï¿½ï¿½LeapDataï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½Ö‚Ìƒ}ï¿½bï¿½v
+	std::map<int, LeapData*> mapIdLeapData;
+
+	std::list<int> usingLeapHandIdList;
+
+	//LeapHandIDï¿½ï¿½ï¿½ç‚»ï¿½ï¿½IDï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½LeapHandï¿½Ö‚Ìƒ}ï¿½bï¿½v
+	std::map<int, LeapHand*> mapLHIdLeapHand;
+
+	//ï¿½oï¿½bï¿½tï¿½@IDï¿½ï¿½ï¿½çŠï¿½ï¿½LeapHandIDï¿½ï¿½
+	std::vector< std::list<int> > bufIdLHIds;
+
+	//static int bufsNum;
+
+	static ProtocolPC* getInstance() {
+		static ProtocolPC instance;
+		return &instance;
+	}
+		
+	bool isSame(LeapHand* L1, LeapHand* L2, double distance);
+
+};
+
+
+// LeapmotionUDP
+class HILeapUDP: public HILeapUDPDesc, public HISkeletonSensor {
+
+public:
+	SPR_OBJECTDEF(HILeapUDP);
+
+	HILeapUDP(const HILeapUDPDesc& desc = HILeapUDPDesc()) {
+	}
+
+	~HILeapUDP() {}
+
+	// ----- ----- ----- ----- -----
+	// HIBaseï¿½ï¿½API
+
+	bool Init(const void* desc);
+	void Update(float dt);
+
+	// ----- ----- ----- ----- -----
+	// ï¿½ï¿½APIï¿½Öï¿½
+
+	/// Leapï¿½ï¿½ï¿½Wï¿½nï¿½ï¿½ï¿½ï¿½iscaleï¿½ï¿½lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ÌjSpringheadï¿½ï¿½ï¿½Wï¿½nï¿½ï¿½
+#ifdef USE_LEAP
+	inline Vec3d ToSpr(Vec3d lv) {
+		return rotation * Vec3d(lv.x, lv.y, lv.z) * scale;
+	}
+	inline Quaterniond ToSprQ(Vec3d lm) {
+		Matrix3d m;
+		for (int i=0; i<3; ++i) {
+			m[0][i] = lm.x; m[1][i] = lm.y; m[2][i] = lm.z;
+		}
+		Quaterniond q; q.FromMatrix(m);
+		return q;
+	}
+
+	
+	
+#endif
+	
+};
+
+float charToFloat(unsigned char* c);
+int charToInt(unsigned char* c);
+Vec3d charToVec3d(unsigned char* c);
+
 
 }
 

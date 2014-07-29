@@ -22,7 +22,6 @@ Springhead2/src/Samples/BoxStack
 */
 
 #include "../../SampleApp.h"
-
 #pragma hdrstop
 using namespace Spr;
 using namespace std;
@@ -92,17 +91,28 @@ public:
 	virtual void BuildScene(){
 		soFloor = CreateFloor();
 
+		/*
 		HILeapDesc descLeap;
 		HILeapIf* leap;
 		leap = hiSdk->CreateHumanInterface(HILeapIf::GetIfInfoStatic())->Cast();
 		leap->Init(&descLeap);
+		*/
+		
+		/*
+		HILeapUDPDesc descLeap;
+		HILeapUDPIf* leap;
+		leap = hiSdk->CreateHumanInterface(HILeapUDPIf::GetIfInfoStatic())->Cast();
+		leap->Init(&descLeap);
+		
+
 		leap->SetScale(1/10.0);
 		leap->SetCenter(Vec3d(0,-8,0));
-		// leap->SetRotation(Quaterniond::Rot(Rad(90), 'x'));
+		//leap->SetRotation(Quaterniond::Rot(Rad(90), 'x'));
 
 		FWSkeletonSensorDesc descSS;
 		FWSkeletonSensorIf* skelSensor = GetSdk()->GetScene(0)->CreateSkeletonSensor(descSS);
 		skelSensor->AddChildObject(leap);
+		*/
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
