@@ -15,6 +15,28 @@
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // 
+void CRReachController::Reset() {
+	/*
+	time      =  0;
+	reachTime = -1;
+	viaTime   = -1;
+	*/
+
+	if (bLookatMode) {
+		Vec3d tipPos = ikEff->GetSolid()->GetPose()       * ikEff->GetTargetLocalPosition();
+		Vec3d tipDir = ikEff->GetSolid()->GetPose().Ori() * ikEff->GetTargetLocalDirection();
+		double distance = (finalPos - tipPos).norm();
+		currPos = tipPos + (tipDir * distance);
+		bForceRestart = true;
+		Step();
+	} else {
+		Vec3d tipPos = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
+		currPos = tipPos;
+		bForceRestart = true;
+		Step();
+	}
+}
+
 void CRReachController::Step() {
 	PHSceneIf* phScene = DCAST(PHSceneIf,ikEff->GetSolid()->GetScene());
 	Vec3d tipOrigin = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
@@ -56,10 +78,11 @@ void CRReachController::Step() {
 	} else {
 		mp = marginalPos;
 	}
-	Vec3d vMarginalPos = (mp - lastFinalPos) / phScene->GetTimeStep();
+
+	Vec3d vMarginalPos = (mp - lastMarginalPos) / phScene->GetTimeStep();
 	double alpha = 0.5;
 	vMarginalPosLPF = alpha*vMarginalPos + (1-alpha)*vMarginalPosLPF;
-	lastFinalPos = mp;
+	lastMarginalPos = mp;
 
 	/// --- 必要に応じて目標位置の更新・再スタートの判断
 	bool bRestart = false;
@@ -77,6 +100,14 @@ void CRReachController::Step() {
 			targPos = marginalPos;
 			targVel = finalVel;
 		}
+	}
+
+	if (bForceRestart) {
+		bWaitingTargetSpeedDown = false;
+		targPos = marginalPos;
+		targVel = finalVel;
+		bRestart = true;
+		bForceRestart = false;
 	}
 
 	/// --- 再スタート

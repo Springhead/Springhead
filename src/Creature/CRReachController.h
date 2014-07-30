@@ -27,12 +27,13 @@ private:
 	PHIKEndEffectorIf* ikEff;
 
 	// <!!>
-	Vec3d lastFinalPos, vMarginalPosLPF;
+	Vec3d lastMarginalPos, vMarginalPosLPF;
 	bool bWaitingTargetSpeedDown;
 	bool bFinished;
 	int tempCounter; // <!!>
 
 	bool bLookatMode;
+	bool bForceRestart;
 
 public:
 	SPR_OBJECTDEF(CRReachController);
@@ -45,12 +46,13 @@ public:
 	CRReachController(const CRReachControllerDesc& desc) : CRReachControllerDesc(desc) { InitVars(); }
 	void InitVars() {
 		ikEff = NULL;
-		lastFinalPos = Vec3d();
+		lastMarginalPos = Vec3d();
 		vMarginalPosLPF = Vec3d();
 		bWaitingTargetSpeedDown = false;
 		bFinished = true;
 		tempCounter = 0; // <!!>
 		bLookatMode = false;
+		bForceRestart = false;
 	}
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -63,7 +65,7 @@ public:
 		initPos  = currPos;
 		initVel  = currVel;
 
-		lastFinalPos = finalPos = currPos;
+		lastMarginalPos = finalPos = currPos;
 		ikEff->SetTargetPosition(currPos);
 	}
 
@@ -71,11 +73,7 @@ public:
 	virtual void Step();
 
 	///  状態をリセットする
-	virtual void Reset() {
-		time      =  0;
-		reachTime = -1;
-		viaTime   = -1;
-	}
+	virtual void Reset();
 
 	///  現状を返す
 	virtual int  GetStatus() {
