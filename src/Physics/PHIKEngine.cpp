@@ -22,6 +22,7 @@ PHIKEngine::PHIKEngine():
 	bTest(false),
 	maxVel(20), // 20[m/s]
 	maxAngVel(Rad(500)), // 500[deg/s]
+	maxActVel(Rad(30)),  //  10[deg/s]
 	regularizeParam(0.7),
 	lastM(0),
 	lastN(0),

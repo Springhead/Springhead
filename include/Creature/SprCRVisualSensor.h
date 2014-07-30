@@ -19,6 +19,7 @@ struct CRVisualInfo {
 	Vec3d		posLocal;
 	Vec3d		velWorld;
 	Vec3d		velLocal;
+	double		angle;
 	PHSolidIf*	solid;
 	PHSolidIf*	solidSensor;
 	Posed		sensorPose;

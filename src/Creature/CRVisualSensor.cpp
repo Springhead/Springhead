@@ -47,6 +47,7 @@ void CRVisualSensor::Step(){
 			visible.posLocal    = localPos;
 			visible.velWorld    = so->GetVelocity();
 			visible.velLocal    = (so->GetPose() * pose).Inv() * so->GetVelocity();
+			visible.angle       = acos(direction * Vec3d(0,-1,0));
 			visible.solid       = so;
 			visible.solidSensor = soVisualSensor;
 			visible.sensorPose  = soVisualSensor->GetPose() * pose;

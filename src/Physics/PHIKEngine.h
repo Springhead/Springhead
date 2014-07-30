@@ -61,7 +61,7 @@ public:
 	bool	bEnabled;
 	bool	bTest;
 	size_t	numIter;
-	double  maxVel, maxAngVel;
+	double  maxVel, maxAngVel, maxActVel;
 	double  regularizeParam;
 	int     lastM, lastN;
 	double  iterCutOffAngVel;
@@ -81,6 +81,8 @@ public:
 	double GetMaxVelocity()                   { return maxVel; }
 	void SetMaxAngularVelocity(double maxAV)  { this->maxAngVel = maxAV; }
 	double GetMaxAngularVelocity()            { return maxAngVel; }
+	void SetMaxActuatorVelocity(double maxAV) { this->maxActVel = maxAV; }
+	double GetMaxActuatorVelocity()           { return maxActVel; }
 	void SetRegularizeParam(double epsilon)   { this->regularizeParam = epsilon; }
 	double GetRegularizeParam()               { return regularizeParam; }
 	void SetIterCutOffAngVel(double epsilon)  { this->iterCutOffAngVel = epsilon; }

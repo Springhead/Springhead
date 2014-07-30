@@ -307,8 +307,19 @@ void PHIKBallActuator::CalcPullbackVelocity() {
 void PHIKBallActuator::Move(){
 	if (!bEnabled) { return; }
 
+	Vec3d dir = (jointTempOri.RotationHalf() - jointTempOriIntp);
+	double limit = DCAST(PHSceneIf,GetScene())->GetIKEngine()->GetMaxActuatorVelocity();
+	if (dir.norm() > limit) { dir = dir.unit() * limit; }
+	jointTempOriIntp += dir;
+	if (jointVelocity.norm() > limit) { jointVelocity = jointVelocity.unit() * limit; }
+
+	DCAST(PHBallJoint,joint)->SetTargetPosition(Quaterniond::Rot(jointTempOriIntp));
+	DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
+
+	/*
 	DCAST(PHBallJoint,joint)->SetTargetPosition(jointTempOri);
 	DCAST(PHBallJoint,joint)->SetTargetVelocity(jointVelocity);
+	*/
 
 	return;
 }
@@ -449,8 +460,19 @@ void PHIKHingeActuator::Move(){
 	if (!bEnabled) { return; }
 	PHHingeJointIf* hj = joint->Cast();
 
+	double limit = DCAST(PHSceneIf,GetScene())->GetIKEngine()->GetMaxActuatorVelocity();
+	double diff = jointTempAngle - jointTempAngleIntp;
+	if (abs(diff) > limit) { diff = diff / abs(diff) * limit; }
+	jointTempAngleIntp += diff;
+	jointVelocity = std::max(-limit, std::min(jointVelocity, limit));
+
+	hj->SetTargetPosition(jointTempAngleIntp);
+	hj->SetTargetVelocity(jointVelocity);
+
+	/*
 	hj->SetTargetPosition(jointTempAngle);
 	hj->SetTargetVelocity(jointVelocity);
+	*/
 	
 	return;
 }

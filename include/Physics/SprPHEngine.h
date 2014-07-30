@@ -160,6 +160,11 @@ public:
 	void SetMaxAngularVelocity(double maxAV);
 	double GetMaxAngularVelocity();
 
+	/** @brief IKアクチュエータ回転角速度限界
+	*/
+	void SetMaxActuatorVelocity(double maxAV);
+	double GetMaxActuatorVelocity();
+
 	/** @brief ヤコビアンの擬似逆の正則化パラメータ
 	*/
 	void SetRegularizeParam(double epsilon);

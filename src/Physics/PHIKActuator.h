@@ -277,6 +277,9 @@ public:
 	/// 関節で実現すべき速度
 	Vec3d jointVelocity;
 
+	/// 補間後の関節角度（in 回転ベクトル）（IK条件の変更等によるTargetPositionの急激な変化を避けるため）
+	Vec3d jointTempOriIntp;
+
 	// --- --- --- --- --- --- --- --- --- ---
 
 	/** @brief 初期化
@@ -287,6 +290,7 @@ public:
 		jointVelocity = Vec3d();
 		solidVelocity = Vec3d();
 		solidAngularVelocity = Vec3d();
+		jointTempOriIntp = Vec3d();
 	}
 
 	/** @brief デフォルトコンストラクタ
@@ -374,6 +378,9 @@ public:
 	/// 関節で実現すべき速度
 	double jointVelocity;
 
+	/// 補間後の関節角度（IK条件の変更等によるTargetPositionの急激な変化を避けるため）
+	double jointTempAngleIntp;
+
 	// --- --- --- --- --- --- --- --- --- ---
 
 	/** @brief 初期化
@@ -381,6 +388,7 @@ public:
 	virtual void Init() {
 		ndof = 1;
 		jointTempAngle = 0;
+		jointTempAngleIntp = 0;
 		PHIKActuator::Init();
 	}
 
