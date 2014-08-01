@@ -43,6 +43,15 @@ struct CRReachControllerIf : public CRControllerIf{
 	void EnableLookatMode(bool bEnable);
 	bool IsLookatMode();
 
+	/** @brief 手の使用数を設定・取得する
+	*/
+	void SetNumUseHands(int n);
+	int GetNumUseHands();
+
+	/** @brief i番目の腕の付け根関節をセットする（距離に基づく使用判定に使う）
+	*/
+	void SetBaseJoint(int n, PHJointIf* jo);
+
 	// ----- ----- -----
 
 	/** @brief 平均到達速度をセットする（ここから目標到達時間が計算される）
