@@ -28,6 +28,9 @@ public:
 	double mu0, mu, e;
 	double spring, damper;
 
+	double fx, flim;
+
+public:
 	/// コンストラクタ
 	PHContactPoint(){}
 	PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1);

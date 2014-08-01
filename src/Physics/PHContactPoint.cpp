@@ -21,11 +21,31 @@ PHContactPoint::PHContactPoint(const Matrix3d& local, PHShapePairForLCP* sp, Vec
 	shapePair = sp;
 	const PHMaterial& mat0 = sp->shape[0]->GetMaterial();
 	const PHMaterial& mat1 = sp->shape[1]->GetMaterial();
-	//mu0 = 0.5 * (mat0.mu0 + mat1.mu0);
-	//mu  = 0.5 * (mat0.mu  + mat1.mu );
-	mu0 = std::min(mat0.mu0, mat1.mu0);
-	mu  = std::min(mat0.mu , mat1.mu );
-	e   = 0.5 * (mat0.e   + mat1.e  );
+	
+	PHScene* s = DCAST(PHScene, s0->GetScene());
+	switch(s->blendMode){
+	case PHSceneDesc::BLEND_MIN:
+		mu0 = std::min(mat0.mu0, mat1.mu0);
+		mu  = std::min(mat0.mu , mat1.mu );
+		e   = std::min(mat0.e  , mat1.e  );
+		break;
+	case PHSceneDesc::BLEND_MAX:
+		mu0 = std::max(mat0.mu0, mat1.mu0);
+		mu  = std::max(mat0.mu , mat1.mu );
+		e   = std::max(mat0.e  , mat1.e  );
+		break;
+	case PHSceneDesc::BLEND_AVE_ADD:
+		mu0 = 0.5 * (mat0.mu0 + mat1.mu0);
+		mu  = 0.5 * (mat0.mu  + mat1.mu );
+		e   = 0.5 * (mat0.e   + mat1.e  );
+		break;
+	case PHSceneDesc::BLEND_AVE_MUL:
+		mu0 = sqrt(mat0.mu0 * mat1.mu0);
+		mu  = sqrt(mat0.mu  * mat1.mu );
+		e   = sqrt(mat0.e   * mat1.e  );
+		break;
+	}
+	
 	if(mat0.spring == 0.0f){
 		if(mat1.spring == 0.0f)
 			 spring = 0.0;
@@ -98,7 +118,6 @@ void PHContactPoint::CompBias(){
 bool PHContactPoint::Projection(double& f_, int i) {
 	PHConstraint::Projection(f_, i);
 
-	static double fx, flim;
 	if(i == 0){	
 		// 接触深度が許容値以下なら反力を出さない
 		if(shapePair->depth < GetScene()->GetContactTolerance()){
@@ -114,6 +133,7 @@ bool PHContactPoint::Projection(double& f_, int i) {
 		fx = f_;
 		// 最大静止摩擦力
 		flim = mu0 * fx;
+
 		return false;
 	}
 	else{

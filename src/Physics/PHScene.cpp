@@ -701,6 +701,10 @@ void PHScene::SetContactDetectionRange(Vec3f center, Vec3f extent, int nx, int n
 	hapticEngine    ->SetDetectionRange(center, extent, nx, ny, nz);
 }
 
+void PHScene::SetMaterialBlending(int mode){
+	blendMode = mode;
+}
+
 void PHScene::DumpObjectR(std::ostream& os, int level) const{
 	Object::DumpObjectR(os, level);
 	size_t n = engines.size();

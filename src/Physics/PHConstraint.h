@@ -14,13 +14,15 @@
 
 #include <vector>
 
+#ifdef USE_OPENMP_PHYSICS
+# include <omp.h>
+#endif
+
 namespace Spr{;
 
 class PHTreeNode;
 
-/** 拘束のステート
-	- allocatorの関係上SpatialVectorはステートに置けないので注意
- */
+/** 拘束のステート */
 struct PHConstraintState {
 	/// 拘束力の力積
 	Vec6d f;
@@ -67,14 +69,10 @@ public:
 	virtual void IterateCorrection (){}	///< 位置LCP(GS)の繰り返し計算
 	virtual void CompResponse      (double df, int i){}
 	virtual void CompResponseDirect(double df, int i){}
-	/// 速度LCPの射影
-	//virtual bool Projection(double& f, int i){ return false; }
-	/// 位置LCPの射影
-	//virtual void ProjectionCorrection(double& F, int i){}
 };
 
 /// 拘束
-class PHConstraint : public SceneObject, public PHConstraintDesc, /*public PHConstraintState, */public PHConstraintBase{
+class PHConstraint : public SceneObject, public PHConstraintDesc, public PHConstraintBase{
 public:
 	SPR_OBJECTDEF_ABST(PHConstraint);
 	ACCESS_DESC(PHConstraint);
@@ -91,6 +89,12 @@ public:
 		SpatialMatrix A;
 	};
 	struct Adjacents : std::vector<Adjacent>{
+		int num;
+		void Add(PHConstraint* _con, const SpatialMatrix& _A){
+			at(num).con = _con;
+			at(num).A   = _A;
+			num++;
+		}
 		Adjacent* Find(PHConstraint* con){
 			for(iterator it = begin(); it != end(); it++)
 				if(it->con == con)
@@ -105,10 +109,6 @@ public:
 
 	/// 剛体が解析法に従う場合true	
 	bool bInactive[2];
-
-	/// UpdateState時にUpdateCacheLCPを呼ぶのを禁止する．GetPosition()が呼ばれるたびにdvを書き換えられては困るため．
-	///   （このフラグが立つ頃にはConstraintEngineからUpdateCacheLCPが呼ばれているはずなので禁止しても問題は起きない）
-	//bool bProhibitUpdateSolidCacheLCP;
 
 	// ----- 計算用変数
 
@@ -134,28 +134,10 @@ public:
 	///   [1]：子剛体の質量中心からPlug座標系経由でSocket座標系へのヤコビアン
 	SpatialMatrix J[2];
 
-	/// T = M.inv() * J^t ガウスザイデルで使用               #[6 x n_c] 拘束のある行だけで良い
-	//SpatialMatrix T[2];
-	
-	/// LCPのbベクトルとその補正量                           #[n_c]     拘束のある行だけで良い
-	//SpatialVector b, db, B;
-	
-	/// LCPのA行列の対角成分とその補正量，逆数               #[n_c]
-	//SpatialVector A, dA, Ainv;
-
-	//SpatialVector f;					///< 拘束力の力積
-	//SpatialVector F;					///< 拘束誤差を位置のLCPで補正する場合の補正量*質量
 	SpatialVector fAvg;					///< 拘束力にローパスをかけたもの
 	SpatialVector xs;					///< ばね部の距離（三要素モデル用）
 	bool   bYielded;					///< 降伏したかどうか
-	
-	//SpatialVector fnew;			///< 更新後の拘束力	
-	//SpatialVector df;			///< 拘束力の変化量	
-	//SpatialVector dv;			///< 拘束速度の変化量	
-	//SpatialVector dF;			///< 拘束力の変化量	
-	//SpatialVector dV;
-	//SpatialVector res;			///< 拘束残差		
-	
+		
 	double fMaxDt[6], fMinDt[6];	///< Projection用の各軸のMin/Max
 
 	/** ----- 拘束軸管理
@@ -167,16 +149,12 @@ public:
 		  axesは拘束自由度および動的に拘束対象となっている可動自由度の両方を保持し，かつ前ステップからの拘束状態の切り替わりを記憶する．
 	 */
 
-	/// 拘束の対象となりうる軸番号リスト
-	//int targetAxes[6];
-	/// targetAxesの要素数
-	//int nTargetAxes;
-	/// 可動（＝本来拘束しない）軸番号リスト
-	//int movableAxes[6];
-	/// movableAxesの要素数
-	//int nMovableAxes;
 	AxisIndex<6>	movableAxes;		///< 可動自由度
 	AxisIndex<6>	targetAxes;			///< 関節自身，可動範囲，モータのいずれかによって拘束される自由度
+
+#ifdef USE_OPENMP_PHYSICS
+	omp_lock_t		dv_lock;			///< dvを排他アクセスするためのロック
+#endif
 
 public:
 	// -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
@@ -196,7 +174,6 @@ public:
 	void UpdateState();
 	
 	/// PHConstraintBaseの仮想関数
-	//virtual int  NDof                        (){ return 6; }
 	virtual void Setup                       ();
 	virtual void SetupCorrection             ();
 	virtual	void Iterate                     ();
