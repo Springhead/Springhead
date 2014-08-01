@@ -23,14 +23,14 @@ void CRReachController::Reset() {
 	*/
 
 	if (bLookatMode) {
-		Vec3d tipPos = ikEff->GetSolid()->GetPose()       * ikEff->GetTargetLocalPosition();
-		Vec3d tipDir = ikEff->GetSolid()->GetPose().Ori() * ikEff->GetTargetLocalDirection();
+		Vec3d tipPos = GetTipPos();
+		Vec3d tipDir = GetTipDir();
 		double distance = (finalPos - tipPos).norm();
 		currPos = tipPos + (tipDir * distance);
 		bForceRestart = true;
 		Step();
 	} else {
-		Vec3d tipPos = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
+		Vec3d tipPos = GetTipPos();
 		currPos = tipPos;
 		bForceRestart = true;
 		Step();
@@ -38,8 +38,10 @@ void CRReachController::Reset() {
 }
 
 void CRReachController::Step() {
-	PHSceneIf* phScene = DCAST(PHSceneIf,ikEff->GetSolid()->GetScene());
-	Vec3d tipOrigin = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
+	if (ikEffs.size()==0) { return; }
+
+	PHSceneIf* phScene = DCAST(PHSceneIf,ikEffs[0]->GetSolid()->GetScene());
+	Vec3d tipOrigin = GetTipPos();
 
 	/// --- マージンをとった目標位置を計算
 	Vec3d marginalPos;
@@ -115,7 +117,7 @@ void CRReachController::Step() {
 		if (bFinished) {
 			// 到達運動してない状態からスタートする場合はIKエンドエフェクタの内部位置を初期状態とする
 			if (!bLookatMode) {
-				currPos = ikEff->GetSolidTempPose() * ikEff->GetTargetLocalPosition();
+				currPos = GetTipPos();
 			}
 			currVel = Vec3d();
 		}
@@ -123,30 +125,61 @@ void CRReachController::Step() {
 		// 現在位置から滑らかに接続する
 		initPos = currPos; initVel  = currVel;
 
+		// 到達目標時刻のセット
 		if (bLookatMode) {
-			// なす角に応じて到達目標時刻をセットする
-			Vec3d tipOrigin = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
+			// -- なす角に応じて到達目標時刻をセットする
+			Vec3d tipOrigin = GetTipPos();
 			double theta = acos( ((currPos-tipOrigin).unit()) * ((finalPos-tipOrigin).unit()) );
 			reachTime = abs(theta) / averageSpeed;
 		} else {
-			// 軌道長に応じて到達目標時刻をセットする
+			// -- 軌道長に応じて到達目標時刻をセットする
 			reachTime = (targPos - currPos).norm() / averageSpeed; // GetLengthのためにはとりあえずreachTimeが必要なので
 			reachTime = this->GetLength() / averageSpeed;
 		}
+
+		// 使う手を選択（手が複数あり、なおかつnumUseHandsが手の本数より小さい正の数の場合だけ）
+		if (ikEffs.size() > 1 && numUseHands > 0 && numUseHands < ikEffs.size()) {
+			ikEffUseFlags.resize(ikEffs.size());
+			for (size_t i=0; i<ikEffUseFlags.size(); ++i) { ikEffUseFlags[i] = true; }
+
+			for (size_t i=0; i<ikEffUseFlags.size(); ++i) {
+				if (baseJoints[i]) {
+					Posed pp; baseJoints[i]->GetPlugPose(pp);
+					Vec3d joPos = baseJoints[i]->GetPlugSolid()->GetPose() * pp.Pos();
+					double distance = (finalPos - joPos).norm();
+					std::cout << baseJoints[i]->GetName() << " : " << distance << std::endl;
+				}
+			}
+
+			// <!!>
+			// i番目の手を使わない場合はikEffUseFlags[i]をfalseにする。
+			// 何本の手をfalseにするかは numUseHands によって決める。
+			// （未実装）
+		}
+
+		// 運動開始
 		time = 0;
 		bFinished = false;
 	}
 
 	/// --- 到達運動の計算と実行
-	Vec6d point = GetTrajectory(time / reachTime);
-	currPos = point.r;
-	currVel = point.v;
+	if (!bFinished) {
+		Vec6d point = GetTrajectory(time / reachTime);
+		currPos = point.r;
+		currVel = point.v;
 
-	if (bLookatMode) {
-		ikEff->SetTargetLookat(currPos);
-	} else {
-		ikEff->SetTargetPosition(currPos);
-		// ikEff->SetTargetVelocity(currVel);
+		if (bLookatMode) {
+			for (size_t i=0; i<ikEffs.size(); ++i) {
+				ikEffs[i]->SetTargetLookat(currPos); // <!!> Offset付けられるようにする？
+			}
+		} else {
+			for (size_t i=0; i<ikEffs.size(); ++i) {
+				if (!(i<ikEffUseFlags.size()) || ikEffUseFlags[i]) {
+					ikEffs[i]->SetTargetPosition(currPos); // <!!> Offset付けられるようにする
+					// ikEffs[i]->SetTargetVelocity(currVel);
+				}
+			}
+		}
 	}
 
 	// FrontKeep();
@@ -222,9 +255,8 @@ double CRReachController::GetLength() {
 }
 
 void CRReachController::FrontKeep() {
-	
+	/*
 	//初期化
-	states = ObjectStatesIf::Create();
 	PHSceneIf* phScene = DCAST(PHSceneIf,ikEff->GetSolid()->GetScene());
 	double s;
 	Quaterniond qt;
@@ -277,6 +309,7 @@ void CRReachController::FrontKeep() {
 	//姿勢をIKにセット
 	ikEff->SetTargetOrientation(qt);
 	ikEff->EnableOrientationControl(enabled);
+	*/
 }
 
 void CRReachController::Draw() {

@@ -16,6 +16,7 @@
 #include <Physics/SprPHIK.h>
 #include <Creature/SprCRCreature.h>
 
+#include <vector>
 
 //@{
 namespace Spr{;
@@ -24,7 +25,9 @@ namespace Spr{;
 class CRReachController : public CRController, public CRReachControllerDesc {
 private:
 	// 到達運動対象のエンドエフェクタ
-	PHIKEndEffectorIf* ikEff;
+	std::vector<PHIKEndEffectorIf*> ikEffs;
+	std::vector<bool>               ikEffUseFlags;
+	std::vector<PHJointIf*>         baseJoints;
 
 	// <!!>
 	Vec3d lastMarginalPos, vMarginalPosLPF;
@@ -35,6 +38,8 @@ private:
 	bool bLookatMode;
 	bool bForceRestart;
 
+	int numUseHands; // 使用する手の本数 (負の場合すべて使う)
+
 public:
 	SPR_OBJECTDEF(CRReachController);
 	ACCESS_DESC_STATE(CRReachController);
@@ -42,10 +47,11 @@ public:
 	Quaterniond	tempori;
 
 	// コンストラクタ
-	CRReachController(){ InitVars(); }
+	CRReachController(){
+		InitVars(); states = ObjectStatesIf::Create();
+	}
 	CRReachController(const CRReachControllerDesc& desc) : CRReachControllerDesc(desc) { InitVars(); }
 	void InitVars() {
-		ikEff = NULL;
 		lastMarginalPos = Vec3d();
 		vMarginalPosLPF = Vec3d();
 		bWaitingTargetSpeedDown = false;
@@ -53,6 +59,23 @@ public:
 		tempCounter = 0; // <!!>
 		bLookatMode = false;
 		bForceRestart = false;
+		numUseHands = -1;
+	}
+
+	Vec3d GetTipPos() {
+		Vec3d tipPosSum = Vec3d();
+		for (size_t i=0; i<ikEffs.size(); ++i) {
+			tipPosSum += (ikEffs[i]->GetSolid()->GetPose() * ikEffs[i]->GetTargetLocalPosition());
+		}
+		return tipPosSum * (1.0/(double)(ikEffs.size()));
+	}
+
+	Vec3d GetTipDir() {
+		Vec3d tipPosSum = Vec3d();
+		for (size_t i=0; i<ikEffs.size(); ++i) {
+			tipPosSum += (ikEffs[i]->GetSolid()->GetPose().Ori() * ikEffs[i]->GetTargetLocalDirection());
+		}
+		return tipPosSum * (1.0/(double)(ikEffs.size()));
 	}
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -60,13 +83,16 @@ public:
 
 	/// 初期化を実行する
 	virtual void Init() {
-		currPos  = ikEff->GetSolid()->GetPose() * ikEff->GetTargetLocalPosition();
+		currPos  = GetTipPos();
 		currVel  = Vec3d();
 		initPos  = currPos;
 		initVel  = currVel;
 
 		lastMarginalPos = finalPos = currPos;
-		ikEff->SetTargetPosition(currPos);
+
+		for (size_t i=0; i<ikEffs.size(); ++i) {
+			ikEffs[i]->SetTargetPosition(currPos); // <!!> Offset付けられるようにする
+		}
 	}
 
 	/// 制御処理を実行する
@@ -89,8 +115,17 @@ public:
 
 	/** @brief 到達に使うエンドエフェクタを設定・取得する
 	*/
-	void SetIKEndEffector(PHIKEndEffectorIf* ikEff) { this->ikEff = ikEff; }
-	PHIKEndEffectorIf* GetIKEndEffector() { return this->ikEff; }
+	void SetIKEndEffector(PHIKEndEffectorIf* ikEff) {
+		if (this->ikEffs.size() == 0) {
+			AddChildObject(ikEff);
+		} else {
+			this->ikEffs[0] = ikEff;
+		}
+	}
+	PHIKEndEffectorIf* GetIKEndEffector() {
+		if (this->ikEffs.size() == 0) { return NULL; }
+		return this->ikEffs[0];
+	}
 
 	/** @brief 最終到達目標位置をセットする
 	*/
@@ -112,6 +147,18 @@ public:
 	*/
 	void EnableLookatMode(bool bEnable) { bLookatMode = bEnable; }
 	bool IsLookatMode() { return bLookatMode; }
+
+	/** @brief 手の使用数を設定・取得する
+	*/
+	void SetNumUseHands(int n) { numUseHands = n; }
+	int GetNumUseHands() { return numUseHands; }
+
+	/** @brief i番目の腕の付け根関節をセットする（距離に基づく使用判定に使う）
+	*/
+	void SetBaseJoint(int n, PHJointIf* jo) {
+		if (baseJoints.size() <= n) { baseJoints.resize(n+1); }
+		baseJoints[n] = jo;
+	}
 
 	// ----- ----- -----
 
@@ -166,23 +213,36 @@ public:
 	// 子要素の扱い
 
 	virtual size_t NChildObject() const {
-		return( ((ikEff==NULL)?0:1) );
+		return ikEffs.size();
 	}
 
 	virtual ObjectIf* GetChildObject(size_t i) {
-		if (i==0) {
-			return ikEff;
+		if (0 <= i && i < ikEffs.size()) {
+			return ikEffs[i];
 		}
 		return NULL;
 	}
 
 	virtual bool AddChildObject(ObjectIf* o) {
-		if (!ikEff) { ikEff = o->Cast(); if (ikEff) { return true; } }
+		PHIKEndEffectorIf* ie = o->Cast();
+		if (ie) {
+			ikEffs.push_back(ie);
+			ikEffUseFlags.push_back(true);
+			baseJoints.push_back(NULL);
+			return true;
+		}
 		return false;
 	}
 
 	virtual bool DelChildObject(ObjectIf* o) {
-		if (o==ikEff) { ikEff = NULL; return true; }
+		PHIKEndEffectorIf* ie = o->Cast();
+		if (ie) {
+			std::vector<PHIKEndEffectorIf*>::iterator it = std::find(ikEffs.begin(), ikEffs.end(), ie);
+			if (it != ikEffs.end()) {
+				ikEffs.erase(it);
+				return true;
+			}
+		}
 		return false;
 	}
 
