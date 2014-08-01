@@ -124,7 +124,7 @@ void PHConstraint::Iterate() {
 		// Gauss-Seidel Update
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
 		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * res[i];
-	
+
 		// Projection
 		Projection(fnew[i], i);
 		
@@ -225,7 +225,6 @@ void PHConstraint::CompResponseDirect(double df, int i){
 #ifdef USE_OPENMP_PHYSICS
 			omp_set_lock(&dest->dv_lock);
 #endif
-
 			dest->dv[i1] += adj[j].A[i1][i] * df;
 
 #ifdef USE_OPENMP_PHYSICS

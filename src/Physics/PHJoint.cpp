@@ -49,10 +49,10 @@ ObjectIf* PH1DJoint::GetChildObject(size_t i) {
 }
 
 PH1DJointLimitIf* PH1DJoint::CreateLimit(const PH1DJointLimitDesc& desc) {
-	PH1DJointLimitIf* limit = GetScene()->CreateObject(PH1DJointLimitIf::GetIfInfoStatic(), &desc)->Cast();
-	if(limit)
-		AddChildObject(limit);
-	return limit;
+	PH1DJointLimitIf* l = GetScene()->CreateObject(PH1DJointLimitIf::GetIfInfoStatic(), &desc)->Cast();
+	if(l)
+		AddChildObject(l);
+	return l;
 }
 
 //-------------------------------------------------------------------------------------------------
