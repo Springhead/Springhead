@@ -117,11 +117,10 @@ void PHContactPoint::CompBias(){
 
 bool PHContactPoint::Projection(double& f_, int i) {
 	PHConstraint::Projection(f_, i);
-
 	if(i == 0){	
 		// 接触深度が許容値以下なら反力を出さない
 		if(shapePair->depth < GetScene()->GetContactTolerance()){
-			f_ = 0.0;
+			f_ = fx = flim = 0.0;
 			return true;
 		}
 		//垂直抗力 >= 0の制約
