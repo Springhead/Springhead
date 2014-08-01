@@ -21,7 +21,7 @@ class AxisIndex {
 	int    idx[N];
 
 	/// idxの要素数
-	size_t sz;
+	int    sz;
 
 	/// 拘束フラグから拘束軸番号リストを作成する
 	void CreateList() {
@@ -56,7 +56,7 @@ public:
 	bool IsEnabled(int i) { return bCurr[i]; }
 
 	/// 拘束軸番号リストのサイズを取得する
-	int  size() { return (int)sz; }
+	int  size() { return sz; }
 
 	/// 拘束軸番号リストのn番目の軸番号を取得する
 	int& operator[](int n){ return idx[n]; }

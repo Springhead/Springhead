@@ -1089,6 +1089,7 @@ protected:\
 	bool	bContactDetectionEnabled;	\
 	bool	bCCDEnabled;	\
 	int	broadPhaseMode;	\
+	int	blendMode;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -1109,6 +1110,7 @@ public:\
 		bContactDetectionEnabled = ((PHSceneDesc*)ptr)->bContactDetectionEnabled;	\
 		bCCDEnabled = ((PHSceneDesc*)ptr)->bCCDEnabled;	\
 		broadPhaseMode = ((PHSceneDesc*)ptr)->broadPhaseMode;	\
+		blendMode = ((PHSceneDesc*)ptr)->blendMode;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -1130,6 +1132,7 @@ public:\
 		((PHSceneDesc*)ptr)->bContactDetectionEnabled = bContactDetectionEnabled;	\
 		((PHSceneDesc*)ptr)->bCCDEnabled = bCCDEnabled;	\
 		((PHSceneDesc*)ptr)->broadPhaseMode = broadPhaseMode;	\
+		((PHSceneDesc*)ptr)->blendMode = blendMode;	\
 		return true;	\
 	}\
 

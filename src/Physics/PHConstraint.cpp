@@ -32,6 +32,10 @@ PHConstraint::PHConstraint() {
 	bInactive[0] = true;
 	bInactive[1] = true;
 	treeNode = 0;
+
+#ifdef USE_OPENMP_PHYSICS
+	omp_init_lock(&dv_lock);
+#endif
 }
 
 // ----- エンジンから呼び出される関数
@@ -210,16 +214,29 @@ void PHConstraint::CompResponseCorrection(double dF, int i){
 	}
 }
 void PHConstraint::CompResponseDirect(double df, int i){
-	for(int j = 0; j < (int)adj.size(); j++){
-		PHConstraint* dest = adj[j].con;
+	PHConstraint* dest;
+	
+	for(int j = 0; j < adj.num; j++){
+		dest = adj[j].con;
+
 		for(int n1 = 0; n1 < dest->targetAxes.size(); n1++){
 			int i1 = dest->targetAxes[n1];
+			
+#ifdef USE_OPENMP_PHYSICS
+			omp_set_lock(&dest->dv_lock);
+#endif
+
 			dest->dv[i1] += adj[j].A[i1][i] * df;
+
+#ifdef USE_OPENMP_PHYSICS
+			omp_unset_lock(&dest->dv_lock);
+#endif
 		}
+
 	}
 }
 void PHConstraint::CompResponseDirectCorrection(double dF, int i){
-	for(int j = 0; j < (int)adj.size(); j++){
+	for(int j = 0; j < adj.num; j++){
 		PHConstraint* dest = adj[j].con;
 		for(int n1 = 0; n1 < dest->targetAxes.size(); n1++){
 			int i1 = dest->targetAxes[n1];

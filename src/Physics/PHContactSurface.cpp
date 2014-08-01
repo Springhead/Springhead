@@ -75,45 +75,12 @@ void PHContactSurface::Iterate() {
 	}
 }
 
-void PHContactSurface::CompBias(){
-	PHSceneIf* scene = GetScene();
-	double dt    = scene->GetTimeStep();
-	double dtinv = scene->GetTimeStepInv();
-	double tol   = scene->GetContactTolerance();
-	double vth   = scene->GetImpactThreshold();
-	
-	//	速度が小さい場合は、跳ね返りなし。
-	if(vjrel[0] > -vth){
-		double diff = std::max(shapePair->depth - tol, 0.0);
-		
-		// 粘弾性なし
-		if(spring == 0.0 && damper == 0.0){
-			db[0] = - engine->contactCorrectionRate * diff * dtinv;
-		}
-		// 粘弾性あり
-		else{
-			double tmp = 1.0 / (damper + spring * dt);
-			dA[0] = tmp * dtinv;
-			db[0] = - tmp * spring * diff;
-		}
-	}
-	else{
-		//	跳ね返り係数: 2物体の平均値を使う
-		//	跳ね返るときは補正なし
-		db[0] = e * vjrel[0];
-	}
-
-}
-
-bool PHContactSurface::Projection(double& f_, int k){
-	// 並進力の射影はPHContactPointと同じ
-	return PHContactPoint::Projection(f_, k);
-}
-
 void PHContactSurface::ProjectionTorque(SpatialVector& fnew){
 	PHConstraint::Projection(fnew[3], 3);
 	PHConstraint::Projection(fnew[4], 4);
 	PHConstraint::Projection(fnew[5], 5);
+	fnew[3] = fnew[4] = fnew[5] = 0.0;
+	return;
 
 	PHSceneIf* scene = GetScene();
 

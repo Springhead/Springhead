@@ -32,11 +32,6 @@ public:
 	// ----- PHConstraintの機能をオーバーライド
 	virtual void Iterate();
 
-	// ----- PHConstraintの派生クラスで実装する機能
-
-	virtual void CompBias();
-	virtual bool Projection(double& f_, int k);
-
 	// ----- このクラスで実装する機能
 	void	ProjectionTorque  (SpatialVector& fnew);		///< トルク用Projection
 };

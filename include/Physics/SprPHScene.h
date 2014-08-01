@@ -94,6 +94,14 @@ struct PHSceneDesc: public PHSceneState{
 		MODE_LCP		///< LCPで解く
 	};
 
+	/// 物性（摩擦係数、跳ね返り係数）の合成則
+	enum MatrialBlending{
+		BLEND_MIN,		///< 最小値
+		BLEND_MAX,		///< 最大値
+		BLEND_AVE_ADD,	///< 加法平均
+		BLEND_AVE_MUL,	///< 乗法平均
+	};
+
 	/// LCPの解法
 	enum LCPSolver{
 		SOLVER_GS,		///< ガウスーザイデル法
@@ -120,6 +128,7 @@ struct PHSceneDesc: public PHSceneState{
 	bool	bContactDetectionEnabled;	///< 接触判定が有効か．これがfalseだと接触判定自体を行わない
 	bool	bCCDEnabled;				///< Continuous Collision Detectionの有効化
 	int     broadPhaseMode;
+	int     blendMode;
 	
 	PHSceneDesc(){Init();}
 	
@@ -141,6 +150,7 @@ struct PHSceneDesc: public PHSceneState{
 		bContactDetectionEnabled = true;
 		bCCDEnabled              = true;
 		broadPhaseMode           = MODE_SORT_AND_SWEEP_Z;
+		blendMode                = BLEND_AVE_ADD;
 	}
 };
 
@@ -506,6 +516,10 @@ public:
 		@param nz       z方向分割数
 	 */
 	void SetContactDetectionRange(Vec3f center, Vec3f extent, int nx, int ny, int nz);
+
+	/** 物性（摩擦係数、跳ね返り係数）の合成ルールを設定
+	 */
+	void SetMaterialBlending(int mode);
 
 	/** @brief シーンの時刻を進める
 	 */

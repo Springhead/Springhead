@@ -90,14 +90,13 @@ struct PHConstraintsSt{
 };
 
 
-class PHConstraintEngine : public PHConstraintEngineDesc, public PHContactDetector/*<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine>*/{
+class PHConstraintEngine : public PHConstraintEngineDesc, public PHContactDetector{
 	friend class PHConstraint;
 	friend class PHShapePairForLCP;
 	SPR_OBJECTDEF1(PHConstraintEngine, PHEngine);
 	ACCESS_DESC(PHConstraintEngine);
 public:
-	//typedef PHContactDetector<PHShapePairForLCP, PHSolidPairForLCP, PHConstraintEngine> Detector;
-	
+
 	typedef std::vector< UTRef<PHRootNode> >	PHRootNodes;
 	typedef std::vector< UTRef<PHPath> >		PHPaths;
 	typedef std::vector< PHConstraintBase* >	PHConstraintBases;
@@ -111,7 +110,6 @@ public:
 
 	PHConstraints		cons;		///< 有効な拘束の配列
 	PHConstraintBases	cons_base;
-	//PHGears				gears_active;
 
 	int count;
 
