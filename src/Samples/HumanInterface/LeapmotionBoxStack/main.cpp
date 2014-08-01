@@ -53,12 +53,16 @@ public:
 		ID_BLOCK,
 		//ID_TOWER,
 		ID_SHAKE,
+		ID_CALIBRATE
 	};
 
 	PHSolidIf*				soFloor;
 	std::vector<PHSolidIf*> soBox;
 
 	double					floorShakeAmplitude;
+
+	int						calibrateState;
+	HILeapUDPIf*			leapUDP;
 
 	HISdkIf*				hiSdk;
 
@@ -83,6 +87,10 @@ public:
 		//AddHotKey(MENU_MAIN, ID_TOWER, 't');
 		AddAction(MENU_MAIN, ID_SHAKE, "shake floor");
 		AddHotKey(MENU_MAIN, ID_SHAKE, 'f');
+		
+		AddAction(MENU_MAIN, ID_CALIBRATE, "leap calibration");
+		AddHotKey(MENU_MAIN, ID_CALIBRATE, 'x');
+
 
 		hiSdk = HISdkIf::CreateSdk();
 	}
@@ -98,21 +106,21 @@ public:
 		leap->Init(&descLeap);
 		*/
 		
-		/*
-		HILeapUDPDesc descLeap;
-		HILeapUDPIf* leap;
-		leap = hiSdk->CreateHumanInterface(HILeapUDPIf::GetIfInfoStatic())->Cast();
-		leap->Init(&descLeap);
+		
+		HILeapUDPDesc descLeapUDP;
+		
+		leapUDP = hiSdk->CreateHumanInterface(HILeapUDPIf::GetIfInfoStatic())->Cast();
+		leapUDP->Init(&descLeapUDP);
 		
 
-		leap->SetScale(1/10.0);
-		leap->SetCenter(Vec3d(0,-8,0));
+		leapUDP->SetScale(1/10.0);
+		leapUDP->SetCenter(Vec3d(0,-8,0));
 		//leap->SetRotation(Quaterniond::Rot(Rad(90), 'x'));
 
 		FWSkeletonSensorDesc descSS;
 		FWSkeletonSensorIf* skelSensor = GetSdk()->GetScene(0)->CreateSkeletonSensor(descSS);
-		skelSensor->AddChildObject(leap);
-		*/
+		skelSensor->AddChildObject(leapUDP);
+		
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
@@ -138,6 +146,8 @@ public:
 		sstr << "NObj = " << GetFWScene()->GetPHScene()->NSolids();
 		render->DrawFont(Vec2f(-21, 23), sstr.str());
 	}
+
+
 
 	virtual void OnAction(int menu, int id){
 		if(menu == MENU_MAIN){
@@ -191,6 +201,24 @@ public:
 				else{
 					floorShakeAmplitude = 0;
 					message = "floor stopped.";
+				}
+			}
+
+			if(id == ID_CALIBRATE){
+				using namespace std;
+				int leapNum = 5;
+
+				if(calibrateState == 0) {
+					message = "start calibrate.";
+					calibrateState++;
+				}
+				else if(calibrateState == leapNum) {
+					message = "calibrate end.";
+					calibrateState = 0;
+				}
+				else {
+					leapUDP->calibrate(calibrateState);
+					calibrateState++;
 				}
 			}
 		}

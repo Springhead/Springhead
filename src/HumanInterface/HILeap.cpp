@@ -78,24 +78,38 @@ UDPInit::~UDPInit() {
 bool HILeapUDP::Init(const void* desc) {
 #ifdef USE_LEAP	
 	ProtocolPC::getInstance();
+	
+	
+
 #endif
 	return true;
 }
 
+int HILeapUDP::getLeapNum() {
+	return ProtocolPC::getInstance()->mapIdLeapData.size();
+}
+
 bool ProtocolPC::isSame(LeapHand* L1, LeapHand* L2, double distance) {
-	return false;
-	double l1x = L1->position.x;
-	double l2x = L2->position.x;
+	if(!calibFileExist) { return false; }
+	if(calibrateOffset.size() <= L1->leapID){ return false; }
+	Vec3d l1v(L1->position);
+	Vec3d l2v(L2->position);
+
 	int l1id = L1->leapID;
 	int l2id = L2->leapID;
 
-	l1x += l1id * DISTANCE;
-	l2x += l2id * DISTANCE;
+	l1v.x += ( l1id - 1 ) * DISTANCE;
+	l2v.x += ( l2id - 1 ) * DISTANCE;
+
+	l1v += calibrateOffset[l1id - 1];
+	l2v += calibrateOffset[l2id - 1];
 
 	std::cout << "L1x : " << l1id << std::endl;
 	std::cout << "L2x : " << l2id << std::endl;
 	//return false;
-	double diff = pow(l1x - l2x, 2) + pow(L1->position.y - L2->position.y, 2) + pow(L1->position.z - L2->position.z, 2);
+	double diff = pow(l1v.x - l2v.x, 2)
+				+ pow(l1v.y - l2v.y, 2)
+				+ pow(l1v.z - l2v.z, 2);
 	
 	std::cout << "distance : " << diff << std::endl;
 
@@ -106,6 +120,36 @@ bool ProtocolPC::isSame(LeapHand* L1, LeapHand* L2, double distance) {
 	else { return false; }
 }
 
+
+void HILeapUDP::calibrate(int formerLeapID) {
+	ProtocolPC* ppc = ProtocolPC::getInstance();
+	FILE* fp;
+	if(formerLeapID == 1) {
+		fp = fopen("calibrate.ini", "w");
+		fprintf(fp, "%lf, %lf, %lf\n", 0.0, 0.0, 0.0);
+		ppc->calibratingFlag = true;
+	}
+	else { fp = fopen("calibrate.ini", "a"); }
+
+	LeapHand* formerHand;
+	LeapHand* latterHand;
+
+	formerHand = &ppc->mapIdLeapData[formerLeapID]->leapFrameBufs[ppc->mapIdLeapData[formerLeapID]->read].leapHands[0];
+	latterHand = &ppc->mapIdLeapData[formerLeapID+1]->leapFrameBufs[ppc->mapIdLeapData[formerLeapID+1]->read].leapHands[0];
+
+	Vec3d offset;
+	offset.x = latterHand->position.x + DISTANCE - formerHand->position.x;
+	offset.y = latterHand->position.y - formerHand->position.y;
+	offset.z = latterHand->position.z - formerHand->position.z;
+
+	fprintf(fp, "%lf, %lf, %lf\n", offset.x, offset.y, offset.z);
+
+	fclose(fp);
+
+	ppc->loadCalib();
+	//if(formerLeapID == ppc->mapIdLeapData.size() - 1) { ppc->calibratingFlag = false; }
+
+}
 
 void HILeapUDP::Update(float dt) {
 #ifdef USE_LEAP
@@ -290,6 +334,15 @@ void HILeapUDP::Update(float dt) {
 					offset.y = lb->position.y;
 					offset.z = lb->position.z;
 					offset.x = lb->position.x + (mostConfLH->leapID - 1) * DISTANCE;
+
+					if(mostConfLH->leapID <= ppc->calibrateOffset.size()) {
+						offset -= ppc->calibrateOffset[mostConfLH->leapID - 1];
+					}
+					else {
+						cout << "bad here" << endl;
+					}
+
+					//offset.x = lb->position.x;
 					DCAST(HIBone,skel->bones[cnt])->position  = ToSpr(offset) + center;
 					DCAST(HIBone,skel->bones[cnt])->direction = ToSpr(lb->direction);
 					DCAST(HIBone,skel->bones[cnt])->length    = lb->length * scale;
@@ -317,13 +370,42 @@ LeapFinger::LeapFinger(){}
 LeapHand::LeapHand() : recFingersNum(0), bufID(-1) {}
 LeapFrame::LeapFrame() : recHandsNum(0) {}
 
+void ProtocolPC::loadCalib() {
+	FILE *fp;
+	fp = fopen("calibrate.ini", "r");
+	calibrateOffset.clear();
+	if(calibrateOffset.size() != 0) {
+		std::cout << "bad" << std::endl;
+	}
+	if(fp) {
+		double x, y, z;
+		while( fscanf(fp, "%lf, %lf, %lf", &x, &y, &z) != EOF ) {
+			Vec3d v(x, y, z);
+			calibrateOffset.push_back(v);
+		}
+
+		for(int i = 1; i < calibrateOffset.size(); i++) {
+			calibrateOffset[i] += calibrateOffset[i - 1];
+		}
+		fclose(fp);
+
+		calibFileExist = true;
+	}
+	else {
+		calibFileExist = false;
+	}
+}
+
 ProtocolPC::ProtocolPC() {
 	UDPInit::getInstance();
 
 	recvPort = 2233;
 	nRecv = 0;
 	
-
+	calibratingFlag = false;
+	loadCalib();
+	
+	
 //	write = 0;
 //	keep = 1;
 //	read = 2;
