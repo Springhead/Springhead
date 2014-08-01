@@ -35,6 +35,7 @@ struct HILeapDesc{
 /** @brief LeapmotionUDPのインターフェース */
 struct HILeapUDPIf: public HISkeletonSensorIf{
 	SPR_IFDEF(HILeapUDP);
+	void calibrate(int formerLeapID);
 };
 
 /** @brief LeapmotionUDPのデスクリプタ */

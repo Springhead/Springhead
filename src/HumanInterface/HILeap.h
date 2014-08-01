@@ -10,7 +10,8 @@
 #define HI_LEAP_H
 
 // Libraries/LeapSdk��`�F�b�N�A�E�g���Ĉȉ���define�̃R�����g�A�E�g��O����Leapmotion���g����悤�ɂȂ�B
-// #define USE_LEAP
+#define USE_LEAP
+#define USE_LEAP_UDP
 
 #include <Foundation/UTTimer.h>
 //#include <Foundation/UTSocket.h>
@@ -24,6 +25,7 @@
 #include "../../Libraries/LeapSDK/include/Leap.h"
 #pragma comment(lib, "Leap.lib")
 #endif
+
 #include <HumanInterface/HISkeletonSensor.h>
 #include <HumanInterface/SprHILeap.h>
 namespace Spr{;
@@ -176,6 +178,7 @@ private:
 	void unpackData(std::vector<char>&, LeapFrame&);
 
 public:
+	void loadCalib();
 	//Leap�ŗLID����LeapData�C���X�^���X�ւ̃}�b�v
 	std::map<int, LeapData*> mapIdLeapData;
 
@@ -196,6 +199,9 @@ public:
 		
 	bool isSame(LeapHand* L1, LeapHand* L2, double distance);
 
+	bool calibratingFlag;
+	std::vector<Vec3d> calibrateOffset;
+	bool calibFileExist;
 };
 
 
@@ -219,6 +225,11 @@ public:
 	// ----- ----- ----- ----- -----
 	// ��API�֐�
 
+
+	void calibrate(int formerLeapID);
+	
+	
+
 	/// Leap���W�n����iscale��l��������ł́jSpringhead���W�n��
 #ifdef USE_LEAP
 	inline Vec3d ToSpr(Vec3d lv) {
@@ -233,6 +244,7 @@ public:
 		return q;
 	}
 
+	int getLeapNum();
 	
 	
 #endif
