@@ -8,6 +8,7 @@
 #ifndef PHCONSTRAINT_H
 #define PHCONSTRAINT_H
 
+#include <SprDefs.h>
 #include "PHContactDetector.h"
 #include "PHSpatial.h"
 #include "PHAxisIndex.h"

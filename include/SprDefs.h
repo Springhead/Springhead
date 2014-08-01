@@ -17,9 +17,9 @@
 
 /** PhysicsでOpenMPを使用
  */
-//#define USE_OMP_PHYSICS
+//#define USE_OPENMP_PHYSICS
 
 /** Springhead2/closed のソースを使用するかどうか
 	開発者以外は未定義としてください
  */
-#include "UseClosedSrcOrNot.h" 
+//#include "UseClosedSrcOrNot.h" 

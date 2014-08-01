@@ -657,7 +657,7 @@ void PHConstraintEngine::CompResponseMatrix(){
 				
 	p.CountUS();
 #ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for private(idx)
+//# pragma omp parallel for private(idx)
 #endif
 	for(int i0 = 0; i0 < (int)cons.size(); i0++){
 		if(idx.size() < cons.size())
@@ -800,7 +800,7 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 
 	// 速度の更新 (dtを渡すので並列化しない）
 	double dt   = GetScene()->GetTimeStep();
-	for(int i = 0; i < solids.size(); i++){
+	for(int i = 0; i < (int)solids.size(); i++){
 		if(solids[i]->IsArticulated())
 			continue;
 		solids[i]->UpdateVelocity(&dt);
@@ -815,16 +815,16 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 #ifdef USE_OPENMP_PHYSICS
 # pragma omp parallel for
 #endif
-	for(PHSolids::iterator is = solids.begin(); is != solids.end(); is++){
-		if((*is)->IsArticulated())
+	for(int i = 0; i < (int)solids.size(); i++){
+		if(solids[i]->IsArticulated())
 			continue;
-		(*is)->UpdatePosition(dt);
+		solids[i]->UpdatePosition(dt);
 	}
 #ifdef USE_OPENMP_PHYSICS
 # pragma omp parallel for
 #endif
-	for(PHRootNodes::iterator it = trees.begin(); it != trees.end(); it++)
-		(*it)->UpdatePosition(dt);
+	for(int i = 0; i < (int)trees.size(); i++)
+		trees[i]->UpdatePosition(dt);
 
 }
 
