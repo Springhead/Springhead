@@ -9,7 +9,6 @@
 #ifndef HI_LEAP_H
 #define HI_LEAP_H
 
-// Libraries/LeapSdk��`�F�b�N�A�E�g���Ĉȉ���define�̃R�����g�A�E�g��O����Leapmotion���g����悤�ɂȂ�B
 #define USE_LEAP
 #define USE_LEAP_UDP
 
@@ -50,15 +49,15 @@ public:
 	}
 
 	// ----- ----- ----- ----- -----
-	// HIBase��API
+	// HIBase??API
 
 	bool Init(const void* desc);
 	void Update(float dt);
 
 	// ----- ----- ----- ----- -----
-	// ��API�֐�
+	// ??API???
 
-	/// Leap���W�n����iscale��l��������ł́jSpringhead���W�n��
+	/// Leap???W?n????iscale??l??????????jSpringhead???W?n??
 #ifdef USE_LEAP
 	inline Vec3d ToSpr(Leap::Vector lv) {
 		return rotation * Vec3d(lv.x, lv.y, lv.z) * scale;
@@ -78,7 +77,7 @@ public:
 
 
 //----- ----- ----- ----- -----
-// �ʐM����
+// ??M????
 
 union Uni {
 	char ch[4];
@@ -162,13 +161,13 @@ public:
 class ProtocolPC {
 private:
 
-	/// ��M�p�|�[�g�ԍ�
+	/// ??M?p?|?[?g???
 	int recvPort;
 
-	/// ��M�X���b�h
+	/// ??M?X???b?h
 	UTTimerIf* recvThread;
 
-	/// ��M�p�P�b�g��
+	/// ??M?p?P?b?g??
 	int nRecv;
 
 	ProtocolPC();
@@ -179,15 +178,15 @@ private:
 
 public:
 	void loadCalib();
-	//Leap�ŗLID����LeapData�C���X�^���X�ւ̃}�b�v
+	//Leap??LID????LeapData?C???X?^???X???}?b?v
 	std::map<int, LeapData*> mapIdLeapData;
 
 	std::list<int> usingLeapHandIdList;
 
-	//LeapHandID���炻��ID������Ă���LeapHand�ւ̃}�b�v
+	//LeapHandID???�b??ID??????????LeapHand???}?b?v
 	std::map<int, LeapHand*> mapLHIdLeapHand;
 
-	//�o�b�t�@ID���珊��LeapHandID��
+	//?o?b?t?@ID???�X??LeapHandID??
 	std::vector< std::list<int> > bufIdLHIds;
 
 	//static int bufsNum;
@@ -217,20 +216,20 @@ public:
 	~HILeapUDP() {}
 
 	// ----- ----- ----- ----- -----
-	// HIBase��API
+	// HIBase??API
 
 	bool Init(const void* desc);
 	void Update(float dt);
 
 	// ----- ----- ----- ----- -----
-	// ��API�֐�
+	// ??API???
 
 
 	void calibrate(int formerLeapID);
 	
 	
 
-	/// Leap���W�n����iscale��l��������ł́jSpringhead���W�n��
+	/// Leap???W?n????iscale??l??????????jSpringhead???W?n??
 #ifdef USE_LEAP
 	inline Vec3d ToSpr(Vec3d lv) {
 		return rotation * Vec3d(lv.x, lv.y, lv.z) * scale;

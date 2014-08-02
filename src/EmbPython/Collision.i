@@ -20,11 +20,7 @@ EXTEND_NEW(PHMaterial)
 #include "../../include/Springhead.h"
 
 #include "../../include/EmbPython/SprEPVersion.h"
-#if EMB_PYTHON_VER==33 
-#include "../../include/Python33/Python.h" 
-#else 
-#include "../../include/Python32/Python.h" 
-#endif 
+#include PYTHON_H_REL
 
 #include "../../include/EmbPython/SprEPUtility.h"
 #include "../../include/EmbPython/SprEPBase.h"

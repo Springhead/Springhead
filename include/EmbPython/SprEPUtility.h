@@ -10,11 +10,7 @@
 #include "Utility/SprUTCriticalSection.h"//CriticalSection用
 
 #include <EmbPython\/SprEPVersion.h>
-#if EMB_PYTHON_VER==33
-#include <Python33/Python.h>
-#else
-#include <Python32/Python.h>
-#endif
+#include PYTHON_H_PATH
 
 #define EP_MODULE_NAME "Spr"
 //#define EP_USE_SUBMODULE
