@@ -91,39 +91,43 @@ int HILeapUDP::getLeapNum() {
 
 bool ProtocolPC::isSame(LeapHand* L1, LeapHand* L2, double distance) {
 	if(!calibFileExist) { return false; }
-	if(calibrateOffset.size() <= L1->leapID){ return false; }
-	Vec3d l1v(L1->position);
-	Vec3d l2v(L2->position);
+	if(calibratingFlag) { return false; }
 
 	int l1id = L1->leapID;
 	int l2id = L2->leapID;
+	
+	int lowerID;
+	(l1id < l2id)? lowerID = l1id : lowerID = l2id;
 
-	l1v.x += ( l1id - 1 ) * DISTANCE;
-	l2v.x += ( l2id - 1 ) * DISTANCE;
+	if(calibrateOffset.size() <= lowerID){ return false; }
+	Vec3d l1v(L1->position);
+	Vec3d l2v(L2->position);
+
+	
+	l1v.x += ( l1id - 1 ) * LEAP_DISTANCE;
+	l2v.x += ( l2id - 1 ) * LEAP_DISTANCE;
 
 	l1v += calibrateOffset[l1id - 1];
 	l2v += calibrateOffset[l2id - 1];
 
-	std::cout << "L1x : " << l1id << std::endl;
-	std::cout << "L2x : " << l2id << std::endl;
 	//return false;
 	double diff = pow(l1v.x - l2v.x, 2)
 				+ pow(l1v.y - l2v.y, 2)
 				+ pow(l1v.z - l2v.z, 2);
 	
-	std::cout << "distance : " << diff << std::endl;
-
 	if(diff < distance * distance) {
-		std::cout << "true" << std::endl;
 		return true;
 	}
 	else { return false; }
 }
 
 
-void HILeapUDP::calibrate(int formerLeapID) {
+bool HILeapUDP::calibrate(int formerLeapID) {
 	ProtocolPC* ppc = ProtocolPC::getInstance();
 	FILE* fp;
+
+	if(ppc->mapIdLeapData.size() <= formerLeapID) { return false; }
+
 	if(formerLeapID == 1) {
 		fp = fopen("calibrate.ini", "w");
 		fprintf(fp, "%lf, %lf, %lf\n", 0.0, 0.0, 0.0);
@@ -138,7 +142,7 @@ void HILeapUDP::calibrate(int formerLeapID) {
 	latterHand = &ppc->mapIdLeapData[formerLeapID+1]->leapFrameBufs[ppc->mapIdLeapData[formerLeapID+1]->read].leapHands[0];
 
 	Vec3d offset;
-	offset.x = latterHand->position.x + DISTANCE - formerHand->position.x;
+	offset.x = latterHand->position.x + LEAP_DISTANCE - formerHand->position.x;
 	offset.y = latterHand->position.y - formerHand->position.y;
 	offset.z = latterHand->position.z - formerHand->position.z;
 
@@ -147,7 +151,11 @@ void HILeapUDP::calibrate(int formerLeapID) {
 	fclose(fp);
 
 	ppc->loadCalib();
-	//if(formerLeapID == ppc->mapIdLeapData.size() - 1) { ppc->calibratingFlag = false; }
+	if(formerLeapID == ppc->mapIdLeapData.size() - 1) {
+		ppc->calibratingFlag = false;
+		return false;
+	}
+	else { return true; }
 
 }
 
@@ -220,7 +228,7 @@ void HILeapUDP::Update(float dt) {
 		for(int i = 0; i < ppc->bufIdLHIds.size(); i++) {
 			if(ppc->bufIdLHIds[i].size()){
 				LeapHand* dlh = ppc->mapLHIdLeapHand[ ppc->bufIdLHIds[i].front() ];
-				if(ppc->isSame(nlh, dlh, 50)) {
+				if(ppc->isSame(nlh, dlh, 200)) {
 					ppc->bufIdLHIds[i].push_back(*it);
 					found = true;
 					break;
@@ -247,6 +255,33 @@ void HILeapUDP::Update(float dt) {
 				}
 			}
 		}
+	}
+
+	//実は同じ手を表しているリストがあった場合統合する
+	int size = ppc->bufIdLHIds.size();
+
+	for(int i = 0; i < size - 1; i++) {
+		if(ppc->bufIdLHIds[i].size() == 0) { continue; }
+		int lh1id = ppc->bufIdLHIds[i].front();
+		int lh2id;
+
+		bool found = false;
+
+		for(int j = i+1; j < ppc->bufIdLHIds.size(); j++) {
+			if(ppc->bufIdLHIds[j].size() == 0) { continue; }
+			lh2id = ppc->bufIdLHIds[j].front();
+			LeapHand* lh1 = ppc->mapLHIdLeapHand[lh1id];
+			LeapHand* lh2 = ppc->mapLHIdLeapHand[lh2id];
+			if(ppc->isSame(lh1, lh2, 30)) {
+				for(list<int>::iterator it = ppc->bufIdLHIds[i].begin(); it != ppc->bufIdLHIds[i].end(); it++) {
+					ppc->bufIdLHIds[j].push_back(*it);
+				}
+				ppc->bufIdLHIds[i].clear();
+				found = true;
+				break;
+			}
+		}
+		if(found) { continue; }
 	}
 
 
@@ -303,52 +338,102 @@ void HILeapUDP::Update(float dt) {
 		}
 		else {
 			//リストから最もconfidence値の高いLeapHandIDを選ぶ
+			/*
 			LeapHand* mostConfLH = ppc->mapLHIdLeapHand[ ppc->bufIdLHIds[h].front() ];
 			for each( int val in ppc->bufIdLHIds[h] ) {
-//			for(list<int>::iterator it = ppc->bufIdLHIds[h].begin(); it != ppc->bufIdLHIds[h].end(); it++) {
 				LeapHand* lh = ppc->mapLHIdLeapHand[val];
 				if(mostConfLH->confidence < lh->confidence) {
 					mostConfLH = lh;
 				}
 			}
+			*/
 
+			//加重平均
+			LeapHand aveLH;
+			aveLH.leapFingers[0].bones[0].position.x = 0;
+			//aveLH.position = (0, 0, 0);
+			//aveLH.direction = (0, 0, 0);
+			double sum = 0;
+			Vec3d offset;
+
+			for each (int val in ppc->bufIdLHIds[h] ) {
+				LeapHand* lh = ppc->mapLHIdLeapHand[val];
+				offset = ppc->calibrateOffset[lh->leapID - 1];
+				float conf = lh->confidence;
+				if(conf < 0.1){ conf = 0; }
+				aveLH.position.x += (lh->position.x + (lh->leapID - 1) * LEAP_DISTANCE - offset.x) * conf;
+				aveLH.position.y += (lh->position.y - offset.y) * conf;
+				aveLH.position.z += (lh->position.z - offset.z) * conf;
+
+				aveLH.direction += lh->direction * conf;
+				sum += conf;
+				for(int f = 0; f < 5; f++) {
+					for(int b = 0; b < 4; b++) {
+						LeapBone* lb = &lh->leapFingers[f].bones[b];
+						aveLH.leapFingers[f].bones[b].position.x += (lb->position.x + (lh->leapID - 1) * LEAP_DISTANCE - offset.x) * conf;
+						aveLH.leapFingers[f].bones[b].position.y += (lb->position.y - offset.y) * conf;
+						aveLH.leapFingers[f].bones[b].position.z += (lb->position.z - offset.z) * conf;
+
+						aveLH.leapFingers[f].bones[b].direction += lb->direction * conf;
+						aveLH.leapFingers[f].bones[b].length += lb->length * conf;
+					}
+				}
+			}
+
+			if( sum > 0) {
+				aveLH.position /= sum;
+				aveLH.direction /= sum;
+
+
+				for(int f = 0; f < 5; f++) {
+					for(int b = 0; b < 4; b++) {
+						aveLH.leapFingers[f].bones[b].position /= sum;
+						aveLH.leapFingers[f].bones[b].direction /= sum;
+						aveLH.leapFingers[f].bones[b].length /= sum;
+					}
+				}
+			
 
 			// 手全体の位置姿勢をセット
-			//skel->pose.Pos() = ToSpr(readBuf->leapHands[h].position) + center;
-			//skel->pose.Ori() = ToSprQ(readBuf->leapHands[h].direction) * rotation;
-
-			skel->pose.Pos() = ToSpr(mostConfLH->position) + center;
-			skel->pose.Ori() = ToSprQ(mostConfLH->direction) * rotation;
+			//skel->pose.Pos() = ToSpr(mostConfLH->position) + center;
+			//skel->pose.Ori() = ToSprQ(mostConfLH->direction) * rotation;
+			skel->pose.Pos() = ToSpr(aveLH.position) + center;
+			skel->pose.Ori() = ToSprQ(aveLH.direction) * rotation;
 
 			// ボーンを準備
 			skel->PrepareBone(20);
 
 			// 各指の位置と方向をセット
 			int cnt = 0;
-			Vec3d offset;
-			for(int f=0; f<mostConfLH->recFingersNum; f++){
+			//Vec3d offset;
+			//for(int f=0; f<mostConfLH->recFingersNum; f++){
+			for(int f = 0; f < 5; f++) {
 				for(int b = 0; b < 4; b++) {
 					Leap::Bone::Type boneType = static_cast<Leap::Bone::Type>(b);
 					//Leap::Bone bone = readBuf->leapHands[h].leapFingers[f].bone(boneType);
-					LeapBone* lb = &mostConfLH->leapFingers[f].bones[b];
-					offset.y = lb->position.y;
-					offset.z = lb->position.z;
-					offset.x = lb->position.x + (mostConfLH->leapID - 1) * DISTANCE;
+					//LeapBone* lb = &mostConfLH->leapFingers[f].bones[b];
+					LeapBone* lb = &aveLH.leapFingers[f].bones[b];
+					//offset.y = lb->position.y;
+					//offset.z = lb->position.z;
+					//offset.x = lb->position.x + (mostConfLH->leapID - 1) * LEAP_DISTANCE;
+					//offset.x = lb->position.x;
 
-					if(mostConfLH->leapID <= ppc->calibrateOffset.size()) {
-						offset -= ppc->calibrateOffset[mostConfLH->leapID - 1];
-					}
-					else {
-						cout << "bad here" << endl;
-					}
+					//if(mostConfLH->leapID <= ppc->calibrateOffset.size()) {
+					//	offset -= ppc->calibrateOffset[mostConfLH->leapID - 1];
+					//}
 
 					//offset.x = lb->position.x;
-					DCAST(HIBone,skel->bones[cnt])->position  = ToSpr(offset) + center;
+					
+					//DCAST(HIBone,skel->bones[cnt])->position  = ToSpr(offset) + center;
+					
+					DCAST(HIBone, skel->bones[cnt])->position = ToSpr(lb->position) + center;
 					DCAST(HIBone,skel->bones[cnt])->direction = ToSpr(lb->direction);
 					DCAST(HIBone,skel->bones[cnt])->length    = lb->length * scale;
+					
 					cnt++;
 				}
 			}
+		}
 		}
 	}
 
@@ -365,7 +450,11 @@ void HILeapUDP::Update(float dt) {
 	#endif	//USE_LEAP
 }
 
-LeapBone::LeapBone(){}
+LeapBone::LeapBone(){
+	//LeapBone::position = (0, 0, 0);
+	//LeapBone::direction = (0, 0, 0);
+	length = 0;
+}
 LeapFinger::LeapFinger(){}
 LeapHand::LeapHand() : recFingersNum(0), bufID(-1) {}
 LeapFrame::LeapFrame() : recHandsNum(0) {}
@@ -374,9 +463,7 @@ void ProtocolPC::loadCalib() {
 	FILE *fp;
 	fp = fopen("calibrate.ini", "r");
 	calibrateOffset.clear();
-	if(calibrateOffset.size() != 0) {
-		std::cout << "bad" << std::endl;
-	}
+
 	if(fp) {
 		double x, y, z;
 		while( fscanf(fp, "%lf, %lf, %lf", &x, &y, &z) != EOF ) {
@@ -557,7 +644,11 @@ void ProtocolPC::unpackData(std::vector<char>& buff, LeapFrame& frame) {
 		//LeapHandID -> LeapHand* のマップを作成
 		ppc->mapLHIdLeapHand[originalLeapHandID] = lh;
 
-		cout << "leapID: " << lh->leapID << " handPosX: " << lh->position.x << endl;
+		for(int c = 0; c < 4; c++) {
+			ch[c] = buff[++offset];
+		}
+		float conf = charToFloat(&ch[0]);
+		lh->confidence = conf;
 
 		fingerNum = buff[++offset];
 		lh->recFingersNum = fingerNum;
