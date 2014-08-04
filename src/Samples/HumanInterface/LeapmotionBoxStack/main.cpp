@@ -206,19 +206,17 @@ public:
 
 			if(id == ID_CALIBRATE){
 				using namespace std;
-				int leapNum = 5;
-
 				if(calibrateState == 0) {
 					message = "start calibrate.";
 					calibrateState++;
 				}
-				else if(calibrateState == leapNum) {
-					message = "calibrate end.";
-					calibrateState = 0;
-				}
-				else {
-					leapUDP->calibrate(calibrateState);
-					calibrateState++;
+				else{
+					bool cf = leapUDP->calibrate(calibrateState);
+					if(cf == false) {
+						message = "calibrate end.";
+						calibrateState = 0;
+					}
+					else { calibrateState++; }
 				}
 			}
 		}

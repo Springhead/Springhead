@@ -144,7 +144,7 @@ public:
 	std::string hostName;
 };
 
-static const int DISTANCE = 300;
+static const int LEAP_DISTANCE = 250;
 
 class UDPInit {
 public:
@@ -225,7 +225,7 @@ public:
 	// ??API???
 
 
-	void calibrate(int formerLeapID);
+	bool calibrate(int formerLeapID);
 	
 	
 
