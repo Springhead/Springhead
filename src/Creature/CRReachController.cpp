@@ -40,7 +40,16 @@ void CRReachController::Reset() {
 void CRReachController::Step() {
 	if (ikEffs.size()==0) { return; }
 
-	PHSceneIf* phScene = DCAST(PHSceneIf,ikEffs[0]->GetSolid()->GetScene());
+	PHSceneIf* phScene = NULL;
+	for (size_t i=0; i<ikEffs.size(); ++i) {
+		phScene = ikEffs[0]->GetSolid()->GetScene()->Cast();
+		if (phScene) { break; }
+	}
+	if (phScene==NULL) {
+		DSTR << "CRReachController : Could Not Find PHScene" << std::endl;
+		return;
+	}
+
 	Vec3d tipOrigin = GetTipPos();
 
 	/// --- マージンをとった目標位置を計算
@@ -114,7 +123,76 @@ void CRReachController::Step() {
 
 	/// --- 再スタート
 	if (bRestart) {
-		if (bFinished) {
+		bool bHandChanged = false; bool bEnabled =true;
+
+		// 使う手を選択（手が複数あり、なおかつnumUseHandsが手の本数より小さい正の数の場合だけ）
+		if (ikEffs.size() > 1 && numUseHands > 0 && numUseHands < ikEffs.size()) {
+			ikEffUseFlags.resize(ikEffs.size());
+			for (size_t i=0; i<ikEffUseFlags.size(); ++i) { ikEffUseFlags[i] = true; ikEffs[i]->EnablePositionControl(bEnabled);}
+			double sholderdistance[] = {ikEffUseFlags.size()};
+			for (size_t i=0; i<ikEffUseFlags.size(); ++i) {
+				if (baseJoints[i]) {
+					Posed pp; baseJoints[i]->GetPlugPose(pp);
+					Vec3d joPos = baseJoints[i]->GetPlugSolid()->GetPose() * pp.Pos();
+					sholderdistance[i] = (finalPos - joPos).norm();
+					std::cout << baseJoints[i]->GetName() << " : " << sholderdistance[i] << std::endl;
+				}
+			}
+
+			// <!!>
+			// i番目の手を使わない場合はikEffUseFlags[i]をfalseにする。
+			// 何本の手をfalseにするかは numUseHands によって決める。
+			// （未実装）
+			
+			if (numUseHands > 0){
+				// 数本の手制御 
+				double handdistance[] = {ikEffUseFlags.size()};
+				double handdiff, sholderdiff;
+				double threshold = 1.0;
+				bool bEnabled = false;
+				for (size_t i=0; i<ikEffUseFlags.size(); ++i){
+					Vec3d handPos = ikEffs[i]->GetSolid()->GetPose().Pos();
+					handdistance[i] = (finalPos - handPos).norm();
+					if(i>0){
+						//使用する手の目標までの距離の差異
+						handdiff	= handdistance[i] - handdistance[i-1];
+						sholderdiff	= sholderdistance[i] - sholderdistance[i-1];
+						if (abs(handdiff) > threshold) {
+							//手から近い方の手を選択
+							if(handdiff > 0) {
+								if (ikEffUseFlags[i]==true) { bHandChanged = true; }
+								ikEffUseFlags[i] = false;
+								ikEffs[i]->EnablePositionControl(bEnabled);
+								//std::cout << "lefthand" << std::endl;
+							} else {
+								if (ikEffUseFlags[i-1]==true) { bHandChanged = true; }
+								ikEffUseFlags[i-1] = false;		
+								ikEffs[i-1]->EnablePositionControl(bEnabled);
+								//std::cout << "righthand" << std::endl;
+							}
+						} else {
+							//肩からの距離の近い方を使用
+							if(sholderdiff > 0){
+								if (ikEffUseFlags[i]==true) { bHandChanged = true; }
+								ikEffUseFlags[i] = false;
+								ikEffs[i]->EnablePositionControl(bEnabled);
+								//std::cout << "leftsholder" << std::endl;
+							} else {
+								if (ikEffUseFlags[i-1]==true) { bHandChanged = true; }
+								ikEffUseFlags[i-1] = false;
+								ikEffs[i-1]->EnablePositionControl(bEnabled);
+								//std::cout << "rightsholder" << std::endl;
+							}
+						}
+					}
+				}
+			}
+			
+		}
+
+		// --
+
+		if (bFinished || bHandChanged) {
 			// 到達運動してない状態からスタートする場合はIKエンドエフェクタの内部位置を初期状態とする
 			if (!bLookatMode) {
 				currPos = GetTipPos();
@@ -135,26 +213,6 @@ void CRReachController::Step() {
 			// -- 軌道長に応じて到達目標時刻をセットする
 			reachTime = (targPos - currPos).norm() / averageSpeed; // GetLengthのためにはとりあえずreachTimeが必要なので
 			reachTime = this->GetLength() / averageSpeed;
-		}
-
-		// 使う手を選択（手が複数あり、なおかつnumUseHandsが手の本数より小さい正の数の場合だけ）
-		if (ikEffs.size() > 1 && numUseHands > 0 && numUseHands < ikEffs.size()) {
-			ikEffUseFlags.resize(ikEffs.size());
-			for (size_t i=0; i<ikEffUseFlags.size(); ++i) { ikEffUseFlags[i] = true; }
-
-			for (size_t i=0; i<ikEffUseFlags.size(); ++i) {
-				if (baseJoints[i]) {
-					Posed pp; baseJoints[i]->GetPlugPose(pp);
-					Vec3d joPos = baseJoints[i]->GetPlugSolid()->GetPose() * pp.Pos();
-					double distance = (finalPos - joPos).norm();
-					std::cout << baseJoints[i]->GetName() << " : " << distance << std::endl;
-				}
-			}
-
-			// <!!>
-			// i番目の手を使わない場合はikEffUseFlags[i]をfalseにする。
-			// 何本の手をfalseにするかは numUseHands によって決める。
-			// （未実装）
 		}
 
 		// 運動開始
@@ -182,7 +240,7 @@ void CRReachController::Step() {
 		}
 	}
 
-	// FrontKeep();
+	FrontKeep();
 
 	if (time <= reachTime) {
 		time += phScene->GetTimeStep();

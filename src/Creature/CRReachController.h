@@ -43,6 +43,7 @@ private:
 public:
 	SPR_OBJECTDEF(CRReachController);
 	ACCESS_DESC_STATE(CRReachController);
+
 	UTRef<ObjectStatesIf>	states;
 	Quaterniond	tempori;
 
@@ -64,18 +65,26 @@ public:
 
 	Vec3d GetTipPos() {
 		Vec3d tipPosSum = Vec3d();
+		double num = 0;
 		for (size_t i=0; i<ikEffs.size(); ++i) {
-			tipPosSum += (ikEffs[i]->GetSolid()->GetPose() * ikEffs[i]->GetTargetLocalPosition());
+			if (ikEffUseFlags[i]) {
+				tipPosSum += (ikEffs[i]->GetSolid()->GetPose() * ikEffs[i]->GetTargetLocalPosition());
+				num += 1;
+			}
 		}
-		return tipPosSum * (1.0/(double)(ikEffs.size()));
+		return tipPosSum * num;
 	}
 
 	Vec3d GetTipDir() {
-		Vec3d tipPosSum = Vec3d();
+		Vec3d tipDirSum = Vec3d();
+		double num = 0;
 		for (size_t i=0; i<ikEffs.size(); ++i) {
-			tipPosSum += (ikEffs[i]->GetSolid()->GetPose().Ori() * ikEffs[i]->GetTargetLocalDirection());
+			if (ikEffUseFlags[i]) {
+				tipDirSum += (ikEffs[i]->GetSolid()->GetPose().Ori() * ikEffs[i]->GetTargetLocalDirection());
+				num += 1;
+			}
 		}
-		return tipPosSum * (1.0/(double)(ikEffs.size()));
+		return tipDirSum * num;
 	}
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
@@ -85,9 +94,9 @@ public:
 	virtual void Init() {
 		currPos  = GetTipPos();
 		currVel  = Vec3d();
+
 		initPos  = currPos;
 		initVel  = currVel;
-
 		lastMarginalPos = finalPos = currPos;
 
 		for (size_t i=0; i<ikEffs.size(); ++i) {
@@ -115,16 +124,17 @@ public:
 
 	/** @brief 到達に使うエンドエフェクタを設定・取得する
 	*/
-	void SetIKEndEffector(PHIKEndEffectorIf* ikEff) {
-		if (this->ikEffs.size() == 0) {
-			AddChildObject(ikEff);
-		} else {
-			this->ikEffs[0] = ikEff;
+	void SetIKEndEffector(PHIKEndEffectorIf* ikEff, int n=0) {
+		while (ikEffs.size() <= n) {
+			ikEffs.push_back(NULL);
+			ikEffUseFlags.push_back(true);
+			baseJoints.push_back(NULL);
 		}
+		this->ikEffs[n] = ikEff;
 	}
-	PHIKEndEffectorIf* GetIKEndEffector() {
-		if (this->ikEffs.size() == 0) { return NULL; }
-		return this->ikEffs[0];
+	PHIKEndEffectorIf* GetIKEndEffector(int n=0) {
+		if (ikEffs.size() <= n) { return NULL; }
+		return this->ikEffs[n];
 	}
 
 	/** @brief 最終到達目標位置をセットする

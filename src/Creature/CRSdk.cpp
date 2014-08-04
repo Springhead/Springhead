@@ -67,6 +67,7 @@ CRCreatureIf* CRSdk::CreateCreature(const IfInfo* ii, const CRCreatureDesc& desc
 
 void CRSdk::Step() {
 	for (size_t i=0; i<creatures.size(); ++i) {
+		//std::cout << i << " : " << creatures[i] << std::endl;
 		creatures[i]->Step();
 	}
 }
