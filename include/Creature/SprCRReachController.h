@@ -19,8 +19,8 @@ struct CRReachControllerIf : public CRControllerIf{
 
 	/** @brief 到達に使うエンドエフェクタを設定・取得する
 	*/
-	void SetIKEndEffector(PHIKEndEffectorIf* ikEff);
-	PHIKEndEffectorIf* GetIKEndEffector();
+	void SetIKEndEffector(PHIKEndEffectorIf* ikEff, int n=0);
+	PHIKEndEffectorIf* GetIKEndEffector(int n=0);
 
 	/** @brief 最終到達目標位置をセットする
 	*/
