@@ -102,7 +102,15 @@ void CRTouchSensor::Step() {
 				if (!constraint) { continue; }
 
 				Vec3d force = phScene->GetConstraintEngine()->GetContactPoints()->GetTotalForce(so1, so2);
+				force = so1->GetPose() * force;
 
+				CRContactInfo contact;
+				contact.soMe		= soMe;
+				contact.soOther		= soOther;
+				contact.force		= force;
+				contact.pressure	= force.norm();
+
+				double num = 0;
 				for (int s=0; s<so1->NShape(); ++s) {
 					for (int t=0; t<so2->NShape(); ++t) {
 
@@ -120,23 +128,19 @@ void CRTouchSensor::Step() {
 
 
 						if (contactStat == 1 || (contactStat == 2 && (lastContCnt == sceneCnt-1))) {
-
 							totalForce += force;
 
 							double		depth			= solidPair->GetContactDepth(s, t);
 							int			nSectionVtx		= shapePair->NSectionVertexes();
 
-							CRContactInfo contact;
-							contact.pos			= solidPair->GetCommonPoint(s, t);
-							contact.soMe		= soMe;
-							contact.soOther		= soOther;
-							contact.force		= force;
-							contact.pressure	= force.norm();
-
-							contactList[write].push_back(contact);
+							contact.pos += solidPair->GetCommonPoint(s, t);
+							num += 1.0;
 						}
 					}
 				}
+				contact.pos *= (1/num);
+
+				contactList[write].push_back(contact);
 			}
 		}
 	}
