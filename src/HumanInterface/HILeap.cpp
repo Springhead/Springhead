@@ -360,7 +360,7 @@ void HILeapUDP::Update(float dt) {
 				LeapHand* lh = ppc->mapLHIdLeapHand[val];
 				offset = ppc->calibrateOffset[lh->leapID - 1];
 				float conf = lh->confidence;
-				if(conf < 0.1){ conf = 0; }
+				//if(conf < 0.1){ conf = 0; }
 				aveLH.position.x += (lh->position.x + (lh->leapID - 1) * LEAP_DISTANCE - offset.x) * conf;
 				aveLH.position.y += (lh->position.y - offset.y) * conf;
 				aveLH.position.z += (lh->position.z - offset.z) * conf;
@@ -471,6 +471,11 @@ void ProtocolPC::loadCalib() {
 			calibrateOffset.push_back(v);
 		}
 
+		while(calibrateOffset.size() < mapIdLeapData.size()) {
+			Vec3d v(0, 0, 0);
+			calibrateOffset.push_back(v);
+		}
+
 		for(int i = 1; i < calibrateOffset.size(); i++) {
 			calibrateOffset[i] += calibrateOffset[i - 1];
 		}
@@ -490,6 +495,7 @@ ProtocolPC::ProtocolPC() {
 	nRecv = 0;
 	
 	calibratingFlag = false;
+	calibFileExist = false;
 	loadCalib();
 	
 	
