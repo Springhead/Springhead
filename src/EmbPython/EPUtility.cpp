@@ -1,15 +1,30 @@
 ﻿#include "../../include\EmbPython\SprEPUtility.h" 
 #include "EPUtility.h" 
 #include "../../include\EmbPython\Utility\SprEPObject.h"
+#include <Windows.h>
 
 #pragma warning(disable:4244) 
 //*********** Decl Global variables ***********
 Spr::UTCriticalSection EPCriticalSection;
 PyObject* PyErr_Spr_NullReference;
+PyObject* PyErr_Spr_OSException;
 
+void mappingSEHtoCPPExceptions(unsigned int exceptionCode, _EXCEPTION_POINTERS* eptr){
+        throw SEH_Exception(exceptionCode, eptr);
+}
+static char SEH_Exception_message[1024];
+const char* SEH_Exception::what() const throw(){
+	_EXCEPTION_POINTERS* e = (_EXCEPTION_POINTERS*) eptr;
+	size_t adr = (size_t)e->ExceptionRecord->ExceptionAddress;
+	sprintf(SEH_Exception_message, "SEH_Exception code = %Xh  address:%X %8X", seCode, (unsigned)(adr>>32), (unsigned)adr);
+	return SEH_Exception_message;
+}
 
 void initUtility(PyObject *rootModule)
 {
 	initEPObject(rootModule);
 	PyErr_Spr_NullReference = PyErr_NewException("Spr.NullReferenceError",NULL,NULL);
+	PyErr_Spr_OSException = PyErr_NewException("Spr.OSException", NULL, NULL);	
+	// OS例外からC++例外への翻訳設定
+	_set_se_translator(mappingSEHtoCPPExceptions);
 }
