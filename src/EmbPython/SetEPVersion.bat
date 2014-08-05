@@ -4,7 +4,7 @@ set EPVERSION_FILE=..\..\include\EmbPython\SprEPVersion.h
 
 call CurrEPVersion.bat
 
-if %PY_VERSION%==%CURR_PY_VERSION% (
+if "%PY_VERSION%"=="%CURR_PY_VERSION%" (
 echo "Do Nothing."
 ) else (
 echo "Set New Version."
