@@ -230,6 +230,9 @@ public:
 	/** @brief FEMの描画 */
 	void EnableRenderFem(bool enable = true);
 	
+	/** @brief SkeletonSensorの描画 */
+	void EnableRenderSkeletonSensor(bool enable = true);
+
 	void AddHumanInterface(HIForceDevice6D* d);
 
 	/** @brief 力覚ポインタを作る
