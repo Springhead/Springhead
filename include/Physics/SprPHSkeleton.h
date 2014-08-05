@@ -35,6 +35,14 @@ public:
 	 */
 	PHSolidIf* GetSolid();
 
+	/** @brief Proxy Solid‚ğİ’è‚·‚é
+	 */
+	void SetProxySolid(PHSolidIf* solid);
+
+	/** @brief Proxy Solid‚ğæ“¾‚·‚é
+	 */
+	PHSolidIf* GetProxySolid();
+
 	/** @brief Joint‚ğİ’è‚·‚é
 	 */
 	void SetJoint(PHJointIf* joint);
