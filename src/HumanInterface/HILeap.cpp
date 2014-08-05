@@ -27,6 +27,8 @@ bool HILeap::Init(const void* desc) {
 
 void HILeap::Update(float dt) {
 #ifdef USE_LEAP
+	const int nUseFingers = 2;
+
 	if (leap) {
 		// Leapmotionからセンシング結果を取得
 		Leap::Frame frame = leap->frame(0);
@@ -44,14 +46,14 @@ void HILeap::Update(float dt) {
 			skel->pose.Pos() = ToSpr(hand.palmPosition()) + center;
 
 			// ボーンを準備
-			skel->PrepareBone(20);
+			skel->PrepareBone(5 * nUseFingers);
 
 			// 各指の位置と方向をセット
 			int cnt = 0;
 
 			for(int f=0; f<hand.fingers().count(); f++){
-				for(int b = 0; b < 4; b++) {
-					Leap::Bone::Type boneType = static_cast<Leap::Bone::Type>(b);
+				for(int b = 0; b<nUseFingers; b++) {
+					Leap::Bone::Type boneType = static_cast<Leap::Bone::Type>(3-b);
 					Leap::Bone bone = hand.fingers()[f].bone(boneType);
 					DCAST(HIBone,skel->bones[cnt])->position  = ToSpr(bone.center()) + center;
 					DCAST(HIBone,skel->bones[cnt])->direction = ToSpr(bone.direction());

@@ -72,7 +72,7 @@ public:
 				num += 1;
 			}
 		}
-		return tipPosSum * num;
+		return tipPosSum * (1/num);
 	}
 
 	Vec3d GetTipDir() {
@@ -84,7 +84,7 @@ public:
 				num += 1;
 			}
 		}
-		return tipDirSum * num;
+		return tipDirSum * (1/num);
 	}
 
 	// ----- ----- ----- ----- ----- ----- ----- ----- ----- -----

@@ -42,6 +42,7 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	renderBBox      = false;
 	renderIK		= false;
 	renderFEM		= false;
+	renderSkeletonSensor = false;
 	// 倍率は等倍
 	scaleAxisWorld = scaleAxisSolid = scaleAxisConst = 1.0f;
 	scaleForce = 1.0f;
@@ -416,6 +417,10 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		if(hapticEngine){
 			DrawHaptic(render, hapticEngine);
 		}
+	}
+
+	if(renderSkeletonSensor){
+		DrawSkeletonSensor(render);
 	}
 
 	if(renderFEM){
@@ -882,6 +887,22 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 	render->SetDepthTest(true);
 }
 
+void FWScene::DrawSkeletonSensor(GRRenderIf* render) {
+	render->SetDepthTest(true);
+
+	for (size_t i=0; i<skeletonSensors.size(); ++i) {
+		FWSkeletonSensor* ss = skeletonSensors[i]->Cast();
+		for (size_t j=0; j<ss->phSkeletons.size(); ++j) {
+			for (size_t k=0; k<ss->phSkeletons[j]->NBones(); ++k) {
+				PHSolidIf* so = ss->phSkeletons[j]->GetBone(k)->GetProxySolid();
+				if (!so) { so = ss->phSkeletons[j]->GetBone(k)->GetSolid(); }
+
+				DrawSolid(render, so, true);
+			}
+		}
+	}
+}
+
 void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 	PHFemEngine* fe = DCAST(PHFemEngine, femEngine);
 
@@ -1171,6 +1192,9 @@ void FWScene::EnableRenderHaptic(bool enable){
 }
 void FWScene::EnableRenderFem(bool enable){
 	renderFEM = enable;
+}
+void FWScene::EnableRenderSkeletonSensor(bool enable){
+	renderSkeletonSensor = enable;
 }
 
 bool FWScene::IsRenderEnabled(ObjectIf* obj){

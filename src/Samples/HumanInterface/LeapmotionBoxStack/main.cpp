@@ -62,7 +62,8 @@ public:
 	double					floorShakeAmplitude;
 
 	int						calibrateState;
-	HILeapUDPIf*			leapUDP;
+	HILeapIf*				leap;
+	HILeapUDPIf*				leapUDP;
 
 	HISdkIf*				hiSdk;
 
@@ -99,14 +100,12 @@ public:
 	virtual void BuildScene(){
 		soFloor = CreateFloor();
 
-		/*
 		HILeapDesc descLeap;
 		HILeapIf* leap;
 		leap = hiSdk->CreateHumanInterface(HILeapIf::GetIfInfoStatic())->Cast();
 		leap->Init(&descLeap);
-		*/
-		
-		
+
+		/*
 		HILeapUDPDesc descLeapUDP;
 		
 		leapUDP = hiSdk->CreateHumanInterface(HILeapUDPIf::GetIfInfoStatic())->Cast();
@@ -115,11 +114,15 @@ public:
 
 		leapUDP->SetScale(1/10.0);
 		leapUDP->SetCenter(Vec3d(0,-8,0));
-		//leap->SetRotation(Quaterniond::Rot(Rad(90), 'x'));
+		*/
 
+		leap->SetScale(1/10.0);
+		leap->SetCenter(Vec3d(0,-8,0));
+		// leap->SetRotation(Quaterniond::Rot(Rad(90), 'x'));
+		
 		FWSkeletonSensorDesc descSS;
 		FWSkeletonSensorIf* skelSensor = GetSdk()->GetScene(0)->CreateSkeletonSensor(descSS);
-		skelSensor->AddChildObject(leapUDP);
+		skelSensor->AddChildObject(leap);
 		
 	}
 

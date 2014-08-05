@@ -70,6 +70,7 @@ public:
 	bool		renderIK;
 	bool		renderHaptic;
 	bool		renderFEM;
+	bool		renderSkeletonSensor;
 
 	/// 描画スケール
 	float		scaleAxisWorld, scaleAxisSolid, scaleAxisConst;
@@ -138,6 +139,7 @@ public:
 	void	DrawLimit		(GRRenderIf* render, PHConstraintIf* con);
 	void	DrawHaptic		(GRRenderIf* render, PHHapticEngineIf* hapticEngine);
 	void	DrawFem			(GRRenderIf* render, PHFemEngineIf* femEngine);
+	void	DrawSkeletonSensor(GRRenderIf* render);
 	
 	/// 描画制御
 	void	EnableRenderPHScene(bool enable = true);
@@ -176,6 +178,8 @@ public:
 	void	EnableRenderHaptic	(bool enable);
 
 	void	EnableRenderFem		(bool enable);
+
+	void	EnableRenderSkeletonSensor(bool enable);
 
 	/// 内部用
 	void	DrawCoordinateAxis	(GRRenderIf* render, float scale, bool solid_or_wire);

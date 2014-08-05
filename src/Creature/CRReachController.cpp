@@ -125,6 +125,16 @@ void CRReachController::Step() {
 	if (bRestart) {
 		bool bHandChanged = false; bool bEnabled =true;
 
+		if (numUseHands < 0) {
+			for (size_t i=0; i<ikEffUseFlags.size(); ++i) { 
+				ikEffUseFlags[i] = true;
+			}
+		}
+
+		for (size_t i=0; i<ikEffUseFlags.size(); ++i) { 
+			if (ikEffUseFlags[i]) { ikEffs[i]->EnablePositionControl(true); }
+		}
+
 		// 使う手を選択（手が複数あり、なおかつnumUseHandsが手の本数より小さい正の数の場合だけ）
 		if (ikEffs.size() > 1 && numUseHands > 0 && numUseHands < ikEffs.size()) {
 			ikEffUseFlags.resize(ikEffs.size());
@@ -240,7 +250,7 @@ void CRReachController::Step() {
 		}
 	}
 
-	FrontKeep();
+	// FrontKeep();
 
 	if (time <= reachTime) {
 		time += phScene->GetTimeStep();
