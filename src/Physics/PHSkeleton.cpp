@@ -14,7 +14,12 @@ namespace Spr{
 
 void PHBone::SetLength(double length) {
 	if (length < 1e-3) { length = 1e-3; }
-	CDRoundConeIf* rc = solid->GetShape(0)->Cast();
+	CDRoundConeIf* rc;
+	if (proxySolid) {
+		rc = proxySolid->GetShape(0)->Cast();
+	} else {
+		rc = solid->GetShape(0)->Cast();
+	}
 	if (rc) {
 		if (abs(rc->GetLength() - length) > 1e-3) {
 			rc->SetLength(length);
@@ -41,6 +46,16 @@ void PHBone::SetPosition(Vec3d currPos) {
 		solid->SetVelocity((currPos - lastPos) / DCAST(PHSceneIf,GetScene())->GetTimeStep());
 	}
 	lastPose.Pos() = currPos;
+
+	if (proxySolid) {
+		if (((currPos - lastPos).norm() > 1.0) ||
+			((proxySolid->GetPose().Pos() - solid->GetPose().Pos()).norm() > 5.0) )
+		{
+			proxySolid->SetPose(solid->GetPose());
+			proxySolid->SetVelocity(solid->GetVelocity());
+			proxySolid->SetAngularVelocity(solid->GetAngularVelocity());
+		}
+	}
 }
 
 }

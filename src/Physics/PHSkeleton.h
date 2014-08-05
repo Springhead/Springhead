@@ -11,6 +11,7 @@ namespace Spr{;
 class PHBone : public SceneObject{
 
 	PHSolidIf* solid;
+	PHSolidIf* proxySolid;
 	PHJointIf* joint;
 	PHBoneIf*  parent;
 
@@ -23,7 +24,7 @@ public:
 
 	/** @brief デフォルトコンストラクタ
 	*/
-	PHBone(){ solid=NULL; joint=NULL; parent=NULL; lastPose = Posed(); }
+	PHBone(){ solid=NULL; proxySolid=NULL; joint=NULL; parent=NULL; lastPose = Posed(); }
 
 	/** @brief Solidを設定する
 	 */
@@ -32,6 +33,14 @@ public:
 	/** @brief Solidを取得する
 	 */
 	PHSolidIf* GetSolid() { return solid; }
+
+	/** @brief Proxy Solidを設定する
+	 */
+	void SetProxySolid(PHSolidIf* solid) { this->proxySolid = solid; }
+
+	/** @brief Proxy Solidを取得する
+	 */
+	PHSolidIf* GetProxySolid() { return proxySolid; }
 
 	/** @brief Jointを設定する
 	 */

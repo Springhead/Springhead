@@ -26,8 +26,8 @@ void FWSkeletonSensor::Update() {
 					if (j<phSkeletons[i]->NBones()) {
 						HIBoneIf* hiBone = hiSkel->GetBone(j);
 						PHBoneIf* phBone = phSkeletons[i]->GetBone(j);
-						phBone->SetPosition(  hiBone->GetPosition()  );
 						phBone->SetDirection( hiBone->GetDirection() );
+						phBone->SetPosition(  hiBone->GetPosition()  );
 						phBone->SetLength(    hiBone->GetLength() )  ;
 					}
 				}
@@ -51,19 +51,43 @@ void FWSkeletonSensor::PrepareBone(PHSkeletonIf* phSkel, int n) {
 		PHBoneIf* phBone = phSkel->CreateBone(NULL);
 		if (bCreatePHSolid) {
 			PHSolidIf* so = phScene->CreateSolid();
-			so->SetName((std::string("so") + std::string(phSkel->GetName())).c_str());
+			so->SetName((std::string("soInput") + std::string(phSkel->GetName())).c_str());
 			so->SetDynamical(false);
+			so->SetMass(0.1);
+			so->SetInertia(Matrix3d::Unit() * 0.1);
+
+			// <!!>
+			PHSolidIf* soProxy = phScene->CreateSolid();
+			soProxy->SetName((std::string("soProxy") + std::string(phSkel->GetName())).c_str());
+			soProxy->SetDynamical(true);
+			soProxy->SetMass(0.1);
+			soProxy->SetInertia(Matrix3d::Unit() * 0.1);
+
+			PHSpringDesc descSpring;
+			PHSpringIf* spring = phScene->CreateJoint(so, soProxy, descSpring)->Cast();
+			spring->SetSpring(Vec3d(1,1,1) *  300);
+			spring->SetDamper(Vec3d(1,1,1) *    3);
+			spring->SetSpringOri(300);
+			spring->SetDamperOri(  3);
+
 			phBone->SetSolid(so);
+			phBone->SetProxySolid(soProxy);
 			if (bCreateCDShape) {
 				CDRoundConeDesc descRC;
 				descRC.length = 1e-2f;
 				descRC.radius = this->radius;
-				so->AddShape( phScene->GetSdk()->CreateShape(descRC) );
+				CDShapeIf* shape = phScene->GetSdk()->CreateShape(descRC);
+				shape->SetStaticFriction(1.0);  // <!!>
+				shape->SetDynamicFriction(1.0); // <!!>
+				soProxy->AddShape(shape);
+
+				// <!!>
+				// phScene->SetContactMode(soProxy, PHSceneDesc::MODE_NONE);
 
 				for (int j=0; j<phSkel->NBones(); ++j) {
-					PHSolidIf* so2 = phSkel->GetBone(j)->GetSolid();
-					if (so!=so2) {
-						phScene->SetContactMode(so, so2, PHSceneDesc::MODE_NONE);
+					PHSolidIf* soProxy2 = phSkel->GetBone(j)->GetProxySolid();
+					if (soProxy!=soProxy2) {
+						phScene->SetContactMode(soProxy, soProxy2, PHSceneDesc::MODE_NONE);
 					}
 				}
 			}
