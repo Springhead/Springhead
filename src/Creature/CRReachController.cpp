@@ -123,81 +123,69 @@ void CRReachController::Step() {
 
 	/// --- 再スタート
 	if (bRestart) {
-		bool bHandChanged = false; bool bEnabled =true;
-
-		if (numUseHands < 0) {
-			for (size_t i=0; i<ikEffUseFlags.size(); ++i) { 
-				ikEffUseFlags[i] = true;
-			}
-		}
-
-		for (size_t i=0; i<ikEffUseFlags.size(); ++i) { 
-			if (ikEffUseFlags[i]) { ikEffs[i]->EnablePositionControl(true); }
-		}
+		bool bHandChanged = false;
 
 		// 使う手を選択（手が複数あり、なおかつnumUseHandsが手の本数より小さい正の数の場合だけ）
-		if (ikEffs.size() > 1 && numUseHands > 0 && numUseHands < ikEffs.size()) {
-			ikEffUseFlags.resize(ikEffs.size());
-			for (size_t i=0; i<ikEffUseFlags.size(); ++i) { ikEffUseFlags[i] = true; ikEffs[i]->EnablePositionControl(bEnabled);}
-			double sholderdistance[] = {ikEffUseFlags.size()};
-			for (size_t i=0; i<ikEffUseFlags.size(); ++i) {
-				if (baseJoints[i]) {
-					Posed pp; baseJoints[i]->GetPlugPose(pp);
-					Vec3d joPos = baseJoints[i]->GetPlugSolid()->GetPose() * pp.Pos();
-					sholderdistance[i] = (finalPos - joPos).norm();
-					std::cout << baseJoints[i]->GetName() << " : " << sholderdistance[i] << std::endl;
+		if (!bLookatMode) {
+			// 複数あって全部使う場合
+			if (ikEffs.size() > 1 && numUseHands < 0) {
+				for (size_t i=0; i<ikEffUseFlags.size(); ++i) { 
+					ikEffUseFlags[i] = true;
+					ikEffs[i]->EnablePositionControl(true);
 				}
 			}
+			// 複数あって一部しか使わない場合
+			if (ikEffs.size() > 1 && numUseHands > 0 && numUseHands < ikEffs.size()) {
+				double sholderdistance[] = {ikEffUseFlags.size()};
+				for (size_t i=0; i<ikEffUseFlags.size(); ++i) {
+					if (baseJoints[i]) {
+						Posed pp; baseJoints[i]->GetPlugPose(pp);
+						Vec3d joPos = baseJoints[i]->GetPlugSolid()->GetPose() * pp.Pos();
+						sholderdistance[i] = (finalPos - joPos).norm();
+					}
+				}
 
-			// <!!>
-			// i番目の手を使わない場合はikEffUseFlags[i]をfalseにする。
-			// 何本の手をfalseにするかは numUseHands によって決める。
-			// （未実装）
-			
-			if (numUseHands > 0){
-				// 数本の手制御 
-				double handdistance[] = {ikEffUseFlags.size()};
-				double handdiff, sholderdiff;
-				double threshold = 1.0;
-				bool bEnabled = false;
-				for (size_t i=0; i<ikEffUseFlags.size(); ++i){
-					Vec3d handPos = ikEffs[i]->GetSolid()->GetPose().Pos();
-					handdistance[i] = (finalPos - handPos).norm();
-					if(i>0){
-						//使用する手の目標までの距離の差異
-						handdiff	= handdistance[i] - handdistance[i-1];
-						sholderdiff	= sholderdistance[i] - sholderdistance[i-1];
-						if (abs(handdiff) > threshold) {
-							//手から近い方の手を選択
-							if(handdiff > 0) {
-								if (ikEffUseFlags[i]==true) { bHandChanged = true; }
-								ikEffUseFlags[i] = false;
-								ikEffs[i]->EnablePositionControl(bEnabled);
-								//std::cout << "lefthand" << std::endl;
+				// i番目の手を使わない場合はikEffUseFlags[i]をfalseにする。
+				// 何本の手をfalseにするかは numUseHands によって決める。
+				if (numUseHands > 0){
+					// 数本の手制御 
+					double handdistance[] = {ikEffUseFlags.size()};
+					double handdiff, sholderdiff;
+					double threshold = 1.0;
+					for (size_t i=0; i<ikEffUseFlags.size(); ++i){
+						Vec3d handPos = ikEffs[i]->GetSolid()->GetPose().Pos();
+						handdistance[i] = (finalPos - handPos).norm();
+						if(i>0){
+							//使用する手の目標までの距離の差異
+							handdiff	= handdistance[i] - handdistance[i-1];
+							sholderdiff	= sholderdistance[i] - sholderdistance[i-1];
+							if (abs(handdiff) > threshold) {
+								//手から近い方の手を選択
+								if(handdiff > 0) {
+									if (ikEffUseFlags[i]==true) { bHandChanged = true; }
+									ikEffUseFlags[i] = false;
+								} else {
+									if (ikEffUseFlags[i-1]==true) { bHandChanged = true; }
+									ikEffUseFlags[i-1] = false;		
+								}
 							} else {
-								if (ikEffUseFlags[i-1]==true) { bHandChanged = true; }
-								ikEffUseFlags[i-1] = false;		
-								ikEffs[i-1]->EnablePositionControl(bEnabled);
-								//std::cout << "righthand" << std::endl;
-							}
-						} else {
-							//肩からの距離の近い方を使用
-							if(sholderdiff > 0){
-								if (ikEffUseFlags[i]==true) { bHandChanged = true; }
-								ikEffUseFlags[i] = false;
-								ikEffs[i]->EnablePositionControl(bEnabled);
-								//std::cout << "leftsholder" << std::endl;
-							} else {
-								if (ikEffUseFlags[i-1]==true) { bHandChanged = true; }
-								ikEffUseFlags[i-1] = false;
-								ikEffs[i-1]->EnablePositionControl(bEnabled);
-								//std::cout << "rightsholder" << std::endl;
+								//肩からの距離の近い方を使用
+								if(sholderdiff > 0){
+									if (ikEffUseFlags[i]==true) { bHandChanged = true; }
+									ikEffUseFlags[i] = false;
+								} else {
+									if (ikEffUseFlags[i-1]==true) { bHandChanged = true; }
+									ikEffUseFlags[i-1] = false;
+								}
 							}
 						}
 					}
 				}
-			}
 			
+				for (size_t i=0; i<ikEffUseFlags.size(); ++i) {
+					ikEffs[i]->EnablePositionControl(ikEffUseFlags[i]);
+				}
+			}
 		}
 
 		// --
