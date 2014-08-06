@@ -21,6 +21,8 @@ const char* SEH_Exception::what() const throw(){
 }
 const char* EPAssertException::what() const throw(){
 	sprintf(exceptionMessage, "Assert(%s) in %s L%d", expr, file, line);
+	DSTR << exceptionMessage << std::endl;
+    __debugbreak();
 	return exceptionMessage;
 }
 
