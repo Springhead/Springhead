@@ -18,6 +18,7 @@
 extern Spr::UTCriticalSection EPCriticalSection;
 extern PyObject* PyErr_Spr_NullReference;
 extern PyObject* PyErr_Spr_OSException;
+extern PyObject* PyErr_Spr_AssertException;
 
 // Class for containing information on a Win32 Structured Exception
 class SEH_Exception: public std::exception{
@@ -28,6 +29,19 @@ private:
 public:
     SEH_Exception(unsigned int uSECode, void* ep) : seCode(uSECode), eptr(ep) {}
     ~SEH_Exception() {}
+	virtual const char* what() const throw();
+};
+
+// Class for containing information on a Win32 Structured Exception
+class EPAssertException: public std::exception{
+private:
+    EPAssertException() {}
+public:
+	const char* file;
+	const char* expr;
+	int line;
+    EPAssertException(const char* e, const char* f, int l) : expr(e), file(f), line(l) {}
+    ~EPAssertException() {}
 	virtual const char* what() const throw();
 };
 
