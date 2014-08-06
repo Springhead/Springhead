@@ -293,7 +293,7 @@ void PHContactDetector::DelShapePairs(PHSolid* solid, int iBegin, int iEnd){
 				solidPair->shapePairs.item(j, k - (iEnd - iBegin)) = solidPair->shapePairs.item(j, k);
 		}
 		//	サイズの更新
-		solidPair->shapePairs.resize(solid->NShape(), srhs->NShape());
+		solidPair->shapePairs.resize(slhs->NShape(), srhs->NShape());
 	}
 	for(i = isolid+1; i < (int)solids.size(); i++){
 		solidPair = solidPairs.item(isolid, i);
@@ -306,7 +306,7 @@ void PHContactDetector::DelShapePairs(PHSolid* solid, int iBegin, int iEnd){
 			}
 		}
 		//	サイズの更新
-		solidPair->shapePairs.resize(solid->NShape(), srhs->NShape());
+		solidPair->shapePairs.resize(slhs->NShape(), srhs->NShape());
 	}
 }
 
