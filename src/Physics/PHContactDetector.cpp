@@ -56,7 +56,7 @@ void PHSolidPair::Init(PHContactDetector* d, PHSolid* s0, PHSolid* s1){
 bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool continuous){
 	PHFrame* fr0 = shapePair->frame[0];
 	PHFrame* fr1 = shapePair->frame[1];
-#if 1	// check PHFrame
+#if 0	// check PHFrame
 	for(int i=0; i<2; ++i){
 			int j;
 			for(j=0; j< solid[i]->frames.size(); ++j){
@@ -318,7 +318,7 @@ void PHContactDetector::DelShapePairs(PHSolid* solid, int iBegin, int iEnd){
 		}
 		//	サイズの更新
 		solidPair->shapePairs.resize(slhs->NShape(), srhs->NShape());
-#if 1		//確認
+#if 0		//確認
 		for(j = 0; j < slhs->NShape(); j++) {
 			for(int k=0; k<srhs->NShape(); ++k) {
 				if (solidPair->shapePairs.item(j,k)->frame[0] != solidPair->solid[0]->frames[j]){
