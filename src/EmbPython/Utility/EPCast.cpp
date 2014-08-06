@@ -2,6 +2,7 @@
 using namespace std;
 #include <locale>
 #include "EmbPython/SprEPBase.h"
+#include "EmbPython/EPUtility.h"
 
 double PyObject_asDouble(PyObject* obj)
 {
@@ -10,7 +11,7 @@ double PyObject_asDouble(PyObject* obj)
 	else if (PyLong_Check(obj))
 		return PyLong_AsDouble(obj);
 	else 
-		assert(0);
+		EP_ASSERT(0);
 	
 	return 0;
 }
@@ -22,7 +23,7 @@ long PyObject_asLong(PyObject* obj)
 	else if (PyLong_Check(obj))
 		return PyLong_AsLong(obj);
 	else 
-		assert(0);
+		EP_ASSERT(0);
 
 	return 0;
 }
@@ -34,7 +35,7 @@ if( obj->ob_type == &EP##N##S##dType)						\
 	if( obj->ob_type == &EP##N##S##fType)					\
 	return ((##N##S##T##)*EPObject_Cast(obj,N##S##f));		\
 	DSTR << "CastError at PyObject_as3(" #N #S #T ")\n";	\
-assert(0);													\
+EP_ASSERT(0);													\
 return N##S##T##();											\
 }
 
@@ -63,7 +64,7 @@ PyObject_as3(Affine,2,f)
 //		return (Matrix3d)*EPObject_Cast(obj,Matrix3f);
 //	
 //	DSTR << "PyObject_asMatrix3dにおいてキャストが正常に行われませんでした";
-//	assert(0);
+//	EP_ASSERT(0);
 //	return Matrix3d();
 //}
 
@@ -74,7 +75,7 @@ N##T PyObject_as##N##T##(PyObject* obj){					\
 	if( obj->ob_type == &EP##N##fType )						\
 	return (##N##T##)*EPObject_Cast(obj,##N##f);			\
 	DSTR << "CastError at PyObject_as2(" #N #T ")\n";		\
-	assert(0);												\
+	EP_ASSERT(0);												\
 	return N##T##();									\
 }
 
@@ -119,7 +120,7 @@ ConvertStr::ConvertStr( PyObject *obj )
 
 		setlocale( LC_CTYPE, "japanese" );
 		int ret = (int)wcstombs(buff,(const wchar_t*)PyUnicode_AS_DATA(obj),size*2);
-		if (ret == -1) assert(0);//変換エラー 
+		if (ret == -1) EP_ASSERT(0);//変換エラー 
 		buff[ret] = '\0';
 		
 	}
