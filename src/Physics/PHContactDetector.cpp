@@ -56,6 +56,17 @@ void PHSolidPair::Init(PHContactDetector* d, PHSolid* s0, PHSolid* s1){
 bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool continuous){
 	PHFrame* fr0 = shapePair->frame[0];
 	PHFrame* fr1 = shapePair->frame[1];
+#if 1	// check PHFrame
+	for(int i=0; i<2; ++i){
+			int j;
+			for(j=0; j< solid[i]->frames.size(); ++j){
+				if (solid[i]->GetFrame(j) ==  shapePair->frame[i]->Cast()) break;
+			}
+			if (j >= solid[i]->frames.size()){
+				DSTR << solid[i]->GetName() << " has wrong frame " <<  shapePair->frame[i]->GetName() << std::endl;
+			}
+	}
+#endif
 
 	bool found = false;
 	if(continuous){	
@@ -289,8 +300,8 @@ void PHContactDetector::DelShapePairs(PHSolid* solid, int iBegin, int iEnd){
 		srhs = solid;
 		//	消えたShapeに対応する行を詰める
 		for(j = 0; j < slhs->NShape(); j++){
-			for(int k=iEnd; k<srhs->NShape(); ++k)
-				solidPair->shapePairs.item(j, k - (iEnd - iBegin)) = solidPair->shapePairs.item(j, k);
+			for(int k=iEnd; k < srhs->NShape() + (iEnd-iBegin); ++k)
+				solidPair->shapePairs.item(j, k - (iEnd-iBegin)) = solidPair->shapePairs.item(j, k);
 		}
 		//	サイズの更新
 		solidPair->shapePairs.resize(slhs->NShape(), srhs->NShape());
@@ -301,12 +312,27 @@ void PHContactDetector::DelShapePairs(PHSolid* solid, int iBegin, int iEnd){
 		srhs = solidPair->solid[1];
 		//	消えたShapeに対応する行を詰める
 		for(j = 0; j < srhs->NShape(); j++) {
-			for(int k=iEnd; k<slhs->NShape(); ++k) {
-				solidPair->shapePairs.item(k - (iEnd - iBegin), j) = solidPair->shapePairs.item(k, j);
+			for(int k=iEnd; k < slhs->NShape() + (iEnd-iBegin); ++k){
+				solidPair->shapePairs.item(k - (iEnd-iBegin), j) = solidPair->shapePairs.item(k, j);
 			}
 		}
 		//	サイズの更新
 		solidPair->shapePairs.resize(slhs->NShape(), srhs->NShape());
+#if 1		//確認
+		for(j = 0; j < slhs->NShape(); j++) {
+			for(int k=0; k<srhs->NShape(); ++k) {
+				if (solidPair->shapePairs.item(j,k)->frame[0] != solidPair->solid[0]->frames[j]){
+					DSTR << solidPair->solid[0]->GetName() << "-" << solidPair->solid[1]->GetName() << std::endl;
+					DSTR << "sp" << j << " - " << k << " " << solidPair->shapePairs.item(j,k)->frame[0]->GetName() << "-" << solidPair->solid[0]->frames[j]->GetName();
+					DSTR << std::endl;
+					DSTR << "collision";
+				}
+				if (solidPair->shapePairs.item(j,k)->frame[1] != solidPair->solid[1]->frames[k]){
+					DSTR << solidPair->solid[0]->GetName() << "-" << solidPair->solid[1]->GetName() << std::endl;
+				}
+			}
+		}
+#endif
 	}
 }
 
