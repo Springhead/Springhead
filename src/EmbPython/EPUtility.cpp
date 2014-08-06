@@ -12,12 +12,16 @@ PyObject* PyErr_Spr_OSException;
 void mappingSEHtoCPPExceptions(unsigned int exceptionCode, _EXCEPTION_POINTERS* eptr){
         throw SEH_Exception(exceptionCode, eptr);
 }
-static char SEH_Exception_message[1024];
+static char exceptionMessage[1024];
 const char* SEH_Exception::what() const throw(){
 	_EXCEPTION_POINTERS* e = (_EXCEPTION_POINTERS*) eptr;
 	size_t adr = (size_t)e->ExceptionRecord->ExceptionAddress;
-	sprintf(SEH_Exception_message, "SEH_Exception code = %Xh  address:%X %8X", seCode, (unsigned)(adr>>32), (unsigned)adr);
-	return SEH_Exception_message;
+	sprintf(exceptionMessage, "SEH_Exception code = %Xh  address:%X %8X", seCode, (unsigned)(adr>>32), (unsigned)adr);
+	return exceptionMessage;
+}
+const char* EPAssertException::what() const throw(){
+	sprintf(exceptionMessage, "Assert(%s) in %s L%d", expr, file, line);
+	return exceptionMessage;
 }
 
 void initUtility(PyObject *rootModule)
