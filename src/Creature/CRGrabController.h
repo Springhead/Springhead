@@ -59,13 +59,20 @@ public:
 	virtual void Init() {}
 
 	/// 1ステップ
-	virtual void Step() {}
+	virtual void Step() {
+		if (grabSpring) {
+			Vec3d f,t;
+			grabSpring->GetConstraintForce(f,t);
+			std::cout << f.norm() << " : "  << t.norm() << std::endl;
+		}
+	}
 
 	/// 状態をリセットする
 	virtual void Reset() {
 		if (grabSpring) { grabSpring->Enable(false); }
 		grabbingSolid = NULL;
 		grabSpring    = NULL;
+		std::cout << "Reset Grab Control" << std::endl;
 	}
 
 	/// 現状を返す
@@ -78,20 +85,28 @@ public:
 		Posed relpose = solid->GetPHSolid()->GetPose().Inv() * targetSolid->GetPose();
 
 		GrabSpringMap::iterator it = grabSpringMap.find(targetSolid);
+		std::cout << "For solid : " << targetSolid->GetName() << std::endl;
 		if (it==grabSpringMap.end()) {
 			PHSpringDesc descSpring;
 			descSpring.bEnabled = false;
-			descSpring.spring   = Vec3d(1,1,1) * 500;
+			descSpring.spring   = Vec3d(1,1,1) * 50000;
 			descSpring.damper   = Vec3d(1,1,1) *   5;
 			PHSpringIf* spring = phScene->CreateJoint(solid->GetPHSolid(), targetSolid, descSpring)->Cast();
 
 			grabSpringMap[targetSolid] = spring;
 			grabSpring = spring;
+			std::cout << "Create New Spring ; " << grabSpring << std::endl;
 		} else {
 			grabSpring = it->second;
+			std::cout << "Found Spring ; " << grabSpring << std::endl;
 		}
 
 		Posed pose;
+		if (grabSpring) {
+			std::cout << this << " : " << grabSpring->GetSocketSolid()->GetName() << " <-> " << grabSpring->GetPlugSolid()->GetName() << std::endl;
+		} else {
+			std::cout << this << " : GrabSpring is NULL " << std::endl;
+		}
 		grabSpring->Enable(true);
 		grabSpring->SetPlugPose(Posed());
 		grabSpring->SetSocketPose(relpose);
