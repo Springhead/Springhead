@@ -92,15 +92,18 @@ public:
 	struct Adjacents : std::vector<Adjacent>{
 		int num;
 		void Add(PHConstraint* _con, const SpatialMatrix& _A){
+			if(size() < num+1) resize(2*(num+1));
 			at(num).con = _con;
 			at(num).A   = _A;
 			num++;
 		}
 		Adjacent* Find(PHConstraint* con){
-			for(iterator it = begin(); it != end(); it++)
-				if(it->con == con)
-					return &*it;
+			for(int i=0; i != num; ++i){
+				if(at(i).con == con) return &at(i);
+			}
 			return 0;
+		}
+		Adjacents():std::vector<Adjacent>(12){
 		}
 	};
 	Adjacents	adj;

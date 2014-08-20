@@ -47,6 +47,10 @@ public:
 	/// 関連付けられたHISkeletonSensorを返す
 	HISkeletonSensorIf* GetSensor() { return sensor; }
 
+	/// スケルトン情報を返す
+	int NSkeleton() { return phSkeletons.size(); }
+	PHSkeletonIf* GetSkeleton(int i) { return phSkeletons[i]; }
+
 	// ----- ----- ----- ----- -----
 	// ベースクラスのAPI関数
 	

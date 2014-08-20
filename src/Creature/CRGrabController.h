@@ -37,6 +37,10 @@ private:
 	/// 把持中の剛体
 	PHSolidIf* grabbingSolid;
 
+	int i;
+	Vec6d currforce, lastforce;
+	double diff, diffLPF;
+
 	/// 把持を行うための作成済Springのマップ
 	//// 把持対象の剛体→連結用ばね
 	typedef std::map< PHSolidIf*, PHSpringIf* > GrabSpringMap;
@@ -61,9 +65,22 @@ public:
 	/// 1ステップ
 	virtual void Step() {
 		if (grabSpring) {
-			Vec3d f,t;
-			grabSpring->GetConstraintForce(f,t);
-			std::cout << f.norm() << " : "  << t.norm() << std::endl;
+			double alpha = 0.5;
+			currforce = grabSpring->GetMotorForce();
+			
+			if(i>0) {
+				diff = (currforce - lastforce).norm();
+				diffLPF	= alpha * diff + (1-alpha) * diffLPF;
+				std::cout << "constraint,constraintLPF,i:" << diff <<","<< diffLPF <<","<< i << std::endl;
+			}
+			lastforce = currforce;
+
+			if(i>40){
+				if(diffLPF> 100){
+					Reset();
+				}
+			}
+			i++;
 		}
 	}
 
@@ -72,6 +89,7 @@ public:
 		if (grabSpring) { grabSpring->Enable(false); }
 		grabbingSolid = NULL;
 		grabSpring    = NULL;
+		i = 0;
 		std::cout << "Reset Grab Control" << std::endl;
 	}
 
@@ -95,6 +113,7 @@ public:
 
 			grabSpringMap[targetSolid] = spring;
 			grabSpring = spring;
+			i=0;
 			std::cout << "Create New Spring ; " << grabSpring << std::endl;
 		} else {
 			grabSpring = it->second;

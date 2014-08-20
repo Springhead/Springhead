@@ -42,6 +42,7 @@ struct FWSkeletonSensorDesc {
 	}
 };
 
+struct PHSkeletonIf;
 /**	@brief SkeletonSensorのインタフェース */
 struct FWSkeletonSensorIf: public SceneObjectIf {
 	SPR_IFDEF(FWSkeletonSensor);
@@ -54,6 +55,11 @@ struct FWSkeletonSensorIf: public SceneObjectIf {
 
 	/// 関連付けられたHISkeletonSensorを返す
 	HISkeletonSensorIf* GetSensor();
+
+	/// スケルトン情報を返す
+	int NSkeleton();
+	PHSkeletonIf* GetSkeleton(int i);
+
 };
 
 //@}

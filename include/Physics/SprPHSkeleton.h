@@ -97,6 +97,10 @@ public:
 	/** @brief Bone‚ğì¬‚·‚é
 	 */
 	PHBoneIf* CreateBone(PHBoneIf* parent, const PHBoneDesc& desc = PHBoneDesc());
+
+	/** @brief ’Í‚ñ‚Å‚é“x‚ğæ“¾‚·‚é
+	 */
+	float GetGrabStrength();
 };
 
 

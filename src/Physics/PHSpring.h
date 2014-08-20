@@ -70,6 +70,13 @@ public:
 	virtual double GetHardnessRate() { return hardnessRate; }
 	virtual void SetSecondMoment(Vec3d sM) { secondMoment = sM; }
 	virtual Vec3d GetSecondMoment() { return secondMoment; }
+
+	// <!!>
+	virtual Vec6d GetMotorForce() {
+		Vec3d _f = motor->f.v() * GetScene()->GetTimeStepInv();
+		Vec3d _t = motor->f.w() * GetScene()->GetTimeStepInv();
+		return Vec6d(_f.x, _f.y, _f.z, _t.x, _t.y, _t.z);
+	}
 };
 
 }

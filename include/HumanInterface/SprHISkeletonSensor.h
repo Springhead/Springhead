@@ -46,6 +46,8 @@ struct HISkeletonIf: public ObjectIf{
 	HIBoneIf* GetBone(int i);
 	/// ルートボーンを返す
 	HIBoneIf* GetRoot();
+	/// 掴んでる度を返す
+	float GetGrabStrength();
 
 	/// トラッキング状況
 	bool IsTracked();
@@ -66,6 +68,7 @@ struct HISkeletonSensorIf: public HIBaseIf{
 	void SetCenter(Vec3d c);
 	// 座標軸の向きを決める回転をセットする
 	void SetRotation(Quaterniond q);
+
 };
 
 //@}
