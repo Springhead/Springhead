@@ -6,6 +6,7 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include <Framework/FWSkeletonSensor.h>
+#include <Physics/PHSkeleton.h>
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
@@ -31,6 +32,7 @@ void FWSkeletonSensor::Update() {
 						phBone->SetLength(    hiBone->GetLength() )  ;
 					}
 				}
+				((PHSkeleton*)phSkeletons[i])->grabStrength = hiSkel->GetGrabStrength();
 			}
 		}
 	}

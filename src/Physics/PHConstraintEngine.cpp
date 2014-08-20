@@ -663,8 +663,6 @@ void PHConstraintEngine::CompResponseMatrix(){
 		if(idx.size() < cons.size())
 			idx.resize(cons.size());
 		con0 = cons[i0];
-		if(con0->adj.size() < cons.size())
-			con0->adj.resize(2*cons.size());
 		con0->adj.num = 0;
 		fill(idx.begin(), idx.end(), -1);
 

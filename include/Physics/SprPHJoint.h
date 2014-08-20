@@ -693,6 +693,10 @@ struct PHSpringIf : public PHJointIf{
 		@return 断面二次モーメント
 	 */
 	Vec3d GetSecondMoment();
+
+	/** @brief バネの発揮している力を取得する
+	 */
+	Vec6d GetMotorForce();
 };
 
 /// バネダンパのデスクリプタ

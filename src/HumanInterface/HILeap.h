@@ -54,6 +54,7 @@ public:
 	bool Init(const void* desc);
 	void Update(float dt);
 
+
 	// ----- ----- ----- ----- -----
 	// ??API???
 
@@ -101,12 +102,19 @@ struct LeapFinger {
 };
 
 struct LeapHand {
+	enum HandKind{
+		RIGHT_HAND,
+		LEFT_HAND,
+	} handKind;
+
+
 	static const int FINGER_NUM = 5;
 	Spr::Vec3d position;
 	Spr::Vec3d direction;
 	LeapFinger leapFingers[FINGER_NUM];
 	int recFingersNum;
 	float confidence;
+	float grabStrength;
 	inline int getRecFingersNum() { return recFingersNum; }
 
 	int originalLeapHandID;
@@ -158,7 +166,7 @@ public:
 	~UDPInit();
 };
 
-class ProtocolPC {
+class ProtocolPC: public UTRefCount {
 private:
 
 	/// ??M?p?|?[?g???
@@ -192,11 +200,12 @@ public:
 	//static int bufsNum;
 
 	static ProtocolPC* getInstance() {
-		static ProtocolPC instance;
-		return &instance;
+		static UTRef<ProtocolPC> instance;
+		if (!instance) instance = DBG_NEW ProtocolPC;
+		return instance;
 	}
 		
-	bool isSame(LeapHand* L1, LeapHand* L2, double distance);
+	bool isSame(LeapHand* L1, LeapHand* L2, double sameHandDistance, double wrongHandDistance);
 
 	bool calibratingFlag;
 	std::vector<Vec3d> calibrateOffset;

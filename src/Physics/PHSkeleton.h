@@ -82,10 +82,12 @@ public:
 };
 
 class PHSkeleton : public SceneObject{
+public:
 
 	std::vector< UTRef<PHBone> > bones;
 
-public:
+	float grabStrength;
+
 	SPR_OBJECTDEF(PHSkeleton);
 
 	/** @brief デフォルトコンストラクタ
@@ -109,6 +111,10 @@ public:
 		bone->SetScene(GetScene());
 		return bone->Cast();
 	}
+
+	/** @brief 掴んでる度を取得する
+	 */
+	float GetGrabStrength() { return grabStrength; }
 };
 
 }

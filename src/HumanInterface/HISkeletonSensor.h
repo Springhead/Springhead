@@ -51,6 +51,8 @@ public:
 
 	Posed pose;
 
+	float grabStrength;
+
 	// ----- ----- ----- ----- -----
 	// API関数
 
@@ -67,6 +69,8 @@ public:
 		}
 		return NULL;
 	}
+	/// 掴んでる度を返す
+	virtual float GetGrabStrength() { return grabStrength; }
 	/// トラッキング状況
 	bool IsTracked() { return false; }
 
