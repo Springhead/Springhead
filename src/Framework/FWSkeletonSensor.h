@@ -48,7 +48,7 @@ public:
 	HISkeletonSensorIf* GetSensor() { return sensor; }
 
 	/// ƒXƒPƒ‹ƒgƒ“î•ñ‚ğ•Ô‚·
-	int NSkeleton() { return phSkeletons.size(); }
+	int NSkeleton() { return (int) phSkeletons.size(); }
 	PHSkeletonIf* GetSkeleton(int i) { return phSkeletons[i]; }
 
 	// ----- ----- ----- ----- -----

@@ -893,9 +893,9 @@ void FWScene::DrawSkeletonSensor(GRRenderIf* render) {
 	for (size_t i=0; i<skeletonSensors.size(); ++i) {
 		FWSkeletonSensor* ss = skeletonSensors[i]->Cast();
 		for (size_t j=0; j<ss->phSkeletons.size(); ++j) {
-			for (size_t k=0; k<ss->phSkeletons[j]->NBones(); ++k) {
-				PHSolidIf* so = ss->phSkeletons[j]->GetBone(k)->GetProxySolid();
-				if (!so) { so = ss->phSkeletons[j]->GetBone(k)->GetSolid(); }
+			for (size_t k=0; (int)k<ss->phSkeletons[j]->NBones(); ++k) {
+				PHSolidIf* so = ss->phSkeletons[j]->GetBone((int) k)->GetProxySolid();
+				if (!so) { so = ss->phSkeletons[j]->GetBone((int) k)->GetSolid(); }
 
 				DrawSolid(render, so, true);
 			}
