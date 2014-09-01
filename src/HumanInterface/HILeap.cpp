@@ -90,7 +90,7 @@ bool HILeapUDP::Init(const void* desc) {
 }
 
 int HILeapUDP::getLeapNum() {
-	return ProtocolPC::getInstance()->mapIdLeapData.size();
+	return (int) ProtocolPC::getInstance()->mapIdLeapData.size();
 }
 
 bool ProtocolPC::isSame(LeapHand* L1, LeapHand* L2, double sameHandDistance, double wrongHandDistance) {
@@ -104,7 +104,7 @@ bool ProtocolPC::isSame(LeapHand* L1, LeapHand* L2, double sameHandDistance, dou
 	int lowerID;
 	(l1id < l2id)? lowerID = l1id : lowerID = l2id;
 
-	if(calibrateOffset.size() <= lowerID){ return false; }
+	if((int) calibrateOffset.size() <= lowerID){ return false; }
 	Vec3d l1v(L1->position);
 	Vec3d l2v(L2->position);
 
@@ -135,7 +135,7 @@ bool HILeapUDP::calibrate(int formerLeapID) {
 	ProtocolPC* ppc = ProtocolPC::getInstance();
 	FILE* fp;
 
-	if(ppc->mapIdLeapData.size() <= formerLeapID) { return false; }
+	if((int) ppc->mapIdLeapData.size() <= formerLeapID) { return false; }
 
 	if(formerLeapID == 1) {
 		fp = fopen("calibrate.ini", "w");
@@ -234,7 +234,7 @@ void HILeapUDP::Update(float dt) {
 	for(list<int>::iterator it = newLeapHandIdList.begin(); it != newLeapHandIdList.end(); it++) {
 		LeapHand* nlh = ppc->mapLHIdLeapHand[*it];
 		bool found = false;
-		for(int i = 0; i < ppc->bufIdLHIds.size(); i++) {
+		for(int i = 0; i < (int) ppc->bufIdLHIds.size(); i++) {
 			if(ppc->bufIdLHIds[i].size()){
 				LeapHand* dlh = ppc->mapLHIdLeapHand[ ppc->bufIdLHIds[i].front() ];
 				if(ppc->isSame(nlh, dlh, 300, 0)) {
@@ -248,7 +248,7 @@ void HILeapUDP::Update(float dt) {
 			//同じ手が見つからなかったら空のリストに追加する。
 			//空のリストが無かったら新しくリストを作る。
 			bool swEmpty = false;
-			for(int i = 0; i < ppc->bufIdLHIds.size(); i++) {
+			for(int i = 0; i < (int) ppc->bufIdLHIds.size(); i++) {
 				if(ppc->bufIdLHIds[i].size() == 0) {
 					ppc->bufIdLHIds[i].push_back(*it);
 					swEmpty = true;
@@ -267,7 +267,7 @@ void HILeapUDP::Update(float dt) {
 	}
 
 	//実は同じ手を表しているリストがあった場合統合する
-	int size = ppc->bufIdLHIds.size();
+	int size = (int) ppc->bufIdLHIds.size();
 
 	for(int i = 0; i < size - 1; i++) {
 		if(ppc->bufIdLHIds[i].size() == 0) { continue; }
@@ -276,7 +276,7 @@ void HILeapUDP::Update(float dt) {
 
 		bool found = false;
 
-		for(int j = i+1; j < ppc->bufIdLHIds.size(); j++) {
+		for(int j = i+1; j < (int) ppc->bufIdLHIds.size(); j++) {
 			if(ppc->bufIdLHIds[j].size() == 0) { continue; }
 			lh2id = ppc->bufIdLHIds[j].front();
 			LeapHand* lh1 = ppc->mapLHIdLeapHand[lh1id];
@@ -297,7 +297,7 @@ void HILeapUDP::Update(float dt) {
 	//使い終わったIDを取り除く
 	for(list<int>::iterator it = usedLeapHandIdList.begin(); it != usedLeapHandIdList.end(); it++) {
 		
-		for(int i = 0; i < ppc->bufIdLHIds.size(); i++) {
+		for(int i = 0; i < (int) ppc->bufIdLHIds.size(); i++) {
 			//for(int j = 0; j < ppc->bufIdLHIds[i].size(); j++) {
 			//if(!ppc->bufIdLHIds[i].empty()){
 				//for each(int val in ppc->bufIdLHIds[i]) {
@@ -323,7 +323,7 @@ void HILeapUDP::Update(float dt) {
 	//for(int i = 0; i < ppc->bufIdLHIds.size(); i++) {
 
 	//int handsCount = readBuf->recHandsNum; 
-	int handsCount =  ppc->bufIdLHIds.size();
+	int handsCount =  (int) ppc->bufIdLHIds.size();
 //	cout << "handsCount: " << handsCount << endl;
 
 	// Skeletonの不足分を用意
@@ -571,7 +571,7 @@ void ProtocolPC::loadCalib() {
 			calibrateOffset.push_back(v);
 		}
 
-		for(int i = 1; i < calibrateOffset.size(); i++) {
+		for(int i = 1; i < (int) calibrateOffset.size(); i++) {
 			calibrateOffset[i] += calibrateOffset[i - 1];
 		}
 		fclose(fp);
@@ -734,7 +734,7 @@ void ProtocolPC::unpackData(std::vector<char>& buff, LeapFrame& frame) {
 
 	int handsNum = buff[++offset];
 	frame.recHandsNum = handsNum;
-	if(handsNum > frame.leapHands.size()) { frame.leapHands.resize(handsNum); }
+	if(handsNum > (int) frame.leapHands.size()) { frame.leapHands.resize(handsNum); }
 	using namespace std;
 
 	int fingerNum = 0;

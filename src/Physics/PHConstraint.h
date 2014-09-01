@@ -92,7 +92,7 @@ public:
 	struct Adjacents : std::vector<Adjacent>{
 		int num;
 		void Add(PHConstraint* _con, const SpatialMatrix& _A){
-			if(size() < num+1) resize(2*(num+1));
+			if((int) size() < num+1) resize(2*(num+1));
 			at(num).con = _con;
 			at(num).A   = _A;
 			num++;

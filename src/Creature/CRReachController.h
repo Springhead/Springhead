@@ -125,7 +125,7 @@ public:
 	/** @brief 到達に使うエンドエフェクタを設定・取得する
 	*/
 	void SetIKEndEffector(PHIKEndEffectorIf* ikEff, int n=0) {
-		while (ikEffs.size() <= n) {
+		while ((int) ikEffs.size() <= n) {
 			ikEffs.push_back(NULL);
 			ikEffUseFlags.push_back(true);
 			baseJoints.push_back(NULL);
@@ -133,7 +133,7 @@ public:
 		this->ikEffs[n] = ikEff;
 	}
 	PHIKEndEffectorIf* GetIKEndEffector(int n=0) {
-		if (ikEffs.size() <= n) { return NULL; }
+		if ((int) ikEffs.size() <= n) { return NULL; }
 		return this->ikEffs[n];
 	}
 
@@ -166,7 +166,7 @@ public:
 	/** @brief i番目の腕の付け根関節をセットする（距離に基づく使用判定に使う）
 	*/
 	void SetBaseJoint(int n, PHJointIf* jo) {
-		if (baseJoints.size() <= n) { baseJoints.resize(n+1); }
+		if ((int) baseJoints.size() <= n) { baseJoints.resize(n+1); }
 		baseJoints[n] = jo;
 	}
 

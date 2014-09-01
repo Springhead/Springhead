@@ -377,7 +377,7 @@ bool PHIKEngine::DelChildObject(ObjectIf* o){
 			actuators.erase(it);
 
 			// 現存する全てのactuatorのascendant, descendant, children, parent, eefから削除
-			for (int i=0; i<actuators.size(); ++i) {
+			for (int i=0; i<(int)actuators.size(); ++i) {
 				PHIKActuator* act = actuators[i];
 				{
 					Acts::iterator it_ = std::find(act->ascendant.begin(), act->ascendant.end(), ia);
@@ -409,7 +409,7 @@ bool PHIKEngine::DelChildObject(ObjectIf* o){
 			endeffectors.erase(it);
 
 			// 現存する全てのactuatorのeefから削除
-			for (int i=0; i<actuators.size(); ++i) {
+			for (int i=0; i<(int)actuators.size(); ++i) {
 				if (actuators[i]->eef == ie) { actuators[i]->eef = NULL; }
 			}
 

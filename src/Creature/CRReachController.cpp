@@ -135,7 +135,7 @@ void CRReachController::Step() {
 				}
 			}
 			// 複数あって一部しか使わない場合
-			if (ikEffs.size() > 1 && numUseHands > 0 && numUseHands < ikEffs.size()) {
+			if ((int) ikEffs.size() > 1 && numUseHands > 0 && numUseHands < (int) ikEffs.size()) {
 				double sholderdistance[] = {ikEffUseFlags.size()};
 				for (size_t i=0; i<ikEffUseFlags.size(); ++i) {
 					if (baseJoints[i]) {
