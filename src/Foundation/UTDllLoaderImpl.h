@@ -46,10 +46,11 @@ static void ReportError(const char* pname){
 	}
 #endif
 
+#endif
+
 #undef DLLFUNC_NAME
 #undef DLLFUNC_STR
 #undef DLLFUNC_ARGDEF
 #undef DLLFUNC_ARGCALL
 #undef DLLFUNC_CTYPE 
-
-#endif
+#undef DLLFUNC_RTYPE 

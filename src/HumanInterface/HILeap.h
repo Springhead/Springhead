@@ -9,8 +9,11 @@
 #ifndef HI_LEAP_H
 #define HI_LEAP_H
 
+#ifdef USE_CLOSED_SRC
+
 #define USE_LEAP
 #define USE_LEAP_UDP
+#endif
 
 #include <Foundation/UTTimer.h>
 //#include <Foundation/UTSocket.h>
@@ -29,7 +32,7 @@
 #include <HumanInterface/SprHILeap.h>
 namespace Spr{;
 
-// Leapmotion
+///	Leapmotion 
 class HILeap: public HILeapDesc, public HISkeletonSensor {
 
 #ifdef USE_LEAP
@@ -49,16 +52,15 @@ public:
 	}
 
 	// ----- ----- ----- ----- -----
-	// HIBase??API
+	//	HIBase's API
 
 	bool Init(const void* desc);
 	void Update(float dt);
 
 
 	// ----- ----- ----- ----- -----
-	// ??API???
+	// API for Leap
 
-	/// Leap???W?n????iscale??l??????????jSpringhead???W?n??
 #ifdef USE_LEAP
 	inline Vec3d ToSpr(Leap::Vector lv) {
 		return rotation * Vec3d(lv.x, lv.y, lv.z) * scale;
@@ -191,10 +193,10 @@ public:
 
 	std::list<int> usingLeapHandIdList;
 
-	//LeapHandID???˙b??ID??????????LeapHand???}?b?v
+	//LeapHandID???ÁÇª??ID??????????LeapHand???}?b?v
 	std::map<int, LeapHand*> mapLHIdLeapHand;
 
-	//?o?b?t?@ID???éX??LeapHandID??
+	//?o?b?t?@ID???Áèä??LeapHandID??
 	std::vector< std::list<int> > bufIdLHIds;
 
 	//static int bufsNum;
