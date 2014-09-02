@@ -88,10 +88,11 @@ bool HILeapUDP::Init(const void* desc) {
 #endif
 	return true;
 }
-
+#ifdef USE_LEAP_UDP
 int HILeapUDP::getLeapNum() {
 	return (int) ProtocolPC::getInstance()->mapIdLeapData.size();
 }
+#endif
 
 bool ProtocolPC::isSame(LeapHand* L1, LeapHand* L2, double sameHandDistance, double wrongHandDistance) {
 	//return false;

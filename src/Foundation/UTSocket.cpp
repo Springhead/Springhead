@@ -1,11 +1,11 @@
 //---------------------------------------------------------------------------
 /*
-ƒ\ƒPƒbƒg‚Ìƒ‰ƒbƒp Ver.1.3.2  by Gimite sì
+ã‚½ã‚±ãƒƒãƒˆã®ãƒ©ãƒƒãƒ‘ Ver.1.3.2  by Gimite å¸‚å·
 
-TCP/IPƒ\ƒPƒbƒg‚Ìƒ‰ƒbƒp‚Å‚·BWindowsiWinSock2j‚ÆUNIXiPOSIX Socketj‚É‘Î
-‰‚µ‚Ä‚¢‚Ü‚·B
+TCP/IPã‚½ã‚±ãƒƒãƒˆã®ãƒ©ãƒƒãƒ‘ã§ã™ã€‚Windowsï¼ˆWinSock2ï¼‰ã¨UNIXï¼ˆPOSIX Socketï¼‰ã«å¯¾
+å¿œã—ã¦ã„ã¾ã™ã€‚
 
-Gimite sì <gimite@mx12.freecom.ne.jp>
+Gimite å¸‚å· <gimite@mx12.freecom.ne.jp>
 
 */
 //---------------------------------------------------------------------------
@@ -24,7 +24,7 @@ Gimite sì <gimite@mx12.freecom.ne.jp>
 #endif
 //---------------------------------------------------------------------------
 namespace gimite{
-//ƒ\ƒPƒbƒgƒVƒXƒeƒ€‚ğ‰Šú‰»
+//ã‚½ã‚±ãƒƒãƒˆã‚·ã‚¹ãƒ†ãƒ ã‚’åˆæœŸåŒ–
 	
 	bool startup_socket(){
 #ifdef GIMITE_WIN32
@@ -36,14 +36,14 @@ namespace gimite{
 }
 
 //---------------------------------------------------------------------------
-	//ƒ\ƒPƒbƒgƒVƒXƒeƒ€‚ğŒãn––
+	//ã‚½ã‚±ãƒƒãƒˆã‚·ã‚¹ãƒ†ãƒ ã‚’å¾Œå§‹æœ«
 	void cleanup_socket(){
 #ifdef GIMITE_WIN32
 		WSACleanup();
 #endif
 }
 
-	//IPƒAƒhƒŒƒX
+	//IPã‚¢ãƒ‰ãƒ¬ã‚¹
 
 	ip_address::ip_address(sock_uint32_t  addr = INADDR_NONE) {
 		addr_ = new in_addr;
@@ -126,7 +126,7 @@ namespace gimite{
 	
 	
 	//---------------------------------------------------------------------------
-	//IPƒAƒhƒŒƒX+ƒ|[ƒg”Ô†
+	//IPã‚¢ãƒ‰ãƒ¬ã‚¹+ãƒãƒ¼ãƒˆç•ªå·
 
 	socket_address::socket_address(){
 		ip = new ip_address();
@@ -138,7 +138,7 @@ namespace gimite{
 		ip = 0;
 	}
 	
-	//”äŠrA“¯’l”»’èB
+	//æ¯”è¼ƒã€åŒå€¤åˆ¤å®šã€‚
 	bool operator<(const socket_address& lhs, const socket_address& rhs){
 		if (lhs.ip<rhs.ip) return true;
 		if (lhs.ip>rhs.ip) return false;
@@ -152,14 +152,14 @@ namespace gimite{
 	}
 	bool operator!=(const socket_address& lhs, const socket_address& rhs){ return !(lhs==rhs); }
 
-	//streamo—ÍB
+	//streamå‡ºåŠ›ã€‚
 	std::ostream& operator<<(std::ostream& os, const socket_address& saddr){
 		os << saddr.ip << ":" << saddr.port;
 		return os;
 	}
 	
 	//---------------------------------------------------------------------------
-	//ƒXƒgƒŠ[ƒ€ƒ\ƒPƒbƒg—pstreambuf
+	//ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚½ã‚±ãƒƒãƒˆç”¨streambuf
 	socket_streambuf::socket_streambuf(socket_t sock= -1, std::size_t buf_size= 1024)
 		: sock_(sock), buffer_(buf_size){}
 	socket_streambuf::socket_streambuf(const ip_address& host, int port, 
@@ -170,7 +170,7 @@ namespace gimite{
 	socket_streambuf::~socket_streambuf(){
 		close();
 	}
-	//Ú‘±
+	//æ¥ç¶š
 	bool socket_streambuf::open(const ip_address& host, int port){
 		if (is_open()) close();
 		if (host.as_int()==INADDR_NONE) return false;
@@ -184,7 +184,7 @@ namespace gimite{
 			close();
 		return is_open();
 	}
-	//Ø’f
+	//åˆ‡æ–­
 	void socket_streambuf::close(){
 		if (sock_==-1) return;
 #ifdef GIMITE_WIN32
@@ -194,26 +194,26 @@ namespace gimite{
 #endif
 		sock_= -1;
 	}
-	//ƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹‚ğ•Â‚¶‚¸‚É‰ğ•ú
+	//ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’é–‰ã˜ãšã«è§£æ”¾
 	socket_t socket_streambuf::release(){
 		socket_t sock= sock_;
 		sock_= -1;
 		return sock;
 	}
-	//‘—M
+	//é€ä¿¡
 	int socket_streambuf::send(const void* buffer, int size){
 		return ::send(sock_, (const char*)buffer, size, 0);
 	}
-	//óM
+	//å—ä¿¡
 	int socket_streambuf::recv(void* buffer, int size){
 		return ::recv(sock_, (char*)buffer, size, 0);
 	}
-	//³í‚ÉÚ‘±‚³‚ê‚Ä‚é‚©
+	//æ­£å¸¸ã«æ¥ç¶šã•ã‚Œã¦ã‚‹ã‹
 	bool socket_streambuf::is_open()const{ return sock_!=-1; }
-	//ƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹
+	//ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«
 	socket_t socket_streambuf::socket()const{ return sock_; }
 
-	//1•¶š‘—M
+	//1æ–‡å­—é€ä¿¡
 	socket_streambuf::int_type socket_streambuf::overflow(int_type c= std::char_traits<char>::eof()){
 		if (!traits_type::eq_int_type(c, traits_type::eof())){
 			char cc= char(c);
@@ -222,13 +222,13 @@ namespace gimite{
 		}
 		return 'a';
 	}
-	//n•¶š‘—M
+	//næ–‡å­—é€ä¿¡
 	std::streamsize socket_streambuf::xsputn(const char_type* s, std::streamsize n){
 		if (!is_open()) return 0;
 		sock_result_t res= ::send(sock_, s, int(n), 0);
 		return res==-1? 0 : res;
 	}
-	//óMƒoƒbƒtƒ@‚ª‹ó‚É‚È‚Á‚½
+	//å—ä¿¡ãƒãƒƒãƒ•ã‚¡ãŒç©ºã«ãªã£ãŸ
 	socket_streambuf::int_type socket_streambuf::underflow(){
 		if (!is_open()) return traits_type::eof();
 		if (!gptr() || gptr()>=egptr()){
@@ -246,62 +246,62 @@ namespace gimite{
 	}
 	
 	//---------------------------------------------------------------------------
-	//ƒXƒgƒŠ[ƒ€ƒ\ƒPƒbƒg—pstream
-	//‚·‚®‚É‚ÍÚ‘±‚µ‚È‚¢ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚½ã‚±ãƒƒãƒˆç”¨stream
+	//ã™ãã«ã¯æ¥ç¶šã—ãªã„ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	socket_stream::socket_stream(): std::iostream(0){
 		rdbuf(&sbuf_);
 		setstate(std::ios::badbit);
 	}
-	//‚·‚®‚ÉÚ‘±‚·‚éƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã™ãã«æ¥ç¶šã™ã‚‹ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	socket_stream::socket_stream(const ip_address& host, int port)
 		: std::iostream(0), sbuf_(host, port){
 			rdbuf(&sbuf_);
 			if (!sbuf_.is_open()) setstate(std::ios::badbit);
 	}
-	//Šù‘¶‚Ìƒ\ƒPƒbƒg‚ğw’è‚·‚éƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//æ—¢å­˜ã®ã‚½ã‚±ãƒƒãƒˆã‚’æŒ‡å®šã™ã‚‹ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	socket_stream::socket_stream(socket_t sock)
 		: std::iostream(0), sbuf_(sock){
 			rdbuf(&sbuf_);
 			if (!sbuf_.is_open()) setstate(std::ios::badbit);
 	}
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	socket_stream::~socket_stream(){ rdbuf(0); }
-	//Ú‘±
+	//æ¥ç¶š
 	void socket_stream::open(const ip_address& host, int port){
 		clear();
 		sbuf_.open(host, port);
 		if (!sbuf_.is_open()) setstate(std::ios::badbit);
 	}
-	//Ø’f
+	//åˆ‡æ–­
 	void socket_stream::close(){
 		setstate(std::ios::badbit);
 		sbuf_.close();
 	}
-	//ƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹‚ğ•Â‚¶‚¸‚É‰ğ•ú
+	//ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’é–‰ã˜ãšã«è§£æ”¾
 	socket_t socket_stream::release(){
 		setstate(std::ios::badbit);
 		return sbuf_.release();
 	}
-	//‘—M
+	//é€ä¿¡
 	int socket_stream::send(const void* buffer, int size){ return sbuf_.send(buffer, size); }
-	//óM
+	//å—ä¿¡
 	int socket_stream::recv(void* buffer, int size){ return sbuf_.recv(buffer, size); }
-	//ƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹
+	//ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«
 	socket_t socket_stream::socket()const{ return sbuf_.socket(); }
 	
 	//---------------------------------------------------------------------------
-	//ƒoƒCƒ“ƒh‚µ‚Äg‚¤ƒ\ƒPƒbƒg
-	//’Êí‚ÌƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ãƒã‚¤ãƒ³ãƒ‰ã—ã¦ä½¿ã†ã‚½ã‚±ãƒƒãƒˆ
+	//é€šå¸¸ã®ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	bound_socket::bound_socket(int type)
 		: type_(type), sock_(-1), is_bound_(false){}
-	//Šù‘¶‚Ìƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹‚ğg‚¤ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//æ—¢å­˜ã®ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’ä½¿ã†ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	bound_socket::bound_socket(int type, socket_t sock, bool is_bound)
 		: type_(type), sock_(sock), is_bound_(is_bound){}
-	//ƒfƒXƒgƒ‰ƒNƒ^
+	//ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	bound_socket::~bound_socket(){
 		close();
 	}
-	//ƒ\ƒPƒbƒg‚ğƒNƒ[ƒY
+	//ã‚½ã‚±ãƒƒãƒˆã‚’ã‚¯ãƒ­ãƒ¼ã‚º
 	void bound_socket::close(){
 		is_bound_= false;
 		if (sock_==-1) return;
@@ -312,29 +312,29 @@ namespace gimite{
 #endif
 		sock_= -1;
 	}
-	//ƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹‚ğ‰ğ•ú
+	//ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’è§£æ”¾
 	socket_t bound_socket::release(){
 		socket_t sock= sock_;
 		sock_= -1;
 		is_bound_= false;
 		return sock;
 	}
-	//Šù‘¶‚Ìƒ\ƒPƒbƒg‚ğw’è
+	//æ—¢å­˜ã®ã‚½ã‚±ãƒƒãƒˆã‚’æŒ‡å®š
 	void bound_socket::socket(socket_t sock, bool is_bound){
 		close();
 		sock_= sock;
 		is_bound_= is_bound;
 	}
-	//ƒ\ƒPƒbƒg‚Ìƒ^ƒCƒv
+	//ã‚½ã‚±ãƒƒãƒˆã®ã‚¿ã‚¤ãƒ—
 	int bound_socket::type()const{ return type_; }
-	//ƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹
+	//ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«
 	socket_t bound_socket::socket()const{ return sock_; }
-	//³‚µ‚­ƒoƒCƒ“ƒh‚³‚ê‚Ä‚¢‚é‚©
+	//æ­£ã—ããƒã‚¤ãƒ³ãƒ‰ã•ã‚Œã¦ã„ã‚‹ã‹
 	bound_socket::operator const void*()const{ return is_bound_? this : NULL; }
 	bool bound_socket::operator!()const{ return !is_bound_; }
 
 
-	//ƒoƒCƒ“ƒh
+	//ãƒã‚¤ãƒ³ãƒ‰
 	bool bound_socket::pbind(int port){
 		if (is_bound_) return false;
 		if (sock_==-1){
@@ -345,8 +345,8 @@ namespace gimite{
 		addr.sin_family= AF_INET;
 		addr.sin_port= htons(port);
 		addr.sin_addr= *ip_address(sock_uint32_t(INADDR_ANY)).addr();
-		//’Fcygwin gcc 3.3.1‚Å‚ÍINADDR_ANY‚ÌŒ^‚ªsock_uint32_t‚Å‚Í‚È‚¢‚Ì‚ÅA
-		//    B–†‚³‚ğ–³‚­‚·‚½‚ß‚ÌƒLƒƒƒXƒg‚ª•K—vB
+		//æ³¨ï¼šcygwin gcc 3.3.1ã§ã¯INADDR_ANYã®å‹ãŒsock_uint32_tã§ã¯ãªã„ã®ã§ã€
+		//    æ›–æ˜§ã•ã‚’ç„¡ãã™ãŸã‚ã®ã‚­ãƒ£ã‚¹ãƒˆãŒå¿…è¦ã€‚
 		if (::bind(sock_, (const sockaddr*)&addr, sizeof(addr))==-1)
 			return false;
 		is_bound_= true;
@@ -355,64 +355,64 @@ namespace gimite{
 
 	
 	//---------------------------------------------------------------------------
-	//ƒT[ƒo—pƒXƒgƒŠ[ƒ€ƒ\ƒPƒbƒg
-	//‚·‚®‚É‚ÍƒoƒCƒ“ƒh‚µ‚È‚¢ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã‚µãƒ¼ãƒç”¨ã‚¹ãƒˆãƒªãƒ¼ãƒ ã‚½ã‚±ãƒƒãƒˆ
+	//ã™ãã«ã¯ãƒã‚¤ãƒ³ãƒ‰ã—ãªã„ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	server_stream_socket::server_stream_socket()
 		: bound_socket(SOCK_STREAM){}
-	//‚·‚®‚ÉƒoƒCƒ“ƒh‚·‚éƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã™ãã«ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	server_stream_socket::server_stream_socket(int port, int backlog= 5)
 		: bound_socket(SOCK_STREAM){
 			bind(port, backlog);  
 	}
-	//Šù‘¶‚Ìƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹‚ğg‚¤ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//æ—¢å­˜ã®ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’ä½¿ã†ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	server_stream_socket::server_stream_socket(socket_t sock, bool is_bound)
 		: bound_socket(SOCK_STREAM, sock, is_bound){}
-	//ƒoƒCƒ“ƒh
+	//ãƒã‚¤ãƒ³ãƒ‰
 	bool server_stream_socket::bind(int port, int backlog= 5){
 		if (!pbind(port)) return false;
 		if (::listen(socket(), backlog)!=-1) return true;
 		close();
 		return false;
 	}
-	//Ú‘±—v‹‚ğó‚¯“ü‚ê‚é
+	//æ¥ç¶šè¦æ±‚ã‚’å—ã‘å…¥ã‚Œã‚‹
 	socket_t server_stream_socket::accept(){
 		return ::accept(socket(), 0, 0);
 	}
 
 	
 	//---------------------------------------------------------------------------
-	//ƒ_ƒCƒAƒOƒ‰ƒ€ƒ\ƒPƒbƒg
-	//‚·‚®‚É‚ÍƒoƒCƒ“ƒh‚µ‚È‚¢ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ãƒ€ã‚¤ã‚¢ã‚°ãƒ©ãƒ ã‚½ã‚±ãƒƒãƒˆ
+	//ã™ãã«ã¯ãƒã‚¤ãƒ³ãƒ‰ã—ãªã„ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	diagram_socket::diagram_socket()
 		: bound_socket(SOCK_DGRAM){}
-	//‚·‚®‚ÉƒoƒCƒ“ƒh‚·‚éƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//ã™ãã«ãƒã‚¤ãƒ³ãƒ‰ã™ã‚‹ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	diagram_socket::diagram_socket(int port)
 		: bound_socket(SOCK_DGRAM){
 			bind(port);
 	}
-	//Šù‘¶‚Ìƒ\ƒPƒbƒgƒnƒ“ƒhƒ‹‚ğg‚¤ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+	//æ—¢å­˜ã®ã‚½ã‚±ãƒƒãƒˆãƒãƒ³ãƒ‰ãƒ«ã‚’ä½¿ã†ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 	diagram_socket::diagram_socket(socket_t sock, bool is_bound)
 		: bound_socket(SOCK_DGRAM, sock, is_bound){}
-	//ƒoƒCƒ“ƒh
+	//ãƒã‚¤ãƒ³ãƒ‰
 	bool diagram_socket::bind(int port){
 		return pbind(port);
 	}
-	//ƒf[ƒ^‚ğóM
+	//ãƒ‡ãƒ¼ã‚¿ã‚’å—ä¿¡
 	int diagram_socket::recvfrom(void* buffer, int size, socket_address* addr,
 		int flags){
 			struct sockaddr_in saddr;
 			sock_len_t addr_len= sizeof(saddr);
 			int result= ::recvfrom(socket(), (char*)buffer, size, flags,
 				(struct sockaddr *)&saddr, &addr_len);
-			//’FWinsock‚Ìrecvfrom‚Ì‘æ2ƒpƒ‰ƒ[ƒ^Œ^‚Íchar*‚È‚Ì‚Å
-			//    ƒLƒƒƒXƒg‚ª•K—vB
+			//æ³¨ï¼šWinsockã®recvfromã®ç¬¬2ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿å‹ã¯char*ãªã®ã§
+			//    ã‚­ãƒ£ã‚¹ãƒˆãŒå¿…è¦ã€‚
 			if (addr){
 				(addr->ip)= &ip_address(saddr.sin_addr);
 				addr->port= ntohs(saddr.sin_port);
 			}
 			return result;
 	}
-	//ƒf[ƒ^‚ğ‘—M
+	//ãƒ‡ãƒ¼ã‚¿ã‚’é€ä¿¡
 	int diagram_socket::sendto(const void* buffer, int size, const socket_address* addr,
 		int flags= 0){
 			sockaddr_in saddr;
@@ -421,8 +421,8 @@ namespace gimite{
 			saddr.sin_port= htons(addr->port);
 			return ::sendto(socket(), (const char*)buffer, size, flags,
 				(const sockaddr*)&saddr, sizeof(saddr));
-			//’FWinsock‚Ìsendto‚Ì‘æ2ƒpƒ‰ƒ[ƒ^Œ^‚Íconst char*‚È‚Ì‚Å
-			//    ƒLƒƒƒXƒg‚ª•K—vB
+			//æ³¨ï¼šWinsockã®sendtoã®ç¬¬2ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿å‹ã¯const char*ãªã®ã§
+			//    ã‚­ãƒ£ã‚¹ãƒˆãŒå¿…è¦ã€‚
 	}
 	
 }	//namespace
