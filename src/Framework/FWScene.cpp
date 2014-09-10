@@ -273,13 +273,7 @@ void FWScene::Draw(GRRenderIf* render){
 void FWScene::DrawPHScene(GRRenderIf* render){
 	if (!phScene) return;
 
-	/*
-	// GRSceneのカメラの視点を反映
-	GRCameraIf* cam = NULL;
-	if (grScene) cam = grScene->GetCamera();
-	if (cam) cam->Render(render);
-			
-	// 光源が1つもセットされない場合
+	// 光源が1つもセットされない場合、適当な光源を自動で追加
 	bool defLight = false;
 	if(render->NLights() == 0){
 		defLight = true;
@@ -290,7 +284,6 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		ld.position = Vec4f(1,1,1,0);
 		render->PushLight(ld);
 	}
-	*/
 
 	// ワールド座標軸
 	if(renderAxisWorld){

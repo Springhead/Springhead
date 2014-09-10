@@ -25,7 +25,7 @@
 
 #ifdef USE_LEAP
 #include "../../Libraries/LeapSDK/include/Leap.h"
-#pragma comment(lib, "Leap.lib")
+//	#pragma comment(lib, "Leap.lib")
 #endif
 
 #include <HumanInterface/HISkeletonSensor.h>
