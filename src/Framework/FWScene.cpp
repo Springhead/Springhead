@@ -408,7 +408,7 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 	if(renderHaptic){
 		PHHapticEngineIf* hapticEngine = phScene->GetHapticEngine();
 		if(hapticEngine){
-			DrawHaptic(render, hapticEngine);
+			//DrawHaptic(render, hapticEngine);
 		}
 	}
 

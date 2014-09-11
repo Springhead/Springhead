@@ -71,7 +71,7 @@ bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool co
 	bool found = false;
 	if(continuous){	
 		const double alpha = 2.0;
-		if(shapePair->ContDetect(ct, fr0->pose_abs, fr1->pose_abs, alpha * fr0->delta, alpha * fr1->delta, dt)){
+		if (shapePair->ContDetect(ct, solid[0]->pose * fr0->pose, solid[1]->pose * fr1->pose, alpha * fr0->delta, alpha * fr1->delta, dt)){
 			double n = shapePair->normal.norm();
 			assert(0.9 < n && n < 1.1);
 			found = true;
@@ -79,7 +79,7 @@ bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool co
 		}		
 	}
 	else{
-		if(shapePair->Detect(ct, fr0->pose_abs, fr1->pose_abs)){
+		if (shapePair->Detect(ct, solid[0]->pose * fr0->pose, solid[1]->pose * fr1->pose)){
 			found = true;
 			OnDetect(shapePair, ct, dt);
 		}
