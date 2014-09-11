@@ -9,8 +9,9 @@
 #ifndef HI_LEAP_H
 #define HI_LEAP_H
 
-#ifdef USE_CLOSED_SRC
+#include <SprDefs.h>
 
+#ifdef USE_CLOSED_SRC
 #define USE_LEAP
 #define USE_LEAP_UDP
 #endif
@@ -24,15 +25,15 @@
 #include <list>
 
 #ifdef USE_LEAP
-#include "../../Libraries/LeapSDK/include/Leap.h"
-//	#pragma comment(lib, "Leap.lib")
+#include <LeapSDK/Leap.h>
+#pragma comment(lib, "Leap.lib")
 #endif
 
 #include <HumanInterface/HISkeletonSensor.h>
 #include <HumanInterface/SprHILeap.h>
 namespace Spr{;
 
-///	Leapmotion 
+/// Leapmotion 
 class HILeap: public HILeapDesc, public HISkeletonSensor {
 
 #ifdef USE_LEAP
