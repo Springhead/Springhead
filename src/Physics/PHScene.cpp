@@ -20,6 +20,28 @@
 namespace Spr{;
 
 //----------------------------------------------------------------------------
+//	PHSceneDesc
+void PHSceneDesc::Init(){
+	PHSceneState::Init();
+	gravity				     = Vec3d(0.0, -9.8, 0.0);
+	airResistanceRate	     = 1.0;
+	contactTolerance         = 0.002;
+	impactThreshold          = 10.0;
+	frictionThreshold        = 0.01;
+	maxDeltaPosition         = FLT_MAX;
+	maxDeltaOrientation      = FLT_MAX;
+	maxVelocity              = FLT_MAX;
+	maxAngularVelocity       = 100.0;
+	maxForce                 = FLT_MAX;
+	maxMoment                = FLT_MAX;
+	numIteration		     = 15;
+	method                   = SOLVER_GS;
+	bContactDetectionEnabled = true;
+	bCCDEnabled              = true;
+	broadPhaseMode           = MODE_SORT_AND_SWEEP_X;
+	blendMode                = BLEND_AVE_ADD;
+}
+//----------------------------------------------------------------------------
 //	PHScene
 PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
