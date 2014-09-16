@@ -58,6 +58,8 @@ public:
 	virtual void         OnContDetect(PHShapePair* sp, unsigned ct, double dt){}	///< 交差が検知されたときの処理
 	
 	void Init  (PHContactDetector* d, PHSolid* s0, PHSolid* s1);
+	bool Detect(unsigned int ct, double dt);
+	bool ContDetect(unsigned int ct, double dt);
 	bool Detect(PHShapePair* shapePair, unsigned ct, double dt, bool continuous);
 
 	void SetSt(const PHSolidPairSt& s){ *((PHSolidPairSt*)this) = s; }
@@ -104,14 +106,14 @@ public:
 	};
 	
 	struct Edge{
-		ShapeIndex index;
 		float      edge;		///< 端の位置
-		bool       bMin;		///< 初端か  
+		bool       bMin;		///< 初端か 
+		int		index;		///< 剛体のID
 		
 		bool operator < (const Edge& s) const { return edge < s.edge; }
 
 		Edge(){}
-		Edge(int i, int j, float e, bool _min):index(i,j,true), edge(e), bMin(_min){}
+		Edge(int i, float e, bool _min): index(i), edge(e), bMin(_min){}
 	};
 	
 	struct Cell{
@@ -136,6 +138,9 @@ public:
 	PHSolidPairs		solidPairs;			///< 剛体の組の配列	
 	int					nBroad;
 	int					nNarrow;
+#ifdef _DEBUG
+	int nMaxOverlapObject;
+#endif
 
 	Cell&	GetCell(int ix, int iy, int iz){
 		return cells[(ix * numDivision.y + iy) * numDivision.z + iz];

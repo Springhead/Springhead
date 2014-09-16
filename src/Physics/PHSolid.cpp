@@ -107,7 +107,7 @@ bool PHFrame::AddChildObject(ObjectIf * o){
 			solid->AddFrame(f->Cast());
 		} 
 		if (solid){
-			//solid->bboxReady = false;
+			solid->bboxReady = false;
 			solid->aabbReady = false;
 			//接触エンジンのshapePairsを更新する
 			PHScene* scene = DCAST(PHScene,solid->GetScene());
@@ -197,7 +197,7 @@ PHSolid::PHSolid(const PHSolidDesc& desc, SceneIf* s):PHSolidDesc(desc){
 	Iinv            = inertia.inv();
 	treeNode        = NULL;
 	bFrozen         = false;
-	//bboxReady       = false;
+	bboxReady       = false;
 	aabbReady       = false;
 
 	if (s){ SetScene(s); }
@@ -280,8 +280,7 @@ Vec3d PHSolid::GetDeltaPosition(const Vec3d& p) const {
 	return velocity*dt + (rot*(p-center) - p);
 }
 bool PHSolid::CalcBBox(){
-	//if(bboxReady)
-	//	return;
+	if(bboxReady) return false;
 
 	bool changed = false;
 	for(int i = 0; i < (int)frames.size(); i++)
@@ -304,7 +303,7 @@ bool PHSolid::CalcBBox(){
 		 bbLocal.SetBBoxMinMax(Vec3f(0,0,0), Vec3f(-1,-1,-1));
 	else bbLocal.SetBBoxMinMax(bbmin, bbmax);
 
-	//bboxReady = true;
+	bboxReady = true;
 	return true;
 }
 void PHSolid::CalcAABB(){
@@ -345,7 +344,6 @@ void PHSolid::GetBBox(Vec3d& bbmin, Vec3d& bbmax, bool world){
 	}
 }
 void PHSolid::GetBBoxSupport(const Vec3f& dir, float& minS, float& maxS){
-	//if(!bboxReady)
 	CalcBBox();
 	bbLocal.GetSupport(GetOrientation().Inv()*dir, minS, maxS);
 	float c = Vec3f(GetFramePosition()) * dir;
@@ -663,7 +661,7 @@ void PHSolid::AddFrame(PHFrameIf* fi){
 	frames.push_back(f->Cast());
 	frames.back()->solid = this;
 	if (frames.back()->shape){
-		//bboxReady = false;
+		bboxReady = false;
 		aabbReady = false;
 		//接触エンジンのshapePairsを更新する
 		PHScene* scene = DCAST(PHScene,GetScene());
@@ -682,7 +680,7 @@ void PHSolid::AddFrame(PHFrameIf* fi){
 }*/
 void PHSolid::AddShape(CDShapeIf* shape){
 	frames.push_back(DBG_NEW PHFrame(this, shape->Cast()));
-	//bboxReady = false;
+	bboxReady = false;
 	aabbReady = false;
 	PHScene* scene = DCAST(PHScene,GetScene());
 	scene->penaltyEngine   ->UpdateShapePairs(this);
@@ -695,7 +693,7 @@ void PHSolid::AddShapes(CDShapeIf** shBegin, CDShapeIf** shEnd){
 		frames.push_back(DBG_NEW PHFrame());
 		frames.back()->shape = shape;
 	}
-	//bboxReady = false;
+	bboxReady = false;
 	aabbReady = false;
 	PHScene* scene = DCAST(PHScene,GetScene());
 	scene->penaltyEngine   ->UpdateShapePairs(this);
@@ -715,7 +713,7 @@ void PHSolid::RemoveShapes(int iBegin, int iEnd){
 	int n = iEnd - iBegin;
 	for(int i = 0; i < n; i++)
 		frames.erase(frames.begin() + iBegin);
-	//bboxReady = false;
+	bboxReady = false;
 	aabbReady = false;
 	//接触エンジンのshapePairsを更新する
 	PHScene* scene = DCAST(PHScene, GetScene());
@@ -743,7 +741,7 @@ void PHSolid::ClearShape(){
 void PHSolid::SetShapePose(int i, const Posed& pose){
 	if(0 <= i && i < (int)frames.size()){
 		frames[i]->SetPose(pose);
-		//bboxReady = false;
+		bboxReady = false;
 		aabbReady = false;
 	}
 }
