@@ -53,6 +53,88 @@ void PHSolidPair::Init(PHContactDetector* d, PHSolid* s0, PHSolid* s1){
 	bEnabled = true;
 }
 
+bool PHSolidPair::Detect(unsigned int ct, double dt){
+	if(!bEnabled)return false;
+
+	// いずれかのSolidに形状が割り当てられていない場合は接触なし
+	if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
+
+	// 全てのshape pairについて交差を調べる
+	bool found = false;
+	PHShapePair* sp;
+	for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
+		sp = shapePairs.item(i, j);
+		//このshape pairの交差判定/法線と接触の位置を求める．
+		if(sp->Detect(
+			ct,
+			solid[0]->GetPose() * solid[0]->GetShapePose(i), solid[1]->GetPose() * solid[1]->GetShapePose(j))){
+			found = true;
+			OnDetect(sp, ct, dt);
+		}
+	}
+	return found;
+}
+bool PHSolidPair::ContDetect(unsigned int ct, double dt){
+	if(!bEnabled)return false;
+
+	// いずれかのSolidに形状が割り当てられていない場合は接触なし
+	if(solid[0]->NShape() == 0 || solid[1]->NShape() == 0) return false;
+	// 両方ともフリーズ状態の場合は接触なし
+	if(solid[0]->IsFrozen() && solid[1]->IsFrozen())
+		return false;
+
+	static std::vector<Posed> shapePose[2];
+	static std::vector<Vec3d> shapeCenter[2];
+	for(int i=0; i < 2; i++){
+		shapePose[i].resize(solid[i]->NShape());
+		shapeCenter[i].resize(solid[i]->NShape());
+		for(int j=0; j < solid[i]->NShape(); j++){
+			CDConvex* convex = DCAST(CDConvex, solid[i]->GetShape(j));
+			if(convex){
+				Posed lp = solid[i]->GetShapePose(j);
+				shapeCenter[i][j] = lp * convex->CalcCenterOfMass();
+				shapePose[i][j] = solid[i]->GetPose() * lp;
+			}else{
+				solid[i]->DelChildObject(solid[i]->GetFrame(j));
+				shapePose[i].resize(solid[i]->NShape());
+				shapeCenter[i].resize(solid[i]->NShape());
+				j--;
+			}
+		}
+	}
+	//	１ステップ前の並進移動量×α倍だけ戻す。
+	//	２倍くらい戻した方が、離れる確率が高いし、そのくらいなら戻ってもおかしなことにはならないので。
+	double alpha = 2;
+	Vec3d vt[2] = {solid[0]->GetVelocity() * dt * alpha, solid[1]->GetVelocity() * dt * alpha};
+	Vec3d wt[2] = {solid[0]->GetAngularVelocity() * dt * alpha, solid[1]->GetAngularVelocity() * dt * alpha};
+	Vec3d delta[2] = {vt[0] - (wt[0]^solid[0]->GetCenterOfMass()), vt[1] - (wt[1] ^  solid[1]->GetCenterOfMass())};
+
+	// 全てのshape pairについて交差を調べる
+	bool found = false;
+	PHShapePair* sp;
+	for(int i = 0; i < solid[0]->NShape(); i++)for(int j = 0; j < solid[1]->NShape(); j++){
+		sp = shapePairs.item(i, j);
+		//このshape pairの交差判定/法線と接触の位置を求める．
+		if(sp->ContDetect(ct, shapePose[0][i], shapePose[1][j], 
+			//	剛体ではなく、形状の移動量なので、形状の中心位置で移動量を補正する。
+			delta[0] + (wt[0]^shapeCenter[0][i]),  delta[1] + (wt[1]^shapeCenter[1][j]), dt)){
+			assert(0.9 < sp->normal.norm() && sp->normal.norm() < 1.1);
+			found = true;
+			OnContDetect(sp, ct, dt);
+		}
+	}
+	// フリーズの解除
+	if(found){
+		if(solid[0]->IsDynamical() && !solid[1]->IsFrozen()){
+			solid[0]->SetFrozen(false);
+		}
+		else if(solid[1]->IsDynamical() && !solid[0]->IsFrozen()){
+			solid[1]->SetFrozen(false);
+		}
+	}
+	return found;
+}
+
 bool PHSolidPair::Detect(PHShapePair* shapePair, unsigned ct, double dt, bool continuous){
 	PHFrame* fr0 = shapePair->frame[0];
 	PHFrame* fr1 = shapePair->frame[1];
@@ -454,46 +536,85 @@ bool PHContactDetector::DetectPair(
 };
 
 bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous){
-	if(NActiveSolidPairs() == 0)
-		return false;
+	if(NActiveSolidPairs() == 0) return false;
+
+	bool found = false;
 	
-	// 各形状のAABBを計算
-#ifdef REPORT_TIME
-	ptimerForCd.CountUS();
-#endif
-	int nsolids = (int)solids.size();
-	for(int i = 0; i < nsolids; ++i){
-		PHSolid* solid = solids[i];
-		solid->CalcAABB();
-	}
-#ifdef REPORT_TIME
-	DSTR << "  aabb:" << ptimerForCd.CountUS();
-#endif
-
-#ifdef REPORT_TIME
-	ptimerForCd.CountUS();
-#endif
-
+	//	Sort and prune mode --------------------------------------------------------------------
 	if( mode >= PHSceneDesc::MODE_SORT_AND_SWEEP_X &&
 	    mode <= PHSceneDesc::MODE_SORT_AND_SWEEP_Z ){
 		int idx = mode - PHSceneDesc::MODE_SORT_AND_SWEEP_X;
-		
-		edges.clear();
+		Vec3d dir(0,0,0);
+		dir[idx] = 1;
+		edges.resize(2 * solids.size());
 		std::vector<Edge>::iterator eit = edges.begin();
-		Vec3d bbmin, bbmax;
-		for(int i = 0; i < nsolids; i++){
-			int nshapes = solids[i]->NShape();
-			for(int j = 0; j < nshapes; j++){
-				PHBBox& bb = solids[i]->frames[j]->bbWorld[continuous];
-				bbmin = bb.GetBBoxMin();
-				bbmax = bb.GetBBoxMax();
-				edges.push_back(Edge(i, j, bbmin[idx], true ));
-				edges.push_back(Edge(i, j, bbmax[idx], false));
+		for(int i = 0; i < (int)solids.size(); i++){
+			solids[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+			eit[0].index = i; eit[0].bMin = true;
+			eit[1].index = i; eit[1].bMin = false;
+			eit += 2;
+		}				
+		std::sort(edges.begin(), edges.end());
+
+#ifdef REPORT_TIME
+		DSTR << "  assign:" << ptimerForCd.CountUS();
+		DSTR << endl;
+#endif
+
+#ifdef REPORT_TIME
+		ptimerForCd.CountUS();
+#endif
+		//端から見ていって，接触の可能性があるノードの判定をする．
+		typedef std::set<int> SolidSet;
+		SolidSet cur;							//	現在のSolidのセット
+#ifdef _DEBUG
+		nMaxOverlapObject = 0;
+#endif
+		for(std::vector<Edge>::iterator it = edges.begin(); it != edges.end(); ++it){
+			if (it->bMin){						//	初端だったら，リスト内の物体と判定
+				for(SolidSet::iterator itf=cur.begin(); itf != cur.end(); ++itf){
+					int f1 = it->index;
+					int f2 = *itf;
+					if (f1 > f2) std::swap(f1, f2);
+					//2. SolidとSolidの衝突判定
+#ifdef REPORT_TIME
+					ptimerForCd.Stop();
+#endif
+					found |= solidPairs.item(f1, f2)->Detect(ct, dt);
+#ifdef REPORT_TIME
+					ptimerForCd.Start();
+#endif
+				}
+				cur.insert(it->index);
+#ifdef _DEBUG
+				if (nMaxOverlapObject < (int)cur.size()) nMaxOverlapObject = cur.size();
+#endif
+			}else{
+				cur.erase(it->index);			//	終端なので削除．
 			}
 		}
-		std::sort(edges.begin(), edges.end());
-	}
-	else{
+#ifdef REPORT_TIME
+		DSTR << "  narrow:" << ptimerForCd.CountUS();
+#endif
+	//	Cell mode --------------------------------------------------------------------
+	}else{
+			// 各形状のAABBを計算
+#ifdef REPORT_TIME
+			ptimerForCd.CountUS();
+#endif
+			int nsolids = (int)solids.size();
+			for(int i = 0; i < nsolids; ++i){
+				PHSolid* solid = solids[i];
+				solid->CalcAABB();
+			}
+#ifdef REPORT_TIME
+			DSTR << "  aabb:" << ptimerForCd.CountUS();
+#endif
+
+#ifdef REPORT_TIME
+		ptimerForCd.CountUS();
+#endif
+
 		// 各形状を領域に分類
 		cellOutside.shapes.clear();
 		for(int c = 0; c < (int)cells.size(); c++)
@@ -549,42 +670,16 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 				}
 			}
 		}
-	}
-
 #ifdef REPORT_TIME
-	DSTR << "  assign:" << ptimerForCd.CountUS();
-	DSTR << endl;
+		DSTR << "  assign:" << ptimerForCd.CountUS();
+		DSTR << endl;
 #endif
 
 #ifdef REPORT_TIME
-	ptimerForCd.CountUS();
+		ptimerForCd.CountUS();
 #endif
-	nBroad  = 0;
-	nNarrow = 0;
-	bool found = false;
-
-	if( mode >= PHSceneDesc::MODE_SORT_AND_SWEEP_X &&
-		mode <= PHSceneDesc::MODE_SORT_AND_SWEEP_Z ){
-		//端から見ていって，接触の可能性があるノードの判定をする．
-		typedef std::set<ShapeIndex> ShapeIndexSet;
-		ShapeIndexSet cur;
-
-		for(std::vector<Edge>::iterator it = edges.begin(); it != edges.end(); ++it){
-			// 初端だったら，リスト内の物体と判定
-			if (it->bMin){
-				for(ShapeIndexSet::iterator itf = cur.begin(); itf != cur.end(); ++itf){
-					found |= DetectPair(it->index, *itf, ct, dt, continuous);
-				}
-				cur.insert(it->index);
-			}
-			// 終端なので削除．
-			else{
-				cur.erase(it->index);
-			}
-		}
-
-	}
-	else{
+		nBroad  = 0;
+		nNarrow = 0;
 		// 各セルについて交差判定
 		int ix, iy, iz;
 		for(ix = 0; ix < numDivision.x; ix++)for(iy = 0; iy < numDivision.y; iy++)for(iz = 0; iz < numDivision.z; iz++){
@@ -593,7 +688,6 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 			for(int s0 = 1; s0 < n; s0++)for(int s1 = 0; s1 < s0; s1++)
 				found |= DetectPair(cell.shapes[s0], cell.shapes[s1], ct, dt, continuous);
 		}
-
 		// 外側とセル間
 		int noutside = (int)cellOutside.shapes.size();
 		for(int c = 0; c < (int)cells.size(); c++){
@@ -601,7 +695,6 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 			for(int s0 = 0; s0 < noutside; s0++)for(int s1 = 0; s1 < n; s1++)
 				found |= DetectPair(cellOutside.shapes[s0], cells[c].shapes[s1], ct, dt, continuous);
 		}
-
 		// 外側同士
 		for(int s0 = 1; s0 < noutside; s0++)for(int s1 = 0; s1 < s0; s1++)
 			found |= DetectPair(cellOutside.shapes[s0], cellOutside.shapes[s1], ct, dt, continuous);
@@ -610,8 +703,8 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 	DSTR << "  check:" << ptimerForCd.CountUS();
 	DSTR << "total: " << NActiveShapePairs() << " broad : " << nBroad << "  narrow: " << nNarrow << std::endl;
 #endif
-
 	return found;
+
 }
 
 }

@@ -166,7 +166,7 @@ public:
 	double				velocityNorm;
 	double				angVelocityNorm;
 	int                 id;
-	//bool				bboxReady;    ///< bboxの再計算用フラグ
+	bool				bboxReady;    ///< bboxの再計算用フラグ
 	bool                aabbReady;    ///< aabbの再計算用フラグ
 	PHBBox              bbLocal;      ///< ローカル座標のBBox
 	PHBBox              bbWorld;      ///< ワールド座標のBBox
