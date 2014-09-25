@@ -16,6 +16,7 @@
 
 #include <vector>
 #include "../../SampleApp.h"
+#include <GL/glut.h>
 
 #include <Creature/CRBodyGenerator/CRBallHumanBodyGen.h>
 
