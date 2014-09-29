@@ -550,6 +550,20 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 		std::vector<Edge>::iterator eit = edges.begin();
 		for(int i = 0; i < (int)solids.size(); i++){
 			solids[i]->GetBBoxSupport(dir, eit[0].edge, eit[1].edge);
+			if (continuous){
+				PHScene* s = DCAST(PHScene, solids[i]->GetNameManager());
+				double dt = s->GetTimeStep();
+				Quaterniond rot = Quaterniond::Rot(solids[i]->GetAngularVelocity() * dt);
+				Vec3d prevDir = rot * dir;
+				float pe0, pe1;
+				solids[i]->GetBBoxSupport(prevDir, pe0, pe1);
+				Vec3d delta = dt * solids[i]->GetVelocity();
+				float ofs = delta * prevDir;
+				if (ofs < 0) pe0 += ofs;
+				else pe1 += ofs;
+				eit[0].edge = std::min(eit[0].edge, pe0);
+				eit[1].edge = std::max(eit[1].edge, pe1);
+			}
 			eit[0].index = i; eit[0].bMin = true;
 			eit[1].index = i; eit[1].bMin = false;
 			eit += 2;
@@ -580,7 +594,11 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 #ifdef REPORT_TIME
 					ptimerForCd.Stop();
 #endif
-					found |= solidPairs.item(f1, f2)->Detect(ct, dt);
+					if (continuous){
+						found |= solidPairs.item(f1, f2)->ContDetect(ct, dt);
+					}else{
+						found |= solidPairs.item(f1, f2)->Detect(ct, dt);
+					}
 #ifdef REPORT_TIME
 					ptimerForCd.Start();
 #endif
