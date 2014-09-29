@@ -279,6 +279,7 @@ Vec3d PHSolid::GetDeltaPosition(const Vec3d& p) const {
 	Quaterniond rot = Quaterniond::Rot(angVelocity*dt);
 	return velocity*dt + (rot*(p-center) - p);
 }
+
 bool PHSolid::CalcBBox(){
 	if(bboxReady) return false;
 

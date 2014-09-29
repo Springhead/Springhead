@@ -234,6 +234,7 @@ public:
 
 	Posed		GetPose             () const { return pose; }
 	Vec3d		GetFramePosition    () const { return pose.Pos(); }
+	Posed 		GetPrevPose() const;
 	Vec3d		GetDeltaPosition    () const ;
 	Vec3d		GetDeltaPosition    (const Vec3d& p) const;
 	Vec3d		GetPrevFramePosition() const { return pose.Pos() - GetDeltaPosition(); }
