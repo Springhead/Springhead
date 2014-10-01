@@ -128,6 +128,7 @@ bool FWFemMeshNew::CreatePHFemMeshFromGRMesh(){
 		pmd.vertices.push_back(vtxsOut[i]);
 	} 
 	pmd.tets.assign(tetsOut, tetsOut + nTetsOut*4);
+	pmd.spheric = (bool)spheric;
 	phFemMesh->SetDesc(&pmd);
 
 	return true;
