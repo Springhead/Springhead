@@ -310,6 +310,9 @@ public:
 	bool		IsFrozen(){return bFrozen;}
 	PHTreeNodeIf* GetTreeNode();
 
+	//For FEM multiple interface collision
+	int			femIndex;   //Stores the FEM mesh index
+
 protected:
 	virtual void AfterSetDesc();
 };
