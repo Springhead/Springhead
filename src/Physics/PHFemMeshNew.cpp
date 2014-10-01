@@ -67,6 +67,12 @@ bool FemEdge::operator == (const FemEdge& e2){
 PHFemMeshNew::PHFemMeshNew(const PHFemMeshNewDesc& desc, SceneIf* s){
 	SetDesc(&desc);
 	if (s){ SetScene(s); }
+
+	//For multiple FEM implementation
+	this->debugVertexInside = NULL;
+	this->debugFacesInside = NULL;
+	this->debugFixedPoints = NULL;
+	this->debugPairs = NULL;
 }
 
 size_t PHFemMeshNew::GetDescSize() const { 
@@ -231,6 +237,65 @@ void PHFemMeshNew::SetDesc(const void* p){
 			vertices[faces[i].vertexIDs[j]].faceIDs.push_back(i);
 		}
 	}
+
+this->root = NULL; //Clear the mesh KDTree root
+
+	int fs = faces.size();
+	for(int i=0;i<fs;i++){
+		faces[i].centroid.x = (vertices[faces[i].vertexIDs[0]].pos.x + vertices[faces[i].vertexIDs[1]].pos.x + vertices[faces[i].vertexIDs[2]].pos.x)  /3.0f;
+		faces[i].centroid.y = (vertices[faces[i].vertexIDs[0]].pos.y + vertices[faces[i].vertexIDs[1]].pos.y + vertices[faces[i].vertexIDs[2]].pos.y)  /3.0f;
+		faces[i].centroid.z = (vertices[faces[i].vertexIDs[0]].pos.z + vertices[faces[i].vertexIDs[1]].pos.z + vertices[faces[i].vertexIDs[2]].pos.z)  /3.0f;
+	}
+
+	//Calculating the Area of each tetra face
+	for(int i=0;i<fs;i++){
+		Vec3d vec[2];
+		vec[0] = vertices[faces[i].vertexIDs[1]].pos - vertices[faces[i].vertexIDs[0]].pos;  //vec[0] = pos[1] - pos[0];
+		vec[1] = vertices[faces[i].vertexIDs[2]].pos - vertices[faces[i].vertexIDs[0]].pos;  //vec[1] = pos[2] - pos[0];
+		
+		Vec3d normal = vec[1] % vec[0];
+		
+		faces[i].area = sqrt (( normal.x * normal.x ) + (normal.y * normal.y) + (normal.z * normal.z)) / 2.0f;
+	}
+
+	//Calculating normal
+	for(int i=0;i<fs;i++){
+		faces[i].normal = this->CompFaceNormal(i, false);
+	}
+
+	//This code calculates the distance from the vertex to the 
+	//closest nieghbor face centroid
+	int nv = NVertices();
+	for (int i=0; i< nv ;i++){
+		int nf = vertices[i].faceIDs.size();
+		double maxDist = DBL_MIN;
+
+		for (int j=0; j< nf ;j++) {
+			int face = vertices[i].faceIDs[j];
+
+			if (face > nSurfaceFace) { continue; }
+
+			for (int k=0; k<3 ;k++) {
+				int vid = faces[face].vertexIDs[k];
+
+				if (vid == i) { continue; }
+
+				double dd = (vertices[vid].pos - vertices[i].pos).norm();
+				if (dd > maxDist ) {
+					maxDist = dd;
+				}
+			}
+		}
+		vertices[i].centerDist = maxDist;
+	}
+
+	//for the faces in the surface saves the correspondant tetId 
+	for (int i=0; i < nSurfaceFace; i++) {
+		faces[i].tetraId = FindTetFromFace(i);
+	}
+
+	//saves if the mesh is spheric or not from the sprfile flag
+	this->spheric = d->spheric;
 }
 
 bool PHFemMeshNew::AddChildObject(ObjectIf* o){
