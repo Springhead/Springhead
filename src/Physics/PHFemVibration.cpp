@@ -164,6 +164,74 @@ void PHFemVibration::Init(){
 	//veIds.push_back(7);
 	//veIds.push_back(5);
 	//veIds.push_back(6);
+	const char *stmp = GetPHFemMesh()->GetName();
+
+	if (strcmp(stmp, "femMesh") == 0) {
+		//int arr[8] = {0,7,1,2,3,4,5,6};
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+8);
+		
+		//int arr[8] = {0,1,2,3,4,5,6,7}; 
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+8);
+
+		//int arr[6] = {25,13,18,7,17,16};   //TWO LEG EXPERIMENT
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+6);   //TWO LEG EXPERIMENT
+
+		//int arr[7] = {13,14,28,4,83,38,34};   //MEASUREMENT EXPERIMENT
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+7);   //MEASUREMENT EXPERIMENT
+
+		//int arr[4] = {74,76,75,77};   //MEASUREMENT EXPERIMENT
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+4);   //MEASUREMENT EXPERIMENT
+
+		//int arr[4] = {91,94,175,174};   //MEASUREMENT EXPERIMENT
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+4);   //MEASUREMENT EXPERIMENT
+
+		//int arr[4] = {91,94,175,174};   //MEASUREMENT EXPERIMENT
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+4);   //MEASUREMENT EXPERIMENT
+
+		int arr[4] = {587,586,137,544};   //GOMU BEAM DETAILED
+		fixedVertices.insert(fixedVertices.end(), arr, arr+4);   //GOMU BEAM DETAILED
+	}
+
+	//if ( (strcmp(stmp, "femMeshi") == 0) || (strcmp(stmp, "femMeshii") == 0) ) {
+		//int arr[19] = {19,29,18,30,20,53,3,50,81,2,76,32,65,1,27,22,52,21,49};
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+19);
+		/*int arr[33] = {19,29,18,30,20,
+					 53,55,43,39,49,
+					 3,37,59,0,21,
+					 50,41,45,63,35,52,
+					 81,82,71,57,
+					 2,76,32,65,1,62,27,22};
+		fixedVertices.insert(fixedVertices.end(), arr, arr+33);*/
+		//int arr[5] = {13,14,33,27,32};
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+5);
+		//int arr[4] = {19,54,38,31};
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+4);
+		//int arr[6] = {30,32,18,11,33,23};   //TWO LEG EXPERIMENT JUST CORNERS
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+6);   //TWO LEG EXPERIMENT JUST CORNERS
+		//int arr[22] = {11,42,10,34,12,38,18,37,17,51,23,50,29,53,31,39,33,40,3,41,30,32};   //TWO LEG EXPERIMENT ALL BOTTOM
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+22);   //TWO LEG EXPERIMENT ALL BOTTOM
+
+		//int arr[8] = {30,32,18,11,33,23,34,53 };   //TWO LEG EXPERIMENT JUST CORNERS
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+8);   //TWO LEG EXPERIMENT JUST CORNERS
+
+		//int arr[8] = {48,50,52,53,40,42,43,45};   //MEASURMENT EXPERIMENT POINTER LEGS
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+8);   //MEASUREMENT EXPERIMENT POINTER LEGS
+
+		//int arr[8] = {59,26,8,45,60,46,9,24};   //GOMU BEAM 
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+8);   //GOMU BEAM
+
+		//int arr[8] = {46,60,24,9,47,6,21,10};   //GOMU BEAM DETEAILEDD 20
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+8);   //GOMU BEAM DETAILED 20
+
+		//int arr[6] = {142,138,269,206,273,210};   //GOMU BEAM DETEAILEDD 30
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+6);   //GOMU BEAM DETAILED 30
+
+		//int arr[5] = {142,138,269,71,54};   //GOMU BEAM DETEAILEDD 30
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+5);   //GOMU BEAM DETAILED 30
+
+		//int arr[9] = {2, 4, 5, 7,23,25,29,27,56};
+		//fixedVertices.insert(fixedVertices.end(), arr, arr+9);   //CUBE 
+	//}
 
 	Vec3i con = Vec3i(1,1,1);
 	for(int i = 0; i < (int)fixedVertices.size(); i++){
@@ -264,6 +332,7 @@ void PHFemVibration::CompStiffnessMatrix(){
 
 void PHFemVibration::CompMassMatrix(){
 	/// 質量行列の計算
+	double totalMass = 0.0;
 	PHFemMeshNew* mesh = GetPHFemMesh();
 	const int NTets = (int)mesh->tets.size();
 	const int NDof = NVertices() * 3;
@@ -291,6 +360,8 @@ void PHFemVibration::CompMassMatrix(){
 		}
 		const double volume = mesh->CompTetVolume(i, true);
 		matMe *= GetDensity() * volume / 20.0;
+		//totalMass += (density * 3 * volume);    //TAKEAHANA'S DENSITY TRICK
+		totalMass += (density * volume);
 		
 		// 全体質量行列の計算
 		// 頂点番号順 u = (u0, v0, w0,  ..., un-1, vn-2, wn-1)として計算
@@ -307,6 +378,7 @@ void PHFemVibration::CompMassMatrix(){
 		}
 	}
 	matMp.assign(matMIni);
+	mesh->GetPHSolid()->SetMass(totalMass);
 }
 
 void PHFemVibration::CompRayleighDampingMatrix(){
@@ -504,7 +576,10 @@ void PHFemVibration::InitModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K,
 		evalue.resize(nmode, 0.0);
 		evector.resize(size, nmode, 0.0);
 		qtimer.StartPoint("CompEigen");
-		CompEigenValue(_M, _K, 0, nmode, evalue, evector);
+		if (this->fixedVertices.size() == 0) {
+			CompEigenValue(_M, _K, 6, nmode, evalue, evector);
+		} else {
+			CompEigenValue(_M, _K, 0, nmode, evalue, evector); }
 		qtimer.EndPoint("CompEigen");
 
 		q.resize(nmode,0);
@@ -1018,11 +1093,33 @@ bool PHFemVibration::AddForce(int tetId, Vec3d posW, Vec3d fW){
 	Vec3d posL = inv * posW;
 	Vec3d fL = inv * fW;
 	Vec4d v;
-	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, false)) return false;
+
+	//if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, false)) return false;
+	mesh->CompTetShapeFunctionValue(tetId, posL, v, true);
 	for(int i = 0; i < 4; i++){
 		int vtxId = mesh->tets[tetId].vertexIDs[i];
 		mesh->vertices[vtxId].bUpdated=true;//更新フラグ
 
+
+		Vec3d fdiv = v[i] * fL;
+		AddVertexForceL(vtxId, fdiv);
+	}
+	return true;
+}
+
+bool PHFemVibration::AddForceL(int tetId, Vec3d posW, Vec3d fL){
+	PHFemMeshNew* mesh = GetPHFemMesh();
+	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
+	Vec3d posL = inv * posW;
+	//Vec3d fL = inv * fW;
+	Vec4d v;
+
+	//if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, true)) { DSTR << "ERRORL" << std::endl; return false; }
+	mesh->CompTetShapeFunctionValue(tetId, posL, v, true);
+	//DSTR << this->GetName()  << " : " << tetId << std::endl;
+	for(int i = 0; i < 4; i++){
+		int vtxId = mesh->tets[tetId].vertexIDs[i];
+		mesh->vertices[vtxId].bUpdated=true;//更新フラグ  Update Flag
 
 		Vec3d fdiv = v[i] * fL;
 		AddVertexForceL(vtxId, fdiv);
@@ -1090,7 +1187,8 @@ bool PHFemVibration::GetVelocity(int tetId, Vec3d posW, Vec3d& vel, bool bDeform
 	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
 	Vec3d posL = inv * posW;
 	Vec4d v;
-	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform)) return false;
+	//if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform)) return false;
+	mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform);
 	for(int i = 0; i < 4; i++){
 		int vtxId = mesh->tets[tetId].vertexIDs[i];
 		vel += mesh->GetVertexVelocityL(vtxId) * v[i];
@@ -1105,7 +1203,8 @@ bool PHFemVibration::GetPosition(int tetId, Vec3d posW, Vec3d& pos, bool bDeform
 	Posed inv = mesh->GetPHSolid()->GetPose().Inv();
 	Vec3d posL = inv * posW;
 	Vec4d v;
-	if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform)) return false;
+	//if(!mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform)) return false;
+	mesh->CompTetShapeFunctionValue(tetId, posL, v, bDeform);
 	for(int i = 0; i < 4; i++){
 		int vtxId = mesh->tets[tetId].vertexIDs[i];
 		pos += mesh->GetVertexPositionL(vtxId) * v[i];
@@ -1211,6 +1310,168 @@ void PHFemVibration::MatrixFileOut(VMatrixRe mat, std::string filename){
 		ofs << std::endl;
     }
     ofs.close();
+}
+
+//This function uses almost the same method as Susa to match to find
+//the pointer on the FEM surface. But this method considers the
+//contact normal and the tetra face normal to make it faster
+bool PHFemVibration::searchSurfaceTetra(Vec3d commonPointW, Vec3d contactNormalU, int &faceId, Vec3d &surfacePoint, bool bDeform) {
+	PHFemMeshNew* mesh = GetPHFemMesh();
+	Posed pose = mesh->GetPHSolid()->GetPose();
+	std::vector< FemFace > faces = mesh->faces;
+	int nsf = mesh->nSurfaceFace;
+	faceId = 0;
+
+	double dist = DBL_MAX;
+	for(int i = 0; i < nsf; i++){
+
+		double cosine = (pose * faces[i].normal).unit() * contactNormalU;
+		if (!(cosine > 0.9) ) {   // 0 degrees
+			//DSTR << "DEBUG mesh " << mesh->femIndex << " : " << cosine  << " : " << i << std::endl; 
+			continue; }  //Addition to the method
+
+		Vec3d fp[3];
+		for(int j = 0; j < 3; j++){
+			if(bDeform)		fp[j] = pose * mesh->vertices[faces[i].vertexIDs[j]].pos;
+			else			fp[j] = pose * mesh->vertices[faces[i].vertexIDs[j]].initialPos;
+		}
+		Vec3d cpW; 
+		double d;
+
+		if(!FindClosestPointOnMesh(commonPointW, fp, cpW, d, bDeform)) continue;
+		if(d < dist){
+			// 前回よりも点-面間の距離が近い場合は近い方を選ぶ
+			dist = d;
+			faceId = i;
+			surfacePoint = cpW;
+		}else if(d == dist){
+			faceId = i;
+			surfacePoint = cpW;
+		}
+	}
+
+	if(faceId) return true;
+	else return false;
+}
+
+//gets the reduced index, to get values from the reduced matrix
+int PHFemVibration::getReducedIndex(int vertexId) {
+	//considering the reduced matrix to calculate the right index
+	//the fixedVertices should be sort for this block to work
+
+	int nfix = fixedVertices.size();
+	int jumps = 0;
+	for (int i=0; i< nfix ;i++){
+		 if (fixedVertices[i] < vertexId)
+			 jumps++;
+		 else
+			 break; 
+	}
+
+	return (vertexId - jumps) * 3;
+}
+
+//Return the instant vertex position
+bool PHFemVibration::GetInstantPosition(int vertexId, Vec3d& returnPosL) {
+	
+	Vec3d initialPos = GetPHFemMesh()->GetVertexInitalPositionL(vertexId);
+
+	int id = getReducedIndex(vertexId);
+	
+	returnPosL[0] = (evector.row(id) * q) + initialPos.x;
+	returnPosL[1] = (evector.row(id+1) * q) + initialPos.y;
+	returnPosL[2] = (evector.row(id+2) * q) + initialPos.z;
+
+	return true;
+}
+
+//Return the instant vertex velocity
+bool PHFemVibration::GetInstantVelocity(int vertexId, Vec3d& returnVelL) {
+	
+	int id = getReducedIndex(vertexId);
+
+	returnVelL[0] = (evector.row(id) * qv);
+	returnVelL[1] = (evector.row(id+1) * qv);
+	returnVelL[2] = (evector.row(id+2) * qv);
+	return true;
+}
+
+//Return the instant vertex acceleration
+bool PHFemVibration::GetInstantAcceleration(int vertexId, Vec3d& returnAccelL) {
+	
+	int id = getReducedIndex(vertexId);
+
+	returnAccelL[0] = (evector.row(id) * qa);
+	returnAccelL[1] = (evector.row(id+1) * qa);
+	returnAccelL[2] = (evector.row(id+2) * qa);
+	return true;
+}
+
+//Returns the mass of a simple tetra element
+bool PHFemVibration::GetVertexMass(int vertexId, double& returnMass, bool bDeform){
+	
+	/*Vec3d returnMass;
+
+	int id = vtxId * 3;
+	returnMass[0] = matMp[id][id];
+	returnMass[1] = matMp[id+1][id+1];
+	returnMass[2] = matMp[id+2][id+2];
+	return returnMass;*/
+
+	PHFemMeshNew *mesh = this->GetPHFemMesh()->Cast();
+	const double volume = mesh->CompTetVolume(vertexId, true);
+	
+	if (volume == 0.0) {return false;}
+
+	returnMass = density * volume;  //Taken from Susa's code
+
+	return true;
+}
+
+inline double PHFemVibration::TriArea2D(double x1, double y1, double x2, double y2, double x3, double y3)
+{
+	return (x1-x2)*(y2-y3) - (x2-x3)*(y1-y2);
+}
+
+void PHFemVibration::Barycentric(Vec3d fp[3], Vec3d& p, double &u, double &v, double &w)
+{
+	// Unnormalized triangle normal
+	Vec3d a = fp[0];
+	Vec3d b = fp[1];
+	Vec3d c = fp[2];
+
+	Vec3d m = (b - a)%(c - a);
+	// Nominators and one-over-denominator for u and v ratios
+	double nu, nv, ood;
+	// Absolute components for determining projection plane
+	double  x = abs(m.x), y = abs(m.y), z = abs(m.z);
+	// Compute areas in plane of largest projection
+	if(x>=y&&x>=z){
+		// x is largest, project to the yz plane
+		nu = TriArea2D(p.y, p.z, b.y, b.z, c.y, c.z); // Area of PBC in yz plane
+		nv = TriArea2D(p.y, p.z, c.y, c.z, a.y, a.z); // Area of PCA in yz plane
+		ood = 1.0f / m.x; // 1/(2*area of ABC in yz plane)
+	} else if (y >= x && y >= z) {
+		// y is largest, project to the xz plane
+		nu = TriArea2D(p.x, p.z, b.x, b.z, c.x, c.z);
+		nv = TriArea2D(p.x, p.z, c.x, c.z, a.x, a.z);
+		ood = 1.0f / -m.y;
+	} else {
+		// z is largest, project to the xy plane
+		nu = TriArea2D(p.x, p.y, b.x, b.y, c.x, c.y);
+		nv = TriArea2D(p.x, p.y, c.x, c.y, a.x, a.y);
+		ood = 1.0f / m.z;
+	}
+		u = nu * ood;
+		v = nv * ood;
+		w=1.0f-u-v;
+}
+
+bool PHFemVibration::TestPointTriangle(Vec3d fp[3], Vec3d c)
+{
+	double u, v, w;
+	Barycentric(fp, c, u, v, w);
+	return v >= 0.0f && w >= 0.0f && (v + w) <= 1.0f;
 }
 
 }
