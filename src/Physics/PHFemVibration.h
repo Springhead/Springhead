@@ -179,6 +179,31 @@ public:
 
 	/// 行列のファイル出力
 	void MatrixFileOut(VMatrixRe mat, std::string filename);
+
+	//For FEM implementations FUNCTIONS
+
+	/// 
+	bool searchSurfaceTetra(Vec3d commonPointW, Vec3d contactNormalU, int &faceId, Vec3d &surfacePoint, bool bDeform);
+	///Gets the tetrahedra mass using the mass matrix
+	bool GetVertexMass(int vertexId, double& returnMass, bool bDeform);
+	//Vec3d GetVertexMass(int vtxId, double return Mass);  
+
+	///Convertex the vertexID into a reduced one for the reduced matrix
+	int getReducedIndex(int vertexId);  
+	///Gets the position directly from the matrix
+	bool GetInstantPosition(int vertexId, Vec3d& returnPosL);  
+	///Gets the velocity directly from the matrix
+	bool GetInstantVelocity(int vertexId, Vec3d& returnVelL);  
+	///Gets the acceleration directly from the matrix
+	bool GetInstantAcceleration(int vertexId, Vec3d& returnAccelL);
+	///AddForce using local coordinates (should be also modified)
+	bool AddForceL(int tetId, Vec3d posW, Vec3d fL);    
+
+	/// This rutines are for the Barycentric Method to match faces and vertices
+	bool TestPointTriangle(Vec3d fp[3], Vec3d c);
+	void Barycentric(Vec3d fp[3], Vec3d& p, double &u, double &v, double &w);
+	inline double TriArea2D(double x1, double y1, double x2, double y2, double x3, double y3);
+	
 };
 
 }
