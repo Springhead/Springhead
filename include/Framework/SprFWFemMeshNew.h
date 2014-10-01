@@ -19,6 +19,7 @@ struct FWFemMeshNewDesc: public FWObjectDesc{
 	unsigned kogetex; //焦げテクスチャの枚数
 	std::string meshRoughness;			///< tetgenで生成するメッシュの粗さ
 	FWFemMeshNewDesc();
+	bool spheric;
 	void Init();
 };
 
