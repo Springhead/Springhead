@@ -30,6 +30,7 @@ struct PHFemMeshNewDesc: public PHFemMeshNewState{
 	std::vector<Vec3d> vertices;
 	std::vector<int> tets;
 	std::vector<int> faces;
+	bool spheric;   //For multiple FEM implementation
 };
 /// PHFemMeshNewへのインタフェース
 struct PHFemMeshNewIf : public SceneObjectIf{
