@@ -737,7 +737,6 @@ void PHScene::DumpObjectR(std::ostream& os, int level) const{
 	}
 }
 
-
 //----------------------------------------------------------------------------
 //	PHRay
 void PHRay::Apply(){
