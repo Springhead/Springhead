@@ -12,7 +12,13 @@
 #include "PHFemMesh.h"
 #include "PHFemMeshNew.h"
 
-namespace Spr{;
+//For the FEM interface implementation
+#include "PHFemCollision.h"
+#include <Physics/PHContactPoint.h>
+#include <Physics/PHConstraintEngine.h>
+
+
+namespace Spr{
 
 // 現状はメッシュのステップを呼ぶのみ
 // 複数のメッシュでのやりとりをおこなう場合は
@@ -38,6 +44,18 @@ public:
 	virtual bool AddChildObject(ObjectIf* o);
 	void SetTimeStep(double dt);
 	double GetTimeStep();
+
+	//For the multiple object implemenation VARIABLES
+	bool **contactMatrix;    //contact matrix to surf throug the object's contact
+	PHFemCollision ***femColArray;  //saves the objects to control their FEM collision interaction
+
+	//For the multiple object implemenation FUNCTIONS
+	PHFemMeshNew* GetMeshByName(std::string name);
+	void	FEMSolidMatchRefresh();   
+	void	ContactInterface();
+	void	clearContacts();  
+	void	InitContacts();
+	
 };
 
 }
