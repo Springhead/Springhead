@@ -13,6 +13,9 @@
 #include "../Foundation/Object.h"
 #include "PHScene.h"
 
+//For multiFEM
+#include "Physics\structs\RingBuffer.h"
+
 namespace Spr{;
 using namespace PTM;
 
@@ -27,6 +30,9 @@ public:
 	std::vector<int> edgeIDs;
 	std::vector<int> faceIDs;
 	bool bUpdated;
+
+	//For multiple FEM objects
+	double centerDist;    //The distance to the closest neighbour
 };
 //	Žl–Ê‘Ì
 class FemTet{
@@ -47,6 +53,12 @@ public:
 	void Update();
 	bool operator < (const FemFace& f2);	///< ’¸“_ID‚Å”äŠr
 	bool operator == (const FemFace& f2);	///< ’¸“_ID‚Å”äŠr
+
+	//added for the FEM implementation
+	Vec3d centroid;  /// Face centroid
+	double area;	/// Face area
+	Vec3d normal;	//Face normal
+	int tetraId;    //Saves the FaceId
 };
 //	•Ó
 struct FemEdge{
@@ -54,6 +66,48 @@ struct FemEdge{
 	bool operator < (const FemEdge& e2); 	///< ’¸“_ID‚Å”äŠr
 	bool operator == (const FemEdge& e2);	///< ’¸“_ID‚Å”äŠr
 	FemEdge(int v1=-1, int v2=-1);
+};
+
+//Data structures for the multiple FEM implementation
+//This structure is used for the KDTree Search
+struct data {
+    int faceId;
+    Vec3d cpoint;
+	Vec3d median;
+	Vec3d fnormal;
+	int vtxIds[3];
+	int tetraId;
+    data() {}
+};
+
+//class to define the KDTree data structure
+class KDVertex{
+public:
+	KDVertex *left;
+	KDVertex *right;
+	data val;
+
+	KDVertex() {
+		left = NULL;
+		right = NULL;
+	}
+};
+
+//This structure is used to match Tetrahedra and vertex in a collision
+struct FemFVPair {
+	int vertexId;
+	int faceId;
+	int tetraId;
+	int femIndex;
+	Vec3d projection;
+	double dist;
+	Vec3d initialPos[2];
+
+	Vec3d debugVertex; //DEBUG
+	int debugMaster;   //DEBUG
+	int debugSlave;    //DEBUG
+
+	FemFVPair () {}
 };
 
 class PHFemBase;
@@ -173,6 +227,25 @@ public:
 	/// –Ê‚Ì–@ü‚ð•Ô‚·
 	Vec3d CompFaceNormal(const Vec3d pos[3]);		// ”CˆÓ‚Ì’¸“_
 	Vec3d CompFaceNormal(const int& faceId, const bool& bDeform);
+
+	//For multiple object implementation VARIABLES
+	bool *contactVector;	//saves the contact configuration of the scene
+	int femIndex;			//stores the fem loading Index
+	KDVertex* root;         //stores the KDTree root  
+	RingBuffer* ringVel;    //ring buffer to save the instant vel 
+	bool spheric;			//indicates the shape of the model (from SPR file)
+
+
+	//For DEBUG FEM multiple collision
+	Vec3d debugFoundPoint;  //debug
+	Vec3d debugSearchPoint;  //debug
+	Vec3d debugClosestPoint;  //debug
+	Vec3d debugContactFace; //debug
+	Vec3d debugPivotPoint;  //debug
+	std::vector<int> *debugVertexInside;  //debug
+	std::vector<int> *debugFacesInside;  //debug
+	std::vector<int> *debugFixedPoints;  //debug
+	std::vector<FemFVPair> *debugPairs;   //debug
 
 };
 
