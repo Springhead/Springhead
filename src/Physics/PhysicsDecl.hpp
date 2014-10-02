@@ -151,6 +151,7 @@ protected:\
 	std::vector< Vec3d >	vertices;	\
 	std::vector< int >	tets;	\
 	std::vector< int >	faces;	\
+	bool	spheric;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -158,6 +159,7 @@ public:\
 		vertices = ((PHFemMeshNewDesc*)ptr)->vertices;	\
 		tets = ((PHFemMeshNewDesc*)ptr)->tets;	\
 		faces = ((PHFemMeshNewDesc*)ptr)->faces;	\
+		spheric = ((PHFemMeshNewDesc*)ptr)->spheric;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -166,6 +168,7 @@ public:\
 		((PHFemMeshNewDesc*)ptr)->vertices = vertices;	\
 		((PHFemMeshNewDesc*)ptr)->tets = tets;	\
 		((PHFemMeshNewDesc*)ptr)->faces = faces;	\
+		((PHFemMeshNewDesc*)ptr)->spheric = spheric;	\
 		return true;	\
 	}\
 

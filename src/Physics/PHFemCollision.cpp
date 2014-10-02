@@ -73,8 +73,8 @@ void PHFemCollision::firstContactImpact (PHFemMeshNew *mesh[2], PHContactPoint *
 		
 	//DEBUG BLOCK
 	DSTR << "pairs :" << std::endl;
-	for (int k=0; k<pairs.size() ; k++) {
-		DSTR << pairs[k].vertexId << "-" << pairs[k].faceId << std::endl;
+	for (int kk=0; kk<(int)pairs.size() ; kk++) {
+		DSTR << pairs[kk].vertexId << "-" << pairs[kk].faceId << std::endl;
 	}
 	DSTR << "pairs :" << std::endl;
 	//DEBUG BLOCK
@@ -90,13 +90,13 @@ void PHFemCollision::firstContactImpact (PHFemMeshNew *mesh[2], PHContactPoint *
 	instantVel[0] = (instantVel[0] * normal) * normal;
 	instantVel[1] = (instantVel[1] * normal) * normal;
 
-	nPairs = pairs.size();
+	nPairs = (int) pairs.size();
 	
 
 	Vec3d Fp;
-	double reducedMass;
-	double impulseRedMass;
-	double damperRedMass;
+	double reducedMass = 0;
+	double impulseRedMass = 0;
+	double damperRedMass = 0;
 
 	mass[0] = solid[0]->GetMass();
 	mass[1] = solid[1]->GetMass();
@@ -271,8 +271,8 @@ void PHFemCollision::findVertexTrianglePairs(PHFemMeshNew *meshes[2], Vec3d cont
 	Posed pose0 = mesh0->GetPHSolid()->GetPose();
 	Posed pose1 = mesh1->GetPHSolid()->GetPose();
 	PHFemVibration *fvib = mesh0->GetPHFemVibration()->Cast();
-	nv[0] = vertexInside0->size();
-	nv[1] = vertexInside1->size();
+	nv[0] = (int) vertexInside0->size();
+	nv[1] = (int) vertexInside1->size();
 	Vec3d fp[3];
 	visitedArray = new bool[mesh1->vertices.size()];
 	memset(visitedArray, false, sizeof(bool) * mesh1->vertices.size());
@@ -298,12 +298,12 @@ void PHFemCollision::findVertexTrianglePairs(PHFemMeshNew *meshes[2], Vec3d cont
 			{   continue; }
 
 			maxDist = DBL_MIN;
-			int nf = mesh0->vertices[insideIndex].faceIDs.size();
+			int nf = (int) mesh0->vertices[insideIndex].faceIDs.size();
 			std::vector <int> facesIds = mesh0->vertices[insideIndex].faceIDs;
 			for (int f=0; f < nf ;f++) {
 
 				//surface face check
-				if (facesIds[f] >= mesh0->nSurfaceFace) {continue;}
+				if (facesIds[f] >= (int) mesh0->nSurfaceFace) {continue;}
 
 				//normal check
 				if (!((pose0 * mesh0->faces[facesIds[f]].normal).unit() * contactNormal > 0.899)) { continue; }
@@ -332,7 +332,7 @@ void PHFemCollision::findVertexTrianglePairs(PHFemMeshNew *meshes[2], Vec3d cont
 					//Checks wich is the deapest point in contact
 					if (maxDist < (surfacePoint - point).norm() ) {
 						maxDist = (surfacePoint - point).norm();
-						*deapest = pairs->size();
+						*deapest = (int) pairs->size();
 					}
 
 					//Finally the selected points are saved
@@ -482,7 +482,7 @@ int PHFemCollision::recursiveSearch(PHFemMeshNew *mesh, Posed* pose, PHSolid *so
 	//Removed from the code to include edge-face, vertex-face, vertex-vertex collisions
 	//if (!distanceCheck(vertexPos, contactPoint, firstDepth)) {return 1;}
 
-	int edgesSize = mesh->vertices[vertexIndex].edgeIDs.size();
+	int edgesSize = (int) mesh->vertices[vertexIndex].edgeIDs.size();
 	vertexInside->push_back(vertexIndex);
 	
 	Vec3d vecNormal;
@@ -501,7 +501,7 @@ int PHFemCollision::recursiveSearch(PHFemMeshNew *mesh, Posed* pose, PHSolid *so
 		} if (mesh->edges[edgeIndx].vertexIDs[1] == vertexIndex) {
 			point = mesh->edges[edgeIndx].vertexIDs[0];  }
 
-		if (edgeIndx > mesh->nSurfaceEdge) { continue; }
+		if (edgeIndx > (int) mesh->nSurfaceEdge) { continue; }
 
 		//first check the normal orientation
 		//NOTE maybe with this check is enough, the distance calculation could be redundant (distanceCheck)
