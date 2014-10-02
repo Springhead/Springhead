@@ -9,7 +9,7 @@
 #include <Physics/PHFemVibration.h>
 #include <Physics/PHContactPoint.h>
 #include <Physics/PHConstraintEngine.h>
-#include <Physics/structs/RingBuffer.h>
+#include <Physics/RingBuffer.h>
 #include <iomanip> 
 
 //using namespace Spr;
