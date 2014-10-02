@@ -14,7 +14,7 @@
 #include "PHScene.h"
 
 //For multiFEM
-#include "Physics\structs\RingBuffer.h"
+#include <Physics\RingBuffer.h>
 
 namespace Spr{;
 using namespace PTM;
