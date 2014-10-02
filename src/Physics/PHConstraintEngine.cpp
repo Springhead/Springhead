@@ -841,7 +841,7 @@ void PHConstraintEngine::StepPart1(){
 
 	if(bReport){
 		timeCollision = ptimer.CountUS();
-		DSTR << " col:" << timeCollision;
+		//DSTR << " col:" << timeCollision;
 	}
 }
 
@@ -874,13 +874,13 @@ void PHConstraintEngine::StepPart2(){
 	Setup();
 	if(bReport){
 		timeSetup = ptimer.CountUS();
-		DSTR << " sup:" << timeSetup;
+		//DSTR << " sup:" << timeSetup;
 	}
 
 	Iterate();
 	if(bReport){
 		timeIterate = ptimer.CountUS();
-		DSTR << " ite:" << timeIterate << std::endl;
+		//DSTR << " ite:" << timeIterate << std::endl;
 	}
 
 	// 位置LCP
