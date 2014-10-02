@@ -605,7 +605,7 @@ bool PHContactDetector::Detect(unsigned ct, double dt, int mode, bool continuous
 				}
 				cur.insert(it->index);
 #ifdef _DEBUG
-				if (nMaxOverlapObject < (int)cur.size()) nMaxOverlapObject = cur.size();
+				if (nMaxOverlapObject < (int)cur.size()) nMaxOverlapObject = (int)cur.size();
 #endif
 			}else{
 				cur.erase(it->index);			//	終端なので削除．

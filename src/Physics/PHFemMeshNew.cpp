@@ -240,7 +240,7 @@ void PHFemMeshNew::SetDesc(const void* p){
 
 this->root = NULL; //Clear the mesh KDTree root
 
-	int fs = faces.size();
+	int fs = (int) faces.size();
 	for(int i=0;i<fs;i++){
 		faces[i].centroid.x = (vertices[faces[i].vertexIDs[0]].pos.x + vertices[faces[i].vertexIDs[1]].pos.x + vertices[faces[i].vertexIDs[2]].pos.x)  /3.0f;
 		faces[i].centroid.y = (vertices[faces[i].vertexIDs[0]].pos.y + vertices[faces[i].vertexIDs[1]].pos.y + vertices[faces[i].vertexIDs[2]].pos.y)  /3.0f;
@@ -267,13 +267,13 @@ this->root = NULL; //Clear the mesh KDTree root
 	//closest nieghbor face centroid
 	int nv = NVertices();
 	for (int i=0; i< nv ;i++){
-		int nf = vertices[i].faceIDs.size();
+		int nf = (int) vertices[i].faceIDs.size();
 		double maxDist = DBL_MIN;
 
 		for (int j=0; j< nf ;j++) {
 			int face = vertices[i].faceIDs[j];
 
-			if (face > nSurfaceFace) { continue; }
+			if (face > (int) nSurfaceFace) { continue; }
 
 			for (int k=0; k<3 ;k++) {
 				int vid = faces[face].vertexIDs[k];
@@ -290,7 +290,7 @@ this->root = NULL; //Clear the mesh KDTree root
 	}
 
 	//for the faces in the surface saves the correspondant tetId 
-	for (int i=0; i < nSurfaceFace; i++) {
+	for (int i=0; i < (int) nSurfaceFace; i++) {
 		faces[i].tetraId = FindTetFromFace(i);
 	}
 
