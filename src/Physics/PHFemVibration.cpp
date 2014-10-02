@@ -1359,7 +1359,7 @@ int PHFemVibration::getReducedIndex(int vertexId) {
 	//considering the reduced matrix to calculate the right index
 	//the fixedVertices should be sort for this block to work
 
-	int nfix = fixedVertices.size();
+	int nfix = (int) fixedVertices.size();
 	int jumps = 0;
 	for (int i=0; i< nfix ;i++){
 		 if (fixedVertices[i] < vertexId)
