@@ -57,7 +57,7 @@ bool PHFemEngine::AddChildObject(ObjectIf* o){
 
 ///Used to find the PHFemMesh object using the solid's name
 PHFemMeshNew* PHFemEngine::GetMeshByName(std::string name){
-	int nm = meshes_n.size();
+	int nm = (int) meshes_n.size();
 	for (int i=0; i<nm  ;i++) {
 		if (meshes_n[i]->GetPHSolid()->GetName() == name)
 			return meshes_n[i];
@@ -67,7 +67,7 @@ PHFemMeshNew* PHFemEngine::GetMeshByName(std::string name){
 
 ///Used to match the solids with their respective FEM Mesh
 void PHFemEngine::FEMSolidMatchRefresh() {
-	int nm = meshes_n.size();
+	int nm = (int) meshes_n.size();
 	PHSolid *temp;
 	for (int i=0; i<nm  ;i++) {
 		temp = meshes_n[i]->GetPHSolid()->Cast();
@@ -219,7 +219,7 @@ void PHFemEngine::ContactInterface() {
 void PHFemEngine::InitContacts() {
 
 	//This block initializes the contact matrix
-	int nfems = meshes_n.size();
+	int nfems = (int) meshes_n.size();
 	contactMatrix = new bool*[nfems];
 	for (int j=0; j< nfems ;j++)
 		contactMatrix[j] = new bool(false);
@@ -238,7 +238,7 @@ void PHFemEngine::InitContacts() {
 ///Clears from the memory the unused femColArray objects
 ///checking if both objects are still in contact with each other
 void PHFemEngine::clearContacts(){
-	int nfems = meshes_n.size();
+	int nfems = (int) meshes_n.size();
 
 	//clears the femCollision object from the memory
 	for(int i=0; i< nfems; i++){
