@@ -17,7 +17,8 @@ PHFemEngine::PHFemEngine(){
 
 void PHFemEngine::Step(){
 	/// FEM Interface for vibration transmission
-	this->ContactInterface();
+	if (meshes_n.size() > 1)
+		this->ContactInterface();
 
 	/// 旧メッシュの更新
 	for(size_t i = 0; i < meshes.size(); ++i){
