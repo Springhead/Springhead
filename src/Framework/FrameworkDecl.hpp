@@ -28,12 +28,14 @@ public:\
 protected:\
 	unsigned int	kogetex;	\
 	std::string	meshRoughness;	\
+	bool	spheric;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		FWObject::SetDesc((FWObjectDesc*)(FWFemMeshNewDesc*)ptr);	\
 		kogetex = ((FWFemMeshNewDesc*)ptr)->kogetex;	\
 		meshRoughness = ((FWFemMeshNewDesc*)ptr)->meshRoughness;	\
+		spheric = ((FWFemMeshNewDesc*)ptr)->spheric;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -41,6 +43,7 @@ public:\
 		FWObject::GetDesc((FWObjectDesc*)(FWFemMeshNewDesc*)ptr);	\
 		((FWFemMeshNewDesc*)ptr)->kogetex = kogetex;	\
 		((FWFemMeshNewDesc*)ptr)->meshRoughness = meshRoughness;	\
+		((FWFemMeshNewDesc*)ptr)->spheric = spheric;	\
 		return true;	\
 	}\
 
