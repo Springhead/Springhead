@@ -458,9 +458,9 @@ void FWFemMeshNew::SyncThermoInfo(){
 		 //vertexの法線？表示
 		for(unsigned i=0; i < phFemMesh->faces.size(); i++){
 			//.	faceエッジを表示	
-			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
-			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
-			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0f,0.5f,0.1f);
 		}
 	}
 
@@ -470,9 +470,9 @@ void FWFemMeshNew::SyncThermoInfo(){
 		//}
 		for(unsigned i=0; i < phFemMesh->faces.size(); i++){
 			//.	faceエッジを表示	
-			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
-			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
-			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0f,0.5f,0.1f);
 		}
 	}
 	
@@ -482,9 +482,9 @@ void FWFemMeshNew::SyncThermoInfo(){
 		//}
 		for(unsigned i=0; i < phFemMesh->faces.size(); i++){
 			//.	faceエッジを表示	
-			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0,0.5,0.1);
-			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0,0.5,0.1);
-			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0,0.5,0.1);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,0),phFemMesh->GetFaceEdgeVtx(i,1),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,1),phFemMesh->GetFaceEdgeVtx(i,2),1.0f,0.5f,0.1f);
+			DrawEdgeCW(phFemMesh->GetFaceEdgeVtx(i,2),phFemMesh->GetFaceEdgeVtx(i,0),1.0f,0.5f,0.1f);
 		}
 	}
 
