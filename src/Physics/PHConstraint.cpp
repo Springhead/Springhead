@@ -19,13 +19,6 @@ namespace Spr{
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHConstraint
 
-void PHConstraint::Adjacents::Add(PHConstraint* _con, const SpatialMatrix& _A){
-	if((int) size() < num+1) { resize(2*(num+1)); }
-	at(num).con = _con;
-	at(num).A   = _A;
-	num++;
-}
-
 // コンストラクタ
 PHConstraint::PHConstraint() {
 	solid[0] = solid[1] = NULL;
