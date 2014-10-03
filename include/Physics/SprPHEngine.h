@@ -97,6 +97,10 @@ public:
 		@return value shrinkRateCorrectionの値
 	*/
 	double GetShrinkRateCorrection();
+
+	/** @breif 接触領域を表示するための情報を更新するかどうか。FWSceen::EnableRenderContact()が呼び出す。
+	*/
+	void EnableRenderContact(bool enable);
 };
 
 struct PHConstraintEngineDesc{

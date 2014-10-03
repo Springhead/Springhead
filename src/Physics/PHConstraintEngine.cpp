@@ -226,6 +226,8 @@ PHConstraintEngine::PHConstraintEngine(){
 		if(reportFile)
 			fprintf(reportFile, "col, sup, ite\n");
 	}
+
+	renderContact = true;
 }
 
 PHConstraintEngine::~PHConstraintEngine(){

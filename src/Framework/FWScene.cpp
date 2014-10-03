@@ -1140,10 +1140,10 @@ void FWScene::SetForceScale(float scalef, float scalem){
 }
 void FWScene::EnableRenderContact(bool enable){
 	renderContact = enable;
-	/*if (phScene){
+	if (phScene){
 		PHConstraintEngineIf* c = phScene->GetConstraintEngine();
 		if (c) c->EnableRenderContact(enable);
-	}*/
+	}
 }
 void FWScene::SetContactMaterial(int mat){
 	matContact = mat;
