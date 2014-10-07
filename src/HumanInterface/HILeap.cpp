@@ -14,36 +14,42 @@
 #pragma hdrstop
 #endif
 
+#pragma comment(lib, "LeapMotion.lib")
+
 namespace Spr{
 
+__declspec(dllimport) void*     __cdecl CreateLeapController(void);
+__declspec(dllimport) void      __cdecl DeleteLeapController(void* leap);
+__declspec(dllimport) LeapFrame __cdecl GetLeapFrame(void* leap, int i);
+
+HILeap::~HILeap() {
+	DeleteLeapController(leap);
+}
+
 bool HILeap::Init(const void* desc) {
-	#ifdef USE_LEAP
-	
 	// Leapmotionを初期化
-	leap = new Leap::Controller();
-	#endif
+	leap = CreateLeapController();
 	return true;
 }
 
 void HILeap::Update(float dt) {
-#ifdef USE_LEAP
-	const int nUseFingers = 2;
+	const int nUseFingers = 4;
 
 	if (leap) {
 		// Leapmotionからセンシング結果を取得
-		Leap::Frame frame = leap->frame(0);
+		LeapFrame frame = GetLeapFrame(leap, 0);
 
 		// Skeletonの不足分を用意
-		PrepareSkeleton(frame.hands().count());
+		PrepareSkeleton(frame.leapHands.size());
 
-		for (int h=0; h<frame.hands().count(); ++h) {
-			Leap::Hand hand = frame.hands()[h];
+		for (int h=0; h<frame.leapHands.size(); ++h) {
+			LeapHand hand = frame.leapHands[h];
 
 			HISkeleton* skel = skeletons[h]->Cast();
 
 			// 手全体の位置姿勢をセット
-			skel->pose.Ori() = ToSpr(hand.basis()) * rotation;
-			skel->pose.Pos() = ToSpr(hand.palmPosition()) + center;
+			skel->pose.Pos() = (rotation * hand.position * scale) + center;
+			skel->pose.Ori() = hand.orientation * rotation;
 
 			// ボーンを準備
 			skel->PrepareBone(5 * nUseFingers);
@@ -51,23 +57,22 @@ void HILeap::Update(float dt) {
 			// 各指の位置と方向をセット
 			int cnt = 0;
 
-			for(int f=0; f<hand.fingers().count(); f++){
+			for(int f=0; f<hand.FINGER_NUM; f++){
 				for(int b = 0; b<nUseFingers; b++) {
-					Leap::Bone::Type boneType = static_cast<Leap::Bone::Type>(3-b);
-					Leap::Bone bone = hand.fingers()[f].bone(boneType);
+					LeapBone bone = hand.leapFingers[f].bones[(3 - b)];
 					
-					DCAST(HIBone,skel->bones[cnt])->position  = (ToSpr(bone.center()) + center);
-					DCAST(HIBone,skel->bones[cnt])->direction = ToSpr(bone.direction());
-					DCAST(HIBone,skel->bones[cnt])->length    = bone.length() * scale;
+					DCAST(HIBone, skel->bones[cnt])->position  = (rotation * bone.position * scale) + center;
+					DCAST(HIBone, skel->bones[cnt])->direction = (rotation * bone.direction).unit();
+					DCAST(HIBone, skel->bones[cnt])->length    = bone.length * scale;
 
 					cnt++;
 				}
 			}
 		}
 	}
-#endif
 }
 
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 UDPInit::UDPInit() {
 	gimite::startup_socket();
@@ -79,20 +84,14 @@ UDPInit::~UDPInit() {
 
 
 bool HILeapUDP::Init(const void* desc) {
-#ifdef USE_LEAP	
 	std::cout << "HILeapUDP Init" << std::endl;
 	ProtocolPC::getInstance();
-	
-	
-
-#endif
 	return true;
 }
-#ifdef USE_LEAP_UDP
+
 int HILeapUDP::getLeapNum() {
 	return (int) ProtocolPC::getInstance()->mapIdLeapData.size();
 }
-#endif
 
 bool ProtocolPC::isSame(LeapHand* L1, LeapHand* L2, double sameHandDistance, double wrongHandDistance) {
 	//return false;
@@ -170,7 +169,6 @@ bool HILeapUDP::calibrate(int formerLeapID) {
 }
 
 void HILeapUDP::Update(float dt) {
-#ifdef USE_LEAP
 	using namespace std;
 	ProtocolPC* ppc = ProtocolPC::getInstance();
 	
@@ -535,8 +533,6 @@ void HILeapUDP::Update(float dt) {
 			ld->writeMode = LeapData::WRITING;
 			ld->readMode = LeapData::READ_COMP;
 	}
-
-	#endif	//USE_LEAP
 }
 
 LeapBone::LeapBone(){
