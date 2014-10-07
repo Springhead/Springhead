@@ -99,31 +99,37 @@ public:
 
 	virtual void BuildScene(){
 		soFloor = CreateFloor();
-		/*
+
+		/**/
 		HILeapDesc descLeap;
-		HILeapIf* leap;
+
 		leap = hiSdk->CreateHumanInterface(HILeapIf::GetIfInfoStatic())->Cast();
 		leap->Init(&descLeap);
-		*/
 		
-		HILeapUDPDesc descLeapUDP;
-		
-		leapUDP = hiSdk->CreateHumanInterface(HILeapUDPIf::GetIfInfoStatic())->Cast();
-		leapUDP->Init(&descLeapUDP);
-		
-
-		leapUDP->SetScale(1/10.0);
-		leapUDP->SetCenter(Vec3d(0,-8,0));
-		
-
-		//leap->SetScale(1/10.0);
-		//leap->SetCenter(Vec3d(0,-8,0));
+		leap->SetScale(1/10.0);
+		leap->SetCenter(Vec3d(0,-8,0));
 		// leap->SetRotation(Quaterniond::Rot(Rad(90), 'x'));
 		
 		FWSkeletonSensorDesc descSS;
 		FWSkeletonSensorIf* skelSensor = GetSdk()->GetScene(0)->CreateSkeletonSensor(descSS);
-		//skelSensor->AddChildObject(leap);
+
+		skelSensor->AddChildObject(leap);
+
+		/*/
+
+		HILeapUDPDesc descLeapUDP;
+
+		leapUDP = hiSdk->CreateHumanInterface(HILeapUDPIf::GetIfInfoStatic())->Cast();
+		leapUDP->Init(&descLeapUDP);
+
+		leapUDP->SetScale(1 / 10.0);
+		leapUDP->SetCenter(Vec3d(0, -8, 0));
+
+		FWSkeletonSensorDesc descSS;
+		FWSkeletonSensorIf* skelSensor = GetSdk()->GetScene(0)->CreateSkeletonSensor(descSS);
+
 		skelSensor->AddChildObject(leapUDP);
+		/**/
 	}
 
 	// タイマコールバック関数．タイマ周期で呼ばれる

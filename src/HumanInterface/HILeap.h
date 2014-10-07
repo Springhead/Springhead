@@ -11,83 +11,18 @@
 
 #include <SprDefs.h>
 
-#ifdef USE_CLOSED_SRC
-#define USE_LEAP
-#define USE_LEAP_UDP
-#endif
-
 #include <Foundation/UTTimer.h>
-//#include <Foundation/UTSocket.h>
 
-//#include <vector>
 #include <map>
 #include <string>
 #include <list>
 
-#ifdef USE_LEAP
-#include <LeapSDK/Leap.h>
-#pragma comment(lib, "Leap.lib")
-#endif
-
 #include <HumanInterface/HISkeletonSensor.h>
 #include <HumanInterface/SprHILeap.h>
+
 namespace Spr{;
 
-/// Leapmotion 
-class HILeap: public HILeapDesc, public HISkeletonSensor {
-
-#ifdef USE_LEAP
-	Leap::Controller* leap;
-#endif
-
-public:
-	SPR_OBJECTDEF(HILeap);
-
-	HILeap(const HILeapDesc& desc = HILeapDesc()) {
-	}
-
-	~HILeap() {
-#ifdef USE_LEAP
-		if (leap) { delete leap; }; leap = NULL;
-#endif
-	}
-
-	// ----- ----- ----- ----- -----
-	//	HIBase's API
-
-	bool Init(const void* desc);
-	void Update(float dt);
-
-
-	// ----- ----- ----- ----- -----
-	// API for Leap
-
-#ifdef USE_LEAP
-	inline Vec3d ToSpr(Leap::Vector lv) {
-		return rotation * Vec3d(lv.x, lv.y, lv.z) * scale;
-	}
-	inline Quaterniond ToSpr(Leap::Matrix lm) {
-		Matrix3d m;
-		for (int i=0; i<3; ++i) {
-			m[0][i] = lm.xBasis[i]; m[1][i] = lm.yBasis[i]; m[2][i] = lm.zBasis[i];
-		}
-		Quaterniond q; q.FromMatrix(m);
-
-		return q;
-	}
-#endif
-
-};
-
-
-//----- ----- ----- ----- -----
-// Multi hand
-
-union Uni {
-	char ch[4];
-	float fl;
-	int i;
-};
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
 
 struct LeapBone {
 	Spr::Vec3d position;
@@ -110,10 +45,10 @@ struct LeapHand {
 		LEFT_HAND,
 	} handKind;
 
-
 	static const int FINGER_NUM = 5;
 	Spr::Vec3d position;
 	Spr::Vec3d direction;
+	Spr::Quaterniond orientation;
 	LeapFinger leapFingers[FINGER_NUM];
 	int recFingersNum;
 	float confidence;
@@ -142,7 +77,7 @@ public:
 		WRITING,
 		WRITE_COMP,
 	} writeMode;
-	
+
 	enum ReadMode {
 		READING,
 		READ_COMP,
@@ -153,6 +88,40 @@ public:
 	LeapFrame leapFrameBufs[3];
 
 	std::string hostName;
+};
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+/// Leapmotion 
+class HILeap: public HILeapDesc, public HISkeletonSensor {
+	void* leap;
+
+public:
+	SPR_OBJECTDEF(HILeap);
+
+	HILeap(const HILeapDesc& desc = HILeapDesc()) {}
+	~HILeap();
+
+	// ----- ----- ----- ----- -----
+	//	HIBase's API
+
+	bool Init(const void* desc);
+	void Update(float dt);
+};
+
+
+// ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- ----- -----
+
+
+
+
+//----- ----- ----- ----- -----
+// Multi hand
+
+union Uni {
+	char ch[4];
+	float fl;
+	int i;
 };
 
 static const int LEAP_DISTANCE = 250;
@@ -222,24 +191,20 @@ public:
 	~HILeapUDP() {}
 
 	// ----- ----- ----- ----- -----
-	// HIBase??API
+	// HIBaseÇÃAPI
 
 	bool Init(const void* desc);
 	void Update(float dt);
 
 	// ----- ----- ----- ----- -----
-	// ??API???
-
+	// îÒAPIä÷êî
 
 	bool calibrate(int formerLeapID);
-	
-	
-
-#ifdef USE_LEAP
+		
 	inline Vec3d ToSpr(Vec3d lv) {
 		return rotation * Vec3d(lv.x, lv.y, lv.z) * scale;
 	}
-	inline Quaterniond ToSprQ(Vec3d lm) {
+	inline Quaterniond ToSprQ(Vec3d lm) { //<!!> MatrixÇQuaternionÇ…Ç∑ÇÈä÷êîÇÃÇÕÇ∏ÅAà¯êîÇ™Vec3dÇ»ÇÃÇÕÇ®Ç©ÇµÇ¢
 		Matrix3d m;
 		for (int i=0; i<3; ++i) {
 			m[0][i] = lm.x; m[1][i] = lm.y; m[2][i] = lm.z;
@@ -248,17 +213,12 @@ public:
 		return q;
 	}
 
-	int getLeapNum();
-	
-	
-#endif
-	
+	int getLeapNum();	
 };
 
 float charToFloat(unsigned char* c);
 int charToInt(unsigned char* c);
 Vec3d charToVec3d(unsigned char* c);
-
 
 }
 
