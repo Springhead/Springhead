@@ -40,9 +40,9 @@ void HILeap::Update(float dt) {
 		LeapFrame frame = GetLeapFrame(leap, 0);
 
 		// Skeletonの不足分を用意
-		PrepareSkeleton(frame.leapHands.size());
+		PrepareSkeleton((int)frame.leapHands.size());
 
-		for (int h=0; h<frame.leapHands.size(); ++h) {
+		for (int h=0; h<(int)frame.leapHands.size(); ++h) {
 			LeapHand hand = frame.leapHands[h];
 
 			HISkeleton* skel = skeletons[h]->Cast();
