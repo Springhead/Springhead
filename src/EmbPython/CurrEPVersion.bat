@@ -1,2 +1,2 @@
 @echo off                             
-set CURR_PY_VERSION=33      
+set CURR_PY_VERSION=34      
