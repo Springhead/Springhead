@@ -8,26 +8,44 @@
 #include <HumanInterface/HILeap.h>
 //#include <Foundation/UTTimer.h>
 #include <Foundation/UTSocket.h>
+#include <Foundation/UTDllLoader.h>
+
 #include <Windows.h>
 
 #ifdef USE_HDRSTOP
 #pragma hdrstop
 #endif
 
-#pragma comment(lib, "LeapLoader.lib")
+// #pragma comment(lib, "LeapLoader.lib")
 
 namespace Spr{
 
+/*
 __declspec(dllimport) void*     __cdecl CreateLeapController(void);
 __declspec(dllimport) void      __cdecl DeleteLeapController(void* leap);
 __declspec(dllimport) LeapFrame __cdecl GetLeapFrame(void* leap, int i);
+*/
+
+static Spr::UTDllLoader dllLoaderLeap;
 
 HILeap::~HILeap() {
+	typedef void (SPR_CDECL *DeleteLeapControllerType)(void*);
+	DeleteLeapControllerType DeleteLeapController = (DeleteLeapControllerType)(dllLoaderLeap.GetProc("DeleteLeapController"));
+
 	DeleteLeapController(leap);
 }
 
 bool HILeap::Init(const void* desc) {
 	// Leapmotionを初期化
+	#if defined(_WIN64)
+		dllLoaderLeap.Load("LeapLoader.dll", ".;$(SPRINGHEAD2)\\bin\\win64");
+	#else
+		dllLoaderLeap.Load("LeapLoader.dll", ".;$(SPRINGHEAD2)\\bin\\win32");
+	#endif
+
+	typedef void* (SPR_CDECL *CreateLeapControllerType)(void);
+	CreateLeapControllerType CreateLeapController = (CreateLeapControllerType)(dllLoaderLeap.GetProc("CreateLeapController"));
+
 	leap = CreateLeapController();
 	return true;
 }
@@ -36,8 +54,12 @@ void HILeap::Update(float dt) {
 	const int nUseFingers = 4;
 
 	if (leap) {
+		typedef void (SPR_CDECL *GetLeapFrameType)(void*, int, void*);
+		GetLeapFrameType GetLeapFrame = (GetLeapFrameType)(dllLoaderLeap.GetProc("GetLeapFrame"));
+
 		// Leapmotionからセンシング結果を取得
-		LeapFrame frame = GetLeapFrame(leap, 0);
+		LeapFrame frame;
+		GetLeapFrame(leap, 0, &frame);
 
 		// Skeletonの不足分を用意
 		PrepareSkeleton((int)frame.leapHands.size());
