@@ -91,7 +91,7 @@ public:
 
 	// タイマコールバック関数．タイマ周期で呼ばれる
 	virtual void OnStep() {
-		GetSdk()->SaveScene("test.spr", NULL, FIFileSprIf::GetIfInfoStatic());
+		// GetSdk()->SaveScene("test.spr", NULL, FIFileSprIf::GetIfInfoStatic());
 
 		SampleApp::OnStep();
 

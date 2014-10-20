@@ -14,7 +14,7 @@
 #pragma hdrstop
 #endif
 
-#pragma comment(lib, "LeapMotion.lib")
+#pragma comment(lib, "LeapLoader.lib")
 
 namespace Spr{
 
