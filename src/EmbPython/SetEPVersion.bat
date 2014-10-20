@@ -16,8 +16,8 @@ echo #define EMB_PYTHON_VER %PY_VERSION%                               >> %EPVER
 echo #define PYTHON_H_REL  "../../include/Python%PY_VERSION%/Python.h" >> %EPVERSION_FILE%
 echo #define PYTHON_H_PATH ^<Python%PY_VERSION%/Python.h^>             >> %EPVERSION_FILE%
 
-echo @echo off                             >  CurrEPVersion.bat
-echo set CURR_PY_VERSION=%PY_VERSION%      >> CurrEPVersion.bat
+echo @echo off                       >  CurrEPVersion.bat
+echo set CURR_PY_VERSION=%PY_VERSION%>> CurrEPVersion.bat
 )
 
 exit /b
