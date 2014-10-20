@@ -105,8 +105,8 @@ void UTDllLoader::Cleanup(){
 #endif
 }
 void* UTDllLoader::GetProc(const char* name){
-	if (!module) return NULL;
-#ifdef _WIN32			
+	if (!module) { return NULL; };
+#ifdef _WIN32
 	return GetProcAddress((HMODULE)module, name);
 #else
 	return (void(*))dlsym(module, name);
