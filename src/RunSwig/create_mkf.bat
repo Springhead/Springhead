@@ -1,7 +1,7 @@
 @echo off
 :: ***********************************************************************************
 ::  File:
-::	create_mkf.bat makefile
+::	    create_mkf.bat makefile
 ::
 ::	arguments:
 ::		makefile	makefile名 (=%MAKEFILE%)
@@ -10,17 +10,17 @@
 ::				(=%DEPENDENCIES%)
 ::
 ::  Description:
-::	RunSwig 実行のための makefile を作成するスクリプト.
-::	プロジェクトの依存関係は, 引数 dependencies で指定する.
-::	このスクリプトは, 各プロジェクトのビルドを実行するディレクトリで実行され,
-::	makefile もそこに作成される.
+::	    RunSwig 実行のための makefile を作成するスクリプト.
+::	    プロジェクトの依存関係は, 引数 dependencies で指定する.
+::	    このスクリプトは, 各プロジェクトのビルドを実行するディレクトリで実行され,
+::	    makefile もそこに作成される.
 ::
 ::	関連ファイル
-::	  output: %MAKEFILE% (=%1)
+::	    output: %MAKEFILE% (=%1)
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 1.0	  2012/12/27	F.Kanehori
+::	    Ver 1.0	  2012/12/27	F.Kanehori
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set CWD=%cd%
@@ -196,9 +196,9 @@ set STR1=
     if "%1" equ "" goto :endloop
     for %%f in (%EXCLUDES%) do if %1 equ %%f goto :next
     if "!STR1!" equ "" (
-	set STR1=%1
+	    set STR1=%1
     ) else (
-	set STR1=!STR1! %1
+	    set STR1=!STR1! %1
     )
 :next
     shift /1
@@ -268,9 +268,11 @@ set STR2=
 for %%f in (!STR1!) do (
     call :leaf_name %%f
     if "!STR2!" equ "" (
-	set STR2=%1\!LEAF!
+	    set STR2=%1\!LEAF!
     ) else (
-	set STR2=!STR2! %1\!LEAF!
+	    set STR2=!STR2! %1\!LEAF!
     )
 )
 exit /b
+
+:end create_mkf.bat

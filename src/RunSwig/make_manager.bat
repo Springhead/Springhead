@@ -1,22 +1,22 @@
 @echo off
 :: ***********************************************************************************
 ::  File:
-::	make_manager.bat [-A] {-c -d -r -t}
+::	    make_manager.bat [-A] {-c -d -r -t}
 ::
 ::  Description:
-::	各プロジェクトで実行する make の制御を行なう.
+::	    各プロジェクトで実行する make の制御を行なう.
 ::
 ::	引数：	-A	対象となるすべてのプロジェクトについて, 以降の引数で示された
 ::			処理を実行する.
 ::
 ::		以下, 個別のプロジェクトに対する処理
-::		-c	Makefile.swig がなければ作成する.
-::		-d	Makefile.swig を削除する.
-::		-r	Makefile.swig.tmp があれば, それを Makefile.swig とする.
-::		-t	Makefile.swig.tmp を作成する (テンポラリファイル).
+::		    -c	Makefile.swig がなければ作成する.
+::		    -d	Makefile.swig を削除する.
+::		    -r	Makefile.swig.tmp があれば, それを Makefile.swig とする.
+::		    -t	Makefile.swig.tmp を作成する (テンポラリファイル).
 ::
-::	テンポラリファイルの作成モードがあるのは, make の実行中に Makefile.swig を
-::	書き換えてしまうのを回避するため.
+::	    テンポラリファイルの作成モードがあるのは, make の実行中に Makefile.swig を
+::	    書き換えてしまうのを回避するため.
 ::
 :: ***********************************************************************************
 ::  Version:
@@ -54,22 +54,22 @@ set ETCDIR=..\..\src\RunSwig
 :: ------------------------
 ::  -A オプションの処理
 :: ------------------------
-if "%1" == "-A" (
+if "%1" equ "-A" (
     set NEEDONEFILE=
-    if "%2" == "-c" set NEEDONEFILE=1
-    if "%3" == "-c" set NEEDONEFILE=1
-    if "%2" == "-t" set NEEDONEFILE=1
+    if "%2" equ "-c" set NEEDONEFILE=1
+    if "%3" equ "-c" set NEEDONEFILE=1
+    if "%2" equ "-t" set NEEDONEFILE=1
 
     if !NEEDONEFILE! == 1 echo checking makefile existance...
     for /f "tokens=1,*" %%p in (%ETCDIR%\%PROJFILE%) do (
-	cd %SRCDIR%\%%p
-	if !NEEDONEFILE! == 1 (
-	    echo.
-	    echo     ***  %%p  ***
-	    echo %%p %%q > %PROJFILEONE%
-	)
-	cmd /c %BINDIR%\%MAKEMGR% %2 %3 %4 %5 %6 %7 %8 %9
-	cd %CWD%
+	    cd %SRCDIR%\%%p
+	    if !NEEDONEFILE! == 1 (
+	        echo.
+	        echo     ***  %%p  ***
+	        echo %%p %%q > %PROJFILEONE%
+	    )
+	    cmd /c %BINDIR%\%MAKEMGR% %2 %3 %4 %5 %6 %7 %8 %9
+	    cd %CWD%
     )
     :: 終了
     exit /b
@@ -85,10 +85,10 @@ set ARG_D=0
 set ARG_R=0
 set ARG_T=0
 :ana_args
-    if "%1" == "-c" (set ARG_C=1
-    ) else if "%1" == "-d" (set ARG_D=1
-    ) else if "%1" == "-r" (set ARG_R=1
-    ) else if "%1" == "-t" (set ARG_T=1
+    if "%1" equ "-c" (set ARG_C=1
+    ) else if "%1" equ "-d" (set ARG_D=1
+    ) else if "%1" equ "-r" (set ARG_R=1
+    ) else if "%1" equ "-t" (set ARG_T=1
     ) else goto :end_args
     shift
     goto :ana_args
@@ -121,18 +121,18 @@ set DEPT=
 if %INIT% gtr 0 (
     call :leaf_name %cd%
     for /f "tokens=1,*" %%p in (%PROJFILEONE%) do (
-	if !PROJ! == %%p (
-	    set DEPT="%%q"
-	    if %DEBUG% == 1 (
-		echo.  project=!PROJ!
-		echo.  dependencies=!DEPT!
+        if !PROJ! equ %%p (
+            set DEPT="%%q"
+	        if %DEBUG% == 1 (
+		        echo.  project=!PROJ!
+		        echo.  dependencies=!DEPT!
+	        )
+	        goto :exit_for
 	    )
-	    goto :exit_for
-	)
     )
-    if "%DEPT%" == "" (
-	echo make_manager: can not get dependencies.
-	exit /b
+    if "%DEPT%" equ "" (
+	    echo make_manager: can not get dependencies.
+	    exit /b
     )
 )
 :exit_for
@@ -143,8 +143,8 @@ if %INIT% gtr 0 (
 ::
 if %ARG_D% == 1 (
     if exist %MAKEFILE% (
-	if %DEBUG% == 1 echo removing "%MAKEFILE%"
-	del %MAKEFILE%
+	    if %DEBUG% == 1 echo removing "%MAKEFILE%"
+	    del %MAKEFILE%
     )
 )
 
@@ -176,9 +176,9 @@ if %ARG_T% == 1 (
 ::
 if %ARG_R% == 1 (
     if exist %MAKETEMP% (
-	if %DEBUG% == 1 echo renaming "%MAKETEMP%" to "%MAKEFILE%"
-	if exist %MAKEFILE% del %MAKEFILE%
-	rename %MAKETEMP% %MAKEFILE%
+	    if %DEBUG% == 1 echo renaming "%MAKETEMP%" to "%MAKEFILE%"
+	    if exist %MAKEFILE% del %MAKEFILE%
+	    rename %MAKETEMP% %MAKEFILE%
     )
 )
 
@@ -196,3 +196,5 @@ exit /b
 :leaf_name
     set PROJ=%~nx1
 exit /b
+
+:end make_manager.bat
