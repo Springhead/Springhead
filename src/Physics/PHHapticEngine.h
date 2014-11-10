@@ -235,6 +235,12 @@ public:
 	///< ローカル側の力覚ポインタをとってくる
 	PHHapticPointers* GetLocalHapticPointers();
 
+	///<接触判定の有効化・無効化
+	void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable);
+	void EnableContact(PHSolidIf** group, size_t length, bool bEnable);
+	void EnableContact(PHSolidIf* solid, bool bEnable);
+	void EnableContact(bool bEnable);
+
 	///< デバック用シミュレーション実行
 	///（PHScene::Stepの変わりに呼ぶ）
 	virtual void StepPhysicsSimulation(){ engineImp->StepPhysicsSimulation(); }
