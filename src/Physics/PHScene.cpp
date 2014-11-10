@@ -347,21 +347,33 @@ void PHScene::IntegratePart2(){
 void PHScene::SetContactMode(PHSolidIf* lhs, PHSolidIf* rhs, PHSceneDesc::ContactMode mode){
 	penaltyEngine   ->EnableContact(lhs, rhs, mode == PHSceneDesc::MODE_PENALTY);
 	constraintEngine->EnableContact(lhs, rhs, mode == PHSceneDesc::MODE_LCP);
+	hapticEngine->EnableContact(lhs, rhs, (mode == PHSceneDesc::MODE_PENALTY) || (mode == PHSceneDesc::MODE_LCP));
 }
 
 void PHScene::SetContactMode(PHSolidIf** group, size_t length, PHSceneDesc::ContactMode mode){
 	penaltyEngine   ->EnableContact(group, length, mode == PHSceneDesc::MODE_PENALTY);
 	constraintEngine->EnableContact(group, length, mode == PHSceneDesc::MODE_LCP);
+	hapticEngine    ->EnableContact(group, length, (mode == PHSceneDesc::MODE_PENALTY) || (mode == PHSceneDesc::MODE_LCP));
 }
 
 void PHScene::SetContactMode(PHSolidIf* solid, PHSceneDesc::ContactMode mode){
 	penaltyEngine   ->EnableContact(solid, mode == PHSceneDesc::MODE_PENALTY);
 	constraintEngine->EnableContact(solid, mode == PHSceneDesc::MODE_LCP);
+	if (!DCAST(PHHapticPointer, solid)) {
+		// 対象が通常剛体の場合は、Pointerとの接触を切る必要があるためHapticEngineにも伝える。
+		hapticEngine->EnableContact(solid, (mode == PHSceneDesc::MODE_PENALTY) || (mode == PHSceneDesc::MODE_LCP));
+
+		// <!!>
+		// PHHapticEngineにより、毎ステップ、
+		// PHHapticPointer p に対して SetContactMode(p, NONE) が行われる。
+		// そのため対象は通常剛体に限らないと何にも接触しなくなる。
+	}
 }
 
 void PHScene::SetContactMode(PHSceneDesc::ContactMode mode){
 	penaltyEngine   ->EnableContact(mode == PHSceneDesc::MODE_PENALTY);
 	constraintEngine->EnableContact(mode == PHSceneDesc::MODE_LCP);
+	hapticEngine    ->EnableContact((mode == PHSceneDesc::MODE_PENALTY) || (mode == PHSceneDesc::MODE_LCP));
 }
 int  PHScene::GetLCPSolver(){
 	return constraintEngine->method;

@@ -577,6 +577,7 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 		const int pointerID = pointer->GetPointerID();
 		PHSolidPairForHaptic* solidPair = GetSolidPair(i, pointerID);
 		if(DCAST(PHHapticPointer, solidPair->solid[0])) continue;	// 剛体がポインタの場合
+		if (!solidPair->bEnabled) continue;
 		if(nAxes == 3){
 			// 形状毎の近傍点探索、接触解析
 			int ns0 = solidPair->solid[0]->NShape();
@@ -760,6 +761,56 @@ PHHapticPointers* PHHapticEngine::GetLocalHapticPointers(){
 void PHHapticEngine::ReleaseState(){
 	if(!engineImp->states) return;
 	engineImp->states->ReleaseState(GetScene());
+}
+
+void PHHapticEngine::EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){
+	PHSolidIf *soLatter = NULL;
+	for (int i = 0; i < solidPairs.height(); ++i) {
+		for (int j = 0; j < solidPairs.width(); ++j) {
+			PHSolidIf *s0 = solidPairs.item(i, j)->solid[0]->Cast(), *s1 = solidPairs.item(i, j)->solid[1]->Cast();
+			if ( ((s0 == lhs) && (s1 == rhs)) || ((s0 == rhs) && (s1 == lhs)) ) {
+				solidPairs.item(i, j)->bEnabled = bEnable;
+			}
+		}
+	}
+}
+
+void PHHapticEngine::EnableContact(PHSolidIf** group, size_t length, bool bEnable){
+	// <!!> Not Implemented Yet
+	/*
+	std::vector<int> idx;
+	PHSolids::iterator it;
+	for (int i = 0; i < (int)length; i++){
+		it = find(solids.begin(), solids.end(), (PHSolid*)(group[i]->Cast()));
+		if (it != solids.end())
+			idx.push_back((int)(it - solids.begin()));
+	}
+	sort(idx.begin(), idx.end());
+	for (int i = 0; i < (int)idx.size(); i++){
+		for (int j = i + 1; j < (int)idx.size(); j++){
+			solidPairs.item(idx[i], idx[j])->bEnabled = bEnable;
+		}
+	}
+	*/
+}
+
+void PHHapticEngine::EnableContact(PHSolidIf* solid, bool bEnable){
+	for (int i = 0; i < solidPairs.height(); ++i) {
+		for (int j = 0; j < solidPairs.width(); ++j) {
+			PHSolidIf *s0 = solidPairs.item(i, j)->solid[0]->Cast(), *s1 = solidPairs.item(i, j)->solid[1]->Cast();
+			if (s0==solid || s1==solid) {
+				solidPairs.item(i, j)->bEnabled = bEnable;
+			}
+		}
+	}
+}
+
+void PHHapticEngine::EnableContact(bool bEnable){
+	for (int i = 0; i<solidPairs.height(); ++i) {
+		for (int j=0; j<solidPairs.width(); ++j) {
+			solidPairs.item(i, j)->bEnabled = bEnable;
+		}
+	}
 }
 
 } // namespace Spr

@@ -42,6 +42,7 @@ void FWHapticSample::BuildScene(){
 		soBox->AddShape(phSdk->CreateShape(bd));
 		soBox->SetInertia(soBox->GetShape(0)->CalcMomentOfInertia() * (1/soBox->GetShape(0)->CalcVolume()) * (float)soBox->GetMass());
 		soBox->SetFramePosition(Vec3d(-0.5 , -0.35, 0.0));
+		soBox->SetName("soBox");
 
 		// 力覚ポインタの作成
 		pointer = phscene->CreateHapticPointer();	// 力覚ポインタの作成
@@ -61,6 +62,7 @@ void FWHapticSample::BuildScene(){
 		pointer->SetReflexDamper(0.1 * 0.0);		// ダンパ係数の設定
 		pointer->EnableFriction(false);				// 摩擦を有効にするかどうか
 		//pointer->EnableDebugControl(true);		// キーボードから力覚ポインタを動かす機能カーソルでx、y方向に移動可能
+		pointer->SetName("hpPointer");
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
 		fwPointer->SetHumanInterface(spg);		// HumanInterfaceの設定
 		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfのsってい
@@ -158,6 +160,20 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			// アプリケーションの終了
 			exit(0);
 			break;
+
+		case 't':
+			{
+				PHSolidIf* box = GetSdk()->GetScene()->GetPHScene()->FindObject("soBox")->Cast();
+				GetSdk()->GetScene()->GetPHScene()->SetContactMode(pointer, box, PHSceneDesc::MODE_NONE);
+				break;
+			}
+		case 'y':
+			{
+				PHSolidIf* box = GetSdk()->GetScene()->GetPHScene()->FindObject("soBox")->Cast();
+				GetSdk()->GetScene()->GetPHScene()->SetContactMode(pointer, box, PHSceneDesc::MODE_LCP);
+				break;
+			}
+
 		case '1':
 			{
 				// レンダリングモードをPenaltyに
