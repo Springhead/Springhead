@@ -208,6 +208,8 @@ PyObject* SprPy_PassFWSdkIf(FWSdkIf *ob);
 //ループ実行直前に１度だけ呼ばれる
 void EPLoopInit(void* arg)
 	{
+		UTAutoLock LOCK(EPCriticalSection);
+
 		MyApp* app = (MyApp*)arg;
 		//
 		//////Pythonでモジュールの使用宣言
