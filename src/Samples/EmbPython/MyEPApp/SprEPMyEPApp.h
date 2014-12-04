@@ -1,12 +1,6 @@
 #ifndef SPREPMYEPAPP_H
 #define SPREPMYEPAPP_H
 
-//{*********EPFWApp*******
-extern PyTypeObject EPFWAppType;
-#define EPFWApp_Check(ob) PyObject_TypeCheck(ob, &EPFWAppType)
-PyObject* newEPFWApp(const FWApp*);
-//}EPFWApp
-
 //{*********EPSampleApp*******
 extern PyTypeObject EPSampleAppType;
 #define EPSampleApp_Check(ob) PyObject_TypeCheck(ob, &EPSampleAppType)
