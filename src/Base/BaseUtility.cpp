@@ -6,7 +6,9 @@
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
 #include "Base.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 
 #include <iostream>
 namespace Spr {
