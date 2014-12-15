@@ -1,5 +1,7 @@
 ﻿#include "Foundation.h"
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #include "UTMMTimer.h"
 #include <windows.h>
 #include <mmsystem.h>

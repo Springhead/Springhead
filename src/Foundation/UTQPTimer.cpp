@@ -5,7 +5,9 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
+#ifdef USE_HDRSTOP
 #pragma hdrstop
+#endif
 #pragma comment(lib, "winmm.lib")
 
 #include "UTQPTimer.h"
