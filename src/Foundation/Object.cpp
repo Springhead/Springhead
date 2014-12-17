@@ -186,7 +186,7 @@ bool Object::WriteStateR(std::ostream& fout){
 		GetState(state);
 		sd->Write(fout, state);	
 		DestructState(state);
-		delete state;
+		delete[] state;
 	}
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){
@@ -215,7 +215,7 @@ bool Object::ReadStateR(std::istream& fin){
 		sd->Read(fin, state);	
 		SetState(state);
 		DestructState(state);
-		delete state;
+		delete[] state;
 	}
 	size_t n = NChildObject();
 	for(size_t i=0; i<n; ++i){

@@ -941,7 +941,7 @@ void GRDeviceGL::SetTextureImage(const std::string id, int components, int xsize
 		if (rv){DSTR << "SetTextureImage :" << gluErrorString(rv) << std::endl;}
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		delete texbuf;
+		delete[] texbuf;
 	}
 }
 
@@ -1086,7 +1086,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
 		if (loadFromFile) {
 			int rv = gluBuild2DMipmaps(GL_TEXTURE_2D, nc, tx, ty, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
-			delete texbuf;
+			delete[] texbuf;
 			if (rv){
 				DSTR << gluErrorString(rv) << std::endl;
 				return 0;
