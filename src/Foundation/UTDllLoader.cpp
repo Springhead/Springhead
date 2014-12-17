@@ -27,8 +27,8 @@ static char* GetEnv(char* buf, const char* var){
 			char varstr[1024];
 			assert(cur >= start);
 			assert(cur - start < 1024);
-			varstr[cur - start] = '\0';
 			strncpy(varstr, var+start, cur-start);
+			varstr[cur - start] = '\0';
 			char* env = getenv(varstr);
 			if (!env){
 				env = "";
@@ -43,8 +43,8 @@ static char* GetEnv(char* buf, const char* var){
 			while(var[cur] && var[cur] != '%') cur ++;
 			char varstr[1024];
 			assert(cur - start < 1024);
-			varstr[cur-start] = '\0';
 			strncpy(varstr, var+start, cur-start);
+			varstr[cur - start] = '\0';
 			char* env = getenv(varstr);
 			if (!env){
 				env = "";
