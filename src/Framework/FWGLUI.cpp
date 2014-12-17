@@ -218,7 +218,7 @@ void FWGLUI::SetLabel(FWControl* ctrl, UTString label){
 }
 
 void FWGLUI::SetAlign(FWControl* ctrl, int align){
-	int gluiAlign;
+	int gluiAlign = FWControlDesc::ALIGN_LEFT;
 	switch(align){
 	case FWControlDesc::ALIGN_LEFT:		gluiAlign = GLUI_ALIGN_LEFT;	break;
 	case FWControlDesc::ALIGN_CENTER:	gluiAlign = GLUI_ALIGN_CENTER;	break;

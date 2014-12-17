@@ -4573,7 +4573,7 @@ void PHFemThermo::SetVertexHeatTransRatio(int vtxId, double heatTransRatio){
 }
 
 float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
-	float gvtx;
+	float gvtx = 0.0f;
 	//テクスチャの設定
 	//焦げテクスチャの枚数
 	unsigned kogetex	= 5;
