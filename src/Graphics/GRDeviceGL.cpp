@@ -1045,7 +1045,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 					}					
 				}					
 			}
-			delete texbuf;
+			delete[] texbuf;
 			texbuf = newTexbuf;
 			glTexImage3D(GL_TEXTURE_3D, 0, nc, tx, ty, tz, 0, pxfm[nc - 1], GL_UNSIGNED_BYTE, texbuf);
 			err = glGetError();
@@ -1055,7 +1055,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 		}
 		glBindTexture(GL_TEXTURE_3D, 0);
 		if (enableDebugMessage){ std::cout << "8: glBindTexture(GL_TEXTURE_3D, " << 0 << ");" << std::endl; }
-		delete texbuf;
+		delete[] texbuf;
 	}else{	
 		//	2D textureの場合
 		bool loadFromFile = (filename.c_str()[0]!=':');
