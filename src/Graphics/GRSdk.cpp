@@ -101,7 +101,7 @@ bool GRSdk::AddChildObject(ObjectIf* o){
 			// デフォルトネーム
 			if(strcmp(s->GetName(), "") == 0){
 				char name[256];
-				sprintf(name, "scene%d", NScene()-1);
+				sprintf(name, "scene%d", (int)NScene()-1);
 				s->SetName(name);
 			}
 			return true;

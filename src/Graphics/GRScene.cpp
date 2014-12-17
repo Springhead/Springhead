@@ -84,7 +84,7 @@ bool GRScene::AddChildObject(ObjectIf* o){
 			if(ac)
 				sprintf(name, "animation_controller");
 			if(as)
-				sprintf(name, "animation_set%d", animationController->NChildObject()-1);
+				sprintf(name, "animation_set%d", (int)animationController->NChildObject()-1);
 			so->SetName(name);		
 		}
 	}
