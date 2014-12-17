@@ -36,7 +36,7 @@ bool PHTreeNode::AddChildObject(ObjectIf* o){
 		
 		char name[256];
 		if(strcmp(n->GetName(), "") == 0){
-			sprintf(name, "%s%d", GetName(), Children().size());
+			sprintf(name, "%s%d", GetName(), (int)Children().size());
 			n->SetName(name);
 		}
 		

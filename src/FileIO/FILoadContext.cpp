@@ -57,6 +57,9 @@ public:
 		// ファイルマッピングオブジェクト作成
 		hFileMap = CreateFileMapping(hFile, NULL, PAGE_READONLY, 0, 0, NULL);
 		// ファイルfnを読み属性でマップし、その先頭アドレスを取得
+		if (hFileMap == NULL) {
+			return false;
+		}
 		start = (const char*)MapViewOfFile(hFileMap, FILE_MAP_READ, 0, 0, 0);
 		end = start + len;
 		return true;	

@@ -107,14 +107,14 @@ bool GRFrame::AddChildObject(ObjectIf* o){
 		if(strcmp(v->GetName(), "") == 0){
 			char name[256]="";
 			if(frame)
-				sprintf(name, "%s_frame%d", GetName(), frames.size()-1);
+				sprintf(name, "%s_frame%d", GetName(), (int)frames.size()-1);
 			else if(mat)
-				sprintf(name, "%s_mat%d", GetName(), materials.size()-1);
+				sprintf(name, "%s_mat%d", GetName(), (int)materials.size()-1);
 			else if(light)
-				sprintf(name, "%s_light%d", GetName(), lights.size()-1);
+				sprintf(name, "%s_light%d", GetName(), (int)lights.size()-1);
 			else if(mesh)
-				sprintf(name, "%s_mesh%d", GetName(), meshes.size()-1);
-			else sprintf(name, "%s_misc%d", GetName(), miscs.size()-1);
+				sprintf(name, "%s_mesh%d", GetName(), (int)meshes.size()-1);
+			else sprintf(name, "%s_misc%d", GetName(), (int)miscs.size()-1);
 			v->SetName(name);
 		}
 		return true;
