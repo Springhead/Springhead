@@ -285,7 +285,7 @@ void UTTypeDesc::Read(std::istream& is, void* base){
 			is.read(buf, len);				//	文字列を読み出す
 			buf[len] = 0;
 			WriteString(buf, base);			//	読みだした結果をbaseに格納
-			delete buf;
+			delete[] buf;
 		}else{
 			assert(0);	//	ここには来ないはず
 			is.read((char*)base, GetSize());

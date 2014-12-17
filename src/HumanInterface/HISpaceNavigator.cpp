@@ -54,7 +54,7 @@ bool HISpaceNavigator::Init(const void* desc) {
 				}
 			}
 		}
-		delete deviceList;
+		delete[] deviceList;
 
 		// Raw Inputを受け付けるよう登録
 		RAWINPUTDEVICE sRawInputDevices[] = { {0x01, 0x08, 0x00, 0x00} };

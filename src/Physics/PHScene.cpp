@@ -688,7 +688,7 @@ bool PHScene::WriteStateR(std::ostream& fout){
 		if (cst->joints.size()) fout.write((char*)&*cst->joints.begin(), sizeof(PHConstraintState)*cst->joints.size());
 	}
 	DestructState(state);
-	delete state;
+	delete[] state;
 	size_t n = NSolids();
 	for(size_t i=0; i<n; ++i) GetSolids()[i]->WriteStateR(fout);
 	return true;
@@ -719,7 +719,7 @@ bool PHScene::ReadStateR(std::istream& fin){
 	}
 	SetState(state);
 	if (cst) cst->~PHConstraintsSt();
-	delete state;
+	delete[] state;
 	size_t n = NSolids();
 	for(size_t i=0; i<n; ++i) GetSolids()[i]->ReadStateR(fin);
 	return true;
