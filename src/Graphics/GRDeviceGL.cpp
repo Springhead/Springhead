@@ -730,8 +730,8 @@ void GRDeviceGL::SetFont(const GRFont& font){
 			DSTR << "wglUseFontBitmaps() failed with error:" << e << std::endl;
 			if (lpMsgBuf) {
 				DSTR << lpMsgBuf << std::endl;
+				LocalFree(lpMsgBuf);
 			}
-			LocalFree(lpMsgBuf);
 		}
 		SelectObject(hDC, hOldFont);
 		DeleteObject(hFont);		
@@ -1010,7 +1010,7 @@ unsigned int GRDeviceGL::LoadTexture(const std::string filename){
 				int c = LoadBmpGetBytePerPixel(h);
 				if(x != tx || y != ty || c != nc){
 					DSTR << "Error: Texture file '" << fnStr.str() << "' has an illegal format." << std::endl;
-					delete texbuf;
+					delete[] texbuf;
 					return 0;
 				}
 				LoadBmpGetBmp(h, texbuf+pictureSize*i);
