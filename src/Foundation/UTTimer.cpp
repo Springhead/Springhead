@@ -77,7 +77,7 @@ public:
 protected:
 	void GetCaps(){
 #ifdef _WIN32
-		TIMECAPS tc;
+		TIMECAPS tc = { 0, 0 };
 		if (timeGetDevCaps(&tc, sizeof(TIMECAPS)) != TIMERR_NOERROR) {
 			DSTR << "UTTimer::BeginPeriod()  Fail to get resolution." << std::endl;
 		}
