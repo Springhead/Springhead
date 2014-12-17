@@ -27,7 +27,7 @@ bool HISpaceNavigator::Init(const void* desc) {
 	hWnd = ((HISpaceNavigatorDesc*)desc)->hWnd;
 
 	if (hWnd) {
-		UINT numDevices;
+		UINT numDevices = 0;
 
 		// 接続されているSpaceNavigatorを確認してデバイスハンドルを控えておく
 		GetRawInputDeviceList(NULL, &numDevices, sizeof(RAWINPUTDEVICELIST));
