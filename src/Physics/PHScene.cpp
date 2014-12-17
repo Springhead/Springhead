@@ -147,7 +147,7 @@ PHSolidPairForLCPIf* PHScene::GetSolidPair(int i, int j){
 
 PHSolidPairForLCPIf* PHScene::GetSolidPair(PHSolidIf* lhs, PHSolidIf* rhs, bool& bSwap){
 	bSwap = false;
-	int l, r = -1;
+	int l = -1, r = -1;
 	PHSolidIf** solid = GetSolids();
 	for(int i = 0; i < NSolids(); i++){
 		if(solid[i] == lhs) l = i;

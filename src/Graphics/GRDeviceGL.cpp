@@ -728,7 +728,9 @@ void GRDeviceGL::SetFont(const GRFont& font){
 		        (LPSTR)&lpMsgBuf,
 		        0, NULL );
 			DSTR << "wglUseFontBitmaps() failed with error:" << e << std::endl;
-			DSTR << lpMsgBuf << std::endl;
+			if (lpMsgBuf) {
+				DSTR << lpMsgBuf << std::endl;
+			}
 			LocalFree(lpMsgBuf);
 		}
 		SelectObject(hDC, hOldFont);
@@ -859,7 +861,7 @@ void GRDeviceGL::SetAlphaTest(bool b){
 /// アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 void GRDeviceGL::SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){
 	GRRenderBaseIf::TBlendFunc  bffac[2] = { src, dest };
-	GLenum glfac[2];
+	GLenum glfac[2] = { GRRenderBaseIf::BF_ZERO, GRRenderBaseIf::BF_ZERO };
 
 	for (int iCnt=0; iCnt<2; ++iCnt){
 		switch(bffac[iCnt]) {

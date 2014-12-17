@@ -377,7 +377,7 @@ void GRAnimation::BlendPose(float time, float weight, bool add){
 		GRAnimationKey& anim = *it;
 		//	時刻でキーを検索
 		for(unsigned i=0; i < anim.keys.size(); ++i){
-			float blended[16];
+			float blended[16] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 			if (anim.keys[i].time > time){	//	見つかったのでブレンドした変換を計算
 				if (i==0){	//	i=0だけをセット
 					for(unsigned v=0; v<anim.keys[i].values.size(); ++v){
@@ -534,7 +534,7 @@ void GRAnimation::SortGRKey(){
 
 float GRAnimation::GetLastKeyTime(){
 	SortGRKey();
-	float lastKeyTime;
+	float lastKeyTime = 0.0f;
 	if(keys[0].keys.size()>0){
 		//ソート後の最後の時間を取得
 		lastKeyTime =keys[0].keys.back().time;

@@ -493,7 +493,7 @@ int PHFemCollision::recursiveSearch(PHFemMeshNew *mesh, Posed* pose, PHSolid *so
 
 	for (int i=0; i< edgesSize ;i++) {
 		
-		int point;
+		int point = 0;
 		int edgeIndx = mesh->vertices[vertexIndex].edgeIDs[i];
 
 		if (mesh->edges[edgeIndx].vertexIDs[0] == vertexIndex) {
