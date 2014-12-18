@@ -55,14 +55,14 @@ void EPInterpreter::Initialize()
 	//SPRPYTHONPATHにSpringheadPythonで使うLIBのPATHを追加しておく
 	std::string newPath;
 	char buff[1024];
-	buff[0] = '\0';
 	if (!GetEnvironmentVariable("SPRPYTHONPATH",buff,1024) || !strlen(buff)){
 		DSTR << "Warning: " << "Can not find environment variable of 'SPRPYTHONPATH'. " 
 			<< "Embeded python may cause serious error." << std::endl;
 	}
-	newPath.append(buff);
-	newPath.append(";");
-	buff[0] = '\0';
+	else{
+		newPath.append(buff);
+		newPath.append(";");
+	}
 	GetEnvironmentVariable("PYTHONPATH", buff,1024);
 	newPath.append(buff);
 	if (newPath.length() <= 1){

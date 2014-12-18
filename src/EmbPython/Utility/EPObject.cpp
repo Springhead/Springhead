@@ -75,7 +75,7 @@ static PyObject* __PYDECL EPObject_richcmp(PyObject *obj1, PyObject *obj2, int o
 {
 	//EPObjectは == で比較したとき、同じSpringheadのインスタンスへのポインタの場合はTrue,それ以外はFalseを返す
     PyObject *result;
-	int c;
+	int c = 0;
 
 	if ( !EPObject_Check(obj1) || !EPObject_Check(obj2) ) c = 0;
 	else
