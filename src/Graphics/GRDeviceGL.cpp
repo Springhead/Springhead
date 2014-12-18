@@ -861,7 +861,7 @@ void GRDeviceGL::SetAlphaTest(bool b){
 /// アルファブレンディングのモード設定(SRCの混合係数, DEST混合係数)
 void GRDeviceGL::SetAlphaMode(GRRenderBaseIf::TBlendFunc src, GRRenderBaseIf::TBlendFunc dest){
 	GRRenderBaseIf::TBlendFunc  bffac[2] = { src, dest };
-	GLenum glfac[2] = { GRRenderBaseIf::BF_ZERO, GRRenderBaseIf::BF_ZERO };
+	GLenum glfac[2] = { GL_ZERO, GL_ZERO };
 
 	for (int iCnt=0; iCnt<2; ++iCnt){
 		switch(bffac[iCnt]) {
