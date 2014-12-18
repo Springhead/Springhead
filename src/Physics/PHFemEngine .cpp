@@ -98,6 +98,8 @@ void PHFemEngine::ContactInterface() {
 		PHSolid *solid[2]; 
 		mesh[0] = meshes_n[cp->solid[0]->femIndex];
 		mesh[1] = meshes_n[cp->solid[1]->femIndex];
+		assert(mesh[0] != NULL);
+		assert(mesh[1] != NULL);
 
 		solid[0] = mesh[0]->GetPHSolid()->Cast();
 		solid[1] = mesh[1]->GetPHSolid()->Cast();
