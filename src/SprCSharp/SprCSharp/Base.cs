@@ -20,9 +20,9 @@ namespace Spr {
     }
 
     public class Vec3d {
-        protected IntPtr _ptr_;
+        public IntPtr _ptr_;
 
-        protected Vec3d(IntPtr p) {
+        public Vec3d(IntPtr p) {
             _ptr_ = p;
         }
 
