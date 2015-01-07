@@ -233,11 +233,26 @@ int CDBox::LineIntersect(const Vec3f& origin, const Vec3f& dir, Vec3f* result, f
 
 		// 4角形の内部にあるか
 		Vec3d b =GetBoxSize()*0.5; //CDBoxのx,y,z軸に対する最大値
-		if(-b.x<=p.x && p.x <=b.x && -b.y<=p.y && p.y <=b.y && -b.z<=p.z && p.z <=b.z ){
-			result[num] = p;
-			offset[num] = s;
-			num++;
+		if (abs(n.x) > 0.99) {
+			if(-b.y<=p.y && p.y <=b.y && -b.z<=p.z && p.z <=b.z ){
+				result[num] = p;
+				offset[num] = s;
+				num++;
+			}
+		} else if (abs(n.y) > 0.99) {
+			if(-b.x<=p.x && p.x <=b.x && -b.z<=p.z && p.z <=b.z ){
+				result[num] = p;
+				offset[num] = s;
+				num++;
+			}
+		} else if (abs(n.z) > 0.99) {
+			if(-b.y<=p.y && p.y <=b.y && -b.x<=p.x && p.x <=b.x ){
+				result[num] = p;
+				offset[num] = s;
+				num++;
+			}
 		}
+
 		if(num == 2)		// 理屈上は3つ以上はあり得ないが念のため
 			break;
 	}
