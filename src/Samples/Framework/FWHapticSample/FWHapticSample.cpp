@@ -13,7 +13,11 @@ using namespace Spr;
 FWHapticSample::FWHapticSample(){
 	pdt = 0.02f;
 	hdt = 0.001f;
-	engineType = SINGLE;										// SINGLE, MULTI, LD
+#ifdef  _DEBUG
+	engineType = MULTI;										// SINGLE, MULTI, LD
+#else
+	engineType = SINGLE;									// SINGLE, MULTI, LD
+#endif
 	humanInterface = SPIDAR;
 }
 
