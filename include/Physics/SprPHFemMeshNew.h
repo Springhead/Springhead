@@ -21,7 +21,7 @@ namespace Spr{;
 struct PHSolidIf;
 struct PHFemVibrationIf;
 struct PHFemThermoIf;
-//struct PHFemWOMoveIf;
+struct PHFemPorousWOMoveIf;
 
 ///	FemMeshのステート
 struct PHFemMeshNewState{};
@@ -39,14 +39,16 @@ struct PHFemMeshNewIf : public SceneObjectIf{
 	PHSolidIf* GetPHSolid();
 	PHFemVibrationIf* GetPHFemVibration();
 	PHFemThermoIf* GetPHFemThermo();
-	//PHFemWOMoveIf* GetPHFemWOMove();
+	PHFemPorousWOMoveIf* GetPHFemPorousWOMove();
 	int NVertices();
 	int NFaces();
+	int NTets();
 	double CompTetVolume(int tetID, bool bDeform);
 	bool AddVertexDisplacementW(int vtxId, Vec3d disW);
 	bool AddVertexDisplacementL(int vtxId, Vec3d disL);
 	bool SetVertexPositionW(int vtxId, Vec3d posW);
 	bool SetVertexPositionL(int vtxId, Vec3d posL);
+	unsigned GetnSurfaceFace();
 };
 
 /// Femのデスクリプタ
@@ -117,17 +119,23 @@ struct PHFemVibrationIf : public PHFemBaseIf{
 struct PHFemThermoDesc: public PHFemBaseDesc{
 	double rho;						//	密度
 	double thConduct;				//熱伝導率
+	double thConduct_x;				//	x方向	熱伝導率
+	double thConduct_y;				//	y方向	熱伝導率
+	double thConduct_z;				//	z方向	熱伝導率
 	double heatTrans;				//熱伝達率			//class 節点には、heatTransRatioが存在する
 	double specificHeat;			//比熱
+	double radiantHeat;				//熱輻射率（空気への熱伝達率）
+	//float	distance[10];			//	中心からの距離	一つ目は0.0
+	//float	ondo[10];				//	上記距離の温度
+	double initial_temp;			//	均質な初期温度、
 	PHFemThermoDesc();
 	void Init();
+	double weekPow_full;
 };
 
 ///	温度のFEM用のメッシュ
 struct PHFemThermoIf : public PHFemBaseIf{
 	SPR_IFDEF(PHFemThermo);
-	void SetTimeStep(double dt);
-	double GetTimeStep();
 	int GetSurfaceVertex(int id);
 	int NSurfaceVertices();
 	void SetVertexTc(int id,double temp);
@@ -138,18 +146,14 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	unsigned long GetStepCountCyc();				///	カウント１が何週目か	計算式:TotalCount = GetStepCount() + GetStepCountCyc() * (1000 * 1000 * 1000) 
 	double GetVertexTemp(unsigned id);				// メッシュ節点の温度を取得
 	double GetSufVertexTemp(unsigned id);			// メッシュ表面の節点温度を取得
-	double GetVertexHeatTransRatio(int vtxId);
-	void SetVertexHeatTransRatio(int vexId, double heatTransRatio);
 	void SetVertexTemp(unsigned id,double temp);
 	void SetVerticesTempAll(double temp);
 	void AddvecFAll(unsigned id,double dqdt);		//セットだと、値をそう入れ替えしそうな名前で危険。実際には、add又は、IH加熱ベクトルのみにSetする。ベクトルにSetする関数を作って、ロードしてもいいと思う。
 	void SetvecFAll(unsigned id,double dqdt);		//FAllの成分に加算だが、危険
 	void SetRhoSpheat(double rho,double Cp);		//素材固有の物性
-	//int NFaces();
-	//std::vector<Vec3d> GetFaceEdgeVtx(unsigned id);
-	//Vec3d GetFaceEdgeVtx(unsigned id, unsigned	 vtx);
 	Vec2d GetIHbandDrawVtx();
 	void CalcIHdqdt_atleast(double r,double R,double dqdtAll,unsigned num);
+	void UpdateIHheatband(double xS,double xE,unsigned heatingMODE);//小野原追加
 	void UpdateIHheat(unsigned heating);	//	IH加熱状態の更新
 	void UpdateVecF();						//	被加熱物体の熱流束リセット
 	void UpdateVecF_frypan();				//	被加熱物体の熱流束リセット
@@ -164,41 +168,105 @@ struct PHFemThermoIf : public PHFemBaseIf{
 		double heatTrans		// heatTrans:熱伝達率 W/(m^2・K)
 		);
 	void SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0);
+	double GetArbitraryPointTemp(Vec3d temppos);			//	多分、未使用
+	double GetVtxTempInTets(Vec3d temppos);					//	使用している関数	
 	void InitVecFAlls();
-	double GetVtxTempInTets(Vec3d temppos);
-	void UpdateVertexTempAll();		//	計算結果としての温度をTVecAllから全節点に更新する
+	double Get_thConduct();
+	bool SetConcentricHeatMap(std::vector<double> r, std::vector<double> temp, Vec2d origin);
+	void SetThermalEmissivityToVerticesAll(double thermalEmissivity,double thermalEmissivity_const);
+	// 熱放射同定関係
+	void SetOuterTemp(double temp);
+	void SetThermalRadiation(double ems,double ems_const);
+	void SetGaussCalcParam(unsigned cyc,double epsilon);
+	void InitTcAll(double temp);
+	void InitToutAll(double temp);
+	void SetWeekPow(double weekPow_);
+	void SetIHParamWEEK(double inr_, double outR_, double weekPow_);
+	void SetHeatTransRatioToAllVertex(double heatTransR_);
+	void AfterSetDesc();												//全行列などを作り直す
+	//void ReProduceMat_Vec_ThermalRadiation();
+	void SetStopTimespan(double timespan);
+	void UpdateMatk_RadiantHeatToAir();
+	void ActivateVtxbeRadiantHeat();			//
+	PTM::TMatrixRow<4,4,double> GetKMatInTet(unsigned id);
+	void OutputMatKall();
+	void IfRadiantHeatTrans();
 	float calcGvtx(std::string fwfood, int pv, unsigned texture_mode);
-
+	void SetTimeStep(double dt);
+	Vec3d GetVertexNormal(unsigned vtxid);
+	void SetVertexHeatTransRatio(unsigned vtxid, double heattransRatio);
+	void SetVertexBeRadiantHeat(unsigned vtxid, bool flag);
+	double GetVertexArea(unsigned vtxid);
+	void SetVertexToofar(unsigned vtxid, bool tooFar);
+	bool GetVertexToofar(unsigned vtxid);
+	void SetVertexBeCondVtxs(unsigned vtxid, bool becondVtxs);
+	void CreateVecFAll();
+	void CalcFaceNormalAll();
+	void CalcVertexNormalAll();
+	void InitFaceNormalAll();
+	void InitVertexNormalAll();
+	void RevVertexNormalAll();
+	void SetWeekPowFULL(double weekPow_full);
+	double GetWeekPowFULL();
+	Vec3d GetVertexPose(unsigned vtxid);
+	void OutTetVolumeAll();
+	int GetTetsV(unsigned tetid, unsigned vtxid);
+	void VecFNegativeCheck();
+	double GetVecFElem(unsigned vtxid);
+	int GetTetVNums(unsigned id,unsigned num);
+	double GetInitialTemp();
+	void UpdateVertexTempAll();
 };
 
-/*
-struct PHFemWOMoveDesc: public PHFemBaseDesc{
-	double wDiff;	//食品中での水分の拡散係数(m^2/s)
-	double wDiffAir; //空気中での水分の拡散係数(m^2/s)
-	double wDens;	//水の密度(g/m^3)
-	double oDens;	//油の密度(g/m^3)
-	double wwInit;	//含水率の初期値
-	double woInit;	//含油率の初期値
+
+struct PHFemPorousWOMoveDesc: public PHFemBaseDesc{
+	double wDiffAir;
+	double K;		//浸透係数
+	double kc;		//毛管ポテンシャルの係数
+	double kp;		//毛管圧力の定数
+	double alpha;	//毛管ポテンシャルの係数
+	double gamma;	//毛管圧力の係数
+	double rhoWater;	//水の密度(g/m^3)
+	double rhoOil;	//油の密度(g/m^3)
+	double rhowInit;	//含水率の初期値
+	double rhooInit;	//含油率の初期値
 	double evapoRate;	//蒸発速度定数
-	double wTrans;	//水の透過係数(g/m)
-	double oTrans;	//油の透過係数
 	double denatTemp;	//変性温度	頂点がこの温度に達すると、結合水を含水率ベクトルに加える
 	double boundWaterRatio;	//結合水の割合 0.15～0.25
 	double equilWaterCont;	//減率第1段乾燥期の平衡含水量
 	double limitWaterCont;	//限界水分量 恒率乾燥期と減率第1段乾燥期の閾値
 	double boundaryThick;	//境膜の厚さ
-	PHFemWOMoveDesc();
+	double initMassAll;		//食材の初期質量
+	double initWaterRatio;	//食材の質量に対する水分質量の初期値
+	double initOilRatio;	//食材の質量に対する油質量の初期値
+	double shrinkageRatio;	//タンパク質変性時の収縮率
+	Vec3d top;
+	Vec3d center;
+	Vec3d bottom;
+	PHFemPorousWOMoveDesc();
 	void Init();
 };
 
-struct PHFemWOMoveIf: public PHFemBaseIf{
-	SPR_IFDEF(PHFemWOMove);
+struct PHFemPorousWOMoveIf: public PHFemBaseIf{
+	SPR_IFDEF(PHFemPorousWOMove);
 	void SetTimeStep(double dt);
 	double GetTimeStep();
-	void UpdateVertexWwAll();
-	void UpdateVertexWoAll();
+	void UpdateVertexRhoWAll();
+	void UpdateVertexRhoOAll();
+	void SetVertexMw(unsigned vtxid, double mw);
+	void SetVertexMo(unsigned vtxid, double mo);
+	double GetVertexMw(unsigned vtxid);
+	double GetVertexMo(unsigned vtxid);
+	double GetVtxWaterInTets(Vec3d temppos);
+	double GetVtxOilInTets(Vec3d temppos);
+	double GetVertexRhoW(unsigned vtxid);
+	double GetVertexRhoO(unsigned vtxid);
+	float calcGvtx(std::string fwfood, int pv, unsigned texture_mode);
+	void setGravity(Vec3d g);
+	double decideWetValue(unsigned faceid);
+	double GetVtxSaturation(unsigned vtxid);
 };
-*/
+
 
 //@}
 
