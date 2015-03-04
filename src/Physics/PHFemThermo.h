@@ -640,7 +640,7 @@ public:
 	double sumVectorElement(PTM::VVector<double> vec);
 	void createNewVecF();
 	PTM::VVector<double> TVecAllSub;
-	void CalcHeatTransDirect3(double dt);
+	void CalcHeatTransDirect3(double dt);//”M—¬‘©‰ü—Ç”Å’¼Ú–@
 	PTM::VMatrixRow<double> rightkeisu;
 	void CalcHeatTransDirect4(double dt);
 	double GetInitialTemp(){return initial_temp;}
