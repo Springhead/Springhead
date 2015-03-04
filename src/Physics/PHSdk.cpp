@@ -20,6 +20,7 @@
 #include <Physics/PHFemMeshNew.h>
 #include <Physics/PHFemVibration.h>
 #include <Physics/PHFemThermo.h>
+#include <Physics/PHFemPorousWOMove.h>
 #include <Collision/CDBox.h>
 #include <Collision/CDSphere.h>
 #include <Collision/CDCapsule.h>
@@ -79,6 +80,7 @@ void PHSdkIf::RegisterSdk(){
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemMeshNew));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemVibration));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemThermo));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFemPorousWOMove));
 
 	PHSolidIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFrame));
 

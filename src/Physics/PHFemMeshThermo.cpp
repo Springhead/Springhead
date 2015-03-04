@@ -3532,10 +3532,25 @@ void PHFemMeshThermo::UpdateMatk_RadiantHeatToAir(){
 		for(unsigned i =0; i < edges.size();i++){
 			edges[i].k = 0.0;
 		}
+#ifdef UseMatAll
+		matKAll.clear();
+#endif
 		dMatKAll[0].clear(); 
 		for(unsigned i=0;i<tets.size();++i){
 			CreateMatkLocal_update(i);
 		}
+#ifdef UseMatAll
+		if(strcmp(GetName(), "beef-round50x13x20_fem") == 0){
+			matKAllout.open("matKAllout.csv");
+			for(unsigned i=0; i<vertices.size(); i++){
+				for(unsigned j=0; j<vertices.size(); j++){
+					matKAllout << matKAll[i][j] << ",";
+				}
+				matKAllout << std::endl;
+			}
+			matKAllout.close();
+		}
+#endif
 }
 
 void PHFemMeshThermo::UpdateIHheat(unsigned heatingMODE){
@@ -4516,7 +4531,7 @@ void PHFemMeshThermo::CreateMatkLocal(unsigned id){
 	matk = tets[id].matk[0] + tets[id].matk[1] + tets[id].matk[2];	
 	//<注意>	matk[0]:K1, matk[1]:K2, matk[2]:K3
 	matkcheck << id << std::endl;
-	matkcheck << tets[id].matk[2] << std::endl;
+	matkcheck << tets[id].matk[0] << std::endl;
 	//if(id == 0){
 	//	DSTR << "Initial Create matk" << std::endl;
 	//	DSTR << matk << std::endl;
@@ -6477,6 +6492,113 @@ void PHFemMeshThermo::DecrMoist(){
 	}
 }
 
+void PHFemMeshThermo::CalcFaceNormalAll(){
+	//	faceの法線を計算
+	//.	表面の頂点に、法線ベクトルを追加
+	//.	について再帰的に実行
+	Vec3d extp;		//	外向き法線
+	Vec3d tempV;	//	外向き判定比較頂点(該当face面上にない頂点序数)
+	DSTR << "tets.size(): " << tets.size() << std::endl;
+	for(unsigned tid=0; tid < tets.size(); tid++){
+		//	どの頂点IDでfaceが構成されているのか
+		unsigned idsum = 0;
+		for(unsigned i=0;i<4;i++){
+			idsum += tets[tid].vertices[i];
+		}
+		for(unsigned fid = 0; fid < 4; fid++){
+			//DSTR << "fid :" << fid <<std::endl;
+			extp = (vertices[faces[tets[tid].faces[fid]].vertices[1]].pos - vertices[faces[tets[tid].faces[fid]].vertices[0]].pos)
+				% (vertices[faces[tets[tid].faces[fid]].vertices[2]].pos - vertices[faces[tets[tid].faces[fid]].vertices[0]].pos);
+			extp = extp / extp.norm();
+			Vec3d chkN[2] = {vertices[faces[tets[tid].faces[fid]].vertices[1]].pos - vertices[faces[tets[tid].faces[fid]].vertices[2]].pos
+				, vertices[faces[tets[tid].faces[fid]].vertices[2]].pos - vertices[faces[tets[tid].faces[fid]].vertices[1]].pos};
+			if(extp * chkN[0]/(extp.norm() * chkN[0].norm()) > 1e-15 ){		// 1e-17くらい0より大きく、完全な法線にはなっていないため
+				DSTR << "this normal is invalid. make sure to check it out. " << "tid: "<< tid << ", fid: " << fid << " ; "<< this->GetName() << std::endl;
+				DSTR << "the invalid value is... " << extp * chkN[0]/(extp.norm() * chkN[0].norm()) <<", " << extp * chkN[1]/(extp.norm() * chkN[1].norm()) << std::endl;
+				assert(0);
+			}
+			if(extp == 0){
+				DSTR << "ERROR: extp value == 0" << "tid = " << tid << ", fid = " << fid << std::endl;
+			}
+	
+			//unsigned expVtx =0;		//	face面上にない、0~3番目の四面体頂点
+			unsigned idsumt =idsum;
+			for(unsigned j=0;j<3;j++){
+				idsumt -= faces[tets[tid].faces[fid]].vertices[j];
+				//DSTR << "faces[" << fid << "].vertices["<<j <<"]: "<< faces[tets[tid].faces[fid]].vertices[j];
+			}
+			
+			//. face重心からface外頂点へのベクトルtempV計算
+			Vec3d jushin = vertices[faces[tets[tid].faces[fid]].vertices[0]].pos + vertices[faces[tets[tid].faces[fid]].vertices[1]].pos
+				+ vertices[faces[tets[tid].faces[fid]].vertices[2]].pos;
+			jushin *= 1.0 / 3.0;
+			tempV = vertices[idsumt].pos - jushin;
+			//DSTR << "tempV:" << tempV <<std::endl;
+			if(tempV==Vec3d(0.0,0.0,0.0)){
+				DSTR <<"ERROR:	for normal calculating, some vertices judging is invalids"<< std::endl;
+			}
+			if((tempV * extp / (tempV.norm() * extp.norm()) ) < 0.0){
+				//extpとtempVが±９０度以上離れている：extpが外向き法線
+				faces[tets[tid].faces[fid]].normal = extp / 10.0;		//	長さを１0cmに
+			}else{
+				//extpとtempVが９０度以内：extpの向きを180度変えて、faces[fid].normalに代入
+				faces[tets[tid].faces[fid]].normal = - extp / 10.0;		// 逆ベクトル
+			}
+			int debughogeshi=0;
+		}
+		//Debug
+		//全faceに、外向き法線ベクトルを表示させてみて、様子を見れば、確認できるかな？又は、シンプルなメッシュで表示してみるか
+	}
+
+	//	頂点の法線を計算
+	//	頂点の属するface面より平均？正規化した頂点法線を求める
+	std::vector<Vec3d> faceNormal;
+	faceNormal.clear();
+	for(unsigned vid = 0; vid < vertices.size(); vid++ ){
+		//unsigned fsize = vertices[vid].faces.size();
+		for(unsigned fid = 0; fid < vertices[vid].faces.size(); fid++ ){
+			//.	属するface法線がほぼ同じ方向を向いてるものが見つかった場合は、1つだけ加算して平均をとるように変更する
+
+			//外側の頂点の法線だけ加算			
+			if(vertices[vid].faces[fid] < (int)nSurfaceFace){
+				vertices[vid].normal += faces[vertices[vid].faces[fid]].normal;		// このコードに代わって、上記vectorコードと以下の加算コードに置き換え
+			}
+
+		}
+		vertices[vid].normal = vertices[vid].normal / vertices[vid].normal.norm();		//	単位ベクトル化
+	}
+}
+
+void PHFemMeshThermo::CalcVertexNormalAll(){
+	//	頂点の法線を計算
+	//	頂点の属するface面より平均？正規化した頂点法線を求める
+	std::vector<Vec3d> faceNormal;
+	faceNormal.clear();
+	for(unsigned vid = 0; vid < vertices.size(); vid++ ){
+		//unsigned fsize = vertices[vid].faces.size();
+		for(unsigned fid = 0; fid < vertices[vid].faces.size(); fid++ ){
+			//.	属するface法線がほぼ同じ方向を向いてるものが見つかった場合は、1つだけ加算して平均をとるように変更する
+
+			//外側の頂点の法線だけ加算			
+			if(vertices[vid].faces[fid] < (int)nSurfaceFace){
+				vertices[vid].normal += faces[vertices[vid].faces[fid]].normal;		// このコードに代わって、上記vectorコードと以下の加算コードに置き換え
+			}
+
+		}
+		vertices[vid].normal = vertices[vid].normal / vertices[vid].normal.norm();		//	単位ベクトル化
+	}
+}
+
+void PHFemMeshThermo::InitFaceNormalAll(){
+	for(unsigned faceid=0; faceid < faces.size(); faceid++){
+		faces[faceid].normal = Vec3d(0.0, 0.0, 0.0);
+	}
+}
+void PHFemMeshThermo::InitVertexNormalAll(){
+	for(unsigned vtxid=0; vtxid < vertices.size(); vtxid++){
+		vertices[vtxid].normal = Vec3d(0.0, 0.0, 0.0);
+	}
+}
 }
 
 

@@ -10,6 +10,7 @@
 #include <Physics/PHFemBase.h>
 #include <Physics/PHFemVibration.h>
 #include <Physics/PHFemThermo.h>
+#include <Physics/PHFemPorousWOMove.h>
 
 namespace Spr{;
 
@@ -312,6 +313,12 @@ bool PHFemMeshNew::AddChildObject(ObjectIf* o){
 		bCheck = true;
 	}
 
+	PHFemPorousWOMove* fPorousWOMove = DCAST(PHFemPorousWOMove, o);
+	if(fPorousWOMove){
+		femPorousWOMove = fPorousWOMove;
+		bCheck = true;
+	}
+
 	PHFemBase* f = DCAST(PHFemBase, o);
 	if(f){
 		f->SetPHFemMesh(this);
@@ -346,12 +353,20 @@ PHFemThermoIf* PHFemMeshNew::GetPHFemThermo(){
 	return femThermo->Cast();
 }
 
+PHFemPorousWOMoveIf* PHFemMeshNew::GetPHFemPorousWOMove(){
+	return femPorousWOMove->Cast();
+}
+
 int PHFemMeshNew::NVertices(){
 	return (int)vertices.size();
 }
 
 int PHFemMeshNew::NFaces(){
 	return (int)faces.size();
+}
+
+int PHFemMeshNew::NTets(){
+	return (int)tets.size();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
