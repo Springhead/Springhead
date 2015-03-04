@@ -21,6 +21,7 @@ struct FWFemMeshNewDesc: public FWObjectDesc{
 	FWFemMeshNewDesc();
 	bool spheric;
 	void Init();
+	unsigned texture_mode;
 };
 
 /** 
