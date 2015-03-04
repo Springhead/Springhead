@@ -503,6 +503,10 @@ public:
 	PTM::TMatrixRow<4,4,double> GetKMatInTet(unsigned id);
 	void OutputMatKall();
 	//int cntdbgk;						//debug用変数
+	void CalcFaceNormalAll();
+	void CalcVertexNormalAll();
+	void InitFaceNormalAll();
+	void InitVertexNormalAll();
 };
 
 

@@ -114,6 +114,7 @@ class PHFemBase;
 typedef std::vector< UTRef< PHFemBase > > PHFemBases;
 class PHFemVibration;
 class PHFemThermo;
+class PHFemPorousWOMove;
 class PHFemMeshNew : public SceneObject{//, public PHFemMeshNewDesc{
 public:
 	/* PHFemMeshNewのメンバ変数、関数群 */
@@ -137,6 +138,7 @@ public:
 	PHFemBases femBases;
 	UTRef< PHFemVibration > femVibration;
 	UTRef< PHFemThermo > femThermo;
+	UTRef< PHFemPorousWOMove > femPorousWOMove;
 
 	///	デスクリプタ
 	PHFemMeshNew(const PHFemMeshNewDesc& desc = PHFemMeshNewDesc(), SceneIf* s=NULL);
@@ -161,11 +163,15 @@ public:
 	PHFemVibrationIf* GetPHFemVibration();
 	/// PHFemThermoIfを返す
 	PHFemThermoIf* GetPHFemThermo();
+	/// PHFemPorousWOMoveIfを返す
+	PHFemPorousWOMoveIf* GetPHFemPorousWOMove();
 
 	/// 頂点の総数を返す
 	int NVertices();
 	///	面の総数を返す
 	int NFaces();
+	/// 四面体の総数を返す
+	int NTets();
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	//* 頂点に関する関数 */
@@ -227,6 +233,7 @@ public:
 	/// 面の法線を返す
 	Vec3d CompFaceNormal(const Vec3d pos[3]);		// 任意の頂点
 	Vec3d CompFaceNormal(const int& faceId, const bool& bDeform);
+	unsigned GetnSurfaceFace(){return nSurfaceFace;}
 
 	//For multiple object implementation VARIABLES
 	bool *contactVector;	//saves the contact configuration of the scene
