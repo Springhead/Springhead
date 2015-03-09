@@ -156,7 +156,7 @@ void PHFemThermo::Init(){
 	PHFemThermoIf* phm = mesh->GetPHFemThermo();
 
 	int nSurfaceVtxs = NSurfaceVertices();
-	for(unsigned i=0; i < nSurfaceVtxs; i++){
+	for(unsigned i=0; i < (unsigned) nSurfaceVtxs; i++){
 		int vtxid = GetSurfaceVertex(i);
 		//‰~’ŒƒƒbƒVƒ…‚Ì’ê–Êã‚É‚ ‚é’¸“_
 		if(GetVertexPose(vtxid).y < -0.00749){
