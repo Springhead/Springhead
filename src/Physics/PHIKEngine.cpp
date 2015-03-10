@@ -170,7 +170,7 @@ void PHIKEngine::IK() {
 
 	// <!!>Vの作成
 	for (size_t j=0; j<endeffectors.size(); ++j){
-		if (endeffectors[j]->IsEnabled()) {
+		if (endeffectors[j]->IsEnabled() && (endeffectors[j]->bPosition || endeffectors[j]->bOrientation)) {
 			// V
 			PHIKEndEffector* eff = endeffectors[j];
 			PTM::VVector<double> Vpart; Vpart.resize(eff->ndof);
@@ -198,7 +198,7 @@ void PHIKEngine::IK() {
 
 	// --- 位置
 	vector_type   UtV  = ublas::prod(ublas::trans(U)  , V    );
-	vector_type DiUtV  = ublas::prod(Di               , UtV  );
+	vector_type DiUtV = ublas::prod(Di, UtV);
 	W                  = ublas::prod(ublas::trans(Vt) , DiUtV);
 
 	// <!!>Wに標準姿勢復帰速度を加える
