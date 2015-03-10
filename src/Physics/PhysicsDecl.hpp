@@ -220,16 +220,28 @@ public:\
 protected:\
 	double	rho;	\
 	double	thConduct;	\
+	double	thConduct_x;	\
+	double	thConduct_y;	\
+	double	thConduct_z;	\
 	double	heatTrans;	\
 	double	specificHeat;	\
+	double	radiantHeat;	\
+	double	initial_temp;	\
+	double	weekPow_full;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHFemBase::SetDesc((PHFemBaseDesc*)(PHFemThermoDesc*)ptr);	\
 		rho = ((PHFemThermoDesc*)ptr)->rho;	\
 		thConduct = ((PHFemThermoDesc*)ptr)->thConduct;	\
+		thConduct_x = ((PHFemThermoDesc*)ptr)->thConduct_x;	\
+		thConduct_y = ((PHFemThermoDesc*)ptr)->thConduct_y;	\
+		thConduct_z = ((PHFemThermoDesc*)ptr)->thConduct_z;	\
 		heatTrans = ((PHFemThermoDesc*)ptr)->heatTrans;	\
 		specificHeat = ((PHFemThermoDesc*)ptr)->specificHeat;	\
+		radiantHeat = ((PHFemThermoDesc*)ptr)->radiantHeat;	\
+		initial_temp = ((PHFemThermoDesc*)ptr)->initial_temp;	\
+		weekPow_full = ((PHFemThermoDesc*)ptr)->weekPow_full;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -237,8 +249,97 @@ public:\
 		PHFemBase::GetDesc((PHFemBaseDesc*)(PHFemThermoDesc*)ptr);	\
 		((PHFemThermoDesc*)ptr)->rho = rho;	\
 		((PHFemThermoDesc*)ptr)->thConduct = thConduct;	\
+		((PHFemThermoDesc*)ptr)->thConduct_x = thConduct_x;	\
+		((PHFemThermoDesc*)ptr)->thConduct_y = thConduct_y;	\
+		((PHFemThermoDesc*)ptr)->thConduct_z = thConduct_z;	\
 		((PHFemThermoDesc*)ptr)->heatTrans = heatTrans;	\
 		((PHFemThermoDesc*)ptr)->specificHeat = specificHeat;	\
+		((PHFemThermoDesc*)ptr)->radiantHeat = radiantHeat;	\
+		((PHFemThermoDesc*)ptr)->initial_temp = initial_temp;	\
+		((PHFemThermoDesc*)ptr)->weekPow_full = weekPow_full;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemPorousWOMoveDesc \
+protected:\
+	double	wDiffAir;	\
+	double	K;	\
+	double	kc;	\
+	double	kp;	\
+	double	alpha;	\
+	double	gamma;	\
+	double	rhoWater;	\
+	double	rhoOil;	\
+	double	rhowInit;	\
+	double	rhooInit;	\
+	double	evapoRate;	\
+	double	denatTemp;	\
+	double	boundWaterRatio;	\
+	double	equilWaterCont;	\
+	double	limitWaterCont;	\
+	double	boundaryThick;	\
+	double	initMassAll;	\
+	double	initWaterRatio;	\
+	double	initOilRatio;	\
+	double	shrinkageRatio;	\
+	Vec3d	top;	\
+	Vec3d	center;	\
+	Vec3d	bottom;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHFemBase::SetDesc((PHFemBaseDesc*)(PHFemPorousWOMoveDesc*)ptr);	\
+		wDiffAir = ((PHFemPorousWOMoveDesc*)ptr)->wDiffAir;	\
+		K = ((PHFemPorousWOMoveDesc*)ptr)->K;	\
+		kc = ((PHFemPorousWOMoveDesc*)ptr)->kc;	\
+		kp = ((PHFemPorousWOMoveDesc*)ptr)->kp;	\
+		alpha = ((PHFemPorousWOMoveDesc*)ptr)->alpha;	\
+		gamma = ((PHFemPorousWOMoveDesc*)ptr)->gamma;	\
+		rhoWater = ((PHFemPorousWOMoveDesc*)ptr)->rhoWater;	\
+		rhoOil = ((PHFemPorousWOMoveDesc*)ptr)->rhoOil;	\
+		rhowInit = ((PHFemPorousWOMoveDesc*)ptr)->rhowInit;	\
+		rhooInit = ((PHFemPorousWOMoveDesc*)ptr)->rhooInit;	\
+		evapoRate = ((PHFemPorousWOMoveDesc*)ptr)->evapoRate;	\
+		denatTemp = ((PHFemPorousWOMoveDesc*)ptr)->denatTemp;	\
+		boundWaterRatio = ((PHFemPorousWOMoveDesc*)ptr)->boundWaterRatio;	\
+		equilWaterCont = ((PHFemPorousWOMoveDesc*)ptr)->equilWaterCont;	\
+		limitWaterCont = ((PHFemPorousWOMoveDesc*)ptr)->limitWaterCont;	\
+		boundaryThick = ((PHFemPorousWOMoveDesc*)ptr)->boundaryThick;	\
+		initMassAll = ((PHFemPorousWOMoveDesc*)ptr)->initMassAll;	\
+		initWaterRatio = ((PHFemPorousWOMoveDesc*)ptr)->initWaterRatio;	\
+		initOilRatio = ((PHFemPorousWOMoveDesc*)ptr)->initOilRatio;	\
+		shrinkageRatio = ((PHFemPorousWOMoveDesc*)ptr)->shrinkageRatio;	\
+		top = ((PHFemPorousWOMoveDesc*)ptr)->top;	\
+		center = ((PHFemPorousWOMoveDesc*)ptr)->center;	\
+		bottom = ((PHFemPorousWOMoveDesc*)ptr)->bottom;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFemBase::GetDesc((PHFemBaseDesc*)(PHFemPorousWOMoveDesc*)ptr);	\
+		((PHFemPorousWOMoveDesc*)ptr)->wDiffAir = wDiffAir;	\
+		((PHFemPorousWOMoveDesc*)ptr)->K = K;	\
+		((PHFemPorousWOMoveDesc*)ptr)->kc = kc;	\
+		((PHFemPorousWOMoveDesc*)ptr)->kp = kp;	\
+		((PHFemPorousWOMoveDesc*)ptr)->alpha = alpha;	\
+		((PHFemPorousWOMoveDesc*)ptr)->gamma = gamma;	\
+		((PHFemPorousWOMoveDesc*)ptr)->rhoWater = rhoWater;	\
+		((PHFemPorousWOMoveDesc*)ptr)->rhoOil = rhoOil;	\
+		((PHFemPorousWOMoveDesc*)ptr)->rhowInit = rhowInit;	\
+		((PHFemPorousWOMoveDesc*)ptr)->rhooInit = rhooInit;	\
+		((PHFemPorousWOMoveDesc*)ptr)->evapoRate = evapoRate;	\
+		((PHFemPorousWOMoveDesc*)ptr)->denatTemp = denatTemp;	\
+		((PHFemPorousWOMoveDesc*)ptr)->boundWaterRatio = boundWaterRatio;	\
+		((PHFemPorousWOMoveDesc*)ptr)->equilWaterCont = equilWaterCont;	\
+		((PHFemPorousWOMoveDesc*)ptr)->limitWaterCont = limitWaterCont;	\
+		((PHFemPorousWOMoveDesc*)ptr)->boundaryThick = boundaryThick;	\
+		((PHFemPorousWOMoveDesc*)ptr)->initMassAll = initMassAll;	\
+		((PHFemPorousWOMoveDesc*)ptr)->initWaterRatio = initWaterRatio;	\
+		((PHFemPorousWOMoveDesc*)ptr)->initOilRatio = initOilRatio;	\
+		((PHFemPorousWOMoveDesc*)ptr)->shrinkageRatio = shrinkageRatio;	\
+		((PHFemPorousWOMoveDesc*)ptr)->top = top;	\
+		((PHFemPorousWOMoveDesc*)ptr)->center = center;	\
+		((PHFemPorousWOMoveDesc*)ptr)->bottom = bottom;	\
 		return true;	\
 	}\
 

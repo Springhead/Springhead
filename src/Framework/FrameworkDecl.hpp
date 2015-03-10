@@ -29,6 +29,7 @@ protected:\
 	unsigned int	kogetex;	\
 	std::string	meshRoughness;	\
 	bool	spheric;	\
+	unsigned int	texture_mode;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -36,6 +37,7 @@ public:\
 		kogetex = ((FWFemMeshNewDesc*)ptr)->kogetex;	\
 		meshRoughness = ((FWFemMeshNewDesc*)ptr)->meshRoughness;	\
 		spheric = ((FWFemMeshNewDesc*)ptr)->spheric;	\
+		texture_mode = ((FWFemMeshNewDesc*)ptr)->texture_mode;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -44,6 +46,7 @@ public:\
 		((FWFemMeshNewDesc*)ptr)->kogetex = kogetex;	\
 		((FWFemMeshNewDesc*)ptr)->meshRoughness = meshRoughness;	\
 		((FWFemMeshNewDesc*)ptr)->spheric = spheric;	\
+		((FWFemMeshNewDesc*)ptr)->texture_mode = texture_mode;	\
 		return true;	\
 	}\
 
