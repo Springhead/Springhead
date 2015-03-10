@@ -67,7 +67,6 @@ public:
 		MOISTURE,
 		THERMAL,
 	} texturemode;
-	unsigned texture_mode;
 	void SetTexmode(unsigned mode){texture_mode = mode;};
 };
 }
