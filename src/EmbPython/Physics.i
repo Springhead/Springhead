@@ -28,6 +28,7 @@
 %ignore Spr::PHFemMeshThermoIf::GetKMatInTet;
 %ignore Spr::PHGenericJointCallback;
 %ignore Spr::PHGenericJointIf::SetCallback;
+%ignore Spr::PHFemThermoIf::GetKMatInTet;
 %include "Utility/EPObject.i"
 EXTEND_NEW(PHSolidDesc)
 EXTEND_NEW(PHPathPoint)
