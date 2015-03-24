@@ -15,6 +15,7 @@
 #include <Physics/PHConstraintEngine.h>
 #include <Physics/PHHapticEngine.h>
 #include <Physics/PHFemEngine.h>
+#include <Physics/PHOpEngine.h>
 #include <sstream>
 
 namespace Spr{;
@@ -77,6 +78,10 @@ void PHScene::Init(){
 
 	hapticEngine = DBG_NEW PHHapticEngine;
 	engines.Add(hapticEngine);
+
+	opEngine = DBG_NEW PHOpEngine;
+	engines.Add(opEngine);
+
 	PHHapticEngineCallStep2* hpe = DBG_NEW PHHapticEngineCallStep2;
 	hpe->engine = hapticEngine;
 	engines.Add(hpe);
@@ -280,6 +285,12 @@ int PHScene::NFemMeshesNew() const{
 PHFemMeshNewIf*	PHScene::GetFemMeshNew(int i){
 	return femEngine->meshes_n[i]->Cast();
 }
+int PHScene::NOpObjs() const {
+	return (int)opEngine->opObjs.size();
+}
+PHOpObj* PHScene::GetOpObj(int i){
+	return opEngine->opObjs[i]->Cast();
+}
 
 void PHScene::Clear(){
 	engines.Clear();
@@ -479,6 +490,9 @@ bool PHScene::AddChildObject(ObjectIf* o){
 	PHFemMeshNewIf* fem_n = o->Cast();
 	if(fem_n && femEngine->AddChildObject(o))
 		ok = true;
+	PHOpObj* opObj = o->Cast();
+	if (opObj && opEngine->AddChildObject(o))
+		ok = true;
 
 	// MergeSceneなどで他のSceneから移動してくる場合もあるので所有権を更新する
 	if(ok){
@@ -554,6 +568,9 @@ bool PHScene::DelChildObject(ObjectIf* o){
 	if(DCAST(PHFemMeshIf, o))
 		return femEngine->DelChildObject(o);
 
+	if (DCAST(PHOpObj, o))
+		return opEngine->DelChildObject(o);
+
 	return false;
 }
 
@@ -588,6 +605,10 @@ PHIKEngineIf* PHScene::GetIKEngine(){
 
 PHFemEngineIf* PHScene::GetFemEngine(){
 	return XCAST(femEngine);
+}
+
+PHOpEngineIf* PHScene::GetOpEngine(){
+	return XCAST(opEngine);
 }
 
 PHHapticEngineIf* PHScene::GetHapticEngine(){

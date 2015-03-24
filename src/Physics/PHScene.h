@@ -15,6 +15,7 @@
 #include "PHIKActuator.h"
 #include "PHIKEndEffector.h"
 #include "PHSkeleton.h"
+#include "PHOpEngine.h"
 
 namespace Spr {;
 
@@ -62,6 +63,7 @@ protected:
 	PHRays					rays;
 	PHFemEngine*			femEngine;
 	PHHapticEngine*			hapticEngine;
+	PHOpEngine*				opEngine;
 
 	std::vector< UTRef<PHSkeleton> > skeletons;
 
@@ -146,6 +148,8 @@ public:
 	PHFemMeshIf*			GetFemMesh(int i);
 	int						NFemMeshesNew() const;
 	PHFemMeshNewIf*			GetFemMeshNew(int i);
+	int						NOpObjs() const;
+	PHOpObj*			GetOpObj(int i);
 
 	//void 					FindNeighboringSolids(PHSolidIf* solid, double range, PHSolidIfs& nsolids);
 
@@ -219,6 +223,7 @@ public:
 	PHIKEngineIf*			GetIKEngine();
 	PHFemEngineIf*			GetFemEngine();
 	PHHapticEngineIf*		GetHapticEngine();
+	PHOpEngineIf*				GetOpEngine();
 	PHHapticPointerIf*		CreateHapticPointer();
 	void					SetStateMode(bool bConstraints);
 	

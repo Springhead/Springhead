@@ -21,6 +21,7 @@
 #include <Physics/SprPHIK.h>
 #include <Physics/SprPHEngine.h>
 #include <Physics/SprPHFemMesh.h>
+#include <Physics/SprPHOpObj.h>
 #include <Physics/SprPHFemMeshNew.h>
 #include <Physics/SprPHHaptic.h>
 #include <Physics/SprPHSkeleton.h>
@@ -553,6 +554,11 @@ public:
 		@return HapticEngineへのポインタ
 	*/
 	PHHapticEngineIf* GetHapticEngine();
+
+	/** @brief OrientedParticleEngineを取得する
+	@return OrientedParticleEngineへのポインタ
+	*/
+	PHOpEngineIf* GetOpEngine();
 
 	/** @breif HapticPointerを作成する
 		@retrun HapticPointerへのポインタ
