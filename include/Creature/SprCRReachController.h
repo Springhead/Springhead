@@ -87,7 +87,7 @@ struct CRReachControllerIf : public CRControllerIf{
 
 	/** @brief 現在時刻を返す
 	*/
-	float GetCurrentTime();
+	float GetTime();
 
 	/** @brief デバッグ情報を描画する
 	*/
