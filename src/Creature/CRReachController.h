@@ -205,7 +205,7 @@ public:
 
 	/** @brief 現在時刻を返す
 	*/
-	float GetCurrentTime() { return this->time; }
+	float GetTime() { return this->time; }
 
 	/** @brief デバッグ情報を描画する
 	*/
