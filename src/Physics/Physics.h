@@ -32,3 +32,4 @@
 #include "PHIKActuator.h"
 #include "PHIKEndEffector.h"
 #include "PHContactSurface.h"
+#include "PHOpObj.h"

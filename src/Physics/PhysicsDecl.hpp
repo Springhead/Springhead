@@ -1139,6 +1139,50 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHOpObjState \
+protected:\
+	Vec3d	velocity;	\
+	Vec3d	angVelocity;	\
+	Posed	pose;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		velocity = ((PHOpObjState*)ptr)->velocity;	\
+		angVelocity = ((PHOpObjState*)ptr)->angVelocity;	\
+		pose = ((PHOpObjState*)ptr)->pose;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		((PHOpObjState*)ptr)->velocity = velocity;	\
+		((PHOpObjState*)ptr)->angVelocity = angVelocity;	\
+		((PHOpObjState*)ptr)->pose = pose;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHOpObjDesc \
+protected:\
+	double	mass;	\
+	Matrix3d	inertia;	\
+	Vec3d	center;	\
+	bool	dynamical;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHOpObj::SetState((PHOpObjState*)(PHOpObjDesc*)ptr);	\
+		mass = ((PHOpObjDesc*)ptr)->mass;	\
+		inertia = ((PHOpObjDesc*)ptr)->inertia;	\
+		center = ((PHOpObjDesc*)ptr)->center;	\
+		dynamical = ((PHOpObjDesc*)ptr)->dynamical;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHOpObj::GetState((PHOpObjState*)(PHOpObjDesc*)ptr);	\
+		((PHOpObjDesc*)ptr)->mass = mass;	\
+		((PHOpObjDesc*)ptr)->inertia = inertia;	\
+		((PHOpObjDesc*)ptr)->center = center;	\
+		((PHOpObjDesc*)ptr)->dynamical = dynamical;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHRayDesc \
 protected:\
 	Vec3d	origin;	\

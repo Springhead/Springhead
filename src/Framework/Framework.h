@@ -13,6 +13,7 @@
 #include "Framework/FWScene.h"
 #include "Framework/FWObject.h"
 #include "Framework/FWSdk.h"
+#include "Framework/FWOpObj.h"
 
 
 #endif

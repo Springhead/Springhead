@@ -43,6 +43,7 @@ FWScene::FWScene(const FWSceneDesc& d) : phScene(NULL), grScene(NULL){
 	renderIK		= false;
 	renderFEM		= false;
 	renderSkeletonSensor = false;
+	renderOp		= false;
 	// 倍率は等倍
 	scaleAxisWorld = scaleAxisSolid = scaleAxisConst = 1.0f;
 	scaleForce = 1.0f;
@@ -423,6 +424,13 @@ void FWScene::DrawPHScene(GRRenderIf* render){
 		}
 	}
 
+	if (renderOp){
+		PHOpEngineIf* opEngine = phScene->GetOpEngine();
+		if (opEngine){
+			DrawOp(render, opEngine);
+		}
+	}
+	
 	/*
 	if(defLight) render->PopLight();
 	if (cam) cam->Rendered(render);
@@ -994,6 +1002,115 @@ void FWScene::DrawFem(GRRenderIf* render, PHFemEngineIf* femEngine){
 	//render->SetDepthTest(true);
 }
 
+void FWScene::DrawOp(GRRenderIf* render, PHOpEngineIf* opEngineif)
+{
+	PHOpEngine* opEngine = DCAST(PHOpEngine, opEngineif);
+	for (int obji = 0; obji < (int) opEngine->opObjs.size(); obji++)
+	{
+		PHOpObj &drawObj = *opEngine->opObjs[obji];
+//			//DrawAddInternalP
+//			if (beginAddITP)
+//			{
+//				if (tempAddItP->hitedByMouse)
+//					render->SetMaterial(GRRenderIf::YELLOW);
+//				else render->SetMaterial(GRRenderIf::DARKBLUE);
+//
+//				Affinef affpos;
+//				affpos.Pos() = tempAddItP->pCurrCtr;
+//				render->PushModelMatrix();//相対座標で使う
+//				render->MultModelMatrix(affpos);
+//#ifdef USE_AVG_RADIUS
+//				float ra = drawObj.averRadius, rb = ra, rc = ra / 2;
+//#endif
+//#ifdef USE_DYN_RADIUS
+//				float ra = drawObj.averRadius, rb = ra, rc = ra / 2;//internal p
+//#endif
+//				Spr::TQuaternion<float> elliRotQ; elliRotQ.FromMatrix(tempAddItP->pCurrOrint.Inv() * tempAddItP->ellipRotMatrix);
+//
+//				drawEll.drawOval(ra * radiusCoe, rb * radiusCoe, rc* radiusCoe, 8, elliRotQ);//dp.pCurrOrint.Inv());
+//
+//				render->PopModelMatrix();
+//			}
+
+			
+			for (int i = 0; i < drawObj.assPsNum; i++)
+			{
+				PHOpParticle &dp = drawObj.objPArr[i];
+				
+				Vec3f pos1 = dp.pNewCtr;
+				Affinef affpos;
+				affpos.Pos() = pos1;
+
+				if (dp.hitedByMouse)
+					render->SetMaterial(GRRenderIf::YELLOW);
+				else if (dp.isColliedSphashSolved)
+					render->SetMaterial(GRRenderIf::RED);
+				else if (dp.isColliedSphashSolvedReady)
+					render->SetMaterial(GRRenderIf::DEEPPINK);
+				else if (dp.isColliedbySphash)
+					render->SetMaterial(GRRenderIf::GREEN);
+				else if (dp.isColliedbyColliCube)
+					;
+				else render->SetMaterial(GRRenderIf::CADETBLUE);
+
+				render->PushModelMatrix();//相対座標で使う
+				render->MultModelMatrix(affpos);
+				
+				float ra = dp.pMainRadius, rb = dp.pSecRadius, rc = dp.pThrRadius;
+#ifdef USE_AVG_RADIUS
+				;//float ra = drawObj.averRadius, rb = ra, rc = ra / 2;
+#endif
+#ifdef USE_DYN_RADIUS
+				float ra = dp.pDynamicRadius, rb = ra, rc = ra / 2;//internal p
+#endif
+
+				Spr::TQuaternion<float> elliRotQ; elliRotQ.FromMatrix(dp.pCurrOrint.Inv() * dp.ellipRotMatrix);
+				
+				opEngine->drawEll.drawOval(ra * opEngine->radiusCoe, rb * opEngine->radiusCoe, rc* opEngine->radiusCoe, 8, elliRotQ);//dp.pCurrOrint.Inv());
+
+				render->PopModelMatrix();
+
+
+			}
+
+	//if (drawOrien)
+		
+			for (int i = 0; i<drawObj.assGrpNum; i++)
+			{
+			
+				Vec3f &sttP = drawObj.objPArr[i].pNewCtr;
+
+				////DrawPindex
+				//if (drawObj.objId == 0)
+				//	sstr << "PA " << i;
+				//else if (drawObj.objId == 1)
+				//	sstr << "PB " << i;
+				//else sstr << "PX " << i;
+				////if(i==0||i==18||i==22)
+				//render->DrawFont(sttP, sstr.str());
+				//sstr.str("");
+
+
+				render->SetMaterial(GRRenderIf::WHITE);
+				Vec3f &addVec = Vec3f(0.6, 0.6, 0.6);
+		
+				Spr::TPose<float> ptclPos;
+			
+				ptclPos = TPose<float>(sttP, drawObj.objPArr[i].pNewOrint);
+		
+				ptclPos.x = -ptclPos.x;
+				ptclPos.y = -ptclPos.y;
+				ptclPos.z = -ptclPos.z;
+		
+				addVec = ptclPos * addVec;
+
+
+				render->DrawLine(sttP, addVec);
+	
+			}
+		
+		}
+}
 void FWScene::DrawMesh(GRRenderIf* render, CDConvexMeshIf* mesh, bool solid){
 	Vec3f* base = mesh->GetVertices();
 	if(solid){
@@ -1189,7 +1306,9 @@ void FWScene::EnableRenderFem(bool enable){
 void FWScene::EnableRenderSkeletonSensor(bool enable){
 	renderSkeletonSensor = enable;
 }
-
+void FWScene::EnableRenderOp(bool enable){
+	renderOp = enable;
+}
 bool FWScene::IsRenderEnabled(ObjectIf* obj){
 	std::map<ObjectIf*, bool>::iterator it = renderObject.find(obj);
 	if(it != renderObject.end())

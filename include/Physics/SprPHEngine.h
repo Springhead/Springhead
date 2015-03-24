@@ -197,7 +197,14 @@ public:
 	double GetTimeStep();
 	SPR_IFDEF(PHFemEngine);
 };
+struct PHOpEngineIf : PHEngineIf{
+public:
+	void SetTimeStep(double dt);
+	double GetTimeStep();
+	void SetGravity(bool gflag);
 
+	SPR_IFDEF(PHOpEngine);
+};
 struct PHHapticEngineDesc{
 	enum HapticEngineMode{
 		SINGLE_THREAD = 0,
@@ -206,6 +213,7 @@ struct PHHapticEngineDesc{
 	};
 	PHHapticEngineDesc();
 };
+
 struct PHHapticEngineIf : public PHHapticEngineDesc, PHEngineIf{
 public:
 	SPR_IFDEF(PHHapticEngine);

@@ -233,6 +233,9 @@ public:
 	/** @brief SkeletonSensorの描画 */
 	void EnableRenderSkeletonSensor(bool enable = true);
 
+	/** @brief Opの描画 */
+	void EnableRenderOp(bool enable = true);
+
 	void AddHumanInterface(HIForceDevice6D* d);
 
 	/** @brief 力覚ポインタを作る
