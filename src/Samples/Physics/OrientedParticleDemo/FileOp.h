@@ -245,7 +245,7 @@ public:
 			fprintf(f, "pInGrpList.size\n");
 			fprintf(f, "%i\n",  dfobj.objPArr[i].pInGrpList.size());
 			fprintf(f, "pInGrpList\n");
-			for(int k=0;k<dfobj.objPArr[i].pInGrpList.size();k++)
+			for(unsigned int k=0;k<dfobj.objPArr[i].pInGrpList.size();k++)
 			{
 				int grpId = dfobj.objPArr[i].pInGrpList[k];
 				fprintf(f, "%i\n",  grpId);
@@ -292,7 +292,7 @@ public:
 		for(int i=0;i<dfobj.assPsNum;i++)
 			{
 				fprintf(f, "%i\n",dfobj.objPArr[i].pFaceInd.size());
-				for(int j=0;j<dfobj.objPArr[i].pFaceInd.size();j++)
+				for(unsigned int j=0;j<dfobj.objPArr[i].pFaceInd.size();j++)
 					fprintf(f, "%i\n", dfobj.objPArr[i].pFaceInd[j]);
 		}
 		fclose(f);
@@ -329,13 +329,13 @@ public:
 
 		const int len = 100;
 		char s[len+1];
-		int i;
+		//int i;
 		/*m2Vector pos;
 		m2Real mass;
 		int i;
 
 		reset();*/
-		int numVerts;
+		//int numVerts;
 		fgets(s, len, f);
 		fgets(s, len, f);
 		float *loadfvf = new float;
