@@ -259,7 +259,7 @@ void PHOpObj::newReducedPositionProject()
 	Vec3d px0_cx0;
 	R = R.Zero();
 	S = S.Zero();
-	polarDecomposition pd;
+	//polarDecomposition pd;
 
 	float m = 0.0f;
 	//計算は毎グループで行われている

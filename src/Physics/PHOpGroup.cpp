@@ -7,7 +7,7 @@ namespace Spr{;
 void PHOpGroup::addPInds(int gPIndex)
 {
 
-	for(int i=0;i<gPInd.size();i++)
+	for(unsigned int i=0;i<gPInd.size();i++)
 	{
 		if(gPInd[i] == gPIndex)
 			return;
