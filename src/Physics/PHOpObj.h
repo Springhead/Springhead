@@ -76,93 +76,93 @@ namespace Spr{
 			}
 		}
 
-		//Stepè¨ˆç®—ç”¨é–¢æ•°
+		//StepŒvZ—pŠÖ”
 		//void newReducedPositionProjectByOne(int i);
 		//void ReducedPositionProjectByOne(int i);
 		//void positionProjectByOne(int i);
 
-		//æ–°ã—ã„simulationæ–¹æ³•(æ…£æ€§Matrixã‚’æ›´æ–°ã€GoalPositionã¯å¹³å‡ã§ã¯ãªããã®ã¾ã¾ï¼‰
+		//V‚µ‚¢simulation•û–@(Šµ«Matrix‚ğXVAGoalPosition‚Í•½‹Ï‚Å‚Í‚È‚­‚»‚Ì‚Ü‚Üj
 		void newReducedPositionProject();
-		//simpleã®ä¸€å›simulationéç¨‹ã®ã¾ã¨ã‚ã‚‹
+		//simple‚Ìˆê‰ñsimulation‰ß’ö‚Ì‚Ü‚Æ‚ß‚é
 		void SimpleSimulationStep();
 
-		//shapematchingè¨ˆç®—ã‚’Jacobiè¨ˆç®—ç”¨ã®
+		//shapematchingŒvZ‚ğJacobiŒvZ—p‚Ì
 		Jacobi j;
-		//åŠ›è¦šObjectã¨åŒºåˆ¥ã®ãŸã‚ä½¿ã†
+		//—ÍŠoObject‚Æ‹æ•Ê‚Ì‚½‚ßg‚¤
 		int objType;
-		//è·é›¢æ‹˜æŸã®switch
+		//‹——£S‘©‚Ìswitch
 		bool objUseDistCstr;
-		//åŠ›è¦šObjectã¨åŒºåˆ¥ã®ãŸã‚ä½¿ã†
+		//—ÍŠoObject‚Æ‹æ•Ê‚Ì‚½‚ßg‚¤
 		bool objUnNormalobj;
-		//é ‚ç‚¹ã®åˆæœŸä½ç½®ï¼ˆBlendã«ä½¿ã†ï¼‰
+		//’¸“_‚Ì‰ŠúˆÊ’uiBlend‚Ég‚¤j
 		Vec3f* objOrigPos;
-		//é ‚ç‚¹ã®åˆæœŸä½ç½®åˆæœŸåŒ–flag
+		//’¸“_‚Ì‰ŠúˆÊ’u‰Šú‰»flag
 		bool initialOrgP;
-		//ç²’å­groupã®linkæ•°å®šæ•°
+		//—±qgroup‚Ìlink”’è”
 		int objGrouplinkCount;
 		//ObjectID
 		int objId;
-		//è³ªé‡ä¸­å¿ƒï¼ˆé–‹ç™ºä¸­ã€æœªæ¤œè¨¼ï¼‰
+		//¿—Ê’†SiŠJ”­’†A–¢ŒŸØj
 		//Vec3f objMassCenter;
-		//é ‚ç‚¹ãŒç²’å­groupmemberã«å¯¾ã™ã‚‹é‡ã¿ï¼ˆBlendã«ä½¿ã†ï¼‰
+		//’¸“_‚ª—±qgroupmember‚É‘Î‚·‚éd‚İiBlend‚Ég‚¤j
 		float** objBlWeightArr;
-		//é‡ã¿åˆæœŸåŒ–ã•ã‚ŒãŸã‹
+		//d‚İ‰Šú‰»‚³‚ê‚½‚©
 		bool initialBlWei;
-		//ç²’å­ã®åˆæœŸå§¿å‹¢
+		//—±q‚Ì‰Šúp¨
 		Spr::TPose<float> * objOrinPsPoseList;
-		//é ‚ç‚¹ã‹ã‚‰ç²’å­ã®map
+		//’¸“_‚©‚ç—±q‚Ìmap
 		int *objVtoPmap;
-		//é ‚ç‚¹ç²’å­mapåˆæœŸåŒ–ã•ã‚ŒãŸã‹
+		//’¸“_—±qmap‰Šú‰»‚³‚ê‚½‚©
 		bool initialVtoPmap;
-		//åŠå¾„ã®å¹³å‡
+		//”¼Œa‚Ì•½‹Ï
 		float objAverRadius;
-		//åŠå¾„ã®å¹³å‡
+		//”¼Œa‚Ì•½‹Ï
 		float objMaxRadius;
-		//ç²’å­BVHï¼ˆé–‹ç™ºä¸­ï¼‰
+		//—±qBVHiŠJ”­’†j
 		//BVHgOp *bvhGOps;
 
-		//å¤ã„modelå¯¾è±¡
+		//ŒÃ‚¢model‘ÎÛ
 		//GRMesh *targetMesh;
-		//modelé ‚ç‚¹ç¾¤
+		//model’¸“_ŒQ
 		Vec3f *objTargetVts;
-		//modelé ‚ç‚¹ç¾¤åˆæœŸåŒ–ã•ã‚ŒãŸã‹
+		//model’¸“_ŒQ‰Šú‰»‚³‚ê‚½‚©
 		bool initialtgV;
-		//modelé ‚ç‚¹ç¾¤æ•°
+		//model’¸“_ŒQ”
 		int objTargetVtsNum;
-		//ä¸€æ™‚ç²’å­groupä¿å­˜å ´
+		//ˆê—±qgroup•Û‘¶ê
 		std::vector<PHOpGroup> tmpPGroups;
-		//ç²’å­groupã®é…åˆ—
+		//—±qgroup‚Ì”z—ñ
 		PHOpGroup* objGArr;
-		//ç²’å­groupåˆæœŸåŒ–ã•ã‚ŒãŸã‹
+		//—±qgroup‰Šú‰»‚³‚ê‚½‚©
 		bool initialGArr;
-		//ç²’å­groupã®æ•°
+		//—±qgroup‚Ì”
 		int assGrpNum;
 
-		//ä¸€æ™‚ç²’å­ä¿å­˜å ´
+		//ˆê—±q•Û‘¶ê
 		std::vector<PHOpParticle> tmpPtclList;
-		//ç²’å­ã®é…åˆ—
-		PHOpParticle *objPArr;//Memoryã®è€ƒãˆã§ã€ã“ã“ã§æœ€å¾Œã«ä¿å­˜ã—ã¾ã—ãŸ
-		//ç²’å­ã®é…åˆ—åˆæœŸåŒ–ã•ã‚ŒãŸã‹
+		//—±q‚Ì”z—ñ
+		PHOpParticle *objPArr;//Memory‚Ìl‚¦‚ÅA‚±‚±‚ÅÅŒã‚É•Û‘¶‚µ‚Ü‚µ‚½
+		//—±q‚Ì”z—ñ‰Šú‰»‚³‚ê‚½‚©
 		bool initialPArr;
-		//ç²’å­ã®æ•°
+		//—±q‚Ì”
 		int assPsNum;
-		//ç‹¬ç«‹alphaä½¿ç”¨switchï¼ˆé–‹ç™ºä¸­ï¼‰
+		//“Æ—§alphag—pswitchiŠJ”­’†j
 		bool objUseIndepParam;
-		//é‡åŠ›switch
+		//d—Íswitch
 		bool gravityOn;
-		//è»½é‡åŒ–è¨ˆç®—é–¢æ•°switch
+		//Œy—Ê‰»ŒvZŠÖ”switch
 		bool objUseReducedPP;
-		//ç²’å­ã¨è¡¨é¢meshã¨ã®å¯¾å¿œé–¢ä¿‚
+		//—±q‚Æ•\–Êmesh‚Æ‚Ì‘Î‰ŠÖŒW
 		std::vector<int> faceBelongs;
 
 
 		//int bvhNum;
-		//ç¹°ã‚Šè¿”ã™æ•°ãˆè¨ˆæ•°
+		//ŒJ‚è•Ô‚·”‚¦Œv”
 		int objitrTime;
 
 
 	private:
-		//é…ç½®å®Œäº†ã®listï¼ˆlocalç”¨ï¼‰
+		//”z’uŠ®—¹‚Ìlistilocal—pj
 		std::vector<int> mPtclAssList;
 	public:
 
@@ -236,7 +236,7 @@ namespace Spr{
 
 		void ReducedPositionProject();
 
-		//pNewCtrã‹ã‚‰pCurrCtrã¸æ›´æ–°
+		//pNewCtr‚©‚çpCurrCtr‚ÖXV
 
 		void integrationStep();
 
@@ -341,7 +341,7 @@ namespace Spr{
 		{
 			objOrigPos = new Vec3f[vtsNum];
 			initialOrgP = true;
-			objTargetVts = vts;//TetgenãŸã‚ä½¿ã†
+			objTargetVts = vts;//Tetgen‚½‚ßg‚¤
 			objTargetVtsNum = vtsNum;
 
 			initalDeformVertex(vts, vtsNum);
@@ -366,9 +366,9 @@ namespace Spr{
 			float objPtclRadius = pSize;
 
 			//decide particle pos & add vertexes to particles
-			//Particleè‡ªå‹•ç”Ÿæˆæ‰‹é †
-			//æœ€åˆã®é ‚ç‚¹ã‹ã‚‰particleç›´å¾„ç¯„å›²å†…ä»–ã®é ‚ç‚¹ã‚’æ¢ã™ã€
-			//è¦‹ã¤ã‹ã£ãŸå…¨ã¦ã®é ‚ç‚¹ã‚’ä¸€ã¤ã®particleã«ã‚ã’ã‚‹
+			//Particle©“®¶¬è‡
+			//Å‰‚Ì’¸“_‚©‚çparticle’¼Œa”ÍˆÍ“à‘¼‚Ì’¸“_‚ğ’T‚·A
+			//Œ©‚Â‚©‚Á‚½‘S‚Ä‚Ì’¸“_‚ğˆê‚Â‚Ìparticle‚É‚ ‚°‚é
 			//Simple Particle auto generation
 			//From first vertex, find other vertex inside particle diameter
 			//add all found vetices into one particle ->loop			
@@ -405,7 +405,7 @@ namespace Spr{
 			}
 			delete dp;
 
-			//Particleã«é–¢ã™ã‚‹æƒ…å ±ã‚’ç”Ÿæˆã™ã‚‹
+			//Particle‚ÉŠÖ‚·‚éî•ñ‚ğ¶¬‚·‚é
 			//Build Particle propoties
 			objAverRadius = 0.0f;
 			objMaxRadius = 0.0f;
@@ -448,7 +448,7 @@ namespace Spr{
 
 			mt.startMyTimer();
 #endif
-			//Particle groupã‚’ä½œã‚‹
+			//Particle group‚ğì‚é
 			//buildGroup
 			Vec3f p1, p2;
 			//int  nearest[4];
@@ -456,12 +456,12 @@ namespace Spr{
 			std::vector<DisCmpPoint> disCmpQue;
 			DisCmpPoint tmpdcp;
 
-			//particlegroupç”Ÿæˆè‡ªå‹•åŒ–æ‰‹é †
-			//æœ€åˆã®particleã‹ã‚‰,
-			//link æ•°æ±ºã‚ã‚‹æ™‚ 
-			//ã‚ã‚‹é™ã‚Šéš£ã®particleã‚’groupã«å…¥ã‚Œã‚‹  ->loop
-			//link æ•°è¶³ã‚Šãªã„æ™‚
-			//ã‚ã‚‹ã ã‘éš£ã®particleã‚’groupã«å…¥ã‚Œã‚‹  ->loop
+			//particlegroup¶¬©“®‰»è‡
+			//Å‰‚Ìparticle‚©‚ç,
+			//link ”Œˆ‚ß‚é 
+			//‚ ‚éŒÀ‚è—×‚Ìparticle‚ğgroup‚É“ü‚ê‚é  ->loop
+			//link ”‘«‚è‚È‚¢
+			//‚ ‚é‚¾‚¯—×‚Ìparticle‚ğgroup‚É“ü‚ê‚é  ->loop
 			for (int i = 0; i < (int)dParticleArr.size(); i++)
 			{
 				dParticleArr[i].pMyGroupInd = i;
@@ -488,7 +488,7 @@ namespace Spr{
 					disCmpQue.push_back(tmpdcp);
 
 				}
-				//éš£particleã¸ã®è·é›¢ã®sort
+				//—×particle‚Ö‚Ì‹——£‚Ìsort
 				std::sort(disCmpQue.begin(), disCmpQue.end());
 
 
@@ -538,7 +538,7 @@ namespace Spr{
 
 			mt.startMyTimer();
 #endif
-			//Arrayã¸memoryã‚’å¤‰ãˆã‚‹
+			//Array‚Ömemory‚ğ•Ï‚¦‚é
 
 
 			swapMemParticle(dParticleArr);
@@ -549,10 +549,10 @@ namespace Spr{
 			//build weight relation between vertices to particle center
 			//buildDisWeightForVsinP();
 
-			//faceæƒ…å ±ã®å…¥åŠ›
+			//faceî•ñ‚Ì“ü—Í
 			//buildFaceInfoInP();
 
-			//Vertexã‹ã‚‰Opã¾ã§ã®é€†mapã‚’ã¤ãã‚‹
+			//Vertex‚©‚çOp‚Ü‚Å‚Ì‹tmap‚ğ‚Â‚­‚é
 			BuildMapFromVtoP();
 
 			//buildGroupCenter
@@ -562,11 +562,11 @@ namespace Spr{
 			mt.endMyTimer();
 			mt.printElastedTime();
 #endif
-			//particlegroupweightã‚’ä½œã‚‹
+			//particlegroupweight‚ğì‚é
 			//initial blend weight
 			BuildBlendWeight();
 
-			//ParticleåˆæœŸå§¿å‹¢ã‚’è¨˜æ†¶ã™ã‚‹(blendingã«ä½¿ã†)
+			//Particle‰Šúp¨‚ğ‹L‰¯‚·‚é(blending‚Ég‚¤)
 			//build Oringinal Pose of Ps
 			objOrinPsPoseList = new TPose<float>[assPsNum];
 			for (int j = 0; j<assPsNum; j++)
@@ -691,7 +691,7 @@ namespace Spr{
 				PHOpGroup pg = objGArr[objPArr[j].pMyGroupInd];
 				int gpSize = pg.gNptcl;//
 				for (int k = 0; k<objPArr[j].pNvertex; k++)
-				{//Particleå†…ã™ã¹ã¦vertexã«å¯¾ã—ã¦
+				{//Particle“à‚·‚×‚Ävertex‚É‘Î‚µ‚Ä
 
 					std::vector<float> distancelist;
 					float distanceSum = 0.0;
@@ -701,7 +701,7 @@ namespace Spr{
 					vert = objTargetVts[vertind];
 
 					float tmpdis = (CenterPs - vert).norm();
-					distanceSum += tmpdis;//vertexã‹ã‚‰ã™ã¹ã¦linkã—ã¦Particleã®è·é›¢ã‚’è¨ˆç®—ã™ã‚‹
+					distanceSum += tmpdis;//vertex‚©‚ç‚·‚×‚Älink‚µ‚ÄParticle‚Ì‹——£‚ğŒvZ‚·‚é
 					distancelist.push_back(tmpdis);
 
 					float* linkWeight = new float[gpSize];
@@ -719,7 +719,7 @@ namespace Spr{
 					}
 
 					for (int jm = 1; jm < gpSize; jm++)
-					{//ã™ã¹ã¦linkã•ã‚ŒãŸParticleã«å¯¾ã—ã¦
+					{//‚·‚×‚Älink‚³‚ê‚½Particle‚É‘Î‚µ‚Ä
 
 						//PHOpParticle linkPs = objPArr[pg.getParticleGlbIndex(jm)];
 						Vec3f linkPsCenter = objPArr[pg.getParticleGlbIndex(jm)].pOrigCtr;
@@ -856,7 +856,7 @@ namespace Spr{
 		}
 
 
-		//DeformVertexåˆæœŸåŒ–
+		//DeformVertex‰Šú‰»
 		void initalDeformVertex(Vec3f *vts, int vtsNum)
 		{
 			for (int i = 0; i<vtsNum; i++)
@@ -877,7 +877,7 @@ namespace Spr{
 
 			inline void set(const Vec3d &min0, const Vec3d &max0) { min = min0; max = max0; }
 
-			void clamp(Vec3f &pos){//å¢ƒç•Œã‚’è¶…ãˆãŸç‚¹ã‚’ãã®ã¾ã¾å¢ƒç•Œã®ã©ã“ã‚è¨­å®šã™ã‚‹
+			void clamp(Vec3f &pos){//‹«ŠE‚ğ’´‚¦‚½“_‚ğ‚»‚Ì‚Ü‚Ü‹«ŠE‚Ì‚Ç‚±‚ëİ’è‚·‚é
 				if (isEmpty()) return;
 				//pos.maximum(min);
 				maximum(pos, min);
@@ -912,7 +912,7 @@ namespace Spr{
 
 			Vec3f gravity;
 			float timeStep;
-			m3Bounds bounds;//æŒ™å‹•ç¯„å›²
+			m3Bounds bounds;//‹““®”ÍˆÍ
 
 			float alpha;
 			float beta;
