@@ -7,7 +7,7 @@ namespace Spr{;
 
 void PHOpParticle::swapVectorToArr()
 {
-	int size = pVertTempInd.size();
+	int size = (int)pVertTempInd.size();
 	pVertArr = new int[size];
 	initialPvarr = true;
 	for(int i=0;i<size;i++)

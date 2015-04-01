@@ -870,7 +870,7 @@ void PHFemPorousWOMove::Step(double dt){
 
 void PHFemPorousWOMove::InitMatWO(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
-	int vtxSize = mesh->vertices.size();
+	int vtxSize = (int)mesh->vertices.size();
 
 	matWwAll.resize(vtxSize, vtxSize);
 	matOwAll.resize(vtxSize, vtxSize);
@@ -902,7 +902,7 @@ void PHFemPorousWOMove::InitMatWO(){
 
 void PHFemPorousWOMove::InitMatC(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
-	int vtxSize = mesh->vertices.size();
+	int vtxSize = (int)mesh->vertices.size();
 	matCAll.resize(vtxSize, vtxSize);
 	matCAll.clear();
 	for(unsigned tetid=0; tetid < mesh->tets.size(); tetid++){
@@ -915,7 +915,7 @@ void PHFemPorousWOMove::InitMatC(){
 
 void PHFemPorousWOMove::InitMatPc(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
-	int vtxSize = mesh->vertices.size();
+	int vtxSize = (int)mesh->vertices.size();
 	matPcwAll.resize(vtxSize, vtxSize);
 	matPcoAll.resize(vtxSize, vtxSize);
 
@@ -929,7 +929,7 @@ void PHFemPorousWOMove::InitMatPc(){
 
 void PHFemPorousWOMove::InitVecF(){
 	PHFemMeshNew* mesh = GetPHFemMesh();
-	int vtxSize = mesh->vertices.size();
+	int vtxSize = (int)mesh->vertices.size();
 
 	vecFwAll.resize(vtxSize, 1);
 	vecFoAll.resize(vtxSize, 1);
@@ -2218,14 +2218,14 @@ void PHFemPorousWOMove::CalcWOContentUsingGaussSeidel(unsigned NofCyc, double dt
 //}
 
 void PHFemPorousWOMove::SetRhoWAllToRhoWVecAll(){
-	unsigned vtxSize = GetPHFemMesh()->vertices.size();
+	unsigned vtxSize = (unsigned)GetPHFemMesh()->vertices.size();
 	for(unsigned i=0; i < vtxSize; i++){
 		rhoWVecAll[i][0] = vertexVars[i].rhoW;
 	}
 }
 
 void PHFemPorousWOMove::SetRhoOAllToRhoOVecAll(){
-	unsigned vtxSize = GetPHFemMesh()->vertices.size();
+	unsigned vtxSize = (unsigned)GetPHFemMesh()->vertices.size();
 	for(unsigned i=0; i < vtxSize; i++){
 		rhoOVecAll[i][0] = vertexVars[i].rhoO;
 	}
@@ -2454,8 +2454,8 @@ PTM::VMatrixRow<double> PHFemPorousWOMove::inv(PTM::VMatrixRow<double> mat){
 	result.resize(mat.height(),mat.width());
 	result.clear();
 
-	int m = mat.height();//s”
-	int n = mat.width();//—ñ”
+	int m = (int)mat.height();//s”
+	int n = (int)mat.width();//—ñ”
 	int lda = n;
 	double *A = new double[m*n];
 	int info;
