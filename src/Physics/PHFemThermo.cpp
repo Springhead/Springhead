@@ -7629,7 +7629,7 @@ void PHFemThermo::makeFPartition(unsigned num){
 }
 
 PTM::VVector<double> PHFemThermo::fPartition(unsigned vid, double f, unsigned num){
-	unsigned vsize = GetPHFemMesh()->vertices.size();
+	unsigned vsize = (unsigned)GetPHFemMesh()->vertices.size();
 	double cratioSum = 0;
 	PTM::VVector<double> fsub;
 	fsub.resize(vsize);

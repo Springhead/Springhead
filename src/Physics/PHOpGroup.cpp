@@ -31,7 +31,7 @@ void PHOpGroup::delPInds(int gPIndex)
 
 	}
 	gPInd.swap(newgpinds);
-	gNptcl = gPInd.size();
+	gNptcl = (int)gPInd.size();
 }
 
 

@@ -440,7 +440,7 @@ void PHOpObj::positionProject()
 				{
 					continue;
 				}
-				int goalsize = dp.pGoalCtr.size();//重なった計算数
+				int goalsize = (int)dp.pGoalCtr.size();//重なった計算数
 				float scale = 1.0f / (float)goalsize;
 				newpSum = dp.pNewCtr;
 				newpSum1 = newpSum1.Zero();
@@ -524,7 +524,7 @@ void PHOpObj::ReducedPositionProject()
 				//Reduced Op goalPostion calculation
 				Vec3f rSum = rSum.Zero();
 				Vec3f pNbc = pNbc.Zero();
-				int l_i = dp.pInGrpList.size();
+				int l_i = (int)dp.pInGrpList.size();
 				
 				for(int k=0;k < l_i;k++)
 				{

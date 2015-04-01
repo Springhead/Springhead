@@ -511,10 +511,10 @@ namespace Spr{
 				}
 				if (linkCount < (int)disCmpQue.size())
 					linkCount = objGrouplinkCount; //debug linkCount
-				else linkCount = disCmpQue.size();
+				else linkCount = (int)disCmpQue.size();
 
 				if ((int)dParticleArr.size()<linkCount)
-					linkCount = dParticleArr.size() - 1;
+					linkCount = (int)dParticleArr.size() - 1;
 
 				pg.gMyIndex = i;
 				pg.gPInd.push_back(i);
@@ -820,7 +820,7 @@ namespace Spr{
 		//clear the memory of the vector used
 		void swapMemGroup()
 		{
-			assGrpNum = tmpPGroups.size();
+			assGrpNum = (int)tmpPGroups.size();
 			objGArr = new PHOpGroup[assGrpNum];
 			initialGArr = true;
 			for (int i = 0; i<assGrpNum; i++)
@@ -842,7 +842,7 @@ namespace Spr{
 		//clear memory
 		void swapMemParticle(std::vector<PHOpParticle> &dParticleArr)
 		{
-			assPsNum = dParticleArr.size();
+			assPsNum = (int)dParticleArr.size();
 			objPArr = new PHOpParticle[assPsNum];
 			initialPArr = true;
 			for (int i = 0; i<assPsNum; i++)
