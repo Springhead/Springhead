@@ -525,14 +525,14 @@ void PHOpObj::ReducedPositionProject()
 				Vec3f rSum = rSum.Zero();
 				Vec3f pNbc = pNbc.Zero();
 				int l_i = dp.pInGrpList.size();
-				FloatErrorTest ftst;
+				
 				for(int k=0;k < l_i;k++)
 				{
 					PHOpParticle &dp_k = objPArr[dp.pInGrpList[k]];
 					PHOpGroup &pg_k = objGArr[dp.pInGrpList[k]];
 				
 					rSum += me.MatrixMultiVec3fRight(dp_k.pSmR, (dp.pOrigCtr - pg_k.gOrigCenter));//\sigma {k}{l_i}{Rgpk *(xibar - xgkbar)}
-					if(!ftst.CheckBadFloatValue(rSum.x,rSum.y,rSum.z))
+					if(!FloatErrorTest::CheckBadFloatValue(rSum.x,rSum.y,rSum.z))
 						int u=0;
 
 					pNbc += pg_k.gCurrCenter;
@@ -543,7 +543,7 @@ void PHOpObj::ReducedPositionProject()
 
 				 dp.pNewCtr = newpSum1;
 				
-				if(!ftst.CheckBadFloatValue(newpSum1.x,newpSum1.y,newpSum1.z))
+				if(!FloatErrorTest::CheckBadFloatValue(newpSum1.x,newpSum1.y,newpSum1.z))
 						int u=0;
 
 				dp.pGoalCtr.clear();
