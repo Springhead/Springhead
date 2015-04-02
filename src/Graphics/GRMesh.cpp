@@ -56,35 +56,41 @@ GRMesh::~GRMesh(){
 }
 
 void GRMesh::DuplicateVertices(){
-	// faceNormals���w�肳��Ă���ꍇ�C�ʓ��m�ł̋��L�����邽�ߒ��_�Ɩ@���𕡐�����
-	if(faceNormals.empty())
-		return;
+	//	If descripter has faceNormals (a map between normals and each vertex on each face)
+	//	duplecate vertices so that number of vetices comes to (n face) * (n vertices in the face)
+	if(faceNormals.empty()) return;
 
 	int nVertices = 0;
 	for(int i = 0; i < (int)faces.size(); i++){
 		nVertices += faces[i].nVertices;
 	}
-	vector<Vec3f>	newVertices(nVertices);
-	vector<Vec3f>	newNormals(nVertices);
+	vector<Vec3f>	newVertices(nVertices), newNormals;
+	vector<Vec2f>	newTexCoords;
+	if (normals.size()) newNormals.resize(nVertices);
+	if (texCoords.size()) newTexCoords.resize(nVertices);
 
 	int idx = 0;
 	for(int i = 0; i < (int)faces.size(); i++){
 		for(int j = 0; j < faces[i].nVertices; j++){
 			newVertices[idx] = vertices[faces[i].indices[j]];
-			newNormals[idx] = normals[faceNormals[i].indices[j]];
+			if (newNormals.size()){
+				newNormals[idx] = normals[faceNormals[i].indices[j]];
+			}
+			if (texCoords.size()){
+				newTexCoords[idx] = texCoords[faces[i].indices[j]];
+			}
 			faces[i].indices[j] = idx;
 			faceNormals[i].indices[j] = idx;
 			idx++;
 		}
 	}
-	vertices.swap(newVertices);
-	normals.swap(newNormals);
+	vertices = newVertices;
+	normals = newNormals;
+	texCoords = newTexCoords;
 }
 
 void GRMesh::DecomposeFaces(){
 	// 面の3角形分割
-	//orgFaceIds.clear();
-	//orgFaces.clear();
 	triFaces.clear();
 	triML.clear();
 	for(int i = 0; i < (int)faces.size(); ++i){
@@ -93,15 +99,11 @@ void GRMesh::DecomposeFaces(){
 			DSTR << "number of vertices in a mesh must be 3 or 4." << endl;
 			continue;
 		}
-		//orgFaceIds.push_back(i);
 		triFaces.push_back( faces[i].indices[2] );
 		triFaces.push_back( faces[i].indices[1] );
 		triFaces.push_back( faces[i].indices[0] );
 		if(!materialList.empty())
 			triML.push_back(materialList[i]);
-		//orgFaces.push_back( faces[i].indices[0] );
-		//orgFaces.push_back( faces[i].indices[1] );
-		//orgFaces.push_back( faces[i].indices[2] );
 
 		if (faces[i].nVertices == 4){
 			//orgFaceIds.push_back(i);
@@ -146,10 +148,10 @@ void GRMesh::GenerateNormals(){
 }
 
 void GRMesh::AfterSetDesc(){
+	//	普通のXファイルをロードするためには、頂点と法線を面の頂点の数に直す必要がある。
+	DuplicateVertices();
 	DecomposeFaces();
-	if(normals.empty())
-		GenerateNormals();
-	//DuplicateVertices();
+	if(normals.empty()) GenerateNormals();
 }
 
 GRSkinWeightIf* GRMesh::CreateSkinWeight(const GRSkinWeightDesc& desc){
@@ -228,7 +230,7 @@ inline void CopyTexCoords3D(T* v, const vector<Vec2f>& texCoords){
 		v[i].t.w = 1.0f;
 	}
 }
-// �ȉ��Cw��0�ɐݒ肵�Ă���̂��Ӑ}�I�Ȃ̂��o�O�Ȃ̂��s��
+// Set 2D texture coords value to a 3D texture coords buffer.
 template<class T>
 inline void CopyTexCoords3D2(T* v, const vector<Vec2f>& texCoords){
 	for (int i = 0; i < (int)texCoords.size(); ++i){
