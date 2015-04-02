@@ -57,7 +57,7 @@ protected:
 	void DecomposeFaces();
 	/// 法線自動生成
 	void GenerateNormals();
-	/// ���_����
+	///	面ごとに頂点を独立させる
 	void DuplicateVertices();
 
 	virtual void AfterSetDesc();
