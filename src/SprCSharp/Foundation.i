@@ -9,8 +9,6 @@
 %include "../../include/Base/BaseDebug.h"
 %include "../../src/Foundation/UTTypeDesc.h"
 %include "../Foundation/Foundation.h"
-%include "../Foundation/FoundationCLI.h"
-%include "../Foundation/FoundationCs.h"
 %include "../Foundation/Object.h"
 %include "../Foundation/Scene.h"
 %include "../Foundation/UTBaseType.h"
