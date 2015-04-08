@@ -23,5 +23,8 @@ struct Matrix3f{ float data[9]; };
 struct Matrix3d{ double data[9]; };
 struct Affinef{ float data[16]; };
 struct Affined{ double data[16]; };
+// for C#
+struct Vec3i{ int x; int y; int z; };
+typedef std::string UTString;
 }
 #endif
