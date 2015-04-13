@@ -60,9 +60,15 @@ if exist %MODULE%.i (
 	move /Y !MODULE!Cs.cs  %CS_SRC%\CS%MODULE%.cs  > NUL 2>&1
 	move /Y !MODULE!CsP.cs %CS_IMP%\CS%MODULE%.cs  > NUL 2>&1
 	move /Y !MODULE!Cs.cpp %CS_EXP%\CS%MODULE%.cpp > NUL 2>&1
+	move /Y !MODULE!CsWrap.cs  %CS_SRC%\CS%MODULE%.wrapper.cs  > NUL 2>&1
+	move /Y !MODULE!CsPWrap.cs %CS_IMP%\CS%MODULE%.wrapper.cs  > NUL 2>&1
+	move /Y !MODULE!CsWrap.cpp %CS_EXP%\CS%MODULE%.wrapper.cpp > NUL 2>&1
 	echo %CS_SRC%\CS%MODULE%.cs  created
 	echo %CS_IMP%\CS%MODULE%.cs  created
 	echo %CS_EXP%\CS%MODULE%.cpp created
+	echo %CS_SRC%\CS%MODULE%.wrapper.cs  created
+	echo %CS_IMP%\CS%MODULE%.wrapper.cs  created
+	echo %CS_EXP%\CS%MODULE%.wrapper.cpp created
 	if %DEBUG% == 1 (
 	    move /Y %MODULE%CS.info %CS_INFO%\CS%MODULE%.info >NUL 2>&1
 	) else (
