@@ -68,6 +68,23 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_FWOpObjDesc \
+protected:\
+	float	fwPSize;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		FWObject::SetDesc((FWObjectDesc*)(FWOpObjDesc*)ptr);	\
+		fwPSize = ((FWOpObjDesc*)ptr)->fwPSize;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		FWObject::GetDesc((FWObjectDesc*)(FWOpObjDesc*)ptr);	\
+		((FWOpObjDesc*)ptr)->fwPSize = fwPSize;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_FWSceneDesc \
 protected:\
 public:\
@@ -353,23 +370,6 @@ public:\
 		((FWWinDesc*)ptr)->useJoyStick = useJoyStick;	\
 		((FWWinDesc*)ptr)->joyStickPollInterval = joyStickPollInterval;	\
 		((FWWinDesc*)ptr)->useTrackball = useTrackball;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_FWOpObjDesc \
-protected:\
-	float	fwPSize;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		FWObject::SetDesc((FWObjectDesc*)(FWOpObjDesc*)ptr);	\
-		fwPSize = ((FWOpObjDesc*)ptr)->fwPSize;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		FWObject::GetDesc((FWObjectDesc*)(FWOpObjDesc*)ptr);	\
-		((FWOpObjDesc*)ptr)->fwPSize = fwPSize;	\
 		return true;	\
 	}\
 
