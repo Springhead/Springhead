@@ -59,29 +59,64 @@ void GRMesh::DuplicateVertices(){
 	//	If descripter has faceNormals (a map between normals and each vertex on each face)
 	//	duplecate vertices so that number of vetices comes to (n face) * (n vertices in the face)
 	if(faceNormals.empty()) return;
-
-	int nVertices = 0;
-	for(int i = 0; i < (int)faces.size(); i++){
-		nVertices += faces[i].nVertices;
+	
+	vector<vector<int> > vertexNormalMap(vertices.size());
+	for (int i = 0; i < (int)faces.size(); i++){
+		for(int j = 0; j < faces[i].nVertices; j++){
+			int vid = faces[i].indices[j];
+			int nid = faceNormals[i].indices[j];
+			int k;
+			for(k=0; k<(int)vertexNormalMap[vid].size(); ++k){
+				if (vertexNormalMap[vid][k] == nid) break;
+			}
+			if (k == vertexNormalMap[vid].size()){
+				vertexNormalMap[vid].push_back(nid);
+			}
+		}
 	}
-	vector<Vec3f>	newVertices(nVertices), newNormals;
+	vector<vector<int> > newVertexMap(vertices.size());
+	int nNewVertex = 0;
+	for(int i = 0; i < (int)vertexNormalMap.size(); i++){
+		if (vertexNormalMap[i].size() >= 2) newVertexMap[i].resize(vertexNormalMap[i].size()-1, 0);
+		nNewVertex += vertexNormalMap[i].size();
+	}
+	
+	vector<Vec3f>	newVertices(nNewVertex), newNormals;
 	vector<Vec2f>	newTexCoords;
-	if (normals.size()) newNormals.resize(nVertices);
-	if (texCoords.size()) newTexCoords.resize(nVertices);
+	if (normals.size()) newNormals.resize(nNewVertex);
+	if (texCoords.size()) newTexCoords.resize(nNewVertex);
 
-	int idx = 0;
+	int newIdx = vertices.size();
 	for(int i = 0; i < (int)faces.size(); i++){
 		for(int j = 0; j < faces[i].nVertices; j++){
-			newVertices[idx] = vertices[faces[i].indices[j]];
+			int vid = faces[i].indices[j];
+			int nid = faceNormals[i].indices[j];
+			int k;
+			for (k = 0; k < (int)vertexNormalMap[vid].size(); ++k){
+				if (vertexNormalMap[vid][k] == nid) break;
+			}
+			assert(k < (int)vertexNormalMap[vid].size());
+			int idx;
+			if (k==0){
+				idx = vid;
+			}else{
+				if (newVertexMap[vid][k-1] != 0){
+					idx = newVertexMap[vid][k-1];
+				}else{
+					newVertexMap[vid][k-1] = newIdx;
+					idx = newIdx;
+					newIdx++;
+				}
+			}
+			newVertices[idx] = vertices[vid];
 			if (newNormals.size()){
-				newNormals[idx] = normals[faceNormals[i].indices[j]];
+				newNormals[idx] = normals[nid];
 			}
 			if (texCoords.size()){
-				newTexCoords[idx] = texCoords[faces[i].indices[j]];
+				newTexCoords[idx] = texCoords[vid];
 			}
 			faces[i].indices[j] = idx;
 			faceNormals[i].indices[j] = idx;
-			idx++;
 		}
 	}
 	vertices = newVertices;
