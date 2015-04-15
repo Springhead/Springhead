@@ -25,6 +25,7 @@ struct Affinef{ float data[16]; };
 struct Affined{ double data[16]; };
 // for C#
 struct Vec3i{ int x; int y; int z; };
+struct Vec6d{ double vx; double vy; double vz; double wx; double wy; double wz; };
 typedef std::string UTString;
 }
 #endif
