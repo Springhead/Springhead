@@ -43,6 +43,15 @@ extern "C" {
         vector<float>* vecptr = (vector<float>*) ptr;
         (*vecptr)[index] = value;
     }
+    //  double
+    __declspec(dllexport) double __cdecl Spr_vector_get_double(HANDLE ptr, int index) {
+        vector<double>* vecptr = (vector<double>*) ptr;
+        return (*vecptr)[index];
+    }
+    __declspec(dllexport) void __cdecl Spr_vector_set_double(HANDLE ptr, int index, double value) {
+        vector<double>* vecptr = (vector<double>*) ptr;
+        (*vecptr)[index] = value;
+    }
     //  string
     __declspec(dllexport) HANDLE __cdecl Spr_vector_get_string(HANDLE ptr, int index) {
         BSTR result = NULL;
