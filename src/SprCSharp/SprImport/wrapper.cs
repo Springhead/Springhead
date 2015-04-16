@@ -26,6 +26,11 @@ namespace SprCs {
         public static extern float Spr_vector_get_float(IntPtr _ptr, int index);
         [DllImport("SprExport.dll")]
         public static extern void Spr_vector_set_float(IntPtr _ptr, int index, float value);
+        //  double
+        [DllImport("SprExport.dll")]
+        public static extern double Spr_vector_get_double(IntPtr _ptr, int index);
+        [DllImport("SprExport.dll")]
+        public static extern void Spr_vector_set_double(IntPtr _ptr, int index, double value);
         //  string
         [DllImport("SprExport.dll")]
         public static extern IntPtr Spr_vector_get_string(IntPtr _ptr, int index);

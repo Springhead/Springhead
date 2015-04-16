@@ -53,6 +53,18 @@ namespace SprCs {
             set { SprExport.Spr_vector_set_float(_ptr, index, value); }
         }
     }
+    //  double
+    public class vectorwrapper_double {
+        private IntPtr _ptr;
+        public vectorwrapper_double(IntPtr ptr) { _ptr = ptr; }
+        protected vectorwrapper_double() {}
+        ~vectorwrapper_double() {}
+        public IntPtr get() { return _ptr; }
+        public double this[int index] {
+            get { return (double) SprExport.Spr_vector_get_double(_ptr, index); }
+            set { SprExport.Spr_vector_set_double(_ptr, index, value); }
+        }
+    }
     //  string
     public class vectorwrapper_string {
         private IntPtr _ptr;
