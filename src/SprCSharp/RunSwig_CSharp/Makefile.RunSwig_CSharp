@@ -1,0 +1,49 @@
+# Makefile.RunSwig_CSharp
+#
+
+PROJDIR	= ../../..
+BINDIR	= $(PROJDIR)/bin/swig
+DLLDIR	= $(PROJDIR)/bin/$(PLATFORM)
+TOPDIR	= $(PROJDIR)/src/SprCSharp
+MAKEDIR	= $(TOPDIR)/RunSwig_CSharp
+SRCDIR	= $(TOPDIR)/SprCSharp
+IFDIR	= $(TOPDIR)
+
+SWIG	= $(BINDIR)/swig.exe
+RUNSWIG	= $(MAKEDIR)\RunSwig_CSharp.bat
+
+DLLS	= $(DLLDIR)/SprExport.dll	\
+	  $(DLLDIR)/SprImport.dll	\
+	  $(DLLDIR)/SprCSharp.dll
+
+SRCS	= $(SRCDIR)/CSBase.cs		\
+	  $(SRCDIR)/CSCollision.cs	\
+	  $(SRCDIR)/CSCreature.cs	\
+	  $(SRCDIR)/CSFileIO.cs		\
+	  $(SRCDIR)/CSFoundation.cs	\
+	  $(SRCDIR)/CSFramework.cs	\
+	  $(SRCDIR)/CSGraphics.cs	\
+	  $(SRCDIR)/CSHumanInterface.cs	\
+	  $(SRCDIR)/CSPhysics.cs
+
+IFILES	= $(IFDIR)/Base.i		\
+	  $(IFDIR)/Collision.i		\
+	  $(IFDIR)/Creature.i		\
+	  $(IFDIR)/FileIO.i		\
+	  $(IFDIR)/Foundation.i		\
+	  $(IFDIR)/Framework.i		\
+	  $(IFDIR)/Graphics.i		\
+	  $(IFDIR)/HumanInterface.i	\
+	  $(IFDIR)/Physics.i
+
+all:		$(DLLS)
+		$(RUNSWIG)
+
+$(DLLS):	$(SRCS)
+
+$(SRCS):	$(IFILES) $(SWIG)
+
+$(IFILES):	
+
+$(SWIG):	
+
