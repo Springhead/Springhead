@@ -12,6 +12,8 @@ namespace SprCsSample {
             descScene.airResistanceRate = 0.5;
             descScene.gravity = new Vec3d(0, 0, -4.5);
 
+            Vec3d d = descScene.gravity;
+            //System.Console.WriteLine(d);
             System.Console.WriteLine(descScene.gravity);
         }
     }
