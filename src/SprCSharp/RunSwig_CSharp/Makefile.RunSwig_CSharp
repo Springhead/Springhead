@@ -1,47 +1,77 @@
 # Makefile.RunSwig_CSharp
 #
 
-PROJDIR	= ../../..
-BINDIR	= $(PROJDIR)/bin/swig
-DLLDIR	= $(PROJDIR)/bin/$(PLATFORM)
-TOPDIR	= $(PROJDIR)/src/SprCSharp
-MAKEDIR	= $(TOPDIR)/RunSwig_CSharp
-SRCDIR	= $(TOPDIR)/SprCSharp
-IFDIR	= $(TOPDIR)
+PROJDIR	= ..\..\..
+BINDIR	= $(PROJDIR)\bin\swig
+DLLDIR	= $(PROJDIR)\bin\$(PLATFORM)
+TOPDIR	= $(PROJDIR)\src\SprCSharp
+MAKEDIR	= $(TOPDIR)\RunSwig_CSharp
+EXPSRCDIR	= $(TOPDIR)\SprExport
+IMPSRCDIR	= $(TOPDIR)\SprImport
+CSSRCDIR	= $(TOPDIR)\SprCSharp
+IFILEDIR	= $(TOPDIR)
 
-SWIG	= $(BINDIR)/swig.exe
+SWIG	= $(BINDIR)\swig.exe
 RUNSWIG	= $(MAKEDIR)\RunSwig_CSharp.bat
 
-DLLS	= $(DLLDIR)/SprExport.dll	\
-	  $(DLLDIR)/SprImport.dll	\
-	  $(DLLDIR)/SprCSharp.dll
+EXPSRCS	= $(EXPSRCDIR)\CSBase.cpp		\
+	  $(EXPSRCDIR)\CSCollision.cpp		\
+	  $(EXPSRCDIR)\CSCreature.cpp		\
+	  $(EXPSRCDIR)\CSFileIO.cpp		\
+	  $(EXPSRCDIR)\CSFoundation.cpp		\
+	  $(EXPSRCDIR)\CSFramework.cpp		\
+	  $(EXPSRCDIR)\CSGraphics.cpp		\
+	  $(EXPSRCDIR)\CSHumanInterface.cpp	\
+	  $(EXPSRCDIR)\CSPhysics.cpp
 
-SRCS	= $(SRCDIR)/CSBase.cs		\
-	  $(SRCDIR)/CSCollision.cs	\
-	  $(SRCDIR)/CSCreature.cs	\
-	  $(SRCDIR)/CSFileIO.cs		\
-	  $(SRCDIR)/CSFoundation.cs	\
-	  $(SRCDIR)/CSFramework.cs	\
-	  $(SRCDIR)/CSGraphics.cs	\
-	  $(SRCDIR)/CSHumanInterface.cs	\
-	  $(SRCDIR)/CSPhysics.cs
+IMPSRCS	= $(IMPSRCDIR)\CSBase.cs		\
+	  $(IMPSRCDIR)\CSCollision.cs		\
+	  $(IMPSRCDIR)\CSCreature.cs		\
+	  $(IMPSRCDIR)\CSFileIO.cs		\
+	  $(IMPSRCDIR)\CSFoundation.cs		\
+	  $(IMPSRCDIR)\CSFramework.cs		\
+	  $(IMPSRCDIR)\CSGraphics.cs		\
+	  $(IMPSRCDIR)\CSHumanInterface.cs	\
+	  $(IMPSRCDIR)\CSPhysics.cs
 
-IFILES	= $(IFDIR)/Base.i		\
-	  $(IFDIR)/Collision.i		\
-	  $(IFDIR)/Creature.i		\
-	  $(IFDIR)/FileIO.i		\
-	  $(IFDIR)/Foundation.i		\
-	  $(IFDIR)/Framework.i		\
-	  $(IFDIR)/Graphics.i		\
-	  $(IFDIR)/HumanInterface.i	\
-	  $(IFDIR)/Physics.i
+CSSRCS	= $(CSSRCDIR)\CSBase.cs			\
+	  $(CSSRCDIR)\CSCollision.cs		\
+	  $(CSSRCDIR)\CSCreature.cs		\
+	  $(CSSRCDIR)\CSFileIO.cs		\
+	  $(CSSRCDIR)\CSFoundation.cs		\
+	  $(CSSRCDIR)\CSFramework.cs		\
+	  $(CSSRCDIR)\CSGraphics.cs		\
+	  $(CSSRCDIR)\CSHumanInterface.cs	\
+	  $(CSSRCDIR)\CSPhysics.cs
 
-all:		$(DLLS)
-		$(RUNSWIG)
+IFILES	= $(IFILEDIR)\Base.i			\
+	  $(IFILEDIR)\Collision.i		\
+	  $(IFILEDIR)\Creature.i		\
+	  $(IFILEDIR)\FileIO.i			\
+	  $(IFILEDIR)\Foundation.i		\
+	  $(IFILEDIR)\Framework.i		\
+	  $(IFILEDIR)\Graphics.i		\
+	  $(IFILEDIR)\HumanInterface.i		\
+	  $(IFILEDIR)\Physics.i
 
-$(DLLS):	$(SRCS)
+all:	dlls
+	$(RUNSWIG)
 
-$(SRCS):	$(IFILES) $(SWIG)
+dlls:	$(DLLDIR)\SprExport.dll	\
+	$(DLLDIR)\SprImport.dll	\
+	$(DLLDIR)\SprCSharp.dll
+
+$(DLLDIR)\SprExport.dll:	$(EXPSRCS)
+
+$(DLLDIR)\SprImport.dll:	$(IMPSRCS)
+
+$(DLLDIR)\SprCSharp.dll:	$(CSSRCS)
+
+$(EXPSRCS):	$(IFILES) $(SWIG)
+
+$(IMPSRCS):	$(IFILES) $(SWIG)
+
+$(CSSRCS):	$(IFILES) $(SWIG)
 
 $(IFILES):	
 

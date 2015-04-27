@@ -112,7 +112,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SprCSharp\SprCSharp.csproj">
+    <ProjectReference Include="..\SprCSharp\SprCSharp10.csproj">
       <Project>{618cee37-671c-4c06-9460-cee167a1d7ba}</Project>
       <Name>SprCSharp</Name>
     </ProjectReference>
