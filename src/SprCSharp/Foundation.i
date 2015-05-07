@@ -1,4 +1,5 @@
 #	Do not edit. RunSwig.bat will update this file.
+%ignore Spr::UTTimerIf::SetCallback;
 %module Foundation
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"

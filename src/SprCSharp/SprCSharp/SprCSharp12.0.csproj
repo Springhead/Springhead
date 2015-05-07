@@ -99,6 +99,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="wrapper.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SprImport\SprImport12.0.csproj">
+      <Project>{70aaf348-cc6a-483e-9a52-b4fbc7256e7a}</Project>
+      <Name>SprImport12.0</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

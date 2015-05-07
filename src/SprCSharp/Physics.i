@@ -1,5 +1,12 @@
 #	Do not edit. RunSwig.bat will update this file.
 %module Physics
+
+%ignore Spr::PHFemThermoIf::GetKMatInTet;
+%ignore Spr::PHFemMeshThermoIf::GetKMatInTet;
+%ignore Spr::PHIKActuatorIf::GetRawSolution;
+%ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
+%ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
+
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
 %include "../../include/base/Env.h"
