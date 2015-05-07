@@ -9,8 +9,8 @@ namespace SprCsSample {
     class Program {
         static void Main(string[] args) {
             PHSceneDesc descScene = new PHSceneDesc();
-            descScene.airResistanceRate = 0.5;
-            descScene.gravity = new Vec3d(0, 0, -4.5);
+            //descScene.airResistanceRate = 0.5;
+            //descScene.gravity = new Vec3d(0, 0, -4.5);
 
             Vec3d d = descScene.gravity;
             //System.Console.WriteLine(d.ToString());
