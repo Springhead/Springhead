@@ -44,6 +44,16 @@ void FWSkeletonSensor::PrepareSkeleton(int n) {
 		PHSkeletonIf* phSkel = phScene->CreateSkeleton();
 		phSkel->SetName("skelLeap");
 		phSkeletons.push_back(phSkel);
+
+		for (int j = 0; j<phSkel->NBones(); ++j) {
+			PHSolidIf* so1 = (bCreatePHSpring ? phSkel->GetBone(j)->GetProxySolid() : phSkel->GetBone(j)->GetSolid());
+			for (int k = 0; k < phSkel->NBones(); ++k) {
+				if (j != k) {
+					PHSolidIf* so2 = (bCreatePHSpring ? phSkel->GetBone(k)->GetProxySolid() : phSkel->GetBone(k)->GetSolid());
+					phScene->SetContactMode(so1, so2, PHSceneDesc::MODE_NONE);
+				}
+			}
+		}
 	}
 }
 
@@ -57,23 +67,24 @@ void FWSkeletonSensor::PrepareBone(PHSkeletonIf* phSkel, int n) {
 			so->SetDynamical(false);
 			so->SetMass(0.1);
 			so->SetInertia(Matrix3d::Unit() * 0.1);
-
-			// <!!>
-			PHSolidIf* soProxy = phScene->CreateSolid();
-			soProxy->SetName((std::string("soProxy") + std::string(phSkel->GetName())).c_str());
-			soProxy->SetDynamical(true);
-			soProxy->SetMass(0.1);
-			soProxy->SetInertia(Matrix3d::Unit() * 0.1);
-
-			PHSpringDesc descSpring;
-			PHSpringIf* spring = phScene->CreateJoint(so, soProxy, descSpring)->Cast();
-			spring->SetSpring(Vec3d(1,1,1) *  300);
-			spring->SetDamper(Vec3d(1,1,1) *    3);
-			spring->SetSpringOri(300);
-			spring->SetDamperOri(  3);
-
 			phBone->SetSolid(so);
-			phBone->SetProxySolid(soProxy);
+
+			if (bCreatePHSpring) {
+				PHSolidIf* soProxy = phScene->CreateSolid();
+				soProxy->SetName((std::string("soProxy") + std::string(phSkel->GetName())).c_str());
+				soProxy->SetDynamical(true);
+				soProxy->SetMass(0.1);
+				soProxy->SetInertia(Matrix3d::Unit() * 0.1);
+				phBone->SetProxySolid(soProxy);
+
+				PHSpringDesc descSpring;
+				PHSpringIf* spring = phScene->CreateJoint(so, soProxy, descSpring)->Cast();
+				spring->SetSpring(Vec3d(1, 1, 1) * 300);
+				spring->SetDamper(Vec3d(1, 1, 1) * 3);
+				spring->SetSpringOri(300);
+				spring->SetDamperOri(3);
+			}
+
 			if (bCreateCDShape) {
 				CDRoundConeDesc descRC;
 				descRC.length = 1e-2f;
@@ -81,15 +92,19 @@ void FWSkeletonSensor::PrepareBone(PHSkeletonIf* phSkel, int n) {
 				CDShapeIf* shape = phScene->GetSdk()->CreateShape(descRC);
 				shape->SetStaticFriction(1.0);  // <!!>
 				shape->SetDynamicFriction(1.0); // <!!>
-				soProxy->AddShape(shape);
 
-				// <!!>
-				// phScene->SetContactMode(soProxy, PHSceneDesc::MODE_NONE);
+				PHSolidIf* shapedSolid;
+				if (bCreatePHSpring) {
+					shapedSolid = phBone->GetProxySolid();
+				} else {
+					shapedSolid = phBone->GetSolid();
+				}
+				shapedSolid->AddShape(shape);
 
-				for (int j=0; j<phSkel->NBones(); ++j) {
-					PHSolidIf* soProxy2 = phSkel->GetBone(j)->GetProxySolid();
-					if (soProxy!=soProxy2) {
-						phScene->SetContactMode(soProxy, soProxy2, PHSceneDesc::MODE_NONE);
+				for (int k = 0; k<phScene->NSolids(); ++k) {
+					PHSolidIf* so2 = phScene->GetSolids()[k];
+					if ((shapedSolid != so2) && !(so2->IsDynamical())) {
+						phScene->SetContactMode(shapedSolid, so2, PHSceneDesc::MODE_NONE);
 					}
 				}
 			}

@@ -15,11 +15,11 @@ namespace Spr{
 void PHBone::SetLength(double length) {
 	if (length < 1e-3) { length = 1e-3; }
 	CDRoundConeIf* rc;
-	if (proxySolid) {
+	rc = solid->GetShape(0)->Cast();
+	if (!rc && proxySolid) {
 		rc = proxySolid->GetShape(0)->Cast();
-	} else {
-		rc = solid->GetShape(0)->Cast();
 	}
+
 	if (rc) {
 		if (abs(rc->GetLength() - length) > 1e-3) {
 			rc->SetLength(length);
