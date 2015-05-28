@@ -1,6 +1,19 @@
 #	Do not edit. RunSwig.bat will update this file.
+%ignore Spr::UTTimerIf::GetCallback;
 %ignore Spr::UTTimerIf::SetCallback;
+%ignore Spr::ObjectIf::Print;
+%ignore Spr::ObjectIf::PrintShort;
+%ignore Spr::ObjectIf::WriteStateR;
+%ignore Spr::ObjectIf::ReadStateR;
+%ignore Spr::ObjectIf::DumpObjectR;
 %module Foundation
+%include "../../include/SprBase.h"
+%include "../../include/Base/Env.h"
+%include "../../include/Foundation/SprObject.h"
+%include "../../include/Foundation/SprScene.h"
+%include "../../include/Foundation/SprUTTimer.h"
+%include "../Foundation/UTBaseType.h"
+/*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
 %include "../../include/base/Env.h"
@@ -25,3 +38,4 @@
 %include "../Foundation/UTSocket.h"
 %include "../Foundation/UTTimer.h"
 %include "../Foundation/UTTypeDesc.h"
+*/

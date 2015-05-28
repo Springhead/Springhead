@@ -1,5 +1,19 @@
 #	Do not edit. RunSwig.bat will update this file.
 %module Creature
+%include "../../include/SprBase.h"
+%include "../../include/Base/Env.h"
+%include "../../include/Foundation/SprObject.h"
+%include "../../include/Foundation/SprScene.h"
+%include "../../include/Creature/SprCRBody.h"
+%include "../../include/Creature/SprCRBone.h"
+%include "../../include/Creature/SprCREngine.h"
+%include "../../include/Creature/SprCRController.h"
+%include "../../include/Creature/SprCRCreature.h"
+%include "../../include/Creature/SprCRReachController.h"
+%include "../../include/Creature/SprCRSdk.h"
+%include "../../include/Creature/SprCRTouchSensor.h"
+%include "../../include/Creature/SprCRVisualSensor.h"
+/*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
 %include "../../include/base/Env.h"
@@ -129,3 +143,4 @@
 %include "../Creature/CRTouchSensor.h"
 %include "../Creature/CRTrajectoryController.h"
 %include "../Creature/CRVisualSensor.h"
+*/

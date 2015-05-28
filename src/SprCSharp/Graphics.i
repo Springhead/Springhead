@@ -1,5 +1,22 @@
 #	Do not edit. RunSwig.bat will update this file.
+%ignore Spr::GRDeviceIf::Print;
 %module Graphics
+%include "../../include/SprBase.h"
+%include "../../include/Base/Env.h"
+%include "../../include/Base/Affine.h"
+%include "../../include/Foundation/SprObject.h"
+%include "../../include/Foundation/SprScene.h"
+%include "../../include/Collision/SprCDShape.h"
+%include "../../include/Graphics/SprGRFrame.h"
+%include "../../include/Graphics/SprGRBlendMesh.h"
+%include "../../include/Graphics/SprGRMesh.h"
+%include "../../include/Graphics/SprGRRender.h"
+%include "../../include/Graphics/SprGRScene.h"
+%include "../../include/Graphics/SprGRSdk.h"
+%include "../../include/Graphics/SprGRShader.h"
+%include "../../include/Graphics/SprGRSphere.h"
+%include "../../include/Graphics/SprGRVertex.h"
+/*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
 %include "../../include/base/Env.h"
@@ -43,3 +60,4 @@
 %include "../Graphics/GRScene.h"
 %include "../Graphics/GRSdk.h"
 %include "../Graphics/GRSphere.h"
+*/
