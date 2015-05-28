@@ -1,5 +1,35 @@
 #	Do not edit. RunSwig.bat will update this file.
+%ignore Spr::FWSceneIf::AddHumanInterface;
+%ignore Spr::FWApp::timers;
 %module Framework
+%include "../../include/SprBase.h"
+%include "../../include/Base/Env.h"
+%include "../../include/Foundation/SprObject.h"
+%include "../../include/Foundation/SprScene.h"
+%include "../../include/Foundation/SprUTTimer.h"
+%include "../../include/Collision/SprCDShape.h"
+%include "../../include/HumanInterface/SprHIBase.h"
+%include "../../include/HumanInterface/SprHIDevice.h"
+%include "../../include/HumanInterface/SprHIKeyMouse.h"
+%include "../../include/HumanInterface/SprHISkeletonSensor.h"
+%include "../../include/Physics/SprPHFemMeshNew.h"
+%include "../../include/Physics/SprPHSolid.h"
+%include "../../include/Physics/SprPHHaptic.h"
+%include "../../include/Physics/SprPHScene.h"
+%include "../../include/Base/BaseUtility.h"
+%include "../../include/Framework/SprFWApp.h"
+%include "../../include/Framework/SprFWEditor.h"
+%include "../../include/Framework/SprFWObject.h"
+%include "../../include/Framework/SprFWOpObj.h"
+%include "../../include/Framework/SprFWFemMesh.h"
+%include "../../include/Framework/SprFWFemMeshNew.h"
+%include "../../include/Framework/SprFWHapticPointer.h"
+%include "../../include/Framework/SprFWScene.h"
+%include "../../include/Framework/SprFWSdk.h"
+%include "../../include/Framework/SprFWSkeletonSensor.h"
+%include "../../include/Framework/SprFWWin.h"
+%include "../../include/Graphics/SprGRScene.h"
+/*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
 %include "../../include/base/Env.h"
@@ -51,3 +81,4 @@
 %include "../Framework/FWSkeletonSensor.h"
 %include "../Framework/FWSprTetgen.h"
 %include "../Framework/FWWin.h"
+*/

@@ -1,5 +1,10 @@
 #	Do not edit. RunSwig.bat will update this file.
 %module Collision
+%include "../../include/SprBase.h"
+%include "../../include/Base/Env.h"
+%include "../../include/Foundation/SprObject.h"
+%include "../../include/Collision/SprCDShape.h"
+/*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
 %include "../../include/base/Env.h"
@@ -40,3 +45,4 @@
 %include "../Collision/CDShape.h"
 %include "../Collision/CDSphere.h"
 %include "../Collision/Collision.h"
+*/

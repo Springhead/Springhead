@@ -1,5 +1,23 @@
 #	Do not edit. RunSwig.bat will update this file.
 %module HumanInterface
+%include "../../include/SprBase.h"
+%include "../../include/Base/Env.h"
+%include "../../include/Foundation/SprObject.h"
+%include "../../include/Foundation/SprScene.h"
+%include "../../include/HumanInterface/SprHIBase.h"
+%include "../../include/HumanInterface/SprHIDevice.h"
+%include "../../include/HumanInterface/SprHIDRUsb.h"
+%include "../../include/HumanInterface/SprHIJoyStick.h"
+%include "../../include/HumanInterface/SprHIKeyMouse.h"
+%include "../../include/HumanInterface/SprHISkeletonSensor.h"
+%include "../../include/HumanInterface/SprHILeap.h"
+%include "../../include/HumanInterface/SprHINovint.h"
+%include "../../include/HumanInterface/SprHISdk.h"
+%include "../../include/HumanInterface/SprHISpaceNavigator.h"
+%include "../../include/HumanInterface/SprHISpidar.h"
+%include "../../include/HumanInterface/SprHITrackball.h"
+%include "../../include/HumanInterface/SprHIXbox360Controller.h"
+/*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
 %include "../../include/base/Env.h"
@@ -67,3 +85,4 @@
 %include "../HumanInterface/HITrackball.h"
 %include "../HumanInterface/HIXbox360Controller.h"
 %include "../HumanInterface/HumanInterface.h"
+*/

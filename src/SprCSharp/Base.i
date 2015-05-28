@@ -1,15 +1,16 @@
 %module Base
 
-%begin %{
 #include "Base/TQuaternion.h"
 #include "Base/Affine.h"
 #include <string>
 
+/*
 using namespace std;
-%}
+*/
 
 namespace Spr{
 
+/*
 %feature("not_newable","1");
 	class IfInfo{
 	public:
@@ -18,6 +19,7 @@ namespace Spr{
 	class ostream{};
 	class istream{};
 %feature("not_newable","");
+*/
 
 }//namespace
 

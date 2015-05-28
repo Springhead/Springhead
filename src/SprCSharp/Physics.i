@@ -1,12 +1,31 @@
 #	Do not edit. RunSwig.bat will update this file.
 %module Physics
-
 %ignore Spr::PHFemThermoIf::GetKMatInTet;
 %ignore Spr::PHFemMeshThermoIf::GetKMatInTet;
 %ignore Spr::PHIKActuatorIf::GetRawSolution;
 %ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
 %ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
-
+%include "../../include/SprBase.h"
+%include "../../include/Base/Env.h"
+%include "../../include/Foundation/SprObject.h"
+%include "../../include/Foundation/SprScene.h"
+%include "../../include/Collision/SprCDShape.h"
+%include "../../include/Physics/SprPHDef.h"
+%include "../../include/Physics/SprPHEngine.h"
+%include "../../include/Physics/SprPHFemMesh.h"
+%include "../../include/Physics/SprPHFemMeshNew.h"
+%include "../../include/Physics/SprPHSolid.h"
+%include "../../include/Physics/SprPHHaptic.h"
+%include "../../include/Physics/SprPHIK.h"
+%include "../../include/Physics/SprPHJoint.h"
+%include "../../include/Physics/SprPHJointLimit.h"
+%include "../../include/Physics/SprPHJointMotor.h"
+%include "../../include/Physics/SprPHNodeHandlers.h"
+%include "../../include/Physics/SprPHOpObj.h"
+%include "../../include/Physics/SprPHScene.h"
+%include "../../include/Physics/SprPHSdk.h"
+%include "../../include/Physics/SprPHSkeleton.h"
+/*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
 %include "../../include/base/Env.h"
@@ -116,3 +135,4 @@
 %include "../Physics/PHTreeNode.h"
 %include "../Physics/Physics.h"
 %include "../Physics/RingBuffer.h"
+*/

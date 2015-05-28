@@ -1,5 +1,13 @@
 #	Do not edit. RunSwig.bat will update this file.
 %module FileIO
+%include "../../include/SprBase.h"
+%include "../../include/Base/Env.h"
+%include "../../include/Foundation/SprObject.h"
+%include "../../include/Foundation/SprScene.h"
+%include "../../include/FileIO/SprFIFile.h"
+%include "../../include/FileIO/SprFIImport.h"
+%include "../../include/FileIO/SprFISdk.h"
+/*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
 %include "../../include/base/Env.h"
@@ -40,3 +48,4 @@
 %include "../FileIO/FISaveContext.h"
 %include "../FileIO/FISdk.h"
 %include "../FileIO/FISpirit.h"
+*/
