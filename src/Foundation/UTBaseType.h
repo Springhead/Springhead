@@ -24,16 +24,9 @@ struct Matrix3d{ double data[9]; };
 struct Affinef{ float data[16]; };
 struct Affined{ double data[16]; };
 // for C#
-#if 0
-struct TAffine2_float { float xx,xy,xz, yx,yy,yz, px,py,pz; };
-struct TAffine2_double { double xx,xy,xz, yx,yy,yz, px,py,pz; };
-struct TAffine_float { float xx,xy,xz,xw, yx,yy,yz,yw, zx,zy,zz,zw, px,py,pz,pw; };
-struct TAffine_double { double xx,xy,xz,xw, yx,yy,yz,yw, zx,zy,zz,zw, px,py,pz,pw; };
-#endif
 struct Vec2i{ int x; int y; };
 struct Vec3i{ int x; int y; int z; };
 struct Vec6d{ double vx; double vy; double vz; double wx; double wy; double wz; };
 struct Curve3f{};
-struct IfInfo {};
 }
 #endif
