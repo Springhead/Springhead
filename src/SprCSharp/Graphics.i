@@ -1,5 +1,6 @@
 #	Do not edit. RunSwig.bat will update this file.
 %ignore Spr::GRDeviceIf::Print;
+%ignore Spr::GRSceneIf::CreateVisual;
 %module Graphics
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"

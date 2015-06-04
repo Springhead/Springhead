@@ -1,4 +1,6 @@
 #	Do not edit. RunSwig.bat will update this file.
+%ignore Spr::FISdkIf::CreateFile;
+%ignore Spr::FISdkIf::CreateSdk;
 %module FileIO
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"

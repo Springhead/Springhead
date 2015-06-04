@@ -1,10 +1,14 @@
 #	Do not edit. RunSwig.bat will update this file.
 %module Physics
+%ignore Spr::PHBallJointIf::CreateLimit;
 %ignore Spr::PHFemThermoIf::GetKMatInTet;
 %ignore Spr::PHFemMeshThermoIf::GetKMatInTet;
 %ignore Spr::PHIKActuatorIf::GetRawSolution;
 %ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
 %ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
+%ignore Spr::PHSceneIf::CreateJoint;
+%ignore Spr::PHSceneIf::CreateIKActuator;
+%ignore Spr::PHSdkIf::CreateShape;
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"
 %include "../../include/Foundation/SprObject.h"

@@ -122,5 +122,23 @@ namespace SprCs {
             set { SprExport.Spr_array_set_double(_ptr, index, value); }
         }
     }
+
+    //  Followings are not wrappers.
+    //    IfInfo
+    public class IfInfo : Object {
+        protected IfInfo() {}
+    }
+    //    TAffine
+    public class TAffine2<T> {
+        T xx, xy, xz;
+        T yx, yy, yz;
+        T px, py, pz;
+    }
+    public class TAffine<T> {
+        T xx, xy, xz, xw;
+        T yx, yy, yz, yw;
+        T zx, zy, zz, zw;
+        T px, py, pz, pw;
+    }
 }
 
