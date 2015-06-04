@@ -1,4 +1,8 @@
 #	Do not edit. RunSwig.bat will update this file.
+%ignore Spr::CRCreatureIf::CreateBody;
+%ignore Spr::CRCreatureIf::CreateEngine;
+%ignore Spr::CRSdkIf::CreateCreature;
+%ignore Spr::CRSdk::CreateSdk;
 %module Creature
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"

@@ -19,13 +19,21 @@ struct Quaterniond{ double x; double y; double z; double w;};
 //struct Posed{ Quaterniond Ori(); Vec3d Pos(); };
 struct Posef{ float w; float x; float y; float z; float px; float py; float pz;};
 struct Posed{ double w; double x; double y; double z; double px; double py; double pz;};
+#if 0
 struct Matrix3f{ float data[9]; };
 struct Matrix3d{ double data[9]; };
 struct Affinef{ float data[16]; };
 struct Affined{ double data[16]; };
+#else
+struct Matrix3f{ float xx,xy,xz, yx,yy,yz, zx,zy,zz; };
+struct Matrix3d{ double xx,xy,xz, yx,yy,yz, zx,zy,zz; };
+struct Affinef{ float xx,xy,xz,xw, yx,yy,yz,yw, zx,zy,zz,zw, px,py,pz,pw; };
+struct Affined{ double xx,xy,xz,xw, yx,yy,yz,yw, zx,zy,zz,zw, px,py,pz,pw; };
+#endif
 // for C#
 struct Vec2i{ int x; int y; };
 struct Vec3i{ int x; int y; int z; };
+struct Vec4i{ int x; int y; int z; int w; };
 struct Vec6d{ double vx; double vy; double vz; double wx; double wy; double wz; };
 struct Curve3f{};
 }
