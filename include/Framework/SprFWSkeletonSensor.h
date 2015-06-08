@@ -28,6 +28,8 @@ struct FWSkeletonSensorDesc {
 	bool bCreatePHSolid;
 	// 自動でPHSolidを作る際に自動でCDShapeも作成する
 	bool bCreateCDShape;
+	// 自動でPHSolidを作る際に親子関係に基いてPHJointも作成する
+	bool bCreatePHJoint;
 	// 自動でPHSolidを作る際に自動で２つのPHSolidを作り間をPHSpringでつなぐ
 	bool bCreatePHSpring;
 	// 自動で作るRoundConeの直径（＝指の太さ）
@@ -37,6 +39,7 @@ struct FWSkeletonSensorDesc {
 		bCreatePHSkeleton = true;
 		bCreatePHSolid    = true;
 		bCreateCDShape    = true;
+		bCreatePHJoint    = false;
 		bCreatePHSpring   = false;
 		radius            = Vec2d(0.7, 0.7);
 	}

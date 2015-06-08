@@ -21,14 +21,20 @@
 #include <vector>
 
 namespace Spr{;
+struct FWSkeletonInfo {
+	int                 id, invisibleCnt;
+	UTRef<PHSkeletonIf> phSkeleton;
+	FWSkeletonInfo() : id(-1), invisibleCnt(0), phSkeleton(NULL) {}
+};
 
 // HISkeletonSensorとPHSkeletonをつなぐひと
 class FWSkeletonSensor: public FWSkeletonSensorDesc, public SceneObject {
 public:
 	SPR_OBJECTDEF(FWSkeletonSensor);
+	ACCESS_DESC(FWSkeletonSensor);
 
 	HISkeletonSensorIf*        sensor;
-	std::vector<PHSkeletonIf*> phSkeletons;
+	std::vector<FWSkeletonInfo> skeletons;
 
 	// ----- ----- ----- ----- -----
 
@@ -48,38 +54,53 @@ public:
 	HISkeletonSensorIf* GetSensor() { return sensor; }
 
 	/// スケルトン情報を返す
-	int NSkeleton() { return (int) phSkeletons.size(); }
-	PHSkeletonIf* GetSkeleton(int i) { return phSkeletons[i]; }
+	int NSkeleton() const {
+		int cnt = 0;
+		for (size_t i = 0; i < skeletons.size(); ++i) {
+			if (skeletons[i].id >= 0) { cnt++; }
+		}
+		return cnt;
+	}
+	PHSkeletonIf* GetSkeleton(int i) {
+		int cnt = 0;
+		for (size_t i = 0; i < skeletons.size(); ++i) {
+			if (skeletons[i].id >= 0) { cnt++; }
+			if (cnt == i) { return skeletons[i].phSkeleton; }
+		}
+		return NULL;
+	}
 
 	// ----- ----- ----- ----- -----
 	// ベースクラスのAPI関数
 	
 	virtual bool        AddChildObject(ObjectIf* o) {
-		if (DCAST(HISkeletonSensorIf,o)) { sensor = o->Cast();             return true; }
-		if (DCAST(PHSkeletonIf,o))       { phSkeletons.push_back(o->Cast()); return true; }
+		if (DCAST(HISkeletonSensorIf, o)) { sensor = o->Cast();             return true; }
+		if (DCAST(PHSkeletonIf, o))       { FWSkeletonInfo si; si.phSkeleton = o->Cast();  skeletons.push_back(si); return true; }
 		return false;
 	}
 	virtual ObjectIf*   GetChildObject(size_t pos)  {
 		if (sensor==NULL) {
-			return phSkeletons[pos];
+			return GetSkeleton(pos);
 		} else {
 			if (pos==0) {
 				return sensor;
 			} else {
-				return phSkeletons[pos-1];
+				return GetSkeleton(pos-1);
 			}
 		}
 	}
 	virtual size_t NChildObject() const {
-		return( ((sensor==NULL) ? 0 : 1)+phSkeletons.size() );
+		return( ((sensor==NULL) ? 0 : 1) + (size_t)(NSkeleton()) );
 	}
 
 	// ----- ----- ----- ----- -----
 	// 非API関数
 
-	void PrepareSkeleton(int n);
+	void ProcessSkeleton(HISkeletonIf* hiSkel, int i);
+	void AddSkeleton();
+	void FreezeSkeleton(int i);
+	void UnfreezeSkeleton(int i);
 	void PrepareBone(PHSkeletonIf* phSkel, int n);
-
 
 };
 

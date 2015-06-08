@@ -114,6 +114,7 @@ protected:\
 	bool	bCreatePHSkeleton;	\
 	bool	bCreatePHSolid;	\
 	bool	bCreateCDShape;	\
+	bool	bCreatePHJoint;	\
 	bool	bCreatePHSpring;	\
 	Vec2d	radius;	\
 public:\
@@ -122,6 +123,7 @@ public:\
 		bCreatePHSkeleton = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSkeleton;	\
 		bCreatePHSolid = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSolid;	\
 		bCreateCDShape = ((FWSkeletonSensorDesc*)ptr)->bCreateCDShape;	\
+		bCreatePHJoint = ((FWSkeletonSensorDesc*)ptr)->bCreatePHJoint;	\
 		bCreatePHSpring = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSpring;	\
 		radius = ((FWSkeletonSensorDesc*)ptr)->radius;	\
 		AfterSetDesc();	\
@@ -131,6 +133,7 @@ public:\
 		((FWSkeletonSensorDesc*)ptr)->bCreatePHSkeleton = bCreatePHSkeleton;	\
 		((FWSkeletonSensorDesc*)ptr)->bCreatePHSolid = bCreatePHSolid;	\
 		((FWSkeletonSensorDesc*)ptr)->bCreateCDShape = bCreateCDShape;	\
+		((FWSkeletonSensorDesc*)ptr)->bCreatePHJoint = bCreatePHJoint;	\
 		((FWSkeletonSensorDesc*)ptr)->bCreatePHSpring = bCreatePHSpring;	\
 		((FWSkeletonSensorDesc*)ptr)->radius = radius;	\
 		return true;	\

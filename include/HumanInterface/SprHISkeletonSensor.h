@@ -51,6 +51,9 @@ struct HISkeletonIf: public ObjectIf{
 
 	/// トラッキング状況
 	bool IsTracked();
+
+	/// トラッキングID
+	int GetTrackID();
 };
 
 /**	@brief SkeletonSensorのインタフェース */
