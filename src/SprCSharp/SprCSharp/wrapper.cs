@@ -123,22 +123,30 @@ namespace SprCs {
         }
     }
 
-    //  Followings are not wrappers.
-    //    IfInfo
-    public class IfInfo : Object {
-        protected IfInfo() {}
-    }
+    //  Followings are not wrappers, but ...
     //    TAffine
     public class TAffine2<T> {
-        T xx, xy, xz;
-        T yx, yy, yz;
-        T px, py, pz;
+/*
+	public IntPtr _this;
+	private bool _flag;
+	public TAffine2() { _this = SprExport.Spr_new_TAffine2(T t); _flag = true; }
+	~TAffine2() { if (_flag) SprExport.Spr_delete_TAffine2(_this); }
+*/
+        public T xx, xy, xz;
+        public T yx, yy, yz;
+        public T px, py, pz;
     }
     public class TAffine<T> {
-        T xx, xy, xz, xw;
-        T yx, yy, yz, yw;
-        T zx, zy, zz, zw;
-        T px, py, pz, pw;
+/*
+	public IntPtr _this;
+	private bool _flag;
+	public TAffine() { _this = SprExport.Spr_new_TAffine(T t); _flag = true; }
+	~TAffine() { if (_flag) SprExport.Spr_delete_TAffine(_this); }
+*/
+        public T xx, xy, xz, xw;
+        public T yx, yy, yz, yw;
+        public T zx, zy, zz, zw;
+        public T px, py, pz, pw;
     }
 }
 
