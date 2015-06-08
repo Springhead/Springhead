@@ -20,11 +20,13 @@ class PHBone : public SceneObject{
 	std::vector<PHBoneIf*> children;
 
 public:
+	Quaterniond lastJointPose;
+
 	SPR_OBJECTDEF(PHBone);
 
 	/** @brief デフォルトコンストラクタ
 	*/
-	PHBone(){ solid=NULL; proxySolid=NULL; joint=NULL; parent=NULL; lastPose = Posed(); }
+	PHBone(){ solid = NULL; proxySolid = NULL; joint = NULL; parent = NULL; lastPose = Posed(); lastJointPose = Quaterniond(); }
 
 	/** @brief Solidを設定する
 	 */

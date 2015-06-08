@@ -84,8 +84,8 @@ void FWSkeletonSensor::ProcessSkeleton(HISkeletonIf* hiSkel, int i) {
 					PHBallJointIf* jo = phBone->GetJoint()->Cast();
 					if (!jo) {
 						PHBallJointDesc desc;
-						desc.spring = 10000;
-						desc.damper =   100;
+						desc.spring = 1e+3;
+						desc.damper = 1e+1;
 						desc.poseSocket.Pos().Z() = -hiParentBone->GetLength() / 2.0;
 						desc.posePlug.Pos().Z()   =  hiBone->GetLength() / 2.0;
 						jo = phScene->CreateJoint(phParentBone->GetSolid(), phBone->GetSolid(), desc)->Cast();
@@ -95,7 +95,11 @@ void FWSkeletonSensor::ProcessSkeleton(HISkeletonIf* hiSkel, int i) {
 					// 次にhiBoneとhiParentBoneの姿勢差に基いて関節の目標角度をセット
 					Quaterniond qP; qP.RotationArc(Vec3d(0, 0, 1), hiParentBone->GetDirection().unit());
 					Quaterniond qC; qC.RotationArc(Vec3d(0, 0, 1), hiBone->GetDirection().unit());
-					jo->SetTargetPosition(qP.Inv() * qC);
+					Quaterniond q = qP.Inv() * qC;
+					Vec3d w = (q * (DCAST(PHBone, phBone)->lastJointPose.Inv())).RotationHalf() / phScene->GetTimeStep();
+					jo->SetTargetPosition(q);
+					jo->SetTargetVelocity(w);
+					DCAST(PHBone, phBone)->lastJointPose = q;
 
 					// 子剛体のDynamicalをONにする
 					phBone->GetSolid()->SetDynamical(true);
