@@ -53,6 +53,10 @@ public:
 
 	float grabStrength;
 
+	int trackID;
+
+	bool bTracked;
+
 	// ----- ----- ----- ----- -----
 	// API関数
 
@@ -72,7 +76,9 @@ public:
 	/// 掴んでる度を返す
 	virtual float GetGrabStrength() { return grabStrength; }
 	/// トラッキング状況
-	bool IsTracked() { return false; }
+	bool IsTracked() { return bTracked; }
+	/// トラッキングID
+	int GetTrackID() { return trackID; }
 
 	// ----- ----- ----- ----- -----
 	// 非API関数

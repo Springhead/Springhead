@@ -62,12 +62,18 @@ void HILeap::Update(float dt) {
 		GetLeapFrame(leap, 0, &frame);
 
 		// Skeletonの不足分を用意
-		PrepareSkeleton((int)frame.leapHands.size());
+		PrepareSkeleton((int)frame.recHandsNum);
+		for (int i = 0; i < skeletons.size(); ++i) {
+			DCAST(HISkeleton, skeletons[i])->bTracked = false;
+		}
 
-		for (int h=0; h<(int)frame.leapHands.size(); ++h) {
+		for (int h = 0; h<(int)frame.recHandsNum; ++h) {
 			LeapHand hand = frame.leapHands[h];
 
 			HISkeleton* skel = skeletons[h]->Cast();
+
+			skel->trackID  = hand.originalLeapHandID;
+			skel->bTracked = hand.isTracked;
 
 			// 手全体の位置姿勢をセット
 			skel->pose.Pos() = (rotation * hand.position * scale) + center;
@@ -84,8 +90,17 @@ void HILeap::Update(float dt) {
 					LeapBone bone = hand.leapFingers[f].bones[(3 - b)];
 					
 					DCAST(HIBone, skel->bones[cnt])->position  = (rotation * bone.position * scale) + center;
-					DCAST(HIBone, skel->bones[cnt])->direction = (rotation * bone.direction).unit();
+					if (bone.direction.norm() < 1e-5) {
+						// DCAST(HIBone, skel->bones[cnt])->direction = skel->pose.Ori() * Vec3d(0, 0, 1);
+						DCAST(HIBone, skel->bones[cnt])->direction = Vec3d(0, 0, 1);
+					} else {
+						DCAST(HIBone, skel->bones[cnt])->direction = (rotation * bone.direction).unit();
+					}
 					DCAST(HIBone, skel->bones[cnt])->length    = bone.length * scale;
+
+					if ((f!=0 && b < nUseFingers-1) || (f==0 && b < nUseFingers-2)) {
+						DCAST(HIBone, skel->bones[cnt])->parent = skel->bones[cnt+1];
+					}
 
 					cnt++;
 				}

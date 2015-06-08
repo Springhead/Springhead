@@ -54,6 +54,7 @@ struct LeapHand {
 	float grabStrength;
 	inline int getRecFingersNum() { return recFingersNum; }
 
+	bool isTracked;
 	int originalLeapHandID;
 	int bufID;
 
