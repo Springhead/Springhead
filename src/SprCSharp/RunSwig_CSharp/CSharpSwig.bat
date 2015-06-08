@@ -47,7 +47,7 @@ set PATH=%SWIGPATH%;%PATH%
 :: 使用するプログラム名
 ::
 set SWIG=swig
-set ARGS=-sprcs -c++ -I%SWIGPATH%\Lib -w305,312,319,325,401,402
+set ARGS=-sprcs -DSWIG_CS_SPR -c++ -I%SWIGPATH%\Lib -w305,312,319,325,401,402
 
 :: ----------
 ::  処理開始
