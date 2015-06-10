@@ -29,7 +29,7 @@ set SRCDIR=%TOPDIR%\src
 set INCDIR=%TOPDIR%\include
 set ETCDIR=%SRCDIR%\RunSwig
 
-set CSBASE=..
+set CSBASE=.
 set CS_SRC=%CSBASE%/SprCSharp
 set CS_IMP=%CSBASE%/SprImport
 set CS_EXP=%CSBASE%/SprExport
@@ -87,6 +87,15 @@ set PROJECTS=Base
 for /f "tokens=1,*" %%m in (%ETCDIR%\%PROJFILE%) do set PROJECTS=!PROJECTS! %%m
 if %DEBUG% == 1 echo Projects are: %PROJECTS%
 
+:: ------------------------------
+::  .i ファイルの一覧を作成
+:: ------------------------------
+set IFILES=
+for %%p in (%PROJECTS%) do (
+    set IFILES=!IFILES! ./%%p.i
+)
+set IFILES=%IFILES:~1%
+
 :: ----------
 ::  処理開始
 :: ----------
@@ -94,7 +103,7 @@ for %%p in (%PROJECTS%) do (
     echo   Project: %%p
     set MKFILE=%MAKEFILE%.%%p
     call :collect_headers %%p
-    call :make_makefile %%p ..\!MKFILE! "!INCHDRS!" "!SRCHDRS!"
+    call :make_makefile %%p ..\!MKFILE! "!INCHDRS!" "!SRCHDRS!" "%IFILES%"
     cd ..
     cmd /c %MAKE% -f !MKFILE!
     cd %CWD%
@@ -145,21 +154,24 @@ exit /b
     setlocal enabledelayedexpansion
     set MODULE=%1
     set MKFILE=%2
-    set INCFILES=%~3
-    set SRCFILES=%~4
+    set INCHDRS=%~3
+    set SRCHDRS=%~4
+    set INTFILES=%~5
     if %DEBUG% == 1 (
         echo MODULE   [%MODULE%]
         echo MKFILE   [%MKFILE%]
-        echo INCFILES [%INCFILES%]
-        echo SRCFILES [%SRCFILES%]
+        echo INCHDRS  [%INCHDRS%]
+        echo SRCHDRS  [%SRCHDRS%]
+        echo INTFILES [%INTFILES%]
     )
 
     set TARGET_SRC=%CS_SRC%/CS%MODULE%.cs
-    set TARGET_IMP=%CS_IMP%/CS%MODULE%.cs
-    set TARGET_EXP=%CS_EXP%/CS%MODULE%.cpp
-    set TARGET_ALL=%TARGET_SRC% %TARGET_IMP% %TARGET_EXP%
+    set TARGET_ALL=%TARGET_SRC%
+    rem set TARGET_IMP=%CS_IMP%/CS%MODULE%.cs
+    rem set TARGET_EXP=%CS_EXP%/CS%MODULE%.cpp
+    rem set TARGET_ALL=%TARGET_SRC% %TARGET_IMP% %TARGET_EXP%
 
-    set DEPENDENCIES=%INCFILES% %SRCFILES%
+    set DEPENDENCIES=%INCHDRS% %SRCHDRS% %INTFILES%
     if %DEBUG% == 1 (
         echo TARGET       [%TARGET%]
         echo DEPENDENCIES [%DEPENDENCIES%]
@@ -168,15 +180,33 @@ exit /b
     echo #  Do not edit. RunSwig_CSharp.bat will update this file.   > %MKFILE%
     echo #  File: %MKFILE%	>> %MKFILE%
     echo.			>> %MKFILE%
+    echo INCHDRS=\>> %MKFILE%
+    for %%f in (%INCHDRS%) do (
+        echo %%f \>> %MKFILE%
+    )
+    echo.			>> %MKFILE%
+    echo SRCHDRS=\>> %MKFILE%
+    for %%f in (%SRCHDRS%) do (
+        echo %%f \>> %MKFILE%
+    )
+    echo.			>> %MKFILE%
+    echo INTFILES=\>> %MKFILE%
+    for %%f in (%INTFILES%) do (
+        echo %%f \>> %MKFILE%
+    )
+    echo.			>> %MKFILE%
+
     echo all:	%TARGET_ALL%    >> %MKFILE%
-    echo %TARGET_SRC%:	%TARGET_IMP%	>> %MKFILE%
-    echo %TARGET_IMP%:	%TARGET_EXP%	>> %MKFILE%
-    echo %TARGET_EXP%:	%DEPENDENCIES%	>> %MKFILE%
+    echo.			>> %MKFILE%
+    echo %TARGET_SRC%:	$(INCHDRS) $(SRCHDRS) $(INTFILES)>> %MKFILE%
     echo.	call %SWIG% %MODULE%	>> %MKFILE%
     echo.				>> %MKFILE%
-    for %%f in (%DEPENDENCIES%) do (
-        echo %%f:	    >> %MKFILE%
-    )
+    echo $(INCHDRS):			>> %MKFILE%
+    echo.				>> %MKFILE%
+    echo $(SRCHDRS):			>> %MKFILE%
+    echo.				>> %MKFILE%
+    echo $(INTFILES):			>> %MKFILE%
+    echo.				>> %MKFILE%
     endlocal
 exit /b
 
