@@ -4,6 +4,8 @@
 %ignore Spr::HISdkIf::FindRealDevice;
 %ignore Spr::HISdkIf::RentVirtualDevice;
 %ignore Spr::HISdkIf::CreateHumanInterface;
+//?
+%ignore Spr::HISkeletonIf::GetTrackID;
 %module HumanInterface
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"

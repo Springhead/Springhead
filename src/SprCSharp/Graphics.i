@@ -1,6 +1,21 @@
 #	Do not edit. RunSwig.bat will update this file.
 %ignore Spr::GRDeviceIf::Print;
+%ignore Spr::GRFrameIf::CalcBBox;
+%ignore Spr::GRFrameIf::GetTransform;
+%ignore Spr::GRFrameIf::GetWorldTransform;
+%ignore Spr::GRFrameIf::SetTransform;
+%ignore Spr::GRRenderBaseIf::GetModelMatrix;
+%ignore Spr::GRRenderBaseIf::GetViewMatrix;
+%ignore Spr::GRRenderBaseIf::GetProjectionMatrix;
+%ignore Spr::GRRenderBaseIf::MultModelMatrix;
+%ignore Spr::GRRenderBaseIf::SetBlendMatrix;
+%ignore Spr::GRRenderBaseIf::SetModelMatrix;
+%ignore Spr::GRRenderBaseIf::SetViewMatrix;
+%ignore Spr::GRRenderBaseIf::SetProjectionMatrix;
 %ignore Spr::GRSceneIf::CreateVisual;
+%ignore Spr::GRFrameTransformMatrix::transform;
+%ignore Spr::GRFrameDesc::transform;
+%ignore Spr::GRSkinWeightDesc::offset;
 %module Graphics
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"
