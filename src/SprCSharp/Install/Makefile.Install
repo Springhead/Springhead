@@ -1,0 +1,69 @@
+# ------------------------------------------------------------------------------
+#  Arguments:
+#	PROJDIR=dir		  Project directory
+#	VERS={ 10 | 12.0 }	  Visual Studio version
+#	PLAT={ x86 | x64 }	  build platform
+#	CONF={ Debug | Release }  build configuration { Debug | Release }
+# ------------------------------------------------------------------------------
+DEBUG = 1
+
+!IF "$(VERS)" == ""
+VERS = 12.0
+!ENDIF
+!IF "$(PLAT)" == ""
+PLAT = x86
+!ENDIF
+!IF "$(CONF)" == ""
+CONF = Release
+!ENDIF
+
+!IF "$(PLAT)" == "x86"
+BINCONF	= win32
+!ELSE
+BINCONF	= win64
+!ENDIF
+
+BLDDIR	= $(PROJDIR)..\$(VERS)\bin\$(PLAT)\$(CONF)
+INSDIR	= $(PROJDIR)..\..\..\bin\$(BINCONF)
+
+!MESSAGE Using parameters ...
+!MESSAGE    VERS: [$(VERS)]
+!MESSAGE    PLAT: [$(PLAT)]
+!MESSAGE    CONF: [$(CONF)]
+!MESSAGE    BLDDIR: [$(BLDDIR)]
+!MESSAGE    INSDIR: [$(INSDIR)]
+
+BLDEXPd	= $(BLDDIR)\SprExport.dll
+BLDEXPp	= $(BLDDIR)\SprExport.pdb
+BLDIMPd	= $(BLDDIR)\SprImport.dll
+BLDIMPp	= $(BLDDIR)\SprImport.pdb
+BLDCSPd	= $(BLDDIR)\SprCSharp.dll
+BLDCSPp	= $(BLDDIR)\SprCSharp.pdb
+
+INSEXPd	= $(INSDIR)\SprExport.dll
+INSEXPp	= $(INSDIR)\SprExport.pdb
+INSIMPd	= $(INSDIR)\SprImport.dll
+INSIMPp	= $(INSDIR)\SprImport.pdb
+INSCSPd	= $(INSDIR)\SprCSharp.dll
+INSCSPp	= $(INSDIR)\SprCSharp.pdb
+
+all:	$(INSEXPd) $(INSEXPp) $(INSIMPd) $(INSIMPp) $(INSCSPd) $(INSCSPp)
+
+$(INSEXPd):	$(BLDEXPd)
+		copy $** $@
+
+$(INSEXPp):	$(BLDEXPp)
+		copy $** $@
+
+$(INSIMPd):	$(BLDIMPd)
+		copy $** $@
+
+$(INSIMPp):	$(BLDIMPp)
+		copy $** $@
+
+$(INSCSPd):	$(BLDCSPd)
+		copy $** $@
+
+$(INSCSPp):	$(BLDCSPp)
+		copy $** $@
+
