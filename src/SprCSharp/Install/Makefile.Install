@@ -50,20 +50,26 @@ INSCSPp	= $(INSDIR)\SprCSharp.pdb
 all:	$(INSEXPd) $(INSEXPp) $(INSIMPd) $(INSIMPp) $(INSCSPd) $(INSCSPp)
 
 $(INSEXPd):	$(BLDEXPd)
-		copy $** $@
+		@echo copying $** to $@
+		@copy $** $@ > NULL 2>&1
 
 $(INSEXPp):	$(BLDEXPp)
-		copy $** $@
+		@echo copying $** to $@
+		@copy $** $@ > NULL 2>&1
 
 $(INSIMPd):	$(BLDIMPd)
-		copy $** $@
+		@echo copying $** to $@
+		@copy $** $@ > NULL 2>&1
 
 $(INSIMPp):	$(BLDIMPp)
-		copy $** $@
+		@echo copying $** to $@
+		@copy $** $@ > NULL 2>&1
 
 $(INSCSPd):	$(BLDCSPd)
-		copy $** $@
+		@echo copying $** to $@
+		@copy $** $@ > NULL 2>&1
 
 $(INSCSPp):	$(BLDCSPp)
-		copy $** $@
+		@echo copying $** to $@
+		@copy $** $@ > NULL 2>&1
 
