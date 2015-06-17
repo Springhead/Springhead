@@ -12,6 +12,9 @@ namespace SprCs {
         protected vectorwrapper_int() {}
         ~vectorwrapper_int() {}
         public IntPtr get() { return _ptr; }
+        public int size() { return (int) SprExport.Spr_vector_size_int(_ptr); }
+        public void push_back(int value) { SprExport.Spr_vector_push_back_int(_ptr, value); }
+        public void clear() { SprExport.Spr_vector_clear_int(_ptr); }
         public int this[int index] {
             get { return (int) SprExport.Spr_vector_get_int(_ptr, index); }
             set { SprExport.Spr_vector_set_int(_ptr, index, value); }
@@ -24,6 +27,9 @@ namespace SprCs {
         protected vectorwrapper_unsigned_int() {}
         ~vectorwrapper_unsigned_int() {}
         public IntPtr get() { return _ptr; }
+        public int size() { return (int) SprExport.Spr_vector_size_unsigned_int(_ptr); }
+        public void push_back(uint value) { SprExport.Spr_vector_push_back_unsigned_int(_ptr, value); }
+        public void clear() { SprExport.Spr_vector_clear_unsigned_int(_ptr); }
         public uint this[int index] {
             get { return (uint) SprExport.Spr_vector_get_unsigned_int(_ptr, index); }
             set { SprExport.Spr_vector_set_unsigned_int(_ptr, index, value); }
@@ -36,6 +42,9 @@ namespace SprCs {
         protected vectorwrapper_size_t() {}
         ~vectorwrapper_size_t() {}
         public IntPtr get() { return _ptr; }
+        public int size() { return (int) SprExport.Spr_vector_size_size_t(_ptr); }
+        public void push_back(ulong value) { SprExport.Spr_vector_push_back_size_t(_ptr, value); }
+        public void clear() { SprExport.Spr_vector_clear_size_t(_ptr); }
         public ulong this[int index] {
             get { return (ulong) SprExport.Spr_vector_get_size_t(_ptr, index); }
             set { SprExport.Spr_vector_set_size_t(_ptr, index, value); }
@@ -48,6 +57,9 @@ namespace SprCs {
         protected vectorwrapper_float() {}
         ~vectorwrapper_float() {}
         public IntPtr get() { return _ptr; }
+        public int size() { return (int) SprExport.Spr_vector_size_float(_ptr); }
+        public void push_back(float value) { SprExport.Spr_vector_push_back_float(_ptr, value); }
+        public void clear() { SprExport.Spr_vector_clear_float(_ptr); }
         public float this[int index] {
             get { return (float) SprExport.Spr_vector_get_float(_ptr, index); }
             set { SprExport.Spr_vector_set_float(_ptr, index, value); }
@@ -60,6 +72,9 @@ namespace SprCs {
         protected vectorwrapper_double() {}
         ~vectorwrapper_double() {}
         public IntPtr get() { return _ptr; }
+        public int size() { return (int) SprExport.Spr_vector_size_double(_ptr); }
+        public void push_back(double value) { SprExport.Spr_vector_push_back_double(_ptr, value); }
+        public void clear() { SprExport.Spr_vector_clear_double(_ptr); }
         public double this[int index] {
             get { return (double) SprExport.Spr_vector_get_double(_ptr, index); }
             set { SprExport.Spr_vector_set_double(_ptr, index, value); }
@@ -72,6 +87,9 @@ namespace SprCs {
         protected vectorwrapper_string() {}
         ~vectorwrapper_string() {}
         public IntPtr get() { return _ptr; }
+        public int size() { return (int) SprExport.Spr_vector_size_string(_ptr); }
+        public void push_back(string value) { SprExport.Spr_vector_push_back_string(_ptr, value); }
+        public void clear() { SprExport.Spr_vector_clear_string(_ptr); }
         public string this[int index] {
             get {
                 IntPtr ptr = SprExport.Spr_vector_get_string(_ptr, index);
@@ -121,32 +139,6 @@ namespace SprCs {
             get { return (double) SprExport.Spr_array_get_double(_ptr, index); }
             set { SprExport.Spr_array_set_double(_ptr, index, value); }
         }
-    }
-
-    //  Followings are not wrappers, but ...
-    //    TAffine
-    public class TAffine2<T> {
-/*
-	public IntPtr _this;
-	private bool _flag;
-	public TAffine2() { _this = SprExport.Spr_new_TAffine2(T t); _flag = true; }
-	~TAffine2() { if (_flag) SprExport.Spr_delete_TAffine2(_this); }
-*/
-        public T xx, xy, xz;
-        public T yx, yy, yz;
-        public T px, py, pz;
-    }
-    public class TAffine<T> {
-/*
-	public IntPtr _this;
-	private bool _flag;
-	public TAffine() { _this = SprExport.Spr_new_TAffine(T t); _flag = true; }
-	~TAffine() { if (_flag) SprExport.Spr_delete_TAffine(_this); }
-*/
-        public T xx, xy, xz, xw;
-        public T yx, yy, yz, yw;
-        public T zx, zy, zz, zw;
-        public T px, py, pz, pw;
     }
 }
 
