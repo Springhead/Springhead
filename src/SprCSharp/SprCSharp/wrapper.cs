@@ -4,140 +4,116 @@ using System;
 using System.Runtime.InteropServices;
 
 namespace SprCs {
+    // wrapper base class
+    //
+    public class wrapper {
+        private IntPtr _ptr;
+        public wrapper(IntPtr ptr) { _ptr = ptr; }
+        protected wrapper() {}
+        ~wrapper() {}
+        public IntPtr get() { return _ptr; }
+    }
+
     // std::vector
     //  int
-    public class vectorwrapper_int {
-        private IntPtr _ptr;
-        public vectorwrapper_int(IntPtr ptr) { _ptr = ptr; }
-        protected vectorwrapper_int() {}
-        ~vectorwrapper_int() {}
-        public IntPtr get() { return _ptr; }
-        public int size() { return (int) SprExport.Spr_vector_size_int(_ptr); }
-        public void push_back(int value) { SprExport.Spr_vector_push_back_int(_ptr, value); }
-        public void clear() { SprExport.Spr_vector_clear_int(_ptr); }
+    public class vectorwrapper_int : wrapper {
+        public vectorwrapper_int(IntPtr ptr) : base(ptr) {}
+        public int size() { return (int) SprExport.Spr_vector_size_int(get()); }
+        public void push_back(int value) { SprExport.Spr_vector_push_back_int(get(), value); }
+        public void clear() { SprExport.Spr_vector_clear_int(get()); }
         public int this[int index] {
-            get { return (int) SprExport.Spr_vector_get_int(_ptr, index); }
-            set { SprExport.Spr_vector_set_int(_ptr, index, value); }
+            get { return (int) SprExport.Spr_vector_get_int(get(), index); }
+            set { SprExport.Spr_vector_set_int(get(), index, value); }
         }
     }
     //  unsigned int
-    public class vectorwrapper_unsigned_int {
-        private IntPtr _ptr;
-        public vectorwrapper_unsigned_int(IntPtr ptr) { _ptr = ptr; }
-        protected vectorwrapper_unsigned_int() {}
-        ~vectorwrapper_unsigned_int() {}
-        public IntPtr get() { return _ptr; }
-        public int size() { return (int) SprExport.Spr_vector_size_unsigned_int(_ptr); }
-        public void push_back(uint value) { SprExport.Spr_vector_push_back_unsigned_int(_ptr, value); }
-        public void clear() { SprExport.Spr_vector_clear_unsigned_int(_ptr); }
+    public class vectorwrapper_unsigned_int : wrapper {
+        public vectorwrapper_unsigned_int(IntPtr ptr) : base(ptr) {}
+        public int size() { return (int) SprExport.Spr_vector_size_unsigned_int(get()); }
+        public void push_back(uint value) { SprExport.Spr_vector_push_back_unsigned_int(get(), value); }
+        public void clear() { SprExport.Spr_vector_clear_unsigned_int(get()); }
         public uint this[int index] {
-            get { return (uint) SprExport.Spr_vector_get_unsigned_int(_ptr, index); }
-            set { SprExport.Spr_vector_set_unsigned_int(_ptr, index, value); }
+            get { return (uint) SprExport.Spr_vector_get_unsigned_int(get(), index); }
+            set { SprExport.Spr_vector_set_unsigned_int(get(), index, value); }
         }
     }
     //  size_t
-    public class vectorwrapper_size_t {
-        private IntPtr _ptr;
-        public vectorwrapper_size_t(IntPtr ptr) { _ptr = ptr; }
-        protected vectorwrapper_size_t() {}
-        ~vectorwrapper_size_t() {}
-        public IntPtr get() { return _ptr; }
-        public int size() { return (int) SprExport.Spr_vector_size_size_t(_ptr); }
-        public void push_back(ulong value) { SprExport.Spr_vector_push_back_size_t(_ptr, value); }
-        public void clear() { SprExport.Spr_vector_clear_size_t(_ptr); }
+    public class vectorwrapper_size_t : wrapper {
+        public vectorwrapper_size_t(IntPtr ptr) : base(ptr) {}
+        public int size() { return (int) SprExport.Spr_vector_size_size_t(get()); }
+        public void push_back(ulong value) { SprExport.Spr_vector_push_back_size_t(get(), value); }
+        public void clear() { SprExport.Spr_vector_clear_size_t(get()); }
         public ulong this[int index] {
-            get { return (ulong) SprExport.Spr_vector_get_size_t(_ptr, index); }
-            set { SprExport.Spr_vector_set_size_t(_ptr, index, value); }
+            get { return (ulong) SprExport.Spr_vector_get_size_t(get(), index); }
+            set { SprExport.Spr_vector_set_size_t(get(), index, value); }
         }
     }
     //  float
-    public class vectorwrapper_float {
-        private IntPtr _ptr;
-        public vectorwrapper_float(IntPtr ptr) { _ptr = ptr; }
-        protected vectorwrapper_float() {}
-        ~vectorwrapper_float() {}
-        public IntPtr get() { return _ptr; }
-        public int size() { return (int) SprExport.Spr_vector_size_float(_ptr); }
-        public void push_back(float value) { SprExport.Spr_vector_push_back_float(_ptr, value); }
-        public void clear() { SprExport.Spr_vector_clear_float(_ptr); }
+    public class vectorwrapper_float : wrapper {
+        public vectorwrapper_float(IntPtr ptr) : base(ptr) {}
+        public int size() { return (int) SprExport.Spr_vector_size_float(get()); }
+        public void push_back(float value) { SprExport.Spr_vector_push_back_float(get(), value); }
+        public void clear() { SprExport.Spr_vector_clear_float(get()); }
         public float this[int index] {
-            get { return (float) SprExport.Spr_vector_get_float(_ptr, index); }
-            set { SprExport.Spr_vector_set_float(_ptr, index, value); }
+            get { return (float) SprExport.Spr_vector_get_float(get(), index); }
+            set { SprExport.Spr_vector_set_float(get(), index, value); }
         }
     }
     //  double
-    public class vectorwrapper_double {
-        private IntPtr _ptr;
-        public vectorwrapper_double(IntPtr ptr) { _ptr = ptr; }
-        protected vectorwrapper_double() {}
-        ~vectorwrapper_double() {}
-        public IntPtr get() { return _ptr; }
-        public int size() { return (int) SprExport.Spr_vector_size_double(_ptr); }
-        public void push_back(double value) { SprExport.Spr_vector_push_back_double(_ptr, value); }
-        public void clear() { SprExport.Spr_vector_clear_double(_ptr); }
+    public class vectorwrapper_double : wrapper {
+        public vectorwrapper_double(IntPtr ptr) : base(ptr) {}
+        public int size() { return (int) SprExport.Spr_vector_size_double(get()); }
+        public void push_back(double value) { SprExport.Spr_vector_push_back_double(get(), value); }
+        public void clear() { SprExport.Spr_vector_clear_double(get()); }
         public double this[int index] {
-            get { return (double) SprExport.Spr_vector_get_double(_ptr, index); }
-            set { SprExport.Spr_vector_set_double(_ptr, index, value); }
+            get { return (double) SprExport.Spr_vector_get_double(get(), index); }
+            set { SprExport.Spr_vector_set_double(get(), index, value); }
         }
     }
     //  string
-    public class vectorwrapper_string {
-        private IntPtr _ptr;
-        public vectorwrapper_string(IntPtr ptr) { _ptr = ptr; }
-        protected vectorwrapper_string() {}
-        ~vectorwrapper_string() {}
-        public IntPtr get() { return _ptr; }
-        public int size() { return (int) SprExport.Spr_vector_size_string(_ptr); }
-        public void push_back(string value) { SprExport.Spr_vector_push_back_string(_ptr, value); }
-        public void clear() { SprExport.Spr_vector_clear_string(_ptr); }
+    public class vectorwrapper_string : wrapper {
+        public vectorwrapper_string(IntPtr ptr) : base(ptr) {}
+        public int size() { return (int) SprExport.Spr_vector_size_string(get()); }
+        public void push_back(string value) { SprExport.Spr_vector_push_back_string(get(), value); }
+        public void clear() { SprExport.Spr_vector_clear_string(get()); }
         public string this[int index] {
             get {
-                IntPtr ptr = SprExport.Spr_vector_get_string(_ptr, index);
-                string str = Marshal.PtrToStringBSTR(ptr);
-                return str;
+                IntPtr ptr = SprExport.Spr_vector_get_string(get(), index);
+                string bstr = Marshal.PtrToStringBSTR(ptr);
+                Marshal.FreeCoTaskMem(ptr);
+                return bstr;
             }
             set {
                 IntPtr pbstr = Marshal.StringToBSTR(value);
-                SprExport.Spr_vector_set_string(_ptr, index, pbstr);
+                SprExport.Spr_vector_set_string(get(), index, pbstr);
+                Marshal.FreeBSTR(pbstr);
             }
         }
     }
 
     // array
     //  int
-    public class arraywrapper_int {
-        private IntPtr _ptr;
-        public arraywrapper_int(IntPtr ptr) { _ptr = ptr; }
-        protected arraywrapper_int() {}
-        ~arraywrapper_int() {}
-        public IntPtr get() { return _ptr; }
+    public class arraywrapper_int : wrapper {
+        public arraywrapper_int(IntPtr ptr) : base(ptr) {}
         public int this[int index] {
-            get { return (int) SprExport.Spr_array_get_int(_ptr, index); }
-            set { SprExport.Spr_array_set_int(_ptr, index, value); }
+            get { return (int) SprExport.Spr_array_get_int(get(), index); }
+            set { SprExport.Spr_array_set_int(get(), index, value); }
         }
     }
     //  float
-    public class arraywrapper_float {
-        private IntPtr _ptr;
-        public arraywrapper_float(IntPtr ptr) { _ptr = ptr; }
-        protected arraywrapper_float() {}
-        ~arraywrapper_float() {}
-        public IntPtr get() { return _ptr; }
+    public class arraywrapper_float : wrapper {
+        public arraywrapper_float(IntPtr ptr) : base(ptr) {}
         public float this[int index] {
-            get { return (float) SprExport.Spr_array_get_float(_ptr, index); }
-            set { SprExport.Spr_array_set_float(_ptr, index, value); }
+            get { return (float) SprExport.Spr_array_get_float(get(), index); }
+            set { SprExport.Spr_array_set_float(get(), index, value); }
         }
     }
     //  double
-    public class arraywrapper_double {
-        private IntPtr _ptr;
-        public arraywrapper_double(IntPtr ptr) { _ptr = ptr; }
-        protected arraywrapper_double() {}
-        ~arraywrapper_double() {}
-        public IntPtr get() { return _ptr; }
+    public class arraywrapper_double : wrapper {
+        public arraywrapper_double(IntPtr ptr) : base(ptr) {}
         public double this[int index] {
-            get { return (double) SprExport.Spr_array_get_double(_ptr, index); }
-            set { SprExport.Spr_array_set_double(_ptr, index, value); }
+            get { return (double) SprExport.Spr_array_get_double(get(), index); }
+            set { SprExport.Spr_array_set_double(get(), index, value); }
         }
     }
 }

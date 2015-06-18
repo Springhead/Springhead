@@ -149,30 +149,30 @@ extern "C" {
     // array
     //  int
     __declspec(dllexport) int __cdecl Spr_array_get_int(HANDLE ptr, int index) {
-        int** aryptr = (int**) ptr;
-        return (*aryptr)[index];
+        int* aryptr = (int*) ptr;
+        return aryptr[index];
     }
     __declspec(dllexport) void __cdecl Spr_array_set_int(HANDLE ptr, int index, int value) {
-        int** aryptr = (int**) ptr;
-        (*aryptr)[index] = value;
+        int* aryptr = (int*) ptr;
+        aryptr[index] = value;
     }
     //  float
     __declspec(dllexport) float __cdecl Spr_array_get_float(HANDLE ptr, int index) {
-        float** aryptr = (float**) ptr;
-        return (*aryptr)[index];
+        float* aryptr = (float*) ptr;
+        return aryptr[index];
     }
     __declspec(dllexport) void __cdecl Spr_array_set_float(HANDLE ptr, int index, float value) {
-        float** aryptr = (float**) ptr;
-        (*aryptr)[index] = value;
+        float* aryptr = (float*) ptr;
+        aryptr[index] = value;
     }
     //  double
     __declspec(dllexport) double __cdecl Spr_array_get_double(HANDLE ptr, int index) {
-        double** aryptr = (double**) ptr;
-        return (*aryptr)[index];
+        double* aryptr = (double*) ptr;
+        return aryptr[index];
     }
     __declspec(dllexport) void __cdecl Spr_array_set_double(HANDLE ptr, int index, double value) {
-        double** aryptr = (double**) ptr;
-        (*aryptr)[index] = value;
+        double* aryptr = (double*) ptr;
+        aryptr[index] = value;
     }
 }
 
