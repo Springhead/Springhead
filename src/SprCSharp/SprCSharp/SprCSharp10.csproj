@@ -104,6 +104,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CSBase.cs" />
     <Compile Include="CSBase.wrapper.cs" />
     <Compile Include="CSCollision.cs" />
     <Compile Include="CSCollision.wrapper.cs" />
