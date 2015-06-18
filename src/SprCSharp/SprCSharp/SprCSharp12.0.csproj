@@ -75,11 +75,10 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SprImport, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\12.0\bin\x86\Debug\SprImport.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -111,10 +110,6 @@
     <Compile Include="wrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RunSwig_CSharp\RunSwig_CSharp12.0.vcxproj">
-      <Project>{3bb1e53c-ad6b-4020-80f3-8bd44636c9e1}</Project>
-      <Name>RunSwig_CSharp12.0</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SprImport\SprImport12.0.csproj">
       <Project>{70aaf348-cc6a-483e-9a52-b4fbc7256e7a}</Project>
       <Name>SprImport12.0</Name>

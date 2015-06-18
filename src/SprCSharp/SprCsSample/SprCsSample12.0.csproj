@@ -93,11 +93,10 @@
   <PropertyGroup>
     <StartupObject>SprCsSample.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SprImport, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\12.0\bin\x64\Debug\SprImport.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -112,16 +111,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\SprCSharp\SprCSharp12.0.csproj">
-      <Project>{c40daa82-0982-4598-a900-65dfb10d3a4f}</Project>
-      <Name>SprCSharp12.0</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SprImport\SprImport12.0.csproj">
-      <Project>{70aaf348-cc6a-483e-9a52-b4fbc7256e7a}</Project>
-      <Name>SprImport12.0</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -139,6 +128,16 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SprCSharp\SprCSharp12.0.csproj">
+      <Project>{c40daa82-0982-4598-a900-65dfb10d3a4f}</Project>
+      <Name>SprCSharp12.0</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SprImport\SprImport12.0.csproj">
+      <Project>{70aaf348-cc6a-483e-9a52-b4fbc7256e7a}</Project>
+      <Name>SprImport12.0</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
