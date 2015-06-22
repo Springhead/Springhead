@@ -12,11 +12,13 @@ namespace SprCsSample {
             bool do_tostring = true;
             bool do_vector = true;
             bool do_array = true;
+            bool do_func_return = true;
 
             if (do_intrinsic)   test_intrinsic();
             if (do_tostring)    test_tostring();
             if (do_vector)      test_vector();
             if (do_array)       test_array();
+            if (do_func_return) test_func_return();
         }
 
         static void test_intrinsic() {
@@ -93,6 +95,10 @@ namespace SprCsSample {
             for (int i = 0; i < 4; i++) {
                 System.Console.WriteLine("array<int>: expected: " + (100 + i) + " result: " + meshFace.indices[i]);
             }
+        }
+
+        static void test_func_return() {
+            System.Console.WriteLine("---[ function return ]---");
         }
     }
 }
