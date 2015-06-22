@@ -134,8 +134,12 @@
       <Project>{c40daa82-0982-4598-a900-65dfb10d3a4f}</Project>
       <Name>SprCSharp12.0</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SprExport\SprExport12.0.vcxproj">
+      <Project>{136deb22-adc4-4234-a990-1217a6fcc8d1}</Project>
+      <Name>SprExport12.0</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SprImport\SprImport12.0.csproj">
-      <Project>{70aaf348-cc6a-483e-9a52-b4fbc7256e7a}</Project>
+      <Project>{34112957-8bdb-4dc5-a0bc-3749ea41f248}</Project>
       <Name>SprImport12.0</Name>
     </ProjectReference>
   </ItemGroup>
