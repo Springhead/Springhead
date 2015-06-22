@@ -1384,10 +1384,10 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHConstraintState \
 protected:\
-	Spr::Vec6d	f;	\
-	Spr::Vec6d	F;	\
-	Spr::Vec6d	xs;	\
-	Spr::Vec6d	fAvg;	\
+	Vec6d	f;	\
+	Vec6d	F;	\
+	Vec6d	xs;	\
+	Vec6d	fAvg;	\
 	bool	bYielded;	\
 public:\
 	virtual void SetState(const void* ptr){ \
