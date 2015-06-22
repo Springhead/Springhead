@@ -99,6 +99,17 @@ namespace SprCsSample {
 
         static void test_func_return() {
             System.Console.WriteLine("---[ function return ]---");
+            PHSceneDesc descScene = new PHSceneDesc();
+            PHSolidDesc descSolid = new PHSolidDesc();
+
+            PHSdkIf phSdk = PHSdkIf.CreateSdk();
+            PHSceneIf phScene = phSdk.CreateScene(descScene);
+            PHSolidIf phSolid = phScene.CreateSolid(descSolid);
+
+            for (int i = 0; i < 20; i++) {
+                phScene.Step();
+                System.Console.WriteLine(i.ToString() + " : " + phSolid.GetPose());
+            }
         }
     }
 }
