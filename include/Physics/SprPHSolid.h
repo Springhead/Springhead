@@ -24,6 +24,7 @@ struct PHFrameDesc{
 };
 struct PHFrameIf: public SceneObjectIf{
 	SPR_IFDEF(PHFrame);
+
 	Posed GetPose();
 	void  SetPose(Posed p);
 };

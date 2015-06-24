@@ -31,6 +31,7 @@ struct Matrix3f{ float xx,xy,xz, yx,yy,yz, zx,zy,zz; };
 struct Matrix3d{ double xx,xy,xz, yx,yy,yz, zx,zy,zz; };
 struct Affinef{ float xx,xy,xz,xw, yx,yy,yz,yw, zx,zy,zz,zw, px,py,pz,pw; };
 struct Affined{ double xx,xy,xz,xw, yx,yy,yz,yw, zx,zy,zz,zw, px,py,pz,pw; };
+struct IfInfo{ IfInfo* creator; };
 
 #else
 struct Matrix3f{ float data[9]; };
