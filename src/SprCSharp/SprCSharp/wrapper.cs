@@ -6,12 +6,10 @@ using System.Runtime.InteropServices;
 namespace SprCs {
     // wrapper base class
     //
-    public class wrapper {
-        private IntPtr _ptr;
-        public wrapper(IntPtr ptr) { _ptr = ptr; }
+    public class wrapper : CsObject {
+        public wrapper(IntPtr ptr) { _this = ptr; }
         protected wrapper() {}
         ~wrapper() {}
-        public IntPtr get() { return _ptr; }
     }
 
     // std::vector
