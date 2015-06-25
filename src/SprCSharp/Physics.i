@@ -8,7 +8,7 @@
 %ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
 %ignore Spr::PHSceneIf::CreateJoint;
 %ignore Spr::PHSceneIf::CreateIKActuator;
-%ignore Spr::PHSdkIf::CreateShape;
+// %ignore Spr::PHSdkIf::CreateShape;
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"
 %include "../../include/Foundation/SprObject.h"

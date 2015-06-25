@@ -101,12 +101,21 @@ namespace SprCsSample {
             System.Console.WriteLine("---[ function return ]---");
             PHSceneDesc descScene = new PHSceneDesc();
             PHSolidDesc descSolid = new PHSolidDesc();
+            CDBoxDesc descBox = new CDBoxDesc();
 
             PHSdkIf phSdk = PHSdkIf.CreateSdk();
             PHSceneIf phScene = phSdk.CreateScene(descScene);
             PHSolidIf phSolid = phScene.CreateSolid(descSolid);
+            phSolid.AddShape(phSdk.CreateShape(CDBoxIf.GetIfInfoStatic(), descBox));
+            phSolid.SetPose(new Posed(1, 0, 0, 0, 0, 2, 0));
 
-            for (int i = 0; i < 20; i++) {
+            PHSolidIf phFloor = phScene.CreateSolid(descSolid);
+            phFloor.SetDynamical(false);
+            descBox.boxsize = new Vec3f(10, 10, 10);
+            phFloor.AddShape(phSdk.CreateShape(CDBoxIf.GetIfInfoStatic(), descBox));
+            phFloor.SetPose(new Posed(1, 0, 0, 0, 0, -5, 0));
+
+            for (int i = 0; i < 200; i++) {
                 phScene.Step();
                 System.Console.WriteLine(i.ToString() + " : " + phSolid.GetPose());
             }
