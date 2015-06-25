@@ -34,26 +34,23 @@ INSDIR	= $(PROJDIR)..\..\..\bin\$(BINCONF)
 !MESSAGE    INSDIR: [$(INSDIR)]
 
 BLDEXPd	= $(BLDDIR)\SprExport.dll
-BLDEXPp	= $(BLDDIR)\SprExport.pdb
 BLDIMPd	= $(BLDDIR)\SprImport.dll
-BLDIMPp	= $(BLDDIR)\SprImport.pdb
 BLDCSPd	= $(BLDDIR)\SprCSharp.dll
-BLDCSPp	= $(BLDDIR)\SprCSharp.pdb
+#BLDEXPp	= $(BLDDIR)\SprExport.pdb
+#BLDIMPp	= $(BLDDIR)\SprImport.pdb
+#BLDCSPp	= $(BLDDIR)\SprCSharp.pdb
 
 INSEXPd	= $(INSDIR)\SprExport.dll
-INSEXPp	= $(INSDIR)\SprExport.pdb
 INSIMPd	= $(INSDIR)\SprImport.dll
-INSIMPp	= $(INSDIR)\SprImport.pdb
 INSCSPd	= $(INSDIR)\SprCSharp.dll
-INSCSPp	= $(INSDIR)\SprCSharp.pdb
+#INSEXPp	= $(INSDIR)\SprExport.pdb
+#INSIMPp	= $(INSDIR)\SprImport.pdb
+#INSCSPp	= $(INSDIR)\SprCSharp.pdb
 
-all:	$(INSEXPd) $(INSEXPp) $(INSIMPd) $(INSIMPp) $(INSCSPd) $(INSCSPp)
+all:	$(INSEXPd) $(INSIMPd) $(INSCSPd)
+#all:	$(INSEXPd) $(INSEXPp) $(INSIMPd) $(INSIMPp) $(INSCSPd) $(INSCSPp)
 
 $(INSEXPd):	$(BLDEXPd)
-		@echo copying $** to $@
-		@copy $** $@ > NULL 2>&1
-
-$(INSEXPp):	$(BLDEXPp)
 		@echo copying $** to $@
 		@copy $** $@ > NULL 2>&1
 
@@ -61,15 +58,19 @@ $(INSIMPd):	$(BLDIMPd)
 		@echo copying $** to $@
 		@copy $** $@ > NULL 2>&1
 
-$(INSIMPp):	$(BLDIMPp)
-		@echo copying $** to $@
-		@copy $** $@ > NULL 2>&1
-
 $(INSCSPd):	$(BLDCSPd)
 		@echo copying $** to $@
 		@copy $** $@ > NULL 2>&1
 
-$(INSCSPp):	$(BLDCSPp)
-		@echo copying $** to $@
-		@copy $** $@ > NULL 2>&1
+#$(INSEXPp):	$(BLDEXPp)
+#		@echo copying $** to $@
+#		@copy $** $@ > NULL 2>&1
+
+#$(INSIMPp):	$(BLDIMPp)
+#		@echo copying $** to $@
+#		@copy $** $@ > NULL 2>&1
+
+#$(INSCSPp):	$(BLDCSPp)
+#		@echo copying $** to $@
+#		@copy $** $@ > NULL 2>&1
 
