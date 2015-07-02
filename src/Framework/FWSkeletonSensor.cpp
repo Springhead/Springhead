@@ -19,7 +19,7 @@ void FWSkeletonSensor::Update() {
 		sensor->Update(fwScene->GetPHScene()->GetTimeStep());
 
 		// Invisible Countの更新 (まず全て++しておいて、VisibleなものはProcessSkeleton内で0にする)
-		for (int j = 0; j < skeletons.size(); ++j) {
+		for (int j = 0; j < (int) skeletons.size(); ++j) {
 			skeletons[j].invisibleCnt++;
 		}
 
@@ -28,7 +28,7 @@ void FWSkeletonSensor::Update() {
 			if (!(sensor->GetSkeleton(i)->IsTracked())) { continue; } // トラッキングされていない場合はスキップ
 
 			bool bProcessed = false;
-			for (int j = 0; j < skeletons.size(); ++j) {
+			for (int j = 0; j < (int) skeletons.size(); ++j) {
 				if (skeletons[j].id == sensor->GetSkeleton(i)->GetTrackID()) {
 					ProcessSkeleton(sensor->GetSkeleton(i), j);
 					bProcessed = true;
@@ -37,7 +37,7 @@ void FWSkeletonSensor::Update() {
 			}
 			if (!bProcessed) {
 				// 空きスケルトンを探す
-				for (int j = 0; j < skeletons.size(); ++j) {
+				for (int j = 0; j < (int) skeletons.size(); ++j) {
 					if (skeletons[j].id < 0) {
 						skeletons[j].id = sensor->GetSkeleton(i)->GetTrackID();
 						ProcessSkeleton(sensor->GetSkeleton(i), j);
@@ -55,7 +55,7 @@ void FWSkeletonSensor::Update() {
 		}
 
 		// Invisible Countが一定値を超えたら消滅処理
-		for (int j = 0; j < skeletons.size(); ++j) {
+		for (int j = 0; j < (int) skeletons.size(); ++j) {
 			if (skeletons[j].invisibleCnt > 1) { // 見えない 即 消失
 				FreezeSkeleton(j);
 			}

@@ -25,6 +25,7 @@ struct Posed{ double w; double x; double y; double z; double px; double py; doub
 struct Vec2i{ int x; int y; };
 struct Vec3i{ int x; int y; int z; };
 struct Vec4i{ int x; int y; int z; int w; };
+struct Vec6f{ float vx; float vy; float vz; float wx; float wy; float wz; };
 struct Vec6d{ double vx; double vy; double vz; double wx; double wy; double wz; };
 struct Curve3f{};
 struct Matrix3f{ float xx,xy,xz, yx,yy,yz, zx,zy,zz; };

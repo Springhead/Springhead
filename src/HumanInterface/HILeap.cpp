@@ -63,7 +63,7 @@ void HILeap::Update(float dt) {
 
 		// Skeletonの不足分を用意
 		PrepareSkeleton((int)frame.recHandsNum);
-		for (int i = 0; i < skeletons.size(); ++i) {
+		for (int i = 0; i < (int) skeletons.size(); ++i) {
 			DCAST(HISkeleton, skeletons[i])->bTracked = false;
 		}
 
