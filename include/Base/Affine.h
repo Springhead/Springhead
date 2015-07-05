@@ -556,8 +556,9 @@ public:
 		@param front	手前のクリッピング平面とカメラの距離
 		@param back		奥のクリッピング平面とカメラの距離	*/
 	template <class BUFS, class BUFZ>
-	static TAffine<T> ProjectionD3D(const PTM::TVectorBase<3, BUFS>& screen,
-	const PTM::TVectorBase<2, BUFZ>& size,
+	static TAffine<T> ProjectionD3D(
+		const PTM::TVectorBase<3, BUFS>& screen,
+	    const PTM::TVectorBase<2, BUFZ>& size,
 		element_type front=1.0f, element_type back=10000.0f)
 	{
 		TAffine<T> y;
@@ -568,10 +569,14 @@ public:
 	/** OpenGLの直交射影変換
 		@param vpSize	ビューポートのサイズ
 	 */
-	template <class BUFS>
-	static TAffine<T> OrthoGL(const PTM::TVectorBase<2,BUFS>& vpSize){
+	template <class BUFS, class BUFZ>
+	static TAffine<T> OrthoGL(
+		const PTM::TVectorBase<3,BUFS>& screen,
+		const PTM::TVectorBase<2,BUFZ>& size,
+		element_type front=1.0f, element_type back=10000.0f)
+	{
 		TAffine<T> y;
-		PTM::init_ortho_gl(y, vpSize);
+		PTM::init_ortho_gl(y, screen, size, front, back);
 		return y;
 	}
 

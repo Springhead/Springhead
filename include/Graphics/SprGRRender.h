@@ -154,12 +154,18 @@ struct GRCameraIf: public GRVisualIf{
 /**	@brief	カメラの情報			*/
 struct GRCameraDesc : GRVisualDesc{
 	SPR_DESCDEF(GRCamera);
+	enum {
+		ORTHO,
+		PERSPECTIVE,
+	};
 	Vec2f size;				///<	スクリーンのサイズ
 	Vec2f center;			///<	カメラからのスクリーンのずれ
 	float front, back;		///<	視点からクリップ面までの相対距離（正の値で指定）
+	int   type;             ///<    投影変換
+	
 	//GRCameraDesc():center(Vec2f()), size(Vec2f(0.2f, 0)), front(0.1f), back(500.0f){}
-	GRCameraDesc(Vec2f sz = Vec2f(0.2f, 0.0f), Vec2f c = Vec2f(), float f = 0.1f, float b = 500.0f):
-		size(sz), center(c), front(f), back(b) {}
+	GRCameraDesc(Vec2f sz = Vec2f(0.2f, 0.0f), Vec2f c = Vec2f(), float f = 0.1f, float b = 500.0f, int t = PERSPECTIVE):
+		size(sz), center(c), front(f), back(b), type(t) {}
 };
 
 /** 影生成ライト */
