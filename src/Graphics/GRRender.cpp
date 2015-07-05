@@ -259,12 +259,15 @@ void GRRender::SetCamera(const GRCameraDesc& c){
 	Vec2f vpsize = GetViewportSize();
 	// メモリ比較でフィルタすると外部からSetProjectionMatrixした際にカメラが反映されないので無効化 tazz
 	//if (memcmp(&camera,&c, sizeof(c)) != 0){
-		camera = c;
-		if (camera.size.y==0) camera.size.y = camera.size.x*(vpsize.y/vpsize.x);
-		if (camera.size.x==0) camera.size.x = camera.size.y*(vpsize.x/vpsize.y);
-		Affinef afProj = Affinef::ProjectionGL(Vec3f(camera.center.x, camera.center.y, camera.front), 
-			camera.size, camera.front, camera.back);
-		SetProjectionMatrix(afProj);
+	camera = c;
+	if (camera.size.y==0) camera.size.y = camera.size.x*(vpsize.y/vpsize.x);
+	if (camera.size.x==0) camera.size.x = camera.size.y*(vpsize.x/vpsize.y);
+	Affinef afProj;
+	Vec3f screen(camera.center.x, camera.center.y, camera.front);
+	if(c.type == GRCameraDesc::PERSPECTIVE)
+		 afProj = Affinef::ProjectionGL(screen, camera.size, camera.front, camera.back);
+	else afProj = Affinef::OrthoGL     (screen, camera.size, camera.front, camera.back);
+	SetProjectionMatrix(afProj);
 	//}
 }
 Vec2f GRRender::GetPixelSize(){
@@ -298,23 +301,23 @@ Vec3f GRRender::ScreenToCamera(int x, int y, float depth, bool LorR){
 void GRRender::EnterScreenCoordinate(){
 	if(screenCoord)
 		return;
-	GetViewMatrix(affViewTmp);
-	GetModelMatrix(affModelTmp);
-	GetProjectionMatrix(affProjTmp);
+	GetViewMatrix      (affViewTmp );
+	GetModelMatrix     (affModelTmp);
+	GetProjectionMatrix(affProjTmp );
 
 	SetModelMatrix(Affinef());
-	SetViewMatrix(Affinef::Trn(0.0f, 0.0f, -1.001f * GetCamera().front));
-	Affinef affOrtho = Affinef::OrthoGL(GetViewportSize());
-	SetProjectionMatrix(affOrtho);
+	SetViewMatrix (Affinef());
+	Vec2f vpSize = GetViewportSize();
+	SetProjectionMatrix(Affinef::OrthoGL( Vec3f(vpSize.x/2.0f, vpSize.y/2.0f, 1.0f), Vec2f(vpSize.x, -vpSize.y), 1.0f, -1.0f));
 	screenCoord = true;
 }
 
 void GRRender::LeaveScreenCoordinate(){
 	if(!screenCoord)
 		return;
-	SetProjectionMatrix(affProjTmp);
-	SetViewMatrix(affViewTmp);
-	SetModelMatrix(affModelTmp);
+	SetProjectionMatrix(affProjTmp );
+	SetViewMatrix      (affViewTmp );
+	SetModelMatrix     (affModelTmp);
 	screenCoord = false;
 }
 	

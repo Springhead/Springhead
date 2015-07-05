@@ -260,6 +260,7 @@ protected:\
 	Vec2f	center;	\
 	float	front;	\
 	float	back;	\
+	int	type;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -268,6 +269,7 @@ public:\
 		center = ((GRCameraDesc*)ptr)->center;	\
 		front = ((GRCameraDesc*)ptr)->front;	\
 		back = ((GRCameraDesc*)ptr)->back;	\
+		type = ((GRCameraDesc*)ptr)->type;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -277,6 +279,7 @@ public:\
 		((GRCameraDesc*)ptr)->center = center;	\
 		((GRCameraDesc*)ptr)->front = front;	\
 		((GRCameraDesc*)ptr)->back = back;	\
+		((GRCameraDesc*)ptr)->type = type;	\
 		return true;	\
 	}\
 

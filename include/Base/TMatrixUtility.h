@@ -316,15 +316,35 @@ void init_projection_d3d(TMatrixBase<4, 4, D>& a,
 	a.item(0,3) = 0;					a.item(1,3) = 0;					a.item(2,3) = -Q*front;		a.item(3,3) = 0;
 }
 
-template <class D, class SD>
-void init_ortho_gl(TMatrixBase<4,4,D>& a, const TVectorBase<2,SD>& vpSize){
+template <class D, class SD, class ZD>
+void init_ortho_gl(TMatrixBase<4,4,D>& a,
+	               const TVectorBase<3,SD>& screen_,
+	               const TVectorBase<2,ZD>& size_,
+				   TYPENAME D::element_type front=1.0f, TYPENAME D::element_type back=10000.0f){
+	TYPENAME SD::ret_type screen(screen_);
+	TYPENAME ZD::ret_type size(size_);
+	
+	TVector<2,float> center = screen.sub_vector(TSubVectorDim<0,2>());
+	
+	center *= front / screen[2];
+	size   *= front / screen[2];
+	
 	a.clear();
-	a.item(0,0) =  2.0f / vpSize.item(0);
-	a.item(1,1) = -2.0f / vpSize.item(1);
-	a.item(2,2) = -1.0f;
+	a.item(0,0) =  2.0f / size.item(0);
+	a.item(1,1) =  2.0f / size.item(1);
+	a.item(2,2) = -2.0f / (back - front);
 	a.item(3,3) =  1.0f;
-	a.item(0,3) = -1.0f;
-	a.item(1,3) =  1.0f;
+	a.item(0,3) = -2.0f * center.item(0) / size.item(0);
+	a.item(1,3) = -2.0f * center.item(1) / size.item(1);
+	a.item(2,3) = -(back + front) / (back - front);
+
+	// 下記従来
+	//a.item(0,0) =  2.0f / vpSize.item(0);
+	//a.item(1,1) = -2.0f / vpSize.item(1);
+	//a.item(2,2) = -1.0f;
+	//a.item(3,3) =  1.0f;
+	//a.item(0,3) = -1.0f;
+	//a.item(1,3) =  1.0f;
 }
 
 
