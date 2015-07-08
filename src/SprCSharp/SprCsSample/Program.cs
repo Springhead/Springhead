@@ -12,25 +12,33 @@ namespace SprCsSample {
             bool do_tostring = true;
             bool do_vector = true;
             bool do_array = true;
+            bool do_type_conv = true;
             bool do_func_return = true;
+            bool do_simulation = true;
 
             if (do_intrinsic)   test_intrinsic();
             if (do_tostring)    test_tostring();
             if (do_vector)      test_vector();
             if (do_array)       test_array();
+            if (do_type_conv)   test_type_conv();
             if (do_func_return) test_func_return();
+            if (do_simulation)  test_simulation();
         }
 
         static void test_intrinsic() {
             System.Console.WriteLine("---[ intrinsic ]---");
+
             // intrinsic member
             PHSceneDesc descScene = new PHSceneDesc();
             PHRaycastHit raycastHit = new PHRaycastHit();
+            GRVertexElement vertexelm = new GRVertexElement();
             // simple
+            vertexelm.offset = 123;
+            System.Console.WriteLine("short:    expected: 123   result: " + vertexelm.offset);
             descScene.numIteration = 123;
             System.Console.WriteLine("int:      expected: 123   result: " + descScene.numIteration);
             descScene.bCCDEnabled = true;
-            System.Console.WriteLine("bool:     expected: true  result: " + descScene.bCCDEnabled);
+            System.Console.WriteLine("bool:     expected: True  result: " + descScene.bCCDEnabled);
             raycastHit.distance = 0.123F;
             System.Console.WriteLine("float:    expected: 0.123 result: " + raycastHit.distance);
             descScene.airResistanceRate = 0.123;
@@ -46,15 +54,30 @@ namespace SprCsSample {
 
         static void test_tostring() {
             System.Console.WriteLine("---[ ToString ]---");
-            //PHSceneDesc descScene = new PHSceneDesc();
-/**/        //Vec3d v3d = descScene.gravity;
+
             Vec3d v3d = new Vec3d(0.1, 0.2, 0.3);
+            //string s = v3d.ToString();
 /**/        System.Console.WriteLine("ToString: expected: (0.1, 0.2, 0.3)   result: " + v3d.ToString());
-/**/        System.Console.WriteLine("ToString: C# ToString:                        " + v3d);
+/**/        System.Console.WriteLine("ToString: implicit ToString call            : " + v3d);
+
+            PHSceneDesc descScene = new PHSceneDesc();
+            PHSolidDesc descSolid = new PHSolidDesc();
+            PHSdkIf phSdk = PHSdkIf.CreateSdk();
+            PHSceneIf phScene = phSdk.CreateScene(descScene);
+            PHSolidIf phSolid = phScene.CreateSolid(descSolid);
+            phSolid.SetPose(new Posed(1, 0, 0, 0, 0, 2, 0));
+            System.Console.WriteLine("ToString: phSolid:");
+            System.Console.Write(phSolid.ToString());
+
+            FWWinBaseDesc descWinBase = new FWWinBaseDesc();
+            FWSdkIf fwSdk = FWSdkIf.CreateSdk();
+            System.Console.WriteLine("ToString: fwSdk.ToString:");
+            System.Console.Write(fwSdk.ToString());
         }
 
         static void test_vector() {
             System.Console.WriteLine("---[ vector ]---");
+
             // vector member
             PHFemMeshNewDesc descFemMeshNew = new PHFemMeshNewDesc();
             vectorwrapper_int tets = descFemMeshNew.tets;
@@ -87,6 +110,7 @@ namespace SprCsSample {
 
         static void test_array() {
             System.Console.WriteLine("---[ array ]---");
+
             PHOpObjDesc descOpObj = new PHOpObjDesc();
             GRMeshFace meshFace = new GRMeshFace();
             for (int i = 0; i < 4; i++) {
@@ -97,12 +121,95 @@ namespace SprCsSample {
             }
         }
 
+        static void test_type_conv() {
+            System.Console.WriteLine("---[ type conversion ]---");
+
+            string msg_f3 = "f2d: (1, 2, 3)";
+            string msg_d3 = "d2f: (4, 5, 6)";
+
+            Vec3f f3 = new Vec3f(1, 2, 3);
+            Vec3d d3 = new Vec3d(4, 5, 6);
+            print_vec3d(f3, msg_f3);
+//            print_vec3f(d3, msg_f3);    // This cause CS1502 and CS1503 compile error. <- OK
+            print_vec3f((Vec3f) d3, msg_d3);
+
+            Vec3fStruct f3s = f3;
+            Vec3dStruct d3s = d3;
+            print_vec3ds(f3s, msg_f3);
+//            print_vec3fs(d3s, msg_d3);  // This cause CS1502 and CS1503 compile error. <- OK
+            print_vec3fs((Vec3fStruct) d3s, msg_d3);
+        }
+
+        static void print_vec3d(Vec3d v, string exp) {
+            System.Console.WriteLine("type_conv: expected: " + exp + " result: " + v.ToString());
+        }
+
+        static void print_vec3f(Vec3f v, string exp) {
+            System.Console.WriteLine("type_conv: expected: " + exp + " result: " + v.ToString());
+        }
+
+        static void print_vec3ds(Vec3dStruct v, string exp) {
+            System.Console.WriteLine("type_conv: expected: " + exp + " result: (" + v.x + ", " + v.y + ", " + v.z + ")");
+        }
+
+        static void print_vec3fs(Vec3fStruct v, string exp) {
+            System.Console.WriteLine("type_conv: expected: " + exp + " result: (" + v.x + ", " + v.y + ", " + v.z + ")");
+        }
+
         static void test_func_return() {
             System.Console.WriteLine("---[ function return ]---");
+            int memoryLeakTest = 0;
+
+            PHSceneDesc descScene = new PHSceneDesc();
+            PHSolidDesc descSolid = new PHSolidDesc();
+            if (memoryLeakTest == 1) return;
+
+            PHSdkIf phSdk = PHSdkIf.CreateSdk();        // ここでメモリリークする
+            if (memoryLeakTest == 2) return;
+            PHSceneIf phScene = phSdk.CreateScene(descScene);
+
+            descSolid.mass = 2.0;
+            descSolid.inertia = new Matrix3d(2.0, 0.0, 0.0, 0.0, 2.0, 0.0, 0.0, 0.0, 2.0);
+            PHSolidIf phSolid = phScene.CreateSolid(descSolid);
+            descSolid.mass = 1e20f;
+
+            descSolid.inertia = new Matrix3d(1e20f, 0.0, 0.0, 0.0, 1e20f, 0.0, 0.0, 0.0, 1e20f);
+            PHSolidIf solid1 = phScene.CreateSolid(descSolid);
+
+            PHHapticPointerDesc descHaptic = new PHHapticPointerDesc();
+            PHHapticPointerIf phHaptic = phScene.CreateHapticPointer();
+
+            //HISdkDesc descHi = new HISdkDesc();
+            //HISdkIf hiSdk = HISdkIf.CreateSdk();
+
+            System.Console.WriteLine("ret int:    expected: 3       result: " + phScene.NSolids());
+            for (int i = 0; i < 20; i++) {
+                phScene.Step();
+            }
+            System.Console.WriteLine("ret Uint:   expected: 20      result: " + phScene.GetCount());
+            phHaptic.SetLocalRange(2.345f);
+            System.Console.WriteLine("ret float:  expected: 2.345   result: " + phHaptic.GetLocalRange());
+            System.Console.WriteLine("ret double: expected: 0.005   result: " + phScene.GetTimeStep());
+            phScene.SetMaxVelocity(1.23);
+            System.Console.WriteLine("ret double: expected: 0.123   result: " + phScene.GetMaxVelocity());
+            phScene.EnableContactDetection(false);
+            System.Console.WriteLine("ret bool:   expected: False   result: " + phScene.IsContactDetectionEnabled());
+            phScene.EnableContactDetection(true);
+            System.Console.WriteLine("ret bool:   expected: True    result: " + phScene.IsContactDetectionEnabled());
+
+            System.Console.WriteLine("ret size_t: expected: xxxx    result: " + phScene.GetDescSize());
+
+            System.Console.WriteLine("ret Vec3d:  expected: (0.0, -9.8, 0.0) result: " + phScene.GetGravity());
+            phScene.SetGravity(new Vec3d(0.1, -9.9, 0.2));
+            System.Console.WriteLine("ret Vec3d:  expected: (0.1, -9.9, 0.2) result: " + phScene.GetGravity());
+        }
+
+        static void test_simulation() {
+            System.Console.WriteLine("---[ physical simulation ]---");
+
             PHSceneDesc descScene = new PHSceneDesc();
             PHSolidDesc descSolid = new PHSolidDesc();
             CDBoxDesc descBox = new CDBoxDesc();
-
             PHSdkIf phSdk = PHSdkIf.CreateSdk();
             PHSceneIf phScene = phSdk.CreateScene(descScene);
             PHSolidIf phSolid = phScene.CreateSolid(descSolid);
@@ -117,8 +224,10 @@ namespace SprCsSample {
 
             for (int i = 0; i < 200; i++) {
                 phScene.Step();
-                System.Console.WriteLine(i.ToString() + " : " + phSolid.GetPose());
+                //System.Console.WriteLine(i.ToString() + " : " + phSolid.GetPose());
+                System.Console.WriteLine(String.Format("{0, 3}", i) + " : " + phSolid.GetPose());
             }
+
         }
     }
 }
