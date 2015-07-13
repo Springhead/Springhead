@@ -80,12 +80,12 @@ public:
 	}
 	virtual ObjectIf*   GetChildObject(size_t pos)  {
 		if (sensor==NULL) {
-			return GetSkeleton(pos);
+			return GetSkeleton((int)pos);
 		} else {
 			if (pos==0) {
 				return sensor;
 			} else {
-				return GetSkeleton(pos-1);
+				return GetSkeleton((int)pos-1);
 			}
 		}
 	}

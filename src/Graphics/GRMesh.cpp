@@ -78,7 +78,7 @@ void GRMesh::DuplicateVertices(){
 	int nNewVertex = 0;
 	for(int i = 0; i < (int)vertexNormalMap.size(); i++){
 		if (vertexNormalMap[i].size() >= 2) newVertexMap[i].resize(vertexNormalMap[i].size()-1, 0);
-		nNewVertex += vertexNormalMap[i].size();
+		nNewVertex += (int)vertexNormalMap[i].size();
 	}
 	
 	vector<Vec3f>	newVertices(nNewVertex), newNormals;
@@ -86,7 +86,7 @@ void GRMesh::DuplicateVertices(){
 	if (normals.size()) newNormals.resize(nNewVertex);
 	if (texCoords.size()) newTexCoords.resize(nNewVertex);
 
-	int newIdx = vertices.size();
+	int newIdx = (int)vertices.size();
 	for(int i = 0; i < (int)faces.size(); i++){
 		for(int j = 0; j < faces[i].nVertices; j++){
 			int vid = faces[i].indices[j];
