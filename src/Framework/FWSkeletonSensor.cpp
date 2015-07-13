@@ -49,7 +49,7 @@ void FWSkeletonSensor::Update() {
 				if (!bProcessed) {
 					// ‹ó‚«‚ª–³‚©‚Á‚½‚Ì‚Å’Ç‰Á‚·‚é
 					AddSkeleton();
-					ProcessSkeleton(sensor->GetSkeleton(i), skeletons.size()-1);
+					ProcessSkeleton(sensor->GetSkeleton(i), (int)skeletons.size()-1);
 				}
 			}
 		}
