@@ -82,11 +82,13 @@ struct CRVisualSensorDesc : CREngineDesc{
 	Vec2d range;       ///< 視野の大きさ： 水平角度，垂直角度
 	Vec2d centerRange; ///< 中心視野の大きさ： 水平角度，垂直角度
 	Posed pose;        ///< 視覚センサを対象剛体に貼り付ける位置・姿勢
+	float limitDistance;	///< この距離を越えるとこぐまに認識されなくなる
 
 	CRVisualSensorDesc(){
 		range = Vec2d(Rad(90), Rad(90));
 		centerRange = Vec2d(Rad(10), Rad(10));
 		pose  = Posed();
+		limitDistance = 60;
 	}
 };
 
