@@ -40,7 +40,7 @@ void CRVisualSensor::Step(){
 
 		Vec2d thetaC = Vec2d(atan2(direction.x, -direction.y), atan2(direction.z, -direction.y));
 		thetaC.y *= (centerRange.X() / centerRange.Y());
-		if (theta.norm() < (range.X() / 2.0) && dist < 30) { // 決め打ち<!!>
+		if (theta.norm() < (range.X() / 2.0) && dist < limitDistance) { 
 			// Visible
 			CRVisualInfo visible;
 			visible.posWorld    = pos;
