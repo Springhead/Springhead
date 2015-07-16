@@ -7,22 +7,26 @@ using SprCs;
 
 namespace SprCsSample {
     class Program {
-        static void Main(string[] args) {
-            bool do_intrinsic = true;
-            bool do_tostring = true;
-            bool do_vector = true;
-            bool do_array = true;
-            bool do_type_conv = true;
-            bool do_func_return = true;
-            bool do_simulation = true;
+        static string def = "itvacfrs";
+        static string inc = "a";	// include: "a" for all
+        static string exc = "f";	// exclude:
 
-            if (do_intrinsic)   test_intrinsic();
-            if (do_tostring)    test_tostring();
-            if (do_vector)      test_vector();
-            if (do_array)       test_array();
-            if (do_type_conv)   test_type_conv();
-            if (do_func_return) test_func_return();
-            if (do_simulation)  test_simulation();
+        static void Main(string[] args) {
+            if (inc.Equals("a")) {
+                inc = def;
+            }
+            if (check_test("i"))  test_intrinsic();
+            if (check_test("t"))  test_tostring();
+            if (check_test("v"))  test_vector();
+            if (check_test("a"))  test_array();
+            if (check_test("c"))  test_type_conv();
+            if (check_test("f"))  test_func_args();
+            if (check_test("r"))  test_func_return();
+            if (check_test("s"))  test_simulation();
+        }
+
+        static bool check_test(string chk) {
+            return inc.Contains(chk) && !exc.Contains(chk);
         }
 
         static void test_intrinsic() {
@@ -156,6 +160,16 @@ namespace SprCsSample {
             System.Console.WriteLine("type_conv: expected: " + exp + " result: (" + v.x + ", " + v.y + ", " + v.z + ")");
         }
 
+        static void test_func_args() {
+            System.Console.WriteLine("---[ function arguments ]---");
+
+            // ここでのコードは正常には動作はしない － 例外が起きて停止する。
+            // デバッガで止めて値を確認すること。
+            //
+            // [int]
+            CDShapePairIf shapePairIf = new CDShapePairIf();
+            shapePairIf.GetShape(123);
+        }
         static void test_func_return() {
             System.Console.WriteLine("---[ function return ]---");
             int memoryLeakTest = 0;
