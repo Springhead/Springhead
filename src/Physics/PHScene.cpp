@@ -113,6 +113,17 @@ PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	AddChildObject(s->Cast());
 	return s->Cast();
 }
+UTRef<PHOpSpHashColliAgentIf> PHScene::CreateOpSpHashAgent()
+{
+	UTRef<PHOpSpHashColliAgent> s = DBG_NEW PHOpSpHashColliAgent();
+	opSpAgent = s;
+
+	opSpAgent->SetScene(Cast());
+
+	s->spTable = DBG_NEW CDSpatialHashTable();
+
+	return s->Cast();
+}
 int PHScene::NSolids()const{
 	return (int)solids->solids.size();
 }
@@ -609,6 +620,10 @@ PHFemEngineIf* PHScene::GetFemEngine(){
 
 PHOpEngineIf* PHScene::GetOpEngine(){
 	return XCAST(opEngine);
+}
+
+PHOpSpHashColliAgentIf* PHScene:: GetOpColliAgent(){
+	return XCAST(opSpAgent);
 }
 
 PHHapticEngineIf* PHScene::GetHapticEngine(){

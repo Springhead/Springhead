@@ -10,6 +10,7 @@ namespace Spr{
 		fdt = 0.01;
 		objidIndex = 0;
 		radiusCoe = 0.5;
+		opIterationTime = 1;
 	}
 	void PHOpEngine:: SetGravity(bool gflag)
 	{
@@ -19,8 +20,31 @@ namespace Spr{
 		}
 	}
 	void PHOpEngine::Step(){
-		for (int obji = 0; obji < (int) opObjs.size(); obji++)
-				opObjs[obji]->SimpleSimulationStep();
+		/*for (int obji = 0; obji < (int) opObjs.size(); obji++)
+				opObjs[obji]->SimpleSimulationStep();*/
+
+		PHSceneIf* phs = (PHSceneIf*)GetScene();
+		PHOpSpHashColliAgentIf* agent = phs->GetOpColliAgent();
+
+		for (int obji = 0; obji < (int)opObjs.size(); obji++)
+		{
+			opObjs[obji]->positionPredict();
+			
+
+			if (agent->CollisionEnabled())
+			{
+				agent->OpCollisionProcedure();
+			
+			}
+			for (int itri = 0; itri < opIterationTime; itri++)//iteration default is 1
+			{
+				opObjs[obji]->groupStep();
+
+
+			}
+
+			opObjs[obji]->integrationStep();
+		}
 	}
 	void PHOpEngine::SetTimeStep(double dt){
 		fdt = dt;

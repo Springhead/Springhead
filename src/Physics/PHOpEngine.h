@@ -147,6 +147,8 @@ namespace Spr{
 		float radiusCoe;
 		//‘È‰~•`‰æ‚·‚é—p
 		DrawEllipsoid drawEll;
+
+		int opIterationTime;
 	
 		PHOpEngine();
 

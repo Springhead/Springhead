@@ -16,6 +16,7 @@
 #include "PHIKEndEffector.h"
 #include "PHSkeleton.h"
 #include "PHOpEngine.h"
+#include <Physics\PHOpSpHashColliAgent.h>
 
 namespace Spr {;
 
@@ -64,6 +65,8 @@ protected:
 	PHFemEngine*			femEngine;
 	PHHapticEngine*			hapticEngine;
 	PHOpEngine*				opEngine;
+	
+	UTRef<PHOpSpHashColliAgent>	opSpAgent;
 
 	std::vector< UTRef<PHSkeleton> > skeletons;
 
@@ -142,6 +145,7 @@ public:
 		skeleton->SetScene(this->Cast());
 		return skeleton->Cast();
 	}
+	UTRef<PHOpSpHashColliAgentIf> CreateOpSpHashAgent();
 
 
 	int						NFemMeshes()const;
@@ -224,6 +228,7 @@ public:
 	PHFemEngineIf*			GetFemEngine();
 	PHHapticEngineIf*		GetHapticEngine();
 	PHOpEngineIf*				GetOpEngine();
+	PHOpSpHashColliAgentIf* GetOpColliAgent();
 	PHHapticPointerIf*		CreateHapticPointer();
 	void					SetStateMode(bool bConstraints);
 	
