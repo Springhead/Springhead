@@ -26,6 +26,7 @@
 %include "../../include/Physics/SprPHJointMotor.h"
 %include "../../include/Physics/SprPHNodeHandlers.h"
 %include "../../include/Physics/SprPHOpObj.h"
+%include "../../include/Physics/SprPHOpSpHashAgent.h"
 %include "../../include/Physics/SprPHScene.h"
 %include "../../include/Physics/SprPHSdk.h"
 %include "../../include/Physics/SprPHSkeleton.h"
