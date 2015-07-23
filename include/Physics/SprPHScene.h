@@ -25,6 +25,7 @@
 #include <Physics/SprPHFemMeshNew.h>
 #include <Physics/SprPHHaptic.h>
 #include <Physics/SprPHSkeleton.h>
+#include <Physics/SprPHOpSpHashAgent.h>
 
 namespace Spr{;
 
@@ -301,6 +302,11 @@ public:
 	 */
 	int NGears()const;
 
+	/** @brief OPためのspHashの代理を作る
+
+	*/
+	PHOpSpHashColliAgentIf* CreateOpSpHashAgent();
+
 	/** @brief ギアを取得する
 	 */
 	PHGearIf* GetGear(int i);
@@ -559,6 +565,11 @@ public:
 	@return OrientedParticleEngineへのポインタ
 	*/
 	PHOpEngineIf* GetOpEngine();
+
+	/** @brief Op衝突判定のagentを取得する
+	@return agentへのポインタ
+	*/
+	PHOpSpHashColliAgentIf* GetOpColliAgent();
 
 	/** @breif HapticPointerを作成する
 		@retrun HapticPointerへのポインタ

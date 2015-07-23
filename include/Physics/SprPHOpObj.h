@@ -56,7 +56,21 @@ struct PHOpObjIf : public SceneObjectIf{
 	
 	bool initialDeformObject(Vec3f *vts, int vtsNum, float pSize);
 	void		SetGravity(bool bOn);
+	void SimpleSimulationStep();
+
+	void AddVertextoLocalBuffer(Vec3f v);
+	bool InitialObjUsingLocalBuffer(float pSize);
+
+	//âBÇµÇΩÇŸÇ§Ç™Ç¢Ç¢ä÷êîÇΩÇø
+	void positionPredict();
+	void groupStep();
+	void integrationStep();
+	void ReducedPositionProject();
+	void positionProject();
+
+	void BuildBlendWeight();
 	
+
 };
 
 //@}

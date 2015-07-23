@@ -14,3 +14,4 @@
 #include "CDCapsule.h"
 #include "CDRoundCone.h"
 #include "CDBox.h"
+#include "CDSpatialHashTable.h"

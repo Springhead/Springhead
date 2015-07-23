@@ -16,6 +16,7 @@
 #include <Physics/PHTreeNode.h>
 #include <Physics/PHGear.h>
 #include <Physics/PHOpObj.h>
+#include <Physics/PHOpSpHashColliAgent.h>
 #include <Physics/PHFemMesh.h>
 #include <Physics/PHFemMeshThermo.h>
 #include <Physics/PHFemMeshNew.h>
@@ -86,6 +87,7 @@ void PHSdkIf::RegisterSdk(){
 	PHSolidIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFrame));
 
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHOpObj));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHOpSpHashColliAgent));
 
 	PHRegisterTypeDescs();
 	PHRegisterLoadHandlers();

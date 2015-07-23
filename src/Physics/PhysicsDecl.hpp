@@ -1183,6 +1183,18 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHOpSpHashColliAgentDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHRayDesc \
 protected:\
 	Vec3d	origin;	\

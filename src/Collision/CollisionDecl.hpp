@@ -118,3 +118,15 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_CDSpatialHashTableDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+

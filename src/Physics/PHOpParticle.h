@@ -141,6 +141,8 @@ public :
 	Vec3f pVelocity;
 	//粒子の到達位置（未使用）
 	std::vector<Vec3f> pGoalCtr;
+	//used to precalculation in Collision Detection;
+	Matrix3f pPreEllipA;
 
 	//Delayed Force Base.()
 	//外力

@@ -232,6 +232,7 @@ protected:\
 	Vec2d	range;	\
 	Vec2d	centerRange;	\
 	Posed	pose;	\
+	float	limitDistance;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -239,6 +240,7 @@ public:\
 		range = ((CRVisualSensorDesc*)ptr)->range;	\
 		centerRange = ((CRVisualSensorDesc*)ptr)->centerRange;	\
 		pose = ((CRVisualSensorDesc*)ptr)->pose;	\
+		limitDistance = ((CRVisualSensorDesc*)ptr)->limitDistance;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -247,6 +249,7 @@ public:\
 		((CRVisualSensorDesc*)ptr)->range = range;	\
 		((CRVisualSensorDesc*)ptr)->centerRange = centerRange;	\
 		((CRVisualSensorDesc*)ptr)->pose = pose;	\
+		((CRVisualSensorDesc*)ptr)->limitDistance = limitDistance;	\
 		return true;	\
 	}\
 

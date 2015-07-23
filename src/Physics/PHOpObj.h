@@ -21,6 +21,7 @@ namespace Spr{
 	;
 
 
+
 	//class PHOpObj: public SceneObject, public PHOpObjStatePrivate, public PHOpObjDesc {
 	class PHOpObj : public SceneObject, public PHOpObjDesc {
 		SPR_OBJECTDEF(PHOpObj);
@@ -155,6 +156,7 @@ namespace Spr{
 		//—±q‚Æ•\–Êmesh‚Æ‚Ì‘Î‰ŠÖŒW
 		std::vector<int> faceBelongs;
 
+		std::vector<Vec3f> tmpVts;
 
 		//int bvhNum;
 		//ŒJ‚è•Ô‚·”‚¦Œv”
@@ -335,7 +337,40 @@ namespace Spr{
 		Matrix3f SolveShpMchByJacobi(PHOpGroup &pg);
 
 
+		bool InitialObjUsingLocalBuffer(float pSize)
+		{
+			int vtsNum = tmpVts.size();
+			Vec3f* vts = new Vec3f[vtsNum];
 
+			for (int vi = 0; vi < vtsNum; vi++)
+			{
+				vts[vi] = tmpVts[vi];
+			}
+
+			objOrigPos = new Vec3f[vtsNum];
+			initialOrgP = true;
+			objTargetVts = vts;//Tetgen‚½‚ßg‚¤
+			objTargetVtsNum = vtsNum;
+
+			initalDeformVertex(vts, vtsNum);
+			if (!BuildParticles(vts, vtsNum, tmpPtclList, pSize))
+				return false;
+
+			return true;
+			
+			ClearLocalVtsBuffer();
+		}
+
+		void ClearLocalVtsBuffer()
+		{
+			std::vector<Vec3f> cl;
+			cl.swap(tmpVts);
+		}
+
+		void AddVertextoLocalBuffer(Vec3f v)
+		{
+			tmpVts.push_back(v);
+		}
 
 		bool initialDeformObject(Vec3f *vts, int vtsNum, float pSize)
 		{
@@ -869,37 +904,7 @@ namespace Spr{
 			return objBlWeightArr[vertexIndex][linkPIndex];
 		}
 
-		class m3Bounds
-		{
-		public:
-			m3Bounds(){}
-			inline m3Bounds(const Vec3d &min0, const Vec3d &max0) { min = min0; max = max0; }
-
-			inline void set(const Vec3d &min0, const Vec3d &max0) { min = min0; max = max0; }
-
-			void clamp(Vec3f &pos){//‹«ŠE‚ğ’´‚¦‚½“_‚ğ‚»‚Ì‚Ü‚Ü‹«ŠE‚Ì‚Ç‚±‚ëİ’è‚·‚é
-				if (isEmpty()) return;
-				//pos.maximum(min);
-				maximum(pos, min);
-				minimum(pos, max);
-			};
-			inline bool isEmpty() const {
-				if (min.x > max.x&&min.y > max.y&&min.z > max.z) return true;
-				return false;
-			}
-			inline void minimum(Vec3f &self, Vec3f &other) {
-				if (other.x < self.x) self.x = other.x;
-				if (other.y < self.y) self.y = other.y;
-				if (other.z < self.z) self.z = other.z;
-
-			}
-			inline void maximum(Vec3f &self, Vec3f &other) {
-				if (other.x > self.x) self.x = other.x;
-				if (other.y > self.y) self.y = other.y;
-				if (other.z > self.z) self.z = other.z;
-			}
-			Vec3f min, max;
-		};
+		
 
 
 
@@ -912,7 +917,7 @@ namespace Spr{
 
 			Vec3f gravity;
 			float timeStep;
-			m3Bounds bounds;//‹““®”ÍˆÍ
+			Bounds bounds;//‹““®”ÍˆÍ
 
 			float alpha;
 			float beta;
