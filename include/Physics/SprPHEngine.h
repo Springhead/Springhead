@@ -205,15 +205,6 @@ public:
 
 	SPR_IFDEF(PHOpEngine);
 };
-
-struct PHOpHapticEngineIf : PHEngineIf{
-public:
-	void SetTimeStep(double dt);
-	double GetTimeStep();
-
-	SPR_IFDEF(PHOpHapticEngine);
-};
-
 struct PHHapticEngineDesc{
 	enum HapticEngineMode{
 		SINGLE_THREAD = 0,
