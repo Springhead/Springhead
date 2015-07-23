@@ -11,7 +11,6 @@ IMPSRCDIR	= $(TOPDIR)\SprImport
 CSSRCDIR	= $(TOPDIR)\SprCSharp
 IFILEDIR	= $(TOPDIR)
 
-SWIG	= $(BINDIR)\swig.exe
 RUNSWIG	= $(MAKEDIR)\RunSwig_CSharp.bat
 
 EXPSRCS	= $(EXPSRCDIR)\CSBase.cpp		\
@@ -67,13 +66,11 @@ $(DLLDIR)\SprImport.dll:	$(IMPSRCS)
 
 $(DLLDIR)\SprCSharp.dll:	$(CSSRCS)
 
-$(EXPSRCS):	$(IFILES) $(SWIG)
+$(EXPSRCS):	$(IFILES)
 
-$(IMPSRCS):	$(IFILES) $(SWIG)
+$(IMPSRCS):	$(IFILES)
 
-$(CSSRCS):	$(IFILES) $(SWIG)
+$(CSSRCS):	$(IFILES)
 
 $(IFILES):	
-
-$(SWIG):	
 
