@@ -70,6 +70,7 @@ EXTEND_N_GET_TO_LIST(Spr::PHSolidIf				,NShape				,GetShape			,CDShapeIf			)
 %include "../../include/Physics/SprPHJoint.h"
 %include "../../include/Physics/SprPHJointLimit.h"
 %include "../../include/Physics/SprPHNodeHandlers.h"
+%include "../../include/Physics/SprPHOpSpHashAgent.h"
 %include "../../include/Physics/SprPHScene.h"
 %include "../../include/Physics/SprPHSdk.h"
 %include "../../include/Physics/SprPHSolid.h"
