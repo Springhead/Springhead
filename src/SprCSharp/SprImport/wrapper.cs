@@ -5,6 +5,12 @@ using System.Runtime.InteropServices;
 
 namespace SprCs {
     public partial class SprExport {
+        // wrapper base class
+        //  vectorwrapper
+        //  arraywrapper
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern IntPtr Spr_arraywrapper_new(uint size, uint nelm);
+
         // std::vector
         //  int
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]

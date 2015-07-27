@@ -6,6 +6,13 @@
 using namespace std;
 
 extern "C" {
+    // wrapper base class
+    //  vectorwrapper
+    //  arraywrapper
+    __declspec(dllexport) HANDLE __cdecl Spr_arraywrapper_new(unsigned int size, unsigned int nelm) {
+        return (HANDLE) new char[size * nelm];
+    }
+
     // std::vector
     //  int
     __declspec(dllexport) int __cdecl Spr_vector_get_int(HANDLE ptr, int index) {
