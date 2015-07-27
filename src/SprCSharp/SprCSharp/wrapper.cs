@@ -7,9 +7,21 @@ namespace SprCs {
     // wrapper base class
     //
     public class wrapper : CsObject {
-        public wrapper(IntPtr ptr) { _this = ptr; }
+        public wrapper(IntPtr ptr) { _this = ptr; _nelm = 0; }
         protected wrapper() {}
         ~wrapper() {}
+        protected uint _nelm;
+        public uint size() { return _nelm; }
+    }
+    public class vectorwrapper : wrapper {
+        public vectorwrapper(IntPtr ptr) : base(ptr) {}
+    }
+    public class arraywrapper : wrapper {
+        public arraywrapper(IntPtr ptr) : base(ptr) {}
+        public arraywrapper(uint size, uint nelm) {
+            _this = SprExport.Spr_arraywrapper_new(size, nelm);
+            _nelm = nelm;
+        }
     }
 
     // std::vector
@@ -91,24 +103,27 @@ namespace SprCs {
 
     // array
     //  int
-    public class arraywrapper_int : wrapper {
+    public class arraywrapper_int : arraywrapper {
         public arraywrapper_int(IntPtr ptr) : base(ptr) {}
+        public arraywrapper_int(uint nelm) : base(sizeof(int), nelm) {}
         public int this[int index] {
             get { return (int) SprExport.Spr_array_get_int(get(), index); }
             set { SprExport.Spr_array_set_int(get(), index, value); }
         }
     }
     //  float
-    public class arraywrapper_float : wrapper {
+    public class arraywrapper_float : arraywrapper {
         public arraywrapper_float(IntPtr ptr) : base(ptr) {}
+        public arraywrapper_float(uint nelm) : base(sizeof(float), nelm) {}
         public float this[int index] {
             get { return (float) SprExport.Spr_array_get_float(get(), index); }
             set { SprExport.Spr_array_set_float(get(), index, value); }
         }
     }
     //  double
-    public class arraywrapper_double : wrapper {
+    public class arraywrapper_double : arraywrapper {
         public arraywrapper_double(IntPtr ptr) : base(ptr) {}
+        public arraywrapper_double(uint nelm) : base(sizeof(double), nelm) {}
         public double this[int index] {
             get { return (double) SprExport.Spr_array_get_double(get(), index); }
             set { SprExport.Spr_array_set_double(get(), index, value); }

@@ -122,6 +122,16 @@ namespace SprCsSample {
             for (int i = 0; i < 4; i++) {
                 System.Console.WriteLine("array<int>: expected: " + (100 + i) + " result: " + meshFace.indices[i]);
             }
+            arraywrapper_int iarray = new arraywrapper_int(4);
+            for (int i = 0; i < 4; i++)
+            {
+                meshFace.indices[i] = 200 + i;
+            }
+            meshFace.indices = iarray;
+            for (int i = 0; i < 4; i++)
+            {
+                System.Console.WriteLine("array<int>: expected: " + (200 + i) + " result: " + meshFace.indices[i]);
+            }
         }
 
         static void test_type_conv() {
