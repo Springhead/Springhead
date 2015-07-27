@@ -21,7 +21,7 @@ namespace Spr{
 		scene = (PHSceneIf*)GetScene();
 		opengIf = scene->GetOpEngine()->Cast();
 		opEngine = DCAST(PHOpEngine, opengIf);
-		objNum = opEngine->opObjs.size();
+		objNum = (int) opEngine->opObjs.size();
 
 	}
 	void PHOpSpHashColliAgent::ClearDebugData()
@@ -149,7 +149,7 @@ namespace Spr{
 		PHSceneIf* scene = (PHSceneIf*)GetScene();
 		PHOpEngineIf* opengIf = scene->GetOpEngine()->Cast();
 		PHOpEngine* opEngine = DCAST(PHOpEngine, opengIf);
-		int objNum = opEngine->opObjs.size();
+		int objNum = (int) opEngine->opObjs.size();
 		std::vector<PHOpObj*>& dfmObj = opEngine->opObjs;
 
 		solveCount = 0;
@@ -162,7 +162,7 @@ namespace Spr{
 			iter_end = std::unique(spTable->ColliedHashIndexList.begin(), spTable->ColliedHashIndexList.end());
 			spTable->ColliedHashIndexList.erase(iter_end, spTable->ColliedHashIndexList.end());
 
-			int size = spTable->ColliedHashIndexList.size();
+			int size = (int) spTable->ColliedHashIndexList.size();
 			//vector<int> colliedIndexes;
 			std::vector<solvedColliPair> solvedColliPairs;
 			//チェック必要な
@@ -251,7 +251,7 @@ namespace Spr{
 								{
 									//one pair check only once
 									bool pairExist = false;
-									for (int si = 0; si < solvedColliPairs.size(); si++)
+									for (int si = 0; si < (int) solvedColliPairs.size(); si++)
 									{
 										int cp1 = solvedColliPairs[si].cPInd1;
 										int cp2 = solvedColliPairs[si].cPInd2;

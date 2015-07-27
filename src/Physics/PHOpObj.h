@@ -339,7 +339,7 @@ namespace Spr{
 
 		bool InitialObjUsingLocalBuffer(float pSize)
 		{
-			int vtsNum = tmpVts.size();
+			int vtsNum = (int) tmpVts.size();
 			Vec3f* vts = new Vec3f[vtsNum];
 
 			for (int vi = 0; vi < vtsNum; vi++)

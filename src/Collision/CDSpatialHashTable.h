@@ -93,7 +93,7 @@ public:
 			IndexOfincludedObjInd= (-1) ;//
 			if(pcInfolist.size()>0)
 			{
-				int testNum = pcInfolist.size();
+				int testNum = (int) pcInfolist.size();
 				std::vector<PtclInfoNode> ::iterator crackendtest = pcInfolist.end();
 				itr = pcInfolist.begin();
 
@@ -116,7 +116,7 @@ public:
 
 							pcInfolist.push_back(newNode);
 							//list<PtclInfoNode> ::iterator crackendtest2 = pcInfolist.end();
-							collilength = pcInfolist.size();
+							collilength = (int) pcInfolist.size();
 							return false;		//exit 1
 						}
 						else
@@ -147,7 +147,7 @@ public:
 				PtclInfoNode newNode(pIndex,oIndex,timestamp);
 				pcInfolist.push_back(newNode);
 				
-				collilength = pcInfolist.size();
+				collilength = (int) pcInfolist.size();
 				return true;
 			}
 			else 
