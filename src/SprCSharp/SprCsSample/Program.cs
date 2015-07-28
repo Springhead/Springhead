@@ -6,7 +6,7 @@ using SprCs;
 
 namespace SprCsSample {
     class Program {
-        static string def = "itvacfrs";
+        static string def = "itvacfr";
         static string inc = "a";	// include: "a" for all
         static string exc = "f";	// exclude:
 
@@ -151,6 +151,35 @@ namespace SprCsSample {
             print_vec3ds(f3s, msg_f3);
 //            print_vec3fs(d3s, msg_d3);  // This cause CS1502 and CS1503 compile error. <- OK
             print_vec3fs((Vec3fStruct) d3s, msg_d3);
+
+            // ----
+
+            // DCASTに相当する機能を実装しないと動かないテスト
+            PHSdkIf phSdk = PHSdkIf.CreateSdk();
+            CDBoxDesc descBox = new CDBoxDesc();
+            descBox.boxsize = new Vec3f(1,4,9);
+            CDShapeIf shape = phSdk.CreateShape(CDBoxIf.GetIfInfoStatic(), descBox);
+
+            Type t = Type.GetType("SprCs.CDBoxIf, SprCSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+            System.Console.WriteLine(t == null ? "null" : t.ToString());
+            System.Console.WriteLine(CDBoxIf.GetIfInfoStatic().ClassName());
+
+            CDBoxIf box = shape as CDBoxIf;
+            System.Console.WriteLine("type_conv: expected: (1, 4, 9)  result: " + box.GetBoxSize().ToString());
+
+            CDSphereIf sphere = shape as CDSphereIf;
+            if (sphere == null) {
+                System.Console.WriteLine("type_conv: expected: null  result: null");
+            } else {
+                System.Console.WriteLine("type_conv: expected: null  result: " + sphere.ToString());
+            }
+
+            CDConvexIf convex = shape as CDConvexIf;
+            if (convex == null) {
+                System.Console.WriteLine("type_conv: expected: not null  result: null");
+            } else {
+                System.Console.WriteLine("type_conv: expected: not null  result: " + convex.ToString());
+            }
         }
 
         static void print_vec3d(Vec3d v, string exp) {
