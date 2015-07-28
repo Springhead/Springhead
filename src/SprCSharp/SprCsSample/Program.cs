@@ -6,7 +6,7 @@ using SprCs;
 
 namespace SprCsSample {
     class Program {
-        static string def = "itvacfr";
+        static string def = "itvcfr";
         static string inc = "a";	// include: "a" for all
         static string exc = "f";	// exclude:
 
@@ -153,27 +153,26 @@ namespace SprCsSample {
             print_vec3fs((Vec3fStruct) d3s, msg_d3);
 
             // ----
-
-            // DCASTに相当する機能を実装しないと動かないテスト
+            // 自動DCASTのテスト
             PHSdkIf phSdk = PHSdkIf.CreateSdk();
             CDBoxDesc descBox = new CDBoxDesc();
             descBox.boxsize = new Vec3f(1,4,9);
             CDShapeIf shape = phSdk.CreateShape(CDBoxIf.GetIfInfoStatic(), descBox);
+            // ↑ CreateShapeはCDBoxIfオブジェクトを返す。それをCDShapeIfで受ける。
 
-            Type t = Type.GetType("SprCs.CDBoxIf, SprCSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
-            System.Console.WriteLine(t == null ? "null" : t.ToString());
-            System.Console.WriteLine(CDBoxIf.GetIfInfoStatic().ClassName());
-
+            // CDShapeIf型の変数に格納されているが中身はCDBoxIfなので型変換可能。
             CDBoxIf box = shape as CDBoxIf;
             System.Console.WriteLine("type_conv: expected: (1, 4, 9)  result: " + box.GetBoxSize().ToString());
 
+            // CDBoxIf is not a CDSphereIf なので nullになることが期待される。
             CDSphereIf sphere = shape as CDSphereIf;
             if (sphere == null) {
                 System.Console.WriteLine("type_conv: expected: null  result: null");
             } else {
                 System.Console.WriteLine("type_conv: expected: null  result: " + sphere.ToString());
             }
-
+            
+            // CDBoxIf is a CDConvexIf なのでnullにはならず型変換される。
             CDConvexIf convex = shape as CDConvexIf;
             if (convex == null) {
                 System.Console.WriteLine("type_conv: expected: not null  result: null");

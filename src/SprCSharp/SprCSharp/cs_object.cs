@@ -1,6 +1,7 @@
 // cs_object.cs
 //
 using System;
+using System.Collections.Generic;
 
 namespace SprCs {
     public class CsObject {
@@ -23,33 +24,20 @@ namespace SprCs {
         public CsCastObject(ObjectIf obj) { _this = obj._this; _flag = obj._flag; _info = obj.GetIfInfo(); }
     }
 
-    /*
-    public partial class CDConvexIf {
-        public static implicit operator CDConvexIf(CsCastObject target) {
-            return (target._info.Inherit(CDConvexIf.GetIfInfoStatic()) ? new CDConvexIf(target._this, target._flag) : null);
+    public partial class IfInfoToCsType {
+        public static Type FindType(IfInfo ifinfo) {
+            Type t = null;
+            if (mapPhysics.TryGetValue(ifinfo.get(), out t)) { return t; }
+            if (mapCollision.TryGetValue(ifinfo.get(), out t)) { return t; }
+            if (mapFramework.TryGetValue(ifinfo.get(), out t)) { return t; }
+            if (mapGraphics.TryGetValue(ifinfo.get(), out t)) { return t; }
+            if (mapHumanInterface.TryGetValue(ifinfo.get(), out t)) { return t; }
+            if (mapCreature.TryGetValue(ifinfo.get(), out t)) { return t; }
+            if (mapFileIO.TryGetValue(ifinfo.get(), out t)) { return t; }
+            if (mapFoundation.TryGetValue(ifinfo.get(), out t)) { return t; }
+            if (mapBase.TryGetValue(ifinfo.get(), out t)) { return t; }
+            return null;
         }
     }
-
-    public partial class CDSphereIf {
-        public static implicit operator CDSphereIf(CsCastObject target) {
-            if (target._info.Inherit(CDSphereIf.GetIfInfoStatic())) {
-                return new CDSphereIf(target._this, target._flag);
-            } else {
-                return null;
-            }
-        }
-    }
-
-    public partial class CDBoxIf {
-        public static implicit operator CDBoxIf(CsCastObject target) {
-            if (target._info.Inherit(CDBoxIf.GetIfInfoStatic())) {
-                return new CDBoxIf(target._this, target._flag);
-            } else {
-                return null;
-            }
-        }
-    }
-     * */
-
 }
 
