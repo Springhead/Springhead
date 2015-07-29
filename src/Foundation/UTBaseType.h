@@ -21,9 +21,8 @@ struct Posef{ float w; float x; float y; float z; float px; float py; float pz;}
 struct Posed{ double w; double x; double y; double z; double px; double py; double pz;};
 
 #ifdef SWIG_CS_SPR
-#define ARRAY_ALLOCATOR void _array_allocator()
 // for C#
-struct Vec2i{ int x; int y; ARRAY_ALLOCATOR(); };
+struct Vec2i{ int x; int y; };
 struct Vec3i{ int x; int y; int z; };
 struct Vec4i{ int x; int y; int z; int w; };
 struct Vec6f{ float vx; float vy; float vz; float wx; float wy; float wz; };
