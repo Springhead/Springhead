@@ -34,6 +34,8 @@ struct Affinef{ float xx,xy,xz,xw, yx,yy,yz,yw, zx,zy,zz,zw, px,py,pz,pw; };
 struct Affined{ double xx,xy,xz,xw, yx,yy,yz,yw, zx,zy,zz,zw, px,py,pz,pw; };
 struct IfInfo{ bool Inherit(const IfInfo* info); const char* ClassName(); };
 
+// struct _Hoge { Vec3d v3_array[10]; };
+
 #else
 struct Matrix3f{ float data[9]; };
 struct Matrix3d{ double data[9]; };

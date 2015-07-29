@@ -152,7 +152,7 @@ namespace SprCsSample {
 //            print_vec3fs(d3s, msg_d3);  // This cause CS1502 and CS1503 compile error. <- OK
             print_vec3fs((Vec3fStruct) d3s, msg_d3);
 
-            // ----
+            // -----
             // 自動DCASTのテスト
             PHSdkIf phSdk = PHSdkIf.CreateSdk();
             CDBoxDesc descBox = new CDBoxDesc();
@@ -179,6 +179,11 @@ namespace SprCsSample {
             } else {
                 System.Console.WriteLine("type_conv: expected: not null  result: " + convex.ToString());
             }
+
+            // -----
+            PHSceneDesc descScn = new PHSceneDesc();
+            PHSceneIf scene = phSdk.CreateObject(PHSceneIf.GetIfInfoStatic(), descScn) as PHSceneIf;
+            System.Console.WriteLine((scene == null) ? "null" : scene.ToString());
         }
 
         static void print_vec3d(Vec3d v, string exp) {
