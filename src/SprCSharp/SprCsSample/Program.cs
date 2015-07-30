@@ -6,12 +6,12 @@ using SprCs;
 
 namespace SprCsSample {
     class Program {
-        static string def = "itvcfr";
-        static string inc = "a";	// include: "a" for all
+        static string def = "itvcfrs";
+        static string inc = "A";	// include: "A" for all
         static string exc = "f";	// exclude:
 
         static void Main(string[] args) {
-            if (inc.Equals("a")) {
+            if (inc.Equals("A")) {
                 inc = def;
             }
             if (check_test("i"))  test_intrinsic();
@@ -132,6 +132,17 @@ namespace SprCsSample {
             {
                 System.Console.WriteLine("array<int>: expected: " + (200 + i) + " result: " + meshFace.indices[i]);
             }
+            //Vec3i v3i = new Vec3i(1, 2, 3);
+            //System.Console.WriteLine("array<int> alloc(3): result:   " + v3i);
+            //v3i.alloc(2);
+            //for (int i = 0; i < 2; i++) {
+            //    v3i[i].x = 10 * (i + 1);
+            //    v3i[i].y = 10 * (i + 1);
+            //    v3i[i].z = 10 * (i + 1);
+            //}
+            //System.Console.WriteLine("                     expected: " + "((10, 10, 10), (20, 20, 20))");
+            //System.Console.WriteLine("                     result:   " + v3i);
+
         }
 
         static void test_type_conv() {
@@ -253,7 +264,7 @@ namespace SprCsSample {
             phScene.EnableContactDetection(true);
             System.Console.WriteLine("ret bool:   expected: True    result: " + phScene.IsContactDetectionEnabled());
 
-            System.Console.WriteLine("ret size_t: expected: xxxx    result: " + phScene.GetDescSize());
+            System.Console.WriteLine("ret size_t: expected: 152?    result: " + phScene.GetDescSize());
 
             System.Console.WriteLine("ret Vec3d:  expected: (0.0, -9.8, 0.0) result: " + phScene.GetGravity());
             phScene.SetGravity(new Vec3d(0.1, -9.9, 0.2));
