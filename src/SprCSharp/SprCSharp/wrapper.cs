@@ -11,12 +11,12 @@ namespace SprCs {
         protected wrapper() {}
         ~wrapper() {}
         protected uint _nelm;
-        public uint size() { return _nelm; }
     }
     public class vectorwrapper : wrapper {
         public vectorwrapper(IntPtr ptr) : base(ptr) {}
     }
     public class arraywrapper : wrapper {
+        protected arraywrapper() {}
         public arraywrapper(IntPtr ptr) : base(ptr) {}
         public arraywrapper(uint size, uint nelm) {
             _this = SprExport.Spr_arraywrapper_new(size, nelm);
