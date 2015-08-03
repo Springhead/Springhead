@@ -6,7 +6,7 @@ using SprCs;
 
 namespace SprCsSample {
     class Program {
-        static string def = "itvcfrs";
+        static string def = "itvacfrs";
         static string inc = "A";	// include: "A" for all
         static string exc = "f";	// exclude:
 
@@ -164,7 +164,7 @@ namespace SprCsSample {
             print_vec3fs((Vec3fStruct) d3s, msg_d3);
 
             // -----
-            // 自動DCASTのテスト
+            // 戻り値の自動型変換のテスト
             PHSdkIf phSdk = PHSdkIf.CreateSdk();
             CDBoxDesc descBox = new CDBoxDesc();
             descBox.boxsize = new Vec3f(1,4,9);
