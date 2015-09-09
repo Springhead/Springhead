@@ -33,3 +33,8 @@
 #include "PHIKEndEffector.h"
 #include "PHContactSurface.h"
 #include "PHOpObj.h"
+#include "PHOpSpHashColliAgent.h"
+#include "PHOpDecompositionMethods.h"
+#include "PHOpHapticController.h"
+#include "PHOpHapticRenderer.h"
+#include "PHOpEngine.h"

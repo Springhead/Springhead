@@ -21,7 +21,7 @@ namespace Spr{
 		scene = (PHSceneIf*)GetScene();
 		opengIf = scene->GetOpEngine()->Cast();
 		opEngine = DCAST(PHOpEngine, opengIf);
-		objNum = (int) opEngine->opObjs.size();
+		objNum = (int)opEngine->opObjs.size();
 
 	}
 	void PHOpSpHashColliAgent::ClearDebugData()
@@ -34,7 +34,7 @@ namespace Spr{
 			swp2.swap(pPCtcPs2);
 		}
 	}
-	bool PHOpSpHashColliAgent::CollisionEnabled()
+	bool PHOpSpHashColliAgent::IsCollisionEnabled()
 	{
 		return enableCollision;
 	}
@@ -149,7 +149,7 @@ namespace Spr{
 		PHSceneIf* scene = (PHSceneIf*)GetScene();
 		PHOpEngineIf* opengIf = scene->GetOpEngine()->Cast();
 		PHOpEngine* opEngine = DCAST(PHOpEngine, opengIf);
-		int objNum = (int) opEngine->opObjs.size();
+		int objNum = (int)opEngine->opObjs.size();
 		std::vector<PHOpObj*>& dfmObj = opEngine->opObjs;
 
 		solveCount = 0;
@@ -162,7 +162,7 @@ namespace Spr{
 			iter_end = std::unique(spTable->ColliedHashIndexList.begin(), spTable->ColliedHashIndexList.end());
 			spTable->ColliedHashIndexList.erase(iter_end, spTable->ColliedHashIndexList.end());
 
-			int size = (int) spTable->ColliedHashIndexList.size();
+			int size = (int)spTable->ColliedHashIndexList.size();
 			//vector<int> colliedIndexes;
 			std::vector<solvedColliPair> solvedColliPairs;
 			//チェック必要な
@@ -251,7 +251,10 @@ namespace Spr{
 								{
 									//one pair check only once
 									bool pairExist = false;
+
+
 									for (int si = 0; si < (int) solvedColliPairs.size(); si++)
+
 									{
 										int cp1 = solvedColliPairs[si].cPInd1;
 										int cp2 = solvedColliPairs[si].cPInd2;
@@ -754,7 +757,7 @@ namespace Spr{
 					float distwithDir = distV.dot(planeOrint);
 
 #ifndef COlliPlaneBallSolution
-					float testrange;
+					//float testrange;
 					//ellipsoid solution
 					//if(dist < grSphereRadii)
 #ifdef USE_AVE_RADIUS

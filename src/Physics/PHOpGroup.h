@@ -6,26 +6,25 @@
 
 namespace Spr{;
 
-class PHOpGroup
+class PHOpGroup :public SceneObject, public PHOpGroupDesc
 {
+	SPR_OBJECTDEF(PHOpGroup);
 public:
-	//粒子グループのid
-	int gMyIndex;
+	
 	//このグループに含む粒子のindex
 	std::vector<int> gPInd;
-	//グループのモーメント行列
-	Matrix3f gAgroup;
-	//グループの固有ベクトル群
-	Matrix3f gEigen;
-	//グループの質量
-	float gtotalMass;
-	//初期中心
-	Vec3f gOrigCenter;
-	//現在中心
-	Vec3f gCurrCenter;
-	//このグループに含む粒子の数
-	int gNptcl;
-
+	int GetGrpInPtcl(int gi)
+	{
+		return gPInd[gi];
+	}
+	int GetGrpInPtclNum()
+	{
+		return (int) gPInd.size();
+	}
+	PHOpGroupDesc* GetGroupDesc()
+	{
+		return this;
+	}
 	PHOpGroup()
 	{
 		gCurrCenter = gOrigCenter = Vec3f(0,0,0);

@@ -7,7 +7,7 @@
 #include <Physics/PHSpatial.h>
 #include <Foundation/Object.h>
 //#include <Graphics\SprGRMesh.h>
-//#include <Graphics\GRMesh.h>
+#include <Graphics\GRMesh.h>
 #include <Physics/PHOpParticle.h>
 #include <Physics/PHOpGroup.h>
 //#include "PHOpObjOpEngine.h"
@@ -41,7 +41,7 @@ namespace Spr{
 
 			objGrouplinkCount = 5;
 			objTargetVtsNum = 0;
-			objUnNormalobj = false;
+			objNoMeshObj = false;
 			objUseDistCstr = false;
 			objUseReducedPP = true;
 
@@ -50,6 +50,7 @@ namespace Spr{
 			initialGArr = false;
 			initialOrgP = false;
 			initialPArr = false;
+			updateNormals = false;
 
 			objType = 0;
 			objitrTime = 1;
@@ -89,20 +90,14 @@ namespace Spr{
 
 		//shapematching計算をJacobi計算用の
 		Jacobi j;
-		//力覚Objectと区別のため使う
-		int objType;
-		//距離拘束のswitch
-		bool objUseDistCstr;
-		//力覚Objectと区別のため使う
-		bool objUnNormalobj;
+
+
 		//頂点の初期位置（Blendに使う）
 		Vec3f* objOrigPos;
 		//頂点の初期位置初期化flag
 		bool initialOrgP;
-		//粒子groupのlink数定数
-		int objGrouplinkCount;
-		//ObjectID
-		int objId;
+		//粒子の配列初期化されたか
+		bool initialPArr;
 		//質量中心（開発中、未検証）
 		//Vec3f objMassCenter;
 		//頂点が粒子groupmemberに対する重み（Blendに使う）
@@ -115,58 +110,60 @@ namespace Spr{
 		int *objVtoPmap;
 		//頂点粒子map初期化されたか
 		bool initialVtoPmap;
-		//半径の平均
-		float objAverRadius;
-		//半径の平均
-		float objMaxRadius;
+
 		//粒子BVH（開発中）
 		//BVHgOp *bvhGOps;
 
-		//古いmodel対象
-		//GRMesh *targetMesh;
+		//model対象
+		GRMesh *targetMesh;
 		//model頂点群
-		Vec3f *objTargetVts;
+		//Vec3f *objTargetVts;
 		//model頂点群初期化されたか
 		bool initialtgV;
 		//model頂点群数
-		int objTargetVtsNum;
+		//int objTargetVtsNum;
 		//一時粒子group保存場
 		std::vector<PHOpGroup> tmpPGroups;
 		//粒子groupの配列
 		PHOpGroup* objGArr;
 		//粒子group初期化されたか
 		bool initialGArr;
-		//粒子groupの数
-		int assGrpNum;
+
 
 		//一時粒子保存場
 		std::vector<PHOpParticle> tmpPtclList;
 		//粒子の配列
 		PHOpParticle *objPArr;//Memoryの考えで、ここで最後に保存しました
-		//粒子の配列初期化されたか
-		bool initialPArr;
-		//粒子の数
-		int assPsNum;
+
+
 		//独立alpha使用switch（開発中）
 		bool objUseIndepParam;
 		//重力switch
 		bool gravityOn;
 		//軽量化計算関数switch
 		bool objUseReducedPP;
-		//粒子と表面meshとの対応関係
-		std::vector<int> faceBelongs;
+		////粒子と表面meshとの対応関係
+		std::vector<int> objFaceBelongs;
 
 		std::vector<Vec3f> tmpVts;
 
 		//int bvhNum;
-		//繰り返す数え計数
-		int objitrTime;
+
 
 
 	private:
 		//配置完了のlist（local用）
 		std::vector<int> mPtclAssList;
 	public:
+
+		float GetVtxBlendWeight(int Vtxi, int Grpi)
+		{
+			return objBlWeightArr[Vtxi][Grpi];
+		}
+		int GetobjVtoPmap(int vi)
+		{
+			return objVtoPmap[vi];
+		}
 
 		void SetGravity(bool bOn)
 		{
@@ -179,8 +176,18 @@ namespace Spr{
 			objUseIndepParam = useIndepParamflag;
 		}
 
-
-
+		ObjectIf* GetOpParticle(int pi)
+		{
+			return objPArr[pi].Cast();
+		}
+		ObjectIf* GetOpGroup(int gi)
+		{
+			return objGArr[gi].Cast();
+		}
+		void SetGRMesh(Object *mesh)
+		{
+			targetMesh = (GRMesh*)mesh;
+		}
 
 		void DynamicRadiusUpdate()
 		{
@@ -210,7 +217,7 @@ namespace Spr{
 				mPtclAssList.push_back(vIndex);
 				return true;
 			}
-			for (int i = 0; i< (int)mPtclAssList.size(); i++)
+			for (int i = 0; i < (int)mPtclAssList.size(); i++)
 			{
 				if (mPtclAssList[i] == vIndex)
 				{
@@ -282,17 +289,17 @@ namespace Spr{
 			pg->gNptcl++;
 
 			int linkCount = objGrouplinkCount;
-			for (int k = 0; k<linkCount; k++)
+			for (int k = 0; k < linkCount; k++)
 			{
 				pg->addPInds(disCmpQue[k].pIndex);
-				//build groupInfo for particle ,particle belongs to...
+				//build groupInfo for particle ,particle \ngs to...
 				objPArr[disCmpQue[k].pIndex].pInGrpList.push_back(i);
 
 			}
 
 			assPsNum++;
 			PHOpParticle* newpList = new PHOpParticle[assPsNum];
-			for (int j = 0; j<assPsNum - 1; j++)
+			for (int j = 0; j < assPsNum - 1; j++)
 			{
 				newpList[j] = objPArr[j];
 			}
@@ -300,7 +307,7 @@ namespace Spr{
 			objPArr = newpList;
 			objPArr[assPsNum - 1].pPId = assPsNum - 1;
 			objPArr[assPsNum - 1].pObjId = this->objId;
-			for (int k = 0; k<linkCount; k++)
+			for (int k = 0; k < linkCount; k++)
 			{
 				objPArr[assPsNum - 1].pInGrpList.push_back(disCmpQue[k].pIndex);
 			}
@@ -314,7 +321,7 @@ namespace Spr{
 
 			assGrpNum++;
 			PHOpGroup* gplist = new PHOpGroup[assGrpNum];
-			for (int j = 0; j<assGrpNum - 1; j++)
+			for (int j = 0; j < assGrpNum - 1; j++)
 			{
 				gplist[j] = objGArr[j];
 			}
@@ -331,15 +338,121 @@ namespace Spr{
 		}
 
 
+		void vertexBlending()
+		{
+			int count = 0;
+			/*if(unNormalobj)
+			{
+			targetVts[0]= objPArr[0].pCurrCtr;
+			return;
+			}*/
 
+			//if (useTetgen)
+			count = objTargetVtsNum;
+			//	else count = targetMesh->NVertex();
+			for (int j = 0; j < assPsNum; j++)
+			{
 
+				PHOpGroup &pg = objGArr[objPArr[j].pMyGroupInd];
+				//頂点はグループのメンバーに対して重みをかけて位置を計算する
+				for (int k = 0; k < objPArr[j].pNvertex; k++)
+				{
+					int vertind = objPArr[j].pVertArr[k];
+					Vec3f &vert = objOrigPos[vertind];
+					Vec3f u; u = u.Zero();
+					//vert = Vec3f(1.2,0,0);
+
+					//TAffine<float> taB,taM;
+					//Spr::TQuaternion<float> tq;tq.fr
+					//PHOpParticle &ctrP = objPArr[pg.getParticleGlbIndex(0)];
+
+					//Spr::TPose<float> ctrpose = TPose<float>(ctrP.pOrigCtr,ctrP.pOrigOrint);//ctrP.pOrigCtr,ctrP.pOrigOrint
+					//ctrpose.unitize();
+					//ctrpose.w=1.0;+9
+					//ctrpose.ToAffine(taM);
+					//ctrpose= ctrpose.Inv();
+
+					int startFromLinkP = 0;
+					for (int jm = startFromLinkP; jm < pg.gNptcl; jm++)
+					{
+
+						PHOpParticle &dp = objPArr[pg.getParticleGlbIndex(jm)];
+
+						//Spr::TPose<float> &ctrpose = TPose<float>(dp.pOrigCtr,dp.pOrigOrint);//ctrP.pOrigCtr,ctrP.pOrigOrint
+						//ctrpose= ctrpose.Inv();
+						//boost!1
+						Spr::TPose<float> &ctrpose = objOrinPsPoseList[pg.getParticleGlbIndex(jm)];
+
+						//Spr::TQuaternion<float> tq;tq.FromMatrix(dp.pSmR);
+						//Spr::TPose<float> pose = TPose<float>(dp.pCurrCtr,dp.pCurrOrint);
+						Spr::TPose<float> pose = TPose<float>(dp.pCurrCtr, dp.pCurrOrint);
+						//Spr::TPose<float> pose1 = pose;
+						//pose1 = pose1.Inv();
+						//pose = pose.Inv();
+						pose.x = -pose.x;
+						pose.y = -pose.y;
+						pose.z = -pose.z;
+						//Spr::TQuaternion<float> tq;tq.FromMatrix(dp.pSmR);
+						//tq.unitize();
+						//tq = tq*dp.pOrigOrint;
+						//Spr::TPose<float> &pose = TPose<float>(dp.pCurrCtr,tq);
+
+						//Spr::TPose<float> pose = TPose<float>(pg.gCurrCenter,dp.pCurrOrint);
+						//ctrpose = ctrpose * pose;
+
+						//pose.unitize();
+						//pose.w = 1.0;
+						//pose = pose.Inv();
+						//pose.ToAffine(taB);
+						//taB = taB.inv();
+						//tmp = vert;
+						//tmp = ctrpose * tmp;
+						//tmp = pose * tmp;
+						//u += tmp * blWeightArr[vertind][jm];
+
+						//ver.1 boost1
+						//u += blWeightArr[vertind][jm] * (pose * (ctrpose * vert));// (taM *
+						//ver.2 boost2
+						u += objBlWeightArr[vertind][jm] * (pose * (ctrpose.Pos() + vert));// (taM *
+
+						//u += taB * (vert * blWeightArr[vertind][jm]);// (taM *//debug 
+						int ks = 0;
+					}
+					//if (useTetgen)
+					objTargetVts[vertind] = u;
+					//else targetMesh->vertices[vertind] = u;
+				}
+			}
+			//	 calc normal
+			// 頂点を共有する面の数
+			if (updateNormals)
+			{
+				std::vector<int> nFace(targetMesh->vertices.size(), 0);
+
+				for (unsigned i = 0; i < targetMesh->triFaces.size(); i += 3){
+					Vec3f n = (targetMesh->vertices[targetMesh->triFaces[i + 1]] - targetMesh->vertices[targetMesh->triFaces[i]])
+						% (targetMesh->vertices[targetMesh->triFaces[i + 2]] - targetMesh->vertices[targetMesh->triFaces[i]]);
+					n.unitize();
+
+					targetMesh->normals[targetMesh->triFaces[i]] += n;
+					targetMesh->normals[targetMesh->triFaces[i + 1]] += n;
+					targetMesh->normals[targetMesh->triFaces[i + 2]] += n;
+					nFace[targetMesh->triFaces[i]] ++;
+					nFace[targetMesh->triFaces[i + 1]] ++;
+					nFace[targetMesh->triFaces[i + 2]] ++;
+				}
+
+				for (unsigned i = 0; i < targetMesh->normals.size(); ++i)
+					targetMesh->normals[i] /= nFace[i];
+			}
+		}
 
 		Matrix3f SolveShpMchByJacobi(PHOpGroup &pg);
 
 
 		bool InitialObjUsingLocalBuffer(float pSize)
 		{
-			int vtsNum = (int) tmpVts.size();
+			int vtsNum = (int)tmpVts.size();
 			Vec3f* vts = new Vec3f[vtsNum];
 
 			for (int vi = 0; vi < vtsNum; vi++)
@@ -352,12 +465,12 @@ namespace Spr{
 			objTargetVts = vts;//Tetgenため使う
 			objTargetVtsNum = vtsNum;
 
-			initalDeformVertex(vts, vtsNum);
+			initialDeformVertex(vts, vtsNum);
 			if (!BuildParticles(vts, vtsNum, tmpPtclList, pSize))
 				return false;
 
 			return true;
-			
+
 			ClearLocalVtsBuffer();
 		}
 
@@ -372,14 +485,14 @@ namespace Spr{
 			tmpVts.push_back(v);
 		}
 
-		bool initialDeformObject(Vec3f *vts, int vtsNum, float pSize)
+		bool initialPHOpObj(Vec3f *vts, int vtsNum, float pSize)
 		{
 			objOrigPos = new Vec3f[vtsNum];
 			initialOrgP = true;
 			objTargetVts = vts;//Tetgenため使う
 			objTargetVtsNum = vtsNum;
 
-			initalDeformVertex(vts, vtsNum);
+			initialDeformVertex(vts, vtsNum);
 			if (!BuildParticles(vts, vtsNum, tmpPtclList, pSize))
 				return false;
 
@@ -407,7 +520,7 @@ namespace Spr{
 			//Simple Particle auto generation
 			//From first vertex, find other vertex inside particle diameter
 			//add all found vetices into one particle ->loop			
-			for (int i = 0; i<vtsNum; i++)
+			for (int i = 0; i < vtsNum; i++)
 			{
 
 				if (!assignPtcl(i))
@@ -415,7 +528,7 @@ namespace Spr{
 				dp->addNewVertex(i);
 				beginP = vts[i];
 
-				for (int j = 0; j<vtsNum; j++)
+				for (int j = 0; j < vtsNum; j++)
 				{
 					diameterP = vts[j];
 					diameterP = beginP - diameterP;
@@ -458,7 +571,7 @@ namespace Spr{
 
 				objAverRadius += dp.pMainRadius;
 
-				if (dp.pMainRadius>objMaxRadius)
+				if (dp.pMainRadius > objMaxRadius)
 					objMaxRadius = dp.pMainRadius;
 				delete[] varr;
 			}
@@ -538,7 +651,7 @@ namespace Spr{
 				//build link  
 				int linkCount = 0;
 				//use limited linklength or constant linkCount
-				for (int k = 0; k< (int)disCmpQue.size(); k++)
+				for (int k = 0; k < (int)disCmpQue.size(); k++)
 				{
 					if (disCmpQue[k].distance <= distance)
 						linkCount++;
@@ -548,13 +661,13 @@ namespace Spr{
 					linkCount = objGrouplinkCount; //debug linkCount
 				else linkCount = (int)disCmpQue.size();
 
-				if ((int)dParticleArr.size()<linkCount)
+				if ((int)dParticleArr.size() < linkCount)
 					linkCount = (int)dParticleArr.size() - 1;
 
 				pg.gMyIndex = i;
 				pg.gPInd.push_back(i);
 				pg.gNptcl++;
-				for (int k = 0; k<linkCount; k++)
+				for (int k = 0; k < linkCount; k++)
 				{
 					pg.addPInds(disCmpQue[k].pIndex);
 					//build groupInfo for particle ,particle belongs 
@@ -604,7 +717,7 @@ namespace Spr{
 			//Particle初期姿勢を記憶する(blendingに使う)
 			//build Oringinal Pose of Ps
 			objOrinPsPoseList = new TPose<float>[assPsNum];
-			for (int j = 0; j<assPsNum; j++)
+			for (int j = 0; j < assPsNum; j++)
 			{
 				Spr::TPose<float> ctrpose = TPose<float>(objPArr[j].pOrigCtr, objPArr[j].pOrigOrint);
 				ctrpose = ctrpose.Inv();
@@ -620,11 +733,11 @@ namespace Spr{
 
 		void buildParticleMomentInertia()
 		{
-			for (int j = 0; j<assPsNum; j++)
+			for (int j = 0; j < assPsNum; j++)
 			{
 				PHOpParticle &dp = objPArr[j];
 				Matrix3f &pMIMatrix = dp.pMomentInertia;
-				for (int i = 0; i<dp.pNvertex; i++)
+				for (int i = 0; i < dp.pNvertex; i++)
 				{
 					Vec3f &p = objTargetVts[dp.pVertArr[i]] - dp.pCurrCtr;
 					pMIMatrix.xx += p.y * p.y + p.z * p.z;
@@ -649,21 +762,21 @@ namespace Spr{
 		void buildDisWeightForVsinP()
 		{
 			DSTR << "BuildDisWeightForVsinP" << std::endl;
-			if (objType != 0)
+			if (objNoMeshObj)
 				return;
-			for (int j = 0; j<assPsNum; j++)
+			for (int j = 0; j < assPsNum; j++)
 			{
 				float totalDis = 0.0f;
 				objPArr[j].pVectDisWeightArr = new float[objPArr[j].pNvertex];
 				objPArr[j].initialWArr = true;
-				for (int k = 0; k<objPArr[j].pNvertex; k++)
+				for (int k = 0; k < objPArr[j].pNvertex; k++)
 				{
 					Vec3f &vp = objTargetVts[objPArr[j].pVertArr[k]];
 					totalDis += (vp - objPArr[j].pCurrCtr).norm();
 
 				}
 
-				for (int k = 0; k<objPArr[j].pNvertex; k++)
+				for (int k = 0; k < objPArr[j].pNvertex; k++)
 				{
 					Vec3f &vp = objTargetVts[objPArr[j].pVertArr[k]];
 					if (totalDis == 0.0f)
@@ -682,12 +795,12 @@ namespace Spr{
 		void buildGroupCenter()
 		{
 			DSTR << "BuildGroupCenter" << std::endl;
-			for (int i = 0; i<assGrpNum; i++)
+			for (int i = 0; i < assGrpNum; i++)
 			{
 				objGArr[i].gOrigCenter = objGArr[i].gOrigCenter.Zero();
 				objGArr[i].gtotalMass = 0.0f;
 				//build group totalmass
-				for (int j = 0; j<objGArr[i].gNptcl; j++)
+				for (int j = 0; j < objGArr[i].gNptcl; j++)
 				{
 					PHOpParticle &dp = objPArr[objGArr[i].getParticleGlbIndex(j)];
 					objGArr[i].gOrigCenter += dp.pOrigCtr * dp.pTotalMass;
@@ -706,7 +819,7 @@ namespace Spr{
 			//build linear blend skin weight
 
 			int size = 0;
-			if (objUnNormalobj)
+			if (objType>0)
 			{
 				objBlWeightArr = new float*[1];
 				objBlWeightArr[0] = new float[1];
@@ -719,13 +832,13 @@ namespace Spr{
 
 			objBlWeightArr = new float*[size];
 			initialBlWei = true;
-			for (int j = 0; j<assPsNum; j++)
+			for (int j = 0; j < assPsNum; j++)
 			{
 
 				Vec3f CenterPs = objPArr[j].pOrigCtr;
 				PHOpGroup pg = objGArr[objPArr[j].pMyGroupInd];
 				int gpSize = pg.gNptcl;//
-				for (int k = 0; k<objPArr[j].pNvertex; k++)
+				for (int k = 0; k < objPArr[j].pNvertex; k++)
 				{//Particle内すべてvertexに対して
 
 					std::vector<float> distancelist;
@@ -786,7 +899,7 @@ namespace Spr{
 		void BuildMapFromVtoP()
 		{
 			DSTR << "BuildMapFromVtoP" << std::endl;
-			if (this->objType>0)return;
+			if (this->objNoMeshObj)return;
 			objVtoPmap = new int[objTargetVtsNum];
 			initialtgV = true;
 			for (int pi = 0; pi < assPsNum; pi++)
@@ -858,7 +971,7 @@ namespace Spr{
 			assGrpNum = (int)tmpPGroups.size();
 			objGArr = new PHOpGroup[assGrpNum];
 			initialGArr = true;
-			for (int i = 0; i<assGrpNum; i++)
+			for (int i = 0; i < assGrpNum; i++)
 			{
 				objGArr[i] = tmpPGroups[i];
 			}
@@ -880,7 +993,7 @@ namespace Spr{
 			assPsNum = (int)dParticleArr.size();
 			objPArr = new PHOpParticle[assPsNum];
 			initialPArr = true;
-			for (int i = 0; i<assPsNum; i++)
+			for (int i = 0; i < assPsNum; i++)
 			{
 				objPArr[i] = dParticleArr[i];
 				objPArr[i].pPId = i;
@@ -892,9 +1005,9 @@ namespace Spr{
 
 
 		//DeformVertex初期化
-		void initalDeformVertex(Vec3f *vts, int vtsNum)
+		void initialDeformVertex(Vec3f *vts, int vtsNum)
 		{
-			for (int i = 0; i<vtsNum; i++)
+			for (int i = 0; i < vtsNum; i++)
 			{
 				objOrigPos[i] = vts[i];
 			}
@@ -903,13 +1016,19 @@ namespace Spr{
 		{
 			return objBlWeightArr[vertexIndex][linkPIndex];
 		}
+		//PHOpObjIf* GetMyIf();
 
-		
-
-
-
+		int GetVertexNum()
+		{
+			return objTargetVtsNum;
+		}
+		Vec3f GetVertex(int vi)
+		{
+			return objTargetVts[vi];
+		}
 		struct ObjectParams
 		{
+		public:
 			ObjectParams()
 			{
 				setDefaults();
@@ -932,14 +1051,14 @@ namespace Spr{
 			float veloDamping;
 
 
-			void setDefaults()
+			inline void setDefaults()
 			{
 				timeStep = 0.01f;
 
 
 				gravity = gravity.Zero();
 				gravity.y = -9.81f;
-				float boundcube = 15.0;
+				float boundcube = 8.0;
 				bounds.min.x = -boundcube;
 				bounds.min.y = -boundcube;
 				bounds.min.z = -boundcube;
@@ -959,7 +1078,7 @@ namespace Spr{
 				veloDamping = 0.05f;
 
 			}
-			void SetBound(float boundLength)
+			inline void SetBound(float boundLength)
 			{
 				float boundcube = boundLength;
 				bounds.min.x = -boundcube;
@@ -971,7 +1090,62 @@ namespace Spr{
 			}
 
 		}params;
-
+		float GetObjAlpha()
+		{
+			return params.alpha;
+		}
+		void SetObjAlpha(float alpha)
+		{
+			params.alpha = alpha;
+		}
+		float GetObjBeta()
+		{
+			return params.beta;
+		}
+		void SetObjBeta(float beta)
+		{
+			params.beta = beta;
+		}
+		float GetTimeStep()
+		{
+			return params.timeStep;
+		}
+		void SetTimeStep(float t)
+		{
+			params.timeStep = t;
+		}
+		void SetBound(float b)
+		{
+			params.SetBound(b);
+		}
+		float GetBoundLength()
+		{
+			return (params.bounds.max.x);
+		}
+		float GetVelocityDamping()
+		{
+			return params.veloDamping;
+		}
+		void SetVelocityDamping(float vd)
+		{
+			params.veloDamping = vd;
+		}
+		void SetObjItrTime(int itrT)
+		{
+			objitrTime = itrT;
+		}
+		int GetObjItrTime()
+		{
+			return objitrTime;
+		}
+		void SetObjDstConstraint(bool d)
+		{
+			objUseDistCstr = d;
+		}
+		bool GetObjDstConstraint()
+		{
+			return objUseDistCstr;
+		}
 		PHOpParticle& getObjParticle(int pIndex)
 		{
 			return objPArr[pIndex];

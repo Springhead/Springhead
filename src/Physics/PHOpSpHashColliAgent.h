@@ -47,11 +47,12 @@ class PHOpSpHashColliAgent: public SceneObject, public PHOpSpHashColliAgentDesc{
 		useDebugInfo = true;
 		useHapticDevice = false;
 		enableCollision = false;
+		SetScene(s);
 	}
 
 	void EnableCollisionDetection(bool able = true);
 	void Initial(float cellSize, Bounds  bounds);
-	bool CollisionEnabled();
+	bool IsCollisionEnabled();
 	
 
 	void AddContactPlane(Vec3f planeP, Vec3f planeN);

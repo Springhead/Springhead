@@ -27,13 +27,15 @@ public :
 	//頂点をGraphicsに反映する
 	void Blend();
 	void Sync();
+	void CreateOpObjWithRadius(float r);
 	///	子オブジェクトの数
 	virtual size_t NChildObject() const;
 	///	子オブジェクトの取得
 	virtual ObjectIf* GetChildObject(size_t pos);
 	///	子オブジェクトの追加
 	virtual bool AddChildObject(ObjectIf* o);
-
+	ObjectIf* GetOpObj();
+	ObjectIf* GetGRMesh();
 };
 
 }

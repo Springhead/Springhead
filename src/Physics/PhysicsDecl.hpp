@@ -1157,12 +1157,85 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHOpHapticRendererDesc \
+protected:\
+	float	forceSpring;	\
+	float	constraintSpring;	\
+	float	timeStep;	\
+	float	forceOnRadius;	\
+	bool	useConstrainForce;	\
+	bool	useProxyfixSubitr;	\
+	bool	useIncreaseMeshMove;	\
+	bool	sqrtAlphaForce;	\
+	bool	hitWall;	\
+	bool	useDualTranFix;	\
+	int	proxyItrtNum;	\
+	int	proxyItrtMaxNum;	\
+	int	currDtType;	\
+	int	objNum;	\
+	int	noCtcItrNum;	\
+	Vec3f	proxyFixPos;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		forceSpring = ((PHOpHapticRendererDesc*)ptr)->forceSpring;	\
+		constraintSpring = ((PHOpHapticRendererDesc*)ptr)->constraintSpring;	\
+		timeStep = ((PHOpHapticRendererDesc*)ptr)->timeStep;	\
+		forceOnRadius = ((PHOpHapticRendererDesc*)ptr)->forceOnRadius;	\
+		useConstrainForce = ((PHOpHapticRendererDesc*)ptr)->useConstrainForce;	\
+		useProxyfixSubitr = ((PHOpHapticRendererDesc*)ptr)->useProxyfixSubitr;	\
+		useIncreaseMeshMove = ((PHOpHapticRendererDesc*)ptr)->useIncreaseMeshMove;	\
+		sqrtAlphaForce = ((PHOpHapticRendererDesc*)ptr)->sqrtAlphaForce;	\
+		hitWall = ((PHOpHapticRendererDesc*)ptr)->hitWall;	\
+		useDualTranFix = ((PHOpHapticRendererDesc*)ptr)->useDualTranFix;	\
+		proxyItrtNum = ((PHOpHapticRendererDesc*)ptr)->proxyItrtNum;	\
+		proxyItrtMaxNum = ((PHOpHapticRendererDesc*)ptr)->proxyItrtMaxNum;	\
+		currDtType = ((PHOpHapticRendererDesc*)ptr)->currDtType;	\
+		objNum = ((PHOpHapticRendererDesc*)ptr)->objNum;	\
+		noCtcItrNum = ((PHOpHapticRendererDesc*)ptr)->noCtcItrNum;	\
+		proxyFixPos = ((PHOpHapticRendererDesc*)ptr)->proxyFixPos;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHOpHapticRendererDesc*)ptr)->forceSpring = forceSpring;	\
+		((PHOpHapticRendererDesc*)ptr)->constraintSpring = constraintSpring;	\
+		((PHOpHapticRendererDesc*)ptr)->timeStep = timeStep;	\
+		((PHOpHapticRendererDesc*)ptr)->forceOnRadius = forceOnRadius;	\
+		((PHOpHapticRendererDesc*)ptr)->useConstrainForce = useConstrainForce;	\
+		((PHOpHapticRendererDesc*)ptr)->useProxyfixSubitr = useProxyfixSubitr;	\
+		((PHOpHapticRendererDesc*)ptr)->useIncreaseMeshMove = useIncreaseMeshMove;	\
+		((PHOpHapticRendererDesc*)ptr)->sqrtAlphaForce = sqrtAlphaForce;	\
+		((PHOpHapticRendererDesc*)ptr)->hitWall = hitWall;	\
+		((PHOpHapticRendererDesc*)ptr)->useDualTranFix = useDualTranFix;	\
+		((PHOpHapticRendererDesc*)ptr)->proxyItrtNum = proxyItrtNum;	\
+		((PHOpHapticRendererDesc*)ptr)->proxyItrtMaxNum = proxyItrtMaxNum;	\
+		((PHOpHapticRendererDesc*)ptr)->currDtType = currDtType;	\
+		((PHOpHapticRendererDesc*)ptr)->objNum = objNum;	\
+		((PHOpHapticRendererDesc*)ptr)->noCtcItrNum = noCtcItrNum;	\
+		((PHOpHapticRendererDesc*)ptr)->proxyFixPos = proxyFixPos;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHOpObjDesc \
 protected:\
 	double	mass;	\
 	Matrix3d	inertia;	\
 	Vec3d	center;	\
 	bool	dynamical;	\
+	Vec3f*	objTargetVts;	\
+	int	objTargetVtsNum;	\
+	int	assPsNum;	\
+	int	assGrpNum;	\
+	int	objGrouplinkCount;	\
+	int	objId;	\
+	bool	objUseDistCstr;	\
+	bool	objNoMeshObj;	\
+	int	objType;	\
+	float	objAverRadius;	\
+	float	objMaxRadius;	\
+	int	objitrTime;	\
+	bool	updateNormals;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -1171,6 +1244,19 @@ public:\
 		inertia = ((PHOpObjDesc*)ptr)->inertia;	\
 		center = ((PHOpObjDesc*)ptr)->center;	\
 		dynamical = ((PHOpObjDesc*)ptr)->dynamical;	\
+		objTargetVts = ((PHOpObjDesc*)ptr)->objTargetVts;	\
+		objTargetVtsNum = ((PHOpObjDesc*)ptr)->objTargetVtsNum;	\
+		assPsNum = ((PHOpObjDesc*)ptr)->assPsNum;	\
+		assGrpNum = ((PHOpObjDesc*)ptr)->assGrpNum;	\
+		objGrouplinkCount = ((PHOpObjDesc*)ptr)->objGrouplinkCount;	\
+		objId = ((PHOpObjDesc*)ptr)->objId;	\
+		objUseDistCstr = ((PHOpObjDesc*)ptr)->objUseDistCstr;	\
+		objNoMeshObj = ((PHOpObjDesc*)ptr)->objNoMeshObj;	\
+		objType = ((PHOpObjDesc*)ptr)->objType;	\
+		objAverRadius = ((PHOpObjDesc*)ptr)->objAverRadius;	\
+		objMaxRadius = ((PHOpObjDesc*)ptr)->objMaxRadius;	\
+		objitrTime = ((PHOpObjDesc*)ptr)->objitrTime;	\
+		updateNormals = ((PHOpObjDesc*)ptr)->updateNormals;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -1180,6 +1266,259 @@ public:\
 		((PHOpObjDesc*)ptr)->inertia = inertia;	\
 		((PHOpObjDesc*)ptr)->center = center;	\
 		((PHOpObjDesc*)ptr)->dynamical = dynamical;	\
+		((PHOpObjDesc*)ptr)->objTargetVts = objTargetVts;	\
+		((PHOpObjDesc*)ptr)->objTargetVtsNum = objTargetVtsNum;	\
+		((PHOpObjDesc*)ptr)->assPsNum = assPsNum;	\
+		((PHOpObjDesc*)ptr)->assGrpNum = assGrpNum;	\
+		((PHOpObjDesc*)ptr)->objGrouplinkCount = objGrouplinkCount;	\
+		((PHOpObjDesc*)ptr)->objId = objId;	\
+		((PHOpObjDesc*)ptr)->objUseDistCstr = objUseDistCstr;	\
+		((PHOpObjDesc*)ptr)->objNoMeshObj = objNoMeshObj;	\
+		((PHOpObjDesc*)ptr)->objType = objType;	\
+		((PHOpObjDesc*)ptr)->objAverRadius = objAverRadius;	\
+		((PHOpObjDesc*)ptr)->objMaxRadius = objMaxRadius;	\
+		((PHOpObjDesc*)ptr)->objitrTime = objitrTime;	\
+		((PHOpObjDesc*)ptr)->updateNormals = updateNormals;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHOpParticleDesc \
+protected:\
+	int	pNvertex;	\
+	int	pMyGroupInd;	\
+	int	pPId;	\
+	int	pObjId;	\
+	float	pParaAlpha;	\
+	bool	hitedByMouse;	\
+	float	pTempSingleVMass;	\
+	float	pTotalMass;	\
+	float	pRadii;	\
+	float	pDynamicRadius;	\
+	Vec3f	pMainRadiusVec;	\
+	Vec3f	pSecRadiusVec;	\
+	Vec3f	pThrRadiusVec;	\
+	float	pMainRadius;	\
+	float	pSecRadius;	\
+	float	pThrRadius;	\
+	Vec3f	pCurrCtr;	\
+	Vec3f	pOrigCtr;	\
+	Vec3f	pNewCtr;	\
+	Vec3f	pVelocity;	\
+	bool	isColliedbySphash;	\
+	bool	isColliedbyColliCube;	\
+	bool	isFixedbyMouse;	\
+	bool	isFixed;	\
+	bool	isColliedSphashSolved;	\
+	bool	isColliedSphashSolvedReady;	\
+	Vec3f	pExternalForce;	\
+	Vec3f	pExternalTorque;	\
+	Vec3f	pExternalDisplacement;	\
+	std::vector< int >	pFaceInd;	\
+	Matrix3f	pMomentR;	\
+	Matrix3f	pSmR;	\
+	Matrix3f	pMomentInertia;	\
+	Matrix3f	pInverseOfMomentInertia;	\
+	Matrix3f	ellipRotMatrix;	\
+	Vec3f	pWvel;	\
+	Matrix3f	pPreEllipA;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		pNvertex = ((PHOpParticleDesc*)ptr)->pNvertex;	\
+		pMyGroupInd = ((PHOpParticleDesc*)ptr)->pMyGroupInd;	\
+		pPId = ((PHOpParticleDesc*)ptr)->pPId;	\
+		pObjId = ((PHOpParticleDesc*)ptr)->pObjId;	\
+		pParaAlpha = ((PHOpParticleDesc*)ptr)->pParaAlpha;	\
+		hitedByMouse = ((PHOpParticleDesc*)ptr)->hitedByMouse;	\
+		pTempSingleVMass = ((PHOpParticleDesc*)ptr)->pTempSingleVMass;	\
+		pTotalMass = ((PHOpParticleDesc*)ptr)->pTotalMass;	\
+		pRadii = ((PHOpParticleDesc*)ptr)->pRadii;	\
+		pDynamicRadius = ((PHOpParticleDesc*)ptr)->pDynamicRadius;	\
+		pMainRadiusVec = ((PHOpParticleDesc*)ptr)->pMainRadiusVec;	\
+		pSecRadiusVec = ((PHOpParticleDesc*)ptr)->pSecRadiusVec;	\
+		pThrRadiusVec = ((PHOpParticleDesc*)ptr)->pThrRadiusVec;	\
+		pMainRadius = ((PHOpParticleDesc*)ptr)->pMainRadius;	\
+		pSecRadius = ((PHOpParticleDesc*)ptr)->pSecRadius;	\
+		pThrRadius = ((PHOpParticleDesc*)ptr)->pThrRadius;	\
+		pCurrCtr = ((PHOpParticleDesc*)ptr)->pCurrCtr;	\
+		pOrigCtr = ((PHOpParticleDesc*)ptr)->pOrigCtr;	\
+		pNewCtr = ((PHOpParticleDesc*)ptr)->pNewCtr;	\
+		pVelocity = ((PHOpParticleDesc*)ptr)->pVelocity;	\
+		isColliedbySphash = ((PHOpParticleDesc*)ptr)->isColliedbySphash;	\
+		isColliedbyColliCube = ((PHOpParticleDesc*)ptr)->isColliedbyColliCube;	\
+		isFixedbyMouse = ((PHOpParticleDesc*)ptr)->isFixedbyMouse;	\
+		isFixed = ((PHOpParticleDesc*)ptr)->isFixed;	\
+		isColliedSphashSolved = ((PHOpParticleDesc*)ptr)->isColliedSphashSolved;	\
+		isColliedSphashSolvedReady = ((PHOpParticleDesc*)ptr)->isColliedSphashSolvedReady;	\
+		pExternalForce = ((PHOpParticleDesc*)ptr)->pExternalForce;	\
+		pExternalTorque = ((PHOpParticleDesc*)ptr)->pExternalTorque;	\
+		pExternalDisplacement = ((PHOpParticleDesc*)ptr)->pExternalDisplacement;	\
+		pFaceInd = ((PHOpParticleDesc*)ptr)->pFaceInd;	\
+		pMomentR = ((PHOpParticleDesc*)ptr)->pMomentR;	\
+		pSmR = ((PHOpParticleDesc*)ptr)->pSmR;	\
+		pMomentInertia = ((PHOpParticleDesc*)ptr)->pMomentInertia;	\
+		pInverseOfMomentInertia = ((PHOpParticleDesc*)ptr)->pInverseOfMomentInertia;	\
+		ellipRotMatrix = ((PHOpParticleDesc*)ptr)->ellipRotMatrix;	\
+		pWvel = ((PHOpParticleDesc*)ptr)->pWvel;	\
+		pPreEllipA = ((PHOpParticleDesc*)ptr)->pPreEllipA;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHOpParticleDesc*)ptr)->pNvertex = pNvertex;	\
+		((PHOpParticleDesc*)ptr)->pMyGroupInd = pMyGroupInd;	\
+		((PHOpParticleDesc*)ptr)->pPId = pPId;	\
+		((PHOpParticleDesc*)ptr)->pObjId = pObjId;	\
+		((PHOpParticleDesc*)ptr)->pParaAlpha = pParaAlpha;	\
+		((PHOpParticleDesc*)ptr)->hitedByMouse = hitedByMouse;	\
+		((PHOpParticleDesc*)ptr)->pTempSingleVMass = pTempSingleVMass;	\
+		((PHOpParticleDesc*)ptr)->pTotalMass = pTotalMass;	\
+		((PHOpParticleDesc*)ptr)->pRadii = pRadii;	\
+		((PHOpParticleDesc*)ptr)->pDynamicRadius = pDynamicRadius;	\
+		((PHOpParticleDesc*)ptr)->pMainRadiusVec = pMainRadiusVec;	\
+		((PHOpParticleDesc*)ptr)->pSecRadiusVec = pSecRadiusVec;	\
+		((PHOpParticleDesc*)ptr)->pThrRadiusVec = pThrRadiusVec;	\
+		((PHOpParticleDesc*)ptr)->pMainRadius = pMainRadius;	\
+		((PHOpParticleDesc*)ptr)->pSecRadius = pSecRadius;	\
+		((PHOpParticleDesc*)ptr)->pThrRadius = pThrRadius;	\
+		((PHOpParticleDesc*)ptr)->pCurrCtr = pCurrCtr;	\
+		((PHOpParticleDesc*)ptr)->pOrigCtr = pOrigCtr;	\
+		((PHOpParticleDesc*)ptr)->pNewCtr = pNewCtr;	\
+		((PHOpParticleDesc*)ptr)->pVelocity = pVelocity;	\
+		((PHOpParticleDesc*)ptr)->isColliedbySphash = isColliedbySphash;	\
+		((PHOpParticleDesc*)ptr)->isColliedbyColliCube = isColliedbyColliCube;	\
+		((PHOpParticleDesc*)ptr)->isFixedbyMouse = isFixedbyMouse;	\
+		((PHOpParticleDesc*)ptr)->isFixed = isFixed;	\
+		((PHOpParticleDesc*)ptr)->isColliedSphashSolved = isColliedSphashSolved;	\
+		((PHOpParticleDesc*)ptr)->isColliedSphashSolvedReady = isColliedSphashSolvedReady;	\
+		((PHOpParticleDesc*)ptr)->pExternalForce = pExternalForce;	\
+		((PHOpParticleDesc*)ptr)->pExternalTorque = pExternalTorque;	\
+		((PHOpParticleDesc*)ptr)->pExternalDisplacement = pExternalDisplacement;	\
+		((PHOpParticleDesc*)ptr)->pFaceInd = pFaceInd;	\
+		((PHOpParticleDesc*)ptr)->pMomentR = pMomentR;	\
+		((PHOpParticleDesc*)ptr)->pSmR = pSmR;	\
+		((PHOpParticleDesc*)ptr)->pMomentInertia = pMomentInertia;	\
+		((PHOpParticleDesc*)ptr)->pInverseOfMomentInertia = pInverseOfMomentInertia;	\
+		((PHOpParticleDesc*)ptr)->ellipRotMatrix = ellipRotMatrix;	\
+		((PHOpParticleDesc*)ptr)->pWvel = pWvel;	\
+		((PHOpParticleDesc*)ptr)->pPreEllipA = pPreEllipA;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHOpGroupDesc \
+protected:\
+	int	gMyIndex;	\
+	Matrix3f	gAgroup;	\
+	Matrix3f	gEigen;	\
+	float	gtotalMass;	\
+	Vec3f	gOrigCenter;	\
+	Vec3f	gCurrCenter;	\
+	int	gNptcl;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		gMyIndex = ((PHOpGroupDesc*)ptr)->gMyIndex;	\
+		gAgroup = ((PHOpGroupDesc*)ptr)->gAgroup;	\
+		gEigen = ((PHOpGroupDesc*)ptr)->gEigen;	\
+		gtotalMass = ((PHOpGroupDesc*)ptr)->gtotalMass;	\
+		gOrigCenter = ((PHOpGroupDesc*)ptr)->gOrigCenter;	\
+		gCurrCenter = ((PHOpGroupDesc*)ptr)->gCurrCenter;	\
+		gNptcl = ((PHOpGroupDesc*)ptr)->gNptcl;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHOpGroupDesc*)ptr)->gMyIndex = gMyIndex;	\
+		((PHOpGroupDesc*)ptr)->gAgroup = gAgroup;	\
+		((PHOpGroupDesc*)ptr)->gEigen = gEigen;	\
+		((PHOpGroupDesc*)ptr)->gtotalMass = gtotalMass;	\
+		((PHOpGroupDesc*)ptr)->gOrigCenter = gOrigCenter;	\
+		((PHOpGroupDesc*)ptr)->gCurrCenter = gCurrCenter;	\
+		((PHOpGroupDesc*)ptr)->gNptcl = gNptcl;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHOpHapticControllerDesc \
+protected:\
+	float	posScale;	\
+	float	forceScale;	\
+	Vec3f	userPos;	\
+	Vec3f	hcCurrPPos;	\
+	Vec3f	hcCurrUPos;	\
+	Vec3f	hcLastUPos;	\
+	Vec3f	hcFixsubGoal;	\
+	float	c_obstRadius;	\
+	int	hpObjIndex;	\
+	bool	logForce;	\
+	int	fileindex;	\
+	Vec3f	lastHpRateF;	\
+	bool	hcReady;	\
+	bool	hcCollied;	\
+	int	constrainCount;	\
+	int	constrainCountHc;	\
+	Vec3f	couterPlaneN;	\
+	float	hcElmDtcRadius;	\
+	int	collectCount;	\
+	int	collectItrtor;	\
+	bool	hcProxyOn;	\
+	int	suspObjid;	\
+	float	proxyRadius;	\
+	int	surrCnstrs;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		posScale = ((PHOpHapticControllerDesc*)ptr)->posScale;	\
+		forceScale = ((PHOpHapticControllerDesc*)ptr)->forceScale;	\
+		userPos = ((PHOpHapticControllerDesc*)ptr)->userPos;	\
+		hcCurrPPos = ((PHOpHapticControllerDesc*)ptr)->hcCurrPPos;	\
+		hcCurrUPos = ((PHOpHapticControllerDesc*)ptr)->hcCurrUPos;	\
+		hcLastUPos = ((PHOpHapticControllerDesc*)ptr)->hcLastUPos;	\
+		hcFixsubGoal = ((PHOpHapticControllerDesc*)ptr)->hcFixsubGoal;	\
+		c_obstRadius = ((PHOpHapticControllerDesc*)ptr)->c_obstRadius;	\
+		hpObjIndex = ((PHOpHapticControllerDesc*)ptr)->hpObjIndex;	\
+		logForce = ((PHOpHapticControllerDesc*)ptr)->logForce;	\
+		fileindex = ((PHOpHapticControllerDesc*)ptr)->fileindex;	\
+		lastHpRateF = ((PHOpHapticControllerDesc*)ptr)->lastHpRateF;	\
+		hcReady = ((PHOpHapticControllerDesc*)ptr)->hcReady;	\
+		hcCollied = ((PHOpHapticControllerDesc*)ptr)->hcCollied;	\
+		constrainCount = ((PHOpHapticControllerDesc*)ptr)->constrainCount;	\
+		constrainCountHc = ((PHOpHapticControllerDesc*)ptr)->constrainCountHc;	\
+		couterPlaneN = ((PHOpHapticControllerDesc*)ptr)->couterPlaneN;	\
+		hcElmDtcRadius = ((PHOpHapticControllerDesc*)ptr)->hcElmDtcRadius;	\
+		collectCount = ((PHOpHapticControllerDesc*)ptr)->collectCount;	\
+		collectItrtor = ((PHOpHapticControllerDesc*)ptr)->collectItrtor;	\
+		hcProxyOn = ((PHOpHapticControllerDesc*)ptr)->hcProxyOn;	\
+		suspObjid = ((PHOpHapticControllerDesc*)ptr)->suspObjid;	\
+		proxyRadius = ((PHOpHapticControllerDesc*)ptr)->proxyRadius;	\
+		surrCnstrs = ((PHOpHapticControllerDesc*)ptr)->surrCnstrs;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHOpHapticControllerDesc*)ptr)->posScale = posScale;	\
+		((PHOpHapticControllerDesc*)ptr)->forceScale = forceScale;	\
+		((PHOpHapticControllerDesc*)ptr)->userPos = userPos;	\
+		((PHOpHapticControllerDesc*)ptr)->hcCurrPPos = hcCurrPPos;	\
+		((PHOpHapticControllerDesc*)ptr)->hcCurrUPos = hcCurrUPos;	\
+		((PHOpHapticControllerDesc*)ptr)->hcLastUPos = hcLastUPos;	\
+		((PHOpHapticControllerDesc*)ptr)->hcFixsubGoal = hcFixsubGoal;	\
+		((PHOpHapticControllerDesc*)ptr)->c_obstRadius = c_obstRadius;	\
+		((PHOpHapticControllerDesc*)ptr)->hpObjIndex = hpObjIndex;	\
+		((PHOpHapticControllerDesc*)ptr)->logForce = logForce;	\
+		((PHOpHapticControllerDesc*)ptr)->fileindex = fileindex;	\
+		((PHOpHapticControllerDesc*)ptr)->lastHpRateF = lastHpRateF;	\
+		((PHOpHapticControllerDesc*)ptr)->hcReady = hcReady;	\
+		((PHOpHapticControllerDesc*)ptr)->hcCollied = hcCollied;	\
+		((PHOpHapticControllerDesc*)ptr)->constrainCount = constrainCount;	\
+		((PHOpHapticControllerDesc*)ptr)->constrainCountHc = constrainCountHc;	\
+		((PHOpHapticControllerDesc*)ptr)->couterPlaneN = couterPlaneN;	\
+		((PHOpHapticControllerDesc*)ptr)->hcElmDtcRadius = hcElmDtcRadius;	\
+		((PHOpHapticControllerDesc*)ptr)->collectCount = collectCount;	\
+		((PHOpHapticControllerDesc*)ptr)->collectItrtor = collectItrtor;	\
+		((PHOpHapticControllerDesc*)ptr)->hcProxyOn = hcProxyOn;	\
+		((PHOpHapticControllerDesc*)ptr)->suspObjid = suspObjid;	\
+		((PHOpHapticControllerDesc*)ptr)->proxyRadius = proxyRadius;	\
+		((PHOpHapticControllerDesc*)ptr)->surrCnstrs = surrCnstrs;	\
 		return true;	\
 	}\
 
