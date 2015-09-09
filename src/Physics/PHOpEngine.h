@@ -1,12 +1,15 @@
 #ifndef PHOPENGINE_H
 #define PHOPENGINE_H
 
-#include "Physics\PHEngine.h"
-#include "Physics\PHOpObj.h"
+
 #include <SprDefs.h>
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include <Physics\PHOpDecompositionMethods.h>
+#include "Physics\PHOpHapticController.h"
+#include "Physics\PHEngine.h"
+#include "Physics\PHOpObj.h"
+#include "Physics\PHOpHapticRenderer.h"
 
 namespace Spr{
 	;
@@ -149,21 +152,59 @@ namespace Spr{
 		DrawEllipsoid drawEll;
 
 		int opIterationTime;
-	
+
+		TQuaternion<float> winPose;
+
+		bool subStepProFix;
+		bool subStepProSolve;
+
+		//proxy
+		int noCtcItrNum;
+		PHOpHapticRenderer* opHpRender;
+		PHOpHapticController *myHc;
+		bool useHaptic;
+
+
 		PHOpEngine();
 
-		int  GetPriority() const { 
+		int  GetPriority() const {
 			return SGBP_NONE;
 			//return SGBP_FORCEGENERATOR;
-			 }//SGBP_DYNAMICALSYSTEM;}
+		}//SGBP_DYNAMICALSYSTEM;}
 		void Step();
-		
+
 		void SetGravity(bool gflag);
 
 		virtual bool AddChildObject(ObjectIf* o);
 		virtual bool DelChildObject(ObjectIf* o);
 		void SetTimeStep(double dt);
 		double GetTimeStep();
+		//void initialHapticController(ObjectIf*);
+		//ObjectIf* GetHapticController();
+		int GetOpObjNum(){ return(int)opObjs.size(); }
+		PHOpObjDesc* GetOpObj(int i);
+		void StepWithBlend();
+		int  AddOpObj();
+		PHOpObjIf* GetOpObjIf(int obji);
+		void HapticProcedure_3DOF();
+		void InitialHapticRenderer(int objInt);
+		bool TrySetHapticEnable(bool enable);
+		bool IsHapticEnabled();
+		void SetHapticSolveEnable(bool enable);
+		bool IsHapticSolve();
+		void SetProxyCorrectionEnable(bool enable);
+		bool IsProxyCorrection();
+		void InitialNoMeshHapticRenderer();
+
+		ObjectIf* GetOpHapticController();
+		ObjectIf* GetOpHapticRenderer();
+
+		void SetUpdateNormal(bool flag);
+		bool IsUpdateNormal(int obji);
+
+
+		void SetCurrentCameraOritation(TQuaternion<float> orit);
+		TQuaternion<float> GetCurrentCameraOrientation();
 	};
 
 }

@@ -29,6 +29,7 @@
 #include <Collision/CDRoundCone.h>
 #include <Collision/CDConvexMesh.h>
 #include <Collision/CDConvexMeshInterpolate.h>
+#include <Physics\PHOpHapticController.h>
 #include <stdlib.h>
 
 namespace Spr{;
@@ -87,8 +88,9 @@ void PHSdkIf::RegisterSdk(){
 	PHSolidIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHFrame));
 
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHOpObj));
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHOpHapticController));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHOpSpHashColliAgent));
-
+	
 	PHRegisterTypeDescs();
 	PHRegisterLoadHandlers();
 	CDRegisterTypeDescs();

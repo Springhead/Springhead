@@ -23,6 +23,10 @@ struct FWOpObjIf : FWObjectIf{
 	 ObjectIf* GetChildObject(size_t pos);
 	///	子オブジェクトの追加
 	 bool AddChildObject(ObjectIf* o);
+	 void CreateOpObjWithRadius(float r);
+	 void CreateOpObj();
+	 ObjectIf* GetOpObj();
+	 ObjectIf* GetGRMesh();
 };
 
 }

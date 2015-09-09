@@ -5,6 +5,8 @@
 #include "Base/TinyVec.h"
 #include "Base/TinyMat.h"
 #include <vector>
+#include <Foundation/Object.h>
+#include <Physics\SprPHOpObj.h>
 
 namespace Spr{;
 
@@ -18,8 +20,9 @@ namespace Spr{;
 //	when simulation : build currCenter ,CurrOrien
 //
 */
-class PHOpParticle
+class PHOpParticle :public SceneObject, public PHOpParticleDesc
 {
+	SPR_OBJECTDEF(PHOpParticle);
 public :	
 	//public TPos oritation;
 
@@ -52,6 +55,10 @@ public :
 	}
 	
 private:
+	
+	
+	
+public :
 	//初期向き計算用共分散行列
 	std::vector<Matrix3f> covMatrixList;
 	//初期向き計算用
@@ -59,114 +66,66 @@ private:
 	//初期向き計算用
 	Matrix3f dotCoeffMatrix;
 	
-	
-public :
-	//マウスに触られたかフラグ
-	bool hitedByMouse;
 	//一時的の頂点index
 	std::vector<int> pVertTempInd;
-	//含むメッシュのindex
-	std::vector<int> pFaceInd;
-	//粒子硬さ係数alpha(開発中)
-	float pParaAlpha;
-	//projection from vertices(local index) to faces (targetMesh index)
-
-	//頂点配列
-	int *pVertArr;
-	//頂点配列配置フラグ
-	bool initialPvarr;
-	//頂点数
-	int pNvertex;
-	//自分のグループid
-	int pMyGroupInd;
-	//粒子のid
-	int pPId;
-	//所属objのid
-	int pObjId;
-	//表面粒子と内部粒子区別用
-	int pType;
-	
-
-	//頂点慣性モーメント 
-	Matrix3f pMomentInertia;
-	//頂点慣性モーメントの逆 
-	Matrix3f pInverseOfMomentInertia;
-	//頂点持つ質量（仮）
-	float pTempSingleVMass;
-	//粒子の総合質量
-	float pTotalMass;
-	//粒子モーメント行列
-	Matrix3f pMomentR;
-	//粒子分解後回転行列
-	Matrix3f pSmR;
-	//粒子中心からの頂点の重み
-	float *pVectDisWeightArr;
-	//重み初期化フラグ
-	bool initialWArr;
-	//caution pCurrOrint cannot be used directly now you need to inverse the pos before use it.
-	//check commond DrawOrien in OPAppExpand.cpp
 	//現在向き
 	TQuaternion<float> pCurrOrint;
 	//初期向き
 	TQuaternion<float> pOrigOrint;
 	//予測向き
 	TQuaternion<float> pNewOrint;
-	//頂点の主成分分析PCAによる楕円の向き行列
-	Matrix3f ellipRotMatrix;
-	//粒子角速度
-	Vec3f pWvel;//角速度、長さは速度の大きさ、方向は速度の方向
-	//粒子球半径（球として扱う時に使う）
-	float pRadii;
-	//動的粒子半径
-	float pDynamicRadius;
-	//主半径vector
-	Vec3f pMainRadiusVec;
-	//副半径vector
-	Vec3f pSecRadiusVec;
-	//従半径vector
-	Vec3f pThrRadiusVec;
-	//主半径
-	float pMainRadius;
-	//副半径
-	float pSecRadius;
-	//従半径
-	float pThrRadius;
-	//粒子の現在位置
-	Vec3f pCurrCtr;
-	//粒子の初期位置
-	Vec3f pOrigCtr;
-	//粒子の予測位置
-	Vec3f pNewCtr;
-	//粒子の速度
-	Vec3f pVelocity;
-	//粒子の到達位置（未使用）
-	std::vector<Vec3f> pGoalCtr;
-	//used to precalculation in Collision Detection;
-	Matrix3f pPreEllipA;
+	
+	//projection from vertices(local index) to faces (targetMesh index)
 
-	//Delayed Force Base.()
-	//外力
-	Vec3f pExternalForce;
-	//not yet been used
-	Vec3f pExternalTorque;//not yet been used
-	//not yet been used
-	Vec3f pExternalDisplacement;
 
-	//The list which include the groups that contain this particle
+	//頂点配列配置フラグ
+	bool initialPvarr;
+	//頂点配列
+	int *pVertArr;
+	//表面粒子と内部粒子区別用
+	int pType;
+	
+	//粒子中心からの頂点の重み
+	float *pVectDisWeightArr;
+	float GetVtxDisWeight(int vi)
+	{
+		return pVectDisWeightArr[vi];
+	}
 	//本粒子に含むグループのindexリスト
 	std::vector<int> pInGrpList;
-	//SPhash に検出されたか
-	bool isColliedbySphash;
-	//ColliCubeに検出されたか
-	bool isColliedbyColliCube;
-	//マウスにつかまれたか
-	bool isFixedbyMouse;
-	//固定してるか
-	bool isFixed;
-	//SPhash に解決すべしか
-	bool isColliedSphashSolved;
-	//SPhash にまもなく解決すべしか
-	bool isColliedSphashSolvedReady;
+	int GetinGrpListNum()
+	{
+		return (int)pInGrpList.size();
+	}
+	int GetinGrpList(int gi)
+	{
+		return pInGrpList[gi];
+	}
+	int GetOpPtclVtxId(int vi)
+	{
+		return pVertArr[vi];
+	}
+	PHOpParticleDesc* GetParticleDesc()
+	{
+		return this;
+	}
+
+	//重み初期化フラグ
+	bool initialWArr;
+	//caution pCurrOrint cannot be used directly now you need to inverse the pos before use it.
+	//check commond DrawOrien in OPAppExpand.cpp
+	
+	
+	//粒子の到達位置（未使用）
+	std::vector<Vec3f> pGoalCtr;
+	
+
+	//Delayed Force Base.()
+	
+
+	//The list which include the groups that contain this particle
+	
+	
 
 
 	int getVertexGlbIndex(int vindex)

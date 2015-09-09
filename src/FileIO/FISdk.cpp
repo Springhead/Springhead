@@ -37,7 +37,6 @@ void SPR_CDECL FISdkIf::RegisterSdk(){
 	FISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(FIFileCOLLADA));
 	FISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(FIFileBinary));
 	FISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImpOwned(FIFileSpr));
-
 	FISdkIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(Import));
 
 	UTLoadHandlerDbPool::Get("FileIO")->insert(DBG_NEW ImportHandler);

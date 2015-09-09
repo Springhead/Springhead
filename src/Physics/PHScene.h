@@ -66,7 +66,7 @@ protected:
 	PHHapticEngine*			hapticEngine;
 	PHOpEngine*				opEngine;
 	
-	UTRef<PHOpSpHashColliAgent>	opSpAgent;
+	PHOpSpHashColliAgent*	opSpAgent;
 
 	std::vector< UTRef<PHSkeleton> > skeletons;
 
@@ -145,7 +145,7 @@ public:
 		skeleton->SetScene(this->Cast());
 		return skeleton->Cast();
 	}
-	UTRef<PHOpSpHashColliAgentIf> CreateOpSpHashAgent();
+	
 
 
 	int						NFemMeshes()const;

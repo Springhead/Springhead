@@ -302,11 +302,6 @@ public:
 	 */
 	int NGears()const;
 
-	/** @brief OPためのspHashの代理を作る
-
-	*/
-	PHOpSpHashColliAgentIf* CreateOpSpHashAgent();
-
 	/** @brief ギアを取得する
 	 */
 	PHGearIf* GetGear(int i);

@@ -1,8 +1,16 @@
 #include <Physics\PHOpObj.h>
 #include "PHOpDecompositionMethods.h"
+#define CHECK_INF_ERR
 
 using namespace PTM;
 namespace Spr{;
+
+//PHOpObjIf* PHOpObj::GetMyIf()
+//{
+//	NameManagerIf* nm = GetNameManager();
+//	PHOpObjIf* sdk = DCAST(PHOpObjIf, nm);
+//	return sdk;
+//}
 
 void PHOpObj::SimpleSimulationStep()
 {
@@ -91,6 +99,11 @@ void PHOpObj::positionPredict()
 		//external force
 		dp.pVelocity += dp.pExternalForce *params.timeStep / dp.pTempSingleVMass;
 
+#ifdef CHECK_INF_ERR
+		if (!FloatErrorTest::CheckBadFloatValue(dp.pVelocity.z))
+			int u = 0;
+#endif
+
 		//clear
 		dp.pExternalForce.clear();
 	}
@@ -158,6 +171,7 @@ void PHOpObj::positionPredict()
         params.bounds.clamp(dp.pNewCtr);
 		
 	}
+
 }
 /*
 @brief グループMatrixの計算
@@ -187,7 +201,14 @@ void PHOpObj::summationTogAgroup()
 	
 			Matrix3f Agroup;
 			Agroup.clear();
-
+			PHOpParticle &dp = objPArr[0];
+#ifdef CHECK_INF_ERR
+			if (!FloatErrorTest::CheckBadFloatValue(dp.pCurrCtr.x))
+			{
+				int u = 0;
+				return;
+			}
+#endif
 			int pcount = pg.gNptcl;
 			for(int j=0;j<pcount;j++)
 			{
@@ -217,7 +238,13 @@ void PHOpObj::summationTogAgroup()
 
 				gCurrentCenter += x ;
 			}
-			
+#ifdef CHECK_INF_ERR
+			if (!FloatErrorTest::CheckBadFloatValue(Agroup.xx, Agroup.yx, Agroup.zx))
+			{
+				int u = 0;
+				return;
+			}
+#endif
 		
 			pg.gCurrCenter = gCurrentCenter * (1.0f / pg.gtotalMass);
 			
@@ -337,11 +364,13 @@ void PHOpObj::newReducedPositionProject()
 		//avoid bug of infinite in polardecom
 		R = SolveShpMchByJacobi(pg);
 		//pd.polarDecom(R, S, pg.gAgroup);
+#ifdef CHECK_INF_ERR
 		if (!FloatErrorTest::CheckBadFloatValue(R.xx, R.yx, R.yz))
 		{
 			int u = 0;
 			continue;
 		}
+#endif
 		MatrixExtension me;
 
 
@@ -532,8 +561,10 @@ void PHOpObj::ReducedPositionProject()
 					PHOpGroup &pg_k = objGArr[dp.pInGrpList[k]];
 				
 					rSum += me.MatrixMultiVec3fRight(dp_k.pSmR, (dp.pOrigCtr - pg_k.gOrigCenter));//\sigma {k}{l_i}{Rgpk *(xibar - xgkbar)}
+#ifdef CHECK_INF_ERR
 					if(!FloatErrorTest::CheckBadFloatValue(rSum.x,rSum.y,rSum.z))
 						int u=0;
+#endif
 
 					pNbc += pg_k.gCurrCenter;
 				}
@@ -543,8 +574,10 @@ void PHOpObj::ReducedPositionProject()
 
 				 dp.pNewCtr = newpSum1;
 				
+#ifdef CHECK_INF_ERR
 				if(!FloatErrorTest::CheckBadFloatValue(newpSum1.x,newpSum1.y,newpSum1.z))
 						int u=0;
+#endif
 
 				dp.pGoalCtr.clear();
 				

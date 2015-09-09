@@ -29,9 +29,18 @@
 #define PHOPDEMO_H						// 同上
 
 #include <Springhead.h>								// SpringheadのAPIを使うためのヘッダファイル
-#include <Framework/SprFWApp.h>						// Frameworkクラスが宣言されているヘッダファイル
-#include <Physics\PHOpParticle.h>
-#include "FileOp.h"
+#include "Framework/SprFWApp.h"						// Frameworkクラスが宣言されているヘッダファイル
+
+#include "FileIO\SprFIOpStateHandler.h"
+#include "Physics\SprPHOpSpHashAgent.h"
+//#include "Physics\SprPHOpObj.h"
+#include "Physics\PHOpObj.h"
+//#include "Physics\PHOpParticle.h"
+#include "Framework\FWOpObj.h"
+#include "Physics\PHOpEngine.h"
+//#include "Physics\PHOpSpHashColliAgent.h"
+
+//#include "Physics\Spr"
 
 using namespace Spr;								// Springheadの名前空間
 
@@ -52,6 +61,8 @@ public:
 	bool OnMouseMove(int button, int x, int y, int zdelta);
 	void MouseButton(int button, int state, int x, int y);
 	bool OnMouse(int button, int state, int x, int y);
+
+	GRRenderIf* render;
 
 	//粒子描画スウィチ
 	bool drawPs;
@@ -95,8 +106,12 @@ public:
 	//opのTimerId
 	int opSimuTimerId;
 
+
+
 	//OpFileStateStore
-	FileOp fileOp;
+	FIOpStateHandlerIf* fileOp;
+	//stateFileVersion
+	float fileVersion;
 	//meshname
 	char* mymeshname;
 }; 

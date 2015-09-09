@@ -7,15 +7,15 @@
  */
 
 #include "PHOpDemo.h"
-#include "Physics\PHOpObj.h"
-#include "Framework\FWOpObj.h"
-#include "Physics\PHOpEngine.h"
-//#include "Physics\PHOpSpHashColliAgent.h"
-#include "Physics\SprPHOpSpHashAgent.h"
+
 
 #define USE_SPRFILE
 #define ESC 27
 #define USE_AVG_RADIUS
+#define COLLISION_DEMO
+#define HAPTIC_DEMO
+
+using namespace std;
 
 PHOpDemo::PHOpDemo(){
 #ifdef USE_SPRFILE
@@ -26,13 +26,15 @@ PHOpDemo::PHOpDemo(){
 
 	gravity = false;
 	drawPs = false;
+	//fileOp = new FIOpStateHandlerIf();
+	fileVersion = 2.0f;
 }
 
 void PHOpDemo::Init(int argc, char* argv[]){
 	CreateSdk();			// SDKの作成
 	UTRef<ImportIf> import = GetSdk()->GetFISdk()->CreateImport();
 	GetSdk()->LoadScene(fileName, import);			// ファイルのロード
-	GetSdk()->SaveScene("save.spr", import);		// ファイルのセーブテスト
+	//GetSdk()->SaveScene("save.spr", import);		// ファイルのセーブテスト
 	GRInit(argc, argv);		// ウィンドウマネジャ初期化
 	CreateWin();			// ウィンドウを作成
 	CreateTimer();			// タイマを作成
@@ -42,21 +44,44 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	GetSdk()->GetScene()->EnableRenderAxis(true);		// 座標軸の表示
 	GetSdk()->GetScene()->EnableRenderContact(true);	// 接触領域の表示
 
-	FWOpObj *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
+	//initial op objects
+	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
 	tmp->CreateOpObj();
 
-	FWOpObj *tmp2 = GetSdk()->GetScene()->FindObject("fwSLBunny2")->Cast();
-	tmp2->CreateOpObj();
+	//FWOpObjIf *tmp2 = GetSdk()->GetScene()->FindObject("fwSLBunny2")->Cast();
+	//tmp2->CreateOpObj();
 
-	//PHOpSpHashColliAgent cdif;
-	PHOpSpHashColliAgentIf* spIf;
-	spIf = GetSdk()->GetScene()->GetPHScene()->CreateOpSpHashAgent();
+#ifdef HAPTIC_DEMO
+	//initial for haptic
+	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+	//opEngine->InitialHapticRenderer(opEngine->GetOpObjNum() - 1);
+	opEngine->InitialNoMeshHapticRenderer();
 	
-	spIf->Initial(0.5f, tmp->opObj->params.bounds);
+	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngine->GetOpHapticController();
+	opHc->setC_ObstacleRadius(0.2f);
+	//PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
+	
+#endif
+
+#ifdef COLLISION_DEMO
+	////initial collision detection
+	PHOpSpHashColliAgentIf* spIf;
+	spIf = GetSdk()->GetScene()->GetPHScene() -> GetOpColliAgent();
+
+	Bounds bounds;
+	float boundcube = ((PHOpObjIf*)tmp->GetOpObj())->GetBoundLength();
+	bounds.min.x = -boundcube;
+	bounds.min.y = -boundcube;
+	bounds.min.z = -boundcube;
+	bounds.max.x = boundcube;
+	bounds.max.y = boundcube;
+	bounds.max.z = boundcube;
+
+	spIf->Initial(0.5f, bounds);
 
 	spIf->EnableCollisionDetection(false);
+#endif
 
-	//spIf->OpCollisionProcedure(0);
 	DrawHelpInfo = true;
 	checkPtclInfo = true;
 	useMouseSelect = false;
@@ -74,6 +99,7 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	pgroupEditionModel = false;
 	addGrpLink = true;
 	ediFirP = true;
+	render = GetCurrentWin()->GetRender();
 	
 	//STEPタイマ作成
 	UTTimerIf* SimuTimer = CreateTimer(UTTimerIf::FRAMEWORK);
@@ -83,7 +109,18 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	SimuTimer->SetResolution(1);
 	opSimuTimerId = SimuTimer->GetID();
 
+
+
 	mymeshname = "demoMesh";
+
+	//カメラ位置調整
+	Vec3d pos = Vec3d(0.0, 5.0, 10.0);		// カメラ初期位置
+	GetCurrentWin()->GetTrackball()->SetPosition(pos);	// カメラ初期位置の設定
+	float rmin, rmax;
+	GetCurrentWin()->GetTrackball()->GetLongitudeRange(rmin, rmax);
+	rmin *= 2; rmax *= 2;
+	GetCurrentWin()->GetTrackball()->SetLongitudeRange(rmin, rmax);
+
 }
 bool PHOpDemo::OnMouse(int button, int state, int x, int y)
 {
@@ -109,92 +146,138 @@ void PHOpDemo::TimerFunc(int id)
 		//OpのシミュレーションStepをコール
 		PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
 		opEngine->Step();
+		//opEngine->StepWithBlend();
 		PostRedisplay();
 	}
+
+	
 }
 void PHOpDemo::Keyboard(int key, int x, int y){
 
 	float alpha, beta;
 	int itr = -1;
+	float vd;
 	PHOpSpHashColliAgentIf* spIf = GetSdk()->GetScene()->GetPHScene()->GetOpColliAgent();
+
 
 	//PHOpObj *opObj = GetSdk()->GetScene()->FindObject("phObj")->Cast();
 	PHOpEngineIf* opEngineif = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
-	PHOpEngine* opEngine = DCAST(PHOpEngine, opEngineif);
-
+	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngineif->GetOpHapticController();
+	//PHOpEngine* opEngine = DCAST(PHOpEngine, opEngineif);
+	PHOpObjIf* objif = opEngineif->GetOpObjIf(0);
+	PHOpObjIf* objif2 = NULL;
+	if (opEngineif->GetOpObjNum()>1)
+		objif2 = opEngineif->GetOpObjIf(1);
+	PHOpParticleIf *dpif = (PHOpParticleIf*)objif->GetOpParticle(0);
+	PHOpParticleDesc *dp = dpif->GetParticleDesc();
 	switch (key) {
 	case ESC:
 	case 'q':
 		// アプリケーションの終了
 		exit(0);
 		break;
+	case'i':
+		opEngineif->SetProxyCorrectionEnable(!opEngineif->IsProxyCorrection());
+		if (opEngineif->IsProxyCorrection())
+			DSTR << "Enable ProxyCorrection" << std::endl;
+		else DSTR << "Disable ProxyCorrection" << std::endl;
+		break;
+	case'o':
+		opEngineif->SetHapticSolveEnable(!opEngineif->IsHapticSolve());
+		if (opEngineif->IsHapticSolve())
+			DSTR << "Enable HapticSolve" << std::endl;
+		else DSTR << "Disable HapticSolve" << std::endl;
+		break;
+	case't' :
+		if (!opEngineif->IsHapticEnabled())
+		{
+			if (opEngineif->TrySetHapticEnable(!opEngineif->IsHapticEnabled()))
+			{
+
+				DSTR << "Enable Haptic" << std::endl;
+
+			}
+			else
+			{
+				DSTR << "Haptic Initial Failed" << std::endl;
+			}
+		}
+		else DSTR << "Disable Haptic" << std::endl;
+		break;
+	case 'b':
+		dp->pCurrCtr.y += dp->pCurrCtr.y;
+		break;
 	case 'c':
-		spIf->EnableCollisionDetection(!spIf->CollisionEnabled());
-		if (spIf->CollisionEnabled())
+		spIf->EnableCollisionDetection(!spIf->IsCollisionEnabled());
+		if (spIf->IsCollisionEnabled())
 		DSTR << "Enable Collision detection" << std::endl;
 		else DSTR << "Disable Collision detection" << std::endl;
 		break;
 	case '3':
 		//Adjust iteration count
-		for (int obji = 0; obji< (int)opEngine->opObjs.size(); obji++)
+		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
 		{
-			itr = ++opEngine->opObjs[obji]->objitrTime;
+			itr = ((PHOpObjIf*)opEngineif->GetOpObjIf(obji))->GetObjItrTime();
+			++itr;
+			opEngineif->GetOpObjIf(obji)->SetObjItrTime(itr);
 		}
 		DSTR << "increase Op iteration num =" << itr <<std::endl;
 		break;
 	case '4':
 		//Adjust iteration count
-		for (int obji = 0; obji< (int)opEngine->opObjs.size(); obji++)
+		for (int obji = 0; obji < (int)opEngineif->GetOpObjNum(); obji++)
 		{
-			itr = --opEngine->opObjs[obji]->objitrTime;
+			itr = ((PHOpObjIf*)opEngineif->GetOpObjIf(obji))->GetObjItrTime();
+			--itr;
+			opEngineif->GetOpObjIf(obji)->SetObjItrTime(itr);
 		}
 		DSTR << "decrease Op iteration num =" << itr << std::endl;
 		break;
 	case '+':
 		//Adjust Alpha of op
-		for (int obji = 0; obji< (int) opEngine->opObjs.size(); obji++)
+		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
 		{
-			alpha = opEngine->opObjs[obji]->params.alpha;
+			alpha = ((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->GetObjAlpha();
 			
 			if (alpha<0.9501f)
 				alpha += 0.05f;
-			opEngine->opObjs[obji]->params.alpha = alpha;
+			((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->SetObjAlpha(alpha);
 		}
 		DSTR << "increase alpha =" << alpha << std::endl;
 		break;
 	case '-':
 		//Adjust Alpha of op
-		for (int obji = 0; obji< (int) opEngine->opObjs.size(); obji++)
+		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
 		{
-			alpha = opEngine->opObjs[obji]->params.alpha;
+			alpha = ((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->GetObjAlpha();
 		
 			if (alpha>0.0f)
 				alpha -= 0.05f;
-			opEngine->opObjs[obji]->params.alpha = alpha;
+			((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->SetObjAlpha(alpha);
 		}
 		DSTR << "decrease alpha =" << alpha << std::endl;
 		break;
 	case '*':
 		//Adjust Beta of op
-		for (int obji = 0; obji< (int)opEngine->opObjs.size(); obji++)
+		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
 		{
-			beta = opEngine->opObjs[obji]->params.beta;
+			beta = ((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->GetObjBeta();
 
 			if (beta<0.9501f)
 				beta += 0.05f;
-			opEngine->opObjs[obji]->params.beta = beta;
+			((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->SetObjBeta(beta);
 		}
 		DSTR << "increase beta =" << beta << std::endl;
 		break;
 	case '/':
 		//Adjust Beta of op
-		for (int obji = 0; obji< (int)opEngine->opObjs.size(); obji++)
+		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
 		{
-			beta = opEngine->opObjs[obji]->params.beta;
+			beta = ((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->GetObjBeta();
 
 			if (beta>0.0f)
 				beta -= 0.05f;
-			opEngine->opObjs[obji]->params.beta = beta;
+			((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->SetObjBeta(beta);
 		}
 		DSTR << "decrease beta =" << beta << std::endl;
 		break;
@@ -225,17 +308,23 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		fixPs = !fixPs;
 		if (fixPs)
 			DSTR << "EnterFixParticleModel" << std::endl;
-		else DSTR << " ExitFixParticleModel" << std::endl;
+		else DSTR << "ExitFixParticleModel" << std::endl;
 		break;
 	case 'g':
 		//Enable gravity
 		gravity = !gravity;
 		opEngineif->SetGravity(gravity);
+		if (gravity)
+			DSTR << "EnableGravity" << std::endl;
+		else DSTR << "DisableGravity" << std::endl;
 		break;
 	case 'p':
 		//Draw particle in physics scene
 		drawPs = !drawPs;
 		GetSdk()->GetScene()->EnableRenderOp(drawPs);
+		if (gravity)
+			DSTR << "DrawParticles" << std::endl;
+		else DSTR << "ClearDrawParticles" << std::endl;
 		break;
 	case 'y':
 		//Enable mouse function
@@ -251,91 +340,129 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 
 	case 'D':
 		//Enable Distance Constraint
-		for (int obji = 0; obji< (int)opEngine->opObjs.size(); obji++)
+		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
 		{
-			opEngine->opObjs[obji]->objUseDistCstr = !opEngine->opObjs[obji]->objUseDistCstr;
+			((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->SetObjDstConstraint(!((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->GetObjDstConstraint());
 		}
-		DSTR << "useDistCstr" << opEngine->opObjs[0]->objUseDistCstr << std::endl;;
+		DSTR << "useDistCstr" << ((PHOpObjIf*)opEngineif->GetOpObjIf(0)->Cast())->GetObjDstConstraint() << std::endl;;
 		break;
 
 	case '(':
 		//Adjust velocity damping coefficient
-		for (int obji = 0; obji< (int)opEngine->opObjs.size(); obji++)
+		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
 		{
-			opEngine->opObjs[obji]->params.veloDamping += 0.05f;
+			//opEngine->opObjs[obji]->params.veloDamping += 0.05f;
+			vd = ((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->GetVelocityDamping();
+			vd += 0.05f;
+			((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->SetVelocityDamping(vd);
 		}
-		DSTR << "params.veloDamping +=0.05f; " << opEngine->opObjs[0]->params.veloDamping << std::endl;;
+		DSTR << "params.veloDamping +=0.05f; " << vd << std::endl;;
 		break;
 	case ')':
 		//Adjust velocity damping coefficient
-		for (int obji = 0; obji< (int)opEngine->opObjs.size(); obji++)
+		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
 		{
-			opEngine->opObjs[obji]->params.veloDamping -= 0.05f;
+			vd = ((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->GetVelocityDamping();
+			vd -= 0.05f;
+			((PHOpObjIf*)opEngineif->GetOpObjIf(obji)->Cast())->SetVelocityDamping(vd);
 		}
-		DSTR << "params.veloDamping -=0.05f; " << opEngine->opObjs[0]->params.veloDamping << std::endl;;
+		DSTR << "params.veloDamping -=0.05f; " << vd<< std::endl;;
 		break;
 	case 257:// key "F1"
  		//mesh state Save1 
-		if (opEngine->opObjs.size()>0)
+		if (opEngineif->GetOpObjNum()>0)
 		{
-			std::cout << "Save FirObj1" << endl;
-			fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject1.dfOp", mymeshname);
+			std::cout << "Save FirObjState1" << endl;
+			fileOp->saveToFile(objif, "opDeformObject1.dfOp", fileVersion);
 		}
 		break;
 	case 258:// key "F2"
 		//mesh state Save2
-		if (opEngine->opObjs.size()>0)
+		if (opEngineif->GetOpObjNum()>0)
 		{
-			std::cout << "Save FirObj2" << endl;
-			fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject2.dfOp", mymeshname);
+			std::cout << "Save FirObjState2" << endl;
+			fileOp->saveToFile(objif, "opDeformObject2.dfOp", fileVersion);
 		}
 		break;
 	case 259:// key "F3"
 		//mesh state Save3
-		if (opEngine->opObjs.size()>0)
+		if (opEngineif->GetOpObjNum()>0)
 		{
-			std::cout << "Save FirObj3" << endl;
-			fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject3.dfOp", mymeshname);
+			std::cout << "Save FirObjState3" << endl;
+
+			fileOp->saveToFile(objif, "opDeformObject3.dfOp", fileVersion);
 		}
 		break;
 	case 260:// key "F4"
 		//mesh state Save4 
-		if (opEngine->opObjs.size()>0)
+		if (opEngineif->GetOpObjNum()>0)
 		{
-			std::cout << "Save FirObj4" << endl;
-			fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject4.dfOp", mymeshname);
+			std::cout << "Save FirObjState4" << endl;
+			fileOp->saveToFile(objif, "opDeformObject4.dfOp", fileVersion);
 		}
 		break;
 	case 261:// key "F5"
 		//mesh state Save5 
-		if (opEngine->opObjs.size()>0)
+		if (opEngineif->GetOpObjNum()>0)
 		{
-			std::cout << "Load FirObj1" << endl;
-			fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject1.dfOp", mymeshname);
+			std::cout << "Load FirObjState1" << endl;
+			fileOp->loadFromFile(objif, "opDeformObject1.dfOp", false, fileVersion);
 		}
 		break;
 	case 262:// key "F6"
 		//mesh state Save6 
-		if (opEngine->opObjs.size()>0)
+		if (opEngineif->GetOpObjNum()>0)
 		{
-			std::cout << "load FirObj2" << endl;
-			fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject2.dfOp", mymeshname);
+			std::cout << "load FirObjState2" << endl;
+			fileOp->loadFromFile(objif, "opDeformObject2.dfOp", false, fileVersion);
 		}
 		break;
 	case 263:// key "F7"
 		//mesh state Save7
-		if (opEngine->opObjs.size()>0)
+		if (opEngineif->GetOpObjNum()>0)
 		{
-			std::cout << "Load FirObj3" << endl;
-			fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject3.dfOp", mymeshname);
+			std::cout << "Load FirObjState3" << endl;
+			fileOp->loadFromFile(objif, "opDeformObject3.dfOp", false, fileVersion);
 		}
 		break;
 	case 264:// key "F8"
 		//mesh state Save8
-		if (opEngine->opObjs.size()>0)
+		if (opEngineif->GetOpObjNum()>0)
 		{
-			std::cout << "load FirObj4" << endl;
-			fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject4.dfOp", mymeshname);
+			std::cout << "load FirObjState4" << endl;
+			fileOp->loadFromFile(objif, "opDeformObject4.dfOp", false, fileVersion);
+		}
+		break;
+	case 265:// key "F9"
+		//mesh state Save
+		if (opEngineif->GetOpObjNum()>0)
+		{
+			std::cout << "Save SecObjState1" << endl;
+			fileOp->saveToFile(objif2, "opDeformObject1_other.dfOp", fileVersion);
+		}
+		break;
+	case 266:// key "F10"
+		//mesh state Save 
+		if (opEngineif->GetOpObjNum()>0)
+		{
+			std::cout << "Save SecObjState2" << endl;
+			fileOp->saveToFile(objif2, "opDeformObject2_other.dfOp", fileVersion);
+		}
+		break;
+	case 267:// key "F11"
+		//mesh state Load
+		if (opEngineif->GetOpObjNum()>0)
+		{
+			std::cout << "Load SecObjState1" << endl;
+			fileOp->loadFromFile(objif2, "opDeformObject1_other.dfOp", false, fileVersion);
+		}
+		break;
+	case 268:// key "F12"
+		//mesh state Load
+		if (opEngineif->GetOpObjNum()>0)
+		{
+			std::cout << "load SecObjState2" << endl;
+			fileOp->loadFromFile(objif2, "opDeformObject2_other.dfOp", false, fileVersion);
 		}
 		break;
 	case 'r':
@@ -366,8 +493,30 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 
 void PHOpDemo::Display()
 {
-	GRRenderIf* render = GetCurrentWin()->GetRender();
+	//GRRenderIf* render = GetCurrentWin()->GetRender();
 	render->SetLighting(false);
+
+	//draw proxy
+	if (1)
+	{
+		PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+		PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngine->GetOpHapticController();
+
+		Affinef affpos;
+		//affpos.Pos() = HaptcRatePos
+		affpos.Pos() = opHc->GetUserPos();
+
+		render->SetMaterial(GRRenderIf::AZURE);
+		render->PushModelMatrix();//相対座標で使う
+		render->MultModelMatrix(affpos);
+		//render->DrawSphere(myHc->proxyRadius*1.01f,8,8,false);
+		//render->DrawSphere(myHc->hcElmDtcRadius*1.01f,8,8,false);
+		render->DrawSphere(opHc->GetC_ObstacleRadius() * 2 * 1.01f, 8, 8, true);
+		//render->DrawSphere(myHc->c_obstRadius * 0.02f * 1.01f, 8, 8, true);
+
+		render->PopModelMatrix();
+
+	}
 
 
 	if (DrawHelpInfo)
@@ -448,7 +597,7 @@ void PHOpDemo::Display()
 
 	PHOpEngineIf* opEngineif = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
 	PHOpEngine* opEngine = DCAST(PHOpEngine, opEngineif);
-	for (int obji = 0; obji < (int) opEngine->opObjs.size(); obji++)
+	for (int obji = 0; obji < (int) opEngineif->GetOpObjNum(); obji++)
 	{
 		PHOpObj& drawObj = *opEngine->opObjs[obji];
 		

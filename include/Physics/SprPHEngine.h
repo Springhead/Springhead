@@ -9,6 +9,7 @@
 #define SPR_PHENGINEIF_H
 
 #include <Foundation/SprObject.h>
+#include <Physics\SprPHOpObj.h>
 
 namespace Spr{;
 
@@ -198,13 +199,34 @@ public:
 	SPR_IFDEF(PHFemEngine);
 };
 struct PHOpEngineIf : PHEngineIf{
+	SPR_IFDEF(PHOpEngine);
 public:
 	void SetTimeStep(double dt);
 	double GetTimeStep();
 	void SetGravity(bool gflag);
+	void InitialHapticRenderer(int objId);
+	//ObjectIf* GetHapticController();
+	PHOpObjDesc* GetOpObj(int i);
+	void StepWithBlend();
+	int AddOpObj();
+	bool TrySetHapticEnable(bool enable);
+	bool IsHapticEnabled();
+	void SetHapticSolveEnable(bool enable);
+	bool IsHapticSolve();
+	void SetProxyCorrectionEnable(bool enable);
+	bool IsProxyCorrection();
+	void SetUpdateNormal(bool flag);
+	bool IsUpdateNormal(int obji);
 
-	SPR_IFDEF(PHOpEngine);
+	PHOpObjIf* GetOpObjIf(int obji);
+	int GetOpObjNum();
+
+	ObjectIf* GetOpHapticController();
+	ObjectIf* GetOpHapticRenderer();
+	
+	void InitialNoMeshHapticRenderer();
 };
+
 struct PHHapticEngineDesc{
 	enum HapticEngineMode{
 		SINGLE_THREAD = 0,

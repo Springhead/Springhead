@@ -82,6 +82,10 @@ void PHScene::Init(){
 	opEngine = DBG_NEW PHOpEngine;
 	engines.Add(opEngine);
 
+	opSpAgent = DBG_NEW PHOpSpHashColliAgent;
+	opSpAgent->SetScene(this->Cast());
+	opSpAgent->spTable = DBG_NEW CDSpatialHashTable();
+	
 	PHHapticEngineCallStep2* hpe = DBG_NEW PHHapticEngineCallStep2;
 	hpe->engine = hapticEngine;
 	engines.Add(hpe);
@@ -111,17 +115,6 @@ PHSdkIf* PHScene::GetSdk(){
 PHSolidIf* PHScene::CreateSolid(const PHSolidDesc& desc){
 	UTRef<PHSolid> s = DBG_NEW PHSolid(desc, Cast());
 	AddChildObject(s->Cast());
-	return s->Cast();
-}
-UTRef<PHOpSpHashColliAgentIf> PHScene::CreateOpSpHashAgent()
-{
-	UTRef<PHOpSpHashColliAgent> s = DBG_NEW PHOpSpHashColliAgent();
-	opSpAgent = s;
-
-	opSpAgent->SetScene(Cast());
-
-	s->spTable = DBG_NEW CDSpatialHashTable();
-
 	return s->Cast();
 }
 int PHScene::NSolids()const{

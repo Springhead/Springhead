@@ -3,6 +3,8 @@
 //#include "SVDDecomposition.h"
 //#include "JacobiDecomposition.h"
 //#include "MatrixExtension.h"
+#define CHECK_INF_ERR
+
 namespace Spr{;
 
 void PHOpParticle::swapVectorToArr()
@@ -254,6 +256,14 @@ void PHOpParticle::buildEllipRadius(Vec3f *mPos)
 	
 		pMomentR = me.MatrixesMultiply3f(ellipM, Rot);
 		
+#ifdef CHECK_INF_ERR
+		if (!FloatErrorTest::CheckBadFloatValue(ellipM.xx, ellipM.yx, ellipM.zx))
+		{
+			int u = 0;
+			return NULL;
+		}
+#endif
+
 		return &pMomentR;
 
 	}

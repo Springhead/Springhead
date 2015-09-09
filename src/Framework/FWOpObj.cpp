@@ -8,6 +8,14 @@ FWOpObj::FWOpObj(const FWOpObjDesc& d) :grMesh(NULL){
 	SetDesc(&d);
 	fwPSize = d.fwPSize;
 }
+ObjectIf* FWOpObj::GetOpObj()
+{
+	return opObj->Cast();
+}
+ObjectIf* FWOpObj::GetGRMesh()
+{
+	return grMesh->Cast();
+}
 void FWOpObj::Sync()
 {
 	Blend();
@@ -143,8 +151,20 @@ void FWOpObj::CreateOpObj()
 	float objPtclDiameter = fabs(tdiameterP.norm());
 	//objPtclRadiusSpecialForUnstabledeform = objPtclDiameter / 2;//no kill
 
-	opObj->initialDeformObject(&grMesh->vertices[0], grMesh->NVertex(), objPtclDiameter);
+	opObj->initialPHOpObj(&grMesh->vertices[0], grMesh->NVertex(), objPtclDiameter);
+	//opObj->SetGRMesh(grMesh);
+	opObj->targetMesh = grMesh;
+	opObj->SetName(grMesh->GetName());
 }
+void FWOpObj::CreateOpObjWithRadius(float r)
+{
+	grMesh->EnableAlwaysCreateBuffer();
+	opObj->initialPHOpObj(&grMesh->vertices[0], grMesh->NVertex(), r);
+	//opObj->SetGRMesh(grMesh);
+	opObj->targetMesh = grMesh;
+	opObj->SetName(grMesh->GetName());
+}
+
 void FWOpObj::Blend()
 {
 
@@ -182,6 +202,29 @@ void FWOpObj::Blend()
 			grMesh->vertices[vertind] = u;
 			
 		}
+	}
+
+	//	 calc normal
+	// ’¸“_‚ð‹¤—L‚·‚é–Ê‚Ì”
+	if (opObj->updateNormals)
+	{
+		std::vector<int> nFace(grMesh->vertices.size(), 0);
+
+		for (unsigned i = 0; i < grMesh->triFaces.size(); i += 3){
+			Vec3f n = (grMesh->vertices[grMesh->triFaces[i + 1]] - grMesh->vertices[grMesh->triFaces[i]])
+				% (grMesh->vertices[grMesh->triFaces[i + 2]] - grMesh->vertices[grMesh->triFaces[i]]);
+			n.unitize();
+
+			grMesh->normals[grMesh->triFaces[i]] += n;
+			grMesh->normals[grMesh->triFaces[i + 1]] += n;
+			grMesh->normals[grMesh->triFaces[i + 2]] += n;
+			nFace[grMesh->triFaces[i]] ++;
+			nFace[grMesh->triFaces[i + 1]] ++;
+			nFace[grMesh->triFaces[i + 2]] ++;
+		}
+
+		for (unsigned i = 0; i < grMesh->normals.size(); ++i)
+			grMesh->normals[i] /= nFace[i];
 	}
 }
 
