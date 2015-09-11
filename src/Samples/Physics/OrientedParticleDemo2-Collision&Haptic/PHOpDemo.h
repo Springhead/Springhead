@@ -112,8 +112,6 @@ public:
 	FIOpStateHandlerIf* fileOp;
 	//stateFileVersion
 	float fileVersion;
-	//meshname
-	char* mymeshname;
 }; 
 
 #endif
