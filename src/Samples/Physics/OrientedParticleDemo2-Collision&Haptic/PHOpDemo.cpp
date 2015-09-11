@@ -12,17 +12,18 @@
 #define USE_SPRFILE
 #define ESC 27
 #define USE_AVG_RADIUS
-#define COLLISION_DEMO
+//#define COLLISION_DEMO
 #define HAPTIC_DEMO
 
 using namespace std;
 
 PHOpDemo::PHOpDemo(){
-#ifdef USE_SPRFILE
-	fileName = "./files/sceneSample.spr";	// sprファイル
-#else
-	fileName = "./files/sceneSample.x";		// xファイル
+#ifdef COLLISION_DEMO
+	fileName = "./files/sceneSampleColli.spr";	// sprファイル
+#else if  HAPTIC_DEMO
+	fileName = "./files/sceneSampleHaptic.spr";
 #endif
+	
 
 	gravity = false;
 	drawPs = false;
@@ -48,9 +49,6 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
 	tmp->CreateOpObj();
 
-	//FWOpObjIf *tmp2 = GetSdk()->GetScene()->FindObject("fwSLBunny2")->Cast();
-	//tmp2->CreateOpObj();
-
 #ifdef HAPTIC_DEMO
 	//initial for haptic
 	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
@@ -64,6 +62,10 @@ void PHOpDemo::Init(int argc, char* argv[]){
 #endif
 
 #ifdef COLLISION_DEMO
+
+	FWOpObjIf *tmp2 = GetSdk()->GetScene()->FindObject("fwSLBunny2")->Cast();
+	tmp2->CreateOpObj();
+
 	////initial collision detection
 	PHOpSpHashColliAgentIf* spIf;
 	spIf = GetSdk()->GetScene()->GetPHScene() -> GetOpColliAgent();
@@ -108,10 +110,6 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	SimuTimer->SetInterval(intervaltime);
 	SimuTimer->SetResolution(1);
 	opSimuTimerId = SimuTimer->GetID();
-
-
-
-	mymeshname = "demoMesh";
 
 	//カメラ位置調整
 	Vec3d pos = Vec3d(0.0, 5.0, 10.0);		// カメラ初期位置
@@ -162,7 +160,11 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 
 	//PHOpObj *opObj = GetSdk()->GetScene()->FindObject("phObj")->Cast();
 	PHOpEngineIf* opEngineif = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
-	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngineif->GetOpHapticController();
+
+	PHOpHapticControllerIf* opHc = NULL;
+#ifdef HAPTIC_DEMO
+	opHc= (PHOpHapticControllerIf*)opEngineif->GetOpHapticController();
+#endif
 	//PHOpEngine* opEngine = DCAST(PHOpEngine, opEngineif);
 	PHOpObjIf* objif = opEngineif->GetOpObjIf(0);
 	PHOpObjIf* objif2 = NULL;
@@ -495,7 +497,7 @@ void PHOpDemo::Display()
 {
 	//GRRenderIf* render = GetCurrentWin()->GetRender();
 	render->SetLighting(false);
-
+#ifdef HAPTIC_DEMO
 	//draw proxy
 	if (1)
 	{
@@ -517,7 +519,7 @@ void PHOpDemo::Display()
 		render->PopModelMatrix();
 
 	}
-
+#endif
 
 	if (DrawHelpInfo)
 	{
@@ -584,6 +586,12 @@ void PHOpDemo::Display()
 		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
 		sstr.str("");
 		sstr << "Model File Load: From 'F5' to 'F8";
+		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
+		sstr.str("");
+		sstr << "Enable Collision: 'c'";
+		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
+		sstr.str("");
+		sstr << "Enable Haptic: 't'";
 		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
 		sstr.str("");
 		sstr << "Please watch springhead output for more information";
