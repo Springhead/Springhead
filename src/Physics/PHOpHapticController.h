@@ -101,7 +101,7 @@ namespace Spr {
 		targetVts[0]= objPArr[0].pCurrCtr;
 		}*/
 		bool doCalibration();
-		void  initDevice();
+		bool  initDevice();
 		bool InitialHapticController(PHOpObj* opObjectif);
 		bool InitialHapticController();
 		//void UpdateHapticPosition(Vec3f &pos);

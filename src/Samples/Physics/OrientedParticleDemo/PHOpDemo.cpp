@@ -43,6 +43,9 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	FWOpObj *tmp = GetSdk()->GetScene()->FindObject("fwOpObj")->Cast();
 	tmp->CreateOpObj();
 
+	FWOpObj *tmp2 = GetSdk()->GetScene()->FindObject("fwOpObj2")->Cast();
+	tmp2->CreateOpObj();
+
 	DrawHelpInfo = true;
 	checkPtclInfo = true;
 	useMouseSelect = false;
@@ -183,21 +186,21 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		break;
 	case'l':
 		drawlink = !drawlink;
-		cout << "drawlink" << drawlink << endl;
+		DSTR << "drawlink" << drawlink <<std::endl;
 		break;
 	case 'e':
 		//edit particle link model
 		pgroupEditionModel = !pgroupEditionModel;
 		if (pgroupEditionModel)
-			DSTR << "Enter pGroupEditingModel" << endl;
-		else DSTR << "Exit pGroupEditingModel" << endl;
+			DSTR << "Enter pGroupEditingModel" <<std::endl;
+		else DSTR << "Exit pGroupEditingModel" <<std::endl;
 		break;
 	case 'E':
 		//change "add" or "delete link" in edit model
 		addGrpLink = !addGrpLink;
 		if (addGrpLink)
-			DSTR << "Add Pgroup Function" << endl;
-		else DSTR << "Del Pgroup Function" << endl;
+			DSTR << "Add Pgroup Function" <<std::endl;
+		else DSTR << "Del Pgroup Function" <<std::endl;
 		break;
 	case 'f':
 		//Use mouse to fix touched particle
@@ -253,69 +256,69 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		}
 		DSTR << "params.veloDamping -=0.05f; " << opEngine->opObjs[0]->params.veloDamping << std::endl;;
 		break;
-	case 257:// key "F1"
- 		//mesh state Save1 
-		if (opEngine->opObjs.size()>0)
-		{
-			std::cout << "Save FirObj1" << endl;
-			fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject1.dfOp", mymeshname);
-		}
-		break;
-	case 258:// key "F2"
-		//mesh state Save2
-		if (opEngine->opObjs.size()>0)
-		{
-			std::cout << "Save FirObj2" << endl;
-			fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject2.dfOp", mymeshname);
-		}
-		break;
-	case 259:// key "F3"
-		//mesh state Save3
-		if (opEngine->opObjs.size()>0)
-		{
-			std::cout << "Save FirObj3" << endl;
-			fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject3.dfOp", mymeshname);
-		}
-		break;
-	case 260:// key "F4"
-		//mesh state Save4 
-		if (opEngine->opObjs.size()>0)
-		{
-			std::cout << "Save FirObj4" << endl;
-			fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject4.dfOp", mymeshname);
-		}
-		break;
-	case 261:// key "F5"
-		//mesh state Save5 
-		if (opEngine->opObjs.size()>0)
-		{
-			std::cout << "Load FirObj1" << endl;
-			fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject1.dfOp", mymeshname);
-		}
-		break;
-	case 262:// key "F6"
-		//mesh state Save6 
-		if (opEngine->opObjs.size()>0)
-		{
-			std::cout << "load FirObj2" << endl;
-			fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject2.dfOp", mymeshname);
-		}
-		break;
-	case 263:// key "F7"
-		//mesh state Save7
-		if (opEngine->opObjs.size()>0)
-		{
-			std::cout << "Load FirObj3" << endl;
-			fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject3.dfOp", mymeshname);
-		}
-		break;
-	case 264:// key "F8"
-		//mesh state Save8
-		if (opEngine->opObjs.size()>0)
-		{
-			std::cout << "load FirObj4" << endl;
-			fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject4.dfOp", mymeshname);
-		}
+	//case 257:// key "F1"
+ //		//mesh state Save1 
+	//	if (opEngine->opObjs.size()>0)
+	//	{
+	//		std::cout << "Save FirObj1" <<std::endl;
+	//		fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject1.dfOp", mymeshname);
+	//	}
+	//	break;
+	//case 258:// key "F2"
+	//	//mesh state Save2
+	//	if (opEngine->opObjs.size()>0)
+	//	{
+	//		std::cout << "Save FirObj2" <<std::endl;
+	//		fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject2.dfOp", mymeshname);
+	//	}
+	//	break;
+	//case 259:// key "F3"
+	//	//mesh state Save3
+	//	if (opEngine->opObjs.size()>0)
+	//	{
+	//		std::cout << "Save FirObj3" <<std::endl;
+	//		fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject3.dfOp", mymeshname);
+	//	}
+	//	break;
+	//case 260:// key "F4"
+	//	//mesh state Save4 
+	//	if (opEngine->opObjs.size()>0)
+	//	{
+	//		std::cout << "Save FirObj4" <<std::endl;
+	//		fileOp.saveToFile(*opEngine->opObjs[0], "opDeformObject4.dfOp", mymeshname);
+	//	}
+	//	break;
+	//case 261:// key "F5"
+	//	//mesh state Save5 
+	//	if (opEngine->opObjs.size()>0)
+	//	{
+	//		std::cout << "Load FirObj1" <<std::endl;
+	//		fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject1.dfOp", mymeshname);
+	//	}
+	//	break;
+	//case 262:// key "F6"
+	//	//mesh state Save6 
+	//	if (opEngine->opObjs.size()>0)
+	//	{
+	//		std::cout << "load FirObj2" <<std::endl;
+	//		fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject2.dfOp", mymeshname);
+	//	}
+	//	break;
+	//case 263:// key "F7"
+	//	//mesh state Save7
+	//	if (opEngine->opObjs.size()>0)
+	//	{
+	//		std::cout << "Load FirObj3" <<std::endl;
+	//		fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject3.dfOp", mymeshname);
+	//	}
+	//	break;
+	//case 264:// key "F8"
+	//	//mesh state Save8
+	//	if (opEngine->opObjs.size()>0)
+	//	{
+	//		std::cout << "load FirObj4" <<std::endl;
+	//		fileOp.loadFromFile(*opEngine->opObjs[0], "opDeformObject4.dfOp", mymeshname);
+	//	}
 		break;
 	case 'r':
 		// ファイルの再読み込み

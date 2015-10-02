@@ -459,6 +459,7 @@ namespace Spr{
 			{
 				vts[vi] = tmpVts[vi];
 			}
+			ClearLocalVtsBuffer();
 
 			objOrigPos = new Vec3f[vtsNum];
 			initialOrgP = true;
@@ -471,7 +472,7 @@ namespace Spr{
 
 			return true;
 
-			ClearLocalVtsBuffer();
+			
 		}
 
 		void ClearLocalVtsBuffer()

@@ -1443,12 +1443,14 @@ protected:\
 	float	posScale;	\
 	float	forceScale;	\
 	Vec3f	userPos;	\
+	Posef	userPose;	\
 	Vec3f	hcCurrPPos;	\
 	Vec3f	hcCurrUPos;	\
 	Vec3f	hcLastUPos;	\
 	Vec3f	hcFixsubGoal;	\
 	float	c_obstRadius;	\
 	int	hpObjIndex;	\
+	Spr::PHOpHapticControllerDesc::HaticDOFType	hcType;	\
 	bool	logForce;	\
 	int	fileindex;	\
 	Vec3f	lastHpRateF;	\
@@ -1470,12 +1472,14 @@ public:\
 		posScale = ((PHOpHapticControllerDesc*)ptr)->posScale;	\
 		forceScale = ((PHOpHapticControllerDesc*)ptr)->forceScale;	\
 		userPos = ((PHOpHapticControllerDesc*)ptr)->userPos;	\
+		userPose = ((PHOpHapticControllerDesc*)ptr)->userPose;	\
 		hcCurrPPos = ((PHOpHapticControllerDesc*)ptr)->hcCurrPPos;	\
 		hcCurrUPos = ((PHOpHapticControllerDesc*)ptr)->hcCurrUPos;	\
 		hcLastUPos = ((PHOpHapticControllerDesc*)ptr)->hcLastUPos;	\
 		hcFixsubGoal = ((PHOpHapticControllerDesc*)ptr)->hcFixsubGoal;	\
 		c_obstRadius = ((PHOpHapticControllerDesc*)ptr)->c_obstRadius;	\
 		hpObjIndex = ((PHOpHapticControllerDesc*)ptr)->hpObjIndex;	\
+		hcType = ((PHOpHapticControllerDesc*)ptr)->hcType;	\
 		logForce = ((PHOpHapticControllerDesc*)ptr)->logForce;	\
 		fileindex = ((PHOpHapticControllerDesc*)ptr)->fileindex;	\
 		lastHpRateF = ((PHOpHapticControllerDesc*)ptr)->lastHpRateF;	\
@@ -1498,12 +1502,14 @@ public:\
 		((PHOpHapticControllerDesc*)ptr)->posScale = posScale;	\
 		((PHOpHapticControllerDesc*)ptr)->forceScale = forceScale;	\
 		((PHOpHapticControllerDesc*)ptr)->userPos = userPos;	\
+		((PHOpHapticControllerDesc*)ptr)->userPose = userPose;	\
 		((PHOpHapticControllerDesc*)ptr)->hcCurrPPos = hcCurrPPos;	\
 		((PHOpHapticControllerDesc*)ptr)->hcCurrUPos = hcCurrUPos;	\
 		((PHOpHapticControllerDesc*)ptr)->hcLastUPos = hcLastUPos;	\
 		((PHOpHapticControllerDesc*)ptr)->hcFixsubGoal = hcFixsubGoal;	\
 		((PHOpHapticControllerDesc*)ptr)->c_obstRadius = c_obstRadius;	\
 		((PHOpHapticControllerDesc*)ptr)->hpObjIndex = hpObjIndex;	\
+		((PHOpHapticControllerDesc*)ptr)->hcType = hcType;	\
 		((PHOpHapticControllerDesc*)ptr)->logForce = logForce;	\
 		((PHOpHapticControllerDesc*)ptr)->fileindex = fileindex;	\
 		((PHOpHapticControllerDesc*)ptr)->lastHpRateF = lastHpRateF;	\

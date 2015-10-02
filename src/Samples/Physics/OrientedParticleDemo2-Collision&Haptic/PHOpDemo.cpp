@@ -13,7 +13,10 @@
 #define ESC 27
 #define USE_AVG_RADIUS
 //#define COLLISION_DEMO
+
+#ifndef COLLISION_DEMO
 #define HAPTIC_DEMO
+#endif
 
 using namespace std;
 
@@ -23,7 +26,7 @@ PHOpDemo::PHOpDemo(){
 #else if  HAPTIC_DEMO
 	fileName = "./files/sceneSampleHaptic.spr";
 #endif
-	
+//	fileName = "./files/sceneSample.spr";
 
 	gravity = false;
 	drawPs = false;
@@ -48,16 +51,38 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	//initial op objects
 	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
 	tmp->CreateOpObj();
+	
+	
 
 #ifdef HAPTIC_DEMO
 	//initial for haptic
 	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
-	//opEngine->InitialHapticRenderer(opEngine->GetOpObjNum() - 1);
-	opEngine->InitialNoMeshHapticRenderer();
 	
+	int objid;
+	
+	objid = opEngine->AddOpObj();
+	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(objid);
+	Vec3f* vArr;
+	vArr = new Vec3f[((GRMesh*)tmp->GetGRMesh())->vertices.size()];
+	//vector<int> a;
+	for (int vi = 0; vi<((GRMesh*)tmp->GetGRMesh())->vertices.size(); vi++) {
+		Vec3f v;// = new Vec3f();
+		v.x = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].x;
+		v.y = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].y;
+		v.z = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].z;
+
+		opObjIf->AddVertextoLocalBuffer(v);
+	}
+	opObjIf->InitialObjUsingLocalBuffer(0.5f);
+	
+	opEngine->InitialHapticRenderer(opEngine->GetOpObjNum() - 1);
+	//opEngine->InitialNoMeshHapticRenderer();
+	
+
+
 	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngine->GetOpHapticController();
 	opHc->setC_ObstacleRadius(0.2f);
-	//PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
+	PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
 	
 #endif
 
@@ -66,7 +91,7 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	FWOpObjIf *tmp2 = GetSdk()->GetScene()->FindObject("fwSLBunny2")->Cast();
 	tmp2->CreateOpObj();
 
-	////initial collision detection
+	//initial collision detection
 	PHOpSpHashColliAgentIf* spIf;
 	spIf = GetSdk()->GetScene()->GetPHScene() -> GetOpColliAgent();
 
@@ -138,6 +163,10 @@ void PHOpDemo::Reset(){
 
 void PHOpDemo::TimerFunc(int id)
 {
+	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
+	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(1);
+
 	FWApp::TimerFunc(id);
 	if (id == opSimuTimerId)
 	{
@@ -148,7 +177,12 @@ void PHOpDemo::TimerFunc(int id)
 		PostRedisplay();
 	}
 
-	
+	//blend
+	GRMeshIf *grMesh = (GRMeshIf*)tmp->GetGRMesh();
+	for (int vi = 0; vi < opObjIf->GetVertexNum(); vi++)
+	{
+		grMesh->GetVertices()[vi] = opObjIf->GetVertex(vi);
+	}
 }
 void PHOpDemo::Keyboard(int key, int x, int y){
 
@@ -193,7 +227,7 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 	case't' :
 		if (!opEngineif->IsHapticEnabled())
 		{
-			if (opEngineif->TrySetHapticEnable(!opEngineif->IsHapticEnabled()))
+			if (opEngineif->TrySetHapticEnable(true))
 			{
 
 				DSTR << "Enable Haptic" << std::endl;
@@ -204,7 +238,14 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 				DSTR << "Haptic Initial Failed" << std::endl;
 			}
 		}
-		else DSTR << "Disable Haptic" << std::endl;
+		else {
+			if (opEngineif->TrySetHapticEnable(false))
+			{
+
+				DSTR << "Disable Haptic" << std::endl;
+			}
+			else DSTR << "Haptic Initial Failed" << std::endl;
+		}
 		break;
 	case 'b':
 		dp->pCurrCtr.y += dp->pCurrCtr.y;

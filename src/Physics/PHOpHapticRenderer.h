@@ -53,7 +53,7 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 			proxyItrtMaxNum = 3;
 		}
 
-		void initialRenderer(PHOpHapticController* hc, std::vector<PHOpObj*>* objs)
+		void initial3DOFRenderer(PHOpHapticController* hc, std::vector<PHOpObj*>* objs)
 		{
 			myHc = hc;
 			opObjs = objs;
@@ -61,6 +61,14 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 			objNum = (int)(*opObjs).size();
 			BuildVToFaceRelation();
 			BuildEdgeInfo();
+		}
+		void initial6DOFRenderer(PHOpHapticController* hc, std::vector<PHOpObj*>* objs)
+		{
+			myHc = hc;
+			opObjs = objs;
+			forceOnRadius = 0.3f;
+			objNum = (int)(*opObjs).size();
+			
 		}
 
 		void ProxySlvPlane();
@@ -72,7 +80,22 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 		{
 			forceOnRadius = r;
 		}
-
+		void SetForceSpring(float k)
+		{
+			forceSpring = k;
+		}
+		float GetForceSpring()
+		{
+			return forceSpring;
+		}
+		void SetConstraintSpring(float k)
+		{
+			constraintSpring = k;
+		}
+		float GetConstraintSrping()
+		{
+			return constraintSpring;
+		}
 		//void HpProxyPosFix();
 		//void HpConstraint();
 		void HpNoCtcProxyCorrection();
