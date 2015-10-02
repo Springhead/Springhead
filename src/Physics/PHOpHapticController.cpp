@@ -198,9 +198,9 @@ namespace Spr {
 		//cpiHpVec.resize();
 		cpiLastHpVec.push_back(tmpcpinfo);
 
-		initDevice();
+		
 
-		return true;
+		return initDevice();
 
 	}
 	bool PHOpHapticController::InitialHapticController(PHOpObj* opObject)
@@ -253,9 +253,9 @@ namespace Spr {
 		//cpiHpVec.resize();
 		cpiLastHpVec.push_back(tmpcpinfo);
 
-		initDevice();
 		
-		return hcReady;
+		
+		return initDevice();
 	}
 	
 	ObjectIf*PHOpHapticController:: GetHpOpObj()
@@ -263,7 +263,7 @@ namespace Spr {
 		return hcObj->Cast();
 	}
 
-	void PHOpHapticController::initDevice()
+	bool PHOpHapticController::initDevice()
 	{
 		// 力覚インタフェースとの接続設定
 		hiSdk = HISdkIf::CreateSdk();
@@ -288,15 +288,16 @@ namespace Spr {
 
 		UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 		hcReady = spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+
 		if (hcReady)
 		{
 			spg->Calibration();
 			spg->Update(0.001f);
 		}
-
+		else return false;
 		
 		currSpg = spg;
-		
+		return true;
 	}
 	bool PHOpHapticController::doCalibration()
 	{

@@ -301,6 +301,7 @@ struct PHOpHapticControllerDesc
 	float posScale;
 	float forceScale;
 	Vec3f userPos;
+	Posef userPose;
 	Vec3f hcCurrPPos;
 	Vec3f hcCurrUPos;
 	Vec3f hcLastUPos;
@@ -309,6 +310,13 @@ struct PHOpHapticControllerDesc
 
 	//PHOpParticle* hcColliedP;
 	int hpObjIndex;
+	enum HaticDOFType
+	{
+		_3DOF,
+		_6DOF,
+	};
+
+	HaticDOFType hcType;
 	//Vec3f hcPointPos;
 	bool logForce;
 
@@ -350,7 +358,7 @@ struct PHOpHapticControllerIf : public SceneObjectIf{
 
 	
 	bool doCalibration();
-	void initDevice();
+	bool initDevice();
 	////UTRef<ObjectIf> initDevice();
 	//bool InitialHapticController(ObjectIf* opObjectif);
 	////void UpdateHapticPosition(Vec3f &pos);
@@ -379,7 +387,10 @@ struct PHOpHapticRendererIf : public SceneObjectIf{
 	bool ProxyCorrection();
 	void ForceCalculation();
 	void setForceOnRadius(float r);
-
+	void SetForceSpring(float k);
+	float GetForceSpring();
+	void SetConstraintSpring(float k);
+	float GetConstraintSrping();
 
 	void HpNoCtcProxyCorrection();
 	void HpConstrainSolve(Vec3f &currSubStart);

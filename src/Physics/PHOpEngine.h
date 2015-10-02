@@ -187,6 +187,7 @@ namespace Spr{
 		int  AddOpObj();
 		PHOpObjIf* GetOpObjIf(int obji);
 		void HapticProcedure_3DOF();
+		void HapticProcedure_6DOF();
 		void InitialHapticRenderer(int objInt);
 		bool TrySetHapticEnable(bool enable);
 		bool IsHapticEnabled();

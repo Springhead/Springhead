@@ -31,7 +31,7 @@
 #include <Springhead.h>								// SpringheadのAPIを使うためのヘッダファイル
 #include <Framework/SprFWApp.h>						// Frameworkクラスが宣言されているヘッダファイル
 #include <Physics\PHOpParticle.h>
-#include "FileOp.h"
+
 
 using namespace Spr;								// Springheadの名前空間
 
@@ -96,7 +96,7 @@ public:
 	int opSimuTimerId;
 
 	//OpFileStateStore
-	FileOp fileOp;
+	//FileOp fileOp;
 	//meshname
 	char* mymeshname;
 }; 
