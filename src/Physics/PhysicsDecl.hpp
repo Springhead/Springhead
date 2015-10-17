@@ -1224,6 +1224,7 @@ protected:\
 	Vec3d	center;	\
 	bool	dynamical;	\
 	Vec3f*	objTargetVts;	\
+	float	objTargetVtsArr;	\
 	int	objTargetVtsNum;	\
 	int	assPsNum;	\
 	int	assGrpNum;	\
@@ -1245,6 +1246,7 @@ public:\
 		center = ((PHOpObjDesc*)ptr)->center;	\
 		dynamical = ((PHOpObjDesc*)ptr)->dynamical;	\
 		objTargetVts = ((PHOpObjDesc*)ptr)->objTargetVts;	\
+		objTargetVtsArr = ((PHOpObjDesc*)ptr)->objTargetVtsArr;	\
 		objTargetVtsNum = ((PHOpObjDesc*)ptr)->objTargetVtsNum;	\
 		assPsNum = ((PHOpObjDesc*)ptr)->assPsNum;	\
 		assGrpNum = ((PHOpObjDesc*)ptr)->assGrpNum;	\
@@ -1267,6 +1269,7 @@ public:\
 		((PHOpObjDesc*)ptr)->center = center;	\
 		((PHOpObjDesc*)ptr)->dynamical = dynamical;	\
 		((PHOpObjDesc*)ptr)->objTargetVts = objTargetVts;	\
+		((PHOpObjDesc*)ptr)->objTargetVtsArr = objTargetVtsArr;	\
 		((PHOpObjDesc*)ptr)->objTargetVtsNum = objTargetVtsNum;	\
 		((PHOpObjDesc*)ptr)->assPsNum = assPsNum;	\
 		((PHOpObjDesc*)ptr)->assGrpNum = assGrpNum;	\
@@ -1449,6 +1452,7 @@ protected:\
 	Vec3f	hcLastUPos;	\
 	Vec3f	hcFixsubGoal;	\
 	float	c_obstRadius;	\
+	Vec3f	currOutForce;	\
 	int	hpObjIndex;	\
 	Spr::PHOpHapticControllerDesc::HaticDOFType	hcType;	\
 	bool	logForce;	\
@@ -1478,6 +1482,7 @@ public:\
 		hcLastUPos = ((PHOpHapticControllerDesc*)ptr)->hcLastUPos;	\
 		hcFixsubGoal = ((PHOpHapticControllerDesc*)ptr)->hcFixsubGoal;	\
 		c_obstRadius = ((PHOpHapticControllerDesc*)ptr)->c_obstRadius;	\
+		currOutForce = ((PHOpHapticControllerDesc*)ptr)->currOutForce;	\
 		hpObjIndex = ((PHOpHapticControllerDesc*)ptr)->hpObjIndex;	\
 		hcType = ((PHOpHapticControllerDesc*)ptr)->hcType;	\
 		logForce = ((PHOpHapticControllerDesc*)ptr)->logForce;	\
@@ -1508,6 +1513,7 @@ public:\
 		((PHOpHapticControllerDesc*)ptr)->hcLastUPos = hcLastUPos;	\
 		((PHOpHapticControllerDesc*)ptr)->hcFixsubGoal = hcFixsubGoal;	\
 		((PHOpHapticControllerDesc*)ptr)->c_obstRadius = c_obstRadius;	\
+		((PHOpHapticControllerDesc*)ptr)->currOutForce = currOutForce;	\
 		((PHOpHapticControllerDesc*)ptr)->hpObjIndex = hpObjIndex;	\
 		((PHOpHapticControllerDesc*)ptr)->hcType = hcType;	\
 		((PHOpHapticControllerDesc*)ptr)->logForce = logForce;	\

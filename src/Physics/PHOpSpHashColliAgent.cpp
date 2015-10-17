@@ -406,7 +406,7 @@ namespace Spr{
 
 
 		//sphere colli test
-		if (0)
+		if (1)
 		{
 			dp1->isColliedSphashSolvedReady = true;
 			dp2->isColliedSphashSolvedReady = true;

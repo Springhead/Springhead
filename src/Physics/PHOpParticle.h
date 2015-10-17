@@ -22,11 +22,13 @@ namespace Spr{;
 */
 class PHOpParticle :public SceneObject, public PHOpParticleDesc
 {
-	SPR_OBJECTDEF(PHOpParticle);
+	
 public :	
+	SPR_OBJECTDEF(PHOpParticle);
+	ACCESS_DESC(PHOpParticle);
 	//public TPos oritation;
 
-	PHOpParticle()
+	PHOpParticle(const PHOpParticleDesc& desc = PHOpParticleDesc()) :PHOpParticleDesc(desc)
 	{
 		//
 		pType = 0;//0 は表面particleで、1は内部particle

@@ -87,14 +87,17 @@ struct PHOpHapticRendererDesc{
 };
 
 struct PHOpObjDesc : public PHOpObjState{
-	//SPR_DESCDEF(PHOpObj);
 	double		mass;			///<	質量
 	Matrix3d	inertia;		///<	慣性テンソル	(Local系)
 	Vec3d		center;			///<	質量中心の位置	(Local系)
 	bool		dynamical;		///<	物理法則に従うか(速度は積分される)
 
-	//model頂点群
+	////model頂点群
 	Vec3f *objTargetVts;
+	
+	//model頂点データ
+	float objTargetVtsArr[10000];
+
 	//model頂点群数
 	int objTargetVtsNum;
 	//粒子の数
@@ -137,7 +140,7 @@ struct CDShapeIf;
 struct PHTreeNodeIf;
 
 ///	剛体のインタフェース
-struct PHOpObjIf : public SceneObjectIf{
+struct PHOpObjIf : public SceneObjectIf {
 	SPR_IFDEF(PHOpObj);
 	
 	
@@ -180,6 +183,10 @@ struct PHOpObjIf : public SceneObjectIf{
 	void SetObjDstConstraint(bool d);
 	void SetObjItrTime(int itrT);
 	int GetObjItrTime();
+
+	//void GetFirVertexData(float vData[]);
+	//float* GetFirVData();
+	//bool GetVDataArr(void *source);
 
 };
 struct PHOpParticleDesc {
@@ -308,6 +315,8 @@ struct PHOpHapticControllerDesc
 	Vec3f hcFixsubGoal;
 	float c_obstRadius;// = hapticDetectRange/6;
 
+	Vec3f currOutForce;
+
 	//PHOpParticle* hcColliedP;
 	int hpObjIndex;
 	enum HaticDOFType
@@ -377,6 +386,7 @@ struct PHOpHapticControllerIf : public SceneObjectIf{
 	Vec3f GetUserPos();
 	float GetC_ObstacleRadius();
 	//int GetHpObjIndex();
+	Vec3f GetCurrentOutputForce();
 };
 struct PHOpHapticRendererIf : public SceneObjectIf{
 	SPR_IFDEF(PHOpHapticRenderer);

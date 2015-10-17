@@ -24,15 +24,17 @@ namespace Spr{
 
 	//class PHOpObj: public SceneObject, public PHOpObjStatePrivate, public PHOpObjDesc {
 	class PHOpObj : public SceneObject, public PHOpObjDesc {
-		SPR_OBJECTDEF(PHOpObj);
-		//ACCESS_DESC_STATE_PRIVATE(PHOpObj);
+	
+		
 
 		//PHOpObj(const PHOpObjDesc& desc=PHOpObjDesc(), SceneIf* s=NULL);
 
 	public:
-
+		SPR_OBJECTDEF(PHOpObj);
+		ACCESS_DESC(PHOpObj);
 		PHOpObj(const PHOpObjDesc& desc = PHOpObjDesc(), SceneIf* s = NULL) :PHOpObjDesc(desc)
 		{
+		
 			//objId = 0;
 			//DSTR<<"Don't use Default constructor, the id of Deformer is set in 0"<<std::endl;
 			//objId = id;
@@ -90,7 +92,9 @@ namespace Spr{
 
 		//shapematching計算をJacobi計算用の
 		Jacobi j;
-
+		//model頂点群データ
+		//float objTargetVtsArr[10000];
+		//float *objTargetVtsArr;
 
 		//頂点の初期位置（Blendに使う）
 		Vec3f* objOrigPos;
@@ -155,7 +159,15 @@ namespace Spr{
 		//配置完了のlist（local用）
 		std::vector<int> mPtclAssList;
 	public:
+		bool GetDesc(void *desc)  {
+			
+			for(int vi=0;vi<objTargetVtsNum * 3 ;vi++)
+			{
+				((float*)desc)[vi] = objTargetVtsArr[vi];
+			}
 
+			return true;
+		}
 		float GetVtxBlendWeight(int Vtxi, int Grpi)
 		{
 			return objBlWeightArr[Vtxi][Grpi];
@@ -168,6 +180,30 @@ namespace Spr{
 		void SetGravity(bool bOn)
 		{
 			gravityOn = bOn;
+		}
+
+		/*void GetFirVertexData(float vData[])
+		{
+		vData = objTargetVtsArr;
+		}*/
+		//float (&GetFirVData())[10000]
+		/*float *GetFirVData()
+		{
+			return objTargetVtsArr;
+		}*/
+
+
+		void InitialFloatVertexDataArr()
+		{
+			//objTargetVtsArr = new float[objTargetVtsNum * 3];
+			//objTargetVtsArr[0] = new float[10000];
+			for (int vi = 0; vi <objTargetVtsNum; vi++)
+			{
+				objTargetVtsArr[vi * 3] = objTargetVts[vi].x;
+				objTargetVtsArr[vi * 3 + 1] = objTargetVts[vi].y;
+				objTargetVtsArr[vi * 3 + 2] = objTargetVts[vi].z;
+			}
+			int u = 0;
 		}
 
 		void UpdateItrTime(int itrT, bool useIndepParamflag)
@@ -419,7 +455,12 @@ namespace Spr{
 						int ks = 0;
 					}
 					//if (useTetgen)
+
 					objTargetVts[vertind] = u;
+					objTargetVtsArr[vertind * 3] = u.x;
+					objTargetVtsArr[vertind * 3 + 1] = u.y;
+					objTargetVtsArr[vertind * 3 + 2] = u.z;
+
 					//else targetMesh->vertices[vertind] = u;
 				}
 			}
@@ -466,6 +507,8 @@ namespace Spr{
 			objTargetVts = vts;//Tetgenため使う
 			objTargetVtsNum = vtsNum;
 
+			InitialFloatVertexDataArr();
+
 			initialDeformVertex(vts, vtsNum);
 			if (!BuildParticles(vts, vtsNum, tmpPtclList, pSize))
 				return false;
@@ -492,6 +535,8 @@ namespace Spr{
 			initialOrgP = true;
 			objTargetVts = vts;//Tetgenため使う
 			objTargetVtsNum = vtsNum;
+
+			InitialFloatVertexDataArr();
 
 			initialDeformVertex(vts, vtsNum);
 			if (!BuildParticles(vts, vtsNum, tmpPtclList, pSize))
