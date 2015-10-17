@@ -12,7 +12,7 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 	{
 	SPR_OBJECTDEF(PHOpHapticRenderer);
 	public :
-		
+		ACCESS_DESC(PHOpHapticRenderer);
 		
 		PHOpHapticController* myHc;
 		std::vector<Vec3f> ctcPPosList;
@@ -36,7 +36,7 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 			}*/
 		}slvItr;
 
-		PHOpHapticRenderer()
+		PHOpHapticRenderer(const PHOpHapticRendererDesc& desc = PHOpHapticRendererDesc()) : PHOpHapticRendererDesc(desc)
 		//PHOpHapticRenderer(const PHOpHapticRendererDesc& desc = PHOpHapticRendererDesc(), SceneIf* s = NULL)
 		{
 			hitWall = false;

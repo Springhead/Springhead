@@ -25,4 +25,6 @@
 #include "Physics/SprPHFemMeshNew.h"
 #include "Physics/SprPHHaptic.h"
 #include "Physics/SprPHSkeleton.h"
+#include "Physics/SprPHOpObj.h"
+#include "Physics/SprPHOpSpHashAgent.h"
 #endif

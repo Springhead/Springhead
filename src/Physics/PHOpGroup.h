@@ -8,8 +8,10 @@ namespace Spr{;
 
 class PHOpGroup :public SceneObject, public PHOpGroupDesc
 {
-	SPR_OBJECTDEF(PHOpGroup);
+	
 public:
+	SPR_OBJECTDEF(PHOpGroup);
+	ACCESS_DESC(PHOpGroup);
 	
 	//このグループに含む粒子のindex
 	std::vector<int> gPInd;
@@ -25,7 +27,7 @@ public:
 	{
 		return this;
 	}
-	PHOpGroup()
+	PHOpGroup(const PHOpGroupDesc& desc = PHOpGroupDesc()) :PHOpGroupDesc(desc)
 	{
 		gCurrCenter = gOrigCenter = Vec3f(0,0,0);
 		gAgroup = gAgroup.Zero();

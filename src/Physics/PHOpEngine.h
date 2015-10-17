@@ -174,7 +174,7 @@ namespace Spr{
 		void Step();
 
 		void SetGravity(bool gflag);
-
+		//void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ);
 		virtual bool AddChildObject(ObjectIf* o);
 		virtual bool DelChildObject(ObjectIf* o);
 		void SetTimeStep(double dt);

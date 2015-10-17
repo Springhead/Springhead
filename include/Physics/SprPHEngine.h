@@ -225,6 +225,7 @@ public:
 	ObjectIf* GetOpHapticRenderer();
 	
 	void InitialNoMeshHapticRenderer();
+	//void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ);
 };
 
 struct PHHapticEngineDesc{

@@ -69,7 +69,10 @@ namespace Spr {
 		s.swap(hcColliedPs);
 
 	}
-
+	Vec3f PHOpHapticController::GetCurrentOutputForce()
+	{
+		return currOutForce;
+	}
 	void PHOpHapticController::setC_ObstacleRadius(float r)
 	{
 		c_obstRadius = r;

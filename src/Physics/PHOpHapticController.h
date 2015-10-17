@@ -16,11 +16,11 @@ namespace Spr {
 
 	class PHOpHapticController: public SceneObject, public PHOpHapticControllerDesc
 	{
-		SPR_OBJECTDEF(PHOpHapticController);
-
+		
 		PHOpObj* hcObj;
-
-		PHOpHapticController(const PHOpHapticControllerDesc& desc = PHOpHapticControllerDesc(), SceneIf* s = NULL)// : PHOpHapticControllerDesc(desc)
+		//Matrix3f crossPlatformTransform;
+	public:
+		PHOpHapticController(const PHOpHapticControllerDesc& desc = PHOpHapticControllerDesc()): PHOpHapticControllerDesc(desc)
 		{
 			
 		}
@@ -31,8 +31,9 @@ namespace Spr {
 			if (logPPosFile) fclose(logPPosFile);
 		}
 
-	public:
 	
+		SPR_OBJECTDEF(PHOpHapticController);
+		ACCESS_DESC(PHOpHapticController);
 
 		UTRef<HISpidarGIf> currSpg;
 		UTRef<HISdkIf> hiSdk;
@@ -121,6 +122,24 @@ namespace Spr {
 		void BuildVToFaceRelation();
 		ObjectIf* GetHpOpObj();
 
+		/*void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ)
+		{
+			crossPlatformTransform.xx = 1;
+			crossPlatformTransform.yy = 1;
+			crossPlatformTransform.zz = 1;
+			if (InverX)
+			{
+				crossPlatformTransform.xx = -1;
+			}
+			if (InverY)
+			{
+				crossPlatformTransform.yy = -1;
+			}
+			if (InverZ)
+			{
+				crossPlatformTransform.zz = -1;
+			}
+		}*/
 		Vec3f GetUserPos()
 		{
 			return userPos;
@@ -129,6 +148,7 @@ namespace Spr {
 		{
 			return c_obstRadius;
 		}
+		Vec3f GetCurrentOutputForce();
 		/*void AddtoOpEngine()
 		{
 			PHSceneIf* scene = (PHSceneIf*)GetScene();

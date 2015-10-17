@@ -9,7 +9,7 @@ namespace Spr{
 	PHOpEngine::PHOpEngine(){
 		fdt = 0.01;
 		objidIndex = 0;
-		radiusCoe = 0.5;
+		radiusCoe = 1.0f;
 		opIterationTime = 1;
 		subStepProFix = true;
 		noCtcItrNum = 0;
@@ -153,6 +153,7 @@ namespace Spr{
 				Vec3f &spgpos = myHc->currSpg->GetPosition();
 				myHc->userPose = myHc->currSpg->GetPose();
 				myHc->userPose.Pos() = winPose * myHc->userPose.Pos()* myHc->posScale;
+				
 				myHc->userPos = winPose *  spgpos * myHc->posScale;
 			}
 
@@ -202,6 +203,12 @@ namespace Spr{
 	{
 		winPose = orit;
 	}
+
+	//void PHOpEngine::SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ)
+	//{
+	//	myHc->SetCrossPlatformCoord(InverX, InverY, InverZ);
+	//}
+
 	void PHOpEngine::HapticProcedure_6DOF()
 	{
 		
