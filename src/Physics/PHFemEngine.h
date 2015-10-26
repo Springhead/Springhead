@@ -17,6 +17,8 @@
 #include <Physics/PHContactPoint.h>
 #include <Physics/PHConstraintEngine.h>
 
+//#define ENABLE_CONTACTINTERFACE 
+
 
 namespace Spr{
 
