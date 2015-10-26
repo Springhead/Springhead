@@ -8,18 +8,28 @@
 #include <Physics/PHFemEngine.h>
 
 using namespace std;
+
+
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // FEMEngine
 PHFemEngine::PHFemEngine(){
+	#ifdef ENABLE_CONTACTINTERFACE
+		std::cout<<"ContactInterface Enabled "<<endl;
+	#else
+		std::cout<<"ContactInterface Disabled"<<endl;
+	#endif
+
 	fdt = 0.02;
 }
 
 void PHFemEngine::Step(){
 	/// FEM Interface for vibration transmission
-	if (meshes_n.size() > 1)
-		this->ContactInterface();
-
+	#ifdef ENABLE_CONTACTINTERFACE
+		if (meshes_n.size() > 1) {
+			this->ContactInterface();
+		}
+	#endif
 	/// 旧メッシュの更新
 	for(size_t i = 0; i < meshes.size(); ++i){
 		meshes[i]->Step(GetTimeStep());
@@ -93,7 +103,6 @@ void PHFemEngine::ContactInterface() {
 
 		s0 = cp->solid[0]->GetName();
 		s1 = cp->solid[1]->GetName();
-
 		PHFemMeshNew *mesh[2];
 		PHSolid *solid[2]; 
 		mesh[0] = meshes_n[cp->solid[0]->femIndex];
@@ -214,7 +223,9 @@ void PHFemEngine::ContactInterface() {
 		}
 	}
 	//clears contact matrix
-	this->clearContacts();
+	if(nc){		
+		this->clearContacts();
+	}
 }
 
 ///Initilizes the contacts between the objects 
