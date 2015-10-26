@@ -5,7 +5,7 @@
  *  software. Please deal with this software under one of the following licenses: 
  *  This license itself, Boost Software License, The MIT License, The BSD License.   
  */
-#if ( _MSC_VER > 1500 )
+#if ( _MSC_VER > 1500 && _MSC_VER < 1900 )  // VC2015 does not support _outp and _inp
 
 #include <Foundation/UTDllLoader.h>
 #include <HumanInterface/DRPortIO.h>
