@@ -9,27 +9,35 @@
 
 using namespace std;
 
+int phfemmode=0;
 
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // FEMEngine
 PHFemEngine::PHFemEngine(){
-	#ifdef ENABLE_CONTACTINTERFACE
-		std::cout<<"ContactInterface Enabled "<<endl;
-	#else
-		std::cout<<"ContactInterface Disabled"<<endl;
-	#endif
-
 	fdt = 0.02;
+}
+
+void PHFemEngine::SetPHFemMode(int mode){
+	//Thermo: mode=0 ;  Vibration : mode=1;
+	phfemmode=mode;
+	if(phfemmode==THERMO_MODE){
+		std::cout<<"PHFemMode: Thermo"<<std::endl;
+		std::cout<<"ContactInterface Disabled "<<std::endl;
+	}
+	else if(phfemmode==VIBRATION_MODE){
+		std::cout<<"PHFemMode: Vibration"<<std::endl;
+		std::cout<<"ContactInterface Enabled "<<std::endl;
+	}
 }
 
 void PHFemEngine::Step(){
 	/// FEM Interface for vibration transmission
-	#ifdef ENABLE_CONTACTINTERFACE
+	if(phfemmode==VIBRATION_MODE){
 		if (meshes_n.size() > 1) {
 			this->ContactInterface();
 		}
-	#endif
+	}
 	/// 旧メッシュの更新
 	for(size_t i = 0; i < meshes.size(); ++i){
 		meshes[i]->Step(GetTimeStep());

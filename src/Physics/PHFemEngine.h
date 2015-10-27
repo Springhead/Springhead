@@ -17,8 +17,8 @@
 #include <Physics/PHContactPoint.h>
 #include <Physics/PHConstraintEngine.h>
 
-//#define ENABLE_CONTACTINTERFACE 
-
+#define THERMO_MODE 0
+#define VIBRATION_MODE 1
 
 namespace Spr{
 
@@ -40,6 +40,7 @@ public:
 
 	PHFemEngine();
 
+	void SetPHFemMode(int mode);  //Thermo: mode=0 ;  Vibration : mode=1;
 	int  GetPriority() const {return SGBP_NONE; }//SGBP_DYNAMICALSYSTEM;}
 	void Step();
 	void Clear();
