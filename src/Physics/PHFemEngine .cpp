@@ -9,7 +9,8 @@
 
 using namespace std;
 
-int phfemmode=0;
+int phfemmode=1;	//Thermo: mode=0 ;  Vibration : mode=1; //Default:1
+
 
 namespace Spr{
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
