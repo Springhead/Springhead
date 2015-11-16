@@ -7134,7 +7134,7 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 		kogetex	= 5;
 	}
 	else if(fwfood == "fwNsteak"){
-		kogetex	= 5;		//7‚É‚·‚é
+		kogetex	= 7;		//7‚É‚·‚é
 	}
 	else if(fwfood == "fwPan"){
 		kogetex = 5;
@@ -7253,52 +7253,53 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 		}
 	}else if(texture_mode == 2){
 		double temp = vertexVars[pv].temp;
-		// -50.0~0.0:aqua to blue
-		if(temp <= -50.0){
-			gvtx = thstart;
-		}
-		else if(-50.0 < temp && temp <= 0.0){	
-			gvtx = (thstart ) + ((temp + 50.0) * dtex /50.0);
-		}
-		//	0~50.0:blue to green
-		else if(0.0 < temp && temp <= 50.0 ){
-			//double green = temp * dtex / 50.0 + thstart;
-			gvtx = temp * dtex / 50.0 + thstart + dtex;
-		}
-		//	50.0~100.0:green to yellow
-		else if(50.0 < temp && temp <= 100.0){
-			gvtx = (temp - 50.0 ) * dtex /	 50.0 + thstart + 2 * dtex;
-		}
-		//	100.0~150:yellow to orange	
-		else if(100.0 < temp && temp <= 150.0){
-			gvtx = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
-		}
-		//	150~200:orange to red
-		else if(150.0 < temp && temp <= 200.0){
-			double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
-			gvtx = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
-		}
-		//	200~250:red to purple
-		else if(200.0 < temp && temp <= 250.0){
-			gvtx = (temp - 50.0 ) * dtex / 50.0 + thstart + 2 * dtex;
-		}
-		///	250~:only purple
-		else if(250.0 < temp){
-			gvtx = dtex * 6.0 + thstart;
-			//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	‚Ü‚¾‚ç‚É‚È‚Á‚¿‚á‚¤
-		}
-		else{
-			DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
-		}
+			// -50.0~0.0:aqua to blue
+			if(temp <= -50.0){
+				gvtx = thstart;
+			}
+			else if(-50.0 < temp && temp <= 0.0){	
+				gvtx = (thstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			//	0~50.0:blue to green
+			else if(0.0 < temp && temp <= 50.0 ){
+				//double green = temp * dtex / 50.0 + thstart;
+				gvtx = (thstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			//	50.0~100.0:green to yellow
+			else if(50.0 < temp && temp <= 100.0){
+				gvtx = (thstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			//	100.0~150:yellow to orange	
+			else if(100.0 < temp && temp <= 150.0){
+				gvtx = (thstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			//	150~200:orange to red
+			else if(150.0 < temp && temp <= 200.0){
+				double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+				gvtx = (thstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			//	200~250:red to pink
+			else if(200.0 < temp && temp <= 250.0){
+				gvtx = (thstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			///	250~:only purple
+			else if(250.0 < temp){
+				gvtx = dtex * 6.0 + thstart;
+				//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	‚Ü‚¾‚ç‚É‚È‚Á‚¿‚á‚¤
+			}
+			else{
+				DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
+			}
 	}else if(texture_mode == 4){
 		double temp = vertexVars[pv].temp;
 		// -50.0~0.0:aqua to blue => 20 : purple
 		if(temp < 20.0){
-			gvtx = thstart + 6.0 * dtex; 
+			gvtx = thstart + 7.0 * dtex; 
 		}
 		else if(temp == 20.0){
 			gvtx = thcamstart;
 		}
+		// 20.0~30.0:purple to pink 
 		else if(20.0 < temp && temp <= 30.0){	
 			gvtx = thcamstart + (temp - 20.0) * dtex / 10.0;
 		}
