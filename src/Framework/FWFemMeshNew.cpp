@@ -42,7 +42,7 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	//meshRoughness = "pq2.1a0.1";//phRec 
 	//meshRoughness = "pq2.1a1.15";//phCube phBoardmini phPipemini
 	SetDesc(&d);
-	texture_mode = 2;		//	テクスチャ表示の初期値：温度
+	texture_mode = 1;		//	テクスチャ表示の初期値：温度
 }
 
 size_t FWFemMeshNew::NChildObject() const{
@@ -588,6 +588,9 @@ void FWFemMeshNew::SyncThermoInfo(){
 						gvtxTemp = phFemMesh->GetPHFemThermo()->calcGvtx(fwfood, pv, texture_mode);
 						if(gvtx){
 							gvtx[stride * gv + tex + 2] = gvtxTemp;
+							if(fwfood == "fwNsteak"){
+								//DSTR<<"fwNsteak kogetex "<<kogetex<<"  gvtxTemp: "<<gvtxTemp<<std::endl;
+							}
 						}
 					}
 				}
@@ -631,6 +634,5 @@ Vec4f FWFemMeshNew::CompThermoColor(float value){
 	}
 	return color;
 }
-
 
 }

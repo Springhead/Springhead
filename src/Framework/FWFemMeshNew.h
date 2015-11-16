@@ -60,6 +60,8 @@ public:
 
 	Vec4f CompThermoColor(float value);
 
+	void CreateTranslucentMesh(GRMeshIf* wetMesh,std::map<int,int> corFemWet,std::vector<int> femVtx,std::vector<bool> vWetFlag,GRRenderIf* render);
+
 
 public:
 	enum TEXTURE_MODE{
