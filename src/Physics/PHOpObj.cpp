@@ -22,20 +22,22 @@ void PHOpObj::SimpleSimulationStep()
 
 void PHOpObj::groupStep()
 {
-	for (int it = 0; it < objitrTime; it++)
-	{
-		//gAgroupŒvŽZgroupCurrCenterŒvŽZ
-		summationTogAgroup();
-		//•ÏŒ`ŒãV‚µ‚¢’†S‚ðŒvŽZ
+	if (!isRigid){
+		for (int it = 0; it < objitrTime; it++)
+		{
+			//gAgroupŒvŽZgroupCurrCenterŒvŽZ
+			summationTogAgroup();
+			//•ÏŒ`ŒãV‚µ‚¢’†S‚ðŒvŽZ
 
-		if (objUseReducedPP)
-			ReducedPositionProject();
-		else positionProject();
+			if (objUseReducedPP)
+				ReducedPositionProject();
+			else positionProject();
 
 
-		if (objUseDistCstr)
-			DistanceConstrain();
+			if (objUseDistCstr)
+				DistanceConstrain();
 
+		}
 	}
 }
 /*

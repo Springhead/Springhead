@@ -46,6 +46,22 @@ namespace Spr{
 		if (timeStamp > (std::numeric_limits<int>::max()))
 			timeStamp = 0;
 
+		//clear flags
+		for (int obji = 0; obji < objNum; obji++)
+		{
+			std::vector<PHOpObj*>& dfmObj = opEngine->opObjs;
+			for (int j = 0; j < dfmObj[obji]->assPsNum; j++)
+			{
+				PHOpParticle &dp = dfmObj[obji]->objPArr[j];
+				dp.isColliedbyColliCube = false;
+				dp.isColliedbySphash = false;
+				dp.isColliedSphashSolved = false;
+				dp.isColliedSphashSolvedReady = false;
+				
+			}
+		}
+
+
 		OpCollisionProcedure(timeStamp);
 	}
 	void PHOpSpHashColliAgent::OpCollisionProcedure(int myTimeStamp)
@@ -411,24 +427,28 @@ namespace Spr{
 			dp1->isColliedSphashSolvedReady = true;
 			dp2->isColliedSphashSolvedReady = true;
 
-			//if (xdirs<0)
+			
+			Vec3f dir = dpCtr1 - dpCtr2;
+			dir.unitize();
+			//add ctcps
+			//pPCtcPs.push_back();
+
+
+			if (!FloatErrorTest::CheckBadFloatValue(dir))
+			{
+				dir = dir.Zero();
+				DSTR << "Collision dir has bad float value!" << std::endl;
+				return;
+			}
+
+			if (dir.norm() < (ellRadius1 + ellRadius2))
 			{
 
 				//set colli flag
 				dp1->isColliedSphashSolved = true;
 				dp2->isColliedSphashSolved = true;
 
-				Vec3f dir = dpCtr1 - dpCtr2;
-				dir.unitize();
-				//add ctcps
-				//pPCtcPs.push_back();
-
-
-				if (!FloatErrorTest::CheckBadFloatValue(dir))
-				{
-					dir = dir.Zero();
-
-				}
+				
 
 				//hapticInform
 				/*if (hcColliedIndex >0)
@@ -443,7 +463,7 @@ namespace Spr{
 						myHc->AddColliedPtcl(ptclindex1, objIndex1, -dir * ellRadius1 + dpCtr1);
 					}
 				}*/
-				else
+				//else
 					//solve
 					pctlColliSolve(objIndex1, ptclindex1, objIndex2, ptclindex2, -dir * ellRadius1 + dpCtr1, dir * ellRadius2 + dpCtr2);
 
@@ -455,167 +475,167 @@ namespace Spr{
 
 
 
-		//if((ptclindex1!=0))
-		//	return;
-		//if((ptclindex2!=2))
-		//	return;
+		////if((ptclindex1!=0))
+		////	return;
+		////if((ptclindex2!=2))
+		////	return;
 
-		//calculate by velocity?
+		////calculate by velocity?
 
-		//Vec3f pv1 = dp1.pVelocity;
-		//Vec3f pv2 = dp2.pVelocity;
+		////Vec3f pv1 = dp1.pVelocity;
+		////Vec3f pv2 = dp2.pVelocity;
 
-		////do projection
-		//Vec3f destdir = linkVec.unit();
-		//
-		//float vlen1 = pv1.dot(destdir);
-		//float vlen2 = pv2.dot(destdir);
-		//
-		//Vec3f &prj1 = destdir * vlen1;
-		//Vec3f &prj2 = destdir * vlen2;
+		//////do projection
+		////Vec3f destdir = linkVec.unit();
+		////
+		////float vlen1 = pv1.dot(destdir);
+		////float vlen2 = pv2.dot(destdir);
+		////
+		////Vec3f &prj1 = destdir * vlen1;
+		////Vec3f &prj2 = destdir * vlen2;
 
-		//pv1 = pv1 - prj1;
-		//pv2 = pv2 - prj2;
+		////pv1 = pv1 - prj1;
+		////pv2 = pv2 - prj2;
 
-		////v1Œ=[(m1-m2) v1+2m2v2]/( m1+m2)
-		////v2Œ=[(m2-m1) v2+2m1v1]/( m1+m2)
-		//Vec3f &result = prj1 - prj2;
+		//////v1Œ=[(m1-m2) v1+2m2v2]/( m1+m2)
+		//////v2Œ=[(m2-m1) v2+2m1v1]/( m1+m2)
+		////Vec3f &result = prj1 - prj2;
 
-		//approximate calculation in need?
+		////approximate calculation in need?
 
-		//correct ellipsoid collision solve
-		MatrixExtension me;
-
-
-		Matrix3f ROrit1;
-		Matrix3f ROrit2;
-		ROrit1 = ROrit1.Zero();
-		ROrit2 = ROrit2.Zero();
-
-		pOrint1.Inv().ToMatrix(ROrit1);
-		ROrit1 = me.MatrixesMultiply3f(dp1->ellipRotMatrix, ROrit1);
-		Matrix3f ellipA1tmp = me.MatrixesMultiply3f(ROrit1.trans(), dp1->pPreEllipA);
-		ellipA1tmp = me.MatrixesMultiply3f(ellipA1tmp, ROrit1);
+		////correct ellipsoid collision solve
+		//MatrixExtension me;
 
 
-		pOrint2.Inv().ToMatrix(ROrit2);
-		ROrit2 = me.MatrixesMultiply3f(dp2->ellipRotMatrix, ROrit2);
-		Matrix3f ellipA2tmp = me.MatrixesMultiply3f(ROrit2.trans(), dp2->pPreEllipA);
-		ellipA2tmp = me.MatrixesMultiply3f(ellipA2tmp, ROrit2);
+		//Matrix3f ROrit1;
+		//Matrix3f ROrit2;
+		//ROrit1 = ROrit1.Zero();
+		//ROrit2 = ROrit2.Zero();
 
-		Vec3f vectorN1 = dpCtr2 - dpCtr1;//separate them by moving ellipsoid 2 along the direction defined by the normal vector n
-		vectorN1.unitize();
-		Vec3f vectorN2 = -vectorN1;
-
-		//reason why compute twice
-		Vec3f x1 = getCtcP_PvP(vectorN1, ellipA1tmp, ellipA2tmp);
-		Vec3f x2 = getCtcP_PvP(vectorN2, ellipA2tmp, ellipA1tmp);
+		//pOrint1.Inv().ToMatrix(ROrit1);
+		//ROrit1 = me.MatrixesMultiply3f(dp1->ellipRotMatrix, ROrit1);
+		//Matrix3f ellipA1tmp = me.MatrixesMultiply3f(ROrit1.trans(), dp1->pPreEllipA);
+		//ellipA1tmp = me.MatrixesMultiply3f(ellipA1tmp, ROrit1);
 
 
+		//pOrint2.Inv().ToMatrix(ROrit2);
+		//ROrit2 = me.MatrixesMultiply3f(dp2->ellipRotMatrix, ROrit2);
+		//Matrix3f ellipA2tmp = me.MatrixesMultiply3f(ROrit2.trans(), dp2->pPreEllipA);
+		//ellipA2tmp = me.MatrixesMultiply3f(ellipA2tmp, ROrit2);
 
-		//Vec3f vectorN = dpCtr2 - dpCtr1;//separate them by moving ellipsoid 2 along the direction defined by the normal vector n
-		//vectorN.unitize();
+		//Vec3f vectorN1 = dpCtr2 - dpCtr1;//separate them by moving ellipsoid 2 along the direction defined by the normal vector n
+		//vectorN1.unitize();
+		//Vec3f vectorN2 = -vectorN1;
 
-		//Matrix3f A1_A2inv = me.MatrixesMultiply3f(ellipA1tmp, ellipA2tmp.inv());
+		////reason why compute twice
+		//Vec3f x1 = getCtcP_PvP(vectorN1, ellipA1tmp, ellipA2tmp);
+		//Vec3f x2 = getCtcP_PvP(vectorN2, ellipA2tmp, ellipA1tmp);
 
-		//Vec3f lamdV;
-		//lamdV = me.MatrixMultiVec3fLeft(vectorN,A1_A2inv);
-		////lamdV = vectorN * A1_A2inv;
-		//
-		////we want lamda is  negtive means the collision is happen
-		////solve lamda
-		//float lamdaDir =lamdV.dot(vectorN);
-		//float lamdaP = sqrt(lamdaDir);
 
-		////if(lamdaDir<0)
-		////we set lamda to negtive (colli from the outside)
-		//	lamdaP = -lamdaP;
 
-		////solve matrix B
-		//Matrix3f B = (ellipA2tmp * lamdaP - ellipA1tmp).inv();
-		//B = me.MatrixesMultiply3f(B,ellipA2tmp);
+		////Vec3f vectorN = dpCtr2 - dpCtr1;//separate them by moving ellipsoid 2 along the direction defined by the normal vector n
+		////vectorN.unitize();
 
-		////solve d
-		//Matrix3f BtA1B = me.MatrixesMultiply3f(B.trans(),ellipA1tmp); 
-		//BtA1B = me.MatrixesMultiply3f(BtA1B,B);
+		////Matrix3f A1_A2inv = me.MatrixesMultiply3f(ellipA1tmp, ellipA2tmp.inv());
 
-		//Vec3f ntBtA1B;
-		//ntBtA1B = me.MatrixMultiVec3fLeft(vectorN,BtA1B);
-		////ntBtA1B  = vectorN *BtA1B;// wrong solution
+		////Vec3f lamdV;
+		////lamdV = me.MatrixMultiVec3fLeft(vectorN,A1_A2inv);
+		//////lamdV = vectorN * A1_A2inv;
+		////
+		//////we want lamda is  negtive means the collision is happen
+		//////solve lamda
+		////float lamdaDir =lamdV.dot(vectorN);
+		////float lamdaP = sqrt(lamdaDir);
 
-		////d is need?
-		//float dwithDir = (ntBtA1B.dot(vectorN))*(lamdaP * lamdaP);
-		//float d = sqrt(dwithDir);
-		//d = 1/d;
+		//////if(lamdaDir<0)
+		//////we set lamda to negtive (colli from the outside)
+		////	lamdaP = -lamdaP;
 
-		/*if(dwithDir<0)
-		{
-		int u=0;
-		}*/
+		//////solve matrix B
+		////Matrix3f B = (ellipA2tmp * lamdaP - ellipA1tmp).inv();
+		////B = me.MatrixesMultiply3f(B,ellipA2tmp);
 
-		//set ready flag
-		dp1->isColliedSphashSolvedReady = true;
-		dp2->isColliedSphashSolvedReady = true;
+		//////solve d
+		////Matrix3f BtA1B = me.MatrixesMultiply3f(B.trans(),ellipA1tmp); 
+		////BtA1B = me.MatrixesMultiply3f(BtA1B,B);
 
-		//compair P1 to P2 distance with d to //what is d?
-		//if(d>pPdist)
+		////Vec3f ntBtA1B;
+		////ntBtA1B = me.MatrixMultiVec3fLeft(vectorN,BtA1B);
+		//////ntBtA1B  = vectorN *BtA1B;// wrong solution
+
+		//////d is need?
+		////float dwithDir = (ntBtA1B.dot(vectorN))*(lamdaP * lamdaP);
+		////float d = sqrt(dwithDir);
+		////d = 1/d;
+
+		///*if(dwithDir<0)
 		//{
-		//cout<<"d = "<<d<<endl;
-		//cout<<"pPdist = "<<pPdist<<endl;
+		//int u=0;
+		//}*/
 
-		//solve x
-		//x = B * lamda * d * n
-		//Vec3f x = me.MatrixMultiVec3fRight(B,vectorN);//debug change the sequance of multi
-		//x.multi(lamdaP * d);
+		////set ready flag
+		//dp1->isColliedSphashSolvedReady = true;
+		//dp2->isColliedSphashSolvedReady = true;
 
-		//float distInxx = x.norm()*2;
+		////compair P1 to P2 distance with d to //what is d?
+		////if(d>pPdist)
+		////{
+		////cout<<"d = "<<d<<endl;
+		////cout<<"pPdist = "<<pPdist<<endl;
 
-		//check x is in dp2 or not
+		////solve x
+		////x = B * lamda * d * n
+		////Vec3f x = me.MatrixMultiVec3fRight(B,vectorN);//debug change the sequance of multi
+		////x.multi(lamdaP * d);
 
-		//bool xInP2 = false;
-		//float xp1 = (me.MatrixMultiVec3fLeft((x1),ellipA1tmp)).dot(x1) - 1.0f;
+		////float distInxx = x.norm()*2;
+
+		////check x is in dp2 or not
+
+		////bool xInP2 = false;
+		////float xp1 = (me.MatrixMultiVec3fLeft((x1),ellipA1tmp)).dot(x1) - 1.0f;
+		//////if(xp2<0)
+		//////cout<<"xp1 = "<<xp1<<endl;
+		////float xp2 = (me.MatrixMultiVec3fLeft((x2),ellipA2tmp)).dot(x2) - 1.0f;
 		////if(xp2<0)
-		////cout<<"xp1 = "<<xp1<<endl;
-		//float xp2 = (me.MatrixMultiVec3fLeft((x2),ellipA2tmp)).dot(x2) - 1.0f;
-		//if(xp2<0)
-		//cout<<"xp2 = "<<xp2<<endl;
-		//cout<<"x norm = "<<x.norm()<<endl;
+		////cout<<"xp2 = "<<xp2<<endl;
+		////cout<<"x norm = "<<x.norm()<<endl;
 
-		float xdirs = ((x2 + dpCtr2) - (x1 + dpCtr1)).dot(vectorN1);
-		//cout<<"xdirs = "<<xdirs<<endl;
-		if (xdirs<0)
-		{
+		//float xdirs = ((x2 + dpCtr2) - (x1 + dpCtr1)).dot(vectorN1);
+		////cout<<"xdirs = "<<xdirs<<endl;
+		//if (xdirs<0)
+		//{
 
-			//set colli flag
-			dp1->isColliedSphashSolved = true;
-			dp2->isColliedSphashSolved = true;
+		//	//set colli flag
+		//	dp1->isColliedSphashSolved = true;
+		//	dp2->isColliedSphashSolved = true;
 
 
 
-			//add ctcps
-			pPCtcPs.push_back(x1 + dp1->pNewCtr);
-			pPCtcPs2.push_back(x2 + dp2->pNewCtr);
+		//	//add ctcps
+		//	pPCtcPs.push_back(x1 + dp1->pNewCtr);
+		//	pPCtcPs2.push_back(x2 + dp2->pNewCtr);
 
-			//hapticInform
-			//haptic imp
-			/*if (hcColliedIndex >0)
-			{
-				myHc->SetHcColliedFlag(true);
-				if (hcColliedIndex == 1)
-				{
-					myHc->AddColliedPtcl(ptclindex2, objIndex2, x2 + dpCtr2);
-				}
-				else if (hcColliedIndex == 2)
-				{
-					myHc->AddColliedPtcl(ptclindex1, objIndex1, x1 + dpCtr1);
-				}
-			}
-			else*/
-				//solve
-				pctlColliSolve(objIndex1, ptclindex1, objIndex2, ptclindex2, x1 + dpCtr1, x2 + dpCtr2);
+		//	//hapticInform
+		//	//haptic imp
+		//	/*if (hcColliedIndex >0)
+		//	{
+		//		myHc->SetHcColliedFlag(true);
+		//		if (hcColliedIndex == 1)
+		//		{
+		//			myHc->AddColliedPtcl(ptclindex2, objIndex2, x2 + dpCtr2);
+		//		}
+		//		else if (hcColliedIndex == 2)
+		//		{
+		//			myHc->AddColliedPtcl(ptclindex1, objIndex1, x1 + dpCtr1);
+		//		}
+		//	}
+		//	else*/
+		//		//solve
+		//		pctlColliSolve(objIndex1, ptclindex1, objIndex2, ptclindex2, x1 + dpCtr1, x2 + dpCtr2);
 
-			solveCount++;
-		}
+		//	solveCount++;
+		//}
 
 	}
 
@@ -672,8 +692,23 @@ namespace Spr{
 		Vec3f lastpos1 = dpCtr1;
 		Vec3f lastpos2 = dpCtr2;
 		Vec3f moveVec = (-vectorN) * moveDhalf;
-		dpCtr1 += (dfmObj[objIndex1]->params.alpha) * moveVec;
-		dpCtr2 += (dfmObj[objIndex2]->params.alpha) * (-1) * moveVec;
+		if (!dp1->isFixed&&!dp2->isFixed){
+			dpCtr1 += (dfmObj[objIndex1]->params.alpha) * moveVec;
+			dpCtr2 += (dfmObj[objIndex2]->params.alpha) * (-1) * moveVec;
+		}
+		else{
+			if (dp1->isFixed&&!dp2->isFixed)
+			{
+				moveVec = (-vectorN) *x2tox1.norm();
+				dpCtr2 += (dfmObj[objIndex2]->params.alpha) * (-1) * moveVec;
+			}
+			else if (dp2->isFixed&&!dp1->isFixed){
+				moveVec = (-vectorN) *x2tox1.norm();
+				dpCtr1 += (dfmObj[objIndex1]->params.alpha) * moveVec;
+			}
+			
+		}
+		
 
 		//dpCtr1 += (dp1->pParaAlpha)* moveVec;
 		//dpCtr2 += (dp2->pParaAlpha) * (-1) * moveVec;
