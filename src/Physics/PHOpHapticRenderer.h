@@ -40,6 +40,7 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 		//PHOpHapticRenderer(const PHOpHapticRendererDesc& desc = PHOpHapticRendererDesc(), SceneIf* s = NULL)
 		{
 			hitWall = false;
+			rigid = false;
 			forceSpring = 1.0f;
 			constraintSpring = 1.0f;
 			useIncreaseMeshMove = false;
@@ -52,7 +53,19 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 			proxyItrtNum = 0;
 			proxyItrtMaxNum = 3;
 		}
-
+		void SetRigid(bool set)
+		{
+			rigid = set;
+			if (rigid)
+			{
+				if (myHc != NULL)
+					myHc->hcObj->isRigid = rigid;
+			}
+		}
+		bool IsRigid()
+		{
+			return rigid;
+		}
 		void initial3DOFRenderer(PHOpHapticController* hc, std::vector<PHOpObj*>* objs)
 		{
 			myHc = hc;

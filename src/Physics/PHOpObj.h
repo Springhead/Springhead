@@ -53,6 +53,7 @@ namespace Spr{
 			initialOrgP = false;
 			initialPArr = false;
 			updateNormals = false;
+			isRigid = false;
 
 			objType = 0;
 			objitrTime = 1;
@@ -210,6 +211,11 @@ namespace Spr{
 		{
 			objitrTime = itrT;
 			objUseIndepParam = useIndepParamflag;
+		}
+
+		void SetDefaultLinkNum(int linkNum)
+		{
+			objGrouplinkCount = linkNum;
 		}
 
 		ObjectIf* GetOpParticle(int pi)
@@ -523,7 +529,7 @@ namespace Spr{
 			std::vector<Vec3f> cl;
 			cl.swap(tmpVts);
 		}
-
+		
 		void AddVertextoLocalBuffer(Vec3f v)
 		{
 			tmpVts.push_back(v);
@@ -761,14 +767,7 @@ namespace Spr{
 			BuildBlendWeight();
 
 			//Particle初期姿勢を記憶する(blendingに使う)
-			//build Oringinal Pose of Ps
-			objOrinPsPoseList = new TPose<float>[assPsNum];
-			for (int j = 0; j < assPsNum; j++)
-			{
-				Spr::TPose<float> ctrpose = TPose<float>(objPArr[j].pOrigCtr, objPArr[j].pOrigOrint);
-				ctrpose = ctrpose.Inv();
-				objOrinPsPoseList[j] = ctrpose;
-			}
+			StoreOrigPose();
 
 
 
@@ -858,7 +857,18 @@ namespace Spr{
 
 		}
 
-
+		void StoreOrigPose()
+		{
+			//Particle初期姿勢を記憶する(blendingに使う)
+			//build Oringinal Pose of Ps
+			objOrinPsPoseList = new TPose<float>[assPsNum];
+			for (int j = 0; j < assPsNum; j++)
+			{
+				Spr::TPose<float> ctrpose = TPose<float>(objPArr[j].pOrigCtr, objPArr[j].pOrigOrint);
+				ctrpose = ctrpose.Inv();
+				objOrinPsPoseList[j] = ctrpose;
+			}
+		}
 		void BuildBlendWeight()
 		{
 			DSTR << "BuildBlendWeight" << std::endl;

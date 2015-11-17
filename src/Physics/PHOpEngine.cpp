@@ -14,13 +14,14 @@ namespace Spr{
 		subStepProFix = true;
 		noCtcItrNum = 0;
 
+		logForce = false;
 		useHaptic = false;
 	}
-	void PHOpEngine::InitialNoMeshHapticRenderer()
+	void PHOpEngine::InitialNoMeshHapticRenderer(HISdkIf* hisdk)
 	{
 		opHpRender = new PHOpHapticRenderer();
 		myHc = new PHOpHapticController();
-		myHc->InitialHapticController();
+		myHc->InitialHapticController(hisdk);
 		myHc->hpObjIndex = -1;
 		//opObjs.push_back(myHc->hcObj);
 
@@ -45,11 +46,11 @@ namespace Spr{
 	myHc->IntialHapticController(opObj);
 	}*/
 
-	void PHOpEngine::InitialHapticRenderer(int objId)
+	void PHOpEngine::InitialHapticRenderer(int objId, HISdkIf* hisdk)
 	{
 		opHpRender = new PHOpHapticRenderer();
 		myHc = new PHOpHapticController();
-		myHc->InitialHapticController(opObjs[objId]->Cast());
+		myHc->InitialHapticController(opObjs[objId]->Cast(),hisdk);
 		opHpRender->initial6DOFRenderer(myHc, &opObjs);
 		
 		myHc->hcType = PHOpHapticControllerDesc::_6DOF;
@@ -70,7 +71,7 @@ namespace Spr{
 	{
 		return useHaptic;
 	}
-	bool PHOpEngine::TrySetHapticEnable(bool enable)
+	bool PHOpEngine::TrySetHapticEnable(bool enable, HISdkIf* hisdk)
 	{
 		if (myHc->hcReady)
 		{
@@ -78,7 +79,7 @@ namespace Spr{
 			return true;
 		}
 		else{
-			myHc->initDevice();
+			myHc->initDevice(hisdk);
 			if (myHc->hcReady)
 			{
 				useHaptic = enable;
@@ -144,31 +145,71 @@ namespace Spr{
 
 			//predict step
 			opObjs[obji]->positionPredict();
+		}
 
-			//haptic sych
-			if (useHaptic)
+		//haptic sych
+		if (useHaptic)
+		{
+
+			myHc->currSpg->Update(0.001f);
+			Vec3f &spgpos = myHc->currSpg->GetPosition();
+			myHc->userPose = myHc->currSpg->GetPose();
+			myHc->userPose.Ori() = myHc->userPose.Ori() * myHc->rotScale;
+			myHc->userPose.Pos() = winPose * myHc->userPose.Pos()* myHc->posScale;
+
+			myHc->userPos = winPose *  spgpos * myHc->posScale;
+
+			//
+			if (myHc->hcType == PHOpHapticControllerDesc::_6DOF)
 			{
-		
-				myHc->currSpg->Update(0.001f);
-				Vec3f &spgpos = myHc->currSpg->GetPosition();
-				myHc->userPose = myHc->currSpg->GetPose();
-				myHc->userPose.Pos() = winPose * myHc->userPose.Pos()* myHc->posScale;
-				
-				myHc->userPos = winPose *  spgpos * myHc->posScale;
+				if (!opHpRender->IsRigid())
+				{
+					for (int pi = 0; pi < opObjs[myHc->GetHpObjIndex()]->assPsNum; pi++)
+					{
+						PHOpParticle &dp = opObjs[myHc->GetHpObjIndex()]->objPArr[pi];
+						Vec3f diff = (myHc->userPose *dp.pOrigCtr);//userPos
+
+						dp.pNewCtr += (diff - dp.pNewCtr)* opHpRender->constraintSpring;
+
+					}
+				}
+				else{
+					//for rigid
+					for (int pi = 0; pi < opObjs[myHc->GetHpObjIndex()]->assPsNum; pi++)
+					{
+						PHOpParticle &dp = opObjs[myHc->GetHpObjIndex()]->objPArr[pi];
+
+						dp.pNewCtr = myHc->userPose *dp.pOrigCtr;
+						dp.pNewOrint = myHc->userPose.Ori() * dp.pOrigOrint;
+						dp.pCurrCtr = dp.pNewCtr;
+					}
+				}
 			}
 
+		}
+
+		for (int obji = 0; obji < (int)opObjs.size(); obji++)
+		{
+			if (opObjs[obji]->objNoMeshObj)
+				continue;
 			//collision
 			if (agent->IsCollisionEnabled())
 			{
 				agent->OpCollisionProcedure();
 
 			}
-
+		}
+		
 			for (int itri = 0; itri < opIterationTime; itri++)//iteration default is 1
 			{
-				//deform
-				opObjs[obji]->groupStep();
+				for (int obji = 0; obji < (int)opObjs.size(); obji++)
+				{
+					if (opObjs[obji]->objNoMeshObj)
+						continue;
 
+					//deform
+					opObjs[obji]->groupStep();
+				}
 
 				//haptic
 				if (useHaptic)
@@ -190,9 +231,18 @@ namespace Spr{
 
 					
 				}
-			}
 
-			opObjs[obji]->integrationStep();
+			}
+		for (int obji = 0; obji < (int)opObjs.size(); obji++)
+		{
+			if (opObjs[obji]->objNoMeshObj)
+				continue;
+
+			//	if (!opObjs[obji]->isRigid)
+				{
+					opObjs[obji]->integrationStep();
+				}
+
 		}
 	}
 	TQuaternion<float> PHOpEngine::GetCurrentCameraOrientation()
@@ -217,10 +267,14 @@ namespace Spr{
 		for (int pi = 0; pi < opObjs[myHc->GetHpObjIndex()]->assPsNum; pi++)
 		{
 			PHOpParticle &dp = opObjs[myHc->GetHpObjIndex()]->objPArr[pi];
-			TPose<float> nowPose = TPose<float>(dp.pCurrCtr, dp.pCurrOrint);
 			Vec3f diff = (myHc->userPose *dp.pOrigCtr);//userPos
+
+			//dp.pNewCtr += (diff - dp.pNewCtr)* constraintSpring;
+			//if (dp.isColliedSphashSolved)
 			diffAcc += -(diff - dp.pNewCtr);
-			dp.pNewCtr = dp.pNewCtr + (diff - dp.pNewCtr) * opHpRender->constraintSpring;
+
+			if (opHpRender->IsRigid())
+			dp.pNewCtr = dp.pCurrCtr;
 			//dp.pColliedForce += (diff - dp.pNewCtr)* constraintSpring;
 		}
 		//myHc->positionPredict();
@@ -234,7 +288,12 @@ namespace Spr{
 		//	DSTR << "Big Force Output!" << std::endl;
 		//	;// f.clear();
 		//}
-		myHc->currSpg->SetForce(f, Vec3f());
+		if (myHc->SetForce(f))
+		{
+			;//log force?
+			/*if (logForce)
+				myHc->LogForce(f);*/
+		}
 	}
 	void PHOpEngine::HapticProcedure_3DOF()
 	{

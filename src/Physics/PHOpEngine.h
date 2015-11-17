@@ -157,6 +157,7 @@ namespace Spr{
 
 		bool subStepProFix;
 		bool subStepProSolve;
+		bool logForce;
 
 		//proxy
 		int noCtcItrNum;
@@ -188,14 +189,14 @@ namespace Spr{
 		PHOpObjIf* GetOpObjIf(int obji);
 		void HapticProcedure_3DOF();
 		void HapticProcedure_6DOF();
-		void InitialHapticRenderer(int objInt);
-		bool TrySetHapticEnable(bool enable);
+		void InitialHapticRenderer(int objId, HISdkIf* hisdk);
+		bool TrySetHapticEnable(bool enable, HISdkIf* hisdk);
 		bool IsHapticEnabled();
 		void SetHapticSolveEnable(bool enable);
 		bool IsHapticSolve();
 		void SetProxyCorrectionEnable(bool enable);
 		bool IsProxyCorrection();
-		void InitialNoMeshHapticRenderer();
+		void InitialNoMeshHapticRenderer(HISdkIf* hisdk);
 
 		ObjectIf* GetOpHapticController();
 		ObjectIf* GetOpHapticRenderer();

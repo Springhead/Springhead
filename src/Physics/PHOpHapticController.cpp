@@ -161,7 +161,7 @@ namespace Spr {
 			fprintf(logUPosFile, "%f\n", hcCurrUPos.y);
 		}
 	}
-	bool PHOpHapticController::InitialHapticController()
+	bool PHOpHapticController::InitialHapticController(HISdkIf* hisdk)
 	{//
 		Vec3f* OrigPos = new Vec3f[1];
 		OrigPos[0] = OrigPos[0].Zero();
@@ -172,6 +172,7 @@ namespace Spr {
 
 		hcObj->objNoMeshObj = true;
 		posScale = 150;
+		rotScale = 1.0f;
 		forceScale = 0.01f;
 		hcReady = false;
 		hcCollied = false;
@@ -203,10 +204,10 @@ namespace Spr {
 
 		
 
-		return initDevice();
+		return initDevice(hisdk);
 
 	}
-	bool PHOpHapticController::InitialHapticController(PHOpObj* opObject)
+	bool PHOpHapticController::InitialHapticController(PHOpObj* opObject, HISdkIf* hisdk)
 	{
 		////if (hpMesh.enabled)
 		//{
@@ -226,6 +227,7 @@ namespace Spr {
 		hcObj = opObject;
 		hpObjIndex = hcObj->objId;
 		posScale = 150;
+		rotScale = 1.0f;
 		forceScale = 0.01f;
 		hcReady = false;
 		hcCollied = false;
@@ -258,27 +260,35 @@ namespace Spr {
 
 		
 		
-		return initDevice();
+		return initDevice(hisdk);
 	}
 	
 	ObjectIf*PHOpHapticController:: GetHpOpObj()
 	{
 		return hcObj->Cast();
 	}
-
-	bool PHOpHapticController::initDevice()
+	bool PHOpHapticController::SetForce(Vec3f f)
+	{
+		if (fabs(f.norm()) < max_output_force)
+		{
+			currSpg->SetForce(f, Vec3f());
+			return true;
+		}
+		else return false;
+	}
+	bool PHOpHapticController::initDevice(HISdkIf* hiSdk)
 	{
 		// 力覚インタフェースとの接続設定
-		hiSdk = HISdkIf::CreateSdk();
+		//hiSdk = HISdkIf::CreateSdk();
 
 		// win32
-		DRUsb20SimpleDesc usbSimpleDesc;
+		/*DRUsb20SimpleDesc usbSimpleDesc;
 		hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
 		DRUsb20Sh4Desc usb20Sh4Desc;
 		for (int i = 0; i<10; ++i){
 			usb20Sh4Desc.channel = i;
 			hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
-		}
+		}*/
 		// win64
 		DRCyUsb20Sh4Desc cyDesc;
 		for (int i = 0; i<10; ++i){

@@ -17,12 +17,13 @@ namespace Spr {
 	class PHOpHapticController: public SceneObject, public PHOpHapticControllerDesc
 	{
 		
-		PHOpObj* hcObj;
+		
 		//Matrix3f crossPlatformTransform;
 	public:
+		PHOpObj* hcObj;
 		PHOpHapticController(const PHOpHapticControllerDesc& desc = PHOpHapticControllerDesc()): PHOpHapticControllerDesc(desc)
 		{
-			
+			max_output_force = 6.0f;
 		}
 		PHOpHapticController::~PHOpHapticController()
 		{
@@ -36,7 +37,7 @@ namespace Spr {
 		ACCESS_DESC(PHOpHapticController);
 
 		UTRef<HISpidarGIf> currSpg;
-		UTRef<HISdkIf> hiSdk;
+		//UTRef<HISdkIf> hiSdk;
 		
 
 		std::vector<PvsHcCtcPInfo> hcColliedPs;
@@ -47,7 +48,7 @@ namespace Spr {
 		FILE *logPPosFile;//proxy pos
 		FILE *logPosFile;//particle pos
 		FILE *logUPosFile;//user pos
-		
+		float max_output_force;
 		
 
 		//proxyfix
@@ -102,9 +103,9 @@ namespace Spr {
 		targetVts[0]= objPArr[0].pCurrCtr;
 		}*/
 		bool doCalibration();
-		bool  initDevice();
-		bool InitialHapticController(PHOpObj* opObjectif);
-		bool InitialHapticController();
+		bool  initDevice(HISdkIf* hiSdk);
+		bool InitialHapticController(PHOpObj* opObjectif, HISdkIf* hisdk);
+		bool InitialHapticController(HISdkIf* hisdk);
 		//void UpdateHapticPosition(Vec3f &pos);
 
 		void LogForce(TQuaternion<float> winPose);
@@ -121,7 +122,8 @@ namespace Spr {
 		int GetHpObjIndex();
 		void BuildVToFaceRelation();
 		ObjectIf* GetHpOpObj();
-
+		bool SetForce(Vec3f f);
+		
 		/*void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ)
 		{
 			crossPlatformTransform.xx = 1;

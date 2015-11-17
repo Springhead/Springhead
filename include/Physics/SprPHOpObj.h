@@ -13,6 +13,7 @@
 #define SPR_PHOPOBJ_H
 
 #include <Foundation/SprObject.h>
+#include <HumanInterface\/SprHISdk.h>
 //#include <Physics\SprPHOpSpHashAgent.h>
 
 //#include "HumanInterface\SprHIDRUsb.h"
@@ -26,11 +27,11 @@ struct Bounds
 {
 public:
 	Bounds(){}
-	inline Bounds(const Vec3d min0, const Vec3d max0) { min = min0; max = max0; }
+	inline Bounds(const Vec3d &min0, const Vec3d &max0) { min = min0; max = max0; }
 
-	inline void set(const Vec3d min0, const Vec3d max0) { min = min0; max = max0; }
+	inline void set(const Vec3d &min0, const Vec3d &max0) { min = min0; max = max0; }
 
-	void clamp(Vec3f pos){//ã´äEÇí¥Ç¶ÇΩì_ÇÇªÇÃÇ‹Ç‹ã´äEÇÃÇ«Ç±ÇÎê›íËÇ∑ÇÈ
+	void clamp(Vec3f &pos){//ã´äEÇí¥Ç¶ÇΩì_ÇÇªÇÃÇ‹Ç‹ã´äEÇÃÇ«Ç±ÇÎê›íËÇ∑ÇÈ
 		if (isEmpty()) return;
 		//pos.maximum(min);
 		maximum(pos, min);
@@ -40,13 +41,13 @@ public:
 		if (min.x > max.x&&min.y > max.y&&min.z > max.z) return true;
 		return false;
 	}
-	inline void minimum(Vec3f self, Vec3f other) {
+	inline void minimum(Vec3f &self, Vec3f &other) {
 		if (other.x < self.x) self.x = other.x;
 		if (other.y < self.y) self.y = other.y;
 		if (other.z < self.z) self.z = other.z;
 
 	}
-	inline void maximum(Vec3f self, Vec3f other) {
+	inline void maximum(Vec3f &self, Vec3f &other) {
 		if (other.x > self.x) self.x = other.x;
 		if (other.y > self.y) self.y = other.y;
 		if (other.z > self.z) self.z = other.z;
@@ -76,6 +77,7 @@ struct PHOpHapticRendererDesc{
 	bool sqrtAlphaForce;
 	bool hitWall;
 	bool useDualTranFix;
+	bool rigid;
 
 	int proxyItrtNum;
 	int proxyItrtMaxNum;
@@ -113,6 +115,8 @@ struct PHOpObjDesc : public PHOpObjState{
 	bool objUseDistCstr;
 	//MeshÇéùÇ¡ÇƒÇ¢Ç»Ç¢Object
 	bool objNoMeshObj;
+	//çÑëÃÇ©
+	bool isRigid;
 	//óÕäoObjectÇ∆ãÊï ÇÃÇΩÇﬂégÇ§
 	int objType;
 	//îºåaÇÃïΩãœ
@@ -125,6 +129,8 @@ struct PHOpObjDesc : public PHOpObjState{
 
 	//FaceNormalÇBlendÇÃÇ∆Ç´Ç…çXêVÇ∑ÇÈÇ©
 	bool updateNormals;
+
+
 
 	//ObjectParams params;
 
@@ -157,9 +163,10 @@ struct PHOpObjIf : public SceneObjectIf {
 	void integrationStep();
 	void ReducedPositionProject();
 	void positionProject();
+	void SetDefaultLinkNum(int linkNum);
 
 	void BuildBlendWeight();
-
+	void buildGroupCenter();
 	int GetVertexNum();
 	Vec3f GetVertex(int vi);
 	ObjectIf* GetOpParticle(int pi);
@@ -183,6 +190,7 @@ struct PHOpObjIf : public SceneObjectIf {
 	void SetObjDstConstraint(bool d);
 	void SetObjItrTime(int itrT);
 	int GetObjItrTime();
+	void StoreOrigPose();
 
 	//void GetFirVertexData(float vData[]);
 	//float* GetFirVData();
@@ -306,6 +314,7 @@ struct PHOpGroupIf : public ObjectIf{
 struct PHOpHapticControllerDesc
 {
 	float posScale;
+	float rotScale;
 	float forceScale;
 	Vec3f userPos;
 	Posef userPose;
@@ -319,13 +328,13 @@ struct PHOpHapticControllerDesc
 
 	//PHOpParticle* hcColliedP;
 	int hpObjIndex;
-	enum HaticDOFType
+	enum HapticDOFType
 	{
 		_3DOF,
 		_6DOF,
 	};
 
-	HaticDOFType hcType;
+	HapticDOFType hcType;
 	//Vec3f hcPointPos;
 	bool logForce;
 
@@ -367,7 +376,7 @@ struct PHOpHapticControllerIf : public SceneObjectIf{
 
 	
 	bool doCalibration();
-	bool initDevice();
+	bool  initDevice(HISdkIf* hiSdk);
 	////UTRef<ObjectIf> initDevice();
 	//bool InitialHapticController(ObjectIf* opObjectif);
 	////void UpdateHapticPosition(Vec3f &pos);
@@ -406,7 +415,8 @@ struct PHOpHapticRendererIf : public SceneObjectIf{
 	void HpConstrainSolve(Vec3f &currSubStart);
 	void BuildVToFaceRelation();
 	void BuildEdgeInfo();
-	
+	void SetRigid(bool set);
+	bool IsRigid();
 };
 
 //struct PHOpHapticHandler : ObjectIf{
