@@ -88,6 +88,9 @@
 
 using namespace PTM;
 
+double ThCamera_minTemp = 30;
+double ThCamera_maxTemp = 100;		
+
 namespace Spr{;
 
 PHFemThermoDesc::PHFemThermoDesc(){
@@ -7114,6 +7117,13 @@ void PHFemThermo::VertexWaterBoiling(unsigned vtxid){
 	}
 }
 
+void PHFemThermo::SetThermoCameraScale(double minTemp,double maxTemp){
+	if(minTemp < maxTemp){
+		ThCamera_minTemp=minTemp;
+		ThCamera_maxTemp=maxTemp;
+	}
+};
+
 float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 	float gvtx = 0.0f;
 	//テクスチャの設定
@@ -7197,38 +7207,35 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 			// 温度変化と同じで　
 			double temp = vertexVars[pv].temp;
 			// -50.0~0.0:aqua to blue
-			if(temp <= -50.0){
-				gvtx = texstart + dtex;
+			if(temp <= 30.0){
+				gvtx = texstart;
 			}
-			else if(-50.0 < temp && temp <= 0.0){	
-				gvtx = texstart + dtex;//(texstart ) + ((temp + 50.0) * dtex /50.0);
+			else if(30.0 < temp && temp <= 40.0){
+				gvtx = texstart + ((temp - 30) / 10 * dtex);//(texstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			else if(40.0 < temp && temp <= 50.0){
+				gvtx = texstart + ((temp - 40) / 10 * dtex) + (1.0 * dtex);//(texstart ) + ((temp + 50.0) * dtex /50.0);
 			}
 			//	0~50.0:blue to green
-			else if(0.0 < temp && temp <= 50.0 ){
+			else if(50.0 < temp && temp <= 63.0 ){
 				//double green = temp * dtex / 50.0 + thstart;
-				gvtx = (temp - 50.0)  * dtex / 50.0 + texstart + dtex; //+     dtex;
+				gvtx = texstart + ((temp - 50) / 13 * dtex) + (2.0 * dtex); //+     dtex;
 			}
 			//	50.0~100.0:green to yellow
-			else if(50.0 < temp && temp <= 100.0){
-				gvtx = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			else if(63.0 < temp && temp <= 68.0){
+				gvtx = texstart + ((temp - 63) / 5 * dtex) + (3.0 * dtex);// + 2 * dtex;
 			}
 			//	100.0~150:yellow to orange	
-			else if(100.0 < temp && temp <= 150.0){
-				gvtx = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			else if(68.0 < temp && temp <= 77.0){
+				gvtx = texstart + ((temp - 68) / 9 * dtex) + (4.0 * dtex);// + 2 * dtex;
 			}
 			//	150~200:orange to red
-			else if(150.0 < temp && temp <= 200.0){
-				double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
-				gvtx = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			else if(77.0 < temp && temp <= 100.0){
+				gvtx = texstart + ((temp - 77) / 13 * dtex) + (5.0 * dtex);// + 2 * dtex;
 			}
 			//	200~250:red to purple
-			else if(200.0 < temp && temp <= 250.0){
-				gvtx = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
-			}
-			///	250~:only purple
-			else if(250.0 < temp){
-				gvtx = dtex * 6.0 + texstart;
-				//gvtx[stride*gv + tex + 2] = wastart;			//white	 ///	まだらになっちゃう
+			else if(100.0 < temp ){
+				gvtx = texstart + (6.0 * dtex);// + 2 * dtex;
 			}
 			else{
 				DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
@@ -7252,6 +7259,22 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 			}
 		}
 	}else if(texture_mode == 2){
+		double minTemp = -50;
+		double maxTemp = 250;
+		double temp = vertexVars[pv].temp;
+		double dtemp = (maxTemp - minTemp) / ( thtex - 1);
+			if(temp < minTemp){
+				gvtx = thstart;
+			}else if(minTemp <= temp && temp < maxTemp){
+				gvtx = thstart + ((temp - dtemp - minTemp) * dtex / dtemp) + dtex;
+			}
+			else if(maxTemp <= temp){
+				gvtx = dtex * 6.0 + thstart;
+			}
+			else{
+				DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
+			}
+		/*
 		double temp = vertexVars[pv].temp;
 			// -50.0~0.0:aqua to blue
 			if(temp <= -50.0){
@@ -7290,7 +7313,22 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 			else{
 				DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
 			}
+			*/
 	}else if(texture_mode == 4){
+		double temp = vertexVars[pv].temp;
+		double dtemp= (ThCamera_maxTemp - ThCamera_minTemp) / (thcamtex - 1);
+			if(temp < ThCamera_minTemp){
+				gvtx = thcamstart;
+			}else if(ThCamera_minTemp <= temp && temp < ThCamera_maxTemp){
+				gvtx = thcamstart + ((temp - dtemp - ThCamera_minTemp) * dtex / dtemp) + dtex;
+			}
+			else if(ThCamera_maxTemp <= temp){
+				gvtx = dtex * 8.0 + thcamstart;
+			}
+			else{
+				DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
+			}
+		/*
 		double temp = vertexVars[pv].temp;
 		// -50.0~0.0:aqua to blue => 20 : purple
 		if(temp < 20.0){
@@ -7337,6 +7375,7 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 		else{
 			DSTR << "vertexVars[" << pv << "].temp = " << vertexVars[pv].temp << std::endl;
 		}
+		*/
 	}
 	return gvtx;
 }

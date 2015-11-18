@@ -216,6 +216,7 @@ struct PHFemThermoIf : public PHFemBaseIf{
 	int GetTetVNums(unsigned id,unsigned num);
 	double GetInitialTemp();
 	void UpdateVertexTempAll();
+	void SetThermoCameraScale(double minTemp,double maxTemp);
 };
 
 
