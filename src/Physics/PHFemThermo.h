@@ -184,7 +184,6 @@ protected:
 
 	// 表示用	//デバッグ
 	Vec2d IHLineVtxX;		//	IH加熱の境界線を引く	x軸の最小地、最大値が格納
-
 public:
 	//%%%		関数の宣言		%%%%%%%%//
 	//%%%%%%		熱伝導計算本体		%%%//
@@ -459,7 +458,6 @@ public:
 	//	StepCountの周回カウントアップ
 	unsigned long GetStepCountCyc(){return StepCount_;};
 
-
 	//	ガウスザイデル計算で用いる関数群
 
 	///	メッシュ表面節点の原点からの距離を計算して、struct FemVertex の disFromOrigin に格納
@@ -588,6 +586,7 @@ public:
 	bool GetVertexToofar(unsigned vtxid){return vertexVars[vtxid].toofar;}
 	void SetVertexBeCondVtxs(unsigned vtxid, bool becondVtxs){vertexVars[vtxid].beCondVtxs = becondVtxs;}
 	void CreateVecFAll();
+	void SetThermoCameraScale(double minTemp,double maxTemp);
 
 	void CalcFaceNormalAll();
 	void CalcVertexNormalAll();
