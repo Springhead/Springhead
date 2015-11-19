@@ -9,6 +9,7 @@
 %include "../../include/FileIO/SprFIFile.h"
 %include "../../include/FileIO/SprFIImport.h"
 %include "../../include/FileIO/SprFISdk.h"
+%include "../../include/FileIO/SprFIOpStateHandler.h"
 /*
 #define DOUBLECOLON :: 
 %include "../../include/Springhead.h"
