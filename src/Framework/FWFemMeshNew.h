@@ -31,6 +31,7 @@ public:
 	UTRef< GRMesh > grFemMesh;			///< 描画用のメッシュ
 	std::vector<int> vertexIdMap;		///< grFemMeshからphFemMeshへの頂点の対応表
 	//char* meshRoughness;			///< tetgenで生成するメッシュの粗さ
+	bool drawflag;
 
 	FWFemMeshNew(const FWFemMeshNewDesc& d=FWFemMeshNewDesc());		//コンストラクタ
 	///	子オブジェクトの数
@@ -62,7 +63,7 @@ public:
 
 	void CreateTranslucentMesh(GRMeshIf* wetMesh,std::map<int,int> corFemWet,std::vector<int> femVtx,std::vector<bool> vWetFlag,GRRenderIf* render);
 
-
+	void EnableDrawEdgeCW(bool flag){drawflag = flag;};
 public:
 	enum TEXTURE_MODE{
 		BROWNED,

@@ -89,7 +89,7 @@
 using namespace PTM;
 
 double ThCamera_minTemp = 30;
-double ThCamera_maxTemp = 100;		
+double ThCamera_maxTemp = 100;
 
 namespace Spr{;
 
@@ -108,6 +108,7 @@ void PHFemThermoDesc::Init(){
 	specificHeat = 459.94;//SPECIFICHEAT;//0.196;		//1960
 	radiantHeat =0;
 	initial_temp=0.0;
+
 }
 
 ///////////////////////////////////////////////////////////////////
@@ -141,7 +142,6 @@ PHFemThermo::PHFemThermo(const PHFemThermoDesc& desc, SceneIf* s){
 	outR_decr = 0.041;
 	//%%%
 	stopTime = 180.3;
-
 	// ディスクリプタにセット
 	SetDesc(&desc);
 	if (s){ SetScene(s); }
@@ -4998,12 +4998,11 @@ void PHFemThermo::CreateVecFAll(unsigned id){
 
 void PHFemThermo::CreateMatkLocal_update(unsigned id){
 	PHFemMeshNew* mesh = GetPHFemMesh();
-
 	//	四面体要素について係数行列[k]を作る			命名規則	
 	//..	k1を作る	k1kでも、k1bでもどちらでも構わない	どちらが速いか調べる
 	///....		変形した時だけ生成する
 	//if(deformed){	
-	//	CreateMatk1k(id);
+		//CreateMatk1k(id);
 	//}			//  K第一項（メッシュ内熱伝導）の行列作成	//k理論を根拠に、加筆して、形状関数を導出	
 	//if(deformed){	CreateMatk1b(id);}			//	書籍の理論を根拠に、公式を用いて形状関数を導出
 	
@@ -7207,34 +7206,34 @@ float PHFemThermo::calcGvtx(std::string fwfood, int pv, unsigned texture_mode){
 			// 温度変化と同じで　
 			double temp = vertexVars[pv].temp;
 			// -50.0~0.0:aqua to blue
-			if(temp <= 30.0){
+			if(temp <= 50.0){
 				gvtx = texstart;
 			}
-			else if(30.0 < temp && temp <= 40.0){
-				gvtx = texstart + ((temp - 30) / 10 * dtex);//(texstart ) + ((temp + 50.0) * dtex /50.0);
+			else if(50.0 < temp && temp <= 60.0){
+				gvtx = texstart + ((temp - 50) / 10 * dtex);//(texstart ) + ((temp + 50.0) * dtex /50.0);
 			}
-			else if(40.0 < temp && temp <= 50.0){
-				gvtx = texstart + ((temp - 40) / 10 * dtex) + (1.0 * dtex);//(texstart ) + ((temp + 50.0) * dtex /50.0);
+			else if(60.0 < temp && temp <= 63.0){
+				gvtx = texstart + ((temp - 60) / 3 * dtex) + (1.0 * dtex);//(texstart ) + ((temp + 50.0) * dtex /50.0);
 			}
 			//	0~50.0:blue to green
-			else if(50.0 < temp && temp <= 63.0 ){
+			else if(63.0 < temp && temp <= 68.0 ){
 				//double green = temp * dtex / 50.0 + thstart;
-				gvtx = texstart + ((temp - 50) / 13 * dtex) + (2.0 * dtex); //+     dtex;
+				gvtx = texstart + ((temp - 63) / 5 * dtex) + (2.0 * dtex); //+     dtex;
 			}
 			//	50.0~100.0:green to yellow
-			else if(63.0 < temp && temp <= 68.0){
-				gvtx = texstart + ((temp - 63) / 5 * dtex) + (3.0 * dtex);// + 2 * dtex;
+			else if(68.0 < temp && temp <= 72.0){
+				gvtx = texstart + ((temp - 68) / 5 * dtex) + (3.0 * dtex);// + 2 * dtex;
 			}
 			//	100.0~150:yellow to orange	
-			else if(68.0 < temp && temp <= 77.0){
-				gvtx = texstart + ((temp - 68) / 9 * dtex) + (4.0 * dtex);// + 2 * dtex;
+			else if(72.0 < temp && temp <= 77.0){
+				gvtx = texstart + ((temp - 72) / 5 * dtex) + (4.0 * dtex);// + 2 * dtex;
 			}
 			//	150~200:orange to red
-			else if(77.0 < temp && temp <= 100.0){
-				gvtx = texstart + ((temp - 77) / 13 * dtex) + (5.0 * dtex);// + 2 * dtex;
+			else if(77.0 < temp && temp <= 120.0){
+				gvtx = texstart + ((temp - 77) / 43 * dtex) + (5.0 * dtex);// + 2 * dtex;
 			}
 			//	200~250:red to purple
-			else if(100.0 < temp ){
+			else if(120.0 < temp ){
 				gvtx = texstart + (6.0 * dtex);// + 2 * dtex;
 			}
 			else{
