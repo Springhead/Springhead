@@ -32,6 +32,7 @@ public:
 	std::vector<int> vertexIdMap;		///< grFemMeshからphFemMeshへの頂点の対応表
 	//char* meshRoughness;			///< tetgenで生成するメッシュの粗さ
 	bool drawflag;
+	std::vector<float> texmode1Map;
 
 	FWFemMeshNew(const FWFemMeshNewDesc& d=FWFemMeshNewDesc());		//コンストラクタ
 	///	子オブジェクトの数
