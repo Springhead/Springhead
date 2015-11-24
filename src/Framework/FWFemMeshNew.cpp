@@ -43,6 +43,7 @@ FWFemMeshNew::FWFemMeshNew(const FWFemMeshNewDesc& d){
 	//meshRoughness = "pq2.1a1.15";//phCube phBoardmini phPipemini
 	SetDesc(&d);
 	texture_mode = 1;		//	テクスチャ表示の初期値：温度
+	drawflag=true;
 }
 
 size_t FWFemMeshNew::NChildObject() const{
@@ -603,6 +604,7 @@ void FWFemMeshNew::SyncThermoInfo(){
 
 void FWFemMeshNew::DrawEdgeCW(Vec3d vtx0, Vec3d vtx1,float R,float G,float B){
 	// 入力された2頂点座標間を結ぶ
+	if(drawflag==true){
 	Vec3d wpos0 = this->GetGRFrame()->GetWorldTransform() * vtx0; //* ローカル座標を 世界座標への変換して代入
 	Vec3d wpos1 = this->GetGRFrame()->GetWorldTransform() * vtx1; //* ローカル座標を 世界座標への変換して代入
 	glBegin(GL_LINES);
@@ -610,6 +612,7 @@ void FWFemMeshNew::DrawEdgeCW(Vec3d vtx0, Vec3d vtx1,float R,float G,float B){
 		glVertex3d(wpos0[0],wpos0[1],wpos0[2]);
 		glVertex3d(wpos1[0],wpos1[1],wpos1[2]);
 	glEnd();
+	}
 	//glFlush();
 }
 
@@ -634,5 +637,6 @@ Vec4f FWFemMeshNew::CompThermoColor(float value){
 	}
 	return color;
 }
+
 
 }

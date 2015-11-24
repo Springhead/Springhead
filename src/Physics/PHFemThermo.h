@@ -347,7 +347,7 @@ protected:
 	bool deformed;					///	形状が変わったかどうか		///	構造体に持っていてほしい
 	bool alphaUpdated;				///	熱伝達率が更新、matk2,Vecf3等が更新されたか
 	bool doCalc;					///	ガウスザイデル計算するフラグ
-	
+
 	std::ofstream templog;		// 頂点の温度変化
 	std::ofstream cpslog;		//	CPSの変化
 
