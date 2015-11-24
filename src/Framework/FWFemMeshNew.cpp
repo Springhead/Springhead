@@ -385,6 +385,10 @@ void FWFemMeshNew::CreateGRFromPH(){
 	//	テクスチャモードをコピー
 	rv->tex3d = grFemMesh->tex3d;
 	grFemMesh = rv;
+
+	for(int i = 0; i < (int)vertexIdMap.size(); i++){
+		texmode1Map.push_back(0);
+	}
 }
 
 void FWFemMeshNew::Sync(){		
@@ -508,6 +512,12 @@ void FWFemMeshNew::SyncThermoInfo(){
 				for(unsigned gv = 0; gv < vertexIdMap.size(); ++gv){
 					float gvtxTemp;
 					int pv = vertexIdMap[gv];
+					float texend;
+					if(fwfood == "fwNsteak"){
+						texend=0.25862;
+					}else if(fwfood == "fwNegi" || fwfood == "fwPan"){
+						texend=0.25;
+					}
 					//	PHから何らかの物理量を取ってくる
 							//phから節点の温度を取ってくる
 					//PHFemMeshThermoの各節点の温度を取ってくる。
@@ -582,8 +592,11 @@ void FWFemMeshNew::SyncThermoInfo(){
 						
 #endif	
 						gvtxTemp = phFemMesh->GetPHFemThermo()->calcGvtx(fwfood, pv, texture_mode);
+						if(gvtxTemp > texmode1Map[gv] && gvtxTemp < texend){
+							texmode1Map[gv] = gvtxTemp;
+						}
 						if(gvtx){
-							gvtx[stride * gv + tex + 2] = gvtxTemp;
+							gvtx[stride * gv + tex + 2] = texmode1Map[gv];
 						}
 					}else if(texture_mode == 3 || texture_mode == 2 || texture_mode == 4){
 						gvtxTemp = phFemMesh->GetPHFemThermo()->calcGvtx(fwfood, pv, texture_mode);
