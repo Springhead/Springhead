@@ -649,8 +649,6 @@ public:
 	void vecFTopOutToFile();
 	std::vector<int> topVertexNums;
 	std::vector<int> bottomVertexNums;
-
-
 	//PTM::VMatrixRow<double> inv(PTM::VMatrixRow<double> mat);
 };
 

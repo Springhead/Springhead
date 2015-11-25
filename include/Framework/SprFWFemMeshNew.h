@@ -31,6 +31,7 @@ struct FWFemMeshNewIf : FWObjectIf{
 	PHFemMeshNewIf* GetPHFemMesh();
 	void SetTexmode(unsigned mode);
 	void EnableDrawEdgeCW(bool flag);
+	void Settexmode1Map(float temp);
 };
 
 //@}
