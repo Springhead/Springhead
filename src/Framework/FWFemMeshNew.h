@@ -65,6 +65,8 @@ public:
 	void CreateTranslucentMesh(GRMeshIf* wetMesh,std::map<int,int> corFemWet,std::vector<int> femVtx,std::vector<bool> vWetFlag,GRRenderIf* render);
 
 	void EnableDrawEdgeCW(bool flag){drawflag = flag;};
+
+	void Settexmode1Map(float temp);
 public:
 	enum TEXTURE_MODE{
 		BROWNED,

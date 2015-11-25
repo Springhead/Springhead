@@ -615,6 +615,116 @@ void FWFemMeshNew::SyncThermoInfo(){
 	}
 }
 
+void FWFemMeshNew::Settexmode1Map(float temp){
+	//焦げテクスチャの枚数
+	unsigned kogetex	= 5;
+	//水分テクスチャの枚数
+	unsigned watex		= 2;
+	//サーモテクスチャの枚数
+	unsigned thtex		= 6;
+	unsigned thcamtex   = 9;		//熱カメラっぽい表示用
+	//	ロードテクスチャーが焦げ→水→温度の順	（または）水→温度→焦げ	にも変更可能（ファイル名のリネームが必要）
+
+	//水分テクスチャの枚数(水の空間密度を用いた場合)
+	unsigned watex2 = 5;
+
+	std::string fwfood;
+	fwfood = this->GetName();		//	fwmeshの名前取得
+
+	if(fwfood == "fwNegi" ||fwfood == "fwPan"){		///	テクスチャと温度、水分量との対応表は、Samples/Physics/FEMThermo/テクスチャの色と温度の対応.xls	を参照のこと
+		kogetex	= 5;
+	}
+	else if(fwfood == "fwNsteak"){
+		kogetex	= 7;		//7にする
+	}
+
+	double dtex =(double) 1.0 / ( kogetex + thtex + watex + thcamtex);		//	テクスチャ奥行座標の層間隔
+	if(fwfood == "fwNsteak"){
+		dtex =(double) 1.0 / ( kogetex + thtex + watex + thcamtex + watex2);
+	}
+	double texstart = dtex /2.0;										//	テクスチャ座標の初期値 = 焦げテクスチャのスタート座標
+	double wastart = texstart + kogetex * dtex;							//	水分量表示テクスチャのスタート座標
+	double thstart = texstart + kogetex * dtex + 1.0 * dtex;			//	サーモのテクスチャのスタート座標 水分テクスチャの2枚目からスタート
+	double thcamstart = texstart + (thtex + kogetex + watex) * dtex;	//
+	
+	float gvtxTemp;
+
+	if(fwfood == "fwPan"){
+			gvtxTemp = texstart;// + dtex;		// ねずみ色の底面
+		}else if(fwfood == "fwNegi"){
+			// 温度変化と同じで　
+			// -50.0~0.0:aqua to blue
+			if(temp <= -50.0){
+				gvtxTemp = texstart + dtex;
+			}
+			else if(-50.0 < temp && temp <= 0.0){	
+				gvtxTemp = texstart + dtex;//(texstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			//	0~50.0:blue to green
+			else if(0.0 < temp && temp <= 50.0 ){
+				//double green = temp * dtex / 50.0 + thstart;
+				gvtxTemp = (temp - 50.0)  * dtex / 50.0 + texstart + dtex; //+     dtex;
+			}
+			//	50.0~100.0:green to yellow
+			else if(50.0 < temp && temp <= 100.0){
+				gvtxTemp = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			//	100.0~150:yellow to orange	
+			else if(100.0 < temp && temp <= 150.0){
+				gvtxTemp = (temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			//	150~200:orange to red
+			else if(150.0 < temp && temp <= 200.0){
+				double pinkc = (temp - 50.0 ) * dtex / 50.0 + thstart ;
+				gvtxTemp = dtex * 4.0 + texstart;//(temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			//	200~250:red to purple
+			else if(200.0 < temp && temp <= 250.0){
+				gvtxTemp = dtex * 4.0 + texstart;//(temp - 50.0 ) * dtex / 50.0 + texstart + dtex;// + 2 * dtex;
+			}
+			///	250~:only purple
+			else if(250.0 < temp){
+				gvtxTemp = dtex * 4.0 + texstart;
+				//gvtx[stride*gv + tex + 2] = wastart;			//whit
+			}
+	}else if(fwfood == "fwNsteak"){
+			// -50.0~0.0:aqua to blue
+			if(temp <= 50.0){
+				gvtxTemp = texstart;
+			}
+			else if(50.0 < temp && temp <= 60.0){
+				gvtxTemp = texstart + ((temp - 50) / 10 * dtex);//(texstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			else if(60.0 < temp && temp <= 63.0){
+				gvtxTemp = texstart + ((temp - 60) / 3 * dtex) + (1.0 * dtex);//(texstart ) + ((temp + 50.0) * dtex /50.0);
+			}
+			//	0~50.0:blue to green
+			else if(63.0 < temp && temp <= 68.0 ){
+				//double green = temp * dtex / 50.0 + thstart;
+				gvtxTemp = texstart + ((temp - 63) / 5 * dtex) + (2.0 * dtex); //+     dtex;
+			}
+			//	50.0~100.0:green to yellow
+			else if(68.0 < temp && temp <= 72.0){
+				gvtxTemp = texstart + ((temp - 68) / 5 * dtex) + (3.0 * dtex);// + 2 * dtex;
+			}
+			//	100.0~150:yellow to orange	
+			else if(72.0 < temp && temp <= 77.0){
+				gvtxTemp = texstart + ((temp - 72) / 5 * dtex) + (4.0 * dtex);// + 2 * dtex;
+			}
+			//	150~200:orange to red
+			else if(77.0 < temp && temp <= 120.0){
+				gvtxTemp = texstart + ((temp - 77) / 43 * dtex) + (5.0 * dtex);// + 2 * dtex;
+			}
+			//	200~250:red to purple
+			else if(120.0 < temp ){
+				gvtxTemp = texstart + (6.0 * dtex);// + 2 * dtex;
+			}
+		}
+	for(unsigned i = 0; i < vertexIdMap.size(); ++i){
+		texmode1Map[i]=gvtxTemp;
+	}
+}
+
 void FWFemMeshNew::DrawEdgeCW(Vec3d vtx0, Vec3d vtx1,float R,float G,float B){
 	// 入力された2頂点座標間を結ぶ
 	if(drawflag==true){

@@ -4565,6 +4565,104 @@ void PHFemThermo::UpdateIHheatband(double xS,double xE,unsigned heatingMODE){///
 void PHFemThermo::SetParamAndReCreateMatrix(double thConduct0,double roh0,double specificHeat0){
 	// デバッグのため　&&　使われていなかったので、コメントアウト
 	DSTR << "この関数はデバッグのため、コメントアウトしています。用いる場合には、実装を良く見て復活させてください。" <<std::endl;
+	
+	PHFemMeshNew* mesh = GetPHFemMesh();
+	PHFemThermoIf* phm = mesh->GetPHFemThermo();
+
+	int nSurfaceVtxs = NSurfaceVertices();
+
+	for(unsigned i =0; i < mesh->edges.size();i++){
+		edgeVars[i].c = 0.0;	
+		edgeVars[i].k = 0.0;
+	}
+
+	/////	faces
+	for(unsigned i=0;i<mesh->faces.size();i++){
+		faceVars[i].alphaUpdated = true;
+		faceVars[i].area = 0.0;
+		faceVars[i].heatTransRatio = 0.0;
+		faceVars[i].deformed = true;				//初期状態は、変形後とする
+		for(unsigned j=0;j<4;++j){
+			faceVars[i].fluxarea[j] =0.0;
+		}
+		faceVars[i].map = INT_MAX;	//
+		//faces[i].thermalEmissivity =0.0;
+		//faces[i].thermalEmissivity_const =0.0;
+		//faces[i].heatflux.clear();				// 初期化
+		//faces[i].heatflux[hum]の領域確保：配列として、か、vectorとしてのpush_backか、どちらかを行う。配列ならここに記述。
+		for(unsigned mode =0; mode < HIGH +1 ; mode++){			// 加熱モードの数だけ、ベクトルを生成
+			for(unsigned j=0;j<4;++j){
+				faceVars[i].heatflux[mode][j] = 0.0;
+			}
+		}
+	}
+
+	////行列の成分数などを初期化
+	bVecAll.resize(mesh->vertices.size(),1);
+	TVecAll.resize(mesh->vertices.size());
+	preTVecAll.resize(mesh->vertices.size());
+
+	////節点温度の初期設定(行列を作る前に行う)
+	//SetVerticesTempAll(0.0);			///	初期温度の設定
+
+	////周囲流体温度の初期化(temp度にする)
+	//InitTcAll(0.0);
+
+	////dmnN 次元の温度の縦（列）ベクトル
+	CreateTempVertex();
+
+	////熱伝導率、密度、比熱、熱伝達率　のパラメーターを設定・代入
+	//	//PHFemThermoのメンバ変数の値を代入 CADThermoより、0.574;//玉ねぎの値//熱伝導率[W/(ｍ・K)]　Cp = 1.96 * (Ndt);//玉ねぎの比熱[kJ/(kg・K) 1.96kJ/(kg K),（玉ねぎの密度）食品加熱の科学p64より970kg/m^3
+	//	//熱伝達率の単位系　W/(m^2 K)⇒これはSI単位系なのか？　25は論文(MEAT COOKING SIMULATION BY FINITE ELEMENTS)のオーブン加熱時の実測値
+	////. 熱伝達する SetInitThermoConductionParam(0.574,970,0.1960,25 * 0.001 );		//> thConduct:熱伝導率 ,roh:密度,	specificHeat:比熱 J/ (K・kg):1960 ,　heatTrans:熱伝達率 W/(m^2・K)
+	////. 熱伝達しない
+	SetInitThermoConductionParam(thConduct0,roh0,specificHeat0,0);		// 熱伝達率=0;にしているw
+	//
+	////> 熱流束の初期化
+	////SetVtxHeatFluxAll(0.0);			// 頂点の熱流束の初期化
+
+	////>	熱放射率の設定
+	SetThermalEmissivityToVerticesAll(ems,ems_const);				///	暫定値0.0で初期化	：熱放射はしないｗ
+
+	////> IH加熱するfaceをある程度(表面face && 下底面)絞る、関係しそうなface節点の原点からの距離を計算し、face[].mayIHheatedを判定
+	//CalcVtxDisFromOrigin();
+	////CalcVtxDisFromVertex(0.0,-1.2);
+	////>	IHからの単位時間当たりの加熱熱量	//単位時間当たりの総加熱熱量	231.9; //>	J/sec
+	//
+	////	この後で、熱流束ベクトルを計算する関数を呼び出す
+	InitCreateMatC();					///	CreateMatCの初期化
+	InitVecFAlls();					///	VecFAll類の初期化
+	InitCreateMatk();					///	CreateMatKの初期化
+
+	/////	熱伝達率を各節点に格納
+	SetHeatTransRatioToAllVertex();
+	for(unsigned i=0; i < mesh->tets.size(); i++){
+
+		/*小野原追加ここから--------------------------------------------*/
+		//表面faceの面積を計算
+		for(unsigned j= 0 ; j < 4; j++){
+			if(mesh->tets[i].faceIDs[j] < (int)mesh->nSurfaceFace){			///	外殻の面
+				///	四面体の三角形の面積を計算		///	この関数の外で面積分の面積計算を実装する。移動する
+				faceVars[mesh->tets[i].faceIDs[j]].area = CalcTriangleArea(mesh->faces[mesh->tets[i].faceIDs[j]].vertexIDs[0], mesh->faces[mesh->tets[i].faceIDs[j]].vertexIDs[1], mesh->faces[mesh->tets[i].faceIDs[j]].vertexIDs[2]);
+			}
+		}
+		/*小野原追加ここまで--------------------------------------------*/
+
+		tetVars[i].volume = CalcTetrahedraVolume2(i);
+		//各行列を作って、ガウスザイデルで計算するための係数の基本を作る。Timestepの入っている項は、このソース(SetDesc())では、実現できないことが分かった(NULLが返ってくる)
+		CreateMatkLocal(i);				///	Matk1 Matk2(更新が必要な場合がある)を作る	//ifdefスイッチで全体剛性行列も(表示用だが)生成可能
+		CreatedMatCAll(i);
+		CreateVecFAll(i);
+	}
+	//
+	//// カウントの初期化
+	////Ndt =0;
+
+	////水分蒸発周りの初期化
+	//InitMoist();
+
+	//SetVerticesTempAll(0.0);
+
 
 	//for(unsigned i =0; i < edges.size();i++){
 	//	edges[i].c = 0.0;

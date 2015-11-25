@@ -20,12 +20,20 @@
 - 'l'で、右へ
 */
 
+
 #include "../../SampleApp.h"
 
 #pragma  hdrstop
 
 using namespace Spr;
 using namespace std;
+
+const char* cmd = "ffmpeg -r 30 -f rawvideo -pix_fmt rgba -s 1024x768 -i - "
+                  " -threads 0 -preset fast -y -pix_fmt yuv420p -crf 21 -vf vflip  -b:v 3000k -f flv rtmp://localhost/live/livestream";
+
+FILE* ffmpeg = _popen(cmd, "wb");
+int* buffer = new int[1024*768];
+int ct=0;
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // アプリケーションクラス
@@ -586,7 +594,21 @@ public:
 
 		SampleApp::OnAction(menu, id);
 	}
+
+	virtual void OnStep(){
+		ct++;
+		if (ct==5){
+			//glutSwapBuffers();
+			glReadPixels(0, 0, 1024, 768, GL_RGBA, GL_UNSIGNED_BYTE, buffer);
+			fwrite(buffer, sizeof(int)*1024*768, 1, ffmpeg);
+			ct=0;
+		}
+		SampleApp::OnStep();
+	}
+
 } app;
+
+
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 /**
