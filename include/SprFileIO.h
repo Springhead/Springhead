@@ -15,5 +15,6 @@
 #include "FileIO/SprFISdk.h"
 #include "FileIO/SprFIFile.h"
 #include "FileIO/SprFIImport.h"
+#include "FileIO/SprFIOpStateHandler.h"
 
 #endif

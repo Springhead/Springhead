@@ -9,16 +9,16 @@
 namespace Spr{
 struct Vec2f{ float x; float y; };
 struct Vec2d{ double x; double y; };
-struct Vec3f{ float x; float y; float z; };
-struct Vec3d{ double x; double y; double z; };
+struct Vec3f{ float x; float y; float z; float norm(); };
+struct Vec3d{ double x; double y; double z; double norm(); };
 struct Vec4f{ float x; float y; float z; float w;};
 struct Vec4d{ double x; double y; double z; double w;};
-struct Quaternionf{ float x; float y; float z; float w;};
-struct Quaterniond{ double x; double y; double z; double w;};
+struct Quaternionf{ float x; float y; float z; float w; Quaternionf Inv(); };
+struct Quaterniond{ double x; double y; double z; double w; Quaterniond Inv(); };
 //struct Posef{ Quaternionf Ori(); Vec3f Pos(); };
 //struct Posed{ Quaterniond Ori(); Vec3d Pos(); };
-struct Posef{ float w; float x; float y; float z; float px; float py; float pz;};
-struct Posed{ double w; double x; double y; double z; double px; double py; double pz;};
+struct Posef{ float w; float x; float y; float z; float px; float py; float pz; Vec3f Pos(); Quaternionf Ori(); Posef Inv(); };
+struct Posed{ double w; double x; double y; double z; double px; double py; double pz; Vec3d Pos(); Quaterniond Ori(); Posed Inv(); };
 
 #ifdef SWIG_CS_SPR
 // for C#

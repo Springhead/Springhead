@@ -1169,6 +1169,7 @@ protected:\
 	bool	sqrtAlphaForce;	\
 	bool	hitWall;	\
 	bool	useDualTranFix;	\
+	bool	rigid;	\
 	int	proxyItrtNum;	\
 	int	proxyItrtMaxNum;	\
 	int	currDtType;	\
@@ -1188,6 +1189,7 @@ public:\
 		sqrtAlphaForce = ((PHOpHapticRendererDesc*)ptr)->sqrtAlphaForce;	\
 		hitWall = ((PHOpHapticRendererDesc*)ptr)->hitWall;	\
 		useDualTranFix = ((PHOpHapticRendererDesc*)ptr)->useDualTranFix;	\
+		rigid = ((PHOpHapticRendererDesc*)ptr)->rigid;	\
 		proxyItrtNum = ((PHOpHapticRendererDesc*)ptr)->proxyItrtNum;	\
 		proxyItrtMaxNum = ((PHOpHapticRendererDesc*)ptr)->proxyItrtMaxNum;	\
 		currDtType = ((PHOpHapticRendererDesc*)ptr)->currDtType;	\
@@ -1208,6 +1210,7 @@ public:\
 		((PHOpHapticRendererDesc*)ptr)->sqrtAlphaForce = sqrtAlphaForce;	\
 		((PHOpHapticRendererDesc*)ptr)->hitWall = hitWall;	\
 		((PHOpHapticRendererDesc*)ptr)->useDualTranFix = useDualTranFix;	\
+		((PHOpHapticRendererDesc*)ptr)->rigid = rigid;	\
 		((PHOpHapticRendererDesc*)ptr)->proxyItrtNum = proxyItrtNum;	\
 		((PHOpHapticRendererDesc*)ptr)->proxyItrtMaxNum = proxyItrtMaxNum;	\
 		((PHOpHapticRendererDesc*)ptr)->currDtType = currDtType;	\
@@ -1232,6 +1235,7 @@ protected:\
 	int	objId;	\
 	bool	objUseDistCstr;	\
 	bool	objNoMeshObj;	\
+	bool	isRigid;	\
 	int	objType;	\
 	float	objAverRadius;	\
 	float	objMaxRadius;	\
@@ -1254,6 +1258,7 @@ public:\
 		objId = ((PHOpObjDesc*)ptr)->objId;	\
 		objUseDistCstr = ((PHOpObjDesc*)ptr)->objUseDistCstr;	\
 		objNoMeshObj = ((PHOpObjDesc*)ptr)->objNoMeshObj;	\
+		isRigid = ((PHOpObjDesc*)ptr)->isRigid;	\
 		objType = ((PHOpObjDesc*)ptr)->objType;	\
 		objAverRadius = ((PHOpObjDesc*)ptr)->objAverRadius;	\
 		objMaxRadius = ((PHOpObjDesc*)ptr)->objMaxRadius;	\
@@ -1277,6 +1282,7 @@ public:\
 		((PHOpObjDesc*)ptr)->objId = objId;	\
 		((PHOpObjDesc*)ptr)->objUseDistCstr = objUseDistCstr;	\
 		((PHOpObjDesc*)ptr)->objNoMeshObj = objNoMeshObj;	\
+		((PHOpObjDesc*)ptr)->isRigid = isRigid;	\
 		((PHOpObjDesc*)ptr)->objType = objType;	\
 		((PHOpObjDesc*)ptr)->objAverRadius = objAverRadius;	\
 		((PHOpObjDesc*)ptr)->objMaxRadius = objMaxRadius;	\
@@ -1444,6 +1450,7 @@ public:\
 #define SPR_DECLMEMBEROF_PHOpHapticControllerDesc \
 protected:\
 	float	posScale;	\
+	float	rotScale;	\
 	float	forceScale;	\
 	Vec3f	userPos;	\
 	Posef	userPose;	\
@@ -1454,7 +1461,7 @@ protected:\
 	float	c_obstRadius;	\
 	Vec3f	currOutForce;	\
 	int	hpObjIndex;	\
-	Spr::PHOpHapticControllerDesc::HaticDOFType	hcType;	\
+	Spr::PHOpHapticControllerDesc::HapticDOFType	hcType;	\
 	bool	logForce;	\
 	int	fileindex;	\
 	Vec3f	lastHpRateF;	\
@@ -1474,6 +1481,7 @@ public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		posScale = ((PHOpHapticControllerDesc*)ptr)->posScale;	\
+		rotScale = ((PHOpHapticControllerDesc*)ptr)->rotScale;	\
 		forceScale = ((PHOpHapticControllerDesc*)ptr)->forceScale;	\
 		userPos = ((PHOpHapticControllerDesc*)ptr)->userPos;	\
 		userPose = ((PHOpHapticControllerDesc*)ptr)->userPose;	\
@@ -1505,6 +1513,7 @@ public:\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		((PHOpHapticControllerDesc*)ptr)->posScale = posScale;	\
+		((PHOpHapticControllerDesc*)ptr)->rotScale = rotScale;	\
 		((PHOpHapticControllerDesc*)ptr)->forceScale = forceScale;	\
 		((PHOpHapticControllerDesc*)ptr)->userPos = userPos;	\
 		((PHOpHapticControllerDesc*)ptr)->userPose = userPose;	\

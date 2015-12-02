@@ -1,9 +1,11 @@
 // wrapper.cpp
 //
+#include <Springhead.h>
 #include <Windows.h>
 #include <vector>
 
 using namespace std;
+using namespace Spr;
 
 extern "C" {
     // wrapper base class
@@ -181,5 +183,13 @@ extern "C" {
         double* aryptr = (double*) ptr;
         aryptr[index] = value;
     }
+
+	// ----- ----- ----- ----- -----
+
+	__declspec(dllexport) HANDLE __cdecl Spr_Posed_operator_mult(HANDLE ptr1, HANDLE ptr2) {
+		Posed* ptr = new Posed();
+		(*ptr) = (*((Posed*)ptr1)) * (*((Posed*)ptr2));
+		return (HANDLE)ptr;
+	}
 }
 
