@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using SprCs;
 
 namespace SprCsSample {
@@ -289,12 +290,18 @@ namespace SprCsSample {
             phFloor.AddShape(phSdk.CreateShape(CDBoxIf.GetIfInfoStatic(), descBox));
             phFloor.SetPose(new Posed(1, 0, 0, 0, 0, -5, 0));
 
+            PHBallJointDesc descJoint = new PHBallJointDesc();
+            PHBallJointIf j = phScene.CreateJoint(phFloor, phSolid, PHBallJointIf.GetIfInfoStatic(), descJoint).Cast();
+            System.Console.WriteLine(j.GetName());
+
+            /*
             for (int i = 0; i < 200; i++) {
                 phScene.Step();
                 //System.Console.WriteLine(i.ToString() + " : " + phSolid.GetPose());
                 System.Console.WriteLine(String.Format("{0, 3}", i) + " : " + phSolid.GetPose());
             }
-
+            */
         }
+
     }
 }

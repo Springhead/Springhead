@@ -114,9 +114,10 @@ public:
 	void        SetSecondMoment(Vec3d sM) { secondMoment = sM; }
 	Vec3d       GetSecondMoment() { return secondMoment; }
 	Vec3d       GetMotorForce() {
-		if (limit && limit->IsOnLimit())
-			return Vec3d();
-		return f.w() *  GetScene()->GetTimeStepInv();
+		//if (limit && limit->IsOnLimit())
+		//	return Vec3d();
+		//return f.w() *  GetScene()->GetTimeStepInv();
+		return Vec3d(motor->f[0], motor->f[1], motor->f[2]) * GetScene()->GetTimeStepInv();
 	}
 };
 

@@ -39,5 +39,12 @@ namespace SprCs {
             return null;
         }
     }
+
+    public partial class Posed {
+        public static Posed operator *(Posed a, Posed b) {
+            IntPtr ptr = SprExport.Spr_Posed_operator_mult(a._this, b._this);
+            return new Posed(ptr, true);
+        }
+    }
 }
 
