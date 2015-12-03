@@ -204,6 +204,10 @@ void FWSkeletonSensor::UnfreezeSkeleton(int i) {
 
 void FWSkeletonSensor::PrepareBone(PHSkeletonIf* phSkel, int n) {
 	PHSceneIf* phScene = DCAST(FWSceneIf,GetScene())->GetPHScene();
+
+	// <!!>
+	// phScene->SetImpactThreshold(1e+5);
+
 	for (int i=phSkel->NBones(); i<n; ++i) {
 		PHBoneIf* phBone = phSkel->CreateBone(NULL);
 		if (bCreatePHSolid) {
@@ -237,6 +241,9 @@ void FWSkeletonSensor::PrepareBone(PHSkeletonIf* phSkel, int n) {
 				CDShapeIf* shape = phScene->GetSdk()->CreateShape(descRC);
 				shape->SetStaticFriction(1.0);  // <!!>
 				shape->SetDynamicFriction(1.0); // <!!>
+				shape->SetContactSpring(10);
+				shape->SetContactDamper(10);
+				shape->SetElasticity(0);
 
 				PHSolidIf* shapedSolid;
 				if (bCreatePHSpring) {
