@@ -27,23 +27,6 @@ public class PHSolidBehaviour : SpringheadBehaviour {
         Vector3 v = gameObject.transform.position;
 		Quaternion q = gameObject.transform.rotation;
 		phSolid.SetPose (new Posed(q.w, q.x, q.y, q.z, v.x, v.y, v.z));
-
-		BoxCollider bc = gameObject.GetComponent<BoxCollider> ();
-		if (bc != null) {
-			CDBoxDesc descBox = new CDBoxDesc ();
-			Vector3 size = bc.size;
-			Vector3 scale = gameObject.transform.lossyScale;
-			descBox.boxsize = new Vec3f ((float)(size.x * scale.x), (float)(size.y * scale.y), (float)(size.z * scale.z));
-			phSolid.AddShape (phSdk.CreateShape (CDBoxIf.GetIfInfoStatic (), descBox));
-		}
-
-		SphereCollider sc = gameObject.GetComponent<SphereCollider> ();
-		if (sc != null) {
-			CDSphereDesc descSphere = new CDSphereDesc();
-			Vector3 scale = gameObject.transform.lossyScale;
-			descSphere.radius = sc.radius * (Mathf.Max (Mathf.Max (scale.x, scale.y), scale.z));
-			phSolid.AddShape (phSdk.CreateShape (CDSphereIf.GetIfInfoStatic (), descSphere));
-		}
 	}
 
     public void UpdatePose () {

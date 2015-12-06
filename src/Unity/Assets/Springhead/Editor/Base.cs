@@ -5,6 +5,31 @@ using SprCs;
 using System.Reflection;
 using System;
 
+[CustomPropertyDrawer(typeof(Vec3fStruct))]
+public class Vec3fDrawer : PropertyDrawer {
+    public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
+        EditorGUI.BeginProperty(position, label, property);
+        position = EditorGUI.PrefixLabel(position, GUIUtility.GetControlID(FocusType.Passive), label);
+
+        int indent = EditorGUI.indentLevel;
+        EditorGUI.indentLevel = 0;
+
+        float w = (position.width - 10) / 3;
+        Rect rectX = new Rect(position.x + (w + 5) * 0, position.y, w, position.height);
+        Rect rectY = new Rect(position.x + (w + 5) * 1, position.y, w, position.height);
+        Rect rectZ = new Rect(position.x + (w + 5) * 2, position.y, w, position.height);
+
+        EditorGUI.PropertyField(rectX, property.FindPropertyRelative("x"), GUIContent.none);
+        EditorGUI.PropertyField(rectY, property.FindPropertyRelative("y"), GUIContent.none);
+        EditorGUI.PropertyField(rectZ, property.FindPropertyRelative("z"), GUIContent.none);
+
+        EditorGUI.indentLevel = indent;
+
+        EditorGUI.EndProperty();
+    }
+}
+
+
 [CustomPropertyDrawer(typeof(Vec3dStruct))]
 public class Vec3dDrawer : PropertyDrawer {
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
