@@ -2,20 +2,20 @@
 using System.Collections;
 using SprCs;
 
-public class PHBallJointBehaviour : SpringheadBehaviour {
-    public PHBallJointIf phJoint = null;
-    public PHBallJointDescStruct ballJointDescripter = null;
+public class PHHingeJointBehaviour : SpringheadBehaviour {
+    public PHHingeJointIf phJoint = null;
+    public PHHingeJointDescStruct hingeJointDescripter = null;
     public GameObject socket = null;
     public GameObject plug = null;
 
     void Reset() {
         SetDLLPath();
-        ballJointDescripter = new PHBallJointDesc();
-        //ballJointDescripter.spring = 5000;
-        //ballJointDescripter.damper = 100;
+        hingeJointDescripter = new PHHingeJointDesc();
+        //hingeJointDescripter.spring = 5000;
+        //hingeJointDescripter.damper = 100;
     }
 
-    void Awake () {
+    void Awake() {
         PHSceneIf phScene = gameObject.GetComponentInParent<PHSceneBehaviour>().GetPHScene();
 
         if (!socket) {
@@ -35,11 +35,11 @@ public class PHBallJointBehaviour : SpringheadBehaviour {
             Posed poseSock = soSock.GetPose();
             Posed posePlug = soPlug.GetPose();
 
-            PHBallJointDesc d = ballJointDescripter;
+            PHHingeJointDesc d = hingeJointDescripter;
             d.poseSocket = poseSock.Inv() * poseJoint;
-            d.posePlug   = posePlug.Inv() * poseJoint;
+            d.posePlug = posePlug.Inv() * poseJoint;
 
-            phJoint = phScene.CreateJoint(soSock, soPlug, PHBallJointIf.GetIfInfoStatic(), d).Cast();
+            phJoint = phScene.CreateJoint(soSock, soPlug, PHHingeJointIf.GetIfInfoStatic(), d).Cast();
             phJoint.SetName("jo:" + gameObject.name);
         }
     }
