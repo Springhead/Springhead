@@ -7,7 +7,7 @@ using SprCs;
 
 namespace SprCsSample {
     class Program {
-        static string def = "itvacfrs";
+        static string def = "itvacfros";
         static string inc = "A";	// include: "A" for all
         static string exc = "f";	// exclude:
 
@@ -22,6 +22,7 @@ namespace SprCsSample {
             if (check_test("c"))  test_type_conv();
             if (check_test("f"))  test_func_args();
             if (check_test("r"))  test_func_return();
+            if (check_test("o"))  test_operator();
             if (check_test("s"))  test_simulation();
         }
 
@@ -29,40 +30,44 @@ namespace SprCsSample {
             return inc.Contains(chk) && !exc.Contains(chk);
         }
 
+	static void title(string title) {
+            System.Console.WriteLine("\n---[ " + title + " ]---");
+	}
+
+	static void put(string title, string expected, object obj) {
+	    string line = title + ": expected: " + expected + ", result: " + obj;
+	    System.Console.WriteLine(line);
+	}
+
         static void test_intrinsic() {
-            System.Console.WriteLine("---[ intrinsic ]---");
+            title("intrinsic");
 
             // intrinsic member
             PHSceneDesc descScene = new PHSceneDesc();
             PHRaycastHit raycastHit = new PHRaycastHit();
             GRVertexElement vertexelm = new GRVertexElement();
             // simple
-            vertexelm.offset = 123;
-            System.Console.WriteLine("short:    expected: 123   result: " + vertexelm.offset);
-            descScene.numIteration = 123;
-            System.Console.WriteLine("int:      expected: 123   result: " + descScene.numIteration);
-            descScene.bCCDEnabled = true;
-            System.Console.WriteLine("bool:     expected: True  result: " + descScene.bCCDEnabled);
-            raycastHit.distance = 0.123F;
-            System.Console.WriteLine("float:    expected: 0.123 result: " + raycastHit.distance);
-            descScene.airResistanceRate = 0.123;
-            System.Console.WriteLine("double:   expected: 0.123 result: " + descScene.airResistanceRate);
+            vertexelm.offset = 123;              put("short ", "123  ", vertexelm.offset);
+            descScene.numIteration = 123;        put("int   ", "123  ", descScene.numIteration);
+            descScene.bCCDEnabled = true;        put("bool  ", "True ", descScene.bCCDEnabled);
+            raycastHit.distance = 0.123F;        put("float ", "0.123", raycastHit.distance);
+            descScene.airResistanceRate = 0.123; put("double", "0.123", descScene.airResistanceRate);
             // nested
             descScene.gravity.x = 0;
             descScene.gravity.y = 0;
             descScene.gravity.z = -4.5;
-/**/        System.Console.WriteLine("set by elm:   expected: (0.0, 0.0, -4.5)  result: " + descScene.gravity);
+/**/        put("set by elm", "(0.0, 0.0, -4.5)", descScene.gravity);
             descScene.gravity = new Vec3d(2.5, -5.2, 0.5);
-/**/        System.Console.WriteLine("set struct:   expected: (2.5, -5.2, 0.5)  result: " + descScene.gravity);
+/**/        put("set struct", "(2.5, -5.2, 0.5)", descScene.gravity);
         }
 
         static void test_tostring() {
-            System.Console.WriteLine("---[ ToString ]---");
+            title("ToString");
 
             Vec3d v3d = new Vec3d(0.1, 0.2, 0.3);
             //string s = v3d.ToString();
-/**/        System.Console.WriteLine("ToString: expected: (0.1, 0.2, 0.3)   result: " + v3d.ToString());
-/**/        System.Console.WriteLine("ToString: implicit ToString call            : " + v3d);
+/**/        put("ToString", "(0.1, 0.2, 0.3)", v3d.ToString());
+/**/        System.Console.WriteLine("ToString: implicit ToString call           : " + v3d);
 
             PHSceneDesc descScene = new PHSceneDesc();
             PHSolidDesc descSolid = new PHSolidDesc();
@@ -80,7 +85,7 @@ namespace SprCsSample {
         }
 
         static void test_vector() {
-            System.Console.WriteLine("---[ vector ]---");
+            title("vector");
 
             // vector member
             PHFemMeshNewDesc descFemMeshNew = new PHFemMeshNewDesc();
@@ -88,32 +93,32 @@ namespace SprCsSample {
             // intrinsic element
             tets.push_back(101);
             tets.push_back(102);
-            System.Console.WriteLine("vec<int>: expected: 2     result: " + tets.size());
-            System.Console.WriteLine("vec<int>: expected: 101   result: " + tets[0]);
-            System.Console.WriteLine("vec<int>: expected: 102   result: " + tets[1]);
+            put("vec<int>", "2  ", tets.size());
+            put("vec<int>", "101", tets[0]);
+            put("vec<int>", "102", tets[1]);
             tets.clear();
             tets.push_back(101);
             tets.push_back(102);
             tets[0] = 201;
             tets[1] = 202;
             tets.push_back(203);
-            System.Console.WriteLine("vec<int>: expected: 3     result: " + tets.size());
-            System.Console.WriteLine("vec<int>: expected: 201   result: " + tets[0]);
-            System.Console.WriteLine("vec<int>: expected: 202   result: " + tets[1]);
-            System.Console.WriteLine("vec<int>: expected: 203   result: " + tets[2]);
+            put("vec<int>", "3  ", tets.size());
+            put("vec<int>", "201", tets[0]);
+            put("vec<int>", "202", tets[1]);
+            put("vec<int>", "203", tets[2]);
             // structure element
             vectorwrapper_PHFemMeshNewDesc_Vec3d vertices = descFemMeshNew.vertices;
             vertices.push_back(new Vec3d(0.1, 0.2, 0.3));
             vertices.push_back(new Vec3d(0.4, 0.5, 0.6));
-            System.Console.WriteLine("vec<Vec3d>: expected: 2     result: " + vertices.size());
-            System.Console.WriteLine("vec<Vec3d>: expected: 0.1   result: " + vertices[0].x);
-            System.Console.WriteLine("vec<Vec3d>: expected: 0.2   result: " + vertices[0].y);
-            System.Console.WriteLine("vec<Vec3d>: expected: 0.3   result: " + vertices[0].z);
-            System.Console.WriteLine("vec<Vec3d>: expected: (0.4, 0.5, 0.6) result: " + vertices[1].ToString());
+            put("vec<Vec3d>", "2  ", vertices.size());
+            put("vec<Vec3d>", "0.1", vertices[0].x);
+            put("vec<Vec3d>", "0.2", vertices[0].y);
+            put("vec<Vec3d>", "0.3", vertices[0].z);
+            put("vec<Vec3d>", "(0.4, 0.5, 0.6)", vertices[1].ToString());
         }
 
         static void test_array() {
-            System.Console.WriteLine("---[ array ]---");
+            title("array");
 
             PHOpObjDesc descOpObj = new PHOpObjDesc();
             GRMeshFace meshFace = new GRMeshFace();
@@ -147,22 +152,23 @@ namespace SprCsSample {
         }
 
         static void test_type_conv() {
-            System.Console.WriteLine("---[ type conversion ]---");
+            title("type conversion");
 
             string msg_f3 = "f2d: (1, 2, 3)";
             string msg_d3 = "d2f: (4, 5, 6)";
 
             Vec3f f3 = new Vec3f(1, 2, 3);
             Vec3d d3 = new Vec3d(4, 5, 6);
-            print_vec3d(f3, msg_f3);
+            put("type_conv", msg_f3, f3);
 //            print_vec3f(d3, msg_f3);    // This cause CS1502 and CS1503 compile error. <- OK
-            print_vec3f((Vec3f) d3, msg_d3);
+            put("type_conv", msg_d3, (Vec3f) d3);
 
             Vec3fStruct f3s = f3;
             Vec3dStruct d3s = d3;
-            print_vec3ds(f3s, msg_f3);
+            put("type_conv", msg_f3, "(" + f3s.x + ", " + f3s.y + ", " + f3s.z + ")");
 //            print_vec3fs(d3s, msg_d3);  // This cause CS1502 and CS1503 compile error. <- OK
-            print_vec3fs((Vec3fStruct) d3s, msg_d3);
+            put("type_conv", msg_d3,
+                "(" + ((Vec3fStruct)d3s).x + ", " + ((Vec3fStruct)d3s).y + ", " + ((Vec3fStruct)d3s).z + ")");
 
             // -----
             // 戻り値の自動型変換のテスト
@@ -174,22 +180,22 @@ namespace SprCsSample {
 
             // CDShapeIf型の変数に格納されているが中身はCDBoxIfなので型変換可能。
             CDBoxIf box = shape as CDBoxIf;
-            System.Console.WriteLine("type_conv: expected: (1, 4, 9)  result: " + box.GetBoxSize().ToString());
+            put("type_conv", "(1, 4, 9)", box.GetBoxSize().ToString());
 
             // CDBoxIf is not a CDSphereIf なので nullになることが期待される。
             CDSphereIf sphere = shape as CDSphereIf;
             if (sphere == null) {
-                System.Console.WriteLine("type_conv: expected: null  result: null");
+                put("type_conv", "null", "null");
             } else {
-                System.Console.WriteLine("type_conv: expected: null  result: " + sphere.ToString());
+                put("type_conv", "null", sphere.ToString());
             }
             
             // CDBoxIf is a CDConvexIf なのでnullにはならず型変換される。
             CDConvexIf convex = shape as CDConvexIf;
             if (convex == null) {
-                System.Console.WriteLine("type_conv: expected: not null  result: null");
+                put("type_conv", "not null", "null");
             } else {
-                System.Console.WriteLine("type_conv: expected: not null  result: " + convex.ToString());
+                put("type_conv", "not null", convex.ToString());
             }
 
             // -----
@@ -198,24 +204,8 @@ namespace SprCsSample {
             System.Console.WriteLine((scene == null) ? "null" : scene.ToString());
         }
 
-        static void print_vec3d(Vec3d v, string exp) {
-            System.Console.WriteLine("type_conv: expected: " + exp + " result: " + v.ToString());
-        }
-
-        static void print_vec3f(Vec3f v, string exp) {
-            System.Console.WriteLine("type_conv: expected: " + exp + " result: " + v.ToString());
-        }
-
-        static void print_vec3ds(Vec3dStruct v, string exp) {
-            System.Console.WriteLine("type_conv: expected: " + exp + " result: (" + v.x + ", " + v.y + ", " + v.z + ")");
-        }
-
-        static void print_vec3fs(Vec3fStruct v, string exp) {
-            System.Console.WriteLine("type_conv: expected: " + exp + " result: (" + v.x + ", " + v.y + ", " + v.z + ")");
-        }
-
         static void test_func_args() {
-            System.Console.WriteLine("---[ function arguments ]---");
+            title("function arguments");
 
             // ここでのコードは正常には動作はしない － 例外が起きて停止する。
             // デバッガで止めて値を確認すること。
@@ -224,8 +214,9 @@ namespace SprCsSample {
             CDShapePairIf shapePairIf = new CDShapePairIf();
             shapePairIf.GetShape(123);
         }
+
         static void test_func_return() {
-            System.Console.WriteLine("---[ function return ]---");
+            title("function return");
             int memoryLeakTest = 0;
 
             PHSceneDesc descScene = new PHSceneDesc();
@@ -250,30 +241,61 @@ namespace SprCsSample {
             //HISdkDesc descHi = new HISdkDesc();
             //HISdkIf hiSdk = HISdkIf.CreateSdk();
 
-            System.Console.WriteLine("ret int:    expected: 3       result: " + phScene.NSolids());
+            put("ret int   ", "3    ", phScene.NSolids());
             for (int i = 0; i < 20; i++) {
                 phScene.Step();
             }
-            System.Console.WriteLine("ret Uint:   expected: 20      result: " + phScene.GetCount());
+            put("ret Uint  ", "20   ", phScene.GetCount());
             phHaptic.SetLocalRange(2.345f);
-            System.Console.WriteLine("ret float:  expected: 2.345   result: " + phHaptic.GetLocalRange());
-            System.Console.WriteLine("ret double: expected: 0.005   result: " + phScene.GetTimeStep());
+            put("ret float ", "2.345", phHaptic.GetLocalRange());
+            put("ret double", "0.005", phScene.GetTimeStep());
             phScene.SetMaxVelocity(1.23);
-            System.Console.WriteLine("ret double: expected: 0.123   result: " + phScene.GetMaxVelocity());
+            put("ret double", "0.123", phScene.GetMaxVelocity());
             phScene.EnableContactDetection(false);
-            System.Console.WriteLine("ret bool:   expected: False   result: " + phScene.IsContactDetectionEnabled());
+            put("ret bool  ", "False", phScene.IsContactDetectionEnabled());
             phScene.EnableContactDetection(true);
-            System.Console.WriteLine("ret bool:   expected: True    result: " + phScene.IsContactDetectionEnabled());
+            put("ret bool  ", "True ", phScene.IsContactDetectionEnabled());
 
-            System.Console.WriteLine("ret size_t: expected: 152?    result: " + phScene.GetDescSize());
+            put("ret size_t", "152? ", phScene.GetDescSize());
 
-            System.Console.WriteLine("ret Vec3d:  expected: (0.0, -9.8, 0.0) result: " + phScene.GetGravity());
+            put("ret Vec3d ", "(0.0, -9.8, 0.0)", phScene.GetGravity());
             phScene.SetGravity(new Vec3d(0.1, -9.9, 0.2));
-            System.Console.WriteLine("ret Vec3d:  expected: (0.1, -9.9, 0.2) result: " + phScene.GetGravity());
+            put("ret Vec3d ", "(0.1, -9.9, 0.2)", phScene.GetGravity());
         }
 
+        static void test_operator() {
+            title("operator");
+
+            // vector
+            Vec3f v3a = new Vec3f(0.1f, 0.2f, 0.3f);
+            Vec3f v3b = new Vec3f(0.4f, 0.5f, 0.6f);
+            Vec3f v3c = v3a;
+            Vec3f v3d;
+	    put("vector unary  -", "(-0.1, -0.2, -0.3)", -v3a);
+            put("vector binary +", "( 0.5,  0.7,  0.9)", v3a + v3b);
+            put("vector binary -", "(-0.3, -0.3, -0.3)", v3a - v3b);
+            put("vector binary *", "( 0.2,  0.4,  0.6)", v3a * 2);
+            put("vector binary *", "( 0.8,  1.0,  1.2)", 2 * v3b);
+            put("vector binary /", "( 0.05, 0.10,  0.15)", v3a / 2);
+            put("vector binary *", "  0.32", v3a * v3b);
+            put("vector binary %", "(-0.03, 0.06, -0.03)", v3a % v3b);
+            put("vector binary ^", "(-0.03, 0.06, -0.03)", v3a ^ v3b);
+            v3d = v3a; v3d += v3b;
+            put("vector binary +=", "( 0.5,  0.7,  0.9)", v3d);
+            v3d = v3a; v3d -= v3b;
+            put("vector binary -=", "(-0.3, -0.3, -0.3)", v3d);
+            v3d = v3a; v3d *= 2;
+            put("vector binary *=", "( 0.2,  0.4,  0.6)", v3d);
+            v3d = v3a; v3d /= 2;
+            put("vector binary /=", "(0.05, 0.10, 0.15)", v3d);
+            put("vector binary ==", "True ", v3a == v3c);
+            put("vector binary ==", "False", v3a == v3b);
+            put("vector binary !=", "True ", v3a != v3b);
+            put("vector binary !=", "False", v3a != v3c);
+	}
+
         static void test_simulation() {
-            System.Console.WriteLine("---[ physical simulation ]---");
+            title("physical simulation");
 
             PHSceneDesc descScene = new PHSceneDesc();
             PHSolidDesc descSolid = new PHSolidDesc();
