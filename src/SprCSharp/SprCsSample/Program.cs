@@ -310,16 +310,24 @@ namespace SprCsSample {
             m3d = m3a; m3d *= 2;   put("matrix binary +=", show_matrix(m3u), show_matrix(m3d));
 
 	    // TQuaternion
-	    Quaternionf q1 = new Quaternionf(1.0f, 2.0f, 3.0f, 4.0f);
-	    Quaternionf q2 = new Quaternionf(5.0f, 6.0f, 7.0f, 8.0f);
-	    Vec3f v1 = new Vec3f(1.0f, 2.0f, 3.0f);
-            Matrix3f m1 = new Matrix3f(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
-	    Quaternionf qr = new Quaternionf(-60.0f, 12.0f, 30.0f, 24.0f);
-	    Vec3f vs = new Vec3f(54f, 60f, 78f);
-            Matrix3f mt = new Matrix3f(138.0f, 144.0f, 150.0f, 132.0f, 156.0f, 210.0f, 126.0f, 168.0f, 210.0f);
+            Quaternionf q1 = new Quaternionf(1.0f, 2.0f, 3.0f, 4.0f);
+            Quaternionf q2 = new Quaternionf(5.0f, 6.0f, 7.0f, 8.0f);
+            Vec3f qv1 = new Vec3f(1.0f, 2.0f, 3.0f);
+            Matrix3f qm1 = new Matrix3f(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f, 8.0f, 9.0f);
+            Quaternionf qr = new Quaternionf(-60.0f, 12.0f, 30.0f, 24.0f);
+            Vec3f qvs = new Vec3f(54f, 60f, 78f);
+            Matrix3f qmt = new Matrix3f(150f, 156f, 162f, 120f, 150f, 180, 150f, 192f, 234f);
             put("quaternion binary *", show_quaternion(qr), show_quaternion(q1 * q2));
-            put("quaternion binary *", show_vector(vs), show_vector(q1 * v1));
-            put("quaternion binary *", show_matrix(mt), show_matrix(q1 * m1));
+            put("quaternion binary *", show_vector(qvs), show_vector(q1 * qv1));
+            put("quaternion binary *", show_matrix(qmt), show_matrix(q1 * qm1));
+
+	    // TPose
+            Posef pp1 = new Posef(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f);
+            Posef pp2 = new Posef(7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f);
+            Vec3f pv1 = new Vec3f(1.0f, 2.0f, 3.0f);
+            Posef pr1 = new Posef(-36.0f, 12.0f, 42.0f, 24.0f, -25.0f, 66.0f, 97.0f);
+            put("pose binary *", show_pose(pr1), show_pose(pp1 * pp2));
+            put("pose binary *", "(59, 66, 85)", (pp1 * pv1));
 	}
 
 	static string show_vector(Vec3f v) {
@@ -337,6 +345,12 @@ namespace SprCsSample {
 	static string show_quaternion(Quaternionf q) {
             string str = "\n"
                        + "( " + q.w + ",  " + q.x + ",  " + q.y + ", " +  q.z + " )\n";
+            return str;
+	}
+	static string show_pose(Posef p) {
+            string str = "\n"
+                       + "( " + p.w + ", " + p.x + ", " + p.y + ", " + p.z
+                       + ", " + p.px + ", " + p.py + ", " + p.pz + " )\n";
             return str;
 	}
 	static string show_matrix2(Matrix3f m) {
