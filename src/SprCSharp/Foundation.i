@@ -10,138 +10,38 @@
 %ignore Spr::SdkIf::CreateSdk;
 
 %feature("struct") Spr::IfInfo;
-%feature("operator", spec0="11") Spr::Vec2f;
-%feature("operator", spec1="u:-:neg:vv") Spr::Vec2f;
-%feature("operator", spec2="b:+:add:vvv:Vec2f:Vec2f:Vec2f") Spr::Vec2f;
-%feature("operator", spec3="b:-:sub:vvv:Vec2f:Vec2f:Vec2f") Spr::Vec2f;
-%feature("operator", spec4="b:*:mul:vsv:Vec2f:float:Vec2f") Spr::Vec2f;
-%feature("operator", spec5="b:*:mul:vvs:Vec2f:Vec2f:float") Spr::Vec2f;
-%feature("operator", spec6="b:/:div:vvs:Vec2f:Vec2f:float") Spr::Vec2f;
-%feature("operator", spec7="b:*:sprod:svv:float:Vec2f:Vec2f") Spr::Vec2f;
-%feature("operator", spec8="b:%:vprod1:svv:float:Vec2f:Vec2f") Spr::Vec2f;
-%feature("operator", spec9="b:^:vprod2:svv:float:Vec2f:Vec2f") Spr::Vec2f;
-%feature("operator", spec10="b:==:equ:svv:bool:Vec2f:Vec2f") Spr::Vec2f;
-%feature("operator", spec11="b:!=:neq:svv:bool:Vec2f:Vec2f") Spr::Vec2f;
-%feature("operator", spec0="11") Spr::Vec2d;
-%feature("operator", spec1="u:-:neg:vv") Spr::Vec2d;
-%feature("operator", spec2="b:+:add:vvv:Vec2d:Vec2d:Vec2d") Spr::Vec2d;
-%feature("operator", spec3="b:-:sub:vvv:Vec2d:Vec2d:Vec2d") Spr::Vec2d;
-%feature("operator", spec4="b:*:mul:vsv:Vec2d:double:Vec2d") Spr::Vec2d;
-%feature("operator", spec5="b:*:mul:vvs:Vec2d:Vec2d:double") Spr::Vec2d;
-%feature("operator", spec6="b:/:div:vvs:Vec2d:Vec2d:double") Spr::Vec2d;
-%feature("operator", spec7="b:*:sprod:svv:double:Vec2d:Vec2d") Spr::Vec2d;
-%feature("operator", spec8="b:%:vprod1:svv:double:Vec2d:Vec2d") Spr::Vec2d;
-%feature("operator", spec9="b:^:vprod2:svv:double:Vec2d:Vec2d") Spr::Vec2d;
-%feature("operator", spec10="b:==:equ:svv:bool:Vec2d:Vec2d") Spr::Vec2d;
-%feature("operator", spec11="b:!=:neq:svv:bool:Vec2d:Vec2d") Spr::Vec2d;
-%feature("operator", spec0="11") Spr::Vec3f;
-%feature("operator", spec1="u:-:neg:vv") Spr::Vec3f;
-%feature("operator", spec2="b:+:add:vvv:Vec3f:Vec3f:Vec3f") Spr::Vec3f;
-%feature("operator", spec3="b:-:sub:vvv:Vec3f:Vec3f:Vec3f") Spr::Vec3f;
-%feature("operator", spec4="b:*:mul:vsv:Vec3f:float:Vec3f") Spr::Vec3f;
-%feature("operator", spec5="b:*:mul:vvs:Vec3f:Vec3f:float") Spr::Vec3f;
-%feature("operator", spec6="b:/:div:vvs:Vec3f:Vec3f:float") Spr::Vec3f;
-%feature("operator", spec7="b:*:sprod:svv:float:Vec3f:Vec3f") Spr::Vec3f;
-%feature("operator", spec8="b:%:vprod1:vvv:Vec3f:Vec3f:Vec3f") Spr::Vec3f;
-%feature("operator", spec9="b:^:vprod2:vvv:Vec3f:Vec3f:Vec3f") Spr::Vec3f;
-%feature("operator", spec10="b:==:equ:svv:bool:Vec3f:Vec3f") Spr::Vec3f;
-%feature("operator", spec11="b:!=:neq:svv:bool:Vec3f:Vec3f") Spr::Vec3f;
-%feature("operator", spec0="11") Spr::Vec3d;
-%feature("operator", spec1="u:-:neg:vv") Spr::Vec3d;
-%feature("operator", spec2="b:+:add:vvv:Vec3d:Vec3d:Vec3d") Spr::Vec3d;
-%feature("operator", spec3="b:-:sub:vvv:Vec3d:Vec3d:Vec3d") Spr::Vec3d;
-%feature("operator", spec4="b:*:mul:vsv:Vec3d:double:Vec3d") Spr::Vec3d;
-%feature("operator", spec5="b:*:mul:vvs:Vec3d:Vec3d:double") Spr::Vec3d;
-%feature("operator", spec6="b:/:div:vvs:Vec3d:Vec3d:double") Spr::Vec3d;
-%feature("operator", spec7="b:*:sprod:svv:double:Vec3d:Vec3d") Spr::Vec3d;
-%feature("operator", spec8="b:%:vprod1:vvv:Vec3d:Vec3d:Vec3d") Spr::Vec3d;
-%feature("operator", spec9="b:^:vprod2:vvv:Vec3d:Vec3d:Vec3d") Spr::Vec3d;
-%feature("operator", spec10="b:==:equ:svv:bool:Vec3d:Vec3d") Spr::Vec3d;
-%feature("operator", spec11="b:!=:neq:svv:bool:Vec3d:Vec3d") Spr::Vec3d;
-%feature("operator", spec0="9") Spr::Vec4f;
-%feature("operator", spec1="u:-:neg:vv") Spr::Vec4f;
-%feature("operator", spec2="b:+:add:vvv:Vec4f:Vec4f:Vec4f") Spr::Vec4f;
-%feature("operator", spec3="b:-:sub:vvv:Vec4f:Vec4f:Vec4f") Spr::Vec4f;
-%feature("operator", spec4="b:*:mul:vsv:Vec4f:float:Vec4f") Spr::Vec4f;
-%feature("operator", spec5="b:*:mul:vvs:Vec4f:Vec4f:float") Spr::Vec4f;
-%feature("operator", spec6="b:/:div:vvs:Vec4f:Vec4f:float") Spr::Vec4f;
-%feature("operator", spec7="b:*:sprod:svv:float:Vec4f:Vec4f") Spr::Vec4f;
-%feature("operator", spec8="b:==:equ:svv:bool:Vec4f:Vec4f") Spr::Vec4f;
-%feature("operator", spec9="b:!=:neq:svv:bool:Vec4f:Vec4f") Spr::Vec4f;
-%feature("operator", spec0="9") Spr::Vec4d;
-%feature("operator", spec1="u:-:neg:vv") Spr::Vec4d;
-%feature("operator", spec2="b:+:add:vvv:Vec4d:Vec4d:Vec4d") Spr::Vec4d;
-%feature("operator", spec3="b:-:sub:vvv:Vec4d:Vec4d:Vec4d") Spr::Vec4d;
-%feature("operator", spec4="b:*:mul:vsv:Vec4d:double:Vec4d") Spr::Vec4d;
-%feature("operator", spec5="b:*:mul:vvs:Vec4d:Vec4d:double") Spr::Vec4d;
-%feature("operator", spec6="b:/:div:vvs:Vec4d:Vec4d:double") Spr::Vec4d;
-%feature("operator", spec7="b:*:sprod:svv:double:Vec4d:Vec4d") Spr::Vec4d;
-%feature("operator", spec8="b:==:equ:svv:bool:Vec4d:Vec4d") Spr::Vec4d;
-%feature("operator", spec9="b:!=:neq:svv:bool:Vec4d:Vec4d") Spr::Vec4d;
-%feature("operator", spec0="11") Spr::Vec2i;
-%feature("operator", spec1="u:-:neg:vv") Spr::Vec2i;
-%feature("operator", spec2="b:+:add:vvv:Vec2i:Vec2i:Vec2i") Spr::Vec2i;
-%feature("operator", spec3="b:-:sub:vvv:Vec2i:Vec2i:Vec2i") Spr::Vec2i;
-%feature("operator", spec4="b:*:mul:vsv:Vec2i:int:Vec2i") Spr::Vec2i;
-%feature("operator", spec5="b:*:mul:vvs:Vec2i:Vec2i:int") Spr::Vec2i;
-%feature("operator", spec6="b:/:div:vvs:Vec2i:Vec2i:int") Spr::Vec2i;
-%feature("operator", spec7="b:*:sprod:svv:int:Vec2i:Vec2i") Spr::Vec2i;
-%feature("operator", spec8="b:%:vprod1:svv:int:Vec2i:Vec2i") Spr::Vec2i;
-%feature("operator", spec9="b:^:vprod2:svv:int:Vec2i:Vec2i") Spr::Vec2i;
-%feature("operator", spec10="b:==:equ:svv:bool:Vec2i:Vec2i") Spr::Vec2i;
-%feature("operator", spec11="b:!=:neq:svv:bool:Vec2i:Vec2i") Spr::Vec2i;
-%feature("operator", spec0="11") Spr::Vec3i;
-%feature("operator", spec1="u:-:neg:vv") Spr::Vec3i;
-%feature("operator", spec2="b:+:add:vvv:Vec3i:Vec3i:Vec3i") Spr::Vec3i;
-%feature("operator", spec3="b:-:sub:vvv:Vec3i:Vec3i:Vec3i") Spr::Vec3i;
-%feature("operator", spec4="b:*:mul:vsv:Vec3i:int:Vec3i") Spr::Vec3i;
-%feature("operator", spec5="b:*:mul:vvs:Vec3i:Vec3i:int") Spr::Vec3i;
-%feature("operator", spec6="b:/:div:vvs:Vec3i:Vec3i:int") Spr::Vec3i;
-%feature("operator", spec7="b:*:sprod:svv:int:Vec3i:Vec3i") Spr::Vec3i;
-%feature("operator", spec8="b:%:vprod1:vvv:Vec3i:Vec3i:Vec3i") Spr::Vec3i;
-%feature("operator", spec9="b:^:vprod2:vvv:Vec3i:Vec3i:Vec3i") Spr::Vec3i;
-%feature("operator", spec10="b:==:equ:svv:bool:Vec3i:Vec3i") Spr::Vec3i;
-%feature("operator", spec11="b:!=:neq:svv:bool:Vec3i:Vec3i") Spr::Vec3i;
-%feature("operator", spec0="9") Spr::Vec6d;
-%feature("operator", spec1="u:-:neg:vv") Spr::Vec6d;
-%feature("operator", spec2="b:+:add:vvv:Vec6d:Vec6d:Vec6d") Spr::Vec6d;
-%feature("operator", spec3="b:-:sub:vvv:Vec6d:Vec6d:Vec6d") Spr::Vec6d;
-%feature("operator", spec4="b:*:mul:vsv:Vec6d:double:Vec6d") Spr::Vec6d;
-%feature("operator", spec5="b:*:mul:vvs:Vec6d:Vec6d:double") Spr::Vec6d;
-%feature("operator", spec6="b:/:div:vvs:Vec6d:Vec6d:double") Spr::Vec6d;
-%feature("operator", spec7="b:*:sprod:svv:double:Vec6d:Vec6d") Spr::Vec6d;
-%feature("operator", spec8="b:==:equ:svv:bool:Vec6d:Vec6d") Spr::Vec6d;
-%feature("operator", spec9="b:!=:neq:svv:bool:Vec6d:Vec6d") Spr::Vec6d;
-%feature("operator", spec0="7") Spr::Matrix3f;
-%feature("operator", spec1="u:-:neg:mm") Spr::Matrix3f;
-%feature("operator", spec2="b:+:add:mmm:Matrix3f:Matrix3f:Matrix3f") Spr::Matrix3f;
-%feature("operator", spec3="b:-:sub:mmm:Matrix3f:Matrix3f:Matrix3f") Spr::Matrix3f;
-%feature("operator", spec4="b:*:mul:msm:Matrix3f:float:Matrix3f") Spr::Matrix3f;
-%feature("operator", spec5="b:*:mul:mms:Matrix3f:Matrix3f:float") Spr::Matrix3f;
-%feature("operator", spec6="b:*:prod:vmv:Vec3f:Matrix3f:Vec3f") Spr::Matrix3f;
-%feature("operator", spec7="b:*:prod:vvm:Vec3f:Vec3f:Matrix3f") Spr::Matrix3f;
-%feature("operator", spec0="7") Spr::Matrix3d;
-%feature("operator", spec1="u:-:neg:mm") Spr::Matrix3d;
-%feature("operator", spec2="b:+:add:mmm:Matrix3d:Matrix3d:Matrix3d") Spr::Matrix3d;
-%feature("operator", spec3="b:-:sub:mmm:Matrix3d:Matrix3d:Matrix3d") Spr::Matrix3d;
-%feature("operator", spec4="b:*:mul:msm:Matrix3d:double:Matrix3d") Spr::Matrix3d;
-%feature("operator", spec5="b:*:mul:mms:Matrix3d:Matrix3d:double") Spr::Matrix3d;
-%feature("operator", spec6="b:*:prod:vmv:Vec3d:Matrix3d:Vec3d") Spr::Matrix3d;
-%feature("operator", spec7="b:*:prod:vvm:Vec3d:Vec3d:Matrix3d") Spr::Matrix3d;
-%feature("operator", spec0="3") Spr::Quaternionf;
-%feature("operator", spec1="b:*:mul:qqq:Quaternionf:Quaternionf:Quaternionf") Spr::Quaternionf;
-%feature("operator", spec2="b:*:mul:vqv:Vec3f:Quaternionf:Vec3f") Spr::Quaternionf;
-%feature("operator", spec3="b:*:mul:mqm:Matrix3f:Quaternionf:Matrix3f") Spr::Quaternionf;
-%feature("operator", spec0="3") Spr::Quaterniond;
-%feature("operator", spec1="b:*:mul:qqq:Quaterniond:Quaterniond:Quaterniond") Spr::Quaterniond;
-%feature("operator", spec2="b:*:mul:vqv:Vec3d:Quaterniond:Vec3d") Spr::Quaterniond;
-%feature("operator", spec3="b:*:mul:mqm:Matrix3d:Quaterniond:Matrix3d") Spr::Quaterniond;
-%feature("operator", spec0="2") Spr::Posef;
-%feature("operator", spec1="b:*:mul:vpv:Vec3f:Posef:Vec3f") Spr::Posef;
-%feature("operator", spec2="b:*:mul:ppp:Posef:Posef:Posef") Spr::Posef;
-%feature("operator", spec0="2") Spr::Posed;
-%feature("operator", spec1="b:*:mul:vpv:Vec3d:Posed:Vec3d") Spr::Posed;
-%feature("operator", spec2="b:*:mul:ppp:Posed:Posed:Posed") Spr::Posed;
+
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        *,ECC: %,ECC: ^,ECC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec2f;
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        *,ECC: %,ECC: ^,ECC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec2d;
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        *,ECC: %,CCC: ^,CCC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec3f;
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        *,ECC: %,CCC: ^,CCC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec3d;
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        ==,SCC,,bool: !=,SCC,,bool") Spr::Vec4f;
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        ==,SCC,,bool: !=,SCC,,bool") Spr::Vec4d;
+
+%feature("operator", def="*,vCv:*,CCC:*,mCm") Spr::Quaternionf;
+%feature("operator", def="*,vCv:*,CCC:*,mCm") Spr::Quaterniond;
+%feature("operator", def="*,vCv:*,CCC") Spr::Posef;
+%feature("operator", def="*,vCv:*,CCC") Spr::Posed;
+
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        *,ECC: %,ECC: ^,ECC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec2i;
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        *,ECC: %,CCC: ^,CCC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec3i;
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        ==,SCC,,bool: !=,SCC,,bool") Spr::Vec4i;
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        ==,SCC,,bool: !=,SCC,,bool") Spr::Vec6f;
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
+        ==,SCC,,bool: !=,SCC,,bool") Spr::Vec6d;
+
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: *,vCv: *,vvC") Spr::Matrix3f;
+%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: *,vCv: *,vvC") Spr::Matrix3d;
 
 %feature("withfunc") Spr::Posed;
 %feature("withfunc") Spr::Vec3d;
