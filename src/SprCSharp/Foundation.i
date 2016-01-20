@@ -11,37 +11,45 @@
 
 %feature("struct") Spr::IfInfo;
 
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        *,ECC: %,ECC: ^,ECC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec2f;
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        *,ECC: %,ECC: ^,ECC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec2d;
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        *,ECC: %,CCC: ^,CCC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec3f;
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        *,ECC: %,CCC: ^,CCC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec3d;
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        ==,SCC,,bool: !=,SCC,,bool") Spr::Vec4f;
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        ==,SCC,,bool: !=,SCC,,bool") Spr::Vec4d;
+%feature("operator",
+        macro="UNARY    (-,CC)
+               BASIC_V  (+,CCC: -,CCC: *,CEC: *,CCE: /,CCE)
+               BASIC_M  (+,CCC: -,CCC: *,CEC: *,CCE)
+               S_PROD   (*,ECC)
+               V_PROD2  (%,ECC: ^,ECC)
+               V_PROD3  (%,CCC: ^,CCC)
+               Q_PROD   (*,vCv: *,CCC: *,mCm)
+               P_PROD   (*,vCv: *,CCC)
+               M_PROD   (*,vCv: *,vvC)
+               COMP     (==,SCC,,bool: !=,SCC,,bool)
 
-%feature("operator", def="*,vCv:*,CCC:*,mCm") Spr::Quaternionf;
-%feature("operator", def="*,vCv:*,CCC:*,mCm") Spr::Quaterniond;
-%feature("operator", def="*,vCv:*,CCC") Spr::Posef;
-%feature("operator", def="*,vCv:*,CCC") Spr::Posed;
+               VECTOR2_OPERATOR(UNARY: BASIC_V: S_PROD: V_PROD2: COMP)
+               VECTOR3_OPERATOR(UNARY: BASIC_V: S_PROD: V_PROD3: COMP)
+               VECTOR4_OPERATOR(UNARY: BASIC_V: COMP)
+               VECTOR6_OPERATOR(UNARY: BASIC_V: COMP)
+               MATRIX_OPERATION(UNARY: BASIC_M: M_PROD)
+");
 
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        *,ECC: %,ECC: ^,ECC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec2i;
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        *,ECC: %,CCC: ^,CCC: ==,SCC,,bool: !=,SCC,,bool") Spr::Vec3i;
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        ==,SCC,,bool: !=,SCC,,bool") Spr::Vec4i;
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        ==,SCC,,bool: !=,SCC,,bool") Spr::Vec6f;
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: /,CCE:
-        ==,SCC,,bool: !=,SCC,,bool") Spr::Vec6d;
+%feature("operator", def="VECTOR2_OPERATOR") Spr::Vec2f;
+%feature("operator", def="VECTOR2_OPERATOR") Spr::Vec2d;
+%feature("operator", def="VECTOR3_OPERATOR") Spr::Vec3f;
+%feature("operator", def="VECTOR3_OPERATOR") Spr::Vec3d;
+%feature("operator", def="VECTOR4_OPERATOR") Spr::Vec4f;
+%feature("operator", def="VECTOR4_OPERATOR") Spr::Vec4d;
 
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: *,vCv: *,vvC") Spr::Matrix3f;
-%feature("operator", def="-,CC: +,CCC: -,CCC: *,CEC: *,CCE: *,vCv: *,vvC") Spr::Matrix3d;
+%feature("operator", def="Q_PROD") Spr::Quaternionf;
+%feature("operator", def="Q_PROD") Spr::Quaterniond;
+%feature("operator", def="P_PROD") Spr::Posef;
+%feature("operator", def="P_PROD") Spr::Posed;
+
+%feature("operator", def="VECTOR2_OPERATOR") Spr::Vec2i;
+%feature("operator", def="VECTOR3_OPERATOR") Spr::Vec3i;
+%feature("operator", def="VECTOR4_OPERATOR") Spr::Vec4i;
+%feature("operator", def="VECTOR6_OPERATOR") Spr::Vec6f;
+%feature("operator", def="VECTOR6_OPERATOR") Spr::Vec6d;
+
+%feature("operator", def="MATRIX_OPERATION") Spr::Matrix3f;
+%feature("operator", def="MATRIX_OPERATION") Spr::Matrix3d;
 
 %feature("withfunc") Spr::Posed;
 %feature("withfunc") Spr::Vec3d;
