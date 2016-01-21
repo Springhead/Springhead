@@ -64,12 +64,14 @@
                P_PROD   (*,vCv: *,CCC)
                M_PROD   (*,vCv: *,vvC)
                COMP     (==,SCC,,bool: !=,SCC,,bool)
+               SUBS_V   ([],ES,,int)
+               SUBS_M   ([],vS,,int)
 
-               VECTOR2_OPERATOR(UNARY: BASIC_V: S_PROD: V_PROD2: COMP)
-               VECTOR3_OPERATOR(UNARY: BASIC_V: S_PROD: V_PROD3: COMP)
-               VECTOR4_OPERATOR(UNARY: BASIC_V: COMP)
-               VECTOR6_OPERATOR(UNARY: BASIC_V: COMP)
-               MATRIX_OPERATION(UNARY: BASIC_M: M_PROD)
+               VECTOR2_OPERATOR(UNARY: BASIC_V: S_PROD: V_PROD2: COMP: SUBS_V)
+               VECTOR3_OPERATOR(UNARY: BASIC_V: S_PROD: V_PROD3: COMP: SUBS_V)
+               VECTOR4_OPERATOR(UNARY: BASIC_V: COMP: SUBS_V)
+               VECTOR6_OPERATOR(UNARY: BASIC_V: COMP: SUBS_V)
+               MATRIX_OPERATION(UNARY: BASIC_M: M_PROD: SUBS_M)
 ");
 
 %feature("operator", def="VECTOR2_OPERATOR") Spr::Vec2f;
