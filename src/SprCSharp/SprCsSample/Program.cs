@@ -318,7 +318,7 @@ namespace SprCsSample {
             Vec3f qvs = new Vec3f(54f, 60f, 78f);
             Matrix3f qmt = new Matrix3f(150f, 156f, 162f, 120f, 150f, 180, 150f, 192f, 234f);
             put("quaternion binary *", show_quaternion(qr), show_quaternion(q1 * q2));
-            put("quaternion binary *", show_vector(qvs), show_vector(q1 * qv1));
+            put("quaternion binary *", show_vector_0(qvs), show_vector_0(q1 * qv1));
             put("quaternion binary *", show_matrix(qmt), show_matrix(q1 * qm1));
 
 	    // TPose
@@ -328,11 +328,33 @@ namespace SprCsSample {
             Posef pr1 = new Posef(-36.0f, 12.0f, 42.0f, 24.0f, -25.0f, 66.0f, 97.0f);
             put("pose binary *", show_pose(pr1), show_pose(pp1 * pp2));
             put("pose binary *", "(59, 66, 85)", (pp1 * pv1));
+
+	    // indexing
+            System.Console.WriteLine("");
+            Vec3f v31 = new Vec3f(0.1f, 0.2f, 0.3f);
+            Vec3f v32 = new Vec3f(1.0f, 1.0f, 1.0f);
+            Vec3f v3e = v31 + v32;
+            for (int i = 0; i < 3; i++) { v31[i] += v32[i]; }
+            put("indexing []", show_vector_0(v3e), show_vector_0(v31));
+
+            Matrix3f m31 = new Matrix3f(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f);
+            Matrix3f m32 = new Matrix3f(1.0f, 1.0f, 1.0f, 2.0f, 2.0f, 2.0f, 3.0f, 3.0f, 3.0f);
+            Matrix3f m3e = m31 + m32;
+            put("indexing [] ref", "(0.1, 0.2, 0.3)", show_vector_0(m31[0]));
+            put("            ref", "(0.4, 0.5, 0.6)", show_vector_0(m31[1]));
+            put("            ref", "(0.7, 0.8, 0.9)", show_vector_0(m31[2]));
+            for (int i = 0; i < 3; i++) { m31[i] += v32; }
+            for (int i = 1; i < 3; i++) { m31[i] += v32; }
+            for (int i = 2; i < 3; i++) { m31[i] += v32; }
+            put("indexing [] set", show_matrix(m3e), show_matrix(m31));
 	}
 
 	static string show_vector(Vec3f v) {
-            string str = "\n"
-                       + "(( " + v.x + ",  " + v.y + ",  " + v.z + " ))\n";
+            string str = "\n" + show_vector_0(v) + "\n";
+            return str;
+	}
+	static string show_vector_0(Vec3f v) {
+            string str = "( " + v.x + ",  " + v.y + ",  " + v.z + " )";
             return str;
 	}
 	static string show_matrix(Matrix3f m) {
