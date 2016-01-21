@@ -11,6 +11,48 @@
 
 %feature("struct") Spr::IfInfo;
 
+#ifdef  DESCRIPTION
+// HOW TO DEFINE CLASS OPERATOR.
+//      Operators are defined using '%feature' facility of swig.
+//        %feature("operator", def="<op-spec-list>");
+//      Definition may accross several lines (spaces, tabs and new-lines are ignored).
+//
+//      <op-spec-list>          a ':' separated list of { <op-spec> | <op-macro> }
+//      <op-spec>               <op-sym>,<type-cat>[,[<func-name>][,<type>[,<type>]]]
+//      <op-sym>                operator symbol
+//      <type-cat>              Two or three letters indicating type category.
+//                                1st letter  type category of operation result
+//                                2nd letter  type category of 1st operand
+//                                3rd letter  type category of 2nd operand if exist
+//                              Type category letter is one of follows.
+//                              　C  indicates this class (defining the operator)
+//                              　E  indicates the element type of this class
+//                              　v  indicates Vec** class
+//                              　m  indicates Matrix** class
+//                              　q  indicates Quaternion* class
+//                              　p  indicates Pose* class
+//                              　S  indicates scalar type
+//                                     type itself is specifeid in <type> field
+//                              　O  indicates other class
+//                                     specify name of that class in <type> field
+//      <func-name>             name part assigning to interface function (optional).
+//                                should be unique in combination with <type-cat>
+//      <type>                  Class name or scalar type name
+//                                if S or O appeares in <type-cat> field N times,
+//                                <type> should be specified N times in thar order.
+//      <op-macro>              operator macro
+//
+// HOW TO DEFINE OPERATOR MACRO.
+//      Operator macros are also defined using '%feature' facility of swig.
+//        %feature("operator", macro="<macro-list>");
+//      Definition may accross several lines (spaces, tabs and new-lines are ignored).
+//      Other macro names may be referred in dfining macro.
+//
+//      <op-macro>              a list of <macro-name>(<op-spec-list>)
+//      <macro-name>            name assigned to this macro
+//      <op-spec-list>          see above
+#endif
+
 %feature("operator",
         macro="UNARY    (-,CC)
                BASIC_V  (+,CCC: -,CCC: *,CEC: *,CCE: /,CCE)
@@ -36,18 +78,15 @@
 %feature("operator", def="VECTOR3_OPERATOR") Spr::Vec3d;
 %feature("operator", def="VECTOR4_OPERATOR") Spr::Vec4f;
 %feature("operator", def="VECTOR4_OPERATOR") Spr::Vec4d;
-
 %feature("operator", def="Q_PROD") Spr::Quaternionf;
 %feature("operator", def="Q_PROD") Spr::Quaterniond;
 %feature("operator", def="P_PROD") Spr::Posef;
 %feature("operator", def="P_PROD") Spr::Posed;
-
 %feature("operator", def="VECTOR2_OPERATOR") Spr::Vec2i;
 %feature("operator", def="VECTOR3_OPERATOR") Spr::Vec3i;
 %feature("operator", def="VECTOR4_OPERATOR") Spr::Vec4i;
 %feature("operator", def="VECTOR6_OPERATOR") Spr::Vec6f;
 %feature("operator", def="VECTOR6_OPERATOR") Spr::Vec6d;
-
 %feature("operator", def="MATRIX_OPERATION") Spr::Matrix3f;
 %feature("operator", def="MATRIX_OPERATION") Spr::Matrix3d;
 
