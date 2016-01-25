@@ -13,9 +13,12 @@ namespace Spr{
 		opIterationTime = 1;
 		subStepProFix = true;
 		noCtcItrNum = 0;
+		opAnimator = new PHOpAnimation();
+		//opAnimator->intial(this);
 
 		logForce = false;
 		useHaptic = false;
+		useAnime = false;
 	}
 	void PHOpEngine::InitialNoMeshHapticRenderer(HISdkIf* hisdk)
 	{
@@ -26,7 +29,7 @@ namespace Spr{
 		//opObjs.push_back(myHc->hcObj);
 
 		myHc->hcType = PHOpHapticControllerDesc::_3DOF;
-		
+
 		opHpRender->initial3DOFRenderer(myHc, &opObjs);
 
 		//set defualt c_obstacle
@@ -36,6 +39,7 @@ namespace Spr{
 	{
 		return opObjs[i];
 	}
+
 	/*ObjectIf* PHOpEngine:: GetHapticController()
 	{
 	return myHc->Cast();
@@ -50,13 +54,25 @@ namespace Spr{
 	{
 		opHpRender = new PHOpHapticRenderer();
 		myHc = new PHOpHapticController();
-		myHc->InitialHapticController(opObjs[objId]->Cast(),hisdk);
+		myHc->InitialHapticController(opObjs[objId]->Cast(), hisdk);
 		opHpRender->initial6DOFRenderer(myHc, &opObjs);
-		
+
 		myHc->hcType = PHOpHapticControllerDesc::_6DOF;
 
 		//set c_obstacle
 		myHc->c_obstRadius = opObjs[objId]->objAverRadius / 6;
+	}
+	void  PHOpEngine::SetIterationCount(int count)
+	{
+		opIterationTime = count;
+	}
+	int  PHOpEngine::GetIterationCount()
+	{
+		return opIterationTime;
+	}
+	ObjectIf*  PHOpEngine::GetOpAnimator()
+	{
+		return opAnimator->Cast();
 	}
 	ObjectIf*  PHOpEngine::GetOpHapticController()
 	{
@@ -91,6 +107,14 @@ namespace Spr{
 	bool PHOpEngine::IsHapticSolve()
 	{
 		return subStepProSolve;
+	}
+	void  PHOpEngine::SetDrawPtclR(float r)
+	{
+		radiusCoe = r;
+	}
+	bool  PHOpEngine::GetDrawPtclR()
+	{
+		return radiusCoe;
 	}
 	void PHOpEngine::SetHapticSolveEnable(bool enable)
 	{
@@ -130,6 +154,14 @@ namespace Spr{
 	bool PHOpEngine::IsUpdateNormal(int obji)
 	{
 		return opObjs[obji]->updateNormals;
+	}
+	void PHOpEngine::SetAnimationFlag(bool flag)
+	{
+		useAnime = flag;
+	}
+	bool PHOpEngine::GetAnimationFlag()
+	{
+		return useAnime;
 	}
 	void PHOpEngine::Step(){
 		/*for (int obji = 0; obji < (int) opObjs.size(); obji++)
@@ -180,7 +212,8 @@ namespace Spr{
 						PHOpParticle &dp = opObjs[myHc->GetHpObjIndex()]->objPArr[pi];
 
 						dp.pNewCtr = myHc->userPose *dp.pOrigCtr;
-						dp.pNewOrint = myHc->userPose.Ori() * dp.pOrigOrint;
+						dp.pNewOrint = myHc->userPose.Ori().Inv() * dp.pOrigOrint;
+						//dp.pCurrOrint = dp.pNewOrint;
 						dp.pCurrCtr = dp.pNewCtr;
 					}
 				}
@@ -188,60 +221,84 @@ namespace Spr{
 
 		}
 
-		for (int obji = 0; obji < (int)opObjs.size(); obji++)
+		//animation
+		if (useAnime)
+			opAnimator->AnimationStep(this);
+
+
+		//collision
+		//for (int obji = 0; obji < (int)opObjs.size(); obji++)
 		{
-			if (opObjs[obji]->objNoMeshObj)
-				continue;
-			//collision
-			if (agent->IsCollisionEnabled())
-			{
+			
+				if (agent->IsCollisionEnabled())
+				{
 				agent->OpCollisionProcedure();
 
-			}
+				}
 		}
-		
-			for (int itri = 0; itri < opIterationTime; itri++)//iteration default is 1
+
+		for (int itri = 0; itri < opIterationTime; itri++)//iteration default is 1
+		{
+			for (int obji = 0; obji < (int)opObjs.size(); obji++)
 			{
-				for (int obji = 0; obji < (int)opObjs.size(); obji++)
-				{
-					if (opObjs[obji]->objNoMeshObj)
-						continue;
+				if (opObjs[obji]->objNoMeshObj)
+					continue;
 
-					//deform
-					opObjs[obji]->groupStep();
+				//deform
+				opObjs[obji]->groupStep();
+			}
+
+			//haptic
+			if (useHaptic)
+			{
+				if (myHc->hcType == PHOpHapticControllerDesc::_3DOF)
+				{//3DOF
+
+					if (myHc->hcReady)
+						HapticProcedure_3DOF();
+					else DSTR << "Haptic Device is not ready" << std::endl;
+				}
+				else
+				{//6DOF
+
+					if (myHc->hcReady)
+						HapticProcedure_6DOF();
+					else DSTR << "Haptic Device is not ready" << std::endl;
 				}
 
-				//haptic
-				if (useHaptic)
-				{
-					if (myHc->hcType == PHOpHapticControllerDesc::_3DOF)
-					{//3DOF
-					
-						if (myHc->hcReady)
-							HapticProcedure_3DOF();
-						else DSTR << "Haptic Device is not ready" << std::endl;
-					}
-					else
-					{//6DOF
-
-						if (myHc->hcReady)
-							HapticProcedure_6DOF();
-						else DSTR << "Haptic Device is not ready" << std::endl;
-					}
-
-					
-				}
 
 			}
+
+		}
+
+		if (useAnime)
+			opAnimator->AnimationIntergration(this);
+
+		//intergration
 		for (int obji = 0; obji < (int)opObjs.size(); obji++)
 		{
 			if (opObjs[obji]->objNoMeshObj)
 				continue;
 
-			//	if (!opObjs[obji]->isRigid)
-				{
-					opObjs[obji]->integrationStep();
+			if (useHaptic)
+			{
+				if (!myHc->hcType == PHOpHapticControllerDesc::_3DOF)
+				{//6DOF
+
+					for (int pi = 0; pi < opObjs[myHc->GetHpObjIndex()]->assPsNum; pi++)
+					{
+						PHOpParticle &dp = opObjs[myHc->GetHpObjIndex()]->objPArr[pi];
+
+						if (opHpRender->IsRigid())
+							dp.pNewCtr = dp.pCurrCtr;
+					}
 				}
+			}
+
+			//if (!opObjs[obji]->isRigid)
+			{
+				opObjs[obji]->integrationStep();
+			}
 
 		}
 	}
@@ -261,7 +318,7 @@ namespace Spr{
 
 	void PHOpEngine::HapticProcedure_6DOF()
 	{
-		
+
 		Vec3f diffAcc;
 
 		for (int pi = 0; pi < opObjs[myHc->GetHpObjIndex()]->assPsNum; pi++)
@@ -273,8 +330,7 @@ namespace Spr{
 			//if (dp.isColliedSphashSolved)
 			diffAcc += -(diff - dp.pNewCtr);
 
-			if (opHpRender->IsRigid())
-			dp.pNewCtr = dp.pCurrCtr;
+			
 			//dp.pColliedForce += (diff - dp.pNewCtr)* constraintSpring;
 		}
 		//myHc->positionPredict();
@@ -297,7 +353,7 @@ namespace Spr{
 	}
 	void PHOpEngine::HapticProcedure_3DOF()
 	{
-		
+
 		;
 		PHOpParticle* dp = myHc->GetMyHpProxyParticle();
 		if (!myHc->CheckProxyState())
@@ -335,7 +391,7 @@ namespace Spr{
 #endif
 		if (subStepProSolve)
 		{
-			
+
 			//haptic‰ðŒˆ
 			opHpRender->HpConstrainSolve(dp->pCurrCtr);
 			//HpConstrainSolve();
@@ -349,7 +405,7 @@ namespace Spr{
 		PHOpObj *dpobj = opObjs[0];
 		float timeStep = dpobj->params.timeStep;
 
-		dp->pVelocity = (myHc->userPos - dp->pNewCtr) /timeStep;
+		dp->pVelocity = (myHc->userPos - dp->pNewCtr) / timeStep;
 
 		//•½–Ê‚Æ‚Ìhaptic
 		opHpRender->ProxySlvPlane();
@@ -405,7 +461,7 @@ namespace Spr{
 		opObj->objId = objidIndex;
 		objidIndex++;
 		opObjs.push_back(opObj);
-		
+
 		return  opObj->objId;
 	}
 	PHOpObjIf* PHOpEngine::GetOpObjIf(int obji)
@@ -422,18 +478,18 @@ namespace Spr{
 			objidIndex++;
 			return true;
 		}
-		
+
 		return false;
 	}
 	bool PHOpEngine::DelChildObject(ObjectIf* o)
 	{//not test yet
-		
+
 		PHOpObj* opObj = o->Cast();
 		if (opObj){
 			//this->opObjs.push_back(opObj);
 			std::vector<PHOpObj*>::iterator it;
 			it = opObjs.begin();
-			for (int obji = 0; obji < (int) opObjs.size(); obji++)
+			for (int obji = 0; obji < (int)opObjs.size(); obji++)
 			{
 				if (opObjs[obji]->objId == opObj->objId)
 				{
@@ -445,11 +501,11 @@ namespace Spr{
 					++it;
 				}
 			}
-		
-		
+
+
 		}
 
 		return false;
 	}
-	
+
 }

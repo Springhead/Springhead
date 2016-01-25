@@ -70,12 +70,7 @@ public :
 	
 	//一時的の頂点index
 	std::vector<int> pVertTempInd;
-	//現在向き
-	TQuaternion<float> pCurrOrint;
-	//初期向き
-	TQuaternion<float> pOrigOrint;
-	//予測向き
-	TQuaternion<float> pNewOrint;
+	
 	
 	//projection from vertices(local index) to faces (targetMesh index)
 

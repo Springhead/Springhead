@@ -10,6 +10,8 @@
 #include "Physics\PHEngine.h"
 #include "Physics\PHOpObj.h"
 #include "Physics\PHOpHapticRenderer.h"
+#include "Physics\PHOpAnimation.h"
+
 
 namespace Spr{
 	;
@@ -150,6 +152,7 @@ namespace Spr{
 		float radiusCoe;
 		//‘È‰~•`‰æ‚·‚é—p
 		DrawEllipsoid drawEll;
+		PHOpAnimation* opAnimator;
 
 		int opIterationTime;
 
@@ -158,6 +161,7 @@ namespace Spr{
 		bool subStepProFix;
 		bool subStepProSolve;
 		bool logForce;
+		bool useAnime;
 
 		//proxy
 		int noCtcItrNum;
@@ -172,6 +176,8 @@ namespace Spr{
 			return SGBP_NONE;
 			//return SGBP_FORCEGENERATOR;
 		}//SGBP_DYNAMICALSYSTEM;}
+		void SetIterationCount(int count);
+		int GetIterationCount();
 		void Step();
 
 		void SetGravity(bool gflag);
@@ -200,10 +206,13 @@ namespace Spr{
 
 		ObjectIf* GetOpHapticController();
 		ObjectIf* GetOpHapticRenderer();
-
+		ObjectIf* GetOpAnimator();
 		void SetUpdateNormal(bool flag);
 		bool IsUpdateNormal(int obji);
-
+		void SetAnimationFlag(bool flag);
+		bool GetAnimationFlag();
+		void SetDrawPtclR(float r);
+		bool GetDrawPtclR();
 
 		void SetCurrentCameraOritation(TQuaternion<float> orit);
 		TQuaternion<float> GetCurrentCameraOrientation();

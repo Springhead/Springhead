@@ -273,11 +273,20 @@ struct PHOpParticleDesc {
 	Matrix3f pInverseOfMomentInertia;
 	//頂点の主成分分析PCAによる楕円の向き行列
 	Matrix3f ellipRotMatrix;
+	//粒子固有向き、ellipRotMatrixから
+	Quaternionf ellipOrigOrint;
 	//粒子角速度
 	Vec3f pWvel;//角速度、長さは速度の大きさ、方向は速度の方向
 	//used to precalculation in Collision Detection;
 	Matrix3f pPreEllipA;
 
+	//現在向き
+	Quaternionf pCurrOrint;
+	//初期向き
+	Quaternionf pOrigOrint;
+	//予測向き
+	Quaternionf pNewOrint;
+	
 
 };
 struct PHOpGroupDesc {
@@ -418,6 +427,35 @@ struct PHOpHapticRendererIf : public SceneObjectIf{
 	void SetRigid(bool set);
 	bool IsRigid();
 };
+
+struct PHOpAnimationDesc  {
+
+	struct OpAnimationStruct
+	{
+		int animatedPindex;
+		int animatedObjindex;
+		int animatedType;
+		int animatedHoldtimes;
+
+		Vec3f animatedForces;
+		Vec3f animatedPStarts;
+		Vec3f animatedPEnds;
+
+	};
+	float timestep;
+};
+struct PHOpAnimationIf :public  SceneObjectIf, public PHOpAnimationDesc{
+	SPR_IFDEF(PHOpAnimation);
+	//struct OpAnimationStruct;
+
+	void AddAnimationP(int objIndex, int pIndex, Vec3f start, Vec3f end, float totalTime);
+	void AddAnimationP(int objIndex, int pIndex, Vec3f force, float totalTime);
+	//OpAnimationStruct* GetAnimeInfo(int animeindex);
+	void AnimationStep(void* opEngine);
+	void AnimationIntergration(void* opEngine);
+	
+};
+
 
 //struct PHOpHapticHandler : ObjectIf{
 //public:

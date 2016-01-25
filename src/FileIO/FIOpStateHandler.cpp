@@ -145,6 +145,8 @@ namespace Spr
 			fprintf(f, "%f %f %f  %f %f %f  %f %f %f\n", dfobj.objPArr[i].dotCoeffMatrix.xx, dfobj.objPArr[i].dotCoeffMatrix.xy, dfobj.objPArr[i].dotCoeffMatrix.xz, dfobj.objPArr[i].dotCoeffMatrix.yx, dfobj.objPArr[i].dotCoeffMatrix.yy, dfobj.objPArr[i].dotCoeffMatrix.yz, dfobj.objPArr[i].dotCoeffMatrix.zx, dfobj.objPArr[i].dotCoeffMatrix.zy, dfobj.objPArr[i].dotCoeffMatrix.zz);
 			fprintf(f, "ellipRotMatrix\n");
 			fprintf(f, "%f %f %f  %f %f %f  %f %f %f\n", dfobj.objPArr[i].ellipRotMatrix.xx, dfobj.objPArr[i].ellipRotMatrix.xy, dfobj.objPArr[i].ellipRotMatrix.xz, dfobj.objPArr[i].ellipRotMatrix.yx, dfobj.objPArr[i].ellipRotMatrix.yy, dfobj.objPArr[i].ellipRotMatrix.yz, dfobj.objPArr[i].ellipRotMatrix.zx, dfobj.objPArr[i].ellipRotMatrix.zy, dfobj.objPArr[i].ellipRotMatrix.zz);
+			fprintf(f, "ellipOrigOrint\n");
+			fprintf(f, "%f %f %f %f\n", dfobj.objPArr[i].ellipOrigOrint.x, dfobj.objPArr[i].ellipOrigOrint.y, dfobj.objPArr[i].ellipOrigOrint.z, dfobj.objPArr[i].ellipOrigOrint.w);
 
 			fprintf(f, "pMyGroupInd\n");
 			fprintf(f, "%i\n", dfobj.objPArr[i].pMyGroupInd);
@@ -187,7 +189,7 @@ namespace Spr
 			for (int k = 0; k< dfobj.objPArr[j].pNvertex; k++)
 			{
 				int vertind = dfobj.objPArr[j].pVertArr[k];
-				for (int jm = 1; jm < gpSize; jm++)
+				for (int jm = 0; jm < gpSize; jm++)
 				{
 					fprintf(f, "%f\n", dfobj.objBlWeightArr[vertind][jm]);
 				}
@@ -411,6 +413,8 @@ namespace Spr
 		fgets(s, len, f); sscanf_s(s, "%f %f %f  %f %f %f  %f %f %f", &dfobj.objPArr[i].dotCoeffMatrix.xx, &dfobj.objPArr[i].dotCoeffMatrix.xy, &dfobj.objPArr[i].dotCoeffMatrix.xz, &dfobj.objPArr[i].dotCoeffMatrix.yx, &dfobj.objPArr[i].dotCoeffMatrix.yy, &dfobj.objPArr[i].dotCoeffMatrix.yz, &dfobj.objPArr[i].dotCoeffMatrix.zx, &dfobj.objPArr[i].dotCoeffMatrix.zy, &dfobj.objPArr[i].dotCoeffMatrix.zz);
 		fgets(s, len, f);
 		fgets(s, len, f); sscanf_s(s, "%f %f %f  %f %f %f  %f %f %f", &dfobj.objPArr[i].ellipRotMatrix.xx, &dfobj.objPArr[i].ellipRotMatrix.xy, &dfobj.objPArr[i].ellipRotMatrix.xz, &dfobj.objPArr[i].ellipRotMatrix.yx, &dfobj.objPArr[i].ellipRotMatrix.yy, &dfobj.objPArr[i].ellipRotMatrix.yz, &dfobj.objPArr[i].ellipRotMatrix.zx, &dfobj.objPArr[i].ellipRotMatrix.zy, &dfobj.objPArr[i].ellipRotMatrix.zz);
+		fgets(s, len, f);
+		fgets(s, len, f); sscanf_s(s, "%f %f %f %f", &dfobj.objPArr[i].ellipOrigOrint.x, &dfobj.objPArr[i].ellipOrigOrint.y, &dfobj.objPArr[i].ellipOrigOrint.z, &dfobj.objPArr[i].ellipOrigOrint.w);
 
 
 		fgets(s, len, f);
@@ -477,7 +481,7 @@ namespace Spr
 		for (int k = 0; k< dfobj.objPArr[j].pNvertex; k++)
 		{
 			int vertind = dfobj.objPArr[j].pVertArr[k];
-			for (int jm = 1; jm < gpSize; jm++)
+			for (int jm = 0; jm < gpSize; jm++)
 			{
 				fgets(s, len, f);
 				sscanf_s(s, "%f", &dfobj.objBlWeightArr[vertind][jm]);
