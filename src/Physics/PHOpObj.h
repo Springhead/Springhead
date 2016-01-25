@@ -13,6 +13,7 @@
 //#include "PHOpObjOpEngine.h"
 #include <Physics/PHOpDecompositionMethods.h>
 
+
 #define GROUP_DISTANCE
 
 using namespace PTM;
@@ -875,7 +876,7 @@ namespace Spr{
 			//build linear blend skin weight
 
 			int size = 0;
-			if (objType>0)
+			if (objNoMeshObj)
 			{
 				objBlWeightArr = new float*[1];
 				objBlWeightArr[0] = new float[1];

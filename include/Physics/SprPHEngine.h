@@ -8,7 +8,6 @@
 #ifndef SPR_PHENGINEIF_H
 #define SPR_PHENGINEIF_H
 
-
 #include <Foundation/SprObject.h>
 #include <Physics\SprPHOpObj.h>
 
@@ -222,9 +221,15 @@ public:
 	PHOpObjIf* GetOpObjIf(int obji);
 	int GetOpObjNum();
 
+	ObjectIf* GetOpAnimator();
 	ObjectIf* GetOpHapticController();
 	ObjectIf* GetOpHapticRenderer();
-	
+	void SetIterationCount(int count);
+	int GetIterationCount();
+	void SetAnimationFlag(bool flag);
+	bool GetAnimationFlag();
+	void SetDrawPtclR(float r);
+	bool GetDrawPtclR();
 	void InitialNoMeshHapticRenderer(HISdkIf* hisdk);
 	//void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ);
 };

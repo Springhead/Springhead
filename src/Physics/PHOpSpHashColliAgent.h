@@ -16,6 +16,7 @@ struct solvedColliPair{
 };
 
 class PHOpSpHashColliAgent: public SceneObject, public PHOpSpHashColliAgentDesc{
+public :
 	SPR_OBJECTDEF(PHOpSpHashColliAgent);
 
 
@@ -26,10 +27,13 @@ class PHOpSpHashColliAgent: public SceneObject, public PHOpSpHashColliAgentDesc{
 	int objNum;
 	int timeStamp;
 
+	
 	bool enableCollision;
 	
 	std::vector<Vec3f> pPCtcPs;
 	std::vector<Vec3f> pPCtcPs2;
+	std::vector<Vec3f> pPCtcPs3;
+	std::vector<Vec3f> pPCtcPs4;
 	std::vector<Vec3f> PlanePosList;
 	std::vector<Vec3f> PlaneNorList;
 
@@ -50,11 +54,17 @@ class PHOpSpHashColliAgent: public SceneObject, public PHOpSpHashColliAgentDesc{
 		SetScene(s);
 	}
 
+	Vec3f GetFirContactPosition(int firId);
+	Vec3f GetSecContactPosition(int secId);
+
 	void EnableCollisionDetection(bool able = true);
 	void Initial(float cellSize, Bounds  bounds);
+	void SetDebugMode(bool flag);
+	bool GetDebugMode();
 	bool IsCollisionEnabled();
-	
-
+	void OpDirCollision();
+	void SetIsDirCollision(bool flag);
+	bool GetIsDirCollision();
 	void AddContactPlane(Vec3f planeP, Vec3f planeN);
 	void ClearDebugData();
 	void UpdateSceneInfo();
@@ -65,7 +75,8 @@ class PHOpSpHashColliAgent: public SceneObject, public PHOpSpHashColliAgentDesc{
 	void spHashColliContact(int objIndex1, int ptclindex1, int objIndex2, int ptclindex2, Vec3f &linkVec);
 	void EllipColliInit();
 	void pctlColliSolve(int objIndex1, int ptclindex1, int objIndex2, int ptclindex2, Vec3f &ctc1, Vec3f &ctc2);
-	Vec3f getCtcP_PvP(Vec3f &vectorN, Matrix3f &ellipA1tmp, Matrix3f &ellipA2tmp);
+	Vec3f getCtcP_PvP(Vec3f &vectorN, Matrix3f &ellipA1tmp, Matrix3f &ellipA2tmp, float &d, float& lamdaP);
+	//Vec3f getConterCtcP_PvP(Vec3f &vectorN, Matrix3f &ellipA1tmp, Matrix3f &ellipA2tmp);
 
 };
 

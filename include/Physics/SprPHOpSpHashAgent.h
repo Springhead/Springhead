@@ -17,7 +17,7 @@ namespace Spr{;
 
 
 struct PHOpSpHashColliAgentDesc{
-
+	bool useDirColli;
 };
 
 struct PHOpSpHashColliAgentIf: public ObjectIf{
@@ -26,10 +26,14 @@ struct PHOpSpHashColliAgentIf: public ObjectIf{
 	void Initial(float cellSize, Bounds bounds);
 	void OpCollisionProcedure(int myTimeStamp);
 	void OpCollisionProcedure();
+	void OpDirCollision();
 	
 	void AddContactPlane(Vec3f planeP, Vec3f planeN);
 	bool IsCollisionEnabled();
-
+	void SetIsDirCollision(bool flag);
+	bool GetIsDirCollision();
+	void SetDebugMode(bool flag);
+	bool GetDebugMode();
 };
 
 

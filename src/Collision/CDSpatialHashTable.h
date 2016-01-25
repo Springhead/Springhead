@@ -174,7 +174,7 @@ public:
 	};
 
 
-class CDSpatialHashTable: public Object
+class CDSpatialHashTable: public NamedObject
 {
 	SPR_OBJECTDEF(CDSpatialHashTable);
 

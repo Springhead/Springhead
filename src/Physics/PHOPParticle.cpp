@@ -229,6 +229,7 @@ void PHOpParticle::buildEllipRadius(Vec3f *mPos)
 		
 		ellAff.LookAt(pThrRadiusVec,pSecRadiusVec);
 		ellipRotMatrix = ellAff.Rot();
+		ellipOrigOrint.FromMatrix(ellipRotMatrix);
 		int y=0;
 
 		return;
