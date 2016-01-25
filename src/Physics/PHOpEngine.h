@@ -212,7 +212,7 @@ namespace Spr{
 		void SetAnimationFlag(bool flag);
 		bool GetAnimationFlag();
 		void SetDrawPtclR(float r);
-		bool GetDrawPtclR();
+		float GetDrawPtclR();
 
 		void SetCurrentCameraOritation(TQuaternion<float> orit);
 		TQuaternion<float> GetCurrentCameraOrientation();

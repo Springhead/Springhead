@@ -112,7 +112,7 @@ namespace Spr{
 	{
 		radiusCoe = r;
 	}
-	bool  PHOpEngine::GetDrawPtclR()
+	float  PHOpEngine::GetDrawPtclR()
 	{
 		return radiusCoe;
 	}

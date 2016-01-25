@@ -28,6 +28,7 @@
 #ifndef PHOPDEMO_H						// ヘッダファイルを作る時のおまじない
 #define PHOPDEMO_H						// 同上
 
+
 #include <Springhead.h>								// SpringheadのAPIを使うためのヘッダファイル
 #include "Framework/SprFWApp.h"						// Frameworkクラスが宣言されているヘッダファイル
 
@@ -61,6 +62,7 @@ public:
 	bool OnMouseMove(int button, int x, int y, int zdelta);
 	void MouseButton(int button, int state, int x, int y);
 	bool OnMouse(int button, int state, int x, int y);
+	void SaveTstPPos(char *filename, int pi, Vec3f Pos);
 
 	GRRenderIf* render;
 
@@ -69,6 +71,8 @@ public:
 	bool gravity;
 	bool DrawHelpInfo;
 	bool drawlink;
+	bool drawVertex;
+	bool recordingPos;
 
 	//Mouse control
 	float recX,recY;
@@ -106,12 +110,20 @@ public:
 	//opのTimerId
 	int opSimuTimerId;
 
-
+	bool useAnime;
+	bool drawCtcP;
+	bool runByStep;
 
 	//OpFileStateStore
 	FIOpStateHandlerIf* fileOp;
 	//stateFileVersion
 	float fileVersion;
-}; 
 
-#endif
+	float radiusCoe;
+
+	void* dp;
+	PHOpParticleDesc* dpAdd;
+	PHOpHapticRendererDesc* opHrDesc;
+	PHOpAnimationIf* opAnimator;
+}; 
+#endif 
