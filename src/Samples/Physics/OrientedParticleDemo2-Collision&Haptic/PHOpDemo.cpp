@@ -7,18 +7,31 @@
  */
 
 #include "PHOpDemo.h"
+#include "Physics\PHOpSpHashColliAgent.h"
+#include "Physics\PHOpEngine.h"
 
 
 #define USE_SPRFILE
 #define ESC 27
 #define USE_AVG_RADIUS
-//#define COLLISION_DEMO
+#define COLLISION_DEMO
 
 #ifndef COLLISION_DEMO
 #define HAPTIC_DEMO
 #endif
 
+#ifdef HAPTIC_DEMO
+//#define _3DOF
+
+#ifndef _3DOF
+#define _6DOF
+#endif
+
+#endif
+
 using namespace std;
+
+int hapticObjId;
 
 PHOpDemo::PHOpDemo(){
 #ifdef COLLISION_DEMO
@@ -29,9 +42,10 @@ PHOpDemo::PHOpDemo(){
 //	fileName = "./files/sceneSample.spr";
 
 	gravity = false;
+	drawVertex = false;
 	drawPs = false;
 	//fileOp = new FIOpStateHandlerIf();
-	fileVersion = 2.0f;
+	fileVersion = 2.1f;
 }
 
 void PHOpDemo::Init(int argc, char* argv[]){
@@ -48,45 +62,60 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	GetSdk()->GetScene()->EnableRenderAxis(true);		// 座標軸の表示
 	GetSdk()->GetScene()->EnableRenderContact(true);	// 接触領域の表示
 
+	HISdkIf* hisdk = GetSdk()->GetHISdk();
+	int U = 0;
+
+	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+	for (int obji = 0; obji< (int)opEngine->GetOpObjNum(); obji++)
+	{
+		opEngine->GetOpObjIf(obji)->SetDefaultLinkNum(10);
+
+
+	}
+
 	//initial op objects
 	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
+//#ifdef _3DOF
 	tmp->CreateOpObj();
+//#endif
 	
 	
+//#ifdef HAPTIC_DEMO
+//	//initial for haptic
+//	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+//	
+//	int objid;
+//	
+//	hapticObjId = opEngine->AddOpObj();
+//	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
+//	Vec3f* vArr;
+//	vArr = new Vec3f[((GRMesh*)tmp->GetGRMesh())->vertices.size()];
+//	//vector<int> a;
+//	for (int vi = 0; vi<((GRMesh*)tmp->GetGRMesh())->vertices.size(); vi++) {
+//		Vec3f v;// = new Vec3f();
+//		v.x = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].x;
+//		v.y = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].y;
+//		v.z = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].z;
+//
+//		opObjIf->AddVertextoLocalBuffer(v);
+//	}
+//	opObjIf->InitialObjUsingLocalBuffer(0.5f);
+//#ifdef _6DOF
+//	opEngine->InitialHapticRenderer(1);
+//#endif
+//#ifdef _3DOF
+//	opEngine->InitialNoMeshHapticRenderer();
+//#endif
+//	
+//
+//
+//	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngine->GetOpHapticController();
+//	opHc->setC_ObstacleRadius(0.2f);
+//	PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
+//	
+//#endif
 
-#ifdef HAPTIC_DEMO
-	//initial for haptic
-	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
-	
-	int objid;
-	
-	objid = opEngine->AddOpObj();
-	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(objid);
-	Vec3f* vArr;
-	vArr = new Vec3f[((GRMesh*)tmp->GetGRMesh())->vertices.size()];
-	//vector<int> a;
-	for (int vi = 0; vi<((GRMesh*)tmp->GetGRMesh())->vertices.size(); vi++) {
-		Vec3f v;// = new Vec3f();
-		v.x = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].x;
-		v.y = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].y;
-		v.z = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].z;
-
-		opObjIf->AddVertextoLocalBuffer(v);
-	}
-	opObjIf->InitialObjUsingLocalBuffer(0.5f);
-	
-	opEngine->InitialHapticRenderer(opEngine->GetOpObjNum() - 1);
-	//opEngine->InitialNoMeshHapticRenderer();
-	
-
-
-	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngine->GetOpHapticController();
-	opHc->setC_ObstacleRadius(0.2f);
-	PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
-	
-#endif
-
-#ifdef COLLISION_DEMO
+//#ifdef COLLISION_DEMO
 
 	FWOpObjIf *tmp2 = GetSdk()->GetScene()->FindObject("fwSLBunny2")->Cast();
 	tmp2->CreateOpObj();
@@ -107,13 +136,82 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	spIf->Initial(0.5f, bounds);
 
 	spIf->EnableCollisionDetection(false);
-#endif
+//#endif
+//	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+	
+	opEngine->InitialHapticRenderer(1, hisdk);
+	PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
+
+	//for rigid Clip
+	opHr->SetRigid(true);
+
+	//set Original clip to open
+	/*PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
+	dp = (void *)((opObjIf->GetOpParticle(48)->GetDescAddress()));
+	dpAdd = (PHOpParticleDesc*)dp;
+	dpAdd->pOrigCtr += Vec3f(-1, 0, 0.2f);
+	dp = (void *)((opObjIf->GetOpParticle(38)->GetDescAddress()));
+	dpAdd = (PHOpParticleDesc*)dp;
+	dpAdd->pOrigCtr += Vec3f(0.9, 0, 0.2f);
+	dp = (void *)((opObjIf->GetOpParticle(49)->GetDescAddress()));
+	dpAdd = (PHOpParticleDesc*)dp;
+	dpAdd->pOrigCtr += Vec3f(0.8, 0, 0.2f);
+	dp = (void *)((opObjIf->GetOpParticle(50)->GetDescAddress()));
+	dpAdd = (PHOpParticleDesc*)dp;
+	dpAdd->pOrigCtr += Vec3f(0.7, 0, 0.2f);
+	dp = (void *)((opObjIf->GetOpParticle(51)->GetDescAddress()));
+	dpAdd = (PHOpParticleDesc*)dp;
+	dpAdd->pOrigCtr += Vec3f(1, 0, 0.2f);
+	dp = (void *)((opObjIf->GetOpParticle(52)->GetDescAddress()));
+	dpAdd = (PHOpParticleDesc*)dp;
+	dpAdd->pOrigCtr += Vec3f(1, 0, 0.2f);
+	dp = (void *)((opObjIf->GetOpParticle(53)->GetDescAddress()));
+	dpAdd = (PHOpParticleDesc*)dp;
+	dpAdd->pOrigCtr += Vec3f(1, 0, 0.2f);
+	dp = (void *)((opObjIf->GetOpParticle(54)->GetDescAddress()));
+	dpAdd = (PHOpParticleDesc*)dp;
+	dpAdd->pOrigCtr += Vec3f(0.6, 0, 0.2f);
+	dp = (void *)((opObjIf->GetOpParticle(55)->GetDescAddress()));
+	dpAdd = (PHOpParticleDesc*)dp;
+	dpAdd->pOrigCtr += Vec3f(-0.6, 0, 0.2f);*/
+
+
+	opAnimator = (PHOpAnimationIf*)opEngine->GetOpAnimator();
+	opAnimator->AddAnimationP(1, 38, Vec3f(0, -300, 0), 100);
+	for (int pi = 48; pi < 56; pi++)
+	{
+		opAnimator->AddAnimationP(1, pi, Vec3f(0, -300, 0), 100);
+	}
+
+
+
+	//extra test 
+	/*
+	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
+	dp = (void *)((opObjIf->GetOpParticle(55)->GetDescAddress()));
+	dpAdd = (PHOpParticleDesc*)dp;
+	opObjIf->SetBound(8);
+	PHOpObjIf *opObjIf1 = opEngine->GetOpObjIf(0);
+	opObjIf1->SetBound(8);*/
+
+	opHrDesc = DCAST(PHOpHapticRenderer, opHr);
+	PHOpEngine* opEnginedesc = DCAST(PHOpEngine, opEngine);
+	
+	
+
+	int f = opHrDesc->forceSpring;
+
+	PHOpObjDesc* dp1 = opEnginedesc->opObjs[0];
+	PHOpObjDesc* dp2 = opEnginedesc->opObjs[1];
+	cout << "obji = 0" << "pNum" << dp1->assPsNum << "gNum" << dp1-> assGrpNum<< endl;
+	cout << "obji = 1" << "pNum" << dp2->assPsNum << "gNum" << dp2->assGrpNum << endl;
 
 	DrawHelpInfo = true;
 	checkPtclInfo = true;
 	useMouseSelect = false;
 	useMouseSelect = false;
 	useMouseSlcObj = false;
+	useAnime = false;
 	pgroupEditionModel = false;
 	fixPs = false;
 	mouseX = 0.0f;
@@ -124,9 +222,11 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	mouseLbtn = false;
 	mouseVertmotion = false;
 	pgroupEditionModel = false;
+	runByStep = false;
 	addGrpLink = true;
 	ediFirP = true;
 	render = GetCurrentWin()->GetRender();
+	radiusCoe = 1.0f;
 	
 	//STEPタイマ作成
 	UTTimerIf* SimuTimer = CreateTimer(UTTimerIf::FRAMEWORK);
@@ -165,15 +265,16 @@ void PHOpDemo::TimerFunc(int id)
 {
 	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
 	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
-	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(1);
+	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
 
 	FWApp::TimerFunc(id);
 	if (id == opSimuTimerId)
 	{
 		//OpのシミュレーションStepをコール
 		PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
-		opEngine->Step();
-		//opEngine->StepWithBlend();
+		//opEngine->Step();
+		if (!runByStep)
+		opEngine->StepWithBlend();
 		PostRedisplay();
 	}
 
@@ -182,15 +283,40 @@ void PHOpDemo::TimerFunc(int id)
 	for (int vi = 0; vi < opObjIf->GetVertexNum(); vi++)
 	{
 		grMesh->GetVertices()[vi] = opObjIf->GetVertex(vi);
+		
 	}
+
+	//save tst pos
+	if (recordingPos)
+		SaveTstPPos("TstP.dfmobj", 55, dpAdd->pCurrCtr);
+
+	/*if (useAnime)
+		opAnimator->AnimationStep(opEngine->GetDescAddress());*/
 }
+
+void PHOpDemo::SaveTstPPos(char *filename, int pi, Vec3f Pos)
+{
+	FILE *f;
+	fopen_s(&f, filename, "a");
+	if (!f)
+	{
+		std::cout << " file dir can not open" << endl;
+		return;
+	}
+	fprintf(f, "Pos:");
+	fprintf(f, "%d  ", pi);
+	fprintf(f, "%f %f %f\n", Pos.x, Pos.y, Pos.z);
+
+	fclose(f);
+}
+
 void PHOpDemo::Keyboard(int key, int x, int y){
 
 	float alpha, beta;
 	int itr = -1;
 	float vd;
 	PHOpSpHashColliAgentIf* spIf = GetSdk()->GetScene()->GetPHScene()->GetOpColliAgent();
-
+	
 
 	//PHOpObj *opObj = GetSdk()->GetScene()->FindObject("phObj")->Cast();
 	PHOpEngineIf* opEngineif = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
@@ -206,11 +332,35 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		objif2 = opEngineif->GetOpObjIf(1);
 	PHOpParticleIf *dpif = (PHOpParticleIf*)objif->GetOpParticle(0);
 	PHOpParticleDesc *dp = dpif->GetParticleDesc();
+
+
+	PHOpObjIf *opObjIf = opEngineif->GetOpObjIf(1);
+	void * dp1;
+	
+
+
 	switch (key) {
 	case ESC:
 	case 'q':
 		// アプリケーションの終了
 		exit(0);
+		break;
+	case '=':
+		recordingPos = !recordingPos;
+		cout << "recording" << endl;
+		break;
+	case '<':
+		opEngineif->SetDrawPtclR(opEngineif->GetDrawPtclR() + 0.3f);
+		
+		cout << "Radius++ " << opEngineif->GetDrawPtclR() << endl;
+		break;
+	case '>':
+		opEngineif->SetDrawPtclR(opEngineif->GetDrawPtclR() - 0.3f);
+		cout << "Radius-- " << opEngineif->GetDrawPtclR() << endl;
+		break;
+	case 'C':
+		drawCtcP = !drawCtcP;
+		cout << "drawCtcP" << drawCtcP<< endl;
 		break;
 	case'i':
 		opEngineif->SetProxyCorrectionEnable(!opEngineif->IsProxyCorrection());
@@ -224,10 +374,15 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 			DSTR << "Enable HapticSolve" << std::endl;
 		else DSTR << "Disable HapticSolve" << std::endl;
 		break;
+	case 'w':
+		useAnime = !useAnime;
+		opEngineif->SetAnimationFlag(useAnime);
+		cout << "useAnime" << useAnime << endl;
+		break;
 	case't' :
 		if (!opEngineif->IsHapticEnabled())
 		{
-			if (opEngineif->TrySetHapticEnable(true))
+			if (opEngineif->TrySetHapticEnable(true,GetSdk()->GetHISdk()))
 			{
 
 				DSTR << "Enable Haptic" << std::endl;
@@ -239,7 +394,7 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 			}
 		}
 		else {
-			if (opEngineif->TrySetHapticEnable(false))
+			if (opEngineif->TrySetHapticEnable(false, GetSdk()->GetHISdk()))
 			{
 
 				DSTR << "Disable Haptic" << std::endl;
@@ -389,7 +544,26 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		}
 		DSTR << "useDistCstr" << ((PHOpObjIf*)opEngineif->GetOpObjIf(0)->Cast())->GetObjDstConstraint() << std::endl;;
 		break;
-
+	case ',':
+		//adjust constraint spring of haptic
+		opHrDesc->constraintSpring -= 0.2f;
+		DSTR << "constraintSpring is " << opHrDesc->constraintSpring << std::endl;
+		break;
+	case '.':
+		//adjust constraint spring of haptic
+		opHrDesc->constraintSpring += 0.2f;
+		DSTR << "constraintSpring is " << opHrDesc->constraintSpring << std::endl;
+		break;
+	case '8':
+		//adjust forceSpring spring of haptic
+		opHrDesc->forceSpring -= 0.2f;
+		DSTR << "forceSpring is " << opHrDesc->forceSpring << std::endl;
+		break;
+	case '9':
+		//adjust forceSpring spring of haptic
+		opHrDesc->forceSpring += 0.2f;
+		DSTR << "forceSpring is " << opHrDesc->forceSpring << std::endl;
+		break;
 	case '(':
 		//Adjust velocity damping coefficient
 		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
@@ -508,14 +682,50 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 			fileOp->loadFromFile(objif2, "opDeformObject2_other.dfOp", false, fileVersion);
 		}
 		break;
+	case 's':
+		//step debugger run one step
+		opEngineif->StepWithBlend();
+		break;
+	case 'v':
+		drawVertex = !drawVertex;
+		DSTR << "drawVertex = " << drawVertex << std::endl;
+		break;
+	case 'z':
+		//step debugger
+		runByStep = !runByStep;
+		break;
 	case 'r':
 		// ファイルの再読み込み
 		Reset();
 		break;
-	case 'w':
-		// カメラ位置の初期化
-		InitCameraView();
+	case ' ':
+		//change radius collision test
+		dp1 = (void *)((opObjIf->GetOpParticle(48)->GetDescAddress()));
+		dpAdd = (PHOpParticleDesc*)dp1;
+		dpAdd->pMainRadius /= 5;
+		dpAdd->pSecRadius /= 5;
+		dpAdd->pThrRadiusVec /= 5;
+		dp1 = (void *)((opObjIf->GetOpParticle(38)->GetDescAddress()));
+		dpAdd = (PHOpParticleDesc*)dp1;
+		dpAdd->pMainRadius /= 5;
+		dpAdd->pSecRadius /= 5;
+		dpAdd->pThrRadiusVec /= 5;
+		dp1 = (void *)((opObjIf->GetOpParticle(49)->GetDescAddress()));
+		dpAdd = (PHOpParticleDesc*)dp1;
+		dpAdd->pMainRadius /= 5;
+		dpAdd->pSecRadius /= 5;
+		dpAdd->pThrRadiusVec /= 5;
+		dp1 = (void *)((opObjIf->GetOpParticle(50)->GetDescAddress()));
+		dpAdd = (PHOpParticleDesc*)dp1;
+		dpAdd->pMainRadius /= 5;
+		dpAdd->pSecRadius /= 5;
+		dpAdd->pThrRadiusVec /= 5;
+		std::cout << "changed"<<endl;
 		break;
+	//case 'w':
+	//	// カメラ位置の初期化
+	//	InitCameraView();
+	//	break;
 	case 'd':
 	{
 		// デバック表示
@@ -539,6 +749,7 @@ void PHOpDemo::Display()
 	//GRRenderIf* render = GetCurrentWin()->GetRender();
 	render->SetLighting(false);
 #ifdef HAPTIC_DEMO
+#ifdef _3DOF
 	//draw proxy
 	if (1)
 	{
@@ -561,7 +772,9 @@ void PHOpDemo::Display()
 
 	}
 #endif
+#endif
 
+#if 1
 	if (DrawHelpInfo)
 	{
 		render->EnterScreenCoordinate();
@@ -641,11 +854,110 @@ void PHOpDemo::Display()
 		render->LeaveScreenCoordinate();
 
 	}
-
-
-
+#endif 
 	PHOpEngineIf* opEngineif = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
 	PHOpEngine* opEngine = DCAST(PHOpEngine, opEngineif);
+
+	std::ostringstream sstr;
+	if (drawVertex)
+	for (int obji = 0; obji < (int)opEngineif->GetOpObjNum(); obji++)
+	{
+		
+		PHOpObj& drawObj = *opEngine->opObjs[obji];
+		{
+			for (int i = 0; i < drawObj.assGrpNum; i++)
+			{
+				//Vec3f sttP = drawObj.objPArr[i].pOrigCtr;
+
+				//Vec3f sttP = drawObj.objPArr[i].pOritPose.Pos();// / drawObj.floatErrKill ;//kill
+				Vec3f &sttP = drawObj.objPArr[i].pNewCtr;
+
+				//DrawPindex
+				if (drawObj.objId == 0)
+					sstr << "PA " << i;
+				else if (drawObj.objId == 1)
+					sstr << "PB " << i;
+				else sstr << "PX " << i;
+				//if(i==0||i==18||i==22)
+				render->DrawFont(sttP, sstr.str());
+				sstr.str("");
+			}
+		}
+	}
+
+	if (drawCtcP)
+	{
+		PHOpSpHashColliAgentIf* spIf = GetSdk()->GetScene()->GetPHScene()->GetOpColliAgent();
+		PHOpSpHashColliAgent* opsh = DCAST(PHOpSpHashColliAgent, spIf);
+
+		render->SetMaterial(GRRenderIf::CHOCOLATE);
+
+		Affinef affpos;
+		for (int j = 0; j<opsh->pPCtcPs.size(); j++)
+		{
+			affpos.Pos() = opsh->pPCtcPs[j];
+			render->SetMaterial(GRRenderIf::CHOCOLATE);
+			render->PushModelMatrix();
+			render->MultModelMatrix(affpos);
+			render->DrawSphere(0.15, 10, 10, true);
+
+			render->PopModelMatrix();
+		}
+		render->SetMaterial(GRRenderIf::NAVAJOWHITE);
+
+
+		for (int j = 0; j<opsh->pPCtcPs2.size(); j++)
+		{
+			affpos.Pos() = opsh->pPCtcPs2[j];
+			render->SetMaterial(GRRenderIf::NAVAJOWHITE);
+			render->PushModelMatrix();
+			render->MultModelMatrix(affpos);
+			render->DrawSphere(0.15, 10, 10, true);
+
+			render->PopModelMatrix();
+		}
+	}
+	
+	//if (drawPs)
+	//{
+	//	for (int obji = 0; obji < (int)opEngineif->GetOpObjNum(); obji++)
+	//	{
+	//		PHOpObj& drawObj = *opEngine->opObjs[obji];
+	//		{
+	//			for (int j = 0; j < drawObj.assPsNum; j++)
+	//			{
+	//				PHOpParticle &dp = drawObj.objPArr[j];
+	//				Vec3f &spCtr = dp.pCurrCtr;
+	//				Affinef affpos; affpos.Pos() = spCtr;
+	//				float radius = drawObj.objAverRadius;
+	//				if (dp.hitedByMouse)
+	//					render->SetMaterial(GRRenderIf::YELLOW);
+	//				else if (dp.isColliedSphashSolved)
+	//					render->SetMaterial(GRRenderIf::RED);
+	//				else if (dp.isColliedSphashSolvedReady)
+	//					render->SetMaterial(GRRenderIf::DEEPPINK);
+	//				else if (dp.isColliedbySphash)
+	//					render->SetMaterial(GRRenderIf::GREEN);
+	//				else if (dp.isColliedbyColliCube)
+	//					;
+	//				else render->SetMaterial(GRRenderIf::CADETBLUE);
+
+	//				render->PushModelMatrix();//相対座標で使う
+	//				render->MultModelMatrix(affpos);
+	//				//render->DrawSphere(radius, 10, 10, false);
+
+	//				float ra = drawObj.objAverRadius, rb = ra, rc = ra / 2;
+	//				Spr::TQuaternion<float> elliRotQ; elliRotQ.FromMatrix(dp.pCurrOrint.Inv() * dp.ellipRotMatrix);
+	//				//Spr::TQuaternion<float> elliRotQ = dp.pCurrOrint.Inv();//with no ellip orint
+	//				//TPose<float> ta; ta= TPose<float>(pos1,elliRotQ); 
+	//				DrawEllipsoid drawEll;
+	//				drawEll.drawOval(ra * radiusCoe, rb * radiusCoe, rc* radiusCoe, 8, elliRotQ);//dp.pCurrOrint.Inv());
+
+	//				render->PopModelMatrix();
+	//			}
+	//		}
+	//	}
+	//}
 	for (int obji = 0; obji < (int) opEngineif->GetOpObjNum(); obji++)
 	{
 		PHOpObj& drawObj = *opEngine->opObjs[obji];
@@ -858,6 +1170,7 @@ void PHOpDemo::MouseButton(int button, int state, int x, int y)
 		GetCurrentWin()->GetTrackball()->SetTarget(pos);
 		return;
 	}
+
 	if (state == 1)
 	{
 		GetCurrentWin()->GetTrackball()->Enable();
@@ -872,6 +1185,7 @@ void PHOpDemo::MouseButton(int button, int state, int x, int y)
 		recY = 0;
 		return;
 	}
+
 	if (!mouseHit)
 	{
 		GetCurrentWin()->GetTrackball()->Enable();

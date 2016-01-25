@@ -257,9 +257,10 @@ void PHOpHapticRenderer::ProxyMove()
 #ifdef PRINT_PC_ITR
 			if (itrNum > 0)
 				cout << "itrNum = " << itrNum << endl;
-#endif
+
 			if (itrNum > 15)
-				;// mtHapticFix.printTimer();
+				 mtHapticFix.printTimer();
+#endif
 			break;
 		}
 
@@ -506,9 +507,10 @@ bool PHOpHapticRenderer::ProxyCorrection()
 #ifdef PRINT_PC_ITR
 			if (itrNum > 0)
 				cout << "itrNum = " << itrNum << endl;
-#endif
+
 			if (itrNum > 15)
-				;// mtHapticFix.printTimer();
+				 mtHapticFix.printTimer();
+#endif
 			break;
 		}
 

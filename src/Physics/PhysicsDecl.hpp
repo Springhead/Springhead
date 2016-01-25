@@ -1328,8 +1328,12 @@ protected:\
 	Matrix3f	pMomentInertia;	\
 	Matrix3f	pInverseOfMomentInertia;	\
 	Matrix3f	ellipRotMatrix;	\
+	Quaternionf	ellipOrigOrint;	\
 	Vec3f	pWvel;	\
 	Matrix3f	pPreEllipA;	\
+	Quaternionf	pCurrOrint;	\
+	Quaternionf	pOrigOrint;	\
+	Quaternionf	pNewOrint;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -1368,8 +1372,12 @@ public:\
 		pMomentInertia = ((PHOpParticleDesc*)ptr)->pMomentInertia;	\
 		pInverseOfMomentInertia = ((PHOpParticleDesc*)ptr)->pInverseOfMomentInertia;	\
 		ellipRotMatrix = ((PHOpParticleDesc*)ptr)->ellipRotMatrix;	\
+		ellipOrigOrint = ((PHOpParticleDesc*)ptr)->ellipOrigOrint;	\
 		pWvel = ((PHOpParticleDesc*)ptr)->pWvel;	\
 		pPreEllipA = ((PHOpParticleDesc*)ptr)->pPreEllipA;	\
+		pCurrOrint = ((PHOpParticleDesc*)ptr)->pCurrOrint;	\
+		pOrigOrint = ((PHOpParticleDesc*)ptr)->pOrigOrint;	\
+		pNewOrint = ((PHOpParticleDesc*)ptr)->pNewOrint;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -1409,8 +1417,12 @@ public:\
 		((PHOpParticleDesc*)ptr)->pMomentInertia = pMomentInertia;	\
 		((PHOpParticleDesc*)ptr)->pInverseOfMomentInertia = pInverseOfMomentInertia;	\
 		((PHOpParticleDesc*)ptr)->ellipRotMatrix = ellipRotMatrix;	\
+		((PHOpParticleDesc*)ptr)->ellipOrigOrint = ellipOrigOrint;	\
 		((PHOpParticleDesc*)ptr)->pWvel = pWvel;	\
 		((PHOpParticleDesc*)ptr)->pPreEllipA = pPreEllipA;	\
+		((PHOpParticleDesc*)ptr)->pCurrOrint = pCurrOrint;	\
+		((PHOpParticleDesc*)ptr)->pOrigOrint = pOrigOrint;	\
+		((PHOpParticleDesc*)ptr)->pNewOrint = pNewOrint;	\
 		return true;	\
 	}\
 
@@ -1543,15 +1555,33 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHOpSpHashColliAgentDesc \
+#define SPR_DECLMEMBEROF_PHOpAnimationDesc \
 protected:\
+	float	timestep;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
+		timestep = ((PHOpAnimationDesc*)ptr)->timestep;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		((PHOpAnimationDesc*)ptr)->timestep = timestep;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHOpSpHashColliAgentDesc \
+protected:\
+	bool	useDirColli;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		useDirColli = ((PHOpSpHashColliAgentDesc*)ptr)->useDirColli;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHOpSpHashColliAgentDesc*)ptr)->useDirColli = useDirColli;	\
 		return true;	\
 	}\
 

@@ -229,7 +229,7 @@ public:
 	void SetAnimationFlag(bool flag);
 	bool GetAnimationFlag();
 	void SetDrawPtclR(float r);
-	bool GetDrawPtclR();
+	float GetDrawPtclR();
 	void InitialNoMeshHapticRenderer(HISdkIf* hisdk);
 	//void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ);
 };
