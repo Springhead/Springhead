@@ -7,7 +7,7 @@ using SprCs;
 
 namespace SprCsSample {
     class Program {
-        static string def = "itvacfros";
+        static string def = "itvacfroFs";
         static string inc = "A";	// include: "A" for all
         static string exc = "f";	// exclude:
 
@@ -23,6 +23,7 @@ namespace SprCsSample {
             if (check_test("f"))  test_func_args();
             if (check_test("r"))  test_func_return();
             if (check_test("o"))  test_operator();
+            if (check_test("F"))  test_func_call();
             if (check_test("s"))  test_simulation();
         }
 
@@ -366,7 +367,7 @@ namespace SprCsSample {
 	}
 	static string show_quaternion(Quaternionf q) {
             string str = "\n"
-                       + "( " + q.w + ",  " + q.x + ",  " + q.y + ", " +  q.z + " )\n";
+                       + "( " + q.w + ",  " + q.x + ",  " + q.y + ",  " +  q.z + " )\n";
             return str;
 	}
 	static string show_pose(Posef p) {
@@ -378,6 +379,81 @@ namespace SprCsSample {
 	static string show_matrix2(Matrix3f m) {
             string str = "\n" + m;
             return str;
+	}
+
+        static void test_func_call() {
+            title("func_call");
+
+            // TVector
+            Vec3f v31 = new Vec3f(1.0f, 2.0f, 3.0f);
+            put("Vec3f: square ", "14.0", v31.square());
+            put("Vec3f: norm   ", "3.7416574", v31.norm());
+            Vec3f v3u = v31; v3u.unitize();
+            Vec3f v3r = new Vec3f(0.2672612f, 0.5345225f, 0.8017837f);
+            put("Vec3f: unitize", "\n          " + show_vector_0(v3r) + "\n", show_vector_0(v3u));
+
+	    // TQuaternion
+            System.Console.WriteLine("");
+            float pi    = 3.1415927f;
+            float rad90 = pi / 2;
+            float rad45 = pi / 4;
+            float cos45 = 0.7071069f;
+            float sqrt3 = 1.7320508f;
+            float sqrt3div3 = sqrt3 / 3;
+            Quaternionf q1 = new Quaternionf(cos45, sqrt3div3, sqrt3div3, sqrt3div3);
+            Quaternionf q2 = new Quaternionf(q1.W(), q1.X(), q1.Y(), q1.Z());
+            Vec3f qv1 = new Vec3f(sqrt3div3, sqrt3div3, sqrt3div3);
+            put("Quaternionf: W(),X(),Y(),Z()", show_quaternion(q1), show_quaternion(q2));
+            put("Quaternionf: V", show_vector(qv1), show_vector(q1.V()));
+            put("Quaternionf: Axis", show_vector(qv1), show_vector(q1.Axis()));
+            put("Quaternionf: Theta", rad90.ToString(), q1.Theta());
+            System.Console.WriteLine("");
+
+            float half = pi / (2 * sqrt3);
+            Vec3f qv2 = new Vec3f(half, half, half);
+            put("Quaternionf: RotationHalf", show_vector(qv2), show_vector(q1.RotationHalf()));
+            put("Quaternionf: Rotation    ", show_vector(qv2), show_vector(q1.Rotation()));
+
+            float angle = rad90;
+            float d = sqrt3;
+            float s = (float) Math.Sin(angle / 2) / d;
+            Quaternionf qr = new Quaternionf((float) Math.Cos(angle / 2), s, s, s);
+            Quaternionf q3 = Quaternionf.Rot(angle, new Vec3f(1f, 1f, 1f));
+            put("Quaternionf: Rot", show_quaternion(qr), show_quaternion(q3));
+
+            float c1 = (float) Math.Cos(angle / 2);
+            float s1 = (float) Math.Sin(angle / 2);
+            Quaternionf qs = new Quaternionf(c1, s1, 0f, 0f);
+            Quaternionf q4 = Quaternionf.Rot(angle, (sbyte) 'x');
+            put("Quaternionf: Rot", show_quaternion(qs), show_quaternion(q4));
+
+            Vec3f qv3 = new Vec3f(1f, 1f, 1f);
+            float c2 = (float) Math.Cos(sqrt3 / 2);
+            float s2 = (float) Math.Sin(sqrt3 / 2);
+            Vec3f qv4 = (s2 / sqrt3) * qv3;
+            Quaternionf qt = new Quaternionf(c2, qv4[0], qv4[1], qv4[2]);
+            Quaternionf q5 = Quaternionf.Rot(qv3);
+            put("Quaternionf: Rot", show_quaternion(qt), show_quaternion(q5));
+
+            Quaternionf qt1 = q1; qt1.Conjugate();
+            Quaternionf qc = new Quaternionf(cos45, -sqrt3div3, -sqrt3div3, -sqrt3div3);
+            float qf1 = (float) Math.Sqrt(cos45*cos45 + 3);
+            Quaternionf qt2 = q1; qt2.Inv();
+            Quaternionf qd = new Quaternionf(cos45/qf1, -sqrt3div3/qf1, -sqrt3div3/qf1, -sqrt3div3/qf1);
+            put("Quaternionf: Conjugate", show_quaternion(qc), show_quaternion(qt1));
+            put("Quaternionf: Conjugated", show_quaternion(qc), show_quaternion(q1.Conjugated()));
+            put("Quaternionf: Inv", show_quaternion(qd), show_quaternion(qt2.Inv()));
+
+	    // TPose
+            System.Console.WriteLine("");
+            Posef p1 = new Posef(cos45, sqrt3, sqrt3, sqrt3, 1f, 2f, 3f);
+            Posef p2 = new Posef(p1.W(), p1.X(), p1.Y(), p1.Z(), p1.Px(), p1.Py(), p1.Pz());
+            put("Posef: W(),X(),Y(),Z(),Px(),Py(),Pz()", show_pose(p1), show_pose(p2));
+            put("Posef: Pos()", show_pose(p1), show_vector(p1.Pos()));
+            put("Posef: Ori()", show_pose(p1), show_quaternion(p1.Ori()));
+            put("Posef: Unit ", show_pose(p1), show_pose(Posef.Unit()));
+            put("Posef: Trn  ", show_pose(p1), show_pose(Posef.Trn(1f, 1f, 1f)));
+            put("Posef: Trn  ", show_pose(p1), show_pose(Posef.Trn(new Vec3f(1f, 1f, 1f))));
 	}
 
         static void test_simulation() {
