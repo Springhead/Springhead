@@ -92,9 +92,9 @@
 %feature("operator", def="MATRIX_OPERATION") Spr::Matrix3f;
 %feature("operator", def="MATRIX_OPERATION") Spr::Matrix3d;
 
-%feature("withfunc") Spr::Posed;
-%feature("withfunc") Spr::Vec3d;
-%feature("withfunc") Spr::Vec3f;
+//%feature("withfunc") Spr::Posed;
+//%feature("withfunc") Spr::Vec3d;
+//%feature("withfunc") Spr::Vec3f;
 
 %module Foundation
 %include "../../include/SprBase.h"
@@ -103,3 +103,7 @@
 %include "../../include/Foundation/SprScene.h"
 %include "../../include/Foundation/SprUTTimer.h"
 %include "../Foundation/UTBaseType.h"
+
+//%include "../../include/Base/TVector.h"
+//%include "../../include/Base/TMatrix.h"
+//%include "../../include/Base/TQuaternion.h"
