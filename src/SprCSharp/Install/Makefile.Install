@@ -25,6 +25,7 @@ BINCONF	= win64
 
 BLDDIR	= $(PROJDIR)..\$(VERS)\bin\$(PLAT)\$(CONF)
 INSDIR	= $(PROJDIR)..\..\..\bin\$(BINCONF)
+PINDIR	= $(PROJDIR)..\..\..\src\Unity\Assets\Springhead\Plugins
 
 !MESSAGE Using parameters ...
 !MESSAGE    VERS: [$(VERS)]
@@ -47,8 +48,17 @@ INSCSPd	= $(INSDIR)\SprCSharp.dll
 #INSIMPp	= $(INSDIR)\SprImport.pdb
 #INSCSPp	= $(INSDIR)\SprCSharp.pdb
 
-all:	$(INSEXPd) $(INSIMPd) $(INSCSPd)
-#all:	$(INSEXPd) $(INSEXPp) $(INSIMPd) $(INSIMPp) $(INSCSPd) $(INSCSPp)
+PINEXPd	= $(PINDIR)\SprExport.dll
+PINIMPd	= $(PINDIR)\SprImport.dll
+PINCSPd	= $(PINDIR)\SprCSharp.dll
+#PINEXPp	= $(PINDIR)\SprExport.pdb
+#PINIMPp	= $(PINDIR)\SprImport.pdb
+#PINCSPp	= $(PINDIR)\SprCSharp.pdb
+
+all:	$(INSEXPd) $(INSIMPd) $(INSCSPd)\
+	$(PINEXPd) $(PINIMPd) $(PINCSPd)
+#all:	$(INSEXPd) $(INSEXPp) $(INSIMPd) $(INSIMPp) $(INSCSPd) $(INSCSPp)\
+#	$(PINEXPd) $(PINEXPp) $(PINIMPd) $(PINIMPp) $(PINCSPd) $(PINCSPp)
 
 $(INSEXPd):	$(BLDEXPd)
 		@echo copying $** to $@
@@ -71,6 +81,30 @@ $(INSCSPd):	$(BLDCSPd)
 #		@copy $** $@ > NULL 2>&1
 
 #$(INSCSPp):	$(BLDCSPp)
+#		@echo copying $** to $@
+#		@copy $** $@ > NULL 2>&1
+
+$(PINEXPd):	$(BLDEXPd)
+		@echo copying $** to $@
+		@copy $** $@ > NULL 2>&1
+
+$(PINIMPd):	$(BLDIMPd)
+		@echo copying $** to $@
+		@copy $** $@ > NULL 2>&1
+
+$(PINCSPd):	$(BLDCSPd)
+		@echo copying $** to $@
+		@copy $** $@ > NULL 2>&1
+
+#$(PINEXPp):	$(BLDEXPp)
+#		@echo copying $** to $@
+#		@copy $** $@ > NULL 2>&1
+
+#$(PINIMPp):	$(BLDIMPp)
+#		@echo copying $** to $@
+#		@copy $** $@ > NULL 2>&1
+
+#$(PINCSPp):	$(BLDCSPp)
 #		@echo copying $** to $@
 #		@copy $** $@ > NULL 2>&1
 
