@@ -262,6 +262,25 @@ namespace SprCsSample {
             put("ret Vec3d ", "(0.0, -9.8, 0.0)", phScene.GetGravity());
             phScene.SetGravity(new Vec3d(0.1, -9.9, 0.2));
             put("ret Vec3d ", "(0.1, -9.9, 0.2)", phScene.GetGravity());
+
+	    // function returns array by pointer
+            GRSceneDesc sceneDesc = new GRSceneDesc();
+            GRVisualDesc visualDesc = new GRVisualDesc();
+            GRMeshDesc meshDesc = new GRMeshDesc();
+            GRSdkIf grSdk = GRSdkIf.CreateSdk();
+            GRSceneIf grScene = grSdk.CreateScene(sceneDesc);
+            GRFrameIf grFrame = grScene.GetWorld();
+            //GRVisualIf grVisual = grScene.CreateVisual(GRFrameIf.GetIfInfoStatic(), visualDesc, grFrame);
+            //GRMeshIf meshIf = (GRMeshIf) grVisual;
+
+            //List<Vec3f>[] v3fv = new List<Vec3f>[3];
+            //meshDesc.vertices.push_back(new Vec3f(1.1f, 1.2f, 1.3f));
+            //meshDesc.vertices.push_back(new Vec3f(2.1f, 2.2f, 2.3f));
+            //meshDesc.vertices.push_back(new Vec3f(3.1f, 3.2f, 3.3f));
+            //arraywrapper_GRMeshIf_Vec3f gv = meshIf.GetVertices();
+            //for (int i = 0; i < 3; i++) {
+                //System.Console.WriteLine(gv[0]);
+            //}
         }
 
         static void test_operator() {
@@ -437,12 +456,16 @@ namespace SprCsSample {
 
             Quaternionf qt1 = q1; qt1.Conjugate();
             Quaternionf qc = new Quaternionf(cos45, -sqrt3div3, -sqrt3div3, -sqrt3div3);
-            float qf1 = (float) Math.Sqrt(cos45*cos45 + 3);
-            Quaternionf qt2 = q1; qt2.Inv();
-            Quaternionf qd = new Quaternionf(cos45/qf1, -sqrt3div3/qf1, -sqrt3div3/qf1, -sqrt3div3/qf1);
+            //Quaternionf qd = new Quaternionf(q1.Conjugated());
+            Quaternionf qd = q1.Conjugated();
             put("Quaternionf: Conjugate", show_quaternion(qc), show_quaternion(qt1));
             put("Quaternionf: Conjugated", show_quaternion(qc), show_quaternion(q1.Conjugated()));
-            put("Quaternionf: Inv", show_quaternion(qd), show_quaternion(qt2.Inv()));
+
+            Quaternionf qt2 = q1; qt2.Inv();
+            //float qf1 = (float) Math.Sqrt(cos45*cos45 + 9);
+            float qf1 = (float) (cos45*cos45 + 9)*(cos45*cos45 + 9);
+            Quaternionf qe = qc / qf1;
+            put("Quaternionf: Inv", show_quaternion(qe), show_quaternion(qt2.Inv()));
 
 	    // TPose
             System.Console.WriteLine("");

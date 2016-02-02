@@ -14,8 +14,16 @@
 %ignore Spr::GRRenderBaseIf::SetProjectionMatrix;
 %ignore Spr::GRSceneIf::CreateVisual;
 %ignore Spr::GRFrameTransformMatrix::transform;
-%ignore Spr::GRFrameDesc::transform;
-%ignore Spr::GRSkinWeightDesc::offset;
+//%ignore Spr::GRFrameDesc::transform;
+//%ignore Spr::GRSkinWeightDesc::offset;
+
+%feature("returns_array") Spr::GRMeshIf::GetFaceNormals;
+%feature("returns_array") Spr::GRMeshIf::GetFaces;
+%feature("returns_array") Spr::GRMeshIf::GetTexCoords;
+%feature("returns_array") Spr::GRMeshIf::GetNormals;
+%feature("returns_array") Spr::GRMeshIf::GetVertices;
+%feature("returns_array") Spr::GRMeshIf::GetColors;
+
 %module Graphics
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"
