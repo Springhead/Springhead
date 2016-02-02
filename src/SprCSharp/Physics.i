@@ -10,6 +10,8 @@
 // %ignore Spr::PHSceneIf::CreateIKActuator;
 // %ignore Spr::PHSdkIf::CreateShape;
 
+// %feature ‚Í %include ‚æ‚è‚à‘O‚ÉŽw’è‚·‚é‚±‚Æ.
+//
 %feature("returns_array") Spr::PHOpGroupIf::GetGroupDesc;
 %feature("returns_array") Spr::PHOpEngineIf::GetOpObj;
 %feature("returns_array") Spr::PHOpParticleIf::GetParticleDesc;

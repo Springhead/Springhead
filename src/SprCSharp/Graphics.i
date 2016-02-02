@@ -17,6 +17,8 @@
 //%ignore Spr::GRFrameDesc::transform;
 //%ignore Spr::GRSkinWeightDesc::offset;
 
+// %feature ‚Í %include ‚æ‚è‚à‘O‚ÉŽw’è‚·‚é‚±‚Æ.
+//
 %feature("returns_array") Spr::GRMeshIf::GetFaceNormals;
 %feature("returns_array") Spr::GRMeshIf::GetFaces;
 %feature("returns_array") Spr::GRMeshIf::GetTexCoords;
