@@ -29,8 +29,8 @@ public class PHSceneBehaviour : SpringheadBehaviour {
         phScene.SetTimeStep(Time.fixedDeltaTime);
         phScene.GetIKEngine().Enable(true);
 	}
-	
-	void FixedUpdate () {
+
+    void FixedUpdate () {
 		if (phScene!=null) {
 			phScene.Step ();
             for (int i=0; i<phScene.NJoints(); i++) {

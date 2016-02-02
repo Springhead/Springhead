@@ -150,6 +150,17 @@ namespace SprCsSample {
             //System.Console.WriteLine("                     expected: " + "((10, 10, 10), (20, 20, 20))");
             //System.Console.WriteLine("                     result:   " + v3i);
 
+            CDConvexMeshDesc descMesh = new CDConvexMeshDesc();
+            for (int x = 0; x < 10; x++) {
+                for (int y = 0; y < 10; y++) {
+                    for (int z = 0; z < 10; z++) {
+                        descMesh.vertices.push_back(new Vec3f(x, y, z));
+                    }
+                }
+            }
+            PHSdkIf phSdk = PHSdkIf.CreateSdk();
+            CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), descMesh) as CDConvexMeshIf;
+            mesh.GetVertices();
         }
 
         static void test_type_conv() {
@@ -291,7 +302,7 @@ namespace SprCsSample {
             Vec3f v3b = new Vec3f(0.4f, 0.5f, 0.6f);
             Vec3f v3c = new Vec3f(0.1f, 0.2f, 0.3f);	// v3c == v3a
             Vec3f v3d;
-	    put("vector unary  -", "(-0.1, -0.2, -0.3)", -v3a);
+            put("vector unary  -", "(-0.1, -0.2, -0.3)", -v3a);
             put("vector binary +", "( 0.5,  0.7,  0.9)", v3a + v3b);
             put("vector binary -", "(-0.3, -0.3, -0.3)", v3a - v3b);
             put("vector binary *", "( 0.2,  0.4,  0.6)", v3a * 2);
