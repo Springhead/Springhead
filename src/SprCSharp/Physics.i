@@ -9,6 +9,14 @@
 // %ignore Spr::PHSceneIf::CreateJoint;
 // %ignore Spr::PHSceneIf::CreateIKActuator;
 // %ignore Spr::PHSdkIf::CreateShape;
+
+%feature("returns_array") Spr::PHOpGroupIf::GetGroupDesc;
+%feature("returns_array") Spr::PHOpEngineIf::GetOpObj;
+%feature("returns_array") Spr::PHOpParticleIf::GetParticleDesc;
+%feature("returns_array") Spr::PHRayIf::GetDynamicalNearest;
+%feature("returns_array") Spr::PHRayIf::GetHits;
+%feature("returns_array") Spr::PHRayIf::GetNearest;
+
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"
 %include "../../include/Foundation/SprObject.h"

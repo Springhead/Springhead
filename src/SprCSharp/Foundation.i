@@ -71,7 +71,8 @@
                VECTOR3_OPERATOR(UNARY: BASIC_V: S_PROD: V_PROD3: COMP: SUBS_V)
                VECTOR4_OPERATOR(UNARY: BASIC_V: COMP: SUBS_V)
                VECTOR6_OPERATOR(UNARY: BASIC_V: COMP: SUBS_V)
-               MATRIX_OPERATION(UNARY: BASIC_M: M_PROD: SUBS_M)
+               QUATERNION_OPERATOR(BASIC_V: Q_PROD)
+               MATRIX_OPERATOR(UNARY: BASIC_M: M_PROD: SUBS_M)
 ");
 
 %feature("operator", def="VECTOR2_OPERATOR") Spr::Vec2f;
@@ -80,8 +81,10 @@
 %feature("operator", def="VECTOR3_OPERATOR") Spr::Vec3d;
 %feature("operator", def="VECTOR4_OPERATOR") Spr::Vec4f;
 %feature("operator", def="VECTOR4_OPERATOR") Spr::Vec4d;
-%feature("operator", def="Q_PROD") Spr::Quaternionf;
-%feature("operator", def="Q_PROD") Spr::Quaterniond;
+//%feature("operator", def="Q_PROD") Spr::Quaternionf;
+//%feature("operator", def="Q_PROD") Spr::Quaterniond;
+%feature("operator", def="QUATERNION_OPERATOR") Spr::Quaternionf;
+%feature("operator", def="QUATERNION_OPERATOR") Spr::Quaterniond;
 %feature("operator", def="P_PROD") Spr::Posef;
 %feature("operator", def="P_PROD") Spr::Posed;
 %feature("operator", def="VECTOR2_OPERATOR") Spr::Vec2i;
@@ -89,8 +92,8 @@
 %feature("operator", def="VECTOR4_OPERATOR") Spr::Vec4i;
 %feature("operator", def="VECTOR6_OPERATOR") Spr::Vec6f;
 %feature("operator", def="VECTOR6_OPERATOR") Spr::Vec6d;
-%feature("operator", def="MATRIX_OPERATION") Spr::Matrix3f;
-%feature("operator", def="MATRIX_OPERATION") Spr::Matrix3d;
+%feature("operator", def="MATRIX_OPERATOR") Spr::Matrix3f;
+%feature("operator", def="MATRIX_OPERATOR") Spr::Matrix3d;
 
 //%feature("withfunc") Spr::Posed;
 //%feature("withfunc") Spr::Vec3d;
