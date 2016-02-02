@@ -50,7 +50,7 @@ public class PHSolidBehaviour : SpringheadBehaviour {
 
 		if (phSolid != null) {
             phSolid.GetDesc (d);
-			solidDescripter.ApplyTo (d);
+            solidDescripter.ApplyTo (d);
             phSolid.SetDesc (d);
 
 			for (int i=0; i< phSolid.NShape(); i++) {
