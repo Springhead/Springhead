@@ -108,7 +108,7 @@ namespace SprCsSample {
             put("vec<int>", "202", tets[1]);
             put("vec<int>", "203", tets[2]);
             // structure element
-            vectorwrapper_PHFemMeshNewDesc_Vec3d vertices = descFemMeshNew.vertices;
+            vectorwrapper_Vec3d vertices = descFemMeshNew.vertices;
             vertices.push_back(new Vec3d(0.1, 0.2, 0.3));
             vertices.push_back(new Vec3d(0.4, 0.5, 0.6));
             put("vec<Vec3d>", "2  ", vertices.size());
@@ -275,23 +275,27 @@ namespace SprCsSample {
             put("ret Vec3d ", "(0.1, -9.9, 0.2)", phScene.GetGravity());
 
 	    // function returns array by pointer
-            GRSceneDesc sceneDesc = new GRSceneDesc();
-            GRVisualDesc visualDesc = new GRVisualDesc();
-            GRMeshDesc meshDesc = new GRMeshDesc();
-            GRSdkIf grSdk = GRSdkIf.CreateSdk();
-            GRSceneIf grScene = grSdk.CreateScene(sceneDesc);
-            GRFrameIf grFrame = grScene.GetWorld();
-            //GRVisualIf grVisual = grScene.CreateVisual(GRFrameIf.GetIfInfoStatic(), visualDesc, grFrame);
-            //GRMeshIf meshIf = (GRMeshIf) grVisual;
-
-            //List<Vec3f>[] v3fv = new List<Vec3f>[3];
-            //meshDesc.vertices.push_back(new Vec3f(1.1f, 1.2f, 1.3f));
-            //meshDesc.vertices.push_back(new Vec3f(2.1f, 2.2f, 2.3f));
-            //meshDesc.vertices.push_back(new Vec3f(3.1f, 3.2f, 3.3f));
-            //arraywrapper_GRMeshIf_Vec3f gv = meshIf.GetVertices();
-            //for (int i = 0; i < 3; i++) {
-                //System.Console.WriteLine(gv[0]);
-            //}
+            CDConvexMeshDesc descMesh = new CDConvexMeshDesc();
+            for (int x = 0; x < 10; x++) {
+                for (int y = 0; y < 10; y++) {
+                    for (int z = 0; z < 10; z++) {
+                        Vec3f v3f = new Vec3f(x, y, z);
+                        descMesh.vertices.push_back(new Vec3f(x, y, z));
+                    }
+                }
+            }
+            //PHSdkIf phSdk = PHSdkIf.CreateSdk();
+            CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), descMesh) as CDConvexMeshIf;
+            mesh.GetVertices();
+            arraywrapper_Vec3f vertices = mesh.GetVertices();
+            Vec3f[] v3fr = new Vec3f[8];
+            v3fr[0] = new Vec3f(0, 0, 0); v3fr[1] = new Vec3f(0, 0, 9);
+            v3fr[2] = new Vec3f(0, 9, 0); v3fr[3] = new Vec3f(0, 9, 9);
+            v3fr[4] = new Vec3f(9, 0, 0); v3fr[5] = new Vec3f(9, 0, 9);
+            v3fr[6] = new Vec3f(9, 9, 0); v3fr[7] = new Vec3f(9, 9, 9);
+            for (int i = 0; i< 8; i++) {
+                put("ret_array", show_vector_0(v3fr[i]), vertices[i]);
+            }
         }
 
         static void test_operator() {

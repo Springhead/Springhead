@@ -56,6 +56,7 @@ set SRCDIROUT=..\..\src
 ::
 set PROJFILE=do_swigall.projs
 set MAKEFILE=Makefile_CSharp.swig
+set SIGNATURE=..\swig_sprcs.signature
 
 :: 使用するプログラム名
 ::
@@ -95,6 +96,14 @@ for %%p in (%PROJECTS%) do (
     set IFILES=!IFILES! ./%%p.i
 )
 set IFILES=%IFILES:~1%
+
+:: ------------------------------
+::  クラスの重複生成回避
+:: ------------------------------
+if exist %SIGNATURE% (
+    del /F %SIGNATURE%
+)
+type NUL > %SIGNATURE%
 
 :: ----------
 ::  処理開始
