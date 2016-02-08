@@ -84,24 +84,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CSBase.cs" />
-    <Compile Include="CSBase.wrapper.cs" />
     <Compile Include="CSCollision.cs" />
-    <Compile Include="CSCollision.wrapper.cs" />
     <Compile Include="CSCreature.cs" />
-    <Compile Include="CSCreature.wrapper.cs" />
     <Compile Include="CSFileIO.cs" />
-    <Compile Include="CSFileIO.wrapper.cs" />
     <Compile Include="CSFoundation.cs" />
-    <Compile Include="CSFoundation.wrapper.cs" />
     <Compile Include="CSFramework.cs" />
-    <Compile Include="CSFramework.wrapper.cs" />
     <Compile Include="CSGraphics.cs" />
-    <Compile Include="CSGraphics.wrapper.cs" />
     <Compile Include="CSHumanInterface.cs" />
-    <Compile Include="CSHumanInterface.wrapper.cs" />
     <Compile Include="CSPhysics.cs" />
-    <Compile Include="CSPhysics.wrapper.cs" />
     <Compile Include="cs_object.cs" />
+    <Compile Include="module.wrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="wrapper.cs" />
   </ItemGroup>
