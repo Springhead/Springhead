@@ -242,9 +242,11 @@ exit /b
 
     set TARGET_SRC=%CS_SRC%/CS%MODULE%.cs
     set TARGET_ALL=%TARGET_SRC%
+    rem ------------------------------------------------------
     rem set TARGET_IMP=%CS_IMP%/CS%MODULE%.cs
     rem set TARGET_EXP=%CS_EXP%/CS%MODULE%.cpp
     rem set TARGET_ALL=%TARGET_SRC% %TARGET_IMP% %TARGET_EXP%
+    rem ------------------------------------------------------
 
     set DEPENDENCIES=%INCHDRS% %SRCHDRS% %INTFILES%
     if %DEBUG% == 1 (
@@ -270,10 +272,20 @@ exit /b
         echo %%f \>> %MKFILE%
     )
     echo.			>> %MKFILE%
+    echo FIXED_WRAPPERS=\>> %MKFILE%
+    echo ./SprCSharp/wrapper.cs		\>> %MKFILE%
+    echo ./SprImport/wrapper.cs		\>> %MKFILE%
+    echo ./SprExport/wrapper.cpp	\>> %MKFILE%
+    echo.			>> %MKFILE%
+    echo WRAPPERS=\>> %MKFILE%
+    echo ./SprCSharp/module.wrapper.cs	\>> %MKFILE%
+    echo ./SprImport/module.wrapper.cs	\>> %MKFILE%
+    echo ./SprExport/module.wrapper.cpp	\>> %MKFILE%
+    echo.			>> %MKFILE%
 
     echo all:	%TARGET_ALL%    >> %MKFILE%
     echo.			>> %MKFILE%
-    echo %TARGET_SRC%:	$(INCHDRS) $(SRCHDRS) $(INTFILES)>> %MKFILE%
+    echo %TARGET_SRC%:	$(INCHDRS) $(SRCHDRS) $(INTFILES) $(FIXED_WRAPPERS)>> %MKFILE%
     echo.	call %SWIG% %MODULE%	>> %MKFILE%
     echo.				>> %MKFILE%
     echo $(INCHDRS):			>> %MKFILE%
@@ -281,6 +293,8 @@ exit /b
     echo $(SRCHDRS):			>> %MKFILE%
     echo.				>> %MKFILE%
     echo $(INTFILES):			>> %MKFILE%
+    echo.				>> %MKFILE%
+    echo $(FIXED_WRAPPERS):		>> %MKFILE%
     echo.				>> %MKFILE%
     endlocal
 exit /b
