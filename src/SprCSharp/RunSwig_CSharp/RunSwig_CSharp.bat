@@ -3,15 +3,23 @@
 ::  File:
 ::      RunSwig_CSharp.bat
 ::
+::  SYNOPSIS:
+::	RunSwig_CSharp [:export]
+::
 ::  Description:
 ::      ファイルの依存関係を調べて、CSharpSWig.bat を最適に実行する.
+::	※ このスクリプトで作成した makefile を実行する.
 ::
 ::    　実行するプロジェクトは ..\..\src\RunSwig\do_swigall.projs に定義されている
 ::      ものを使用する. ただしプロジェクト Base は定義の有無に関わりなく実行する.
 ::
+::  ARGUMENTS:
+::	:export		共通に使用する名前を export する.
+::	
 :: ***********************************************************************************
 ::  Version:
-::	    Ver 1.0	  2015/03/18	F.Kanehori  初版
+::	Ver 2.0	  2016/02/08	F.Kanehori  wrapper file をまとめた
+::	Ver 1.0	  2015/03/18	F.Kanehori  初版
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -30,10 +38,12 @@ set INCDIR=%TOPDIR%\include
 set ETCDIR=%SRCDIR%\RunSwig
 
 set CSBASE=.
-set CS_SRC=%CSBASE%/SprCSharp
-set CS_IMP=%CSBASE%/SprImport
-set CS_EXP=%CSBASE%/SprExport
-
+set SUBDIR_SRC=SprCSharp
+set SUBDIR_IMP=SprImport
+set SUBDIR_EXP=SprExport
+set CS_SRC=%CSBASE%/%SUBDIR_SRC%
+set CS_IMP=%CSBASE%/%SUBDIR_IMP%
+set CS_EXP=%CSBASE%/%SUBDIR_EXP%
 if %DEBUG% == 1 (
     call :show_abs_path INCDIR %INCDIR%
     call :show_abs_path SRCDIR %SRCDIR%
@@ -43,6 +53,20 @@ if %DEBUG% == 1 (
     call :show_abs_path CS_EXP %CS_EXP%
     echo. 
 )
+
+:: ---------------------------------------------
+::  RunSwig_CSharp.bat と共通で使用する環境変数
+::
+::  wrapper file が作成されたことを示すファイル名
+set WRAPPERS_BUILT=wrappers.built
+::
+::  モジュール毎に作成する wrapper file の名前
+set MODULE_WRAPPER_SRC=wrapper.cs
+set MODULE_WRAPPER_IMP=wrapper.cs
+set MODULE_WRAPPER_EXP=wrapper.cpp
+::
+if "%1" equ ":export" goto :export
+:: ---------------------------------------------
 
 :: 依存関係にはないと見做すファイルの一覧
 ::
@@ -56,6 +80,13 @@ set SRCDIROUT=..\..\src
 ::
 set PROJFILE=do_swigall.projs
 set MAKEFILE=Makefile_CSharp.swig
+::
+::  wrapper file の名前
+set WRAPPERFILE_SRC=module.wrapper.cs
+set WRAPPERFILE_IMP=module.wrapper.cs
+set WRAPPERFILE_EXP=module.wrapper.cpp
+::
+::  関数の多重生成を防ぐためにモジュール間で情報を受け渡すファイル
 set SIGNATURE=..\swig_sprcs.signature
 
 :: 使用するプログラム名
@@ -98,12 +129,10 @@ for %%p in (%PROJECTS%) do (
 set IFILES=%IFILES:~1%
 
 :: ------------------------------
-::  クラスの重複生成回避
+::  モジュールにまたがる初期化
 :: ------------------------------
-if exist %SIGNATURE% (
-    del /F %SIGNATURE%
-)
-type NUL > %SIGNATURE%
+call :truncate_file %SIGNATURE%
+del /f ..\%WRAPPERS_BUILT% > NUL 2>&1
 
 :: ----------
 ::  処理開始
@@ -118,10 +147,47 @@ for %%p in (%PROJECTS%) do (
     cd %CWD%
 )
 
+:: -------------------------
+::  wrapper file をまとめる
+:: -------------------------
+if exist ..\%WRAPPERS_BUILT% (
+    echo combining wrapper files
+    set WF_SRC=%CS_SRC:/=\%\%WRAPPERFILE_SRC%
+    set WF_IMP=%CS_IMP:/=\%\%WRAPPERFILE_IMP%
+    set WF_EXP=%CS_EXP:/=\%\%WRAPPERFILE_EXP%
+    type ..\!WF_SRC!.prologue > ..\!WF_SRC!
+    type ..\!WF_IMP!.prologue > ..\!WF_IMP!
+    type ..\!WF_EXP!.prologue > ..\!WF_EXP!
+    for %%p in (%PROJECTS%) do (
+        call :append_file ..\%SUBDIR_SRC%\tmp\CS%%p.%MODULE_WRAPPER_SRC% ..\!WF_SRC!
+        call :append_file ..\%SUBDIR_IMP%\tmp\CS%%p.%MODULE_WRAPPER_IMP% ..\!WF_IMP!
+        call :append_file ..\%SUBDIR_EXP%\tmp\CS%%p.%MODULE_WRAPPER_EXP% ..\!WF_EXP!
+    )
+    echo } >> ..\!WF_SRC!
+    echo } >> ..\!WF_IMP!
+    echo } >> ..\!WF_EXP!
+)
+
 :: ----------
 ::  処理終了
 :: ----------
+
 endlocal
+exit /b
+
+:: -----------------------------------------------------------------------------------
+::  ファイルの初期化（空のファイルとする）
+:: -----------------------------------------------------------------------------------
+:truncate_file
+    if exist %1 del /F %1
+    type NUL > %1
+exit /b
+
+:: -----------------------------------------------------------------------------------
+::  ファイルへの追加
+:: -----------------------------------------------------------------------------------
+:append_file
+    if exist %1 type %1 >> %2
 exit /b
 
 :: -----------------------------------------------------------------------------------
@@ -236,6 +302,23 @@ exit /b
     set $string=
     for %%f in (%~1) do (set $string=!$string! %2\%%f)
     set $string=%$string:~1%
+exit /b
+
+:: -----------------------------------------------------------------------------------
+::  共通に使用する名前を exportする
+:: -----------------------------------------------------------------------------------
+:export
+    call :get_abs_path .
+    set BASEDIR=%$ret%
+    endlocal && (
+	set MODULE_WRAPPER_SRC=%MODULE_WRAPPER_SRC%
+	set MODULE_WRAPPER_IMP=%MODULE_WRAPPER_IMP%
+	set MODULE_WRAPPER_EXP=%MODULE_WRAPPER_EXP%
+	set WRAPPERS_BUILT=%WRAPPERS_BUILT%
+    )
+exit /b
+:get_abs_path
+    set $ret=%~dp1
 exit /b
 
 :: -----------------------------------------------------------------------------------
