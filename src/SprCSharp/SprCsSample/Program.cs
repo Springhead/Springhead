@@ -274,7 +274,7 @@ namespace SprCsSample {
             phScene.SetGravity(new Vec3d(0.1, -9.9, 0.2));
             put("ret Vec3d ", "(0.1, -9.9, 0.2)", phScene.GetGravity());
 
-	    // function returns array by pointer
+	    // function returns array by using pointer
             CDConvexMeshDesc descMesh = new CDConvexMeshDesc();
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 10; y++) {
