@@ -214,6 +214,44 @@ namespace SprCsSample {
             PHSceneDesc descScn = new PHSceneDesc();
             PHSceneIf scene = phSdk.CreateObject(PHSceneIf.GetIfInfoStatic(), descScn) as PHSceneIf;
             System.Console.WriteLine((scene == null) ? "null" : scene.ToString());
+
+	    // constructor による初期値設定のテスト
+	    // ---- State を継承 ----
+	    // 暗黙の型変換による
+            PHSceneDescStruct structScene1 = new PHSceneDesc();
+            Vec3d v3d1 = new Vec3d(0.0, -9.8, 0.0);
+            Vec3d v3d2 = new Vec3d(1.0, -8.8, 1.0);
+            put("by typeconv:    gravity ", show_vector_0(v3d1), show_vector_0(structScene1.gravity));
+            put("by typeconv:    timeStep", "0.005", structScene1.timeStep);
+            // constructor による
+            PHSceneDescStruct structScene2 = new PHSceneDescStruct();
+            put("by constructor: gravity ", show_vector_0(v3d1), show_vector_0(structScene2.gravity));
+            put("by constructor: timeStep", "0.005", structScene2.timeStep);
+            // ApplyFrom による
+            PHSceneDescStruct structScene3 = new PHSceneDescStruct();
+            structScene3.gravity = v3d2;
+            structScene3.timeStep = 1.001;
+            put("by Apply(): fm: gravity ", show_vector_0(v3d2), show_vector_0(structScene3.gravity));
+            put("by Apply(): fm: timeStep", "1.001", structScene3.timeStep);
+            structScene2.ApplyFrom((PHSceneDesc) structScene3);
+            put("by Apply(): to: gravity ", show_vector_0(v3d2), show_vector_0(structScene2.gravity));
+            put("by Apply(): to: timeStep", "0.005", structScene2.timeStep);
+	    //
+	    // ---- Desc を継承 ----
+            CDSphereDescStruct structSphere1 = new CDSphereDescStruct();
+            CDSphereDesc descSphere1 = structSphere1;
+            put("DescStruct: radius          ", "1", structSphere1.radius);
+            put("Desc:       material.density", "1", descSphere1.material.density);
+            CDSphereDescStruct structSphere2 = new CDSphereDescStruct();
+            CDSphereDesc descSphere2 = structSphere2;
+            structSphere2.radius = 2;
+            descSphere2.material.density = 2;
+            put("DescStruct: radius          ", "2", structSphere2.radius);
+            put("Desc:       material.density", "2", descSphere2.material.density);
+            structSphere1.ApplyFrom(descSphere2);
+            descSphere1 = structSphere1;
+            put("DescStruct: radius          ", "2", structSphere1.radius);
+            put("Desc:       material.density", "1", descSphere1.material.density);
         }
 
         static void test_func_args() {
@@ -388,11 +426,26 @@ namespace SprCsSample {
             string str = "\n" + show_vector_0(v) + "\n";
             return str;
 	}
+	static string show_vector(Vec3d v) {
+            string str = "\n" + show_vector_0(v) + "\n";
+            return str;
+	}
 	static string show_vector_0(Vec3f v) {
             string str = "( " + v.x + ",  " + v.y + ",  " + v.z + " )";
             return str;
 	}
+	static string show_vector_0(Vec3d v) {
+            string str = "( " + v.x + ",  " + v.y + ",  " + v.z + " )";
+            return str;
+	}
 	static string show_matrix(Matrix3f m) {
+            string str = "\n"
+                       + "(( " + m.xx + ",  " + m.yx + ",  " + m.zx + " ) "
+                       + " ( " + m.xy + ",  " + m.yy + ",  " + m.zy + " ) "
+                       + " ( " + m.xz + ",  " + m.yz + ",  " + m.zz + " ))\n";
+            return str;
+	}
+	static string show_matrix(Matrix3d m) {
             string str = "\n"
                        + "(( " + m.xx + ",  " + m.yx + ",  " + m.zx + " ) "
                        + " ( " + m.xy + ",  " + m.yy + ",  " + m.zy + " ) "
