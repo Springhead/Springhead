@@ -12,19 +12,26 @@ namespace SprCsSample {
         static string exc = "f";	// exclude:
 
         static void Main(string[] args) {
-            if (inc.Equals("A")) {
-                inc = def;
+//            CSInit init = new CSInit();
+
+            try {
+                if (inc.Equals("A")) {
+                    inc = def;
+                }
+                if (check_test("i"))  test_intrinsic();
+                if (check_test("t"))  test_tostring();
+                if (check_test("v"))  test_vector();
+                if (check_test("a"))  test_array();
+                if (check_test("c"))  test_type_conv();
+                if (check_test("f"))  test_func_args();
+                if (check_test("r"))  test_func_return();
+                if (check_test("o"))  test_operator();
+                if (check_test("F"))  test_func_call();
+                if (check_test("s"))  test_simulation();
             }
-            if (check_test("i"))  test_intrinsic();
-            if (check_test("t"))  test_tostring();
-            if (check_test("v"))  test_vector();
-            if (check_test("a"))  test_array();
-            if (check_test("c"))  test_type_conv();
-            if (check_test("f"))  test_func_args();
-            if (check_test("r"))  test_func_return();
-            if (check_test("o"))  test_operator();
-            if (check_test("F"))  test_func_call();
-            if (check_test("s"))  test_simulation();
+            catch (Exception e) {
+                System.Console.WriteLine(e.ToString());
+            }
         }
 
         static bool check_test(string chk) {
