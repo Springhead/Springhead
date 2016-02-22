@@ -54,6 +54,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -92,7 +93,6 @@
     <Compile Include="CSGraphics.cs" />
     <Compile Include="CSHumanInterface.cs" />
     <Compile Include="CSPhysics.cs" />
-    <Compile Include="CSUtility.cs" />
     <Compile Include="cs_object.cs" />
     <Compile Include="module.wrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
