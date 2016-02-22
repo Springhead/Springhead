@@ -12,12 +12,9 @@ namespace SprCsSample {
         static string exc = "f";	// exclude:
 
         static void Main(string[] args) {
-//            CSInit init = new CSInit();
 
             try {
-                if (inc.Equals("A")) {
-                    inc = def;
-                }
+                if (inc.Equals("A"))  inc = def;
                 if (check_test("i"))  test_intrinsic();
                 if (check_test("t"))  test_tostring();
                 if (check_test("v"))  test_vector();
@@ -29,7 +26,20 @@ namespace SprCsSample {
                 if (check_test("F"))  test_func_call();
                 if (check_test("s"))  test_simulation();
             }
+            catch (SEHException e) {
+                System.Console.WriteLine("C#: SEH_Exception");
+                System.Console.WriteLine(e.ToString());
+            }
             catch (Exception e) {
+                System.Console.WriteLine("C#: Exception");
+                System.Runtime.CompilerServices.RuntimeWrappedException rwe = e as System.Runtime.CompilerServices.RuntimeWrappedException;
+                if (rwe != null) {
+                    System.Console.WriteLine("RuntimeWrappedException");
+                    String s = rwe.WrappedException as String;
+                    if (s != null) {
+                        System.Console.WriteLine(s);
+                    }
+                }
                 System.Console.WriteLine(e.ToString());
             }
         }
