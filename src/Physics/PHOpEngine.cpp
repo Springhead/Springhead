@@ -139,14 +139,14 @@ namespace Spr{
 	void PHOpEngine::StepWithBlend()
 	{
 		PHOpEngine::Step();
-		for (int obji = 0; obji < opObjs.size(); obji++)
+		for (int obji = 0; obji < (int)opObjs.size(); obji++)
 		{
 			opObjs[obji]->vertexBlending();
 		}
 	}
 	void PHOpEngine::SetUpdateNormal(bool flag)
 	{
-		for (int obji = 0; obji < opObjs.size(); obji++)
+		for (int obji = 0; obji < (int)opObjs.size(); obji++)
 		{
 			opObjs[obji]->updateNormals = flag;
 		}

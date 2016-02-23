@@ -9,7 +9,7 @@ namespace Spr{
 	{
 		timestep = ((PHOpEngine*)opEngine)->opObjs[0]->params.timeStep;
 		//orig Pose base
-		for (int ai = 0; ai < animatedPs.size(); ai++)
+		for (int ai = 0; ai < (int)animatedPs.size(); ai++)
 		{
 			if (animatedPs[ai].animatedHoldtimes == 0)
 				continue;
@@ -49,7 +49,7 @@ namespace Spr{
 
 	void PHOpAnimation::AnimationIntergration(void* opEngine)
 	{
-		for (int ai = 0; ai < animatedPs.size(); ai++)
+		for (int ai = 0; ai < (int)animatedPs.size(); ai++)
 		{
 			PHOpObj* pobj = ((PHOpEngine*)opEngine)->opObjs[animatedPs[ai].animatedObjindex];
 			PHOpParticle* dp = &pobj->objPArr[animatedPs[ai].animatedPindex];

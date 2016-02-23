@@ -193,7 +193,7 @@ void PHOpHapticRenderer::ProxyMove()
 		myHc->surrCnstrList.clear();
 		std::vector<int> surrSwapt;
 		surrSwapt.swap(myHc->surrCnstrList);
-		for (int ofi = 0; ofi < tgtMesh->faces.size(); ofi++)
+		for (int ofi = 0; ofi < (int)tgtMesh->faces.size(); ofi++)
 		{
 
 			Vec3f &fpa = tgtMesh->vertices[tgtMesh->faces[ofi].indices[2]];
@@ -277,7 +277,7 @@ void PHOpHapticRenderer::ProxyMove()
 		}
 
 		bool toosmallquit = false;
-		for (int ci = 0; ci < myHc->surrCnstrList.size(); ci++)
+		for (int ci = 0; ci < (int)myHc->surrCnstrList.size(); ci++)
 		{
 			int ofi = myHc->surrCnstrList[ci];
 			std::vector<int> ovrVs;
@@ -421,7 +421,7 @@ bool PHOpHapticRenderer::ProxyCorrection()
 		myHc->surrCnstrList.clear();
 		std::vector<int> surrSwapt;
 		surrSwapt.swap(myHc->surrCnstrList);
-		for (int ofi = 0; ofi < tgtMesh->faces.size(); ofi++)
+		for (int ofi = 0; ofi < (int)tgtMesh->faces.size(); ofi++)
 		{
 
 			Vec3f &fpa = tgtMesh->vertices[tgtMesh->faces[ofi].indices[2]];
@@ -527,7 +527,7 @@ bool PHOpHapticRenderer::ProxyCorrection()
 		}
 
 		bool toosmallquit = false;
-		for (int ci = 0; ci < myHc->surrCnstrList.size(); ci++)
+		for (int ci = 0; ci < (int)myHc->surrCnstrList.size(); ci++)
 		{
 			int ofi = myHc->surrCnstrList[ci];
 			std::vector<int> ovrVs;
@@ -690,7 +690,7 @@ bool PHOpHapticRenderer::ProxyCorrection()
 
 							mofIInver = mofIInver.inv();
 						}
-						for (int fis = 0; fis < fidexlist.size(); fis++)
+						for (int fis = 0; fis < (int)fidexlist.size(); fis++)
 						{
 							int fi = tgtMesh->faces[ofi].indices[fis];
 							Vec3f &fv = tgtMesh->vertices[fi];

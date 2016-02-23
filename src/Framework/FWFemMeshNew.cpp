@@ -514,7 +514,7 @@ void FWFemMeshNew::SyncThermoInfo(){
 					int pv = vertexIdMap[gv];
 					float texend;
 					if(fwfood == "fwNsteak"){
-						texend=0.25862;
+						texend=0.25862f;
 					}else if(fwfood == "fwNegi" || fwfood == "fwPan"){
 						texend=0.25;
 					}
