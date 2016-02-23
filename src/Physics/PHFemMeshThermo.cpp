@@ -6118,8 +6118,8 @@ bool PHFemMeshThermo::SetConcentricHeatMap(std::vector<double> r, std::vector<do
 			}
 		} 
 	}
-	if(r.size() != temp.size()) return -1;
-	return 1;
+	if(r.size() != temp.size()) return (bool) -1;
+	return (bool) 1;
 }
 
 

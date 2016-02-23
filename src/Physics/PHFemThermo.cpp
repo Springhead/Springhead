@@ -6908,8 +6908,8 @@ bool PHFemThermo::SetConcentricHeatMap(std::vector<double> r, std::vector<double
 			}
 		} 
 	}
-	if(r.size() != temp.size()) return -1;
-	return 1;
+	if(r.size() != temp.size()) return (bool) -1;
+	return (bool) 1;
 }
 
 void PHFemThermo::SetInitThermoConductionParam(double thConduct0,double roh0,double specificHeat0,double heatTrans0){

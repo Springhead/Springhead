@@ -60,7 +60,7 @@ namespace Spr
 			float nearest = 100.0f;
 			int nearesti = -1;
 			//search nearest vertics
-			for (int ovi = 0; ovi<tgtMesh->vertices.size(); ovi++)
+			for (int ovi = 0; ovi < (int)tgtMesh->vertices.size(); ovi++)
 			{
 				Vec3f &v = tgtMesh->vertices[ovi];
 				float dist = fabs((currSubStart - v).norm());
@@ -84,12 +84,12 @@ namespace Spr
 			//vector<Vec3f> dynfs; 
 
 			bool notbi = false;
-			float nstDist = nearest, nstFDist, nstEDist;
+			float nstDist = nearest /*, nstFDist, nstEDist*/ ;
 			int nstfid, nsteidA, nsteidB, nstType = 1;
 			Vec3f tmpbaseP, baseP;
 			Vec3f setP = tgtMesh->vertices[nearesti];
 			Vec3f efnormal, facenormal, eAvgNormal, tmpnormal;
-			for (int fiv = 0; fiv < vfit->second.size(); fiv++)
+			for (int fiv = 0; fiv < (int)vfit->second.size(); fiv++)
 			{
 				/*for(int fii = 0;fii<tgtMesh->faces[facevct[fiv]].nVertices;fii++)
 				{*/
@@ -218,7 +218,7 @@ namespace Spr
 					int size = (int)vfit->second.size();
 					int dirNum = 0;
 					float neareastDir = 100.0f;
-					for (int fiv = 0; fiv < vfit->second.size(); fiv++)
+					for (int fiv = 0; fiv < (int)vfit->second.size(); fiv++)
 					{
 						/*for(int fii = 0;fii<tgtMesh->faces[facevct[fiv]].nVertices;fii++)
 						{*/
@@ -258,7 +258,7 @@ namespace Spr
 				vector<Vec3f> planePs;
 
 				int size = (int)vfit->second.size();
-				for (int fiv = 0; fiv < vfit->second.size(); fiv++)
+				for (int fiv = 0; fiv < (int)vfit->second.size(); fiv++)
 				{
 					/*for(int fii = 0;fii<tgtMesh->faces[facevct[fiv]].nVertices;fii++)
 					{*/
@@ -311,7 +311,7 @@ namespace Spr
 				if (true == insideOBJ)
 				{
 					Vec3f subGoal = currSubStart;
-					for (int zi = 0; zi < planeNs.size(); zi++)
+					for (int zi = 0; zi < (int)planeNs.size(); zi++)
 					{
 						//Vec3f vt = tgtMesh->vertices[nearesti];
 
@@ -366,7 +366,7 @@ namespace Spr
 				DA.AddTempDrawFont3D(v1 + efnormal / 2, "v1");
 #endif
 				v2 = tgtMesh->vertices[nsteidA];
-				for (int fiv = 0; fiv < mvfit->second.size(); fiv++)
+				for (int fiv = 0; fiv < (int)mvfit->second.size(); fiv++)
 				{
 					/*for(int fii = 0;fii<tgtMesh->faces[facevct[fiv]].nVertices;fii++)
 					{*/
@@ -1172,7 +1172,7 @@ namespace Spr
 						//vector<PHOpHapticController::ConstrainPlaneInfo*>::iterator unii = unique(slvItr.constrainIs.begin(), slvItr.constrainIs.end());
 						//if (unii == slvItr.constrainIs.end())
 						bool repeat = false;
-						for (int ii = 0; ii < slvItr.constrainIs.size(); ii++)
+						for (int ii = 0; ii < (int)slvItr.constrainIs.size(); ii++)
 						{
 							PHOpHapticController::ConstrainPlaneInfo *cpinfo1 = slvItr.constrainIs[ii];
 							switch (cpinfo1->cstType)
@@ -1275,7 +1275,7 @@ namespace Spr
 
 	bool PHOpHapticRenderer::intersectOnRouteInColliPs(Vec3f currSubStart, Vec3f currSubGoal, Vec3f &newSubStart, Vec3f &newSubGoal, PHOpHapticController::ConstrainPlaneInfo &cpinfo, bool inverseF)
 	{
-		MatrixExtension me;
+		//MatrixExtension me;
 
 		//vector<Vec3f> subRouteGoals;
 		//Vec3f nearestRouteStart;
@@ -1294,13 +1294,13 @@ namespace Spr
 		int IsIntsctedOverf;
 		int IsIntsctedEdgecyliner;
 		int IsIntsctedSphere;
-		int IsIntsctedOverf2;
+		//int IsIntsctedOverf2;
 		//float enlargeProp = 5;
 		float detectRadius = (userPoint - currSubStart).norm();// prcRoute.norm();
 		if (detectRadius < myHc->hcElmDtcRadius)
 			detectRadius = myHc->hcElmDtcRadius;
 
-		for (int suspi = 0; suspi<myHc->hcColliedPs.size(); suspi++)
+		for (int suspi = 0; suspi < (int)myHc->hcColliedPs.size(); suspi++)
 		{
 			int obji = myHc->hcColliedPs[suspi].objIndex;
 
@@ -1313,7 +1313,7 @@ namespace Spr
 			int faceNum = tgtMesh->NFace();
 			//collect face inrange
 			//for(int ofi = 0;ofi < faceNum; ofi++)
-			for (int finpi = 0; finpi<dp.pFaceInd.size(); finpi++)
+			for (int finpi = 0; finpi < (int)dp.pFaceInd.size(); finpi++)
 			{
 				int ofi = dp.pFaceInd[finpi];
 				bool finr = false;
@@ -1359,7 +1359,7 @@ namespace Spr
 
 			}
 			//new for tstoverTriface
-			for (int fi = 0; fi < fsInRange.size(); fi++)
+			for (int fi = 0; fi < (int)fsInRange.size(); fi++)
 			{
 				int ofi = fsInRange[fi];
 
@@ -1443,7 +1443,7 @@ namespace Spr
 			}
 
 			//new for tstEdgeCylinder
-			for (int fi = 0; fi < fsInRange.size(); fi++)
+			for (int fi = 0; fi < (int)fsInRange.size(); fi++)
 			{
 				int i = fsInRange[fi];
 				//no map is needed
@@ -1606,7 +1606,7 @@ namespace Spr
 			}
 
 			//new for tstvertexBall
-			for (int vi = 0; vi<vsInRange.size(); vi++)
+			for (int vi = 0; vi < (int)vsInRange.size(); vi++)
 			{
 				Vec3f &vP = tgtMesh->vertices[vsInRange[vi]];
 
@@ -1690,7 +1690,7 @@ namespace Spr
 #ifdef Old_Functions
 	bool PHOpHapticRenderer::intersectOnRoute(Vec3f currSubStart, Vec3f currSubGoal, Vec3f &newSubStart, Vec3f &newSubGoal, PHOpHapticController::ConstrainPlaneInfo &cpinfo, bool inverseF)
 	{
-		MatrixExtension me;
+		//MatrixExtension me;
 		float mPrevPrecE = 0.001f;
 		//vector<Vec3f> subRouteGoals;
 		//Vec3f nearestRouteStart;
@@ -1709,7 +1709,7 @@ namespace Spr
 		int IsIntsctedOverf;
 		int IsIntsctedEdgecyliner;
 		int IsIntsctedSphere;
-		int IsIntsctedOverf2;
+		//int IsIntsctedOverf2;
 		//float enlargeProp = 8;
 		float detectRadius = (userPoint - currSubStart).norm();
 		if (detectRadius < myHc->hcElmDtcRadius)
@@ -1769,7 +1769,7 @@ namespace Spr
 
 			}
 			//new for tstoverTriface
-			for (int fi = 0; fi < fsInRange.size(); fi++)
+			for (int fi = 0; fi < (int)fsInRange.size(); fi++)
 			{
 				int ofi = fsInRange[fi];
 
@@ -1853,7 +1853,7 @@ namespace Spr
 			}
 
 			//new for tstEdgeCylinder
-			for (int fi = 0; fi < fsInRange.size(); fi++)
+			for (int fi = 0; fi < (int)fsInRange.size(); fi++)
 			{
 				int i = fsInRange[fi];
 				//no map is needed
@@ -2019,7 +2019,7 @@ namespace Spr
 			}
 
 			//new for tstvertexBall
-			for (int vi = 0; vi<vsInRange.size(); vi++)
+			for (int vi = 0; vi < (int)vsInRange.size(); vi++)
 			{
 				Vec3f &vP = tgtMesh->vertices[vsInRange[vi]];
 
@@ -2146,7 +2146,7 @@ namespace Spr
 					if (listIna)
 					{
 						vector<int> &va = l_ita->second;
-						for (int vi = 0; vi<va.size(); vi++)
+						for (int vi = 0; vi < (int)va.size(); vi++)
 						{
 							if (va[vi] == b) bExistIna = true;
 							if (va[vi] == c) cExistIna = true;
@@ -2156,7 +2156,7 @@ namespace Spr
 					if (listInb)
 					{
 						vector<int> &vb = l_itb->second;
-						for (int vi = 0; vi<vb.size(); vi++)
+						for (int vi = 0; vi < (int)vb.size(); vi++)
 						{
 							if (vb[vi] == a) aExistInb = true;
 							if (vb[vi] == c) cExistInb = true;
@@ -2166,7 +2166,7 @@ namespace Spr
 					if (listInc)
 					{
 						vector<int> &vc = l_itc->second;
-						for (int vi = 0; vi<vc.size(); vi++)
+						for (int vi = 0; vi < (int)vc.size(); vi++)
 						{
 							if (vc[vi] == a) aExistInc = true;
 							if (vc[vi] == b) bExistInc = true;
@@ -2176,7 +2176,7 @@ namespace Spr
 					if (fourv&&listInd)
 					{
 						vector<int> &vd = l_itd->second;
-						for (int vi = 0; vi<vd.size(); vi++)
+						for (int vi = 0; vi < (int)vd.size(); vi++)
 						{
 							if (vd[vi] == a) aExistInd = true;
 							if (vd[vi] == b) bExistInd = true;
@@ -2358,7 +2358,7 @@ namespace Spr
 
 					vector<int>&la = l_ita->second;
 					bool inside = false;
-					for (int i = 0; i<la.size(); i++)
+					for (int i = 0; i < (int)la.size(); i++)
 					{
 						if (la[i] == ofi)inside = true;
 					}
@@ -2379,7 +2379,7 @@ namespace Spr
 				else{
 					vector<int>&lb = l_itb->second;
 					bool inside = false;
-					for (int i = 0; i<lb.size(); i++)
+					for (int i = 0; i < (int)lb.size(); i++)
 					{
 						if (lb[i] == ofi)inside = true;
 					}
@@ -2400,7 +2400,7 @@ namespace Spr
 				else{
 					vector<int>&lc = l_itc->second;
 					bool inside = false;
-					for (int i = 0; i<lc.size(); i++)
+					for (int i = 0; i < (int)lc.size(); i++)
 					{
 						if (lc[i] == ofi)inside = true;
 					}
@@ -2423,7 +2423,7 @@ namespace Spr
 					{
 						vector<int>&ld = l_itd->second;
 						bool inside = false;
-						for (int i = 0; i<ld.size(); i++)
+						for (int i = 0; i < (int)ld.size(); i++)
 						{
 							if (ld[i] == ofi)inside = true;
 						}
