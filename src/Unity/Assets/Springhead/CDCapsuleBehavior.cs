@@ -21,10 +21,11 @@ public class CDCapsuleBehavior : SpringheadBehaviour{
             CDCapsuleDesc descCapsule = new CDCapsuleDesc();
             Vector3 scale = gameObject.transform.lossyScale;
             descCapsule.radius = cc.radius * (Mathf.Max(Mathf.Max(scale.x, scale.y), scale.z));
-            descCapsule.length = cc.height * scale.y;// cc.radius * (Mathf.Max(Mathf.Max(scale.x, scale.y), scale.z));
+            descCapsule.length = cc.height * (Mathf.Max(Mathf.Max(scale.x, scale.y), scale.z))-descCapsule.radius*2;// cc.radius * (Mathf.Max(Mathf.Max(scale.x, scale.y), scale.z));
+            Debug.Log("radius is " + descCapsule.radius);
+            Debug.Log("lengh is " + descCapsule.length);
             solidBehaviour.phSolid.AddShape(phSdk.CreateShape(CDCapsuleIf.GetIfInfoStatic(), descCapsule));
         }
-        
     }
 
     public void OnValidate()
