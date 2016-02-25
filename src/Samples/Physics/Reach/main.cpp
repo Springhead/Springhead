@@ -191,7 +191,7 @@ public:
 		// 初期視点
 		GetCurrentWin()->GetTrackball()->SetTarget  (Vec3f(0.0f, 0.2f, 0.0f));
 		GetCurrentWin()->GetTrackball()->SetDistance(2.0);
-		GetCurrentWin()->GetTrackball()->SetAngle   (Rad(135.0), Rad(30.0));
+		GetCurrentWin()->GetTrackball()->SetAngle   ((float)Rad(135.0), (float)Rad(30.0));
 	}
 
 	virtual void OnAction(int menu, int id){
