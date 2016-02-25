@@ -43,21 +43,24 @@
 #
 BINDIR		= .
 INCDIR		= ..\..\include
+RUNSWIG		= ..\RunSwig
 FOUNDATION	= ..\Foundation
 FRAMEWORK	= ..\Framework
+EMBPYTHON	= ..\EmbPython
 
 #  使用するスクリプト
 #
 SCILABSWIG	= ScilabSwig.bat
 RUNSWIGFW	= RunSwigFramework.bat
 SCRIPT		= do_swigall.bat
+EP_SCRIPT	= RunSwig.bat
 
 #  前処理で作成するファイル
 #
 SCILABSTUBHDR	= $(INCDIR)\ScilabStub.hpp
 FWOLDSPRSTUB	= $(FRAMEWORK)\FWOldSpringheadStub.cpp
 
-all:	PreWork RunSwig
+all:	PreWork RunSwig RunEmbPythonSwig
 
 PreWork:	$(SCILABSTUBHDR) $(FWOLDSPRSTUB)
 
@@ -69,3 +72,9 @@ $(FWOLDSPRSTUB):
 
 RunSwig:	
 		$(BINDIR)\$(SCRIPT)
+
+RunEmbPythonSwig:	
+		@echo *** EmbPython ***
+		@cd $(EMBPYTHON)
+		$(EP_SCRIPT)
+		@cd $(RUNSWIG)
