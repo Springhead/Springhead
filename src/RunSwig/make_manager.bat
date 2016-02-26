@@ -18,16 +18,10 @@
 ::	テンポラリファイルの作成モードがあるのは, make の実行中に Makefile.swig を
 ::	書き換えてしまうのを回避するため.
 ::
-::  Ver 2.0 での追加機能
-::	EmbPython/RunSwig.bat との連携を図るために、EmbPython/RunSwig.bat から呼び
-::	出される Makfile のターゲットコマンドを強制的に実行させるための仕組みを -d
-::	オプションに追加する.
-::
 :: ***********************************************************************************
 ::  Version:
 ::	Ver 1.0	 2013/01/07 F.Kanehori	初版
 ::	Ver 1.1	 2013/03/13 F.Kanehori	モジュール識別文字列一部変更
-::	Ver 2.0  2016/02/25 F.Kanehori	-d オプションの機能追加
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set CWD=%cd%
@@ -50,14 +44,12 @@ set MAKEFILE=Makefile.swig
 set MAKETEMP=Makefile.swig.tmp
 set PROJFILE=do_swigall.projs
 set PROJFILEONE=do_swigone.projs
-set EP_DEPEND=EPBase.cpp
 
 :: ディレクトリの定義
 ::
 set SRCDIR=..\..\src
 set BINDIR=..\..\src\RunSwig
 set ETCDIR=..\..\src\RunSwig
-set EP_DIR=..\..\src\EmbPython
 
 :: ------------------------
 ::  -A オプションの処理
@@ -147,17 +139,12 @@ if %INIT% gtr 0 (
 
 :: ------------------------------------
 ::  引数 -d の処理： %MAKEFILE% を削除
-::		   : EmbPython の依存ファイルを削除 (Ver 2.0)
 :: ------------------------------------
 ::
 if %ARG_D% == 1 (
     if exist %MAKEFILE% (
 	    if %DEBUG% == 1 echo removing "%MAKEFILE%"
 	    del %MAKEFILE%
-    )
-    if exist %EP_DIR%\%EP_DEPEND% (
-	    if %DEBUG% == 1 echo removing "%EP_DIR%\%EP_DEPEND%"
-	    del %EP_DIR%\%EP_DEPEND%
     )
 )
 
