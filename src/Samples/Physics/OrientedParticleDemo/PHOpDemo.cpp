@@ -44,7 +44,7 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	tmp->CreateOpObj();
 
 	FWOpObj *tmp2 = GetSdk()->GetScene()->FindObject("fwOpObj2")->Cast();
-	tmp2->CreateOpObj();
+	if (tmp2->grMesh) tmp2->CreateOpObj();
 
 	DrawHelpInfo = true;
 	checkPtclInfo = true;
