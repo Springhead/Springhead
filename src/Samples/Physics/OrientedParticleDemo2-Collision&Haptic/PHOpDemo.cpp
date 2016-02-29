@@ -199,7 +199,7 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	
 	
 
-	int f = opHrDesc->forceSpring;
+	int f = (int) opHrDesc->forceSpring;
 
 	PHOpObjDesc* dp1 = opEnginedesc->opObjs[0];
 	PHOpObjDesc* dp2 = opEnginedesc->opObjs[1];
@@ -893,26 +893,26 @@ void PHOpDemo::Display()
 		render->SetMaterial(GRRenderIf::CHOCOLATE);
 
 		Affinef affpos;
-		for (int j = 0; j<opsh->pPCtcPs.size(); j++)
+		for (int j = 0; j<(int)opsh->pPCtcPs.size(); j++)
 		{
 			affpos.Pos() = opsh->pPCtcPs[j];
 			render->SetMaterial(GRRenderIf::CHOCOLATE);
 			render->PushModelMatrix();
 			render->MultModelMatrix(affpos);
-			render->DrawSphere(0.15, 10, 10, true);
+			render->DrawSphere(0.15f, 10, 10, true);
 
 			render->PopModelMatrix();
 		}
 		render->SetMaterial(GRRenderIf::NAVAJOWHITE);
 
 
-		for (int j = 0; j<opsh->pPCtcPs2.size(); j++)
+		for (int j = 0; j<(int)opsh->pPCtcPs2.size(); j++)
 		{
 			affpos.Pos() = opsh->pPCtcPs2[j];
 			render->SetMaterial(GRRenderIf::NAVAJOWHITE);
 			render->PushModelMatrix();
 			render->MultModelMatrix(affpos);
-			render->DrawSphere(0.15, 10, 10, true);
+			render->DrawSphere(0.15f, 10, 10, true);
 
 			render->PopModelMatrix();
 		}
