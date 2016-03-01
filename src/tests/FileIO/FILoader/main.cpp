@@ -24,7 +24,9 @@
 #include <GL/glut.h>
 
 #define	ESC				27				// Esc key
-#define EXIT_TIMER		12000			// 強制終了させるステップ数
+//#define EXIT_TIMER		12000			// 強制終了させるステップ数
+#define EXIT_TIMER		1200
+
 
 namespace Spr{
 	UTRef<PHSdkIf> phSdk;

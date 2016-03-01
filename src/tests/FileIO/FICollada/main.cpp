@@ -21,7 +21,8 @@
 #include <Springhead.h>
 #include <GL/glut.h>
 #define	ESC				27				// Esc key
-#define EXIT_TIMER	20000
+//#define EXIT_TIMER	20000
+#define	EXIT_TIMER	1000
 #define TEST_FILECOLLADA	"test1.dae"
 
 
