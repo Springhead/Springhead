@@ -22,8 +22,8 @@ public class CDCapsuleBehavior : SpringheadBehaviour{
             CDCapsuleDesc descCapsule = new CDCapsuleDesc();
             Vector3 scale = gameObject.transform.lossyScale;
             Vector3 position = gameObject.GetComponent<Transform>().position;
-            descCapsule.radius = cc.radius * (Mathf.Max(Mathf.Max(scale.x, scale.y), scale.z));
-            descCapsule.length = cc.height * (Mathf.Max(Mathf.Max(scale.x, scale.y), scale.z))-descCapsule.radius*2;
+            descCapsule.radius = cc.radius * (Mathf.Max(scale.x, scale.z));
+            descCapsule.length = cc.height * scale.y - descCapsule.radius * 2;
             solidBehaviour.phSolid.AddShape(phSdk.CreateShape(CDCapsuleIf.GetIfInfoStatic(), descCapsule));
             Vec3d p = new Vec3d(0.0,0.0,0.0);
             Quaterniond q = Quaterniond.Rot(90.0 * Mathf.Deg2Rad, new Vec3d(1.0, 0.0, 0.0));
