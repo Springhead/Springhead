@@ -26,22 +26,14 @@ namespace SprCsSample {
                 if (check_test("F"))  test_func_call();
                 if (check_test("s"))  test_simulation();
             }
-            catch (SEHException e) {
-                System.Console.WriteLine("C#: SEH_Exception");
-                System.Console.WriteLine(e.ToString());
+            catch (ExternalException e) {
+                System.Console.WriteLine(SEH_Exception.what());
+               	System.Console.WriteLine(e.ToString());
             }
-            catch (Exception e) {
-                System.Console.WriteLine("C#: Exception");
-                System.Runtime.CompilerServices.RuntimeWrappedException rwe = e as System.Runtime.CompilerServices.RuntimeWrappedException;
-                if (rwe != null) {
-                    System.Console.WriteLine("RuntimeWrappedException");
-                    String s = rwe.WrappedException as String;
-                    if (s != null) {
-                        System.Console.WriteLine(s);
-                    }
-                }
-                System.Console.WriteLine(e.ToString());
-            }
+            //catch (Exception e) {
+            //    System.Console.WriteLine("C#: Exception");
+            //    System.Console.WriteLine(e.ToString());
+            //}
         }
 
         static bool check_test(string chk) {

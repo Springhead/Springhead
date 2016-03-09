@@ -93,6 +93,7 @@
     <Compile Include="CSGraphics.cs" />
     <Compile Include="CSHumanInterface.cs" />
     <Compile Include="CSPhysics.cs" />
+    <Compile Include="CSUtility.cs" />
     <Compile Include="cs_object.cs" />
     <Compile Include="module.wrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
