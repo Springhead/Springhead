@@ -15,8 +15,7 @@ const char* printStack(void* sample_address);
 
 void __cdecl se_translator(unsigned int code, _EXCEPTION_POINTERS* ep) {
 	SEH_Exception se(code, ep);
-	//printf("se_trans: code %x\n", code);
-	//printf("%s\n", se.what());
+	se.trace();
 	throw se;
 }
 
@@ -222,7 +221,7 @@ const char* printStack(void* sample_address) {
 	HANDLE process;
 	process = GetCurrentProcess();
 	SymInitialize(process, NULL, TRUE);
-	frames = (func) (2, kMaxCallers, callers_stack, NULL);
+	frames = (func) (0, kMaxCallers, callers_stack, NULL);
 	symbol = (SYMBOL_INFO*) calloc(sizeof(SYMBOL_INFO) + 256 * sizeof(char), 1);
 	symbol->MaxNameLen = 255;
 	symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
