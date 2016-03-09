@@ -234,7 +234,7 @@ const char* printStack(void* sample_address) {
 	for (unsigned int i = 0, n = 0; i < frames; i++) {
  		const char* trace = convertAddress(process, (D_WORD)(callers_stack[i]));
 		if (filterStackTrace(APPLY_FILTER, trace)) {
-			out << "*** " << n++ << ": " << trace << std::endl;
+			out << "[" << n++ << "] " << trace << std::endl;
 		}
 	}
 
