@@ -9,6 +9,7 @@
 #define PH_IKENGINE_H
 
 #include <Physics/SprPHIK.h>
+#include <Physics/SprPHEngine.h>
 #include "PHEngine.h"
 
 #include <Foundation/UTClapack.h>
@@ -22,9 +23,10 @@ class PHIKEndEffector;
 // IKエンジン
 // 
 
-class PHIKEngine : public PHEngine{
+class PHIKEngine : public PHEngine , public PHIKEngineDesc {
 public:
 	SPR_OBJECTDEF(PHIKEngine);
+	ACCESS_DESC(PHIKEngine);
 
 	// --- --- --- --- ---
 
@@ -58,17 +60,12 @@ public:
 
 	// --- --- --- --- ---
 
-	bool	bEnabled;
-	bool	bTest;
-	size_t	numIter;
-	double  maxVel, maxAngVel, maxActVel;
-	double  regularizeParam;
 	int     lastM, lastN;
 	double  iterCutOffAngVel;
 
 	// --- --- --- --- --- --- --- --- --- ---
 
-	PHIKEngine();
+	PHIKEngine(const PHIKEngineDesc& desc = PHIKEngineDesc());
 
 	int  GetPriority() const {return SGBP_INVERSEKINEMATICS;}
 	void Step();

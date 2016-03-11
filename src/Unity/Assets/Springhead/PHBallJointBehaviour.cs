@@ -22,8 +22,9 @@ public class PHBallJointBehaviour : SpringheadBehaviour {
             socket = gameObject.transform.parent.GetComponentInParent<PHSolidBehaviour>().gameObject;
         }
         if (!plug) {
-            plug = gameObject.GetComponentInChildren<PHSolidBehaviour>().gameObject;
+            plug = gameObject.GetComponentInParent<PHSolidBehaviour>().gameObject;
         }
+        print("joint " + name + " : socket = " + socket.name + " plug = " + plug.name);
 
         if (socket && plug) {
             PHSolidIf soSock = socket.GetComponent<PHSolidBehaviour>().phSolid;
@@ -41,6 +42,9 @@ public class PHBallJointBehaviour : SpringheadBehaviour {
 
             phJoint = phScene.CreateJoint(soSock, soPlug, PHBallJointIf.GetIfInfoStatic(), d).Cast();
             phJoint.SetName("jo:" + gameObject.name);
+        } else {
+            if (!socket) { print("socket not found for " + name); }
+            if (!plug) { print("plug not found for " + name); }
         }
     }
 }

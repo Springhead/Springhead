@@ -238,7 +238,7 @@ void FIFile::SaveNode(FISaveContext* sc, ObjectIf* obj){
 void FIFile::SaveBlock(FISaveContext* sc){
 	OnSaveBlockStart(sc);
 	void* base = sc->datas.Top()->data;
-	while(sc->fieldIts.back().NextField(base)){
+	while (sc->fieldIts.back().NextField(base)){
 		//UTTypeDesc::Composit::iterator field = sc->fieldIts.back().field;	//	現在のフィールド型
 		UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);
 		//	要素数の取得

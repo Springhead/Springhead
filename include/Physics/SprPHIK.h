@@ -51,7 +51,7 @@ struct PHIKEndEffectorDesc : public PHIKEndEffectorState {
 
 	bool   bPosition;				///< 位置制御を有効にするかどうか
 	bool   bOrientation;			///< 姿勢制御を有効にするかどうか
-	OriCtlMode oriCtlMode;			///< 姿勢制御のモード（Quaternion, Direction, Lookat）
+	int    oriCtlMode;				///< 姿勢制御のモード（Quaternion, Direction, Lookat）
 	bool   bForce;					///< 力制御を有効にするかどうか
 	bool   bTorque;					///< トルク制御を有効にするかどうか
 

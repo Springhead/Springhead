@@ -14,6 +14,11 @@ const char* get_additional_reason(EXCEPTION_RECORD* er);
 const char* printStack(void* sample_address);
 
 void __cdecl se_translator(unsigned int code, _EXCEPTION_POINTERS* ep) {
+	{
+		std::ofstream ofs("out.txt", std::ios_base::out | std::ios_base::app);
+		ofs << "in translator" << std::endl;
+		ofs.close();
+	}
 	SEH_Exception se(code, ep);
 	se.trace();
 	throw se;
@@ -264,14 +269,14 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	case DLL_THREAD_ATTACH:
 		printf("DllMain: DLL_THREAD_ATTACH: new thread is creating.\n");
 		// OS—áŠO‚©‚çC++—áŠO‚Ö‚Ì–|–óÝ’è
-		//_set_se_translator(se_translator);
-		//printf("set SEH translator (" HEXFMT ").\n", ADDR(se_translator));
+		_set_se_translator(se_translator);
+		printf("set SEH translator (" HEXFMT ").\n", ADDR(se_translator));
 		break;
 	case DLL_THREAD_DETACH:
 		printf("DllMain: DLL_THREAD_DETACH: current thread is exiting.\n");
 		// OS—áŠO‚©‚çC++—áŠO‚Ö‚Ì–|–ó‰ðœ
-		//se_trans = _set_se_translator(NULL);
-		//printf("unset SEH translator (" HEXFMT ").\n", ADDR(se_trans));
+		se_trans = _set_se_translator(NULL);
+		printf("unset SEH translator (" HEXFMT ").\n", ADDR(se_trans));
 		break;
 	case DLL_PROCESS_DETACH:
 		printf("DllMain: DLL_PROCESS_DETACH: DLL will be released by %s.\n", msg_pd[idx]);

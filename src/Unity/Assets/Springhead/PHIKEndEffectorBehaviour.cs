@@ -6,6 +6,8 @@ public class PHIKEndEffectorBehaviour : SpringheadBehaviour {
     public PHIKEndEffectorIf phIKee = null;
     public PHIKEndEffectorDescStruct phIKeeDescriptor = null;
 
+    public GameObject iktarget = null;
+
     void Reset() {
         SetDLLPath();
         phIKeeDescriptor = new PHIKEndEffectorDesc();
@@ -20,7 +22,7 @@ public class PHIKEndEffectorBehaviour : SpringheadBehaviour {
         phIKee.Enable(true);
         phIKee.EnableOrientationControl(true);
 
-        PHSolidBehaviour solidBehaviour = gameObject.transform.parent.GetComponentInParent<PHSolidBehaviour>();
+        PHSolidBehaviour solidBehaviour = gameObject.GetComponent<PHSolidBehaviour>();
         if (solidBehaviour != null && solidBehaviour.phSolid != null) {
             phIKee.AddChildObject(solidBehaviour.phSolid);
         }
@@ -29,7 +31,7 @@ public class PHIKEndEffectorBehaviour : SpringheadBehaviour {
     }
 
     void Start () {
-        PHIKBallActuatorBehaviour ba = gameObject.GetComponentInParent<PHIKBallActuatorBehaviour>();
+        PHIKBallActuatorBehaviour ba = gameObject.GetComponentInChildren<PHIKBallActuatorBehaviour>();
         if (ba != null && ba.phIKAct != null && phIKee != null) {
             ba.phIKAct.AddChildObject(phIKee);
         }
@@ -40,7 +42,6 @@ public class PHIKEndEffectorBehaviour : SpringheadBehaviour {
     }
 
     public void UpdateIKTargetPosition() {
-        GameObject iktarget = GameObject.Find("IKTarget");
         if (iktarget != null) {
             Vector3 p = iktarget.transform.position;
             Quaternion q = iktarget.transform.rotation;

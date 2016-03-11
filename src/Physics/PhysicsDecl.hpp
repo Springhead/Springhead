@@ -52,6 +52,36 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_PHIKEngineDesc \
+protected:\
+	bool	bEnabled;	\
+	size_t	numIter;	\
+	double	maxVel;	\
+	double	maxAngVel;	\
+	double	maxActVel;	\
+	double	regularizeParam;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		bEnabled = ((PHIKEngineDesc*)ptr)->bEnabled;	\
+		numIter = ((PHIKEngineDesc*)ptr)->numIter;	\
+		maxVel = ((PHIKEngineDesc*)ptr)->maxVel;	\
+		maxAngVel = ((PHIKEngineDesc*)ptr)->maxAngVel;	\
+		maxActVel = ((PHIKEngineDesc*)ptr)->maxActVel;	\
+		regularizeParam = ((PHIKEngineDesc*)ptr)->regularizeParam;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHIKEngineDesc*)ptr)->bEnabled = bEnabled;	\
+		((PHIKEngineDesc*)ptr)->numIter = numIter;	\
+		((PHIKEngineDesc*)ptr)->maxVel = maxVel;	\
+		((PHIKEngineDesc*)ptr)->maxAngVel = maxAngVel;	\
+		((PHIKEngineDesc*)ptr)->maxActVel = maxActVel;	\
+		((PHIKEngineDesc*)ptr)->regularizeParam = regularizeParam;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_PHHapticEngineDesc \
 protected:\
 public:\
@@ -372,7 +402,7 @@ protected:\
 	bool	bEnabled;	\
 	bool	bPosition;	\
 	bool	bOrientation;	\
-	Spr::PHIKEndEffectorDesc::OriCtlMode	oriCtlMode;	\
+	int	oriCtlMode;	\
 	bool	bForce;	\
 	bool	bTorque;	\
 	double	positionPriority;	\

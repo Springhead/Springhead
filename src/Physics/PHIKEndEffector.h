@@ -170,8 +170,8 @@ public:
 
 	/** @brief 姿勢制御のモードを設定する
 	*/
-	void SetOriCtlMode(PHIKEndEffectorDesc::OriCtlMode mode) { oriCtlMode = mode; }
-	PHIKEndEffectorDesc::OriCtlMode GetOriCtlMode() { return oriCtlMode; }
+	void SetOriCtlMode(PHIKEndEffectorDesc::OriCtlMode mode) { oriCtlMode = (int)mode; }
+	PHIKEndEffectorDesc::OriCtlMode GetOriCtlMode() { return (PHIKEndEffectorDesc::OriCtlMode)oriCtlMode; }
 
 	/** @brief 姿勢の目標値を設定する
 	*/
