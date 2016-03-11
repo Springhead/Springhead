@@ -148,6 +148,15 @@ public:
 
 };
 
+struct PHIKEngineDesc {
+	bool	bEnabled;
+	size_t	numIter;
+	double  maxVel, maxAngVel, maxActVel;
+	double  regularizeParam;
+
+	PHIKEngineDesc();
+};
+
 struct PHIKEngineIf : PHEngineIf{
 public:
 	/** @brief IK機能が有効か無効か

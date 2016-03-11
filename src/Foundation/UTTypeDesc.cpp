@@ -474,6 +474,7 @@ void UTTypeDescFieldIt::SetFieldInfo(void* base){
 	//	配列カウントを初期化
 	arrayPos = -1;
 	//	フィールドの型を設定
+	DSTR << field->name << std::endl;
 	if (!field->type){
 		DSTR << type->GetTypeName() << " has NULL field type" << std::endl;
 		type->Print(DSTR);

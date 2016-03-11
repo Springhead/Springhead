@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SprCs;
+using System.Runtime.InteropServices;
 
 public class PHSceneBehaviour : SpringheadBehaviour {
     public PHSceneDescStruct phSceneDescriptor = null;
@@ -33,9 +34,6 @@ public class PHSceneBehaviour : SpringheadBehaviour {
     void FixedUpdate () {
 		if (phScene!=null) {
 			phScene.Step ();
-            for (int i=0; i<phScene.NJoints(); i++) {
-                PHBallJointIf j = phScene.GetJoint(i).Cast();
-            }
 		}
 	}
 

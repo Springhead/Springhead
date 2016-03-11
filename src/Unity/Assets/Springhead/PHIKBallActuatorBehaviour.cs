@@ -19,25 +19,39 @@ public class PHIKBallActuatorBehaviour : SpringheadBehaviour {
         phIKAct.SetName("ika:" + gameObject.name);
         phIKAct.Enable(true);
 
-        PHBallJointBehaviour jointBehaviour = gameObject.transform.parent.GetComponentInParent<PHBallJointBehaviour>();
-        if (jointBehaviour != null && jointBehaviour.phJoint != null) {
-            phIKAct.AddChildObject(jointBehaviour.phJoint);
+        PHBallJointBehaviour bj = gameObject.GetComponent<PHBallJointBehaviour>();
+        if (bj != null && bj.phJoint != null) {
+            phIKAct.AddChildObject(bj.phJoint);
+            print(phIKAct.GetName() + " <= " + bj.phJoint.GetName());
         }
     }
 
     void Start () {
-        PHIKBallActuatorBehaviour ba = gameObject.transform.parent.GetComponentInParent<PHIKBallActuatorBehaviour>();
-        if (ba != null && ba.phIKAct != null && phIKAct != null) {
-            ba.phIKAct.AddChildObject(phIKAct);
+        PHBallJointBehaviour bj = gameObject.GetComponent<PHBallJointBehaviour>();
+        if (bj != null && bj.phJoint != null && phIKAct != null) {
+            PHBallJointBehaviour bjParent = bj.socket.GetComponentInChildren<PHBallJointBehaviour>();
+            if (bjParent != null && bj != bjParent) {
+                print("parent joint of " + bj.name + " is " + bjParent.name);
+                PHIKBallActuatorBehaviour ba = bjParent.GetComponent<PHIKBallActuatorBehaviour>();
+                if (ba != null && ba.phIKAct != null && phIKAct != ba.phIKAct) {
+                    ba.phIKAct.AddChildObject(phIKAct);
+                    print(phIKAct.GetName() + " is a child of " + ba.phIKAct.GetName());
+                }
+            }
         }
         OnValidate();
     }
 
     public void OnValidate() {
         SetDLLPath();
+        if (ballActuatorDescriptor == null) {
+            ballActuatorDescriptor = new PHIKBallActuatorDesc();
+        }
+        /* // PHIKBallActuatorDescStructのバグのせいで落ちる。直るまでコメントアウト
         if (phIKAct != null) {
             phIKAct.SetBias(ballActuatorDescriptor.bias > 0.1F ? ballActuatorDescriptor.bias : 0.1F);
             phIKAct.SetPullbackRate(ballActuatorDescriptor.pullbackRate > 0 ? ballActuatorDescriptor.pullbackRate : 0);
         }
+        */
     }
 }

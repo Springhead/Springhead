@@ -29,6 +29,13 @@
 %ignore Spr::PHGenericJointCallback;
 %ignore Spr::PHGenericJointIf::SetCallback;
 %ignore Spr::PHFemThermoIf::GetKMatInTet;
+
+%ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
+%ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
+%ignore Spr::PHOpObjDesc;
+%ignore Spr::PHOpObjIf;
+%ignore Spr::PHOpEngineIf;
+
 %include "Utility/EPObject.i"
 EXTEND_NEW(PHSolidDesc)
 EXTEND_NEW(PHPathPoint)

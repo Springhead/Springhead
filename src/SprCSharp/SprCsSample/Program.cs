@@ -169,7 +169,10 @@ namespace SprCsSample {
             }
             PHSdkIf phSdk = PHSdkIf.CreateSdk();
             CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), descMesh) as CDConvexMeshIf;
-            mesh.GetVertices();
+            var vertices = mesh.GetVertices();
+            for (int i = 0; i < mesh.NVertex(); i++) {
+                System.Console.WriteLine(vertices[i]);
+            }
         }
 
         static void test_type_conv() {
@@ -577,6 +580,9 @@ namespace SprCsSample {
             PHBallJointDesc descJoint = new PHBallJointDesc();
             PHBallJointIf j = phScene.CreateJoint(phFloor, phSolid, PHBallJointIf.GetIfInfoStatic(), descJoint).Cast();
             System.Console.WriteLine(j.GetName());
+
+            PHIKBallActuatorDescStruct s = new PHIKBallActuatorDesc();
+            put("bias", "something", s.bias);
 
             /*
             for (int i = 0; i < 200; i++) {

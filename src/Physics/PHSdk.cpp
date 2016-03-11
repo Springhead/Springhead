@@ -91,6 +91,8 @@ void PHSdkIf::RegisterSdk(){
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHOpHapticController));
 	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHOpSpHashColliAgent));
 	
+	PHSceneIf::GetIfInfoStatic()->RegisterFactory(DBG_NEW FactoryImp(PHIKEngine));
+
 	PHRegisterTypeDescs();
 	PHRegisterLoadHandlers();
 	CDRegisterTypeDescs();

@@ -427,7 +427,8 @@ ObjectIf* PHScene::CreateObject(const IfInfo* info, const void* desc){
 size_t PHScene::NChildObject() const{
 	//return engines.size();
 	return NSolids() + NJoints() + NRootNodes() + NGears() + NPaths()
-		+ NContacts() + NRays() + NIKActuators() + NIKEndEffectors();
+		+ NContacts() + NRays() + NIKActuators() + NIKEndEffectors()
+		+ 1; // for PHIKEngine
 }
 ObjectIf* PHScene::GetChildObject(size_t pos){
 	//return engines[pos]->Cast();
@@ -448,6 +449,9 @@ ObjectIf* PHScene::GetChildObject(size_t pos){
 	if(pos < (size_t)NIKActuators()) return GetIKActuator((int)pos);
 	pos -= NIKActuators();
 	if(pos < (size_t)NIKEndEffectors()) return GetIKEndEffector((int)pos);
+	pos -= NIKEndEffectors();
+	if (pos < 1) return GetIKEngine();
+	pos -= 1;
 	return NULL;
 }
 bool PHScene::AddChildObject(ObjectIf* o){
@@ -528,6 +532,16 @@ bool PHScene::AddChildObject(ObjectIf* o){
 			so->SetName(name);
 		}
 	}
+
+	// Engine is not a SceneObject? <!!>
+	PHIKEngine* ikEngine_ = o->Cast();
+	if (ikEngine_) {
+		PHIKEngineDesc d;
+		ikEngine_->GetDesc(&d);
+		ikEngine->SetDesc(&d);
+		ok = true;
+	}
+
 	return ok;
 }
 bool PHScene::DelChildObject(ObjectIf* o){

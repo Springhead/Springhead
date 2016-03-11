@@ -12,6 +12,8 @@
 #include <fstream>
 #include <sstream>
 
+#include <Physics/SprPHEngine.h>
+
 namespace Spr{;
 
 #ifdef _DEBUG
@@ -134,6 +136,7 @@ static bool NextField(){
 			DSTR << "NextField failed. end of composition." << std::endl;
 		}
 	)
+
 	return rv;
 }
 static bool IsFieldValid(){

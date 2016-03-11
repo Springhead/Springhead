@@ -14,20 +14,24 @@ namespace Spr{
 
 //static std::ofstream *dlog;
 
-// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
-// IKEngine
-PHIKEngine::PHIKEngine():
+PHIKEngineDesc::PHIKEngineDesc():
 	numIter(1),
 	bEnabled(false),
-	bTest(false),
 	maxVel(20), // 20[m/s]
 	maxAngVel(Rad(500)), // 500[deg/s]
 	maxActVel(Rad(30)),  //  10[deg/s]
-	regularizeParam(0.7),
+	regularizeParam(0.7)
+{}
+
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+// IKEngine
+PHIKEngine::PHIKEngine(const PHIKEngineDesc& desc):
 	lastM(0),
 	lastN(0),
 	iterCutOffAngVel(0.01)
-	{}
+{
+	SetDesc(&desc);
+}
 
 void PHIKEngine::ApplyExactState(bool reverse) {
 	for(size_t i=0; i<actuators.size(); ++i){
