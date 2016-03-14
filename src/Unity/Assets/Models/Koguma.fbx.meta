@@ -1,0 +1,183 @@
+fileFormatVersion: 2
+guid: 5ba86a3661b317a469165fc3d56a4f6e
+timeCreated: 1450340154
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: Armature
+    100002: Body
+    100004: Bone
+    100006: Bone.001
+    100008: Bone.002
+    100010: Bone.002_L
+    100012: Bone.002_L.001
+    100014: Bone.002_L.002
+    100016: Bone.002_L.003
+    100018: Bone.002_L.003_end
+    100020: Bone.002_R
+    100022: Bone.002_R.001
+    100024: Bone.002_R.002
+    100026: Bone.002_R.003
+    100028: Bone.002_R.003_end
+    100030: Bone.003
+    100032: Bone.003_L
+    100034: Bone.003_L.001
+    100036: Bone.003_L.001_end
+    100038: Bone.003_R
+    100040: Bone.003_R.001
+    100042: Bone.003_R.001_end
+    100044: Bone_L
+    100046: Bone_L.001
+    100048: Bone_L.002
+    100050: Bone_L.003
+    100052: Bone_L.003_end
+    100054: Bone_R
+    100056: Bone_R.001
+    100058: Bone_R.002
+    100060: Bone_R.003
+    100062: Bone_R.003_end
+    100064: Head
+    100066: Hemi
+    100068: //RootNode
+    100070: LeftArm
+    100072: LeftEar
+    100074: LeftEye
+    100076: LeftLeg
+    100078: RightArm
+    100080: RightEar
+    100082: RightEye
+    100084: RightLeg
+    100086: Tail
+    400000: Armature
+    400002: Body
+    400004: Bone
+    400006: Bone.001
+    400008: Bone.002
+    400010: Bone.002_L
+    400012: Bone.002_L.001
+    400014: Bone.002_L.002
+    400016: Bone.002_L.003
+    400018: Bone.002_L.003_end
+    400020: Bone.002_R
+    400022: Bone.002_R.001
+    400024: Bone.002_R.002
+    400026: Bone.002_R.003
+    400028: Bone.002_R.003_end
+    400030: Bone.003
+    400032: Bone.003_L
+    400034: Bone.003_L.001
+    400036: Bone.003_L.001_end
+    400038: Bone.003_R
+    400040: Bone.003_R.001
+    400042: Bone.003_R.001_end
+    400044: Bone_L
+    400046: Bone_L.001
+    400048: Bone_L.002
+    400050: Bone_L.003
+    400052: Bone_L.003_end
+    400054: Bone_R
+    400056: Bone_R.001
+    400058: Bone_R.002
+    400060: Bone_R.003
+    400062: Bone_R.003_end
+    400064: Head
+    400066: Hemi
+    400068: //RootNode
+    400070: LeftArm
+    400072: LeftEar
+    400074: LeftEye
+    400076: LeftLeg
+    400078: RightArm
+    400080: RightEar
+    400082: RightEye
+    400084: RightLeg
+    400086: Tail
+    4300000: Body
+    4300002: LeftArm
+    4300004: LeftEar
+    4300006: RightArm
+    4300008: RightEar
+    4300010: RightLeg
+    4300012: Tail
+    4300014: Head
+    4300016: RightEye
+    4300018: LeftEye
+    4300020: LeftLeg
+    7400000: Armature|ArmatureAction
+    9500000: //RootNode
+    13700000: Body
+    13700002: Head
+    13700004: LeftArm
+    13700006: LeftEar
+    13700008: LeftEye
+    13700010: LeftLeg
+    13700012: RightArm
+    13700014: RightEar
+    13700016: RightEye
+    13700018: RightLeg
+    13700020: Tail
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
