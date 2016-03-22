@@ -47,11 +47,9 @@ public class PHIKBallActuatorBehaviour : SpringheadBehaviour {
         if (ballActuatorDescriptor == null) {
             ballActuatorDescriptor = new PHIKBallActuatorDesc();
         }
-        /* // PHIKBallActuatorDescStructのバグのせいで落ちる。直るまでコメントアウト
         if (phIKAct != null) {
             phIKAct.SetBias(ballActuatorDescriptor.bias > 0.1F ? ballActuatorDescriptor.bias : 0.1F);
             phIKAct.SetPullbackRate(ballActuatorDescriptor.pullbackRate > 0 ? ballActuatorDescriptor.pullbackRate : 0);
         }
-        */
     }
 }
