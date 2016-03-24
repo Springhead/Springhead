@@ -3,19 +3,22 @@ using System.Collections;
 using System.Linq;
 using SprCs;
 
-public class CDRoundConeBehavior : SpringheadBehaviour
-{
+public class CDRoundConeBehavior : SpringheadBehaviour {
     public CDRoundConeDescStruct roundConeDescripter = null;
     public GameObject child = null;
 
-    void Reset()
-    {
+    void Reset() {
         SetDLLPath();
         roundConeDescripter = new CDRoundConeDesc();
     }
 
-    void Awake()
-    {
+    Posed TransformToPose(Transform t) {
+        Vector3 p = t.position;
+        Quaternion q = t.rotation;
+        return new Posed(q.w, q.x, q.y, q.z, p.x, p.y, p.z);
+    }
+
+    void Awake() {
         PHSceneIf phScene = gameObject.GetComponentInParent<PHSceneBehaviour>().GetPHScene();
         PHSdkIf phSdk = phScene.GetSdk();
 
@@ -23,12 +26,26 @@ public class CDRoundConeBehavior : SpringheadBehaviour
         if (mrc != null) {
             // RoundConeプリミティブを使う場合
             PHSolidBehaviour solidBehaviour = gameObject.GetComponentInParent<PHSolidBehaviour>();
+            GameObject solidObject = solidBehaviour.gameObject;
             CDRoundConeDesc descRoundCone = new CDRoundConeDesc();
             descRoundCone.radius = new Vec2f(mrc.r1, mrc.r2);
             descRoundCone.length = mrc.length;
             solidBehaviour.phSolid.AddShape(phSdk.CreateShape(CDRoundConeIf.GetIfInfoStatic(), descRoundCone));
-            Quaterniond q = Quaterniond.Rot(90.0f * Mathf.Deg2Rad, new Vec3d(0,1,0));
-            solidBehaviour.phSolid.SetShapePose(solidBehaviour.phSolid.NShape() - 1, new Posed(q.w, q.x, q.y, q.z, 0, 0, 0));
+
+            // 剛体オブジェクトからの相対変換
+            Posed relposeShapeSolid = TransformToPose(solidObject.transform).Inv() * TransformToPose(gameObject.transform);
+
+            // SpringheadとUnityでカプセルの向きが違うことに対する補正
+            Vec3f p = new Vec3f();
+            if (mrc.pivot == MeshRoundCone.Pivot.R1) {
+                p = new Vec3f(+0.5f * mrc.length, 0, 0);
+            } else if (mrc.pivot == MeshRoundCone.Pivot.R2) {
+                p = new Vec3f(-0.5f * mrc.length, 0, 0);
+            }
+            Quaterniond q = Quaterniond.Rot(90.0f * Mathf.Deg2Rad, new Vec3d(0, 1, 0));
+            Posed corrCapsuleDir = new Posed(q.w, q.x, q.y, q.z, p.x, p.y, p.z);
+
+            solidBehaviour.phSolid.SetShapePose(solidBehaviour.phSolid.NShape() - 1, relposeShapeSolid * corrCapsuleDir);
 
         } else {
             // Sphereプリミティブ２つを使う場合
@@ -71,8 +88,8 @@ public class CDRoundConeBehavior : SpringheadBehaviour
                 }
             }
         }
-    }                                             
-    public void OnValidate()
-    {
+    }
+
+    public void OnValidate() {
     }
 }

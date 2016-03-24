@@ -24,7 +24,6 @@ public class PHBallJointBehaviour : SpringheadBehaviour {
         if (!plug) {
             plug = gameObject.GetComponentInParent<PHSolidBehaviour>().gameObject;
         }
-        print("joint " + name + " : socket = " + socket.name + " plug = " + plug.name);
 
         if (socket && plug) {
             PHSolidIf soSock = socket.GetComponent<PHSolidBehaviour>().phSolid;
