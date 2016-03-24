@@ -32,7 +32,7 @@ public class RoundConeEditor : Editor {
         }
 
         EditorGUI.BeginChangeCheck();
-        float length = Handles.ScaleSlider(mrc.length, pos, rot * new Vector3(0,1,0), rot, defLeng, 0.5f);
+        float length = Handles.ScaleSlider(mrc.length, pos, rot * new Vector3(0,1,0), rot, 1, 0.5f);
         if (EditorGUI.EndChangeCheck()) {
             Undo.RecordObject(target, "Change Length");
             mrc.length = length;
