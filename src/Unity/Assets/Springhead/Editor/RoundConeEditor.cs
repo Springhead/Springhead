@@ -13,30 +13,40 @@ public class RoundConeEditor : Editor {
         Vector3 scale = trans.localScale;
         Quaternion rot = trans.rotation;
 
-        Vector3 posOffset = new Vector3(mrc.length * 0.5f, 0, 0);
+        float offset1, offset2;
+        if (mrc.pivot == MeshRoundCone.Pivot.Center) {
+            offset1 = -0.5f * mrc.length;
+            offset2 = +0.5f * mrc.length;
+        } else if (mrc.pivot == MeshRoundCone.Pivot.R1) {
+            offset1 = 0;
+            offset2 = mrc.length;
+        } else {
+            offset1 = -mrc.length;
+            offset2 = 0;
+        }
 
         EditorGUI.BeginChangeCheck();
-        float r1 = Handles.RadiusHandle(rot, pos - rot * posOffset, mrc.r1);
+        float r1 = Handles.RadiusHandle(rot, pos + rot * new Vector3(offset1, 0, 0), mrc.r1);
         if (EditorGUI.EndChangeCheck()) {
             Undo.RecordObject(target, "Change Radius 1");
             mrc.r1 = r1;
-            mrc.OnValidate();
+            mrc.Reshape();
         }
 
         EditorGUI.BeginChangeCheck();
-        float r2 = Handles.RadiusHandle(rot, pos + rot * posOffset, mrc.r2);
+        float r2 = Handles.RadiusHandle(rot, pos + rot * new Vector3(offset2, 0, 0), mrc.r2);
         if (EditorGUI.EndChangeCheck()) {
             Undo.RecordObject(target, "Change Radius 2");
             mrc.r2 = r2;
-            mrc.OnValidate();
+            mrc.Reshape();
         }
 
         EditorGUI.BeginChangeCheck();
-        float length = Handles.ScaleSlider(mrc.length, pos, rot * new Vector3(0,1,0), rot, 1, 0.5f);
+        float length = Handles.ScaleSlider(mrc.length, pos, rot * new Vector3(0, 1, 0), rot, 1, 0.5f);
         if (EditorGUI.EndChangeCheck()) {
             Undo.RecordObject(target, "Change Length");
             mrc.length = length;
-            mrc.OnValidate();
+            mrc.Reshape();
         }
     }
 }

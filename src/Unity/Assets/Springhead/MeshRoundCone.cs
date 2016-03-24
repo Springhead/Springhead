@@ -5,13 +5,19 @@ public class MeshRoundCone : MonoBehaviour {
     public float length = 2.0f;
     public float r1 = 0.5f;
     public float r2 = 1.0f;
+    public enum Pivot { Center, R1, R2 };
+    public Pivot pivot = Pivot.Center;
 
     [HideInInspector]
     public int split = 32;
     [HideInInspector]
     public int slice = 16;
 
-    public void OnValidate () {
+    void OnValidate() {
+        Reshape();
+    }
+
+    public void Reshape () {
         MeshFilter mf = gameObject.GetComponent<MeshFilter>();
         Mesh mesh = mf.sharedMesh;
 
@@ -23,11 +29,23 @@ public class MeshRoundCone : MonoBehaviour {
         int coneVtxs = split * 2;
         int coneTris = split * 2;
 
+        float offset1, offset2;
+        if (pivot == Pivot.Center) {
+            offset1 = -0.5f * length;
+            offset2 = +0.5f * length;
+        } else if (pivot == Pivot.R1) {
+            offset1 = 0;
+            offset2 = length;
+        } else {
+            offset1 = -length;
+            offset2 = 0;
+        }
+
         // Make Vertices
         /// -- Sphere
         for (int n = 0; n < 2; n++) {
             float r = (n == 0) ? r1 : r2;
-            float c = (n == 0) ? -0.5f * length : +0.5f * length;
+            float c = (n == 0) ? offset1 : offset2;
             for (int j = 0; j < slice + 1; j++) {
                 for (int i = 0; i < split; i++) {
                     vertices[(split * j + i) + n * sphereVtxs].x = r * Mathf.Cos(Mathf.Deg2Rad * 180.0f * j / slice) + c;
@@ -38,7 +56,7 @@ public class MeshRoundCone : MonoBehaviour {
         }
         /// -- Cone
         float cr1 = r1, cr2 = r2;
-        float cx1 = -0.5f * length, cx2 = +0.5f * length;
+        float cx1 = offset1, cx2 = offset2;
         if (r1 > r2) {
             float cos = (r1 - r2) / length;
             cx1 += r1 * cos;

@@ -22,7 +22,6 @@ public class PHIKBallActuatorBehaviour : SpringheadBehaviour {
         PHBallJointBehaviour bj = gameObject.GetComponent<PHBallJointBehaviour>();
         if (bj != null && bj.phJoint != null) {
             phIKAct.AddChildObject(bj.phJoint);
-            print(phIKAct.GetName() + " <= " + bj.phJoint.GetName());
         }
     }
 
@@ -31,11 +30,9 @@ public class PHIKBallActuatorBehaviour : SpringheadBehaviour {
         if (bj != null && bj.phJoint != null && phIKAct != null) {
             PHBallJointBehaviour bjParent = bj.socket.GetComponentInChildren<PHBallJointBehaviour>();
             if (bjParent != null && bj != bjParent) {
-                print("parent joint of " + bj.name + " is " + bjParent.name);
                 PHIKBallActuatorBehaviour ba = bjParent.GetComponent<PHIKBallActuatorBehaviour>();
                 if (ba != null && ba.phIKAct != null && phIKAct != ba.phIKAct) {
                     ba.phIKAct.AddChildObject(phIKAct);
-                    print(phIKAct.GetName() + " is a child of " + ba.phIKAct.GetName());
                 }
             }
         }
