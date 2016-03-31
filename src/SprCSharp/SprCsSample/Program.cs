@@ -69,6 +69,9 @@ namespace SprCsSample {
 /**/        put("set by elm", "(0.0, 0.0, -4.5)", descScene.gravity);
             descScene.gravity = new Vec3d(2.5, -5.2, 0.5);
 /**/        put("set struct", "(2.5, -5.2, 0.5)", descScene.gravity);
+
+            Posed pose = new Posed(new Vec3d(1, 2, 3), new Quaterniond(1, 0, 0, 0));
+            put("pose", "...", pose);
         }
 
         static void test_tostring() {
