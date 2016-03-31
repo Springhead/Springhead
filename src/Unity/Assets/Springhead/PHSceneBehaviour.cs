@@ -20,6 +20,7 @@ public class PHSceneBehaviour : SpringheadBehaviour {
     }
 
     void Awake () {
+        SEH_Exception.init();
         if (phSdk==null) {
 			phSdk = PHSdkIf.CreateSdk ();
 		}

@@ -1,8 +1,13 @@
 // CSUtility.cpp
 #include <sstream>
 #include <iostream>
+#include <iomanip>
 #include <Windows.h>
 #include <string.h>
+#include <stdarg.h>
+#include <time.h>
+#include <process.h>
+#include <map>
 #include "CSUtility.h"
 #include "../../../include/Base/BaseDebug.h"
 
@@ -12,15 +17,17 @@
 const char* get_reason(DWORD code);
 const char* get_additional_reason(EXCEPTION_RECORD* er);
 const char* printStack(void* sample_address);
+static bool first_occurence = true;
 
 void __cdecl se_translator(unsigned int code, _EXCEPTION_POINTERS* ep) {
-	{
-		std::ofstream ofs("out.txt", std::ios_base::out | std::ios_base::app);
-		ofs << "in translator" << std::endl;
-		ofs.close();
-	}
 	SEH_Exception se(code, ep);
-	se.trace();
+	if (first_occurence) {
+		CSlog::Print("** enter: se_translator **\n");
+		const char* stack_trace = se.trace();
+		CSlog::Print(stack_trace);
+		CSlog::Print("** leave: se_translator **\n");
+		//first_occurence = false;
+	}
 	throw se;
 }
 
@@ -45,17 +52,13 @@ const char* SEH_Exception::what() const throw() {
 	return _message;
 }
 
-static std::string* _seh_exception_info = NULL;
-static bool SEH_trace_called = false;
+static std::string* _seh_exception_info = new std::string("** stack trace not available **");
 
 const char* SEH_Exception::trace() const {
-	if (!SEH_trace_called) {
-		std::stringstream out;
-		out << std::endl << what() << std::endl;
-		out << "stack trace:" << std::endl << printStack((void*) this);
-		_seh_exception_info = new std::string(out.str());
-	}
-	SEH_trace_called = true;
+	std::stringstream out;
+	out << std::endl << what() << std::endl;
+	out << "stack trace:" << std::endl << printStack((void*) this);
+	_seh_exception_info = new std::string(out.str());
 	return _seh_exception_info->c_str();
 }
 
@@ -106,6 +109,30 @@ const char* get_additional_reason(EXCEPTION_RECORD* er) {
 		return _buff;
 	}
 	return NULL;
+}
+
+// --------------------------------------------------------------------------
+//  Managed exception raiser.
+// --------------------------------------------------------------------------
+typedef void (__cdecl* FunctionPointer)(const char*);
+static FunctionPointer exception_raiser = NULL;
+
+extern "C" {
+	__declspec(dllexport) void __cdecl Spr_register_exception_raiser(FunctionPointer func) {
+		if (exception_raiser == NULL) {
+			exception_raiser = (FunctionPointer) func;
+			CSlog::Print("** managed-exception raiser registered **\n");
+		}
+	}
+	__declspec(dllexport) void __cdecl Spr_set_se_translator() {
+		_se_translator_function se_trans = _set_se_translator(se_translator);
+		CSlog::VPrint("set SEH translator: (" HEXFMT ").\n", ADDR(se_translator));
+	}
+}
+
+void SEH_Exception::raise_managed_exception(char* msg) const throw() {
+	(*exception_raiser)(msg);
+	CSlog::Print("** call managed-exception raiser **\n");
 }
 
 // --------------------------------------------------------------------------
@@ -226,7 +253,7 @@ const char* printStack(void* sample_address) {
 	HANDLE process;
 	process = GetCurrentProcess();
 	SymInitialize(process, NULL, TRUE);
-	frames = (func) (0, kMaxCallers, callers_stack, NULL);
+	frames = (func)(0, kMaxCallers, callers_stack, NULL);
 	symbol = (SYMBOL_INFO*) calloc(sizeof(SYMBOL_INFO) + 256 * sizeof(char), 1);
 	symbol->MaxNameLen = 255;
 	symbol->SizeOfStruct = sizeof(SYMBOL_INFO);
@@ -251,6 +278,11 @@ const char* printStack(void* sample_address) {
 //  Add exception translator to the process.
 // --------------------------------------------------------------------------
 #define	SET_HOOK
+#define	CON	0x01
+#define	LOG	0x02
+#define	BOTH	(CON | LOG)
+static void DllMainPrint(int out, const char* format, ...);
+static std::map<DWORD, _se_translator_function> se_map;
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 #ifdef	SET_HOOK
@@ -258,35 +290,89 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 	char* msg_pd[2] = { "process termination", "FreeLibrary" };
 	int idx = lpvReserved ? 0 : 1;
 	_se_translator_function se_trans;
+	_se_translator_function se_trans_prev;
+	DWORD thread_id = GetCurrentThreadId();
 
 	switch (fdwReason) {
 	case DLL_PROCESS_ATTACH:
-		printf("DllMain: DLL_PROCESS_ATTACH: DLL is loaded %s.\n", msg_pa[idx]);
 		// OS例外からC++例外への翻訳設定
-		_set_se_translator(se_translator);
-		printf("set SEH translator (" HEXFMT ").\n", ADDR(se_translator));
+		se_trans = _set_se_translator(se_translator);
+		CSlog::Truncate();
+		se_map.clear();
+		se_map[(DWORD) 0] = se_trans;
+		DllMainPrint(BOTH, "DllMain: DLL_PROCESS_ATTACH: DLL is loaded %s.\n", msg_pa[idx]);
+		DllMainPrint(BOTH, " --- set SEH translator (" HEXFMT ").\n", ADDR(se_translator));
 		break;
 	case DLL_THREAD_ATTACH:
-		printf("DllMain: DLL_THREAD_ATTACH: new thread is creating.\n");
 		// OS例外からC++例外への翻訳設定
-		_set_se_translator(se_translator);
-		printf("set SEH translator (" HEXFMT ").\n", ADDR(se_translator));
+		//se_trans = _set_se_translator(se_translator);
+		//se_map[thread_id] = se_trans;
+		//DllMainPrint(BOTH, "DllMain: DLL_THREAD_ATTACH: (" HEXFMT ").\n", ADDR(se_translator));
 		break;
 	case DLL_THREAD_DETACH:
-		printf("DllMain: DLL_THREAD_DETACH: current thread is exiting.\n");
 		// OS例外からC++例外への翻訳解除
-		se_trans = _set_se_translator(NULL);
-		printf("unset SEH translator (" HEXFMT ").\n", ADDR(se_trans));
+		//se_trans_prev = NULL;
+		//if (se_map.find(thread_id) != se_map.end()) se_trans_prev = se_map[thread_id];
+		//se_trans = _set_se_translator(se_trans_prev);
+		////DllMainPrint(BOTH, "DllMain: DLL_THREAD_DETACH: (" HEXFMT ").\n", ADDR(se_trans_prev));
 		break;
 	case DLL_PROCESS_DETACH:
-		printf("DllMain: DLL_PROCESS_DETACH: DLL will be released by %s.\n", msg_pd[idx]);
 		// OS例外からC++例外への翻訳解除
-		se_trans = _set_se_translator(NULL);
-		printf("unset SEH translator (" HEXFMT ").\n", ADDR(se_trans));
+		se_trans_prev = se_map[(DWORD) 0];
+		se_trans = _set_se_translator(se_trans_prev);
+		DllMainPrint(BOTH, "DllMain: DLL_PROCESS_DETACH: DLL will be released by %s.\n", msg_pd[idx]);
+		DllMainPrint(BOTH, "- unset SEH translator (" HEXFMT ").\n", ADDR(se_trans_prev));
 		break;
 	}
 #endif	//SET_HOOK
 	return TRUE;
+}
+
+static void DllMainPrint(int out, const char* format, ...) {
+	va_list args;
+	char buff[1024];
+	va_start(args, format);
+	vsnprintf_s(buff, sizeof(buff), format, args);
+	va_end(args);
+	if (out&CON) printf(buff);
+	if (out&LOG) CSlog::Print(buff);
+}
+
+// --------------------------------------------------------------------------
+//  for execution tracking
+// --------------------------------------------------------------------------
+#define	LOGFILE	"F:/Project/Springhead2/src/Unity/SprCS.log"
+
+void CSlog::VPrint(const char* format, ...) {
+	va_list args;
+	char buff[1024];
+	va_start(args, format);
+	vsnprintf_s(buff, sizeof(buff), format, args);
+	va_end(args);
+	Print(buff);
+}
+
+void CSlog::Print(const char* str) {
+	const char* path = LOGFILE;
+	std::ofstream ofs(path, std::ios::out | std::ios::app);
+	time_t now = time(NULL);
+	struct tm tm;
+	localtime_s(&tm, &now);
+	ofs << tm.tm_year + 1990 << "/"
+	    << std::setfill('0') << std::setw(2) << tm.tm_mon+1 << "/"
+	    << std::setfill('0') << std::setw(2) << tm.tm_mday << " "
+	    << std::setfill('0') << std::setw(2) << tm.tm_hour << ":"
+	    << std::setfill('0') << std::setw(2) << tm.tm_min << ":"
+	    << std::setfill('0') << std::setw(2) << tm.tm_sec << " ";
+	ofs << "[" << std::setw(5) << GetCurrentThreadId() << "] ";
+	ofs << str;
+	ofs.close();
+}
+
+void CSlog::Truncate() {
+	const char* path = LOGFILE;
+	std::ofstream ofs(path, std::ios::trunc);
+	ofs.close();
 }
 
 //end of CSUtility.cpp

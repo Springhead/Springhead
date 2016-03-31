@@ -5,7 +5,7 @@
 #include <stdexcept>
 
 // Class for containing information on a Win32 Structured Exception
-class SEH_Exception: public std::exception {
+class SEH_Exception : public std::exception {
 private:
 	SEH_Exception() {}
 	unsigned int _code;
@@ -15,6 +15,15 @@ public:
 	~SEH_Exception() {}
 	virtual const char* what() const throw();
 	virtual const char* trace() const;
+	virtual void raise_managed_exception(char* msg) const throw();
+};
+
+// for execution tracking ...
+class CSlog {
+public:
+	static void VPrint(const char* formt, ...);
+	static void Print(const char* str);
+	static void Truncate();
 };
 
 #endif //CSUTILITY_H
