@@ -6,12 +6,13 @@ public class PHIKBallActuatorBehaviour : SpringheadBehaviour {
     public PHIKBallActuatorIf phIKAct = null;
     public PHIKBallActuatorDescStruct ballActuatorDescriptor = null;
 
-    void Reset() {
-        SetDLLPath();
+    public override void InitDesc() {
         ballActuatorDescriptor = new PHIKBallActuatorDesc();
     }
 
     void Awake() {
+        if (!enabled) { return; }
+
         PHSceneIf phScene = gameObject.GetComponentInParent<PHSceneBehaviour>().GetPHScene();
 
         PHIKBallActuatorDesc dIK = ballActuatorDescriptor;

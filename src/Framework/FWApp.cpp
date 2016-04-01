@@ -40,6 +40,7 @@ FWApp::~FWApp(){
 		FWGraphicsHandler::instance->LeaveGameMode();
 }
 
+void FWApp::Init(){ Init(0); }
 void FWApp::Init(int argc, char* argv[]){
 	// 最も基本的な初期化処理
 	// SDK初期化
@@ -84,8 +85,8 @@ void FWApp::OnDisplay(){
 
 void FWApp::TimerFunc(int id){
 	UserFunc();
-	//GetSdk()->Step();
-	GetCurrentWin()->GetScene()->Step();
+	// GetSdk()->Step();
+	// GetCurrentWin()->GetScene()->Step();
 	PostRedisplay();
 }
 
@@ -241,10 +242,12 @@ void FWApp::SetGRHandler(int type){
 	}
 }
 
-void FWApp::GRInit(int argc, char* argv[], int type){
+GRDeviceIf* FWApp::GRInit() { return GRInit(0); }
+GRDeviceIf* FWApp::GRInit(int argc, char* argv[], int type){
 	if(!FWGraphicsHandler::instance)
 		SetGRHandler(type);
 	FWGraphicsHandler::instance->Init(argc, argv);
+	return FWGraphicsHandler::instance->GetGRDevice();
 }
 
 //タイマ///////////////////////////////////////////////////////////////////////////

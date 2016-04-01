@@ -6,8 +6,7 @@ using SprCs;
 //  未完成のプログラムです                  //
 //----------------------------------------//
 
-public class PHBallJointLimitBehavior : SpringheadBehaviour
-{
+public class PHBallJointLimitBehavior : SpringheadBehaviour {
     public PHBallJointIf phJoint = null;
     //public PHBallJointConeLimitIf phJointConeLimit = null;
     public PHBallJointDescStruct ballJointDescripter = null;
@@ -15,30 +14,24 @@ public class PHBallJointLimitBehavior : SpringheadBehaviour
     public GameObject socket = null;
     public GameObject plug = null;
 
-    void Reset()
-    {
-        SetDLLPath();
+    public override void InitDesc() {
         ballJointDescripter = new PHBallJointDesc();
         ballJointConeLimitDescripter = new PHBallJointConeLimitDesc();
         //ballJointDescripter.spring = 5000;
         //ballJointDescripter.damper = 100;
     }
 
-    void Awake()
-    {
+    void Awake() {
         PHSceneIf phScene = gameObject.GetComponentInParent<PHSceneBehaviour>().GetPHScene();
 
-        if (!socket)
-        {
+        if (!socket) {
             socket = gameObject.transform.parent.GetComponentInParent<PHSolidBehaviour>().gameObject;
         }
-        if (!plug)
-        {
+        if (!plug) {
             plug = gameObject.GetComponentInChildren<PHSolidBehaviour>().gameObject;
         }
 
-        if (socket && plug)
-        {
+        if (socket && plug) {
             PHSolidIf soSock = socket.GetComponent<PHSolidBehaviour>().phSolid;
             PHSolidIf soPlug = plug.GetComponent<PHSolidBehaviour>().phSolid;
 
@@ -54,13 +47,13 @@ public class PHBallJointLimitBehavior : SpringheadBehaviour
             ballJointDescripter.spring = 5000;
             ballJointDescripter.damper = 100;
 
-            PHBallJointConeLimitDesc d2 = ballJointConeLimitDescripter;   
+            PHBallJointConeLimitDesc d2 = ballJointConeLimitDescripter;
             d2.limitSwing.x = 0;
-            d2.limitSwing.y = 1;  
+            d2.limitSwing.y = 1;
 
             phJoint = phScene.CreateJoint(soSock, soPlug, PHBallJointIf.GetIfInfoStatic(), d).Cast();
             //phJointConeLimit = phScene.CreateJoint(soSock, soPlug, PHBallJointConeLimitIf.GetIfInfoStatic(), d).Cast();  
-            phJoint.SetName("jo:" + gameObject.name); 
+            phJoint.SetName("jo:" + gameObject.name);
             //phJointConeLimit.SetSwingRange(d2.limitSwing);
         }
     }
