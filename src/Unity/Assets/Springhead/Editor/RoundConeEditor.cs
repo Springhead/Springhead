@@ -3,8 +3,13 @@ using UnityEngine;
 using System.Collections;
 
 [CustomEditor(typeof(MeshRoundCone))]
+[CanEditMultipleObjects]
 public class RoundConeEditor : Editor {
-	void OnSceneGUI () {
+    public override void OnInspectorGUI() {
+        DrawDefaultInspector();
+    }
+
+    void OnSceneGUI () {
         MeshRoundCone mrc = target as MeshRoundCone;
         Transform trans = mrc.gameObject.transform;
 
