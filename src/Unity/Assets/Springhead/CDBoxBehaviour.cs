@@ -1,28 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SprCs;
+using System;
 
-public class CDBoxBehaviour : SpringheadBehaviour {
+public class CDBoxBehaviour : CDShapeBehaviour {
     public CDBoxDescStruct boxDescripter = null;
 
-    void Reset() {
-        SetDLLPath();
+    public override void InitDesc() {
         boxDescripter = new CDBoxDesc();
     }
 
-    void Awake () {
-        PHSceneIf phScene = gameObject.GetComponentInParent<PHSceneBehaviour>().GetPHScene();
-        PHSdkIf phSdk = phScene.GetSdk();
+    public override CDShapeIf CreateShape(GameObject shapeObject) {
+        BoxCollider bc = shapeObject.GetComponent<BoxCollider>();
+        if (bc == null) { throw new ObjectNotFoundException("CDBoxBehaviour requires BoxCollider", shapeObject); }
 
-        BoxCollider bc = gameObject.GetComponent<BoxCollider>();
-        PHSolidBehaviour solidBehaviour = gameObject.GetComponentInParent<PHSolidBehaviour>();
-        if (bc != null && solidBehaviour != null && solidBehaviour.phSolid != null) {
-            CDBoxDesc descBox = new CDBoxDesc();
-            Vector3 size = bc.size;
-            Vector3 scale = gameObject.transform.lossyScale;
-            descBox.boxsize = new Vec3f((float)(size.x * scale.x), (float)(size.y * scale.y), (float)(size.z * scale.z));
-            solidBehaviour.phSolid.AddShape(phSdk.CreateShape(CDBoxIf.GetIfInfoStatic(), descBox));
-        }
+        CDBoxDesc descBox = new CDBoxDesc();
+        Vector3 size = bc.size;
+        Vector3 scale = gameObject.transform.lossyScale;
+        descBox.boxsize = new Vec3f((float)(size.x * scale.x), (float)(size.y * scale.y), (float)(size.z * scale.z));
+
+        return GetPHSdk().CreateShape(CDBoxIf.GetIfInfoStatic(), descBox);
     }
 
     public void OnValidate() {

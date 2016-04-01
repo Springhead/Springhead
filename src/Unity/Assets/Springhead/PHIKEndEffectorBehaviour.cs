@@ -8,13 +8,14 @@ public class PHIKEndEffectorBehaviour : SpringheadBehaviour {
 
     public GameObject iktarget = null;
 
-    void Reset() {
-        SetDLLPath();
+    public override void InitDesc() {
         phIKeeDescriptor = new PHIKEndEffectorDesc();
         phIKeeDescriptor.targetLocalDirection = new Vec3d(0, 0, 1);
     }
 
     void Awake() {
+        if (!enabled) { return; }
+
         PHSceneIf phScene = gameObject.GetComponentInParent<PHSceneBehaviour>().GetPHScene();
         PHIKEndEffectorDesc dIKEE = phIKeeDescriptor;
         phIKee = phScene.CreateIKEndEffector(dIKEE);

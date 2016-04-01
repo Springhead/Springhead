@@ -18,6 +18,7 @@ namespace Spr{;
 
 struct FWSdkIf;
 class FWGraphicsHandler;
+struct GRDeviceIf;
 
 /** @brief アプリケーションクラス
 	Springheadのクラスは基本的に継承せずに使用するように設計されているが，
@@ -49,7 +50,8 @@ public:
 	/** @brief 初期化
 		FWAppオブジェクトの初期化を行う．最初に必ず呼ぶ．
 	 */
-	virtual void Init(int argc = 0, char* argv[] = NULL);
+	virtual void Init(); // C# API用. （引数を持つInitのみを%ignoreしたいので）
+	virtual void Init(int argc, char* argv[] = NULL);
 
 	/** @brief シーンの描画
 		シーンが表示されるときに呼ばれる．
@@ -235,7 +237,8 @@ public:
 
 		tazz
 	 */
-	void GRInit(int argc = 0, char* argv[] = NULL, int type = TypeGLUT);
+	GRDeviceIf* GRInit(); // C# API用. （引数を持つGRInitのみを%ignoreしたいので）
+	GRDeviceIf* GRInit(int argc, char* argv[] = NULL, int type = TypeGLUT);
 
 public:
 	// タイマー

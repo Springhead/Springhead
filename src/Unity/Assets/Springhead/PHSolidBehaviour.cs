@@ -11,13 +11,14 @@ public class PHSolidBehaviour : SpringheadBehaviour {
     public PHSolidDescStruct solidDescripter = null;
 	public PHMaterialStruct  solidMaterial = null;
 
-    void Reset() {
-        SetDLLPath();
+    public override void InitDesc() {
         solidDescripter = new PHSolidDesc();
         solidMaterial = new PHMaterial();
     }
 
     void Awake () {
+        if (!enabled) { return; }
+
         PHSceneIf phScene = gameObject.GetComponentInParent<PHSceneBehaviour> ().GetPHScene ();
 		PHSdkIf phSdk = phScene.GetSdk ();
 
@@ -28,6 +29,8 @@ public class PHSolidBehaviour : SpringheadBehaviour {
 		Quaternion q = gameObject.transform.rotation;
 		phSolid.SetPose (new Posed(q.w, q.x, q.y, q.z, v.x, v.y, v.z));
 	}
+
+    public void Start() { }
 
     public void UpdatePose () {
         if (phSolid != null) {

@@ -4,7 +4,11 @@
 %ignore Spr::FWSceneIf::AddHumanInterface;
 %ignore Spr::FWSdkIf::LoadScene;
 %ignore Spr::FWSdkIf::SaveScene;
-%ignore Spr::FWApp;
+%ignore Spr::FWApp::timers;
+%ignore Spr::FWApp::Timers;
+%ignore Spr::FWApp::Init(int argc, char* argv[]);
+%ignore Spr::FWApp::GRInit(int argc, char* argv[], int type);
+// %ignore Spr::FWApp;
 %module Framework
 %include "../../include/SprBase.h"
 %include "../../include/Base/Env.h"

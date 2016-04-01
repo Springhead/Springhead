@@ -9,8 +9,7 @@ public class PHSceneBehaviour : SpringheadBehaviour {
     static PHSdkIf phSdk = null;
 	PHSceneIf phScene = null;
 
-    void Reset() {
-        SetDLLPath();
+    public override void InitDesc() {
         phSceneDescriptor = new PHSceneDesc();
     }
 
@@ -21,26 +20,39 @@ public class PHSceneBehaviour : SpringheadBehaviour {
 
     void Awake () {
         SEH_Exception.init();
-        if (phSdk==null) {
-			phSdk = PHSdkIf.CreateSdk ();
-		}
 
-        PHSceneDesc d = phSceneDescriptor;
-		phScene = phSdk.CreateScene (d);
+        PHSceneDesc pd = phSceneDescriptor;
+
+        FWAppBehaviour appB = GetComponent<FWAppBehaviour>();
+
+        if (appB != null) {
+            FWApp app = FWAppBehaviour.app;
+            phSdk   = app.GetSdk().GetPHSdk();
+            phScene = app.GetSdk().GetScene(0).GetPHScene();
+            phScene.Clear();
+            phScene.SetDesc(pd);
+        } else {
+            phSdk = PHSdkIf.CreateSdk();
+            phScene = phSdk.CreateScene(pd);
+        }
 
         phScene.SetTimeStep(Time.fixedDeltaTime);
         phScene.GetIKEngine().Enable(true);
-	}
+
+    }
 
     void FixedUpdate () {
 		if (phScene!=null) {
 			phScene.Step ();
 		}
-	}
+    }
 
     void Update() {
         foreach (PHSolidBehaviour srb in gameObject.GetComponentsInChildren<PHSolidBehaviour>()) {
             srb.UpdatePose();
+        }
+        if (FWAppBehaviour.app != null) {
+            FWAppBehaviour.app.PostRedisplay();
         }
     }
 
