@@ -13,6 +13,7 @@ namespace SprCsSample {
 
         static void Main(string[] args) {
 
+            ExceptionRaiser er = new ExceptionRaiser();
             try {
                 if (inc.Equals("A"))  inc = def;
                 if (check_test("i"))  test_intrinsic();
@@ -26,31 +27,14 @@ namespace SprCsSample {
                 if (check_test("F"))  test_func_call();
                 if (check_test("s"))  test_simulation();
             }
-            catch (ExternalException e) {
-                System.Console.WriteLine(SEH_Exception.what());
-               	System.Console.WriteLine(e.ToString());
+            catch (System.Exception e) {
+                System.Console.WriteLine(SEH_Exception.what(e));
             }
-            //catch (Exception e) {
-            //    System.Console.WriteLine("C#: Exception");
-            //    System.Console.WriteLine(e.ToString());
-            //}
+            CSlog.Print("Test End");
         }
-
-        static bool check_test(string chk) {
-            return inc.Contains(chk) && !exc.Contains(chk);
-        }
-
-	static void title(string title) {
-            System.Console.WriteLine("\n---[ " + title + " ]---");
-	}
-
-	static void put(string title, string expected, object obj) {
-	    string line = title + ": expected: " + expected + ", result: " + obj;
-	    System.Console.WriteLine(line);
-	}
 
         static void test_intrinsic() {
-            title("intrinsic");
+            test_name("intrinsic");
 
             // intrinsic member
             PHSceneDesc descScene = new PHSceneDesc();
@@ -71,11 +55,11 @@ namespace SprCsSample {
 /**/        put("set struct", "(2.5, -5.2, 0.5)", descScene.gravity);
 
             Posed pose = new Posed(new Vec3d(1, 2, 3), new Quaterniond(1, 0, 0, 0));
-            put("pose", "...", pose);
+            put2("pose", new Posed(1, 0, 0, 0, 1, 2, 3), pose);
         }
 
         static void test_tostring() {
-            title("ToString");
+            test_name("ToString");
 
             Vec3d v3d = new Vec3d(0.1, 0.2, 0.3);
             //string s = v3d.ToString();
@@ -88,17 +72,17 @@ namespace SprCsSample {
             PHSceneIf phScene = phSdk.CreateScene(descScene);
             PHSolidIf phSolid = phScene.CreateSolid(descSolid);
             phSolid.SetPose(new Posed(1, 0, 0, 0, 0, 2, 0));
-            System.Console.WriteLine("ToString: phSolid:");
-            System.Console.Write(phSolid.ToString());
+            put_title("ToString: phSolid");
+            put_indent(2, phSolid.ToString());
 
             FWWinBaseDesc descWinBase = new FWWinBaseDesc();
             FWSdkIf fwSdk = FWSdkIf.CreateSdk();
-            System.Console.WriteLine("ToString: fwSdk.ToString:");
-            System.Console.Write(fwSdk.ToString());
+            put_title("ToString: fwSdk.ToString");
+            put_indent(2, fwSdk.ToString());
         }
 
         static void test_vector() {
-            title("vector");
+            test_name("vector");
 
             // vector member
             PHFemMeshNewDesc descFemMeshNew = new PHFemMeshNewDesc();
@@ -131,7 +115,7 @@ namespace SprCsSample {
         }
 
         static void test_array() {
-            title("array");
+            test_name("array");
 
             PHOpObjDesc descOpObj = new PHOpObjDesc();
             GRMeshFace meshFace = new GRMeshFace();
@@ -142,13 +126,11 @@ namespace SprCsSample {
                 System.Console.WriteLine("array<int>: expected: " + (100 + i) + " result: " + meshFace.indices[i]);
             }
             arraywrapper_int iarray = new arraywrapper_int(4);
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 meshFace.indices[i] = 200 + i;
             }
             meshFace.indices = iarray;
-            for (int i = 0; i < 4; i++)
-            {
+            for (int i = 0; i < 4; i++) {
                 System.Console.WriteLine("array<int>: expected: " + (200 + i) + " result: " + meshFace.indices[i]);
             }
             //Vec3i v3i = new Vec3i(1, 2, 3);
@@ -174,12 +156,12 @@ namespace SprCsSample {
             CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), descMesh) as CDConvexMeshIf;
             var vertices = mesh.GetVertices();
             for (int i = 0; i < mesh.NVertex(); i++) {
-                System.Console.WriteLine(vertices[i]);
+                put_indent(2, vertices[i]);
             }
         }
 
         static void test_type_conv() {
-            title("type conversion");
+            test_name("type conversion");
 
             string msg_f3 = "f2d: (1, 2, 3)";
             string msg_d3 = "d2f: (4, 5, 6)";
@@ -230,47 +212,62 @@ namespace SprCsSample {
             PHSceneIf scene = phSdk.CreateObject(PHSceneIf.GetIfInfoStatic(), descScn) as PHSceneIf;
             System.Console.WriteLine((scene == null) ? "null" : scene.ToString());
 
-	    // constructor による初期値設定のテスト
-	    // ---- State を継承 ----
-	    // 暗黙の型変換による
+	        // constructor による初期値設定のテスト
+	        // ---- State を継承 ----
+	        // 暗黙の型変換による
             PHSceneDescStruct structScene1 = new PHSceneDesc();
             Vec3d v3d1 = new Vec3d(0.0, -9.8, 0.0);
             Vec3d v3d2 = new Vec3d(1.0, -8.8, 1.0);
-            put("by typeconv:    gravity ", show_vector_0(v3d1), show_vector_0(structScene1.gravity));
+            put("by typeconv:    gravity ", edit_vector(v3d1), edit_vector(structScene1.gravity));
             put("by typeconv:    timeStep", "0.005", structScene1.timeStep);
             // constructor による
             PHSceneDescStruct structScene2 = new PHSceneDescStruct();
-            put("by constructor: gravity ", show_vector_0(v3d1), show_vector_0(structScene2.gravity));
+            put("by constructor: gravity ", edit_vector(v3d1), edit_vector(structScene2.gravity));
             put("by constructor: timeStep", "0.005", structScene2.timeStep);
             // ApplyFrom による
             PHSceneDescStruct structScene3 = new PHSceneDescStruct();
             structScene3.gravity = v3d2;
             structScene3.timeStep = 1.001;
-            put("by Apply(): fm: gravity ", show_vector_0(v3d2), show_vector_0(structScene3.gravity));
+            put("by Apply(): fm: gravity ", edit_vector(v3d2), edit_vector(structScene3.gravity));
             put("by Apply(): fm: timeStep", "1.001", structScene3.timeStep);
             structScene2.ApplyFrom((PHSceneDesc) structScene3);
-            put("by Apply(): to: gravity ", show_vector_0(v3d2), show_vector_0(structScene2.gravity));
+            put("by Apply(): to: gravity ", edit_vector(v3d2), edit_vector(structScene2.gravity));
             put("by Apply(): to: timeStep", "0.005", structScene2.timeStep);
-	    //
-	    // ---- Desc を継承 ----
+	        //
+	        // ---- Desc を継承 ----
             CDSphereDescStruct structSphere1 = new CDSphereDescStruct();
             CDSphereDesc descSphere1 = structSphere1;
-            put("DescStruct: radius          ", "1", structSphere1.radius);
-            put("Desc:       material.density", "1", descSphere1.material.density);
             CDSphereDescStruct structSphere2 = new CDSphereDescStruct();
             CDSphereDesc descSphere2 = structSphere2;
-            structSphere2.radius = 2;
+            descSphere2.radius = 2;
             descSphere2.material.density = 2;
-            put("DescStruct: radius          ", "2", structSphere2.radius);
-            put("Desc:       material.density", "2", descSphere2.material.density);
+            //
+            put("DescStruct: radius      ", "1", structSphere1.radius);
+            put("DescStruct: base.density", "1", structSphere1.material.density);
             structSphere1.ApplyFrom(descSphere2);
-            descSphere1 = structSphere1;
-            put("DescStruct: radius          ", "2", structSphere1.radius);
-            put("Desc:       material.density", "1", descSphere1.material.density);
+            put("ApplyFrom:");
+            put("DescStruct: radius      ", "2", structSphere1.radius);
+            put("DescStruct: base.density", "1", structSphere1.material.density);
+            structSphere1 = descSphere2;
+            put("assignment:");
+            put("DescStruct: radius      ", "2", structSphere1.radius);
+            put("DescStruct: base.density", "2", structSphere1.material.density);
+            //
+            descSphere2.radius = 3;
+            descSphere2.material.density = 3;
+            structSphere1.ApplyFrom(descSphere2);
+            put("ApplyTo:");
+            put("DescStruct: radius      ", "3", structSphere1.radius);
+            put("DescStruct: base.density", "2", structSphere1.material.density);
+            structSphere1.material.density = 3;
+            descSphere1 = structSphere2;
+            put("assignment:");
+            put("DescStruct: radius      ", "3", structSphere1.radius);
+            put("DescStruct: base.density", "3", structSphere1.material.density);
         }
 
         static void test_func_args() {
-            title("function arguments");
+            test_name("function arguments");
 
             // ここでのコードは正常には動作はしない － 例外が起きて停止する。
             // デバッガで止めて値を確認すること。
@@ -281,7 +278,7 @@ namespace SprCsSample {
         }
 
         static void test_func_return() {
-            title("function return");
+            test_name("function return");
             int memoryLeakTest = 0;
 
             PHSceneDesc descScene = new PHSceneDesc();
@@ -327,7 +324,7 @@ namespace SprCsSample {
             phScene.SetGravity(new Vec3d(0.1, -9.9, 0.2));
             put("ret Vec3d ", "(0.1, -9.9, 0.2)", phScene.GetGravity());
 
-	    // function returns array by using pointer
+	        // function returns array by using pointer
             CDConvexMeshDesc descMesh = new CDConvexMeshDesc();
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 10; y++) {
@@ -347,12 +344,12 @@ namespace SprCsSample {
             v3fr[4] = new Vec3f(9, 0, 0); v3fr[5] = new Vec3f(9, 0, 9);
             v3fr[6] = new Vec3f(9, 9, 0); v3fr[7] = new Vec3f(9, 9, 9);
             for (int i = 0; i< 8; i++) {
-                put("ret_array", show_vector_0(v3fr[i]), vertices[i]);
+                put("ret_array", edit_vector(v3fr[i]), vertices[i]);
             }
         }
 
         static void test_operator() {
-            title("operator");
+            test_name("operator");
 
             // TVector
             Vec3f v3a = new Vec3f(0.1f, 0.2f, 0.3f);
@@ -386,16 +383,16 @@ namespace SprCsSample {
             Matrix3f m3s = new Matrix3f(1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f, 2.8f);
             Matrix3f m3t = new Matrix3f(-1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f);
             Matrix3f m3u = new Matrix3f(0.2f, 0.4f, 0.6f, 0.8f, 1.0f, 1.2f, 1.4f, 1.6f, 1.8f);
-            put("matrix unary  -", show_matrix(m3r), show_matrix2(-m3a));
-            put("matrix binary +", show_matrix(m3s), show_matrix2(m3a + m3b));
-            put("matrix binary -", show_matrix(m3t), show_matrix2(m3a - m3b));
-            put("matrix binary *", show_matrix(m3u), show_matrix2(m3a * 2));
-            put("matrix binary *", show_matrix(m3u), show_matrix2(2 * m3a));
-            put("matrix binary *", "( 0.14, 0.32, 0.50 )", (m3a * v3a));
-            put("matrix binary *", "( 2.16, 2.31, 2.46 )", (v3b * m3b));
-            m3d = m3a; m3d += m3b; put("matrix binary +=", show_matrix(m3s), show_matrix(m3d));
-            m3d = m3a; m3d -= m3b; put("matrix binary +=", show_matrix(m3t), show_matrix(m3d));
-            m3d = m3a; m3d *= 2;   put("matrix binary +=", show_matrix(m3u), show_matrix(m3d));
+            put2("matrix unary  -", edit_matrix(m3r), edit_matrix(-m3a));
+            put2("matrix binary +", edit_matrix(m3s), edit_matrix(m3a + m3b));
+            put2("matrix binary -", edit_matrix(m3t), edit_matrix(m3a - m3b));
+            put2("matrix binary *", edit_matrix(m3u), edit_matrix(m3a * 2));
+            put2("matrix binary *", edit_matrix(m3u), edit_matrix(2 * m3a));
+            put2("matrix binary *", new Vec3d( 0.14, 0.32, 0.50 ), (m3a * v3a));
+            put2("matrix binary *", new Vec3d( 2.16, 2.31, 2.46 ), (v3b * m3b));
+            m3d = m3a; m3d += m3b; put2("matrix binary +=", edit_matrix(m3s), edit_matrix(m3d));
+            m3d = m3a; m3d -= m3b; put2("matrix binary +=", edit_matrix(m3t), edit_matrix(m3d));
+            m3d = m3a; m3d *= 2;   put2("matrix binary +=", edit_matrix(m3u), edit_matrix(m3d));
 
 	    // TQuaternion
             Quaternionf q1 = new Quaternionf(1.0f, 2.0f, 3.0f, 4.0f);
@@ -405,17 +402,17 @@ namespace SprCsSample {
             Quaternionf qr = new Quaternionf(-60.0f, 12.0f, 30.0f, 24.0f);
             Vec3f qvs = new Vec3f(54f, 60f, 78f);
             Matrix3f qmt = new Matrix3f(150f, 156f, 162f, 120f, 150f, 180, 150f, 192f, 234f);
-            put("quaternion binary *", show_quaternion(qr), show_quaternion(q1 * q2));
-            put("quaternion binary *", show_vector_0(qvs), show_vector_0(q1 * qv1));
-            put("quaternion binary *", show_matrix(qmt), show_matrix(q1 * qm1));
+            put2("quaternion binary *", edit_quaternion(qr), edit_quaternion(q1 * q2));
+            put2("quaternion binary *", edit_vector(qvs), edit_vector(q1 * qv1));
+            put2("quaternion binary *", edit_matrix(qmt), edit_matrix(q1 * qm1));
 
 	    // TPose
             Posef pp1 = new Posef(1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f);
             Posef pp2 = new Posef(7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f);
             Vec3f pv1 = new Vec3f(1.0f, 2.0f, 3.0f);
             Posef pr1 = new Posef(-36.0f, 12.0f, 42.0f, 24.0f, -25.0f, 66.0f, 97.0f);
-            put("pose binary *", show_pose(pr1), show_pose(pp1 * pp2));
-            put("pose binary *", "(59, 66, 85)", (pp1 * pv1));
+            put2("pose binary *", edit_pose(pr1), edit_pose(pp1 * pp2));
+            put2("pose binary *", "(59, 66, 85)", (pp1 * pv1));
 
 	    // indexing
             System.Console.WriteLine("");
@@ -423,68 +420,22 @@ namespace SprCsSample {
             Vec3f v32 = new Vec3f(1.0f, 1.0f, 1.0f);
             Vec3f v3e = v31 + v32;
             for (int i = 0; i < 3; i++) { v31[i] += v32[i]; }
-            put("indexing []", show_vector_0(v3e), show_vector_0(v31));
+            put("indexing []", edit_vector(v3e), edit_vector(v31));
 
             Matrix3f m31 = new Matrix3f(0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f);
             Matrix3f m32 = new Matrix3f(1.0f, 1.0f, 1.0f, 2.0f, 2.0f, 2.0f, 3.0f, 3.0f, 3.0f);
             Matrix3f m3e = m31 + m32;
-            put("indexing [] ref", "(0.1, 0.2, 0.3)", show_vector_0(m31[0]));
-            put("            ref", "(0.4, 0.5, 0.6)", show_vector_0(m31[1]));
-            put("            ref", "(0.7, 0.8, 0.9)", show_vector_0(m31[2]));
+            put("indexing [] ref", "(0.1, 0.2, 0.3)", edit_vector(m31[0]));
+            put("            ref", "(0.4, 0.5, 0.6)", edit_vector(m31[1]));
+            put("            ref", "(0.7, 0.8, 0.9)", edit_vector(m31[2]));
             for (int i = 0; i < 3; i++) { m31[i] += v32; }
             for (int i = 1; i < 3; i++) { m31[i] += v32; }
             for (int i = 2; i < 3; i++) { m31[i] += v32; }
-            put("indexing [] set", show_matrix(m3e), show_matrix(m31));
-	}
-
-	static string show_vector(Vec3f v) {
-            string str = "\n" + show_vector_0(v) + "\n";
-            return str;
-	}
-	static string show_vector(Vec3d v) {
-            string str = "\n" + show_vector_0(v) + "\n";
-            return str;
-	}
-	static string show_vector_0(Vec3f v) {
-            string str = "( " + v.x + ",  " + v.y + ",  " + v.z + " )";
-            return str;
-	}
-	static string show_vector_0(Vec3d v) {
-            string str = "( " + v.x + ",  " + v.y + ",  " + v.z + " )";
-            return str;
-	}
-	static string show_matrix(Matrix3f m) {
-            string str = "\n"
-                       + "(( " + m.xx + ",  " + m.yx + ",  " + m.zx + " ) "
-                       + " ( " + m.xy + ",  " + m.yy + ",  " + m.zy + " ) "
-                       + " ( " + m.xz + ",  " + m.yz + ",  " + m.zz + " ))\n";
-            return str;
-	}
-	static string show_matrix(Matrix3d m) {
-            string str = "\n"
-                       + "(( " + m.xx + ",  " + m.yx + ",  " + m.zx + " ) "
-                       + " ( " + m.xy + ",  " + m.yy + ",  " + m.zy + " ) "
-                       + " ( " + m.xz + ",  " + m.yz + ",  " + m.zz + " ))\n";
-            return str;
-	}
-	static string show_quaternion(Quaternionf q) {
-            string str = "\n"
-                       + "( " + q.w + ",  " + q.x + ",  " + q.y + ",  " +  q.z + " )\n";
-            return str;
-	}
-	static string show_pose(Posef p) {
-            string str = "\n"
-                       + "( " + p.w + ", " + p.x + ", " + p.y + ", " + p.z
-                       + ", " + p.px + ", " + p.py + ", " + p.pz + " )\n";
-            return str;
-	}
-	static string show_matrix2(Matrix3f m) {
-            string str = "\n" + m;
-            return str;
+            put2("indexing [] set", edit_matrix(m3e), edit_matrix(m31));
 	}
 
         static void test_func_call() {
-            title("func_call");
+            test_name("func_call");
 
             // TVector
             Vec3f v31 = new Vec3f(1.0f, 2.0f, 3.0f);
@@ -492,7 +443,7 @@ namespace SprCsSample {
             put("Vec3f: norm   ", "3.7416574", v31.norm());
             Vec3f v3u = v31; v3u.unitize();
             Vec3f v3r = new Vec3f(0.2672612f, 0.5345225f, 0.8017837f);
-            put("Vec3f: unitize", "\n          " + show_vector_0(v3r) + "\n", show_vector_0(v3u));
+            put2("Vec3f: unitize", edit_vector(v3r), edit_vector(v3u));
 
 	    // TQuaternion
             System.Console.WriteLine("");
@@ -505,29 +456,29 @@ namespace SprCsSample {
             Quaternionf q1 = new Quaternionf(cos45, sqrt3div3, sqrt3div3, sqrt3div3);
             Quaternionf q2 = new Quaternionf(q1.W(), q1.X(), q1.Y(), q1.Z());
             Vec3f qv1 = new Vec3f(sqrt3div3, sqrt3div3, sqrt3div3);
-            put("Quaternionf: W(),X(),Y(),Z()", show_quaternion(q1), show_quaternion(q2));
-            put("Quaternionf: V", show_vector(qv1), show_vector(q1.V()));
-            put("Quaternionf: Axis", show_vector(qv1), show_vector(q1.Axis()));
+            put2("Quaternionf: W(),X(),Y(),Z()", edit_quaternion(q1), edit_quaternion(q2));
+            put2("Quaternionf: V", edit_vector(qv1), edit_vector(q1.V()));
+            put2("Quaternionf: Axis", edit_vector(qv1), edit_vector(q1.Axis()));
             put("Quaternionf: Theta", rad90.ToString(), q1.Theta());
             System.Console.WriteLine("");
 
             float half = pi / (2 * sqrt3);
             Vec3f qv2 = new Vec3f(half, half, half);
-            put("Quaternionf: RotationHalf", show_vector(qv2), show_vector(q1.RotationHalf()));
-            put("Quaternionf: Rotation    ", show_vector(qv2), show_vector(q1.Rotation()));
+            put2("Quaternionf: RotationHalf", edit_vector(qv2), edit_vector(q1.RotationHalf()));
+            put2("Quaternionf: Rotation    ", edit_vector(qv2), edit_vector(q1.Rotation()));
 
             float angle = rad90;
             float d = sqrt3;
             float s = (float) Math.Sin(angle / 2) / d;
             Quaternionf qr = new Quaternionf((float) Math.Cos(angle / 2), s, s, s);
             Quaternionf q3 = Quaternionf.Rot(angle, new Vec3f(1f, 1f, 1f));
-            put("Quaternionf: Rot", show_quaternion(qr), show_quaternion(q3));
+            put2("Quaternionf: Rot", edit_quaternion(qr), edit_quaternion(q3));
 
             float c1 = (float) Math.Cos(angle / 2);
             float s1 = (float) Math.Sin(angle / 2);
             Quaternionf qs = new Quaternionf(c1, s1, 0f, 0f);
             Quaternionf q4 = Quaternionf.Rot(angle, (sbyte) 'x');
-            put("Quaternionf: Rot", show_quaternion(qs), show_quaternion(q4));
+            put2("Quaternionf: Rot", edit_quaternion(qs), edit_quaternion(q4));
 
             Vec3f qv3 = new Vec3f(1f, 1f, 1f);
             float c2 = (float) Math.Cos(sqrt3 / 2);
@@ -535,35 +486,39 @@ namespace SprCsSample {
             Vec3f qv4 = (s2 / sqrt3) * qv3;
             Quaternionf qt = new Quaternionf(c2, qv4[0], qv4[1], qv4[2]);
             Quaternionf q5 = Quaternionf.Rot(qv3);
-            put("Quaternionf: Rot", show_quaternion(qt), show_quaternion(q5));
+            put2("Quaternionf: Rot", edit_quaternion(qt), edit_quaternion(q5));
 
-            Quaternionf qt1 = q1; qt1.Conjugate();
+            Quaternionf qc1 = new Quaternionf(cos45,  sqrt3div3,  sqrt3div3,  sqrt3div3);
+            Quaternionf qc2 = new Quaternionf(cos45,  sqrt3div3,  sqrt3div3,  sqrt3div3);
             Quaternionf qc = new Quaternionf(cos45, -sqrt3div3, -sqrt3div3, -sqrt3div3);
-            //Quaternionf qd = new Quaternionf(q1.Conjugated());
-            Quaternionf qd = q1.Conjugated();
-            put("Quaternionf: Conjugate", show_quaternion(qc), show_quaternion(qt1));
-            put("Quaternionf: Conjugated", show_quaternion(qc), show_quaternion(q1.Conjugated()));
+            qc1.Conjugate();
+            put2("Quaternionf: Conjugate", edit_quaternion(qc), edit_quaternion(qc1));
+            put2("Quaternionf: Conjugated", edit_quaternion(qc), edit_quaternion(qc2.Conjugated()));
 
-            Quaternionf qt2 = q1; qt2.Inv();
-            //float qf1 = (float) Math.Sqrt(cos45*cos45 + 9);
-            float qf1 = (float) (cos45*cos45 + 9)*(cos45*cos45 + 9);
-            Quaternionf qe = qc / qf1;
-            put("Quaternionf: Inv", show_quaternion(qe), show_quaternion(qt2.Inv()));
+            float qf1 = (float) (cos45*cos45 + 3*sqrt3div3*sqrt3div3);
+            Quaternionf qe = qc2.Conjugated() / qf1;
+            put2("Quaternionf: Inv", edit_quaternion(qe), edit_quaternion(qc2.Inv()));
 
-	    // TPose
+            // TPose
             System.Console.WriteLine("");
             Posef p1 = new Posef(cos45, sqrt3, sqrt3, sqrt3, 1f, 2f, 3f);
             Posef p2 = new Posef(p1.W(), p1.X(), p1.Y(), p1.Z(), p1.Px(), p1.Py(), p1.Pz());
-            put("Posef: W(),X(),Y(),Z(),Px(),Py(),Pz()", show_pose(p1), show_pose(p2));
-            put("Posef: Pos()", show_pose(p1), show_vector(p1.Pos()));
-            put("Posef: Ori()", show_pose(p1), show_quaternion(p1.Ori()));
-            put("Posef: Unit ", show_pose(p1), show_pose(Posef.Unit()));
-            put("Posef: Trn  ", show_pose(p1), show_pose(Posef.Trn(1f, 1f, 1f)));
-            put("Posef: Trn  ", show_pose(p1), show_pose(Posef.Trn(new Vec3f(1f, 1f, 1f))));
+            Vec3f pv31 = new Vec3f(1f, 2f, 3f);
+            Quaternionf pq1 = new Quaternionf(cos45, sqrt3, sqrt3, sqrt3);
+            Quaternionf pq2 = new Quaternionf();
+            Vec3f pv32 = new Vec3f();
+            Posef pp1 = new Posef(pq2.w, pq2.x, pq2.y, pq2.z, pv32.x, pv32.y, pv32.z);
+            Posef pp2 = new Posef(pq2.w, pq2.x, pq2.y, pq2.z, 1f, 2f, 3f);
+            put2("Posef: W(),X(),Y(),Z(),Px(),Py(),Pz()", edit_pose(p1), edit_pose(p2));
+            put2("Posef: Pos()", edit_vector(pv31), edit_vector(p1.Pos()));
+            put2("Posef: Ori()", edit_quaternion(pq1), edit_quaternion(p1.Ori()));
+            put2("Posef: Unit ", edit_pose(pp1), edit_pose(Posef.Unit()));
+            put2("Posef: Trn  ", edit_pose(pp2), edit_pose(Posef.Trn(1f, 2f, 3f)));
+            put2("Posef: Trn  ", edit_pose(pp2), edit_pose(Posef.Trn(pv31)));
 	}
 
         static void test_simulation() {
-            title("physical simulation");
+            test_name("physical simulation");
 
             PHSceneDesc descScene = new PHSceneDesc();
             PHSolidDesc descSolid = new PHSolidDesc();
@@ -596,5 +551,63 @@ namespace SprCsSample {
             */
         }
 
+	// ------------------
+	//  helper functions
+	// ------------------
+        static bool check_test(string chk) {
+            return inc.Contains(chk) && !exc.Contains(chk);
+        }
+	static void test_name(string test_name) {
+            System.Console.WriteLine("\n---[ " + test_name + " ]---");
+	}
+	static void put(string s = "") { System.Console.WriteLine(s); }
+
+	static void put(string title, object expected, object result) {
+	        string line = title + ": expected: " + expected + ", result: " + result;
+	        System.Console.WriteLine(line);
+	}
+        static void put2(string title, object expected, object result) {
+            string line = title + ":\n  expected: " + expected + ",\n  result:   " + result;
+            System.Console.WriteLine(line);
+        }
+        static void put_title(string title) {
+            System.Console.WriteLine(title + ":");
+        }
+        static void put_indent(int indent, object obj) {
+            string str;
+            if (obj.GetType() == typeof(string)) {
+                str = (string) obj;
+            }
+            else {
+                str = obj.ToString();
+            }
+            char[] seps = { '\n' };
+            string[] lines = str.Split(seps);
+            for (int i = 0; i < lines.Length; i++ ) {
+                if (lines[i] == "") continue;
+                System.Console.WriteLine("        ".Substring(0,indent) + lines[i]);
+            }
+        }
+	//
+	static string edit_vector(Vec3f v) { return "( " + v.x + ", " + v.y + ", " + v.z + " )"; }
+	static string edit_vector(Vec3d v) { return "( " + v.x + ", " + v.y + ", " + v.z + " )"; }
+	static string edit_vector(Vec4f v) { return "( " + v.w + ", " + v.x + ", " + v.y + ", " + v.z + " )"; }
+	static string edit_matrix(Matrix3f m) {
+            return "(( " + m.xx + ",  " + m.yx + ",  " + m.zx + " )"
+                 + " ( " + m.xy + ",  " + m.yy + ",  " + m.zy + " )"
+                 + " ( " + m.xz + ",  " + m.yz + ",  " + m.zz + " ))";
+	}
+	static string edit_matrix(Matrix3d m) {
+            return "(( " + m.xx + ",  " + m.yx + ",  " + m.zx + " )"
+                 + " ( " + m.xy + ",  " + m.yy + ",  " + m.zy + " )"
+                 + " ( " + m.xz + ",  " + m.yz + ",  " + m.zz + " ))";
+	}
+	static string edit_quaternion(Quaternionf q) {
+            return "( " + q.w + ",  " + q.x + ",  " + q.y + ",  " +  q.z + " )";
+	}
+	static string edit_pose(Posef p) {
+            return "( " + p.w + ", " + p.x + ", " + p.y + ", " + p.z
+                 + ", " + p.px + ", " + p.py + ", " + p.pz + " )";
+	}
     }
 }
