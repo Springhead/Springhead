@@ -4,17 +4,22 @@ using SprCs;
 using System;
 
 public class PHBallJointBehaviour : PHJointBehaviour {
-    public PHBallJointDescStruct ballJointDescripter = null;
+    public PHBallJointDescStruct desc = null;
 
-    public override void InitDesc() {
-        ballJointDescripter = new PHBallJointDesc();
+    public override CsObject descStruct {
+        get { return desc; }
+        set { desc = value as PHBallJointDescStruct; }
     }
 
-    public override IfInfo GetIfInfo() {
-        return PHBallJointIf.GetIfInfoStatic();
+    public override void ApplyDesc(CsObject from, CsObject to) {
+        (from as PHBallJointDescStruct).ApplyTo(to as PHBallJointDesc);
     }
 
-    public override PHJointDesc BuildDesc(GameObject socket, GameObject plug) {
-        return (PHBallJointDesc)ballJointDescripter;
+    public override CsObject CreateDesc() {
+        return new PHBallJointDesc();
+    }
+
+    public override PHJointIf CreateJoint(PHSolidIf soSock, PHSolidIf soPlug) {
+        return phScene.CreateJoint(soSock, soPlug, PHBallJointIf.GetIfInfoStatic(), (PHBallJointDesc)desc);
     }
 }

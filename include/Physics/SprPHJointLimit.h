@@ -171,6 +171,18 @@ struct PHBallJointConeLimitIf : public PHBallJointLimitIf{
 	 */
 	void GetSwingRange(Vec2d& range);
 
+	/** @brief スイング方位角の可動範囲を設定する
+	@param lower 最大スイング角度
+	@param upper 最大スイング角度
+	*/
+	void SetSwingDirRange(Vec2d range);
+
+	/** @brief スイング方位角の可動範囲を取得する
+	@param lower 最大スイング角度
+	@param upper 最大スイング角度
+	*/
+	void GetSwingDirRange(Vec2d& range);
+
 	/** @brief ツイスト角の可動範囲を設定する
 		@param lower 最小ツイスト角度
 		@param upper 最大ツイスト角度

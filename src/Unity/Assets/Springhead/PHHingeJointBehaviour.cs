@@ -1,19 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SprCs;
+using System;
 
 public class PHHingeJointBehaviour : PHJointBehaviour {
-    public PHHingeJointDescStruct hingeJointDescripter = null;
+    public PHHingeJointDescStruct desc = null;
 
-    public override void InitDesc() {
-        hingeJointDescripter = new PHHingeJointDesc();
+    public override CsObject descStruct {
+        get { return desc; }
+        set { desc = value as PHHingeJointDescStruct; }
     }
 
-    public override IfInfo GetIfInfo() {
-        return PHHingeJointIf.GetIfInfoStatic();
+    public override void ApplyDesc(CsObject from, CsObject to) {
+        (from as PHHingeJointDescStruct).ApplyTo(to as PHHingeJointDesc);
     }
 
-    public override PHJointDesc BuildDesc(GameObject socket, GameObject plug) {
-        return (PHHingeJointDesc)hingeJointDescripter;
+    public override CsObject CreateDesc() {
+        return new PHHingeJointDesc();
+    }
+
+    public override PHJointIf CreateJoint(PHSolidIf soSock, PHSolidIf soPlug) {
+        return phScene.CreateJoint(soSock, soPlug, PHHingeJointIf.GetIfInfoStatic(), (PHHingeJointDesc)desc);
     }
 }
