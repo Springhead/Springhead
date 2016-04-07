@@ -14,7 +14,7 @@
 #define USE_SPRFILE
 #define ESC 27
 #define USE_AVG_RADIUS
-#define COLLISION_DEMO
+//#define COLLISION_DEMO
 
 #ifndef COLLISION_DEMO
 #define HAPTIC_DEMO
@@ -63,16 +63,9 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	GetSdk()->GetScene()->EnableRenderContact(true);	// 接触領域の表示
 
 	HISdkIf* hisdk = GetSdk()->GetHISdk();
-	int U = 0;
-
-	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
-	for (int obji = 0; obji< (int)opEngine->GetOpObjNum(); obji++)
-	{
-		opEngine->GetOpObjIf(obji)->SetDefaultLinkNum(10);
-
-
-	}
-
+	
+	
+	
 	//initial op objects
 	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
 //#ifdef _3DOF
@@ -83,32 +76,31 @@ void PHOpDemo::Init(int argc, char* argv[]){
 #ifdef HAPTIC_DEMO
 	//initial for haptic
 	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
-	
-	int objid;
-	
-	hapticObjId = opEngine->AddOpObj();
-	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
-	Vec3f* vArr;
-	vArr = new Vec3f[((GRMesh*)tmp->GetGRMesh())->vertices.size()];
-	//vector<int> a;
-	for (int vi = 0; vi<((GRMesh*)tmp->GetGRMesh())->vertices.size(); vi++) {
-		Vec3f v;// = new Vec3f();
-		v.x = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].x;
-		v.y = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].y;
-		v.z = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].z;
 
-		opObjIf->AddVertextoLocalBuffer(v);
-	}
-	opObjIf->InitialObjUsingLocalBuffer(0.5f);
+	////for clip
+	//int objid;
+	//
+	//hapticObjId = opEngine->AddOpObj();
+	//PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
+	//Vec3f* vArr;
+	//vArr = new Vec3f[((GRMesh*)tmp->GetGRMesh())->vertices.size()];
+	////vector<int> a;
+	//for (int vi = 0; vi<((GRMesh*)tmp->GetGRMesh())->vertices.size(); vi++) {
+	//	Vec3f v;// = new Vec3f();
+	//	v.x = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].x;
+	//	v.y = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].y;
+	//	v.z = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].z;
+
+	//	opObjIf->AddVertextoLocalBuffer(v);
+	//}
+	//opObjIf->InitialObjUsingLocalBuffer(0.5f);
 #ifdef _6DOF
-	opEngine->InitialHapticRenderer(1, hisdk);
+	opEngine->InitialHapticRenderer(0, hisdk);
 #endif
 #ifdef _3DOF
 	opEngine->InitialNoMeshHapticRenderer();
 #endif
 	
-
-
 	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngine->GetOpHapticController();
 	opHc->setC_ObstacleRadius(0.2f);
 	PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
@@ -126,9 +118,10 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	//{
 	//	opAnimator->AddAnimationP(1, pi, Vec3f(0, -300, 0), 100);
 	//}
+	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(0);
+	opObjIf->SetBound(3);
 
-
-	//opHrDesc = DCAST(PHOpHapticRenderer, opHr);
+	opHrDesc = DCAST(PHOpHapticRenderer, opHr);
 #endif
 
 #ifdef COLLISION_DEMO
@@ -158,9 +151,9 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	
 
 	PHOpObjDesc* dp1 = opEnginedesc->opObjs[0];
-	PHOpObjDesc* dp2 = opEnginedesc->opObjs[1];
+	//PHOpObjDesc* dp2 = opEnginedesc->opObjs[1];
 	cout << "obji = 0" << "pNum" << dp1->assPsNum << "gNum" << dp1-> assGrpNum<< endl;
-	cout << "obji = 1" << "pNum" << dp2->assPsNum << "gNum" << dp2->assGrpNum << endl;
+	//cout << "obji = 1" << "pNum" << dp2->assPsNum << "gNum" << dp2->assGrpNum << endl;
 
 	DrawHelpInfo = true;
 	checkPtclInfo = true;
@@ -221,8 +214,8 @@ void PHOpDemo::TimerFunc(int id)
 {
 	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
 	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
-	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
-
+	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(0);
+	
 	FWApp::TimerFunc(id);
 	if (id == opSimuTimerId)
 	{
@@ -233,14 +226,16 @@ void PHOpDemo::TimerFunc(int id)
 		opEngine->StepWithBlend();
 		PostRedisplay();
 	}
+	
 
-	//blend
-	GRMeshIf *grMesh = (GRMeshIf*)tmp->GetGRMesh();
-	for (int vi = 0; vi < opObjIf->GetVertexNum(); vi++)
-	{
-		grMesh->GetVertices()[vi] = opObjIf->GetVertex(vi);
-		
-	}
+
+	////blend
+	//GRMeshIf *grMesh = (GRMeshIf*)tmp->GetGRMesh();
+	//for (int vi = 0; vi < opObjIf->GetVertexNum(); vi++)
+	//{
+	//	grMesh->GetVertices()[vi] = opObjIf->GetVertex(vi);
+	//	
+	//}
 
 	//save tst pos
 	if (recordingPos)
@@ -290,7 +285,6 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 	PHOpParticleDesc *dp = dpif->GetParticleDesc();
 
 
-	PHOpObjIf *opObjIf = opEngineif->GetOpObjIf(1);
 	void * dp1;
 	
 
@@ -368,7 +362,7 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		else DSTR << "Disable Collision detection" << std::endl;
 		break;
 	case '3':
-		//Adjust iteration count
+		//Adjust deform iteration count
 		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
 		{
 			itr = ((PHOpObjIf*)opEngineif->GetOpObjIf(obji))->GetObjItrTime();
@@ -378,7 +372,7 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		DSTR << "increase Op iteration num =" << itr <<std::endl;
 		break;
 	case '4':
-		//Adjust iteration count
+		//Adjust deform iteration count
 		for (int obji = 0; obji < (int)opEngineif->GetOpObjNum(); obji++)
 		{
 			itr = ((PHOpObjIf*)opEngineif->GetOpObjIf(obji))->GetObjItrTime();
@@ -513,13 +507,13 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		break;
 	case '8':
 		//adjust forceSpring spring of haptic
-		opHrDesc->forceSpring -= 0.2f;
-		DSTR << "forceSpring is " << opHrDesc->forceSpring << std::endl;
+		opHrDesc->outForceSpring -= 0.2f;
+		DSTR << "forceSpring is " << opHrDesc->outForceSpring << std::endl;
 		break;
 	case '9':
 		//adjust forceSpring spring of haptic
-		opHrDesc->forceSpring += 0.2f;
-		DSTR << "forceSpring is " << opHrDesc->forceSpring << std::endl;
+		opHrDesc->outForceSpring += 0.2f;
+		DSTR << "forceSpring is " << opHrDesc->outForceSpring << std::endl;
 		break;
 #endif
 	case '(':
@@ -658,22 +652,22 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		break;
 	case ' ':
 		//change radius collision test
-		dp1 = (void *)((opObjIf->GetOpParticle(48)->GetDescAddress()));
+		dp1 = (void *)((objif2->GetOpParticle(48)->GetDescAddress()));
 		dpAdd = (PHOpParticleDesc*)dp1;
 		dpAdd->pMainRadius /= 5;
 		dpAdd->pSecRadius /= 5;
 		dpAdd->pThrRadiusVec /= 5;
-		dp1 = (void *)((opObjIf->GetOpParticle(38)->GetDescAddress()));
+		dp1 = (void *)((objif2->GetOpParticle(38)->GetDescAddress()));
 		dpAdd = (PHOpParticleDesc*)dp1;
 		dpAdd->pMainRadius /= 5;
 		dpAdd->pSecRadius /= 5;
 		dpAdd->pThrRadiusVec /= 5;
-		dp1 = (void *)((opObjIf->GetOpParticle(49)->GetDescAddress()));
+		dp1 = (void *)((objif2->GetOpParticle(49)->GetDescAddress()));
 		dpAdd = (PHOpParticleDesc*)dp1;
 		dpAdd->pMainRadius /= 5;
 		dpAdd->pSecRadius /= 5;
 		dpAdd->pThrRadiusVec /= 5;
-		dp1 = (void *)((opObjIf->GetOpParticle(50)->GetDescAddress()));
+		dp1 = (void *)((objif2->GetOpParticle(50)->GetDescAddress()));
 		dpAdd = (PHOpParticleDesc*)dp1;
 		dpAdd->pMainRadius /= 5;
 		dpAdd->pSecRadius /= 5;
@@ -804,6 +798,15 @@ void PHOpDemo::Display()
 		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
 		sstr.str("");
 		sstr << "Enable Haptic: 't'";
+		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
+		sstr.str("");
+		sstr << "--Haptic output forceSpring: '9' to ++, '8' to --";
+		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
+		sstr.str("");
+		sstr << "--Haptic constraintSpring: '.' to ++, ',' to --";
+		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
+		sstr.str("");
+		sstr << "--decrease constraintSpring under 1 to enable it, under 0.4 will get better exprience";
 		render->DrawFont(Vec2f(0, ++Ycor * 10), sstr.str());
 		sstr.str("");
 		sstr << "Please watch springhead output for more information";

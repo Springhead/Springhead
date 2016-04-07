@@ -239,6 +239,8 @@ namespace Spr{
 
 		for (int itri = 0; itri < opIterationTime; itri++)//iteration default is 1
 		{
+
+
 			for (int obji = 0; obji < (int)opObjs.size(); obji++)
 			{
 				if (opObjs[obji]->objNoMeshObj)
@@ -337,7 +339,7 @@ namespace Spr{
 		diffAcc /= opObjs[myHc->GetHpObjIndex()]->assPsNum;
 
 
-		Vec3f f = winPose *diffAcc * opHpRender->forceSpring;
+		Vec3f f = winPose *diffAcc * opHpRender->outForceSpring;
 		//float magni = f.norm();
 		//if (magni > 10.0f)
 		//{
@@ -424,7 +426,7 @@ namespace Spr{
 		{
 			winPose = winPose.Inv();
 			//if (!useConstrainForce)
-			f = winPose * (dp->pCurrCtr - myHc->userPos) *opHpRender->forceSpring;
+			f = winPose * (dp->pCurrCtr - myHc->userPos) *opHpRender->outForceSpring;
 			//else 
 			//	f = winPose * (dp->pCurrCtr - myHc->userPos) / myHc->posScale *constraintSpring;
 			float magni = f.norm();

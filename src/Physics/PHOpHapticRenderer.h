@@ -41,7 +41,8 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 		{
 			hitWall = false;
 			rigid = false;
-			forceSpring = 1.0f;
+			outForceSpring = 1.0f;
+			extForceSpring = 1.0f;
 			constraintSpring = 1.0f;
 			useIncreaseMeshMove = false;
 			useConstrainForce = false;
@@ -95,11 +96,11 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 		}
 		void SetForceSpring(float k)
 		{
-			forceSpring = k;
+			extForceSpring = k;
 		}
 		float GetForceSpring()
 		{
-			return forceSpring;
+			return extForceSpring;
 		}
 		void SetConstraintSpring(float k)
 		{
