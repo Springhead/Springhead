@@ -153,7 +153,7 @@ namespace SprCsSample {
                 }
             }
             PHSdkIf phSdk = PHSdkIf.CreateSdk();
-            CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), descMesh) as CDConvexMeshIf;
+            CDConvexMeshIf mesh = phSdk.CreateShape(CDConvexMeshIf.GetIfInfoStatic(), (CDConvexMeshDesc)descMesh) as CDConvexMeshIf;
             var vertices = mesh.GetVertices();
             for (int i = 0; i < mesh.NVertex(); i++) {
                 put_indent(2, vertices[i]);

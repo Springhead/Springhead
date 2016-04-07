@@ -2,15 +2,24 @@
 using System.Collections;
 using SprCs;
 using System.Runtime.InteropServices;
+using System;
 
-public class PHSceneBehaviour : SpringheadBehaviour {
-    public PHSceneDescStruct phSceneDescriptor = null;
-
+public class PHSceneBehaviour : SprBehaviour {
     static PHSdkIf phSdk = null;
-	PHSceneIf phScene = null;
 
-    public override void InitDesc() {
-        phSceneDescriptor = new PHSceneDesc();
+    public PHSceneDescStruct desc = null;
+
+    public override CsObject descStruct {
+        get { return desc; }
+        set { desc = value as PHSceneDescStruct; }
+    }
+
+    public override void ApplyDesc(CsObject from, CsObject to) {
+        (from as PHSceneDescStruct).ApplyTo(to as PHSceneDesc);
+    }
+
+    public override CsObject CreateDesc() {
+        return new PHSceneDesc();
     }
 
     void OnGUI() {
@@ -18,32 +27,32 @@ public class PHSceneBehaviour : SpringheadBehaviour {
         GUI.TextArea(new Rect(10, 10, 600, 100), text);
     }
 
-    void Awake () {
+    public override ObjectIf Build() {
         SEH_Exception.init();
-
-        PHSceneDesc pd = phSceneDescriptor;
 
         FWAppBehaviour appB = GetComponent<FWAppBehaviour>();
 
+        PHSceneIf phScene;
         if (appB != null) {
             FWApp app = FWAppBehaviour.app;
             phSdk   = app.GetSdk().GetPHSdk();
             phScene = app.GetSdk().GetScene(0).GetPHScene();
             phScene.Clear();
-            phScene.SetDesc(pd);
+            phScene.SetDesc(desc);
         } else {
             phSdk = PHSdkIf.CreateSdk();
-            phScene = phSdk.CreateScene(pd);
+            phScene = phSdk.CreateScene(desc);
         }
 
         phScene.SetTimeStep(Time.fixedDeltaTime);
         phScene.GetIKEngine().Enable(true);
 
+       return phScene;
     }
 
     void FixedUpdate () {
-		if (phScene!=null) {
-			phScene.Step ();
+		if (sprObject!=null) {
+			(sprObject as PHSceneIf).Step ();
 		}
     }
 
@@ -55,13 +64,4 @@ public class PHSceneBehaviour : SpringheadBehaviour {
             FWAppBehaviour.app.PostRedisplay();
         }
     }
-
-    void OnValidate() {
-        SetDLLPath();
-        if (phScene != null) {
-            phScene.SetDesc(phSceneDescriptor);
-        }
-    }
-
-    public PHSceneIf GetPHScene() { return phScene; }
 }

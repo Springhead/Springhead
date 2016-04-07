@@ -1,60 +1,58 @@
 ﻿using UnityEngine;
 using System.Collections;
 using SprCs;
+using System;
 
-//----------------------------------------//
-//  未完成のプログラムです                  //
-//----------------------------------------//
+public class PHBallJointLimitBehavior : SprSceneObjBehaviour {
+    public PHBallJointConeLimitDescStruct desc = null;
 
-public class PHBallJointLimitBehavior : SpringheadBehaviour {
-    public PHBallJointIf phJoint = null;
-    //public PHBallJointConeLimitIf phJointConeLimit = null;
-    public PHBallJointDescStruct ballJointDescripter = null;
-    public PHBallJointConeLimitDescStruct ballJointConeLimitDescripter = null;
-    public GameObject socket = null;
-    public GameObject plug = null;
+    public GameObject jointObject = null;
 
-    public override void InitDesc() {
-        ballJointDescripter = new PHBallJointDesc();
-        ballJointConeLimitDescripter = new PHBallJointConeLimitDesc();
-        //ballJointDescripter.spring = 5000;
-        //ballJointDescripter.damper = 100;
+    public Quaternion rot = new Quaternion(0,0,0,1);
+
+    public override CsObject descStruct {
+        get { return desc; }
+        set { desc = value as PHBallJointConeLimitDesc; }
     }
 
-    void Awake() {
-        PHSceneIf phScene = gameObject.GetComponentInParent<PHSceneBehaviour>().GetPHScene();
+    public override void ApplyDesc(CsObject from, CsObject to) {
+        (from as PHBallJointConeLimitDescStruct).ApplyTo(to as PHBallJointConeLimitDesc);
+    }
 
-        if (!socket) {
-            socket = gameObject.transform.parent.GetComponentInParent<PHSolidBehaviour>().gameObject;
-        }
-        if (!plug) {
-            plug = gameObject.GetComponentInChildren<PHSolidBehaviour>().gameObject;
-        }
+    public override CsObject CreateDesc() {
+        PHBallJointConeLimitDesc d = new PHBallJointConeLimitDesc();
+        d.bEnabled = true;
+        return d;
+    }
 
-        if (socket && plug) {
-            PHSolidIf soSock = socket.GetComponent<PHSolidBehaviour>().phSolid;
-            PHSolidIf soPlug = plug.GetComponent<PHSolidBehaviour>().phSolid;
+    public override ObjectIf Build() {
+        PHBallJointIf jo = null;
 
-            Vector3 v = gameObject.transform.position;
-            Quaternion q = gameObject.transform.rotation;
-            Posed poseJoint = new Posed(q.w, q.x, q.y, q.z, v.x, v.y, v.z);
-            Posed poseSock = soSock.GetPose();
-            Posed posePlug = soPlug.GetPose();
+        var b = (jointObject ? jointObject : gameObject).GetComponent<PHBallJointBehaviour>();
+        if (!b) { return null; }
 
-            PHBallJointDesc d = ballJointDescripter;
-            d.poseSocket = poseSock.Inv() * poseJoint;
-            d.posePlug = posePlug.Inv() * poseJoint;
-            ballJointDescripter.spring = 5000;
-            ballJointDescripter.damper = 100;
+        jo = b.sprObject as PHBallJointIf;
+        if (jo == null) { return null; }
 
-            PHBallJointConeLimitDesc d2 = ballJointConeLimitDescripter;
-            d2.limitSwing.x = 0;
-            d2.limitSwing.y = 1;
+        PHBallJointConeLimitDesc d = desc;
+        PHBallJointLimitIf lim = jo.CreateLimit(PHBallJointConeLimitIf.GetIfInfoStatic(), d);
 
-            phJoint = phScene.CreateJoint(soSock, soPlug, PHBallJointIf.GetIfInfoStatic(), d).Cast();
-            //phJointConeLimit = phScene.CreateJoint(soSock, soPlug, PHBallJointConeLimitIf.GetIfInfoStatic(), d).Cast();  
-            phJoint.SetName("jo:" + gameObject.name);
-            //phJointConeLimit.SetSwingRange(d2.limitSwing);
+        return lim;
+    }
+
+    public override void OnValidate() {
+        Initialize();
+
+        // LimitにSetDescしても効果がなかったので直接セット
+        if (sprObject != null) {
+            PHBallJointConeLimitIf limit = sprObject as PHBallJointConeLimitIf;
+            limit.Enable(desc.bEnabled);
+            limit.SetDamper(desc.damper);
+            limit.SetLimitDir(desc.limitDir);
+            limit.SetSpring(desc.spring);
+            limit.SetSwingRange(desc.limitSwing);
+            limit.SetSwingDirRange(desc.limitSwingDir);
+            limit.SetTwistRange(desc.limitTwist);
         }
     }
 }

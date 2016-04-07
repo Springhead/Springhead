@@ -138,6 +138,8 @@ public:
 	virtual bool IsOnLimit() { return bOnLimit; }
 	void SetSwingRange(Vec2d range) { limitSwing = range; }
 	void GetSwingRange(Vec2d& range){ range = limitSwing; }
+	void SetSwingDirRange(Vec2d range) { limitSwingDir = range; }
+	void GetSwingDirRange(Vec2d& range){ range = limitSwingDir; }
 	void SetTwistRange(Vec2d range) { limitTwist = range; }
 	void GetTwistRange(Vec2d& range){ range = limitTwist; }
 };

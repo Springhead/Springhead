@@ -1,6 +1,6 @@
 #	Do not edit. RunSwig.bat will update this file.
 %module Physics
-%ignore Spr::PHBallJointIf::CreateLimit;
+// %ignore Spr::PHBallJointIf::CreateLimit;
 %ignore Spr::PHFemThermoIf::GetKMatInTet;
 %ignore Spr::PHFemMeshThermoIf::GetKMatInTet;
 %ignore Spr::PHIKActuatorIf::GetRawSolution;
