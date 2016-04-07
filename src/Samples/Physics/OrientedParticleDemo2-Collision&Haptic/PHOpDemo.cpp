@@ -80,42 +80,58 @@ void PHOpDemo::Init(int argc, char* argv[]){
 //#endif
 	
 	
-//#ifdef HAPTIC_DEMO
-//	//initial for haptic
-//	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
-//	
-//	int objid;
-//	
-//	hapticObjId = opEngine->AddOpObj();
-//	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
-//	Vec3f* vArr;
-//	vArr = new Vec3f[((GRMesh*)tmp->GetGRMesh())->vertices.size()];
-//	//vector<int> a;
-//	for (int vi = 0; vi<((GRMesh*)tmp->GetGRMesh())->vertices.size(); vi++) {
-//		Vec3f v;// = new Vec3f();
-//		v.x = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].x;
-//		v.y = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].y;
-//		v.z = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].z;
-//
-//		opObjIf->AddVertextoLocalBuffer(v);
-//	}
-//	opObjIf->InitialObjUsingLocalBuffer(0.5f);
-//#ifdef _6DOF
-//	opEngine->InitialHapticRenderer(1);
-//#endif
-//#ifdef _3DOF
-//	opEngine->InitialNoMeshHapticRenderer();
-//#endif
-//	
-//
-//
-//	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngine->GetOpHapticController();
-//	opHc->setC_ObstacleRadius(0.2f);
-//	PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
-//	
-//#endif
+#ifdef HAPTIC_DEMO
+	//initial for haptic
+	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+	
+	int objid;
+	
+	hapticObjId = opEngine->AddOpObj();
+	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
+	Vec3f* vArr;
+	vArr = new Vec3f[((GRMesh*)tmp->GetGRMesh())->vertices.size()];
+	//vector<int> a;
+	for (int vi = 0; vi<((GRMesh*)tmp->GetGRMesh())->vertices.size(); vi++) {
+		Vec3f v;// = new Vec3f();
+		v.x = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].x;
+		v.y = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].y;
+		v.z = ((GRMesh*)tmp->GetGRMesh())->vertices[vi].z;
 
-//#ifdef COLLISION_DEMO
+		opObjIf->AddVertextoLocalBuffer(v);
+	}
+	opObjIf->InitialObjUsingLocalBuffer(0.5f);
+#ifdef _6DOF
+	opEngine->InitialHapticRenderer(1, hisdk);
+#endif
+#ifdef _3DOF
+	opEngine->InitialNoMeshHapticRenderer();
+#endif
+	
+
+
+	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngine->GetOpHapticController();
+	opHc->setC_ObstacleRadius(0.2f);
+	PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
+	
+	//for clip
+	//opEngine->InitialHapticRenderer(1, hisdk);
+	//PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
+
+	////for rigid Clip
+	//opHr->SetRigid(true);
+
+	//opAnimator = (PHOpAnimationIf*)opEngine->GetOpAnimator();
+	//opAnimator->AddAnimationP(1, 38, Vec3f(0, -300, 0), 100);
+	//for (int pi = 48; pi < 56; pi++)
+	//{
+	//	opAnimator->AddAnimationP(1, pi, Vec3f(0, -300, 0), 100);
+	//}
+
+
+	//opHrDesc = DCAST(PHOpHapticRenderer, opHr);
+#endif
+
+#ifdef COLLISION_DEMO
 
 	FWOpObjIf *tmp2 = GetSdk()->GetScene()->FindObject("fwSLBunny2")->Cast();
 	tmp2->CreateOpObj();
@@ -136,70 +152,10 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	spIf->Initial(0.5f, bounds);
 
 	spIf->EnableCollisionDetection(false);
-//#endif
-//	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+#endif
 	
-	opEngine->InitialHapticRenderer(1, hisdk);
-	PHOpHapticRendererIf* opHr = (PHOpHapticRendererIf*)opEngine->GetOpHapticRenderer();
-
-	//for rigid Clip
-	opHr->SetRigid(true);
-
-	//set Original clip to open
-	/*PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
-	dp = (void *)((opObjIf->GetOpParticle(48)->GetDescAddress()));
-	dpAdd = (PHOpParticleDesc*)dp;
-	dpAdd->pOrigCtr += Vec3f(-1, 0, 0.2f);
-	dp = (void *)((opObjIf->GetOpParticle(38)->GetDescAddress()));
-	dpAdd = (PHOpParticleDesc*)dp;
-	dpAdd->pOrigCtr += Vec3f(0.9, 0, 0.2f);
-	dp = (void *)((opObjIf->GetOpParticle(49)->GetDescAddress()));
-	dpAdd = (PHOpParticleDesc*)dp;
-	dpAdd->pOrigCtr += Vec3f(0.8, 0, 0.2f);
-	dp = (void *)((opObjIf->GetOpParticle(50)->GetDescAddress()));
-	dpAdd = (PHOpParticleDesc*)dp;
-	dpAdd->pOrigCtr += Vec3f(0.7, 0, 0.2f);
-	dp = (void *)((opObjIf->GetOpParticle(51)->GetDescAddress()));
-	dpAdd = (PHOpParticleDesc*)dp;
-	dpAdd->pOrigCtr += Vec3f(1, 0, 0.2f);
-	dp = (void *)((opObjIf->GetOpParticle(52)->GetDescAddress()));
-	dpAdd = (PHOpParticleDesc*)dp;
-	dpAdd->pOrigCtr += Vec3f(1, 0, 0.2f);
-	dp = (void *)((opObjIf->GetOpParticle(53)->GetDescAddress()));
-	dpAdd = (PHOpParticleDesc*)dp;
-	dpAdd->pOrigCtr += Vec3f(1, 0, 0.2f);
-	dp = (void *)((opObjIf->GetOpParticle(54)->GetDescAddress()));
-	dpAdd = (PHOpParticleDesc*)dp;
-	dpAdd->pOrigCtr += Vec3f(0.6, 0, 0.2f);
-	dp = (void *)((opObjIf->GetOpParticle(55)->GetDescAddress()));
-	dpAdd = (PHOpParticleDesc*)dp;
-	dpAdd->pOrigCtr += Vec3f(-0.6, 0, 0.2f);*/
-
-
-	opAnimator = (PHOpAnimationIf*)opEngine->GetOpAnimator();
-	opAnimator->AddAnimationP(1, 38, Vec3f(0, -300, 0), 100);
-	for (int pi = 48; pi < 56; pi++)
-	{
-		opAnimator->AddAnimationP(1, pi, Vec3f(0, -300, 0), 100);
-	}
-
-
-
-	//extra test 
-	/*
-	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(hapticObjId);
-	dp = (void *)((opObjIf->GetOpParticle(55)->GetDescAddress()));
-	dpAdd = (PHOpParticleDesc*)dp;
-	opObjIf->SetBound(8);
-	PHOpObjIf *opObjIf1 = opEngine->GetOpObjIf(0);
-	opObjIf1->SetBound(8);*/
-
-	opHrDesc = DCAST(PHOpHapticRenderer, opHr);
 	PHOpEngine* opEnginedesc = DCAST(PHOpEngine, opEngine);
 	
-	
-
-	int f = (int) opHrDesc->forceSpring;
 
 	PHOpObjDesc* dp1 = opEnginedesc->opObjs[0];
 	PHOpObjDesc* dp2 = opEnginedesc->opObjs[1];
@@ -544,6 +500,7 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		}
 		DSTR << "useDistCstr" << ((PHOpObjIf*)opEngineif->GetOpObjIf(0)->Cast())->GetObjDstConstraint() << std::endl;;
 		break;
+#ifdef HAPTIC_DEMO
 	case ',':
 		//adjust constraint spring of haptic
 		opHrDesc->constraintSpring -= 0.2f;
@@ -564,6 +521,7 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		opHrDesc->forceSpring += 0.2f;
 		DSTR << "forceSpring is " << opHrDesc->forceSpring << std::endl;
 		break;
+#endif
 	case '(':
 		//Adjust velocity damping coefficient
 		for (int obji = 0; obji< (int)opEngineif->GetOpObjNum(); obji++)
