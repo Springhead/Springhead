@@ -28,7 +28,6 @@ FWOptimizer::FWOptimizer() {
 
 	bRunning = false;
 	bInitialized = false;
-	//xstart = NULL; stddev = NULL; parameters = NULL; evo = NULL; xfinal = NULL; xprovisional = NULL;
 	xstart = NULL; stddev = NULL; xfinal = NULL; xprovisional = NULL;
 #ifdef USE_CLOSED_SRC
 	parameters = NULL; evo = NULL;
