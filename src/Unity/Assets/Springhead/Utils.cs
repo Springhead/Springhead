@@ -2,7 +2,17 @@
 using System.Collections;
 using SprCs;
 
-public abstract class SprBehaviour : MonoBehaviour {
+public class SprBehaviourBase : MonoBehaviour {
+    /// -- Privateメソッド
+    [System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true)]
+    protected static extern bool SetDllDirectory(string lpPathName);
+    protected void SetDLLPath() {
+        SetDllDirectory(Application.dataPath + "/Assets/Springhead/Plugins");
+        SetDllDirectory(Application.dataPath + "/Springhead/Plugins");
+    }
+}
+
+public abstract class SprBehaviour : SprBehaviourBase {
     // 
     private ObjectIf sprObject_ = null;
     public ObjectIf sprObject { get { return sprObject_; }  protected set { sprObject_ = value; } }
@@ -55,14 +65,6 @@ public abstract class SprBehaviour : MonoBehaviour {
                 sprObject.SetDesc(d);
             }
         }
-    }
-
-    /// -- Privateメソッド
-    [System.Runtime.InteropServices.DllImport("kernel32", SetLastError = true)]
-    private static extern bool SetDllDirectory(string lpPathName);
-    protected void SetDLLPath() {
-        SetDllDirectory(Application.dataPath + "/Assets/Springhead/Plugins");
-        SetDllDirectory(Application.dataPath + "/Springhead/Plugins");
     }
 }
 
