@@ -31,7 +31,7 @@ protected:
 	CMAES<double>			*evo;
 #endif
 
-	static void FWOptimizer_ThreadCallback(int id, void* arg);
+	static void SPR_CDECL FWOptimizer_ThreadCallback(int id, void* arg);
 
 public:
 	/// Constructor

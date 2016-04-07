@@ -15,7 +15,7 @@
 
 namespace Spr{;
 
-void FWOptimizer::FWOptimizer_ThreadCallback(int id, void* arg) {
+void SPR_CDECL FWOptimizer::FWOptimizer_ThreadCallback(int id, void* arg) {
 	FWOptimizer* instance = (FWOptimizer*)arg;
 	instance->Optimize();
 }
@@ -28,15 +28,21 @@ FWOptimizer::FWOptimizer() {
 
 	bRunning = false;
 	bInitialized = false;
-	xstart = NULL; stddev = NULL; parameters = NULL; evo = NULL; xfinal = NULL; xprovisional = NULL;
+	//xstart = NULL; stddev = NULL; parameters = NULL; evo = NULL; xfinal = NULL; xprovisional = NULL;
+	xstart = NULL; stddev = NULL; xfinal = NULL; xprovisional = NULL;
+#ifdef USE_CLOSED_SRC
+	parameters = NULL; evo = NULL;
+#endif
 }
 
 FWOptimizer::~FWOptimizer() {
 	thread->Clear();
 	if (xstart)			{ delete xstart; }
 	if (stddev)			{ delete stddev; }
+#ifdef USE_CLOSED_SRC
 	if (parameters)		{ delete parameters; }
 	if (evo)			{ delete evo; }
+#endif
 	if (xfinal)			{ delete xfinal; }
 	if (xprovisional)	{ delete xprovisional; }
 }
