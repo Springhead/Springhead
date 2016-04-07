@@ -5,6 +5,40 @@ namespace Spr{
 	;
 
 #define USE_AVE_RADIUS
+
+	int TestSphereSphere(Vec3f a_c, float a_r, Vec3f b_c, float b_r)
+	{
+		// Calculate squared distance between centers
+		Vec3f d = a_c - b_c;
+		float dist2 = d.dot(d);
+		// Spheres intersect if squared distance is less than squared sum of radii
+		float radiusSum = a_r + b_r;
+		return dist2 <= radiusSum * radiusSum;
+	}
+	int TestMovingSphereSphere(Vec3f s0_c, float s0_r, Vec3f d, float t0, float t1, Vec3f s1_c, float s1_r, float &t)
+	{
+		// Compute sphere bounding motion of s0 during time interval from t0 to t1
+		//Sphere b;
+		float mid = (t0 + t1) * 0.5f;
+		Vec3f spb_c = s0_c + d * mid;
+		float spb_r = (mid - t0) * d.norm() + s0_r;
+		// If bounding sphere not overlapping s1, then no collision in this interval
+		if (!TestSphereSphere(spb_c, spb_r, s1_c, s1_r)) return 0;
+		// Cannot rule collision out: recurse for more accurate testing. To terminate the
+		// recursion, collision is assumed when time interval becomes sufficiently small
+		//	if (((t1 - t0 < 0.0001f) && (t1 - t0>0)) || (t1 - t0 > -0.0001) && (t1 - t0<0)) {
+		if (t1 - t0 < 0.0001f){
+		
+			t = t0;
+			return 1;
+		}
+		// Recursively test first half of interval; return collision if detected
+		if (TestMovingSphereSphere(s0_c, s0_r, d, t0, mid, s1_c, s1_r, t)) return 1;
+		// Recursively test second half of interval
+		return TestMovingSphereSphere(s0_c, s0_r, d, mid, t1, s1_c, s1_r, t);
+	}
+
+
 	void PHOpSpHashColliAgent::EnableCollisionDetection(bool able)
 	{
 		enableCollision = able;
@@ -468,7 +502,7 @@ namespace Spr{
 
 
 		//sphere colli test
-		if (0)
+		if (1)
 		{
 			dp1->isColliedSphashSolvedReady = true;
 			dp2->isColliedSphashSolvedReady = true;
@@ -494,8 +528,6 @@ namespace Spr{
 				dp1->isColliedSphashSolved = true;
 				dp2->isColliedSphashSolved = true;
 
-
-
 				//hapticInform
 				/*if (hcColliedIndex >0)
 				{
@@ -512,6 +544,10 @@ namespace Spr{
 				//else
 				//solve
 				pctlColliSolve(objIndex1, ptclindex1, objIndex2, ptclindex2, -dir * ellRadius1 + dpCtr1, dir * ellRadius2 + dpCtr2);
+				Vec3f &dpCtr1 = dp1->pNewCtr;
+				Vec3f &dpCtr2 = dp2->pNewCtr;
+				float mindeltaT = 1.0f;
+				//TestMovingSphereSphere(dpCtr1, ellRadius1, dpCtr2 - dpCtr1, 0.01f, 0.01f, dpCtr2, ellRadius2, mindeltaT);
 
 				solveCount++;
 			}

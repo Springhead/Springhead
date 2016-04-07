@@ -1115,7 +1115,7 @@ namespace Spr{
 
 				gravity = gravity.Zero();
 				gravity.y = -9.81f;
-				float boundcube = 8.0;
+				float boundcube = 3.0;
 				bounds.min.x = -boundcube;
 				bounds.min.y = -boundcube;
 				bounds.min.z = -boundcube;

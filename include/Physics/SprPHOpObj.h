@@ -27,7 +27,9 @@ struct Bounds
 {
 public:
 	Bounds(){}
-	inline Bounds(const Vec3d &min0, const Vec3d &max0) { min = min0; max = max0; }
+	inline Bounds(const Vec3d &min0, const Vec3d &max0) { min = min0; max = max0; 
+	
+	}
 
 	inline void set(const Vec3d &min0, const Vec3d &max0) { min = min0; max = max0; }
 
@@ -52,7 +54,9 @@ public:
 		if (other.y > self.y) self.y = other.y;
 		if (other.z > self.z) self.z = other.z;
 	}
+
 	Vec3f min, max;
+
 };
 
 ///	剛体のステート
@@ -66,7 +70,8 @@ struct PHOpObjState{
 };
 
 struct PHOpHapticRendererDesc{
-	float forceSpring;
+	float extForceSpring;
+	float outForceSpring;
 	float constraintSpring;
 	float timeStep;
 	float forceOnRadius;

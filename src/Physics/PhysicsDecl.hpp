@@ -1189,7 +1189,8 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHOpHapticRendererDesc \
 protected:\
-	float	forceSpring;	\
+	float	extForceSpring;	\
+	float	outForceSpring;	\
 	float	constraintSpring;	\
 	float	timeStep;	\
 	float	forceOnRadius;	\
@@ -1209,7 +1210,8 @@ protected:\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
-		forceSpring = ((PHOpHapticRendererDesc*)ptr)->forceSpring;	\
+		extForceSpring = ((PHOpHapticRendererDesc*)ptr)->extForceSpring;	\
+		outForceSpring = ((PHOpHapticRendererDesc*)ptr)->outForceSpring;	\
 		constraintSpring = ((PHOpHapticRendererDesc*)ptr)->constraintSpring;	\
 		timeStep = ((PHOpHapticRendererDesc*)ptr)->timeStep;	\
 		forceOnRadius = ((PHOpHapticRendererDesc*)ptr)->forceOnRadius;	\
@@ -1230,7 +1232,8 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		((PHOpHapticRendererDesc*)ptr)->forceSpring = forceSpring;	\
+		((PHOpHapticRendererDesc*)ptr)->extForceSpring = extForceSpring;	\
+		((PHOpHapticRendererDesc*)ptr)->outForceSpring = outForceSpring;	\
 		((PHOpHapticRendererDesc*)ptr)->constraintSpring = constraintSpring;	\
 		((PHOpHapticRendererDesc*)ptr)->timeStep = timeStep;	\
 		((PHOpHapticRendererDesc*)ptr)->forceOnRadius = forceOnRadius;	\

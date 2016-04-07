@@ -950,7 +950,7 @@ void PHOpHapticRenderer::ForceCalculation()
 			{
 				float deltT = (*opObjs)[cdp->pObjId]->params.timeStep;
 				//cdp->pColliedForce += pMove / (deltT * deltT) * cdp->pTempSingleVMass;
-				cdp->pExternalForce += forceSpring * pMove;
+				cdp->pExternalForce += extForceSpring * pMove;
 				int u = 0;
 			}
 			else{
