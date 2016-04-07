@@ -358,9 +358,9 @@ private: 	bool addTohashtable(float tx,float ty,float tz,int objInd,int pInd,int
 
 		//float is too approximated here txx is a cut to classify nearby pos
 		//is it work? If use float then many will be hashed to same cell
-		int txx = (int)(tx * posCoefft)/(cellsize * cellCoefft);
-		int tyy = (int)(ty * posCoefft)/(cellsize * cellCoefft);
-		int tzz = (int)(tz * posCoefft)/(cellsize * cellCoefft);
+		int txx = (int)((tx * posCoefft)/(cellsize * cellCoefft));
+		int tyy = (int)((ty * posCoefft)/(cellsize * cellCoefft));
+		int tzz = (int)((tz * posCoefft)/(cellsize * cellCoefft));
 
 		Vec3i &tmp = Vec3i(txx,tyy,tzz);
 		hashIndex = hash(tmp,hashtableSize);
