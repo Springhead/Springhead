@@ -7,10 +7,23 @@ namespace SprCs {
     public class CsObject {
         public IntPtr _this;
         public bool _flag;
-        protected CsObject() {}
-	protected CsObject(IntPtr ptr, bool flag = false) { _this = ptr; _flag = flag; }
-        ~CsObject() {}
-	public IntPtr get() { return _this; }
+        protected CsObject() { }
+        protected CsObject(IntPtr ptr, bool flag = false) { _this = ptr; _flag = flag; }
+        ~CsObject() { }
+        public IntPtr get() { return _this; }
+        public static bool operator ==(CsObject a, CsObject b) {
+            if ((object)a == null || (object)b == null) {
+                if ((object)a == null && (object)b == null) { return true; } else { return false; }
+            } else {
+                return a._this == b._this;
+            }
+        }
+        public static bool operator !=(CsObject a, CsObject b) {
+            return !(a == b);
+        }
+        public override bool Equals(object obj) {
+            return this == (CsObject)obj;
+        }
     }
 
     public partial class ObjectIf {
@@ -40,4 +53,3 @@ namespace SprCs {
         }
     }
 }
-
