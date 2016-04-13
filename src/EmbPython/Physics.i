@@ -30,10 +30,6 @@
 %ignore Spr::PHGenericJointIf::SetCallback;
 %ignore Spr::PHFemThermoIf::GetKMatInTet;
 
-// 2016/04/06 for dailybuild
-%ignore Spr::PHSceneIf::GetOpEngine();
-%ignore Spr::PHOpSpHashColliAgentIf::Initial(float, Bounds);
-
 %ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
 %ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
 %ignore Spr::PHOpObjDesc;
