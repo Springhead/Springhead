@@ -53,9 +53,17 @@ namespace SprCsSample {
 /**/        put("set by elm", "(0.0, 0.0, -4.5)", descScene.gravity);
             descScene.gravity = new Vec3d(2.5, -5.2, 0.5);
 /**/        put("set struct", "(2.5, -5.2, 0.5)", descScene.gravity);
-
+            // structure
+            Vec3d v3d = new Vec3d(0.1, 0.2, 0.3);
+            put("Vec new", "(0.1, 0.2, 0.3)", v3d);
+            put("Vec * c", "(0.2, 0.4, 0.6)", v3d * 2);
+            put("c * Vec", "(0.2, 0.4, 0.6)", 2 * v3d);
             Posed pose = new Posed(new Vec3d(1, 2, 3), new Quaterniond(1, 0, 0, 0));
             put2("pose", new Posed(1, 0, 0, 0, 1, 2, 3), pose);
+            // NULL pointer as argument
+            FWApp app = new FWApp();
+            FWWinDesc desc = new FWWinDesc();
+            FWWinIf win = app.CreateWin(desc, null);
         }
 
         static void test_tostring() {

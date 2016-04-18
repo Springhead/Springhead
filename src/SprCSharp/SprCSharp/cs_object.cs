@@ -24,6 +24,9 @@ namespace SprCs {
         public override bool Equals(object obj) {
             return this == (CsObject)obj;
         }
+        public override int GetHashCode() {
+            return this.GetHashCode();
+        }
     }
 
     public partial class ObjectIf {
