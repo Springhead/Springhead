@@ -9,7 +9,8 @@ namespace SprCsSample {
     class Program {
         static string def = "itvacfroFs";
         static string inc = "A";	// include: "A" for all
-        static string exc = "f";	// exclude:
+        static string exc = " ";	// exclude:
+        static string brk = "n";	// set "y" if run under debugger
 
         static void Main(string[] args) {
 
@@ -60,10 +61,6 @@ namespace SprCsSample {
             put("c * Vec", "(0.2, 0.4, 0.6)", 2 * v3d);
             Posed pose = new Posed(new Vec3d(1, 2, 3), new Quaterniond(1, 0, 0, 0));
             put2("pose", new Posed(1, 0, 0, 0, 1, 2, 3), pose);
-            // NULL pointer as argument
-            FWApp app = new FWApp();
-            FWWinDesc desc = new FWWinDesc();
-            FWWinIf win = app.CreateWin(desc, null);
         }
 
         static void test_tostring() {
@@ -277,9 +274,29 @@ namespace SprCsSample {
         static void test_func_args() {
             test_name("function arguments");
 
-            // ここでのコードは正常には動作はしない － 例外が起きて停止する。
+            // 引数をちゃんと設定しないと例外が起きる！！
+            if (brk != "y") return;
+
+            // default argument
+            FWApp app = new FWApp();
+            FWWinDesc desc = new FWWinDesc();
+            FWWinIf winif = new FWWinIf();
+            try { FWWinIf win1 = app.CreateWin(); }
+                catch (System.Exception e) { put(SEH_Exception.what(e)); }
+            try { FWWinIf win2 = app.CreateWin(desc); }
+                catch (System.Exception e) { put(SEH_Exception.what(e)); }
+            try { FWWinIf win3 = app.CreateWin(desc, winif); }
+                catch (System.Exception e) { put(SEH_Exception.what(e)); }
+
+            // NULL pointer as argument
+            try { FWWinIf win4 = app.CreateWin(desc, null); }
+                catch (System.Exception e) { put(SEH_Exception.what(e)); }
+
+            // これ以降のコードは正常には動作はしない － 例外が起きて停止する。
             // デバッガで止めて値を確認すること。
             //
+            if (brk != "y") return;
+
             // [int]
             CDShapePairIf shapePairIf = new CDShapePairIf();
             shapePairIf.GetShape(123);
@@ -325,14 +342,12 @@ namespace SprCsSample {
             put("ret bool  ", "False", phScene.IsContactDetectionEnabled());
             phScene.EnableContactDetection(true);
             put("ret bool  ", "True ", phScene.IsContactDetectionEnabled());
-
             put("ret size_t", "152? ", phScene.GetDescSize());
-
             put("ret Vec3d ", "(0.0, -9.8, 0.0)", phScene.GetGravity());
             phScene.SetGravity(new Vec3d(0.1, -9.9, 0.2));
             put("ret Vec3d ", "(0.1, -9.9, 0.2)", phScene.GetGravity());
 
-	        // function returns array by using pointer
+            // function returns array by using pointer
             CDConvexMeshDesc descMesh = new CDConvexMeshDesc();
             for (int x = 0; x < 10; x++) {
                 for (int y = 0; y < 10; y++) {

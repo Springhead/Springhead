@@ -129,5 +129,14 @@ namespace SprCs {
             set { SprExport.Spr_array_set_double(get(), index, value); }
         }
     }
+    //  char*
+    public class arraywrapper_char_p : arraywrapper {
+        public arraywrapper_char_p(IntPtr ptr) : base(ptr) {}
+        public arraywrapper_char_p(uint nelm) : base((uint) IntPtr.Size, nelm) {}
+        public IntPtr this[int index] {
+            get { return (IntPtr) SprExport.Spr_array_get_char_p(get(), index); }
+            set { SprExport.Spr_array_set_char_p(get(), index, value); }
+        }
+    }
 }
 

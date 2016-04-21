@@ -95,6 +95,11 @@ namespace SprCs {
         public static extern double Spr_array_get_double(IntPtr _ptr, int index);
         [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
         public static extern void Spr_array_set_double(IntPtr _ptr, int index, double value);
+        //  char*
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern IntPtr Spr_array_get_char_p(IntPtr _ptr, int index);
+        [DllImport("SprExport.dll", CallingConvention=CallingConvention.Cdecl)]
+        public static extern void Spr_array_set_char_p(IntPtr _ptr, int index, IntPtr value);
     }
 }
 

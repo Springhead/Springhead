@@ -183,5 +183,14 @@ extern "C" {
         double* aryptr = (double*) ptr;
         aryptr[index] = value;
     }
+    //  char*
+    __declspec(dllexport) HANDLE __cdecl Spr_array_get_char_p(HANDLE ptr, int index) {
+        char** aryptr = (char**) ptr;
+        return aryptr[index];
+    }
+    __declspec(dllexport) void __cdecl Spr_array_set_char_p(HANDLE ptr, int index, HANDLE value) {
+        char** aryptr = (char**) ptr;
+        aryptr[index] = (char*) value;
+    }
 }
 
