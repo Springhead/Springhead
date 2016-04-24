@@ -110,7 +110,7 @@ void FWHapticSample::Init(int argc, char* argv[]){
 	InitInterface();									// インタフェースの初期化
 	BuildScene();										// オブジェクトの作成
 	PHHapticEngineIf* he = phscene->GetHapticEngine();	// 力覚エンジンをとってくる
-	he->EnableHapticEngine(true);						// 力覚エンジンの有効化
+	he->Enable(true);						            // 力覚エンジンの有効化
 
 	if(engineType == SINGLE){
 		// シングルスレッドモード
