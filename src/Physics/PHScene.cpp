@@ -18,6 +18,8 @@
 #include <Physics/PHOpEngine.h>
 #include <sstream>
 
+#include <Foundation/UTPreciseTimer.h>
+
 namespace Spr{;
 
 //----------------------------------------------------------------------------
@@ -306,10 +308,20 @@ void PHScene::SetTimeStep(double dt){
 	timeStepInv = 1.0/dt;
 }
 
+static UTPreciseTimer ptimer;
+
 void PHScene::Step(){
+	int t0, t1, t2;
+	ptimer.CountUS();
 	ClearForce();
+	t0 = ptimer.CountUS();
+	ptimer.CountUS();
 	GenerateForce();
+	t1 = ptimer.CountUS();
+	ptimer.CountUS();
 	Integrate();
+	t2 = ptimer.CountUS();
+	//DSTR << "clear: " << t0 << " gen: " << t1 << " int: " << t2 << std::endl;
 }
 void PHScene::ClearForce(){
 	engines.ClearForce();
