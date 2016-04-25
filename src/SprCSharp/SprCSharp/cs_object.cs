@@ -10,7 +10,9 @@ namespace SprCs {
         protected CsObject() { }
         protected CsObject(IntPtr ptr, bool flag = false) { _this = ptr; _flag = flag; }
         ~CsObject() { }
-        public IntPtr get() { return _this; }
+        public static implicit operator IntPtr(CsObject obj) {
+            return (obj == null) ? IntPtr.Zero : obj._this;
+        }
         public static bool operator ==(CsObject a, CsObject b) {
             if ((object)a == null || (object)b == null) {
                 if ((object)a == null && (object)b == null) { return true; } else { return false; }
@@ -43,15 +45,15 @@ namespace SprCs {
     public partial class IfInfoToCsType {
         public static Type FindType(IfInfo ifinfo) {
             Type t = null;
-            if (mapPhysics.TryGetValue(ifinfo.get(), out t)) { return t; }
-            if (mapCollision.TryGetValue(ifinfo.get(), out t)) { return t; }
-            if (mapFramework.TryGetValue(ifinfo.get(), out t)) { return t; }
-            if (mapGraphics.TryGetValue(ifinfo.get(), out t)) { return t; }
-            if (mapHumanInterface.TryGetValue(ifinfo.get(), out t)) { return t; }
-            if (mapCreature.TryGetValue(ifinfo.get(), out t)) { return t; }
-            if (mapFileIO.TryGetValue(ifinfo.get(), out t)) { return t; }
-            if (mapFoundation.TryGetValue(ifinfo.get(), out t)) { return t; }
-            if (mapBase.TryGetValue(ifinfo.get(), out t)) { return t; }
+            if (mapPhysics.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapCollision.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapFramework.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapGraphics.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapHumanInterface.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapCreature.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapFileIO.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapFoundation.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapBase.TryGetValue(ifinfo, out t)) { return t; }
             return null;
         }
     }
