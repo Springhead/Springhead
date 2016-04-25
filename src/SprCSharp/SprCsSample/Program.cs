@@ -269,6 +269,31 @@ namespace SprCsSample {
             put("assignment:");
             put("DescStruct: radius      ", "3", structSphere1.radius);
             put("DescStruct: base.density", "3", structSphere1.material.density);
+
+            //
+            // ---- 比較 ----
+            Vec3d v3d_c11 = new Vec3d(1, 2, 3);
+            Vec3d v3d_c12 = new Vec3d(1, 2, 3);
+            Vec3d v3d_c21 = new Vec3d(4, 5, 6);
+            put("compare: ==, same", "True ", v3d_c11 == v3d_c12);
+            put("compare: ==, diff", "False", v3d_c11 == v3d_c21);
+            put("compare: ==, null", "False", v3d_c11 == null);
+            put("compare: ==, null", "False", null == v3d_c11);
+            put("compare: !=, same", "False", v3d_c11 != v3d_c12);
+            put("compare: !=, diff", "True ", v3d_c11 != v3d_c21);
+            put("compare: !=, null", "True ", v3d_c11 != null);
+            put("compare: !=, null", "True ", null != v3d_c11);
+            vectorwrapper_int vw11 = new vectorwrapper_int((IntPtr) 0);
+            vectorwrapper_int vw12 = new vectorwrapper_int((IntPtr) 0);
+            vectorwrapper_int vw21 = new vectorwrapper_int((IntPtr) 1);
+            put("compare: ==, wrap", "True ", vw11 == vw12);
+            put("compare: ==, wrap", "False", vw11 == vw21);
+            put("compare: ==, null", "False", vw11 == null);
+            put("compare: ==, null", "False", null == vw21);
+            put("compare: !=, wrap", "False", vw11 != vw12);
+            put("compare: !=, wrap", "True ", vw11 != vw21);
+            put("compare: !=, null", "True ", vw11 != null);
+            put("compare: !=, null", "True ", null != vw21);
         }
 
         static void test_func_args() {
