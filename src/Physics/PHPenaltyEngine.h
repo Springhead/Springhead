@@ -57,12 +57,8 @@ public:
 };
 
 class PHPenaltyEngine;
-class PHSolidPairForPenalty : public PHSolidPair/*<PHShapePairForPenalty, PHPenaltyEngine>*/{
+class PHSolidPairForPenalty : public PHSolidPair{
 public:
-	//typedef PHSolidPair<PHShapePairForPenalty, PHPenaltyEngine> base_type;
-	//typedef base_type::shapepair_type shapepair_type;
-	//typedef base_type::engine_type engine_type;
-
 	Vec3f cocog;					///<	2剛体の重心の中点(絶対系)
 	Vec3f reflexForce;				///<	抗力
 	Vec3f reflexTorque;				///<	抗力によるトルク(cocog系)
@@ -116,8 +112,10 @@ protected:
 	void CalcFriction(PHShapePairForPenalty* cp);
 };
 
-class PHPenaltyEngine : public PHContactDetector/*<PHShapePairForPenalty, PHSolidPairForPenalty, PHPenaltyEngine>*/{
-	SPR_OBJECTDEF_NOIF1(PHPenaltyEngine, PHEngine);
+class PHPenaltyEngine : public PHContactDetector{
+public:
+	SPR_OBJECTDEF1(PHPenaltyEngine, PHEngine);
+
 public:
 	PHSolidPairForPenalty* GetSolidPair(int i, int j){ return (PHSolidPairForPenalty*)(PHSolidPair*)solidPairs.item(i,j); }
 	
