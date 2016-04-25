@@ -415,19 +415,19 @@ void PHRootNode::Setup(){
 		Prepare     ();
 		PrepareGear (engine->gears);
 
-		for(int i = 0; i < (int)nodes.size(); i++){
-			DSTR << nodes[i]->id;
-			if(nodes[i]->GetParent())
-				DSTR << " -> " << nodes[i]->GetParent()->id;
-			PHTreeNode1D* node1D = nodes[i]->Cast();
-			if(node1D){
-				if(node1D->gearRoot)
-					DSTR << " gr: " << node1D->gearRoot->id;
-				if(node1D->gearUpper)
-					DSTR << " gu: " << node1D->gearUpper->id;
-			}
-			DSTR << endl;
-		}
+		//for(int i = 0; i < (int)nodes.size(); i++){
+		//	DSTR << nodes[i]->id;
+		//	if(nodes[i]->GetParent())
+		//		DSTR << " -> " << nodes[i]->GetParent()->id;
+		//	PHTreeNode1D* node1D = nodes[i]->Cast();
+		//	if(node1D){
+		//		if(node1D->gearRoot)
+		//			DSTR << " gr: " << node1D->gearRoot->id;
+		//		if(node1D->gearUpper)
+		//			DSTR << " gu: " << node1D->gearUpper->id;
+		//	}
+		//	DSTR << endl;
+		//}
 
 		PrepareDepth();
 		bReady = true;
