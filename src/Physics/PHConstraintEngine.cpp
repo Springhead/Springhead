@@ -506,7 +506,9 @@ bool PHConstraintEngine::DelChildObject(ObjectIf* o){
 
 void PHConstraintEngine::Setup(){
 	//< ツリー構造の前処理(ABA関係)
-	# pragma omp for
+    #ifdef USE_OPENMP_PHYSICS
+    # pragma omp for
+    #endif
 	for(int i = 0; i < (int)trees.size(); i++){
 		if(!trees[i]->IsEnabled())
 			continue;
@@ -516,7 +518,9 @@ void PHConstraintEngine::Setup(){
 	// 反復計算用拘束配列の作成
 	// cons      : PHConstraint派生クラス
 	// cons_base : PHConstraintBase派生クラス：PHConstraint派生クラスが先頭に来るように
-	# pragma omp single
+    #ifdef USE_OPENMP_PHYSICS
+    # pragma omp single
+    #endif
 	{
 		cons     .clear();
 		cons_base.clear();
@@ -577,12 +581,16 @@ void PHConstraintEngine::Setup(){
 	} //< omp single
 
 	// 拘束毎の前処理（J, b, db, dA, ...）
+    #ifdef USE_OPENMP_PHYSICS
 	# pragma omp for
+    #endif
 	for(int i = 0; i < (int)cons_base.size(); i++)
 		cons_base[i]->Setup();
 		
 	// 拘束力初期値による速度変化を計算 (dv = A * f)
+    #ifdef USE_OPENMP_PHYSICS
 	# pragma omp for
+    #endif
 	for(int i = 0; i < (int)cons_base.size(); i++){
 		PHConstraintBase* con = cons_base[i];
 		for(int n = 0; n < (int)con->axes.size(); n++){
@@ -757,7 +765,9 @@ void PHConstraintEngine::CompResponseMatrix(){
 }
 
 void PHConstraintEngine::SetupCorrection(){
+    #ifdef USE_OPENMP_PHYSICS
 	# pragma omp for
+    #endif
  	for(int i = 0; i < (int)cons_base.size(); i++)
 		cons_base[i]->SetupCorrection();
 }
@@ -766,7 +776,9 @@ void PHConstraintEngine::Iterate(){
 	int n;
 	for(n = 0; n < numIter; n++){
 		int nupdated = 0;
+        #ifdef USE_OPENMP_PHYSICS
 		# pragma omp for
+        #endif
 		for(int i = 0; i < (int)cons_base.size(); i++)
 			nupdated += (int)cons_base[i]->Iterate();
 
@@ -784,7 +796,9 @@ void PHConstraintEngine::Iterate(){
 
 void PHConstraintEngine::IterateCorrection(){
 	for(int n = 0; n != numIterCorrection; ++n){
+        #ifdef USE_OPENMP_PHYSICS
 		# pragma omp for
+        #endif
 		for(int i = 0; i < (int)cons_base.size(); i++)
 			cons_base[i]->IterateCorrection();
 	}
