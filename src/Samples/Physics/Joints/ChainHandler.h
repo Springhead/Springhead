@@ -142,12 +142,16 @@ public:
 			jdesc.posePlug.Pos() = Vec3d(1.01, 1.01, 1.01);
 			joints.push_back(phScene->CreateJoint(links.back(), so, jdesc));
 			PHBallJointConeLimitDesc ldesc;
+			ldesc.limitSwing    = Vec2d(-Rad(30.0), Rad(30.0));
+			ldesc.limitTwist    = Vec2d(-Rad(30.0), Rad(30.0));
+			ldesc.spring = 10000;
+			ldesc.damper = 100;
 			DCAST(PHBallJointIf,joints.back())->CreateLimit(ldesc);
 		}
 		if(id == ID_HINGE || id == ID_BALL || id == ID_SLIDER){
 			links.push_back(so);
 			nodeTree.push_back(GetPHScene()->CreateTreeNode(nodeTree.back(), so));
-			//UpdateJoint(joints.back());
+			UpdateJoint(joints.back());
 		}
 
 		if(id == ID_INC_POS){
