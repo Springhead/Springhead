@@ -33,9 +33,15 @@ PHConstraint::PHConstraint() {
 	bInactive[1] = true;
 	treeNode = 0;
 
-#ifdef USE_OPENMP_PHYSICS
+    #ifdef USE_OPENMP_PHYSICS
 	omp_init_lock(&dv_lock);
-#endif
+    #endif
+}
+
+PHConstraint::~PHConstraint(){
+    #ifdef USE_OPENMP_PHYSICS
+	omp_destroy_lock(&dv_lock);
+    #endif
 }
 
 // ----- エンジンから呼び出される関数
@@ -117,9 +123,12 @@ void PHConstraint::Setup() {
 	}
 }
 
-void PHConstraint::Iterate() {
+bool PHConstraint::Iterate() {
+	bool updated = false;
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
+		if(!dv_changed[i])
+			continue;
 
 		// Gauss-Seidel Update
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
@@ -128,16 +137,16 @@ void PHConstraint::Iterate() {
 		// Projection
 		Projection(fnew[i], i);
 		
-		// tightening
-		// 多点接触などにおいて拘束を満たす力の組み合わせが一意でないとき
-		// なるべく最小エネルギ解に近づくように微小収縮させる　tazz
-		//fnew[i] *= 0.99;
-
 		// Comp Response & Update f
 		df[i] = fnew[i] - f[i];
-		CompResponseDirect(df[i], i);
-		f[i] = fnew[i];
+		f [i] = fnew[i];
+
+		if(std::abs(df[i]) > engine->dfEps){
+			updated = true;
+			CompResponseDirect(df[i], i);
+		}
 	}
+	return updated;
 }
 
 void PHConstraint::SetupCorrection() {
@@ -222,14 +231,16 @@ void PHConstraint::CompResponseDirect(double df, int i){
 		for(int n1 = 0; n1 < dest->targetAxes.size(); n1++){
 			int i1 = dest->targetAxes[n1];
 			
-#ifdef USE_OPENMP_PHYSICS
-			omp_set_lock(&dest->dv_lock);
-#endif
+			#ifdef USE_OPENMP_PHYSICS
+			while(!omp_test_lock(&dest->dv_lock));
+			#endif
+			
 			dest->dv[i1] += adj[j].A[i1][i] * df;
+			dest->dv_changed_next[i1] = true;
 
-#ifdef USE_OPENMP_PHYSICS
+			#ifdef USE_OPENMP_PHYSICS
 			omp_unset_lock(&dest->dv_lock);
-#endif
+			#endif
 		}
 
 	}
@@ -239,7 +250,16 @@ void PHConstraint::CompResponseDirectCorrection(double dF, int i){
 		PHConstraint* dest = adj[j].con;
 		for(int n1 = 0; n1 < dest->targetAxes.size(); n1++){
 			int i1 = dest->targetAxes[n1];
+			
+			#ifdef USE_OPENMP_PHYSICS
+			while(!omp_test_lock(&dest->dv_lock));
+			#endif
+			
 			dest->dV[i1] += adj[j].A[i1][i] * dF;
+
+			#ifdef USE_OPENMP_PHYSICS
+			omp_unset_lock(&dest->dv_lock);
+			#endif
 		}
 	}
 }

@@ -45,23 +45,37 @@ PHContactSurface::PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp,
 	movableAxes.Clear();
 }
 
-void PHContactSurface::Iterate() {
-	SpatialVector fnew, df;
+bool PHContactSurface::Iterate() {
+	bool updated = false;
 
 	// -- 力
 	for (int i=0; i<3; ++i) {
-		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i]*f[i] + b[i] + db[i] + dv[i]);
+		if(!dv_changed[i])
+			continue;
+		dv_changed[i] = false;
+
+		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * res[i];
 
 		Projection(fnew[i], i);
 
 		df[i] = fnew[i] - f[i];
-		CompResponseDirect(df[i], i);
-		f[i] = fnew[i];
+		f [i] = fnew[i];
+		
+		if(std::abs(df[i]) > engine->dfEps){
+			updated = true;
+			CompResponseDirect(df[i], i);
+		}
 	}
 
 	// -- トルク
 	for (int i=3; i<6; ++i) {
-		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * (dA[i]*f[i] + b[i] + db[i] + dv[i]);
+		if(!dv_changed[i])
+			continue;
+		dv_changed[i] = false;
+
+		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
+		fnew[i] = f[i] - engine->accelSOR * Ainv[i] * res[i];
 	}
 
 	// Projection
@@ -70,9 +84,14 @@ void PHContactSurface::Iterate() {
 	// Comp Response & Update f
 	for (int i=3; i<6; ++i) {
 		df[i] = fnew[i] - f[i];
-		CompResponseDirect(df[i], i);
-		f[i] = fnew[i];
+		f [i] = fnew[i];
+
+		if(std::abs(df[i]) > engine->dfEps){
+			updated = true;
+			CompResponseDirect(df[i], i);
+		}
 	}
+	return updated;
 }
 
 void PHContactSurface::ProjectionTorque(SpatialVector& fnew){

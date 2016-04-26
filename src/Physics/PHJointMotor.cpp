@@ -20,13 +20,16 @@ namespace Spr{;
 // -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  -----  ----- 
 // PHNDJointMotor
 
+// バネ・ダンパ係数を0と見なす閾値
+const double epsilon = 1e-10;
+const double inf     = 1e+10;
+
 template<int NDOF>
 void PHNDJointMotor<NDOF>::SetupAxisIndex(){
 	PHNDJointMotorParam<NDOF> p; GetParams(p);
 	axes.Clear();
 	for(int n = 0; n < joint->movableAxes.size(); ++n) {
-		double epsilon = 1e-10;
-		if (p.spring[n] > epsilon || p.damper[n] > epsilon){
+		if (p.spring[n] >= epsilon || p.damper[n] >= epsilon || std::abs(p.offsetForce[n]) >= epsilon){
 			axes.Enable(n);
 			joint->targetAxes.Enable(joint->movableAxes[n]);
 		}
@@ -57,11 +60,13 @@ void PHNDJointMotor<NDOF>::Setup(){
 		f [j] *= axes.IsContinued(j) ? joint->engine->shrinkRate : 0;
 	}
 
-	double epsilon = 1e-10;
 	if (p.spring.norm() < epsilon && p.damper.norm() < epsilon) {
 		// オフセット力のみ有効の場合は拘束力初期値に設定するだけでよい
-		for(int n = 0; n < joint->movableAxes.size(); ++n)
-			f[n] = p.offsetForce[n];
+		for(int n = 0; n < joint->movableAxes.size(); ++n){
+			f [n] = p.offsetForce[n];
+			dA[n] = inf;
+			db[n] = inf;
+		}
 	}
 	else {
 		VecNd sd = p.secondDamper;
@@ -94,7 +99,9 @@ void PHNDJointMotor<NDOF>::Setup(){
 	for(int n = 0; n < axes.size(); ++n){
 		int j = axes[n];
 		A   [n] = joint->A[joint->movableAxes[j]];
-		Ainv[n] = 1.0 / (A[n] + dA[n]);
+		if(A[n] + dA[n] < inf)
+			 Ainv[n] = 1.0 / (A[n] + dA[n]);
+		else Ainv[n] = 0.0;
 	}
 
 	SetParams(p);
@@ -102,20 +109,29 @@ void PHNDJointMotor<NDOF>::Setup(){
 }
 
 template<int NDOF>
-void PHNDJointMotor<NDOF>::Iterate(){
+bool PHNDJointMotor<NDOF>::Iterate(){
+	bool updated = false;
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
+		int j = joint->movableAxes[i];
+		if(!joint->dv_changed[j])
+			continue;
 
-		dv  [i] = joint->dv[joint->movableAxes[i]];
+		dv  [i] = joint->dv[j];
 		res [i] = b[i] + db[i] + dA[i]*f[i] + dv[i];
 		fnew[i] = f[i] - joint->engine->accelSOR * Ainv[i] * res[i];
 	
 		fnew[i] = min(max(fMinDt[i], fnew[i]), fMaxDt[i]);
 
 		df[i] = fnew[i] - f[i];
-		CompResponseDirect(df[i], i);
-		f[i] = fnew[i];
+		f [i] = fnew[i];
+
+		if(std::abs(df[i]) > joint->engine->dfEps){
+			updated = true;
+			CompResponseDirect(df[i], i);
+		}
 	}
+	return updated;
 }
 
 template<int NDOF>
@@ -141,9 +157,15 @@ void PHNDJointMotor<NDOF>::CompBiasElastic() {
 		
 		double K   = p.spring[j];
 		double D   = p.damper[j];
-		double tmp = 1.0 / (D + K*dt);
-		dA[j] = tmp * (1.0/dt);
-		db[j] = tmp * (-K*propV[j] - D*p.targetVelocity[j] - p.offsetForce[j]);
+		if(K < epsilon && D < epsilon){
+			dA[j] = inf;
+			db[j] = inf;
+		}
+		else{
+			double tmp = 1.0 / (D + K*dt);
+			dA[j] = tmp * (1.0/dt);
+			db[j] = tmp * (-K*propV[j] - D*p.targetVelocity[j] - p.offsetForce[j]);
+		}
 	}
 
 	SetParams(p);

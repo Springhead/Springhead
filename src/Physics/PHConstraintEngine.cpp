@@ -15,7 +15,6 @@
 #include <Physics/PHSpring.h>
 #include <Physics/PHContactPoint.h>
 #include <Physics/PHContactSurface.h>
-#include <Foundation/UTPreciseTimer.h>
 
 #include <iomanip>
 #include <fstream>
@@ -28,14 +27,11 @@ namespace Spr{;
 /* 時間計測
    bReportをtrueにすると処理時間を計測して
    DSTRに出すと同時にcsvファイルに書き出す
+   
+   * DSTRやファイルに書き出すのに1ms程度かかるので注意
+
  */
-bool           bReport = true;
-UTPreciseTimer ptimer;
 const char*    reportFilename = "PHConstraintEngineReport.csv";
-FILE*          reportFile     = 0;
-int            timeCollision;
-int            timeSetup;
-int            timeIterate;
 
 void PHSolidPairForLCP::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 	PHShapePairForLCP* sp = (PHShapePairForLCP*)_sp;
@@ -221,18 +217,27 @@ void PHShapePairForLCP::EnumVertex(unsigned ct, PHSolid* solid0, PHSolid* solid1
 // PHConstraintEngine
 
 PHConstraintEngine::PHConstraintEngine(){
-	if(bReport && !reportFile){
+	dfEps      = 1.0e-12;
+	reportFile = 0;
+}
+
+PHConstraintEngine::~PHConstraintEngine(){
+	EnableReport(false);
+}
+
+void PHConstraintEngine::EnableReport(bool on){
+	if(!on && reportFile){
+		fclose(reportFile);
+	}
+	if(on && !reportFile){
 		reportFile = fopen(reportFilename, "w");
 		if(reportFile)
 			fprintf(reportFile, "col, sup, ite\n");
 	}
 
+	bReport = on;
 	renderContact = true;
-}
 
-PHConstraintEngine::~PHConstraintEngine(){
-	if(reportFile)
-		fclose(reportFile);
 }
 
 void PHConstraintEngine::Clear(){
@@ -500,89 +505,84 @@ bool PHConstraintEngine::DelChildObject(ObjectIf* o){
 }
 
 void PHConstraintEngine::Setup(){
-	UTPreciseTimer p;
-	p.CountUS();
-
 	//< ツリー構造の前処理(ABA関係)
-#ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for
-#endif
+	# pragma omp for
 	for(int i = 0; i < (int)trees.size(); i++){
 		if(!trees[i]->IsEnabled())
 			continue;
 		trees[i]->Setup();
 	}
-	//DSTR << " aba: " << p.CountUS() << std::endl;
-
+		
 	// 反復計算用拘束配列の作成
 	// cons      : PHConstraint派生クラス
 	// cons_base : PHConstraintBase派生クラス：PHConstraint派生クラスが先頭に来るように
-	cons     .clear();
-	cons_base.clear();
-	// 接触
-	for(int i = 0; i < (int)points.size(); i++){
-		if(points[i]->IsEnabled() && points[i]->IsFeasible()){
-			cons     .push_back(points[i]);
-			cons_base.push_back(points[i]);
-		}
-	}
-	// 関節
-	for(int i = 0; i < (int)joints.size(); i++){
-		if(joints[i]->IsEnabled() && joints[i]->IsFeasible()){
-			cons     .push_back(joints[i]);
-			cons_base.push_back(joints[i]);
-		}
-	}
-	// 可動範囲，モータ
-	for(int i = 0; i < (int)joints.size(); i++){
-		if(joints[i]->IsEnabled() && joints[i]->IsFeasible()){
-			PH1DJoint* jnt1D = joints[i]->Cast();
-			if(jnt1D){
-				// Motorを先に入れないとMotorに対してLimitがかからない
-				if(jnt1D->motor)
-					cons_base.push_back(jnt1D->motor);
-				if(jnt1D->limit && jnt1D->limit->IsEnabled())
-					cons_base.push_back(jnt1D->limit);
-			}
-			PHBallJoint* ball = joints[i]->Cast();
-			if(ball){
-				// Motorを先に入れないとMotorに対してLimitがかからない
-				if(ball->motor)
-					cons_base.push_back(ball->motor);
-				if(ball->limit && ball->limit->IsEnabled())
-					cons_base.push_back(ball->limit);
-			}
-			PHSpring* spring = joints[i]->Cast();
-			if(spring){
-				if(spring->motor)
-					cons_base.push_back(spring->motor);
+	# pragma omp single
+	{
+		cons     .clear();
+		cons_base.clear();
+		
+		// 接触
+		for(int i = 0; i < (int)points.size(); i++){
+			if(points[i]->IsEnabled() && points[i]->IsFeasible()){
+				cons     .push_back(points[i]);
+				cons_base.push_back(points[i]);
 			}
 		}
-	}
-	// ギア
-	for(int i = 0; i < (int)gears.size(); i++){
-		if(gears[i]->IsEnabled() && gears[i]->IsFeasible() && !gears[i]->IsArticulated())
-			cons_base.push_back(gears[i]);
-	}
+		// 関節
+		for(int i = 0; i < (int)joints.size(); i++){
+			if(joints[i]->IsEnabled() && joints[i]->IsFeasible()){
+				cons     .push_back(joints[i]);
+				cons_base.push_back(joints[i]);
+			}
+		}
+		// 可動範囲，モータ
+		for(int i = 0; i < (int)joints.size(); i++){
+			if(joints[i]->IsEnabled() && joints[i]->IsFeasible()){
+				PH1DJoint* jnt1D = joints[i]->Cast();
+				if(jnt1D){
+					// Motorを先に入れないとMotorに対してLimitがかからない
+					if(jnt1D->motor)
+						cons_base.push_back(jnt1D->motor);
+					if(jnt1D->limit && jnt1D->limit->IsEnabled())
+						cons_base.push_back(jnt1D->limit);
+				}
+				PHBallJoint* ball = joints[i]->Cast();
+				if(ball){
+					// Motorを先に入れないとMotorに対してLimitがかからない
+					if(ball->motor)
+						cons_base.push_back(ball->motor);
+					if(ball->limit && ball->limit->IsEnabled())
+						cons_base.push_back(ball->limit);
+				}
+				PHSpring* spring = joints[i]->Cast();
+				if(spring){
+					if(spring->motor)
+						cons_base.push_back(spring->motor);
+				}
+			}
+		}
+		// ギア
+		for(int i = 0; i < (int)gears.size(); i++){
+			if(gears[i]->IsEnabled() && gears[i]->IsFeasible() && !gears[i]->IsArticulated())
+				cons_base.push_back(gears[i]);
+		}
+		
+		// 拘束自由度の決定
+		for(int i = 0; i < (int)cons_base.size(); i++)
+			cons_base[i]->SetupAxisIndex();
+		
+		// 拘束間の A = J M^-1 J^T を計算
+		CompResponseMatrix();
+		
+	} //< omp single
 
-	// 拘束自由度の決定
-	for(int i = 0; i < (int)cons_base.size(); i++)
-		cons_base[i]->SetupAxisIndex();
-	//DSTR << " comp A0: " << p.CountUS() << std::endl;
-	
-	// 拘束間の A = J M^-1 J^T を計算
-	CompResponseMatrix();
-	//DSTR << " comp A1: " << p.CountUS() << std::endl;
-	
 	// 拘束毎の前処理（J, b, db, dA, ...）
-#ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for
-#endif
+	# pragma omp for
 	for(int i = 0; i < (int)cons_base.size(); i++)
 		cons_base[i]->Setup();
-	//DSTR << " comp A2: " << p.CountUS() << std::endl;
-
+		
 	// 拘束力初期値による速度変化を計算 (dv = A * f)
+	# pragma omp for
 	for(int i = 0; i < (int)cons_base.size(); i++){
 		PHConstraintBase* con = cons_base[i];
 		for(int n = 0; n < (int)con->axes.size(); n++){
@@ -590,7 +590,6 @@ void PHConstraintEngine::Setup(){
 			con->CompResponseDirect(con->f[j], j);
 		}
 	}
-	//DSTR << " comp A3: " << p.CountUS() << std::endl;
 }
 
 inline double QuadForm(const double* v1, const double* M, const double* v2){
@@ -658,9 +657,6 @@ void PHConstraintEngine::CompResponseMatrix(){
 	vector<int> idx;
 				
 	p.CountUS();
-#ifdef USE_OPENMP_PHYSICS
-//# pragma omp parallel for private(idx)
-#endif
 	for(int i0 = 0; i0 < (int)cons.size(); i0++){
 		if(idx.size() < cons.size())
 			idx.resize(cons.size());
@@ -761,34 +757,42 @@ void PHConstraintEngine::CompResponseMatrix(){
 }
 
 void PHConstraintEngine::SetupCorrection(){
-#ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for
-#endif
+	# pragma omp for
  	for(int i = 0; i < (int)cons_base.size(); i++)
 		cons_base[i]->SetupCorrection();
 }
 
 void PHConstraintEngine::Iterate(){
-	for(int n = 0; n != numIter; ++n){	
-#ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for
-#endif
+	int n;
+	for(n = 0; n < numIter; n++){
+		int nupdated = 0;
+		# pragma omp for
 		for(int i = 0; i < (int)cons_base.size(); i++)
-			cons_base[i]->Iterate();
+			nupdated += (int)cons_base[i]->Iterate();
+
+		if(nupdated == 0)
+			break;
+
+		for(int i = 0; i < (int)cons_base.size(); i++){
+			for(int j = 0; j < 6; j++){
+				cons_base[i]->dv_changed[j] = cons_base[i]->dv_changed_next[j];
+				cons_base[i]->dv_changed_next[j] = false;
+			}
+		}
 	}
 }
 
 void PHConstraintEngine::IterateCorrection(){
 	for(int n = 0; n != numIterCorrection; ++n){
-#ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for
-#endif
+		# pragma omp for
 		for(int i = 0; i < (int)cons_base.size(); i++)
 			cons_base[i]->IterateCorrection();
 	}
 }
 
 void PHConstraintEngine::UpdateSolids(bool bVelOnly){
+	double dt;
+
 	// 拘束力に対する速度変化を計算
 	for(int i = 0; i < (int)cons_base.size(); i++){
 		PHConstraintBase* con = cons_base[i];
@@ -799,7 +803,7 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 	}
 
 	// 速度の更新 (dtを渡すので並列化しない）
-	double dt   = GetScene()->GetTimeStep();
+	dt = GetScene()->GetTimeStep();
 	for(int i = 0; i < (int)solids.size(); i++){
 		if(solids[i]->IsArticulated())
 			continue;
@@ -812,77 +816,98 @@ void PHConstraintEngine::UpdateSolids(bool bVelOnly){
 		return;
 
 	// 位置の更新
-#ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for
-#endif
+	//# pragma omp for
 	for(int i = 0; i < (int)solids.size(); i++){
 		if(solids[i]->IsArticulated())
 			continue;
 		solids[i]->UpdatePosition(dt);
 	}
-#ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for
-#endif
+	//# pragma omp for
 	for(int i = 0; i < (int)trees.size(); i++)
 		trees[i]->UpdatePosition(dt);
 
 }
 
 void PHConstraintEngine::StepPart1(){
-	//交差を検知
-	points.clear();
+    #ifdef USE_OPENMP_PHYSICS
+	# pragma omp single
+    #endif
+	{
+		//交差を検知
+		points.clear();
 
-	if(bReport)
-		ptimer.CountUS();
+		if(bReport)
+			ptimer.CountUS();
 
-	PHSceneIf* scene = GetScene();
-	if(scene->IsContactDetectionEnabled()){
-		Detect(scene->GetCount(), scene->GetTimeStep(), scene->GetBroadPhaseMode(), scene->IsCCDEnabled());
-		if (renderContact) UpdateContactInfoQueue();
-	}
+		PHSceneIf* scene = GetScene();
+		if(scene->IsContactDetectionEnabled()){
+			Detect(scene->GetCount(), scene->GetTimeStep(), scene->GetBroadPhaseMode(), scene->IsCCDEnabled());
+			if (renderContact) UpdateContactInfoQueue();
+		}
 
-	if(bReport){
-		timeCollision = ptimer.CountUS();
-		//DSTR << " col:" << timeCollision;
+		if(bReport){
+			timeCollision = ptimer.CountUS();
+			DSTR << " col:" << timeCollision;
+		}
 	}
 }
 
 void PHConstraintEngine::StepPart2(){
-	if(bReport)
-		ptimer.CountUS();
+    #ifdef USE_OPENMP_PHYSICS
+	# pragma omp single
+    #endif
+	{
+		if(bReport)
+			ptimer.CountUS();
+	}
 
 	double dt = GetScene()->GetTimeStep();
 
 	// 前回のStep以降に別の要因によって剛体の位置・速度が変化した場合
 	// ヤコビアン等の再計算
 	// 各剛体の前処理
-#ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for
-#endif
+    #ifdef USE_OPENMP_PHYSICS
+    # pragma omp for
+    #endif
 	for(int i = 0; i < (int)solids.size(); i++)
 		solids[i]->UpdateCacheLCP(dt);
-#ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for
-#endif
+    
+    #ifdef USE_OPENMP_PHYSICS
+    # pragma omp for
+    #endif
 	for(int i = 0; i < (int)points.size(); i++)
 		points[i]->UpdateState();
-#ifdef USE_OPENMP_PHYSICS
-# pragma omp parallel for
-#endif
+    
+    #ifdef USE_OPENMP_PHYSICS
+    # pragma omp for
+    #endif
 	for(int i = 0; i < (int)joints.size(); i++)
 		joints[i]->UpdateState();
-	
+
 	// 速度LCP
 	Setup();
-	if(bReport){
-		timeSetup = ptimer.CountUS();
-		//DSTR << " sup:" << timeSetup;
+
+    #ifdef USE_OPENMP_PHYSICS
+    # pragma omp single
+    #endif
+	{
+		if(bReport){
+			timeSetup = ptimer.CountUS();
+			DSTR << " sup:" << timeSetup;
+			ptimer.CountUS();
+		}
 	}
 
 	Iterate();
-	if(bReport){
-		timeIterate = ptimer.CountUS();
-		//DSTR << " ite:" << timeIterate << std::endl;
+	
+    #ifdef USE_OPENMP_PHYSICS
+    # pragma omp single
+    #endif
+	{
+		if(bReport){
+			timeIterate = ptimer.CountUS();
+			DSTR << " ite:" << timeIterate << std::endl;
+		}
 	}
 
 	// 位置LCP
@@ -890,12 +915,22 @@ void PHConstraintEngine::StepPart2(){
 	IterateCorrection();
 	
 	// 位置・速度の更新
-	UpdateSolids(!bUpdateAllState);
+    #ifdef USE_OPENMP_PHYSICS
+    # pragma omp single
+    #endif
+	{
+		UpdateSolids(!bUpdateAllState);
+	}
 }
 	
 void PHConstraintEngine::Step(){
-	StepPart1();	// 接触判定
-	StepPart2();	// 拘束力計算，積分
+    #ifdef USE_OPENMP_PHYSICS
+	# pragma omp parallel
+    #endif
+	{
+		StepPart1();	// 接触判定
+		StepPart2();	// 拘束力計算，積分
+	}
 
 	if(bReport && reportFile){
 		fprintf(reportFile, "%d, %d, %d\n", timeCollision, timeSetup, timeIterate);

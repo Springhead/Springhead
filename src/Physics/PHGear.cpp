@@ -99,12 +99,24 @@ void PHGear::Setup(){
 	else db[0] = 0.0;
 }
 
-void PHGear::Iterate(){
-	dv  [0] = ratio * joint[0]->dv[joint[0]->movableAxes[0]] - joint[1]->dv[joint[1]->movableAxes[0]];
+bool PHGear::Iterate(){
+	bool updated = false;
+	int i0 = joint[0]->movableAxes[0];
+	int i1 = joint[1]->movableAxes[0];
+	if(!joint[0]->dv_changed[i0] && !joint[1]->dv_changed[i1])
+		return false;
+
+	dv  [0] = ratio * joint[0]->dv[i0] - joint[1]->dv[i1];
 	res [0] = b[0] + db[0] + dv[0];
 	fnew[0] = f[0] - engine->accelSOR * Ainv[0] * res[0];
-	CompResponseDirect(fnew[0] - f[0], 0);
-	f[0] = fnew[0];
+	df  [0] = fnew[0] - f[0];
+	f   [0] = fnew[0];
+
+	if(df[0] > engine->dfEps){
+		updated = true;
+		CompResponseDirect(df[0], 0);
+	}
+	return updated;
 }
 
 void PHGear::CompResponse(double df, int i){

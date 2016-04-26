@@ -16,7 +16,6 @@ namespace Spr{
 
 PHIKEngineDesc::PHIKEngineDesc():
 	numIter(1),
-	bEnabled(false),
 	maxVel(20), // 20[m/s]
 	maxAngVel(Rad(500)), // 500[deg/s]
 	maxActVel(Rad(30)),  //  10[deg/s]

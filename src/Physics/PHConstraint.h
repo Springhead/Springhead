@@ -62,10 +62,12 @@ public:
 	SpatialVector res;
 	
 	AxisIndex<6> axes;		///< 拘束軸管理クラス
+	bool         dv_changed[6];
+	bool         dv_changed_next[6];
 
 	virtual void SetupAxisIndex    (){}
 	virtual void Setup             (){}	///< 速度LCPの前処理
-	virtual	void Iterate           (){}	///< 速度LCP(GS)の繰り返し計算
+	virtual	bool Iterate           (){ return true; }	///< 速度LCP(GS)の繰り返し計算
 	virtual void SetupCorrection   (){}	///< 位置LCPの前処理
 	virtual void IterateCorrection (){}	///< 位置LCP(GS)の繰り返し計算
 	virtual void CompResponse      (double df, int i){}
@@ -165,6 +167,7 @@ public:
 
 	/// コンストラクタ
 	PHConstraint();
+	virtual ~PHConstraint();
 
 	/// 拘束対象軸番号リストの構築．コンストラクタでmovableAxesを決めた後に呼ぶ
 	void InitTargetAxes();
@@ -180,7 +183,7 @@ public:
 	/// PHConstraintBaseの仮想関数
 	virtual void Setup                       ();
 	virtual void SetupCorrection             ();
-	virtual	void Iterate                     ();
+	virtual	bool Iterate                     ();
 	virtual void IterateCorrection           ();
 	virtual bool Projection                  (double& f_, int i);
 	virtual void ProjectionCorrection        (double& F, int k){}

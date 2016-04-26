@@ -54,11 +54,13 @@ void PH1DJointLimit::Setup(){
 
 }
 
-void PH1DJointLimit::Iterate(){
+bool PH1DJointLimit::Iterate(){
 	if(!onLower && !onUpper)
-		return;
+		return false;
 
 	int i = joint->movableAxes[0];
+	if(!joint->dv_changed[i])
+		return false;
 
 	// Gauss-Seidel Update
 	res [0] = joint->b[i] + db[0] + dA[0]*f[0] + joint->dv[i];
@@ -72,8 +74,13 @@ void PH1DJointLimit::Iterate(){
 
 	// Comp Response & Update f
 	df[0] = fnew[0] - f[0];
-	CompResponseDirect(df[0], 0);
-	f[0] = fnew[0];
+	f [0] = fnew[0];
+
+	if(std::abs(df[0]) > joint->engine->dfEps){
+		CompResponseDirect(df[0], 0);
+		return true;
+	}
+	return false;
 }
 
 void PH1DJointLimit::CompResponse(double df, int i){
@@ -171,7 +178,11 @@ void PHBallJointLimit::Setup() {
 }
 
 /// LCPの繰り返し計算
-void PHBallJointLimit::Iterate() {
+bool PHBallJointLimit::Iterate() {
+	if(!joint->dv_changed[3] && !joint->dv_changed[4] && !joint->dv_changed[5])
+		return false;
+
+	bool updated = false;
 	for (int n=0; n<axes.size(); ++n) {
 		int i = axes[n];
 
@@ -185,9 +196,14 @@ void PHBallJointLimit::Iterate() {
 
 		// Comp Response & Update f
 		df[i] = fnew[i] - f[i];
-		CompResponseDirect(df[i], i);
-		f[i] = fnew[i];
+		f [i] = fnew[i];
+
+		if(std::abs(df[i]) > joint->engine->dfEps){
+			updated = true;
+			CompResponseDirect(df[i], i);
+		}
 	}
+	return updated;
 }
 
 void PHBallJointLimit::CompResponse(double df, int i){
