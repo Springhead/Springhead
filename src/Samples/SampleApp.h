@@ -728,6 +728,10 @@ public: /** FWAppの実装 **/
 	}
 
 	virtual void Keyboard(int key, int x, int y) {
+		// 特殊キーは無視
+		if(key > 0xff)
+			return;
+
 		// 'h' : ヘルプの表示切り替え
 		if(key == 'h' || key == 'H'){
 			showHelp = !showHelp;
