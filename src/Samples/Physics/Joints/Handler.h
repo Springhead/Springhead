@@ -8,6 +8,7 @@ class Handler : public UTRefCount{
 public:
 	enum {
 		MENU_CHAIN = SampleApp::MENU_SCENE,
+		MENU_SPRING,
 		MENU_LINK,
 		MENU_ARM,
 		MENU_GEAR,
