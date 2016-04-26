@@ -33,6 +33,11 @@ PHConstraint::PHConstraint() {
 	bInactive[1] = true;
 	treeNode = 0;
 
+	for (int i = 0; i < 6; i++) {
+		dv_changed     [i] = true;
+		dv_changed_next[i] = true;
+	}
+
     #ifdef USE_OPENMP_PHYSICS
 	omp_init_lock(&dv_lock);
     #endif
