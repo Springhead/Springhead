@@ -63,7 +63,7 @@ public:
 	// ----- PHConstraintBaseの仮想関数
 	virtual void SetupAxisIndex();
 	virtual void Setup         ();
-	virtual void Iterate       ();
+	virtual bool Iterate       ();
 	virtual void CompResponse      (double df, int i);
 	virtual void CompResponseDirect(double df, int i);
 

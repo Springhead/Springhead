@@ -12,6 +12,7 @@
 #include <Physics/PHConstraint.h>
 #include <Physics/PHGear.h>
 #include <Physics/PHContactDetector.h>
+#include <Foundation/UTPreciseTimer.h>
 
 namespace Spr{;
 
@@ -113,6 +114,13 @@ public:
 
 	int count;
 
+	/// レポート用
+	UTPreciseTimer ptimer;
+	FILE*          reportFile;
+	int            timeCollision;
+	int            timeSetup;
+	int            timeIterate;
+
 public:
 	PHConstraintEngine();
 	~PHConstraintEngine();
@@ -164,6 +172,7 @@ public:
 	double	GetShrinkRate            (){return shrinkRate;}
 	void	SetShrinkRateCorrection  (double data){shrinkRateCorrection = data;}
 	double	GetShrinkRateCorrection  (){return shrinkRateCorrection;}
+	void    EnableReport             (bool on);
 
 	//	接触領域を表示するための情報を更新するかどうか
 	virtual void	EnableRenderContact	(bool enable);

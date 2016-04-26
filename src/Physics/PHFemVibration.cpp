@@ -606,15 +606,28 @@ void PHFemVibration::InitModalAnalysis(const VMatrixRe& _M, const VMatrixRe& _K,
 		DSTR << dampingratio[0] << " " << dampingratio[1] << std::endl;
 
 		// モード質量、剛性, 減衰行列の計算
-		#pragma omp parallel sections
+        #ifdef USE_OPENMP_PHYSICS
+		# pragma omp parallel sections
+        #endif
 		{
-			#pragma omp section
+            #ifdef USE_OPENMP_PHYSICS
+            # pragma omp section
+            #endif
 			Mm.assign(evector.trans() * _M * evector);
-			#pragma omp section
+
+            #ifdef USE_OPENMP_PHYSICS
+            # pragma omp section
+            #endif
 			Km.assign(evector.trans() * _K * evector);
-			#pragma omp section
+
+            #ifdef USE_OPENMP_PHYSICS
+            # pragma omp section
+            #endif
 			Cm.assign(evector.trans() * _C * evector);
-			#pragma omp section
+
+            #ifdef USE_OPENMP_PHYSICS
+            # pragma omp section
+            #endif
 			SmInv.resize(nmode, nmode, 0.0);
 		}
 

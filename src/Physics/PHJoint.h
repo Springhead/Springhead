@@ -103,8 +103,8 @@ public:
 	double GetTargetPosition() { return targetPosition; }
 	void   SetTargetVelocity(const double& targetVelocity) { this->targetVelocity = targetVelocity; }
 	double GetTargetVelocity() { return targetVelocity; }
-	void   SetOffsetForce   (const double& offsetForce) { this->offsetForce = offsetForce; }
-	double GetOffsetForce   () { return offsetForce; }
+	void   SetOffsetForce   (const double& offsetForce) { this->offsetForce = offsetForce * GetScene()->GetTimeStep(); }
+	double GetOffsetForce   () { return offsetForce * GetScene()->GetTimeStepInv(); }
 	void   SetYieldStress   (const double& yieldStress) { this->yieldStress = yieldStress; }
 	double GetYieldStress   () { return yieldStress; }
 	void   SetHardnessRate  (const double& hardnessRate) { this->hardnessRate = hardnessRate; }

@@ -30,7 +30,7 @@ public:
 	PHContactSurface(const Matrix3d& local, PHShapePairForLCP* sp, Vec3d p, PHSolid* s0, PHSolid* s1, std::vector<Vec3d> sec);
 
 	// ----- PHConstraintの機能をオーバーライド
-	virtual void Iterate();
+	virtual bool Iterate();
 
 	// ----- このクラスで実装する機能
 	void	ProjectionTorque  (SpatialVector& fnew);		///< トルク用Projection

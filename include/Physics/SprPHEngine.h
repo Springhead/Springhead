@@ -18,14 +18,22 @@ struct PHSceneIf;
 
 /** \addtogroup gpPhysics */
 //@{
-///	エンジンの基本クラス
 struct PHEngineIf : public SceneObjectIf{
 public:
 	SPR_IFDEF(PHEngine);
+	
 	///	実行順序を決めるプライオリティ値．小さいほど早い
 	int GetPriority() const;
+	
 	///	時間を dt 進める
 	void Step();
+	
+	/// 有効化/無効化
+	void Enable(bool on = true);
+
+	/// 
+	bool IsEnabled();
+
 	///
 	PHSceneIf* GetScene();
 };
@@ -99,7 +107,10 @@ public:
 	*/
 	double GetShrinkRateCorrection();
 
-	/** @breif 接触領域を表示するための情報を更新するかどうか。FWSceen::EnableRenderContact()が呼び出す。
+	/** レポートを有効化/無効化 */
+	void EnableReport(bool on = true);
+
+	/** @brief 接触領域を表示するための情報を更新するかどうか。FWScene::EnableRenderContact()が呼び出す。
 	*/
 	void EnableRenderContact(bool enable);
 };
@@ -116,9 +127,11 @@ struct PHConstraintEngineDesc{
 	double	shrinkRateCorrection;
 	double	freezeThreshold;			///< 剛体がフリーズする閾値
 	double	accelSOR;					///< SOR法の加速係数
+	double  dfEps;
 	bool	bSaveConstraints;			///< SaveState, LoadStateに， constraints を含めるかどうか．本来不要だが，f, Fが変化する．
 	bool	bUpdateAllState;			///< 剛体の速度，位置の全ての状態を更新する．
 	bool	bUseContactSurface;			///< 面接触を使う
+	bool    bReport;                    ///< 計算時間などのレポートをデバッグ出力およびファイルへ出力する
 
 	PHConstraintEngineDesc(){
 		numIter					 = 15;
@@ -131,9 +144,11 @@ struct PHConstraintEngineDesc{
 		shrinkRateCorrection	 = 0.7;
 		freezeThreshold			 = 0.0;
 		accelSOR				 = 1.0;
+		dfEps                    = 0.0;
 		bSaveConstraints         = false;
 		bUpdateAllState	         = true;
 		bUseContactSurface       = false;
+		bReport                  = false;
 	}
 };
 
@@ -148,8 +163,7 @@ public:
 
 };
 
-struct PHIKEngineDesc {
-	bool	bEnabled;
+struct PHIKEngineDesc{
 	size_t	numIter;
 	double  maxVel, maxAngVel, maxActVel;
 	double  regularizeParam;
@@ -159,11 +173,6 @@ struct PHIKEngineDesc {
 
 struct PHIKEngineIf : PHEngineIf{
 public:
-	/** @brief IK機能が有効か無効か
-	*/
-	void Enable(bool bEnabled);
-	bool IsEnabled();
-
 	/** @brief IKエンドエフェクタの移動速度限界（1stepあたりの移動量限界を決める）
 	*/
 	void SetMaxVelocity(double maxVel);
@@ -252,17 +261,14 @@ struct PHHapticEngineDesc{
 	PHHapticEngineDesc();
 };
 
-struct PHHapticEngineIf : public PHHapticEngineDesc, PHEngineIf{
+struct PHHapticEngineIf : public PHEngineIf{
 public:
 	SPR_IFDEF(PHHapticEngine);
-	/** @breif HapticEngineを有効化する
-	*/
-	void EnableHapticEngine(bool b);
-
+	
 	/** @breif HapticEngineのモードを切り替える
 		@param mode HapticEngineMode
 	*/
-	void SetHapticEngineMode(HapticEngineMode mode);
+	void SetHapticEngineMode(PHHapticEngineDesc::HapticEngineMode mode);
 
 	/** @brief シミュレーションをすすめる。HapticEngineを有効化した場合には
 		この関数を使ってシミュレーションをすすめる

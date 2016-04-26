@@ -52,17 +52,30 @@ enum PHBehaviorPriority{
 };
 
 class PHScene;
+
 ///	動作エンジンの基本クラス．
-class PHEngine:public SceneObject{
+class PHEngine : public SceneObject{
 	SPR_OBJECTDEF(PHEngine);
+
+	bool bEnabled;
+
 public:
 	///	実行順序を決めるプライオリティ値．小さいほど早い
 	virtual int GetPriority() const { return SGBP_FORCEGENERATOR; }
+	
 	///	時間を dt 進める
 	virtual void Step(){}
+
+	void Enable(bool on){ bEnabled = on; }
+
+	bool IsEnabled(){ return bEnabled; }
+	
 	///
 	virtual PHSceneIf* GetScene(){ return SceneObject::GetScene()->Cast(); }
+
+	PHEngine();
 };
+
 inline bool operator < (const PHEngine& e1, const PHEngine& e2){
 	return e1.GetPriority() < e2.GetPriority();
 }

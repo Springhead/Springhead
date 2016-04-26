@@ -11,6 +11,13 @@
 namespace Spr{;
 
 //----------------------------------------------------------------------------
+//	PHEngine
+
+PHEngine::PHEngine(){
+	bEnabled = true;
+}
+
+//----------------------------------------------------------------------------
 //	PHEngines
 
 void PHEngines::Add(PHEngine* e){
@@ -46,20 +53,27 @@ void PHEngines::Clear(){
 }
 
 void PHEngines::ClearForce(){
-	for(iterator it = begin2(); it != forceGenerator && it!=end2(); ++it)
-		UTRef<PHEngine>(*it)->Step();
+	for(iterator it = begin2(); it != forceGenerator && it!=end2(); ++it){
+		PHEngine* e = *it;
+		if(e->bEnabled)
+			e->Step();
+	}
 }
 
 void PHEngines::GenerateForce(){
 	for(iterator it = forceGenerator; it != dynamicalSystem && it!=end2(); ++it){
-		UTRef<PHEngine>(*it)->Step();
+		PHEngine* e = *it;
+		if(e->bEnabled)
+			e->Step();
 	}
 }
 
 void PHEngines::Integrate(){
-	for(iterator it = dynamicalSystem; it != motion && it!=end2(); ++it)	//本当はmotionまでにすべきだけど，
-//	for(iterator it = dynamicalSystem; it!=end2(); ++it)
-		UTRef<PHEngine>(*it)->Step();
+	for(iterator it = dynamicalSystem; it != motion && it!=end2(); ++it){	//本当はmotionまでにすべきだけど，
+		PHEngine* e = *it;
+		if(e->bEnabled)
+			e->Step();
+	}
 }
 
 
