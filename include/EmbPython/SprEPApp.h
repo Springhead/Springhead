@@ -177,7 +177,7 @@ public:
 		// HapticAppの初期化処理
 		CreatePointer();									// 力覚ポインタの作成
 		PHHapticEngineIf* he = phScene->GetHapticEngine();	// 力覚エンジンをとってくる
-		he->EnableHapticEngine(true);						// 力覚エンジンの有効化
+		he->Enable(true);            						// 力覚エンジンの有効化
 
 		if(engineType == SINGLE){
 			// シングルスレッドモード
