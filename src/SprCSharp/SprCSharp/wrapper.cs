@@ -90,7 +90,7 @@ namespace SprCs {
             get {
                 IntPtr ptr = SprExport.Spr_vector_get_string(this, index);
                 string bstr = Marshal.PtrToStringBSTR(ptr);
-                Marshal.FreeCoTaskMem(ptr);
+                Marshal.FreeBSTR(ptr);
                 return bstr;
             }
             set {
@@ -132,12 +132,17 @@ namespace SprCs {
     //  char*
     public class arraywrapper_char_p : arraywrapper {
         public arraywrapper_char_p(IntPtr ptr) : base(ptr) {}
-        public arraywrapper_char_p(uint nelm) : base((uint) IntPtr.Size, nelm) {}
+        public arraywrapper_char_p(uint nelm) : base((uint) IntPtr.Size, nelm+1) {
+            SprExport.Spr_array_init_char_p(_this, nelm+1);
+        }
+        ~arraywrapper_char_p() {
+            SprExport.Spr_array_delete_char_p(_this, _nelm);
+        }
         public string this[int index] {
             get {
                 IntPtr ptr = SprExport.Spr_array_get_char_p(this, index);
                 string bstr = Marshal.PtrToStringBSTR(ptr);
-                Marshal.FreeCoTaskMem(ptr);
+                Marshal.FreeBSTR(ptr);
                 return bstr;
             }
             set {
