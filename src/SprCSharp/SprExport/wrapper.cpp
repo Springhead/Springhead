@@ -184,13 +184,40 @@ extern "C" {
         aryptr[index] = value;
     }
     //  char*
-    __declspec(dllexport) HANDLE __cdecl Spr_array_get_char_p(HANDLE ptr, int index) {
+    __declspec(dllexport) void __cdecl Spr_array_delete_char_p(HANDLE ptr, unsigned int nelm) {
+	if (ptr == NULL) return;
         char** aryptr = (char**) ptr;
-        return aryptr[index];
+        for (unsigned int i = 0; i < nelm; i++) { if (aryptr[i] != NULL) delete aryptr[i]; }
+        delete aryptr;
+    }
+    __declspec(dllexport) void __cdecl Spr_array_init_char_p(HANDLE ptr, unsigned int nelm) {
+	if (ptr == NULL) return;
+        char** aryptr = (char**) ptr;
+        for (unsigned int i = 0; i < nelm; i++) { aryptr[i] = NULL; }
+    }
+    __declspec(dllexport) HANDLE __cdecl Spr_array_get_char_p(HANDLE ptr, int index) {
+        BSTR result = NULL;
+        char** aryptr = (char**) ptr;
+        char* cstr = aryptr[index];
+        int lenW = ::MultiByteToWideChar(CP_ACP, 0, cstr, -1, NULL, 0);
+        if (lenW > 0) {
+            result = ::SysAllocStringLen(0, lenW);
+            ::MultiByteToWideChar(CP_ACP, 0, cstr, -1, result, lenW);
+        }
+        return (HANDLE) result;
     }
     __declspec(dllexport) void __cdecl Spr_array_set_char_p(HANDLE ptr, int index, HANDLE value) {
-        char** aryptr = (char**) ptr;
-        aryptr[index] = (char*) value;
+        int lenMB = ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR) value, -1, NULL, 0, NULL, NULL);
+        if (lenMB > 0) {
+            LPSTR addr = (LPSTR) ::SysAllocStringLen(0, lenMB);
+            ::WideCharToMultiByte(CP_ACP, 0, (LPCWSTR) value, -1, addr, lenMB, NULL, NULL);
+            int len = strlen(addr);
+            char* strptr = new char[len+1];
+            strcpy_s(strptr, len+1, addr);
+            SysFreeString((BSTR) addr);
+            char** aryptr = (char**) ptr;
+            aryptr[index] = strptr;
+        }
     }
 }
 

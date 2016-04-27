@@ -134,6 +134,14 @@ namespace SprCsSample {
             for (int i = 0; i < 4; i++) {
                 meshFace.indices[i] = 200 + i;
             }
+            string[] strsrc = { "abc", "def", "gh", "jklm" };
+            arraywrapper_char_p icharp = new arraywrapper_char_p(4);
+            for (int i = 0; i < 4; i++) {
+                icharp[i] = strsrc[i];
+            }
+            for (int i = 0; i < 4; i++) {
+                put("array<char*>", strsrc[i], icharp[i]);
+            }
             meshFace.indices = iarray;
             for (int i = 0; i < 4; i++) {
                 System.Console.WriteLine("array<int>: expected: " + (200 + i) + " result: " + meshFace.indices[i]);
