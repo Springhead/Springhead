@@ -47,4 +47,20 @@ public abstract class CDShapeBehaviour : SprSceneObjBehaviour {
 
     // 形状固有のShapePoseの取得。剛体からの相対位置姿勢による分は除く
     public virtual Posed ShapePose(GameObject shapeObject) { return new Posed(); }
+
+    // UnityのOnValidate : SprBehaviourのものをオーバーライド
+    public override void OnValidate() {
+        Initialize();
+        if (sprObject != null) {
+            CsObject d = CreateDesc();
+            if (d != null) {
+                sprObject.GetDesc(d);
+                ApplyDesc(descStruct, d);
+                sprObject.SetDesc(d);
+
+                // <!!> うまく動いてない　あれー？
+                (sprObject as CDShapeIf).SetMaterial((descStruct as CDShapeDescStruct).material);
+            }
+        }
+    }
 }

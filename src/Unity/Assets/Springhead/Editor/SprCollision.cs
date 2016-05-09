@@ -166,13 +166,13 @@ public class SprCollision : EditorWindow
         foreach (GameObject obj in SprLayerList[i].allObject)
         {
             //phScene = obj.GetComponentInParent<PHSceneBehaviour>().GetPHScene();
-            collisionWindowSolid1 = obj.GetComponent<PHSolidBehaviour>().phSolid as PHSolidIf;
+            collisionWindowSolid1 = obj.GetComponent<PHSolidBehaviour>().sprObject as PHSolidIf;
             foreach (GameObject obj2 in SprLayerList[k].allObject)
             {
                 //ここに当たり判定の設定
                 //横軸のレイヤーに登録されている縦軸のレイヤーに登録されている
                 //全てのオブジェクトについて設定をしなければならない（？）
-                collisionWindowSolid2 = obj2.GetComponent<PHSolidBehaviour>().phSolid as PHSolidIf;
+                collisionWindowSolid2 = obj2.GetComponent<PHSolidBehaviour>().sprObject as PHSolidIf;
                 if (phScene != null)
                 {
                     Debug.Log(obj.name + " and " + obj2.name + " collision set");
