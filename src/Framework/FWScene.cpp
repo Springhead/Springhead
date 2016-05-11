@@ -682,7 +682,7 @@ void FWScene::DrawLimit(GRRenderIf* render, PHConstraintIf* con){
 				render->MultModelMatrix(aff);
 				Vec2d lim; limit->GetRange(lim);
 				if (lim[0] < lim[1]) {
-					float vtx[2][3] = {{lim[0], 0, 0}, {lim[1], 0, 0}};
+					float vtx[2][3] = {{(float)lim[0], 0.0f, 0.0f}, {(float)lim[1], 0.0f, 0.0f}};
 					GLuint idx[2] = {0, 1};
 					render->SetMaterial(matAxis.z);
 					render->DrawIndexed(GRRenderBaseIf::LINES, idx, (void*)vtx, 2);

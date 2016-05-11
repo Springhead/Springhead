@@ -136,7 +136,7 @@ void CRReachController::Step() {
 			}
 			// 複数あって一部しか使わない場合
 			if ((int) ikEffs.size() > 1 && numUseHands > 0 && numUseHands < (int) ikEffs.size()) {
-				double sholderdistance[] = {ikEffUseFlags.size()};
+				double sholderdistance[] = {(double) ikEffUseFlags.size()};
 				for (size_t i=0; i<ikEffUseFlags.size(); ++i) {
 					if (baseJoints[i]) {
 						Posed pp; baseJoints[i]->GetPlugPose(pp);
@@ -149,7 +149,7 @@ void CRReachController::Step() {
 				// 何本の手をfalseにするかは numUseHands によって決める。
 				if (numUseHands > 0){
 					// 数本の手制御 
-					double handdistance[] = {ikEffUseFlags.size()};
+					double handdistance[] = {(double) ikEffUseFlags.size()};
 					double handdiff, sholderdiff;
 					double threshold = 1.0;
 					for (size_t i=0; i<ikEffUseFlags.size(); ++i){

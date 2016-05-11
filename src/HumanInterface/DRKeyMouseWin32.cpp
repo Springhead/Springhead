@@ -133,6 +133,8 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 	bool btnState = DVButtonSt::UP;
 	bool keyState = 0;
 	
+#pragma warning (push)
+#pragma warning (disable : 4302 4311)
 	switch (msg->message){
 	case WM_LBUTTONDOWN:
 	case WM_MBUTTONDOWN:
@@ -214,6 +216,7 @@ bool DRKeyMouseWin32::PreviewMessage(void* m){
 		}
 	default:;
 	}
+#pragma warning (pop)
 	return false;
 }
 
