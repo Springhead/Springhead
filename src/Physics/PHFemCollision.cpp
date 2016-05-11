@@ -425,7 +425,7 @@ void PHFemCollision::marchVertices(PHFemMeshNew *meshes[2], std::vector<int> ver
 	memset(borderVertex[1], false, sizeof(bool) * meshes[1]->vertices.size());
 
 	double sumEdge[2] = {0.0, 0.0}; 
-	int numEdge[2] = {0.0, 0.0};
+	int numEdge[2] = {0, 0};
 
 	int r = -1;
 	vertexInside[0].clear();

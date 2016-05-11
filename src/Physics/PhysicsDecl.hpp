@@ -11,9 +11,11 @@ protected:\
 	double	shrinkRateCorrection;	\
 	double	freezeThreshold;	\
 	double	accelSOR;	\
+	double	dfEps;	\
 	bool	bSaveConstraints;	\
 	bool	bUpdateAllState;	\
 	bool	bUseContactSurface;	\
+	bool	bReport;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
@@ -28,9 +30,11 @@ public:\
 		shrinkRateCorrection = ((PHConstraintEngineDesc*)ptr)->shrinkRateCorrection;	\
 		freezeThreshold = ((PHConstraintEngineDesc*)ptr)->freezeThreshold;	\
 		accelSOR = ((PHConstraintEngineDesc*)ptr)->accelSOR;	\
+		dfEps = ((PHConstraintEngineDesc*)ptr)->dfEps;	\
 		bSaveConstraints = ((PHConstraintEngineDesc*)ptr)->bSaveConstraints;	\
 		bUpdateAllState = ((PHConstraintEngineDesc*)ptr)->bUpdateAllState;	\
 		bUseContactSurface = ((PHConstraintEngineDesc*)ptr)->bUseContactSurface;	\
+		bReport = ((PHConstraintEngineDesc*)ptr)->bReport;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
@@ -46,15 +50,16 @@ public:\
 		((PHConstraintEngineDesc*)ptr)->shrinkRateCorrection = shrinkRateCorrection;	\
 		((PHConstraintEngineDesc*)ptr)->freezeThreshold = freezeThreshold;	\
 		((PHConstraintEngineDesc*)ptr)->accelSOR = accelSOR;	\
+		((PHConstraintEngineDesc*)ptr)->dfEps = dfEps;	\
 		((PHConstraintEngineDesc*)ptr)->bSaveConstraints = bSaveConstraints;	\
 		((PHConstraintEngineDesc*)ptr)->bUpdateAllState = bUpdateAllState;	\
 		((PHConstraintEngineDesc*)ptr)->bUseContactSurface = bUseContactSurface;	\
+		((PHConstraintEngineDesc*)ptr)->bReport = bReport;	\
 		return true;	\
 	}\
 
 #define SPR_DECLMEMBEROF_PHIKEngineDesc \
 protected:\
-	bool	bEnabled;	\
 	size_t	numIter;	\
 	double	maxVel;	\
 	double	maxAngVel;	\
@@ -63,7 +68,6 @@ protected:\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
-		bEnabled = ((PHIKEngineDesc*)ptr)->bEnabled;	\
 		numIter = ((PHIKEngineDesc*)ptr)->numIter;	\
 		maxVel = ((PHIKEngineDesc*)ptr)->maxVel;	\
 		maxAngVel = ((PHIKEngineDesc*)ptr)->maxAngVel;	\
@@ -73,7 +77,6 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		((PHIKEngineDesc*)ptr)->bEnabled = bEnabled;	\
 		((PHIKEngineDesc*)ptr)->numIter = numIter;	\
 		((PHIKEngineDesc*)ptr)->maxVel = maxVel;	\
 		((PHIKEngineDesc*)ptr)->maxAngVel = maxAngVel;	\

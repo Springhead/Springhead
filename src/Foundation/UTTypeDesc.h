@@ -81,16 +81,22 @@ template <class T>
 class UTAccess:public UTAccessBase{
 	virtual void* Create(){ return DBG_NEW T; }
 	virtual void Delete(void* ptr){delete (T*)ptr; }
+#pragma warning (push)
+#pragma warning (disable : 4172)
 	virtual void* VectorPush(void* v){
 		((std::vector<T>*)v)->push_back(T());
 		return &((std::vector<T>*)v)->back();
 	}
+#pragma warning (pop)
 	virtual void VectorPop(void* v){
 		((std::vector<T>*)v)->pop_back();
 	}
-	virtual void* VectorAt(void* v, int pos){
+#pragma warning (push)
+#pragma warning (disable : 4172)
+	virtual void* VectorAt(void* v, int pos) {
 		return &((std::vector<T>*)v)->at(pos);
 	}
+#pragma warning (pop)
 	size_t VectorSize(const void* v){
 		return ((const std::vector<T>*)v)->size();
 	}
