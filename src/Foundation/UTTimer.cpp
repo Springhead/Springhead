@@ -203,10 +203,11 @@ void (__stdcall UTTimer_MMTimerCallback)(unsigned uID, unsigned, ulong_ptr dwUse
 }
 
 unsigned long SPR_STDCALL UTTimer_ThreadCallback(void* arg){
-#pragma warning (push)
-#pragma warning (disable : 4302 4311)
+#ifdef	_WIN64
+	UTTimer* timer = UTTimerStub::Get().timers[(unsigned long long)arg];
+#else
 	UTTimer* timer = UTTimerStub::Get().timers[(int)arg];
-#pragma warning (pop)
+#endif
 	unsigned long lastCall = timeGetTime();
 	
 	while(!timer->bStopThread){
@@ -247,15 +248,13 @@ bool UTTimer::Start(){
 	}
 	else if(mode == UTTimerIf::THREAD){
 #if defined _WIN32
-#pragma warning (push)
-#pragma warning (disable : 4302 4311 4312)
 		unsigned long id=0;
-		timerIdImpl = (unsigned int)CreateThread(NULL, 0x1000, UTTimer_ThreadCallback, (void*)timerId, 0, &id);
+		HANDLE thread_id = CreateThread(NULL, 0x1000, UTTimer_ThreadCallback, (void*)(size_t)timerId, 0, &id);
+		timerIdImpl = ((size_t) thread_id) & 0xffffffff;
 		if (timerIdImpl){
-			SetThreadPriority((HANDLE)timerIdImpl, THREAD_PRIORITY_TIME_CRITICAL);//THREAD_PRIORITY_ABOVE_NORMAL);
+			SetThreadPriority((HANDLE)(size_t)timerIdImpl, THREAD_PRIORITY_TIME_CRITICAL);//THREAD_PRIORITY_ABOVE_NORMAL);
 			bStarted = true;
 		}
-#pragma warning (pop)
 #endif
 	}
 	else if (mode == UTTimerIf::FRAMEWORK){
@@ -300,7 +299,7 @@ bool UTTimer::Stop(){
 		for(int t=0; t<100 && bStopThread; t++) Sleep(20);	//	停止するまで待ってみる
 		if (bStopThread)
 			DSTR << "UTTimer THREAD mode: Can not stop the timer thread. There may be a dead lock problem." << std::endl;
-		CloseHandle(*(HANDLE*)&timerIdImpl);
+		CloseHandle((HANDLE)(size_t)timerIdImpl);
 		timerIdImpl = 0;
 		bStarted = false;
 #endif
