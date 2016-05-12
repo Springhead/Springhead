@@ -121,10 +121,7 @@ namespace Spr
 			fprintf(f, "%i\n", dfobj.objPArr[i].isFixed);
 
 			fprintf(f, "covMatrixList.size\n");
-#pragma warning (push)
-#pragma warning (disable : 4477)
-			fprintf(f, "%u\n", dfobj.objPArr[i].covMatrixList.size());
-#pragma warning (pop)
+			fprintf(f, "%i\n", (int) dfobj.objPArr[i].covMatrixList.size());
 			fprintf(f, "covMatrixList\n");
 			for (int k = 0; k<(int)dfobj.objPArr[i].covMatrixList.size(); k++)
 				fprintf(f, "%f %f %f  %f %f %f  %f %f %f\n", dfobj.objPArr[i].covMatrixList[k].xx, dfobj.objPArr[i].covMatrixList[k].xy, dfobj.objPArr[i].covMatrixList[k].xz, dfobj.objPArr[i].covMatrixList[k].yx, dfobj.objPArr[i].covMatrixList[k].yy, dfobj.objPArr[i].covMatrixList[k].yz, dfobj.objPArr[i].covMatrixList[k].zx, dfobj.objPArr[i].covMatrixList[k].zy, dfobj.objPArr[i].covMatrixList[k].zz);
@@ -173,10 +170,7 @@ namespace Spr
 			fprintf(f, "pThrRadiusVec\n");
 			fprintf(f, "%f %f %f\n", dfobj.objPArr[i].pThrRadiusVec.x, dfobj.objPArr[i].pThrRadiusVec.y, dfobj.objPArr[i].pThrRadiusVec.z);
 			fprintf(f, "pInGrpList.size\n");
-#pragma warning (push)
-#pragma warning (disable : 4477)
-			fprintf(f, "%i\n", dfobj.objPArr[i].pInGrpList.size());
-#pragma warning (pop)
+			fprintf(f, "%i\n", (int) dfobj.objPArr[i].pInGrpList.size());
 			fprintf(f, "pInGrpList\n");
 			for (int k = 0; k<(int)dfobj.objPArr[i].pInGrpList.size(); k++)
 			{
@@ -222,15 +216,12 @@ namespace Spr
 		//bind faceinfo in particles
 		fprintf(f, "fInPBindInfo\n");
 
-#pragma warning (push)
-#pragma warning (disable : 4477)
 		for (int i = 0; i<dfobj.assPsNum; i++)
 		{
-			fprintf(f, "%i\n", dfobj.objPArr[i].pFaceInd.size());
+			fprintf(f, "%i\n", (int) dfobj.objPArr[i].pFaceInd.size());
 			for (int j = 0; j<(int)dfobj.objPArr[i].pFaceInd.size(); j++)
-				fprintf(f, "%i\n", dfobj.objPArr[i].pFaceInd[j]);
+				fprintf(f, "%i\n", (int) dfobj.objPArr[i].pFaceInd[j]);
 		}
-#pragma warning (pop)
 
 		//Orignal vertex position
 		fprintf(f, "Orig Vertex positions\n");
@@ -385,10 +376,10 @@ namespace Spr
 		fgets(s, len, f);
 		fgets(s, len, f); sscanf_s(s, "%f", &dfobj.objPArr[i].pTotalMass);
 		fgets(s, len, f);
-#pragma warning (push)
-#pragma warning (disable : 4477)
-		fgets(s, len, f); sscanf_s(s, "%i", &dfobj.objPArr[i].isFixed);
-#pragma warning (pop)
+		//fgets(s, len, f); sscanf_s(s, "%i", &dfobj.objPArr[i].isFixed);
+		int tmp_isFixed;
+		fgets(s, len, f); sscanf_s(s, "%i", &tmp_isFixed);
+		dfobj.objPArr[i].isFixed = (tmp_isFixed) ? true : false;
 
 		fgets(s, len, f);
 		int* incovSize = new int;
