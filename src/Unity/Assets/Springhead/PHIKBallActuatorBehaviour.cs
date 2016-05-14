@@ -3,7 +3,7 @@ using System.Collections;
 using SprCs;
 using System;
 
-public class PHIKBallActuatorBehaviour : SprSceneObjBehaviour {
+public class PHIKBallActuatorBehaviour : PHIKActuatorBehaviour {
     public PHIKBallActuatorDescStruct desc = null;
 
     public override CsObject descStruct {
@@ -30,18 +30,5 @@ public class PHIKBallActuatorBehaviour : SprSceneObjBehaviour {
         }
 
         return phIKAct;
-    }
-
-    public override void Link () {
-        PHBallJointBehaviour bj = gameObject.GetComponent<PHBallJointBehaviour>();
-        if (bj != null && bj.sprObject != null && sprObject != null) {
-            PHBallJointBehaviour bjParent = bj.socket.GetComponentInChildren<PHBallJointBehaviour>();
-            if (bjParent != null && bj != bjParent) {
-                PHIKBallActuatorBehaviour ba = bjParent.GetComponent<PHIKBallActuatorBehaviour>();
-                if (ba != null && ba.sprObject != null && sprObject != ba.sprObject) {
-                    ba.sprObject.AddChildObject(sprObject);
-                }
-            }
-        }
     }
 }
