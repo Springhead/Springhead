@@ -20,7 +20,7 @@ public class CDCapsuleBehavior : CDShapeBehaviour {
     }
 
     public override CDShapeIf CreateShape(GameObject shapeObject) {
-        CapsuleCollider cc = gameObject.GetComponent<CapsuleCollider>();
+        CapsuleCollider cc = shapeObject.GetComponent<CapsuleCollider>();
         if (cc == null) { throw new ObjectNotFoundException("CDCapsuleBehaviour requires CapsuleCollider", shapeObject); }
 
         Vector3 scale = shapeObject.transform.lossyScale;

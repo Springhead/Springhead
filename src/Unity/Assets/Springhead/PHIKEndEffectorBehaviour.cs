@@ -43,6 +43,10 @@ public class PHIKEndEffectorBehaviour : SprSceneObjBehaviour {
         if (ba != null && ba.sprObject != null && sprObject != null) {
             ba.sprObject.AddChildObject(sprObject);
         }
+        PHIKHingeActuatorBehaviour ha = gameObject.GetComponentInChildren<PHIKHingeActuatorBehaviour>();
+        if (ha != null && ha.sprObject != null && sprObject != null) {
+            ha.sprObject.AddChildObject(sprObject);
+        }
     }
 
     void Update () {

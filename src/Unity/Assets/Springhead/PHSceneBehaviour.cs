@@ -38,7 +38,7 @@ public class PHSceneBehaviour : SprBehaviour {
             phSdk   = app.GetSdk().GetPHSdk();
             phScene = app.GetSdk().GetScene(0).GetPHScene();
             phScene.Clear();
-            phScene.SetDesc(desc);
+            // phScene.SetDesc(desc);
         } else {
             phSdk = PHSdkIf.CreateSdk();
             phScene = phSdk.CreateScene(desc);
