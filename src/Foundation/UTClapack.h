@@ -37,56 +37,44 @@
       # pragma comment(lib, "CLAPACK10.lib")
     #endif
   #else			    // after Visual Studio 2010
-    #if (_MSC_VER == 1900)	// Visual Studio 2015
-      #ifdef _WIN64 
-        # pragma comment(lib, "LIBF2C14.0Tx64.lib")
-        # pragma comment(lib, "BLAS14.0Tx64.lib")
-        # pragma comment(lib, "CLAPACK14.0Tx64.lib")
-      #else
-        # pragma comment(lib, "LIBF2C14.0T.lib")
-        # pragma comment(lib, "BLAS14.0T.lib")
-        # pragma comment(lib, "CLAPACK14.0T.lib")
-      #endif
-    #else /* _MSC_VER */
-      #ifdef _WIN64 
-        # pragma comment(lib, "LIBF2C10Tx64.lib")
-        # pragma comment(lib, "BLAS10Tx64.lib")
-        # pragma comment(lib, "CLAPACK10Tx64.lib")
-      #else
-        # pragma comment(lib, "LIBF2C10T.lib")
-        # pragma comment(lib, "BLAS10T.lib")
-        # pragma comment(lib, "CLAPACK10T.lib")
-      #endif
-    #endif /* _MSC_VER */
+    #ifdef _WIN64 
+      # pragma comment(lib, "LIBF2C10Tx64.lib")
+      # pragma comment(lib, "BLAS10Tx64.lib")
+      # pragma comment(lib, "CLAPACK10Tx64.lib")
+    #else
+      # pragma comment(lib, "LIBF2C10T.lib")
+      # pragma comment(lib, "BLAS10T.lib")
+      # pragma comment(lib, "CLAPACK10T.lib")
+    #endif
   #endif
 #else /* TRACE */
   #if (_MSC_VER == 1900)    // Visual Studio 2015
     #ifdef _DEBUG
       #ifdef _DLL		// Debug (former DebugDll)
         #ifdef _WIN64
-          # pragma comment(lib, "LIBF2C14.0MDx64.lib")
-          # pragma comment(lib, "BLAS14.0MDx64.lib")
-          # pragma comment(lib, "CLAPACK14.0MDx64.lib")
+          # pragma comment(lib, "LIBF2C14MDx64.lib")
+          # pragma comment(lib, "BLAS14MDx64.lib")
+          # pragma comment(lib, "CLAPACK14MDx64.lib")
         #else
-          # pragma comment(lib, "LIBF2C14.0MD.lib")
-          # pragma comment(lib, "BLAS14.0MD.lib")
-          # pragma comment(lib, "CLAPACK14.0MD.lib")
+          # pragma comment(lib, "LIBF2C14MD.lib")
+          # pragma comment(lib, "BLAS14MD.lib")
+          # pragma comment(lib, "CLAPACK14MD.lib")
         #endif
       #endif
     #else
       #ifdef _DLL		// Debug (former DebugDll)
         #ifdef _WIN64
-          # pragma comment(lib, "LIBF2C14.0Mx64.lib")
-          # pragma comment(lib, "BLAS14.0Mx64.lib")
-          # pragma comment(lib, "CLAPACK14.0Mx64.lib")
+          # pragma comment(lib, "LIBF2C14Mx64.lib")
+          # pragma comment(lib, "BLAS14Mx64.lib")
+          # pragma comment(lib, "CLAPACK14Mx64.lib")
         #else
-          # pragma comment(lib, "LIBF2C14.0M.lib")
-          # pragma comment(lib, "BLAS14.0M.lib")
-          # pragma comment(lib, "CLAPACK14.0M.lib")
+          # pragma comment(lib, "LIBF2C14M.lib")
+          # pragma comment(lib, "BLAS14M.lib")
+          # pragma comment(lib, "CLAPACK14M.lib")
         #endif
       #endif
     #endif
-  #else	/* _MSC_VER */
+  #else
     #ifdef _DEBUG
       #ifdef _DLL		// Debug (former DebugDll)
         #ifdef _WIN64 
