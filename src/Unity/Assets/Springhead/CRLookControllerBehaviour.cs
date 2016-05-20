@@ -2,8 +2,7 @@
 using System.Collections;
 using SprCs;
 
-public class CRLookControllerBehaviour : SprBehaviourBase
-{
+public class CRLookControllerBehaviour : SprBehaviourBase {
     public GameObject head;
     public GameObject eyeLeft;
     public GameObject eyeRight;
@@ -14,9 +13,8 @@ public class CRLookControllerBehaviour : SprBehaviourBase
     public Vector2 eyeLeftCenter = new Vector2(-0.05f, 0.08f);
     public Vector2 eyeRightCenter = new Vector2(-0.05f, -0.08f);
     public float eyeAngleLimit = Mathf.Deg2Rad * 25f;
-    
-    void Reset()
-    {
+
+    void Reset() {
         SetDLLPath();
         controllerDescriptor = new CRReachControllerDesc();
         controllerDescriptor.margin = 0;
@@ -25,8 +23,7 @@ public class CRLookControllerBehaviour : SprBehaviourBase
         controllerDescriptor.targPos.z = -20f;
     }
 
-    void Awake()
-    {
+    void Awake() {
         CRCreatureIf crCreature = gameObject.GetComponentInParent<CRCreatureBehaviour>().GetCRCreature();
         CRReachControllerDesc d = controllerDescriptor;
         headCRReachController = (CRReachControllerIf)crCreature.CreateEngine(CRReachControllerIf.GetIfInfoStatic(), d);
@@ -36,7 +33,7 @@ public class CRLookControllerBehaviour : SprBehaviourBase
         headCRReachController.SetIKEndEffector(headPHIKEndEffectorBehaviour.sprObject as PHIKEndEffectorIf, 0);
     }
 
-    public void setTarget(Vector3 position){
+    public void setTarget(Vector3 position) {
         PHSolidIf eyeLeftPHSolid = eyeLeft.GetComponent<PHSolidBehaviour>().sprObject as PHSolidIf;
         PHSolidIf eyeRightPHSolid = eyeRight.GetComponent<PHSolidBehaviour>().sprObject as PHSolidIf;
         PHBallJointIf eyeLeftPHBallJoint = eyeLeft.GetComponent<PHBallJointBehaviour>().sprObject as PHBallJointIf;
@@ -56,7 +53,7 @@ public class CRLookControllerBehaviour : SprBehaviourBase
         headOrientationInverse.y = (float)(head.GetComponent<PHSolidBehaviour>().sprObject as PHSolidIf).GetPose().Ori().Inv().y;
         headOrientationInverse.z = (float)(head.GetComponent<PHSolidBehaviour>().sprObject as PHSolidIf).GetPose().Ori().Inv().z;
         eyeCenterToTargetVector = headOrientationInverse * eyeCenterToTargetVector;
-        
+
         Vector3 eyeLeftToTargetVector = position - new Vector3((float)eyeLeftPHSolid.GetPose().Pos().x,
                                                                (float)eyeLeftPHSolid.GetPose().Pos().y,
                                                                (float)eyeLeftPHSolid.GetPose().Pos().z);
@@ -75,12 +72,10 @@ public class CRLookControllerBehaviour : SprBehaviourBase
         Vector2 eyeLeftMoveVector = new Vector2(eyeLeftX, eyeY);
         Vector2 eyeRightMoveVector = new Vector2(eyeRightX, eyeY);
 
-        if ((eyeLeftMoveVector - eyeLeftCenter).magnitude > eyeAngleLimit)
-        {
+        if ((eyeLeftMoveVector - eyeLeftCenter).magnitude > eyeAngleLimit) {
             eyeLeftMoveVector = (eyeLeftMoveVector - eyeLeftCenter).normalized * eyeAngleLimit;
         }
-        if ((eyeRightMoveVector - eyeRightCenter).magnitude > eyeAngleLimit)
-        {
+        if ((eyeRightMoveVector - eyeRightCenter).magnitude > eyeAngleLimit) {
             eyeRightMoveVector = (eyeRightMoveVector - eyeRightCenter).normalized * eyeAngleLimit;
         }
 
@@ -96,8 +91,7 @@ public class CRLookControllerBehaviour : SprBehaviourBase
         headCRReachController.SetFinalPos(new Vec3d(position.x, position.y, position.z));
     }
 
-    void OnValidate()
-    {
+    void OnValidate() {
         SetDLLPath();
     }
 }
