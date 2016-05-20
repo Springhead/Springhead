@@ -63,7 +63,13 @@ public class PHIKEndEffectorBehaviour : SprSceneObjBehaviour {
                     phIKee.SetTargetLookat(new Vec3f(p.x, p.y, p.z));
                 } else {
                     phIKee.SetTargetPosition(new Vec3f(p.x, p.y, p.z));
-                    phIKee.SetTargetOrientation(new Quaternionf(q.w, q.x, q.y, q.z));
+                    Quaternionf qT;
+                    if (q.w > 0) {
+                        qT = new Quaternionf(q.w, q.x, q.y, q.z);
+                    } else {
+                        qT = new Quaternionf(-q.w, -q.x, -q.y, -q.z);
+                    }
+                    phIKee.SetTargetOrientation(qT);
                 }
             }
         }
