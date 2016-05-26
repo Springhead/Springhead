@@ -18,7 +18,7 @@ class TimerProviderGL: public UTTimerProvider{
 	typedef std::vector<Arg*> Args;
 	Args args;
 	static void SPR_CDECL Callback(int a){
-		Arg* arg = (Arg*)a;
+		Arg* arg = (Arg*)(size_t)a;
 		if (!arg->bStop){
 			arg->timer->Call();
 			glutTimerFunc(arg->timer->GetInterval(), Callback, a);
@@ -35,7 +35,7 @@ public:
 	}
 	bool StartTimer(UTTimer* timer){
 		args.push_back(new Arg(timer));
-		glutTimerFunc(timer->GetInterval(), Callback, (int)(void*)args.back());
+		glutTimerFunc(timer->GetInterval(), Callback, (int)(size_t)(void*)args.back());
 		return true;
 	}
 	bool StopTimer(UTTimer* timer){
