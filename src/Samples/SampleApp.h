@@ -580,6 +580,7 @@ public: /** FWAppの実装 **/
 		string shaderDir = "../../../../shader/";
 		GRRenderIf* render = GetCurrentWin()->GetRender();
 
+	/***
 		GRShaderDesc shd;
 		shd.vsname = shaderDir + "vsbase.txt";
 		shd.fsname = shaderDir + "fsbase.txt";
@@ -603,6 +604,7 @@ public: /** FWAppの実装 **/
 		shd.bShadowCreate    = false;
 		shd.bShadowRender    = true;
 		shaderShadowRender = render->CreateShader(shd);
+	***/
 		
 		/// 光源設定
 		GRLightDesc ld;
