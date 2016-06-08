@@ -84,6 +84,7 @@ void FWOptimizer::Init(int dimension) {
 		stddev[i] = 0.3;
 	}
 
+	parameters->stopTolFun = 1e-2;
 	parameters->init(dimension, xstart, stddev);
 	arFunvals = evo->init(*parameters);
 
@@ -117,7 +118,7 @@ void FWOptimizer::Optimize() {
 			Iterate();
 			cnt++;
 			if (cnt % 10 == 0) {
-				DSTR << "Generation : " << cnt << std::endl;
+				DSTR << "Generation : " << cnt << " (Fitness = " << evo->get(CMAES<double>::Fitness) << ")" << std::endl;
 				double *lastxprov = xprovisional;
 				xprovisional = evo->getNew(CMAES<double>::XMean);
 				if (lastxprov) { delete lastxprov; }

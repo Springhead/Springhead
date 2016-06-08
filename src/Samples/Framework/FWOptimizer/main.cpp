@@ -79,7 +79,7 @@ public:
 	JointTrajectory<NSUB> jt[nJoints];
 
 	void Init() {
-		FWOptimizer::Init(nJoints * NSUB * 3);
+		FWOptimizer::Init(nJoints * NSUB * 5);
 	}
 
 	virtual double Objective(double const *x, int n) {
@@ -88,14 +88,22 @@ public:
 			jo[i] = fwScene->GetPHScene()->GetJoint(i)->Cast();
 		}
 
+		double obj = 0;
+
 		// 1. Apply x to Scene
 		for (int i = 0; i < nJoints; ++i) {
-			jt[i].Set(&(x[i * NSUB * 3]));
+			jt[i].Set(&(x[i * NSUB * 5]));
+
+			double spring = (x[i * NSUB * 5 + 3]);
+			double damper = (x[i * NSUB * 5 + 4]);
+			jo[i]->SetSpring(abs(spring) * 100 + 100);
+			jo[i]->SetDamper(abs(damper) * 10 + 10);
+
+			obj += 1e+3*abs(spring) + 1e+3*abs(damper);
 		}
 
-		double obj = 0;
 		double lastTorque[nJoints]; for (int i = 0; i < nJoints; ++i) { lastTorque[i] = 0; }
-		for (int i = 0; i < 100; ++i) {
+		for (int step = 0; step < 100; ++step) {
 			// 2. Do Simulation Step
 			double t = fwScene->GetPHScene()->GetCount() * fwScene->GetPHScene()->GetTimeStep();
 
@@ -111,18 +119,22 @@ public:
 				double dtorque = torque - lastTorque[i];
 				lastTorque[i] = torque;
 
-				obj += dtorque*dtorque;
+				obj += (dtorque*dtorque) + (torque*torque);
 			}
 		}
 
 		// 4. Calc Criterion for Final State
-		PHIKEndEffectorIf* eef = fwScene->GetPHScene()->GetIKEndEffector(0);
-		double error = ((eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition()) - eef->GetTargetPosition()).norm();
+		for (int step = 100; step < 150; ++step) {
+			fwScene->Step();
 
-		obj += 1e+5 * abs(error);
+			PHIKEndEffectorIf* eef = fwScene->GetPHScene()->GetIKEndEffector(0);
+			double error = ((eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition()) - eef->GetTargetPosition()).norm();
 
-		obj += 1e+4 * eef->GetSolid()->GetVelocity().norm();
-		obj += 1e+4 * eef->GetSolid()->GetAngularVelocity().norm();
+			obj += 1e+4 * abs(error);
+
+			obj += 1e+3 * eef->GetSolid()->GetVelocity().norm();
+			obj += 1e+3 * eef->GetSolid()->GetAngularVelocity().norm();
+		}
 
 		return obj;
 	}
@@ -144,9 +156,10 @@ public:
 	int argc;
 	char** argv;
 
-	Optimizer<5> optimizer;
+	static const int nsub = 1;
+	Optimizer<nsub> optimizer;
 	//FWOptimizer optimizer;
-	JointTrajectory<5> jt[2];
+	JointTrajectory<nsub> jt[2];
 
 	ObjectStatesIf *states_;
 
@@ -205,13 +218,13 @@ public:
 
 		// Link 1
 		PHSolidIf* so1 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
-		so1->SetFramePosition(Vec3d(0,4,0));
+		so1->SetFramePosition(Vec3d(0,-4,0));
 		so1->AddShape(phSdk->CreateShape(descCapsule));
 		so1->SetShapePose(0, shapePose);
 
 		// Link 2
 		PHSolidIf* so2 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
-		so2->SetFramePosition(Vec3d(0,8,0));
+		so2->SetFramePosition(Vec3d(0,-8,0));
 		so2->AddShape(phSdk->CreateShape(descCapsule));
 		so2->SetShapePose(0, shapePose);
 
@@ -226,8 +239,8 @@ public:
 		// ----- ----- ----- ----- -----
 
 		PHHingeJointDesc descJoint;
-		descJoint.poseSocket = Posed(1,0,0,0, 0, 2,0);
-		descJoint.posePlug   = Posed(1,0,0,0, 0,-2,0);
+		descJoint.poseSocket = Posed(1,0,0,0, 0,-2,0);
+		descJoint.posePlug   = Posed(1,0,0,0, 0, 2,0);
 		descJoint.spring =   100.0;
 		descJoint.damper =    10.0;
 		descJoint.cyclic =     true;
@@ -249,7 +262,7 @@ public:
 		ika1->AddChildObject(ika2);
 
 		// Link2 = End Effector
-		descIKE.targetLocalPosition = Vec3d(0,2,0);
+		descIKE.targetLocalPosition = Vec3d(0,-2,0);
 		PHIKEndEffectorIf* ike1 = GetFWScene()->GetPHScene()->CreateIKEndEffector(descIKE);
 		ike1->AddChildObject(so2);
 		ika2->AddChildObject(ike1);
@@ -276,12 +289,16 @@ public:
 		double* params = optimizer.GetResults();
 		if (params) {
 			DSTR << "Result : " << std::endl;
-			for (int i = 0; i < 30; ++i) {
+			for (int i = 0; i < (nsub * 5 * 2); ++i) {
 				DSTR << i << " : " << params[i] << std::endl;
 			}
 			DSTR << " --- " << std::endl;
-			jt[0].Set(&(params[0 * 3]));
-			jt[1].Set(&(params[5 * 3]));
+			jt[0].Set(&(params[0 * 5]));
+			jt[1].Set(&(params[nsub * 5]));
+			jo1->SetSpring(abs(params[0 * nsub * 5 + 3]) * 100 + 100);
+			jo1->SetDamper(abs(params[0 * nsub * 5 + 4]) * 10 + 10);
+			jo2->SetSpring(abs(params[1 * nsub * 5 + 3]) * 100 + 100);
+			jo2->SetDamper(abs(params[1 * nsub * 5 + 4]) * 10 + 10);
 		}
 
 		// ----- ----- ----- ----- -----
@@ -323,10 +340,14 @@ public:
 			double t = GetFWScene()->GetPHScene()->GetCount() * GetFWScene()->GetPHScene()->GetTimeStep();
 			jo1->SetTargetPosition(jt[0].At(t));
 			jo2->SetTargetPosition(jt[1].At(t));
-
 			GetFWScene()->Step();
+
+		} else if (GetFWScene()->GetPHScene()->GetCount() < 150) {
+			GetFWScene()->Step();
+
 		} else {
 			states_->LoadState(GetFWScene());
+
 		}
 
 		/*

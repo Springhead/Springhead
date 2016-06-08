@@ -289,6 +289,9 @@ void PHIKBallActuator::CalcPullbackVelocity() {
 
 	Vec3d pullback = -(jointTempOri.RotationHalf()) * pullbackRate;
 
+	// トルク最小化IKの概念テスト。実際にはもう少しきめ細やかな実装が必要になりそう
+	// pullback += -(DCAST(PHBallJointIf, joint)->GetMotorForce() * 0.001);
+
 	// <!!> 本当はLimit成分を入れたほうが良い気がする
 
 	// <!!> Pullback量が一定以下になるよう制限する．

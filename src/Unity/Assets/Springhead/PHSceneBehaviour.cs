@@ -27,6 +27,15 @@ public class PHSceneBehaviour : SprBehaviour {
         GUI.TextArea(new Rect(10, 10, 600, 100), text);
     }
 
+    /*
+    int cnt = 0;
+    delegate void FunctionPointerTarget(IntPtr x);
+    void OnTimer(IntPtr x) {
+        cnt++;
+        print("Timer! : " + cnt);
+    }
+    */
+
     public override ObjectIf Build() {
         SEH_Exception.init();
 
@@ -47,7 +56,21 @@ public class PHSceneBehaviour : SprBehaviour {
         phScene.SetTimeStep(Time.fixedDeltaTime);
         phScene.GetIKEngine().Enable(true);
 
-       return phScene;
+        /*
+        UTTimerIf timer = UTTimerIf.Create();
+        print(timer.get());
+
+        FunctionPointerTarget fp = new FunctionPointerTarget(OnTimer);
+        var functionPointer = Marshal.GetFunctionPointerForDelegate(fp);
+        GCHandle _gcHandle = GCHandle.Alloc(fp);
+        timer.SetMode(UTTimerIf.Mode.MULTIMEDIA);
+        timer.SetCallback(functionPointer);
+        //timer.SetResolution(1);
+        //timer.SetInterval(1);
+        timer.Start();
+        */
+
+        return phScene;
     }
 
     void FixedUpdate () {
