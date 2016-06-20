@@ -122,8 +122,11 @@ if options.timestamp:	args += ' -T'
 ifile = kvf.get('LogFile')
 if ifile is None:
 	ifile = kvf.get('TestRoot') + '/log/build.log'
-ofile = kvf.get('TestMainLogFile')
-print('ofile: %s' % (ofile))
+ofile = options.logfile
+if ofile is None:
+	ofile = kvf.get('TestMainLogFile')
+if options.verbose:
+	print('  extract_log:\t%s' % (ofile))
 cmd = 'del ' + ofile + ' >NUL 2>&1'
 result = subprocess.call(cmd.replace('/', '\\'), shell=True)
 
