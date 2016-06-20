@@ -9,7 +9,7 @@
 #	Only one scene at a time is available.
 #
 #  VERSION:
-#	Ver 1.0  2016/06/16 F.Kanehori	First release
+#	Ver 1.0  2016/06/20 F.Kanehori	First version
 # ======================================================================
 version = 1.0
 import sys
@@ -112,8 +112,8 @@ spr2root = kvf.get('Springhead2')
 defaults['UnityProject'] = spr2root + '/src/Unity'
 defaults['ScenesDir']	 = 'Assets/Scenes'
 defaults['TestRoot']	 = spr2root + '/UnityTest'
-defaults['OutFile']	 = defaults['TestRoot'] + '/player.exe'
-defaults['LogFile']	 = defaults['TestRoot'] + '/build.log'
+defaults['OutFile']	 = defaults['TestRoot'] + '/bin/player.exe'
+defaults['LogFile']	 = defaults['TestRoot'] + '/log/build.log'
 for key in defaults.keys():
 	if kvf.get(key) is None:
 		kvf.set(key, defaults[key])

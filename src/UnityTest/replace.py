@@ -14,7 +14,7 @@
 #	    replacement will be applied to all lines in the file
 #
 #  VERSION:
-#       Ver 1.0  2016/06/16 F.Kanehori	First release
+#       Ver 1.0  2016/06/16 F.Kanehori	First version
 # ==============================================================================
 version = 1.0
 import os

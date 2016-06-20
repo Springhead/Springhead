@@ -8,7 +8,9 @@
 #	Make dictionary by reading key-value pair file.
 #
 #  VERSION:
-#	Ver 1.0  13-Jun-2016	F.Kanehori  First version
+#	Ver 1.0  2016/06/13 F.Kanehori	First version
+#	Ver 1.1  2016/06/20 F.Kanehori  Add %include function
+#					Allow continued line
 # ======================================================================
 import sys
 import re
@@ -43,21 +45,42 @@ class KvFile:
 			value = None
 		return value	
 
-	def read(self):
+	def read(self, path=None):
+		if path is None:
+			path = self.path
 		count = 0
 		nlines = 0
 		try:
-			f = open(self.path, 'r')
+			f = open(path, 'r')
 		except IOError as err:
 			# can't open file
 			self.__error('%s' % (err))
 			return -1
+		prev_line = ''
 		for line in f:
 			nlines += 1
-			if self.verbose > 1:
-				print(str(nlines) + ': ' + line.rstrip())
 			if re.match('^\s*$', line): continue
 			if re.match('^\s*#', line): continue
+			if self.verbose > 1:
+				print(str(nlines) + ': ' + line.rstrip())
+			# continued line
+			m = re.match('(.*)(.)$', line)
+			if m and m.group(len(m.groups())) == '\\':
+				prev_line += m.group(1)
+				continue
+			else:
+				line = prev_line + line
+				if self.verbose and prev_line != '':
+					print('CONT\'D: [%s]' % (line.rstrip()))
+				prev_line = ''
+			# %include
+			m = re.match('^%include\s+([\w.]+)', line)
+			if m:
+				if self.verbose:
+					print('%%include %s' % m.group(1))
+				self.read(m.group(1))
+				continue
+			# key-value pair
 			pair = line.rstrip().split()
 			if len(pair) < 2:
 				msg = self.path + ': ' + str(nlines)
@@ -113,10 +136,10 @@ class KvFile:
 if __name__ == '__main__':
 
 	verbose = 0
-	kvf = KvFile('UnityTest.ini', verbose)
+	kvf = KvFile('UnityTestMain.ini', verbose)
 	kvf.read()
 	kvf.show(2)
-	keys = ['Springhead2', 'UnityProject', 'OutputFile', 'GhostKey']
+	keys = ['Springhead2', 'UnityProject', 'OutFile', 'GhostKey']
 	if kvf.check(keys) != 0:
 		print('Not all keys are defined !!')
 	for key in keys:
