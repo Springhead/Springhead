@@ -8,8 +8,9 @@
 #
 #  VERSION:
 #       Ver 1.0  2016/06/20 F.Kanehori  First version
+#       Ver 1.0a 2016/06/22 F.Kanehori  Bug fixed: version print
 # ==============================================================================
-version = 1.0
+version = '1.0a'
 import os
 import sys
 from optparse import OptionParser
@@ -41,6 +42,9 @@ parser.add_option('-V', '--version', action="store_true", dest='version',
                     help='show version')
 (options, args) = parser.parse_args()
 #
+if options.version:
+	parser.print_help()
+	sys.exit(0)
 script = sys.argv[0].split('\\')[-1].split('.')[0]
 
 #-------------------------------------------------------------------------------
@@ -53,7 +57,6 @@ str_end = '^-----EndCompilerOutput---------------'
 pattern_tgt = re.compile(str_tgt)
 pattern_bgn = re.compile(str_bgn)
 pattern_end = re.compile(str_end)
-pattern_err = re.compile('error', re.IGNORECASE)
 
 #-------------------------------------------------------------------------------
 # Main process
