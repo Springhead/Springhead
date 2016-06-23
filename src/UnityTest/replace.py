@@ -15,50 +15,37 @@
 #
 #  VERSION:
 #       Ver 1.0  2016/06/16 F.Kanehori	First version
+#       Ver 2.0  2016/06/23 F.Kanehori	Command syntax changed
+#					Multiple pattern replace implemented
 # ==============================================================================
-version = 1.0
+version = '2.0'
 import os
 import sys
 from optparse import OptionParser
 import types
 
-#-------------------------------------------------------------------------------
-# Constants
-#
-encoding = 'utf-8'
-
-#-------------------------------------------------------------------------------
-# Options
-#
-usage = "Usage: %prog [options] infile outfile"
-parser = OptionParser(usage = usage)
-parser.add_option('-p', '--pattern', action="store", dest='pattern',
-                    help='replace pattern (from=to)')
-parser.add_option('-v', '--verbose', action="count", dest='verbose',
-                    default=0, help='set verbose mode')
-parser.add_option('-V', '--version', action="store_true", dest='version',
-                    help='show version')
-(options, args) = parser.parse_args()
-#
-script = sys.argv[0].split('\\')[-1].split('.')[0]
-verbose = options.verbose
-if options.version:
-	print('%s: Version %s' % (script, version))
-	sys.exit(0)
-
-#-------------------------------------------------------------------------------
-def replace(ifname, ofname):
+# ------------------------------------------------------------------------------
+def replace(ifname, ofname, patterns, sep):
+	pat = []
+	for pattern in patterns:
+		p = pattern.split(options.sep)
+		pat.append({'fm': p[0], 'to': p[1]})
+	#
 	with open(ofname, 'w') as ofile:
 		with open(ifname, 'r') as ifile:
 			line = ifile.readline()
 			count = 1
 			while (line):
-				replaced = line.replace(pat_fm, pat_to)
+				replaced = line
+				for p in pat:
+					fm = p['fm']
+					to = p['to']
+					replaced = replaced.replace(fm, to)
 				ofile.write(replaced)
 				if verbose > 0 and replaced != line:
 					print(fixed(count, 4) + line.rstrip())
 					print("   => " + replaced.rstrip())
-				elif verbose > 1:
+				elif options.verbose > 1:
 					print(fixed(count, 4) + replaced.rstrip())
 				line = ifile.readline()
 				count += 1
@@ -70,32 +57,47 @@ def fixed(num, width):
 	if length < width:
 		return ' ' * (width-length) + string + ': '
 	return string + ': '
-	
-#-------------------------------------------------------------------------------
-# Main process
+
+# ------------------------------------------------------------------------------
+#  Process for command line
 #
-status = 0
-if len(args) != 2:
+usage = "Usage: %prog [options] infile outfile form=to [from=to].."
+parser = OptionParser(usage = usage)
+parser.add_option('-s', '--separator', action="store", dest='sep', default='=',
+                    help='pattern separator [default: %default]')
+parser.add_option('-v', '--verbose', action="count", dest='verbose',
+                    default=0, help='set verbose mode')
+parser.add_option('-V', '--version', action="store_true", dest='version',
+                    help='show version')
+(options, args) = parser.parse_args()
+verbose = options.verbose
+#
+script = sys.argv[0].split('\\')[-1].split('.')[0]
+if options.version:
+	print('%s: Version %s' % (script, version))
+	sys.exit(0)
+#
+if len(args) < 3:
 	parser.error("incorrect number of arguments")
 	sys.exit(-1)
-if not isinstance(options.pattern, str):
-	parser.error('pattern not specified')
-	sys.exit(-1)
-
-pattern = options.pattern.split('=')
-pat_fm = pattern[0]
-pat_to = pattern[1]
-
 ifname = args[0];
 ofname = args[1];
-if verbose > 0:
-	sys.stderr.write(script + ':\n')
-	sys.stderr.write('    ifile: ' + ifname + '\n')
-	sys.stderr.write('    ofile: ' + ofname + '\n')
-	sys.stderr.write('    pattern from: [' + pat_fm + ']\n') 
-	sys.stderr.write('    pattern to:   [' + pat_to + ']\n') 
-
-status = replace(ifname, ofname)
+patterns = args[2:]
+if verbose:
+	print(script + ':')
+	print('    ifile: ' + ifname)
+	print('    ofile: ' + ofname)
+	for pattern in patterns:
+		if not options.sep in pattern:
+			parser.error('invalid pattern specified [' + pattern + ']')
+		p = pattern.split(options.sep)
+		print('    pattern from: [' + p[0] + ']') 
+		print('    pattern to:   [' + p[1] + ']') 
+		
+# ------------------------------------------------------------------------------
+#  Main process
+#
+status = replace(ifname, ofname, patterns, options.sep)
 sys.exit(status)
 
 #end: replace.py

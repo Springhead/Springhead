@@ -10,6 +10,7 @@
 #
 #  VERSION:
 #	Ver 1.0  2016/06/20 F.Kanehori	First version
+#	Ver 1.1  2016/06/23 F.Kanehori	Correspond to 'replace' V2.0
 # ======================================================================
 version = 1.0
 import sys
@@ -153,12 +154,13 @@ if result != 0:
 # replace parameter
 replace_pattern ="displayResolutionDialog: 1=displayResolutionDialog: 0"
 script = 'replace.py'
-params = '-p "' + replace_pattern + '"'
+params = ''
 if options.verbose:
 	params += ' -v'
 ifile = saved_file
 ofile = setting_file
-cmd = ' '.join([kvf.get('Python'), script, params, ifile, ofile])
+patterns = '"' + replace_pattern + '"'
+cmd = ' '.join([kvf.get('Python'), script, params, ifile, ofile, patterns])
 verbose(cmd, 1)
 result = subprocess.call(cmd, shell=True)
 if result != 0:
