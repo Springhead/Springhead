@@ -112,7 +112,7 @@ defaults = {}
 spr2root = kvf.get('Springhead2')
 defaults['UnityProject'] = spr2root + '/src/Unity'
 defaults['ScenesDir']	 = 'Assets/Scenes'
-defaults['TestRoot']	 = spr2root + '/UnityTest'
+defaults['TestRoot']	 = spr2root + '/scr/UnityTest'
 defaults['OutFile']	 = defaults['TestRoot'] + '/bin/player.exe'
 defaults['LogFile']	 = defaults['TestRoot'] + '/log/build.log'
 for key in defaults.keys():
