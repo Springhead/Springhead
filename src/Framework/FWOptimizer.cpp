@@ -46,8 +46,9 @@ FWOptimizer::~FWOptimizer() {
 	if (xprovisional)	{ delete xprovisional; }
 }
 
-void FWOptimizer::CopyScene(FWSceneIf* fwSceneInput) {
+void FWOptimizer::CopyScene(PHSceneIf* phSceneInput) {
 	// ファイル名は一考の余地あり
+	/*
 	fwSdk = fwSceneInput->GetSdk();
 	fwSdk->SaveScene("temp.spr");
 	fwSdk->LoadScene("temp.spr");
@@ -61,6 +62,7 @@ void FWOptimizer::CopyScene(FWSceneIf* fwSceneInput) {
 			phScene->SetContactMode(PHSceneDesc::MODE_NONE); // 現状ではとりあえず切る
 		}
 	}
+	*/
 }
 
 void FWOptimizer::Init(int dimension) {
@@ -85,11 +87,12 @@ void FWOptimizer::Init(int dimension) {
 	}
 
 	parameters->stopTolFun = 1e-2;
+	parameters->lambda = 30;
 	parameters->init(dimension, xstart, stddev);
 	arFunvals = evo->init(*parameters);
 
 	states = ObjectStatesIf::Create();
-	states->SaveState(fwScene);
+	states->SaveState(phScene);
 
 	bInitialized = true;
 #endif
@@ -143,7 +146,7 @@ void FWOptimizer::Iterate() {
 
 	// evaluate the new search points using objective function
 	for (int i = 0; i < evo->get(CMAES<double>::Lambda); ++i) {
-		states->LoadState(fwScene);
+		states->LoadState(phScene);
 		arFunvals[i] = Objective(pop[i], (int)evo->get(CMAES<double>::Dimension));
 	}
 
@@ -154,7 +157,6 @@ void FWOptimizer::Iterate() {
 
 double FWOptimizer::Objective(double const *x, int n) {
 	// 1. Apply x to Scene
-	PHSceneIf* phScene = fwScene->GetPHScene();
 	for (int i = 0; i < phScene->NJoints(); ++i) {
 		Vec3d f, t;
 		PHHingeJointIf* jo = phScene->GetJoint(i)->Cast();
@@ -165,7 +167,7 @@ double FWOptimizer::Objective(double const *x, int n) {
 	double obj = 0;
 	for (int i = 0; i < 100; ++i) {
 		// 2. Do Simulation Step
-		fwScene->Step();
+		phScene->Step();
 
 		// 3. Calc Criterion and Sum up
 		for (int j = 0; j < phScene->NJoints(); ++j) {
@@ -184,6 +186,10 @@ double FWOptimizer::Objective(double const *x, int n) {
 	obj += 1e+4 * eef->GetSolid()->GetAngularVelocity().norm();
 
 	return obj;
+}
+
+double FWOptimizer::ApplyPop(PHSceneIf* phScene, double const *x, int n) {
+	return 0;
 }
 
 int FWOptimizer::NResults() {
@@ -206,4 +212,180 @@ double* FWOptimizer::GetProvisionalResults() {
 	return xprovisional;
 }
 
+// --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+
+void FWStaticTorqueOptimizer::Init() {
+	// Save Initial Root Pos
+	PHIKActuatorIf* root = phScene->GetIKActuator(0);
+	while (root->GetParent()) { root = root->GetParent(); }
+	if (DCAST(PHIKBallActuatorIf, root)) {
+		initialRootPos = DCAST(PHIKBallActuatorIf, root)->GetJoint()->GetSocketSolid()->GetPose().Pos();
+	}
+	if (DCAST(PHIKHingeActuatorIf, root)) {
+		initialRootPos = DCAST(PHIKHingeActuatorIf, root)->GetJoint()->GetSocketSolid()->GetPose().Pos();
+	}
+
+	// Save Initial Pos and Determine DOF
+	int nJoints = phScene->NIKActuators();
+	int dof = 3;
+	initialPos.resize(nJoints);
+	for (int i = 0; i < nJoints; ++i) {
+		if (DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(i))) {
+			PHBallJointIf* jo = DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(i))->GetJoint();
+			jo->SetSpring(1e+30);
+			jo->SetDamper(1e+30);
+			initialPos[i].ori = jo->GetPosition();
+			dof += 3;
+		}
+		if (DCAST(PHIKHingeActuatorIf, phScene->GetIKActuator(i))) {
+			PHHingeJointIf* jo = DCAST(PHIKHingeActuatorIf, phScene->GetIKActuator(i))->GetJoint();
+			jo->SetSpring(1e+30);
+			jo->SetDamper(1e+30);
+			initialPos[i].angle = jo->GetPosition();
+			dof += 1;
+		}
+	}
+	FWOptimizer::Init(dof);
 }
+
+double FWStaticTorqueOptimizer::ApplyPop(PHSceneIf* phScene, double const *x, int n) {
+	int nJoints = phScene->NIKActuators();
+	int cnt = 0;
+	double obj = 0;
+
+	double scale = 0.1;
+
+	// Root Solid
+	PHIKActuatorIf* root = phScene->GetIKActuator(0);
+	while (root->GetParent()) { root = root->GetParent(); }
+	Vec3d pos = Vec3d(x[cnt + 0], x[cnt + 1], x[cnt + 2]) * scale;
+	if (DCAST(PHIKBallActuatorIf, root)) {
+		DCAST(PHIKBallActuatorIf, root)->GetJoint()->GetSocketSolid()->SetFramePosition(pos + initialRootPos);
+	}
+	if (DCAST(PHIKHingeActuatorIf, root)) {
+		DCAST(PHIKHingeActuatorIf, root)->GetJoint()->GetSocketSolid()->SetFramePosition(pos + initialRootPos);
+	}
+	obj += pos.norm();
+	cnt += 3;
+
+	// Joint
+	for (int i = 0; i < nJoints; ++i) {
+		if (DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(i))) {
+			Vec3d rot = Vec3d(x[cnt + 0], x[cnt + 1], x[cnt + 2]) * scale;
+			Quaterniond ori = Quaterniond::Rot(rot) * initialPos[i].ori;
+			DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(i))->SetJointTempOri(ori);
+			DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(i))->GetJoint()->SetTargetPosition(ori);
+			obj += pow(rot.norm(), 4);
+			cnt += 3;
+		}
+		if (DCAST(PHIKHingeActuatorIf, phScene->GetIKActuator(i))) {
+			double relAngle = x[cnt] * scale;
+			double angle = relAngle + initialPos[i].angle;
+			DCAST(PHIKHingeActuatorIf, phScene->GetIKActuator(i))->SetJointTempAngle(angle);
+			DCAST(PHIKHingeActuatorIf, phScene->GetIKActuator(i))->GetJoint()->SetTargetPosition(angle);
+			obj += pow(relAngle, 4);
+			cnt += 1;
+		}
+	}
+
+	phScene->GetIKEngine()->FK();
+	phScene->GetIKEngine()->ApplyExactState(true);
+
+	// Find Lowest Solid
+	double y = 1e+10; PHSolidIf* lowest = NULL;
+	for (int i = 0; i < phScene->NSolids(); ++i) {
+		PHSolidIf* so = phScene->GetSolids()[i];
+		if (so->IsDynamical() && so->GetFramePosition().y < y) {
+			y = so->GetFramePosition().y;
+			lowest = so;
+		}
+	}
+	if (lowest != NULL) {
+		for (int i = 0; i < phScene->NSolids(); ++i) {
+			PHSolidIf* so = phScene->GetSolids()[i];
+			so->SetFramePosition(so->GetFramePosition() - Vec3d(0, y, 0));
+		}
+	}
+
+	return obj;
+}
+
+double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
+	double obj = 0;
+
+	// 1. Apply x to Scene
+	obj += ApplyPop(phScene, x, n);
+
+	// 2. Do Simulation Step And Calc Criterion
+	int nJoints = phScene->NIKActuators();
+
+	// b. Calc Error Criterion
+	for (int i = 0; i < phScene->NIKEndEffectors(); ++i) {
+		PHIKEndEffectorIf* eef = phScene->GetIKEndEffector(i);
+		if (eef->IsPositionControlEnabled()) {
+			Vec3d diff = ((eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition()) - eef->GetTargetPosition());
+			diff.x = 0; diff.z = 0;
+			obj += errorWeight * pow(diff.norm(), 2);
+		}
+		if (eef->IsOrientationControlEnabled()) {
+			obj += errorWeight * ((eef->GetSolid()->GetOrientation() * Vec3d(1, 0, 0)) - (eef->GetTargetOrientation() * Vec3d(1, 0, 0))).norm();
+			obj += errorWeight * ((eef->GetSolid()->GetOrientation() * Vec3d(0, 1, 0)) - (eef->GetTargetOrientation() * Vec3d(0, 1, 0))).norm();
+		}
+	}
+
+	phScene->Step();
+
+	// c. Calc Torque Criterion
+	for (int i = 0; i < nJoints; ++i) {
+		if (DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(i))) {
+			Vec3d torque = DCAST(PHIKBallActuatorIf, phScene->GetIKActuator(i))->GetJoint()->GetMotorForce();
+			obj += torqueWeight * (torque.norm() * torque.norm());
+		}
+		if (DCAST(PHIKHingeActuatorIf, phScene->GetIKActuator(i))) {
+			double torque = DCAST(PHIKHingeActuatorIf, phScene->GetIKActuator(i))->GetJoint()->GetMotorForce();
+			obj += torqueWeight * (torque * torque);
+		}
+	}
+
+	// d. Calc Stability Criterion
+	Vec3d force  = Vec3d();
+	Vec3d torque = Vec3d();
+	Vec3d CoM    = Vec3d();
+
+	for (int i = 0; i < phScene->NSolids(); ++i) {
+		PHSolidIf* so = phScene->GetSolids()[i];
+		Vec3d pos = so->GetPose() * so->GetCenterOfMass();
+		pos += CoM;
+
+		force += so->GetForce();
+	}
+	CoM *= (1.0 / phScene->NSolids());
+
+	for (int i = 0; i < phScene->NContacts(); ++i) {
+		PHContactPointIf* contact = phScene->GetContact(i);
+		PHSolidIf* so; Vec3d contactPos;
+
+		Vec3d f, t; contact->GetConstraintForce(f, t);
+		force += f;
+
+		if (contact->GetSocketSolid()->IsDynamical()) {
+			so = contact->GetSocketSolid();
+			Posed pose; contact->GetSocketPose(pose);
+			contactPos = pose * so->GetPose().Pos();
+		} else {
+			so = contact->GetPlugSolid();
+			Posed pose; contact->GetPlugPose(pose);
+			contactPos = pose * so->GetPose().Pos();
+		}
+
+		torque += ((contactPos - CoM) % f);
+	}
+
+	obj += stabilityWeight * torque.norm();
+	obj += stabilityWeight * force.norm();
+	
+	return obj;
+}
+
+}
+
