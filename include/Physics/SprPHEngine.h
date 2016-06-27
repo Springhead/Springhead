@@ -207,6 +207,10 @@ public:
 	void SetNumIter(int numIter);
 	int GetNumIter();
 
+	/** @brief FKの実行
+	*/
+	void FK();
+
 	SPR_IFDEF(PHIKEngine);
 };
 

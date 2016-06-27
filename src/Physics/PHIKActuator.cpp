@@ -25,7 +25,9 @@ bool PHIKActuator::AddChildObject(ObjectIf* o){
 
 	PHIKActuator* actuator = o->Cast();
 	if (actuator) {
-		DCAST(PHSceneIf,GetScene())->GetIKEngine()->AddChildObject(actuator->Cast());
+		DSTR << this->GetName() << " <= " << actuator->GetName() << std::endl;
+
+		DCAST(PHSceneIf, GetScene())->GetIKEngine()->AddChildObject(actuator->Cast());
 		// 自分の子にする
 		children.push_back(actuator);
 		this->bActuatorAdded = true;

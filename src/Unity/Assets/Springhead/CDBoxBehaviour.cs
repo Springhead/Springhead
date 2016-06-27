@@ -24,7 +24,7 @@ public class CDBoxBehaviour : CDShapeBehaviour {
         if (bc == null) { throw new ObjectNotFoundException("CDBoxBehaviour requires BoxCollider", shapeObject); }
 
         Vector3 size = bc.size;
-        Vector3 scale = gameObject.transform.lossyScale;
+        Vector3 scale = shapeObject.transform.lossyScale;
         desc.boxsize = new Vec3f((float)(size.x * scale.x), (float)(size.y * scale.y), (float)(size.z * scale.z));
 
         return phSdk.CreateShape(CDBoxIf.GetIfInfoStatic(), (CDBoxDesc)desc);

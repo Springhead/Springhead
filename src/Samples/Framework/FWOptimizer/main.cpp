@@ -157,8 +157,9 @@ public:
 	char** argv;
 
 	static const int nsub = 1;
-	Optimizer<nsub> optimizer;
+	//Optimizer<nsub> optimizer;
 	//FWOptimizer optimizer;
+	FWStaticTorqueOptimizer optimizer;
 	JointTrajectory<nsub> jt[2];
 
 	ObjectStatesIf *states_;
@@ -189,7 +190,7 @@ public:
 
 	PHSolidIf         *soTarget;
 	PHIKEndEffectorIf *ikeTarget;
-	PHHingeJointIf    *jo1, *jo2;
+	PHHingeJointIf    *jo1, *jo2, *jo3, *jo4;
 
 	// シーン構築
 	virtual void BuildScene() {
@@ -228,13 +229,25 @@ public:
 		so2->AddShape(phSdk->CreateShape(descCapsule));
 		so2->SetShapePose(0, shapePose);
 
-		// Pointer
-		PHSolidIf* so4 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
-		so4->SetFramePosition(Vec3d(6,0,0));
-		so4->AddShape(phSdk->CreateShape(descSphere));
-		so4->SetDynamical(false);
+		// Link 3
+		PHSolidIf* so3 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
+		so3->SetFramePosition(Vec3d(0, -12, 0));
+		so3->AddShape(phSdk->CreateShape(descCapsule));
+		so3->SetShapePose(0, shapePose);
 
-		soTarget = so4;
+		// Link 4
+		PHSolidIf* so4 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
+		so4->SetFramePosition(Vec3d(0, -16, 0));
+		so4->AddShape(phSdk->CreateShape(descCapsule));
+		so4->SetShapePose(0, shapePose);
+
+		// Pointer
+		PHSolidIf* so5 = GetFWScene()->GetPHScene()->CreateSolid(descSolid);
+		so5->SetFramePosition(Vec3d(6,0,0));
+		so5->AddShape(phSdk->CreateShape(descSphere));
+		so5->SetDynamical(false);
+
+		soTarget = so5;
 
 		// ----- ----- ----- ----- -----
 
@@ -261,11 +274,25 @@ public:
 
 		ika1->AddChildObject(ika2);
 
-		// Link2 = End Effector
+		// Link 2 <-> Link 3
+		jo3 = GetFWScene()->GetPHScene()->CreateJoint(so2, so3, descJoint)->Cast();
+		PHIKHingeActuatorIf* ika3 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKA)->Cast();
+		ika3->AddChildObject(jo3);
+
+		ika2->AddChildObject(ika3);
+
+		// Link 3 <-> Link 4
+		jo4 = GetFWScene()->GetPHScene()->CreateJoint(so3, so4, descJoint)->Cast();
+		PHIKHingeActuatorIf* ika4 = GetFWScene()->GetPHScene()->CreateIKActuator(descIKA)->Cast();
+		ika4->AddChildObject(jo4);
+
+		ika3->AddChildObject(ika4);
+
+		// Link4 = End Effector
 		descIKE.targetLocalPosition = Vec3d(0,-2,0);
 		PHIKEndEffectorIf* ike1 = GetFWScene()->GetPHScene()->CreateIKEndEffector(descIKE);
-		ike1->AddChildObject(so2);
-		ika2->AddChildObject(ike1);
+		ike1->AddChildObject(so4);
+		ika4->AddChildObject(ike1);
 		ike1->SetTargetPosition(Vec3d(-5,0,0));
 
 		ikeTarget = ike1;
@@ -284,8 +311,20 @@ public:
 		optimizer.Init();
 		//optimizer.Start();
 		//bStarted = true;
+
 		optimizer.Optimize();
 
+		double* params = optimizer.GetResults();
+		if (params) {
+			DSTR << "Result : " << std::endl;
+			for (int i = 0; i < optimizer.NResults(); ++i) {
+				DSTR << i << " : " << params[i] << std::endl;
+			}
+			DSTR << " --- " << std::endl;
+		}
+		optimizer.ApplyPop(GetFWScene(), optimizer.GetResults(), optimizer.NResults());
+
+		/*
 		double* params = optimizer.GetResults();
 		if (params) {
 			DSTR << "Result : " << std::endl;
@@ -300,6 +339,7 @@ public:
 			jo2->SetSpring(abs(params[1 * nsub * 5 + 3]) * 100 + 100);
 			jo2->SetDamper(abs(params[1 * nsub * 5 + 4]) * 10 + 10);
 		}
+		*/
 
 		// ----- ----- ----- ----- -----
 
@@ -336,6 +376,7 @@ public:
 
 	/// 1ステップのシミュレーション
 	virtual void OnStep(){
+		/*
 		if (GetFWScene()->GetPHScene()->GetCount() < 100) {
 			double t = GetFWScene()->GetPHScene()->GetCount() * GetFWScene()->GetPHScene()->GetTimeStep();
 			jo1->SetTargetPosition(jt[0].At(t));
@@ -349,6 +390,7 @@ public:
 			states_->LoadState(GetFWScene());
 
 		}
+		*/
 
 		/*
 		if (bStarted && !optimizer.IsRunning()) {

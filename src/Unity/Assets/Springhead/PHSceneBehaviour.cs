@@ -9,6 +9,10 @@ public class PHSceneBehaviour : SprBehaviour {
 
     public PHSceneDescStruct desc = null;
 
+    public bool enableIK = true;
+    public bool enableStep = true;
+    public bool enableUpdate = true;
+
     public override CsObject descStruct {
         get { return desc; }
         set { desc = value as PHSceneDescStruct; }
@@ -54,7 +58,10 @@ public class PHSceneBehaviour : SprBehaviour {
         }
 
         phScene.SetTimeStep(Time.fixedDeltaTime);
-        phScene.GetIKEngine().Enable(true);
+
+        if (enableIK) {
+            phScene.GetIKEngine().Enable(true);
+        }
 
         /*
         UTTimerIf timer = UTTimerIf.Create();
@@ -74,17 +81,19 @@ public class PHSceneBehaviour : SprBehaviour {
     }
 
     void FixedUpdate () {
-		if (sprObject!=null) {
+		if (sprObject!=null && enableStep) {
 			(sprObject as PHSceneIf).Step ();
 		}
     }
 
     void Update() {
-        foreach (PHSolidBehaviour srb in gameObject.GetComponentsInChildren<PHSolidBehaviour>()) {
-            srb.UpdatePose();
-        }
-        if (FWAppBehaviour.app != null) {
-            FWAppBehaviour.app.PostRedisplay();
+        if (enableUpdate) {
+            foreach (PHSolidBehaviour srb in gameObject.GetComponentsInChildren<PHSolidBehaviour>()) {
+                srb.UpdatePose();
+            }
+            if (FWAppBehaviour.app != null) {
+                FWAppBehaviour.app.PostRedisplay();
+            }
         }
     }
 }
