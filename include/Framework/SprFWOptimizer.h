@@ -15,8 +15,7 @@ namespace Spr{;
 class FWOptimizer : public UTRefCount {
 protected:
 	static FWOptimizer*		instance;
-	UTRef<FWSdkIf>			fwSdk;
-	UTRef<FWSceneIf>		fwScene;
+	UTRef<PHSceneIf>		phScene;
 	UTRef<UTTimerIf>		thread;
 	UTRef<ObjectStatesIf>	states;
 	bool					bRunning;
@@ -41,10 +40,10 @@ public:
 	~FWOptimizer();
 
 	/// Copy PHScene from passed scene
-	void CopyScene(FWSceneIf* fwSceneInput);
+	void CopyScene(PHSceneIf* phSceneInput);
 
 	/// Get FWScene
-	FWSceneIf* GetScene() { return fwScene; }
+	PHSceneIf* GetScene() { return phScene; }
 
 	/// Initialize Optimizer
 	void Init(int dimension);
@@ -64,6 +63,9 @@ public:
 	/// Optimization Iteration Step
 	void Iterate();
 
+	/// Apply Poplulation to Scene
+	virtual double ApplyPop(PHSceneIf* phScene, double const *x, int n);
+
 	/// Objective Function to Minimize
 	virtual double Objective(double const *x, int n);
 
@@ -78,6 +80,43 @@ public:
 
 	/// Return Provisional Results
 	double* GetProvisionalResults();
+};
+
+class FWStaticTorqueOptimizer : public FWOptimizer {
+	struct JointPos {
+		Quaterniond ori;
+		double angle;
+		JointPos() { ori = Quaterniond(); angle = 0; }
+	};
+	std::vector<JointPos> initialPos;
+	Vec3d initialRootPos;
+
+	double errorWeight, stabilityWeight, torqueWeight;
+
+public:
+	virtual void Init();
+
+	virtual void Iterate() { FWOptimizer::Iterate(); }
+
+	virtual void ApplyResult(PHSceneIf* phScene) { FWOptimizer::ApplyPop(phScene, GetResults(), NResults()); }
+
+	virtual double ApplyPop(PHSceneIf* phScene, double const *x, int n);
+
+	virtual double Objective(double const *x, int n);
+
+	void SetScene(PHSceneIf* phSceneInput) { phScene = phSceneInput; }
+
+	void Optimize() { FWOptimizer::Optimize(); }
+
+	bool TestForTermination() { return evo->testForTermination(); }
+
+	void TakeFinalValue() { xfinal = evo->getNew(CMAES<double>::XMean); }
+
+	void SetErrorWeight(double v) { errorWeight = v; }
+
+	void SetStabilityWeight(double v) { stabilityWeight = v; }
+
+	void SetTorqueWeight(double v) { torqueWeight = v; }
 };
 
 }
