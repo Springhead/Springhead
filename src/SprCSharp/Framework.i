@@ -36,6 +36,7 @@
 %include "../../include/Framework/SprFWSdk.h"
 %include "../../include/Framework/SprFWSkeletonSensor.h"
 %include "../../include/Framework/SprFWWin.h"
+%include "../../include/Framework/SprFWOptimizer.h"
 %include "../../include/Graphics/SprGRScene.h"
 /*
 #define DOUBLECOLON :: 
@@ -55,6 +56,7 @@
 %include "../../include/Framework/SprFWSdk.h"
 %include "../../include/Framework/SprFWSkeletonSensor.h"
 %include "../../include/Framework/SprFWWin.h"
+%include "../../include/Framework/SprFWOptimizer.h"
 %include "../../include/Base/BaseDebug.h"
 %include "../../src/Foundation/UTTypeDesc.h"
 %include "../Foundation/Foundation.h"

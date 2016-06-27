@@ -322,6 +322,10 @@ public:
 	*/
 	virtual PHBallJointIf* GetJoint() { return this->joint->Cast(); }
 
+	/** @brief 関節一時姿勢をセットする
+	*/
+	void SetJointTempOri(Quaterniond ori) { jointTempOri = ori; }
+
 	// --- --- --- --- ---
 
 	virtual bool		AddChildObject(ObjectIf* o);
@@ -420,6 +424,10 @@ public:
 	/** @brief 動作対象として設定された関節を取得する
 	*/
 	virtual PHHingeJointIf* GetJoint() { return this->joint->Cast(); }
+
+	/** @brief 関節一時姿勢をセットする
+	*/
+	void SetJointTempAngle(double angle) { jointTempAngle = angle; jointTempOri = Quaterniond::Rot(angle, 'z'); }
 
 	// --- --- --- --- ---
 

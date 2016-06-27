@@ -360,6 +360,10 @@ struct PHIKBallActuatorIf : PHIKActuatorIf{
 	/** @brief 動作対象として設定された関節を取得する
 	*/
 	PHBallJointIf* GetJoint();
+
+	/** @brief 関節一時姿勢をセットする
+	*/
+	void SetJointTempOri(Quaterniond ori);
 };
 
 /// ３軸アクチュエータのディスクリプタ
@@ -378,6 +382,10 @@ struct PHIKHingeActuatorIf : PHIKActuatorIf{
 	/** @brief 動作対象として設定された関節を取得する
 	*/
 	PHHingeJointIf* GetJoint();
+
+	/** @brief 関節一時姿勢をセットする
+	*/
+	void SetJointTempAngle(double angle);
 };
 
 /// １軸アクチュエータのディスクリプタ
