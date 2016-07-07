@@ -17,6 +17,7 @@
 #       Ver 1.0  2016/06/16 F.Kanehori	First version
 #       Ver 2.0  2016/06/23 F.Kanehori	Command syntax changed
 #					Multiple pattern replace implemented
+#       Ver 2.0a 2016/07/07 F.Kanehori	Help message revised
 # ==============================================================================
 version = '2.0'
 import os
@@ -61,7 +62,7 @@ def fixed(num, width):
 # ------------------------------------------------------------------------------
 #  Process for command line
 #
-usage = "Usage: %prog [options] infile outfile form=to [from=to].."
+usage = "Usage: %prog [options] infile outfile from=to [from=to].."
 parser = OptionParser(usage = usage)
 parser.add_option('-s', '--separator', action="store", dest='sep', default='=',
                     help='pattern separator [default: %default]')
