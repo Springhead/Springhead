@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <time.h>
 #include <process.h>
+#include <stdlib.h>
 #include <map>
 #include "CSUtility.h"
 #include "../../../include/Base/BaseDebug.h"
@@ -341,8 +342,6 @@ static void DllMainPrint(int out, const char* format, ...) {
 // --------------------------------------------------------------------------
 //  for execution tracking
 // --------------------------------------------------------------------------
-#define	LOGFILE	"F:/Project/Springhead2/src/Unity/SprCS.log"
-
 void CSlog::VPrint(const char* format, ...) {
 	va_list args;
 	char buff[1024];
@@ -353,8 +352,13 @@ void CSlog::VPrint(const char* format, ...) {
 }
 
 void CSlog::Print(const char* str) {
-	const char* path = LOGFILE;
+	char* path;
+	size_t len;
+	errno_t err = _dupenv_s(&path, &len, "SPRCS_LOGFILE");
+	if (err) return;
 	std::ofstream ofs(path, std::ios::out | std::ios::app);
+	free(path);
+	//
 	time_t now = time(NULL);
 	struct tm tm;
 	localtime_s(&tm, &now);
@@ -370,8 +374,12 @@ void CSlog::Print(const char* str) {
 }
 
 void CSlog::Truncate() {
-	const char* path = LOGFILE;
+	char* path;
+	size_t len;
+	errno_t err = _dupenv_s(&path, &len, "SPRCS_LOGFILE");
+	if (err) return;
 	std::ofstream ofs(path, std::ios::trunc);
+	free(path);
 	ofs.close();
 }
 
