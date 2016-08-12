@@ -289,16 +289,19 @@ void PHIKBallActuator::CalcJacobian(PHIKEndEffector* endeffector){
 void PHIKBallActuator::CalcPullbackVelocity() {
 	Matrix3d m(e[0], e[1], e[2]);
 
-	Vec3d pullback = -(jointTempOri.RotationHalf()) * pullbackRate;
+	Vec3d pullback = Vec3d();
+	
+	// 標準姿勢へののPullback
+	pullback += -(jointTempOri.RotationHalf()) * pullbackRate;
 
-	// トルク最小化IKの概念テスト。実際にはもう少しきめ細やかな実装が必要になりそう
+	// <!!> トルク最小化IKの概念テスト。実際にはもう少しきめ細やかな実装が必要になりそう
 	// pullback += -(DCAST(PHBallJointIf, joint)->GetMotorForce() * 0.001);
 
 	// <!!> 本当はLimit成分を入れたほうが良い気がする
 
 	// <!!> Pullback量が一定以下になるよう制限する．
-	if (pullback.norm() > Rad(200)) {
-		pullback = pullback.unit() * Rad(200);
+	if (pullback.norm() > Rad(10)) {
+		pullback = pullback.unit() * Rad(10);
 	}
 
 	Posed soParentPose = (parent) ? parent->GetSolidTempPose() : joint->GetSocketSolid()->GetPose();

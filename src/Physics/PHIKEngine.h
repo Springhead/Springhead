@@ -91,7 +91,7 @@ public:
 
 	void Prepare(bool second = false);
 	void CalcJacobian();
-	void IK();
+	void IK(bool nopullback = false);
 	void Limit();
 	void FK();
 	void SaveFKResult();

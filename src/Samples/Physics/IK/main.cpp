@@ -28,12 +28,14 @@
 using namespace Spr;
 using namespace std;
 
+/*
 const char* cmd = "ffmpeg -r 30 -f rawvideo -pix_fmt rgba -s 1024x768 -i - "
                   " -threads 0 -preset fast -y -pix_fmt yuv420p -crf 21 -vf vflip  -b:v 3000k -f flv rtmp://localhost/live/livestream";
 
 FILE* ffmpeg = _popen(cmd, "wb");
 int* buffer = new int[1024*768];
 int ct=0;
+*/
 
 // --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
 // アプリケーションクラス
@@ -525,8 +527,8 @@ public:
 		ika5->SetBias( 2.0);
 		ika6->SetBias( 1.0);
 
-		ike1->SetPositionPriority(1.0);
-		ike2->SetPositionPriority(0.05);
+		//ike1->SetPositionPriority(1.0);
+		//ike2->SetPositionPriority(0.05);
 
 		ike1->SetOrientationPriority(1.0);
 
@@ -534,7 +536,7 @@ public:
 		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxVelocity(200);
 		GetFWScene()->GetPHScene()->GetIKEngine()->SetMaxAngularVelocity(Rad(2000));
 		GetFWScene()->GetPHScene()->GetIKEngine()->SetRegularizeParam(0.2);
-		// GetFWScene()->GetPHScene()->GetIKEngine()->SetNumIter(30);
+		GetFWScene()->GetPHScene()->GetIKEngine()->SetNumIter(2);
 
 		GetFWScene()->GetPHScene()->SetContactMode(PHSceneDesc::MODE_NONE);
 	}
@@ -596,6 +598,7 @@ public:
 	}
 
 	virtual void OnStep(){
+		/*
 		ct++;
 		if (ct==5){
 			//glutSwapBuffers();
@@ -603,6 +606,7 @@ public:
 			fwrite(buffer, sizeof(int)*1024*768, 1, ffmpeg);
 			ct=0;
 		}
+		*/
 		SampleApp::OnStep();
 	}
 
