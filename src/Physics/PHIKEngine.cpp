@@ -165,7 +165,7 @@ void PHIKEngine::CalcJacobian() {
 	}
 }
 
-void PHIKEngine::IK() {
+void PHIKEngine::IK(bool nopullback) {
 	// 計算の準備（α・β・γの事前計算）
 	for(size_t i=0; i<actuators.size(); ++i){
 		actuators[i]->PrepareSolve();
@@ -190,26 +190,29 @@ void PHIKEngine::IK() {
 	vector_type S; S.resize((std::min)(J.size1(), J.size2())); S.clear();
 
 	ublas::matrix<double> U, Vt;
-	ublas::diagonal_matrix<double> D, Di;
+	ublas::diagonal_matrix<double> D, Di, Di_;
 	svd(J, U, D, Vt);
 
 	Di.resize(D.size2(), D.size1());
-	for (size_t i=0; i<(std::min(J.size1(),J.size2())); ++i) {
+	for (size_t i = 0; i<(std::min(J.size1(), J.size2())); ++i) {
 		// Tikhonov Regularization
-		Di.at_element(i,i) = D(i,i) / (D(i,i)*D(i,i) + regularizeParam*regularizeParam);
+		Di.at_element(i, i)  = D(i, i) / (D(i, i)*D(i, i) + regularizeParam*regularizeParam);
 	}
 
 	// --- 位置
-	vector_type   UtV  = ublas::prod(ublas::trans(U)  , V    );
-	vector_type DiUtV = ublas::prod(Di, UtV);
-	W                  = ublas::prod(ublas::trans(Vt) , DiUtV);
+	vector_type      UtV = ublas::prod(ublas::trans(U)  , V    );
+	vector_type    DiUtV = ublas::prod(Di               , UtV  );
+	W                    = ublas::prod(ublas::trans(Vt) , DiUtV);
 
 	// <!!>Wに標準姿勢復帰速度を加える
-	vector_type      JWp = ublas::prod(J                ,      Wp);
-	vector_type    UtJWp = ublas::prod(ublas::trans(U)  ,     JWp);
-	vector_type  DiUtJWp = ublas::prod(Di               ,   UtJWp);
-	vector_type VDiUtJWp = ublas::prod(ublas::trans(Vt) , DiUtJWp);
-	W = W + Wp - VDiUtJWp;
+	if (!nopullback) {
+		vector_type       JWp = ublas::prod(J, Wp);
+		vector_type     UtJWp = ublas::prod(ublas::trans(U), JWp);
+		vector_type   DiUtJWp = ublas::prod(Di, UtJWp);
+		vector_type  VDiUtJWp = ublas::prod(ublas::trans(Vt), DiUtJWp);
+		vector_type Wpullback = Wp - VDiUtJWp;
+		W = W + Wpullback;
+	}
 
 	// <!!>非常に大きくなりすぎた解を切り捨てる
 	double limitW = 1e+10;
@@ -304,7 +307,11 @@ void PHIKEngine::Step() {
 	size_t iter;
 	for (iter=0; iter<numIter; ++iter) {
 		CalcJacobian();
-		IK();
+		if (numIter == 1 || iter < numIter - 1) {
+			IK(false);
+		} else {
+			IK(true); // Last One Step : Without Pullback
+		}
 		Limit();
 		FK();
 		SaveFKResult();
