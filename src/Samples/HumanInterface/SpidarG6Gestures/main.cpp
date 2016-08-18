@@ -36,7 +36,7 @@ double K = 5000;		// バネ係数     //Spring coefficient
 double D = 5;			// ダンパ係数   //Damper coeficient
 double fy = -0.009;		// 力覚提示位置 //Haptic position
 //used for debugging std::ofstream myfile; //debug file 
-double time;   //time ticks
+double timeticks;   //time ticks
 SpidarGestures sg;  //class that implements the gestures
 
 
@@ -66,15 +66,15 @@ void SPR_CDECL CallBackLoop(int id, void* arg){
 	//Returns 1 if the event happend in the positive axis
 	//Returns -1 if the event happend in the negative axis
 	//And 0 if the event is not triggered. 
-	int r = sg.slideEventTrigger(pz, pvz, time);
+	int r = sg.slideEventTrigger(pz, pvz, timeticks);
 	if (r == 1)
 		std::cout << "Positive Event Triggered.. " << std::endl;
 	else if (r == -1)
 		std::cout << "Negative Event Triggered.. " << std::endl;
 
-	// Used for debuging myfile << time << "," << pz << "," << pvz << "," << r << std::endl;
+	// Used for debuging myfile << timeticks << "," << pz << "," << pvz << "," << r << std::endl;
 
-	time = time + dt;
+	timeticks = timeticks + dt;
 }
 
 void __cdecl main(){
