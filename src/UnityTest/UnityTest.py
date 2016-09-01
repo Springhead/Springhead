@@ -201,7 +201,7 @@ if result == 0:
 		proc.kill()
 		result = 0
 	else:
-		result = p.poll()
+		result = proc.poll()
 	#
 	info(result_str(s16(result)), scene, continued=True)
 	exitcode = result
