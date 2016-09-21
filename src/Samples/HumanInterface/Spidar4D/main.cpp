@@ -4,8 +4,14 @@
 #include <iomanip>
 using namespace Spr;
 
+#ifdef DAILYBUILD
+  #include "dailybuild_SEH_Handler.h"
+#endif
 
 int __cdecl main(){
+	SEH_HANDLER_DEF
+	SEH_HANDLER_TRY
+
 	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
 	DRUsb20SimpleDesc usbSimpleDesc;
 	sdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
@@ -67,4 +73,6 @@ int __cdecl main(){
 		}
 	}
 */
+
+	SEH_HANDLER_CATCH
 }
