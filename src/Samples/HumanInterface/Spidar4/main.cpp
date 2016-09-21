@@ -3,9 +3,16 @@
 #include <HumanInterface/SprHIDRUsb.h>
 #include <iomanip>
 
+#ifdef DAILYBUILD
+  #include "dailybuild_SEH_Handler.h"
+#endif
+
 using namespace Spr;
 
 int __cdecl main(){
+	SEH_HANDLER_DEF
+	SEH_HANDLER_TRY
+
 	// HumanInterface SDKを作成
 	UTRef<HISdkIf> sdk = HISdkIf::CreateSdk();
 
@@ -61,4 +68,6 @@ int __cdecl main(){
 		}
 	}
 */
+
+	SEH_HANDLER_CATCH
 }

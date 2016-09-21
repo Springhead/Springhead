@@ -26,6 +26,10 @@ Springhead2/src/Samples/BoxStack
 using namespace Spr;
 using namespace std;
 
+#ifdef DAILYBUILD
+  #include "dailybuild_SEH_Handler.h"
+#endif
+
 /*int frame=0,timepassed=0,timebase=0;
 void fps(){
 	frame++; 
@@ -245,8 +249,11 @@ MyApp app;
  return		0 (正常終了)
  */
 int __cdecl main(int argc, char *argv[]) {
+	SEH_HANDLER_DEF
+	SEH_HANDLER_TRY
 	app.Init(argc, argv);
 	app.StartMainLoop();
+	SEH_HANDLER_CATCH
 	return 0;
 }
 
