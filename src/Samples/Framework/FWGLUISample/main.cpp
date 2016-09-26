@@ -10,6 +10,7 @@
 #pragma hdrstop
 using namespace Spr;
 using namespace std;
+
 #ifdef DAILYBUILD
   #include "dailybuild_SEH_Handler.h"
 #endif
@@ -63,8 +64,10 @@ public:
 int _cdecl main(int argc, char* argv[]){
 	SEH_HANDLER_DEF
 	SEH_HANDLER_TRY
+
 	app.Init(argc, argv);
 	app.StartMainLoop();
+
 	SEH_HANDLER_CATCH
 	return 0;
 }
