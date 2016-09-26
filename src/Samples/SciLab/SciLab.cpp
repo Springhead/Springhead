@@ -18,9 +18,17 @@ ScilabStub.hpp, ScilabStubImpl.cxxはswigで自動生成されるので、参考
 #include <Base/Affine.h>
 #include <conio.h>
 #include <Scilab/SprScilab.h>
+
+#ifdef DAILYBUILD
+  #include "dailybuild_SEH_Handler.h"
+#endif
+
 using namespace Spr;
 
 int _cdecl main(){
+	SEH_HANDLER_DEF
+	SEH_HANDLER_TRY
+
 	if (!ScilabStart()){
 		std::cout << "Error : ScilabStart \n";
 	}
@@ -104,4 +112,6 @@ int _cdecl main(){
 
 	ScilabEnd();
 	if(_getch())	return 0;
+
+	SEH_HANDLER_CATCH
 }

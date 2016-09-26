@@ -29,6 +29,9 @@ using namespace PTM;
 using namespace Spr;
 using namespace std;
 
+#ifdef DAILYBUILD
+  #include "dailybuild_SEH_Handler.h"
+#endif
 
 class MyApp : public SampleApp{
 public:
@@ -1147,8 +1150,13 @@ MyApp app;
 #include <GL/glut.h>
 #endif
 int __cdecl main(int argc, char *argv[]) {
+	SEH_HANDLER_DEF
+	SEH_HANDLER_TRY
+
 	app.Init(argc, argv);
 	app.StartMainLoop();
+
+	SEH_HANDLER_CATCH
 	return 0;
 }
 
