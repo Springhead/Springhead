@@ -251,8 +251,10 @@ MyApp app;
 int __cdecl main(int argc, char *argv[]) {
 	SEH_HANDLER_DEF
 	SEH_HANDLER_TRY
+
 	app.Init(argc, argv);
 	app.StartMainLoop();
+
 	SEH_HANDLER_CATCH
 	return 0;
 }

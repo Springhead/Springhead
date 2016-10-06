@@ -1,0 +1,10 @@
+# dailybuild.control
+
+#SolutionAlias
+#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
+#UseClosedSrc
+CppMacro	DAILYBUILD;AVOID_DUP_DEF
+#DontBuild
+#DontRun
+#Timeout
+#RunStatus	0
