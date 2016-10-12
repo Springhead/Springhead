@@ -11,9 +11,7 @@
 using namespace Spr;
 using namespace std;
 
-#ifdef DAILYBUILD
-  #include "dailybuild_SEH_Handler.h"
-#endif
+#include "dailybuild_SEH_Handler.h"
 
 class MyApp : public SampleApp{
 public:

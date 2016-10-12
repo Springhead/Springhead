@@ -6,7 +6,7 @@
 //	Class and macros for Win32 Structured Exception.
 //
 //  VERSION:
-//	Ver 0.1d 2016/10/05 F.Kanehori	First version
+//	Ver 1.0  2016/10/05 F.Kanehori	First version
 // --------------------------------------------------------------------------
 #ifndef SEH_HANDLER_H
 #define SEH_HANDLER_H
