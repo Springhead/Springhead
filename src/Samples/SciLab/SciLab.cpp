@@ -19,9 +19,7 @@ ScilabStub.hpp, ScilabStubImpl.cxxはswigで自動生成されるので、参考
 #include <conio.h>
 #include <Scilab/SprScilab.h>
 
-#ifdef DAILYBUILD
-  #include "dailybuild_SEH_Handler.h"
-#endif
+#include "dailybuild_SEH_Handler.h"
 
 using namespace Spr;
 
