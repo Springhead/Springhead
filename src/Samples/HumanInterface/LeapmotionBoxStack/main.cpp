@@ -26,9 +26,7 @@ Springhead2/src/Samples/BoxStack
 using namespace Spr;
 using namespace std;
 
-#ifdef DAILYBUILD
-  #include "dailybuild_SEH_Handler.h"
-#endif
+#include "dailybuild_SEH_Handler.h"
 
 /*int frame=0,timepassed=0,timebase=0;
 void fps(){
