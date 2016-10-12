@@ -3,9 +3,7 @@
 #include <HumanInterface/SprHIDRUsb.h>
 #include <iomanip>
 
-#ifdef DAILYBUILD
-  #include "dailybuild_SEH_Handler.h"
-#endif
+#include "dailybuild_SEH_Handler.h"
 
 using namespace Spr;
 

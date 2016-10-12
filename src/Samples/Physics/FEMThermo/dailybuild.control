@@ -1,5 +1,6 @@
 # dailybuild.control
 
+Exclude
 #SolutionAlias
 #OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
 #UseClosedSrc
