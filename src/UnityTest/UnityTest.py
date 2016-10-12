@@ -11,6 +11,7 @@
 #  VERSION:
 #	Ver 1.0  2016/06/20 F.Kanehori	First version
 #	Ver 1.1  2016/06/23 F.Kanehori	Correspond to 'replace' V2.0
+#	Ver 1.2  2016/10/06 F.Kanehori	Revised by using modules
 # ======================================================================
 version = 1.0
 import sys
@@ -21,20 +22,15 @@ from time import sleep
 from datetime import datetime
 from datetime import timedelta
 from optparse import OptionParser
-from KvFile import KvFile
+
+sys.path.append('../../bin/test')
+from KvFile import *
+from Util import *
 
 # ----------------------------------------------------------------------
-def get_date():
-	today = str(datetime.today())
-	return today[0:19].replace('-', '/')
-
-def dir_part(path):
-	return path[0:path.rindex('/')]
-
-def s16(value):
-	return -(value & 0b1000000000000000) | (value & 0b0111111111111111)
-
 def result_str(code):
+	if code == Util.ETIME:
+		return '0 (success - timeout)'
 	str = 'success' if code >= 0 else 'fail'
 	return '%d (%s)' % (code, str)
 
@@ -45,7 +41,7 @@ def verbose(msg, level=0):
 def info(msg, name=None, has_next=False, continued=False):
 	if options.verbose > 0 or not continued:
 		if options.timestamp:
-			sys.stdout.write(get_date() + ': ')
+			sys.stdout.write(Util.now() + ': ')
 		if not name is None:
 			sys.stdout.write(name + ': ')
 	sys.stdout.write(msg)
@@ -54,7 +50,7 @@ def info(msg, name=None, has_next=False, continued=False):
 	sys.stdout.flush()
 
 def fatal(msg, code = -1):
-	sys.stderr.write(script + ': Error: ' + msg + '\n')
+	Util.error(prog, msg)
 	sys.exit(code)
 
 # ----------------------------------------------------------------------
@@ -79,9 +75,9 @@ parser.add_option('-V', '--version',
 			help='show version')
 (options, args) = parser.parse_args()
 
-script = sys.argv[0].split('\\')[-1].split('.')[0]
+prog = sys.argv[0].split('\\')[-1].split('.')[0]
 if options.version:
-	print('%s: Version %s' % (script, version))
+	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
 #
 if len(args) != 1:
@@ -127,14 +123,17 @@ if options.verbose:
 		print('  %s:\t%s' % (key, kvf.get(key)))
 
 # prepare directories
-outdir = dir_part(kvf.get('OutFile'))
-logdir = dir_part(kvf.get('LogFile'))
+outdir = os.path.dirname(kvf.get('OutFile'))
+logdir = os.path.dirname(kvf.get('LogFile'))
 if not os.path.isdir(outdir):
 	verbose('creating directory "%s"' % (outdir))
 	os.makedirs(outdir)
 if not os.path.isdir(logdir):
 	verbose('creating directory "%s"' % (outdir))
 	os.makedirs(logdir)
+
+# flag for trace execute command
+exec_trace = False
 
 # ----------------------------------------------------------------------
 #  Change ProjectSettings so as not to display runtime dialog
@@ -146,32 +145,34 @@ saved_file = setting_file + '.save'
 verbose('saving ' + setting_file)
 
 # save original one
-cmd = ' '.join(['copy', setting_file, saved_file, '> NUL'])
-result = subprocess.call(cmd.replace('/', '\\'), shell=True)
+args = Util.dospath('copy %s %s' % (setting_file, saved_file))
+result = Util.exec(args, stdout=Util.NULL, stderr=Util.STDOUT, shell=True,
+		   verbose=exec_trace)
 if result != 0:
 	fatal('can\'t save ProjectSettings file')
 
 # replace parameter
 replace_pattern ="displayResolutionDialog: 1=displayResolutionDialog: 0"
-script = 'replace.py'
+script = Util.dospath('%s replace.py' % kvf.get('Python'))
 params = ''
 if options.verbose:
 	params += ' -v'
 ifile = saved_file
 ofile = setting_file
 patterns = '"' + replace_pattern + '"'
-cmd = ' '.join([kvf.get('Python'), script, params, ifile, ofile, patterns])
-verbose(cmd, 1)
-result = subprocess.call(cmd, shell=True)
+args = '%s %s %s %s %s' % (script, params, ifile, ofile, patterns)
+verbose(args, 1)
+result = Util.exec(args, verbose=exec_trace)
 if result != 0:
 	fatal('can\'t replace ProjectSettings file')
 
 # ----------------------------------------------------------------------
 #  Build and Run
 #
-cmd = ' '.join(['del', kvf.get('OutFile'), '1>NUL 2>&1'])
-verbose(cmd, 1)
-result = subprocess.call(cmd.replace('/', '\\'), shell=True)
+args = Util.dospath('del %s' % kvf.get('OutFile'))
+verbose(args, 1)
+result = Util.exec(args, stdout=Util.NULL, stderr=Util.STDOUT,
+		   shell=True, verbose=exec_trace)
 #
 projpath = '-projectPath ' + kvf.get('UnityProject')
 execmode = '-executeMethod BuildClass.Build'
@@ -179,31 +180,38 @@ quiet	 = '-batchmode -quit'
 logfile	 = '-logfile ' + kvf.get('LogFile')
 outfile	 = '-output ' + kvf.get('OutFile')
 target	 = '-target ' + kvf.get('ScenesDir') + '/' + scene
-args = ' '.join([projpath, execmode, quiet, outfile, logfile, target])
-cmd  = ' '.join([kvf.get('Unity'), args])
-verbose(cmd, 1)
+args = '%s %s %s %s %s %s' % (projpath, execmode, quiet, outfile, logfile, target)
+cmnd = Util.dospath('%s %s' % (kvf.get('Unity'), args))
+verbose(cmnd, 1)
 #
-result = subprocess.call(cmd.replace('/', '\\'), shell=True)
+result = Util.exec(cmnd, shell=True, verbose=exec_trace)
 result = result if os.path.isfile(kvf.get('OutFile')) else -1
-info(result_str(s16(result)), scene, continued=True)
+info(result_str(Util.s16(result)), scene, continued=True)
 exitcode = result
 #
 if result == 0:
 	info('executing ', scene, has_next=True)
-	cmd = kvf.get('OutFile')
-	newpath = os.environ.get('PATH') + ';' + kvf.get('DllPath').replace('/', '\\')
+	cmnd = Util.dospath(kvf.get('OutFile'))
+	addpath = Util.dospath(kvf.get('DllPath'))
 	#
-	verbose(cmd, 1)
-	proc = subprocess.Popen(cmd.replace('/', '\\'), env={"PATH": newpath})
-	sleep(float(options.timeout))
-	if proc.poll() is None:
-		# process is still alive
-		proc.kill()
-		result = 0
-	else:
-		result = proc.poll()
+	verbose(cmnd, 1)
+	result = Util.exec(cmnd, shell=True, addpath=addpath, timeout=options.timeout,
+			   verbose=exec_trace)
+	# Unity is teminated but player.exe is NOT!
+	tasklist = 'tasklist.tmp'
+	st = Util.exec('tasklist', stdout=tasklist, shell=True)
+	if st == 0:
+		tlist = KvFile(tasklist)
+		if (tlist.read() < 0):
+			fatal("can't kill task")
+		player_name = os.path.basename(kvf.get('OutFile'))
+		player_info = tlist.get(player_name)
+		pid = int(player_info.split()[0])
+		if options.verbose:
+			print('  kill %s (pid %d)' % (player_name, pid))
+		os.kill(pid, signal.SIGTERM)
 	#
-	info(result_str(s16(result)), scene, continued=True)
+	info(result_str(Util.s16(result)), scene, continued=True)
 	exitcode = result
 
 # ----------------------------------------------------------------------
@@ -211,13 +219,15 @@ if result == 0:
 #
 verbose('reviving ' + setting_file)
 
-cmd = ' '.join(['del', setting_file, '1>NUL 2>&1'])
-verbose(cmd, 1)
-result = subprocess.call(cmd.replace('/', '\\'), shell=True)
+cmnd = 'del %s' % Util.dospath(setting_file)
+verbose(cmnd, 1)
+result = Util.exec(cmnd, shell=True, stdout=Util.NULL, stderr=Util.STDOUT,
+		   verbose=exec_trace)
 
-cmd = ' '.join(['move', saved_file, setting_file, '1>NUL 2>&1'])
-verbose(cmd, 1)
-result = subprocess.call(cmd.replace('/', '\\'), shell=True)
+cmnd = Util.dospath('move %s %s' % (saved_file, setting_file))
+verbose(cmnd, 1)
+result = Util.exec(cmnd, shell=True, stdout=Util.NULL, stderr=Util.STDOUT,
+		   verbose=exec_trace)
 
 sys.exit(exitcode)
 
