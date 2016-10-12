@@ -9,28 +9,30 @@
 #
 #  VERSION:
 #	Ver 1.0  2016/06/20 F.Kanehori	First version
+#	Ver 1.1  2016/10/12 F.Kanehori	Revised by using modules
 # ======================================================================
 version = 1.0
 import sys
+import os
 import subprocess
 from optparse import OptionParser
-from KvFile import KvFile
+
+sys.path.append('../../bin/test')
+from KvFile import *
+from Util import *
 
 # ----------------------------------------------------------------------
-def s16(value):
-	return -(value & 0b1000000000000000) | (value & 0b0111111111111111)
-
 def logmsg(msg, file):
 	cmd = 'echo ' + msg + ' >> ' + file
-	verbose(cmd, 0)
-	return subprocess.call(cmd, shell=True)
+	#verbose(cmd, 0)
+	return Util.exec(cmd, shell=True)
 
 def verbose(msg, level=0):
 	if options.verbose > level:
 		print(msg)
 
 def error(msg):
-	sys.stderr.write(script + ': Error: ' + msg + '\n')
+	Util.error(prog + ': Error: ' + msg)
 
 # ----------------------------------------------------------------------
 #  Process for command line
@@ -60,9 +62,10 @@ parser.add_option('-V', '--version',
 			help='show version')
 (options, args) = parser.parse_args()
 
-script = sys.argv[0].split('\\')[-1].split('.')[0]
+#
+prog = sys.argv[0].split('\\')[-1].split('.')[0]
 if options.version:
-	print('%s: Version %s' % (script, version))
+	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
 #
 if len(args) != 0:
@@ -119,6 +122,7 @@ if options.timeout:	args += ' -t ' + str(options.timeout)
 if options.timestamp:	args += ' -T'
 
 # clear log file
+#
 ifile = kvf.get('LogFile')
 if ifile is None:
 	ifile = kvf.get('TestRoot') + '/log/build.log'
@@ -127,31 +131,35 @@ if ofile is None:
 	ofile = kvf.get('TestMainLogFile')
 if options.verbose:
 	print('  extract_log:\t%s' % (ofile))
-cmd = 'del ' + ofile + ' >NUL 2>&1'
-result = subprocess.call(cmd.replace('/', '\\'), shell=True)
+cmd = 'del %s' % Util.dospath(ofile)
+verbose(cmd, 0)
+result = Util.exec(cmd, stdout=Util.NULL, stderr=Util.STDOUT,
+		   shell=True, verbose=options.verbose)
 
 # command for log extraction
 extract = kvf.get('Python') + ' ' + kvf.get('ExtractScript')
-extract += ' ' + ifile + ' >> ' + ofile
+extract += ' ' + ifile
+extract = Util.dospath(extract)
 
 # execute build and run
+#
 scenes = scene_list.split()
 for scene in scenes:
 	cmd = script + args + ' ' + scene
 	verbose(cmd, 0)
-	result = subprocess.call(cmd.replace('/', '\\'), shell=True)
-	if result != 0:
-		error('unity returns ' + str(s16(result)))
+	result = Util.exec(cmd, shell=True, verbose=options.verbose)
+	if result != 0 and result != Util.ETIME:
+		error('unity returns %d' % result)
 	# log extraction
 	logmsg('======================', ofile)
 	logmsg(' ' + scene, ofile)
 	logmsg('======================', ofile)
 	verbose(extract, 0)
-	result = subprocess.call(extract.replace('/', '\\'), shell=True)
+	result = Util.exec(extract, stdout=ofile, stderr=Util.STDOUT, shell=True)
 	# for debug
 	if options.onlyone:
 		break
 
-sys.exit(s16(result))
+sys.exit(result)
 
 # end: UnityTestMain.py
