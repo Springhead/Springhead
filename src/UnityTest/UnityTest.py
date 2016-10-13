@@ -11,7 +11,7 @@
 #  VERSION:
 #	Ver 1.0  2016/06/20 F.Kanehori	First version
 #	Ver 1.1  2016/06/23 F.Kanehori	Correspond to 'replace' V2.0
-#	Ver 1.2  2016/10/06 F.Kanehori	Revised by using modules
+#	Ver 1.2  2016/10/13 F.Kanehori	Revised by using modules
 # ======================================================================
 version = 1.0
 import sys
@@ -134,6 +134,7 @@ if not os.path.isdir(logdir):
 
 # flag for trace execute command
 exec_trace = False
+#exec_trace = True
 
 # ----------------------------------------------------------------------
 #  Change ProjectSettings so as not to display runtime dialog
@@ -174,19 +175,19 @@ verbose(args, 1)
 result = Util.exec(args, stdout=Util.NULL, stderr=Util.STDOUT,
 		   shell=True, verbose=exec_trace)
 #
-projpath = '-projectPath ' + kvf.get('UnityProject')
+projpath = '-projectPath %s' % kvf.get('UnityProject')
 execmode = '-executeMethod BuildClass.Build'
 quiet	 = '-batchmode -quit'
-logfile	 = '-logfile ' + kvf.get('LogFile')
-outfile	 = '-output ' + kvf.get('OutFile')
-target	 = '-target ' + kvf.get('ScenesDir') + '/' + scene
+logfile	 = '-logfile %s' % kvf.get('LogFile')
+outfile	 = '-output %s' % kvf.get('OutFile')
+target	 = '-target %s/%s' % (kvf.get('ScenesDir'), scene)
 args = '%s %s %s %s %s %s' % (projpath, execmode, quiet, outfile, logfile, target)
 cmnd = Util.dospath('%s %s' % (kvf.get('Unity'), args))
 verbose(cmnd, 1)
 #
 result = Util.exec(cmnd, shell=True, verbose=exec_trace)
 result = result if os.path.isfile(kvf.get('OutFile')) else -1
-info(result_str(Util.s16(result)), scene, continued=True)
+info(result_str(result), scene, continued=True)
 exitcode = result
 #
 if result == 0:
@@ -197,21 +198,10 @@ if result == 0:
 	verbose(cmnd, 1)
 	result = Util.exec(cmnd, shell=True, addpath=addpath, timeout=options.timeout,
 			   verbose=exec_trace)
-	# Unity is teminated but player.exe is NOT!
-	tasklist = 'tasklist.tmp'
-	st = Util.exec('tasklist', stdout=tasklist, shell=True)
-	if st == 0:
-		tlist = KvFile(tasklist)
-		if (tlist.read() < 0):
-			fatal("can't kill task")
-		player_name = os.path.basename(kvf.get('OutFile'))
-		player_info = tlist.get(player_name)
-		pid = int(player_info.split()[0])
-		if options.verbose:
-			print('  kill %s (pid %d)' % (player_name, pid))
-		os.kill(pid, signal.SIGTERM)
+	# kill player.exe
+	Util.kill(image='player.exe', verbose=exec_trace)
 	#
-	info(result_str(Util.s16(result)), scene, continued=True)
+	info(result_str(result), scene, continued=True)
 	exitcode = result
 
 # ----------------------------------------------------------------------
