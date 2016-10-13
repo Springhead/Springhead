@@ -50,7 +50,7 @@ def info(msg, name=None, has_next=False, continued=False):
 	sys.stdout.flush()
 
 def fatal(msg, code = -1):
-	Util.error(prog, msg)
+	Util.error(prog + ': Error: ' + msg)
 	sys.exit(code)
 
 # ----------------------------------------------------------------------
