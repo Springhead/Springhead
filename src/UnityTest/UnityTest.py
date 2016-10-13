@@ -196,10 +196,8 @@ if result == 0:
 	addpath = Util.dospath(kvf.get('DllPath'))
 	#
 	verbose(cmnd, 1)
-	result = Util.exec(cmnd, shell=True, addpath=addpath, timeout=options.timeout,
-			   verbose=exec_trace)
-	# kill player.exe
-	Util.kill(image='player.exe', verbose=exec_trace)
+	result = Util.exec(cmnd, shell=False, addpath=addpath,
+			   timeout=options.timeout, verbose=exec_trace)
 	#
 	info(result_str(result), scene, continued=True)
 	exitcode = result
