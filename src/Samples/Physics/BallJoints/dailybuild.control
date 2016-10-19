@@ -1,0 +1,11 @@
+# dailybuild.control
+
+SolutionAlias	IK
+#OutputDir
+#UseClosedSrc
+#CppMacro	DAILYBUILD
+#DontBuild
+#DontRun
+#Timeout
+#RunStatus
+PipeProcess	GenKbEvent .sH.G...Q . s
