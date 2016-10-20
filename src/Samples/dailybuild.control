@@ -1,5 +1,6 @@
 # dailybuild.control
 
+#Exclude
 #SolutionAlias
 OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
 UseClosedSrc
@@ -7,4 +8,5 @@ UseClosedSrc
 #DontBuild
 DontRun
 Timeout		10
-RunStatus	0
+ExpectedStatus	0
+#PipeProcess	GenKbEvent seq sleep space
