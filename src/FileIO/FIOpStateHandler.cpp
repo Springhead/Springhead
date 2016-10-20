@@ -116,7 +116,7 @@ namespace Spr
 			fprintf(f, "%f %f %f %f\n", dfobj.objPArr[i].pCurrOrint.x, dfobj.objPArr[i].pCurrOrint.y, dfobj.objPArr[i].pCurrOrint.z, dfobj.objPArr[i].pCurrOrint.w);
 
 			fprintf(f, "pTotalMass\n");
-			fprintf(f, "%f\n", dfobj.objPArr[i].pTotalMass);
+			fprintf(f, "%g\n", dfobj.objPArr[i].pTotalMass);
 			fprintf(f, "isFixed\n");
 			fprintf(f, "%i\n", dfobj.objPArr[i].isFixed);
 
@@ -131,7 +131,7 @@ namespace Spr
 			fprintf(f, "%f %f %f  %f %f %f  %f %f %f\n", dfobj.objPArr[i].pInverseOfMomentInertia.xx, dfobj.objPArr[i].pInverseOfMomentInertia.xy, dfobj.objPArr[i].pInverseOfMomentInertia.xz, dfobj.objPArr[i].pInverseOfMomentInertia.yx, dfobj.objPArr[i].pInverseOfMomentInertia.yy, dfobj.objPArr[i].pInverseOfMomentInertia.yz, dfobj.objPArr[i].pInverseOfMomentInertia.zx, dfobj.objPArr[i].pInverseOfMomentInertia.zy, dfobj.objPArr[i].pInverseOfMomentInertia.zz);
 
 			fprintf(f, "pTempSingleVMass\n");
-			fprintf(f, "%f\n", dfobj.objPArr[i].pTempSingleVMass);
+			fprintf(f, "%g\n", dfobj.objPArr[i].pTempSingleVMass);
 			fprintf(f, "pMomentR\n");
 			fprintf(f, "%f %f %f  %f %f %f  %f %f %f\n", dfobj.objPArr[i].pMomentR.xx, dfobj.objPArr[i].pMomentR.xy, dfobj.objPArr[i].pMomentR.xz, dfobj.objPArr[i].pMomentR.yx, dfobj.objPArr[i].pMomentR.yy, dfobj.objPArr[i].pMomentR.yz, dfobj.objPArr[i].pMomentR.zx, dfobj.objPArr[i].pMomentR.zy, dfobj.objPArr[i].pMomentR.zz);
 			fprintf(f, "pSmR\n");
@@ -374,7 +374,7 @@ namespace Spr
 		fgets(s, len, f);
 		fgets(s, len, f); sscanf_s(s, "%f %f %f %f", &dfobj.objPArr[i].pCurrOrint.x, &dfobj.objPArr[i].pCurrOrint.y, &dfobj.objPArr[i].pCurrOrint.z, &dfobj.objPArr[i].pCurrOrint.w);
 		fgets(s, len, f);
-		fgets(s, len, f); sscanf_s(s, "%f", &dfobj.objPArr[i].pTotalMass);
+		fgets(s, len, f); sscanf_s(s, "%g", &dfobj.objPArr[i].pTotalMass);
 		fgets(s, len, f);
 		//fgets(s, len, f); sscanf_s(s, "%i", &dfobj.objPArr[i].isFixed);
 		int tmp_isFixed;
@@ -397,7 +397,7 @@ namespace Spr
 		fgets(s, len, f); sscanf_s(s, "%f %f %f  %f %f %f  %f %f %f", &dfobj.objPArr[i].pInverseOfMomentInertia.xx, &dfobj.objPArr[i].pInverseOfMomentInertia.xy, &dfobj.objPArr[i].pInverseOfMomentInertia.xz, &dfobj.objPArr[i].pInverseOfMomentInertia.yx, &dfobj.objPArr[i].pInverseOfMomentInertia.yy, &dfobj.objPArr[i].pInverseOfMomentInertia.yz, &dfobj.objPArr[i].pInverseOfMomentInertia.zx, &dfobj.objPArr[i].pInverseOfMomentInertia.zy, &dfobj.objPArr[i].pInverseOfMomentInertia.zz);
 
 		fgets(s, len, f);
-		fgets(s, len, f); sscanf_s(s, "%f", &dfobj.objPArr[i].pTempSingleVMass);
+		fgets(s, len, f); sscanf_s(s, "%g", &dfobj.objPArr[i].pTempSingleVMass);
 		fgets(s, len, f);
 		fgets(s, len, f); sscanf_s(s, "%f %f %f  %f %f %f  %f %f %f", &dfobj.objPArr[i].pMomentR.xx, &dfobj.objPArr[i].pMomentR.xy, &dfobj.objPArr[i].pMomentR.xz, &dfobj.objPArr[i].pMomentR.yx, &dfobj.objPArr[i].pMomentR.yy, &dfobj.objPArr[i].pMomentR.yz, &dfobj.objPArr[i].pMomentR.zx, &dfobj.objPArr[i].pMomentR.zy, &dfobj.objPArr[i].pMomentR.zz);
 		fgets(s, len, f);
@@ -544,6 +544,7 @@ namespace Spr
 	}
 
 	fclose(f);
+	dfobj.buildGroupCenter();
 	dfobj.BuildBlendWeight();
 	dfobj.buildDisWeightForVsinP();
 	std::cout << " Success" << std::endl;
