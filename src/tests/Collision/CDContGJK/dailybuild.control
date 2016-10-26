@@ -8,5 +8,7 @@
 #DontBuild
 #DontRun
 #Timeout
-#RunStatus	0
-PipeProcess	GenKbEvent .....Q . s
+#ExpectedStatus	0
+PipeProcess	GenKbEvent .....Q
+#NeedIntervention
+KillProcess	CDContGJK.exe

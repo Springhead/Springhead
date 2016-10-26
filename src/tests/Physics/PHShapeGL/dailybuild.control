@@ -9,4 +9,6 @@
 #DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent .....Q . s
+PipeProcess	GenKbEvent ....Q
+#NeedIntervention
+KillProcess	PHShapeGL.exe

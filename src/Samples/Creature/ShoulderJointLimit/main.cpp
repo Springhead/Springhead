@@ -20,6 +20,8 @@
 
 #include <Creature/CRBodyGenerator/CRBallHumanBodyGen.h>
 
+#include "dailybuild_SEH_Handler.h"
+
 #pragma  hdrstop
 
 using namespace Spr;
@@ -170,7 +172,12 @@ public:
 #include <GL/glut.h>
 #endif
 int __cdecl main(int argc, char *argv[]) {
+	SEH_HANDLER_DEF
+	SEH_HANDLER_TRY
+
 	app.Init(argc, argv);
 	app.StartMainLoop();
+
+	SEH_HANDLER_CATCH
 	return 0;
 }

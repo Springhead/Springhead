@@ -8,5 +8,7 @@ UseClosedSrc
 #DontBuild
 #DontRun
 Timeout		10
-RunStatus	0
-#PipeProcess	GenKbEvent seq sleep space
+ExpectedStatus	0
+#PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
+#NeedIntervention
+#KillProcess

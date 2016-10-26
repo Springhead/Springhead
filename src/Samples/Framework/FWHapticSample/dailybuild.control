@@ -3,8 +3,8 @@
 #Exclude
 #SolutionAlias
 #OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
-#UseClosedSrc
-CppMacro	DAILYBUILD
+UseClosedSrc	False
+#CppMacro	DAILYBUILD
 #DontBuild
 #DontRun
 #Timeout
