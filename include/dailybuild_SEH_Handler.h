@@ -7,6 +7,7 @@
 //
 //  VERSION:
 //	Ver 1.0  2016/10/05 F.Kanehori	First version
+//	Ver 1.1  2016/10/26 F.Kanehori	Avoid duplicated definition.
 // --------------------------------------------------------------------------
 #ifndef SEH_HANDLER_H
 #define SEH_HANDLER_H
@@ -28,6 +29,8 @@ typedef void *PVOID;
 #else
 	typedef unsigned long ULONG_PTR;
 #endif
+
+#ifndef _INC_EXCPT
 typedef struct _EXCEPTION_RECORD {
 	DWORD ExceptionCode;
 	DWORD ExceptionFlags;
@@ -41,6 +44,7 @@ typedef struct _EXCEPTION_POINTERS {
 	//PCONTEXT ContextRecord;
 	PVOID ContextRecord;		// kludge
 } EXCEPTION_POINTERS, *PEXCEPTION_POINTERS;
+#endif	//_INC_EXCPT
 #endif	//AVOID_DUP_DEF
 
 // --------------------------------------------------------------------------
