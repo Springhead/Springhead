@@ -1,5 +1,6 @@
 # dailybuild.control
 
+#Exclude
 #SolutionAlias
 #OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
 UseClosedSrc	False
@@ -7,4 +8,7 @@ CppMacro	DAILYBUILD
 #DontBuild
 #DontRun
 #Timeout
-#RunStatus	0
+#ExpectedStatus	0
+#PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
+#NeedIntervention
+KillProcess	Spidar4.exe

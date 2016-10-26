@@ -1,5 +1,6 @@
 # dailybuild.control
 
+#Exclude
 #SolutionAlias
 OutputDir	$TOOLSET/$PYTHON_VERSION/$PLATFORM/$CONFIGURATION
 #UseClosedSrc
@@ -7,4 +8,7 @@ OutputDir	$TOOLSET/$PYTHON_VERSION/$PLATFORM/$CONFIGURATION
 #DontBuild
 #DontRun
 #Timeout
-#RunStatus	0
+#ExpectedStatus	0
+PipeProcess	GenKbEvent sH.J...Q
+#NeedIntervention
+KillProcess	PythonSpr.exe

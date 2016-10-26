@@ -7,6 +7,9 @@
  */
 
 #include "PHOpDemo.h"
+
+#include "dailybuild_SEH_Handler.h"
+
 /**
 	シンプルなSprfileローダー
 	シミュレーションはglutIdleFuncで進める
@@ -18,7 +21,12 @@
 
 PHOpDemo app;
 int _cdecl main(int argc, char* argv[]){
+	SEH_HANDLER_DEF
+	SEH_HANDLER_TRY
+
 	app.Init(argc, argv);
 	app.StartMainLoop();
+
+	SEH_HANDLER_CATCH
 	return 0;
 }

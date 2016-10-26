@@ -4,10 +4,10 @@
 #SolutionAlias
 #OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
 #UseClosedSrc
-CppMacro	DAILYBUILD
+#CppMacro	DAILYBUILD
 #DontBuild
 #DontRun
-#Timeout
+Timeout		30
 #ExpectedStatus	0
 #PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
 #NeedIntervention

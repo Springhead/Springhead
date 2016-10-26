@@ -6,7 +6,9 @@
 #UseClosedSrc
 CppMacro	DAILYBUILD
 #DontBuild
-DontRun
+#DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent .s..Q . s
+PipeProcess	GenKbEvent ..s...A
+#NeedIntervention
+KillProcess	ShoulderJointLimit.exe

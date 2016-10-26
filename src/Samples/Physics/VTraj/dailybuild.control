@@ -2,13 +2,13 @@
 
 #Exclude
 #SolutionAlias
-OutputDir	$TOOLSET/$PYTHON_VERSION/$PLATFORM/$CONFIGURATION
+#OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
 #UseClosedSrc
 #CppMacro	DAILYBUILD
 #DontBuild
 #DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent sH.F.S.D.G..Q
+PipeProcess	GenKbEvent .sH.KKKK.KKKK.LLLL.LLLL..Q
 #NeedIntervention
-KillProcess	BoxStack.exe
+KillProcess	VTraj.exe

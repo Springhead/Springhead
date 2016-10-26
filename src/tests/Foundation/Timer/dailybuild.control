@@ -9,4 +9,6 @@
 #DontRun
 #Timeout
 ExpectedStatus	-1
-#PipeProcess	GenKbEvent seq sleep space
+#PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
+#NeedIntervention
+#KillProcess

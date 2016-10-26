@@ -4,11 +4,11 @@
 #SolutionAlias
 #OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
 #UseClosedSrc
-CppMacro	DAILYBUILD
+#CppMacro	DAILYBUILD
 #DontBuild
 #DontRun
 #Timeout
-#ExpectedStatus	0
+ExpectedStatus	-62
 #PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
 #NeedIntervention
-#KillProcess
+KillProcess	FWAppSample.exe

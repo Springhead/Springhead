@@ -1,5 +1,6 @@
 # dailybuild.control
 
+#Exclude
 SolutionAlias	IK
 #OutputDir
 #UseClosedSrc
@@ -7,5 +8,7 @@ SolutionAlias	IK
 #DontBuild
 #DontRun
 #Timeout
-#RunStatus
-PipeProcess	GenKbEvent .sH.G...Q . s
+#ExpectedStatus	0
+PipeProcess	GenKbEvent .sH.G...Q
+#NeedIntervention
+KillProcess	IK.exe
