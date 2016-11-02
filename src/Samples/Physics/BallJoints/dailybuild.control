@@ -9,6 +9,6 @@ SolutionAlias	IK
 #DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent .sH.G...Q
+PipeProcess	GenKbEvent .\sh.G...q
 #NeedIntervention
 KillProcess	IK.exe

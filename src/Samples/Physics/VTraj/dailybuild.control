@@ -7,8 +7,8 @@
 #CppMacro	DAILYBUILD
 #DontBuild
 #DontRun
-#Timeout
+Timeout		20
 #ExpectedStatus	0
-PipeProcess	GenKbEvent .sH.KKKK.KKKK.LLLL.LLLL..Q
+PipeProcess	GenKbEvent .\sh.l.l.l.k.k.k.J.J..q
 #NeedIntervention
 KillProcess	VTraj.exe

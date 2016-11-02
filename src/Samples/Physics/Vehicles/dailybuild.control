@@ -9,6 +9,6 @@
 #DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent .sH.F..B..Q
+PipeProcess	GenKbEvent .\sh.f..b..r..q
 #NeedIntervention
-#KillProcess
+KillProcess	Vehicles.exe

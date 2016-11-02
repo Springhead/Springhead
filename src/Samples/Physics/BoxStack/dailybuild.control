@@ -9,6 +9,6 @@
 #DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent H....Q
+PipeProcess	GenKbEvent .h.fe.b.G..G..q
 #NeedIntervention
 KillProcess	BoxStack.exe

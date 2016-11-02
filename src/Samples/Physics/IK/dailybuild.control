@@ -7,8 +7,8 @@
 #CppMacro	DAILYBUILD
 #DontBuild
 #DontRun
-#Timeout
+Timeout		15
 #ExpectedStatus	0
-PipeProcess	GenKbEvent .sH..J.J.G..Q
+PipeProcess	GenKbEvent .\sh..J.J.G.l.l..Q
 #NeedIntervention
 KillProcess	IK.exe

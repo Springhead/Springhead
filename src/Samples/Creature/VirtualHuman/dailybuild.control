@@ -9,6 +9,6 @@ CppMacro	DAILYBUILD
 DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent .s...A
+PipeProcess	GenKbEvent .\s...A
 #NeedIntervention
 KillProcess	VirtualHuman.exe
