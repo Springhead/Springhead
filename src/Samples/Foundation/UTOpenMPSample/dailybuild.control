@@ -9,6 +9,6 @@
 #DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	CatArgs 10\n 10\n \x0d
+PipeProcess	python $(BIN)/CatArgs.py 10\n10\n\n -kbevent \n
 #NeedIntervention
 KillProcess	UTOpenMPSample.exe

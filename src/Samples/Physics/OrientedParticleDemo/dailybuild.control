@@ -7,8 +7,8 @@ SolutionAlias	PHOpDemo
 CppMacro	DAILYBUILD
 #DontBuild
 #DontRun
-Timeout		10
+Timeout		15
 #ExpectedStatus	0
-PipeProcess	GenKbEvent ...G...AQ
-#NeedIntervention
+PipeProcess	GenKbEvent ....g...q
+NeedIntervention
 KillProcess	PHOpDemo.exe

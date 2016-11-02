@@ -9,6 +9,6 @@ OutputDir	$TOOLSET/$PYTHON_VERSION/$PLATFORM/$CONFIGURATION
 #DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent sH.F.S.D.G..Q
+PipeProcess	GenKbEvent .\sh.f.s.d.G..q
 #NeedIntervention
 KillProcess	BoxStack.exe

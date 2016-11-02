@@ -12,6 +12,7 @@
 #	Ver 1.0  2016/06/20 F.Kanehori	First version
 #	Ver 1.1  2016/06/23 F.Kanehori	Correspond to 'replace' V2.0
 #	Ver 1.2  2016/10/13 F.Kanehori	Revised by using modules
+#	Ver 1.2a 2016/11/02 F.Kanehori	Fixed exec_trace default value.
 # ======================================================================
 version = 1.0
 import sys
@@ -133,8 +134,8 @@ if not os.path.isdir(logdir):
 	os.makedirs(logdir)
 
 # flag for trace execute command
-exec_trace = False
-#exec_trace = True
+exec_trace = 0
+#exec_trace = 1
 
 # ----------------------------------------------------------------------
 #  Change ProjectSettings so as not to display runtime dialog

@@ -9,6 +9,6 @@ OutputDir	$TOOLSET/$PYTHON_VERSION/$PLATFORM/$CONFIGURATION
 #DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent sH.J...Q
+PipeProcess	GenKbEvent \sh....q
 #NeedIntervention
 KillProcess	PythonSpr.exe
