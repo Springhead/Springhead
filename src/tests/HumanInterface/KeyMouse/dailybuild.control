@@ -9,7 +9,7 @@
 #DontRun
 #Timeout
 #ExpectedStatus
-#PipeProcess	GenKbEvent .....\e
-PipeProcess	python $(BIN)/CatArgs.py Q
+#PipeProcess	GenKbEvent ....\e
+PipeProcess	python $(BIN)/CatArgs.py -kbevent ... -stdout Q
 #NeedIntervention
 KillProcess	KeyMouse.exe

@@ -9,6 +9,6 @@ UseClosedSrc
 #DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent .\s.\s.\s.\s.Q
+PipeProcess	GenKbEvent .\s.\s.\s.\s.q
 #NeedIntervention
 KillProcess	FWHapticSample.exe
