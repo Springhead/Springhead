@@ -9,6 +9,6 @@ UseClosedSrc
 #DontRun
 #Timeout
 #ExpectedStatus	0
-PipeProcess	GenKbEvent .g....q
+PipeProcess	GenKbEvent ..g....q
 #NeedIntervention
 KillProcess	PHOpDemo.exe
