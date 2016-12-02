@@ -21,6 +21,7 @@
 #include <Graphics/GRScene.h>
 #include <Graphics/GRSdk.h>
 #ifdef USE_HDRSTOP
+
 #pragma hdrstop
 #endif
 
@@ -1056,9 +1057,11 @@ void FWScene::DrawOp(GRRenderIf* render, PHOpEngineIf* opEngineif)
 				render->PushModelMatrix();//相対座標で使う
 				render->MultModelMatrix(affpos);
 				
-				float ra = dp.pMainRadius, rb = dp.pSecRadius, rc = dp.pThrRadius;
+				
 #ifdef USE_AVG_RADIUS
-				;//float ra = drawObj.averRadius, rb = ra, rc = ra / 2;
+				float ra = drawObj.objAverRadius, rb = ra, rc = ra / 2;
+#else
+				float ra = dp.pMainRadius, rb = dp.pSecRadius, rc = dp.pThrRadius;
 #endif
 #ifdef USE_DYN_RADIUS
 				float ra = dp.pDynamicRadius, rb = ra, rc = ra / 2;//internal p
