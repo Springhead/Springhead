@@ -14,7 +14,7 @@
 #define USE_SPRFILE
 #define ESC 27
 #define USE_AVG_RADIUS
-//#define COLLISION_DEMO
+#define COLLISION_DEMO
 
 #ifndef COLLISION_DEMO
 #define HAPTIC_DEMO
@@ -72,10 +72,10 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	tmp->CreateOpObj();
 //#endif
 	
-	
+	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
 #ifdef HAPTIC_DEMO
 	//initial for haptic
-	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+	
 
 	////for clip
 	//int objid;
@@ -151,9 +151,11 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	
 
 	PHOpObjDesc* dp1 = opEnginedesc->opObjs[0];
-	//PHOpObjDesc* dp2 = opEnginedesc->opObjs[1];
-	cout << "obji = 0" << "pNum" << dp1->assPsNum << "gNum" << dp1-> assGrpNum<< endl;
-	//cout << "obji = 1" << "pNum" << dp2->assPsNum << "gNum" << dp2->assGrpNum << endl;
+	cout << "obji = 0" << "pNum" << dp1->assPsNum << "gNum" << dp1->assGrpNum << endl;
+#ifdef COLLISION_DEMO
+	PHOpObjDesc* dp2 = opEnginedesc->opObjs[1];
+	cout << "obji = 1" << "pNum" << dp2->assPsNum << "gNum" << dp2->assGrpNum << endl;
+#endif
 
 	DrawHelpInfo = true;
 	checkPtclInfo = true;

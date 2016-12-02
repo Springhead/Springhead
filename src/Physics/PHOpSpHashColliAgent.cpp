@@ -491,8 +491,8 @@ namespace Spr{
 
 
 
-		if (pPdist > (ellRadius1 + ellRadius2))
-			return;
+		//if (pPdist > (ellRadius1 + ellRadius2))
+		//	return;
 
 
 		Vec3f &dpCtr1 = dp1->pNewCtr;
@@ -502,7 +502,7 @@ namespace Spr{
 
 
 		//sphere colli test
-		if (1)
+		if (0)
 		{
 			dp1->isColliedSphashSolvedReady = true;
 			dp2->isColliedSphashSolvedReady = true;
