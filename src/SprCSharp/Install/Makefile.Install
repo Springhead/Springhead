@@ -1,9 +1,14 @@
+#  Makefile.Install
 # ------------------------------------------------------------------------------
 #  Arguments:
-#	PROJDIR=dir		  Project directory
+#	PROJECTDIR=dir		  Project directory
 #	VERS={ 10 | 12.0 }	  Visual Studio version
 #	PLAT={ x86 | x64 }	  build platform
 #	CONF={ Debug | Release }  build configuration { Debug | Release }
+#
+#  Version:
+#	Ver1.1  2016/12/05	F.Kanehori  PROJDIR -> PROJECTDIR
+#	Ver1.0  2016/02/02	F.Kanehori  èâî≈
 # ------------------------------------------------------------------------------
 DEBUG = 1
 
@@ -23,14 +28,16 @@ BINCONF	= win32
 BINCONF	= win64
 !ENDIF
 
-BLDDIR	= $(PROJDIR)..\$(VERS)\bin\$(PLAT)\$(CONF)
-INSDIR	= $(PROJDIR)..\..\..\bin\$(BINCONF)
-PINDIR	= $(PROJDIR)..\..\..\src\Unity\Assets\Springhead\Plugins
+BLDDIR	= ..\$(VERS)\bin\$(PLAT)\$(CONF)
+INSDIR	= ..\..\..\bin\$(BINCONF)
+PINDIR	= ..\..\..\src\Unity\Assets\Springhead\Plugins
 
+!MESSAGE Makefile.Install
 !MESSAGE Using parameters ...
 !MESSAGE    VERS: [$(VERS)]
 !MESSAGE    PLAT: [$(PLAT)]
 !MESSAGE    CONF: [$(CONF)]
+!MESSAGE    PRJDIR: [$(PROJECTDIR)]
 !MESSAGE    BLDDIR: [$(BLDDIR)]
 !MESSAGE    INSDIR: [$(INSDIR)]
 

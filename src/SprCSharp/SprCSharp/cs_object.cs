@@ -45,6 +45,12 @@ namespace SprCs {
     public partial class IfInfoToCsType {
         public static Type FindType(IfInfo ifinfo) {
             Type t = null;
+#if	TARGET_Physics
+            if (mapPhysics.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapCollision.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapFoundation.TryGetValue(ifinfo, out t)) { return t; }
+            if (mapBase.TryGetValue(ifinfo, out t)) { return t; }
+#else	// ALL
             if (mapPhysics.TryGetValue(ifinfo, out t)) { return t; }
             if (mapCollision.TryGetValue(ifinfo, out t)) { return t; }
             if (mapFramework.TryGetValue(ifinfo, out t)) { return t; }
@@ -54,6 +60,7 @@ namespace SprCs {
             if (mapFileIO.TryGetValue(ifinfo, out t)) { return t; }
             if (mapFoundation.TryGetValue(ifinfo, out t)) { return t; }
             if (mapBase.TryGetValue(ifinfo, out t)) { return t; }
+#endif
             return null;
         }
     }

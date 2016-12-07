@@ -10,6 +10,13 @@
 // %ignore Spr::PHSceneIf::CreateIKActuator;
 // %ignore Spr::PHSdkIf::CreateShape;
 
+#ifdef  Physics_ONLY
+%ignore Spr::PHOpEngineIf::InitialHapticRenderer;
+%ignore Spr::PHOpEngineIf::TrySetHapticEnable;
+%ignore Spr::PHOpEngineIf::InitialNoMeshHapticRenderer;
+%ignore Spr::PHOpHapticControllerIf::initDevice;
+#endif
+
 // %feature ‚Í %include ‚æ‚è‚à‘O‚ÉŽw’è‚·‚é‚±‚Æ.
 //
 %feature("returns_array") Spr::PHOpGroupIf::GetGroupDesc;
