@@ -4,7 +4,7 @@
 ::      RunSwig_CSharp.bat
 ::
 ::  SYNOPSIS:
-::	RunSwig_CSharp [:export]
+::	RunSwig_CSharp target
 ::
 ::  Description:
 ::      ファイルの依存関係を調べて、CSharpSWig.bat を最適に実行する.
@@ -14,17 +14,34 @@
 ::      ものを使用する. ただしプロジェクト Base は定義の有無に関わりなく実行する.
 ::
 ::  ARGUMENTS:
-::	:export		共通に使用する名前を export する.
+::	target		リンクするプロジェクトの指定
+::	    ALL		すべてのプロジェクトを含む構成とする.
+::	    Physics	Physics を含む最小の構成とするを含む構成とする.
+::	    :export	特殊ターゲット：共通に使用する名前を export する.
 ::	
 :: ***********************************************************************************
 ::  Version:
-::	Ver 2.0	  2016/02/08	F.Kanehori  wrapper file をまとめた
-::	Ver 1.0	  2015/03/18	F.Kanehori  初版
+::	Ver 3.0	 2016/12/07	F.Kanehori  リンク構成指定を可能とした.
+::	Ver 2.0	 2016/02/08	F.Kanehori  wrapper file をまとめた.
+::	Ver 1.0	 2015/03/18	F.Kanehori  初版
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
 set CWD=%cd%
-set DEBUG=0
+set DEBUG=1
+
+:: ------------
+::  引数の処理
+:: ------------
+set TARGET=%1
+if "%TARGET%" equ "" (
+    echo Usage: %PROG% target
+    echo     target     ALL ^| Physics ^| :export
+    exit /b
+)
+if %DEBUG% == 1 (
+    echo TARGET: [%TARGET%]
+)
 
 :: ----------
 ::  各種定義
@@ -44,13 +61,19 @@ set SUBDIR_EXP=SprExport
 set CS_SRC=%CSBASE%/%SUBDIR_SRC%
 set CS_IMP=%CSBASE%/%SUBDIR_IMP%
 set CS_EXP=%CSBASE%/%SUBDIR_EXP%
+
+:: ファイル名の定義
+set TARGETFILE=..\TargetManager\target.last
+
 if %DEBUG% == 1 (
+    echo %~nx0
     call :show_abs_path INCDIR %INCDIR%
     call :show_abs_path SRCDIR %SRCDIR%
     call :show_abs_path ETCDIR %ETCDIR%
     call :show_abs_path CS_SRC %CS_SRC%
     call :show_abs_path CS_IMP %CS_IMP%
     call :show_abs_path CS_EXP %CS_EXP%
+    call :show_abs_path TARGETFILE %TARGETFILE%
     echo. 
 )
 
@@ -65,7 +88,7 @@ set MODULE_WRAPPER_SRC=wrapper.cs
 set MODULE_WRAPPER_IMP=wrapper.cs
 set MODULE_WRAPPER_EXP=wrapper.cpp
 ::
-if "%1" equ ":export" goto :export
+if "%TARGET%" equ ":export" goto :export
 :: ---------------------------------------------
 
 :: 依存関係にはないと見做すファイルの一覧
@@ -106,7 +129,7 @@ if exist "%ARCH%\Microsoft Visual Studio 10.0" set VSVER=10.0
 if exist "%ARCH%\Microsoft Visual Studio 12.0" set VSVER=12.0
 set MAKEPATH="%ARCH%\Microsoft Visual Studio %VSVER%\VC\bin"
 if not exist %MAKEPATH% (
-    echo %PROG%: can not find '%MAKE%' path.
+    echo %PROG%: Error: can not find '%MAKE%' path.
     exit /b
 )
 set SWIGPATH=%BINDIR%\swig
@@ -116,8 +139,35 @@ set PATH=.;%SWIGPATH%;%MAKEPATH%;%PATH%
 ::  処理するモジュール一覧を作成
 :: ------------------------------
 set PROJECTS=Base
-for /f "tokens=1,*" %%m in (%ETCDIR%\%PROJFILE%) do set PROJECTS=!PROJECTS! %%m
-if %DEBUG% == 1 echo Projects are: %PROJECTS%
+set SWIGMACRO=
+
+if /i "%TARGET%" equ "ALL" (
+	for /f "tokens=1,*" %%m in (%ETCDIR%\%PROJFILE%) do (
+    		set PROJECTS=!PROJECTS! %%m
+	)
+) else (
+	for %%t in (%TARGET:,= %) do (
+		for /f "tokens=1,*" %%m in (%ETCDIR%\%PROJFILE%) do (
+			if "%%m" equ "%%t" (
+	    			set PROJECTS=!PROJECTS! %%n %%m
+	    			set PROJECTS=!PROJECTS:,= !
+	    			:: 重複要素を取り除く
+	    			call :bag_to_set PROJECTS_tmp "!PROJECTS!"
+	    			set PROJECTS=!PROJECTS_tmp!
+			)
+    		)
+	)
+	:: swig用のマクロを定義する
+	if "!TARGET!" equ "!TARGET:,= !" (
+		set SWIGMACRO=%TARGET%_ONLY
+	) else (
+		set SWIGMACRO=!TARGET:,=_and_!
+	)
+)
+if "%PROJECTS%" equ "" (
+    echo %PROG%: Error: invalid target name "%TARGET%"
+    exit /b
+)
 
 :: ------------------------------
 ::  .i ファイルの一覧を作成
@@ -126,7 +176,12 @@ set IFILES=
 for %%p in (%PROJECTS%) do (
     set IFILES=!IFILES! ./%%p.i
 )
+
 set IFILES=%IFILES:~1%
+
+echo Projects:  [%PROJECTS%]
+echo SWIGMACRO: [%SWIGMACRO%]
+echo IFiles:    [%IFILES%]
 
 :: ------------------------------
 ::  モジュールにまたがる初期化
@@ -137,13 +192,14 @@ del /f ..\%WRAPPERS_BUILT% > NUL 2>&1
 :: ----------
 ::  処理開始
 :: ----------
+echo making ...
 for %%p in (%PROJECTS%) do (
     echo   Project: %%p
     set MKFILE=%MAKEFILE%.%%p
     call :collect_headers %%p
     call :make_makefile %%p ..\!MKFILE! "!INCHDRS!" "!SRCHDRS!" "%IFILES%"
     cd ..
-    cmd /c %MAKE% -f !MKFILE!
+    cmd /c %MAKE% -f !MKFILE! > NUL 2>&1
     cd %CWD%
 )
 
@@ -168,10 +224,15 @@ if exist ..\%WRAPPERS_BUILT% (
     echo } >> ..\!WF_EXP!
 )
 
+:: -----------------------------
+::  TARGET をファイルに記録する
+:: -----------------------------
+echo last target: %TARGET%
+echo %TARGET% > %TARGETFILE%
+
 :: ----------
 ::  処理終了
 :: ----------
-
 endlocal
 exit /b
 
@@ -205,7 +266,7 @@ exit /b
     )
     call :add_prefix "!INCHDRS:~1!" %INCDIROUT%\%PROJECT%
     set INCHDRS=%$string:\=/%
-    if %DEBUG% == 1 echo INCHDRS  [%INCHDRS%]
+    if %DEBUG% gtr 2 echo INCHDRS  [%INCHDRS%]
 
     set SRCHDRS=
     for %%f in (%SRCDIR%\%PROJECT%\*.h) do (
@@ -214,7 +275,7 @@ exit /b
     )
     call :add_prefix "!SRCHDRS:~1!" %SRCDIROUT%\%PROJECT%
     set SRCHDRS=%$string:\=/%
-    if %DEBUG% == 1 echo SRCHDRS  [%SRCHDRS%]
+    if %DEBUG% gtr 2 echo SRCHDRS  [%SRCHDRS%]
 
 exit /b
 
@@ -232,7 +293,7 @@ exit /b
     set INCHDRS=%~3
     set SRCHDRS=%~4
     set INTFILES=%~5
-    if %DEBUG% == 1 (
+    if %DEBUG% gtr 1 (
         echo MODULE   [%MODULE%]
         echo MKFILE   [%MKFILE%]
         echo INCHDRS  [%INCHDRS%]
@@ -249,7 +310,7 @@ exit /b
     rem ------------------------------------------------------
 
     set DEPENDENCIES=%INCHDRS% %SRCHDRS% %INTFILES%
-    if %DEBUG% == 1 (
+    if %DEBUG% gtr 1 (
         echo TARGET       [%TARGET%]
         echo DEPENDENCIES [%DEPENDENCIES%]
     )
@@ -286,7 +347,7 @@ exit /b
     echo all:	%TARGET_ALL%    >> %MKFILE%
     echo.			>> %MKFILE%
     echo %TARGET_SRC%:	$(INCHDRS) $(SRCHDRS) $(INTFILES) $(FIXED_WRAPPERS)>> %MKFILE%
-    echo.	call %SWIG% %MODULE%	>> %MKFILE%
+    echo.	call %SWIG% %MODULE% %SWIGMACRO%	>> %MKFILE%
     echo.				>> %MKFILE%
     echo $(INCHDRS):			>> %MKFILE%
     echo.				>> %MKFILE%
@@ -333,6 +394,22 @@ exit /b
 exit /b
 :get_abs_path
     set $ret=%~dp1
+exit /b
+
+:: -----------------------------------------------------------------------------------
+::  集合から重複した要素を取り除く
+:: -----------------------------------------------------------------------------------
+:bag_to_set
+	setlocal enabledelayedexpansion
+	set SET=
+	for %%b in (%~2) do (
+		set IN=0
+		for %%s in (!SET!) do (
+			if "%%b" equ "%%s" set IN=1
+		)
+		if !IN! == 0 set SET=!SET! %%b
+	)
+	endlocal && (set %1=%SET:~1%)
 exit /b
 
 :: -----------------------------------------------------------------------------------

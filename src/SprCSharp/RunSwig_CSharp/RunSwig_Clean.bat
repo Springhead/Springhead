@@ -12,7 +12,8 @@
 ::
 :: ***********************************************************************************
 ::  Version:
-::	    Ver 1.0	  2015/03/18	F.Kanehori  初版
+::	Ver 2.0	 2016/12/05	F.Kanehori  ターゲット指定実装
+::	Ver 1.0	 2015/03/18	F.Kanehori  初版
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -29,16 +30,23 @@ set CS_IMP=%CSBASE%\SprImport
 set CS_EXP=%CSBASE%\SprExport
 
 if %DEBUG% == 1 (
+    echo %PROG%
+    echo CWD: %CWD%
+    call :show_abs_path TOPDIR %TOPDIR%
+    call :show_abs_path SRCDIR %SRCDIR%
     call :show_abs_path ETCDIR %ETCDIR%
+    call :show_abs_path CSBASE %CSBASE%
     call :show_abs_path CS_SRC %CS_SRC%
     call :show_abs_path CS_IMP %CS_IMP%
     call :show_abs_path CS_EXP %CS_EXP%
     echo. 
 )
 
-:: 使用するファイル名
-::
+:: --------------------
+::  使用するファイル名
+:: --------------------
 set PROJFILE=do_swigall.projs
+set TARGETFILE=..\TargetManager\target.last
 
 :: ------------------------------
 ::  処理するモジュール一覧を作成
@@ -54,7 +62,11 @@ for %%p in (%PROJECTS%) do (
     del %CS_SRC%\CS%%p*.cs  > NUL 2>&1
     del %CS_IMP%\CS%%p*.cs  > NUL 2>&1
     del %CS_EXP%\CS%%p*.cpp > NUL 2>&1
+    del %CS_SRC%\module_wrapper.cs  > NUL 2>&1
+    del %CS_IMP%\module_wrapper.cs  > NUL 2>&1
+    del %CS_EXP%\module_wrapper.cpp > NUL 2>&1
 )
+echo. > %TARGETFILE%
 
 :: ----------
 ::  処理終了

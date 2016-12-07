@@ -1,17 +1,49 @@
-# Makefile.RunSwig_CSharp
+#  Makefile.RunSwig_CSharp
+# ------------------------------------------------------------------------------
+#  Arguments:
+#	TARGET={ ALL | Physics }  Target link modules
+#	PROJECTDIR=dir		  Project directory
+#	PLAT={ x86 | x64 }	  build platform
 #
+#  Version:
+#	Ver2.0  2016/12/07	F.Kanehori  ターゲット指定実装
+#	Ver1.0  2015/07/23	F.Kanehori  初版
+# ------------------------------------------------------------------------------
+DEBUG = 1
+
+!IF "$(PLAT)" == "x86"
+PLATFORM = win32
+!ELSE
+PLATFORM = win64
+!ENDIF
+!IF "$(TARGET)" == ""
+TARGET	= ALL
+!ENDIF
 
 PROJDIR	= ..\..\..
 BINDIR	= $(PROJDIR)\bin\swig
 DLLDIR	= $(PROJDIR)\bin\$(PLATFORM)
 TOPDIR	= $(PROJDIR)\src\SprCSharp
-MAKEDIR	= $(TOPDIR)\RunSwig_CSharp
+MAKEDIR	= $(PROJECTDIR)
 EXPSRCDIR	= $(TOPDIR)\SprExport
 IMPSRCDIR	= $(TOPDIR)\SprImport
 CSSRCDIR	= $(TOPDIR)\SprCSharp
 IFILEDIR	= $(TOPDIR)
 
-RUNSWIG	= $(MAKEDIR)\RunSwig_CSharp.bat
+!MESSAGE Makefile.RunSwig_CSharp
+!MESSAGE Using parameters ...
+!MESSAGE    TARGET:     [$(TARGET)]
+!MESSAGE    PLATFORM:   [$(PLATFORM)]
+!MESSAGE    PRJDIR:     [$(PROJECTDIR)]
+!MESSAGE    TOPDIR:     [$(TOPDIR)]
+!MESSAGE    MAKEDIR:    [$(MAKEDIR)]
+!MESSAGE    DLLDIR:     [$(DLLDIR)]
+!MESSAGE    EXPSRCDIR:  [$(EXPSRCDIR)]
+!MESSAGE    IMPSRCDIR:  [$(IMPSRCDIR)]
+!MESSAGE    CSSRCDIR:   [$(CSSRCDIR)]
+!MESSAGE    IFILEDIR:   [$(IFILEDIR)]
+
+RUNSWIG   = $(MAKEDIR)\RunSwig_CSharp.bat
 
 EXPSRCS	= $(EXPSRCDIR)\CSBase.cpp		\
 	  $(EXPSRCDIR)\CSCollision.cpp		\
@@ -54,7 +86,7 @@ IFILES	= $(IFILEDIR)\Base.i			\
 	  $(IFILEDIR)\Physics.i
 
 all:	dlls
-	$(RUNSWIG)
+	call $(RUNSWIG) $(TARGET)
 
 dlls:	$(DLLDIR)\SprExport.dll	\
 	$(DLLDIR)\SprImport.dll	\
@@ -72,5 +104,4 @@ $(IMPSRCS):	$(IFILES)
 
 $(CSSRCS):	$(IFILES)
 
-$(IFILES):	
-
+# end: Makefile.RunSwig_CSharp
