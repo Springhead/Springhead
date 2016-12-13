@@ -101,12 +101,11 @@ void App::Keyboard(int key, int x, int y){
 	float dr = 0.01f;
 	for(int i = 0; i < NTimers(); i++)	GetTimer(i)->Stop();
 	switch(key){
-	case 0x1b:
+		case 0x1b:
 		case 'q':
 			// アプリケーションの終了
 			exit(0);
-			break;
-
+		break;
 		case 'c':
 			{
 				// インタフェースのキャリブレーション
