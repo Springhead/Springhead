@@ -11,11 +11,12 @@
 #include <Graphics/SprGRFrame.h>
 #include <Graphics/SprGRVertex.h>
 #include <Graphics/SprGRShader.h>
-#if defined(USE_GLEW)
-  #include <GL/glew.h>
-#else
+
+//#if defined(USE_GLEW)
+//  #include <GL/glew.h>
+//#else
   typedef unsigned int	GLuint;
-#endif
+//#endif
 
 namespace Spr{;
 
