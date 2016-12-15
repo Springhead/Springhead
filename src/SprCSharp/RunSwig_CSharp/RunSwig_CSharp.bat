@@ -1,17 +1,10 @@
 @echo off
 :: ***********************************************************************************
-::  File:
+::  FILE:
 ::      RunSwig_CSharp.bat
 ::
 ::  SYNOPSIS:
 ::	RunSwig_CSharp target
-::
-::  Description:
-::      ファイルの依存関係を調べて、CSharpSWig.bat を最適に実行する.
-::	※ このスクリプトで作成した makefile を実行する.
-::
-::    　実行するプロジェクトは ..\..\src\RunSwig\do_swigall.projs に定義されている
-::      ものを使用する. ただしプロジェクト Base は定義の有無に関わりなく実行する.
 ::
 ::  ARGUMENTS:
 ::	target		リンクするプロジェクトの指定
@@ -19,11 +12,19 @@
 ::	    Physics	Physics を含む最小の構成とするを含む構成とする.
 ::	    :export	特殊ターゲット：共通に使用する名前を export する.
 ::	
+::  DESCRIPTION:
+::      ファイルの依存関係を調べて、CSharpSWig.bat を最適に実行する.
+::	※ このスクリプトで作成した makefile を実行する.
+::
+::    　実行するプロジェクトは ..\..\src\RunSwig\do_swigall.projs に定義されている
+::      ものを使用する. ただしプロジェクト Base は定義の有無に関わりなく実行する.
+::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 3.0	 2016/12/07	F.Kanehori  リンク構成指定を可能とした.
-::	Ver 2.0	 2016/02/08	F.Kanehori  wrapper file をまとめた.
-::	Ver 1.0	 2015/03/18	F.Kanehori  初版
+::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
+::	Ver 3.0	 2016/12/07 F.Kanehori  リンク構成指定実装
+::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file 統合
+::	Ver 1.0	 2015/03/18 F.Kanehori  初版
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -199,7 +200,11 @@ for %%p in (%PROJECTS%) do (
     call :collect_headers %%p
     call :make_makefile %%p ..\!MKFILE! "!INCHDRS!" "!SRCHDRS!" "%IFILES%"
     cd ..
-    cmd /c %MAKE% -f !MKFILE! > NUL 2>&1
+    if %DEBUG% gtr 1 (
+	cmd /c %MAKE% -f !MKFILE!
+    ) else (
+	cmd /c %MAKE% -f !MKFILE! > NUL 2>&1
+    )
     cd %CWD%
 )
 
@@ -214,12 +219,11 @@ if exist ..\%WRAPPERS_BUILT% (
     type ..\!WF_SRC!.prologue > ..\!WF_SRC!
     type ..\!WF_IMP!.prologue > ..\!WF_IMP!
     type ..\!WF_EXP!.prologue > ..\!WF_EXP!
-    for %%p in (%PROJECTS%) do (
-        call :append_file ..\%SUBDIR_SRC%\tmp\CS%%p.%MODULE_WRAPPER_SRC% ..\!WF_SRC!
-        call :append_file ..\%SUBDIR_IMP%\tmp\CS%%p.%MODULE_WRAPPER_IMP% ..\!WF_IMP!
-        call :append_file ..\%SUBDIR_EXP%\tmp\CS%%p.%MODULE_WRAPPER_EXP% ..\!WF_EXP!
-    )
+    for %%f in (..\%CS_SRC:/=\%\tmp\*.cs)  do ( type %%f >> ..\!WF_SRC! )
+    for %%f in (..\%CS_IMP:/=\%\tmp\*.cs)  do ( type %%f >> ..\!WF_IMP! )
+    for %%f in (..\%CS_EXP:/=\%\tmp\*.cpp) do ( type %%f >> ..\!WF_EXP! )
     echo } >> ..\!WF_SRC!
+    echo.   } >> ..\!WF_IMP!
     echo } >> ..\!WF_IMP!
     echo } >> ..\!WF_EXP!
 )
@@ -356,6 +360,8 @@ exit /b
     echo $(INTFILES):			>> %MKFILE%
     echo.				>> %MKFILE%
     echo $(FIXED_WRAPPERS):		>> %MKFILE%
+    echo.				>> %MKFILE%
+    echo $(WRAPPERS):			>> %MKFILE%
     echo.				>> %MKFILE%
     endlocal
 exit /b

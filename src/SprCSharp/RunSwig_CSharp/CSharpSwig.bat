@@ -6,21 +6,23 @@
 ::  SYNOPSIS:
 ::	RunSwig module [swigmacro]
 ::
-::  Description:
-::	Springhead のライブラリ(DLL) を C# から利用するためのコードを生成する。
-::
 ::  ARGUMENTS:
 ::	module		モジュール名
 ::	swigmacro	swig に渡すマクロ（#ifdef swigmacro として使う）
 ::
+::  Description:
+::	Springhead のライブラリ(DLL) を C# から利用するためのコードを生成する。
+::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 3.0	 2016/12/01	F.Kanehori  ターゲット指定実装
-::	Ver 2.0	 2016/02/08	F.Kanehori  wrapper file をまとめた
-::	Ver 1.0	 2015/01/26	F.Kanehori  初版
+::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
+::	Ver 3.0	 2016/12/01 F.Kanehori  ターゲット指定実装
+::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file 統合
+::	Ver 1.0	 2015/01/26 F.Kanehori  初版
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
+set CWD=%cd%
 set DEBUG=1
 
 if %DEBUG% == 1 (
@@ -40,7 +42,7 @@ set DUMPTREE=0
 if "%1" equ "dumptree" set DUMPTREE=1
 
 if %DEBUG% == 1 (
-    echo %~nx1
+    echo %~nx0
     echo MODULE: [%MODULE%]
     echo MACRO:  [%MACRO%]
 )
@@ -85,18 +87,9 @@ if exist %MODULE%.i (
 	move /Y %MODULE%Cs.cs  %CS_SRC%\CS%MODULE%.cs  > NUL 2>&1
 	move /Y %MODULE%CsP.cs %CS_IMP%\CS%MODULE%.cs  > NUL 2>&1
 	move /Y %MODULE%Cs.cpp %CS_EXP%\CS%MODULE%.cpp > NUL 2>&1
-	if not exist %CS_SRC%\tmp mkdir %CS_SRC%\tmp
-	if not exist %CS_IMP%\tmp mkdir %CS_IMP%\tmp
-	if not exist %CS_EXP%\tmp mkdir %CS_EXP%\tmp
-	move /Y %MODULE%CsWrap.cs  %CS_SRC%\tmp\CS%MODULE%.%MODULE_WRAPPER_SRC% > NUL 2>&1
-	move /Y %MODULE%CsPWrap.cs %CS_IMP%\tmp\CS%MODULE%.%MODULE_WRAPPER_IMP% > NUL 2>&1
-	move /Y %MODULE%CsWrap.cpp %CS_EXP%\tmp\CS%MODULE%.%MODULE_WRAPPER_EXP% > NUL 2>&1
 	echo %CS_SRC%\CS%MODULE%.cs  created
 	echo %CS_IMP%\CS%MODULE%.cs  created
 	echo %CS_EXP%\CS%MODULE%.cpp created
-	echo %CS_SRC%\tmp\CS%MODULE%.%MODULE_WRAPPER_SRC% created
-	echo %CS_IMP%\tmp\CS%MODULE%.%MODULE_WRAPPER_IMP% created
-	echo %CS_EXP%\tmp\CS%MODULE%.%MODULE_WRAPPER_EXP% created
 	if %DEBUG% == 1 (
 	    move /Y %MODULE%CS.info %CS_INFO%\CS%MODULE%.info >NUL 2>&1
 	) else (

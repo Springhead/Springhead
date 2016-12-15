@@ -9,9 +9,7 @@
 #include <Physics/PHFemPorousWOMove.h>
 #include <Base/Affine.h>
 
-#include <GL/glew.h>
-#include <GL/glut.h>
-
+#define NOMINMAX
 #include "windows.h"
 
 #include <Foundation/UTClapack.h>

@@ -12,9 +12,6 @@
 //#include <Framework/FWObject.h>
 //#include <Framework/sprFWObject.h>
 
-#include <GL/glew.h>
-#include <GL/glut.h>
-
 #include "windows.h"
 
 #include <Foundation/UTClapack.h>
