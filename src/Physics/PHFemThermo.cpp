@@ -15,9 +15,6 @@
 
 #include "windows.h"
 
-#include <GL/glew.h>
-#include <GL/glut.h>
-
 #include <Foundation/UTClapack.h>
 
 #define FEMLOG(x)

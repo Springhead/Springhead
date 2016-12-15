@@ -1,9 +1,9 @@
 @echo off
 :: ***********************************************************************************
-::  File:
+::  FILE:
 ::      RunSwig_Clean.bat
 ::
-::  Description:
+::  DESCRIPTION:
 ::      RunSwig_CSharp で作成されたファイルを削除する.
 ::      プロジェクト RunSwig_CSharp の [ソリューションのクリーン] から呼ばれる.
 ::
@@ -12,8 +12,9 @@
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 2.0	 2016/12/05	F.Kanehori  ターゲット指定実装
-::	Ver 1.0	 2015/03/18	F.Kanehori  初版
+::	Ver 2.0a 2016/12/14 F.Kanehori	ラッパファイル作成方式変更
+::	Ver 2.0	 2016/12/05 F.Kanehori	リンク構成指定実装
+::	Ver 1.0	 2015/03/18 F.Kanehori	初版
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -62,9 +63,12 @@ for %%p in (%PROJECTS%) do (
     del %CS_SRC%\CS%%p*.cs  > NUL 2>&1
     del %CS_IMP%\CS%%p*.cs  > NUL 2>&1
     del %CS_EXP%\CS%%p*.cpp > NUL 2>&1
-    del %CS_SRC%\module_wrapper.cs  > NUL 2>&1
-    del %CS_IMP%\module_wrapper.cs  > NUL 2>&1
-    del %CS_EXP%\module_wrapper.cpp > NUL 2>&1
+    del %CS_SRC%\module.wrapper.cs  > NUL 2>&1
+    del %CS_IMP%\module.wrapper.cs  > NUL 2>&1
+    del %CS_EXP%\module.wrapper.cpp > NUL 2>&1
+    del %CS_SRC%\tmp\*.cs  > NUL 2>&1
+    del %CS_IMP%\tmp\*.cs  > NUL 2>&1
+    del %CS_EXP%\tmp\*.cpp > NUL 2>&1
 )
 echo. > %TARGETFILE%
 

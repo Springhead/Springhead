@@ -3,8 +3,14 @@
 
 
 #include <SprDefs.h>
-#include <GL/glew.h>
-#include <GL/glut.h>
+//#include <GL/glew.h>
+//#include <GL/glut.h>
+  #undef CreateDialog
+  #undef CreateFile
+  #undef GetObject
+  #undef min
+  #undef max
+// end
 #include <Physics\PHOpDecompositionMethods.h>
 #include "Physics\PHOpHapticController.h"
 #include "Physics\PHEngine.h"
