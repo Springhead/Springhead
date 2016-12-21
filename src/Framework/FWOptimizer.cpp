@@ -292,6 +292,7 @@ double FWStaticTorqueOptimizer::ApplyPop(PHSceneIf* phScene, double const *x, in
 	phScene->GetIKEngine()->ApplyExactState(true);
 
 	// Find Lowest Solid
+	/*
 	double y = 1e+10; PHSolidIf* lowest = NULL;
 	for (int i = 0; i < phScene->NSolids(); ++i) {
 		PHSolidIf* so = phScene->GetSolids()[i];
@@ -306,6 +307,7 @@ double FWStaticTorqueOptimizer::ApplyPop(PHSceneIf* phScene, double const *x, in
 			so->SetFramePosition(so->GetFramePosition() - Vec3d(0, y, 0));
 		}
 	}
+	*/
 
 	return obj;
 }
@@ -324,7 +326,6 @@ double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
 		PHIKEndEffectorIf* eef = phScene->GetIKEndEffector(i);
 		if (eef->IsPositionControlEnabled()) {
 			Vec3d diff = ((eef->GetSolid()->GetPose() * eef->GetTargetLocalPosition()) - eef->GetTargetPosition());
-			diff.x = 0; diff.z = 0;
 			obj += errorWeight * pow(diff.norm(), 2);
 		}
 		if (eef->IsOrientationControlEnabled()) {
@@ -333,7 +334,9 @@ double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
 		}
 	}
 
-	phScene->Step();
+	for (int i = 0; i < 5; ++i) {
+		phScene->Step();
+	}
 
 	// c. Calc Torque Criterion
 	for (int i = 0; i < nJoints; ++i) {
@@ -348,6 +351,12 @@ double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
 	}
 
 	// d. Calc Stability Criterion
+	for (int j = 0; j < phScene->NSolids(); ++j) {
+		obj += stabilityWeight * phScene->GetSolids()[j]->GetVelocity().norm();
+		obj += stabilityWeight * phScene->GetSolids()[j]->GetAngularVelocity().norm();
+	}
+
+	/*
 	Vec3d force  = Vec3d();
 	Vec3d torque = Vec3d();
 	Vec3d CoM    = Vec3d();
@@ -383,6 +392,7 @@ double FWStaticTorqueOptimizer::Objective(double const *x, int n) {
 
 	obj += stabilityWeight * torque.norm();
 	obj += stabilityWeight * force.norm();
+	*/
 	
 	return obj;
 }
