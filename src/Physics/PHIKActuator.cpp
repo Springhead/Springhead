@@ -292,7 +292,7 @@ void PHIKBallActuator::CalcPullbackVelocity() {
 	Vec3d pullback = Vec3d();
 	
 	// 標準姿勢へののPullback
-	pullback += -(jointTempOri.RotationHalf()) * pullbackRate;
+	pullback += (pullbackTarget * jointTempOri.Inv()).RotationHalf() * pullbackRate;
 
 	// <!!> トルク最小化IKの概念テスト。実際にはもう少しきめ細やかな実装が必要になりそう
 	// pullback += -(DCAST(PHBallJointIf, joint)->GetMotorForce() * 0.001);
@@ -447,7 +447,7 @@ void PHIKHingeActuator::CalcJacobian(PHIKEndEffector* endeffector){
 }
 
 void PHIKHingeActuator::CalcPullbackVelocity() {
-	double pullbacked = (1-pullbackRate) * jointTempAngle;
+	double pullbacked = jointTempAngle - pullbackRate * (jointTempAngle - pullbackTarget);
 
 	// リミット成分
 	PH1DJointLimitIf* limit = DCAST(PHHingeJointIf,joint)->GetLimit();

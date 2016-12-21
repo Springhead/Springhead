@@ -108,11 +108,19 @@ public:
 
 	void Optimize() { FWOptimizer::Optimize(); }
 
+	bool TestForTermination() {
 #ifdef USE_CLOSED_SRC
-	bool TestForTermination() { return evo->testForTermination(); }
-
-	void TakeFinalValue() { xfinal = evo->getNew(CMAES<double>::XMean); }
+		return evo->testForTermination();
+#else
+		return true;
 #endif
+	}
+
+	void TakeFinalValue() {
+#ifdef USE_CLOSED_SRC
+		xfinal = evo->getNew(CMAES<double>::XMean);
+#endif
+	}
 
 	void SetErrorWeight(double v) { errorWeight = v; }
 

@@ -520,29 +520,35 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHIKBallActuatorDesc \
 protected:\
+	Quaterniond	pullbackTarget;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHIKActuator::SetDesc((PHIKActuatorDesc*)(PHIKBallActuatorDesc*)ptr);	\
+		pullbackTarget = ((PHIKBallActuatorDesc*)ptr)->pullbackTarget;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHIKActuator::GetDesc((PHIKActuatorDesc*)(PHIKBallActuatorDesc*)ptr);	\
+		((PHIKBallActuatorDesc*)ptr)->pullbackTarget = pullbackTarget;	\
 		return true;	\
 	}\
 
 #define SPR_DECLMEMBEROF_PHIKHingeActuatorDesc \
 protected:\
+	double	pullbackTarget;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
 		PHIKActuator::SetDesc((PHIKActuatorDesc*)(PHIKHingeActuatorDesc*)ptr);	\
+		pullbackTarget = ((PHIKHingeActuatorDesc*)ptr)->pullbackTarget;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		PHIKActuator::GetDesc((PHIKActuatorDesc*)(PHIKHingeActuatorDesc*)ptr);	\
+		((PHIKHingeActuatorDesc*)ptr)->pullbackTarget = pullbackTarget;	\
 		return true;	\
 	}\
 
