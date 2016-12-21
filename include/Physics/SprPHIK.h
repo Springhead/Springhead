@@ -364,11 +364,21 @@ struct PHIKBallActuatorIf : PHIKActuatorIf{
 	/** @brief 関節一時姿勢をセットする
 	*/
 	void SetJointTempOri(Quaterniond ori);
+
+	/** @brief 関節引き戻し目標をセットする
+	*/
+	void SetPullbackTarget(Quaterniond ori);
 };
 
 /// ３軸アクチュエータのディスクリプタ
 struct PHIKBallActuatorDesc : PHIKActuatorDesc{
 	SPR_DESCDEF(PHIKBallActuator);
+
+	Quaterniond pullbackTarget;
+
+	PHIKBallActuatorDesc() {
+		pullbackTarget = Quaterniond();
+	}
 };
 
 /// １軸アクチュエータ（PHHingeJointを駆動する）
@@ -386,11 +396,21 @@ struct PHIKHingeActuatorIf : PHIKActuatorIf{
 	/** @brief 関節一時姿勢をセットする
 	*/
 	void SetJointTempAngle(double angle);
+
+	/** @brief 関節引き戻し目標をセットする
+	*/
+	void SetPullbackTarget(double angle);
 };
 
 /// １軸アクチュエータのディスクリプタ
 struct PHIKHingeActuatorDesc : PHIKActuatorDesc{
 	SPR_DESCDEF(PHIKHingeActuator);
+
+	double pullbackTarget;
+
+	PHIKHingeActuatorDesc() {
+		pullbackTarget = 0.0;
+	}
 };
 
 //@}

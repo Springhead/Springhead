@@ -356,21 +356,23 @@ void CSlog::Print(const char* str) {
 	size_t len;
 	errno_t err = _dupenv_s(&path, &len, "SPRCS_LOGFILE");
 	if (err) return;
-	std::ofstream ofs(path, std::ios::out | std::ios::app);
-	free(path);
-	//
-	time_t now = time(NULL);
-	struct tm tm;
-	localtime_s(&tm, &now);
-	ofs << tm.tm_year + 1990 << "/"
-	    << std::setfill('0') << std::setw(2) << tm.tm_mon+1 << "/"
-	    << std::setfill('0') << std::setw(2) << tm.tm_mday << " "
-	    << std::setfill('0') << std::setw(2) << tm.tm_hour << ":"
-	    << std::setfill('0') << std::setw(2) << tm.tm_min << ":"
-	    << std::setfill('0') << std::setw(2) << tm.tm_sec << " ";
-	ofs << "[" << std::setw(5) << GetCurrentThreadId() << "] ";
-	ofs << str;
-	ofs.close();
+	if (path != NULL) {
+		std::ofstream ofs(path, std::ios::out | std::ios::app);
+		free(path);
+		//
+		time_t now = time(NULL);
+		struct tm tm;
+		localtime_s(&tm, &now);
+		ofs << tm.tm_year + 1990 << "/"
+			<< std::setfill('0') << std::setw(2) << tm.tm_mon + 1 << "/"
+			<< std::setfill('0') << std::setw(2) << tm.tm_mday << " "
+			<< std::setfill('0') << std::setw(2) << tm.tm_hour << ":"
+			<< std::setfill('0') << std::setw(2) << tm.tm_min << ":"
+			<< std::setfill('0') << std::setw(2) << tm.tm_sec << " ";
+		ofs << "[" << std::setw(5) << GetCurrentThreadId() << "] ";
+		ofs << str;
+		ofs.close();
+	}
 }
 
 void CSlog::Truncate() {
@@ -378,9 +380,11 @@ void CSlog::Truncate() {
 	size_t len;
 	errno_t err = _dupenv_s(&path, &len, "SPRCS_LOGFILE");
 	if (err) return;
-	std::ofstream ofs(path, std::ios::trunc);
-	free(path);
-	ofs.close();
+	if (path != NULL) {
+		std::ofstream ofs(path, std::ios::trunc);
+		free(path);
+		ofs.close();
+	}
 }
 
 //end of CSUtility.cpp
