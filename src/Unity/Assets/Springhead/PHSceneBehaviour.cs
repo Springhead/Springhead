@@ -59,9 +59,7 @@ public class PHSceneBehaviour : SprBehaviour {
 
         phScene.SetTimeStep(Time.fixedDeltaTime);
 
-        if (enableIK) {
-            phScene.GetIKEngine().Enable(true);
-        }
+        phScene.GetIKEngine().Enable(enableIK);
 
         /*
         UTTimerIf timer = UTTimerIf.Create();
