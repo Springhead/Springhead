@@ -2,7 +2,7 @@
 #define PHFEMCOLLISION_H
 
 #include <Springhead.h>
-#include <Framework/SprFWApp.h>
+//#include <Framework/SprFWApp.h>
 
 //#include <Physics\PHFemEngine.h>
 #include <Physics/PHFemMeshNew.h>
