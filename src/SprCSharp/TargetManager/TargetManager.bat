@@ -14,30 +14,32 @@
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 1.0	 2016/12/07	F.Kanehori  初版
+::	Ver 1.0	 2016/12/07 F.Kanehori	初版
+::	Ver 1.1	 2017/01/16 F.Kanehori	NameManger 導入
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
-set DEBUG=0
+set DEBUG=1
 
 :: ------------
 ::  引数の処理
 :: ------------
 set TARGET=%1
 if "%TARGET%" equ "" (
-	echo %PROG%: Error: need arg "target"
+	echo %PROG%: Error: missing arg "target"
+	echo.
+	call :usage
 	exit /b
 )
 
-:: --------------------
-::  使用するファイル名
-:: --------------------
-set TARGETFILE=..\TargetManager\target.last
-
-:: --------------------
-::  使用するスクリプト
-:: --------------------
-set CLEAN=..\RunSwig_CSharp\RunSwig_Clean.bat
+:: ------------------------
+::  共通環境変数を読み込む
+:: ------------------------
+call ..\NameManager\NameManager.bat
+if %DEBUG% == 1 (
+	echo TARGET FILE:  %TARGETFILE%
+	echo CLEAN SCRIPT: %CSHARPCLEAN%
+)
 
 :: ----------------------------------
 ::  記録されたターゲット名を読み出す
@@ -54,12 +56,19 @@ if "%TARGET%" equ "%LASTTARGET%" (
 ) else (
 	:: 異なったのでファイルの削除を行なう
 	echo %PROG%: %LASTTARGET% -^> %TARGET%, clearing files
-	%CLEAN% 
+	%CSHARPCLEAN% 
 )
 
 :: ----------
 ::  処理終了
 :: ----------
 endlocal
+
+:: -----------------------------------------------------------------------------------
+:: -----------------------------------------------------------------------------------
+:usage
+	echo Usage: %PROG% target
+	echo            target:	ALL ^| Physics ^| ...
+exit /b
 
 ::end TargetManager.bat

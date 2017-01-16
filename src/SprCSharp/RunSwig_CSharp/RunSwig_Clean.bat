@@ -7,39 +7,30 @@
 ::      RunSwig_CSharp で作成されたファイルを削除する.
 ::      プロジェクト RunSwig_CSharp の [ソリューションのクリーン] から呼ばれる.
 ::
-::    　実行するプロジェクトは ..\..\src\RunSwig\do_swigall.projs に定義されている
-::      ものを使用する. ただしプロジェクト Base は定義の有無に関わりなく実行する.
-::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 2.0a 2016/12/14 F.Kanehori	ラッパファイル作成方式変更
-::	Ver 2.0	 2016/12/05 F.Kanehori	リンク構成指定実装
 ::	Ver 1.0	 2015/03/18 F.Kanehori	初版
+::	Ver 2.0	 2016/12/05 F.Kanehori	リンク構成指定実装
+::	Ver 2.1	 2017/01/16 F.Kanehori	NameManger 導入
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
 set CWD=%cd%
 set DEBUG=1
 
-set TOPDIR=..\..\..
-set SRCDIR=%TOPDIR%\src
-set ETCDIR=%SRCDIR%\RunSwig
-
-set CSBASE=..
-set CS_SRC=%CSBASE%\SprCSharp
-set CS_IMP=%CSBASE%\SprImport
-set CS_EXP=%CSBASE%\SprExport
-
+:: ------------------------
+::  共通環境変数を読み込む
+:: ------------------------
+call ..\NameManager\NameManager.bat
 if %DEBUG% == 1 (
     echo %PROG%
     echo CWD: %CWD%
-    call :show_abs_path TOPDIR %TOPDIR%
-    call :show_abs_path SRCDIR %SRCDIR%
-    call :show_abs_path ETCDIR %ETCDIR%
-    call :show_abs_path CSBASE %CSBASE%
-    call :show_abs_path CS_SRC %CS_SRC%
-    call :show_abs_path CS_IMP %CS_IMP%
-    call :show_abs_path CS_EXP %CS_EXP%
+    call :show_abspath TOPDIR %TOPDIR%
+    call :show_abspath SRCDIR %SRCDIR%
+    call :show_abspath ETCDIR %ETCDIR%
+    call :show_abspath CS_SRC %CS_SRC%
+    call :show_abspath CS_IMP %CS_IMP%
+    call :show_abspath CS_EXP %CS_EXP%
     echo. 
 )
 
@@ -81,7 +72,7 @@ exit /b
 :: -----------------------------------------------------------------------------------
 ::  デバッグ用
 :: -----------------------------------------------------------------------------------
-:show_abs_path
+:show_abspath
     echo %1:  [%~f2]
 exit /b
 
