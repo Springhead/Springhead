@@ -10,7 +10,6 @@
 ::	target		リンクするプロジェクトの指定
 ::	    ALL		すべてのプロジェクトを含む構成とする.
 ::	    Physics	Physics を含む最小の構成とするを含む構成とする.
-::	    :export	特殊ターゲット：共通に使用する名前を export する.
 ::	
 ::  DESCRIPTION:
 ::      ファイルの依存関係を調べて、CSharpSWig.bat を最適に実行する.
@@ -21,11 +20,11 @@
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 3.1a 2016/12/20 F.Kanehori	bug fixed
-::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
-::	Ver 3.0	 2016/12/07 F.Kanehori  リンク構成指定実装
-::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file 統合
 ::	Ver 1.0	 2015/03/18 F.Kanehori  初版
+::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file 統合
+::	Ver 3.0	 2016/12/07 F.Kanehori  リンク構成指定実装
+::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
+::	Ver 3.2	 2017/01/16 F.Kanehori	NameManger 導入
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -38,60 +37,28 @@ set DEBUG=1
 set TARGET=%1
 if "%TARGET%" equ "" (
     echo Usage: %PROG% target
-    echo     target     ALL ^| Physics ^| :export
+    echo     target     ALL ^| Physics ^| ...
     exit /b
 )
 if %DEBUG% == 1 (
     echo TARGET: [%TARGET%]
 )
 
-:: ----------
-::  各種定義
-:: ----------
-:: ディレクトリの定義
-::
-set TOPDIR=..\..\..
-set BINDIR=%TOPDIR%\bin
-set SRCDIR=%TOPDIR%\src
-set INCDIR=%TOPDIR%\include
-set ETCDIR=%SRCDIR%\RunSwig
-
-set CSBASE=.
-set SUBDIR_SRC=SprCSharp
-set SUBDIR_IMP=SprImport
-set SUBDIR_EXP=SprExport
-set CS_SRC=%CSBASE%/%SUBDIR_SRC%
-set CS_IMP=%CSBASE%/%SUBDIR_IMP%
-set CS_EXP=%CSBASE%/%SUBDIR_EXP%
-
-:: ファイル名の定義
-set TARGETFILE=..\TargetManager\target.last
-
+:: ------------------------
+::  共通環境変数を読み込む
+:: ------------------------
+call ..\NameManager\NameManager.bat
 if %DEBUG% == 1 (
     echo %~nx0
-    call :show_abs_path INCDIR %INCDIR%
-    call :show_abs_path SRCDIR %SRCDIR%
-    call :show_abs_path ETCDIR %ETCDIR%
-    call :show_abs_path CS_SRC %CS_SRC%
-    call :show_abs_path CS_IMP %CS_IMP%
-    call :show_abs_path CS_EXP %CS_EXP%
-    call :show_abs_path TARGETFILE %TARGETFILE%
+    call :show_abspath INCDIR %INCDIR%
+    call :show_abspath SRCDIR %SRCDIR%
+    call :show_abspath ETCDIR %ETCDIR%
+    call :show_abspath CS_SRC %CS_SRC%
+    call :show_abspath CS_IMP %CS_IMP%
+    call :show_abspath CS_EXP %CS_EXP%
+    call :show_abspath TARGETFILE %TARGETFILE%
     echo. 
 )
-
-:: ---------------------------------------------
-::  RunSwig_CSharp.bat と共通で使用する環境変数
-::
-::  wrapper file が作成されたことを示すファイル名
-set WRAPPERS_BUILT=wrappers.built
-::
-::  モジュール毎に作成する wrapper file の名前
-set MODULE_WRAPPER_SRC=wrapper.cs
-set MODULE_WRAPPER_IMP=wrapper.cs
-set MODULE_WRAPPER_EXP=wrapper.cpp
-::
-if "%TARGET%" equ ":export" goto :export
-:: ---------------------------------------------
 
 :: 依存関係にはないと見做すファイルの一覧
 ::
@@ -103,39 +70,15 @@ set SRCDIROUT=..\..\src
 
 :: 使用するファイル名
 ::
-set PROJFILE=do_swigall.projs
 set MAKEFILE=Makefile_CSharp.swig
-::
-::  wrapper file の名前
-set WRAPPERFILE_SRC=module.wrapper.cs
-set WRAPPERFILE_IMP=module.wrapper.cs
-set WRAPPERFILE_EXP=module.wrapper.cpp
-::
-::  関数の多重生成を防ぐためにモジュール間で情報を受け渡すファイル
-set SIGNATURE=..\swig_sprcs.signature
-
-:: 使用するプログラム名
-::
-set MAKE=nmake
-set SWIG=RunSwig_CSharp\CSharpSwig.bat
 
 :: 使用するパス
 ::
-set X32=c:\Program Files
-set X64=c:\Program Files (x86)
-set ARCH=
-if exist "%X32%" set ARCH=%X32%
-if exist "%X64%" set ARCH=%X64%
-set VSVER=
-if exist "%ARCH%\Microsoft Visual Studio 10.0" set VSVER=10.0
-if exist "%ARCH%\Microsoft Visual Studio 12.0" set VSVER=12.0
-set MAKEPATH="%ARCH%\Microsoft Visual Studio %VSVER%\VC\bin"
+call ..\NameManager\SetMakePath.bat
 if not exist %MAKEPATH% (
     echo %PROG%: Error: can not find '%MAKE%' path.
     exit /b
 )
-set SWIGPATH=%BINDIR%\swig
-set PATH=.;%SWIGPATH%;%MAKEPATH%;%PATH%
 
 :: ------------------------------
 ::  処理するモジュール一覧を作成
@@ -144,12 +87,12 @@ set PROJECTS=Base
 set SWIGMACRO=
 
 if /i "%TARGET%" equ "ALL" (
-	for /f "tokens=1,*" %%m in (%ETCDIR%\%PROJFILE%) do (
+	for /f "tokens=1,*" %%m in (%PROJSFILE%) do (
     		set PROJECTS=!PROJECTS! %%m
 	)
 ) else (
 	for %%t in (%TARGET:,= %) do (
-		for /f "tokens=1,*" %%m in (%ETCDIR%\%PROJFILE%) do (
+		for /f "tokens=1,*" %%m in (%PROJSFILE%) do (
 			if "%%m" equ "%%t" (
 	    			set PROJECTS=!PROJECTS! %%n %%m
 	    			set PROJECTS=!PROJECTS:,= !
@@ -188,15 +131,14 @@ echo IFiles:    [%IFILES%]
 :: ------------------------------
 ::  モジュールにまたがる初期化
 :: ------------------------------
-call :truncate_file %SIGNATURE%
-del /f ..\%WRAPPERS_BUILT% > NUL 2>&1
+call :truncate_file %SIGNATUREFILE%
+del /f ..\%WRAPPERSBUILTFILE% > NUL 2>&1
 
 :: ------------------------------
 ::  作業ディレクトリの作成
 :: ------------------------------
-for %%d in (%SUBDIR_SRC% %SUBDIR_IMP% %SUBDIR_EXP%) do (
-	call :abs_path ..
-	set TMPDIR=!$ret!\%%d\tmp
+for %%d in (%CS_SRC% %CS_IMP% %CS_EXP%) do (
+	set TMPDIR=%%d\tmp
 	if not exist !TMPDIR! (
 		echo making directory !TMPDIR!
 		mkdir !TMPDIR!
@@ -224,17 +166,17 @@ for %%p in (%PROJECTS%) do (
 :: -------------------------
 ::  wrapper file をまとめる
 :: -------------------------
-if exist ..\%WRAPPERS_BUILT% (
+if exist %WRAPPERSBUILTFILE% (
     echo combining wrapper files
-    set WF_SRC=%CS_SRC:/=\%\%WRAPPERFILE_SRC%
-    set WF_IMP=%CS_IMP:/=\%\%WRAPPERFILE_IMP%
-    set WF_EXP=%CS_EXP:/=\%\%WRAPPERFILE_EXP%
+    set WF_SRC=%SUBDIR_SRC:/=\%\%MOD_WRAPPERFILE_SRC%
+    set WF_IMP=%SUBDIR_IMP:/=\%\%MOD_WRAPPERFILE_IMP%
+    set WF_EXP=%SUBDIR_EXP:/=\%\%MOD_WRAPPERFILE_EXP%
     type ..\!WF_SRC!.prologue > ..\!WF_SRC!
     type ..\!WF_IMP!.prologue > ..\!WF_IMP!
     type ..\!WF_EXP!.prologue > ..\!WF_EXP!
-    for %%f in (..\%CS_SRC:/=\%\tmp\*.cs)  do ( type %%f >> ..\!WF_SRC! )
-    for %%f in (..\%CS_IMP:/=\%\tmp\*.cs)  do ( type %%f >> ..\!WF_IMP! )
-    for %%f in (..\%CS_EXP:/=\%\tmp\*.cpp) do ( type %%f >> ..\!WF_EXP! )
+    for %%f in (..\%SUBDIR_SRC:/=\%\tmp\*.cs)  do ( type %%f >> ..\!WF_SRC! )
+    for %%f in (..\%SUBDIR_IMP:/=\%\tmp\*.cs)  do ( type %%f >> ..\!WF_IMP! )
+    for %%f in (..\%SUBDIR_EXP:/=\%\tmp\*.cpp) do ( type %%f >> ..\!WF_EXP! )
     echo } >> ..\!WF_SRC!
     echo.   } >> ..\!WF_IMP!
     echo } >> ..\!WF_IMP!
@@ -318,11 +260,11 @@ exit /b
         echo INTFILES [%INTFILES%]
     )
 
-    set TARGET_SRC=%CS_SRC%/CS%MODULE%.cs
+    set TARGET_SRC=./%SUBDIR_SRC%/CS%MODULE%.cs
     set TARGET_ALL=%TARGET_SRC%
     rem ------------------------------------------------------
-    rem set TARGET_IMP=%CS_IMP%/CS%MODULE%.cs
-    rem set TARGET_EXP=%CS_EXP%/CS%MODULE%.cpp
+    rem set TARGET_IMP=%SUBDIR_IMP%/CS%MODULE%.cs
+    rem set TARGET_EXP=%SUBDIR_EXP%/CS%MODULE%.cpp
     rem set TARGET_ALL=%TARGET_SRC% %TARGET_IMP% %TARGET_EXP%
     rem ------------------------------------------------------
 
@@ -364,7 +306,7 @@ exit /b
     echo all:	%TARGET_ALL%    >> %MKFILE%
     echo.			>> %MKFILE%
     echo %TARGET_SRC%:	$(INCHDRS) $(SRCHDRS) $(INTFILES) $(FIXED_WRAPPERS)>> %MKFILE%
-    echo.	call %SWIG% %MODULE% %SWIGMACRO%	>> %MKFILE%
+    echo.	call %CSHARPSWIG% %MODULE% %SWIGMACRO%	>> %MKFILE%
     echo.				>> %MKFILE%
     echo $(INCHDRS):			>> %MKFILE%
     echo.				>> %MKFILE%
@@ -399,31 +341,6 @@ exit /b
 exit /b
 
 :: -----------------------------------------------------------------------------------
-::  引数1 で与えられたパスを絶対パスに変換する（引数1はディレクトリ名でもよい）
-::  結果は $ret に返す
-:: -----------------------------------------------------------------------------------
-:abs_path
-    set $ret=%~f1
-exit /b
-
-:: -----------------------------------------------------------------------------------
-::  共通に使用する名前を exportする
-:: -----------------------------------------------------------------------------------
-:export
-    call :get_abs_path .
-    set BASEDIR=%$ret%
-    endlocal && (
-	set MODULE_WRAPPER_SRC=%MODULE_WRAPPER_SRC%
-	set MODULE_WRAPPER_IMP=%MODULE_WRAPPER_IMP%
-	set MODULE_WRAPPER_EXP=%MODULE_WRAPPER_EXP%
-	set WRAPPERS_BUILT=%WRAPPERS_BUILT%
-    )
-exit /b
-:get_abs_path
-    set $ret=%~dp1
-exit /b
-
-:: -----------------------------------------------------------------------------------
 ::  集合から重複した要素を取り除く
 :: -----------------------------------------------------------------------------------
 :bag_to_set
@@ -442,7 +359,7 @@ exit /b
 :: -----------------------------------------------------------------------------------
 ::  デバッグ用
 :: -----------------------------------------------------------------------------------
-:show_abs_path
+:show_abspath
     echo %1:  [%~f2]
 exit /b
 

@@ -15,10 +15,11 @@
 ::
 :: ***********************************************************************************
 ::  Version:
-::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
-::	Ver 3.0	 2016/12/01 F.Kanehori  ターゲット指定実装
-::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file 統合
 ::	Ver 1.0	 2015/01/26 F.Kanehori  初版
+::	Ver 2.0	 2016/02/08 F.Kanehori  wrapper file 統合
+::	Ver 3.0	 2016/12/01 F.Kanehori  ターゲット指定実装
+::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
+::	Ver 3.2	 2017/01/16 F.Kanehori	NameManger 導入
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -47,34 +48,19 @@ if %DEBUG% == 1 (
     echo MACRO:  [%MACRO%]
 )
 
-:: ----------
-::  各種定義
-:: ----------
-:: ディレクトリの定義
-::
-call :set_abspath SRCDIR ..\..\src
-set CS_SRC=SprCSharp
-set CS_IMP=SprImport
-set CS_EXP=SprExport
-
+:: ------------------------
+::  共通環境変数を読み込む
+:: ------------------------
+call .\NameManager\NameManager.bat
 echo. 
 echo *** %MODULE% ***
 echo using src directory: %SRCDIR%
 
-:: 使用するパス
-::
-set SWIGPATH=..\..\bin\swig
-set PATH=%SWIGPATH%;%PATH% 
-
-:: 使用するプログラム名
-::
-set SWIG=swig_sprcs
+:: ----------
+::  各種定義
+:: ----------
+set PATH=%SWIGDIR%;%PATH% 
 set ARGS=-sprcs -DSWIG_CS_SPR -c++ -I%SWIGPATH%\Lib -w305,312,319,325,401,402
-
-:: 使用するファイル名
-::	RunSwig_CSharp.bat から読み出す
-::
-call RunSwig_CSharp\RunSwig_CSharp :export
 
 :: ----------
 ::  処理開始
@@ -87,15 +73,15 @@ if exist %MODULE%.i (
 	move /Y %MODULE%Cs.cs  %CS_SRC%\CS%MODULE%.cs  > NUL 2>&1
 	move /Y %MODULE%CsP.cs %CS_IMP%\CS%MODULE%.cs  > NUL 2>&1
 	move /Y %MODULE%Cs.cpp %CS_EXP%\CS%MODULE%.cpp > NUL 2>&1
-	echo %CS_SRC%\CS%MODULE%.cs  created
-	echo %CS_IMP%\CS%MODULE%.cs  created
-	echo %CS_EXP%\CS%MODULE%.cpp created
+	echo %SUBDIR_SRC%\CS%MODULE%.cs  created
+	echo %SUBDIR_IMP%\CS%MODULE%.cs  created
+	echo %SUBDIR_EXP%\CS%MODULE%.cpp created
 	if %DEBUG% == 1 (
 	    move /Y %MODULE%CS.info %CS_INFO%\CS%MODULE%.info >NUL 2>&1
 	) else (
 	    del %MODULE%CS.info 2>NUL
 	)
-	type NUL > %WRAPPERS_BUILT%
+	type NUL > %WRAPPERSBUILTFILE%
     )
 ) else (
     echo "%MODULE%.i" not found
@@ -108,6 +94,4 @@ echo.
 endlocal
 exit /b
 
-:set_abspath
-    set %1=%~f2
-exit /b
+::end CSharpSWig.bat
