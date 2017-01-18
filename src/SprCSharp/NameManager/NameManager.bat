@@ -3,7 +3,7 @@
 
 set BINDIR=F:\Project\Springhead2\bin
 set CSHARPCLEAN=F:\Project\Springhead2\src\SprCSharp\RunSwig_CSharp\RunSwig_Clean.bat
-set CSHARPSWIG=F:\Project\Springhead2\src\SprCSharp\RunSwig_CSharp\CSharpSwig.bat
+set CSHARPSWIG=CSharpSwig.bat
 set CS_EXP=F:\Project\Springhead2\src\SprCSharp\SprExport
 set CS_IMP=F:\Project\Springhead2\src\SprCSharp\SprImport
 set CS_SRC=F:\Project\Springhead2\src\SprCSharp\SprCSharp

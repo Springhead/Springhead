@@ -5,8 +5,8 @@
 #	NameManager.py
 #
 #  SYNOPSIS:
-#	NameManager [-d topdir] [-i inifile] [-o outfile]
-#	    topdir:	System base directory name (str).
+#	NameManager [-d srctop] [-i inifile] [-o outfile]
+#	    srctop:	Top directory name of system src tree (str).
 #	    inifile:	Environment variable definition file name (str).
 #	    outfile:	Batch file name to be generated (str).
 #
@@ -22,6 +22,7 @@
 # ----------------------------------------------------------------------
 #  VERSION:
 #	Ver 1.0  2017/01/16 F.Kanehori	First release version.
+#	Ver 1.1  2017/01/18 F.Kanehori	Change directory position (-d).
 # ======================================================================
 import sys
 import os
@@ -48,10 +49,10 @@ E = Error(prog)
 #
 usage = 'Usage: %prog [options]'
 parser = OptionParser(usage = usage)
-parser.add_option('-d', '--topdir',
-			dest='topdir', default='Springhead2',
+parser.add_option('-d', '--srctop',
+			dest='srctop', default='src',
 			metavar='DIR',
-			help='Spr base directory [default: %default]')
+			help='top directory of src tree [default: %default]')
 parser.add_option('-i', '--inifile',
 			dest='inifile', default='NameManager.ini',
 			metavar='FILE',
@@ -83,7 +84,7 @@ if len(args) != 0:
 	sys.exit(0)
 
 # get options
-topdir	= options.topdir
+srctop	= options.srctop
 inifile	= options.inifile
 outfile	= options.outfile
 test_only = options.test_only
@@ -91,7 +92,7 @@ verbose	= options.verbose
 
 if verbose:
 	print('argument used:')
-	print('  topdir:    %s' % topdir)
+	print('  srctop:    %s' % srctop)
 	print('  inifile:   %s' % inifile)
 	print('  outfile:   %s' % outfile)
 	print('  test_only: %s' % test_only)
@@ -103,12 +104,12 @@ if verbose:
 dirlist = os.getcwd().split('\\')
 found = False
 for n in range(len(dirlist)):
-	if dirlist[n] == topdir:
+	if dirlist[n] == srctop:
 		found = True
 		break
 if not found:
-	E.print('no such directory "%s"' % topdir)
-topdir = '\\'.join(dirlist[0:n+1]) if found else None
+	E.print('no such directory "%s"' % srctop)
+topdir = '\\'.join(dirlist[0:n]) if found else None
 
 # ----------------------------------------------------------------------
 #  Read name definitions.
