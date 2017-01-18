@@ -25,6 +25,7 @@
 ::	Ver 3.0	 2016/12/07 F.Kanehori  リンク構成指定実装
 ::	Ver 3.1  2016/12/15 F.Kanehori	ラッパファイル作成方式変更
 ::	Ver 3.2	 2017/01/16 F.Kanehori	NameManger 導入
+::	Ver 3.2a 2017/01/18 F.Kanehori	Bug fixed.
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -67,6 +68,7 @@ set EXCLUDES=
 :: makefile に出力するときのパス
 set INCDIROUT=..\..\include
 set SRCDIROUT=..\..\src
+set CSHARPSWIG=RunSwig_CSharp\%CSHARPSWIG%
 
 :: 使用するファイル名
 ::
