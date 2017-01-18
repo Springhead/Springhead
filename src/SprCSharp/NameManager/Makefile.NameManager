@@ -1,0 +1,18 @@
+#  File: Makefile.NameManager
+			
+INIFILE	= NameNamager.ini
+SCRIPT	= NameManager.py
+TARGET	= NameManager.bat
+
+all:	$(TARGET)
+
+$(TARGET):	$(INIFILE) $(SCRIPT)
+		python $(SCRIPT)
+
+clean:		
+		del $(TARGET)
+
+$(INIFILE):			
+
+$(SCRIPT):			
+
