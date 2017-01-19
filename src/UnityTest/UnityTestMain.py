@@ -10,6 +10,7 @@
 #  VERSION:
 #	Ver 1.0  2016/06/20 F.Kanehori	First version
 #	Ver 1.1  2016/10/12 F.Kanehori	Revised by using modules
+#	Ver 1.1a 2017/01/19 F.Kanehori	Bug fixed.
 # ======================================================================
 version = 1.0
 import sys
@@ -154,8 +155,10 @@ for scene in scenes:
 	logmsg('======================', ofile)
 	logmsg(' ' + scene, ofile)
 	logmsg('======================', ofile)
+	tmpf = ofile + '.tmp'
 	verbose(extract, 0)
-	result = Util.exec(extract, stdout=ofile, stderr=Util.STDOUT, shell=True)
+	append_proc = 'python log_append.py %s' % ofile
+	result = Util.exec(extract, opipe_proc=append_proc, shell=True)
 	# for debug
 	if options.onlyone:
 		break
