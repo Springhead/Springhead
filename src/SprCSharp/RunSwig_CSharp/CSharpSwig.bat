@@ -1,10 +1,10 @@
 @echo off
 :: ***********************************************************************************
 ::  File:
-::	RunSwig.bat
+::	CSharpSwig.bat
 ::
 ::  SYNOPSIS:
-::	RunSwig module [swigmacro]
+::	CSharpSwig module [swigmacro]
 ::
 ::  ARGUMENTS:
 ::	module		ÉÇÉWÉÖÅ[Éãñº
