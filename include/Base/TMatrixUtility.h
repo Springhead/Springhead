@@ -231,7 +231,7 @@ void init_look_at(TMatrixBase<4, 4, D>& a, const TVectorBase<3, BP>& posi){
 }*/
 template <class D, class BP, class BT>
 void init_look_at(TMatrixBase<4,4,D>& a, const TVectorBase<3, BP>& pos, const TVectorBase<3, BT>& diry){
-	typedef TYPENAME D::ret_type TAf;
+	//typedef TYPENAME D::ret_type TAf;
 	typedef TYPENAME BP::ret_type TVec;
 	// preserve scaling (not needed?)
 	TYPENAME D::element_type sx = a.col(0).sub_vector(TSubVectorDim<0,3>()).norm();
@@ -279,7 +279,7 @@ void init_projection_gl(TMatrixBase<4,4,D>& a,
 	assert(front > 0);				//	Check front clipping plane.
 	assert(back > front);			//	Check back clipping plane.
 	
-	typedef TYPENAME D::element_type ET;
+	//typedef TYPENAME D::element_type ET;
 	TVector<2,float> center = screen.sub_vector(TSubVectorDim<0,2>());
 	
 	center *= front / screen[2];
@@ -303,7 +303,7 @@ void init_projection_d3d(TMatrixBase<4, 4, D>& a,
 	assert(front > 0);					//	Check front clipping plane.
 	assert(back > front);				//	Check back clipping plane.
 	
-	typedef TYPENAME D::element_type ET;
+	//typedef TYPENAME D::element_type ET;
 	TSubVector<2, TYPENAME TVectorBase<3, SD>::desc > center = screen.sub_vector(TSubVectorDim<0,2>());
 	
 	center *= front / screen[2];
