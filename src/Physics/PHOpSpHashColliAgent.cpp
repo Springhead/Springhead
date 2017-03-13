@@ -531,7 +531,7 @@ namespace Spr{
 				//hapticInform
 				/*if (hcColliedIndex >0)
 				{
-				myHc->SetHcColliedFlag(true);
+				myHc->SetHCColliedFlag(true);
 				if (hcColliedIndex == 1)
 				{
 				myHc->AddColliedPtcl(ptclindex2, objIndex2, dir * ellRadius2 + dpCtr2);
@@ -635,7 +635,7 @@ namespace Spr{
 			//haptic imp
 			/*if (hcColliedIndex >0)
 			{
-			myHc->SetHcColliedFlag(true);
+			myHc->SetHCColliedFlag(true);
 			if (hcColliedIndex == 1)
 			{
 			myHc->AddColliedPtcl(ptclindex2, objIndex2, x2 + dpCtr2);

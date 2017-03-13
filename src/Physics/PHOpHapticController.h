@@ -2,28 +2,25 @@
 #define PHOPHAPTICCONTROLLER_H
 
 #include <Foundation/Object.h>
-#include <HumanInterface\SprHISpidar.h>
+//#include <HumanInterface\SprHISpidar.h>
 #include <Physics\PHOpObj.h>
 #include <sstream>
-#include "HumanInterface\SprHIDRUsb.h"
-#include "HumanInterface\SprHIKeyMouse.h"
-#include "HumanInterface\SprHISdk.h"
+#include <Physics\PHSpatial.h>
+//#include "HumanInterface\SprHIDRUsb.h"
+//#include "HumanInterface\SprHIKeyMouse.h"
+//#include "HumanInterface\SprHISdk.h"
 //#include "Physics\PHOpEngine.h"
 
 namespace Spr {
 	;
-
-
 	class PHOpHapticController: public SceneObject, public PHOpHapticControllerDesc
 	{
-		
-		
-		//Matrix3f crossPlatformTransform;
 	public:
 		PHOpObj* hcObj;
 		PHOpHapticController(const PHOpHapticControllerDesc& desc = PHOpHapticControllerDesc()): PHOpHapticControllerDesc(desc)
 		{
 			max_output_force = 6.0f;
+			IsSetForceReady = false;
 		}
 		PHOpHapticController::~PHOpHapticController()
 		{
@@ -32,27 +29,20 @@ namespace Spr {
 			if (logPPosFile) fclose(logPPosFile);
 		}
 
-	
 		SPR_OBJECTDEF(PHOpHapticController);
 		ACCESS_DESC(PHOpHapticController);
 
-		UTRef<HISpidarGIf> currSpg;
-		//UTRef<HISdkIf> hiSdk;
 		
-
 		std::vector<PvsHcCtcPInfo> hcColliedPs;
 		//std::vector<PvsHcCtcPInfo> segTestPs;//Ptcl of segment test in pre-ctc detection
 		std::vector<int> suspFaceIndex;
+		SpatialVector outForce;
 		
 		FILE *logForceFile;//Force
 		FILE *logPPosFile;//proxy pos
 		FILE *logPosFile;//particle pos
 		FILE *logUPosFile;//user pos
 		float max_output_force;
-		
-
-		//proxyfix
-		
 		std::vector<int> surrCnstrList;
 
 		struct ConstrainPlaneInfo{
@@ -97,21 +87,23 @@ namespace Spr {
 		std::vector<int> sameLIdArr;
 		//HapticController(int id) :PHOpObj(id)
 
+		//for new HC
 		
-		/*void vertexBlending()
-		{
-		targetVts[0]= objPArr[0].pCurrCtr;
-		}*/
-		bool doCalibration();
-		bool  initDevice(HISdkIf* hiSdk);
-		bool InitialHapticController(PHOpObj* opObjectif, HISdkIf* hisdk);
-		bool InitialHapticController(HISdkIf* hisdk);
-		//void UpdateHapticPosition(Vec3f &pos);
+		void SetPhHCReady(bool flag);
+		bool GetPhHCReady();
+		SpatialVector GetHCOutput();
 
+
+	
+		//bool doCalibration();
+		//bool  initDevice(HISdkIf* hiSdk);
+		bool InitialHapticController(PHOpObj* opObjectif);
+		bool InitialHapticController();
+		
 		void LogForce(TQuaternion<float> winPose);
 		void UpdateProxyPosition(Vec3f &pos, TQuaternion<float> winPose);
 		bool CheckProxyState();
-		void SetHcColliedFlag(bool flag);
+		void SetHCColliedFlag(bool flag);
 		//void BindCtcPlane(ConstrainPlaneInfo cif);
 		void AddColliedPtcl(int pIndex, int objindex, Vec3f ctcPos);
 		PHOpParticle* GetMyHpProxyParticle();
@@ -123,6 +115,16 @@ namespace Spr {
 		void BuildVToFaceRelation();
 		ObjectIf* GetHpOpObj();
 		bool SetForce(Vec3f f);
+		
+		void SetHCForceReady(bool flag);
+		bool GetHCForceReady();
+		void SetHCReady(bool flag);
+		bool GetHCReady();
+		Vec3f GetHCPosition();
+		void SetHCPosition(Vec3f pos);
+		void SetHCPose(Posef pose);
+		Posef GetHCPose();
+
 		
 		/*void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ)
 		{

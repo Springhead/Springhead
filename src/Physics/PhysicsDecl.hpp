@@ -1513,13 +1513,13 @@ protected:\
 	Vec3f	hcLastUPos;	\
 	Vec3f	hcFixsubGoal;	\
 	float	c_obstRadius;	\
-	Vec3f	currOutForce;	\
 	int	hpObjIndex;	\
 	Spr::PHOpHapticControllerDesc::HapticDOFType	hcType;	\
 	bool	logForce;	\
+	bool	hcReady;	\
+	bool	IsSetForceReady;	\
 	int	fileindex;	\
 	Vec3f	lastHpRateF;	\
-	bool	hcReady;	\
 	bool	hcCollied;	\
 	int	constrainCount;	\
 	int	constrainCountHc;	\
@@ -1544,13 +1544,13 @@ public:\
 		hcLastUPos = ((PHOpHapticControllerDesc*)ptr)->hcLastUPos;	\
 		hcFixsubGoal = ((PHOpHapticControllerDesc*)ptr)->hcFixsubGoal;	\
 		c_obstRadius = ((PHOpHapticControllerDesc*)ptr)->c_obstRadius;	\
-		currOutForce = ((PHOpHapticControllerDesc*)ptr)->currOutForce;	\
 		hpObjIndex = ((PHOpHapticControllerDesc*)ptr)->hpObjIndex;	\
 		hcType = ((PHOpHapticControllerDesc*)ptr)->hcType;	\
 		logForce = ((PHOpHapticControllerDesc*)ptr)->logForce;	\
+		hcReady = ((PHOpHapticControllerDesc*)ptr)->hcReady;	\
+		IsSetForceReady = ((PHOpHapticControllerDesc*)ptr)->IsSetForceReady;	\
 		fileindex = ((PHOpHapticControllerDesc*)ptr)->fileindex;	\
 		lastHpRateF = ((PHOpHapticControllerDesc*)ptr)->lastHpRateF;	\
-		hcReady = ((PHOpHapticControllerDesc*)ptr)->hcReady;	\
 		hcCollied = ((PHOpHapticControllerDesc*)ptr)->hcCollied;	\
 		constrainCount = ((PHOpHapticControllerDesc*)ptr)->constrainCount;	\
 		constrainCountHc = ((PHOpHapticControllerDesc*)ptr)->constrainCountHc;	\
@@ -1576,13 +1576,13 @@ public:\
 		((PHOpHapticControllerDesc*)ptr)->hcLastUPos = hcLastUPos;	\
 		((PHOpHapticControllerDesc*)ptr)->hcFixsubGoal = hcFixsubGoal;	\
 		((PHOpHapticControllerDesc*)ptr)->c_obstRadius = c_obstRadius;	\
-		((PHOpHapticControllerDesc*)ptr)->currOutForce = currOutForce;	\
 		((PHOpHapticControllerDesc*)ptr)->hpObjIndex = hpObjIndex;	\
 		((PHOpHapticControllerDesc*)ptr)->hcType = hcType;	\
 		((PHOpHapticControllerDesc*)ptr)->logForce = logForce;	\
+		((PHOpHapticControllerDesc*)ptr)->hcReady = hcReady;	\
+		((PHOpHapticControllerDesc*)ptr)->IsSetForceReady = IsSetForceReady;	\
 		((PHOpHapticControllerDesc*)ptr)->fileindex = fileindex;	\
 		((PHOpHapticControllerDesc*)ptr)->lastHpRateF = lastHpRateF;	\
-		((PHOpHapticControllerDesc*)ptr)->hcReady = hcReady;	\
 		((PHOpHapticControllerDesc*)ptr)->hcCollied = hcCollied;	\
 		((PHOpHapticControllerDesc*)ptr)->constrainCount = constrainCount;	\
 		((PHOpHapticControllerDesc*)ptr)->constrainCountHc = constrainCountHc;	\

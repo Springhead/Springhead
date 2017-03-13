@@ -201,14 +201,15 @@ namespace Spr{
 		PHOpObjIf* GetOpObjIf(int obji);
 		void HapticProcedure_3DOF();
 		void HapticProcedure_6DOF();
-		void InitialHapticRenderer(int objId, HISdkIf* hisdk);
-		bool TrySetHapticEnable(bool enable, HISdkIf* hisdk);
-		bool IsHapticEnabled();
+		void InitialHapticRenderer(int objId);
+		void SetUseHaptic(bool hapticUsage);
+		bool GetUseHaptic();
+		
 		void SetHapticSolveEnable(bool enable);
 		bool IsHapticSolve();
 		void SetProxyCorrectionEnable(bool enable);
 		bool IsProxyCorrection();
-		void InitialNoMeshHapticRenderer(HISdkIf* hisdk);
+		void InitialNoMeshHapticRenderer();
 
 		ObjectIf* GetOpHapticController();
 		ObjectIf* GetOpHapticRenderer();

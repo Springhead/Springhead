@@ -36,7 +36,7 @@ public:
 		gNptcl = 0;
 		gEigen = gEigen.Unit();
 	}
-	void addPInds(int gPIndex);
+	bool addPInds(int gPIndex);
 	void delPInds(int gPIndex);
 	void preCalculation();
 

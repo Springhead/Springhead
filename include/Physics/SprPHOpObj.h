@@ -13,7 +13,6 @@
 #define SPR_PHOPOBJ_H
 
 #include <Foundation/SprObject.h>
-#include <HumanInterface\/SprHISdk.h>
 //#include <Physics\SprPHOpSpHashAgent.h>
 
 //#include "HumanInterface\SprHIDRUsb.h"
@@ -178,6 +177,7 @@ struct PHOpObjIf : public SceneObjectIf {
 	ObjectIf* GetOpGroup(int gi);
 	int GetobjVtoPmap(int vi);
 	float GetVtxBlendWeight(int Vtxi, int Grpi);
+	
 	//void SetGRMesh(ObjectIf *mesh);
 	//PHOpObjIf* GetMyIf();
 
@@ -338,8 +338,6 @@ struct PHOpHapticControllerDesc
 	Vec3f hcFixsubGoal;
 	float c_obstRadius;// = hapticDetectRange/6;
 
-	Vec3f currOutForce;
-
 	//PHOpParticle* hcColliedP;
 	int hpObjIndex;
 	enum HapticDOFType
@@ -351,10 +349,11 @@ struct PHOpHapticControllerDesc
 	HapticDOFType hcType;
 	//Vec3f hcPointPos;
 	bool logForce;
+	bool hcReady;
+	bool IsSetForceReady;
 
 	int fileindex;
 	Vec3f lastHpRateF;
-	bool hcReady;
 	bool hcCollied;
 	//proxy
 	int constrainCount;//used in dynamic constrain feel, indicate the constrainNum now
@@ -388,17 +387,10 @@ struct PHOpHapticControllerDesc
 struct PHOpHapticControllerIf : public SceneObjectIf{
 	SPR_IFDEF(PHOpHapticController);
 
-	
-	bool doCalibration();
-	bool  initDevice(HISdkIf* hiSdk);
-	////UTRef<ObjectIf> initDevice();
-	//bool InitialHapticController(ObjectIf* opObjectif);
-	////void UpdateHapticPosition(Vec3f &pos);
-
-	////void LogForce(TQuaternion<float> winPose);
-	//void UpdateProxyPosition(Vec3f &pos, TQuaternion<float> winPose);
+	void SetHCForceReady(bool flag);
+	bool GetHCForceReady();
 	bool CheckProxyState();
-	//void SetHcColliedFlag(bool flag);
+	//void SetHCColliedFlag(bool flag);
 	////void BindCtcPlane(ConstrainPlaneInfo cif);
 	void AddColliedPtcl(int pIndex, int objindex, Vec3f ctcPos);
 	//PHOpParticleIf* GetMyHpProxyParticle();
@@ -407,6 +399,10 @@ struct PHOpHapticControllerIf : public SceneObjectIf{
 	//void ClearColliedPs();
 	void setC_ObstacleRadius(float r);
 	Vec3f GetUserPos();
+	Vec3f GetHCPosition();
+	void SetHCPosition(Vec3f pos);
+	void SetHCPose(Posef pose);
+	Posef GetHCPose();
 	float GetC_ObstacleRadius();
 	//int GetHpObjIndex();
 	Vec3f GetCurrentOutputForce();

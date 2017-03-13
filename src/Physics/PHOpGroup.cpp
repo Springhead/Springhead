@@ -4,17 +4,21 @@
 
 namespace Spr{;
 
-void PHOpGroup::addPInds(int gPIndex)
+bool PHOpGroup::addPInds(int gPIndex)
 {
 
-	for(unsigned int i=0;i<gPInd.size();i++)
+	//gPtclList.push_back(dp);
+
+	for (int i = 0; i<gPInd.size(); i++)
 	{
-		if(gPInd[i] == gPIndex)
-			return;
+		if (gPInd[i] == gPIndex)
+			return false;
 	}
 	gPInd.push_back(gPIndex);
 
 	this->gNptcl++;
+
+	return true;
 }
 	
 void PHOpGroup::delPInds(int gPIndex)

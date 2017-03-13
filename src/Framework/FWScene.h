@@ -11,12 +11,14 @@
 #include <Framework/SprFWScene.h>
 #include <Framework/SprFWObject.h>
 #include <Framework/SprFWHapticPointer.h>
+#include <Framework/SprFWOpHapticHandler.h>
 #include <Framework/SprFWSkeletonSensor.h>
 #include <Framework/FWSkeletonSensor.h>
 #include <Physics/SprPHEngine.h>
 #include <Foundation/Scene.h>
 #include <HumanInterface/HIBase.h>
 #include <Physics/PHSolid.h>
+#include <Framework/FWOpHapticHandler.h>
 #include <Physics/PHContactDetector.h>
 
 
@@ -53,6 +55,7 @@ public:
 	FWSdk*				sdk;						///<	親SDKへの参照
 	FWObjects			fwObjects;					///<	物理とグラフィックスのオブジェクトのリンク
 	FWHapticPointers	fwHapticPointers;			///<	登録されている力覚ポインタへのリンク
+	FWOpHapticHandler*   fwOpHapticHandler;			///<	OPに使う力覚ポインタへのハンドラー
 	PHSceneIf*			phScene;					///<	物理シミュレーション用のシーン
 	GRSceneIf*			grScene;					///<	グラフィックス用のシーン
 
@@ -202,8 +205,11 @@ public:
 	void				AddHumanInterface(HIForceDevice6D* d);
 	FWHapticPointerIf*	CreateHapticPointer();
 	FWHapticPointerIf*	GetHapticPointer(int i);
+	FWOpHapticHandlerIf* CreateOpHapticHandler();
+	FWOpHapticHandlerIf* GetOpHapticHandler();
 	int					NHapticPointers();
 	void				UpdateHapticPointers();
+	void				UpdateOpHapticHandler();
 
 	/** SkeletonSensor系関数
 	 */

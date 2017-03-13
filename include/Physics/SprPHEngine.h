@@ -226,19 +226,19 @@ public:
 	void SetTimeStep(double dt);
 	double GetTimeStep();
 	void SetGravity(bool gflag);
-	void InitialHapticRenderer(int objId, HISdkIf* hisdk);
+	void InitialHapticRenderer(int objId);
 	//ObjectIf* GetHapticController();
 	PHOpObjDesc* GetOpObj(int i);
 	void StepWithBlend();
 	int AddOpObj();
-	bool TrySetHapticEnable(bool enable, HISdkIf* hisdk);
-	bool IsHapticEnabled();
 	void SetHapticSolveEnable(bool enable);
 	bool IsHapticSolve();
 	void SetProxyCorrectionEnable(bool enable);
 	bool IsProxyCorrection();
 	void SetUpdateNormal(bool flag);
 	bool IsUpdateNormal(int obji);
+	void SetUseHaptic(bool hapticUsage);
+	bool GetUseHaptic();
 
 	PHOpObjIf* GetOpObjIf(int obji);
 	int GetOpObjNum();
@@ -252,7 +252,7 @@ public:
 	bool GetAnimationFlag();
 	void SetDrawPtclR(float r);
 	float GetDrawPtclR();
-	void InitialNoMeshHapticRenderer(HISdkIf* hisdk);
+	void InitialNoMeshHapticRenderer();
 	//void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ);
 };
 

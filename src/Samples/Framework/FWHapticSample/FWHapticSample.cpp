@@ -84,15 +84,15 @@ void FWHapticSample::InitInterface(){
 			usb20Sh4Desc.channel = i;
 			hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
 		}
-		// x64
-		DRCyUsb20Sh4Desc cyDesc;
-		for(int i=0; i<10; ++i){
-			cyDesc.channel = i;
-			hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
-		}
-		hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-		hiSdk->Print(DSTR);
-		hiSdk->Print(std::cout);
+		//// x64
+		//DRCyUsb20Sh4Desc cyDesc;
+		//for(int i=0; i<10; ++i){
+		//	cyDesc.channel = i;
+		//	hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+		//}
+		//hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
+		//hiSdk->Print(DSTR);
+		//hiSdk->Print(std::cout);
 
 		spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 		spg->Init(&HISpidarGDesc("SpidarG6X3R"));
