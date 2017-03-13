@@ -1,7 +1,6 @@
 #include "Physics\PHOpHapticController.h"
 
 
-
 namespace Spr {
 	;
 
@@ -71,7 +70,7 @@ namespace Spr {
 	}
 	Vec3f PHOpHapticController::GetCurrentOutputForce()
 	{
-		return currOutForce;
+		return	outForce.v();
 	}
 	void PHOpHapticController::setC_ObstacleRadius(float r)
 	{
@@ -95,13 +94,50 @@ namespace Spr {
 		hcColliedPs.push_back(c);
 
 	}
+	void PHOpHapticController::SetHCReady(bool flag)
+	{
+		hcReady = flag;
+	}
 
-
+	bool PHOpHapticController::GetHCReady()
+	{
+		return hcReady;
+	}
+	bool PHOpHapticController::GetHCForceReady()
+	{
+		return IsSetForceReady;
+	}
+	void PHOpHapticController::SetHCForceReady(bool flag)
+	{
+		IsSetForceReady = flag;
+		if (flag == false)
+		{
+			outForce.clear();
+		}
+	}
+	Vec3f PHOpHapticController::GetHCPosition()
+	{
+		return userPos;
+	}
+	void PHOpHapticController::SetHCPosition(Vec3f pos)
+	{
+		userPos = pos * posScale;
+	}
+	Posef PHOpHapticController::GetHCPose()
+	{
+		return userPose;
+	}
+	void PHOpHapticController::SetHCPose(Posef pose)
+	{
+		pose.Pos() = pose.Pos() * posScale;
+		pose.Ori() = pose.Ori() * rotScale;
+		userPose = pose;
+	}
 	/*void PHOpHapticController::BindCtcPlane(ConstrainPlaneInfo cif)
 	{
 		hcBindCpi = cif;
 	}*/
-	void PHOpHapticController::SetHcColliedFlag(bool flag)
+	void PHOpHapticController::SetHCColliedFlag(bool flag)
 	{
 		hcCollied = flag;
 	}
@@ -139,7 +175,7 @@ namespace Spr {
 		}
 
 
-		currSpg->SetForce(f, Vec3f());
+		SetForce(f);
 		//std::DSTR<<"Force = "<<f<<std::endl;
 	}
 	void PHOpHapticController::LogForce(TQuaternion<float> winPose)
@@ -161,7 +197,7 @@ namespace Spr {
 			fprintf(logUPosFile, "%f\n", hcCurrUPos.y);
 		}
 	}
-	bool PHOpHapticController::InitialHapticController(HISdkIf* hisdk)
+	bool PHOpHapticController::InitialHapticController()
 	{//
 		Vec3f* OrigPos = new Vec3f[1];
 		OrigPos[0] = OrigPos[0].Zero();
@@ -174,7 +210,6 @@ namespace Spr {
 		posScale = 150;
 		rotScale = 1.0f;
 		forceScale = 0.01f;
-		hcReady = false;
 		hcCollied = false;
 
 		hcObj->objType = 1;
@@ -204,10 +239,10 @@ namespace Spr {
 
 		
 
-		return initDevice(hisdk);
+		return true; //initDevice(hisdk);
 
 	}
-	bool PHOpHapticController::InitialHapticController(PHOpObj* opObject, HISdkIf* hisdk)
+	bool PHOpHapticController::InitialHapticController(PHOpObj* opObject)
 	{
 		////if (hpMesh.enabled)
 		//{
@@ -229,7 +264,6 @@ namespace Spr {
 		posScale = 150;
 		rotScale = 1.0f;
 		forceScale = 0.01f;
-		hcReady = false;
 		hcCollied = false;
 		//hcColliedPid = -1;
 		//hcObj->objNoMeshObj = true;//->only use for no mesh objec(like one ball)
@@ -260,7 +294,7 @@ namespace Spr {
 
 		
 		
-		return initDevice(hisdk);
+		return true; //initDevice(hisdk);
 	}
 	
 	ObjectIf*PHOpHapticController:: GetHpOpObj()
@@ -271,57 +305,19 @@ namespace Spr {
 	{
 		if (fabs(f.norm()) < max_output_force)
 		{
-			currSpg->SetForce(f, Vec3f());
+			//currSpg->SetForce(f, Vec3f());
+			SetHCForceReady(true);
+			outForce.v() = f;
 			return true;
 		}
 		else return false;
 	}
-	bool PHOpHapticController::initDevice(HISdkIf* hiSdk)
+	
+	SpatialVector PHOpHapticController::GetHCOutput()
 	{
-		// 力覚インタフェースとの接続設定
-		//hiSdk = HISdkIf::CreateSdk();
-
-		// win32
-		/*DRUsb20SimpleDesc usbSimpleDesc;
-		hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
-		DRUsb20Sh4Desc usb20Sh4Desc;
-		for (int i = 0; i<10; ++i){
-			usb20Sh4Desc.channel = i;
-			hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
-		}*/
-		// win64
-		DRCyUsb20Sh4Desc cyDesc;
-		for (int i = 0; i<10; ++i){
-			cyDesc.channel = i;
-			hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
-		}
-		hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-		hiSdk->Print(DSTR);
-		//hiSdk->Print(std::DSTR);
-
-		UTRef<HISpidarGIf> spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-		hcReady = spg->Init(&HISpidarGDesc("SpidarG6X3R"));
-
-		if (hcReady)
-		{
-			spg->Calibration();
-			spg->Update(0.001f);
-		}
-		else return false;
-		
-		currSpg = spg;
-		return true;
+		SpatialVector tempForce = outForce;
+		return tempForce;
 	}
-	bool PHOpHapticController::doCalibration()
-	{
-		if (currSpg->Calibration())
-		{
-			currSpg->Update(0.001f);
-			return true;
-		}
-		return false;
-	}
-
 
 
 }//namespace

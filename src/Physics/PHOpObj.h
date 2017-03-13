@@ -746,6 +746,24 @@ namespace Spr{
 
 			swapMemGroup();
 
+			//connect each other groups
+			for (int i = 0; i < assPsNum; i++)
+			{
+				PHOpParticle &dp = objPArr[i];
+				PHOpGroup  &pg = objGArr[i];
+
+
+				int Ingrpsize = dp.pInGrpList.size();
+				for (int pin = 0; pin < Ingrpsize; pin++)
+				{
+
+					if (pg.addPInds(dp.pInGrpList[pin]))
+						objPArr[dp.pInGrpList[pin]].pInGrpList.push_back(i);
+
+					int u = 0;
+				}
+
+			}
 
 			//build weight relation between vertices to particle center
 			//buildDisWeightForVsinP();

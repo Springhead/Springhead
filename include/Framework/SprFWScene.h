@@ -31,6 +31,8 @@ struct GRRenderIf;
 
 struct FWHapticPointerIf;
 
+struct FWOpHapticHandlerIf;
+
 struct FWSceneDesc{
 };
 
@@ -253,6 +255,18 @@ public:
 	/** @breif スケルトンセンサからの情報を反映する
 	*/
 	void UpdateSkeletonSensors();
+
+	/** @brief OP力覚ハンドラーを作る
+	*/
+	FWOpHapticHandlerIf* CreateOpHapticHandler();
+
+	/** @breif OP力覚ハンドラー取得する
+	*/
+	FWOpHapticHandlerIf* GetOpHapticHandler();
+
+	/** @breif HumanInterfaceの状態を取得し、力覚ポインタを更新する
+	*/
+	void UpdateOpHapticHandler();
 
 };
 

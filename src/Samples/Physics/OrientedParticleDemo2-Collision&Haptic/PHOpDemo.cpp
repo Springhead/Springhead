@@ -8,13 +8,14 @@
 
 #include "PHOpDemo.h"
 #include "Physics\PHOpSpHashColliAgent.h"
+//#include "Framework\FWOpHapticHandler.h"
 #include "Physics\PHOpEngine.h"
-
+#include <Foundation/UTClapack.h>
 
 #define USE_SPRFILE
 #define ESC 27
 #define USE_AVG_RADIUS
-#define COLLISION_DEMO
+//#define COLLISION_DEMO
 
 #ifndef COLLISION_DEMO
 #define HAPTIC_DEMO
@@ -69,7 +70,7 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	//initial op objects
 	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
 //#ifdef _3DOF
-	tmp->CreateOpObj();
+	tmp->CreateOpObjWithRadius(0.05f);
 //#endif
 	
 	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
@@ -95,11 +96,15 @@ void PHOpDemo::Init(int argc, char* argv[]){
 	//}
 	//opObjIf->InitialObjUsingLocalBuffer(0.5f);
 #ifdef _6DOF
-	opEngine->InitialHapticRenderer(0, hisdk);
+	
+	opEngine->InitialHapticRenderer(0);//6DOF haptic renderer
 #endif
 #ifdef _3DOF
 	opEngine->InitialNoMeshHapticRenderer();
 #endif
+	FWOpHapticHandlerIf* opHapticHandler = GetSdk()->GetScene()->CreateOpHapticHandler();
+	InitInterface();
+	opHapticHandler->SetHumanInterface(spg);
 	
 	PHOpHapticControllerIf* opHc = (PHOpHapticControllerIf*)opEngine->GetOpHapticController();
 	opHc->setC_ObstacleRadius(0.2f);
@@ -126,25 +131,25 @@ void PHOpDemo::Init(int argc, char* argv[]){
 
 #ifdef COLLISION_DEMO
 
-	FWOpObjIf *tmp2 = GetSdk()->GetScene()->FindObject("fwSLBunny2")->Cast();
-	tmp2->CreateOpObj();
+	//FWOpObjIf *tmp2 = GetSdk()->GetScene()->FindObject("fwSLBunny2")->Cast();
+	//tmp2->CreateOpObj();
 
-	//initial collision detection
-	PHOpSpHashColliAgentIf* spIf;
-	spIf = GetSdk()->GetScene()->GetPHScene() -> GetOpColliAgent();
+	////initial collision detection
+	//PHOpSpHashColliAgentIf* spIf;
+	//spIf = GetSdk()->GetScene()->GetPHScene() -> GetOpColliAgent();
 
-	Bounds bounds;
-	float boundcube = ((PHOpObjIf*)tmp->GetOpObj())->GetBoundLength();
-	bounds.min.x = -boundcube;
-	bounds.min.y = -boundcube;
-	bounds.min.z = -boundcube;
-	bounds.max.x = boundcube;
-	bounds.max.y = boundcube;
-	bounds.max.z = boundcube;
+	//Bounds bounds;
+	//float boundcube = ((PHOpObjIf*)tmp->GetOpObj())->GetBoundLength();
+	//bounds.min.x = -boundcube;
+	//bounds.min.y = -boundcube;
+	//bounds.min.z = -boundcube;
+	//bounds.max.x = boundcube;
+	//bounds.max.y = boundcube;
+	//bounds.max.z = boundcube;
 
-	spIf->Initial(0.5f, bounds);
+	//spIf->Initial(0.5f, bounds);
 
-	spIf->EnableCollisionDetection(false);
+	//spIf->EnableCollisionDetection(false);
 #endif
 	
 	PHOpEngine* opEnginedesc = DCAST(PHOpEngine, opEngine);
@@ -152,10 +157,10 @@ void PHOpDemo::Init(int argc, char* argv[]){
 
 	PHOpObjDesc* dp1 = opEnginedesc->opObjs[0];
 	cout << "obji = 0" << "pNum" << dp1->assPsNum << "gNum" << dp1->assGrpNum << endl;
-#ifdef COLLISION_DEMO
-	PHOpObjDesc* dp2 = opEnginedesc->opObjs[1];
-	cout << "obji = 1" << "pNum" << dp2->assPsNum << "gNum" << dp2->assGrpNum << endl;
-#endif
+//#ifdef COLLISION_DEMO
+//	PHOpObjDesc* dp2 = opEnginedesc->opObjs[1];
+//	cout << "obji = 1" << "pNum" << dp2->assPsNum << "gNum" << dp2->assGrpNum << endl;
+//#endif
 
 	DrawHelpInfo = true;
 	checkPtclInfo = true;
@@ -214,19 +219,28 @@ void PHOpDemo::Reset(){
 
 void PHOpDemo::TimerFunc(int id)
 {
-	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("fwSLBunny")->Cast();
+	FWOpObjIf *tmp = GetSdk()->GetScene()->FindObject("FwExpBoardmesh")->Cast();
 	PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
 	PHOpObjIf *opObjIf = opEngine->GetOpObjIf(0);
 	
 	FWApp::TimerFunc(id);
 	if (id == opSimuTimerId)
 	{
+#ifdef HAPTIC_DEMO
+
+		//HapticUpdate 
+		GetSdk()->GetScene()->UpdateOpHapticHandler();
+
+
+#endif
 		//OpのシミュレーションStepをコール
 		PHOpEngineIf* opEngine = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
 		//opEngine->Step();
 		if (!runByStep)
 		opEngine->StepWithBlend();
 		PostRedisplay();
+
+		//opHapticHandler->SetCurrFeedbackForce();
 	}
 	
 
@@ -246,6 +260,41 @@ void PHOpDemo::TimerFunc(int id)
 	/*if (useAnime)
 		opAnimator->AnimationStep(opEngine->GetDescAddress());*/
 }
+void PHOpDemo::InitInterface(){
+	HISdkIf* hiSdk = GetSdk()->GetHISdk();
+
+	if (humanInterface == SPIDAR){
+		// x86
+		DRUsb20SimpleDesc usbSimpleDesc;
+		hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
+		DRUsb20Sh4Desc usb20Sh4Desc;
+		for (int i = 0; i< 10; ++i){
+			usb20Sh4Desc.channel = i;
+			hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
+		}
+		// x64
+		DRCyUsb20Sh4Desc cyDesc;
+		for(int i=0; i<10; ++i){
+			cyDesc.channel = i;
+			hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+		}
+		hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
+		hiSdk->Print(DSTR);
+		hiSdk->Print(std::cout);
+
+		spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+		spg->Init(&HISpidarGDesc("SpidarG6X3R"));
+		spg->Calibration();
+	}
+	else if (humanInterface == XBOX){
+		spg = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
+	}
+	else if (humanInterface == FALCON){
+		spg = hiSdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
+		spg->Init(NULL);
+	}
+}
+
 
 void PHOpDemo::SaveTstPPos(char *filename, int pi, Vec3f Pos)
 {
@@ -261,6 +310,121 @@ void PHOpDemo::SaveTstPPos(char *filename, int pi, Vec3f Pos)
 	fprintf(f, "%f %f %f\n", Pos.x, Pos.y, Pos.z);
 
 	fclose(f);
+}
+
+void PHOpDemo::showOPStructureMatrix()
+{
+
+	cout << "showOPStructureMatrix" << endl;
+	PHOpEngineIf* opEngineif = GetSdk()->GetScene()->GetPHScene()->GetOpEngine()->Cast();
+
+	PHOpEngine* opEnginedesc = DCAST(PHOpEngine, opEngineif);
+	
+
+	for (int obji = 0; obji < opEngineif->GetOpObjNum(); obji++)
+	{
+		cout << "Obj =" << obji << endl;
+
+		PHOpObjIf* objif = opEngineif->GetOpObjIf(obji);
+		PHOpObjDesc* obj1 = opEnginedesc->opObjs[obji];
+		PHOpParticleIf *dpif = (PHOpParticleIf*)objif->GetOpParticle(obji);
+		PHOpParticleDesc *dp = dpif->GetParticleDesc();
+
+		int grpNum = obj1->assGrpNum;
+
+		structureMArr.resize(grpNum * grpNum, 0.0);
+
+		for (int pi = 0; pi < grpNum; pi++)
+		{
+			PHOpGroupIf *gpif = (PHOpGroupIf*)objif->GetOpGroup(pi);
+			PHOpGroupDesc *gp = gpif->GetGroupDesc();
+			
+
+			for (int lp = 0; lp < gpif->GetGrpInPtclNum(); lp++)
+			{
+				structureMArr[pi * obj1->assGrpNum + gpif->GetGrpInPtcl(lp)] = dp->pTotalMass / gp->gtotalMass;
+			}
+
+		}
+
+		cout << "S =" << endl;
+
+		int sRowIndex = grpNum;
+
+		for (int rowI = 0; rowI < grpNum; rowI++)
+		{
+
+			for (int si = 0; si < sRowIndex; si++)
+			{
+				std::cout << std::setprecision(4) << structureMArr[rowI * grpNum + si] << ", ";
+
+			}
+			cout << endl;
+			cout << endl;
+		}
+
+		ublas::matrix< float, ublas::column_major > structureM;
+		ublas::matrix<double> U, Vt;
+		ublas::diagonal_matrix<double> D;
+
+		structureM.resize(grpNum, grpNum);
+
+
+		cout << "Solve SVD by lapack" << endl;
+		for (int rowi = 0; rowi < grpNum; rowi++)
+		{
+			
+
+			for (int coli = 0; coli < grpNum; coli++)
+			{
+				
+
+				structureM.at_element(rowi, coli) = structureMArr[rowi * grpNum + coli];
+			}
+		}
+
+		//add I
+		for (int coli = 0; coli < grpNum; coli++)
+		{
+			structureM.at_element(coli, coli) = structureM.at_element(coli, coli) + 1.0f;
+		}
+
+		svd(structureM, U, D, Vt);
+
+
+		FILE *logEigen;
+		fopen_s(&logEigen, "logEigen-Cal.dfmobj", "w+");
+		if (!logEigen) {
+			std::cout << " file dir can not open" << endl;
+			return;
+		}
+
+		float lamda = 0.0f;
+
+		for (int rowi = 0; rowi < grpNum; rowi++)
+		{
+
+			//lamda = 1.0f / (1.0f - Vt.at_element(rowi, rowi));
+			std::cout << std::setprecision(4) << Vt.at_element(rowi, rowi) << endl;
+			fprintf(logEigen, "%f\n", Vt.at_element(rowi, rowi));
+		}
+
+
+		cout << "finish" << endl;
+
+
+		//cout << "Solve SVD 2" << endl;
+
+		/*SVDDecomposition svdd;
+
+		Matrix3f S;
+		svdd.svd(grpNum, grpNum, )*/
+		fclose(logEigen);
+	}
+
+
+
+	
 }
 
 void PHOpDemo::Keyboard(int key, int x, int y){
@@ -285,7 +449,7 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		objif2 = opEngineif->GetOpObjIf(1);
 	PHOpParticleIf *dpif = (PHOpParticleIf*)objif->GetOpParticle(0);
 	PHOpParticleDesc *dp = dpif->GetParticleDesc();
-
+	FWOpHapticHandlerIf* opHapticHandler = GetSdk()->GetScene()->GetOpHapticHandler();
 
 	void * dp1;
 	
@@ -296,6 +460,9 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 	case 'q':
 		// アプリケーションの終了
 		exit(0);
+		break;
+	case '?':
+		showOPStructureMatrix();
 		break;
 	case '=':
 		recordingPos = !recordingPos;
@@ -332,26 +499,14 @@ void PHOpDemo::Keyboard(int key, int x, int y){
 		cout << "useAnime" << useAnime << endl;
 		break;
 	case't' :
-		if (!opEngineif->IsHapticEnabled())
+		if (!opHapticHandler->IsHapticEnabled())
 		{
-			if (opEngineif->TrySetHapticEnable(true,GetSdk()->GetHISdk()))
-			{
-
-				DSTR << "Enable Haptic" << std::endl;
-
-			}
-			else
-			{
-				DSTR << "Haptic Initial Failed" << std::endl;
-			}
+			opHapticHandler->SetHapticflag(true);
+			opEngineif->SetUseHaptic(true);
 		}
 		else {
-			if (opEngineif->TrySetHapticEnable(false, GetSdk()->GetHISdk()))
-			{
-
-				DSTR << "Disable Haptic" << std::endl;
-			}
-			else DSTR << "Haptic Initial Failed" << std::endl;
+			opHapticHandler->SetHapticflag(false);
+			opEngineif->SetUseHaptic(false);
 		}
 		break;
 	case 'b':

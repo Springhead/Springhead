@@ -20,11 +20,11 @@ namespace Spr{
 		useHaptic = false;
 		useAnime = false;
 	}
-	void PHOpEngine::InitialNoMeshHapticRenderer(HISdkIf* hisdk)
+	void PHOpEngine::InitialNoMeshHapticRenderer()
 	{
 		opHpRender = new PHOpHapticRenderer();
 		myHc = new PHOpHapticController();
-		myHc->InitialHapticController(hisdk);
+		myHc->InitialHapticController();
 		myHc->hpObjIndex = -1;
 		//opObjs.push_back(myHc->hcObj);
 
@@ -35,6 +35,15 @@ namespace Spr{
 		//set defualt c_obstacle
 		myHc->c_obstRadius = 0.2f;// opObjs[objId]->objAverRadius / 6;
 	}
+	void PHOpEngine::SetUseHaptic(bool hapticUsage)
+	{
+		useHaptic = hapticUsage;
+	}
+	bool PHOpEngine::GetUseHaptic()
+	{
+		return useHaptic;
+	}
+
 	PHOpObjDesc* PHOpEngine::GetOpObj(int i)
 	{
 		return opObjs[i];
@@ -50,11 +59,11 @@ namespace Spr{
 	myHc->IntialHapticController(opObj);
 	}*/
 
-	void PHOpEngine::InitialHapticRenderer(int objId, HISdkIf* hisdk)
+	void PHOpEngine::InitialHapticRenderer(int objId)
 	{
 		opHpRender = new PHOpHapticRenderer();
 		myHc = new PHOpHapticController();
-		myHc->InitialHapticController(opObjs[objId]->Cast(), hisdk);
+		myHc->InitialHapticController(opObjs[objId]->Cast());
 		opHpRender->initial6DOFRenderer(myHc, &opObjs);
 
 		myHc->hcType = PHOpHapticControllerDesc::_6DOF;
@@ -81,28 +90,6 @@ namespace Spr{
 	ObjectIf* PHOpEngine::GetOpHapticRenderer()
 	{
 		return opHpRender->Cast();
-	}
-
-	bool PHOpEngine::IsHapticEnabled()
-	{
-		return useHaptic;
-	}
-	bool PHOpEngine::TrySetHapticEnable(bool enable, HISdkIf* hisdk)
-	{
-		if (myHc->hcReady)
-		{
-			useHaptic = enable;
-			return true;
-		}
-		else{
-			myHc->initDevice(hisdk);
-			if (myHc->hcReady)
-			{
-				useHaptic = enable;
-				return true;
-			}
-			else return false;
-		}
 	}
 	bool PHOpEngine::IsHapticSolve()
 	{
@@ -183,14 +170,16 @@ namespace Spr{
 		if (useHaptic)
 		{
 
-			myHc->currSpg->Update(0.001f);
-			Vec3f &spgpos = myHc->currSpg->GetPosition();
+			//myHc->currSpg->Update(0.001f);
+		/*	Vec3f &spgpos = myHc->currSpg->GetPosition();
 			myHc->userPose = myHc->currSpg->GetPose();
 			myHc->userPose.Ori() = myHc->userPose.Ori() * myHc->rotScale;
 			myHc->userPose.Pos() = winPose * myHc->userPose.Pos()* myHc->posScale;
 
-			myHc->userPos = winPose *  spgpos * myHc->posScale;
+			myHc->userPos = winPose *  spgpos * myHc->posScale;*/
 
+			myHc->userPose.Pos() = winPose * myHc->userPose.Pos();
+			myHc->userPos = winPose *  myHc->userPos;
 			//
 			if (myHc->hcType == PHOpHapticControllerDesc::_6DOF)
 			{
@@ -443,7 +432,7 @@ namespace Spr{
 
 		if (opHpRender->hitWall)
 			f = f * 3;
-		myHc->currSpg->SetForce(f, Vec3f());
+		myHc->SetForce(f);
 	}
 
 	void PHOpEngine::SetTimeStep(double dt){

@@ -1402,4 +1402,21 @@ void FWScene::UpdateHapticPointers(){
 	}
 }
 
+FWOpHapticHandlerIf* FWScene::CreateOpHapticHandler(){
+	fwOpHapticHandler = DBG_NEW FWOpHapticHandler();
+	
+	return XCAST(fwOpHapticHandler);
+}
+
+FWOpHapticHandlerIf* FWScene::GetOpHapticHandler(){
+	return XCAST(fwOpHapticHandler);
+}
+
+void FWScene::UpdateOpHapticHandler()
+{
+	PHOpEngineIf* opEngine = phScene->GetOpEngine();
+	fwOpHapticHandler->UpdateHumanInterface(DCAST(PHOpHapticController, opEngine->GetOpHapticController()), fwOpHapticHandler->GetHapticTimeInterval());
+
+}
+
 }

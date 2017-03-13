@@ -35,10 +35,12 @@
 #include "FileIO\SprFIOpStateHandler.h"
 #include "Physics\SprPHOpSpHashAgent.h"
 //#include "Physics\SprPHOpObj.h"
-#include "Physics\PHOpObj.h"
+#include "Physics\SprPHOpObj.h"
 //#include "Physics\PHOpParticle.h"
-#include "Framework\FWOpObj.h"
+#include "Framework\SprFWOpObj.h"
 #include "Physics\PHOpEngine.h"
+
+#include "Framework\SprFWOpHapticHandler.h"
 //#include "Physics\PHOpSpHashColliAgent.h"
 
 //#include "Physics\Spr"
@@ -50,6 +52,14 @@ public:
 	std::string fileName;							///< ロードするファイル名
 
 	Vec3f infiniP;
+
+	enum HumanInterface{
+		SPIDAR,
+		XBOX,
+		FALCON,
+	} humanInterface;
+
+	UTRef<HIBaseIf> spg;		// 力覚インタフェースへのポインタ
 
 	PHOpDemo();							///< コンストラクタ（このクラスのインスタンスが生成された時に呼ばれる関数）
 	virtual void Init(int argc, char* argv[]);		///< アプリケーションの初期化
@@ -63,6 +73,7 @@ public:
 	void MouseButton(int button, int state, int x, int y);
 	bool OnMouse(int button, int state, int x, int y);
 	void SaveTstPPos(char *filename, int pi, Vec3f Pos);
+	void showOPStructureMatrix();
 
 	GRRenderIf* render;
 
@@ -125,5 +136,9 @@ public:
 	PHOpParticleDesc* dpAdd;
 	PHOpHapticRendererDesc* opHrDesc;
 	PHOpAnimationIf* opAnimator;
+	
+	std::vector<float> structureMArr;
+
+	void InitInterface();
 }; 
 #endif 
