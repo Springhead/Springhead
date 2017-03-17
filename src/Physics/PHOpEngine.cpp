@@ -29,9 +29,11 @@ namespace Spr{
 		//opObjs.push_back(myHc->hcObj);
 
 		myHc->hcType = PHOpHapticControllerDesc::_3DOF;
-
+#ifdef USEGRMESH
 		opHpRender->initial3DOFRenderer(myHc, &opObjs);
-
+#else
+		DSTR << "Currently 3DOFRenderer is not implemented" << std::endl;
+#endif
 		//set defualt c_obstacle
 		myHc->c_obstRadius = 0.2f;// opObjs[objId]->objAverRadius / 6;
 	}
@@ -344,7 +346,7 @@ namespace Spr{
 	}
 	void PHOpEngine::HapticProcedure_3DOF()
 	{
-
+#ifdef USEGRMESH
 		;
 		PHOpParticle* dp = myHc->GetMyHpProxyParticle();
 		if (!myHc->CheckProxyState())
@@ -433,6 +435,7 @@ namespace Spr{
 		if (opHpRender->hitWall)
 			f = f * 3;
 		myHc->SetForce(f);
+#endif
 	}
 
 	void PHOpEngine::SetTimeStep(double dt){

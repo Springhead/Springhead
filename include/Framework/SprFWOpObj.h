@@ -2,14 +2,12 @@
 #define SPRFWOPOBJ_H
 
 #include <Framework/SprFWObject.h>
-//#include <Graphics\GRMesh.h>
 
 namespace Spr{;
 
 
 struct FWOpObjDesc :public FWObjectDesc{
 
-	//UTRef<GRMesh> grMesh;
 	float fwPSize;
 };
 

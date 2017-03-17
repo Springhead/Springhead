@@ -409,7 +409,7 @@ struct PHOpHapticControllerIf : public SceneObjectIf{
 };
 struct PHOpHapticRendererIf : public SceneObjectIf{
 	SPR_IFDEF(PHOpHapticRenderer);
-
+#ifdef USEGRMESH
 	void ProxySlvPlane();
 	void ProxyMove();
 	void ProxyTrace();
@@ -425,6 +425,7 @@ struct PHOpHapticRendererIf : public SceneObjectIf{
 	void HpConstrainSolve(Vec3f &currSubStart);
 	void BuildVToFaceRelation();
 	void BuildEdgeInfo();
+#endif
 	void SetRigid(bool set);
 	bool IsRigid();
 };

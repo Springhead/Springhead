@@ -6,11 +6,11 @@
 #include <Physics/PHEngine.h>
 #include <Physics/PHSpatial.h>
 #include <Foundation/Object.h>
-//#include <Graphics\SprGRMesh.h>
+#ifdef USEGRMESH
 #include <Graphics\GRMesh.h>
+#endif
 #include <Physics/PHOpParticle.h>
 #include <Physics/PHOpGroup.h>
-//#include "PHOpObjOpEngine.h"
 #include <Physics/PHOpDecompositionMethods.h>
 
 
@@ -21,25 +21,14 @@ using namespace PTM;
 namespace Spr{
 	;
 
-
-
-	//class PHOpObj: public SceneObject, public PHOpObjStatePrivate, public PHOpObjDesc {
 	class PHOpObj : public SceneObject, public PHOpObjDesc {
 	
-		
-
-		//PHOpObj(const PHOpObjDesc& desc=PHOpObjDesc(), SceneIf* s=NULL);
-
 	public:
 		SPR_OBJECTDEF(PHOpObj);
 		ACCESS_DESC(PHOpObj);
 		PHOpObj(const PHOpObjDesc& desc = PHOpObjDesc(), SceneIf* s = NULL) :PHOpObjDesc(desc)
 		{
 		
-			//objId = 0;
-			//DSTR<<"Don't use Default constructor, the id of Deformer is set in 0"<<std::endl;
-			//objId = id;
-
 			gravityOn = false;
 
 			objGrouplinkCount = 5;
@@ -120,10 +109,13 @@ namespace Spr{
 		//粒子BVH（開発中）
 		//BVHgOp *bvhGOps;
 
+#ifdef USEGRMESH
 		//model対象
 		GRMesh *targetMesh;
+#else
 		//model頂点群
-		//Vec3f *objTargetVts;
+		Vec3f *objTargetVts;
+#endif
 		//model頂点群初期化されたか
 		bool initialtgV;
 		//model頂点群数
@@ -227,10 +219,12 @@ namespace Spr{
 		{
 			return objGArr[gi].Cast();
 		}
+#ifdef USEGRMESH
 		void SetGRMesh(Object *mesh)
 		{
 			targetMesh = (GRMesh*)mesh;
 		}
+#endif
 
 		void DynamicRadiusUpdate()
 		{
@@ -471,11 +465,12 @@ namespace Spr{
 					//else targetMesh->vertices[vertind] = u;
 				}
 			}
+#ifdef USEGRMESH
 			//	 calc normal
 			// 頂点を共有する面の数
 			if (updateNormals)
 			{
-				std::vector<int> nFace(targetMesh->vertices.size(), 0);
+				std::vector<int> nFace(objTargetVtsNum, 0);
 
 				for (unsigned i = 0; i < targetMesh->triFaces.size(); i += 3){
 					Vec3f n = (targetMesh->vertices[targetMesh->triFaces[i + 1]] - targetMesh->vertices[targetMesh->triFaces[i]])
@@ -493,6 +488,7 @@ namespace Spr{
 				for (unsigned i = 0; i < targetMesh->normals.size(); ++i)
 					targetMesh->normals[i] /= nFace[i];
 			}
+#endif
 		}
 
 		Matrix3f SolveShpMchByJacobi(PHOpGroup &pg);

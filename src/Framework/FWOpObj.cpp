@@ -153,7 +153,9 @@ void FWOpObj::CreateOpObj()
 
 	opObj->initialPHOpObj(&grMesh->vertices[0], grMesh->NVertex(), objPtclDiameter);
 	//opObj->SetGRMesh(grMesh);
+#ifdef USEGRMESH
 	opObj->targetMesh = grMesh;
+#endif
 	opObj->SetName(grMesh->GetName());
 }
 void FWOpObj::CreateOpObjWithRadius(float r)
@@ -161,7 +163,9 @@ void FWOpObj::CreateOpObjWithRadius(float r)
 	grMesh->EnableAlwaysCreateBuffer();
 	opObj->initialPHOpObj(&grMesh->vertices[0], grMesh->NVertex(), r);
 	//opObj->SetGRMesh(grMesh);
+#ifdef USEGRMESH
 	opObj->targetMesh = grMesh;
+#endif
 	opObj->SetName(grMesh->GetName());
 }
 
