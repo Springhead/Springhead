@@ -4,12 +4,13 @@
 namespace Spr
 {
 	;
-
+#ifdef USEGRMESH
 void uniqueVector(std::vector<int> &vt)
 {
 	sort(vt.begin(), vt.end());
 	vt.erase(unique(vt.begin(), vt.end()), vt.end());
 }
+
 void PHOpHapticRenderer::ProxySlvPlane()
 {
 	hitWall = false;
@@ -44,6 +45,7 @@ void PHOpHapticRenderer::ProxySlvPlane()
 
 
 }
+
 void PHOpHapticRenderer::ProxyTrace()
 {
 	std::vector<PHOpHapticController::ConstrainPlaneInfo>& cpiVec = myHc->cpiVec;
@@ -813,156 +815,7 @@ bool PHOpHapticRenderer::ProxyCorrection()
 	return true;
 
 }
-void PHOpHapticRenderer::ForceCalculation()
-{
-	//MatrixExtension ma;
-	//Force calculation
-	PHOpParticle	*hdp = myHc->GetMyHpProxyParticle();
-	int insideCount;
-	//DeformObject *myobj = &opObjs[0];
-	PHOpObj *myobj;
-	if (myHc->hcProxyOn)
-	{
-		myobj = (*opObjs)[myHc->cpiVec[0].objid];
-	}
-	else myobj = (*opObjs)[0];
-	GRMesh *tgtMesh = myobj->targetMesh;
-	std::vector<DisCmpPoint> disCmpQue;
-	std::vector<int> corrPtcl;
-	DisCmpPoint tmpdcp;
-	std::vector<float> vWeights;
-	if (myHc->CheckProxyState() || hitWall == true)
-	{
+#endif
 
-
-		for (int pi = 0; pi < myobj->assPsNum; pi++)
-		{
-			/*for (int suspi = 0; suspi<myHc->hcColliedPs.size(); suspi++)
-			{*/
-			//for (int vi = 0; vi<myobj->objPArr[myHc->hcColliedPs[suspi].ptclIndex].pNvertex; vi++)
-			for (int vi = 0; vi < myobj->objPArr[pi].pNvertex; vi++)
-			{
-				//Vec3f &v = tgtMesh->vertices[myobj->objPArr[myHc->hcColliedPs[suspi].ptclIndex].pVertArr[vi]];
-				Vec3f &v = tgtMesh->vertices[myobj->objPArr[pi].pVertArr[vi]];
-
-
-
-
-				float dist = fabs((hdp->pNewCtr - v).norm());
-				//if (dist<(myHc->c_obstRadius * 5))
-				if (dist < (forceOnRadius))
-				{
-
-					tmpdcp.distance = dist;
-					tmpdcp.pIndex = vi;//‚±‚±‚Í’¸“_‚Ìid‚Å‚·
-					disCmpQue.push_back(tmpdcp);
-					//corrPtcl.push_back(myHc->hcColliedPs[suspi].ptclIndex);
-					corrPtcl.push_back(pi);
-				}
-			}
-		}
-
-		
-
-
-		//std::sort(disCmpQue.begin(),disCmpQue.end());
-		insideCount = (int)disCmpQue.size();
-
-		//match face
-		std::vector<Vec3f> moves;
-		//float totalMovement = (closestP - hdp->pNewCtr).norm();///////////////////debug
-		float totalMovement = (hdp->pVelocity.norm() * timeStep);
-		Vec3f moveNormal = hdp->pVelocity.unit();
-		if (totalMovement == 0.0f)
-			return;
-		//weight calculation
-		float totalDis = 0.0f;
-		for (int vsi = 0; vsi < insideCount; vsi++)
-		{
-			totalDis += disCmpQue[vsi].distance;
-		}
-		int testFloat0 = 0;
-		float tsttotalMove = 0.0f;
-		float weightTotal = 0.0f;
-		totalDis = 1 / totalDis;
-		for (int vsi = 0; vsi < insideCount; vsi++)
-		{
-			float weight = (disCmpQue[vsi].distance * totalDis);
-			vWeights.push_back(weight);
-
-			////template consider: use projection direction for moving verts
-			//moves.push_back(moveNormal * (totalMovement * weight));
-			//tsttotalMove += moves[vsi].norm();
-			weightTotal += 1 / weight;
-		}
-		for (int vsi = 0; vsi < insideCount; vsi++)
-		{
-			moves.push_back(moveNormal * (totalMovement * (1 / vWeights[vsi]) / weightTotal));
-			tsttotalMove += moves[vsi].norm();
-		}
-
-		//Here we don't need move the vertex -> to move the Particle
-		//Calculate force by these moves
-		Vec3f pMove, pRotate;
-		//movedVerticesNum = insideCount;
-		for (int vsi = 0; vsi < insideCount; vsi++)
-		{
-			PHOpParticle *cdp = &myobj->objPArr[corrPtcl[vsi]];
-			//int plocalind = cdp->getVertexLclIndex(disCmpQue[vsi].pIndex);
-			int plocalVid = disCmpQue[vsi].pIndex;
-			if (plocalVid != -1)
-			{
-				//eliminate mass
-				//Or use: sum move_i * mass_i = F = move_p * mass_p
-
-				//Local plausible surface regeneration 
-				//displacement
-				////pMove += moves[vsi] * cdp->pVectDisWeightArr[plocalind] *(1 - opObjs[cdp->pObjId].params.alpha);
-				//pMove = moves[vsi] * cdp->pVectDisWeightArr[plocalVid] *(1 - opObjs[cdp->pObjId].params.alpha);
-
-				//myHc->params.alpha = opObjs[cdp->pObjId].params.alpha;
-				if (sqrtAlphaForce)
-					pMove = moves[vsi];// *(1 - sqrt(opObjs[cdp->pObjId].params.alpha));
-				else pMove = moves[vsi];//  *(1 - opObjs[cdp->pObjId].params.alpha);
-				//		pMove = moves[vsi] * (1 - sqrt(cdp->pParaAlpha));
-				//	else pMove = moves[vsi] * (1 - cdp->pParaAlpha);
-
-				//angularVelocity
-				//Vec3f &vPosition = opObjs[cdp->pObjId].targetMesh->vertices[disCmpQue[vsi].pIndex];
-				//pRotate += cdp->pInverseOfMomentInertia 
-				//	* me.VectorCross((vPosition - cdp->pCurrCtr),moves[vsi]) 
-				//	* opObjs[cdp->pObjId].params.timeStep;
-
-			}
-			else DSTR << "GtoL index Error" << std::endl;
-			if (!(pMove.x == pMove.x) || !(pMove.y == pMove.y) || !(pMove.z == pMove.z))
-			{
-				int u = 0;
-				DSTR << "pMove not a number Error!" << std::endl;
-			}
-			if (_isnan(pMove.x) == 1 || _isnan(pMove.y) == 1 || _isnan(pMove.z) == 1)
-			{
-				int u = 0;
-				DSTR << "pMove not a number Error!" << std::endl;
-			}
-			//Delayed Force based
-			if (!useConstrainForce)
-			{
-				float deltT = (*opObjs)[cdp->pObjId]->params.timeStep;
-				//cdp->pColliedForce += pMove / (deltT * deltT) * cdp->pTempSingleVMass;
-				cdp->pExternalForce += extForceSpring * pMove;
-				int u = 0;
-			}
-			else{
-
-				//Force constrain based
-				//cdp->pCurrCtr += pMove;
-				if (!cdp->isFixed)
-					cdp->pNewCtr += constraintSpring * pMove;
-
-			}
-		}
-	}
-}
 
 }//namespace 

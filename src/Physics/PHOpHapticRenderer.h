@@ -4,6 +4,7 @@
 #include <Foundation\Object.h>
 #include <Physics\PHOpHapticController.h>
 #include <Collision\CDCollisionFunctions.h>
+#include <map>
 
 namespace Spr
 {;
@@ -67,6 +68,7 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 		{
 			return rigid;
 		}
+#ifdef USEGRMESH
 		void initial3DOFRenderer(PHOpHapticController* hc, std::vector<PHOpObj*>* objs)
 		{
 			myHc = hc;
@@ -76,6 +78,7 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 			BuildVToFaceRelation();
 			BuildEdgeInfo();
 		}
+#endif
 		void initial6DOFRenderer(PHOpHapticController* hc, std::vector<PHOpObj*>* objs)
 		{
 			myHc = hc;
@@ -84,12 +87,19 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 			objNum = (int)(*opObjs).size();
 			
 		}
-
+#ifdef USEGRMESH
 		void ProxySlvPlane();
 		void ProxyMove();
 		void ProxyTrace();
 		bool ProxyCorrection();
 		void ForceCalculation();
+		void HpNoCtcProxyCorrection();
+		void HpConstrainSolve(Vec3f &currSubStart);
+		void BuildVToFaceRelation();
+		void BuildEdgeInfo();
+		bool intersectOnRoute(Vec3f currSubStart, Vec3f currSubGoal, Vec3f &newSubStart, Vec3f &newSubGoal, PHOpHapticController::ConstrainPlaneInfo &cpinfo, bool inverseF);
+		bool intersectOnRouteInColliPs(Vec3f currSubStart, Vec3f currSubGoal, Vec3f &newSubStart, Vec3f &newSubGoal, PHOpHapticController::ConstrainPlaneInfo &cpinfo, bool inverseF);
+#endif
 		void setForceOnRadius(float r)
 		{
 			forceOnRadius = r;
@@ -112,12 +122,7 @@ class PHOpHapticRenderer :public SceneObject, public PHOpHapticRendererDesc
 		}
 		//void HpProxyPosFix();
 		//void HpConstraint();
-		void HpNoCtcProxyCorrection();
-		void HpConstrainSolve(Vec3f &currSubStart);
-		void BuildVToFaceRelation();
-		void BuildEdgeInfo();
-		bool intersectOnRoute(Vec3f currSubStart, Vec3f currSubGoal, Vec3f &newSubStart, Vec3f &newSubGoal, PHOpHapticController::ConstrainPlaneInfo &cpinfo, bool inverseF);
-		bool intersectOnRouteInColliPs(Vec3f currSubStart, Vec3f currSubGoal, Vec3f &newSubStart, Vec3f &newSubGoal, PHOpHapticController::ConstrainPlaneInfo &cpinfo, bool inverseF);
+
 	};
 }
 

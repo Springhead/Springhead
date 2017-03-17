@@ -26,7 +26,7 @@ namespace Spr
 
 
 	using namespace std;
-
+#ifdef USEGRMESH
 	void PHOpHapticRenderer::HpNoCtcProxyCorrection()
 	{
 		//noCtcItrNum++;
@@ -2439,5 +2439,5 @@ namespace Spr
 		}
 
 	}
-	
+#endif
 }

@@ -3,18 +3,14 @@
 
 
 #include <Framework\SprFWOpObj.h>
-//#include "FWObject.h"
 #include <Framework/FWObject.h>
 #include "FrameworkDecl.hpp"
 #include <Graphics\GRMesh.h>
 #include <Physics/PHOpObj.h>
 namespace Spr{ ;
-//class GRMesh;
-//class PHOpObj;
 
 class FWOpObj: public FWObject{
 	SPR_OBJECTDEF(FWOpObj);
-	//SPR_DECLMEMBEROF_FWOpObjDesc;
 public :
 	UTRef<GRMesh> grMesh;
 	UTRef<PHOpObj> opObj;

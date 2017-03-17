@@ -11,6 +11,7 @@
 //#include "Framework\FWOpHapticHandler.h"
 #include "Physics\PHOpEngine.h"
 #include <Foundation/UTClapack.h>
+#include "Graphics\GRMesh.h"
 
 #define USE_SPRFILE
 #define ESC 27

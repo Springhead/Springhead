@@ -20,6 +20,7 @@
 #include <Physics/PHSliderJoint.h>
 #include <Graphics/GRScene.h>
 #include <Graphics/GRSdk.h>
+#include <Graphics/GRDrawEllipsoid.h>
 #ifdef USE_HDRSTOP
 
 #pragma hdrstop
@@ -1068,8 +1069,9 @@ void FWScene::DrawOp(GRRenderIf* render, PHOpEngineIf* opEngineif)
 #endif
 
 				Spr::TQuaternion<float> elliRotQ; elliRotQ.FromMatrix(dp.pCurrOrint.Inv() * dp.ellipRotMatrix);
-				
-				opEngine->drawEll.drawOval(ra * opEngine->radiusCoe, rb * opEngine->radiusCoe, rc* opEngine->radiusCoe, 8, elliRotQ);//dp.pCurrOrint.Inv());
+
+				DrawEllipsoid drawEll;
+				drawEll.drawOval(ra * opEngine->radiusCoe, rb * opEngine->radiusCoe, rc* opEngine->radiusCoe, 8, elliRotQ);//dp.pCurrOrint.Inv());
 
 				render->PopModelMatrix();
 
