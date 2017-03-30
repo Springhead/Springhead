@@ -60,6 +60,8 @@ class UTRefCount {};
 #include "../../include/Framework/SprFWHapticPointer.h"
 #include "../../include/Framework/SprFWWin.h"
 #include "../../include/Framework/SprFWApp.h"
+#include "../../include/Framework/SprFWScene.h"
+#include "../../include/Framework/SprFWOpHapticHandler.h"
 #include "../../include/EmbPython/SprEPApp.h"
 %}
 //--  
