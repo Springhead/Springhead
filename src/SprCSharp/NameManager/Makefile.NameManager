@@ -10,7 +10,7 @@ $(TARGET):	$(INIFILE) $(SCRIPT)
 		GoPython $(SCRIPT)
 
 clean:		
-		del $(TARGET)
+		del $(TARGET) >NUL 2>&1
 
 $(INIFILE):			
 
