@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -6,7 +6,6 @@
 #
 #  SYNOPSIS:
 #	python create_mkf.py makefile project dependencies
-#
 #	    makefile:	    Makefile名
 #	    project:	    プロジェクト名
 #	    dependencies:   依存するプロジェクト名のリスト(カンマ区切り)
@@ -19,9 +18,10 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/12 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 1.0
+debug = False
 
 import sys
 import os
@@ -29,7 +29,17 @@ import glob
 import copy
 from optparse import OptionParser
 
-sys.path.append('../../bin/test')
+# ----------------------------------------------------------------------
+#  Import Springhead2 python library.
+#
+cwd = os.getcwd().split(os.sep)[::-1]
+for n in range(len(cwd)):
+	if cwd[n] != 'src': continue
+	spr2 = '/'.join(cwd[::-1][0:len(cwd)-n-1])
+	break
+libdir = '%s/bin/test' % spr2
+sys.path.append('/usr/local/lib')
+sys.path.append(libdir)
 from TextFio import *
 from Util import *
 from Error import *
@@ -39,12 +49,12 @@ from Error import *
 #
 prog = sys.argv[0].split('\\')[-1].split('.')[0]
 python_version = 34
-debug = True
 
 # ----------------------------------------------------------------------
 #  Directories and paths
 #
-spr2top	= '../..'
+#spr2top	= '../..'
+spr2top	= Util.pathconv(os.path.relpath(spr2), 'unix')
 incdir	= '%s/%s' % (spr2top, 'include')
 srcdir	= '%s/%s' % (spr2top, 'src')
 bindir	= '%s/%s' % (spr2top, 'bin')
@@ -68,7 +78,7 @@ tempfile = prog + '.tmp'
 #
 pythonexe = 'python%s' % (python_version if Util.is_unix() else '')
 python = '%s/%s' % (pythondir, pythonexe)
-makemgr = '%s make_manger.py' % python
+makemanager = '%s make_manger.py' % python
 swig = '%s %s/RunSwig.py' % (python, swigdir)
 
 # ----------------------------------------------------------------------
@@ -121,12 +131,12 @@ parser.add_option('-V', '--version',
 if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
-if len(args) < 2 or len(args) > 3:
+if len(args) != 3:
 	parser.error("incorrect number of arguments")
 
 makefile = args[0]
 project  = args[1]
-depends  = args[2] if len(args) > 2 else []
+depends  = args[2] if args[2] != 'None' else ''
 
 verbose = options.verbose
 debug   = options.debug
@@ -141,7 +151,7 @@ if verbose:
 #   Swig に渡す引数
 #
 swigargs = project
-if depends is not None:
+if depends != '':
 	swigargs += ' %s' % depends.replace(',', ' ')
 
 # ----------------------------------------------------------------------
@@ -150,14 +160,16 @@ if depends is not None:
 #	毎回ディレクトリのリストをとる (新規ファイル追加対応).
 #
 inchdrs = filelist('%s/%s' % (incdir, project))
-for dept in depends.split(','):
-	inchdrs.extend(filelist('%s/%s' % (incdir, dept)))
+if depends != '':
+	for dept in depends.split(','):
+		inchdrs.extend(filelist('%s/%s' % (incdir, dept)))
 
 srchdrs = filelist('%s/%s' % (srcdir, project))
 replaced = '%s/%s' % (srcdir, project)
 srchdrs = list(map(lambda x: x.replace(replaced, '.'), srchdrs))
-for dept in depends.split(','):
-	srchdrs.extend(filelist('%s/%s' % (srcdir, dept)))
+if depends != '':
+	for dept in depends.split(','):
+		srchdrs.extend(filelist('%s/%s' % (srcdir, dept)))
 
 if verbose:
 	print('  FIXHDRS: %s' % fixhdrs)
@@ -192,7 +204,7 @@ lines.append('all:\t%s%s' % (project, stubfile))
 lines.append('')
 
 lines.append('%s%s:\t$(FIXHDRS) $(INCHDRS) $(SRCHDRS)' % (project, stubfile))
-lines.append(Util.pathconv('\t%s -t' % makemgr))
+lines.append(Util.pathconv('\t%s -t' % makemanager))
 lines.append(Util.pathconv('\t%s %s' % (swig, swigargs)))
 lines.append('')
 
@@ -204,6 +216,10 @@ lines.append('\t')
 
 lines.append('$(SRCHDRS):\t')
 lines.append('\t')
+
+if verbose:
+	for line in lines:
+		print(line)
 
 # ----------------------------------------------------------------------
 #  ファイルに書き出す.

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -25,7 +25,7 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/12 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 1.0
 
@@ -34,7 +34,15 @@ import os
 import glob
 from optparse import OptionParser
 
-sys.path.append('../../bin/test')
+#  Import Springhead2 python library.
+cwd = os.getcwd().split(os.sep)[::-1]
+for n in range(len(cwd)):
+	if cwd[n] != 'src': continue
+	spr2 = '/'.join(cwd[::-1][0:len(cwd)-n-1])
+	break
+libdir = '%s/bin/test' % spr2
+sys.path.append('/usr/local/lib')
+sys.path.append(libdir)
 from TextFio import *
 from Util import *
 from Error import *
@@ -49,23 +57,23 @@ python_version = 34
 #  Globals
 #
 E = Error(prog)
-unix = Util.is_unix()
-path_sep = '/' if unix else '\\'
+U = Util()
+unix = U.is_unix()
 
 # ----------------------------------------------------------------------
 #  Directories
 #
-spr2top = '../..'
+spr2top = U.pathconv(os.path.relpath(spr2), 'unix')
 srcdir = '%s/%s' % (spr2top, 'src')
 bindir = '%s/%s' % (spr2top, 'bin')
-pythondir = '%s/Python%s' % (bindir, python_version)
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
+pythondir = '%s/Python%s' % (bindir, python_version)
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 
 # ----------------------------------------------------------------------
 #  Scripts
 #
-pythonexe = 'python%s' % (python_version if Util.is_unix() else '')
+pythonexe = 'python%s' % (python_version if unix else '')
 python = '%s/%s' % (pythondir, pythonexe)
 createmkf = '%s %s/create_mkf.py' % (python, runswigdir)
 
@@ -108,6 +116,10 @@ def do_process(proj, dept):
 			if verbose:
 				print('removing "%s"' % makefile)
 			Util.rm(makefile)
+		if os.path.exists(one_file):
+			if verbose:
+				print('removing "%s"' % one_file)
+			Util.rm(one_file)
 
 	#  Option '-c': Create makefile.
 	if options.create:
@@ -206,7 +218,7 @@ fio.close()
 
 #  Do the job.
 #
-curr_proj = os.getcwd().split(path_sep)[-1].lower()
+curr_proj = os.getcwd().split(os.sep)[-1].lower()
 for line in lines:
 	if verbose > 1:
 		print('Def: [%s]' % line)
