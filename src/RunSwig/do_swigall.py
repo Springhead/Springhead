@@ -43,7 +43,7 @@
 #  Version:
 #	Ver 1.0	 2012/10/25 F.Kanehori	First release version.
 #	Ver 2.0	 2013/01/07 F.Kanehori	全面改訂
-#	Ver 3.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
+#	Ver 3.0	 2017/04/19 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 3.0
 
@@ -86,6 +86,7 @@ spr2top = U.pathconv(os.path.relpath(spr2), 'unix')
 srcdir = '%s/%s' % (spr2top, 'src')
 bindir = '%s/%s' % (spr2top, 'bin')
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
+runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 pythondir = '%s/Python%s' % (bindir, python_version)
 
 # ----------------------------------------------------------------------
@@ -94,7 +95,7 @@ pythondir = '%s/Python%s' % (bindir, python_version)
 pythonexe = 'python%s' % (python_version if unix else '')
 python = '%s/%s' % (pythondir, pythonexe)
 make = 'make' if unix else 'nmake'
-makemanager = '%s make_manager.py' % python
+makemanager = '%s %s/make_manager.py' % (python, runswigdir)
 
 # ----------------------------------------------------------------------
 #  Files
@@ -154,7 +155,7 @@ for line in lines:
 	#  Do make.
 	cmd = '%s -f %s' % (make, makefile)
 	U.exec(cmd, addpath=addpath, shell=True, dry_run=debug)
-	cmd = '%s -r' % makemanager
+	cmd = '%s -r' % U.pathconv(makemanager)
 	U.exec(cmd, addpath=addpath, shell=True, dry_run=debug)
 
 	#  Return to original directory.

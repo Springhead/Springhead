@@ -18,7 +18,7 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0	 2017/04/19 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 1.0
 debug = False
@@ -51,6 +51,13 @@ prog = sys.argv[0].split('\\')[-1].split('.')[0]
 python_version = 34
 
 # ----------------------------------------------------------------------
+#  Globals
+#
+E = Error(prog)
+U = Util()
+unix = U.is_unix()
+
+# ----------------------------------------------------------------------
 #  Directories and paths
 #
 #spr2top	= '../..'
@@ -58,7 +65,8 @@ spr2top	= Util.pathconv(os.path.relpath(spr2), 'unix')
 incdir	= '%s/%s' % (spr2top, 'include')
 srcdir	= '%s/%s' % (spr2top, 'src')
 bindir	= '%s/%s' % (spr2top, 'bin')
-pythondir = '%s/Pyhton%s' % (bindir, python_version)
+pythondir = '%s/Python%s' % (bindir, python_version)
+runswigdir = '%s/%s' % (srcdir, 'RunSwig')
 swigdir   = '%s/%s' % (srcdir, 'Foundation')
 
 # ----------------------------------------------------------------------
@@ -78,8 +86,8 @@ tempfile = prog + '.tmp'
 #
 pythonexe = 'python%s' % (python_version if Util.is_unix() else '')
 python = '%s/%s' % (pythondir, pythonexe)
-makemanager = '%s make_manger.py' % python
-swig = '%s %s/RunSwig.py' % (python, swigdir)
+makemanager = '%s %s/make_manager.py' % (python, U.pathconv(runswigdir))
+swig = '%s %s/RunSwig.py' % (python, U.pathconv(swigdir))
 
 # ----------------------------------------------------------------------
 #  常に依存関係にあると見做すファイルの一覧.
