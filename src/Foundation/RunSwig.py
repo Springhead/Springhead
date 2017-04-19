@@ -13,13 +13,14 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0	 2017/04/19 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 1.0
 
 import sys
 import os
 import glob
+import copy
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
@@ -42,32 +43,26 @@ from Error import *
 #
 prog = sys.argv[0].split('\\')[-1].split('.')[0]
 python_version = 34
-debug = True
 
 # ----------------------------------------------------------------------
 #  Globals
 #
 U = Util()
+E = Error(prog)
 unix = U.is_unix()
-
-# ----------------------------------------------------------------------
-#  Process for command line
-#
-(options, args) = parser.parse_args()
-module = args[0]
-target_list = args[1:][::-1]
 
 # ----------------------------------------------------------------------
 #  Directories
 #
 spr2top = U.pathconv(os.path.relpath(spr2), 'unix')
-bindir = '%s/%s' % (spr2top, 'bin')
 incdir = '%s/%s' % (spr2top, 'include')
+srcdir = '%s/%s' % (spr2top, 'src')
+bindir = '%s/%s' % (spr2top, 'bin')
 swigdir = '%s/%s' % (bindir, 'swig')
 pythondir = '%s/Python%s' % (bindir, python_version)
 
-incdir_rel = U.pathconv(os.relpath(incdir), 'unix')
-srcdir_rel = U.pathconv(os.relpath(srcdir), 'unix')
+incdir_rel = U.pathconv(os.path.relpath(incdir), 'unix')
+srcdir_rel = U.pathconv(os.path.relpath(srcdir), 'unix')
 
 # ----------------------------------------------------------------------
 #  Scripts
@@ -75,13 +70,7 @@ srcdir_rel = U.pathconv(os.relpath(srcdir), 'unix')
 pythonexe = 'python%s' % (python_version if unix else '')
 python = '%s/%s' % (pythondir, pythonexe)
 make = 'make' if unix else 'nmake'
-
-# ----------------------------------------------------------------------
-#  Files
-#
-modulefile = '%s.i' % module
-makefile = '%s/%s' % (module, 'Stub.mak.txt')
-stubfile = '%s/%s/%sStub.cpp' % (srcdir, module, module)
+swig = 'swig'
 
 # ----------------------------------------------------------------------
 #  Paths
@@ -91,14 +80,52 @@ addpath = os.pathsep.join([bindir, swigdir])
 # ----------------------------------------------------------------------
 #  Main process
 # ----------------------------------------------------------------------
-
-#  Gather header file information.
+#  オプションの定義
 #
-auxdep_list1 = ['%s/Springhead.h' % incdir,
-		'%s/Base/Env.h' % incdir,
-		'%s/Base/BaseDebug.h' % incdir ]
-auxdep_list2 = ['%s/Foundation/UTTypeDesc.h' % srcdir ]
-auxdep = ' '.join(auxdep_list1.extend(auxdep_list2))
+usage = 'Usage: %prog [options] module [projct [project]..]'
+parser = OptionParser(usage = usage)
+parser.add_option('-d', '--dry_run',
+			dest='dry_run', action='store_true', default=False,
+			help='dry_run (for debug)')
+parser.add_option('-v', '--verbose',
+			dest='verbose', action='count', default=0,
+			help='set verbose count')
+parser.add_option('-V', '--version',
+			dest='version', action='store_true', default=False,
+			help='show version')
+
+# ----------------------------------------------------------------------
+#  コマンドラインの解析
+#
+(options, args) = parser.parse_args()
+if options.version:
+	print('%s: Version %s' % (prog, version))
+	sys.exit(0)
+if len(args) < 1:
+	parser.error("incorrect number of arguments")
+
+module = args[0]
+target_list = args[::-1]
+
+verbose	= options.verbose
+dry_run	= options.dry_run
+
+# ----------------------------------------------------------------------
+#  Files
+#
+interfacefile = '%s.i' % module
+makefile = '%sStub.mak.txt' % module
+stubfile = '%s/%s/%sStub.cpp' % (srcdir, module, module)
+
+# ----------------------------------------------------------------------
+#  ヘッダファイル情報を収集する.
+#
+incf_names = ['Springhead.h', 'Base/Env.h', 'Base/BaseDebug.h']
+srcf_names = ['Foundation/UTTypeDesc.h']
+auxdep_inc = list(map(lambda x: '%s/%s' % (incdir, x), incf_names))
+auxdep_src = list(map(lambda x: '%s/%s' % (srcdir, x), srcf_names))
+auxdep = copy.deepcopy(auxdep_inc)
+auxdep.extend(auxdep_src)
 
 srcinf = []
 srcimp = []
@@ -109,23 +136,37 @@ for target in target_list:
 	srcimp.extend(glob.glob('%s/%s/*.h' % (srcdir_rel, target)))
 	srcinfdep.extend(glob.glob('%s/%s/*.h' % (incdir_rel, target)))
 	srcimpdep.extend(glob.glob('%s/%s/*.h' % (srcdir_rel, target)))
+srcinf = U.pathconv(srcinf, 'unix')
+srcimp = U.pathconv(srcimp, 'unix')
+srcinfdep = U.pathconv(srcinfdep, 'unix')
+srcimpdep = U.pathconv(srcimpdep, 'unix')
+if verbose:
+	print('srcinf: %s' % srcinf)
+	print('srcimp: %s' % srcimp)
+	print('srcinfdep: %s' % srcinfdep)
+	print('srcimpdep: %s' % srcimpdep)
 
-#  Make swig ".i" file
+# ----------------------------------------------------------------------
+#  インターフェイスファイルを生成する.
 #
 lines = []
 lines.append('#\tDo not edit. RunSwig.py will update this file.')
 lines.append('%%module %s' % module)
 lines.append('#define DOUBLECOLON ::')
-for fname in auxdep_list1:
+for fname in auxdep_inc:
 	lines.append('%%include "%s"' % fname)
 for fname in srcinf:
 	lines.append('%%include "%s"' % fname)
-for fname in auxdep_list2:
+for fname in auxdep_src:
 	lines.append('%%include "%s"' % fname)
 for fname in srcimp:
 	lines.append('%%include "%s"' % fname)
 #
-def fileout(fname):
+def output(fname, lines):
+	if verbose:
+		print('%s:' % fname)
+		for line in lines:
+			print('  %s' % line)
 	fobj = TextFio(fname, 'w', encoding='utf8')
 	if fobj.open() < 0:
 		E.print(fobj.error())
@@ -133,31 +174,39 @@ def fileout(fname):
 		E.print(fobj.error())
 	fobj.close()
 #
-fileout(modulefile)
+if verbose:
+	path = '%s/%s' % (os.getcwd(), interfacefile)
+	print('  creating "%s"' % U.pathconv(path, 'unix'))
+output(interfacefile, lines)
 
-#  Make makefile.
+# ----------------------------------------------------------------------
+#  makefile を生成する.
 #
 lines = []
 lines.append('#\tDo not edit. RunSwig.py will update this file.')
-lines.append('echo all:\t%s' % stubfile)
-for fname in auxdep:
-	lines.append('%%include "%s"' % fname)
-for fname in srcinfdep:
-	lines.append('%%include "%s"' % fname)
-for fname in srcimpdep:
-	lines.append('%%include "%s"' % fname)
-args = ['-spr', '-w305,312,319,325,401,402']
-args.append('-DSWIG_%s' % module)
-args.append('-c++')
-args.append(modulefile)
-lines.append(' '.join(args))
+lines.append('all:\t%s' % stubfile)
+line = '%s:\t' % stubfile
+line += ' '.join(auxdep)
+line += ' ' + ' '.join(srcinfdep)
+line += ' ' + ' '.join(srcimpdep)
+lines.append(line)
+line = '\t%s/%s -spr -w305,312,319,325,401,402' % (swigdir, swig)
+line += ' -DSWIG_%s -c++ %s' % (module, interfacefile)
+lines.append(line)
 #
-fileout(stubfile)
+if verbose:
+	path = '%s/%s' % (os.getcwd(), makefile)
+	print('  creating "%s"' % U.pathconv(path, 'unix'))
+lines = U.pathconv(lines)
+output(makefile, lines)
 
-#  Execute make.
+# ----------------------------------------------------------------------
+#  make を実行する.
 #
 cmd = '%s -f %s' % (make, U.pathconv(makefile))
-U.exec(cmd, addpath=addpath, shell=True, dry_run=debug)
+status = U.exec(cmd, addpath=addpath, shell=True, dry_run=dry_run)
+if status != 0:
+	E.print('%s failed (%d)' % (make, status))
 
 sys.exit(0)
 
