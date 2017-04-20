@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.4
+ï»¿#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -8,12 +8,12 @@
 #	python RunSwig.py module target [target]...
 #
 #  DESCRIPTION:
-#	w’è‚³‚ê‚½ƒ‚ƒWƒ…[ƒ‹‚É‚Â‚¢‚Ä, swig ‚ğÀs‚·‚é‚½‚ß‚Ì makefile ‚ğì¬‚µ,
-#	make ‚ğÀs‚·‚é.
+#	æŒ‡å®šã•ã‚ŒãŸãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã«ã¤ã„ã¦, swig ã‚’å®Ÿè¡Œã™ã‚‹ãŸã‚ã® makefile ã‚’ä½œæˆã—,
+#	make ã‚’å®Ÿè¡Œã™ã‚‹.
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/19 F.Kanehori	Windows batch file ‚©‚çˆÚA.
+#	Ver 1.0	 2017/04/19 F.Kanehori	Windows batch file ã‹ã‚‰ç§»æ¤.
 # ==============================================================================
 version = 1.0
 
@@ -80,7 +80,7 @@ addpath = os.pathsep.join([bindir, swigdir])
 # ----------------------------------------------------------------------
 #  Main process
 # ----------------------------------------------------------------------
-#  ƒIƒvƒVƒ‡ƒ“‚Ì’è‹`
+#  ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®å®šç¾©
 #
 usage = 'Usage: %prog [options] module [projct [project]..]'
 parser = OptionParser(usage = usage)
@@ -95,7 +95,7 @@ parser.add_option('-V', '--version',
 			help='show version')
 
 # ----------------------------------------------------------------------
-#  ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Ì‰ğÍ
+#  ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã®è§£æ
 #
 (options, args) = parser.parse_args()
 if options.version:
@@ -118,7 +118,7 @@ makefile = '%sStub.mak.txt' % module
 stubfile = '%s/%s/%sStub.cpp' % (srcdir, module, module)
 
 # ----------------------------------------------------------------------
-#  ƒwƒbƒ_ƒtƒ@ƒCƒ‹î•ñ‚ğûW‚·‚é.
+#  ãƒ˜ãƒƒãƒ€ãƒ•ã‚¡ã‚¤ãƒ«æƒ…å ±ã‚’åé›†ã™ã‚‹.
 #
 incf_names = ['Springhead.h', 'Base/Env.h', 'Base/BaseDebug.h']
 srcf_names = ['Foundation/UTTypeDesc.h']
@@ -147,7 +147,7 @@ if verbose:
 	print('srcimpdep: %s' % srcimpdep)
 
 # ----------------------------------------------------------------------
-#  ƒCƒ“ƒ^[ƒtƒFƒCƒXƒtƒ@ƒCƒ‹‚ğ¶¬‚·‚é.
+#  ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç”Ÿæˆã™ã‚‹.
 #
 lines = []
 lines.append('#\tDo not edit. RunSwig.py will update this file.')
@@ -180,7 +180,7 @@ if verbose:
 output(interfacefile, lines)
 
 # ----------------------------------------------------------------------
-#  makefile ‚ğ¶¬‚·‚é.
+#  makefile ã‚’ç”Ÿæˆã™ã‚‹.
 #
 lines = []
 lines.append('#\tDo not edit. RunSwig.py will update this file.')
@@ -201,7 +201,7 @@ lines = U.pathconv(lines)
 output(makefile, lines)
 
 # ----------------------------------------------------------------------
-#  make ‚ğÀs‚·‚é.
+#  make ã‚’å®Ÿè¡Œã™ã‚‹.
 #
 cmd = '%s -f %s' % (make, U.pathconv(makefile))
 status = U.exec(cmd, addpath=addpath, shell=True, dry_run=dry_run)

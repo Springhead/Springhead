@@ -18,7 +18,7 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/19 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0	 2017/04/20 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 1.0
 debug = False
@@ -110,7 +110,7 @@ excludes = []
 #  指定されたディレクトリに存在する".h"ファイルをリストアップする.
 #
 def filelist(dir, excludes=[]):
-	files = glob.glob('%s/*.h' % dir)
+	files = sorted(glob.glob('%s/*.h' % dir))
 	list(map(lambda x: files.remove(x), excludes))
 	return Util.pathconv(files, 'unix')
 

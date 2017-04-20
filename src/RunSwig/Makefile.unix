@@ -1,0 +1,65 @@
+﻿#################################################################################
+#  FILE:
+#	Makefile.unix
+#
+#  DESCRIPTION:
+#	各プロジェクトに対して, 必要に応じて RunSwig を実行させる makefile.
+#
+#	RunSwig 実行のための手順：
+#
+#	処理概要：
+#	    このファイルを make するにあたり, 各プロジェクトに対して予め次の
+#	    処理を施しておく.
+#		compile	    ⇒ makefile.swig がなければ生成する.
+#		recompile   ⇒ makefile.swig を削除した後, 新たに生成する.
+#		clean	    ⇒ makefile.swig を削除する.
+#	    実際の処理は, make_manager.py に次の引数を与えることで実現する.
+#		compile	    ⇒ python make_manager.py -A -c
+#		recompile   ⇒ python make_manager.py -A -d -c
+#		clean	    ⇒ python make_manager.py -A -d
+#
+#	    各プロジェクトに対して, make -f makefile.swig を実行する.
+#	    この処理は, この makefile で実現する.
+#
+#################################################################################
+#  Version:
+#	Ver 1.0  2017/04/20 F.Kanehori  Windows 版を unix 用に修正
+#################################################################################
+
+#  Python の定義
+#
+PYTHON_VERSION	= 34
+PYTHON_DIR	= ../../bin/Python$(PYTHON_VERSION)
+PYTHON		= $(PYTHON_DIR)/python$(PYTHON_VERSION)
+
+#  ディレクトリの定義
+#
+BINDIR		= .
+INCDIR		= ../../include
+FOUNDATION	= ../Foundation
+FRAMEWORK	= ../Framework
+
+#  使用するスクリプト
+#
+SCILABSWIG	= $(PYTHON) ScilabSwig.py
+RUNSWIGFW	= $(PYTHON) RunSwigFramework.py
+SCRIPT		= do_swigall.py
+
+#  前処理で作成するファイル
+#
+SCILABSTUBHDR	= $(INCDIR)/ScilabStub.hpp
+FWOLDSPRSTUB	= $(FRAMEWORK)/FWOldSpringheadStub.cpp
+
+all:	PreWork RunSwig
+
+PreWork:	$(SCILABSTUBHDR) $(FWOLDSPRSTUB)
+
+$(SCILABSTUBHDR):	
+		cd $(FOUNDATION) && $(SCILABSWIG)
+
+$(FWOLDSPRSTUB):	
+		cd $(FRAMEWORK) && $(RUNSWIGFW)
+
+RunSwig:	
+		$(PYTHON) $(BINDIR)/$(SCRIPT)
+
