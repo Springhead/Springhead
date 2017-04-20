@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.4
+ï»¿#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -8,17 +8,17 @@
 #	python RunSwigFramework.py
 #
 #  DESCRIPTION:
-#	ˆÈ‰º‚Ìƒtƒ@ƒCƒ‹‚ğ¶¬‚·‚é‚½‚ß‚É ShiftJIS ‚Ì¢ŠE‚Å swig ‚ğÀs‚·‚é.
-#	¶¬‚·‚éƒtƒ@ƒCƒ‹F
+#	ä»¥ä¸‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç”Ÿæˆã™ã‚‹ãŸã‚ã« ShiftJIS ã®ä¸–ç•Œã§ swig ã‚’å®Ÿè¡Œã™ã‚‹.
+#	ç”Ÿæˆã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ï¼š
 #	    include/SprFWOldSpringheadDecl.hpp
 #	    src/FWOldSpringheadDecl.hpp
 #	    src/FWOldSpringheadStub.cpp
-#	ì‹ÆƒfƒBƒŒƒNƒgƒŠF
-#	    Springhead2 ‚Ì’¼‰º‚É swigtemp ‚Æ‚¢‚¤ƒfƒBƒŒƒNƒgƒŠ‚ğì‚èg—p‚·‚é.
+#	ä½œæ¥­ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªï¼š
+#	    Springhead2 ã®ç›´ä¸‹ã« swigtemp ã¨ã„ã†ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’ä½œã‚Šä½¿ç”¨ã™ã‚‹.
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/19 F.Kanehori	Windows batch file ‚©‚çˆÚA.
+#	Ver 1.0	 2017/04/20 F.Kanehori	Windows batch file ã‹ã‚‰ç§»æ¤.
 # ==============================================================================
 version = 1.0
 debug = True
@@ -26,6 +26,7 @@ debug = True
 import sys
 import os
 import glob
+import copy
 from optparse import OptionParser
 
 #  Import Springhead2 python library.
@@ -87,6 +88,12 @@ makefile = '%sStub.mak.txt' % module	# in src/Foundation
 stubcpp = '%sStub.cpp' % module		# in src/Framework
 
 # ----------------------------------------------------------------------
+#  Library path
+#
+new_env = copy.deepcopy(os.environ)
+new_env['SWIG_LIB'] = '%s/bin/swig/Lib' % spr2top
+
+# ----------------------------------------------------------------------
 #  Local method
 # ---------------------------------------------------------------------
 def output(fname, lines):
@@ -101,7 +108,7 @@ def output(fname, lines):
 # ----------------------------------------------------------------------
 #  Main process
 # ----------------------------------------------------------------------
-#  ƒIƒvƒVƒ‡ƒ“‚Ì’è‹`
+#  ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®å®šç¾©
 #
 usage = 'Usage: %prog [options]'
 parser = OptionParser(usage = usage)
@@ -116,7 +123,7 @@ parser.add_option('-V', '--version',
 			help='show version')
 
 # ----------------------------------------------------------------------
-#  ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Ì‰ğÍ
+#  ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã®è§£æ
 #
 (options, args) = parser.parse_args()
 if options.version:
@@ -129,15 +136,15 @@ verbose	= options.verbose
 dry_run	= options.dry_run
 
 # ----------------------------------------------------------------------
-#  src/Foundation ‚ÖˆÚ‚Á‚Ä RunSwig ‚ğÀs‚·‚é.
+#  src/Foundation ã¸ç§»ã£ã¦ RunSwig ã‚’å®Ÿè¡Œã™ã‚‹.
 #
 cmd = '%s Framework Foundation' % runswig_foundation
-status = U.exec(cmd, shell=True, verbose=verbose, dry_run=dry_run)
+status = U.exec(cmd, shell=True, env=new_env, dry_run=dry_run)
 if status != 0:
 	E.print('%s failed (%d)' % (runswig_foundation, status))
 
 # ----------------------------------------------------------------------
-#  swigtemp ‰º‚É SJIS world ‚ğì‚é.
+#  swigtemp ä¸‹ã« SJIS world ã‚’ä½œã‚‹.
 #
 swigtmp = '%s/swigtemp' % spr2top
 tmp_inc = '%s/include' % swigtmp
@@ -161,33 +168,27 @@ for dir in tmp_srcdirs:
 incf_names = ['Springhead.h', 'Base/Env.h', 'Base/BaseDebug.h']
 srcf_names = ['Foundation/UTTypeDesc.h', 'Framework/FWOldSpringheadNodeHandler.h']
 for file in incf_names:
-	if unix:
-		cmnd = '%s -s -o %s/include/%s %s/%s' % (nkf, swigtmp, file, incdir, file)
-	else:
-		cmnd = '%s -s -O %s/%s %s/include/%s' % (nkf, incdir, file, swigtmp, file)
+	cmnd = '%s -s -O %s/%s %s/include/%s' % (nkf, incdir, file, swigtmp, file)
 	cmnd = U.pathconv(cmnd)
 	status = Util.exec(cmnd, shell=True, verbose=verbose, dry_run=dry_run)
 	if status != 0:
 		E.print('"%s" failed (%d)' % (U.pathconv(cmnd, 'unix'), status))
 for file in srcf_names:
-	if unix:
-		cmnd = '%s -s -o %s/src/%s %s/%s' % (nkf, swigtmp, file, srcdir, file)
-	else:
-		cmnd = '%s -s -O %s/%s %s/src/%s' % (nkf, srcdir, file, swigtmp, file)
+	cmnd = '%s -s -O %s/%s %s/src/%s' % (nkf, srcdir, file, swigtmp, file)
 	cmnd = U.pathconv(cmnd)
 	status = Util.exec(cmnd, shell=True, verbose=verbose, dry_run=dry_run)
 	if status != 0:
 		E.print('"%s" failed (%d)' % (U.pathconv(cmnd, 'unix'), status))
 
 # ----------------------------------------------------------------------
-#  ‚±‚±‚©‚ç‚Í swigtemp/src/Foundation ‚ÉˆÚ‚Á‚Äì‹Æ‚·‚é.
+#  ã“ã“ã‹ã‚‰ã¯ swigtemp/src/Foundation ã«ç§»ã£ã¦ä½œæ¥­ã™ã‚‹.
 #
 os.chdir('%s/Foundation' % tmp_src)
 if verbose:
 	print('  chdir to %s' % U.pathconv(os.getcwd(), 'unix'))
 
 # ----------------------------------------------------------------------
-#  swig ‚ÌƒCƒ“ƒ^[ƒtƒFƒCƒXƒtƒ@ƒCƒ‹‚ğì¬‚·‚é.
+#  swig ã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒ•ã‚§ã‚¤ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä½œæˆã™ã‚‹.
 #
 addpath = os.pathsep.join(['%s' % bindir, '%s' % swigdir])
 srcimp = '%s/src/Framework/FWOldSpringheadNodeHandler.h' % swigtmp
@@ -208,7 +209,7 @@ if verbose:
 output(interfacefile, lines)
 
 # ----------------------------------------------------------------------
-#  makefile ‚ğì¬‚·‚é.
+#  makefile ã‚’ä½œæˆã™ã‚‹.
 #
 swigargs = '-spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++'
 cp = 'cp' if unix else 'copy'
@@ -227,15 +228,15 @@ lines = U.pathconv(lines)
 output(makefile, lines)
 
 # ----------------------------------------------------------------------
-#  make ‚ğÀs‚·‚é.
+#  make ã‚’å®Ÿè¡Œã™ã‚‹.
 #
 cmd = '%s -f %s' % (make, makefile)
-status = U.exec(cmd, shell=True, verbose=verbose, dry_run=dry_run)
+status = U.exec(cmd, shell=True, env=new_env, dry_run=dry_run)
 if status != 0:
 	E.print('%s failed (%d)' % (make, status))
 
 # ----------------------------------------------------------------------
-#  ˆ—I—¹.
+#  å‡¦ç†çµ‚äº†.
 #
 sys.exit(0)
 

@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.4
+ï»¿#!/usr/local/bin/python3.4
 # -*- coding: utf-8 -*-
 # ==============================================================================
 #  FILE:
@@ -8,12 +8,12 @@
 #	python ScilabSwig.py
 #
 #  DESCRIPTION:
-#	Scilab ƒ‚ƒWƒ…[ƒ‹‚É‚Â‚¢‚Ä, swig ‚ğÀs‚·‚é‚½‚ß‚Ì makefile ‚ğì¬‚µ,
-#	make ‚ğÀs‚·‚é (Scilab.i -> ../../include/Scilab/ScilabStub.hpp).
+#	Scilab ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã«ã¤ã„ã¦, swig ã‚’å®Ÿè¡Œã™ã‚‹ãŸã‚ã® makefile ã‚’ä½œæˆã—,
+#	make ã‚’å®Ÿè¡Œã™ã‚‹ (Scilab.i -> ../../include/Scilab/ScilabStub.hpp).
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/19 F.Kanehori	Windows batch file ‚©‚çˆÚA.
+#	Ver 1.0	 2017/04/20 F.Kanehori	Windows batch file ã‹ã‚‰ç§»æ¤.
 # ==============================================================================
 version = 1.0
 debug = False
@@ -21,6 +21,7 @@ debug = False
 import sys
 import os
 import glob
+import copy
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
@@ -85,9 +86,15 @@ stubpath = '%s/%s/%s' % (incdir, module, stubfile)
 addpath = os.pathsep.join([bindir, swigdir])
 
 # ----------------------------------------------------------------------
+#  Library path
+#
+new_env = copy.deepcopy(os.environ)
+new_env['SWIG_LIB'] = '%s/bin/swig/Lib' % spr2top
+
+# ----------------------------------------------------------------------
 #  Main process
 # ----------------------------------------------------------------------
-#  ƒIƒvƒVƒ‡ƒ“‚Ì’è‹`
+#  ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã®å®šç¾©
 #
 usage = 'Usage: %prog [options]'
 parser = OptionParser(usage = usage)
@@ -99,7 +106,7 @@ parser.add_option('-V', '--version',
 			help='show version')
 
 # ----------------------------------------------------------------------
-#  ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Ì‰ğÍ
+#  ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã®è§£æ
 #
 (options, args) = parser.parse_args()
 if options.version:
@@ -111,7 +118,7 @@ if len(args) != 0:
 verbose	= options.verbose
 
 # ----------------------------------------------------------------------
-#  makefile ‚ğ¶¬‚·‚é.
+#  makefile ã‚’ç”Ÿæˆã™ã‚‹.
 #
 lines = []
 lines.append('#\tDo not edit. %sSwig.py will update this file.' % module)
@@ -140,11 +147,11 @@ lines = U.pathconv(lines)
 output(makefile)
 
 # ----------------------------------------------------------------------
-#  make ‚ğÀs‚·‚é.
+#  make ã‚’å®Ÿè¡Œã™ã‚‹.
 #
 swdesig = '-' if unix else '/'
 cmd = '%s %sf %s' % (make, swdesig, U.pathconv(makefile))
-U.exec(cmd, addpath=addpath, shell=True, verbose=0, dry_run=debug)
+U.exec(cmd, env=new_env, addpath=addpath, shell=True, dry_run=debug)
 
 sys.exit(0)
 

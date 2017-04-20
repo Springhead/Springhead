@@ -1,65 +1,65 @@
-#################################################################################
+﻿#################################################################################
 #  FILE:
 #	Makefile.win
 #
 #  DESCRIPTION:
-#	���̃v���W�F�N�g�̃r���h����� RunSwig �����s���邽�߂̃v���W�F�N�g.
-#	Makefile ����ѓ��v���W�F�N�g�v���p�e�B�̃R�}���h���C���Ƃ�g�ݍ��킹��
-#	���ƂŎ�������.
+#	他のプロジェクトのビルドより先に RunSwig を実行するためのプロジェクト.
+#	Makefile および当プロジェクトプロパティのコマンドラインとを組み合わせる
+#	ことで実現する.
 #
-#	[�v���p�e�B]-[�\���v���p�e�B]-[NMake] �̃R�}���h���C���ɐݒ肷��R�}���h
-#	�ƃr���h���j���[�Ƃ̊֌W��, ���̂悤�ɂȂ��Ă���.
-#	�@�@�r���h�@�@�ˁ@�r���h�R�}���h���C��
-#	�@�@���r���h�@�ˁ@�N���[���R�}���h���C�� �� ���ׂă��r���h�R�}���h���C��
-#	�@�@�N���[���@�ˁ@�N���[���R�}���h���C��
+#	[プロパティ]-[構成プロパティ]-[NMake] のコマンドラインに設定するコマンド
+#	とビルドメニューとの関係は, 次のようになっている.
+#	　　ビルド　　⇒　ビルドコマンドライン
+#	　　リビルド　⇒　クリーンコマンドライン → すべてリビルドコマンドライン
+#	　　クリーン　⇒　クリーンコマンドライン
 #
-#	�����, ���̂悤�Ȑݒ�ɂ��@�\����������.
-#	(�e�f�B���N�g���ɂ���)
-#	�@�@(�R�}���h���C���ɂ���āj
-#		�r���h���@�@�ˁ@Makefile ���Ȃ���΍쐬 �� make �̎��s
-#		���r���h���@�ˁ@Makefile �������č쐬 �� make �̎��s
-#		�N���[�����@�ˁ@Makefile ���폜
-#	�@�@(Makefile.swig �ɂ����)
-#		RunSwig �����s�����Ɣ��肳�ꂽ���@�ˁ@Makefile �������č쐬
-#		(�������ꎞ�t�@�C���ɍ쐬���Ă��� make �I����� rename ����)
+#	よって, 次のような設定により機能を実現する.
+#	(各ディレクトリについて)
+#	　　(コマンドラインによって）
+#		ビルド時　　⇒　Makefile がなければ作成 → make の実行
+#		リビルド時　⇒　Makefile を強制再作成 → make の実行
+#		クリーン時　⇒　Makefile を削除
+#	　　(Makefile.swig によって)
+#		RunSwig が実行されると判定された時　⇒　Makefile を強制再作成
+#		(ただし一時ファイルに作成しておき make 終了後に rename する)
 #
-#	���� Makefile ����� $(SCRIPT) ���Ăяo������.
-#	Makefile �쐬/�폜�̐����, make_manager.bat �X�N���v�g�ŏW���Ǘ�����.
+#	この Makefile からは $(SCRIPT) を呼び出すだけ.
+#	Makefile 作成/削除の制御は, make_manager.bat スクリプトで集中管理する.
 #
-#	�v���p�e�B�̃R�}���h���C���Ɏ��ۂɐݒ肷��R�}���h�͎��̂Ƃ���.
+#	プロパティのコマンドラインに実際に設定するコマンドは次のとおり.
 #
-#	�r���h�R�}���h���C���F	 make_manager.bat -A -c && nmake -f Makefile
-#	���ׂă��r���h�R�}���h���C���F
+#	ビルドコマンドライン：	 make_manager.bat -A -c && nmake -f Makefile
+#	すべてリビルドコマンドライン：
 #				 make_manager.bat -A -d -c && nmake -f Makefile
-#	�N���[���R�}���h���C���F make_manager.bat -A -d
+#	クリーンコマンドライン： make_manager.bat -A -d
 #
 #################################################################################
 #  Version:
 #	Ver 1.0	 2012/10/15 F.Kanehori
-#	Ver 2.0  2013/01/10 F.Kanehori  �O������ǉ�
-#	Ver 3.0  2017/04/19 F.Kanehori  �o�b�`�X�N���v�g���� Python �Ɉڍs.
+#	Ver 2.0  2013/01/10 F.Kanehori  前処理を追加
+#	Ver 3.0  2017/04/19 F.Kanehori  バッチスクリプトから Python に移行.
 #################################################################################
 
-#  Python �̒�`
+#  Python の定義
 #
 PYTHON_VERSION	= 34
 PYTHON_DIR	= ..\..\bin\Python$(PYTHON_VERSION)
 PYTHON		= $(PYTHON_DIR)\python
 
-#  �f�B���N�g���̒�`
+#  ディレクトリの定義
 #
 BINDIR		= .
 INCDIR		= ..\..\include
 FOUNDATION	= ..\Foundation
 FRAMEWORK	= ..\Framework
 
-#  �g�p����X�N���v�g
+#  使用するスクリプト
 #
 SCILABSWIG	= $(PYTHON) ScilabSwig.py
 RUNSWIGFW	= $(PYTHON) RunSwigFramework.py
 SCRIPT		= do_swigall.py
 
-#  �O�����ō쐬����t�@�C��
+#  前処理で作成するファイル
 #
 SCILABSTUBHDR	= $(INCDIR)\ScilabStub.hpp
 FWOLDSPRSTUB	= $(FRAMEWORK)\FWOldSpringheadStub.cpp
