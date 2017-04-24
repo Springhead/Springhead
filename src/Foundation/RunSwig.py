@@ -13,7 +13,7 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/19 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0	 2017/04/24 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 1.0
 
@@ -190,7 +190,8 @@ line += ' '.join(auxdep)
 line += ' ' + ' '.join(srcinfdep)
 line += ' ' + ' '.join(srcimpdep)
 lines.append(line)
-line = '\t%s/%s -spr -w305,312,319,325,401,402' % (swigdir, swig)
+line = '\t%s/%s -I%s/Lib' % (swigdir, swig, swigdir)
+line += ' -spr -w305,312,319,325,401,402'
 line += ' -DSWIG_%s -c++ %s' % (module, interfacefile)
 lines.append(line)
 #
