@@ -26,7 +26,6 @@ debug = True
 import sys
 import os
 import glob
-import copy
 from optparse import OptionParser
 
 #  Import Springhead2 python library.
@@ -88,12 +87,6 @@ makefile = '%sStub.mak.txt' % module	# in src/Foundation
 stubcpp = '%sStub.cpp' % module		# in src/Framework
 
 # ----------------------------------------------------------------------
-#  Library path
-#
-new_env = copy.deepcopy(os.environ)
-new_env['SWIG_LIB'] = '%s/bin/swig/Lib' % spr2top
-
-# ----------------------------------------------------------------------
 #  Local method
 # ---------------------------------------------------------------------
 def output(fname, lines):
@@ -139,7 +132,7 @@ dry_run	= options.dry_run
 #  src/Foundation へ移って RunSwig を実行する.
 #
 cmd = '%s Framework Foundation' % runswig_foundation
-status = U.exec(cmd, shell=True, env=new_env, dry_run=dry_run)
+status = U.exec(cmd, shell=True, dry_run=dry_run)
 if status != 0:
 	E.print('%s failed (%d)' % (runswig_foundation, status))
 
@@ -210,7 +203,8 @@ output(interfacefile, lines)
 # ----------------------------------------------------------------------
 #  makefile を作成する.
 #
-swigargs = '-I../%s/Lib -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++' % swigdir
+swigargs = '-I../%s/Lib' % swigdir
+swigargs += ' -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++'
 cp = 'cp' if unix else 'copy'
 lines = []
 lines.append('# Do not edit. %s will update this file.' % prog)
@@ -230,7 +224,7 @@ output(makefile, lines)
 #  make を実行する.
 #
 cmd = '%s -f %s' % (make, makefile)
-status = U.exec(cmd, shell=True, env=new_env, dry_run=dry_run)
+status = U.exec(cmd, shell=True, dry_run=dry_run)
 if status != 0:
 	E.print('%s failed (%d)' % (make, status))
 
