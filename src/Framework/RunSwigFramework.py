@@ -18,7 +18,7 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/20 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0	 2017/04/24 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 1.0
 debug = True
@@ -190,7 +190,6 @@ if verbose:
 # ----------------------------------------------------------------------
 #  swig のインターフェイスファイルを作成する.
 #
-addpath = os.pathsep.join(['%s' % bindir, '%s' % swigdir])
 srcimp = '%s/src/Framework/FWOldSpringheadNodeHandler.h' % swigtmp
 srcimpdep = '%s/Framework/FWOldSpringheadNodeHandler.h' % srcdir
 swigtmp_rel = Util.pathconv(os.path.relpath(swigtmp), 'unix')
@@ -211,7 +210,7 @@ output(interfacefile, lines)
 # ----------------------------------------------------------------------
 #  makefile を作成する.
 #
-swigargs = '-spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++'
+swigargs = '-I../%s/Lib -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++' % swigdir
 cp = 'cp' if unix else 'copy'
 lines = []
 lines.append('# Do not edit. %s will update this file.' % prog)
