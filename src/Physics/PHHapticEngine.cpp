@@ -24,8 +24,15 @@ void PHSolidForHaptic::AddForce(Vec3d f, Vec3d r){
 	force += f;
 }
 //----------------------------------------------------------------------------
-// PHSapePairForHaptic
+// PHShapePairForHaptic
 PHShapePairForHaptic::PHShapePairForHaptic(){}
+void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
+	PHShapePair::Init(sp, fr0, fr1);
+	springK = (shape[0]->GetReflexSpring() + shape[1]->GetReflexSpring()) * 0.5;
+	damperD = (shape[0]->GetReflexDamper() + shape[1]->GetReflexDamper()) * 0.5;
+	mu = (shape[0]->GetDynamicFriction() + shape[1]->GetDynamicFriction()) * 0.5;
+	mu0 = (shape[0]->GetStaticFriction() + shape[1]->GetStaticFriction()) * 0.5;
+}
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
 	// 0:剛体, 1:力覚ポインタ
 	// 前回の状態を保存
@@ -129,12 +136,6 @@ bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2]
 	//DSTR << curShapePoseW[0] << "," << closestPoint[0] << std::endl;
 
 	if(dot >= 0.0) return false;
-	PHIr irtemp;
-	irtemp.springK = (shape[0]->GetReflexSpring() + shape[1]->GetReflexSpring()) * 0.5;
-	irtemp.damperD = (shape[0]->GetReflexDamper() + shape[1]->GetReflexDamper()) * 0.5;
-	irtemp.mu = (shape[0]->GetDynamicFriction() + shape[1]->GetDynamicFriction()) * 0.5;
-	irtemp.mu0 = (shape[0]->GetStaticFriction() + shape[1]->GetStaticFriction()) * 0.5;
-
 	if(bPoints){
 		for(int i = 0; i < (int)intersectionVertices.size(); i++){
 			Vec3d iv = intersectionVertices[i];
@@ -142,7 +143,6 @@ bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2]
 			dot = (wiv - interpolation_sPoint) * interpolation_normal;	// デバイスの侵入点から中間面上の点へのベクトルのノルム（デバイスの侵入量）
 			if(dot > 0.0)	continue;
 			PHIr* ir = DBG_NEW PHIr();
-			*ir = irtemp;
 			ir->normal = interpolation_normal;
 			ir->pointerPointW = wiv;
 			Vec3d ortho = dot * interpolation_normal; // 剛体の近傍点からデバイス侵入点までのベクトルを面法線へ射影
@@ -153,7 +153,6 @@ bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2]
 		}
 	}else{
 		PHIr* ir = DBG_NEW PHIr();
-		*ir = irtemp;
 		ir->normal = interpolation_normal;
 		ir->pointerPointW = pPoint;
 		Vec3d ortho = dot * interpolation_normal;
@@ -302,8 +301,7 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 	if(Nirs == 0) return false;
 	for(int i = 0; i < Nirs; i++){
 		PHIr* ir = sp->irs[i];
-		double mu = ir->mu;	// 動摩擦係数	
-		double l = mu * ir->depth;		// 摩擦円錐半径
+		double l = sp->mu * ir->depth;		// 摩擦円錐半径
 
 		Vec3d vps = ir->pointerPointW;
 		Vec3d vq = relativePose * ir->pointerPointW;
@@ -320,8 +318,7 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 		if(tangent.norm() < epsilon){
 			// 静止状態
 			//DSTR << "rest" << std::endl;
-		}
-		if(epsilon < tangent.norm() && tangent.norm() <= l){
+		}else if(tangent.norm() <= l){
 			//静摩擦（静止摩擦半径内）
 			sp->irs.push_back(DBG_NEW PHIr());
 			*sp->irs.back() = *ir;
@@ -335,9 +332,11 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 			*sp->irs.back() = *ir;
 			sp->irs.back()->normal = tangent.unit();
 			sp->irs.back()->depth = l;
+//hase			sp->stickCount = 0;
 			//DSTR << "dynamic friction" << std::endl;
 		}
 	}
+//hase	sp->stickCount++;
 	return true;
 }
 
@@ -447,7 +446,7 @@ PHHapticEngineDesc::PHHapticEngineDesc(){
 }
 
 PHHapticEngine::PHHapticEngine(){
-	bHapticEngine = false;
+	bEnabled = false;
 	bPhysicStep   = true;
 	engineImp = DBG_NEW PHHapticEngineImpulse();
 	engineImp->engine = this;

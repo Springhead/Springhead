@@ -63,10 +63,16 @@ public:
 	Posed lastShapePoseW[2];	///< 前回の形状姿勢
 	Vec3d lastClosestPoint[2];	///< 前回の近傍点(ローカル座標)
 	Vec3d lastNormal;			///< 前回の近傍物体の提示面の法線
+	float springK;				///< バネ係数
+	float damperD;				///< ダンパ係数
+	float mu;					///< 動摩擦係数
+	float mu0;					///< 最大静止摩擦係数(最大静止摩擦は未実装)	
+
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
-	std::vector< UTRef< PHIr > > irs;
+	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
 
 	PHShapePairForHaptic();
+	void Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1);
 	/// 接触判定．近傍点対を常時更新
 	virtual bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	/// 接触時の判定
@@ -86,7 +92,10 @@ struct PHSolidPairForHapticSt{
 	Posed initialRelativePose;	///< 接触開始時の相対位置姿勢
 	Posed relativePose;			///< 接触中の相対位置姿勢
 
-	int contactCount;
+	unsigned contactCount;
+	unsigned stickCount;		///< 静止摩擦の継続Hapticステップ数, 時変摩擦用の時間計測
+	unsigned slipCount;			///< 静止摩擦の継続Hapticステップ数, 摩擦開放時の固有振動用
+
 	Vec3d vibrationVel;
 	enum FrictionState{
 		FREE,
@@ -125,7 +134,7 @@ class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> 
 class PHHapticRender;
 class PHHapticLoopImp;
 class PHHapticEngineImp : public SceneObject{
-	SPR_OBJECTDEF_NOIF(PHHapticEngineImp);
+	SPR_OBJECTDEF_ABST_NOIF(PHHapticEngineImp);
 public:
 	PHHapticEngine* engine;
 	PHHapticLoopImp* hapticLoop;
@@ -133,7 +142,7 @@ public:
 	PHHapticEngineImp(){}
 	virtual void Step1(){};
 	virtual void Step2(){};
-	virtual void StepHapticLoop(){};
+	virtual void StepHapticLoop()=0;
 
 	double GetPhysicsTimeStep();
 	double GetHapticTimeStep();
@@ -162,7 +171,7 @@ public:
 };
 
 //----------------------------------------------------------------------------
-// PHHapticEngine
+/// PHHapticEngine,	This engine is initially disabled. Enable() muse be called prior to use.
 class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector/*< PHShapePairForHaptic, PHSolidPairForHaptic, PHHapticEngine >*/{
 public:
 	SPR_OBJECTDEF1(PHHapticEngine, PHEngine);
@@ -183,16 +192,15 @@ public:
 	struct Edge{ Vec3f min, max; };
 	std::vector< Edge > edges;
 
-	bool bHapticEngine;
-	bool bPhysicStep;
+protected:
 	HapticEngineMode engineMode;
+public:
+	bool bPhysicStep;
 	PHHapticEngine();
 
 
 	//-------------------------------------------------------------------
 	// APIの実装
-	///< 力覚提示計算のON/OFF
-	void EnableHapticEngine(bool b){ bHapticEngine = b; }
 	///< エンジンモードの選択
 	void SetHapticEngineMode(HapticEngineMode mode);
 	///< 力覚ポインタの数を返す
@@ -210,10 +218,10 @@ public:
 	PHSolidPairForHaptic* GetSolidPairTemp(int i, int j){ return (PHSolidPairForHaptic*)&*solidPairsTemp.item(i,j); }
 
 	///< シミュレーションループの更新（PHScene::Integrate()からコール）
-	virtual void Step(){ if(bHapticEngine && bPhysicStep) engineImp->Step1(); }
-	virtual void Step2(){ if(bHapticEngine && bPhysicStep) engineImp->Step2(); }
+	virtual void Step(){ if(bEnabled && bPhysicStep) engineImp->Step1(); }
+	virtual void Step2(){ if(bEnabled && bPhysicStep) engineImp->Step2(); }
 	///< 力覚ループの更新	
-	virtual void StepHapticLoop(){ if(bHapticEngine) engineImp->StepHapticLoop(); }
+	virtual void StepHapticLoop(){ if(bEnabled) engineImp->StepHapticLoop(); }
 
 	///< 力覚レンダリング用の衝突判定開始
 	virtual void StartDetection();

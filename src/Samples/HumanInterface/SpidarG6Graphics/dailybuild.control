@@ -3,12 +3,12 @@
 #Exclude
 #SolutionAlias
 #OutputDir	$TOOLSET/$PLATFORM/$CONFIGURATION
-#UseClosedSrc
+UseClosedSrc
 #CppMacro	DAILYBUILD
 #DontBuild
 #DontRun
 #Timeout
 #ExpectedStatus	0
-#PipeProcess	GenKbEvent seq [sleep=.] [space=s] [escape=e] [htab=t] [enter=n]
+PipeProcess	GenKbEvent ....\e
 #NeedIntervention
-#KillProcess
+KillProcess	SpidarG6Graphics.exe

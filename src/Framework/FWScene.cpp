@@ -1385,6 +1385,7 @@ int FWScene::NHapticPointers(){
 	return (int)fwHapticPointers.size();
 }
 void FWScene::UpdateHapticPointers(){
+	assert(this);
 	PHHapticEngine* he = GetPHScene()->GetHapticEngine()->Cast();
 	if(he->GetHapticEngineMode() == 0){
 		// single thread

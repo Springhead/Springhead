@@ -66,7 +66,7 @@ protected:
 	PHHapticEngine*			hapticEngine;
 	PHOpEngine*				opEngine;
 	
-	PHOpSpHashColliAgent*	opSpAgent;
+	UTRef<PHOpSpHashColliAgent>	opSpAgent;
 
 	std::vector< UTRef<PHSkeleton> > skeletons;
 

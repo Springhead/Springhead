@@ -11,6 +11,7 @@
 using namespace Spr;
 
 FWHapticSample::FWHapticSample(){
+//	_crtBreakAlloc = 75154;
 	pdt = 0.02f;
 	hdt = 0.001f;
 #ifdef  _DEBUG
@@ -69,7 +70,7 @@ void FWHapticSample::BuildScene(){
 		pointer->SetName("hpPointer");
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
 		fwPointer->SetHumanInterface(spg);		// HumanInterfaceの設定
-		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfのsってい
+		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfの設定
 }
 
 void FWHapticSample::InitInterface(){
