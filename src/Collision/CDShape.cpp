@@ -26,6 +26,13 @@ PHMaterial::PHMaterial(){
 	vibW = 300;
 	vibT = 0;
 	vibContact = false;
+
+	float vFricA;
+	float vFricB;
+	float vFricC;
+	///	粘性摩擦のための係数	f_t = fricViscocity * vel * f_N
+	float fircViscosity;
+
 }
 
 //-------------------------------------------------------------------------------------------------

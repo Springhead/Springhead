@@ -42,7 +42,7 @@ namespace Spr{
 		DrawEllipsoid drawEll;
 
 #endif
-		PHOpAnimation* opAnimator;
+		UTRef<PHOpAnimation> opAnimator;	//	To avoid memory leak
 
 		int opIterationTime;
 

@@ -178,12 +178,20 @@ struct PHMaterial{
 	float frictionSpring;
 	float frictionDamper;
 	
-	//	固有振動提示のための係数
+	///	固有振動提示のための係数
 	float vibA;				///< 振幅係数
 	float vibB;				///< 減衰係数
 	float vibW;				///< 周波数
 	float vibT;				///< 接触時間
-	bool vibContact;		///< 
+	bool vibContact;		///< 接触時の固有振動を発生させるかどうか
+	bool vibFric;			///< 摩擦時の固有振動を発生させるかどうか
+
+	///	時変摩擦係数のための係数	mu_0 = A log(1+Bt+C/v)
+	float vFricA;
+	float vFricB;
+	float vFricC;
+	///	粘性摩擦のための係数	f_t = fricViscocity * vel * f_N
+	float fircViscosity;
 };
 
 ///	形状のディスクリプタ(基本クラス)

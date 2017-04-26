@@ -13,7 +13,7 @@ namespace Spr{
 		opIterationTime = 1;
 		subStepProFix = true;
 		noCtcItrNum = 0;
-		opAnimator = new PHOpAnimation();
+		opAnimator = DBG_NEW PHOpAnimation();
 		//opAnimator->intial(this);
 
 		logForce = false;

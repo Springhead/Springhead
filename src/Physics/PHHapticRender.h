@@ -23,10 +23,7 @@ struct PHIntermediateRepresentation :public UTRefCount{
 	Vec3d contactPointVel;		///< 剛体側の接触点の速度(world)
 	Posed interpolation_pose;	///< 形状の補間姿勢
 	double f;					///< 侵入解除計算で接触点が並進移動に作用する大きさ
-	float springK;					///< バネ係数
-	float damperD;					///< ダンパ係数
-	float mu;					///< 動摩擦係数
-	float mu0;					///< 最大静止摩擦係数(最大静止摩擦は未実装)
+
 	PHIntermediateRepresentation(){
 		solidID = -1;
 		f = 0.0;

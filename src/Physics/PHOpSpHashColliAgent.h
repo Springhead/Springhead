@@ -20,7 +20,7 @@ public :
 	SPR_OBJECTDEF(PHOpSpHashColliAgent);
 
 
-	CDSpatialHashTable* spTable;
+	UTRef<CDSpatialHashTable> spTable;
 	PHSceneIf* scene;
 	PHOpEngineIf* opengIf;
 	PHOpEngine* opEngine;
