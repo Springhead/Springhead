@@ -23,6 +23,7 @@
 #  VERSION:
 #	Ver 1.0  2017/01/16 F.Kanehori	First release version.
 #	Ver 1.1  2017/01/18 F.Kanehori	Change directory position (-d).
+#	Ver 1.2  2017/01/26 F.Kanehori	Bug fixed.
 # ======================================================================
 import sys
 import os
@@ -115,7 +116,7 @@ topdir = '\\'.join(dirlist[0:n]) if found else None
 #  Read name definitions.
 #
 kvf = KvFile(inifile, sep='=')
-count = kvf.read({'TOPDIR': topdir})
+count = kvf.read(dic={'TOPDIR': topdir})
 if count < 0:
 	E.print(kvf.error())
 keys = sorted(kvf.keys())
@@ -145,15 +146,19 @@ if test_only:
 headers	 = [ '@echo off', ':: FILE: %s' % outfile, '' ]
 trailers = [ '', '::end: %s' % outfile ]
 
-f = TextFio(outfile, 'w', encoding='sjis')
+f = TextFio(outfile, 'w')
 if f.open() < 0:
 	E.print(f.error())
 #
 f.writelines(headers)
 for key in keys:
-	f.writeline('set %s=%s' % (key, Util.dospath(kvf.get(key))))
+	line = 'set %s=%s' % (key, Util.pathconv(kvf.get(key)))
+	if verbose > 1:
+		print(line)
+	f.writeline(line)
 f.writelines(trailers)
 f.close()
 
 sys.exit(0)
+
 # end: NameManager.py
