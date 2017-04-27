@@ -37,6 +37,7 @@
 %include "../../include/Framework/SprFWSkeletonSensor.h"
 %include "../../include/Framework/SprFWWin.h"
 %include "../../include/Framework/SprFWOptimizer.h"
+%include "../../include/Framework/SprFWOpHapticHandler.h"
 %include "../../include/Graphics/SprGRScene.h"
 /*
 #define DOUBLECOLON :: 
