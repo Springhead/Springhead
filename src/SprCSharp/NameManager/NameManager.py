@@ -23,7 +23,7 @@
 #  VERSION:
 #	Ver 1.0  2017/01/16 F.Kanehori	First release version.
 #	Ver 1.1  2017/01/18 F.Kanehori	Change directory position (-d).
-#	Ver 1.2  2017/01/26 F.Kanehori	Bug fixed.
+#	Ver 1.2  2017/01/27 F.Kanehori	Bug fixed.
 # ======================================================================
 import sys
 import os
@@ -143,8 +143,8 @@ if verbose:
 if test_only:
 	sys.exit(0)
 
-headers	 = [ '@echo off', ':: FILE: %s' % outfile, '' ]
-trailers = [ '', '::end: %s' % outfile ]
+headers	 = [ '@echo off', 'rem FILE: %s' % outfile, '' ]
+trailers = [ '', 'rem end: %s' % outfile ]
 
 f = TextFio(outfile, 'w')
 if f.open() < 0:
