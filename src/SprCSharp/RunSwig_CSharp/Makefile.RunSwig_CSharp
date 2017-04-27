@@ -6,8 +6,9 @@
 #	PLAT={ x86 | x64 }	  build platform
 #
 #  Version:
-#	Ver2.0  2016/12/07	F.Kanehori  ターゲット指定実装
 #	Ver1.0  2015/07/23	F.Kanehori  初版
+#	Ver2.0  2016/12/07	F.Kanehori  ターゲット指定実装
+#	Ver3.0  2017/04/27	F.Kanehori  NameManager対応
 # ------------------------------------------------------------------------------
 DEBUG = 1
 
@@ -30,6 +31,13 @@ IMPSRCDIR	= $(TOPDIR)\SprImport
 CSSRCDIR	= $(TOPDIR)\SprCSharp
 IFILEDIR	= $(TOPDIR)
 
+PYTHON_VERSION	= 34
+PYTHONDIR	= $(PROJDIR)\bin\Python$(PYTHON_VERSION)
+PYTHON		= $(PYTHONDIR)\python
+PYTHONDLLDIR	= $(PROJDIR)\bin\win64
+NAMEMGRDIR	= $(PROJDIR)\src\SprCSharp\NameManager
+NAMEMGR		= $(NAMEMGRDIR)\NameManager.bat
+
 !MESSAGE Makefile.RunSwig_CSharp
 !MESSAGE Using parameters ...
 !MESSAGE    TARGET:     [$(TARGET)]
@@ -42,8 +50,12 @@ IFILEDIR	= $(TOPDIR)
 !MESSAGE    IMPSRCDIR:  [$(IMPSRCDIR)]
 !MESSAGE    CSSRCDIR:   [$(CSSRCDIR)]
 !MESSAGE    IFILEDIR:   [$(IFILEDIR)]
+!MESSAGE    NAMEMGR:    [$(NAMEMGR)]
 
-RUNSWIG   = $(MAKEDIR)\RunSwig_CSharp.bat
+RUNSWIG 	= $(MAKEDIR)\RunSwig_CSharp.bat
+NAMEMGR_SCRIPT	= $(PYTHON) $(NAMEMGRDIR)\NameManager.py
+NAMEMGR_INI	= $(NAMEMGRDIR)\NameManager.ini
+
 
 EXPSRCS	= $(EXPSRCDIR)\CSBase.cpp		\
 	  $(EXPSRCDIR)\CSCollision.cpp		\
@@ -85,9 +97,12 @@ IFILES	= $(IFILEDIR)\Base.i			\
 	  $(IFILEDIR)\HumanInterface.i		\
 	  $(IFILEDIR)\Physics.i
 
-all:	dlls
+all:	$(NAMEMGR) dlls
 	call $(RUNSWIG) $(TARGET)
 
+$(NAMEMGR):	
+	$(NAMEMGR_SCRIPT) -i $(NAMEMGR_INI) -o $(NAMEMGR)
+	
 dlls:	$(DLLDIR)\SprExport.dll	\
 	$(DLLDIR)\SprImport.dll	\
 	$(DLLDIR)\SprCSharp.dll
