@@ -11,7 +11,7 @@ namespace Spr{;
 
 PHMaterial::PHMaterial(){
 	mu = 0.4f;
-	mu0 = 0.4f;
+	mu0 = 0.8f;
 	e = 0.4f;
 	density = 1.0f;
 	spring = 0.0f;
