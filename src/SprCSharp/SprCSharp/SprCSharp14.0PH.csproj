@@ -15,7 +15,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\14.0\bin\x64\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TARGET_Physic</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TARGET_Physics</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -33,7 +33,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>..\14.0\bin\x86\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TARGET_Physic</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TARGET_Physics</DefineConstants>
     <DebugType>full</DebugType>
     <PlatformTarget>x86</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
@@ -41,7 +41,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>..\14.0\bin\x86\Release\</OutputPath>
-    <DefineConstants>TRACE;TARGET_Physic</DefineConstants>
+    <DefineConstants>TRACE;TARGET_Physics</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x86</PlatformTarget>
