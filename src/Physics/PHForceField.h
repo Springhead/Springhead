@@ -14,7 +14,7 @@
 namespace Spr{;
 
 class PHGravityEngine : public PHEngine{
-	SPR_OBJECTDEF_NOIF(PHGravityEngine);
+	SPR_OBJECTDEF(PHGravityEngine);
 public:
 	PHSolids solids;		///< 重力を加える剛体の配列
 	Vec3d	accel;			///< 重力加速度

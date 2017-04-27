@@ -279,7 +279,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 				ir->contactPointVel = curSolid[0]->GetPointVelocity(ir->contactPointW);
 				ir->pointerPointVel = curSolid[1]->GetPointVelocity(ir->pointerPointW);	
 			}
-			if(pointer->bFriction) CompFrictionIntermediateRepresentation(spHaptic);
+			if(pointer->bFriction) CompFrictionIntermediateRepresentation2(spHaptic);
 			for(int k = 0; k < (int)spHaptic->irs.size(); k++){
 				irs.push_back(spHaptic->irs[k]);
 			}
@@ -341,49 +341,47 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairFor
 }
 
 bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp){
-	// 摩擦(最大静止摩擦版）未実装
+	// 摩擦(最大静止摩擦版）未実装		hase:まずPenaltyでやってから
+	//	haseこちらでテスト中
+	int Nirs = sp->irs.size();
+	if(Nirs == 0) return false;
+	bool bDynamic = false;
+	for (int i = 0; i < Nirs; i++) {
+		PHIr* ir = sp->irs[i];
+		double mu = sp->mu;
+		if (frictionState == FIRST || frictionState == STATIC) mu = sp->mu0;
+		double l = mu * ir->depth;		// 摩擦円錐半径
+		Vec3d vps = ir->pointerPointW;
+		Vec3d vq = relativePose * ir->pointerPointW;
+		Vec3d dq = (vq - vps) * ir->normal * ir->normal;
+		Vec3d vqs = vq - dq;
+		Vec3d tangent = vqs - vps;
 
-	//int Nirs = sp->irs.size();
-	//if(Nirs == 0) return false;
-	//for(int i = 0; i < Nirs; i++){
-	//	PHIr* ir = sp->irs[i];
-	//	double mu = ir->mu;	// 動摩擦係数				
-	//	double l = mu * ir->depth;		// 摩擦円錐半径
+		//DSTR << "vps" << vps << std::endl;
+		//DSTR << "vq" << vq << std::endl;
+		//DSTR << "tangent " << tangent << tangent.norm() << std::endl;
 
-	//	Vec3d vps = ir->pointerPointW;
-	//	Vec3d vq = relativePose * ir->pointerPointW;
-	//	Vec3d dq = (vq - vps) * ir->normal * ir->normal;
-	//	Vec3d vqs = vq - dq;
-	//	Vec3d tangent = vqs - vps;
-
-	//	//DSTR << "vps" << vps << std::endl;
-	//	//DSTR << "vq" << vq << std::endl;
-	//	//DSTR << "tangent " << tangent << tangent.norm() << std::endl;
-
-	//	PHIr* fricIr = DBG_NEW PHIr();
-	//	*fricIr = *ir;
-	//	double epsilon = 1e-5;
-	//	if(tangent.norm() < epsilon){
-	//		// 静止状態
-	//		delete fricIr;
-	//		//DSTR << "rest" << std::endl;
-	//	}
-	//	if(epsilon < tangent.norm() && tangent.norm() <= l){
-	//		//静摩擦（静止摩擦半径内）
-	//		fricIr->normal = tangent.unit();
-	//		fricIr->depth = tangent.norm();
-	//		sp->irs.push_back(fricIr);
-	//		//DSTR << "static friction" << std::endl;
-	//	}
-
-	//	if(epsilon < l && l < tangent.norm()){
-	//		// 動摩擦
-	//		fricIr->normal = tangent.unit();
-	//		fricIr->depth = l;
-	//		sp->irs.push_back(fricIr);
-	//		//DSTR << "dynamic friction" << std::endl;
-	//	}
-	//}
+		double epsilon = 1e-5;
+		double tangentNorm = tangent.norm();
+		if (tangentNorm > epsilon) {	//	ずれが0のときは、向きも分からないので摩擦拘束は入れない
+			PHIr* fricIr = DBG_NEW PHIr();
+			*fricIr = *ir;
+			fricIr->normal = tangent / tangentNorm;
+			fricIr->depth = std::min(tangentNorm, l);
+			sp->irs.push_back(fricIr);
+			if (l < tangentNorm) {	
+				// 一つでも、静止摩擦を越えたら、連鎖して滑るので、全体を動摩擦にする
+				bDynamic = true;
+			}
+		}
+	}
+	if (bDynamic) {
+		frictionState = DYNAMIC;
+		stickCount = 0;
+	} else {
+		frictionState = STATIC;
+		stickCount++;
+	}
 	return true;
 }
 
