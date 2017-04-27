@@ -25,7 +25,12 @@ void PHSolidForHaptic::AddForce(Vec3d f, Vec3d r){
 }
 //----------------------------------------------------------------------------
 // PHShapePairForHaptic
-PHShapePairForHaptic::PHShapePairForHaptic(){}
+PHShapePairForHaptic::PHShapePairForHaptic(){
+	springK = 0;
+	damperD= 0;
+	mu = 0;
+	mu0= 0;
+}
 void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 	PHShapePair::Init(sp, fr0, fr1);
 	springK = (shape[0]->GetReflexSpring() + shape[1]->GetReflexSpring()) * 0.5;
@@ -706,11 +711,8 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 		s[1] = sp->solid[1];
 		sp->shapePairs.resize(s[0]->NShape(), s[1]->NShape());
 		for(j = 0; j < s[1]->NShape(); j++){
-			PHShapePairForHaptic* n = DBG_NEW PHShapePairForHaptic();
-			n->shape[0] = s[0]->GetShape(s[0]->NShape() - 1)->Cast();
-			n->shape[1] = s[1]->GetShape(j)->Cast();
-			n->frame[0] = s[0]->GetFrame(s[0]->NShape() - 1)->Cast();
-			n->frame[1] = s[1]->GetFrame(j)->Cast();
+			PHShapePairForHaptic* n = sp->CreateShapePair();
+			n->Init(sp, s[0]->GetFrame(s[0]->NShape() - 1)->Cast(), s[1]->GetFrame(j)->Cast());
 			sp->shapePairs.item(s[0]->NShape() - 1, j) = n;
 		}
 	}
@@ -727,11 +729,8 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 		s[1] = solid;
 		sp->shapePairs.resize(s[0]->NShape(), s[1]->NShape());
 		for(j = 0; j < s[0]->NShape(); j++){
-			PHShapePairForHaptic* n = DBG_NEW PHShapePairForHaptic();
-			n->shape[0] = s[0]->GetShape(j)->Cast();
-			n->shape[1] = s[1]->GetShape(s[1]->NShape()-1)->Cast(); 
-			n->frame[0] = s[0]->GetFrame(j)->Cast();
-			n->frame[1] = s[1]->GetFrame(s[1]->NShape()-1)->Cast(); 
+			PHShapePairForHaptic* n = sp->CreateShapePair();
+			n->Init(sp, s[0]->GetFrame(j)->Cast(), s[1]->GetFrame(s[1]->NShape() - 1)->Cast());
 			sp->shapePairs.item(j, s[1]->NShape()-1) = n;
 		}
 	}
