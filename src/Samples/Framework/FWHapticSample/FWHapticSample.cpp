@@ -68,12 +68,13 @@ void FWHapticSample::BuildScene(){
 		pointer->EnableFriction(false);				// 摩擦を有効にするかどうか
 		//pointer->EnableDebugControl(true);		// キーボードから力覚ポインタを動かす機能カーソルでx、y方向に移動可能
 		pointer->SetName("hpPointer");
+		pointer->EnableFriction(true);
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
 		fwPointer->SetHumanInterface(spg);		// HumanInterfaceの設定
 		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfの設定
 
 	//	hase	ポインタに重力を加えるべきか？ GravityEngineをOFFにしておくと、ポインタの振動がなくなる。
-	//	phscene->GetGravityEngine()->Enable(false);
+	//phscene->GetGravityEngine()->Enable(false);
 }
 
 void FWHapticSample::InitInterface(){
@@ -88,15 +89,15 @@ void FWHapticSample::InitInterface(){
 			usb20Sh4Desc.channel = i;
 			hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
 		}
-		//// x64
-		//DRCyUsb20Sh4Desc cyDesc;
-		//for(int i=0; i<10; ++i){
-		//	cyDesc.channel = i;
-		//	hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
-		//}
-		//hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-		//hiSdk->Print(DSTR);
-		//hiSdk->Print(std::cout);
+		// x64
+		DRCyUsb20Sh4Desc cyDesc;
+		for(int i=0; i<10; ++i){
+			cyDesc.channel = i;
+			hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+		}
+		hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
+		hiSdk->Print(DSTR);
+		hiSdk->Print(std::cout);
 
 		spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
 		spg->Init(&HISpidarGDesc("SpidarG6X3R"));
