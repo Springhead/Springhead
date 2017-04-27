@@ -33,7 +33,7 @@ void FWHapticSample::BuildScene(){
 		// 床を作成
 		CDBoxDesc bd;
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
-		bd.material.mu = 0.5f;
+		bd.material.mu = 0.01f;
 		bd.material.mu0 = 0.6f;
 		PHSolidIf* floor = phscene->CreateSolid();
 		floor->AddShape(phSdk->CreateShape(bd));
@@ -53,7 +53,8 @@ void FWHapticSample::BuildScene(){
 		pointer = phscene->CreateHapticPointer();	// 力覚ポインタの作成
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
-		cd.material.mu = 0.4f;
+		cd.material.mu = 0.01f;
+		cd.material.mu0 = 0.6f;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		//pointer->AddShape(phSdk->CreateShape(bd));	// シェイプの追加
 		pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加

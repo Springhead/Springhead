@@ -246,7 +246,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 		contactCount = 0;
 		initialRelativePose =  pointer->GetPose() * interpolationPose.Inv();
 	}else{
-		frictionState = STATIC;
+		if (frictionState == FIRST) frictionState = STATIC;
 		contactCount += 1;
 		initialRelativePose =  pointer->lastProxyPose * lastInterpolationPose.Inv();
 	}
@@ -351,10 +351,11 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation2(PHShapePairFo
 	int Nirs = sp->irs.size();
 	if(Nirs == 0) return false;
 	bool bDynamic = false;
+	double mu = sp->mu;
+	if (frictionState == FIRST || frictionState == STATIC) mu = sp->mu0;
+	DSTR << frictionState << " " << mu << std::endl;
 	for (int i = 0; i < Nirs; i++) {
 		PHIr* ir = sp->irs[i];
-		double mu = sp->mu;
-		if (frictionState == FIRST || frictionState == STATIC) mu = sp->mu0;
 		double l = mu * ir->depth;		// 摩擦円錐半径
 		Vec3d vps = ir->pointerPointW;
 		Vec3d vq = relativePose * ir->pointerPointW;
