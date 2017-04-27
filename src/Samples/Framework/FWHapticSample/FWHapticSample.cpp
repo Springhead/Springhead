@@ -71,6 +71,9 @@ void FWHapticSample::BuildScene(){
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
 		fwPointer->SetHumanInterface(spg);		// HumanInterfaceの設定
 		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfの設定
+
+	//	hase	ポインタに重力を加えるべきか？ GravityEngineをOFFにしておくと、ポインタの振動がなくなる。
+	//	phscene->GetGravityEngine()->Enable(false);
 }
 
 void FWHapticSample::InitInterface(){
