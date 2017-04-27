@@ -26,6 +26,7 @@
 # ==============================================================================
 #  Version:
 #	Ver 1.0	 2017/04/13 F.Kanehori	Windows batch file から移植.
+#	Ver 1.1	 2017/04/17 F.Kanehori	Suppress warnig message.
 # ==============================================================================
 version = 1.0
 
@@ -93,7 +94,7 @@ one_file = 'do_swigone.projs'
 #
 def create(fname, proj, dept):
 	if os.path.exists(fname):
-		E.print('file "%s" already exists.' % fname, prompt='Warning')
+		#E.print('file "%s" already exists.' % fname, prompt='Warning')
 		return
 
 	#  Generate makefile body.
