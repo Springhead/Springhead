@@ -15,6 +15,7 @@ PHHapticPointer::PHHapticPointer(){
 	bDebugControl = false;
 	bForce = false;
 	bFriction = true;
+	bTimeVaryFriction = true;
 	bMultiPoints = true;
 	bVibration = false;
 	rotaionalWeight = 1e5;

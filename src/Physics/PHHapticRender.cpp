@@ -2,8 +2,15 @@
 #include <Physics/PHHapticEngine.h>
 
 namespace Spr{;
+PHHapticRenderInfo::PHHapticRenderInfo() {
+	loopCount = 0;
+	pdt = 0.02f;
+	hdt = 0.001f;
+	bInterpolatePose = true;
+}
 
-PHHapticRender::PHHapticRender(){}
+PHHapticRender::PHHapticRender(){
+}
 
 void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
 	*(PHHapticRenderInfo*)this = info;
@@ -26,9 +33,6 @@ void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
 }
 
 PHIrs PHHapticRender::CompIntermediateRepresentation(PHHapticPointer* pointer){
-	const double syncCount = pdt / hdt;
-	double t = loopCount / syncCount;
-	if(t > 1.0) t = 1.0;
 
 	PHIrs irs;
 	int nNeighbors = (int)pointer->neighborSolidIDs.size();
@@ -38,7 +42,7 @@ PHIrs PHHapticRender::CompIntermediateRepresentation(PHHapticPointer* pointer){
 		PHSolid* curSolid[2];
 		curSolid[0] = hsolids->at(solidID)->GetLocalSolid();
 		curSolid[1] = DCAST(PHSolid, pointer);
-		PHIrs tempIrs = sp->CompIntermediateRepresentation(curSolid, t, bInterpolatePose);
+		PHIrs tempIrs = sp->CompIntermediateRepresentation(this, curSolid);
 		if(tempIrs.size() == 0) continue;
 		irs.insert(irs.end(), tempIrs.begin(), tempIrs.end());
 	}
@@ -220,7 +224,7 @@ void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 		PHSolidPairForHaptic* sp = sps->item(solidID, pointer->GetPointerID());
 		PHSolid* solid = hsolids->at(solidID)->GetLocalSolid(); 
 		if(sp->frictionState == sp->FREE) continue;
-		if(sp->frictionState == sp->FIRST){
+		if(sp->contactCount == 0){
 			sp->vibrationVel = pointer->GetVelocity() - solid->GetVelocity();
 		}
 		Vec3d vibV = sp->vibrationVel;

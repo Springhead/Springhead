@@ -29,7 +29,11 @@ PHShapePairForHaptic::PHShapePairForHaptic(){
 	springK = 0;
 	damperD= 0;
 	mu = 0;
-	mu0= 0;
+	mu0 = 0;
+	timeVaryFrictionA = 0;
+	timeVaryFrictionB = 0;
+	timeVaryFrictionC = 0;
+	frictionViscosity = 0;
 }
 void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 	PHShapePair::Init(sp, fr0, fr1);
@@ -37,6 +41,10 @@ void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 	damperD = (shape[0]->GetReflexDamper() + shape[1]->GetReflexDamper()) * 0.5;
 	mu = (shape[0]->GetDynamicFriction() + shape[1]->GetDynamicFriction()) * 0.5;
 	mu0 = (shape[0]->GetStaticFriction() + shape[1]->GetStaticFriction()) * 0.5;
+	timeVaryFrictionA = (shape[0]->GetMaterial().timeVaryFrictionA + shape[1]->GetMaterial().timeVaryFrictionA) * 0.5;
+	timeVaryFrictionB = (shape[0]->GetMaterial().timeVaryFrictionB + shape[1]->GetMaterial().timeVaryFrictionB) * 0.5;
+	timeVaryFrictionC = (shape[0]->GetMaterial().timeVaryFrictionC + shape[1]->GetMaterial().timeVaryFrictionC) * 0.5;
+	frictionViscosity = (shape[0]->GetMaterial().frictionViscosity + shape[1]->GetMaterial().frictionViscosity) * 0.5;
 }
 bool PHShapePairForHaptic::Detect(unsigned ct, const Posed& pose0, const Posed& pose1){
 	// 0:剛体, 1:力覚ポインタ
@@ -219,17 +227,21 @@ void PHSolidPairForHaptic::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 	//CSVOUT << (sp->shapePoseW[0] * sp->closestPoint[0]).y << "," << (sp->shapePoseW[1] * sp->closestPoint[1]).y << std::endl;
 }
 
-PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose){
+PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, PHSolid* curSolid[2]){
 	/* 力覚安定化のための補間
 	// Impulseの場合は相手の剛体のPoseの補間が必要。
 	// LocalDynamicsの場合は法線の補間のみでよい。
 	// 法線の補間はPHShapePairForHapticでやる。h
 	*/
+	const double syncCount = hr->pdt / hr->hdt;
+	double t = hr->loopCount / syncCount;
+	if (t > 1.0) t = 1.0;
+
 	force.clear();
 	torque.clear();
 	lastInterpolationPose = interpolationPose;
 	interpolationPose = curSolid[0]->GetPose();
-	if(bInterpolatePose){
+	if(hr->bInterpolatePose){
 		Posed cur = curSolid[0]->GetPose();
 		double dt = ((PHScene*)curSolid[0]->GetScene())->GetTimeStep();
 		Posed last;
@@ -242,11 +254,11 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 #if 1
 	// 相対摩擦
 	if(frictionState == FREE){
-		frictionState = FIRST;
+		frictionState = STATIC;
 		contactCount = 0;
+		stickCount = 0;
 		initialRelativePose =  pointer->GetPose() * interpolationPose.Inv();
 	}else{
-		if (frictionState == FIRST) frictionState = STATIC;
 		contactCount += 1;
 		initialRelativePose =  pointer->lastProxyPose * lastInterpolationPose.Inv();
 	}
@@ -275,7 +287,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 			Posed curShapePoseW[2];
 			curShapePoseW[0] = interpolationPose * curSolid[0]->GetShapePose(i);
 			curShapePoseW[1] = curSolid[1]->GetPose() * curSolid[1]->GetShapePose(j);
-			spHaptic->CompIntermediateRepresentation(curShapePoseW, t, bInterpolatePose, pointer->bMultiPoints);
+			spHaptic->CompIntermediateRepresentation(curShapePoseW, t, hr->bInterpolatePose, pointer->bMultiPoints);
 			for(int k = 0; k < (int)spHaptic->irs.size(); k++){
 				PHIr* ir = spHaptic->irs[k];
 				ir->solidID = solidID[0];
@@ -284,7 +296,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 				ir->contactPointVel = curSolid[0]->GetPointVelocity(ir->contactPointW);
 				ir->pointerPointVel = curSolid[1]->GetPointVelocity(ir->pointerPointW);	
 			}
-			if(pointer->bFriction) CompFrictionIntermediateRepresentation2(spHaptic);
+			if(pointer->bFriction) CompFrictionIntermediateRepresentation(hr, curSolid, spHaptic);
 			for(int k = 0; k < (int)spHaptic->irs.size(); k++){
 				irs.push_back(spHaptic->irs[k]);
 			}
@@ -300,62 +312,30 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHSolid* curSolid[2],
 	return irs;
 }
 
-bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHShapePairForHaptic* sp){
-	// 摩擦
-	int Nirs = (int)sp->irs.size();
-	if(Nirs == 0) return false;
-	for(int i = 0; i < Nirs; i++){
-		PHIr* ir = sp->irs[i];
-		double l = sp->mu * ir->depth;		// 摩擦円錐半径
-
-		Vec3d vps = ir->pointerPointW;
-		Vec3d vq = relativePose * ir->pointerPointW;
-		Vec3d dq = (vq - vps) * ir->normal * ir->normal;
-		Vec3d vqs = vq - dq;
-		Vec3d tangent = vqs - vps;
-
-		//DSTR << "vps" << vps << std::endl;
-		//DSTR << "vq" << vq << std::endl;
-		//DSTR << "tangent " << tangent << tangent.norm() << std::endl;
-
-		double epsilon = 1e-5;
-		//DSTR << "---------" << std::endl;
-		if(tangent.norm() < epsilon){
-			// 静止状態
-			//DSTR << "rest" << std::endl;
-		}else if(tangent.norm() <= l){
-			//静摩擦（静止摩擦半径内）
-			sp->irs.push_back(DBG_NEW PHIr());
-			*sp->irs.back() = *ir;
-			sp->irs.back()->normal = tangent.unit();
-			sp->irs.back()->depth = tangent.norm();
-			//DSTR << "static friction" << std::endl;
-		}
-		if(epsilon < l && l < tangent.norm()){
-			// 動摩擦
-			sp->irs.push_back(DBG_NEW PHIr());
-			*sp->irs.back() = *ir;
-			sp->irs.back()->normal = tangent.unit();
-			sp->irs.back()->depth = l;
-//hase			sp->stickCount = 0;
-			//DSTR << "dynamic friction" << std::endl;
-		}
-	}
-//hase	sp->stickCount++;
-	return true;
-}
-
-bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp){
-	// 摩擦(最大静止摩擦版）未実装		hase:まずPenaltyでやってから
-	//	haseこちらでテスト中
+bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender* hr, PHSolid* curSolid[2], PHShapePairForHaptic* sp){
 	int Nirs = sp->irs.size();
 	if(Nirs == 0) return false;
 	bool bDynamic = false;
-	double mu = sp->mu;
-	if (frictionState == FIRST || frictionState == STATIC) mu = sp->mu0;
-	DSTR << frictionState << " " << mu << std::endl;
+	double mu;
+	PHHapticPointer* pointer = DCAST(PHHapticPointer, curSolid[1]);
+	if (pointer->bTimeVaryFriction) {
+		if (frictionState == STATIC) {
+			mu = sp->mu + sp->mu*( sp->timeVaryFrictionA * log(1 + sp->timeVaryFrictionB * stickCount * hr->hdt));
+		}
+	}
+	else {
+		mu = sp->mu;
+		if (frictionState == STATIC) mu = sp->mu0;
+	}
 	for (int i = 0; i < Nirs; i++) {
 		PHIr* ir = sp->irs[i];
+		if (pointer->bTimeVaryFriction && frictionState == DYNAMIC) {
+			double v = (ir->pointerPointVel - ir->contactPointVel).norm();
+			v = std::max(v, sp->timeVaryFrictionC / hr->hdt);
+			//	速度と粘性摩擦を含める
+			mu = sp->mu + sp->timeVaryFrictionA * log(1 + sp->timeVaryFrictionB * sp->timeVaryFrictionC / v)
+				+ sp->frictionViscosity * v;
+		}
 		double l = mu * ir->depth;		// 摩擦円錐半径
 		Vec3d vps = ir->pointerPointW;
 		Vec3d vq = relativePose * ir->pointerPointW;
