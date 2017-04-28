@@ -15,7 +15,10 @@ void PHGravityEngine::Step(){
 	PHSolid* solid;
 	for(it = solids.begin(); it != solids.end(); it++){
 		solid = *it;
-		solid->AddForce((float)solid->GetMass() * accel);
+		PHHapticPointerIf* hp = solid->Cast();
+		if (!hp) {	//	力覚ポインタには重力は加えない方が良いと思う(hase)
+			solid->AddForce((float)solid->GetMass() * accel);
+		}
 	}
 }
 

@@ -33,8 +33,8 @@ void FWHapticSample::BuildScene(){
 		// 床を作成
 		CDBoxDesc bd;
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
-		bd.material.mu = 0.01f;
-		bd.material.mu0 = 0.6f;
+		bd.material.mu = 0.4f;
+		bd.material.mu0 = 0.8f;
 		PHSolidIf* floor = phscene->CreateSolid();
 		floor->AddShape(phSdk->CreateShape(bd));
 		floor->SetFramePosition(Vec3d(0, -1.0, 0.0));
@@ -53,8 +53,8 @@ void FWHapticSample::BuildScene(){
 		pointer = phscene->CreateHapticPointer();	// 力覚ポインタの作成
 		CDSphereDesc cd;
 		cd.radius = 0.1f;
-		cd.material.mu = 0.01f;
-		cd.material.mu0 = 0.6f;
+		cd.material.mu = 1.0f;
+		cd.material.mu0 = 1.6f;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
 		//pointer->AddShape(phSdk->CreateShape(bd));	// シェイプの追加
 		pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
@@ -67,15 +67,12 @@ void FWHapticSample::BuildScene(){
 		pointer->SetReflexSpring(5000);				// バネ係数の設定
 		pointer->SetReflexDamper(0.1 * 0.0);		// ダンパ係数の設定
 		pointer->EnableFriction(false);				// 摩擦を有効にするかどうか
-		//pointer->EnableDebugControl(true);		// キーボードから力覚ポインタを動かす機能カーソルでx、y方向に移動可能
+		pointer->EnableDebugControl(true);		// キーボードから力覚ポインタを動かす機能カーソルでx、y方向に移動可能
 		pointer->SetName("hpPointer");
 		pointer->EnableFriction(true);
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
 		fwPointer->SetHumanInterface(spg);		// HumanInterfaceの設定
 		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfの設定
-
-	//	hase	ポインタに重力を加えるべきか？ GravityEngineをOFFにしておくと、ポインタの振動がなくなる。
-	//phscene->GetGravityEngine()->Enable(false);
 }
 
 void FWHapticSample::InitInterface(){
@@ -167,17 +164,17 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 	for(int i = 0; i < NTimers(); i++)	GetTimer(i)->Stop();
 	switch(key){
 		case 'q':
-			// アプリケーションの終了
+		case 0x1b:
+		// アプリケーションの終了
 			exit(0);
 			break;
-
-		case 't':
+		case 'T':
 			{
 				PHSolidIf* box = GetSdk()->GetScene()->GetPHScene()->FindObject("soBox")->Cast();
 				GetSdk()->GetScene()->GetPHScene()->SetContactMode(pointer, box, PHSceneDesc::MODE_NONE);
 				break;
 			}
-		case 'y':
+		case 'Y':
 			{
 				PHSolidIf* box = GetSdk()->GetScene()->GetPHScene()->FindObject("soBox")->Cast();
 				GetSdk()->GetScene()->GetPHScene()->SetContactMode(pointer, box, PHSceneDesc::MODE_LCP);
@@ -198,6 +195,10 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 				pointer->SetHapticRenderMode(PHHapticPointerDesc::CONSTRAINT);
 				break;
 			}
+		case 't':	//	time vary friction
+			pointer->SetTimeVaryFriction(!pointer->GetTimeVaryFriction());
+			std::cout << "timeVaryFriction:" << pointer->GetTimeVaryFriction() << std::endl;
+			break;
 		case 'c':
 			{
 				// インタフェースのキャリブレーション

@@ -41,6 +41,7 @@ struct PHHapticRenderInfo{// : public PHHapticRenderDesc{
 	double pdt;
 	double hdt;
 	bool bInterpolatePose;
+	PHHapticRenderInfo();
 };
 
 class PHHapticRender : public PHHapticRenderInfo, public SceneObject{

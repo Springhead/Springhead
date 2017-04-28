@@ -186,12 +186,13 @@ struct PHMaterial{
 	bool vibContact;		///< 接触時の固有振動を発生させるかどうか
 	bool vibFric;			///< 摩擦時の固有振動を発生させるかどうか
 
-	///	時変摩擦係数のための係数	mu_0 = A log(1+Bt+C/v)
-	float vFricA;
-	float vFricB;
-	float vFricC;
-	///	粘性摩擦のための係数	f_t = fricViscocity * vel * f_N
-	float fircViscosity;
+	/**	時変摩擦係数のための係数	静止摩擦 = mu0 + log(1+Bt),  動摩擦 = mu + A log (1+B C/v)  [Dieterich 1979]
+		Cは動摩擦時のスリップ距離を意味する C/v < dt(時間刻み) のときは、v=C/dt を使う */
+	float timeVaryFrictionA;
+	float timeVaryFrictionB;
+	float timeVaryFrictionC;
+	///	粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
+	float frictionViscosity;
 };
 
 ///	形状のディスクリプタ(基本クラス)

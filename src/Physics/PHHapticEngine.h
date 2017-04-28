@@ -67,6 +67,11 @@ public:
 	float damperD;				///< ダンパ係数
 	float mu;					///< 動摩擦係数
 	float mu0;					///< 最大静止摩擦係数(最大静止摩擦は未実装)	
+	float timeVaryFrictionA;	///< 時変摩擦定数A
+	float timeVaryFrictionB;	///< 時変摩擦定数B
+	float timeVaryFrictionC;	///< 時変摩擦定数C
+	float frictionViscosity;	///< 粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
+
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
@@ -99,7 +104,6 @@ struct PHSolidPairForHapticSt{
 	Vec3d vibrationVel;
 	enum FrictionState{
 		FREE,
-		FIRST,
 		STATIC,
 		DYNAMIC,
 	} frictionState;
@@ -123,9 +127,8 @@ public:
 
 	/// 交差が検知された後の処理
 	virtual void  OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
-	virtual PHIrs CompIntermediateRepresentation(PHSolid* curSolid[2], double t, bool bInterpolatePose);
-	virtual bool  CompFrictionIntermediateRepresentation (PHShapePairForHaptic* sp);
-	virtual bool  CompFrictionIntermediateRepresentation2(PHShapePairForHaptic* sp);
+	virtual PHIrs CompIntermediateRepresentation(PHHapticRender* hr, PHSolid* curSolid[2]);
+	virtual bool  CompFrictionIntermediateRepresentation(PHHapticRender* hr, PHSolid* curSolid[2], PHShapePairForHaptic* sp);
 };
 class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> >{};
 
