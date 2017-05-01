@@ -105,6 +105,9 @@ def output(fname, lines):
 #
 usage = 'Usage: %prog [options]'
 parser = OptionParser(usage = usage)
+parser.add_option('-c', '--clean',
+			dest='clean', action='store_true', default=False,
+			help='execute target clean')
 parser.add_option('-d', '--dry_run',
 			dest='dry_run', action='store_true', default=False,
 			help='dry_run (for debug)')
@@ -125,6 +128,7 @@ if options.version:
 if len(args) != 0:
 	parser.error("incorrect number of arguments")
 
+clean	= options.clean
 verbose	= options.verbose
 dry_run	= options.dry_run
 
@@ -206,14 +210,22 @@ output(interfacefile, lines)
 swigargs = '-I../%s/Lib' % swigdir
 swigargs += ' -spr -w312,325,401,402 -DSWIG_OLDNODEHANDLER -c++'
 cp = 'cp' if unix else 'copy'
+rm = 'rm' if unix else 'del'
+quiet = '>/dev/null 2>&1' if unix else '>NUL 2>&1'
 lines = []
 lines.append('# Do not edit. %s will update this file.' % prog)
 lines.append('all:\t../../../src/Framework/%sStub.cpp' % module)
 lines.append('../../../src/Framework/%sStub.cpp:\t../%s' % (module, srcimpdep))
 lines.append('\t../%s/%s %s %s' % (swigdir, swig, swigargs, interfacefile))
-lines.append('\t%s Spr%sDecl.hpp ../../../include/%s' % (cp, module, module))
-lines.append('\t%s %sStub.cpp ../../../src/Framework' % (cp, module))
-lines.append('\t%s %sDecl.hpp ../../../src/Framework' % (cp, module))
+lines.append('\t%s Spr%sDecl.hpp ../../../include/%s %s' % (cp, module, module, quiet))
+lines.append('\t%s %sStub.cpp ../../../src/Framework %s' % (cp, module, quiet))
+lines.append('\t%s %sDecl.hpp ../../../src/Framework %s' % (cp, module, quiet))
+lines.append('')
+lines.append('clean:\t')
+lines.append('\t-%s ../../../src/Framework/%sStub.cpp %s' % (rm, module, quiet))
+lines.append('\t-%s ../../../include/%s %s' % (rm, module, quiet))
+lines.append('\t-%s ../../../src/Framework/%sStub.cpp %s' % (rm, module, quiet))
+lines.append('\t-%s ../../../src/Framework/%sDecl.hpp %s' % (rm, module, quiet))
 if verbose:
 	path = '%s/%s' % (os.getcwd(), makefile)
 	print('  creating "%s"' % U.pathconv(path, 'unix'))
@@ -224,6 +236,8 @@ output(makefile, lines)
 #  make を実行する.
 #
 cmd = '%s -f %s' % (make, makefile)
+if clean:
+	cmd += ' clean'
 status = U.exec(cmd, shell=True, dry_run=dry_run)
 if status != 0:
 	E.print('%s failed (%d)' % (make, status))

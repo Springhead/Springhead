@@ -23,7 +23,7 @@
 #
 #################################################################################
 #  Version:
-#	Ver 1.0  2017/04/20 F.Kanehori  unix 用に新規に作成.
+#	Ver 1.0  2017/04/24 F.Kanehori  unix 用に新規に作成.
 #################################################################################
 
 #  Python の定義
@@ -31,6 +31,11 @@
 PYTHON_VERSION	= 34
 PYTHON_DIR	= ../../bin/Python$(PYTHON_VERSION)
 PYTHON		= $(PYTHON_DIR)/python$(PYTHON_VERSION)
+
+FOUNDATION_DIR	= ../Foundation
+FRAMEWORK_DIR	= ../Framework
+SCILABSWIG		= ScilabSwig.py
+RUNSWIGFRAMEWORK	= RunSwigFramework.py
 
 #  Directory の定義
 #
@@ -53,4 +58,6 @@ recompile:
 
 clean:	
 	$(MAKEMANAGER) -A -d
-	/bin/rm -r -f $(SWIGTEMP)
+	-cd $(FOUNDATION_DIR) && $(PYTHON) $(SCILABSWIG) -c
+	-cd $(FRAMEWORK_DIR) && $(PYTHON) $(RUNSWIGFRAMEWORK) -c
+	-/bin/rm -r -f $(SWIGTEMP)

@@ -13,7 +13,7 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/20 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0	 2017/04/24 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 1.0
 debug = False
@@ -21,7 +21,6 @@ debug = False
 import sys
 import os
 import glob
-import copy
 from optparse import OptionParser
 
 # ----------------------------------------------------------------------
@@ -70,13 +69,13 @@ srcdir_rel = U.pathconv(os.path.relpath(srcdir), 'unix')
 #
 pythonexe = 'python%s' % (python_version if unix else '')
 python = '%s/%s' % (pythondir, pythonexe)
-swig = '%s/%s' % (swigdir, 'swig' if unix else 'swig.exe')
+swig = '%s/swig -I%s/Lib' % (swigdir, swigdir)
 make = 'make' if unix else 'nmake'
 
 # ----------------------------------------------------------------------
 #  Files
 #
-makefile = '%s%s' % (module, 'Stub.mak.txt')
+makefile = '%sStub.mak.txt' % module
 stubfile = '%sStub.hpp' % module
 stubpath = '%s/%s/%s' % (incdir, module, stubfile)
 
@@ -86,18 +85,15 @@ stubpath = '%s/%s/%s' % (incdir, module, stubfile)
 addpath = os.pathsep.join([bindir, swigdir])
 
 # ----------------------------------------------------------------------
-#  Library path
-#
-new_env = copy.deepcopy(os.environ)
-new_env['SWIG_LIB'] = '%s/bin/swig/Lib' % spr2top
-
-# ----------------------------------------------------------------------
 #  Main process
 # ----------------------------------------------------------------------
 #  オプションの定義
 #
 usage = 'Usage: %prog [options]'
 parser = OptionParser(usage = usage)
+parser.add_option('-c', '--clean',
+			dest='clean', action='store_true', default=False,
+			help='execute target clean')
 parser.add_option('-v', '--verbose',
 			dest='verbose', action='count', default=0,
 			help='set verbose count')
@@ -115,22 +111,30 @@ if options.version:
 if len(args) != 0:
 	parser.error("incorrect number of arguments")
 
+clean	= options.clean
 verbose	= options.verbose
 
 # ----------------------------------------------------------------------
 #  makefile を生成する.
 #
+
 lines = []
 lines.append('#\tDo not edit. %sSwig.py will update this file.' % module)
 lines.append('all: %s' % stubpath)
 lines.append('%s: %s.i' % (stubpath, module))
-args = '-dll -c++ %s.i' % module
-lines.append('\t%s %s' % (U.pathconv(swig), args))
+swigargs = '-I%s/Lib' % pythondir
+swigargs += ' -dll -c++ %s.i' % module
+rm = 'rm' if unix else 'del'
+quiet = '>/dev/null 2>&1' if unix else '>NUL 2>&1'
+lines.append('\t%s %s' % (U.pathconv(swig), swigargs))
 if unix:
-	lines.append('\tmv -f %s %s' % (stubfile, stubpath))
+	lines.append('\tmv -f %s %s %s' % (stubfile, stubpath, quiet))
 else:
-	lines.append('\tcopy %s %s' % (stubfile, os.path.split(stubpath)[0]))
-	lines.append('\tdel %s' % stubfile)
+	lines.append('\tcopy %s %s %s' % (stubfile, os.path.split(stubpath)[0], quiet))
+	lines.append('\tdel %s %s' % (stubfile, quiet))
+lines.append('')
+lines.append('clean:\t')
+lines.append('\t-%s %s %s' % (rm, stubpath, quiet))
 #
 def output(fname):
 	fobj = TextFio(fname, 'w', encoding='utf8')
@@ -149,9 +153,10 @@ output(makefile)
 # ----------------------------------------------------------------------
 #  make を実行する.
 #
-swdesig = '-' if unix else '/'
-cmd = '%s %sf %s' % (make, swdesig, U.pathconv(makefile))
-U.exec(cmd, env=new_env, addpath=addpath, shell=True, dry_run=debug)
+cmd = '%s -f %s' % (make, U.pathconv(makefile))
+if clean:
+	cmd += ' clean'
+U.exec(cmd, shell=True, dry_run=debug)
 
 sys.exit(0)
 
