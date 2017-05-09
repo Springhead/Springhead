@@ -12,7 +12,6 @@ PHHapticPointer::PHHapticPointer(){
 	reflexDamperOri = 0.0;
 	localRange = 1.0; 
 	posScale = 1.0;
-	bDebugControl = false;
 	bForce = false;
 	bFriction = true;
 	bTimeVaryFriction = true;
@@ -49,21 +48,30 @@ float PHHapticPointer::GetContactForce(int i){
 }
 
 void PHHapticPointer::UpdateHumanInterface(const Posed& pose, const SpatialVector& vel){
-	if(bDebugControl) return;
 	// HumanInterfaceから状態を取得
 	double s = GetPosScale();
 	hiSolid.SetVelocity       (s * vel.v());
-	hiSolid.SetAngularVelocity(s * vel.w());
+	hiSolid.SetAngularVelocity(vel.w());
 	hiSolid.SetPose(GetDefaultPose() * Posed(s * pose.Pos(), pose.Ori()));
 }
 
-void PHHapticPointer::UpdateDirect(){
+void PHHapticPointer::UpdatePointer(){
 	// ポインタの状態更新
-	SetVelocity(hiSolid.GetVelocity());
-	SetAngularVelocity(hiSolid.GetAngularVelocity());
-	SetFramePosition(hiSolid.GetFramePosition());
-	SetOrientation(hiSolid.GetOrientation());
-	
+/*	if (hapticRenderMode == VC) {	//	VCモードでは、ポインタ位置＝Tool位置にする。
+		Vec3f f = reflexSpring * (hiSolid.GetCenterPosition() - GetCenterPosition())
+			+ reflexDamper * (hiSolid.GetVelocity() - GetVelocity());
+		Vec3f t = reflexSpringOri * (hiSolid.GetOrientation() * GetOrientation().Inv()).Rotation() 
+			+ reflexDamperOri * (hiSolid.GetAngularVelocity() - GetAngularVelocity());
+		AddForce(f);
+		AddTorque(t);
+		Step();
+	}
+	else {
+*/		SetVelocity(hiSolid.GetVelocity());
+		SetAngularVelocity(hiSolid.GetAngularVelocity());
+		SetFramePosition(hiSolid.GetFramePosition());
+		SetOrientation(hiSolid.GetOrientation());
+//	}
 	// プロキシの状態の保存と更新
 	lastProxyPose = proxyPose;
 	proxyPose = GetPose();

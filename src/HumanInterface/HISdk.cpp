@@ -51,7 +51,7 @@ void SPR_CDECL HISdkIf::RegisterSdk(){
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIXbox360Controller));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HILeap));
 	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HILeapUDP));
-
+	HISdkIf::GetIfInfoStatic()->RegisterFactory(new FactoryImpOwned(HIHapticDummy));
 }
 
 HISdk::HISdk(const HISdkDesc& desc){

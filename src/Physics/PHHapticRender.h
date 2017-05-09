@@ -55,7 +55,6 @@ public:
 	virtual void PenaltyBasedRendering(PHHapticPointer* pointer);
 	virtual void ConstraintBasedRendering(PHHapticPointer* pointer);
 	virtual void VibrationRendering(PHHapticPointer* pointer);
-	virtual void VirtualCoupling(PHHapticPointer* pointer);
 
 	// ガウスザイデル法を使いAx+b>0を解く
 	template <class AD, class XD, class BD>

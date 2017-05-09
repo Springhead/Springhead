@@ -36,10 +36,7 @@ void PHHapticEngineSingleBase::Step2(){
 
 void PHHapticEngineSingleBase::UpdateHapticPointer(){
 	for(int i = 0; i < NHapticPointers(); i++){
-		if(GetHapticPointer(i)->bDebugControl == true){
-			GetHapticPointer(i)->hiSolid = *GetHapticPointer(i);
-		}
-		GetHapticPointer(i)->UpdateDirect();
+		GetHapticPointer(i)->UpdatePointer();
 	}
 }
 

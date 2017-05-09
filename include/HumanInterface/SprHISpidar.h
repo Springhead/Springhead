@@ -80,7 +80,6 @@ struct HISpidarMotorDesc{
 		lengthPerPulse	= 2.924062107079e-5f;
 	}
 };
-
 struct HISpidarIf : public HIHapticIf{
 	SPR_VIFDEF(HISpidar);
 	/// 最小出力の設定

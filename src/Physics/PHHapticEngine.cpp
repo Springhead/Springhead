@@ -256,13 +256,13 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, P
 	if(frictionState == FREE){
 		frictionState = STATIC;
 		contactCount = 0;
-		stickCount = 0;
+		fricCount = 0;
 		initialRelativePose =  pointer->GetPose() * interpolationPose.Inv();
 	}else{
 		contactCount += 1;
 		initialRelativePose =  pointer->lastProxyPose * lastInterpolationPose.Inv();
 	}
-	relativePose = initialRelativePose * interpolationPose * pointer->GetPose().Inv();		
+	relativePose = initialRelativePose * interpolationPose * pointer->GetPose().Inv();
 #else
 	// 絶対摩擦
 	if(frictionState == FREE){
@@ -316,17 +316,18 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender
 	int Nirs = sp->irs.size();
 	if(Nirs == 0) return false;
 	bool bDynamic = false;
-	double mu;
+	double mu=0;
 	PHHapticPointer* pointer = DCAST(PHHapticPointer, curSolid[1]);
 	if (pointer->bTimeVaryFriction) {
 		if (frictionState == STATIC) {
-			mu = sp->mu + sp->mu*( sp->timeVaryFrictionA * log(1 + sp->timeVaryFrictionB * stickCount * hr->hdt));
+			mu = sp->mu + sp->mu*( sp->timeVaryFrictionA * log(1 + sp->timeVaryFrictionB * fricCount * hr->hdt));
 		}
 	}
 	else {
 		mu = sp->mu;
 		if (frictionState == STATIC) mu = sp->mu0;
 	}
+	totalFrictionForce = Vec3d();
 	for (int i = 0; i < Nirs; i++) {
 		PHIr* ir = sp->irs[i];
 		if (pointer->bTimeVaryFriction && frictionState == DYNAMIC) {
@@ -336,12 +337,12 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender
 			mu = sp->mu + sp->timeVaryFrictionA * log(1 + sp->timeVaryFrictionB * sp->timeVaryFrictionC / v)
 				+ sp->frictionViscosity * v;
 		}
-		double l = mu * ir->depth;		// 摩擦円錐半径
-		Vec3d vps = ir->pointerPointW;
-		Vec3d vq = relativePose * ir->pointerPointW;
-		Vec3d dq = (vq - vps) * ir->normal * ir->normal;
-		Vec3d vqs = vq - dq;
-		Vec3d tangent = vqs - vps;
+		double l = mu * ir->depth;						// 摩擦円錐半径
+		Vec3d vps = ir->pointerPointW;						//	接触判定した際の、ポインタ侵入点の位置
+		Vec3d vq = relativePose * ir->pointerPointW;		//	現在の(ポインタの移動分を反映した)、位置
+		Vec3d dq = (vq - vps) * ir->normal * ir->normal;	//	移動の法線成分
+		Vec3d vqs = vq - dq;								//	法線成分の移動を消した現在の位置
+		Vec3d tangent = vqs - vps;							//	移動の接線成分
 
 		//DSTR << "vps" << vps << std::endl;
 		//DSTR << "vq" << vq << std::endl;
@@ -355,18 +356,25 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender
 			fricIr->normal = tangent / tangentNorm;
 			fricIr->depth = std::min(tangentNorm, l);
 			sp->irs.push_back(fricIr);
-			if (l < tangentNorm) {	
+			totalFrictionForce += fricIr->depth * fricIr->normal;
+			if (l < tangentNorm) {
 				// 一つでも、静止摩擦を越えたら、連鎖して滑るので、全体を動摩擦にする
 				bDynamic = true;
 			}
 		}
 	}
+	fricCount++;
 	if (bDynamic) {
-		frictionState = DYNAMIC;
-		stickCount = 0;
+		if (frictionState != DYNAMIC) {
+			fricCount = 0;
+			frictionState = DYNAMIC;
+		}
 	} else {
-		frictionState = STATIC;
-		stickCount++;
+		if (frictionState != STATIC) {
+			fricCount = 0;
+			frictionState = STATIC;
+		}
+		std::cout << fricCount << " ";
 	}
 	return true;
 }

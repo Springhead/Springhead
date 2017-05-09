@@ -18,7 +18,7 @@ struct PHHapticPointerDesc{
 	enum HapticRenderMode{
 		PENALTY,
 		CONSTRAINT,
-		VC,
+		DYNAMICS_CONSTRAINT,
 	};
 };
 
@@ -32,8 +32,7 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	void	EnableVibration(bool b);
 	void	EnableMultiPoints(bool b);
 	bool	IsMultiPoints();
-	void	EnableDebugControl(bool b);
-
+	
 	void	SetReflexSpring(float s);
 	float	GetReflexSpring();
 	void	SetReflexDamper(float d);

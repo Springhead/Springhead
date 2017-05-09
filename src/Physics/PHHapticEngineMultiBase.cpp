@@ -6,7 +6,7 @@ namespace Spr{;
 
 void PHHapticLoopImp::UpdateInterface(){
 	for(int i = 0; i < NHapticPointers(); i++){
-		GetHapticPointer(i)->UpdateDirect();
+		GetHapticPointer(i)->UpdatePointer();
 	}
 }
 double PHHapticLoopImp::GetPhysicsTimeStep(){
@@ -85,46 +85,23 @@ void PHHapticEngineMultiBase::SyncHapticPointers(){
 	for(int i = 0; i < hapticLoop->NHapticPointers(); i++){
 		PHHapticPointer* ppointer = GetHapticPointer(i);
 		PHHapticPointer* hpointer = hapticLoop->GetHapticPointer(i);
-		/* haptic側のポインタの状態をphysics側のポインタへ反映
+		// haptic側のポインタの状態をphysics側のポインタへ反映
 		// physics <-------- haptic
-		*/
 		// 1.ポインタの位置姿勢の同期
-		if(ppointer->bDebugControl){
-			// physicsからの入力をhapticへ
-			ppointer->hiSolid = *DCAST(PHSolid, ppointer);
-			hpointer->hiSolid = ppointer->hiSolid;
-		}else{
-			// hapticからの入力をphysicsへ
+		// hapticからの入力をphysicsへ
 
-			//DSTR << "sync ppointer" << ppointer->GetHapticForce() << std::endl;
-			//DSTR << "sync hpointer" << hpointer->GetHapticForce() << std::endl;
-			ppointer->hiSolid = hpointer->hiSolid;
-		}
-		ppointer->UpdateDirect();
+		//DSTR << "sync ppointer" << ppointer->GetHapticForce() << std::endl;
+		//DSTR << "sync hpointer" << hpointer->GetHapticForce() << std::endl;
+		ppointer->hiSolid = hpointer->hiSolid;
+		ppointer->UpdatePointer();
 		
 		// 2.情報の同期
 		PHHapticPointerSt* pst = (PHHapticPointerSt*)ppointer;
 		PHHapticPointerSt* hst = (PHHapticPointerSt*)hpointer;
 		*pst = *hst;
 
-		/* physics側の変更をhaptic側へ反映
+		// physics側の変更をhaptic側へ反映
 		// haptic <--------- physics
-		*/
-		if(ppointer->hapticRenderMode == ppointer->VC){
-			if(!ppointer->vcSolid) break;
-			PHSolid* vcSolid = DCAST(PHSolid, ppointer->vcSolid);
-			if(ppointer->hapticRenderMode == ppointer->VC){
-				vcSolid->SetGravity(false);
-				ppointer->vcSolidCopied = *vcSolid;
-				vcSolid->AddForce (hpointer->vcForce.v());
-				vcSolid->AddTorque(hpointer->vcForce.w());
-				ppointer->vcForce = SpatialVector();
-				hpointer->vcForce = SpatialVector();
-			}else{
-				hpointer->vcForce = SpatialVector();
-				vcSolid->SetGravity(true);
-			}
-		}
 		*hpointer = *ppointer;
 	}
 }

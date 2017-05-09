@@ -126,6 +126,15 @@ UTDllLoader* HINovintFalcon::sDllLoader;
 #define DLLFUNC_ARGCALL	(hHandle)							//	関数呼び出しの引数
 #include <Foundation/UTDllLoaderImpl.h>
 
+//	__declspec(dllexport) int hdlCountDevices();
+#define DLLFUNC_RTYPE	int								//	返り型
+#define DLLFUNC_CTYPE	HDLAPIENTRY						//	呼び出し型
+#define DLLFUNC_NAME	hdlCountDevices					//	関数名
+#define DLLFUNC_STR		"hdlCountDevices"				//	関数名
+#define DLLFUNC_ARGDEF	()								//	関数宣言時の引数
+#define DLLFUNC_ARGCALL	()								//	関数呼び出しの引数
+#include <Foundation/UTDllLoaderImpl.h>
+
 #undef dllLoader
 
 
@@ -136,10 +145,10 @@ HINovintFalcon::HINovintFalcon(const HINovintFalconDesc& desc){
 }
 
 HINovintFalcon::~HINovintFalcon(){
-	if (dll){
+	if (dll && dll->IsLoaded()){
 		hdlUninitDevice(deviceHandle);
-		deviceHandle = HDL_INVALID_HANDLE;
 	}
+	deviceHandle = HDL_INVALID_HANDLE;
 }
 bool testHDLError(char* str){
     HDLError err = hdlGetError();
@@ -184,7 +193,6 @@ bool HINovintFalcon::Init(const void* desc){
 		DSTR << "Error: Novint Falcon - Could not open device." << std::endl;
 		return false;
     }
-
 	// Start the servo thread
 	hdlStart();
 	testHDLError("Could not start servo thread");
@@ -202,6 +210,10 @@ bool HINovintFalcon::Init(const void* desc){
 
 	calibrateFalcon();
 	good = true;
+	if (hdlCountDevices() <= 0) {
+		DSTR << "Error: Novint Falcon - no device connected." << std::endl;
+		return false;
+	}
 	return true;
 }
 bool HINovintFalcon::BeforeCalibration(){

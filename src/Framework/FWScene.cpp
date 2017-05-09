@@ -1387,14 +1387,12 @@ int FWScene::NHapticPointers(){
 void FWScene::UpdateHapticPointers(){
 	assert(this);
 	PHHapticEngine* he = GetPHScene()->GetHapticEngine()->Cast();
-	if(he->GetHapticEngineMode() == 0){
-		// single thread
+	if(he->GetHapticEngineMode() == PHHapticEngineDesc::SINGLE_THREAD){	// single thread
 		for(int i = 0; i < NHapticPointers(); i++){
 			FWHapticPointer* fp = GetHapticPointer(i)->Cast();
 			fp->UpdateHumanInterface(fp->GetPHHapticPointer()->Cast(), GetPHScene()->GetHapticTimeStep());
 		}
-	}else{
-		// multi thread
+	}else{	// multi thread
 		PHHapticPointers* localPointers = he->GetLocalHapticPointers();
 		if(localPointers->size() <= 0) return;
 		for(int i = 0; i < NHapticPointers(); i++){

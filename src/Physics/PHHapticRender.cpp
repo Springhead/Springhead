@@ -22,10 +22,8 @@ void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
 				PenaltyBasedRendering(pointer);
 				break;
 			case PHHapticPointerDesc::CONSTRAINT:
+			case PHHapticPointerDesc::DYNAMICS_CONSTRAINT:
 				ConstraintBasedRendering(pointer);
-				break;
-			case PHHapticPointerDesc::VC:
-				VirtualCoupling(pointer);
 				break;
 		}
  		VibrationRendering(pointer);
@@ -33,7 +31,6 @@ void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
 }
 
 PHIrs PHHapticRender::CompIntermediateRepresentation(PHHapticPointer* pointer){
-
 	PHIrs irs;
 	int nNeighbors = (int)pointer->neighborSolidIDs.size();
 	for(int i = 0; i < nNeighbors; i++){
@@ -215,7 +212,6 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 }
 
 
-
 void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 	if(!pointer->bVibration) return;
 	int Nneigbors = (int)pointer->neighborSolidIDs.size();
@@ -227,6 +223,7 @@ void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 		if(sp->contactCount == 0){
 			sp->vibrationVel = pointer->GetVelocity() - solid->GetVelocity();
 		}
+
 		Vec3d vibV = sp->vibrationVel;
 		double vibA = solid->GetShape(0)->GetVibA();
 		double vibB = solid->GetShape(0)->GetVibB();
@@ -236,65 +233,15 @@ void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 		SpatialVector vibForce;
 		// 法線方向に射影する必要がある？
 		vibForce.v() = vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
+		if (sp->frictionState == sp->DYNAMIC) {
+			Vec3d vibV = sp->totalFrictionForce;
+			double vibT = sp->fricCount * hdt;
+			vibForce.v() += 1000 * vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
+		}
+
 		pointer->AddHapticForce(vibForce);
 		//CSVOUT << vibForce.v().x << "," << vibForce.v().y << "," << vibForce.v().z << std::endl;
 	}
 }
-
-void PHHapticRender::VirtualCoupling(PHHapticPointer* pointer){
-//	const double syncCount = pdt / hdt;
-//	double t = loopCount / syncCount;
-//	if(t > 1.0) t = 1.0;
-//
-//	// 前回と今回の状態を補間
-//	Posed curPose = pointer->vcSolidCopied.GetPose();
-//	//Posed lastPose = pointer->vcSolidCopied.GetLastPose();
-//	Vec3d curVel = pointer->vcSolidCopied.GetVelocity();
-//	//Vec3d lastVel = pointer->vcSolidCopied.GetLastVelocity();
-//	Vec3d curAngVel = pointer->vcSolidCopied.GetAngularVelocity();
-//	//Vec3d lastAngVel = pointer->vcSolidCopied.GetLastAngularVelocity();
-//
-//	Posed interpolationPose = interpolate(t, lastPose, curPose);
-//	Vec3d interpolationVel = interpolate(t, lastVel, curVel);
-//	Vec3d interpolationAngVel = interpolate(t, lastAngVel, curAngVel);
-//
-//	Vec3d dr = pointer->GetPose().Pos() - interpolationPose.Pos();
-//	Vec3d dv = pointer->GetVelocity() - interpolationVel;
-//	Vec3d dAngVel =  pointer->GetAngularVelocity() - interpolationAngVel;
-//
-//	SpatialTransform X[2];
-//	X[0].r = pointer->vcSolidCopied.GetCenterPosition();
-//	X[1].r = pointer->GetCenterPosition();
-//	SpatialTransform Xj[2];
-//	Xj[0].q = interpolationPose.Ori();
-//	Xj[1].q = pointer->GetOrientation();
-//
-//	SpatialTransform Xjrel =  Xj[1] * X[1] * X[0].inv() * Xj[0].inv();
-//	Quaterniond diff = Xjrel.q;
-//	Vec3d prop = diff.RotationHalf();
-//
-////	float K  = 2000 / pointer->GetPosScale();
-////	float D = 300 / pointer->GetPosScale();
-//	float K  = 1000 / pointer->GetPosScale();
-//	float D = 150 / pointer->GetPosScale();
-//	float Kori = 0.01;
-//	float Dori = 0.001;
-//
-//	SpatialVector outForce;
-//	outForce.v() = -1 * (K * dr  + D * dv);
-//	outForce.w() = -1 * (Kori * prop + Dori * dAngVel);
-//
-//	pointer->AddHapticForce(outForce / 20);
-//	pointer->vcForce += -1 * outForce / syncCount;
-//
-//	//DSTR <<  pointer->vcForce <<std::endl;
-//	//CSVOUT << outForce.v().x << "," << outForce.v().y << "," << outForce.v().x * 20 << std::endl;
-
-}
-
-
-
-
-
 
 }

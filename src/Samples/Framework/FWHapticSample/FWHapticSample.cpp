@@ -7,6 +7,10 @@
  */
 
 #include "FWHapticSample.h"	
+#include <../src/Physics/PHHapticPointer.h>
+#include <../src/Physics/PHHapticEngine.h>
+#include <../src/Physics/PHHapticEngineImpulse.h>
+#include <../src/Physics/PHHapticEngineMultiBase.h>
 
 using namespace Spr;
 
@@ -14,18 +18,13 @@ FWHapticSample::FWHapticSample(){
 //	_crtBreakAlloc = 75154;
 	pdt = 0.02f;
 	hdt = 0.001f;
-#ifdef  _DEBUG
 	engineType = MULTI;										// SINGLE, MULTI, LD
-#else
-	engineType = SINGLE;									// SINGLE, MULTI, LD
-#endif
-	humanInterface = SPIDAR;
 }
 
 void FWHapticSample::BuildScene(){
 		PHSdkIf* phSdk = GetSdk()->GetPHSdk();				// シェイプ作成のためにPHSdkへのポインタをとってくる
 		phscene = GetSdk()->GetScene()->GetPHScene();		// 剛体作成のためにPHSceneへのポインタをとってくる
-		
+
 		Vec3d pos = Vec3d(0, 0, 1.21825);					// カメラ初期位置
 		GetCurrentWin()->GetTrackball()->SetPosition(pos);	// カメラ初期位置の設定
 		GetSdk()->SetDebugMode(true);						// デバック表示の有効化
@@ -41,14 +40,14 @@ void FWHapticSample::BuildScene(){
 		floor->SetDynamical(false);
 	
 		// 箱を作成
-		PHSolidIf* soBox = phscene->CreateSolid();
+/*		PHSolidIf* soBox = phscene->CreateSolid();
 		soBox->SetMass(0.3f);
 		bd.boxsize.clear(0.4f);
 		soBox->AddShape(phSdk->CreateShape(bd));
 		soBox->SetInertia(soBox->GetShape(0)->CalcMomentOfInertia() * (1/soBox->GetShape(0)->CalcVolume()) * (float)soBox->GetMass());
 		soBox->SetFramePosition(Vec3d(-0.5 , -0.35, 0.0));
 		soBox->SetName("soBox");
-
+*/
 		// 力覚ポインタの作成
 		pointer = phscene->CreateHapticPointer();	// 力覚ポインタの作成
 		CDSphereDesc cd;
@@ -63,49 +62,54 @@ void FWHapticSample::BuildScene(){
 		pointer->SetDefaultPose(defaultPose);		// 力覚ポインタ初期姿勢の設定
 		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia() * (1/pointer->GetShape(0)->CalcVolume()));	// 慣性テンソルの設定
 		pointer->SetLocalRange(0.1f);				// 局所シミュレーション範囲の設定
-		pointer->SetPosScale(50);					// 力覚ポインタの移動スケールの設定
-		pointer->SetReflexSpring(5000);				// バネ係数の設定
-		pointer->SetReflexDamper(0.1 * 0.0);		// ダンパ係数の設定
-		pointer->EnableFriction(false);				// 摩擦を有効にするかどうか
-		pointer->EnableDebugControl(true);		// キーボードから力覚ポインタを動かす機能カーソルでx、y方向に移動可能
+		pointer->SetPosScale(50.0f);				// 力覚ポインタの移動スケールの設定
+		pointer->SetReflexSpring(3000.0f);			// バネ係数の設定
+		pointer->SetReflexDamper(10.0f);			// ダンパ係数の設定
 		pointer->SetName("hpPointer");
 		pointer->EnableFriction(true);
+		pointer->EnableVibration(true);
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
-		fwPointer->SetHumanInterface(spg);		// HumanInterfaceの設定
+		fwPointer->SetHumanInterface(device);		// HumanInterfaceの設定
 		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfの設定
 }
 
 void FWHapticSample::InitInterface(){
 	HISdkIf* hiSdk = GetSdk()->GetHISdk();
-
-	if(humanInterface == SPIDAR){
-		// x86
-		DRUsb20SimpleDesc usbSimpleDesc;
-		hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
-		DRUsb20Sh4Desc usb20Sh4Desc;
-		for(int i=0; i< 10; ++i){
-			usb20Sh4Desc.channel = i;
-			hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
-		}
-		// x64
-		DRCyUsb20Sh4Desc cyDesc;
-		for(int i=0; i<10; ++i){
-			cyDesc.channel = i;
-			hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
-		}
-		hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
-		hiSdk->Print(DSTR);
-		hiSdk->Print(std::cout);
-
-		spg = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
-		spg->Init(&HISpidarGDesc("SpidarG6X3R"));
-		spg->Calibration();
-	}else if(humanInterface == XBOX){
-		spg = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
-	}else if(humanInterface == FALCON){
-		spg = hiSdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
-		spg->Init(NULL);
+	//	実デバイスの追加
+	//	for SPIDAR
+	// x86
+	DRUsb20SimpleDesc usbSimpleDesc;
+	hiSdk->AddRealDevice(DRUsb20SimpleIf::GetIfInfoStatic(), &usbSimpleDesc);
+	DRUsb20Sh4Desc usb20Sh4Desc;
+	for(int i=0; i< 10; ++i){
+		usb20Sh4Desc.channel = i;
+		hiSdk->AddRealDevice(DRUsb20Sh4If::GetIfInfoStatic(), &usb20Sh4Desc);
 	}
+	// x64
+	DRCyUsb20Sh4Desc cyDesc;
+	for(int i=0; i<10; ++i){
+		cyDesc.channel = i;
+		hiSdk->AddRealDevice(DRCyUsb20Sh4If::GetIfInfoStatic(), &cyDesc);
+	}
+	hiSdk->AddRealDevice(DRKeyMouseWin32If::GetIfInfoStatic());
+
+	//	インタフェースの取得
+	device = hiSdk->CreateHumanInterface(HISpidarGIf::GetIfInfoStatic())->Cast();
+	if (device->Init(&HISpidarGDesc("SpidarG6X3R"))) {
+		device->Calibration();
+	}else{	//	XBOX
+		device = hiSdk->CreateHumanInterface(HIXbox360ControllerIf::GetIfInfoStatic())->Cast();
+		if (!device->Init(NULL)) {
+			device = hiSdk->CreateHumanInterface(HINovintFalconIf::GetIfInfoStatic())->Cast();
+			if (!device->Init(NULL)) {
+				device = hiSdk->CreateHumanInterface(HIHapticDummyIf::GetIfInfoStatic())->Cast();
+				device->Init(NULL);
+				dummyDevice = device->Cast();
+			}
+		}
+	}
+	hiSdk->Print(DSTR);
+	hiSdk->Print(std::cout);
 }
 
 void FWHapticSample::Init(int argc, char* argv[]){
@@ -139,14 +143,14 @@ void FWHapticSample::Init(int argc, char* argv[]){
 
 
 void FWHapticSample::TimerFunc(int id){
-	if(engineType == 0){
+	if(engineType == EngineType::SINGLE){
 		if(hapticTimerID == id){
 			GetSdk()->GetScene()->UpdateHapticPointers();
 			phscene->Step();
 		}else if(physicsTimerID == id){
 			PostRedisplay();
 		}
-	}else if(engineType > 0){
+	}else{	//	multi thread
 		if(hapticTimerID == id){
 			GetSdk()->GetScene()->UpdateHapticPointers();
 			phscene->StepHapticLoop();
@@ -160,7 +164,7 @@ void FWHapticSample::TimerFunc(int id){
 
 void FWHapticSample::Keyboard(int key, int x, int y){
 	// 各スレッドの共有メモリのアクセス違反回避のために全てのタイマをとめる
-	float dr = 0.01f;
+	float dr = 0.001f;
 	for(int i = 0; i < NTimers(); i++)	GetTimer(i)->Stop();
 	switch(key){
 		case 'q':
@@ -195,6 +199,13 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 				pointer->SetHapticRenderMode(PHHapticPointerDesc::CONSTRAINT);
 				break;
 			}
+		case '3':
+		{
+			// レンダリングモードをDynamics Constraintに
+			DSTR << "Dynamics Constraint mode" << std::endl;
+			pointer->SetHapticRenderMode(PHHapticPointerDesc::DYNAMICS_CONSTRAINT);
+			break;
+		}
 		case 't':	//	time vary friction
 			pointer->SetTimeVaryFriction(!pointer->GetTimeVaryFriction());
 			std::cout << "timeVaryFriction:" << pointer->GetTimeVaryFriction() << std::endl;
@@ -202,7 +213,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 		case 'c':
 			{
 				// インタフェースのキャリブレーション
-				spg->Calibration();
+				device->Calibration();
 				DSTR << "CameraPosition" << std::endl;
 				DSTR << GetCurrentWin()->GetTrackball()->GetPosition() << std::endl;
 			}
@@ -291,33 +302,33 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 				box->SetFramePosition(Vec3d(-0.5, 1.0, 0.0));
 			}
 		case 356: // left
-			{
-				Vec3d pos = pointer->GetFramePosition();
-				pos.x -= dr;
-				pointer->SetFramePosition(pos);
+			if (dummyDevice){
+				Posed p = dummyDevice->GetPose();
+				p.PosX() -= dr;
+				dummyDevice->SetPose(p);
 			}
 			break;
 		case 358: // right
-			{
-				Vec3d pos = pointer->GetFramePosition();
-				pos.x += dr;
-				pointer->SetFramePosition(pos);
+			if (dummyDevice) {
+				Posed p = dummyDevice->GetPose();
+				p.PosX() += dr;
+				dummyDevice->SetPose(p);
 			}
 			break;		
 		case 357: // up
-			{
-				Vec3d pos = pointer->GetFramePosition();
-				pos.y += dr;
-				pointer->SetFramePosition(pos);
+			if (dummyDevice) {
+				Posed p = dummyDevice->GetPose();
+				p.PosY() += dr;
+				dummyDevice->SetPose(p);
 			}
 			break;			
 		case 359: // down
-			{
-				Vec3d pos = pointer->GetFramePosition();
-				pos.y -= dr;
-				pointer->SetFramePosition(pos);
+			if (dummyDevice) {
+				Posed p = dummyDevice->GetPose();
+				p.PosY() -= dr;
+				dummyDevice->SetPose(p);
 			}
-			break;	
+			break;
 		default:
 			break;
 	}

@@ -112,7 +112,20 @@ public:
 	virtual Vec3f GetAngularVelocity(){ return angVel; }
 	//@}
 };
-	
+
+class SPR_DLL HIHapticDummy : HIHapticDummyDesc, public HIHaptic {
+public:
+	SPR_OBJECTDEF(HIHapticDummy);
+	HIHapticDummy() {}
+	///
+	HIHapticDummy(const HIHapticDummyDesc& desc) { *(HIHapticDummyDesc*)this = desc; }
+	///
+	virtual ~HIHapticDummy() {}
+	void SetPose(Posed p) { pose = p; }
+	virtual Vec3f		GetPosition() { return pose.Pos(); }
+	virtual Quaternionf GetOrientation() { return pose.Ori(); }
+};
+
 }
 
 
