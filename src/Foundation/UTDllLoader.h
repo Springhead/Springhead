@@ -31,6 +31,9 @@ public:
 	bool Load(const char* dllName=NULL, const char* addPath=NULL);
 	/// DLLが持つ、指定された関数のアドレスを取得する．
 	void* GetProc(const char* name);
+	bool IsLoaded() {
+		return module != NULL;
+	}
 protected:
 	void Init();
 	void Cleanup();

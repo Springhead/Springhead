@@ -80,6 +80,13 @@ struct HIHapticIf : HIPoseIf{
 	///	デバイスの目標出力とトルク出力を設定する
 	void SetForce(const Vec3f& f, const Vec3f& t = Vec3f());
 };
+struct HIHapticDummyDesc{
+	Posed pose;
+};
+struct HIHapticDummyIf : public HIHapticIf {
+	SPR_IFDEF(HIHapticDummy);
+	void SetPose(Posed p);
+};
 
 //@}
 }

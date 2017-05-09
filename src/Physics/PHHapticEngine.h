@@ -98,10 +98,10 @@ struct PHSolidPairForHapticSt{
 	Posed relativePose;			///< 接触中の相対位置姿勢
 
 	unsigned contactCount;
-	unsigned stickCount;		///< 静止摩擦の継続Hapticステップ数, 時変摩擦用の時間計測
-	unsigned slipCount;			///< 静止摩擦の継続Hapticステップ数, 摩擦開放時の固有振動用
+	unsigned fricCount;			///< 静止摩擦/動摩擦の継続Hapticステップ数, 時変摩擦と固有振動用の時間計測
 
 	Vec3d vibrationVel;
+	Vec3d totalFrictionForce;
 	enum FrictionState{
 		FREE,
 		STATIC,

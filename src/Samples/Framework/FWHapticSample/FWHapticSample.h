@@ -16,11 +16,6 @@ using namespace Spr;
 
 class FWHapticSample : public FWApp{
 public:
-	enum HumanInterface{
-		SPIDAR,				
-		XBOX,				
-		FALCON,
-	} humanInterface;
 	enum EngineType{
 		SINGLE = 0,				// シングルすれっど
 		MULTI,					// マルチスレッド
@@ -33,7 +28,8 @@ public:
 	float hdt;					// 力覚スレッドの刻み
 	int physicsTimerID;			// 物理スレッドのタイマ
 	int hapticTimerID;			// 力覚スレッドのタイマ
-	UTRef<HIBaseIf> spg;		// 力覚インタフェースへのポインタ
+	UTRef<HIBaseIf> device;		// 力覚インタフェースへのポインタ
+	HIHapticDummyIf* dummyDevice;	// キーボードで操作するダミーデバイス
 
 	FWHapticSample();
 	void InitInterface();						// 力覚インタフェースの初期化
