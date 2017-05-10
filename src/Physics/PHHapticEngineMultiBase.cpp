@@ -92,20 +92,20 @@ void PHHapticEngineMultiBase::SyncHapticPointers(){
 
 		//DSTR << "sync ppointer" << ppointer->GetHapticForce() << std::endl;
 		//DSTR << "sync hpointer" << hpointer->GetHapticForce() << std::endl;
-		ppointer->hiSolid = hpointer->hiSolid;
+		ppointer->hiSolidSt = hpointer->hiSolidSt;
 		ppointer->UpdatePointer();
 		
 		// 2.情報の同期
-		PHHapticPointerSt* pst = (PHHapticPointerSt*)ppointer;
-		PHHapticPointerSt* hst = (PHHapticPointerSt*)hpointer;
-		*pst = *hst;
+		*(PHHapticPointerHapticSt*)ppointer = *(PHHapticPointerHapticSt*)hpointer;
 
 		// physics側の変更をhaptic側へ反映
 		// haptic <--------- physics
+		//	TODO hase:Solidのコピーは重いので避けるべきだが、しないとPhysics側で設定したFlagが伝わらなくなる。
 		*hpointer = *ppointer;
 	}
 }
 
+//	TODO hase:	ここも大量のSolidのコピーがあり重そう。
 void PHHapticEngineMultiBase::SyncArrays(){
 	// haptic <------------- physics
 	// Physicsで新しく追加されたオブジェクトをHaptic側にコピー

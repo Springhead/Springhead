@@ -227,7 +227,7 @@ void PHSolidPairForHaptic::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 	//CSVOUT << (sp->shapePoseW[0] * sp->closestPoint[0]).y << "," << (sp->shapePoseW[1] * sp->closestPoint[1]).y << std::endl;
 }
 
-PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, PHSolid* curSolid[2]){
+PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, PHSolid* solid0, PHHapticPointer* pointer){
 	/* 力覚安定化のための補間
 	// Impulseの場合は相手の剛体のPoseの補間が必要。
 	// LocalDynamicsの場合は法線の補間のみでよい。
@@ -240,18 +240,16 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, P
 	force.clear();
 	torque.clear();
 	lastInterpolationPose = interpolationPose;
-	interpolationPose = curSolid[0]->GetPose();
+	interpolationPose = solid0->GetPose();
 	if(hr->bInterpolatePose){
-		Posed cur = curSolid[0]->GetPose();
-		double dt = ((PHScene*)curSolid[0]->GetScene())->GetTimeStep();
+		Posed cur = solid0->GetPose();
+		double dt = ((PHScene*)solid0->GetScene())->GetTimeStep();
 		Posed last;
-		last.Pos() = cur.Pos() - (curSolid[0]->GetVelocity() * dt + curSolid[0]->GetOrientation() * curSolid[0]->dV.v());
-		last.Ori() = (cur.Ori() * Quaterniond::Rot(- curSolid[0]->v.w() * dt + - curSolid[0]->dV.w())).unit();
+		last.Pos() = cur.Pos() - (solid0->GetVelocity() * dt + solid0->GetOrientation() * solid0->dV.v());
+		last.Ori() = (cur.Ori() * Quaterniond::Rot(- solid0->v.w() * dt + - solid0->dV.w())).unit();
 		interpolationPose = interpolate(t, last, cur);
 	}
 	// 接触したとして摩擦計算のための相対位置を計算
-	PHHapticPointer* pointer = DCAST(PHHapticPointer, curSolid[1]);
-#if 1
 	// 相対摩擦
 	if(frictionState == FREE){
 		frictionState = STATIC;
@@ -260,20 +258,9 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, P
 		initialRelativePose =  pointer->GetPose() * interpolationPose.Inv();
 	}else{
 		contactCount += 1;
-		initialRelativePose =  pointer->lastProxyPose * lastInterpolationPose.Inv();
+		initialRelativePose = pointer->lastProxyPose * lastInterpolationPose.Inv();
 	}
 	relativePose = initialRelativePose * interpolationPose * pointer->GetPose().Inv();
-#else
-	// 絶対摩擦
-	if(frictionState == FREE){
-		frictionState = STATIC;
-		initialRelativePose = Posed();
-	}else{
-		initialRelativePose =  pointer->lastProxyPose * pointer->GetPose().Inv();
-	}
-	relativePose = initialRelativePose;
-#endif
-
 	//DSTR << "pose" << pointer->GetPose() << std::endl;
 	//DSTR << "lastProxy" << pointer->lastProxyPose << std::endl;
 	//DSTR << "ini" << initialRelativePose << std::endl;
@@ -281,22 +268,22 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, P
 
 	// 中間表現の作成
 	PHIrs irs;
-	for(int i = 0; i < curSolid[0]->NShape(); i++){
-		for(int j = 0; j < curSolid[1]->NShape(); j++){
+	for(int i = 0; i < solid0->NShape(); i++){
+		for(int j = 0; j < pointer->NShape(); j++){
 			PHShapePairForHaptic* spHaptic = GetShapePair(i, j);
 			Posed curShapePoseW[2];
-			curShapePoseW[0] = interpolationPose * curSolid[0]->GetShapePose(i);
-			curShapePoseW[1] = curSolid[1]->GetPose() * curSolid[1]->GetShapePose(j);
+			curShapePoseW[0] = interpolationPose * solid0->GetShapePose(i);
+			curShapePoseW[1] = pointer->GetPose() * pointer->GetShapePose(j);
 			spHaptic->CompIntermediateRepresentation(curShapePoseW, t, hr->bInterpolatePose, pointer->bMultiPoints);
 			for(int k = 0; k < (int)spHaptic->irs.size(); k++){
 				PHIr* ir = spHaptic->irs[k];
 				ir->solidID = solidID[0];
 				ir->solidPair = this;
-				ir->r = ir->pointerPointW - curSolid[1]->GetCenterPosition();
-				ir->contactPointVel = curSolid[0]->GetPointVelocity(ir->contactPointW);
-				ir->pointerPointVel = curSolid[1]->GetPointVelocity(ir->pointerPointW);	
+				ir->r = ir->pointerPointW - pointer->GetCenterPosition();
+				ir->contactPointVel = solid0->GetPointVelocity(ir->contactPointW);
+				ir->pointerPointVel = pointer->GetPointVelocity(ir->pointerPointW);	
 			}
-			if(pointer->bFriction) CompFrictionIntermediateRepresentation(hr, curSolid, spHaptic);
+			if(pointer->bFriction) CompFrictionIntermediateRepresentation(hr, pointer, spHaptic);
 			for(int k = 0; k < (int)spHaptic->irs.size(); k++){
 				irs.push_back(spHaptic->irs[k]);
 			}
@@ -312,12 +299,11 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, P
 	return irs;
 }
 
-bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender* hr, PHSolid* curSolid[2], PHShapePairForHaptic* sp){
+bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender* hr, PHHapticPointer* pointer, PHShapePairForHaptic* sp){
 	int Nirs = sp->irs.size();
 	if(Nirs == 0) return false;
 	bool bDynamic = false;
 	double mu=0;
-	PHHapticPointer* pointer = DCAST(PHHapticPointer, curSolid[1]);
 	if (pointer->bTimeVaryFriction) {
 		if (frictionState == STATIC) {
 			mu = sp->mu + sp->mu*( sp->timeVaryFrictionA * log(1 + sp->timeVaryFrictionB * fricCount * hr->hdt));
