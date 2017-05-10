@@ -378,13 +378,16 @@ public:\
 
 #define SPR_DECLMEMBEROF_PHHapticPointerDesc \
 protected:\
+	Spr::PHHapticPointerDesc::HapticRenderMode	renderMode;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
+		renderMode = ((PHHapticPointerDesc*)ptr)->renderMode;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		((PHHapticPointerDesc*)ptr)->renderMode = renderMode;	\
 		return true;	\
 	}\
 

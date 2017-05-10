@@ -28,7 +28,8 @@ void FWHapticSample::BuildScene(){
 		Vec3d pos = Vec3d(0, 0, 1.21825);					// カメラ初期位置
 		GetCurrentWin()->GetTrackball()->SetPosition(pos);	// カメラ初期位置の設定
 		GetSdk()->SetDebugMode(true);						// デバック表示の有効化
-			
+		GetSdk()->GetScene()->EnableRenderHaptic(true);		//	力覚デバッグ表示ON
+
 		// 床を作成
 		CDBoxDesc bd;
 		bd.boxsize = Vec3f(5.0f, 1.0f, 5.0f);
@@ -55,8 +56,9 @@ void FWHapticSample::BuildScene(){
 		cd.material.mu = 1.0f;
 		cd.material.mu0 = 1.6f;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
-		//pointer->AddShape(phSdk->CreateShape(bd));	// シェイプの追加
-		pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
+		pointer->AddShape(phSdk->CreateShape(bd));	// シェイプの追加
+		pointer->SetShapePose(0, Posed(Vec3d(), Quaterniond::Rot(Rad(10), 'z')));
+		//pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
 		Posed defaultPose;
 		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);	
 		pointer->SetDefaultPose(defaultPose);		// 力覚ポインタ初期姿勢の設定

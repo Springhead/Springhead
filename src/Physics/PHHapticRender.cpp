@@ -17,7 +17,7 @@ void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
 	for(int i = 0; i < (int)pointers->size(); i++){
 		PHHapticPointer* pointer = pointers->at(i);
 		pointer->hapticForce.clear();
-		switch (pointer->hapticRenderMode){
+		switch (pointer->renderMode){
 			case PHHapticPointerDesc::PENALTY:
 				PenaltyBasedRendering(pointer);
 				break;
@@ -36,10 +36,7 @@ PHIrs PHHapticRender::CompIntermediateRepresentation(PHHapticPointer* pointer){
 	for(int i = 0; i < nNeighbors; i++){
 		int solidID = pointer->neighborSolidIDs[i];
 		PHSolidPairForHaptic* sp = sps->item(solidID, pointer->GetPointerID());
-		PHSolid* curSolid[2];
-		curSolid[0] = hsolids->at(solidID)->GetLocalSolid();
-		curSolid[1] = DCAST(PHSolid, pointer);
-		PHIrs tempIrs = sp->CompIntermediateRepresentation(this, curSolid);
+		PHIrs tempIrs = sp->CompIntermediateRepresentation(this, hsolids->at(solidID)->GetLocalSolid(), pointer);
 		if(tempIrs.size() == 0) continue;
 		irs.insert(irs.end(), tempIrs.begin(), tempIrs.end());
 	}
@@ -95,6 +92,9 @@ void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
 }
 
 void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
+	// プロキシの状態の保存と更新
+	pointer->lastProxyPose = Posed(pointer->proxyPose.Pos(), pointer->GetOrientation());
+
 	// 中間表現を求める。摩擦状態を更新
 	PHIrs irs = CompIntermediateRepresentation(pointer);
 		
@@ -154,11 +154,8 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 
 
 		// プロキシ位置姿勢更新（目標位置姿勢解除状態）
-		pointer->targetProxy.Ori() = ( Quaterniond::Rot(dtheta) * pointer->GetOrientation() ).unit();
-		pointer->targetProxy.Pos() = pointer->GetFramePosition() + dr;
-
-		// 相対位置計算用のプロキシ位置姿勢
-		pointer->proxyPose.Pos() = pointer->targetProxy.Pos();
+		pointer->proxyPose.Ori() = ( Quaterniond::Rot(dtheta) * pointer->GetOrientation() ).unit();
+		pointer->proxyPose.Pos() = pointer->GetFramePosition() + dr;
 		
 		/// 力覚インタフェースに出力する力の計算
 		Vec3d last_dr = pointer->last_dr;
@@ -205,6 +202,10 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 			//DSTR << irs[i]->contactPointW - localSolid->GetCenterPosition() << std::endl;
 		}
 	}
+	else {
+		pointer->proxyPose = pointer->GetPose();
+	}
+
 	pointer->AddHapticForce(outForce);
 	//DSTR << pointer->GetFramePosition() << std::endl;
 	//DSTR << "render" << outForce << std::endl;

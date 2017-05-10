@@ -127,8 +127,8 @@ public:
 
 	/// 交差が検知された後の処理
 	virtual void  OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
-	virtual PHIrs CompIntermediateRepresentation(PHHapticRender* hr, PHSolid* curSolid[2]);
-	virtual bool  CompFrictionIntermediateRepresentation(PHHapticRender* hr, PHSolid* curSolid[2], PHShapePairForHaptic* sp);
+	virtual PHIrs CompIntermediateRepresentation(PHHapticRender* hr, PHSolid* solid0, PHHapticPointer* pointer);
+	virtual bool CompFrictionIntermediateRepresentation(PHHapticRender* hr, PHHapticPointer* pointer, PHShapePairForHaptic* sp);
 };
 class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> >{};
 

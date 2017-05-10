@@ -16,10 +16,12 @@ namespace Spr{;
 
 struct PHHapticPointerDesc{
 	enum HapticRenderMode{
-		PENALTY,
-		CONSTRAINT,
-		DYNAMICS_CONSTRAINT,
+		PENALTY,				///<	ペナルティ法でProxyの行き先を求める
+		CONSTRAINT,				///<	中間表現を拘束条件だと思って、Proxyの行き先を求める
+		DYNAMICS_CONSTRAINT,	///<	Proxyに質量と動力学をもたせたCONSTRAINT
 	};
+	///	haptic renderingのモード
+	HapticRenderMode renderMode;
 };
 
 struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc

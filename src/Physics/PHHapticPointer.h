@@ -8,16 +8,19 @@ namespace Spr{;
 
 //----------------------------------------------------------------------------
 // PHHapticPointer
-class PHHapticPointerSt{
-public:
+//	Sync時にHaptic→Physicsにコピーすべき状態
+struct PHHapticPointerHapticSt{
 	Vec3d last_dr;
 	Vec3d last_dtheta;
-	Posed proxyPose;			// 摩擦計算用のプロキシ	hase:多分今は使っていない
-	Posed targetProxy;			// 反力計算用のプロキシ	IRsのLCPで追い出した後の位置
-	Posed lastProxyPose;		// 1(haptic)ステップ前のtargetProxy
+	Posed proxyPose;			// 反力計算用のProxyの姿勢	IRsのLCPで追い出した後の位置
+	Posed lastProxyPose;		// 1(haptic)ステップ前のproxyPoseの位置、デバイスの向き
+	SpatialVector proxyVelocity;// Proxyの速度(ProxyにDyanmicsを考える DYNAMIC_CONSTRAINT 時に使用)
 	SpatialVector hapticForce;	// HapticRenderingで求めた、提示すべき力
 };
-class PHHapticPointer : public PHHapticPointerSt, public PHHapticPointerDesc, public PHSolid{
+class PHHapticPointer : public PHHapticPointerHapticSt, public PHHapticPointerDesc, public PHSolid{
+	friend class PHSolidPairForHaptic;
+	friend class PHHapticRender;
+	friend class FWHapticPointer;
 public:
 	SPR_OBJECTDEF(PHHapticPointer);
 	ACCESS_DESC(PHHapticPointer);
@@ -31,23 +34,19 @@ protected:
 	double posScale;
 	Posed defaultPose;
 	double rotaionalWeight;
-
-public:
 	bool bForce;
 	bool bFriction;
 	bool bTimeVaryFriction;
 	bool bVibration;
 	bool bMultiPoints;
-	HapticRenderMode hapticRenderMode;
+public:
 	std::vector<int> neighborSolidIDs;
-	PHSolid hiSolid;
-//	PHSolidIf* vcSolid;
-//	PHSolid vcSolidCopied;
+	PHSolidState hiSolidSt;						//	Haptic Interfaceの姿勢・速度
 	PHHapticPointer();
 	PHHapticPointer(const PHHapticPointer& p);
 
 	//API
-	void	SetHapticRenderMode(HapticRenderMode m){ hapticRenderMode = m; }
+	void	SetHapticRenderMode(HapticRenderMode m){ renderMode = m; }
 	void	EnableForce(bool b){ bForce = b; }
 	void	EnableFriction(bool b){ bFriction = b; }
 	void	SetTimeVaryFriction(bool b) { bTimeVaryFriction = b; }
@@ -90,7 +89,9 @@ public:
 	///	Set device vel/pose into hiSolid.
 	void	UpdateHumanInterface(const Posed& pose, const SpatialVector& vel);
 	///	Copy from hiSolid to the inherited solid.
-	void	UpdatePointer();
+	void	UpdatePointer() {
+		*(PHSolidState*)this = hiSolidSt;
+	}
 	void	AddHapticForce(const SpatialVector& f);
 	SpatialVector	GetHapticForce();
 
