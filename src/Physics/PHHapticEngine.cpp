@@ -257,7 +257,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, P
 		fricCount = 0;
 		initialRelativePose =  pointer->GetPose() * interpolationPose.Inv();
 	}else{
-		contactCount += 1;
+		contactCount ++;
 		initialRelativePose = pointer->lastProxyPose * lastInterpolationPose.Inv();
 	}
 	relativePose = initialRelativePose * interpolationPose * pointer->GetPose().Inv();
@@ -289,7 +289,6 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, P
 			}
 		}
 	}
-
 	if(irs.size() == 0){
 		// 接触なし
 		frictionState = FREE;
