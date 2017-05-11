@@ -11,9 +11,14 @@
 #	Scilab モジュールについて, swig を実行するための makefile を作成し,
 #	make を実行する (Scilab.i -> ../../include/Scilab/ScilabStub.hpp).
 #
+#  ＊注意＊
+#	ScilabStub.hpp は, dll.cpp を移植しないと作成できない.
+#	Ver 1.0 では, makefile (ScilabStub.mak.txt) は作成するが, make は
+#	実行しない (make clean も実行しない).
+#
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/24 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0	 2017/05/10 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 1.0
 debug = False
@@ -108,8 +113,6 @@ parser.add_option('-V', '--version',
 if options.version:
 	print('%s: Version %s' % (prog, version))
 	sys.exit(0)
-if len(args) != 0:
-	parser.error("incorrect number of arguments")
 
 clean	= options.clean
 verbose	= options.verbose
@@ -122,19 +125,22 @@ lines = []
 lines.append('#\tDo not edit. %sSwig.py will update this file.' % module)
 lines.append('all: %s' % stubpath)
 lines.append('%s: %s.i' % (stubpath, module))
-swigargs = '-I%s/Lib' % pythondir
-swigargs += ' -dll -c++ %s.i' % module
-rm = 'rm' if unix else 'del'
-quiet = '>/dev/null 2>&1' if unix else '>NUL 2>&1'
-lines.append('\t%s %s' % (U.pathconv(swig), swigargs))
+swigargs = '-dll -c++ %s.i' % module
 if unix:
+	rm = 'rm'
+	quiet = '>/dev/null 2>&1'
+	lines.append('\t%s %s' % (U.pathconv(swig), swigargs))
 	lines.append('\tmv -f %s %s %s' % (stubfile, stubpath, quiet))
 else:
+	rm = 'del'
+	quiet = '>NUL 2>&1'
+	lines.append('\t%s %s' % (U.pathconv(swig), swigargs))
 	lines.append('\tcopy %s %s %s' % (stubfile, os.path.split(stubpath)[0], quiet))
 	lines.append('\tdel %s %s' % (stubfile, quiet))
 lines.append('')
 lines.append('clean:\t')
-lines.append('\t-%s %s %s' % (rm, stubpath, quiet))
+lines.append('\t-%s -f %s %s' % (rm, stubpath, quiet))
+lines.append('\t-%s -f %s %s' % (rm, makefile, quiet))
 #
 def output(fname):
 	fobj = TextFio(fname, 'w', encoding='utf8')
@@ -153,6 +159,13 @@ output(makefile)
 # ----------------------------------------------------------------------
 #  make を実行する.
 #
+
+# ***************************************************
+#  ＊注意＊
+#	unix では make 実行は行なわない (Ver 1.0).
+if unix: sys.exit(0)
+# ***************************************************
+
 cmd = '%s -f %s' % (make, U.pathconv(makefile))
 if clean:
 	cmd += ' clean'

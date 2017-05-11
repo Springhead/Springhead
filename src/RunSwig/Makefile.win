@@ -52,6 +52,7 @@ BINDIR		= .
 INCDIR		= ..\..\include
 FOUNDATION	= ..\Foundation
 FRAMEWORK	= ..\Framework
+SCILAB		= $(INCDIR)\Scilab
 
 #  使用するスクリプト
 #
@@ -61,7 +62,7 @@ SCRIPT		= do_swigall.py
 
 #  前処理で作成するファイル
 #
-SCILABSTUBHDR	= $(INCDIR)\ScilabStub.hpp
+SCILABSTUBHDR	= $(SCILAB)\ScilabStub.hpp
 FWOLDSPRSTUB	= $(FRAMEWORK)\FWOldSpringheadStub.cpp
 
 all:	PreWork RunSwig
