@@ -43,12 +43,13 @@
 #  Version:
 #	Ver 1.0	 2012/10/25 F.Kanehori	First release version.
 #	Ver 2.0	 2013/01/07 F.Kanehori	全面改訂
-#	Ver 3.0	 2017/04/19 F.Kanehori	Windows batch file から移植.
+#	Ver 3.0	 2017/05/10 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 3.0
 
 import sys
 import os
+from optparse import OptionParser
 
 # ----------------------------------------------------------------------
 #  Import Springhead2 python library.
@@ -115,7 +116,7 @@ else:
 	if os.path.exists(x32) and os.path.isdir(x32): arch = x32
 	if os.path.exists(x64) and os.path.isdir(x64): arch = x64
 	if arch is None:
-		E.print('can not find "%s" path.' % makefile)
+		E.print('can not find "%s" path.' % make)
 	makepath = '%s/Microsoft Visual Studio 12.0/VC/bin' % arch
 
 swigpath = '%s/%s' % (srcdir, 'Foundation')
@@ -124,8 +125,33 @@ addpath = os.pathsep.join([bindir, swigpath, makepath])
 # ----------------------------------------------------------------------
 #  Main process
 # ----------------------------------------------------------------------
+#  オプションの定義
+#
+usage = 'Usage: %prog [options]'
+parser = OptionParser(usage = usage)
+parser.add_option('-c', '--clean',
+                        dest='clean', action='store_true', default=False,
+                        help='execute target clean')
+parser.add_option('-v', '--verbose',
+                        dest='verbose', action='count', default=0,
+                        help='set verbose count')
+parser.add_option('-V', '--version',
+                        dest='version', action='store_true', default=False,
+                        help='show version')
 
-#  Read project dependency definition file.
+# ----------------------------------------------------------------------
+#  コマンドラインの解析
+#
+(options, args) = parser.parse_args()
+if options.version:
+        print('%s: Version %s' % (prog, version))
+        sys.exit(0)
+
+clean   = options.clean
+verbose = options.verbose
+
+# ----------------------------------------------------------------------
+#  プロジェクト依存定義ファイルを読み込む.
 #
 fio = TextFio('%s/%s' % (etcdir, projfile))
 if fio.open() < 0:
@@ -133,7 +159,8 @@ if fio.open() < 0:
 lines = fio.read()
 fio.close()
 
-#  Do the job.
+# ----------------------------------------------------------------------
+#  各プロジェクト毎に処理を行なう.
 #
 for line in lines:
 	fields = line.split()
@@ -153,10 +180,15 @@ for line in lines:
 	os.chdir(target_dir)
 
 	#  Do make.
-	cmd = '%s -f %s' % (make, makefile)
-	U.exec(cmd, addpath=addpath, shell=True, dry_run=debug)
-	cmd = '%s -r' % U.pathconv(makemanager)
-	U.exec(cmd, addpath=addpath, shell=True, dry_run=debug)
+	if clean:
+		U.rm(makefile, force=True)
+		U.rm('%sStub.cpp' % proj, force=True)
+		U.rm('%sStub.mak.txt' % proj, force=True)
+	else:
+		cmd = '%s -f %s' % (make, makefile)
+		U.exec(cmd, addpath=addpath, shell=True, dry_run=debug)
+		cmd = '%s -r' % U.pathconv(makemanager)
+		U.exec(cmd, addpath=addpath, shell=True, dry_run=debug)
 
 	#  Return to original directory.
 	os.chdir(cwd)

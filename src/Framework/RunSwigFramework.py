@@ -18,7 +18,7 @@
 #
 # ==============================================================================
 #  Version:
-#	Ver 1.0	 2017/04/24 F.Kanehori	Windows batch file から移植.
+#	Ver 1.0	 2017/05/10 F.Kanehori	Windows batch file から移植.
 # ==============================================================================
 version = 1.0
 debug = True
@@ -222,10 +222,10 @@ lines.append('\t%s %sStub.cpp ../../../src/Framework %s' % (cp, module, quiet))
 lines.append('\t%s %sDecl.hpp ../../../src/Framework %s' % (cp, module, quiet))
 lines.append('')
 lines.append('clean:\t')
-lines.append('\t-%s ../../../src/Framework/%sStub.cpp %s' % (rm, module, quiet))
-lines.append('\t-%s ../../../include/%s %s' % (rm, module, quiet))
-lines.append('\t-%s ../../../src/Framework/%sStub.cpp %s' % (rm, module, quiet))
-lines.append('\t-%s ../../../src/Framework/%sDecl.hpp %s' % (rm, module, quiet))
+lines.append('\t-%s -f ../../../src/Framework/%sStub.cpp %s' % (rm, module, quiet))
+lines.append('\t-%s -f ../../../include/%s %s' % (rm, module, quiet))
+lines.append('\t-%s -f ../../../src/Framework/%sStub.cpp %s' % (rm, module, quiet))
+lines.append('\t-%s -f ../../../src/Framework/%sDecl.hpp %s' % (rm, module, quiet))
 if verbose:
 	path = '%s/%s' % (os.getcwd(), makefile)
 	print('  creating "%s"' % U.pathconv(path, 'unix'))
