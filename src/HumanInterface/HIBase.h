@@ -122,6 +122,8 @@ public:
 	///
 	virtual ~HIHapticDummy() {}
 	void SetPose(Posed p) { pose = p; }
+	void SetVelocity(Vec3d v) { vel = v; }
+	void SetAngularVelocity(Vec3d v) { angVel = v; }
 	virtual Vec3f		GetPosition() { return pose.Pos(); }
 	virtual Quaternionf GetOrientation() { return pose.Ori(); }
 };

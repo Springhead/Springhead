@@ -56,20 +56,28 @@ void FWHapticSample::BuildScene(){
 		cd.material.mu = 1.0f;
 		cd.material.mu0 = 1.6f;
 		bd.boxsize = Vec3f(0.2f, 0.2f, 0.2f);
+		bd.material.density = 1.0f;
 		pointer->AddShape(phSdk->CreateShape(bd));	// シェイプの追加
 		pointer->SetShapePose(0, Posed(Vec3d(), Quaterniond::Rot(Rad(10), 'z')));
 		//pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
 		Posed defaultPose;
 		defaultPose.Pos() = Vec3d(0.0, -0.35, 0.0);	
 		pointer->SetDefaultPose(defaultPose);		// 力覚ポインタ初期姿勢の設定
-		pointer->SetInertia(pointer->GetShape(0)->CalcMomentOfInertia() * (1/pointer->GetShape(0)->CalcVolume()));	// 慣性テンソルの設定
+		pointer->CompInertia();
 		pointer->SetLocalRange(0.1f);				// 局所シミュレーション範囲の設定
 		pointer->SetPosScale(50.0f);				// 力覚ポインタの移動スケールの設定
-		pointer->SetReflexSpring(3000.0f);			// バネ係数の設定
-		pointer->SetReflexDamper(10.0f);			// ダンパ係数の設定
+		PHSpringDamperCoeff sdc;
+		sdc.spring = 3000.0f;
+		sdc.damper = 10.0f;
+		pointer->SetReflexCoeff(sdc);
+		sdc *= 0.1f;
+		pointer->SetFrictionCoeff(sdc);
+
 		pointer->SetName("hpPointer");
 		pointer->EnableFriction(true);
 		pointer->EnableVibration(true);
+		pointer->SetHapticRenderMode(PHHapticPointerDesc::DYNAMICS_CONSTRAINT);
+		pointer->SetTimeVaryFriction(true);
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
 		fwPointer->SetHumanInterface(device);		// HumanInterfaceの設定
 		fwPointer->SetPHHapticPointer(pointer); // PHHapticPointerIfの設定
@@ -273,10 +281,10 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			{
 				// バネ係数を100増やす
 				if(pointer){
-					float spring = pointer->GetReflexSpring();
-					spring += 100.0;
-					pointer->SetReflexSpring(spring);
-					DSTR << "Spring: " << spring << std::endl;
+					PHSpringDamperCoeff sdc = pointer->GetReflexCoeff();
+					sdc.spring += 100.0;
+					pointer->SetReflexCoeff(sdc);
+					DSTR << "Spring: " << sdc.spring << std::endl;
 				}
 			}
 			break;
@@ -284,10 +292,10 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			{
 				// バネ係数を100減らす
 				if(pointer){
-					float spring = pointer->GetReflexSpring();
-					spring -= 100.0;
-					pointer->SetReflexSpring(spring);
-					DSTR << "Spring: " << spring << std::endl;
+					PHSpringDamperCoeff sdc = pointer->GetReflexCoeff();
+					sdc.spring -= 100.0;
+					pointer->SetReflexCoeff(sdc);
+					DSTR << "Spring: " << sdc.spring << std::endl;
 				}
 			}
 			break;
@@ -303,28 +311,28 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 				box->SetInertia(box->GetShape(0)->CalcMomentOfInertia() * (1/box->GetShape(0)->CalcVolume()) * (float)box->GetMass());
 				box->SetFramePosition(Vec3d(-0.5, 1.0, 0.0));
 			}
-		case 356: // left
+		case DVKeyCode::LEFT:
 			if (dummyDevice){
 				Posed p = dummyDevice->GetPose();
 				p.PosX() -= dr;
 				dummyDevice->SetPose(p);
 			}
 			break;
-		case 358: // right
+		case DVKeyCode::RIGHT:
 			if (dummyDevice) {
 				Posed p = dummyDevice->GetPose();
 				p.PosX() += dr;
 				dummyDevice->SetPose(p);
 			}
 			break;		
-		case 357: // up
+		case DVKeyCode::UP:
 			if (dummyDevice) {
 				Posed p = dummyDevice->GetPose();
 				p.PosY() += dr;
 				dummyDevice->SetPose(p);
 			}
 			break;			
-		case 359: // down
+		case DVKeyCode::DOWN:
 			if (dummyDevice) {
 				Posed p = dummyDevice->GetPose();
 				p.PosY() -= dr;

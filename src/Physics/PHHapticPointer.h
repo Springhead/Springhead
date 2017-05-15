@@ -13,9 +13,11 @@ struct PHHapticPointerHapticSt{
 	Vec3d last_dr;
 	Vec3d last_dtheta;
 	Posed proxyPose;			// 反力計算用のProxyの姿勢	IRsのLCPで追い出した後の位置
+	SpatialVector proxyVelocity;// Proxyの速度、ポインタ速度を射影したもの(ProxyにDyanmicsを考える DYNAMIC_CONSTRAINT 時に使用)
 	Posed lastProxyPose;		// 1(haptic)ステップ前のproxyPoseの位置、デバイスの向き
-	SpatialVector proxyVelocity;// Proxyの速度(ProxyにDyanmicsを考える DYNAMIC_CONSTRAINT 時に使用)
+	SpatialVector lastProxyVelocity;// lastProxyの速度(ProxyにDyanmicsを考える DYNAMIC_CONSTRAINT 時に使用)
 	SpatialVector hapticForce;	// HapticRenderingで求めた、提示すべき力
+	bool bLastContactState;		// 前回接触していればtrue
 };
 class PHHapticPointer : public PHHapticPointerHapticSt, public PHHapticPointerDesc, public PHSolid{
 	friend class PHSolidPairForHaptic;
@@ -28,8 +30,7 @@ public:
 protected:
 	int pointerID;
 	int pointerSolidID;
-	float reflexSpring, reflexDamper;
-	float reflexSpringOri, reflexDamperOri;
+	PHSpringDamperCoeff reflexCoeff, frictionCoeff;
 	float localRange;
 	double posScale;
 	Posed defaultPose;
@@ -43,7 +44,6 @@ public:
 	std::vector<int> neighborSolidIDs;
 	PHSolidState hiSolidSt;						//	Haptic Interfaceの姿勢・速度
 	PHHapticPointer();
-	PHHapticPointer(const PHHapticPointer& p);
 
 	//API
 	void	SetHapticRenderMode(HapticRenderMode m){ renderMode = m; }
@@ -54,14 +54,10 @@ public:
 	void	EnableMultiPoints(bool b){ bMultiPoints = b; }
 	bool	IsMultiPoints(){ return bMultiPoints; }
 	void	EnableVibration(bool b){ bVibration = b; }
-	void	SetReflexSpring(float s){ reflexSpring = s; }
-	float	GetReflexSpring(){ return reflexSpring; }
-	void	SetReflexDamper(float d){ reflexDamper = d; }
-	float	GetReflexDamper(){ return reflexDamper; }
-	void	SetReflexSpringOri(float s){ reflexSpringOri = s; }
-	float	GetReflexSpringOri(){ return reflexSpringOri; }
-	void	SetReflexDamperOri(float d){ reflexDamperOri = d; }
-	float	GetReflexDamperOri(){ return reflexDamperOri; }
+	void	SetReflexCoeff(const PHSpringDamperCoeff& r){ reflexCoeff = r; }
+	const PHSpringDamperCoeff& GetReflexCoeff(){ return reflexCoeff; }
+	void	SetFrictionCoeff(const PHSpringDamperCoeff& r){ frictionCoeff = r; }
+	const PHSpringDamperCoeff& GetFrictionCoeff(){ return frictionCoeff; }
 	void	SetLocalRange(float r){ localRange = r; } 
 	float	GetLocalRange(){ return localRange; }
 	void	SetPosScale(double scale){ posScale = scale; }
