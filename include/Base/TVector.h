@@ -239,8 +239,8 @@ public:
 	inline exp_type& exp(){ return *(exp_type*)this; }
 	inline const exp_type& exp() const { return *(const exp_type*)this; }
 	///	n番目の要素を返す(基数は0).
-	inline element_type& item(size_t n){ return exp().item_impl(n); }
 	inline const element_type& item(size_t n) const { return exp().item_impl(n); }
+	inline element_type& item(size_t n) { return exp().item_impl(n); }
 	///	サイズの取得
 	inline size_t size() const { return exp().size_impl(); }
 	///	サイズの設定
@@ -683,10 +683,11 @@ public:
 	///	ストライド
 	size_t stride_impl() const { return 1; }
 };
+
 template <class T>
 class EVector:public VectorImp< TVectorDesc<1, EVector<T>, VVector<T>,T,T> >{
 public:
-	typedef ConstEVector<T> const_type;
+	typedef const ConstEVector<T> const_type;
 	typedef TVectorDesc<1, EVector<T>,VVector<T>,T,T> desc;
 	typedef VectorImp<desc> base_type;
 	/**	継承されない基本的なメンバの定義.
@@ -747,7 +748,7 @@ protected:
 template<class T>
 class EVectorSlice: public VectorImp< VectorDesc<EVectorSlice<T>, VVector<T>, T> >{
 public:
-	typedef ConstEVectorSlice<T> const_type;
+	typedef const ConstEVectorSlice<T> const_type;
 	typedef void array_type;
 	typedef void const_array_type;
 	typedef VectorDesc<EVectorSlice<T>, VVector<T>, T> desc;

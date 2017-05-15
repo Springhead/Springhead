@@ -23,6 +23,14 @@ struct PHHapticPointerDesc{
 	///	haptic renderingのモード
 	HapticRenderMode renderMode;
 };
+struct PHSpringDamperCoeff{
+	float spring;
+	float damper;
+	float rotationSpring;
+	float rotationDamper;
+	PHSpringDamperCoeff();
+	PHSpringDamperCoeff operator *= (float s);
+};
 
 struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	SPR_IFDEF(PHHapticPointer);
@@ -35,14 +43,10 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	void	EnableMultiPoints(bool b);
 	bool	IsMultiPoints();
 	
-	void	SetReflexSpring(float s);
-	float	GetReflexSpring();
-	void	SetReflexDamper(float d);
-	float	GetReflexDamper();
-	void	SetReflexSpringOri(float s);
-	float	GetReflexSpringOri();
-	void	SetReflexDamperOri(float d);
-	float	GetReflexDamperOri();
+	void	SetReflexCoeff(const PHSpringDamperCoeff& r);
+	const PHSpringDamperCoeff& GetReflexCoeff();
+	void	SetFrictionCoeff(const PHSpringDamperCoeff& r);
+	const PHSpringDamperCoeff& GetFrictionCoeff();
 	void	SetLocalRange(float r);
 	float	GetLocalRange();
 	void	SetPosScale(double scale);
