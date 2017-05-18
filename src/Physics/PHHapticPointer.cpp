@@ -9,12 +9,16 @@ PHSpringDamperCoeff::PHSpringDamperCoeff() {
 	rotationSpring = 4.0f;
 	rotationDamper = 0.001f;
 };
-PHSpringDamperCoeff PHSpringDamperCoeff::operator *= (float s) {
-	spring *= s;
-	damper *= s;
-	rotationSpring *= s;
-	rotationDamper *= s;
-	return *this;
+PHSpringDamperCoeff operator * (float s, PHSpringDamperCoeff c) {
+	PHSpringDamperCoeff rv = c;
+	rv.spring *= s;
+	rv.damper *= s;
+	rv.rotationSpring *= s;
+	rv.rotationDamper *= s;
+	return rv;
+}
+PHSpringDamperCoeff operator * (PHSpringDamperCoeff c, float s) {
+	return s*c;
 }
 
 //----------------------------------------------------------------------------
@@ -59,8 +63,9 @@ void PHHapticPointer::UpdateHumanInterface(const Posed& pose, const SpatialVecto
 	// HumanInterfaceから状態を取得
 	double s = GetPosScale();
 	hiSolidSt.velocity = s * vel.v();
-	hiSolidSt.angVelocity = vel.w();
-	hiSolidSt.pose = GetDefaultPose() * Posed(s * pose.Pos(), pose.Ori());
+//	hiSolidSt.angVelocity = vel.w();
+//	hiSolidSt.pose = GetDefaultPose() * Posed(s * pose.Pos(), pose.Ori());
+	hiSolidSt.pose.Pos() = GetDefaultPose() * (s * pose.Pos());
 }
 SpatialVector PHHapticPointer::GetHapticForce() {
 	SpatialVector rv = hapticForce;

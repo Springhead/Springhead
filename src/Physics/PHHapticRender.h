@@ -59,8 +59,9 @@ public:
 	virtual void HapticRendering(PHHapticRenderInfo info);
 	PHIrs CompIntermediateRepresentation(PHHapticPointer* pointer);
 	PHIrs CompIntermediateRepresentationForDynamicsConstraint(PHHapticPointer* pointer);
-	PHIrs CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer,
+	bool CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer,
 		PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
+	bool CompFrictionIntermediateRepresentation(PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
 	void PenaltyBasedRendering(PHHapticPointer* pointer);
 	void ConstraintBasedRendering(PHHapticPointer* pointer);
 	void DynamicsConstraintRendering(PHHapticPointer* pointer);
