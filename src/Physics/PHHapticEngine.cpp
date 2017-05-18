@@ -34,6 +34,7 @@ PHShapePairForHaptic::PHShapePairForHaptic(){
 	timeVaryFrictionB = 0;
 	timeVaryFrictionC = 0;
 	frictionViscosity = 0;
+	nIrsNormal = 0;
 }
 void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 	PHShapePair::Init(sp, fr0, fr1);
@@ -133,6 +134,7 @@ bool PHShapePairForHaptic::AnalyzeContactRegion(){
 
 bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints){
 	irs.clear();
+	nIrsNormal = 0;
 	Vec3d sPoint = curShapePoseW[0] * closestPoint[0];	// 今回のsolidの近傍点（World)
 	Vec3d pPoint = curShapePoseW[1] * closestPoint[1];	// 今回のpointerの近傍点（World)
 	Vec3d last_sPoint = lastShapePoseW[0] * lastClosestPoint[0]; // 前回の剛体近傍点（World)
@@ -174,6 +176,7 @@ bool PHShapePairForHaptic::CompIntermediateRepresentation(Posed curShapePoseW[2]
 		ir->interpolation_pose = curShapePoseW[0];
 		irs.push_back(ir);
 	}
+	nIrsNormal = irs.size();
 	return true;
 }
 
@@ -312,7 +315,6 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender
 		mu = sp->mu;
 		if (frictionState == STATIC) mu = sp->mu0;
 	}
-	totalFrictionForce = Vec3d();
 	for (int i = 0; i < Nirs; i++) {
 		PHIr* ir = sp->irs[i];
 		if (pointer->bTimeVaryFriction && frictionState == DYNAMIC) {
@@ -341,7 +343,6 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender
 			fricIr->normal = tangent / tangentNorm;
 			fricIr->depth = std::min(tangentNorm, l);
 			sp->irs.push_back(fricIr);
-			totalFrictionForce += fricIr->depth * fricIr->normal;
 			if (l < tangentNorm) {
 				// 一つでも、静止摩擦を越えたら、連鎖して滑るので、全体を動摩擦にする
 				bDynamic = true;

@@ -58,7 +58,7 @@ public:
 	// Implementation
 	virtual void HapticRendering(PHHapticRenderInfo info);
 	PHIrs CompIntermediateRepresentation(PHHapticPointer* pointer);
-	PHIrs CompIntermediateRepresentationForDynamicProxy(PHHapticPointer* pointer);
+	void CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
 	bool CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer,
 		PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
 	bool CompFrictionIntermediateRepresentation(PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
