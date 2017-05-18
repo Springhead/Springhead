@@ -10,8 +10,6 @@
 namespace Spr{;
 
 PHMaterial::PHMaterial(){
-	mu = 0.4f;
-	mu0 = 0.8f;
 	e = 0.4f;
 	density = 1.0f;
 	spring = 0.0f;
@@ -27,13 +25,15 @@ PHMaterial::PHMaterial(){
 	vibT = 0;
 	vibContact = false;
 
-	/**	時変摩擦係数のための係数	mu_0 = A log(1+Bt),  mu = A log (1+B C/v)  [Dieterich 1979]
+	mu = 0.3f;
+	mu0 = 1.2f;
+	/**	時変摩擦係数のための係数	ms = mu+ A log(1+Bt),  md = mu+ A log (1+B C/v)  [Dieterich 1979]
 		Cは動摩擦時のスリップ距離を意味する C/v < dt(時間刻み) のときは、v=C/dt を使う */
-	timeVaryFrictionA = 0.2f;
-	timeVaryFrictionB = 2000.0f;
-	timeVaryFrictionC = 0.0001f;
+	timeVaryFrictionA = 0.12f;
+	timeVaryFrictionB = 1e9f;
+	timeVaryFrictionC = 0.0f;
 	///	粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
-	frictionViscosity = 1.0f;
+	frictionViscosity = 0.0f;
 }
 
 //-------------------------------------------------------------------------------------------------

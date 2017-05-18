@@ -49,8 +49,8 @@ public:
 	void	SetHapticRenderMode(HapticRenderMode m){ renderMode = m; }
 	void	EnableForce(bool b){ bForce = b; }
 	void	EnableFriction(bool b){ bFriction = b; }
-	void	SetTimeVaryFriction(bool b) { bTimeVaryFriction = b; }
-	bool	GetTimeVaryFriction() { return bTimeVaryFriction;  }
+	void	EnableTimeVaryFriction(bool b) { bTimeVaryFriction = b; }
+	bool	IsTimeVaryFriction() { return bTimeVaryFriction;  }
 	void	EnableMultiPoints(bool b){ bMultiPoints = b; }
 	bool	IsMultiPoints(){ return bMultiPoints; }
 	void	EnableVibration(bool b){ bVibration = b; }

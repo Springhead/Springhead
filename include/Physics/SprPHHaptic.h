@@ -29,16 +29,17 @@ struct PHSpringDamperCoeff{
 	float rotationSpring;
 	float rotationDamper;
 	PHSpringDamperCoeff();
-	PHSpringDamperCoeff operator *= (float s);
 };
+PHSpringDamperCoeff operator * (float s, PHSpringDamperCoeff);
+PHSpringDamperCoeff operator * (PHSpringDamperCoeff, float s);
 
 struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	SPR_IFDEF(PHHapticPointer);
 	void	SetHapticRenderMode(PHHapticPointerDesc::HapticRenderMode m);
 	void	EnableForce(bool b);
 	void	EnableFriction(bool b);
-	void	SetTimeVaryFriction(bool b);
-	bool	GetTimeVaryFriction();
+	void	EnableTimeVaryFriction(bool b);
+	bool	IsTimeVaryFriction();
 	void	EnableVibration(bool b);
 	void	EnableMultiPoints(bool b);
 	bool	IsMultiPoints();

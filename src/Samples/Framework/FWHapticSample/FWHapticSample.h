@@ -30,6 +30,7 @@ public:
 	int hapticTimerID;			// 力覚スレッドのタイマ
 	UTRef<HIBaseIf> device;		// 力覚インタフェースへのポインタ
 	HIHapticDummyIf* dummyDevice;	// キーボードで操作するダミーデバイス
+	bool bPause;
 
 	FWHapticSample();
 	void InitInterface();						// 力覚インタフェースの初期化
