@@ -58,17 +58,15 @@ public:
 	// Implementation
 	virtual void HapticRendering(PHHapticRenderInfo info);
 	PHIrs CompIntermediateRepresentation(PHHapticPointer* pointer);
-	PHIrs CompIntermediateRepresentationForDynamicsConstraint(PHHapticPointer* pointer);
+	PHIrs CompIntermediateRepresentationForDynamicProxy(PHHapticPointer* pointer);
 	bool CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer,
 		PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
 	bool CompFrictionIntermediateRepresentation(PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
 	void PenaltyBasedRendering(PHHapticPointer* pointer);
 	void ConstraintBasedRendering(PHHapticPointer* pointer);
-	void DynamicsConstraintRendering(PHHapticPointer* pointer);
+	void DynamicProxyRendering(PHHapticPointer* pointer);
 	void VibrationRendering(PHHapticPointer* pointer);
 	void SolveProxyPose(Vec3d& dr, Vec3d& dtheta, Vec3d& allDepth, PHHapticPointer* pointer, const PHIrs& irs);
-	void SolveProxyVelocity(PHHapticPointer* pointer, const PHIrs& irsconst);
-	void SolveFrictionForce(PHHapticPointer* pointer, const PHIrs& irs);
 
 	// ガウスザイデル法を使いAx+b>0を解く
 	template <class AD, class XD, class BD>

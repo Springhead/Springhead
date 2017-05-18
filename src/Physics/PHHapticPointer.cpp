@@ -3,28 +3,11 @@
 
 namespace Spr{;
 
-PHSpringDamperCoeff::PHSpringDamperCoeff() {
-	spring = 300;
-	damper = 0.1f;
-	rotationSpring = 4.0f;
-	rotationDamper = 0.001f;
-};
-PHSpringDamperCoeff operator * (float s, PHSpringDamperCoeff c) {
-	PHSpringDamperCoeff rv = c;
-	rv.spring *= s;
-	rv.damper *= s;
-	rv.rotationSpring *= s;
-	rv.rotationDamper *= s;
-	return rv;
+PHHapticPointerHapticSt::PHHapticPointerHapticSt() {
+	bLastContactState = false;
 }
-PHSpringDamperCoeff operator * (PHSpringDamperCoeff c, float s) {
-	return s*c;
-}
-
-//----------------------------------------------------------------------------
-// PHHapticPointer
-PHHapticPointer::PHHapticPointer(){
-	localRange = 1.0; 
+PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
+	localRange = 1.0;
 	posScale = 1.0;
 	bForce = false;
 	bFriction = true;
@@ -32,9 +15,18 @@ PHHapticPointer::PHHapticPointer(){
 	bMultiPoints = true;
 	bVibration = false;
 	rotaionalWeight = 1e5;
-	dynamical = false;
-	renderMode = CONSTRAINT;
-	bLastContactState = false;
+	frictionSpring = 400.0f;
+	reflexSpring = 1000.0f;
+	reflexDamper = 0.0f;
+	rotationReflexSpring = 10.0f;
+	rotationReflexDamper = 0.0f;
+}
+
+//----------------------------------------------------------------------------
+// PHHapticPointer
+PHHapticPointer::PHHapticPointer(){
+	SetDynamical(false);
+	renderMode = DYNAMIC_PROXY;
 }
 
 float PHHapticPointer::GetContactForce(int i){
