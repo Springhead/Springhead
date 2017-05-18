@@ -75,6 +75,7 @@ public:
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
+	int nIrsNormal;						///<	法線の中間表現の数、以降が摩擦
 
 	PHShapePairForHaptic();
 	void Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1);
@@ -100,7 +101,7 @@ struct PHSolidPairForHapticSt{
 	unsigned contactCount;
 	unsigned fricCount;			///< 静止摩擦/動摩擦の継続Hapticステップ数, 時変摩擦と固有振動用の時間計測
 
-	Vec3d vibrationVel;
+	Vec3d contactVibrationVel;
 	Vec3d totalFrictionForce;
 	enum FrictionState{
 		FREE,
