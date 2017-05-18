@@ -48,32 +48,27 @@ void FWHapticSample::BuildScene(){
 		soBox->SetName("soBox");
 */
 		// 力覚ポインタの作成
-		pointer = phscene->CreateHapticPointer();	// 力覚ポインタの作成
-		CDSphereDesc cd;
+		pointer = phscene->CreateHapticPointer();			// 力覚ポインタの作成
+		CDSphereDesc cd;									//　半径1cmの球
 		cd.radius = 0.01f;
-		cd.material.density = 1.0f;
-		bd.boxsize = Vec3f(0.02f, 0.02f, 0.02f);
-		bd.material.density = 1.0f;
-		pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
+		bd.boxsize = Vec3f(0.02f, 0.02f, 0.02f);			//	１辺2cmの直方体
+		CDShapeIf* shape = phSdk->CreateShape(bd);			//	どちらかを作る
+		shape->SetDensity(0.006f / shape->CalcVolume());	//	指の重さは大体 6g
+		pointer->AddShape(shape);	// シェイプの追加
 		pointer->SetShapePose(0, Posed(Vec3d(), Quaterniond::Rot(Rad(10), 'z')));
-		//pointer->AddShape(phSdk->CreateShape(cd));	// シェイプの追加
-		Posed defaultPose;
-		defaultPose.Pos() = Vec3d(0.0, 0.0, 0.0);	
-		pointer->SetDefaultPose(defaultPose);		// 力覚ポインタ初期姿勢の設定
-		pointer->CompInertia();
-		pointer->SetLocalRange(0.02f);				// 局所シミュレーション範囲の設定
-		pointer->SetPosScale(1.0f);				// 力覚ポインタの移動スケールの設定
-		PHSpringDamperCoeff sdc;
-		sdc.spring = 3000.0f;
-		sdc.damper = 0.0f;
-		sdc.rotationSpring = 30.0f;
-		sdc.rotationDamper = 0.0f;
-		sdc = sdc;
-		pointer->SetReflexCoeff(sdc);
+		pointer->SetDefaultPose(Posed());					//	力覚ポインタ初期姿勢の設定
+		pointer->CompInertia();								//	質量と慣性テンソルを密度から計算
+		pointer->SetLocalRange(0.02f);						//	局所シミュレーション範囲の設定
+		pointer->SetPosScale(1.0f);							//	力覚ポインタの移動スケールの設定
+		pointer->SetFrictionSpring(500.0f);					//	DynamicProxyの際の摩擦計算に使うバネ係数
+		pointer->SetReflexSpring(3000.0f);					//	力覚レンダリング用のバネ
+		pointer->SetReflexDamper(0.0f);						//	力覚レンダリング用のダンパ
+		pointer->SetRotationReflexSpring(30.0f);			//	力覚レンダリング用の回転バネ
+		pointer->SetRotationReflexDamper(0.0f);				//	力覚レンダリング用の回転ダンパ
 		pointer->SetName("hpPointer");
 		pointer->EnableFriction(true);
-		pointer->EnableVibration(true);
-		pointer->SetHapticRenderMode(PHHapticPointerDesc::DYNAMICS_CONSTRAINT);
+		pointer->EnableVibration(false);
+		pointer->SetHapticRenderMode(PHHapticPointerDesc::DYNAMIC_PROXY);
 		pointer->EnableTimeVaryFriction(true);
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
 		fwPointer->SetHumanInterface(device);		// HumanInterfaceの設定
@@ -220,7 +215,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 		{
 			// レンダリングモードをDynamics Constraintに
 			DSTR << "Dynamics Constraint mode" << std::endl;
-			pointer->SetHapticRenderMode(PHHapticPointerDesc::DYNAMICS_CONSTRAINT);
+			pointer->SetHapticRenderMode(PHHapticPointerDesc::DYNAMIC_PROXY);
 			break;
 		}
 		case 't':	//	time vary friction
@@ -288,10 +283,10 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			{
 				// バネ係数を100増やす
 				if(pointer){
-					PHSpringDamperCoeff sdc = pointer->GetReflexCoeff();
-					sdc.spring += 100.0;
-					pointer->SetReflexCoeff(sdc);
-					DSTR << "Spring: " << sdc.spring << std::endl;
+					float spr = pointer->GetReflexSpring();
+					spr += 100.0;
+					pointer->SetReflexSpring(spr);
+					DSTR << "Spring: " << spr << std::endl;
 				}
 			}
 			break;
@@ -299,10 +294,10 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 			{
 				// バネ係数を100減らす
 				if(pointer){
-					PHSpringDamperCoeff sdc = pointer->GetReflexCoeff();
-					sdc.spring -= 100.0;
-					pointer->SetReflexCoeff(sdc);
-					DSTR << "Spring: " << sdc.spring << std::endl;
+					float spr = pointer->GetReflexSpring();
+					spr -= 100.0;
+					pointer->SetReflexSpring(spr);
+					DSTR << "Spring: " << spr << std::endl;
 				}
 			}
 			break;

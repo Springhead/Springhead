@@ -50,8 +50,8 @@ void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
 			case PHHapticPointerDesc::CONSTRAINT:
 				ConstraintBasedRendering(pointer);
 				break;
-			case PHHapticPointerDesc::DYNAMICS_CONSTRAINT:
-				DynamicsConstraintRendering(pointer);
+			case PHHapticPointerDesc::DYNAMIC_PROXY:
+				DynamicProxyRendering(pointer);
 				break;
 		}
  		VibrationRendering(pointer);
@@ -99,8 +99,8 @@ void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
 			Vec3d dv = ir->pointerPointVel - ir->contactPointVel;
 			Vec3d dvortho = dv.norm() * ir->normal;
 
-			float K  = pointer->reflexCoeff.spring / pointer->GetPosScale();
-			float D = pointer->reflexCoeff.damper / pointer->GetPosScale();
+			float K  = pointer->reflexSpring / pointer->GetPosScale();
+			float D = pointer->reflexDamper / pointer->GetPosScale();
 
 			Vec3d addforce = K * ortho + D * dvortho;
 			outForce.v() += addforce;
@@ -203,10 +203,10 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 		Vec3d last_dr = pointer->last_dr;
 		Vec3d last_dtheta = pointer->last_dtheta;
 
-		float K  = pointer->reflexCoeff.spring / pointer->GetPosScale();
-		float D = pointer->reflexCoeff.damper / pointer->GetPosScale();
-		float KOri = pointer->reflexCoeff.rotationSpring * pointer->GetRotationalWeight();
-		float DOri = pointer->reflexCoeff.rotationDamper * pointer->GetRotationalWeight();
+		float K  = pointer->reflexSpring / pointer->GetPosScale();
+		float D = pointer->reflexDamper / pointer->GetPosScale();
+		float KOri = pointer->rotationReflexSpring* pointer->GetRotationalWeight();
+		float DOri = pointer->rotationReflexDamper * pointer->GetRotationalWeight();
 
 		outForce.v() = K * dr  + D * (dr - last_dr)/hdt;
 		outForce.w() = KOri * dtheta + DOri * ((dtheta - last_dtheta)/hdt);
@@ -307,7 +307,12 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 	count++;
 	int Nirs = sh->irs.size();
 	if (Nirs == 0) return false;
+	//	動摩擦になったことを確認するためのフラグ
 	bool bDynamic = false;
+	//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合
+	//const double alpha = 0.4;
+	double alpha = hdt * hdt * pointer->GetMassInv() * pointer->reflexSpring;
+	//	摩擦係数の計算
 	double mu = 0;
 	if (pointer->bTimeVaryFriction) {
 		if (sp->frictionState == sp->STATIC) {
@@ -318,10 +323,9 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 		mu = sh->mu;
 		if (sp->frictionState == sp->STATIC) mu = sh->mu0;
 	}
+	
+	//	摩擦による撃力による振動を作るときに使う
 	sp->totalFrictionForce = Vec3d();
-
-//	pointer->lastProxyPose.Pos().X() = pointer->GetPose().PosX() - 0.01;
-//	pointer->lastProxyVelocity.v() = Vec3d(1,0,0);
 
 	for (int i = 0; i < Nirs; i++) {
 		PHIr* ir = sh->irs[i];
@@ -345,16 +349,18 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 
 		//	Pointer側の速度
 		Vec3d proxyPointVel = pointer->lastProxyVelocity.v() + (pointer->lastProxyVelocity.w() % (ir->pointerPointW - pointer->GetPose().Pos()));
+#if 0	//	動摩擦の判定は、速度より拘束力でやった方が良い
 		Vec3d relVel = proxyPointVel - ir->contactPointVel;
 		relVel -= (relVel * ir->normal) * ir->normal;
 		DSTR << "relVel:" << relVel.norm();
 		if (relVel.norm() > 0.01) {
-//			bDynamic = true;				// 一つでも、静止摩擦を越えたら、連鎖して滑るので、全体を動摩擦にする
+			bDynamic = true;				// 一つでも、静止摩擦を越えたら、連鎖して滑るので、全体を動摩擦にする
 		}
-#if 1
-		Posed lastProxyFromDevice = pointer->lastProxyPose * pointer->GetPose().Inv();
-		//Vec3d lastProxyPointFromDevice = lastProxyFromDevice.Pos() + lastProxyFromDevice.Ori().Rotation() % (ir->pointerPointW - pointer->GetPose().Pos());
+#endif
 
+#if 1
+		//Posed lastProxyFromDevice = pointer->lastProxyPose * pointer->GetPose().Inv();
+		//Vec3d lastProxyPointFromDevice = lastProxyFromDevice.Pos() + lastProxyFromDevice.Ori().Rotation() % (ir->pointerPointW - pointer->GetPose().Pos());
 //		DSTR << "lastProxyPointFromDevice: " << lastProxyPointFromDevice << "  vel:" << pointer->lastProxyVelocity.v() << std::endl;
 
 		double epsilon = 1e-5;
@@ -371,12 +377,11 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 		if (fricDir.norm() > 0) {
 			double lastProxy = tangent * fricDir;
 			double predict = lastProxy + (proxyPointVel * fricDir) * hdt;	//	pr = r(t) + v dt;
-			const double alpha = 0.4;
 			double fullFric = predict -  alpha * (predict - l);				//	r(t+1) = pr - alpha * (pr - l)
 			PHIr* fricIr = DBG_NEW PHIr();
 			*fricIr = *ir;
 			fricIr->normal = fricDir;
-			DSTR << (sp->frictionState == sp->STATIC ? "S":"D") << (lastProxy > fullFric ? "d " : "s ") << "LP:" << lastProxy << "  FF:" << fullFric << std::endl;
+			//DSTR << (sp->frictionState == sp->STATIC ? "S":"D") << (lastProxy > fullFric ? "d " : "s ") << "LP:" << lastProxy << "  FF:" << fullFric << std::endl;
 			fricIr->depth = std::min(lastProxy, fullFric);
 			if (lastProxy > fullFric) {
 				bDynamic = true;				// 一つでも、静止摩擦を越えたら、連鎖して滑るので、全体を動摩擦にする
@@ -417,7 +422,7 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 	return true;
 }
 
-PHIrs PHHapticRender::CompIntermediateRepresentationForDynamicsConstraint(PHHapticPointer* pointer) {
+PHIrs PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHHapticPointer* pointer) {
 	PHIrs irsAll;
 	int nNeighbors = (int)pointer->neighborSolidIDs.size();
 	for (int i = 0; i < nNeighbors; i++) {
@@ -495,10 +500,10 @@ PHIrs PHHapticRender::CompIntermediateRepresentationForDynamicsConstraint(PHHapt
 }
 
 
-void PHHapticRender::DynamicsConstraintRendering(PHHapticPointer* pointer) {
+void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
 	NANCHECKLP
 	// 中間表現を求める。摩擦状態を更新
-	PHIrs irs = CompIntermediateRepresentationForDynamicsConstraint(pointer);
+	PHIrs irs = CompIntermediateRepresentationForDynamicProxy(pointer);
 	SpatialVector outForce = SpatialVector();
 	if (irs.size() == 0) {
 		pointer->proxyPose = pointer->GetPose();
@@ -529,10 +534,10 @@ void PHHapticRender::DynamicsConstraintRendering(PHHapticPointer* pointer) {
 		Vec3d last_dr = pointer->last_dr;
 		Vec3d last_dtheta = pointer->last_dtheta;
 
-		float K = pointer->reflexCoeff.spring / pointer->GetPosScale();
-		float D = pointer->reflexCoeff.damper / pointer->GetPosScale();
-		float KOri = pointer->reflexCoeff.rotationSpring * pointer->GetRotationalWeight();
-		float DOri = pointer->reflexCoeff.rotationDamper * pointer->GetRotationalWeight();
+		float K = pointer->reflexSpring / pointer->GetPosScale();
+		float D = pointer->reflexDamper / pointer->GetPosScale();
+		float KOri = pointer->rotationReflexSpring * pointer->GetRotationalWeight();
+		float DOri = pointer->rotationReflexDamper * pointer->GetRotationalWeight();
 
 		outForce.v() = K * dr + D * (dr - last_dr) / hdt;
 		outForce.w() = KOri * dtheta + DOri * ((dtheta - last_dtheta) / hdt);

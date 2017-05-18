@@ -806,7 +806,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 		render->PushModelMatrix();
 		render->MultModelMatrix(aff);
 	
-		render->SetMaterial(render->CORAL);
+		render->SetMaterial(render->GOLD);
 		for(int j = 0; j < pointer->NShape(); ++j){
 			CDShapeIf* shape = pointer->GetShape(j);
 			if(IsRenderEnabled(shape)){
@@ -819,8 +819,8 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 		}
 		render->PopModelMatrix();
 
-
-		render->SetMaterial(render->GOLD);
+#if 0
+		render->SetMaterial(render->CORAL);
 		proxyPose = pointer->lastProxyPose;
 		proxyPose.ToAffine(aff);
 		render->PushModelMatrix();
@@ -837,6 +837,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 			}
 		}
 		render->PopModelMatrix();
+#endif
 	}
 
 	render->SetLighting(false);
