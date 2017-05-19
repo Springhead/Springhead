@@ -63,7 +63,7 @@ public:
 		PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
 	bool CompFrictionIntermediateRepresentation(PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
 	void PenaltyBasedRendering(PHHapticPointer* pointer);
-	void ConstraintBasedRendering(PHHapticPointer* pointer);
+	//void ConstraintBasedRendering(PHHapticPointer* pointer);
 	void DynamicProxyRendering(PHHapticPointer* pointer);
 	void VibrationRendering(PHHapticPointer* pointer);
 	void SolveProxyPose(Vec3d& dr, Vec3d& dtheta, Vec3d& allDepth, PHHapticPointer* pointer, const PHIrs& irs);
