@@ -4,7 +4,6 @@
 namespace Spr{;
 
 PHHapticPointerHapticSt::PHHapticPointerHapticSt() {
-	bLastContactState = false;
 }
 PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
 	bRotation = true;

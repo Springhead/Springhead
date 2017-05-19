@@ -495,8 +495,9 @@ void PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNor
 	}
 }
 
-
 void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
+	NANCHECKLP
+	pointer->lastProxyPose = pointer->proxyPose;
 	NANCHECKLP
 		// 中間表現を求める。摩擦状態を更新
 	PHIrs irsNormal, irsFric, irsAll;
@@ -506,27 +507,20 @@ void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
 	SpatialVector outForce = SpatialVector();
 	if (irsNormal.size() == 0) {
 		pointer->proxyPose = pointer->GetPose();
-		pointer->proxyVelocity.v() = pointer->GetVelocity();
-		pointer->proxyVelocity.w() = pointer->GetAngularVelocity();
-		pointer->bLastContactState = false;
+		pointer->lastProxyVelocity.v() = pointer->GetVelocity();
+		pointer->lastProxyVelocity.w() = pointer->GetAngularVelocity();
 	}else{
-		//	初回接触時のみ、 lastProxyをProxy合わせる。
-		if (!pointer->bLastContactState) {
-			pointer->lastProxyPose = pointer->proxyPose;
-			pointer->lastProxyVelocity = pointer->proxyVelocity;
-			pointer->bLastContactState = true;
-		}
-		// ポインタ移動量を求める
+		// 追い出しのためのポインタ移動量を求める
 		Vec3d dr, dtheta, allDepth;
 		SolveProxyPose(dr, dtheta, allDepth, pointer, irsAll);
 		// ポインタを中間表現の外に追い出した点を、proxyPoseとする。
-		pointer->proxyPose.Ori() = (Quaterniond::Rot(dtheta) * pointer->GetOrientation()).unit();
+		pointer->proxyPose.Ori() = Quaterniond::Rot(dtheta) * pointer->GetOrientation();
 		pointer->proxyPose.Pos() = pointer->GetFramePosition() + dr;
+		//	Proxyの速度の計算
 		Vec3d dProxPos = pointer->proxyPose.Pos() - pointer->lastProxyPose.Pos();
 		Quaterniond dProxRot = pointer->proxyPose.Ori() * pointer->lastProxyPose.Ori().Inv();
 		pointer->lastProxyVelocity.v() = dProxPos / hdt;
 		pointer->lastProxyVelocity.w() = dProxRot.Rotation() / hdt;
-		pointer->lastProxyPose = pointer->proxyPose;
 		NANCHECKLP
 
 		/// 力覚インタフェースに出力する力の計算
