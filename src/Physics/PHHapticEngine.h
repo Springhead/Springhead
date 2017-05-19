@@ -211,18 +211,29 @@ public:
 
 	//-------------------------------------------------------------------
 	// APIの実装
-	///< エンジンモードの選択
+	/// エンジンモードの選択
 	void SetHapticEngineMode(HapticEngineMode mode);
-	///< 力覚ポインタの数を返す
+
+	/// 力覚ポインタの数を返す
 	int NHapticPointers() { return (int)hapticPointers.size(); }
-	///< hapticSolidsの数を返す
+	/// hapticSolidsの数を返す
 	int NHapticSolids() { return (int)hapticSolids.size(); }
-	///< 力覚ポインタへのポインタを返す
+	/// 力覚ポインタへのポインタを返す
 	PHHapticPointerIf* GetHapticPointer(int i){ return hapticPointers[i]->Cast(); }
-	///< state保存のために確保した領域を開放する
-	void ReleaseState();
 	///
 	PHSolidPairForHapticIf* GetSolidPair(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairs.item(i, j); }
+
+	///	Haptic側を返す
+	/// 力覚ポインタの数を返す
+	int NHapticPointersHaptic();
+	/// hapticSolidsの数を返す
+	int NHapticSolidsHaptic();
+	/// 力覚ポインタへのポインタを返す
+	PHHapticPointerIf* GetHapticPointerHaptic(int i);
+	///
+	PHSolidPairForHapticIf* GetSolidPairHaptic(int i, int j);
+	/// state保存のために確保した領域を開放する
+	void ReleaseState();
 	///
 	PHSolidPairForHapticIf* GetSolidPairTemp(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairsTemp.item(i, j); }
 

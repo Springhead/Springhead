@@ -433,6 +433,30 @@ PHHapticEngine::PHHapticEngine(){
 	engineImps.push_back(engineImp);
 	hapticRender = DBG_NEW PHHapticRender();
 }
+int PHHapticEngine::NHapticSolidsHaptic() {
+	if (!engineImp) return 0;
+	PHHapticLoopImp* loop = engineImp->GetHapticLoop();
+	if (!loop) return 0;
+	return loop->NHapticSolids();
+}
+int PHHapticEngine::NHapticPointersHaptic() {
+	if (!engineImp) return 0;
+	PHHapticLoopImp* loop = engineImp->GetHapticLoop();
+	if (!loop) return 0;
+	return loop->NHapticPointers();
+}
+PHHapticPointerIf* PHHapticEngine::GetHapticPointerHaptic(int i) {
+	if (!engineImp) return NULL;
+	PHHapticLoopImp* loop = engineImp->GetHapticLoop();
+	if (!loop) return NULL;
+	return (PHHapticPointerIf*)&*loop->GetHapticPointer(i);
+}
+PHSolidPairForHapticIf* PHHapticEngine::GetSolidPairHaptic(int i, int j) {
+	if (!engineImp) return NULL;
+	PHHapticLoopImp* loop = engineImp->GetHapticLoop();
+	if (!loop) return NULL;
+	return (PHSolidPairForHapticIf*)&*loop->GetSolidPairForHaptic(i, j);
+}
 
 void PHHapticEngine::SetHapticEngineMode(HapticEngineMode mode){
 	engineMode = mode;
