@@ -85,18 +85,6 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHHapticEngineDesc \
-protected:\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		return true;	\
-	}\
-
 #define SPR_DECLMEMBEROF_PHFemMeshState \
 protected:\
 public:\
@@ -388,6 +376,18 @@ public:\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
 		((PHHapticPointerDesc*)ptr)->renderMode = renderMode;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHHapticEngineDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 

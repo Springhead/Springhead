@@ -255,55 +255,6 @@ public:
 	void InitialNoMeshHapticRenderer();
 	//void SetCrossPlatformCoord(bool InverX, bool InverY, bool InverZ);
 };
-
-struct PHHapticEngineDesc{
-	enum HapticEngineMode{
-		SINGLE_THREAD = 0,
-		MULTI_THREAD,
-		LOCAL_DYNAMICS,
-	};
-	PHHapticEngineDesc();
-};
-
-struct PHHapticEngineIf : public PHEngineIf{
-public:
-	SPR_IFDEF(PHHapticEngine);
-	
-	/** @breif HapticEngineのモードを切り替える
-		@param mode HapticEngineMode
-	*/
-	void SetHapticEngineMode(PHHapticEngineDesc::HapticEngineMode mode);
-
-	/** @brief シミュレーションをすすめる。HapticEngineを有効化した場合には
-		この関数を使ってシミュレーションをすすめる
-	*/
-	void StepPhysicsSimulation();
-
-	/** @brief シミュレーションを実行する直前かどうかを返す
-	*/
-	// bool IsBeforeStepPhysicsSimulation();
-
-	/** @brief シミュレーションを実行した直後かどうかを返す
-	*/
-	// bool IsAfterStepPhysicsSimulation();
-
-	/** @breif シーングラフの状態(ObjectStatesIf)を開放する。
-				動的にオブジェクトを追加する時には直前に呼ぶ必要がある。
-	*/
-	void ReleaseState();
-
-	///	コールバック関数の型
-	typedef void (SPR_CDECL *Callback)(void* arg);
-
-	/** @brief シミュレーションを実行する直前に実行されるコールバックを登録する
-	*/
-	bool SetCallbackBeforeStep(Callback f, void* arg);
-
-	/** @brief シミュレーションを実行した直後に実行されるコールバックを登録する
-	*/
-	bool SetCallbackAfterStep(Callback f, void* arg);
-
-};
 //@}
 }
 #endif

@@ -143,7 +143,7 @@ void PHHapticEngineLD::PredictSimulation3D(){
 			PHHapticPointer* pointer = GetHapticPointer(j);
 			PHSolidPairForHaptic* solidPair = GetSolidPairForHaptic(i, pointer->GetPointerID());
 			if(solidPair->inLocal == 0) continue;
-			PHShapePairForHaptic* sp = solidPair->GetShapePair(0, 0);	// 1形状のみ対応
+			PHShapePairForHaptic* sp = solidPair->GetShapePair(0, 0)->Cast();	// 1形状のみ対応
 			Vec3d cPoint = sp->shapePoseW[0] * sp->closestPoint[0];		// 力を加える点(ワールド座標)
 			Vec3d normal = -1 * sp->normal;
 

@@ -34,6 +34,7 @@ PHShapePairForHaptic::PHShapePairForHaptic(){
 	timeVaryFrictionB = 0;
 	timeVaryFrictionC = 0;
 	frictionViscosity = 0;
+	muCur = 0;
 	nIrsNormal = 0;
 }
 void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
@@ -192,7 +193,7 @@ PHSolidPairForHaptic::PHSolidPairForHaptic(const PHSolidPairForHaptic& s){
 	*this = s;
 	for(int i = 0; i < s.shapePairs.height(); i++){
 		for(int j = 0; j < s.shapePairs.width(); j++){
-			const PHShapePairForHaptic* src = s.GetShapePair(i, j);
+			const PHShapePairForHaptic* src = s.GetShapePair(i, j)->Cast();
 			if (src) shapePairs.item(i, j) = DBG_NEW PHShapePairForHaptic(*src);
 		}
 	}
@@ -273,7 +274,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, P
 	PHIrs irs;
 	for(int i = 0; i < solid0->NShape(); i++){
 		for(int j = 0; j < pointer->NShape(); j++){
-			PHShapePairForHaptic* spHaptic = GetShapePair(i, j);
+			PHShapePairForHaptic* spHaptic = GetShapePair(i, j)->Cast();
 			Posed curShapePoseW[2];
 			curShapePoseW[0] = interpolationPose * solid0->GetShapePose(i);
 			curShapePoseW[1] = pointer->GetPose() * pointer->GetShapePose(j);
@@ -386,7 +387,7 @@ PHSolidForHaptic* PHHapticEngineImp::GetHapticSolid(int i){
 	return engine->hapticSolids[i];
 }
 PHSolidPairForHaptic* PHHapticEngineImp::GetSolidPairForHaptic(int i, int j){
-	return engine->GetSolidPair(i, j);
+	return engine->GetSolidPair(i, j)->Cast();
 }
 PHHapticPointers* PHHapticEngineImp::GetHapticPointers(){
 	return &engine->hapticPointers;
@@ -552,7 +553,7 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 #if 1
 		// 2.近傍物体と判定
 		const int pointerID = pointer->GetPointerID();
-		PHSolidPairForHaptic* solidPair = GetSolidPair(i, pointerID);
+		PHSolidPairForHaptic* solidPair = GetSolidPair(i, pointerID)->Cast();
 		if(DCAST(PHHapticPointer, solidPair->solid[0])) continue;	// 剛体がポインタの場合
 		if (!solidPair->bEnabled) continue;
 		if(nAxes == 3){
@@ -560,7 +561,7 @@ void PHHapticEngine::Detect(PHHapticPointer* pointer){
 			int ns0 = solidPair->solid[0]->NShape();
 			int ns1 = solidPair->solid[1]->NShape();
 			for(int is0 = 0; is0 < ns0; is0++)for(int is1 = 0; is1 < ns1; is1++){
-				solidPair->Detect(solidPair->GetShapePair(is0, is1), ct, dt, false);
+				solidPair->Detect(solidPair->GetShapePair(is0, is1)->Cast(), ct, dt, false);
 			}
 			pointer->neighborSolidIDs.push_back(i);
 			PHSolidForHaptic* h = hapticSolids[i];
@@ -681,7 +682,7 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 	PHSolid* s[2];
 	// solidの場合(行の更新）
 	for(i = 0; i < NHapticPointers(); i++){
-		sp = GetSolidPair(isolid, i);
+		sp = GetSolidPair(isolid, i)->Cast();
 		s[0] = solid;
 		s[1] = sp->solid[1];
 		sp->shapePairs.resize(s[0]->NShape(), s[1]->NShape());
@@ -699,7 +700,7 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 	int pointerSolidID = pointer->GetSolidID();
 	for(i = 0; i < (int)solids.size(); i++){
 		if(i == pointerSolidID) continue;
-		sp = GetSolidPair(i, pointerID);
+		sp = GetSolidPair(i, pointerID)->Cast();
 		s[0] = sp->solid[0];
 		s[1] = solid;
 		sp->shapePairs.resize(s[0]->NShape(), s[1]->NShape());

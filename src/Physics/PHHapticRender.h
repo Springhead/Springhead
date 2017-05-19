@@ -24,16 +24,14 @@ struct PHIntermediateRepresentation :public UTRefCount{
 	Vec3d contactPointVel;		///< 剛体側の接触点の速度(world)
 	Vec3d force;				///< 力覚ポインタからの力
 	Posed interpolation_pose;	///< 形状の補間姿勢
-	double f;					///< 侵入解除計算で接触点が並進移動に作用する大きさ
 
 	PHIntermediateRepresentation(){
 		solidID = -1;
-		f = 0.0;
 		solidPair = NULL;
 		shapePair = NULL;
 	}
 	PHIntermediateRepresentation(PHSolidPairForHaptic* so, int soId, PHShapePairForHaptic* sh)
-		:solidPair(so), solidID(soId), shapePair(sh), f(0.0), depth(0.0){	
+		:solidPair(so), solidID(soId), shapePair(sh), depth(0.0){	
 	}
 };
 typedef PHIntermediateRepresentation PHIr;

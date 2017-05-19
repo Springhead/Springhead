@@ -58,6 +58,7 @@ class PHSolidsForHaptic : public std::vector< UTRef< PHSolidForHaptic > >{};
 class PHSolidPairForHaptic;
 class PHShapePairForHaptic : public PHShapePair{
 public:	
+	SPR_OBJECTDEF(PHShapePairForHaptic);
 	// 0:solid、1:pointer
 	// Vec3d normalは剛体から力覚ポインタへの法線ベクトル
 	Posed lastShapePoseW[2];	///< 前回の形状姿勢
@@ -66,12 +67,12 @@ public:
 	float springK;				///< バネ係数
 	float damperD;				///< ダンパ係数
 	float mu;					///< 動摩擦係数
-	float mu0;					///< 最大静止摩擦係数(最大静止摩擦は未実装)	
+	float mu0;					///< 最大静止摩擦係数	
 	float timeVaryFrictionA;	///< 時変摩擦定数A
 	float timeVaryFrictionB;	///< 時変摩擦定数B
 	float timeVaryFrictionC;	///< 時変摩擦定数C
 	float frictionViscosity;	///< 粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
-
+	float muCur;				///< 計算された時変摩擦係数
 
 	std::vector< Vec3d > intersectionVertices; ///< 接触体積の頂点(ローカル座標)
 	std::vector< UTRef< PHIr > > irs;	///<	中間表現、後半に摩擦の拘束が追加される
@@ -85,6 +86,10 @@ public:
 	int OnDetect(unsigned ct, const Vec3d& center0);
 	bool AnalyzeContactRegion();
 	bool CompIntermediateRepresentation(Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bMultiPoints);
+	int NIrs() { return irs.size();  }
+	int NIrsNormal() { return nIrsNormal;  }
+	Vec3d GetIrForce(int i) { return irs[i]->force;  }
+	double GetMu() { return muCur;  }
 };
 
 //----------------------------------------------------------------------------
@@ -112,6 +117,7 @@ struct PHSolidPairForHapticSt{
 
 class PHSolidPairForHaptic : public PHSolidPairForHapticSt, public PHSolidPair/*< PHShapePairForHaptic, PHHapticEngine >*/{
 public:
+	SPR_OBJECTDEF(PHSolidPairForHaptic);
 	int solidID[2];
 	
 	int inLocal;	// 0:NONE, 1:in local first, 2:in local
@@ -123,8 +129,8 @@ public:
 	PHSolidPairForHaptic(const PHSolidPairForHaptic& s);
 
 	virtual PHShapePairForHaptic* CreateShapePair(){ return DBG_NEW PHShapePairForHaptic(); }
-	PHShapePairForHaptic*       GetShapePair(int i, int j){ return (PHShapePairForHaptic*)&*shapePairs.item(i,j); }
-	const PHShapePairForHaptic* GetShapePair(int i, int j) const { return (const PHShapePairForHaptic*)&*shapePairs.item(i,j); }
+	PHShapePairForHapticIf*       GetShapePair(int i, int j){ return (PHShapePairForHapticIf*)&*shapePairs.item(i,j); }
+	const PHShapePairForHapticIf* GetShapePair(int i, int j) const { return (const PHShapePairForHapticIf*)&*shapePairs.item(i,j); }
 
 	/// 交差が検知された後の処理
 	virtual void  OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
@@ -208,19 +214,22 @@ public:
 	///< エンジンモードの選択
 	void SetHapticEngineMode(HapticEngineMode mode);
 	///< 力覚ポインタの数を返す
-	int NHapticPointers(){ return (int)hapticPointers.size(); }
+	int NHapticPointers() { return (int)hapticPointers.size(); }
+	///< hapticSolidsの数を返す
+	int NHapticSolids() { return (int)hapticSolids.size(); }
 	///< 力覚ポインタへのポインタを返す
-	PHHapticPointer* GetHapticPointer(int i){ return hapticPointers[i]; }
+	PHHapticPointerIf* GetHapticPointer(int i){ return hapticPointers[i]->Cast(); }
 	///< state保存のために確保した領域を開放する
 	void ReleaseState();
+	///
+	PHSolidPairForHapticIf* GetSolidPair(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairs.item(i, j); }
+	///
+	PHSolidPairForHapticIf* GetSolidPairTemp(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairsTemp.item(i, j); }
 
 	// PHContactDetectorの仮想関数
 	PHSolidPair* CreateSolidPair(){ return DBG_NEW PHSolidPairForHaptic(); }
 	
 	// PHHapticEngineの実装
-	PHSolidPairForHaptic* GetSolidPair    (int i, int j){ return (PHSolidPairForHaptic*)&*solidPairs    .item(i,j); }
-	PHSolidPairForHaptic* GetSolidPairTemp(int i, int j){ return (PHSolidPairForHaptic*)&*solidPairsTemp.item(i,j); }
-
 	///< シミュレーションループの更新（PHScene::Integrate()からコール）
 	virtual void Step(){ if(bEnabled && bPhysicStep) engineImp->Step1(); }
 	virtual void Step2(){ if(bEnabled && bPhysicStep) engineImp->Step2(); }

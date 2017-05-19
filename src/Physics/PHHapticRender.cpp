@@ -305,24 +305,20 @@ bool PHHapticRender::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 	return true;
 }
 bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
-	static std::ofstream fricLog("fricLog.txt");
-	static int count;
-	count++;
 	int Nirs = sh->irs.size();
 	if (Nirs == 0) return false;
 	bool bStatic = false;
 	//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
 	double alpha = hdt * hdt * pointer->GetMassInv() * pointer->reflexSpring;
 	//	摩擦係数の計算
-	double mu = 0;
 	if (pointer->bTimeVaryFriction) {
 		if (sp->frictionState == sp->STATIC) {
-			mu = sh->mu + sh->mu*(sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * (sp->fricCount + 1) * hdt));
+			sh->muCur = sh->mu + sh->mu*(sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * (sp->fricCount + 1) * hdt));
 		}
 	}
 	else {
-		mu = sh->mu;
-		if (sp->frictionState == sp->STATIC) mu = sh->mu0;
+		sh->muCur = sh->mu;
+		if (sp->frictionState == sp->STATIC) sh->muCur = sh->mu0;
 	}
 	
 	for (int i = 0; i < Nirs; i++) {
@@ -331,26 +327,27 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 			double v = (ir->pointerPointVel - ir->contactPointVel).norm();
 			v = std::max(v, sh->timeVaryFrictionC / hdt);
 			//	速度と粘性摩擦を含める
-			mu = sh->mu + sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * sh->timeVaryFrictionC / v)
+			sh->muCur = sh->mu + sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * sh->timeVaryFrictionC / v)
 				+ sh->frictionViscosity * v;
 		}
-		double l = mu * ir->depth;							//	摩擦円錐半径
+		double l = sh->muCur * ir->depth;					//	摩擦円錐半径
 		Vec3d vps = ir->pointerPointW;						//	接触判定した際の、ポインタ侵入点の位置
 		Vec3d vq = sp->relativePose * ir->pointerPointW;	//	現在の(ポインタの移動分を反映した)、位置
 		Vec3d dq = (vq - vps) * ir->normal * ir->normal;	//	移動の法線成分
 		Vec3d vqs = vq - dq;								//	法線成分の移動を消した現在の位置
 		Vec3d tangent = vqs - vps;							//	移動の接線成分
-
 		//DSTR << "vps" << vps << std::endl;
 		//DSTR << "vq" << vq << std::endl;
 		//DSTR << "tangent " << tangent << tangent.norm() << std::endl;
-
-		//	Pointer側の速度
-		Vec3d proxyPointVel = pointer->lastProxyVelocity.v() + (pointer->lastProxyVelocity.w() % (ir->pointerPointW - pointer->GetPose().Pos()));
-#if 1
+		
+		//	TODO hase: 上の計算法(relativePose)が本当に良いか要検討
 		//Posed lastProxyFromDevice = pointer->lastProxyPose * pointer->GetPose().Inv();
 		//Vec3d lastProxyPointFromDevice = lastProxyFromDevice.Pos() + lastProxyFromDevice.Ori().Rotation() % (ir->pointerPointW - pointer->GetPose().Pos());
 		//DSTR << "lastProxyPointFromDevice: " << lastProxyPointFromDevice << "  vel:" << pointer->lastProxyVelocity.v() << std::endl;
+
+
+		//	Pointer側の速度
+		Vec3d proxyPointVel = pointer->lastProxyVelocity.v() + (pointer->lastProxyVelocity.w() % (ir->pointerPointW - pointer->GetPose().Pos()));
 
 		double epsilon = 1e-5;
 		double tangentNorm = tangent.norm();
@@ -379,17 +376,6 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 			}
 			sh->irs.push_back(fricIr);
 		}
-#else
-		double epsilon = 1e-5;
-		double tangentNorm = tangent.norm();
-		if (tangentNorm > epsilon) {	//	ずれが0のときは、向きも分からないので摩擦拘束は入れない
-			PHIr* fricIr = DBG_NEW PHIr();
-			*fricIr = *ir;
-			fricIr->normal = tangent / tangentNorm;
-			fricIr->depth = std::min(tangentNorm, l);
-			sh->irs.push_back(fricIr);
-		}
-#endif
 	}
 	sp->fricCount++;
 	if (!bStatic) {
@@ -406,7 +392,6 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 			sp->frictionState = sp->STATIC;
 		}
 	}
-	fricLog << count << "\t" << mu << std::endl;
 	return true;
 }
 
@@ -461,7 +446,7 @@ void PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNor
 		bool bContact = false;
 		for (int i = 0; i < solid0->NShape(); i++) {
 			for (int j = 0; j < pointer->NShape(); j++) {
-				PHShapePairForHaptic* sh = sp->GetShapePair(i, j);
+				PHShapePairForHaptic* sh = sp->GetShapePair(i, j)->Cast();
 				Posed curShapePoseW[2];
 				curShapePoseW[0] = sp->interpolationPose * solid0->GetShapePose(i);
 				curShapePoseW[1] = pointer->GetPose() * pointer->GetShapePose(j);
