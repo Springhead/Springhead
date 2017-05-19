@@ -19,18 +19,18 @@ PHMaterial::PHMaterial(){
 	reflexDamper = 0.1f;
 	frictionSpring = 5.0;
 	frictionDamper = 0.1f;
-	vibA = -30;
+	vibA = -20;
 	vibB = 90;
-	vibW = 300;
+	vibW = 200;
 	vibT = 0;
 	vibContact = false;
 
 	mu = 0.3f;
-	mu0 = 1.0f;
+	mu0 = 0.7f;
 	/**	時変摩擦係数のための係数	ms = mu+ A log(1+Bt),  md = mu+ A log (1+B C/v)  [Dieterich 1979]
 		Cは動摩擦時のスリップ距離を意味する C/v < dt(時間刻み) のときは、v=C/dt を使う */
-	timeVaryFrictionA = 0.12f;
-	timeVaryFrictionB = 1e9f;
+	timeVaryFrictionA = 0.1f;
+	timeVaryFrictionB = 1e6f;
 	timeVaryFrictionC = 0.0f;
 	///	粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
 	frictionViscosity = 0.0f;

@@ -48,7 +48,8 @@ void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
 				PenaltyBasedRendering(pointer);
 				break;
 			case PHHapticPointerDesc::CONSTRAINT:
-				ConstraintBasedRendering(pointer);
+				DynamicProxyRendering(pointer);
+				//ConstraintBasedRendering(pointer);
 				break;
 			case PHHapticPointerDesc::DYNAMIC_PROXY:
 				DynamicProxyRendering(pointer);
@@ -181,7 +182,7 @@ Vec3d GetOrthogonalVector(Vec3d n) {
 	u -= (u * n) * n;
 	return u.unit();
 }
-
+#if 0
 void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 	// プロキシの状態の保存と更新
 	pointer->lastProxyPose = Posed(pointer->proxyPose.Pos(), pointer->GetOrientation());
@@ -251,7 +252,7 @@ void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
 	//DSTR << "render" << outForce << std::endl;
 	//CSVOUT << outForce[0] << "," << outForce[1] << "," << outForce[2] << "," << outForce[3] << "," << outForce[4] << "," << outForce[5] << "," <<std::endl;
 }
-
+#endif
 
 bool PHHapticRender::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer, 
 	PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints) {
@@ -309,11 +310,8 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 	count++;
 	int Nirs = sh->irs.size();
 	if (Nirs == 0) return false;
-	//	動摩擦になったことを確認するためのフラグ
-	//bool bDynamic = false;
 	bool bStatic = false;
-	//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合
-	//const double alpha = 0.4;
+	//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
 	double alpha = hdt * hdt * pointer->GetMassInv() * pointer->reflexSpring;
 	//	摩擦係数の計算
 	double mu = 0;
@@ -349,45 +347,37 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 
 		//	Pointer側の速度
 		Vec3d proxyPointVel = pointer->lastProxyVelocity.v() + (pointer->lastProxyVelocity.w() % (ir->pointerPointW - pointer->GetPose().Pos()));
-#if 0	//	動摩擦の判定は、速度より拘束力でやった方が良い
-		Vec3d relVel = proxyPointVel - ir->contactPointVel;
-		relVel -= (relVel * ir->normal) * ir->normal;
-		DSTR << "relVel:" << relVel.norm();
-		if (relVel.norm() > 0.01) {
-			bDynamic = true;				// 一つでも、静止摩擦を越えたら、連鎖して滑るので、全体を動摩擦にする
-		}
-#endif
-
 #if 1
 		//Posed lastProxyFromDevice = pointer->lastProxyPose * pointer->GetPose().Inv();
 		//Vec3d lastProxyPointFromDevice = lastProxyFromDevice.Pos() + lastProxyFromDevice.Ori().Rotation() % (ir->pointerPointW - pointer->GetPose().Pos());
-//		DSTR << "lastProxyPointFromDevice: " << lastProxyPointFromDevice << "  vel:" << pointer->lastProxyVelocity.v() << std::endl;
+		//DSTR << "lastProxyPointFromDevice: " << lastProxyPointFromDevice << "  vel:" << pointer->lastProxyVelocity.v() << std::endl;
 
 		double epsilon = 1e-5;
 		double tangentNorm = tangent.norm();
-		Vec3d fricDir;
-		if (tangentNorm > 1e-5) fricDir = tangent / tangentNorm;
-		/* 摩擦の向きは速度だと、速度0で破綻することが多い
-		Vec3d velTangent = relVel - (relVel * ir->normal) * ir->normal;
-		double velTagentNorm = velTangent.norm();
-		if (velTagentNorm > epsilon) fricDir = - velTangent / velTagentNorm;
-		else if (tangentNorm > epsilon) fricDir = tangent / tangentNorm;
-		*/
-		//	DSTR << "tan:" << tangent / tangentNorm << "  vel:" << - proxyPointVel << std::endl;
-		if (fricDir.norm() > 0) {
-			double lastProxy = tangent * fricDir;
-			double predict = lastProxy + (proxyPointVel * fricDir) * hdt;	//	pr = r(t) + v dt;
-			double fullFric = predict -  alpha * (predict - l);				//	r(t+1) = pr - alpha * (pr - l)
+		if (tangentNorm > 1e-5) {
 			PHIr* fricIr = DBG_NEW PHIr();
 			*fricIr = *ir;
-			fricIr->normal = fricDir;
-			//DSTR << (sp->frictionState == sp->STATIC ? "S":"D") << (lastProxy > fullFric ? "d " : "s ") << "LP:" << lastProxy << "  FF:" << fullFric << std::endl;
-			fricIr->depth = std::min(lastProxy, fullFric);
-			if (lastProxy <= fullFric) {
+			fricIr->normal = tangent / tangentNorm;
+			//	現在のProxy位置と摩擦力の限界位置を計算
+			double proxyPos, frictionLimit;
+			if (pointer->renderMode == PHHapticPointer::DYNAMIC_PROXY) {
+				proxyPos = tangentNorm;
+				double predict = proxyPos + (proxyPointVel * fricIr->normal) * hdt;	//	pr = r(t) + v dt;
+				frictionLimit = predict - alpha * (predict - l);
+			}
+			else {
+				proxyPos = tangentNorm;
+				frictionLimit = l;
+			}
+			//	結果をfricIrに反映
+			if (proxyPos <= frictionLimit) {
+				fricIr->depth = proxyPos;
 				bStatic = true;				// 一つでも、静止摩擦ならば、それが持ちこたえると考える。
 			}
+			else {
+				fricIr->depth = frictionLimit;
+			}
 			sh->irs.push_back(fricIr);
-			//DSTR << "lastPx:" << lastProxy <<  "  wall:" << fricIr->depth << "  vel:" << pointer->lastProxyVelocity.v().x << std::endl;
 		}
 #else
 		double epsilon = 1e-5;
@@ -507,8 +497,10 @@ void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
 	SpatialVector outForce = SpatialVector();
 	if (irsNormal.size() == 0) {
 		pointer->proxyPose = pointer->GetPose();
-		pointer->lastProxyVelocity.v() = pointer->GetVelocity();
-		pointer->lastProxyVelocity.w() = pointer->GetAngularVelocity();
+		if (pointer->renderMode == pointer->DYNAMIC_PROXY) {
+			pointer->lastProxyVelocity.v() = pointer->GetVelocity();
+			pointer->lastProxyVelocity.w() = pointer->GetAngularVelocity();
+		}
 	}else{
 		// 追い出しのためのポインタ移動量を求める
 		Vec3d dr, dtheta, allDepth;
@@ -516,13 +508,14 @@ void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
 		// ポインタを中間表現の外に追い出した点を、proxyPoseとする。
 		pointer->proxyPose.Ori() = Quaterniond::Rot(dtheta) * pointer->GetOrientation();
 		pointer->proxyPose.Pos() = pointer->GetFramePosition() + dr;
-		//	Proxyの速度の計算
-		Vec3d dProxPos = pointer->proxyPose.Pos() - pointer->lastProxyPose.Pos();
-		Quaterniond dProxRot = pointer->proxyPose.Ori() * pointer->lastProxyPose.Ori().Inv();
-		pointer->lastProxyVelocity.v() = dProxPos / hdt;
-		pointer->lastProxyVelocity.w() = dProxRot.Rotation() / hdt;
-		NANCHECKLP
-
+		if (pointer->renderMode == pointer->DYNAMIC_PROXY) {
+			//	Proxyの速度の計算
+			Vec3d dProxPos = pointer->proxyPose.Pos() - pointer->lastProxyPose.Pos();
+			Quaterniond dProxRot = pointer->proxyPose.Ori() * pointer->lastProxyPose.Ori().Inv();
+			pointer->lastProxyVelocity.v() = dProxPos / hdt;
+			pointer->lastProxyVelocity.w() = dProxRot.Rotation() / hdt;
+			NANCHECKLP
+		}
 		/// 力覚インタフェースに出力する力の計算
 		Vec3d last_dr = pointer->last_dr;
 		Vec3d last_dtheta = pointer->last_dtheta;
@@ -593,7 +586,6 @@ void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 		if(sp->contactCount == 0){
 			sp->contactVibrationVel = pointer->GetVelocity() - solid->GetVelocity();
 		}
-
 		Vec3d vibV = sp->contactVibrationVel;
 		double vibA = solid->GetShape(0)->GetVibA();
 		double vibB = solid->GetShape(0)->GetVibB();
