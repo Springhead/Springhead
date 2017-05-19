@@ -13,11 +13,9 @@ struct PHHapticPointerHapticSt{
 	Vec3d last_dr;
 	Vec3d last_dtheta;
 	Posed proxyPose;			// 反力計算用のProxyの姿勢	IRsのLCPで追い出した後の位置
-	SpatialVector proxyVelocity;// Proxyの速度、ポインタ速度を射影したもの(ProxyにDyanmicsを考える DYNAMIC_CONSTRAINT 時に使用)
 	Posed lastProxyPose;		// 1(haptic)ステップ前のproxyPoseの位置、デバイスの向き
 	SpatialVector lastProxyVelocity;// lastProxyの速度(ProxyにDyanmicsを考える DYNAMIC_CONSTRAINT 時に使用)
 	SpatialVector hapticForce;	// HapticRenderingで求めた、提示すべき力
-	bool bLastContactState;		// 前回接触していればtrue
 	PHHapticPointerHapticSt();
 };
 struct PHHapticPointerPhysicsSt {
