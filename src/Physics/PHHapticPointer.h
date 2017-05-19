@@ -21,20 +21,21 @@ struct PHHapticPointerHapticSt{
 	PHHapticPointerHapticSt();
 };
 struct PHHapticPointerPhysicsSt {
-	float frictionSpring;
-	float reflexSpring;
-	float reflexDamper;
-	float rotationReflexSpring;
-	float rotationReflexDamper;
-	float localRange;
-	double posScale;
-	Posed defaultPose;
-	double rotaionalWeight;
+	bool bRotation;
 	bool bForce;
 	bool bFriction;
 	bool bTimeVaryFriction;
 	bool bVibration;
 	bool bMultiPoints;
+	double posScale;
+	float localRange;
+	float frictionSpring;
+	float reflexSpring;
+	float reflexDamper;
+	float rotationReflexSpring;
+	float rotationReflexDamper;
+	Posed defaultPose;
+	double rotaionalWeight;
 	PHHapticPointerPhysicsSt();
 };
 
@@ -55,14 +56,20 @@ public:
 	PHHapticPointer();
 
 	//API
-	void	SetHapticRenderMode(HapticRenderMode m){ renderMode = m; }
+	void	SetHapticRenderMode(HapticRenderMode m) { renderMode = m; }
+	HapticRenderMode GetHapticRenderMode() { return renderMode; }
+	void	EnableRotation(bool b) { bRotation = b; }
+	bool	IsRotation() { return bRotation; }
 	void	EnableForce(bool b){ bForce = b; }
+	bool	IsForce() { return bForce; }
 	void	EnableFriction(bool b){ bFriction = b; }
+	bool	IsFriction() { return bFriction; }
 	void	EnableTimeVaryFriction(bool b) { bTimeVaryFriction = b; }
 	bool	IsTimeVaryFriction() { return bTimeVaryFriction;  }
 	void	EnableMultiPoints(bool b){ bMultiPoints = b; }
 	bool	IsMultiPoints(){ return bMultiPoints; }
-	void	EnableVibration(bool b){ bVibration = b; }
+	void	EnableVibration(bool b) { bVibration = b; }
+	bool	IsVibration() { return bVibration; }
 	void	SetFrictionSpring(float s) { frictionSpring = s; }
 	float	GetFrictionSpring() { return frictionSpring; }
 	void	SetReflexSpring(float s) { reflexSpring = s; }

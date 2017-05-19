@@ -7,19 +7,20 @@ PHHapticPointerHapticSt::PHHapticPointerHapticSt() {
 	bLastContactState = false;
 }
 PHHapticPointerPhysicsSt::PHHapticPointerPhysicsSt() {
-	localRange = 1.0;
-	posScale = 1.0;
+	bRotation = true;
 	bForce = false;
 	bFriction = true;
 	bTimeVaryFriction = true;
 	bMultiPoints = true;
 	bVibration = false;
-	rotaionalWeight = 1e5;
+	posScale = 1.0;
+	localRange = 1.0;
 	frictionSpring = 400.0f;
 	reflexSpring = 1000.0f;
 	reflexDamper = 0.0f;
 	rotationReflexSpring = 10.0f;
 	rotationReflexDamper = 0.0f;
+	rotaionalWeight = 1e5;
 }
 
 //----------------------------------------------------------------------------
@@ -55,14 +56,18 @@ void PHHapticPointer::UpdateHumanInterface(const Posed& pose, const SpatialVecto
 	// HumanInterfaceから状態を取得
 	double s = GetPosScale();
 	hiSolidSt.velocity = s * vel.v();
-//	hiSolidSt.angVelocity = vel.w();
-//	hiSolidSt.pose = GetDefaultPose() * Posed(s * pose.Pos(), pose.Ori());
-	hiSolidSt.pose.Pos() = GetDefaultPose() * (s * pose.Pos());
+	if (bRotation) {
+		hiSolidSt.angVelocity = vel.w();
+		hiSolidSt.pose = GetDefaultPose() * Posed(s * pose.Pos(), pose.Ori());
+	}
+	else {
+		hiSolidSt.pose.Pos() = GetDefaultPose() * (s * pose.Pos());
+	}
 }
 SpatialVector PHHapticPointer::GetHapticForce() {
 	SpatialVector rv = hapticForce;
 	rv.v() = GetDefaultPose().Ori().Inv() * rv.v();
-	rv.w() = GetDefaultPose().Ori().Inv() * rv.w();
+	if (bRotation) rv.w() = GetDefaultPose().Ori().Inv() * rv.w();
 	return rv;
 }
 

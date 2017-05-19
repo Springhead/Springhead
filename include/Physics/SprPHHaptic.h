@@ -27,11 +27,17 @@ struct PHHapticPointerDesc{
 struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	SPR_IFDEF(PHHapticPointer);
 	void	SetHapticRenderMode(PHHapticPointerDesc::HapticRenderMode m);
+	PHHapticPointerDesc::HapticRenderMode GetHapticRenderMode();
+	void	EnableRotation(bool b);
+	bool	IsRotation();
 	void	EnableForce(bool b);
+	bool	IsForce();
 	void	EnableFriction(bool b);
+	bool	IsFriction();
 	void	EnableTimeVaryFriction(bool b);
 	bool	IsTimeVaryFriction();
 	void	EnableVibration(bool b);
+	bool	IsVibration();
 	void	EnableMultiPoints(bool b);
 	bool	IsMultiPoints();
 

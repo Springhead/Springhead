@@ -153,7 +153,7 @@ void PHHapticRender::SolveProxyPose(Vec3d& dr, Vec3d& dtheta, Vec3d& allDepth, P
 	GaussSeidel(c, f, -d);
 
 	for (size_t i = 0; i < irs.size(); i++) {
-		f[i] = std::max(f[i], 0.0);
+		assert(f[i] >= 0);
 		// 並進量
 		Vec3d tmpdr = f[i] * irs[i]->normal * massInv;
 		dr += tmpdr;
@@ -310,7 +310,8 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 	int Nirs = sh->irs.size();
 	if (Nirs == 0) return false;
 	//	動摩擦になったことを確認するためのフラグ
-	bool bDynamic = false;
+	//bool bDynamic = false;
+	bool bStatic = false;
 	//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合
 	//const double alpha = 0.4;
 	double alpha = hdt * hdt * pointer->GetMassInv() * pointer->reflexSpring;
@@ -382,8 +383,8 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 			fricIr->normal = fricDir;
 			//DSTR << (sp->frictionState == sp->STATIC ? "S":"D") << (lastProxy > fullFric ? "d " : "s ") << "LP:" << lastProxy << "  FF:" << fullFric << std::endl;
 			fricIr->depth = std::min(lastProxy, fullFric);
-			if (lastProxy > fullFric) {
-				bDynamic = true;				// 一つでも、静止摩擦を越えたら、連鎖して滑るので、全体を動摩擦にする
+			if (lastProxy <= fullFric) {
+				bStatic = true;				// 一つでも、静止摩擦ならば、それが持ちこたえると考える。
 			}
 			sh->irs.push_back(fricIr);
 			//DSTR << "lastPx:" << lastProxy <<  "  wall:" << fricIr->depth << "  vel:" << pointer->lastProxyVelocity.v().x << std::endl;
@@ -401,7 +402,7 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 #endif
 	}
 	sp->fricCount++;
-	if (bDynamic) {
+	if (!bStatic) {
 		if (sp->frictionState != sp->DYNAMIC) {
 			std::cout << " S:" << sp->fricCount;
 			sp->fricCount = 0;
@@ -569,12 +570,14 @@ void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
 		//	摩擦振動提示の大きさに使うため、SolidPairに摩擦力の合計を計算して記録する
 		if (irsFric.size()) {
 			PHSolidPairForHaptic* sp = irsFric[0]->solidPair;
-			sp->totalFrictionForce.clear();
-			for (size_t i = 0; i < irsFric.size(); i++) {
-				sp->totalFrictionForce += irsFric[i]->force;
-				if (sp != irsFric[i]->solidPair) {
-					sp = irsFric[i]->solidPair;
-					sp->totalFrictionForce.clear();
+			if (sp->frictionState == sp->STATIC) {
+				sp->lastStaticFrictionForce.clear();
+				for (size_t i = 0; i < irsFric.size(); i++) {
+					sp->lastStaticFrictionForce += irsFric[i]->force;
+					if (sp != irsFric[i]->solidPair) {
+						sp = irsFric[i]->solidPair;
+						sp->lastStaticFrictionForce.clear();
+					}
 				}
 			}
 		}
@@ -607,11 +610,10 @@ void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 		// 法線方向に射影する必要がある？
 		vibForce.v() = vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
 		if (sp->frictionState == sp->DYNAMIC) {
-			Vec3d vibV = sp->totalFrictionForce;
+			Vec3d vibV = sp->lastStaticFrictionForce * hdt * pointer->GetMassInv() * 0.3;	//	0.3は謎係数。ないと接触の振動に対して強すぎてしまう。
 			double vibT = sp->fricCount * hdt;
-			vibForce.v() += 1000 * vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
+			vibForce.v() += vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
 		}
-
 		pointer->AddHapticForce(vibForce);
 		//CSVOUT << vibForce.v().x << "," << vibForce.v().y << "," << vibForce.v().z << std::endl;
 	}
