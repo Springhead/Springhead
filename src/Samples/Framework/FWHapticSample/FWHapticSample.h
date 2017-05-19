@@ -30,8 +30,8 @@ public:
 	int hapticTimerID;			// 力覚スレッドのタイマ
 	UTRef<HIBaseIf> device;		// 力覚インタフェースへのポインタ
 	HIHapticDummyIf* dummyDevice;	// キーボードで操作するダミーデバイス
-	bool bPause;
-
+	bool bPause;				//	シミュレーションの一時停止
+	
 	FWHapticSample();
 	void InitInterface();						// 力覚インタフェースの初期化
 	void Init(int argc = 0, char* argv[] = 0);	// アプリケーションの初期化

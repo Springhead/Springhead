@@ -165,12 +165,14 @@ void FWHapticSample::TimerFunc(int id){
 	}else{	//	multi thread
 		if(hapticTimerID == id){
 			GetSdk()->GetScene()->UpdateHapticPointers();
-			if (!bPause)
+			if (!bPause) {
 				phscene->StepHapticLoop();
+			}
 		}else{
 			PHHapticEngineIf* he = phscene->GetHapticEngine();
-			if (!bPause)
+			if (!bPause) {
 				he->StepPhysicsSimulation();
+			}
 			PostRedisplay();
 		}
 	}

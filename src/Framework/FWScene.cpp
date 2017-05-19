@@ -799,7 +799,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 
 	// プロキシの描画
 	for(int i = 0; i< he->NHapticPointers(); i++){
-		PHHapticPointer* pointer = he->GetHapticPointer(i);
+		PHHapticPointer* pointer = he->GetHapticPointer(i)->Cast();
 		Posed proxyPose = pointer->proxyPose;
 		Affinef aff;
 		proxyPose.ToAffine(aff);
@@ -846,16 +846,16 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 	render->PushModelMatrix();
 	render->SetModelMatrix(Affinef());
 	for (int i = 0; i < Npointers; i++){
-		PHHapticPointer* pointer = he->GetHapticPointer(i);
+		PHHapticPointer* pointer = he->GetHapticPointer(i)->Cast();
 		float range = pointer->GetLocalRange();
 		float radius = 0.02f;
 		int nNeighbors = (int)pointer->neighborSolidIDs.size();
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = pointer->neighborSolidIDs[j];
-			PHSolidPairForHaptic* solidPair = he->GetSolidPairTemp(solidID, i);
+			PHSolidPairForHaptic* solidPair = he->GetSolidPairTemp(solidID, i)->Cast();
 			for(int k = 0; k < solidPair->solid[0]->NShape(); k++){
 				for(int l = 0; l < solidPair->solid[1]->NShape(); l++){
-					PHShapePairForHaptic* sp = solidPair->GetShapePair(k, l);
+					PHShapePairForHaptic* sp = solidPair->GetShapePair(k, l)->Cast();
 					for(int m = 0; m < 2; m++){
 						// 近傍点対		・白点
 						Posed p;

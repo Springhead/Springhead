@@ -333,12 +333,13 @@ struct PHShapePairForLCPIf : public ObjectIf{
 	/// 形状を取得する
 	CDShapeIf* GetShape(int i);
 };
-
-struct PHSolidPairForLCPIf : public ObjectIf{
-	SPR_IFDEF(PHSolidPairForLCP);
-	
+struct PHSolidPairIf : public ObjectIf {
+	SPR_IFDEF(PHSolidPair);
 	PHSolidIf* GetSolid(int i);
+};
 
+struct PHSolidPairForLCPIf : public PHSolidPairIf{
+	SPR_IFDEF(PHSolidPairForLCP);
 	/** @brief 剛体同士の接触が有効かどうかを取得・設定する
 	*/
 	bool IsContactEnabled();
