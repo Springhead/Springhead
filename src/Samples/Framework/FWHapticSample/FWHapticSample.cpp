@@ -39,20 +39,21 @@ void FWHapticSample::BuildScene(){
 		floor->SetDynamical(false);
 	
 		// 箱を作成
-/*		PHSolidIf* soBox = phscene->CreateSolid();
-		soBox->SetMass(0.3f);
-		bd.boxsize.clear(0.4f);
+#if 1
+		PHSolidIf* soBox = phscene->CreateSolid();
+		bd.boxsize.clear(0.04f);
+		bd.material.density = 10000;
 		soBox->AddShape(phSdk->CreateShape(bd));
-		soBox->SetInertia(soBox->GetShape(0)->CalcMomentOfInertia() * (1/soBox->GetShape(0)->CalcVolume()) * (float)soBox->GetMass());
-		soBox->SetFramePosition(Vec3d(-0.5 , -0.35, 0.0));
+		soBox->CompInertia();
+		soBox->SetCenterPosition(Vec3d(-0.05 , -0.035, 0.0));
 		soBox->SetName("soBox");
-*/
+#endif
 		// 力覚ポインタの作成
 		pointer = phscene->CreateHapticPointer();			// 力覚ポインタの作成
 		CDSphereDesc cd;									//　半径1cmの球
 		cd.radius = 0.01f;
 		bd.boxsize = Vec3f(0.02f, 0.02f, 0.02f);			//	１辺2cmの直方体
-		CDShapeIf* shape = phSdk->CreateShape(bd);			//	どちらかを作る
+		CDShapeIf* shape = phSdk->CreateShape(cd);			//	どちらかを作る
 		shape->SetDensity(0.006f / shape->CalcVolume());	//	指の重さは大体 6g
 		pointer->AddShape(shape);	// シェイプの追加
 		pointer->SetShapePose(0, Posed(Vec3d(), Quaterniond::Rot(Rad(10), 'z')));
@@ -66,8 +67,9 @@ void FWHapticSample::BuildScene(){
 		pointer->SetRotationReflexSpring(30.0f);			//	力覚レンダリング用の回転バネ
 		pointer->SetRotationReflexDamper(0.0f);				//	力覚レンダリング用の回転ダンパ
 		pointer->SetName("hpPointer");
+		pointer->EnableRotation(false);
 		pointer->EnableFriction(true);
-		pointer->EnableVibration(false);
+		pointer->EnableVibration(true);
 		pointer->SetHapticRenderMode(PHHapticPointerDesc::DYNAMIC_PROXY);
 		pointer->EnableTimeVaryFriction(true);
 		FWHapticPointerIf* fwPointer = GetSdk()->GetScene()->CreateHapticPointer();	// HumanInterfaceと接続するためのオブジェクトを作成
@@ -252,14 +254,12 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 				// 振動提示のON/OFF
 				if(pointer){
 					static bool bVibration = false;
-					if(!bVibration){
-						bVibration = true;
-						pointer->EnableVibration(bVibration);
+					if(!pointer->IsVibration()){
+						pointer->EnableVibration(true);
 						DSTR << "Vibration: ON" << std::endl;
 					}else{
-						bVibration = false;
-						pointer->EnableVibration(bVibration);					
-						DSTR << "Vibration: ON" << std::endl;
+						pointer->EnableVibration(false);					
+						DSTR << "Vibration: OFF" << std::endl;
 					}
 				}			
 			}
