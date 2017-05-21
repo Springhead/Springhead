@@ -106,9 +106,11 @@ class UTAccess:public UTAccessBase{
 };
 
 class UTTypeDescDb;
+
 ///	型を表す
-class SPR_DLL UTTypeDesc:public UTRefCount{
+class SPR_DLL UTTypeDesc:public Object{
 public:
+	SPR_OBJECTDEF(UTTypeDesc);
 	enum { BIGVALUE= 0x40000000 };
 	///	レコードのフィールドを表す
 	class SPR_DLL Field{
@@ -128,13 +130,11 @@ public:
 		///	要素数を別のフィールドからとる場合のフィールド名
 		std::string lengthFieldName;
 		///	vector/配列かどうか
-		enum VarType{
-			SINGLE, ARRAY, VECTOR
-		} varType;
+		UTTypeDescIf::FieldType varType;
 		///	参照かどうか
 		bool isReference;
 
-		Field(): offset(-1), length(1), varType(SINGLE), isReference(false){}
+		Field(): offset(-1), length(1), varType(UTTypeDescIf::SINGLE), isReference(false){}
 		~Field();
 		///	データのサイズ
 		size_t GetSize();
@@ -239,12 +239,38 @@ public:
 	BinaryType CheckSimple();
 	///	組み立て型の要素
 	Composit& GetComposit(){ return composit; }
+	///	組み立て型のフィールドの数
+	int NFields() { return composit.size(); }
+	///	フィールドのTypeDesc
+	UTTypeDesc* GetFieldType(int i) { return composit[i].type; }
+	///	Fieldが配列の場合の配列の長さを返す
+	int GetFieldLength(int i) { return composit[i].length; }
+	///	Fieldのvector場合のvectorの長さを返す
+	int GetFieldVectorSize(int i, const void* base) { return composit[i].VectorSize(base); }
+	///	要素数を別のフィールドからとる場合のフィールド名
+	const char* GetFieldLengthName(int i) { return composit[i].lengthFieldName.c_str(); }
+	///	vector/配列かどうか
+	UTTypeDescIf::FieldType GetFieldVarType(int i) { return composit[i].varType; }
+	///	参照かどうか
+	bool GetFieldIsReference(int i) { return composit[i].isReference; }
+	///	フィールド名
+	const char* GetFieldName(int i) { return composit[i].name.c_str(); }
+	///	フィールドのアドレスの取得
+	void* GetFieldAddress(int i, void*base, int pos) { return composit[i].GetAddress(base, pos); }
+	const void* GetFieldAddress(int i, const void*base, int pos) { return composit[i].GetAddress(base, pos); }
+	///	フィールドのアドレスを計算．vectorを拡張する．
+	void* GetFieldAddressEx(int i, void* base, int pos) { return composit[i].GetAddressEx(base, pos); }
+	///	文字列からフィールドに書き込む
+	std::string ReadToString(int i, void* base, int pos);
+	///	文字列からフィールドに書き込む
+	void WriteFromString(std::string from, int i, void* base, int pos);
+
 	///	フィールドの型情報のリンク
 	void Link(UTTypeDescDb* db);
 	///	リンクの確認
 	bool LinkCheck();
 	///
-	const IfInfo* GetIfInfo(){ return ifInfo; }
+	const IfInfo* GetIfInfoOfType() { return ifInfo; }
 
 	//	ユーティリティ関数
 	virtual bool IsBool(){ return false; }
@@ -432,8 +458,8 @@ class UTTypeDescDbPool: public UTRefCount,
 	public std::set< UTRef<UTTypeDescDb>, UTContentsLess< UTRef<UTTypeDescDb> > >{
 protected:
 	static UTRef<UTTypeDescDbPool> pool;
-	static UTTypeDescDbPool* SPR_CDECL GetPool();
 public:
+	static UTTypeDescDbPool* SPR_CDECL GetPool();
 	static UTTypeDescDb* SPR_CDECL Get(std::string gp);
 	static void SPR_CDECL Print(std::ostream& os);
 };

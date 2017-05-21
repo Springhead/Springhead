@@ -361,6 +361,92 @@ struct ObjectStatesIf: public ObjectIf{
 	static ObjectStatesIf* SPR_CDECL Create();
 };
 
+struct UTTypeDescIf{
+	SPR_IFDEF(UTTypeDesc);
+	enum FieldType {
+		SINGLE, ARRAY, VECTOR
+	};
+	static UTTypeDescIf* FindTypeDesc(const char* typeName, const char* moduleName);
+	static void PrintPool(std::ostream& os);
+		///
+	void Print(std::ostream& os) const;
+	///	型名
+	std::string GetTypeName() const;
+	///	型名
+	void SetTypeName(const char* s);
+	///	型のサイズ
+	size_t GetSize();
+	///	組み立て型かどうか
+	bool IsPrimitive();
+	///	文字列やvectorや参照を含まなければ true
+	bool IsSimple();
+	///	組み立て型のフィールドの数
+	int NFields();
+	///	フィールドのTypeDesc
+	UTTypeDesc* GetFieldType(int i);
+	///	Fieldが配列の場合の配列の長さを返す
+	int GetFieldLength(int i);
+	///	Fieldのvector場合のvectorの長さを返す
+	int GetFieldVectorSize(int i, const void* base);
+	///	要素数を別のフィールドからとる場合のフィールド名
+	const char* GetFieldLengthName(int i);
+	///	vector/配列かどうか
+	UTTypeDescIf::FieldType GetFieldVarType(int i);
+	///	参照かどうか
+	bool GetFieldIsReference(int i);
+	///	フィールド名
+	const char* GetFieldName(int i);
+	///	フィールドのアドレスの取得
+	void* GetFieldAddress(int i, void* base, int pos);
+	const void* GetFieldAddress(int i, const void* base, int pos);
+	///	フィールドのアドレスを計算．vectorを拡張する．
+	void* GetFieldAddressEx(int i, void* base, int pos);
+	///	文字列にフィールドを読み出す
+	std::string ReadToString(int i, void* base, int pos);
+	///	文字列からフィールドに書き込む
+	void WriteFromString(std::string from, int i, void* base, int pos);
+	///
+	const IfInfo* GetIfInfoOfType();
+
+	//	ユーティリティ関数
+	bool IsBool();
+	bool IsNumber();
+	bool IsString();
+	///	TypeDescがboolの単純型の場合に，boolを読み出す関数
+	bool ReadBool(const void* ptr);
+	///	TypeDescが数値の単純型の場合に，数値を書き込む関数
+	void WriteBool(bool val, void* ptr);
+	///	TypeDescが数値の単純型の場合に，数値を読み出す関数
+	double ReadNumber(const void* ptr);
+	///	TypeDescが数値の単純型の場合に，数値を書き込む関数
+	void WriteNumber(double val, void* ptr);
+	///	文字列読み出し
+	std::string ReadString(const void* ptr);
+	///	文字列書き込み
+	void WriteString(const char* val, void* ptr);
+
+	///	オブジェクトの構築
+	void* Create();
+	///	オブジェクトの後始末
+	void Delete(void* ptr);
+	///	vector::push_back() return &vector::back();
+	void* VectorPush(void* v);
+	///	vector::pop_back();
+	void VectorPop(void* v);
+	///	return &vector::at(pos);
+	void* VectorAt(void* v, int pos);
+	const void* VectorAt(const void* v, int pos);
+	///	return vector::size();
+	size_t VectorSize(const void * v);
+	///
+	size_t SizeOfVector();
+	//	シリアライズ
+	///	ストリームに書き出し
+	void Write(std::ostream& os, void* base);
+	///	ストリームから読み出し
+	void Read(std::istream& is, void* base);
+};
+
 }
 
 #endif

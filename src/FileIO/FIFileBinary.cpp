@@ -68,7 +68,7 @@ void FIFileBinary::LoadBlock(){
 		UTTypeDesc::Field* field = &*(fieldIt.field);
 
 		// 可変長フィールドの場合，長さを読み込みセット
-		if(field->varType == UTTypeDesc::Field::VECTOR){
+		if(field->varType == UTTypeDescIf::VECTOR){
 			fieldIt.arrayLength = (int) *(size_t*)ptr;
 			ptr += sizeof(size_t);
 		}
@@ -199,7 +199,7 @@ void FIFileBinary::OnSaveDataEnd(FISaveContext* sc){
 }
 bool FIFileBinary::OnSaveFieldStart(FISaveContext* sc, int nElements){
 	UTTypeDesc::Composit::iterator field = sc->fieldIts.back().field;
-	if(field->varType == UTTypeDesc::Field::VECTOR){
+	if(field->varType == UTTypeDescIf::VECTOR){
 		// 可変長フィールドの場合，その長さを出力
 		size_t len = nElements;
 		sc->Stream().write((const char*)&len, sizeof(size_t));
