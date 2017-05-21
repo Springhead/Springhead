@@ -188,11 +188,11 @@ static void DefId(const char* b, const char* e){
 	tdesc->GetComposit().back().name.assign(b, e);
 }
 static void ArrayId(const char* b, const char* e){
-	tdesc->GetComposit().back().varType = UTTypeDesc::Field::VECTOR;
+	tdesc->GetComposit().back().varType = UTTypeDescIf::VECTOR;
 	tdesc->GetComposit().back().lengthFieldName.assign(b, e);
 }
 static void ArrayNum(int n){
-	tdesc->GetComposit().back().varType = UTTypeDesc::Field::ARRAY;
+	tdesc->GetComposit().back().varType = UTTypeDescIf::ARRAY;
 	tdesc->GetComposit().back().length = n;
 }
 static void TempEnd(char c){

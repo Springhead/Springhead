@@ -243,9 +243,9 @@ void FIFile::SaveBlock(FISaveContext* sc){
 		UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);
 		//	要素数の取得
 		int nElements = 1;
-		if (field->varType == UTTypeDesc::Field::VECTOR){
+		if (field->varType == UTTypeDescIf::VECTOR){
 			nElements = (int)field->VectorSize(base);
-		}else if (field->varType == UTTypeDesc::Field::ARRAY){
+		}else if (field->varType == UTTypeDescIf::ARRAY){
 			nElements = field->length;
 		}
 		if (OnSaveFieldStart(sc, nElements)){

@@ -257,11 +257,11 @@ static void DefId(const char* b, const char* e){
 	tdesc->GetComposit().back().name.assign(b, e);
 }
 static void ArrayId(const char* b, const char* e){
-	tdesc->GetComposit().back().varType = UTTypeDesc::Field::VECTOR;
+	tdesc->GetComposit().back().varType = UTTypeDescIf::VECTOR;
 	tdesc->GetComposit().back().lengthFieldName.assign(b, e);
 }
 static void ArrayNum(int n){
-	tdesc->GetComposit().back().varType = UTTypeDesc::Field::ARRAY;
+	tdesc->GetComposit().back().varType = UTTypeDescIf::ARRAY;
 	tdesc->GetComposit().back().length = n;
 }
 static void TempEnd(char c){
@@ -428,10 +428,10 @@ bool FIFileSpr::OnSaveFieldStart(FISaveContext* sc, int nElements){
 		bool bNoChange = true;
 		void* data = sc->datas.Top()->data;
 		int dataLen=-1, defaultDataLen=-1;
-		if (field->varType == UTTypeDesc::Field::VECTOR){
+		if (field->varType == UTTypeDescIf::VECTOR){
 			dataLen = (int)field->VectorSize(data);
 			defaultDataLen = (int)field->VectorSize(defaultData);
-		}else if(field->varType == UTTypeDesc::Field::ARRAY){
+		}else if(field->varType == UTTypeDescIf::ARRAY){
 			dataLen = defaultDataLen = field->length;
 		}
 		if (dataLen>=0){
@@ -450,14 +450,14 @@ bool FIFileSpr::OnSaveFieldStart(FISaveContext* sc, int nElements){
 	}else if(depthFromField >= 0){
 		depthFromField ++;
 	}
-	if (field->varType == UTTypeDesc::Field::VECTOR){
+	if (field->varType == UTTypeDescIf::VECTOR){
 		sc->Stream() << "[";
 	}
 	return true;
 }
 void FIFileSpr::OnSaveFieldEnd(FISaveContext* sc, int nElements){
 	UTTypeDesc::Field* field = &*(sc->fieldIts.back().field);
-	if (field->varType == UTTypeDesc::Field::VECTOR){
+	if (field->varType == UTTypeDescIf::VECTOR){
 		sc->Stream() << "]";
 	}
 	if (depthFromField == 0){

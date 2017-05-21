@@ -652,7 +652,7 @@ ObjectIf* UTLoadContext::CreateSceneRecursive(){
 	//	先祖オブジェクトに作ってもらう
 	ObjectIf* obj = NULL;
 	const IfInfo* info = NULL;
-	if (ld->type) info = ld->type->GetIfInfo();
+	if (ld->type) info = ld->type->GetIfInfoOfType();
 	if (info){
 		obj = CreateObject(info, ld->data, ld->GetName());	//	作成して，
 		if (obj){

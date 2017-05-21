@@ -23,7 +23,7 @@ UTTypeDesc::Field::~Field(){
 
 
 size_t UTTypeDesc::Field::GetSize(){
-	if (varType==VECTOR){
+	if (varType== UTTypeDescIf::VECTOR){
 		return type->SizeOfVector();
 	}else{
 		size_t sz = 0;
@@ -32,9 +32,9 @@ size_t UTTypeDesc::Field::GetSize(){
 		}else{
 			sz = type->GetSize();
 		}
-		if (varType==SINGLE){
+		if (varType== UTTypeDescIf::SINGLE){
 			return sz; 
-		}else if (varType==ARRAY){
+		}else if (varType== UTTypeDescIf::ARRAY){
 			return sz * length;
 		}
 	}
@@ -52,16 +52,16 @@ void UTTypeDesc::Field::AddEnumConst(std::string name){
 }
 const void* UTTypeDesc::Field::GetAddress(const void* base, int pos){
 	const void* ptr = (const char*)base + offset;
-	if (varType == VECTOR){
+	if (varType == UTTypeDescIf::VECTOR){
 		ptr = type->VectorAt(ptr, pos);
-	}else if (varType == ARRAY){
+	}else if (varType == UTTypeDescIf::ARRAY){
 		ptr = (const char*)ptr + type->GetSize()*pos;
 	}
 	return ptr;
 }
 void* UTTypeDesc::Field::GetAddressEx(void* base, int pos){
 	void* ptr = (char*)base + offset;
-	if (varType == VECTOR){
+	if (varType == UTTypeDescIf::VECTOR){
 		while((int)type->VectorSize(ptr)<=pos) type->VectorPush(ptr);
 		if (pos == -2){
 			type->VectorPush(ptr);
@@ -71,7 +71,7 @@ void* UTTypeDesc::Field::GetAddressEx(void* base, int pos){
 		}else{
 			ptr = type->VectorAt(ptr, pos);
 		}
-	}else if (varType == ARRAY){
+	}else if (varType == UTTypeDescIf::ARRAY){
 		ptr = (char*)ptr + type->GetSize()*pos;
 	}
 	return ptr;
@@ -81,7 +81,7 @@ void UTTypeDesc::Field::Print(std::ostream& os) const{
 	int w = os.width();
 	os.width(0);
 	os << UTPadding(w) << name.c_str() << "(+" << offset << ") = ";
-	if (varType==VECTOR || varType==ARRAY){
+	if (varType==UTTypeDescIf::VECTOR || varType==UTTypeDescIf::ARRAY){
 		os << "Vector<";
 		if (isReference){
 			os << "UTRef<" << type->GetTypeName().c_str() << ">";
@@ -167,12 +167,10 @@ UTTypeDesc::BinaryType UTTypeDesc::CheckSimple(){
 	return bSimple;
 }
 
-//----------------------------------------------------------------------------
-//	UTTypeDesc
 UTTypeDesc::Field* UTTypeDesc::AddField(std::string pre, std::string tn, std::string n, std::string suf){
 	composit.push_back(Field());
 	if (pre.compare("vector") == 0){
-		composit.back().varType = UTTypeDesc::Field::VECTOR;
+		composit.back().varType = UTTypeDescIf::VECTOR;
 		composit.back().length = UTTypeDesc::BIGVALUE;
 	}
 	if (pre.compare("UTRef") == 0) composit.back().isReference = true;
@@ -183,8 +181,8 @@ UTTypeDesc::Field* UTTypeDesc::AddField(std::string pre, std::string tn, std::st
 		if (!is.good()){
 			composit.back().lengthFieldName = suf;
 		}
-		if (composit.back().varType == UTTypeDesc::Field::SINGLE){
-			composit.back().varType = UTTypeDesc::Field::ARRAY;
+		if (composit.back().varType == UTTypeDescIf::SINGLE){
+			composit.back().varType = UTTypeDescIf::ARRAY;
 		}
 	}
 
@@ -253,9 +251,9 @@ void UTTypeDesc::Write(std::ostream& os, void* base){
 	}else{
 		for(unsigned i=0; i< composit.size(); ++i){
 			UTTypeDesc::Field& field = composit[i];
-			if (field.varType == UTTypeDesc::Field::SINGLE){
+			if (field.varType == UTTypeDescIf::SINGLE){
 				field.type->Write(os, field.GetAddress(base, 0));
-			}else if (field.varType == UTTypeDesc::Field::ARRAY){
+			}else if (field.varType == UTTypeDescIf::ARRAY){
 				unsigned arrayLen = field.length;
 				UTTypeDesc::Field* lf = composit.Find(field.lengthFieldName.c_str());
 				if (lf) arrayLen = lf->ReadNumber(base);
@@ -263,7 +261,7 @@ void UTTypeDesc::Write(std::ostream& os, void* base){
 				for(unsigned i=0; i<arrayLen; ++i){
 					field.type->Write(os, field.GetAddress(base, i));
 				}
-			}else if (composit[i].varType == UTTypeDesc::Field::VECTOR){
+			}else if (composit[i].varType == UTTypeDescIf::VECTOR){
 				unsigned vecLen = (unsigned) composit[i].VectorSize(base);
 				os.write((char*)&vecLen, sizeof(vecLen));		//	vectorの要素数をまず書き出す
 				for(unsigned i=0; i<vecLen; ++i){
@@ -293,9 +291,9 @@ void UTTypeDesc::Read(std::istream& is, void* base){
 	}else{
 		for(unsigned i=0; i< composit.size(); ++i){
 			UTTypeDesc::Field& field = composit[i];
-			if (field.varType == UTTypeDesc::Field::SINGLE){
+			if (field.varType == UTTypeDescIf::SINGLE){
 				field.type->Read(is, field.GetAddress(base,0));
-			}else if (field.varType == UTTypeDesc::Field::ARRAY){
+			}else if (field.varType == UTTypeDescIf::ARRAY){
 				unsigned arrayLen;
 				is.read((char*)&arrayLen, sizeof(arrayLen));	//	配列の要素数をまず読み出す
 				UTTypeDesc::Field* lf = composit.Find(field.lengthFieldName.c_str());
@@ -307,7 +305,7 @@ void UTTypeDesc::Read(std::istream& is, void* base){
 				for(unsigned i=0; i<arrayLen; ++i){
 					field.type->Read(is, field.GetAddress(base, i));
 				}
-			}else if (composit[i].varType == UTTypeDesc::Field::VECTOR){
+			}else if (composit[i].varType == UTTypeDescIf::VECTOR){
 				unsigned vecLen = (unsigned) composit[i].VectorSize(base);
 				is.read((char*)&vecLen, sizeof(vecLen));		//	vectorの要素数をまず読み出す
 				for(unsigned i=0; i<vecLen; ++i){
@@ -315,6 +313,41 @@ void UTTypeDesc::Read(std::istream& is, void* base){
 				}
 			}
 		} 
+	}
+}
+std::string UTTypeDesc::ReadToString(int i, void* base, int pos) {
+	std::string rv;
+	if (composit[i].type->IsBool()) {
+		bool b = composit[i].type->ReadBool(composit[i].GetAddress(base, pos));
+		if (b) rv = "true";
+		else rv = "false";
+	}
+	else if (composit[i].type->IsNumber()) {
+		double d = composit[i].type->ReadNumber(composit[i].GetAddress(base, pos));
+		std::ostringstream os;
+		os << d;
+		rv = os.str();
+	}
+	else if (composit[i].type->IsString()) {
+		rv = composit[i].type->ReadString(composit[i].GetAddress(base, pos));
+	}
+	return rv;
+}
+void UTTypeDesc::WriteFromString(std::string in, int i, void* base, int pos) {
+	if (composit[i].type->IsBool()) {
+		std::string s;
+		std::istringstream(in) >> s;
+		bool b = true;
+		if (s[0] == 'f' || s[0] == 'F' || s[0] == 'n' || s[0] == 'N' || s[0] == '0') b = false;
+		composit[i].type->WriteBool(b, composit[i].GetAddress(base, pos));
+	}
+	else if (composit[i].type->IsNumber()) {
+		double d;
+		std::istringstream(in) >> d;
+		composit[i].type->WriteNumber(d, composit[i].GetAddress(base, pos));
+	}
+	else if (composit[i].type->IsString()) {
+		composit[i].type->WriteString(in.c_str(), composit[i].GetAddress(base, pos));
 	}
 }
 //----------------------------------------------------------------------------
@@ -458,9 +491,9 @@ bool UTTypeDescFieldIt::HaveField(UTString name){			///<	指定の名前のフ�
 
 void UTTypeDescFieldIt::SetFieldInfo(void* base){
 	//	フィールドの配列要素数を設定
-	if (field->varType==UTTypeDesc::Field::SINGLE){
+	if (field->varType==UTTypeDescIf::SINGLE){
 		arrayLength = 1;
-	}else if(field->varType==UTTypeDesc::Field::VECTOR || field->varType==UTTypeDesc::Field::ARRAY){
+	}else if(field->varType== UTTypeDescIf::VECTOR || field->varType==UTTypeDescIf::ARRAY){
 		arrayLength = field->length;
 		if (field->lengthFieldName.length()){
 			for(UTTypeDesc::Composit::iterator it = type->composit.begin(); it != field && it != type->composit.end(); ++it){
@@ -512,6 +545,13 @@ UTTypeDescFieldIt::FieldType UTTypeDescFieldIt::GetTypeId(UTTypeDesc* type){
 		fieldType = F_BLOCK;
 	}
 	return fieldType;
+}
+UTTypeDescIf* UTTypeDescIf::FindTypeDesc(const char* typeName, const char* moduleName) {
+	UTTypeDescDb* db = UTTypeDescDbPool::Get(moduleName);
+	return (UTTypeDescIf*)db->Find(typeName);
+}
+void UTTypeDescIf::PrintPool(std::ostream& os) {
+	UTTypeDescDbPool::GetPool()->Print(os);
 }
 
 
