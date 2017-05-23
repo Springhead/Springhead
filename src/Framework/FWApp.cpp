@@ -59,30 +59,6 @@ void FWApp::Display(){
 	GetCurrentWin()->Display();
 }
 
-void FWApp::OnDisplay(){
-	FWWinIf* win = GetCurrentWin();
-	if(!win->GetScene()) return;
-	FWSceneIf* scene = win->GetScene();
-	GRRenderIf* render = win->GetRender();
-
-	// GRSceneにカメラフレームが無い場合はトラックボールを直接ビュー変換に反映する
-	if(!scene->GetGRScene() || !scene->GetGRScene()->GetCamera() || !scene->GetGRScene()->GetCamera()->GetFrame()){
-		render->SetViewMatrix(win->GetTrackball()->GetAffine().inv());
-	}
-
-	// シーン内のオブジェクトの描画
-	if(win->GetDebugMode())
-		scene->DrawPHScene(render);
-	else if(scene->GetGRScene()){
-		scene->Sync();
-		scene->GetGRScene()->Render(render);
-	}
-	render->EndScene();
-	render->SwapBuffers();
-	render->ClearBuffer();
-	render->BeginScene();
-}
-
 void FWApp::TimerFunc(int id){
 	UserFunc();
 	// GetSdk()->Step();

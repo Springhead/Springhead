@@ -255,8 +255,8 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, P
 	}
 	// 接触したとして摩擦計算のための相対位置を計算
 	// 相対摩擦
-	if(frictionState == FREE){
-		frictionState = STATIC;
+	if(frictionState == PHSolidPairForHapticIf::FREE){
+		frictionState = PHSolidPairForHapticIf::STATIC;
 		contactCount = 0;
 		fricCount = 0;
 		initialRelativePose =  pointer->GetPose() * interpolationPose.Inv();
@@ -295,7 +295,7 @@ PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, P
 	}
 	if(irs.size() == 0){
 		// 接触なし
-		frictionState = FREE;
+		frictionState = PHSolidPairForHapticIf::FREE;
 		initialRelativePose = Posed();
 		relativePose = Posed();
 	}
@@ -308,17 +308,17 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender
 	bool bDynamic = false;
 	double mu=0;
 	if (pointer->bTimeVaryFriction) {
-		if (frictionState == STATIC) {
+		if (frictionState == PHSolidPairForHapticIf::STATIC) {
 			mu = sp->mu + sp->mu*( sp->timeVaryFrictionA * log(1 + sp->timeVaryFrictionB * fricCount * hr->hdt));
 		}
 	}
 	else {
 		mu = sp->mu;
-		if (frictionState == STATIC) mu = sp->mu0;
+		if (frictionState == PHSolidPairForHapticIf::STATIC) mu = sp->mu0;
 	}
 	for (int i = 0; i < Nirs; i++) {
 		PHIr* ir = sp->irs[i];
-		if (pointer->bTimeVaryFriction && frictionState == DYNAMIC) {
+		if (pointer->bTimeVaryFriction && frictionState == PHSolidPairForHapticIf::DYNAMIC) {
 			double v = (ir->pointerPointVel - ir->contactPointVel).norm();
 			v = std::max(v, sp->timeVaryFrictionC / hr->hdt);
 			//	速度と粘性摩擦を含める
@@ -352,14 +352,14 @@ bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender
 	}
 	fricCount++;
 	if (bDynamic) {
-		if (frictionState != DYNAMIC) {
+		if (frictionState != PHSolidPairForHapticIf::DYNAMIC) {
 			fricCount = 0;
-			frictionState = DYNAMIC;
+			frictionState = PHSolidPairForHapticIf::DYNAMIC;
 		}
 	} else {
-		if (frictionState != STATIC) {
+		if (frictionState != PHSolidPairForHapticIf::STATIC) {
 			fricCount = 0;
-			frictionState = STATIC;
+			frictionState = PHSolidPairForHapticIf::STATIC;
 		}
 		std::cout << fricCount << " ";
 	}

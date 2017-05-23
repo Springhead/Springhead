@@ -334,6 +334,72 @@ public:
 		}
 	}
 };
+
+
+template <class T, class CO = std::vector< T > >
+class RingBuffer
+{
+private:
+	volatile size_t read_index;
+	volatile size_t write_index;
+	CO buffer;
+public:
+	RingBuffer(int s=10){
+		read_index = 0;
+		write_index = 0;
+		buffer.resize(s);
+	}
+	bool Read(T &result){
+		volatile size_t local_read;
+		local_read = read_index;
+
+		if (local_read == write_index)
+			return false;
+
+		++local_read;
+		if (local_read == buffer.size())
+			local_read = 0;
+
+		result = buffer[local_read];
+		read_index = local_read;
+		return true;
+	}
+
+	bool Write(const T& element){
+		volatile size_t local_write;
+		local_write = write_index;
+
+		++local_write;
+		if (local_write == buffer.size())
+			local_write = 0;
+
+		if (local_write != read_index) {
+			buffer[local_write] = element;
+			write_index = local_write;
+			return true;
+		}
+		return false;
+	}
+	void WriteNoLimit(const T& element)
+	{
+		volatile unsigned local_write;
+		local_write = write_index;
+
+		++local_write;
+		if (local_write == buffer.size())
+			local_write = 0;
+
+		buffer[local_write] = element;
+		write_index = local_write;
+	}
+	void RingBuffer::GetLastOne(T& t)
+	{
+		volatile size_t local_write;
+		local_write = write_index;
+		t = buffer[local_write];
+	}
+};
+
 //@}
 	
 /** 	assert_cast

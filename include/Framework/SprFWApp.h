@@ -60,8 +60,6 @@ public:
 	 */
 	virtual void Display();
 
-	virtual void OnDisplay();
-
 	/** @brief IdleFuncの呼び出しを有効化/無効化する
 		glutの場合，glutIdleFuncに対応する．
 

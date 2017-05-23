@@ -129,6 +129,8 @@ public:
 	///	カレントの投影行列をafpで置き換える
 	virtual void SetProjectionMatrix(const Affinef& afp){}
 	virtual void GetProjectionMatrix(Affinef& afp){}
+	virtual void PushProjectionMatrix() {}																\
+	virtual void PopProjectionMatrix() {}																\
 	virtual void SetModelMatrix(const Affinef& afw){}
 	virtual void GetModelMatrix(Affinef& afw){}
 	///	カレントのモデル行列に対してafwを掛ける
@@ -223,6 +225,8 @@ public:
 	virtual void GetViewMatrix(Affinef& afv){ ptr GetViewMatrix(afv); }										\
 	virtual void SetProjectionMatrix(const Affinef& afp){ ptr SetProjectionMatrix(afp); }					\
 	virtual void GetProjectionMatrix(Affinef& afp){ ptr GetProjectionMatrix(afp); }							\
+	virtual void PushProjectionMatrix(){ ptr PushProjectionMatrix(); }										\
+	virtual void PopProjectionMatrix(){ ptr PopProjectionMatrix(); }										\
 	virtual void SetModelMatrix(const Affinef& afw){ ptr SetModelMatrix(afw); }								\
 	virtual void GetModelMatrix(Affinef& afw){ ptr SetModelMatrix(afw); }									\
 	virtual void MultModelMatrix(const Affinef& afw){ ptr MultModelMatrix(afw); }							\

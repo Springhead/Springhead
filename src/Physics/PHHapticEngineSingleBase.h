@@ -16,6 +16,7 @@ public:
 	virtual void Step2();
 	virtual void UpdateHapticPointer();
 	virtual void StepHapticLoop() {}
+	virtual void StepHapticSync() {}
 	PHHapticRender* GetHapticRender(){
 		return engine->hapticRender;
 	}

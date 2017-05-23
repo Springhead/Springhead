@@ -574,6 +574,9 @@ public:
 	/** @breif HapticLoopを更新する
 	*/
 	void StepHapticLoop();
+	/** @breif Physicsとの同期を取る StepHapticLoop()を呼ぶ度に呼び出す必要あり
+	*/
+	void StepHapticSync();
 };
 
 //@}

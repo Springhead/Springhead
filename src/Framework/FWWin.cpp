@@ -75,7 +75,10 @@ void FWWin::Display(){
 	if(!scene->GetGRScene() || !scene->GetGRScene()->GetCamera() || !scene->GetGRScene()->GetCamera()->GetFrame()){
 		render->SetViewMatrix(trackball->GetAffine().inv());
 	}
+	render->ClearBuffer();
+	render->BeginScene();
 	scene->Draw(render, debugMode);
+	render->EndScene();
 	render->SwapBuffers();
 }
 

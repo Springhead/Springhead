@@ -167,6 +167,7 @@ void FWHapticSample::TimerFunc(int id){
 			GetSdk()->GetScene()->UpdateHapticPointers();
 			if (!bPause) {
 				phscene->StepHapticLoop();
+				phscene->StepHapticSync();
 			}
 		}else{
 			PHHapticEngineIf* he = phscene->GetHapticEngine();
@@ -322,6 +323,7 @@ void FWHapticSample::Keyboard(int key, int x, int y){
 		{
 			static int count;
 			phscene->StepHapticLoop();
+			phscene->StepHapticSync();
 			if (count %20 == 0) phscene->GetHapticEngine()->StepPhysicsSimulation();
 			count++;
 			break;

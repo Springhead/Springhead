@@ -326,6 +326,8 @@ struct GRRenderBaseIf: public ObjectIf{
 	void SetProjectionMatrix(const Affinef& afp);
 	///	カレントの投影行列を取得する
 	void GetProjectionMatrix(Affinef& afp);
+	void PushProjectionMatrix();																	\
+	void PopProjectionMatrix();																		\
 	///	カレントのモデル行列をafwで置き換える
 	void SetModelMatrix(const Affinef& afw);
 	///	カレントのモデル行列を取得する
