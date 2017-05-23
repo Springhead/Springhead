@@ -652,8 +652,11 @@ PHHapticPointerIf* PHScene::CreateHapticPointer(){
 	return p->Cast();	
 }
 
-void PHScene::StepHapticLoop(){
-	if(hapticEngine) hapticEngine->StepHapticLoop();
+void PHScene::StepHapticLoop() {
+	if (hapticEngine) hapticEngine->StepHapticLoop();
+}
+void PHScene::StepHapticSync() {
+	if (hapticEngine) hapticEngine->StepHapticSync();
 }
 
 size_t PHScene::GetStateSize() const{

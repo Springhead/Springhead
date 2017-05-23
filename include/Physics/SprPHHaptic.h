@@ -77,7 +77,15 @@ struct PHShapePairForHapticIf : public ObjectIf {
 };
 struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	SPR_IFDEF(PHSolidPairForHaptic);
+	enum FrictionState {
+		FREE,
+		STATIC,
+		DYNAMIC,
+	};
 	PHShapePairForHapticIf* GetShapePair(int i, int j);
+	FrictionState GetFrictionState();
+	unsigned GetContactCount();
+	unsigned GetFrictionCount();
 };
 
 struct PHHapticEngineDesc {

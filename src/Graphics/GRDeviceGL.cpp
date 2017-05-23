@@ -145,7 +145,7 @@ void GRDeviceGL::BeginScene(){
 }
 /// レンダリングの終了後に呼ぶ関数
 void GRDeviceGL::EndScene(){
-	glFinish();
+	//glFinish();		GLの処理が終わるまで待つ必要はないので、コメントにしました。Swapbufferの前に呼ぶ必要はないです。
 }
 ///	カレントの視点行列をafvで置き換える
 void GRDeviceGL::SetViewMatrix(const Affinef& afv){   
@@ -201,6 +201,18 @@ void GRDeviceGL::PopModelMatrix(){
 
 	CalcShadowMatrix();
 }
+
+void GRDeviceGL::PushProjectionMatrix() {
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+}
+/// モデル行列スタックから取り出し、カレントのモデル行列とする
+void GRDeviceGL::PopProjectionMatrix() {
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+}
+
 /// ブレンド変換行列の全要素を削除する
 /*void GRDeviceGL::ClearBlendMatrix(){
 	blendMatrix.clear();

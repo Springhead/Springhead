@@ -260,16 +260,11 @@ void FWScene::Draw(GRRenderIf* render, bool debug){
 	Draw(render);
 }
 void FWScene::Draw(GRRenderIf* render){
-	render->ClearBuffer();
-	render->BeginScene();
-
-	
 	if (renderPHScene) DrawPHScene(render);
 	if (renderGRScene && GetGRScene()){
 		Sync();
 		GetGRScene()->Render(render);
 	}
-	render->EndScene();
 }
 
 /// シーン内の全てのオブジェクトをレンダリングする

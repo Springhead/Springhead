@@ -13,9 +13,6 @@
 #include "../Foundation/Object.h"
 #include "PHScene.h"
 
-//For multiFEM
-#include <Physics\RingBuffer.h>
-
 namespace Spr{;
 using namespace PTM;
 
@@ -239,7 +236,7 @@ public:
 	bool *contactVector;	//saves the contact configuration of the scene
 	int femIndex;			//stores the fem loading Index
 	KDVertex* root;         //stores the KDTree root  
-	RingBuffer* ringVel;    //ring buffer to save the instant vel 
+	RingBuffer<Vec3d>* ringVel;    //ring buffer to save the instant vel 
 	bool spheric;			//indicates the shape of the model (from SPR file)
 
 

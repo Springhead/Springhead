@@ -52,6 +52,7 @@ protected:
 public:
 	PHHapticEngineMultiBase();
 	virtual void StepHapticLoop();	// hapticloop
+	virtual void StepHapticSync();	// hapticloop
 	virtual void Step1(){}
 	virtual void Step2(){}
 	virtual void SyncThreads();

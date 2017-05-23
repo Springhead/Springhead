@@ -108,11 +108,7 @@ struct PHSolidPairForHapticSt{
 
 	Vec3d contactVibrationVel;
 	Vec3d lastStaticFrictionForce;
-	enum FrictionState{
-		FREE,
-		STATIC,
-		DYNAMIC,
-	} frictionState;
+	PHSolidPairForHapticIf::FrictionState  frictionState;
 };
 
 class PHSolidPairForHaptic : public PHSolidPairForHapticSt, public PHSolidPair/*< PHShapePairForHaptic, PHHapticEngine >*/{
@@ -131,6 +127,9 @@ public:
 	virtual PHShapePairForHaptic* CreateShapePair(){ return DBG_NEW PHShapePairForHaptic(); }
 	PHShapePairForHapticIf*       GetShapePair(int i, int j){ return (PHShapePairForHapticIf*)&*shapePairs.item(i,j); }
 	const PHShapePairForHapticIf* GetShapePair(int i, int j) const { return (const PHShapePairForHapticIf*)&*shapePairs.item(i,j); }
+	PHSolidPairForHapticIf::FrictionState GetFrictionState() { return frictionState; }
+	unsigned GetContactCount() { return contactCount;  }
+	unsigned GetFrictionCount() { return fricCount; }
 
 	/// 交差が検知された後の処理
 	virtual void  OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
@@ -152,8 +151,8 @@ public:
 	PHHapticEngineImp(){}
 	virtual void Step1(){};
 	virtual void Step2(){};
-	virtual void StepHapticLoop()=0;
-
+	virtual void StepHapticLoop() = 0;
+	virtual void StepHapticSync() = 0;
 	double GetPhysicsTimeStep();
 	double GetHapticTimeStep();
 
@@ -245,7 +244,8 @@ public:
 	virtual void Step(){ if(bEnabled && bPhysicStep) engineImp->Step1(); }
 	virtual void Step2(){ if(bEnabled && bPhysicStep) engineImp->Step2(); }
 	///< 力覚ループの更新	
-	virtual void StepHapticLoop(){ if(bEnabled) engineImp->StepHapticLoop(); }
+	virtual void StepHapticLoop() { if (bEnabled) engineImp->StepHapticLoop(); }
+	virtual void StepHapticSync() { if (bEnabled) engineImp->StepHapticSync(); }
 
 	///< 力覚レンダリング用の衝突判定開始
 	virtual void StartDetection();

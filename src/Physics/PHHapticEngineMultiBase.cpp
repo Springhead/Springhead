@@ -55,6 +55,8 @@ PHHapticEngineMultiBase::PHHapticEngineMultiBase(){
 
 void PHHapticEngineMultiBase::StepHapticLoop(){
 	hapticLoop->Step();
+}
+void PHHapticEngineMultiBase::StepHapticSync() {
 	SyncThreads();
 }
 

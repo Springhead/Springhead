@@ -218,7 +218,8 @@ public:
 	void					IntegratePart2();
 	
 	void					StepHapticLoop();
-	
+	void					StepHapticSync();
+
 	int						NEngines();
 	PHEngineIf*				GetEngine(int i);
 	PHConstraintEngineIf*	GetConstraintEngine();

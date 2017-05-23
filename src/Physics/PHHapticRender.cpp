@@ -312,18 +312,18 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 	double alpha = hdt * hdt * pointer->GetMassInv() * pointer->reflexSpring;
 	//	摩擦係数の計算
 	if (pointer->bTimeVaryFriction) {
-		if (sp->frictionState == sp->STATIC) {
+		if (sp->frictionState == PHSolidPairForHapticIf::STATIC) {
 			sh->muCur = sh->mu + sh->mu*(sh->timeVaryFrictionA * log(1 + sh->timeVaryFrictionB * (sp->fricCount + 1) * hdt));
 		}
 	}
 	else {
 		sh->muCur = sh->mu;
-		if (sp->frictionState == sp->STATIC) sh->muCur = sh->mu0;
+		if (sp->frictionState == PHSolidPairForHapticIf::STATIC) sh->muCur = sh->mu0;
 	}
 	
 	for (int i = 0; i < Nirs; i++) {
 		PHIr* ir = sh->irs[i];
-		if (pointer->bTimeVaryFriction && sp->frictionState == sp->DYNAMIC) {
+		if (pointer->bTimeVaryFriction && sp->frictionState == PHSolidPairForHapticIf::DYNAMIC) {
 			double v = (ir->pointerPointVel - ir->contactPointVel).norm();
 			v = std::max(v, sh->timeVaryFrictionC / hdt);
 			//	速度と粘性摩擦を含める
@@ -379,17 +379,17 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 	}
 	sp->fricCount++;
 	if (!bStatic) {
-		if (sp->frictionState != sp->DYNAMIC) {
+		if (sp->frictionState != PHSolidPairForHapticIf::DYNAMIC) {
 			std::cout << " S:" << sp->fricCount;
 			sp->fricCount = 0;
-			sp->frictionState = sp->DYNAMIC;
+			sp->frictionState = PHSolidPairForHapticIf::DYNAMIC;
 		}
 	}
 	else {
-		if (sp->frictionState != sp->STATIC) {
+		if (sp->frictionState != PHSolidPairForHapticIf::STATIC) {
 			std::cout << " D:" << sp->fricCount << std::endl;
 			sp->fricCount = 0;
-			sp->frictionState = sp->STATIC;
+			sp->frictionState = PHSolidPairForHapticIf::STATIC;
 		}
 	}
 	return true;
@@ -426,8 +426,8 @@ void PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNor
 		}
 		// 接触したとして摩擦計算のための相対位置を計算
 		// 相対摩擦
-		if (sp->frictionState == PHSolidPairForHaptic::FREE) {
-			sp->frictionState = PHSolidPairForHaptic::STATIC;
+		if (sp->frictionState == PHSolidPairForHapticIf::FREE) {
+			sp->frictionState = PHSolidPairForHapticIf::STATIC;
 			sp->contactCount = 0;
 			sp->fricCount = 0;
 			sp->initialRelativePose = pointer->GetPose() * sp->interpolationPose.Inv();
@@ -463,7 +463,7 @@ void PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNor
 		}
 		if (!bContact) {
 			// 接触なし
-			sp->frictionState = PHSolidPairForHaptic::FREE;
+			sp->frictionState = PHSolidPairForHapticIf::FREE;
 			sp->initialRelativePose = Posed();
 			sp->relativePose = Posed();
 		}
@@ -542,7 +542,7 @@ void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
 		//	摩擦振動提示の大きさに使うため、SolidPairに摩擦力の合計を計算して記録する
 		if (irsFric.size()) {
 			PHSolidPairForHaptic* sp = irsFric[0]->solidPair;
-			if (sp->frictionState == sp->STATIC) {
+			if (sp->frictionState == PHSolidPairForHapticIf::STATIC) {
 				sp->lastStaticFrictionForce.clear();
 				for (size_t i = 0; i < irsFric.size(); i++) {
 					sp->lastStaticFrictionForce += irsFric[i]->force;
@@ -567,7 +567,7 @@ void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 		int solidID = pointer->neighborSolidIDs[j];
 		PHSolidPairForHaptic* sp = sps->item(solidID, pointer->GetPointerID());
 		PHSolid* solid = hsolids->at(solidID)->GetLocalSolid(); 
-		if(sp->frictionState == sp->FREE) continue;
+		if(sp->frictionState == PHSolidPairForHapticIf::FREE) continue;
 		if(sp->contactCount == 0){
 			sp->contactVibrationVel = pointer->GetVelocity() - solid->GetVelocity();
 		}
@@ -580,7 +580,7 @@ void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 		SpatialVector vibForce;
 		// 法線方向に射影する必要がある？
 		vibForce.v() = vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
-		if (sp->frictionState == sp->DYNAMIC) {
+		if (sp->frictionState == PHSolidPairForHapticIf::DYNAMIC) {
 			Vec3d vibV = sp->lastStaticFrictionForce * hdt * pointer->GetMassInv() * 0.3;	//	0.3は謎係数。ないと接触の振動に対して強すぎてしまう。
 			double vibT = sp->fricCount * hdt;
 			vibForce.v() += vibA * vibV * exp(-vibB * vibT) * sin(2 * M_PI * vibW * vibT) / pointer->GetPosScale();		//振動計算
