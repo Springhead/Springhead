@@ -15,6 +15,8 @@ TARGET_LIB	:= lib$(TARGET_NAME).a
 
 SRCS		= $(wildcard *.cpp)
 OBJS 		= ${SRCS:.cpp=.o}
+
+CXXFLAGS	= -Wno-unused-function
 	
 
 ################################################################
