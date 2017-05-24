@@ -392,7 +392,7 @@ public:
 		buffer[local_write] = element;
 		write_index = local_write;
 	}
-	void RingBuffer::GetLastOne(T& t)
+	void GetLastOne(T& t)
 	{
 		volatile size_t local_write;
 		local_write = write_index;

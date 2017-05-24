@@ -11,6 +11,9 @@
 #include <algorithm>
 #include <tuple>
 #include <vector>
+#ifndef	_WIN32
+  #include <float.h>
+#endif
 
 namespace Spr{;
 
@@ -210,21 +213,21 @@ protected:
 	int	type;
 
 	// 点の配列．常にtの昇順に並ぶ．
-	std::vector<Point>	points;
+	std::vector<struct Point>	points;
 
 	struct CompByTime{
-		bool operator()(const Point& lhs, const Point& rhs){
+		bool operator()(const struct Point& lhs, const struct Point& rhs){
 			return lhs.t < rhs.t;
 		}
 	};
 	struct CompByID{
-		bool operator()(const Point& lhs, const Point& rhs){
+		bool operator()(const struct Point& lhs, const struct Point& rhs){
 			return lhs.id < rhs.id;
 		}
 	};
 	struct CheckID{
 		int id;
-		bool operator()(const Point& p){
+		bool operator()(const struct Point& p){
 			return p.id == id;
 		}
 		CheckID(int _id):id(_id){}
@@ -256,7 +259,7 @@ public:
 
 	/// IDからインデックスを取得
 	int	IndexFromID(int id){
-		vector<Point>::iterator it = find_if(points.begin(), points.end(), CheckID(id));
+		typename std::vector<struct Point>::iterator it = find_if(points.begin(), points.end(), CheckID(id));
 		if(it == points.end())
 			return -1;
 		return it - points.begin();
@@ -316,32 +319,36 @@ public:
 template<class V, class T>
 class TCurveEuclid : public TCurve<V, V, T>{
 public:
+	typedef V	pos_t;
+	typedef V	vel_t;
+	typedef T	real_t;
+
 	pos_t	CalcPos(real_t t){
 		int i0, i1;
 		std::tie(i0, i1) = GetSegment(t);
-		Point& p0 = points[i0];
-		Point& p1 = points[i1];
-		return InterpolatePos(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, type);
+		struct Point& p0 = TCurve<V,V,T>::points[i0];
+		struct Point& p1 = TCurve<V,V,T>::points[i1];
+		return InterpolatePos(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<V,V,T>::type);
 	}
 
 	vel_t	CalcVel(real_t t){
 		int i0, i1;
 		std::tie(i0, i1) = GetSegment(t);
-		Point& p0 = points[i0];
-		Point& p1 = points[i1];
-		return InterpolateVel(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, type);
+		struct Point& p0 = TCurve<V,V,T>::points[i0];
+		struct Point& p1 = TCurve<V,V,T>::points[i1];
+		return InterpolateVel(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<V,V,T>::type);
 	}
 
-	vel_t	CalcAcc(real_t){
+	vel_t	CalcAcc(real_t t){
 		int i0, i1;
 		std::tie(i0, i1) = GetSegment(t);
-		Point& p0 = points[i0];
-		Point& p1 = points[i1];
-		return InterpolateAcc(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, type);
+		struct Point& p0 = TCurve<V,V,T>::points[i0];
+		struct Point& p1 = TCurve<V,V,T>::points[i1];
+		return InterpolateAcc(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<V,V,T>::type);
 	}
 
 	TCurveEuclid(){
-		type = Interpolate::LinearDiff;
+		TCurve<V,V,T>::type = Interpolate::LinearDiff;
 	}
 };
 
@@ -352,32 +359,36 @@ public:
 template<class T>
 class TCurveQuat : public TCurve<TQuaternion<T>, TVec3<T>, T>{
 public:
+	typedef TQuaternion<T>	pos_t;
+	typedef TVec3<T>	vel_t;
+	typedef T	real_t;
+
 	pos_t	CalcPos(real_t t){
 		int i0, i1;
 		std::tie(i0, i1) = GetSegment(t);
-		Point& p0 = points[i0];
-		Point& p1 = points[i1];
-		return InterpolateOri(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, type);
+		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i0];
+		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i1];
+		return InterpolateOri(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<TQuaternion<T>,TVec3<T>,T>::type);
 	}
 
 	vel_t	CalcVel(real_t t){
 		int i0, i1;
 		std::tie(i0, i1) = GetSegment(t);
-		Point& p0 = points[i0];
-		Point& p1 = points[i1];
-		return InterpolateAngvel(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, type);
+		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i0];
+		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i1];
+		return InterpolateAngvel(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<TQuaternion<T>,TVec3<T>,T>::type);
 	}
 
-	vel_t	CalcAcc(real_t){
+	vel_t	CalcAcc(real_t t){
 		int i0, i1;
 		std::tie(i0, i1) = GetSegment(t);
-		Point& p0 = points[i0];
-		Point& p1 = points[i1];
-		return InterpolateAngacc(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, type);
+		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i0];
+		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i1];
+		return InterpolateAngacc(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<TQuaternion<T>,TVec3<T>,T>::type);
 	}
 
 	TCurveQuat(){
-		type = SLERP_DIFF;
+		TCurve<TQuaternion<T>,TVec3<T>,T>::type = SLERP_DIFF;
 	}
 };
 
