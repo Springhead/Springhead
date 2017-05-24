@@ -108,6 +108,7 @@ public:
 	// インタフェースの実装
 	Posed     GetPose();
 	void      SetPose(Posed p);
+	CDShapeIf* GetShape() { return (CDShapeIf*)shape; }
 
 	// Objectの仮想関数
 	virtual ObjectIf* GetChildObject(size_t pos);

@@ -80,6 +80,7 @@ public:
 
 	PHShapePairForHaptic();
 	void Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1);
+	void UpdateCache();
 	/// 接触判定．近傍点対を常時更新
 	virtual bool Detect(unsigned ct, const Posed& pose0, const Posed& pose1);
 	/// 接触時の判定
