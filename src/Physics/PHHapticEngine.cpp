@@ -39,6 +39,9 @@ PHShapePairForHaptic::PHShapePairForHaptic(){
 }
 void PHShapePairForHaptic::Init(PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1) {
 	PHShapePair::Init(sp, fr0, fr1);
+	UpdateCache();
+}
+void PHShapePairForHaptic::UpdateCache() {
 	springK = (shape[0]->GetReflexSpring() + shape[1]->GetReflexSpring()) * 0.5;
 	damperD = (shape[0]->GetReflexDamper() + shape[1]->GetReflexDamper()) * 0.5;
 	mu = (shape[0]->GetDynamicFriction() + shape[1]->GetDynamicFriction()) * 0.5;

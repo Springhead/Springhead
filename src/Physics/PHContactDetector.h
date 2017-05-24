@@ -31,6 +31,7 @@ public:
 	void Init (PHSolidPair* sp, PHFrame* fr0, PHFrame* fr1);
 	void SetSt(const CDShapePairSt& s){ *((CDShapePairSt*)this) = s; }
 	void GetSt(      CDShapePairSt& s){ s = *this; }
+	PHFrameIf* GetFrame(int i) { return (PHFrameIf*)frame[i]; }
 };
 
 /// 剛体の組の状態

@@ -74,6 +74,8 @@ struct PHShapePairForHapticIf : public ObjectIf {
 	int NIrsNormal();
 	Vec3d GetIrForce(int i);
 	double GetMu();
+	PHFrameIf* GetFrame(int i);
+	void UpdateCache();
 };
 struct PHSolidPairForHapticIf : public PHSolidPairIf {
 	SPR_IFDEF(PHSolidPairForHaptic);

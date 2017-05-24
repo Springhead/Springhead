@@ -22,11 +22,13 @@ namespace Spr{;
 struct PHFrameDesc{
 	Posed pose;		///< 剛体に対する位置と向き
 };
+struct CDShapeIf;
 struct PHFrameIf: public SceneObjectIf{
 	SPR_IFDEF(PHFrame);
 
 	Posed GetPose();
 	void  SetPose(Posed p);
+	CDShapeIf* GetShape();
 };
 
 ///	剛体のステート
