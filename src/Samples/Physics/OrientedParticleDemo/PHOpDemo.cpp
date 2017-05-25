@@ -547,7 +547,7 @@ void PHOpDemo::Display()
 
 
 
-	FWApp::OnDisplay();
+//	FWApp::OnDisplay();
 }
 void PHOpDemo::MouseButton(int button, int state, int x, int y)
 {
