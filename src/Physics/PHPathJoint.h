@@ -11,7 +11,6 @@
 #include <Physics/SprPHJoint.h>
 #include <Physics/PHConstraint.h>
 #include <Physics/PHTreeNode.h>
-#include <Physics/PHSpatial.h>
 
 namespace Spr{;
 

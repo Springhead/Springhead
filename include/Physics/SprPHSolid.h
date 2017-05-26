@@ -13,6 +13,7 @@
 #define SPR_PHSolidIf_H
 
 #include <Foundation/SprObject.h>
+#include <Base/Spatial.h>
 
 /**	\addtogroup gpPhysics	*/
 //@{

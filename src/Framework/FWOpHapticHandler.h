@@ -12,8 +12,6 @@
 #include <HumanInterface\SprHIKeyMouse.h>
 #include <HumanInterface\SprHISdk.h>
 #include <Physics\PHOpHapticController.h>
-#include <Physics\PHSpatial.h>
-//#include <Physics\SprPHEngine.h>
 #include <Framework/SprFWOpHapticHandler.h>
 
 namespace Spr {

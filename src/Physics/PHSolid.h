@@ -11,7 +11,6 @@
 #include <Physics/SprPHSolid.h>
 #include <Collision/SprCDShape.h>
 #include "../Physics/PHEngine.h"
-#include "../Physics/PHSpatial.h"
 #include "../Foundation/Object.h"
 
 namespace Spr{;

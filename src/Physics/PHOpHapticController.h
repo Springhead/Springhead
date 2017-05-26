@@ -5,7 +5,6 @@
 //#include <HumanInterface\SprHISpidar.h>
 #include <Physics\PHOpObj.h>
 #include <sstream>
-#include <Physics\PHSpatial.h>
 //#include "HumanInterface\SprHIDRUsb.h"
 //#include "HumanInterface\SprHIKeyMouse.h"
 //#include "HumanInterface\SprHISdk.h"
