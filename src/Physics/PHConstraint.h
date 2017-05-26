@@ -10,7 +10,6 @@
 
 #include <SprDefs.h>
 #include "PHContactDetector.h"
-#include "PHSpatial.h"
 #include "PHAxisIndex.h"
 
 #include <vector>

@@ -11,8 +11,6 @@
 #include "CDQuickHull3DImp.h"
 #include "CDConvex.h"
 
-#include "../Physics/PHSpatial.h"	//	PHSpacial.hをBaseかFoundationに移動することを希望
-
 namespace Spr {;
 
 #define CD_EPSILON	HULL_EPSILON

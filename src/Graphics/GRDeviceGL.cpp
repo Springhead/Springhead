@@ -656,8 +656,6 @@ void GRDeviceGL::DrawFont(Vec3f pos, const std::string str){
 		glPopAttrib();
 	}
 	else{
-		glColor3f(1.0f, 1.0f, 1.0f);		// 白限定（暫定）
-		//glColor3f(0.0f, 0.0f, 0.0f);		// 黒限定（暫定）
 		glRasterPos3fv(pos);
 		std::string::const_iterator iter;
 		for (iter = str.begin(); iter != str.end();	++iter) {

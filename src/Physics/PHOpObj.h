@@ -4,7 +4,6 @@
 #include <Physics/SprPHOpObj.h>
 #include <Collision/SprCDShape.h>
 #include <Physics/PHEngine.h>
-#include <Physics/PHSpatial.h>
 #include <Foundation/Object.h>
 #ifdef USEGRMESH
 #include <Graphics\GRMesh.h>
