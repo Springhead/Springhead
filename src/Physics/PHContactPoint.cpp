@@ -118,11 +118,13 @@ void PHContactPoint::CompBias(){
 bool PHContactPoint::Projection(double& f_, int i) {
 	PHConstraint::Projection(f_, i);
 	if(i == 0){	
+#if 0	// hase:以下があると、0になった瞬間重力分落ちてしまうため振動する。特に数センチの物体のシミュレーションで支障あり。
 		// 接触深度が許容値以下なら反力を出さない
 		if(shapePair->depth < GetScene()->GetContactTolerance()){
 			f_ = fx = flim = 0.0;
 			return true;
 		}
+#endif
 		//垂直抗力 >= 0の制約
 		if(f_ < 0.0){
 			f_ = fx = flim = 0.0;
