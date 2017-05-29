@@ -9,7 +9,7 @@
 ################################################################
 TOP_DIR 	= ../..
 include 	$(TOP_DIR)/make.header
-TARGET_DIR  := $(shell env pwd)
+TARGET_DIR	:= $(shell env pwd)
 TARGET_NAME	:= $(shell env basename $(TARGET_DIR))
 TARGET_LIB	:= lib$(TARGET_NAME).a
 
@@ -26,9 +26,9 @@ CXXFLAGS	= -Wno-unused-function
 all: $(TARGET_LIB)
 
 $(TARGET_LIB): $(OBJS)
-		-$(RM) $@
-		$(AR) $(ARFLAGS) $@ $(OBJS)	
-		$(RANLIB) $@
+	-$(RM) $@
+	$(AR) $(ARFLAGS) $@ $(OBJS)	
+	$(RANLIB) $@
 	
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
