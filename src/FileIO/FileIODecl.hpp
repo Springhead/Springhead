@@ -1,3 +1,18 @@
+#define SPR_DECLMEMBEROF_ImportDesc \
+protected:\
+	std::string	path;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		path = ((ImportDesc*)ptr)->path;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((ImportDesc*)ptr)->path = path;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_FIFileSprDesc \
 protected:\
 public:\
@@ -55,21 +70,6 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_ImportDesc \
-protected:\
-	std::string	path;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		path = ((ImportDesc*)ptr)->path;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((ImportDesc*)ptr)->path = path;	\
 		return true;	\
 	}\
 

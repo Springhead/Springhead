@@ -253,7 +253,7 @@ public:
 	///	組立型から抜る(fieldItsとdatasをPopする）
 	void CompositEnd();
 	///	現在ロード中のノードから指定のフィールドをさがす。
-	bool UTLoadContext::FindField(UTString name);
+	bool FindField(UTString name);
 	///
 	void WriteString(std::string v);
 	///

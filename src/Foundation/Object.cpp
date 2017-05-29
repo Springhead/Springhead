@@ -11,6 +11,8 @@
 #include <sstream>
 #include <iomanip>
 
+#include <string.h>  // strcmp
+
 namespace Spr {;
 
 struct MemCheck{

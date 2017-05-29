@@ -45,7 +45,8 @@ from Error import *
 #  Constants
 #
 prog = sys.argv[0].split('\\')[-1].split('.')[0]
-python_version = 34
+#python_version = 34
+python_version = 3
 verbose = 1 if debug else 0
 dry_run = 1 if debug else 0
 
@@ -63,7 +64,8 @@ spr2top = U.pathconv(os.path.relpath(spr2), 'unix')
 incdir = '%s/%s' % (spr2top, 'include')
 srcdir = '%s/%s' % (spr2top, 'src')
 bindir = '%s/%s' % (spr2top, 'bin')
-pythondir = '%s/Python%s' % (bindir, python_version)
+#pythondir = '%s/Python%s' % (bindir, python_version)
+pythondir = '/usr/bin'
 swigdir = '%s/swig' % bindir
 foundation_dir = '%s/%s' % (srcdir, 'Foundation')
 framework_dir = '%s/%s' % (srcdir, 'Framework')

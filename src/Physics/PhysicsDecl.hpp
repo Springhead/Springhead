@@ -1,557 +1,62 @@
-#define SPR_DECLMEMBEROF_PHConstraintEngineDesc \
+#define SPR_DECLMEMBEROF_PHFrameDesc \
 protected:\
-	int	method;	\
-	int	numIter;	\
-	int	numIterCorrection;	\
-	int	numIterContactCorrection;	\
-	double	velCorrectionRate;	\
-	double	posCorrectionRate;	\
-	double	contactCorrectionRate;	\
-	double	shrinkRate;	\
-	double	shrinkRateCorrection;	\
-	double	freezeThreshold;	\
-	double	accelSOR;	\
-	double	dfEps;	\
-	bool	bSaveConstraints;	\
-	bool	bUpdateAllState;	\
-	bool	bUseContactSurface;	\
-	bool	bReport;	\
+	Posed	pose;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
-		method = ((PHConstraintEngineDesc*)ptr)->method;	\
-		numIter = ((PHConstraintEngineDesc*)ptr)->numIter;	\
-		numIterCorrection = ((PHConstraintEngineDesc*)ptr)->numIterCorrection;	\
-		numIterContactCorrection = ((PHConstraintEngineDesc*)ptr)->numIterContactCorrection;	\
-		velCorrectionRate = ((PHConstraintEngineDesc*)ptr)->velCorrectionRate;	\
-		posCorrectionRate = ((PHConstraintEngineDesc*)ptr)->posCorrectionRate;	\
-		contactCorrectionRate = ((PHConstraintEngineDesc*)ptr)->contactCorrectionRate;	\
-		shrinkRate = ((PHConstraintEngineDesc*)ptr)->shrinkRate;	\
-		shrinkRateCorrection = ((PHConstraintEngineDesc*)ptr)->shrinkRateCorrection;	\
-		freezeThreshold = ((PHConstraintEngineDesc*)ptr)->freezeThreshold;	\
-		accelSOR = ((PHConstraintEngineDesc*)ptr)->accelSOR;	\
-		dfEps = ((PHConstraintEngineDesc*)ptr)->dfEps;	\
-		bSaveConstraints = ((PHConstraintEngineDesc*)ptr)->bSaveConstraints;	\
-		bUpdateAllState = ((PHConstraintEngineDesc*)ptr)->bUpdateAllState;	\
-		bUseContactSurface = ((PHConstraintEngineDesc*)ptr)->bUseContactSurface;	\
-		bReport = ((PHConstraintEngineDesc*)ptr)->bReport;	\
+		pose = ((PHFrameDesc*)ptr)->pose;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		((PHConstraintEngineDesc*)ptr)->method = method;	\
-		((PHConstraintEngineDesc*)ptr)->numIter = numIter;	\
-		((PHConstraintEngineDesc*)ptr)->numIterCorrection = numIterCorrection;	\
-		((PHConstraintEngineDesc*)ptr)->numIterContactCorrection = numIterContactCorrection;	\
-		((PHConstraintEngineDesc*)ptr)->velCorrectionRate = velCorrectionRate;	\
-		((PHConstraintEngineDesc*)ptr)->posCorrectionRate = posCorrectionRate;	\
-		((PHConstraintEngineDesc*)ptr)->contactCorrectionRate = contactCorrectionRate;	\
-		((PHConstraintEngineDesc*)ptr)->shrinkRate = shrinkRate;	\
-		((PHConstraintEngineDesc*)ptr)->shrinkRateCorrection = shrinkRateCorrection;	\
-		((PHConstraintEngineDesc*)ptr)->freezeThreshold = freezeThreshold;	\
-		((PHConstraintEngineDesc*)ptr)->accelSOR = accelSOR;	\
-		((PHConstraintEngineDesc*)ptr)->dfEps = dfEps;	\
-		((PHConstraintEngineDesc*)ptr)->bSaveConstraints = bSaveConstraints;	\
-		((PHConstraintEngineDesc*)ptr)->bUpdateAllState = bUpdateAllState;	\
-		((PHConstraintEngineDesc*)ptr)->bUseContactSurface = bUseContactSurface;	\
-		((PHConstraintEngineDesc*)ptr)->bReport = bReport;	\
+		((PHFrameDesc*)ptr)->pose = pose;	\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHIKEngineDesc \
+#define SPR_DECLMEMBEROF_PHSolidState \
 protected:\
-	size_t	numIter;	\
-	double	maxVel;	\
-	double	maxAngVel;	\
-	double	maxActVel;	\
-	double	regularizeParam;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		numIter = ((PHIKEngineDesc*)ptr)->numIter;	\
-		maxVel = ((PHIKEngineDesc*)ptr)->maxVel;	\
-		maxAngVel = ((PHIKEngineDesc*)ptr)->maxAngVel;	\
-		maxActVel = ((PHIKEngineDesc*)ptr)->maxActVel;	\
-		regularizeParam = ((PHIKEngineDesc*)ptr)->regularizeParam;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((PHIKEngineDesc*)ptr)->numIter = numIter;	\
-		((PHIKEngineDesc*)ptr)->maxVel = maxVel;	\
-		((PHIKEngineDesc*)ptr)->maxAngVel = maxAngVel;	\
-		((PHIKEngineDesc*)ptr)->maxActVel = maxActVel;	\
-		((PHIKEngineDesc*)ptr)->regularizeParam = regularizeParam;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHFemMeshState \
-protected:\
+	Vec3d	velocity;	\
+	Vec3d	angVelocity;	\
+	Posed	pose;	\
 public:\
 	virtual void SetState(const void* ptr){ \
+		velocity = ((PHSolidState*)ptr)->velocity;	\
+		angVelocity = ((PHSolidState*)ptr)->angVelocity;	\
+		pose = ((PHSolidState*)ptr)->pose;	\
 	}\
 	virtual bool GetState(void* ptr) const { \
+		((PHSolidState*)ptr)->velocity = velocity;	\
+		((PHSolidState*)ptr)->angVelocity = angVelocity;	\
+		((PHSolidState*)ptr)->pose = pose;	\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHFemMeshDesc \
+#define SPR_DECLMEMBEROF_PHSolidDesc \
 protected:\
-	std::vector< Vec3d >	vertices;	\
-	std::vector< int >	tets;	\
-	std::vector< int >	faces;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHFemMesh::SetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
-		vertices = ((PHFemMeshDesc*)ptr)->vertices;	\
-		tets = ((PHFemMeshDesc*)ptr)->tets;	\
-		faces = ((PHFemMeshDesc*)ptr)->faces;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHFemMesh::GetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
-		((PHFemMeshDesc*)ptr)->vertices = vertices;	\
-		((PHFemMeshDesc*)ptr)->tets = tets;	\
-		((PHFemMeshDesc*)ptr)->faces = faces;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHFemMeshThermoDesc \
-protected:\
-	double	rho;	\
-	double	thConduct;	\
-	double	thConduct_x;	\
-	double	thConduct_y;	\
-	double	thConduct_z;	\
-	double	heatTrans;	\
-	double	specificHeat;	\
-	double	radiantHeat;	\
-	double	initial_temp;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHFemMesh::SetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
-		rho = ((PHFemMeshThermoDesc*)ptr)->rho;	\
-		thConduct = ((PHFemMeshThermoDesc*)ptr)->thConduct;	\
-		thConduct_x = ((PHFemMeshThermoDesc*)ptr)->thConduct_x;	\
-		thConduct_y = ((PHFemMeshThermoDesc*)ptr)->thConduct_y;	\
-		thConduct_z = ((PHFemMeshThermoDesc*)ptr)->thConduct_z;	\
-		heatTrans = ((PHFemMeshThermoDesc*)ptr)->heatTrans;	\
-		specificHeat = ((PHFemMeshThermoDesc*)ptr)->specificHeat;	\
-		radiantHeat = ((PHFemMeshThermoDesc*)ptr)->radiantHeat;	\
-		initial_temp = ((PHFemMeshThermoDesc*)ptr)->initial_temp;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHFemMesh::GetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
-		((PHFemMeshThermoDesc*)ptr)->rho = rho;	\
-		((PHFemMeshThermoDesc*)ptr)->thConduct = thConduct;	\
-		((PHFemMeshThermoDesc*)ptr)->thConduct_x = thConduct_x;	\
-		((PHFemMeshThermoDesc*)ptr)->thConduct_y = thConduct_y;	\
-		((PHFemMeshThermoDesc*)ptr)->thConduct_z = thConduct_z;	\
-		((PHFemMeshThermoDesc*)ptr)->heatTrans = heatTrans;	\
-		((PHFemMeshThermoDesc*)ptr)->specificHeat = specificHeat;	\
-		((PHFemMeshThermoDesc*)ptr)->radiantHeat = radiantHeat;	\
-		((PHFemMeshThermoDesc*)ptr)->initial_temp = initial_temp;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHFemMeshNewState \
-protected:\
-public:\
-	virtual void SetState(const void* ptr){ \
-	}\
-	virtual bool GetState(void* ptr) const { \
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHFemMeshNewDesc \
-protected:\
-	std::vector< Vec3d >	vertices;	\
-	std::vector< int >	tets;	\
-	std::vector< int >	faces;	\
-	bool	spheric;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHFemMeshNew::SetState((PHFemMeshNewState*)(PHFemMeshNewDesc*)ptr);	\
-		vertices = ((PHFemMeshNewDesc*)ptr)->vertices;	\
-		tets = ((PHFemMeshNewDesc*)ptr)->tets;	\
-		faces = ((PHFemMeshNewDesc*)ptr)->faces;	\
-		spheric = ((PHFemMeshNewDesc*)ptr)->spheric;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHFemMeshNew::GetState((PHFemMeshNewState*)(PHFemMeshNewDesc*)ptr);	\
-		((PHFemMeshNewDesc*)ptr)->vertices = vertices;	\
-		((PHFemMeshNewDesc*)ptr)->tets = tets;	\
-		((PHFemMeshNewDesc*)ptr)->faces = faces;	\
-		((PHFemMeshNewDesc*)ptr)->spheric = spheric;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHFemBaseDesc \
-protected:\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHFemVibrationDesc \
-protected:\
-	double	young;	\
-	double	poisson;	\
-	double	density;	\
-	double	alpha;	\
-	double	beta;	\
-	std::vector< int >	fixedVertices;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHFemBase::SetDesc((PHFemBaseDesc*)(PHFemVibrationDesc*)ptr);	\
-		young = ((PHFemVibrationDesc*)ptr)->young;	\
-		poisson = ((PHFemVibrationDesc*)ptr)->poisson;	\
-		density = ((PHFemVibrationDesc*)ptr)->density;	\
-		alpha = ((PHFemVibrationDesc*)ptr)->alpha;	\
-		beta = ((PHFemVibrationDesc*)ptr)->beta;	\
-		fixedVertices = ((PHFemVibrationDesc*)ptr)->fixedVertices;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHFemBase::GetDesc((PHFemBaseDesc*)(PHFemVibrationDesc*)ptr);	\
-		((PHFemVibrationDesc*)ptr)->young = young;	\
-		((PHFemVibrationDesc*)ptr)->poisson = poisson;	\
-		((PHFemVibrationDesc*)ptr)->density = density;	\
-		((PHFemVibrationDesc*)ptr)->alpha = alpha;	\
-		((PHFemVibrationDesc*)ptr)->beta = beta;	\
-		((PHFemVibrationDesc*)ptr)->fixedVertices = fixedVertices;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHFemThermoDesc \
-protected:\
-	double	rho;	\
-	double	thConduct;	\
-	double	thConduct_x;	\
-	double	thConduct_y;	\
-	double	thConduct_z;	\
-	double	heatTrans;	\
-	double	specificHeat;	\
-	double	radiantHeat;	\
-	double	initial_temp;	\
-	double	weekPow_full;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHFemBase::SetDesc((PHFemBaseDesc*)(PHFemThermoDesc*)ptr);	\
-		rho = ((PHFemThermoDesc*)ptr)->rho;	\
-		thConduct = ((PHFemThermoDesc*)ptr)->thConduct;	\
-		thConduct_x = ((PHFemThermoDesc*)ptr)->thConduct_x;	\
-		thConduct_y = ((PHFemThermoDesc*)ptr)->thConduct_y;	\
-		thConduct_z = ((PHFemThermoDesc*)ptr)->thConduct_z;	\
-		heatTrans = ((PHFemThermoDesc*)ptr)->heatTrans;	\
-		specificHeat = ((PHFemThermoDesc*)ptr)->specificHeat;	\
-		radiantHeat = ((PHFemThermoDesc*)ptr)->radiantHeat;	\
-		initial_temp = ((PHFemThermoDesc*)ptr)->initial_temp;	\
-		weekPow_full = ((PHFemThermoDesc*)ptr)->weekPow_full;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHFemBase::GetDesc((PHFemBaseDesc*)(PHFemThermoDesc*)ptr);	\
-		((PHFemThermoDesc*)ptr)->rho = rho;	\
-		((PHFemThermoDesc*)ptr)->thConduct = thConduct;	\
-		((PHFemThermoDesc*)ptr)->thConduct_x = thConduct_x;	\
-		((PHFemThermoDesc*)ptr)->thConduct_y = thConduct_y;	\
-		((PHFemThermoDesc*)ptr)->thConduct_z = thConduct_z;	\
-		((PHFemThermoDesc*)ptr)->heatTrans = heatTrans;	\
-		((PHFemThermoDesc*)ptr)->specificHeat = specificHeat;	\
-		((PHFemThermoDesc*)ptr)->radiantHeat = radiantHeat;	\
-		((PHFemThermoDesc*)ptr)->initial_temp = initial_temp;	\
-		((PHFemThermoDesc*)ptr)->weekPow_full = weekPow_full;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHFemPorousWOMoveDesc \
-protected:\
-	double	wDiffAir;	\
-	double	K;	\
-	double	kc;	\
-	double	kp;	\
-	double	alpha;	\
-	double	gamma;	\
-	double	rhoWater;	\
-	double	rhoOil;	\
-	double	rhowInit;	\
-	double	rhooInit;	\
-	double	evapoRate;	\
-	double	denatTemp;	\
-	double	boundWaterRatio;	\
-	double	equilWaterCont;	\
-	double	limitWaterCont;	\
-	double	boundaryThick;	\
-	double	initMassAll;	\
-	double	initWaterRatio;	\
-	double	initOilRatio;	\
-	double	shrinkageRatio;	\
-	Vec3d	top;	\
+	double	mass;	\
+	Matrix3d	inertia;	\
 	Vec3d	center;	\
-	Vec3d	bottom;	\
+	bool	dynamical;	\
+	bool	stationary;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
-		PHFemBase::SetDesc((PHFemBaseDesc*)(PHFemPorousWOMoveDesc*)ptr);	\
-		wDiffAir = ((PHFemPorousWOMoveDesc*)ptr)->wDiffAir;	\
-		K = ((PHFemPorousWOMoveDesc*)ptr)->K;	\
-		kc = ((PHFemPorousWOMoveDesc*)ptr)->kc;	\
-		kp = ((PHFemPorousWOMoveDesc*)ptr)->kp;	\
-		alpha = ((PHFemPorousWOMoveDesc*)ptr)->alpha;	\
-		gamma = ((PHFemPorousWOMoveDesc*)ptr)->gamma;	\
-		rhoWater = ((PHFemPorousWOMoveDesc*)ptr)->rhoWater;	\
-		rhoOil = ((PHFemPorousWOMoveDesc*)ptr)->rhoOil;	\
-		rhowInit = ((PHFemPorousWOMoveDesc*)ptr)->rhowInit;	\
-		rhooInit = ((PHFemPorousWOMoveDesc*)ptr)->rhooInit;	\
-		evapoRate = ((PHFemPorousWOMoveDesc*)ptr)->evapoRate;	\
-		denatTemp = ((PHFemPorousWOMoveDesc*)ptr)->denatTemp;	\
-		boundWaterRatio = ((PHFemPorousWOMoveDesc*)ptr)->boundWaterRatio;	\
-		equilWaterCont = ((PHFemPorousWOMoveDesc*)ptr)->equilWaterCont;	\
-		limitWaterCont = ((PHFemPorousWOMoveDesc*)ptr)->limitWaterCont;	\
-		boundaryThick = ((PHFemPorousWOMoveDesc*)ptr)->boundaryThick;	\
-		initMassAll = ((PHFemPorousWOMoveDesc*)ptr)->initMassAll;	\
-		initWaterRatio = ((PHFemPorousWOMoveDesc*)ptr)->initWaterRatio;	\
-		initOilRatio = ((PHFemPorousWOMoveDesc*)ptr)->initOilRatio;	\
-		shrinkageRatio = ((PHFemPorousWOMoveDesc*)ptr)->shrinkageRatio;	\
-		top = ((PHFemPorousWOMoveDesc*)ptr)->top;	\
-		center = ((PHFemPorousWOMoveDesc*)ptr)->center;	\
-		bottom = ((PHFemPorousWOMoveDesc*)ptr)->bottom;	\
+		PHSolid::SetState((PHSolidState*)(PHSolidDesc*)ptr);	\
+		mass = ((PHSolidDesc*)ptr)->mass;	\
+		inertia = ((PHSolidDesc*)ptr)->inertia;	\
+		center = ((PHSolidDesc*)ptr)->center;	\
+		dynamical = ((PHSolidDesc*)ptr)->dynamical;	\
+		stationary = ((PHSolidDesc*)ptr)->stationary;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		PHFemBase::GetDesc((PHFemBaseDesc*)(PHFemPorousWOMoveDesc*)ptr);	\
-		((PHFemPorousWOMoveDesc*)ptr)->wDiffAir = wDiffAir;	\
-		((PHFemPorousWOMoveDesc*)ptr)->K = K;	\
-		((PHFemPorousWOMoveDesc*)ptr)->kc = kc;	\
-		((PHFemPorousWOMoveDesc*)ptr)->kp = kp;	\
-		((PHFemPorousWOMoveDesc*)ptr)->alpha = alpha;	\
-		((PHFemPorousWOMoveDesc*)ptr)->gamma = gamma;	\
-		((PHFemPorousWOMoveDesc*)ptr)->rhoWater = rhoWater;	\
-		((PHFemPorousWOMoveDesc*)ptr)->rhoOil = rhoOil;	\
-		((PHFemPorousWOMoveDesc*)ptr)->rhowInit = rhowInit;	\
-		((PHFemPorousWOMoveDesc*)ptr)->rhooInit = rhooInit;	\
-		((PHFemPorousWOMoveDesc*)ptr)->evapoRate = evapoRate;	\
-		((PHFemPorousWOMoveDesc*)ptr)->denatTemp = denatTemp;	\
-		((PHFemPorousWOMoveDesc*)ptr)->boundWaterRatio = boundWaterRatio;	\
-		((PHFemPorousWOMoveDesc*)ptr)->equilWaterCont = equilWaterCont;	\
-		((PHFemPorousWOMoveDesc*)ptr)->limitWaterCont = limitWaterCont;	\
-		((PHFemPorousWOMoveDesc*)ptr)->boundaryThick = boundaryThick;	\
-		((PHFemPorousWOMoveDesc*)ptr)->initMassAll = initMassAll;	\
-		((PHFemPorousWOMoveDesc*)ptr)->initWaterRatio = initWaterRatio;	\
-		((PHFemPorousWOMoveDesc*)ptr)->initOilRatio = initOilRatio;	\
-		((PHFemPorousWOMoveDesc*)ptr)->shrinkageRatio = shrinkageRatio;	\
-		((PHFemPorousWOMoveDesc*)ptr)->top = top;	\
-		((PHFemPorousWOMoveDesc*)ptr)->center = center;	\
-		((PHFemPorousWOMoveDesc*)ptr)->bottom = bottom;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHHapticPointerDesc \
-protected:\
-	Spr::PHHapticPointerDesc::HapticRenderMode	renderMode;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		renderMode = ((PHHapticPointerDesc*)ptr)->renderMode;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((PHHapticPointerDesc*)ptr)->renderMode = renderMode;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHHapticEngineDesc \
-protected:\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHIKEndEffectorState \
-protected:\
-	Posed	solidTempPose;	\
-public:\
-	virtual void SetState(const void* ptr){ \
-		solidTempPose = ((PHIKEndEffectorState*)ptr)->solidTempPose;	\
-	}\
-	virtual bool GetState(void* ptr) const { \
-		((PHIKEndEffectorState*)ptr)->solidTempPose = solidTempPose;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHIKEndEffectorDesc \
-protected:\
-	bool	bEnabled;	\
-	bool	bPosition;	\
-	bool	bOrientation;	\
-	int	oriCtlMode;	\
-	bool	bForce;	\
-	bool	bTorque;	\
-	double	positionPriority;	\
-	double	orientationPriority;	\
-	double	forcePriority;	\
-	double	torquePriority;	\
-	Vec3d	targetPosition;	\
-	Vec3d	targetVelocity;	\
-	Vec3d	targetLocalPosition;	\
-	Vec3d	targetLocalDirection;	\
-	Quaterniond	targetOrientation;	\
-	Vec3d	targetDirection;	\
-	Vec3d	targetLookat;	\
-	Vec3d	targetAngVel;	\
-	Vec3d	targetForce;	\
-	Vec3d	targetForceWorkingPoint;	\
-	Vec3d	targetTorque;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHIKEndEffector::SetState((PHIKEndEffectorState*)(PHIKEndEffectorDesc*)ptr);	\
-		bEnabled = ((PHIKEndEffectorDesc*)ptr)->bEnabled;	\
-		bPosition = ((PHIKEndEffectorDesc*)ptr)->bPosition;	\
-		bOrientation = ((PHIKEndEffectorDesc*)ptr)->bOrientation;	\
-		oriCtlMode = ((PHIKEndEffectorDesc*)ptr)->oriCtlMode;	\
-		bForce = ((PHIKEndEffectorDesc*)ptr)->bForce;	\
-		bTorque = ((PHIKEndEffectorDesc*)ptr)->bTorque;	\
-		positionPriority = ((PHIKEndEffectorDesc*)ptr)->positionPriority;	\
-		orientationPriority = ((PHIKEndEffectorDesc*)ptr)->orientationPriority;	\
-		forcePriority = ((PHIKEndEffectorDesc*)ptr)->forcePriority;	\
-		torquePriority = ((PHIKEndEffectorDesc*)ptr)->torquePriority;	\
-		targetPosition = ((PHIKEndEffectorDesc*)ptr)->targetPosition;	\
-		targetVelocity = ((PHIKEndEffectorDesc*)ptr)->targetVelocity;	\
-		targetLocalPosition = ((PHIKEndEffectorDesc*)ptr)->targetLocalPosition;	\
-		targetLocalDirection = ((PHIKEndEffectorDesc*)ptr)->targetLocalDirection;	\
-		targetOrientation = ((PHIKEndEffectorDesc*)ptr)->targetOrientation;	\
-		targetDirection = ((PHIKEndEffectorDesc*)ptr)->targetDirection;	\
-		targetLookat = ((PHIKEndEffectorDesc*)ptr)->targetLookat;	\
-		targetAngVel = ((PHIKEndEffectorDesc*)ptr)->targetAngVel;	\
-		targetForce = ((PHIKEndEffectorDesc*)ptr)->targetForce;	\
-		targetForceWorkingPoint = ((PHIKEndEffectorDesc*)ptr)->targetForceWorkingPoint;	\
-		targetTorque = ((PHIKEndEffectorDesc*)ptr)->targetTorque;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHIKEndEffector::GetState((PHIKEndEffectorState*)(PHIKEndEffectorDesc*)ptr);	\
-		((PHIKEndEffectorDesc*)ptr)->bEnabled = bEnabled;	\
-		((PHIKEndEffectorDesc*)ptr)->bPosition = bPosition;	\
-		((PHIKEndEffectorDesc*)ptr)->bOrientation = bOrientation;	\
-		((PHIKEndEffectorDesc*)ptr)->oriCtlMode = oriCtlMode;	\
-		((PHIKEndEffectorDesc*)ptr)->bForce = bForce;	\
-		((PHIKEndEffectorDesc*)ptr)->bTorque = bTorque;	\
-		((PHIKEndEffectorDesc*)ptr)->positionPriority = positionPriority;	\
-		((PHIKEndEffectorDesc*)ptr)->orientationPriority = orientationPriority;	\
-		((PHIKEndEffectorDesc*)ptr)->forcePriority = forcePriority;	\
-		((PHIKEndEffectorDesc*)ptr)->torquePriority = torquePriority;	\
-		((PHIKEndEffectorDesc*)ptr)->targetPosition = targetPosition;	\
-		((PHIKEndEffectorDesc*)ptr)->targetVelocity = targetVelocity;	\
-		((PHIKEndEffectorDesc*)ptr)->targetLocalPosition = targetLocalPosition;	\
-		((PHIKEndEffectorDesc*)ptr)->targetLocalDirection = targetLocalDirection;	\
-		((PHIKEndEffectorDesc*)ptr)->targetOrientation = targetOrientation;	\
-		((PHIKEndEffectorDesc*)ptr)->targetDirection = targetDirection;	\
-		((PHIKEndEffectorDesc*)ptr)->targetLookat = targetLookat;	\
-		((PHIKEndEffectorDesc*)ptr)->targetAngVel = targetAngVel;	\
-		((PHIKEndEffectorDesc*)ptr)->targetForce = targetForce;	\
-		((PHIKEndEffectorDesc*)ptr)->targetForceWorkingPoint = targetForceWorkingPoint;	\
-		((PHIKEndEffectorDesc*)ptr)->targetTorque = targetTorque;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHIKActuatorState \
-protected:\
-	Posed	solidTempPose;	\
-	Quaterniond	jointTempOri;	\
-	double	jointTempAngle;	\
-public:\
-	virtual void SetState(const void* ptr){ \
-		solidTempPose = ((PHIKActuatorState*)ptr)->solidTempPose;	\
-		jointTempOri = ((PHIKActuatorState*)ptr)->jointTempOri;	\
-		jointTempAngle = ((PHIKActuatorState*)ptr)->jointTempAngle;	\
-	}\
-	virtual bool GetState(void* ptr) const { \
-		((PHIKActuatorState*)ptr)->solidTempPose = solidTempPose;	\
-		((PHIKActuatorState*)ptr)->jointTempOri = jointTempOri;	\
-		((PHIKActuatorState*)ptr)->jointTempAngle = jointTempAngle;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHIKActuatorDesc \
-protected:\
-	bool	bEnabled;	\
-	float	bias;	\
-	double	pullbackRate;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHIKActuator::SetState((PHIKActuatorState*)(PHIKActuatorDesc*)ptr);	\
-		bEnabled = ((PHIKActuatorDesc*)ptr)->bEnabled;	\
-		bias = ((PHIKActuatorDesc*)ptr)->bias;	\
-		pullbackRate = ((PHIKActuatorDesc*)ptr)->pullbackRate;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHIKActuator::GetState((PHIKActuatorState*)(PHIKActuatorDesc*)ptr);	\
-		((PHIKActuatorDesc*)ptr)->bEnabled = bEnabled;	\
-		((PHIKActuatorDesc*)ptr)->bias = bias;	\
-		((PHIKActuatorDesc*)ptr)->pullbackRate = pullbackRate;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHIKBallActuatorDesc \
-protected:\
-	Quaterniond	pullbackTarget;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHIKActuator::SetDesc((PHIKActuatorDesc*)(PHIKBallActuatorDesc*)ptr);	\
-		pullbackTarget = ((PHIKBallActuatorDesc*)ptr)->pullbackTarget;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHIKActuator::GetDesc((PHIKActuatorDesc*)(PHIKBallActuatorDesc*)ptr);	\
-		((PHIKBallActuatorDesc*)ptr)->pullbackTarget = pullbackTarget;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHIKHingeActuatorDesc \
-protected:\
-	double	pullbackTarget;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHIKActuator::SetDesc((PHIKActuatorDesc*)(PHIKHingeActuatorDesc*)ptr);	\
-		pullbackTarget = ((PHIKHingeActuatorDesc*)ptr)->pullbackTarget;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHIKActuator::GetDesc((PHIKActuatorDesc*)(PHIKHingeActuatorDesc*)ptr);	\
-		((PHIKHingeActuatorDesc*)ptr)->pullbackTarget = pullbackTarget;	\
+		PHSolid::GetState((PHSolidState*)(PHSolidDesc*)ptr);	\
+		((PHSolidDesc*)ptr)->mass = mass;	\
+		((PHSolidDesc*)ptr)->inertia = inertia;	\
+		((PHSolidDesc*)ptr)->center = center;	\
+		((PHSolidDesc*)ptr)->dynamical = dynamical;	\
+		((PHSolidDesc*)ptr)->stationary = stationary;	\
 		return true;	\
 	}\
 
@@ -1054,97 +559,6 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PH1DJointLimitDesc \
-protected:\
-	bool	bEnabled;	\
-	double	spring;	\
-	double	damper;	\
-	Vec2d	range;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		bEnabled = ((PH1DJointLimitDesc*)ptr)->bEnabled;	\
-		spring = ((PH1DJointLimitDesc*)ptr)->spring;	\
-		damper = ((PH1DJointLimitDesc*)ptr)->damper;	\
-		range = ((PH1DJointLimitDesc*)ptr)->range;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((PH1DJointLimitDesc*)ptr)->bEnabled = bEnabled;	\
-		((PH1DJointLimitDesc*)ptr)->spring = spring;	\
-		((PH1DJointLimitDesc*)ptr)->damper = damper;	\
-		((PH1DJointLimitDesc*)ptr)->range = range;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHBallJointLimitDesc \
-protected:\
-	bool	bEnabled;	\
-	double	spring;	\
-	double	damper;	\
-	Vec3d	limitDir;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		bEnabled = ((PHBallJointLimitDesc*)ptr)->bEnabled;	\
-		spring = ((PHBallJointLimitDesc*)ptr)->spring;	\
-		damper = ((PHBallJointLimitDesc*)ptr)->damper;	\
-		limitDir = ((PHBallJointLimitDesc*)ptr)->limitDir;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((PHBallJointLimitDesc*)ptr)->bEnabled = bEnabled;	\
-		((PHBallJointLimitDesc*)ptr)->spring = spring;	\
-		((PHBallJointLimitDesc*)ptr)->damper = damper;	\
-		((PHBallJointLimitDesc*)ptr)->limitDir = limitDir;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHBallJointConeLimitDesc \
-protected:\
-	Vec2d	limitSwing;	\
-	Vec2d	limitSwingDir;	\
-	Vec2d	limitTwist;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHBallJointLimit::SetDesc((PHBallJointLimitDesc*)(PHBallJointConeLimitDesc*)ptr);	\
-		limitSwing = ((PHBallJointConeLimitDesc*)ptr)->limitSwing;	\
-		limitSwingDir = ((PHBallJointConeLimitDesc*)ptr)->limitSwingDir;	\
-		limitTwist = ((PHBallJointConeLimitDesc*)ptr)->limitTwist;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHBallJointLimit::GetDesc((PHBallJointLimitDesc*)(PHBallJointConeLimitDesc*)ptr);	\
-		((PHBallJointConeLimitDesc*)ptr)->limitSwing = limitSwing;	\
-		((PHBallJointConeLimitDesc*)ptr)->limitSwingDir = limitSwingDir;	\
-		((PHBallJointConeLimitDesc*)ptr)->limitTwist = limitTwist;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHBallJointSplineLimitDesc \
-protected:\
-	std::vector< Spr::PHSplineLimitNode >	nodes;	\
-	Vec2d	poleTwist;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		PHBallJointLimit::SetDesc((PHBallJointLimitDesc*)(PHBallJointSplineLimitDesc*)ptr);	\
-		nodes = ((PHBallJointSplineLimitDesc*)ptr)->nodes;	\
-		poleTwist = ((PHBallJointSplineLimitDesc*)ptr)->poleTwist;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		PHBallJointLimit::GetDesc((PHBallJointLimitDesc*)(PHBallJointSplineLimitDesc*)ptr);	\
-		((PHBallJointSplineLimitDesc*)ptr)->nodes = nodes;	\
-		((PHBallJointSplineLimitDesc*)ptr)->poleTwist = poleTwist;	\
-		return true;	\
-	}\
-
 #define SPR_DECLMEMBEROF_PH1DJointMotorDesc \
 protected:\
 public:\
@@ -1178,6 +592,418 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKEndEffectorState \
+protected:\
+	Posed	solidTempPose;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		solidTempPose = ((PHIKEndEffectorState*)ptr)->solidTempPose;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		((PHIKEndEffectorState*)ptr)->solidTempPose = solidTempPose;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKEndEffectorDesc \
+protected:\
+	bool	bEnabled;	\
+	bool	bPosition;	\
+	bool	bOrientation;	\
+	int	oriCtlMode;	\
+	bool	bForce;	\
+	bool	bTorque;	\
+	double	positionPriority;	\
+	double	orientationPriority;	\
+	double	forcePriority;	\
+	double	torquePriority;	\
+	Vec3d	targetPosition;	\
+	Vec3d	targetVelocity;	\
+	Vec3d	targetLocalPosition;	\
+	Vec3d	targetLocalDirection;	\
+	Quaterniond	targetOrientation;	\
+	Vec3d	targetDirection;	\
+	Vec3d	targetLookat;	\
+	Vec3d	targetAngVel;	\
+	Vec3d	targetForce;	\
+	Vec3d	targetForceWorkingPoint;	\
+	Vec3d	targetTorque;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHIKEndEffector::SetState((PHIKEndEffectorState*)(PHIKEndEffectorDesc*)ptr);	\
+		bEnabled = ((PHIKEndEffectorDesc*)ptr)->bEnabled;	\
+		bPosition = ((PHIKEndEffectorDesc*)ptr)->bPosition;	\
+		bOrientation = ((PHIKEndEffectorDesc*)ptr)->bOrientation;	\
+		oriCtlMode = ((PHIKEndEffectorDesc*)ptr)->oriCtlMode;	\
+		bForce = ((PHIKEndEffectorDesc*)ptr)->bForce;	\
+		bTorque = ((PHIKEndEffectorDesc*)ptr)->bTorque;	\
+		positionPriority = ((PHIKEndEffectorDesc*)ptr)->positionPriority;	\
+		orientationPriority = ((PHIKEndEffectorDesc*)ptr)->orientationPriority;	\
+		forcePriority = ((PHIKEndEffectorDesc*)ptr)->forcePriority;	\
+		torquePriority = ((PHIKEndEffectorDesc*)ptr)->torquePriority;	\
+		targetPosition = ((PHIKEndEffectorDesc*)ptr)->targetPosition;	\
+		targetVelocity = ((PHIKEndEffectorDesc*)ptr)->targetVelocity;	\
+		targetLocalPosition = ((PHIKEndEffectorDesc*)ptr)->targetLocalPosition;	\
+		targetLocalDirection = ((PHIKEndEffectorDesc*)ptr)->targetLocalDirection;	\
+		targetOrientation = ((PHIKEndEffectorDesc*)ptr)->targetOrientation;	\
+		targetDirection = ((PHIKEndEffectorDesc*)ptr)->targetDirection;	\
+		targetLookat = ((PHIKEndEffectorDesc*)ptr)->targetLookat;	\
+		targetAngVel = ((PHIKEndEffectorDesc*)ptr)->targetAngVel;	\
+		targetForce = ((PHIKEndEffectorDesc*)ptr)->targetForce;	\
+		targetForceWorkingPoint = ((PHIKEndEffectorDesc*)ptr)->targetForceWorkingPoint;	\
+		targetTorque = ((PHIKEndEffectorDesc*)ptr)->targetTorque;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHIKEndEffector::GetState((PHIKEndEffectorState*)(PHIKEndEffectorDesc*)ptr);	\
+		((PHIKEndEffectorDesc*)ptr)->bEnabled = bEnabled;	\
+		((PHIKEndEffectorDesc*)ptr)->bPosition = bPosition;	\
+		((PHIKEndEffectorDesc*)ptr)->bOrientation = bOrientation;	\
+		((PHIKEndEffectorDesc*)ptr)->oriCtlMode = oriCtlMode;	\
+		((PHIKEndEffectorDesc*)ptr)->bForce = bForce;	\
+		((PHIKEndEffectorDesc*)ptr)->bTorque = bTorque;	\
+		((PHIKEndEffectorDesc*)ptr)->positionPriority = positionPriority;	\
+		((PHIKEndEffectorDesc*)ptr)->orientationPriority = orientationPriority;	\
+		((PHIKEndEffectorDesc*)ptr)->forcePriority = forcePriority;	\
+		((PHIKEndEffectorDesc*)ptr)->torquePriority = torquePriority;	\
+		((PHIKEndEffectorDesc*)ptr)->targetPosition = targetPosition;	\
+		((PHIKEndEffectorDesc*)ptr)->targetVelocity = targetVelocity;	\
+		((PHIKEndEffectorDesc*)ptr)->targetLocalPosition = targetLocalPosition;	\
+		((PHIKEndEffectorDesc*)ptr)->targetLocalDirection = targetLocalDirection;	\
+		((PHIKEndEffectorDesc*)ptr)->targetOrientation = targetOrientation;	\
+		((PHIKEndEffectorDesc*)ptr)->targetDirection = targetDirection;	\
+		((PHIKEndEffectorDesc*)ptr)->targetLookat = targetLookat;	\
+		((PHIKEndEffectorDesc*)ptr)->targetAngVel = targetAngVel;	\
+		((PHIKEndEffectorDesc*)ptr)->targetForce = targetForce;	\
+		((PHIKEndEffectorDesc*)ptr)->targetForceWorkingPoint = targetForceWorkingPoint;	\
+		((PHIKEndEffectorDesc*)ptr)->targetTorque = targetTorque;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKActuatorState \
+protected:\
+	Posed	solidTempPose;	\
+	Quaterniond	jointTempOri;	\
+	double	jointTempAngle;	\
+public:\
+	virtual void SetState(const void* ptr){ \
+		solidTempPose = ((PHIKActuatorState*)ptr)->solidTempPose;	\
+		jointTempOri = ((PHIKActuatorState*)ptr)->jointTempOri;	\
+		jointTempAngle = ((PHIKActuatorState*)ptr)->jointTempAngle;	\
+	}\
+	virtual bool GetState(void* ptr) const { \
+		((PHIKActuatorState*)ptr)->solidTempPose = solidTempPose;	\
+		((PHIKActuatorState*)ptr)->jointTempOri = jointTempOri;	\
+		((PHIKActuatorState*)ptr)->jointTempAngle = jointTempAngle;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKActuatorDesc \
+protected:\
+	bool	bEnabled;	\
+	float	bias;	\
+	double	pullbackRate;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHIKActuator::SetState((PHIKActuatorState*)(PHIKActuatorDesc*)ptr);	\
+		bEnabled = ((PHIKActuatorDesc*)ptr)->bEnabled;	\
+		bias = ((PHIKActuatorDesc*)ptr)->bias;	\
+		pullbackRate = ((PHIKActuatorDesc*)ptr)->pullbackRate;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHIKActuator::GetState((PHIKActuatorState*)(PHIKActuatorDesc*)ptr);	\
+		((PHIKActuatorDesc*)ptr)->bEnabled = bEnabled;	\
+		((PHIKActuatorDesc*)ptr)->bias = bias;	\
+		((PHIKActuatorDesc*)ptr)->pullbackRate = pullbackRate;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKBallActuatorDesc \
+protected:\
+	Quaterniond	pullbackTarget;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHIKActuator::SetDesc((PHIKActuatorDesc*)(PHIKBallActuatorDesc*)ptr);	\
+		pullbackTarget = ((PHIKBallActuatorDesc*)ptr)->pullbackTarget;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHIKActuator::GetDesc((PHIKActuatorDesc*)(PHIKBallActuatorDesc*)ptr);	\
+		((PHIKBallActuatorDesc*)ptr)->pullbackTarget = pullbackTarget;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKHingeActuatorDesc \
+protected:\
+	double	pullbackTarget;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHIKActuator::SetDesc((PHIKActuatorDesc*)(PHIKHingeActuatorDesc*)ptr);	\
+		pullbackTarget = ((PHIKHingeActuatorDesc*)ptr)->pullbackTarget;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHIKActuator::GetDesc((PHIKActuatorDesc*)(PHIKHingeActuatorDesc*)ptr);	\
+		((PHIKHingeActuatorDesc*)ptr)->pullbackTarget = pullbackTarget;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHHapticPointerDesc \
+protected:\
+	Spr::PHHapticPointerDesc::HapticRenderMode	renderMode;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		renderMode = ((PHHapticPointerDesc*)ptr)->renderMode;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHHapticPointerDesc*)ptr)->renderMode = renderMode;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHHapticEngineDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHOpSpHashColliAgentDesc \
+protected:\
+	bool	useDirColli;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		useDirColli = ((PHOpSpHashColliAgentDesc*)ptr)->useDirColli;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHOpSpHashColliAgentDesc*)ptr)->useDirColli = useDirColli;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemMeshNewState \
+protected:\
+public:\
+	virtual void SetState(const void* ptr){ \
+	}\
+	virtual bool GetState(void* ptr) const { \
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemMeshNewDesc \
+protected:\
+	std::vector< Vec3d >	vertices;	\
+	std::vector< int >	tets;	\
+	std::vector< int >	faces;	\
+	bool	spheric;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHFemMeshNew::SetState((PHFemMeshNewState*)(PHFemMeshNewDesc*)ptr);	\
+		vertices = ((PHFemMeshNewDesc*)ptr)->vertices;	\
+		tets = ((PHFemMeshNewDesc*)ptr)->tets;	\
+		faces = ((PHFemMeshNewDesc*)ptr)->faces;	\
+		spheric = ((PHFemMeshNewDesc*)ptr)->spheric;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFemMeshNew::GetState((PHFemMeshNewState*)(PHFemMeshNewDesc*)ptr);	\
+		((PHFemMeshNewDesc*)ptr)->vertices = vertices;	\
+		((PHFemMeshNewDesc*)ptr)->tets = tets;	\
+		((PHFemMeshNewDesc*)ptr)->faces = faces;	\
+		((PHFemMeshNewDesc*)ptr)->spheric = spheric;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemBaseDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemVibrationDesc \
+protected:\
+	double	young;	\
+	double	poisson;	\
+	double	density;	\
+	double	alpha;	\
+	double	beta;	\
+	std::vector< int >	fixedVertices;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHFemBase::SetDesc((PHFemBaseDesc*)(PHFemVibrationDesc*)ptr);	\
+		young = ((PHFemVibrationDesc*)ptr)->young;	\
+		poisson = ((PHFemVibrationDesc*)ptr)->poisson;	\
+		density = ((PHFemVibrationDesc*)ptr)->density;	\
+		alpha = ((PHFemVibrationDesc*)ptr)->alpha;	\
+		beta = ((PHFemVibrationDesc*)ptr)->beta;	\
+		fixedVertices = ((PHFemVibrationDesc*)ptr)->fixedVertices;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFemBase::GetDesc((PHFemBaseDesc*)(PHFemVibrationDesc*)ptr);	\
+		((PHFemVibrationDesc*)ptr)->young = young;	\
+		((PHFemVibrationDesc*)ptr)->poisson = poisson;	\
+		((PHFemVibrationDesc*)ptr)->density = density;	\
+		((PHFemVibrationDesc*)ptr)->alpha = alpha;	\
+		((PHFemVibrationDesc*)ptr)->beta = beta;	\
+		((PHFemVibrationDesc*)ptr)->fixedVertices = fixedVertices;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemThermoDesc \
+protected:\
+	double	rho;	\
+	double	thConduct;	\
+	double	thConduct_x;	\
+	double	thConduct_y;	\
+	double	thConduct_z;	\
+	double	heatTrans;	\
+	double	specificHeat;	\
+	double	radiantHeat;	\
+	double	initial_temp;	\
+	double	weekPow_full;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHFemBase::SetDesc((PHFemBaseDesc*)(PHFemThermoDesc*)ptr);	\
+		rho = ((PHFemThermoDesc*)ptr)->rho;	\
+		thConduct = ((PHFemThermoDesc*)ptr)->thConduct;	\
+		thConduct_x = ((PHFemThermoDesc*)ptr)->thConduct_x;	\
+		thConduct_y = ((PHFemThermoDesc*)ptr)->thConduct_y;	\
+		thConduct_z = ((PHFemThermoDesc*)ptr)->thConduct_z;	\
+		heatTrans = ((PHFemThermoDesc*)ptr)->heatTrans;	\
+		specificHeat = ((PHFemThermoDesc*)ptr)->specificHeat;	\
+		radiantHeat = ((PHFemThermoDesc*)ptr)->radiantHeat;	\
+		initial_temp = ((PHFemThermoDesc*)ptr)->initial_temp;	\
+		weekPow_full = ((PHFemThermoDesc*)ptr)->weekPow_full;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFemBase::GetDesc((PHFemBaseDesc*)(PHFemThermoDesc*)ptr);	\
+		((PHFemThermoDesc*)ptr)->rho = rho;	\
+		((PHFemThermoDesc*)ptr)->thConduct = thConduct;	\
+		((PHFemThermoDesc*)ptr)->thConduct_x = thConduct_x;	\
+		((PHFemThermoDesc*)ptr)->thConduct_y = thConduct_y;	\
+		((PHFemThermoDesc*)ptr)->thConduct_z = thConduct_z;	\
+		((PHFemThermoDesc*)ptr)->heatTrans = heatTrans;	\
+		((PHFemThermoDesc*)ptr)->specificHeat = specificHeat;	\
+		((PHFemThermoDesc*)ptr)->radiantHeat = radiantHeat;	\
+		((PHFemThermoDesc*)ptr)->initial_temp = initial_temp;	\
+		((PHFemThermoDesc*)ptr)->weekPow_full = weekPow_full;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemPorousWOMoveDesc \
+protected:\
+	double	wDiffAir;	\
+	double	K;	\
+	double	kc;	\
+	double	kp;	\
+	double	alpha;	\
+	double	gamma;	\
+	double	rhoWater;	\
+	double	rhoOil;	\
+	double	rhowInit;	\
+	double	rhooInit;	\
+	double	evapoRate;	\
+	double	denatTemp;	\
+	double	boundWaterRatio;	\
+	double	equilWaterCont;	\
+	double	limitWaterCont;	\
+	double	boundaryThick;	\
+	double	initMassAll;	\
+	double	initWaterRatio;	\
+	double	initOilRatio;	\
+	double	shrinkageRatio;	\
+	Vec3d	top;	\
+	Vec3d	center;	\
+	Vec3d	bottom;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHFemBase::SetDesc((PHFemBaseDesc*)(PHFemPorousWOMoveDesc*)ptr);	\
+		wDiffAir = ((PHFemPorousWOMoveDesc*)ptr)->wDiffAir;	\
+		K = ((PHFemPorousWOMoveDesc*)ptr)->K;	\
+		kc = ((PHFemPorousWOMoveDesc*)ptr)->kc;	\
+		kp = ((PHFemPorousWOMoveDesc*)ptr)->kp;	\
+		alpha = ((PHFemPorousWOMoveDesc*)ptr)->alpha;	\
+		gamma = ((PHFemPorousWOMoveDesc*)ptr)->gamma;	\
+		rhoWater = ((PHFemPorousWOMoveDesc*)ptr)->rhoWater;	\
+		rhoOil = ((PHFemPorousWOMoveDesc*)ptr)->rhoOil;	\
+		rhowInit = ((PHFemPorousWOMoveDesc*)ptr)->rhowInit;	\
+		rhooInit = ((PHFemPorousWOMoveDesc*)ptr)->rhooInit;	\
+		evapoRate = ((PHFemPorousWOMoveDesc*)ptr)->evapoRate;	\
+		denatTemp = ((PHFemPorousWOMoveDesc*)ptr)->denatTemp;	\
+		boundWaterRatio = ((PHFemPorousWOMoveDesc*)ptr)->boundWaterRatio;	\
+		equilWaterCont = ((PHFemPorousWOMoveDesc*)ptr)->equilWaterCont;	\
+		limitWaterCont = ((PHFemPorousWOMoveDesc*)ptr)->limitWaterCont;	\
+		boundaryThick = ((PHFemPorousWOMoveDesc*)ptr)->boundaryThick;	\
+		initMassAll = ((PHFemPorousWOMoveDesc*)ptr)->initMassAll;	\
+		initWaterRatio = ((PHFemPorousWOMoveDesc*)ptr)->initWaterRatio;	\
+		initOilRatio = ((PHFemPorousWOMoveDesc*)ptr)->initOilRatio;	\
+		shrinkageRatio = ((PHFemPorousWOMoveDesc*)ptr)->shrinkageRatio;	\
+		top = ((PHFemPorousWOMoveDesc*)ptr)->top;	\
+		center = ((PHFemPorousWOMoveDesc*)ptr)->center;	\
+		bottom = ((PHFemPorousWOMoveDesc*)ptr)->bottom;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFemBase::GetDesc((PHFemBaseDesc*)(PHFemPorousWOMoveDesc*)ptr);	\
+		((PHFemPorousWOMoveDesc*)ptr)->wDiffAir = wDiffAir;	\
+		((PHFemPorousWOMoveDesc*)ptr)->K = K;	\
+		((PHFemPorousWOMoveDesc*)ptr)->kc = kc;	\
+		((PHFemPorousWOMoveDesc*)ptr)->kp = kp;	\
+		((PHFemPorousWOMoveDesc*)ptr)->alpha = alpha;	\
+		((PHFemPorousWOMoveDesc*)ptr)->gamma = gamma;	\
+		((PHFemPorousWOMoveDesc*)ptr)->rhoWater = rhoWater;	\
+		((PHFemPorousWOMoveDesc*)ptr)->rhoOil = rhoOil;	\
+		((PHFemPorousWOMoveDesc*)ptr)->rhowInit = rhowInit;	\
+		((PHFemPorousWOMoveDesc*)ptr)->rhooInit = rhooInit;	\
+		((PHFemPorousWOMoveDesc*)ptr)->evapoRate = evapoRate;	\
+		((PHFemPorousWOMoveDesc*)ptr)->denatTemp = denatTemp;	\
+		((PHFemPorousWOMoveDesc*)ptr)->boundWaterRatio = boundWaterRatio;	\
+		((PHFemPorousWOMoveDesc*)ptr)->equilWaterCont = equilWaterCont;	\
+		((PHFemPorousWOMoveDesc*)ptr)->limitWaterCont = limitWaterCont;	\
+		((PHFemPorousWOMoveDesc*)ptr)->boundaryThick = boundaryThick;	\
+		((PHFemPorousWOMoveDesc*)ptr)->initMassAll = initMassAll;	\
+		((PHFemPorousWOMoveDesc*)ptr)->initWaterRatio = initWaterRatio;	\
+		((PHFemPorousWOMoveDesc*)ptr)->initOilRatio = initOilRatio;	\
+		((PHFemPorousWOMoveDesc*)ptr)->shrinkageRatio = shrinkageRatio;	\
+		((PHFemPorousWOMoveDesc*)ptr)->top = top;	\
+		((PHFemPorousWOMoveDesc*)ptr)->center = center;	\
+		((PHFemPorousWOMoveDesc*)ptr)->bottom = bottom;	\
 		return true;	\
 	}\
 
@@ -1615,21 +1441,6 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHOpSpHashColliAgentDesc \
-protected:\
-	bool	useDirColli;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		useDirColli = ((PHOpSpHashColliAgentDesc*)ptr)->useDirColli;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((PHOpSpHashColliAgentDesc*)ptr)->useDirColli = useDirColli;	\
-		return true;	\
-	}\
-
 #define SPR_DECLMEMBEROF_PHRayDesc \
 protected:\
 	Vec3d	origin;	\
@@ -1731,15 +1542,163 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHSdkDesc \
+#define SPR_DECLMEMBEROF_PHFemMeshState \
 protected:\
+public:\
+	virtual void SetState(const void* ptr){ \
+	}\
+	virtual bool GetState(void* ptr) const { \
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemMeshDesc \
+protected:\
+	std::vector< Vec3d >	vertices;	\
+	std::vector< int >	tets;	\
+	std::vector< int >	faces;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
+		PHFemMesh::SetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
+		vertices = ((PHFemMeshDesc*)ptr)->vertices;	\
+		tets = ((PHFemMeshDesc*)ptr)->tets;	\
+		faces = ((PHFemMeshDesc*)ptr)->faces;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		PHFemMesh::GetState((PHFemMeshState*)(PHFemMeshDesc*)ptr);	\
+		((PHFemMeshDesc*)ptr)->vertices = vertices;	\
+		((PHFemMeshDesc*)ptr)->tets = tets;	\
+		((PHFemMeshDesc*)ptr)->faces = faces;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHFemMeshThermoDesc \
+protected:\
+	double	rho;	\
+	double	thConduct;	\
+	double	thConduct_x;	\
+	double	thConduct_y;	\
+	double	thConduct_z;	\
+	double	heatTrans;	\
+	double	specificHeat;	\
+	double	radiantHeat;	\
+	double	initial_temp;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHFemMesh::SetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
+		rho = ((PHFemMeshThermoDesc*)ptr)->rho;	\
+		thConduct = ((PHFemMeshThermoDesc*)ptr)->thConduct;	\
+		thConduct_x = ((PHFemMeshThermoDesc*)ptr)->thConduct_x;	\
+		thConduct_y = ((PHFemMeshThermoDesc*)ptr)->thConduct_y;	\
+		thConduct_z = ((PHFemMeshThermoDesc*)ptr)->thConduct_z;	\
+		heatTrans = ((PHFemMeshThermoDesc*)ptr)->heatTrans;	\
+		specificHeat = ((PHFemMeshThermoDesc*)ptr)->specificHeat;	\
+		radiantHeat = ((PHFemMeshThermoDesc*)ptr)->radiantHeat;	\
+		initial_temp = ((PHFemMeshThermoDesc*)ptr)->initial_temp;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHFemMesh::GetDesc((PHFemMeshDesc*)(PHFemMeshThermoDesc*)ptr);	\
+		((PHFemMeshThermoDesc*)ptr)->rho = rho;	\
+		((PHFemMeshThermoDesc*)ptr)->thConduct = thConduct;	\
+		((PHFemMeshThermoDesc*)ptr)->thConduct_x = thConduct_x;	\
+		((PHFemMeshThermoDesc*)ptr)->thConduct_y = thConduct_y;	\
+		((PHFemMeshThermoDesc*)ptr)->thConduct_z = thConduct_z;	\
+		((PHFemMeshThermoDesc*)ptr)->heatTrans = heatTrans;	\
+		((PHFemMeshThermoDesc*)ptr)->specificHeat = specificHeat;	\
+		((PHFemMeshThermoDesc*)ptr)->radiantHeat = radiantHeat;	\
+		((PHFemMeshThermoDesc*)ptr)->initial_temp = initial_temp;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHConstraintEngineDesc \
+protected:\
+	int	method;	\
+	int	numIter;	\
+	int	numIterCorrection;	\
+	int	numIterContactCorrection;	\
+	double	velCorrectionRate;	\
+	double	posCorrectionRate;	\
+	double	contactCorrectionRate;	\
+	double	shrinkRate;	\
+	double	shrinkRateCorrection;	\
+	double	freezeThreshold;	\
+	double	accelSOR;	\
+	double	dfEps;	\
+	bool	bSaveConstraints;	\
+	bool	bUpdateAllState;	\
+	bool	bUseContactSurface;	\
+	bool	bReport;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		method = ((PHConstraintEngineDesc*)ptr)->method;	\
+		numIter = ((PHConstraintEngineDesc*)ptr)->numIter;	\
+		numIterCorrection = ((PHConstraintEngineDesc*)ptr)->numIterCorrection;	\
+		numIterContactCorrection = ((PHConstraintEngineDesc*)ptr)->numIterContactCorrection;	\
+		velCorrectionRate = ((PHConstraintEngineDesc*)ptr)->velCorrectionRate;	\
+		posCorrectionRate = ((PHConstraintEngineDesc*)ptr)->posCorrectionRate;	\
+		contactCorrectionRate = ((PHConstraintEngineDesc*)ptr)->contactCorrectionRate;	\
+		shrinkRate = ((PHConstraintEngineDesc*)ptr)->shrinkRate;	\
+		shrinkRateCorrection = ((PHConstraintEngineDesc*)ptr)->shrinkRateCorrection;	\
+		freezeThreshold = ((PHConstraintEngineDesc*)ptr)->freezeThreshold;	\
+		accelSOR = ((PHConstraintEngineDesc*)ptr)->accelSOR;	\
+		dfEps = ((PHConstraintEngineDesc*)ptr)->dfEps;	\
+		bSaveConstraints = ((PHConstraintEngineDesc*)ptr)->bSaveConstraints;	\
+		bUpdateAllState = ((PHConstraintEngineDesc*)ptr)->bUpdateAllState;	\
+		bUseContactSurface = ((PHConstraintEngineDesc*)ptr)->bUseContactSurface;	\
+		bReport = ((PHConstraintEngineDesc*)ptr)->bReport;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHConstraintEngineDesc*)ptr)->method = method;	\
+		((PHConstraintEngineDesc*)ptr)->numIter = numIter;	\
+		((PHConstraintEngineDesc*)ptr)->numIterCorrection = numIterCorrection;	\
+		((PHConstraintEngineDesc*)ptr)->numIterContactCorrection = numIterContactCorrection;	\
+		((PHConstraintEngineDesc*)ptr)->velCorrectionRate = velCorrectionRate;	\
+		((PHConstraintEngineDesc*)ptr)->posCorrectionRate = posCorrectionRate;	\
+		((PHConstraintEngineDesc*)ptr)->contactCorrectionRate = contactCorrectionRate;	\
+		((PHConstraintEngineDesc*)ptr)->shrinkRate = shrinkRate;	\
+		((PHConstraintEngineDesc*)ptr)->shrinkRateCorrection = shrinkRateCorrection;	\
+		((PHConstraintEngineDesc*)ptr)->freezeThreshold = freezeThreshold;	\
+		((PHConstraintEngineDesc*)ptr)->accelSOR = accelSOR;	\
+		((PHConstraintEngineDesc*)ptr)->dfEps = dfEps;	\
+		((PHConstraintEngineDesc*)ptr)->bSaveConstraints = bSaveConstraints;	\
+		((PHConstraintEngineDesc*)ptr)->bUpdateAllState = bUpdateAllState;	\
+		((PHConstraintEngineDesc*)ptr)->bUseContactSurface = bUseContactSurface;	\
+		((PHConstraintEngineDesc*)ptr)->bReport = bReport;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHIKEngineDesc \
+protected:\
+	size_t	numIter;	\
+	double	maxVel;	\
+	double	maxAngVel;	\
+	double	maxActVel;	\
+	double	regularizeParam;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		numIter = ((PHIKEngineDesc*)ptr)->numIter;	\
+		maxVel = ((PHIKEngineDesc*)ptr)->maxVel;	\
+		maxAngVel = ((PHIKEngineDesc*)ptr)->maxAngVel;	\
+		maxActVel = ((PHIKEngineDesc*)ptr)->maxActVel;	\
+		regularizeParam = ((PHIKEngineDesc*)ptr)->regularizeParam;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((PHIKEngineDesc*)ptr)->numIter = numIter;	\
+		((PHIKEngineDesc*)ptr)->maxVel = maxVel;	\
+		((PHIKEngineDesc*)ptr)->maxAngVel = maxAngVel;	\
+		((PHIKEngineDesc*)ptr)->maxActVel = maxActVel;	\
+		((PHIKEngineDesc*)ptr)->regularizeParam = regularizeParam;	\
 		return true;	\
 	}\
 
@@ -1767,65 +1726,106 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHFrameDesc \
+#define SPR_DECLMEMBEROF_PH1DJointLimitDesc \
 protected:\
-	Posed	pose;	\
+	bool	bEnabled;	\
+	double	spring;	\
+	double	damper;	\
+	Vec2d	range;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
-		pose = ((PHFrameDesc*)ptr)->pose;	\
+		bEnabled = ((PH1DJointLimitDesc*)ptr)->bEnabled;	\
+		spring = ((PH1DJointLimitDesc*)ptr)->spring;	\
+		damper = ((PH1DJointLimitDesc*)ptr)->damper;	\
+		range = ((PH1DJointLimitDesc*)ptr)->range;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		((PHFrameDesc*)ptr)->pose = pose;	\
+		((PH1DJointLimitDesc*)ptr)->bEnabled = bEnabled;	\
+		((PH1DJointLimitDesc*)ptr)->spring = spring;	\
+		((PH1DJointLimitDesc*)ptr)->damper = damper;	\
+		((PH1DJointLimitDesc*)ptr)->range = range;	\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_PHSolidState \
+#define SPR_DECLMEMBEROF_PHBallJointLimitDesc \
 protected:\
-	Vec3d	velocity;	\
-	Vec3d	angVelocity;	\
-	Posed	pose;	\
-public:\
-	virtual void SetState(const void* ptr){ \
-		velocity = ((PHSolidState*)ptr)->velocity;	\
-		angVelocity = ((PHSolidState*)ptr)->angVelocity;	\
-		pose = ((PHSolidState*)ptr)->pose;	\
-	}\
-	virtual bool GetState(void* ptr) const { \
-		((PHSolidState*)ptr)->velocity = velocity;	\
-		((PHSolidState*)ptr)->angVelocity = angVelocity;	\
-		((PHSolidState*)ptr)->pose = pose;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_PHSolidDesc \
-protected:\
-	double	mass;	\
-	Matrix3d	inertia;	\
-	Vec3d	center;	\
-	bool	dynamical;	\
-	bool	stationary;	\
+	bool	bEnabled;	\
+	double	spring;	\
+	double	damper;	\
+	Vec3d	limitDir;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
-		PHSolid::SetState((PHSolidState*)(PHSolidDesc*)ptr);	\
-		mass = ((PHSolidDesc*)ptr)->mass;	\
-		inertia = ((PHSolidDesc*)ptr)->inertia;	\
-		center = ((PHSolidDesc*)ptr)->center;	\
-		dynamical = ((PHSolidDesc*)ptr)->dynamical;	\
-		stationary = ((PHSolidDesc*)ptr)->stationary;	\
+		bEnabled = ((PHBallJointLimitDesc*)ptr)->bEnabled;	\
+		spring = ((PHBallJointLimitDesc*)ptr)->spring;	\
+		damper = ((PHBallJointLimitDesc*)ptr)->damper;	\
+		limitDir = ((PHBallJointLimitDesc*)ptr)->limitDir;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		PHSolid::GetState((PHSolidState*)(PHSolidDesc*)ptr);	\
-		((PHSolidDesc*)ptr)->mass = mass;	\
-		((PHSolidDesc*)ptr)->inertia = inertia;	\
-		((PHSolidDesc*)ptr)->center = center;	\
-		((PHSolidDesc*)ptr)->dynamical = dynamical;	\
-		((PHSolidDesc*)ptr)->stationary = stationary;	\
+		((PHBallJointLimitDesc*)ptr)->bEnabled = bEnabled;	\
+		((PHBallJointLimitDesc*)ptr)->spring = spring;	\
+		((PHBallJointLimitDesc*)ptr)->damper = damper;	\
+		((PHBallJointLimitDesc*)ptr)->limitDir = limitDir;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHBallJointConeLimitDesc \
+protected:\
+	Vec2d	limitSwing;	\
+	Vec2d	limitSwingDir;	\
+	Vec2d	limitTwist;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHBallJointLimit::SetDesc((PHBallJointLimitDesc*)(PHBallJointConeLimitDesc*)ptr);	\
+		limitSwing = ((PHBallJointConeLimitDesc*)ptr)->limitSwing;	\
+		limitSwingDir = ((PHBallJointConeLimitDesc*)ptr)->limitSwingDir;	\
+		limitTwist = ((PHBallJointConeLimitDesc*)ptr)->limitTwist;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHBallJointLimit::GetDesc((PHBallJointLimitDesc*)(PHBallJointConeLimitDesc*)ptr);	\
+		((PHBallJointConeLimitDesc*)ptr)->limitSwing = limitSwing;	\
+		((PHBallJointConeLimitDesc*)ptr)->limitSwingDir = limitSwingDir;	\
+		((PHBallJointConeLimitDesc*)ptr)->limitTwist = limitTwist;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHBallJointSplineLimitDesc \
+protected:\
+	std::vector< Spr::PHSplineLimitNode >	nodes;	\
+	Vec2d	poleTwist;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		PHBallJointLimit::SetDesc((PHBallJointLimitDesc*)(PHBallJointSplineLimitDesc*)ptr);	\
+		nodes = ((PHBallJointSplineLimitDesc*)ptr)->nodes;	\
+		poleTwist = ((PHBallJointSplineLimitDesc*)ptr)->poleTwist;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		PHBallJointLimit::GetDesc((PHBallJointLimitDesc*)(PHBallJointSplineLimitDesc*)ptr);	\
+		((PHBallJointSplineLimitDesc*)ptr)->nodes = nodes;	\
+		((PHBallJointSplineLimitDesc*)ptr)->poleTwist = poleTwist;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_PHSdkDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 

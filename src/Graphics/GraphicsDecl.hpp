@@ -34,6 +34,66 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_GRSphereDesc \
+protected:\
+	float	radius;	\
+	int	slices;	\
+	int	stacks;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		radius = ((GRSphereDesc*)ptr)->radius;	\
+		slices = ((GRSphereDesc*)ptr)->slices;	\
+		stacks = ((GRSphereDesc*)ptr)->stacks;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((GRSphereDesc*)ptr)->radius = radius;	\
+		((GRSphereDesc*)ptr)->slices = slices;	\
+		((GRSphereDesc*)ptr)->stacks = stacks;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_GRShaderDesc \
+protected:\
+	std::string	vsname;	\
+	std::string	fsname;	\
+	bool	bEnableLighting;	\
+	bool	bEnableTexture2D;	\
+	bool	bEnableTexture3D;	\
+	bool	bShadowCreate;	\
+	bool	bShadowRender;	\
+	bool	bEnableBlending;	\
+	int	numBlendMatrices;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		vsname = ((GRShaderDesc*)ptr)->vsname;	\
+		fsname = ((GRShaderDesc*)ptr)->fsname;	\
+		bEnableLighting = ((GRShaderDesc*)ptr)->bEnableLighting;	\
+		bEnableTexture2D = ((GRShaderDesc*)ptr)->bEnableTexture2D;	\
+		bEnableTexture3D = ((GRShaderDesc*)ptr)->bEnableTexture3D;	\
+		bShadowCreate = ((GRShaderDesc*)ptr)->bShadowCreate;	\
+		bShadowRender = ((GRShaderDesc*)ptr)->bShadowRender;	\
+		bEnableBlending = ((GRShaderDesc*)ptr)->bEnableBlending;	\
+		numBlendMatrices = ((GRShaderDesc*)ptr)->numBlendMatrices;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((GRShaderDesc*)ptr)->vsname = vsname;	\
+		((GRShaderDesc*)ptr)->fsname = fsname;	\
+		((GRShaderDesc*)ptr)->bEnableLighting = bEnableLighting;	\
+		((GRShaderDesc*)ptr)->bEnableTexture2D = bEnableTexture2D;	\
+		((GRShaderDesc*)ptr)->bEnableTexture3D = bEnableTexture3D;	\
+		((GRShaderDesc*)ptr)->bShadowCreate = bShadowCreate;	\
+		((GRShaderDesc*)ptr)->bShadowRender = bShadowRender;	\
+		((GRShaderDesc*)ptr)->bEnableBlending = bEnableBlending;	\
+		((GRShaderDesc*)ptr)->numBlendMatrices = numBlendMatrices;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_GRVisualDesc \
 protected:\
 public:\
@@ -116,6 +176,18 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_GRSceneDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_GRSkinWeightDesc \
 protected:\
 	Affinef	offset;	\
@@ -169,6 +241,18 @@ public:\
 		((GRMeshDesc*)ptr)->colors = colors;	\
 		((GRMeshDesc*)ptr)->texCoords = texCoords;	\
 		((GRMeshDesc*)ptr)->materialList = materialList;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_GRSdkDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
 		return true;	\
 	}\
 
@@ -330,90 +414,6 @@ public:\
 		((GRShadowLightDesc*)ptr)->texHeight = texHeight;	\
 		((GRShadowLightDesc*)ptr)->offset = offset;	\
 		((GRShadowLightDesc*)ptr)->color = color;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_GRSceneDesc \
-protected:\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_GRSdkDesc \
-protected:\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_GRShaderDesc \
-protected:\
-	std::string	vsname;	\
-	std::string	fsname;	\
-	bool	bEnableLighting;	\
-	bool	bEnableTexture2D;	\
-	bool	bEnableTexture3D;	\
-	bool	bShadowCreate;	\
-	bool	bShadowRender;	\
-	bool	bEnableBlending;	\
-	int	numBlendMatrices;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		vsname = ((GRShaderDesc*)ptr)->vsname;	\
-		fsname = ((GRShaderDesc*)ptr)->fsname;	\
-		bEnableLighting = ((GRShaderDesc*)ptr)->bEnableLighting;	\
-		bEnableTexture2D = ((GRShaderDesc*)ptr)->bEnableTexture2D;	\
-		bEnableTexture3D = ((GRShaderDesc*)ptr)->bEnableTexture3D;	\
-		bShadowCreate = ((GRShaderDesc*)ptr)->bShadowCreate;	\
-		bShadowRender = ((GRShaderDesc*)ptr)->bShadowRender;	\
-		bEnableBlending = ((GRShaderDesc*)ptr)->bEnableBlending;	\
-		numBlendMatrices = ((GRShaderDesc*)ptr)->numBlendMatrices;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((GRShaderDesc*)ptr)->vsname = vsname;	\
-		((GRShaderDesc*)ptr)->fsname = fsname;	\
-		((GRShaderDesc*)ptr)->bEnableLighting = bEnableLighting;	\
-		((GRShaderDesc*)ptr)->bEnableTexture2D = bEnableTexture2D;	\
-		((GRShaderDesc*)ptr)->bEnableTexture3D = bEnableTexture3D;	\
-		((GRShaderDesc*)ptr)->bShadowCreate = bShadowCreate;	\
-		((GRShaderDesc*)ptr)->bShadowRender = bShadowRender;	\
-		((GRShaderDesc*)ptr)->bEnableBlending = bEnableBlending;	\
-		((GRShaderDesc*)ptr)->numBlendMatrices = numBlendMatrices;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_GRSphereDesc \
-protected:\
-	float	radius;	\
-	int	slices;	\
-	int	stacks;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		radius = ((GRSphereDesc*)ptr)->radius;	\
-		slices = ((GRSphereDesc*)ptr)->slices;	\
-		stacks = ((GRSphereDesc*)ptr)->stacks;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((GRSphereDesc*)ptr)->radius = radius;	\
-		((GRSphereDesc*)ptr)->slices = slices;	\
-		((GRSphereDesc*)ptr)->stacks = stacks;	\
 		return true;	\
 	}\
 
