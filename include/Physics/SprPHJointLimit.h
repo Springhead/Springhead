@@ -14,6 +14,8 @@
 
 #include <Foundation/SprObject.h>
 
+#include <float.h>  // FLT_MAX
+
 namespace Spr{;
 
 /** \addtogroup gpJoint */

@@ -388,7 +388,7 @@ public:
 	}
 
 	TCurveQuat(){
-		TCurve<TQuaternion<T>,TVec3<T>,T>::type = SLERP_DIFF;
+		TCurve<TQuaternion<T>,TVec3<T>,T>::type = Interpolate::SlerpDiff;
 	}
 };
 

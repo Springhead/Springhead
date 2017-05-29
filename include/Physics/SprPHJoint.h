@@ -15,6 +15,8 @@
 #include <Foundation/SprObject.h>
 #include <Physics/SprPHJointLimit.h>
 
+#include <float.h>  // FLT_MAX
+
 namespace Spr{;
 
 struct PHSolidIf;

@@ -98,7 +98,7 @@ public:
 	Factories factories;
 	///	コンストラクタ
 	IfInfo(const char* cn, const IfInfo** bl, const UTTypeInfo* o):
-		baseList(bl), objInfo(o), className(cn), creator(NULL), desc(NULL), state(NULL){id = ++maxId;}
+		desc(NULL), state(NULL), baseList(bl), objInfo(o), className(cn), creator(NULL){id = ++maxId;}
 	///	デストラクタ
 	virtual ~IfInfo() {};
 	///	クラス名

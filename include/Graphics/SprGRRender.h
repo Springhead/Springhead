@@ -12,6 +12,8 @@
 #include <Graphics/SprGRVertex.h>
 #include <Graphics/SprGRShader.h>
 
+#include <float.h>  // FLT_MAX
+
 //#if defined(USE_GLEW)
 //  #include <GL/glew.h>
 //#else
