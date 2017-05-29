@@ -2,13 +2,14 @@
 #define PH_HAPTICRENDERBASE_H
 
 #include <Physics/PHHapticPointer.h>
+#include <Physics/PHContactDetector.h>
 
 using namespace PTM;
 namespace Spr{;
 
 class PHSolidsForHaptic;
 class PHSolidPairForHaptic;
-class PHSolidPairsForHaptic;
+//class PHSolidPairsForHaptic;
 class PHShapePairForHaptic;
 
 struct PHIntermediateRepresentation :public UTRefCount{
@@ -40,7 +41,7 @@ typedef std::vector< PHIr* > PHIrs;
 struct PHHapticRenderInfo{// : public PHHapticRenderDesc{
 	PHHapticPointers*		pointers;
 	PHSolidsForHaptic*		hsolids;
-	PHSolidPairsForHaptic*	sps;
+	PHContactDetector::PHSolidPairs*	sps;
 	int loopCount;
 	double pdt;
 	double hdt;

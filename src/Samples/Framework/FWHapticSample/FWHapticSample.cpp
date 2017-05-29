@@ -18,7 +18,7 @@ FWHapticSample::FWHapticSample(){
 //	_crtBreakAlloc = 75154;
 	pdt = 0.02f;
 	hdt = 0.001f;
-	engineType = MULTI;										// SINGLE, MULTI, LD
+	engineType = SINGLE;										// SINGLE, MULTI, LD
 	bPause = false;
 }
 void FWHapticSample::BuildScene(){

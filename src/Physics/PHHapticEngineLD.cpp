@@ -1,14 +1,15 @@
 ﻿#include <Physics/PHHapticEngineLD.h>
 
 namespace Spr{;
+#if 0
 //----------------------------------------------------------------------------
 // PHHapticLoopLD
-void PHHapticLoopLD::Step(){
+void PHHapticLoopLD::Step(){	//=>void PHHapticEngineLD::StepHapticLoop()
 	UpdateInterface();
 	HapticRendering();
 	LocalDynamics();
 }
-void PHHapticLoopLD::HapticRendering(){
+void PHHapticLoopLD::HapticRendering(){	//=>void PHHapticEngineLD::StepHapticLoop() {
 	PHHapticRenderInfo info;
 	info.pointers = GetHapticPointers();
 	info.hsolids = GetHapticSolids();
@@ -20,7 +21,7 @@ void PHHapticLoopLD::HapticRendering(){
 	GetHapticRender()->HapticRendering(info);
 }
 
-void PHHapticLoopLD::LocalDynamics(){
+void PHHapticLoopLD::LocalDynamics(){	=>void PHHapticEngineLD::LocalDynamics() {
 	double pdt = GetPhysicsTimeStep();
 	double hdt = GetHapticTimeStep();
 	for(int i = 0; i < NHapticSolids(); i++){
@@ -56,12 +57,63 @@ void PHHapticLoopLD::LocalDynamics(){
 		localSolid->Step();
 	}
 }
-
+#endif
 //----------------------------------------------------------------------------
 // PHHapticEngineLD
+void PHHapticEngineLD::StepHapticLoop() {
+	UpdateHapticPointer();
+
+	PHHapticRenderInfo info;
+	info.pointers = GetHapticPointersInHaptic();
+	info.hsolids = GetHapticSolidsInHaptic();
+	info.sps = GetSolidPairsInHaptic();
+	info.hdt = GetHapticTimeStep();
+	info.pdt = GetPhysicsTimeStep();
+	info.loopCount = loopCount;
+	info.bInterpolatePose = false;
+	GetHapticRender()->HapticRendering(info);
+
+	LocalDynamics();
+}
+void PHHapticEngineLD::LocalDynamics() {
+	double pdt = GetPhysicsTimeStep();
+	double hdt = GetHapticTimeStep();
+	for (int i = 0; i < NHapticSolidsHaptic(); i++) {
+		PHSolidForHaptic* hsolid = GetHapticSolidHaptic(i);
+		if (hsolid->doSim == 0) continue;
+		if (hsolid->GetLocalSolid()->IsDynamical() == false) continue;
+		PHSolid* localSolid = &hsolid->localSolid;
+
+		Vec3d vel_v, vel_w;
+		vel_v = localSolid->GetVelocity();
+		vel_w = localSolid->GetAngularVelocity();
+		if (loopCount == 1) {
+			SpatialVector diff = hsolid->curb - hsolid->lastb;
+			vel_v += diff.v() * pdt;	// 衝突の影響を反映
+			vel_w += diff.w() * pdt;
+		}
+		for (int j = 0; j < NHapticPointers(); j++) {
+			PHHapticPointer* pointer = GetHapticPointerHaptic(j);
+			PHSolidPairForHaptic* sp = GetSolidPairInHaptic(i, pointer->GetPointerID());
+			if (sp->inLocal == 0) continue;
+			// 力覚ポインタからの力による速度変化
+			vel_v += (sp->A.SUBMAT(0, 0, 3, 3) * sp->force) * hdt;
+			vel_w += (sp->A.SUBMAT(3, 0, 3, 3) * sp->force) * hdt;
+		}
+		vel_v += hsolid->b.v() * hdt;
+		vel_w += hsolid->b.w() * hdt;
+		localSolid->SetVelocity(vel_v);
+		localSolid->SetAngularVelocity(vel_w);
+		localSolid->SetOrientation((Quaterniond::Rot(vel_w * hdt) * localSolid->GetOrientation()).unit());
+		localSolid->SetCenterPosition(localSolid->GetCenterPosition() + vel_v * hdt);
+
+		localSolid->SetUpdated(true);
+		localSolid->Step();
+	}
+}
+
+
 PHHapticEngineLD::PHHapticEngineLD(){
-	hapticLoop = &hapticLoopLD;
-	hapticLoop->engineImp = this;
 	states = ObjectStatesIf::Create();
 }
 
@@ -141,7 +193,7 @@ void PHHapticEngineLD::PredictSimulation3D(){
 		/// HapticPointerの数だけ力を加える予測シミュレーション
 		for(int j = 0; j < NHapticPointers(); j++){
 			PHHapticPointer* pointer = GetHapticPointer(j);
-			PHSolidPairForHaptic* solidPair = GetSolidPairForHaptic(i, pointer->GetPointerID());
+			PHSolidPairForHaptic* solidPair = (PHSolidPairForHaptic*)engine->GetSolidPair(i, pointer->GetPointerID());
 			if(solidPair->inLocal == 0) continue;
 			PHShapePairForHaptic* sp = solidPair->GetShapePair(0, 0)->Cast();	// 1形状のみ対応
 			Vec3d cPoint = sp->shapePoseW[0] * sp->closestPoint[0];		// 力を加える点(ワールド座標)
@@ -239,23 +291,23 @@ void PHHapticEngineLD::SyncHaptic2Physic(){
 	// physics <------ haptic
 	// PHSolidForHapticの同期
 	// PHSolidPairForHaptic(力覚ポインタと近傍の物体)の各種情報の同期
-	for(int i = 0; i < hapticLoop->NHapticPointers(); i++){
-		PHHapticPointer* hpointer = hapticLoop->GetHapticPointer(i);
+	for(size_t i = 0; i < hapticModel.hapticPointers.size(); i++){
+		PHHapticPointer* hpointer = hapticModel.hapticPointers[i];
 		int hpointerID = hpointer->GetPointerID();
 		int nNeighbors = (int)hpointer->neighborSolidIDs.size();
 		// 近傍物体であるペアだけ同期
 		for(int j = 0; j < nNeighbors; j++){
 			int solidID = hpointer->neighborSolidIDs[j];
-			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(solidID, hpointerID);
-			PHSolidPairForHaptic* ppair = GetSolidPairForHaptic(solidID, hpointerID);
+			PHSolidPairForHaptic* hpair = hapticModel.GetSolidPair(solidID, hpointerID);
+			PHSolidPairForHaptic* ppair = (PHSolidPairForHaptic*)engine->GetSolidPair(solidID, hpointerID);
 			PHSolidPairForHapticSt* hst = (PHSolidPairForHapticSt*)hpair;
 			PHSolidPairForHapticSt* pst = (PHSolidPairForHapticSt*)ppair;
 			*pst = *hst;	// haptic側で保持しておくべき情報を同期
 		}
 	}
 	// LocalDynamicsSimulationの結果をシーンに反映
-	for(int i = 0; i < (int)hapticLoop->NHapticSolids(); i++){
-		PHSolidForHaptic* hsolid = hapticLoop->GetHapticSolid(i);
+	for(size_t i = 0; i < hapticModel.hapticSolids.size(); i++){
+		PHSolidForHaptic* hsolid = hapticModel.hapticSolids[i];
 		if(hsolid->bPointer) continue;		// ポインタの場合
 		if(hsolid->doSim <= 1) continue;	// 局所シミュレーション対象でない場合
 
@@ -288,7 +340,7 @@ void PHHapticEngineLD::SyncPhysic2Haptic(){
 	for(int i = 0; i < NHapticSolids(); i++){
 		PHSolidForHaptic* psolid = GetHapticSolid(i);
 		if(psolid->bPointer) continue;
-		PHSolidForHaptic* hsolid = hapticLoop->GetHapticSolid(i);
+		PHSolidForHaptic* hsolid = hapticModel.hapticSolids[i];
 		PHSolidForHapticSt2* pst2 = (PHSolidForHapticSt2*)psolid;
 		PHSolidForHapticSt2* hst2 = (PHSolidForHapticSt2*)hsolid;
 		*hst2 = *pst2;
@@ -302,8 +354,8 @@ void PHHapticEngineLD::SyncPhysic2Haptic(){
 		const int nNeighbors = (int)ppointer->neighborSolidIDs.size();
 		for(int j = 0; j < nNeighbors; j++){
 			const int solidID = ppointer->neighborSolidIDs[j];
-			PHSolidPairForHaptic* hpair = hapticLoop->GetSolidPairForHaptic(solidID, ppointerID);
-			PHSolidPairForHaptic* ppair = GetSolidPairForHaptic(solidID, ppointerID);
+			PHSolidPairForHaptic* hpair = hapticModel.GetSolidPair(solidID, ppointerID);
+			PHSolidPairForHaptic* ppair = (PHSolidPairForHaptic*)engine->GetSolidPair(solidID, ppointerID);
 			*hpair = PHSolidPairForHaptic(*ppair);
 		}
 	}

@@ -137,23 +137,25 @@ public:
 	virtual PHIrs CompIntermediateRepresentation(PHHapticRender* hr, PHSolid* solid0, PHHapticPointer* pointer);
 	virtual bool CompFrictionIntermediateRepresentation(PHHapticRender* hr, PHHapticPointer* pointer, PHShapePairForHaptic* sp);
 };
-class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> >{};
+//class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> >{};
 
 //----------------------------------------------------------------------------
 // PHHapticEngineImp
 class PHHapticRender;
-class PHHapticLoopImp;
 class PHHapticEngineImp : public SceneObject{
 	SPR_OBJECTDEF_ABST_NOIF(PHHapticEngineImp);
 public:
 	PHHapticEngine* engine;
-	PHHapticLoopImp* hapticLoop;
 	UTRef< ObjectStatesIf > states;
 	PHHapticEngineImp(){}
+	///	
 	virtual void Step1(){};
+	///	
 	virtual void Step2(){};
 	virtual void StepHapticLoop() = 0;
 	virtual void StepHapticSync() = 0;
+	virtual void UpdateHapticPointer() = 0;
+
 	double GetPhysicsTimeStep();
 	double GetHapticTimeStep();
 
@@ -162,14 +164,19 @@ public:
 	PHHapticPointer*       GetHapticPointer(int i);
 	PHSolidForHaptic*      GetHapticSolid(int i);
 
+	virtual int NHapticPointersHaptic()=0;
+	virtual int NHapticSolidsHaptic()=0;
+	virtual PHHapticPointer* GetHapticPointerHaptic(int i)=0;
+	virtual PHSolidForHaptic* GetHapticSolidHaptic(int i)=0;
+
+	virtual PHSolidPairForHaptic* GetSolidPairInHaptic(int i, int j)=0;
+	virtual PHHapticPointers* GetHapticPointersInHaptic() = 0;
+	virtual PHSolidsForHaptic* GetHapticSolidsInHaptic() = 0;
+	virtual PHContactDetector::PHSolidPairs* GetSolidPairsInHaptic() = 0;
+
 	///< 剛体と力覚ポインタのペアを取得する（i:剛体、j:力覚ポインタ）
 	// iには力覚ポインタも含まれる。
-	PHSolidPairForHaptic*  GetSolidPairForHaptic(int i, int j);
-	PHHapticPointers*      GetHapticPointers();
-	PHSolidsForHaptic*     GetHapticSolids();
-	PHSolidPairsForHaptic* GetSolidPairsForHaptic();
 	PHHapticRender*        GetHapticRender();
-	PHHapticLoopImp*       GetHapticLoop();
 
 	///< デバック用シミュレーション実行
 	virtual void StepPhysicsSimulation();
@@ -182,7 +189,7 @@ public:
 
 //----------------------------------------------------------------------------
 /// PHHapticEngine,	This engine is initially disabled. Enable() muse be called prior to use.
-class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector/*< PHShapePairForHaptic, PHSolidPairForHaptic, PHHapticEngine >*/{
+class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector{
 public:
 	SPR_OBJECTDEF1(PHHapticEngine, PHEngine);
 	ACCESS_DESC(PHHapticEngine);

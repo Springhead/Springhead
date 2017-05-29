@@ -11,9 +11,9 @@ void PHHapticEngineSingleBase::Step1(){
 	engine->StartDetection();
 	UpdateHapticPointer();
 	PHHapticRenderInfo info;
-	info.pointers = GetHapticPointers();
-	info.hsolids = GetHapticSolids();
-	info.sps = GetSolidPairsForHaptic();
+	info.pointers = GetHapticPointersInHaptic();
+	info.hsolids = GetHapticSolidsInHaptic();
+	info.sps = GetSolidPairsInHaptic();
 	info.hdt = GetPhysicsTimeStep();
 	info.pdt = GetPhysicsTimeStep();
 	info.loopCount = 1.0;

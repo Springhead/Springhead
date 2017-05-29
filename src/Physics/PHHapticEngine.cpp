@@ -389,7 +389,8 @@ PHHapticPointer* PHHapticEngineImp::GetHapticPointer(int i){
 PHSolidForHaptic* PHHapticEngineImp::GetHapticSolid(int i){
 	return engine->hapticSolids[i];
 }
-PHSolidPairForHaptic* PHHapticEngineImp::GetSolidPairForHaptic(int i, int j){
+/*
+PHSolidPairForHaptic* PHHapticEngineImp::GetSolidPair(int i, int j){
 	return engine->GetSolidPair(i, j)->Cast();
 }
 PHHapticPointers* PHHapticEngineImp::GetHapticPointers(){
@@ -401,12 +402,9 @@ PHSolidsForHaptic* PHHapticEngineImp::GetHapticSolids(){
 PHSolidPairsForHaptic* PHHapticEngineImp::GetSolidPairsForHaptic(){
 	return (PHSolidPairsForHaptic*)&engine->solidPairs;
 }
+*/
 PHHapticRender* PHHapticEngineImp::GetHapticRender(){
 	return engine->hapticRender->Cast();
-}
-PHHapticLoopImp* PHHapticEngineImp::GetHapticLoop(){
-	if(hapticLoop) return hapticLoop;
-	else return NULL;
 }
 
 void PHHapticEngineImp::StepPhysicsSimulation(){
@@ -438,27 +436,20 @@ PHHapticEngine::PHHapticEngine(){
 }
 int PHHapticEngine::NHapticSolidsHaptic() {
 	if (!engineImp) return 0;
-	PHHapticLoopImp* loop = engineImp->GetHapticLoop();
-	if (!loop) return 0;
-	return loop->NHapticSolids();
+	return engineImp->NHapticSolidsHaptic();
 }
 int PHHapticEngine::NHapticPointersHaptic() {
 	if (!engineImp) return 0;
-	PHHapticLoopImp* loop = engineImp->GetHapticLoop();
-	if (!loop) return 0;
-	return loop->NHapticPointers();
+	return engineImp->NHapticPointersHaptic();
 }
+
 PHHapticPointerIf* PHHapticEngine::GetHapticPointerHaptic(int i) {
 	if (!engineImp) return NULL;
-	PHHapticLoopImp* loop = engineImp->GetHapticLoop();
-	if (!loop) return NULL;
-	return (PHHapticPointerIf*)&*loop->GetHapticPointer(i);
+	return (PHHapticPointerIf*)engineImp->GetHapticPointerHaptic(i);
 }
 PHSolidPairForHapticIf* PHHapticEngine::GetSolidPairHaptic(int i, int j) {
 	if (!engineImp) return NULL;
-	PHHapticLoopImp* loop = engineImp->GetHapticLoop();
-	if (!loop) return NULL;
-	return (PHSolidPairForHapticIf*)&*loop->GetSolidPairForHaptic(i, j);
+	return (PHSolidPairForHapticIf*) engineImp->GetSolidPairInHaptic(i, j);
 }
 
 void PHHapticEngine::SetHapticEngineMode(HapticEngineMode mode){
@@ -751,10 +742,12 @@ int PHHapticEngine::GetHapticEngineMode(){
 }
 
 PHHapticPointers* PHHapticEngine::GetLocalHapticPointers(){
-	if(engineImp->hapticLoop)
-		return engineImp->GetHapticLoop()->GetHapticPointers();
-	else
+	if (engineImp) {
+		return engineImp->GetHapticPointersInHaptic();
+	}
+	else {
 		return NULL;
+	}
 }
 
 void PHHapticEngine::ReleaseState(){
