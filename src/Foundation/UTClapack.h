@@ -3,10 +3,15 @@
 
 //#include <Springhead.h>
 
+#include <float.h>  // DBL_MIN DBL_MAX
+
 #define BOOST_NUMERIC_BINDINGS_USE_CLAPACK
-#pragma warning(push)
-#pragma warning(disable:4267)
-#pragma warning(disable:4005)
+
+#if defined _MSC_VER
+# pragma warning(push)
+# pragma warning(disable:4267)
+# pragma warning(disable:4005)
+#endif
 //#include <boost/numeric/ublas/fwd.hpp>
 #include <boost/numeric/bindings/lapack/driver/sygv.hpp>
 #include <boost/numeric/bindings/lapack/driver/sygvx.hpp>
@@ -23,9 +28,12 @@
 #include <boost/numeric/bindings/ublas/vector_proxy.hpp>
 #include <boost/numeric/ublas/io.hpp>
 #include <boost/numeric/ublas/lu.hpp>
-#pragma warning(pop)
+#if defined _MSC_VER
+# pragma warning(pop)
+#endif
 
-#ifdef TRACE		// Trace
+#ifdef _MSC_VER
+ #ifdef TRACE		// Trace
   #if (_MSC_VER == 1500)    // Visual Studio 2008
     #ifdef _WIN64 
       # pragma comment(lib, "LIBF2C10x64.lib")
@@ -59,7 +67,7 @@
       #endif
     #endif /* _MSC_VER */
   #endif
-#else /* TRACE */
+ #else /* TRACE */
   #if (_MSC_VER == 1900)    // Visual Studio 2015
     #ifdef _DEBUG
       #ifdef _DLL		// Debug (former DebugDll)
@@ -132,8 +140,9 @@
         #endif
       #endif
     #endif /* _DEBUG */
-  #endif // _MSC_VER
-#endif /* TRACE */
+  #endif /* _MSC_VER */
+ #endif /* TRACE */
+#endif /* ifdef _MSC_VER */
 
 /*
 / リンクするlibファイルは_cdeclで呼び出し

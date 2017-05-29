@@ -70,7 +70,7 @@ from Error import *
 #  Constants
 #
 prog = sys.argv[0].split('\\')[-1].split('.')[0]
-python_version = 34
+python_version = 3
 debug = False
 
 # ----------------------------------------------------------------------
@@ -88,7 +88,7 @@ srcdir = '%s/%s' % (spr2top, 'src')
 bindir = '%s/%s' % (spr2top, 'bin')
 etcdir = '%s/%s' % (srcdir, 'RunSwig')
 runswigdir = '%s/%s' % (srcdir, 'RunSwig')
-pythondir = '%s/Python%s' % (bindir, python_version)
+pythondir = '/usr/bin'
 
 # ----------------------------------------------------------------------
 #  Scripts

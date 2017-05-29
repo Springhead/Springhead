@@ -38,13 +38,13 @@ echo "#	Do not edit. RunSwig.bat will update this file." > $module.i
 echo "%module ${module}" >> $module.i
 echo "%include \"../../include/Springhead.h\"" >> $module.i
 echo "%include \"../../include/Base/Env.h\"" >> $module.i
+echo "%include \"../../include/Base/BaseDebug.h\"" >> $module.i
 
 for p in $srcintf
 do
   echo "%include \"$p\"" >> $module.i
 done
 
-echo "%include \"../../src/Base/BaseDebug.h\"" >> $module.i
 echo "%include \"../../src/Foundation/UTTypeDesc.h\"" >> $module.i
 
 for p in $srcimp

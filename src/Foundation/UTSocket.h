@@ -49,7 +49,7 @@ namespace gimite{
 #else
 	typedef int socket_t;
 	typedef ssize_t sock_result_t;
-	typedef socklen_t sock_len_t;
+	typedef int sock_len_t;
 	typedef u_int32_t sock_uint32_t;
 #endif
 
