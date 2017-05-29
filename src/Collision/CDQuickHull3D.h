@@ -62,12 +62,11 @@ public:
 			}
 		}
  	};
-	typedef CDQHPlane<TVtx> CDQHPlane;
 
-	CDQHPlane* buffer;		///<	バッファへのポインタ new する．
+	CDQHPlane<TVtx>* buffer;		///<	バッファへのポインタ new する．
 	int len;			///<	バッファの長さ
-	CDQHPlane* begin;		///<	最初の面
-	CDQHPlane* end;		///<	最後の面の次
+	CDQHPlane<TVtx>* begin;		///<	最初の面
+	CDQHPlane<TVtx>* end;		///<	最後の面の次
 	TVtx** vtxBegin;	///<	残っている頂点の先頭
 	TVtx** vtxEnd;		///<	残っている頂点の最後の次
 	int nPlanes;		///<	面の数
@@ -91,18 +90,18 @@ private:
 	void CreateFirstConvex();
 	/**	horizon を作る． cur が穴をあける面，vtx が新しい頂点．
 	rv にhorizonを辺に持つ3角形を1つ返す．*/
-	void FindHorizon(TVtx*& rv, CDQHPlane* cur, TVtx* vtx);
+	void FindHorizon(TVtx*& rv, CDQHPlane<TVtx>* cur, TVtx* vtx);
 	/**	頂点とhorizonの間にコーンを作る．*/
 	void CreateCone(TVtx* firstVtx, TVtx* top);
 	/**	一番遠くの頂点を見つける．見つけたらそれを頂点リストからはずす	*/
-	bool FindFarthest(CDQHPlane* plane);
+	bool FindFarthest(CDQHPlane<TVtx>* plane);
 	/*	外側 内側 の順に並べる．
 		外側の終わり＝内側の始まりが inner	*/
-	TVtx** DivideByPlaneR(CDQHPlane* plane, TVtx** start, TVtx** end);
-	TVtx** DivideByPlane(CDQHPlane* plane, TVtx** start, TVtx** end);
+	TVtx** DivideByPlaneR(CDQHPlane<TVtx>* plane, TVtx** start, TVtx** end);
+	TVtx** DivideByPlane(CDQHPlane<TVtx>* plane, TVtx** start, TVtx** end);
 	/**	一つの面に対する処理を行う．一番遠くの頂点を見つけ，
 		地平線を調べ，コーンを作り，内部の頂点をはずす．*/
-	void TreatPlane(CDQHPlane* cur);
+	void TreatPlane(CDQHPlane<TVtx>* cur);
 };
 
 ///	頂点クラスの例

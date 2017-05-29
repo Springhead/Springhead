@@ -29,7 +29,7 @@ public:
 	double dist;			///<	面の原点からの距離
 	
 	TVtx* vtx[2];			///<	面を構成する頂点
-	CDQHLine* neighbor[2];	///<	隣の面 vtx[0] の隣が neighbor[0]
+	CDQHLine<TVtx>* neighbor[2];	///<	隣の面 vtx[0] の隣が neighbor[0]
 	bool deleted;			///<	削除された面はtrue
 	void Clear();			///<	メモリクリア．使う前に呼ぶ．
 	void Reverse();			///<	辺の裏表をひっくり返す．
@@ -61,12 +61,11 @@ public:
 			}
 		}
  	};
-	typedef CDQHLine<TVtx> CDQHLine;
 
-	CDQHLine* buffer;	///<	バッファへのポインタ new する．
+	CDQHLine<TVtx>* buffer;	///<	バッファへのポインタ new する．
 	int len;			///<	バッファの長さ
-	CDQHLine* begin;	///<	最初の辺
-	CDQHLine* end;		///<	最後の辺の次
+	CDQHLine<TVtx>* begin;	///<	最初の辺
+	CDQHLine<TVtx>* end;		///<	最後の辺の次
 	TVtx** vtxBegin;	///<	残っている頂点の先頭
 	TVtx** vtxEnd;		///<	残っている頂点の最後の次
 	int nLines;			///<	辺の数
@@ -88,16 +87,16 @@ private:
 	/**	辺curと，その面から一番遠い頂点 top を受け取り，
 		curとその周囲の辺を削除し，凸包にtopを含める．
 		end[-1], end[-2]が新たに作られた辺になる．	*/
-	void CreateCone(CDQHLine* cur, TVtx* top);
+	void CreateCone(CDQHLine<TVtx>* cur, TVtx* top);
 	/**	一番遠くの頂点を見つける．見つけたらそれを頂点リストからはずす	*/
-	bool FindFarthest(CDQHLine* plane);
+	bool FindFarthest(CDQHLine<TVtx>* plane);
 	/*	外側 内側 の順に並べる．
 		外側の終わり＝内側の始まりが inner	*/
-	TVtx** DivideByPlaneR(CDQHLine* plane, TVtx** start, TVtx** end);
-	TVtx** DivideByPlane(CDQHLine* plane, TVtx** start, TVtx** end);
+	TVtx** DivideByPlaneR(CDQHLine<TVtx>* plane, TVtx** start, TVtx** end);
+	TVtx** DivideByPlane(CDQHLine<TVtx>* plane, TVtx** start, TVtx** end);
 	/**	一つの面に対する処理を行う．一番遠くの頂点を見つけ，
 		地平線を調べ，コーンを作り，内部の頂点をはずす．*/
-	void TreatPlane(CDQHLine* cur);
+	void TreatPlane(CDQHLine<TVtx>* cur);
 };
 
 ///	頂点クラスの例

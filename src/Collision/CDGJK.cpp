@@ -23,6 +23,8 @@
 #include <Physics/SprPHSdk.h>
 #include <fstream>
 
+#include <string.h>  // strcmp
+
 bool bGJKDebug;
 
 
@@ -484,7 +486,9 @@ int FASTCALL ContFindCommonPoint(const CDConvex* a, const CDConvex* b,
 					DSTR << "ids:"; for(int i=0; i<4; ++i) DSTR << ids[i]; DSTR << std::endl;
 					DSTR << "w:"; for(int i=0; i<4; ++i) DSTR << w[i]; DSTR << std::endl;
 					DSTR << "v:"; for(int i=0; i<4; ++i) DSTR << v[i]; DSTR << std::endl;
+#ifdef _MSC_VER
 					__debugbreak();
+#endif
 				}else{
 					line /= len;
 					ave = ave - (ave * line) * line;
