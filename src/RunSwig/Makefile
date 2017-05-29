@@ -1,4 +1,4 @@
-# ==============================================================================
+﻿# ==============================================================================
 #  FILE:
 #	Makefile
 #
@@ -29,8 +29,8 @@
 
 #  Python の定義
 #
-PYTHON_VERSION	= 3
-PYTHON_DIR	= /usr/bin
+PYTHON_VERSION	= 34
+PYTHON_DIR	= ../../bin/Python$(PYTHON_VERSION)
 PYTHON		= $(PYTHON_DIR)/python$(PYTHON_VERSION)
 ADDPATH		= ../../bin/win64
 
