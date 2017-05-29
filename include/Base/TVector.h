@@ -363,7 +363,7 @@ public:
 	//@{
 	/**	表示.
 		@param os 出力先ストリーム	*/
-	void print(std::ostream& os, char* sep="( )") const {
+	void print(std::ostream& os, const char* sep="( )") const {
 		if (sep[0]) os << sep[0];
 		if (size()){ os.width(6); os << item(0); }
 		for(size_t i=1; i<size(); ++i){

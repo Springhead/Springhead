@@ -2,7 +2,7 @@
 #define SPRCDSPHASH_H
 
 #include <Foundation/SprObject.h>
-#include <Physics\PHOpObj.h>
+#include <Physics/PHOpObj.h>
 
 namespace Spr{;
 
