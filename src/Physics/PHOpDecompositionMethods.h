@@ -188,12 +188,12 @@ public:
 			DSTR << "f is not a valid Number!" ;
 			return false;
 		}
-		if (std::isnan(f.norm()) != 0)
+		if (isnan(f.norm()) != 0)
 		{
 			DSTR << "f is not a valid Number!" ;
 			return false;
 		}
-		if (!std::isfinite(f.x) || !std::isfinite(f.y) || !std::isfinite(f.z))
+		if (!finite(f.x) || !finite(f.y) || !finite(f.z))
 		{
 			DSTR << "f is not a valid Number!";
 			return false;
@@ -208,12 +208,12 @@ public:
 
 			return false;
 		}
-		if (std::isnan(f) != 0)
+		if (isnan(f) != 0)
 		{
 			DSTR <<"f is not a valid Number!" ;
 			return false;
 		}
-		if (!std::isfinite(f))
+		if (!finite(f))
 		{
 			DSTR << "f is not a valid Number!";
 			return false;
@@ -227,12 +227,12 @@ public:
 			DSTR << "f is not a valid Number!" ;
 			return false;
 		}
-		if (std::isnan(f1) != 0 || std::isnan(f2) != 0 || std::isnan(f3) != 0)
+		if (isnan(f1) != 0 || isnan(f2) != 0 || isnan(f3) != 0)
 		{
 			DSTR << "f is not a valid Number!" ;
 			return false;
 		}
-		if (!std::isfinite(f1) || !std::isfinite(f2) || !std::isfinite(f3))
+		if (!finite(f1) || !finite(f2) || !finite(f3))
 		{
 			DSTR << "f is not a valid Number!" ;
 			return false;

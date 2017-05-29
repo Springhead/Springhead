@@ -64,6 +64,10 @@
 # include <float.h>
 # define isnan  _isnan
 # define finite _finite
+#else
+# #include <cmath>
+# define isnan   std::isnan
+# define finite  std::isfinite
 #endif
 
 //	for Visual C++ 's strange spec of stl.
