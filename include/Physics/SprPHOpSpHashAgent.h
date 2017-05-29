@@ -2,7 +2,7 @@
 #define SPRPHOPSPHASHAGENT_H
 
 //#include <Foundation/SprObject.h>
-#include <Physics\SprPHOpObj.h>
+#include <Physics/SprPHOpObj.h>
 //#include <Physics/PHOpObj.h>
 //#include <Physics/PHOpSpHashColliAgent.h>
 
