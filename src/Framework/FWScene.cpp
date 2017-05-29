@@ -814,7 +814,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 		}
 		render->PopModelMatrix();
 
-#if 0
+#if 0	//	lastProxy
 		render->SetMaterial(render->CORAL);
 		proxyPose = pointer->lastProxyPose;
 		proxyPose.ToAffine(aff);
@@ -835,73 +835,74 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 #endif
 	}
 
-	render->SetLighting(false);
-	render->SetDepthTest(false);
+	if (he->GetHapticEngineMode() != PHHapticEngine::SINGLE_THREAD) {
+		render->SetLighting(false);
+		render->SetDepthTest(false);
 
-	render->PushModelMatrix();
-	render->SetModelMatrix(Affinef());
-	for (int i = 0; i < Npointers; i++){
-		PHHapticPointer* pointer = he->GetHapticPointer(i)->Cast();
-		float range = pointer->GetLocalRange();
-		float radius = 0.02f;
-		int nNeighbors = (int)pointer->neighborSolidIDs.size();
-		for(int j = 0; j < nNeighbors; j++){
-			int solidID = pointer->neighborSolidIDs[j];
-			PHSolidPairForHaptic* solidPair = he->GetSolidPairTemp(solidID, i)->Cast();
-			for(int k = 0; k < solidPair->solid[0]->NShape(); k++){
-				for(int l = 0; l < solidPair->solid[1]->NShape(); l++){
-					PHShapePairForHaptic* sp = solidPair->GetShapePair(k, l)->Cast();
-					for(int m = 0; m < 2; m++){
-						// 近傍点対		・白点
-						Posed p;
-						p.Pos() = sp->shapePoseW[m] * sp->closestPoint[m];
+		render->PushModelMatrix();
+		render->SetModelMatrix(Affinef());
+		for (int i = 0; i < Npointers; i++) {
+			UTRef<PHHapticPointer> pointer = DBG_NEW PHHapticPointer(*(PHHapticPointer*)&*he->GetHapticPointer(i));
+			float range = pointer->GetLocalRange();
+			float radius = 0.02f;
+			int nNeighbors = (int)pointer->neighborSolidIDs.size();
+			for (int j = 0; j < nNeighbors; j++) {
+				int solidID = pointer->neighborSolidIDs[j];
+				PHSolidPairForHaptic* solidPair = (PHSolidPairForHaptic*)he->GetSolidPairTemp(solidID, i);
+				for (int k = 0; k < solidPair->solid[0]->NShape(); k++) {
+					for (int l = 0; l < solidPair->solid[1]->NShape(); l++) {
+						PHShapePairForHaptic* sp = (PHShapePairForHaptic*)solidPair->GetShapePair(k, l);
+						for (int m = 0; m < 2; m++) {
+							// 近傍点対		・白点
+							Posed p;
+							p.Pos() = sp->shapePoseW[m] * sp->closestPoint[m];
+							Affinef aff;
+							p.ToAffine(aff);
+							render->PushModelMatrix();
+							render->MultModelMatrix(aff);
+							render->SetMaterial(GRRenderIf::WHITE);
+							render->DrawSphere(range * radius, 10, 10, true);
+							render->PopModelMatrix();
+						}
+						// 接触点		：黄色
+						for (int m = 0; m < (int)sp->intersectionVertices.size(); m++) {
+							Posed p;
+							p.Pos() = sp->shapePoseW[1] * sp->intersectionVertices[m];
+							Affinef aff;
+							p.ToAffine(aff);
+							render->PushModelMatrix();
+							render->MultModelMatrix(aff);
+							render->SetMaterial(GRRenderIf::YELLOW);
+							render->DrawSphere(range * radius, 10, 10, true);
+							render->PopModelMatrix();
+						}
+
+						// 面
+						Posed p;	// 面の位置姿勢
+						p.Pos() = sp->shapePoseW[0] * sp->closestPoint[0];
+						Vec3d vec = Vec3d(0.0, 1.0, 0.0);
+						double angle = acos(vec * sp->normal);
+						Vec3d axis = vec % sp->normal;
+						if(axis.norm() < 1e-5) axis = vec;
+						p.Ori() = Quaterniond::Rot(angle, axis);
+						
 						Affinef aff;
 						p.ToAffine(aff);
+						Vec4f moon(1.0, 1.0, 0.8, 0.3);
 						render->PushModelMatrix();
 						render->MultModelMatrix(aff);
-						render->SetMaterial(GRRenderIf::WHITE);
-						render->DrawSphere(range * radius, 10, 10, true);
+						render->SetMaterial( GRMaterialDesc(moon) );
+						render->SetAlphaTest(true);
+						render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
+						render->DrawBox(range * 0.5f, 0.005f, range * 0.5f, true);
 						render->PopModelMatrix();
+						render->SetAlphaTest(false);
 					}
-					// 接触点		：黄色
-					for(int m = 0; m < (int)sp->intersectionVertices.size(); m++){
-						Posed p;
-						p.Pos() = sp->shapePoseW[1] * sp->intersectionVertices[m];
-						Affinef aff;
-						p.ToAffine(aff);
-						render->PushModelMatrix();
-						render->MultModelMatrix(aff);
-						render->SetMaterial(GRRenderIf::YELLOW);
-						render->DrawSphere(range * radius, 10, 10, true);
-						render->PopModelMatrix();
-					}
-
-					//// 面
-					//Posed p;	// 面の位置姿勢
-					//p.Pos() = sp->shapePoseW[0] * sp->closestPoint[0];
-					//Vec3d vec = Vec3d(0.0, 1.0, 0.0);
-					//double angle = acos(vec * sp->normal);
-					//Vec3d axis = vec % sp->normal;
-					//if(axis.norm() < 1e-5) axis = vec;
-					//p.Ori() = Quaterniond::Rot(angle, axis);
-					//
-					//Affinef aff;
-					//p.ToAffine(aff);
-					//Vec4f moon(1.0, 1.0, 0.8, 0.3);
-					//render->PushModelMatrix();
-					//render->MultModelMatrix(aff);
-					//render->SetMaterial( GRMaterialDesc(moon) );
-					//render->SetAlphaTest(true);
-					//render->SetAlphaMode(render->BF_SRCALPHA, render->BF_ONE);
-					//render->DrawBox(range * 0.5f, 0.005f, range * 0.5f, true);
-					//render->PopModelMatrix();
-					//render->SetAlphaTest(false);
 				}
 			}
 		}
+		render->PopModelMatrix();
 	}
-
-	render->PopModelMatrix();
 	render->SetLighting(true);
 	render->SetDepthTest(true);
 }

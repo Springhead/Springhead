@@ -64,7 +64,7 @@ PHIrs PHHapticRender::CompIntermediateRepresentation(PHHapticPointer* pointer){
 	int nNeighbors = (int)pointer->neighborSolidIDs.size();
 	for(int i = 0; i < nNeighbors; i++){
 		int solidID = pointer->neighborSolidIDs[i];
-		PHSolidPairForHaptic* sp = sps->item(solidID, pointer->GetPointerID());
+		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*sps->item(solidID, pointer->GetPointerID());
 		PHIrs tempIrs = sp->CompIntermediateRepresentation(this, hsolids->at(solidID)->GetLocalSolid(), pointer);
 		if(tempIrs.size() == 0) continue;
 		irs.insert(irs.end(), tempIrs.begin(), tempIrs.end());
@@ -109,7 +109,7 @@ void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
 			irs[i]->force = -1 * addforce;
 			hsolids->at(irs[i]->solidID)->AddForce(irs[i]->force, irs[i]->contactPointW);
 			PHSolid* localSolid = &hsolids->at(irs[i]->solidID)->localSolid;
-			PHSolidPairForHaptic* sp = sps->item(irs[i]->solidID, pointer->GetPointerID());
+			PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*sps->item(irs[i]->solidID, pointer->GetPointerID());
 			sp->force += irs[i]->force;	// あるポインタが剛体に加える力
 			sp->torque += (irs[i]->contactPointW - localSolid->GetCenterPosition()) ^ irs[i]->force;
 		}
@@ -399,7 +399,7 @@ void PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNor
 	int nNeighbors = (int)pointer->neighborSolidIDs.size();
 	for (int i = 0; i < nNeighbors; i++) {
 		int solidID = pointer->neighborSolidIDs[i];
-		PHSolidPairForHaptic* sp = sps->item(solidID, pointer->GetPointerID());
+		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*sps->item(solidID, pointer->GetPointerID());
 
 		//--------------------------------------------------
 		/* 力覚安定化のための補間
@@ -533,7 +533,7 @@ void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
 		for (size_t i = 0; i < irsAll.size(); i++) {
 			hsolids->at(irsAll[i]->solidID)->AddForce(irsAll[i]->force, irsAll[i]->contactPointW);	// 各ポインタが剛体に加えた全ての力
 			PHSolid* localSolid = &hsolids->at(irsAll[i]->solidID)->localSolid;
-			PHSolidPairForHaptic* sp = sps->item(irsAll[i]->solidID, pointer->GetPointerID());
+			PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*sps->item(irsAll[i]->solidID, pointer->GetPointerID());
 			assert(sp == irsAll[i]->solidPair);
 			sp = irsAll[i]->solidPair;
 			sp->force += irsAll[i]->force;	// あるポインタが剛体に加える力
@@ -565,7 +565,7 @@ void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
 	int Nneigbors = (int)pointer->neighborSolidIDs.size();
 	for(int j = 0; j < (int)Nneigbors; j++){
 		int solidID = pointer->neighborSolidIDs[j];
-		PHSolidPairForHaptic* sp = sps->item(solidID, pointer->GetPointerID());
+		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*sps->item(solidID, pointer->GetPointerID());
 		PHSolid* solid = hsolids->at(solidID)->GetLocalSolid(); 
 		if(sp->frictionState == PHSolidPairForHapticIf::FREE) continue;
 		if(sp->contactCount == 0){

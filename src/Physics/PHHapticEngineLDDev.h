@@ -5,6 +5,7 @@
 
 namespace Spr{;
 
+#if 0
 //----------------------------------------------------------------------------
 // PHHapticLoopLDDev
 class PHHapticLoopLDDev : public PHHapticLoopImp{
@@ -14,13 +15,12 @@ public:
 	virtual void HapticRendering();
 	virtual void LocalDynamics6D();
 };
-
+#endif
 //----------------------------------------------------------------------------
 // PHHapticEngineLD
 class PHHapticEngineLDDev : public PHHapticEngineMultiBase{
 	SPR_OBJECTDEF_NOIF(PHHapticEngineLDDev);
 protected:
-	PHHapticLoopLDDev hapticLoopLD;
 	UTRef<ObjectStatesIf> states;
 	std::vector<SpatialVector> lastvels;
 
@@ -30,8 +30,9 @@ public:
 	virtual void Step2();
 	virtual void PredictSimulation6D();
 	virtual void SyncHaptic2Physic();	
-	virtual void SyncPhysic2Haptic();	
-
+	virtual void SyncPhysic2Haptic();
+	virtual void StepHapticLoop();
+	virtual void LocalDynamics6D();
 };
 
 }
