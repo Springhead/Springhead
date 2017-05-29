@@ -9,27 +9,25 @@
 ################################################################
 TOP_DIR 	= ../..
 include 	$(TOP_DIR)/make.header
-TARGET_DIR  := $(shell env pwd)
+TARGET_DIR	:= $(shell env pwd)
 TARGET_NAME	:= $(shell env basename $(TARGET_DIR))
 TARGET_LIB	:= lib$(TARGET_NAME).a
 
 SRCS		= $(wildcard *.cpp)
 OBJS 		= ${SRCS:.cpp=.o}
 
+CXXFLAGS	= -std=gnu++11
 
 ################################################################
 #	build management
 ################################################################
 
-all: swig $(TARGET_LIB)
-
-swig:
-	$(TOP_DIR)/src/Foundation/runswig FileIO Foundation
+all: $(TARGET_LIB)
 
 $(TARGET_LIB): $(OBJS)
-		-$(RM) $@
-		$(AR) $(ARFLAGS) $@ $(OBJS)	
-		$(RANLIB) $@
+	-$(RM) $@
+	$(AR) $(ARFLAGS) $@ $(OBJS)	
+	$(RANLIB) $@
 
 .cpp.o:
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
