@@ -6,7 +6,7 @@
 #include "Base/TinyMat.h"
 #include <vector>
 #include <Foundation/Object.h>
-#include <Physics\SprPHOpObj.h>
+#include <Physics/SprPHOpObj.h>
 
 namespace Spr{;
 

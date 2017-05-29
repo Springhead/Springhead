@@ -70,7 +70,7 @@ unsigned CDQHLines<TVtx>::size(){
 }
 template <class TVtx>
 CDQHLines<TVtx>::CDQHLines(int l):epsilon(1e-6), infinite(1e8), len(l){
-	buffer = new CDQHLine[len];
+	buffer = new CDQHLine<TVtx>[len];
 	Clear();
 }
 template <class TVtx>
@@ -118,7 +118,7 @@ void CDQHLines<TVtx>::CreateConvexHull(TVtx** b, TVtx** e){
 			}
 			DSTR << begin->dist << begin->normal << std::endl;
 		)
-		for(CDQHLine* cur = begin; cur != end; ++cur){
+		for(CDQHLine<TVtx>* cur = begin; cur != end; ++cur){
 			if (cur->deleted) continue;
 			TreatPlane(cur);
 			assert(end < buffer+len);
@@ -129,11 +129,11 @@ void CDQHLines<TVtx>::CreateConvexHull(TVtx** b, TVtx** e){
 template <class TVtx>
 void CDQHLines<TVtx>::Print(std::ostream& os) const {
 	int num=0;
-	for(const CDQHLine* it = begin; it != end; ++it){
+	for(const CDQHLine<TVtx>* it = begin; it != end; ++it){
 		if (!it->deleted) num ++;
 	}
 	os << num << " lines." << std::endl;
-	for(const CDQHLine* it = begin; it != end; ++it){
+	for(const CDQHLine<TVtx>* it = begin; it != end; ++it){
 		it->Print(os);
 	}
 }
@@ -209,11 +209,11 @@ bool CDQHLines<TVtx>::CreateFirstConvex(){
 	curとその周囲の辺を削除し，凸包にtopを含める．
 	end[-1], end[-2]が新たに作られた辺になる．	*/
 template <class TVtx>
-void CDQHLines<TVtx>::CreateCone(CDQHLine* cur, TVtx* top){
+void CDQHLines<TVtx>::CreateCone(CDQHLine<TVtx>* cur, TVtx* top){
 	cur->deleted = true;							//	curは削除
 	nLines --;
 	//	隣の辺を見ていって，頂点からみえる辺は削除する．
-	CDQHLine* horizon[2];
+	CDQHLine<TVtx>* horizon[2];
 	for(int i=0; i<2; ++i){
 		horizon[i] = cur->neighbor[i];
 		while(horizon[i]->Visible(top) && nLines>1){
@@ -246,7 +246,7 @@ void CDQHLines<TVtx>::CreateCone(CDQHLine* cur, TVtx* top){
 }	
 /**	一番遠くの頂点を見つける．見つけたらそれを頂点リストからはずす	*/
 template <class TVtx>
-bool CDQHLines<TVtx>::FindFarthest(CDQHLine* line){
+bool CDQHLines<TVtx>::FindFarthest(CDQHLine<TVtx>* line){
 #if 0	
 	TVtx** maxVtx=NULL;
 	double maxDist = epsilon;
@@ -315,7 +315,7 @@ bool CDQHLines<TVtx>::FindFarthest(CDQHLine* line){
 /*	外側 内側 の順に並べる．
 外側の終わり＝内側の始まりが inner	*/
 template <class TVtx>
-TVtx** CDQHLines<TVtx>::DivideByPlaneR(CDQHLine* plane, TVtx** start, TVtx** end){
+TVtx** CDQHLines<TVtx>::DivideByPlaneR(CDQHLine<TVtx>* plane, TVtx** start, TVtx** end){
 	double INNER_DISTANCE = epsilon * plane->dist;
 	while(start != end){
 		double d = -plane->CalcDist(*start);
@@ -329,7 +329,7 @@ TVtx** CDQHLines<TVtx>::DivideByPlaneR(CDQHLine* plane, TVtx** start, TVtx** end
 	return start;
 }
 template <class TVtx>
-TVtx** CDQHLines<TVtx>::DivideByPlane(CDQHLine* plane, TVtx** start, TVtx** end){
+TVtx** CDQHLines<TVtx>::DivideByPlane(CDQHLine<TVtx>* plane, TVtx** start, TVtx** end){
 	double INNER_DISTANCE = epsilon * plane->dist;
 	while(start != end){
 		double d = plane->CalcDist(*start);
@@ -345,7 +345,7 @@ TVtx** CDQHLines<TVtx>::DivideByPlane(CDQHLine* plane, TVtx** start, TVtx** end)
 /**	一つの面に対する処理を行う．一番遠くの頂点を見つけ，
 地平線を調べ，コーンを作り，内部の頂点をはずす．*/
 template <class TVtx>
-void CDQHLines<TVtx>::TreatPlane(CDQHLine* cur){
+void CDQHLines<TVtx>::TreatPlane(CDQHLine<TVtx>* cur){
 	//	一番遠くの頂点の探索
 	if (!FindFarthest(cur)) return;
 	HULL_DEBUG_EVAL(
@@ -365,7 +365,7 @@ void CDQHLines<TVtx>::TreatPlane(CDQHLine* cur){
 	)
 	//	注目した辺(cur)と新たな辺(end-2,end-1)によって閉じ込められる頂点をvtxEndの後ろに移動
 	TVtx** inner = DivideByPlaneR(cur, vtxBegin, vtxEnd);
-	for(CDQHLine* it=end-2; it!=end; ++it){
+	for(CDQHLine<TVtx>* it=end-2; it!=end; ++it){
 		HULL_DEBUG_EVAL(
 			std::cout << "Inner:";
 			for(TVtx** v = inner; v != vtxEnd; ++v){

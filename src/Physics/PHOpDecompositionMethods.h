@@ -3,7 +3,7 @@
 
 #include <math.h>
 #include <stdlib.h>
-#include "Physics\SprPHOpObj.h"
+#include "Physics/SprPHOpObj.h"
 
 namespace Spr{;
 
@@ -188,12 +188,12 @@ public:
 			DSTR << "f is not a valid Number!" ;
 			return false;
 		}
-		if (_isnan(f.norm()) != 0)
+		if (std::isnan(f.norm()) != 0)
 		{
 			DSTR << "f is not a valid Number!" ;
 			return false;
 		}
-		if (!_finite(f.x) || !_finite(f.y) || !_finite(f.z))
+		if (!std::isfinite(f.x) || !std::isfinite(f.y) || !std::isfinite(f.z))
 		{
 			DSTR << "f is not a valid Number!";
 			return false;
@@ -208,12 +208,12 @@ public:
 
 			return false;
 		}
-		if (_isnan(f) != 0)
+		if (std::isnan(f) != 0)
 		{
 			DSTR <<"f is not a valid Number!" ;
 			return false;
 		}
-		if (!_finite(f))
+		if (!std::isfinite(f))
 		{
 			DSTR << "f is not a valid Number!";
 			return false;
@@ -227,12 +227,12 @@ public:
 			DSTR << "f is not a valid Number!" ;
 			return false;
 		}
-		if (_isnan(f1) != 0 || _isnan(f2) != 0 || _isnan(f3) != 0)
+		if (std::isnan(f1) != 0 || std::isnan(f2) != 0 || std::isnan(f3) != 0)
 		{
 			DSTR << "f is not a valid Number!" ;
 			return false;
 		}
-		if (!_finite(f1) || !_finite(f2) || !_finite(f3))
+		if (!std::isfinite(f1) || !std::isfinite(f2) || !std::isfinite(f3))
 		{
 			DSTR << "f is not a valid Number!" ;
 			return false;

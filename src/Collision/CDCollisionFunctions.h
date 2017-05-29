@@ -6,7 +6,7 @@
 */
 
 
-#include <Foundation\Object.h>
+#include <Foundation/Object.h>
 
 namespace Spr{
 	;
@@ -37,9 +37,9 @@ namespace Spr{
 	{
 		int regionFlag, insideFlag;
 		//Check if P in vertex region outside A
-		Vec3f &ab = b - a;
-		Vec3f &ac = c - a;
-		Vec3f &ap = p - a;
+		Vec3f ab = b - a;
+		Vec3f ac = c - a;
+		Vec3f ap = p - a;
 		float d1 = ab * ap;
 		float d2 = ac * ap;
 		//if (d1 <= 0.0f && d2 <= 0.0f) { regionFlag = 1; return a; }
@@ -50,7 +50,7 @@ namespace Spr{
 		float d4 = ac * bp;
 		//if(d3 >= 0.0f && d4 <= d3 ) {regionFlag = 2;return b;}
 
-		Vec3f &bc = c - b;
+		Vec3f bc = c - b;
 		float d4_ = bc * bp;
 		//if (d3 >= 0.0f && d4_ <= 0.0f)  { regionFlag = 2; return b; }
 
@@ -308,9 +308,9 @@ namespace Spr{
 	static Vec3f  ClosestPtoTriangle(Vec3f p, Vec3f a, Vec3f b, Vec3f c, bool &insideFlag, int &regionFlag)
 	{
 		//Check if P in vertex region outside A
-		Vec3f &ab = b - a;
-		Vec3f &ac = c - a;
-		Vec3f &ap = p - a;
+		Vec3f ab = b - a;
+		Vec3f ac = c - a;
+		Vec3f ap = p - a;
 		float d1 = ab * ap;
 		float d2 = ac * ap;
 		if (d1 <= 0.0f && d2 <= 0.0f) { regionFlag = 1; return a; }
@@ -321,7 +321,7 @@ namespace Spr{
 		float d4 = ac * bp;
 		//if(d3 >= 0.0f && d4 <= d3 ) {regionFlag = 2;return b;}
 
-		Vec3f &bc = c - b;
+		Vec3f bc = c - b;
 		float d4_ = bc * bp;
 		if (d3 >= 0.0f && d4_ <= 0.0f)  { regionFlag = 2; return b; }
 

@@ -6,7 +6,7 @@
 #include <Physics/PHEngine.h>
 #include <Foundation/Object.h>
 #ifdef USEGRMESH
-#include <Graphics\GRMesh.h>
+#include <Graphics/GRMesh.h>
 #endif
 #include <Physics/PHOpParticle.h>
 #include <Physics/PHOpGroup.h>
@@ -70,76 +70,76 @@ namespace Spr{
 			}
 		}
 
-		//StepŒvZ—pŠÖ”
+		//Stepè¨ˆç®—ç”¨é–¢æ•°
 		//void newReducedPositionProjectByOne(int i);
 		//void ReducedPositionProjectByOne(int i);
 		//void positionProjectByOne(int i);
 
-		//V‚µ‚¢simulation•û–@(Šµ«Matrix‚ğXVAGoalPosition‚Í•½‹Ï‚Å‚Í‚È‚­‚»‚Ì‚Ü‚Üj
+		//æ–°ã—ã„simulationæ–¹æ³•(æ…£æ€§Matrixã‚’æ›´æ–°ã€GoalPositionã¯å¹³å‡ã§ã¯ãªããã®ã¾ã¾ï¼‰
 		void newReducedPositionProject();
-		//simple‚Ìˆê‰ñsimulation‰ß’ö‚Ì‚Ü‚Æ‚ß‚é
+		//simpleã®ä¸€å›simulationéç¨‹ã®ã¾ã¨ã‚ã‚‹
 		void SimpleSimulationStep();
 
-		//shapematchingŒvZ‚ğJacobiŒvZ—p‚Ì
+		//shapematchingè¨ˆç®—ã‚’Jacobiè¨ˆç®—ç”¨ã®
 		Jacobi j;
-		//model’¸“_ŒQƒf[ƒ^
+		//modelé ‚ç‚¹ç¾¤ãƒ‡ãƒ¼ã‚¿
 		//float objTargetVtsArr[10000];
 		//float *objTargetVtsArr;
 
-		//’¸“_‚Ì‰ŠúˆÊ’uiBlend‚Ég‚¤j
+		//é ‚ç‚¹ã®åˆæœŸä½ç½®ï¼ˆBlendã«ä½¿ã†ï¼‰
 		Vec3f* objOrigPos;
-		//’¸“_‚Ì‰ŠúˆÊ’u‰Šú‰»flag
+		//é ‚ç‚¹ã®åˆæœŸä½ç½®åˆæœŸåŒ–flag
 		bool initialOrgP;
-		//—±q‚Ì”z—ñ‰Šú‰»‚³‚ê‚½‚©
+		//ç²’å­ã®é…åˆ—åˆæœŸåŒ–ã•ã‚ŒãŸã‹
 		bool initialPArr;
-		//¿—Ê’†SiŠJ”­’†A–¢ŒŸØj
+		//è³ªé‡ä¸­å¿ƒï¼ˆé–‹ç™ºä¸­ã€æœªæ¤œè¨¼ï¼‰
 		//Vec3f objMassCenter;
-		//’¸“_‚ª—±qgroupmember‚É‘Î‚·‚éd‚İiBlend‚Ég‚¤j
+		//é ‚ç‚¹ãŒç²’å­groupmemberã«å¯¾ã™ã‚‹é‡ã¿ï¼ˆBlendã«ä½¿ã†ï¼‰
 		float** objBlWeightArr;
-		//d‚İ‰Šú‰»‚³‚ê‚½‚©
+		//é‡ã¿åˆæœŸåŒ–ã•ã‚ŒãŸã‹
 		bool initialBlWei;
-		//—±q‚Ì‰Šúp¨
+		//ç²’å­ã®åˆæœŸå§¿å‹¢
 		Spr::TPose<float> * objOrinPsPoseList;
-		//’¸“_‚©‚ç—±q‚Ìmap
+		//é ‚ç‚¹ã‹ã‚‰ç²’å­ã®map
 		int *objVtoPmap;
-		//’¸“_—±qmap‰Šú‰»‚³‚ê‚½‚©
+		//é ‚ç‚¹ç²’å­mapåˆæœŸåŒ–ã•ã‚ŒãŸã‹
 		bool initialVtoPmap;
 
-		//—±qBVHiŠJ”­’†j
+		//ç²’å­BVHï¼ˆé–‹ç™ºä¸­ï¼‰
 		//BVHgOp *bvhGOps;
 
 #ifdef USEGRMESH
-		//model‘ÎÛ
+		//modelå¯¾è±¡
 		GRMesh *targetMesh;
 #else
-		//model’¸“_ŒQ
+		//modelé ‚ç‚¹ç¾¤
 		Vec3f *objTargetVts;
 #endif
-		//model’¸“_ŒQ‰Šú‰»‚³‚ê‚½‚©
+		//modelé ‚ç‚¹ç¾¤åˆæœŸåŒ–ã•ã‚ŒãŸã‹
 		bool initialtgV;
-		//model’¸“_ŒQ”
+		//modelé ‚ç‚¹ç¾¤æ•°
 		//int objTargetVtsNum;
-		//ˆê—±qgroup•Û‘¶ê
+		//ä¸€æ™‚ç²’å­groupä¿å­˜å ´
 		std::vector<PHOpGroup> tmpPGroups;
-		//—±qgroup‚Ì”z—ñ
+		//ç²’å­groupã®é…åˆ—
 		PHOpGroup* objGArr;
-		//—±qgroup‰Šú‰»‚³‚ê‚½‚©
+		//ç²’å­groupåˆæœŸåŒ–ã•ã‚ŒãŸã‹
 		bool initialGArr;
 
 
-		//ˆê—±q•Û‘¶ê
+		//ä¸€æ™‚ç²’å­ä¿å­˜å ´
 		std::vector<PHOpParticle> tmpPtclList;
-		//—±q‚Ì”z—ñ
-		PHOpParticle *objPArr;//Memory‚Ìl‚¦‚ÅA‚±‚±‚ÅÅŒã‚É•Û‘¶‚µ‚Ü‚µ‚½
+		//ç²’å­ã®é…åˆ—
+		PHOpParticle *objPArr;//Memoryã®è€ƒãˆã§ã€ã“ã“ã§æœ€å¾Œã«ä¿å­˜ã—ã¾ã—ãŸ
 
 
-		//“Æ—§alphag—pswitchiŠJ”­’†j
+		//ç‹¬ç«‹alphaä½¿ç”¨switchï¼ˆé–‹ç™ºä¸­ï¼‰
 		bool objUseIndepParam;
-		//d—Íswitch
+		//é‡åŠ›switch
 		bool gravityOn;
-		//Œy—Ê‰»ŒvZŠÖ”switch
+		//è»½é‡åŒ–è¨ˆç®—é–¢æ•°switch
 		bool objUseReducedPP;
-		////—±q‚Æ•\–Êmesh‚Æ‚Ì‘Î‰ŠÖŒW
+		////ç²’å­ã¨è¡¨é¢meshã¨ã®å¯¾å¿œé–¢ä¿‚
 		std::vector<int> objFaceBelongs;
 
 		std::vector<Vec3f> tmpVts;
@@ -149,7 +149,7 @@ namespace Spr{
 
 
 	private:
-		//”z’uŠ®—¹‚Ìlistilocal—pj
+		//é…ç½®å®Œäº†ã®listï¼ˆlocalç”¨ï¼‰
 		std::vector<int> mPtclAssList;
 	public:
 		bool GetDesc(void *desc)  {
@@ -281,7 +281,7 @@ namespace Spr{
 
 		void ReducedPositionProject();
 
-		//pNewCtr‚©‚çpCurrCtr‚ÖXV
+		//pNewCtrã‹ã‚‰pCurrCtrã¸æ›´æ–°
 
 		void integrationStep();
 
@@ -390,7 +390,7 @@ namespace Spr{
 			{
 
 				PHOpGroup &pg = objGArr[objPArr[j].pMyGroupInd];
-				//’¸“_‚ÍƒOƒ‹[ƒv‚Ìƒƒ“ƒo[‚É‘Î‚µ‚Äd‚İ‚ğ‚©‚¯‚ÄˆÊ’u‚ğŒvZ‚·‚é
+				//é ‚ç‚¹ã¯ã‚°ãƒ«ãƒ¼ãƒ—ã®ãƒ¡ãƒ³ãƒãƒ¼ã«å¯¾ã—ã¦é‡ã¿ã‚’ã‹ã‘ã¦ä½ç½®ã‚’è¨ˆç®—ã™ã‚‹
 				for (int k = 0; k < objPArr[j].pNvertex; k++)
 				{
 					int vertind = objPArr[j].pVertArr[k];
@@ -466,7 +466,7 @@ namespace Spr{
 			}
 #ifdef USEGRMESH
 			//	 calc normal
-			// ’¸“_‚ğ‹¤—L‚·‚é–Ê‚Ì”
+			// é ‚ç‚¹ã‚’å…±æœ‰ã™ã‚‹é¢ã®æ•°
 			if (updateNormals)
 			{
 				std::vector<int> nFace(objTargetVtsNum, 0);
@@ -506,7 +506,7 @@ namespace Spr{
 
 			objOrigPos = new Vec3f[vtsNum];
 			initialOrgP = true;
-			objTargetVts = vts;//Tetgen‚½‚ßg‚¤
+			objTargetVts = vts;//TetgenãŸã‚ä½¿ã†
 			objTargetVtsNum = vtsNum;
 
 			InitialFloatVertexDataArr();
@@ -535,7 +535,7 @@ namespace Spr{
 		{
 			objOrigPos = new Vec3f[vtsNum];
 			initialOrgP = true;
-			objTargetVts = vts;//Tetgen‚½‚ßg‚¤
+			objTargetVts = vts;//TetgenãŸã‚ä½¿ã†
 			objTargetVtsNum = vtsNum;
 
 			InitialFloatVertexDataArr();
@@ -562,9 +562,9 @@ namespace Spr{
 			float objPtclRadius = pSize;
 
 			//decide particle pos & add vertexes to particles
-			//Particle©“®¶¬è‡
-			//Å‰‚Ì’¸“_‚©‚çparticle’¼Œa”ÍˆÍ“à‘¼‚Ì’¸“_‚ğ’T‚·A
-			//Œ©‚Â‚©‚Á‚½‘S‚Ä‚Ì’¸“_‚ğˆê‚Â‚Ìparticle‚É‚ ‚°‚é
+			//Particleè‡ªå‹•ç”Ÿæˆæ‰‹é †
+			//æœ€åˆã®é ‚ç‚¹ã‹ã‚‰particleç›´å¾„ç¯„å›²å†…ä»–ã®é ‚ç‚¹ã‚’æ¢ã™ã€
+			//è¦‹ã¤ã‹ã£ãŸå…¨ã¦ã®é ‚ç‚¹ã‚’ä¸€ã¤ã®particleã«ã‚ã’ã‚‹
 			//Simple Particle auto generation
 			//From first vertex, find other vertex inside particle diameter
 			//add all found vetices into one particle ->loop			
@@ -601,7 +601,7 @@ namespace Spr{
 			}
 			delete dp;
 
-			//Particle‚ÉŠÖ‚·‚éî•ñ‚ğ¶¬‚·‚é
+			//Particleã«é–¢ã™ã‚‹æƒ…å ±ã‚’ç”Ÿæˆã™ã‚‹
 			//Build Particle propoties
 			objAverRadius = 0.0f;
 			objMaxRadius = 0.0f;
@@ -644,7 +644,7 @@ namespace Spr{
 
 			mt.startMyTimer();
 #endif
-			//Particle group‚ğì‚é
+			//Particle groupã‚’ä½œã‚‹
 			//buildGroup
 			Vec3f p1, p2;
 			//int  nearest[4];
@@ -652,12 +652,12 @@ namespace Spr{
 			std::vector<DisCmpPoint> disCmpQue;
 			DisCmpPoint tmpdcp;
 
-			//particlegroup¶¬©“®‰»è‡
-			//Å‰‚Ìparticle‚©‚ç,
-			//link ”Œˆ‚ß‚é 
-			//‚ ‚éŒÀ‚è—×‚Ìparticle‚ğgroup‚É“ü‚ê‚é  ->loop
-			//link ”‘«‚è‚È‚¢
-			//‚ ‚é‚¾‚¯—×‚Ìparticle‚ğgroup‚É“ü‚ê‚é  ->loop
+			//particlegroupç”Ÿæˆè‡ªå‹•åŒ–æ‰‹é †
+			//æœ€åˆã®particleã‹ã‚‰,
+			//link æ•°æ±ºã‚ã‚‹æ™‚ 
+			//ã‚ã‚‹é™ã‚Šéš£ã®particleã‚’groupã«å…¥ã‚Œã‚‹  ->loop
+			//link æ•°è¶³ã‚Šãªã„æ™‚
+			//ã‚ã‚‹ã ã‘éš£ã®particleã‚’groupã«å…¥ã‚Œã‚‹  ->loop
 			for (int i = 0; i < (int)dParticleArr.size(); i++)
 			{
 				dParticleArr[i].pMyGroupInd = i;
@@ -684,7 +684,7 @@ namespace Spr{
 					disCmpQue.push_back(tmpdcp);
 
 				}
-				//—×particle‚Ö‚Ì‹——£‚Ìsort
+				//éš£particleã¸ã®è·é›¢ã®sort
 				std::sort(disCmpQue.begin(), disCmpQue.end());
 
 
@@ -734,7 +734,7 @@ namespace Spr{
 
 			mt.startMyTimer();
 #endif
-			//Array‚Ömemory‚ğ•Ï‚¦‚é
+			//Arrayã¸memoryã‚’å¤‰ãˆã‚‹
 
 
 			swapMemParticle(dParticleArr);
@@ -763,10 +763,10 @@ namespace Spr{
 			//build weight relation between vertices to particle center
 			//buildDisWeightForVsinP();
 
-			//faceî•ñ‚Ì“ü—Í
+			//faceæƒ…å ±ã®å…¥åŠ›
 			//buildFaceInfoInP();
 
-			//Vertex‚©‚çOp‚Ü‚Å‚Ì‹tmap‚ğ‚Â‚­‚é
+			//Vertexã‹ã‚‰Opã¾ã§ã®é€†mapã‚’ã¤ãã‚‹
 			BuildMapFromVtoP();
 
 			//buildGroupCenter
@@ -776,11 +776,11 @@ namespace Spr{
 			mt.endMyTimer();
 			mt.printElastedTime();
 #endif
-			//particlegroupweight‚ğì‚é
+			//particlegroupweightã‚’ä½œã‚‹
 			//initial blend weight
 			BuildBlendWeight();
 
-			//Particle‰Šúp¨‚ğ‹L‰¯‚·‚é(blending‚Ég‚¤)
+			//ParticleåˆæœŸå§¿å‹¢ã‚’è¨˜æ†¶ã™ã‚‹(blendingã«ä½¿ã†)
 			StoreOrigPose();
 
 
@@ -798,7 +798,7 @@ namespace Spr{
 				Matrix3f &pMIMatrix = dp.pMomentInertia;
 				for (int i = 0; i < dp.pNvertex; i++)
 				{
-					Vec3f &p = objTargetVts[dp.pVertArr[i]] - dp.pCurrCtr;
+					Vec3f p = objTargetVts[dp.pVertArr[i]] - dp.pCurrCtr;
 					pMIMatrix.xx += p.y * p.y + p.z * p.z;
 					pMIMatrix.xy += -p.x * p.y;
 					pMIMatrix.xz += -p.x * p.z;
@@ -873,7 +873,7 @@ namespace Spr{
 
 		void StoreOrigPose()
 		{
-			//Particle‰Šúp¨‚ğ‹L‰¯‚·‚é(blending‚Ég‚¤)
+			//ParticleåˆæœŸå§¿å‹¢ã‚’è¨˜æ†¶ã™ã‚‹(blendingã«ä½¿ã†)
 			//build Oringinal Pose of Ps
 			objOrinPsPoseList = new TPose<float>[assPsNum];
 			for (int j = 0; j < assPsNum; j++)
@@ -909,7 +909,7 @@ namespace Spr{
 				PHOpGroup pg = objGArr[objPArr[j].pMyGroupInd];
 				int gpSize = pg.gNptcl;//
 				for (int k = 0; k < objPArr[j].pNvertex; k++)
-				{//Particle“à‚·‚×‚Ävertex‚É‘Î‚µ‚Ä
+				{//Particleå†…ã™ã¹ã¦vertexã«å¯¾ã—ã¦
 
 					std::vector<float> distancelist;
 					float distanceSum = 0.0;
@@ -919,7 +919,7 @@ namespace Spr{
 					vert = objTargetVts[vertind];
 
 					float tmpdis = (CenterPs - vert).norm();
-					distanceSum += tmpdis;//vertex‚©‚ç‚·‚×‚Älink‚µ‚ÄParticle‚Ì‹——£‚ğŒvZ‚·‚é
+					distanceSum += tmpdis;//vertexã‹ã‚‰ã™ã¹ã¦linkã—ã¦Particleã®è·é›¢ã‚’è¨ˆç®—ã™ã‚‹
 					distancelist.push_back(tmpdis);
 
 					float* linkWeight = new float[gpSize];
@@ -937,7 +937,7 @@ namespace Spr{
 					}
 
 					for (int jm = 1; jm < gpSize; jm++)
-					{//‚·‚×‚Älink‚³‚ê‚½Particle‚É‘Î‚µ‚Ä
+					{//ã™ã¹ã¦linkã•ã‚ŒãŸParticleã«å¯¾ã—ã¦
 
 						//PHOpParticle linkPs = objPArr[pg.getParticleGlbIndex(jm)];
 						Vec3f linkPsCenter = objPArr[pg.getParticleGlbIndex(jm)].pOrigCtr;
@@ -1074,7 +1074,7 @@ namespace Spr{
 		}
 
 
-		//DeformVertex‰Šú‰»
+		//DeformVertexåˆæœŸåŒ–
 		void initialDeformVertex(Vec3f *vts, int vtsNum)
 		{
 			for (int i = 0; i < vtsNum; i++)
@@ -1106,7 +1106,7 @@ namespace Spr{
 
 			Vec3f gravity;
 			float timeStep;
-			Bounds bounds;//‹““®”ÍˆÍ
+			Bounds bounds;//æŒ™å‹•ç¯„å›²
 
 			float alpha;
 			float beta;

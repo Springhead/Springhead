@@ -88,7 +88,7 @@ unsigned CDQHPlanes<TVtx>::size(){
 }
 template <class TVtx>
 CDQHPlanes<TVtx>::CDQHPlanes(int l):len(l){
-	buffer = new CDQHPlane[len];
+	buffer = new CDQHPlane<TVtx>[len];
 	Clear();
 }
 template <class TVtx>
@@ -120,7 +120,7 @@ void CDQHPlanes<TVtx>::CreateConvexHull(TVtx** b, TVtx** e){
 		}
 		DSTR << begin->dist << begin->normal << std::endl;
 	)
-	for(CDQHPlane* cur = begin; cur != end; ++cur){
+	for(CDQHPlane<TVtx>* cur = begin; cur != end; ++cur){
 		if (cur->deleted) continue;
 		TreatPlane(cur);
 		assert(end < buffer+len);
@@ -130,11 +130,11 @@ void CDQHPlanes<TVtx>::CreateConvexHull(TVtx** b, TVtx** e){
 template <class TVtx>
 void CDQHPlanes<TVtx>::Print(std::ostream& os) const {
 	int num=0;
-	for(const CDQHPlane* it = begin; it != end; ++it){
+	for(const CDQHPlane<TVtx>* it = begin; it != end; ++it){
 		if (!it->deleted) num ++;
 	}
 	os << num << " planes." << std::endl;
-	for(const CDQHPlane* it = begin; it != end; ++it){
+	for(const CDQHPlane<TVtx>* it = begin; it != end; ++it){
 		it->Print(os);
 	}
 }
@@ -209,10 +209,10 @@ void CDQHPlanes<TVtx>::CreateFirstConvex(){
 /**	horizon を作る． cur が穴をあける面，vtx が新しい頂点．
 rv にhorizonを辺に持つ3角形を1つ返す．*/
 template <class TVtx>
-void CDQHPlanes<TVtx>::FindHorizon(TVtx*& rv, CDQHPlane* cur, TVtx* vtx){
+void CDQHPlanes<TVtx>::FindHorizon(TVtx*& rv, CDQHPlane<TVtx>* cur, TVtx* vtx){
 	//	curの削除．隣の面からの参照も消す．
 	for(int i=0; i<3; ++i){
-		CDQHPlane* next = cur->neighbor[i];
+		CDQHPlane<TVtx>* next = cur->neighbor[i];
 		if (!next) continue;
 		for(int j=0; j<3; ++j){
 			if (next->neighbor[j] == cur){
@@ -227,7 +227,7 @@ void CDQHPlanes<TVtx>::FindHorizon(TVtx*& rv, CDQHPlane* cur, TVtx* vtx){
 	bool bRecurse = false;
 	TVtx* rvc=NULL;
 	for(int i=0; i<3; ++i){
-		CDQHPlane* next = cur->neighbor[i];
+		CDQHPlane<TVtx>* next = cur->neighbor[i];
 		if (!next) continue;
 		if (next->Visible(vtx) && nPlanes>1){	//	見える面には穴をあける．
 			FindHorizon(rv, next, vtx);
@@ -247,7 +247,7 @@ template <class TVtx>
 void CDQHPlanes<TVtx>::CreateCone(TVtx* firstVtx, TVtx* top){
 	CDQHPlanes& planes = *this; 
 	TVtx* curVtx = firstVtx;
-	CDQHPlane* curHorizon = firstVtx->horizon;
+	CDQHPlane<TVtx>* curHorizon = firstVtx->horizon;
 	HULL_DEBUG_EVAL( std::cout << "Horizon:" << *curVtx; )
 	//	最初の面を張る
 	int curVtxID = curHorizon->GetVtxID(curVtx);
@@ -261,7 +261,7 @@ void CDQHPlanes<TVtx>::CreateCone(TVtx* firstVtx, TVtx* top){
 	//	curHorizonと接続
 	planes.end->neighbor[0] = curHorizon;
 	curHorizon->neighbor[prevVtxID] = planes.end;
-	CDQHPlane* firstPlane = planes.end;
+	CDQHPlane<TVtx>* firstPlane = planes.end;
 	//	面の作成完了
 	planes.end ++;
 	nPlanes ++;
@@ -330,7 +330,7 @@ void CDQHPlanes<TVtx>::CreateCone(TVtx* firstVtx, TVtx* top){
 }	
 /**	一番遠くの頂点を見つける．見つけたらそれを頂点リストからはずす	*/
 template <class TVtx>
-bool CDQHPlanes<TVtx>::FindFarthest(CDQHPlane* plane){
+bool CDQHPlanes<TVtx>::FindFarthest(CDQHPlane<TVtx>* plane){
 	TVtx** maxVtx=NULL;
 	double maxDist = HULL_EPSILON;
 	for(TVtx** it=vtxBegin; it!= vtxEnd; ++it){
@@ -363,7 +363,7 @@ bool CDQHPlanes<TVtx>::FindFarthest(CDQHPlane* plane){
 	外側の終わり＝内側の始まりが inner	
 	面の法線が内側を向いている．(逆向きの面)	*/
 template <class TVtx>
-TVtx** CDQHPlanes<TVtx>::DivideByPlaneR(CDQHPlane* plane, TVtx** start, TVtx** end){
+TVtx** CDQHPlanes<TVtx>::DivideByPlaneR(CDQHPlane<TVtx>* plane, TVtx** start, TVtx** end){
 	double INNER_DISTANCE = HULL_EPSILON * plane->dist;
 	while(start != end){
 		double d = -plane->CalcDist(*start);
@@ -380,7 +380,7 @@ TVtx** CDQHPlanes<TVtx>::DivideByPlaneR(CDQHPlane* plane, TVtx** start, TVtx** e
 	外側の終わり＝内側の始まりが inner．
 	面の法線は外側を向いている．*/
 template <class TVtx>
-TVtx** CDQHPlanes<TVtx>::DivideByPlane(CDQHPlane* plane, TVtx** start, TVtx** end){
+TVtx** CDQHPlanes<TVtx>::DivideByPlane(CDQHPlane<TVtx>* plane, TVtx** start, TVtx** end){
 	double INNER_DISTANCE = HULL_EPSILON * plane->dist;
 	while(start != end){
 		double d = plane->CalcDist(*start);
@@ -396,7 +396,7 @@ TVtx** CDQHPlanes<TVtx>::DivideByPlane(CDQHPlane* plane, TVtx** start, TVtx** en
 /**	一つの面に対する処理を行う．一番遠くの頂点を見つけ，
 地平線を調べ，コーンを作り，内部の頂点をはずす．*/
 template <class TVtx>
-void CDQHPlanes<TVtx>::TreatPlane(CDQHPlane* cur){
+void CDQHPlanes<TVtx>::TreatPlane(CDQHPlane<TVtx>* cur){
 	if (!FindFarthest(cur)) return;
 	HULL_DEBUG_EVAL(
 		DSTR << "Farthest:" << vtxBegin[-1]->GetPos();
@@ -415,12 +415,12 @@ void CDQHPlanes<TVtx>::TreatPlane(CDQHPlane* cur){
 		}
 	)
 	//	コーンの作成
-	CDQHPlane* coneBegin = end;
+	CDQHPlane<TVtx>* coneBegin = end;
 	CreateCone(hor, vtxBegin[-1]);
-	CDQHPlane* coneEnd = end;
+	CDQHPlane<TVtx>* coneEnd = end;
 	//	コーンに閉じ込められる頂点をvtxEndの後ろに移動
 	TVtx** inner = DivideByPlaneR(cur, vtxBegin, vtxEnd);
-	for(CDQHPlane* it=coneBegin; it!=coneEnd; ++it){
+	for(CDQHPlane<TVtx>* it=coneBegin; it!=coneEnd; ++it){
 		if (it->deleted) continue;
 		HULL_DEBUG_EVAL(
 			std::cout << "Inner:";
