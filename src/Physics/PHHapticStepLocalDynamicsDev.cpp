@@ -1,19 +1,19 @@
-﻿#include <Physics/PHHapticEngineLDDev.h>
+﻿#include <Physics/PHHapticStepLocalDynamicsDev.h>
 
 namespace Spr{;
 
 //----------------------------------------------------------------------------
-// PHHapticEngineLDDev
-void PHHapticEngineLDDev::StepHapticLoop() {
+// PHHapticStepLocalDynamicsDev
+void PHHapticStepLocalDynamicsDev::StepHapticLoop() {
 	UpdateHapticPointer();
 	GetHapticRender()->HapticRendering(this);
 	LocalDynamics6D();
 }
-void PHHapticEngineLDDev::LocalDynamics6D() {
+void PHHapticStepLocalDynamicsDev::LocalDynamics6D() {
 	double pdt = GetPhysicsTimeStep();
 	double hdt = GetHapticTimeStep();
 	for (int i = 0; i < NHapticSolids(); i++) {
-		PHSolidForHaptic* hsolid = GetHapticSolidHaptic(i);
+		PHSolidForHaptic* hsolid = GetSolidInHaptic(i);
 		if (hsolid->doSim == 0) continue;
 		if (hsolid->GetLocalSolid()->IsDynamical() == false) continue;
 		PHSolid* localSolid = &hsolid->localSolid;
@@ -24,7 +24,7 @@ void PHHapticEngineLDDev::LocalDynamics6D() {
 			vel += (hsolid->curb - hsolid->lastb) * pdt;	// 衝突の影響を反映
 		}
 		for (int j = 0; j < NHapticPointers(); j++) {
-			PHHapticPointer* pointer = GetHapticPointerHaptic(j);
+			PHHapticPointer* pointer = GetPointerInHaptic(j);
 			PHSolidPairForHaptic* sp = GetSolidPairInHaptic(i, pointer->GetPointerID());
 			if (sp->inLocal == 0) continue;
 			SpatialVector force;
@@ -49,11 +49,11 @@ void PHHapticEngineLDDev::LocalDynamics6D() {
 	}
 }
 
-PHHapticEngineLDDev::PHHapticEngineLDDev(){
+PHHapticStepLocalDynamicsDev::PHHapticStepLocalDynamicsDev(){
 	states = ObjectStatesIf::Create();
 }
 
-void PHHapticEngineLDDev::Step1(){
+void PHHapticStepLocalDynamicsDev::Step1(){
 	lastvels.clear();
 	for(int i = 0; i < NHapticSolids(); i++){
 		SpatialVector vel;
@@ -62,7 +62,7 @@ void PHHapticEngineLDDev::Step1(){
 		lastvels.push_back(vel);
 	}
 }
-void PHHapticEngineLDDev::Step2(){
+void PHHapticStepLocalDynamicsDev::Step2(){
 	// 更新後の速度、前回の速度差から定数項を計算
 	for(int i = 0; i < NHapticSolids(); i++){
 		// 近傍の剛体のみ
@@ -78,7 +78,7 @@ void PHHapticEngineLDDev::Step2(){
 	PredictSimulation6D();
 }
 
-void PHHapticEngineLDDev::PredictSimulation6D(){
+void PHHapticStepLocalDynamicsDev::PredictSimulation6D(){
 	engine->bPhysicStep = false;
 	/** PHSolidForHapticのdosim > 0の物体に対してテスト力を加え，
 		すべての近傍物体について，アクセレランスを計算する */
@@ -304,7 +304,7 @@ void PHHapticEngineLDDev::PredictSimulation6D(){
 }
 
 
-void PHHapticEngineLDDev::SyncHaptic2Physic(){
+void PHHapticStepLocalDynamicsDev::SyncHaptic2Physic(){
 #if 1
 	// physics <------ haptic
 	// PHSolidForHapticの同期
@@ -361,7 +361,7 @@ void PHHapticEngineLDDev::SyncHaptic2Physic(){
 #endif
 }
 
-void PHHapticEngineLDDev::SyncPhysic2Haptic(){
+void PHHapticStepLocalDynamicsDev::SyncPhysic2Haptic(){
 #if 1
 	// haptic <------ physics
 	// PHSolidForHapticの同期
@@ -391,7 +391,7 @@ void PHHapticEngineLDDev::SyncPhysic2Haptic(){
 #endif
 }
 
-void PHHapticEngineLDDev::ReleaseState(PHSceneIf* scene) {
+void PHHapticStepLocalDynamicsDev::ReleaseState(PHSceneIf* scene) {
 	states->ReleaseState(scene);
 }
 

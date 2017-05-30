@@ -1,4 +1,4 @@
-﻿#include <Physics/PHHapticEngineImpulse.h>
+﻿#include <Physics/PHHapticStepImpulse.h>
 
 namespace Spr{;
 
@@ -25,24 +25,24 @@ void PHHapticLoopImpulse::HapticRendering(){
 }
 #endif
 //----------------------------------------------------------------------------
-// PHHapticEngineImpulse
-PHHapticEngineImpulse::PHHapticEngineImpulse(){ 
+// PHHapticStepImpulse
+PHHapticStepImpulse::PHHapticStepImpulse(){ 
 }
 
-void PHHapticEngineImpulse::Step1(){};
-void PHHapticEngineImpulse::Step2(){
+void PHHapticStepImpulse::Step1(){};
+void PHHapticStepImpulse::Step2(){
 	for(int i = 0; i < NHapticSolids(); i++){
 		PHSolid* solid = GetHapticSolid(i)->sceneSolid;
 		//if(i == 1) //CSVOUT << solid->GetVelocity().y << "," << solid->GetFramePosition().y  << std::endl;
 	}
 	engine->StartDetection();
 }
-void PHHapticEngineImpulse::StepHapticLoop() {
+void PHHapticStepImpulse::StepHapticLoop() {
 	UpdateHapticPointer();
 	GetHapticRender()->HapticRendering(this);
 }
 
-void PHHapticEngineImpulse::SyncHaptic2Physic(){
+void PHHapticStepImpulse::SyncHaptic2Physic(){
 	// physics <------ haptic
 	// PHSolidForHapticの同期
 	// PHSolidPairForHaptic(力覚ポインタと近傍の物体)の各種情報の同期
@@ -72,7 +72,7 @@ void PHHapticEngineImpulse::SyncHaptic2Physic(){
 	}
 }
 
-void PHHapticEngineImpulse::SyncPhysic2Haptic(){
+void PHHapticStepImpulse::SyncPhysic2Haptic(){
 	// haptic <------ physics
 	// PHSolidForHapticの同期
 	for(int i = 0; i < NHapticSolids(); i++){

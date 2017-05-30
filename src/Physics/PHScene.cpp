@@ -88,10 +88,9 @@ void PHScene::Init(){
 	opSpAgent->SetScene(this->Cast());
 	opSpAgent->spTable = DBG_NEW CDSpatialHashTable();
 	
-	PHHapticEngineCallStep2* hpe = DBG_NEW PHHapticEngineCallStep2;
+	PHHapticEngine::PHHapticEngineCallStep2* hpe = DBG_NEW PHHapticEngine::PHHapticEngineCallStep2;
 	hpe->engine = hapticEngine;
 	engines.Add(hpe);
-
 	AfterSetDesc();
 }
 void PHScene::AfterSetDesc(){
