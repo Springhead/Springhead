@@ -39,16 +39,7 @@ void PHHapticEngineImpulse::Step2(){
 }
 void PHHapticEngineImpulse::StepHapticLoop() {
 	UpdateHapticPointer();
-
-	PHHapticRenderInfo info;
-	info.pointers = GetHapticPointersInHaptic();
-	info.hsolids = GetHapticSolidsInHaptic();
-	info.sps = GetSolidPairsInHaptic();
-	info.hdt = GetHapticTimeStep();
-	info.pdt = GetPhysicsTimeStep();
-	info.loopCount = loopCount;
-	info.bInterpolatePose = true;
-	GetHapticRender()->HapticRendering(info);
+	GetHapticRender()->HapticRendering(this);
 }
 
 void PHHapticEngineImpulse::SyncHaptic2Physic(){

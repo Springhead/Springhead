@@ -233,142 +233,6 @@ void PHSolidPairForHaptic::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 
 	//CSVOUT << (sp->shapePoseW[0] * sp->closestPoint[0]).y << "," << (sp->shapePoseW[1] * sp->closestPoint[1]).y << std::endl;
 }
-
-PHIrs PHSolidPairForHaptic::CompIntermediateRepresentation(PHHapticRender* hr, PHSolid* solid0, PHHapticPointer* pointer){
-	/* 力覚安定化のための補間
-	// Impulseの場合は相手の剛体のPoseの補間が必要。
-	// LocalDynamicsの場合は法線の補間のみでよい。
-	// 法線の補間はPHShapePairForHapticでやる。h
-	*/
-	const double syncCount = hr->pdt / hr->hdt;
-	double t = hr->loopCount / syncCount;
-	if (t > 1.0) t = 1.0;
-
-	force.clear();
-	torque.clear();
-	lastInterpolationPose = interpolationPose;
-	interpolationPose = solid0->GetPose();
-	if(hr->bInterpolatePose){
-		Posed cur = solid0->GetPose();
-		double dt = ((PHScene*)solid0->GetScene())->GetTimeStep();
-		Posed last;
-		last.Pos() = cur.Pos() - (solid0->GetVelocity() * dt + solid0->GetOrientation() * solid0->dV.v());
-		last.Ori() = (cur.Ori() * Quaterniond::Rot(- solid0->v.w() * dt + - solid0->dV.w())).unit();
-		interpolationPose = interpolate(t, last, cur);
-	}
-	// 接触したとして摩擦計算のための相対位置を計算
-	// 相対摩擦
-	if(frictionState == PHSolidPairForHapticIf::FREE){
-		frictionState = PHSolidPairForHapticIf::STATIC;
-		contactCount = 0;
-		fricCount = 0;
-		initialRelativePose =  pointer->GetPose() * interpolationPose.Inv();
-	}else{
-		contactCount ++;
-		initialRelativePose = pointer->lastProxyPose * lastInterpolationPose.Inv();
-	}
-	relativePose = initialRelativePose * interpolationPose * pointer->GetPose().Inv();
-	//DSTR << "pose" << pointer->GetPose() << std::endl;
-	//DSTR << "lastProxy" << pointer->lastProxyPose << std::endl;
-	//DSTR << "ini" << initialRelativePose << std::endl;
-	//DSTR << "relativePose" << relativePose << std::endl;
-
-	// 中間表現の作成
-	PHIrs irs;
-	for(int i = 0; i < solid0->NShape(); i++){
-		for(int j = 0; j < pointer->NShape(); j++){
-			PHShapePairForHaptic* spHaptic = GetShapePair(i, j)->Cast();
-			Posed curShapePoseW[2];
-			curShapePoseW[0] = interpolationPose * solid0->GetShapePose(i);
-			curShapePoseW[1] = pointer->GetPose() * pointer->GetShapePose(j);
-			spHaptic->CompIntermediateRepresentation(curShapePoseW, t, hr->bInterpolatePose, pointer->bMultiPoints);
-			for(int k = 0; k < (int)spHaptic->irs.size(); k++){
-				PHIr* ir = spHaptic->irs[k];
-				ir->solidID = solidID[0];
-				ir->solidPair = this;
-				ir->r = ir->pointerPointW - pointer->GetCenterPosition();
-				ir->contactPointVel = solid0->GetPointVelocity(ir->contactPointW);
-				ir->pointerPointVel = pointer->GetPointVelocity(ir->pointerPointW);	
-			}
-			if(pointer->bFriction) CompFrictionIntermediateRepresentation(hr, pointer, spHaptic);
-			for(int k = 0; k < (int)spHaptic->irs.size(); k++){
-				irs.push_back(spHaptic->irs[k]);
-			}
-		}
-	}
-	if(irs.size() == 0){
-		// 接触なし
-		frictionState = PHSolidPairForHapticIf::FREE;
-		initialRelativePose = Posed();
-		relativePose = Posed();
-	}
-	return irs;
-}
-
-bool PHSolidPairForHaptic::CompFrictionIntermediateRepresentation(PHHapticRender* hr, PHHapticPointer* pointer, PHShapePairForHaptic* sp){
-	int Nirs = sp->irs.size();
-	if(Nirs == 0) return false;
-	bool bDynamic = false;
-	double mu=0;
-	if (pointer->bTimeVaryFriction) {
-		if (frictionState == PHSolidPairForHapticIf::STATIC) {
-			mu = sp->mu + sp->mu*( sp->timeVaryFrictionA * log(1 + sp->timeVaryFrictionB * fricCount * hr->hdt));
-		}
-	}
-	else {
-		mu = sp->mu;
-		if (frictionState == PHSolidPairForHapticIf::STATIC) mu = sp->mu0;
-	}
-	for (int i = 0; i < Nirs; i++) {
-		PHIr* ir = sp->irs[i];
-		if (pointer->bTimeVaryFriction && frictionState == PHSolidPairForHapticIf::DYNAMIC) {
-			double v = (ir->pointerPointVel - ir->contactPointVel).norm();
-			v = std::max(v, sp->timeVaryFrictionC / hr->hdt);
-			//	速度と粘性摩擦を含める
-			mu = sp->mu + sp->timeVaryFrictionA * log(1 + sp->timeVaryFrictionB * sp->timeVaryFrictionC / v)
-				+ sp->frictionViscosity * v;
-		}
-		double l = mu * ir->depth;						// 摩擦円錐半径
-		Vec3d vps = ir->pointerPointW;						//	接触判定した際の、ポインタ侵入点の位置
-		Vec3d vq = relativePose * ir->pointerPointW;		//	現在の(ポインタの移動分を反映した)、位置
-		Vec3d dq = (vq - vps) * ir->normal * ir->normal;	//	移動の法線成分
-		Vec3d vqs = vq - dq;								//	法線成分の移動を消した現在の位置
-		Vec3d tangent = vqs - vps;							//	移動の接線成分
-
-		//DSTR << "vps" << vps << std::endl;
-		//DSTR << "vq" << vq << std::endl;
-		//DSTR << "tangent " << tangent << tangent.norm() << std::endl;
-
-		double epsilon = 1e-5;
-		double tangentNorm = tangent.norm();
-		if (tangentNorm > epsilon) {	//	ずれが0のときは、向きも分からないので摩擦拘束は入れない
-			PHIr* fricIr = DBG_NEW PHIr();
-			*fricIr = *ir;
-			fricIr->normal = tangent / tangentNorm;
-			fricIr->depth = std::min(tangentNorm, l);
-			sp->irs.push_back(fricIr);
-			if (l < tangentNorm) {
-				// 一つでも、静止摩擦を越えたら、連鎖して滑るので、全体を動摩擦にする
-				bDynamic = true;
-			}
-		}
-	}
-	fricCount++;
-	if (bDynamic) {
-		if (frictionState != PHSolidPairForHapticIf::DYNAMIC) {
-			fricCount = 0;
-			frictionState = PHSolidPairForHapticIf::DYNAMIC;
-		}
-	} else {
-		if (frictionState != PHSolidPairForHapticIf::STATIC) {
-			fricCount = 0;
-			frictionState = PHSolidPairForHapticIf::STATIC;
-		}
-		std::cout << fricCount << " ";
-	}
-	return true;
-}
-
 //----------------------------------------------------------------------------
 // PHHapticEngineImp
 double PHHapticEngineImp::GetPhysicsTimeStep(){
@@ -389,20 +253,6 @@ PHHapticPointer* PHHapticEngineImp::GetHapticPointer(int i){
 PHSolidForHaptic* PHHapticEngineImp::GetHapticSolid(int i){
 	return engine->hapticSolids[i];
 }
-/*
-PHSolidPairForHaptic* PHHapticEngineImp::GetSolidPair(int i, int j){
-	return engine->GetSolidPair(i, j)->Cast();
-}
-PHHapticPointers* PHHapticEngineImp::GetHapticPointers(){
-	return &engine->hapticPointers;
-}
-PHSolidsForHaptic* PHHapticEngineImp::GetHapticSolids(){
-	return &engine->hapticSolids;
-}
-PHSolidPairsForHaptic* PHHapticEngineImp::GetSolidPairsForHaptic(){
-	return (PHSolidPairsForHaptic*)&engine->solidPairs;
-}
-*/
 PHHapticRender* PHHapticEngineImp::GetHapticRender(){
 	return engine->hapticRender->Cast();
 }
@@ -737,8 +587,8 @@ void PHHapticEngine::SetContactMode(){
 	}
 }
 
-int PHHapticEngine::GetHapticEngineMode(){
-	return (int)engineMode;
+PHHapticEngineDesc::HapticEngineMode PHHapticEngine::GetHapticEngineMode(){
+	return engineMode;
 }
 
 PHHapticPointers* PHHapticEngine::GetLocalHapticPointers(){
@@ -751,8 +601,7 @@ PHHapticPointers* PHHapticEngine::GetLocalHapticPointers(){
 }
 
 void PHHapticEngine::ReleaseState(){
-	if(!engineImp->states) return;
-	engineImp->states->ReleaseState(GetScene());
+	engineImp->ReleaseState(GetScene());
 }
 
 void PHHapticEngine::EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){

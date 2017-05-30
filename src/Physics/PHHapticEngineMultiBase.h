@@ -12,37 +12,6 @@ struct PHHapticRenderingModel{
 	PHContactDetector::PHSolidPairs solidPairs;
 	PHSolidPairForHaptic* GetSolidPair(int i, int j) { return (PHSolidPairForHaptic*)&*solidPairs.item(i, j); }
 };
-#if 0
-//----------------------------------------------------------------------------
-// PHHapticLoopImp
-class PHHapticLoopImp : public SceneObject{
-	SPR_OBJECTDEF_NOIF(PHHapticLoopImp);
-protected:
-	PHHapticPointers hapticPointers;
-	PHSolidsForHaptic hapticSolids;
-	PHSolidPairsForHaptic solidPairs;
-public:
-	PHHapticEngineImp* engineImp;
-	int loopCount;
-
-	PHHapticLoopImp(){}
-	virtual void Step(){};
-	virtual void UpdateInterface();
-	virtual void HapticRendering(){};
-
-	double GetPhysicsTimeStep();
-	double GetHapticTimeStep();
-	int NHapticPointers();
-	int NHapticSolids();
-	PHHapticPointer* GetHapticPointer(int i);
-	PHSolidForHaptic* GetHapticSolid(int i);
-	PHSolidPairForHaptic* GetSolidPairForHaptic(int i, int j);
-	PHHapticPointers* GetHapticPointers();
-	PHSolidsForHaptic* GetHapticSolids();
-	PHSolidPairsForHaptic* GetSolidPairsForHaptic();
-	PHHapticRender* GetHapticRender();
-};
-#endif
 //----------------------------------------------------------------------------
 // PHHapticEngineMultiBase
 class PHHapticEngineMultiBase : public PHHapticEngineImp{
@@ -57,6 +26,7 @@ protected:
 	PHHapticEngineIf::Callback cbBeforeStep;
 	PHHapticEngineIf::Callback cbAfterStep;
 	void *callbackArg;
+	virtual int GetLoopCount() { return loopCount; }
 
 public:
 	PHHapticEngineMultiBase();

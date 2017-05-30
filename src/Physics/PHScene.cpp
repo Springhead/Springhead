@@ -46,6 +46,9 @@ void PHSceneDesc::Init(){
 }
 //----------------------------------------------------------------------------
 //	PHScene
+PHScene::~PHScene() {
+	if (hapticEngine) hapticEngine->ReleaseState();
+}
 PHScene::PHScene(const PHSceneDesc& desc):PHSceneDesc(desc){
 	Init();
 }

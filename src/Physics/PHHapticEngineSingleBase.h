@@ -15,6 +15,8 @@ namespace Spr{;
 */	
 class PHHapticEngineSingleBase : public PHHapticEngineImp{
 	SPR_OBJECTDEF_NOIF(PHHapticEngineSingleBase);
+	virtual bool IsInterporate() { return false; }
+	virtual int GetLoopCount() { return 1; }
 public:
 	PHHapticEngineSingleBase();
 	virtual void Step1();

@@ -2,48 +2,6 @@
 
 namespace Spr{;
 //----------------------------------------------------------------------------
-// PHHapticLoopImp
-#if 0
-void PHHapticLoopImp::UpdateInterface(){	//=> MultiBase::UpdateHapticPointer()
-	for(int i = 0; i < NHapticPointers(); i++){
-		GetHapticPointer(i)->UpdatePointer();
-	}
-}
-double PHHapticLoopImp::GetPhysicsTimeStep(){
-	return engineImp->GetPhysicsTimeStep();
-}
-double PHHapticLoopImp::GetHapticTimeStep(){
-	return engineImp->GetHapticTimeStep();
-}
-int PHHapticLoopImp::NHapticPointers(){
-	return (int)hapticPointers.size();
-}
-int PHHapticLoopImp::NHapticSolids(){
-	return (int)hapticSolids.size();
-}
-PHHapticPointer* PHHapticLoopImp::GetHapticPointer(int i){
-	return hapticPointers[i];
-}
-PHSolidForHaptic* PHHapticLoopImp::GetHapticSolid(int i){
-	return hapticSolids[i];
-}
-PHSolidPairForHaptic* PHHapticLoopImp::GetSolidPairForHaptic(int i, int j){
-	return solidPairs.item(i, j);
-}
-PHHapticPointers* PHHapticLoopImp::GetHapticPointers(){
-	return &hapticPointers;
-}
-PHSolidsForHaptic* PHHapticLoopImp::GetHapticSolids(){
-	return &hapticSolids;
-}
-PHSolidPairsForHaptic* PHHapticLoopImp::GetSolidPairsForHaptic(){
-	return &solidPairs;
-}
-PHHapticRender* PHHapticLoopImp::GetHapticRender(){
-	return engineImp->GetHapticRender();
-}
-#endif
-//----------------------------------------------------------------------------
 // PHHapticEngineMultiBase
 PHHapticEngineMultiBase::PHHapticEngineMultiBase(){
 	bSync = false;
@@ -53,11 +11,6 @@ PHHapticEngineMultiBase::PHHapticEngineMultiBase(){
 	cbBeforeStep = NULL;
 	cbAfterStep = NULL;
 }
-#if 0
-void PHHapticEngineMultiBase::StepHapticLoop(){
-	hapticLoop->Step();
-}
-#endif
 void PHHapticEngineMultiBase::StepHapticSync() {
 	if (bSync) {
 		/// 同期の実行

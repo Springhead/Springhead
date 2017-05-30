@@ -4,27 +4,18 @@
 #include <Physics/PHHapticEngineMultiBase.h>
 
 namespace Spr {;
-#if 0
-//----------------------------------------------------------------------------
-// PHHapticLoopLD
-class PHHapticLoopLD : public PHHapticLoopImp {
-	SPR_OBJECTDEF_NOIF(PHHapticLoopLD);
-public:
-	virtual void Step();
-	virtual void HapticRendering();
-	virtual void LocalDynamics();
-};
-#endif
 //----------------------------------------------------------------------------
 // PHHapticEngineLD
 class PHHapticEngineLD : public PHHapticEngineMultiBase {
 	SPR_OBJECTDEF_NOIF(PHHapticEngineLD);
 protected:
-	//	PHHapticLoopLD hapticLoopLD;
 	std::vector<SpatialVector> lastvels;
+	UTRef< ObjectStatesIf > states;
+	virtual bool IsInterporate() { return false; }
 
 public:
 	PHHapticEngineLD();
+	~PHHapticEngineLD();
 	virtual void Step1();
 	virtual void Step2();
 	virtual void PredictSimulation3D();
@@ -32,6 +23,7 @@ public:
 	virtual void SyncPhysic2Haptic();
 	virtual void StepHapticLoop();
 	virtual void LocalDynamics();
+	virtual void ReleaseState(PHSceneIf* scene);
 };
 }
 #endif

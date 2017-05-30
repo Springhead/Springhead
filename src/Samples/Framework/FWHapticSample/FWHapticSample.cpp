@@ -18,7 +18,6 @@ FWHapticSample::FWHapticSample(){
 //	_crtBreakAlloc = 75154;
 	pdt = 0.02f;
 	hdt = 0.001f;
-	engineType = SINGLE;										// SINGLE, MULTI, LD
 	bPause = false;
 }
 void FWHapticSample::BuildScene(){
@@ -123,39 +122,39 @@ void FWHapticSample::Init(int argc, char* argv[]){
 	PHHapticEngineIf* he = phscene->GetHapticEngine();	// 力覚エンジンをとってくる
 	he->Enable(true);						            // 力覚エンジンの有効化
 
-	if(engineType == SINGLE){
-		// シングルスレッドモード
-		he->SetHapticEngineMode(PHHapticEngineDesc::SINGLE_THREAD);
-		phscene->SetTimeStep(hdt);
-	}else if(engineType == MULTI){
-		// マルチスレッドモード
-		he->SetHapticEngineMode(PHHapticEngineDesc::MULTI_THREAD);
-		phscene->SetTimeStep(pdt);
-	}else if(engineType == LD){
-		// 局所シミュレーションモード
-		he->SetHapticEngineMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
-		phscene->SetTimeStep(pdt);
-	}
-		physicsTimerID = GetTimer(0)->GetID();					// 物理スレッドのタイマIDの取得
-		GetTimer(0)->SetMode(UTTimerIf::IDLE);					// 物理スレッドのタイマをIDLEモードに設定
-#if 0
-		UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// 力覚スレッド用のマルチメディアタイマを作成
-		timer->SetResolution(1);			// 分解能(ms)
-		timer->SetInterval(unsigned int(hdt * 1000));		// 刻み(ms)h
-		hapticTimerID = timer->GetID();		// 力覚スレッドのタイマIDの取得
-		timer->Start();						// タイマスタート
+#if 0	// シングルスレッドモード
+	he->SetHapticEngineMode(PHHapticEngineDesc::SINGLE_THREAD);
+	phscene->SetTimeStep(hdt);
+#elif 0
+	// マルチスレッドモード
+	he->SetHapticEngineMode(PHHapticEngineDesc::MULTI_THREAD);
+	phscene->SetTimeStep(pdt);
 #else
-		UTTimerIf* timer = CreateTimer(UTTimerIf::THREAD);	// 力覚スレッド用のマルチメディアタイマを作成
-		timer->SetResolution(1);			// 分解能(ms)
-		timer->SetInterval(unsigned int(hdt * 1000));		// 刻み(ms)h
-		hapticTimerID = timer->GetID();		// 力覚スレッドのタイマIDの取得
-		timer->Start();						// タイマスタート
+	// 局所シミュレーションモード
+	he->SetHapticEngineMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
+	phscene->SetTimeStep(pdt);
+#endif
+	physicsTimerID = GetTimer(0)->GetID();					// 物理スレッドのタイマIDの取得
+	GetTimer(0)->SetMode(UTTimerIf::IDLE);					// 物理スレッドのタイマをIDLEモードに設定
+		
+#if 0	//	Multi Media timer or Thread
+	UTTimerIf* timer = CreateTimer(UTTimerIf::MULTIMEDIA);	// 力覚スレッド用のマルチメディアタイマを作成
+	timer->SetResolution(1);			// 分解能(ms)
+	timer->SetInterval(unsigned int(hdt * 1000));		// 刻み(ms)h
+	hapticTimerID = timer->GetID();		// 力覚スレッドのタイマIDの取得
+	timer->Start();						// タイマスタート
+#else
+	UTTimerIf* timer = CreateTimer(UTTimerIf::THREAD);	// 力覚スレッド用のマルチメディアタイマを作成
+	timer->SetResolution(1);			// 分解能(ms)
+	timer->SetInterval(unsigned int(hdt * 1000));		// 刻み(ms)h
+	hapticTimerID = timer->GetID();		// 力覚スレッドのタイマIDの取得
+	timer->Start();						// タイマスタート
 #endif
 }
 
 
 void FWHapticSample::TimerFunc(int id){
-	if(engineType == EngineType::SINGLE){
+	if(phscene->GetHapticEngine()->GetHapticEngineMode() == PHHapticEngineDesc::SINGLE_THREAD){
 		if(hapticTimerID == id){
 			GetSdk()->GetScene()->UpdateHapticPointers();
 			phscene->Step();

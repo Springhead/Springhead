@@ -134,20 +134,20 @@ public:
 
 	/// 交差が検知された後の処理
 	virtual void  OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
-	virtual PHIrs CompIntermediateRepresentation(PHHapticRender* hr, PHSolid* solid0, PHHapticPointer* pointer);
-	virtual bool CompFrictionIntermediateRepresentation(PHHapticRender* hr, PHHapticPointer* pointer, PHShapePairForHaptic* sp);
 };
-//class PHSolidPairsForHaptic : public UTCombination< UTRef<PHSolidPairForHaptic> >{};
 
 //----------------------------------------------------------------------------
 // PHHapticEngineImp
 class PHHapticRender;
 class PHHapticEngineImp : public SceneObject{
-	SPR_OBJECTDEF_ABST_NOIF(PHHapticEngineImp);
 public:
+	SPR_OBJECTDEF_ABST_NOIF(PHHapticEngineImp);
 	PHHapticEngine* engine;
-	UTRef< ObjectStatesIf > states;
 	PHHapticEngineImp(){}
+	///	物理シミュレーションのdt
+	double GetPhysicsTimeStep();
+	///	力覚レンダリングのdt
+	double GetHapticTimeStep();
 	///	
 	virtual void Step1(){};
 	///	
@@ -155,9 +155,6 @@ public:
 	virtual void StepHapticLoop() = 0;
 	virtual void StepHapticSync() = 0;
 	virtual void UpdateHapticPointer() = 0;
-
-	double GetPhysicsTimeStep();
-	double GetHapticTimeStep();
 
 	int NHapticPointers();
 	int NHapticSolids();
@@ -173,6 +170,7 @@ public:
 	virtual PHHapticPointers* GetHapticPointersInHaptic() = 0;
 	virtual PHSolidsForHaptic* GetHapticSolidsInHaptic() = 0;
 	virtual PHContactDetector::PHSolidPairs* GetSolidPairsInHaptic() = 0;
+	virtual void ReleaseState(PHSceneIf* scene) {}
 
 	///< 剛体と力覚ポインタのペアを取得する（i:剛体、j:力覚ポインタ）
 	// iには力覚ポインタも含まれる。
@@ -180,11 +178,14 @@ public:
 
 	///< デバック用シミュレーション実行
 	virtual void StepPhysicsSimulation();
-
 	/// シミュレーションを実行する直前に実行されるコールバックを登録する
 	virtual bool SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg);
 	/// シミュレーションを実行した直後に実行されるコールバックを登録する
 	virtual bool SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg);
+	///	物理ステップの中の何度目のHapticStepかを返す
+	virtual int GetLoopCount() = 0;
+	///	中間表現を補間する場合 true
+	virtual bool IsInterporate() = 0;
 };
 
 //----------------------------------------------------------------------------
@@ -271,7 +272,7 @@ public:
 	///< 接触モードの変更
 	virtual void SetContactMode();
 	//< エンジンモードの取得
-	int GetHapticEngineMode();
+	PHHapticEngineDesc::HapticEngineMode GetHapticEngineMode();
 	///< ローカル側の力覚ポインタをとってくる
 	PHHapticPointers* GetLocalHapticPointers();
 

@@ -107,10 +107,10 @@ PHSdk::~PHSdk(){
 	Clear();
 }
 void PHSdk::Clear(){
-	Sdk::Clear();
-	shapes.clear();
-	objects.clear();
 	scenes.clear();
+	objects.clear();
+	shapes.clear();
+	Sdk::Clear();
 }
 PHSceneIf* PHSdk::CreateScene(const PHSceneDesc& desc){
 	PHSceneIf* rv = DCAST(PHSceneIf, CreateObject(PHSceneIf::GetIfInfoStatic(), &desc));

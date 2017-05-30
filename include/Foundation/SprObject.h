@@ -357,6 +357,8 @@ struct ObjectStatesIf: public ObjectIf{
 	void SingleSave(ObjectIf* o);
 	/// シングルロード
 	void SingleLoad(ObjectIf* o);
+	///	アロケート済みかどうか
+	bool IsAllocated();
 	///	ObjectStateオブジェクトを作成する．
 	static ObjectStatesIf* SPR_CDECL Create();
 };
