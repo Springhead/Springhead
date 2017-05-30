@@ -1,9 +1,9 @@
 ﻿#include <Physics/PHHapticEngine.h>
 #include <Physics/PHHapticRender.h>
-#include <Physics/PHHapticEngineMultiBase.h>
-#include <Physics/PHHapticEngineImpulse.h>
-#include <Physics/PHHapticEngineSingleBase.h>
-#include <Physics/PHHapticEngineLD.h>
+#include <Physics/PHHapticStepMulti.h>
+#include <Physics/PHHapticStepImpulse.h>
+#include <Physics/PHHapticStepSingle.h>
+#include <Physics/PHHapticStepLocalDynamics.h>
 
 namespace Spr{;
 
@@ -233,111 +233,83 @@ void PHSolidPairForHaptic::OnDetect(PHShapePair* _sp, unsigned ct, double dt){
 
 	//CSVOUT << (sp->shapePoseW[0] * sp->closestPoint[0]).y << "," << (sp->shapePoseW[1] * sp->closestPoint[1]).y << std::endl;
 }
-//----------------------------------------------------------------------------
-// PHHapticEngineImp
-double PHHapticEngineImp::GetPhysicsTimeStep(){
-	return engine->GetScene()->GetTimeStep();
-}
-double PHHapticEngineImp::GetHapticTimeStep(){
-	return engine->GetScene()->GetHapticTimeStep();
-}
-int PHHapticEngineImp::NHapticPointers(){
-	return (int)engine->hapticPointers.size();
-}
-int PHHapticEngineImp::NHapticSolids(){
-	return (int)engine->hapticSolids.size();
-}
-PHHapticPointer* PHHapticEngineImp::GetHapticPointer(int i){
-	return engine->hapticPointers[i];
-}
-PHSolidForHaptic* PHHapticEngineImp::GetHapticSolid(int i){
-	return engine->hapticSolids[i];
-}
-PHHapticRender* PHHapticEngineImp::GetHapticRender(){
-	return engine->hapticRender->Cast();
-}
-
-void PHHapticEngineImp::StepPhysicsSimulation(){
-	engine->GetScene()->Step();
-}
-
-bool PHHapticEngineImp::SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg) {
-	return true;
-}
-
-bool PHHapticEngineImp::SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg) {
-	return true;
-}
 
 //----------------------------------------------------------------------------
 // PHHapticEngine
 PHHapticEngineDesc::PHHapticEngineDesc(){
-
 }
 
 PHHapticEngine::PHHapticEngine(){
 	bEnabled = false;
 	bPhysicStep   = true;
-	engineImp = DBG_NEW PHHapticEngineImpulse();
-	engineImp->engine = this;
-	engineMode = MULTI_THREAD;
-	engineImps.push_back(engineImp);
+	hapticStep = DBG_NEW PHHapticStepImpulse();
+	hapticStep->engine = this;
+	hapticStepMode = MULTI_THREAD;
+	hapticSteps.push_back(hapticStep);
 	hapticRender = DBG_NEW PHHapticRender();
 }
-int PHHapticEngine::NHapticSolidsHaptic() {
-	if (!engineImp) return 0;
-	return engineImp->NHapticSolidsHaptic();
+void PHHapticEngine::Step() { if (bEnabled && bPhysicStep) hapticStep->Step1(); }
+void PHHapticEngine::Step2() { if (bEnabled && bPhysicStep) hapticStep->Step2(); }
+void PHHapticEngine::StepHapticLoop() { if (bEnabled) hapticStep->StepHapticLoop(); }
+void PHHapticEngine::StepHapticSync() { if (bEnabled) hapticStep->StepHapticSync(); }
+void PHHapticEngine::StepPhysicsSimulation() { hapticStep->StepPhysicsSimulation(); }
+bool PHHapticEngine::SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg) { return hapticStep->SetCallbackBeforeStep(f, arg); }
+bool PHHapticEngine::SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg) { return hapticStep->SetCallbackAfterStep(f, arg); }
+
+int PHHapticEngine::NSolidsInHaptic() {
+	if (!hapticStep) return 0;
+	return hapticStep->NSolidsInHaptic();
 }
-int PHHapticEngine::NHapticPointersHaptic() {
-	if (!engineImp) return 0;
-	return engineImp->NHapticPointersHaptic();
+int PHHapticEngine::NPointersInHaptic() {
+	if (!hapticStep) return 0;
+	return hapticStep->NPointersInHaptic();
 }
 
-PHHapticPointerIf* PHHapticEngine::GetHapticPointerHaptic(int i) {
-	if (!engineImp) return NULL;
-	return (PHHapticPointerIf*)engineImp->GetHapticPointerHaptic(i);
+PHHapticPointerIf* PHHapticEngine::GetPointerInHaptic(int i) {
+	if (!hapticStep) return NULL;
+	return (PHHapticPointerIf*)hapticStep->GetPointerInHaptic(i);
 }
-PHSolidPairForHapticIf* PHHapticEngine::GetSolidPairHaptic(int i, int j) {
-	if (!engineImp) return NULL;
-	return (PHSolidPairForHapticIf*) engineImp->GetSolidPairInHaptic(i, j);
+PHSolidPairForHapticIf* PHHapticEngine::GetSolidPairInHaptic(int i, int j) {
+	if (!hapticStep) return NULL;
+	return (PHSolidPairForHapticIf*) hapticStep->GetSolidPairInHaptic(i, j);
 }
 
-void PHHapticEngine::SetHapticEngineMode(HapticEngineMode mode){
-	engineMode = mode;
-	switch(engineMode){
+void PHHapticEngine::SetHapticStepMode(HapticStepMode mode){
+	hapticStepMode = mode;
+	switch(hapticStepMode){
 		case SINGLE_THREAD:		
-			for(int i = 0; i < (int)engineImps.size(); i++){
-				if(DCAST(PHHapticEngineSingleBase, engineImps[i])){
-					engineImp = engineImps[i];
+			for(int i = 0; i < (int)hapticSteps.size(); i++){
+				if(DCAST(PHHapticStepSingle, hapticSteps[i])){
+					hapticStep = hapticSteps[i];
 					return;
 				}
 			}
-			engineImp = DBG_NEW PHHapticEngineSingleBase();
+			hapticStep = DBG_NEW PHHapticStepSingle();
 			break;		
 		case MULTI_THREAD:		
-			for(int i = 0; i < (int)engineImps.size(); i++){
-				if(DCAST(PHHapticEngineImpulse, engineImps[i])){
-					engineImp = engineImps[i];
+			for(int i = 0; i < (int)hapticSteps.size(); i++){
+				if(DCAST(PHHapticStepImpulse, hapticSteps[i])){
+					hapticStep = hapticSteps[i];
 					return;
 				}
 			}
-			engineImp = DBG_NEW PHHapticEngineImpulse();
+			hapticStep = DBG_NEW PHHapticStepImpulse();
 			break;
 		case LOCAL_DYNAMICS:
-			for(int i = 0; i < (int)engineImps.size(); i++){
-				if(DCAST(PHHapticEngineLD, engineImps[i])){
-					engineImp = engineImps[i];
+			for(int i = 0; i < (int)hapticSteps.size(); i++){
+				if(DCAST(PHHapticStepLocalDynamics, hapticSteps[i])){
+					hapticStep = hapticSteps[i];
 					return;
 				}
 			}
-			engineImp = DBG_NEW PHHapticEngineLD();
+			hapticStep = DBG_NEW PHHapticStepLocalDynamics();
 			break;
 		default:
 			assert(0);
 			return;
 	}
-	engineImp->engine = this;
-	engineImps.push_back(engineImp);
+	hapticStep->engine = this;
+	hapticSteps.push_back(hapticStep);
 }
 
 void PHHapticEngine::StartDetection(){
@@ -549,7 +521,7 @@ void PHHapticEngine::UpdateShapePairs(PHSolid* solid){
 	PHSolidPairForHaptic* sp;
 	PHSolid* s[2];
 	// solidの場合(行の更新）
-	for(i = 0; i < NHapticPointers(); i++){
+	for(i = 0; i < NPointers(); i++){
 		sp = GetSolidPair(isolid, i)->Cast();
 		s[0] = solid;
 		s[1] = sp->solid[1];
@@ -587,21 +559,12 @@ void PHHapticEngine::SetContactMode(){
 	}
 }
 
-PHHapticEngineDesc::HapticEngineMode PHHapticEngine::GetHapticEngineMode(){
-	return engineMode;
-}
-
-PHHapticPointers* PHHapticEngine::GetLocalHapticPointers(){
-	if (engineImp) {
-		return engineImp->GetHapticPointersInHaptic();
-	}
-	else {
-		return NULL;
-	}
+PHHapticEngineDesc::HapticStepMode PHHapticEngine::GetHapticStepMode(){
+	return hapticStepMode;
 }
 
 void PHHapticEngine::ReleaseState(){
-	engineImp->ReleaseState(GetScene());
+	hapticStep->ReleaseState(GetScene());
 }
 
 void PHHapticEngine::EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable){

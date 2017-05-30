@@ -789,12 +789,12 @@ void FWScene::DrawIK(GRRenderIf* render, PHIKEngineIf* ikEngine) {
 
 void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 	PHHapticEngine* he = DCAST(PHHapticEngine, hapticEngine);
-	int Npointers = he->NHapticPointers();
+	int Npointers = he->NPointers();
 	if(Npointers == 0) return;
 
 	// プロキシの描画
-	for(int i = 0; i< he->NHapticPointers(); i++){
-		PHHapticPointer* pointer = he->GetHapticPointer(i)->Cast();
+	for(int i = 0; i< he->NPointers(); i++){
+		PHHapticPointer* pointer = he->GetPointer(i)->Cast();
 		Posed proxyPose = pointer->proxyPose;
 		Affinef aff;
 		proxyPose.ToAffine(aff);
@@ -835,14 +835,14 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 #endif
 	}
 
-	if (he->GetHapticEngineMode() != PHHapticEngine::SINGLE_THREAD) {
+	if (he->GetHapticStepMode() != PHHapticEngine::SINGLE_THREAD) {
 		render->SetLighting(false);
 		render->SetDepthTest(false);
 
 		render->PushModelMatrix();
 		render->SetModelMatrix(Affinef());
 		for (int i = 0; i < Npointers; i++) {
-			UTRef<PHHapticPointer> pointer = DBG_NEW PHHapticPointer(*(PHHapticPointer*)&*he->GetHapticPointer(i));
+			UTRef<PHHapticPointer> pointer = DBG_NEW PHHapticPointer(*(PHHapticPointer*)&*he->GetPointer(i));
 			float range = pointer->GetLocalRange();
 			float radius = 0.02f;
 			int nNeighbors = (int)pointer->neighborSolidIDs.size();
@@ -1404,17 +1404,16 @@ int FWScene::NHapticPointers(){
 void FWScene::UpdateHapticPointers(){
 	assert(this);
 	PHHapticEngine* he = GetPHScene()->GetHapticEngine()->Cast();
-	if(he->GetHapticEngineMode() == PHHapticEngineDesc::SINGLE_THREAD){	// single thread
+	if(he->GetHapticStepMode() == PHHapticEngineDesc::SINGLE_THREAD){	// single thread
 		for(int i = 0; i < NHapticPointers(); i++){
 			FWHapticPointer* fp = GetHapticPointer(i)->Cast();
 			fp->UpdateHumanInterface(fp->GetPHHapticPointer()->Cast(), GetPHScene()->GetHapticTimeStep());
 		}
 	}else{	// multi thread
-		PHHapticPointers* localPointers = he->GetLocalHapticPointers();
-		if(localPointers->size() <= 0) return;
+		if(he->NPointersInHaptic()==0) return;
 		for(int i = 0; i < NHapticPointers(); i++){
 			FWHapticPointer* fp = GetHapticPointer(i)->Cast();
-			PHHapticPointer* plp = localPointers->at(i);
+			PHHapticPointer* plp = (PHHapticPointer*)he->GetPointerInHaptic(i);
 			fp->UpdateHumanInterface(plp, GetPHScene()->GetHapticTimeStep());
 		}
 	}

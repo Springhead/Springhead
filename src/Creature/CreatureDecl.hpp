@@ -1,4 +1,4 @@
-#define SPR_DECLMEMBEROF_CREngineDesc \
+#define SPR_DECLMEMBEROF_CRBodyDesc \
 protected:\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
@@ -10,17 +10,64 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_CRTouchSensorDesc \
+#define SPR_DECLMEMBEROF_CRBoneDesc \
 protected:\
+	std::string	label;	\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
 	virtual void SetDesc(const void* ptr){ \
-		CREngine::SetDesc((CREngineDesc*)(CRTouchSensorDesc*)ptr);	\
+		label = ((CRBoneDesc*)ptr)->label;	\
 		AfterSetDesc();	\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
-		CREngine::GetDesc((CREngineDesc*)(CRTouchSensorDesc*)ptr);	\
+		((CRBoneDesc*)ptr)->label = label;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_CRControllerDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		CREngine::SetDesc((CREngineDesc*)(CRControllerDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CREngine::GetDesc((CREngineDesc*)(CRControllerDesc*)ptr);	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_CRGazeControllerDesc \
+protected:\
+	Vec3d	front;	\
+	Vec3d	up;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		front = ((CRGazeControllerDesc*)ptr)->front;	\
+		up = ((CRGazeControllerDesc*)ptr)->up;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((CRGazeControllerDesc*)ptr)->front = front;	\
+		((CRGazeControllerDesc*)ptr)->up = up;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_CRGrabControllerDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		CRController::SetDesc((CRControllerDesc*)(CRGrabControllerDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CRController::GetDesc((CRControllerDesc*)(CRGrabControllerDesc*)ptr);	\
 		return true;	\
 	}\
 
@@ -36,7 +83,7 @@ public:\
 		return true;	\
 	}\
 
-#define SPR_DECLMEMBEROF_CRSdkDesc \
+#define SPR_DECLMEMBEROF_CREngineDesc \
 protected:\
 public:\
 	virtual const void* GetDescAddress() const { return NULL; }\
@@ -154,6 +201,32 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_CRSdkDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_CRTouchSensorDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		CREngine::SetDesc((CREngineDesc*)(CRTouchSensorDesc*)ptr);	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		CREngine::GetDesc((CREngineDesc*)(CRTouchSensorDesc*)ptr);	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_CRVisualSensorDesc \
 protected:\
 	Vec2d	range;	\
@@ -177,79 +250,6 @@ public:\
 		((CRVisualSensorDesc*)ptr)->centerRange = centerRange;	\
 		((CRVisualSensorDesc*)ptr)->pose = pose;	\
 		((CRVisualSensorDesc*)ptr)->limitDistance = limitDistance;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_CRBoneDesc \
-protected:\
-	std::string	label;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		label = ((CRBoneDesc*)ptr)->label;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((CRBoneDesc*)ptr)->label = label;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_CRBodyDesc \
-protected:\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_CRControllerDesc \
-protected:\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		CREngine::SetDesc((CREngineDesc*)(CRControllerDesc*)ptr);	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		CREngine::GetDesc((CREngineDesc*)(CRControllerDesc*)ptr);	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_CRGazeControllerDesc \
-protected:\
-	Vec3d	front;	\
-	Vec3d	up;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		front = ((CRGazeControllerDesc*)ptr)->front;	\
-		up = ((CRGazeControllerDesc*)ptr)->up;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((CRGazeControllerDesc*)ptr)->front = front;	\
-		((CRGazeControllerDesc*)ptr)->up = up;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_CRGrabControllerDesc \
-protected:\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		CRController::SetDesc((CRControllerDesc*)(CRGrabControllerDesc*)ptr);	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		CRController::GetDesc((CRControllerDesc*)(CRGrabControllerDesc*)ptr);	\
 		return true;	\
 	}\
 

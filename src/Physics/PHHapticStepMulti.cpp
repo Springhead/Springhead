@@ -1,9 +1,9 @@
-﻿#include <Physics/PHHapticEngineMultiBase.h>
+﻿#include <Physics/PHHapticStepMulti.h>
 
 namespace Spr{;
 //----------------------------------------------------------------------------
-// PHHapticEngineMultiBase
-PHHapticEngineMultiBase::PHHapticEngineMultiBase(){
+// PHHapticStepMulti
+PHHapticStepMulti::PHHapticStepMulti(){
 	bSync = false;
 	bCalcPhys =  true;
 	hapticCount = 1;
@@ -11,7 +11,7 @@ PHHapticEngineMultiBase::PHHapticEngineMultiBase(){
 	cbBeforeStep = NULL;
 	cbAfterStep = NULL;
 }
-void PHHapticEngineMultiBase::StepHapticSync() {
+void PHHapticStepMulti::StepHapticSync() {
 	if (bSync) {
 		/// 同期の実行
 		SyncHapticPointers();
@@ -34,7 +34,7 @@ void PHHapticEngineMultiBase::StepHapticSync() {
 	hapticCount++;
 }
 
-void PHHapticEngineMultiBase::SyncHapticPointers(){
+void PHHapticStepMulti::SyncHapticPointers(){
 	for (size_t i = 0; i < hapticModel.hapticPointers.size(); i++) {
 		PHHapticPointer* pPointer = GetHapticPointer(i);
 		PHHapticPointer* hPointer = hapticModel.hapticPointers[i];
@@ -59,7 +59,7 @@ void PHHapticEngineMultiBase::SyncHapticPointers(){
 }
 
 //	TODO hase:	ここも大量のSolidのコピーがあり重そう。
-void PHHapticEngineMultiBase::SyncArrays(){
+void PHHapticStepMulti::SyncArrays(){
 	// haptic <------------- physics
 	// Physicsで新しく追加されたオブジェクトをHaptic側にコピー
 	// 1.力覚ポインタの増加分
@@ -101,7 +101,7 @@ void PHHapticEngineMultiBase::SyncArrays(){
 	//DSTR << hapticLoop->NHapticSolids() << std::endl;
 	//DSTR << hapticLoop->GetHapticPointer(0)->neighborSolidIDs.size() << std::endl;
 }
-void PHHapticEngineMultiBase::UpdateHapticPointer() {
+void PHHapticStepMulti::UpdateHapticPointer() {
 	for (size_t i = 0; i < hapticModel.hapticPointers.size(); ++i) {
 		hapticModel.hapticPointers[i]->UpdatePointer();
 	}
@@ -110,7 +110,7 @@ void PHHapticEngineMultiBase::UpdateHapticPointer() {
 
 // デバック用コード
 // 旧版、PHScene::Step()が内蔵されているので
-void PHHapticEngineMultiBase::StepPhysicsSimulation(){
+void PHHapticStepMulti::StepPhysicsSimulation(){
 	if (bSync) return;
 	if (bCalcPhys){
 		/// Before Step Callback

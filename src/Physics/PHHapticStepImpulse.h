@@ -1,18 +1,18 @@
 ﻿#ifndef PHHAPTICENGINE_IMPULSE_H
 #define PHHAPTICENGINE_IMPULSE_H
 
-#include <Physics/PHHapticEngineMultiBase.h>
+#include <Physics/PHHapticStepMulti.h>
 
 namespace Spr{;
 
 //----------------------------------------------------------------------------
-// PHHapticEngineImpulse
-class PHHapticEngineImpulse : public PHHapticEngineMultiBase{
+// PHHapticStepImpulse
+class PHHapticStepImpulse : public PHHapticStepMulti{
 protected:
 	virtual bool IsInterporate() { return true; }
 public:
-	SPR_OBJECTDEF_NOIF(PHHapticEngineImpulse);
-	PHHapticEngineImpulse();
+	SPR_OBJECTDEF_NOIF(PHHapticStepImpulse);
+	PHHapticStepImpulse();
 	virtual void Step1();
 	virtual void Step2();
 	virtual void StepHapticLoop();

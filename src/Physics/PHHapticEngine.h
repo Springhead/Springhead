@@ -8,7 +8,6 @@
 #ifndef PH_HAPTICENGINE_H
 #define PH_HAPTICENGINE_H
 
-//#include <Springhead.h>
 #include <HumanInterface/SprHIBase.h>
 #include <Physics/PHContactDetector.h>
 #include <Physics/PHHapticPointer.h>
@@ -136,67 +135,15 @@ public:
 	virtual void  OnDetect(PHShapePair* sp, unsigned ct, double dt);	///< 交差が検知されたときの処理
 };
 
-//----------------------------------------------------------------------------
-// PHHapticEngineImp
-class PHHapticRender;
-class PHHapticEngineImp : public SceneObject{
-public:
-	SPR_OBJECTDEF_ABST_NOIF(PHHapticEngineImp);
-	PHHapticEngine* engine;
-	PHHapticEngineImp(){}
-	///	物理シミュレーションのdt
-	double GetPhysicsTimeStep();
-	///	力覚レンダリングのdt
-	double GetHapticTimeStep();
-	///	
-	virtual void Step1(){};
-	///	
-	virtual void Step2(){};
-	virtual void StepHapticLoop() = 0;
-	virtual void StepHapticSync() = 0;
-	virtual void UpdateHapticPointer() = 0;
-
-	int NHapticPointers();
-	int NHapticSolids();
-	PHHapticPointer*       GetHapticPointer(int i);
-	PHSolidForHaptic*      GetHapticSolid(int i);
-
-	virtual int NHapticPointersHaptic()=0;
-	virtual int NHapticSolidsHaptic()=0;
-	virtual PHHapticPointer* GetHapticPointerHaptic(int i)=0;
-	virtual PHSolidForHaptic* GetHapticSolidHaptic(int i)=0;
-
-	virtual PHSolidPairForHaptic* GetSolidPairInHaptic(int i, int j)=0;
-	virtual PHHapticPointers* GetHapticPointersInHaptic() = 0;
-	virtual PHSolidsForHaptic* GetHapticSolidsInHaptic() = 0;
-	virtual PHContactDetector::PHSolidPairs* GetSolidPairsInHaptic() = 0;
-	virtual void ReleaseState(PHSceneIf* scene) {}
-
-	///< 剛体と力覚ポインタのペアを取得する（i:剛体、j:力覚ポインタ）
-	// iには力覚ポインタも含まれる。
-	PHHapticRender*        GetHapticRender();
-
-	///< デバック用シミュレーション実行
-	virtual void StepPhysicsSimulation();
-	/// シミュレーションを実行する直前に実行されるコールバックを登録する
-	virtual bool SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg);
-	/// シミュレーションを実行した直後に実行されるコールバックを登録する
-	virtual bool SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg);
-	///	物理ステップの中の何度目のHapticStepかを返す
-	virtual int GetLoopCount() = 0;
-	///	中間表現を補間する場合 true
-	virtual bool IsInterporate() = 0;
-};
-
+class PHHapticStepBase;
 //----------------------------------------------------------------------------
 /// PHHapticEngine,	This engine is initially disabled. Enable() muse be called prior to use.
 class PHHapticEngine : public PHHapticEngineDesc, public PHContactDetector{
+	std::vector< UTRef<PHHapticStepBase> > hapticSteps;
 public:
 	SPR_OBJECTDEF1(PHHapticEngine, PHEngine);
 	ACCESS_DESC(PHHapticEngine);
-
-	UTRef< PHHapticEngineImp >              engineImp;
-	std::vector< UTRef<PHHapticEngineImp> > engineImps;
+	UTRef< PHHapticStepBase >               hapticStep;
 	UTRef< PHHapticRender >                 hapticRender;
 	PHHapticPointers                        hapticPointers;
 	PHSolidsForHaptic                       hapticSolids;
@@ -211,35 +158,32 @@ public:
 	std::vector< Edge > edges;
 
 protected:
-	HapticEngineMode engineMode;
+	HapticStepMode hapticStepMode;
 public:
 	bool bPhysicStep;
 	PHHapticEngine();
-
-
 	//-------------------------------------------------------------------
 	// APIの実装
 	/// エンジンモードの選択
-	void SetHapticEngineMode(HapticEngineMode mode);
-
+	void SetHapticStepMode(HapticStepMode mode);
 	/// 力覚ポインタの数を返す
-	int NHapticPointers() { return (int)hapticPointers.size(); }
+	int NPointers() { return (int)hapticPointers.size(); }
 	/// hapticSolidsの数を返す
-	int NHapticSolids() { return (int)hapticSolids.size(); }
+	int NSolids() { return (int)hapticSolids.size(); }
 	/// 力覚ポインタへのポインタを返す
-	PHHapticPointerIf* GetHapticPointer(int i){ return hapticPointers[i]->Cast(); }
+	PHHapticPointerIf* GetPointer(int i){ return hapticPointers[i]->Cast(); }
 	///
 	PHSolidPairForHapticIf* GetSolidPair(int i, int j) { return (PHSolidPairForHapticIf*)&*solidPairs.item(i, j); }
 
 	///	Haptic側を返す
 	/// 力覚ポインタの数を返す
-	int NHapticPointersHaptic();
+	int NPointersInHaptic();
 	/// hapticSolidsの数を返す
-	int NHapticSolidsHaptic();
+	int NSolidsInHaptic();
 	/// 力覚ポインタへのポインタを返す
-	PHHapticPointerIf* GetHapticPointerHaptic(int i);
+	PHHapticPointerIf* GetPointerInHaptic(int i);
 	///
-	PHSolidPairForHapticIf* GetSolidPairHaptic(int i, int j);
+	PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j);
 	/// state保存のために確保した領域を開放する
 	void ReleaseState();
 	///
@@ -250,11 +194,11 @@ public:
 	
 	// PHHapticEngineの実装
 	///< シミュレーションループの更新（PHScene::Integrate()からコール）
-	virtual void Step(){ if(bEnabled && bPhysicStep) engineImp->Step1(); }
-	virtual void Step2(){ if(bEnabled && bPhysicStep) engineImp->Step2(); }
+	virtual void Step();
+	virtual void Step2();
 	///< 力覚ループの更新	
-	virtual void StepHapticLoop() { if (bEnabled) engineImp->StepHapticLoop(); }
-	virtual void StepHapticSync() { if (bEnabled) engineImp->StepHapticSync(); }
+	virtual void StepHapticLoop();
+	virtual void StepHapticSync();
 
 	///< 力覚レンダリング用の衝突判定開始
 	virtual void StartDetection();
@@ -272,9 +216,7 @@ public:
 	///< 接触モードの変更
 	virtual void SetContactMode();
 	//< エンジンモードの取得
-	PHHapticEngineDesc::HapticEngineMode GetHapticEngineMode();
-	///< ローカル側の力覚ポインタをとってくる
-	PHHapticPointers* GetLocalHapticPointers();
+	PHHapticEngineDesc::HapticStepMode GetHapticStepMode();
 
 	///<接触判定の有効化・無効化
 	void EnableContact(PHSolidIf* lhs, PHSolidIf* rhs, bool bEnable);
@@ -284,21 +226,20 @@ public:
 
 	///< デバック用シミュレーション実行
 	///（PHScene::Stepの変わりに呼ぶ）
-	virtual void StepPhysicsSimulation(){ engineImp->StepPhysicsSimulation(); }
-
+	virtual void StepPhysicsSimulation();
 	/// シミュレーションを実行する直前に実行されるコールバックを登録する
-	virtual bool SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg) { return engineImp->SetCallbackBeforeStep(f, arg); }
+	virtual bool SetCallbackBeforeStep(PHHapticEngineIf::Callback f, void* arg);
 	/// シミュレーションを実行した直後に実行されるコールバックを登録する
-	virtual bool SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg)  { return engineImp->SetCallbackAfterStep(f, arg); }
-};
+	virtual bool SetCallbackAfterStep(PHHapticEngineIf::Callback f, void* arg);
 
-// PHSceneからStep()を2回呼ぶための擬似クラス
-class PHHapticEngineCallStep2 : public PHEngine{
 public:
-	SPR_OBJECTDEF_NOIF(PHHapticEngineCallStep2);
-	UTRef< PHHapticEngine > engine;
-	int GetPriority() const { return SGBP_HAPTICENGINE2; }
-	virtual void Step(){ engine->Step2(); }
+	// PHSceneからStep()を2回呼ぶためのクラス
+	class PHHapticEngineCallStep2 : public PHEngine {
+	public:
+		UTRef< PHHapticEngine > engine;
+		int GetPriority() const { return SGBP_HAPTICENGINE2; }
+		virtual void Step() { engine->Step2(); }
+	};
 };
 
 }	//	namespace Spr

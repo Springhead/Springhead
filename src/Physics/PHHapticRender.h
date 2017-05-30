@@ -51,21 +51,21 @@ struct PHHapticRenderInfo{// : public PHHapticRenderDesc{
 };
 #endif
 
-class PHHapticEngineImp;
+class PHHapticStepBase;
 class PHHapticRender : public SceneObject{
 public:
 	SPR_OBJECTDEF_NOIF(PHHapticRender);
 	PHHapticRender();
 
 	// Implementation
-	virtual void HapticRendering(PHHapticEngineImp* he);
-	void CompIntermediateRepresentationForDynamicProxy(PHHapticEngineImp* he, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
+	virtual void HapticRendering(PHHapticStepBase* he);
+	void CompIntermediateRepresentationForDynamicProxy(PHHapticStepBase* he, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
 	bool CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer,
 		PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
-	bool CompFrictionIntermediateRepresentation(PHHapticEngineImp* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
-	void PenaltyBasedRendering(PHHapticEngineImp* he, PHHapticPointer* pointer);
-	void DynamicProxyRendering(PHHapticEngineImp* he, PHHapticPointer* pointer);
-	void VibrationRendering(PHHapticEngineImp* he, PHHapticPointer* pointer);
+	bool CompFrictionIntermediateRepresentation(PHHapticStepBase* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
+	void PenaltyBasedRendering(PHHapticStepBase* he, PHHapticPointer* pointer);
+	void DynamicProxyRendering(PHHapticStepBase* he, PHHapticPointer* pointer);
+	void VibrationRendering(PHHapticStepBase* he, PHHapticPointer* pointer);
 	void SolveProxyPose(Vec3d& dr, Vec3d& dtheta, Vec3d& allDepth, PHHapticPointer* pointer, const PHIrs& irs);
 
 	// ガウスザイデル法を使いAx+b>0を解く

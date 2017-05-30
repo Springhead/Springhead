@@ -1,80 +1,3 @@
-#define SPR_DECLMEMBEROF_FWSkeletonSensorDesc \
-protected:\
-	bool	bCreatePHSkeleton;	\
-	bool	bCreatePHSolid;	\
-	bool	bCreateCDShape;	\
-	bool	bCreatePHJoint;	\
-	bool	bCreatePHSpring;	\
-	Vec2d	radius;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		bCreatePHSkeleton = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSkeleton;	\
-		bCreatePHSolid = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSolid;	\
-		bCreateCDShape = ((FWSkeletonSensorDesc*)ptr)->bCreateCDShape;	\
-		bCreatePHJoint = ((FWSkeletonSensorDesc*)ptr)->bCreatePHJoint;	\
-		bCreatePHSpring = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSpring;	\
-		radius = ((FWSkeletonSensorDesc*)ptr)->radius;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((FWSkeletonSensorDesc*)ptr)->bCreatePHSkeleton = bCreatePHSkeleton;	\
-		((FWSkeletonSensorDesc*)ptr)->bCreatePHSolid = bCreatePHSolid;	\
-		((FWSkeletonSensorDesc*)ptr)->bCreateCDShape = bCreateCDShape;	\
-		((FWSkeletonSensorDesc*)ptr)->bCreatePHJoint = bCreatePHJoint;	\
-		((FWSkeletonSensorDesc*)ptr)->bCreatePHSpring = bCreatePHSpring;	\
-		((FWSkeletonSensorDesc*)ptr)->radius = radius;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_FWObjectDesc \
-protected:\
-	bool	bAbsolute;	\
-	enum Spr::FWObjectDesc::FWObjectSyncSource	syncSource;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		bAbsolute = ((FWObjectDesc*)ptr)->bAbsolute;	\
-		syncSource = ((FWObjectDesc*)ptr)->syncSource;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		((FWObjectDesc*)ptr)->bAbsolute = bAbsolute;	\
-		((FWObjectDesc*)ptr)->syncSource = syncSource;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_FWOpObjDesc \
-protected:\
-	float	fwPSize;	\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		FWObject::SetDesc((FWObjectDesc*)(FWOpObjDesc*)ptr);	\
-		fwPSize = ((FWOpObjDesc*)ptr)->fwPSize;	\
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		FWObject::GetDesc((FWObjectDesc*)(FWOpObjDesc*)ptr);	\
-		((FWOpObjDesc*)ptr)->fwPSize = fwPSize;	\
-		return true;	\
-	}\
-
-#define SPR_DECLMEMBEROF_FWSdkDesc \
-protected:\
-public:\
-	virtual const void* GetDescAddress() const { return NULL; }\
-	virtual void SetDesc(const void* ptr){ \
-		AfterSetDesc();	\
-	}\
-	virtual bool GetDesc(void* ptr) const { \
-		BeforeGetDesc();	\
-		return true;	\
-	}\
-
 #define SPR_DECLMEMBEROF_FWFemMeshDesc \
 protected:\
 	unsigned int	kogePics;	\
@@ -127,6 +50,41 @@ public:\
 		return true;	\
 	}\
 
+#define SPR_DECLMEMBEROF_FWObjectDesc \
+protected:\
+	bool	bAbsolute;	\
+	enum Spr::FWObjectDesc::FWObjectSyncSource	syncSource;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		bAbsolute = ((FWObjectDesc*)ptr)->bAbsolute;	\
+		syncSource = ((FWObjectDesc*)ptr)->syncSource;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((FWObjectDesc*)ptr)->bAbsolute = bAbsolute;	\
+		((FWObjectDesc*)ptr)->syncSource = syncSource;	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_FWOpObjDesc \
+protected:\
+	float	fwPSize;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		FWObject::SetDesc((FWObjectDesc*)(FWOpObjDesc*)ptr);	\
+		fwPSize = ((FWOpObjDesc*)ptr)->fwPSize;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		FWObject::GetDesc((FWObjectDesc*)(FWOpObjDesc*)ptr);	\
+		((FWOpObjDesc*)ptr)->fwPSize = fwPSize;	\
+		return true;	\
+	}\
+
 #define SPR_DECLMEMBEROF_FWSceneDesc \
 protected:\
 public:\
@@ -136,6 +94,48 @@ public:\
 	}\
 	virtual bool GetDesc(void* ptr) const { \
 		BeforeGetDesc();	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_FWSdkDesc \
+protected:\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		return true;	\
+	}\
+
+#define SPR_DECLMEMBEROF_FWSkeletonSensorDesc \
+protected:\
+	bool	bCreatePHSkeleton;	\
+	bool	bCreatePHSolid;	\
+	bool	bCreateCDShape;	\
+	bool	bCreatePHJoint;	\
+	bool	bCreatePHSpring;	\
+	Vec2d	radius;	\
+public:\
+	virtual const void* GetDescAddress() const { return NULL; }\
+	virtual void SetDesc(const void* ptr){ \
+		bCreatePHSkeleton = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSkeleton;	\
+		bCreatePHSolid = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSolid;	\
+		bCreateCDShape = ((FWSkeletonSensorDesc*)ptr)->bCreateCDShape;	\
+		bCreatePHJoint = ((FWSkeletonSensorDesc*)ptr)->bCreatePHJoint;	\
+		bCreatePHSpring = ((FWSkeletonSensorDesc*)ptr)->bCreatePHSpring;	\
+		radius = ((FWSkeletonSensorDesc*)ptr)->radius;	\
+		AfterSetDesc();	\
+	}\
+	virtual bool GetDesc(void* ptr) const { \
+		BeforeGetDesc();	\
+		((FWSkeletonSensorDesc*)ptr)->bCreatePHSkeleton = bCreatePHSkeleton;	\
+		((FWSkeletonSensorDesc*)ptr)->bCreatePHSolid = bCreatePHSolid;	\
+		((FWSkeletonSensorDesc*)ptr)->bCreateCDShape = bCreateCDShape;	\
+		((FWSkeletonSensorDesc*)ptr)->bCreatePHJoint = bCreatePHJoint;	\
+		((FWSkeletonSensorDesc*)ptr)->bCreatePHSpring = bCreatePHSpring;	\
+		((FWSkeletonSensorDesc*)ptr)->radius = radius;	\
 		return true;	\
 	}\
 

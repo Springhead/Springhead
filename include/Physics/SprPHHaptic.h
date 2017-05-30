@@ -92,7 +92,7 @@ struct PHSolidPairForHapticIf : public PHSolidPairIf {
 };
 
 struct PHHapticEngineDesc {
-	enum HapticEngineMode {
+	enum HapticStepMode {
 		SINGLE_THREAD = 0,
 		MULTI_THREAD,
 		LOCAL_DYNAMICS,
@@ -105,28 +105,28 @@ public:
 	SPR_IFDEF(PHHapticEngine);
 
 	/** @breif HapticEngineのモードを切り替える
-	@param mode HapticEngineMode
+	@param mode HapticStepMode
 	*/
-	void SetHapticEngineMode(PHHapticEngineDesc::HapticEngineMode mode);
-	PHHapticEngineDesc::HapticEngineMode GetHapticEngineMode();
+	void SetHapticStepMode(PHHapticEngineDesc::HapticStepMode mode);
+	PHHapticEngineDesc::HapticStepMode GetHapticStepMode();
 
 	///	Physics側の剛体数
-	int NHapticSolids();
+	int NSolids();
 	///	Physics側の力覚ポインタ数
-	int NHapticPointers();
+	int NPointers();
 	///	Physics側の力覚ポインタの取得
-	PHHapticPointerIf* GetHapticPointer(int i);
+	PHHapticPointerIf* GetPointer(int i);
 	///	Physics側のSolidPairForHapticの取得。iが剛体、jがHapticPointerの番号
 	PHSolidPairForHapticIf* GetSolidPair(int i, int j);
 
 	///	Haptics側の剛体数
-	int NHapticSolidsHaptic();
+	int NSolidsInHaptic();
 	///	Haptics側の力覚ポインタ数
-	int NHapticPointersHaptic();
+	int NPointersInHaptic();
 	///	Haptics側の力覚ポインタの取得
-	PHHapticPointerIf* GetHapticPointerHaptic(int i);
+	PHHapticPointerIf* GetPointerInHaptic(int i);
 	///	Haptics側のSolidPairForHapticの取得。iが剛体、jがHapticPointerの番号
-	PHSolidPairForHapticIf* GetSolidPairHaptic(int i, int j);
+	PHSolidPairForHapticIf* GetSolidPairInHaptic(int i, int j);
 
 	/** @brief シミュレーションをすすめる。HapticEngineを有効化した場合には
 	この関数を使ってシミュレーションをすすめる

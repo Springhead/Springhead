@@ -1,18 +1,18 @@
-﻿#include <Physics/PHHapticEngineLD.h>
+﻿#include <Physics/PHHapticStepLocalDynamics.h>
 
 namespace Spr{;
 //----------------------------------------------------------------------------
-// PHHapticEngineLD
-void PHHapticEngineLD::StepHapticLoop() {
+// PHHapticStepLocalDynamics
+void PHHapticStepLocalDynamics::StepHapticLoop() {
 	UpdateHapticPointer();
 	GetHapticRender()->HapticRendering(this);
 	LocalDynamics();
 }
-void PHHapticEngineLD::LocalDynamics() {
+void PHHapticStepLocalDynamics::LocalDynamics() {
 	double pdt = GetPhysicsTimeStep();
 	double hdt = GetHapticTimeStep();
-	for (int i = 0; i < NHapticSolidsHaptic(); i++) {
-		PHSolidForHaptic* hsolid = GetHapticSolidHaptic(i);
+	for (int i = 0; i < NSolidsInHaptic(); i++) {
+		PHSolidForHaptic* hsolid = GetSolidInHaptic(i);
 		if (hsolid->doSim == 0) continue;
 		if (hsolid->GetLocalSolid()->IsDynamical() == false) continue;
 		PHSolid* localSolid = &hsolid->localSolid;
@@ -26,7 +26,7 @@ void PHHapticEngineLD::LocalDynamics() {
 			vel_w += diff.w() * pdt;
 		}
 		for (int j = 0; j < NHapticPointers(); j++) {
-			PHHapticPointer* pointer = GetHapticPointerHaptic(j);
+			PHHapticPointer* pointer = GetPointerInHaptic(j);
 			PHSolidPairForHaptic* sp = GetSolidPairInHaptic(i, pointer->GetPointerID());
 			if (sp->inLocal == 0) continue;
 			// 力覚ポインタからの力による速度変化
@@ -44,19 +44,19 @@ void PHHapticEngineLD::LocalDynamics() {
 		localSolid->Step();
 	}
 }
-void PHHapticEngineLD::ReleaseState(PHSceneIf* scene) {
+void PHHapticStepLocalDynamics::ReleaseState(PHSceneIf* scene) {
 	states->ReleaseState(scene);
 }
 
 
-PHHapticEngineLD::PHHapticEngineLD(){
+PHHapticStepLocalDynamics::PHHapticStepLocalDynamics(){
 	states = ObjectStatesIf::Create();
 }
-PHHapticEngineLD::~PHHapticEngineLD() {
+PHHapticStepLocalDynamics::~PHHapticStepLocalDynamics() {
 	assert(states->IsAllocated() == false);
 }
 
-void PHHapticEngineLD::Step1(){
+void PHHapticStepLocalDynamics::Step1(){
 	lastvels.clear();
 	for(int i = 0; i < NHapticSolids(); i++){
 		SpatialVector vel;
@@ -65,7 +65,7 @@ void PHHapticEngineLD::Step1(){
 		lastvels.push_back(vel);
 	}
 }
-void PHHapticEngineLD::Step2(){
+void PHHapticStepLocalDynamics::Step2(){
 	// 更新後の速度、前回の速度差から定数項を計算
 	for(int i = 0; i < NHapticSolids(); i++){
 		// 近傍の剛体のみ
@@ -82,7 +82,7 @@ void PHHapticEngineLD::Step2(){
 }
 
 /// 1対1のshapeで、1点の接触のみ対応
-void PHHapticEngineLD::PredictSimulation3D(){
+void PHHapticStepLocalDynamics::PredictSimulation3D(){
 	engine->bPhysicStep = false;
 	/** PHSolidForHapticのdosim > 0の物体に対してテスト力を加え，
 		すべての近傍物体について，アクセレランスを計算する */
@@ -227,7 +227,7 @@ void PHHapticEngineLD::PredictSimulation3D(){
 	engine->bPhysicStep = true;
 }
 
-void PHHapticEngineLD::SyncHaptic2Physic(){
+void PHHapticStepLocalDynamics::SyncHaptic2Physic(){
 #if 1
 	// physics <------ haptic
 	// PHSolidForHapticの同期
@@ -275,7 +275,7 @@ void PHHapticEngineLD::SyncHaptic2Physic(){
 #endif
 }
 
-void PHHapticEngineLD::SyncPhysic2Haptic(){
+void PHHapticStepLocalDynamics::SyncPhysic2Haptic(){
 	// haptic <------ physics
 	// PHSolidForHapticの同期
 	for(int i = 0; i < NHapticSolids(); i++){

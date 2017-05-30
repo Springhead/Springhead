@@ -1,12 +1,12 @@
-﻿#include <Physics/PHHapticEngineSingleBase.h>
+﻿#include <Physics/PHHapticStepSingle.h>
 
 namespace Spr{;
 
 //----------------------------------------------------------------------------
-// PHHapticEngineSingleBase
-PHHapticEngineSingleBase::PHHapticEngineSingleBase(){}
+// PHHapticStepSingle
+PHHapticStepSingle::PHHapticStepSingle(){}
 
-void PHHapticEngineSingleBase::Step1(){
+void PHHapticStepSingle::Step1(){
 	////DSTR << "step" << std::endl;
 	engine->StartDetection();
 	UpdateHapticPointer();
@@ -23,10 +23,10 @@ void PHHapticEngineSingleBase::Step1(){
 	}
 }
 
-void PHHapticEngineSingleBase::Step2(){
+void PHHapticStepSingle::Step2(){
 }
 
-void PHHapticEngineSingleBase::UpdateHapticPointer(){
+void PHHapticStepSingle::UpdateHapticPointer(){
 	for(int i = 0; i < NHapticPointers(); i++){
 		GetHapticPointer(i)->UpdatePointer();
 	}
@@ -36,7 +36,7 @@ void PHHapticEngineSingleBase::UpdateHapticPointer(){
 // デバック用コード
 // 旧版、PHScene::Step()が内蔵されているので
 // ここで呼ぶわけにはいかない
-void PHHapticEngineSingleBase::StepSimulation(){
+void PHHapticStepSingle::StepSimulation(){
 	/// シミュレーションの実行
 	engine->GetScene()->Step();
 }
