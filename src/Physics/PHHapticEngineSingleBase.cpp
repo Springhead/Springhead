@@ -10,15 +10,7 @@ void PHHapticEngineSingleBase::Step1(){
 	////DSTR << "step" << std::endl;
 	engine->StartDetection();
 	UpdateHapticPointer();
-	PHHapticRenderInfo info;
-	info.pointers = GetHapticPointersInHaptic();
-	info.hsolids = GetHapticSolidsInHaptic();
-	info.sps = GetSolidPairsInHaptic();
-	info.hdt = GetPhysicsTimeStep();
-	info.pdt = GetPhysicsTimeStep();
-	info.loopCount = 1.0;
-	info.bInterpolatePose = false;
-	GetHapticRender()->HapticRendering(info);
+	GetHapticRender()->HapticRendering(this);
 	//レンダリングした力をシーンに反映
 	for(int i = 0; i < (int)NHapticSolids(); i++){
 		PHSolidForHaptic* hsolid = GetHapticSolid(i);

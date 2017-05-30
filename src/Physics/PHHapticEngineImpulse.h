@@ -5,22 +5,13 @@
 
 namespace Spr{;
 
-#if 0
-//----------------------------------------------------------------------------
-// PHHapticLoopImpulse
-class PHHapticLoopImpulse : public PHHapticLoopImp{
-	SPR_OBJECTDEF_NOIF(PHHapticLoopImpulse);
-public:
-	virtual void Step();
-	virtual void HapticRendering();
-};
-#endif
-
 //----------------------------------------------------------------------------
 // PHHapticEngineImpulse
 class PHHapticEngineImpulse : public PHHapticEngineMultiBase{
-	SPR_OBJECTDEF_NOIF(PHHapticEngineImpulse);
+protected:
+	virtual bool IsInterporate() { return true; }
 public:
+	SPR_OBJECTDEF_NOIF(PHHapticEngineImpulse);
 	PHHapticEngineImpulse();
 	virtual void Step1();
 	virtual void Step2();

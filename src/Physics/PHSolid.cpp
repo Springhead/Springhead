@@ -92,7 +92,7 @@ PHFrame::PHFrame(const PHFrameDesc& desc):PHFrameDesc(desc), solid(NULL), shape(
 }
 
 ObjectIf* PHFrame::GetChildObject(size_t pos){
-	if(pos==0) return shape->Cast(); 
+	if(pos==0) return (ObjectIf*)shape; 
 	return NULL;
 }
 bool PHFrame::AddChildObject(ObjectIf * o){

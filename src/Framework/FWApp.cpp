@@ -29,6 +29,9 @@ FWApp::FWApp(){
 }
 
 FWApp::~FWApp(){
+	//	タイマーを止める
+	for (size_t i = 0; i<timers.size(); ++i) timers[i]->Stop();	
+	//	フルスクリーンモードだったら戻す
 	bool hasFullScreen = false;
 	for(int i = 0; i < (int)wins.size(); i++){
 		if(wins[i]->GetFullScreen()){
@@ -38,6 +41,7 @@ FWApp::~FWApp(){
 	}
 	if(hasFullScreen)
 		FWGraphicsHandler::instance->LeaveGameMode();
+
 }
 
 void FWApp::Init(){ Init(0); }

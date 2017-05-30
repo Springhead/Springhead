@@ -1,83 +1,12 @@
 ﻿#include <Physics/PHHapticEngineLDDev.h>
 
 namespace Spr{;
-#if 0
-//----------------------------------------------------------------------------
-// PHHapticLoopLDDev
-void PHHapticLoopLDDev::Step(){//=>void PHHapticEngineLDDev::StepHapticLoop() 
-	UpdateInterface();
-	HapticRendering();
-	LocalDynamics6D();
-}
-void PHHapticLoopLDDev::HapticRendering(){
-	PHHapticRenderInfo info;
-	info.pointers = GetHapticPointers();
-	info.hsolids = GetHapticSolids();
-	info.sps = GetSolidPairsForHaptic();
-	info.hdt = GetHapticTimeStep();
-	info.pdt = GetPhysicsTimeStep();
-	info.loopCount = loopCount;
-	info.bInterpolatePose = false;
-	GetHapticRender()->HapticRendering(info);
-}
-
-
-void PHHapticLoopLDDev::LocalDynamics6D(){	//=> PHHapticEngineLDDev::LocalDynamics6D()
-	double pdt = GetPhysicsTimeStep();
-	double hdt = GetHapticTimeStep();
-	for(int i = 0; i < NHapticSolids(); i++){
-		PHSolidForHaptic* hsolid = GetHapticSolid(i);
-		if(hsolid->doSim == 0) continue;
-		if(hsolid->GetLocalSolid()->IsDynamical() == false) continue;
-		PHSolid* localSolid = &hsolid->localSolid;
-		SpatialVector vel;
-		vel.v() = localSolid->GetVelocity();
-		vel.w() = localSolid->GetAngularVelocity();
-		if(loopCount == 1){
-			vel += (hsolid->curb - hsolid->lastb) * pdt;	// 衝突の影響を反映
-		}
-		for(int j = 0; j < NHapticPointers(); j++){
-			PHHapticPointer* pointer = GetHapticPointer(j);
-			PHSolidPairForHaptic* sp = GetSolidPairForHaptic(i, pointer->GetPointerID());
-			if(sp->inLocal == 0) continue;
-			SpatialVector force;
-			force.v() = sp->force;
-			force.w() = sp->torque;
-			vel += (sp->A6D * force) * hdt;			// 力覚ポインタからの力による速度変化
-			//CSVOUT << force[0] << "," << force[1] << "," << force[2] << "," << force[3] << "," << force[4] << "," << force[5] << "," <<std::endl;
-			//DSTR << force << std::endl;
-			//DSTR << sp->A6D << std::endl;
-		}
-		vel += hsolid->b * hdt;
-		//DSTR << vel << std::endl;
-		//CSVOUT << vel.w().y << std::endl;
-		localSolid->SetVelocity       (vel.v());		
-		localSolid->SetAngularVelocity(vel.w());
-		localSolid->SetOrientation( (Quaterniond::Rot(vel.w() * hdt) * localSolid->GetOrientation()).unit() );
-		//localSolid->SetOrientation(( localSolid->GetOrientation() * Quaterniond::Rot(vel.w() * hdt)).unit());
-		localSolid->SetCenterPosition(localSolid->GetCenterPosition() + vel.v() * hdt);
-
- 		localSolid->SetUpdated(true);
-		localSolid->Step();
-	}
-}
-#endif
 
 //----------------------------------------------------------------------------
 // PHHapticEngineLDDev
 void PHHapticEngineLDDev::StepHapticLoop() {
 	UpdateHapticPointer();
-
-	PHHapticRenderInfo info;
-	info.pointers = GetHapticPointersInHaptic();
-	info.hsolids = GetHapticSolidsInHaptic();
-	info.sps = GetSolidPairsInHaptic();
-	info.hdt = GetHapticTimeStep();
-	info.pdt = GetPhysicsTimeStep();
-	info.loopCount = loopCount;
-	info.bInterpolatePose = false;
-	GetHapticRender()->HapticRendering(info);
-
+	GetHapticRender()->HapticRendering(this);
 	LocalDynamics6D();
 }
 void PHHapticEngineLDDev::LocalDynamics6D() {
@@ -461,5 +390,10 @@ void PHHapticEngineLDDev::SyncPhysic2Haptic(){
 	}
 #endif
 }
+
+void PHHapticEngineLDDev::ReleaseState(PHSceneIf* scene) {
+	states->ReleaseState(scene);
+}
+
 
 }

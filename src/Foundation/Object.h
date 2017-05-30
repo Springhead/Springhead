@@ -464,6 +464,8 @@ public:
 	void SingleSave(ObjectIf* o);
 	/// SprBlender用再帰的ではないロード
 	void SingleLoad(ObjectIf* o);
+	///	アロケート済みかどうか
+	bool IsAllocated() { return state != NULL; }
 };
 
 

@@ -16,11 +16,6 @@ using namespace Spr;
 
 class FWHapticSample : public FWApp{
 public:
-	enum EngineType{
-		SINGLE = 0,				// シングルすれっど
-		MULTI,					// マルチスレッド
-		LD,						// マルチ+局所シミュレーション
-	} engineType;
 	PHSceneIf* phscene;			// PHSceneへのポインタ
 
 	PHHapticPointerIf* pointer; // 力覚ポインタへのポインタ

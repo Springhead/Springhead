@@ -1,78 +1,11 @@
 ﻿#include <Physics/PHHapticEngineLD.h>
 
 namespace Spr{;
-#if 0
-//----------------------------------------------------------------------------
-// PHHapticLoopLD
-void PHHapticLoopLD::Step(){	//=>void PHHapticEngineLD::StepHapticLoop()
-	UpdateInterface();
-	HapticRendering();
-	LocalDynamics();
-}
-void PHHapticLoopLD::HapticRendering(){	//=>void PHHapticEngineLD::StepHapticLoop() {
-	PHHapticRenderInfo info;
-	info.pointers = GetHapticPointers();
-	info.hsolids = GetHapticSolids();
-	info.sps = GetSolidPairsForHaptic();
-	info.hdt = GetHapticTimeStep();
-	info.pdt = GetPhysicsTimeStep();
-	info.loopCount = loopCount;
-	info.bInterpolatePose = false;
-	GetHapticRender()->HapticRendering(info);
-}
-
-void PHHapticLoopLD::LocalDynamics(){	=>void PHHapticEngineLD::LocalDynamics() {
-	double pdt = GetPhysicsTimeStep();
-	double hdt = GetHapticTimeStep();
-	for(int i = 0; i < NHapticSolids(); i++){
-		PHSolidForHaptic* hsolid = GetHapticSolid(i);
-		if(hsolid->doSim == 0) continue;
-		if(hsolid->GetLocalSolid()->IsDynamical() == false) continue;
-		PHSolid* localSolid = &hsolid->localSolid;
-
-		Vec3d vel_v, vel_w;
-		vel_v = localSolid->GetVelocity();
-		vel_w = localSolid->GetAngularVelocity();
-		if(loopCount == 1){
-			SpatialVector diff = hsolid->curb - hsolid->lastb;
-			vel_v += diff.v() * pdt;	// 衝突の影響を反映
-			vel_w += diff.w() * pdt;
-		}
-		for(int j = 0; j < NHapticPointers(); j++){
-			PHHapticPointer* pointer = GetHapticPointer(j);
-			PHSolidPairForHaptic* sp = GetSolidPairForHaptic(i, pointer->GetPointerID());
-			if(sp->inLocal == 0) continue;
-			// 力覚ポインタからの力による速度変化
-			vel_v += (sp->A.SUBMAT(0,0,3,3) * sp->force) * hdt;
-			vel_w += (sp->A.SUBMAT(3,0,3,3) * sp->force) * hdt;
-		}
-		vel_v += hsolid->b.v() * hdt;
-		vel_w += hsolid->b.w() * hdt;
-		localSolid->SetVelocity       (vel_v);		
-		localSolid->SetAngularVelocity(vel_w);
-		localSolid->SetOrientation(( Quaterniond::Rot(vel_w * hdt) * localSolid->GetOrientation()).unit());
-		localSolid->SetCenterPosition(localSolid->GetCenterPosition() + vel_v * hdt);
-
- 		localSolid->SetUpdated(true);
-		localSolid->Step();
-	}
-}
-#endif
 //----------------------------------------------------------------------------
 // PHHapticEngineLD
 void PHHapticEngineLD::StepHapticLoop() {
 	UpdateHapticPointer();
-
-	PHHapticRenderInfo info;
-	info.pointers = GetHapticPointersInHaptic();
-	info.hsolids = GetHapticSolidsInHaptic();
-	info.sps = GetSolidPairsInHaptic();
-	info.hdt = GetHapticTimeStep();
-	info.pdt = GetPhysicsTimeStep();
-	info.loopCount = loopCount;
-	info.bInterpolatePose = false;
-	GetHapticRender()->HapticRendering(info);
-
+	GetHapticRender()->HapticRendering(this);
 	LocalDynamics();
 }
 void PHHapticEngineLD::LocalDynamics() {
@@ -111,10 +44,16 @@ void PHHapticEngineLD::LocalDynamics() {
 		localSolid->Step();
 	}
 }
+void PHHapticEngineLD::ReleaseState(PHSceneIf* scene) {
+	states->ReleaseState(scene);
+}
 
 
 PHHapticEngineLD::PHHapticEngineLD(){
 	states = ObjectStatesIf::Create();
+}
+PHHapticEngineLD::~PHHapticEngineLD() {
+	assert(states->IsAllocated() == false);
 }
 
 void PHHapticEngineLD::Step1(){
@@ -158,12 +97,12 @@ void PHHapticEngineLD::PredictSimulation3D(){
 	phScene->GenerateForce();
 	phScene->IntegratePart1();
 	#endif
+
+#if 1	//TEST sim
+	/// テストシミュレーション実行
 	/// 予測シミュレーションのために現在の剛体の状態を保存する
 	phScene->GetConstraintEngine()->SetBSaveConstraints(true);
-	states->Clear();
-	states->SaveState(phScene);	
-#if 1
-	/// テストシミュレーション実行
+	states->SaveState(phScene);
 	for(int i = 0; i < NHapticSolids(); i++){
 		if(GetHapticSolid(i)->doSim == 0) continue;
 		PHSolidForHaptic* hsolid = GetHapticSolid(i);
@@ -278,8 +217,10 @@ void PHHapticEngineLD::PredictSimulation3D(){
 #endif
 		}
 	}
-#endif
+	//states->ReleaseState(phScene);	ここで呼ぶと毎回確保が必要になって無駄なので呼ばない
 	///--------テストシミュレーション終了--------
+#endif	//TEST sim
+
 #ifdef DIVIDE_STEP
 	states2->LoadState(phScene);							// 元のstateに戻しシミュレーションを進める
 #endif

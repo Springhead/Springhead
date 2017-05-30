@@ -961,8 +961,8 @@ size_t PHConstraintEngine::GetStateSize() const{
 }
 void PHConstraintEngine::ConstructState(void* m) const{
 	PHContactDetector::ConstructState(m);
-	char* p = (char*)m;
 	if (bSaveConstraints){
+		char* p = (char*)m;
 		p += PHContactDetector::GetStateSize();
 		new (p) PHConstraintsSt;
 	}

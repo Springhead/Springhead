@@ -38,6 +38,7 @@ struct PHIntermediateRepresentation :public UTRefCount{
 typedef PHIntermediateRepresentation PHIr;
 typedef std::vector< PHIr* > PHIrs;
 
+#if 0
 struct PHHapticRenderInfo{// : public PHHapticRenderDesc{
 	PHHapticPointers*		pointers;
 	PHSolidsForHaptic*		hsolids;
@@ -48,23 +49,23 @@ struct PHHapticRenderInfo{// : public PHHapticRenderDesc{
 	bool bInterpolatePose;
 	PHHapticRenderInfo();
 };
+#endif
 
-class PHHapticRender : public PHHapticRenderInfo, public SceneObject{
+class PHHapticEngineImp;
+class PHHapticRender : public SceneObject{
 public:
 	SPR_OBJECTDEF_NOIF(PHHapticRender);
 	PHHapticRender();
 
 	// Implementation
-	virtual void HapticRendering(PHHapticRenderInfo info);
-	PHIrs CompIntermediateRepresentation(PHHapticPointer* pointer);
-	void CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
+	virtual void HapticRendering(PHHapticEngineImp* he);
+	void CompIntermediateRepresentationForDynamicProxy(PHHapticEngineImp* he, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer);
 	bool CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer,
 		PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints);
-	bool CompFrictionIntermediateRepresentation(PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
-	void PenaltyBasedRendering(PHHapticPointer* pointer);
-	//void ConstraintBasedRendering(PHHapticPointer* pointer);
-	void DynamicProxyRendering(PHHapticPointer* pointer);
-	void VibrationRendering(PHHapticPointer* pointer);
+	bool CompFrictionIntermediateRepresentation(PHHapticEngineImp* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh);
+	void PenaltyBasedRendering(PHHapticEngineImp* he, PHHapticPointer* pointer);
+	void DynamicProxyRendering(PHHapticEngineImp* he, PHHapticPointer* pointer);
+	void VibrationRendering(PHHapticEngineImp* he, PHHapticPointer* pointer);
 	void SolveProxyPose(Vec3d& dr, Vec3d& dtheta, Vec3d& allDepth, PHHapticPointer* pointer, const PHIrs& irs);
 
 	// ガウスザイデル法を使いAx+b>0を解く

@@ -108,6 +108,7 @@ public:
 	@param mode HapticEngineMode
 	*/
 	void SetHapticEngineMode(PHHapticEngineDesc::HapticEngineMode mode);
+	PHHapticEngineDesc::HapticEngineMode GetHapticEngineMode();
 
 	///	Physics側の剛体数
 	int NHapticSolids();

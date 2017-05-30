@@ -1,5 +1,6 @@
 ﻿#include <Physics/PHHapticRender.h>
 #include <Physics/PHHapticEngine.h>
+#include <Physics/PHHapticEngineMultiBase.h>
 #include <Foundation/QuadProg++.hh>
 
 #if 1
@@ -28,50 +29,51 @@ double lpn = pointer->lastProxyVelocity.norm();			\
 #endif
 
 namespace Spr{;
+#if 0
 PHHapticRenderInfo::PHHapticRenderInfo() {
 	loopCount = 0;
 	pdt = 0.02f;
 	hdt = 0.001f;
 	bInterpolatePose = true;
 }
+#endif
 
 PHHapticRender::PHHapticRender(){
 }
 
-void PHHapticRender::HapticRendering(PHHapticRenderInfo info){
-	*(PHHapticRenderInfo*)this = info;
-	for(int i = 0; i < (int)pointers->size(); i++){
-		PHHapticPointer* pointer = pointers->at(i);
+void PHHapticRender::HapticRendering(PHHapticEngineImp* he){
+	for(int i = 0; i < he->NHapticPointersHaptic(); i++){
+		PHHapticPointer* pointer = he->GetHapticPointerHaptic(i);
 		pointer->hapticForce.clear();
 		switch (pointer->renderMode){
 			case PHHapticPointerDesc::PENALTY:
-				PenaltyBasedRendering(pointer);
+				PenaltyBasedRendering(he, pointer);
 				break;
 			case PHHapticPointerDesc::CONSTRAINT:
-				DynamicProxyRendering(pointer);
+				DynamicProxyRendering(he, pointer);
 				//ConstraintBasedRendering(pointer);
 				break;
 			case PHHapticPointerDesc::DYNAMIC_PROXY:
-				DynamicProxyRendering(pointer);
+				DynamicProxyRendering(he, pointer);
 				break;
 		}
- 		VibrationRendering(pointer);
+ 		VibrationRendering(he, pointer);
 	}
 }
-
-PHIrs PHHapticRender::CompIntermediateRepresentation(PHHapticPointer* pointer){
+#if 0
+PHIrs PHHapticRender::CompIntermediateRepresentation(PHHapticEngineImp* he, PHHapticPointer* pointer){
 	PHIrs irs;
 	int nNeighbors = (int)pointer->neighborSolidIDs.size();
 	for(int i = 0; i < nNeighbors; i++){
 		int solidID = pointer->neighborSolidIDs[i];
-		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*sps->item(solidID, pointer->GetPointerID());
-		PHIrs tempIrs = sp->CompIntermediateRepresentation(this, hsolids->at(solidID)->GetLocalSolid(), pointer);
+		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*he->GetSolidPairInHaptic(solidID, pointer->GetPointerID());
+		PHIrs tempIrs = sp->CompIntermediateRepresentation(this, he->GetHapticSolidHaptic(solidID)->GetLocalSolid(), pointer);
 		if(tempIrs.size() == 0) continue;
 		irs.insert(irs.end(), tempIrs.begin(), tempIrs.end());
 	}
 	return irs;
 }
-
+#endif
 // 力覚レンダリング
 // （とりあえず欲しい）
 // 凸形状が使えるPenaltyBasedRendering(multiple point intermediate representation)
@@ -84,13 +86,14 @@ PHIrs PHHapticRender::CompIntermediateRepresentation(PHHapticPointer* pointer){
 
 // 各接触頂点の侵入量にバネ係数をかけて合計したものを出力
 // バネ係数が高いと不安定になるので低めに（1000N/m)程度に抑える必要あり
-void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
+void PHHapticRender::PenaltyBasedRendering(PHHapticEngineImp* he, PHHapticPointer* pointer){
 	// 摩擦は追加できないので、強制的にfalse
 	const bool bFric = pointer->bFriction;
 	if(pointer->bFriction){
 		pointer->EnableFriction(false);
 	}
-	PHIrs irs = CompIntermediateRepresentation(pointer);
+	PHIrs irs;
+	CompIntermediateRepresentationForDynamicProxy(he, irs, irs, pointer);
 	SpatialVector outForce = SpatialVector();
 	int NIrs = (int)irs.size();
 	if(NIrs > 0){
@@ -107,9 +110,9 @@ void PHHapticRender::PenaltyBasedRendering(PHHapticPointer* pointer){
 			outForce.v() += addforce;
 			
 			irs[i]->force = -1 * addforce;
-			hsolids->at(irs[i]->solidID)->AddForce(irs[i]->force, irs[i]->contactPointW);
-			PHSolid* localSolid = &hsolids->at(irs[i]->solidID)->localSolid;
-			PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*sps->item(irs[i]->solidID, pointer->GetPointerID());
+			he->GetHapticSolidHaptic(irs[i]->solidID)->AddForce(irs[i]->force, irs[i]->contactPointW);
+			PHSolid* localSolid = &he->GetHapticSolidHaptic(irs[i]->solidID)->localSolid;
+			PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*he->GetSolidPairInHaptic(irs[i]->solidID, pointer->GetPointerID());
 			sp->force += irs[i]->force;	// あるポインタが剛体に加える力
 			sp->torque += (irs[i]->contactPointW - localSolid->GetCenterPosition()) ^ irs[i]->force;
 		}
@@ -182,77 +185,6 @@ Vec3d GetOrthogonalVector(Vec3d n) {
 	u -= (u * n) * n;
 	return u.unit();
 }
-#if 0
-void PHHapticRender::ConstraintBasedRendering(PHHapticPointer* pointer){
-	// プロキシの状態の保存と更新
-	pointer->lastProxyPose = Posed(pointer->proxyPose.Pos(), pointer->GetOrientation());
-
-	// 中間表現を求める。摩擦状態を更新
-	PHIrs irs = CompIntermediateRepresentation(pointer);
-	
-	SpatialVector outForce = SpatialVector();
-	if(irs.size() > 0){
-		// ポインタ移動量を求める
-		Vec3d dr, dtheta, allDepth;
-		SolveProxyPose(dr, dtheta, allDepth, pointer, irs);
-
-		// プロキシ位置姿勢更新（目標位置姿勢解除状態）
-		pointer->proxyPose.Ori() = ( Quaterniond::Rot(dtheta) * pointer->GetOrientation() ).unit();
-		pointer->proxyPose.Pos() = pointer->GetFramePosition() + dr;
-		
-		/// 力覚インタフェースに出力する力の計算
-		Vec3d last_dr = pointer->last_dr;
-		Vec3d last_dtheta = pointer->last_dtheta;
-
-		float K  = pointer->reflexSpring / pointer->GetPosScale();
-		float D = pointer->reflexDamper / pointer->GetPosScale();
-		float KOri = pointer->rotationReflexSpring* pointer->GetRotationalWeight();
-		float DOri = pointer->rotationReflexDamper * pointer->GetRotationalWeight();
-
-		outForce.v() = K * dr  + D * (dr - last_dr)/hdt;
-		outForce.w() = KOri * dtheta + DOri * ((dtheta - last_dtheta)/hdt);
-		pointer->last_dr = dr;
-		pointer->last_dtheta = dtheta; 
-
-		// 剛体に加える力を計算
-		// レンダリングした力から各接触点に働く力を逆算
-		// うまくいってない可能性がある
-		Vec3d ratio;
-		double epsilon = 1e-10;
-		for(int i = 0; i < 3; i++){
-			ratio[i] = outForce.v()[i] / allDepth[i];
-			if(abs(allDepth[i]) < epsilon) ratio[i] = 0.0;
-		}
-		//DSTR << "all" << outForce << std::endl;
-		//DSTR << "ratio" << ratio << std::endl;
-		//DSTR << "NIrs" << irs.size() << std::endl;
-		for(size_t i = 0; i < irs.size(); i++){
-			Vec3d dir = irs[i]->normal * irs[i]->depth;
-			for(int j = 0; j < 3; j++){
-				irs[i]->force[j] = ratio[j] * dir[j];
-			}
-			//DSTR << "pos" << irs[i]->contactPointW << std::endl;
-			//DSTR << "depth" << irs[i]->depth << std::endl;
-			//DSTR << "irs[i]->force" << irs[i]->force << std::endl;
-			hsolids->at(irs[i]->solidID)->AddForce(irs[i]->force, irs[i]->contactPointW);	// 各ポインタが剛体に加えた全ての力
-			PHSolid* localSolid = &hsolids->at(irs[i]->solidID)->localSolid;
-			PHSolidPairForHaptic* sp = sps->item(irs[i]->solidID, pointer->GetPointerID());
-			sp->force += irs[i]->force;	// あるポインタが剛体に加える力
-			sp->torque += (irs[i]->contactPointW - localSolid->GetCenterPosition()) ^ irs[i]->force;
-			//DSTR << sp->force << std::endl;
-			//DSTR << irs[i]->contactPointW << " " << localSolid->GetCenterPosition() << std::endl;
-			//DSTR << irs[i]->contactPointW - localSolid->GetCenterPosition() << std::endl;
-		}
-	}
-	else {
-		pointer->proxyPose = pointer->GetPose();
-	}
-	pointer->AddHapticForce(outForce);
-	//DSTR << pointer->GetFramePosition() << std::endl;
-	//DSTR << "render" << outForce << std::endl;
-	//CSVOUT << outForce[0] << "," << outForce[1] << "," << outForce[2] << "," << outForce[3] << "," << outForce[4] << "," << outForce[5] << "," <<std::endl;
-}
-#endif
 
 bool PHHapticRender::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, PHHapticPointer* pointer, 
 	PHSolidPairForHaptic* so, PHShapePairForHaptic* sh, Posed curShapePoseW[2], double t, bool bInterpolatePose, bool bPoints) {
@@ -304,11 +236,12 @@ bool PHHapticRender::CompIntermediateRepresentationShapeLevel(PHSolid* solid0, P
 	sh->nIrsNormal = sh->irs.size();
 	return true;
 }
-bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
+bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticEngineImp* he, PHHapticPointer* pointer, PHSolidPairForHaptic* sp, PHShapePairForHaptic* sh) {
 	int Nirs = sh->irs.size();
 	if (Nirs == 0) return false;
 	bool bStatic = false;
 	//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
+	double hdt = he->GetHapticTimeStep();
 	double alpha = hdt * hdt * pointer->GetMassInv() * pointer->reflexSpring;
 	//	摩擦係数の計算
 	if (pointer->bTimeVaryFriction) {
@@ -395,11 +328,11 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticPointer* poi
 	return true;
 }
 
-void PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer){
+void PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHHapticEngineImp* he, PHIrs& irsNormal, PHIrs& irsFric, PHHapticPointer* pointer){
 	int nNeighbors = (int)pointer->neighborSolidIDs.size();
 	for (int i = 0; i < nNeighbors; i++) {
 		int solidID = pointer->neighborSolidIDs[i];
-		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*sps->item(solidID, pointer->GetPointerID());
+		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*he->GetSolidPairInHaptic(solidID, pointer->GetPointerID());
 
 		//--------------------------------------------------
 		/* 力覚安定化のための補間
@@ -407,16 +340,17 @@ void PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNor
 		// LocalDynamicsの場合は法線の補間のみでよい。
 		// 法線の補間はPHShapePairForHapticでやる。h
 		*/
-		PHSolid* solid0 = hsolids->at(solidID)->GetLocalSolid();
-		const double syncCount = pdt / hdt;
-		double t = loopCount / syncCount;
+		PHSolid* solid0 = he->GetHapticSolidHaptic(solidID)->GetLocalSolid();
+		
+		const double syncCount = he->GetPhysicsTimeStep() / he->GetHapticTimeStep();
+		double t = he->GetLoopCount() / syncCount;
 		if (t > 1.0) t = 1.0;
 
 		sp->force.clear();
 		sp->torque.clear();
 		sp->lastInterpolationPose = sp->interpolationPose;
 		sp->interpolationPose = solid0->GetPose();
-		if (bInterpolatePose) {
+		if (he->IsInterporate()) {
 			Posed cur = solid0->GetPose();
 			double dt = ((PHScene*)solid0->GetScene())->GetTimeStep();
 			Posed last;
@@ -450,13 +384,13 @@ void PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNor
 				Posed curShapePoseW[2];
 				curShapePoseW[0] = sp->interpolationPose * solid0->GetShapePose(i);
 				curShapePoseW[1] = pointer->GetPose() * pointer->GetShapePose(j);
-				CompIntermediateRepresentationShapeLevel(solid0, pointer, sp, sh, curShapePoseW, t, bInterpolatePose, pointer->bMultiPoints);
+				CompIntermediateRepresentationShapeLevel(solid0, pointer, sp, sh, curShapePoseW, t, he->IsInterporate(), pointer->bMultiPoints);
 				if (sh->irs.size()) {
 					bContact = true;
 					irsNormal.insert(irsNormal.end(), sh->irs.begin(), sh->irs.end());
 				}
 				if (pointer->bFriction) {
-					CompFrictionIntermediateRepresentation(pointer, sp, sh);
+					CompFrictionIntermediateRepresentation(he, pointer, sp, sh);
 					irsFric.insert(irsFric.end(), sh->irs.begin()+sh->nIrsNormal, sh->irs.end());
 				}
 			}
@@ -470,13 +404,14 @@ void PHHapticRender::CompIntermediateRepresentationForDynamicProxy(PHIrs& irsNor
 	}
 }
 
-void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
+void PHHapticRender::DynamicProxyRendering(PHHapticEngineImp* he, PHHapticPointer* pointer) {
+	double hdt = he->GetHapticTimeStep();
 	NANCHECKLP
 	pointer->lastProxyPose = pointer->proxyPose;
 	NANCHECKLP
 		// 中間表現を求める。摩擦状態を更新
 	PHIrs irsNormal, irsFric, irsAll;
-	CompIntermediateRepresentationForDynamicProxy(irsNormal, irsFric, pointer);
+	CompIntermediateRepresentationForDynamicProxy(he, irsNormal, irsFric, pointer);
 	irsAll = irsNormal;
 	irsAll.insert(irsAll.end(), irsFric.begin(), irsFric.end());
 	SpatialVector outForce = SpatialVector();
@@ -531,9 +466,9 @@ void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
 		}		
 		//	中間表現から、剛体に力を加える
 		for (size_t i = 0; i < irsAll.size(); i++) {
-			hsolids->at(irsAll[i]->solidID)->AddForce(irsAll[i]->force, irsAll[i]->contactPointW);	// 各ポインタが剛体に加えた全ての力
-			PHSolid* localSolid = &hsolids->at(irsAll[i]->solidID)->localSolid;
-			PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*sps->item(irsAll[i]->solidID, pointer->GetPointerID());
+			he->GetHapticSolidHaptic(irsAll[i]->solidID)->AddForce(irsAll[i]->force, irsAll[i]->contactPointW);	// 各ポインタが剛体に加えた全ての力
+			PHSolid* localSolid = &he->GetHapticSolidHaptic(irsAll[i]->solidID)->localSolid;
+			PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*he->GetSolidPairInHaptic(irsAll[i]->solidID, pointer->GetPointerID());
 			assert(sp == irsAll[i]->solidPair);
 			sp = irsAll[i]->solidPair;
 			sp->force += irsAll[i]->force;	// あるポインタが剛体に加える力
@@ -560,13 +495,14 @@ void PHHapticRender::DynamicProxyRendering(PHHapticPointer* pointer) {
 	//CSVOUT << outForce[0] << "," << outForce[1] << "," << outForce[2] << "," << outForce[3] << "," << outForce[4] << "," << outForce[5] << "," <<std::endl;
 }
 
-void PHHapticRender::VibrationRendering(PHHapticPointer* pointer){
+void PHHapticRender::VibrationRendering(PHHapticEngineImp* he, PHHapticPointer* pointer){
 	if(!pointer->bVibration) return;
+	double hdt = he->GetHapticTimeStep();
 	int Nneigbors = (int)pointer->neighborSolidIDs.size();
 	for(int j = 0; j < (int)Nneigbors; j++){
 		int solidID = pointer->neighborSolidIDs[j];
-		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*sps->item(solidID, pointer->GetPointerID());
-		PHSolid* solid = hsolids->at(solidID)->GetLocalSolid(); 
+		PHSolidPairForHaptic* sp = (PHSolidPairForHaptic*)&*he->GetSolidPairInHaptic(solidID, pointer->GetPointerID());
+		PHSolid* solid = he->GetHapticSolidHaptic(solidID)->GetLocalSolid(); 
 		if(sp->frictionState == PHSolidPairForHapticIf::FREE) continue;
 		if(sp->contactCount == 0){
 			sp->contactVibrationVel = pointer->GetVelocity() - solid->GetVelocity();
