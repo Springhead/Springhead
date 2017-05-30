@@ -7,10 +7,6 @@
  */
 
 #include "FWHapticSample.h"	
-#include <../src/Physics/PHHapticPointer.h>
-#include <../src/Physics/PHHapticEngine.h>
-#include <../src/Physics/PHHapticEngineImpulse.h>
-#include <../src/Physics/PHHapticEngineMultiBase.h>
 
 using namespace Spr;
 
@@ -131,7 +127,7 @@ void FWHapticSample::Init(int argc, char* argv[]){
 	phscene->SetTimeStep(pdt);
 #else
 	// 局所シミュレーションモード
-	he->SetHapticEngineMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
+	he->SetHapticStepMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
 	phscene->SetTimeStep(pdt);
 #endif
 	physicsTimerID = GetTimer(0)->GetID();					// 物理スレッドのタイマIDの取得
@@ -154,7 +150,7 @@ void FWHapticSample::Init(int argc, char* argv[]){
 
 
 void FWHapticSample::TimerFunc(int id){
-	if(phscene->GetHapticEngine()->GetHapticEngineMode() == PHHapticEngineDesc::SINGLE_THREAD){
+	if(phscene->GetHapticEngine()->GetHapticStepMode() == PHHapticEngineDesc::SINGLE_THREAD){
 		if(hapticTimerID == id){
 			GetSdk()->GetScene()->UpdateHapticPointers();
 			phscene->Step();
