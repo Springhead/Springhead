@@ -65,7 +65,7 @@
 # define isnan  _isnan
 # define finite _finite
 #else
-# #include <cmath>
+# include <cmath>
 # define isnan   std::isnan
 # define finite  std::isfinite
 #endif
