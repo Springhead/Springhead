@@ -197,7 +197,7 @@ public:
 
 	/** @brief 軌道の通過点を返す s=0.0～1.0
 	*/
-	Vec6d CRReachController::GetTrajectory(float s);
+	Vec6d GetTrajectory(float s);
 
 	/** @brief 目標到達時間を返す
 	*/

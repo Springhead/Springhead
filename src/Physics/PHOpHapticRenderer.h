@@ -1,9 +1,9 @@
-#ifndef PHOPHAPTICRENDERER_H
+﻿#ifndef PHOPHAPTICRENDERER_H
 #define PHOPHAPTICRENDERER_H
 
-#include <Foundation\Object.h>
-#include <Physics\PHOpHapticController.h>
-#include <Collision\CDCollisionFunctions.h>
+#include <Foundation/Object.h>
+#include <Physics/PHOpHapticController.h>
+#include <Collision/CDCollisionFunctions.h>
 #include <map>
 
 namespace Spr

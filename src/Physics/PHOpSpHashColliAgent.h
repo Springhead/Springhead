@@ -1,12 +1,12 @@
-#ifndef PHOPSPHASHCOLLIAGENT_H
+﻿#ifndef PHOPSPHASHCOLLIAGENT_H
 #define PHOPSPHASHCOLLIAGENT_H
 
 
 #include <Foundation/Object.h>
-#include <Physics\SprPHOpSpHashAgent.h>
-#include <Collision\SprCDSpHash.h>
-#include <Collision\CDSpatialHashTable.h>
-#include "Physics\PHOpEngine.h"
+#include <Physics/SprPHOpSpHashAgent.h>
+#include <Collision/SprCDSpHash.h>
+#include <Collision/CDSpatialHashTable.h>
+#include "Physics/PHOpEngine.h"
 
 namespace Spr{;
 
