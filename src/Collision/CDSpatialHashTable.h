@@ -1,8 +1,8 @@
-#ifndef CDSPATIALHASHTABLE_H
+ï»¿#ifndef CDSPATIALHASHTABLE_H
 #define CDSPATIALHASHTABLE_H
 
 #include <Foundation/Object.h>
-#include <Physics\PHOpObj.h>
+#include <Physics/PHOpObj.h>
 
 namespace Spr{;
 
@@ -14,7 +14,7 @@ namespace Spr{;
 //
 //			inline void set(const Vec3d &min0, const Vec3d &max0) { min = min0; max = max0; }
 //
-//			void clamp(Vec3f &pos){//‹«ŠE‚ğ’´‚¦‚½“_‚ğ‚»‚Ì‚Ü‚Ü‹«ŠE‚Ì‚Ç‚±‚ëİ’è‚·‚é
+//			void clamp(Vec3f &pos){//å¢ƒç•Œã‚’è¶…ãˆãŸç‚¹ã‚’ãã®ã¾ã¾å¢ƒç•Œã®ã©ã“ã‚è¨­å®šã™ã‚‹
 //				if (isEmpty()) return;
 //				//pos.maximum(min);
 //				maximum(pos, min);
@@ -85,7 +85,7 @@ public:
 		
 		
 
-		//point‚ğHashCell‚Éadd‚µ‚Ä‚İ‚Ü‚·A‘¼‚Ìobj‚Ìpoint‚à“¯‚¶hash‚É‚¢‚é‚È‚çAƒRƒŠƒWƒ‡ƒ“”­¶‚·‚éB
+		//pointã‚’HashCellã«addã—ã¦ã¿ã¾ã™ã€ä»–ã®objã®pointã‚‚åŒã˜hashã«ã„ã‚‹ãªã‚‰ã€ã‚³ãƒªã‚¸ãƒ§ãƒ³ç™ºç”Ÿã™ã‚‹ã€‚
 		bool addNewP(int pIndex,int oIndex,int timestamp,int hashIndex,int axis)
 		{
 			int hashId = hashIndex;
@@ -208,7 +208,7 @@ class CDSpatialHashTable: public NamedObject
 	float cellCoefft;
 
 	void init(float cellSize,Bounds  bounds)
-	{//hash•\A‹óŠÔ‚Ì\’z
+	{//hashè¡¨ã€ç©ºé–“ã®æ§‹ç¯‰
 		currHashs.reserve(reserveSize);
 		//params
 		hashtableSize = 809;
@@ -235,7 +235,7 @@ class CDSpatialHashTable: public NamedObject
 	}
 
 	int  hash(Vec3i pos,int hashsize)
-	{//hashŠÖ”
+	{//hashé–¢æ•°
 		//float p1= 73856093,p2 = 19349663,p3 = 83492791;
 		int p1= 73856099,p2 = 1934966,p3 = 89279;
 		int xpp1= pos.x *p1;
@@ -246,7 +246,7 @@ class CDSpatialHashTable: public NamedObject
 		return abs((xpp1)%hashsize);
 	}
 	bool ReducedSelectPointsToAdd(Vec3f &pCtr, float radius, int objInd, int pInd, int timestamp)
-	{//1 ‘I‚ñ‚¾“_‚ğHashTable‚ÉÏ‚İ‚Ş
+	{//1 é¸ã‚“ã ç‚¹ã‚’HashTableã«ç©ã¿è¾¼ã‚€
 
 		
 
@@ -350,7 +350,7 @@ class CDSpatialHashTable: public NamedObject
 	
 private: 	bool addTohashtable(float tx,float ty,float tz,int objInd,int pInd,int timestamp,int boxId)
 	{//hashIndex is calculated here and already updated to be used in addColliPairs
-		//Hashtable‚ÉÏ‚İ‚Ş
+		//Hashtableã«ç©ã¿è¾¼ã‚€
 
 		/*int txx = tx/cellsize;
 		int tyy = ty/cellsize;
@@ -362,7 +362,8 @@ private: 	bool addTohashtable(float tx,float ty,float tz,int objInd,int pInd,int
 		int tyy = (int)((ty * posCoefft)/(cellsize * cellCoefft));
 		int tzz = (int)((tz * posCoefft)/(cellsize * cellCoefft));
 
-		Vec3i &tmp = Vec3i(txx,tyy,tzz);
+		Vec3i ref_tmp = Vec3i(txx,tyy,tzz);
+		Vec3i &tmp = ref_tmp;
 		hashIndex = hash(tmp,hashtableSize);
 
 		//redundant check
@@ -377,7 +378,7 @@ private: 	bool addTohashtable(float tx,float ty,float tz,int objInd,int pInd,int
 
 		//if(hashIndex==1648)mygod400hash.push_back(tmp);//result both 13,11,12 and 11,11,10 and...is hashed to 400
 
-		//‚±‚Ìpoint‚ğadd‚µ‚Ä‚İ‚Ü‚·A‘¼‚Ìobj‚Ìpoint‚à“¯‚¶hash‚É‚¢‚é‚È‚çAƒRƒŠƒWƒ‡ƒ“”­¶‚·‚éB
+		//ã“ã®pointã‚’addã—ã¦ã¿ã¾ã™ã€ä»–ã®objã®pointã‚‚åŒã˜hashã«ã„ã‚‹ãªã‚‰ã€ã‚³ãƒªã‚¸ãƒ§ãƒ³ç™ºç”Ÿã™ã‚‹ã€‚
 		return ptclColliList[hashIndex].addNewP(pInd,objInd,timestamp,hashIndex,0);
 	}
 
