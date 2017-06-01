@@ -1,4 +1,4 @@
-#ifndef PHOPENGINE_H
+ï»¿#ifndef PHOPENGINE_H
 #define PHOPENGINE_H
 
 
@@ -12,14 +12,14 @@
   #undef max
 // end
 #ifdef USEGRMESH
-#include "Graphics\GRDrawEllipsoid.h"
+#include "Graphics/GRDrawEllipsoid.h"
 #endif
-#include <Physics\PHOpDecompositionMethods.h>
-#include "Physics\PHOpHapticController.h"
-#include "Physics\PHEngine.h"
-#include "Physics\PHOpObj.h"
-#include "Physics\PHOpHapticRenderer.h"
-#include "Physics\PHOpAnimation.h"
+#include <Physics/PHOpDecompositionMethods.h>
+#include "Physics/PHOpHapticController.h"
+#include "Physics/PHEngine.h"
+#include "Physics/PHOpObj.h"
+#include "Physics/PHOpHapticRenderer.h"
+#include "Physics/PHOpAnimation.h"
 
 
 namespace Spr{
@@ -29,16 +29,16 @@ namespace Spr{
 	{
 	public:
 		SPR_OBJECTDEF(PHOpEngine);
-		//ŠÔ”÷•ª
+		//æ™‚é–“å¾®åˆ†
 		double fdt;
-		//opƒIƒuƒWƒFƒNƒg”z—ñ
+		//opã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆé…åˆ—
 		std::vector<PHOpObj*> opObjs;
-		//ObjId‚ÌŒv”
+		//ObjIdã®è¨ˆæ•°
 		int objidIndex;
-		//•`‰æ‚·‚é—±q‚Ì”¼ŒaŒW”
+		//æç”»ã™ã‚‹ç²’å­ã®åŠå¾„ä¿‚æ•°
 		float radiusCoe;
 #ifdef USEGRMESH
-		//‘È‰~•`‰æ‚·‚é—p
+		//æ¥•å††æç”»ã™ã‚‹ç”¨
 		DrawEllipsoid drawEll;
 
 #endif

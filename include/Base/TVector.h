@@ -14,6 +14,9 @@
 #include <assert.h>
 #include <stddef.h>
 #include <vector>
+#ifdef	__linux__
+#  include <string.h>
+#endif
 
 /** \addtogroup gpLinearAlgebra */
 //@{
@@ -617,7 +620,7 @@ public:
 	///	コピーコンストラクタ
 	VVector(const VVector& s){
 		init_buffer();
-		resize(s.size_);
+		VectorImp<desc>::resize(s.size_);
 		memcpy(data, s.data, sizeof(element_type) * size_);
 	}
 	template <class D>

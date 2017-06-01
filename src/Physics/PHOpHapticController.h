@@ -1,14 +1,14 @@
-#ifndef PHOPHAPTICCONTROLLER_H
+﻿#ifndef PHOPHAPTICCONTROLLER_H
 #define PHOPHAPTICCONTROLLER_H
 
 #include <Foundation/Object.h>
-//#include <HumanInterface\SprHISpidar.h>
-#include <Physics\PHOpObj.h>
+//#include <HumanInterface/SprHISpidar.h>
+#include <Physics/PHOpObj.h>
 #include <sstream>
-//#include "HumanInterface\SprHIDRUsb.h"
-//#include "HumanInterface\SprHIKeyMouse.h"
-//#include "HumanInterface\SprHISdk.h"
-//#include "Physics\PHOpEngine.h"
+//#include "HumanInterface/SprHIDRUsb.h"
+//#include "HumanInterface/SprHIKeyMouse.h"
+//#include "HumanInterface/SprHISdk.h"
+//#include "Physics/PHOpEngine.h"
 
 namespace Spr {
 	;
@@ -21,7 +21,7 @@ namespace Spr {
 			max_output_force = 6.0f;
 			IsSetForceReady = false;
 		}
-		PHOpHapticController::~PHOpHapticController()
+		~PHOpHapticController()
 		{
 			if (logForceFile) fclose(logForceFile);
 			if (logPosFile) fclose(logPosFile);
