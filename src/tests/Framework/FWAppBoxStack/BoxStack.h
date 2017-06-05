@@ -39,12 +39,9 @@ public:
 	BoxStack();	
 	void Init(int argc, char* argv[]);		
 	void Reset();
-	void InitCameraView();										
-	void DesignObject();
+	void BuildScene();
 	void Step();
-	void Display();		
 	void Keyboard(int key, int x, int y);
-	void MakeContactList();
 }; 
 extern BoxStack bstack;
 
