@@ -67,6 +67,7 @@ struct PHHapticPointerIf : public PHSolidIf { // , public PHHapticPointerDesc
 	PHSolidIf*   GetNeighborSolid(int i);			///<	ポインタ近傍の剛体数			
 	float   GetContactForce(int i);					///<	近傍物体iからの接触力
 	SpatialVector GetHapticForce();					///<	力覚インタフェースに出力する力
+	SpatialVector GetProxyVelocity();				///<	質量ありプロキシの速度
 };
 
 struct PHShapePairForHapticIf : public ObjectIf {

@@ -349,6 +349,14 @@ public:
 		write_index = 0;
 		buffer.resize(s);
 	}
+	size_t Size() {
+		return buffer.size();
+	}
+	size_t Length(){
+		int diff = (int)write_index - (int)read_index;
+		if (diff < 0) diff += Size();
+		return diff;
+	}
 	bool Read(T &result){
 		volatile size_t local_read;
 		local_read = read_index;

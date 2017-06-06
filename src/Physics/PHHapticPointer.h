@@ -96,6 +96,7 @@ public:
 		return DCAST(PHSceneIf,GetScene())->GetSolids()[j];
 	}
 	float   GetContactForce(int i);
+	SpatialVector GetProxyVelocity() { return lastProxyVelocity; }
 
 	// Implementation
 	void	SetPointerID(int id){ pointerID = id; }
