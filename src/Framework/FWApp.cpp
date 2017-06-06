@@ -54,6 +54,8 @@ void FWApp::Init(int argc, char* argv[]){
 	// ウィンドウマネジャ初期化
 	GRInit(argc, argv);
 	// ウィンドウを作成
+	FWWinDesc wd;
+	wd.title = argc ? argv[0] : "FWApp";
 	CreateWin();
 	// タイマを作成
 	CreateTimer();
@@ -65,8 +67,7 @@ void FWApp::Display(){
 
 void FWApp::TimerFunc(int id){
 	UserFunc();
-	// GetSdk()->Step();
-	// GetCurrentWin()->GetScene()->Step();
+	GetCurrentWin()->GetScene()->Step();
 	PostRedisplay();
 }
 

@@ -240,8 +240,8 @@ bool PHHapticRender::CompFrictionIntermediateRepresentation(PHHapticStepBase* he
 	int Nirs = sh->irs.size();
 	if (Nirs == 0) return false;
 	bool bStatic = false;
-	//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
 	double hdt = he->GetHapticTimeStep();
+	//	Proxyを動力学で動かすときの、バネの伸びに対する移動距離の割合 0.5くらいが良い感じ
 	double alpha = hdt * hdt * pointer->GetMassInv() * pointer->reflexSpring;
 	//	摩擦係数の計算
 	if (pointer->bTimeVaryFriction) {
