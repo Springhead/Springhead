@@ -1,6 +1,11 @@
 #	Do not edit. RunSwig.bat will update this file.
 %ignore Spr::UTTimerIf::GetCallback;
 %ignore Spr::UTTimerIf::SetCallback;
+%ignore Spr::UTTypeDescIf::PrintPool;
+%ignore Spr::UTTypeDescIf::Print;
+%ignore Spr::UTTypeDescIf::GetFieldType;
+%ignore Spr::UTTypeDescIf::Write;
+%ignore Spr::UTTypeDescIf::Read;
 // %ignore Spr::ObjectIf::CreateObject;
 %ignore Spr::ObjectIf::Print;
 %ignore Spr::ObjectIf::PrintShort;
