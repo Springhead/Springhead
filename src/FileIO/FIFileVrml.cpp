@@ -1,7 +1,7 @@
 ﻿// VrmlParser.cpp : コンソール アプリケーションのエントリ ポイントを定義します。
 //
 
-#include <FileIO/FIFileVRML.h>
+#include <FileIO/FIFileVrml.h>
 #include <FileIO/FILoadContext.h>
 #include <FileIO/FISaveContext.h>
 #include <boost/spirit/include/classic_regex.hpp>
