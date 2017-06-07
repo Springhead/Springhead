@@ -29,7 +29,7 @@ namespace Spr{;
 //  既存のファイルのアクセス速度向上を行うために、実際のファイルをメモリ上にマッピングする
 
 class FILoadFileMap : public UTFileMap{
-	FILoadFileMap::~FILoadFileMap(){
+	~FILoadFileMap(){
 		if (start) Unmap();
 	}
 #ifdef _WIN32

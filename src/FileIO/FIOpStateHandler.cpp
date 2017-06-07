@@ -1,5 +1,10 @@
 #include "FIOpStateHandler.h"
 
+#ifdef	__linux__
+#  define fopen_s(fptr,name,mode)	*(fptr) = fopen(name,mode)
+#  define sscanf_s(buf,fmt,...)		sscanf(buf,fmt,##__VA_ARGS__)
+#endif
+
 namespace Spr
 {
 	;

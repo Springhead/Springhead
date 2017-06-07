@@ -10,7 +10,7 @@
 #include <FileIO/FIFileCOLLADA.h>
 #include <FileIO/FIFileBinary.h>
 #include <FileIO/FIFileSpr.h>
-#include <FileIO/FIFileVRML.h>
+#include <FileIO/FIFileVrml.h>
 #include <FileIO/FIImport.h>
 #include <stdlib.h>
 
@@ -116,7 +116,12 @@ FIFileXIf* FISdk::CreateFileX(){
 	//rv->sdk = this;
 	//files.push_back(rv);
 	//return rv->Cast();
+#ifdef	_WIN32
 	return DCAST(FIFileXIf, CreateObject(FIFileXIf::GetIfInfoStatic(), &FIFileXDesc()));
+#else
+	FIFileXDesc tmp = FIFileXDesc();
+	return DCAST(FIFileXIf, CreateObject(FIFileXIf::GetIfInfoStatic(), &tmp));
+#endif
 }
 
 FIFileSprIf* FISdk::CreateFileSpr(){
@@ -124,7 +129,12 @@ FIFileSprIf* FISdk::CreateFileSpr(){
 	//rv->sdk = this;
 	//files.push_back(rv);
 	//return rv->Cast();
+#ifdef	_WIN32
 	return DCAST(FIFileSprIf, CreateObject(FIFileSprIf::GetIfInfoStatic(), &FIFileSprDesc()));
+#else
+	FIFileSprDesc tmp = FIFileSprDesc();
+	return DCAST(FIFileSprIf, CreateObject(FIFileSprIf::GetIfInfoStatic(), &tmp));
+#endif
 }
 
 FIFileVRMLIf* FISdk::CreateFileVRML(){
@@ -132,7 +142,12 @@ FIFileVRMLIf* FISdk::CreateFileVRML(){
 	//rv->sdk = this;
 	//files.push_back(rv);
 	//return rv->Cast();
+#ifdef	_WIN32
 	return DCAST(FIFileVRMLIf, CreateObject(FIFileVRMLIf::GetIfInfoStatic(), &FIFileVRMLDesc()));
+#else
+	FIFileVRMLDesc tmp = FIFileVRMLDesc();
+	return DCAST(FIFileVRMLIf, CreateObject(FIFileVRMLIf::GetIfInfoStatic(), &tmp));
+#endif
 }
 
 FIFileCOLLADAIf* FISdk::CreateFileCOLLADA(){
@@ -140,7 +155,12 @@ FIFileCOLLADAIf* FISdk::CreateFileCOLLADA(){
 	//rv->sdk = this;
 	//files.push_back(rv);
 	//return rv->Cast();
+#ifdef	_WIN32
 	return DCAST(FIFileCOLLADAIf, CreateObject(FIFileCOLLADAIf::GetIfInfoStatic(), &FIFileCOLLADADesc()));
+#else
+	FIFileCOLLADADesc tmp = FIFileCOLLADADesc();
+	return DCAST(FIFileCOLLADAIf, CreateObject(FIFileCOLLADAIf::GetIfInfoStatic(), &tmp));
+#endif
 }
 
 FIFileBinaryIf* FISdk::CreateFileBinary(){
@@ -148,7 +168,12 @@ FIFileBinaryIf* FISdk::CreateFileBinary(){
 	//rv->sdk = this;
 	//files.push_back(rv);
 	//return rv->Cast();
+#ifdef	_WIN32
 	return DCAST(FIFileBinaryIf, CreateObject(FIFileBinaryIf::GetIfInfoStatic(), &FIFileBinaryDesc()));
+#else
+	FIFileBinaryDesc tmp = FIFileBinaryDesc();
+	return DCAST(FIFileBinaryIf, CreateObject(FIFileBinaryIf::GetIfInfoStatic(), &tmp));
+#endif
 }
 
 FIFileIf* FISdk::CreateFile(const IfInfo* ii){
@@ -191,13 +216,23 @@ ImportIf* FISdk::CreateImport(){
 	//Import* import = DBG_NEW Import;
 	//imports.push_back(import);
 	//return import->Cast();
+#ifdef	_WIN32
 	ImportIf* imp = CreateObject(ImportIf::GetIfInfoStatic(), &ImportDesc())->Cast();
+#else
+	ImportDesc tmp = ImportDesc();
+	ImportIf* imp = CreateObject(ImportIf::GetIfInfoStatic(), &tmp)->Cast();
+#endif
 	AddChildObject(imp);
 	return imp;
 }
 
 ImportIf*	FISdk::CreateImport(ImportIf* parent, UTString path, ObjectIf* owner, const ObjectIfs& children){
+#ifdef	_WIN32
 	Import* imp = CreateObject(ImportIf::GetIfInfoStatic(), &ImportDesc())->Cast();
+#else
+	ImportDesc tmp = ImportDesc();
+	Import* imp = CreateObject(ImportIf::GetIfInfoStatic(), &tmp)->Cast();
+#endif
 	imp->path = path;
 	imp->ownerObj = owner;
 	imp->childObjs = children;
