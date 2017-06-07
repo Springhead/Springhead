@@ -331,9 +331,9 @@ public:
 	void UpdateheatTransRatio(unsigned id,double heatTransRatio);
 
 	// If としての実装
-	void PHFemMeshThermo::AddvecFAll(unsigned id,double dqdt);
+	void AddvecFAll(unsigned id,double dqdt);
 	// AddVecFAllが完成したら、消す
-	void PHFemMeshThermo::SetvecFAll(unsigned id,double dqdt);
+	void SetvecFAll(unsigned id,double dqdt);
 
 	//%%%%%%%%		熱伝導境界条件の設定関数の宣言		%%%%%%%%//
 	void SetThermalBoundaryCondition();				//	熱伝導境界条件の設定

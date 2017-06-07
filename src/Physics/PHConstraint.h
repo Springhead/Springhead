@@ -287,7 +287,12 @@ public:
 				SpatialVector __f;
 				__f.v() = _f;
 				__f.w() = _t;
+#ifdef	_WIN32
 				SpatialVector Jf = (const SpatialVector&)((*it)->J[0].trans() * __f);
+#else
+				Vec6d tmp_matrix = (*it)->J[0].trans() * __f;
+				SpatialVector Jf = (const SpatialVector&) tmp_matrix;
+#endif
 				total += Jf.v();
 			}
 		}
