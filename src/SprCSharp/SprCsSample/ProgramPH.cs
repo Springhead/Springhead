@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define	SprCSTest
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Diagnostics;
@@ -9,7 +11,7 @@ namespace SprCsSample {
     class Program {
         static string def = "itvacfroFs";
         static string inc = "A";	// include: "A" for all
-        static string exc = " ";	// exclude:
+        static string exc = "s";	// exclude:
         static string brk = "n";	// set "y" if run under debugger
 
         static void Main(string[] args) {
@@ -17,6 +19,9 @@ namespace SprCsSample {
             ExceptionRaiser er = new ExceptionRaiser();
             try {
                 if (inc.Equals("A"))  inc = def;
+#if SprCSTest
+                if (check_test("C"))  test_constructor();
+#endif
                 if (check_test("i"))  test_intrinsic();
                 if (check_test("t"))  test_tostring();
                 if (check_test("v"))  test_vector();
@@ -33,6 +38,28 @@ namespace SprCsSample {
             }
             CSlog.Print("Test End");
         }
+
+#if SprCSTest
+        static void test_constructor() {
+            test_name("constructor");
+
+            SprCSTest cst = new SprCSTest();
+            put("Vec3d        ", "(1,2,3)  ", cst.R1());
+            put("vector<Vec3d>", "[(1,2,3)]", edit_vectorwrapper(cst.R2(), 0));
+            put("Vec3d*       ", "[(1,2,3)]", cst.R3());
+            //arraywrapper_Vec3d awR4 = cst.R4();
+            //put("Vec3d[0]     ", "[(1,2,3)]", edit_arraywrapper(awR4, 0));
+            //put("Vec3d[1]     ", "[(11,22,33)]", edit_arraywrapper(awR4, 1));
+            //put("Vec3d[2]     ", "[(111,222,333)]", edit_arraywrapper(awR4, 2));
+            put("int          ", "1        ", cst.R5());
+            put("vector<int>  ", "[1]      ", edit_vectorwrapper(cst.R6(), 0));
+            put("int*         ", "[1]      ", cst.R7());
+            //arraywrapper_int awR8 = cst.R8();
+            //put("int[0]       ", "[1]      ", edit_arraywrapper(awR8, 0));
+            //put("int[1]       ", "[11]      ", edit_arraywrapper(awR8, 1));
+            //put("int[2]       ", "[111]      ", edit_arraywrapper(awR8, 2));
+        }
+#endif
 
         static void test_intrinsic() {
             test_name("intrinsic");
@@ -678,6 +705,19 @@ namespace SprCsSample {
 	static string edit_pose(Posef p) {
             return "( " + p.w + ", " + p.x + ", " + p.y + ", " + p.z
                  + ", " + p.px + ", " + p.py + ", " + p.pz + " )";
+	}
+
+	static string edit_vectorwrapper(vectorwrapper_Vec3d v, int ix) {
+	    return "( " + v[ix].x + ", " + v[ix].y + ", " + v[ix].z + " )";
+	}
+	static string edit_vectorwrapper(vectorwrapper_int v, int ix) {
+	    return v[ix].ToString();
+	}
+	static string edit_arraywrapper(arraywrapper_Vec3d a, int ix) {
+	    return "( " + a[ix].x + ", " + a[ix].y + ", " + a[ix].z + " )";
+	}
+	static string edit_arraywrapper(arraywrapper_int a, int ix) {
+	    return a[ix].ToString();
 	}
     }
 }
