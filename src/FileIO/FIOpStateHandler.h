@@ -1,11 +1,13 @@
-#ifndef FIOPSTATEHANDLER_H
+﻿#ifndef FIOPSTATEHANDLER_H
 #define FIOPSTATEHANDLER_H
 
-#include <shlobj.h> 
+#ifdef	_WIN32
+#  include <shlobj.h> 
+#endif
 #include <string.h>
 #include <Foundation/Object.h>
-#include <FileIO\SprFIOpStateHandler.h>
-#include <Physics\PHOpObj.h>
+#include <FileIO/SprFIOpStateHandler.h>
+#include <Physics/PHOpObj.h>
 
 
 namespace Spr{ ;
