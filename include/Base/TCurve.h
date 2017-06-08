@@ -306,9 +306,8 @@ public:
 	}
 
 	int	GetNearest(real_t t)const{
-		int i0, i1;
-		std::tie(i0, i1) = GetSegment(t);
-		return (t - points[i0].t < points[i1].t - t) ? i0 : i1;
+		std::pair<int,int> seg = GetSegment(t);
+		return (t - points[seg.first].t < points[seg.segond].t - t) ? seg.first : seg.second;
 	}
 
 };
@@ -324,26 +323,23 @@ public:
 	typedef T	real_t;
 
 	pos_t	CalcPos(real_t t){
-		int i0, i1;
-		std::tie(i0, i1) = GetSegment(t);
-		struct Point& p0 = TCurve<V,V,T>::points[i0];
-		struct Point& p1 = TCurve<V,V,T>::points[i1];
+		std::pair<int,int> seg = GetSegment(t);
+		struct Point& p0 = TCurve<V,V,T>::points[seg.first ];
+		struct Point& p1 = TCurve<V,V,T>::points[seg.second];
 		return InterpolatePos(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<V,V,T>::type);
 	}
 
 	vel_t	CalcVel(real_t t){
-		int i0, i1;
-		std::tie(i0, i1) = GetSegment(t);
-		struct Point& p0 = TCurve<V,V,T>::points[i0];
-		struct Point& p1 = TCurve<V,V,T>::points[i1];
+		std::pair<int,int> seg = GetSegment(t);
+		struct Point& p0 = TCurve<V,V,T>::points[seg.first ];
+		struct Point& p1 = TCurve<V,V,T>::points[seg.second];
 		return InterpolateVel(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<V,V,T>::type);
 	}
 
 	vel_t	CalcAcc(real_t t){
-		int i0, i1;
-		std::tie(i0, i1) = GetSegment(t);
-		struct Point& p0 = TCurve<V,V,T>::points[i0];
-		struct Point& p1 = TCurve<V,V,T>::points[i1];
+		std::pair<int,int> seg = GetSegment(t);
+		struct Point& p0 = TCurve<V,V,T>::points[seg.first ];
+		struct Point& p1 = TCurve<V,V,T>::points[seg.second];
 		return InterpolateAcc(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<V,V,T>::type);
 	}
 
@@ -364,26 +360,23 @@ public:
 	typedef T	real_t;
 
 	pos_t	CalcPos(real_t t){
-		int i0, i1;
-		std::tie(i0, i1) = GetSegment(t);
-		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i0];
-		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i1];
+		std::pair<int,int> seg = GetSegment(t);
+		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.first ];
+		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.second];
 		return InterpolateOri(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<TQuaternion<T>,TVec3<T>,T>::type);
 	}
 
 	vel_t	CalcVel(real_t t){
-		int i0, i1;
-		std::tie(i0, i1) = GetSegment(t);
-		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i0];
-		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i1];
+		std::pair<int,int> seg = GetSegment(t);
+		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.first ];
+		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.second];
 		return InterpolateAngvel(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<TQuaternion<T>,TVec3<T>,T>::type);
 	}
 
 	vel_t	CalcAcc(real_t t){
-		int i0, i1;
-		std::tie(i0, i1) = GetSegment(t);
-		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i0];
-		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[i1];
+		std::pair<int,int> seg = GetSegment(t);
+		struct Point& p0 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.first ];
+		struct Point& p1 = TCurve<TQuaternion<T>,TVec3<T>,T>::points[seg.second];
 		return InterpolateAngacc(t, p0.t, p0.pos, p0.vel, p1.t, p1.pos, p1.vel, TCurve<TQuaternion<T>,TVec3<T>,T>::type);
 	}
 
