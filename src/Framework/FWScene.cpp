@@ -876,7 +876,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 							render->DrawSphere(range * radius, 10, 10, true);
 							render->PopModelMatrix();
 						}
-
+#if 0
 						// 面
 						Posed p;	// 面の位置姿勢
 						p.Pos() = sp->shapePoseW[0] * sp->closestPoint[0];
@@ -897,6 +897,7 @@ void FWScene::DrawHaptic(GRRenderIf* render, PHHapticEngineIf* hapticEngine) {
 						render->DrawBox(range * 0.5f, 0.005f, range * 0.5f, true);
 						render->PopModelMatrix();
 						render->SetAlphaTest(false);
+#endif
 					}
 				}
 			}

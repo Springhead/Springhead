@@ -3,6 +3,7 @@
 %begin %{
 #include "Base/TQuaternion.h"
 #include "Base/Affine.h"
+#include "Base/Spatial.h"
 
 #ifdef SWIG
 #define __EPDECL

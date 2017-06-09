@@ -7,23 +7,21 @@
 #include <Physics\SprPHOpObj.h>
 
 
-namespace Spr{
-	;
-	struct FWOpHapticHandlerIf :SceneObjectIf{
-		SPR_IFDEF(FWOpHapticHandler);
+namespace Spr{;
 
-		void SetHapticflag(bool flag);
-		bool IsHapticEnabled();
+struct FWOpHapticHandlerIf :SceneObjectIf{
+	SPR_IFDEF(FWOpHapticHandler);
 
-		bool doCalibration(float dt);
-	   // void UpdateHumanInterface(PHOpHapticController* opHC, float dt);
-		void SetHumanInterface(HIBaseIf* hi);
-		HIBaseIf* GetHumanInterface();
-		void SetHapticTimeInterval(float dt);
-		float GetHapticTimeInterval();
-	};
+	void SetHapticflag(bool flag);
+	bool IsHapticEnabled();
 
-
+	bool doCalibration(float dt);
+	// void UpdateHumanInterface(PHOpHapticController* opHC, float dt);
+	void SetHumanInterface(HIBaseIf* hi);
+	HIBaseIf* GetHumanInterface();
+	void SetHapticTimeInterval(float dt);
+	float GetHapticTimeInterval();
+};
 
 
 }//namespace
