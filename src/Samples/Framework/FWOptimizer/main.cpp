@@ -306,7 +306,7 @@ public:
 
 		ike1->SetTargetPosition(soTarget->GetPose().Pos());
 
-		optimizer.CopyScene(GetFWScene());
+		optimizer.CopyScene(GetFWScene()->GetPHScene());
 
 		optimizer.Init();
 		//optimizer.Start();
@@ -322,7 +322,7 @@ public:
 			}
 			DSTR << " --- " << std::endl;
 		}
-		optimizer.ApplyPop(GetFWScene(), optimizer.GetResults(), optimizer.NResults());
+		optimizer.ApplyPop(GetFWScene()->GetPHScene(), optimizer.GetResults(), optimizer.NResults());
 
 		/*
 		double* params = optimizer.GetResults();

@@ -26,10 +26,10 @@ PHMaterial::PHMaterial(){
 	vibContact = false;
 
 	mu = 0.3f;
-	mu0 = 0.7f;
+	mu0 = 0.5f;
 	/**	時変摩擦係数のための係数	ms = mu+ A log(1+Bt),  md = mu+ A log (1+B C/v)  [Dieterich 1979]
 		Cは動摩擦時のスリップ距離を意味する C/v < dt(時間刻み) のときは、v=C/dt を使う */
-	timeVaryFrictionA = 0.3f;
+	timeVaryFrictionA = 0.1f;
 	timeVaryFrictionB = 1800;
 	timeVaryFrictionC = 0.0f;
 	///	粘性摩擦のための係数	f_t = frictionViscocity * vel * f_N
