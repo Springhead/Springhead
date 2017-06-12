@@ -7,7 +7,7 @@
 #define __EPDECL __fastcall
 #endif
 
-#include "Utility/SprUTCriticalSection.h"//CriticalSection用
+#include "Foundation/SprUTCriticalSection.h"//CriticalSection用
 
 #include <EmbPython\/SprEPVersion.h>
 #include PYTHON_H_PATH
