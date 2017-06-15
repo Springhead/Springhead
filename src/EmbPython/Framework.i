@@ -16,6 +16,8 @@
 %ignore Spr::FWInteractSceneIf::GetIAAdaptee; //APIの不整合がありコンパイル不可なので
 %ignore Spr::FWSceneIf::GetObjects; // **が出てくるので未対応
 %ignore Spr::FWSceneIf::AddHumanInterface;//HIForceDevice6DがAPIヘッダで定義されていない
+%ignore Spr::FWSceneIf::CreateOpHapticHandler;
+%ignore Spr::FWSceneIf::GetOpHapticHandler;
 %ignore Spr::FWApp::CreateTimer;
 %extend Spr::FWApp{
 	Spr::UTTimerIf* CreateTimer(int mode){

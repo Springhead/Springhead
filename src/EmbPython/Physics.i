@@ -23,6 +23,8 @@
 %ignore Spr::PHHapticEngineIf::Callback;
 %ignore Spr::PHHapticEngineIf::SetCallbackBeforeStep;
 %ignore Spr::PHHapticEngineIf::SetCallbackAfterStep;
+%ignore Spr::PHHapticPointerIf::GetHapticForce;
+%ignore Spr::PHHapticPointerIf::GetProxyVelocity;
 %ignore Spr::PHFemVibrationIf::AddBoundaryCondition;
 %ignore Spr::PHFemVibrationIf::AddVertexForceW;
 %ignore Spr::PHFemMeshThermoIf::GetKMatInTet;

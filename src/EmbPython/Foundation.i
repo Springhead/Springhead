@@ -18,6 +18,7 @@ void SPR_CDECL PyUTTimerFunc(int id, void* arg);
 %ignore Spr::UTPadding;
 %ignore Spr::UTStringLess;
 %ignore Spr::UTEatWhite;
+%ignore Spr::UTTypeDescIf::GetFieldType;
 %ignore Spr::UTTypeInfo;
 %ignore Spr::UTTypeInfoObjectBase;
 %ignore Spr::DebugPrintf;

@@ -11,7 +11,8 @@
 ::
 :: ***********************************************************************************
 ::  Version:
-::	    Ver 1.0	  2014/10/29	F.Kanehori  初版
+::	Ver 1.0  2014/10/29 F.Kanehori  初版
+::	Ver 1.1  2017/06/15 F.Kanehori  依存リストに ".i" ファイルを追加
 :: ***********************************************************************************
 setlocal enabledelayedexpansion
 set PROG=%~n0
@@ -38,6 +39,7 @@ set EXCLUDES=
 :: makefile に出力するときのパス
 set INCDIROUT=..\..\include
 set SRCDIROUT=..\..\src
+set EMBDIROUT=..\..\src\EmbPython
 
 :: 使用するファイル名
 ::
@@ -82,7 +84,7 @@ for %%p in (%PROJECTS%) do (
     echo   Project: %%p
     set MKFILE=%MAKEFILE%.%%p
     call :collect_headers %%p
-    call :make_makefile %%p !MKFILE! "!INCHDRS!" "!SRCHDRS!"
+    call :make_makefile %%p !MKFILE! "!INTERFS!" "!INCHDRS!" "!SRCHDRS!"
     cmd /c %MAKE% -f !MKFILE!
 )
 
@@ -100,6 +102,25 @@ exit /b
 
     :: 依存ファイル情報を集める
     ::
+    ::   swig interface files
+    set INTERFS1=
+    for %%f in (*.i) do (
+        call :one_of "%EXCLUDES%" %%~nxf
+        if "!$result!" equ "no" set INTERFS1=!INTERFS1! %%~nxf
+    )
+    call :add_prefix "!INTERFS1!" %EMBDIROUT%
+    set INTERFS1=%$string:\=/%
+    set INTERFS2=
+    for %%f in (Utility\*.i) do (
+        call :one_of "%EXCLUDES%" %%~nxf
+        if "!$result!" equ "no" set INTERFS2=!INTERFS2! %%~nxf
+    )
+    call :add_prefix "!INTERFS2!" %EMBDIROUT%\Utility
+    set INTERFS2=%$string:\=/%
+    set INTERFS=!INTERFS1! !INTERFS2!
+    if %DEBUG% == 1 echo INTERFS [%INTERFS%]
+
+    ::  header files
     set INCHDRS=
     for %%f in (%INCDIR%\%PROJECT%\*.h) do (
         call :one_of "%EXCLUDES%" %%~nxf
@@ -109,6 +130,7 @@ exit /b
     set INCHDRS=%$string:\=/%
     if %DEBUG% == 1 echo INCHDRS [%INCHDRS%]
 
+    ::  source files
     set SRCHDRS=
     for %%f in (%SRCDIR%\%PROJECT%\*.h) do (
         call :one_of "%EXCLUDES%" %%~nxf
@@ -124,24 +146,27 @@ exit /b
 ::  makefile を作成する
 ::      引数1   モジュール名
 ::      引数2   makefile 名
-::      引数3   "依存ヘッダファイル名リスト"
-::      引数4   "依存ソースファイル名リスト"
+::      引数3   "依存インターフェイスファイル名リスト"
+::      引数4   "依存ヘッダファイル名リスト"
+::      引数5   "依存ソースファイル名リスト"
 :: -----------------------------------------------------------------------------------
 :make_makefile
     setlocal enabledelayedexpansion
     set MODULE=%1
     set MKFILE=%2
-    set INCFILES=%~3
-    set SRCFILES=%~4
+    set INTFILES=%~3
+    set INCFILES=%~4
+    set SRCFILES=%~5
     if %DEBUG% == 1 (
         echo MODULE   [%MODULE%]
         echo MKFILE   [%MKFILE%]
+        echo INTFILES [%INTFILES%]
         echo INCFILES [%INCFILES%]
         echo SRCFILES [%SRCFILES%]
     )
 
     set TARGET=%EMBPYTHONDIR%/EP%MODULE%.cpp
-    set DEPENDENCIES=%INCFILES% %SRCFILES%
+    set DEPENDENCIES=%INTFILES% %INCFILES% %SRCFILES%
     if %DEBUG% == 1 (
         echo TARGET       [%TARGET%]
         echo DEPENDENCIES [%DEPENDENCIES%]
