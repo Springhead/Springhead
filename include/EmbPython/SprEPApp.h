@@ -181,15 +181,15 @@ public:
 
 		if(engineType == SINGLE){
 			// シングルスレッドモード
-			he->SetHapticEngineMode(PHHapticEngineDesc::SINGLE_THREAD);
+			he->SetHapticStepMode(PHHapticEngineDesc::SINGLE_THREAD);
 			phScene->SetTimeStep(hdt);
 		}else if(engineType == MULTI){
 			// マルチスレッドモード
-			he->SetHapticEngineMode(PHHapticEngineDesc::MULTI_THREAD);
+			he->SetHapticStepMode(PHHapticEngineDesc::MULTI_THREAD);
 			phScene->SetTimeStep(pdt);
 		}else if(engineType == LD){
 			// 局所シミュレーションモード
-			he->SetHapticEngineMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
+			he->SetHapticStepMode(PHHapticEngineDesc::LOCAL_DYNAMICS);
 			phScene->SetTimeStep(pdt);
 		}
 
